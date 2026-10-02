@@ -1,3 +1,5 @@
+import { PREDICATES } from "../domain/predicates";
+import { relationLabel, polarityLabel } from "./format";
 import type { EntitySummary, ClaimSummary } from "../domain/api";
 
 // 同名がGraph内に存在するときだけ、登録済みの説明を補助ラベルに使う。
@@ -16,12 +18,16 @@ export function edgeRoutes(claims: Record<string, ClaimSummary>) {
     const key = [claim.subjectId, claim.objectId].sort().join(":");
     groups.set(key, [...(groups.get(key) ?? []), claim]);
   });
-  const result: Record<string, { distance: number; weight: number }> = {};
+  const result: Record<string, { distance: number; weight: number; label: string }> = {};
   groups.forEach((group) => {
     group.sort((a, b) => a.id.localeCompare(b.id));
     group.forEach((claim, index) => {
-      const offset = (index - (group.length - 1) / 2) * 130;
-      result[claim.id] = { distance: (claim.subjectId < claim.objectId ? offset : -offset) * (group.length === 2 ? 2 : 1), weight: group.length > 1 ? 0.3 + index * 0.4 / (group.length - 1) : 0.5 };
+      const step = group.length === 2 ? 260 : 320;
+      const offset = (index - (group.length - 1) / 2) * step;
+      const period = !claim.period.from && !claim.period.to ? "期間不明" : `${claim.period.from?.value ?? "開始不明"}〜${claim.period.to?.value ?? "終了不明"}`;
+      const sameRelationCount = group.filter((other) => other.subjectId === claim.subjectId && other.objectId === claim.objectId && other.predicate === claim.predicate).length;
+      const label = sameRelationCount > 1 ? `${PREDICATES[claim.predicate].label}\n${polarityLabel(claim)} · ${period}` : relationLabel(claim).replace("（否定）", "\n（否定）");
+      result[claim.id] = { distance: offset === 0 ? 0 : claim.subjectId < claim.objectId ? offset : -offset, weight: group.length === 2 ? 0.3 + index * 0.4 : 0.5, label };
     });
   });
   return result;

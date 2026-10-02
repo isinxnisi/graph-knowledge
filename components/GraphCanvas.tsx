@@ -4,7 +4,6 @@ import cytoscape, { type Core, type ElementDefinition } from "cytoscape";
 import { useEffect, useRef } from "react";
 import type { GraphState, Selection } from "../lib/client/graph-state";
 import { entityLabel, edgeRoutes } from "../lib/client/graph-presentation";
-import { relationLabel } from "../lib/client/format";
 import styles from "./Explorer.module.css";
 
 type Props = { graph: GraphState; selection: Selection; onEntity: (id: string) => void; onClaim: (id: string) => void };
@@ -45,7 +44,7 @@ export default function GraphCanvas({ graph, selection, onEntity, onClaim }: Pro
         { selector: 'node[kind="organization"]', style: { shape: "hexagon", "background-color": "#eae5f3" } },
         { selector: 'node[kind="event"]', style: { shape: "diamond" } },
         { selector: "node.center", style: { "border-width": 3, "border-color": "#376c83" } },
-        { selector: "edge", style: { label: "data(label)", "curve-style": "unbundled-bezier", "control-point-distances": "data(distance)", "control-point-weights": "data(weight)", "target-arrow-shape": "triangle", "line-color": "#8299a3", "target-arrow-color": "#8299a3", width: 2, "font-size": 13, "text-background-color": "#ffffff", "text-background-opacity": 0.9, "text-background-padding": "3px", "text-wrap": "wrap", "text-max-width": "145px", "text-overflow-wrap": "anywhere" } },
+        { selector: "edge", style: { label: "data(label)", "curve-style": "unbundled-bezier", "control-point-distances": "data(distance)", "control-point-weights": "data(weight)", "target-arrow-shape": "triangle", "source-arrow-shape": "none", "arrow-scale": 1.2, "line-color": "#8299a3", "target-arrow-color": "#8299a3", width: 2, "font-size": 13, "text-background-color": "#ffffff", "text-background-opacity": 1, "text-background-padding": "3px", "text-wrap": "wrap", "text-max-width": "145px", "text-overflow-wrap": "anywhere", "text-events": "yes" } },
         { selector: 'edge[polarity="denied"]', style: { "line-style": "dashed", "line-color": "#965d44", "target-arrow-color": "#965d44" } },
         { selector: "node[expanded = 1]", style: { "border-style": "double", "border-width": 4 } },
         { selector: "node.added", style: { "underlay-color": "#e7b345", "underlay-opacity": 0.25, "underlay-padding": 10 } },
@@ -72,7 +71,7 @@ export default function GraphCanvas({ graph, selection, onEntity, onClaim }: Pro
     const routes = edgeRoutes(graph.claims);
     const elements: ElementDefinition[] = newNodes.map((node) => ({ group: "nodes", data: { id: node.id, label: entityLabel(node, graph.nodes), kind: node.kind }, position: { x: 0, y: 0 } }));
     Object.values(graph.claims).forEach((claim) => {
-      if (!cy.getElementById(claim.id).length) elements.push({ group: "edges", data: { id: claim.id, source: claim.subjectId, target: claim.objectId, label: relationLabel(claim).replace("（否定）", "\n（否定）"), polarity: claim.polarity, ...routes[claim.id] } });
+      if (!cy.getElementById(claim.id).length) elements.push({ group: "edges", data: { id: claim.id, source: claim.subjectId, target: claim.objectId, polarity: claim.polarity, ...routes[claim.id] } });
     });
     cy.batch(() => {
       cy.add(elements);

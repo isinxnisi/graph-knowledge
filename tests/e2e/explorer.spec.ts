@@ -150,3 +150,60 @@ test("Step 5: 全体展開・同名補助・並行Claim・選択と一覧の同�
   expect(await page.evaluate(() => document.documentElement.scrollHeight <= innerHeight)).toBe(true);
   await page.screenshot({ path: "/tmp/graph-knowledge-step5-compact.png", fullPage: true });
 });
+
+test("回帰: 3本のASSISTANT_OFのラベル・方向・線クリックのClaim対応", async ({ page }) => {
+  await page.setViewportSize({ width: 1160, height: 650 });
+  await choose(page); await expect(page.getByTestId("graph-counts")).toHaveText("Entity 5 / Claim 7");
+  for (const index of [8, 3, 1, 2, 4, 9, 10, 11]) {
+    await canvasTap(page, fixture.entities[index].id);
+    await expect(page.getByRole("region", { name: "Entity詳細" })).toContainText("近傍は取得済み");
+  }
+  await expect(page.getByTestId("graph-counts")).toHaveText("Entity 11 / Claim 15");
+  await page.getByRole("button", { name: "全体を表示", exact: true }).click();
+  const ids = fixture.claims.slice(0, 3).map((claim) => claim.id);
+  const edges = await page.getByTestId("graph-canvas").evaluate(async (el, ids) => {
+    const cy = (el as unknown as { _cyreg: { cy: import("cytoscape").Core } })._cyreg.cy;
+    await new Promise<void>((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => resolve())));
+    return ids.map((id) => {
+      const edge = cy.getElementById(id);
+      return { id, point: edge.renderedMidpoint(), box: edge.renderedBoundingBox({ includeEdges: false, includeNodes: false, includeLabels: true }),
+        source: edge.source().id(), target: edge.target().id(), arrow: edge.style("target-arrow-shape"), sourceArrow: edge.style("source-arrow-shape"),
+        line: edge.style("line-style"), label: edge.data("label") };
+    });
+  }, ids);
+  for (let i = 0; i < 3; i++) {
+    expect(edges[i].source).toBe(root.id); expect(edges[i].target).toBe(fixture.entities[1].id);
+    expect(edges[i].arrow).toBe("triangle"); expect(edges[i].sourceArrow).toBe("none");
+    expect(edges[i].line).toBe(i === 2 ? "dashed" : "solid");
+    expect(edges[i].label).toContain(i === 2 ? "否定" : "肯定");
+    expect(edges[i].label).toContain(fixture.claims[i].period.from!.value);
+    expect(edges[i].label).toContain(fixture.claims[i].period.to!.value);
+    for (let j = i + 1; j < 3; j++) {
+      const a = edges[i], b = edges[j];
+      expect(Math.hypot(a.point.x-b.point.x, a.point.y-b.point.y)).toBeGreaterThan(30);
+      const gap = Math.max(a.box.x1-b.box.x2, b.box.x1-a.box.x2, a.box.y1-b.box.y2, b.box.y1-a.box.y2);
+      expect(gap).toBeGreaterThan(4);
+    }
+  }
+  await page.screenshot({ path: "/tmp/graph-knowledge-assistant-parallel.png", fullPage: true });
+  // zoomやpanを変えず、全体表示で見えている各線の中点を実クリックする。
+  for (const edge of edges) {
+    await page.getByTestId("graph-canvas").click({ position: edge.point });
+    await expect(page.getByTestId(`claim-card-${edge.id}`).getByRole("heading", { name: "選択した主張", exact: true })).toBeVisible();
+    const chosen = await page.getByTestId("graph-canvas").evaluate((el) => {
+      const cy = (el as unknown as { _cyreg: { cy: import("cytoscape").Core } })._cyreg.cy;
+      return cy.edges(".chosen").map((e) => e.id());
+    });
+    expect(chosen).toEqual([edge.id]);
+  }
+  // 記録画像のみ、同じGraphの3本を拡大して文字と矢印を読み取れる状態を残す。
+  await page.setViewportSize({ width: 1440, height: 1000 });
+  await page.getByTestId("graph-canvas").evaluate(async (el, ids) => {
+    const cy = (el as unknown as { _cyreg: { cy: import("cytoscape").Core } })._cyreg.cy;
+    cy.resize(); cy.zoom(1); cy.center(cy.edges().filter((edge) => ids.includes(edge.id())));
+    await new Promise<void>((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => resolve())));
+  }, ids);
+  // 記録画像だけは、ズーム後にCytoscapeがラベルのテクスチャを再描画する時間を置く。
+  await page.waitForTimeout(500);
+  await page.screenshot({ path: "/tmp/graph-knowledge-assistant-parallel-focus.png", fullPage: true });
+});

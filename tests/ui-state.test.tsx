@@ -105,6 +105,25 @@ describe("Graphの表示補助", () => {
     const b = { ...a, id: "b" }; const c = { ...a, id: "c", subjectId: "2", objectId: "1" };
     const routes = edgeRoutes({ a, b, c });
     expect(Object.keys(routes)).toHaveLength(3);
-    expect([routes.a.distance, routes.b.distance, -routes.c.distance]).toEqual([-130, 0, 130]);
+    expect([routes.a.distance, routes.b.distance, -routes.c.distance]).toEqual([-320, 0, 320]);
+  });
+});
+
+
+describe("実fixtureのASSISTANT_OF並行Claim", () => {
+  it("肯定2件・否定1件を別の経路と期間付きラベルで表示する", () => {
+    const claims = page.claims.filter((claim) => claim.predicate === "ASSISTANT_OF");
+    expect(claims).toHaveLength(3);
+    const routes = edgeRoutes(Object.fromEntries(claims.map((claim) => [claim.id, claim])));
+    const distances = claims.map((claim) => routes[claim.id].distance).sort((a,b) => a-b);
+    expect(distances).toEqual([-320, 0, 320]);
+    expect(claims.filter((claim) => claim.polarity === "affirmed")).toHaveLength(2);
+    expect(new Set(claims.map((claim) => routes[claim.id].label)).size).toBe(3);
+    for (const claim of claims) {
+      expect(routes[claim.id].label).toContain(claim.polarity === "denied" ? "否定" : "肯定");
+      expect(routes[claim.id].label).toContain(claim.period.from!.value);
+      expect(routes[claim.id].label).toContain(claim.period.to!.value);
+      expect(routes[claim.id].weight).toBe(0.5);
+    }
   });
 });
