@@ -1,10 +1,10 @@
 # 初期技術設計
 
-更新日: 2026-10-03 / 状態: 設計案。コード・DB環境はまだ作成しない。
+更新日: 2026-10-03 / 状態: 最小Vertical Sliceの初期採用案を整理済み。コード・DB環境はまだ作成しない。
 
 ## 前提と設計の位置づけ
 
-[PROJECT_CONTEXT.md](PROJECT_CONTEXT.md)を目的とスコープの基準とする。Neo4jを関係性データの正本、PostgreSQLをサービス運営データの正本とする構成を想定する。以下のClaimノード方式は初期推奨案であり、fixtureで検証する。フレームワークやライブラリの選定は未確定。
+[PROJECT_CONTEXT.md](PROJECT_CONTEXT.md)を目的とスコープの基準とする。Neo4jを関係性データの正本、PostgreSQLをサービス運営データの正本とする構成を想定する。初期はClaimノード方式を採用し、fixtureで検証する。今回決めた実装範囲は末尾の「最小Vertical Sliceの初期採用仕様」にまとめる。将来の拡張案と初期仕様を区別する。
 
 ## 初期システム構成
 
@@ -21,7 +21,7 @@ fixture投入処理 → Neo4j
 
 初期は単一のWebアプリとAPI、Neo4jで読み取り体験を成立させる。PostgreSQLの責務は予約するが、利用する機能がないVertical Sliceのためだけに空の運営機能を実装しない。ブラウザからDBへ直接接続しない。
 
-検索用の名称・別名も初期はNeo4jで保持する。検索方式、フロントエンド、バックエンド、グラフ描画ライブラリ、DBのバージョン・提供形態は実装時に選定する。初期から別の検索基盤やマイクロサービスを設けない。
+検索用の名称・別名も初期はNeo4jで保持する。初期の検索方式と技術構成は末尾の採用仕様に従う。本番ホスティングは未選定。初期から別の検索基盤やマイクロサービスを設けない。
 
 ## Relationship方式とClaimノード方式の比較
 
@@ -35,7 +35,7 @@ fixture投入処理 → Neo4j
 | 限定条件・審査・履歴 | 辺の属性・外部ID参照で対応する | Claimを識別可能な対象として拡張できる |
 | 負担 | 小規模では簡潔。複雑化すると周辺モデルが必要 | ノード・接続が増え、問い合わせが複雑になる |
 
-**初期推奨: Claimノードを正本とする。** 複数出典と矛盾の保存が中核要件であり、最初から主張を独立した対象として扱う利点が大きい。Neo4jのRelationshipから別のノードへ直接Relationshipを張る形は使えないため、Relationship方式でSourceを共有するには追加の参照管理が必要になる。
+**初期採用: Claimノードを正本とする。** 複数出典と矛盾の保存が中核要件であり、最初から主張を独立した対象として扱う利点が大きい。Neo4jのRelationshipから別のノードへ直接Relationshipを張る形は使えないため、Relationship方式でSourceを共有するには追加の参照管理が必要になる。
 
 正本となる`ASSISTANT_OF`などの直接RelationshipをClaimと同時に保存しない。UI用の辺はAPIで導出する。将来必要なら再生成可能な投影を検討するが、第二の正本を作らない。
 
@@ -56,17 +56,17 @@ fixture投入処理 → Neo4j
 | `id` | 永続的な内部ID |
 | `predicate` | `ASSISTANT_OF`等の管理された関係タイプ |
 | `polarity` | `affirmed / denied`。否定は不明・未掲載と区別 |
-| `validFrom`, `validTo` | 主張される関係の期間。任意 |
+| `validFromValue/Precision`, `validToValue/Precision` | 主張される関係の期間。APIではperiodに変換。任意 |
 | 日付精度 | 年・月・日、不明など。年だけを架空の月日にしない |
 | `visibility` | 閲覧対象を選ぶための状態。真偽の判定ではない |
 | `createdAt`, `updatedAt` | システムの記録日時 |
 | 取込由来 | 取込元statement識別子、取得日時、元データの版等 |
 
-各Claimは`SUBJECT`と`OBJECT`をそれぞれ一つ持つ。例ではClaimから主体・対象へ接続する。期間不明は「無期限で成立」と解釈しない。期間端点の包含規則や曖昧な範囲表現は実装前に詰める。
+各Claimは`SUBJECT`と`OBJECT`をそれぞれ一つ持つ。例ではClaimから主体・対象へ接続する。期間不明は「無期限で成立」と解釈しない。初期の日付精度と期間端点の規則は末尾の採用仕様に従う。推定・曖昧な範囲表現は後回しにする。
 
 関係タイプには意味、主体・対象の許容kind、方向、表示名を定義する。`ASSISTANT_OF`はアシスタントから相手への方向とし、`INFLUENCED_BY`や`CONTRIBUTED_TO`等も個別に定義する。アシスタント関係から師弟関係を自動推論しない。逆方向表示は同じClaimの見せ方とし、逆向きのClaimを重複保存しない。
 
-関係タイプ定義は初期はバージョン管理した設定に置く案とする。ユーザーが任意のpredicateを追加できる機能は後回しにする。
+関係タイプ定義は初期はバージョン管理したTypeScriptの定数辞書に置く。ユーザーが任意のpredicateを追加できる機能は後回しにする。
 
 ### SourceとCitation
 
@@ -120,7 +120,7 @@ DB間の外部キーや単一トランザクションは前提にしない。将
 
 ## ID設計
 
-- Entity、Claim、Source、Citation等はアプリケーションで生成したUUIDを持つ案とする。UUIDの版は未確定。
+- Entity、Claim、Source、Citation等はUUID v4を持つ。fixtureはあらかじめ割り当てた固定UUID v4をファイルに保存する。
 - Neo4jのDB内部識別子をURLや他DBからの永続参照に使わない。
 - QIDは外部IDであり、内部の主キーにしない。Wikidata未登録のEntityを作れる。
 - Bookmark・監査ログは対象種別と内部IDを参照する。削除や統合で参照が消えた場合の扱いを設計する。
@@ -147,16 +147,16 @@ Wikidataのstatementは値だけでなくqualifierやreferenceを持つため、
 
 ### fixtureとAPIの境界
 
-架空の人物・作品・組織を中心に、10〜20程度のEntityを目安として用意する案。アシスタント、影響、作品参加、組織との関係を含める。同名人物、孤立Entity、複数出典、異なる期間・肯否のClaim、期間不明、出典未確認を含める。現段階ではfixture自体は作らない。
+末尾の採用仕様に従い、架空のEntity 12件、Claim 15件、Source 5件、Citation 15件を用意する。現段階ではfixtureファイル自体は作らない。
 
-APIの機能案:
+APIの機能:
 
 - 人物検索: 名称・別名から候補を返し、同名候補の内部IDを区別する。
 - 近傍取得: Entity IDから、主体側・対象側の両方向のClaimを一段階取得する。
 - 関係詳細: Claim IDから期間・限定条件・Citation・Sourceを返す。
 - Entity詳細: 再展開時の名称や種別を取得する。
 
-経路名やレスポンスの厳密な仕様は未確定。近傍取得は件数制限・ページングを備え、打ち切りをUIへ伝える。初期は1段階ずつ展開し、無制限の多段探索を提供しない。
+経路・レスポンス・展開上限は末尾の採用仕様に従う。初期は1段階ずつ展開し、無制限の多段探索を提供しない。
 
 ### グラフ表示
 
@@ -193,4 +193,151 @@ APIの機能案:
 | 提供基盤・コスト | Neo4jの提供形態、運用・バックアップ、利用条件、ホスティングは未選定 |
 | UI・アクセシビリティ | 大きなグラフの可読性、モバイル操作、キーボード操作、一覧による代替表示を検討 |
 
-次の実装では、技術スタック、fixture内容、関係タイプ辞書、日付表現、API契約、展開上限を確定する。投稿・審査の詳細や大規模取り込みは、最小の探索体験が成立した後に設計する。
+次の実装は以下の初期採用仕様を基準に進める。投稿・審査の詳細や大規模取り込みは、最小の探索体験が成立した後に設計する。
+
+## 最小Vertical Sliceの初期採用仕様
+
+この節は実装準備として採用する初期仕様。上記の将来案より具体的な条件を優先する。今回は文書更新までとし、アプリ・fixture・DB環境の生成は次の実装で行う。
+
+### 1. 技術スタック
+
+| 項目 | 採用 | 理由 |
+| --- | --- | --- |
+| 実行環境 | Node.js 24 LTS、npm、TypeScript | UI・API・seedで同じ言語と型を使う |
+| Web / API | Next.js App Router、React、Route Handlers（Node runtime） | 一つのアプリで画面と読み取りAPIを提供する |
+| グラフ | Cytoscape.js、直接呼び出す小さなReactコンポーネント | 方向付きの辺、並行辺、クリックと追加展開を扱う |
+| レイアウト | 内蔵のbreadthfirst、中心Entityをrootに指定、レイアウト時は無向として扱う | 追加プラグインを入れず、入出両方向の近傍を表示する |
+| スタイル / 状態 | CSS Modules、React標準のstate | UIキットやグローバル状態管理を先に導入しない |
+| DB | Neo4j Community 5.26 LTS、Docker Composeの単一サービス | Claimモデルを実際のDBで検証し、ローカルで再現する |
+| DBアクセス | 公式neo4j-driver、パラメータ化したCypher | 小さなモデルにORMを追加しない |
+| 入力検証 | Zod（fixtureとAPI入力）、共通TypeScript型 | DB投入前とAPI境界で整合性を確認する |
+| 検証 | Vitest、必要なブラウザ経路のみPlaywright | 日付・seed・API・探索体験の重要な動作を確認する |
+
+Next.js、React、ドライバー等の正確なバージョンは実装開始時の互換性のある安定版を選び、package-lock.jsonへ固定する。NodeとNeo4jは上記系列のパッチ版を固定し、Dockerのlatestタグは使わない。DBとドライバーの組み合わせを接続・クエリ実行で確認する。Neo4j接続設定はサーバー用環境変数に置き、クライアントへ渡さない。
+
+初期はPostgreSQL、認証、投稿、Wikidataアクセス、外部検索基盤、Redisを起動しない。fixture投入だけが書き込み経路で、Web APIはGETのみ。アプリはローカル実行を対象とする。
+
+選定時に参照した公式資料: [Next.js Route Handlers](https://nextjs.org/docs/app/getting-started/route-handlers)、[Neo4jドライバー](https://neo4j.com/docs/javascript-manual/current/install/)、[Cytoscape.js](https://js.cytoscape.org/)、[Node.jsリリース計画](https://github.com/nodejs/Release)。
+
+### 2. fixture
+
+実在人物の事実確認を待たずにモデルとUIを検証できる、完全な架空データを採用する。画面には「架空のデモデータ」を常時表示する。次のキーはfixture内の読みやすい参照名で、公開APIのIDは固定UUID v4とする。
+
+| キー | kind | 名称 / 区別用description |
+| --- | --- | --- |
+| P1 | person | 青葉ハル / 漫画家、星の航路の作者 |
+| P2 | person | 黒川レン / 漫画家、師匠として語られる人物 |
+| P3 | person | 白石ミオ / 漫画家、共同制作参加者 |
+| P4 | person | 橘ソラ / 漫画家、月の工房の作者 |
+| P5 | person | 水野ナツ / 編集者 |
+| P6 | person | 佐藤アキ / 漫画家 |
+| P7 | person | 佐藤アキ / 編集者、P6と別人 |
+| P8 | person | 森ユウ / 関係が未登録の漫画家 |
+| W1 | work | 星の航路 / 架空漫画 |
+| W2 | work | 月の工房 / 架空漫画 |
+| O1 | organization | 青空出版 / 架空出版社 |
+| O2 | organization | 月刊コミック灯 / 架空雑誌編集部 |
+
+別名の例はP1に「あおば はる」を登録する。初期の雑誌は作品自体ではなく編集部組織として明示する。Eventはkindとして予約するがfixtureに追加しない。外部IDは空で、架空QIDを割り当てない。
+
+SourceはS1「黒川レン創作記」（book、URLなし、2010年）、S2「青葉ハルへのインタビュー」（interview、2011-06）、S3「月刊コミック灯 特集号」（magazine、2012-03-15）、S4「創作活動メモ」（web、公開日不明）、S5「漫画制作の共同作業に関する研究」（paper、2015年）の5件とする。すべて架空資料であることを注記し、ISBN/DOIを捏造しない。URLを持つ資料はexample.invalid配下のデモURLとして表示するが、外部リンクとして有効にしない。実データのURLはhttp/httpsのみリンク化する。
+
+| Claim | 主体 → predicate → 対象 | polarity / 期間 | 支持するSource・参照箇所 |
+| --- | --- | --- | --- |
+| C01 | P1 → ASSISTANT_OF → P2 | affirmed / 2001〜2003 | S1 pp.12–13、S2 第2節 |
+| C02 | P1 → ASSISTANT_OF → P2 | affirmed / 2002〜2004 | S3 p.8 |
+| C03 | P1 → ASSISTANT_OF → P2 | denied / 2001〜2003 | S4「制作経歴」節 |
+| C04 | P3 → ASSISTANT_OF → P2 | affirmed / 両端不明 | S1 p.20 |
+| C05 | P1 → INFLUENCED_BY → P4 | affirmed / 両端不明 | S2 第3節 |
+| C06 | P4 → INFLUENCED_BY → P1 | affirmed / 両端不明 | S3 p.10 |
+| C07 | P1 → CONTRIBUTED_TO → W1 | affirmed / 2005〜2007 | S3 p.12 |
+| C08 | P3 → CONTRIBUTED_TO → W1 | affirmed / 2006-04〜2006-09 | S5 p.5 |
+| C09 | P4 → CONTRIBUTED_TO → W2 | affirmed / 2008〜終了不明 | S3 p.14 |
+| C10 | P5 → CONTRIBUTED_TO → W1 | affirmed / 両端不明 | S5 p.6 |
+| C11 | P1 → AFFILIATED_WITH → O1 | affirmed / 2005〜終了不明 | S2 第4節 |
+| C12 | P5 → AFFILIATED_WITH → O1 | affirmed / 両端不明 | S3 p.16 |
+| C13 | P6 → CONTRIBUTED_TO → W2 | affirmed / 両端不明 | 出典未確認 |
+| C14 | P7 → AFFILIATED_WITH → O2 | affirmed / 両端不明 | S4「編集部」節 |
+| C15 | P3 → AFFILIATED_WITH → O2 | affirmed / 両端不明 | S3 p.18 |
+
+合計はEntity 12、Claim 15、Source 5、Citation 15。C03を否定する主張として支持するCitationのstanceはsupportとする。polarityとCitationのstanceを混同しない。各Citationは専用の固定IDを持つ。
+
+実装時はfixtures/demo.jsonに全件を置き、schemaVersionを1とする。seedは全件検証後、一つのトランザクション内でIDをキーにMERGEし、二度実行しても件数が増えないようにする。参照先不在、重複ID、predicate/kind違反、複数SUBJECT/OBJECT、日付不正は投入前に拒否する。初期seedは内容の更新・削除の同期を担わず、fixture変更は開発専用DBを明示的に再作成して投入する。通常seedに全DB削除を含めない。
+
+### 3. 関係タイプ辞書
+
+lib/domain/predicates.tsに固定辞書を置き、APIとseedから共有する。自由入力、編集画面、辞書APIは設けない。
+
+| predicate | 主体kind → 対象kind | 表示名 / 逆方向表示 | 意味 |
+| --- | --- | --- | --- |
+| ASSISTANT_OF | person → person | アシスタントだった / アシスタントに迎えていた | 対象人物の制作補助を行ったという主張 |
+| INFLUENCED_BY | person → person | 影響を受けた / 影響を与えた | 主体が対象から影響を受けたという主張 |
+| CONTRIBUTED_TO | person → work | 制作に関わった / 制作関係者 | 作品への関与。作者・編集者等の役割は初期は区別しない |
+| AFFILIATED_WITH | person → organization | 関わりがあった / 関係者 | 組織との関わり。雇用や所属を断定しない |
+
+師弟関係はアシスタントから推論しない。作品と出版社の関係等は新しいpredicateの意味を決めてから追加する。初期はこの4種で検索・探索経路を成立させる。
+
+### 4. 日付表現
+
+APIとfixtureの部分日付は、`{ value: "2001", precision: "year" }`、`{ value: "2006-04", precision: "month" }`、`{ value: "2012-03-15", precision: "day" }`のいずれか、またはnullとする。初期は西暦0001〜9999のグレゴリオ暦のみ対応する。桁数とprecisionの一致、閏年を含む実在日付を検証する。
+
+Claimのperiodは`{ from: PartialDate | null, to: PartialDate | null }`。どちらのnullも不明であり、現在も継続中・無期限という意味にはしない。表示は「2008年〜終了不明」などとする。年・月はその精度のまま表示し、便宜的な1月1日を保存しない。
+
+両端は指定された年・月・日を含む。妥当性チェックのみ、fromの最早日とtoの最遅日を比較し、開始が終了より確実に後なら拒否する。範囲が重なる場合は受け入れ、詳細な成立日を推定しない。期間で絞り込む検索は初期に設けない。
+
+Neo4jではPartialDateをネストしたpropertyとして保存せず、`validFromValue / validFromPrecision / validToValue / validToPrecision`のスカラーへ展開する。SourceのpublishedAtも同じ方式。APIで元の形へ戻し、値なしはnullで返す。createdAt/updatedAtはUTCのISO 8601日時、CitationのaccessedAtは日単位のISO日付またはnullとし、関係期間とは分離する。概数・推定・歴史的暦は今回は対象外。
+
+### 5. 読み取りAPI契約
+
+同一オリジンのJSON API、接頭辞は/api。日付以外の任意値も欠損時はnull、配列は空配列とし、undefinedを契約に使わない。fixture読取はライブクエリとし、初期はHTTPレスポンスをCache-Control: no-storeにする。
+
+共通の返却型:
+
+- EntitySummary: `{ id, kind, name, description }`。descriptionは同名判別用でnullable。
+- ClaimSummary: `{ id, subjectId, objectId, predicate, polarity, period, sourceCount }`。sourceCountはCitationが指す異なるSourceの件数を導出し、信用点数にはしない。
+- SourceDetail: `{ id, kind, title, authors, publisher, url, publishedAt, edition, note, isDemo }`。authorsは文字列配列、id/kind/title/isDemo以外のスカラーはnullable。
+- CitationDetail: `{ id, locator, note, accessedAt, stance, source }`。locatorはページ・節等を表す文字列、noteとaccessedAtはnullable。sourceはSourceDetail。
+
+| GET経路 | 入力 | 200のレスポンス |
+| --- | --- | --- |
+| /api/entities | q必須、limit省略可 | `{ items: EntitySummary[], hasMore: boolean }` |
+| /api/entities/{id} | Entity UUID | `{ entity: EntitySummary + { aliases: string[] } }` |
+| /api/entities/{id}/neighbors | limit、after省略可 | `{ centerId, nodes: EntitySummary[], claims: ClaimSummary[], page: { nextCursor, hasMore } }` |
+| /api/claims/{id} | Claim UUID | `{ claim: ClaimSummary + { createdAt, updatedAt, citations: CitationDetail[] }, relatedClaimIds: string[] }` |
+
+検索はpersonのみ。qをtrimし、Unicode NFKCと小文字化を行う。1〜100文字を許可し、空文字は400。表示名称・別名から同じ正規化で作った検索用配列に対する部分一致を用い、Cypherのパラメータとして渡す。検索索引・日本語形態素解析は初期不要。完全一致、名称、IDの順で安定して並べ、limit既定10・最大20でlimit+1件からhasMoreを判定する。初期検索はページングせず、候補が多い場合は検索語の絞り込みを促す。
+
+近傍はvisibility=publishedのClaimを主体側・対象側の両方から1段階だけ取得する。Claim ID昇順で並べ、afterは直前のnextCursor（Claim UUID）を渡す。IDがafterより大きいものからlimit+1件を取得し、返却した最後のIDを次のcursorとする。続きがなければnextCursor=null。nodesは中心と返却Claimの全端点を重複排除したもの。否定するClaimも返す。孤立Entityは中心ノードのみ、claims=[]。静的fixtureが前提であり、投稿時の変更に耐えるページングは後で再設計する。
+
+関係詳細のrelatedClaimIdsは同じsubjectId/predicate/objectIdを持つ他の公開ClaimのIDを、期間・肯否を問わずID昇順で返す。選択中のClaimは含めない。詳細画面はそれぞれのIDから内容を取得して比較できるようにする。初期fixtureでは件数が小さいため、この一覧は全件返却する。全データへ拡張する前に上限を設計する。自動的な矛盾ラベルや優先順位付けは行わない。
+
+不正なUUID、q、limit、afterは400、存在しないEntity/Claim（非公開も含む）は404、DB接続不能・タイムアウトは503、予期しない失敗は500。整数limitは1以上・上限以内のみ受理し、黙って補正しない。エラー本文は`{ error: { code, message } }`。codeはINVALID_ARGUMENT / NOT_FOUND / SERVICE_UNAVAILABLE / INTERNAL_ERRORとし、DBエラーや認証情報を本文に出さない。未対応のHTTPメソッドは405。
+
+### 6. グラフ展開上限とUIの動作
+
+| 制限 | 初期値 |
+| --- | --- |
+| 1回の近傍取得 | Claim既定20件、最大50件 |
+| 探索深度 | クリックごとに1段階。自動再帰なし |
+| 画面全体 | Entity最大100件、Claim最大200件 |
+| DBクエリのタイムアウト | 5秒 |
+
+近傍取得はClaim単位のページングで、nodesは最大51件（中心を含む）。一つのClaimを一本の辺として表示し、初期は集約しない。並行辺を分け、矢印、関係名、否定の表示を付ける。出典未確認は詳細と辺の説明で分かるようにする。否定の辺には「否定」の文字と破線を用い、色だけに依存しない。
+
+追加展開はEntity IDとClaim IDで重複排除し、既存のノード位置は極力維持する。中心と隣接関係のテキスト一覧も提供し、一覧から展開・詳細確認ができるようにする。複雑なレイアウト最適化やモバイル専用画面は後回し。
+
+ページのマージ前に、重複を除いた追加件数と全端点を確認する。画面全体の上限を超える場合はそのページを丸ごと追加せず、cursorも進めない。「表示上限に達したため、別の人物を中心に探索してください」と示す。中心を選び直すとグラフと全cursorをリセットする。受理できたページだけcursorを更新し、hasMoreがtrueなら「続きを表示」を出す。同じEntityの同時リクエストを防ぎ、失敗時は再試行可能にする。
+
+初期値は小さなデモで操作と上限処理を確認するための値で、性能保証ではない。上限・ページングは別の生成したテストデータで検証し、手作業fixtureを巨大化しない。
+
+### 実装順序と完了条件
+
+1. Node/Next.js/Neo4jの最小環境、環境変数例、READMEを用意する。DockerはNeo4jのみ、WebアプリはローカルNodeで動かす。
+2. 共通型、predicate辞書、日付検証、fixture JSONを作る。Neo4jに各ノードのid一意制約を作り、seedを二度実行して件数と接続の冪等性を確認する。
+3. パラメータ化した読取クエリと上記4経路のAPIを実装する。複数出典、否定、両方向探索、同名検索、日付精度、404、ページングを実DBで確認する。
+4. 検索・グラフ・詳細パネルを一画面で繋ぐ。空結果・孤立人物・失敗・続きを表示・上限の状態も表示する。
+5. 検索→人物選択→作品へ展開→関係選択→参照箇所確認の経路をブラウザで検証する。型検査・lint・重要なテストを通し、起動と再投入手順をREADMEに記録する。
+
+次の実装の想定配置はapp/（画面とAPI）、components/（検索・グラフ・詳細）、lib/domain/（型・辞書・検証）、lib/server/（DBとクエリ）、fixtures/、scripts/seed.ts、tests/。APIとseedは型・検証を共有するが、汎用リポジトリ基盤やプラグイン機構は作らない。
+
+6項目はこの仕様で実装を開始できる。残るのは実装時のパッチ版固定、実測によるレイアウト調整と応答時間の確認。本番運用・投稿・履歴・同期・複雑な限定条件は今回の完了条件に含めない。
