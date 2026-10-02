@@ -4,6 +4,7 @@ import type { Driver, ManagedTransaction } from "neo4j-driver";
 import { dateProperties } from "../domain/dates";
 import { validateFixture, type Fixture } from "../domain/fixture";
 import { QUERY_TIMEOUT_MS } from "./neo4j";
+import { normalizeSearch } from "../domain/search";
 
 // Offline whole-fixture writes need a separate budget from interactive reads.
 export const SEED_TIMEOUT_MS = 60000;
@@ -69,7 +70,7 @@ export async function seedFixture(driver: Driver, database: string, input: unkno
       };
       for (const entity of fixture.entities) {
         const { externalIds, ...properties } = entity;
-        const searchNames = [...new Set([entity.name, ...entity.aliases].map((name) => name.trim().normalize("NFKC").toLowerCase()))];
+        const searchNames = [...new Set([entity.name, ...entity.aliases].map(normalizeSearch))];
         await merge("Entity", { ...properties, searchNames });
         for (const external of externalIds) {
           const result = await tx.run(

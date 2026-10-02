@@ -1,0 +1,278 @@
+{
+  "search": {
+    "items": [
+      {
+        "id": "c286065c-6e17-47a7-9288-2a1cf6919ce9",
+        "kind": "person",
+        "name": "青葉ハル",
+        "description": "漫画家、星の航路の作者"
+      }
+    ],
+    "hasMore": false
+  },
+  "entity": {
+    "entity": {
+      "id": "c286065c-6e17-47a7-9288-2a1cf6919ce9",
+      "kind": "person",
+      "name": "青葉ハル",
+      "description": "漫画家、星の航路の作者",
+      "aliases": [
+        "あおば はる"
+      ]
+    }
+  },
+  "neighbors": {
+    "centerId": "c286065c-6e17-47a7-9288-2a1cf6919ce9",
+    "nodes": [
+      {
+        "id": "c286065c-6e17-47a7-9288-2a1cf6919ce9",
+        "kind": "person",
+        "name": "青葉ハル",
+        "description": "漫画家、星の航路の作者"
+      },
+      {
+        "id": "8eb728de-a5fc-4adc-960c-2412fa9c91b7",
+        "kind": "work",
+        "name": "星の航路",
+        "description": "架空漫画"
+      },
+      {
+        "id": "0507b795-487d-4528-8aa7-8a5c369a6e5b",
+        "kind": "person",
+        "name": "黒川レン",
+        "description": "漫画家、師匠として語られる人物"
+      },
+      {
+        "id": "a714bbc7-a74b-4ba3-a302-dd29fb0d258a",
+        "kind": "person",
+        "name": "橘ソラ",
+        "description": "漫画家、月の工房の作者"
+      },
+      {
+        "id": "af3c9bae-96c4-4a1f-93fe-5d1a6e79cac5",
+        "kind": "organization",
+        "name": "青空出版",
+        "description": "架空出版社"
+      }
+    ],
+    "claims": [
+      {
+        "id": "0c3bdd3c-8669-4640-b4c8-bf8413d5a0a8",
+        "subjectId": "c286065c-6e17-47a7-9288-2a1cf6919ce9",
+        "objectId": "8eb728de-a5fc-4adc-960c-2412fa9c91b7",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": {
+            "value": "2005",
+            "precision": "year"
+          },
+          "to": {
+            "value": "2007",
+            "precision": "year"
+          }
+        },
+        "sourceCount": 1
+      },
+      {
+        "id": "580dd445-3287-401d-bcce-43af3caaf509",
+        "subjectId": "c286065c-6e17-47a7-9288-2a1cf6919ce9",
+        "objectId": "0507b795-487d-4528-8aa7-8a5c369a6e5b",
+        "predicate": "ASSISTANT_OF",
+        "polarity": "affirmed",
+        "period": {
+          "from": {
+            "value": "2001",
+            "precision": "year"
+          },
+          "to": {
+            "value": "2003",
+            "precision": "year"
+          }
+        },
+        "sourceCount": 2
+      },
+      {
+        "id": "8c9226b4-eea7-44f7-857a-80db6c20ad3c",
+        "subjectId": "a714bbc7-a74b-4ba3-a302-dd29fb0d258a",
+        "objectId": "c286065c-6e17-47a7-9288-2a1cf6919ce9",
+        "predicate": "INFLUENCED_BY",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "sourceCount": 1
+      },
+      {
+        "id": "a2bacd73-d6ae-4cbb-accf-e9d6c8894614",
+        "subjectId": "c286065c-6e17-47a7-9288-2a1cf6919ce9",
+        "objectId": "a714bbc7-a74b-4ba3-a302-dd29fb0d258a",
+        "predicate": "INFLUENCED_BY",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "sourceCount": 1
+      },
+      {
+        "id": "c7e05a6c-6295-4ce6-9f5d-4c06bbab551d",
+        "subjectId": "c286065c-6e17-47a7-9288-2a1cf6919ce9",
+        "objectId": "0507b795-487d-4528-8aa7-8a5c369a6e5b",
+        "predicate": "ASSISTANT_OF",
+        "polarity": "denied",
+        "period": {
+          "from": {
+            "value": "2001",
+            "precision": "year"
+          },
+          "to": {
+            "value": "2003",
+            "precision": "year"
+          }
+        },
+        "sourceCount": 1
+      },
+      {
+        "id": "e231c2eb-9391-4aff-98a6-18762fa339f7",
+        "subjectId": "c286065c-6e17-47a7-9288-2a1cf6919ce9",
+        "objectId": "af3c9bae-96c4-4a1f-93fe-5d1a6e79cac5",
+        "predicate": "AFFILIATED_WITH",
+        "polarity": "affirmed",
+        "period": {
+          "from": {
+            "value": "2005",
+            "precision": "year"
+          },
+          "to": null
+        },
+        "sourceCount": 1
+      },
+      {
+        "id": "e415e58b-ac29-42a6-8f1c-370abd1c6392",
+        "subjectId": "c286065c-6e17-47a7-9288-2a1cf6919ce9",
+        "objectId": "0507b795-487d-4528-8aa7-8a5c369a6e5b",
+        "predicate": "ASSISTANT_OF",
+        "polarity": "affirmed",
+        "period": {
+          "from": {
+            "value": "2002",
+            "precision": "year"
+          },
+          "to": {
+            "value": "2004",
+            "precision": "year"
+          }
+        },
+        "sourceCount": 1
+      }
+    ],
+    "page": {
+      "hasMore": false,
+      "nextCursor": null
+    }
+  },
+  "claim": {
+    "claim": {
+      "id": "580dd445-3287-401d-bcce-43af3caaf509",
+      "subjectId": "c286065c-6e17-47a7-9288-2a1cf6919ce9",
+      "objectId": "0507b795-487d-4528-8aa7-8a5c369a6e5b",
+      "predicate": "ASSISTANT_OF",
+      "polarity": "affirmed",
+      "period": {
+        "from": {
+          "value": "2001",
+          "precision": "year"
+        },
+        "to": {
+          "value": "2003",
+          "precision": "year"
+        }
+      },
+      "sourceCount": 2,
+      "createdAt": "2026-10-03T00:00:00Z",
+      "updatedAt": "2026-10-03T00:00:00Z",
+      "citations": [
+        {
+          "id": "b1cc1372-fcdd-4644-988c-b265a5a7bb77",
+          "locator": "第2節",
+          "note": null,
+          "accessedAt": null,
+          "stance": "support",
+          "source": {
+            "id": "1c359a8d-e039-4422-8b35-8b878d0d8532",
+            "kind": "interview",
+            "title": "青葉ハルへのインタビュー",
+            "authors": [],
+            "publisher": null,
+            "url": "https://example.invalid/demo/source-2",
+            "publishedAt": {
+              "value": "2011-06",
+              "precision": "month"
+            },
+            "edition": null,
+            "note": "架空のデモ資料。実在する資料ではありません。",
+            "isDemo": true
+          }
+        },
+        {
+          "id": "f02cb5a0-a766-46c3-92ff-9bc95f48cb23",
+          "locator": "pp.12–13",
+          "note": null,
+          "accessedAt": null,
+          "stance": "support",
+          "source": {
+            "id": "3173795c-d11d-4d1b-9de8-afbd8dd36b1d",
+            "kind": "book",
+            "title": "黒川レン創作記",
+            "authors": [],
+            "publisher": null,
+            "url": null,
+            "publishedAt": {
+              "value": "2010",
+              "precision": "year"
+            },
+            "edition": null,
+            "note": "架空のデモ資料。実在する資料ではありません。",
+            "isDemo": true
+          }
+        }
+      ]
+    },
+    "relatedClaimIds": [
+      "c7e05a6c-6295-4ce6-9f5d-4c06bbab551d",
+      "e415e58b-ac29-42a6-8f1c-370abd1c6392"
+    ]
+  },
+  "unsourced": {
+    "claim": {
+      "id": "ad0db859-1494-44e3-88bd-eab30c6cb4cf",
+      "subjectId": "869501dc-2ec0-4b5d-8e87-ff7a485cbe5a",
+      "objectId": "48b628ac-46a6-48b2-8e32-394eb8e7720e",
+      "predicate": "CONTRIBUTED_TO",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "sourceCount": 0,
+      "createdAt": "2026-10-03T00:00:00Z",
+      "updatedAt": "2026-10-03T00:00:00Z",
+      "citations": []
+    },
+    "relatedClaimIds": []
+  },
+  "internalError": {
+    "error": {
+      "code": "INTERNAL_ERROR",
+      "message": "処理中にエラーが発生しました。"
+    }
+  },
+  "unavailable": {
+    "error": {
+      "code": "SERVICE_UNAVAILABLE",
+      "message": "データベースを利用できません。時間をおいて再試行してください。"
+    }
+  }
+}

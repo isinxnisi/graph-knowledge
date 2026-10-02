@@ -2,7 +2,7 @@
 
 出典付きの関係性を蓄積・探索するサービスの初期基盤です。作業前に[PROJECT_CONTEXT](docs/PROJECT_CONTEXT.md)と[ARCHITECTURE](docs/ARCHITECTURE.md)を参照してください。
 
-現在の実装は実装順序1〜2（環境・domain・fixture・制約・seed）までです。API、画面、Cytoscape.js、認証、投稿、Wikidata取り込みは未実装です。app/layout.tsxはフレームワークの構造だけを用意し、ページはありません。ブラウザのルートはNext.js標準の404になります。
+現在の実装は実装順序3（環境・投入基盤・読み取りAPI）までです。画面、Cytoscape.js、認証、投稿、Wikidata取り込みは未実装です。app/layout.tsxはフレームワークの構造だけを用意し、ページはありません。ブラウザのルートはNext.js標準の404になります。
 
 ## 必要な環境
 
@@ -41,9 +41,9 @@ npm run build
 npm run dev
 ```
 
-通常テストはDB不要です。統合テストは起動済みの開発専用Neo4jに対してseedを再実行します。全ノードの属性と接続が再実行前後で等しいこと、期待件数、制約、既存内容が異なる場合のトランザクション全体のロールバックを検証します。テストでDB全体を削除しません。他データがあるDBでは件数の検証が失敗するため、このComposeの専用DBを使ってください。
+通常テストはDB不要です。統合テストはこのComposeの開発専用Neo4jを使い、seedの冪等性とHTTP経由のAPIを直列実行で検証します。APIテストは空きポートでNext.jsを自動起動して終了時に停止します。公開状態・不正データの検証では一部のデータを一時変更し、必ず復元します。503の検証ではNeo4jを一時停止し、finallyで再起動します。他のDB作業と同時に実行しないでください。終了時に全属性・接続が元に戻っていることを確認し、DB全体の削除は行いません。
 
-Next.jsのdev/build/startは環境の動作確認用です。検索・グラフ表示は次の実装段階で追加します。
+Next.jsのdev/startで以下のAPIを提供します。ルートの検索・グラフ画面は未実装です。APIだけを検証する場合は`npm run test:api`を実行します。
 
 ## fixtureとseedの扱い
 
@@ -65,3 +65,30 @@ npm run db:seed
 ```
 
 停止してデータを保持する場合は`docker compose down`を使います。
+
+## 読み取りAPI
+
+| GET経路 | 内容 | 既定値 / 上限 |
+| --- | --- | --- |
+| /api/entities?q=... | personの名称・別名の部分一致検索 | limit 10 / 20 |
+| /api/entities/{id} | Entity詳細・別名 | UUID v4 |
+| /api/entities/{id}/neighbors | 公開Claimの両方向1段階探索 | limit 20 / 50、afterは前のnextCursor |
+| /api/claims/{id} | 主張・Citation・Source・他の同一関係のClaim ID | UUID v4 |
+
+すべてJSON、Cache-Control: no-storeです。DBはサーバーだけから接続します。検索結果には同名人物を区別するdescriptionを含みます。入力不正400、存在しない対象・非公開Claim404、GET以外405、内部エラー500、DB接続不能・タイムアウト503です。非GETにはAllow: GETを返し、HEADにはHTTP仕様どおり本文がありません。
+
+```bash
+npm run dev
+```
+
+別のターミナルで、起動ログに表示されたポートに合わせて確認できます。次のIDは固定fixtureの青葉ハルとC01です。
+
+```bash
+API_BASE_URL=http://127.0.0.1:3000
+curl --get "$API_BASE_URL/api/entities" --data-urlencode 'q=青葉ハル'
+curl "$API_BASE_URL/api/entities/c286065c-6e17-47a7-9288-2a1cf6919ce9"
+curl "$API_BASE_URL/api/entities/c286065c-6e17-47a7-9288-2a1cf6919ce9/neighbors?limit=2"
+curl "$API_BASE_URL/api/claims/580dd445-3287-401d-bcce-43af3caaf509"
+```
+
+返却型・主要Cypher・検証記録は[Step 3実施記録](docs/IMPLEMENTATION_STEP_3.md)、取得した応答例は[API_RESPONSE_EXAMPLES.json](docs/API_RESPONSE_EXAMPLES.json)を参照してください。

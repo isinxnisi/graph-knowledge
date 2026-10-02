@@ -1,0 +1,75 @@
+import { z } from "zod";
+import { normalizeSearch } from "../domain/search";
+
+type ErrorCode = "INVALID_ARGUMENT" | "NOT_FOUND" | "SERVICE_UNAVAILABLE" | "INTERNAL_ERROR";
+export class ApiError extends Error {
+  constructor(public status: number, public code: ErrorCode, message: string) { super(message); }
+}
+
+export function json(body: unknown, status = 200, extraHeaders: Record<string, string> = {}) {
+  return Response.json(body, { status, headers: { "Cache-Control": "no-store", ...extraHeaders } });
+}
+
+export function methodNotAllowed() {
+  return json({ error: { code: "INVALID_ARGUMENT", message: "GETメソッドのみ利用できます。" } }, 405, { Allow: "GET" });
+}
+
+function isUnavailable(error: unknown): boolean {
+  if (!(error instanceof Error) || !("code" in error) || typeof error.code !== "string") return false;
+  return ["ServiceUnavailable", "SessionExpired", "ECONNREFUSED", "ECONNRESET", "ETIMEDOUT"].includes(error.code)
+    || /TransactionTimedOut|TransactionTimedOutClientConfiguration/.test(error.code)
+    || error.code.startsWith("Neo.TransientError.");
+}
+
+export async function handle<T>(action: () => Promise<T>) {
+  try { return json(await action()); }
+  catch (error) {
+    if (error instanceof ApiError) return json({ error: { code: error.code, message: error.message } }, error.status);
+    const unavailable = isUnavailable(error);
+    // Only a category is logged; never expose DB statements, credentials or raw errors.
+    console.error(unavailable ? "API database unavailable" : "API internal error");
+    return json({ error: {
+      code: unavailable ? "SERVICE_UNAVAILABLE" : "INTERNAL_ERROR",
+      message: unavailable ? "データベースを利用できません。時間をおいて再試行してください。" : "処理中にエラーが発生しました。",
+    } }, unavailable ? 503 : 500);
+  }
+}
+
+function parse<T>(schema: z.ZodType<T>, value: unknown, message: string): T {
+  const result = schema.safeParse(value);
+  if (!result.success) throw new ApiError(400, "INVALID_ARGUMENT", message);
+  return result.data;
+}
+
+export function parseId(value: unknown): string {
+  return parse(z.uuidv4(), value, "UUID v4を指定してください。").toLowerCase();
+}
+
+function single(params: URLSearchParams, key: string) {
+  if (params.getAll(key).length > 1) throw new ApiError(400, "INVALID_ARGUMENT", `${key}は一つだけ指定してください。`);
+  return params.get(key);
+}
+
+function limit(params: URLSearchParams, defaultValue: number, max: number): number {
+  const value = single(params, "limit");
+  if (value === null) return defaultValue;
+  if (!/^\d+$/.test(value)) throw new ApiError(400, "INVALID_ARGUMENT", "limitは整数で指定してください。");
+  return parse(z.number().int().min(1).max(max), Number(value), `limitは1〜${max}で指定してください。`);
+}
+
+export function searchInput(request: Request) {
+  const params = new URL(request.url).searchParams;
+  const q = single(params, "q");
+  if (q === null) throw new ApiError(400, "INVALID_ARGUMENT", "qを指定してください。");
+  const normalized = normalizeSearch(q);
+  return {
+    q: parse(z.string().min(1).refine((text) => [...text].length <= 100), normalized, "qは1〜100文字で指定してください。"),
+    limit: limit(params, 10, 20),
+  };
+}
+
+export function neighborsInput(request: Request) {
+  const params = new URL(request.url).searchParams;
+  const after = single(params, "after");
+  return { limit: limit(params, 20, 50), after: after === null ? null : parseId(after) };
+}

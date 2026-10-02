@@ -1,0 +1,288 @@
+import { spawn, execFile, type ChildProcess } from "node:child_process";
+import { createServer, type AddressInfo } from "node:net";
+import { createRequire } from "node:module";
+import { promisify } from "node:util";
+import { writeFile } from "node:fs/promises";
+import { randomUUID } from "node:crypto";
+import { afterAll, beforeAll, expect, it, vi } from "vitest";
+import type { Driver } from "neo4j-driver";
+import type { Fixture } from "../lib/domain/fixture";
+import type { ClaimResponse, EntityResponse, EntitySearchResponse, NeighborsResponse } from "../lib/domain/api";
+import { openDatabase } from "../lib/server/neo4j";
+import { graphSnapshot, loadFixture, seedFixture } from "../lib/server/seed";
+
+vi.setConfig({ testTimeout: 30000 });
+
+const exec = promisify(execFile);
+const require = createRequire(import.meta.url);
+let fixture: Fixture;
+let driver: Driver;
+let database: string;
+let app: ChildProcess | undefined;
+let baseUrl: string;
+let serverLog = "";
+let stopped = false;
+let initialSnapshot: Awaited<ReturnType<typeof graphSnapshot>>;
+const examples: Record<string, unknown> = {};
+
+async function request<T>(path: string, status = 200, method = "GET"): Promise<T> {
+  const response = await fetch(`${baseUrl}${path}`, { method, signal: AbortSignal.timeout(30000) });
+  const text = await response.text();
+  expect(response.status, `${path}: ${text}`).toBe(status);
+  expect(response.headers.get("cache-control")).toBe("no-store");
+  return JSON.parse(text) as T;
+}
+
+async function write(query: string, params: Record<string, unknown>) {
+  const session = driver.session({ database });
+  try { await session.run(query, params); } finally { await session.close(); }
+}
+
+async function restartDb() {
+  await exec("docker", ["compose", "up", "-d", "--wait", "--wait-timeout", "180", "neo4j"], { timeout: 190000 });
+  stopped = false;
+}
+
+beforeAll(async () => {
+  fixture = await loadFixture();
+  ({ driver, database } = openDatabase());
+  await driver.verifyConnectivity();
+  await seedFixture(driver, database, fixture);
+  initialSnapshot = await graphSnapshot(driver, database);
+  const socket = createServer();
+  await new Promise<void>((resolve) => socket.listen(0, "127.0.0.1", resolve));
+  const port = (socket.address() as AddressInfo).port;
+  await new Promise<void>((resolve, reject) => socket.close((error) => error ? reject(error) : resolve()));
+  baseUrl = `http://127.0.0.1:${port}`;
+  app = spawn(process.execPath, [require.resolve("next/dist/bin/next"), "dev", "--hostname", "127.0.0.1", "--port", String(port)], {
+    cwd: process.cwd(), detached: process.platform !== "win32",
+    env: { ...process.env, NEXT_TELEMETRY_DISABLED: "1", NODE_ENV: "development" }, stdio: ["ignore", "pipe", "pipe"],
+  });
+  const log = (chunk: Buffer) => { serverLog = (serverLog + chunk.toString()).slice(-16000); };
+  app.stdout?.on("data", log); app.stderr?.on("data", log);
+  const deadline = Date.now() + 120000;
+  while (Date.now() < deadline) {
+    if (app.exitCode !== null) throw new Error(`Next.js exited: ${serverLog}`);
+    try {
+      const response = await fetch(`${baseUrl}/api/entities?q=`, { signal: AbortSignal.timeout(10000) });
+      if (response.status === 400) return;
+    } catch { /* Wait for Next.js and initial route compilation. */ }
+    await new Promise((resolve) => setTimeout(resolve, 250));
+  }
+  throw new Error(`Next.js did not become ready: ${serverLog}`);
+}, 150000);
+
+afterAll(async () => {
+  try {
+    if (stopped) await restartDb();
+    if (driver && initialSnapshot) expect(await graphSnapshot(driver, database)).toEqual(initialSnapshot);
+    if (process.env.API_RESPONSE_EXAMPLES_PATH) {
+      await writeFile(process.env.API_RESPONSE_EXAMPLES_PATH, JSON.stringify(examples, null, 2) + "\n");
+    }
+  } finally {
+    if (app?.pid && app.exitCode === null) {
+      if (process.platform === "win32") app.kill("SIGTERM");
+      else {
+        try { process.kill(-app.pid, "SIGTERM"); } catch { /* Already stopped. */ }
+      }
+      await Promise.race([new Promise((resolve) => app!.once("exit", resolve)), new Promise((resolve) => setTimeout(resolve, 5000))]);
+    }
+    if (driver) await driver.close();
+  }
+}, 200000);
+
+it("searches 青葉ハル by name and alias and excludes non-person entities", async () => {
+  const result = await request<EntitySearchResponse>(`/api/entities?q=${encodeURIComponent("青葉ハル")}`);
+  expect(result.items).toEqual([{ id: fixture.entities[0].id, kind: "person", name: "青葉ハル", description: fixture.entities[0].description }]);
+  expect(result.hasMore).toBe(false);
+  const alias = await request<EntitySearchResponse>(`/api/entities?q=${encodeURIComponent(" あおば はる ")}`);
+  expect(alias.items[0].id).toBe(fixture.entities[0].id);
+  const work = await request<EntitySearchResponse>(`/api/entities?q=${encodeURIComponent("星の航路")}`);
+  expect(work.items).toEqual([]);
+  examples.search = result;
+});
+
+it("returns two distinct 佐藤アキ entities and honors search limit", async () => {
+  const path = `/api/entities?q=${encodeURIComponent("佐藤アキ")}`;
+  const result = await request<EntitySearchResponse>(path);
+  expect(result.items).toHaveLength(2);
+  expect(new Set(result.items.map((entity) => entity.id)).size).toBe(2);
+  expect(new Set(result.items.map((entity) => entity.description)).size).toBe(2);
+  const limited = await request<EntitySearchResponse>(`${path}&limit=1`);
+  expect(limited.items).toEqual(result.items.slice(0, 1));
+  expect(limited.hasMore).toBe(true);
+});
+
+it("orders exact name/alias matches first, then name and ID", async () => {
+  const partial = randomUUID(); const exact = randomUUID();
+  try {
+    await write(`CREATE (:Entity {id: $partial, kind: 'person', name: 'あ', searchNames: ['青葉ハル追加'], aliases: []}),
+                        (:Entity {id: $exact, kind: 'person', name: 'い', searchNames: ['い', '青葉ハル'], aliases: ['青葉ハル']})`, { partial, exact });
+    const result = await request<EntitySearchResponse>(`/api/entities?q=${encodeURIComponent("青葉ハル")}`);
+    expect(result.items.map((e) => e.id)).toEqual([exact, fixture.entities[0].id, partial]);
+  } finally { await write("MATCH (e:Entity) WHERE e.id IN $ids DELETE e", { ids: [partial, exact] }); }
+});
+
+it("treats a Cypher-like search string as data", async () => {
+  const result = await request<EntitySearchResponse>(`/api/entities?q=${encodeURIComponent("' MATCH (n) DETACH DELETE n //")}`);
+  expect(result.items).toEqual([]);
+});
+
+it("returns Entity detail without storage fields", async () => {
+  const result = await request<EntityResponse>(`/api/entities/${fixture.entities[0].id}`);
+  expect(result.entity.aliases).toEqual(["あおば はる"]);
+  expect(Object.keys(result.entity).sort()).toEqual(["aliases", "description", "id", "kind", "name"]);
+  examples.entity = result;
+});
+
+it("gets one-hop neighbors from both directions with denied claims and distinct nodes", async () => {
+  const id = fixture.entities[0].id;
+  const result = await request<NeighborsResponse>(`/api/entities/${id}/neighbors`);
+  const expected = fixture.claims.filter((claim) => claim.subjectId === id || claim.objectId === id).map((c) => c.id).sort();
+  expect(result.claims.map((claim) => claim.id)).toEqual(expected);
+  expect(result.claims.some((c) => c.subjectId === id)).toBe(true);
+  expect(result.claims.some((c) => c.objectId === id)).toBe(true);
+  expect(result.claims.some((c) => c.polarity === "denied")).toBe(true);
+  expect(result.nodes[0].id).toBe(id);
+  expect(new Set(result.nodes.map((e) => e.id)).size).toBe(result.nodes.length);
+  expect(result.nodes.some((e) => e.id === fixture.entities[2].id)).toBe(false); // Two hops via P2/W1.
+  expect(result.claims.find((c) => c.id === fixture.claims[0].id)?.sourceCount).toBe(2);
+  examples.neighbors = result;
+});
+
+it("discovers the same assistant claim from its object and a work contribution from the work", async () => {
+  const object = await request<NeighborsResponse>(`/api/entities/${fixture.entities[1].id}/neighbors`);
+  expect(object.claims.some((c) => c.id === fixture.claims[0].id)).toBe(true);
+  const work = await request<NeighborsResponse>(`/api/entities/${fixture.entities[8].id}/neighbors`);
+  expect(work.claims.some((c) => c.id === fixture.claims[6].id)).toBe(true);
+});
+
+it("pages by Claim ID without gaps, duplicated claims, or extra endpoint nodes", async () => {
+  const id = fixture.entities[0].id;
+  const ids: string[] = [];
+  let after: string | null = null;
+  for (let pageNumber = 0; pageNumber < 20; pageNumber++) {
+    const result: NeighborsResponse = await request<NeighborsResponse>(`/api/entities/${id}/neighbors?limit=2${after ? `&after=${after}` : ""}`);
+    expect(result.claims.length).toBeLessThanOrEqual(2);
+    const expectedNodes = new Set([id, ...result.claims.flatMap((c) => [c.subjectId, c.objectId])]);
+    expect(new Set(result.nodes.map((e) => e.id))).toEqual(expectedNodes);
+    ids.push(...result.claims.map((claim) => claim.id));
+    if (!result.page.hasMore) { expect(result.page.nextCursor).toBeNull(); break; }
+    expect(result.page.nextCursor).toBe(result.claims.at(-1)?.id);
+    after = result.page.nextCursor;
+  }
+  expect(ids).toEqual(fixture.claims.filter((c) => c.subjectId === id || c.objectId === id).map((c) => c.id).sort());
+  expect(new Set(ids).size).toBe(ids.length);
+  const end = await request<NeighborsResponse>(`/api/entities/${id}/neighbors?after=${ids.at(-1)}`);
+  expect(end.claims).toEqual([]);
+  expect(end.nodes.map((e) => e.id)).toEqual([id]);
+});
+
+it("only exposes published Claims, including relatedClaimIds", async () => {
+  const id = fixture.claims[1].id;
+  try {
+    await write("MATCH (c:Claim {id: $id}) SET c.visibility = 'hidden'", { id });
+    const neighbors = await request<NeighborsResponse>(`/api/entities/${fixture.entities[0].id}/neighbors`);
+    expect(neighbors.claims.some((c) => c.id === id)).toBe(false);
+    const related = await request<ClaimResponse>(`/api/claims/${fixture.claims[0].id}`);
+    expect(related.relatedClaimIds).toEqual([fixture.claims[2].id]);
+    await request(`/api/claims/${id}`, 404);
+  } finally { await write("MATCH (c:Claim {id: $id}) SET c.visibility = 'published'", { id }); }
+});
+
+it("returns period, polarity, multiple Citation/Source and all other Claims of the same relation", async () => {
+  const result = await request<ClaimResponse>(`/api/claims/${fixture.claims[0].id}`);
+  expect(result.claim.period).toEqual({ from: { value: "2001", precision: "year" }, to: { value: "2003", precision: "year" } });
+  expect(result.claim.polarity).toBe("affirmed");
+  expect(result.claim.citations).toHaveLength(2);
+  expect(new Set(result.claim.citations.map((r) => r.source.id)).size).toBe(2);
+  expect(result.claim.citations.map((r) => r.locator).sort()).toEqual(["pp.12–13", "第2節"].sort());
+  expect(result.relatedClaimIds).toEqual([fixture.claims[1].id, fixture.claims[2].id].sort());
+  expect(JSON.stringify(result)).not.toMatch(/validFromValue|validFromPrecision|visibility|searchNames|elementId/);
+  examples.claim = result;
+  const denied = await request<ClaimResponse>(`/api/claims/${fixture.claims[2].id}`);
+  expect(denied.claim.polarity).toBe("denied");
+  expect(denied.claim.citations[0].stance).toBe("support");
+});
+
+it("preserves month precision, unknown endpoints, publication dates and nulls", async () => {
+  const month = await request<ClaimResponse>(`/api/claims/${fixture.claims[7].id}`);
+  expect(month.claim.period.from).toEqual({ value: "2006-04", precision: "month" });
+  const unknownEnd = await request<ClaimResponse>(`/api/claims/${fixture.claims[8].id}`);
+  expect(unknownEnd.claim.period.to).toBeNull();
+  expect(unknownEnd.claim.citations[0].source.publishedAt).toEqual({ value: "2012-03-15", precision: "day" });
+  expect(unknownEnd.claim.citations[0].source.url).toBeNull();
+});
+
+it("returns an unsourced Claim with sourceCount zero and citations empty", async () => {
+  const result = await request<ClaimResponse>(`/api/claims/${fixture.claims[12].id}`);
+  expect(result.claim.sourceCount).toBe(0);
+  expect(result.claim.citations).toEqual([]);
+  expect(result.claim.period).toEqual({ from: null, to: null });
+  expect(result.relatedClaimIds).toEqual([]);
+  examples.unsourced = result;
+});
+
+it("returns the center only for an isolated Entity", async () => {
+  const id = fixture.entities[7].id;
+  const result = await request<NeighborsResponse>(`/api/entities/${id}/neighbors`);
+  expect(result.centerId).toBe(id);
+  expect(result.nodes.map((e) => e.id)).toEqual([id]);
+  expect(result.claims).toEqual([]);
+  expect(result.page).toEqual({ nextCursor: null, hasMore: false });
+});
+
+it("returns 400 for invalid UUID/q/limit/cursor and 404 for absent IDs", async () => {
+  for (const path of ["/api/entities/not-a-uuid", "/api/entities/not-a-uuid/neighbors", "/api/claims/not-a-uuid",
+    "/api/entities", "/api/entities?q=", `/api/entities?q=${"x".repeat(101)}`, "/api/entities?q=x&limit=21",
+    `/api/entities/${fixture.entities[0].id}/neighbors?limit=51`, `/api/entities/${fixture.entities[0].id}/neighbors?after=bad`]) {
+    const result = await request<{ error: { code: string } }>(path, 400);
+    expect(result.error.code).toBe("INVALID_ARGUMENT");
+  }
+  const missing = randomUUID();
+  for (const path of [`/api/entities/${missing}`, `/api/entities/${missing}/neighbors`, `/api/claims/${missing}`]) {
+    const result = await request<{ error: { code: string } }>(path, 404);
+    expect(result.error.code).toBe("NOT_FOUND");
+  }
+});
+
+it("returns 405 for every unsupported standard method on all routes", async () => {
+  for (const path of ["/api/entities?q=x", `/api/entities/${fixture.entities[0].id}`, `/api/entities/${fixture.entities[0].id}/neighbors`, `/api/claims/${fixture.claims[0].id}`]) {
+    for (const method of ["POST", "PUT", "PATCH", "DELETE", "OPTIONS", "HEAD"]) {
+      const response = await fetch(`${baseUrl}${path}`, { method });
+      expect(response.status).toBe(405);
+      expect(response.headers.get("allow")).toBe("GET");
+      expect(response.headers.get("cache-control")).toBe("no-store");
+      if (method !== "HEAD") expect((await response.json()).error.code).toBe("INVALID_ARGUMENT");
+      else expect(await response.text()).toBe("");
+    }
+  }
+});
+
+it("returns sanitized 500 for invalid stored data, not 400", async () => {
+  const id = fixture.claims[0].id;
+  try {
+    await write("MATCH (c:Claim {id: $id}) SET c.predicate = 'INVALID_STORED_PREDICATE'", { id });
+    const result = await request<{ error: { code: string; message: string } }>(`/api/claims/${id}`, 500);
+    expect(result.error.code).toBe("INTERNAL_ERROR");
+    expect(JSON.stringify(result)).not.toMatch(/INVALID_STORED|Cypher|password|bolt/);
+    examples.internalError = result;
+  } finally { await write("MATCH (c:Claim {id: $id}) SET c.predicate = $predicate", { id, predicate: fixture.claims[0].predicate }); }
+});
+
+it("returns 503 with the real DB stopped, then recovers after restarting", async () => {
+  stopped = true;
+  try {
+    await exec("docker", ["compose", "stop", "neo4j"], { timeout: 40000 });
+    for (const path of [`/api/entities?q=${encodeURIComponent("青葉ハル")}`, `/api/entities/${fixture.entities[0].id}`,
+      `/api/entities/${fixture.entities[0].id}/neighbors`, `/api/claims/${fixture.claims[0].id}`]) {
+      const result = await request<{ error: { code: string; message: string } }>(path, 503);
+      expect(result.error.code).toBe("SERVICE_UNAVAILABLE");
+      expect(JSON.stringify(result)).not.toMatch(/password|bolt|Neo4jError|ECONNREFUSED/);
+      examples.unavailable = result;
+    }
+    await request("/api/entities?q=", 400); // Invalid requests still validate without DB access.
+  } finally { await restartDb(); }
+  const recovered = await request<EntitySearchResponse>(`/api/entities?q=${encodeURIComponent("青葉ハル")}`);
+  expect(recovered.items[0].id).toBe(fixture.entities[0].id);
+}, 240000);
