@@ -79,7 +79,7 @@ export default function GraphCanvas({ graph, selection, onEntity, onClaim }: Pro
       Object.values(graph.nodes).forEach((node) => cy.getElementById(node.id).data({ expanded: graph.expansions[node.id]?.expanded ? 1 : 0 }));
       Object.entries(routes).forEach(([id, route]) => cy.getElementById(id).data(route));
       if (newNodes.length) { cy.nodes().removeClass("added"); if (!reset && initialLayoutDone.current) newNodes.forEach((node) => cy.getElementById(node.id).addClass("added")); }
-      Object.values(graph.nodes).forEach((node) => { const element = cy.getElementById(node.id); element.data("label", `${entityLabel(node, graph.nodes)}${element.hasClass("added") ? "\n＋追加" : ""}`); });
+      Object.values(graph.nodes).forEach((node) => { const element = cy.getElementById(node.id); element.data("label", entityLabel(node, graph.nodes)); });
       cy.nodes().removeClass("center");
       if (graph.centerId) cy.getElementById(graph.centerId).addClass("center");
     });
@@ -110,7 +110,7 @@ export default function GraphCanvas({ graph, selection, onEntity, onClaim }: Pro
     <div className={styles.graphTools}>
       <button onClick={() => core.current?.fit(undefined, 50)} disabled={!graph.centerId}>全体を表示</button>
       <span>丸：人物 ／ 四角：作品 ／ 六角形：組織</span>
-      <span>矢印：方向 ／ 破線・「否定」：否定 ／ 二重枠：展開済 ／ 「＋追加」・淡い黄の外枠：直近の追加Node</span>
+      <span>矢印：方向 ／ 破線・「否定」：否定 ／ 二重枠：展開済 ／ 淡い外枠：新しく表示されたNode</span>
     </div>
   </>;
 }

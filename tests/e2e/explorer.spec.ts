@@ -119,7 +119,7 @@ test("Step 5: 全体展開・同名補助・並行Claim・選択と一覧の同�
     const cy = (el as unknown as { _cyreg: { cy: import("cytoscape").Core } })._cyreg.cy;
     return ids.map((id) => cy.getElementById(id).data("label"));
   }, [fixture.entities[5].id, fixture.entities[6].id, root.id]);
-  expect(labels[0]).toMatch(/^佐藤アキ\n漫画家/); expect(labels[1]).toMatch(/^佐藤アキ\n編集者/); expect(labels[2]).toBe("青葉ハル");
+  expect(labels).toEqual(["佐藤アキ\n漫画家", "佐藤アキ\n編集者", "青葉ハル"]);
   const midpoints = await page.getByTestId("graph-canvas").evaluate((el, ids) => {
     const cy = (el as unknown as { _cyreg: { cy: import("cytoscape").Core } })._cyreg.cy;
     return ids.map((id) => cy.getElementById(id).midpoint());
