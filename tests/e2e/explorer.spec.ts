@@ -100,3 +100,53 @@ test("API失敗・DB unavailable・Graph再試行", async ({ page }) => {
   await page.unroute("**/api/entities/*/neighbors*"); await page.getByRole("button", { name: "Graph取得を再試行" }).click();
   await expect(page.getByTestId("graph-counts")).toHaveText("Entity 5 / Claim 7");
 });
+
+test("Step 5: 全体展開・同名補助・並行Claim・選択と一覧の同期", async ({ page }) => {
+  await choose(page); await expect(page.getByTestId("graph-counts")).toHaveText("Entity 5 / Claim 7");
+  await page.screenshot({ path: "/tmp/graph-knowledge-step5-initial.png", fullPage: true });
+  const positions = () => page.getByTestId("graph-canvas").evaluate((el) => {
+    const cy = (el as unknown as { _cyreg: { cy: import("cytoscape").Core } })._cyreg.cy;
+    return Object.fromEntries(cy.nodes().map((node) => [node.id(), node.position()]));
+  });
+  for (const index of [8, 3, 1, 2, 4, 9, 10, 11]) {
+    const before = await positions();
+    await canvasTap(page, fixture.entities[index].id);
+    await expect(page.getByRole("region", { name: "Entity詳細" })).toContainText("近傍は取得済み");
+    const after = await positions(); for (const [id, position] of Object.entries(before)) expect(after[id]).toEqual(position);
+  }
+  await expect(page.getByTestId("graph-counts")).toHaveText("Entity 11 / Claim 15");
+  const labels = await page.getByTestId("graph-canvas").evaluate((el, ids) => {
+    const cy = (el as unknown as { _cyreg: { cy: import("cytoscape").Core } })._cyreg.cy;
+    return ids.map((id) => cy.getElementById(id).data("label"));
+  }, [fixture.entities[5].id, fixture.entities[6].id, root.id]);
+  expect(labels[0]).toMatch(/^佐藤アキ\n漫画家/); expect(labels[1]).toMatch(/^佐藤アキ\n編集者/); expect(labels[2]).toBe("青葉ハル");
+  const midpoints = await page.getByTestId("graph-canvas").evaluate((el, ids) => {
+    const cy = (el as unknown as { _cyreg: { cy: import("cytoscape").Core } })._cyreg.cy;
+    return ids.map((id) => cy.getElementById(id).midpoint());
+  }, fixture.claims.slice(0,3).map((claim) => claim.id));
+  for (let i = 0; i < 3; i++) for (let j = i+1; j < 3; j++) expect(Math.hypot(midpoints[i].x-midpoints[j].x,midpoints[i].y-midpoints[j].y)).toBeGreaterThan(30);
+  await page.getByRole("button", { name: "全体を表示", exact: true }).click();
+  await page.screenshot({ path: "/tmp/graph-knowledge-step5-expanded.png", fullPage: true });
+  await canvasTap(page, fixture.entities[5].id);
+  await expect(page.getByTestId("selection-status")).toContainText("佐藤アキ / 漫画家");
+  await canvasTap(page, fixture.entities[6].id);
+  await expect(page.getByTestId("selection-status")).toContainText("佐藤アキ / 編集者");
+  await canvasTap(page, fixture.claims[0].id, true);
+  await expect(page.getByTestId(`claim-card-${fixture.claims[0].id}`)).toContainText("出典 2件");
+  await expect(page.getByTestId(`relation-${fixture.claims[0].id}`).getByRole("button", { name: "主張と出典を見る" })).toHaveAttribute("aria-pressed", "true");
+  await expect(page.getByTestId(`claim-card-${fixture.claims[2].id}`)).toContainText("否定する主張");
+  await page.screenshot({ path: "/tmp/graph-knowledge-step5-detail.png", fullPage: true });
+  await page.getByTestId(`relation-${fixture.claims[0].id}`).getByRole("button", { name: "黒川レンを選択・展開" }).click();
+  await expect(page.getByTestId("selection-status")).toContainText("黒川レン");
+  const selected = await page.getByTestId("graph-canvas").evaluate((el) => {
+    const cy = (el as unknown as { _cyreg: { cy: import("cytoscape").Core } })._cyreg.cy;
+    return cy.elements(".chosen").map((element) => element.id());
+  });
+  expect(selected).toEqual([fixture.entities[1].id]);
+  expect(await page.evaluate(() => document.documentElement.scrollHeight <= innerHeight)).toBe(true);
+  await page.setViewportSize({ width: 1160, height: 650 });
+  await page.getByRole("button", { name: "全体を表示", exact: true }).click();
+  expect((await page.getByTestId("graph-canvas").boundingBox())!.height).toBeGreaterThan(260);
+  expect(await page.evaluate(() => document.documentElement.scrollHeight <= innerHeight)).toBe(true);
+  await page.screenshot({ path: "/tmp/graph-knowledge-step5-compact.png", fullPage: true });
+});

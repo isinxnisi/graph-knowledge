@@ -1,11 +1,13 @@
 import type { GraphState, Selection } from "../lib/client/graph-state";
+import { entityLabel } from "../lib/client/graph-presentation";
 import { formatPeriod, polarityLabel, relationLabel } from "../lib/client/format";
 import styles from "./Explorer.module.css";
 
 export default function RelationsList({ graph, selection, onEntity, onClaim }: {
   graph: GraphState; selection: Selection; onEntity: (id: string) => void; onClaim: (id: string) => void;
 }) {
-  const entity = selection?.kind === "entity" ? graph.nodes[selection.id] : null;
+  const entityId = selection?.kind === "entity" ? selection.id : selection?.kind === "claim" ? graph.claims[selection.id]?.subjectId : null;
+  const entity = entityId ? graph.nodes[entityId] : null;
   if (!entity) return <p className={styles.muted}>Nodeを選ぶと、そのEntityの隣接関係をテキストで確認できます。</p>;
   const claims = Object.values(graph.claims).filter((claim) => claim.subjectId === entity.id || claim.objectId === entity.id);
   const expansion = graph.expansions[entity.id];
@@ -15,12 +17,12 @@ export default function RelationsList({ graph, selection, onEntity, onClaim }: {
     <ul className={styles.relationList}>
       {claims.map((claim) => {
         const neighbor = graph.nodes[claim.subjectId === entity.id ? claim.objectId : claim.subjectId];
-        return <li key={claim.id} data-testid={`relation-${claim.id}`}>
-          <p>{graph.nodes[claim.subjectId]?.name} → {relationLabel(claim)} → {graph.nodes[claim.objectId]?.name}</p>
+        return <li key={claim.id} className={selection?.kind === "claim" && selection.id === claim.id ? styles.selectedRelation : undefined} data-testid={`relation-${claim.id}`}>
+          <p>{entityLabel(graph.nodes[claim.subjectId], graph.nodes).replace("\n", " / ")} → {relationLabel(claim)} → {entityLabel(graph.nodes[claim.objectId], graph.nodes).replace("\n", " / ")}</p>
           <p className={styles.muted}>{polarityLabel(claim)} · {formatPeriod(claim.period)} · {claim.sourceCount ? `出典 ${claim.sourceCount}件` : "出典未確認"}</p>
           <div className={styles.actions}>
-            <button onClick={() => onEntity(neighbor.id)}>{neighbor.name}を選択・展開</button>
-            <button onClick={() => onClaim(claim.id)}>主張と出典を見る</button>
+            <button aria-pressed={selection?.kind === "entity" && selection.id === neighbor.id} onClick={() => onEntity(neighbor.id)}>{neighbor.name}を選択・展開</button>
+            <button aria-pressed={selection?.kind === "claim" && selection.id === claim.id} onClick={() => onClaim(claim.id)}>主張と出典を見る</button>
           </div>
         </li>;
       })}

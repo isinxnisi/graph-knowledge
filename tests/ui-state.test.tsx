@@ -1,6 +1,7 @@
 // @vitest-environment jsdom
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { act, cleanup, render, renderHook, screen, waitFor } from "@testing-library/react";
+import { entityLabel, edgeRoutes } from "../lib/client/graph-presentation";
 import { emptyGraph, mergePage } from "../lib/client/graph-state";
 import { useGraphExplorer } from "../lib/client/use-graph-explorer";
 import { ClaimCard } from "../components/ClaimDetails";
@@ -83,5 +84,27 @@ describe("主張カード", () => {
     const claim = { ...examples.claim.claim, polarity: "denied", sourceCount: 0, citations: [] } as ClaimDetail;
     render(<ClaimCard claim={claim} nodes={{}} title="主張" />);
     expect(screen.getByText("否定する主張")).toBeDefined(); expect(screen.getByText("出典未確認")).toBeDefined();
+  });
+});
+
+describe("Graphの表示補助", () => {
+  it("同名が揃ったときだけ説明を表示する", () => {
+    const a = { ...root, id: "a", name: "佐藤アキ", description: "漫画家" };
+    const b = { ...a, id: "b", description: "編集者、同名の漫画家とは別人" };
+    expect(entityLabel(a, { a })).toBe("佐藤アキ");
+    expect(entityLabel(a, { a, b })).toBe("佐藤アキ\n漫画家");
+    expect(entityLabel(b, { a, b })).toBe("佐藤アキ\n編集者");
+  });
+  it("同名で説明も同じ場合はIDを補助表示する", () => {
+    const a = { ...root, id: "aaaaaaaa-1" }; const b = { ...root, id: "bbbbbbbb-2" };
+    expect(entityLabel(a, { a, b })).toContain("aaaaaaaa");
+    expect(entityLabel(b, { a, b })).toContain("bbbbbbbb");
+  });
+  it("並行・双方向Claimを統合せず、別曲線に割り当てる", () => {
+    const a = { ...page.claims[0], id: "a", subjectId: "1", objectId: "2" };
+    const b = { ...a, id: "b" }; const c = { ...a, id: "c", subjectId: "2", objectId: "1" };
+    const routes = edgeRoutes({ a, b, c });
+    expect(Object.keys(routes)).toHaveLength(3);
+    expect([routes.a.distance, routes.b.distance, -routes.c.distance]).toEqual([-130, 0, 130]);
   });
 });
