@@ -2,7 +2,7 @@
 
 出典付きの関係性を蓄積・探索するサービスの初期基盤です。作業前に[PROJECT_CONTEXT](docs/PROJECT_CONTEXT.md)と[ARCHITECTURE](docs/ARCHITECTURE.md)を参照してください。
 
-現在の実装は実装順序3（環境・投入基盤・読み取りAPI）までです。画面、Cytoscape.js、認証、投稿、Wikidata取り込みは未実装です。app/layout.tsxはフレームワークの構造だけを用意し、ページはありません。ブラウザのルートはNext.js標準の404になります。
+現在は実装順序4までです。ルートに検索・Cytoscape.jsのGraph・詳細を一画面で表示します。すべて架空のデモデータです。認証・投稿・Wikidata取り込みは未実装です。Step 5の最終調整にはまだ進んでいません。
 
 ## 必要な環境
 
@@ -43,7 +43,7 @@ npm run dev
 
 通常テストはDB不要です。統合テストはこのComposeの開発専用Neo4jを使い、seedの冪等性とHTTP経由のAPIを直列実行で検証します。APIテストは空きポートでNext.jsを自動起動して終了時に停止します。公開状態・不正データの検証では一部のデータを一時変更し、必ず復元します。503の検証ではNeo4jを一時停止し、finallyで再起動します。他のDB作業と同時に実行しないでください。終了時に全属性・接続が元に戻っていることを確認し、DB全体の削除は行いません。
 
-Next.jsのdev/startで以下のAPIを提供します。ルートの検索・グラフ画面は未実装です。APIだけを検証する場合は`npm run test:api`を実行します。
+Next.jsのdev/startでルートの探索画面と以下のAPIを提供します。APIだけを検証する場合は`npm run test:api`を実行します。
 
 ## fixtureとseedの扱い
 
@@ -92,3 +92,20 @@ curl "$API_BASE_URL/api/claims/580dd445-3287-401d-bcce-43af3caaf509"
 ```
 
 返却型・主要Cypher・検証記録は[Step 3実施記録](docs/IMPLEMENTATION_STEP_3.md)、取得した応答例は[API_RESPONSE_EXAMPLES.json](docs/API_RESPONSE_EXAMPLES.json)を参照してください。
+
+## 探索UIとブラウザテスト
+
+`npm run dev`で起動し、表示されたURLを開きます。「青葉ハル」を検索して選択し、Graphの作品「星の航路」をクリックして追加展開できます。線から主張・期間・出典・参照箇所を確認できます。Graph下のテキスト一覧でも同じ操作ができます。同名の「佐藤アキ」は説明で判別でき、「森ユウ」は孤立人物です。
+
+Nodeクリックは一段階のみ展開します。追加ページは右の「続きを表示」から取得します。既存位置を保つため、新しいNodeが画面外に配置された場合は「全体を表示」を使用してください。Entity 100 / Claim 200の上限を超えるページは追加せず、別の人物を検索・選択して探索をリセットします。
+
+```bash
+npx playwright install chromium
+# Linuxで必要な共有ライブラリが不足する場合:
+# npx playwright install-deps chromium
+npm run test:e2e
+```
+
+DBをseed済みにして実行してください。ブラウザテストは3210番ポートでNext.jsを自動起動・停止します。DB停止を含むAPI統合テストとは同時に実行しないでください。通常テストは状態管理・主張カードも検証します。E2Eのページングは実APIのlimit=2、上限とHTTPエラーはテスト内の応答制御を使い、fixtureとDBを変更しません。
+
+[Step 4実施記録](docs/IMPLEMENTATION_STEP_4.md)にファイル・状態管理・レイアウト・検証範囲を記録しています。

@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 
-// Framework shell only. Pages and API routes are intentionally deferred.
+export const metadata = { title: "関係性を探索する | 架空のデモデータ" };
 export default function RootLayout({ children }: { children: ReactNode }) {
   return <html lang="ja"><body>{children}</body></html>;
 }
