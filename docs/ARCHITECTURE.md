@@ -1,6 +1,6 @@
 # 初期技術設計
 
-更新日: 2026-10-03 / 状態: 最小Vertical Sliceの初期採用案を整理済み。コード・DB環境はまだ作成しない。
+更新日: 2026-10-03 / 状態: 実装順序1〜2を実装。API・画面は未実装。検証記録はIMPLEMENTATION_STEP_1_2.mdを参照。
 
 ## 前提と設計の位置づけ
 
@@ -90,8 +90,8 @@ Claimは0件以上のCitationを持てるが、0件は「出典未確認」と�
 (Claim C1 {predicate: ASSISTANT_OF, polarity: affirmed})
     ├─ SUBJECT → (Entity A {kind: person})
     ├─ OBJECT  → (Entity B {kind: person})
-    ├─ HAS_CITATION → (Citation R1 {pages: "12–13"}) → CITES → (Source S1)
-    └─ HAS_CITATION → (Citation R2 {section: "インタビュー"}) → CITES → (Source S2)
+    ├─ HAS_CITATION → (Citation R1 {locator: "pp.12–13"}) → CITES → (Source S1)
+    └─ HAS_CITATION → (Citation R2 {locator: "インタビュー"}) → CITES → (Source S2)
 
 (Claim C2 {predicate: ASSISTANT_OF, polarity: denied})
     ├─ SUBJECT → (Entity A)
@@ -147,7 +147,7 @@ Wikidataのstatementは値だけでなくqualifierやreferenceを持つため、
 
 ### fixtureとAPIの境界
 
-末尾の採用仕様に従い、架空のEntity 12件、Claim 15件、Source 5件、Citation 15件を用意する。現段階ではfixtureファイル自体は作らない。
+末尾の採用仕様に従い、架空のEntity 12件、Claim 15件、Source 5件、Citation 15件を用意する。fixtures/demo.jsonに固定UUIDで記録する。
 
 APIの機能:
 
@@ -174,7 +174,7 @@ APIの機能:
 - 同名対象を区別でき、展開上限に達した場合は続きがあると分かる。
 - fixture再投入で重複せず、必須接続やIDの不整合を検出できる。
 
-検証はこの探索経路とモデル上の重要な例に集中する。今回の作業は文書作成のみであり、実装・テストコードは生成しない。
+検証はこの探索経路とモデル上の重要な例に集中する。現在は実装順序1〜2の検証までを行い、API・画面の受け入れ基準は次の実装段階で確認する。
 
 ## 将来問題になり得る点と未確定判断
 
@@ -197,7 +197,7 @@ APIの機能:
 
 ## 最小Vertical Sliceの初期採用仕様
 
-この節は実装準備として採用する初期仕様。上記の将来案より具体的な条件を優先する。今回は文書更新までとし、アプリ・fixture・DB環境の生成は次の実装で行う。
+この節は実装準備として採用する初期仕様。上記の将来案より具体的な条件を優先する。実装順序1〜2は実装済み。API・画面・グラフ描画は次の実装段階とする。
 
 ### 1. 技術スタック
 
@@ -262,7 +262,7 @@ SourceはS1「黒川レン創作記」（book、URLなし、2010年）、S2「�
 
 合計はEntity 12、Claim 15、Source 5、Citation 15。C03を否定する主張として支持するCitationのstanceはsupportとする。polarityとCitationのstanceを混同しない。各Citationは専用の固定IDを持つ。
 
-実装時はfixtures/demo.jsonに全件を置き、schemaVersionを1とする。seedは全件検証後、一つのトランザクション内でIDをキーにMERGEし、二度実行しても件数が増えないようにする。参照先不在、重複ID、predicate/kind違反、複数SUBJECT/OBJECT、日付不正は投入前に拒否する。初期seedは内容の更新・削除の同期を担わず、fixture変更は開発専用DBを明示的に再作成して投入する。通常seedに全DB削除を含めない。
+実装時はfixtures/demo.jsonに全件を置き、schemaVersionを1とする。seedは全件検証後、データ全件を一つのトランザクション内でIDをキーにMERGEし、二度実行しても件数が増えないようにする。参照先不在、重複ID、predicate/kind違反、複数SUBJECT/OBJECT、日付不正は投入前に拒否する。初期seedは内容の更新・削除の同期を担わず、fixture変更は開発専用DBを明示的に再作成して投入する。通常seedに全DB削除を含めない。
 
 ### 3. 関係タイプ辞書
 
@@ -320,7 +320,7 @@ Neo4jではPartialDateをネストしたpropertyとして保存せず、`validFr
 | 1回の近傍取得 | Claim既定20件、最大50件 |
 | 探索深度 | クリックごとに1段階。自動再帰なし |
 | 画面全体 | Entity最大100件、Claim最大200件 |
-| DBクエリのタイムアウト | 5秒 |
+| 読み取りDBクエリのタイムアウト | 5秒 |
 
 近傍取得はClaim単位のページングで、nodesは最大51件（中心を含む）。一つのClaimを一本の辺として表示し、初期は集約しない。並行辺を分け、矢印、関係名、否定の表示を付ける。出典未確認は詳細と辺の説明で分かるようにする。否定の辺には「否定」の文字と破線を用い、色だけに依存しない。
 
@@ -341,3 +341,12 @@ Neo4jではPartialDateをネストしたpropertyとして保存せず、`validFr
 次の実装の想定配置はapp/（画面とAPI）、components/（検索・グラフ・詳細）、lib/domain/（型・辞書・検証）、lib/server/（DBとクエリ）、fixtures/、scripts/seed.ts、tests/。APIとseedは型・検証を共有するが、汎用リポジトリ基盤やプラグイン機構は作らない。
 
 6項目はこの仕様で実装を開始できる。残るのは実装時のパッチ版固定、実測によるレイアウト調整と応答時間の確認。本番運用・投稿・履歴・同期・複雑な限定条件は今回の完了条件に含めない。
+
+### 実装順序1〜2で具体化した点
+
+- Node 24.21.0、Neo4j Community 5.26.31、Next.js 16.3.8、React 19.3.0、neo4j-driver 6.2.0、Zod 4.6.5へ固定。その他はpackage.jsonとpackage-lock.jsonを参照する。
+- seedのデータトランザクションは60秒、対話的な読み取りは5秒とする。初回の一括投入が5秒でタイムアウトしたため、全件の原子性を保つためのseed専用の上限を設けた。
+- Neo4jの制約作成はデータ投入とは別トランザクションで行う。データの投入失敗では全件がロールバックされるが、既に作成した制約は残る。
+- 同じIDの既存ノードに異なる属性・接続がある場合は拒否する。ON CREATEでのみ属性を書き込み、seed再実行による暗黙の更新を防ぐ。
+- app/layout.tsxのみ作成し、ページ・API・グラフ描画は未実装。Next.jsの標準404で起動・ビルドを確認する。
+- Next.jsが生成したAGENTS.md / CLAUDE.mdは保持し、AGENTS.mdにプロジェクト文書の参照指示を追加する。next-env.d.tsは生成物としてGit対象外とし、型検査の前にnext typegenを実行する。

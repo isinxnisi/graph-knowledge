@@ -1,0 +1,586 @@
+{
+  "schemaVersion": 1,
+  "entities": [
+    {
+      "id": "c286065c-6e17-47a7-9288-2a1cf6919ce9",
+      "kind": "person",
+      "name": "青葉ハル",
+      "description": "漫画家、星の航路の作者",
+      "aliases": [
+        "あおば はる"
+      ],
+      "externalIds": [],
+      "createdAt": "2026-10-03T00:00:00Z",
+      "updatedAt": "2026-10-03T00:00:00Z"
+    },
+    {
+      "id": "0507b795-487d-4528-8aa7-8a5c369a6e5b",
+      "kind": "person",
+      "name": "黒川レン",
+      "description": "漫画家、師匠として語られる人物",
+      "aliases": [],
+      "externalIds": [],
+      "createdAt": "2026-10-03T00:00:00Z",
+      "updatedAt": "2026-10-03T00:00:00Z"
+    },
+    {
+      "id": "b6270d95-9e59-4a27-bf45-f734c8593fe3",
+      "kind": "person",
+      "name": "白石ミオ",
+      "description": "漫画家、共同制作参加者",
+      "aliases": [],
+      "externalIds": [],
+      "createdAt": "2026-10-03T00:00:00Z",
+      "updatedAt": "2026-10-03T00:00:00Z"
+    },
+    {
+      "id": "a714bbc7-a74b-4ba3-a302-dd29fb0d258a",
+      "kind": "person",
+      "name": "橘ソラ",
+      "description": "漫画家、月の工房の作者",
+      "aliases": [],
+      "externalIds": [],
+      "createdAt": "2026-10-03T00:00:00Z",
+      "updatedAt": "2026-10-03T00:00:00Z"
+    },
+    {
+      "id": "6efc78fd-687e-4dd5-b614-25624186e7f4",
+      "kind": "person",
+      "name": "水野ナツ",
+      "description": "編集者",
+      "aliases": [],
+      "externalIds": [],
+      "createdAt": "2026-10-03T00:00:00Z",
+      "updatedAt": "2026-10-03T00:00:00Z"
+    },
+    {
+      "id": "869501dc-2ec0-4b5d-8e87-ff7a485cbe5a",
+      "kind": "person",
+      "name": "佐藤アキ",
+      "description": "漫画家",
+      "aliases": [],
+      "externalIds": [],
+      "createdAt": "2026-10-03T00:00:00Z",
+      "updatedAt": "2026-10-03T00:00:00Z"
+    },
+    {
+      "id": "b025d50b-5d7b-4f8f-a5dd-09f003781bf8",
+      "kind": "person",
+      "name": "佐藤アキ",
+      "description": "編集者、同名の漫画家とは別人",
+      "aliases": [],
+      "externalIds": [],
+      "createdAt": "2026-10-03T00:00:00Z",
+      "updatedAt": "2026-10-03T00:00:00Z"
+    },
+    {
+      "id": "248c769c-8a74-452b-92a4-99ab0c5181eb",
+      "kind": "person",
+      "name": "森ユウ",
+      "description": "関係が未登録の漫画家",
+      "aliases": [],
+      "externalIds": [],
+      "createdAt": "2026-10-03T00:00:00Z",
+      "updatedAt": "2026-10-03T00:00:00Z"
+    },
+    {
+      "id": "8eb728de-a5fc-4adc-960c-2412fa9c91b7",
+      "kind": "work",
+      "name": "星の航路",
+      "description": "架空漫画",
+      "aliases": [],
+      "externalIds": [],
+      "createdAt": "2026-10-03T00:00:00Z",
+      "updatedAt": "2026-10-03T00:00:00Z"
+    },
+    {
+      "id": "48b628ac-46a6-48b2-8e32-394eb8e7720e",
+      "kind": "work",
+      "name": "月の工房",
+      "description": "架空漫画",
+      "aliases": [],
+      "externalIds": [],
+      "createdAt": "2026-10-03T00:00:00Z",
+      "updatedAt": "2026-10-03T00:00:00Z"
+    },
+    {
+      "id": "af3c9bae-96c4-4a1f-93fe-5d1a6e79cac5",
+      "kind": "organization",
+      "name": "青空出版",
+      "description": "架空出版社",
+      "aliases": [],
+      "externalIds": [],
+      "createdAt": "2026-10-03T00:00:00Z",
+      "updatedAt": "2026-10-03T00:00:00Z"
+    },
+    {
+      "id": "52db436e-61ef-48eb-9ce1-38f7eae8192e",
+      "kind": "organization",
+      "name": "月刊コミック灯",
+      "description": "架空雑誌編集部",
+      "aliases": [],
+      "externalIds": [],
+      "createdAt": "2026-10-03T00:00:00Z",
+      "updatedAt": "2026-10-03T00:00:00Z"
+    }
+  ],
+  "claims": [
+    {
+      "id": "580dd445-3287-401d-bcce-43af3caaf509",
+      "subjectId": "c286065c-6e17-47a7-9288-2a1cf6919ce9",
+      "objectId": "0507b795-487d-4528-8aa7-8a5c369a6e5b",
+      "predicate": "ASSISTANT_OF",
+      "polarity": "affirmed",
+      "period": {
+        "from": {
+          "value": "2001",
+          "precision": "year"
+        },
+        "to": {
+          "value": "2003",
+          "precision": "year"
+        }
+      },
+      "visibility": "published",
+      "createdAt": "2026-10-03T00:00:00Z",
+      "updatedAt": "2026-10-03T00:00:00Z"
+    },
+    {
+      "id": "e415e58b-ac29-42a6-8f1c-370abd1c6392",
+      "subjectId": "c286065c-6e17-47a7-9288-2a1cf6919ce9",
+      "objectId": "0507b795-487d-4528-8aa7-8a5c369a6e5b",
+      "predicate": "ASSISTANT_OF",
+      "polarity": "affirmed",
+      "period": {
+        "from": {
+          "value": "2002",
+          "precision": "year"
+        },
+        "to": {
+          "value": "2004",
+          "precision": "year"
+        }
+      },
+      "visibility": "published",
+      "createdAt": "2026-10-03T00:00:00Z",
+      "updatedAt": "2026-10-03T00:00:00Z"
+    },
+    {
+      "id": "c7e05a6c-6295-4ce6-9f5d-4c06bbab551d",
+      "subjectId": "c286065c-6e17-47a7-9288-2a1cf6919ce9",
+      "objectId": "0507b795-487d-4528-8aa7-8a5c369a6e5b",
+      "predicate": "ASSISTANT_OF",
+      "polarity": "denied",
+      "period": {
+        "from": {
+          "value": "2001",
+          "precision": "year"
+        },
+        "to": {
+          "value": "2003",
+          "precision": "year"
+        }
+      },
+      "visibility": "published",
+      "createdAt": "2026-10-03T00:00:00Z",
+      "updatedAt": "2026-10-03T00:00:00Z"
+    },
+    {
+      "id": "be08ccfb-7eef-4ab4-ae73-38f390e45a74",
+      "subjectId": "b6270d95-9e59-4a27-bf45-f734c8593fe3",
+      "objectId": "0507b795-487d-4528-8aa7-8a5c369a6e5b",
+      "predicate": "ASSISTANT_OF",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "visibility": "published",
+      "createdAt": "2026-10-03T00:00:00Z",
+      "updatedAt": "2026-10-03T00:00:00Z"
+    },
+    {
+      "id": "a2bacd73-d6ae-4cbb-accf-e9d6c8894614",
+      "subjectId": "c286065c-6e17-47a7-9288-2a1cf6919ce9",
+      "objectId": "a714bbc7-a74b-4ba3-a302-dd29fb0d258a",
+      "predicate": "INFLUENCED_BY",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "visibility": "published",
+      "createdAt": "2026-10-03T00:00:00Z",
+      "updatedAt": "2026-10-03T00:00:00Z"
+    },
+    {
+      "id": "8c9226b4-eea7-44f7-857a-80db6c20ad3c",
+      "subjectId": "a714bbc7-a74b-4ba3-a302-dd29fb0d258a",
+      "objectId": "c286065c-6e17-47a7-9288-2a1cf6919ce9",
+      "predicate": "INFLUENCED_BY",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "visibility": "published",
+      "createdAt": "2026-10-03T00:00:00Z",
+      "updatedAt": "2026-10-03T00:00:00Z"
+    },
+    {
+      "id": "0c3bdd3c-8669-4640-b4c8-bf8413d5a0a8",
+      "subjectId": "c286065c-6e17-47a7-9288-2a1cf6919ce9",
+      "objectId": "8eb728de-a5fc-4adc-960c-2412fa9c91b7",
+      "predicate": "CONTRIBUTED_TO",
+      "polarity": "affirmed",
+      "period": {
+        "from": {
+          "value": "2005",
+          "precision": "year"
+        },
+        "to": {
+          "value": "2007",
+          "precision": "year"
+        }
+      },
+      "visibility": "published",
+      "createdAt": "2026-10-03T00:00:00Z",
+      "updatedAt": "2026-10-03T00:00:00Z"
+    },
+    {
+      "id": "6ed7c6f6-220e-4c8e-a7e4-4f02ad7a7630",
+      "subjectId": "b6270d95-9e59-4a27-bf45-f734c8593fe3",
+      "objectId": "8eb728de-a5fc-4adc-960c-2412fa9c91b7",
+      "predicate": "CONTRIBUTED_TO",
+      "polarity": "affirmed",
+      "period": {
+        "from": {
+          "value": "2006-04",
+          "precision": "month"
+        },
+        "to": {
+          "value": "2006-09",
+          "precision": "month"
+        }
+      },
+      "visibility": "published",
+      "createdAt": "2026-10-03T00:00:00Z",
+      "updatedAt": "2026-10-03T00:00:00Z"
+    },
+    {
+      "id": "f8ba6ab9-21bc-4540-91fb-ee3f0d35d963",
+      "subjectId": "a714bbc7-a74b-4ba3-a302-dd29fb0d258a",
+      "objectId": "48b628ac-46a6-48b2-8e32-394eb8e7720e",
+      "predicate": "CONTRIBUTED_TO",
+      "polarity": "affirmed",
+      "period": {
+        "from": {
+          "value": "2008",
+          "precision": "year"
+        },
+        "to": null
+      },
+      "visibility": "published",
+      "createdAt": "2026-10-03T00:00:00Z",
+      "updatedAt": "2026-10-03T00:00:00Z"
+    },
+    {
+      "id": "7d5a7d6c-b180-4a10-9451-8a6840a88a1a",
+      "subjectId": "6efc78fd-687e-4dd5-b614-25624186e7f4",
+      "objectId": "8eb728de-a5fc-4adc-960c-2412fa9c91b7",
+      "predicate": "CONTRIBUTED_TO",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "visibility": "published",
+      "createdAt": "2026-10-03T00:00:00Z",
+      "updatedAt": "2026-10-03T00:00:00Z"
+    },
+    {
+      "id": "e231c2eb-9391-4aff-98a6-18762fa339f7",
+      "subjectId": "c286065c-6e17-47a7-9288-2a1cf6919ce9",
+      "objectId": "af3c9bae-96c4-4a1f-93fe-5d1a6e79cac5",
+      "predicate": "AFFILIATED_WITH",
+      "polarity": "affirmed",
+      "period": {
+        "from": {
+          "value": "2005",
+          "precision": "year"
+        },
+        "to": null
+      },
+      "visibility": "published",
+      "createdAt": "2026-10-03T00:00:00Z",
+      "updatedAt": "2026-10-03T00:00:00Z"
+    },
+    {
+      "id": "2b2f0359-1dae-4e1b-a4dc-b08e207b78f8",
+      "subjectId": "6efc78fd-687e-4dd5-b614-25624186e7f4",
+      "objectId": "af3c9bae-96c4-4a1f-93fe-5d1a6e79cac5",
+      "predicate": "AFFILIATED_WITH",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "visibility": "published",
+      "createdAt": "2026-10-03T00:00:00Z",
+      "updatedAt": "2026-10-03T00:00:00Z"
+    },
+    {
+      "id": "ad0db859-1494-44e3-88bd-eab30c6cb4cf",
+      "subjectId": "869501dc-2ec0-4b5d-8e87-ff7a485cbe5a",
+      "objectId": "48b628ac-46a6-48b2-8e32-394eb8e7720e",
+      "predicate": "CONTRIBUTED_TO",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "visibility": "published",
+      "createdAt": "2026-10-03T00:00:00Z",
+      "updatedAt": "2026-10-03T00:00:00Z"
+    },
+    {
+      "id": "cef44375-2c22-4536-8089-8f6f1c1816e9",
+      "subjectId": "b025d50b-5d7b-4f8f-a5dd-09f003781bf8",
+      "objectId": "52db436e-61ef-48eb-9ce1-38f7eae8192e",
+      "predicate": "AFFILIATED_WITH",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "visibility": "published",
+      "createdAt": "2026-10-03T00:00:00Z",
+      "updatedAt": "2026-10-03T00:00:00Z"
+    },
+    {
+      "id": "c9e5a0eb-9dad-4aeb-90ac-08aa1b6f08d0",
+      "subjectId": "b6270d95-9e59-4a27-bf45-f734c8593fe3",
+      "objectId": "52db436e-61ef-48eb-9ce1-38f7eae8192e",
+      "predicate": "AFFILIATED_WITH",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "visibility": "published",
+      "createdAt": "2026-10-03T00:00:00Z",
+      "updatedAt": "2026-10-03T00:00:00Z"
+    }
+  ],
+  "sources": [
+    {
+      "id": "3173795c-d11d-4d1b-9de8-afbd8dd36b1d",
+      "kind": "book",
+      "title": "黒川レン創作記",
+      "authors": [],
+      "publisher": null,
+      "url": null,
+      "publishedAt": {
+        "value": "2010",
+        "precision": "year"
+      },
+      "edition": null,
+      "note": "架空のデモ資料。実在する資料ではありません。",
+      "isDemo": true
+    },
+    {
+      "id": "1c359a8d-e039-4422-8b35-8b878d0d8532",
+      "kind": "interview",
+      "title": "青葉ハルへのインタビュー",
+      "authors": [],
+      "publisher": null,
+      "url": "https://example.invalid/demo/source-2",
+      "publishedAt": {
+        "value": "2011-06",
+        "precision": "month"
+      },
+      "edition": null,
+      "note": "架空のデモ資料。実在する資料ではありません。",
+      "isDemo": true
+    },
+    {
+      "id": "db4e1c42-c297-49f0-bba0-225348a1d201",
+      "kind": "magazine",
+      "title": "月刊コミック灯 特集号",
+      "authors": [],
+      "publisher": null,
+      "url": null,
+      "publishedAt": {
+        "value": "2012-03-15",
+        "precision": "day"
+      },
+      "edition": null,
+      "note": "架空のデモ資料。実在する資料ではありません。",
+      "isDemo": true
+    },
+    {
+      "id": "16852de6-78c5-418b-bab6-42675489cda3",
+      "kind": "web",
+      "title": "創作活動メモ",
+      "authors": [],
+      "publisher": null,
+      "url": "https://example.invalid/demo/source-4",
+      "publishedAt": null,
+      "edition": null,
+      "note": "架空のデモ資料。実在する資料ではありません。",
+      "isDemo": true
+    },
+    {
+      "id": "d6380e00-4e4f-4cc3-a3dc-c4c9dbcaa4a8",
+      "kind": "paper",
+      "title": "漫画制作の共同作業に関する研究",
+      "authors": [],
+      "publisher": null,
+      "url": null,
+      "publishedAt": {
+        "value": "2015",
+        "precision": "year"
+      },
+      "edition": null,
+      "note": "架空のデモ資料。実在する資料ではありません。",
+      "isDemo": true
+    }
+  ],
+  "citations": [
+    {
+      "id": "f02cb5a0-a766-46c3-92ff-9bc95f48cb23",
+      "claimId": "580dd445-3287-401d-bcce-43af3caaf509",
+      "sourceId": "3173795c-d11d-4d1b-9de8-afbd8dd36b1d",
+      "locator": "pp.12–13",
+      "note": null,
+      "accessedAt": null,
+      "stance": "support"
+    },
+    {
+      "id": "b1cc1372-fcdd-4644-988c-b265a5a7bb77",
+      "claimId": "580dd445-3287-401d-bcce-43af3caaf509",
+      "sourceId": "1c359a8d-e039-4422-8b35-8b878d0d8532",
+      "locator": "第2節",
+      "note": null,
+      "accessedAt": null,
+      "stance": "support"
+    },
+    {
+      "id": "94ac9ee2-34b3-4977-a148-15c2e9576801",
+      "claimId": "e415e58b-ac29-42a6-8f1c-370abd1c6392",
+      "sourceId": "db4e1c42-c297-49f0-bba0-225348a1d201",
+      "locator": "p.8",
+      "note": null,
+      "accessedAt": null,
+      "stance": "support"
+    },
+    {
+      "id": "13dd3933-6c4a-48ba-a97e-cc4fa2fc9613",
+      "claimId": "c7e05a6c-6295-4ce6-9f5d-4c06bbab551d",
+      "sourceId": "16852de6-78c5-418b-bab6-42675489cda3",
+      "locator": "制作経歴節",
+      "note": null,
+      "accessedAt": null,
+      "stance": "support"
+    },
+    {
+      "id": "176f93d1-7d12-4ed8-b7ee-712109f5c218",
+      "claimId": "be08ccfb-7eef-4ab4-ae73-38f390e45a74",
+      "sourceId": "3173795c-d11d-4d1b-9de8-afbd8dd36b1d",
+      "locator": "p.20",
+      "note": null,
+      "accessedAt": null,
+      "stance": "support"
+    },
+    {
+      "id": "0c53a9af-dfd7-452e-8b25-184c93d132e9",
+      "claimId": "a2bacd73-d6ae-4cbb-accf-e9d6c8894614",
+      "sourceId": "1c359a8d-e039-4422-8b35-8b878d0d8532",
+      "locator": "第3節",
+      "note": null,
+      "accessedAt": null,
+      "stance": "support"
+    },
+    {
+      "id": "83f6e2e5-d724-41ed-ae9e-76bb7603b3a6",
+      "claimId": "8c9226b4-eea7-44f7-857a-80db6c20ad3c",
+      "sourceId": "db4e1c42-c297-49f0-bba0-225348a1d201",
+      "locator": "p.10",
+      "note": null,
+      "accessedAt": null,
+      "stance": "support"
+    },
+    {
+      "id": "45598bc3-e58f-4cc0-a0bb-a8163136fe9f",
+      "claimId": "0c3bdd3c-8669-4640-b4c8-bf8413d5a0a8",
+      "sourceId": "db4e1c42-c297-49f0-bba0-225348a1d201",
+      "locator": "p.12",
+      "note": null,
+      "accessedAt": null,
+      "stance": "support"
+    },
+    {
+      "id": "88a941ea-8a76-4af1-b9dd-224cf009d3a6",
+      "claimId": "6ed7c6f6-220e-4c8e-a7e4-4f02ad7a7630",
+      "sourceId": "d6380e00-4e4f-4cc3-a3dc-c4c9dbcaa4a8",
+      "locator": "p.5",
+      "note": null,
+      "accessedAt": null,
+      "stance": "support"
+    },
+    {
+      "id": "4617ecea-9779-4ece-a2df-4ffaafee8a46",
+      "claimId": "f8ba6ab9-21bc-4540-91fb-ee3f0d35d963",
+      "sourceId": "db4e1c42-c297-49f0-bba0-225348a1d201",
+      "locator": "p.14",
+      "note": null,
+      "accessedAt": null,
+      "stance": "support"
+    },
+    {
+      "id": "f737df63-957c-4647-8e2b-76f1a2edc8ed",
+      "claimId": "7d5a7d6c-b180-4a10-9451-8a6840a88a1a",
+      "sourceId": "d6380e00-4e4f-4cc3-a3dc-c4c9dbcaa4a8",
+      "locator": "p.6",
+      "note": null,
+      "accessedAt": null,
+      "stance": "support"
+    },
+    {
+      "id": "1b81625b-0965-4c7f-b74f-d4f8045b4780",
+      "claimId": "e231c2eb-9391-4aff-98a6-18762fa339f7",
+      "sourceId": "1c359a8d-e039-4422-8b35-8b878d0d8532",
+      "locator": "第4節",
+      "note": null,
+      "accessedAt": null,
+      "stance": "support"
+    },
+    {
+      "id": "c4c5bfff-8d61-49b2-b067-61ac699dc98a",
+      "claimId": "2b2f0359-1dae-4e1b-a4dc-b08e207b78f8",
+      "sourceId": "db4e1c42-c297-49f0-bba0-225348a1d201",
+      "locator": "p.16",
+      "note": null,
+      "accessedAt": null,
+      "stance": "support"
+    },
+    {
+      "id": "77aa69d9-9299-44e2-ac89-aa2cb2a87088",
+      "claimId": "cef44375-2c22-4536-8089-8f6f1c1816e9",
+      "sourceId": "16852de6-78c5-418b-bab6-42675489cda3",
+      "locator": "編集部節",
+      "note": null,
+      "accessedAt": null,
+      "stance": "support"
+    },
+    {
+      "id": "3bac238b-e037-459a-ac86-7a59ecae7774",
+      "claimId": "c9e5a0eb-9dad-4aeb-90ac-08aa1b6f08d0",
+      "sourceId": "db4e1c42-c297-49f0-bba0-225348a1d201",
+      "locator": "p.18",
+      "note": null,
+      "accessedAt": null,
+      "stance": "support"
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "name": "graph-knowledge",
+  "version": "0.1.0",
+  "private": true,
+  "engines": {
+    "node": "24.21.0"
+  },
+  "scripts": {
+    "dev": "next dev --hostname 127.0.0.1",
+    "build": "next build",
+    "start": "next start --hostname 127.0.0.1",
+    "typecheck": "next typegen && tsc --noEmit",
+    "lint": "eslint .",
+    "test": "vitest run tests/domain.test.ts",
+    "test:integration": "vitest run tests/seed.integration.test.ts",
+    "fixture:validate": "tsx scripts/validate-fixture.ts",
+    "db:constraints": "tsx scripts/constraints.ts",
+    "db:seed": "tsx scripts/seed.ts"
+  },
+  "dependencies": {
+    "neo4j-driver": "6.2.0",
+    "next": "16.3.8",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "zod": "4.6.5"
+  },
+  "type": "module",
+  "devDependencies": {
+    "@types/node": "24.19.1",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "eslint": "9.39.5",
+    "eslint-config-next": "16.3.8",
+    "tsx": "4.23.15",
+    "typescript": "6.0.3",
+    "vitest": "5.0.3"
+  }
+}
