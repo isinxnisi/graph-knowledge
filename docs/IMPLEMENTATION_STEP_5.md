@@ -108,3 +108,22 @@ UI調整とその検証をStep 5の今回の完了範囲とし、上記の残る
 [全体表示の確認画像](screenshots/assistant-parallel-overview.png)と[同じGraphの3本を拡大した画像](screenshots/assistant-parallel-focus.png)を記録する。拡大画像は読取り用の記録であり、回帰テストの間隔・クリックの検証時には拡大していない。縮小した全体表示で文字自体が小さくなる制約は引き続き残る。
 
 今回の最終結果：Playwright 8件成功（既存7件＋専用回帰1件）、通常テスト51件成功（表示補助の専用回帰1件を追加）。typecheck・lint・build・git diff --checkも成功。Node配置やAPI・DB・fixtureへの変更はない。
+
+## 追加調整: 表示Relationへの集約（2026-10-03）
+
+ユーザーの最新指定により、以前の「各Claimを別Edge・期間付きラベルで表示する」方針を更新した。過去の並行Claim検証は当時の記録で、現在の仕様はARCHITECTURE.mdの「表示Relationと独立Claim」に従う。
+
+- `lib/client/graph-presentation.ts`で取得済みClaimをsubjectId/predicate/objectIdで集約。API・DB・fixtureは変更しない。
+- 表示Edgeは `{id, source, target, claimIds, polarity, label, distance, weight, labelOffset}`。idは表示専用の安定キー、source/targetは元の主体/対象。Claim IDと混同しない。
+- 「異説あり」は取得済みClaimにaffirmedとdeniedが両方ある場合だけ。期間差や出典数では判定せず、真偽や信頼度の評価を行わない。肯定のみは関係名だけ、否定のみは否定の文字と破線、混在は異説の文字と点線。
+- Edge選択では既存Claim APIとrelatedClaimIdsで全公開Claimを取得し、ID順で同格のカードとして縦並びする。期間・肯否・Citation・Source・出典未確認を各カードで確認可能。取得失敗では再試行を案内する。
+- Graphは取得済みページだけから集約する。未取得ページがある場合は範囲を明示し、詳細で取得した関連ClaimをGraphへ自動追加しない。Claim上限200とページの拒否・cursor維持は従来通り。
+- unbundled-bezierの単独Relationはdistance=0、同じ端点組の別Relationは48刻み（2本±24）、weight=0.5。曲線を大きくする代わりにラベルの縦位置を32刻み（2本±16px）で分ける。Node配置は変更しない。
+- 初期7 Edge→5 Relation、全展開15 Edge→13 Relation。青葉ハル→黒川レンのASSISTANT_OFは3 Edge→1 Relation。独立Claim数は7 / 15のまま。
+- 選択にはRelation種別を追加。一覧は個別Claimの操作を維持し、選択Claimに対応するGraph Relationを強調する。Relation選択では所属する一覧行を強調する。
+
+検証: unit 53件、Playwright 10件。実DBで検索、初期Graph、Work・循環・全展開、同名、3 Claim詳細、複数出典、一覧、ページング、上限、API失敗を確認。追加のブラウザ通信スタブで肯定のみの集約、同じ端点の別predicate、単一否定・出典未確認を確認。最終的にtypecheck / lint / test / Playwright / buildはすべて成功。初回のPlaywrightでは凡例の増加で短い画面のGraph高が低下し、凡例を簡潔にして回帰を解消した。
+
+現在の記録画像: [初期Graph](screenshots/relation-initial.png)、[全展開Graph](screenshots/relation-expanded.png)、[Relation詳細](screenshots/relation-detail.png)。
+
+残る制約: 任意の大規模Graphでラベル重なりを完全に防ぐ配置最適化は行っていない。多くの関連Claimの詳細取得・ページングは将来のデータ拡大時に検討する。Graphの「異説あり」は取得済みClaimの範囲であり、未取得ページまでないことを保証する表示ではない。

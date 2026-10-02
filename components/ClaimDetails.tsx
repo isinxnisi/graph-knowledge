@@ -43,7 +43,7 @@ export function ClaimCard({ claim, nodes, title }: { claim: ClaimDetail; nodes: 
   </article>;
 }
 
-export default function ClaimDetails({ id, nodes }: { id: string; nodes: Record<string, EntitySummary> }) {
+export default function ClaimDetails({ id, nodes, mode = "claim" }: { id: string; nodes: Record<string, EntitySummary>; mode?: "claim" | "relation" }) {
   const [primary, setPrimary] = useState<ClaimResponse | null>(null);
   const [related, setRelated] = useState<ClaimDetail[]>([]);
   const [error, setError] = useState<string | null>(null);
@@ -70,16 +70,23 @@ export default function ClaimDetails({ id, nodes }: { id: string; nodes: Record<
     setPrimary(null); setRelated([]); setError(null); setRelatedError(null); setRelatedLoading(false); setAttempt((value) => value + 1);
   }
   return <section aria-label="Claim詳細">
-    <h3>主張と出典</h3>
+    <h3>{mode === "relation" ? "関係に含まれる主張と出典" : "主張と出典"}</h3>
     {!primary && !error && <p role="status">主張の詳細を取得中…</p>}
     {error && <div className={styles.error} role="alert"><p>{error}</p><button onClick={retry}>主張の取得を再試行</button></div>}
     {primary && <>
+      {mode === "relation" ? <>
+        <p className={styles.muted}>肯否・期間・出典を個別に比較できます。表示順は正しさや信頼度を表しません。</p>
+        {[primary.claim, ...related].sort((a, b) => a.id.localeCompare(b.id)).map((claim, index) =>
+          <ClaimCard key={claim.id} claim={claim} nodes={nodes} title={`主張 ${index + 1}`} />)}
+      </> : <>
       <ClaimCard claim={primary.claim} nodes={nodes} title="選択した主張" />
       <h3>同じ関係についての他の主張</h3>
       <p className={styles.muted}>肯否・期間・出典をそれぞれ確認できます。表示順は正しさや信頼度を表しません。</p>
       {relatedLoading && <p role="status">他の主張を取得中…</p>}
       {!primary.relatedClaimIds.length && <p className={styles.muted}>他の主張は登録されていません。</p>}
       {related.map((claim) => <ClaimCard key={claim.id} claim={claim} nodes={nodes} title="他の主張" />)}
+      </>}
+      {mode === "relation" && relatedLoading && <p role="status">同じ関係の主張を取得中…</p>}
       {relatedError && <div className={styles.error} role="alert"><p>{relatedError}</p><button onClick={retry}>他の主張を再試行</button></div>}
     </>}
   </section>;

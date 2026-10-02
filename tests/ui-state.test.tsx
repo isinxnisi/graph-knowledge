@@ -1,13 +1,13 @@
 // @vitest-environment jsdom
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { act, cleanup, render, renderHook, screen, waitFor } from "@testing-library/react";
-import { entityLabel, edgeRoutes } from "../lib/client/graph-presentation";
+import { entityLabel, edgeRoutes, displayRelations, relationId } from "../lib/client/graph-presentation";
 import { emptyGraph, mergePage } from "../lib/client/graph-state";
 import { useGraphExplorer } from "../lib/client/use-graph-explorer";
-import { ClaimCard } from "../components/ClaimDetails";
+import ClaimDetails, { ClaimCard } from "../components/ClaimDetails";
 import examples from "../docs/API_RESPONSE_EXAMPLES.json";
-import type { ClaimDetail, NeighborsResponse, EntitySummary } from "../lib/domain/api";
-import { fetchNeighbors } from "../lib/client/api";
+import type { ClaimDetail, ClaimResponse, NeighborsResponse, EntitySummary } from "../lib/domain/api";
+import { fetchNeighbors, fetchClaim } from "../lib/client/api";
 vi.mock("../lib/client/api", () => ({ fetchNeighbors: vi.fn(), fetchClaim: vi.fn(), errorMessage: () => "取得失敗" }));
 afterEach(() => { cleanup(); vi.clearAllMocks(); });
 const page = examples.neighbors as NeighborsResponse;
@@ -100,30 +100,45 @@ describe("Graphの表示補助", () => {
     expect(entityLabel(a, { a, b })).toContain("aaaaaaaa");
     expect(entityLabel(b, { a, b })).toContain("bbbbbbbb");
   });
-  it("並行・双方向Claimを統合せず、別曲線に割り当てる", () => {
+  it("同一関係は表示だけ集約し、逆方向と別predicateは弱い別曲線にする", () => {
     const a = { ...page.claims[0], id: "a", subjectId: "1", objectId: "2" };
     const b = { ...a, id: "b" }; const c = { ...a, id: "c", subjectId: "2", objectId: "1" };
-    const routes = edgeRoutes({ a, b, c });
-    expect(Object.keys(routes)).toHaveLength(3);
-    expect([routes.a.distance, routes.b.distance, -routes.c.distance]).toEqual([-320, 0, 320]);
+    const d = { ...a, id: "d", predicate: "INFLUENCED_BY" as const };
+    const relations = displayRelations({ a, b, c, d });
+    expect(Object.keys(relations)).toHaveLength(3);
+    expect(relations[relationId(a)].claimIds).toEqual(["a", "b"]);
+    const routes = edgeRoutes(relations);
+    expect(Object.values(routes).every((route) => Math.abs(route.distance) <= 48 && route.weight === 0.5)).toBe(true);
+    expect(new Set([routes[relationId(a)].distance, -routes[relationId(c)].distance, routes[relationId(d)].distance]).size).toBe(3);
   });
-});
-
-
-describe("実fixtureのASSISTANT_OF並行Claim", () => {
-  it("肯定2件・否定1件を別の経路と期間付きラベルで表示する", () => {
-    const claims = page.claims.filter((claim) => claim.predicate === "ASSISTANT_OF");
-    expect(claims).toHaveLength(3);
-    const routes = edgeRoutes(Object.fromEntries(claims.map((claim) => [claim.id, claim])));
-    const distances = claims.map((claim) => routes[claim.id].distance).sort((a,b) => a-b);
-    expect(distances).toEqual([-320, 0, 320]);
-    expect(claims.filter((claim) => claim.polarity === "affirmed")).toHaveLength(2);
-    expect(new Set(claims.map((claim) => routes[claim.id].label)).size).toBe(3);
-    for (const claim of claims) {
-      expect(routes[claim.id].label).toContain(claim.polarity === "denied" ? "否定" : "肯定");
-      expect(routes[claim.id].label).toContain(claim.period.from!.value);
-      expect(routes[claim.id].label).toContain(claim.period.to!.value);
-      expect(routes[claim.id].weight).toBe(0.5);
-    }
+  it("実fixtureの3 Claimを1 Relationにし、期間を出さず肯否の混在だけ示す", () => {
+    const claims = Object.fromEntries(page.claims.map((claim) => [claim.id, claim]));
+    const relations = displayRelations(claims);
+    expect(Object.keys(relations)).toHaveLength(5);
+    const relation = relations[relationId(page.claims.find((claim) => claim.predicate === "ASSISTANT_OF")!)];
+    expect(relation.claimIds).toHaveLength(3);
+    expect(relation.label).toBe("アシスタントだった\n異説あり");
+    expect(edgeRoutes(relations)[relation.id].distance).toBe(0);
+    expect(Object.keys(claims)).toHaveLength(7);
+  });
+  it("期間の違いだけでは異説とせず、肯定のみは通常、否定のみは否定表示にする", () => {
+    const a = { ...page.claims[0], id: "a", polarity: "affirmed" as const };
+    const b = { ...a, id: "b", period: { from: null, to: null } };
+    expect(displayRelations({ a, b })[relationId(a)].label).not.toContain("異説");
+    expect(displayRelations({ a })[relationId(a)].label).not.toContain("肯定");
+    expect(displayRelations({ a: { ...a, polarity: "denied" } })[relationId(a)].label).toContain("否定");
+    expect(displayRelations({ a, b })[relationId(a)].id).toBe(displayRelations({ a })[relationId(a)].id);
+  });
+  it("Relation詳細は未取得ページにある関連Claimも取得し、同格のカードで比較する", async () => {
+    const primary = examples.claim;
+    const related = primary.relatedClaimIds.map((id, index) => ({ ...primary.claim, id,
+      polarity: index ? "denied" : "affirmed", citations: [], sourceCount: 0 } as ClaimDetail));
+    vi.mocked(fetchClaim).mockImplementation(async (id) => id === primary.claim.id ? primary as ClaimResponse : { claim: related.find((claim) => claim.id === id)!, relatedClaimIds: [] });
+    render(<ClaimDetails id={primary.claim.id} nodes={{}} mode="relation" />);
+    await waitFor(() => expect(screen.getAllByTestId(/^claim-card-/)).toHaveLength(3));
+    expect(screen.getByText("否定する主張")).toBeDefined();
+    expect(screen.getAllByText("出典未確認")).toHaveLength(2);
+    expect(screen.queryByText("選択した主張")).toBeNull();
+    expect(fetchClaim).toHaveBeenCalledTimes(3);
   });
 });

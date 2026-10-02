@@ -11,10 +11,10 @@ async function choose(page: Page, name = "青葉ハル") {
 async function canvasTap(page: Page, id: string, edge = false) {
   const point = await page.getByTestId("graph-canvas").evaluate(async (el, args) => {
     const cy = (el as unknown as { _cyreg: { cy: import("cytoscape").Core } })._cyreg.cy;
-    const target = cy.getElementById(args.id);
+    const target = args.edge ? cy.edges().filter((edge) => edge.data("claimIds").includes(args.id)).first() : cy.getElementById(args.id);
     cy.zoom(1); cy.center(target);
     await new Promise<void>((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => resolve())));
-    const p = args.edge ? target.renderedMidpoint() : target.renderedPosition();
+    const p = args.edge ? (target as import("cytoscape").EdgeSingular).renderedMidpoint() : (target as import("cytoscape").NodeSingular).renderedPosition();
     return { x: p.x, y: p.y };
   }, { id, edge });
   await page.getByTestId("graph-canvas").click({ position: point });
@@ -24,9 +24,9 @@ test("実DB: 検索・Graph・Work展開・循環・出典比較", async ({ page
   await choose(page); await expect(page.getByTestId("graph-counts")).toHaveText("Entity 5 / Claim 7");
   const cyData = () => page.getByTestId("graph-canvas").evaluate((el) => {
     const cy = (el as unknown as { _cyreg: { cy: import("cytoscape").Core } })._cyreg.cy;
-    return { positions: Object.fromEntries(cy.nodes().map((n) => [n.id(), n.position()])), denied: cy.edges('[polarity="denied"]').map((e) => ({ label: e.data("label"), line: e.style("line-style"), arrow: e.style("target-arrow-shape") })) };
+    return { positions: Object.fromEntries(cy.nodes().map((n) => [n.id(), n.position()])), denied: cy.edges('[polarity="mixed"]').map((e) => ({ label: e.data("label"), line: e.style("line-style"), arrow: e.style("target-arrow-shape") })) };
   });
-  const before = await cyData(); expect(before.denied).toEqual([expect.objectContaining({ label: expect.stringContaining("否定"), line: "dashed", arrow: "triangle" })]);
+  const before = await cyData(); expect(before.denied).toEqual([expect.objectContaining({ label: expect.stringContaining("異説あり"), line: "dotted", arrow: "triangle" })]);
   await canvasTap(page, fixture.entities[8].id);
   await expect(page.getByRole("heading", { name: "星の航路の隣接関係" })).toBeVisible();
   await expect(page.getByTestId("graph-counts")).toHaveText("Entity 7 / Claim 9");
@@ -67,6 +67,7 @@ test("実DB: ページング・取得中・二重取得抑止", async ({ page })
     await expect(page.getByRole("button", { name: "続きを取得中…" })).toBeDisabled();
     await expect(page.getByTestId("graph-counts")).toContainText(`Claim ${count}`);
   }
+  await expect(page.getByTestId("relation-counts")).toHaveText("Relation 5");
   expect(requests).toBe(4); await expect(page.getByRole("button", { name: "続きを表示", exact: true })).toHaveCount(0);
 });
 for (const kind of ["Entity", "Claim"] as const) {
@@ -120,11 +121,7 @@ test("Step 5: 全体展開・同名補助・並行Claim・選択と一覧の同�
     return ids.map((id) => cy.getElementById(id).data("label"));
   }, [fixture.entities[5].id, fixture.entities[6].id, root.id]);
   expect(labels).toEqual(["佐藤アキ\n漫画家", "佐藤アキ\n編集者", "青葉ハル"]);
-  const midpoints = await page.getByTestId("graph-canvas").evaluate((el, ids) => {
-    const cy = (el as unknown as { _cyreg: { cy: import("cytoscape").Core } })._cyreg.cy;
-    return ids.map((id) => cy.getElementById(id).midpoint());
-  }, fixture.claims.slice(0,3).map((claim) => claim.id));
-  for (let i = 0; i < 3; i++) for (let j = i+1; j < 3; j++) expect(Math.hypot(midpoints[i].x-midpoints[j].x,midpoints[i].y-midpoints[j].y)).toBeGreaterThan(30);
+  await expect(page.getByTestId("relation-counts")).toHaveText("Relation 13");
   await page.getByRole("button", { name: "全体を表示", exact: true }).click();
   await page.screenshot({ path: "/tmp/graph-knowledge-step5-expanded.png", fullPage: true });
   await canvasTap(page, fixture.entities[5].id);
@@ -151,59 +148,72 @@ test("Step 5: 全体展開・同名補助・並行Claim・選択と一覧の同�
   await page.screenshot({ path: "/tmp/graph-knowledge-step5-compact.png", fullPage: true });
 });
 
-test("回帰: 3本のASSISTANT_OFのラベル・方向・線クリックのClaim対応", async ({ page }) => {
-  await page.setViewportSize({ width: 1160, height: 650 });
-  await choose(page); await expect(page.getByTestId("graph-counts")).toHaveText("Entity 5 / Claim 7");
-  for (const index of [8, 3, 1, 2, 4, 9, 10, 11]) {
-    await canvasTap(page, fixture.entities[index].id);
-    await expect(page.getByRole("region", { name: "Entity詳細" })).toContainText("近傍は取得済み");
-  }
-  await expect(page.getByTestId("graph-counts")).toHaveText("Entity 11 / Claim 15");
-  await page.getByRole("button", { name: "全体を表示", exact: true }).click();
+test("回帰: ASSISTANT_OFの3 Claimは1 Relation、全主張の詳細と線クリックが対応", async ({ page }) => {
+  await choose(page); await expect(page.getByTestId("relation-counts")).toHaveText("Relation 5");
   const ids = fixture.claims.slice(0, 3).map((claim) => claim.id);
-  const edges = await page.getByTestId("graph-canvas").evaluate(async (el, ids) => {
+  const edge = await page.getByTestId("graph-canvas").evaluate((el, ids) => {
     const cy = (el as unknown as { _cyreg: { cy: import("cytoscape").Core } })._cyreg.cy;
-    await new Promise<void>((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => resolve())));
-    return ids.map((id) => {
-      const edge = cy.getElementById(id);
-      return { id, point: edge.renderedMidpoint(), box: edge.renderedBoundingBox({ includeEdges: false, includeNodes: false, includeLabels: true }),
-        source: edge.source().id(), target: edge.target().id(), arrow: edge.style("target-arrow-shape"), sourceArrow: edge.style("source-arrow-shape"),
-        line: edge.style("line-style"), label: edge.data("label") };
-    });
+    const edges = cy.edges().filter((edge) => edge.data("claimIds").some((id: string) => ids.includes(id)));
+    const e = edges.first() as import("cytoscape").EdgeSingular;
+    return { count: edges.length, id: e.id(), claimIds: e.data("claimIds"), source: e.source().id(), target: e.target().id(),
+      arrow: e.style("target-arrow-shape"), sourceArrow: e.style("source-arrow-shape"), label: e.data("label"), distance: e.data("distance") };
   }, ids);
-  for (let i = 0; i < 3; i++) {
-    expect(edges[i].source).toBe(root.id); expect(edges[i].target).toBe(fixture.entities[1].id);
-    expect(edges[i].arrow).toBe("triangle"); expect(edges[i].sourceArrow).toBe("none");
-    expect(edges[i].line).toBe(i === 2 ? "dashed" : "solid");
-    expect(edges[i].label).toContain(i === 2 ? "否定" : "肯定");
-    expect(edges[i].label).toContain(fixture.claims[i].period.from!.value);
-    expect(edges[i].label).toContain(fixture.claims[i].period.to!.value);
-    for (let j = i + 1; j < 3; j++) {
-      const a = edges[i], b = edges[j];
-      expect(Math.hypot(a.point.x-b.point.x, a.point.y-b.point.y)).toBeGreaterThan(30);
-      const gap = Math.max(a.box.x1-b.box.x2, b.box.x1-a.box.x2, a.box.y1-b.box.y2, b.box.y1-a.box.y2);
-      expect(gap).toBeGreaterThan(4);
-    }
+  expect(edge.count).toBe(1); expect(edge.claimIds.sort()).toEqual(ids.sort());
+  expect(edge.source).toBe(root.id); expect(edge.target).toBe(fixture.entities[1].id);
+  expect(edge.arrow).toBe("triangle"); expect(edge.sourceArrow).toBe("none");
+  expect(edge.label).toBe("アシスタントだった\n異説あり"); expect(edge.distance).toBe(0);
+  await canvasTap(page, fixture.claims[0].id, true);
+  for (const claim of fixture.claims.slice(0, 3)) {
+    await expect(page.getByTestId(`claim-card-${claim.id}`)).toContainText(`${claim.period.from!.value}年〜${claim.period.to!.value}年`);
   }
-  await page.screenshot({ path: "/tmp/graph-knowledge-assistant-parallel.png", fullPage: true });
-  // zoomやpanを変えず、全体表示で見えている各線の中点を実クリックする。
-  for (const edge of edges) {
-    await page.getByTestId("graph-canvas").click({ position: edge.point });
-    await expect(page.getByTestId(`claim-card-${edge.id}`).getByRole("heading", { name: "選択した主張", exact: true })).toBeVisible();
-    const chosen = await page.getByTestId("graph-canvas").evaluate((el) => {
-      const cy = (el as unknown as { _cyreg: { cy: import("cytoscape").Core } })._cyreg.cy;
-      return cy.edges(".chosen").map((e) => e.id());
-    });
-    expect(chosen).toEqual([edge.id]);
-  }
-  // 記録画像のみ、同じGraphの3本を拡大して文字と矢印を読み取れる状態を残す。
-  await page.setViewportSize({ width: 1440, height: 1000 });
-  await page.getByTestId("graph-canvas").evaluate(async (el, ids) => {
+  await expect(page.getByTestId(`claim-card-${fixture.claims[2].id}`)).toContainText("否定する主張");
+  await expect(page.getByRole("heading", { name: "選択した主張", exact: true })).toHaveCount(0);
+  const chosen = await page.getByTestId("graph-canvas").evaluate((el) => {
     const cy = (el as unknown as { _cyreg: { cy: import("cytoscape").Core } })._cyreg.cy;
-    cy.resize(); cy.zoom(1); cy.center(cy.edges().filter((edge) => ids.includes(edge.id())));
-    await new Promise<void>((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => resolve())));
-  }, ids);
-  // 記録画像だけは、ズーム後にCytoscapeがラベルのテクスチャを再描画する時間を置く。
-  await page.waitForTimeout(500);
-  await page.screenshot({ path: "/tmp/graph-knowledge-assistant-parallel-focus.png", fullPage: true });
+    return cy.edges(".chosen").map((edge) => edge.id());
+  });
+  expect(chosen).toEqual([edge.id]);
+  await page.screenshot({ path: "/tmp/graph-knowledge-relation-detail.png", fullPage: true });
+});
+
+test("表示用データ: 肯定のみの集約・別predicateの弱い曲線・単一Relation", async ({ page }) => {
+  const claims = examples.neighbors.claims.filter((claim) => claim.predicate === "ASSISTANT_OF" && claim.polarity === "affirmed");
+  claims.push({ ...claims[0], id: fixture.claims[4].id, predicate: "INFLUENCED_BY" });
+  await page.route("**/api/entities/*/neighbors*", (route) => route.fulfill({ json: { centerId: root.id,
+    nodes: examples.neighbors.nodes.filter((node) => node.id === root.id || node.id === fixture.entities[1].id), claims, page: { nextCursor: null, hasMore: false } } }));
+  await page.route("**/api/claims/*", (route) => {
+    const id = route.request().url().split("/").pop();
+    const claim = claims.find((claim) => claim.id === id)!;
+    return route.fulfill({ json: { claim: { ...examples.claim.claim, ...claim, citations: [], sourceCount: 0 },
+      relatedClaimIds: claims.filter((other) => other.id !== id && other.predicate === claim.predicate).map((other) => other.id) } });
+  });
+  await choose(page); await expect(page.getByTestId("relation-counts")).toHaveText("Relation 2");
+  const edges = await page.getByTestId("graph-canvas").evaluate((el) => {
+    const cy = (el as unknown as { _cyreg: { cy: import("cytoscape").Core } })._cyreg.cy;
+    return cy.edges().map((e) => ({ label: e.data("label"), distance: e.data("distance"), claimIds: e.data("claimIds"), point: e.renderedMidpoint() }));
+  });
+  expect(edges.map((e) => e.label).sort()).toEqual(["アシスタントだった", "影響を受けた"].sort());
+  expect(edges.every((e) => Math.abs(e.distance) === 24)).toBe(true);
+  expect(edges.map((e) => e.claimIds.length).sort()).toEqual([1, 2]);
+  expect(Math.hypot(edges[0].point.x - edges[1].point.x, edges[0].point.y - edges[1].point.y)).toBeGreaterThan(0);
+  for (const claim of [claims[0], claims[2]]) {
+    await canvasTap(page, claim.id, true);
+    await expect(page.getByTestId(`claim-card-${claim.id}`)).toBeVisible();
+    await expect(page.getByRole("region", { name: "Claim詳細" }).getByTestId(/^claim-card-/)).toHaveCount(claim.predicate === "ASSISTANT_OF" ? 2 : 1);
+  }
+});
+
+test("表示用データ: 単一の否定Relationと出典未確認の詳細", async ({ page }) => {
+  const claim = { ...examples.neighbors.claims.find((claim) => claim.polarity === "denied")!, sourceCount: 0 };
+  await page.route("**/api/entities/*/neighbors*", (route) => route.fulfill({ json: { centerId: root.id,
+    nodes: examples.neighbors.nodes.filter((node) => node.id === claim.subjectId || node.id === claim.objectId), claims: [claim], page: { nextCursor: null, hasMore: false } } }));
+  await page.route("**/api/claims/*", (route) => route.fulfill({ json: { claim: { ...examples.claim.claim, ...claim, citations: [] }, relatedClaimIds: [] } }));
+  await choose(page); await expect(page.getByTestId("relation-counts")).toHaveText("Relation 1");
+  const edge = await page.getByTestId("graph-canvas").evaluate((el) => {
+    const cy = (el as unknown as { _cyreg: { cy: import("cytoscape").Core } })._cyreg.cy;
+    const edge = cy.edges().first(); return { label: edge.data("label"), line: edge.style("line-style"), distance: edge.data("distance") };
+  });
+  expect(edge.label).toBe("アシスタントだった\n（否定）"); expect(edge.line).toBe("dashed"); expect(edge.distance).toBe(0);
+  await canvasTap(page, claim.id, true); await expect(page.getByTestId(`claim-card-${claim.id}`)).toContainText("出典未確認");
+  await expect(page.getByTestId(`claim-card-${claim.id}`)).toContainText("否定する主張");
 });

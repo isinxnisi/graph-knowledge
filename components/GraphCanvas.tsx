@@ -3,10 +3,10 @@
 import cytoscape, { type Core, type ElementDefinition } from "cytoscape";
 import { useEffect, useRef } from "react";
 import type { GraphState, Selection } from "../lib/client/graph-state";
-import { entityLabel, edgeRoutes } from "../lib/client/graph-presentation";
+import { entityLabel, edgeRoutes, displayRelations, relationId } from "../lib/client/graph-presentation";
 import styles from "./Explorer.module.css";
 
-type Props = { graph: GraphState; selection: Selection; onEntity: (id: string) => void; onClaim: (id: string) => void };
+type Props = { graph: GraphState; selection: Selection; onEntity: (id: string) => void; onRelation: (id: string) => void };
 
 function positionNewNodes(cy: Core, ids: string[], anchorId: string | null) {
   const anchor = anchorId ? cy.getElementById(anchorId) : cy.nodes().first();
@@ -25,13 +25,13 @@ function positionNewNodes(cy: Core, ids: string[], anchorId: string | null) {
   });
 }
 
-export default function GraphCanvas({ graph, selection, onEntity, onClaim }: Props) {
+export default function GraphCanvas({ graph, selection, onEntity, onRelation }: Props) {
   const container = useRef<HTMLDivElement>(null);
   const core = useRef<Core | null>(null);
-  const handlers = useRef({ onEntity, onClaim });
+  const handlers = useRef({ onEntity, onRelation });
   const generation = useRef(-1);
   const initialLayoutDone = useRef(false);
-  useEffect(() => { handlers.current = { onEntity, onClaim }; }, [onEntity, onClaim]);
+  useEffect(() => { handlers.current = { onEntity, onRelation }; }, [onEntity, onRelation]);
 
   useEffect(() => {
     if (!container.current) return;
@@ -44,8 +44,9 @@ export default function GraphCanvas({ graph, selection, onEntity, onClaim }: Pro
         { selector: 'node[kind="organization"]', style: { shape: "hexagon", "background-color": "#eae5f3" } },
         { selector: 'node[kind="event"]', style: { shape: "diamond" } },
         { selector: "node.center", style: { "border-width": 3, "border-color": "#376c83" } },
-        { selector: "edge", style: { label: "data(label)", "curve-style": "unbundled-bezier", "control-point-distances": "data(distance)", "control-point-weights": "data(weight)", "target-arrow-shape": "triangle", "source-arrow-shape": "none", "arrow-scale": 1.2, "line-color": "#8299a3", "target-arrow-color": "#8299a3", width: 2, "font-size": 13, "text-background-color": "#ffffff", "text-background-opacity": 1, "text-background-padding": "3px", "text-wrap": "wrap", "text-max-width": "145px", "text-overflow-wrap": "anywhere", "text-events": "yes" } },
+        { selector: "edge", style: { label: "data(label)", "curve-style": "unbundled-bezier", "control-point-distances": "data(distance)", "control-point-weights": "data(weight)", "target-arrow-shape": "triangle", "source-arrow-shape": "none", "arrow-scale": 1.2, "line-color": "#8299a3", "target-arrow-color": "#8299a3", width: 2, "font-size": 13, "text-margin-y": (edge: cytoscape.EdgeSingular) => Number(edge.data("labelOffset")), "text-background-color": "#ffffff", "text-background-opacity": 1, "text-background-padding": "3px", "text-wrap": "wrap", "text-max-width": "145px", "text-overflow-wrap": "anywhere", "text-events": "yes" } },
         { selector: 'edge[polarity="denied"]', style: { "line-style": "dashed", "line-color": "#965d44", "target-arrow-color": "#965d44" } },
+        { selector: 'edge[polarity="mixed"]', style: { "line-style": "dotted" } },
         { selector: "node[expanded = 1]", style: { "border-style": "double", "border-width": 4 } },
         { selector: "node.added", style: { "underlay-color": "#e7b345", "underlay-opacity": 0.25, "underlay-padding": 10 } },
         { selector: "node.chosen", style: { "border-width": 5, "border-color": "#194e6e", "underlay-color": "#194e6e", "underlay-opacity": 0.12, "underlay-padding": 8 } },
@@ -54,7 +55,7 @@ export default function GraphCanvas({ graph, selection, onEntity, onClaim }: Pro
     });
     core.current = cy;
     cy.on("tap", "node", (event) => handlers.current.onEntity(event.target.id()));
-    cy.on("tap", "edge", (event) => handlers.current.onClaim(event.target.id()));
+    cy.on("tap", "edge", (event) => handlers.current.onRelation(event.target.id()));
     const resize = new ResizeObserver(() => cy.resize());
     resize.observe(container.current);
     return () => { resize.disconnect(); cy.destroy(); core.current = null; generation.current = -1; initialLayoutDone.current = false; };
@@ -68,15 +69,16 @@ export default function GraphCanvas({ graph, selection, onEntity, onClaim }: Pro
     const reset = generation.current !== graph.generation;
     if (reset) { cy.elements().remove(); generation.current = graph.generation; initialLayoutDone.current = false; }
     const newNodes = Object.values(graph.nodes).filter((node) => !cy.getElementById(node.id).length);
-    const routes = edgeRoutes(graph.claims);
+    const relations = displayRelations(graph.claims);
+    const routes = edgeRoutes(relations);
     const elements: ElementDefinition[] = newNodes.map((node) => ({ group: "nodes", data: { id: node.id, label: entityLabel(node, graph.nodes), kind: node.kind }, position: { x: 0, y: 0 } }));
-    Object.values(graph.claims).forEach((claim) => {
-      if (!cy.getElementById(claim.id).length) elements.push({ group: "edges", data: { id: claim.id, source: claim.subjectId, target: claim.objectId, polarity: claim.polarity, ...routes[claim.id] } });
+    Object.values(relations).forEach((claim) => {
+      if (!cy.getElementById(claim.id).length) elements.push({ group: "edges", data: { id: claim.id, source: claim.subjectId, target: claim.objectId, polarity: claim.polarity, claimIds: claim.claimIds, ...routes[claim.id] } });
     });
     cy.batch(() => {
       cy.add(elements);
       Object.values(graph.nodes).forEach((node) => cy.getElementById(node.id).data({ expanded: graph.expansions[node.id]?.expanded ? 1 : 0 }));
-      Object.entries(routes).forEach(([id, route]) => cy.getElementById(id).data(route));
+      Object.entries(relations).forEach(([id, relation]) => cy.getElementById(id).data({ polarity: relation.polarity, claimIds: relation.claimIds, ...routes[id] }));
       if (newNodes.length) { cy.nodes().removeClass("added"); if (!reset && initialLayoutDone.current) newNodes.forEach((node) => cy.getElementById(node.id).addClass("added")); }
       Object.values(graph.nodes).forEach((node) => { const element = cy.getElementById(node.id); element.data("label", entityLabel(node, graph.nodes)); });
       cy.nodes().removeClass("center");
@@ -101,7 +103,10 @@ export default function GraphCanvas({ graph, selection, onEntity, onClaim }: Pro
     const cy = core.current;
     if (!cy) return;
     cy.elements().removeClass("chosen");
-    if (selection) cy.getElementById(selection.id).addClass("chosen");
+    if (selection) {
+      const id = selection.kind === "claim" && graph.claims[selection.id] ? relationId(graph.claims[selection.id]) : selection.id;
+      cy.getElementById(id).addClass("chosen");
+    }
   }, [selection, graph]);
 
   return <>
@@ -109,7 +114,7 @@ export default function GraphCanvas({ graph, selection, onEntity, onClaim }: Pro
     <div className={styles.graphTools}>
       <button onClick={() => core.current?.fit(undefined, 50)} disabled={!graph.centerId}>全体を表示</button>
       <span>丸：人物 ／ 四角：作品 ／ 六角形：組織</span>
-      <span>矢印：方向 ／ 破線・「否定」：否定 ／ 二重枠：展開済 ／ 淡い外枠：新しく表示されたNode</span>
+      <span>矢印：方向 ／ 破線：否定 ／ 点線：異説あり ／ 二重枠：展開済 ／ 淡い外枠：新規表示</span>
     </div>
   </>;
 }

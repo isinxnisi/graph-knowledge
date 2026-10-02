@@ -2,7 +2,7 @@ import type { ClaimSummary, EntitySummary, NeighborsResponse } from "../domain/a
 
 export const GRAPH_LIMITS = { entities: 100, claims: 200 } as const;
 export const GRAPH_LIMIT_MESSAGE = "表示上限に達したため、別の人物を中心に探索してください。";
-export type Selection = { kind: "entity" | "claim"; id: string } | null;
+export type Selection = { kind: "entity" | "claim" | "relation"; id: string } | null;
 export type Expansion = {
   expanded: boolean; nextCursor: string | null; hasMore: boolean;
   loading: boolean; error: string | null; blocked: boolean;

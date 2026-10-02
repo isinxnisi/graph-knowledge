@@ -37,7 +37,7 @@ fixture投入処理 → Neo4j
 
 **初期採用: Claimノードを正本とする。** 複数出典と矛盾の保存が中核要件であり、最初から主張を独立した対象として扱う利点が大きい。Neo4jのRelationshipから別のノードへ直接Relationshipを張る形は使えないため、Relationship方式でSourceを共有するには追加の参照管理が必要になる。
 
-正本となる`ASSISTANT_OF`などの直接RelationshipをClaimと同時に保存しない。UI用の辺はAPIで導出する。将来必要なら再生成可能な投影を検討するが、第二の正本を作らない。
+正本となる`ASSISTANT_OF`などの直接RelationshipをClaimと同時に保存しない。UI用の辺はAPIのClaimからフロントのpresentation層で導出する。将来必要なら再生成可能な投影を検討するが、第二の正本を作らない。
 
 ## Neo4jの論理モデル
 
@@ -160,7 +160,7 @@ APIの機能:
 
 ### グラフ表示
 
-保存モデルのClaimやCitationを、そのまま全て画面上のノードにしない。APIはEntityを表示ノード、Claimを表示辺として投影する。同じ主体・関係タイプ・対象の表示辺をまとめる場合も、所属するClaim IDの一覧を保ち、詳細で各主張と出典を分離して表示する。
+保存モデルのClaimやCitationを、そのまま全て画面上のノードにしない。APIはEntityとClaimを返し、フロントのpresentation層がEntityを表示ノード、同一関係のClaim群を表示辺に投影する。同じ主体・関係タイプ・対象の表示辺をまとめる場合も、所属するClaim IDの一覧を保ち、詳細で各主張と出典を分離して表示する。
 
 辺の識別はClaim ID、集約辺なら安定した集約キーを使う。Entity IDとClaim IDで追加展開の重複を防ぐ。方向と関係名を示し、矛盾や出典未確認を隠さない。否定のClaimを、肯定された関係と同じ線として無説明で表示しない。
 
@@ -322,7 +322,7 @@ Neo4jではPartialDateをネストしたpropertyとして保存せず、`validFr
 | 画面全体 | Entity最大100件、Claim最大200件 |
 | 読み取りDBクエリのタイムアウト | 5秒 |
 
-近傍取得はClaim単位のページングで、nodesは最大51件（中心を含む）。一つのClaimを一本の辺として表示し、初期は集約しない。並行辺を分け、矢印、関係名、否定の表示を付ける。出典未確認は詳細と辺の説明で分かるようにする。否定の辺には「否定」の文字と破線を用い、色だけに依存しない。
+近傍取得はClaim単位のページングで、nodesは最大51件（中心を含む）。表示では同じsubjectId/predicate/objectIdの取得済みClaimを一つのRelationへまとめる。永続Claimは独立したまま。肯否が混在するRelationには「異説あり」と点線、否定のみには「否定」と破線を付ける。個別期間・出典未確認状態は詳細で確認する。Graphのラベルは取得済みClaimの範囲に基づき、未取得ページがある場合はその旨を表示する。詳細はrelatedClaimIdsで同一関係の全公開Claimを取得する。
 
 追加展開はEntity IDとClaim IDで重複排除し、既存のノード位置は極力維持する。中心と隣接関係のテキスト一覧も提供し、一覧から展開・詳細確認ができるようにする。複雑なレイアウト最適化やモバイル専用画面は後回し。
 
@@ -379,10 +379,20 @@ API契約、fixture、DBモデル、上限の変更はない。配置と非同�
 Step 4のDB/API契約と探索機能を維持し、表示のみ調整した。以下はStep 4記録の配置・画面サイズを更新する現在の仕様。
 
 - 初回のbreadthfirst配置を、中心固定の放射状preset配置へ変更する。中心周辺に全Claimのラベルが集まる状態を避けるため。初期半径はmax(255, 周辺Node数×65)。追加配置は展開元の8方向・同心円、初期半径260、各周190以上のNode間距離を目安とし、既存座標・pan/zoomを維持する。
-- 並行・双方向のClaimは端点の組ごとにID順で別のunbundled-bezier曲線を割り当てる。Edgeの集約・削除はしない。3本以上は制御点間隔320・重み0.5で曲線を分散し、2本は間隔260・重み0.3/0.7とする。同じsubject/predicate/objectの複数Claimには13pxの関係名と肯否・期間を表示する。単独Claimは従来の関係名と否定表示を維持する。矢印・破線は維持する。
+- 同じsubjectId/predicate/objectIdのClaimをpresentation層で一つの有向Relationへ集約する。表示IDは `relation:<subjectId>:<predicate>:<objectId>`、claimIdsは独立したClaim IDの配列。逆方向や別predicateは別Relation。単独端点組は制御点距離0、同じ端点組の別Relationには48刻み（2本なら±24）のunbundled-bezier、重み0.5を使う。別Relationのラベルには32刻みの縦オフセット（2本なら±16px）も付け、曲線を大きくせずラベルを分離する。個別期間をGraphに出さず、関係名と肯否混在時の「異説あり」だけを簡潔に示す。「異説あり」はaffirmedとdeniedの両方が取得済みの場合のみで、期間差・出典数の評価や自動矛盾判定ではない。
 - 同名が表示中Graph内に存在するときのみ、descriptionの「、」「。」より前を補助ラベルにする。説明も同じ場合はIDの先頭8桁を添える。通常Nodeは名称だけ。元のEntityの名前・説明を変更しない。
 - 三列は190px / 可変Graph / 300px。画面高に合わせてGraphが伸縮し、詳細と隣接一覧は個別にスクロールする。短いデスクトップ画面では一覧の配分を減らしGraphを優先する。600px未満の高さや小さい横幅の専用対応は未実施。
 - 選択対象をGraph上部にも文字で表示する。展開済みは二重枠、直近に表示されたNodeは淡い外枠だけで識別し、操作を想起させる文字ラベルを付けない。Claimを選んでも主体の隣接一覧を維持し、該当ボタンのaria-pressedと枠線で選択を示す。
 - 主張カード内の関係・肯否・期間・出典を区切り、CitationごとにSourceと参照箇所を表示する。関連主張は同じカード形式の縦並びのまま、表示順が正しさ・信頼度を意味しないことを明記する。
 
 新しい依存ライブラリは追加していない。上限は変更せず、混雑したGraphを常に重なりゼロにする保証は行わない。拡大・パン、隣接一覧と出典詳細を併用する。
+
+### Step 5追加調整: 表示Relationと独立Claim
+
+最新のユーザー指定により、以前の「Claimごとに一本の辺」という表示方針を変更した。Step 4および過去のStep 5検証記録は当時の記録であり、現在のGraph表示は本節に従う。
+
+- API契約とNeo4jモデルを変えない。Reactのclaims辞書は全Claimを独立保持し、Entity最大100・Claim最大200、cursorの扱いも維持する。
+- Edge選択はRelation IDで保持し、そのclaimIdsの一件から既存Claim詳細APIを呼び、relatedClaimIdsの全公開Claimを取得する。Graph未取得ページの関連Claimも詳細で確認するが、Graphへ自動マージ・cursor更新はしない。
+- 全ClaimカードをID順で同格に縦並びする。期間・肯否・Citation・Source・出典未確認を個別表示し、順序が信頼度を表さないことを明示する。一部取得失敗では成功したカードを残し再試行を案内する。
+- 一覧はClaim単位を維持する。個別Claim選択では対応するRelation Edgeを強調し、Relation選択では所属Claimの一覧行を強調する。
+- デモ初期Graphは7 Claim / 5 Relation、全展開Graphは15 Claim / 13 Relation。青葉ハル→黒川レンの3 Claimは1 Relationになる。Claim数とRelation数は別々に表示する。

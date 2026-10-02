@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { EntitySummary } from "../domain/api";
+import { displayRelations } from "./graph-presentation";
 import { fetchNeighbors, errorMessage } from "./api";
 import { emptyExpansion, emptyGraph, mergePage, type GraphState, type Selection } from "./graph-state";
 
@@ -59,5 +60,8 @@ export function useGraphExplorer() {
     if (current.current.claims[id]) setSelection({ kind: "claim", id });
   }, []);
 
-  return { graph, selection, chooseRoot, selectEntity, selectClaim, expand };
+  const selectRelation = useCallback((id: string) => {
+    if (displayRelations(current.current.claims)[id]) setSelection({ kind: "relation", id });
+  }, []);
+  return { graph, selection, chooseRoot, selectEntity, selectClaim, selectRelation, expand };
 }
