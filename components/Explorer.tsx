@@ -14,7 +14,7 @@ import styles from "./Explorer.module.css";
 export default function Explorer() {
   const [dark, setDark] = useState(false);
   const [darkPalette, setDarkPalette] = useState<"brown" | "blue">("brown");
-  const { graph, selection, chooseRoot, selectEntity, selectClaim, selectRelation, expand, close } = useGraphExplorer();
+  const { graph, selection, chooseRoot, selectEntity, selectClaim, selectRelation, expand, close, toggleEntity } = useGraphExplorer();
   const relations = displayRelations(graph.claims);
   const selectedRelation = selection?.kind === "relation" ? relations[selection.id] : null;
   const selectedEntity = selection?.kind === "entity" ? graph.nodes[selection.id] : null;
@@ -50,7 +50,7 @@ export default function Explorer() {
         {Object.values(graph.expansions).some((meta) => meta.active && meta.hasMore) && <p className={styles.muted}>Graphの関係表示は取得済みの主張に基づきます。続きは各Entityの詳細から取得できます。</p>}
         {graph.notice && <p role="status">{graph.notice}</p>}
         {blocked && <p role="alert" className={styles.error}>{blocked.error}</p>}
-        <GraphCanvas graph={graph} selection={selection} onEntity={selectEntity} onRelation={selectRelation} />
+        <GraphCanvas graph={graph} selection={selection} onEntity={selectEntity} onRelation={selectRelation} onToggleEntity={toggleEntity} />
         <RelationsList graph={graph} selection={selection} onEntity={selectEntity} onClaim={selectClaim} onExpand={(id) => void expand(id)} onClose={close} />
       </section>
       <aside className={styles.panel} aria-labelledby="detail-title">

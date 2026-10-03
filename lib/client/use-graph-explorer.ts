@@ -84,5 +84,9 @@ export function useGraphExplorer() {
     if (displayRelations(current.current.claims)[id]) setSelection({ kind: "relation", id });
   }, []);
   const close = useCallback((id: string) => commit(closeExpansion(current.current, id)), [commit]);
-  return { graph, selection, chooseRoot, selectEntity, selectClaim, selectRelation, expand, close };
+  const toggleEntity = useCallback((id: string) => {
+    if (!current.current.nodes[id]) return;
+    if (current.current.expansions[id]?.open) close(id); else void expand(id);
+  }, [close, expand]);
+  return { graph, selection, chooseRoot, selectEntity, selectClaim, selectRelation, expand, close, toggleEntity };
 }

@@ -425,3 +425,9 @@ Step 4のDB/API契約と探索機能を維持し、表示のみ調整した。�
 - Graphと一覧は共通の表示対象を使う。差分削除と座標復元を行い、残存位置・pan/zoomを維持する。消失Entity選択は起点へ、消失Claim / Relation選択は解除する。Relation詳細は全公開Claim比較を維持し、Graph未表示を区別する。
 
 仕様は [EXPLORATION_CLOSE_PHASE.md](EXPLORATION_CLOSE_PHASE.md)、検証結果は [IMPLEMENTATION_EXPLORATION_CLOSE.md](IMPLEMENTATION_EXPLORATION_CLOSE.md) を参照。API・DB・fixture・predicate・日付の変更はない。条件付き探索・時系列・移行順序5以降は未実装。
+
+### Nodeクリックの開閉と操作設定
+
+Graphの未選択Nodeは即時に選択・必要な展開を行い、選択中Nodeは300ms後に開閉する。300ms以内の同じNodeへの二度目のクリックは開閉を取り消し、独立したダブルクリックのコールバックへ渡す（現在は未割当）。選択変更・他対象の操作・ドラッグ・中心変更・破棄では待機中の開閉を取り消す。一覧の選択・明示開閉ボタンは即時の既存操作を維持する。
+
+判定値はlib/client/graph-interaction.tsのGRAPH_INTERACTION_DEFAULTSへ集約し、テスト可能なイベント判定から開閉処理を分離する。設定モーダルや設定永続化は未実装。利用者の操作設定、Graph表示調整、管理ポリシーの責務分担は [GRAPH_INTERACTION_AND_SETTINGS.md](GRAPH_INTERACTION_AND_SETTINGS.md) を参照。

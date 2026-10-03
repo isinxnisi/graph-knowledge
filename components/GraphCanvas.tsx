@@ -5,18 +5,24 @@ import { useEffect, useRef } from "react";
 import type { GraphState, Selection } from "../lib/client/graph-state";
 import { entityLabel, edgeRoutes, displayRelations, relationId } from "../lib/client/graph-presentation";
 import { initialPositions, additionalPositions } from "../lib/client/graph-layout";
+import { createNodeClickHandler } from "../lib/client/graph-interaction";
 import styles from "./Explorer.module.css";
 
-type Props = { graph: GraphState; selection: Selection; onEntity: (id: string) => void; onRelation: (id: string) => void };
+type Props = { graph: GraphState; selection: Selection; onEntity: (id: string) => void; onRelation: (id: string) => void; onToggleEntity: (id: string) => void; onEntityDoubleClick?: (id: string) => void };
 
-export default function GraphCanvas({ graph, selection, onEntity, onRelation }: Props) {
+export default function GraphCanvas({ graph, selection, onEntity, onRelation, onToggleEntity, onEntityDoubleClick }: Props) {
   const container = useRef<HTMLDivElement>(null);
   const core = useRef<Core | null>(null);
-  const handlers = useRef({ onEntity, onRelation });
+  const handlers = useRef({ onEntity, onRelation, onToggleEntity, onEntityDoubleClick, selection });
+  const gestures = useRef<ReturnType<typeof createNodeClickHandler> | null>(null);
   const generation = useRef(-1);
   const savedPositions = useRef<Record<string, { x: number; y: number }>>({});
   const initialLayoutDone = useRef(false);
-  useEffect(() => { handlers.current = { onEntity, onRelation }; }, [onEntity, onRelation]);
+  useEffect(() => { handlers.current = { onEntity, onRelation, onToggleEntity, onEntityDoubleClick, selection }; }, [onEntity, onRelation, onToggleEntity, onEntityDoubleClick, selection]);
+  useEffect(() => { gestures.current?.cancel(); }, [graph.generation]);
+  useEffect(() => { gestures.current?.selectionChanged(selection?.kind === "entity" ? selection.id : null); }, [selection?.kind, selection?.id]);
+  const selectedOpen = selection?.kind === "entity" ? graph.expansions[selection.id]?.open : undefined;
+  useEffect(() => { gestures.current?.cancelPending(); }, [selectedOpen]);
 
   useEffect(() => {
     if (!container.current) return;
@@ -45,11 +51,19 @@ export default function GraphCanvas({ graph, selection, onEntity, onRelation }: 
     const themeObserver = new MutationObserver(() => cy.style(themeStyles()));
     themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
     core.current = cy;
-    cy.on("tap", "node", (event) => handlers.current.onEntity(event.target.id()));
-    cy.on("tap", "edge", (event) => handlers.current.onRelation(event.target.id()));
+    const clicks = createNodeClickHandler({
+      isSelected: (id) => handlers.current.selection?.kind === "entity" && handlers.current.selection.id === id,
+      select: (id) => handlers.current.onEntity(id), toggle: (id) => handlers.current.onToggleEntity(id),
+      doubleClick: (id) => handlers.current.onEntityDoubleClick?.(id),
+    });
+    gestures.current = clicks;
+    cy.on("tap", "node", (event) => clicks.click(event.target.id(), event.originalEvent?.timeStamp));
+    cy.on("tap", "edge", (event) => { clicks.cancel(); handlers.current.onRelation(event.target.id()); });
+    cy.on("tap", (event) => { if (event.target === cy) clicks.cancel(); });
+    cy.on("drag", "node", () => clicks.cancel());
     const resize = new ResizeObserver(() => cy.resize());
     resize.observe(container.current);
-    return () => { themeObserver.disconnect(); resize.disconnect(); cy.destroy(); core.current = null; generation.current = -1; initialLayoutDone.current = false; };
+    return () => { clicks.cancel(); gestures.current = null; themeObserver.disconnect(); resize.disconnect(); cy.destroy(); core.current = null; generation.current = -1; initialLayoutDone.current = false; };
   }, []);
 
   useEffect(() => {

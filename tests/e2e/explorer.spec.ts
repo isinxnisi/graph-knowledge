@@ -428,3 +428,39 @@ test("開閉 ブラウザ: 上限後に他の枝を閉じて再試行・復元�
   await expect(page.getByTestId("graph-counts")).toContainText("Claim 192");
   expect((await viewState(page)).positions[C.id]).toBeDefined(); expect((await viewState(page)).positions[E.id]).toBeUndefined();
 });
+
+test("Node再クリック: 300msで開閉、ダブルクリックは開閉を抑止", async ({ page }) => {
+  await choose(page); await expect(page.getByTestId("graph-counts")).toHaveText("Entity 5 / Claim 7");
+  await canvasTap(page, root.id); await expect(page.getByTestId("graph-counts")).toHaveText("Entity 1 / Claim 0");
+  await expect(page.getByTestId("selection-status")).toContainText("青葉ハル");
+  await canvasTap(page, root.id); await expect(page.getByTestId("graph-counts")).toHaveText("Entity 5 / Claim 7");
+  const point = await page.getByTestId("graph-canvas").evaluate((el, id) => {
+    const cy = (el as unknown as { _cyreg: { cy: import("cytoscape").Core } })._cyreg.cy;
+    return cy.getElementById(id).renderedPosition();
+  }, root.id);
+  await page.getByTestId("graph-canvas").dblclick({ position: point });
+  await page.waitForTimeout(400);
+  await expect(page.getByTestId("graph-counts")).toHaveText("Entity 5 / Claim 7");
+  // 未選択Nodeの二度目の入力中はAPIを保留し、描画・通信とジェスチャーを分けて確認。
+  await choose(page); await expect(page.getByTestId("graph-counts")).toHaveText("Entity 5 / Claim 7");
+  let release!: () => void;
+  const gate = new Promise<void>((resolve) => { release = resolve; });
+  await page.route(`**/api/entities/${fixture.entities[8].id}/neighbors*`, async (route) => {
+    const response = await route.fetch(); await gate; await route.fulfill({ response }).catch(() => {});
+  });
+  const work = await page.getByTestId("graph-canvas").evaluate((el, id) => {
+    const cy = (el as unknown as { _cyreg: { cy: import("cytoscape").Core } })._cyreg.cy;
+    return cy.getElementById(id).renderedPosition();
+  }, fixture.entities[8].id);
+  await page.getByTestId("graph-canvas").dblclick({ position: work });
+  await expect(page.getByTestId("selection-status")).toContainText("星の航路");
+  await page.waitForTimeout(400); release();
+  await expect(page.getByTestId("graph-counts")).toHaveText("Entity 7 / Claim 9");
+  // 判定待ち中に明示ボタンで閉じても、古いトグルが再開させない。
+  await canvasTap(page, root.id);
+  await page.waitForTimeout(320);
+  await canvasTap(page, root.id);
+  await closeInDetail(page);
+  await page.waitForTimeout(400);
+  await expect(page.getByTestId("graph-counts")).toHaveText("Entity 1 / Claim 0");
+});

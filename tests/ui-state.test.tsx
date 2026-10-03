@@ -1,6 +1,7 @@
 // @vitest-environment jsdom
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { act, cleanup, render, renderHook, screen, waitFor } from "@testing-library/react";
+import { createNodeClickHandler } from "../lib/client/graph-interaction";
 import { entityLabel, edgeRoutes, displayRelations, relationId } from "../lib/client/graph-presentation";
 import { initialPositions, additionalPositions } from "../lib/client/graph-layout";
 import { emptyGraph, mergePage, closeExpansion, reopenExpansion } from "../lib/client/graph-state";
@@ -291,5 +292,43 @@ describe("開閉時の通信と選択", () => {
     await act(async () => { await result.current.expand("A"); });
     expect(result.current.graph.nodes.C).toBeUndefined(); expect(fetchNeighbors).toHaveBeenCalledTimes(2);
     act(() => result.current.selectEntity("B")); expect(fetchNeighbors).toHaveBeenCalledTimes(3);
+  });
+});
+
+
+describe("Nodeのクリック判定", () => {
+  const setup = (initial: string | null = "A") => {
+    let selected = initial;
+    const select = vi.fn((id: string) => { selected = id; });
+    const toggle = vi.fn(), doubleClick = vi.fn();
+    const handler = createNodeClickHandler({ isSelected: (id) => selected === id, select, toggle, doubleClick });
+    return { ...handler, select, toggle, doubleClick, deselect: () => { selected = null; } };
+  };
+  it("未選択は即時選択し、選択中だけ300ms後に開閉する", () => {
+    vi.useFakeTimers();
+    try {
+      const clicks = setup(null); clicks.click("A"); expect(clicks.select).toHaveBeenCalledWith("A");
+      clicks.cancelPending(); vi.advanceTimersByTime(301); expect(clicks.toggle).not.toHaveBeenCalled();
+      clicks.click("A"); vi.advanceTimersByTime(299); expect(clicks.toggle).not.toHaveBeenCalled();
+      vi.advanceTimersByTime(1); expect(clicks.toggle).toHaveBeenCalledExactlyOnceWith("A");
+    } finally { vi.useRealTimers(); }
+  });
+  it.each([null, "A"])("ダブルクリックは開閉せず、別動作へ1回だけ渡す（選択=%s）", (initial) => {
+    vi.useFakeTimers();
+    try {
+      const clicks = setup(initial); clicks.click("A"); if (initial === null) clicks.cancelPending();
+      vi.advanceTimersByTime(100); clicks.click("A"); vi.advanceTimersByTime(500);
+      expect(clicks.toggle).not.toHaveBeenCalled(); expect(clicks.doubleClick).toHaveBeenCalledExactlyOnceWith("A");
+    } finally { vi.useRealTimers(); }
+  });
+  it("選択変更・他Node・破棄・ドラッグ時の取消で遅い開閉を残さない", () => {
+    vi.useFakeTimers();
+    try {
+      const clicks = setup(); clicks.click("A"); clicks.deselect(); clicks.selectionChanged(null); vi.advanceTimersByTime(300);
+      expect(clicks.toggle).not.toHaveBeenCalled();
+      clicks.click("B"); vi.advanceTimersByTime(301); clicks.click("B"); clicks.click("C"); vi.advanceTimersByTime(300);
+      expect(clicks.toggle).not.toHaveBeenCalled(); expect(clicks.select).toHaveBeenLastCalledWith("C");
+      clicks.click("C"); clicks.cancel(); vi.advanceTimersByTime(300); expect(clicks.toggle).not.toHaveBeenCalled();
+    } finally { vi.useRealTimers(); }
   });
 });
