@@ -192,3 +192,7 @@ npm run pilot:e2e
 ```bash
 docker compose --env-file .env.pilot -f compose.pilot.yaml stop
 ```
+
+## 関係語彙の意味契約
+
+既存4 predicateの包含・除外・境界例と変更手順は [Predicate意味契約](docs/design/PREDICATE_CONTRACTS.md) を参照してください。`npm run vocabulary:check`をlint/testでも実行します。追加・変更には全既存語彙との比較と、変更前後hashに一致する承認済み票が必要です。使用済みIDの意味を変えず、基準版を書き換えません。コミット済みの変更を審査する場合は `npm run vocabulary:check -- --base-ref <変更開始前のcommit>` を使います。Role・DB/API/UI・凍結パイロットは変更していません。

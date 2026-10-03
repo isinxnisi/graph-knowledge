@@ -1,0 +1,344 @@
+{
+  "schemaVersion": 1,
+  "entries": [
+    {
+      "id": "ASSISTANT_OF",
+      "status": "active",
+      "definitionLanguage": "ja",
+      "runtime": {
+        "subjectKind": "person",
+        "objectKind": "person",
+        "label": "アシスタントだった",
+        "reverseLabel": "アシスタントに迎えていた",
+        "description": "対象人物の制作補助を行ったという主張"
+      },
+      "meaning": {
+        "definition": "主体人物が対象人物の制作をアシスタントとして補助したという主張。師弟、雇用、親交、影響の有無は含意しない。",
+        "subjectRole": "制作を補助した人物",
+        "objectRole": "制作を補助された人物",
+        "direction": "subject-to-object",
+        "rules": [
+          "師弟・雇用を推論しない。",
+          "未登録や出典欠如を否定へ変換しない。"
+        ],
+        "examples": [
+          {
+            "id": "assistant_of-include-1",
+            "category": "include",
+            "scenario": "当事者の経歴にBのアシスタントとして制作補助をしたと明記される",
+            "rationale": "アシスタントとしての制作補助を直接述べる。"
+          },
+          {
+            "id": "assistant_of-exclude-1",
+            "category": "exclude",
+            "scenario": "Bを師匠と呼ぶだけ",
+            "rationale": "師弟の呼称だけでは制作補助を示さない。"
+          },
+          {
+            "id": "assistant_of-exclude-2",
+            "category": "exclude",
+            "scenario": "同じ仕事場で働いた",
+            "rationale": "共在だけではアシスタント関係を示さない。"
+          },
+          {
+            "id": "assistant_of-boundary-1",
+            "category": "boundary",
+            "scenario": "Bの手伝いをしたとの記述だけ",
+            "rationale": "保留。制作補助か、アシスタントとしての関与かを資料で確認する。"
+          }
+        ],
+        "nearbyConcepts": [
+          {
+            "term": "師弟",
+            "difference": "師弟の呼称と制作補助は独立。"
+          },
+          {
+            "term": "共同制作",
+            "difference": "同じ作品への参加だけでは誰が誰を補助したか分からない。"
+          }
+        ]
+      },
+      "translations": {
+        "ja": {
+          "label": "アシスタントだった",
+          "reverseLabel": "アシスタントに迎えていた",
+          "description": "対象人物の制作補助を行ったという主張",
+          "aliases": []
+        }
+      },
+      "comparisons": [
+        {
+          "predicateId": "INFLUENCED_BY",
+          "relation": "distinct",
+          "rationale": "影響と制作補助は独立。"
+        },
+        {
+          "predicateId": "CONTRIBUTED_TO",
+          "relation": "distinct",
+          "rationale": "人物を補助した関係と作品への関与は端点・命題が違う。"
+        },
+        {
+          "predicateId": "AFFILIATED_WITH",
+          "relation": "distinct",
+          "rationale": "対象人物への補助と組織との関わりは違う。"
+        }
+      ]
+    },
+    {
+      "id": "INFLUENCED_BY",
+      "status": "active",
+      "definitionLanguage": "ja",
+      "runtime": {
+        "subjectKind": "person",
+        "objectKind": "person",
+        "label": "影響を受けた",
+        "reverseLabel": "影響を与えた",
+        "description": "主体が対象から影響を受けたという主張"
+      },
+      "meaning": {
+        "definition": "主体人物が対象人物から影響を受けたという主張。影響の強さ、尊敬、好意、師弟を含意せず、人物への影響と作品への影響を置き換えない。",
+        "subjectRole": "影響を受けた人物",
+        "objectRole": "影響の対象として挙げられた人物",
+        "direction": "subject-to-object",
+        "rules": [
+          "逆方向のClaimを別途生成しない。",
+          "影響の強さや全創作への影響を推論しない。"
+        ],
+        "examples": [
+          {
+            "id": "influenced_by-include-1",
+            "category": "include",
+            "scenario": "本人がBから絵のタッチに影響を受けたと答える",
+            "rationale": "人物を対象とする影響を明示している。限定した内容を保持する。"
+          },
+          {
+            "id": "influenced_by-exclude-1",
+            "category": "exclude",
+            "scenario": "Bが好きだと述べるだけ",
+            "rationale": "好意は影響を受けたことを意味しない。"
+          },
+          {
+            "id": "influenced_by-exclude-2",
+            "category": "exclude",
+            "scenario": "作品Wに影響されたので作者Bへの関係に変換する",
+            "rationale": "資料の対象が作品であり、人物への影響に置き換えられない。"
+          },
+          {
+            "id": "influenced_by-boundary-1",
+            "category": "boundary",
+            "scenario": "Bを参考にしたとの発言のみ",
+            "rationale": "保留。参考行為だけか、影響を受けたとの主張か文脈を確認する。"
+          }
+        ],
+        "nearbyConcepts": [
+          {
+            "term": "尊敬・好意",
+            "difference": "態度と影響は別の主張。"
+          },
+          {
+            "term": "参考にした",
+            "difference": "参照という行為だけでは影響の主張を保証しない。"
+          }
+        ]
+      },
+      "translations": {
+        "ja": {
+          "label": "影響を受けた",
+          "reverseLabel": "影響を与えた",
+          "description": "主体が対象から影響を受けたという主張",
+          "aliases": []
+        }
+      },
+      "comparisons": [
+        {
+          "predicateId": "ASSISTANT_OF",
+          "relation": "distinct",
+          "rationale": "制作補助と影響は独立。"
+        },
+        {
+          "predicateId": "CONTRIBUTED_TO",
+          "relation": "distinct",
+          "rationale": "影響と制作参加は独立で端点も違う。"
+        },
+        {
+          "predicateId": "AFFILIATED_WITH",
+          "relation": "distinct",
+          "rationale": "組織との関わりと人物への影響は違う。"
+        }
+      ]
+    },
+    {
+      "id": "CONTRIBUTED_TO",
+      "status": "active",
+      "definitionLanguage": "ja",
+      "runtime": {
+        "subjectKind": "person",
+        "objectKind": "work",
+        "label": "制作に関わった",
+        "reverseLabel": "制作関係者",
+        "description": "作品への関与。作者・編集者等の役割は初期は区別しない"
+      },
+      "meaning": {
+        "definition": "主体人物が対象作品の制作に関与したという主張。制作クレジット等が示す関与を資料の限定内で扱い、作者や具体的役割、全巻・全期間の担当を認定しない。",
+        "subjectRole": "制作に関与した人物",
+        "objectRole": "制作への関与が述べられた作品",
+        "direction": "subject-to-object",
+        "rules": [
+          "役割なしは全役割の肯定ではない。",
+          "将来の役割限定の否定を制作関与全体の否定へ変換しない。",
+          "作品共通の人物同士に直接の共同作業関係を生成しない。"
+        ],
+        "examples": [
+          {
+            "id": "contributed_to-include-1",
+            "category": "include",
+            "scenario": "当該版の商品情報に脚本・監修・プロデュースの制作クレジットがある",
+            "rationale": "該当資料の範囲で制作関与を述べられる。役割原表記と限定を残す。"
+          },
+          {
+            "id": "contributed_to-exclude-1",
+            "category": "exclude",
+            "scenario": "好きな作品・代表作という評価だけ",
+            "rationale": "制作への関与を示さない。"
+          },
+          {
+            "id": "contributed_to-exclude-2",
+            "category": "exclude",
+            "scenario": "原作由来として名前があるだけ",
+            "rationale": "原作・翻案の由来と、この作品への制作参加を同一視しない。"
+          },
+          {
+            "id": "contributed_to-boundary-1",
+            "category": "boundary",
+            "scenario": "著というクレジットから作画担当を登録したい",
+            "rationale": "広い制作関与は検討できるが、作画という限定は原表記だけから認定しない。"
+          },
+          {
+            "id": "contributed_to-boundary-2",
+            "category": "boundary",
+            "scenario": "一巻のクレジットから全巻の担当を登録したい",
+            "rationale": "全巻へ一般化しない。当該資料の限定を保持できなければ保留する。"
+          }
+        ],
+        "nearbyConcepts": [
+          {
+            "term": "制作役割",
+            "difference": "作画・監修等は関与の限定として検討し、現行Claimには導入していない。"
+          },
+          {
+            "term": "代表作・出世作・批判",
+            "difference": "評価・文脈・行為を制作関与へ置き換えない。"
+          }
+        ]
+      },
+      "translations": {
+        "ja": {
+          "label": "制作に関わった",
+          "reverseLabel": "制作関係者",
+          "description": "作品への関与。作者・編集者等の役割は初期は区別しない",
+          "aliases": []
+        }
+      },
+      "comparisons": [
+        {
+          "predicateId": "ASSISTANT_OF",
+          "relation": "distinct",
+          "rationale": "作品への参加だけではアシスタント関係を示さない。"
+        },
+        {
+          "predicateId": "INFLUENCED_BY",
+          "relation": "distinct",
+          "rationale": "制作参加だけでは人物への影響を示さない。"
+        },
+        {
+          "predicateId": "AFFILIATED_WITH",
+          "relation": "distinct",
+          "rationale": "作品への参加と組織との関わりは別。"
+        }
+      ]
+    },
+    {
+      "id": "AFFILIATED_WITH",
+      "status": "active",
+      "definitionLanguage": "ja",
+      "runtime": {
+        "subjectKind": "person",
+        "objectKind": "organization",
+        "label": "関わりがあった",
+        "reverseLabel": "関係者",
+        "description": "組織との関わり。雇用や所属を断定しない"
+      },
+      "meaning": {
+        "definition": "主体人物と対象組織との関わりが資料に述べられるという主張。雇用、所属、契約形態は認定せず、作品の出版社というだけで人物の関係を生成しない。",
+        "subjectRole": "組織との関わりが述べられた人物",
+        "objectRole": "関わりの対象組織",
+        "direction": "subject-to-object",
+        "rules": [
+          "雇用・所属・契約を推論しない。",
+          "作品と出版社の関係を人物と組織の関係へ転写しない。"
+        ],
+        "examples": [
+          {
+            "id": "affiliated_with-include-1",
+            "category": "include",
+            "scenario": "資料がAのB編集部への協力を明示する",
+            "rationale": "人物と組織の具体的関わりが直接述べられる。雇用は認定しない。"
+          },
+          {
+            "id": "affiliated_with-exclude-1",
+            "category": "exclude",
+            "scenario": "出版社BがAの作品を刊行したのでAはBに所属する",
+            "rationale": "作品と出版社の情報から人物の所属を推論している。"
+          },
+          {
+            "id": "affiliated_with-exclude-2",
+            "category": "exclude",
+            "scenario": "Bの商品を買っただけで制作上の所属を認定する",
+            "rationale": "購入から所属・雇用を認定できない。"
+          },
+          {
+            "id": "affiliated_with-boundary-1",
+            "category": "boundary",
+            "scenario": "組織との交流があるという曖昧な紹介",
+            "rationale": "保留。何を関わりとして述べる資料なのか確認し、より強い関係へ変換しない。"
+          }
+        ],
+        "nearbyConcepts": [
+          {
+            "term": "所属・雇用",
+            "difference": "具体的な所属・雇用はより限定された別の命題。現行語彙はそれを認定しない。"
+          },
+          {
+            "term": "作品の刊行",
+            "difference": "端点と主張内容が異なる。"
+          }
+        ]
+      },
+      "translations": {
+        "ja": {
+          "label": "関わりがあった",
+          "reverseLabel": "関係者",
+          "description": "組織との関わり。雇用や所属を断定しない",
+          "aliases": []
+        }
+      },
+      "comparisons": [
+        {
+          "predicateId": "ASSISTANT_OF",
+          "relation": "distinct",
+          "rationale": "組織との関わりから人物の補助関係を推定しない。"
+        },
+        {
+          "predicateId": "INFLUENCED_BY",
+          "relation": "distinct",
+          "rationale": "組織との関わりから人物への影響を推定しない。"
+        },
+        {
+          "predicateId": "CONTRIBUTED_TO",
+          "relation": "distinct",
+          "rationale": "人物と組織の関わりを作品への制作参加と同一視しない。"
+        }
+      ]
+    }
+  ]
+}

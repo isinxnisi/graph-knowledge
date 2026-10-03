@@ -1,0 +1,44 @@
+{
+  "id": "proposal-replace-me",
+  "targetId": "PROPOSED_PREDICATE",
+  "kind": "predicate",
+  "change": "addition",
+  "beforeHash": null,
+  "afterHash": "0000000000000000000000000000000000000000000000000000000000000000",
+  "status": "draft",
+  "reviewer": null,
+  "reviewedAt": null,
+  "outcome": "new-predicate",
+  "motivation": "TODO: 既存語彙で表せない実資料の要求",
+  "evidenceExample": "TODO: 採用例と資料の参照",
+  "counterexample": "TODO: 採用してはいけない例",
+  "comparisons": [
+    {
+      "predicateId": "ASSISTANT_OF",
+      "relation": "distinct",
+      "rationale": "TODO: この既存語彙との差異。語感ではなく命題・根拠を比較"
+    },
+    {
+      "predicateId": "INFLUENCED_BY",
+      "relation": "distinct",
+      "rationale": "TODO: この既存語彙との差異。語感ではなく命題・根拠を比較"
+    },
+    {
+      "predicateId": "CONTRIBUTED_TO",
+      "relation": "distinct",
+      "rationale": "TODO: この既存語彙との差異。語感ではなく命題・根拠を比較"
+    },
+    {
+      "predicateId": "AFFILIATED_WITH",
+      "relation": "distinct",
+      "rationale": "TODO: この既存語彙との差異。語感ではなく命題・根拠を比較"
+    }
+  ],
+  "impacts": {
+    "claims": "TODO: 既存Claimの保持・新旧の意味差",
+    "conditions": "TODO: 取得条件・cursor・保存条件への影響",
+    "translations": "TODO: locale別の表現・別名と誤解",
+    "presentation": "TODO: 集約・肯否・詳細への影響"
+  },
+  "rationale": "TODO: 新predicate / 別名 / 限定 / 分類の判断理由"
+}

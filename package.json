@@ -10,8 +10,8 @@
     "build": "next build",
     "start": "next start --hostname 127.0.0.1",
     "typecheck": "next typegen && tsc --noEmit",
-    "lint": "eslint .",
-    "test": "vitest run tests/domain.test.ts tests/http.test.ts tests/ui-state.test.tsx tests/pilot.test.ts",
+    "lint": "npm run vocabulary:check && eslint .",
+    "test": "npm run vocabulary:check && vitest run tests/domain.test.ts tests/http.test.ts tests/ui-state.test.tsx tests/pilot.test.ts tests/vocabulary.test.ts",
     "test:integration": "vitest run tests/seed.integration.test.ts tests/api.integration.test.ts --no-file-parallelism",
     "fixture:validate": "tsx scripts/validate-fixture.ts",
     "db:constraints": "tsx scripts/constraints.ts",
@@ -24,7 +24,8 @@
     "pilot:dev": "tsx scripts/pilot.ts dev",
     "pilot:build": "tsx scripts/pilot.ts build",
     "pilot:e2e": "playwright test --config=playwright.pilot.config.ts",
-    "pilot:integration": "vitest run tests/pilot.integration.test.ts --no-file-parallelism"
+    "pilot:integration": "vitest run tests/pilot.integration.test.ts --no-file-parallelism",
+    "vocabulary:check": "tsx scripts/check-vocabulary.ts"
   },
   "dependencies": {
     "cytoscape": "3.34.3",

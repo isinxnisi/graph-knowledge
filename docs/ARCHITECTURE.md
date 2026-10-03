@@ -474,3 +474,7 @@ GraphStateは一つの有効条件スコープ（predicates / conditionKey）内
 - 専用表示は少数実データ・非網羅・共通作品は人物同士の直接関係ではないことを明示する。新規文字列はlocale解決境界へ置く。Graphの配置・操作・条件・開閉・Relation集約は維持する。
 
 一般更新・大量importを追加したわけではない。検証中は版を固定し、新版への切替は別DBを検証して探索を再開始する。demo統合テストはパイロット設定を拒否し、パイロットのテストは専用実行経路で分離する。
+
+### 既存Predicateの意味契約・変更チェック
+
+既存4語彙の実行辞書とClaim schemaは維持する。vocabulary/catalog.jsonに包含・除外・境界例、方向、近接概念、locale別表現、既存語彙との比較を記録し、baseline-v1.jsonを変更検出用の基準版とする。使用済みIDの意味は変更せず、追加・意味を保つ明確化・翻訳修正にもhashで変更前後を指定した比較票を要求する。端点変更・ID削除・辞書との不一致・無審査変更は開発時validatorで拒否する。意味の同一性・資料の解釈は人間レビュー。詳細と実行方法は [PREDICATE_CONTRACTS.md](design/PREDICATE_CONTRACTS.md)。Role・taxonomy・Graph表示束・DB/API/UI・凍結データは今回変更しない。

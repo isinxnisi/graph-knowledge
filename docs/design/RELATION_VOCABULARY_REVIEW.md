@@ -1,8 +1,10 @@
 # 関係語彙・役割・分類・表示の意味境界レビュー
 
-2026-10-03。**設計提案・未採用・未実装**。少数実データパイロットは現在の凍結版で区切る。今回変更するのは文書だけで、DB・API・UI・fixture・pilot dataの契約と内容を変更しない。
+2026-10-03。**提案を採用**（既存4語彙の意味契約・最小チェックを実装。Role・分類・表示束等は未実装）。少数実データパイロットは現在の凍結版で区切る。今回変更するのは文書だけで、DB・API・UI・fixture・pilot dataの契約と内容を変更しない。
 
 現行仕様は[ARCHITECTURE](../ARCHITECTURE.md)、目的は[PROJECT_CONTEXT](../PROJECT_CONTEXT.md)。[プリセット・taxonomy](EXPLORATION_PRESETS_REVIEW.md)、[探索モデル](EXPLORATION_MODEL_REVIEW.md)、[条件付き探索](CONDITIONAL_EXPLORATION_PHASE.md)、[プロダクト原則](PRODUCT_VISION_AND_PRINCIPLES.md)、[パイロット設計](REAL_DATA_PILOT.md)、[実施記録](../archive/phase-04-real-data-pilot/IMPLEMENTATION_REAL_DATA_PILOT.md)を踏まえる。
+
+後続の採用仕様・手順は[Predicate意味契約](PREDICATE_CONTRACTS.md)。以下はレビュー時点の提案・分析として残す。
 
 ## 1. 結論と問題の整理
 
