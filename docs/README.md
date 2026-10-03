@@ -10,6 +10,7 @@
 
 | 現役の設計文書 | 状態・読む場面 |
 | --- | --- |
+| [プロダクト像と設計原則](design/PRODUCT_VISION_AND_PRINCIPLES.md) | 成熟したサービスの目標・実現意向・未確定候補・守る境界。直近の実装要件ではない |
 | [探索モデル](design/EXPLORATION_MODEL_REVIEW.md) | 開閉部分は採用済み。条件付き探索・複数起点・時系列の残りは提案。探索の拡張時に参照 |
 | [操作と設定](design/GRAPH_INTERACTION_AND_SETTINGS.md) | 再クリック・300ms判定は実装済み。設定モーダル・永続化・管理設定は検討中 |
 | [プリセット・分類・多言語・会員保存](design/EXPLORATION_PRESETS_REVIEW.md) | 多言語対応は設計前提として採用済み。具体方式・プリセット・保存は設計案。条件API・taxonomy・翻訳・認証・保存は未実装 |

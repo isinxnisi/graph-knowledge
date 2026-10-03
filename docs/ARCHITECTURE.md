@@ -6,6 +6,8 @@
 
 [PROJECT_CONTEXT.md](PROJECT_CONTEXT.md)を目的とスコープの基準とする。Neo4jを関係性データの正本、PostgreSQLをサービス運営データの正本とする構成を想定する。初期はClaimノード方式を採用し、fixtureで検証する。今回決めた実装範囲は末尾の「最小Vertical Sliceの初期採用仕様」にまとめる。将来の拡張案と初期仕様を区別する。
 
+成熟したプロダクト像と、投稿・議論・保存・履歴等の初回設計で守る境界は [PRODUCT_VISION_AND_PRINCIPLES.md](design/PRODUCT_VISION_AND_PRINCIPLES.md) を参照する。構想の保存であり、現行API・DB契約や着手範囲を変更しない。
+
 ## 多言語対応の設計前提
 
 多言語対応は必須の設計前提であり、将来選択するオプションではない。現在は日本語のみの実装だが、新しい設計では以下の境界を守る。対応言語、翻訳の拡充、言語切替UI、名称モデルとAPIの具体的な移行時期は別途決める。
