@@ -1,6 +1,6 @@
 # 初期技術設計
 
-更新日: 2026-10-03 / 状態: 実装順序5の既存UI調整まで実施。検証記録はIMPLEMENTATION_STEP_1_2.md、IMPLEMENTATION_STEP_3.md、IMPLEMENTATION_STEP_4.md、IMPLEMENTATION_STEP_5.mdを参照。
+更新日: 2026-10-03 / 状態: 初期Vertical Slice（ローカルの読み取り専用デモ）をテーマ調整まで完了。検証記録はIMPLEMENTATION_STEP_1_2.md、IMPLEMENTATION_STEP_3.md、IMPLEMENTATION_STEP_4.md、IMPLEMENTATION_STEP_5.mdを参照。
 
 ## 前提と設計の位置づけ
 
@@ -407,3 +407,10 @@ Step 4のDB/API契約と探索機能を維持し、表示のみ調整した。�
 - Node文字16px、Edge文字15px、Edgeラベル幅165px・背景余白5px。選択Edgeは線の強調と淡いラベル背景を使い、窮屈なラベル枠を付けない。
 - 短いCanvasでは縦半径の基準をclamp((Canvas高−80)/2, 155, 220)へ縮め、180未満なら横半径の基準を360に広げる。周辺数による半径下限は維持する。
 - 初期はfit後のzoomを0.8〜1.15（未取得ページがある場合は下限0.65）に調整し、可読性を優先する。狭い領域では一部が画面外に出る場合があり、パンか「全体を表示」で確認する。「全体を表示」は余白24pxのfitで全域の位置関係を確認し、文字が縮小する。
+
+### 初期Vertical Sliceのテーマと完了範囲
+
+- app/theme.cssで画面・Graphの共通CSS変数を定義。落ち着いた深緑、明るい紙色、personの淡い緑・workの紙色・organizationの淡い紫を使う。CSS ModulesとCytoscapeは同じテーマ値を参照する。Graphは初期化時に値を読むため、テーマ値変更後は再読み込みする。
+- レイアウト、Node配置、曲率、意味表現、API・DB・fixtureは維持する。選択の太い枠、展開済みの二重枠、新規表示の淡い外枠、Node形状、否定の文字と破線、肯否混在の文字と点線も維持する。
+- 検証した文字と背景の比率は4.5以上、Graph線・Node境界・入力境界は3以上を確認。包括的なアクセシビリティ適合の認証ではない。
+- 初期の検索→探索→Claim比較→出典確認までのローカルデモを完了として区切る。将来機能や本番公開準備は対象外。配色と確認画像は [IMPLEMENTATION_THEME.md](IMPLEMENTATION_THEME.md) を参照。

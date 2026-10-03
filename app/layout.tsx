@@ -1,3 +1,4 @@
+import "./theme.css";
 import styles from "./layout.module.css";
 
 import type { ReactNode } from "react";

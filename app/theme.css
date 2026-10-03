@@ -1,0 +1,26 @@
+/* 画面とCytoscapeで共有するテーマ。色の変更はこの一覧を起点に行う。 */
+:root {
+  --color-page: #eef1ed;
+  --color-panel: #fafbf8;
+  --color-canvas: #f5f7f3;
+  --color-text: #253c37;
+  --color-muted: #566a62;
+  --color-border: #c2ccc5;
+  --color-control-border: #7b9185;
+  --color-accent: #326357;
+  --color-accent-strong: #234d43;
+  --color-accent-soft: #e3eee8;
+  --color-hover: #edf3ed;
+  --color-on-accent: #fafbf8;
+  --color-denied: #875044;
+  --color-denied-soft: #f5e9e3;
+  --color-demo-text: #705825;
+  --color-demo: #f3ecd8;
+  --color-demo-border: #bc9c61;
+  --color-person: #e3eee8;
+  --color-work: #f0e9d8;
+  --color-organization: #e8e6ef;
+  --color-node-border: #748879;
+  --color-edge: #6b8075;
+  --color-new-node: #b18a43;
+}

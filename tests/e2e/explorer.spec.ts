@@ -247,3 +247,41 @@ test("表示用データ: 単一の否定Relationと出典未確認の詳細", a
   await canvasTap(page, claim.id, true); await expect(page.getByTestId(`claim-card-${claim.id}`)).toContainText("出典未確認");
   await expect(page.getByTestId(`claim-card-${claim.id}`)).toContainText("否定する主張");
 });
+
+test("テーマ: 画面とGraphの色を共有し文字・操作境界のコントラストを確保", async ({ page }) => {
+  await choose(page); await expect(page.getByTestId("graph-counts")).toHaveText("Entity 5 / Claim 7");
+  const palette = await page.getByTestId("graph-canvas").evaluate((el) => {
+    const style = getComputedStyle(el);
+    const token = (name: string) => style.getPropertyValue(`--color-${name}`).trim();
+    const cy = (el as unknown as { _cyreg: { cy: import("cytoscape").Core } })._cyreg.cy;
+    const input = getComputedStyle(document.querySelector("input")!);
+    const button = getComputedStyle(document.querySelector("form button")!);
+    return { surface: style.backgroundColor, canvas: token("canvas"),
+      controlPairs: [[input.color, input.backgroundColor], [button.color, button.backgroundColor]],
+      controlBorder: [input.borderTopColor, input.backgroundColor],
+      textPairs: ["panel", "canvas", "person", "work", "organization", "accent-soft"].map((name) => [token("text"), token(name)]),
+      mutedPairs: ["panel", "canvas", "accent-soft"].map((name) => [token("muted"), token(name)]),
+      otherPairs: [[token("on-accent"), token("accent")], [token("denied"), token("denied-soft")], [token("demo-text"), token("demo")]],
+      boundaries: [[token("edge"), token("canvas")], [token("control-border"), token("panel")], ...["person", "work", "organization"].map((name) => [token("node-border"), token(name)])],
+      nodes: cy.nodes().map((node) => ({ color: node.style("color"), fill: node.style("background-color"), shape: node.style("shape"), expanded: node.style("border-style") })),
+      edges: cy.edges().map((edge) => ({ color: edge.style("color"), background: edge.style("text-background-color"), line: edge.style("line-color") })),
+      expected: { text: token("text"), person: token("person"), work: token("work"), organization: token("organization"), edge: token("edge"), panel: token("panel") } };
+  });
+  const rgb = (color: string) => color.startsWith("#") ? [1, 3, 5].map((i) => parseInt(color.slice(i, i + 2), 16)) : color.match(/[\d.]+/g)!.slice(0, 3).map(Number);
+  const luminance = (color: string) => rgb(color).map((value) => { const v = value / 255; return v <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; }).reduce((sum, v, i) => sum + v * [0.2126, 0.7152, 0.0722][i], 0);
+  const contrast = ([a, b]: string[]) => { const values = [luminance(a), luminance(b)].sort((a, b) => b - a); return (values[0] + 0.05) / (values[1] + 0.05); };
+  for (const pair of [...palette.textPairs, ...palette.mutedPairs, ...palette.otherPairs, ...palette.controlPairs]) expect(contrast(pair)).toBeGreaterThanOrEqual(4.5);
+  expect(rgb(palette.surface)).toEqual(rgb(palette.canvas));
+  for (const pair of [...palette.boundaries, palette.controlBorder]) expect(contrast(pair)).toBeGreaterThanOrEqual(3);
+  for (const node of palette.nodes) expect(rgb(node.color)).toEqual(rgb(palette.expected.text));
+  expect(palette.nodes.map((node) => node.shape)).toContain("ellipse");
+  expect(palette.nodes.map((node) => node.shape)).toContain("round-rectangle");
+  expect(palette.nodes.map((node) => node.shape)).toContain("hexagon");
+  expect(palette.nodes.some((node) => node.expanded === "double")).toBe(true);
+  for (const edge of palette.edges) {
+    expect(rgb(edge.color)).toEqual(rgb(palette.expected.text));
+    expect(rgb(edge.line)).toEqual(rgb(palette.expected.edge));
+    expect(rgb(edge.background)).toEqual(rgb(palette.expected.panel));
+  }
+  await page.screenshot({ path: "/tmp/graph-knowledge-theme-initial.png", fullPage: true });
+});

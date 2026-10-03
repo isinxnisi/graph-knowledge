@@ -19,22 +19,24 @@ export default function GraphCanvas({ graph, selection, onEntity, onRelation }: 
 
   useEffect(() => {
     if (!container.current) return;
+    const theme = getComputedStyle(container.current);
+    const color = (name: string) => theme.getPropertyValue(`--color-${name}`).trim();
     const cy = cytoscape({
       container: container.current, elements: [], layout: { name: "preset" },
       minZoom: 0.15, maxZoom: 2,
       style: [
-        { selector: "node", style: { label: "data(label)", "background-color": "#e7f0f3", color: "#172f39", "border-width": 1, "border-color": "#7d9aa6", width: 116, height: 64, "font-size": 16, "text-valign": "center", "text-halign": "center", "text-wrap": "wrap", "text-max-width": "108px" } },
-        { selector: 'node[kind="work"]', style: { shape: "round-rectangle", "background-color": "#f6efdc" } },
-        { selector: 'node[kind="organization"]', style: { shape: "hexagon", "background-color": "#eae5f3" } },
+        { selector: "node", style: { label: "data(label)", "background-color": color("person"), color: color("text"), "border-width": 1, "border-color": color("node-border"), width: 116, height: 64, "font-size": 16, "text-valign": "center", "text-halign": "center", "text-wrap": "wrap", "text-max-width": "108px" } },
+        { selector: 'node[kind="work"]', style: { shape: "round-rectangle", "background-color": color("work") } },
+        { selector: 'node[kind="organization"]', style: { shape: "hexagon", "background-color": color("organization") } },
         { selector: 'node[kind="event"]', style: { shape: "diamond" } },
-        { selector: "node.center", style: { "border-width": 3, "border-color": "#376c83" } },
-        { selector: "edge", style: { label: "data(label)", "curve-style": "unbundled-bezier", "control-point-distances": "data(distance)", "control-point-weights": "data(weight)", "target-arrow-shape": "triangle", "source-arrow-shape": "none", "arrow-scale": 1.2, "line-color": "#8299a3", "target-arrow-color": "#8299a3", width: 2, "font-size": 15, "text-margin-y": (edge: cytoscape.EdgeSingular) => Number(edge.data("labelOffset")), "text-background-color": "#ffffff", "text-background-opacity": 1, "text-background-padding": "5px", "text-wrap": "wrap", "text-max-width": "165px", "text-overflow-wrap": "anywhere", "text-events": "yes" } },
-        { selector: 'edge[polarity="denied"]', style: { "line-style": "dashed", "line-color": "#965d44", "target-arrow-color": "#965d44" } },
+        { selector: "node.center", style: { "border-width": 3, "border-color": color("accent") } },
+        { selector: "edge", style: { label: "data(label)", color: color("text"), "curve-style": "unbundled-bezier", "control-point-distances": "data(distance)", "control-point-weights": "data(weight)", "target-arrow-shape": "triangle", "source-arrow-shape": "none", "arrow-scale": 1.2, "line-color": color("edge"), "target-arrow-color": color("edge"), width: 2, "font-size": 15, "text-margin-y": (edge: cytoscape.EdgeSingular) => Number(edge.data("labelOffset")), "text-background-color": color("panel"), "text-background-opacity": 1, "text-background-padding": "5px", "text-wrap": "wrap", "text-max-width": "165px", "text-overflow-wrap": "anywhere", "text-events": "yes" } },
+        { selector: 'edge[polarity="denied"]', style: { "line-style": "dashed", "line-color": color("denied"), "target-arrow-color": color("denied") } },
         { selector: 'edge[polarity="mixed"]', style: { "line-style": "dotted" } },
         { selector: "node[expanded = 1]", style: { "border-style": "double", "border-width": 4 } },
-        { selector: "node.added", style: { "underlay-color": "#e7b345", "underlay-opacity": 0.25, "underlay-padding": 10 } },
-        { selector: "node.chosen", style: { "border-width": 5, "border-color": "#194e6e", "underlay-color": "#194e6e", "underlay-opacity": 0.12, "underlay-padding": 8 } },
-        { selector: "edge.chosen", style: { "line-color": "#194e6e", "target-arrow-color": "#194e6e", width: 4, "text-background-color": "#edf4f8", "z-index": 10 } },
+        { selector: "node.added", style: { "underlay-color": color("new-node"), "underlay-opacity": 0.25, "underlay-padding": 10 } },
+        { selector: "node.chosen", style: { "border-width": 5, "border-color": color("accent-strong"), "underlay-color": color("accent-strong"), "underlay-opacity": 0.12, "underlay-padding": 8 } },
+        { selector: "edge.chosen", style: { "line-color": color("accent-strong"), "target-arrow-color": color("accent-strong"), width: 4, "text-background-color": color("accent-soft"), "z-index": 10 } },
       ],
     });
     core.current = cy;

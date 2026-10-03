@@ -131,3 +131,7 @@ UI調整とその検証をStep 5の今回の完了範囲とし、上記の残る
 ## 追加調整: Node配置・曲率・ラベルのバランス
 
 Relation集約後の曲率が弱すぎることと、Node配置・余白の偏りを再調整した。最新の数値・判断理由・画像は [IMPLEMENTATION_GRAPH_BALANCE.md](IMPLEMENTATION_GRAPH_BALANCE.md) を参照。前節の48刻み曲率や32刻みラベルオフセットは当時の記録で、現在は端点間の距離に応じた曲率を採用する。
+
+## 最終調整: テーマと初期Vertical Sliceの完了
+
+共通テーマを画面・Graphへ適用し、初期ローカルデモを完了として区切った。配色、意味表現の維持、コントラスト確認と画像は [IMPLEMENTATION_THEME.md](IMPLEMENTATION_THEME.md) を参照。将来機能と本番公開準備は未着手。

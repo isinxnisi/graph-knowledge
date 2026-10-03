@@ -2,7 +2,7 @@
 
 出典付きの関係性を蓄積・探索するサービスの初期基盤です。作業前に[PROJECT_CONTEXT](docs/PROJECT_CONTEXT.md)と[ARCHITECTURE](docs/ARCHITECTURE.md)を参照してください。
 
-現在は実装順序5の既存UI調整まで実施済みです。ルートに検索・Cytoscape.jsのGraph・詳細を一画面で表示します。すべて架空のデモデータです。認証・投稿・Wikidata取り込みは未実装です。Graphの可読性・同名表示・選択とスクロールの操作を調整しています。
+初期Vertical Slice（ローカルの読み取り専用デモ）は、実装順序5のUI・テーマ調整まで完了しています。ルートに検索・Cytoscape.jsのGraph・詳細を一画面で表示します。すべて架空のデモデータです。認証・投稿・Wikidata取り込みは未実装です。Graphの可読性・同名表示・選択とスクロールの操作を調整しています。
 
 ## 必要な環境
 
@@ -133,3 +133,5 @@ GRAPH_TEST_REUSE=1 npm run test:e2e
 Graphの線は同じ主体・関係タイプ・対象のClaimをまとめた表示用Relationです。肯定・否定の混在は「異説あり」と点線で示し、クリックすると独立した各Claimの期間・出典を比較できます。初期Graphは7 Claim / 5 Relation、全展開は15 Claim / 13 Relationです。未取得ページがある場合、Graph表示は取得済みの主張に基づきます。
 
 Graphの配置・曲率の最新調整と確認画像は [IMPLEMENTATION_GRAPH_BALANCE.md](docs/IMPLEMENTATION_GRAPH_BALANCE.md) を参照してください。
+
+テーマ色は `app/theme.css` に集約しています。画面とGraphで共有し、変更後は画面を再読み込みしてください。配色・検証・完了範囲は [IMPLEMENTATION_THEME.md](docs/IMPLEMENTATION_THEME.md) を参照してください。
