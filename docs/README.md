@@ -10,6 +10,7 @@
 
 | 現役の設計文書 | 状態・読む場面 |
 | --- | --- |
+| [現在地点と次フェーズ](design/CURRENT_STATE_AND_NEXT_PHASE.md) | 2026-10-03の棚卸し。最小の条件付き探索を推奨、次フェーズは未承認・未実装 |
 | [プロダクト像と設計原則](design/PRODUCT_VISION_AND_PRINCIPLES.md) | 成熟したサービスの目標・実現意向・未確定候補・守る境界。直近の実装要件ではない |
 | [探索モデル](design/EXPLORATION_MODEL_REVIEW.md) | 開閉部分は採用済み。条件付き探索・複数起点・時系列の残りは提案。探索の拡張時に参照 |
 | [操作と設定](design/GRAPH_INTERACTION_AND_SETTINGS.md) | 再クリック・300ms判定は実装済み。設定モーダル・永続化・管理設定は検討中 |
