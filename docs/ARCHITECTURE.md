@@ -478,3 +478,7 @@ GraphStateは一つの有効条件スコープ（predicates / conditionKey）内
 ### 既存Predicateの意味契約・変更チェック
 
 既存4語彙の実行辞書とClaim schemaは維持する。vocabulary/catalog.jsonに包含・除外・境界例、方向、近接概念、locale別表現、既存語彙との比較を記録し、baseline-v1.jsonを変更検出用の基準版とする。使用済みIDの意味は変更せず、追加・意味を保つ明確化・翻訳修正にもhashで変更前後を指定した比較票を要求する。端点変更・ID削除・辞書との不一致・無審査変更は開発時validatorで拒否する。意味の同一性・資料の解釈は人間レビュー。詳細と実行方法は [PREDICATE_CONTRACTS.md](design/PREDICATE_CONTRACTS.md)。Role・taxonomy・Graph表示束・DB/API/UI・凍結データは今回変更しない。
+
+### 制作Roleの最小設計レビュー（未採用・未実装）
+
+CONTRIBUTED_TO専用の一Claim一Role、刊行物scope、広いrelatedClaimIds、現行DisplayRelationを維持した概要、LIMIT前のRole条件・cursorの拡張、新dataset版の案を [CONTRIBUTION_ROLE_REVIEW.md](design/CONTRIBUTION_ROLE_REVIEW.md) に整理する。初期候補は台帳で明示された脚本・監修・プロデュース・ストーリー共同制作。作画は資料確認まで保留。これは設計提案であり、現行のDB・API・UI・Claim schema・fixture・凍結pilot dataは変更していない。
