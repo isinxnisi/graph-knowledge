@@ -1,5 +1,7 @@
 "use client";
 
+import type { DatasetMode } from "../lib/domain/dataset";
+import { datasetLabels } from "../lib/i18n/dataset";
 import { useState } from "react";
 import { displayRelations, entityLabel } from "../lib/client/graph-presentation";
 import { relationLabel } from "../lib/client/format";
@@ -12,7 +14,8 @@ import EntityDetails from "./EntityDetails";
 import ClaimDetails from "./ClaimDetails";
 import styles from "./Explorer.module.css";
 
-export default function Explorer() {
+export default function Explorer({ dataset = "demo" }: { dataset?: DatasetMode }) {
+  const labels = datasetLabels(dataset);
   const [dark, setDark] = useState(false);
   const [darkPalette, setDarkPalette] = useState<"brown" | "blue">("brown");
   const { graph, selection, changePredicates, chooseRoot, selectEntity, selectClaim, selectRelation, expand, close, toggleEntity } = useGraphExplorer();
@@ -26,8 +29,8 @@ export default function Explorer() {
   const blocked = Object.values(graph.expansions).find((meta) => meta.blocked);
   return <div className={styles.explorer}>
     <header className={styles.header}>
-      <h1>関係性を探索する</h1><p className={styles.demo}>架空のデモデータ</p>
-      <p>人物・作品・組織のつながりを、主張と出典から辿る。</p>
+      <h1>関係性を探索する</h1><p className={styles.demo}>{labels.badge}</p>
+      <p>{labels.description}</p>
       <button className={styles.themeToggle} aria-label="ダークモード" aria-pressed={dark} onClick={() => {
         const next = !dark; setDark(next);
         document.documentElement.dataset.theme = next ? `dark-${darkPalette}` : "light";
@@ -40,7 +43,7 @@ export default function Explorer() {
       </label>}
     </header>
     <main className={styles.columns}>
-      <div className={styles.panel}><SearchPanel onChoose={chooseRoot} /><RelationFilter value={graph.predicates} onApply={changePredicates} /></div>
+      <div className={styles.panel}><SearchPanel placeholder={labels.searchExample} onChoose={chooseRoot} /><RelationFilter value={graph.predicates} onApply={changePredicates} /></div>
       <section className={`${styles.panel} ${styles.graphPanel}`} aria-labelledby="graph-title">
         <div className={styles.graphHeading}><h2 id="graph-title">Graph</h2>
           <p data-testid="graph-counts">Entity {Object.keys(graph.nodes).length} / Claim {Object.keys(graph.claims).length}</p><p data-testid="relation-counts">Relation {Object.keys(relations).length}</p>
@@ -52,7 +55,7 @@ export default function Explorer() {
         {graph.notice && <p role="status">{graph.notice}</p>}
         {blocked && <p role="alert" className={styles.error}>{blocked.error}</p>}
         <GraphCanvas graph={graph} selection={selection} onEntity={selectEntity} onRelation={selectRelation} onToggleEntity={toggleEntity} />
-        <RelationsList graph={graph} selection={selection} onEntity={selectEntity} onClaim={selectClaim} onExpand={(id) => void expand(id)} onClose={close} />
+        <RelationsList dataset={dataset} graph={graph} selection={selection} onEntity={selectEntity} onClaim={selectClaim} onExpand={(id) => void expand(id)} onClose={close} />
       </section>
       <aside className={styles.panel} aria-labelledby="detail-title">
         <h2 id="detail-title">詳細</h2>

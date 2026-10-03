@@ -1,3 +1,4 @@
+import { assertDemoTestTarget } from "../lib/domain/dataset";
 import { randomUUID } from "node:crypto";
 import { expect, it } from "vitest";
 import { fixtureCounts } from "../lib/domain/fixture";
@@ -7,6 +8,7 @@ import { graphCounts, graphSnapshot, loadFixture, seedFixture } from "../lib/ser
 it("preserves all data on a second seed and rolls back an incompatible fixture", async () => {
   const fixture = await loadFixture();
   const { driver, database } = openDatabase();
+  assertDemoTestTarget();
   try {
     await driver.verifyConnectivity();
     await seedFixture(driver, database, fixture);

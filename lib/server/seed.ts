@@ -63,6 +63,44 @@ export async function seedFixture(driver: Driver, database: string, input: unkno
   const session = driver.session({ database });
   try {
     return await session.executeWrite(async (tx) => {
+      // 凍結版のデータ書込み前に、別データセットのNode混在を拒否する。
+      const ids = new Map([
+        ...fixture.entities.map((node) => [node.id, "Entity"] as const),
+        ...fixture.claims.map((node) => [node.id, "Claim"] as const),
+        ...fixture.sources.map((node) => [node.id, "Source"] as const),
+        ...fixture.citations.map((node) => [node.id, "Citation"] as const),
+      ]);
+      const externalKeys = new Set(fixture.entities.flatMap((entity) => entity.externalIds.map((id) => canonical(id))));
+      const existing = await tx.run("MATCH (n) RETURN labels(n) AS labels, properties(n) AS properties");
+      for (const record of existing.records) {
+        const labels = record.get("labels") as string[];
+        const props = record.get("properties");
+        const allowed = labels.length === 1 && (labels[0] === "ExternalIdentifier"
+          ? externalKeys.has(canonical({ namespace: props.namespace, value: props.value }))
+          : ids.get(props.id) === labels[0]);
+        if (!allowed) throw new Error("Existing database contains nodes outside this fixture/dataset; refusing mixed seed");
+      }
+      const expectedEdges = new Set<string>();
+      for (const claim of fixture.claims) {
+        expectedEdges.add(canonical([claim.id, "SUBJECT", claim.subjectId]));
+        expectedEdges.add(canonical([claim.id, "OBJECT", claim.objectId]));
+      }
+      for (const citation of fixture.citations) {
+        expectedEdges.add(canonical([citation.claimId, "HAS_CITATION", citation.id]));
+        expectedEdges.add(canonical([citation.id, "CITES", citation.sourceId]));
+      }
+      for (const entity of fixture.entities) for (const external of entity.externalIds) {
+        expectedEdges.add(canonical([entity.id, "HAS_EXTERNAL_ID", external.namespace, external.value]));
+      }
+      const edges = await tx.run("MATCH (s)-[r]->(t) RETURN s.id AS subjectId, type(r) AS type, t.id AS objectId, t.namespace AS namespace, t.value AS value");
+      const seenEdges = new Set<string>();
+      for (const record of edges.records) {
+        const key = canonical(record.get("type") === "HAS_EXTERNAL_ID"
+          ? [record.get("subjectId"), record.get("type"), record.get("namespace"), record.get("value")]
+          : [record.get("subjectId"), record.get("type"), record.get("objectId")]);
+        if (!expectedEdges.has(key) || seenEdges.has(key)) throw new Error("Existing database contains relationships outside this fixture/dataset");
+        seenEdges.add(key);
+      }
       let nodesCreated = 0;
       let relationshipsCreated = 0;
       const merge = async (label: "Entity" | "Claim" | "Source" | "Citation", props: Properties) => {

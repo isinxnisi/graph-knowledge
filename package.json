@@ -11,13 +11,20 @@
     "start": "next start --hostname 127.0.0.1",
     "typecheck": "next typegen && tsc --noEmit",
     "lint": "eslint .",
-    "test": "vitest run tests/domain.test.ts tests/http.test.ts tests/ui-state.test.tsx",
+    "test": "vitest run tests/domain.test.ts tests/http.test.ts tests/ui-state.test.tsx tests/pilot.test.ts",
     "test:integration": "vitest run tests/seed.integration.test.ts tests/api.integration.test.ts --no-file-parallelism",
     "fixture:validate": "tsx scripts/validate-fixture.ts",
     "db:constraints": "tsx scripts/constraints.ts",
     "db:seed": "tsx scripts/seed.ts",
     "test:api": "vitest run tests/api.integration.test.ts --no-file-parallelism",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "pilot:prepare": "tsx scripts/prepare-pilot.ts",
+    "pilot:validate": "tsx scripts/prepare-pilot.ts --check",
+    "pilot:seed": "tsx scripts/pilot.ts seed",
+    "pilot:dev": "tsx scripts/pilot.ts dev",
+    "pilot:build": "tsx scripts/pilot.ts build",
+    "pilot:e2e": "playwright test --config=playwright.pilot.config.ts",
+    "pilot:integration": "vitest run tests/pilot.integration.test.ts --no-file-parallelism"
   },
   "dependencies": {
     "cytoscape": "3.34.3",

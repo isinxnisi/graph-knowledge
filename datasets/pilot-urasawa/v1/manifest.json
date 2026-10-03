@@ -1,0 +1,21 @@
+{
+  "id": "pilot-urasawa",
+  "version": 1,
+  "transformVersion": 1,
+  "createdAt": "2026-10-03T05:13:37Z",
+  "reviewer": "Codex: source and identity review; user observation pending",
+  "scope": "5人物・3漫画作品。出版社クレジット8主張と本人インタビューの影響1主張。網羅的ではない。",
+  "frozen": true,
+  "files": {
+    "ledger.json": "222b7e4530d9638d2966ddaa5d81a6ffd20427cf9c9b7ed1e7c95b4a7852eb03",
+    "raw/Q348436.json": "7f4ce9ec0ccc25fb52caec694621f5379f426a2065364a9413c9bc03a1cc5927",
+    "raw/Q3514203.json": "0212bf5156ba6904b360a2e1768a628af88d6f144b90104e7503189301fb5697",
+    "raw/Q6724933.json": "5fda464513ef5637ce59e3c1941413d76f3e781a07eb2d13d9fe73a5021d2ef0",
+    "raw/Q11264988.json": "2460299c85093dd9514a6bdd7fdee3b530c274325b86f1b210758817dc1cfa19",
+    "raw/Q193300.json": "45648d7da70c0e495fc939f42799cea9b278b07c276bad1409ace874e5a2add6",
+    "raw/Q1197216.json": "dfe1b656b2b77f429248a8a66e140f698cee724fe80d36571ae7df80c459705d",
+    "raw/Q1185624.json": "6700f436c4781d1b8ca688769d4471205c843a9977ddf3f2df4465a9e2bf1dac",
+    "raw/Q594758.json": "8601b074c49b64a3105e92865f1888a67e08ba6d685b8e7a76c497ea2d3d047c",
+    "data.json": "446cb51ef4c1119ac8d2cf85ce1691b5e3b9e63e377c4cbef7d976fa585fc5cd"
+  }
+}

@@ -463,6 +463,14 @@ neighborsは任意のpredicates CSVを追加し、published・predicate条件を
 
 GraphStateは一つの有効条件スコープ（predicates / conditionKey）内にEntity別展開を保持する。世代変更で旧応答を排除し、受理・表示でもpredicateを検査する。同一起点では座標・pan/zoomを可能な限り保持し、選択は起点へ戻す。条件内空結果は孤立と区別する。新しい関係選択文字列はlocale解決境界を持つ日本語リソースに置く。taxonomy・プリセット・期間条件・複数起点・全面翻訳は今回追加しない。
 
-### 少数実データパイロットの投入前設計（未実装）
+### 少数実データパイロット v1
 
-[REAL_DATA_PILOT.md](design/REAL_DATA_PILOT.md)に対象・資料・ID・言語・由来・凍結版の提案を記録した。現行schemaにない名称の言語や取り込みprovenanceは構造化収集台帳で保持し、現行形式の投入用JSONへ投影する案。demo fixtureと回帰環境は維持し、パイロットDBは分離する。現seedは更新用途にせず、明示的なデータセット選択と表示モードの最小準備を次の実装候補とする。この設計案は現行API・Neo4jモデルの変更やデータ投入を意味しない。
+[REAL_DATA_PILOT.md](design/REAL_DATA_PILOT.md)を採用し、[Phase 04](archive/phase-04-real-data-pilot/IMPLEMENTATION_REAL_DATA_PILOT.md)で最小の実データ環境を実装した。5人物・3漫画作品・9 Claim・4 Source・9 Citation・8 ExternalIdentifier。Claimは確認した出版社・本人インタビューを根拠とし、Wikidataは外部ID・名称・同一性の確認と原取得記録に限定する。
+
+- datasets/pilot-urasawa/v1/ledger.jsonが収集台帳。言語付き名称・役割原表記・資料の限定・取得由来・保留を保持し、原JSONのhash/revisionと照合する。data.jsonは現行schemaへの投影、manifestは凍結版と内容hash。生成・検証はオフライン。
+- demo fixtureは維持。パイロットは別compose project/volume、Neo4j 7475/7688、Next 3211/.next-pilot。GRAPH_DATASETと接続先・seedの指定が一致しなければ拒否する。サーバーから表示モードだけをUIへ渡す。
+- seedは同じ確定内容の投入だけ。トランザクション内で対象外の既存Node/Relationshipを拒否し、差異を上書きしない。既存6制約・知識モデル・読み取りAPI契約を維持する。任意の手動DB書込みを制御する権限基盤は未実装。
+- Sourceは実資料、Wikidataの取得provenanceとは別。Citation.noteは台帳の役割・限定・理由から生成する。発売日・取材日をSource公開日やClaim期間へ転用しない。役割の汎用モデル・言語付き名称のAPI・履歴検索は未実装。
+- 専用表示は少数実データ・非網羅・共通作品は人物同士の直接関係ではないことを明示する。新規文字列はlocale解決境界へ置く。Graphの配置・操作・条件・開閉・Relation集約は維持する。
+
+一般更新・大量importを追加したわけではない。検証中は版を固定し、新版への切替は別DBを検証して探索を再開始する。demo統合テストはパイロット設定を拒否し、パイロットのテストは専用実行経路で分離する。

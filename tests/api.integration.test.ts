@@ -1,3 +1,4 @@
+import { assertDemoTestTarget } from "../lib/domain/dataset";
 import { spawn, execFile, type ChildProcess } from "node:child_process";
 import { createServer, type AddressInfo } from "node:net";
 import { createRequire } from "node:module";
@@ -46,6 +47,7 @@ async function restartDb() {
 beforeAll(async () => {
   fixture = await loadFixture();
   ({ driver, database } = openDatabase());
+  assertDemoTestTarget();
   await driver.verifyConnectivity();
   await seedFixture(driver, database, fixture);
   initialSnapshot = await graphSnapshot(driver, database);
@@ -327,6 +329,11 @@ it("returns 503 with the real DB stopped, then recovers after restarting", async
     }
     await request("/api/entities?q=", 400); // Invalid requests still validate without DB access.
   } finally { await restartDb(); }
+  // コンテナの疎通成功後も、アプリの既存driverの再接続を最大30秒待つ。
+  await expect.poll(async () => {
+    const response = await fetch(`${baseUrl}/api/entities?q=${encodeURIComponent("青葉ハル")}`, { signal: AbortSignal.timeout(10000) });
+    return response.status;
+  }, { timeout: 30000, interval: 1000 }).toBe(200);
   const recovered = await request<EntitySearchResponse>(`/api/entities?q=${encodeURIComponent("青葉ハル")}`);
   expect(recovered.items[0].id).toBe(fixture.entities[0].id);
 }, 240000);

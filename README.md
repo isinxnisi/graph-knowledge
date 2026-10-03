@@ -2,7 +2,7 @@
 
 出典付きの関係性を蓄積・探索するサービスの初期基盤です。作業前に[PROJECT_CONTEXT](docs/PROJECT_CONTEXT.md)と[ARCHITECTURE](docs/ARCHITECTURE.md)を参照してください。文書の状態とフェーズ別履歴は[docsの入口](docs/README.md)にまとめています。
 
-初期Vertical Slice（ローカルの読み取り専用デモ）は、実装順序5のUI・テーマ調整まで完了しています。ルートに検索・Cytoscape.jsのGraph・詳細を一画面で表示します。すべて架空のデモデータです。認証・投稿・Wikidata取り込みは未実装です。Graphの可読性・同名表示・選択とスクロールの操作を調整しています。
+初期Vertical Slice（ローカルの読み取り専用デモ）は、実装順序5のUI・テーマ調整まで完了しています。ルートに検索・Cytoscape.jsのGraph・詳細を一画面で表示します。既定環境は架空のデモデータです。別環境の少数実データパイロットは末尾を参照してください。認証・投稿・Wikidataの大量取り込みや自動同期は未実装です。Graphの可読性・同名表示・選択とスクロールの操作を調整しています。
 
 ## 必要な環境
 
@@ -157,3 +157,38 @@ Nodeクリックと今後の設定の責務は [GRAPH_INTERACTION_AND_SETTINGS.m
 [条件付き探索の契約](docs/design/CONDITIONAL_EXPLORATION_PHASE.md)を参照してください。起動済みdevをAPI統合テストに使う場合は API_TEST_BASE_URL=http://127.0.0.1:3210 npm run test:integration を使用できます。統合テストはDB停止・再開を含むためPlaywrightと同時実行しないでください。
 
 検証結果と確認画像は [Phase 03実施記録](docs/archive/phase-03-conditional-exploration/IMPLEMENTATION_CONDITIONAL_EXPLORATION.md) を参照してください。
+
+## 少数実データパイロット v1
+
+架空demoを残し、浦沢直樹周辺の確認した資料だけを別環境で探索できます。収録は人物5・漫画作品3・Claim9（制作関与8、人物間の影響1）・Source4・Citation9です。網羅的な経歴データではありません。[収集台帳と版](datasets/pilot-urasawa/v1/README.md)を参照してください。
+
+Node 24.21.0の環境で、プロジェクトルートから実行します。
+
+```bash
+cp .env.pilot.example .env.pilot
+npm run pilot:validate
+docker compose --env-file .env.pilot -f compose.pilot.yaml up -d --wait --wait-timeout 180
+npm run pilot:seed
+npm run pilot:dev
+```
+
+画面は **http://127.0.0.1:3211**。「少数実データパイロット v1」の表示を確認し、「浦沢直樹」を検索してください。PLUTO → 長崎尚志 → MASTERキートン → 勝鹿北星と辿れます。BILLY BATも展開し、線を選んで引用詳細のプロデュース／脚本／ストーリー共同制作と、根拠とする巻・版を確認してください。「影響を受けた」だけを適用すると、本人インタビューを根拠とする手塚治虫への関係を確認できます。
+
+既存の.envは変更しません。パイロットは別compose project・別volume、Neo4j Browserは7475、Boltは7688、Next出力は.next-pilotです。demoは従来の7474 / 7687を維持します。プロセスはデータセットと接続先を検査します。シェルに既にNEO4J_URI等をexportしている場合、その値が.env.pilotより優先されるので、別のシェルで実行するか設定を確認してください。既存ファイルのある場合は.env.pilotを上書きせず内容を確認します。
+
+seedは指定データセット・実行モード・接続先が食い違う場合、またはDB内に対象外のNode/Relationshipがある場合に拒否します。変更済みデータへ上書き更新はしません。demoのseedは`npm run db:seed`、実データは`npm run pilot:seed`を使用し、混在させないでください。環境を切り替える際はサーバーを再起動します。
+
+パイロットの生成／検証はオフラインです。`npm run pilot:prepare`はledgerからdata/manifestを生成します。原資料を再取得して黙って更新する処理はありません。
+
+```bash
+npm run pilot:integration
+npm run pilot:e2e
+```
+
+実データの統合テストは.env.pilotを使用します。ブラウザテストは3211の専用サーバーを使い、既に起動している場合は`GRAPH_TEST_REUSE=1 npm run pilot:e2e`で確認できます。demoの`test:integration`はDB停止・一時書込みを行うので、パイロット設定では実行を拒否します。demoのブラウザ回帰は従来の`test:e2e`で、パイロットのケースは分離しています。同じdemo DBに対する統合テストとブラウザテストは順番に実行してください。
+
+パイロットを停止する場合は専用サーバーをCtrl+Cで終了し、次を実行します。データvolumeは残ります。
+
+```bash
+docker compose --env-file .env.pilot -f compose.pilot.yaml stop
+```

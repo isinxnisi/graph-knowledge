@@ -5,7 +5,7 @@ import type { EntitySearchResponse, EntitySummary } from "../lib/domain/api";
 import { searchPeople, errorMessage } from "../lib/client/api";
 import styles from "./Explorer.module.css";
 
-export default function SearchPanel({ onChoose }: { onChoose: (entity: EntitySummary) => void }) {
+export default function SearchPanel({ onChoose, placeholder = "例：青葉ハル" }: { placeholder?: string; onChoose: (entity: EntitySummary) => void }) {
   const [q, setQ] = useState("");
   const [result, setResult] = useState<EntitySearchResponse | null>(null);
   const [loading, setLoading] = useState(false);
@@ -29,7 +29,7 @@ export default function SearchPanel({ onChoose }: { onChoose: (entity: EntitySum
     <h2 id="search-title">人物を検索</h2>
     <form onSubmit={submit} className={styles.searchForm}>
       <label htmlFor="person-search">人物名・別名</label>
-      <input id="person-search" value={q} onChange={(event) => setQ(event.target.value)} placeholder="例：青葉ハル" autoComplete="off" />
+      <input id="person-search" value={q} onChange={(event) => setQ(event.target.value)} placeholder={placeholder} autoComplete="off" />
       <button type="submit" disabled={loading}>{loading ? "検索中…" : "検索"}</button>
     </form>
     {error && <p role="alert" className={styles.error}>{error}</p>}

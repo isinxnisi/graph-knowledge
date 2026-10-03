@@ -1,3 +1,5 @@
 import Explorer from "../components/Explorer";
+import { datasetMode } from "../lib/domain/dataset";
 
-export default function Page() { return <Explorer />; }
+export const dynamic = "force-dynamic";
+export default function Page() { return <Explorer dataset={datasetMode(process.env.GRAPH_DATASET)} />; }
