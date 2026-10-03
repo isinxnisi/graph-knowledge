@@ -147,3 +147,13 @@ Graphの配置・曲率の最新調整と確認画像は [IMPLEMENTATION_GRAPH_B
 [開閉フェーズ実施記録](docs/archive/phase-02-exploration-close/IMPLEMENTATION_EXPLORATION_CLOSE.md)を参照してください。API・DB・fixtureは変更せず、条件付き探索・複数起点・時系列はまだ追加していません。
 
 Nodeクリックと今後の設定の責務は [GRAPH_INTERACTION_AND_SETTINGS.md](docs/design/GRAPH_INTERACTION_AND_SETTINGS.md) に記録しています。設定モーダル・永続化はまだ追加していません。
+
+## 辿る関係を選ぶ
+
+検索欄の下で既存4種類の関係を選び「適用」します。全件選択は従来の自由探索、全件解除は関係を表示しない指定です。編集中のチェック変更だけではGraphを変えません。適用すると同じ起点から取得し直し、旧条件の枝・開閉状態・cursorはリセットします。共通Nodeの座標と表示範囲は可能な限り維持します。起点を検索から変更しても適用中の条件は維持します。
+
+条件付きの近傍API例：GET /api/entities/{id}/neighbors?predicates=ASSISTANT_OF,INFLUENCED_BY&limit=2。続きを取得する時は返されたnextCursorをそのままafterへ渡し、同じpredicate集合を指定してください。条件付きcursorは起点と条件に結び付いており、別条件との混用は400です。条件を省略した無条件のUUID cursorは維持しています。条件内の結果なしは、孤立Entityとは分けて表示します。
+
+[条件付き探索の契約](docs/design/CONDITIONAL_EXPLORATION_PHASE.md)を参照してください。起動済みdevをAPI統合テストに使う場合は API_TEST_BASE_URL=http://127.0.0.1:3210 npm run test:integration を使用できます。統合テストはDB停止・再開を含むためPlaywrightと同時実行しないでください。
+
+検証結果と確認画像は [Phase 03実施記録](docs/archive/phase-03-conditional-exploration/IMPLEMENTATION_CONDITIONAL_EXPLORATION.md) を参照してください。

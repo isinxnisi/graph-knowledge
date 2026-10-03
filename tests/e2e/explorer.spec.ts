@@ -464,3 +464,115 @@ test("Node再クリック: 300msで開閉、ダブルクリックは開閉を抑
   await page.waitForTimeout(400);
   await expect(page.getByTestId("graph-counts")).toHaveText("Entity 1 / Claim 0");
 });
+
+async function applyPredicates(page: Page, names: string[]) {
+  const filter = page.getByRole("group", { name: "辿る関係" });
+  await filter.getByRole("button", { name: "選択を解除", exact: true }).click();
+  for (const name of names) await filter.getByRole("checkbox", { name, exact: true }).check();
+  await filter.getByRole("button", { name: "適用", exact: true }).click();
+}
+
+test("条件探索 実DB: 集約・出典・開閉・座標維持・空条件と孤立の区別", async ({ page }) => {
+  await choose(page);
+  await expect(page.getByTestId("graph-counts")).toHaveText("Entity 5 / Claim 7");
+  const snapshot = () => page.getByTestId("graph-canvas").evaluate((el) => {
+    const cy = (el as unknown as { _cyreg: { cy: import("cytoscape").Core } })._cyreg.cy;
+    return { positions: Object.fromEntries(cy.nodes().map((node) => [node.id(), node.position()])), zoom: cy.zoom(), pan: cy.pan(), labels: cy.edges().map((edge) => edge.data("label")) };
+  });
+  const before = await snapshot();
+  await applyPredicates(page, ["アシスタントだった"]);
+  await expect(page.getByTestId("graph-counts")).toHaveText("Entity 2 / Claim 3");
+  await expect(page.getByTestId("relation-counts")).toHaveText("Relation 1");
+  const after = await snapshot();
+  for (const [id, point] of Object.entries(after.positions)) expect(point).toEqual(before.positions[id]);
+  expect(after.zoom).toBe(before.zoom); expect(after.pan).toEqual(before.pan);
+  expect(after.labels[0]).toContain("異説あり");
+  await canvasTap(page, fixture.claims[0].id, true);
+  for (const claim of fixture.claims.slice(0, 3)) await expect(page.getByTestId("claim-card-" + claim.id)).toBeVisible();
+  await expect(page.getByTestId("claim-card-" + fixture.claims[0].id)).toContainText("出典 2件");
+  await expect(page.getByTestId("claim-card-" + fixture.claims[2].id)).toContainText("否定する主張");
+  await page.screenshot({ path: "/tmp/graph-knowledge-conditional-claim.png", fullPage: true });
+  await canvasTap(page, fixture.entities[1].id);
+  await expect(page.getByTestId("graph-counts")).toHaveText("Entity 3 / Claim 4");
+  await canvasTap(page, root.id);
+  await page.getByRole("region", { name: "Entity詳細" }).getByRole("button", { name: "展開を閉じる", exact: true }).click();
+  await expect(page.getByTestId("graph-counts")).toHaveText("Entity 1 / Claim 0");
+  await page.getByRole("button", { name: "展開を再開", exact: true }).first().click();
+  await expect(page.getByTestId("graph-counts")).toHaveText("Entity 3 / Claim 4");
+  await applyPredicates(page, []);
+  await expect(page.getByTestId("graph-counts")).toHaveText("Entity 1 / Claim 0");
+  await expect(page.getByText("この条件に一致する関係はありません。")).toBeVisible();
+  await expect(page.getByText("関係は登録されていません（孤立Entity）。")).toHaveCount(0);
+  const filter = page.getByRole("group", { name: "辿る関係" });
+  await filter.getByRole("button", { name: "すべて選択", exact: true }).click();
+  await filter.getByRole("button", { name: "適用", exact: true }).click();
+  await expect(page.getByTestId("graph-counts")).toHaveText("Entity 5 / Claim 7");
+  await page.screenshot({ path: "/tmp/graph-knowledge-conditional-all.png", fullPage: true });
+  await choose(page, "森ユウ");
+  await expect(page.getByText("関係は登録されていません（孤立Entity）。")).toBeVisible();
+});
+
+test("条件探索 実DB: 条件付きページング・編集待機・循環・未取得Claim比較", async ({ page }) => {
+  await page.route("**/api/entities/*/neighbors*", async (route) => {
+    const url = new URL(route.request().url()); url.searchParams.set("limit", "1");
+    await route.fulfill({ response: await route.fetch({ url: url.toString() }) });
+  });
+  await applyPredicates(page, ["アシスタントだった"]);
+  await choose(page); await expect(page.getByTestId("graph-counts")).toHaveText("Entity 2 / Claim 1");
+  await page.getByTestId("relation-" + fixture.claims[0].id).getByRole("button", { name: "主張と出典を見る" }).click();
+  await expect(page.getByTestId("claim-card-" + fixture.claims[2].id)).toContainText("否定する主張");
+  await canvasTap(page, root.id);
+  for (const count of [2, 3]) {
+    await page.getByRole("button", { name: "続きを表示", exact: true }).click();
+    await expect(page.getByTestId("graph-counts")).toHaveText("Entity 2 / Claim " + count);
+  }
+  await expect(page.getByTestId("relation-counts")).toHaveText("Relation 1");
+  const filter = page.getByRole("group", { name: "辿る関係" });
+  await filter.getByRole("checkbox", { name: "影響を受けた", exact: true }).check();
+  await expect(page.getByTestId("active-predicates")).not.toContainText("影響を受けた");
+  await expect(page.getByTestId("graph-counts")).toHaveText("Entity 2 / Claim 3");
+  await applyPredicates(page, ["影響を受けた"]);
+  await expect(page.getByTestId("graph-counts")).toHaveText("Entity 2 / Claim 1");
+  await page.getByRole("button", { name: "続きを表示", exact: true }).click();
+  await expect(page.getByTestId("graph-counts")).toHaveText("Entity 2 / Claim 2");
+  await canvasTap(page, fixture.entities[3].id);
+  const detail = page.getByRole("region", { name: "Entity詳細" });
+  await detail.getByRole("button", { name: "続きを表示", exact: true }).click();
+  await expect(detail.getByText("このEntityの近傍は取得済みです。")).toBeVisible();
+  await expect(page.getByTestId("graph-counts")).toHaveText("Entity 2 / Claim 2");
+  await canvasTap(page, root.id);
+  await page.getByRole("region", { name: "Entity詳細" }).getByRole("button", { name: "展開を閉じる", exact: true }).click();
+  await expect(page.getByTestId("graph-counts")).toHaveText("Entity 1 / Claim 0");
+  await page.getByRole("button", { name: "展開を再開", exact: true }).first().click();
+  await expect(page.getByTestId("graph-counts")).toHaveText("Entity 2 / Claim 2");
+  await page.screenshot({ path: "/tmp/graph-knowledge-conditional-influence.png", fullPage: true });
+});
+
+test("条件探索: 条件変更中の旧応答とエラーからの復旧", async ({ page }) => {
+  let delayed = false;
+  await page.route("**/api/entities/*/neighbors*", async (route) => {
+    const url = new URL(route.request().url());
+    if (url.searchParams.get("predicates") === "ASSISTANT_OF") {
+      delayed = true;
+      await new Promise((resolve) => setTimeout(resolve, 600));
+      await route.fulfill({ json: { ...examples.neighbors, claims: examples.neighbors.claims.filter((c) => c.predicate === "ASSISTANT_OF") } }).catch(() => {});
+    } else await route.continue();
+  });
+  await choose(page); await applyPredicates(page, ["アシスタントだった"]);
+  await expect.poll(() => delayed).toBe(true);
+  await applyPredicates(page, ["影響を受けた"]);
+  await expect(page.getByTestId("graph-counts")).toHaveText("Entity 2 / Claim 2");
+  await page.waitForTimeout(700);
+  await expect(page.getByTestId("graph-counts")).toHaveText("Entity 2 / Claim 2");
+  await page.unroute("**/api/entities/*/neighbors*");
+  await page.route("**/api/entities/*/neighbors*", async (route) => {
+    const url = new URL(route.request().url());
+    if (url.searchParams.get("predicates") === "CONTRIBUTED_TO") await route.fulfill({ status: 503, json: { error: {} } });
+    else await route.continue();
+  });
+  await applyPredicates(page, ["制作に関わった"]);
+  await expect(page.getByText("データベースを利用できません。時間をおいて再試行してください。").first()).toBeVisible();
+  await page.unroute("**/api/entities/*/neighbors*");
+  await page.getByRole("button", { name: "Graph取得を再試行" }).click();
+  await expect(page.getByTestId("graph-counts")).toHaveText("Entity 2 / Claim 1");
+});

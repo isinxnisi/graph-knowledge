@@ -1,3 +1,4 @@
+import { decodeNeighborCursor } from "../../../../../lib/server/neighbor-cursor";
 import { getNeighbors } from "../../../../../lib/server/graph";
 import { handle, parseId, neighborsInput } from "../../../../../lib/server/http";
 
@@ -6,8 +7,8 @@ export const dynamic = "force-dynamic";
 export async function GET(request: Request, context: { params: Promise<{ id: string }> }) {
   return handle(async () => {
     const id = parseId((await context.params).id);
-    const { limit, after } = neighborsInput(request);
-    return getNeighbors(id, limit, after);
+    const { limit, after, predicates } = neighborsInput(request);
+    return getNeighbors(id, limit, decodeNeighborCursor(after, id, predicates), predicates);
   });
 }
 export {

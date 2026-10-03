@@ -1,6 +1,6 @@
 # 現行技術設計
 
-更新日: 2026-10-03 / 状態: 初期Vertical Sliceと探索の開閉・Node再クリックまで実装済み。条件付き探索・プリセット・会員保存は未実装。[文書の入口](README.md)に現役設計とフェーズ別履歴をまとめる。
+更新日: 2026-10-03 / 状態: 初期Vertical Sliceと探索の開閉・Node再クリックまで実装済み。既存predicateによる条件付き探索を追加。taxonomy・プリセット・会員保存は未実装。[文書の入口](README.md)に現役設計とフェーズ別履歴をまとめる。
 
 ## 前提と設計の位置づけ
 
@@ -316,12 +316,12 @@ Neo4jではPartialDateをネストしたpropertyとして保存せず、`validFr
 | --- | --- | --- |
 | /api/entities | q必須、limit省略可 | `{ items: EntitySummary[], hasMore: boolean }` |
 | /api/entities/{id} | Entity UUID | `{ entity: EntitySummary + { aliases: string[] } }` |
-| /api/entities/{id}/neighbors | limit、after省略可 | `{ centerId, nodes: EntitySummary[], claims: ClaimSummary[], page: { nextCursor, hasMore } }` |
+| /api/entities/{id}/neighbors | limit、after、predicates省略可 | `{ centerId, nodes: EntitySummary[], claims: ClaimSummary[], page: { nextCursor, hasMore } }` |
 | /api/claims/{id} | Claim UUID | `{ claim: ClaimSummary + { createdAt, updatedAt, citations: CitationDetail[] }, relatedClaimIds: string[] }` |
 
 検索はpersonのみ。qをtrimし、Unicode NFKCと小文字化を行う。1〜100文字を許可し、空文字は400。表示名称・別名から同じ正規化で作った検索用配列に対する部分一致を用い、Cypherのパラメータとして渡す。検索索引・日本語形態素解析は初期不要。完全一致、名称、IDの順で安定して並べ、limit既定10・最大20でlimit+1件からhasMoreを判定する。初期検索はページングせず、候補が多い場合は検索語の絞り込みを促す。
 
-近傍はvisibility=publishedのClaimを主体側・対象側の両方から1段階だけ取得する。Claim ID昇順で並べ、afterは直前のnextCursor（Claim UUID）を渡す。IDがafterより大きいものからlimit+1件を取得し、返却した最後のIDを次のcursorとする。続きがなければnextCursor=null。nodesは中心と返却Claimの全端点を重複排除したもの。否定するClaimも返す。孤立Entityは中心ノードのみ、claims=[]。静的fixtureが前提であり、投稿時の変更に耐えるページングは後で再設計する。
+近傍はvisibility=publishedのClaimを主体側・対象側の両方から1段階だけ取得する。Claim ID昇順で並べ、afterは直前のnextCursorを渡す。無条件ではClaim UUID、条件付きでは起点・正規化predicate集合・版を含む不透明cursorとする。predicate条件はLIMIT前に適用し、詳細は末尾の条件付き探索仕様を参照する。IDがafterより大きいものからlimit+1件を取得し、返却した最後のIDを次のcursorとする。続きがなければnextCursor=null。nodesは中心と返却Claimの全端点を重複排除したもの。否定するClaimも返す。孤立Entityは中心ノードのみ、claims=[]。静的fixtureが前提であり、投稿時の変更に耐えるページングは後で再設計する。
 
 関係詳細のrelatedClaimIdsは同じsubjectId/predicate/objectIdを持つ他の公開ClaimのIDを、期間・肯否を問わずID昇順で返す。選択中のClaimは含めない。詳細画面はそれぞれのIDから内容を取得して比較できるようにする。初期fixtureでは件数が小さいため、この一覧は全件返却する。全データへ拡張する前に上限を設計する。自動的な矛盾ラベルや優先順位付けは行わない。
 
@@ -442,7 +442,7 @@ Step 4のDB/API契約と探索機能を維持し、表示のみ調整した。�
 - 起点の配列を内部境界に用意するが、複数起点UI・条件キーの汎用化は未実装。局所要求番号・abort・世代番号で旧応答を拒否。
 - Graphと一覧は共通の表示対象を使う。差分削除と座標復元を行い、残存位置・pan/zoomを維持する。消失Entity選択は起点へ、消失Claim / Relation選択は解除する。Relation詳細は全公開Claim比較を維持し、Graph未表示を区別する。
 
-仕様は [EXPLORATION_CLOSE_PHASE.md](archive/phase-02-exploration-close/EXPLORATION_CLOSE_PHASE.md)、検証結果は [IMPLEMENTATION_EXPLORATION_CLOSE.md](archive/phase-02-exploration-close/IMPLEMENTATION_EXPLORATION_CLOSE.md) を参照。API・DB・fixture・predicate・日付の変更はない。条件付き探索・時系列・移行順序5以降は未実装。
+仕様は [EXPLORATION_CLOSE_PHASE.md](archive/phase-02-exploration-close/EXPLORATION_CLOSE_PHASE.md)、検証結果は [IMPLEMENTATION_EXPLORATION_CLOSE.md](archive/phase-02-exploration-close/IMPLEMENTATION_EXPLORATION_CLOSE.md) を参照。開閉フェーズ時点でAPI・DB・fixture・predicate・日付の変更はなかった。その後、移行順序5〜6の最小predicate条件付き探索を追加した。kind・期間条件・複数起点・時系列は未実装。
 
 ### Nodeクリックの開閉と操作設定
 
@@ -453,3 +453,12 @@ Graphの未選択Nodeは即時に選択・必要な展開を行い、選択中No
 ### 探索軸プリセット・taxonomy・保存ビューの設計レビュー（未実装）
 
 探索プリセットはアプリケーション層の版付き条件テンプレートとする提案。predicateの意味、閲覧分類、多言語label、個人の保存ビュー、実行セッションを分ける。初期の公式カタログはコード管理から始め、運営の画面編集と会員保存は必要時にPostgreSQLへ置く。Neo4jへ知識Graphの第二の正本を作らない。保存ビューは出自プリセットの版と確定した条件を持ち、公式更新へ黙って追従しない。詳細・未確定判断は [EXPLORATION_PRESETS_REVIEW.md](design/EXPLORATION_PRESETS_REVIEW.md) を参照。今回のレビューは提案で、条件API・認証・管理・保存機能は未実装。
+
+
+### 既存predicateによる条件付き探索
+
+今回の採用契約は [CONDITIONAL_EXPLORATION_PHASE.md](design/CONDITIONAL_EXPLORATION_PHASE.md)。4 predicateの集合を選び適用する。全件は無条件、空集合は関係なし。同一起点から再取得し、旧条件の通信・受理ページ・cursor・開閉意図は引き継がない。無条件の開閉・休止子孫復元は維持する。
+
+neighborsは任意のpredicates CSVを追加し、published・predicate条件をLIMIT前に評価する。正規化した全件は従来のUUID cursor、部分集合は起点・条件・版と結び付いた不透明cursor。別条件や起点との混用、未知predicate・未対応queryは400。返却型・Claim詳細契約は維持する。
+
+GraphStateは一つの有効条件スコープ（predicates / conditionKey）内にEntity別展開を保持する。世代変更で旧応答を排除し、受理・表示でもpredicateを検査する。同一起点では座標・pan/zoomを可能な限り保持し、選択は起点へ戻す。条件内空結果は孤立と区別する。新しい関係選択文字列はlocale解決境界を持つ日本語リソースに置く。taxonomy・プリセット・期間条件・複数起点・全面翻訳は今回追加しない。

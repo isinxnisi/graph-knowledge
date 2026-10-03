@@ -1,6 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { normalizePredicates, predicateKey, type PredicateFilter } from "../domain/exploration";
+import { explorationLabels } from "../i18n/exploration";
 import type { EntitySummary } from "../domain/api";
 import { displayRelations } from "./graph-presentation";
 import { fetchNeighbors, errorMessage } from "./api";
@@ -52,7 +54,7 @@ export function useGraphExplorer() {
     pending.current.set(id, controller); commit(state);
     const valid = () => !controller.signal.aborted && generation.current === epoch && current.current.expansions[id]?.request === request && current.current.expansions[id]?.active;
     try {
-      const page = await fetchNeighbors(id, after, controller.signal);
+      const page = await fetchNeighbors(id, after, controller.signal, state.predicates);
       if (!valid()) return;
       if (page.centerId !== id) throw new Error("Unexpected center");
       commit(mergePage(current.current, page, after));
@@ -70,8 +72,21 @@ export function useGraphExplorer() {
   const chooseRoot = useCallback((entity: EntitySummary) => {
     pending.current.forEach((controller) => controller.abort()); pending.current.clear();
     generation.current += 1;
-    commit(projectGraph({ ...emptyGraph(generation.current), roots: [entity.id], centerId: entity.id, cacheNodes: { [entity.id]: entity } }));
+    commit(projectGraph({ ...emptyGraph(generation.current), predicates: current.current.predicates, conditionKey: current.current.conditionKey, roots: [entity.id], centerId: entity.id, cacheNodes: { [entity.id]: entity } }));
     setSelection({ kind: "entity", id: entity.id }); void expand(entity.id);
+  }, [commit, expand]);
+  const changePredicates = useCallback((values: PredicateFilter) => {
+    const predicates = normalizePredicates(values);
+    if (predicateKey(predicates) === predicateKey(current.current.predicates)) return;
+    const rootId = current.current.centerId;
+    const root = rootId ? current.current.cacheNodes[rootId] : null;
+    pending.current.forEach((controller) => controller.abort()); pending.current.clear();
+    generation.current += 1;
+    commit(projectGraph({ ...emptyGraph(generation.current), predicates, conditionKey: predicateKey(predicates),
+      centerId: rootId, roots: rootId ? [rootId] : [], cacheNodes: root ? { [root.id]: root } : {},
+      notice: explorationLabels().changed }));
+    setSelection(root ? { kind: "entity", id: root.id } : null);
+    if (root) void expand(root.id);
   }, [commit, expand]);
   const selectEntity = useCallback((id: string) => {
     if (!current.current.nodes[id]) return;
@@ -88,5 +103,5 @@ export function useGraphExplorer() {
     if (!current.current.nodes[id]) return;
     if (current.current.expansions[id]?.open) close(id); else void expand(id);
   }, [close, expand]);
-  return { graph, selection, chooseRoot, selectEntity, selectClaim, selectRelation, expand, close, toggleEntity };
+  return { graph, selection, changePredicates, chooseRoot, selectEntity, selectClaim, selectRelation, expand, close, toggleEntity };
 }

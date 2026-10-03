@@ -1,6 +1,6 @@
 # 探索モデルの設計レビュー
 
-2026-10-03。状態: **移行順序1〜4の開閉モデルは採用・実装済み。条件付き探索・時系列・API拡張は提案段階**。初期Vertical Sliceは維持する。以下の現状分析はレビュー時点の記録で、開閉後の実装は末尾の参照先を基準とする。
+2026-10-03。状態: **移行順序1〜4の開閉モデルは採用・実装済み。既存predicate条件は後続フェーズで実装済み。kind・期間・時系列等のAPI拡張は提案段階**。初期Vertical Sliceは維持する。以下の現状分析はレビュー時点の記録で、開閉後の実装は末尾の参照先を基準とする。
 
 ## 1. 現状の構造
 
@@ -214,3 +214,8 @@ flowchart LR
 ## 開閉フェーズの具体化
 
 推奨案に基づく移行順序1〜4の実装範囲・受け入れ条件は [EXPLORATION_CLOSE_PHASE.md](../archive/phase-02-exploration-close/EXPLORATION_CLOSE_PHASE.md) に記録した。復元UXは「休止した子孫も復元」で承認され、移行順序1〜4は実装済み。結果は [IMPLEMENTATION_EXPLORATION_CLOSE.md](../archive/phase-02-exploration-close/IMPLEMENTATION_EXPLORATION_CLOSE.md) を参照。
+
+
+## 条件付き探索の第一段階
+
+移行順序5〜6のうち既存predicate集合の取得・表示・条件付きページングを実装。kind・期間・複数起点は未実装。今回の契約は [CONDITIONAL_EXPLORATION_PHASE.md](CONDITIONAL_EXPLORATION_PHASE.md) を参照。上記の現状表・移行案はレビュー時点の記録。

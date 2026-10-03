@@ -1,3 +1,4 @@
+import { matchesPredicate, predicateKey, type PredicateFilter } from "../domain/exploration";
 import type { ClaimSummary, EntitySummary, NeighborsResponse } from "../domain/api";
 
 export const GRAPH_LIMITS = { entities: 100, claims: 200 } as const;
@@ -11,13 +12,14 @@ export type Expansion = {
   loading: boolean; error: string | null; blocked: boolean; request: number; used: number;
 };
 export type GraphState = {
+  predicates: PredicateFilter; conditionKey: string;
   generation: number; roots: string[]; centerId: string | null;
   nodes: Record<string, EntitySummary>; claims: Record<string, ClaimSummary>;
   cacheNodes: Record<string, EntitySummary>; cacheClaims: Record<string, ClaimSummary>;
   expansions: Record<string, Expansion>; lastExpandedId: string | null; notice: string | null; clock: number; evictedIds: string[];
 };
 export const emptyExpansion = (): Expansion => ({ open: false, expanded: false, active: false, pages: [], nextCursor: null, hasMore: false, loading: false, error: null, blocked: false, request: 0, used: 0 });
-export const emptyGraph = (generation = 0): GraphState => ({ generation, roots: [], centerId: null, nodes: {}, claims: {}, cacheNodes: {}, cacheClaims: {}, expansions: {}, lastExpandedId: null, notice: null, clock: 0, evictedIds: [] });
+export const emptyGraph = (generation = 0): GraphState => ({ predicates: null, conditionKey: predicateKey(null), generation, roots: [], centerId: null, nodes: {}, claims: {}, cacheNodes: {}, cacheClaims: {}, expansions: {}, lastExpandedId: null, notice: null, clock: 0, evictedIds: [] });
 
 // 表示は起点から有効な展開に属するClaimだけで導出する。切断循環は起点にならない。
 export function projectGraph(graph: GraphState): GraphState {
@@ -32,7 +34,7 @@ export function projectGraph(graph: GraphState): GraphState {
       active.add(id); changed = true;
       for (const page of meta.pages) for (const claimId of page.claimIds) {
         const claim = graph.cacheClaims[claimId];
-        if (!claim || !graph.cacheNodes[claim.subjectId] || !graph.cacheNodes[claim.objectId]) continue;
+        if (!claim || !matchesPredicate(claim.predicate, graph.predicates) || !graph.cacheNodes[claim.subjectId] || !graph.cacheNodes[claim.objectId]) continue;
         claims[claim.id] = claim; ids.add(claim.subjectId); ids.add(claim.objectId);
       }
     }
@@ -72,6 +74,7 @@ function reject(graph: GraphState, id: string, message = GRAPH_LIMIT_MESSAGE): G
 }
 
 export function mergePage(graph: GraphState, page: NeighborsResponse, after: string | null = null): GraphState {
+  if (page.claims.some((claim) => !matchesPredicate(claim.predicate, graph.predicates))) throw new Error("Unexpected predicate");
   const previous = graph.expansions[page.centerId] ?? emptyExpansion();
   const cacheNodes = { ...graph.cacheNodes }; const cacheClaims = { ...graph.cacheClaims };
   page.nodes.forEach((node) => { cacheNodes[node.id] = node; });

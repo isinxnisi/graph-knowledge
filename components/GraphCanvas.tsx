@@ -16,6 +16,8 @@ export default function GraphCanvas({ graph, selection, onEntity, onRelation, on
   const handlers = useRef({ onEntity, onRelation, onToggleEntity, onEntityDoubleClick, selection });
   const gestures = useRef<ReturnType<typeof createNodeClickHandler> | null>(null);
   const generation = useRef(-1);
+  const previousCenter = useRef<string | null>(null);
+  const previousCondition = useRef("all");
   const savedPositions = useRef<Record<string, { x: number; y: number }>>({});
   const initialLayoutDone = useRef(false);
   useEffect(() => { handlers.current = { onEntity, onRelation, onToggleEntity, onEntityDoubleClick, selection }; }, [onEntity, onRelation, onToggleEntity, onEntityDoubleClick, selection]);
@@ -72,12 +74,17 @@ export default function GraphCanvas({ graph, selection, onEntity, onRelation, on
     // 取得中メッセージの切替でCanvasの位置も変わるため、クリック座標のキャッシュを更新する。
     cy.resize();
     const reset = generation.current !== graph.generation;
-    if (reset) { savedPositions.current = {}; cy.elements().remove(); generation.current = graph.generation; initialLayoutDone.current = false; }
+    if (reset) {
+      const sameCenter = graph.centerId !== null && previousCenter.current === graph.centerId && previousCondition.current !== graph.conditionKey;
+      if (sameCenter) cy.nodes().forEach((node) => { savedPositions.current[node.id()] = { ...node.position() }; });
+      else { savedPositions.current = {}; cy.elements().remove(); initialLayoutDone.current = false; }
+      generation.current = graph.generation; previousCenter.current = graph.centerId; previousCondition.current = graph.conditionKey;
+    }
     const newNodes = Object.values(graph.nodes).filter((node) => !cy.getElementById(node.id).length);
     const relations = displayRelations(graph.claims);
     // 同じ世代でも表示対象は減る。端点を消す前に辺を削除する。
     cy.nodes().forEach((node) => { if (!graph.nodes[node.id()]) savedPositions.current[node.id()] = { ...node.position() }; });
-    Object.keys(savedPositions.current).forEach((id) => { if (!graph.cacheNodes[id]) delete savedPositions.current[id]; });
+    Object.keys(savedPositions.current).forEach((id) => { if (!graph.cacheNodes[id] && (!initialLayoutDone.current || (graph.centerId && graph.expansions[graph.centerId]?.expanded))) delete savedPositions.current[id]; });
     cy.batch(() => { cy.edges().filter((edge) => !relations[edge.id()]).remove(); cy.nodes().filter((node) => !graph.nodes[node.id()]).remove(); });
     const routes = edgeRoutes(relations);
     const elements: ElementDefinition[] = newNodes.map((node) => ({ group: "nodes", data: { id: node.id, label: entityLabel(node, graph.nodes), kind: node.kind }, position: { x: 0, y: 0 } }));

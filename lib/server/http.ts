@@ -1,4 +1,7 @@
+import { explorationLabels } from "../i18n/exploration";
 import { z } from "zod";
+import { normalizePredicates } from "../domain/exploration";
+import { PREDICATE_KEYS } from "../domain/predicates";
 import { normalizeSearch } from "../domain/search";
 
 type ErrorCode = "INVALID_ARGUMENT" | "NOT_FOUND" | "SERVICE_UNAVAILABLE" | "INTERNAL_ERROR";
@@ -71,5 +74,10 @@ export function searchInput(request: Request) {
 export function neighborsInput(request: Request) {
   const params = new URL(request.url).searchParams;
   const after = single(params, "after");
-  return { limit: limit(params, 20, 50), after: after === null ? null : parseId(after) };
+  for (const key of params.keys()) if (!["after", "limit", "predicates"].includes(key)) {
+    throw new ApiError(400, "INVALID_ARGUMENT", explorationLabels().unsupported);
+  }
+  const raw = single(params, "predicates");
+  const predicates = raw === null ? null : normalizePredicates(parse(z.array(z.enum(PREDICATE_KEYS)), raw === "" ? [] : raw.split(","), explorationLabels().invalidPredicates));
+  return { limit: limit(params, 20, 50), after, predicates };
 }

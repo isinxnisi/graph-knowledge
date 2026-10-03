@@ -73,3 +73,11 @@
 
 .themePalette { display: flex; align-items: center; gap: 6px; font-size: 12px; }
 .themePalette select { background: var(--color-panel); color: var(--color-text); padding: 4px 8px; }
+
+.columns > .panel:first-child > .panel { border: 0; padding: 0; height: auto; overflow: visible; }
+.relationFilter { border: 0; border-top: 1px solid var(--color-border); margin: 16px 0 0; padding: 12px 0 0; min-width: 0; }
+.relationFilter legend { font-weight: 600; }
+.filterChoices { display: grid; gap: 8px; margin-bottom: 12px; }
+.filterChoices label { display: flex; align-items: flex-start; gap: 7px; }
+.filterChoices input { width: auto; margin-top: 5px; accent-color: var(--color-accent); }
+.relationFilter p { margin-top: 10px; font-size: 12px; }

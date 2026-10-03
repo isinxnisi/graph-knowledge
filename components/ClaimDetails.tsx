@@ -1,5 +1,7 @@
 "use client";
 
+import { matchesPredicate, type PredicateFilter } from "../lib/domain/exploration";
+import { explorationLabels } from "../lib/i18n/exploration";
 import { useEffect, useState } from "react";
 import type { ClaimDetail, ClaimResponse, EntitySummary, SourceDetail } from "../lib/domain/api";
 import { fetchClaim, errorMessage } from "../lib/client/api";
@@ -43,7 +45,7 @@ export function ClaimCard({ claim, nodes, title }: { claim: ClaimDetail; nodes: 
   </article>;
 }
 
-export default function ClaimDetails({ id, nodes, mode = "claim", visibleClaimIds }: { id: string; nodes: Record<string, EntitySummary>; mode?: "claim" | "relation"; visibleClaimIds?: string[] }) {
+export default function ClaimDetails({ id, nodes, mode = "claim", visibleClaimIds, predicates = null }: { id: string; nodes: Record<string, EntitySummary>; mode?: "claim" | "relation"; visibleClaimIds?: string[]; predicates?: PredicateFilter }) {
   const [primary, setPrimary] = useState<ClaimResponse | null>(null);
   const [related, setRelated] = useState<ClaimDetail[]>([]);
   const [error, setError] = useState<string | null>(null);
@@ -77,14 +79,14 @@ export default function ClaimDetails({ id, nodes, mode = "claim", visibleClaimId
       {mode === "relation" ? <>
         <p className={styles.muted}>肯否・期間・出典を個別に比較できます。表示順は正しさや信頼度を表しません。</p>
         {[primary.claim, ...related].sort((a, b) => a.id.localeCompare(b.id)).map((claim, index) =>
-          <div key={claim.id}>{visibleClaimIds && <p className={styles.muted}>{visibleClaimIds.includes(claim.id) ? "Graphに表示中の主張" : "Graphには未表示の主張"}</p>}<ClaimCard claim={claim} nodes={nodes} title={`主張 ${index + 1}`} /></div>)}
+          <div key={claim.id}>{visibleClaimIds && <p className={styles.muted}>{!matchesPredicate(claim.predicate, predicates) ? explorationLabels().outside : visibleClaimIds.includes(claim.id) ? explorationLabels().shown : explorationLabels().unseen}</p>}<ClaimCard claim={claim} nodes={nodes} title={`主張 ${index + 1}`} /></div>)}
       </> : <>
       <ClaimCard claim={primary.claim} nodes={nodes} title="選択した主張" />
       <h3>同じ関係についての他の主張</h3>
       <p className={styles.muted}>肯否・期間・出典をそれぞれ確認できます。表示順は正しさや信頼度を表しません。</p>
       {relatedLoading && <p role="status">他の主張を取得中…</p>}
       {!primary.relatedClaimIds.length && <p className={styles.muted}>他の主張は登録されていません。</p>}
-      {related.map((claim) => <ClaimCard key={claim.id} claim={claim} nodes={nodes} title="他の主張" />)}
+      {related.map((claim) => <div key={claim.id}>{!matchesPredicate(claim.predicate, predicates) && <p className={styles.muted}>{explorationLabels().outside}</p>}<ClaimCard claim={claim} nodes={nodes} title="他の主張" /></div>)}
       </>}
       {mode === "relation" && relatedLoading && <p role="status">同じ関係の主張を取得中…</p>}
       {relatedError && <div className={styles.error} role="alert"><p>{relatedError}</p><button onClick={retry}>他の主張を再試行</button></div>}

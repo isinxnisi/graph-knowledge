@@ -4,7 +4,7 @@ import { act, cleanup, render, renderHook, screen, waitFor } from "@testing-libr
 import { createNodeClickHandler } from "../lib/client/graph-interaction";
 import { entityLabel, edgeRoutes, displayRelations, relationId } from "../lib/client/graph-presentation";
 import { initialPositions, additionalPositions } from "../lib/client/graph-layout";
-import { emptyGraph, mergePage, closeExpansion, reopenExpansion } from "../lib/client/graph-state";
+import { emptyGraph, mergePage, closeExpansion, reopenExpansion, projectGraph } from "../lib/client/graph-state";
 import { useGraphExplorer } from "../lib/client/use-graph-explorer";
 import ClaimDetails, { ClaimCard } from "../components/ClaimDetails";
 import examples from "../docs/API_RESPONSE_EXAMPLES.json";
@@ -330,5 +330,60 @@ describe("Nodeのクリック判定", () => {
       expect(clicks.toggle).not.toHaveBeenCalled(); expect(clicks.select).toHaveBeenLastCalledWith("C");
       clicks.click("C"); clicks.cancel(); vi.advanceTimersByTime(300); expect(clicks.toggle).not.toHaveBeenCalled();
     } finally { vi.useRealTimers(); }
+  });
+});
+
+describe("条件付き探索", () => {
+  const filtered = { ...page, claims: page.claims.filter((claim) => claim.predicate === "ASSISTANT_OF") };
+  it("条件変更で旧応答・cursor・枝を捨て、同条件の再適用は通信しない", async () => {
+    const old = deferred(); vi.mocked(fetchNeighbors).mockReturnValueOnce(old.promise).mockResolvedValueOnce(filtered);
+    const { result } = renderHook(useGraphExplorer);
+    act(() => result.current.chooseRoot(root));
+    const signal = vi.mocked(fetchNeighbors).mock.calls[0][2];
+    act(() => result.current.changePredicates(["ASSISTANT_OF"]));
+    expect(signal.aborted).toBe(true);
+    await waitFor(() => expect(Object.keys(result.current.graph.claims)).toHaveLength(filtered.claims.length));
+    await act(async () => { old.resolve(page); await old.promise; });
+    expect(result.current.graph.conditionKey).toBe("ASSISTANT_OF");
+    expect(Object.values(result.current.graph.claims).every((claim) => claim.predicate === "ASSISTANT_OF")).toBe(true);
+    expect(fetchNeighbors).toHaveBeenLastCalledWith(root.id, null, expect.any(AbortSignal), ["ASSISTANT_OF"]);
+    act(() => result.current.changePredicates(["ASSISTANT_OF", "ASSISTANT_OF"]));
+    expect(fetchNeighbors).toHaveBeenCalledTimes(2);
+    act(() => result.current.close(root.id));
+    const calls = vi.mocked(fetchNeighbors).mock.calls.length;
+    act(() => result.current.toggleEntity(root.id));
+    expect(fetchNeighbors).toHaveBeenCalledTimes(calls);
+    expect(Object.keys(result.current.graph.claims)).toHaveLength(filtered.claims.length);
+  });
+  it("条件を起点変更でも維持し、空条件の受理済み空ページを復元する", async () => {
+    vi.mocked(fetchNeighbors).mockImplementation(async (id) => ({ centerId: id, nodes: [entity(id)], claims: [], page: { nextCursor: null, hasMore: false } }));
+    const { result } = renderHook(useGraphExplorer);
+    act(() => result.current.changePredicates([]));
+    act(() => result.current.chooseRoot(root));
+    await waitFor(() => expect(result.current.graph.expansions[root.id]?.expanded).toBe(true));
+    expect(fetchNeighbors).toHaveBeenLastCalledWith(root.id, null, expect.any(AbortSignal), []);
+    act(() => result.current.close(root.id)); act(() => result.current.toggleEntity(root.id));
+    expect(fetchNeighbors).toHaveBeenCalledTimes(1);
+    act(() => result.current.chooseRoot(page.nodes[1]));
+    expect(result.current.graph.predicates).toEqual([]);
+  });
+  it("別条件のページを受理せず、表示投影にも混ぜない", () => {
+    const graph = { ...emptyGraph(), predicates: ["INFLUENCED_BY"] as const };
+    expect(() => mergePage({ ...graph, predicates: ["INFLUENCED_BY"] }, page)).toThrow("Unexpected predicate");
+    const all = mergePage(emptyGraph(), page);
+    const projected = projectGraph({ ...all, predicates: ["INFLUENCED_BY"] });
+    expect(Object.values(projected.claims).every((claim) => claim.predicate === "INFLUENCED_BY")).toBe(true);
+  });
+  it("条件内でも上限拒否でcursorを維持し、閉じた後に受理範囲を復元する", () => {
+    const claim = page.claims.find((item) => item.predicate === "ASSISTANT_OF")!;
+    const accepted = { ...page, claims: Array.from({ length: 200 }, (_, i) => ({ ...claim, id: String(i) })),
+      page: { nextCursor: "condition-cursor", hasMore: true } };
+    const first = mergePage({ ...emptyGraph(), predicates: ["ASSISTANT_OF"], conditionKey: "ASSISTANT_OF" }, accepted);
+    const rejected = mergePage(first, { ...accepted, claims: [{ ...claim, id: "overflow" }], page: { nextCursor: null, hasMore: false } }, "condition-cursor");
+    expect(rejected.expansions[root.id]).toMatchObject({ blocked: true, nextCursor: "condition-cursor", hasMore: true });
+    expect(Object.keys(rejected.claims)).toHaveLength(200);
+    const closed = closeExpansion(rejected, root.id);
+    expect(Object.keys(closed.claims)).toHaveLength(0);
+    expect(Object.keys(reopenExpansion(closed, root.id).claims)).toHaveLength(200);
   });
 });

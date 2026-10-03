@@ -11,7 +11,8 @@ MATCH (e:Entity {id: $id}) RETURN properties(e) AS entity`;
 
 export const NEIGHBORS = `
 MATCH (:Entity {id: $id})<-[:SUBJECT|OBJECT]-(c:Claim)
-WHERE c.visibility = 'published' AND ($after IS NULL OR c.id > $after)
+WHERE c.visibility = 'published' AND ($predicates IS NULL OR c.predicate IN $predicates)
+  AND ($after IS NULL OR c.id > $after)
 WITH DISTINCT c ORDER BY c.id LIMIT $take
 MATCH (c)-[:SUBJECT]->(subject:Entity), (c)-[:OBJECT]->(object:Entity)
 OPTIONAL MATCH (c)-[:HAS_CITATION]->(:Citation)-[:CITES]->(source:Source)

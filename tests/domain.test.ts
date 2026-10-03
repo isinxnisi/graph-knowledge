@@ -66,3 +66,11 @@ describe("demo fixture", () => {
     expect(() => validateFixture(fixture)).toThrow();
   });
 });
+
+it("探索条件の同一性は表示localeから独立している", async () => {
+  const { explorationLabels } = await import("../lib/i18n/exploration");
+  const { normalizePredicates, predicateKey } = await import("../lib/domain/exploration");
+  expect(explorationLabels("ja-JP")).toEqual(explorationLabels("ja"));
+  expect(explorationLabels("en")).toEqual(explorationLabels("ja"));
+  expect(predicateKey(normalizePredicates(["ASSISTANT_OF", "INFLUENCED_BY"]))).toBe(predicateKey(normalizePredicates(["INFLUENCED_BY", "ASSISTANT_OF", "ASSISTANT_OF"])));
+});

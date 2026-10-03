@@ -1,6 +1,8 @@
 import "server-only";
 import { int } from "neo4j-driver";
 import { claimDetailSchema, type EntitySearchResponse, type EntityResponse, type NeighborsResponse, type ClaimResponse } from "../domain/api";
+import type { PredicateFilter } from "../domain/exploration";
+import { encodeNeighborCursor } from "./neighbor-cursor";
 import { ApiError } from "./http";
 import { readTransaction } from "./read-db";
 import { entitySummary, entityDetail, claimSummary, citationDetail, relatedId } from "./mappers";
@@ -23,12 +25,12 @@ export function getEntity(id: string): Promise<EntityResponse> {
   });
 }
 
-export function getNeighbors(id: string, limit: number, after: string | null): Promise<NeighborsResponse> {
+export function getNeighbors(id: string, limit: number, after: string | null, predicates: PredicateFilter = null): Promise<NeighborsResponse> {
   return readTransaction(async (tx) => {
     const centerResult = await tx.run(ENTITY_DETAIL, { id });
     if (!centerResult.records.length) throw notFound();
     const center = entitySummary(centerResult.records[0].get("entity"));
-    const result = await tx.run(NEIGHBORS, { id, after, take: int(limit + 1) });
+    const result = await tx.run(NEIGHBORS, { id, after, predicates, take: int(limit + 1) });
     const nodes = new Map([[center.id, center]]);
     const claims = result.records.slice(0, limit).map((record) => {
       const subject = entitySummary(record.get("subject"));
@@ -38,7 +40,7 @@ export function getNeighbors(id: string, limit: number, after: string | null): P
     });
     const hasMore = result.records.length > limit;
     return { centerId: id, nodes: [...nodes.values()], claims,
-      page: { hasMore, nextCursor: hasMore ? claims.at(-1)!.id : null } };
+      page: { hasMore, nextCursor: hasMore ? encodeNeighborCursor(id, predicates, claims.at(-1)!.id) : null } };
   });
 }
 

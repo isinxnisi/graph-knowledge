@@ -49,6 +49,7 @@ beforeAll(async () => {
   await driver.verifyConnectivity();
   await seedFixture(driver, database, fixture);
   initialSnapshot = await graphSnapshot(driver, database);
+  if (process.env.API_TEST_BASE_URL) { baseUrl = process.env.API_TEST_BASE_URL; return; }
   const socket = createServer();
   await new Promise<void>((resolve) => socket.listen(0, "127.0.0.1", resolve));
   const port = (socket.address() as AddressInfo).port;
@@ -268,6 +269,49 @@ it("returns sanitized 500 for invalid stored data, not 400", async () => {
     expect(JSON.stringify(result)).not.toMatch(/INVALID_STORED|Cypher|password|bolt/);
     examples.internalError = result;
   } finally { await write("MATCH (c:Claim {id: $id}) SET c.predicate = $predicate", { id, predicate: fixture.claims[0].predicate }); }
+});
+
+it("filters before LIMIT, pages both directions and retains denied Claims", async () => {
+  const center = fixture.entities[0].id;
+  const expected = fixture.claims.filter((claim) => (claim.subjectId === center || claim.objectId === center) && ["ASSISTANT_OF", "INFLUENCED_BY"].includes(claim.predicate)).map((claim) => claim.id).sort();
+  const found: string[] = []; let cursor: string | null = null;
+  for (let index = 0; index < 20; index++) {
+    const params = new URLSearchParams({ predicates: index % 2 ? "INFLUENCED_BY,ASSISTANT_OF,ASSISTANT_OF" : "ASSISTANT_OF,INFLUENCED_BY", limit: "2" });
+    if (cursor) params.set("after", cursor);
+    const result = await request<NeighborsResponse>(`/api/entities/${center}/neighbors?${params}`);
+    expect(result.claims.length).toBeLessThanOrEqual(2);
+    expect(result.claims.every((claim) => ["ASSISTANT_OF", "INFLUENCED_BY"].includes(claim.predicate))).toBe(true);
+    expect(new Set(result.nodes.map((node) => node.id))).toEqual(new Set([center, ...result.claims.flatMap((claim) => [claim.subjectId, claim.objectId])]));
+    found.push(...result.claims.map((claim) => claim.id));
+    if (!result.page.hasMore) break;
+    cursor = result.page.nextCursor;
+  }
+  expect(found).toEqual(expected);
+  const object = await request<NeighborsResponse>(`/api/entities/${fixture.entities[1].id}/neighbors?predicates=ASSISTANT_OF`);
+  expect(object.claims.some((claim) => claim.polarity === "denied")).toBe(true);
+});
+
+it("rejects cross-condition cursors and distinguishes empty matches from all relations", async () => {
+  const center = fixture.entities[0].id;
+  const first = await request<NeighborsResponse>(`/api/entities/${center}/neighbors?predicates=ASSISTANT_OF&limit=1`);
+  const cursor = encodeURIComponent(first.page.nextCursor!);
+  for (const path of [
+    `/api/entities/${center}/neighbors?predicates=INFLUENCED_BY&after=${cursor}`,
+    `/api/entities/${fixture.entities[1].id}/neighbors?predicates=ASSISTANT_OF&after=${cursor}`,
+    `/api/entities/${center}/neighbors?after=${cursor}`,
+    `/api/entities/${center}/neighbors?predicates=ASSISTANT_OF&after=${fixture.claims[0].id}`,
+    `/api/entities/${center}/neighbors?predicates=UNKNOWN`,
+    `/api/entities/${center}/neighbors?predicates=ASSISTANT_OF&predicates=INFLUENCED_BY`,
+    `/api/entities/${center}/neighbors?time=2000`,
+  ]) await request(path, 400);
+  const late = await request<NeighborsResponse>(`/api/entities/${center}/neighbors?predicates=CONTRIBUTED_TO&limit=1`);
+  expect(late.claims.map((claim) => claim.id)).toEqual([fixture.claims[6].id]);
+  const empty = await request<NeighborsResponse>(`/api/entities/${center}/neighbors?predicates=`);
+  expect(empty.claims).toEqual([]); expect(empty.nodes.map((node) => node.id)).toEqual([center]);
+  expect(empty.page).toEqual({ hasMore: false, nextCursor: null });
+  const detail = await request<ClaimResponse>(`/api/claims/${fixture.claims[0].id}`);
+  expect(detail.relatedClaimIds).toHaveLength(2);
+  expect(detail.claim.citations).toHaveLength(2);
 });
 
 it("returns 503 with the real DB stopped, then recovers after restarting", async () => {

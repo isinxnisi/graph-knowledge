@@ -2,6 +2,8 @@
 
 2026-10-03。**設計提案、未実装**。現在の自由探索・開閉契約・Claimモデルを維持する。認証、PostgreSQL、管理UI、会員保存、条件APIは今回実装しない。
 
+このレビュー後、既存predicate集合だけの条件付き近傍取得を実装した。最新契約は [CONDITIONAL_EXPLORATION_PHASE.md](CONDITIONAL_EXPLORATION_PHASE.md)。本レビューのtaxonomy・公式カタログ・会員保存・言語切替は未実装で、以下の現状分析はレビュー時点の記録。
+
 ## 現状と判断
 
 実際に確認したファイル:

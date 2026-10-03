@@ -4,6 +4,7 @@ import { useState } from "react";
 import { displayRelations, entityLabel } from "../lib/client/graph-presentation";
 import { relationLabel } from "../lib/client/format";
 import { useGraphExplorer } from "../lib/client/use-graph-explorer";
+import RelationFilter from "./RelationFilter";
 import SearchPanel from "./SearchPanel";
 import GraphCanvas from "./GraphCanvas";
 import RelationsList from "./RelationsList";
@@ -14,7 +15,7 @@ import styles from "./Explorer.module.css";
 export default function Explorer() {
   const [dark, setDark] = useState(false);
   const [darkPalette, setDarkPalette] = useState<"brown" | "blue">("brown");
-  const { graph, selection, chooseRoot, selectEntity, selectClaim, selectRelation, expand, close, toggleEntity } = useGraphExplorer();
+  const { graph, selection, changePredicates, chooseRoot, selectEntity, selectClaim, selectRelation, expand, close, toggleEntity } = useGraphExplorer();
   const relations = displayRelations(graph.claims);
   const selectedRelation = selection?.kind === "relation" ? relations[selection.id] : null;
   const selectedEntity = selection?.kind === "entity" ? graph.nodes[selection.id] : null;
@@ -39,7 +40,7 @@ export default function Explorer() {
       </label>}
     </header>
     <main className={styles.columns}>
-      <SearchPanel onChoose={chooseRoot} />
+      <div className={styles.panel}><SearchPanel onChoose={chooseRoot} /><RelationFilter value={graph.predicates} onApply={changePredicates} /></div>
       <section className={`${styles.panel} ${styles.graphPanel}`} aria-labelledby="graph-title">
         <div className={styles.graphHeading}><h2 id="graph-title">Graph</h2>
           <p data-testid="graph-counts">Entity {Object.keys(graph.nodes).length} / Claim {Object.keys(graph.claims).length}</p><p data-testid="relation-counts">Relation {Object.keys(relations).length}</p>
@@ -57,8 +58,8 @@ export default function Explorer() {
         <h2 id="detail-title">詳細</h2>
         {!selection && <p className={styles.muted}>人物、作品、組織、または関係の線を選んでください。</p>}
         {selectedEntity && <EntityDetails key={key} entity={selectedEntity} expansion={graph.expansions[selectedEntity.id]} onExpand={(more) => void expand(selectedEntity.id, more)} onClose={() => close(selectedEntity.id)} />}
-        {selectedRelation && <ClaimDetails key={`${key}:${selectedRelation.claimIds[0]}`} id={selectedRelation.claimIds[0]} nodes={graph.nodes} mode="relation" visibleClaimIds={selectedRelation.claimIds} />}
-        {selection?.kind === "claim" && <ClaimDetails key={key} id={selection.id} nodes={graph.nodes} />}
+        {selectedRelation && <ClaimDetails key={`${key}:${selectedRelation.claimIds[0]}`} id={selectedRelation.claimIds[0]} nodes={graph.nodes} mode="relation" visibleClaimIds={selectedRelation.claimIds} predicates={graph.predicates} />}
+        {selection?.kind === "claim" && <ClaimDetails key={key} id={selection.id} nodes={graph.nodes} predicates={graph.predicates} />}
       </aside>
     </main>
   </div>;
