@@ -1,5 +1,6 @@
 # 探索の開閉フェーズ実施記録
 
+> 完了フェーズの履歴です。記載の仕様・件数は実施時点のものです。現行仕様は [ARCHITECTURE.md](../../ARCHITECTURE.md)、文書一覧は [docs/README.md](../../README.md) を参照してください。
 2026-10-03。[EXPLORATION_CLOSE_PHASE.md](EXPLORATION_CLOSE_PHASE.md) の移行順序1〜4を完了。「休止した子孫も復元」は利用者承認済み。条件付き探索・複数起点UI・時系列・個別非表示は対象外。
 
 ## 実装

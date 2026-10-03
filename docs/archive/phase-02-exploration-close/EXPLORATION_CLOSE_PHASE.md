@@ -1,8 +1,9 @@
 # 探索の開閉フェーズ：移行順序1〜4
 
+> 完了フェーズの履歴です。記載の仕様・件数は実施時点のものです。現行仕様は [ARCHITECTURE.md](../../ARCHITECTURE.md)、文書一覧は [docs/README.md](../../README.md) を参照してください。
 2026-10-03。推奨探索モデルを基準にした実装準備。**復元UXは「休止した子孫も復元」で承認済み。移行順序1〜4を実装済み。** 実施結果は [IMPLEMENTATION_EXPLORATION_CLOSE.md](IMPLEMENTATION_EXPLORATION_CLOSE.md) を参照。
 
-[EXPLORATION_MODEL_REVIEW.md](EXPLORATION_MODEL_REVIEW.md) を前提とする。今回のフェーズは単一起点の自由探索に「展開を閉じる／再開する」を加える。フィルタ、複数起点UI、時系列、個別非表示、pin、API・DB・fixture変更は含めない。
+[EXPLORATION_MODEL_REVIEW.md](../../design/EXPLORATION_MODEL_REVIEW.md) を前提とする。今回のフェーズは単一起点の自由探索に「展開を閉じる／再開する」を加える。フィルタ、複数起点UI、時系列、個別非表示、pin、API・DB・fixture変更は含めない。
 
 ## 復元UXの選択肢
 
@@ -13,7 +14,7 @@
 | 休止した枝も復元（推奨） | 受理済み範囲と、再到達した開いた子孫の受理済み範囲を戻す | 探索の絵を戻せる。子孫が戻る説明と上限検証が必要 |
 | 再開するたび選択ダイアログ | 上記を毎回選ぶ | 自由度はあるが操作が重く、初期フェーズには非推奨 |
 
-現在のNodeクリックは選択＋未展開なら一段階取得、右詳細には「続きを表示」、展開済みNodeには二重枠がある。この流れに合わせ、**閉じたNodeのクリックも選択＋再開**とする。閉じる操作は右のEntity詳細と隣接一覧の見出し部分に同じ操作を設け、開閉フェーズ当初はNodeクリックをトグルにしなかった。その後の承認により、選択中Nodeの再クリックだけ300ms判定後に開閉する。詳細は [GRAPH_INTERACTION_AND_SETTINGS.md](GRAPH_INTERACTION_AND_SETTINGS.md) を参照。
+現在のNodeクリックは選択＋未展開なら一段階取得、右詳細には「続きを表示」、展開済みNodeには二重枠がある。この流れに合わせ、**閉じたNodeのクリックも選択＋再開**とする。閉じる操作は右のEntity詳細と隣接一覧の見出し部分に同じ操作を設け、開閉フェーズ当初はNodeクリックをトグルにしなかった。その後の承認により、選択中Nodeの再クリックだけ300ms判定後に開閉する。詳細は [GRAPH_INTERACTION_AND_SETTINGS.md](../../design/GRAPH_INTERACTION_AND_SETTINGS.md) を参照。
 
 推奨案の契約:
 

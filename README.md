@@ -1,6 +1,6 @@
 # Graph Knowledge
 
-出典付きの関係性を蓄積・探索するサービスの初期基盤です。作業前に[PROJECT_CONTEXT](docs/PROJECT_CONTEXT.md)と[ARCHITECTURE](docs/ARCHITECTURE.md)を参照してください。
+出典付きの関係性を蓄積・探索するサービスの初期基盤です。作業前に[PROJECT_CONTEXT](docs/PROJECT_CONTEXT.md)と[ARCHITECTURE](docs/ARCHITECTURE.md)を参照してください。文書の状態とフェーズ別履歴は[docsの入口](docs/README.md)にまとめています。
 
 初期Vertical Slice（ローカルの読み取り専用デモ）は、実装順序5のUI・テーマ調整まで完了しています。ルートに検索・Cytoscape.jsのGraph・詳細を一画面で表示します。すべて架空のデモデータです。認証・投稿・Wikidata取り込みは未実装です。Graphの可読性・同名表示・選択とスクロールの操作を調整しています。
 
@@ -91,7 +91,7 @@ curl "$API_BASE_URL/api/entities/c286065c-6e17-47a7-9288-2a1cf6919ce9/neighbors?
 curl "$API_BASE_URL/api/claims/580dd445-3287-401d-bcce-43af3caaf509"
 ```
 
-返却型・主要Cypher・検証記録は[Step 3実施記録](docs/IMPLEMENTATION_STEP_3.md)、取得した応答例は[API_RESPONSE_EXAMPLES.json](docs/API_RESPONSE_EXAMPLES.json)を参照してください。
+返却型・主要Cypher・検証記録は[Step 3実施記録](docs/archive/phase-01-vertical-slice/IMPLEMENTATION_STEP_3.md)、取得した応答例は[API_RESPONSE_EXAMPLES.json](docs/API_RESPONSE_EXAMPLES.json)を参照してください。
 
 ## 探索UIとブラウザテスト
 
@@ -108,7 +108,7 @@ npm run test:e2e
 
 DBをseed済みにして実行してください。ブラウザテストは3210番ポートでNext.jsを自動起動・停止します。DB停止を含むAPI統合テストとは同時に実行しないでください。通常テストは状態管理・主張カードも検証します。E2Eのページングは実APIのlimit=2、上限とHTTPエラーはテスト内の応答制御を使い、fixtureとDBを変更しません。
 
-[Step 4実施記録](docs/IMPLEMENTATION_STEP_4.md)にファイル・状態管理・レイアウト・検証範囲を記録しています。
+[Step 4実施記録](docs/archive/phase-01-vertical-slice/IMPLEMENTATION_STEP_4.md)にファイル・状態管理・レイアウト・検証範囲を記録しています。
 
 ## Step 5の画面確認
 
@@ -128,13 +128,13 @@ GRAPH_TEST_REUSE=1 npm run test:e2e
 # GRAPH_TEST_PORT=3211 npm run test:e2e
 ```
 
-同じディレクトリのNext.js devは同時に複数起動できないため、起動済みの場合はreuseを指定してください。[Step 5実施記録](docs/IMPLEMENTATION_STEP_5.md)に変更内容・ブラウザ検証・スクリーンショットを記録しています。
+同じディレクトリのNext.js devは同時に複数起動できないため、起動済みの場合はreuseを指定してください。[Step 5実施記録](docs/archive/phase-01-vertical-slice/IMPLEMENTATION_STEP_5.md)に変更内容・ブラウザ検証・スクリーンショットを記録しています。
 
 Graphの線は同じ主体・関係タイプ・対象のClaimをまとめた表示用Relationです。肯定・否定の混在は「異説あり」と点線で示し、クリックすると独立した各Claimの期間・出典を比較できます。初期Graphは7 Claim / 5 Relation、全展開は15 Claim / 13 Relationです。未取得ページがある場合、Graph表示は取得済みの主張に基づきます。
 
-Graphの配置・曲率の最新調整と確認画像は [IMPLEMENTATION_GRAPH_BALANCE.md](docs/IMPLEMENTATION_GRAPH_BALANCE.md) を参照してください。
+Graphの配置・曲率の最新調整と確認画像は [IMPLEMENTATION_GRAPH_BALANCE.md](docs/archive/phase-01-vertical-slice/IMPLEMENTATION_GRAPH_BALANCE.md) を参照してください。
 
-テーマ色は `app/theme.css` に集約しています。画面とGraphで共有しています。右上でライト/ダークを切り替え、ダーク時はブラウン/ブルーを選べます。配色切り替えにGraphも追従します。CSS定義を編集した後は画面を再読み込みしてください。配色・検証・完了範囲は [IMPLEMENTATION_THEME.md](docs/IMPLEMENTATION_THEME.md) を参照してください。
+テーマ色は `app/theme.css` に集約しています。画面とGraphで共有しています。右上でライト/ダークを切り替え、ダーク時はブラウン/ブルーを選べます。配色切り替えにGraphも追従します。CSS定義を編集した後は画面を再読み込みしてください。配色・検証・完了範囲は [IMPLEMENTATION_THEME.md](docs/archive/phase-01-vertical-slice/IMPLEMENTATION_THEME.md) を参照してください。
 
 ## 展開を閉じる・再開する
 
@@ -144,6 +144,6 @@ Graphの配置・曲率の最新調整と確認画像は [IMPLEMENTATION_GRAPH_B
 
 残存Nodeの位置とpan/zoomを維持します。復元Nodeは以前の座標を優先し、衝突時だけ追加配置します。上限で復元できない場合は他の枝を閉じて再試行してください。探索キャッシュは有限で、破棄された枝は再取得になります。ページ再読込・中心変更で探索状態はリセットします。
 
-[開閉フェーズ実施記録](docs/IMPLEMENTATION_EXPLORATION_CLOSE.md)を参照してください。API・DB・fixtureは変更せず、条件付き探索・複数起点・時系列はまだ追加していません。
+[開閉フェーズ実施記録](docs/archive/phase-02-exploration-close/IMPLEMENTATION_EXPLORATION_CLOSE.md)を参照してください。API・DB・fixtureは変更せず、条件付き探索・複数起点・時系列はまだ追加していません。
 
-Nodeクリックと今後の設定の責務は [GRAPH_INTERACTION_AND_SETTINGS.md](docs/GRAPH_INTERACTION_AND_SETTINGS.md) に記録しています。設定モーダル・永続化はまだ追加していません。
+Nodeクリックと今後の設定の責務は [GRAPH_INTERACTION_AND_SETTINGS.md](docs/design/GRAPH_INTERACTION_AND_SETTINGS.md) に記録しています。設定モーダル・永続化はまだ追加していません。

@@ -1,5 +1,6 @@
 # 実装順序1〜2の実施記録
 
+> 完了フェーズの履歴です。記載の仕様・件数は実施時点のものです。現行仕様は [ARCHITECTURE.md](../../ARCHITECTURE.md)、文書一覧は [docs/README.md](../../README.md) を参照してください。
 日付: 2026-10-03（Asia/Tokyo）
 
 ## 実装した範囲

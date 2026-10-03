@@ -1,6 +1,6 @@
 # Project instructions
 
-Read docs/PROJECT_CONTEXT.md and docs/ARCHITECTURE.md before changing this project. Follow the current requested implementation scope; future API/UI plans are not authorization to implement them.
+Read docs/PROJECT_CONTEXT.md and docs/ARCHITECTURE.md before changing this project. Use docs/README.md to locate active designs and completed phase archives; archived records are historical, not the current specification. Follow the current requested implementation scope; future API/UI plans are not authorization to implement them.
 
 作業完了時は必要な検証を行い、今回の作業に関する変更を日本語のコミットメッセージでコミットする。ユーザーから別の指示がある場合はその指示を優先する。
 

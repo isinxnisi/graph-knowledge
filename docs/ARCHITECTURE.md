@@ -1,6 +1,6 @@
-# 初期技術設計
+# 現行技術設計
 
-更新日: 2026-10-03 / 状態: 初期Vertical Slice（ローカルの読み取り専用デモ）をテーマ調整まで完了。検証記録はIMPLEMENTATION_STEP_1_2.md、IMPLEMENTATION_STEP_3.md、IMPLEMENTATION_STEP_4.md、IMPLEMENTATION_STEP_5.mdを参照。
+更新日: 2026-10-03 / 状態: 初期Vertical Sliceと探索の開閉・Node再クリックまで実装済み。条件付き探索・プリセット・会員保存は未実装。[文書の入口](README.md)に現役設計とフェーズ別履歴をまとめる。
 
 ## 前提と設計の位置づけ
 
@@ -174,7 +174,7 @@ APIの機能:
 - 同名対象を区別でき、展開上限に達した場合は続きがあると分かる。
 - fixture再投入で重複せず、必須接続やIDの不整合を検出できる。
 
-検証はこの探索経路とモデル上の重要な例に集中する。現在は実装順序4として読み取りAPIを利用する画面の主要経路を検証する。Step 5の最終調整は別段階とする。
+検証はこの探索経路とモデル上の重要な例に集中する。初期Vertical SliceのStep 1〜5と後続の開閉・再クリックを検証済み。件数や実行条件はフェーズ別の実施記録を参照する。
 
 ## 将来問題になり得る点と未確定判断
 
@@ -197,7 +197,7 @@ APIの機能:
 
 ## 最小Vertical Sliceの初期採用仕様
 
-この節は実装準備として採用する初期仕様。上記の将来案より具体的な条件を優先する。実装順序4の画面・グラフ描画まで実装済み。
+この節は実装準備として採用する初期仕様。上記の将来案より具体的な条件を優先する。初期Vertical Sliceおよび後続の開閉・再クリックを実装済み。Step別の当時の記録はarchive、継続検討はdesignを参照する。
 
 ### 1. 技術スタック
 
@@ -206,7 +206,7 @@ APIの機能:
 | 実行環境 | Node.js 24 LTS、npm、TypeScript | UI・API・seedで同じ言語と型を使う |
 | Web / API | Next.js App Router、React、Route Handlers（Node runtime） | 一つのアプリで画面と読み取りAPIを提供する |
 | グラフ | Cytoscape.js、直接呼び出す小さなReactコンポーネント | 方向付きの辺、並行辺、クリックと追加展開を扱う |
-| レイアウト | 内蔵のbreadthfirst、中心Entityをrootに指定、レイアウト時は無向として扱う | 追加プラグインを入れず、入出両方向の近傍を表示する |
+| レイアウト | presetと配置関数（初期は楕円状、追加時は既存位置を維持） | 追加プラグインを入れず、配置と意味を分離する。数値は後述のGraph全体のバランス調整を参照 |
 | スタイル / 状態 | CSS Modules、React標準のstate | UIキットやグローバル状態管理を先に導入しない |
 | DB | Neo4j Community 5.26 LTS、Docker Composeの単一サービス | Claimモデルを実際のDBで検証し、ローカルで再現する |
 | DBアクセス | 公式neo4j-driver、パラメータ化したCypher | 小さなモデルにORMを追加しない |
@@ -342,6 +342,10 @@ Neo4jではPartialDateをネストしたpropertyとして保存せず、`validFr
 
 6項目はこの仕様で実装を開始できる。残るのは実装時のパッチ版固定、実測によるレイアウト調整と応答時間の確認。本番運用・投稿・履歴・同期・複雑な限定条件は今回の完了条件に含めない。
 
+### 初期実装の補足記録（Step 1〜5の実施時点）
+
+以下のStep別記述は経緯の要約。現在のGraphは後述のRelation集約・開閉・再クリック仕様に従い、当時の状態管理や表示方針より優先する。詳細履歴は [Phase 01](archive/phase-01-vertical-slice/README.md) を参照。
+
 ### 実装順序1〜2で具体化した点
 
 - Node 24.21.0、Neo4j Community 5.26.31、Next.js 16.3.8、React 19.3.0、neo4j-driver 6.2.0、Zod 4.6.5へ固定。その他はpackage.jsonとpackage-lock.jsonを参照する。
@@ -413,25 +417,25 @@ Step 4のDB/API契約と探索機能を維持し、表示のみ調整した。�
 - app/theme.cssで画面・Graphの共通CSS変数を定義。落ち着いた深緑、明るい紙色、personの淡い緑・workの紙色・organizationの淡い紫を使う。CSS ModulesとCytoscapeは同じテーマ値を参照する。ヘッダーにライト/ダークのトグルとダーク配色（ブラウン/ブルー）の選択を用意する。Graphはルートのdata-theme属性変更を監視し、CSS変数を再取得してstyleだけを更新する。既存Core・位置・選択・pan/zoomを維持する。初期表示はライトで、永続化・OSへの自動追従は追加しない。
 - レイアウト、Node配置、曲率、意味表現、API・DB・fixtureは維持する。選択の太い枠、展開済みの二重枠、新規表示の淡い外枠、Node形状、否定の文字と破線、肯否混在の文字と点線も維持する。
 - 検証した文字と背景の比率は4.5以上、Graph線・Node境界・入力境界は3以上を確認。包括的なアクセシビリティ適合の認証ではない。
-- 初期の検索→探索→Claim比較→出典確認までのローカルデモを完了として区切る。将来機能や本番公開準備は対象外。配色と確認画像は [IMPLEMENTATION_THEME.md](IMPLEMENTATION_THEME.md) を参照。
+- 初期の検索→探索→Claim比較→出典確認までのローカルデモを完了として区切る。将来機能や本番公開準備は対象外。配色と確認画像は [IMPLEMENTATION_THEME.md](archive/phase-01-vertical-slice/IMPLEMENTATION_THEME.md) を参照。
 
 ### 探索モデルの設計レビューと開閉フェーズ
 
-閉じる・条件付き探索・時系列の設計提案は [EXPLORATION_MODEL_REVIEW.md](EXPLORATION_MODEL_REVIEW.md) を参照する。移行順序1〜4を採用し実装済み。React state内の取得キャッシュとページ所属・open意図から表示対象を導出する。単一起点のUIを維持し、閉じるでは当該展開の利用を解除する。共有対象は残し、起点から切れた循環は除く。休止した子孫の受理済み範囲は再到達時に復元し、明示的に閉じた子孫は閉じたまま。復元で通信は行わない。
+閉じる・条件付き探索・時系列の設計提案は [EXPLORATION_MODEL_REVIEW.md](design/EXPLORATION_MODEL_REVIEW.md) を参照する。移行順序1〜4を採用し実装済み。React state内の取得キャッシュとページ所属・open意図から表示対象を導出する。単一起点のUIを維持し、閉じるでは当該展開の利用を解除する。共有対象は残し、起点から切れた循環は除く。休止した子孫の受理済み範囲は再到達時に復元し、明示的に閉じた子孫は閉じたまま。復元で通信は行わない。
 
 - 表示上限は100 Entity / 200独立Claim。新規ページ・枝の復元を全体で検査し、超過時は拒否する。閉じる後に再試行でき、cursorは受理時だけ進める。
 - 一時キャッシュは400 Entity / 800 Claim。非活動かつ非通信中の展開を古い利用順に所属・cursorごと破棄し、再取得を可能にする。起点変更で全てリセット。
 - 起点の配列を内部境界に用意するが、複数起点UI・条件キーの汎用化は未実装。局所要求番号・abort・世代番号で旧応答を拒否。
 - Graphと一覧は共通の表示対象を使う。差分削除と座標復元を行い、残存位置・pan/zoomを維持する。消失Entity選択は起点へ、消失Claim / Relation選択は解除する。Relation詳細は全公開Claim比較を維持し、Graph未表示を区別する。
 
-仕様は [EXPLORATION_CLOSE_PHASE.md](EXPLORATION_CLOSE_PHASE.md)、検証結果は [IMPLEMENTATION_EXPLORATION_CLOSE.md](IMPLEMENTATION_EXPLORATION_CLOSE.md) を参照。API・DB・fixture・predicate・日付の変更はない。条件付き探索・時系列・移行順序5以降は未実装。
+仕様は [EXPLORATION_CLOSE_PHASE.md](archive/phase-02-exploration-close/EXPLORATION_CLOSE_PHASE.md)、検証結果は [IMPLEMENTATION_EXPLORATION_CLOSE.md](archive/phase-02-exploration-close/IMPLEMENTATION_EXPLORATION_CLOSE.md) を参照。API・DB・fixture・predicate・日付の変更はない。条件付き探索・時系列・移行順序5以降は未実装。
 
 ### Nodeクリックの開閉と操作設定
 
 Graphの未選択Nodeは即時に選択・必要な展開を行い、選択中Nodeは300ms後に開閉する。300ms以内の同じNodeへの二度目のクリックは開閉を取り消し、独立したダブルクリックのコールバックへ渡す（現在は未割当）。選択変更・他対象の操作・ドラッグ・中心変更・破棄では待機中の開閉を取り消す。一覧の選択・明示開閉ボタンは即時の既存操作を維持する。
 
-判定値はlib/client/graph-interaction.tsのGRAPH_INTERACTION_DEFAULTSへ集約し、テスト可能なイベント判定から開閉処理を分離する。設定モーダルや設定永続化は未実装。利用者の操作設定、Graph表示調整、管理ポリシーの責務分担は [GRAPH_INTERACTION_AND_SETTINGS.md](GRAPH_INTERACTION_AND_SETTINGS.md) を参照。
+判定値はlib/client/graph-interaction.tsのGRAPH_INTERACTION_DEFAULTSへ集約し、テスト可能なイベント判定から開閉処理を分離する。設定モーダルや設定永続化は未実装。利用者の操作設定、Graph表示調整、管理ポリシーの責務分担は [GRAPH_INTERACTION_AND_SETTINGS.md](design/GRAPH_INTERACTION_AND_SETTINGS.md) を参照。
 
 ### 探索軸プリセット・taxonomy・保存ビューの設計レビュー（未実装）
 
-探索プリセットはアプリケーション層の版付き条件テンプレートとする提案。predicateの意味、閲覧分類、多言語label、個人の保存ビュー、実行セッションを分ける。初期の公式カタログはコード管理から始め、運営の画面編集と会員保存は必要時にPostgreSQLへ置く。Neo4jへ知識Graphの第二の正本を作らない。保存ビューは出自プリセットの版と確定した条件を持ち、公式更新へ黙って追従しない。詳細・未確定判断は [EXPLORATION_PRESETS_REVIEW.md](EXPLORATION_PRESETS_REVIEW.md) を参照。今回のレビューは提案で、条件API・認証・管理・保存機能は未実装。
+探索プリセットはアプリケーション層の版付き条件テンプレートとする提案。predicateの意味、閲覧分類、多言語label、個人の保存ビュー、実行セッションを分ける。初期の公式カタログはコード管理から始め、運営の画面編集と会員保存は必要時にPostgreSQLへ置く。Neo4jへ知識Graphの第二の正本を作らない。保存ビューは出自プリセットの版と確定した条件を持ち、公式更新へ黙って追従しない。詳細・未確定判断は [EXPLORATION_PRESETS_REVIEW.md](design/EXPLORATION_PRESETS_REVIEW.md) を参照。今回のレビューは提案で、条件API・認証・管理・保存機能は未実装。

@@ -1,5 +1,6 @@
 # 実装順序3: 読み取りAPIの実施記録
 
+> 完了フェーズの履歴です。記載の仕様・件数は実施時点のものです。現行仕様は [ARCHITECTURE.md](../../ARCHITECTURE.md)、文書一覧は [docs/README.md](../../README.md) を参照してください。
 日付: 2026-10-03（Asia/Tokyo）
 
 ## 完了範囲
@@ -36,7 +37,7 @@ EntitySummary、ClaimSummary等はlib/domain/api.tsで既存のdomain定義か�
 
 ## 使用した主要Cypher
 
-実装の正本は[queries.ts](../lib/server/queries.ts)。q、ID、cursor、limit+1はすべてパラメータで渡す。Neo4jのLIMITにはdriverのIntegerを用いる。
+実装の正本は[queries.ts](../../../lib/server/queries.ts)。q、ID、cursor、limit+1はすべてパラメータで渡す。Neo4jのLIMITにはdriverのIntegerを用いる。
 
 ### SEARCH_ENTITIES
 
@@ -126,7 +127,7 @@ HTTPテストはNext.jsを空きポートで自動起動し、以下を確認し
 
 ## 実際のAPI応答例
 
-[API_RESPONSE_EXAMPLES.json](API_RESPONSE_EXAMPLES.json)にHTTP経由で取得した完全な応答を保存した。search、entity、neighbors、claim、unsourced、internalError（500）、unavailable（503）を収録する。
+[API_RESPONSE_EXAMPLES.json](../../API_RESPONSE_EXAMPLES.json)にHTTP経由で取得した完全な応答を保存した。search、entity、neighbors、claim、unsourced、internalError（500）、unavailable（503）を収録する。
 
 青葉ハルの検索:
 

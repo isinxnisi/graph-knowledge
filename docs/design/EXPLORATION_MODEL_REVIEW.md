@@ -213,4 +213,4 @@ flowchart LR
 
 ## 開閉フェーズの具体化
 
-推奨案に基づく移行順序1〜4の実装範囲・受け入れ条件は [EXPLORATION_CLOSE_PHASE.md](EXPLORATION_CLOSE_PHASE.md) に記録した。復元UXは「休止した子孫も復元」で承認され、移行順序1〜4は実装済み。結果は [IMPLEMENTATION_EXPLORATION_CLOSE.md](IMPLEMENTATION_EXPLORATION_CLOSE.md) を参照。
+推奨案に基づく移行順序1〜4の実装範囲・受け入れ条件は [EXPLORATION_CLOSE_PHASE.md](../archive/phase-02-exploration-close/EXPLORATION_CLOSE_PHASE.md) に記録した。復元UXは「休止した子孫も復元」で承認され、移行順序1〜4は実装済み。結果は [IMPLEMENTATION_EXPLORATION_CLOSE.md](../archive/phase-02-exploration-close/IMPLEMENTATION_EXPLORATION_CLOSE.md) を参照。
