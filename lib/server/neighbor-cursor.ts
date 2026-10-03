@@ -1,15 +1,24 @@
+import { datasetMode, type DatasetMode } from "../domain/dataset";
 import { explorationLabels } from "../i18n/exploration";
 import { z } from "zod";
 import { ApiError } from "./http";
-import { predicateKey, type PredicateFilter } from "../domain/exploration";
+import { explorationKey, predicateKey, type ContributionRoleFilter, type PredicateFilter } from "../domain/exploration";
 
+const v2Schema = z.strictObject({ v: z.literal(2), center: z.uuidv4(), condition: z.string(), dataset: z.string(), after: z.uuidv4() });
 const schema = z.strictObject({ v: z.literal(1), center: z.uuidv4(), condition: z.string(), after: z.uuidv4() });
-export function encodeNeighborCursor(center: string, predicates: PredicateFilter, after: string): string {
+export function encodeNeighborCursor(center: string, predicates: PredicateFilter, after: string, roles: ContributionRoleFilter = null, dataset: DatasetMode = datasetMode(process.env.GRAPH_DATASET)): string {
+  if (roles !== null || dataset === "pilot-urasawa-v2") return Buffer.from(JSON.stringify({ v: 2, center, condition: explorationKey(predicates, roles), dataset, after })).toString("base64url");
   return predicates === null ? after : Buffer.from(JSON.stringify({ v: 1, center, condition: predicateKey(predicates), after })).toString("base64url");
 }
-export function decodeNeighborCursor(cursor: string | null, center: string, predicates: PredicateFilter): string | null {
+export function decodeNeighborCursor(cursor: string | null, center: string, predicates: PredicateFilter, roles: ContributionRoleFilter = null, dataset: DatasetMode = datasetMode(process.env.GRAPH_DATASET)): string | null {
   if (cursor === null) return null;
   try {
+    if (roles !== null || dataset === "pilot-urasawa-v2") {
+      if (cursor.length > 1024 || !/^[A-Za-z0-9_-]+$/.test(cursor)) throw new Error("Invalid cursor");
+      const value = v2Schema.parse(JSON.parse(Buffer.from(cursor, "base64url").toString("utf8")));
+      if (value.center !== center || value.dataset !== dataset || value.condition !== explorationKey(predicates, roles)) throw new Error("Cursor scope mismatch");
+      return value.after.toLowerCase();
+    }
     if (predicates === null) return z.uuidv4().parse(cursor).toLowerCase();
     if (cursor.length > 1024 || !/^[A-Za-z0-9_-]+$/.test(cursor)) throw new Error("Invalid cursor");
     const value = schema.parse(JSON.parse(Buffer.from(cursor, "base64url").toString("utf8")));

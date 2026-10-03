@@ -20,6 +20,9 @@ RETURN properties(c) AS claim, properties(subject) AS subject,
        properties(object) AS object, count(DISTINCT source) AS sourceCount
 ORDER BY claim.id`;
 
+// Role無条件は従来のquery planを再利用。条件ありだけ限定をLIMIT前へ加える。
+export const NEIGHBORS_BY_ROLE = NEIGHBORS.replace("  AND ($after", "  AND (c.predicate <> 'CONTRIBUTED_TO' OR c.contributionRoleId IN $contributionRoles)\n  AND ($after");
+
 export const CLAIM_DETAIL = `
 MATCH (c:Claim {id: $id})-[:SUBJECT]->(subject:Entity), (c)-[:OBJECT]->(object:Entity)
 WHERE c.visibility = 'published'

@@ -18,11 +18,15 @@
 | [操作と設定](design/GRAPH_INTERACTION_AND_SETTINGS.md) | 再クリック・300ms判定は実装済み。設定モーダル・永続化・管理設定は検討中 |
 | [プリセット・分類・多言語・会員保存](design/EXPLORATION_PRESETS_REVIEW.md) | 多言語対応は設計前提として採用済み。具体方式・プリセット・保存は設計案。predicate条件APIは実装済み。taxonomy・言語切替・認証・保存は未実装 |
 | [Predicate意味契約・チェック](design/PREDICATE_CONTRACTS.md) | 既存4語彙の契約・基準版・比較票・validatorを実装済み。追加と変更の手順。Role schemaは未導入 |
-| [関係語彙・役割・意味境界](design/RELATION_VOCABULARY_REVIEW.md) | 凍結パイロット後の設計レビュー。意味契約、役割限定、追加審査、分類・表示の分離。提案を採用し、既存4語彙の契約・チェックを実装。Role・表示束等は未実装 |
-| [制作Roleの最小設計](design/CONTRIBUTION_ROLE_REVIEW.md) | CONTRIBUTED_TO限定の4 Role候補・刊行物scope・肯否／比較・条件／cursor・表示・v2方針。推奨案で未採用・未実装 |
+| [関係語彙・役割・意味境界](design/RELATION_VOCABULARY_REVIEW.md) | 凍結パイロット後の設計レビュー。意味契約、役割限定、追加審査、分類・表示の分離。提案を採用し、既存4語彙の契約・チェックを実装。制作RoleはPhase 06を参照。複数predicateの表示束は未実装 |
+| [制作Roleの最小設計](design/CONTRIBUTION_ROLE_REVIEW.md) | CONTRIBUTED_TO限定の4 Role候補・刊行物scope・肯否／比較・条件／cursor・表示・v2方針。採用済み。現行契約と受入状態はPhase 06を参照 |
 | [API応答例](API_RESPONSE_EXAMPLES.json) | 読み取りAPIの例。テストから参照するため、この場所を維持 |
 
 未実装部分を含む文書は、完了した内容が一部あっても丸ごとアーカイブしない。設計案を採用済みとみなさず、最新のユーザー指示を優先する。
+
+## 進行中のフェーズ
+
+Phase 06：[限定制作Roleの実装・受入](design/phase-06-contribution-role/IMPLEMENTATION_CONTRIBUTION_ROLE.md)。技術検証済み、個々の実データ受入確認待ち。完了履歴へはまだ移さない。
 
 ## フェーズ別の完了履歴
 
@@ -43,3 +47,5 @@ Phase 02後のNode再クリックの採用・検証は、現役の[操作と設�
 - 過去の検証件数・画像・当時の判断は残す。古い表示方針を現行仕様として使わない。
 - 変更履歴はGitと完了記録に残し、同じ計画文書の完了／提案の状態を曖昧にしない。
 - 移動時はREADME・文書間リンク・画像・コードからの参照を確認する。参照維持だけの空ファイルは増やさない。
+
+Phase 06の現行契約：[限定制作Role](design/CONTRIBUTION_ROLE_CONTRACTS.md)。[実施記録・未完了範囲](design/phase-06-contribution-role/IMPLEMENTATION_CONTRIBUTION_ROLE.md)で実装検証と実データ受入を区別する。

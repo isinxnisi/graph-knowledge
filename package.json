@@ -11,7 +11,7 @@
     "start": "next start --hostname 127.0.0.1",
     "typecheck": "next typegen && tsc --noEmit",
     "lint": "npm run vocabulary:check && eslint .",
-    "test": "npm run vocabulary:check && vitest run tests/domain.test.ts tests/http.test.ts tests/ui-state.test.tsx tests/pilot.test.ts tests/vocabulary.test.ts",
+    "test": "npm run vocabulary:check && vitest run tests/domain.test.ts tests/http.test.ts tests/ui-state.test.tsx tests/pilot.test.ts tests/vocabulary.test.ts tests/contribution.test.ts",
     "test:integration": "vitest run tests/seed.integration.test.ts tests/api.integration.test.ts --no-file-parallelism",
     "fixture:validate": "tsx scripts/validate-fixture.ts",
     "db:constraints": "tsx scripts/constraints.ts",
@@ -25,7 +25,14 @@
     "pilot:build": "tsx scripts/pilot.ts build",
     "pilot:e2e": "playwright test --config=playwright.pilot.config.ts",
     "pilot:integration": "vitest run tests/pilot.integration.test.ts --no-file-parallelism",
-    "vocabulary:check": "tsx scripts/check-vocabulary.ts"
+    "vocabulary:check": "tsx scripts/check-vocabulary.ts",
+    "pilot:v2:prepare": "tsx scripts/prepare-pilot-v2.ts",
+    "pilot:v2:validate": "tsx scripts/prepare-pilot-v2.ts --check",
+    "pilot:v2:seed": "tsx scripts/pilot-v2.ts seed",
+    "pilot:v2:dev": "tsx scripts/pilot-v2.ts dev",
+    "pilot:v2:build": "tsx scripts/pilot-v2.ts build",
+    "pilot:v2:integration": "vitest run tests/contribution.integration.test.ts --no-file-parallelism",
+    "pilot:v2:e2e": "playwright test --config=playwright.pilot-v2.config.ts"
   },
   "dependencies": {
     "cytoscape": "3.34.3",

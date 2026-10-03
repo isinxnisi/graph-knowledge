@@ -7,8 +7,8 @@ export const dynamic = "force-dynamic";
 export async function GET(request: Request, context: { params: Promise<{ id: string }> }) {
   return handle(async () => {
     const id = parseId((await context.params).id);
-    const { limit, after, predicates } = neighborsInput(request);
-    return getNeighbors(id, limit, decodeNeighborCursor(after, id, predicates), predicates);
+    const { limit, after, predicates, contributionRoles = null } = neighborsInput(request);
+    return getNeighbors(id, limit, decodeNeighborCursor(after, id, predicates, contributionRoles), predicates, contributionRoles);
   });
 }
 export {

@@ -1,3 +1,5 @@
+import { contributionOf } from "../domain/contribution";
+import { contributionLabels } from "../i18n/contribution";
 import { PREDICATES } from "../domain/predicates";
 import type { EntitySummary, ClaimSummary } from "../domain/api";
 
@@ -29,7 +31,7 @@ export function displayRelations(claims: Record<string, ClaimSummary>): Record<s
     const polarity = polarities.size > 1 ? "mixed" : first.polarity;
     return [id, { id, subjectId: first.subjectId, objectId: first.objectId, predicate: first.predicate,
       claimIds: group.map((claim) => claim.id).sort(), polarity,
-      label: PREDICATES[first.predicate].label + (polarity === "mixed" ? "\n異説あり" : polarity === "denied" ? "\n（否定）" : ""),
+      label: relationSummaryLabel(first.predicate, group) + (polarity === "mixed" ? first.predicate === "CONTRIBUTED_TO" ? `\n${contributionLabels().mixed}` : "\n異説あり" : polarity === "denied" ? "\n（否定）" : ""),
     }];
   }));
 }
@@ -57,4 +59,11 @@ export function edgeRoutes(relations: Record<string, DisplayRelation>, positions
     });
   });
   return result;
+}
+
+function relationSummaryLabel(predicate: ClaimSummary["predicate"], claims: ClaimSummary[]): string {
+  const roleIds = [...new Set(claims.flatMap((claim) => contributionOf(claim)?.roleId ? [contributionOf(claim)!.roleId!] : []))].sort();
+  if (!roleIds.length) return PREDICATES[predicate].label;
+  const names = roleIds.slice(0, 2).map((role) => contributionLabels().roles[role]).join("・") + (roleIds.length > 2 ? contributionLabels().moreRoles(roleIds.length - 2) : "");
+  return `${PREDICATES[predicate].label}\n${[...names].length > 12 ? contributionLabels().roleCount(roleIds.length) : names}`;
 }

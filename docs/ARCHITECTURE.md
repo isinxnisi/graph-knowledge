@@ -1,6 +1,6 @@
 # 現行技術設計
 
-更新日: 2026-10-03 / 状態: 初期Vertical Sliceと探索の開閉・Node再クリックまで実装済み。既存predicateによる条件付き探索を追加。taxonomy・プリセット・会員保存は未実装。[文書の入口](README.md)に現役設計とフェーズ別履歴をまとめる。
+更新日: 2026-10-03 / 状態: 初期Vertical Sliceと探索の開閉・Node再クリックまで実装済み。既存predicateと限定制作Roleによる条件付き探索を追加。v2 Role Claimの個別受入は確認待ち。taxonomy・プリセット・会員保存は未実装。[文書の入口](README.md)に現役設計とフェーズ別履歴をまとめる。
 
 ## 前提と設計の位置づけ
 
@@ -308,15 +308,15 @@ Neo4jではPartialDateをネストしたpropertyとして保存せず、`validFr
 共通の返却型:
 
 - EntitySummary: `{ id, kind, name, description }`。descriptionは同名判別用でnullable。
-- ClaimSummary: `{ id, subjectId, objectId, predicate, polarity, period, sourceCount }`。sourceCountはCitationが指す異なるSourceの件数を導出し、信用点数にはしない。
+- ClaimSummary: `{ id, subjectId, objectId, predicate, polarity, period, contribution, sourceCount }`。sourceCountはCitationが指す異なるSourceの件数を導出し、信用点数にはしない。
 - SourceDetail: `{ id, kind, title, authors, publisher, url, publishedAt, edition, note, isDemo }`。authorsは文字列配列、id/kind/title/isDemo以外のスカラーはnullable。
-- CitationDetail: `{ id, locator, note, accessedAt, stance, source }`。locatorはページ・節等を表す文字列、noteとaccessedAtはnullable。sourceはSourceDetail。
+- CitationDetail: `{ id, locator, note, accessedAt, stance, source, roleEvidence }`。locatorはページ・節等を表す文字列、noteとaccessedAtはnullable。sourceはSourceDetail。
 
 | GET経路 | 入力 | 200のレスポンス |
 | --- | --- | --- |
 | /api/entities | q必須、limit省略可 | `{ items: EntitySummary[], hasMore: boolean }` |
 | /api/entities/{id} | Entity UUID | `{ entity: EntitySummary + { aliases: string[] } }` |
-| /api/entities/{id}/neighbors | limit、after、predicates省略可 | `{ centerId, nodes: EntitySummary[], claims: ClaimSummary[], page: { nextCursor, hasMore } }` |
+| /api/entities/{id}/neighbors | limit、after、predicates、contributionRoles省略可 | `{ centerId, nodes: EntitySummary[], claims: ClaimSummary[], page: { nextCursor, hasMore } }` |
 | /api/claims/{id} | Claim UUID | `{ claim: ClaimSummary + { createdAt, updatedAt, citations: CitationDetail[] }, relatedClaimIds: string[] }` |
 
 検索はpersonのみ。qをtrimし、Unicode NFKCと小文字化を行う。1〜100文字を許可し、空文字は400。表示名称・別名から同じ正規化で作った検索用配列に対する部分一致を用い、Cypherのパラメータとして渡す。検索索引・日本語形態素解析は初期不要。完全一致、名称、IDの順で安定して並べ、limit既定10・最大20でlimit+1件からhasMoreを判定する。初期検索はページングせず、候補が多い場合は検索語の絞り込みを促す。
@@ -479,6 +479,8 @@ GraphStateは一つの有効条件スコープ（predicates / conditionKey）内
 
 既存4語彙の実行辞書とClaim schemaは維持する。vocabulary/catalog.jsonに包含・除外・境界例、方向、近接概念、locale別表現、既存語彙との比較を記録し、baseline-v1.jsonを変更検出用の基準版とする。使用済みIDの意味は変更せず、追加・意味を保つ明確化・翻訳修正にもhashで変更前後を指定した比較票を要求する。端点変更・ID削除・辞書との不一致・無審査変更は開発時validatorで拒否する。意味の同一性・資料の解釈は人間レビュー。詳細と実行方法は [PREDICATE_CONTRACTS.md](design/PREDICATE_CONTRACTS.md)。Role・taxonomy・Graph表示束・DB/API/UI・凍結データは今回変更しない。
 
-### 制作Roleの最小設計レビュー（未採用・未実装）
+### 限定された制作Role（Phase 06）
 
-CONTRIBUTED_TO専用の一Claim一Role、刊行物scope、広いrelatedClaimIds、現行DisplayRelationを維持した概要、LIMIT前のRole条件・cursorの拡張、新dataset版の案を [CONTRIBUTION_ROLE_REVIEW.md](design/CONTRIBUTION_ROLE_REVIEW.md) に整理する。初期候補は台帳で明示された脚本・監修・プロデュース・ストーリー共同制作。作画は資料確認まで保留。これは設計提案であり、現行のDB・API・UI・Claim schema・fixture・凍結pilot dataは変更していない。
+[CONTRIBUTION_ROLE_CONTRACTS.md](design/CONTRIBUTION_ROLE_CONTRACTS.md)を現行の採用仕様とする。4 Role、一Claim一Role、publication scope、Citationの原表記・言語、LIMIT前条件、dataset付きv2 cursor、広いrelatedClaimIdsと三つ組DisplayRelationを実装。CONTRIBUTED_TOの混在は「肯定・否定あり」。既存demo/v1の無Role条件cursorは維持するが、Claim/Citationの返却にcontribution/roleEvidenceを追加しクライアントも更新した。凍結v1ファイル・DBは変更しない。
+
+実データ候補の人間受入と実装完了の区別・検証結果は[Phase 06実施記録](design/phase-06-contribution-role/IMPLEMENTATION_CONTRIBUTION_ROLE.md)を参照。taxonomy等は未実装。

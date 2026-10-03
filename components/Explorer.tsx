@@ -1,4 +1,5 @@
 "use client";
+import { contributionLabels } from "../lib/i18n/contribution";
 
 import type { DatasetMode } from "../lib/domain/dataset";
 import { datasetLabels } from "../lib/i18n/dataset";
@@ -43,7 +44,7 @@ export default function Explorer({ dataset = "demo" }: { dataset?: DatasetMode }
       </label>}
     </header>
     <main className={styles.columns}>
-      <div className={styles.panel}><SearchPanel placeholder={labels.searchExample} onChoose={chooseRoot} /><RelationFilter value={graph.predicates} onApply={changePredicates} /></div>
+      <div className={styles.panel}><SearchPanel placeholder={labels.searchExample} onChoose={chooseRoot} /><RelationFilter roles={graph.contributionRoles ?? null} value={graph.predicates} onApply={changePredicates} /></div>
       <section className={`${styles.panel} ${styles.graphPanel}`} aria-labelledby="graph-title">
         <div className={styles.graphHeading}><h2 id="graph-title">Graph</h2>
           <p data-testid="graph-counts">Entity {Object.keys(graph.nodes).length} / Claim {Object.keys(graph.claims).length}</p><p data-testid="relation-counts">Relation {Object.keys(relations).length}</p>
@@ -54,6 +55,7 @@ export default function Explorer({ dataset = "demo" }: { dataset?: DatasetMode }
         {Object.values(graph.expansions).some((meta) => meta.active && meta.hasMore) && <p className={styles.muted}>Graphの関係表示は取得済みの主張に基づきます。続きは各Entityの詳細から取得できます。</p>}
         {graph.notice && <p role="status">{graph.notice}</p>}
         {blocked && <p role="alert" className={styles.error}>{blocked.error}</p>}
+        {Object.values(graph.claims).some((claim) => claim.contribution?.roleId) && <p className={styles.muted}>{contributionLabels().partial}</p>}
         <GraphCanvas graph={graph} selection={selection} onEntity={selectEntity} onRelation={selectRelation} onToggleEntity={toggleEntity} />
         <RelationsList dataset={dataset} graph={graph} selection={selection} onEntity={selectEntity} onClaim={selectClaim} onExpand={(id) => void expand(id)} onClose={close} />
       </section>
@@ -61,8 +63,8 @@ export default function Explorer({ dataset = "demo" }: { dataset?: DatasetMode }
         <h2 id="detail-title">詳細</h2>
         {!selection && <p className={styles.muted}>人物、作品、組織、または関係の線を選んでください。</p>}
         {selectedEntity && <EntityDetails key={key} entity={selectedEntity} expansion={graph.expansions[selectedEntity.id]} onExpand={(more) => void expand(selectedEntity.id, more)} onClose={() => close(selectedEntity.id)} />}
-        {selectedRelation && <ClaimDetails key={`${key}:${selectedRelation.claimIds[0]}`} id={selectedRelation.claimIds[0]} nodes={graph.nodes} mode="relation" visibleClaimIds={selectedRelation.claimIds} predicates={graph.predicates} />}
-        {selection?.kind === "claim" && <ClaimDetails key={key} id={selection.id} nodes={graph.nodes} predicates={graph.predicates} />}
+        {selectedRelation && <ClaimDetails key={`${key}:${selectedRelation.claimIds[0]}`} id={selectedRelation.claimIds[0]} nodes={graph.nodes} mode="relation" visibleClaimIds={selectedRelation.claimIds} roles={graph.contributionRoles ?? null} predicates={graph.predicates} />}
+        {selection?.kind === "claim" && <ClaimDetails key={key} id={selection.id} nodes={graph.nodes} roles={graph.contributionRoles ?? null} predicates={graph.predicates} />}
       </aside>
     </main>
   </div>;

@@ -1,12 +1,13 @@
+import { contributionSchema, roleEvidenceSchema } from "./contribution";
 import { z } from "zod";
 import { entitySchema, claimSchema, citationSchema, sourceSchema } from "./fixture";
 
 export const entitySummarySchema = entitySchema.pick({ id: true, kind: true, name: true, description: true });
 export const entityDetailSchema = entitySummarySchema.extend({ aliases: entitySchema.shape.aliases });
 export const claimSummarySchema = claimSchema.omit({ visibility: true, createdAt: true, updatedAt: true })
-  .extend({ sourceCount: z.number().int().nonnegative() });
+  .extend({ contribution: contributionSchema.nullable(), sourceCount: z.number().int().nonnegative() });
 export const citationDetailSchema = citationSchema.omit({ claimId: true, sourceId: true })
-  .extend({ source: sourceSchema });
+  .extend({ source: sourceSchema, roleEvidence: roleEvidenceSchema.nullable() });
 export const claimDetailSchema = claimSummarySchema.extend({
   createdAt: claimSchema.shape.createdAt, updatedAt: claimSchema.shape.updatedAt,
   citations: z.array(citationDetailSchema),

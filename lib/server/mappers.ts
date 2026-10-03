@@ -1,3 +1,4 @@
+import { storedContribution, roleEvidenceSchema } from "../domain/contribution";
 import { z } from "zod";
 import { partialDateSchema, type PartialDate } from "../domain/dates";
 import {
@@ -25,7 +26,7 @@ export function entityDetail(properties: Properties) {
 export function claimSummary(properties: Properties, subject: EntitySummary, object: EntitySummary, sourceCount: number): ClaimSummary {
   const result = claimSummarySchema.parse({
     id: properties.id, subjectId: subject.id, objectId: object.id,
-    predicate: properties.predicate, polarity: properties.polarity,
+    predicate: properties.predicate, polarity: properties.polarity, contribution: storedContribution(properties, String(properties.predicate)),
     period: { from: partialDate(properties, "validFrom"), to: partialDate(properties, "validTo") }, sourceCount,
   });
   const definition = PREDICATES[result.predicate];
@@ -44,6 +45,7 @@ export function citationDetail(properties: Properties, source: Properties) {
   return citationDetailSchema.parse({
     id: properties.id, locator: properties.locator, note: properties.note ?? null,
     accessedAt: properties.accessedAt ?? null, stance: properties.stance, source: sourceDetail(source),
+    roleEvidence: properties.roleOriginalText == null && properties.roleOriginalLanguage == null ? null : roleEvidenceSchema.parse({ originalText: properties.roleOriginalText, language: properties.roleOriginalLanguage }),
   });
 }
 export function relatedId(value: unknown): string { return z.uuidv4().parse(value); }

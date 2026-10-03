@@ -1,3 +1,4 @@
+import { contributionSchema, roleEvidenceSchema, type Contribution, type RoleEvidence } from "./contribution";
 import { z } from "zod";
 import { accessedAtSchema, partialDateSchema, periodSchema } from "./dates";
 import { ENTITY_KINDS, PREDICATE_KEYS, PREDICATES } from "./predicates";
@@ -28,11 +29,12 @@ export const citationSchema = z.strictObject({
   accessedAt: accessedAtSchema, stance: z.enum(["support", "refute", "background"]),
 });
 
-export const fixtureSchema = z.strictObject({
+const fixtureBaseSchema = z.strictObject({
   schemaVersion: z.literal(1),
   entities: z.array(entitySchema), claims: z.array(claimSchema),
   sources: z.array(sourceSchema), citations: z.array(citationSchema),
-}).superRefine((fixture, ctx) => {
+});
+function validateReferences(fixture: z.infer<typeof fixtureBaseSchema>, ctx: z.RefinementCtx) {
   const issue = (path: (string | number)[], message: string) => ctx.addIssue({ code: "custom", path, message });
   const seen = new Set<string>();
   for (const key of ["entities", "claims", "sources", "citations"] as const) {
@@ -63,16 +65,30 @@ export const fixtureSchema = z.strictObject({
     if (externalIds.has(key)) issue(["entities", i, "externalIds", j], "Duplicate external identifier");
     externalIds.add(key);
   }));
-});
+}
+export const fixtureSchema = fixtureBaseSchema.superRefine(validateReferences);
 
-export type Fixture = z.infer<typeof fixtureSchema>;
+const claimV2Schema = claimSchema.extend({ contribution: contributionSchema.nullable() }).superRefine((claim, ctx) => {
+  if ((claim.predicate === "CONTRIBUTED_TO") !== (claim.contribution !== null)) ctx.addIssue({ code: "custom", message: "Contribution must match predicate" });
+});
+export const fixtureV2Schema = z.strictObject({ ...fixtureBaseSchema.shape, schemaVersion: z.literal(2), claims: z.array(claimV2Schema), citations: z.array(citationSchema.extend({ roleEvidence: roleEvidenceSchema.nullable() })) }).superRefine((fixture, ctx) => {
+  validateReferences({ ...fixture, schemaVersion: 1 }, ctx);
+  const claims = new Map(fixture.claims.map((claim) => [claim.id, claim]));
+  fixture.citations.forEach((citation, i) => {
+    if (citation.roleEvidence && claims.get(citation.claimId)?.predicate !== "CONTRIBUTED_TO") ctx.addIssue({ code: "custom", path: ["citations", i, "roleEvidence"], message: "Role evidence is contribution-specific" });
+  });
+});
+export type Fixture = Omit<z.infer<typeof fixtureSchema>, "schemaVersion" | "claims" | "citations"> & {
+  schemaVersion: 1 | 2; claims: (z.infer<typeof claimSchema> & { contribution?: Contribution | null })[];
+  citations: (z.infer<typeof citationSchema> & { roleEvidence?: RoleEvidence | null })[];
+};
 export type Entity = z.infer<typeof entitySchema>;
 export type Claim = z.infer<typeof claimSchema>;
 export type Source = z.infer<typeof sourceSchema>;
 export type Citation = z.infer<typeof citationSchema>;
 
 export function validateFixture(input: unknown): Fixture {
-  return fixtureSchema.parse(input);
+  return (typeof input === "object" && input !== null && "schemaVersion" in input && input.schemaVersion === 2) ? fixtureV2Schema.parse(input) : fixtureSchema.parse(input);
 }
 
 export function fixtureCounts(fixture: Fixture) {

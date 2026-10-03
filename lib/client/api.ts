@@ -1,4 +1,4 @@
-import type { PredicateFilter } from "../domain/exploration";
+import type { ContributionRoleFilter, PredicateFilter } from "../domain/exploration";
 import type { ClaimResponse, EntityResponse, EntitySearchResponse, NeighborsResponse } from "../domain/api";
 
 export class ClientApiError extends Error {
@@ -25,9 +25,10 @@ async function get<T>(path: string, signal: AbortSignal): Promise<T> {
 export const searchPeople = (q: string, signal: AbortSignal) => get<EntitySearchResponse>(`/api/entities?${new URLSearchParams({ q })}`, signal);
 export const fetchEntity = (id: string, signal: AbortSignal) => get<EntityResponse>(`/api/entities/${encodeURIComponent(id)}`, signal);
 export const fetchClaim = (id: string, signal: AbortSignal) => get<ClaimResponse>(`/api/claims/${encodeURIComponent(id)}`, signal);
-export const fetchNeighbors = (id: string, after: string | null, signal: AbortSignal, predicates: PredicateFilter = null) => {
+export const fetchNeighbors = (id: string, after: string | null, signal: AbortSignal, predicates: PredicateFilter = null, roles: ContributionRoleFilter = null) => {
   const params = new URLSearchParams();
   if (after !== null) params.set("after", after);
+  if (roles !== null) params.set("contributionRoles", roles.join(","));
   if (predicates !== null) params.set("predicates", predicates.join(","));
   return get<NeighborsResponse>(`/api/entities/${encodeURIComponent(id)}/neighbors${params.size ? `?${params}` : ""}`, signal);
 };

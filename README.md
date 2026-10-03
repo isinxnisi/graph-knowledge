@@ -195,4 +195,21 @@ docker compose --env-file .env.pilot -f compose.pilot.yaml stop
 
 ## 関係語彙の意味契約
 
-既存4 predicateの包含・除外・境界例と変更手順は [Predicate意味契約](docs/design/PREDICATE_CONTRACTS.md) を参照してください。`npm run vocabulary:check`をlint/testでも実行します。追加・変更には全既存語彙との比較と、変更前後hashに一致する承認済み票が必要です。使用済みIDの意味を変えず、基準版を書き換えません。コミット済みの変更を審査する場合は `npm run vocabulary:check -- --base-ref <変更開始前のcommit>` を使います。Role・DB/API/UI・凍結パイロットは変更していません。
+既存4 predicateの包含・除外・境界例と変更手順は [Predicate意味契約](docs/design/PREDICATE_CONTRACTS.md) を参照してください。`npm run vocabulary:check`をlint/testでも実行します。追加・変更には全既存語彙との比較と、変更前後hashに一致する承認済み票が必要です。使用済みIDの意味を変えず、基準版を書き換えません。コミット済みの変更を審査する場合は `npm run vocabulary:check -- --base-ref <変更開始前のcommit>` を使います。Phase 05ではRoleを導入していません。現在の限定Roleは下記Phase 06を参照してください。
+
+## 制作Role v2環境
+
+[採用契約](docs/design/CONTRIBUTION_ROLE_CONTRACTS.md)・[実施記録](docs/design/phase-06-contribution-role/IMPLEMENTATION_CONTRIBUTION_ROLE.md)を参照。実データ候補は人間の受入を経たものだけ生成します。v1は変更しません。
+
+```bash
+cp .env.pilot-v2.example .env.pilot-v2
+docker compose --env-file .env.pilot-v2 -f compose.pilot-v2.yaml up -d --wait
+npm run pilot:v2:prepare
+npm run pilot:v2:validate
+npm run pilot:v2:seed
+npm run pilot:v2:dev
+```
+
+http://127.0.0.1:3212 で「長崎尚志」を検索。Role条件は左ペイン、刊行物の限定・原表記はEdgeの詳細で確認します。受入待ち候補は表示されません。生成データを直接編集せず、台帳の人間判断と再生成・検証を経てください。
+
+検証：`npm run pilot:v2:integration`、`npm run pilot:v2:e2e`。専用テストの架空Claimはpilotファイルへ保存しません。

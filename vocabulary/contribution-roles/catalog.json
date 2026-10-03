@@ -1,0 +1,273 @@
+{
+  "schemaVersion": 1,
+  "entries": [
+    {
+      "id": "SCRIPT_WRITING",
+      "predicate": "CONTRIBUTED_TO",
+      "definitionLanguage": "ja",
+      "meaning": {
+        "definition": "資料に脚本として明示された制作関与。原作・作画・ストーリー共同制作と同義にしない。",
+        "subjectRole": "制作関与者",
+        "objectRole": "対象作品（適用刊行物で限定）",
+        "direction": "subject-to-object",
+        "rules": [
+          "一Claim一Role。肯否はscope・periodを含む限定全体に掛かる。",
+          "Roleなしは全役割の肯定ではない。原表記から自動正規化しない。"
+        ],
+        "examples": [
+          {
+            "id": "SCRIPT_WRITING-include",
+            "category": "include",
+            "scenario": "完全版第1巻に脚本担当として記載",
+            "rationale": "明示Roleと適用scopeを別々に受入審査する"
+          },
+          {
+            "id": "SCRIPT_WRITING-exclude",
+            "category": "exclude",
+            "scenario": "ストーリー担当という表現だけでは脚本を認定しない",
+            "rationale": "近接概念を同義にしない"
+          },
+          {
+            "id": "SCRIPT_WRITING-boundary",
+            "category": "boundary",
+            "scenario": "作品全体のクレジットが巻の商品ページにある",
+            "rationale": "資料範囲だけから当該刊行物への適用を決めない"
+          }
+        ],
+        "nearbyConcepts": [
+          {
+            "term": "脚本以外の制作関与",
+            "difference": "広い関与と限定した命題を分離する"
+          }
+        ]
+      },
+      "translations": {
+        "ja": {
+          "label": "脚本",
+          "reverseLabel": "脚本担当としての関与",
+          "description": "資料に脚本として明示された制作関与。原作・作画・ストーリー共同制作と同義にしない。",
+          "aliases": []
+        }
+      },
+      "predicateRationale": "制作への関与をRoleで限定し、CONTRIBUTED_TOの意味・端点・方向を変えない。",
+      "comparisons": [
+        {
+          "roleId": "SUPERVISION",
+          "relation": "distinct",
+          "rationale": "脚本と監修の明示表記・命題は別。片方から他方を推論しない。"
+        },
+        {
+          "roleId": "PRODUCING",
+          "relation": "distinct",
+          "rationale": "脚本とプロデュースの明示表記・命題は別。片方から他方を推論しない。"
+        },
+        {
+          "roleId": "STORY_CO_CREATION",
+          "relation": "distinct",
+          "rationale": "脚本とストーリー共同制作の明示表記・命題は別。片方から他方を推論しない。"
+        }
+      ]
+    },
+    {
+      "id": "SUPERVISION",
+      "predicate": "CONTRIBUTED_TO",
+      "definitionLanguage": "ja",
+      "meaning": {
+        "definition": "資料に監修として明示された制作関与。監督・作者・作画を認定しない。",
+        "subjectRole": "制作関与者",
+        "objectRole": "対象作品（適用刊行物で限定）",
+        "direction": "subject-to-object",
+        "rules": [
+          "一Claim一Role。肯否はscope・periodを含む限定全体に掛かる。",
+          "Roleなしは全役割の肯定ではない。原表記から自動正規化しない。"
+        ],
+        "examples": [
+          {
+            "id": "SUPERVISION-include",
+            "category": "include",
+            "scenario": "当該刊行物の監修クレジット",
+            "rationale": "明示Roleと適用scopeを別々に受入審査する"
+          },
+          {
+            "id": "SUPERVISION-exclude",
+            "category": "exclude",
+            "scenario": "監督・推薦文と監修を区別する",
+            "rationale": "近接概念を同義にしない"
+          },
+          {
+            "id": "SUPERVISION-boundary",
+            "category": "boundary",
+            "scenario": "作品全体のクレジットが巻の商品ページにある",
+            "rationale": "資料範囲だけから当該刊行物への適用を決めない"
+          }
+        ],
+        "nearbyConcepts": [
+          {
+            "term": "監修以外の制作関与",
+            "difference": "広い関与と限定した命題を分離する"
+          }
+        ]
+      },
+      "translations": {
+        "ja": {
+          "label": "監修",
+          "reverseLabel": "監修担当としての関与",
+          "description": "資料に監修として明示された制作関与。監督・作者・作画を認定しない。",
+          "aliases": []
+        }
+      },
+      "predicateRationale": "制作への関与をRoleで限定し、CONTRIBUTED_TOの意味・端点・方向を変えない。",
+      "comparisons": [
+        {
+          "roleId": "SCRIPT_WRITING",
+          "relation": "distinct",
+          "rationale": "監修と脚本の明示表記・命題は別。片方から他方を推論しない。"
+        },
+        {
+          "roleId": "PRODUCING",
+          "relation": "distinct",
+          "rationale": "監修とプロデュースの明示表記・命題は別。片方から他方を推論しない。"
+        },
+        {
+          "roleId": "STORY_CO_CREATION",
+          "relation": "distinct",
+          "rationale": "監修とストーリー共同制作の明示表記・命題は別。片方から他方を推論しない。"
+        }
+      ]
+    },
+    {
+      "id": "PRODUCING",
+      "predicate": "CONTRIBUTED_TO",
+      "definitionLanguage": "ja",
+      "meaning": {
+        "definition": "プロデュースとして明示された制作関与。資金提供・雇用・脚本を含意しない。",
+        "subjectRole": "制作関与者",
+        "objectRole": "対象作品（適用刊行物で限定）",
+        "direction": "subject-to-object",
+        "rules": [
+          "一Claim一Role。肯否はscope・periodを含む限定全体に掛かる。",
+          "Roleなしは全役割の肯定ではない。原表記から自動正規化しない。"
+        ],
+        "examples": [
+          {
+            "id": "PRODUCING-include",
+            "category": "include",
+            "scenario": "当該刊行物のプロデュース表記",
+            "rationale": "明示Roleと適用scopeを別々に受入審査する"
+          },
+          {
+            "id": "PRODUCING-exclude",
+            "category": "exclude",
+            "scenario": "企画・協力だけではプロデュースへ変換しない",
+            "rationale": "近接概念を同義にしない"
+          },
+          {
+            "id": "PRODUCING-boundary",
+            "category": "boundary",
+            "scenario": "作品全体のクレジットが巻の商品ページにある",
+            "rationale": "資料範囲だけから当該刊行物への適用を決めない"
+          }
+        ],
+        "nearbyConcepts": [
+          {
+            "term": "プロデュース以外の制作関与",
+            "difference": "広い関与と限定した命題を分離する"
+          }
+        ]
+      },
+      "translations": {
+        "ja": {
+          "label": "プロデュース",
+          "reverseLabel": "プロデュース担当としての関与",
+          "description": "プロデュースとして明示された制作関与。資金提供・雇用・脚本を含意しない。",
+          "aliases": []
+        }
+      },
+      "predicateRationale": "制作への関与をRoleで限定し、CONTRIBUTED_TOの意味・端点・方向を変えない。",
+      "comparisons": [
+        {
+          "roleId": "SCRIPT_WRITING",
+          "relation": "distinct",
+          "rationale": "プロデュースと脚本の明示表記・命題は別。片方から他方を推論しない。"
+        },
+        {
+          "roleId": "SUPERVISION",
+          "relation": "distinct",
+          "rationale": "プロデュースと監修の明示表記・命題は別。片方から他方を推論しない。"
+        },
+        {
+          "roleId": "STORY_CO_CREATION",
+          "relation": "distinct",
+          "rationale": "プロデュースとストーリー共同制作の明示表記・命題は別。片方から他方を推論しない。"
+        }
+      ]
+    },
+    {
+      "id": "STORY_CO_CREATION",
+      "predicate": "CONTRIBUTED_TO",
+      "definitionLanguage": "ja",
+      "meaning": {
+        "definition": "ストーリー共同制作として明示された制作関与。脚本への置換や共同相手の関係生成をしない。",
+        "subjectRole": "制作関与者",
+        "objectRole": "対象作品（適用刊行物で限定）",
+        "direction": "subject-to-object",
+        "rules": [
+          "一Claim一Role。肯否はscope・periodを含む限定全体に掛かる。",
+          "Roleなしは全役割の肯定ではない。原表記から自動正規化しない。"
+        ],
+        "examples": [
+          {
+            "id": "STORY_CO_CREATION-include",
+            "category": "include",
+            "scenario": "第4巻の内容紹介にストーリー共同制作と記載",
+            "rationale": "明示Roleと適用scopeを別々に受入審査する"
+          },
+          {
+            "id": "STORY_CO_CREATION-exclude",
+            "category": "exclude",
+            "scenario": "著という表記だけで共同制作へ変換しない",
+            "rationale": "近接概念を同義にしない"
+          },
+          {
+            "id": "STORY_CO_CREATION-boundary",
+            "category": "boundary",
+            "scenario": "作品全体のクレジットが巻の商品ページにある",
+            "rationale": "資料範囲だけから当該刊行物への適用を決めない"
+          }
+        ],
+        "nearbyConcepts": [
+          {
+            "term": "ストーリー共同制作以外の制作関与",
+            "difference": "広い関与と限定した命題を分離する"
+          }
+        ]
+      },
+      "translations": {
+        "ja": {
+          "label": "ストーリー共同制作",
+          "reverseLabel": "ストーリー共同制作担当としての関与",
+          "description": "ストーリー共同制作として明示された制作関与。脚本への置換や共同相手の関係生成をしない。",
+          "aliases": []
+        }
+      },
+      "predicateRationale": "制作への関与をRoleで限定し、CONTRIBUTED_TOの意味・端点・方向を変えない。",
+      "comparisons": [
+        {
+          "roleId": "SCRIPT_WRITING",
+          "relation": "distinct",
+          "rationale": "ストーリー共同制作と脚本の明示表記・命題は別。片方から他方を推論しない。"
+        },
+        {
+          "roleId": "SUPERVISION",
+          "relation": "distinct",
+          "rationale": "ストーリー共同制作と監修の明示表記・命題は別。片方から他方を推論しない。"
+        },
+        {
+          "roleId": "PRODUCING",
+          "relation": "distinct",
+          "rationale": "ストーリー共同制作とプロデュースの明示表記・命題は別。片方から他方を推論しない。"
+        }
+      ]
+    }
+  ]
+}

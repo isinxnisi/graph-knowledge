@@ -8,7 +8,7 @@ import { emptyGraph, mergePage, closeExpansion, reopenExpansion, projectGraph } 
 import { useGraphExplorer } from "../lib/client/use-graph-explorer";
 import ClaimDetails, { ClaimCard } from "../components/ClaimDetails";
 import examples from "../docs/API_RESPONSE_EXAMPLES.json";
-import type { ClaimDetail, ClaimResponse, NeighborsResponse, EntitySummary } from "../lib/domain/api";
+import type { ClaimSummary, ClaimDetail, ClaimResponse, NeighborsResponse, EntitySummary } from "../lib/domain/api";
 import { fetchNeighbors, fetchClaim } from "../lib/client/api";
 vi.mock("../lib/client/api", () => ({ fetchNeighbors: vi.fn(), fetchClaim: vi.fn(), errorMessage: () => "取得失敗" }));
 afterEach(() => { cleanup(); vi.clearAllMocks(); });
@@ -346,7 +346,7 @@ describe("条件付き探索", () => {
     await act(async () => { old.resolve(page); await old.promise; });
     expect(result.current.graph.conditionKey).toBe("ASSISTANT_OF");
     expect(Object.values(result.current.graph.claims).every((claim) => claim.predicate === "ASSISTANT_OF")).toBe(true);
-    expect(fetchNeighbors).toHaveBeenLastCalledWith(root.id, null, expect.any(AbortSignal), ["ASSISTANT_OF"]);
+    expect(fetchNeighbors).toHaveBeenLastCalledWith(root.id, null, expect.any(AbortSignal), ["ASSISTANT_OF"], null);
     act(() => result.current.changePredicates(["ASSISTANT_OF", "ASSISTANT_OF"]));
     expect(fetchNeighbors).toHaveBeenCalledTimes(2);
     act(() => result.current.close(root.id));
@@ -361,7 +361,7 @@ describe("条件付き探索", () => {
     act(() => result.current.changePredicates([]));
     act(() => result.current.chooseRoot(root));
     await waitFor(() => expect(result.current.graph.expansions[root.id]?.expanded).toBe(true));
-    expect(fetchNeighbors).toHaveBeenLastCalledWith(root.id, null, expect.any(AbortSignal), []);
+    expect(fetchNeighbors).toHaveBeenLastCalledWith(root.id, null, expect.any(AbortSignal), [], null);
     act(() => result.current.close(root.id)); act(() => result.current.toggleEntity(root.id));
     expect(fetchNeighbors).toHaveBeenCalledTimes(1);
     act(() => result.current.chooseRoot(page.nodes[1]));
@@ -385,5 +385,42 @@ describe("条件付き探索", () => {
     const closed = closeExpansion(rejected, root.id);
     expect(Object.keys(closed.claims)).toHaveLength(0);
     expect(Object.keys(reopenExpansion(closed, root.id).claims)).toHaveLength(200);
+  });
+});
+
+describe("制作Roleの条件・ページ・復元", () => {
+  const work = { ...entity("role-work"), kind: "work" as const }, child = entity("role-child"), secondWork = { ...entity("role-work-second"), kind: "work" as const };
+  const roleClaim = { ...page.claims[0], predicate: "CONTRIBUTED_TO" as const, contribution: { roleId: "SUPERVISION" as const, scope: null }, id: "role-claim", subjectId: root.id, objectId: work.id };
+  const rolePage: NeighborsResponse = { centerId: root.id, nodes: [root, work], claims: [roleClaim], page: { nextCursor: "role-cursor", hasMore: true } };
+  it("通信途中のRole変更は旧応答を捨て、再取得と再開に同じ条件を使う", async () => {
+    const old = deferred(); vi.mocked(fetchNeighbors).mockReturnValueOnce(old.promise).mockResolvedValueOnce(rolePage);
+    const { result } = renderHook(useGraphExplorer);
+    act(() => result.current.chooseRoot(root));
+    const signal = vi.mocked(fetchNeighbors).mock.calls[0][2];
+    act(() => result.current.changePredicates(["CONTRIBUTED_TO"], ["SUPERVISION"]));
+    expect(signal.aborted).toBe(true);
+    await waitFor(() => expect(result.current.graph.claims[roleClaim.id]).toBeDefined());
+    await act(async () => { old.resolve(page); await old.promise; });
+    expect(Object.keys(result.current.graph.claims)).toEqual([roleClaim.id]);
+    expect(fetchNeighbors).toHaveBeenLastCalledWith(root.id, null, expect.any(AbortSignal), ["CONTRIBUTED_TO"], ["SUPERVISION"]);
+    act(() => result.current.close(root.id)); act(() => result.current.toggleEntity(root.id));
+    expect(fetchNeighbors).toHaveBeenCalledTimes(2);
+    expect(result.current.graph.expansions[root.id].nextCursor).toBe("role-cursor");
+  });
+  it("受理と投影は別Roleを除外し、休止した子孫・循環を同条件で復元する", () => {
+    let graph = { ...emptyGraph(), predicates: ["CONTRIBUTED_TO"] as ClaimSummary["predicate"][], contributionRoles: ["SUPERVISION"] as ("SUPERVISION")[] };
+    const state = mergePage({ ...graph, contributionRoles: ["SUPERVISION"] }, rolePage);
+    const next = mergePage(state, { centerId: work.id, nodes: [work, child], claims: [{ ...roleClaim, id: "child", subjectId: child.id, objectId: work.id }], page: { nextCursor: null, hasMore: false } });
+    const branch = mergePage(next, { centerId: child.id, nodes: [child, secondWork], claims: [{ ...roleClaim, id: "cycle", subjectId: child.id, objectId: secondWork.id }], page: { nextCursor: null, hasMore: false } });
+    const cycle = mergePage(branch, { centerId: secondWork.id, nodes: [secondWork, root], claims: [{ ...roleClaim, id: "return", subjectId: root.id, objectId: secondWork.id }], page: { nextCursor: null, hasMore: false } });
+    expect(Object.keys(cycle.nodes)).toHaveLength(4);
+    const closed = closeExpansion(cycle, root.id); expect(Object.keys(closed.nodes)).toEqual([root.id]);
+    expect(Object.keys(reopenExpansion(closed, root.id).claims)).toHaveLength(4);
+    expect(() => mergePage(state, { ...rolePage, claims: [{ ...roleClaim, contribution: { roleId: "PRODUCING", scope: null } }] })).toThrow();
+    expect(Object.keys(projectGraph({ ...state, contributionRoles: ["PRODUCING"] }).claims)).toHaveLength(0);
+    graph = { ...emptyGraph(), predicates: ["CONTRIBUTED_TO"], contributionRoles: ["SUPERVISION"] };
+    const many = mergePage(graph, { ...rolePage, claims: Array.from({ length: 200 }, (_, i) => ({ ...roleClaim, id: `claim-${i}` })) });
+    const rejected = mergePage(many, { ...rolePage, claims: [{ ...roleClaim, id: "overflow" }], page: { nextCursor: "advance", hasMore: false } }, "role-cursor");
+    expect(Object.keys(rejected.claims)).toHaveLength(200); expect(rejected.expansions[root.id].nextCursor).toBe("role-cursor");
   });
 });

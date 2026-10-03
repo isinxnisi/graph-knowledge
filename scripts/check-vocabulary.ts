@@ -1,3 +1,4 @@
+import { checkRoleVocabulary } from "../lib/domain/role-vocabulary";
 import { readFile } from "node:fs/promises";
 import { execFileSync } from "node:child_process";
 import { PREDICATES } from "../lib/domain/predicates";
@@ -38,3 +39,25 @@ for (const warning of result.warnings) console.warn(`WARN ${warning}`);
 for (const error of result.errors) console.error(`ERROR ${error}`);
 console.log(`語彙検証: ${catalog.entries.length} predicate / ${result.errors.length} error / ${result.warnings.length} warning / Git base ${baseRef}`);
 if (result.errors.length) process.exitCode = 1;
+
+const rolePaths = ["vocabulary/contribution-roles/catalog.json", "vocabulary/contribution-roles/baseline-v1.json", "vocabulary/contribution-roles/reviews.json"];
+const roleValues = await Promise.all(rolePaths.map(async (path) => JSON.parse(await readFile(path, "utf8"))));
+const roleTree = execFileSync("git", ["ls-tree", "--name-only", baseRef, ...rolePaths], { encoding: "utf8" }).trim().split("\n");
+if (roleTree.includes(rolePaths[1]) && vocabularyHash(fromGit(rolePaths[1])) !== vocabularyHash(roleValues[1])) throw new Error("Role baseline rewrite rejected");
+if (roleTree.includes(rolePaths[2])) for (const record of (fromGit(rolePaths[2]) as { id: string; status: string }[]).filter((item) => item.status === "approved")) {
+  if (vocabularyHash(record) !== vocabularyHash(roleValues[2].find((item: { id: string }) => item.id === record.id))) throw new Error("Approved Role review rewrite rejected");
+}
+const roleResult = checkRoleVocabulary(roleValues[0], roleValues[1], roleValues[2]);
+if (roleTree.includes(rolePaths[0])) roleResult.errors.push(...checkRoleVocabulary(roleValues[0], fromGit(rolePaths[0]), roleValues[2]).errors);
+for (const warning of roleResult.warnings) console.warn(`WARN ${warning}`);
+for (const error of roleResult.errors) console.error(`ERROR ${error}`);
+console.log(`Role検証: 4 role / ${roleResult.errors.length} error`);
+if (roleResult.errors.length) process.exitCode = 1;
+
+if (printHashes) {
+  const prior = (roleTree.includes(rolePaths[0]) ? fromGit(rolePaths[0]) : roleValues[1]) as { entries: { id: string }[] };
+  for (const entry of roleValues[0].entries as { id: string }[]) {
+    const before = prior.entries.find((item) => item.id === entry.id);
+    console.log(JSON.stringify({ kind: "role", targetId: entry.id, beforeHash: before ? vocabularyHash(before) : null, afterHash: vocabularyHash(entry) }));
+  }
+}

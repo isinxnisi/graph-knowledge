@@ -12,3 +12,6 @@ playwright-report/
 
 !.env.pilot.example
 .next-pilot/
+
+!.env.pilot-v2.example
+.next-pilot-v2/

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { execFileSync } from "node:child_process";
-import { mkdtempSync, mkdirSync, writeFileSync, rmSync } from "node:fs";
+import { mkdtempSync, mkdirSync, writeFileSync, readFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import catalog from "../vocabulary/catalog.json";
@@ -143,6 +143,8 @@ describe("predicate meaning contracts", () => {
     const script = resolve("scripts/check-vocabulary.ts");
     try {
       mkdirSync(join(directory, "vocabulary/reviews"), { recursive: true });
+      mkdirSync(join(directory, "vocabulary/contribution-roles"), { recursive: true });
+      for (const name of ["catalog.json", "baseline-v1.json", "reviews.json"]) writeFileSync(join(directory, "vocabulary/contribution-roles", name), readFileSync(resolve("vocabulary/contribution-roles", name)));
       const review = approval(contracts.entries[0], contracts.entries[0], "clarification");
       for (const [path, value] of [["catalog.json", catalog], ["baseline-v1.json", baseline], ["reviews/records.json", [review]]] as const) writeFileSync(join(directory, "vocabulary", path), JSON.stringify(value));
       execFileSync("git", ["init", "-q"], { cwd: directory });
@@ -157,13 +159,18 @@ describe("predicate meaning contracts", () => {
       writeFileSync(join(directory, "vocabulary/baseline-v1.json"), JSON.stringify(baseline));
       writeFileSync(join(directory, "vocabulary/reviews/records.json"), JSON.stringify([{ ...review, rationale: "承認後に変更" }]));
       expect(() => check()).toThrow(/承認済み比較票の変更/);
+      writeFileSync(join(directory, "vocabulary/reviews/records.json"), JSON.stringify([review]));
+      const roleBaseline = JSON.parse(readFileSync(resolve("vocabulary/contribution-roles/baseline-v1.json"), "utf8"));
+      roleBaseline.entries[0].meaning.definition += "基準を置換";
+      writeFileSync(join(directory, "vocabulary/contribution-roles/baseline-v1.json"), JSON.stringify(roleBaseline));
+      expect(() => check()).toThrow(/Role baseline rewrite rejected/);
     } finally { rmSync(directory, { recursive: true, force: true }); }
-  }, 15000);
+  }, 20000);
   it("validates the real CLI against a trusted existing Git ref", () => {
     const output = execFileSync(process.execPath, ["--import", "tsx", "scripts/check-vocabulary.ts", "--base-ref", "HEAD"], { encoding: "utf8" });
     expect(output).toContain("4 predicate / 0 error");
     expect(() => execFileSync(process.execPath, ["--import", "tsx", "scripts/check-vocabulary.ts", "--base-ref", "no-such-vocabulary-ref"], { stdio: "pipe" })).toThrow();
-  });
+  }, 15000);
 });
 
 describe("frozen pilot as reviewed semantic examples, not automatic source classification", () => {

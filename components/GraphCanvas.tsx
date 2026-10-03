@@ -1,5 +1,6 @@
 "use client";
 
+import { contributionLabels } from "../lib/i18n/contribution";
 import cytoscape, { type Core, type ElementDefinition } from "cytoscape";
 import { useEffect, useRef } from "react";
 import type { GraphState, Selection } from "../lib/client/graph-state";
@@ -146,7 +147,7 @@ export default function GraphCanvas({ graph, selection, onEntity, onRelation, on
     <div className={styles.graphTools}>
       <button onClick={() => core.current?.fit(undefined, 24)} disabled={!graph.centerId}>全体を表示</button>
       <span>丸：人物 ／ 四角：作品 ／ 六角形：組織</span>
-      <span>矢印：方向 ／ 破線：否定 ／ 点線：異説あり ／ 二重枠：展開済 ／ 淡い外枠：新規表示</span>
+      <span>矢印：方向 ／ 破線：否定 ／ {contributionLabels().mixedLegend} ／ 二重枠：展開済 ／ 淡い外枠：新規表示</span>
     </div>
   </>;
 }

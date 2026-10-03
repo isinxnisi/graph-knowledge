@@ -1,6 +1,6 @@
 # CONTRIBUTED_TOの最小Role対応・設計レビュー
 
-2026-10-03。**推奨案・未採用・未実装**。Phase 05完了後の設計。今回変更するのは文書だけで、DB・API・UI・Claim schema・fixture・凍結pilot dataを変更しない。以下の型、query、返却項目は将来の契約案で、現行APIではない。
+2026-10-03。**推奨案を採用・Phase 06実装の設計根拠**。Phase 05完了後の設計。レビュー作成時は文書だけを変更した。現在の採用契約は[CONTRIBUTION_ROLE_CONTRACTS.md](CONTRIBUTION_ROLE_CONTRACTS.md)、検証と未完了範囲は[Phase 06記録](phase-06-contribution-role/IMPLEMENTATION_CONTRIBUTION_ROLE.md)を参照。以下は採用前レビューの判断過程であり、凍結pilot v1は変更しない。
 
 基準は[ARCHITECTURE](../ARCHITECTURE.md)、[Predicate意味契約](PREDICATE_CONTRACTS.md)、[関係語彙レビュー](RELATION_VOCABULARY_REVIEW.md)。[実データパイロット設計](REAL_DATA_PILOT.md)と[実施記録](../archive/phase-04-real-data-pilot/IMPLEMENTATION_REAL_DATA_PILOT.md)、[条件付き探索](CONDITIONAL_EXPLORATION_PHASE.md)、[探索モデル](EXPLORATION_MODEL_REVIEW.md)、[分類・プリセット](EXPLORATION_PRESETS_REVIEW.md)との整合を確認した。
 

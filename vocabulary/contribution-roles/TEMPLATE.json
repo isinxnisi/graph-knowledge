@@ -1,0 +1,40 @@
+{
+  "id": "role-review-example",
+  "targetId": "SUPERVISION",
+  "kind": "role",
+  "change": "clarification",
+  "beforeHash": "0000000000000000000000000000000000000000000000000000000000000000",
+  "afterHash": "0000000000000000000000000000000000000000000000000000000000000000",
+  "status": "draft",
+  "reviewer": null,
+  "reviewedAt": null,
+  "outcome": "meaning-preserving",
+  "motivation": "TBD",
+  "evidenceExample": "TBD",
+  "counterexample": "TBD",
+  "predicateRationale": "TBD: CONTRIBUTED_TOの限定である理由",
+  "comparisons": [
+    {
+      "roleId": "SCRIPT_WRITING",
+      "relation": "distinct",
+      "rationale": "TBD"
+    },
+    {
+      "roleId": "PRODUCING",
+      "relation": "distinct",
+      "rationale": "TBD"
+    },
+    {
+      "roleId": "STORY_CO_CREATION",
+      "relation": "distinct",
+      "rationale": "TBD"
+    }
+  ],
+  "impacts": {
+    "claims": "TBD",
+    "conditions": "TBD",
+    "translations": "TBD",
+    "presentation": "TBD"
+  },
+  "rationale": "TBD"
+}

@@ -1,5 +1,7 @@
 # 既存Predicateの意味契約と語彙レビュー手順
 
+現在の制作Roleは[CONTRIBUTION_ROLE_CONTRACTS.md](CONTRIBUTION_ROLE_CONTRACTS.md)を参照。以下の「Role未導入」はPhase 05時点の記録。Predicate単体の意味と基準版は変えず、Roleは専用限定として追加する。
+
 2026-10-03。**採用・実装済み**。対象は既存4 predicateの意味契約と開発時チェック。Role、taxonomy、管理UI、投稿、新しい関係語彙は導入していない。
 
 [設計レビュー](RELATION_VOCABULARY_REVIEW.md)を採用した第一段階。[現行仕様](../ARCHITECTURE.md)のAPI・Claim schema・Graph集約・凍結パイロットは維持する。

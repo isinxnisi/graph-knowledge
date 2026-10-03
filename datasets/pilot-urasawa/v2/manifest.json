@@ -1,0 +1,16 @@
+{
+  "id": "pilot-urasawa-v2",
+  "version": 2,
+  "transformVersion": 1,
+  "createdAt": "2026-10-03T12:03:33Z",
+  "files": {
+    "ledger.json": "23e8b7dacea1b80f5d6a5c231f9b55c5f8132113742b3fe7a5367994583b57dd",
+    "data.json": "727abbaa74b31ec4af2be00947628b37d9dd7964a1e9b177c4e70e5ed4b708d3"
+  },
+  "base": {
+    "dataset": "pilot-urasawa-v1",
+    "dataSha256": "446cb51ef4c1119ac8d2cf85ce1691b5e3b9e63e377c4cbef7d976fa585fc5cd",
+    "ledgerSha256": "222b7e4530d9638d2966ddaa5d81a6ffd20427cf9c9b7ed1e7c95b4a7852eb03"
+  },
+  "accepted": []
+}

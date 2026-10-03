@@ -81,3 +81,5 @@
 .filterChoices label { display: flex; align-items: flex-start; gap: 7px; }
 .filterChoices input { width: auto; margin-top: 5px; accent-color: var(--color-accent); }
 .relationFilter p { margin-top: 10px; font-size: 12px; }
+
+.roleFilter { min-width: 0; border: 1px solid var(--color-border); border-radius: 4px; padding: 8px; margin: 10px 0; }
