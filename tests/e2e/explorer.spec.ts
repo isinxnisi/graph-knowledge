@@ -105,6 +105,15 @@ test("API失敗・DB unavailable・Graph再試行", async ({ page }) => {
 test("Step 5: 全体展開・同名補助・並行Claim・選択と一覧の同期", async ({ page }) => {
   await choose(page); await expect(page.getByTestId("graph-counts")).toHaveText("Entity 5 / Claim 7");
   await page.screenshot({ path: "/tmp/graph-knowledge-step5-initial.png", fullPage: true });
+  const initialView = await page.getByTestId("graph-canvas").evaluate((el) => {
+    const cy = (el as unknown as { _cyreg: { cy: import("cytoscape").Core } })._cyreg.cy;
+    const loops = cy.edges().filter((edge) => edge.data("claimIds").length === 1 && edge.data("distance") !== 0);
+    return { zoom: cy.zoom(), curves: loops.map((edge) => Math.abs(edge.data("distance"))), points: loops.map((edge) => (edge as import("cytoscape").EdgeSingular).renderedMidpoint()) };
+  });
+  expect(initialView.zoom).toBeGreaterThanOrEqual(0.8);
+  expect(initialView.curves).toHaveLength(2);
+  expect(initialView.curves.every((distance) => distance >= 70 && distance <= 115)).toBe(true);
+  expect(Math.hypot(initialView.points[0].x - initialView.points[1].x, initialView.points[0].y - initialView.points[1].y)).toBeGreaterThan(50);
   const positions = () => page.getByTestId("graph-canvas").evaluate((el) => {
     const cy = (el as unknown as { _cyreg: { cy: import("cytoscape").Core } })._cyreg.cy;
     return Object.fromEntries(cy.nodes().map((node) => [node.id(), node.position()]));
@@ -122,6 +131,16 @@ test("Step 5: 全体展開・同名補助・並行Claim・選択と一覧の同�
   }, [fixture.entities[5].id, fixture.entities[6].id, root.id]);
   expect(labels).toEqual(["佐藤アキ\n漫画家", "佐藤アキ\n編集者", "青葉ハル"]);
   await expect(page.getByTestId("relation-counts")).toHaveText("Relation 13");
+  const spans = await page.getByTestId("graph-canvas").evaluate((el) => {
+    const cy = (el as unknown as { _cyreg: { cy: import("cytoscape").Core } })._cyreg.cy;
+    return cy.edges().map((edge) => {
+      const a = edge.source().position(), b = edge.target().position();
+      return Math.hypot(a.x - b.x, a.y - b.y);
+    });
+  });
+  expect(Math.min(...spans)).toBeGreaterThan(190);
+  expect(Math.max(...spans)).toBeLessThan(500);
+  expect(Math.max(...spans) / Math.min(...spans)).toBeLessThan(2.3);
   await page.getByRole("button", { name: "全体を表示", exact: true }).click();
   await page.screenshot({ path: "/tmp/graph-knowledge-step5-expanded.png", fullPage: true });
   await canvasTap(page, fixture.entities[5].id);
@@ -146,6 +165,17 @@ test("Step 5: 全体展開・同名補助・並行Claim・選択と一覧の同�
   expect((await page.getByTestId("graph-canvas").boundingBox())!.height).toBeGreaterThan(260);
   expect(await page.evaluate(() => document.documentElement.scrollHeight <= innerHeight)).toBe(true);
   await page.screenshot({ path: "/tmp/graph-knowledge-step5-compact.png", fullPage: true });
+  await choose(page); await expect(page.getByTestId("graph-counts")).toHaveText("Entity 5 / Claim 7");
+  const shortView = await page.getByTestId("graph-canvas").evaluate(async (el) => {
+    const cy = (el as unknown as { _cyreg: { cy: import("cytoscape").Core } })._cyreg.cy;
+    await new Promise<void>((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => resolve())));
+    return { width: cy.width(), height: cy.height(), nodes: cy.nodes().map((node) => node.renderedBoundingBox({ includeLabels: true })) };
+  });
+  for (const box of shortView.nodes) {
+    expect(box.x1).toBeGreaterThanOrEqual(0); expect(box.x2).toBeLessThanOrEqual(shortView.width);
+    expect(box.y1).toBeGreaterThanOrEqual(0); expect(box.y2).toBeLessThanOrEqual(shortView.height);
+  }
+  await page.screenshot({ path: "/tmp/graph-knowledge-balance-short-initial.png", fullPage: true });
 });
 
 test("回帰: ASSISTANT_OFの3 Claimは1 Relation、全主張の詳細と線クリックが対応", async ({ page }) => {
@@ -193,7 +223,7 @@ test("表示用データ: 肯定のみの集約・別predicateの弱い曲線・
     return cy.edges().map((e) => ({ label: e.data("label"), distance: e.data("distance"), claimIds: e.data("claimIds"), point: e.renderedMidpoint() }));
   });
   expect(edges.map((e) => e.label).sort()).toEqual(["アシスタントだった", "影響を受けた"].sort());
-  expect(edges.every((e) => Math.abs(e.distance) === 24)).toBe(true);
+  expect(edges.every((e) => Math.abs(e.distance) >= 70 && Math.abs(e.distance) <= 115)).toBe(true);
   expect(edges.map((e) => e.claimIds.length).sort()).toEqual([1, 2]);
   expect(Math.hypot(edges[0].point.x - edges[1].point.x, edges[0].point.y - edges[1].point.y)).toBeGreaterThan(0);
   for (const claim of [claims[0], claims[2]]) {

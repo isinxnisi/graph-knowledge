@@ -2,6 +2,7 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { act, cleanup, render, renderHook, screen, waitFor } from "@testing-library/react";
 import { entityLabel, edgeRoutes, displayRelations, relationId } from "../lib/client/graph-presentation";
+import { initialPositions, additionalPositions } from "../lib/client/graph-layout";
 import { emptyGraph, mergePage } from "../lib/client/graph-state";
 import { useGraphExplorer } from "../lib/client/use-graph-explorer";
 import ClaimDetails, { ClaimCard } from "../components/ClaimDetails";
@@ -108,7 +109,7 @@ describe("Graphの表示補助", () => {
     expect(Object.keys(relations)).toHaveLength(3);
     expect(relations[relationId(a)].claimIds).toEqual(["a", "b"]);
     const routes = edgeRoutes(relations);
-    expect(Object.values(routes).every((route) => Math.abs(route.distance) <= 48 && route.weight === 0.5)).toBe(true);
+    expect(Object.values(routes).every((route) => Math.abs(route.distance) <= 115 && route.weight === 0.5)).toBe(true);
     expect(new Set([routes[relationId(a)].distance, -routes[relationId(c)].distance, routes[relationId(d)].distance]).size).toBe(3);
   });
   it("実fixtureの3 Claimを1 Relationにし、期間を出さず肯否の混在だけ示す", () => {
@@ -140,5 +141,39 @@ describe("Graphの表示補助", () => {
     expect(screen.getAllByText("出典未確認")).toHaveLength(2);
     expect(screen.queryByText("選択した主張")).toBeNull();
     expect(fetchClaim).toHaveBeenCalledTimes(3);
+  });
+});
+
+describe("Graphの配置", () => {
+  it("初期配置は横書きの余白を確保し、縦に長い十字を避ける", () => {
+    const positions = initialPositions("root", ["a", "b", "c", "d"]);
+    expect(positions.root).toEqual({ x: 0, y: 0 });
+    const points = Object.values(positions).slice(1);
+    expect(points.every((point) => Math.abs(point.x) > 150 && Math.abs(point.y) > 100)).toBe(true);
+    expect(Math.max(...points.map((p) => Math.abs(p.x)))).toBeGreaterThan(Math.max(...points.map((p) => Math.abs(p.y))));
+    const short = initialPositions("root", ["a", "b", "c", "d"], 265);
+    expect(Math.abs(short.a.y)).toBeLessThan(Math.abs(positions.a.y));
+    expect(Math.abs(short.a.x)).toBeGreaterThan(Math.abs(positions.a.x));
+  });
+  it("追加Nodeは複数の接続先の近くへ置き、既存Nodeを移動しない", () => {
+    const existing = { a: { x: -160, y: 0 }, b: { x: 160, y: 0 }, root: { x: 0, y: -220 } };
+    const before = structuredClone(existing);
+    const relations = displayRelations({ a: { ...page.claims[0], id: "a", subjectId: "a", objectId: "new" }, b: { ...page.claims[0], id: "b", subjectId: "b", objectId: "new" } });
+    const result = additionalPositions(existing, ["new"], relations, "a");
+    expect(existing).toEqual(before);
+    for (const id of Object.keys(existing)) expect(result[id]).toEqual(existing[id as keyof typeof existing]);
+    for (const id of ["a", "b"]) expect(Math.hypot(result.new.x - result[id].x, result.new.y - result[id].y)).toBeLessThan(400);
+    expect(Math.abs(result.new.y)).toBeGreaterThan(100);
+    expect(additionalPositions(existing, ["new"], relations, "a")).toEqual(result);
+  });
+  it("双方向曲線は距離で調整し上下限を守り、単独Relationは直線のまま", () => {
+    const a = { ...page.claims[0], id: "a", subjectId: "a", objectId: "b" };
+    const b = { ...a, id: "b", subjectId: "b", objectId: "a" };
+    const relations = displayRelations({ a, b });
+    const route = (span: number) => edgeRoutes(relations, { a: { x: 0, y: 0 }, b: { x: span, y: 0 } })[relationId(a)];
+    expect(Math.abs(route(200).distance)).toBe(70);
+    expect(Math.abs(route(300).distance)).toBe(96);
+    expect(Math.abs(route(800).distance)).toBe(115);
+    expect(edgeRoutes(displayRelations({ a }))[relationId(a)].distance).toBe(0);
   });
 });

@@ -127,3 +127,7 @@ UI調整とその検証をStep 5の今回の完了範囲とし、上記の残る
 現在の記録画像: [初期Graph](screenshots/relation-initial.png)、[全展開Graph](screenshots/relation-expanded.png)、[Relation詳細](screenshots/relation-detail.png)。
 
 残る制約: 任意の大規模Graphでラベル重なりを完全に防ぐ配置最適化は行っていない。多くの関連Claimの詳細取得・ページングは将来のデータ拡大時に検討する。Graphの「異説あり」は取得済みClaimの範囲であり、未取得ページまでないことを保証する表示ではない。
+
+## 追加調整: Node配置・曲率・ラベルのバランス
+
+Relation集約後の曲率が弱すぎることと、Node配置・余白の偏りを再調整した。最新の数値・判断理由・画像は [IMPLEMENTATION_GRAPH_BALANCE.md](IMPLEMENTATION_GRAPH_BALANCE.md) を参照。前節の48刻み曲率や32刻みラベルオフセットは当時の記録で、現在は端点間の距離に応じた曲率を採用する。

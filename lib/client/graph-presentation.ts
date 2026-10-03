@@ -34,8 +34,8 @@ export function displayRelations(claims: Record<string, ClaimSummary>): Record<s
   }));
 }
 
-// 同じ端点間の別Relationだけを弱い曲線に分ける。逆向きも別Relation。
-export function edgeRoutes(relations: Record<string, DisplayRelation>) {
+// 単独Relationは直線。別Relationは線の長さに応じた中程度の曲線へ分ける。
+export function edgeRoutes(relations: Record<string, DisplayRelation>, positions: Record<string, { x: number; y: number }> = {}) {
   const groups = new Map<string, DisplayRelation[]>();
   Object.values(relations).forEach((relation) => {
     const key = [relation.subjectId, relation.objectId].sort().join(":");
@@ -45,9 +45,15 @@ export function edgeRoutes(relations: Record<string, DisplayRelation>) {
   groups.forEach((group) => {
     group.sort((a, b) => a.id.localeCompare(b.id));
     group.forEach((relation, index) => {
-      const offset = (index - (group.length - 1) / 2) * 48;
+      const source = positions[relation.subjectId];
+      const target = positions[relation.objectId];
+      const span = source && target ? Math.hypot(target.x - source.x, target.y - source.y) : 280;
+      const bow = Math.max(70, Math.min(115, span * 0.32));
+      const lane = group.length === 1 ? 0 : (index / (group.length - 1) - 0.5) * 2;
+      const offset = lane * bow;
+      const vertical = source && target ? Math.abs(target.y - source.y) > Math.abs(target.x - source.x) : false;
       result[relation.id] = { distance: offset === 0 ? 0 : relation.subjectId < relation.objectId ? offset : -offset,
-        weight: 0.5, label: relation.label, labelOffset: (index - (group.length - 1) / 2) * 32 };
+        weight: 0.5, label: relation.label, labelOffset: vertical ? lane * 18 : 0 };
     });
   });
   return result;
