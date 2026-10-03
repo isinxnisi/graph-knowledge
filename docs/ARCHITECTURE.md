@@ -462,3 +462,7 @@ Graphの未選択Nodeは即時に選択・必要な展開を行い、選択中No
 neighborsは任意のpredicates CSVを追加し、published・predicate条件をLIMIT前に評価する。正規化した全件は従来のUUID cursor、部分集合は起点・条件・版と結び付いた不透明cursor。別条件や起点との混用、未知predicate・未対応queryは400。返却型・Claim詳細契約は維持する。
 
 GraphStateは一つの有効条件スコープ（predicates / conditionKey）内にEntity別展開を保持する。世代変更で旧応答を排除し、受理・表示でもpredicateを検査する。同一起点では座標・pan/zoomを可能な限り保持し、選択は起点へ戻す。条件内空結果は孤立と区別する。新しい関係選択文字列はlocale解決境界を持つ日本語リソースに置く。taxonomy・プリセット・期間条件・複数起点・全面翻訳は今回追加しない。
+
+### 少数実データパイロットの投入前設計（未実装）
+
+[REAL_DATA_PILOT.md](design/REAL_DATA_PILOT.md)に対象・資料・ID・言語・由来・凍結版の提案を記録した。現行schemaにない名称の言語や取り込みprovenanceは構造化収集台帳で保持し、現行形式の投入用JSONへ投影する案。demo fixtureと回帰環境は維持し、パイロットDBは分離する。現seedは更新用途にせず、明示的なデータセット選択と表示モードの最小準備を次の実装候補とする。この設計案は現行API・Neo4jモデルの変更やデータ投入を意味しない。
