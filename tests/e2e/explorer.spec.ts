@@ -285,3 +285,42 @@ test("テーマ: 画面とGraphの色を共有し文字・操作境界のコン�
   }
   await page.screenshot({ path: "/tmp/graph-knowledge-theme-initial.png", fullPage: true });
 });
+
+test("ダークモード: トグルでGraphも更新し探索・選択・表示範囲を維持", async ({ page }) => {
+  await choose(page); await expect(page.getByTestId("graph-counts")).toHaveText("Entity 5 / Claim 7");
+  await canvasTap(page, fixture.claims[0].id, true);
+  await expect(page.getByTestId(`claim-card-${fixture.claims[2].id}`)).toBeVisible();
+  const inspect = () => page.getByTestId("graph-canvas").evaluate((el) => {
+    const cy = (el as unknown as { _cyreg: { cy: import("cytoscape").Core } })._cyreg.cy;
+    const css = getComputedStyle(el);
+    return { positions: cy.nodes().map((node) => [node.id(), node.position()]), zoom: cy.zoom(), pan: cy.pan(), chosen: cy.elements(".chosen").map((e) => e.id()),
+      text: cy.nodes().first().style("color"), token: css.getPropertyValue("--color-text").trim(),
+      pairs: ["panel", "canvas", "person", "work", "organization", "accent-soft"].map((name) => [css.getPropertyValue("--color-text").trim(), css.getPropertyValue(`--color-${name}`).trim()]),
+      muted: [css.getPropertyValue("--color-muted").trim(), css.getPropertyValue("--color-panel").trim()] };
+  });
+  const before = await inspect();
+  await page.getByRole("button", { name: "ダークモード", exact: true }).click();
+  await expect(page.getByRole("button", { name: "ダークモード", exact: true })).toHaveAttribute("aria-pressed", "true");
+  await expect.poll(async () => (await inspect()).text).not.toBe(before.text);
+  const dark = await inspect();
+  expect(dark.positions).toEqual(before.positions); expect(dark.zoom).toBe(before.zoom); expect(dark.pan).toEqual(before.pan); expect(dark.chosen).toEqual(before.chosen);
+  const rgb = (color: string) => color.startsWith("#") ? [1, 3, 5].map((i) => parseInt(color.slice(i, i + 2), 16)) : color.match(/[\d.]+/g)!.slice(0, 3).map(Number);
+  const lum = (color: string) => rgb(color).map((n) => { const v = n / 255; return v <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; }).reduce((s, n, i) => s + n * [0.2126, 0.7152, 0.0722][i], 0);
+  expect(rgb(dark.text)).toEqual(rgb(dark.token));
+  for (const [a, b] of [...dark.pairs, dark.muted]) expect((Math.max(lum(a), lum(b)) + 0.05) / (Math.min(lum(a), lum(b)) + 0.05)).toBeGreaterThanOrEqual(4.5);
+  await expect(page.getByTestId(`claim-card-${fixture.claims[2].id}`)).toContainText("否定する主張");
+  await page.screenshot({ path: "/tmp/graph-knowledge-theme-dark.png", fullPage: true });
+  await page.getByRole("combobox", { name: "ダーク配色" }).selectOption("blue");
+  await expect.poll(async () => (await inspect()).text).not.toBe(dark.text);
+  const blue = await inspect();
+  expect(blue.positions).toEqual(before.positions); expect(blue.zoom).toBe(before.zoom); expect(blue.pan).toEqual(before.pan); expect(blue.chosen).toEqual(before.chosen);
+  expect(rgb(blue.text)).toEqual(rgb(blue.token));
+  for (const [a, b] of [...blue.pairs, blue.muted]) expect((Math.max(lum(a), lum(b)) + 0.05) / (Math.min(lum(a), lum(b)) + 0.05)).toBeGreaterThanOrEqual(4.5);
+  await page.screenshot({ path: "/tmp/graph-knowledge-theme-dark-blue.png", fullPage: true });
+  await page.getByRole("combobox", { name: "ダーク配色" }).selectOption("brown");
+  await expect.poll(async () => (await inspect()).text).toBe(dark.text);
+  await page.getByRole("button", { name: "ダークモード", exact: true }).click();
+  await expect.poll(async () => (await inspect()).text).toBe(before.text);
+  await expect(page.getByRole("button", { name: "ダークモード", exact: true })).toHaveAttribute("aria-pressed", "false");
+  await expect(page.getByTestId("graph-counts")).toHaveText("Entity 5 / Claim 7");
+});

@@ -26,9 +26,9 @@
 
 ## テーマの変更方法
 
-`app/theme.css`の`:root`に意味別のCSS変数を集約する。`app/layout.tsx`で読み込み、CSS Modulesは`var(--color-...)`を参照する。GraphCanvasは初期化時にgetComputedStyleで同じ変数を読み、Cytoscapeへ具体的な色として渡す。Edgeラベルの文字も明示的に本文色へ揃えた。
+`app/theme.css`の`:root`に意味別のCSS変数を集約する。`app/layout.tsx`で読み込み、CSS Modulesは`var(--color-...)`を参照する。GraphCanvasはgetComputedStyleで同じ変数を読み、Cytoscapeへ具体的な色として渡す。初期化時とdata-theme変更時に配色を適用する。Edgeラベルの文字も明示的に本文色へ揃えた。
 
-変更後は画面を再読み込みしてGraphの配色も確認する。実行中のテーマ切り替えUIや自動同期機能は追加していない。色の定義を画面とGraphへ重複して書かない。
+CSS自体の変更後は画面を再読み込みしてGraphの配色も確認する。右上のトグルによるテーマ切り替えはGraphへ自動追従する。色の定義を画面とGraphへ重複して書かない。
 
 レイアウト、文字サイズ、Node配置、曲率、Graph集約、選択操作、API契約、Neo4j、fixtureは変更していない。依存ライブラリも追加していない。
 
@@ -62,3 +62,16 @@
 ## 検証結果
 
 `npm run typecheck` / `npm run lint` / `npm run build`は成功。`npm test`は56件、`GRAPH_TEST_REUSE=1 npm run test:e2e`は11件成功。実際の入力欄・検索ボタンの色も検証する追記後、テーマのブラウザテストを再実行して成功を確認した。
+
+## 追加: ライト / ダーク切り替えと2種類のダーク配色
+
+- ヘッダーの「ダークモードへ」「ライトモードへ」で切り替える。aria-pressedで現在の状態を伝える。
+- ダーク時に「ダーク配色」からブラウン / ブルーを選ぶ。ブラウンは暖かいチャコール・オリーブ・琥珀、ブルーは紺・淡い青を基調とする。ブラウンの方向性はユーザーのSublime Textの配色という希望を踏まえた独自の落ち着いた配色。[Sublime Textの配色ドキュメント](https://www.sublimetext.com/docs/color_schemes.html) にもMonokaiの例があるが、本UIは同配色の忠実な再現ではない。
+- `app/theme.css`の`:root[data-theme="dark-brown"]`と`dark-blue`で同じテーマ変数を上書きし、color-schemeも更新する。Graphはルートのdata-theme属性をMutationObserverで監視し、stylesheetの色を再適用する。Coreや要素を再生成しない。
+- 初期表示はライト。この画面内では最後に選んだダーク配色を維持する。再読み込みを跨ぐ永続化やOS設定への自動追従は今回追加していない。
+- 配色変更でGraphの位置、pan、zoom、選択、展開状態、読み込み済みClaimと詳細を維持する。Node形状・枠・線種も維持する。APIとDBの変更はない。
+- ブラウザテストでライト→ブラウン→ブルー→ブラウン→ライトを操作し、Graphの色更新、選択・位置・表示範囲の維持、両ダークの文字コントラスト4.5以上を確認。
+
+画像: [ブラウン](screenshots/theme-dark-brown.png) / [ブルー](screenshots/theme-dark-blue.png)。
+
+追加切り替えの検証: typecheck / lint / buildは成功、unitは56件、Playwright全体は12件成功。ブルー配色追加後も切り替えのブラウザテストを再実行し、両配色とライトへの復帰を確認した。

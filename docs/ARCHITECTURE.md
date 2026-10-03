@@ -410,7 +410,7 @@ Step 4のDB/API契約と探索機能を維持し、表示のみ調整した。�
 
 ### 初期Vertical Sliceのテーマと完了範囲
 
-- app/theme.cssで画面・Graphの共通CSS変数を定義。落ち着いた深緑、明るい紙色、personの淡い緑・workの紙色・organizationの淡い紫を使う。CSS ModulesとCytoscapeは同じテーマ値を参照する。Graphは初期化時に値を読むため、テーマ値変更後は再読み込みする。
+- app/theme.cssで画面・Graphの共通CSS変数を定義。落ち着いた深緑、明るい紙色、personの淡い緑・workの紙色・organizationの淡い紫を使う。CSS ModulesとCytoscapeは同じテーマ値を参照する。ヘッダーにライト/ダークのトグルとダーク配色（ブラウン/ブルー）の選択を用意する。Graphはルートのdata-theme属性変更を監視し、CSS変数を再取得してstyleだけを更新する。既存Core・位置・選択・pan/zoomを維持する。初期表示はライトで、永続化・OSへの自動追従は追加しない。
 - レイアウト、Node配置、曲率、意味表現、API・DB・fixtureは維持する。選択の太い枠、展開済みの二重枠、新規表示の淡い外枠、Node形状、否定の文字と破線、肯否混在の文字と点線も維持する。
 - 検証した文字と背景の比率は4.5以上、Graph線・Node境界・入力境界は3以上を確認。包括的なアクセシビリティ適合の認証ではない。
 - 初期の検索→探索→Claim比較→出典確認までのローカルデモを完了として区切る。将来機能や本番公開準備は対象外。配色と確認画像は [IMPLEMENTATION_THEME.md](IMPLEMENTATION_THEME.md) を参照。

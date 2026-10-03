@@ -19,12 +19,10 @@ export default function GraphCanvas({ graph, selection, onEntity, onRelation }: 
 
   useEffect(() => {
     if (!container.current) return;
-    const theme = getComputedStyle(container.current);
-    const color = (name: string) => theme.getPropertyValue(`--color-${name}`).trim();
-    const cy = cytoscape({
-      container: container.current, elements: [], layout: { name: "preset" },
-      minZoom: 0.15, maxZoom: 2,
-      style: [
+    const themeStyles = (): cytoscape.StylesheetStyle[] => {
+      const theme = getComputedStyle(container.current!);
+      const color = (name: string) => theme.getPropertyValue(`--color-${name}`).trim();
+      return [
         { selector: "node", style: { label: "data(label)", "background-color": color("person"), color: color("text"), "border-width": 1, "border-color": color("node-border"), width: 116, height: 64, "font-size": 16, "text-valign": "center", "text-halign": "center", "text-wrap": "wrap", "text-max-width": "108px" } },
         { selector: 'node[kind="work"]', style: { shape: "round-rectangle", "background-color": color("work") } },
         { selector: 'node[kind="organization"]', style: { shape: "hexagon", "background-color": color("organization") } },
@@ -37,14 +35,20 @@ export default function GraphCanvas({ graph, selection, onEntity, onRelation }: 
         { selector: "node.added", style: { "underlay-color": color("new-node"), "underlay-opacity": 0.25, "underlay-padding": 10 } },
         { selector: "node.chosen", style: { "border-width": 5, "border-color": color("accent-strong"), "underlay-color": color("accent-strong"), "underlay-opacity": 0.12, "underlay-padding": 8 } },
         { selector: "edge.chosen", style: { "line-color": color("accent-strong"), "target-arrow-color": color("accent-strong"), width: 4, "text-background-color": color("accent-soft"), "z-index": 10 } },
-      ],
+      ];
+    };
+    const cy = cytoscape({
+      container: container.current, elements: [], layout: { name: "preset" },
+      minZoom: 0.15, maxZoom: 2, style: themeStyles(),
     });
+    const themeObserver = new MutationObserver(() => cy.style(themeStyles()));
+    themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
     core.current = cy;
     cy.on("tap", "node", (event) => handlers.current.onEntity(event.target.id()));
     cy.on("tap", "edge", (event) => handlers.current.onRelation(event.target.id()));
     const resize = new ResizeObserver(() => cy.resize());
     resize.observe(container.current);
-    return () => { resize.disconnect(); cy.destroy(); core.current = null; generation.current = -1; initialLayoutDone.current = false; };
+    return () => { themeObserver.disconnect(); resize.disconnect(); cy.destroy(); core.current = null; generation.current = -1; initialLayoutDone.current = false; };
   }, []);
 
   useEffect(() => {

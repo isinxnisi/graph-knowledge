@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { displayRelations, entityLabel } from "../lib/client/graph-presentation";
 import { relationLabel } from "../lib/client/format";
 import { useGraphExplorer } from "../lib/client/use-graph-explorer";
@@ -11,6 +12,8 @@ import ClaimDetails from "./ClaimDetails";
 import styles from "./Explorer.module.css";
 
 export default function Explorer() {
+  const [dark, setDark] = useState(false);
+  const [darkPalette, setDarkPalette] = useState<"brown" | "blue">("brown");
   const { graph, selection, chooseRoot, selectEntity, selectClaim, selectRelation, expand } = useGraphExplorer();
   const relations = displayRelations(graph.claims);
   const selectedRelation = selection?.kind === "relation" ? relations[selection.id] : null;
@@ -24,6 +27,16 @@ export default function Explorer() {
     <header className={styles.header}>
       <h1>関係性を探索する</h1><p className={styles.demo}>架空のデモデータ</p>
       <p>人物・作品・組織のつながりを、主張と出典から辿る。</p>
+      <button className={styles.themeToggle} aria-label="ダークモード" aria-pressed={dark} onClick={() => {
+        const next = !dark; setDark(next);
+        document.documentElement.dataset.theme = next ? `dark-${darkPalette}` : "light";
+      }}>{dark ? "ライトモードへ" : "ダークモードへ"}</button>
+      {dark && <label className={styles.themePalette}>ダーク配色
+        <select value={darkPalette} onChange={(event) => {
+          const palette = event.target.value === "blue" ? "blue" : "brown";
+          setDarkPalette(palette); document.documentElement.dataset.theme = `dark-${palette}`;
+        }}><option value="brown">ブラウン</option><option value="blue">ブルー</option></select>
+      </label>}
     </header>
     <main className={styles.columns}>
       <SearchPanel onChoose={chooseRoot} />

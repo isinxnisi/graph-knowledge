@@ -134,4 +134,4 @@ Graphの線は同じ主体・関係タイプ・対象のClaimをまとめた表�
 
 Graphの配置・曲率の最新調整と確認画像は [IMPLEMENTATION_GRAPH_BALANCE.md](docs/IMPLEMENTATION_GRAPH_BALANCE.md) を参照してください。
 
-テーマ色は `app/theme.css` に集約しています。画面とGraphで共有し、変更後は画面を再読み込みしてください。配色・検証・完了範囲は [IMPLEMENTATION_THEME.md](docs/IMPLEMENTATION_THEME.md) を参照してください。
+テーマ色は `app/theme.css` に集約しています。画面とGraphで共有しています。右上でライト/ダークを切り替え、ダーク時はブラウン/ブルーを選べます。配色切り替えにGraphも追従します。CSS定義を編集した後は画面を再読み込みしてください。配色・検証・完了範囲は [IMPLEMENTATION_THEME.md](docs/IMPLEMENTATION_THEME.md) を参照してください。

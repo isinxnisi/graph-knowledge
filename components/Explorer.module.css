@@ -5,12 +5,12 @@
 .explorer h2 { font-size: 17px; }
 .explorer h3 { font-size: 15px; }
 .explorer h4, .explorer h5 { font-size: 14px; }
-.explorer button, .explorer input { font: inherit; border: 1px solid var(--color-control-border); border-radius: 4px; padding: 7px 10px; }
+.explorer button, .explorer input, .explorer select { font: inherit; border: 1px solid var(--color-control-border); border-radius: 4px; padding: 7px 10px; }
 .explorer button { background: var(--color-panel); color: var(--color-accent); cursor: pointer; text-align: left; }
 .explorer button:hover:not(:disabled) { background: var(--color-hover); }
 .explorer button:disabled { opacity: .55; cursor: default; }
 .explorer input { background: var(--color-panel); color: var(--color-text); width: 100%; }
-.explorer button:focus-visible, .explorer input:focus-visible, .explorer a:focus-visible { outline: 3px solid var(--color-accent); outline-offset: 2px; }
+.explorer button:focus-visible, .explorer input:focus-visible, .explorer select:focus-visible, .explorer a:focus-visible { outline: 3px solid var(--color-accent); outline-offset: 2px; }
 .header { position: sticky; top: 0; z-index: 2; background: var(--color-panel); border-bottom: 1px solid var(--color-border); padding: 12px 18px; display: flex; align-items: center; gap: 14px; flex-wrap: wrap; flex: 0 0 auto; }
 .header h1, .header p { margin: 0; }
 .demo { padding: 4px 12px; background: var(--color-demo); color: var(--color-demo-text); border: 1px solid var(--color-demo-border); border-radius: 4px; font-weight: 600; }
@@ -46,7 +46,7 @@
 
 /* 画面の高さを探索に配分し、詳細と一覧のスクロールをGraphから分離する。 */
 .header h1 { font-size: 19px; }
-.header > p:last-child { font-size: 12px; }
+.header > p:last-of-type { font-size: 12px; }
 .graphPanel { display: flex; flex-direction: column; overflow: hidden; }
 .graphHeading h2, .graphHeading p { margin-bottom: 6px; }
 .graphPanel > .muted { margin-bottom: 8px; font-size: 12px; }
@@ -68,3 +68,8 @@
 }
 
 .explorer a { color: var(--color-accent); text-decoration: underline; }
+
+.themeToggle { margin-left: auto; padding: 4px 8px !important; font-size: 12px !important; }
+
+.themePalette { display: flex; align-items: center; gap: 6px; font-size: 12px; }
+.themePalette select { background: var(--color-panel); color: var(--color-text); padding: 4px 8px; }
