@@ -43,7 +43,7 @@ export function ClaimCard({ claim, nodes, title }: { claim: ClaimDetail; nodes: 
   </article>;
 }
 
-export default function ClaimDetails({ id, nodes, mode = "claim" }: { id: string; nodes: Record<string, EntitySummary>; mode?: "claim" | "relation" }) {
+export default function ClaimDetails({ id, nodes, mode = "claim", visibleClaimIds }: { id: string; nodes: Record<string, EntitySummary>; mode?: "claim" | "relation"; visibleClaimIds?: string[] }) {
   const [primary, setPrimary] = useState<ClaimResponse | null>(null);
   const [related, setRelated] = useState<ClaimDetail[]>([]);
   const [error, setError] = useState<string | null>(null);
@@ -77,7 +77,7 @@ export default function ClaimDetails({ id, nodes, mode = "claim" }: { id: string
       {mode === "relation" ? <>
         <p className={styles.muted}>肯否・期間・出典を個別に比較できます。表示順は正しさや信頼度を表しません。</p>
         {[primary.claim, ...related].sort((a, b) => a.id.localeCompare(b.id)).map((claim, index) =>
-          <ClaimCard key={claim.id} claim={claim} nodes={nodes} title={`主張 ${index + 1}`} />)}
+          <div key={claim.id}>{visibleClaimIds && <p className={styles.muted}>{visibleClaimIds.includes(claim.id) ? "Graphに表示中の主張" : "Graphには未表示の主張"}</p>}<ClaimCard claim={claim} nodes={nodes} title={`主張 ${index + 1}`} /></div>)}
       </> : <>
       <ClaimCard claim={primary.claim} nodes={nodes} title="選択した主張" />
       <h3>同じ関係についての他の主張</h3>

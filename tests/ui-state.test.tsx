@@ -3,7 +3,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { act, cleanup, render, renderHook, screen, waitFor } from "@testing-library/react";
 import { entityLabel, edgeRoutes, displayRelations, relationId } from "../lib/client/graph-presentation";
 import { initialPositions, additionalPositions } from "../lib/client/graph-layout";
-import { emptyGraph, mergePage } from "../lib/client/graph-state";
+import { emptyGraph, mergePage, closeExpansion, reopenExpansion } from "../lib/client/graph-state";
 import { useGraphExplorer } from "../lib/client/use-graph-explorer";
 import ClaimDetails, { ClaimCard } from "../components/ClaimDetails";
 import examples from "../docs/API_RESPONSE_EXAMPLES.json";
@@ -23,13 +23,15 @@ describe("ページのマージ", () => {
   });
   it.each(["nodes", "claims"] as const)("%sの上限まで受理し、超過ページ全体とcursorを維持する", (kind) => {
     const count = kind === "nodes" ? 100 : 200;
-    const accepted: NeighborsResponse = { ...page, nodes: [root], claims: [], page: { nextCursor: "saved", hasMore: true } };
-    if (kind === "nodes") accepted.nodes = Array.from({ length: count }, (_, i) => entity(String(i)));
-    else accepted.claims = Array.from({ length: count }, (_, i) => ({ ...page.claims[0], id: String(i) }));
+    const accepted: NeighborsResponse = { ...page, nodes: [root, entity("target")], claims: [], page: { nextCursor: "saved", hasMore: true } };
+    if (kind === "nodes") {
+      accepted.nodes = [root, ...Array.from({ length: count - 1 }, (_, i) => entity(String(i)))];
+      accepted.claims = accepted.nodes.slice(1).map((node, i) => ({ ...page.claims[0], id: String(i), subjectId: root.id, objectId: node.id }));
+    } else accepted.claims = Array.from({ length: count }, (_, i) => ({ ...page.claims[0], id: String(i), subjectId: root.id, objectId: "target" }));
     const first = mergePage(emptyGraph(), accepted);
     expect(Object.keys(first[kind])).toHaveLength(count);
-    const overflow = { ...accepted, nodes: kind === "nodes" ? [...accepted.nodes, entity("overflow")] : accepted.nodes,
-      claims: kind === "claims" ? [...accepted.claims, { ...page.claims[0], id: "overflow" }] : [], page: { nextCursor: "advanced", hasMore: false } };
+    const overflow = { ...accepted, nodes: [...accepted.nodes, entity("overflow")],
+      claims: [...accepted.claims, { ...page.claims[0], id: "overflow", subjectId: root.id, objectId: kind === "nodes" ? "overflow" : "target" }], page: { nextCursor: "advanced", hasMore: false } };
     const rejected = mergePage(first, overflow);
     expect(rejected.nodes).toBe(first.nodes); expect(rejected.claims).toBe(first.claims);
     expect(rejected.expansions[page.centerId]).toMatchObject({ nextCursor: "saved", hasMore: true, blocked: true });
@@ -60,8 +62,8 @@ describe("探索の通信", () => {
     vi.mocked(fetchNeighbors).mockReturnValueOnce(a.promise).mockReturnValueOnce(b.promise);
     const ids = page.nodes.slice(1, 3).map((n) => n.id);
     act(() => { result.current.selectEntity(ids[0]); result.current.selectEntity(ids[1]); });
-    await act(async () => { a.resolve({ ...page, centerId: ids[0], nodes: [entity("new-a")], claims: [] }); await a.promise; });
-    await act(async () => { b.resolve({ ...page, centerId: ids[1], nodes: [entity("new-b")], claims: [] }); await b.promise; });
+    await act(async () => { a.resolve({ ...page, centerId: ids[0], nodes: [entity("new-a")], claims: [{ ...page.claims[0], id: "new-a", subjectId: ids[0], objectId: "new-a" }] }); await a.promise; });
+    await act(async () => { b.resolve({ ...page, centerId: ids[1], nodes: [entity("new-b")], claims: [{ ...page.claims[0], id: "new-b", subjectId: ids[1], objectId: "new-b" }] }); await b.promise; });
     expect(result.current.graph.nodes["new-a"]).toBeDefined(); expect(result.current.graph.nodes["new-b"]).toBeDefined();
   });
   it("追加取得失敗でcursorを維持し再試行できる", async () => {
@@ -175,5 +177,119 @@ describe("Graphの配置", () => {
     expect(Math.abs(route(300).distance)).toBe(96);
     expect(Math.abs(route(800).distance)).toBe(115);
     expect(edgeRoutes(displayRelations({ a }))[relationId(a)].distance).toBe(0);
+  });
+});
+
+const link = (id: string, subjectId: string, objectId: string) => ({ ...page.claims[0], id, subjectId, objectId });
+const localPage = (centerId: string, claims: NeighborsResponse["claims"], cursor: string | null = null): NeighborsResponse => ({
+  centerId, nodes: [...new Set([centerId, ...claims.flatMap((claim) => [claim.subjectId, claim.objectId])])].map(entity), claims,
+  page: { nextCursor: cursor, hasMore: !!cursor },
+});
+const branch = () => {
+  let state = mergePage(emptyGraph(), localPage("A", [link("AB", "A", "B"), link("AD", "A", "D")]));
+  state = mergePage(state, localPage("B", [link("BC", "B", "C")]));
+  state = mergePage(state, localPage("C", [link("CE", "C", "E"), link("EC", "E", "C")]));
+  return state;
+};
+describe("探索の開閉と所属", () => {
+  it("孤立Entityの受理済み空ページを閉じても未取得にしない", () => {
+    const isolated = mergePage(emptyGraph(), localPage("A", []));
+    const closed = closeExpansion(isolated, "A");
+    expect(closed.expansions.A).toMatchObject({ open: false, expanded: false, pages: [{ after: null, claimIds: [], nextCursor: null }] });
+    const restored = reopenExpansion(closed, "A");
+    expect(restored.expansions.A.expanded).toBe(true); expect(restored.claims).toEqual({}); expect(Object.keys(restored.nodes)).toEqual(["A"]);
+  });
+  it("切断循環を除き、再開で子孫とそのcursorを復元する", () => {
+    const before = branch(); const closed = closeExpansion(before, "B");
+    expect(Object.keys(closed.nodes).sort()).toEqual(["A", "B", "D"]);
+    expect(closed.expansions.C).toMatchObject({ open: true, active: false, expanded: false });
+    const reopened = reopenExpansion(closed, "B");
+    expect(reopened.nodes).toEqual(before.nodes); expect(reopened.claims).toEqual(before.claims);
+    expect(reopened.expansions.C.expanded).toBe(true);
+  });
+  it("明示的に閉じた子孫を再開しない", () => {
+    const closed = closeExpansion(closeExpansion(branch(), "C"), "B");
+    const reopened = reopenExpansion(closed, "B");
+    expect(reopened.nodes.C).toBeDefined(); expect(reopened.nodes.E).toBeUndefined();
+    expect(reopened.expansions.C.open).toBe(false);
+  });
+  it("合流したEntityと別展開が支える同一Claimを維持する", () => {
+    const joined = mergePage(branch(), localPage("D", [link("DC", "D", "C"), link("BC", "B", "C")]));
+    const closed = closeExpansion(joined, "B");
+    expect(closed.nodes.E).toBeDefined(); expect(closed.claims.BC).toBeDefined();
+    const cut = closeExpansion(closed, "D");
+    expect(cut.nodes.C).toBeUndefined(); expect(cut.nodes.E).toBeUndefined();
+  });
+  it("起点を閉じても残し、子孫を休止する", () => {
+    const closed = closeExpansion(branch(), "A");
+    expect(Object.keys(closed.nodes)).toEqual(["A"]); expect(closed.claims).toEqual({});
+    expect(reopenExpansion(closed, "A").nodes).toEqual(branch().nodes);
+  });
+  it("受理済み複数ページとcursorを閉じても維持する", () => {
+    const first = mergePage(emptyGraph(), localPage("A", [link("AB", "A", "B")], "saved"));
+    const second = mergePage(first, localPage("A", [link("AC", "A", "C")], "next"), "saved");
+    const reopened = reopenExpansion(closeExpansion(second, "A"), "A");
+    expect(reopened.expansions.A.pages).toHaveLength(2);
+    expect(reopened.expansions.A).toMatchObject({ nextCursor: "next", hasMore: true });
+    expect(Object.keys(reopened.claims).sort()).toEqual(["AB", "AC"]);
+  });
+  it("枝全体の復元が上限を超えると原子的に拒否し、閉じた後再開できる", () => {
+    let state = mergePage(emptyGraph(), localPage("A", [link("AB", "A", "B"), link("AD", "A", "D")]));
+    state = mergePage(state, localPage("B", Array.from({ length: 190 }, (_, i) => link(`b${i}`, "B", "C"))));
+    state = closeExpansion(state, "B");
+    state = mergePage(state, localPage("D", Array.from({ length: 190 }, (_, i) => link(`d${i}`, "D", "E"))));
+    const rejected = reopenExpansion(state, "B");
+    expect(rejected.nodes).toBe(state.nodes); expect(rejected.claims).toBe(state.claims);
+    expect(rejected.expansions.B).toMatchObject({ open: false, blocked: true });
+    const restored = reopenExpansion(closeExpansion(rejected, "D"), "B");
+    expect(restored.expansions.B.expanded).toBe(true); expect(restored.claims.b0).toBeDefined();
+  });
+  it("キャッシュ予算を超える休止展開を所属・cursorごと破棄する", () => {
+    let state = mergePage(emptyGraph(), localPage("A", Array.from({ length: 5 }, (_, i) => link(`root${i}`, "A", `B${i}`))));
+    for (let i = 0; i < 5; i++) {
+      state = mergePage(state, localPage(`B${i}`, Array.from({ length: 190 }, (_, j) => link(`${i}-${j}`, `B${i}`, `C${i}`)), "saved"));
+      state = closeExpansion(state, `B${i}`);
+    }
+    expect(Object.keys(state.cacheClaims).length).toBeLessThanOrEqual(800);
+    expect(state.expansions.B0).toBeUndefined(); expect(state.cacheNodes.C0).toBeUndefined();
+    expect(state.nodes.B0).toBeDefined(); expect(state.expansions.B4.pages).toHaveLength(1);
+  });
+});
+describe("開閉時の通信と選択", () => {
+  it("再開は通信せず受理済みの枝を戻し、消失した選択Claimを解除する", async () => {
+    vi.mocked(fetchNeighbors).mockResolvedValueOnce(page);
+    const { result } = renderHook(useGraphExplorer);
+    act(() => result.current.chooseRoot(root));
+    await waitFor(() => expect(result.current.graph.expansions[root.id].expanded).toBe(true));
+    act(() => result.current.selectClaim(page.claims[0].id));
+    act(() => result.current.close(root.id));
+    expect(result.current.selection).toBeNull(); expect(Object.keys(result.current.graph.nodes)).toEqual([root.id]);
+    await act(async () => { await result.current.expand(root.id); });
+    expect(fetchNeighbors).toHaveBeenCalledTimes(1); expect(result.current.graph.claims[page.claims[0].id]).toBeDefined();
+  });
+  it("閉じた応答と古いfinallyは新しい要求を変更しない", async () => {
+    const old = deferred(), fresh = deferred();
+    vi.mocked(fetchNeighbors).mockReturnValueOnce(old.promise).mockReturnValueOnce(fresh.promise);
+    const { result } = renderHook(useGraphExplorer);
+    act(() => result.current.chooseRoot(root)); act(() => result.current.close(root.id));
+    act(() => { void result.current.expand(root.id); });
+    await act(async () => { old.resolve(page); await old.promise; });
+    expect(result.current.graph.claims).toEqual({}); expect(result.current.graph.expansions[root.id].loading).toBe(true);
+    act(() => result.current.selectEntity(root.id)); expect(fetchNeighbors).toHaveBeenCalledTimes(2);
+    await act(async () => { fresh.resolve(page); await fresh.promise; });
+    expect(result.current.graph.claims[page.claims[0].id]).toBeDefined();
+  });
+  it("祖先を閉じて到達不能な子孫の通信を破棄し、選択を起点へ戻す", async () => {
+    const delayed = deferred();
+    vi.mocked(fetchNeighbors).mockResolvedValueOnce(localPage("A", [link("AB", "A", "B")])).mockReturnValueOnce(delayed.promise);
+    const { result } = renderHook(useGraphExplorer); act(() => result.current.chooseRoot(entity("A")));
+    await waitFor(() => expect(result.current.graph.nodes.B).toBeDefined());
+    act(() => result.current.selectEntity("B")); act(() => result.current.close("A"));
+    expect(result.current.selection).toEqual({ kind: "entity", id: "A" });
+    expect(result.current.graph.expansions.B).toMatchObject({ open: true, active: false, loading: false });
+    await act(async () => { delayed.resolve(localPage("B", [link("BC", "B", "C")])); await delayed.promise; });
+    await act(async () => { await result.current.expand("A"); });
+    expect(result.current.graph.nodes.C).toBeUndefined(); expect(fetchNeighbors).toHaveBeenCalledTimes(2);
+    act(() => result.current.selectEntity("B")); expect(fetchNeighbors).toHaveBeenCalledTimes(3);
   });
 });

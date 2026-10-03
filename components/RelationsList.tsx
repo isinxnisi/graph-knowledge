@@ -3,8 +3,8 @@ import { displayRelations, entityLabel, relationId } from "../lib/client/graph-p
 import { formatPeriod, polarityLabel, relationLabel } from "../lib/client/format";
 import styles from "./Explorer.module.css";
 
-export default function RelationsList({ graph, selection, onEntity, onClaim }: {
-  graph: GraphState; selection: Selection; onEntity: (id: string) => void; onClaim: (id: string) => void;
+export default function RelationsList({ graph, selection, onEntity, onClaim, onExpand, onClose }: {
+  graph: GraphState; selection: Selection; onEntity: (id: string) => void; onClaim: (id: string) => void; onExpand: (id: string) => void; onClose: (id: string) => void;
 }) {
   const relation = selection?.kind === "relation" ? displayRelations(graph.claims)[selection.id] : null;
   const entityId = selection?.kind === "entity" ? selection.id : selection?.kind === "claim" ? graph.claims[selection.id]?.subjectId : relation?.subjectId ?? null;
@@ -14,7 +14,8 @@ export default function RelationsList({ graph, selection, onEntity, onClaim }: {
   const expansion = graph.expansions[entity.id];
   return <section className={styles.relations} aria-label="選択Entityの隣接関係">
     <h3>{entity.name}の隣接関係</h3>
-    {!claims.length && <p role="status">{expansion?.error ? "隣接関係を取得できませんでした。詳細ペインを確認してください。" : expansion?.expanded ? "関係は登録されていません（孤立Entity）。" : "隣接関係を取得しています。"}</p>}
+    <div className={styles.actions}>{expansion?.open ? <button onClick={() => onClose(entity.id)}>展開を閉じる</button> : <button onClick={() => onExpand(entity.id)}>{expansion?.pages.length ? "展開を再開" : "近傍を展開"}</button>}</div>
+    {!claims.length && <p role="status">{expansion?.error ? "隣接関係を取得できませんでした。詳細ペインを確認してください。" : expansion?.expanded && expansion.pages.every((page) => !page.claimIds.length) && !expansion.hasMore ? "関係は登録されていません（孤立Entity）。" : !expansion?.open ? "展開は閉じています。再開すると取得済みの枝を復元します。" : expansion.loading ? "隣接関係を取得しています。" : "表示中の隣接関係はありません。"}</p>}
     <ul className={styles.relationList}>
       {claims.map((claim) => {
         const neighbor = graph.nodes[claim.subjectId === entity.id ? claim.objectId : claim.subjectId];

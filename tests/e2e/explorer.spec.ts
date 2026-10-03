@@ -324,3 +324,107 @@ test("ダークモード: トグルでGraphも更新し探索・選択・表示�
   await expect(page.getByRole("button", { name: "ダークモード", exact: true })).toHaveAttribute("aria-pressed", "false");
   await expect(page.getByTestId("graph-counts")).toHaveText("Entity 5 / Claim 7");
 });
+
+const closeInDetail = (page: Page) => page.getByRole("region", { name: "Entity詳細" }).getByRole("button", { name: "展開を閉じる", exact: true }).click();
+const reopenInDetail = (page: Page) => page.getByRole("region", { name: "Entity詳細" }).getByRole("button", { name: "展開を再開", exact: true }).click();
+const viewState = (page: Page) => page.getByTestId("graph-canvas").evaluate((el) => {
+  const cy = (el as unknown as { _cyreg: { cy: import("cytoscape").Core } })._cyreg.cy;
+  return { positions: Object.fromEntries(cy.nodes().map((node) => [node.id(), node.position()])), pan: cy.pan(), zoom: cy.zoom(),
+    chosen: cy.elements(".chosen").map((element) => element.id()), claims: cy.edges().map((edge) => edge.data("claimIds") as string[]).flat() };
+});
+test("開閉 実DB: 休止子孫復元・明示閉鎖・座標と選択・共有EntityとClaim", async ({ page }) => {
+  let requests = 0;
+  page.on("request", (request) => { if (request.url().includes("/neighbors")) requests++; });
+  await choose(page); await expect(page.getByTestId("graph-counts")).toHaveText("Entity 5 / Claim 7");
+  await canvasTap(page, fixture.entities[8].id); await expect(page.getByTestId("graph-counts")).toHaveText("Entity 7 / Claim 9");
+  await canvasTap(page, fixture.entities[2].id); await expect(page.getByTestId("graph-counts")).toHaveText("Entity 8 / Claim 11");
+  // 作品と白石ミオは同じ制作Claimを共有する。
+  await page.getByRole("region", { name: "選択Entityの隣接関係" }).getByRole("button", { name: "展開を閉じる", exact: true }).click();
+  await expect(page.getByTestId("graph-counts")).toHaveText("Entity 7 / Claim 9");
+  expect((await viewState(page)).claims).toContain(fixture.claims[7].id);
+  await reopenInDetail(page); await expect(page.getByTestId("graph-counts")).toHaveText("Entity 8 / Claim 11");
+  await canvasTap(page, fixture.entities[8].id);
+  await page.getByRole("button", { name: "全体を表示", exact: true }).click();
+  const before = await viewState(page); const requestCount = requests;
+  await closeInDetail(page); await expect(page.getByTestId("graph-counts")).toHaveText("Entity 5 / Claim 7");
+  const closed = await viewState(page);
+  expect(closed.pan).toEqual(before.pan); expect(closed.zoom).toBe(before.zoom);
+  for (const [id, point] of Object.entries(closed.positions)) expect(point).toEqual(before.positions[id]);
+  expect(closed.chosen).toEqual([fixture.entities[8].id]);
+  await page.screenshot({ path: "/tmp/graph-knowledge-close.png", fullPage: true });
+  await reopenInDetail(page); await expect(page.getByTestId("graph-counts")).toHaveText("Entity 8 / Claim 11");
+  expect(requests).toBe(requestCount); const restored = await viewState(page);
+  expect(restored.positions).toEqual(before.positions); expect(restored.pan).toEqual(before.pan); expect(restored.zoom).toBe(before.zoom);
+  await page.screenshot({ path: "/tmp/graph-knowledge-reopen.png", fullPage: true });
+  await canvasTap(page, fixture.entities[2].id); await closeInDetail(page);
+  await canvasTap(page, fixture.entities[8].id); await closeInDetail(page); await reopenInDetail(page);
+  await expect(page.getByTestId("graph-counts")).toHaveText("Entity 7 / Claim 9");
+  // 起点を閉じると孤立とは表示せず、再開で開いた子孫だけが戻る。
+  await canvasTap(page, root.id); await closeInDetail(page); await expect(page.getByTestId("graph-counts")).toHaveText("Entity 1 / Claim 0");
+  await expect(page.getByText("関係は登録されていません（孤立Entity）。")).toHaveCount(0);
+  await reopenInDetail(page); await expect(page.getByTestId("graph-counts")).toHaveText("Entity 7 / Claim 9");
+});
+
+test("開閉 ブラウザ: 合流・共有Claim・切断循環・選択解除", async ({ page }) => {
+  const [A, B, D, C, E] = [0, 1, 2, 3, 4].map((index) => fixture.entities[index]);
+  const make = (i: number, subjectId: string, objectId: string) => ({ ...examples.neighbors.claims[0], id: fixture.claims[i].id, subjectId, objectId });
+  const AB = make(0, A.id, B.id), AD = make(1, A.id, D.id), BC = make(2, B.id, C.id), DC = make(3, D.id, C.id), CE = make(4, C.id, E.id), EC = make(5, E.id, C.id);
+  const sets: Record<string, typeof AB[]> = { [A.id]: [AB, AD], [B.id]: [BC], [D.id]: [DC, BC], [C.id]: [CE, EC], [E.id]: [EC, CE] };
+  await page.route("**/api/entities/*/neighbors*", (route) => {
+    const id = new URL(route.request().url()).pathname.split("/")[3]; const claims = sets[id];
+    const ids = new Set([id, ...claims.flatMap((c) => [c.subjectId, c.objectId])]);
+    return route.fulfill({ json: { centerId: id, nodes: [A,B,C,D,E].filter((node) => ids.has(node.id)), claims, page: { nextCursor: null, hasMore: false } } });
+  });
+  await choose(page); await expect(page.getByTestId("graph-counts")).toHaveText("Entity 3 / Claim 2");
+  for (const node of [B, C, D]) { await canvasTap(page, node.id); await expect(page.getByRole("region", { name: "Entity詳細" })).toContainText("近傍は取得済み"); }
+  await expect(page.getByTestId("graph-counts")).toHaveText("Entity 5 / Claim 6");
+  await canvasTap(page, B.id); await closeInDetail(page); await expect(page.getByTestId("graph-counts")).toHaveText("Entity 5 / Claim 6");
+  expect((await viewState(page)).claims).toContain(BC.id);
+  await canvasTap(page, D.id); await closeInDetail(page); await expect(page.getByTestId("graph-counts")).toHaveText("Entity 3 / Claim 2");
+  expect((await viewState(page)).positions[C.id]).toBeUndefined(); expect((await viewState(page)).positions[E.id]).toBeUndefined();
+  await reopenInDetail(page); await expect(page.getByTestId("graph-counts")).toHaveText("Entity 5 / Claim 6");
+  // 子孫Claim選択中に祖先を一覧から閉じると選択は解除される。
+  await canvasTap(page, DC.id, true); await page.getByRole("region", { name: "選択Entityの隣接関係" }).getByRole("button", { name: "展開を閉じる", exact: true }).click();
+  await expect(page.getByTestId("selection-status")).toHaveText("選択中：未選択");
+  await expect(page.getByTestId("graph-counts")).toHaveText("Entity 3 / Claim 2");
+});
+
+test("開閉 ブラウザ: 通信途中で閉じる・再開後のcursor・旧応答破棄", async ({ page }) => {
+  let first = true, release!: () => void, delayed = false, calls = 0;
+  const gate = new Promise<void>((resolve) => { release = resolve; });
+  await page.route("**/api/entities/*/neighbors*", async (route) => {
+    calls++; const url = new URL(route.request().url()); url.searchParams.set("limit", "2");
+    const response = await route.fetch({ url: url.toString() });
+    if (!first) { delayed = true; await gate; } first = false;
+    await route.fulfill({ response }).catch(() => {});
+  });
+  await choose(page); await expect(page.getByTestId("graph-counts")).toContainText("Claim 2");
+  await page.getByRole("button", { name: "続きを表示", exact: true }).click();
+  await expect.poll(() => delayed).toBe(true); await closeInDetail(page);
+  await expect(page.getByTestId("graph-counts")).toHaveText("Entity 1 / Claim 0"); release();
+  await reopenInDetail(page); await expect(page.getByTestId("graph-counts")).toContainText("Claim 2");
+  expect(calls).toBe(2);
+  await page.getByRole("button", { name: "続きを表示", exact: true }).click();
+  await expect(page.getByTestId("graph-counts")).toContainText("Claim 4"); expect(calls).toBe(3);
+});
+
+test("開閉 ブラウザ: 上限後に他の枝を閉じて再試行・復元全体の拒否", async ({ page }) => {
+  const [A, B, D, C, E] = [0, 1, 2, 3, 4].map((index) => fixture.entities[index]);
+  const make = (i: number, subjectId: string, objectId: string) => ({ ...examples.neighbors.claims[0], id: `30000000-0000-4000-8000-${String(i).padStart(12, "0")}`, subjectId, objectId });
+  await page.route("**/api/entities/*/neighbors*", (route) => {
+    const id = new URL(route.request().url()).pathname.split("/")[3];
+    const claims = id === A.id ? [make(1,A.id,B.id), make(2,A.id,D.id)] : Array.from({ length: 190 }, (_, i) => make(i + (id === B.id ? 10 : 210), id, id === B.id ? C.id : E.id));
+    const ids = new Set([id, ...claims.flatMap((c) => [c.subjectId,c.objectId])]);
+    return route.fulfill({ json: { centerId: id, nodes: [A,B,C,D,E].filter((node) => ids.has(node.id)), claims, page: { nextCursor: null, hasMore: false } } });
+  });
+  await choose(page); await expect(page.getByTestId("graph-counts")).toHaveText("Entity 3 / Claim 2");
+  await canvasTap(page, B.id); await expect(page.getByTestId("graph-counts")).toContainText("Claim 192");
+  await canvasTap(page, D.id); await expect(page.getByRole("region", { name: "Entity詳細" })).toContainText("表示上限");
+  await canvasTap(page, B.id); await closeInDetail(page); await canvasTap(page, D.id);
+  await expect(page.getByTestId("graph-counts")).toContainText("Claim 192");
+  await canvasTap(page, B.id); await expect(page.getByRole("region", { name: "Entity詳細" })).toContainText("表示上限");
+  await expect(page.getByTestId("graph-counts")).toContainText("Claim 192");
+  await canvasTap(page, D.id); await closeInDetail(page); await canvasTap(page, B.id);
+  await expect(page.getByTestId("graph-counts")).toContainText("Claim 192");
+  expect((await viewState(page)).positions[C.id]).toBeDefined(); expect((await viewState(page)).positions[E.id]).toBeUndefined();
+});

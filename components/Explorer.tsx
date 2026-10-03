@@ -14,7 +14,7 @@ import styles from "./Explorer.module.css";
 export default function Explorer() {
   const [dark, setDark] = useState(false);
   const [darkPalette, setDarkPalette] = useState<"brown" | "blue">("brown");
-  const { graph, selection, chooseRoot, selectEntity, selectClaim, selectRelation, expand } = useGraphExplorer();
+  const { graph, selection, chooseRoot, selectEntity, selectClaim, selectRelation, expand, close } = useGraphExplorer();
   const relations = displayRelations(graph.claims);
   const selectedRelation = selection?.kind === "relation" ? relations[selection.id] : null;
   const selectedEntity = selection?.kind === "entity" ? graph.nodes[selection.id] : null;
@@ -46,17 +46,18 @@ export default function Explorer() {
         </div>
         <p className={styles.muted}>Nodeをクリックして一段階展開、線をクリックして主張と出典を確認。</p>
         {!graph.centerId && <p className={styles.empty}>左の検索結果から中心となる人物を選んでください。</p>}
-        <div className={styles.feedback} aria-live="polite"><p data-testid="selection-status">選択中：{selectionText}</p><p>{loading ? `Graphを取得中…（${loading}件）` : selectedEntity ? graph.expansions[selectedEntity.id]?.expanded ? "近傍は展開済みです。" : "クリックで一段階展開します。" : "線ごとに同じ関係の主張をまとめて表示しています。"}</p></div>
-        {Object.values(graph.expansions).some((meta) => meta.hasMore) && <p className={styles.muted}>Graphの関係表示は取得済みの主張に基づきます。続きは各Entityの詳細から取得できます。</p>}
+        <div className={styles.feedback} aria-live="polite"><p data-testid="selection-status">選択中：{selectionText}</p><p>{loading ? `Graphを取得中…（${loading}件）` : selectedEntity ? graph.expansions[selectedEntity.id]?.expanded ? "近傍は展開済みです。" : graph.expansions[selectedEntity.id]?.pages.length ? "展開は閉じています。クリックで取得済みの枝を復元します。" : "クリックで一段階展開します。" : "線ごとに同じ関係の主張をまとめて表示しています。"}</p></div>
+        {Object.values(graph.expansions).some((meta) => meta.active && meta.hasMore) && <p className={styles.muted}>Graphの関係表示は取得済みの主張に基づきます。続きは各Entityの詳細から取得できます。</p>}
+        {graph.notice && <p role="status">{graph.notice}</p>}
         {blocked && <p role="alert" className={styles.error}>{blocked.error}</p>}
         <GraphCanvas graph={graph} selection={selection} onEntity={selectEntity} onRelation={selectRelation} />
-        <RelationsList graph={graph} selection={selection} onEntity={selectEntity} onClaim={selectClaim} />
+        <RelationsList graph={graph} selection={selection} onEntity={selectEntity} onClaim={selectClaim} onExpand={(id) => void expand(id)} onClose={close} />
       </section>
       <aside className={styles.panel} aria-labelledby="detail-title">
         <h2 id="detail-title">詳細</h2>
         {!selection && <p className={styles.muted}>人物、作品、組織、または関係の線を選んでください。</p>}
-        {selectedEntity && <EntityDetails key={key} entity={selectedEntity} expansion={graph.expansions[selectedEntity.id]} onExpand={(more) => void expand(selectedEntity.id, more)} />}
-        {selectedRelation && <ClaimDetails key={`${key}:${selectedRelation.claimIds[0]}`} id={selectedRelation.claimIds[0]} nodes={graph.nodes} mode="relation" />}
+        {selectedEntity && <EntityDetails key={key} entity={selectedEntity} expansion={graph.expansions[selectedEntity.id]} onExpand={(more) => void expand(selectedEntity.id, more)} onClose={() => close(selectedEntity.id)} />}
+        {selectedRelation && <ClaimDetails key={`${key}:${selectedRelation.claimIds[0]}`} id={selectedRelation.claimIds[0]} nodes={graph.nodes} mode="relation" visibleClaimIds={selectedRelation.claimIds} />}
         {selection?.kind === "claim" && <ClaimDetails key={key} id={selection.id} nodes={graph.nodes} />}
       </aside>
     </main>

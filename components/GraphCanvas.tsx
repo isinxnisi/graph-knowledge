@@ -14,6 +14,7 @@ export default function GraphCanvas({ graph, selection, onEntity, onRelation }: 
   const core = useRef<Core | null>(null);
   const handlers = useRef({ onEntity, onRelation });
   const generation = useRef(-1);
+  const savedPositions = useRef<Record<string, { x: number; y: number }>>({});
   const initialLayoutDone = useRef(false);
   useEffect(() => { handlers.current = { onEntity, onRelation }; }, [onEntity, onRelation]);
 
@@ -57,9 +58,13 @@ export default function GraphCanvas({ graph, selection, onEntity, onRelation }: 
     // 取得中メッセージの切替でCanvasの位置も変わるため、クリック座標のキャッシュを更新する。
     cy.resize();
     const reset = generation.current !== graph.generation;
-    if (reset) { cy.elements().remove(); generation.current = graph.generation; initialLayoutDone.current = false; }
+    if (reset) { savedPositions.current = {}; cy.elements().remove(); generation.current = graph.generation; initialLayoutDone.current = false; }
     const newNodes = Object.values(graph.nodes).filter((node) => !cy.getElementById(node.id).length);
     const relations = displayRelations(graph.claims);
+    // 同じ世代でも表示対象は減る。端点を消す前に辺を削除する。
+    cy.nodes().forEach((node) => { if (!graph.nodes[node.id()]) savedPositions.current[node.id()] = { ...node.position() }; });
+    Object.keys(savedPositions.current).forEach((id) => { if (!graph.cacheNodes[id]) delete savedPositions.current[id]; });
+    cy.batch(() => { cy.edges().filter((edge) => !relations[edge.id()]).remove(); cy.nodes().filter((node) => !graph.nodes[node.id()]).remove(); });
     const routes = edgeRoutes(relations);
     const elements: ElementDefinition[] = newNodes.map((node) => ({ group: "nodes", data: { id: node.id, label: entityLabel(node, graph.nodes), kind: node.kind }, position: { x: 0, y: 0 } }));
     Object.values(relations).forEach((claim) => {
@@ -85,7 +90,13 @@ export default function GraphCanvas({ graph, selection, onEntity, onRelation }: 
     } else if (initialLayoutDone.current && newNodes.length) {
       const newIds = newNodes.map((node) => node.id);
       const existing = Object.fromEntries(cy.nodes().filter((node) => !newIds.includes(node.id())).map((node) => [node.id(), { ...(node as cytoscape.NodeSingular).position() }]));
-      const positions = additionalPositions(existing, newIds, relations, graph.lastExpandedId);
+      const remaining: string[] = [];
+      for (const id of newIds) {
+        const saved = savedPositions.current[id];
+        const collides = saved && Object.values(existing).some((point) => Math.hypot(point.x - saved.x, point.y - saved.y) < 200);
+        if (saved && !collides) existing[id] = saved; else remaining.push(id);
+      }
+      const positions = additionalPositions(existing, remaining, relations, graph.lastExpandedId);
       newIds.forEach((id) => cy.getElementById(id).position(positions[id]));
     }
     // 距離依存の曲率は配置後に計算し、手動ドラッグ後も更新する。
