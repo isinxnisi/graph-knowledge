@@ -210,3 +210,7 @@ flowchart LR
 8. 最初の時系列をClaim.periodの行表示として実装。別のEntity日付を用いる表現は必要な日付モデルを設計してから進む。
 
 既存のAPI呼び出し、世代管理、独立Claim、表示Relationの安定キー、出典比較、テーマは再利用する。GraphStateの辞書だけで全てを表す部分と、GraphCanvasへの直接投影は変更する。放射・楕円配置は自由Graphの表現として残し、時系列へ無理に共通化しない。
+
+## 開閉フェーズの具体化
+
+推奨案に基づく移行順序1〜4の実装範囲・受け入れ条件は [EXPLORATION_CLOSE_PHASE.md](EXPLORATION_CLOSE_PHASE.md) に記録した。復元UXは選択肢と推奨案を提示中で、実装はまだ開始していない。
