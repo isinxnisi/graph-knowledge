@@ -431,3 +431,7 @@ Step 4のDB/API契約と探索機能を維持し、表示のみ調整した。�
 Graphの未選択Nodeは即時に選択・必要な展開を行い、選択中Nodeは300ms後に開閉する。300ms以内の同じNodeへの二度目のクリックは開閉を取り消し、独立したダブルクリックのコールバックへ渡す（現在は未割当）。選択変更・他対象の操作・ドラッグ・中心変更・破棄では待機中の開閉を取り消す。一覧の選択・明示開閉ボタンは即時の既存操作を維持する。
 
 判定値はlib/client/graph-interaction.tsのGRAPH_INTERACTION_DEFAULTSへ集約し、テスト可能なイベント判定から開閉処理を分離する。設定モーダルや設定永続化は未実装。利用者の操作設定、Graph表示調整、管理ポリシーの責務分担は [GRAPH_INTERACTION_AND_SETTINGS.md](GRAPH_INTERACTION_AND_SETTINGS.md) を参照。
+
+### 探索軸プリセット・taxonomy・保存ビューの設計レビュー（未実装）
+
+探索プリセットはアプリケーション層の版付き条件テンプレートとする提案。predicateの意味、閲覧分類、多言語label、個人の保存ビュー、実行セッションを分ける。初期の公式カタログはコード管理から始め、運営の画面編集と会員保存は必要時にPostgreSQLへ置く。Neo4jへ知識Graphの第二の正本を作らない。保存ビューは出自プリセットの版と確定した条件を持ち、公式更新へ黙って追従しない。詳細・未確定判断は [EXPLORATION_PRESETS_REVIEW.md](EXPLORATION_PRESETS_REVIEW.md) を参照。今回のレビューは提案で、条件API・認証・管理・保存機能は未実装。
