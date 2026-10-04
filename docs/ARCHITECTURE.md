@@ -497,3 +497,7 @@ GraphStateは一つの有効条件スコープ（predicates / conditionKey）内
 - 閉じた枝の復元時は保存済みNode座標を優先する。既存の200px衝突判定による再配置を行わず、未表示だったNodeだけを候補評価で配置する。受理ページ・休止子孫・合流／循環の契約は変更しない。
 
 DB・API・探索条件キー・cursor・上限・DisplayRelation集約・Claim／Citation／Source・datasetの変更はない。[採用レビュー](design/EXPLORATION_ENTRY_AND_CONDITIONS_REVIEW.md)、[実施記録](archive/phase-07-exploration-entry/IMPLEMENTATION_EXPLORATION_ENTRY.md)を参照。
+
+### 複数分野の探索文脈・起点切替（未採用の設計提案）
+
+[レビュー](design/CROSS_DOMAIN_EXPLORATION_REVIEW.md)に、論理的な共通知識と分野・テーマ・実効条件の分離、明示的な「広く見る」／条件維持の起点変更、直前探索への復帰、別分野の小さい検証案を記録した。現行chooseRootの条件維持・検索・開閉・DB/API契約は変更していない。実装前の採用判断が必要な提案であり、分野分類・preset・復帰機能は未実装。
