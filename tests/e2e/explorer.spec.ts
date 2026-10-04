@@ -442,6 +442,8 @@ test("Node再クリック: 300msで開閉、ダブルクリックは開閉を抑
   await page.getByTestId("graph-canvas").dblclick({ position: point });
   await page.waitForTimeout(400);
   await expect(page.getByTestId("graph-counts")).toHaveText("Entity 5 / Claim 7");
+  await expect(page.getByRole("dialog", { name: "このデータセットに登録された関係概要" })).toBeVisible();
+  await page.keyboard.press("Escape");
   // 未選択Nodeの二度目の入力中はAPIを保留し、描画・通信とジェスチャーを分けて確認。
   await choose(page); await expect(page.getByTestId("graph-counts")).toHaveText("Entity 5 / Claim 7");
   let release!: () => void;
@@ -457,6 +459,8 @@ test("Node再クリック: 300msで開閉、ダブルクリックは開閉を抑
   await expect(page.getByTestId("selection-status")).toContainText("星の航路");
   await page.waitForTimeout(400); release();
   await expect(page.getByTestId("graph-counts")).toHaveText("Entity 7 / Claim 9");
+  await expect(page.getByRole("dialog", { name: "このデータセットに登録された関係概要" })).toBeVisible();
+  await page.keyboard.press("Escape");
   // 判定待ち中に明示ボタンで閉じても、古いトグルが再開させない。
   await canvasTap(page, root.id);
   await page.waitForTimeout(320);

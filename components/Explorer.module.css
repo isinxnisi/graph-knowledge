@@ -115,3 +115,15 @@
   .graphTools { gap: 4px; padding: 4px 0; }
   .graphTools button { padding: 3px 6px; }
 }
+
+.overviewDialog { width: min(580px, calc(100vw - 40px)); }
+.overviewRow { padding: 12px 0; border-bottom: 1px solid var(--color-border); }
+.overviewRow h3 { margin: 0 0 6px; }
+.overviewRow p { margin: 6px 0; }
+.overviewExplanation { margin: 16px 0; }
+
+.rootActions { margin: 12px 0; gap: 8px; }
+
+.rootBar { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 6px 12px; margin-bottom: 6px; flex: 0 0 auto; }
+.rootBar .rootLabel { margin: 0 !important; }
+.rootBar button { font-size: 12px; padding: 4px 8px; }

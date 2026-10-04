@@ -38,3 +38,13 @@ MATCH (related:Claim)-[:SUBJECT]->(:Entity {id: $subjectId}),
       (related)-[:OBJECT]->(:Entity {id: $objectId})
 WHERE related.visibility = 'published' AND related.predicate = $predicate AND related.id <> $id
 RETURN DISTINCT related.id AS id ORDER BY id`;
+
+// 各視点で同じClaimを一度だけ数える。CitationへのJOIN・取得条件・LIMITはない。
+export const ENTITY_OVERVIEW = `
+MATCH (:Entity {id: $id})<-[side:SUBJECT|OBJECT]-(c:Claim)
+WHERE c.visibility = 'published'
+WITH DISTINCT c, type(side) AS side
+RETURN c.predicate AS predicate, toLower(side) AS perspective,
+       c.polarity AS polarity, c.contributionRoleId AS roleId,
+       count(DISTINCT c.id) AS count
+ORDER BY predicate, perspective, roleId, polarity`;

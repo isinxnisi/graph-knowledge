@@ -2,16 +2,20 @@
 
 import { contributionLabels } from "../lib/i18n/contribution";
 import cytoscape, { type Core, type ElementDefinition } from "cytoscape";
-import { useEffect, useRef } from "react";
+import { useEffect, useImperativeHandle, useRef } from "react";
+import type { Ref } from "react";
+import { restorationPositions } from "../lib/client/graph-view";
+import type { GraphView, ViewRestoration } from "../lib/client/graph-view";
+export type GraphCanvasHandle = { capture: () => GraphView | null };
 import type { GraphState, Selection } from "../lib/client/graph-state";
 import { entityLabel, edgeRoutes, displayRelations, relationId } from "../lib/client/graph-presentation";
 import { initialPositions, additionalPositions } from "../lib/client/graph-layout";
 import { createNodeClickHandler } from "../lib/client/graph-interaction";
 import styles from "./Explorer.module.css";
 
-type Props = { graph: GraphState; selection: Selection; onEntity: (id: string) => void; onRelation: (id: string) => void; onToggleEntity: (id: string) => void; onEntityDoubleClick?: (id: string) => void };
+type Props = { ref?: Ref<GraphCanvasHandle>; restoration?: ViewRestoration | null; interactionBlocked?: boolean; graph: GraphState; selection: Selection; onEntity: (id: string) => void; onRelation: (id: string) => void; onToggleEntity: (id: string) => void; onEntityDoubleClick?: (id: string) => void };
 
-export default function GraphCanvas({ graph, selection, onEntity, onRelation, onToggleEntity, onEntityDoubleClick }: Props) {
+export default function GraphCanvas({ ref, restoration, interactionBlocked, graph, selection, onEntity, onRelation, onToggleEntity, onEntityDoubleClick }: Props) {
   const container = useRef<HTMLDivElement>(null);
   const core = useRef<Core | null>(null);
   const handlers = useRef({ onEntity, onRelation, onToggleEntity, onEntityDoubleClick, selection });
@@ -21,6 +25,14 @@ export default function GraphCanvas({ graph, selection, onEntity, onRelation, on
   const previousCondition = useRef("all");
   const savedPositions = useRef<Record<string, { x: number; y: number }>>({});
   const initialLayoutDone = useRef(false);
+  useImperativeHandle(ref, () => ({ capture: () => {
+    const cy = core.current;
+    if (!cy) return null;
+    const positions = { ...savedPositions.current };
+    cy.nodes().forEach((node) => { positions[node.id()] = { ...node.position() }; });
+    return { positions, pan: { ...cy.pan() }, zoom: cy.zoom(), initialLayoutDone: initialLayoutDone.current };
+  } }), []);
+  useEffect(() => { if (interactionBlocked) gestures.current?.cancel(); }, [interactionBlocked]);
   useEffect(() => { handlers.current = { onEntity, onRelation, onToggleEntity, onEntityDoubleClick, selection }; }, [onEntity, onRelation, onToggleEntity, onEntityDoubleClick, selection]);
   useEffect(() => { gestures.current?.cancel(); }, [graph.generation]);
   useEffect(() => { gestures.current?.selectionChanged(selection?.kind === "entity" ? selection.id : null); }, [selection?.kind, selection?.id]);
@@ -75,10 +87,12 @@ export default function GraphCanvas({ graph, selection, onEntity, onRelation, on
     // 取得中メッセージの切替でCanvasの位置も変わるため、クリック座標のキャッシュを更新する。
     cy.resize();
     const reset = generation.current !== graph.generation;
+    const restored = reset && restoration?.generation === graph.generation ? restoration.view : null;
     if (reset) {
       const sameCenter = graph.centerId !== null && previousCenter.current === graph.centerId && previousCondition.current !== graph.conditionKey;
       if (sameCenter) cy.nodes().forEach((node) => { savedPositions.current[node.id()] = { ...node.position() }; });
       else { savedPositions.current = {}; cy.elements().remove(); initialLayoutDone.current = false; }
+      if (restored) { cy.elements().remove(); savedPositions.current = { ...restored.positions }; initialLayoutDone.current = restored.initialLayoutDone; }
       generation.current = graph.generation; previousCenter.current = graph.centerId; previousCondition.current = graph.conditionKey;
     }
     const newNodes = Object.values(graph.nodes).filter((node) => !cy.getElementById(node.id).length);
@@ -101,7 +115,12 @@ export default function GraphCanvas({ graph, selection, onEntity, onRelation, on
       cy.nodes().removeClass("center");
       if (graph.centerId) cy.getElementById(graph.centerId).addClass("center");
     });
-    if (!initialLayoutDone.current && graph.centerId && graph.expansions[graph.centerId]?.expanded) {
+    if (restored) {
+      Object.entries(restorationPositions(graph, restored)).forEach(([id, point]) => cy.getElementById(id).position(point));
+      if (Object.keys(restored.positions).some((id) => graph.nodes[id])) { cy.zoom(restored.zoom); cy.pan(restored.pan); }
+      else cy.fit(undefined, 40);
+      if (graph.centerId && graph.expansions[graph.centerId]?.expanded) initialLayoutDone.current = true;
+    } else if (!initialLayoutDone.current && graph.centerId && graph.expansions[graph.centerId]?.expanded) {
       const positions = initialPositions(graph.centerId, cy.nodes().filter((node) => node.id() !== graph.centerId).map((node) => node.id()), cy.height());
       Object.entries(positions).forEach(([id, point]) => cy.getElementById(id).position(point));
       cy.fit(undefined, 40);
@@ -130,7 +149,7 @@ export default function GraphCanvas({ graph, selection, onEntity, onRelation, on
     updateRoutes();
     cy.on("dragfree", "node", updateRoutes);
     return () => { cy.off("dragfree", "node", updateRoutes); };
-  }, [graph]);
+  }, [graph, restoration]);
 
   useEffect(() => {
     const cy = core.current;
@@ -143,7 +162,7 @@ export default function GraphCanvas({ graph, selection, onEntity, onRelation, on
   }, [selection, graph]);
 
   return <>
-    <div className={styles.canvas} ref={container} data-testid="graph-canvas" role="img" aria-label="人物・作品・組織の関係グラフ。操作できるテキスト一覧は下にあります。" />
+    <div className={styles.canvas} ref={container} data-testid="graph-canvas" tabIndex={-1} role="img" aria-label="人物・作品・組織の関係グラフ。操作できるテキスト一覧は下にあります。" />
     <div className={styles.graphTools}>
       <button onClick={() => core.current?.fit(undefined, 24)} disabled={!graph.centerId}>全体を表示</button>
       <span>丸：人物 ／ 四角：作品 ／ 六角形：組織</span>

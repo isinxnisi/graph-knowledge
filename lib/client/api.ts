@@ -1,5 +1,5 @@
 import type { ContributionRoleFilter, PredicateFilter } from "../domain/exploration";
-import type { ClaimResponse, EntityResponse, EntitySearchResponse, NeighborsResponse } from "../domain/api";
+import type { EntityOverviewResponse, ClaimResponse, EntityResponse, EntitySearchResponse, NeighborsResponse } from "../domain/api";
 
 export class ClientApiError extends Error {
   constructor(message: string, public status: number) { super(message); }
@@ -33,3 +33,5 @@ export const fetchNeighbors = (id: string, after: string | null, signal: AbortSi
   return get<NeighborsResponse>(`/api/entities/${encodeURIComponent(id)}/neighbors${params.size ? `?${params}` : ""}`, signal);
 };
 export const errorMessage = (error: unknown) => error instanceof ClientApiError ? error.message : "情報を取得できませんでした。再試行してください。";
+
+export const fetchOverview = (id: string, signal: AbortSignal) => get<EntityOverviewResponse>(`/api/entities/${encodeURIComponent(id)}/overview`, signal);

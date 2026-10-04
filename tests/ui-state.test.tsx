@@ -1,6 +1,8 @@
 // @vitest-environment jsdom
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { act, cleanup, render, renderHook, screen, waitFor } from "@testing-library/react";
+import { restorationPositions } from "../lib/client/graph-view";
+import { captureExploration } from "../lib/client/exploration-snapshot";
 import { createNodeClickHandler } from "../lib/client/graph-interaction";
 import { entityLabel, edgeRoutes, displayRelations, relationId } from "../lib/client/graph-presentation";
 import { initialPositions, additionalPositions } from "../lib/client/graph-layout";
@@ -472,4 +474,77 @@ describe("探索条件の入口とdraft", () => {
     fireEvent.click(screen.getByRole("button", { name: "適用" }));
     expect(onApply).toHaveBeenLastCalledWith(null, []);
   });
+});
+
+describe("直前探索と原子的な起点切替", () => {
+  it("条件と起点を一度に変え、受理済み範囲・選択・閉じた意図を復元する", async () => {
+    vi.mocked(fetchNeighbors).mockResolvedValueOnce(page);
+    const { result } = renderHook(useGraphExplorer);
+    act(() => result.current.chooseRoot(root));
+    await waitFor(() => expect(result.current.graph.expansions[root.id].expanded).toBe(true));
+    act(() => result.current.close(root.id));
+    const saved = result.current.graph;
+    const next = deferred(); vi.mocked(fetchNeighbors).mockReturnValueOnce(next.promise);
+    const view = { positions: { [root.id]: { x: 12, y: 34 } }, pan: { x: 40, y: 50 }, zoom: 0.8, initialLayoutDone: true };
+    const other = page.nodes[1];
+    act(() => result.current.switchRoot(other, "broad", view));
+    expect(fetchNeighbors).toHaveBeenCalledTimes(2);
+    act(() => result.current.restorePrevious());
+    expect(result.current.graph.centerId).toBe(root.id);
+    expect(result.current.graph.expansions[root.id].open).toBe(false);
+    expect(result.current.graph.cacheClaims).toEqual(saved.cacheClaims);
+    expect(result.current.selection).toEqual({ kind: "entity", id: root.id });
+    expect(result.current.viewRestoration?.view).toEqual(view);
+    expect(result.current.previous).toBeNull();
+    await act(async () => { next.resolve({ ...page, centerId: other.id }); await next.promise; });
+    expect(result.current.graph.centerId).toBe(root.id); expect(fetchNeighbors).toHaveBeenCalledTimes(2);
+  });
+  it("同条件の空集合を維持し、広く見るでは解除し旧起点を取得しない", async () => {
+    vi.mocked(fetchNeighbors).mockResolvedValue({ ...page, claims: [], nodes: [root] });
+    const { result } = renderHook(useGraphExplorer);
+    act(() => result.current.changePredicates([]));
+    act(() => result.current.chooseRoot(root));
+    await waitFor(() => expect(result.current.graph.expansions[root.id].expanded).toBe(true));
+    const other = page.nodes[1];
+    act(() => result.current.switchRoot(other, "same", null));
+    expect(result.current.graph.predicates).toEqual([]);
+    expect(vi.mocked(fetchNeighbors).mock.calls.at(-1)?.[0]).toBe(other.id);
+    act(() => result.current.switchRoot(root, "broad", null));
+    expect(result.current.graph.predicates).toBeNull();
+    expect(vi.mocked(fetchNeighbors).mock.calls.at(-1)?.slice(3)).toEqual([null, null]);
+  });
+  it("通信中の保存はcontrollerを保存せず、復帰後に明示再試行できる", async () => {
+    const old = deferred(), next = deferred();
+    vi.mocked(fetchNeighbors).mockReturnValueOnce(old.promise).mockReturnValueOnce(next.promise).mockResolvedValueOnce(page);
+    const { result } = renderHook(useGraphExplorer);
+    act(() => result.current.chooseRoot(root));
+    act(() => result.current.switchRoot(page.nodes[1], "broad", null));
+    expect(vi.mocked(fetchNeighbors).mock.calls[0][2].aborted).toBe(true);
+    act(() => result.current.restorePrevious());
+    expect(result.current.graph.expansions[root.id]).toMatchObject({ loading: false, open: true, pages: [] });
+    expect(result.current.graph.expansions[root.id].error).toContain("中断");
+    await act(async () => { old.resolve(page); await old.promise; });
+    expect(Object.keys(result.current.graph.claims)).toHaveLength(0);
+    await act(async () => { await result.current.expand(root.id); });
+    expect(Object.keys(result.current.graph.claims)).toHaveLength(page.claims.length);
+    act(() => result.current.chooseRoot(root)); expect(result.current.previous).toBeNull();
+  });
+});
+
+it("直前探索の保存は既存キャッシュ上限を超えず、座標もキャッシュ範囲へ限定する", () => {
+  const graph = mergePage(emptyGraph(), page);
+  const view = { positions: { [root.id]: { x: 1, y: 2 }, obsolete: { x: 3, y: 4 } }, pan: { x: 0, y: 0 }, zoom: 1, initialLayoutDone: true };
+  expect(captureExploration(graph, null, view)?.view?.positions).toEqual({ [root.id]: { x: 1, y: 2 } });
+  const cacheNodes = Object.fromEntries(Array.from({ length: 401 }, (_, i) => [String(i), entity(String(i))]));
+  expect(captureExploration({ ...graph, cacheNodes }, null, null)).toBeNull();
+});
+
+it("受理済み・未描画Nodeの復帰は保存座標を固定し、欠けたNodeだけ補完する", () => {
+  const graph = mergePage(emptyGraph(), page);
+  const view = { positions: { [root.id]: { x: 12, y: 34 } }, pan: { x: 5, y: 7 }, zoom: 0.8, initialLayoutDone: false };
+  const positions = restorationPositions(graph, view);
+  expect(positions[root.id]).toEqual(view.positions[root.id]);
+  expect(Object.keys(positions).sort()).toEqual(Object.keys(graph.nodes).sort());
+  for (const [id, point] of Object.entries(positions)) if (id !== root.id) expect(Math.hypot(point.x - 12, point.y - 34)).toBeGreaterThan(100);
+  expect(restorationPositions(graph, { ...view, positions: {} })[root.id]).toEqual({ x: 0, y: 0 });
 });

@@ -26,3 +26,17 @@ export type NeighborsResponse = {
   page: { nextCursor: string | null; hasMore: boolean };
 };
 export type ClaimResponse = { claim: ClaimDetail; relatedClaimIds: string[] };
+
+// 登録主張の集計。関係先・根拠・探索cursorは含めない。
+export const overviewCountsSchema = z.strictObject({ affirmed: z.number().int().nonnegative(), denied: z.number().int().nonnegative() });
+export const entityOverviewSchema = z.strictObject({
+  entity: entitySummarySchema,
+  scope: z.strictObject({ dataset: z.enum(["demo", "pilot-urasawa-v1", "pilot-urasawa-v2"]), visibility: z.literal("published"), filtered: z.literal(false), unit: z.literal("claim") }),
+  relations: z.array(z.strictObject({
+    predicate: claimSchema.shape.predicate,
+    perspective: z.enum(["subject", "object"]),
+    counts: overviewCountsSchema,
+    contributionRoles: z.array(z.strictObject({ roleId: contributionSchema.shape.roleId, counts: overviewCountsSchema })),
+  })),
+});
+export type EntityOverviewResponse = z.infer<typeof entityOverviewSchema>;

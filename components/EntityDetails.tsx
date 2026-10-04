@@ -1,23 +1,27 @@
 "use client";
 
+import RootActions from "./RootActions";
+import { overviewLabels } from "../lib/i18n/entity-overview";
 import { useEffect, useState } from "react";
 import type { EntityDetail, EntitySummary } from "../lib/domain/api";
 import type { Expansion } from "../lib/client/graph-state";
-import { fetchEntity, errorMessage } from "../lib/client/api";
+import { ClientApiError, fetchEntity, errorMessage } from "../lib/client/api";
 import { KIND_LABELS } from "../lib/client/format";
 import styles from "./Explorer.module.css";
 
-export default function EntityDetails({ entity, expansion, onExpand, onClose }: {
+export default function EntityDetails({ entity, expansion, onExpand, onClose, onOverview, onSwitch, restricted }: {
+  onOverview: () => void; onSwitch: (mode: "broad" | "same") => void; restricted: boolean;
   entity: EntitySummary; expansion?: Expansion; onExpand: (more: boolean) => void; onClose: () => void;
 }) {
   const [detail, setDetail] = useState<EntityDetail | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [missing, setMissing] = useState(false);
   const [attempt, setAttempt] = useState(0);
   useEffect(() => {
     const controller = new AbortController();
     fetchEntity(entity.id, controller.signal).then((result) => {
-      if (!controller.signal.aborted) setDetail(result.entity);
-    }).catch((error) => { if (!controller.signal.aborted) setError(errorMessage(error)); });
+      if (!controller.signal.aborted) { setDetail(result.entity); setMissing(false); setError(null); }
+    }).catch((error) => { if (!controller.signal.aborted) { setError(errorMessage(error)); setMissing(error instanceof ClientApiError && error.status === 404); } });
     return () => controller.abort();
   }, [entity.id, attempt]);
   return <section aria-label="Entity詳細">
@@ -26,6 +30,8 @@ export default function EntityDetails({ entity, expansion, onExpand, onClose }: 
     {!detail && !error && <p role="status">Entity詳細を取得中…</p>}
     {detail && <p>別名：{detail.aliases.length ? detail.aliases.join("、") : "未登録"}</p>}
     {error && <div role="alert" className={styles.error}><p>{error}</p><button onClick={() => { setError(null); setDetail(null); setAttempt((value) => value + 1); }}>Entity詳細を再試行</button></div>}
+    <button onClick={onOverview}>{overviewLabels().open}</button>
+    <RootActions restricted={restricted} disabled={missing} onSwitch={onSwitch} />
     <div className={styles.actions}>
       {expansion?.open ? <button onClick={onClose}>展開を閉じる</button> : <button onClick={() => onExpand(false)}>{expansion?.pages.length ? "展開を再開" : "近傍を展開"}</button>}
     </div>

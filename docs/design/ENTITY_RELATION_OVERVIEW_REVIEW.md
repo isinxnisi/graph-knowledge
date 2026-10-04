@@ -1,6 +1,6 @@
 # Entityの関係俯瞰と起点切替のUXレビュー
 
-2026-10-04。**設計提案、未採用・未実装**。[複数分野のレビュー](CROSS_DOMAIN_EXPLORATION_REVIEW.md)への補足。今回はコード・操作契約・API・docsを照合し、文書だけを更新する。
+2026-10-04。**推奨案を採用、Phase 08で実装**。[複数分野のレビュー](CROSS_DOMAIN_EXPLORATION_REVIEW.md)への補足。以下はレビュー時点の比較・提案を保存する。採用後の具体契約は [ARCHITECTURE](../ARCHITECTURE.md#phase-08関係概要起点切替直前探索への復帰)、検証は [Phase 08実施記録](../archive/phase-08-entity-overview/IMPLEMENTATION_ENTITY_OVERVIEW.md) を参照。
 
 ## 結論
 

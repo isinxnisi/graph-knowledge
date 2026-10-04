@@ -1,4 +1,8 @@
 import "server-only";
+import { datasetMode } from "../domain/dataset";
+import { entityOverviewSchema, type EntityOverviewResponse } from "../domain/api";
+import { PREDICATE_KEYS } from "../domain/predicates";
+import { roleIdSchema } from "../domain/contribution";
 import { int } from "neo4j-driver";
 import { claimDetailSchema, type EntitySearchResponse, type EntityResponse, type NeighborsResponse, type ClaimResponse } from "../domain/api";
 import type { ContributionRoleFilter, PredicateFilter } from "../domain/exploration";
@@ -6,7 +10,7 @@ import { encodeNeighborCursor } from "./neighbor-cursor";
 import { ApiError } from "./http";
 import { readTransaction } from "./read-db";
 import { entitySummary, entityDetail, claimSummary, citationDetail, relatedId } from "./mappers";
-import { SEARCH_ENTITIES, ENTITY_DETAIL, NEIGHBORS, NEIGHBORS_BY_ROLE, CLAIM_DETAIL, RELATED_CLAIMS } from "./queries";
+import { SEARCH_ENTITIES, ENTITY_DETAIL, NEIGHBORS, NEIGHBORS_BY_ROLE, CLAIM_DETAIL, RELATED_CLAIMS, ENTITY_OVERVIEW } from "./queries";
 
 const notFound = () => new ApiError(404, "NOT_FOUND", "対象のデータが見つかりません。");
 
@@ -57,5 +61,33 @@ export function getClaim(id: string): Promise<ClaimResponse> {
     const claim = claimDetailSchema.parse({ ...summary, createdAt: properties.createdAt, updatedAt: properties.updatedAt, citations });
     const related = await tx.run(RELATED_CLAIMS, { id, subjectId: summary.subjectId, objectId: summary.objectId, predicate: summary.predicate });
     return { claim, relatedClaimIds: related.records.map((r) => relatedId(r.get("id"))) };
+  });
+}
+
+export function getEntityOverview(id: string): Promise<EntityOverviewResponse> {
+  return readTransaction(async (tx) => {
+    const center = await tx.run(ENTITY_DETAIL, { id });
+    if (!center.records.length) throw notFound();
+    const result = await tx.run(ENTITY_OVERVIEW, { id });
+    const groups = new Map<string, EntityOverviewResponse["relations"][number]>();
+    for (const record of result.records) {
+      const predicate = record.get("predicate");
+      const perspective = record.get("perspective");
+      const polarity: "affirmed" | "denied" = record.get("polarity");
+      const roleId = roleIdSchema.nullable().parse(record.get("roleId"));
+      if (!PREDICATE_KEYS.includes(predicate) || !["subject", "object"].includes(perspective) || !["affirmed", "denied"].includes(polarity) || (predicate !== "CONTRIBUTED_TO" && roleId !== null)) throw new Error("Invalid overview group");
+      const key = `${predicate}:${perspective}`;
+      const group: EntityOverviewResponse["relations"][number] = groups.get(key) ?? { predicate, perspective, counts: { affirmed: 0, denied: 0 }, contributionRoles: [] };
+      const count = record.get("count").toNumber();
+      group.counts[polarity] += count;
+      if (predicate === "CONTRIBUTED_TO") {
+        let role = group.contributionRoles.find((value) => value.roleId === roleId);
+        if (!role) { role = { roleId, counts: { affirmed: 0, denied: 0 } }; group.contributionRoles.push(role); }
+        role.counts[polarity] += count;
+      }
+      groups.set(key, group);
+    }
+    return entityOverviewSchema.parse({ entity: entitySummary(center.records[0].get("entity")),
+      scope: { dataset: datasetMode(process.env.GRAPH_DATASET), visibility: "published", filtered: false, unit: "claim" }, relations: [...groups.values()] });
   });
 }

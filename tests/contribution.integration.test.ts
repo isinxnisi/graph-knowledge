@@ -7,7 +7,7 @@ import { loadPilotV2 } from "../lib/server/pilot-v2-dataset";
 import { graphCounts, graphSnapshot, seedFixture } from "../lib/server/seed";
 import { contributionProperties } from "../lib/domain/contribution";
 import { dateProperties } from "../lib/domain/dates";
-import type { NeighborsResponse, ClaimResponse } from "../lib/domain/api";
+import type { EntityOverviewResponse, NeighborsResponse, ClaimResponse } from "../lib/domain/api";
 const base = "http://127.0.0.1:3212";
 it("v2 seed/real API and isolated synthetic role cases", async () => {
   process.loadEnvFile(".env.pilot-v2");
@@ -37,6 +37,17 @@ it("v2 seed/real API and isolated synthetic role cases", async () => {
     const get = async (id: string, query: string) => {
       const response = await fetch(`${base}/api/entities/${id}/neighbors?${query}`); expect(response.status).toBe(200); return await response.json() as NeighborsResponse;
     };
+    for (const [target, perspective] of [[center, "subject"], [work, "object"]] as const) {
+      const response = await fetch(`${base}/api/entities/${target}/overview`); expect(response.status).toBe(200);
+      const overview = await response.json() as EntityOverviewResponse;
+      expect(overview.scope.dataset).toBe("pilot-urasawa-v2");
+      expect(overview.relations).toHaveLength(1);
+      expect(overview.relations[0]).toMatchObject({ perspective, counts: { affirmed: 3, denied: 3 } });
+      expect(overview.relations[0].contributionRoles).toEqual(expect.arrayContaining([
+        { roleId: null, counts: { affirmed: 1, denied: 0 } },
+        { roleId: "SUPERVISION", counts: { affirmed: 1, denied: 2 } },
+      ]));
+    }
     const first = await get(center, "limit=1&contributionRoles=SUPERVISION");
     expect(first.claims.map((c) => c.id)).toEqual([ids[2]]); expect(first.page.hasMore).toBe(true);
     const second = await get(center, `limit=1&contributionRoles=SUPERVISION&after=${first.page.nextCursor}`);

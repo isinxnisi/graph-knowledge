@@ -1,5 +1,8 @@
 "use client";
 
+import { captureExploration, type ExplorationSnapshot } from "./exploration-snapshot";
+import type { GraphView, ViewRestoration } from "./graph-view";
+import { overviewLabels } from "../i18n/entity-overview";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { normalizePredicates, normalizeContributionRoles, explorationKey, type ContributionRoleFilter, type PredicateFilter } from "../domain/exploration";
 import { explorationLabels } from "../i18n/exploration";
@@ -11,6 +14,8 @@ import { closeExpansion, reopenExpansion, projectGraph, emptyExpansion, emptyGra
 export function useGraphExplorer() {
   const [graph, setGraph] = useState<GraphState>(emptyGraph);
   const [selection, setSelection] = useState<Selection>(null);
+  const [previous, setPrevious] = useState<ExplorationSnapshot | null>(null);
+  const [viewRestoration, setViewRestoration] = useState<ViewRestoration | null>(null);
   const current = useRef(graph);
   const generation = useRef(0);
   const pending = useRef(new Map<string, AbortController>());
@@ -49,7 +54,7 @@ export function useGraphExplorer() {
     const controller = new AbortController();
     const request = meta.request + 1;
     const after = more ? meta.nextCursor : null;
-    state = projectGraph({ ...state, notice: state.evictedIds.includes(id) ? "以前の枝はキャッシュから外れたため、近傍を再取得します。" : meta.pages.length ? state.notice : meta.open === false && state.expansions[id] ? "取得済みの枝がないため近傍を取得します。" : null,
+    state = projectGraph({ ...state, notice: state.evictedIds.includes(id) ? "以前の枝はキャッシュから外れたため、近傍を再取得します。" : meta.pages.length ? state.notice : meta.open === false && state.expansions[id] ? "取得済みの枝がないため近傍を取得します。" : state.notice === overviewLabels().notSaved ? state.notice : null,
       expansions: { ...state.expansions, [id]: { ...meta, open: true, request, loading: true, error: null, blocked: false } } });
     pending.current.set(id, controller); commit(state);
     const valid = () => !controller.signal.aborted && generation.current === epoch && current.current.expansions[id]?.request === request && current.current.expansions[id]?.active;
@@ -70,11 +75,37 @@ export function useGraphExplorer() {
   }, [commit]);
 
   const chooseRoot = useCallback((entity: EntitySummary) => {
+    setPrevious(null); setViewRestoration(null);
     pending.current.forEach((controller) => controller.abort()); pending.current.clear();
     generation.current += 1;
     commit(projectGraph({ ...emptyGraph(generation.current), predicates: current.current.predicates, contributionRoles: current.current.contributionRoles ?? null, conditionKey: current.current.conditionKey, roots: [entity.id], centerId: entity.id, cacheNodes: { [entity.id]: entity } }));
     setSelection({ kind: "entity", id: entity.id }); void expand(entity.id);
   }, [commit, expand]);
+  const switchRoot = useCallback((entity: EntitySummary, mode: "broad" | "same", view: GraphView | null) => {
+    const old = current.current;
+    const predicates = mode === "broad" ? null : old.predicates;
+    const contributionRoles = mode === "broad" ? null : old.contributionRoles ?? null;
+    const conditionKey = explorationKey(predicates, contributionRoles);
+    if (old.centerId === entity.id && old.conditionKey === conditionKey) return;
+    const snapshot = captureExploration(old, selection, view);
+    setPrevious(snapshot); setViewRestoration(null);
+    pending.current.forEach((controller) => controller.abort()); pending.current.clear();
+    generation.current += 1;
+    commit(projectGraph({ ...emptyGraph(generation.current), predicates, contributionRoles, conditionKey,
+      roots: [entity.id], centerId: entity.id, cacheNodes: { [entity.id]: entity },
+      notice: old.centerId && !snapshot ? overviewLabels().notSaved : null }));
+    setSelection({ kind: "entity", id: entity.id }); void expand(entity.id);
+  }, [commit, expand, selection]);
+  const restorePrevious = useCallback(() => {
+    if (!previous) return;
+    pending.current.forEach((controller) => controller.abort()); pending.current.clear();
+    generation.current += 1;
+    const snapshot = previous;
+    setPrevious(null);
+    setViewRestoration(snapshot.view ? { generation: generation.current, view: snapshot.view } : null);
+    commit(projectGraph({ ...snapshot.graph, generation: generation.current, notice: overviewLabels().restored }));
+    setSelection(snapshot.selection);
+  }, [commit, previous]);
   const changePredicates = useCallback((values: PredicateFilter, roleValues: ContributionRoleFilter = current.current.contributionRoles ?? null) => {
     const predicates = normalizePredicates(values);
     const contributionRoles = normalizeContributionRoles(roleValues, predicates);
@@ -104,5 +135,5 @@ export function useGraphExplorer() {
     if (!current.current.nodes[id]) return;
     if (current.current.expansions[id]?.open) close(id); else void expand(id);
   }, [close, expand]);
-  return { graph, selection, changePredicates, chooseRoot, selectEntity, selectClaim, selectRelation, expand, close, toggleEntity };
+  return { graph, selection, previous, viewRestoration, switchRoot, restorePrevious, changePredicates, chooseRoot, selectEntity, selectClaim, selectRelation, expand, close, toggleEntity };
 }

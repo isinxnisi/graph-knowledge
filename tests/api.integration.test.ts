@@ -8,7 +8,7 @@ import { randomUUID } from "node:crypto";
 import { afterAll, beforeAll, expect, it, vi } from "vitest";
 import type { Driver } from "neo4j-driver";
 import type { Fixture } from "../lib/domain/fixture";
-import type { ClaimResponse, EntityResponse, EntitySearchResponse, NeighborsResponse } from "../lib/domain/api";
+import type { EntityOverviewResponse, ClaimResponse, EntityResponse, EntitySearchResponse, NeighborsResponse } from "../lib/domain/api";
 import { openDatabase } from "../lib/server/neo4j";
 import { graphSnapshot, loadFixture, seedFixture } from "../lib/server/seed";
 
@@ -250,7 +250,7 @@ it("returns 400 for invalid UUID/q/limit/cursor and 404 for absent IDs", async (
 });
 
 it("returns 405 for every unsupported standard method on all routes", async () => {
-  for (const path of ["/api/entities?q=x", `/api/entities/${fixture.entities[0].id}`, `/api/entities/${fixture.entities[0].id}/neighbors`, `/api/claims/${fixture.claims[0].id}`]) {
+  for (const path of ["/api/entities?q=x", `/api/entities/${fixture.entities[0].id}`, `/api/entities/${fixture.entities[0].id}/neighbors`, `/api/entities/${fixture.entities[0].id}/overview`, `/api/claims/${fixture.claims[0].id}`]) {
     for (const method of ["POST", "PUT", "PATCH", "DELETE", "OPTIONS", "HEAD"]) {
       const response = await fetch(`${baseUrl}${path}`, { method });
       expect(response.status).toBe(405);
@@ -321,7 +321,7 @@ it("returns 503 with the real DB stopped, then recovers after restarting", async
   try {
     await exec("docker", ["compose", "stop", "neo4j"], { timeout: 40000 });
     for (const path of [`/api/entities?q=${encodeURIComponent("青葉ハル")}`, `/api/entities/${fixture.entities[0].id}`,
-      `/api/entities/${fixture.entities[0].id}/neighbors`, `/api/claims/${fixture.claims[0].id}`]) {
+      `/api/entities/${fixture.entities[0].id}/neighbors`, `/api/entities/${fixture.entities[0].id}/overview`, `/api/claims/${fixture.claims[0].id}`]) {
       const result = await request<{ error: { code: string; message: string } }>(path, 503);
       expect(result.error.code).toBe("SERVICE_UNAVAILABLE");
       expect(JSON.stringify(result)).not.toMatch(/password|bolt|Neo4jError|ECONNREFUSED/);
@@ -337,3 +337,37 @@ it("returns 503 with the real DB stopped, then recovers after restarting", async
   const recovered = await request<EntitySearchResponse>(`/api/entities?q=${encodeURIComponent("青葉ハル")}`);
   expect(recovered.items[0].id).toBe(fixture.entities[0].id);
 }, 240000);
+
+it("overview counts all published Claims by viewpoint without citations/pages/filters", async () => {
+  const id = fixture.entities[0].id;
+  const overview = await request<EntityOverviewResponse>(`/api/entities/${id}/overview`);
+  expect(overview.scope).toEqual({ dataset: "demo", visibility: "published", filtered: false, unit: "claim" });
+  const assistant = overview.relations.find((r) => r.predicate === "ASSISTANT_OF" && r.perspective === "subject")!;
+  expect(assistant.counts).toEqual({ affirmed: 2, denied: 1 });
+  expect(overview.relations.filter((r) => r.predicate === "INFLUENCED_BY").map((r) => r.perspective).sort()).toEqual(["object", "subject"]);
+  const first = await request<NeighborsResponse>(`/api/entities/${id}/neighbors?limit=1&predicates=CONTRIBUTED_TO`);
+  expect(first.claims).toHaveLength(1);
+  expect(overview.relations).toHaveLength(5);
+  expect(JSON.stringify(overview)).not.toMatch(/citation|sourceCount|nextCursor|claimIds/);
+  for (const entity of fixture.entities) {
+    const value = await request<EntityOverviewResponse>(`/api/entities/${entity.id}/overview`);
+    for (const row of value.relations) for (const polarity of ["affirmed", "denied"] as const) {
+      expect(row.counts[polarity]).toBe(fixture.claims.filter((c) => c.visibility === "published" && c.predicate === row.predicate && c.polarity === polarity && (row.perspective === "subject" ? c.subjectId : c.objectId) === entity.id).length);
+    }
+    if (!fixture.claims.some((c) => [c.subjectId, c.objectId].includes(entity.id))) expect(value.relations).toEqual([]);
+  }
+  const ids = fixture.claims.filter((c) => c.subjectId === id && c.predicate === "ASSISTANT_OF" && c.polarity === "affirmed").map((c) => c.id);
+  try {
+    await write("MATCH(c:Claim) WHERE c.id IN $ids SET c.visibility='hidden'", { ids });
+    const value = await request<EntityOverviewResponse>(`/api/entities/${id}/overview`);
+    expect(value.relations.find((r) => r.predicate === "ASSISTANT_OF")?.counts).toEqual({ affirmed: 0, denied: 1 });
+  } finally { await write("MATCH(c:Claim) WHERE c.id IN $ids SET c.visibility='published'", { ids }); }
+  await request(`/api/entities/${id}/overview?predicates=CONTRIBUTED_TO`, 400);
+  await request(`/api/entities/invalid/overview`, 400);
+  await request(`/api/entities/${randomUUID()}/overview`, 404);
+  await request(`/api/entities/${id}/overview`, 405, "POST");
+  try {
+    await write("MATCH(c:Claim {id:$id}) SET c.polarity='invalid'", { id: fixture.claims[0].id });
+    await request(`/api/entities/${id}/overview`, 500);
+  } finally { await write("MATCH(c:Claim {id:$id}) SET c.polarity=$polarity", { id: fixture.claims[0].id, polarity: fixture.claims[0].polarity }); }
+});

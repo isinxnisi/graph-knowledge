@@ -1,6 +1,6 @@
 # 現行技術設計
 
-更新日: 2026-10-04 / 状態: 初期Vertical Sliceと探索の開閉・Node再クリックまで実装済み。既存predicateと限定制作Roleによる条件付き探索を追加。v2 Role Claim 5件を人間受入後に投入・検証済み。taxonomy・プリセット・会員保存は未実装。[文書の入口](README.md)に現役設計とフェーズ別履歴をまとめる。
+更新日: 2026-10-04 / 状態: 初期Vertical Sliceと探索の開閉・Node再クリックまで実装済み。既存predicateと限定制作Roleによる条件付き探索を追加。v2 Role Claim 5件を人間受入後に投入・検証済み。関係概要・明示起点切替・直前一件復帰も実装。taxonomy・プリセット・会員保存は未実装。[文書の入口](README.md)に現役設計とフェーズ別履歴をまとめる。
 
 ## 前提と設計の位置づけ
 
@@ -501,3 +501,42 @@ DB・API・探索条件キー・cursor・上限・DisplayRelation集約・Claim�
 ### 複数分野の探索文脈・起点切替（未採用の設計提案）
 
 [レビュー](design/CROSS_DOMAIN_EXPLORATION_REVIEW.md)に、論理的な共通知識と分野・テーマ・実効条件の分離、明示的な「広く見る」／条件維持の起点変更、直前探索への復帰、別分野の小さい検証案を記録した。現行chooseRootの条件維持・検索・開閉・DB/API契約は変更していない。実装前の採用判断が必要な提案であり、分野分類・preset・復帰機能は未実装。
+
+## Phase 08：関係概要・起点切替・直前探索への復帰
+
+関係概要は任意の読み取りであり、選択・展開・起点切替から独立する。Entity詳細の「関係概要を見る」が正規導線、Nodeのダブルクリックは同じモーダルへのショートカット。未選択Nodeの初回クリックは即時選択・必要時展開を保ち、300ms以内の二度目で開閉だけを抑止する。概要中も既に開始したGraph取得は完了し得る。
+
+### 概要API
+
+`GET /api/entities/{id}/overview`。UUID v4のみ、query parameterは受け付けず400。既存APIは変更しない。
+
+```ts
+type EntityOverviewResponse = {
+  entity: EntitySummary;
+  scope: { dataset: DatasetMode; visibility: "published"; filtered: false; unit: "claim" };
+  relations: {
+    predicate: Predicate;
+    perspective: "subject" | "object";
+    counts: { affirmed: number; denied: number };
+    contributionRoles: { roleId: ContributionRoleId | null; counts: { affirmed: number; denied: number } }[];
+  }[];
+};
+```
+
+現在datasetの公開Claimを、探索のpredicate／Role条件・ページング・Graph上限から独立して集計する。各視点でDISTINCT Claim IDを数え、Citation／SourceにはJOINしない。自己関係は両視点に一件ずつ現れ得るため、行を合計した全体総数は表示しない。否定も数えるが、成立認定・矛盾判定・重要度へ変換しない。CONTRIBUTED_TOのみRole別に集計し、nullは「役割を限定していない主張」。刊行物・期間の違いを消して担当認定しない。詳細の限定・根拠は既存Claim詳細へ戻る。
+
+対象不存在404、GET以外405、保存データ不正500、DB接続不能／読取予算超過503。ゼロ件は成功応答の空配列であり、取得失敗と区別。パラメータ化Cypher・既存読取timeout・no-storeを使用。概要取得はGraph通信と別のAbortControllerで、閉じる／対象変更時に取消す。404では概要からの起点切替を無効化し、その他の集計失敗では既知の対象から探索可能とする。
+
+### 原子的な起点切替
+
+「この対象から広く見る」はpredicate／Role追加条件をnullへ解除。「同じ条件でこの対象から見る」は確定条件（空集合も含む）を維持。無条件なら操作は一つ。同一起点・同実効条件は不要なリセット／通信をしない。直接Entity詳細からでも概要からでも同じ遷移を使い、概要成功を必須にしない。
+
+起点＋条件を一度に確定し、新世代で新起点だけを一段階取得する。旧通信はabortし、旧応答は世代・要求番号で排除。旧cursor／受理ページ／open意図を新探索へ持ち越さない。同一起点での条件解除は既存の共通座標維持を利用。検索候補選択の条件維持は従来どおり。
+
+### 直前一件の復帰
+
+実際の明示切替直前に、受理済みGraph/cache、起点・条件、cursor、open意図（休止子孫と明示閉鎖を含む）、選択、表示／キャッシュ内Node座標、pan／zoomを保持する。現在のGraphと一件の復帰用探索は各400 Entity／800 Claim以内、合計最大800／1600。履歴のために表示上限100／200は変えない。上限を越える保存は拒否し、復帰ボタンを出さない（通常の正規状態は既存上限内）。
+
+寿命は同じdatasetの画面内セッション。再切替で置換、復帰で消費、検索候補からの新探索・dataset変更による再mount・再読込で失効する。凍結datasetの読み取り環境で、時間による失効やDB版固定は導入しない。将来更新／認可を追加する前に版・認可変更時の失効を決める。検索語・検索結果・条件draft・概要・進行中通信は保存しない。
+
+復帰も新世代にし、通信は再開しない。未完了要求があったEntityはloadingを解除して中断表示／明示再試行を提供し、受理cursorを進めない。座標・pan/zoomはCanvasの小さいview境界から取得／復元する。受理直後で未描画だったNodeは保存座標がないため、既知座標を固定して既存の追加配置ルールで補う。表示Nodeの座標が一つも保存できていなければ初期配置・fitを使い、同じ表示範囲の復元を保証しない。保存がない時は復帰操作を表示せず、元Graphの完全復元を約束しない。DB利用不可でも受理済みGraphへ戻れるが、詳細の再取得・続きを取得する操作は失敗し得る。

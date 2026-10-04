@@ -1,19 +1,19 @@
 # Nodeのクリック操作と今後の設定
 
-2026-10-03。Node再クリックの開閉は実装済み。設定画面・ユーザー設定の永続化・管理設定は検討事項であり未実装。
+2026-10-03作成、2026-10-04 Phase 08の概要接続を追記。Node再クリックの開閉は実装済み。設定画面・ユーザー設定の永続化・管理設定は検討事項であり未実装。
 
 ## 今回の操作
 
 - 未選択Nodeは即時に選択し、必要なら通常の一段階展開／受理済み枝の復元を行う。
 - 選択中Nodeの単クリックは300ms後に開閉する。選択は維持する。
-- 同じNodeへ300ms以内に二度目のクリックが来たら待機中の開閉を取り消す。ダブルクリック動作は独立したコールバックに渡すが、現在は未割当。
+- 同じNodeへ300ms以内に二度目のクリックが来たら待機中の開閉を取り消す。ダブルクリック動作は独立したコールバックに渡すが、Phase 08ではEntity関係概要を開く。
 - 未選択Nodeのダブルクリックでは最初の即時選択・展開は残す。二度目のクリックによる開閉は行わない。選択の応答性を保つため、初回展開の巻き戻しはしない。
 - 他Node・Edge・背景の操作、ドラッグ、選択変更、中心変更、Canvas破棄で待機中の開閉を残さない。最初の選択変更でも連続クリックの記録は保持し、二度目を誤って単クリックとして扱わない。
 - テキスト一覧の「選択・展開」はトグルにしない。詳細と一覧の明示開閉ボタンは判定待ちなし。
 
-GRAPH_INTERACTION_DEFAULTS.doubleClickMsを300にした。クリック判定はcreateNodeClickHandler、実際の開閉はuseGraphExplorer.toggleEntityで分ける。GraphCanvas.onEntityDoubleClickは今後の別動作の接続点。Cytoscapeの別のdbltap判定とは併用しないため、異なる閾値で単クリックとダブルクリックが両方発火しない。
+GRAPH_INTERACTION_DEFAULTS.doubleClickMsを300にした。クリック判定はcreateNodeClickHandler、実際の開閉はuseGraphExplorer.toggleEntityで分ける。GraphCanvas.onEntityDoubleClickはPhase 08の概要モーダルへ接続した。Cytoscapeの別のdbltap判定とは併用しないため、異なる閾値で単クリックとダブルクリックが両方発火しない。
 
-入力イベントの時刻を基準に判定し、描画で処理が遅れた時もハンドラー実行時刻の差だけで判定しない。判定はアプリ内の300msが基準で、OSのダブルクリック速度への追従は追加していない。将来モーダル等を割り当てる場合も、同じ判定処理に接続する。
+入力イベントの時刻を基準に判定し、描画で処理が遅れた時もハンドラー実行時刻の差だけで判定しない。判定はアプリ内の300msが基準で、OSのダブルクリック速度への追従は追加していない。今後別動作を変更する場合も、同じ判定処理に接続する。
 
 ## 設定モーダルは今必要か
 
@@ -58,3 +58,5 @@ GRAPH_TEST_REUSE=1 npm run test:e2e -- --grep 'Node再クリック' --repeat-eac
 ```
 
 変更ファイルはgraph-interaction.ts、use-graph-explorer.ts、GraphCanvas.tsx、Explorer.tsx、状態・ブラウザテスト、READMEと関連設計文書。API・DB・fixture・出典構造・依存パッケージは変更していない。
+
+Phase 08：Entity詳細の明示ボタンとダブルクリックから同じ関係概要を開く。概要中は待機ジェスチャーを取り消して背面入力を止めるが、初回クリックのGraph取得は継続する。初回選択や展開を巻き戻さない。[実施記録](../archive/phase-08-entity-overview/IMPLEMENTATION_ENTITY_OVERVIEW.md)。
