@@ -190,3 +190,7 @@ Phase 07の「条件なしでまず辿る」は維持できる。ただし高次
 [PROJECT_CONTEXT](../PROJECT_CONTEXT.md)、[ARCHITECTURE](../ARCHITECTURE.md)、[Phase 07レビュー](EXPLORATION_ENTRY_AND_CONDITIONS_REVIEW.md)、[Phase 07実施記録](../archive/phase-07-exploration-entry/IMPLEMENTATION_EXPLORATION_ENTRY.md)、[探索モデル](EXPLORATION_MODEL_REVIEW.md)、[条件契約](CONDITIONAL_EXPLORATION_PHASE.md)、[preset・taxonomy](EXPLORATION_PRESETS_REVIEW.md)、[プロダクト原則](PRODUCT_VISION_AND_PRINCIPLES.md)、[Predicate契約](PREDICATE_CONTRACTS.md)、[Role契約](CONTRIBUTION_ROLE_CONTRACTS.md)、[実データ案](REAL_DATA_PILOT.md)とPhase 04／06の受入・検証記録を照合した。コードは上記表の型・hook・query・presentation・詳細・テストを確認。
 
 今回はコード・文書の照合、変更範囲・ローカル文書リンク・差分の確認のみ。新分野の資料検索・収集、ブラウザ操作、アプリテスト・build・DB操作は行っていない。Phase 07の既存検証件数を今回の新しい検証結果として扱わない。
+
+## Entity俯瞰案による次フェーズの補足
+
+[Entity関係概要レビュー](ENTITY_RELATION_OVERVIEW_REVIEW.md)で、未知の対象を俯瞰してから任意に起点を切り替える案を追加検討した。補足の推奨範囲は「最小の関係俯瞰＋明示的な起点切替＋直前復帰」。概要を必須手順にせず、ダブルクリックの初回選択・展開は維持する。元の案とこの補足はいずれも未採用・未実装であり、次フェーズの範囲はユーザーによる再判断を待つ。
