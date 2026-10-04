@@ -3,7 +3,7 @@ import fixture from "../../fixtures/demo.json" with { type: "json" };
 import { editConditions } from "./conditions";
 const root = fixture.entities[0], other = fixture.entities[1];
 async function start(page: Page) {
-  await page.goto("/"); await page.getByLabel("人物名・別名").fill(root.name);
+  await page.goto("/"); await page.getByLabel("名前・別名").fill(root.name);
   await page.getByRole("button", { name: "検索", exact: true }).click();
   await page.getByRole("button", { name: new RegExp(`^${root.name} —`) }).click();
   await expect(page.getByTestId("graph-counts")).toHaveText("Entity 5 / Claim 7");
@@ -47,7 +47,7 @@ test("概要ボタンはGraph不変・条件外の主張も集計・Escape・再
   await expect(dialog.getByRole("button", { name: "この対象から広く見る", exact: true })).toBeEnabled();
   await page.unroute("**/overview"); await dialog.getByRole("button", { name: "関係概要を再試行" }).click();
   await expect(dialog).toContainText("肯定 2件 ／ 否定 1件"); await dialog.getByRole("button", { name: "閉じる", exact: true }).click();
-  await page.getByLabel("人物名・別名").fill("森ユウ"); await page.getByRole("button", { name: "検索", exact: true }).click();
+  await page.getByLabel("名前・別名").fill("森ユウ"); await page.getByRole("button", { name: "検索", exact: true }).click();
   await page.getByRole("button", { name: /^森ユウ —/ }).click();
   await page.getByRole("button", { name: "関係概要を見る", exact: true }).click();
   await expect(dialog).toContainText("公開された関係の主張はまだ登録されていません");

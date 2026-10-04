@@ -127,3 +127,5 @@
 .rootBar { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 6px 12px; margin-bottom: 6px; flex: 0 0 auto; }
 .rootBar .rootLabel { margin: 0 !important; }
 .rootBar button { font-size: 12px; padding: 4px 8px; }
+
+.searchForm select { background: var(--color-panel); color: var(--color-text); width: 100%; }

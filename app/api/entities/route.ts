@@ -5,8 +5,8 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 export async function GET(request: Request) {
   return handle(async () => {
-    const { q, limit } = searchInput(request);
-    return searchEntities(q, limit);
+    const { q, limit, kinds } = searchInput(request);
+    return searchEntities(q, limit, kinds);
   });
 }
 export {

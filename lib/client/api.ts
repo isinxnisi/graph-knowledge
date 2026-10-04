@@ -22,7 +22,7 @@ async function get<T>(path: string, signal: AbortSignal): Promise<T> {
   }
 }
 
-export const searchPeople = (q: string, signal: AbortSignal) => get<EntitySearchResponse>(`/api/entities?${new URLSearchParams({ q })}`, signal);
+export const searchEntities = (q: string, signal: AbortSignal, kind: import("../domain/search").SearchKind | null = null) => get<EntitySearchResponse>(`/api/entities?${new URLSearchParams({ q, ...(kind === null ? {} : { kind }) })}`, signal);
 export const fetchEntity = (id: string, signal: AbortSignal) => get<EntityResponse>(`/api/entities/${encodeURIComponent(id)}`, signal);
 export const fetchClaim = (id: string, signal: AbortSignal) => get<ClaimResponse>(`/api/claims/${encodeURIComponent(id)}`, signal);
 export const fetchNeighbors = (id: string, after: string | null, signal: AbortSignal, predicates: PredicateFilter = null, roles: ContributionRoleFilter = null) => {

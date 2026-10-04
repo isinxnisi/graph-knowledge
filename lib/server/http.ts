@@ -1,9 +1,10 @@
 import { roleIdSchema } from "../domain/contribution";
+import { searchLabels } from "../i18n/entity-search";
 import { explorationLabels } from "../i18n/exploration";
 import { z } from "zod";
 import { normalizeContributionRoles, normalizePredicates } from "../domain/exploration";
 import { PREDICATE_KEYS } from "../domain/predicates";
-import { normalizeSearch } from "../domain/search";
+import { SEARCH_KINDS, normalizeSearch } from "../domain/search";
 
 type ErrorCode = "INVALID_ARGUMENT" | "NOT_FOUND" | "SERVICE_UNAVAILABLE" | "INTERNAL_ERROR";
 export class ApiError extends Error {
@@ -63,12 +64,15 @@ function limit(params: URLSearchParams, defaultValue: number, max: number): numb
 
 export function searchInput(request: Request) {
   const params = new URL(request.url).searchParams;
+  for (const key of params.keys()) if (!["q", "limit", "kind"].includes(key)) throw new ApiError(400, "INVALID_ARGUMENT", searchLabels().unsupported);
+  const kind = single(params, "kind");
+  const kinds = kind === null ? [...SEARCH_KINDS] : [parse(z.enum(SEARCH_KINDS), kind, searchLabels().invalidKind)];
   const q = single(params, "q");
   if (q === null) throw new ApiError(400, "INVALID_ARGUMENT", "qを指定してください。");
   const normalized = normalizeSearch(q);
   return {
     q: parse(z.string().min(1).refine((text) => [...text].length <= 100), normalized, "qは1〜100文字で指定してください。"),
-    limit: limit(params, 10, 20),
+    limit: limit(params, 10, 20), kinds,
   };
 }
 

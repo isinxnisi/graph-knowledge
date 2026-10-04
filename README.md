@@ -70,12 +70,13 @@ npm run db:seed
 
 | GET経路 | 内容 | 既定値 / 上限 |
 | --- | --- | --- |
-| /api/entities?q=... | personの名称・別名の部分一致検索 | limit 10 / 20 |
+| /api/entities?q=...&kind=work | 人物・作品・組織の名称・別名検索（kind省略はすべて） | limit 10 / 20 |
 | /api/entities/{id} | Entity詳細・別名 | UUID v4 |
+| /api/entities/{id}/overview | 現在datasetの公開Claimを種類・視点・肯否・Role別に集計 | UUID v4、探索条件から独立 |
 | /api/entities/{id}/neighbors | 公開Claimの両方向1段階探索 | limit 20 / 50、afterは前のnextCursor |
 | /api/claims/{id} | 主張・Citation・Source・他の同一関係のClaim ID | UUID v4 |
 
-すべてJSON、Cache-Control: no-storeです。DBはサーバーだけから接続します。検索結果には同名人物を区別するdescriptionを含みます。入力不正400、存在しない対象・非公開Claim404、GET以外405、内部エラー500、DB接続不能・タイムアウト503です。非GETにはAllow: GETを返し、HEADにはHTTP仕様どおり本文がありません。
+すべてJSON、Cache-Control: no-storeです。DBはサーバーだけから接続します。検索結果にはkind・description・aliasesを含みます。kindは検索候補だけを絞り、探索の関係・Role条件とは独立です。入力不正400、存在しない対象・非公開Claim404、GET以外405、内部エラー500、DB接続不能・タイムアウト503です。非GETにはAllow: GETを返し、HEADにはHTTP仕様どおり本文がありません。
 
 ```bash
 npm run dev
@@ -216,7 +217,7 @@ http://127.0.0.1:3212 で「長崎尚志」を検索。Role条件はGraph上部�
 
 ## 探索の始め方（Phase 07）
 
-人物名・別名を検索し、候補を選ぶと一段階のGraphが表示されます。初めから関係や制作役割を選ぶ必要はありません。Nodeから枝を辿り、線から個々の主張と出典を確認できます。
+名前・別名を検索し、人物・作品・組織の候補を選ぶと一段階のGraphが表示されます。初めから関係や制作役割を選ぶ必要はありません。Nodeから枝を辿り、線から個々の主張と出典を確認できます。
 
 Graph上部の「適用中」は現在辿っている条件です。「見る関係を編集」で条件を調整し、「適用」した時だけ同じ起点から取得し直します。キャンセル／Escapeでは未適用の変更を捨て、探索を保ちます。制作関与を選んだ編集画面には「制作の役割を調整」があります。「役割で絞らない」は広いClaimも含み、「役割を指定する」は選択Role付きClaimだけを対象にします。全Roleを選んでも役割未指定Claimは含みません。
 
@@ -230,3 +231,10 @@ Entity詳細の「関係概要を見る」で、現在のdatasetに登録され�
 「この対象から広く見る」で追加条件を解除して新しい起点へ、「同じ条件でこの対象から見る」で適用条件を保って切り替えます。Entity詳細から直接切り替えることもできます。「直前の探索へ戻る」は一回だけ元の受理済み範囲・開閉・座標・表示範囲へ戻ります。未完了だった取得は再試行してください。再読込や検索候補からの新探索で復帰記録は消えます。
 
 demoは `npm run dev -- --port 3210` で http://127.0.0.1:3210 、実Roleのv2は http://127.0.0.1:3212 （上記の起動コマンドを参照）。「青葉ハル」／「長崎尚志」から概要→別Entity起点→直前復帰を確認できます。[Phase 08実施記録](docs/archive/phase-08-entity-overview/IMPLEMENTATION_ENTITY_OVERVIEW.md)を参照。
+
+
+## 一般Entity検索（Phase 09）
+
+一つの「対象を探す」フォームから人物・作品・組織を検索できます。既定はすべて。検索対象の選択や検索だけではGraphを変えず、候補を選ぶと適用中の関係／Role条件を保って探索を開始します。デモでは「青葉ハル」「星の航路」「青空出版」、実データv2では「PLUTO」「Master Keaton」から開始できます。eventは今回検索対象にしていません。
+
+現在動作中の画面はdemo http://127.0.0.1:3210、実データv2 http://127.0.0.1:3212。通常の`npm run dev`では起動ログのURLを使ってください。[実施記録](docs/archive/phase-09-entity-search/IMPLEMENTATION_ENTITY_SEARCH.md)に検証経路を記録しています。

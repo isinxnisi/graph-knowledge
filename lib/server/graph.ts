@@ -14,10 +14,10 @@ import { SEARCH_ENTITIES, ENTITY_DETAIL, NEIGHBORS, NEIGHBORS_BY_ROLE, CLAIM_DET
 
 const notFound = () => new ApiError(404, "NOT_FOUND", "対象のデータが見つかりません。");
 
-export function searchEntities(q: string, limit: number): Promise<EntitySearchResponse> {
+export function searchEntities(q: string, limit: number, kinds: readonly import("../domain/search").SearchKind[]): Promise<EntitySearchResponse> {
   return readTransaction(async (tx) => {
-    const result = await tx.run(SEARCH_ENTITIES, { q, take: int(limit + 1) });
-    return { items: result.records.slice(0, limit).map((record) => entitySummary(record.get("entity"))), hasMore: result.records.length > limit };
+    const result = await tx.run(SEARCH_ENTITIES, { q, kinds, take: int(limit + 1) });
+    return { items: result.records.slice(0, limit).map((record) => entityDetail(record.get("entity"))), hasMore: result.records.length > limit };
   });
 }
 

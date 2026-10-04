@@ -19,7 +19,7 @@ export type ClaimSummary = z.infer<typeof claimSummarySchema>;
 export type ClaimDetail = z.infer<typeof claimDetailSchema>;
 export type CitationDetail = z.infer<typeof citationDetailSchema>;
 export type SourceDetail = z.infer<typeof sourceSchema>;
-export type EntitySearchResponse = { items: EntitySummary[]; hasMore: boolean };
+export type EntitySearchResponse = { items: EntityDetail[]; hasMore: boolean };
 export type EntityResponse = { entity: EntityDetail };
 export type NeighborsResponse = {
   centerId: string; nodes: EntitySummary[]; claims: ClaimSummary[];

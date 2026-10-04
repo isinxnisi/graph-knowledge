@@ -1,7 +1,7 @@
 // All request values are passed as parameters. No user value is interpolated.
 export const SEARCH_ENTITIES = `
 MATCH (e:Entity)
-WHERE e.kind = 'person' AND any(name IN e.searchNames WHERE name CONTAINS $q)
+WHERE e.kind IN $kinds AND any(name IN e.searchNames WHERE name CONTAINS $q)
 WITH e, CASE WHEN $q IN e.searchNames THEN 0 ELSE 1 END AS rank
 RETURN properties(e) AS entity
 ORDER BY rank, e.name, e.id LIMIT $take`;

@@ -1,6 +1,6 @@
 # 現行技術設計
 
-更新日: 2026-10-04 / 状態: 初期Vertical Sliceと探索の開閉・Node再クリックまで実装済み。既存predicateと限定制作Roleによる条件付き探索を追加。v2 Role Claim 5件を人間受入後に投入・検証済み。関係概要・明示起点切替・直前一件復帰も実装。taxonomy・プリセット・会員保存は未実装。[文書の入口](README.md)に現役設計とフェーズ別履歴をまとめる。
+更新日: 2026-10-04 / 状態: 初期Vertical Sliceと探索の開閉・Node再クリックまで実装済み。既存predicateと限定制作Roleによる条件付き探索を追加。v2 Role Claim 5件を人間受入後に投入・検証済み。関係概要・明示起点切替・直前一件復帰、人物・作品・組織の統一検索入口も実装。taxonomy・プリセット・会員保存は未実装。[文書の入口](README.md)に現役設計とフェーズ別履歴をまとめる。
 
 ## 前提と設計の位置づけ
 
@@ -314,12 +314,12 @@ Neo4jではPartialDateをネストしたpropertyとして保存せず、`validFr
 
 | GET経路 | 入力 | 200のレスポンス |
 | --- | --- | --- |
-| /api/entities | q必須、limit省略可 | `{ items: EntitySummary[], hasMore: boolean }` |
+| /api/entities | q必須、limit・kind省略可 | `{ items: EntityDetail[], hasMore: boolean }` |
 | /api/entities/{id} | Entity UUID | `{ entity: EntitySummary + { aliases: string[] } }` |
 | /api/entities/{id}/neighbors | limit、after、predicates、contributionRoles省略可 | `{ centerId, nodes: EntitySummary[], claims: ClaimSummary[], page: { nextCursor, hasMore } }` |
 | /api/claims/{id} | Claim UUID | `{ claim: ClaimSummary + { createdAt, updatedAt, citations: CitationDetail[] }, relatedClaimIds: string[] }` |
 
-検索はpersonのみ。qをtrimし、Unicode NFKCと小文字化を行う。1〜100文字を許可し、空文字は400。表示名称・別名から同じ正規化で作った検索用配列に対する部分一致を用い、Cypherのパラメータとして渡す。検索索引・日本語形態素解析は初期不要。完全一致、名称、IDの順で安定して並べ、limit既定10・最大20でlimit+1件からhasMoreを判定する。初期検索はページングせず、候補が多い場合は検索語の絞り込みを促す。
+検索はperson / work / organization。kind省略時は三種すべて、指定時は一種のみ。kindはLIMIT前に適用し、探索条件には含めない。未対応kind・未知query・重複queryは400。EntityDetailはEntitySummaryにaliasesを加えた既存の詳細型を再利用する。qをtrimし、Unicode NFKCと小文字化を行う。1〜100文字を許可し、空文字は400。表示名称・別名から同じ正規化で作った検索用配列に対する部分一致を用い、Cypherのパラメータとして渡す。検索索引・日本語形態素解析は初期不要。完全一致、名称、IDの順で安定して並べ、limit既定10・最大20でlimit+1件からhasMoreを判定する。初期検索はページングせず、候補が多い場合は検索語の絞り込みを促す。
 
 近傍はvisibility=publishedのClaimを主体側・対象側の両方から1段階だけ取得する。Claim ID昇順で並べ、afterは直前のnextCursorを渡す。無条件ではClaim UUID、条件付きでは起点・正規化predicate集合・版を含む不透明cursorとする。predicate条件はLIMIT前に適用し、詳細は末尾の条件付き探索仕様を参照する。IDがafterより大きいものからlimit+1件を取得し、返却した最後のIDを次のcursorとする。続きがなければnextCursor=null。nodesは中心と返却Claimの全端点を重複排除したもの。否定するClaimも返す。孤立Entityは中心ノードのみ、claims=[]。静的fixtureが前提であり、投稿時の変更に耐えるページングは後で再設計する。
 
@@ -487,7 +487,7 @@ GraphStateは一つの有効条件スコープ（predicates / conditionKey）内
 
 ### 探索の入口・条件提示（Phase 07）
 
-人物検索 → 候補を起点に自由探索 → 必要なら見る関係を調整、を既定の流れとする。検索は人物専用のまま。左は検索、中央は起点・適用条件・Graph・隣接一覧、右は選択詳細。検索語・起点・選択中のEntityを区別し、Node選択で起点は変更しない。
+人物検索 → 候補を起点に自由探索 → 必要なら見る関係を調整、を既定の流れとする。Phase 09で同じ入口を人物・作品・組織へ一般化した。左は検索、中央は起点・適用条件・Graph・隣接一覧、右は選択詳細。検索語・起点・選択中のEntityを区別し、Node選択で起点は変更しない。
 
 - 適用中のpredicate／Role条件を中央上部へ常時要約する。「見る関係を編集」からnative dialogを開き、確定条件から独立したdraftを初期化する。編集開閉・取消・Escapeでは通信や探索stateを変更しない。取消後の再編集は確定値から始める。ダイアログ表示中は背景操作を止めるが、既に開始した通信を中断する操作ではない。
 - 変更の明示適用時だけ既存changePredicatesへ渡す。同じ条件では適用を無効にする。同一起点の再取得、旧通信／cursor／開閉状態の破棄、条件内ページングは既存契約を維持する。起点未指定でも条件設定でき、後の候補選択で使う。検索候補は探索条件で絞らない。
@@ -540,3 +540,18 @@ type EntityOverviewResponse = {
 寿命は同じdatasetの画面内セッション。再切替で置換、復帰で消費、検索候補からの新探索・dataset変更による再mount・再読込で失効する。凍結datasetの読み取り環境で、時間による失効やDB版固定は導入しない。将来更新／認可を追加する前に版・認可変更時の失効を決める。検索語・検索結果・条件draft・概要・進行中通信は保存しない。
 
 復帰も新世代にし、通信は再開しない。未完了要求があったEntityはloadingを解除して中断表示／明示再試行を提供し、受理cursorを進めない。座標・pan/zoomはCanvasの小さいview境界から取得／復元する。受理直後で未描画だったNodeは保存座標がないため、既知座標を固定して既存の追加配置ルールで補う。表示Nodeの座標が一つも保存できていなければ初期配置・fitを使い、同じ表示範囲の復元を保証しない。保存がない時は復帰操作を表示せず、元Graphの完全復元を約束しない。DB利用不可でも受理済みGraphへ戻れるが、詳細の再取得・続きを取得する操作は失敗し得る。
+
+
+## Phase 09：既存Entity kindへの検索入口の一般化
+
+検索対象はlib/domain/search.tsのSEARCH_KINDS（person / work / organization）。eventはschemaには存在するが、現在datasetに実例がなく既存predicateの端点にもないため検索対象にしない。新kindを追加する承認や探索範囲の限定ではない。
+
+`GET /api/entities?q=...&kind=work&limit=10`。kindは任意の単一enum、省略は三種すべて。「すべて」はUI値でありAPIへallや空文字を送らない。qはtrim・NFKC・小文字化後1〜100 Unicode code point、limit既定10／最大20。空・欠落q、不正limit、空／未知kind、同じqueryの重複、未対応queryは400。0件は200／items=[]／hasMore=false。完全一致（nameまたはalias）、name、内部ID順。LIMIT+1でhasMoreを判定し、候補のページングは追加しない。
+
+応答itemsは既存EntityDetail（id・kind・name・description・aliases）であり、DB searchNamesや外部IDを露出しない。Webクライアントだけの契約を直接更新し、旧人物専用版のversioning／互換経路は追加しない。neighbors等の応答は変更しない。
+
+左に一つの名前／別名検索と任意の検索対象selectを置く。初期はすべて。候補はkindの文字、名前、説明、別名で見分け、同じ名前・kind・説明が重なる場合は内部IDも補助表示する。候補取得・検索kind変更だけではGraph／探索条件／直前探索を変更しない。検索kind変更では旧検索を取消し候補をクリアするが自動取得しない。候補選択だけ既存chooseRootで確定predicate／Roleを保持した新世代へ移り、旧枝・通信・直前探索をリセットする。
+
+検索kindはGraphState・探索conditionKey・cursorへ入れない。作品／組織から人物も通常どおり辿る。関係概要、明示的な広く見る／同条件切替、一件復帰、開閉／休止枝復元、Claim／Sourceは同じ契約を再利用する。UI文字列はlib/i18n/entity-search.ts等でlocale解決し、Entityの原語別名は知識データとして返す。言語付き名称のAPI、形態素解析、全文検索基盤は追加しない。
+
+実装・検証は[Phase 09記録](archive/phase-09-entity-search/IMPLEMENTATION_ENTITY_SEARCH.md)を参照。

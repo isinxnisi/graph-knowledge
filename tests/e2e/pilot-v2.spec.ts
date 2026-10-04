@@ -7,7 +7,7 @@ import ledger from "../../datasets/pilot-urasawa/v2/ledger.json" with { type: "j
 const id = (name: string) => data.entities.find((e) => e.name === name)!.id;
 async function root(page: Page) {
   await page.goto("/"); await expect(page.getByText("少数実データパイロット v2", { exact: true })).toBeVisible();
-  await page.getByLabel("人物名・別名").fill("長崎尚志"); await page.getByRole("button", { name: "検索", exact: true }).click();
+  await page.getByLabel("名前・別名").fill("長崎尚志"); await page.getByRole("button", { name: "検索", exact: true }).click();
   await page.getByRole("button", { name: /^長崎尚志 —/ }).click();
 }
 async function selectRelation(page: Page, object: string, subject = "長崎尚志") {
@@ -159,7 +159,7 @@ test("全5件の実クレジットとRole条件を人物起点で確認", async 
     const claim = data.claims.find((c) => c.id === candidate.claimId)!;
     const subject = data.entities.find((e) => e.id === claim.subjectId)!.name;
     const object = data.entities.find((e) => e.id === claim.objectId)!.name;
-    await page.getByLabel("人物名・別名").fill(subject);
+    await page.getByLabel("名前・別名").fill(subject);
     await page.getByRole("button", { name: "検索", exact: true }).click();
     await page.getByRole("button", { name: new RegExp(`^${subject} —`) }).click();
     await selectRelation(page, object, subject);
@@ -174,7 +174,7 @@ test("全5件の実クレジットとRole条件を人物起点で確認", async 
   await page.getByRole("checkbox", { name: "脚本", exact: true }).check();
   await page.getByRole("button", { name: "適用", exact: true }).click();
   await expect(page.getByTestId("graph-counts")).toHaveText("Entity 2 / Claim 1");
-  await page.getByLabel("人物名・別名").fill("手塚眞");
+  await page.getByLabel("名前・別名").fill("手塚眞");
   await page.getByRole("button", { name: "検索", exact: true }).click();
   await page.getByRole("button", { name: /^手塚眞 —/ }).click();
   await expect(page.getByTestId("graph-counts")).toHaveText("Entity 1 / Claim 0");
@@ -192,7 +192,7 @@ test("Phase 07: 入口・draft取消・全Roleと無指定・詳細幅とGraph�
   await page.goto("/");
   await expect(page.getByRole("checkbox")).toHaveCount(0);
   await expect(page.getByRole("button", { name: "見る関係を編集", exact: true })).toBeVisible();
-  await expect(page.getByText("人物から、つながりを辿ってみる", { exact: true })).toBeVisible();
+  await expect(page.getByText("対象から、つながりを辿ってみる", { exact: true })).toBeVisible();
   await page.screenshot({ path: "test-results/phase07-initial.png", fullPage: true });
   await root(page);
   await expect(page.getByTestId("graph-counts")).toHaveText("Entity 4 / Claim 6");
@@ -274,4 +274,37 @@ test("Phase08: 実Role概要・作品起点・Role条件解除・直前探索復
   await expect(page.getByTestId("exploration-root")).toContainText("長崎尚志");
   await expect(page.getByTestId("active-predicates")).toContainText("プロデュース");
   await expect(page.getByTestId("graph-counts")).toHaveText("Entity 2 / Claim 1");
+});
+
+test("Phase09: 作品・原語別名から開始し、Role条件を起点種別と分離する", async ({ page }) => {
+  await page.goto("/");
+  await page.getByLabel("名前・別名").fill("Master Keaton");
+  await page.getByLabel("検索対象", { exact: true }).selectOption("work");
+  await page.getByRole("button", { name: "検索", exact: true }).click();
+  await expect(page.getByRole("button", { name: /^MASTERキートン —/ })).toContainText("別名：Master Keaton");
+  await page.getByLabel("名前・別名").fill("PLUTO");
+  await page.getByRole("button", { name: "検索", exact: true }).click();
+  await page.getByRole("button", { name: /^PLUTO —/ }).click();
+  await expect(page.getByTestId("graph-counts")).toHaveText("Entity 4 / Claim 5");
+  await page.getByRole("button", { name: "関係概要を見る", exact: true }).click();
+  await expect(page.getByRole("dialog")).toContainText("この作品の制作関与についての主張");
+  await page.keyboard.press("Escape");
+  await editConditions(page); await editRoles(page);
+  await page.getByRole("checkbox", { name: "プロデュース", exact: true }).check();
+  await page.getByRole("button", { name: "適用", exact: true }).click();
+  await expect(page.getByTestId("graph-counts")).toHaveText("Entity 2 / Claim 1");
+  await page.getByRole("button", { name: "長崎尚志を選択・展開", exact: true }).click();
+  await page.getByRole("button", { name: "同じ条件でこの対象から見る", exact: true }).click();
+  await expect(page.getByTestId("graph-counts")).toHaveText("Entity 2 / Claim 1");
+  await page.getByRole("button", { name: "直前の探索へ戻る" }).click();
+  await expect(page.getByTestId("graph-counts")).toHaveText("Entity 2 / Claim 1");
+  await page.screenshot({ path: "docs/archive/phase-09-entity-search/pilot-work.png" });
+  await page.getByLabel("検索対象", { exact: true }).selectOption("person");
+  await page.getByLabel("名前・別名").fill("浦沢直樹");
+  await page.getByRole("button", { name: "検索", exact: true }).click();
+  await expect(page.getByTestId("graph-counts")).toHaveText("Entity 2 / Claim 1");
+  await page.getByRole("button", { name: /^浦沢直樹 —/ }).click();
+  await expect(page.getByTestId("active-predicates")).toContainText("プロデュース");
+  await expect(page.getByTestId("graph-counts")).toHaveText("Entity 2 / Claim 1");
+  await expect(page.getByRole("button", { name: "手塚治虫を選択・展開", exact: true })).toBeVisible();
 });

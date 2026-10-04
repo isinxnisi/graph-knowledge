@@ -1,0 +1,73 @@
+{
+  "demoAlias": {
+    "request": "/api/entities?q=%E3%81%82%E3%81%8A%E3%81%B0+%E3%81%AF%E3%82%8B",
+    "response": {
+      "items": [
+        {
+          "id": "c286065c-6e17-47a7-9288-2a1cf6919ce9",
+          "kind": "person",
+          "name": "青葉ハル",
+          "description": "漫画家、星の航路の作者",
+          "aliases": [
+            "あおば はる"
+          ]
+        }
+      ],
+      "hasMore": false
+    }
+  },
+  "demoSameName": {
+    "request": "/api/entities?q=%E4%BD%90%E8%97%A4%E3%82%A2%E3%82%AD&kind=person",
+    "response": {
+      "items": [
+        {
+          "id": "869501dc-2ec0-4b5d-8e87-ff7a485cbe5a",
+          "kind": "person",
+          "name": "佐藤アキ",
+          "description": "漫画家",
+          "aliases": []
+        },
+        {
+          "id": "b025d50b-5d7b-4f8f-a5dd-09f003781bf8",
+          "kind": "person",
+          "name": "佐藤アキ",
+          "description": "編集者、同名の漫画家とは別人",
+          "aliases": []
+        }
+      ],
+      "hasMore": false
+    }
+  },
+  "demoOrganization": {
+    "request": "/api/entities?q=%E9%9D%92%E7%A9%BA%E5%87%BA%E7%89%88&kind=organization",
+    "response": {
+      "items": [
+        {
+          "id": "af3c9bae-96c4-4a1f-93fe-5d1a6e79cac5",
+          "kind": "organization",
+          "name": "青空出版",
+          "description": "架空出版社",
+          "aliases": []
+        }
+      ],
+      "hasMore": false
+    }
+  },
+  "pilotWorkAlias": {
+    "request": "/api/entities?q=Master+Keaton&kind=work",
+    "response": {
+      "items": [
+        {
+          "id": "e87a40f9-3139-47a1-a962-6610eb2b8878",
+          "kind": "work",
+          "name": "MASTERキートン",
+          "description": "漫画作品。根拠は完全版第1巻のクレジット。続編・アニメとは別。",
+          "aliases": [
+            "Master Keaton"
+          ]
+        }
+      ],
+      "hasMore": false
+    }
+  }
+}

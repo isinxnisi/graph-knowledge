@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { act, cleanup, render, renderHook, screen, waitFor } from "@testing-library/react";
+import { act, cleanup, render, renderHook, screen, waitFor, fireEvent } from "@testing-library/react";
 import { restorationPositions } from "../lib/client/graph-view";
 import { captureExploration } from "../lib/client/exploration-snapshot";
 import { createNodeClickHandler } from "../lib/client/graph-interaction";
@@ -8,11 +8,12 @@ import { entityLabel, edgeRoutes, displayRelations, relationId } from "../lib/cl
 import { initialPositions, additionalPositions } from "../lib/client/graph-layout";
 import { emptyGraph, mergePage, closeExpansion, reopenExpansion, projectGraph } from "../lib/client/graph-state";
 import { useGraphExplorer } from "../lib/client/use-graph-explorer";
+import SearchPanel from "../components/SearchPanel";
 import ClaimDetails, { ClaimCard } from "../components/ClaimDetails";
 import examples from "../docs/API_RESPONSE_EXAMPLES.json";
 import type { ClaimSummary, ClaimDetail, ClaimResponse, NeighborsResponse, EntitySummary } from "../lib/domain/api";
-import { fetchNeighbors, fetchClaim } from "../lib/client/api";
-vi.mock("../lib/client/api", () => ({ fetchNeighbors: vi.fn(), fetchClaim: vi.fn(), errorMessage: () => "取得失敗" }));
+import { fetchNeighbors, fetchClaim, searchEntities } from "../lib/client/api";
+vi.mock("../lib/client/api", () => ({ fetchNeighbors: vi.fn(), fetchClaim: vi.fn(), searchEntities: vi.fn(), errorMessage: () => "取得失敗" }));
 afterEach(() => { cleanup(); vi.clearAllMocks(); });
 const page = examples.neighbors as NeighborsResponse;
 const root = page.nodes[0];
@@ -547,4 +548,33 @@ it("受理済み・未描画Nodeの復帰は保存座標を固定し、欠けた
   expect(Object.keys(positions).sort()).toEqual(Object.keys(graph.nodes).sort());
   for (const [id, point] of Object.entries(positions)) if (id !== root.id) expect(Math.hypot(point.x - 12, point.y - 34)).toBeGreaterThan(100);
   expect(restorationPositions(graph, { ...view, positions: {} })[root.id]).toEqual({ x: 0, y: 0 });
+});
+
+
+describe("一般Entity検索の境界", () => {
+  it("候補の取得・種別変更では起点を選ばず、別名を提示して明示選択する", async () => {
+    const choose = vi.fn();
+    vi.mocked(searchEntities).mockResolvedValue({ items: [{ ...root, kind: "work", aliases: ["原語名"] }], hasMore: false });
+    render(<SearchPanel onChoose={choose} />);
+    fireEvent.change(screen.getByLabelText("名前・別名"), { target: { value: "原語名" } });
+    fireEvent.change(screen.getByLabelText("検索対象"), { target: { value: "work" } });
+    fireEvent.click(screen.getByRole("button", { name: "検索" }));
+    await screen.findByText("別名：原語名");
+    expect(searchEntities).toHaveBeenCalledWith("原語名", expect.any(AbortSignal), "work");
+    expect(choose).not.toHaveBeenCalled();
+    fireEvent.click(screen.getByRole("button", { name: new RegExp(`^${root.name} —`) }));
+    expect(choose).toHaveBeenCalledWith(expect.objectContaining({ kind: "work", aliases: ["原語名"] }));
+  });
+  it("種別変更時に旧検索を取消し、遅い旧応答を混ぜない", async () => {
+    let resolve!: (value: import("../lib/domain/api").EntitySearchResponse) => void;
+    vi.mocked(searchEntities).mockReturnValue(new Promise((done) => { resolve = done; }));
+    render(<SearchPanel onChoose={vi.fn()} />);
+    fireEvent.change(screen.getByLabelText("名前・別名"), { target: { value: "対象" } });
+    fireEvent.click(screen.getByRole("button", { name: "検索" }));
+    const signal = vi.mocked(searchEntities).mock.calls[0][1];
+    fireEvent.change(screen.getByLabelText("検索対象"), { target: { value: "organization" } });
+    expect(signal.aborted).toBe(true);
+    await act(async () => resolve({ items: [{ ...root, aliases: [] }], hasMore: false }));
+    expect(screen.queryByRole("button", { name: new RegExp(`^${root.name} —`) })).toBeNull();
+  });
 });

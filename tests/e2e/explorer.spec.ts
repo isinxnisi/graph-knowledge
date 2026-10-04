@@ -4,7 +4,7 @@ import fixture from "../../fixtures/demo.json" with { type: "json" };
 import examples from "../../docs/API_RESPONSE_EXAMPLES.json" with { type: "json" };
 const root = examples.neighbors.nodes[0];
 async function search(page: Page, name: string) {
-  await page.getByLabel("人物名・別名").fill(name); await page.getByRole("button", { name: "検索", exact: true }).click();
+  await page.getByLabel("名前・別名").fill(name); await page.getByRole("button", { name: "検索", exact: true }).click();
 }
 async function choose(page: Page, name = "青葉ハル") {
   await search(page, name); await page.getByRole("button", { name: new RegExp(`^${name} —`) }).first().click();
