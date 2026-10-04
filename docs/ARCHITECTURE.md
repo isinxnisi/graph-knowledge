@@ -484,3 +484,16 @@ GraphStateは一つの有効条件スコープ（predicates / conditionKey）内
 [CONTRIBUTION_ROLE_CONTRACTS.md](design/CONTRIBUTION_ROLE_CONTRACTS.md)を現行の採用仕様とする。4 Role、一Claim一Role、publication scope、Citationの原表記・言語、LIMIT前条件、dataset付きv2 cursor、広いrelatedClaimIdsと三つ組DisplayRelationを実装。CONTRIBUTED_TOの混在は「肯定・否定あり」。既存demo/v1の無Role条件cursorは維持するが、Claim/Citationの返却にcontribution/roleEvidenceを追加しクライアントも更新した。凍結v1ファイル・DBは変更しない。
 
 実データ5件の人間受入・検証結果は[Phase 06実施記録](archive/phase-06-contribution-role/IMPLEMENTATION_CONTRIBUTION_ROLE.md)を参照。taxonomy等は未実装。
+
+### 探索の入口・条件提示（Phase 07）
+
+人物検索 → 候補を起点に自由探索 → 必要なら見る関係を調整、を既定の流れとする。検索は人物専用のまま。左は検索、中央は起点・適用条件・Graph・隣接一覧、右は選択詳細。検索語・起点・選択中のEntityを区別し、Node選択で起点は変更しない。
+
+- 適用中のpredicate／Role条件を中央上部へ常時要約する。「見る関係を編集」からnative dialogを開き、確定条件から独立したdraftを初期化する。編集開閉・取消・Escapeでは通信や探索stateを変更しない。取消後の再編集は確定値から始める。ダイアログ表示中は背景操作を止めるが、既に開始した通信を中断する操作ではない。
+- 変更の明示適用時だけ既存changePredicatesへ渡す。同じ条件では適用を無効にする。同一起点の再取得、旧通信／cursor／開閉状態の破棄、条件内ページングは既存契約を維持する。起点未指定でも条件設定でき、後の候補選択で使う。検索候補は探索条件で絞らない。
+- 制作関与がdraftに含まれる場合だけ、追加の「制作の役割を調整」を提示する。無指定と個別指定をradioで分ける。全4 Roleの選択も役割未指定Claimを除くため、無指定とは異なる。Role空集合は制作関与だけを除き、他predicateは維持する。制作関与を外した適用ではRole条件も正規化して解除する。
+- 要約は確定条件のみから、編集中の要約はdraftのみから作る。新規文字列はlib/i18n/exploration-entry.tsのlocale解決境界へ置く。全面翻訳・言語切替は追加しない。
+- 選択詳細に「詳細を広く読む」を用意し、三列を維持したまま右を最大480pxへ広げる。Graphを再マウントせずResizeObserverでcanvas寸法を追従する。モデル座標・pan/zoom・選択を変更せず、必要な表示範囲の調整は既存pan/zoom／全体表示で行う。低い画面では説明・一覧の縦配分を抑え、Graphを最低270px確保する。
+- 閉じた枝の復元時は保存済みNode座標を優先する。既存の200px衝突判定による再配置を行わず、未表示だったNodeだけを候補評価で配置する。受理ページ・休止子孫・合流／循環の契約は変更しない。
+
+DB・API・探索条件キー・cursor・上限・DisplayRelation集約・Claim／Citation／Source・datasetの変更はない。[採用レビュー](design/EXPLORATION_ENTRY_AND_CONDITIONS_REVIEW.md)、[実施記録](archive/phase-07-exploration-entry/IMPLEMENTATION_EXPLORATION_ENTRY.md)を参照。

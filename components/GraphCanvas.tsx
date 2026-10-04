@@ -115,8 +115,8 @@ export default function GraphCanvas({ graph, selection, onEntity, onRelation, on
       const remaining: string[] = [];
       for (const id of newIds) {
         const saved = savedPositions.current[id];
-        const collides = saved && Object.values(existing).some((point) => Math.hypot(point.x - saved.x, point.y - saved.y) < 200);
-        if (saved && !collides) existing[id] = saved; else remaining.push(id);
+        // 復元するNodeは既存の配置を優先し、未表示だったNodeだけを新しく配置する。
+        if (saved) existing[id] = saved; else remaining.push(id);
       }
       const positions = additionalPositions(existing, remaining, relations, graph.lastExpandedId);
       newIds.forEach((id) => cy.getElementById(id).position(positions[id]));

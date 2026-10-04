@@ -1,6 +1,6 @@
 # 探索画面の入口・探索軸・条件提示のレビュー
 
-2026-10-04。**設計提案、未採用・未実装**。Phase 06完了後のコード・現役docs・実施記録を基準にした。DB・API・UI・datasetを変更しない。以下の推奨案は実装の承認ではない。
+2026-10-04。Phase 06完了後のコード・現役docsを基準にした設計レビュー。推奨範囲を承認され、**Phase 07で採用・実装済み**。[実施記録](../archive/phase-07-exploration-entry/IMPLEMENTATION_EXPLORATION_ENTRY.md)を参照。本文の現状分析はレビュー時点の状態。一般Entity検索・開始例・プリセット等は引き続き未実装の提案。
 
 ## 結論
 
@@ -168,7 +168,7 @@ UI構造を変える際はdraftの同期を小さく整える必要がある。�
 
 その後、作品／組織から始める需要を確認し、同じ入口へ一般Entity検索を足す小さいフェーズが自然。名前が未定の人がなお始めにくいなら開始例、軸を指定したい人が増えれば小さいプリセットを検討する。今回これらの機能を採用済みにはしない。
 
-## 確認した資料と今回の検証
+## レビュー時点で確認した資料と検証
 
 目的：[PROJECT_CONTEXT](../PROJECT_CONTEXT.md)、[プロダクト像](PRODUCT_VISION_AND_PRINCIPLES.md)。現行仕様：[ARCHITECTURE](../ARCHITECTURE.md)、[条件付き探索](CONDITIONAL_EXPLORATION_PHASE.md)、[制作Role契約](CONTRIBUTION_ROLE_CONTRACTS.md)。継続設計：[探索モデル](EXPLORATION_MODEL_REVIEW.md)、[プリセット](EXPLORATION_PRESETS_REVIEW.md)。履歴：[Phase 04](../archive/phase-04-real-data-pilot/IMPLEMENTATION_REAL_DATA_PILOT.md)、[Phase 05](../archive/phase-05-predicate-contracts/IMPLEMENTATION_PREDICATE_CONTRACTS.md)、[Phase 06](../archive/phase-06-contribution-role/IMPLEMENTATION_CONTRIBUTION_ROLE.md)。
 

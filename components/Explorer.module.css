@@ -83,3 +83,35 @@
 .relationFilter p { margin-top: 10px; font-size: 12px; }
 
 .roleFilter { min-width: 0; border: 1px solid var(--color-border); border-radius: 4px; padding: 8px; margin: 10px 0; }
+
+/* 検索・探索条件・選択詳細を分け、条件編集中もGraphを背後に維持する。 */
+.conditionBar { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; margin-bottom: 8px; padding-bottom: 8px; border-bottom: 1px solid var(--color-border); flex: 0 0 auto; font-size: 12px; }
+.conditionBar > p { margin: 0; flex: 1 1 220px; }
+.conditionBar > button { padding: 4px 8px; }
+.rootLabel { font-size: 12px; color: var(--color-muted); margin-bottom: 6px !important; }
+.conditionDialog { background: var(--color-panel); color: var(--color-text); border: 1px solid var(--color-control-border); border-radius: 8px; padding: 20px; width: min(620px, calc(100vw - 40px)); max-height: calc(100dvh - 60px); overflow: auto; }
+.conditionDialog::backdrop { background: rgb(0 0 0 / .25); }
+.conditionDialog .relationFilter { margin-top: 8px; }
+.conditionDialog .filterChoices { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.conditionDialog .roleFilter .filterChoices:first-of-type { grid-template-columns: 1fr; }
+.roleSettings { margin: 12px 0; }
+.draftNotice { padding: 6px 9px; border-left: 3px solid var(--color-accent); background: var(--color-accent-soft); font-size: 13px; }
+.editorActions { display: flex; justify-content: flex-end; gap: 10px; }
+.editorActions button:last-child { background: var(--color-accent); color: var(--color-on-accent); }
+.detailHeading { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px; margin-bottom: 12px; }
+.detailHeading h2 { margin: 0; }
+.detailHeading button { padding: 3px 6px; font-size: 12px; }
+.wideDetails { grid-template-columns: 190px minmax(360px, 1fr) clamp(340px, 34vw, 480px); }
+.initialFeedback { display: none; }
+.srOnly { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.conditionDialog { font-size: 14px; }
+@media (max-height: 760px) {
+  .canvas { min-height: 270px; }
+  .relations { flex-basis: 70px; min-height: 55px; }
+  .feedback { display: flex; flex-wrap: wrap; gap: 0 8px; }
+  .initialFeedback { display: none; }
+  .graphPanel > .muted { font-size: 11px; line-height: 1.4; margin-bottom: 4px; }
+  .graphHeading h2, .graphHeading p { margin-bottom: 2px; }
+  .graphTools { gap: 4px; padding: 4px 0; }
+  .graphTools button { padding: 3px 6px; }
+}

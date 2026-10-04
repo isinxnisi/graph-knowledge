@@ -424,3 +424,52 @@ describe("制作Roleの条件・ページ・復元", () => {
     expect(Object.keys(rejected.claims)).toHaveLength(200); expect(rejected.expansions[root.id].nextCursor).toBe("role-cursor");
   });
 });
+
+describe("探索条件の入口とdraft", () => {
+  it("適用要約はRoleの作用対象と無指定・空集合を区別し、locale境界を保つ", async () => {
+    const { conditionSummary } = await import("../lib/i18n/exploration-entry");
+    expect(conditionSummary(null, null, "ja-JP")).toContain("追加条件なし");
+    expect(conditionSummary([], null)).toBe("関係を表示しない");
+    expect(conditionSummary(["CONTRIBUTED_TO", "INFLUENCED_BY"], ["PRODUCING"])).toBe("制作に関わった（プロデュース） ／ 影響を受けた");
+    expect(conditionSummary(null, [])).toContain("制作関与は表示しない");
+    expect(conditionSummary(["INFLUENCED_BY"], null)).not.toContain("役割");
+  });
+  it("開く・編集・キャンセルは適用しない。再開時は確定値から開始", async () => {
+    const { default: RelationFilter } = await import("../components/RelationFilter");
+    HTMLDialogElement.prototype.showModal = function () { this.setAttribute("open", ""); };
+    HTMLDialogElement.prototype.close = function () { this.removeAttribute("open"); };
+    const onApply = vi.fn();
+    const { fireEvent } = await import("@testing-library/react");
+    render(<RelationFilter value={null} onApply={onApply} />);
+    expect(screen.queryByRole("checkbox")).toBeNull();
+    fireEvent.click(screen.getByRole("button", { name: "見る関係を編集" }));
+    expect(screen.queryByRole("checkbox", { name: "監修" })).toBeNull();
+    fireEvent.click(screen.getByRole("button", { name: "選択を解除" }));
+    expect(screen.getByTestId("active-predicates").textContent).toContain("追加条件なし");
+    expect(screen.getByTestId("draft-conditions").textContent).toContain("関係を表示しない");
+    fireEvent.click(screen.getByRole("button", { name: "キャンセル" }));
+    expect(onApply).not.toHaveBeenCalled();
+    fireEvent.click(screen.getByRole("button", { name: "見る関係を編集" }));
+    expect((screen.getByRole("checkbox", { name: "制作に関わった" }) as HTMLInputElement).checked).toBe(true);
+  });
+  it("役割無指定・全Role・空Roleを区別して明示適用する", async () => {
+    const { default: RelationFilter } = await import("../components/RelationFilter");
+    const { fireEvent } = await import("@testing-library/react");
+    const onApply = vi.fn();
+    render(<RelationFilter value={null} onApply={onApply} />);
+    fireEvent.click(screen.getByRole("button", { name: "見る関係を編集" }));
+    fireEvent.click(screen.getByRole("button", { name: "制作の役割を調整" }));
+    fireEvent.click(screen.getByRole("radio", { name: "役割を指定する" }));
+    expect(screen.getByText(/制作の関係は表示されません/)).toBeDefined();
+    for (const name of ["脚本", "監修", "プロデュース", "ストーリー共同制作"]) fireEvent.click(screen.getByRole("checkbox", { name }));
+    expect(onApply).not.toHaveBeenCalled();
+    fireEvent.click(screen.getByRole("button", { name: "適用" }));
+    expect(onApply).toHaveBeenCalledWith(null, ["PRODUCING", "SCRIPT_WRITING", "STORY_CO_CREATION", "SUPERVISION"]);
+    expect(screen.queryByRole("dialog")).toBeNull();
+    fireEvent.click(screen.getByRole("button", { name: "見る関係を編集" }));
+    fireEvent.click(screen.getByRole("button", { name: "制作の役割を調整" }));
+    fireEvent.click(screen.getByRole("radio", { name: "役割を指定する" }));
+    fireEvent.click(screen.getByRole("button", { name: "適用" }));
+    expect(onApply).toHaveBeenLastCalledWith(null, []);
+  });
+});

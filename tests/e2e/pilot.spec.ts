@@ -1,3 +1,4 @@
+import { editConditions } from "./conditions";
 import { test, expect, type Page } from "@playwright/test";
 import data from "../../datasets/pilot-urasawa/v1/data.json" with { type: "json" };
 const id = (name: string) => data.entities.find((entity) => entity.name === name)!.id;
@@ -53,6 +54,7 @@ test("実在データの経路・役割・限定・出典・循環・開閉", as
 });
 test("影響と制作の条件・英語名検索・実際の引用詳細", async ({ page }) => {
   await root(page);
+  await editConditions(page);
   await page.getByRole("button", { name: "選択を解除", exact: true }).click();
   await page.getByRole("checkbox", { name: "影響を受けた", exact: true }).check();
   await page.getByRole("button", { name: "適用", exact: true }).click();
@@ -60,6 +62,7 @@ test("影響と制作の条件・英語名検索・実際の引用詳細", async
   await tap(page, "手塚治虫", true, "浦沢直樹");
   await expect(page.getByTestId(`claim-card-${claimId("浦沢直樹", "手塚治虫")}`)).toContainText("絵のタッチ");
   await expect(page.getByTestId(`claim-card-${claimId("浦沢直樹", "手塚治虫")}`)).toContainText("本人回答");
+  await editConditions(page);
   await page.getByRole("button", { name: "選択を解除", exact: true }).click();
   await page.getByRole("checkbox", { name: "アシスタントだった", exact: true }).check();
   await page.getByRole("button", { name: "適用", exact: true }).click();

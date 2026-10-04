@@ -1,3 +1,4 @@
+import { editConditions } from "./conditions";
 import { test, expect, type Page } from "@playwright/test";
 import fixture from "../../fixtures/demo.json" with { type: "json" };
 import examples from "../../docs/API_RESPONSE_EXAMPLES.json" with { type: "json" };
@@ -466,10 +467,11 @@ test("Node再クリック: 300msで開閉、ダブルクリックは開閉を抑
 });
 
 async function applyPredicates(page: Page, names: string[]) {
+  await editConditions(page);
   const filter = page.getByRole("group", { name: "辿る関係" });
   await filter.getByRole("button", { name: "選択を解除", exact: true }).click();
   for (const name of names) await filter.getByRole("checkbox", { name, exact: true }).check();
-  await filter.getByRole("button", { name: "適用", exact: true }).click();
+  await page.getByRole("button", { name: "適用", exact: true }).click();
 }
 
 test("条件探索 実DB: 集約・出典・開閉・座標維持・空条件と孤立の区別", async ({ page }) => {
@@ -503,9 +505,10 @@ test("条件探索 実DB: 集約・出典・開閉・座標維持・空条件と
   await expect(page.getByTestId("graph-counts")).toHaveText("Entity 1 / Claim 0");
   await expect(page.getByText("この条件に一致する関係はありません。")).toBeVisible();
   await expect(page.getByText("関係は登録されていません（孤立Entity）。")).toHaveCount(0);
+  await editConditions(page);
   const filter = page.getByRole("group", { name: "辿る関係" });
   await filter.getByRole("button", { name: "すべて選択", exact: true }).click();
-  await filter.getByRole("button", { name: "適用", exact: true }).click();
+  await page.getByRole("button", { name: "適用", exact: true }).click();
   await expect(page.getByTestId("graph-counts")).toHaveText("Entity 5 / Claim 7");
   await page.screenshot({ path: "/tmp/graph-knowledge-conditional-all.png", fullPage: true });
   await choose(page, "森ユウ");
@@ -527,6 +530,7 @@ test("条件探索 実DB: 条件付きページング・編集待機・循環・
     await expect(page.getByTestId("graph-counts")).toHaveText("Entity 2 / Claim " + count);
   }
   await expect(page.getByTestId("relation-counts")).toHaveText("Relation 1");
+  await editConditions(page);
   const filter = page.getByRole("group", { name: "辿る関係" });
   await filter.getByRole("checkbox", { name: "影響を受けた", exact: true }).check();
   await expect(page.getByTestId("active-predicates")).not.toContainText("影響を受けた");

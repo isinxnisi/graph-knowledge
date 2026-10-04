@@ -1,3 +1,4 @@
+import { editConditions, editRoles } from "./conditions";
 import { test, expect, type Page } from "@playwright/test";
 import rawData from "../../datasets/pilot-urasawa/v2/data.json" with { type: "json" };
 import type { Fixture } from "../../lib/domain/fixture";
@@ -5,11 +6,15 @@ const data = rawData as Fixture;
 import ledger from "../../datasets/pilot-urasawa/v2/ledger.json" with { type: "json" };
 const id = (name: string) => data.entities.find((e) => e.name === name)!.id;
 async function root(page: Page) {
-  await page.goto("/"); await expect(page.getByText("少数実データパイロット v2・制作Role", { exact: true })).toBeVisible();
+  await page.goto("/"); await expect(page.getByText("少数実データパイロット v2", { exact: true })).toBeVisible();
   await page.getByLabel("人物名・別名").fill("長崎尚志"); await page.getByRole("button", { name: "検索", exact: true }).click();
   await page.getByRole("button", { name: /^長崎尚志 —/ }).click();
 }
 async function selectRelation(page: Page, object: string, subject = "長崎尚志") {
+  await expect.poll(() => page.getByTestId("graph-canvas").evaluate((el, args) => {
+    const cy = (el as unknown as { _cyreg: { cy: import("cytoscape").Core } })._cyreg.cy;
+    return cy.edges().some((edge) => edge.data("source") === args.subject && edge.data("target") === args.object);
+  }, { subject: id(subject), object: id(object) })).toBe(true);
   const point = await page.getByTestId("graph-canvas").evaluate(async (el, args) => {
     const cy = (el as unknown as { _cyreg: { cy: import("cytoscape").Core } })._cyreg.cy;
     const edge = cy.edges().filter((e) => e.data("source") === args.subject && e.data("target") === args.object).first() as import("cytoscape").EdgeSingular;
@@ -36,8 +41,10 @@ test("v2実DBの取得範囲・広い主張・Role条件・出典", async ({ pag
     await expect(card).toContainText("プロデュース"); await expect(card).toContainText("9784091874313"); await expect(card).toContainText("資料の原役割表記");
   }
   await page.screenshot({ path: "test-results/pilot-v2-real-detail.png", fullPage: true });
+  await editConditions(page);
   await page.getByRole("button", { name: "選択を解除", exact: true }).click();
   await page.getByRole("checkbox", { name: "制作に関わった", exact: true }).check();
+  await editRoles(page);
   await page.getByRole("checkbox", { name: "プロデュース", exact: true }).check();
   await page.getByRole("button", { name: "適用", exact: true }).click();
   const producing = data.claims.filter((c) => c.subjectId === id("長崎尚志") && c.contribution?.roleId === "PRODUCING");
@@ -74,8 +81,10 @@ test("専用レスポンスでRole概要・別Roleの否定・scope比較・条�
   await expect(page.getByTestId(`claim-card-${supervisionId}`)).toContainText("否定する主張");
   await expect(page.getByTestId(`claim-card-${supervisionId}`)).toContainText("完全版");
   await page.screenshot({ path: "test-results/pilot-v2-synthetic-multiple-roles.png", fullPage: true });
+  await editConditions(page);
   await page.getByRole("button", { name: "選択を解除", exact: true }).click();
   await page.getByRole("checkbox", { name: "制作に関わった", exact: true }).check();
+  await editRoles(page);
   await page.getByRole("checkbox", { name: "プロデュース", exact: true }).check();
   await page.getByRole("button", { name: "適用", exact: true }).click();
   await expect(page.getByTestId("graph-counts")).toHaveText("Entity 2 / Claim 1");
@@ -158,8 +167,10 @@ test("全5件の実クレジットとRole条件を人物起点で確認", async 
     await expect(card).toContainText(candidate.roleEvidence.originalText);
     await expect(card).toContainText(candidate.scope.isbn13);
   }
+  await editConditions(page);
   await page.getByRole("button", { name: "選択を解除", exact: true }).click();
   await page.getByRole("checkbox", { name: "制作に関わった", exact: true }).check();
+  await editRoles(page);
   await page.getByRole("checkbox", { name: "脚本", exact: true }).check();
   await page.getByRole("button", { name: "適用", exact: true }).click();
   await expect(page.getByTestId("graph-counts")).toHaveText("Entity 2 / Claim 1");
@@ -167,8 +178,63 @@ test("全5件の実クレジットとRole条件を人物起点で確認", async 
   await page.getByRole("button", { name: "検索", exact: true }).click();
   await page.getByRole("button", { name: /^手塚眞 —/ }).click();
   await expect(page.getByTestId("graph-counts")).toHaveText("Entity 1 / Claim 0");
+  await editRoles(page);
   await page.getByRole("checkbox", { name: "脚本", exact: true }).uncheck();
+  await editRoles(page);
   await page.getByRole("checkbox", { name: "監修", exact: true }).check();
   await page.getByRole("button", { name: "適用", exact: true }).click();
   await expect(page.getByTestId("graph-counts")).toHaveText("Entity 2 / Claim 1");
+});
+
+test("Phase 07: 入口・draft取消・全Roleと無指定・詳細幅とGraphの維持", async ({ page }) => {
+  let requests = 0;
+  page.on("request", (request) => { if (request.url().includes("/neighbors")) requests++; });
+  await page.goto("/");
+  await expect(page.getByRole("checkbox")).toHaveCount(0);
+  await expect(page.getByRole("button", { name: "見る関係を編集", exact: true })).toBeVisible();
+  await expect(page.getByText("人物から、つながりを辿ってみる", { exact: true })).toBeVisible();
+  await page.screenshot({ path: "test-results/phase07-initial.png", fullPage: true });
+  await root(page);
+  await expect(page.getByTestId("graph-counts")).toHaveText("Entity 4 / Claim 6");
+  const graphSnapshot = () => page.getByTestId("graph-canvas").evaluate((el) => {
+    const cy = (el as unknown as { _cyreg: { cy: import("cytoscape").Core } })._cyreg.cy;
+    return { nodes: cy.nodes().map((n) => ({ id: n.id(), ...n.position() })), edges: cy.edges().map((e) => e.id()), pan: cy.pan(), zoom: cy.zoom(), selected: cy.elements(".chosen").map((e) => e.id()) };
+  });
+  const before = await graphSnapshot(), requestCount = requests;
+  await editRoles(page);
+  await page.getByRole("checkbox", { name: "プロデュース", exact: true }).check();
+  await expect(page.getByTestId("draft-conditions")).toContainText("プロデュース");
+  await expect(page.getByTestId("active-predicates")).toContainText("追加条件なし");
+  await page.screenshot({ path: "test-results/phase07-editor.png", fullPage: true });
+  await page.getByRole("button", { name: "キャンセル", exact: true }).click();
+  expect(await graphSnapshot()).toEqual(before); expect(requests).toBe(requestCount);
+  await expect(page.getByRole("button", { name: "見る関係を編集", exact: true })).toBeFocused();
+  await editConditions(page);
+  await page.getByRole("button", { name: "制作の役割を調整", exact: true }).click();
+  await expect(page.getByRole("radio", { name: "役割で絞らない", exact: true })).toBeChecked();
+  await page.keyboard.press("Escape");
+  expect(await graphSnapshot()).toEqual(before); expect(requests).toBe(requestCount);
+  await editRoles(page);
+  for (const role of ["脚本", "監修", "プロデュース", "ストーリー共同制作"]) await page.getByRole("checkbox", { name: role, exact: true }).check();
+  await page.getByRole("button", { name: "適用", exact: true }).click();
+  await expect(page.getByTestId("graph-counts")).toHaveText("Entity 4 / Claim 3");
+  expect(requests).toBe(requestCount + 1);
+  await expect(page.getByTestId("active-predicates")).toContainText("制作に関わった（");
+  await expect(page.getByRole("dialog")).toHaveCount(0);
+  await editConditions(page);
+  await page.getByRole("radio", { name: "役割で絞らない", exact: true }).check();
+  await page.getByRole("button", { name: "適用", exact: true }).click();
+  await expect(page.getByTestId("graph-counts")).toHaveText("Entity 4 / Claim 6");
+  await selectRelation(page, "PLUTO");
+  await expect(page.getByRole("region", { name: "Claim詳細" })).toContainText("商品情報で確認されたクレジット");
+  const selected = await graphSnapshot();
+  const detail = page.getByRole("complementary"); const width = (await detail.boundingBox())!.width;
+  await page.getByRole("button", { name: "詳細を広く読む", exact: true }).click();
+  expect((await detail.boundingBox())!.width).toBeGreaterThan(width);
+  expect(await graphSnapshot()).toEqual(selected);
+  await page.screenshot({ path: "test-results/phase07-detail-wide.png", fullPage: true });
+  await page.getByRole("button", { name: "詳細の幅を戻す", exact: true }).click();
+  expect(await graphSnapshot()).toEqual(selected);
+  await page.setViewportSize({ width: 1160, height: 650 });
+  await page.screenshot({ path: "test-results/phase07-compact.png", fullPage: true });
 });
