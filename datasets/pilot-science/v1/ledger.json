@@ -1,0 +1,1141 @@
+{
+  "schemaVersion": 1,
+  "dataset": {
+    "id": "pilot-science-v1",
+    "version": 1,
+    "transformVersion": 1,
+    "createdAt": "2026-10-04T19:55:53.444311Z",
+    "frozen": true,
+    "scope": "5人物・3機関。受入済みC01–C08の広い関わりのみ。C09はpending。制作Role・雇用・同時在籍・共同研究は保証しない。"
+  },
+  "entities": [
+    {
+      "ref": "P1",
+      "entity": {
+        "id": "a58b8ae8-e68f-4e6c-9463-539c106a5f19",
+        "kind": "person",
+        "name": "ニールス・ボーア",
+        "description": "デンマークの物理学者。研究所の設立・活動についての資料を収録。",
+        "aliases": [
+          "Niels Bohr"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q7085"
+          }
+        ],
+        "createdAt": "2026-10-04T19:55:53.444311Z",
+        "updatedAt": "2026-10-04T19:55:53.444311Z"
+      },
+      "names": [
+        {
+          "value": "ニールス・ボーア",
+          "language": "ja",
+          "origin": "wikidata:Q7085@2550455628",
+          "useForSearch": true
+        },
+        {
+          "value": "Niels Bohr",
+          "language": "en",
+          "origin": "wikidata:Q7085@2550455628",
+          "useForSearch": true
+        }
+      ],
+      "identity": {
+        "url": "https://www.wikidata.org/wiki/Special:EntityData/Q7085.json",
+        "retrievedAt": "2026-10-04T19:50:43.883806Z",
+        "revision": 2550455628,
+        "sha256": "8c35e3eadca8a4d168cd0b4ec7d8bf50c3e6ed0ecb460eafe55f8e99863d0d04",
+        "qid": "Q7085",
+        "file": "raw/Q7085.json",
+        "license": "CC0-1.0",
+        "reason": "公式資料の人物名・経歴と外部項目の記述を照合。名前だけで一致としない。",
+        "sourceRefs": [
+          "S1",
+          "S2"
+        ]
+      }
+    },
+    {
+      "ref": "P2",
+      "entity": {
+        "id": "1530af15-129d-40bf-a1ca-ce8343dc7491",
+        "kind": "person",
+        "name": "ヴェルナー・ハイゼンベルク",
+        "description": "理論物理学者。大学での早期経歴と研究所への訪問を収録。",
+        "aliases": [
+          "Werner Heisenberg"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q40904"
+          }
+        ],
+        "createdAt": "2026-10-04T19:55:53.444311Z",
+        "updatedAt": "2026-10-04T19:55:53.444311Z"
+      },
+      "names": [
+        {
+          "value": "ヴェルナー・ハイゼンベルク",
+          "language": "ja",
+          "origin": "wikidata:Q40904@2550814661",
+          "useForSearch": true
+        },
+        {
+          "value": "Werner Heisenberg",
+          "language": "en",
+          "origin": "wikidata:Q40904@2550814661",
+          "useForSearch": true
+        }
+      ],
+      "identity": {
+        "url": "https://www.wikidata.org/wiki/Special:EntityData/Q40904.json",
+        "retrievedAt": "2026-10-04T19:50:44.697994Z",
+        "revision": 2550814661,
+        "sha256": "7191b4e41f6a0657ce81ff08a1b3c33e86d2180a16323fb451e445104227df66",
+        "qid": "Q40904",
+        "file": "raw/Q40904.json",
+        "license": "CC0-1.0",
+        "reason": "公式資料の人物名・経歴と外部項目の記述を照合。名前だけで一致としない。",
+        "sourceRefs": [
+          "S3",
+          "S4"
+        ]
+      }
+    },
+    {
+      "ref": "P3",
+      "entity": {
+        "id": "39e8e984-c530-4b2a-834a-85e85642eacb",
+        "kind": "person",
+        "name": "マックス・ボルン",
+        "description": "物理学者。ゲッティンゲン大学との教授としての関わりを収録。",
+        "aliases": [
+          "Max Born"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q58978"
+          }
+        ],
+        "createdAt": "2026-10-04T19:55:53.444311Z",
+        "updatedAt": "2026-10-04T19:55:53.444311Z"
+      },
+      "names": [
+        {
+          "value": "マックス・ボルン",
+          "language": "ja",
+          "origin": "wikidata:Q58978@2550435917",
+          "useForSearch": true
+        },
+        {
+          "value": "Max Born",
+          "language": "en",
+          "origin": "wikidata:Q58978@2550435917",
+          "useForSearch": true
+        }
+      ],
+      "identity": {
+        "url": "https://www.wikidata.org/wiki/Special:EntityData/Q58978.json",
+        "retrievedAt": "2026-10-04T19:50:44.746669Z",
+        "revision": 2550435917,
+        "sha256": "a52fe5884b62d644a0f3fbfe55dc1c24f5039ad99abf4bed4c3c99ce587b60ec",
+        "qid": "Q58978",
+        "file": "raw/Q58978.json",
+        "license": "CC0-1.0",
+        "reason": "公式資料の人物名・経歴と外部項目の記述を照合。名前だけで一致としない。同名の俳優Q3302042を除外。",
+        "sourceRefs": [
+          "S5"
+        ]
+      }
+    },
+    {
+      "ref": "P4",
+      "entity": {
+        "id": "52a671d1-bc5c-4a52-9d98-8c9418f5ec5c",
+        "kind": "person",
+        "name": "ヴォルフガング・パウリ",
+        "description": "物理学者。大学での学術的助手と研究所への訪問を収録。",
+        "aliases": [
+          "Wolfgang Pauli"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q65989"
+          }
+        ],
+        "createdAt": "2026-10-04T19:55:53.444311Z",
+        "updatedAt": "2026-10-04T19:55:53.444311Z"
+      },
+      "names": [
+        {
+          "value": "ヴォルフガング・パウリ",
+          "language": "ja",
+          "origin": "wikidata:Q65989@2550332977",
+          "useForSearch": true
+        },
+        {
+          "value": "Wolfgang Pauli",
+          "language": "en",
+          "origin": "wikidata:Q65989@2550332977",
+          "useForSearch": true
+        }
+      ],
+      "identity": {
+        "url": "https://www.wikidata.org/wiki/Special:EntityData/Q65989.json",
+        "retrievedAt": "2026-10-04T19:50:45.874226Z",
+        "revision": 2550332977,
+        "sha256": "c73e576b021cb4dcca46c3baaa1daaafdcc2b3dfcb426b64922d07ba656b565f",
+        "qid": "Q65989",
+        "file": "raw/Q65989.json",
+        "license": "CC0-1.0",
+        "reason": "公式資料の人物名・経歴と外部項目の記述を照合。名前だけで一致としない。Wolfgang Paulおよび父Wolfgang Joseph Pauliを除外。",
+        "sourceRefs": [
+          "S6",
+          "S7"
+        ]
+      }
+    },
+    {
+      "ref": "P5",
+      "entity": {
+        "id": "5cda395a-4927-4cae-92fe-839b29d05095",
+        "kind": "person",
+        "name": "ポール・ディラック",
+        "description": "理論物理学者。研究所への訪問とケンブリッジ大学の教授経歴を収録。",
+        "aliases": [
+          "Paul Dirac",
+          "Paul Adrien Maurice Dirac",
+          "Paul A.M. Dirac"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q47480"
+          }
+        ],
+        "createdAt": "2026-10-04T19:55:53.444311Z",
+        "updatedAt": "2026-10-04T19:55:53.444311Z"
+      },
+      "names": [
+        {
+          "value": "ポール・ディラック",
+          "language": "ja",
+          "origin": "wikidata:Q47480@2533008254",
+          "useForSearch": true
+        },
+        {
+          "value": "Paul Dirac",
+          "language": "en",
+          "origin": "wikidata:Q47480@2533008254",
+          "useForSearch": true
+        },
+        {
+          "value": "Paul Adrien Maurice Dirac",
+          "language": "da",
+          "origin": "wikidata:Q47480@2533008254",
+          "useForSearch": true
+        },
+        {
+          "value": "Paul A.M. Dirac",
+          "language": "en",
+          "origin": "source:S8",
+          "useForSearch": true
+        }
+      ],
+      "identity": {
+        "url": "https://www.wikidata.org/wiki/Special:EntityData/Q47480.json",
+        "retrievedAt": "2026-10-04T19:50:46.188572Z",
+        "revision": 2533008254,
+        "sha256": "cd8ab032173d1d9fabc2ec7a7a556791bd13bbba03f517f26900c5a2b65c875e",
+        "qid": "Q47480",
+        "file": "raw/Q47480.json",
+        "license": "CC0-1.0",
+        "reason": "公式資料の人物名・経歴と外部項目の記述を照合。名前だけで一致としない。",
+        "sourceRefs": [
+          "S8",
+          "S10"
+        ]
+      }
+    },
+    {
+      "ref": "O1",
+      "entity": {
+        "id": "a1af9abb-843a-4611-853c-50f630b817ae",
+        "kind": "organization",
+        "name": "ゲッティンゲン大学",
+        "description": "ドイツの大学。都市や同市の別研究所とは区別する。",
+        "aliases": [
+          "ゲオルク・アウグスト大学ゲッティンゲン",
+          "University of Göttingen",
+          "Georg-August-Universität Göttingen"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q152838"
+          }
+        ],
+        "createdAt": "2026-10-04T19:55:53.444311Z",
+        "updatedAt": "2026-10-04T19:55:53.444311Z"
+      },
+      "names": [
+        {
+          "value": "ゲッティンゲン大学",
+          "language": "ja",
+          "origin": "manual:今回の名称受入（日本語の慣用表記）",
+          "useForSearch": true
+        },
+        {
+          "value": "ゲオルク・アウグスト大学ゲッティンゲン",
+          "language": "ja",
+          "origin": "wikidata:Q152838@2552803104",
+          "useForSearch": true
+        },
+        {
+          "value": "University of Göttingen",
+          "language": "en",
+          "origin": "wikidata:Q152838@2552803104",
+          "useForSearch": true
+        },
+        {
+          "value": "Georg-August-Universität Göttingen",
+          "language": "de",
+          "origin": "wikidata:Q152838@2552803104",
+          "useForSearch": true
+        }
+      ],
+      "identity": {
+        "url": "https://www.wikidata.org/wiki/Special:EntityData/Q152838.json",
+        "retrievedAt": "2026-10-04T19:50:46.101211Z",
+        "revision": 2552803104,
+        "sha256": "3bc76658c903cd9762a3461379a155a8591aad4f6e9285cf302821ce85f14fbe",
+        "qid": "Q152838",
+        "file": "raw/Q152838.json",
+        "license": "CC0-1.0",
+        "reason": "公式資料で大学粒度を確認。外部項目の大学名と所在地の説明を照合。都市・部局・研究所・Collegeを同一視しない。",
+        "sourceRefs": [
+          "S3",
+          "S5"
+        ]
+      }
+    },
+    {
+      "ref": "O2",
+      "entity": {
+        "id": "8e322435-4318-4ad0-835b-3f71d2537421",
+        "kind": "organization",
+        "name": "ニールス・ボーア研究所",
+        "description": "コペンハーゲン大学の研究所。旧理論物理学研究所を1965年改称。現在名で表示。",
+        "aliases": [
+          "University of Copenhagen Niels Bohr Institute",
+          "Niels-Bohr-Institut",
+          "Niels Bohr Institutet ved Københavns Universitet",
+          "Niels Bohr Institute",
+          "Niels Bohr Institutet",
+          "University Institute of Theoretical Physics",
+          "Institute for Theoretical Physics"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q263761"
+          }
+        ],
+        "createdAt": "2026-10-04T19:55:53.444311Z",
+        "updatedAt": "2026-10-04T19:55:53.444311Z"
+      },
+      "names": [
+        {
+          "value": "ニールス・ボーア研究所",
+          "language": "ja",
+          "origin": "wikidata:Q263761@2517554621",
+          "useForSearch": true
+        },
+        {
+          "value": "University of Copenhagen Niels Bohr Institute",
+          "language": "en",
+          "origin": "wikidata:Q263761@2517554621",
+          "useForSearch": true
+        },
+        {
+          "value": "Niels-Bohr-Institut",
+          "language": "de",
+          "origin": "wikidata:Q263761@2517554621",
+          "useForSearch": true
+        },
+        {
+          "value": "Niels Bohr Institutet ved Københavns Universitet",
+          "language": "da",
+          "origin": "wikidata:Q263761@2517554621",
+          "useForSearch": true
+        },
+        {
+          "value": "Niels Bohr Institute",
+          "language": "en",
+          "origin": "source:S2",
+          "useForSearch": true
+        },
+        {
+          "value": "Niels Bohr Institutet",
+          "language": "da",
+          "origin": "source:S2",
+          "useForSearch": true
+        },
+        {
+          "value": "University Institute of Theoretical Physics",
+          "language": "en",
+          "origin": "source:S11",
+          "useForSearch": true
+        },
+        {
+          "value": "Institute for Theoretical Physics",
+          "language": "en",
+          "origin": "source:S2",
+          "useForSearch": true
+        }
+      ],
+      "identity": {
+        "url": "https://www.wikidata.org/wiki/Special:EntityData/Q263761.json",
+        "retrievedAt": "2026-10-04T19:50:45.780048Z",
+        "revision": 2517554621,
+        "sha256": "a286dd01fdb73cdb352d37460843cf4f4fe24f865c1bceea83b275f664eecdbd",
+        "qid": "Q263761",
+        "file": "raw/Q263761.json",
+        "license": "CC0-1.0",
+        "reason": "ユーザーが旧研究所と現在名の同一Entity扱いを受入。S2の1921–1962の旧研究所と1965年改称の説明を確認。研究所粒度を維持し、親のコペンハーゲン大学へ関係を転写しない。名称を年代別表示する新モデルは作らない。",
+        "sourceRefs": [
+          "S2",
+          "S11"
+        ]
+      }
+    },
+    {
+      "ref": "O3",
+      "entity": {
+        "id": "eccec249-00fb-423b-8ce9-04f243bcda29",
+        "kind": "organization",
+        "name": "ケンブリッジ大学",
+        "description": "英国の大学。Cambridge市・St John's College・Cavendish Laboratoryとは区別する。",
+        "aliases": [
+          "University of Cambridge"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q35794"
+          }
+        ],
+        "createdAt": "2026-10-04T19:55:53.444311Z",
+        "updatedAt": "2026-10-04T19:55:53.444311Z"
+      },
+      "names": [
+        {
+          "value": "ケンブリッジ大学",
+          "language": "ja",
+          "origin": "wikidata:Q35794@2550926486",
+          "useForSearch": true
+        },
+        {
+          "value": "University of Cambridge",
+          "language": "en",
+          "origin": "wikidata:Q35794@2550926486",
+          "useForSearch": true
+        }
+      ],
+      "identity": {
+        "url": "https://www.wikidata.org/wiki/Special:EntityData/Q35794.json",
+        "retrievedAt": "2026-10-04T19:50:47.498900Z",
+        "revision": 2550926486,
+        "sha256": "3009e8956da9fa1f1c3aeade9d9dad3cb03eb47f493521ba7ac96a9f64c94952",
+        "qid": "Q35794",
+        "file": "raw/Q35794.json",
+        "license": "CC0-1.0",
+        "reason": "公式資料で大学粒度を確認。外部項目の大学名と所在地の説明を照合。都市・部局・研究所・Collegeを同一視しない。",
+        "sourceRefs": [
+          "S10"
+        ]
+      }
+    }
+  ],
+  "documents": [
+    {
+      "ref": "S1",
+      "source": {
+        "id": "cddce742-cdc2-4360-9c95-1e3561add7f9",
+        "kind": "web",
+        "title": "Niels Bohr",
+        "authors": [],
+        "publisher": "Niels Bohr Institute / University of Copenhagen",
+        "url": "https://nbi.ku.dk/hhh/nobel/associated_with_nbi/niels_bohr/",
+        "publishedAt": {
+          "value": "2010-06-02",
+          "precision": "day"
+        },
+        "edition": null,
+        "note": "原資料本文の言語：en。研究所のDirectorとしてボーアを紹介。開始年1916は沿革と不整合のためClaim期間に採用しない。",
+        "isDemo": false
+      },
+      "url": "https://nbi.ku.dk/hhh/nobel/associated_with_nbi/niels_bohr/",
+      "resolvedUrl": "https://nbi.ku.dk/hhh/nobel/associated_with_nbi/niels_bohr/",
+      "retrievedAt": "2026-10-04T19:50:38.014214Z",
+      "sha256": "42ef92d806e5bbfda7647f3fb2c42bfeb5f735340b16a5b86bc443711e4064e5",
+      "language": "en",
+      "method": "公式／アーカイブのWeb本文を手動確認。HTML取得のSHA-256を記録。全文は再配布しない。",
+      "locator": "Niels Bohr InstituteのDirector欄",
+      "summary": "研究所のDirectorとしてボーアを紹介。開始年1916は沿革と不整合のためClaim期間に採用しない。",
+      "publicationDateNote": "2010-06-02は本文ページの日付。ナビゲーションのニュース日付を除外。"
+    },
+    {
+      "ref": "S2",
+      "source": {
+        "id": "e25f3776-1c9d-440c-9687-43e854112960",
+        "kind": "web",
+        "title": "The establishment of an institute",
+        "authors": [
+          "Finn Aaserud"
+        ],
+        "publisher": "Niels Bohr Institute / University of Copenhagen",
+        "url": "https://nbi.ku.dk/english/www/institute/History/history/",
+        "publishedAt": null,
+        "edition": null,
+        "note": "原資料本文の言語：en。旧理論物理学研究所が1965年に改称されたと説明。大学教授任命と研究所開設を分ける。",
+        "isDemo": false
+      },
+      "url": "https://nbi.ku.dk/english/www/institute/History/history/",
+      "resolvedUrl": "https://nbi.ku.dk/english/www/institute/History/history/",
+      "retrievedAt": "2026-10-04T19:50:37.716320Z",
+      "sha256": "ebfc8b9cbd60de3969a283b2a5f10510a0f3950d4b9f2121052e44a6e028edc5",
+      "language": "en",
+      "method": "公式／アーカイブのWeb本文を手動確認。HTML取得のSHA-256を記録。全文は再配布しない。",
+      "locator": "設立沿革の冒頭、1916年教授任命と1921年開設の段落",
+      "summary": "旧理論物理学研究所が1965年に改称されたと説明。大学教授任命と研究所開設を分ける。",
+      "publicationDateNote": "Web公開日不明。沿革見出し年・生没年を公開日にしない。"
+    },
+    {
+      "ref": "S3",
+      "source": {
+        "id": "5d880ab0-1a13-4621-8c4e-7e4a45e864d1",
+        "kind": "web",
+        "title": "Werner Heisenberg, Physics (1901 to 1976)",
+        "authors": [],
+        "publisher": "University of Göttingen",
+        "url": "https://www.uni-goettingen.de/en/62607.html",
+        "publishedAt": null,
+        "edition": null,
+        "note": "原資料本文の言語：en。大学での早期経歴を説明。後年の都市Göttingenや別研究所の経歴をこのClaimへ混ぜない。",
+        "isDemo": false
+      },
+      "url": "https://www.uni-goettingen.de/en/62607.html",
+      "resolvedUrl": "https://www.uni-goettingen.de/en/62607.html",
+      "retrievedAt": "2026-10-04T19:50:38.505751Z",
+      "sha256": "381de19fdf4c768cb273d4e75c34ef31e304263f1699e56efcd5e11124b9ce7d",
+      "language": "en",
+      "method": "公式／アーカイブのWeb本文を手動確認。HTML取得のSHA-256を記録。全文は再配布しない。",
+      "locator": "冒頭、学業・助手・1924年資格取得とPrivatdozentの段落",
+      "summary": "大学での早期経歴を説明。後年の都市Göttingenや別研究所の経歴をこのClaimへ混ぜない。",
+      "publicationDateNote": "Web公開日不明。沿革見出し年・生没年を公開日にしない。"
+    },
+    {
+      "ref": "S4",
+      "source": {
+        "id": "3d8bfd32-31fd-4e8a-aff6-7b7fb80265c0",
+        "kind": "web",
+        "title": "Werner Heisenberg",
+        "authors": [],
+        "publisher": "Niels Bohr Institute / University of Copenhagen",
+        "url": "https://nbi.ku.dk/hhh/nobel/associated_with_nbi/werner_heisenberg/",
+        "publishedAt": {
+          "value": "2010-06-02",
+          "precision": "day"
+        },
+        "edition": null,
+        "note": "原資料本文の言語：en。1924–25のVisitorと1926–27の別役職を列記。今回Visitorのみ受入。",
+        "isDemo": false
+      },
+      "url": "https://nbi.ku.dk/hhh/nobel/associated_with_nbi/werner_heisenberg/",
+      "resolvedUrl": "https://nbi.ku.dk/hhh/nobel/associated_with_nbi/werner_heisenberg/",
+      "retrievedAt": "2026-10-04T19:50:37.903860Z",
+      "sha256": "80ed2f63139cf5fbc2e5480609a3b8f53d397eeed100659bbc2c8e7aebf2b84a",
+      "language": "en",
+      "method": "公式／アーカイブのWeb本文を手動確認。HTML取得のSHA-256を記録。全文は再配布しない。",
+      "locator": "Niels Bohr InstituteのVisitor欄",
+      "summary": "1924–25のVisitorと1926–27の別役職を列記。今回Visitorのみ受入。",
+      "publicationDateNote": "2010-06-02は本文ページの日付。ナビゲーションのニュース日付を除外。"
+    },
+    {
+      "ref": "S5",
+      "source": {
+        "id": "e5a8cc21-2c3e-4c52-abde-d347a708b498",
+        "kind": "web",
+        "title": "Max Born, Physik (1882 bis 1970)",
+        "authors": [],
+        "publisher": "University of Göttingen",
+        "url": "https://www.uni-goettingen.de/de/62603.html",
+        "publishedAt": null,
+        "edition": null,
+        "note": "原資料本文の言語：de。教授として大学と関わった記述。開始1921は公式英語沿革の1922と不一致のため期間は採用しない。",
+        "isDemo": false
+      },
+      "url": "https://www.uni-goettingen.de/de/62603.html",
+      "resolvedUrl": "https://www.uni-goettingen.de/de/62603.html",
+      "retrievedAt": "2026-10-04T19:50:40.087606Z",
+      "sha256": "b74736b3f70572c1c06e48304d4e2547d32a3b84d674f280d9415abeecdf039f",
+      "language": "de",
+      "method": "公式／アーカイブのWeb本文を手動確認。HTML取得のSHA-256を記録。全文は再配布しない。",
+      "locator": "冒頭のPrivatdozent／Professor経歴",
+      "summary": "教授として大学と関わった記述。開始1921は公式英語沿革の1922と不一致のため期間は採用しない。",
+      "publicationDateNote": "Web公開日不明。沿革見出し年・生没年を公開日にしない。"
+    },
+    {
+      "ref": "S6",
+      "source": {
+        "id": "e3184fed-e704-41ef-9206-29345baed6ad",
+        "kind": "web",
+        "title": "Wolfgang Pauli's biography",
+        "authors": [],
+        "publisher": "CERN Archives",
+        "url": "https://archives.web.cern.ch/Pauli_archive/biography/",
+        "publishedAt": null,
+        "edition": null,
+        "note": "原資料本文の言語：en。冬学期のゲッティンゲン大学でのBornの助手という具体的関与。学術的助手をASSISTANT_OFへ変換しない。",
+        "isDemo": false
+      },
+      "url": "https://archives.web.cern.ch/Pauli_archive/biography/",
+      "resolvedUrl": "https://archives.web.cern.ch/Pauli_archive/biography/",
+      "retrievedAt": "2026-10-04T19:50:40.697363Z",
+      "sha256": "198dd32f36c7dd7b1d6addfe093b71f26f0631f64e151f5d04224c33766945f9",
+      "language": "en",
+      "method": "公式／アーカイブのWeb本文を手動確認。HTML取得のSHA-256を記録。全文は再配布しない。",
+      "locator": "学位後の経歴、winter term 1921-1922の段落（参考文献6–8を伴う周辺）",
+      "summary": "冬学期のゲッティンゲン大学でのBornの助手という具体的関与。学術的助手をASSISTANT_OFへ変換しない。",
+      "publicationDateNote": "Web公開日不明。沿革見出し年・生没年を公開日にしない。"
+    },
+    {
+      "ref": "S7",
+      "source": {
+        "id": "02e2f940-31d5-41bb-900e-7c76a1dd3561",
+        "kind": "web",
+        "title": "Wolfgang Pauli",
+        "authors": [],
+        "publisher": "Niels Bohr Institute / University of Copenhagen",
+        "url": "https://nbi.ku.dk/hhh/nobel/associated_with_nbi/wolfgang_pauli/",
+        "publishedAt": {
+          "value": "2010-06-02",
+          "precision": "day"
+        },
+        "edition": null,
+        "note": "原資料本文の言語：en。研究所へのVisitorとして1922–23を明示。",
+        "isDemo": false
+      },
+      "url": "https://nbi.ku.dk/hhh/nobel/associated_with_nbi/wolfgang_pauli/",
+      "resolvedUrl": "https://nbi.ku.dk/hhh/nobel/associated_with_nbi/wolfgang_pauli/",
+      "retrievedAt": "2026-10-04T19:50:39.771753Z",
+      "sha256": "eb01372ff9eb6d83c1908cd47ddfa167f7d1ebc60e8fac4e2e384bc69a950c22",
+      "language": "en",
+      "method": "公式／アーカイブのWeb本文を手動確認。HTML取得のSHA-256を記録。全文は再配布しない。",
+      "locator": "Niels Bohr InstituteのVisitor欄",
+      "summary": "研究所へのVisitorとして1922–23を明示。",
+      "publicationDateNote": "2010-06-02は本文ページの日付。ナビゲーションのニュース日付を除外。"
+    },
+    {
+      "ref": "S8",
+      "source": {
+        "id": "2efd23f2-e6b2-4131-93cc-6c3824313741",
+        "kind": "web",
+        "title": "Paul A.M. Dirac",
+        "authors": [],
+        "publisher": "Niels Bohr Institute / University of Copenhagen",
+        "url": "https://nbi.ku.dk/hhh/nobel/associated_with_nbi/paul_dirac/",
+        "publishedAt": {
+          "value": "2010-06-02",
+          "precision": "day"
+        },
+        "edition": null,
+        "note": "原資料本文の言語：en。研究所へのVisitorとして1926–27を明示。受賞時のCambridge所属欄とは別。",
+        "isDemo": false
+      },
+      "url": "https://nbi.ku.dk/hhh/nobel/associated_with_nbi/paul_dirac/",
+      "resolvedUrl": "https://nbi.ku.dk/hhh/nobel/associated_with_nbi/paul_dirac/",
+      "retrievedAt": "2026-10-04T19:50:40.504046Z",
+      "sha256": "aea8b612de2d9979299d1ba54a039bb1af7d8538f1c500a47647770d88e63a5f",
+      "language": "en",
+      "method": "公式／アーカイブのWeb本文を手動確認。HTML取得のSHA-256を記録。全文は再配布しない。",
+      "locator": "Niels Bohr InstituteのVisitor欄",
+      "summary": "研究所へのVisitorとして1926–27を明示。受賞時のCambridge所属欄とは別。",
+      "publicationDateNote": "2010-06-02は本文ページの日付。ナビゲーションのニュース日付を除外。"
+    },
+    {
+      "ref": "S9",
+      "source": null,
+      "url": "https://files.heisenberg-gesellschaft.de/adpersonam/section-1/students.html",
+      "resolvedUrl": "https://files.heisenberg-gesellschaft.de/adpersonam/section-1/students.html",
+      "retrievedAt": "2026-10-04T19:50:41.778445Z",
+      "sha256": "7426f0bda70f6041d4d47502f21b6190483be77d04de4ad8bd6af21c2748b940",
+      "language": "en",
+      "method": "公式／アーカイブのWeb本文を手動確認。HTML取得のSHA-256を記録。全文は再配布しない。",
+      "locator": "ボーアの講義と散歩の会話を回想する段落",
+      "summary": "C09の保留資料。本人回想としての帰属・元講演／原版・翻訳・前後の文脈と年代差を未解決のまま保持する。",
+      "publicationDateNote": "Web公開日不明。沿革見出し年・生没年を公開日にしない。"
+    },
+    {
+      "ref": "S10",
+      "source": {
+        "id": "1fe1b07a-9d60-4cc9-8024-be5821d3abee",
+        "kind": "web",
+        "title": "Asymptopia June 2002: Paul Dirac: predictor of antimatter",
+        "authors": [
+          "Peter Goddard"
+        ],
+        "publisher": "University of Cambridge, Faculty of Mathematics",
+        "url": "https://www.maths.cam.ac.uk/friends/newsletters/news15",
+        "publishedAt": null,
+        "edition": "Asymptopia June 2002",
+        "note": "原資料本文の言語：en。CambridgeのLucasian Professorとして1932–1969を明示。2002-06は資料号の年月でWeb公開日とは別。",
+        "isDemo": false
+      },
+      "url": "https://www.maths.cam.ac.uk/friends/newsletters/news15",
+      "resolvedUrl": "https://www.maths.cam.ac.uk/friends/newsletters/news15",
+      "retrievedAt": "2026-10-04T19:50:44.946437Z",
+      "sha256": "a19d8e92ae064b6dc48373802f0f3945aec00f345222803ea9d914dc548a8fb9",
+      "language": "en",
+      "method": "公式／アーカイブのWeb本文を手動確認。HTML取得のSHA-256を記録。全文は再配布しない。",
+      "locator": "Dirac Centennial節の冒頭と退任段落",
+      "summary": "CambridgeのLucasian Professorとして1932–1969を明示。2002-06は資料号の年月でWeb公開日とは別。",
+      "publicationDateNote": "2002-06は資料号の日付。Web掲載日は不明。"
+    },
+    {
+      "ref": "S12",
+      "source": null,
+      "url": "https://www2.uni-goettingen.de/en/52652.html",
+      "resolvedUrl": "https://www2.uni-goettingen.de/en/52652.html",
+      "retrievedAt": "2026-10-04T19:50:42.566882Z",
+      "sha256": "6c0515d901c0021648dea63ce4363d0dc3ac4f5e94d73bbf33108c78dee20e9f",
+      "language": "en",
+      "method": "公式／アーカイブのWeb本文を手動確認。HTML取得のSHA-256を記録。全文は再配布しない。",
+      "locator": "Max Born教授経歴の段落",
+      "summary": "Born教授開始を1922とする照合資料。S5の1921との差は期間保留の根拠であり否定Claimではない。",
+      "publicationDateNote": "Web公開日不明。沿革見出し年・生没年を公開日にしない。"
+    },
+    {
+      "ref": "S13",
+      "source": null,
+      "url": "https://mediatheque.lindau-nobel.org/laureates/heisenberg/research-profile",
+      "resolvedUrl": "https://mediatheque.lindau-nobel.org/laureates/heisenberg/research-profile",
+      "retrievedAt": "2026-10-04T19:50:42.698030Z",
+      "sha256": "42ca54859e2bed33f0fff4f19f6e6c2ca7bd7de7acb567210a39656502d0e36b",
+      "language": "en",
+      "method": "公式／アーカイブのWeb本文を手動確認。HTML取得のSHA-256を記録。全文は再配布しない。",
+      "locator": "Bohr Festivalの経歴段落",
+      "summary": "講義の時期をJune 1922とする確認補助。S9の1921との年代差を保留する。",
+      "publicationDateNote": "Web公開日不明。沿革見出し年・生没年を公開日にしない。"
+    },
+    {
+      "ref": "S11",
+      "source": null,
+      "url": "https://nbi.ku.dk/english/www/nobel/associated_with_nbi/",
+      "resolvedUrl": "https://nbi.ku.dk/english/www/nobel/associated_with_nbi/",
+      "language": "en",
+      "retrievedAt": "2026-10-04T20:08:17.765818Z",
+      "sha256": "9f48f2d0f844419d1bb70dde4c8e838350ccbdd1c3690b6de158d5376bcdb946",
+      "method": "NBI公式一覧のInfo節を手動確認。全文は再配布しない。",
+      "locator": "Info節の旧称・1965年改称の記述",
+      "summary": "旧名称University Institute of Theoretical Physicsと1965年改称の説明を確認。常勤と短期訪問の一覧であるためClaimの根拠には個別ページを使う。",
+      "publicationDateNote": "Web公開日不明。1965は改称年で公開日ではない。"
+    }
+  ],
+  "candidates": [
+    {
+      "ref": "C01",
+      "claim": {
+        "id": "ef4dc9ea-b8e2-4959-b594-5d27ebccb054",
+        "subjectId": "39e8e984-c530-4b2a-834a-85e85642eacb",
+        "objectId": "a1af9abb-843a-4611-853c-50f630b817ae",
+        "predicate": "AFFILIATED_WITH",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "published",
+        "createdAt": "2026-10-04T19:55:53.444311Z",
+        "updatedAt": "2026-10-04T19:55:53.444311Z"
+      },
+      "evidence": [
+        {
+          "sourceRef": "S5",
+          "citationId": "704c7ebc-74cc-46b6-a3a4-9998a009febf",
+          "locator": "冒頭のPrivatdozent／Professor経歴",
+          "language": "de",
+          "originalRole": "Professor für Theoretische Physik",
+          "originalPeriod": "von 1921 an; 1933 emigrierte er nach England",
+          "summary": "大学で教授として関わったことを確認。",
+          "limitation": "S12では教授開始1922とされる。1921/1922は保留し、渡英年から終了を推定しない。 この原表記は根拠の説明でありClaimの構造化した職位ではない。全経歴・連続在籍・期間外の不存在を認定しない。"
+        }
+      ],
+      "acceptance": {
+        "decision": "accepted",
+        "reviewer": "ユーザー",
+        "date": "2026-10-05",
+        "reason": "ユーザーの2026-10-05受入。資料の具体的関与に基づく広いAFFILIATED_WITHに限る。職位・雇用形態・所属種別の構造化保証、同時在籍・面識・共同研究は意味しない。"
+      }
+    },
+    {
+      "ref": "C02",
+      "claim": {
+        "id": "47d46b69-b111-4b76-addb-632d679ae4f8",
+        "subjectId": "1530af15-129d-40bf-a1ca-ce8343dc7491",
+        "objectId": "a1af9abb-843a-4611-853c-50f630b817ae",
+        "predicate": "AFFILIATED_WITH",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "published",
+        "createdAt": "2026-10-04T19:55:53.444311Z",
+        "updatedAt": "2026-10-04T19:55:53.444311Z"
+      },
+      "evidence": [
+        {
+          "sourceRef": "S3",
+          "citationId": "931dc662-fe56-49c6-a629-6374416e8129",
+          "locator": "冒頭、学業・助手・1924年資格取得とPrivatdozentの段落",
+          "language": "en",
+          "originalRole": "assistant; Privatdozent [associate professor]",
+          "originalPeriod": "habilitated here in 1924",
+          "summary": "大学での学業・Bornの助手・Privatdozentという早期経歴を確認。",
+          "limitation": "1924は資格取得年。関与開始や連続在籍期間を補完せず、後年の別研究所の経歴も混ぜない。 この原表記は根拠の説明でありClaimの構造化した職位ではない。全経歴・連続在籍・期間外の不存在を認定しない。"
+        }
+      ],
+      "acceptance": {
+        "decision": "accepted",
+        "reviewer": "ユーザー",
+        "date": "2026-10-05",
+        "reason": "ユーザーの2026-10-05受入。資料の具体的関与に基づく広いAFFILIATED_WITHに限る。職位・雇用形態・所属種別の構造化保証、同時在籍・面識・共同研究は意味しない。"
+      }
+    },
+    {
+      "ref": "C03",
+      "claim": {
+        "id": "2bdd7207-c8af-4936-ac23-961a8450eaad",
+        "subjectId": "52a671d1-bc5c-4a52-9d98-8c9418f5ec5c",
+        "objectId": "a1af9abb-843a-4611-853c-50f630b817ae",
+        "predicate": "AFFILIATED_WITH",
+        "polarity": "affirmed",
+        "period": {
+          "from": {
+            "value": "1921",
+            "precision": "year"
+          },
+          "to": {
+            "value": "1922",
+            "precision": "year"
+          }
+        },
+        "visibility": "published",
+        "createdAt": "2026-10-04T19:55:53.444311Z",
+        "updatedAt": "2026-10-04T19:55:53.444311Z"
+      },
+      "evidence": [
+        {
+          "sourceRef": "S6",
+          "citationId": "357428c7-f168-486b-8a7a-d983b637b8ab",
+          "locator": "学位後の経歴、winter term 1921-1922の段落（参考文献6–8を伴う周辺）",
+          "language": "en",
+          "originalRole": "assistant of Max Born",
+          "originalPeriod": "winter term 1921-1922",
+          "summary": "ゲッティンゲン大学で冬学期にBornの学術的助手として関わったことを確認。",
+          "limitation": "冬学期を年精度で保持し、月日は推定しない。漫画のASSISTANT_OFを使わない。 この原表記は根拠の説明でありClaimの構造化した職位ではない。全経歴・連続在籍・期間外の不存在を認定しない。"
+        }
+      ],
+      "acceptance": {
+        "decision": "accepted",
+        "reviewer": "ユーザー",
+        "date": "2026-10-05",
+        "reason": "ユーザーの2026-10-05受入。資料の具体的関与に基づく広いAFFILIATED_WITHに限る。職位・雇用形態・所属種別の構造化保証、同時在籍・面識・共同研究は意味しない。"
+      }
+    },
+    {
+      "ref": "C04",
+      "claim": {
+        "id": "3ce6d2ff-9cdf-4568-b246-719a0e07c410",
+        "subjectId": "a58b8ae8-e68f-4e6c-9463-539c106a5f19",
+        "objectId": "8e322435-4318-4ad0-835b-3f71d2537421",
+        "predicate": "AFFILIATED_WITH",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "published",
+        "createdAt": "2026-10-04T19:55:53.444311Z",
+        "updatedAt": "2026-10-04T19:55:53.444311Z"
+      },
+      "evidence": [
+        {
+          "sourceRef": "S1",
+          "citationId": "b51dfb86-4e23-4e9f-bc34-295fccdfc5cd",
+          "locator": "Niels Bohr InstituteのDirector欄",
+          "language": "en",
+          "originalRole": "Director",
+          "originalPeriod": "1916-1962",
+          "summary": "研究所のDirectorとしての関わりを確認。",
+          "limitation": "S2の1921年研究所開設と開始年が不整合。1916は大学教授任命と混同し得るため期間を採用しない。 この原表記は根拠の説明でありClaimの構造化した職位ではない。全経歴・連続在籍・期間外の不存在を認定しない。"
+        },
+        {
+          "sourceRef": "S2",
+          "citationId": "29e47b6f-3e2c-460f-b659-e3104cb79609",
+          "locator": "設立沿革の冒頭、1916年教授任命と1921年開設の段落",
+          "language": "en",
+          "originalRole": null,
+          "originalPeriod": "1916（大学教授任命）; 1921（研究所開設）",
+          "summary": "研究所の設立・研究教育活動と旧称から現在名への改称を確認。",
+          "limitation": "設立日から関与開始を補完しない。旧研究所と現在名は今回同一Entityに受入。 この原表記は根拠の説明でありClaimの構造化した職位ではない。全経歴・連続在籍・期間外の不存在を認定しない。"
+        }
+      ],
+      "acceptance": {
+        "decision": "accepted",
+        "reviewer": "ユーザー",
+        "date": "2026-10-05",
+        "reason": "ユーザーの2026-10-05受入。資料の具体的関与に基づく広いAFFILIATED_WITHに限る。職位・雇用形態・所属種別の構造化保証、同時在籍・面識・共同研究は意味しない。"
+      }
+    },
+    {
+      "ref": "C05",
+      "claim": {
+        "id": "eb7182aa-e7f1-4064-a731-bffe7c59227c",
+        "subjectId": "1530af15-129d-40bf-a1ca-ce8343dc7491",
+        "objectId": "8e322435-4318-4ad0-835b-3f71d2537421",
+        "predicate": "AFFILIATED_WITH",
+        "polarity": "affirmed",
+        "period": {
+          "from": {
+            "value": "1924",
+            "precision": "year"
+          },
+          "to": {
+            "value": "1925",
+            "precision": "year"
+          }
+        },
+        "visibility": "published",
+        "createdAt": "2026-10-04T19:55:53.444311Z",
+        "updatedAt": "2026-10-04T19:55:53.444311Z"
+      },
+      "evidence": [
+        {
+          "sourceRef": "S4",
+          "citationId": "0a54276e-291e-4379-8258-18b3cc30cc5b",
+          "locator": "Niels Bohr InstituteのVisitor欄",
+          "language": "en",
+          "originalRole": "Visitor",
+          "originalPeriod": "1924-25",
+          "summary": "研究所にVisitorとして関わったことを確認。",
+          "limitation": "別記のAssociate professor, 1926-27は今回のClaimへ結合しない。 この原表記は根拠の説明でありClaimの構造化した職位ではない。全経歴・連続在籍・期間外の不存在を認定しない。"
+        }
+      ],
+      "acceptance": {
+        "decision": "accepted",
+        "reviewer": "ユーザー",
+        "date": "2026-10-05",
+        "reason": "ユーザーの2026-10-05受入。資料の具体的関与に基づく広いAFFILIATED_WITHに限る。職位・雇用形態・所属種別の構造化保証、同時在籍・面識・共同研究は意味しない。"
+      }
+    },
+    {
+      "ref": "C06",
+      "claim": {
+        "id": "c23fe1f3-fae6-43c1-9ed7-af1d94e4712c",
+        "subjectId": "52a671d1-bc5c-4a52-9d98-8c9418f5ec5c",
+        "objectId": "8e322435-4318-4ad0-835b-3f71d2537421",
+        "predicate": "AFFILIATED_WITH",
+        "polarity": "affirmed",
+        "period": {
+          "from": {
+            "value": "1922",
+            "precision": "year"
+          },
+          "to": {
+            "value": "1923",
+            "precision": "year"
+          }
+        },
+        "visibility": "published",
+        "createdAt": "2026-10-04T19:55:53.444311Z",
+        "updatedAt": "2026-10-04T19:55:53.444311Z"
+      },
+      "evidence": [
+        {
+          "sourceRef": "S7",
+          "citationId": "1e122ac6-db31-4a76-bb32-ec8a7e9d8ab4",
+          "locator": "Niels Bohr InstituteのVisitor欄",
+          "language": "en",
+          "originalRole": "Visitor",
+          "originalPeriod": "1922-23",
+          "summary": "研究所にVisitorとして関わったことを確認。",
+          "limitation": "常勤・雇用・全期間の所属へ強めない。 この原表記は根拠の説明でありClaimの構造化した職位ではない。全経歴・連続在籍・期間外の不存在を認定しない。"
+        }
+      ],
+      "acceptance": {
+        "decision": "accepted",
+        "reviewer": "ユーザー",
+        "date": "2026-10-05",
+        "reason": "ユーザーの2026-10-05受入。資料の具体的関与に基づく広いAFFILIATED_WITHに限る。職位・雇用形態・所属種別の構造化保証、同時在籍・面識・共同研究は意味しない。"
+      }
+    },
+    {
+      "ref": "C07",
+      "claim": {
+        "id": "f05e54fa-67a1-49c6-876a-0f4b01534cb0",
+        "subjectId": "5cda395a-4927-4cae-92fe-839b29d05095",
+        "objectId": "8e322435-4318-4ad0-835b-3f71d2537421",
+        "predicate": "AFFILIATED_WITH",
+        "polarity": "affirmed",
+        "period": {
+          "from": {
+            "value": "1926",
+            "precision": "year"
+          },
+          "to": {
+            "value": "1927",
+            "precision": "year"
+          }
+        },
+        "visibility": "published",
+        "createdAt": "2026-10-04T19:55:53.444311Z",
+        "updatedAt": "2026-10-04T19:55:53.444311Z"
+      },
+      "evidence": [
+        {
+          "sourceRef": "S8",
+          "citationId": "6ff140bb-6dff-411a-93f8-5a2ea12d0fba",
+          "locator": "Niels Bohr InstituteのVisitor欄",
+          "language": "en",
+          "originalRole": "Visitor",
+          "originalPeriod": "1926-27",
+          "summary": "研究所にVisitorとして関わったことを確認。",
+          "limitation": "受賞時Cambridge所属欄とは別の関係。 この原表記は根拠の説明でありClaimの構造化した職位ではない。全経歴・連続在籍・期間外の不存在を認定しない。"
+        }
+      ],
+      "acceptance": {
+        "decision": "accepted",
+        "reviewer": "ユーザー",
+        "date": "2026-10-05",
+        "reason": "ユーザーの2026-10-05受入。資料の具体的関与に基づく広いAFFILIATED_WITHに限る。職位・雇用形態・所属種別の構造化保証、同時在籍・面識・共同研究は意味しない。"
+      }
+    },
+    {
+      "ref": "C08",
+      "claim": {
+        "id": "0bac17e3-5832-4e48-9616-27c3de12ea83",
+        "subjectId": "5cda395a-4927-4cae-92fe-839b29d05095",
+        "objectId": "eccec249-00fb-423b-8ce9-04f243bcda29",
+        "predicate": "AFFILIATED_WITH",
+        "polarity": "affirmed",
+        "period": {
+          "from": {
+            "value": "1932",
+            "precision": "year"
+          },
+          "to": {
+            "value": "1969",
+            "precision": "year"
+          }
+        },
+        "visibility": "published",
+        "createdAt": "2026-10-04T19:55:53.444311Z",
+        "updatedAt": "2026-10-04T19:55:53.444311Z"
+      },
+      "evidence": [
+        {
+          "sourceRef": "S10",
+          "citationId": "11e7ab73-485d-4433-99e1-47793f9d13dc",
+          "locator": "Dirac Centennial節の冒頭と退任段落",
+          "language": "en",
+          "originalRole": "Lucasian Professor of Mathematics",
+          "originalPeriod": "1932 to 1969",
+          "summary": "大学でLucasian Professorとして関わったことを確認。",
+          "limitation": "College・研究所へ自動転写しない。2002年の号の日付を所属時期へ使わない。 この原表記は根拠の説明でありClaimの構造化した職位ではない。全経歴・連続在籍・期間外の不存在を認定しない。"
+        }
+      ],
+      "acceptance": {
+        "decision": "accepted",
+        "reviewer": "ユーザー",
+        "date": "2026-10-05",
+        "reason": "ユーザーの2026-10-05受入。資料の具体的関与に基づく広いAFFILIATED_WITHに限る。職位・雇用形態・所属種別の構造化保証、同時在籍・面識・共同研究は意味しない。"
+      }
+    },
+    {
+      "ref": "C09",
+      "claim": {
+        "id": "a8ef145c-4d2f-49bf-914e-aebbed47b169",
+        "subjectId": "1530af15-129d-40bf-a1ca-ce8343dc7491",
+        "objectId": "a58b8ae8-e68f-4e6c-9463-539c106a5f19",
+        "predicate": "INFLUENCED_BY",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "published",
+        "createdAt": "2026-10-04T19:55:53.444311Z",
+        "updatedAt": "2026-10-04T19:55:53.444311Z"
+      },
+      "evidence": [
+        {
+          "sourceRef": "S9",
+          "citationId": "243ff825-b341-4355-810e-9f02c3d028c1",
+          "locator": "ボーアの講義と散歩の会話を回想する段落",
+          "language": "en",
+          "originalRole": null,
+          "originalPeriod": "summer 1921（掲載テキスト）; June 1922（S13の経歴）",
+          "summary": "ボーアの講義と会話で科学への姿勢が変わったという本人回想の候補。",
+          "limitation": "掲載帰属、元講演／原版、翻訳、前後の文脈、年代差、INFLUENCED_BYの受入意味は再確認が必要。"
+        }
+      ],
+      "acceptance": {
+        "decision": "pending",
+        "reviewer": null,
+        "date": "2026-10-05",
+        "reason": "ユーザーが保留を指定。棄却ではない。資料帰属・原版・翻訳・文脈・年代差・意味の確認後に新dataset版で受入を判断する。"
+      }
+    }
+  ],
+  "deferred": [
+    {
+      "topic": "Born教授開始1921/1922",
+      "reason": "公式資料間の差。periodは両端null。",
+      "sourceRefs": [
+        "S5",
+        "S12"
+      ]
+    },
+    {
+      "topic": "Bohr Director開始1916",
+      "reason": "大学教授任命と研究所開設の違い。periodは両端null。",
+      "sourceRefs": [
+        "S1",
+        "S2"
+      ]
+    },
+    {
+      "topic": "Heisenberg研究所Associate professor 1926-27",
+      "reason": "今回の8件に含めず。Visitor期間と結合しない。",
+      "sourceRefs": [
+        "S4"
+      ]
+    },
+    {
+      "topic": "C09の年代・出典来歴・影響の意味",
+      "reason": "pending。棄却・否定・受入済みとは扱わない。",
+      "sourceRefs": [
+        "S9",
+        "S13"
+      ]
+    }
+  ]
+}

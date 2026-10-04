@@ -11,7 +11,7 @@
     "start": "next start --hostname 127.0.0.1",
     "typecheck": "next typegen && tsc --noEmit",
     "lint": "npm run vocabulary:check && eslint .",
-    "test": "npm run vocabulary:check && vitest run tests/domain.test.ts tests/http.test.ts tests/ui-state.test.tsx tests/pilot.test.ts tests/vocabulary.test.ts tests/contribution.test.ts",
+    "test": "npm run vocabulary:check && vitest run tests/domain.test.ts tests/http.test.ts tests/ui-state.test.tsx tests/pilot.test.ts tests/vocabulary.test.ts tests/contribution.test.ts tests/science.test.ts",
     "test:integration": "vitest run tests/seed.integration.test.ts tests/api.integration.test.ts --no-file-parallelism",
     "fixture:validate": "tsx scripts/validate-fixture.ts",
     "db:constraints": "tsx scripts/constraints.ts",
@@ -32,7 +32,14 @@
     "pilot:v2:dev": "tsx scripts/pilot-v2.ts dev",
     "pilot:v2:build": "tsx scripts/pilot-v2.ts build",
     "pilot:v2:integration": "vitest run tests/contribution.integration.test.ts --no-file-parallelism",
-    "pilot:v2:e2e": "playwright test --config=playwright.pilot-v2.config.ts"
+    "pilot:v2:e2e": "playwright test --config=playwright.pilot-v2.config.ts",
+    "science:prepare": "tsx scripts/prepare-science.ts",
+    "science:validate": "tsx scripts/prepare-science.ts --check",
+    "science:seed": "tsx scripts/science.ts seed",
+    "science:dev": "tsx scripts/science.ts dev",
+    "science:build": "tsx scripts/science.ts build",
+    "science:integration": "vitest run tests/science.integration.test.ts --no-file-parallelism",
+    "science:e2e": "playwright test --config=playwright.science.config.ts"
   },
   "dependencies": {
     "cytoscape": "3.34.3",

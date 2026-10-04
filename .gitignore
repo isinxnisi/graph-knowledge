@@ -15,3 +15,5 @@ playwright-report/
 
 !.env.pilot-v2.example
 .next-pilot-v2/
+!.env.science.example
+.next-science/

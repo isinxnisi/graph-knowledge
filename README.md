@@ -221,7 +221,7 @@ http://127.0.0.1:3212 で「長崎尚志」を検索。Role条件はGraph上部�
 
 Graph上部の「適用中」は現在辿っている条件です。「見る関係を編集」で条件を調整し、「適用」した時だけ同じ起点から取得し直します。キャンセル／Escapeでは未適用の変更を捨て、探索を保ちます。制作関与を選んだ編集画面には「制作の役割を調整」があります。「役割で絞らない」は広いClaimも含み、「役割を指定する」は選択Role付きClaimだけを対象にします。全Roleを選んでも役割未指定Claimは含みません。
 
-詳細は「詳細を広く読む」で幅を切り替えられます。Graphの座標・選択・pan/zoomは維持されます。収録済み人物を探す入口であり、作品・組織の直接検索はまだ提供しません。実Role画面の確認はv2専用環境を起動して http://127.0.0.1:3212 を開き、「長崎尚志」等を検索してください。[Phase 07実施記録](docs/archive/phase-07-exploration-entry/IMPLEMENTATION_EXPLORATION_ENTRY.md)に画像と検証結果をまとめています。
+詳細は「詳細を広く読む」で幅を切り替えられます。Graphの座標・選択・pan/zoomは維持されます。現在はPhase 09の統一入口から人物・作品・組織を検索できます。実Role画面の確認はv2専用環境を起動して http://127.0.0.1:3212 を開き、「長崎尚志」等を検索してください。[Phase 07実施記録](docs/archive/phase-07-exploration-entry/IMPLEMENTATION_EXPLORATION_ENTRY.md)に画像と検証結果をまとめています。
 
 
 ## 関係を俯瞰し、探索の主題を変える（Phase 08）
@@ -238,3 +238,19 @@ demoは `npm run dev -- --port 3210` で http://127.0.0.1:3210 、実Roleのv2�
 一つの「対象を探す」フォームから人物・作品・組織を検索できます。既定はすべて。検索対象の選択や検索だけではGraphを変えず、候補を選ぶと適用中の関係／Role条件を保って探索を開始します。デモでは「青葉ハル」「星の航路」「青空出版」、実データv2では「PLUTO」「Master Keaton」から開始できます。eventは今回検索対象にしていません。
 
 現在動作中の画面はdemo http://127.0.0.1:3210、実データv2 http://127.0.0.1:3212。通常の`npm run dev`では起動ログのURLを使ってください。[実施記録](docs/archive/phase-09-entity-search/IMPLEMENTATION_ENTITY_SEARCH.md)に検証経路を記録しています。
+
+## 科学・研究機関パイロット（Phase 10）
+
+人物5・機関3・広いAFFILIATED_WITH 8 Claimの凍結版です。C09の人物間影響はpendingで投入していません。demo／漫画v1／v2とは別環境です。[台帳・生成物・受入と起動](datasets/pilot-science/v1/README.md)／[画面観察・検証](docs/archive/phase-10-science-pilot/IMPLEMENTATION_SCIENCE_PILOT.md)。
+
+```bash
+cp .env.science.example .env.science
+npm run science:validate
+docker compose --env-file .env.science -f compose.science.yaml up -d --wait --wait-timeout 180
+npm run science:seed
+npm run science:dev
+```
+
+既存.env.scienceは上書きしないでください。Node24.21.0を使用。画面は **http://127.0.0.1:3213**。「ゲッティンゲン大学」→パウリ→ニールス・ボーア研究所→ディラック→ケンブリッジ大学と辿れます。原職位と資料の限定は線の詳細／Citationにあります。現在名で表示し、同時在籍・面識・共同研究を認定するGraphではありません。
+
+生成確認はscience:prepare／science:validate、専用Web起動後にscience:integration、ブラウザはscience:e2e（起動済みサーバーを使うならGRAPH_TEST_REUSE=1）。DBはBolt7690／Browser7477、Next出力は.next-scienceです。停止は `docker compose --env-file .env.science -f compose.science.yaml stop`、volumeは残ります。

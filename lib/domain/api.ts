@@ -1,5 +1,6 @@
 import { contributionSchema, roleEvidenceSchema } from "./contribution";
 import { z } from "zod";
+import { DATASET_MODES } from "./dataset";
 import { entitySchema, claimSchema, citationSchema, sourceSchema } from "./fixture";
 
 export const entitySummarySchema = entitySchema.pick({ id: true, kind: true, name: true, description: true });
@@ -31,7 +32,7 @@ export type ClaimResponse = { claim: ClaimDetail; relatedClaimIds: string[] };
 export const overviewCountsSchema = z.strictObject({ affirmed: z.number().int().nonnegative(), denied: z.number().int().nonnegative() });
 export const entityOverviewSchema = z.strictObject({
   entity: entitySummarySchema,
-  scope: z.strictObject({ dataset: z.enum(["demo", "pilot-urasawa-v1", "pilot-urasawa-v2"]), visibility: z.literal("published"), filtered: z.literal(false), unit: z.literal("claim") }),
+  scope: z.strictObject({ dataset: z.enum(DATASET_MODES), visibility: z.literal("published"), filtered: z.literal(false), unit: z.literal("claim") }),
   relations: z.array(z.strictObject({
     predicate: claimSchema.shape.predicate,
     perspective: z.enum(["subject", "object"]),

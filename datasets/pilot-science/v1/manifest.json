@@ -1,0 +1,33 @@
+{
+  "id": "pilot-science-v1",
+  "version": 1,
+  "transformVersion": 1,
+  "createdAt": "2026-10-04T19:55:53.444311Z",
+  "frozen": true,
+  "scope": "5人物・3機関。受入済みC01–C08の広い関わりのみ。C09はpending。制作Role・雇用・同時在籍・共同研究は保証しない。",
+  "files": {
+    "ledger.json": "7e91ccc2bf3ca44c53e0b9d41cdc256d4126efed58aad62a3d8cd940d7e7bec0",
+    "raw/Q7085.json": "8c35e3eadca8a4d168cd0b4ec7d8bf50c3e6ed0ecb460eafe55f8e99863d0d04",
+    "raw/Q40904.json": "7191b4e41f6a0657ce81ff08a1b3c33e86d2180a16323fb451e445104227df66",
+    "raw/Q58978.json": "a52fe5884b62d644a0f3fbfe55dc1c24f5039ad99abf4bed4c3c99ce587b60ec",
+    "raw/Q65989.json": "c73e576b021cb4dcca46c3baaa1daaafdcc2b3dfcb426b64922d07ba656b565f",
+    "raw/Q47480.json": "cd8ab032173d1d9fabc2ec7a7a556791bd13bbba03f517f26900c5a2b65c875e",
+    "raw/Q152838.json": "3bc76658c903cd9762a3461379a155a8591aad4f6e9285cf302821ce85f14fbe",
+    "raw/Q263761.json": "a286dd01fdb73cdb352d37460843cf4f4fe24f865c1bceea83b275f664eecdbd",
+    "raw/Q35794.json": "3009e8956da9fa1f1c3aeade9d9dad3cb03eb47f493521ba7ac96a9f64c94952",
+    "data.json": "95e5c11216cd5bc3cd2a8f0cf942c1114f5978787f47ced20b40a967c2ed74c1"
+  },
+  "accepted": [
+    "C01",
+    "C02",
+    "C03",
+    "C04",
+    "C05",
+    "C06",
+    "C07",
+    "C08"
+  ],
+  "pending": [
+    "C09"
+  ]
+}

@@ -1,6 +1,6 @@
 # 現行技術設計
 
-更新日: 2026-10-04 / 状態: 初期Vertical Sliceと探索の開閉・Node再クリックまで実装済み。既存predicateと限定制作Roleによる条件付き探索を追加。v2 Role Claim 5件を人間受入後に投入・検証済み。関係概要・明示起点切替・直前一件復帰、人物・作品・組織の統一検索入口も実装。taxonomy・プリセット・会員保存は未実装。[文書の入口](README.md)に現役設計とフェーズ別履歴をまとめる。
+更新日: 2026-10-05 / 状態: 初期Vertical Sliceと探索の開閉・Node再クリックまで実装済み。既存predicateと限定制作Roleによる条件付き探索を追加。v2 Role Claim 5件を人間受入後に投入・検証済み。関係概要・明示起点切替・直前一件復帰、人物・作品・組織の統一検索入口も実装。科学・研究機関pilot v1を別環境へ投入・観察済み。taxonomy・プリセット・会員保存は未実装。[文書の入口](README.md)に現役設計とフェーズ別履歴をまとめる。
 
 ## 前提と設計の位置づけ
 
@@ -555,3 +555,15 @@ type EntityOverviewResponse = {
 検索kindはGraphState・探索conditionKey・cursorへ入れない。作品／組織から人物も通常どおり辿る。関係概要、明示的な広く見る／同条件切替、一件復帰、開閉／休止枝復元、Claim／Sourceは同じ契約を再利用する。UI文字列はlib/i18n/entity-search.ts等でlocale解決し、Entityの原語別名は知識データとして返す。言語付き名称のAPI、形態素解析、全文検索基盤は追加しない。
 
 実装・検証は[Phase 09記録](archive/phase-09-entity-search/IMPLEMENTATION_ENTITY_SEARCH.md)を参照。
+
+## Phase 10：科学・研究機関パイロット
+
+`pilot-science-v1`を検証用datasetモードへ追加。person 5／organization 3、AFFILIATED_WITH 8 Claim、Source 9／Citation 9／外部ID 8。C09はpendingで台帳にのみ保持する。Node／Claim／Citation schema、predicate契約、検索・近傍・俯瞰の取得内容、Graph state・起点切替は変更しない。概要応答のdataset enumへ値を追加する。
+
+`datasets/pilot-science/v1`の凍結ledgerから受入済みだけを生成。原職位・言語・期間原表記・受入範囲はCitation.noteと台帳に残し、制作用Roleへ変換しない。9候補のうち8件だけを受入投影する検証、raw QID／ledger／data／manifestの一致確認を行う。既存凍結datasetは不変。公開資料全文の再配布はせず、取得hashと短い原表記・要約・locatorを残す。
+
+専用compose project／volume、Bolt7690／Browser7477／Web3213／.next-scienceを使用。dataset／接続先guardと対象外Node／Relationship拒否を維持し、全seedは既存の冪等・内容一致方式を再利用する。これは物理的な検証環境の分離であり、製品としての分野Graph分断ではない。
+
+科学cursorは既存v2形式を使いdataset／中心／条件を検証。demo／漫画v1の既存cursor契約は維持。CONTRIBUTED_TO Role条件はAFFILIATED_WITHへ作用しない。人物・組織で同じPhase 08／09契約を適用する。
+
+現在名と旧研究所名は公式の改称記述・人間受入により同一Entity。歴史的名称モデル、組織間関係、非制作qualification、Entity概要再設計は未導入。[datasetと起動](../datasets/pilot-science/v1/README.md)／[検証・情報損失の観察](archive/phase-10-science-pilot/IMPLEMENTATION_SCIENCE_PILOT.md)を参照。

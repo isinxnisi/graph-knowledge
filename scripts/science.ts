@@ -1,0 +1,16 @@
+import { spawn } from "node:child_process";
+import { createRequire } from "node:module";
+import { assertDatasetTarget, datasetMode } from "../lib/domain/dataset";
+process.loadEnvFile(".env.science");
+const mode = datasetMode(process.env.GRAPH_DATASET);
+if (mode !== "pilot-science-v1") throw new Error("Science commands require GRAPH_DATASET=pilot-science-v1");
+assertDatasetTarget(mode, process.env.NEO4J_URI ?? "");
+const require = createRequire(import.meta.url);
+const command = process.argv[2];
+const args = command === "seed" ? ["--import", "tsx", "scripts/seed.ts", "--dataset=pilot-science-v1"] :
+  command === "dev" ? [require.resolve("next/dist/bin/next"), "dev", "--hostname", "127.0.0.1", "--port", "3213"] :
+  command === "build" ? [require.resolve("next/dist/bin/next"), "build"] : null;
+if (!args) throw new Error("Use science.ts seed, dev or build");
+const child = spawn(process.execPath, args, { stdio: "inherit", env: process.env });
+for (const signal of ["SIGINT", "SIGTERM"] as const) process.on(signal, () => child.kill(signal));
+child.on("exit", (code) => { process.exitCode = code ?? 1; });

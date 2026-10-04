@@ -1,0 +1,504 @@
+{
+  "schemaVersion": 1,
+  "entities": [
+    {
+      "id": "a58b8ae8-e68f-4e6c-9463-539c106a5f19",
+      "kind": "person",
+      "name": "ニールス・ボーア",
+      "description": "デンマークの物理学者。研究所の設立・活動についての資料を収録。",
+      "aliases": [
+        "Niels Bohr"
+      ],
+      "externalIds": [
+        {
+          "namespace": "wikidata",
+          "value": "Q7085"
+        }
+      ],
+      "createdAt": "2026-10-04T19:55:53.444311Z",
+      "updatedAt": "2026-10-04T19:55:53.444311Z"
+    },
+    {
+      "id": "1530af15-129d-40bf-a1ca-ce8343dc7491",
+      "kind": "person",
+      "name": "ヴェルナー・ハイゼンベルク",
+      "description": "理論物理学者。大学での早期経歴と研究所への訪問を収録。",
+      "aliases": [
+        "Werner Heisenberg"
+      ],
+      "externalIds": [
+        {
+          "namespace": "wikidata",
+          "value": "Q40904"
+        }
+      ],
+      "createdAt": "2026-10-04T19:55:53.444311Z",
+      "updatedAt": "2026-10-04T19:55:53.444311Z"
+    },
+    {
+      "id": "39e8e984-c530-4b2a-834a-85e85642eacb",
+      "kind": "person",
+      "name": "マックス・ボルン",
+      "description": "物理学者。ゲッティンゲン大学との教授としての関わりを収録。",
+      "aliases": [
+        "Max Born"
+      ],
+      "externalIds": [
+        {
+          "namespace": "wikidata",
+          "value": "Q58978"
+        }
+      ],
+      "createdAt": "2026-10-04T19:55:53.444311Z",
+      "updatedAt": "2026-10-04T19:55:53.444311Z"
+    },
+    {
+      "id": "52a671d1-bc5c-4a52-9d98-8c9418f5ec5c",
+      "kind": "person",
+      "name": "ヴォルフガング・パウリ",
+      "description": "物理学者。大学での学術的助手と研究所への訪問を収録。",
+      "aliases": [
+        "Wolfgang Pauli"
+      ],
+      "externalIds": [
+        {
+          "namespace": "wikidata",
+          "value": "Q65989"
+        }
+      ],
+      "createdAt": "2026-10-04T19:55:53.444311Z",
+      "updatedAt": "2026-10-04T19:55:53.444311Z"
+    },
+    {
+      "id": "5cda395a-4927-4cae-92fe-839b29d05095",
+      "kind": "person",
+      "name": "ポール・ディラック",
+      "description": "理論物理学者。研究所への訪問とケンブリッジ大学の教授経歴を収録。",
+      "aliases": [
+        "Paul Dirac",
+        "Paul Adrien Maurice Dirac",
+        "Paul A.M. Dirac"
+      ],
+      "externalIds": [
+        {
+          "namespace": "wikidata",
+          "value": "Q47480"
+        }
+      ],
+      "createdAt": "2026-10-04T19:55:53.444311Z",
+      "updatedAt": "2026-10-04T19:55:53.444311Z"
+    },
+    {
+      "id": "a1af9abb-843a-4611-853c-50f630b817ae",
+      "kind": "organization",
+      "name": "ゲッティンゲン大学",
+      "description": "ドイツの大学。都市や同市の別研究所とは区別する。",
+      "aliases": [
+        "ゲオルク・アウグスト大学ゲッティンゲン",
+        "University of Göttingen",
+        "Georg-August-Universität Göttingen"
+      ],
+      "externalIds": [
+        {
+          "namespace": "wikidata",
+          "value": "Q152838"
+        }
+      ],
+      "createdAt": "2026-10-04T19:55:53.444311Z",
+      "updatedAt": "2026-10-04T19:55:53.444311Z"
+    },
+    {
+      "id": "8e322435-4318-4ad0-835b-3f71d2537421",
+      "kind": "organization",
+      "name": "ニールス・ボーア研究所",
+      "description": "コペンハーゲン大学の研究所。旧理論物理学研究所を1965年改称。現在名で表示。",
+      "aliases": [
+        "University of Copenhagen Niels Bohr Institute",
+        "Niels-Bohr-Institut",
+        "Niels Bohr Institutet ved Københavns Universitet",
+        "Niels Bohr Institute",
+        "Niels Bohr Institutet",
+        "University Institute of Theoretical Physics",
+        "Institute for Theoretical Physics"
+      ],
+      "externalIds": [
+        {
+          "namespace": "wikidata",
+          "value": "Q263761"
+        }
+      ],
+      "createdAt": "2026-10-04T19:55:53.444311Z",
+      "updatedAt": "2026-10-04T19:55:53.444311Z"
+    },
+    {
+      "id": "eccec249-00fb-423b-8ce9-04f243bcda29",
+      "kind": "organization",
+      "name": "ケンブリッジ大学",
+      "description": "英国の大学。Cambridge市・St John's College・Cavendish Laboratoryとは区別する。",
+      "aliases": [
+        "University of Cambridge"
+      ],
+      "externalIds": [
+        {
+          "namespace": "wikidata",
+          "value": "Q35794"
+        }
+      ],
+      "createdAt": "2026-10-04T19:55:53.444311Z",
+      "updatedAt": "2026-10-04T19:55:53.444311Z"
+    }
+  ],
+  "claims": [
+    {
+      "id": "ef4dc9ea-b8e2-4959-b594-5d27ebccb054",
+      "subjectId": "39e8e984-c530-4b2a-834a-85e85642eacb",
+      "objectId": "a1af9abb-843a-4611-853c-50f630b817ae",
+      "predicate": "AFFILIATED_WITH",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "visibility": "published",
+      "createdAt": "2026-10-04T19:55:53.444311Z",
+      "updatedAt": "2026-10-04T19:55:53.444311Z"
+    },
+    {
+      "id": "47d46b69-b111-4b76-addb-632d679ae4f8",
+      "subjectId": "1530af15-129d-40bf-a1ca-ce8343dc7491",
+      "objectId": "a1af9abb-843a-4611-853c-50f630b817ae",
+      "predicate": "AFFILIATED_WITH",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "visibility": "published",
+      "createdAt": "2026-10-04T19:55:53.444311Z",
+      "updatedAt": "2026-10-04T19:55:53.444311Z"
+    },
+    {
+      "id": "2bdd7207-c8af-4936-ac23-961a8450eaad",
+      "subjectId": "52a671d1-bc5c-4a52-9d98-8c9418f5ec5c",
+      "objectId": "a1af9abb-843a-4611-853c-50f630b817ae",
+      "predicate": "AFFILIATED_WITH",
+      "polarity": "affirmed",
+      "period": {
+        "from": {
+          "value": "1921",
+          "precision": "year"
+        },
+        "to": {
+          "value": "1922",
+          "precision": "year"
+        }
+      },
+      "visibility": "published",
+      "createdAt": "2026-10-04T19:55:53.444311Z",
+      "updatedAt": "2026-10-04T19:55:53.444311Z"
+    },
+    {
+      "id": "3ce6d2ff-9cdf-4568-b246-719a0e07c410",
+      "subjectId": "a58b8ae8-e68f-4e6c-9463-539c106a5f19",
+      "objectId": "8e322435-4318-4ad0-835b-3f71d2537421",
+      "predicate": "AFFILIATED_WITH",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "visibility": "published",
+      "createdAt": "2026-10-04T19:55:53.444311Z",
+      "updatedAt": "2026-10-04T19:55:53.444311Z"
+    },
+    {
+      "id": "eb7182aa-e7f1-4064-a731-bffe7c59227c",
+      "subjectId": "1530af15-129d-40bf-a1ca-ce8343dc7491",
+      "objectId": "8e322435-4318-4ad0-835b-3f71d2537421",
+      "predicate": "AFFILIATED_WITH",
+      "polarity": "affirmed",
+      "period": {
+        "from": {
+          "value": "1924",
+          "precision": "year"
+        },
+        "to": {
+          "value": "1925",
+          "precision": "year"
+        }
+      },
+      "visibility": "published",
+      "createdAt": "2026-10-04T19:55:53.444311Z",
+      "updatedAt": "2026-10-04T19:55:53.444311Z"
+    },
+    {
+      "id": "c23fe1f3-fae6-43c1-9ed7-af1d94e4712c",
+      "subjectId": "52a671d1-bc5c-4a52-9d98-8c9418f5ec5c",
+      "objectId": "8e322435-4318-4ad0-835b-3f71d2537421",
+      "predicate": "AFFILIATED_WITH",
+      "polarity": "affirmed",
+      "period": {
+        "from": {
+          "value": "1922",
+          "precision": "year"
+        },
+        "to": {
+          "value": "1923",
+          "precision": "year"
+        }
+      },
+      "visibility": "published",
+      "createdAt": "2026-10-04T19:55:53.444311Z",
+      "updatedAt": "2026-10-04T19:55:53.444311Z"
+    },
+    {
+      "id": "f05e54fa-67a1-49c6-876a-0f4b01534cb0",
+      "subjectId": "5cda395a-4927-4cae-92fe-839b29d05095",
+      "objectId": "8e322435-4318-4ad0-835b-3f71d2537421",
+      "predicate": "AFFILIATED_WITH",
+      "polarity": "affirmed",
+      "period": {
+        "from": {
+          "value": "1926",
+          "precision": "year"
+        },
+        "to": {
+          "value": "1927",
+          "precision": "year"
+        }
+      },
+      "visibility": "published",
+      "createdAt": "2026-10-04T19:55:53.444311Z",
+      "updatedAt": "2026-10-04T19:55:53.444311Z"
+    },
+    {
+      "id": "0bac17e3-5832-4e48-9616-27c3de12ea83",
+      "subjectId": "5cda395a-4927-4cae-92fe-839b29d05095",
+      "objectId": "eccec249-00fb-423b-8ce9-04f243bcda29",
+      "predicate": "AFFILIATED_WITH",
+      "polarity": "affirmed",
+      "period": {
+        "from": {
+          "value": "1932",
+          "precision": "year"
+        },
+        "to": {
+          "value": "1969",
+          "precision": "year"
+        }
+      },
+      "visibility": "published",
+      "createdAt": "2026-10-04T19:55:53.444311Z",
+      "updatedAt": "2026-10-04T19:55:53.444311Z"
+    }
+  ],
+  "sources": [
+    {
+      "id": "cddce742-cdc2-4360-9c95-1e3561add7f9",
+      "kind": "web",
+      "title": "Niels Bohr",
+      "authors": [],
+      "publisher": "Niels Bohr Institute / University of Copenhagen",
+      "url": "https://nbi.ku.dk/hhh/nobel/associated_with_nbi/niels_bohr/",
+      "publishedAt": {
+        "value": "2010-06-02",
+        "precision": "day"
+      },
+      "edition": null,
+      "note": "原資料本文の言語：en。研究所のDirectorとしてボーアを紹介。開始年1916は沿革と不整合のためClaim期間に採用しない。",
+      "isDemo": false
+    },
+    {
+      "id": "e25f3776-1c9d-440c-9687-43e854112960",
+      "kind": "web",
+      "title": "The establishment of an institute",
+      "authors": [
+        "Finn Aaserud"
+      ],
+      "publisher": "Niels Bohr Institute / University of Copenhagen",
+      "url": "https://nbi.ku.dk/english/www/institute/History/history/",
+      "publishedAt": null,
+      "edition": null,
+      "note": "原資料本文の言語：en。旧理論物理学研究所が1965年に改称されたと説明。大学教授任命と研究所開設を分ける。",
+      "isDemo": false
+    },
+    {
+      "id": "5d880ab0-1a13-4621-8c4e-7e4a45e864d1",
+      "kind": "web",
+      "title": "Werner Heisenberg, Physics (1901 to 1976)",
+      "authors": [],
+      "publisher": "University of Göttingen",
+      "url": "https://www.uni-goettingen.de/en/62607.html",
+      "publishedAt": null,
+      "edition": null,
+      "note": "原資料本文の言語：en。大学での早期経歴を説明。後年の都市Göttingenや別研究所の経歴をこのClaimへ混ぜない。",
+      "isDemo": false
+    },
+    {
+      "id": "3d8bfd32-31fd-4e8a-aff6-7b7fb80265c0",
+      "kind": "web",
+      "title": "Werner Heisenberg",
+      "authors": [],
+      "publisher": "Niels Bohr Institute / University of Copenhagen",
+      "url": "https://nbi.ku.dk/hhh/nobel/associated_with_nbi/werner_heisenberg/",
+      "publishedAt": {
+        "value": "2010-06-02",
+        "precision": "day"
+      },
+      "edition": null,
+      "note": "原資料本文の言語：en。1924–25のVisitorと1926–27の別役職を列記。今回Visitorのみ受入。",
+      "isDemo": false
+    },
+    {
+      "id": "e5a8cc21-2c3e-4c52-abde-d347a708b498",
+      "kind": "web",
+      "title": "Max Born, Physik (1882 bis 1970)",
+      "authors": [],
+      "publisher": "University of Göttingen",
+      "url": "https://www.uni-goettingen.de/de/62603.html",
+      "publishedAt": null,
+      "edition": null,
+      "note": "原資料本文の言語：de。教授として大学と関わった記述。開始1921は公式英語沿革の1922と不一致のため期間は採用しない。",
+      "isDemo": false
+    },
+    {
+      "id": "e3184fed-e704-41ef-9206-29345baed6ad",
+      "kind": "web",
+      "title": "Wolfgang Pauli's biography",
+      "authors": [],
+      "publisher": "CERN Archives",
+      "url": "https://archives.web.cern.ch/Pauli_archive/biography/",
+      "publishedAt": null,
+      "edition": null,
+      "note": "原資料本文の言語：en。冬学期のゲッティンゲン大学でのBornの助手という具体的関与。学術的助手をASSISTANT_OFへ変換しない。",
+      "isDemo": false
+    },
+    {
+      "id": "02e2f940-31d5-41bb-900e-7c76a1dd3561",
+      "kind": "web",
+      "title": "Wolfgang Pauli",
+      "authors": [],
+      "publisher": "Niels Bohr Institute / University of Copenhagen",
+      "url": "https://nbi.ku.dk/hhh/nobel/associated_with_nbi/wolfgang_pauli/",
+      "publishedAt": {
+        "value": "2010-06-02",
+        "precision": "day"
+      },
+      "edition": null,
+      "note": "原資料本文の言語：en。研究所へのVisitorとして1922–23を明示。",
+      "isDemo": false
+    },
+    {
+      "id": "2efd23f2-e6b2-4131-93cc-6c3824313741",
+      "kind": "web",
+      "title": "Paul A.M. Dirac",
+      "authors": [],
+      "publisher": "Niels Bohr Institute / University of Copenhagen",
+      "url": "https://nbi.ku.dk/hhh/nobel/associated_with_nbi/paul_dirac/",
+      "publishedAt": {
+        "value": "2010-06-02",
+        "precision": "day"
+      },
+      "edition": null,
+      "note": "原資料本文の言語：en。研究所へのVisitorとして1926–27を明示。受賞時のCambridge所属欄とは別。",
+      "isDemo": false
+    },
+    {
+      "id": "1fe1b07a-9d60-4cc9-8024-be5821d3abee",
+      "kind": "web",
+      "title": "Asymptopia June 2002: Paul Dirac: predictor of antimatter",
+      "authors": [
+        "Peter Goddard"
+      ],
+      "publisher": "University of Cambridge, Faculty of Mathematics",
+      "url": "https://www.maths.cam.ac.uk/friends/newsletters/news15",
+      "publishedAt": null,
+      "edition": "Asymptopia June 2002",
+      "note": "原資料本文の言語：en。CambridgeのLucasian Professorとして1932–1969を明示。2002-06は資料号の年月でWeb公開日とは別。",
+      "isDemo": false
+    }
+  ],
+  "citations": [
+    {
+      "id": "704c7ebc-74cc-46b6-a3a4-9998a009febf",
+      "claimId": "ef4dc9ea-b8e2-4959-b594-5d27ebccb054",
+      "sourceId": "e5a8cc21-2c3e-4c52-abde-d347a708b498",
+      "locator": "冒頭のPrivatdozent／Professor経歴",
+      "note": "大学で教授として関わったことを確認。 原表記（de）：Professor für Theoretische Physik。期間原表記：von 1921 an; 1933 emigrierte er nach England。S12では教授開始1922とされる。1921/1922は保留し、渡英年から終了を推定しない。 この原表記は根拠の説明でありClaimの構造化した職位ではない。全経歴・連続在籍・期間外の不存在を認定しない。 受入：ユーザーの2026-10-05受入。資料の具体的関与に基づく広いAFFILIATED_WITHに限る。職位・雇用形態・所属種別の構造化保証、同時在籍・面識・共同研究は意味しない。",
+      "accessedAt": "2026-10-04",
+      "stance": "support"
+    },
+    {
+      "id": "931dc662-fe56-49c6-a629-6374416e8129",
+      "claimId": "47d46b69-b111-4b76-addb-632d679ae4f8",
+      "sourceId": "5d880ab0-1a13-4621-8c4e-7e4a45e864d1",
+      "locator": "冒頭、学業・助手・1924年資格取得とPrivatdozentの段落",
+      "note": "大学での学業・Bornの助手・Privatdozentという早期経歴を確認。 原表記（en）：assistant; Privatdozent [associate professor]。期間原表記：habilitated here in 1924。1924は資格取得年。関与開始や連続在籍期間を補完せず、後年の別研究所の経歴も混ぜない。 この原表記は根拠の説明でありClaimの構造化した職位ではない。全経歴・連続在籍・期間外の不存在を認定しない。 受入：ユーザーの2026-10-05受入。資料の具体的関与に基づく広いAFFILIATED_WITHに限る。職位・雇用形態・所属種別の構造化保証、同時在籍・面識・共同研究は意味しない。",
+      "accessedAt": "2026-10-04",
+      "stance": "support"
+    },
+    {
+      "id": "357428c7-f168-486b-8a7a-d983b637b8ab",
+      "claimId": "2bdd7207-c8af-4936-ac23-961a8450eaad",
+      "sourceId": "e3184fed-e704-41ef-9206-29345baed6ad",
+      "locator": "学位後の経歴、winter term 1921-1922の段落（参考文献6–8を伴う周辺）",
+      "note": "ゲッティンゲン大学で冬学期にBornの学術的助手として関わったことを確認。 原表記（en）：assistant of Max Born。期間原表記：winter term 1921-1922。冬学期を年精度で保持し、月日は推定しない。漫画のASSISTANT_OFを使わない。 この原表記は根拠の説明でありClaimの構造化した職位ではない。全経歴・連続在籍・期間外の不存在を認定しない。 受入：ユーザーの2026-10-05受入。資料の具体的関与に基づく広いAFFILIATED_WITHに限る。職位・雇用形態・所属種別の構造化保証、同時在籍・面識・共同研究は意味しない。",
+      "accessedAt": "2026-10-04",
+      "stance": "support"
+    },
+    {
+      "id": "b51dfb86-4e23-4e9f-bc34-295fccdfc5cd",
+      "claimId": "3ce6d2ff-9cdf-4568-b246-719a0e07c410",
+      "sourceId": "cddce742-cdc2-4360-9c95-1e3561add7f9",
+      "locator": "Niels Bohr InstituteのDirector欄",
+      "note": "研究所のDirectorとしての関わりを確認。 原表記（en）：Director。期間原表記：1916-1962。S2の1921年研究所開設と開始年が不整合。1916は大学教授任命と混同し得るため期間を採用しない。 この原表記は根拠の説明でありClaimの構造化した職位ではない。全経歴・連続在籍・期間外の不存在を認定しない。 受入：ユーザーの2026-10-05受入。資料の具体的関与に基づく広いAFFILIATED_WITHに限る。職位・雇用形態・所属種別の構造化保証、同時在籍・面識・共同研究は意味しない。",
+      "accessedAt": "2026-10-04",
+      "stance": "support"
+    },
+    {
+      "id": "29e47b6f-3e2c-460f-b659-e3104cb79609",
+      "claimId": "3ce6d2ff-9cdf-4568-b246-719a0e07c410",
+      "sourceId": "e25f3776-1c9d-440c-9687-43e854112960",
+      "locator": "設立沿革の冒頭、1916年教授任命と1921年開設の段落",
+      "note": "研究所の設立・研究教育活動と旧称から現在名への改称を確認。 原表記（en）：未特定。期間原表記：1916（大学教授任命）; 1921（研究所開設）。設立日から関与開始を補完しない。旧研究所と現在名は今回同一Entityに受入。 この原表記は根拠の説明でありClaimの構造化した職位ではない。全経歴・連続在籍・期間外の不存在を認定しない。 受入：ユーザーの2026-10-05受入。資料の具体的関与に基づく広いAFFILIATED_WITHに限る。職位・雇用形態・所属種別の構造化保証、同時在籍・面識・共同研究は意味しない。",
+      "accessedAt": "2026-10-04",
+      "stance": "support"
+    },
+    {
+      "id": "0a54276e-291e-4379-8258-18b3cc30cc5b",
+      "claimId": "eb7182aa-e7f1-4064-a731-bffe7c59227c",
+      "sourceId": "3d8bfd32-31fd-4e8a-aff6-7b7fb80265c0",
+      "locator": "Niels Bohr InstituteのVisitor欄",
+      "note": "研究所にVisitorとして関わったことを確認。 原表記（en）：Visitor。期間原表記：1924-25。別記のAssociate professor, 1926-27は今回のClaimへ結合しない。 この原表記は根拠の説明でありClaimの構造化した職位ではない。全経歴・連続在籍・期間外の不存在を認定しない。 受入：ユーザーの2026-10-05受入。資料の具体的関与に基づく広いAFFILIATED_WITHに限る。職位・雇用形態・所属種別の構造化保証、同時在籍・面識・共同研究は意味しない。",
+      "accessedAt": "2026-10-04",
+      "stance": "support"
+    },
+    {
+      "id": "1e122ac6-db31-4a76-bb32-ec8a7e9d8ab4",
+      "claimId": "c23fe1f3-fae6-43c1-9ed7-af1d94e4712c",
+      "sourceId": "02e2f940-31d5-41bb-900e-7c76a1dd3561",
+      "locator": "Niels Bohr InstituteのVisitor欄",
+      "note": "研究所にVisitorとして関わったことを確認。 原表記（en）：Visitor。期間原表記：1922-23。常勤・雇用・全期間の所属へ強めない。 この原表記は根拠の説明でありClaimの構造化した職位ではない。全経歴・連続在籍・期間外の不存在を認定しない。 受入：ユーザーの2026-10-05受入。資料の具体的関与に基づく広いAFFILIATED_WITHに限る。職位・雇用形態・所属種別の構造化保証、同時在籍・面識・共同研究は意味しない。",
+      "accessedAt": "2026-10-04",
+      "stance": "support"
+    },
+    {
+      "id": "6ff140bb-6dff-411a-93f8-5a2ea12d0fba",
+      "claimId": "f05e54fa-67a1-49c6-876a-0f4b01534cb0",
+      "sourceId": "2efd23f2-e6b2-4131-93cc-6c3824313741",
+      "locator": "Niels Bohr InstituteのVisitor欄",
+      "note": "研究所にVisitorとして関わったことを確認。 原表記（en）：Visitor。期間原表記：1926-27。受賞時Cambridge所属欄とは別の関係。 この原表記は根拠の説明でありClaimの構造化した職位ではない。全経歴・連続在籍・期間外の不存在を認定しない。 受入：ユーザーの2026-10-05受入。資料の具体的関与に基づく広いAFFILIATED_WITHに限る。職位・雇用形態・所属種別の構造化保証、同時在籍・面識・共同研究は意味しない。",
+      "accessedAt": "2026-10-04",
+      "stance": "support"
+    },
+    {
+      "id": "11e7ab73-485d-4433-99e1-47793f9d13dc",
+      "claimId": "0bac17e3-5832-4e48-9616-27c3de12ea83",
+      "sourceId": "1fe1b07a-9d60-4cc9-8024-be5821d3abee",
+      "locator": "Dirac Centennial節の冒頭と退任段落",
+      "note": "大学でLucasian Professorとして関わったことを確認。 原表記（en）：Lucasian Professor of Mathematics。期間原表記：1932 to 1969。College・研究所へ自動転写しない。2002年の号の日付を所属時期へ使わない。 この原表記は根拠の説明でありClaimの構造化した職位ではない。全経歴・連続在籍・期間外の不存在を認定しない。 受入：ユーザーの2026-10-05受入。資料の具体的関与に基づく広いAFFILIATED_WITHに限る。職位・雇用形態・所属種別の構造化保証、同時在籍・面識・共同研究は意味しない。",
+      "accessedAt": "2026-10-04",
+      "stance": "support"
+    }
+  ]
+}

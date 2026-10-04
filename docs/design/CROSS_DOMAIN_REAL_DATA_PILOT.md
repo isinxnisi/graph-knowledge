@@ -1,6 +1,12 @@
 # 別分野実データパイロット：量子物理学者と研究機関
 
-2026-10-05。**設計・候補資料確認まで。受入済みdatasetではない。** Phase 09のコードを基準に、5人物・3 organization・9 Claimの受入候補を提案する。DB・API・UI・schema・fixture・凍結pilot・語彙は変更しない。以下のP/O/C/S番号は文書内参照用であり、内部UUIDや外部IDではない。
+2026-10-05の初回レビュー記録。**以下の候補表・未実施事項は設計時点のもの。現在の受入・投入状態は直下の追記を優先する。** Phase 09のコードを基準に、5人物・3 organization・9 Claimの受入候補を提案する。DB・API・UI・schema・fixture・凍結pilot・語彙は変更しない。以下のP/O/C/S番号は文書内参照用であり、内部UUIDや外部IDではない。
+
+## Phase 10の受入・投入追記
+
+ユーザーがC01–C08を既存AFFILIATED_WITHの広い意味で受入。C09は棄却せずpending。8 Entityと8 Claimを科学専用の凍結v1へ投入した。原職位・言語・期間原表記・限定・受入理由を台帳／Citationに保存。研究所の旧称・現在名は公式改称記述と今回の受入により同一Entityに扱う。QIDは8件だけ照合済み。
+
+[凍結dataset](../../datasets/pilot-science/v1/README.md)／[実施記録と観察](../archive/phase-10-science-pilot/IMPLEMENTATION_SCIENCE_PILOT.md)。人物間の影響の実データ検証は保留。以下の9候補の設計時点の期待は、投入済み8件の実績とは区別する。
 
 ## 結論と目的
 
