@@ -297,6 +297,126 @@
       "createdAt": "2026-10-03T05:13:37Z",
       "updatedAt": "2026-10-03T05:13:37Z",
       "contribution": null
+    },
+    {
+      "id": "dbc08a85-9165-4cc8-a3af-d133c83d8f67",
+      "subjectId": "29e9caea-6c44-4c1f-9abc-f4350003ca3b",
+      "objectId": "2b7c6289-d050-4dc0-93e3-9307681253cc",
+      "predicate": "CONTRIBUTED_TO",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "visibility": "published",
+      "createdAt": "2026-10-03T15:00:00Z",
+      "updatedAt": "2026-10-03T15:00:00Z",
+      "contribution": {
+        "roleId": "PRODUCING",
+        "scope": {
+          "kind": "publication",
+          "isbn13": "9784091874313",
+          "volumeLabel": "第1巻",
+          "editionLabel": null,
+          "language": "ja"
+        }
+      }
+    },
+    {
+      "id": "cc2bc0c3-d8e7-47fe-8aaf-1b219bff0137",
+      "subjectId": "bdb742c2-2973-4c1c-a523-c828374111fc",
+      "objectId": "2b7c6289-d050-4dc0-93e3-9307681253cc",
+      "predicate": "CONTRIBUTED_TO",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "visibility": "published",
+      "createdAt": "2026-10-03T15:00:00Z",
+      "updatedAt": "2026-10-03T15:00:00Z",
+      "contribution": {
+        "roleId": "SUPERVISION",
+        "scope": {
+          "kind": "publication",
+          "isbn13": "9784091874313",
+          "volumeLabel": "第1巻",
+          "editionLabel": null,
+          "language": "ja"
+        }
+      }
+    },
+    {
+      "id": "52c9fa30-bac5-40f1-bbe5-75d7420081d8",
+      "subjectId": "93630265-9c44-4bc8-8e7e-4efc7deef14d",
+      "objectId": "e87a40f9-3139-47a1-a962-6610eb2b8878",
+      "predicate": "CONTRIBUTED_TO",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "visibility": "published",
+      "createdAt": "2026-10-03T15:00:00Z",
+      "updatedAt": "2026-10-03T15:00:00Z",
+      "contribution": {
+        "roleId": "SCRIPT_WRITING",
+        "scope": {
+          "kind": "publication",
+          "isbn13": "9784091841612",
+          "volumeLabel": "第1巻",
+          "editionLabel": "完全版",
+          "language": "ja"
+        }
+      }
+    },
+    {
+      "id": "7142e160-c0d5-4358-9b70-63c03bfd44ad",
+      "subjectId": "29e9caea-6c44-4c1f-9abc-f4350003ca3b",
+      "objectId": "e87a40f9-3139-47a1-a962-6610eb2b8878",
+      "predicate": "CONTRIBUTED_TO",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "visibility": "published",
+      "createdAt": "2026-10-03T15:00:00Z",
+      "updatedAt": "2026-10-03T15:00:00Z",
+      "contribution": {
+        "roleId": "SCRIPT_WRITING",
+        "scope": {
+          "kind": "publication",
+          "isbn13": "9784091841612",
+          "volumeLabel": "第1巻",
+          "editionLabel": "完全版",
+          "language": "ja"
+        }
+      }
+    },
+    {
+      "id": "29f3bd67-b461-49a8-bdfa-d98b1d7dcfe1",
+      "subjectId": "29e9caea-6c44-4c1f-9abc-f4350003ca3b",
+      "objectId": "326dd821-2ca6-406a-a683-e424eb534998",
+      "predicate": "CONTRIBUTED_TO",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "visibility": "published",
+      "createdAt": "2026-10-03T15:00:00Z",
+      "updatedAt": "2026-10-03T15:00:00Z",
+      "contribution": {
+        "roleId": "STORY_CO_CREATION",
+        "scope": {
+          "kind": "publication",
+          "isbn13": "9784063729221",
+          "volumeLabel": "第4巻",
+          "editionLabel": null,
+          "language": "ja"
+        }
+      }
     }
   ],
   "sources": [
@@ -439,6 +559,71 @@
       "accessedAt": "2026-10-03",
       "stance": "support",
       "roleEvidence": null
+    },
+    {
+      "id": "48922d83-9686-4bc9-b5b4-5f4bf1ffd8b4",
+      "claimId": "dbc08a85-9165-4cc8-a3af-d133c83d8f67",
+      "sourceId": "b7266fbf-a778-407e-8a4b-374b97523a26",
+      "locator": "タイトル直下のクレジット",
+      "note": "v1の広いClaim e3b37447-87f5-40ed-b738-6ba37578c8c3 と同じ資料に由来する限定Claim。ユーザーが公式の商品情報上のRole表記と対象刊行物を確認して受入。指定された刊行物の商品情報において、その人物が当該Roleでクレジットされている範囲。当該巻だけの担当、全巻・全版での担当、全期間の担当を意味しない。受入日は記録日、時刻は未確認のため日付境界を用いる。",
+      "accessedAt": "2026-10-03",
+      "stance": "support",
+      "roleEvidence": {
+        "originalText": "長崎尚志プロデュース",
+        "language": "ja"
+      }
+    },
+    {
+      "id": "b775cbf3-4cff-41ea-986d-1f067e14f073",
+      "claimId": "cc2bc0c3-d8e7-47fe-8aaf-1b219bff0137",
+      "sourceId": "b7266fbf-a778-407e-8a4b-374b97523a26",
+      "locator": "タイトル直下のクレジット",
+      "note": "v1の広いClaim 75f911ca-a247-42bd-8bf0-c166649ce145 と同じ資料に由来する限定Claim。ユーザーが公式の商品情報上のRole表記と対象刊行物を確認して受入。指定された刊行物の商品情報において、その人物が当該Roleでクレジットされている範囲。当該巻だけの担当、全巻・全版での担当、全期間の担当を意味しない。受入日は記録日、時刻は未確認のため日付境界を用いる。",
+      "accessedAt": "2026-10-03",
+      "stance": "support",
+      "roleEvidence": {
+        "originalText": "監修",
+        "language": "ja"
+      }
+    },
+    {
+      "id": "11e50f95-30da-4173-9014-c829f93a55ba",
+      "claimId": "52c9fa30-bac5-40f1-bbe5-75d7420081d8",
+      "sourceId": "3b00d7a4-2c90-4771-94b6-870c64e12f57",
+      "locator": "タイトル直下のクレジット",
+      "note": "v1の広いClaim 3ee2132d-436a-44cf-a33e-851faddd3163 と同じ資料に由来する限定Claim。ユーザーが公式の商品情報上のRole表記と対象刊行物を確認して受入。指定された刊行物の商品情報において、その人物が当該Roleでクレジットされている範囲。当該巻だけの担当、全巻・全版での担当、全期間の担当を意味しない。受入日は記録日、時刻は未確認のため日付境界を用いる。",
+      "accessedAt": "2026-10-03",
+      "stance": "support",
+      "roleEvidence": {
+        "originalText": "脚本",
+        "language": "ja"
+      }
+    },
+    {
+      "id": "2c3c2891-fb58-47f8-a40b-591999532432",
+      "claimId": "7142e160-c0d5-4358-9b70-63c03bfd44ad",
+      "sourceId": "3b00d7a4-2c90-4771-94b6-870c64e12f57",
+      "locator": "タイトル直下のクレジット",
+      "note": "v1の広いClaim 48c3605b-34d8-409d-a4d2-fdd50c524c74 と同じ資料に由来する限定Claim。ユーザーが公式の商品情報上のRole表記と対象刊行物を確認して受入。指定された刊行物の商品情報において、その人物が当該Roleでクレジットされている範囲。当該巻だけの担当、全巻・全版での担当、全期間の担当を意味しない。受入日は記録日、時刻は未確認のため日付境界を用いる。",
+      "accessedAt": "2026-10-03",
+      "stance": "support",
+      "roleEvidence": {
+        "originalText": "脚本",
+        "language": "ja"
+      }
+    },
+    {
+      "id": "ef69e88a-9351-4a14-a6ec-db4f4eec0bdc",
+      "claimId": "29f3bd67-b461-49a8-bdfa-d98b1d7dcfe1",
+      "sourceId": "699c3147-79e2-43c8-8c08-9369eab559fa",
+      "locator": "タイトル直下のクレジット・内容紹介末尾",
+      "note": "v1の広いClaim 1ad08ee5-bbc3-41bf-b647-4b7419820a14 と同じ資料に由来する限定Claim。ユーザーが公式の商品情報上のRole表記と対象刊行物を確認して受入。指定された刊行物の商品情報において、その人物が当該Roleでクレジットされている範囲。当該巻だけの担当、全巻・全版での担当、全期間の担当を意味しない。受入日は記録日、時刻は未確認のため日付境界を用いる。",
+      "accessedAt": "2026-10-03",
+      "stance": "support",
+      "roleEvidence": {
+        "originalText": "ストーリー共同制作",
+        "language": "ja"
+      }
     }
   ]
 }

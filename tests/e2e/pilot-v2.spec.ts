@@ -9,7 +9,7 @@ async function root(page: Page) {
   await page.getByLabel("人物名・別名").fill("長崎尚志"); await page.getByRole("button", { name: "検索", exact: true }).click();
   await page.getByRole("button", { name: /^長崎尚志 —/ }).click();
 }
-async function selectRelation(page: Page, object: string) {
+async function selectRelation(page: Page, object: string, subject = "長崎尚志") {
   const point = await page.getByTestId("graph-canvas").evaluate(async (el, args) => {
     const cy = (el as unknown as { _cyreg: { cy: import("cytoscape").Core } })._cyreg.cy;
     const edge = cy.edges().filter((e) => e.data("source") === args.subject && e.data("target") === args.object).first() as import("cytoscape").EdgeSingular;
@@ -17,7 +17,7 @@ async function selectRelation(page: Page, object: string) {
     await new Promise<void>((r) => requestAnimationFrame(() => requestAnimationFrame(() => r())));
     const a = edge.renderedSourceEndpoint(), b = edge.renderedTargetEndpoint();
     return { x: a.x + (b.x - a.x) * 0.3, y: a.y + (b.y - a.y) * 0.3 };
-  }, { subject: id("長崎尚志"), object: id(object) });
+  }, { subject: id(subject), object: id(object) });
   await page.getByTestId("graph-canvas").click({ position: point });
 }
 test("v2実DBの取得範囲・広い主張・Role条件・出典", async ({ page }) => {
@@ -91,5 +91,84 @@ test("専用レスポンスでRole概要・別Roleの否定・scope比較・条�
   await entity.getByRole("button", { name: "展開を閉じる", exact: true }).click();
   await expect(page.getByTestId("graph-counts")).toHaveText("Entity 1 / Claim 0");
   await entity.getByRole("button", { name: "展開を再開", exact: true }).click();
+  await expect(page.getByTestId("graph-counts")).toHaveText("Entity 2 / Claim 1");
+});
+
+test("受入済み実Roleの全探索・共有枝・座標復元・刊行物限定", async ({ page }) => {
+  await root(page);
+  async function node(name: string) {
+    const position = await page.getByTestId("graph-canvas").evaluate(async (el, targetId) => {
+      const cy = (el as unknown as { _cyreg: { cy: import("cytoscape").Core } })._cyreg.cy;
+      const target = cy.getElementById(targetId) as import("cytoscape").NodeSingular;
+      cy.zoom(1); cy.center(target);
+      await new Promise<void>((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => resolve())));
+      return target.renderedPosition();
+    }, id(name));
+    await page.getByTestId("graph-canvas").click({ position });
+    await expect(page.getByRole("region", { name: "Entity詳細" })).toContainText(name);
+  }
+  for (const name of ["PLUTO", "MASTERキートン", "BILLY BAT", "浦沢直樹"]) {
+    await node(name);
+    await expect(page.getByRole("region", { name: "Entity詳細" })).toContainText("取得済み");
+  }
+  await expect(page.getByTestId("graph-counts")).toHaveText("Entity 8 / Claim 14");
+  await page.getByRole("button", { name: "全体を表示", exact: true }).click();
+  const snapshot = () => page.getByTestId("graph-canvas").evaluate((el) => {
+    const cy = (el as unknown as { _cyreg: { cy: import("cytoscape").Core } })._cyreg.cy;
+    return { positions: cy.nodes().map((n) => ({ id: n.id(), ...n.position() })).sort((a, b) => a.id.localeCompare(b.id)), labels: cy.edges().map((e) => e.data("label") as string) };
+  });
+  const before = await snapshot(); expect(before.labels).toHaveLength(9);
+  expect(before.labels.join(" ")).toContain("ストーリー共同制作");
+  await page.screenshot({ path: "test-results/pilot-v2-real-expanded.png", fullPage: true });
+  for (const work of ["PLUTO", "MASTERキートン", "BILLY BAT"]) {
+    await selectRelation(page, work);
+    const candidates = ledger.candidates.filter((c) => c.originClaimId === data.claims.find((claim) => claim.subjectId === id("長崎尚志") && claim.objectId === id(work) && !claim.contribution?.roleId)!.id);
+    for (const candidate of candidates) {
+      const card = page.getByTestId(`claim-card-${candidate.claimId}`);
+      await expect(card).toContainText(candidate.scope.isbn13);
+      await expect(card).toContainText("商品情報で確認されたクレジット");
+      await expect(card).toContainText("この巻だけの担当や、全巻・全版・全期間の担当を示しません");
+      await expect(card).toContainText(candidate.roleEvidence.originalText);
+    }
+  }
+  await node("長崎尚志");
+  const entity = page.getByRole("region", { name: "Entity詳細" });
+  await entity.getByRole("button", { name: "展開を閉じる", exact: true }).click();
+  await expect(page.getByTestId("graph-counts")).toHaveText("Entity 1 / Claim 0");
+  await entity.getByRole("button", { name: "展開を再開", exact: true }).click();
+  await expect(page.getByTestId("graph-counts")).toHaveText("Entity 8 / Claim 14");
+  expect((await snapshot()).positions).toEqual(before.positions);
+  await page.setViewportSize({ width: 1160, height: 650 });
+  await page.getByRole("button", { name: "全体を表示", exact: true }).click();
+  await page.screenshot({ path: "test-results/pilot-v2-real-compact.png", fullPage: true });
+});
+
+
+test("全5件の実クレジットとRole条件を人物起点で確認", async ({ page }) => {
+  await page.goto("/");
+  for (const candidate of ledger.candidates) {
+    const claim = data.claims.find((c) => c.id === candidate.claimId)!;
+    const subject = data.entities.find((e) => e.id === claim.subjectId)!.name;
+    const object = data.entities.find((e) => e.id === claim.objectId)!.name;
+    await page.getByLabel("人物名・別名").fill(subject);
+    await page.getByRole("button", { name: "検索", exact: true }).click();
+    await page.getByRole("button", { name: new RegExp(`^${subject} —`) }).click();
+    await selectRelation(page, object, subject);
+    const card = page.getByTestId(`claim-card-${candidate.claimId}`);
+    await expect(card).toContainText(candidate.roleEvidence.originalText);
+    await expect(card).toContainText(candidate.scope.isbn13);
+  }
+  await page.getByRole("button", { name: "選択を解除", exact: true }).click();
+  await page.getByRole("checkbox", { name: "制作に関わった", exact: true }).check();
+  await page.getByRole("checkbox", { name: "脚本", exact: true }).check();
+  await page.getByRole("button", { name: "適用", exact: true }).click();
+  await expect(page.getByTestId("graph-counts")).toHaveText("Entity 2 / Claim 1");
+  await page.getByLabel("人物名・別名").fill("手塚眞");
+  await page.getByRole("button", { name: "検索", exact: true }).click();
+  await page.getByRole("button", { name: /^手塚眞 —/ }).click();
+  await expect(page.getByTestId("graph-counts")).toHaveText("Entity 1 / Claim 0");
+  await page.getByRole("checkbox", { name: "脚本", exact: true }).uncheck();
+  await page.getByRole("checkbox", { name: "監修", exact: true }).check();
+  await page.getByRole("button", { name: "適用", exact: true }).click();
   await expect(page.getByTestId("graph-counts")).toHaveText("Entity 2 / Claim 1");
 });

@@ -4,13 +4,19 @@
   "transformVersion": 1,
   "createdAt": "2026-10-03T12:03:33Z",
   "files": {
-    "ledger.json": "23e8b7dacea1b80f5d6a5c231f9b55c5f8132113742b3fe7a5367994583b57dd",
-    "data.json": "727abbaa74b31ec4af2be00947628b37d9dd7964a1e9b177c4e70e5ed4b708d3"
+    "ledger.json": "0b22ed0add4df4b780669f45815282975f143225bbaa9b35eef4cf32206f6537",
+    "data.json": "63798471bded3b9d31666c45165d9296d8ccfcd476c042872a02375143981c17"
   },
   "base": {
     "dataset": "pilot-urasawa-v1",
     "dataSha256": "446cb51ef4c1119ac8d2cf85ce1691b5e3b9e63e377c4cbef7d976fa585fc5cd",
     "ledgerSha256": "222b7e4530d9638d2966ddaa5d81a6ffd20427cf9c9b7ed1e7c95b4a7852eb03"
   },
-  "accepted": []
+  "accepted": [
+    "dbc08a85-9165-4cc8-a3af-d133c83d8f67",
+    "cc2bc0c3-d8e7-47fe-8aaf-1b219bff0137",
+    "52c9fa30-bac5-40f1-bbe5-75d7420081d8",
+    "7142e160-c0d5-4358-9b70-63c03bfd44ad",
+    "29f3bd67-b461-49a8-bdfa-d98b1d7dcfe1"
+  ]
 }

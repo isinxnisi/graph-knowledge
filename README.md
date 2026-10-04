@@ -199,7 +199,7 @@ docker compose --env-file .env.pilot -f compose.pilot.yaml stop
 
 ## 制作Role v2環境
 
-[採用契約](docs/design/CONTRIBUTION_ROLE_CONTRACTS.md)・[実施記録](docs/design/phase-06-contribution-role/IMPLEMENTATION_CONTRIBUTION_ROLE.md)を参照。実データ候補は人間の受入を経たものだけ生成します。v1は変更しません。
+[採用契約](docs/design/CONTRIBUTION_ROLE_CONTRACTS.md)・[実施記録](docs/archive/phase-06-contribution-role/IMPLEMENTATION_CONTRIBUTION_ROLE.md)を参照。実データ候補は人間の受入を経たものだけ生成します。v1は変更しません。
 
 ```bash
 cp .env.pilot-v2.example .env.pilot-v2
@@ -210,6 +210,6 @@ npm run pilot:v2:seed
 npm run pilot:v2:dev
 ```
 
-http://127.0.0.1:3212 で「長崎尚志」を検索。Role条件は左ペイン、刊行物の限定・原表記はEdgeの詳細で確認します。受入待ち候補は表示されません。生成データを直接編集せず、台帳の人間判断と再生成・検証を経てください。
+http://127.0.0.1:3212 で「長崎尚志」を検索。Role条件は左ペイン、刊行物の限定・原表記はEdgeの詳細で確認します。2026-10-04に5候補を受入済み。旧9 Claimと役割付き5 Claimを保持し、Graphでは9 Relationへ集約します。受入範囲は指定刊行物の商品情報のクレジットです。生成データを直接編集せず、今版は凍結し、以後の追加は新dataset版で人間判断と生成・検証を行ってください。
 
 検証：`npm run pilot:v2:integration`、`npm run pilot:v2:e2e`。専用テストの架空Claimはpilotファイルへ保存しません。

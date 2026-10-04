@@ -1,12 +1,12 @@
 # 限定された制作Roleの採用契約
 
-2026-10-03。Phase 06の現行実装。設計理由は[Roleレビュー](CONTRIBUTION_ROLE_REVIEW.md)、実施結果と未完了範囲は[実施記録](phase-06-contribution-role/IMPLEMENTATION_CONTRIBUTION_ROLE.md)。
+2026-10-03。Phase 06の現行実装。設計理由は[Roleレビュー](CONTRIBUTION_ROLE_REVIEW.md)、実施結果と受入記録は[実施記録](../archive/phase-06-contribution-role/IMPLEMENTATION_CONTRIBUTION_ROLE.md)。
 
 ## 意味・保存・根拠
 
 対象はCONTRIBUTED_TOだけ。一Claim一Role。SCRIPT_WRITING（脚本）、SUPERVISION（監修）、PRODUCING（プロデュース）、STORY_CO_CREATION（ストーリー共同制作）の4 ID。作画は推定しない。
 
-ClaimSummary/Detailの必須contributionは他predicateではnull、CONTRIBUTED_TOでは `{roleId: RoleId|null, scope: PublicationScope|null}`。roleId=nullはこのClaimではRoleを限定していない。scope=nullは適用範囲が未構造化。全Role・全巻へ補完しない。scopeは `{kind:"publication", isbn13, volumeLabel|null, editionLabel|null, language}`。ISBNは978/979で始まる13桁とチェック桁、languageはBCP 47形式を検証する。資料が当該刊行物への関与を支持するかは人間の受入判断。
+ClaimSummary/Detailの必須contributionは他predicateではnull、CONTRIBUTED_TOでは `{roleId: RoleId|null, scope: PublicationScope|null}`。roleId=nullはこのClaimではRoleを限定していない。scope=nullは適用範囲が未構造化。全Role・全巻へ補完しない。scopeは `{kind:"publication", isbn13, volumeLabel|null, editionLabel|null, language}`。ISBNは978/979で始まる13桁とチェック桁、languageはBCP 47形式を検証する。資料が当該刊行物についてのクレジットを支持するかは人間の受入判断。その巻だけの担当・全巻／全版／全期間を意味しない。
 
 polarityは主体・predicate・作品・Role・scope・periodを含む命題に掛かる。別Role／刊行物／期間の肯否は自動的な矛盾ではない。unknown periodを刊行日で埋めない。
 
@@ -49,3 +49,5 @@ baseline-v1.jsonは固定。npm run vocabulary:checkで実行labelとの一致�
 v1は全ファイル・DBとも凍結保持。v2台帳はv1 data/ledgerのhashを参照し、元Claim ID、候補UUID、Role、scope、原表記、再確認記録、人間の受入判断を保持。acceptedかつreviewer/日時が揃う候補のみ生成。pending/deferredをデータへ変換しない。
 
 v2は別compose/volume、Bolt7689、HTTP7476、Web3212、.env.pilot-v2、.next-pilot-v2。誤ったポート／datasetでseedしない。既存内容が違えば通常seedで上書きしない。収録候補の受入状態は実施記録を参照する。
+
+2026-10-04に5候補をユーザーが受入。v2は旧9 ClaimとRole付き5 Claimを保持した凍結版とする。以後の増量・訂正は新dataset版で受け入れる。

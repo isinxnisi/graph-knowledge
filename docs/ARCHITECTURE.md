@@ -1,6 +1,6 @@
 # 現行技術設計
 
-更新日: 2026-10-03 / 状態: 初期Vertical Sliceと探索の開閉・Node再クリックまで実装済み。既存predicateと限定制作Roleによる条件付き探索を追加。v2 Role Claimの個別受入は確認待ち。taxonomy・プリセット・会員保存は未実装。[文書の入口](README.md)に現役設計とフェーズ別履歴をまとめる。
+更新日: 2026-10-04 / 状態: 初期Vertical Sliceと探索の開閉・Node再クリックまで実装済み。既存predicateと限定制作Roleによる条件付き探索を追加。v2 Role Claim 5件を人間受入後に投入・検証済み。taxonomy・プリセット・会員保存は未実装。[文書の入口](README.md)に現役設計とフェーズ別履歴をまとめる。
 
 ## 前提と設計の位置づけ
 
@@ -483,4 +483,4 @@ GraphStateは一つの有効条件スコープ（predicates / conditionKey）内
 
 [CONTRIBUTION_ROLE_CONTRACTS.md](design/CONTRIBUTION_ROLE_CONTRACTS.md)を現行の採用仕様とする。4 Role、一Claim一Role、publication scope、Citationの原表記・言語、LIMIT前条件、dataset付きv2 cursor、広いrelatedClaimIdsと三つ組DisplayRelationを実装。CONTRIBUTED_TOの混在は「肯定・否定あり」。既存demo/v1の無Role条件cursorは維持するが、Claim/Citationの返却にcontribution/roleEvidenceを追加しクライアントも更新した。凍結v1ファイル・DBは変更しない。
 
-実データ候補の人間受入と実装完了の区別・検証結果は[Phase 06実施記録](design/phase-06-contribution-role/IMPLEMENTATION_CONTRIBUTION_ROLE.md)を参照。taxonomy等は未実装。
+実データ5件の人間受入・検証結果は[Phase 06実施記録](archive/phase-06-contribution-role/IMPLEMENTATION_CONTRIBUTION_ROLE.md)を参照。taxonomy等は未実装。
