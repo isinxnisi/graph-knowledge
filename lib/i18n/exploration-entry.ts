@@ -1,7 +1,8 @@
-import type { ContributionRoleFilter, PredicateFilter } from "../domain/exploration";
+import type { OrganizationPositionFilter, ContributionRoleFilter, PredicateFilter } from "../domain/exploration";
 import { PREDICATE_KEYS } from "../domain/predicates";
 import { explorationLabels } from "./exploration";
 import { contributionLabels } from "./contribution";
+import { organizationParticipationLabels } from "./organization-participation";
 const ja = {
   edit: "見る関係を編集", title: "見る関係の編集", applied: "適用中", unrestricted: "すべての関係（追加条件なし）",
   cancel: "キャンセル", draft: "編集中・未適用", unchanged: "適用中の条件と同じです。", apply: "適用",
@@ -18,11 +19,11 @@ const ja = {
   detailHelp: "Graphで対象や線を選ぶと、ここで内容と根拠を確認できます。",
 };
 export function entryLabels(locale = "ja") { const resources: Record<string, typeof ja> = { ja }; return resources[locale] ?? resources[locale.split("-")[0]] ?? ja; }
-export function conditionSummary(predicates: PredicateFilter, roles: ContributionRoleFilter, locale = "ja") {
+export function conditionSummary(predicates: PredicateFilter, roles: ContributionRoleFilter, locale = "ja", positions: OrganizationPositionFilter = null) {
   const text = entryLabels(locale), relations = explorationLabels(locale), roleText = contributionLabels(locale);
-  if (predicates === null && roles === null) return text.unrestricted;
+  if (predicates === null && roles === null && positions === null) return text.unrestricted;
   if (predicates?.length === 0) return text.none;
   return (predicates ?? PREDICATE_KEYS).map((predicate) => predicate === "CONTRIBUTED_TO" && roles !== null
     ? `${relations.predicates[predicate]}（${roles.length ? roles.map((role) => roleText.roles[role]).join("・") : text.noRoles}）`
-    : relations.predicates[predicate]).join(" ／ ");
+    : predicate === "AFFILIATED_WITH" && positions !== null ? `${relations.predicates[predicate]}（${positions.length ? positions.map(position => organizationParticipationLabels(locale).positions[position]).join("・") : organizationParticipationLabels(locale).empty}）` : relations.predicates[predicate]).join(" ／ ");
 }

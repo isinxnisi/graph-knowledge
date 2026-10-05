@@ -258,3 +258,18 @@ npm run science:dev
 ### 固定の探索開始例
 
 左ペインの「探索してみる」から、現在のdatasetに存在する人物・作品・組織を文字入力なしで起点にできます。開始例は追加条件なしで新しい探索を開始します。既存の検索とGraph途中での起点切替・直前復帰も維持しています。関係モデルを検証する追加データの構成案は[設計文書](docs/design/RELATION_MODEL_VALIDATION_SAMPLES.md)を参照してください。新規データはまだ投入していません。
+
+## 科学v2：時期別の組織立場
+
+Phase 14の限定検証環境は **http://127.0.0.1:3214**。科学v1の広い8 Claimを残し、Visitor 1924–1925 / Associate professor 1926–1927の2 Claimを追加しています。制作Roleと組織の立場は別の条件です。
+
+```bash
+cp .env.science-v2.example .env.science-v2
+docker compose --env-file .env.science-v2 -f compose.science-v2.yaml up -d --wait
+npm run science:v2:validate
+npm run qualification:check
+npm run science:v2:seed
+npm run science:v2:dev
+```
+
+ハイゼンベルクの開始例からNBIの線を選び、広いClaimと2立場/期間の詳細を比較できます。「見る関係を編集」→「組織との関わりの立場を調整」から絞ります。起点切替・直前復帰は従来どおり。[dataset・検証方法](datasets/pilot-science/v2/README.md)／[採用契約](docs/design/TYPED_QUALIFICATION_CONTRACTS.md)。

@@ -1,3 +1,4 @@
+import { organizationParticipationProperties } from "../domain/organization-participation";
 import { contributionProperties } from "../domain/contribution";
 import { readFile } from "node:fs/promises";
 import { randomUUID } from "node:crypto";
@@ -146,8 +147,8 @@ export async function seedFixture(driver: Driver, database: string, input: unkno
         await merge("Source", { ...properties, ...dateProperties("publishedAt", publishedAt) });
       }
       for (const claim of fixture.claims) {
-        const { subjectId, objectId, period, contribution, ...properties } = claim;
-        await merge("Claim", { ...properties, ...contributionProperties(contribution ?? null), ...dateProperties("validFrom", period.from), ...dateProperties("validTo", period.to) });
+        const { subjectId, objectId, period, contribution, organizationParticipation, ...properties } = claim;
+        await merge("Claim", { ...properties, ...contributionProperties(contribution ?? null), ...organizationParticipationProperties(organizationParticipation ?? null), ...dateProperties("validFrom", period.from), ...dateProperties("validTo", period.to) });
         const result = await tx.run(
           `MATCH (c:Claim {id: $id}), (s:Entity {id: $subjectId}), (o:Entity {id: $objectId})
            MERGE (c)-[:SUBJECT]->(s) MERGE (c)-[:OBJECT]->(o)`,
@@ -158,8 +159,8 @@ export async function seedFixture(driver: Driver, database: string, input: unkno
         await ensureConnections(tx, claim.id, "OBJECT", [objectId]);
       }
       for (const citation of fixture.citations) {
-        const { claimId, sourceId, roleEvidence, ...properties } = citation;
-        await merge("Citation", { ...properties, roleOriginalText: roleEvidence?.originalText ?? null, roleOriginalLanguage: roleEvidence?.language ?? null });
+        const { claimId, sourceId, roleEvidence, positionEvidence, ...properties } = citation;
+        await merge("Citation", { ...properties, positionOriginalText: positionEvidence?.originalText ?? null, positionOriginalLanguage: positionEvidence?.language ?? null, roleOriginalText: roleEvidence?.originalText ?? null, roleOriginalLanguage: roleEvidence?.language ?? null });
         const result = await tx.run(
           `MATCH (r:Citation {id: $id}), (c:Claim {id: $claimId}), (s:Source {id: $sourceId})
            MERGE (c)-[:HAS_CITATION]->(r) MERGE (r)-[:CITES]->(s)`,

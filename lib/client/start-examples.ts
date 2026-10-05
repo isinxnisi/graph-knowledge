@@ -112,5 +112,31 @@ export const START_EXAMPLES: Record<DatasetMode, EntitySummary[]> = {
       "name": "ポール・ディラック",
       "description": "理論物理学者。研究所への訪問とケンブリッジ大学の教授経歴を収録。"
     }
+  ],
+  "pilot-science-v2": [
+    {
+      "id": "a1af9abb-843a-4611-853c-50f630b817ae",
+      "kind": "organization",
+      "name": "ゲッティンゲン大学",
+      "description": "ドイツの大学。都市や同市の別研究所とは区別する。"
+    },
+    {
+      "id": "8e322435-4318-4ad0-835b-3f71d2537421",
+      "kind": "organization",
+      "name": "ニールス・ボーア研究所",
+      "description": "コペンハーゲン大学の研究所。旧理論物理学研究所を1965年改称。現在名で表示。"
+    },
+    {
+      "id": "1530af15-129d-40bf-a1ca-ce8343dc7491",
+      "kind": "person",
+      "name": "ヴェルナー・ハイゼンベルク",
+      "description": "理論物理学者。大学での早期経歴と研究所への訪問を収録。"
+    },
+    {
+      "id": "5cda395a-4927-4cae-92fe-839b29d05095",
+      "kind": "person",
+      "name": "ポール・ディラック",
+      "description": "理論物理学者。研究所への訪問とケンブリッジ大学の教授経歴を収録。"
+    }
   ]
 };

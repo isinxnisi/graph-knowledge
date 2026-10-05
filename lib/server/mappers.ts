@@ -1,4 +1,5 @@
 import { storedContribution, roleEvidenceSchema } from "../domain/contribution";
+import { storedOrganizationParticipation, positionEvidenceSchema } from "../domain/organization-participation";
 import { z } from "zod";
 import { partialDateSchema, type PartialDate } from "../domain/dates";
 import {
@@ -27,6 +28,7 @@ export function claimSummary(properties: Properties, subject: EntitySummary, obj
   const result = claimSummarySchema.parse({
     id: properties.id, subjectId: subject.id, objectId: object.id,
     predicate: properties.predicate, polarity: properties.polarity, contribution: storedContribution(properties, String(properties.predicate)),
+    organizationParticipation: storedOrganizationParticipation(properties, String(properties.predicate)),
     period: { from: partialDate(properties, "validFrom"), to: partialDate(properties, "validTo") }, sourceCount,
   });
   const definition = PREDICATES[result.predicate];
@@ -45,6 +47,7 @@ export function citationDetail(properties: Properties, source: Properties) {
   return citationDetailSchema.parse({
     id: properties.id, locator: properties.locator, note: properties.note ?? null,
     accessedAt: properties.accessedAt ?? null, stance: properties.stance, source: sourceDetail(source),
+    positionEvidence: properties.positionOriginalText == null && properties.positionOriginalLanguage == null ? null : positionEvidenceSchema.parse({ originalText: properties.positionOriginalText, language: properties.positionOriginalLanguage }),
     roleEvidence: properties.roleOriginalText == null && properties.roleOriginalLanguage == null ? null : roleEvidenceSchema.parse({ originalText: properties.roleOriginalText, language: properties.roleOriginalLanguage }),
   });
 }

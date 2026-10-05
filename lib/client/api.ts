@@ -1,4 +1,4 @@
-import type { ContributionRoleFilter, PredicateFilter } from "../domain/exploration";
+import type { OrganizationPositionFilter, ContributionRoleFilter, PredicateFilter } from "../domain/exploration";
 import type { EntityOverviewResponse, ClaimResponse, EntityResponse, EntitySearchResponse, NeighborsResponse } from "../domain/api";
 
 export class ClientApiError extends Error {
@@ -25,9 +25,10 @@ async function get<T>(path: string, signal: AbortSignal): Promise<T> {
 export const searchEntities = (q: string, signal: AbortSignal, kind: import("../domain/search").SearchKind | null = null) => get<EntitySearchResponse>(`/api/entities?${new URLSearchParams({ q, ...(kind === null ? {} : { kind }) })}`, signal);
 export const fetchEntity = (id: string, signal: AbortSignal) => get<EntityResponse>(`/api/entities/${encodeURIComponent(id)}`, signal);
 export const fetchClaim = (id: string, signal: AbortSignal) => get<ClaimResponse>(`/api/claims/${encodeURIComponent(id)}`, signal);
-export const fetchNeighbors = (id: string, after: string | null, signal: AbortSignal, predicates: PredicateFilter = null, roles: ContributionRoleFilter = null) => {
+export const fetchNeighbors = (id: string, after: string | null, signal: AbortSignal, predicates: PredicateFilter = null, roles: ContributionRoleFilter = null, positions: OrganizationPositionFilter = null) => {
   const params = new URLSearchParams();
   if (after !== null) params.set("after", after);
+  if (positions !== null) params.set("organizationPositions", positions.join(","));
   if (roles !== null) params.set("contributionRoles", roles.join(","));
   if (predicates !== null) params.set("predicates", predicates.join(","));
   return get<NeighborsResponse>(`/api/entities/${encodeURIComponent(id)}/neighbors${params.size ? `?${params}` : ""}`, signal);

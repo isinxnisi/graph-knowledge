@@ -2,6 +2,7 @@ import { existsSync } from "node:fs";
 import { assertDatasetTarget, datasetMode } from "../lib/domain/dataset";
 import { loadPilotV2 } from "../lib/server/pilot-v2-dataset";
 import { loadPilot } from "../lib/server/pilot-dataset";
+import { loadScienceV2 } from "../lib/server/science-v2-dataset";
 import { loadSciencePilot } from "../lib/server/science-dataset";
 import { fixtureCounts } from "../lib/domain/fixture";
 import { openDatabase } from "../lib/server/neo4j";
@@ -14,7 +15,7 @@ if (args.length > 1 || (args[0] && !args[0].startsWith("--dataset="))) throw new
 const selected = datasetMode(args[0]?.slice("--dataset=".length));
 if (selected !== datasetMode(process.env.GRAPH_DATASET)) throw new Error("Selected dataset does not match GRAPH_DATASET; refusing seed");
 assertDatasetTarget(selected, process.env.NEO4J_URI ?? "");
-const fixture = selected === "demo" ? await loadFixture() : selected === "pilot-science-v1" ? await loadSciencePilot() : selected === "pilot-urasawa-v2" ? await loadPilotV2() : await loadPilot();
+const fixture = selected === "demo" ? await loadFixture() : selected === "pilot-science-v2" ? await loadScienceV2() : selected === "pilot-science-v1" ? await loadSciencePilot() : selected === "pilot-urasawa-v2" ? await loadPilotV2() : await loadPilot();
 const { driver, database } = openDatabase();
 try {
   await driver.verifyConnectivity();

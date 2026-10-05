@@ -349,7 +349,7 @@ describe("条件付き探索", () => {
     await act(async () => { old.resolve(page); await old.promise; });
     expect(result.current.graph.conditionKey).toBe("ASSISTANT_OF");
     expect(Object.values(result.current.graph.claims).every((claim) => claim.predicate === "ASSISTANT_OF")).toBe(true);
-    expect(fetchNeighbors).toHaveBeenLastCalledWith(root.id, null, expect.any(AbortSignal), ["ASSISTANT_OF"], null);
+    expect(fetchNeighbors).toHaveBeenLastCalledWith(root.id, null, expect.any(AbortSignal), ["ASSISTANT_OF"], null, null);
     act(() => result.current.changePredicates(["ASSISTANT_OF", "ASSISTANT_OF"]));
     expect(fetchNeighbors).toHaveBeenCalledTimes(2);
     act(() => result.current.close(root.id));
@@ -364,7 +364,7 @@ describe("条件付き探索", () => {
     act(() => result.current.changePredicates([]));
     act(() => result.current.chooseRoot(root));
     await waitFor(() => expect(result.current.graph.expansions[root.id]?.expanded).toBe(true));
-    expect(fetchNeighbors).toHaveBeenLastCalledWith(root.id, null, expect.any(AbortSignal), [], null);
+    expect(fetchNeighbors).toHaveBeenLastCalledWith(root.id, null, expect.any(AbortSignal), [], null, null);
     act(() => result.current.close(root.id)); act(() => result.current.toggleEntity(root.id));
     expect(fetchNeighbors).toHaveBeenCalledTimes(1);
     act(() => result.current.chooseRoot(page.nodes[1]));
@@ -405,7 +405,7 @@ describe("制作Roleの条件・ページ・復元", () => {
     await waitFor(() => expect(result.current.graph.claims[roleClaim.id]).toBeDefined());
     await act(async () => { old.resolve(page); await old.promise; });
     expect(Object.keys(result.current.graph.claims)).toEqual([roleClaim.id]);
-    expect(fetchNeighbors).toHaveBeenLastCalledWith(root.id, null, expect.any(AbortSignal), ["CONTRIBUTED_TO"], ["SUPERVISION"]);
+    expect(fetchNeighbors).toHaveBeenLastCalledWith(root.id, null, expect.any(AbortSignal), ["CONTRIBUTED_TO"], ["SUPERVISION"], null);
     act(() => result.current.close(root.id)); act(() => result.current.toggleEntity(root.id));
     expect(fetchNeighbors).toHaveBeenCalledTimes(2);
     expect(result.current.graph.expansions[root.id].nextCursor).toBe("role-cursor");
@@ -467,13 +467,13 @@ describe("探索条件の入口とdraft", () => {
     for (const name of ["脚本", "監修", "プロデュース", "ストーリー共同制作"]) fireEvent.click(screen.getByRole("checkbox", { name }));
     expect(onApply).not.toHaveBeenCalled();
     fireEvent.click(screen.getByRole("button", { name: "適用" }));
-    expect(onApply).toHaveBeenCalledWith(null, ["PRODUCING", "SCRIPT_WRITING", "STORY_CO_CREATION", "SUPERVISION"]);
+    expect(onApply).toHaveBeenCalledWith(null, ["PRODUCING", "SCRIPT_WRITING", "STORY_CO_CREATION", "SUPERVISION"], null);
     expect(screen.queryByRole("dialog")).toBeNull();
     fireEvent.click(screen.getByRole("button", { name: "見る関係を編集" }));
     fireEvent.click(screen.getByRole("button", { name: "制作の役割を調整" }));
     fireEvent.click(screen.getByRole("radio", { name: "役割を指定する" }));
     fireEvent.click(screen.getByRole("button", { name: "適用" }));
-    expect(onApply).toHaveBeenLastCalledWith(null, []);
+    expect(onApply).toHaveBeenLastCalledWith(null, [], null);
   });
 });
 
@@ -512,7 +512,7 @@ describe("直前探索と原子的な起点切替", () => {
     expect(vi.mocked(fetchNeighbors).mock.calls.at(-1)?.[0]).toBe(other.id);
     act(() => result.current.switchRoot(root, "broad", null));
     expect(result.current.graph.predicates).toBeNull();
-    expect(vi.mocked(fetchNeighbors).mock.calls.at(-1)?.slice(3)).toEqual([null, null]);
+    expect(vi.mocked(fetchNeighbors).mock.calls.at(-1)?.slice(3)).toEqual([null, null, null]);
   });
   it("通信中の保存はcontrollerを保存せず、復帰後に明示再試行できる", async () => {
     const old = deferred(), next = deferred();
@@ -584,11 +584,12 @@ import { START_EXAMPLES } from "../lib/client/start-examples";
 import demoFixture from "../fixtures/demo.json";
 import pilotV1 from "../datasets/pilot-urasawa/v1/data.json";
 import pilotV2 from "../datasets/pilot-urasawa/v2/data.json";
+import scienceV2 from "../datasets/pilot-science/v2/data.json";
 import scienceV1 from "../datasets/pilot-science/v1/data.json";
 import { startExampleLabels } from "../lib/i18n/start-examples";
 
 describe("固定の探索開始例", () => {
-  it.each(Object.entries({ demo: demoFixture, "pilot-urasawa-v1": pilotV1, "pilot-urasawa-v2": pilotV2, "pilot-science-v1": scienceV1 }))("%sの入口は実在する凍結Entityだけを参照する", (mode, data) => {
+  it.each(Object.entries({ demo: demoFixture, "pilot-urasawa-v1": pilotV1, "pilot-urasawa-v2": pilotV2, "pilot-science-v1": scienceV1, "pilot-science-v2": scienceV2 }))("%sの入口は実在する凍結Entityだけを参照する", (mode, data) => {
     const entries = START_EXAMPLES[mode as keyof typeof START_EXAMPLES];
     expect(new Set(entries.map((entry) => entry.id)).size).toBe(entries.length);
     for (const entry of entries) expect(data.entities.find((entity) => entity.id === entry.id)).toMatchObject(entry);
@@ -606,14 +607,57 @@ describe("固定の探索開始例", () => {
     const { result } = renderHook(useGraphExplorer);
     act(() => result.current.changePredicates(["CONTRIBUTED_TO"], ["SUPERVISION"]));
     act(() => result.current.chooseRoot(root));
-    expect(vi.mocked(fetchNeighbors).mock.calls[0].slice(3)).toEqual([["CONTRIBUTED_TO"], ["SUPERVISION"]]);
+    expect(vi.mocked(fetchNeighbors).mock.calls[0].slice(3)).toEqual([["CONTRIBUTED_TO"], ["SUPERVISION"], null]);
     act(() => result.current.chooseRoot(page.nodes[1], true));
     expect(vi.mocked(fetchNeighbors).mock.calls[0][2].aborted).toBe(true);
-    expect(vi.mocked(fetchNeighbors).mock.calls[1].slice(3)).toEqual([null, null]);
+    expect(vi.mocked(fetchNeighbors).mock.calls[1].slice(3)).toEqual([null, null, null]);
     expect(result.current.graph.centerId).toBe(page.nodes[1].id);
     expect(result.current.graph.predicates).toBeNull(); expect(result.current.graph.contributionRoles).toBeNull();
     expect(result.current.previous).toBeNull();
     await act(async () => { old.resolve(page); await old.promise; });
     expect(result.current.graph.centerId).toBe(page.nodes[1].id); expect(fetchNeighbors).toHaveBeenCalledTimes(2);
+  });
+});
+
+describe("組織立場条件のdraft・通信・直前復帰", () => {
+  it("別値集合の条件を明示適用し、取消では現在条件を保持する", async () => {
+    const { default: RelationFilter } = await import("../components/RelationFilter");
+    const onApply = vi.fn();
+    render(<RelationFilter value={null} onApply={onApply} />);
+    fireEvent.click(screen.getByRole("button", { name: "見る関係を編集" }));
+    fireEvent.click(screen.getByRole("button", { name: "組織との関わりの立場を調整" }));
+    fireEvent.click(screen.getByRole("radio", { name: "立場を指定する" }));
+    fireEvent.click(screen.getByRole("checkbox", { name: "Visitor" }));
+    expect(onApply).not.toHaveBeenCalled();
+    fireEvent.click(screen.getByRole("button", { name: "キャンセル" })); expect(onApply).not.toHaveBeenCalled();
+    fireEvent.click(screen.getByRole("button", { name: "見る関係を編集" }));
+    fireEvent.click(screen.getByRole("button", { name: "組織との関わりの立場を調整" }));
+    expect((screen.getByRole("radio", { name: "立場で絞らない" }) as HTMLInputElement).checked).toBe(true);
+    fireEvent.click(screen.getByRole("radio", { name: "立場を指定する" }));
+    fireEvent.click(screen.getByRole("checkbox", { name: "Associate professor" }));
+    fireEvent.click(screen.getByRole("button", { name: "適用" }));
+    expect(onApply).toHaveBeenCalledWith(null, null, ["ASSOCIATE_PROFESSOR"]);
+  });
+  it("条件変更で旧応答を拒否し、同条件起点と直前復帰へ立場条件を保持する", async () => {
+    const old = deferred();
+    const heisenberg = scienceV2.entities.find(e => e.id === "1530af15-129d-40bf-a1ca-ce8343dc7491")! as EntitySummary;
+    const nbi = scienceV2.entities.find(e => e.id === "8e322435-4318-4ad0-835b-3f71d2537421")! as EntitySummary;
+    const visitor = scienceV2.claims.find(c => c.organizationParticipation?.positionId === "VISITOR")!;
+    const accepted: NeighborsResponse = { centerId: heisenberg.id, nodes: [heisenberg, nbi], claims: [{ ...visitor, sourceCount: 1 } as ClaimSummary], page: { hasMore: false, nextCursor: null } };
+    vi.mocked(fetchNeighbors).mockReturnValueOnce(old.promise).mockResolvedValue(accepted);
+    const { result } = renderHook(useGraphExplorer);
+    act(() => result.current.chooseRoot(heisenberg));
+    act(() => result.current.changePredicates(["AFFILIATED_WITH"], null, ["VISITOR"]));
+    await waitFor(() => expect(result.current.graph.claims[visitor.id]).toBeDefined());
+    expect(vi.mocked(fetchNeighbors).mock.calls[0][2].aborted).toBe(true);
+    await act(async () => { old.resolve(page); await old.promise; });
+    expect(result.current.graph.centerId).toBe(heisenberg.id); expect(result.current.graph.organizationPositions).toEqual(["VISITOR"]);
+    vi.mocked(fetchNeighbors).mockResolvedValue({ ...accepted, centerId: nbi.id });
+    act(() => result.current.switchRoot(nbi, "same", null));
+    await waitFor(() => expect(result.current.graph.claims[visitor.id]).toBeDefined());
+    expect(vi.mocked(fetchNeighbors).mock.calls.at(-1)?.slice(3)).toEqual([["AFFILIATED_WITH"], null, ["VISITOR"]]);
+    act(() => result.current.restorePrevious());
+    expect(result.current.graph.centerId).toBe(heisenberg.id); expect(result.current.graph.organizationPositions).toEqual(["VISITOR"]);
+    act(() => result.current.switchRoot(nbi, "broad", null)); expect(result.current.graph.organizationPositions).toBeNull();
   });
 });

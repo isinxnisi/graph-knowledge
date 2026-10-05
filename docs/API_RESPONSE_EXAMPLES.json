@@ -76,7 +76,8 @@
         "contribution": {
           "roleId": null,
           "scope": null
-        }
+        },
+        "organizationParticipation": null
       },
       {
         "id": "580dd445-3287-401d-bcce-43af3caaf509",
@@ -95,7 +96,8 @@
           }
         },
         "sourceCount": 2,
-        "contribution": null
+        "contribution": null,
+        "organizationParticipation": null
       },
       {
         "id": "8c9226b4-eea7-44f7-857a-80db6c20ad3c",
@@ -108,7 +110,8 @@
           "to": null
         },
         "sourceCount": 1,
-        "contribution": null
+        "contribution": null,
+        "organizationParticipation": null
       },
       {
         "id": "a2bacd73-d6ae-4cbb-accf-e9d6c8894614",
@@ -121,7 +124,8 @@
           "to": null
         },
         "sourceCount": 1,
-        "contribution": null
+        "contribution": null,
+        "organizationParticipation": null
       },
       {
         "id": "c7e05a6c-6295-4ce6-9f5d-4c06bbab551d",
@@ -140,7 +144,8 @@
           }
         },
         "sourceCount": 1,
-        "contribution": null
+        "contribution": null,
+        "organizationParticipation": null
       },
       {
         "id": "e231c2eb-9391-4aff-98a6-18762fa339f7",
@@ -156,7 +161,8 @@
           "to": null
         },
         "sourceCount": 1,
-        "contribution": null
+        "contribution": null,
+        "organizationParticipation": null
       },
       {
         "id": "e415e58b-ac29-42a6-8f1c-370abd1c6392",
@@ -175,7 +181,8 @@
           }
         },
         "sourceCount": 1,
-        "contribution": null
+        "contribution": null,
+        "organizationParticipation": null
       }
     ],
     "page": {
@@ -225,7 +232,8 @@
             "note": "架空のデモ資料。実在する資料ではありません。",
             "isDemo": true
           },
-          "roleEvidence": null
+          "roleEvidence": null,
+          "positionEvidence": null
         },
         {
           "id": "f02cb5a0-a766-46c3-92ff-9bc95f48cb23",
@@ -248,10 +256,12 @@
             "note": "架空のデモ資料。実在する資料ではありません。",
             "isDemo": true
           },
-          "roleEvidence": null
+          "roleEvidence": null,
+          "positionEvidence": null
         }
       ],
-      "contribution": null
+      "contribution": null,
+      "organizationParticipation": null
     },
     "relatedClaimIds": [
       "c7e05a6c-6295-4ce6-9f5d-4c06bbab551d",
@@ -276,7 +286,8 @@
       "contribution": {
         "roleId": null,
         "scope": null
-      }
+      },
+      "organizationParticipation": null
     },
     "relatedClaimIds": []
   },

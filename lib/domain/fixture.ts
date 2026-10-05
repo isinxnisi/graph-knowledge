@@ -1,4 +1,6 @@
 import { contributionSchema, roleEvidenceSchema, type Contribution, type RoleEvidence } from "./contribution";
+import { organizationParticipationSchema, positionEvidenceSchema, type OrganizationParticipation, type PositionEvidence } from "./organization-participation";
+import { invalidQualificationFields } from "./qualifications";
 import { z } from "zod";
 import { accessedAtSchema, partialDateSchema, periodSchema } from "./dates";
 import { ENTITY_KINDS, PREDICATE_KEYS, PREDICATES } from "./predicates";
@@ -78,9 +80,24 @@ export const fixtureV2Schema = z.strictObject({ ...fixtureBaseSchema.shape, sche
     if (citation.roleEvidence && claims.get(citation.claimId)?.predicate !== "CONTRIBUTED_TO") ctx.addIssue({ code: "custom", path: ["citations", i, "roleEvidence"], message: "Role evidence is contribution-specific" });
   });
 });
+export const fixtureV3Schema = z.strictObject({ ...fixtureBaseSchema.shape, schemaVersion: z.literal(3),
+  claims: z.array(claimSchema.extend({ contribution: contributionSchema.nullable(), organizationParticipation: organizationParticipationSchema.nullable() }).superRefine((claim, ctx) => {
+    if ((claim.predicate === "CONTRIBUTED_TO") !== (claim.contribution !== null)) ctx.addIssue({ code: "custom", message: "Contribution must match predicate" });
+    for (const field of invalidQualificationFields(claim)) ctx.addIssue({ code: "custom", path: [field], message: "Qualification must match registered predicate" });
+  })),
+  citations: z.array(citationSchema.extend({ roleEvidence: roleEvidenceSchema.nullable(), positionEvidence: positionEvidenceSchema.nullable() })),
+}).superRefine((fixture, ctx) => {
+  validateReferences({ ...fixture, schemaVersion: 1 }, ctx);
+  const claims = new Map(fixture.claims.map(claim => [claim.id, claim]));
+  fixture.citations.forEach((citation, i) => {
+    const claim = claims.get(citation.claimId);
+    if (citation.roleEvidence && claim?.predicate !== "CONTRIBUTED_TO") ctx.addIssue({ code: "custom", path: ["citations", i, "roleEvidence"], message: "Role evidence is contribution-specific" });
+    if (citation.positionEvidence && !claim?.organizationParticipation) ctx.addIssue({ code: "custom", path: ["citations", i, "positionEvidence"], message: "Position evidence requires an explicitly qualified organization claim" });
+  });
+});
 export type Fixture = Omit<z.infer<typeof fixtureSchema>, "schemaVersion" | "claims" | "citations"> & {
-  schemaVersion: 1 | 2; claims: (z.infer<typeof claimSchema> & { contribution?: Contribution | null })[];
-  citations: (z.infer<typeof citationSchema> & { roleEvidence?: RoleEvidence | null })[];
+  schemaVersion: 1 | 2 | 3; claims: (z.infer<typeof claimSchema> & { contribution?: Contribution | null; organizationParticipation?: OrganizationParticipation | null })[];
+  citations: (z.infer<typeof citationSchema> & { roleEvidence?: RoleEvidence | null; positionEvidence?: PositionEvidence | null })[];
 };
 export type Entity = z.infer<typeof entitySchema>;
 export type Claim = z.infer<typeof claimSchema>;
@@ -88,6 +105,7 @@ export type Source = z.infer<typeof sourceSchema>;
 export type Citation = z.infer<typeof citationSchema>;
 
 export function validateFixture(input: unknown): Fixture {
+  if (typeof input === "object" && input !== null && "schemaVersion" in input && input.schemaVersion === 3) return fixtureV3Schema.parse(input);
   return (typeof input === "object" && input !== null && "schemaVersion" in input && input.schemaVersion === 2) ? fixtureV2Schema.parse(input) : fixtureSchema.parse(input);
 }
 

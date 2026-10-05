@@ -1,0 +1,417 @@
+{
+  "neighborsAll": {
+    "request": "/api/entities/1530af15-129d-40bf-a1ca-ce8343dc7491/neighbors",
+    "response": {
+      "centerId": "1530af15-129d-40bf-a1ca-ce8343dc7491",
+      "nodes": [
+        {
+          "id": "1530af15-129d-40bf-a1ca-ce8343dc7491",
+          "kind": "person",
+          "name": "ヴェルナー・ハイゼンベルク",
+          "description": "理論物理学者。大学での早期経歴と研究所への訪問を収録。"
+        },
+        {
+          "id": "a1af9abb-843a-4611-853c-50f630b817ae",
+          "kind": "organization",
+          "name": "ゲッティンゲン大学",
+          "description": "ドイツの大学。都市や同市の別研究所とは区別する。"
+        },
+        {
+          "id": "8e322435-4318-4ad0-835b-3f71d2537421",
+          "kind": "organization",
+          "name": "ニールス・ボーア研究所",
+          "description": "コペンハーゲン大学の研究所。旧理論物理学研究所を1965年改称。現在名で表示。"
+        }
+      ],
+      "claims": [
+        {
+          "id": "47d46b69-b111-4b76-addb-632d679ae4f8",
+          "subjectId": "1530af15-129d-40bf-a1ca-ce8343dc7491",
+          "objectId": "a1af9abb-843a-4611-853c-50f630b817ae",
+          "predicate": "AFFILIATED_WITH",
+          "polarity": "affirmed",
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "contribution": null,
+          "organizationParticipation": null,
+          "sourceCount": 1
+        },
+        {
+          "id": "e71f548b-65c2-4032-a40f-342ab75b5d3e",
+          "subjectId": "1530af15-129d-40bf-a1ca-ce8343dc7491",
+          "objectId": "8e322435-4318-4ad0-835b-3f71d2537421",
+          "predicate": "AFFILIATED_WITH",
+          "polarity": "affirmed",
+          "period": {
+            "from": {
+              "value": "1924",
+              "precision": "year"
+            },
+            "to": {
+              "value": "1925",
+              "precision": "year"
+            }
+          },
+          "contribution": null,
+          "organizationParticipation": {
+            "positionId": "VISITOR"
+          },
+          "sourceCount": 1
+        },
+        {
+          "id": "eb7182aa-e7f1-4064-a731-bffe7c59227c",
+          "subjectId": "1530af15-129d-40bf-a1ca-ce8343dc7491",
+          "objectId": "8e322435-4318-4ad0-835b-3f71d2537421",
+          "predicate": "AFFILIATED_WITH",
+          "polarity": "affirmed",
+          "period": {
+            "from": {
+              "value": "1924",
+              "precision": "year"
+            },
+            "to": {
+              "value": "1925",
+              "precision": "year"
+            }
+          },
+          "contribution": null,
+          "organizationParticipation": null,
+          "sourceCount": 1
+        },
+        {
+          "id": "ffbe8c65-5435-4373-85c7-c091892e51d9",
+          "subjectId": "1530af15-129d-40bf-a1ca-ce8343dc7491",
+          "objectId": "8e322435-4318-4ad0-835b-3f71d2537421",
+          "predicate": "AFFILIATED_WITH",
+          "polarity": "affirmed",
+          "period": {
+            "from": {
+              "value": "1926",
+              "precision": "year"
+            },
+            "to": {
+              "value": "1927",
+              "precision": "year"
+            }
+          },
+          "contribution": null,
+          "organizationParticipation": {
+            "positionId": "ASSOCIATE_PROFESSOR"
+          },
+          "sourceCount": 1
+        }
+      ],
+      "page": {
+        "hasMore": false,
+        "nextCursor": null
+      }
+    }
+  },
+  "neighborsVisitor": {
+    "request": "/api/entities/1530af15-129d-40bf-a1ca-ce8343dc7491/neighbors?predicates=AFFILIATED_WITH&organizationPositions=VISITOR",
+    "response": {
+      "centerId": "1530af15-129d-40bf-a1ca-ce8343dc7491",
+      "nodes": [
+        {
+          "id": "1530af15-129d-40bf-a1ca-ce8343dc7491",
+          "kind": "person",
+          "name": "ヴェルナー・ハイゼンベルク",
+          "description": "理論物理学者。大学での早期経歴と研究所への訪問を収録。"
+        },
+        {
+          "id": "8e322435-4318-4ad0-835b-3f71d2537421",
+          "kind": "organization",
+          "name": "ニールス・ボーア研究所",
+          "description": "コペンハーゲン大学の研究所。旧理論物理学研究所を1965年改称。現在名で表示。"
+        }
+      ],
+      "claims": [
+        {
+          "id": "e71f548b-65c2-4032-a40f-342ab75b5d3e",
+          "subjectId": "1530af15-129d-40bf-a1ca-ce8343dc7491",
+          "objectId": "8e322435-4318-4ad0-835b-3f71d2537421",
+          "predicate": "AFFILIATED_WITH",
+          "polarity": "affirmed",
+          "period": {
+            "from": {
+              "value": "1924",
+              "precision": "year"
+            },
+            "to": {
+              "value": "1925",
+              "precision": "year"
+            }
+          },
+          "contribution": null,
+          "organizationParticipation": {
+            "positionId": "VISITOR"
+          },
+          "sourceCount": 1
+        }
+      ],
+      "page": {
+        "hasMore": false,
+        "nextCursor": null
+      }
+    }
+  },
+  "neighborsAssociateProfessor": {
+    "request": "/api/entities/1530af15-129d-40bf-a1ca-ce8343dc7491/neighbors?organizationPositions=ASSOCIATE_PROFESSOR",
+    "response": {
+      "centerId": "1530af15-129d-40bf-a1ca-ce8343dc7491",
+      "nodes": [
+        {
+          "id": "1530af15-129d-40bf-a1ca-ce8343dc7491",
+          "kind": "person",
+          "name": "ヴェルナー・ハイゼンベルク",
+          "description": "理論物理学者。大学での早期経歴と研究所への訪問を収録。"
+        },
+        {
+          "id": "8e322435-4318-4ad0-835b-3f71d2537421",
+          "kind": "organization",
+          "name": "ニールス・ボーア研究所",
+          "description": "コペンハーゲン大学の研究所。旧理論物理学研究所を1965年改称。現在名で表示。"
+        }
+      ],
+      "claims": [
+        {
+          "id": "ffbe8c65-5435-4373-85c7-c091892e51d9",
+          "subjectId": "1530af15-129d-40bf-a1ca-ce8343dc7491",
+          "objectId": "8e322435-4318-4ad0-835b-3f71d2537421",
+          "predicate": "AFFILIATED_WITH",
+          "polarity": "affirmed",
+          "period": {
+            "from": {
+              "value": "1926",
+              "precision": "year"
+            },
+            "to": {
+              "value": "1927",
+              "precision": "year"
+            }
+          },
+          "contribution": null,
+          "organizationParticipation": {
+            "positionId": "ASSOCIATE_PROFESSOR"
+          },
+          "sourceCount": 1
+        }
+      ],
+      "page": {
+        "hasMore": false,
+        "nextCursor": null
+      }
+    }
+  },
+  "overviewNbi": {
+    "request": "/api/entities/8e322435-4318-4ad0-835b-3f71d2537421/overview",
+    "response": {
+      "entity": {
+        "id": "8e322435-4318-4ad0-835b-3f71d2537421",
+        "kind": "organization",
+        "name": "ニールス・ボーア研究所",
+        "description": "コペンハーゲン大学の研究所。旧理論物理学研究所を1965年改称。現在名で表示。"
+      },
+      "scope": {
+        "dataset": "pilot-science-v2",
+        "visibility": "published",
+        "filtered": false,
+        "unit": "claim"
+      },
+      "relations": [
+        {
+          "predicate": "AFFILIATED_WITH",
+          "perspective": "object",
+          "counts": {
+            "affirmed": 6,
+            "denied": 0
+          },
+          "contributionRoles": []
+        }
+      ]
+    }
+  },
+  "broadClaim": {
+    "request": "/api/claims/eb7182aa-e7f1-4064-a731-bffe7c59227c",
+    "response": {
+      "claim": {
+        "id": "eb7182aa-e7f1-4064-a731-bffe7c59227c",
+        "subjectId": "1530af15-129d-40bf-a1ca-ce8343dc7491",
+        "objectId": "8e322435-4318-4ad0-835b-3f71d2537421",
+        "predicate": "AFFILIATED_WITH",
+        "polarity": "affirmed",
+        "period": {
+          "from": {
+            "value": "1924",
+            "precision": "year"
+          },
+          "to": {
+            "value": "1925",
+            "precision": "year"
+          }
+        },
+        "contribution": null,
+        "organizationParticipation": null,
+        "sourceCount": 1,
+        "createdAt": "2026-10-04T19:55:53.444311Z",
+        "updatedAt": "2026-10-04T19:55:53.444311Z",
+        "citations": [
+          {
+            "id": "0a54276e-291e-4379-8258-18b3cc30cc5b",
+            "locator": "Niels Bohr InstituteのVisitor欄",
+            "note": "研究所にVisitorとして関わったことを確認。 原表記（en）：Visitor。期間原表記：1924-25。別記のAssociate professor, 1926-27は今回のClaimへ結合しない。 この原表記は根拠の説明でありClaimの構造化した職位ではない。全経歴・連続在籍・期間外の不存在を認定しない。 受入：ユーザーの2026-10-05受入。資料の具体的関与に基づく広いAFFILIATED_WITHに限る。職位・雇用形態・所属種別の構造化保証、同時在籍・面識・共同研究は意味しない。",
+            "accessedAt": "2026-10-04",
+            "stance": "support",
+            "source": {
+              "id": "3d8bfd32-31fd-4e8a-aff6-7b7fb80265c0",
+              "kind": "web",
+              "title": "Werner Heisenberg",
+              "authors": [],
+              "publisher": "Niels Bohr Institute / University of Copenhagen",
+              "url": "https://nbi.ku.dk/hhh/nobel/associated_with_nbi/werner_heisenberg/",
+              "publishedAt": {
+                "value": "2010-06-02",
+                "precision": "day"
+              },
+              "edition": null,
+              "note": "原資料本文の言語：en。1924–25のVisitorと1926–27の別役職を列記。今回Visitorのみ受入。",
+              "isDemo": false
+            },
+            "roleEvidence": null,
+            "positionEvidence": null
+          }
+        ]
+      },
+      "relatedClaimIds": [
+        "e71f548b-65c2-4032-a40f-342ab75b5d3e",
+        "ffbe8c65-5435-4373-85c7-c091892e51d9"
+      ]
+    }
+  },
+  "VISITOR": {
+    "request": "/api/claims/e71f548b-65c2-4032-a40f-342ab75b5d3e",
+    "response": {
+      "claim": {
+        "id": "e71f548b-65c2-4032-a40f-342ab75b5d3e",
+        "subjectId": "1530af15-129d-40bf-a1ca-ce8343dc7491",
+        "objectId": "8e322435-4318-4ad0-835b-3f71d2537421",
+        "predicate": "AFFILIATED_WITH",
+        "polarity": "affirmed",
+        "period": {
+          "from": {
+            "value": "1924",
+            "precision": "year"
+          },
+          "to": {
+            "value": "1925",
+            "precision": "year"
+          }
+        },
+        "contribution": null,
+        "organizationParticipation": {
+          "positionId": "VISITOR"
+        },
+        "sourceCount": 1,
+        "createdAt": "2026-10-05T12:14:06.652778Z",
+        "updatedAt": "2026-10-05T12:14:06.652778Z",
+        "citations": [
+          {
+            "id": "021f7c10-51a9-4f61-af63-d5efd8488a14",
+            "locator": "Werner Heisenberg見出し直下、Niels Bohr Institute行",
+            "note": "NBIの資料がVisitorとして1924–25に関与したと記す。雇用種別を認定しない。 期間原表記：1924-25。対象はこの研究所への資料記載の関与。日本の客員職・有給・専任を保証しない。 資料が記すNBIでの立場と各期間に限定。既存広いClaimの受入だけから立場を自動構造化していない。 同じSourceからの限定付き主張であり独立した新しい根拠ではない。Sourceの「今回Visitorのみ受入」はv1の収集履歴。v2では2立場を個別に受け入れている。",
+            "accessedAt": "2026-10-05",
+            "stance": "support",
+            "source": {
+              "id": "3d8bfd32-31fd-4e8a-aff6-7b7fb80265c0",
+              "kind": "web",
+              "title": "Werner Heisenberg",
+              "authors": [],
+              "publisher": "Niels Bohr Institute / University of Copenhagen",
+              "url": "https://nbi.ku.dk/hhh/nobel/associated_with_nbi/werner_heisenberg/",
+              "publishedAt": {
+                "value": "2010-06-02",
+                "precision": "day"
+              },
+              "edition": null,
+              "note": "原資料本文の言語：en。1924–25のVisitorと1926–27の別役職を列記。今回Visitorのみ受入。",
+              "isDemo": false
+            },
+            "roleEvidence": null,
+            "positionEvidence": {
+              "originalText": "Visitor",
+              "language": "en"
+            }
+          }
+        ]
+      },
+      "relatedClaimIds": [
+        "eb7182aa-e7f1-4064-a731-bffe7c59227c",
+        "ffbe8c65-5435-4373-85c7-c091892e51d9"
+      ]
+    }
+  },
+  "ASSOCIATE_PROFESSOR": {
+    "request": "/api/claims/ffbe8c65-5435-4373-85c7-c091892e51d9",
+    "response": {
+      "claim": {
+        "id": "ffbe8c65-5435-4373-85c7-c091892e51d9",
+        "subjectId": "1530af15-129d-40bf-a1ca-ce8343dc7491",
+        "objectId": "8e322435-4318-4ad0-835b-3f71d2537421",
+        "predicate": "AFFILIATED_WITH",
+        "polarity": "affirmed",
+        "period": {
+          "from": {
+            "value": "1926",
+            "precision": "year"
+          },
+          "to": {
+            "value": "1927",
+            "precision": "year"
+          }
+        },
+        "contribution": null,
+        "organizationParticipation": {
+          "positionId": "ASSOCIATE_PROFESSOR"
+        },
+        "sourceCount": 1,
+        "createdAt": "2026-10-05T12:14:06.652778Z",
+        "updatedAt": "2026-10-05T12:14:06.652778Z",
+        "citations": [
+          {
+            "id": "7bdf687b-8b94-40d7-a92e-9576518c27ad",
+            "locator": "Werner Heisenberg見出し直下、Niels Bohr Institute行",
+            "note": "NBIの資料がAssociate professorとして1926–27に関与したと記す。 期間原表記：1926-27。当該研究所・当該時期の記載された立場。職制・雇用条件・他職位への同義対応は対象外。 資料が記すNBIでの立場と各期間に限定。既存広いClaimの受入だけから立場を自動構造化していない。 同じSourceからの限定付き主張であり独立した新しい根拠ではない。Sourceの「今回Visitorのみ受入」はv1の収集履歴。v2では2立場を個別に受け入れている。",
+            "accessedAt": "2026-10-05",
+            "stance": "support",
+            "source": {
+              "id": "3d8bfd32-31fd-4e8a-aff6-7b7fb80265c0",
+              "kind": "web",
+              "title": "Werner Heisenberg",
+              "authors": [],
+              "publisher": "Niels Bohr Institute / University of Copenhagen",
+              "url": "https://nbi.ku.dk/hhh/nobel/associated_with_nbi/werner_heisenberg/",
+              "publishedAt": {
+                "value": "2010-06-02",
+                "precision": "day"
+              },
+              "edition": null,
+              "note": "原資料本文の言語：en。1924–25のVisitorと1926–27の別役職を列記。今回Visitorのみ受入。",
+              "isDemo": false
+            },
+            "roleEvidence": null,
+            "positionEvidence": {
+              "originalText": "Associate professor",
+              "language": "en"
+            }
+          }
+        ]
+      },
+      "relatedClaimIds": [
+        "e71f548b-65c2-4032-a40f-342ab75b5d3e",
+        "eb7182aa-e7f1-4064-a731-bffe7c59227c"
+      ]
+    }
+  }
+}

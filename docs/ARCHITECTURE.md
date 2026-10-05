@@ -1,6 +1,6 @@
 # 現行技術設計
 
-更新日: 2026-10-05 / 状態: 初期Vertical Sliceと探索の開閉・Node再クリックまで実装済み。既存predicateと限定制作Roleによる条件付き探索を追加。v2 Role Claim 5件を人間受入後に投入・検証済み。関係概要・明示起点切替・直前一件復帰、人物・作品・組織の統一検索入口も実装。科学・研究機関pilot v1を別環境へ投入・観察済み。taxonomy・プリセット・会員保存は未実装。[文書の入口](README.md)に現役設計とフェーズ別履歴をまとめる。
+更新日: 2026-10-05 / 状態: 初期Vertical Sliceと探索の開閉・Node再クリックまで実装済み。既存predicateと限定制作Roleによる条件付き探索を追加。v2 Role Claim 5件を人間受入後に投入・検証済み。関係概要・明示起点切替・直前一件復帰、人物・作品・組織の統一検索入口も実装。科学・研究機関pilot v1を別環境へ投入・観察済み。Phase 14では科学v2と組織立場のtyped限定を追加し、制作Roleと独立した語彙を保って条件・比較処理を共有。taxonomy・プリセット・会員保存は未実装。[文書の入口](README.md)に現役設計とフェーズ別履歴をまとめる。
 
 ## 前提と設計の位置づけ
 
@@ -308,15 +308,15 @@ Neo4jではPartialDateをネストしたpropertyとして保存せず、`validFr
 共通の返却型:
 
 - EntitySummary: `{ id, kind, name, description }`。descriptionは同名判別用でnullable。
-- ClaimSummary: `{ id, subjectId, objectId, predicate, polarity, period, contribution, sourceCount }`。sourceCountはCitationが指す異なるSourceの件数を導出し、信用点数にはしない。
+- ClaimSummary: `{ id, subjectId, objectId, predicate, polarity, period, contribution, organizationParticipation, sourceCount }`。両typed限定は明示nullable。sourceCountはCitationが指す異なるSourceの件数を導出し、信用点数にはしない。
 - SourceDetail: `{ id, kind, title, authors, publisher, url, publishedAt, edition, note, isDemo }`。authorsは文字列配列、id/kind/title/isDemo以外のスカラーはnullable。
-- CitationDetail: `{ id, locator, note, accessedAt, stance, source, roleEvidence }`。locatorはページ・節等を表す文字列、noteとaccessedAtはnullable。sourceはSourceDetail。
+- CitationDetail: `{ id, locator, note, accessedAt, stance, source, roleEvidence, positionEvidence }`。locatorはページ・節等を表す文字列、note、accessedAt、両原表記はnullable。sourceはSourceDetail。
 
 | GET経路 | 入力 | 200のレスポンス |
 | --- | --- | --- |
 | /api/entities | q必須、limit・kind省略可 | `{ items: EntityDetail[], hasMore: boolean }` |
 | /api/entities/{id} | Entity UUID | `{ entity: EntitySummary + { aliases: string[] } }` |
-| /api/entities/{id}/neighbors | limit、after、predicates、contributionRoles省略可 | `{ centerId, nodes: EntitySummary[], claims: ClaimSummary[], page: { nextCursor, hasMore } }` |
+| /api/entities/{id}/neighbors | limit、after、predicates、contributionRoles、organizationPositions省略可 | `{ centerId, nodes: EntitySummary[], claims: ClaimSummary[], page: { nextCursor, hasMore } }` |
 | /api/claims/{id} | Claim UUID | `{ claim: ClaimSummary + { createdAt, updatedAt, citations: CitationDetail[] }, relatedClaimIds: string[] }` |
 
 検索はperson / work / organization。kind省略時は三種すべて、指定時は一種のみ。kindはLIMIT前に適用し、探索条件には含めない。未対応kind・未知query・重複queryは400。EntityDetailはEntitySummaryにaliasesを加えた既存の詳細型を再利用する。qをtrimし、Unicode NFKCと小文字化を行う。1〜100文字を許可し、空文字は400。表示名称・別名から同じ正規化で作った検索用配列に対する部分一致を用い、Cypherのパラメータとして渡す。検索索引・日本語形態素解析は初期不要。完全一致、名称、IDの順で安定して並べ、limit既定10・最大20でlimit+1件からhasMoreを判定する。初期検索はページングせず、候補が多い場合は検索語の絞り込みを促す。
@@ -498,9 +498,9 @@ GraphStateは一つの有効条件スコープ（predicates / conditionKey）内
 
 DB・API・探索条件キー・cursor・上限・DisplayRelation集約・Claim／Citation／Source・datasetの変更はない。[採用レビュー](design/EXPLORATION_ENTRY_AND_CONDITIONS_REVIEW.md)、[実施記録](archive/phase-07-exploration-entry/IMPLEMENTATION_EXPLORATION_ENTRY.md)を参照。
 
-### 複数分野の探索文脈・起点切替（未採用の設計提案）
+### 複数分野の探索文脈・起点切替
 
-[レビュー](design/CROSS_DOMAIN_EXPLORATION_REVIEW.md)に、論理的な共通知識と分野・テーマ・実効条件の分離、明示的な「広く見る」／条件維持の起点変更、直前探索への復帰、別分野の小さい検証案を記録した。現行chooseRootの条件維持・検索・開閉・DB/API契約は変更していない。実装前の採用判断が必要な提案であり、分野分類・preset・復帰機能は未実装。
+[レビュー](design/CROSS_DOMAIN_EXPLORATION_REVIEW.md)に、論理的な共通知識と分野・テーマ・実効条件の分離、明示的な「広く見る」／条件維持の起点変更、直前探索への復帰、別分野の小さい検証案を記録した。起点切替・一件復帰はPhase 08で採用し、科学pilotはPhase 10で投入。分野分類・theme・presetは未実装であり、追加の採用判断を要する。現行の契約は以下のPhase 08以降を参照する。
 
 ## Phase 08：関係概要・起点切替・直前探索への復帰
 
@@ -575,3 +575,13 @@ type EntityOverviewResponse = {
 StartExamplesは検索と並存する左ペインの小さい領域。例を押した時だけchooseRoot(entity, true)で新探索へ移る。既存検索はchooseRoot(entity)で確定条件維持という契約を継承。trueは追加predicate／制作Roleを解除する指定で、起点と条件を一つの世代で確定する。変更条件による旧起点の取得は行わず、旧通信をabort・旧ページ／cursor／開閉意図・直前履歴をリセットする。dataset・公開範囲・取得上限は変えない。検索語・検索kind・検索結果は変更しない。開始例も検索候補も直前復帰対象の起点切替操作とは別の新規開始として扱う。既存の広く見る／同条件で見るの復帰契約は維持する。
 
 開始例は条件や表示法の保存preset・taxonomy・推薦ではない。新規関係モデル／追加データは[検証構成案](design/RELATION_MODEL_VALIDATION_SAMPLES.md)の未実装提案。
+
+## Phase 14：制作Roleと組織立場のtyped限定Vertical Slice
+
+現行仕様は[TYPED_QUALIFICATION_CONTRACTS.md](design/TYPED_QUALIFICATION_CONTRACTS.md)。CONTRIBUTED_TOの制作RoleとAFFILIATED_WITHのorganizationParticipationを別型・別語彙にし、適用先検査・条件正規化/一致・原表記schema・比較キー・探索世代/cache/復帰/cursor処理だけを共有する。組織立場はVISITOR / ASSOCIATE_PROFESSORの二値。雇用・専任・日本の職位への変換はしない。
+
+投入schemaVersion=3、ClaimにorganizationParticipation、CitationにpositionEvidenceを追加。旧v1/v2入力は不変。Neo4jは新スカラーpropertyのみでNode/Relationship/制約を変更しない。neighborsにorganizationPositions CSVを追加し、両限定を独立にLIMIT前適用する。立場nullと空集合を区別し、広いClaimをnoteからVisitor条件へ含めない。立場条件ありまたはscience v2のcursorはv3で起点・dataset・両条件へ拘束。旧無立場条件のcursorは維持する。
+
+比較キーはtyped限定・刊行物識別・periodの値/精度/nullを含み、polarityを除外する。真偽・矛盾判定、Claim UUIDやMERGEキーの代用ではない。relatedClaimIdsとDisplayRelationはSPO単位を維持し、詳細では個別限定へ戻る。AFFILIATED_WITH混在を「肯定・否定あり」とし異なる限定を自動対立表示しない。関係概要は現在のClaim集計構造のまま。
+
+science v2は既存8 Claim＋限定2 Claim、8 Entity・9 Source・11 Citation。C09保留。専用Bolt7691/Browser7478/Web3214/.next-science-v2で検証。既存science v1・漫画v1/v2・demoは凍結不変。語彙追加・更新一般基盤やevent等は未実装。[dataset](../datasets/pilot-science/v2/README.md)、[実施記録](archive/phase-14-typed-qualification/README.md)を参照。

@@ -51,3 +51,5 @@ v1は全ファイル・DBとも凍結保持。v2台帳はv1 data/ledgerのhash�
 v2は別compose/volume、Bolt7689、HTTP7476、Web3212、.env.pilot-v2、.next-pilot-v2。誤ったポート／datasetでseedしない。既存内容が違えば通常seedで上書きしない。収録候補の受入状態は実施記録を参照する。
 
 2026-10-04に5候補をユーザーが受入。v2は旧9 ClaimとRole付き5 Claimを保持した凍結版とする。以後の増量・訂正は新dataset版で受け入れる。
+
+Phase 14追記（2026-10-05）：[二用途の限定契約](TYPED_QUALIFICATION_CONTRACTS.md)を追加。制作の値・scope・語彙baseline・凍結データは不変。原表記schema、適用先、条件正規化/一致、比較キー等の小さい処理を共有。新しい比較キーはperiodも含む。従来の制作比較ラベルは残して個別期間確認を維持する。AFFILIATED_WITHの肯否混在も中立な「肯定・否定あり」へ変更した。組織立場は制作Roleとは別型。

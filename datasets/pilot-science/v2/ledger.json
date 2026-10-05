@@ -1,0 +1,143 @@
+{
+  "schemaVersion": 1,
+  "dataset": {
+    "id": "pilot-science-v2",
+    "version": 2,
+    "transformVersion": 1,
+    "createdAt": "2026-10-05T12:14:06.652778Z",
+    "frozen": true,
+    "scope": "science v1の8広いClaimと、NBIの資料が明示する2立場・各年精度期間のみ。雇用・常勤・日本の職位を認定しない。"
+  },
+  "base": {
+    "dataset": "pilot-science-v1",
+    "files": {
+      "datasets/pilot-urasawa/v1/ledger.json": "222b7e4530d9638d2966ddaa5d81a6ffd20427cf9c9b7ed1e7c95b4a7852eb03",
+      "datasets/pilot-urasawa/v1/data.json": "446cb51ef4c1119ac8d2cf85ce1691b5e3b9e63e377c4cbef7d976fa585fc5cd",
+      "datasets/pilot-urasawa/v1/manifest.json": "39ee383e83adee9472a5d9e264142a6871122b7eafc76f8b50a8a39dda50db2b",
+      "datasets/pilot-urasawa/v1/raw/Q594758.json": "8601b074c49b64a3105e92865f1888a67e08ba6d685b8e7a76c497ea2d3d047c",
+      "datasets/pilot-urasawa/v1/raw/Q193300.json": "45648d7da70c0e495fc939f42799cea9b278b07c276bad1409ace874e5a2add6",
+      "datasets/pilot-urasawa/v1/raw/Q1185624.json": "6700f436c4781d1b8ca688769d4471205c843a9977ddf3f2df4465a9e2bf1dac",
+      "datasets/pilot-urasawa/v1/raw/Q6724933.json": "5fda464513ef5637ce59e3c1941413d76f3e781a07eb2d13d9fe73a5021d2ef0",
+      "datasets/pilot-urasawa/v1/raw/Q1197216.json": "dfe1b656b2b77f429248a8a66e140f698cee724fe80d36571ae7df80c459705d",
+      "datasets/pilot-urasawa/v1/raw/Q348436.json": "7f4ce9ec0ccc25fb52caec694621f5379f426a2065364a9413c9bc03a1cc5927",
+      "datasets/pilot-urasawa/v1/raw/Q11264988.json": "2460299c85093dd9514a6bdd7fdee3b530c274325b86f1b210758817dc1cfa19",
+      "datasets/pilot-urasawa/v1/raw/Q3514203.json": "0212bf5156ba6904b360a2e1768a628af88d6f144b90104e7503189301fb5697",
+      "datasets/pilot-urasawa/v2/ledger.json": "0b22ed0add4df4b780669f45815282975f143225bbaa9b35eef4cf32206f6537",
+      "datasets/pilot-urasawa/v2/data.json": "63798471bded3b9d31666c45165d9296d8ccfcd476c042872a02375143981c17",
+      "datasets/pilot-urasawa/v2/manifest.json": "b16f7152158c9dd9cd117dabda97761b8034e3ece9941ed6c6e6f7a3a3acfca3",
+      "datasets/pilot-science/v1/ledger.json": "7e91ccc2bf3ca44c53e0b9d41cdc256d4126efed58aad62a3d8cd940d7e7bec0",
+      "datasets/pilot-science/v1/data.json": "95e5c11216cd5bc3cd2a8f0cf942c1114f5978787f47ced20b40a967c2ed74c1",
+      "datasets/pilot-science/v1/manifest.json": "121566b662bffe249a09e5b287f408bd0cb4458b800ab580fa6e6643111f93ec",
+      "datasets/pilot-science/v1/raw/Q7085.json": "8c35e3eadca8a4d168cd0b4ec7d8bf50c3e6ed0ecb460eafe55f8e99863d0d04",
+      "datasets/pilot-science/v1/raw/Q40904.json": "7191b4e41f6a0657ce81ff08a1b3c33e86d2180a16323fb451e445104227df66",
+      "datasets/pilot-science/v1/raw/Q35794.json": "3009e8956da9fa1f1c3aeade9d9dad3cb03eb47f493521ba7ac96a9f64c94952",
+      "datasets/pilot-science/v1/raw/Q263761.json": "a286dd01fdb73cdb352d37460843cf4f4fe24f865c1bceea83b275f664eecdbd",
+      "datasets/pilot-science/v1/raw/Q152838.json": "3bc76658c903cd9762a3461379a155a8591aad4f6e9285cf302821ce85f14fbe",
+      "datasets/pilot-science/v1/raw/Q58978.json": "a52fe5884b62d644a0f3fbfe55dc1c24f5039ad99abf4bed4c3c99ce587b60ec",
+      "datasets/pilot-science/v1/raw/Q65989.json": "c73e576b021cb4dcca46c3baaa1daaafdcc2b3dfcb426b64922d07ba656b565f",
+      "datasets/pilot-science/v1/raw/Q47480.json": "cd8ab032173d1d9fabc2ec7a7a556791bd13bbba03f517f26900c5a2b65c875e",
+      "fixtures/demo.json": "f862b121f001127de34c27a4c72b860b1d003ceeb7a25bc2d3b8bdc6181f399e"
+    }
+  },
+  "research": {
+    "file": "docs/research/phase-13-relation-model/v2/ledger.json",
+    "sha256": "a340838c9e2eb9f36361dc4dd3cd93b7469921e2891ebeba5fd2f93baedf914c",
+    "sourceRef": "S01",
+    "retrieval": {
+      "url": "https://nbi.ku.dk/hhh/nobel/associated_with_nbi/werner_heisenberg/",
+      "resolvedUrl": "https://nbi.ku.dk/hhh/nobel/associated_with_nbi/werner_heisenberg/",
+      "accessedAtUtc": "2026-10-05T10:35:49+00:00",
+      "status": 200,
+      "mediaType": "text/html; charset=utf-8",
+      "bytes": 31450,
+      "sha256": "80ed2f63139cf5fbc2e5480609a3b8f53d397eeed100659bbc2c8e7aebf2b84a",
+      "hashTarget": "HTTP response body",
+      "method": "python3 urllib.request / public HTTP GET"
+    },
+    "note": "既存の確認済み資料を再利用。追加資料収集なし。資料本文は再配布しない。"
+  },
+  "sourceId": "3d8bfd32-31fd-4e8a-aff6-7b7fb80265c0",
+  "candidates": [
+    {
+      "ref": "A01",
+      "claimId": "e71f548b-65c2-4032-a40f-342ab75b5d3e",
+      "citationId": "021f7c10-51a9-4f61-af63-d5efd8488a14",
+      "baseClaimId": "eb7182aa-e7f1-4064-a731-bffe7c59227c",
+      "positionId": "VISITOR",
+      "period": {
+        "from": {
+          "value": "1924",
+          "precision": "year"
+        },
+        "to": {
+          "value": "1925",
+          "precision": "year"
+        }
+      },
+      "evidence": {
+        "originalText": "Visitor",
+        "language": "en",
+        "originalPeriod": "1924-25",
+        "locator": "Werner Heisenberg見出し直下、Niels Bohr Institute行",
+        "sourceMeaning": "NBIの資料がVisitorとして1924–25に関与したと記す。雇用種別を認定しない。",
+        "scope": "対象はこの研究所への資料記載の関与。日本の客員職・有給・専任を保証しない。",
+        "doNotInfer": [
+          "Associate professor期間を訪問期間へ足す",
+          "全期間の連続滞在・雇用",
+          "同期間に他機関へ関与しない"
+        ]
+      },
+      "acceptance": {
+        "decision": "accepted",
+        "reviewer": "ユーザー（Phase 14実装依頼）",
+        "date": "2026-10-05",
+        "reference": "Phase14依頼の「今回新しく扱う」Visitor 1924–1925とAssociate professor 1926–1927を別の限定されたClaimとして扱う指示。",
+        "reason": "資料が記すNBIでの立場と各期間に限定。既存広いClaimの受入だけから立場を自動構造化していない。",
+        "structuredImplementation": "具体的なpositionId/schemaは依頼の境界内でCodexが実装判断。Phase13の比較用事実受入と今回の実装指示を分離する。"
+      }
+    },
+    {
+      "ref": "A02",
+      "claimId": "ffbe8c65-5435-4373-85c7-c091892e51d9",
+      "citationId": "7bdf687b-8b94-40d7-a92e-9576518c27ad",
+      "baseClaimId": "eb7182aa-e7f1-4064-a731-bffe7c59227c",
+      "positionId": "ASSOCIATE_PROFESSOR",
+      "period": {
+        "from": {
+          "value": "1926",
+          "precision": "year"
+        },
+        "to": {
+          "value": "1927",
+          "precision": "year"
+        }
+      },
+      "evidence": {
+        "originalText": "Associate professor",
+        "language": "en",
+        "originalPeriod": "1926-27",
+        "locator": "Werner Heisenberg見出し直下、Niels Bohr Institute行",
+        "sourceMeaning": "NBIの資料がAssociate professorとして1926–27に関与したと記す。",
+        "scope": "当該研究所・当該時期の記載された立場。職制・雇用条件・他職位への同義対応は対象外。",
+        "doNotInfer": [
+          "Visitorの開始・終了を上書き",
+          "有給／専任／法的雇用",
+          "1924–27に同じ職位",
+          "双方の期間が排他的・完全である"
+        ]
+      },
+      "acceptance": {
+        "decision": "accepted",
+        "reviewer": "ユーザー（Phase 14実装依頼）",
+        "date": "2026-10-05",
+        "reference": "Phase14依頼の「今回新しく扱う」Visitor 1924–1925とAssociate professor 1926–1927を別の限定されたClaimとして扱う指示。",
+        "reason": "資料が記すNBIでの立場と各期間に限定。既存広いClaimの受入だけから立場を自動構造化していない。",
+        "structuredImplementation": "具体的なpositionId/schemaは依頼の境界内でCodexが実装判断。Phase13の比較用事実受入と今回の実装指示を分離する。"
+      }
+    }
+  ],
+  "pending": [
+    "C09"
+  ],
+  "identity": "science v1の8Entity、QID、言語付き名称、NBI旧称の同一性判断を凍結版から継承する。新たな同一性統合はない。"
+}

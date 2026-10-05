@@ -29,7 +29,7 @@ export default function Explorer({ dataset = "demo" }: { dataset?: DatasetMode }
   const [dark, setDark] = useState(false);
   const [darkPalette, setDarkPalette] = useState<"brown" | "blue">("brown");
   const { graph, selection, previous, viewRestoration, switchRoot, restorePrevious, changePredicates, chooseRoot, selectEntity, selectClaim, selectRelation, expand, close, toggleEntity } = useGraphExplorer();
-  const restricted = graph.predicates !== null || (graph.contributionRoles ?? null) !== null;
+  const restricted = graph.predicates !== null || (graph.contributionRoles ?? null) !== null || (graph.organizationPositions ?? null) !== null;
   const switchFrom = (entity: EntitySummary, mode: "broad" | "same") => {
     switchRoot(entity, mode, canvas.current?.capture() ?? null); setOverview(null);
   };
@@ -64,7 +64,7 @@ export default function Explorer({ dataset = "demo" }: { dataset?: DatasetMode }
         </div>
         <div className={styles.rootBar}><p className={styles.rootLabel} data-testid="exploration-root">{entry.root}：{graph.centerId ? graph.nodes[graph.centerId]?.name : entry.rootEmpty}</p>
         {previous && <button onClick={restorePrevious}>{overviewLabels().restore}</button>}</div>
-        <RelationFilter roles={graph.contributionRoles ?? null} value={graph.predicates} onApply={changePredicates} />
+        <RelationFilter positions={graph.organizationPositions ?? null} roles={graph.contributionRoles ?? null} value={graph.predicates} onApply={changePredicates} />
         {graph.centerId ? <p className={styles.muted}>{entry.selectedHelp}</p> : <div className={styles.empty}><h3>{entry.initialTitle}</h3><p>{entry.initialHelp}</p></div>}
         <div className={`${styles.feedback} ${!graph.centerId ? styles.initialFeedback : ""}`} aria-live="polite"><p data-testid="selection-status">選択中：{selectionText}</p><p>{loading ? `Graphを取得中…（${loading}件）` : selectedEntity ? graph.expansions[selectedEntity.id]?.expanded ? "近傍は展開済みです。" : graph.expansions[selectedEntity.id]?.pages.length ? "展開は閉じています。クリックで取得済みの枝を復元します。" : "クリックで一段階展開します。" : "線ごとに同じ関係の主張をまとめて表示しています。"}</p></div>
         {Object.values(graph.expansions).some((meta) => meta.active && meta.hasMore) && <p className={styles.muted}>Graphの関係表示は取得済みの主張に基づきます。続きは各Entityの詳細から取得できます。</p>}
@@ -78,8 +78,8 @@ export default function Explorer({ dataset = "demo" }: { dataset?: DatasetMode }
         <div className={styles.detailHeading}><h2 id="detail-title">詳細</h2>{selection && <button aria-pressed={detailWide} onClick={() => setDetailWide(!detailWide)}>{detailWide ? entry.detailNormal : entry.detailWide}</button>}</div>
         {!selection && <p className={styles.muted}>{entry.detailHelp}</p>}
         {selectedEntity && <EntityDetails key={key} entity={selectedEntity} expansion={graph.expansions[selectedEntity.id]} onExpand={(more) => void expand(selectedEntity.id, more)} onClose={() => close(selectedEntity.id)} restricted={restricted} onOverview={() => setOverview(selectedEntity)} onSwitch={(mode) => switchFrom(selectedEntity, mode)} />}
-        {selectedRelation && <ClaimDetails key={`${key}:${selectedRelation.claimIds[0]}`} id={selectedRelation.claimIds[0]} nodes={graph.nodes} mode="relation" visibleClaimIds={selectedRelation.claimIds} roles={graph.contributionRoles ?? null} predicates={graph.predicates} />}
-        {selection?.kind === "claim" && <ClaimDetails key={key} id={selection.id} nodes={graph.nodes} roles={graph.contributionRoles ?? null} predicates={graph.predicates} />}
+        {selectedRelation && <ClaimDetails key={`${key}:${selectedRelation.claimIds[0]}`} id={selectedRelation.claimIds[0]} nodes={graph.nodes} mode="relation" visibleClaimIds={selectedRelation.claimIds} positions={graph.organizationPositions ?? null} roles={graph.contributionRoles ?? null} predicates={graph.predicates} />}
+        {selection?.kind === "claim" && <ClaimDetails key={key} id={selection.id} nodes={graph.nodes} positions={graph.organizationPositions ?? null} roles={graph.contributionRoles ?? null} predicates={graph.predicates} />}
       </aside>
     </main>
     {overview && <EntityOverview key={overview.id} entity={overview} dataset={dataset} restricted={restricted} onClose={() => setOverview(null)} onSwitch={(mode) => switchFrom(overview, mode)} />}

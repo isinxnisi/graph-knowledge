@@ -1,0 +1,129 @@
+{
+  "schemaVersion": 1,
+  "entries": [
+    {
+      "id": "VISITOR",
+      "predicate": "AFFILIATED_WITH",
+      "definitionLanguage": "ja",
+      "meaning": {
+        "definition": "資料がVisitorと明示する人物と組織の関わり。滞在形態の制度的意味を補完しない。",
+        "subjectRole": "当該資料に記載された人物",
+        "objectRole": "記載先の組織",
+        "direction": "subject-to-object",
+        "rules": [
+          "一Claim一立場。肯否は立場とperiodを含む命題全体へ掛かる。",
+          "限定なしは全立場を肯定しない。原語はCitation、受入理由と限定は台帳へ保持する。",
+          "雇用・専任・学生・常勤・他の客員職を自動認定しない。"
+        ],
+        "examples": [
+          {
+            "id": "VISITOR-include",
+            "category": "include",
+            "scenario": "NBI人物紹介のVisitorと対応する期間を確認",
+            "rationale": "今回の明示受入の狭い範囲を構造化する"
+          },
+          {
+            "id": "VISITOR-exclude",
+            "category": "exclude",
+            "scenario": "雇用・専任・学生・常勤・他の客員職を自動認定しない。",
+            "rationale": "制度差・雇用関係を語の近さから補完しない"
+          },
+          {
+            "id": "VISITOR-boundary",
+            "category": "boundary",
+            "scenario": "同じ資料で別期間に別の立場が列記される",
+            "rationale": "立場とperiodを独立に確認し、広いClaimを更新しない"
+          }
+        ],
+        "nearbyConcepts": [
+          {
+            "term": "ASSOCIATE_PROFESSOR",
+            "difference": "同じ広い関わりの異なる限定。片方から他方を認定しない。"
+          },
+          {
+            "term": "制作Role",
+            "difference": "別predicate・別値集合であり同一Roleへ統合しない。"
+          }
+        ]
+      },
+      "translations": {
+        "ja": {
+          "label": "Visitor",
+          "reverseLabel": "Visitorとしての関わり",
+          "description": "資料がVisitorと明示する人物と組織の関わり。滞在形態の制度的意味を補完しない。",
+          "aliases": []
+        }
+      },
+      "predicateRationale": "AFFILIATED_WITHの広い意味・端点・方向を変更せず、資料上の立場で命題を限定する。",
+      "comparisons": [
+        {
+          "positionId": "ASSOCIATE_PROFESSOR",
+          "relation": "distinct",
+          "rationale": "原表記・期間が別。排他性や上下関係を保証しない。"
+        }
+      ]
+    },
+    {
+      "id": "ASSOCIATE_PROFESSOR",
+      "predicate": "AFFILIATED_WITH",
+      "definitionLanguage": "ja",
+      "meaning": {
+        "definition": "資料がAssociate professorと明示する人物と組織の関わり。一般Professorや日本の助教授と同義にしない。",
+        "subjectRole": "当該資料に記載された人物",
+        "objectRole": "記載先の組織",
+        "direction": "subject-to-object",
+        "rules": [
+          "一Claim一立場。肯否は立場とperiodを含む命題全体へ掛かる。",
+          "限定なしは全立場を肯定しない。原語はCitation、受入理由と限定は台帳へ保持する。",
+          "Professor一般・日本の助教授・雇用形態・常勤を自動認定しない。"
+        ],
+        "examples": [
+          {
+            "id": "ASSOCIATE_PROFESSOR-include",
+            "category": "include",
+            "scenario": "NBI人物紹介のAssociate professorと対応する期間を確認",
+            "rationale": "今回の明示受入の狭い範囲を構造化する"
+          },
+          {
+            "id": "ASSOCIATE_PROFESSOR-exclude",
+            "category": "exclude",
+            "scenario": "Professor一般・日本の助教授・雇用形態・常勤を自動認定しない。",
+            "rationale": "制度差・雇用関係を語の近さから補完しない"
+          },
+          {
+            "id": "ASSOCIATE_PROFESSOR-boundary",
+            "category": "boundary",
+            "scenario": "同じ資料で別期間に別の立場が列記される",
+            "rationale": "立場とperiodを独立に確認し、広いClaimを更新しない"
+          }
+        ],
+        "nearbyConcepts": [
+          {
+            "term": "VISITOR",
+            "difference": "同じ広い関わりの異なる限定。片方から他方を認定しない。"
+          },
+          {
+            "term": "制作Role",
+            "difference": "別predicate・別値集合であり同一Roleへ統合しない。"
+          }
+        ]
+      },
+      "translations": {
+        "ja": {
+          "label": "Associate professor",
+          "reverseLabel": "Associate professorとしての関わり",
+          "description": "資料がAssociate professorと明示する人物と組織の関わり。一般Professorや日本の助教授と同義にしない。",
+          "aliases": []
+        }
+      },
+      "predicateRationale": "AFFILIATED_WITHの広い意味・端点・方向を変更せず、資料上の立場で命題を限定する。",
+      "comparisons": [
+        {
+          "positionId": "VISITOR",
+          "relation": "distinct",
+          "rationale": "原表記・期間が別。排他性や上下関係を保証しない。"
+        }
+      ]
+    }
+  ]
+}

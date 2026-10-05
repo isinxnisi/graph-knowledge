@@ -24,18 +24,19 @@
 | [複数分野の入口・文脈・起点切替](design/CROSS_DOMAIN_EXPLORATION_REVIEW.md) | Phase 07後の設計提案。一つの論理Graph、テーマと条件の分離、広く見る／条件維持、復帰、研究者・機関の小さい検証案。起点切替・復帰をPhase 08で採用・実装。科学の機関中心pilotはPhase 10で投入 |
 | [Entityの関係俯瞰](design/ENTITY_RELATION_OVERVIEW_REVIEW.md) | 起点切替前の任意の俯瞰、登録範囲の集計、ダブルクリック契約とmodal、最小の次フェーズ範囲。Phase 08で採用・実装 |
 | [別分野実データパイロット](design/CROSS_DOMAIN_REAL_DATA_PILOT.md) | Phase 09後の資料確認・設計案。5研究者・3機関・9候補の設計。Phase 10でC01–C08受入・投入、C09 pending。既存語彙の境界と資料→概要の情報損失を観察 |
-| [関係モデルの検証サンプル構成](design/RELATION_MODEL_VALIDATION_SAMPLES.md) | 既存22 Claimと異なる意味構造の14–20候補、段階的収集。Phase 12で優先7候補を資料確認・比較。Phase 13で7件の狭い事実を人間受入。構造化方式・投入は未承認 |
+| [関係モデルの検証サンプル構成](design/RELATION_MODEL_VALIDATION_SAMPLES.md) | 既存22 Claimと異なる意味構造の14–20候補、段階的収集。Phase 12で優先7候補を資料確認・比較。Phase 13で7件の狭い事実を人間受入。Phase 14ではVisitor / Associate professorだけ構造化・投入。他候補は未実装 |
 | [関係モデルの第1回比較](design/RELATION_MODEL_COMPARISON_REVIEW.md) | Phase 12。時期別立場・家族・映画派生を5方式で比較。独立命題と限定・共通処理の仮説、次のD/E/C、最小実装前の判断 |
 | [関係モデル比較の研究台帳v1](research/phase-12-relation-model/v1/README.md) | Phase 12当時の凍結版。優先7新規＋既存Visitor対照、7 Source、40比較票。当時は受入待ち。最新判断はv2を読む |
-| [関係モデルの第2回比較](design/RELATION_MODEL_SECOND_COMPARISON_REVIEW.md) | Phase 13。D/E/Cの反例、独立命題・限定・共通処理の境界、次の限定Vertical Slice案。実装なし |
+| [関係モデルの第2回比較](design/RELATION_MODEL_SECOND_COMPARISON_REVIEW.md) | Phase 13。D/E/Cの反例、独立命題・限定・共通処理の境界。比較時点では実装なし。次の組織立場Vertical SliceをPhase 14で採用 |
 | [関係モデル比較の研究台帳v2](research/phase-13-relation-model/v2/README.md) | 17記録・85比較票・16 Source。Phase 12の7件は狭い事実のみ受入、新規9研究記録は人間受入待ち。seed入力ではない |
+| [二用途typed限定の採用契約](design/TYPED_QUALIFICATION_CONTRACTS.md) | Phase 14。制作Roleと組織立場の独立型、共通処理、肯否・比較・期間、条件/cursor、科学v2 |
 | [API応答例](API_RESPONSE_EXAMPLES.json) | 読み取りAPIの例。テストから参照するため、この場所を維持 |
 
 未実装部分を含む文書は、完了した内容が一部あっても丸ごとアーカイブしない。設計案を採用済みとみなさず、最新のユーザー指示を優先する。
 
-## 進行中のフェーズ
+## 現在地点
 
-Phase 13でD/E/C各3の資料確認・第2回5方式比較・台帳v2まで完了。Phase 12新規7件は狭い事実のみ人間受入済みで、構造化方式は未承認。既存22＋受入事実7＋今回の関係材料8＝約37件分の比較材料、別に改称対照1件。37 seedable Claimという意味ではない。新規9記録は人間受入待ち、科学C09・合併の法的同一性・態度原版／実対象・F01方式の排他性は未確定。既存dataset・DB/API/UI・語彙契約は変更していない。次は時期別組織立場の最小契約と縦経路を決め、既存制作限定との二用途で必要な処理だけ共有する案。新しい実装の承認はまだない。
+Phase 14で、既存制作Roleと組織立場（Visitor / Associate professor）の二用途による、小さいtyped限定の縦経路を実装・検証した。科学v2に広い8 Claimと独立限定2 Claimを保持。現行契約は[TYPED_QUALIFICATION_CONTRACTS.md](design/TYPED_QUALIFICATION_CONTRACTS.md)、結果は[実施記録](archive/phase-14-typed-qualification/README.md)。家族・組織間・event・派生・態度の比較候補は未実装、C09は保留。次の一般化・追加語彙の承認は含まない。
 
 ## フェーズ別の完了履歴
 
@@ -54,6 +55,7 @@ Phase 13でD/E/C各3の資料確認・第2回5方式比較・台帳v2まで完�
 | Phase 11：モデル検証準備・開始例 | 意味構造のサンプル構成案、既存datasetの固定開始例。新規seedなし | [実施記録](archive/phase-11-model-samples/IMPLEMENTATION_MODEL_SAMPLES.md) |
 | Phase 12：優先実資料・意味比較 | 新規7候補の資料確認、研究台帳、5方式の40比較票。当時の人間受入・新語彙・投入なし | [調査・検証記録](archive/phase-12-model-comparison/README.md) |
 | Phase 13：第2回関係モデル比較 | D/E/Cの9研究記録・45追加比較票、Phase 12狭い事実7件の受入を次版へ記録。新schema・投入なし | [調査・検証記録](archive/phase-13-second-model-comparison/README.md) |
+| Phase 14：二用途typed限定 | 制作Roleと組織立場の分離、条件取得/比較/復帰、science v2の2限定Claim | [実施記録](archive/phase-14-typed-qualification/README.md) |
 
 Phase 02後のNode再クリックの採用・検証は、現役の[操作と設定](design/GRAPH_INTERACTION_AND_SETTINGS.md)へ記録している。今後、設定機能の検討が終わるまでは現役文書として維持する。
 

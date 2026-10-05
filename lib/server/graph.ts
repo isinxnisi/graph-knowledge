@@ -5,12 +5,12 @@ import { PREDICATE_KEYS } from "../domain/predicates";
 import { roleIdSchema } from "../domain/contribution";
 import { int } from "neo4j-driver";
 import { claimDetailSchema, type EntitySearchResponse, type EntityResponse, type NeighborsResponse, type ClaimResponse } from "../domain/api";
-import type { ContributionRoleFilter, PredicateFilter } from "../domain/exploration";
+import type { ContributionRoleFilter, OrganizationPositionFilter, PredicateFilter } from "../domain/exploration";
 import { encodeNeighborCursor } from "./neighbor-cursor";
 import { ApiError } from "./http";
 import { readTransaction } from "./read-db";
 import { entitySummary, entityDetail, claimSummary, citationDetail, relatedId } from "./mappers";
-import { SEARCH_ENTITIES, ENTITY_DETAIL, NEIGHBORS, NEIGHBORS_BY_ROLE, CLAIM_DETAIL, RELATED_CLAIMS, ENTITY_OVERVIEW } from "./queries";
+import { SEARCH_ENTITIES, ENTITY_DETAIL, NEIGHBORS, NEIGHBORS_BY_ROLE, NEIGHBORS_BY_QUALIFICATION, CLAIM_DETAIL, RELATED_CLAIMS, ENTITY_OVERVIEW } from "./queries";
 
 const notFound = () => new ApiError(404, "NOT_FOUND", "対象のデータが見つかりません。");
 
@@ -29,12 +29,12 @@ export function getEntity(id: string): Promise<EntityResponse> {
   });
 }
 
-export function getNeighbors(id: string, limit: number, after: string | null, predicates: PredicateFilter = null, contributionRoles: ContributionRoleFilter = null): Promise<NeighborsResponse> {
+export function getNeighbors(id: string, limit: number, after: string | null, predicates: PredicateFilter = null, contributionRoles: ContributionRoleFilter = null, organizationPositions: OrganizationPositionFilter = null): Promise<NeighborsResponse> {
   return readTransaction(async (tx) => {
     const centerResult = await tx.run(ENTITY_DETAIL, { id });
     if (!centerResult.records.length) throw notFound();
     const center = entitySummary(centerResult.records[0].get("entity"));
-    const result = await tx.run(contributionRoles === null ? NEIGHBORS : NEIGHBORS_BY_ROLE, { id, after, predicates, contributionRoles, take: int(limit + 1) });
+    const result = await tx.run(organizationPositions !== null ? NEIGHBORS_BY_QUALIFICATION : contributionRoles === null ? NEIGHBORS : NEIGHBORS_BY_ROLE, { id, after, predicates, contributionRoles, organizationPositions, take: int(limit + 1) });
     const nodes = new Map([[center.id, center]]);
     const claims = result.records.slice(0, limit).map((record) => {
       const subject = entitySummary(record.get("subject"));
@@ -44,7 +44,7 @@ export function getNeighbors(id: string, limit: number, after: string | null, pr
     });
     const hasMore = result.records.length > limit;
     return { centerId: id, nodes: [...nodes.values()], claims,
-      page: { hasMore, nextCursor: hasMore ? encodeNeighborCursor(id, predicates, claims.at(-1)!.id, contributionRoles) : null } };
+      page: { hasMore, nextCursor: hasMore ? encodeNeighborCursor(id, predicates, claims.at(-1)!.id, contributionRoles, undefined, organizationPositions) : null } };
   });
 }
 
@@ -58,6 +58,7 @@ export function getClaim(id: string): Promise<ClaimResponse> {
     const summary = claimSummary(properties, entitySummary(record.get("subject")), entitySummary(record.get("object")), record.get("sourceCount").toNumber());
     const citations = (record.get("citations") as { citation: Record<string, unknown>; source: Record<string, unknown> }[])
       .map(({ citation, source }) => citationDetail(citation, source));
+    if (citations.some(c => c.positionEvidence && !summary.organizationParticipation || c.roleEvidence && summary.predicate !== "CONTRIBUTED_TO")) throw new Error("Stored evidence qualification mismatch");
     const claim = claimDetailSchema.parse({ ...summary, createdAt: properties.createdAt, updatedAt: properties.updatedAt, citations });
     const related = await tx.run(RELATED_CLAIMS, { id, subjectId: summary.subjectId, objectId: summary.objectId, predicate: summary.predicate });
     return { claim, relatedClaimIds: related.records.map((r) => relatedId(r.get("id"))) };

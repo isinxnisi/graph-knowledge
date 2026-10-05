@@ -1,3 +1,7 @@
+import { contributionOf } from "../domain/contribution";
+import { organizationParticipationOf } from "../domain/organization-participation";
+import { contributionLabels } from "../i18n/contribution";
+import { organizationParticipationLabels } from "../i18n/organization-participation";
 import type { PartialDate } from "../domain/dates";
 import type { ClaimSummary } from "../domain/api";
 import { PREDICATES, type EntityKind } from "../domain/predicates";
@@ -14,3 +18,15 @@ export function formatPeriod(period: ClaimSummary["period"]): string {
 }
 export const polarityLabel = (claim: Pick<ClaimSummary, "polarity">) => claim.polarity === "denied" ? "否定" : "肯定";
 export const relationLabel = (claim: Pick<ClaimSummary, "predicate" | "polarity">) => `${PREDICATES[claim.predicate].label}${claim.polarity === "denied" ? "（否定）" : ""}`;
+
+export function qualificationLabel(claim: ClaimSummary): string | null {
+  if (claim.predicate === "CONTRIBUTED_TO") {
+    const role = contributionOf(claim)?.roleId, text = contributionLabels();
+    return role ? text.roles[role] : text.none;
+  }
+  if (claim.predicate === "AFFILIATED_WITH") {
+    const position = organizationParticipationOf(claim)?.positionId, text = organizationParticipationLabels();
+    return position ? text.positions[position] : text.none;
+  }
+  return null;
+}
