@@ -11,7 +11,7 @@
     "start": "next start --hostname 127.0.0.1",
     "typecheck": "next typegen && tsc --noEmit",
     "lint": "npm run vocabulary:check && npm run qualification:check && eslint .",
-    "test": "npm run vocabulary:check && npm run qualification:check && vitest run tests/domain.test.ts tests/http.test.ts tests/ui-state.test.tsx tests/pilot.test.ts tests/vocabulary.test.ts tests/contribution.test.ts tests/science.test.ts tests/qualification.test.ts",
+    "test": "npm run vocabulary:check && npm run qualification:check && vitest run tests/domain.test.ts tests/http.test.ts tests/ui-state.test.tsx tests/pilot.test.ts tests/vocabulary.test.ts tests/contribution.test.ts tests/science.test.ts tests/qualification.test.ts tests/event.test.ts",
     "test:integration": "vitest run tests/seed.integration.test.ts tests/api.integration.test.ts --no-file-parallelism",
     "fixture:validate": "tsx scripts/validate-fixture.ts",
     "db:constraints": "tsx scripts/constraints.ts",
@@ -47,7 +47,14 @@
     "science:v2:build": "tsx scripts/science-v2.ts build",
     "science:v2:integration": "vitest run tests/qualification.integration.test.ts --no-file-parallelism",
     "science:v2:e2e": "playwright test --config=playwright.science-v2.config.ts",
-    "qualification:check": "tsx scripts/check-qualifications.ts"
+    "qualification:check": "tsx scripts/check-qualifications.ts",
+    "event:prepare": "tsx scripts/prepare-event.ts",
+    "event:validate": "tsx scripts/prepare-event.ts --check",
+    "event:seed": "tsx scripts/event.ts seed",
+    "event:dev": "tsx scripts/event.ts dev",
+    "event:build": "tsx scripts/event.ts build",
+    "event:integration": "vitest run tests/event.integration.test.ts --no-file-parallelism",
+    "event:e2e": "playwright test --config=playwright.event.config.ts"
   },
   "dependencies": {
     "cytoscape": "3.34.3",

@@ -1,9 +1,13 @@
+import { checkEventRoleVocabulary } from "../lib/domain/event-role-vocabulary";
+import { readEventLedger } from "../lib/server/event-dataset";
 import { readFile } from "node:fs/promises";
 import { execFileSync } from "node:child_process";
 import { checkPositionVocabulary } from "../lib/domain/position-vocabulary";
 import { vocabularyHash } from "../lib/domain/vocabulary";
 import { QUALIFICATION_TYPES } from "../lib/domain/qualifications";
 import { loadScienceV2 } from "../lib/server/science-v2-dataset";
+const eventPaths = ["vocabulary/event-participation-roles/catalog.json", "vocabulary/event-participation-roles/baseline-v1.json"];
+const [eventCatalog, eventBaseline] = await Promise.all(eventPaths.map(async path => JSON.parse(await readFile(path, "utf8"))));
 const paths = ["vocabulary/organization-positions/catalog.json", "vocabulary/organization-positions/baseline-v1.json"];
 const [catalog, baseline] = await Promise.all(paths.map(async path => JSON.parse(await readFile(path, "utf8"))));
 const args = process.argv.slice(2);
@@ -15,10 +19,18 @@ for (const path of paths) if (tracked.includes(path)) {
   const prior = JSON.parse(execFileSync("git", ["show", `${baseRef}:${path}`], { encoding: "utf8" }));
   if (vocabularyHash(prior) !== vocabularyHash(path.endsWith("catalog.json") ? catalog : baseline)) throw new Error("使用済み立場の契約／基準版変更を拒否。意味レビューと新ID方針を先に決める。");
 }
+const eventTracked = execFileSync("git", ["ls-tree", "--name-only", baseRef, ...eventPaths], { encoding: "utf8" }).trim().split("\n");
+for (const path of eventPaths) if (eventTracked.includes(path)) {
+  const prior = JSON.parse(execFileSync("git", ["show", `${baseRef}:${path}`], { encoding: "utf8" }));
+  if (vocabularyHash(prior) !== vocabularyHash(path.endsWith("catalog.json") ? eventCatalog : eventBaseline)) throw new Error("使用済みEvent立場の契約／基準版変更を拒否");
+}
 const result = checkPositionVocabulary(catalog, baseline);
-if (QUALIFICATION_TYPES.contribution.predicate !== "CONTRIBUTED_TO" || QUALIFICATION_TYPES.organizationParticipation.predicate !== "AFFILIATED_WITH") result.errors.push("Qualification applicability changed");
+const eventResult = checkEventRoleVocabulary(eventCatalog, eventBaseline);
+result.errors.push(...eventResult.errors); result.warnings.push(...eventResult.warnings);
+await readEventLedger();
+if (QUALIFICATION_TYPES.contribution.predicate !== "CONTRIBUTED_TO" || QUALIFICATION_TYPES.organizationParticipation.predicate !== "AFFILIATED_WITH" || QUALIFICATION_TYPES.eventParticipation.predicate !== "PARTICIPATED_IN") result.errors.push("Qualification applicability changed");
 for (const error of result.errors) console.error(`ERROR ${error}`);
 for (const warning of result.warnings) console.warn(`WARN ${warning}`);
 const fixture = await loadScienceV2();
-console.log(`限定契約検証: 2独立型 / 2組織立場 / ${fixture.claims.length} science v2 Claim / ${result.errors.length} error / ${result.warnings.length} warning`);
+console.log(`限定契約検証: 3独立型 / 2組織立場 / 1Event立場 / ${fixture.claims.length} science v2 Claim / ${result.errors.length} error / ${result.warnings.length} warning`);
 if (result.errors.length) process.exitCode = 1;

@@ -1,3 +1,4 @@
+import { eventProperties, eventParticipationProperties } from "../domain/event-participation";
 import { organizationParticipationProperties } from "../domain/organization-participation";
 import { contributionProperties } from "../domain/contribution";
 import { readFile } from "node:fs/promises";
@@ -109,9 +110,9 @@ export async function seedFixture(driver: Driver, database: string, input: unkno
         nodesCreated += (await mergeNode(tx, label, props)).nodesCreated;
       };
       for (const entity of fixture.entities) {
-        const { externalIds, ...properties } = entity;
+        const { externalIds, event, ...properties } = entity;
         const searchNames = [...new Set([entity.name, ...entity.aliases].map(normalizeSearch))];
-        await merge("Entity", { ...properties, searchNames });
+        await merge("Entity", { ...properties, ...eventProperties(event ?? null), searchNames });
         for (const external of externalIds) {
           const result = await tx.run(
             `MATCH (entity:Entity {id: $entityId})
@@ -147,8 +148,8 @@ export async function seedFixture(driver: Driver, database: string, input: unkno
         await merge("Source", { ...properties, ...dateProperties("publishedAt", publishedAt) });
       }
       for (const claim of fixture.claims) {
-        const { subjectId, objectId, period, contribution, organizationParticipation, ...properties } = claim;
-        await merge("Claim", { ...properties, ...contributionProperties(contribution ?? null), ...organizationParticipationProperties(organizationParticipation ?? null), ...dateProperties("validFrom", period.from), ...dateProperties("validTo", period.to) });
+        const { subjectId, objectId, period, contribution, organizationParticipation, eventParticipation, ...properties } = claim;
+        await merge("Claim", { ...properties, ...contributionProperties(contribution ?? null), ...organizationParticipationProperties(organizationParticipation ?? null), ...eventParticipationProperties(eventParticipation ?? null), ...dateProperties("validFrom", period.from), ...dateProperties("validTo", period.to) });
         const result = await tx.run(
           `MATCH (c:Claim {id: $id}), (s:Entity {id: $subjectId}), (o:Entity {id: $objectId})
            MERGE (c)-[:SUBJECT]->(s) MERGE (c)-[:OBJECT]->(o)`,
@@ -159,8 +160,8 @@ export async function seedFixture(driver: Driver, database: string, input: unkno
         await ensureConnections(tx, claim.id, "OBJECT", [objectId]);
       }
       for (const citation of fixture.citations) {
-        const { claimId, sourceId, roleEvidence, positionEvidence, ...properties } = citation;
-        await merge("Citation", { ...properties, positionOriginalText: positionEvidence?.originalText ?? null, positionOriginalLanguage: positionEvidence?.language ?? null, roleOriginalText: roleEvidence?.originalText ?? null, roleOriginalLanguage: roleEvidence?.language ?? null });
+        const { claimId, sourceId, roleEvidence, positionEvidence, eventParticipationEvidence, ...properties } = citation;
+        await merge("Citation", { ...properties, eventOriginalText: eventParticipationEvidence?.originalText ?? null, eventOriginalLanguage: eventParticipationEvidence?.language ?? null, positionOriginalText: positionEvidence?.originalText ?? null, positionOriginalLanguage: positionEvidence?.language ?? null, roleOriginalText: roleEvidence?.originalText ?? null, roleOriginalLanguage: roleEvidence?.language ?? null });
         const result = await tx.run(
           `MATCH (r:Citation {id: $id}), (c:Claim {id: $claimId}), (s:Source {id: $sourceId})
            MERGE (c)-[:HAS_CITATION]->(r) MERGE (r)-[:CITES]->(s)`,

@@ -1,3 +1,4 @@
+import { eventMetadataSchema, eventParticipationSchema, eventParticipationEvidenceSchema } from "./event-participation";
 import { contributionSchema, roleEvidenceSchema } from "./contribution";
 import { organizationParticipationSchema, positionEvidenceSchema } from "./organization-participation";
 import { z } from "zod";
@@ -5,11 +6,11 @@ import { DATASET_MODES } from "./dataset";
 import { entitySchema, claimSchema, citationSchema, sourceSchema } from "./fixture";
 
 export const entitySummarySchema = entitySchema.pick({ id: true, kind: true, name: true, description: true });
-export const entityDetailSchema = entitySummarySchema.extend({ aliases: entitySchema.shape.aliases });
+export const entityDetailSchema = entitySummarySchema.extend({ aliases: entitySchema.shape.aliases, event: eventMetadataSchema.nullable() });
 export const claimSummarySchema = claimSchema.omit({ visibility: true, createdAt: true, updatedAt: true })
-  .extend({ contribution: contributionSchema.nullable(), organizationParticipation: organizationParticipationSchema.nullable(), sourceCount: z.number().int().nonnegative() });
+  .extend({ contribution: contributionSchema.nullable(), organizationParticipation: organizationParticipationSchema.nullable(), eventParticipation: eventParticipationSchema.nullable(), sourceCount: z.number().int().nonnegative() });
 export const citationDetailSchema = citationSchema.omit({ claimId: true, sourceId: true })
-  .extend({ source: sourceSchema, roleEvidence: roleEvidenceSchema.nullable(), positionEvidence: positionEvidenceSchema.nullable() });
+  .extend({ source: sourceSchema, roleEvidence: roleEvidenceSchema.nullable(), positionEvidence: positionEvidenceSchema.nullable(), eventParticipationEvidence: eventParticipationEvidenceSchema.nullable() });
 export const claimDetailSchema = claimSummarySchema.extend({
   createdAt: claimSchema.shape.createdAt, updatedAt: claimSchema.shape.updatedAt,
   citations: z.array(citationDetailSchema),

@@ -1,3 +1,5 @@
+import { eventParticipationOf } from "../domain/event-participation";
+import { eventParticipationLabels } from "../i18n/event-participation";
 import { organizationParticipationOf } from "../domain/organization-participation";
 import { organizationParticipationLabels } from "../i18n/organization-participation";
 import { contributionOf } from "../domain/contribution";
@@ -33,7 +35,7 @@ export function displayRelations(claims: Record<string, ClaimSummary>): Record<s
     const polarity = polarities.size > 1 ? "mixed" : first.polarity;
     return [id, { id, subjectId: first.subjectId, objectId: first.objectId, predicate: first.predicate,
       claimIds: group.map((claim) => claim.id).sort(), polarity,
-      label: relationSummaryLabel(first.predicate, group) + (polarity === "mixed" ? ["CONTRIBUTED_TO", "AFFILIATED_WITH"].includes(first.predicate) ? `\n${contributionLabels().mixed}` : "\n異説あり" : polarity === "denied" ? "\n（否定）" : ""),
+      label: relationSummaryLabel(first.predicate, group) + (polarity === "mixed" ? ["CONTRIBUTED_TO", "AFFILIATED_WITH", "PARTICIPATED_IN"].includes(first.predicate) ? `\n${contributionLabels().mixed}` : "\n異説あり" : polarity === "denied" ? "\n（否定）" : ""),
     }];
   }));
 }
@@ -64,6 +66,8 @@ export function edgeRoutes(relations: Record<string, DisplayRelation>, positions
 }
 
 function relationSummaryLabel(predicate: ClaimSummary["predicate"], claims: ClaimSummary[]): string {
+  const eventRoles = [...new Set(claims.flatMap(claim => eventParticipationOf(claim)?.roleId ? [eventParticipationOf(claim)!.roleId] : []))];
+  if (eventRoles.length) return `${PREDICATES[predicate].label}\n${eventRoles.map(role => eventParticipationLabels().roles[role]).join("・")}`;
   const positions = [...new Set(claims.flatMap(claim => organizationParticipationOf(claim)?.positionId ? [organizationParticipationOf(claim)!.positionId] : []))].sort();
   if (positions.length) {
     const text = organizationParticipationLabels();

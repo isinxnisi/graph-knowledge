@@ -1,11 +1,13 @@
 "use client";
+import { eventParticipationOf } from "../lib/domain/event-participation";
+import { eventParticipationLabels } from "../lib/i18n/event-participation";
 import { organizationParticipationOf } from "../lib/domain/organization-participation";
 import { organizationParticipationLabels } from "../lib/i18n/organization-participation";
 import { claimComparisonKey } from "../lib/domain/qualifications";
 import { contributionOf, comparisonCategory } from "../lib/domain/contribution";
 import { contributionLabels } from "../lib/i18n/contribution";
 
-import { matchesClaim, type OrganizationPositionFilter, type ContributionRoleFilter, type PredicateFilter } from "../lib/domain/exploration";
+import { matchesClaim, type EventRoleFilter, type OrganizationPositionFilter, type ContributionRoleFilter, type PredicateFilter } from "../lib/domain/exploration";
 import { explorationLabels } from "../lib/i18n/exploration";
 import { useEffect, useState } from "react";
 import type { ClaimDetail, ClaimResponse, EntitySummary, SourceDetail } from "../lib/domain/api";
@@ -23,6 +25,7 @@ function usableUrl(source: SourceDetail): boolean {
 }
 
 export function ClaimCard({ claim, nodes, title }: { claim: ClaimDetail; nodes: Record<string, EntitySummary>; title: string }) {
+  const eventParticipation = eventParticipationOf(claim), eventText = eventParticipationLabels();
   const position = organizationParticipationOf(claim);
   const positionText = organizationParticipationLabels();
   const contribution = contributionOf(claim);
@@ -36,6 +39,7 @@ export function ClaimCard({ claim, nodes, title }: { claim: ClaimDetail; nodes: 
     {contribution && <dl className={styles.claimFacts}><dt>{roleText.roleTitle}</dt><dd>{contribution.roleId ? roleText.roles[contribution.roleId] : roleText.none}</dd>
       <dt>{roleText.scope}</dt><dd>{contribution.scope ? <>{contribution.scope.volumeLabel ?? roleText.volumeUnknown} / {contribution.scope.editionLabel ?? roleText.editionUnknown}<br />ISBN {contribution.scope.isbn13} · {contribution.scope.language}<br />{roleText.publicationOnly}</> : roleText.scopeUnknown}</dd></dl>}
     {claim.predicate === "AFFILIATED_WITH" && <dl className={styles.claimFacts}><dt>{positionText.title}</dt><dd>{position ? positionText.positions[position.positionId] : positionText.none}{position && <><br />{positionText.limitation}</>}</dd></dl>}
+    {claim.predicate === "PARTICIPATED_IN" && <dl className={styles.claimFacts}><dt>{eventText.title}</dt><dd>{eventParticipation ? eventText.roles[eventParticipation.roleId] : eventText.none}{eventParticipation && <><br />{eventText.limitation}</>}</dd></dl>}
     <p>{claim.sourceCount ? `出典 ${claim.sourceCount}件` : "出典未確認"}</p>
     {!claim.citations.length && <p className={styles.muted}>この主張の出典はまだ登録されていません。</p>}
     {!!claim.citations.length && <h5 className={styles.evidenceTitle}>根拠となる出典と参照箇所</h5>}
@@ -52,6 +56,7 @@ export function ClaimCard({ claim, nodes, title }: { claim: ClaimDetail; nodes: 
         ? <a href={citation.source.url} target="_blank" rel="noopener noreferrer">出典のURLを開く</a>
         : <span>デモURL（リンク無効）：{citation.source.url}</span>}</p>}
       {citation.accessedAt && <p>アクセス日：{formatDate({ value: citation.accessedAt, precision: "day" })}</p>}
+      {citation.eventParticipationEvidence && <p><strong>{eventText.evidence}：</strong>{citation.eventParticipationEvidence.originalText}<br />{eventText.language}：{citation.eventParticipationEvidence.language}</p>}
       {citation.positionEvidence && <p><strong>{positionText.evidence}：</strong>{citation.positionEvidence.originalText}<br />{positionText.language}：{citation.positionEvidence.language}</p>}
       {citation.roleEvidence && <p><strong>{roleText.evidence}：</strong>{citation.roleEvidence.originalText}<br />{roleText.language}：{citation.roleEvidence.language}</p>}
       {citation.note && <p>{citation.note}</p>}{citation.source.note && <p className={styles.muted}>{citation.source.note}</p>}
@@ -59,7 +64,7 @@ export function ClaimCard({ claim, nodes, title }: { claim: ClaimDetail; nodes: 
   </article>;
 }
 
-export default function ClaimDetails({ id, nodes, mode = "claim", visibleClaimIds, predicates = null, roles = null, positions = null }: { id: string; nodes: Record<string, EntitySummary>; mode?: "claim" | "relation"; visibleClaimIds?: string[]; predicates?: PredicateFilter; roles?: ContributionRoleFilter; positions?: OrganizationPositionFilter }) {
+export default function ClaimDetails({ id, nodes, mode = "claim", visibleClaimIds, predicates = null, roles = null, positions = null, eventRoles = null }: { id: string; nodes: Record<string, EntitySummary>; mode?: "claim" | "relation"; visibleClaimIds?: string[]; predicates?: PredicateFilter; roles?: ContributionRoleFilter; positions?: OrganizationPositionFilter; eventRoles?: EventRoleFilter }) {
   const roleText = contributionLabels();
   const [primary, setPrimary] = useState<ClaimResponse | null>(null);
   const [related, setRelated] = useState<ClaimDetail[]>([]);
@@ -94,16 +99,16 @@ export default function ClaimDetails({ id, nodes, mode = "claim", visibleClaimId
     {primary && <>
       {reference && <p className={styles.muted}>{roleText.comparisonReference}：{reference.roleId ? roleText.roles[reference.roleId] : roleText.none} ／ {reference.scope ? `ISBN ${reference.scope.isbn13}` : roleText.scopeUnknown}</p>}
       {mode === "relation" ? <>
-        <p className={styles.muted}>肯否・期間・出典を個別に比較できます。表示順は正しさや信頼度を表しません。{primary.claim.predicate === "CONTRIBUTED_TO" && contributionLabels().broader}{primary.claim.predicate === "AFFILIATED_WITH" && organizationParticipationLabels().comparison}</p>
+        <p className={styles.muted}>肯否・期間・出典を個別に比較できます。表示順は正しさや信頼度を表しません。{primary.claim.predicate === "CONTRIBUTED_TO" && contributionLabels().broader}{primary.claim.predicate === "AFFILIATED_WITH" && organizationParticipationLabels().comparison}{primary.claim.predicate === "PARTICIPATED_IN" && eventParticipationLabels().comparison}</p>
         {[primary.claim, ...related].sort((a, b) => a.id.localeCompare(b.id)).map((claim, index) =>
-          <div key={claim.id}>{visibleClaimIds && <p className={styles.muted}>{!matchesClaim(claim, predicates, roles, positions) ? explorationLabels().outside : visibleClaimIds.includes(claim.id) ? explorationLabels().shown : explorationLabels().unseen}</p>}<>{primary.claim.predicate === "AFFILIATED_WITH" && <p className={styles.muted}>{claimComparisonKey(primary.claim) === claimComparisonKey(claim) ? organizationParticipationLabels().sameComparison : organizationParticipationLabels().differentComparison}</p>}{primary.claim.predicate === "CONTRIBUTED_TO" && <p className={styles.muted}>{comparisonCategory(primary.claim, claim) === "same" && claimComparisonKey(primary.claim) !== claimComparisonKey(claim) ? contributionLabels().differentPeriod : contributionLabels().comparison[comparisonCategory(primary.claim, claim)]}</p>}<ClaimCard claim={claim} nodes={nodes} title={`主張 ${index + 1}`} /></></div>)}
+          <div key={claim.id}>{visibleClaimIds && <p className={styles.muted}>{!matchesClaim(claim, predicates, roles, positions, eventRoles) ? explorationLabels().outside : visibleClaimIds.includes(claim.id) ? explorationLabels().shown : explorationLabels().unseen}</p>}<>{primary.claim.predicate === "PARTICIPATED_IN" && <p className={styles.muted}>{claimComparisonKey(primary.claim) === claimComparisonKey(claim) ? eventParticipationLabels().sameComparison : eventParticipationLabels().differentComparison}</p>}{primary.claim.predicate === "AFFILIATED_WITH" && <p className={styles.muted}>{claimComparisonKey(primary.claim) === claimComparisonKey(claim) ? organizationParticipationLabels().sameComparison : organizationParticipationLabels().differentComparison}</p>}{primary.claim.predicate === "CONTRIBUTED_TO" && <p className={styles.muted}>{comparisonCategory(primary.claim, claim) === "same" && claimComparisonKey(primary.claim) !== claimComparisonKey(claim) ? contributionLabels().differentPeriod : contributionLabels().comparison[comparisonCategory(primary.claim, claim)]}</p>}<ClaimCard claim={claim} nodes={nodes} title={`主張 ${index + 1}`} /></></div>)}
       </> : <>
       <ClaimCard claim={primary.claim} nodes={nodes} title="選択した主張" />
       <h3>同じ関係についての他の主張</h3>
       <p className={styles.muted}>肯否・期間・出典をそれぞれ確認できます。表示順は正しさや信頼度を表しません。</p>
       {relatedLoading && <p role="status">他の主張を取得中…</p>}
       {!primary.relatedClaimIds.length && <p className={styles.muted}>他の主張は登録されていません。</p>}
-      {related.map((claim) => <div key={claim.id}>{!matchesClaim(claim, predicates, roles, positions) && <p className={styles.muted}>{explorationLabels().outside}</p>}<>{primary.claim.predicate === "AFFILIATED_WITH" && <p className={styles.muted}>{claimComparisonKey(primary.claim) === claimComparisonKey(claim) ? organizationParticipationLabels().sameComparison : organizationParticipationLabels().differentComparison}</p>}{primary.claim.predicate === "CONTRIBUTED_TO" && <p className={styles.muted}>{comparisonCategory(primary.claim, claim) === "same" && claimComparisonKey(primary.claim) !== claimComparisonKey(claim) ? contributionLabels().differentPeriod : contributionLabels().comparison[comparisonCategory(primary.claim, claim)]}</p>}<ClaimCard claim={claim} nodes={nodes} title="他の主張" /></></div>)}
+      {related.map((claim) => <div key={claim.id}>{!matchesClaim(claim, predicates, roles, positions, eventRoles) && <p className={styles.muted}>{explorationLabels().outside}</p>}<>{primary.claim.predicate === "PARTICIPATED_IN" && <p className={styles.muted}>{claimComparisonKey(primary.claim) === claimComparisonKey(claim) ? eventParticipationLabels().sameComparison : eventParticipationLabels().differentComparison}</p>}{primary.claim.predicate === "AFFILIATED_WITH" && <p className={styles.muted}>{claimComparisonKey(primary.claim) === claimComparisonKey(claim) ? organizationParticipationLabels().sameComparison : organizationParticipationLabels().differentComparison}</p>}{primary.claim.predicate === "CONTRIBUTED_TO" && <p className={styles.muted}>{comparisonCategory(primary.claim, claim) === "same" && claimComparisonKey(primary.claim) !== claimComparisonKey(claim) ? contributionLabels().differentPeriod : contributionLabels().comparison[comparisonCategory(primary.claim, claim)]}</p>}<ClaimCard claim={claim} nodes={nodes} title="他の主張" /></></div>)}
       </>}
       {mode === "relation" && relatedLoading && <p role="status">同じ関係の主張を取得中…</p>}
       {relatedError && <div className={styles.error} role="alert"><p>{relatedError}</p><button onClick={retry}>他の主張を再試行</button></div>}

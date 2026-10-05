@@ -3,6 +3,32 @@ import type { DatasetMode } from "../domain/dataset";
 
 // 凍結datasetの固定入口。条件・順位・推薦情報は含めない。
 export const START_EXAMPLES: Record<DatasetMode, EntitySummary[]> = {
+  "pilot-event-v1": [
+    {
+      "id": "247d3efb-6172-4a3e-aa09-dad69914b47c",
+      "kind": "event",
+      "name": "第5回ソルヴェイ物理会議（1927）",
+      "description": "ブリュッセルで1927年10月24〜29日に開催された特定回。会議シリーズ全体とは別。"
+    },
+    {
+      "id": "32f5aa9e-1d60-40c9-9ba0-ce12f72cf524",
+      "kind": "person",
+      "name": "ヘンドリック・ローレンツ",
+      "description": "1927年第5回ソルヴェイ物理会議の参加者欄で会議議長と記載。"
+    },
+    {
+      "id": "5cda395a-4927-4cae-92fe-839b29d05095",
+      "kind": "person",
+      "name": "ポール・ディラック",
+      "description": "理論物理学者。研究所への訪問とケンブリッジ大学の教授経歴を収録。"
+    },
+    {
+      "id": "8e322435-4318-4ad0-835b-3f71d2537421",
+      "kind": "organization",
+      "name": "ニールス・ボーア研究所",
+      "description": "コペンハーゲン大学の研究所。旧理論物理学研究所を1965年改称。現在名で表示。"
+    }
+  ],
   "demo": [
     {
       "id": "c286065c-6e17-47a7-9288-2a1cf6919ce9",

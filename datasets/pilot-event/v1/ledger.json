@@ -1,0 +1,312 @@
+{
+  "schemaVersion": 1,
+  "dataset": {
+    "id": "pilot-event-v1",
+    "version": 1,
+    "transformVersion": 1,
+    "createdAt": "2026-10-05T14:30:00Z",
+    "scope": "science v2の凍結内容を対照としてコピーし、1927年特定開催回への明示参加と会議議長だけを別環境で検証。"
+  },
+  "base": {
+    "dataset": "pilot-science-v2",
+    "files": {
+      "datasets/pilot-urasawa/v1/ledger.json": "222b7e4530d9638d2966ddaa5d81a6ffd20427cf9c9b7ed1e7c95b4a7852eb03",
+      "datasets/pilot-urasawa/v1/data.json": "446cb51ef4c1119ac8d2cf85ce1691b5e3b9e63e377c4cbef7d976fa585fc5cd",
+      "datasets/pilot-urasawa/v1/manifest.json": "39ee383e83adee9472a5d9e264142a6871122b7eafc76f8b50a8a39dda50db2b",
+      "datasets/pilot-urasawa/v1/raw/Q594758.json": "8601b074c49b64a3105e92865f1888a67e08ba6d685b8e7a76c497ea2d3d047c",
+      "datasets/pilot-urasawa/v1/raw/Q193300.json": "45648d7da70c0e495fc939f42799cea9b278b07c276bad1409ace874e5a2add6",
+      "datasets/pilot-urasawa/v1/raw/Q1185624.json": "6700f436c4781d1b8ca688769d4471205c843a9977ddf3f2df4465a9e2bf1dac",
+      "datasets/pilot-urasawa/v1/raw/Q6724933.json": "5fda464513ef5637ce59e3c1941413d76f3e781a07eb2d13d9fe73a5021d2ef0",
+      "datasets/pilot-urasawa/v1/raw/Q1197216.json": "dfe1b656b2b77f429248a8a66e140f698cee724fe80d36571ae7df80c459705d",
+      "datasets/pilot-urasawa/v1/raw/Q348436.json": "7f4ce9ec0ccc25fb52caec694621f5379f426a2065364a9413c9bc03a1cc5927",
+      "datasets/pilot-urasawa/v1/raw/Q11264988.json": "2460299c85093dd9514a6bdd7fdee3b530c274325b86f1b210758817dc1cfa19",
+      "datasets/pilot-urasawa/v1/raw/Q3514203.json": "0212bf5156ba6904b360a2e1768a628af88d6f144b90104e7503189301fb5697",
+      "datasets/pilot-urasawa/v2/ledger.json": "0b22ed0add4df4b780669f45815282975f143225bbaa9b35eef4cf32206f6537",
+      "datasets/pilot-urasawa/v2/data.json": "63798471bded3b9d31666c45165d9296d8ccfcd476c042872a02375143981c17",
+      "datasets/pilot-urasawa/v2/manifest.json": "b16f7152158c9dd9cd117dabda97761b8034e3ece9941ed6c6e6f7a3a3acfca3",
+      "datasets/pilot-science/v1/ledger.json": "7e91ccc2bf3ca44c53e0b9d41cdc256d4126efed58aad62a3d8cd940d7e7bec0",
+      "datasets/pilot-science/v1/data.json": "95e5c11216cd5bc3cd2a8f0cf942c1114f5978787f47ced20b40a967c2ed74c1",
+      "datasets/pilot-science/v1/manifest.json": "121566b662bffe249a09e5b287f408bd0cb4458b800ab580fa6e6643111f93ec",
+      "datasets/pilot-science/v1/raw/Q7085.json": "8c35e3eadca8a4d168cd0b4ec7d8bf50c3e6ed0ecb460eafe55f8e99863d0d04",
+      "datasets/pilot-science/v1/raw/Q40904.json": "7191b4e41f6a0657ce81ff08a1b3c33e86d2180a16323fb451e445104227df66",
+      "datasets/pilot-science/v1/raw/Q35794.json": "3009e8956da9fa1f1c3aeade9d9dad3cb03eb47f493521ba7ac96a9f64c94952",
+      "datasets/pilot-science/v1/raw/Q263761.json": "a286dd01fdb73cdb352d37460843cf4f4fe24f865c1bceea83b275f664eecdbd",
+      "datasets/pilot-science/v1/raw/Q152838.json": "3bc76658c903cd9762a3461379a155a8591aad4f6e9285cf302821ce85f14fbe",
+      "datasets/pilot-science/v1/raw/Q58978.json": "a52fe5884b62d644a0f3fbfe55dc1c24f5039ad99abf4bed4c3c99ce587b60ec",
+      "datasets/pilot-science/v1/raw/Q65989.json": "c73e576b021cb4dcca46c3baaa1daaafdcc2b3dfcb426b64922d07ba656b565f",
+      "datasets/pilot-science/v1/raw/Q47480.json": "cd8ab032173d1d9fabc2ec7a7a556791bd13bbba03f517f26900c5a2b65c875e",
+      "fixtures/demo.json": "f862b121f001127de34c27a4c72b860b1d003ceeb7a25bc2d3b8bdc6181f399e",
+      "datasets/pilot-science/v2/ledger.json": "e462f973ac8933a70112b6f29a00b5f88a92859685685ee4bcf33e329f8aa0b3",
+      "datasets/pilot-science/v2/data.json": "de829943629c468482e51bad79e78bd2ce2fc065fde40f937c7be00001dcbb33",
+      "datasets/pilot-science/v2/manifest.json": "c357ece6c7dd14e817936a88aac6e0abb4cbe5619ca738db317dd0f33c9ff720"
+    }
+  },
+  "research": {
+    "file": "docs/research/phase-13-relation-model/v2/ledger.json",
+    "sha256": "a340838c9e2eb9f36361dc4dd3cd93b7469921e2891ebeba5fd2f93baedf914c"
+  },
+  "sources": [
+    {
+      "ref": "S11",
+      "id": "4d414446-24d5-42c1-942f-7a968e04d466",
+      "title": "Conferences archives — Physics 1927",
+      "publisher": "International Solvay Institutes",
+      "authors": [],
+      "language": "en",
+      "publishedAt": null,
+      "editionAndSourceLimit": "主催機関の現行索引。1927年5thとchairを明記。ページ公開日不明、URLのupload年は1927年の開催日ではない。",
+      "retrieval": {
+        "url": "https://solvayinstitutes.be/home/archives/conferences-archives/",
+        "resolvedUrl": "https://solvayinstitutes.be/home/archives/conferences-archives/",
+        "accessedAtUtc": "2026-10-05T11:21:08.198677+00:00",
+        "status": 200,
+        "mediaType": "text/html; charset=UTF-8",
+        "bytes": 257848,
+        "sha256": "bb4363314e43d0836b4d49259432729dff74bac47026ec21fe13c225d8d744d2",
+        "hashTarget": "HTTP response body",
+        "method": "python3 urllib.request / public HTTP GET",
+        "note": "全文は/tmpのみ。HTMLは本文、PDFはpypdf抽出の該当ページと前後を読んだ。hashは本文の永久アーカイブではない。"
+      }
+    },
+    {
+      "ref": "S12",
+      "id": "5756c883-e9e9-45eb-8caa-f85c91cc7f45",
+      "title": "Électrons et photons : rapports et discussions du cinquième Conseil de physique",
+      "publisher": "Institut international de physique Solvay / Gauthier-Villars / ULB digitisation",
+      "authors": [],
+      "language": "fr",
+      "publishedAt": {
+        "value": "1928",
+        "precision": "year"
+      },
+      "editionAndSourceLimit": "1928年議事録のULBデジタル複製を主催機関が配信。PDF第1頁APA/ULB来歴、第2頁title、12/13頁参加・欠席。開催は24–29Oct1927、URL2025/10は開催・出版日ではない。W.H.BraggとW.L.Braggを別人物と読む。",
+      "retrieval": {
+        "url": "https://solvayinstitutes.be/wp-content/uploads/2025/10/Proceedings-Physics-1927.pdf",
+        "resolvedUrl": "https://solvayinstitutes.be/wp-content/uploads/2025/10/Proceedings-Physics-1927.pdf",
+        "accessedAtUtc": "2026-10-05T11:22:10.613388+00:00",
+        "status": 200,
+        "mediaType": "application/pdf",
+        "bytes": 21641172,
+        "sha256": "7cce3186eda0449a412cbc88bf9a3d46503a6e50b964a59e94e95e8e12637f2b",
+        "hashTarget": "HTTP response body",
+        "method": "python3 urllib.request / public HTTP GET",
+        "note": "全文は/tmpのみ。HTMLは本文、PDFはpypdf抽出の該当ページと前後を読んだ。hashは本文の永久アーカイブではない。"
+      }
+    }
+  ],
+  "entities": [
+    {
+      "id": "32f5aa9e-1d60-40c9-9ba0-ce12f72cf524",
+      "kind": "person",
+      "name": "ヘンドリック・ローレンツ",
+      "description": "1927年第5回ソルヴェイ物理会議の参加者欄で会議議長と記載。",
+      "aliases": [
+        "Hendrik Lorentz",
+        "H.-A. Lorentz",
+        "ローレンツ"
+      ],
+      "externalIds": [],
+      "event": null,
+      "createdAt": "2026-10-05T14:30:00Z",
+      "updatedAt": "2026-10-05T14:30:00Z"
+    },
+    {
+      "id": "247d3efb-6172-4a3e-aa09-dad69914b47c",
+      "kind": "event",
+      "name": "第5回ソルヴェイ物理会議（1927）",
+      "description": "ブリュッセルで1927年10月24〜29日に開催された特定回。会議シリーズ全体とは別。",
+      "aliases": [
+        "1927 Solvay Conference",
+        "Fifth Solvay Physics Conference",
+        "Electrons et photons",
+        "第5回ソルヴェイ会議"
+      ],
+      "externalIds": [],
+      "event": {
+        "granularity": "occurrence",
+        "period": {
+          "from": {
+            "value": "1927-10-24",
+            "precision": "day"
+          },
+          "to": {
+            "value": "1927-10-29",
+            "precision": "day"
+          }
+        }
+      },
+      "createdAt": "2026-10-05T14:30:00Z",
+      "updatedAt": "2026-10-05T14:30:00Z"
+    }
+  ],
+  "candidates": [
+    {
+      "ref": "E01",
+      "claimId": "341f1523-3e1a-4779-a441-c813706a80a9",
+      "subjectId": "32f5aa9e-1d60-40c9-9ba0-ce12f72cf524",
+      "objectId": "247d3efb-6172-4a3e-aa09-dad69914b47c",
+      "predicate": "PARTICIPATED_IN",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "eventParticipation": null,
+      "sourceMeaning": "1927年第5回物理会議の議長はLorentz。議事録の参加者欄でもPrésidentと明記。名誉議長／科学委員会役職を一般に同義としない。",
+      "scope": "1927年特定回、会議議長。series全回の役職でも全日程の出席保証でもない。",
+      "doNotInfer": [
+        "科学委員会委員長から全回出席",
+        "開催期間を本人の全日程参加へ代入"
+      ],
+      "citations": [
+        {
+          "id": "1f2f13a8-edfb-4dd6-8341-6665e06aa598",
+          "sourceRef": "S12",
+          "locator": "PDF第12ページ／印刷p.VII、Lorentz行",
+          "language": "fr",
+          "sourceMeaning": "参加者のPrésidentとして記載。",
+          "originalPeriodText": "24 au 29 octobre 1927（会議の期間）",
+          "eventParticipationEvidence": null
+        }
+      ],
+      "originalRelationTerms": [
+        {
+          "text": "Chair",
+          "language": "en"
+        },
+        {
+          "text": "Président",
+          "language": "fr"
+        }
+      ]
+    },
+    {
+      "ref": "E01",
+      "claimId": "e84b2f8d-b173-47f9-8511-eb02bc0a2e39",
+      "subjectId": "32f5aa9e-1d60-40c9-9ba0-ce12f72cf524",
+      "objectId": "247d3efb-6172-4a3e-aa09-dad69914b47c",
+      "predicate": "PARTICIPATED_IN",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "eventParticipation": {
+        "roleId": "CHAIR"
+      },
+      "sourceMeaning": "1927年第5回物理会議の議長はLorentz。議事録の参加者欄でもPrésidentと明記。名誉議長／科学委員会役職を一般に同義としない。",
+      "scope": "1927年特定回、会議議長。series全回の役職でも全日程の出席保証でもない。",
+      "doNotInfer": [
+        "科学委員会委員長から全回出席",
+        "開催期間を本人の全日程参加へ代入"
+      ],
+      "citations": [
+        {
+          "id": "7c831c01-8513-4ce2-ad79-e670a6f54b16",
+          "sourceRef": "S11",
+          "locator": "Physics > 1927 > 5th",
+          "language": "en",
+          "sourceMeaning": "特定会議のchair。",
+          "originalPeriodText": null,
+          "eventParticipationEvidence": {
+            "originalText": "Chair",
+            "language": "en"
+          }
+        },
+        {
+          "id": "f49d6fde-edfb-4867-a331-07ebebf67502",
+          "sourceRef": "S12",
+          "locator": "PDF第12ページ／印刷p.VII、Lorentz行",
+          "language": "fr",
+          "sourceMeaning": "参加者のPrésidentとして記載。",
+          "originalPeriodText": "24 au 29 octobre 1927（会議の期間）",
+          "eventParticipationEvidence": {
+            "originalText": "Président",
+            "language": "fr"
+          }
+        }
+      ],
+      "originalRelationTerms": [
+        {
+          "text": "Chair",
+          "language": "en"
+        },
+        {
+          "text": "Président",
+          "language": "fr"
+        }
+      ]
+    },
+    {
+      "ref": "E03",
+      "claimId": "d01a21f2-a6b8-4eb1-9276-8850081fcf69",
+      "subjectId": "5cda395a-4927-4cae-92fe-839b29d05095",
+      "objectId": "247d3efb-6172-4a3e-aa09-dad69914b47c",
+      "predicate": "PARTICIPATED_IN",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "eventParticipation": null,
+      "sourceMeaning": "1928年議事録のOnt participé一覧にDirac（Cambridge）が含まれる。写真・開催前予定リストだけから作った参加候補ではない。",
+      "scope": "1927年特定回の参加記述。全日程・全session・報告者／主導者を認定しない。",
+      "doNotInfer": [
+        "掲載写真から参加日を推測",
+        "1911やseries全回へ一般化",
+        "招待月Septを参加月とする"
+      ],
+      "citations": [
+        {
+          "id": "cd3ae7e0-95e3-4396-b38c-395fde2182a9",
+          "sourceRef": "S12",
+          "locator": "PDF第12ページ／印刷p.VII、Dirac de Cambridge行",
+          "language": "fr",
+          "sourceMeaning": "参加者一覧への明示掲載。",
+          "originalPeriodText": "24 au 29 octobre 1927（会議の期間）",
+          "eventParticipationEvidence": null
+        }
+      ],
+      "originalRelationTerms": [
+        {
+          "text": "participé",
+          "language": "fr"
+        }
+      ]
+    }
+  ],
+  "humanAcceptance": {
+    "decision": "pending",
+    "reviewer": null,
+    "decidedAt": null,
+    "reference": null,
+    "scope": "E01の明示参加＋会議議長、E03の明示参加、特定開催回の同一性と開催期間。全日程出席・全回参加は受け入れない。"
+  },
+  "identity": {
+    "lorentz": "公式索引のHendrik Lorentz (Leyden)と議事録のH.-A.Lorentz de Harlem Présidentを同定。人名の表記差で別人を作らず、Wikidata未確認QIDは付けない。",
+    "dirac": "参加者欄のP.-A.-M.Dirac de Cambridgeを既存science人物UUIDに対応。別のDiracや所属組織との同一視はしない。",
+    "event": "表紙のcinquième Conseil de physique、Bruxelles、24 au 29 octobre 1927と公式Physics1927/5thを同定。シリーズ、開催場所組織、写真集合とは別Entity。",
+    "period": "Event自身の開催期間のみ。E01/E03のClaim.periodは両端nullを維持。",
+    "externalIds": "新Lorentz/Eventの外部IDは未付与。既存science8外部IDは原版から保持。",
+    "namesAndLanguages": "表示名は収集者による日本語（ja）。Lorentzの原表記はS11のHendrik Lorentz（en）とS12のH.-A. Lorentz（fr）。会議の原題はS12のÉlectrons et photons（fr）。英語の開催回別名は収集者の検索用表現で、原題やシリーズ同一性の根拠ではない。名称を言語なしの意味IDとして使わない。"
+  },
+  "excluded": {
+    "ref": "E02",
+    "status": "pending-not-for-runtime",
+    "reason": "議事録はDeslandresが1927年会議へ招待され、欠席を届けたと記す。招待という狭い事実の候補であって参加Claimではない。",
+    "doNotInfer": [
+      "invitedをparticipationRoleへ保存",
+      "招待から出席を推論",
+      "欠席をdenied influence等へ変換"
+    ]
+  },
+  "recheck": {
+    "url": "https://solvayinstitutes.be/wp-content/uploads/2025/10/Proceedings-Physics-1927.pdf",
+    "resolvedUrl": "https://solvayinstitutes.be/wp-content/uploads/2025/10/Proceedings-Physics-1927.pdf",
+    "accessedAtUtc": "2026-10-05T14:18:53.225938+00:00",
+    "status": 200,
+    "bytes": 21641172,
+    "sha256": "7cce3186eda0449a412cbc88bf9a3d46503a6e50b964a59e94e95e8e12637f2b",
+    "mediaType": "application/pdf"
+  }
+}

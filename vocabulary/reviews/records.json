@@ -1,1 +1,46 @@
-[]
+[
+  {
+    "id": "phase15-participated-in",
+    "targetId": "PARTICIPATED_IN",
+    "kind": "predicate",
+    "change": "addition",
+    "beforeHash": null,
+    "afterHash": "b6b9341e8763f2ffb60b9cc9ec3efd6d0ed294baa0d6c3ff343aad2e65a08903",
+    "status": "approved",
+    "reviewer": "Codex（ユーザーのPhase 15依頼による意味レビュー・実装判断。実資料の人間受入とは別）",
+    "reviewedAt": "2026-10-05",
+    "outcome": "new-predicate",
+    "motivation": "特定開催回への参加という独立命題を三用途typed限定で検証する。",
+    "evidenceExample": "E01/E03は実参加が明示される研究候補。人間受入なしにruntimeへ投影しない。",
+    "counterexample": "E02招待＋欠席届、写真、開催前予定だけでは参加としない。",
+    "comparisons": [
+      {
+        "predicateId": "ASSISTANT_OF",
+        "relation": "distinct",
+        "rationale": "人物の制作補助ではなく特定開催回への参加。"
+      },
+      {
+        "predicateId": "INFLUENCED_BY",
+        "relation": "distinct",
+        "rationale": "参加は影響を受けた命題を含意しない。"
+      },
+      {
+        "predicateId": "CONTRIBUTED_TO",
+        "relation": "distinct",
+        "rationale": "作品の制作関与と開催回の参加は独立命題。"
+      },
+      {
+        "predicateId": "AFFILIATED_WITH",
+        "relation": "distinct",
+        "rationale": "組織への関与と特定開催回参加は同義ではない。"
+      }
+    ],
+    "impacts": {
+      "claims": "既存4語彙は不変。新規person→特定eventだけ。",
+      "conditions": "eventRolesはPARTICIPATED_INだけLIMIT前に適用。",
+      "translations": "locale境界で参加／参加者、原語はCitationで別保存。",
+      "presentation": "SPO集約を維持し、詳細で立場・期間・根拠を確認。"
+    },
+    "rationale": "Phase 12/13の5方式比較とPhase 14を踏まえ、独立意味差はpredicate、参加を伴う会議議長は限定。Source受入と技術判断は分離する。"
+  }
+]

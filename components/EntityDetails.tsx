@@ -1,12 +1,13 @@
 "use client";
 
+import { eventParticipationLabels } from "../lib/i18n/event-participation";
 import RootActions from "./RootActions";
 import { overviewLabels } from "../lib/i18n/entity-overview";
 import { useEffect, useState } from "react";
 import type { EntityDetail, EntitySummary } from "../lib/domain/api";
 import type { Expansion } from "../lib/client/graph-state";
 import { ClientApiError, fetchEntity, errorMessage } from "../lib/client/api";
-import { KIND_LABELS } from "../lib/client/format";
+import { KIND_LABELS, formatPeriod } from "../lib/client/format";
 import styles from "./Explorer.module.css";
 
 export default function EntityDetails({ entity, expansion, onExpand, onClose, onOverview, onSwitch, restricted }: {
@@ -29,6 +30,7 @@ export default function EntityDetails({ entity, expansion, onExpand, onClose, on
     <p>{entity.description ?? "説明は未登録です。"}</p>
     {!detail && !error && <p role="status">Entity詳細を取得中…</p>}
     {detail && <p>別名：{detail.aliases.length ? detail.aliases.join("、") : "未登録"}</p>}
+    {detail?.event && <><dl className={styles.claimFacts}><dt>{eventParticipationLabels().eventPeriod}</dt><dd>{formatPeriod(detail.event.period)}</dd></dl><p className={styles.muted}>{eventParticipationLabels().periodHelp}</p></>}
     {error && <div role="alert" className={styles.error}><p>{error}</p><button onClick={() => { setError(null); setDetail(null); setAttempt((value) => value + 1); }}>Entity詳細を再試行</button></div>}
     <button onClick={onOverview}>{overviewLabels().open}</button>
     <RootActions restricted={restricted} disabled={missing} onSwitch={onSwitch} />

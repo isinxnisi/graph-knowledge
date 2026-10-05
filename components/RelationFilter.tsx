@@ -1,17 +1,22 @@
 "use client";
 
+import { EVENT_ROLE_IDS } from "../lib/domain/event-participation";
+import { eventParticipationLabels } from "../lib/i18n/event-participation";
 import { ORGANIZATION_POSITION_IDS } from "../lib/domain/organization-participation";
 import { organizationParticipationLabels } from "../lib/i18n/organization-participation";
 import { useEffect, useRef, useState } from "react";
 import { CONTRIBUTION_ROLE_IDS } from "../lib/domain/contribution";
 import { contributionLabels } from "../lib/i18n/contribution";
 import { conditionSummary, entryLabels } from "../lib/i18n/exploration-entry";
-import { normalizeContributionRoles, normalizeOrganizationPositions, type OrganizationPositionFilter, explorationKey, normalizePredicates, type ContributionRoleFilter, type PredicateFilter } from "../lib/domain/exploration";
+import { normalizeContributionRoles, normalizeOrganizationPositions, normalizeEventRoles, type EventRoleFilter, type OrganizationPositionFilter, explorationKey, normalizePredicates, type ContributionRoleFilter, type PredicateFilter } from "../lib/domain/exploration";
 import { PREDICATE_KEYS, type Predicate } from "../lib/domain/predicates";
 import { explorationLabels } from "../lib/i18n/exploration";
 import styles from "./Explorer.module.css";
 
-function ConditionEditor({ value, roles, positions, onApply, onCancel }: { value: PredicateFilter; roles: ContributionRoleFilter; positions: OrganizationPositionFilter; onApply: (value: PredicateFilter, roles: ContributionRoleFilter, positions: OrganizationPositionFilter) => void; onCancel: () => void }) {
+function ConditionEditor({ value, roles, positions, eventRoles, onApply, onCancel }: { value: PredicateFilter; roles: ContributionRoleFilter; positions: OrganizationPositionFilter; eventRoles: EventRoleFilter; onApply: (value: PredicateFilter, roles: ContributionRoleFilter, positions: OrganizationPositionFilter, eventRoles: EventRoleFilter) => void; onCancel: () => void }) {
+  const [draftEventRoles, setDraftEventRoles] = useState<EventRoleFilter>(eventRoles);
+  const [eventOpen, setEventOpen] = useState(eventRoles !== null);
+  const eventText = eventParticipationLabels();
   const [draft, setDraft] = useState<Predicate[]>(value ?? [...PREDICATE_KEYS]);
   const [draftRoles, setDraftRoles] = useState<ContributionRoleFilter>(roles);
   const [draftPositions, setDraftPositions] = useState<OrganizationPositionFilter>(positions);
@@ -23,7 +28,8 @@ function ConditionEditor({ value, roles, positions, onApply, onCancel }: { value
   const normalized = normalizePredicates(draft);
   const normalizedRoles = normalizeContributionRoles(draftRoles, normalized);
   const normalizedPositions = normalizeOrganizationPositions(draftPositions, normalized);
-  const dirty = explorationKey(normalized, normalizedRoles, normalizedPositions) !== explorationKey(value, roles, positions);
+  const normalizedEventRoles = normalizeEventRoles(draftEventRoles, normalized);
+  const dirty = explorationKey(normalized, normalizedRoles, normalizedPositions, normalizedEventRoles) !== explorationKey(value, roles, positions, eventRoles);
   useEffect(() => { dialog.current?.showModal(); }, []);
   const cancel = () => { dialog.current?.close(); onCancel(); };
   return <dialog ref={dialog} className={styles.conditionDialog} aria-labelledby="condition-title" onCancel={(event) => { event.preventDefault(); cancel(); }}>
@@ -61,20 +67,33 @@ function ConditionEditor({ value, roles, positions, onApply, onCancel }: { value
         <p className={styles.muted}>{positionText.limitation}</p>
       </fieldset>}
     </section>}
+    {draft.includes("PARTICIPATED_IN") && <section className={styles.roleSettings}>
+      <button aria-expanded={eventOpen} aria-controls="event-role-editor" onClick={() => setEventOpen(!eventOpen)}>{eventText.edit}</button>
+      {eventOpen && <fieldset id="event-role-editor" className={styles.roleFilter}><legend>{eventText.title}</legend>
+        <div className={styles.filterChoices}>
+          <label><input type="radio" name="event-role-mode" checked={draftEventRoles === null} onChange={() => setDraftEventRoles(null)} />{eventText.noRole}</label>
+          <label><input type="radio" name="event-role-mode" checked={draftEventRoles !== null} onChange={() => setDraftEventRoles([])} />{eventText.specify}</label>
+        </div>
+        {draftEventRoles !== null ? <><div className={styles.filterChoices}>{EVENT_ROLE_IDS.map(role => <label key={role}>
+          <input type="checkbox" checked={draftEventRoles.includes(role)} onChange={event => setDraftEventRoles(event.target.checked ? [...draftEventRoles, role] : draftEventRoles.filter(item => item !== role))} />{eventText.roles[role]}
+        </label>)}</div><p className={styles.muted}>{eventText.help}</p>{draftEventRoles.length === 0 && <p className={styles.empty}>{eventText.empty}</p>}</> : <p className={styles.muted}>{eventText.broad}</p>}
+        <p className={styles.muted}>{eventText.limitation}</p>
+      </fieldset>}
+    </section>}
     {draft.length === 0 && <p className={styles.empty}>{text.none}</p>}
-    <p data-testid="draft-conditions"><strong>{text.draft}：</strong>{conditionSummary(normalized, normalizedRoles, "ja", normalizedPositions)}</p>
+    <p data-testid="draft-conditions"><strong>{text.draft}：</strong>{conditionSummary(normalized, normalizedRoles, "ja", normalizedPositions, normalizedEventRoles)}</p>
     <p className={styles.muted}>{text.restart}</p>
-    <div className={styles.editorActions}><button onClick={cancel}>{text.cancel}</button><button disabled={!dirty} onClick={() => { dialog.current?.close(); onApply(normalized, normalizedRoles, normalizedPositions); }}>{text.apply}</button></div>
+    <div className={styles.editorActions}><button onClick={cancel}>{text.cancel}</button><button disabled={!dirty} onClick={() => { dialog.current?.close(); onApply(normalized, normalizedRoles, normalizedPositions, normalizedEventRoles); }}>{text.apply}</button></div>
   </dialog>;
 }
 
-export default function RelationFilter({ value, roles = null, positions = null, onApply }: { value: PredicateFilter; roles?: ContributionRoleFilter; positions?: OrganizationPositionFilter; onApply: (value: PredicateFilter, roles: ContributionRoleFilter, positions: OrganizationPositionFilter) => void }) {
+export default function RelationFilter({ value, roles = null, positions = null, eventRoles = null, onApply }: { value: PredicateFilter; roles?: ContributionRoleFilter; positions?: OrganizationPositionFilter; eventRoles?: EventRoleFilter; onApply: (value: PredicateFilter, roles: ContributionRoleFilter, positions: OrganizationPositionFilter, eventRoles: EventRoleFilter) => void }) {
   const [editing, setEditing] = useState(false);
   const text = entryLabels(), relations = explorationLabels();
   return <div className={styles.conditionBar}>
-    <p data-testid="active-predicates"><strong>{text.applied}：</strong>{conditionSummary(value, roles, "ja", positions)}</p>
+    <p data-testid="active-predicates"><strong>{text.applied}：</strong>{conditionSummary(value, roles, "ja", positions, eventRoles)}</p>
     <button aria-haspopup="dialog" aria-expanded={editing} onClick={() => setEditing(true)}>{text.edit}</button>
-    {editing && <ConditionEditor value={value} roles={roles} positions={positions} onCancel={() => setEditing(false)} onApply={(predicates, nextRoles, nextPositions) => { onApply(predicates, nextRoles, nextPositions); setEditing(false); }} />}
+    {editing && <ConditionEditor value={value} roles={roles} positions={positions} eventRoles={eventRoles} onCancel={() => setEditing(false)} onApply={(predicates, nextRoles, nextPositions, nextEventRoles) => { onApply(predicates, nextRoles, nextPositions, nextEventRoles); setEditing(false); }} />}
     <span className={styles.srOnly}>{relations.help}</span>
   </div>;
 }

@@ -96,7 +96,7 @@ afterAll(async () => {
 
 it("searches 青葉ハル by name and alias and includes works and organizations", async () => {
   const result = await request<EntitySearchResponse>(`/api/entities?q=${encodeURIComponent("青葉ハル")}`);
-  expect(result.items).toEqual([{ id: fixture.entities[0].id, kind: "person", name: "青葉ハル", description: fixture.entities[0].description, aliases: fixture.entities[0].aliases }]);
+  expect(result.items).toEqual([{ id: fixture.entities[0].id, kind: "person", name: "青葉ハル", description: fixture.entities[0].description, aliases: fixture.entities[0].aliases, event: null }]);
   expect(result.hasMore).toBe(false);
   const alias = await request<EntitySearchResponse>(`/api/entities?q=${encodeURIComponent(" あおば はる ")}`);
   expect(alias.items[0].id).toBe(fixture.entities[0].id);
@@ -137,7 +137,7 @@ it("treats a Cypher-like search string as data", async () => {
 it("returns Entity detail without storage fields", async () => {
   const result = await request<EntityResponse>(`/api/entities/${fixture.entities[0].id}`);
   expect(result.entity.aliases).toEqual(["あおば はる"]);
-  expect(Object.keys(result.entity).sort()).toEqual(["aliases", "description", "id", "kind", "name"]);
+  expect(Object.keys(result.entity).sort()).toEqual(["aliases", "description", "event", "id", "kind", "name"]);
   examples.entity = result;
 });
 
@@ -378,16 +378,16 @@ it("overview counts all published Claims by viewpoint without citations/pages/fi
 it("filters search kind before limit and validates the generic search contract", async () => {
   const ids = [randomUUID(), randomUUID(), randomUUID(), randomUUID()];
   try {
-    await write(`UNWIND $rows AS row CREATE (e:Entity) SET e = row`, { rows: ids.map((id, index) => ({ id, kind: ["person", "work", "organization", "event"][index], name: "検索境界対象", aliases: ["共通別名"], searchNames: ["検索境界対象", "共通別名"] })) });
+    await write(`UNWIND $rows AS row CREATE (e:Entity) SET e = row`, { rows: ids.map((id, index) => ({ id, kind: ["person", "work", "organization", "event"][index], name: "検索境界対象", aliases: ["共通別名"], searchNames: ["検索境界対象", "共通別名"], ...(index === 3 ? { eventGranularity: "occurrence" } : {}) })) });
     const all = await request<EntitySearchResponse>(`/api/entities?q=${encodeURIComponent("共通別名")}`);
-    expect(all.items).toHaveLength(3);
-    expect(new Set(all.items.map((item) => item.kind))).toEqual(new Set(["person", "work", "organization"]));
-    for (const kind of ["person", "work", "organization"]) {
+    expect(all.items).toHaveLength(4);
+    expect(new Set(all.items.map((item) => item.kind))).toEqual(new Set(["person", "work", "organization", "event"]));
+    for (const kind of ["person", "work", "organization", "event"]) {
       const result = await request<EntitySearchResponse>(`/api/entities?q=${encodeURIComponent("共通別名")}&kind=${kind}&limit=1`);
       expect(result.items).toHaveLength(1); expect(result.items[0].kind).toBe(kind); expect(result.hasMore).toBe(false);
       expect(result.items[0].aliases).toEqual(["共通別名"]);
     }
     expect((await request<EntitySearchResponse>("/api/entities?q=存在しない対象")).items).toEqual([]);
-    for (const query of ["q=x&kind=event", "q=x&kind=", "q=x&kind=work&kind=person", "q=x&predicates=CONTRIBUTED_TO", "q=%20%20", `q=${"a".repeat(101)}`]) await request(`/api/entities?${query}`, 400);
+    for (const query of ["q=x&kind=future", "q=x&kind=", "q=x&kind=work&kind=person", "q=x&predicates=CONTRIBUTED_TO", "q=%20%20", `q=${"a".repeat(101)}`]) await request(`/api/entities?${query}`, 400);
   } finally { await write("MATCH (e:Entity) WHERE e.id IN $ids DETACH DELETE e", { ids }); }
 });

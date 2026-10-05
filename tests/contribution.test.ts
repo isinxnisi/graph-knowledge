@@ -17,7 +17,7 @@ import type { ClaimSummary } from "../lib/domain/api";
 const ledgerV2 = pilotV2LedgerSchema.parse(rawLedgerV2);
 const scope = { kind: "publication" as const, isbn13: "9784091874313", volumeLabel: "第1巻", editionLabel: null, language: "ja" };
 const contribution = { roleId: "SUPERVISION" as const, scope };
-const claim: ClaimSummary = { ...validateFixture(demo).claims[0], predicate: "CONTRIBUTED_TO" as const, contribution, organizationParticipation: null, sourceCount: 1 };
+const claim: ClaimSummary = { ...validateFixture(demo).claims[0], predicate: "CONTRIBUTED_TO" as const, contribution, organizationParticipation: null, eventParticipation: null, sourceCount: 1 };
 const center = demo.entities[0].id, after = demo.claims[0].id;
 describe("制作限定の意味と厳格な保存境界", () => {
   it("旧版の欠損は限定なしであり、全Role・全巻を補完しない", () => {

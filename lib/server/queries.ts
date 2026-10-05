@@ -26,6 +26,8 @@ export const NEIGHBORS_BY_ROLE = NEIGHBORS.replace("  AND ($after", "  AND (c.pr
 // 両限定を独立に適用し、他predicateには作用させない。nullと空集合を区別。
 export const NEIGHBORS_BY_QUALIFICATION = NEIGHBORS.replace("  AND ($after", "  AND ($contributionRoles IS NULL OR c.predicate <> 'CONTRIBUTED_TO' OR c.contributionRoleId IN $contributionRoles)\n  AND ($organizationPositions IS NULL OR c.predicate <> 'AFFILIATED_WITH' OR c.organizationPositionId IN $organizationPositions)\n  AND ($after");
 
+export const NEIGHBORS_BY_EVENT = NEIGHBORS_BY_QUALIFICATION.replace("  AND ($after", "  AND ($eventRoles IS NULL OR c.predicate <> 'PARTICIPATED_IN' OR c.eventRoleId IN $eventRoles)\n  AND ($after");
+
 export const CLAIM_DETAIL = `
 MATCH (c:Claim {id: $id})-[:SUBJECT]->(subject:Entity), (c)-[:OBJECT]->(object:Entity)
 WHERE c.visibility = 'published'

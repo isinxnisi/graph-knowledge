@@ -1,0 +1,65 @@
+{
+  "schemaVersion": 1,
+  "entries": [
+    {
+      "id": "CHAIR",
+      "predicate": "PARTICIPATED_IN",
+      "definitionLanguage": "ja",
+      "meaning": {
+        "definition": "資料に参加が明示された人物が、その特定開催回で会議議長として参加した立場。",
+        "subjectRole": "当該回の参加を伴う会議議長",
+        "objectRole": "特定開催回",
+        "direction": "subject-to-object",
+        "rules": [
+          "参加が別途確認できる場合だけ適用する。",
+          "名誉議長、科学委員会議長、シリーズ全回の役員へ一般化しない。",
+          "他domainの制作Roleや組織立場と値語彙を統合しない。",
+          "INVITEDは参加立場に含めず、招待から参加を推論しない。"
+        ],
+        "examples": [
+          {
+            "id": "chair-attended",
+            "category": "include",
+            "scenario": "参加者欄でLorentzをPrésidentと記す。",
+            "rationale": "当該回への参加と会議議長がともに確認できる。"
+          },
+          {
+            "id": "invitation",
+            "category": "exclude",
+            "scenario": "招待されたが欠席した人物。",
+            "rationale": "参加命題自体が未成立であり立場として登録しない。"
+          },
+          {
+            "id": "honorary",
+            "category": "boundary",
+            "scenario": "名誉議長の就任は確認できるが出席が確認できない。",
+            "rationale": "この参加を伴う議長限定では表せない。独立predicateの必要性は別レビュー。"
+          }
+        ],
+        "nearbyConcepts": [
+          {
+            "term": "Président",
+            "difference": "今回の参加者欄の用法だけCHAIRへ対応。全制度で同義としない。"
+          },
+          {
+            "term": "INVITED",
+            "difference": "招待は参加の立場ではない。"
+          },
+          {
+            "term": "Director / SUPERVISION",
+            "difference": "組織職位・制作Roleとは別の語彙。"
+          }
+        ]
+      },
+      "translations": {
+        "ja": {
+          "label": "会議議長",
+          "reverseLabel": "会議議長としての参加者",
+          "description": "当該開催回への参加を伴う会議議長。名誉・委員会議長を含めない。",
+          "aliases": []
+        }
+      },
+      "predicateRationale": "参加命題が共通で当該回の立場だけを限定する。参加未確認の役職一般は別命題。"
+    }
+  ]
+}

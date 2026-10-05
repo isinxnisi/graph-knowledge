@@ -4,12 +4,12 @@ import { handle, neighborsInput, parseId, searchInput } from "../lib/server/http
 
 describe("API input and errors", () => {
   it("normalizes search with the same function used by seed", () => {
-    expect(searchInput(new Request("http://localhost/api/entities?q=%20ＡＢＣ%20"))).toEqual({ q: "abc", limit: 10, kinds: ["person", "work", "organization"] });
+    expect(searchInput(new Request("http://localhost/api/entities?q=%20ＡＢＣ%20"))).toEqual({ q: "abc", limit: 10, kinds: ["person", "work", "organization", "event"] });
     expect(searchInput(new Request("http://localhost/api/entities?q=x&kind=work&limit=1"))).toEqual({ q: "x", limit: 1, kinds: ["work"] });
     expect(neighborsInput(new Request("http://localhost/api/entities/id/neighbors"))).toEqual({ limit: 20, after: null, predicates: null });
     expect(parseId("EA5804DC-246C-4FD2-A960-B3350C8671E4")).toBe("ea5804dc-246c-4fd2-a960-b3350c8671e4");
   });
-  it.each(["?q=", "?q=x&kind=event", "?q=x&kind=", "?q=x&kind=work&kind=person", "?q=x&predicates=CONTRIBUTED_TO", "?q=x&q=y", "?q=x&limit=0", "?q=x&limit=21", "?q=x&limit=1.5", "?q=x&limit=1e1", "?q=x&limit=1&limit=2"])("rejects malformed input %s", (query) => {
+  it.each(["?q=", "?q=x&kind=future", "?q=x&kind=", "?q=x&kind=work&kind=person", "?q=x&predicates=CONTRIBUTED_TO", "?q=x&q=y", "?q=x&limit=0", "?q=x&limit=21", "?q=x&limit=1.5", "?q=x&limit=1e1", "?q=x&limit=1&limit=2"])("rejects malformed input %s", (query) => {
     expect(() => searchInput(new Request(`http://localhost/api/entities${query}`))).toThrow();
   });
   it.each(["ServiceUnavailable", "SessionExpired", "Neo.ClientError.Transaction.TransactionTimedOutClientConfiguration", "Neo.TransientError.Transaction.TransactionTimedOut"])("maps %s to 503 without details", async (code) => {
@@ -36,7 +36,7 @@ describe("関係条件とcursor", () => {
   it("集合の順序・重複・全件を正規化し、空集合を区別する", () => {
     expect(neighborsInput(new Request("http://localhost/?predicates=INFLUENCED_BY,ASSISTANT_OF,ASSISTANT_OF")).predicates).toEqual(["ASSISTANT_OF", "INFLUENCED_BY"]);
     expect(neighborsInput(new Request("http://localhost/?predicates=")).predicates).toEqual([]);
-    expect(neighborsInput(new Request("http://localhost/?predicates=ASSISTANT_OF,INFLUENCED_BY,CONTRIBUTED_TO,AFFILIATED_WITH")).predicates).toBeNull();
+    expect(neighborsInput(new Request("http://localhost/?predicates=ASSISTANT_OF,INFLUENCED_BY,CONTRIBUTED_TO,AFFILIATED_WITH,PARTICIPATED_IN")).predicates).toBeNull();
   });
   it.each(["predicates=UNKNOWN", "predicates=ASSISTANT_OF,", "predicates=ASSISTANT_OF&predicates=INFLUENCED_BY", "kind=work", "predicates=%27%20RETURN%201"])("未対応・不正条件を拒否する %s", (query) => {
     expect(() => neighborsInput(new Request(`http://localhost/?${query}`))).toThrow();

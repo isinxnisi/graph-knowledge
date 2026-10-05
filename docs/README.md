@@ -17,7 +17,7 @@
 | [探索モデル](design/EXPLORATION_MODEL_REVIEW.md) | 開閉・最小predicate条件は実装済み。kind・期間条件・複数起点・時系列の残りは提案。探索の拡張時に参照 |
 | [操作と設定](design/GRAPH_INTERACTION_AND_SETTINGS.md) | 再クリック・300ms判定は実装済み。設定モーダル・永続化・管理設定は検討中 |
 | [プリセット・分類・多言語・会員保存](design/EXPLORATION_PRESETS_REVIEW.md) | 多言語対応は設計前提として採用済み。具体方式・プリセット・保存は設計案。predicate条件APIは実装済み。taxonomy・言語切替・認証・保存は未実装 |
-| [Predicate意味契約・チェック](design/PREDICATE_CONTRACTS.md) | 既存4語彙の契約・基準版・比較票・validatorを実装済み。追加と変更の手順。制作RoleはPhase 06で導入済み |
+| [Predicate意味契約・チェック](design/PREDICATE_CONTRACTS.md) | 既存4語彙の契約・基準版・比較票・validatorを実装済み。Phase 15でPARTICIPATED_INを追加。追加と変更の手順。制作RoleはPhase 06で導入済み |
 | [関係語彙・役割・意味境界](design/RELATION_VOCABULARY_REVIEW.md) | 凍結パイロット後の設計レビュー。意味契約、役割限定、追加審査、分類・表示の分離。提案を採用し、既存4語彙の契約・チェックを実装。制作RoleはPhase 06を参照。複数predicateの表示束は未実装 |
 | [制作Roleの最小設計](design/CONTRIBUTION_ROLE_REVIEW.md) | CONTRIBUTED_TO限定の4 Role候補・刊行物scope・肯否／比較・条件／cursor・表示・v2方針。採用済み。現行契約と受入状態はPhase 06を参照 |
 | [探索の入口・条件提示](design/EXPLORATION_ENTRY_AND_CONDITIONS_REVIEW.md) | Phase 06後のUI構造レビュー。検索・起点・探索軸・追加条件の分離、段階提示と適用条件の可視性、次フェーズ案。推奨範囲をPhase 07で実装。一般Entity検索はPhase 09で実装。固定開始例はPhase 11で実装。プリセットは未実装 |
@@ -30,13 +30,15 @@
 | [関係モデルの第2回比較](design/RELATION_MODEL_SECOND_COMPARISON_REVIEW.md) | Phase 13。D/E/Cの反例、独立命題・限定・共通処理の境界。比較時点では実装なし。次の組織立場Vertical SliceをPhase 14で採用 |
 | [関係モデル比較の研究台帳v2](research/phase-13-relation-model/v2/README.md) | 17記録・85比較票・16 Source。Phase 12の7件は狭い事実のみ受入、新規9研究記録は人間受入待ち。seed入力ではない |
 | [二用途typed限定の採用契約](design/TYPED_QUALIFICATION_CONTRACTS.md) | Phase 14。制作Roleと組織立場の独立型、共通処理、肯否・比較・期間、条件/cursor、科学v2 |
+| [特定Event参加契約](design/EVENT_PARTICIPATION_CONTRACTS.md) | Phase 15第三のtyped限定、参加／招待、開催回／期間。実資料人間受入待ち |
+| [Phase 15実装・検証状態](design/PHASE_15_IMPLEMENTATION.md) | 実装と人工契約検証、未完了の実資料受入・投入・観察を分ける |
 | [API応答例](API_RESPONSE_EXAMPLES.json) | 読み取りAPIの例。テストから参照するため、この場所を維持 |
 
 未実装部分を含む文書は、完了した内容が一部あっても丸ごとアーカイブしない。設計案を採用済みとみなさず、最新のユーザー指示を優先する。
 
 ## 現在地点
 
-Phase 14で、既存制作Roleと組織立場（Visitor / Associate professor）の二用途による、小さいtyped限定の縦経路を実装・検証した。科学v2に広い8 Claimと独立限定2 Claimを保持。現行契約は[TYPED_QUALIFICATION_CONTRACTS.md](design/TYPED_QUALIFICATION_CONTRACTS.md)、結果は[実施記録](archive/phase-14-typed-qualification/README.md)。家族・組織間・event・派生・態度の比較候補は未実装、C09は保留。次の一般化・追加語彙の承認は含まない。
+Phase 14で、既存制作Roleと組織立場（Visitor / Associate professor）の二用途による、小さいtyped限定の縦経路を実装・検証した。科学v2に広い8 Claimと独立限定2 Claimを保持。現行契約は[TYPED_QUALIFICATION_CONTRACTS.md](design/TYPED_QUALIFICATION_CONTRACTS.md)、結果は[実施記録](archive/phase-14-typed-qualification/README.md)。家族・組織間・派生・態度の比較候補は未実装、C09は保留。その後Phase 15の第三型（特定Event参加）の実装・人工契約検証まで進めた。E01/E03の人間受入・実資料seed・観察は未完了。Phase 15を完了履歴へ入れず、[実装状態](design/PHASE_15_IMPLEMENTATION.md)を読む。
 
 ## フェーズ別の完了履歴
 

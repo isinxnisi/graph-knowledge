@@ -1,3 +1,5 @@
+import { eventParticipationOf } from "../domain/event-participation";
+import { eventParticipationLabels } from "../i18n/event-participation";
 import { contributionOf } from "../domain/contribution";
 import { organizationParticipationOf } from "../domain/organization-participation";
 import { contributionLabels } from "../i18n/contribution";
@@ -27,6 +29,10 @@ export function qualificationLabel(claim: ClaimSummary): string | null {
   if (claim.predicate === "AFFILIATED_WITH") {
     const position = organizationParticipationOf(claim)?.positionId, text = organizationParticipationLabels();
     return position ? text.positions[position] : text.none;
+  }
+  if (claim.predicate === "PARTICIPATED_IN") {
+    const role = eventParticipationOf(claim)?.roleId, text = eventParticipationLabels();
+    return role ? text.roles[role] : text.none;
   }
   return null;
 }

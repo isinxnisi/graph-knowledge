@@ -20,9 +20,9 @@ import v2 from "../datasets/pilot-science/v2/data.json";
 import ledger from "../datasets/pilot-science/v2/ledger.json";
 import type { ClaimSummary, EntitySummary, NeighborsResponse } from "../lib/domain/api";
 const candidate = (positionId: string) => v2.claims.find(c => c.organizationParticipation?.positionId === positionId)!;
-const visitor = { ...candidate("VISITOR"), sourceCount: 1 } as ClaimSummary;
-const professor = { ...candidate("ASSOCIATE_PROFESSOR"), sourceCount: 1 } as ClaimSummary;
-const broad = { ...v2.claims.find(c => c.id === ledger.candidates[0].baseClaimId)!, sourceCount: 1 } as ClaimSummary;
+const visitor = { ...candidate("VISITOR"), sourceCount: 1, eventParticipation: null } as ClaimSummary;
+const professor = { ...candidate("ASSOCIATE_PROFESSOR"), sourceCount: 1, eventParticipation: null } as ClaimSummary;
+const broad = { ...v2.claims.find(c => c.id === ledger.candidates[0].baseClaimId)!, sourceCount: 1, eventParticipation: null } as ClaimSummary;
 const request = (query: string) => new Request(`http://localhost/api/entities/${visitor.subjectId}/neighbors?${query}`);
 describe("二つのtyped限定の境界", () => {
   it("凍結入力のhash、台帳、生成物を検証し既存広いClaimを保持する", async () => {
@@ -60,7 +60,7 @@ describe("二つのtyped限定の境界", () => {
     expect(matchesClaim(visitor, null, [], null)).toBe(true);
     expect(matchesClaim(visitor, null, null, [])).toBe(false);
     expect(matchesClaim({ ...visitor, predicate: "INFLUENCED_BY", organizationParticipation: null }, null, null, [])).toBe(true);
-    expect(matchesClaim({ ...visitor, predicate: "CONTRIBUTED_TO", organizationParticipation: null, contribution: { roleId: "SUPERVISION", scope: null } }, null, ["SUPERVISION"], [])).toBe(true);
+    expect(matchesClaim({ ...visitor, predicate: "CONTRIBUTED_TO", organizationParticipation: null, eventParticipation: null, contribution: { roleId: "SUPERVISION", scope: null } }, null, ["SUPERVISION"], [])).toBe(true);
     expect(normalizeOrganizationPositions(["VISITOR", "VISITOR"], null)).toEqual(["VISITOR"]);
     expect(normalizeOrganizationPositions(["VISITOR"], ["CONTRIBUTED_TO"])).toBeNull();
     expect(normalizeOrganizationPositions(["VISITOR", "ASSOCIATE_PROFESSOR"], null)).not.toBeNull();
@@ -79,7 +79,7 @@ describe("二つのtyped限定の境界", () => {
     expect(Object.values(displayRelations({ [visitor.id]: visitor, [professor.id]: professor, [broad.id]: broad }))).toHaveLength(1);
   });
   it("制作限定にも同じ比較キーを用い、刊行物・期間・Roleを独立に区別する", () => {
-    const creation: ClaimSummary = { ...visitor, predicate: "CONTRIBUTED_TO", organizationParticipation: null, contribution: { roleId: "SUPERVISION", scope: { kind: "publication", isbn13: "9784091874313", volumeLabel: "第1巻", editionLabel: null, language: "ja" } } };
+    const creation: ClaimSummary = { ...visitor, predicate: "CONTRIBUTED_TO", organizationParticipation: null, eventParticipation: null, contribution: { roleId: "SUPERVISION", scope: { kind: "publication", isbn13: "9784091874313", volumeLabel: "第1巻", editionLabel: null, language: "ja" } } };
     expect(claimComparisonKey(creation)).not.toBe(claimComparisonKey({ ...creation, period: professor.period }));
     expect(claimComparisonKey(creation)).not.toBe(claimComparisonKey({ ...creation, contribution: { ...creation.contribution!, roleId: "PRODUCING" } }));
     expect(claimComparisonKey(creation)).not.toBe(claimComparisonKey({ ...creation, contribution: { ...creation.contribution!, scope: null } }));

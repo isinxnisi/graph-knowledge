@@ -3,6 +3,7 @@ import { execFileSync } from "node:child_process";
 import { mkdtempSync, mkdirSync, writeFileSync, readFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
+import currentReviews from "../vocabulary/reviews/records.json";
 import catalog from "../vocabulary/catalog.json";
 import baseline from "../vocabulary/baseline-v1.json";
 import ledger from "../datasets/pilot-urasawa/v1/ledger.json";
@@ -13,7 +14,7 @@ import { checkVocabulary, vocabularyHash, vocabularyCatalogSchema, type Vocabula
 const contracts = vocabularyCatalogSchema.parse(catalog);
 
 function setup() {
-  return { catalog: vocabularyCatalogSchema.parse(structuredClone(catalog)), baseline: vocabularyCatalogSchema.parse(structuredClone(baseline)), reviews: [] as VocabularyReview[],
+  return { catalog: vocabularyCatalogSchema.parse(structuredClone(catalog)), baseline: vocabularyCatalogSchema.parse(structuredClone(baseline)), reviews: structuredClone(currentReviews) as VocabularyReview[],
     runtime: structuredClone(PREDICATES) as Record<string, unknown>, searchLabels: { ...explorationLabels().predicates } as Record<string, string> };
 }
 function approval(target: VocabularyEntry, before: VocabularyEntry | null, change: VocabularyReview["change"]): VocabularyReview {
@@ -75,7 +76,7 @@ describe("predicate meaning contracts", () => {
     const review = approval(input.catalog.entries[0], contracts.entries[0], "clarification");
     input.reviews.push({ ...review, status: "draft" });
     expect(checkVocabulary(input).errors.join()).toContain("承認済み比較票がない");
-    input.reviews[0] = review; expect(checkVocabulary(input).errors).toEqual([]);
+    input.reviews[input.reviews.length - 1] = review; expect(checkVocabulary(input).errors).toEqual([]);
     input.catalog.entries[0].meaning.examples[0].rationale += "追加変更";
     expect(checkVocabulary(input).errors.join()).toContain("承認済み比較票がない");
   });
@@ -83,9 +84,9 @@ describe("predicate meaning contracts", () => {
     const input = setup(); input.catalog.entries[0].meaning.definition += "変更";
     input.reviews.push(approval(input.catalog.entries[0], contracts.entries[0], "meaning-change"));
     expect(checkVocabulary(input).errors.join()).toContain("意味変更は既存IDで承認できない");
-    input.reviews[0].change = "translation";
+    input.reviews[input.reviews.length - 1].change = "translation";
     expect(checkVocabulary(input).errors.join()).toContain("翻訳修正として扱えない");
-    input.reviews[0].reviewer = null;
+    input.reviews[input.reviews.length - 1].reviewer = null;
     expect(checkVocabulary(input).errors.join()).toContain("判断者と判断日");
   });
   it("accepts an example new predicate only after all existing comparisons and approval", () => {
@@ -96,9 +97,9 @@ describe("predicate meaning contracts", () => {
     expect(checkVocabulary(input).errors.join()).toContain("追加に一致する承認済み比較票がない");
     input.reviews.push(approval(added, null, "addition"));
     expect(checkVocabulary(input).errors).toEqual([]);
-    input.reviews[0].comparisons = input.reviews[0].comparisons.slice(1);
+    input.reviews[input.reviews.length - 1].comparisons = input.reviews[input.reviews.length - 1].comparisons.slice(1);
     expect(checkVocabulary(input).errors.join()).toContain("比較がない");
-    input.reviews[0].comparisons[0].relation = "same";
+    input.reviews[input.reviews.length - 1].comparisons[0].relation = "same";
     expect(checkVocabulary(input).errors.join()).toContain("同義predicate");
   });
   it("role or classification decisions cannot approve a new predicate", () => {
@@ -146,7 +147,7 @@ describe("predicate meaning contracts", () => {
       mkdirSync(join(directory, "vocabulary/contribution-roles"), { recursive: true });
       for (const name of ["catalog.json", "baseline-v1.json", "reviews.json"]) writeFileSync(join(directory, "vocabulary/contribution-roles", name), readFileSync(resolve("vocabulary/contribution-roles", name)));
       const review = approval(contracts.entries[0], contracts.entries[0], "clarification");
-      for (const [path, value] of [["catalog.json", catalog], ["baseline-v1.json", baseline], ["reviews/records.json", [review]]] as const) writeFileSync(join(directory, "vocabulary", path), JSON.stringify(value));
+      for (const [path, value] of [["catalog.json", catalog], ["baseline-v1.json", baseline], ["reviews/records.json", [...currentReviews, review]]] as const) writeFileSync(join(directory, "vocabulary", path), JSON.stringify(value));
       execFileSync("git", ["init", "-q"], { cwd: directory });
       execFileSync("git", ["add", "."], { cwd: directory });
       execFileSync("git", ["-c", "user.name=Test", "-c", "user.email=test@example.invalid", "commit", "-qm", "test baseline"], { cwd: directory });
@@ -157,9 +158,9 @@ describe("predicate meaning contracts", () => {
       writeFileSync(join(directory, "vocabulary/baseline-v1.json"), JSON.stringify(replacement));
       expect(() => check()).toThrow(/基準版の書換え/);
       writeFileSync(join(directory, "vocabulary/baseline-v1.json"), JSON.stringify(baseline));
-      writeFileSync(join(directory, "vocabulary/reviews/records.json"), JSON.stringify([{ ...review, rationale: "承認後に変更" }]));
+      writeFileSync(join(directory, "vocabulary/reviews/records.json"), JSON.stringify([...currentReviews, { ...review, rationale: "承認後に変更" }]));
       expect(() => check()).toThrow(/承認済み比較票の変更/);
-      writeFileSync(join(directory, "vocabulary/reviews/records.json"), JSON.stringify([review]));
+      writeFileSync(join(directory, "vocabulary/reviews/records.json"), JSON.stringify([...currentReviews, review]));
       const roleBaseline = JSON.parse(readFileSync(resolve("vocabulary/contribution-roles/baseline-v1.json"), "utf8"));
       roleBaseline.entries[0].meaning.definition += "基準を置換";
       writeFileSync(join(directory, "vocabulary/contribution-roles/baseline-v1.json"), JSON.stringify(roleBaseline));
@@ -168,7 +169,7 @@ describe("predicate meaning contracts", () => {
   }, 20000);
   it("validates the real CLI against a trusted existing Git ref", () => {
     const output = execFileSync(process.execPath, ["--import", "tsx", "scripts/check-vocabulary.ts", "--base-ref", "HEAD"], { encoding: "utf8" });
-    expect(output).toContain("4 predicate / 0 error");
+    expect(output).toContain("5 predicate / 0 error");
     expect(() => execFileSync(process.execPath, ["--import", "tsx", "scripts/check-vocabulary.ts", "--base-ref", "no-such-vocabulary-ref"], { stdio: "pipe" })).toThrow();
   }, 15000);
 });

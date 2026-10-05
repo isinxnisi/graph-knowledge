@@ -13,7 +13,7 @@ const ja = {
   changed: "関係の条件を変更しました。同じ起点から取得し直します。",
   predicates: {
     ASSISTANT_OF: "アシスタントだった", INFLUENCED_BY: "影響を受けた",
-    CONTRIBUTED_TO: "制作に関わった", AFFILIATED_WITH: "関わりがあった",
+    CONTRIBUTED_TO: "制作に関わった", AFFILIATED_WITH: "関わりがあった", PARTICIPATED_IN: "参加した",
   } satisfies Record<Predicate, string>,
 };
 const resources: Record<string, typeof ja> = { ja };

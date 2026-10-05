@@ -48,8 +48,8 @@ export default function GraphCanvas({ ref, restoration, interactionBlocked, grap
         { selector: "node", style: { label: "data(label)", "background-color": color("person"), color: color("text"), "border-width": 1, "border-color": color("node-border"), width: 116, height: 64, "font-size": 16, "text-valign": "center", "text-halign": "center", "text-wrap": "wrap", "text-max-width": "108px" } },
         { selector: 'node[kind="work"]', style: { shape: "round-rectangle", "background-color": color("work") } },
         { selector: 'node[kind="organization"]', style: { shape: "hexagon", "background-color": color("organization") } },
-        { selector: 'node[kind="event"]', style: { shape: "diamond" } },
         { selector: "node.center", style: { "border-width": 3, "border-color": color("accent") } },
+        { selector: 'node[kind="event"]', style: { shape: "diamond", "background-color": color("work") } },
         { selector: "edge", style: { label: "data(label)", color: color("text"), "curve-style": "unbundled-bezier", "control-point-distances": "data(distance)", "control-point-weights": "data(weight)", "target-arrow-shape": "triangle", "source-arrow-shape": "none", "arrow-scale": 1.2, "line-color": color("edge"), "target-arrow-color": color("edge"), width: 2, "font-size": 15, "text-margin-y": (edge: cytoscape.EdgeSingular) => Number(edge.data("labelOffset")), "text-background-color": color("panel"), "text-background-opacity": 1, "text-background-padding": "5px", "text-wrap": "wrap", "text-max-width": "165px", "text-overflow-wrap": "anywhere", "text-events": "yes" } },
         { selector: 'edge[polarity="denied"]', style: { "line-style": "dashed", "line-color": color("denied"), "target-arrow-color": color("denied") } },
         { selector: 'edge[polarity="mixed"]', style: { "line-style": "dotted" } },
@@ -162,10 +162,10 @@ export default function GraphCanvas({ ref, restoration, interactionBlocked, grap
   }, [selection, graph]);
 
   return <>
-    <div className={styles.canvas} ref={container} data-testid="graph-canvas" tabIndex={-1} role="img" aria-label="人物・作品・組織の関係グラフ。操作できるテキスト一覧は下にあります。" />
+    <div className={styles.canvas} ref={container} data-testid="graph-canvas" tabIndex={-1} role="img" aria-label="人物・作品・組織・出来事の関係グラフ。操作できるテキスト一覧は下にあります。" />
     <div className={styles.graphTools}>
       <button onClick={() => core.current?.fit(undefined, 24)} disabled={!graph.centerId}>全体を表示</button>
-      <span>丸：人物 ／ 四角：作品 ／ 六角形：組織</span>
+      <span>丸：人物 ／ 四角：作品 ／ 六角形：組織 ／ ひし形：出来事</span>
       <span>矢印：方向 ／ 破線：否定 ／ {contributionLabels().mixedLegend} ／ 二重枠：展開済 ／ 淡い外枠：新規表示</span>
     </div>
   </>;

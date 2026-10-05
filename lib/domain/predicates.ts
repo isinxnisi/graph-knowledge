@@ -2,7 +2,7 @@ export const ENTITY_KINDS = ["person", "work", "organization", "event"] as const
 export type EntityKind = (typeof ENTITY_KINDS)[number];
 
 export const PREDICATE_KEYS = [
-  "ASSISTANT_OF", "INFLUENCED_BY", "CONTRIBUTED_TO", "AFFILIATED_WITH",
+  "ASSISTANT_OF", "INFLUENCED_BY", "CONTRIBUTED_TO", "AFFILIATED_WITH", "PARTICIPATED_IN",
 ] as const;
 export type Predicate = (typeof PREDICATE_KEYS)[number];
 
@@ -26,6 +26,11 @@ export const PREDICATES = {
     subjectKind: "person", objectKind: "organization",
     label: "関わりがあった", reverseLabel: "関係者",
     description: "組織との関わり。雇用や所属を断定しない",
+  },
+  PARTICIPATED_IN: {
+    subjectKind: "person", objectKind: "event",
+    label: "参加した", reverseLabel: "参加者",
+    description: "主体人物がその特定開催回へ参加したという主張。招待・予定・写真だけでは参加を認定しない",
   },
 } as const satisfies Record<Predicate, {
   subjectKind: EntityKind; objectKind: EntityKind;

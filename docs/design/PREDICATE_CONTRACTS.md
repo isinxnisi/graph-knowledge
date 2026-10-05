@@ -11,7 +11,7 @@
 - 実行する語彙・端点・既存の日本語表現は引き続き lib/domain/predicates.ts。今回内容を変更しない。
 - [vocabulary/catalog.json](../../vocabulary/catalog.json)はその語彙に結び付けた意味契約。定義、主体／対象の意味、禁止する推論、包含・除外・境界例、近接概念、既存語彙との比較、locale別表現を持つ。
 - [baseline-v1.json](../../vocabulary/baseline-v1.json)は今回導入した読み取り専用の基準スナップショット。運用上の第二の辞書ではなく、変更検出用。書き換えてチェックを通すことを禁止する。
-- [reviews/records.json](../../vocabulary/reviews/records.json)は今後の比較票。現状は空。初回契約は現行実装・受入方針を基準化したもので、個別の人間審査を完了したと偽装する承認レコードを生成しない。
+- [reviews/records.json](../../vocabulary/reviews/records.json)は今後の比較票。Phase 05時点では空。Phase 15でPARTICIPATED_IN追加の意味レビュー票を記録。初回契約は現行実装・受入方針を基準化したもので、個別の人間審査を完了したと偽装する承認レコードを生成しない。
 - lib/domain/vocabulary.tsのvalidatorとscripts/check-vocabulary.tsでこれらを照合する。アプリ読取・投入処理に新しい意味解釈エンジンを挿入しない。
 
 意味の言語はdefinitionLanguageで記録し、label / reverseLabel / description / aliasesはlocaleをキーに分離する。現在はjaだけ。言語文字列をpredicate IDや探索条件のキーへ使わない。全面多言語化や別名解決機能は追加していない。
@@ -98,3 +98,10 @@ Role対応前に決めること:
 - 新しいデータ版での根拠付き受入、現在の広いClaimの保持。凍結版の自動移行は行わない。
 
 これらを確定してから限定されたRole対応へ進む。今回のチェックだけで、Role対応やUIの新しい集約が実装済みになったとは扱わない。
+
+
+## Phase 15の追加
+
+PARTICIPATED_INを第5語彙として追加した。既存4契約とbaseline-v1は不変。新語彙の全既存比較、包含・除外・境界例、実行辞書／locale labelとの一致、変更hashに一致する比較票を従来のvalidatorで確認する。新規票のreviewerはCodexであり、ユーザーのPhase 15依頼に基づく意味設計・実装判断を記録する。これはE01/E03のSource事実を人間受入した記録ではない。事実受入はEvent datasetの別ゲートへ残す。
+
+eventParticipationの独立CHAIR契約とbaselineはqualification:checkへ追加。Git baseに登録済みのcatalog/baselineの変更は拒否する。招待・名誉議長・他domain値をenumへ混入させない。新値／翻訳／例の更新も先に意味レビューと基準版方針を決める。この小さい固定機構は語義の自動認定や一般語彙管理UIではない。

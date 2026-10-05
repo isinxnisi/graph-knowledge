@@ -1,6 +1,6 @@
 # 現行技術設計
 
-更新日: 2026-10-05 / 状態: 初期Vertical Sliceと探索の開閉・Node再クリックまで実装済み。既存predicateと限定制作Roleによる条件付き探索を追加。v2 Role Claim 5件を人間受入後に投入・検証済み。関係概要・明示起点切替・直前一件復帰、人物・作品・組織の統一検索入口も実装。科学・研究機関pilot v1を別環境へ投入・観察済み。Phase 14では科学v2と組織立場のtyped限定を追加し、制作Roleと独立した語彙を保って条件・比較処理を共有。taxonomy・プリセット・会員保存は未実装。[文書の入口](README.md)に現役設計とフェーズ別履歴をまとめる。
+更新日: 2026-10-06 / 状態: 初期Vertical Sliceと探索の開閉・Node再クリックまで実装済み。既存predicateと限定制作Roleによる条件付き探索を追加。v2 Role Claim 5件を人間受入後に投入・検証済み。関係概要・明示起点切替・直前一件復帰、人物・作品・組織の統一検索入口も実装。科学・研究機関pilot v1を別環境へ投入・観察済み。Phase 14では科学v2と組織立場のtyped限定を追加し、制作Roleと独立した語彙を保って条件・比較処理を共有。Phase 15の特定Event参加（第三のtyped限定）を実装。実資料E01/E03と開催回の人間受入は確認中で、実データ生成・投入・観察は未完了。taxonomy・プリセット・会員保存は未実装。[文書の入口](README.md)に現役設計とフェーズ別履歴をまとめる。
 
 ## 前提と設計の位置づけ
 
@@ -288,8 +288,9 @@ lib/domain/predicates.tsに固定辞書を置き、APIとseedから共有する�
 | INFLUENCED_BY | person → person | 影響を受けた / 影響を与えた | 主体が対象から影響を受けたという主張 |
 | CONTRIBUTED_TO | person → work | 制作に関わった / 制作関係者 | 作品への関与。作者・編集者等の役割は初期は区別しない |
 | AFFILIATED_WITH | person → organization | 関わりがあった / 関係者 | 組織との関わり。雇用や所属を断定しない |
+| PARTICIPATED_IN | person → event | 参加した / 参加者 | 資料が指す特定開催回への参加。招待・写真・予定だけから認定しない |
 
-師弟関係はアシスタントから推論しない。作品と出版社の関係等は新しいpredicateの意味を決めてから追加する。初期はこの4種で検索・探索経路を成立させる。
+師弟関係はアシスタントから推論しない。作品と出版社の関係等は新しいpredicateの意味を決めてから追加する。初期は4種で成立させ、Phase 15で独立の参加命題を5種目として追加した。
 
 ### 4. 日付表現
 
@@ -308,22 +309,22 @@ Neo4jではPartialDateをネストしたpropertyとして保存せず、`validFr
 共通の返却型:
 
 - EntitySummary: `{ id, kind, name, description }`。descriptionは同名判別用でnullable。
-- ClaimSummary: `{ id, subjectId, objectId, predicate, polarity, period, contribution, organizationParticipation, sourceCount }`。両typed限定は明示nullable。sourceCountはCitationが指す異なるSourceの件数を導出し、信用点数にはしない。
+- ClaimSummary: `{ id, subjectId, objectId, predicate, polarity, period, contribution, organizationParticipation, eventParticipation, sourceCount }`。三つのtyped限定は明示nullable。sourceCountはCitationが指す異なるSourceの件数を導出し、信用点数にはしない。
 - SourceDetail: `{ id, kind, title, authors, publisher, url, publishedAt, edition, note, isDemo }`。authorsは文字列配列、id/kind/title/isDemo以外のスカラーはnullable。
-- CitationDetail: `{ id, locator, note, accessedAt, stance, source, roleEvidence, positionEvidence }`。locatorはページ・節等を表す文字列、note、accessedAt、両原表記はnullable。sourceはSourceDetail。
+- CitationDetail: `{ id, locator, note, accessedAt, stance, source, roleEvidence, positionEvidence, eventParticipationEvidence }`。locatorはページ・節等を表す文字列、note、accessedAt、各原表記はnullable。sourceはSourceDetail。
 
 | GET経路 | 入力 | 200のレスポンス |
 | --- | --- | --- |
 | /api/entities | q必須、limit・kind省略可 | `{ items: EntityDetail[], hasMore: boolean }` |
-| /api/entities/{id} | Entity UUID | `{ entity: EntitySummary + { aliases: string[] } }` |
-| /api/entities/{id}/neighbors | limit、after、predicates、contributionRoles、organizationPositions省略可 | `{ centerId, nodes: EntitySummary[], claims: ClaimSummary[], page: { nextCursor, hasMore } }` |
+| /api/entities/{id} | Entity UUID | `{ entity: EntitySummary + { aliases: string[], event: EventMetadata | null } }` |
+| /api/entities/{id}/neighbors | limit、after、predicates、contributionRoles、organizationPositions、eventRoles省略可 | `{ centerId, nodes: EntitySummary[], claims: ClaimSummary[], page: { nextCursor, hasMore } }` |
 | /api/claims/{id} | Claim UUID | `{ claim: ClaimSummary + { createdAt, updatedAt, citations: CitationDetail[] }, relatedClaimIds: string[] }` |
 
-検索はperson / work / organization。kind省略時は三種すべて、指定時は一種のみ。kindはLIMIT前に適用し、探索条件には含めない。未対応kind・未知query・重複queryは400。EntityDetailはEntitySummaryにaliasesを加えた既存の詳細型を再利用する。qをtrimし、Unicode NFKCと小文字化を行う。1〜100文字を許可し、空文字は400。表示名称・別名から同じ正規化で作った検索用配列に対する部分一致を用い、Cypherのパラメータとして渡す。検索索引・日本語形態素解析は初期不要。完全一致、名称、IDの順で安定して並べ、limit既定10・最大20でlimit+1件からhasMoreを判定する。初期検索はページングせず、候補が多い場合は検索語の絞り込みを促す。
+検索はperson / work / organization / event。kind省略時は四種すべて、指定時は一種のみ。kindはLIMIT前に適用し、探索条件には含めない。未対応kind・未知query・重複queryは400。EntityDetailはEntitySummaryにaliasesとnullable eventを加えた詳細型を再利用する。qをtrimし、Unicode NFKCと小文字化を行う。1〜100文字を許可し、空文字は400。表示名称・別名から同じ正規化で作った検索用配列に対する部分一致を用い、Cypherのパラメータとして渡す。検索索引・日本語形態素解析は初期不要。完全一致、名称、IDの順で安定して並べ、limit既定10・最大20でlimit+1件からhasMoreを判定する。初期検索はページングせず、候補が多い場合は検索語の絞り込みを促す。
 
 近傍はvisibility=publishedのClaimを主体側・対象側の両方から1段階だけ取得する。Claim ID昇順で並べ、afterは直前のnextCursorを渡す。無条件ではClaim UUID、条件付きでは起点・正規化predicate集合・版を含む不透明cursorとする。predicate条件はLIMIT前に適用し、詳細は末尾の条件付き探索仕様を参照する。IDがafterより大きいものからlimit+1件を取得し、返却した最後のIDを次のcursorとする。続きがなければnextCursor=null。nodesは中心と返却Claimの全端点を重複排除したもの。否定するClaimも返す。孤立Entityは中心ノードのみ、claims=[]。静的fixtureが前提であり、投稿時の変更に耐えるページングは後で再設計する。
 
-関係詳細のrelatedClaimIdsは同じsubjectId/predicate/objectIdを持つ他の公開ClaimのIDを、期間・肯否を問わずID昇順で返す。選択中のClaimは含めない。詳細画面はそれぞれのIDから内容を取得して比較できるようにする。初期fixtureでは件数が小さいため、この一覧は全件返却する。全データへ拡張する前に上限を設計する。自動的な矛盾ラベルや優先順位付けは行わない。
+関係詳細のrelatedClaimIdsは同じsubjectId/predicate/objectIdを持つ他の公開ClaimのIDを、限定・期間・肯否を問わずID昇順で返す。選択中のClaimは含めない。詳細画面はそれぞれのIDから内容を取得して比較できるようにする。初期fixtureでは件数が小さいため、この一覧は全件返却する。全データへ拡張する前に上限を設計する。自動的な矛盾ラベルや優先順位付けは行わない。
 
 不正なUUID、q、limit、afterは400、存在しないEntity/Claim（非公開も含む）は404、DB接続不能・タイムアウトは503、予期しない失敗は500。整数limitは1以上・上限以内のみ受理し、黙って補正しない。エラー本文は`{ error: { code, message } }`。codeはINVALID_ARGUMENT / NOT_FOUND / SERVICE_UNAVAILABLE / INTERNAL_ERRORとし、DBエラーや認証情報を本文に出さない。未対応のHTTPメソッドは405。
 
@@ -544,11 +545,11 @@ type EntityOverviewResponse = {
 
 ## Phase 09：既存Entity kindへの検索入口の一般化
 
-検索対象はlib/domain/search.tsのSEARCH_KINDS（person / work / organization）。eventはschemaには存在するが、現在datasetに実例がなく既存predicateの端点にもないため検索対象にしない。新kindを追加する承認や探索範囲の限定ではない。
+検索対象はlib/domain/search.tsのSEARCH_KINDS（person / work / organization / event）。Phase 09時点では三種のみ。Phase 15で既存event kindに特定開催回の契約と参加predicateを実装したため検索へ公開する。新kind追加や探索範囲の限定ではない。
 
-`GET /api/entities?q=...&kind=work&limit=10`。kindは任意の単一enum、省略は三種すべて。「すべて」はUI値でありAPIへallや空文字を送らない。qはtrim・NFKC・小文字化後1〜100 Unicode code point、limit既定10／最大20。空・欠落q、不正limit、空／未知kind、同じqueryの重複、未対応queryは400。0件は200／items=[]／hasMore=false。完全一致（nameまたはalias）、name、内部ID順。LIMIT+1でhasMoreを判定し、候補のページングは追加しない。
+`GET /api/entities?q=...&kind=work&limit=10`。kindは任意の単一enum、省略は四種すべて。「すべて」はUI値でありAPIへallや空文字を送らない。qはtrim・NFKC・小文字化後1〜100 Unicode code point、limit既定10／最大20。空・欠落q、不正limit、空／未知kind、同じqueryの重複、未対応queryは400。0件は200／items=[]／hasMore=false。完全一致（nameまたはalias）、name、内部ID順。LIMIT+1でhasMoreを判定し、候補のページングは追加しない。
 
-応答itemsは既存EntityDetail（id・kind・name・description・aliases）であり、DB searchNamesや外部IDを露出しない。Webクライアントだけの契約を直接更新し、旧人物専用版のversioning／互換経路は追加しない。neighbors等の応答は変更しない。
+応答itemsは既存EntityDetail（id・kind・name・description・aliases・nullable event）であり、DB searchNamesや外部IDを露出しない。Webクライアントだけの契約を直接更新し、旧人物専用版のversioning／互換経路は追加しない。Phase 09ではneighbors等の応答を変更せず、Phase 15でnullable eventParticipation等を追加した。
 
 左に一つの名前／別名検索と任意の検索対象selectを置く。初期はすべて。候補はkindの文字、名前、説明、別名で見分け、同じ名前・kind・説明が重なる場合は内部IDも補助表示する。候補取得・検索kind変更だけではGraph／探索条件／直前探索を変更しない。検索kind変更では旧検索を取消し候補をクリアするが自動取得しない。候補選択だけ既存chooseRootで確定predicate／Roleを保持した新世代へ移り、旧枝・通信・直前探索をリセットする。
 
@@ -585,3 +586,18 @@ StartExamplesは検索と並存する左ペインの小さい領域。例を押�
 比較キーはtyped限定・刊行物識別・periodの値/精度/nullを含み、polarityを除外する。真偽・矛盾判定、Claim UUIDやMERGEキーの代用ではない。relatedClaimIdsとDisplayRelationはSPO単位を維持し、詳細では個別限定へ戻る。AFFILIATED_WITH混在を「肯定・否定あり」とし異なる限定を自動対立表示しない。関係概要は現在のClaim集計構造のまま。
 
 science v2は既存8 Claim＋限定2 Claim、8 Entity・9 Source・11 Citation。C09保留。専用Bolt7691/Browser7478/Web3214/.next-science-v2で検証。既存science v1・漫画v1/v2・demoは凍結不変。語彙追加・更新一般基盤やevent等は未実装。[dataset](../datasets/pilot-science/v2/README.md)、[実施記録](archive/phase-14-typed-qualification/README.md)を参照。
+
+
+## Phase 15：特定Event参加と第三のtyped限定
+
+[Event参加契約](design/EVENT_PARTICIPATION_CONTRACTS.md)を採用。PARTICIPATED_INはperson→特定開催回の独立命題、eventParticipationはnullまたは`{roleId:"CHAIR"}`。参加を伴う当該会議の議長に限定し、委員会職・名誉議長・招待を含めない。INVITEDはenumに存在せず、未知値を適用先の正規化より先に拒否する。参加資料の意味と人間受入の検証は型検証と別。
+
+投入schemaVersion=4。Entityにnullable event（event kindだけ必須、granularity="occurrence"、period）、Claimにnullable eventParticipation、Citationにnullable eventParticipationEvidence（原語＋language）。旧schema 1/2/3と凍結入力は不変。Event kind／参加predicateにはv4入力を要求する。Eventはシリーズではなく開催回を内部UUIDで同定する。開催日からClaim.periodを補完しない。DBではeventGranularity・eventFrom/ToValue/Precision、eventRoleId、eventOriginalText/Languageへ展開する。既存Node/Relationship/制約は維持。
+
+neighborsのeventRoles CSVは省略＝絞らない、空＝参加だけ除外、CHAIR＝明示限定Claimだけ。全Role enumの選択でもnullと区別する。制作Role／組織立場と独立にLIMIT前へ適用する。新型条件またはEvent datasetでcursor v4を使い、dataset・起点・predicate・三限定へ拘束。既存無Event条件のcursor形式は維持。GraphState・世代・受理ページ・開閉・snapshot/復帰に第三条件を渡し、広く見る／開始例で三限定すべてを解除する。
+
+relatedClaimIdsとDisplayRelationはSPO単位のまま。比較キーにはEvent立場とClaim.periodを含み、Event.period・polarity・Sourceは含めない。広い参加と議長参加は同一内容ではなく、Graphの表示束に過ぎない。混在は中立な「肯定・否定あり」。詳細で参加立場・未知のClaim期間・原資料・限定へ戻る。Event開催期間はEntity詳細で別表示する。条件編集はPARTICIPATED_IN選択時だけ参加立場の編集を提示し、draft/明示適用契約を維持。概要の集計構造は変えず、参加Claim数が接続Entity数ではない現象を観察する。
+
+`pilot-event-v1`は科学v2を対照としてコピーした新しい検証版。専用Bolt7692／Browser7479／Web3215／.next-event。台帳のE01/E03と開催回の人間受入がpendingなら生成・seedをDB接続前に拒否する。現時点では受入待ちで生成物・実DBは未作成。予定は10 Entity／13 Claim／11 Source／15 Citation／8外部ID。研究台帳E02は招待・欠席の反例として保留しruntimeへ入れない。
+
+人工契約検証は別の破棄可能DB7693／Web3216／.next-event-contract-test、架空表示・架空Sourceを使う。実資料受入や実データ観察の代用にはしない。[実装・検証状態](design/PHASE_15_IMPLEMENTATION.md)を参照。

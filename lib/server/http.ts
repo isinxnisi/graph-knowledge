@@ -1,10 +1,12 @@
+import { eventRoleSchema } from "../domain/event-participation";
+import { eventParticipationLabels } from "../i18n/event-participation";
 import { organizationParticipationLabels } from "../i18n/organization-participation";
 import { organizationPositionSchema } from "../domain/organization-participation";
 import { roleIdSchema } from "../domain/contribution";
 import { searchLabels } from "../i18n/entity-search";
 import { explorationLabels } from "../i18n/exploration";
 import { z } from "zod";
-import { normalizeContributionRoles, normalizeOrganizationPositions, normalizePredicates } from "../domain/exploration";
+import { normalizeEventRoles, normalizeContributionRoles, normalizeOrganizationPositions, normalizePredicates } from "../domain/exploration";
 import { PREDICATE_KEYS } from "../domain/predicates";
 import { SEARCH_KINDS, normalizeSearch } from "../domain/search";
 
@@ -81,7 +83,7 @@ export function searchInput(request: Request) {
 export function neighborsInput(request: Request) {
   const params = new URL(request.url).searchParams;
   const after = single(params, "after");
-  for (const key of params.keys()) if (!["after", "limit", "predicates", "contributionRoles", "organizationPositions"].includes(key)) {
+  for (const key of params.keys()) if (!["after", "limit", "predicates", "contributionRoles", "organizationPositions", "eventRoles"].includes(key)) {
     throw new ApiError(400, "INVALID_ARGUMENT", explorationLabels().unsupported);
   }
   const raw = single(params, "predicates");
@@ -90,5 +92,7 @@ export function neighborsInput(request: Request) {
   const roles = rawRoles === null ? null : normalizeContributionRoles(parse(z.array(roleIdSchema), rawRoles === "" ? [] : rawRoles.split(","), "制作Roleが不正です。"), predicates);
   const rawPositions = single(params, "organizationPositions");
   const positions = rawPositions === null ? null : normalizeOrganizationPositions(parse(z.array(organizationPositionSchema), rawPositions === "" ? [] : rawPositions.split(","), organizationParticipationLabels().invalid), predicates);
-  return { limit: limit(params, 20, 50), after, predicates, ...(roles !== null ? { contributionRoles: roles } : {}), ...(positions !== null ? { organizationPositions: positions } : {}) };
+  const rawEventRoles = single(params, "eventRoles");
+  const eventRoles = rawEventRoles === null ? null : normalizeEventRoles(parse(z.array(eventRoleSchema), rawEventRoles === "" ? [] : rawEventRoles.split(","), eventParticipationLabels().invalid), predicates);
+  return { limit: limit(params, 20, 50), after, predicates, ...(roles !== null ? { contributionRoles: roles } : {}), ...(positions !== null ? { organizationPositions: positions } : {}), ...(eventRoles !== null ? { eventRoles } : {}) };
 }

@@ -3,5 +3,5 @@ export function normalizeSearch(value: string): string {
 }
 
 // 検索可能な対象。探索のkind条件ではない。
-export const SEARCH_KINDS = ["person", "work", "organization"] as const;
+export const SEARCH_KINDS = ["person", "work", "organization", "event"] as const;
 export type SearchKind = typeof SEARCH_KINDS[number];

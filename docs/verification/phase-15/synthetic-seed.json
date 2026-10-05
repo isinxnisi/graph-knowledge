@@ -1,0 +1,27 @@
+{
+  "syntheticOnly": true,
+  "first": {
+    "nodesCreated": 14,
+    "relationshipsCreated": 16
+  },
+  "second": {
+    "nodesCreated": 0,
+    "relationshipsCreated": 0
+  },
+  "counts": {
+    "nodes": {
+      "Entity": 5,
+      "Claim": 6,
+      "Source": 1,
+      "Citation": 2,
+      "ExternalIdentifier": 0
+    },
+    "relationships": {
+      "SUBJECT": 6,
+      "OBJECT": 6,
+      "HAS_CITATION": 2,
+      "CITES": 2,
+      "HAS_EXTERNAL_ID": 0
+    }
+  }
+}

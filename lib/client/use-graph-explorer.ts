@@ -4,7 +4,7 @@ import { captureExploration, type ExplorationSnapshot } from "./exploration-snap
 import type { GraphView, ViewRestoration } from "./graph-view";
 import { overviewLabels } from "../i18n/entity-overview";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { normalizePredicates, normalizeContributionRoles, normalizeOrganizationPositions, explorationKey, type OrganizationPositionFilter, type ContributionRoleFilter, type PredicateFilter } from "../domain/exploration";
+import { normalizePredicates, normalizeContributionRoles, normalizeOrganizationPositions, normalizeEventRoles, type EventRoleFilter, explorationKey, type OrganizationPositionFilter, type ContributionRoleFilter, type PredicateFilter } from "../domain/exploration";
 import { explorationLabels } from "../i18n/exploration";
 import type { EntitySummary } from "../domain/api";
 import { displayRelations } from "./graph-presentation";
@@ -59,7 +59,7 @@ export function useGraphExplorer() {
     pending.current.set(id, controller); commit(state);
     const valid = () => !controller.signal.aborted && generation.current === epoch && current.current.expansions[id]?.request === request && current.current.expansions[id]?.active;
     try {
-      const page = await fetchNeighbors(id, after, controller.signal, state.predicates, state.contributionRoles ?? null, state.organizationPositions ?? null);
+      const page = await fetchNeighbors(id, after, controller.signal, state.predicates, state.contributionRoles ?? null, state.organizationPositions ?? null, state.eventRoles ?? null);
       if (!valid()) return;
       if (page.centerId !== id) throw new Error("Unexpected center");
       commit(mergePage(current.current, page, after));
@@ -79,23 +79,25 @@ export function useGraphExplorer() {
     pending.current.forEach((controller) => controller.abort()); pending.current.clear();
     generation.current += 1;
     const predicates = resetConditions ? null : current.current.predicates;
+    const eventRoles = resetConditions ? null : current.current.eventRoles ?? null;
     const organizationPositions = resetConditions ? null : current.current.organizationPositions ?? null;
     const contributionRoles = resetConditions ? null : current.current.contributionRoles ?? null;
-    commit(projectGraph({ ...emptyGraph(generation.current), predicates, contributionRoles, organizationPositions, conditionKey: explorationKey(predicates, contributionRoles, organizationPositions), roots: [entity.id], centerId: entity.id, cacheNodes: { [entity.id]: entity } }));
+    commit(projectGraph({ ...emptyGraph(generation.current), predicates, contributionRoles, organizationPositions, eventRoles, conditionKey: explorationKey(predicates, contributionRoles, organizationPositions, eventRoles), roots: [entity.id], centerId: entity.id, cacheNodes: { [entity.id]: entity } }));
     setSelection({ kind: "entity", id: entity.id }); void expand(entity.id);
   }, [commit, expand]);
   const switchRoot = useCallback((entity: EntitySummary, mode: "broad" | "same", view: GraphView | null) => {
     const old = current.current;
     const predicates = mode === "broad" ? null : old.predicates;
+    const eventRoles = mode === "broad" ? null : old.eventRoles ?? null;
     const organizationPositions = mode === "broad" ? null : old.organizationPositions ?? null;
     const contributionRoles = mode === "broad" ? null : old.contributionRoles ?? null;
-    const conditionKey = explorationKey(predicates, contributionRoles, organizationPositions);
+    const conditionKey = explorationKey(predicates, contributionRoles, organizationPositions, eventRoles);
     if (old.centerId === entity.id && old.conditionKey === conditionKey) return;
     const snapshot = captureExploration(old, selection, view);
     setPrevious(snapshot); setViewRestoration(null);
     pending.current.forEach((controller) => controller.abort()); pending.current.clear();
     generation.current += 1;
-    commit(projectGraph({ ...emptyGraph(generation.current), predicates, contributionRoles, organizationPositions, conditionKey,
+    commit(projectGraph({ ...emptyGraph(generation.current), predicates, contributionRoles, organizationPositions, eventRoles, conditionKey,
       roots: [entity.id], centerId: entity.id, cacheNodes: { [entity.id]: entity },
       notice: old.centerId && !snapshot ? overviewLabels().notSaved : null }));
     setSelection({ kind: "entity", id: entity.id }); void expand(entity.id);
@@ -110,16 +112,17 @@ export function useGraphExplorer() {
     commit(projectGraph({ ...snapshot.graph, generation: generation.current, notice: overviewLabels().restored }));
     setSelection(snapshot.selection);
   }, [commit, previous]);
-  const changePredicates = useCallback((values: PredicateFilter, roleValues: ContributionRoleFilter = current.current.contributionRoles ?? null, positionValues: OrganizationPositionFilter = current.current.organizationPositions ?? null) => {
+  const changePredicates = useCallback((values: PredicateFilter, roleValues: ContributionRoleFilter = current.current.contributionRoles ?? null, positionValues: OrganizationPositionFilter = current.current.organizationPositions ?? null, eventRoleValues: EventRoleFilter = current.current.eventRoles ?? null) => {
     const predicates = normalizePredicates(values);
+    const eventRoles = normalizeEventRoles(eventRoleValues, predicates);
     const organizationPositions = normalizeOrganizationPositions(positionValues, predicates);
     const contributionRoles = normalizeContributionRoles(roleValues, predicates);
-    if (explorationKey(predicates, contributionRoles, organizationPositions) === explorationKey(current.current.predicates, current.current.contributionRoles ?? null, current.current.organizationPositions ?? null)) return;
+    if (explorationKey(predicates, contributionRoles, organizationPositions, eventRoles) === explorationKey(current.current.predicates, current.current.contributionRoles ?? null, current.current.organizationPositions ?? null, current.current.eventRoles ?? null)) return;
     const rootId = current.current.centerId;
     const root = rootId ? current.current.cacheNodes[rootId] : null;
     pending.current.forEach((controller) => controller.abort()); pending.current.clear();
     generation.current += 1;
-    commit(projectGraph({ ...emptyGraph(generation.current), predicates, contributionRoles, organizationPositions, conditionKey: explorationKey(predicates, contributionRoles, organizationPositions),
+    commit(projectGraph({ ...emptyGraph(generation.current), predicates, contributionRoles, organizationPositions, eventRoles, conditionKey: explorationKey(predicates, contributionRoles, organizationPositions, eventRoles),
       centerId: rootId, roots: rootId ? [rootId] : [], cacheNodes: root ? { [root.id]: root } : {},
       notice: explorationLabels().changed }));
     setSelection(root ? { kind: "entity", id: root.id } : null);

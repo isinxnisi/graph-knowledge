@@ -21,3 +21,8 @@ playwright-report/
 .env.science-v2
 .next-science-v2/
 !.env.science-v2.example
+
+.next-event/
+!.env.event.example
+
+.next-event-contract-test/

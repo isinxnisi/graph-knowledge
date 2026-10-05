@@ -339,6 +339,94 @@
           "rationale": "人物と組織の関わりを作品への制作参加と同一視しない。"
         }
       ]
+    },
+    {
+      "id": "PARTICIPATED_IN",
+      "status": "active",
+      "definitionLanguage": "ja",
+      "runtime": {
+        "subjectKind": "person",
+        "objectKind": "event",
+        "label": "参加した",
+        "reverseLabel": "参加者",
+        "description": "主体人物がその特定開催回へ参加したという主張。招待・予定・写真だけでは参加を認定しない"
+      },
+      "meaning": {
+        "definition": "主体人物が資料で同定された特定開催回へ参加したという独立命題。招待や予定、写真だけから参加を推論しない。",
+        "subjectRole": "当該開催回への参加が資料に明示された人物",
+        "objectRole": "シリーズではなく資料が指す特定開催回",
+        "direction": "subject-to-object",
+        "rules": [
+          "参加が資料に明示された時だけ肯定する。招待、予定リスト、写真だけでは成立しない。",
+          "会議議長は参加が明示される範囲のeventParticipation限定。名誉・委員会役職を参加と同義にしない。",
+          "開催期間とClaim.periodを分離し、全日程出席を補完しない。",
+          "denyは限定と期間を含む命題全体へ掛かり、他の立場・広い参加・招待へ伝播しない。"
+        ],
+        "examples": [
+          {
+            "id": "event-attendance",
+            "category": "include",
+            "scenario": "1928年議事録の1927年特定回の参加者一覧にDiracが記載される。",
+            "rationale": "開催後の明示参加記述。写真や招待ではない。"
+          },
+          {
+            "id": "invited-absent",
+            "category": "exclude",
+            "scenario": "Deslandresは招待されたが欠席を届けた。",
+            "rationale": "招待は参加とは独立命題。INVITEDという参加Roleへ丸めない。"
+          },
+          {
+            "id": "honorary-chair",
+            "category": "boundary",
+            "scenario": "シリーズの名誉議長または科学委員会委員長だが当該回参加は未確認。",
+            "rationale": "chair職から参加を含意しない。このpredicateの範囲外として保留。"
+          }
+        ],
+        "nearbyConcepts": [
+          {
+            "term": "INVITED_TO",
+            "difference": "招待という命題。出席／欠席と独立で今回は未実装。"
+          },
+          {
+            "term": "CHAIR_OF_EVENT",
+            "difference": "参加を伴わない役職を含むなら独立命題が必要。今回は資料で参加を伴う会議議長だけ。"
+          },
+          {
+            "term": "AFFILIATED_WITH",
+            "difference": "組織との関わりであり特定回への参加ではない。"
+          }
+        ]
+      },
+      "translations": {
+        "ja": {
+          "label": "参加した",
+          "reverseLabel": "参加者",
+          "description": "主体人物がその特定開催回へ参加したという主張。招待・予定・写真だけでは参加を認定しない",
+          "aliases": []
+        }
+      },
+      "comparisons": [
+        {
+          "predicateId": "ASSISTANT_OF",
+          "relation": "distinct",
+          "rationale": "人物の制作補助ではなく特定開催回への参加。"
+        },
+        {
+          "predicateId": "INFLUENCED_BY",
+          "relation": "distinct",
+          "rationale": "参加は影響を受けた命題を含意しない。"
+        },
+        {
+          "predicateId": "CONTRIBUTED_TO",
+          "relation": "distinct",
+          "rationale": "作品の制作関与と開催回の参加は独立命題。"
+        },
+        {
+          "predicateId": "AFFILIATED_WITH",
+          "relation": "distinct",
+          "rationale": "組織への関与と特定開催回参加は同義ではない。"
+        }
+      ]
     }
   ]
 }

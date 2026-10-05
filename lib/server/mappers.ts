@@ -1,3 +1,4 @@
+import { storedEventMetadata, storedEventParticipation, eventParticipationEvidenceSchema } from "../domain/event-participation";
 import { storedContribution, roleEvidenceSchema } from "../domain/contribution";
 import { storedOrganizationParticipation, positionEvidenceSchema } from "../domain/organization-participation";
 import { z } from "zod";
@@ -19,15 +20,17 @@ function partialDate(properties: Properties, prefix: string): PartialDate | null
 }
 
 export function entitySummary(properties: Properties): EntitySummary {
+  storedEventMetadata(properties);
   return entitySummarySchema.parse({ id: properties.id, kind: properties.kind, name: properties.name, description: properties.description ?? null });
 }
 export function entityDetail(properties: Properties) {
-  return entityDetailSchema.parse({ ...entitySummary(properties), aliases: properties.aliases ?? [] });
+  return entityDetailSchema.parse({ ...entitySummary(properties), aliases: properties.aliases ?? [], event: storedEventMetadata(properties) });
 }
 export function claimSummary(properties: Properties, subject: EntitySummary, object: EntitySummary, sourceCount: number): ClaimSummary {
   const result = claimSummarySchema.parse({
     id: properties.id, subjectId: subject.id, objectId: object.id,
     predicate: properties.predicate, polarity: properties.polarity, contribution: storedContribution(properties, String(properties.predicate)),
+    eventParticipation: storedEventParticipation(properties, String(properties.predicate)),
     organizationParticipation: storedOrganizationParticipation(properties, String(properties.predicate)),
     period: { from: partialDate(properties, "validFrom"), to: partialDate(properties, "validTo") }, sourceCount,
   });
@@ -47,6 +50,7 @@ export function citationDetail(properties: Properties, source: Properties) {
   return citationDetailSchema.parse({
     id: properties.id, locator: properties.locator, note: properties.note ?? null,
     accessedAt: properties.accessedAt ?? null, stance: properties.stance, source: sourceDetail(source),
+    eventParticipationEvidence: properties.eventOriginalText == null && properties.eventOriginalLanguage == null ? null : eventParticipationEvidenceSchema.parse({ originalText: properties.eventOriginalText, language: properties.eventOriginalLanguage }),
     positionEvidence: properties.positionOriginalText == null && properties.positionOriginalLanguage == null ? null : positionEvidenceSchema.parse({ originalText: properties.positionOriginalText, language: properties.positionOriginalLanguage }),
     roleEvidence: properties.roleOriginalText == null && properties.roleOriginalLanguage == null ? null : roleEvidenceSchema.parse({ originalText: properties.roleOriginalText, language: properties.roleOriginalLanguage }),
   });

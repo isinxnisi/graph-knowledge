@@ -1,3 +1,4 @@
+import { eventMetadataSchema, eventParticipationSchema, eventParticipationEvidenceSchema, type EventMetadata, type EventParticipation } from "./event-participation";
 import { contributionSchema, roleEvidenceSchema, type Contribution, type RoleEvidence } from "./contribution";
 import { organizationParticipationSchema, positionEvidenceSchema, type OrganizationParticipation, type PositionEvidence } from "./organization-participation";
 import { invalidQualificationFields } from "./qualifications";
@@ -95,9 +96,28 @@ export const fixtureV3Schema = z.strictObject({ ...fixtureBaseSchema.shape, sche
     if (citation.positionEvidence && !claim?.organizationParticipation) ctx.addIssue({ code: "custom", path: ["citations", i, "positionEvidence"], message: "Position evidence requires an explicitly qualified organization claim" });
   });
 });
-export type Fixture = Omit<z.infer<typeof fixtureSchema>, "schemaVersion" | "claims" | "citations"> & {
-  schemaVersion: 1 | 2 | 3; claims: (z.infer<typeof claimSchema> & { contribution?: Contribution | null; organizationParticipation?: OrganizationParticipation | null })[];
-  citations: (z.infer<typeof citationSchema> & { roleEvidence?: RoleEvidence | null; positionEvidence?: PositionEvidence | null })[];
+export const fixtureV4Schema = z.strictObject({ ...fixtureBaseSchema.shape, schemaVersion: z.literal(4),
+  entities: z.array(entitySchema.extend({ event: eventMetadataSchema.nullable() }).superRefine((entity, ctx) => {
+    if ((entity.kind === "event") !== (entity.event !== null)) ctx.addIssue({ code: "custom", message: "Event metadata must match occurrence kind" });
+  })),
+  claims: z.array(claimSchema.extend({ contribution: contributionSchema.nullable(), organizationParticipation: organizationParticipationSchema.nullable(), eventParticipation: eventParticipationSchema.nullable() }).superRefine((claim, ctx) => {
+    if ((claim.predicate === "CONTRIBUTED_TO") !== (claim.contribution !== null)) ctx.addIssue({ code: "custom", message: "Contribution must match predicate" });
+    for (const field of invalidQualificationFields(claim)) ctx.addIssue({ code: "custom", path: [field], message: "Qualification must match registered predicate" });
+  })),
+  citations: z.array(citationSchema.extend({ roleEvidence: roleEvidenceSchema.nullable(), positionEvidence: positionEvidenceSchema.nullable(), eventParticipationEvidence: eventParticipationEvidenceSchema.nullable() })),
+}).superRefine((fixture, ctx) => {
+  validateReferences({ ...fixture, schemaVersion: 1 }, ctx);
+  const claims = new Map(fixture.claims.map(claim => [claim.id, claim]));
+  fixture.citations.forEach((citation, i) => {
+    const claim = claims.get(citation.claimId);
+    if (citation.roleEvidence && claim?.predicate !== "CONTRIBUTED_TO") ctx.addIssue({ code: "custom", path: ["citations", i, "roleEvidence"], message: "Role evidence is contribution-specific" });
+    if (citation.eventParticipationEvidence && !claim?.eventParticipation) ctx.addIssue({ code: "custom", path: ["citations", i, "eventParticipationEvidence"], message: "Event evidence requires explicitly qualified participation" });
+    if (citation.positionEvidence && !claim?.organizationParticipation) ctx.addIssue({ code: "custom", path: ["citations", i, "positionEvidence"], message: "Position evidence requires an explicitly qualified organization claim" });
+  });
+});
+export type Fixture = Omit<z.infer<typeof fixtureSchema>, "schemaVersion" | "claims" | "citations" | "entities"> & {
+  schemaVersion: 1 | 2 | 3 | 4; entities: (z.infer<typeof entitySchema> & { event?: EventMetadata | null })[]; claims: (z.infer<typeof claimSchema> & { contribution?: Contribution | null; organizationParticipation?: OrganizationParticipation | null; eventParticipation?: EventParticipation | null })[];
+  citations: (z.infer<typeof citationSchema> & { roleEvidence?: RoleEvidence | null; positionEvidence?: PositionEvidence | null; eventParticipationEvidence?: z.infer<typeof eventParticipationEvidenceSchema> | null })[];
 };
 export type Entity = z.infer<typeof entitySchema>;
 export type Claim = z.infer<typeof claimSchema>;
@@ -105,6 +125,8 @@ export type Source = z.infer<typeof sourceSchema>;
 export type Citation = z.infer<typeof citationSchema>;
 
 export function validateFixture(input: unknown): Fixture {
+  if (typeof input === "object" && input !== null && "schemaVersion" in input && input.schemaVersion === 4) return fixtureV4Schema.parse(input);
+  if (typeof input === "object" && input !== null && (("claims" in input && Array.isArray(input.claims) && input.claims.some(c => c.predicate === "PARTICIPATED_IN")) || ("entities" in input && Array.isArray(input.entities) && input.entities.some(e => e.kind === "event")))) throw new Error("Event occurrence/participation requires schemaVersion 4");
   if (typeof input === "object" && input !== null && "schemaVersion" in input && input.schemaVersion === 3) return fixtureV3Schema.parse(input);
   return (typeof input === "object" && input !== null && "schemaVersion" in input && input.schemaVersion === 2) ? fixtureV2Schema.parse(input) : fixtureSchema.parse(input);
 }

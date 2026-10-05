@@ -273,3 +273,22 @@ npm run science:v2:dev
 ```
 
 ハイゼンベルクの開始例からNBIの線を選び、広いClaimと2立場/期間の詳細を比較できます。「見る関係を編集」→「組織との関わりの立場を調整」から絞ります。起点切替・直前復帰は従来どおり。[dataset・検証方法](datasets/pilot-science/v2/README.md)／[採用契約](docs/design/TYPED_QUALIFICATION_CONTRACTS.md)。
+
+## 特定Event参加（Phase 15）
+
+[採用契約](docs/design/EVENT_PARTICIPATION_CONTRACTS.md)と[実装・検証状態](docs/design/PHASE_15_IMPLEMENTATION.md)を参照。PARTICIPATED_INと会議議長限定を追加。開催回の開催期間はEntity側、参加Claimの期間とは別です。既存三種に加え、特定開催回のeventを同じ検索・探索へ公開します。
+
+[実資料dataset](datasets/pilot-event/v1/README.md)は人間受入待ち。受入前にevent:prepare／seedを実行すると拒否します。実資料のWeb3215はまだ確認用として案内できません。
+
+人工データによる三用途の契約検証は次で再現できます。実在資料の受入・検証結果ではありません。
+
+```bash
+docker compose -f compose.event-test.yaml up -d --wait
+node --import tsx scripts/event-contract-test.ts seed
+node --import tsx scripts/event-contract-test.ts dev
+# 別terminalで
+npm run event:integration
+npx playwright test --config=playwright.event-contract.config.ts
+```
+
+人工検証画面は http://127.0.0.1:3216 。「架空会議」「架空参加者A」を検索します。実在資料を表示している画面と混同しないよう、架空デモ表示と人工名称・Sourceを使います。検証DBには名前付きvolumeを設けていません。破棄する場合は専用composeに対して `docker compose -f compose.event-test.yaml down -v` を実行します。
