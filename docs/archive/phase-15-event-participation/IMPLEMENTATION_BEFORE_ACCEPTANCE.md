@@ -1,6 +1,8 @@
 # Phase 15：第三のtyped限定の実装・検証状態
 
-2026-10-05〜06。**実装を進め、実資料の人間受入・生成・seed・実データ観察は未完了。Phase 15完了とは扱わない。** [採用契約](EVENT_PARTICIPATION_CONTRACTS.md)と合わせて読む。
+受入前（commit 64ad4b8）の記録。2026-10-06の受入後の完了結果は[Phase 15完了記録](README.md)を参照。
+
+2026-10-05〜06。**実装を進め、実資料の人間受入・生成・seed・実データ観察は未完了。Phase 15完了とは扱わない。** [採用契約](../../design/EVENT_PARTICIPATION_CONTRACTS.md)と合わせて読む。
 
 ## 採用範囲と判断
 
@@ -43,7 +45,7 @@ CHAIRの独立catalog／baselineをqualification:checkに加え、意味例の�
 
 ## 実資料の受入状態
 
-[datasets/pilot-event/v1/ledger.json](../../datasets/pilot-event/v1/ledger.json)はpending。凍結研究台帳v2は変更していない。公式索引S11を再確認し、S12を再取得、旧研究と同じ本文SHA256を確認。PDF表紙の開催期間、印刷p.VIIの参加者欄、p.VIIIの招待／欠席を確認した。Codexの再確認を人間受入にしない。
+[datasets/pilot-event/v1/ledger.json](../../../datasets/pilot-event/v1/ledger.json)はpending。凍結研究台帳v2は変更していない。公式索引S11を再確認し、S12を再取得、旧研究と同じ本文SHA256を確認。PDF表紙の開催期間、印刷p.VIIの参加者欄、p.VIIIの招待／欠席を確認した。Codexの再確認を人間受入にしない。
 
 | 対象 | 候補の狭い意味 | 状態 |
 | --- | --- | --- |
@@ -104,7 +106,7 @@ GraphのSPO束は変更せず、広い参加とCHAIRを1線へまとめて「参
 | `npx playwright test --config=playwright.event.config.ts --list` | 受入後の実資料テスト3経路を列挙のみ。実行成功として数えない |
 | 凍結入力照合／`git diff --check` | 作業開始f770225との36ファイル完全一致、既存4 predicate entry不変、diffチェック成功 |
 
-人工＋既存datasetのintegrationは計25件成功／実資料1件skip、Playwrightは計43件成功。実資料Eventのseed冪等性を確認済みとは扱わない。画像・人工seed結果・凍結照合は[受入前検証記録](../verification/phase-15/README.md)へ保存した。回帰テストが再生成したPhase 09/14の過去の画像は元の版へ戻し、履歴を書き換えていない。
+人工＋既存datasetのintegrationは計25件成功／実資料1件skip、Playwrightは計43件成功。実資料Eventのseed冪等性を確認済みとは扱わない。画像・人工seed結果・凍結照合は[受入前検証記録](../../verification/phase-15/README.md)へ保存した。回帰テストが再生成したPhase 09/14の過去の画像は元の版へ戻し、履歴を書き換えていない。
 
 初回は重い検証を同時に動かした際、人工APIで503、demoの開閉／空条件で2失敗が出た。人工APIをwarm状態で、demo全28件を単独で再実行して成功した。既存300msの入力判定が実行遅延の影響を受ける可能性は残るが、このPhaseで操作契約やタイミング値を変更していない。人工ブラウザの明示開閉検証では直前の選択をテキスト導線から行い、Nodeクリックの遅延トグルと別の操作を区別した。
 

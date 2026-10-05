@@ -1,6 +1,6 @@
 # ドキュメントの入口
 
-2026-10-05。現行仕様・継続検討・完了履歴を分ける。フェーズ番号は記録の整理用であり、未実装機能の着手順や承認を意味しない。
+2026-10-06。現行仕様・継続検討・完了履歴を分ける。フェーズ番号は記録の整理用であり、未実装機能の着手順や承認を意味しない。
 
 ## 作業前に読む文書
 
@@ -28,17 +28,16 @@
 | [関係モデルの第1回比較](design/RELATION_MODEL_COMPARISON_REVIEW.md) | Phase 12。時期別立場・家族・映画派生を5方式で比較。独立命題と限定・共通処理の仮説、次のD/E/C、最小実装前の判断 |
 | [関係モデル比較の研究台帳v1](research/phase-12-relation-model/v1/README.md) | Phase 12当時の凍結版。優先7新規＋既存Visitor対照、7 Source、40比較票。当時は受入待ち。最新判断はv2を読む |
 | [関係モデルの第2回比較](design/RELATION_MODEL_SECOND_COMPARISON_REVIEW.md) | Phase 13。D/E/Cの反例、独立命題・限定・共通処理の境界。比較時点では実装なし。次の組織立場Vertical SliceをPhase 14で採用 |
-| [関係モデル比較の研究台帳v2](research/phase-13-relation-model/v2/README.md) | 17記録・85比較票・16 Source。Phase 12の7件は狭い事実のみ受入、新規9研究記録は人間受入待ち。seed入力ではない |
+| [関係モデル比較の研究台帳v2](research/phase-13-relation-model/v2/README.md) | 17記録・85比較票・16 Source。Phase 12の7件は狭い事実のみ受入、当時の新規9研究記録は人間受入待ち。後続の組織立場・Event受入は各dataset台帳へ記録。研究台帳自体は凍結した比較材料でseed入力ではない |
 | [二用途typed限定の採用契約](design/TYPED_QUALIFICATION_CONTRACTS.md) | Phase 14。制作Roleと組織立場の独立型、共通処理、肯否・比較・期間、条件/cursor、科学v2 |
-| [特定Event参加契約](design/EVENT_PARTICIPATION_CONTRACTS.md) | Phase 15第三のtyped限定、参加／招待、開催回／期間。実資料人間受入待ち |
-| [Phase 15実装・検証状態](design/PHASE_15_IMPLEMENTATION.md) | 実装と人工契約検証、未完了の実資料受入・投入・観察を分ける |
+| [特定Event参加契約](design/EVENT_PARTICIPATION_CONTRACTS.md) | Phase 15第三のtyped限定、参加／招待、開催回／期間。E01/E03と開催回・開催期間を人間受入後に投入・検証済み |
 | [API応答例](API_RESPONSE_EXAMPLES.json) | 読み取りAPIの例。テストから参照するため、この場所を維持 |
 
 未実装部分を含む文書は、完了した内容が一部あっても丸ごとアーカイブしない。設計案を採用済みとみなさず、最新のユーザー指示を優先する。
 
 ## 現在地点
 
-Phase 14で、既存制作Roleと組織立場（Visitor / Associate professor）の二用途による、小さいtyped限定の縦経路を実装・検証した。科学v2に広い8 Claimと独立限定2 Claimを保持。現行契約は[TYPED_QUALIFICATION_CONTRACTS.md](design/TYPED_QUALIFICATION_CONTRACTS.md)、結果は[実施記録](archive/phase-14-typed-qualification/README.md)。家族・組織間・派生・態度の比較候補は未実装、C09は保留。その後Phase 15の第三型（特定Event参加）の実装・人工契約検証まで進めた。E01/E03の人間受入・実資料seed・観察は未完了。Phase 15を完了履歴へ入れず、[実装状態](design/PHASE_15_IMPLEMENTATION.md)を読む。
+Phase 14で、既存制作Roleと組織立場（Visitor / Associate professor）の二用途による、小さいtyped限定の縦経路を実装・検証した。科学v2に広い8 Claimと独立限定2 Claimを保持。現行契約は[TYPED_QUALIFICATION_CONTRACTS.md](design/TYPED_QUALIFICATION_CONTRACTS.md)、結果は[実施記録](archive/phase-14-typed-qualification/README.md)。家族・組織間・派生・態度の比較候補は未実装、C09は保留。Phase 15で第三型（特定Event参加）を実装し、E01/E03・開催回・開催期間を人間受入後に実資料seed・画面観察まで完了。Lorentzの広い参加／議長限定とDiracの広い参加を独立Claimとして保持。三用途の共有処理と固有意味の境界、Phase 16で固定できる原則と未確定事項は[完了記録](archive/phase-15-event-participation/README.md)を読む。E02とC09はruntime対象外。
 
 ## フェーズ別の完了履歴
 
@@ -58,6 +57,7 @@ Phase 14で、既存制作Roleと組織立場（Visitor / Associate professor）
 | Phase 12：優先実資料・意味比較 | 新規7候補の資料確認、研究台帳、5方式の40比較票。当時の人間受入・新語彙・投入なし | [調査・検証記録](archive/phase-12-model-comparison/README.md) |
 | Phase 13：第2回関係モデル比較 | D/E/Cの9研究記録・45追加比較票、Phase 12狭い事実7件の受入を次版へ記録。新schema・投入なし | [調査・検証記録](archive/phase-13-second-model-comparison/README.md) |
 | Phase 14：二用途typed限定 | 制作Roleと組織立場の分離、条件取得/比較/復帰、science v2の2限定Claim | [実施記録](archive/phase-14-typed-qualification/README.md) |
+| Phase 15：特定Event参加 | 独立参加predicate・第三のtyped限定・開催回期間、実資料3 Claim受入／投入と三条件回帰 | [完了記録](archive/phase-15-event-participation/README.md) |
 
 Phase 02後のNode再クリックの採用・検証は、現役の[操作と設定](design/GRAPH_INTERACTION_AND_SETTINGS.md)へ記録している。今後、設定機能の検討が終わるまでは現役文書として維持する。
 

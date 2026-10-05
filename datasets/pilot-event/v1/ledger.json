@@ -276,11 +276,11 @@
     }
   ],
   "humanAcceptance": {
-    "decision": "pending",
-    "reviewer": null,
-    "decidedAt": null,
-    "reference": null,
-    "scope": "E01の明示参加＋会議議長、E03の明示参加、特定開催回の同一性と開催期間。全日程出席・全回参加は受け入れない。"
+    "decision": "accepted",
+    "reviewer": "プロジェクト所有者（ユーザー）",
+    "decidedAt": "2026-10-06",
+    "reference": "2026-10-06ユーザーメッセージ「Phase 15の資料・契約・人工データ検証結果を確認しました」：E01/E03、特定開催回・開催期間の明示受入とPhase 15残作業の実施指示",
+    "scope": "E01 Hendrik Lorentzが1927年第5回Solvay物理会議の参加者一覧に明示され、同じ開催回のPrésident（会議議長）と記される狭い事実を受入。広いPARTICIPATED_INとCHAIR限定を別Claimへ投影する。E03 Paul Diracの同じ開催回の参加者一覧への記載をRole限定なしで受入。Eventの特定開催回同一性と1927-10-24〜1927-10-29をEvent自身のperiodとして受入。全日程・全session参加、会議シリーズ全体の役職、名誉議長・委員会職、Diracの発表者・議長・主導者を推論しない。Event期間はClaim.periodへ転記せず3 Claimとも両端nullを維持。E02はruntime対象外のまま、招待を参加Roleへ変換せず欠席をdenied参加へ変換しない。資料の確認と人間受入、同じ根拠からの別粒度Claimと独立Source数を区別する。"
   },
   "identity": {
     "lorentz": "公式索引のHendrik Lorentz (Leyden)と議事録のH.-A.Lorentz de Harlem Présidentを同定。人名の表記差で別人を作らず、Wikidata未確認QIDは付けない。",
@@ -297,7 +297,8 @@
     "doNotInfer": [
       "invitedをparticipationRoleへ保存",
       "招待から出席を推論",
-      "欠席をdenied influence等へ変換"
+      "欠席をdenied influence等へ変換",
+      "欠席をdenied PARTICIPATED_INへ変換"
     ]
   },
   "recheck": {

@@ -1,0 +1,62 @@
+{
+  "id": "pilot-event-v1",
+  "version": 1,
+  "transformVersion": 1,
+  "createdAt": "2026-10-05T14:30:00Z",
+  "scope": "science v2の凍結内容を対照としてコピーし、1927年特定開催回への明示参加と会議議長だけを別環境で検証。",
+  "frozen": true,
+  "files": {
+    "ledger.json": "fbb0099391bdabdc970221719ac2bdec84a043c89ac4a2eb1d5bfa5be308cdbf",
+    "data.json": "3e7e1a9f0380b5bd19547f8538395e3ba3965e3309e311fa9bf201c660a1dc86"
+  },
+  "frozenInputs": {
+    "datasets/pilot-urasawa/v1/ledger.json": "222b7e4530d9638d2966ddaa5d81a6ffd20427cf9c9b7ed1e7c95b4a7852eb03",
+    "datasets/pilot-urasawa/v1/data.json": "446cb51ef4c1119ac8d2cf85ce1691b5e3b9e63e377c4cbef7d976fa585fc5cd",
+    "datasets/pilot-urasawa/v1/manifest.json": "39ee383e83adee9472a5d9e264142a6871122b7eafc76f8b50a8a39dda50db2b",
+    "datasets/pilot-urasawa/v1/raw/Q594758.json": "8601b074c49b64a3105e92865f1888a67e08ba6d685b8e7a76c497ea2d3d047c",
+    "datasets/pilot-urasawa/v1/raw/Q193300.json": "45648d7da70c0e495fc939f42799cea9b278b07c276bad1409ace874e5a2add6",
+    "datasets/pilot-urasawa/v1/raw/Q1185624.json": "6700f436c4781d1b8ca688769d4471205c843a9977ddf3f2df4465a9e2bf1dac",
+    "datasets/pilot-urasawa/v1/raw/Q6724933.json": "5fda464513ef5637ce59e3c1941413d76f3e781a07eb2d13d9fe73a5021d2ef0",
+    "datasets/pilot-urasawa/v1/raw/Q1197216.json": "dfe1b656b2b77f429248a8a66e140f698cee724fe80d36571ae7df80c459705d",
+    "datasets/pilot-urasawa/v1/raw/Q348436.json": "7f4ce9ec0ccc25fb52caec694621f5379f426a2065364a9413c9bc03a1cc5927",
+    "datasets/pilot-urasawa/v1/raw/Q11264988.json": "2460299c85093dd9514a6bdd7fdee3b530c274325b86f1b210758817dc1cfa19",
+    "datasets/pilot-urasawa/v1/raw/Q3514203.json": "0212bf5156ba6904b360a2e1768a628af88d6f144b90104e7503189301fb5697",
+    "datasets/pilot-urasawa/v2/ledger.json": "0b22ed0add4df4b780669f45815282975f143225bbaa9b35eef4cf32206f6537",
+    "datasets/pilot-urasawa/v2/data.json": "63798471bded3b9d31666c45165d9296d8ccfcd476c042872a02375143981c17",
+    "datasets/pilot-urasawa/v2/manifest.json": "b16f7152158c9dd9cd117dabda97761b8034e3ece9941ed6c6e6f7a3a3acfca3",
+    "datasets/pilot-science/v1/ledger.json": "7e91ccc2bf3ca44c53e0b9d41cdc256d4126efed58aad62a3d8cd940d7e7bec0",
+    "datasets/pilot-science/v1/data.json": "95e5c11216cd5bc3cd2a8f0cf942c1114f5978787f47ced20b40a967c2ed74c1",
+    "datasets/pilot-science/v1/manifest.json": "121566b662bffe249a09e5b287f408bd0cb4458b800ab580fa6e6643111f93ec",
+    "datasets/pilot-science/v1/raw/Q7085.json": "8c35e3eadca8a4d168cd0b4ec7d8bf50c3e6ed0ecb460eafe55f8e99863d0d04",
+    "datasets/pilot-science/v1/raw/Q40904.json": "7191b4e41f6a0657ce81ff08a1b3c33e86d2180a16323fb451e445104227df66",
+    "datasets/pilot-science/v1/raw/Q35794.json": "3009e8956da9fa1f1c3aeade9d9dad3cb03eb47f493521ba7ac96a9f64c94952",
+    "datasets/pilot-science/v1/raw/Q263761.json": "a286dd01fdb73cdb352d37460843cf4f4fe24f865c1bceea83b275f664eecdbd",
+    "datasets/pilot-science/v1/raw/Q152838.json": "3bc76658c903cd9762a3461379a155a8591aad4f6e9285cf302821ce85f14fbe",
+    "datasets/pilot-science/v1/raw/Q58978.json": "a52fe5884b62d644a0f3fbfe55dc1c24f5039ad99abf4bed4c3c99ce587b60ec",
+    "datasets/pilot-science/v1/raw/Q65989.json": "c73e576b021cb4dcca46c3baaa1daaafdcc2b3dfcb426b64922d07ba656b565f",
+    "datasets/pilot-science/v1/raw/Q47480.json": "cd8ab032173d1d9fabc2ec7a7a556791bd13bbba03f517f26900c5a2b65c875e",
+    "fixtures/demo.json": "f862b121f001127de34c27a4c72b860b1d003ceeb7a25bc2d3b8bdc6181f399e",
+    "datasets/pilot-science/v2/ledger.json": "e462f973ac8933a70112b6f29a00b5f88a92859685685ee4bcf33e329f8aa0b3",
+    "datasets/pilot-science/v2/data.json": "de829943629c468482e51bad79e78bd2ce2fc065fde40f937c7be00001dcbb33",
+    "datasets/pilot-science/v2/manifest.json": "c357ece6c7dd14e817936a88aac6e0abb4cbe5619ca738db317dd0f33c9ff720"
+  },
+  "research": {
+    "file": "docs/research/phase-13-relation-model/v2/ledger.json",
+    "sha256": "a340838c9e2eb9f36361dc4dd3cd93b7469921e2891ebeba5fd2f93baedf914c"
+  },
+  "humanAcceptance": {
+    "decision": "accepted",
+    "reviewer": "プロジェクト所有者（ユーザー）",
+    "decidedAt": "2026-10-06",
+    "reference": "2026-10-06ユーザーメッセージ「Phase 15の資料・契約・人工データ検証結果を確認しました」：E01/E03、特定開催回・開催期間の明示受入とPhase 15残作業の実施指示",
+    "scope": "E01 Hendrik Lorentzが1927年第5回Solvay物理会議の参加者一覧に明示され、同じ開催回のPrésident（会議議長）と記される狭い事実を受入。広いPARTICIPATED_INとCHAIR限定を別Claimへ投影する。E03 Paul Diracの同じ開催回の参加者一覧への記載をRole限定なしで受入。Eventの特定開催回同一性と1927-10-24〜1927-10-29をEvent自身のperiodとして受入。全日程・全session参加、会議シリーズ全体の役職、名誉議長・委員会職、Diracの発表者・議長・主導者を推論しない。Event期間はClaim.periodへ転記せず3 Claimとも両端nullを維持。E02はruntime対象外のまま、招待を参加Roleへ変換せず欠席をdenied参加へ変換しない。資料の確認と人間受入、同じ根拠からの別粒度Claimと独立Source数を区別する。"
+  },
+  "accepted": [
+    "E01",
+    "E03"
+  ],
+  "excluded": [
+    "E02"
+  ],
+  "retainedClaims": 10
+}

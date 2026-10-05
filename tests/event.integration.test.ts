@@ -59,19 +59,74 @@ it("人工実DB: 三用途の限定、LIMIT前条件、参加／招待、開催�
 }, 120000);
 
 const accepted = (await readEventLedger()).ledger.humanAcceptance.decision === "accepted";
-it.skipIf(!accepted)("受入済みEvent実資料dataset: 凍結版・冪等性・参加3Claimと2接続を確認", async () => {
+it.skipIf(!accepted)("受入済みEvent実資料dataset: 狭い意味・期間・三条件・根拠・cursor・冪等性を確認", async () => {
   Object.assign(process.env, parseEnv(await readFile(".env.event", "utf8")));
   expect(process.env.GRAPH_DATASET).toBe("pilot-event-v1");
   const { driver, database } = openDatabase();
   try {
     const fixture = await loadEventPilot();
     await seedFixture(driver, database, fixture);
+    const before = await graphSnapshot(driver, database);
     expect(await seedFixture(driver, database, fixture)).toEqual({ nodesCreated: 0, relationshipsCreated: 0 });
     expect(await graphCounts(driver, database)).toEqual(fixtureCounts(fixture));
     const event = fixture.entities.find(e => e.kind === "event")!;
-    const response = await fetch(`http://127.0.0.1:3215/api/entities/${event.id}/neighbors`);
-    expect(response.status).toBe(200); const page = await response.json() as NeighborsResponse;
+    const { ledger } = await readEventLedger();
+    const chair = ledger.candidates.find(c => c.eventParticipation)!;
+    const broad = ledger.candidates.find(c => c.ref === "E01" && !c.eventParticipation)!;
+    const dirac = ledger.candidates.find(c => c.ref === "E03")!;
+    const get = async <T>(path: string, status = 200) => {
+      const response = await fetch(`http://127.0.0.1:3215${path}`);
+      expect(response.status, path).toBe(status); return await response.json() as T;
+    };
+    const path = (id: string, query = "") => `/api/entities/${id}/neighbors?${query}`;
+    const entity = (await get<EntityResponse>(`/api/entities/${event.id}`)).entity;
+    expect(entity.event).toEqual(event.event);
+    expect(entity.event?.period).toEqual({ from: { value: "1927-10-24", precision: "day" }, to: { value: "1927-10-29", precision: "day" } });
+    const page = await get<NeighborsResponse>(path(event.id));
     expect(page.nodes).toHaveLength(3); expect(page.claims).toHaveLength(3);
     expect(page.claims.every(c => c.period.from === null && c.period.to === null)).toBe(true);
+    for (const center of [event.id, chair.subjectId]) {
+      const filtered = await get<NeighborsResponse>(path(center, "eventRoles=CHAIR&limit=1"));
+      expect(filtered.claims.map(c => c.id)).toEqual([chair.claimId]); // 広いClaimが先でもLIMIT前に絞る
+      expect(filtered.page.hasMore).toBe(false);
+      expect((await get<NeighborsResponse>(path(center, "contributionRoles=&organizationPositions=&eventRoles=CHAIR"))).claims).toEqual(filtered.claims);
+    }
+    const diracPage = await get<NeighborsResponse>(path(dirac.subjectId));
+    expect(diracPage.claims).toHaveLength(3);
+    expect((await get<NeighborsResponse>(path(dirac.subjectId, "eventRoles=CHAIR"))).claims.map(c => c.predicate)).toEqual(["AFFILIATED_WITH", "AFFILIATED_WITH"]);
+    expect((await get<NeighborsResponse>(path(dirac.subjectId, "contributionRoles=SUPERVISION"))).claims).toEqual(diracPage.claims);
+    expect((await get<NeighborsResponse>(path(dirac.subjectId, "organizationPositions=&eventRoles="))).claims).toEqual([]);
+    expect((await get<NeighborsResponse>(path(dirac.subjectId, "organizationPositions=&contributionRoles=&eventRoles=CHAIR"))).claims).toEqual([]);
+    for (const candidate of [broad, chair, dirac]) {
+      const detail = await get<ClaimResponse>(`/api/claims/${candidate.claimId}`);
+      expect(detail.claim.eventParticipation).toEqual(candidate.eventParticipation);
+      expect(detail.claim.period).toEqual({ from: null, to: null });
+      expect(detail.claim.polarity).toBe("affirmed");
+      expect(detail.claim.citations).toHaveLength(candidate.citations.length);
+      expect(detail.claim.sourceCount).toBe(candidate.citations.length);
+      for (const citation of candidate.citations) {
+        const actual = detail.claim.citations.find(c => c.id === citation.id)!;
+        expect(actual.locator).toBe(citation.locator);
+        expect(actual.eventParticipationEvidence).toEqual(citation.eventParticipationEvidence);
+        expect(actual.source.id).toBe(ledger.sources.find(s => s.ref === citation.sourceRef)!.id);
+        expect(actual.source.isDemo).toBe(false);
+      }
+      expect(detail.relatedClaimIds).toEqual(candidate.ref === "E01" ? [candidate.claimId === chair.claimId ? broad.claimId : chair.claimId] : []);
+    }
+    const first = await get<NeighborsResponse>(path(event.id, "limit=1"));
+    expect(first.page.hasMore).toBe(true);
+    expect(decodeNeighborCursor(first.page.nextCursor!, event.id, null, null, "pilot-event-v1")).toBe(first.claims[0].id);
+    await get(path(event.id, `eventRoles=CHAIR&after=${first.page.nextCursor}`), 400);
+    await get(path(dirac.subjectId, `after=${first.page.nextCursor}`), 400);
+    const second = await get<NeighborsResponse>(path(event.id, `limit=1&after=${first.page.nextCursor}`));
+    const third = await get<NeighborsResponse>(path(event.id, `limit=1&after=${second.page.nextCursor}`));
+    expect(new Set([...first.claims, ...second.claims, ...third.claims].map(c => c.id)).size).toBe(3);
+    expect(third.page.hasMore).toBe(false);
+    const overview = await get<EntityOverviewResponse>(`/api/entities/${event.id}/overview`);
+    expect(overview.scope.dataset).toBe("pilot-event-v1");
+    expect(overview.relations).toEqual([{ predicate: "PARTICIPATED_IN", perspective: "object", counts: { affirmed: 3, denied: 0 }, contributionRoles: [] }]);
+    expect(fixture.claims.filter(c => c.predicate === "PARTICIPATED_IN")).toHaveLength(3);
+    expect(fixture.claims.every(c => c.polarity === "affirmed")).toBe(true); // 欠席からdeniedを捏造しない
+    expect(await graphSnapshot(driver, database)).toEqual(before);
   } finally { await driver.close(); }
 }, 120000);

@@ -235,7 +235,7 @@ demoは `npm run dev -- --port 3210` で http://127.0.0.1:3210 、実Roleのv2�
 
 ## 一般Entity検索（Phase 09）
 
-一つの「対象を探す」フォームから人物・作品・組織を検索できます。既定はすべて。検索対象の選択や検索だけではGraphを変えず、候補を選ぶと適用中の関係／Role条件を保って探索を開始します。デモでは「青葉ハル」「星の航路」「青空出版」、実データv2では「PLUTO」「Master Keaton」から開始できます。eventは今回検索対象にしていません。
+一つの「対象を探す」フォームから人物・作品・組織を検索できます。既定はすべて。検索対象の選択や検索だけではGraphを変えず、候補を選ぶと適用中の関係／Role条件を保って探索を開始します。デモでは「青葉ハル」「星の航路」「青空出版」、実データv2では「PLUTO」「Master Keaton」から開始できます。Phase 09時点の対象は三種。Phase 15では特定開催回のeventも検索へ公開しています。
 
 現在動作中の画面はdemo http://127.0.0.1:3210、実データv2 http://127.0.0.1:3212。通常の`npm run dev`では起動ログのURLを使ってください。[実施記録](docs/archive/phase-09-entity-search/IMPLEMENTATION_ENTITY_SEARCH.md)に検証経路を記録しています。
 
@@ -276,9 +276,19 @@ npm run science:v2:dev
 
 ## 特定Event参加（Phase 15）
 
-[採用契約](docs/design/EVENT_PARTICIPATION_CONTRACTS.md)と[実装・検証状態](docs/design/PHASE_15_IMPLEMENTATION.md)を参照。PARTICIPATED_INと会議議長限定を追加。開催回の開催期間はEntity側、参加Claimの期間とは別です。既存三種に加え、特定開催回のeventを同じ検索・探索へ公開します。
+[採用契約](docs/design/EVENT_PARTICIPATION_CONTRACTS.md)と[完了記録](docs/archive/phase-15-event-participation/README.md)を参照。PARTICIPATED_INと会議議長限定を追加。開催回の開催期間はEntity側、参加Claimの期間とは別です。既存三種に加え、特定開催回のeventを同じ検索・探索へ公開します。
 
-[実資料dataset](datasets/pilot-event/v1/README.md)は人間受入待ち。受入前にevent:prepare／seedを実行すると拒否します。実資料のWeb3215はまだ確認用として案内できません。
+[実資料dataset](datasets/pilot-event/v1/README.md)は人間受入後に生成・投入・検証済みです。確認画面は **http://127.0.0.1:3215**。初期画面の「第5回ソルヴェイ物理会議（1927）」開始例を押し、Lorentzの線を選ぶと広い参加と会議議長限定のClaimを比較できます。Event詳細に開催期間、Claim詳細に期間不明を表示します。
+
+```bash
+cp .env.event.example .env.event # 初回だけ。既存の設定を上書きしない
+npm run event:validate
+docker compose --env-file .env.event -f compose.event.yaml up -d --wait
+npm run event:seed
+npm run event:dev
+```
+
+「見る関係を編集」→「参加上の立場を調整」→「会議議長」で絞れます。生成を再現する場合は `npm run event:prepare`。このv1は専用DBで凍結し、既存demo・漫画・科学のdatasetへ混在させません。
 
 人工データによる三用途の契約検証は次で再現できます。実在資料の受入・検証結果ではありません。
 

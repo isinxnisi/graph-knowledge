@@ -88,7 +88,10 @@ test("人工データ: ページング・通信途中の条件変更・三型同
   await page.route("**/neighbors*", route => { const url = new URL(route.request().url()); url.searchParams.set("limit", "1"); return route.continue({ url: url.toString() }); });
   await page.goto("/"); await search(page, "架空会議"); const detail = page.getByRole("region", { name: "Entity詳細" });
   await expect(page.getByTestId("graph-counts")).toHaveText("Entity 2 / Claim 1");
-  for (let i = 0; i < 3; i++) await detail.getByRole("button", { name: "続きを表示", exact: true }).click();
+  for (const count of [2, 3, 4]) {
+    await detail.getByRole("button", { name: "続きを表示", exact: true }).click();
+    await expect(page.getByTestId("graph-counts")).toContainText(`Claim ${count}`);
+  }
   await expect(page.getByTestId("graph-counts")).toHaveText("Entity 3 / Claim 4"); await page.unroute("**/neighbors*");
   let incoming!: () => void, release!: () => void;
   const received = new Promise<void>(r => { incoming = r; }), gate = new Promise<void>(r => { release = r; });

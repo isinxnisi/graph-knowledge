@@ -1,6 +1,6 @@
 # 現行技術設計
 
-更新日: 2026-10-06 / 状態: 初期Vertical Sliceと探索の開閉・Node再クリックまで実装済み。既存predicateと限定制作Roleによる条件付き探索を追加。v2 Role Claim 5件を人間受入後に投入・検証済み。関係概要・明示起点切替・直前一件復帰、人物・作品・組織の統一検索入口も実装。科学・研究機関pilot v1を別環境へ投入・観察済み。Phase 14では科学v2と組織立場のtyped限定を追加し、制作Roleと独立した語彙を保って条件・比較処理を共有。Phase 15の特定Event参加（第三のtyped限定）を実装。実資料E01/E03と開催回の人間受入は確認中で、実データ生成・投入・観察は未完了。taxonomy・プリセット・会員保存は未実装。[文書の入口](README.md)に現役設計とフェーズ別履歴をまとめる。
+更新日: 2026-10-06 / 状態: 初期Vertical Sliceと探索の開閉・Node再クリックまで実装済み。既存predicateと限定制作Roleによる条件付き探索を追加。v2 Role Claim 5件を人間受入後に投入・検証済み。関係概要・明示起点切替・直前一件復帰、人物・作品・組織の統一検索入口も実装。科学・研究機関pilot v1を別環境へ投入・観察済み。Phase 14では科学v2と組織立場のtyped限定を追加し、制作Roleと独立した語彙を保って条件・比較処理を共有。Phase 15の特定Event参加（第三のtyped限定）を実装。実資料E01/E03と特定開催回・開催期間を人間受入後に生成・専用DBへ投入・観察済み。taxonomy・プリセット・会員保存は未実装。[文書の入口](README.md)に現役設計とフェーズ別履歴をまとめる。
 
 ## 前提と設計の位置づけ
 
@@ -585,7 +585,7 @@ StartExamplesは検索と並存する左ペインの小さい領域。例を押�
 
 比較キーはtyped限定・刊行物識別・periodの値/精度/nullを含み、polarityを除外する。真偽・矛盾判定、Claim UUIDやMERGEキーの代用ではない。relatedClaimIdsとDisplayRelationはSPO単位を維持し、詳細では個別限定へ戻る。AFFILIATED_WITH混在を「肯定・否定あり」とし異なる限定を自動対立表示しない。関係概要は現在のClaim集計構造のまま。
 
-science v2は既存8 Claim＋限定2 Claim、8 Entity・9 Source・11 Citation。C09保留。専用Bolt7691/Browser7478/Web3214/.next-science-v2で検証。既存science v1・漫画v1/v2・demoは凍結不変。語彙追加・更新一般基盤やevent等は未実装。[dataset](../datasets/pilot-science/v2/README.md)、[実施記録](archive/phase-14-typed-qualification/README.md)を参照。
+science v2は既存8 Claim＋限定2 Claim、8 Entity・9 Source・11 Citation。C09保留。専用Bolt7691/Browser7478/Web3214/.next-science-v2で検証。既存science v1・漫画v1/v2・demoは凍結不変。語彙追加・更新一般基盤は未実装。event参加は次節のPhase 15で追加。[dataset](../datasets/pilot-science/v2/README.md)、[実施記録](archive/phase-14-typed-qualification/README.md)を参照。
 
 
 ## Phase 15：特定Event参加と第三のtyped限定
@@ -598,6 +598,6 @@ neighborsのeventRoles CSVは省略＝絞らない、空＝参加だけ除外、
 
 relatedClaimIdsとDisplayRelationはSPO単位のまま。比較キーにはEvent立場とClaim.periodを含み、Event.period・polarity・Sourceは含めない。広い参加と議長参加は同一内容ではなく、Graphの表示束に過ぎない。混在は中立な「肯定・否定あり」。詳細で参加立場・未知のClaim期間・原資料・限定へ戻る。Event開催期間はEntity詳細で別表示する。条件編集はPARTICIPATED_IN選択時だけ参加立場の編集を提示し、draft/明示適用契約を維持。概要の集計構造は変えず、参加Claim数が接続Entity数ではない現象を観察する。
 
-`pilot-event-v1`は科学v2を対照としてコピーした新しい検証版。専用Bolt7692／Browser7479／Web3215／.next-event。台帳のE01/E03と開催回の人間受入がpendingなら生成・seedをDB接続前に拒否する。現時点では受入待ちで生成物・実DBは未作成。予定は10 Entity／13 Claim／11 Source／15 Citation／8外部ID。研究台帳E02は招待・欠席の反例として保留しruntimeへ入れない。
+`pilot-event-v1`は科学v2を対照としてコピーした新しい検証版。専用Bolt7692／Browser7479／Web3215／.next-event。台帳のE01/E03と開催回の人間受入がpendingなら生成・seedをDB接続前に拒否する。2026-10-06にユーザーが狭い事実・投影・開催回と期間を受入。生成・validate・専用DB seedと実画面検証済みの凍結版。10 Entity／13 Claim／11 Source／15 Citation／8外部ID、57 Node／64 Relationship。再seedは0／0、属性snapshotも不変。3参加Claimの期間は不明のまま。[受入記録](../datasets/pilot-event/v1/ACCEPTANCE.md)を参照。研究台帳E02は招待・欠席の反例として保留しruntimeへ入れない。
 
-人工契約検証は別の破棄可能DB7693／Web3216／.next-event-contract-test、架空表示・架空Sourceを使う。実資料受入や実データ観察の代用にはしない。[実装・検証状態](design/PHASE_15_IMPLEMENTATION.md)を参照。
+人工契約検証は別の破棄可能DB7693／Web3216／.next-event-contract-test、架空表示・架空Sourceを使う。実資料受入や実データ観察の代用にはしない。[Phase 15完了記録](archive/phase-15-event-participation/README.md)を参照。

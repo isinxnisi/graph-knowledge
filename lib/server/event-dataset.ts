@@ -63,7 +63,7 @@ export async function prepareEventPilot(directory = EVENT_DIRECTORY) {
     citations: [...base.citations.map(c => ({ ...c, eventParticipationEvidence: null })), ...ledger.candidates.flatMap(c => c.citations.map(citation => {
       const source = ledger.sources.find(s => s.ref === citation.sourceRef)!;
       return { id: citation.id, claimId: c.claimId, sourceId: source.id, locator: citation.locator, stance: "support", accessedAt: (source.retrieval as { accessedAtUtc: string }).accessedAtUtc.slice(0,10), roleEvidence: null, positionEvidence: null, eventParticipationEvidence: citation.eventParticipationEvidence,
-        note: `${citation.sourceMeaning} ${c.scope} 開催期間原表記：${citation.originalPeriodText ?? "索引は開催年のみ"}。Eventの期間であり人物の全日程出席を保証しない。${c.eventParticipation ? "会議議長としての参加。" : "このClaimでは参加上の立場を限定しない。"} 広い参加と議長参加は同じ資料事実の別粒度であり独立した根拠数を意味しない。` };
+        note: `${citation.sourceMeaning} ${c.scope} 開催期間原表記：${citation.originalPeriodText ?? "索引は開催年のみ"}。Eventの期間であり人物の全日程出席を保証しない。${c.eventParticipation ? "会議議長としての参加。" : "このClaimでは参加上の立場を限定しない。"}${c.ref === "E01" ? " Lorentzの広い参加と議長参加は同じ資料事実の別粒度であり独立した根拠数を意味しない。" : ""}` };
     }))],
   });
   const data = jsonFile(fixture);

@@ -59,6 +59,8 @@ describe("第三のtyped限定と参加／招待の境界", () => {
       const event = result.fixture.entities.find(e => e.kind === "event")!;
       expect(event.event?.period.from?.value).toBe("1927-10-24");
       expect(result.fixture.claims.filter(c => c.predicate === "PARTICIPATED_IN").every(c => c.period.from === null && c.period.to === null)).toBe(true);
+      const dirac = proposed.find(c => c.ref === "E03")!;
+      expect(result.fixture.citations.find(c => c.claimId === dirac.claimId)!.note).not.toContain("議長参加");
       const other = await prepareEventPilot(directory); expect(other.data).toBe(result.data);
       const wrongOwner = structuredClone(result.fixture); wrongOwner.citations.find(c => c.eventParticipationEvidence)!.claimId = broad.id;
       expect(() => validateFixture(wrongOwner)).toThrow();

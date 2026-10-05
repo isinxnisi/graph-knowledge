@@ -45,7 +45,7 @@ export default function GraphCanvas({ ref, restoration, interactionBlocked, grap
       const theme = getComputedStyle(container.current!);
       const color = (name: string) => theme.getPropertyValue(`--color-${name}`).trim();
       return [
-        { selector: "node", style: { label: "data(label)", "background-color": color("person"), color: color("text"), "border-width": 1, "border-color": color("node-border"), width: 116, height: 64, "font-size": 16, "text-valign": "center", "text-halign": "center", "text-wrap": "wrap", "text-max-width": "108px" } },
+        { selector: "node", style: { label: "data(label)", "background-color": color("person"), color: color("text"), "border-width": 1, "border-color": color("node-border"), width: 116, height: 64, "font-size": 16, "text-valign": "center", "text-halign": "center", "text-wrap": "wrap", "text-max-width": "108px", "text-overflow-wrap": "anywhere" } },
         { selector: 'node[kind="work"]', style: { shape: "round-rectangle", "background-color": color("work") } },
         { selector: 'node[kind="organization"]', style: { shape: "hexagon", "background-color": color("organization") } },
         { selector: "node.center", style: { "border-width": 3, "border-color": color("accent") } },

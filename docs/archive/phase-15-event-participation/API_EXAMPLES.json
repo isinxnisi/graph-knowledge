@@ -1,0 +1,345 @@
+{
+  "event": {
+    "entity": {
+      "id": "247d3efb-6172-4a3e-aa09-dad69914b47c",
+      "kind": "event",
+      "name": "第5回ソルヴェイ物理会議（1927）",
+      "description": "ブリュッセルで1927年10月24〜29日に開催された特定回。会議シリーズ全体とは別。",
+      "aliases": [
+        "1927 Solvay Conference",
+        "Fifth Solvay Physics Conference",
+        "Electrons et photons",
+        "第5回ソルヴェイ会議"
+      ],
+      "event": {
+        "granularity": "occurrence",
+        "period": {
+          "from": {
+            "value": "1927-10-24",
+            "precision": "day"
+          },
+          "to": {
+            "value": "1927-10-29",
+            "precision": "day"
+          }
+        }
+      }
+    }
+  },
+  "neighbors": {
+    "centerId": "247d3efb-6172-4a3e-aa09-dad69914b47c",
+    "nodes": [
+      {
+        "id": "247d3efb-6172-4a3e-aa09-dad69914b47c",
+        "kind": "event",
+        "name": "第5回ソルヴェイ物理会議（1927）",
+        "description": "ブリュッセルで1927年10月24〜29日に開催された特定回。会議シリーズ全体とは別。"
+      },
+      {
+        "id": "32f5aa9e-1d60-40c9-9ba0-ce12f72cf524",
+        "kind": "person",
+        "name": "ヘンドリック・ローレンツ",
+        "description": "1927年第5回ソルヴェイ物理会議の参加者欄で会議議長と記載。"
+      },
+      {
+        "id": "5cda395a-4927-4cae-92fe-839b29d05095",
+        "kind": "person",
+        "name": "ポール・ディラック",
+        "description": "理論物理学者。研究所への訪問とケンブリッジ大学の教授経歴を収録。"
+      }
+    ],
+    "claims": [
+      {
+        "id": "341f1523-3e1a-4779-a441-c813706a80a9",
+        "subjectId": "32f5aa9e-1d60-40c9-9ba0-ce12f72cf524",
+        "objectId": "247d3efb-6172-4a3e-aa09-dad69914b47c",
+        "predicate": "PARTICIPATED_IN",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "contribution": null,
+        "organizationParticipation": null,
+        "eventParticipation": null,
+        "sourceCount": 1
+      },
+      {
+        "id": "d01a21f2-a6b8-4eb1-9276-8850081fcf69",
+        "subjectId": "5cda395a-4927-4cae-92fe-839b29d05095",
+        "objectId": "247d3efb-6172-4a3e-aa09-dad69914b47c",
+        "predicate": "PARTICIPATED_IN",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "contribution": null,
+        "organizationParticipation": null,
+        "eventParticipation": null,
+        "sourceCount": 1
+      },
+      {
+        "id": "e84b2f8d-b173-47f9-8511-eb02bc0a2e39",
+        "subjectId": "32f5aa9e-1d60-40c9-9ba0-ce12f72cf524",
+        "objectId": "247d3efb-6172-4a3e-aa09-dad69914b47c",
+        "predicate": "PARTICIPATED_IN",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "contribution": null,
+        "organizationParticipation": null,
+        "eventParticipation": {
+          "roleId": "CHAIR"
+        },
+        "sourceCount": 2
+      }
+    ],
+    "page": {
+      "hasMore": false,
+      "nextCursor": null
+    }
+  },
+  "chairOnly": {
+    "centerId": "247d3efb-6172-4a3e-aa09-dad69914b47c",
+    "nodes": [
+      {
+        "id": "247d3efb-6172-4a3e-aa09-dad69914b47c",
+        "kind": "event",
+        "name": "第5回ソルヴェイ物理会議（1927）",
+        "description": "ブリュッセルで1927年10月24〜29日に開催された特定回。会議シリーズ全体とは別。"
+      },
+      {
+        "id": "32f5aa9e-1d60-40c9-9ba0-ce12f72cf524",
+        "kind": "person",
+        "name": "ヘンドリック・ローレンツ",
+        "description": "1927年第5回ソルヴェイ物理会議の参加者欄で会議議長と記載。"
+      }
+    ],
+    "claims": [
+      {
+        "id": "e84b2f8d-b173-47f9-8511-eb02bc0a2e39",
+        "subjectId": "32f5aa9e-1d60-40c9-9ba0-ce12f72cf524",
+        "objectId": "247d3efb-6172-4a3e-aa09-dad69914b47c",
+        "predicate": "PARTICIPATED_IN",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "contribution": null,
+        "organizationParticipation": null,
+        "eventParticipation": {
+          "roleId": "CHAIR"
+        },
+        "sourceCount": 2
+      }
+    ],
+    "page": {
+      "hasMore": false,
+      "nextCursor": null
+    }
+  },
+  "overview": {
+    "entity": {
+      "id": "247d3efb-6172-4a3e-aa09-dad69914b47c",
+      "kind": "event",
+      "name": "第5回ソルヴェイ物理会議（1927）",
+      "description": "ブリュッセルで1927年10月24〜29日に開催された特定回。会議シリーズ全体とは別。"
+    },
+    "scope": {
+      "dataset": "pilot-event-v1",
+      "visibility": "published",
+      "filtered": false,
+      "unit": "claim"
+    },
+    "relations": [
+      {
+        "predicate": "PARTICIPATED_IN",
+        "perspective": "object",
+        "counts": {
+          "affirmed": 3,
+          "denied": 0
+        },
+        "contributionRoles": []
+      }
+    ]
+  },
+  "E01Broad": {
+    "claim": {
+      "id": "341f1523-3e1a-4779-a441-c813706a80a9",
+      "subjectId": "32f5aa9e-1d60-40c9-9ba0-ce12f72cf524",
+      "objectId": "247d3efb-6172-4a3e-aa09-dad69914b47c",
+      "predicate": "PARTICIPATED_IN",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "contribution": null,
+      "organizationParticipation": null,
+      "eventParticipation": null,
+      "sourceCount": 1,
+      "createdAt": "2026-10-05T14:30:00Z",
+      "updatedAt": "2026-10-05T14:30:00Z",
+      "citations": [
+        {
+          "id": "1f2f13a8-edfb-4dd6-8341-6665e06aa598",
+          "locator": "PDF第12ページ／印刷p.VII、Lorentz行",
+          "note": "参加者のPrésidentとして記載。 1927年特定回、会議議長。series全回の役職でも全日程の出席保証でもない。 開催期間原表記：24 au 29 octobre 1927（会議の期間）。Eventの期間であり人物の全日程出席を保証しない。このClaimでは参加上の立場を限定しない。 Lorentzの広い参加と議長参加は同じ資料事実の別粒度であり独立した根拠数を意味しない。",
+          "accessedAt": "2026-10-05",
+          "stance": "support",
+          "source": {
+            "id": "5756c883-e9e9-45eb-8caa-f85c91cc7f45",
+            "kind": "book",
+            "title": "Électrons et photons : rapports et discussions du cinquième Conseil de physique",
+            "authors": [],
+            "publisher": "Institut international de physique Solvay / Gauthier-Villars / ULB digitisation",
+            "url": "https://solvayinstitutes.be/wp-content/uploads/2025/10/Proceedings-Physics-1927.pdf",
+            "publishedAt": {
+              "value": "1928",
+              "precision": "year"
+            },
+            "edition": null,
+            "note": "1928年議事録のULBデジタル複製を主催機関が配信。PDF第1頁APA/ULB来歴、第2頁title、12/13頁参加・欠席。開催は24–29Oct1927、URL2025/10は開催・出版日ではない。W.H.BraggとW.L.Braggを別人物と読む。",
+            "isDemo": false
+          },
+          "roleEvidence": null,
+          "positionEvidence": null,
+          "eventParticipationEvidence": null
+        }
+      ]
+    },
+    "relatedClaimIds": [
+      "e84b2f8d-b173-47f9-8511-eb02bc0a2e39"
+    ]
+  },
+  "E01Chair": {
+    "claim": {
+      "id": "e84b2f8d-b173-47f9-8511-eb02bc0a2e39",
+      "subjectId": "32f5aa9e-1d60-40c9-9ba0-ce12f72cf524",
+      "objectId": "247d3efb-6172-4a3e-aa09-dad69914b47c",
+      "predicate": "PARTICIPATED_IN",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "contribution": null,
+      "organizationParticipation": null,
+      "eventParticipation": {
+        "roleId": "CHAIR"
+      },
+      "sourceCount": 2,
+      "createdAt": "2026-10-05T14:30:00Z",
+      "updatedAt": "2026-10-05T14:30:00Z",
+      "citations": [
+        {
+          "id": "7c831c01-8513-4ce2-ad79-e670a6f54b16",
+          "locator": "Physics > 1927 > 5th",
+          "note": "特定会議のchair。 1927年特定回、会議議長。series全回の役職でも全日程の出席保証でもない。 開催期間原表記：索引は開催年のみ。Eventの期間であり人物の全日程出席を保証しない。会議議長としての参加。 Lorentzの広い参加と議長参加は同じ資料事実の別粒度であり独立した根拠数を意味しない。",
+          "accessedAt": "2026-10-05",
+          "stance": "support",
+          "source": {
+            "id": "4d414446-24d5-42c1-942f-7a968e04d466",
+            "kind": "web",
+            "title": "Conferences archives — Physics 1927",
+            "authors": [],
+            "publisher": "International Solvay Institutes",
+            "url": "https://solvayinstitutes.be/home/archives/conferences-archives/",
+            "publishedAt": null,
+            "edition": null,
+            "note": "主催機関の現行索引。1927年5thとchairを明記。ページ公開日不明、URLのupload年は1927年の開催日ではない。",
+            "isDemo": false
+          },
+          "roleEvidence": null,
+          "positionEvidence": null,
+          "eventParticipationEvidence": {
+            "originalText": "Chair",
+            "language": "en"
+          }
+        },
+        {
+          "id": "f49d6fde-edfb-4867-a331-07ebebf67502",
+          "locator": "PDF第12ページ／印刷p.VII、Lorentz行",
+          "note": "参加者のPrésidentとして記載。 1927年特定回、会議議長。series全回の役職でも全日程の出席保証でもない。 開催期間原表記：24 au 29 octobre 1927（会議の期間）。Eventの期間であり人物の全日程出席を保証しない。会議議長としての参加。 Lorentzの広い参加と議長参加は同じ資料事実の別粒度であり独立した根拠数を意味しない。",
+          "accessedAt": "2026-10-05",
+          "stance": "support",
+          "source": {
+            "id": "5756c883-e9e9-45eb-8caa-f85c91cc7f45",
+            "kind": "book",
+            "title": "Électrons et photons : rapports et discussions du cinquième Conseil de physique",
+            "authors": [],
+            "publisher": "Institut international de physique Solvay / Gauthier-Villars / ULB digitisation",
+            "url": "https://solvayinstitutes.be/wp-content/uploads/2025/10/Proceedings-Physics-1927.pdf",
+            "publishedAt": {
+              "value": "1928",
+              "precision": "year"
+            },
+            "edition": null,
+            "note": "1928年議事録のULBデジタル複製を主催機関が配信。PDF第1頁APA/ULB来歴、第2頁title、12/13頁参加・欠席。開催は24–29Oct1927、URL2025/10は開催・出版日ではない。W.H.BraggとW.L.Braggを別人物と読む。",
+            "isDemo": false
+          },
+          "roleEvidence": null,
+          "positionEvidence": null,
+          "eventParticipationEvidence": {
+            "originalText": "Président",
+            "language": "fr"
+          }
+        }
+      ]
+    },
+    "relatedClaimIds": [
+      "341f1523-3e1a-4779-a441-c813706a80a9"
+    ]
+  },
+  "E03Broad": {
+    "claim": {
+      "id": "d01a21f2-a6b8-4eb1-9276-8850081fcf69",
+      "subjectId": "5cda395a-4927-4cae-92fe-839b29d05095",
+      "objectId": "247d3efb-6172-4a3e-aa09-dad69914b47c",
+      "predicate": "PARTICIPATED_IN",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "contribution": null,
+      "organizationParticipation": null,
+      "eventParticipation": null,
+      "sourceCount": 1,
+      "createdAt": "2026-10-05T14:30:00Z",
+      "updatedAt": "2026-10-05T14:30:00Z",
+      "citations": [
+        {
+          "id": "cd3ae7e0-95e3-4396-b38c-395fde2182a9",
+          "locator": "PDF第12ページ／印刷p.VII、Dirac de Cambridge行",
+          "note": "参加者一覧への明示掲載。 1927年特定回の参加記述。全日程・全session・報告者／主導者を認定しない。 開催期間原表記：24 au 29 octobre 1927（会議の期間）。Eventの期間であり人物の全日程出席を保証しない。このClaimでは参加上の立場を限定しない。",
+          "accessedAt": "2026-10-05",
+          "stance": "support",
+          "source": {
+            "id": "5756c883-e9e9-45eb-8caa-f85c91cc7f45",
+            "kind": "book",
+            "title": "Électrons et photons : rapports et discussions du cinquième Conseil de physique",
+            "authors": [],
+            "publisher": "Institut international de physique Solvay / Gauthier-Villars / ULB digitisation",
+            "url": "https://solvayinstitutes.be/wp-content/uploads/2025/10/Proceedings-Physics-1927.pdf",
+            "publishedAt": {
+              "value": "1928",
+              "precision": "year"
+            },
+            "edition": null,
+            "note": "1928年議事録のULBデジタル複製を主催機関が配信。PDF第1頁APA/ULB来歴、第2頁title、12/13頁参加・欠席。開催は24–29Oct1927、URL2025/10は開催・出版日ではない。W.H.BraggとW.L.Braggを別人物と読む。",
+            "isDemo": false
+          },
+          "roleEvidence": null,
+          "positionEvidence": null,
+          "eventParticipationEvidence": null
+        }
+      ]
+    },
+    "relatedClaimIds": []
+  }
+}

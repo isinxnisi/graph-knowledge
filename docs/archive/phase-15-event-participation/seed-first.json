@@ -1,0 +1,37 @@
+{
+  "valid": true,
+  "expectedFixture": {
+    "nodes": {
+      "Entity": 10,
+      "Claim": 13,
+      "Source": 11,
+      "Citation": 15,
+      "ExternalIdentifier": 8
+    },
+    "relationships": {
+      "SUBJECT": 13,
+      "OBJECT": 13,
+      "HAS_CITATION": 15,
+      "CITES": 15,
+      "HAS_EXTERNAL_ID": 8
+    }
+  },
+  "nodesCreated": 57,
+  "relationshipsCreated": 64,
+  "database": {
+    "nodes": {
+      "Entity": 10,
+      "Claim": 13,
+      "Source": 11,
+      "Citation": 15,
+      "ExternalIdentifier": 8
+    },
+    "relationships": {
+      "SUBJECT": 13,
+      "OBJECT": 13,
+      "HAS_CITATION": 15,
+      "CITES": 15,
+      "HAS_EXTERNAL_ID": 8
+    }
+  }
+}
