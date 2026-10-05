@@ -10,6 +10,7 @@
 
 | 現役の設計文書 | 状態・読む場面 |
 | --- | --- |
+| [小さい探索分類と条件解決](design/EXPLORATION_CLASSIFICATION_RESOLUTION_REVIEW.md) | Phase 19設計検証完了・提案。5候補／24記録への仮付与、Visitor三状態と検索三契約。relation facet三入口は現条件へ解決可能、学術は未解決、仕事は非採用。研究prototypeのみ、公開API／UIは未接続 |
 | [関係探索モデルの再レビュー](design/RELATION_EXPLORATION_MODEL_REVIEW.md) | Phase 18レビュー完了・提案。意味限定／多軸の探索分類／原語・語彙検索を分離し、A〜Dを多分野で比較。runtime変更・新分類の採用なし。[比較資料v1](research/phase-18-exploration-model/v1/README.md)に根拠と受入境界 |
 | [Entity概要のpresentation](design/ENTITY_OVERVIEW_PRESENTATION.md) | Phase 17採用。種類・視点別関係名・向き優先、統計折り畳み、domain限定の記録、最小overview API拡張 |
 | [関係モデルの基本設計](design/RELATION_MODEL_PRINCIPLES.md) | Phase 16採用。独立命題／domain固有限定／共通処理の判断基準、null・肯否・期間・identity／比較／表示、由来と根拠、追加レビュー手順。語彙追加時は個別契約と併読 |
@@ -40,6 +41,8 @@
 
 ## 現在地点
 
+Phase 19で、Phase 18の24記録へ五つの探索分類候補を研究上仮付与し、[条件解決を検証](design/EXPLORATION_CLASSIFICATION_RESOLUTION_REVIEW.md)した。作品制作・人物と組織の関わり・特定開催回参加の三入口は既存Predicate条件へ解決できる。学術は活動文脈として自然だが現API条件だけでは解決できず、仕事関係は定義未確定で非採用とする案。別tagは今は不要。**研究用の純粋prototypeを除き、runtime・凍結データは不変。catalog／resolverの探索UI接続は未実装。** [仮付与・再検証](research/phase-19-exploration-classification/v1/README.md)と[完了記録](archive/phase-19-exploration-classification/README.md)を参照。
+
 Phase 18で、Graph本体をさらに調整する前に、関係探索の意味・具体語・分類の粒度を再レビューした。現行5 Predicate／三typed型と、企業・スポーツ・政治・映画音楽・非営利・学術等の資料を照合。推奨は必要な意味限定を維持し、多軸の発見分類と原語検索を分ける案。全原語のenum化は一般原則としない。[レビュー](design/RELATION_EXPLORATION_MODEL_REVIEW.md)と[完了記録](archive/phase-18-exploration-model/README.md)を参照。**実装はPhase 17のまま。分類・語検索・長尾値の方式は提案であり未採用・未実装。** 次の小さい検証範囲はレビュー末尾に残す。
 
 Phase 16で、Phase 12〜15の比較・三用途実装を根拠に[関係モデルの基本設計](design/RELATION_MODEL_PRINCIPLES.md)を固定した。新しい語彙・型・dataset・DB/API/UIは追加せず、実装監査と小さい契約テストを補った。Phase 17でEntity概要を方向付き一覧へ改め、種類と向きを先に示し、Claim統計を折り畳んだ。組織立場・Event参加立場の小集計を追加した。意味モデルは不変。[Phase 17完了記録](archive/phase-17-entity-overview/README.md)を参照。Graph本体の混在肯否・限定比較のpresentationには残る課題がある。[完了記録](archive/phase-16-relation-principles/README.md)を参照。
@@ -68,6 +71,7 @@ Phase 14で、既存制作Roleと組織立場（Visitor / Associate professor）
 | Phase 16：関係モデル基本設計 | 三用途の意味／機械処理の境界、追加判断フロー、実装監査・最小契約テスト。runtime・凍結データ不変 | [完了記録](archive/phase-16-relation-principles/README.md) |
 | Phase 17：Entity概要の関係・方向優先 | 視点別一覧、統計折り畳み、三domainの限定記録、概要専用集計拡張 | [完了記録](archive/phase-17-entity-overview/README.md) |
 | Phase 18：関係探索モデルの再レビュー | 多分野24研究記録、意味限定／原語／多軸分類、A〜Dと三種類の検索の比較。runtime・凍結データ変更なし | [完了記録](archive/phase-18-exploration-model/README.md) |
+| Phase 19：小さい探索分類の条件解決 | 5候補・24記録仮付与、Visitor三状態、既存条件の純粋prototype。三入口は解決可、学術は未解決、仕事は非採用。runtime変更なし | [完了記録](archive/phase-19-exploration-classification/README.md) |
 
 Phase 02後のNode再クリックの採用・検証は、現役の[操作と設定](design/GRAPH_INTERACTION_AND_SETTINGS.md)へ記録している。今後、設定機能の検討が終わるまでは現役文書として維持する。
 

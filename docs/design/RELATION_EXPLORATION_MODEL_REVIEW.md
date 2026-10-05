@@ -6,6 +6,8 @@
 
 目的の基準：[PROJECT_CONTEXT](../PROJECT_CONTEXT.md)、現行契約：[ARCHITECTURE](../ARCHITECTURE.md)、[Phase 16原則](RELATION_MODEL_PRINCIPLES.md)、[Phase 17概要](ENTITY_OVERVIEW_PRESENTATION.md)。分類／presetの既存案：[EXPLORATION_PRESETS_REVIEW](EXPLORATION_PRESETS_REVIEW.md)。実資料とlocator：[比較資料v1](../research/phase-18-exploration-model/v1/SAMPLES.md)。新規事実の人間受入は行っていない。
 
+後続の具体的な条件解決は[Phase 19の小さい探索分類検証](EXPLORATION_CLASSIFICATION_RESOLUTION_REVIEW.md)を参照。三つの関係入口は解決可能、活動軸の学術は未解決、仕事関係は非採用と評価した。分類runtimeを導入済みとするものではない。
+
 ## 1. 結論と留保
 
 推奨は、**意味を持つ小さいPredicateと必要な限定を保持し、その上に複数軸の探索分類と語彙検索を置く**構造。具体語はまず資料の文脈・言語とともに失わず保持し、厳密な条件取得や限定比較に必要な意味だけを、定義された意味値へ対応させる。
