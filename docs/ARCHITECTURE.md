@@ -511,7 +511,7 @@ DB・API・探索条件キー・cursor・上限・DisplayRelation集約・Claim�
 
 ### 概要API
 
-`GET /api/entities/{id}/overview`。UUID v4のみ、query parameterは受け付けず400。既存APIは変更しない。
+`GET /api/entities/{id}/overview`。UUID v4のみ、query parameterは受け付けず400。Phase 17で二つのdomain限定内訳を追加し、他の読み取りAPIは変更しない。
 
 ```ts
 type EntityOverviewResponse = {
@@ -522,11 +522,13 @@ type EntityOverviewResponse = {
     perspective: "subject" | "object";
     counts: { affirmed: number; denied: number };
     contributionRoles: { roleId: ContributionRoleId | null; counts: { affirmed: number; denied: number } }[];
+    organizationPositions: { positionId: OrganizationPositionId | null; counts: { affirmed: number; denied: number } }[];
+    eventRoles: { roleId: EventRoleId | null; counts: { affirmed: number; denied: number } }[];
   }[];
 };
 ```
 
-現在datasetの公開Claimを、探索のpredicate／Role条件・ページング・Graph上限から独立して集計する。各視点でDISTINCT Claim IDを数え、Citation／SourceにはJOINしない。自己関係は両視点に一件ずつ現れ得るため、行を合計した全体総数は表示しない。否定も数えるが、成立認定・矛盾判定・重要度へ変換しない。CONTRIBUTED_TOのみRole別に集計し、nullは「役割を限定していない主張」。刊行物・期間の違いを消して担当認定しない。詳細の限定・根拠は既存Claim詳細へ戻る。
+現在datasetの公開Claimを、探索のpredicate／Role条件・ページング・Graph上限から独立して集計する。各視点でDISTINCT Claim IDを数え、Citation／SourceにはJOINしない。自己関係は両視点に一件ずつ現れ得るため、行を合計した全体総数は表示しない。否定も数えるが、成立認定・矛盾判定・重要度へ変換しない。CONTRIBUTED_TOの制作Role、AFFILIATED_WITHの組織立場、PARTICIPATED_INの参加立場を別々に集計し、非適用配列は空。nullは各domainの「限定していない主張」。刊行物・期間の違いを消して担当認定しない。詳細の限定・根拠は既存Claim詳細へ戻る。
 
 対象不存在404、GET以外405、保存データ不正500、DB接続不能／読取予算超過503。ゼロ件は成功応答の空配列であり、取得失敗と区別。パラメータ化Cypher・既存読取timeout・no-storeを使用。概要取得はGraph通信と別のAbortControllerで、閉じる／対象変更時に取消す。404では概要からの起点切替を無効化し、その他の集計失敗では既知の対象から探索可能とする。
 
@@ -603,3 +605,8 @@ relatedClaimIdsとDisplayRelationはSPO単位のまま。比較キーにはEvent
 `pilot-event-v1`は科学v2を対照としてコピーした新しい検証版。専用Bolt7692／Browser7479／Web3215／.next-event。台帳のE01/E03と開催回の人間受入がpendingなら生成・seedをDB接続前に拒否する。2026-10-06にユーザーが狭い事実・投影・開催回と期間を受入。生成・validate・専用DB seedと実画面検証済みの凍結版。10 Entity／13 Claim／11 Source／15 Citation／8外部ID、57 Node／64 Relationship。再seedは0／0、属性snapshotも不変。3参加Claimの期間は不明のまま。[受入記録](../datasets/pilot-event/v1/ACCEPTANCE.md)を参照。研究台帳E02は招待・欠席の反例として保留しruntimeへ入れない。
 
 人工契約検証は別の破棄可能DB7693／Web3216／.next-event-contract-test、架空表示・架空Sourceを使う。実資料受入や実データ観察の代用にはしない。[Phase 15完了記録](archive/phase-15-event-participation/README.md)を参照。
+
+
+## Phase 17：Entity概要の関係・方向優先表示
+
+[概要presentation契約](design/ENTITY_OVERVIEW_PRESENTATION.md)を採用。モーダルは外向き／内向きの方向付き一覧で、視点別関係名と中心端点を先に示す。Claim統計と限定内訳は初期状態で折り畳み、指定されたdomain語彙を二種類まで補助表示する。肯否混在を対立認定せず、否定のみは文言・破線で識別する。既存の根拠詳細へ戻る導線、任意確認、ダブルクリック、起点切替／復帰は維持する。概要APIだけへ固定の組織立場／参加立場配列を追加し、専用DISTINCT集計を再利用する。保存・比較・Graph束・探索条件・cursor・datasetは変更しない。[完了記録](archive/phase-17-entity-overview/README.md)を参照。

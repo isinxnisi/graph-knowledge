@@ -84,7 +84,7 @@ polarityの型は検証できても、資料が限定込みの肯否を支持す
 | 命題比較キー | 正規subject／Predicate／object、登録型の意味値／構造化scope、periodの値・精度・null | Claim同一性、全ての自由記述限定の一致、Source独立性、矛盾・真偽 |
 | relatedClaimIds | 同じSPOの他の公開Claim。探索条件・期間・限定で狭めない | 同じ限定、同一内容、同じ根拠、対立Claimであること |
 | DisplayRelation | 表示中のSPO＋claimIds。逆方向・別Predicateは別線 | 全登録Claimの網羅、同じ限定・期間、肯定された実績一覧 |
-| Entity概要 | 登録dataset内の公開ClaimをPredicate／視点／肯否ごとにDISTINCT集計。制作のみRole小集計 | 接続人数、Graph Edge数、独立Source数、関係強度、重要性 |
+| Entity概要 | 登録dataset内の公開ClaimをPredicate／視点／肯否ごとにDISTINCT集計。各domainの固定限定小集計（Phase 17） | 接続人数、Graph Edge数、独立Source数、関係強度、重要性 |
 
 `claimComparisonKey`はpolarity、Claim UUID、Source／Citation、原表記、表示名、provenance、受入状態、システム時刻、Entity自身の期間を含めない。肯否を並べる**候補の機械的一致**として利用する。polarity込みの同一内容候補キーや自動重複削除は現行では実装していない。
 
@@ -167,7 +167,7 @@ runtimeを基本原則へ合わせるための大規模改修は不要。今回�
 - ontology推論、qualification間の自動意味階層・同義対応、共通機構による資料受入。
 - 全Event一般モデル、非参加CHAIR、INVITED Predicate、シリーズと開催回間のRelation。
 - 家族の対称性保存モデル、組織合併の多項モデル、attitude aspect、時点別名称。
-- Entity概要の表示単位と再設計、複数Predicateの表示束、型数を無制限に増やす公開API形式。
+- Entity概要を接続数等の別集計単位へ変えること、複数Predicateの表示束、型数を無制限に増やす公開API形式。
 
 必要になった時に本書の判断フローで個別レビューする。現三用途のpayloadや一値制約を、未確認の領域へそのまま一般化しない。
 
@@ -182,3 +182,6 @@ runtimeを基本原則へ合わせるための大規模改修は不要。今回�
 7. **観察を反映する。** 原資料→Claim→詳細→Graph／概要の各段階で失われる情報を分けて記録。今回の原則を更新する必要があれば変更理由と影響を明記し、実装成功だけで全領域の意味を受入済みにしない。
 
 確認コマンドは `npm run vocabulary:check -- --base-ref <変更開始前の信頼できるcommit>`、`npm run qualification:check -- --base-ref <同commit>`、関連する契約／取得／探索テスト。既定HEADは作業中の差分を検出するだけで、既にコミットした変更の前提版を自動復元しない。現在はCI・ブランチ保護や任意手動書込みの制御を備えておらず、チェックを迂回した変更まで防止するものではない。
+
+
+Phase 17のpresentation実装は[Entity概要契約](ENTITY_OVERVIEW_PRESENTATION.md)を参照。種類・方向を先に示す一覧と統計折り畳みを採用したが、上記の基本意味・集計単位・比較境界は変えない。

@@ -5,10 +5,41 @@ import type { DatasetMode } from "../lib/domain/dataset";
 import { ClientApiError, errorMessage, fetchOverview } from "../lib/client/api";
 import { overviewLabels } from "../lib/i18n/entity-overview";
 import { datasetLabels } from "../lib/i18n/dataset";
-import { contributionLabels } from "../lib/i18n/contribution";
+import { overviewPresentation, type OverviewRelation } from "../lib/client/overview-presentation";
 import { KIND_LABELS } from "../lib/client/format";
 import RootActions from "./RootActions";
 import styles from "./Explorer.module.css";
+
+function RelationOverview({ relation }: { relation: OverviewRelation }) {
+  const labels = overviewLabels();
+  const view = overviewPresentation(relation);
+  return <li className={styles.overviewRow} data-testid={`overview-${relation.predicate}-${relation.perspective}`} data-polarity={view.status}>
+    <div className={styles.overviewRelationHeading}>
+      <h4>{view.title}</h4>
+      {view.status !== "affirmed" && <span className={styles.overviewStatus}>{view.status === "denied" ? labels.deniedOnly : labels.mixed}</span>}
+    </div>
+    <p className={styles.overviewDirection} role="img" aria-label={`${view.start} → ${view.verb} → ${view.end}`}>
+      <span className={view.fromCenter ? styles.overviewCenter : undefined}>{view.start}</span>
+      <span aria-hidden="true" className={styles.overviewArrow}>→</span><span>{view.verb}</span>
+      <span aria-hidden="true" className={styles.overviewArrow}>→</span>
+      <span className={!view.fromCenter ? styles.overviewCenter : undefined}>{view.end}</span>
+    </p>
+    {view.status === "denied" && <p className={styles.muted}>{labels.deniedHelp}</p>}
+    {view.qualificationSummary && <p className={styles.overviewTerms}>{view.qualification!.title}：{view.qualificationSummary}</p>}
+    <details className={styles.overviewStatistics}>
+      <summary>{labels.statistics}</summary>
+      <p>{labels.countsUnit}：{labels.counts(relation.counts.affirmed, relation.counts.denied)}</p>
+      <p className={styles.muted}>{labels.countsHelp}</p>
+      {view.qualification && <section aria-label={view.qualification.details}>
+        <h5>{view.qualification.details}</h5>
+        <ul>{view.qualification.entries.map(value => <li key={value.id ?? "unqualified"}>
+          {value.label}：{labels.counts(value.counts.affirmed, value.counts.denied)}
+        </li>)}</ul><p className={styles.muted}>{view.qualification.help}</p>
+      </section>}
+    </details>
+  </li>;
+}
+
 export default function EntityOverview({ entity, dataset, restricted, onClose, onSwitch }: {
   entity: EntitySummary; dataset: DatasetMode; restricted: boolean; onClose: () => void; onSwitch: (mode: "broad" | "same") => void;
 }) {
@@ -39,25 +70,30 @@ export default function EntityOverview({ entity, dataset, restricted, onClose, o
   }, [entity.id, dataset, attempt]);
   return <dialog ref={dialog} className={`${styles.conditionDialog} ${styles.overviewDialog}`} aria-labelledby="overview-title" onCancel={(event) => { event.preventDefault(); onClose(); }}>
     <div className={styles.detailHeading}><h2 id="overview-title">{labels.title}</h2><button onClick={onClose}>{labels.close}</button></div>
+    <div className={styles.overviewBody}>
     <p className={styles.muted}>{datasetLabels(dataset).badge}</p>
-    <h3>{entity.name}</h3><p className={styles.badge}>{KIND_LABELS[entity.kind]}</p>
+    <div className={styles.overviewEntity}><h3>{entity.name}</h3><span className={styles.badge}>{KIND_LABELS[entity.kind]}</span></div>
     {entity.description && <p>{entity.description}</p>}
     <p className={styles.muted}>{labels.scope}</p>
-    <p className={styles.muted}>{labels.countsUnit}</p>
     {!result && !failure && <p role="status">{labels.loading}</p>}
     {failure && <div role="alert"><p>{failure.message}</p>{failure.missing && <p>{labels.unavailable}</p>}
       <button onClick={() => { setFailure(null); setResult(null); setAttempt((value) => value + 1); }}>{labels.retry}</button></div>}
     {result && !result.relations.length && <p>{labels.noClaims}</p>}
-    {result?.relations.map((relation) => <section className={styles.overviewRow} key={`${relation.predicate}:${relation.perspective}`}>
-      <h3>{labels.relation(relation.predicate, relation.perspective)}</h3>
-      <p>{labels.counts(relation.counts.affirmed, relation.counts.denied)}</p>
-      {relation.predicate === "CONTRIBUTED_TO" && <details><summary>{labels.roleDetails}</summary>
-        <ul>{relation.contributionRoles.map((role) => <li key={role.roleId ?? "unqualified"}>
-          {role.roleId ? contributionLabels().roles[role.roleId] : labels.unqualified}：{labels.counts(role.counts.affirmed, role.counts.denied)}
-        </li>)}</ul><p className={styles.muted}>{labels.scopeHelp}</p>
-      </details>}
-    </section>)}
-    <details className={styles.overviewExplanation}><summary>{labels.explanation}</summary><p>{labels.countsHelp}</p></details>
-    <RootActions restricted={restricted} disabled={failure?.missing} onSwitch={onSwitch} />
+    {!!result?.relations.length && <>
+      <p className={styles.muted}>{labels.registered}</p>
+      {(["subject", "object"] as const).map(perspective => {
+        const relations = result.relations.filter(relation => relation.perspective === perspective);
+        return relations.length > 0 && <section key={perspective} aria-label={perspective === "subject" ? labels.outgoing : labels.incoming} className={styles.overviewGroup}>
+          <h3>{perspective === "subject" ? labels.outgoing : labels.incoming}</h3>
+          <ul className={styles.overviewRelations}>{relations.map(relation => <RelationOverview relation={relation} key={relation.predicate} />)}</ul>
+        </section>;
+      })}
+    </>}
+    </div>
+    <div className={styles.overviewFooter}>
+      <p className={styles.muted}>{labels.detailHelp}</p>
+      <button onClick={onClose}>{labels.backToGraph}</button>
+      <RootActions restricted={restricted} disabled={failure?.missing} onSwitch={onSwitch} />
+    </div>
   </dialog>;
 }

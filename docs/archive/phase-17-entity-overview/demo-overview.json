@@ -1,0 +1,87 @@
+{
+  "entity": {
+    "id": "c286065c-6e17-47a7-9288-2a1cf6919ce9",
+    "kind": "person",
+    "name": "青葉ハル",
+    "description": "漫画家、星の航路の作者"
+  },
+  "scope": {
+    "dataset": "demo",
+    "visibility": "published",
+    "filtered": false,
+    "unit": "claim"
+  },
+  "relations": [
+    {
+      "predicate": "AFFILIATED_WITH",
+      "perspective": "subject",
+      "counts": {
+        "affirmed": 1,
+        "denied": 0
+      },
+      "contributionRoles": [],
+      "organizationPositions": [
+        {
+          "positionId": null,
+          "counts": {
+            "affirmed": 1,
+            "denied": 0
+          }
+        }
+      ],
+      "eventRoles": []
+    },
+    {
+      "predicate": "ASSISTANT_OF",
+      "perspective": "subject",
+      "counts": {
+        "affirmed": 2,
+        "denied": 1
+      },
+      "contributionRoles": [],
+      "organizationPositions": [],
+      "eventRoles": []
+    },
+    {
+      "predicate": "CONTRIBUTED_TO",
+      "perspective": "subject",
+      "counts": {
+        "affirmed": 1,
+        "denied": 0
+      },
+      "contributionRoles": [
+        {
+          "roleId": null,
+          "counts": {
+            "affirmed": 1,
+            "denied": 0
+          }
+        }
+      ],
+      "organizationPositions": [],
+      "eventRoles": []
+    },
+    {
+      "predicate": "INFLUENCED_BY",
+      "perspective": "object",
+      "counts": {
+        "affirmed": 1,
+        "denied": 0
+      },
+      "contributionRoles": [],
+      "organizationPositions": [],
+      "eventRoles": []
+    },
+    {
+      "predicate": "INFLUENCED_BY",
+      "perspective": "subject",
+      "counts": {
+        "affirmed": 1,
+        "denied": 0
+      },
+      "contributionRoles": [],
+      "organizationPositions": [],
+      "eventRoles": []
+    }
+  ]
+}

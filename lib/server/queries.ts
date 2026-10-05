@@ -51,5 +51,6 @@ WHERE c.visibility = 'published'
 WITH DISTINCT c, type(side) AS side
 RETURN c.predicate AS predicate, toLower(side) AS perspective,
        c.polarity AS polarity, c.contributionRoleId AS roleId,
+       c.organizationPositionId AS positionId, c.eventRoleId AS eventRoleId,
        count(DISTINCT c.id) AS count
 ORDER BY predicate, perspective, roleId, polarity`;

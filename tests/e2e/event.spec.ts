@@ -37,7 +37,15 @@ test("実資料: 特定開催回から参加者、広い参加と議長Claim、�
   expect(labelOverhang).toBeLessThanOrEqual(24);
   await page.screenshot({ path: "test-results/phase15-real-event-initial.png" });
   await detail.getByRole("button", { name: "関係概要を見る", exact: true }).click();
-  await expect(page.getByRole("dialog")).toContainText("肯定 3件 ／ 否定 0件");
+  const dialog = page.getByRole("dialog"), relation = dialog.getByTestId("overview-PARTICIPATED_IN-object");
+  await expect(relation.getByRole("heading", { name: "参加者", exact: true })).toBeVisible();
+  await expect(relation.getByLabel("人物 → 参加した → この出来事", { exact: true })).toBeVisible();
+  await expect(relation.getByText("参加立場の記録：会議議長")).toBeVisible();
+  await expect(relation.getByText("登録された主張の内訳：肯定 3件 ／ 否定 0件", { exact: true })).not.toBeVisible();
+  await relation.locator("summary").click();
+  await expect(relation.getByText("参加上の立場を限定していない主張：肯定 2件 ／ 否定 0件", { exact: true })).toBeVisible();
+  await expect(relation).toContainText("人数・Graphの線・独立した出典");
+  await relation.locator("summary").click();
   await page.screenshot({ path: "test-results/phase15-real-event-overview.png" });
   await page.keyboard.press("Escape");
   const list = page.getByRole("region", { name: /隣接関係/ });

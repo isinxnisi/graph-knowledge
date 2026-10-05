@@ -72,7 +72,7 @@ npm run db:seed
 | --- | --- | --- |
 | /api/entities?q=...&kind=work | 人物・作品・組織の名称・別名検索（kind省略はすべて） | limit 10 / 20 |
 | /api/entities/{id} | Entity詳細・別名 | UUID v4 |
-| /api/entities/{id}/overview | 現在datasetの公開Claimを種類・視点・肯否・Role別に集計 | UUID v4、探索条件から独立 |
+| /api/entities/{id}/overview | 現在datasetの公開Claimを種類・視点・肯否・domain限定別に集計 | UUID v4、探索条件から独立 |
 | /api/entities/{id}/neighbors | 公開Claimの両方向1段階探索 | limit 20 / 50、afterは前のnextCursor |
 | /api/claims/{id} | 主張・Citation・Source・他の同一関係のClaim ID | UUID v4 |
 
@@ -228,7 +228,7 @@ Graph上部の「適用中」は現在辿っている条件です。「見る関
 
 ## 関係を俯瞰し、探索の主題を変える（Phase 08）
 
-Entity詳細の「関係概要を見る」で、現在のdatasetに登録された公開主張を種類・方向・肯否別に確認できます。現在の探索条件では絞りません。Nodeのダブルクリックも同じ概要を開きます。初回クリックの選択・展開はそのままです。
+Entity詳細の「関係概要を見る」で、現在のdatasetに登録された関係の種類・方向を先に確認できます。主張件数とdomain別の限定内訳は折り畳み、制作Role・組織立場・参加立場の記録は短く補助表示します。件数は人数やGraphの線数ではありません。現在の探索条件では絞りません。Nodeのダブルクリックも同じ概要を開きます。初回クリックの選択・展開はそのままです。
 
 「この対象から広く見る」で追加条件を解除して新しい起点へ、「同じ条件でこの対象から見る」で適用条件を保って切り替えます。Entity詳細から直接切り替えることもできます。「直前の探索へ戻る」は一回だけ元の受理済み範囲・開閉・座標・表示範囲へ戻ります。未完了だった取得は再試行してください。再読込や検索候補からの新探索で復帰記録は消えます。
 
@@ -304,3 +304,5 @@ npx playwright test --config=playwright.event-contract.config.ts
 ```
 
 人工検証画面は http://127.0.0.1:3216 。「架空会議」「架空参加者A」を検索します。実在資料を表示している画面と混同しないよう、架空デモ表示と人工名称・Sourceを使います。検証DBには名前付きvolumeを設けていません。破棄する場合は専用composeに対して `docker compose -f compose.event-test.yaml down -v` を実行します。
+
+Phase 17の[概要presentation契約](docs/design/ENTITY_OVERVIEW_PRESENTATION.md)と[画面比較・検証記録](docs/archive/phase-17-entity-overview/README.md)を参照してください。概要の「Graphに戻って関係を選ぶ」は閉じるだけで、探索条件や起点を変更しません。

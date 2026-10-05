@@ -2,6 +2,8 @@
 
 2026-10-04。**推奨案を採用、Phase 08で実装**。[複数分野のレビュー](CROSS_DOMAIN_EXPLORATION_REVIEW.md)への補足。以下はレビュー時点の比較・提案を保存する。採用後の具体契約は [ARCHITECTURE](../ARCHITECTURE.md#phase-08関係概要起点切替直前探索への復帰)、検証は [Phase 08実施記録](../archive/phase-08-entity-overview/IMPLEMENTATION_ENTITY_OVERVIEW.md) を参照。
 
+Phase 17で種類・方向優先の表示と統計折り畳みを採用した。現行のpresentation／固定限定内訳は[Entity概要契約](ENTITY_OVERVIEW_PRESENTATION.md)を参照。
+
 ## 結論
 
 **関係概要を任意に確認し、必要なら新しい起点へ進む体験には採用価値がある。** 未知の対象へ到達した時、現在の探索条件や取得済みページでは見えない関係の種類を知り、探索の向きを判断できるため。

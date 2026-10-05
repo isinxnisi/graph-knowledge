@@ -67,7 +67,7 @@ test("関係概要の組織視点・条件外集計・起点切替と座標／�
   await expect(page.getByTestId("graph-counts")).toHaveText("Entity 7 / Claim 7");
   const before = await view(page);
   await page.getByRole("button", { name: "関係概要を見る", exact: true }).click();
-  const dialog = page.getByRole("dialog"); await expect(dialog).toContainText("この組織との関わりについての主張");
+  const dialog = page.getByRole("dialog"); await expect(dialog).toContainText("関係者");
   await expect(dialog).toContainText("肯定 4件 ／ 否定 0件"); await expect(dialog).toContainText("1965");
   expect(await view(page)).toEqual(before);
   await page.screenshot({ path: "docs/archive/phase-10-science-pilot/science-overview.png" });

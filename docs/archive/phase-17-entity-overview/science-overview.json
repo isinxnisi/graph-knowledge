@@ -1,0 +1,49 @@
+{
+  "entity": {
+    "id": "8e322435-4318-4ad0-835b-3f71d2537421",
+    "kind": "organization",
+    "name": "ニールス・ボーア研究所",
+    "description": "コペンハーゲン大学の研究所。旧理論物理学研究所を1965年改称。現在名で表示。"
+  },
+  "scope": {
+    "dataset": "pilot-science-v2",
+    "visibility": "published",
+    "filtered": false,
+    "unit": "claim"
+  },
+  "relations": [
+    {
+      "predicate": "AFFILIATED_WITH",
+      "perspective": "object",
+      "counts": {
+        "affirmed": 6,
+        "denied": 0
+      },
+      "contributionRoles": [],
+      "organizationPositions": [
+        {
+          "positionId": "ASSOCIATE_PROFESSOR",
+          "counts": {
+            "affirmed": 1,
+            "denied": 0
+          }
+        },
+        {
+          "positionId": "VISITOR",
+          "counts": {
+            "affirmed": 1,
+            "denied": 0
+          }
+        },
+        {
+          "positionId": null,
+          "counts": {
+            "affirmed": 4,
+            "denied": 0
+          }
+        }
+      ],
+      "eventRoles": []
+    }
+  ]
+}

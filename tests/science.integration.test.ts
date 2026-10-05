@@ -44,7 +44,7 @@ it("science real DB: frozen seed, mixing rejection, search, both directions, pag
     for (const ref of ["P2", "O2"]) {
       const overview = await get<EntityOverviewResponse>(`/api/entities/${id(ref)}/overview`);
       expect(overview.scope.dataset).toBe("pilot-science-v1");
-      expect(overview.relations).toEqual([{ predicate: "AFFILIATED_WITH", perspective: ref === "O2" ? "object" : "subject", counts: { affirmed: ref === "O2" ? 4 : 2, denied: 0 }, contributionRoles: [] }]);
+      expect(overview.relations).toEqual([{ predicate: "AFFILIATED_WITH", perspective: ref === "O2" ? "object" : "subject", counts: { affirmed: ref === "O2" ? 4 : 2, denied: 0 }, contributionRoles: [], eventRoles: [], organizationPositions: [{ positionId: null, counts: { affirmed: ref === "O2" ? 4 : 2, denied: 0 } }] }]);
     }
     for (const candidate of ledger.candidates.slice(0, 8)) {
       const body = await get<ClaimResponse>(`/api/claims/${candidate.claim.id}`);

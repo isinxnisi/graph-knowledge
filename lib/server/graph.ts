@@ -3,6 +3,8 @@ import { datasetMode } from "../domain/dataset";
 import { entityOverviewSchema, type EntityOverviewResponse } from "../domain/api";
 import { PREDICATE_KEYS } from "../domain/predicates";
 import { roleIdSchema } from "../domain/contribution";
+import { organizationPositionSchema } from "../domain/organization-participation";
+import { eventRoleSchema } from "../domain/event-participation";
 import { int } from "neo4j-driver";
 import { claimDetailSchema, type EntitySearchResponse, type EntityResponse, type NeighborsResponse, type ClaimResponse } from "../domain/api";
 import type { EventRoleFilter, ContributionRoleFilter, OrganizationPositionFilter, PredicateFilter } from "../domain/exploration";
@@ -76,14 +78,28 @@ export function getEntityOverview(id: string): Promise<EntityOverviewResponse> {
       const perspective = record.get("perspective");
       const polarity: "affirmed" | "denied" = record.get("polarity");
       const roleId = roleIdSchema.nullable().parse(record.get("roleId"));
-      if (!PREDICATE_KEYS.includes(predicate) || !["subject", "object"].includes(perspective) || !["affirmed", "denied"].includes(polarity) || (predicate !== "CONTRIBUTED_TO" && roleId !== null)) throw new Error("Invalid overview group");
+      const positionId = organizationPositionSchema.nullable().parse(record.get("positionId"));
+      const eventRoleId = eventRoleSchema.nullable().parse(record.get("eventRoleId"));
+      if (!PREDICATE_KEYS.includes(predicate) || !["subject", "object"].includes(perspective) || !["affirmed", "denied"].includes(polarity) ||
+        (predicate !== "CONTRIBUTED_TO" && roleId !== null) || (predicate !== "AFFILIATED_WITH" && positionId !== null) ||
+        (predicate !== "PARTICIPATED_IN" && eventRoleId !== null)) throw new Error("Invalid overview group");
       const key = `${predicate}:${perspective}`;
-      const group: EntityOverviewResponse["relations"][number] = groups.get(key) ?? { predicate, perspective, counts: { affirmed: 0, denied: 0 }, contributionRoles: [] };
+      const group: EntityOverviewResponse["relations"][number] = groups.get(key) ?? { predicate, perspective, counts: { affirmed: 0, denied: 0 }, contributionRoles: [], organizationPositions: [], eventRoles: [] };
       const count = record.get("count").toNumber();
       group.counts[polarity] += count;
       if (predicate === "CONTRIBUTED_TO") {
         let role = group.contributionRoles.find((value) => value.roleId === roleId);
         if (!role) { role = { roleId, counts: { affirmed: 0, denied: 0 } }; group.contributionRoles.push(role); }
+        role.counts[polarity] += count;
+      }
+      if (predicate === "AFFILIATED_WITH") {
+        let position = group.organizationPositions.find(value => value.positionId === positionId);
+        if (!position) { position = { positionId, counts: { affirmed: 0, denied: 0 } }; group.organizationPositions.push(position); }
+        position.counts[polarity] += count;
+      }
+      if (predicate === "PARTICIPATED_IN") {
+        let role = group.eventRoles.find(value => value.roleId === eventRoleId);
+        if (!role) { role = { roleId: eventRoleId, counts: { affirmed: 0, denied: 0 } }; group.eventRoles.push(role); }
         role.counts[polarity] += count;
       }
       groups.set(key, group);

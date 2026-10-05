@@ -46,11 +46,18 @@ it("人工実DB: 三用途の限定、LIMIT前条件、参加／招待、開催�
     expect(detail.relatedClaimIds).toEqual([ids.broad, ids.deniedChair]);
     expect((await get<ClaimResponse>(`/api/claims/${ids.broad}`)).claim.eventParticipation).toBeNull();
     const overview = await get<EntityOverviewResponse>(`/api/entities/${ids.event}/overview`);
-    expect(overview.relations).toEqual([{ predicate: "PARTICIPATED_IN", perspective: "object", counts: { affirmed: 3, denied: 1 }, contributionRoles: [] }]);
+    expect(overview.relations).toHaveLength(1);
+    expect(overview.relations[0]).toMatchObject({ predicate: "PARTICIPATED_IN", perspective: "object", counts: { affirmed: 3, denied: 1 }, contributionRoles: [], organizationPositions: [] });
+    expect(overview.relations[0].eventRoles).toHaveLength(2);
+    expect(overview.relations[0].eventRoles).toEqual(expect.arrayContaining([
+      { roleId: null, counts: { affirmed: 2, denied: 0 } },
+      { roleId: "CHAIR", counts: { affirmed: 1, denied: 1 } },
+    ]));
     const session = driver.session({ database });
     try {
       await session.run("MATCH (c:Claim {id:$id}) SET c.eventRoleId=$invalid", { id: ids.chair, invalid: "INVITED" });
       await get(`/api/claims/${ids.chair}`, 500);
+      await get(`/api/entities/${ids.event}/overview`, 500);
     } finally {
       await session.run("MATCH (c:Claim {id:$id}) SET c.eventRoleId='CHAIR'", { id: ids.chair }); await session.close();
     }
@@ -124,7 +131,13 @@ it.skipIf(!accepted)("受入済みEvent実資料dataset: 狭い意味・期間�
     expect(third.page.hasMore).toBe(false);
     const overview = await get<EntityOverviewResponse>(`/api/entities/${event.id}/overview`);
     expect(overview.scope.dataset).toBe("pilot-event-v1");
-    expect(overview.relations).toEqual([{ predicate: "PARTICIPATED_IN", perspective: "object", counts: { affirmed: 3, denied: 0 }, contributionRoles: [] }]);
+    expect(overview.relations).toHaveLength(1);
+    expect(overview.relations[0]).toMatchObject({ predicate: "PARTICIPATED_IN", perspective: "object", counts: { affirmed: 3, denied: 0 }, contributionRoles: [], organizationPositions: [] });
+    expect(overview.relations[0].eventRoles).toHaveLength(2);
+    expect(overview.relations[0].eventRoles).toEqual(expect.arrayContaining([
+      { roleId: null, counts: { affirmed: 2, denied: 0 } },
+      { roleId: "CHAIR", counts: { affirmed: 1, denied: 0 } },
+    ]));
     expect(fixture.claims.filter(c => c.predicate === "PARTICIPATED_IN")).toHaveLength(3);
     expect(fixture.claims.every(c => c.polarity === "affirmed")).toBe(true); // 欠席からdeniedを捏造しない
     expect(await graphSnapshot(driver, database)).toEqual(before);

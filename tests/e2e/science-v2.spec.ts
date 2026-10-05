@@ -90,7 +90,14 @@ test("明示適用・Visitor / Associate professor・解除・条件外詳細・
   await page.getByRole("button", { name: "直前の探索へ戻る", exact: true }).click();
   expect(await view(page)).toEqual(beforeSwitch);
   await page.getByRole("button", { name: "関係概要を見る", exact: true }).click();
-  await expect(page.getByRole("dialog")).toContainText("肯定 6件 ／ 否定 0件");
+  const dialog = page.getByRole("dialog"), relation = dialog.getByTestId("overview-AFFILIATED_WITH-object");
+  await expect(relation.getByRole("heading", { name: "関係者", exact: true })).toBeVisible();
+  await expect(relation.getByLabel("人物 → 関わりがあった → この組織", { exact: true })).toBeVisible();
+  await expect(relation.getByText("組織立場の記録：Associate professor・Visitor")).toBeVisible();
+  await expect(relation.getByText("登録された主張の内訳：肯定 6件 ／ 否定 0件", { exact: true })).not.toBeVisible();
+  await relation.locator("summary").click();
+  await expect(relation.getByText("立場を限定していない主張：肯定 4件 ／ 否定 0件", { exact: true })).toBeVisible();
+  await relation.locator("summary").click();
   await page.screenshot({ path: "docs/archive/phase-14-typed-qualification/science-v2-overview.png" });
   await page.getByRole("dialog").getByRole("button", { name: "この対象から広く見る", exact: true }).click();
   await expect(page.getByTestId("graph-counts")).toHaveText("Entity 5 / Claim 6");

@@ -40,7 +40,10 @@ test("人工データ: Event検索・期間分離・広い参加＋議長の1線
   await expect(page.getByRole("region", { name: "Entity詳細" })).toContainText("人物の全日程参加を示しません");
   await page.screenshot({ path: "test-results/phase15-synthetic-event.png" });
   await page.getByRole("button", { name: "関係概要を見る", exact: true }).click();
-  await expect(page.getByRole("dialog")).toContainText("肯定 3件 ／ 否定 1件"); // 2接続、Citation2でも4Claim
+  await expect(page.getByRole("dialog")).toContainText("肯定 3件 ／ 否定 1件");
+  const overview = page.getByTestId("overview-PARTICIPATED_IN-object");
+  await expect(overview.getByText("肯定・否定の主張あり", { exact: true })).toBeVisible();
+  await expect(overview.getByText("参加立場の記録：会議議長（肯定・否定あり）", { exact: true })).toBeVisible(); // 2接続、Citation2でも4Claim
   await page.screenshot({ path: "test-results/phase15-synthetic-overview.png" });
   await page.keyboard.press("Escape");
   await tap(page, ids.chair, true);

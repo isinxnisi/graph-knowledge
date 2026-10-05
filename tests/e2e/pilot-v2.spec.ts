@@ -250,7 +250,10 @@ test("Phase08: 実Role概要・作品起点・Role条件解除・直前探索復
   await page.getByRole("button", { name: "関係概要を見る", exact: true }).click();
   const dialog = page.getByRole("dialog");
   await expect(dialog).toContainText("肯定 6件 ／ 否定 0件");
-  await dialog.getByText("制作役割の内訳").click();
+  const overviewRow = dialog.getByTestId("overview-CONTRIBUTED_TO-subject");
+  await expect(overviewRow.getByText("制作役割の記録：プロデュース・脚本・ほか1種類")).toBeVisible();
+  await expect(dialog.getByText("役割を限定していない主張：肯定 3件 ／ 否定 0件", { exact: true })).not.toBeVisible();
+  await overviewRow.locator("summary").click();
   await expect(dialog).toContainText("プロデュース：肯定 1件");
   await expect(dialog).toContainText("脚本：肯定 1件");
   await expect(dialog).toContainText("ストーリー共同制作：肯定 1件");
@@ -290,7 +293,7 @@ test("Phase09: 作品・原語別名から開始し、Role条件を起点種別�
   await page.getByRole("button", { name: /^PLUTO —/ }).click();
   await expect(page.getByTestId("graph-counts")).toHaveText("Entity 4 / Claim 5");
   await page.getByRole("button", { name: "関係概要を見る", exact: true }).click();
-  await expect(page.getByRole("dialog")).toContainText("この作品の制作関与についての主張");
+  await expect(page.getByRole("dialog")).toContainText("制作関係者");
   await page.keyboard.press("Escape");
   await editConditions(page); await editRoles(page);
   await page.getByRole("checkbox", { name: "プロデュース", exact: true }).check();

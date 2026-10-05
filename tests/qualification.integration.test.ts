@@ -56,13 +56,21 @@ it("科学v2実DB: 独立2限定、両方向、LIMIT前条件、cursor、凍結C
     try {
       await session.run("MATCH (c:Claim {id: $id}) SET c.organizationPositionId = $invalid", { id: visitor.id, invalid: "PROFESSOR" });
       await get(`/api/claims/${visitor.id}`, 500);
+      await get(`/api/entities/${visitor.objectId}/overview`, 500);
     } finally {
       await session.run("MATCH (c:Claim {id: $id}) SET c.organizationPositionId = $position", { id: visitor.id, position: "VISITOR" });
       await session.close();
     }
     const overview = await get<EntityOverviewResponse>(`/api/entities/${visitor.objectId}/overview`);
     expect(overview.scope.dataset).toBe("pilot-science-v2");
-    expect(overview.relations).toEqual([{ predicate: "AFFILIATED_WITH", perspective: "object", counts: { affirmed: 6, denied: 0 }, contributionRoles: [] }]);
+    expect(overview.relations).toHaveLength(1);
+    expect(overview.relations[0]).toMatchObject({ predicate: "AFFILIATED_WITH", perspective: "object", counts: { affirmed: 6, denied: 0 }, contributionRoles: [], eventRoles: [] });
+    expect(overview.relations[0].organizationPositions).toHaveLength(3);
+    expect(overview.relations[0].organizationPositions).toEqual(expect.arrayContaining([
+      { positionId: null, counts: { affirmed: 4, denied: 0 } },
+      { positionId: "VISITOR", counts: { affirmed: 1, denied: 0 } },
+      { positionId: "ASSOCIATE_PROFESSOR", counts: { affirmed: 1, denied: 0 } },
+    ]));
     expect(await graphSnapshot(driver, database)).toEqual(before);
   } finally { await driver.close(); }
 }, 120000);

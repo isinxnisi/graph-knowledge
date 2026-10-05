@@ -1,0 +1,42 @@
+{
+  "entity": {
+    "id": "247d3efb-6172-4a3e-aa09-dad69914b47c",
+    "kind": "event",
+    "name": "第5回ソルヴェイ物理会議（1927）",
+    "description": "ブリュッセルで1927年10月24〜29日に開催された特定回。会議シリーズ全体とは別。"
+  },
+  "scope": {
+    "dataset": "pilot-event-v1",
+    "visibility": "published",
+    "filtered": false,
+    "unit": "claim"
+  },
+  "relations": [
+    {
+      "predicate": "PARTICIPATED_IN",
+      "perspective": "object",
+      "counts": {
+        "affirmed": 3,
+        "denied": 0
+      },
+      "contributionRoles": [],
+      "organizationPositions": [],
+      "eventRoles": [
+        {
+          "roleId": null,
+          "counts": {
+            "affirmed": 2,
+            "denied": 0
+          }
+        },
+        {
+          "roleId": "CHAIR",
+          "counts": {
+            "affirmed": 1,
+            "denied": 0
+          }
+        }
+      ]
+    }
+  ]
+}

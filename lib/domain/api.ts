@@ -1,6 +1,6 @@
 import { eventMetadataSchema, eventParticipationSchema, eventParticipationEvidenceSchema } from "./event-participation";
 import { contributionSchema, roleEvidenceSchema } from "./contribution";
-import { organizationParticipationSchema, positionEvidenceSchema } from "./organization-participation";
+import { organizationParticipationSchema, organizationPositionSchema, positionEvidenceSchema } from "./organization-participation";
 import { z } from "zod";
 import { DATASET_MODES } from "./dataset";
 import { entitySchema, claimSchema, citationSchema, sourceSchema } from "./fixture";
@@ -40,6 +40,8 @@ export const entityOverviewSchema = z.strictObject({
     perspective: z.enum(["subject", "object"]),
     counts: overviewCountsSchema,
     contributionRoles: z.array(z.strictObject({ roleId: contributionSchema.shape.roleId, counts: overviewCountsSchema })),
+    organizationPositions: z.array(z.strictObject({ positionId: organizationPositionSchema.nullable(), counts: overviewCountsSchema })),
+    eventRoles: z.array(z.strictObject({ roleId: eventParticipationSchema.shape.roleId.nullable(), counts: overviewCountsSchema })),
   })),
 });
 export type EntityOverviewResponse = z.infer<typeof entityOverviewSchema>;
