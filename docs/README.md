@@ -24,14 +24,16 @@
 | [複数分野の入口・文脈・起点切替](design/CROSS_DOMAIN_EXPLORATION_REVIEW.md) | Phase 07後の設計提案。一つの論理Graph、テーマと条件の分離、広く見る／条件維持、復帰、研究者・機関の小さい検証案。起点切替・復帰をPhase 08で採用・実装。科学の機関中心pilotはPhase 10で投入 |
 | [Entityの関係俯瞰](design/ENTITY_RELATION_OVERVIEW_REVIEW.md) | 起点切替前の任意の俯瞰、登録範囲の集計、ダブルクリック契約とmodal、最小の次フェーズ範囲。Phase 08で採用・実装 |
 | [別分野実データパイロット](design/CROSS_DOMAIN_REAL_DATA_PILOT.md) | Phase 09後の資料確認・設計案。5研究者・3機関・9候補の設計。Phase 10でC01–C08受入・投入、C09 pending。既存語彙の境界と資料→概要の情報損失を観察 |
-| [関係モデルの検証サンプル構成](design/RELATION_MODEL_VALIDATION_SAMPLES.md) | 既存22 Claimと異なる意味構造の14–20候補、5方式の比較と段階的収集・レビュー。新規受入・投入は未実施 |
+| [関係モデルの検証サンプル構成](design/RELATION_MODEL_VALIDATION_SAMPLES.md) | 既存22 Claimと異なる意味構造の14–20候補、段階的収集。Phase 12で優先7候補を資料確認・比較。新規人間受入・投入は未実施 |
+| [関係モデルの第1回比較](design/RELATION_MODEL_COMPARISON_REVIEW.md) | Phase 12。時期別立場・家族・映画派生を5方式で比較。独立命題と限定・共通処理の仮説、次のD/E/C、最小実装前の判断 |
+| [関係モデル比較の研究台帳v1](research/phase-12-relation-model/v1/README.md) | 優先7新規＋既存Visitor対照、7 Source、40比較票。全新規人間受入待ち。seed入力ではない |
 | [API応答例](API_RESPONSE_EXAMPLES.json) | 読み取りAPIの例。テストから参照するため、この場所を維持 |
 
 未実装部分を含む文書は、完了した内容が一部あっても丸ごとアーカイブしない。設計案を採用済みとみなさず、最新のユーザー指示を優先する。
 
 ## 進行中のフェーズ
 
-Phase 11で関係モデルの検証サンプル構成を設計し、既存datasetの固定開始例を追加。新規候補の受入・投入は未実施。科学C09はpending。概要UIの再設計や組織関与のqualificationは未着手。
+Phase 12で優先7候補の本文確認・版付き研究台帳・第1回5方式比較まで完了。既存22＋新規7＝約29件分の比較材料であり、29件を受入・投入した意味ではない。新規7件の人間受入、科学C09、siblingの明示資料、派生方式の意味境界は未確定。既存dataset・DB/API/UI・語彙契約は変更していない。次は人間受入範囲を確認し、D/E/Cの少数収集・第2回比較へ進む案。その後の最小実装候補は組織関与の限定。
 
 ## フェーズ別の完了履歴
 
@@ -48,6 +50,7 @@ Phase 11で関係モデルの検証サンプル構成を設計し、既存datase
 | Phase 09：一般Entity検索 | 人物・作品・組織の統一検索入口、種別と探索条件の分離 | [履歴一覧](archive/phase-09-entity-search/README.md) |
 | Phase 10：科学・研究機関パイロット | 8 Entity・8受入Claimの専用環境、根拠保持と共通探索の観察。C09保留 | [履歴一覧](archive/phase-10-science-pilot/README.md) |
 | Phase 11：モデル検証準備・開始例 | 意味構造のサンプル構成案、既存datasetの固定開始例。新規seedなし | [実施記録](archive/phase-11-model-samples/IMPLEMENTATION_MODEL_SAMPLES.md) |
+| Phase 12：優先実資料・意味比較 | 新規7候補の資料確認、研究台帳、5方式の40比較票。人間受入・新語彙・投入なし | [調査・検証記録](archive/phase-12-model-comparison/README.md) |
 
 Phase 02後のNode再クリックの採用・検証は、現役の[操作と設定](design/GRAPH_INTERACTION_AND_SETTINGS.md)へ記録している。今後、設定機能の検討が終わるまでは現役文書として維持する。
 

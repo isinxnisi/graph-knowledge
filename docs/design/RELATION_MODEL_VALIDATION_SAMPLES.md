@@ -1,6 +1,6 @@
 # 関係モデルを比較する実データサンプル構成
 
-2026-10-05 / Phase 11。設計案。今回実装するのは既存datasetの固定開始例のみ。新Claimの受入・投入、新predicate／Role／qualificationの採用は行わない。
+2026-10-05 / Phase 11の収集計画。固定開始例は実装済み。Phase 12で優先7候補の本文確認・版付き台帳・5方式比較まで進めた。[第1回比較レビュー](RELATION_MODEL_COMPARISON_REVIEW.md)と[研究台帳v1](../research/phase-12-relation-model/v1/README.md)を参照。新Claimの人間受入・投入、新predicate／Role／qualificationの採用は未実施。
 
 [意味契約](PREDICATE_CONTRACTS.md)、[関係語彙レビュー](RELATION_VOCABULARY_REVIEW.md)、[制作Role契約](CONTRIBUTION_ROLE_CONTRACTS.md)、[科学観察](../archive/phase-10-science-pilot/IMPLEMENTATION_SCIENCE_PILOT.md)を基準にする。完全なontologyや自由key/value方式を結論として先取りしない。
 
@@ -44,6 +44,8 @@ v1由来の広いClaimと限定Claimは、正当な別命題・受入記録が�
 
 候補：Pierre→Irèneのparent、Marie→Irèneのparent、IrèneとFrédéricのspouse。MarieとPierreのspouseは別の公式略歴で確認し4件にする。Èveとのsiblingは次の明示資料が得られれば5件目。親が共通という計算だけで自動生成しない。biological/adoptive等の区別が明示されなければ付けない。配偶者関係の終期を死亡日から補わない。
 
+Phase 12の追記：Nobelは通常の公開HTTP GETで本文・1966年再刊の版注記を確認できた。Musée CurieのPDFも本文確認でき、Irène夫妻の婚姻日1926-10-04を明記。Marie夫妻は省公式記事と博物館MCP68_01で確認。4件は資料確認済み・人間受入待ち。siblingは明示箇所未確保で保留。以前の403はこの調査時点の取得状態であり、根拠不足の最終判断ではない。
+
 方向付きparent、対称spouse/siblingを少数で比較できるため、最初から広いFAMILY_RELATED＋roleを採用する理由は弱い。これは推奨仮説であり語彙審査前の候補。家族データ公開の範囲は亡くなった歴史的人物を基本に限定する。
 
 ### C：態度と影響は関係の強弱へ潰さない
@@ -69,6 +71,8 @@ CERNとUNESCOの[公式沿革](https://home.cern/about/who-we-are/our-history/)�
 [BFIの2021年紹介](https://www.bfi.org.uk/news/bfi-japan-autumn-programme)本文はSeven Samurai→The Magnificent Sevenのadaptation、Yojimbo→A Fistful of Dollarsのremakeを明示する。2組を候補にできる。ただし映画の年・リメイク版・シリーズを同定し、権利／クレジット・原作のkindと粒度は次に確認する。同ページの他作品への影響は紹介記事の評価なので、本人証言・制作資料と区別する。
 
 原資料の「adapted」「remake」を共通DERIVED_FROM＋derivationTypeにするか、ADAPTED_FROM／REMAKE_OFへ分けるかの良い比較材料。人物向けINFLUENCED_BYへwork端点を黙って追加しない。個々の資料が両語を重ねて使う場合は同義・包含・別命題を人が審査する。
+
+Phase 12の追記：BFIの2014年論考は1960年The Magnificent Sevenをremakeとも呼ぶ。2021年記事のadaptationとの用語差は、同じペアの肯否対立ではない。派生方式の単一排他enumは未確定とし、作品年・監督・旧公開題を台帳へ残した。二組とも資料確認済み・人間受入待ち。
 
 ## 4. 比較する5方式
 
