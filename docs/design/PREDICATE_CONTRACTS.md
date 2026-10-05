@@ -1,5 +1,7 @@
 # 既存Predicateの意味契約と語彙レビュー手順
 
+Phase 16の[関係モデル基本設計](RELATION_MODEL_PRINCIPLES.md)を、新Predicateとtyped限定を判断する共通基準とする。本書は語彙変更チェックの具体契約。現在は5 Predicate／3限定型を扱い、以下の4語彙・Role未導入の説明はPhase 05時点の範囲。後続の追加は末尾と各domain契約を参照する。
+
 現在の制作Roleは[CONTRIBUTION_ROLE_CONTRACTS.md](CONTRIBUTION_ROLE_CONTRACTS.md)を参照。以下の「Role未導入」はPhase 05時点の記録。Predicate単体の意味と基準版は変えず、Roleは専用限定として追加する。
 
 2026-10-03。**採用・実装済み**。対象は既存4 predicateの意味契約と開発時チェック。Role、taxonomy、管理UI、投稿、新しい関係語彙は導入していない。

@@ -196,6 +196,8 @@ docker compose --env-file .env.pilot -f compose.pilot.yaml stop
 
 ## 関係語彙の意味契約
 
+Phase 16で[Relation・Claim・Predicate・typed qualificationの基本設計](docs/design/RELATION_MODEL_PRINCIPLES.md)を採用しました。新語彙・限定の追加判断、共通機構とdomain固有意味、比較／表示／根拠の境界をここへまとめています。個別語彙の変更時は各domain契約と併せて参照してください。
+
 既存4 predicateの包含・除外・境界例と変更手順は [Predicate意味契約](docs/design/PREDICATE_CONTRACTS.md) を参照してください。`npm run vocabulary:check`をlint/testでも実行します。追加・変更には全既存語彙との比較と、変更前後hashに一致する承認済み票が必要です。使用済みIDの意味を変えず、基準版を書き換えません。コミット済みの変更を審査する場合は `npm run vocabulary:check -- --base-ref <変更開始前のcommit>` を使います。Phase 05ではRoleを導入していません。現在の限定Roleは下記Phase 06を参照してください。
 
 ## 制作Role v2環境

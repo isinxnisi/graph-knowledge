@@ -1,5 +1,7 @@
 # 二つのtyped限定の最小契約
 
+Phase 16で[関係モデルの基本設計](RELATION_MODEL_PRINCIPLES.md)を採用した。三用途の共通責務・domain固有意味・今後の追加判断は同書へ集約する。本書の二用途の具体契約は維持し、Eventの具体契約は[Event参加契約](EVENT_PARTICIPATION_CONTRACTS.md)を参照する。
+
 Phase 15では[特定Event参加契約](EVENT_PARTICIPATION_CONTRACTS.md)を第三型として追加。以下はPhase 14採用時点の二用途の説明。共通処理の対象は現在三型であり、Event固有の意味を組織立場／制作Roleへ混合しない。
 
 2026-10-05、Phase 14。制作Roleと組織での立場を同じRoleへ統合せず、二用途で共通処理の価値を検証する。[第2回比較](RELATION_MODEL_SECOND_COMPARISON_REVIEW.md)の組織立場Vertical Sliceを採用。家族・組織間・event・派生・態度の候補は未実装のまま。

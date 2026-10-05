@@ -1,5 +1,7 @@
 # 限定された制作Roleの採用契約
 
+Predicate／限定の追加判断と比較・表示等の共通境界は、Phase 16で採用した[関係モデル基本設計](RELATION_MODEL_PRINCIPLES.md)を参照。本書は制作domain固有のpayload・語彙・scopeの契約を維持する。
+
 2026-10-03。Phase 06の現行実装。設計理由は[Roleレビュー](CONTRIBUTION_ROLE_REVIEW.md)、実施結果と受入記録は[実施記録](../archive/phase-06-contribution-role/IMPLEMENTATION_CONTRIBUTION_ROLE.md)。
 
 ## 意味・保存・根拠

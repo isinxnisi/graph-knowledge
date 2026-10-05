@@ -1,5 +1,7 @@
 # 特定Event参加の最小契約（Phase 15）
 
+共通処理とdomain固有意味の境界は、Phase 16で採用した[関係モデル基本設計](RELATION_MODEL_PRINCIPLES.md)を参照。本書は特定開催回・参加／CHAIR・開催期間・資料受入の固有契約を維持する。
+
 2026-10-06。Phase 15で採用・実装・実資料検証済み。E01/E03、特定開催回同一性と開催期間はユーザーが明示受入。[受入記録](../../datasets/pilot-event/v1/ACCEPTANCE.md)／[完了結果](../archive/phase-15-event-participation/README.md)。資料確認、意味設計、人間受入を分け、未受入Claimをseedしない。
 
 ## 意味レビュー

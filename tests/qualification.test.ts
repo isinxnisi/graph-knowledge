@@ -18,6 +18,8 @@ import baseline from "../vocabulary/organization-positions/baseline-v1.json";
 import v1 from "../datasets/pilot-science/v1/data.json";
 import v2 from "../datasets/pilot-science/v2/data.json";
 import ledger from "../datasets/pilot-science/v2/ledger.json";
+import creationData from "../datasets/pilot-urasawa/v2/data.json";
+import eventData from "../datasets/pilot-event/v1/data.json";
 import type { ClaimSummary, EntitySummary, NeighborsResponse } from "../lib/domain/api";
 const candidate = (positionId: string) => v2.claims.find(c => c.organizationParticipation?.positionId === positionId)!;
 const visitor = { ...candidate("VISITOR"), sourceCount: 1, eventParticipation: null } as ClaimSummary;
@@ -120,5 +122,55 @@ describe("二つのtyped限定の境界", () => {
     const subject = v2.entities.find(e => e.id === visitor.subjectId)! as EntitySummary, object = v2.entities.find(e => e.id === visitor.objectId)! as EntitySummary;
     expect(() => claimSummary({ ...visitor, organizationPositionId: "PROFESSOR" }, subject, object, 1)).toThrow();
     expect(() => citationDetail({ ...v2.citations[0], positionOriginalText: "Visitor" }, v2.sources[0])).toThrow();
+  });
+});
+
+describe("Phase 16：Claim同一性・命題比較・表示束の境界", () => {
+  const qualifiedClaims: [string, ClaimSummary][] = [
+    ["制作Role", creationData, "CONTRIBUTED_TO"],
+    ["組織立場", v2, "AFFILIATED_WITH"],
+    ["Event参加立場", eventData, "PARTICIPATED_IN"],
+  ].map(([name, data, predicate]) => {
+    const fixture = validateFixture(data);
+    const selected = fixture.claims.find(c => c.predicate === predicate &&
+      (c.contribution?.roleId || c.organizationParticipation || c.eventParticipation));
+    if (!selected) throw new Error(`契約テストの限定Claimがない: ${name}`);
+    return [name as string, { ...selected, contribution: selected.contribution ?? null,
+      organizationParticipation: selected.organizationParticipation ?? null,
+      eventParticipation: selected.eventParticipation ?? null, sourceCount: 1 }];
+  });
+
+  it.each(qualifiedClaims)("%s：比較一致でも別UUIDの肯否・根拠件数を保持し、表示束だけを共有する", (_, first) => {
+    // 人工的な対照をメモリ内だけに作る。実資料の否定や新しいSourceを認定しない。
+    const second: ClaimSummary = { ...first, id: "70000000-0000-4000-8000-000000000001", polarity: "denied", sourceCount: 2 };
+    const key = claimComparisonKey(first);
+    expect(claimComparisonKey(second)).toBe(key);
+    const graphClaims = { [first.id]: first, [second.id]: second };
+    const [relation] = Object.values(displayRelations(graphClaims));
+    expect(Object.values(displayRelations(graphClaims))).toHaveLength(1);
+    expect(relation.claimIds).toEqual([first.id, second.id].sort());
+    expect(relation.label).toContain("肯定・否定あり");
+    expect(graphClaims[first.id]).toEqual(first);
+    expect(graphClaims[second.id]).toEqual(second);
+    const separateMeaning: ClaimSummary = { ...second, period: { from: { value: "1900", precision: "year" }, to: null } };
+    expect(claimComparisonKey(separateMeaning)).not.toBe(key);
+    // 別命題比較キーでもSPOの表示IDは変わらず、個々のClaimへ戻れる。
+    const [otherRelation] = Object.values(displayRelations({ [first.id]: first, [second.id]: separateMeaning }));
+    expect(otherRelation.id).toBe(relation.id);
+    expect(otherRelation.claimIds).toEqual(relation.claimIds);
+  });
+
+  it("刊行物の表示文言は比較対象を変えず、構造化した言語・未指定scopeは区別する", () => {
+    const creation = qualifiedClaims[0][1];
+    const contribution = creation.contribution!;
+    const scope = contribution.scope!;
+    expect(scope).not.toBeNull();
+    const translatedLabel: ClaimSummary = { ...creation, contribution: { ...contribution,
+      scope: { ...scope, volumeLabel: "Volume 1", editionLabel: "表示用の版名" } } };
+    expect(claimComparisonKey(translatedLabel)).toBe(claimComparisonKey(creation));
+    const differentLanguage: ClaimSummary = { ...creation, contribution: { ...contribution,
+      scope: { ...scope, language: "en" } } };
+    expect(claimComparisonKey(differentLanguage)).not.toBe(claimComparisonKey(creation));
+    expect(claimComparisonKey({ ...creation, contribution: { ...contribution, scope: null } })).not.toBe(claimComparisonKey(creation));
   });
 });
