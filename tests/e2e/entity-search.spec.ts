@@ -51,3 +51,6 @@ test("別名と同名候補を識別し、種別の空結果を示す", async ({
   await page.getByRole("button", { name: "検索", exact: true }).click();
   await expect(page.getByText("検索結果はありません。名前や検索対象を変えて検索してください。")).toBeVisible();
 });
+
+import { checkStartExamples } from "./start-examples";
+checkStartExamples("demo");

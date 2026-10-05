@@ -74,11 +74,13 @@ export function useGraphExplorer() {
     }
   }, [commit]);
 
-  const chooseRoot = useCallback((entity: EntitySummary) => {
+  const chooseRoot = useCallback((entity: EntitySummary, resetConditions = false) => {
     setPrevious(null); setViewRestoration(null);
     pending.current.forEach((controller) => controller.abort()); pending.current.clear();
     generation.current += 1;
-    commit(projectGraph({ ...emptyGraph(generation.current), predicates: current.current.predicates, contributionRoles: current.current.contributionRoles ?? null, conditionKey: current.current.conditionKey, roots: [entity.id], centerId: entity.id, cacheNodes: { [entity.id]: entity } }));
+    const predicates = resetConditions ? null : current.current.predicates;
+    const contributionRoles = resetConditions ? null : current.current.contributionRoles ?? null;
+    commit(projectGraph({ ...emptyGraph(generation.current), predicates, contributionRoles, conditionKey: explorationKey(predicates, contributionRoles), roots: [entity.id], centerId: entity.id, cacheNodes: { [entity.id]: entity } }));
     setSelection({ kind: "entity", id: entity.id }); void expand(entity.id);
   }, [commit, expand]);
   const switchRoot = useCallback((entity: EntitySummary, mode: "broad" | "same", view: GraphView | null) => {

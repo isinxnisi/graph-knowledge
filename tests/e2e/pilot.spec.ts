@@ -71,3 +71,6 @@ test("影響と制作の条件・英語名検索・実際の引用詳細", async
   await page.getByLabel("名前・別名").fill("Naoki Urasawa"); await page.getByRole("button", { name: "検索", exact: true }).click();
   await expect(page.getByRole("button", { name: /^浦沢直樹 —/ })).toBeVisible();
 });
+
+import { checkStartExamples } from "./start-examples";
+checkStartExamples("pilot-urasawa-v1");

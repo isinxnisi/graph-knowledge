@@ -129,3 +129,7 @@
 .rootBar button { font-size: 12px; padding: 4px 8px; }
 
 .searchForm select { background: var(--color-panel); color: var(--color-text); width: 100%; }
+
+.startExamples { border-top: 1px solid var(--color-border); margin-top: 16px; padding-top: 12px; }
+.startExamples h3, .startExamples p { margin-bottom: 8px; }
+.startExamples button { padding: 5px 8px; font-size: 13px; }

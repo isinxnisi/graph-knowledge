@@ -106,10 +106,13 @@ test("専用レスポンスでRole概要・別Roleの否定・scope比較・条�
 test("受入済み実Roleの全探索・共有枝・座標復元・刊行物限定", async ({ page }) => {
   await root(page);
   async function node(name: string) {
+    // 受理済みGraphの描画を待ち、Canvasの現行サイズで座標を読む。
+    await expect(page.getByTestId("selection-status").locator("..")).not.toContainText("Graphを取得中");
+    await expect.poll(() => page.getByTestId("graph-canvas").evaluate((el, targetId) => (el as unknown as { _cyreg: { cy: import("cytoscape").Core } })._cyreg.cy.getElementById(targetId).length, id(name))).toBe(1);
     const position = await page.getByTestId("graph-canvas").evaluate(async (el, targetId) => {
       const cy = (el as unknown as { _cyreg: { cy: import("cytoscape").Core } })._cyreg.cy;
       const target = cy.getElementById(targetId) as import("cytoscape").NodeSingular;
-      cy.zoom(1); cy.center(target);
+      cy.resize(); cy.zoom(1); cy.center(target);
       await new Promise<void>((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => resolve())));
       return target.renderedPosition();
     }, id(name));
@@ -308,3 +311,6 @@ test("Phase09: 作品・原語別名から開始し、Role条件を起点種別�
   await expect(page.getByTestId("graph-counts")).toHaveText("Entity 2 / Claim 1");
   await expect(page.getByRole("button", { name: "手塚治虫を選択・展開", exact: true })).toBeVisible();
 });
+
+import { checkStartExamples } from "./start-examples";
+checkStartExamples("pilot-urasawa-v2");

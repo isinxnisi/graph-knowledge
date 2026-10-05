@@ -13,6 +13,7 @@ import { relationLabel } from "../lib/client/format";
 import { useGraphExplorer } from "../lib/client/use-graph-explorer";
 import RelationFilter from "./RelationFilter";
 import SearchPanel from "./SearchPanel";
+import StartExamples from "./StartExamples";
 import GraphCanvas, { type GraphCanvasHandle } from "./GraphCanvas";
 import RelationsList from "./RelationsList";
 import EntityDetails from "./EntityDetails";
@@ -56,7 +57,7 @@ export default function Explorer({ dataset = "demo" }: { dataset?: DatasetMode }
       </label>}
     </header>
     <main className={`${styles.columns} ${detailWide ? styles.wideDetails : ""}`}>
-      <div className={styles.panel}><SearchPanel placeholder={labels.searchExample} onChoose={chooseRoot} /></div>
+      <div className={styles.panel}><SearchPanel placeholder={labels.searchExample} onChoose={chooseRoot} /><StartExamples dataset={dataset} onChoose={(entity) => chooseRoot(entity, true)} /></div>
       <section className={`${styles.panel} ${styles.graphPanel}`} aria-labelledby="graph-title">
         <div className={styles.graphHeading}><h2 id="graph-title">Graph</h2>
           <p data-testid="graph-counts">Entity {Object.keys(graph.nodes).length} / Claim {Object.keys(graph.claims).length}</p><p data-testid="relation-counts">Relation {Object.keys(relations).length}</p>

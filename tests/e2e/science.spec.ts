@@ -127,3 +127,6 @@ test("実APIのlimit=1でページ受理・閉鎖復元・途中通信の世代�
   await page.getByRole("button", { name: "直前の探索へ戻る", exact: true }).click();
   await expect(page.getByTestId("graph-counts")).toHaveText("Entity 4 / Claim 3");
 });
+
+import { checkStartExamples } from "./start-examples";
+checkStartExamples("pilot-science-v1");

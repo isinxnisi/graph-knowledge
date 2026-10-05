@@ -578,3 +578,42 @@ describe("一般Entity検索の境界", () => {
     expect(screen.queryByRole("button", { name: new RegExp(`^${root.name} —`) })).toBeNull();
   });
 });
+
+import StartExamples from "../components/StartExamples";
+import { START_EXAMPLES } from "../lib/client/start-examples";
+import demoFixture from "../fixtures/demo.json";
+import pilotV1 from "../datasets/pilot-urasawa/v1/data.json";
+import pilotV2 from "../datasets/pilot-urasawa/v2/data.json";
+import scienceV1 from "../datasets/pilot-science/v1/data.json";
+import { startExampleLabels } from "../lib/i18n/start-examples";
+
+describe("固定の探索開始例", () => {
+  it.each(Object.entries({ demo: demoFixture, "pilot-urasawa-v1": pilotV1, "pilot-urasawa-v2": pilotV2, "pilot-science-v1": scienceV1 }))("%sの入口は実在する凍結Entityだけを参照する", (mode, data) => {
+    const entries = START_EXAMPLES[mode as keyof typeof START_EXAMPLES];
+    expect(new Set(entries.map((entry) => entry.id)).size).toBe(entries.length);
+    for (const entry of entries) expect(data.entities.find((entity) => entity.id === entry.id)).toMatchObject(entry);
+  });
+  it("同名候補を区別し、クリック前は起点選択しない", () => {
+    const choose = vi.fn(); render(<StartExamples dataset="demo" onChoose={choose} />);
+    expect(choose).not.toHaveBeenCalled();
+    const names = screen.getAllByRole("button", { name: /佐藤アキから探索を開始/ });
+    expect(names).toHaveLength(2); expect(names[0].getAttribute("aria-label")).not.toBe(names[1].getAttribute("aria-label"));
+    fireEvent.click(names[1]); expect(choose).toHaveBeenCalledWith(START_EXAMPLES.demo.at(-1));
+    expect(startExampleLabels("en").title).toBe(startExampleLabels("ja-JP").title);
+  });
+  it("開始例は既存の起点選択で条件を同時解除し、旧通信・旧ページを混在させない", async () => {
+    const old = deferred(); vi.mocked(fetchNeighbors).mockReturnValueOnce(old.promise).mockResolvedValueOnce({ ...page, centerId: page.nodes[1].id });
+    const { result } = renderHook(useGraphExplorer);
+    act(() => result.current.changePredicates(["CONTRIBUTED_TO"], ["SUPERVISION"]));
+    act(() => result.current.chooseRoot(root));
+    expect(vi.mocked(fetchNeighbors).mock.calls[0].slice(3)).toEqual([["CONTRIBUTED_TO"], ["SUPERVISION"]]);
+    act(() => result.current.chooseRoot(page.nodes[1], true));
+    expect(vi.mocked(fetchNeighbors).mock.calls[0][2].aborted).toBe(true);
+    expect(vi.mocked(fetchNeighbors).mock.calls[1].slice(3)).toEqual([null, null]);
+    expect(result.current.graph.centerId).toBe(page.nodes[1].id);
+    expect(result.current.graph.predicates).toBeNull(); expect(result.current.graph.contributionRoles).toBeNull();
+    expect(result.current.previous).toBeNull();
+    await act(async () => { old.resolve(page); await old.promise; });
+    expect(result.current.graph.centerId).toBe(page.nodes[1].id); expect(fetchNeighbors).toHaveBeenCalledTimes(2);
+  });
+});

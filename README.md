@@ -254,3 +254,7 @@ npm run science:dev
 既存.env.scienceは上書きしないでください。Node24.21.0を使用。画面は **http://127.0.0.1:3213**。「ゲッティンゲン大学」→パウリ→ニールス・ボーア研究所→ディラック→ケンブリッジ大学と辿れます。原職位と資料の限定は線の詳細／Citationにあります。現在名で表示し、同時在籍・面識・共同研究を認定するGraphではありません。
 
 生成確認はscience:prepare／science:validate、専用Web起動後にscience:integration、ブラウザはscience:e2e（起動済みサーバーを使うならGRAPH_TEST_REUSE=1）。DBはBolt7690／Browser7477、Next出力は.next-scienceです。停止は `docker compose --env-file .env.science -f compose.science.yaml stop`、volumeは残ります。
+
+### 固定の探索開始例
+
+左ペインの「探索してみる」から、現在のdatasetに存在する人物・作品・組織を文字入力なしで起点にできます。開始例は追加条件なしで新しい探索を開始します。既存の検索とGraph途中での起点切替・直前復帰も維持しています。関係モデルを検証する追加データの構成案は[設計文書](docs/design/RELATION_MODEL_VALIDATION_SAMPLES.md)を参照してください。新規データはまだ投入していません。

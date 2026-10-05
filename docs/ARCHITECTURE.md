@@ -567,3 +567,11 @@ type EntityOverviewResponse = {
 科学cursorは既存v2形式を使いdataset／中心／条件を検証。demo／漫画v1の既存cursor契約は維持。CONTRIBUTED_TO Role条件はAFFILIATED_WITHへ作用しない。人物・組織で同じPhase 08／09契約を適用する。
 
 現在名と旧研究所名は公式の改称記述・人間受入により同一Entity。歴史的名称モデル、組織間関係、非制作qualification、Entity概要再設計は未導入。[datasetと起動](../datasets/pilot-science/v1/README.md)／[検証・情報損失の観察](archive/phase-10-science-pilot/IMPLEMENTATION_SCIENCE_PILOT.md)を参照。
+
+## Phase 11：固定の探索開始例
+
+既存dataset別の固定EntitySummaryをlib/client/start-examples.tsで定義する。科学4・漫画各4・demo5（同名2名を含む）。DB・ledger・fixtureの正本は変更せず、unitで各ID・kind・name・descriptionが凍結dataに一致することを検証する。ブラウザへledgerやSource全文を同梱しない。表示文言はlocale境界を持つlib/i18n/start-examples.ts、Entity名は知識データとして扱う。
+
+StartExamplesは検索と並存する左ペインの小さい領域。例を押した時だけchooseRoot(entity, true)で新探索へ移る。既存検索はchooseRoot(entity)で確定条件維持という契約を継承。trueは追加predicate／制作Roleを解除する指定で、起点と条件を一つの世代で確定する。変更条件による旧起点の取得は行わず、旧通信をabort・旧ページ／cursor／開閉意図・直前履歴をリセットする。dataset・公開範囲・取得上限は変えない。検索語・検索kind・検索結果は変更しない。開始例も検索候補も直前復帰対象の起点切替操作とは別の新規開始として扱う。既存の広く見る／同条件で見るの復帰契約は維持する。
+
+開始例は条件や表示法の保存preset・taxonomy・推薦ではない。新規関係モデル／追加データは[検証構成案](design/RELATION_MODEL_VALIDATION_SAMPLES.md)の未実装提案。

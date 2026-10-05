@@ -20,17 +20,18 @@
 | [Predicate意味契約・チェック](design/PREDICATE_CONTRACTS.md) | 既存4語彙の契約・基準版・比較票・validatorを実装済み。追加と変更の手順。制作RoleはPhase 06で導入済み |
 | [関係語彙・役割・意味境界](design/RELATION_VOCABULARY_REVIEW.md) | 凍結パイロット後の設計レビュー。意味契約、役割限定、追加審査、分類・表示の分離。提案を採用し、既存4語彙の契約・チェックを実装。制作RoleはPhase 06を参照。複数predicateの表示束は未実装 |
 | [制作Roleの最小設計](design/CONTRIBUTION_ROLE_REVIEW.md) | CONTRIBUTED_TO限定の4 Role候補・刊行物scope・肯否／比較・条件／cursor・表示・v2方針。採用済み。現行契約と受入状態はPhase 06を参照 |
-| [探索の入口・条件提示](design/EXPLORATION_ENTRY_AND_CONDITIONS_REVIEW.md) | Phase 06後のUI構造レビュー。検索・起点・探索軸・追加条件の分離、段階提示と適用条件の可視性、次フェーズ案。推奨範囲をPhase 07で実装。一般Entity検索はPhase 09で実装。開始例・プリセットは未実装 |
+| [探索の入口・条件提示](design/EXPLORATION_ENTRY_AND_CONDITIONS_REVIEW.md) | Phase 06後のUI構造レビュー。検索・起点・探索軸・追加条件の分離、段階提示と適用条件の可視性、次フェーズ案。推奨範囲をPhase 07で実装。一般Entity検索はPhase 09で実装。固定開始例はPhase 11で実装。プリセットは未実装 |
 | [複数分野の入口・文脈・起点切替](design/CROSS_DOMAIN_EXPLORATION_REVIEW.md) | Phase 07後の設計提案。一つの論理Graph、テーマと条件の分離、広く見る／条件維持、復帰、研究者・機関の小さい検証案。起点切替・復帰をPhase 08で採用・実装。科学の機関中心pilotはPhase 10で投入 |
 | [Entityの関係俯瞰](design/ENTITY_RELATION_OVERVIEW_REVIEW.md) | 起点切替前の任意の俯瞰、登録範囲の集計、ダブルクリック契約とmodal、最小の次フェーズ範囲。Phase 08で採用・実装 |
 | [別分野実データパイロット](design/CROSS_DOMAIN_REAL_DATA_PILOT.md) | Phase 09後の資料確認・設計案。5研究者・3機関・9候補の設計。Phase 10でC01–C08受入・投入、C09 pending。既存語彙の境界と資料→概要の情報損失を観察 |
+| [関係モデルの検証サンプル構成](design/RELATION_MODEL_VALIDATION_SAMPLES.md) | 既存22 Claimと異なる意味構造の14–20候補、5方式の比較と段階的収集・レビュー。新規受入・投入は未実施 |
 | [API応答例](API_RESPONSE_EXAMPLES.json) | 読み取りAPIの例。テストから参照するため、この場所を維持 |
 
 未実装部分を含む文書は、完了した内容が一部あっても丸ごとアーカイブしない。設計案を採用済みとみなさず、最新のユーザー指示を優先する。
 
 ## 進行中のフェーズ
 
-Phase 10で別分野の科学・研究機関パイロットを投入・観察。C09はpending。概要UIの再設計や組織関与のqualificationは未着手。
+Phase 11で関係モデルの検証サンプル構成を設計し、既存datasetの固定開始例を追加。新規候補の受入・投入は未実施。科学C09はpending。概要UIの再設計や組織関与のqualificationは未着手。
 
 ## フェーズ別の完了履歴
 
@@ -46,6 +47,7 @@ Phase 10で別分野の科学・研究機関パイロットを投入・観察。
 | Phase 08：関係俯瞰と起点切替 | 公開主張の専用集計、任意の概要、原子的な切替、直前一件復帰 | [履歴一覧](archive/phase-08-entity-overview/README.md) |
 | Phase 09：一般Entity検索 | 人物・作品・組織の統一検索入口、種別と探索条件の分離 | [履歴一覧](archive/phase-09-entity-search/README.md) |
 | Phase 10：科学・研究機関パイロット | 8 Entity・8受入Claimの専用環境、根拠保持と共通探索の観察。C09保留 | [履歴一覧](archive/phase-10-science-pilot/README.md) |
+| Phase 11：モデル検証準備・開始例 | 意味構造のサンプル構成案、既存datasetの固定開始例。新規seedなし | [実施記録](archive/phase-11-model-samples/IMPLEMENTATION_MODEL_SAMPLES.md) |
 
 Phase 02後のNode再クリックの採用・検証は、現役の[操作と設定](design/GRAPH_INTERACTION_AND_SETTINGS.md)へ記録している。今後、設定機能の検討が終わるまでは現役文書として維持する。
 
