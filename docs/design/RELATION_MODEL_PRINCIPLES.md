@@ -4,6 +4,8 @@
 
 本書は責務を固定する。個別のpayload・有限語彙・受入範囲は[制作Role契約](CONTRIBUTION_ROLE_CONTRACTS.md)、[制作・組織の限定契約](TYPED_QUALIFICATION_CONTRACTS.md)、[Event参加契約](EVENT_PARTICIPATION_CONTRACTS.md)、[Predicate契約](PREDICATE_CONTRACTS.md)を正本とする。API・探索の具体仕様は[ARCHITECTURE](../ARCHITECTURE.md)。過去の比較文書の提案やarchiveの当時の仕様は、新しい型を実装する許可にはならない。
 
+Phase 18の[関係探索モデルの再レビュー](RELATION_EXPLORATION_MODEL_REVIEW.md)は、有限enum・具体語の限定化・探索分類の粒度を多分野で再評価した提案。現行の三型と使用済み値の契約は変更していない。全原語をenum化することや全補足を限定化することを、本書が将来の一般解として保証したとは読まない。
+
 ## 1. 採用する九つの原則
 
 1. **独立した命題差はPredicate候補にする。** 参加と招待、親子と配偶者、参加と組織関与、影響と批判を単なるRole差へ潰さない。独立性は肯否・端点の意味・方向／対称性・含意・失われる意味を合わせてレビューする。新Predicateの採用には別途意味契約が必要。
