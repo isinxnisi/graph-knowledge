@@ -1,5 +1,7 @@
 # 関係モデルを比較する実データサンプル構成
 
+Phase 13追記：[第2回比較](RELATION_MODEL_SECOND_COMPARISON_REVIEW.md)でD/E/C各3の資料と反例を確認済み。Phase 12の新規7件は狭い事実のみ人間受入済み。以下の収集案・当時のpending記述は計画履歴として読む。新しい構造化方式・語彙・投入は未承認。
+
 2026-10-05 / Phase 11の収集計画。固定開始例は実装済み。Phase 12で優先7候補の本文確認・版付き台帳・5方式比較まで進めた。[第1回比較レビュー](RELATION_MODEL_COMPARISON_REVIEW.md)と[研究台帳v1](../research/phase-12-relation-model/v1/README.md)を参照。新Claimの人間受入・投入、新predicate／Role／qualificationの採用は未実施。
 
 [意味契約](PREDICATE_CONTRACTS.md)、[関係語彙レビュー](RELATION_VOCABULARY_REVIEW.md)、[制作Role契約](CONTRIBUTION_ROLE_CONTRACTS.md)、[科学観察](../archive/phase-10-science-pilot/IMPLEMENTATION_SCIENCE_PILOT.md)を基準にする。完全なontologyや自由key/value方式を結論として先取りしない。

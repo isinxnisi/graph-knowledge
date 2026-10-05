@@ -2,6 +2,8 @@
 
 2026-10-05 / Phase 12。**資料確認・設計比較のみ完了。新規候補の人間受入、語彙採用、DB/API/UIへの実装・投入は未実施。**
 
+Phase 13追記：新規7件は今回のユーザー指示で**狭い事実だけ受入済み**。構造化方式は未承認、F01の排他的adaptation/remake正規化は未受入。以下のpending表記はPhase 12当時の記録。最新の受入・反例・次案は[第2回比較](RELATION_MODEL_SECOND_COMPARISON_REVIEW.md)と[台帳v2](../research/phase-13-relation-model/v2/README.md)を読む。凍結v1は変更しない。
+
 [Phase 11の収集計画](RELATION_MODEL_VALIDATION_SAMPLES.md)を具体化した。[版付き台帳と再確認手順](../research/phase-12-relation-model/v1/README.md)、[収集・全候補の5方式比較](../research/phase-12-relation-model/v1/ledger.json)を正本とする。記号は設計比較用であり、predicate ID／Role IDの予約やcatalog登録ではない。
 
 ## 1. 件数と受入状態
