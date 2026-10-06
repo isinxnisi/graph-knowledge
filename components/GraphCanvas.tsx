@@ -54,12 +54,15 @@ export default function GraphCanvas({ ref, restoration, interactionBlocked, grap
         { selector: "node.center", style: { "border-width": 3, "border-color": color("accent") } },
         { selector: 'node[kind="event"]', style: { shape: "diamond", "background-color": color("work") } },
         { selector: "edge", style: { label: "data(canvasLabel)", color: color("text"), "curve-style": "unbundled-bezier", "control-point-distances": "data(distance)", "control-point-weights": "data(weight)", "target-arrow-shape": "triangle", "source-arrow-shape": "none", "arrow-scale": 1.2, "line-color": color("edge"), "target-arrow-color": color("edge"), width: 2, "font-size": 15, "text-margin-y": (edge: cytoscape.EdgeSingular) => Number(edge.data("labelOffset")), "text-background-color": color("panel"), "text-background-opacity": 1, "text-background-padding": "5px", "text-wrap": "wrap", "text-max-width": "165px", "text-overflow-wrap": "anywhere", "text-events": "yes" } },
+        // 具体Roleのない制作ラベルは、文言を保ったままラベル全体をbadge風に描画する。
+        { selector: 'edge[predicate="CONTRIBUTED_TO"][badge=""]', style: { "font-size": 13, "text-background-color": color("hover"), "text-background-shape": "roundrectangle", "text-background-padding": "4px", "text-border-width": 1, "text-border-color": color("border"), "text-border-opacity": 1 } },
         { selector: 'edge[polarity="denied"]', style: { "line-style": "dashed", "line-color": color("denied"), "target-arrow-color": color("denied") } },
         { selector: 'edge[polarity="mixed"]', style: { "line-style": "dotted" } },
         { selector: "node[expanded = 1]", style: { "border-style": "double", "border-width": 4 } },
         { selector: "node.added", style: { "underlay-color": color("new-node"), "underlay-opacity": 0.25, "underlay-padding": 10 } },
         { selector: "node.chosen", style: { "border-width": 5, "border-color": color("accent-strong"), "underlay-color": color("accent-strong"), "underlay-opacity": 0.12, "underlay-padding": 8 } },
         { selector: "edge.chosen", style: { "line-color": color("accent-strong"), "target-arrow-color": color("accent-strong"), width: 4, "text-background-color": color("accent-soft"), "z-index": 10 } },
+        { selector: 'edge.chosen[predicate="CONTRIBUTED_TO"][badge=""]', style: { "text-border-color": color("accent") } },
       ];
     };
     const cy = cytoscape({
@@ -108,7 +111,7 @@ export default function GraphCanvas({ ref, restoration, interactionBlocked, grap
     const routes = edgeRoutes(relations);
     const elements: ElementDefinition[] = newNodes.map((node) => ({ group: "nodes", data: { id: node.id, label: entityLabel(node, graph.nodes), kind: node.kind }, position: { x: 0, y: 0 } }));
     Object.values(relations).forEach((claim) => {
-      if (!cy.getElementById(claim.id).length) elements.push({ group: "edges", data: { id: claim.id, source: claim.subjectId, target: claim.objectId, polarity: claim.polarity, claimIds: claim.claimIds, badge: claim.badge, canvasLabel: claim.canvasLabel, ...routes[claim.id] } });
+      if (!cy.getElementById(claim.id).length) elements.push({ group: "edges", data: { id: claim.id, source: claim.subjectId, target: claim.objectId, predicate: claim.predicate, polarity: claim.polarity, claimIds: claim.claimIds, badge: claim.badge, canvasLabel: claim.canvasLabel, ...routes[claim.id] } });
     });
     cy.batch(() => {
       cy.add(elements);
