@@ -8,6 +8,8 @@ DisplayRelationは表示中の同じsubjectId / predicate / objectIdのClaim UUI
 
 線では「この二者がどう関係するか」を先に示す。構造化済みの具体値がある場合、短い見出し（制作／組織／参加）と具体語を表示し、長いpredicate表示名を繰り返さない。制作Role、組織関与立場、Event参加立場の語彙は別々の辞書を使う。短い見出しは表示文言であり、新taxonomy・保存語彙・条件ではない。
 
+2026-10-07の視覚調整：具体値がある場合だけカテゴリを小さいpatch（11px・控えめな背景と境界・4px角丸）として具体語の左へ添える。具体語は既存15pxのCytoscapeラベル。「影響を受けた」「アシスタントだった」や具体値なしのfallbackにpatchを付けない。Cytoscapeの部分文字装飾を補う小さいDOMレイヤーで、公開labelのboundsに合わせ、pan／zoom／移動／選択に追随する。patchのクリックも同じRelationを選択する。Graphのテキスト代替・選択説明にはカテゴリを含む従来の文字列を残し、描画用の`badge`と`canvasLabel`だけ分離する。新しいGraph要素・保存分類ではない。
+
 具体語は二値まで表示する。ID順で安定させ、信頼度・頻度・期間で順位付けしない。二語の合計が区切り込み24文字を超える場合、語の間で改行する（文字数はUnicodeコードポイント）。長い語を「N種類」へ置き換えない。三値以上は具体語二つと「ほかN件」を示す。このNは未表示の限定値数で、Claim／Source／接続Entity数ではない。全ての値は詳細で確認できる。
 
 Graphでは「指定なし」「Claim件数」「期間」「scope」「Source数」をラベルへ出さない。Role／立場の具体値がない場合は従来のpredicate表示名へfallbackする。例えば浦沢直樹→PLUTOは「制作に関わった」のまま。具体値がある線でも刊行物・期間等の適用範囲を全作品・全期間へ一般化しない。
@@ -49,3 +51,8 @@ Citationでは、Sourceタイトル、支持／反証／背景、locator、URL�
 ## 変更境界
 
 API契約、Cypher、DBモデル、語彙契約、Claim schema、三typed型、条件キー／cursor、GraphState、凍結dataset、レイアウト・曲率は不変。新しい表示文字列は `lib/i18n/relation-presentation.ts` のlocale境界へ置き、保存語彙と分離する。全面多言語化、分類・Capsule・投稿はこの実装に含まない。
+
+
+## 局所badge調整の検証（2026-10-07）
+
+`tests/ui-state.test.tsx`の71件と、既存Playwrightの漫画PLUTO・science・Event・demo代表表示4ケースが成功。patchの有無・11px・クリック対応・pan／zoomへの追随、条件変更後のpatch削除、自然なラベル／fallback、独立Claim／Sourceと既存座標を検証した。実ブラウザのPLUTO・science・Eventのスクリーンショットで視覚階層も確認した。typecheck・変更したTS/TSXへのeslint・buildも成功。専用API integration／seedは実行せず、意味モデル・API・DB・datasetには差分なし。新しい画像アーカイブは追加していない。

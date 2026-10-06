@@ -740,6 +740,8 @@ describe("Relationの概要と独立した主張の読み分け", () => {
     const relations = Object.values(displayRelations({ broad, narrow }));
     expect(relations).toHaveLength(1);
     expect(relations[0].label).toBe(`${category}\n${label}`);
+    expect(relations[0].badge).toBe(category);
+    expect(relations[0].canvasLabel).toBe(label);
     expect(relationPresentation([broad, narrow]).qualification?.entries.find(e => e.id === null)).toMatchObject({ affirmed: 1 });
     expect(relations[0].label).toBe(Object.values(displayRelations({ narrow }))[0].label);
   });
@@ -773,6 +775,8 @@ describe("Relationの概要と独立した主張の読み分け", () => {
     const claim = { ...base, citations: base.citations.map(c => ({ ...c, note: "作画としてクレジット" })) };
     expect(relationPresentation([claim]).graphQualification).toBe("");
     expect(Object.values(displayRelations({ claim }))[0].label).toBe("制作に関わった");
+    expect(Object.values(displayRelations({ claim }))[0].badge).toBe("");
+    expect(Object.values(displayRelations({ claim }))[0].canvasLabel).toBe("制作に関わった");
     expect(relationPresentation([claim]).qualification?.entries).toEqual([{ id: null, label: "役割指定なし", affirmed: 1, denied: 0 }]);
     render(<ClaimCard claim={claim} nodes={{}} title="主張" />);
     expect(screen.getAllByText("作画としてクレジット")).toHaveLength(2);

@@ -30,7 +30,11 @@
 .graphHeading { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex: 0 0 auto; }
 .graphHeading p { font-size: 12px; color: var(--color-muted); }
 .empty { padding: 12px; background: var(--color-hover); }
-.canvas { height: auto; width: 100%; background: var(--color-canvas); border: 1px solid var(--color-border); border-radius: 4px; flex: 1 1 0; min-height: 230px; }
+.canvas { position: relative; height: auto; width: 100%; background: var(--color-canvas); border: 1px solid var(--color-border); border-radius: 4px; flex: 1 1 0; min-height: 230px; }
+.cySurface { position: absolute; inset: 0; }
+.relationPatches { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 10; }
+.explorer .relationPatch { position: absolute; transform-origin: right center; pointer-events: auto; white-space: nowrap; font: 11px/1.2 system-ui, sans-serif; padding: 2px 5px; border: 1px solid var(--color-border); border-radius: 4px; background: var(--color-hover); color: var(--color-muted); }
+.explorer .relationPatch[data-selected="true"] { background: var(--color-accent-soft); color: var(--color-accent); }
 .graphTools { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px 0; font-size: 11px; color: var(--color-muted); flex: 0 0 auto; }
 .relations { border-top: 1px solid var(--color-border); padding-top: 8px; margin-top: 0; flex: 0 1 180px; min-height: 85px; overflow: auto; overscroll-behavior: contain; }
 .relationList { max-height: none; overflow-y: auto; overflow: visible; }

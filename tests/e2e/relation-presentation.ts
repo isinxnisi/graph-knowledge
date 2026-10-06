@@ -52,7 +52,27 @@ export function checkRelationPresentation(mode: keyof typeof datasets) {
     expect(labels[0].label).toContain(c.label); expect(labels[0].label).not.toMatch(/異説|192[467]|200[1234]/);
     expect(labels[0].label).not.toMatch(/指定なし|種類|Claim|主張\s*\d/);
     if (mode === "manga") expect(labels[0].label).not.toMatch(/作画|作者|原作/);
+    const patch = canvas(page).locator("..").locator(`button[data-relation-id="relation:${id(c.subject)}:${pair[0].predicate}:${id(c.object)}"]`);
+    if (mode === "science" || mode === "event") {
+      await expect(patch).toHaveText(mode === "science" ? "組織" : "参加");
+      expect(await patch.evaluate(el => getComputedStyle(el).fontSize)).toBe("11px");
+      const before = (await patch.boundingBox())!;
+      await canvas(page).evaluate(el => { (el as unknown as { _cyreg: { cy: import("cytoscape").Core } })._cyreg.cy.panBy({ x: 20, y: 12 }); });
+      await expect.poll(async () => (await patch.boundingBox())?.x).toBeCloseTo(before.x + 20, 0);
+      await expect.poll(async () => (await patch.boundingBox())?.y).toBeCloseTo(before.y + 12, 0);
+      await canvas(page).evaluate(el => {
+        const cy = (el as unknown as { _cyreg: { cy: import("cytoscape").Core } })._cyreg.cy;
+        cy.zoom(cy.zoom() * 1.1);
+      });
+      await expect.poll(async () => (await patch.boundingBox())?.width).toBeCloseTo(before.width * 1.1, 0);
+    } else await expect(patch).toHaveCount(0);
     await page.screenshot({ path: `test-results/phase22/${mode}-graph.png` });
+    if (mode === "science" || mode === "event") {
+      await patch.click();
+      await expect(patch).toHaveAttribute("data-selected", "true");
+      await expect(page.getByTestId("relation-overview")).toContainText(c.subject);
+      await expect(page.getByTestId("relation-overview")).toContainText(c.object);
+    }
     await clickRelation(page, id(c.subject), id(c.object));
     await expect(page.getByTestId("selection-status")).toContainText(labels[0].label.replaceAll("\n", " / "));
     const detail = page.getByRole("region", { name: "Claim詳細" }), summary = page.getByTestId("relation-overview");
@@ -111,6 +131,8 @@ export function checkRelationPresentation(mode: keyof typeof datasets) {
       { label: "制作に関わった", claimCount: 1 },
     ]));
     expect(semanticLabels).toHaveLength(3);
+    await expect(canvas(page).locator("..").locator('button[data-relation-id]')).toHaveCount(2);
+    await expect(canvas(page).locator("..").locator('button[data-relation-id]').first()).toHaveText("制作");
     await page.screenshot({ path: "test-results/phase22/manga-pluto-graph.png" });
     await clickRelation(page, id("長崎尚志"), id("PLUTO"));
     const summary = page.getByTestId("relation-overview");
@@ -122,6 +144,7 @@ export function checkRelationPresentation(mode: keyof typeof datasets) {
     await page.getByRole("checkbox", { name: "プロデュース", exact: true }).check();
     await page.getByRole("button", { name: "適用", exact: true }).click();
     await expect(page.getByTestId("graph-counts")).toHaveText("Entity 2 / Claim 1");
+    await expect(canvas(page).locator("..").locator('button[data-relation-id]')).toHaveCount(1);
     expect(await canvas(page).evaluate(el => (el as unknown as { _cyreg: { cy: import("cytoscape").Core } })._cyreg.cy.edges().first().data("label"))).toBe("制作\nプロデュース");
     await clickRelation(page, id("長崎尚志"), id("PLUTO"));
     await expect(summary).not.toContainText("役割指定なし");

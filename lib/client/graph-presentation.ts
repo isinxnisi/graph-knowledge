@@ -18,6 +18,7 @@ export const relationId = (claim: Pick<ClaimSummary, "subjectId" | "predicate" |
 export type DisplayRelation = {
   id: string; subjectId: string; objectId: string; predicate: ClaimSummary["predicate"];
   claimIds: string[]; polarity: "affirmed" | "denied" | "mixed"; label: string;
+  badge: string; canvasLabel: string;
 };
 export function displayRelations(claims: Record<string, ClaimSummary>): Record<string, DisplayRelation> {
   const groups = new Map<string, ClaimSummary[]>();
@@ -30,9 +31,12 @@ export function displayRelations(claims: Record<string, ClaimSummary>): Record<s
     const polarities = new Set(group.map((claim) => claim.polarity));
     const polarity = polarities.size > 1 ? "mixed" : first.polarity;
     const presentation = relationPresentation(group);
+    const suffix = polarity === "mixed" ? `\n${relationPresentationLabels().mixed}` : polarity === "denied" ? "\n（否定）" : "";
+    const canvasLabel = (presentation.graphQualification || PREDICATES[first.predicate].label) + suffix;
     return [id, { id, subjectId: first.subjectId, objectId: first.objectId, predicate: first.predicate,
       claimIds: group.map((claim) => claim.id).sort(), polarity,
-      label: (presentation.graphQualification ? `${presentation.graphCategory}\n${presentation.graphQualification}` : PREDICATES[first.predicate].label) + (polarity === "mixed" ? `\n${relationPresentationLabels().mixed}` : polarity === "denied" ? "\n（否定）" : ""),
+      label: (presentation.graphCategory ? `${presentation.graphCategory}\n` : "") + canvasLabel,
+      badge: presentation.graphCategory, canvasLabel,
     }];
   }));
 }

@@ -636,3 +636,6 @@ Edge選択時、表示中ClaimSummaryで関係全体の概要を先に示す。�
 [採用契約](design/RELATION_PRESENTATION_CONTRACTS.md)。構造化済みの具体語がある線は、短い見出し（制作／組織／参加）＋Role／立場の名前で表示する。長い二語は改行し、三値以上でも名前二つと「ほかN件」を残す。ID順は表示の安定性だけを目的とする。指定なし・種類数・Claim件数はGraphの主表示にせず、独立主張の構成を既存Relation詳細で確認する。具体値がない場合は従来のpredicateラベルへfallbackする。CitationからRoleを推測しない。
 
 SPO集約・claimIds・方向・中立的な肯否表現・個別限定の否定注記・詳細の表示範囲区分は不変。変更は既存ClaimSummaryのpresentationとlocale文言だけで、API・DB・意味モデル・dataset・条件・開閉・復帰・座標・曲率は変更しない。[実画面と検証記録](archive/phase-22-semantic-edge-labels/README.md)を参照。
+
+
+Phase 22後の局所視覚調整：構造化済み具体語を持つRelationだけ、カテゴリを11pxの小さい背景付きpatchとして左に添える。主表示は15pxの具体語で、自然なpredicate表示とfallbackにはpatchを付けない。Cytoscapeラベルと補助DOMの描画上の分離であり、Relationの意味・claimIds・API・DB・datasetは不変。詳細は[現行presentation契約](design/RELATION_PRESENTATION_CONTRACTS.md)を参照。
