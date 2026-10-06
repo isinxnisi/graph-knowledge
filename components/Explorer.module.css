@@ -98,6 +98,7 @@
 .draftNotice { padding: 6px 9px; border-left: 3px solid var(--color-accent); background: var(--color-accent-soft); font-size: 13px; }
 .editorActions { display: flex; justify-content: flex-end; gap: 10px; }
 .editorActions button:last-child { background: var(--color-accent); color: var(--color-on-accent); }
+.conditionDialog .editorActions { position: sticky; bottom: -20px; z-index: 1; margin: 0 -20px -20px; padding: 12px 20px; border-top: 1px solid var(--color-border); background: var(--color-panel); }
 .detailHeading { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px; margin-bottom: 12px; }
 .detailHeading h2 { margin: 0; }
 .detailHeading button { padding: 3px 6px; font-size: 12px; }
@@ -155,3 +156,11 @@
 .startExamples { border-top: 1px solid var(--color-border); margin-top: 16px; padding-top: 12px; }
 .startExamples h3, .startExamples p { margin-bottom: 8px; }
 .startExamples button { padding: 5px 8px; font-size: 13px; }
+
+.selectionModes { display: grid; gap: 8px; margin-bottom: 14px; }
+.selectionModes label, .facetChoices label { display: flex; align-items: flex-start; gap: 8px; }
+.selectionModes input, .facetChoices input { width: auto; margin-top: 5px; accent-color: var(--color-accent); }
+.facetChoices { display: grid; gap: 10px; }
+.facetChoices label { padding: 10px; border: 1px solid var(--color-border); border-radius: 5px; }
+.facetDescription { display: block; color: var(--color-muted); font-size: 12px; margin-top: 3px; }
+.preciseTitle { font-size: 14px; margin: 18px 0 8px; }

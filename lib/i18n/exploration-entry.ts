@@ -1,3 +1,5 @@
+import { RELATION_FACET_CATALOG, facetsForPredicates } from "../client/relation-facets";
+import { relationFacetLabels } from "./relation-facets";
 import { eventParticipationLabels } from "./event-participation";
 import type { EventRoleFilter, OrganizationPositionFilter, ContributionRoleFilter, PredicateFilter } from "../domain/exploration";
 import { PREDICATE_KEYS } from "../domain/predicates";
@@ -24,7 +26,13 @@ export function conditionSummary(predicates: PredicateFilter, roles: Contributio
   const text = entryLabels(locale), relations = explorationLabels(locale), roleText = contributionLabels(locale);
   if (predicates === null && roles === null && positions === null && eventRoles === null) return text.unrestricted;
   if (predicates?.length === 0) return text.none;
-  return (predicates ?? PREDICATE_KEYS).map((predicate) => predicate === "CONTRIBUTED_TO" && roles !== null
-    ? `${relations.predicates[predicate]}（${roles.length ? roles.map((role) => roleText.roles[role]).join("・") : text.noRoles}）`
-    : predicate === "AFFILIATED_WITH" && positions !== null ? `${relations.predicates[predicate]}（${positions.length ? positions.map(position => organizationParticipationLabels(locale).positions[position]).join("・") : organizationParticipationLabels(locale).empty}）` : predicate === "PARTICIPATED_IN" && eventRoles !== null ? `${relations.predicates[predicate]}（${eventRoles.length ? eventRoles.map(role => eventParticipationLabels(locale).roles[role]).join("・") : eventParticipationLabels(locale).empty}）` : relations.predicates[predicate]).join(" ／ ");
+  const facetText = relationFacetLabels(locale), facets = facetsForPredicates(predicates);
+  const name = (predicate: typeof PREDICATE_KEYS[number]) => {
+    const facet = RELATION_FACET_CATALOG.items.find(item => facets?.includes(item.id) && (item.predicates as readonly string[]).includes(predicate));
+    return facet ? facetText.items[facet.id].name : relations.predicates[predicate];
+  };
+  const summary = (predicates ?? PREDICATE_KEYS).map((predicate) => predicate === "CONTRIBUTED_TO" && roles !== null
+    ? `${name(predicate)}（${roles.length ? roles.map((role) => roleText.roles[role]).join("・") : text.noRoles}）`
+    : predicate === "AFFILIATED_WITH" && positions !== null ? `${name(predicate)}（${positions.length ? positions.map(position => organizationParticipationLabels(locale).positions[position]).join("・") : organizationParticipationLabels(locale).empty}）` : predicate === "PARTICIPATED_IN" && eventRoles !== null ? `${name(predicate)}（${eventRoles.length ? eventRoles.map(role => eventParticipationLabels(locale).roles[role]).join("・") : eventParticipationLabels(locale).empty}）` : name(predicate)).join(" ／ ");
+  return predicates !== null && facets === null ? `${facetText.customSummary}：${summary}` : summary;
 }

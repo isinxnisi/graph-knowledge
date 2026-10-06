@@ -35,7 +35,7 @@ test("人物・作品・組織の一つの入口と検索だけでは変わら�
   await overview(page);
   await page.getByRole("button", { name: "青葉ハルを選択・展開", exact: true }).click();
   await expect(page.getByTestId("graph-counts")).toHaveText("Entity 6 / Claim 8");
-  await page.screenshot({ path: "docs/archive/phase-09-entity-search/demo-organization.png" });
+  await page.screenshot({ path: "test-results/phase09-demo-organization.png" });
 });
 test("別名と同名候補を識別し、種別の空結果を示す", async ({ page }) => {
   await page.goto("/");

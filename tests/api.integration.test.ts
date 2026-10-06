@@ -11,6 +11,7 @@ import type { Fixture } from "../lib/domain/fixture";
 import type { EntityOverviewResponse, ClaimResponse, EntityResponse, EntitySearchResponse, NeighborsResponse } from "../lib/domain/api";
 import { openDatabase } from "../lib/server/neo4j";
 import { graphSnapshot, loadFixture, seedFixture } from "../lib/server/seed";
+import { resolveRelationFacets } from "../lib/client/relation-facets";
 
 vi.setConfig({ testTimeout: 30000 });
 
@@ -317,6 +318,22 @@ it("rejects cross-condition cursors and distinguishes empty matches from all rel
   const detail = await request<ClaimResponse>(`/api/claims/${fixture.claims[0].id}`);
   expect(detail.relatedClaimIds).toHaveLength(2);
   expect(detail.claim.citations).toHaveLength(2);
+});
+
+it("facetの解決済み条件は直接指定と同じAPI・ページング契約を使う", async () => {
+  const center = fixture.entities[0].id;
+  const predicates = resolveRelationFacets(["relation.work-production", "relation.organization-involvement"])!;
+  const params = new URLSearchParams({ predicates: predicates.join(","), limit: "1" });
+  const path = `/api/entities/${center}/neighbors`;
+  const first = await request<NeighborsResponse>(`${path}?${params}`);
+  expect(first).toEqual(await request<NeighborsResponse>(`${path}?predicates=CONTRIBUTED_TO,AFFILIATED_WITH&limit=1`));
+  expect(first.page.hasMore).toBe(true);
+  params.set("after", first.page.nextCursor!);
+  const second = await request<NeighborsResponse>(`${path}?${params}`);
+  expect(second.claims[0].id).not.toBe(first.claims[0].id);
+  await request(`${path}?predicates=CONTRIBUTED_TO&after=${encodeURIComponent(first.page.nextCursor!)}`, 400);
+  await request(`${path}?facets=relation.work-production`, 400);
+  expect((await request<NeighborsResponse>(`${path}?predicates=${resolveRelationFacets([])!.join(",")}`)).claims).toEqual([]);
 });
 
 it("returns 503 with the real DB stopped, then recovers after restarting", async () => {

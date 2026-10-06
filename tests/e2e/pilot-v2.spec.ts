@@ -1,3 +1,4 @@
+import { checkRelationFacets } from "./relation-facets";
 import { editConditions, editRoles } from "./conditions";
 import { test, expect, type Page } from "@playwright/test";
 import rawData from "../../datasets/pilot-urasawa/v2/data.json" with { type: "json" };
@@ -304,7 +305,7 @@ test("Phase09: 作品・原語別名から開始し、Role条件を起点種別�
   await expect(page.getByTestId("graph-counts")).toHaveText("Entity 2 / Claim 1");
   await page.getByRole("button", { name: "直前の探索へ戻る" }).click();
   await expect(page.getByTestId("graph-counts")).toHaveText("Entity 2 / Claim 1");
-  await page.screenshot({ path: "docs/archive/phase-09-entity-search/pilot-work.png" });
+  await page.screenshot({ path: "test-results/phase09-pilot-work.png" });
   await page.getByLabel("検索対象", { exact: true }).selectOption("person");
   await page.getByLabel("名前・別名").fill("浦沢直樹");
   await page.getByRole("button", { name: "検索", exact: true }).click();
@@ -317,3 +318,5 @@ test("Phase09: 作品・原語別名から開始し、Role条件を起点種別�
 
 import { checkStartExamples } from "./start-examples";
 checkStartExamples("pilot-urasawa-v2");
+
+checkRelationFacets("pilot-urasawa-v2", "長崎尚志", ["作品制作への関与"], ["CONTRIBUTED_TO"], { toggle: "制作の役割を調整", mode: "役割を指定する", label: "プロデュース", parameter: "contributionRoles", value: "PRODUCING" }, "Entity 2 / Claim 1");

@@ -1,3 +1,4 @@
+import { checkRelationFacets } from "./relation-facets";
 import { expect, test, type Page } from "@playwright/test";
 import ledger from "../../datasets/pilot-science/v2/ledger.json" with { type: "json" };
 import { editConditions } from "./conditions";
@@ -38,14 +39,14 @@ async function setPosition(page: Page, position: "Visitor" | "Associate professo
     for (const name of ["Visitor", "Associate professor"]) await page.getByRole("checkbox", { name, exact: true }).uncheck();
     await page.getByRole("checkbox", { name: position, exact: true }).check();
   } else await page.getByRole("radio", { name: "立場で絞らない", exact: true }).check();
-  if (position) await page.screenshot({ path: `docs/archive/phase-14-typed-qualification/science-v2-condition-${position === "Visitor" ? "visitor" : "professor"}.png` });
+  if (position) await page.screenshot({ path: `test-results/phase14-science-v2-condition-${position === "Visitor" ? "visitor" : "professor"}.png` });
   await page.getByRole("button", { name: "適用", exact: true }).click();
 }
 
 test("2立場・2期間・広いClaimを独立表示し、1本のGraphと詳細へ戻れる", async ({ page }) => {
   await start(page);
   expect((await view(page)).edges).toHaveLength(2);
-  await page.screenshot({ path: "docs/archive/phase-14-typed-qualification/science-v2-initial.png" });
+  await page.screenshot({ path: "test-results/phase14-science-v2-initial.png" });
   await tap(page, visitor.claimId, true);
   for (const candidate of ledger.candidates) {
     const card = page.getByTestId(`claim-card-${candidate.claimId}`);
@@ -56,7 +57,7 @@ test("2立場・2期間・広いClaimを独立表示し、1本のGraphと詳細�
   }
   await expect(page.getByTestId(`claim-card-${visitor.baseClaimId}`)).toContainText("立場の限定なし");
   await page.getByRole("button", { name: "詳細を広く読む", exact: true }).click();
-  await page.screenshot({ path: "docs/archive/phase-14-typed-qualification/science-v2-detail.png" });
+  await page.screenshot({ path: "test-results/phase14-science-v2-detail.png" });
   const label = await canvas(page).evaluate((el, claimId) => (el as unknown as { _cyreg: { cy: import("cytoscape").Core } })._cyreg.cy.edges().filter(e => e.data("claimIds").includes(claimId)).first().data("label"), visitor.claimId);
   expect(label).not.toContain("1924"); expect(label).not.toContain("異説"); expect(label).toContain("立場 2種類");
   await tap(page, heisenberg); const entity = page.getByRole("region", { name: "Entity詳細" });
@@ -77,7 +78,7 @@ test("明示適用・Visitor / Associate professor・解除・条件外詳細・
   await setPosition(page, null); await expect(page.getByTestId("graph-counts")).toHaveText("Entity 3 / Claim 4");
   await setPosition(page, "Visitor"); await expect(page.getByTestId("graph-counts")).toHaveText("Entity 2 / Claim 1");
   await expect(page.getByTestId("active-predicates")).toContainText("Visitor");
-  await page.screenshot({ path: "docs/archive/phase-14-typed-qualification/science-v2-visitor.png" });
+  await page.screenshot({ path: "test-results/phase14-science-v2-visitor.png" });
   await tap(page, visitor.claimId, true); await expect(page.getByTestId(`claim-card-${professor.claimId}`)).toBeVisible();
   await expect(page.getByRole("region", { name: "Claim詳細" })).toContainText("現在の探索条件の対象外の主張");
   await tap(page, nbi); await expect(page.getByTestId("graph-counts")).toHaveText("Entity 2 / Claim 1");
@@ -86,7 +87,7 @@ test("明示適用・Visitor / Associate professor・解除・条件外詳細・
   await page.getByRole("button", { name: "同じ条件でこの対象から見る", exact: true }).click();
   await expect(page.getByTestId("exploration-root")).toBeVisible();
   await expect(page.getByTestId("active-predicates")).toContainText("Visitor");
-  await page.screenshot({ path: "docs/archive/phase-14-typed-qualification/science-v2-visitor.png" });
+  await page.screenshot({ path: "test-results/phase14-science-v2-visitor.png" });
   await page.getByRole("button", { name: "直前の探索へ戻る", exact: true }).click();
   expect(await view(page)).toEqual(beforeSwitch);
   await page.getByRole("button", { name: "関係概要を見る", exact: true }).click();
@@ -98,7 +99,7 @@ test("明示適用・Visitor / Associate professor・解除・条件外詳細・
   await relation.locator("summary").click();
   await expect(relation.getByText("立場を限定していない主張：肯定 4件 ／ 否定 0件", { exact: true })).toBeVisible();
   await relation.locator("summary").click();
-  await page.screenshot({ path: "docs/archive/phase-14-typed-qualification/science-v2-overview.png" });
+  await page.screenshot({ path: "test-results/phase14-science-v2-overview.png" });
   await page.getByRole("dialog").getByRole("button", { name: "この対象から広く見る", exact: true }).click();
   await expect(page.getByTestId("graph-counts")).toHaveText("Entity 5 / Claim 6");
   await expect(page.getByTestId("active-predicates")).toContainText("追加条件なし");
@@ -106,7 +107,7 @@ test("明示適用・Visitor / Associate professor・解除・条件外詳細・
   await setPosition(page, "Associate professor"); await expect(page.getByTestId("graph-counts")).toHaveText("Entity 2 / Claim 1");
   await tap(page, professor.claimId, true); await expect(page.getByTestId(`claim-card-${professor.claimId}`)).toContainText("1926年〜1927年");
   await setPosition(page, null, false); await expect(page.getByTestId("graph-counts")).toHaveText("Entity 3 / Claim 4");
-  await page.getByRole("button", { name: "全体を表示", exact: true }).click(); await page.screenshot({ path: "docs/archive/phase-14-typed-qualification/science-v2-unrestricted.png" });
+  await page.getByRole("button", { name: "全体を表示", exact: true }).click(); await page.screenshot({ path: "test-results/phase14-science-v2-unrestricted.png" });
 });
 
 test("実ページング・両限定の副作用なし・条件変更中の旧応答を破棄", async ({ page }) => {
@@ -133,3 +134,5 @@ test("実ページング・両限定の副作用なし・条件変更中の旧�
   await expect(page.getByRole("region", { name: "Entity詳細" })).toContainText("別名：");
 });
 checkStartExamples("pilot-science-v2");
+
+checkRelationFacets("pilot-science-v2", "ヴェルナー・ハイゼンベルク", ["人物と組織の関わり"], ["AFFILIATED_WITH"], { toggle: "組織との関わりの立場を調整", mode: "立場を指定する", label: "Visitor", parameter: "organizationPositions", value: "VISITOR" }, "Entity 2 / Claim 1");

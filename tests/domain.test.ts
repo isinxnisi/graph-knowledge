@@ -3,6 +3,59 @@ import { randomUUID } from "node:crypto";
 import { describe, expect, it } from "vitest";
 import { dateProperties, partialDateSchema, periodSchema } from "../lib/domain/dates";
 import { fixtureCounts, validateFixture } from "../lib/domain/fixture";
+import { changeSelectionMode, facetsForPredicates, resolveRelationFacets, resolveRelationSelection, selectionFromPredicates } from "../lib/client/relation-facets";
+import { explorationKey, matchesClaim, normalizeContributionRoles, normalizeEventRoles, normalizeOrganizationPositions } from "../lib/domain/exploration";
+import { relationFacetLabels } from "../lib/i18n/relation-facets";
+
+describe("relation facetは既存の具体条件へ解決する", () => {
+  it.each([
+    ["relation.work-production", "CONTRIBUTED_TO"],
+    ["relation.organization-involvement", "AFFILIATED_WITH"],
+    ["relation.event-participation", "PARTICIPATED_IN"],
+  ] as const)("%sは限定を生成せず%sへ解決", (id, predicate) => {
+    expect(resolveRelationFacets([id])).toEqual([predicate]);
+    expect(explorationKey(resolveRelationFacets([id]))).toBe(explorationKey([predicate]));
+  });
+  it("複数のOR・順序・重複、三入口全部と全関係、nullと空集合を区別する", () => {
+    const values = resolveRelationFacets(["relation.event-participation", "relation.work-production", "relation.organization-involvement", "relation.work-production"]);
+    expect(values).toEqual(["AFFILIATED_WITH", "CONTRIBUTED_TO", "PARTICIPATED_IN"]);
+    expect(values).not.toBeNull();
+    expect(matchesClaim({ predicate: "INFLUENCED_BY" }, values)).toBe(false);
+    expect(resolveRelationFacets(null)).toBeNull();
+    expect(resolveRelationFacets([])).toEqual([]);
+    expect(explorationKey(null)).not.toBe(explorationKey([]));
+  });
+  it.each(["activity.academic", "candidate.work", "toString", "relation.future"])("未公開・未知ID %sを拒否", id => {
+    expect(() => resolveRelationFacets(["relation.work-production", id])).toThrow("Unknown relation facet");
+  });
+  it("個別指定は完全一致するものだけ逆引きし、影響・アシスタントを丸めない", () => {
+    const predicates = ["ASSISTANT_OF", "CONTRIBUTED_TO"] as const;
+    expect(facetsForPredicates([...predicates])).toBeNull();
+    const selection = selectionFromPredicates([...predicates]);
+    expect(selection.mode).toBe("custom");
+    expect(resolveRelationSelection(selection)).toEqual(predicates);
+    expect(resolveRelationSelection(changeSelectionMode(selection, "facets"))).toEqual([]);
+    expect(resolveRelationSelection(changeSelectionMode(selectionFromPredicates(["AFFILIATED_WITH"]), "custom"))).toEqual(["AFFILIATED_WITH"]);
+  });
+  it("限定の作用先・nullと空集合は既存の意味を保つ", () => {
+    const all = resolveRelationFacets(null), onlyEvent = resolveRelationFacets(["relation.event-participation"]);
+    const roles = normalizeEventRoles(["CHAIR"], all);
+    expect(matchesClaim({ predicate: "AFFILIATED_WITH" }, all, null, null, roles)).toBe(true);
+    expect(matchesClaim({ predicate: "AFFILIATED_WITH" }, onlyEvent, null, null, roles)).toBe(false);
+    expect(matchesClaim({ predicate: "PARTICIPATED_IN", eventParticipation: null }, onlyEvent, null, null, roles)).toBe(false);
+    expect(matchesClaim({ predicate: "PARTICIPATED_IN", eventParticipation: { roleId: "CHAIR" } }, onlyEvent, null, null, roles)).toBe(true);
+    expect(matchesClaim({ predicate: "PARTICIPATED_IN", eventParticipation: { roleId: "CHAIR" } }, onlyEvent, null, null, [])).toBe(false);
+    const org = resolveRelationFacets(["relation.organization-involvement"]);
+    expect(normalizeOrganizationPositions(["VISITOR"], org)).toEqual(["VISITOR"]);
+    expect(normalizeContributionRoles(["PRODUCING"], org)).toBeNull();
+    expect(normalizeEventRoles(["CHAIR"], org)).toBeNull();
+  });
+  it("label変更やlocaleは識別・条件から独立する", () => {
+    expect(relationFacetLabels("en-US").items["relation.work-production"].name).toBe("Work production involvement");
+    expect(relationFacetLabels("ja-JP").items["relation.work-production"].name).toBe("作品制作への関与");
+    expect(selectionFromPredicates(["CONTRIBUTED_TO"])).toEqual({ mode: "facets", ids: ["relation.work-production"] });
+  });
+});
 
 const raw = JSON.parse(readFileSync("fixtures/demo.json", "utf8"));
 

@@ -1,6 +1,6 @@
 # 現行技術設計
 
-更新日: 2026-10-06 / 状態: 初期Vertical Sliceと探索の開閉・Node再クリックまで実装済み。既存predicateと限定制作Roleによる条件付き探索を追加。v2 Role Claim 5件を人間受入後に投入・検証済み。関係概要・明示起点切替・直前一件復帰、人物・作品・組織の統一検索入口も実装。科学・研究機関pilot v1を別環境へ投入・観察済み。Phase 14では科学v2と組織立場のtyped限定を追加し、制作Roleと独立した語彙を保って条件・比較処理を共有。Phase 15の特定Event参加（第三のtyped限定）を実装。実資料E01/E03と特定開催回・開催期間を人間受入後に生成・専用DBへ投入・観察済み。taxonomy・プリセット・会員保存は未実装。[文書の入口](README.md)に現役設計とフェーズ別履歴をまとめる。
+更新日: 2026-10-06 / 状態: 初期Vertical Sliceと探索の開閉・Node再クリックまで実装済み。既存predicateと限定制作Roleによる条件付き探索を追加。v2 Role Claim 5件を人間受入後に投入・検証済み。関係概要・明示起点切替・直前一件復帰、人物・作品・組織の統一検索入口も実装。科学・研究機関pilot v1を別環境へ投入・観察済み。Phase 14では科学v2と組織立場のtyped限定を追加し、制作Roleと独立した語彙を保って条件・比較処理を共有。Phase 15の特定Event参加（第三のtyped限定）を実装。実資料E01/E03と特定開催回・開催期間を人間受入後に生成・専用DBへ投入・観察済み。Phase 20で三relation facetを条件editorへ接続し、具体条件を使う既存取得・復帰を維持。汎用taxonomy・プリセット・会員保存は未実装。[文書の入口](README.md)に現役設計とフェーズ別履歴をまとめる。
 
 ## 前提と設計の位置づけ
 
@@ -610,3 +610,12 @@ relatedClaimIdsとDisplayRelationはSPO単位のまま。比較キーにはEvent
 ## Phase 17：Entity概要の関係・方向優先表示
 
 [概要presentation契約](design/ENTITY_OVERVIEW_PRESENTATION.md)を採用。モーダルは外向き／内向きの方向付き一覧で、視点別関係名と中心端点を先に示す。Claim統計と限定内訳は初期状態で折り畳み、指定されたdomain語彙を二種類まで補助表示する。肯否混在を対立認定せず、否定のみは文言・破線で識別する。既存の根拠詳細へ戻る導線、任意確認、ダブルクリック、起点切替／復帰は維持する。概要APIだけへ固定の組織立場／参加立場配列を追加し、専用DISTINCT集計を再利用する。保存・比較・Graph束・探索条件・cursor・datasetは変更しない。[完了記録](archive/phase-17-entity-overview/README.md)を参照。
+
+
+## Phase 20：三relation facetと既存条件への解決
+
+[採用契約](design/RELATION_FACET_CONTRACTS.md)に従い、作品制作への関与／人物と組織の関わり／特定開催回への参加を条件editorの小さい入口とする。catalog版1・stable IDとlocale labelはclient側に置き、選択のORをCONTRIBUTED_TO／AFFILIATED_WITH／PARTICIPATED_INへ解決する。三入口全部は三Predicateのみ。無制限nullと空集合[]は維持する。
+
+editor内で「すべて」「種類」「個別」を分け、既存五Predicateの任意指定を残す。精密条件は別sectionとし、facet単独では生成しない。未適用draft・Cancelは探索へ作用せず、Apply時だけ具体Predicate＋三精密条件を既存changePredicatesへ渡す。
+
+API・Cypher・GraphState・condition key・cursor・snapshotを変更しない。適用後の正本は具体条件であり、facet IDや対応版を保存しない。要約の逆引きは表示だけで、復帰や旧cursorをcatalogから再解決しない。Claim・DB・凍結dataset・語彙は不変。activity facet・tag・lexical検索・preset・汎用taxonomyは未実装。[実施記録](archive/phase-20-relation-facet/README.md)を参照。

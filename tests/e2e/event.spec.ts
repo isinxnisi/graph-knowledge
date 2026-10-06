@@ -1,3 +1,4 @@
+import { checkRelationFacets } from "./relation-facets";
 import { expect, test, type Page } from "@playwright/test";
 import ledger from "../../datasets/pilot-event/v1/ledger.json" with { type: "json" };
 import { editConditions } from "./conditions";
@@ -150,3 +151,5 @@ test("実資料: Eventから科学の共有枝へ展開・三限定条件・同�
   await expect(page.getByTestId("active-predicates")).toContainText("追加条件なし");
 });
 checkStartExamples("pilot-event-v1");
+
+checkRelationFacets("pilot-event-v1", "第5回ソルヴェイ物理会議（1927）", ["特定開催回への参加"], ["PARTICIPATED_IN"], { toggle: "参加上の立場を調整", mode: "参加上の立場を指定する", label: "会議議長", parameter: "eventRoles", value: "CHAIR" }, "Entity 2 / Claim 1");

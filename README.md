@@ -306,3 +306,6 @@ npx playwright test --config=playwright.event-contract.config.ts
 人工検証画面は http://127.0.0.1:3216 。「架空会議」「架空参加者A」を検索します。実在資料を表示している画面と混同しないよう、架空デモ表示と人工名称・Sourceを使います。検証DBには名前付きvolumeを設けていません。破棄する場合は専用composeに対して `docker compose -f compose.event-test.yaml down -v` を実行します。
 
 Phase 17の[概要presentation契約](docs/design/ENTITY_OVERVIEW_PRESENTATION.md)と[画面比較・検証記録](docs/archive/phase-17-entity-overview/README.md)を参照してください。概要の「Graphに戻って関係を選ぶ」は閉じるだけで、探索条件や起点を変更しません。
+
+
+Phase 20では「見る関係を編集」内で、作品制作への関与・人物と組織の関わり・特定開催回への参加を選べる。Visitor・会議議長・制作Roleは別の追加条件。アシスタント・影響を含む任意の組合せは「個別の関係を指定」で編集できる。「すべての関係」は三入口すべてとは異なる。Apply前の編集／CancelはGraphを変更しない。[採用契約](docs/design/RELATION_FACET_CONTRACTS.md)／[検証記録](docs/archive/phase-20-relation-facet/README.md)。
