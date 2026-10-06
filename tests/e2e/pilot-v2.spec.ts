@@ -1,4 +1,6 @@
 import { checkRelationFacets } from "./relation-facets";
+import { checkRelationPresentation } from "./relation-presentation";
+checkRelationPresentation("manga");
 import { editConditions, editRoles } from "./conditions";
 import { test, expect, type Page } from "@playwright/test";
 import rawData from "../../datasets/pilot-urasawa/v2/data.json" with { type: "json" };

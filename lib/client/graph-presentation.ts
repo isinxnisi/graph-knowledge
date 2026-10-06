@@ -1,9 +1,5 @@
-import { eventParticipationOf } from "../domain/event-participation";
-import { eventParticipationLabels } from "../i18n/event-participation";
-import { organizationParticipationOf } from "../domain/organization-participation";
-import { organizationParticipationLabels } from "../i18n/organization-participation";
-import { contributionOf } from "../domain/contribution";
-import { contributionLabels } from "../i18n/contribution";
+import { relationPresentation } from "./relation-presentation";
+import { relationPresentationLabels } from "../i18n/relation-presentation";
 import { PREDICATES } from "../domain/predicates";
 import type { EntitySummary, ClaimSummary } from "../domain/api";
 
@@ -33,9 +29,10 @@ export function displayRelations(claims: Record<string, ClaimSummary>): Record<s
     const first = group[0];
     const polarities = new Set(group.map((claim) => claim.polarity));
     const polarity = polarities.size > 1 ? "mixed" : first.polarity;
+    const presentation = relationPresentation(group);
     return [id, { id, subjectId: first.subjectId, objectId: first.objectId, predicate: first.predicate,
       claimIds: group.map((claim) => claim.id).sort(), polarity,
-      label: relationSummaryLabel(first.predicate, group) + (polarity === "mixed" ? ["CONTRIBUTED_TO", "AFFILIATED_WITH", "PARTICIPATED_IN"].includes(first.predicate) ? `\n${contributionLabels().mixed}` : "\n異説あり" : polarity === "denied" ? "\n（否定）" : ""),
+      label: PREDICATES[first.predicate].label + (presentation.graphQualification ? `\n${presentation.graphQualification}` : "") + (polarity === "mixed" ? `\n${relationPresentationLabels().mixed}` : polarity === "denied" ? "\n（否定）" : ""),
     }];
   }));
 }
@@ -63,19 +60,4 @@ export function edgeRoutes(relations: Record<string, DisplayRelation>, positions
     });
   });
   return result;
-}
-
-function relationSummaryLabel(predicate: ClaimSummary["predicate"], claims: ClaimSummary[]): string {
-  const eventRoles = [...new Set(claims.flatMap(claim => eventParticipationOf(claim)?.roleId ? [eventParticipationOf(claim)!.roleId] : []))];
-  if (eventRoles.length) return `${PREDICATES[predicate].label}\n${eventRoles.map(role => eventParticipationLabels().roles[role]).join("・")}`;
-  const positions = [...new Set(claims.flatMap(claim => organizationParticipationOf(claim)?.positionId ? [organizationParticipationOf(claim)!.positionId] : []))].sort();
-  if (positions.length) {
-    const text = organizationParticipationLabels();
-    const names = positions.map(position => text.positions[position]).join("・");
-    return `${PREDICATES[predicate].label}\n${[...names].length > 24 ? text.count(positions.length) : names}`;
-  }
-  const roleIds = [...new Set(claims.flatMap((claim) => contributionOf(claim)?.roleId ? [contributionOf(claim)!.roleId!] : []))].sort();
-  if (!roleIds.length) return PREDICATES[predicate].label;
-  const names = roleIds.slice(0, 2).map((role) => contributionLabels().roles[role]).join("・") + (roleIds.length > 2 ? contributionLabels().moreRoles(roleIds.length - 2) : "");
-  return `${PREDICATES[predicate].label}\n${[...names].length > 12 ? contributionLabels().roleCount(roleIds.length) : names}`;
 }

@@ -27,7 +27,7 @@ test("実DB: 検索・Graph・Work展開・循環・出典比較", async ({ page
     const cy = (el as unknown as { _cyreg: { cy: import("cytoscape").Core } })._cyreg.cy;
     return { positions: Object.fromEntries(cy.nodes().map((n) => [n.id(), n.position()])), denied: cy.edges('[polarity="mixed"]').map((e) => ({ label: e.data("label"), line: e.style("line-style"), arrow: e.style("target-arrow-shape") })) };
   });
-  const before = await cyData(); expect(before.denied).toEqual([expect.objectContaining({ label: expect.stringContaining("異説あり"), line: "dotted", arrow: "triangle" })]);
+  const before = await cyData(); expect(before.denied).toEqual([expect.objectContaining({ label: expect.stringContaining("肯定・否定あり"), line: "dotted", arrow: "triangle" })]);
   await canvasTap(page, fixture.entities[8].id);
   await expect(page.getByRole("heading", { name: "星の航路の隣接関係" })).toBeVisible();
   await expect(page.getByTestId("graph-counts")).toHaveText("Entity 7 / Claim 9");
@@ -192,7 +192,7 @@ test("回帰: ASSISTANT_OFの3 Claimは1 Relation、全主張の詳細と線ク�
   expect(edge.count).toBe(1); expect(edge.claimIds.sort()).toEqual(ids.sort());
   expect(edge.source).toBe(root.id); expect(edge.target).toBe(fixture.entities[1].id);
   expect(edge.arrow).toBe("triangle"); expect(edge.sourceArrow).toBe("none");
-  expect(edge.label).toBe("アシスタントだった\n異説あり"); expect(edge.distance).toBe(0);
+  expect(edge.label).toBe("アシスタントだった\n肯定・否定あり"); expect(edge.distance).toBe(0);
   await canvasTap(page, fixture.claims[0].id, true);
   for (const claim of fixture.claims.slice(0, 3)) {
     await expect(page.getByTestId(`claim-card-${claim.id}`)).toContainText(`${claim.period.from!.value}年〜${claim.period.to!.value}年`);
@@ -492,7 +492,7 @@ test("条件探索 実DB: 集約・出典・開閉・座標維持・空条件と
   const after = await snapshot();
   for (const [id, point] of Object.entries(after.positions)) expect(point).toEqual(before.positions[id]);
   expect(after.zoom).toBe(before.zoom); expect(after.pan).toEqual(before.pan);
-  expect(after.labels[0]).toContain("異説あり");
+  expect(after.labels[0]).toContain("肯定・否定あり");
   await canvasTap(page, fixture.claims[0].id, true);
   for (const claim of fixture.claims.slice(0, 3)) await expect(page.getByTestId("claim-card-" + claim.id)).toBeVisible();
   await expect(page.getByTestId("claim-card-" + fixture.claims[0].id)).toContainText("出典 2件");

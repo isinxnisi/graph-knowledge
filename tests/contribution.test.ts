@@ -79,7 +79,7 @@ describe("Role条件・cursor・表示", () => {
     const denied = { ...claim, id: demo.claims[1].id, polarity: "denied" as const, contribution: { ...contribution, roleId: "SCRIPT_WRITING" as const, scope: { ...scope, isbn13: "9784091841612" } } };
     const result = Object.values(displayRelations({ [claim.id]: claim, [denied.id]: denied }));
     expect(result).toHaveLength(1); expect(result[0].claimIds).toHaveLength(2);
-    expect(result[0].label).toContain("脚本・監修"); expect(result[0].label).toContain("肯定・否定あり"); expect(result[0].label).not.toContain("異説"); expect(result[0].label).not.toContain("ISBN");
+    expect(result[0].label).toContain("脚本（否定のみ）・監修"); expect(result[0].label).toContain("肯定・否定あり"); expect(result[0].label).not.toContain("異説"); expect(result[0].label).not.toContain("ISBN");
   });
   it("Role意味契約の黙った変更、Role間同義、比較欠落を拒否する", () => {
     expect(checkRoleVocabulary(roles, baseline, []).errors).toEqual([]);

@@ -28,7 +28,7 @@ Role条件あり、またはdataset=pilot-urasawa-v2ではcursor v=2。center、
 
 relatedClaimIdsは同じsubject/predicate/objectの全公開Claimであり、Role条件で狭めない。詳細で取得する広いClaimをGraphへ自動追加しない。比較ラベルの参照Role／ISBNを明示し、任意の代表Claimを正しさの基準として扱わない。「条件外」「Graph未取得」を明示する。比較はscope未構造化、Role相違、ISBN相違、同じ限定の候補を区別。期間・肯否はカードで個別確認し、順序は信頼度ではない。Roleとscopeの双方が異なる場合はまずRole相違を示し、両scopeはカードで確認できる。
 
-DisplayRelationは三つ組とclaimIdsを維持。取得済みClaimからRole概要を導出するだけで、全役割・肯定された実績一覧ではない。最大2名称、長い組合せは「制作役割 N種類」。Role ID順で意味の順位を付けない。CONTRIBUTED_TOの混在は「肯定・否定あり」。否定の文字／破線を維持。他predicateの「異説あり」は変更しない。
+DisplayRelationは三つ組とclaimIdsを維持。取得済みClaimからRole概要を導出するだけで、全役割・肯定された実績一覧ではない。最大2名称、長い組合せは種類数へ圧縮。Role ID順で意味の順位を付けない。CONTRIBUTED_TOの混在は「肯定・否定あり」。否定の文字／破線を維持。Phase 21で全Predicateの混在表現を中立化し、指定なしとの併存・関係全体から個別根拠へ降りる表示を整理した。[現行presentation契約](RELATION_PRESENTATION_CONTRACTS.md)を参照。
 
 広い旧Claimと新限定Claimは意味が異なる。同じSourceの共有は新しい独立資料・信頼度増加を意味しない。詳細に説明を置き、原表記・言語・刊行物・期間・locator・Source URLへ戻れる。
 

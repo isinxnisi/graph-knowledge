@@ -1,4 +1,6 @@
 import { checkRelationFacets } from "./relation-facets";
+import { checkRelationPresentation } from "./relation-presentation";
+checkRelationPresentation("event");
 import { expect, test, type Page } from "@playwright/test";
 import ledger from "../../datasets/pilot-event/v1/ledger.json" with { type: "json" };
 import { editConditions } from "./conditions";

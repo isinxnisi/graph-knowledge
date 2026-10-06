@@ -1,6 +1,6 @@
 # ドキュメントの入口
 
-2026-10-06。現行仕様・継続検討・完了履歴を分ける。フェーズ番号は記録の整理用であり、未実装機能の着手順や承認を意味しない。
+2026-10-07。現行仕様・継続検討・完了履歴を分ける。フェーズ番号は記録の整理用であり、未実装機能の着手順や承認を意味しない。
 
 ## 作業前に読む文書
 
@@ -13,6 +13,7 @@
 | [小さい探索分類と条件解決](design/EXPLORATION_CLASSIFICATION_RESOLUTION_REVIEW.md) | Phase 19設計検証完了・提案。5候補／24記録への仮付与、Visitor三状態と検索三契約。relation facet三入口は現条件へ解決可能、学術は未解決、仕事は非採用。研究prototypeのみ、公開API／UIは未接続 |
 | [関係探索モデルの再レビュー](design/RELATION_EXPLORATION_MODEL_REVIEW.md) | Phase 18レビュー完了・提案。意味限定／多軸の探索分類／原語・語彙検索を分離し、A〜Dを多分野で比較。runtime変更・新分類の採用なし。[比較資料v1](research/phase-18-exploration-model/v1/README.md)に根拠と受入境界 |
 | [Entity概要のpresentation](design/ENTITY_OVERVIEW_PRESENTATION.md) | Phase 17採用。種類・視点別関係名・向き優先、統計折り畳み、domain限定の記録、最小overview API拡張 |
+| [Graphの関係概要とClaim詳細](design/RELATION_PRESENTATION_CONTRACTS.md) | Phase 21採用。構造化済み限定と中立的な肯否、関係全体から独立Claim／根拠へ、表示中／未表示／条件外の分離 |
 | [関係モデルの基本設計](design/RELATION_MODEL_PRINCIPLES.md) | Phase 16採用。独立命題／domain固有限定／共通処理の判断基準、null・肯否・期間・identity／比較／表示、由来と根拠、追加レビュー手順。語彙追加時は個別契約と併読 |
 | [現在地点と次フェーズ](design/CURRENT_STATE_AND_NEXT_PHASE.md) | 2026-10-03の棚卸し。候補Aは承認・実装へ進んだ。棚卸し時点の状態を確認する記録 |
 | [プロダクト像と設計原則](design/PRODUCT_VISION_AND_PRINCIPLES.md) | 成熟したサービスの目標・実現意向・未確定候補・守る境界。直近の実装要件ではない |
@@ -43,13 +44,15 @@
 
 ## 現在地点
 
+Phase 21でGraphの限定概要と独立Claim詳細を整合した。全Predicateの肯否混在を中立表示し、Relation全体→Graph内／Graph未表示／条件外の各主張→原資料・確認範囲へ進める。API・意味契約・凍結datasetは不変。浦沢→PLUTOのRoleを推定せず、既存情報で改善できた範囲とデータ／モデルの不足を分けて記録した。[現行presentation契約](design/RELATION_PRESENTATION_CONTRACTS.md)／[実画面評価・検証記録](archive/phase-21-relation-presentation/README.md)。
+
 Phase 20で三つのrelation facetを既存の条件編集へ接続した。種類の選択を既存Predicateへ解決し、役割・立場は別の精密条件として維持する。個別五Predicate指定も保持。API・DB・知識語彙・凍結datasetは変更せず、適用後の探索・cursor・復帰は具体条件を使う。[採用契約](design/RELATION_FACET_CONTRACTS.md)／[完了記録](archive/phase-20-relation-facet/README.md)を参照。
 
 Phase 19で、Phase 18の24記録へ五つの探索分類候補を研究上仮付与し、[条件解決を検証](design/EXPLORATION_CLASSIFICATION_RESOLUTION_REVIEW.md)した。作品制作・人物と組織の関わり・特定開催回参加の三入口は既存Predicate条件へ解決できる。学術は活動文脈として自然だが現API条件だけでは解決できず、仕事関係は定義未確定で非採用とする案。別tagは今は不要。**Phase 19当時は研究prototypeのみでruntime不変。三入口のcatalog／resolver・探索UI接続をPhase 20で採用した。** [仮付与・再検証](research/phase-19-exploration-classification/v1/README.md)と[完了記録](archive/phase-19-exploration-classification/README.md)を参照。
 
 Phase 18で、Graph本体をさらに調整する前に、関係探索の意味・具体語・分類の粒度を再レビューした。現行5 Predicate／三typed型と、企業・スポーツ・政治・映画音楽・非営利・学術等の資料を照合。推奨は必要な意味限定を維持し、多軸の発見分類と原語検索を分ける案。全原語のenum化は一般原則としない。[レビュー](design/RELATION_EXPLORATION_MODEL_REVIEW.md)と[完了記録](archive/phase-18-exploration-model/README.md)を参照。**Phase 18当時は実装を変更していない。三relation facetだけPhase 20で採用。活動文脈・語検索・長尾値の方式は引き続き提案で未実装。** 次の小さい検証範囲はレビュー末尾に残す。
 
-Phase 16で、Phase 12〜15の比較・三用途実装を根拠に[関係モデルの基本設計](design/RELATION_MODEL_PRINCIPLES.md)を固定した。新しい語彙・型・dataset・DB/API/UIは追加せず、実装監査と小さい契約テストを補った。Phase 17でEntity概要を方向付き一覧へ改め、種類と向きを先に示し、Claim統計を折り畳んだ。組織立場・Event参加立場の小集計を追加した。意味モデルは不変。[Phase 17完了記録](archive/phase-17-entity-overview/README.md)を参照。Graph本体の混在肯否・限定比較のpresentationには残る課題がある。[完了記録](archive/phase-16-relation-principles/README.md)を参照。
+Phase 16で、Phase 12〜15の比較・三用途実装を根拠に[関係モデルの基本設計](design/RELATION_MODEL_PRINCIPLES.md)を固定した。新しい語彙・型・dataset・DB/API/UIは追加せず、実装監査と小さい契約テストを補った。Phase 17でEntity概要を方向付き一覧へ改め、種類と向きを先に示し、Claim統計を折り畳んだ。組織立場・Event参加立場の小集計を追加した。意味モデルは不変。[Phase 17完了記録](archive/phase-17-entity-overview/README.md)を参照。Graph本体の混在肯否・限定比較はPhase 21で改善し、残るデータ／意味の不足は同完了記録へ分離した。[Phase 16完了記録](archive/phase-16-relation-principles/README.md)を参照。
 
 Phase 14で、既存制作Roleと組織立場（Visitor / Associate professor）の二用途による、小さいtyped限定の縦経路を実装・検証した。科学v2に広い8 Claimと独立限定2 Claimを保持。現行契約は[TYPED_QUALIFICATION_CONTRACTS.md](design/TYPED_QUALIFICATION_CONTRACTS.md)、結果は[実施記録](archive/phase-14-typed-qualification/README.md)。家族・組織間・派生・態度の比較候補は未実装、C09は保留。Phase 15で第三型（特定Event参加）を実装し、E01/E03・開催回・開催期間を人間受入後に実資料seed・画面観察まで完了。Lorentzの広い参加／議長限定とDiracの広い参加を独立Claimとして保持。三用途の共有処理と固有意味の境界、Phase 16で固定できる原則と未確定事項は[完了記録](archive/phase-15-event-participation/README.md)を読む。E02とC09はruntime対象外。
 
@@ -77,6 +80,7 @@ Phase 14で、既存制作Roleと組織立場（Visitor / Associate professor）
 | Phase 18：関係探索モデルの再レビュー | 多分野24研究記録、意味限定／原語／多軸分類、A〜Dと三種類の検索の比較。runtime・凍結データ変更なし | [完了記録](archive/phase-18-exploration-model/README.md) |
 | Phase 19：小さい探索分類の条件解決 | 5候補・24記録仮付与、Visitor三状態、既存条件の純粋prototype。三入口は解決可、学術は未解決、仕事は非採用。runtime変更なし | [完了記録](archive/phase-19-exploration-classification/README.md) |
 | Phase 20：三relation facetのUI接続 | 小さいcatalog・resolver、種類／個別条件・精密条件、既存取得・開閉・起点・復帰の再利用 | [完了記録](archive/phase-20-relation-facet/README.md) |
+| Phase 21：GraphとClaim詳細の整合 | 限定と中立肯否、Relation全体→範囲別Claim→原資料、4 datasetの実画面評価と不足の分離 | [完了記録](archive/phase-21-relation-presentation/README.md) |
 
 Phase 02後のNode再クリックの採用・検証は、現役の[操作と設定](design/GRAPH_INTERACTION_AND_SETTINGS.md)へ記録している。今後、設定機能の検討が終わるまでは現役文書として維持する。
 

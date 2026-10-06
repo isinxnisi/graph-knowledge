@@ -164,3 +164,14 @@
 .facetChoices label { padding: 10px; border: 1px solid var(--color-border); border-radius: 5px; }
 .facetDescription { display: block; color: var(--color-muted); font-size: 12px; margin-top: 3px; }
 .preciseTitle { font-size: 14px; margin: 18px 0 8px; }
+
+.relationOverview { border-bottom: 1px solid var(--color-border); padding-bottom: 12px; margin-bottom: 16px; }
+.qualificationSummary { padding: 0; margin: 0 0 8px; list-style: none; }
+.qualificationSummary li { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 2px 8px; padding: 5px 0; }
+.qualificationSummary span { color: var(--color-muted); font-size: 12px; }
+.claimNavigation { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+.claimNavigation button { font-size: 12px; padding: 3px 6px; }
+.claimGroup { margin: 18px 0; }
+.claimGroup > h4 { padding-bottom: 5px; border-bottom: 1px solid var(--color-border); }
+.citation details { margin-top: 10px; }
+.citation summary { cursor: pointer; color: var(--color-accent); }

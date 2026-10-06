@@ -151,7 +151,7 @@ Lorentzの広い参加／CHAIRが同じ議事録を参照しても独立した�
 | 三型の独立性、null、適用先、条件、cursor／世代／復帰 | 基本設計と整合。旧fixture schema 1〜3は凍結のまま受け付け、API読取時に三型のnullable欄へ正規化する。旧ファイルをschema 4へ書き換える意味ではない。未指定の理由はschemaから復元できない |
 | 比較キーとUUID、SPO束、広いrelatedClaimIds | 整合。比較は登録型の構造化内容だけ。自由記述scope・制度語の同義・期間の重なりは判定しない |
 | 制作の`comparisonCategory` | Role／ISBNの従来の粗い補助ラベルで、完全な命題一致ではない。共通キーはlanguage／periodも区別する。補助ラベルの「同じ」を内容同一認定に使わない。情報の揃え方は次のUIレビュー対象 |
-| 肯否混在のGraph表示 | 三typed用途は「肯定・否定あり」で整合。ASSISTANT_OF／INFLUENCED_BYには旧「異説あり」が残る。異期間の混在にも出るため対立認定に見える余地がある。自動矛盾計算はないが、**表示表現の注意点として未解決**。今回は変更しない |
+| 肯否混在のGraph表示 | Phase 21で全五Predicateを「肯定・否定あり」へ統一。Relation詳細は先頭Claimを比較基準にせず、表示中の全主張の構成と関連主張の表示範囲を分ける。混在から矛盾を認定しない。意味・比較キーは不変。詳細は[関係presentation契約](RELATION_PRESENTATION_CONTRACTS.md) |
 | Entity概要 | DISTINCT Claim集計として正しい。NBIの限定追加、Lorentzの広い＋CHAIRで、接続Entity／表示Relationが増えずClaim件数だけ増えた。探索用圧縮のpresentation課題 |
 | 語彙変更チェック | 無審査変更・基準版書換えを検出できるが、意味の変質を完全判定できない。組織／Eventの固定catalogは変更自体を拒否し、新値の一般承認フローは未実装 |
 

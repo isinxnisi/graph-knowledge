@@ -1,6 +1,7 @@
 // @vitest-environment jsdom
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { act, cleanup, render, renderHook, screen, waitFor, fireEvent } from "@testing-library/react";
+import { within } from "@testing-library/react";
 import { restorationPositions } from "../lib/client/graph-view";
 import { captureExploration } from "../lib/client/exploration-snapshot";
 import { createNodeClickHandler } from "../lib/client/graph-interaction";
@@ -10,6 +11,8 @@ import { emptyGraph, mergePage, closeExpansion, reopenExpansion, projectGraph } 
 import { useGraphExplorer } from "../lib/client/use-graph-explorer";
 import SearchPanel from "../components/SearchPanel";
 import ClaimDetails, { ClaimCard } from "../components/ClaimDetails";
+import { relationPresentation } from "../lib/client/relation-presentation";
+import { relationPresentationLabels } from "../lib/i18n/relation-presentation";
 import examples from "../docs/API_RESPONSE_EXAMPLES.json";
 import type { ClaimSummary, ClaimDetail, ClaimResponse, NeighborsResponse, EntitySummary } from "../lib/domain/api";
 import { fetchNeighbors, fetchClaim, searchEntities } from "../lib/client/api";
@@ -124,7 +127,7 @@ describe("Graphの表示補助", () => {
     expect(Object.keys(relations)).toHaveLength(5);
     const relation = relations[relationId(page.claims.find((claim) => claim.predicate === "ASSISTANT_OF")!)];
     expect(relation.claimIds).toHaveLength(3);
-    expect(relation.label).toBe("アシスタントだった\n異説あり");
+    expect(relation.label).toBe("アシスタントだった\n肯定・否定あり");
     expect(edgeRoutes(relations)[relation.id].distance).toBe(0);
     expect(Object.keys(claims)).toHaveLength(7);
   });
@@ -711,5 +714,73 @@ describe("組織立場条件のdraft・通信・直前復帰", () => {
     act(() => result.current.restorePrevious());
     expect(result.current.graph.centerId).toBe(heisenberg.id); expect(result.current.graph.organizationPositions).toEqual(["VISITOR"]);
     act(() => result.current.switchRoot(nbi, "broad", null)); expect(result.current.graph.organizationPositions).toBeNull();
+  });
+});
+
+describe("Relationの概要と独立した主張の読み分け", () => {
+  const base = { ...examples.claim.claim, predicate: "CONTRIBUTED_TO", contribution: { roleId: null, scope: null }, organizationParticipation: null, eventParticipation: null } as ClaimDetail;
+  const qualified = { ...base, id: "qualified", contribution: { roleId: "SUPERVISION", scope: null } } as ClaimDetail;
+  const denied = { ...base, id: "denied", polarity: "denied", contribution: { roleId: "SCRIPT_WRITING", scope: null } } as ClaimDetail;
+  it("別の限定に掛かる否定を役割の肯定や自動対立に変換しない", () => {
+    const summary = relationPresentation([base, qualified, denied]);
+    expect(summary.graphQualification).toBe("脚本（否定のみ）・監修＋指定なし");
+    expect(summary.qualification?.entries.find(e => e.id === null)).toMatchObject({ affirmed: 1, denied: 0 });
+    const relation = Object.values(displayRelations({ [base.id]: base, qualified, denied }))[0];
+    expect(relation.label).toContain("肯定・否定あり"); expect(relation.label).not.toMatch(/異説|矛盾/);
+    expect(relation.claimIds).toHaveLength(3);
+    expect(relationPresentationLabels("en").title).toBe(relationPresentationLabels("ja-JP").title);
+  });
+  it.each([
+    { predicate: "AFFILIATED_WITH", key: "organizationParticipation", value: { positionId: "VISITOR" }, label: "Visitor＋指定なし" },
+    { predicate: "PARTICIPATED_IN", key: "eventParticipation", value: { roleId: "CHAIR" }, label: "会議議長＋指定なし" },
+  ] as const)("$predicateは固有の値を保持して広い主張と併記する", ({ predicate, key, value, label }) => {
+    const broad = { ...base, predicate, contribution: null } as ClaimSummary;
+    const narrow = { ...broad, id: "narrow", [key]: value } as ClaimSummary;
+    expect(relationPresentation([broad, narrow]).graphQualification).toBe(label);
+    expect(Object.keys(displayRelations({ broad, narrow }))).toHaveLength(1);
+  });
+  it("資料の役割表記を未構造化Claimから推定しない", () => {
+    const claim = { ...base, citations: base.citations.map(c => ({ ...c, note: "作画としてクレジット" })) };
+    expect(relationPresentation([claim]).graphQualification).toBe("");
+    expect(relationPresentation([claim]).qualification?.entries).toEqual([{ id: null, label: "役割指定なし", affirmed: 1, denied: 0 }]);
+    render(<ClaimCard claim={claim} nodes={{}} title="主張" />);
+    expect(screen.getAllByText("作画としてクレジット")).toHaveLength(2);
+    expect(screen.getByText(relationPresentationLabels().noRole)).toBeDefined();
+    expect(screen.getAllByText("資料の書誌情報")[0].closest("details")?.open).toBe(false);
+  });
+  it("Graph内・未表示・条件外を分け、Relation概要は表示中のClaimだけで作る", async () => {
+    const sameRole = { ...qualified, id: "unseen" };
+    vi.mocked(fetchClaim).mockImplementation(async id => ({ claim: id === base.id ? base : id === qualified.id ? qualified : sameRole, relatedClaimIds: id === qualified.id ? [base.id, sameRole.id] : [] }));
+    render(<ClaimDetails id={qualified.id} nodes={{}} mode="relation" visibleClaimIds={[qualified.id]} visibleClaims={[qualified]} roles={["SUPERVISION"]} />);
+    await waitFor(() => expect(screen.getByTestId("claim-group-outside")).toBeDefined());
+    expect(within(screen.getByTestId("claim-group-shown")).getByTestId("claim-card-qualified")).toBeDefined();
+    expect(within(screen.getByTestId("claim-group-unseen")).getByTestId("claim-card-unseen")).toBeDefined();
+    expect(within(screen.getByTestId("claim-group-outside")).getByTestId(`claim-card-${base.id}`)).toBeDefined();
+    expect(screen.getByTestId("relation-overview").textContent).toContain("Graphに表示中の主張 1件");
+    expect(screen.getByTestId("relation-overview").textContent).not.toContain("脚本");
+    expect(screen.queryByText(/限定比較の参照/)).toBeNull();
+    expect(screen.getAllByRole("button", { name: /^主張 \dを読む$/ })).toHaveLength(3);
+  });
+  it("関連Claimの一部失敗を完全取得と見せず、表示中概要と取得済み根拠を残す", async () => {
+    vi.mocked(fetchClaim).mockImplementation(async id => {
+      if (id === denied.id) throw new Error("DB");
+      return { claim: id === base.id ? base : qualified, relatedClaimIds: id === base.id ? [qualified.id, denied.id] : [] };
+    });
+    render(<ClaimDetails id={base.id} nodes={{}} mode="relation" visibleClaimIds={[base.id]} visibleClaims={[base]} />);
+    await waitFor(() => expect(screen.getByRole("alert")).toBeDefined());
+    expect(screen.getByRole("alert").textContent).toContain("取得できた範囲");
+    expect(screen.getByTestId("claim-card-qualified")).toBeDefined();
+    expect(screen.queryByTestId("claim-card-denied")).toBeNull();
+    expect(screen.getByTestId("relation-overview").textContent).toContain("Graphに表示中の主張 1件");
+  });
+  it("取得失敗でもGraphの概要を保持し、再試行で根拠まで復帰する", async () => {
+    vi.mocked(fetchClaim).mockRejectedValueOnce(new Error("DB")).mockResolvedValueOnce({ claim: base, relatedClaimIds: [] });
+    render(<ClaimDetails id={base.id} nodes={{}} mode="relation" visibleClaimIds={[base.id]} visibleClaims={[base]} />);
+    expect(screen.getByTestId("relation-overview").textContent).toContain("1件");
+    await waitFor(() => expect(screen.getByRole("alert")).toBeDefined());
+    expect(screen.getByTestId("relation-overview")).toBeDefined();
+    fireEvent.click(screen.getByRole("button", { name: "主張の取得を再試行" }));
+    await waitFor(() => expect(screen.getByTestId(`claim-card-${base.id}`)).toBeDefined());
+    expect(screen.queryByRole("alert")).toBeNull();
   });
 });

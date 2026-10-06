@@ -1,4 +1,6 @@
 import { checkRelationFacets } from "./relation-facets";
+import { checkRelationPresentation } from "./relation-presentation";
+checkRelationPresentation("science");
 import { expect, test, type Page } from "@playwright/test";
 import ledger from "../../datasets/pilot-science/v2/ledger.json" with { type: "json" };
 import { editConditions } from "./conditions";

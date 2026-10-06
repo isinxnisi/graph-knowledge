@@ -131,7 +131,7 @@ GRAPH_TEST_REUSE=1 npm run test:e2e
 
 同じディレクトリのNext.js devは同時に複数起動できないため、起動済みの場合はreuseを指定してください。[Step 5実施記録](docs/archive/phase-01-vertical-slice/IMPLEMENTATION_STEP_5.md)に変更内容・ブラウザ検証・スクリーンショットを記録しています。
 
-Graphの線は同じ主体・関係タイプ・対象のClaimをまとめた表示用Relationです。肯定・否定の混在は「異説あり」と点線で示し、クリックすると独立した各Claimの期間・出典を比較できます。初期Graphは7 Claim / 5 Relation、全展開は15 Claim / 13 Relationです。未取得ページがある場合、Graph表示は取得済みの主張に基づきます。
+Graphの線は同じ主体・関係タイプ・対象のClaimをまとめた表示用Relationです。肯定・否定の混在は「肯定・否定あり」と点線で示し、矛盾や真偽を判定しません。クリックすると関係全体の概要から独立した各Claimの限定・期間・出典を確認できます。初期Graphは7 Claim / 5 Relation、全展開は15 Claim / 13 Relationです。未取得ページがある場合、Graph表示は取得済みの主張に基づきます。
 
 Graphの配置・曲率の最新調整と確認画像は [IMPLEMENTATION_GRAPH_BALANCE.md](docs/archive/phase-01-vertical-slice/IMPLEMENTATION_GRAPH_BALANCE.md) を参照してください。
 
@@ -309,3 +309,5 @@ Phase 17の[概要presentation契約](docs/design/ENTITY_OVERVIEW_PRESENTATION.m
 
 
 Phase 20では「見る関係を編集」内で、作品制作への関与・人物と組織の関わり・特定開催回への参加を選べる。Visitor・会議議長・制作Roleは別の追加条件。アシスタント・影響を含む任意の組合せは「個別の関係を指定」で編集できる。「すべての関係」は三入口すべてとは異なる。Apply前の編集／CancelはGraphを変更しない。[採用契約](docs/design/RELATION_FACET_CONTRACTS.md)／[検証記録](docs/archive/phase-20-relation-facet/README.md)。
+
+Phase 21では線の構造化済み限定と中立的な肯否を表示し、詳細を「この関係の概要」→「個別の主張と根拠」へ整理した。「主張 Nを読む」「根拠を読む」で移動でき、Graph内・Graph未表示・条件外の主張を分ける。SourceのURL・参照箇所・原表記・確認範囲は先に読み、書誌情報は展開して確認する。浦沢→PLUTOの未構造化Roleを「作画」等へ推定しない。[現行契約](docs/design/RELATION_PRESENTATION_CONTRACTS.md)／[4 datasetの実画面・不足・検証記録](docs/archive/phase-21-relation-presentation/README.md)。

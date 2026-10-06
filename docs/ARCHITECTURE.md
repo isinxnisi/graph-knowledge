@@ -1,6 +1,6 @@
 # 現行技術設計
 
-更新日: 2026-10-06 / 状態: 初期Vertical Sliceと探索の開閉・Node再クリックまで実装済み。既存predicateと限定制作Roleによる条件付き探索を追加。v2 Role Claim 5件を人間受入後に投入・検証済み。関係概要・明示起点切替・直前一件復帰、人物・作品・組織の統一検索入口も実装。科学・研究機関pilot v1を別環境へ投入・観察済み。Phase 14では科学v2と組織立場のtyped限定を追加し、制作Roleと独立した語彙を保って条件・比較処理を共有。Phase 15の特定Event参加（第三のtyped限定）を実装。実資料E01/E03と特定開催回・開催期間を人間受入後に生成・専用DBへ投入・観察済み。Phase 20で三relation facetを条件editorへ接続し、具体条件を使う既存取得・復帰を維持。汎用taxonomy・プリセット・会員保存は未実装。[文書の入口](README.md)に現役設計とフェーズ別履歴をまとめる。
+更新日: 2026-10-07 / 状態: 初期Vertical Sliceと探索の開閉・Node再クリックまで実装済み。既存predicateと限定制作Roleによる条件付き探索を追加。v2 Role Claim 5件を人間受入後に投入・検証済み。関係概要・明示起点切替・直前一件復帰、人物・作品・組織の統一検索入口も実装。科学・研究機関pilot v1を別環境へ投入・観察済み。Phase 14では科学v2と組織立場のtyped限定を追加し、制作Roleと独立した語彙を保って条件・比較処理を共有。Phase 15の特定Event参加（第三のtyped限定）を実装。実資料E01/E03と特定開催回・開催期間を人間受入後に生成・専用DBへ投入・観察済み。Phase 20で三relation facetを条件editorへ接続し、具体条件を使う既存取得・復帰を維持。Phase 21でGraphの限定概要・中立的な肯否と、関係全体から独立主張／根拠へ降りる詳細を整合。汎用taxonomy・プリセット・会員保存は未実装。[文書の入口](README.md)に現役設計とフェーズ別履歴をまとめる。
 
 ## 前提と設計の位置づけ
 
@@ -341,7 +341,7 @@ Neo4jではPartialDateをネストしたpropertyとして保存せず、`validFr
 | 画面全体 | Entity最大100件、Claim最大200件 |
 | 読み取りDBクエリのタイムアウト | 5秒 |
 
-近傍取得はClaim単位のページングで、nodesは最大51件（中心を含む）。表示では同じsubjectId/predicate/objectIdの取得済みClaimを一つのRelationへまとめる。永続Claimは独立したまま。肯否が混在するRelationには「異説あり」と点線、否定のみには「否定」と破線を付ける。個別期間・出典未確認状態は詳細で確認する。Graphのラベルは取得済みClaimの範囲に基づき、未取得ページがある場合はその旨を表示する。詳細はrelatedClaimIdsで同一関係の全公開Claimを取得する。
+近傍取得はClaim単位のページングで、nodesは最大51件（中心を含む）。表示では同じsubjectId/predicate/objectIdの取得済みClaimを一つのRelationへまとめる。永続Claimは独立したまま。肯否が混在するRelationには「肯定・否定あり」と点線、否定のみには「否定」と破線を付ける。個別期間・出典未確認状態は詳細で確認する。Graphのラベルは取得済みClaimの範囲に基づき、未取得ページがある場合はその旨を表示する。詳細はrelatedClaimIdsで同一関係の全公開Claimを取得する。
 
 追加展開はEntity IDとClaim IDで重複排除し、既存のノード位置は極力維持する。中心と隣接関係のテキスト一覧も提供し、一覧から展開・詳細確認ができるようにする。複雑なレイアウト最適化やモバイル専用画面は後回し。
 
@@ -402,7 +402,7 @@ API契約、fixture、DBモデル、上限の変更はない。配置と非同�
 Step 4のDB/API契約と探索機能を維持し、表示のみ調整した。以下はStep 4記録の配置・画面サイズを更新する現在の仕様。
 
 - 初期配置は中心を固定した横長の楕円。通常の横半径max(300, 周辺数×42)、縦半径max(220, 周辺数×28)、開始角-45度とし、横書きラベルの余白と縦の伸びすぎを抑える。追加時は既存Nodeを固定し、新規Nodeだけを接続先・接続先重心の近くの候補へ置く。接続距離、Nodeとの衝突、端点とラベルの余白、既存ラベルとの近さ、中心からの拡がりを評価し、最初に空いた枠への配置を避ける。pan/zoomは追加時に変更しない。詳しい条件は次の「Graph全体のバランス調整」を参照。
-- 同じsubjectId/predicate/objectIdのClaimをpresentation層で一つの有向Relationへ集約する。表示IDは `relation:<subjectId>:<predicate>:<objectId>`、claimIdsは独立したClaim IDの配列。逆方向や別predicateは別Relation。単独端点組は制御点距離0、同じ端点組の別Relationには距離に応じた中程度のunbundled-bezier、重み0.5を使う。2本なら±clamp(線の長さ×0.32, 70, 115)、3本以上はこの範囲に均等に分ける。縦向きの複数Relationには最大±18pxの縦ラベルオフセットも付ける。個別期間をGraphに出さず、関係名と肯否混在時の「異説あり」だけを簡潔に示す。「異説あり」はaffirmedとdeniedの両方が取得済みの場合のみで、期間差・出典数の評価や自動矛盾判定ではない。
+- 同じsubjectId/predicate/objectIdのClaimをpresentation層で一つの有向Relationへ集約する。表示IDは `relation:<subjectId>:<predicate>:<objectId>`、claimIdsは独立したClaim IDの配列。逆方向や別predicateは別Relation。単独端点組は制御点距離0、同じ端点組の別Relationには距離に応じた中程度のunbundled-bezier、重み0.5を使う。2本なら±clamp(線の長さ×0.32, 70, 115)、3本以上はこの範囲に均等に分ける。縦向きの複数Relationには最大±18pxの縦ラベルオフセットも付ける。個別期間をGraphに出さず、関係名・構造化済み限定の短い概要と、肯否混在時の「肯定・否定あり」を示す。混在はaffirmedとdeniedの両方が表示中の場合のみで、期間差・出典数の評価や自動矛盾判定ではない。Phase 21の現行presentationは末尾と採用契約を参照。
 - 同名が表示中Graph内に存在するときのみ、descriptionの「、」「。」より前を補助ラベルにする。説明も同じ場合はIDの先頭8桁を添える。通常Nodeは名称だけ。元のEntityの名前・説明を変更しない。
 - 三列は190px / 可変Graph / 300px。画面高に合わせてGraphが伸縮し、詳細と隣接一覧は個別にスクロールする。短いデスクトップ画面では一覧の配分を減らしGraphを優先する。600px未満の高さや小さい横幅の専用対応は未実施。
 - 選択対象をGraph上部にも文字で表示する。展開済みは二重枠、直近に表示されたNodeは淡い外枠だけで識別し、操作を想起させる文字ラベルを付けない。Claimを選んでも主体の隣接一覧を維持し、該当ボタンのaria-pressedと枠線で選択を示す。
@@ -621,3 +621,11 @@ relatedClaimIdsとDisplayRelationはSPO単位のまま。比較キーにはEvent
 editor内で「すべて」「種類」「個別」を分け、既存五Predicateの任意指定を残す。精密条件は別sectionとし、facet単独では生成しない。未適用draft・Cancelは探索へ作用せず、Apply時だけ具体Predicate＋三精密条件を既存changePredicatesへ渡す。
 
 API・Cypher・GraphState・condition key・cursor・snapshotを変更しない。適用後の正本は具体条件であり、facet IDや対応版を保存しない。要約の逆引きは表示だけで、復帰や旧cursorをcatalogから再解決しない。Claim・DB・凍結dataset・語彙は不変。activity facet・tag・lexical検索・preset・汎用taxonomyは未実装。[実施記録](archive/phase-20-relation-facet/README.md)を参照。
+
+## Phase 21：Graphの関係概要とClaim詳細の整合
+
+[採用契約](design/RELATION_PRESENTATION_CONTRACTS.md)。線のSPO集約と独立Claimは維持し、三domainの構造化済み限定と指定なしの併存を短く示す。全五Predicateの肯否混在を「肯定・否定あり」＋点線へ統一し、意味対立を自動認定しない。期間・scope・原資料の具体表記は詳細で保持する。
+
+Edge選択時、表示中ClaimSummaryで関係全体の概要を先に示す。先頭UUIDは既存API取得の入口だけ。独立ClaimはUUID順で、Graph内／条件内だがGraph未表示／条件外の関連主張を分ける。部分取得・失敗を明示し、確認だけでGraphやcursorを進めない。個別Claim選択は従来の明示基準比較を維持する。
+
+各主張と根拠へスクロールでき、Citationではタイトル・locator・URL・原表記／言語・確認範囲を先に、書誌情報を折り畳みに置く。Roleや著者性をCitation.noteから補完しない。API・DB・schema・語彙・条件／cursor・開閉／復帰・凍結data・レイアウトは不変。[実画面評価・検証・次の不足](archive/phase-21-relation-presentation/README.md)を参照。
