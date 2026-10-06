@@ -11,10 +11,10 @@
 .explorer button:disabled { opacity: .55; cursor: default; }
 .explorer input { background: var(--color-panel); color: var(--color-text); width: 100%; }
 .explorer button:focus-visible, .explorer input:focus-visible, .explorer select:focus-visible, .explorer a:focus-visible { outline: 3px solid var(--color-accent); outline-offset: 2px; }
-.header { position: sticky; top: 0; z-index: 2; background: var(--color-panel); border-bottom: 1px solid var(--color-border); padding: 12px 18px; display: flex; align-items: center; gap: 14px; flex-wrap: wrap; flex: 0 0 auto; }
+.header { position: sticky; top: 0; z-index: 2; background: var(--color-panel); border-bottom: 1px solid var(--color-border); padding: 6px 18px; display: flex; align-items: center; gap: 8px 14px; flex-wrap: wrap; flex: 0 0 auto; }
 .header h1, .header p { margin: 0; }
 .demo { padding: 4px 12px; background: var(--color-demo); color: var(--color-demo-text); border: 1px solid var(--color-demo-border); border-radius: 4px; font-weight: 600; }
-.columns { display: grid; grid-template-columns: 190px minmax(430px, 1fr) 300px; align-items: start; gap: 12px; padding: 12px; flex: 1; min-height: 0; }
+.columns { display: grid; grid-template-columns: 190px minmax(430px, 1fr) 300px; align-items: start; gap: 12px; padding: 8px; flex: 1; min-height: 0; }
 .panel { background: var(--color-panel); border: 1px solid var(--color-border); border-radius: 6px; padding: 12px; min-width: 0; overflow-wrap: anywhere; height: 100%; min-height: 0; }
 .columns > .panel:first-child, .columns > aside { max-height: none; overflow-y: auto; position: static; top: 95px; overscroll-behavior: contain; }
 .searchForm { display: grid; gap: 8px; margin-bottom: 16px; }
@@ -27,7 +27,8 @@
 .muted { color: var(--color-muted); font-size: 13px; }
 .error { border-left: 3px solid var(--color-denied); background: var(--color-denied-soft); padding: 10px; color: var(--color-denied); }
 .error p:last-child { margin: 0; }
-.graphHeading { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex: 0 0 auto; }
+.graphHeader { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 4px 16px; margin-bottom: 4px; flex: 0 0 auto; }
+.graphHeading { display: flex; align-items: center; flex-wrap: wrap; gap: 4px 12px; flex: 0 0 auto; }
 .graphHeading p { font-size: 12px; color: var(--color-muted); }
 .empty { padding: 12px; background: var(--color-hover); }
 .canvas { position: relative; height: auto; width: 100%; background: var(--color-canvas); border: 1px solid var(--color-border); border-radius: 4px; flex: 1 1 0; min-height: 230px; }
@@ -35,7 +36,8 @@
 .relationPatches { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 10; }
 .explorer .relationPatch { position: absolute; transform-origin: right center; pointer-events: auto; white-space: nowrap; font: 11px/1.2 system-ui, sans-serif; padding: 2px 5px; border: 1px solid var(--color-border); border-radius: 4px; background: var(--color-hover); color: var(--color-muted); }
 .explorer .relationPatch[data-selected="true"] { background: var(--color-accent-soft); color: var(--color-accent); }
-.graphTools { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px 0; font-size: 11px; color: var(--color-muted); flex: 0 0 auto; }
+.graphTools { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; padding: 4px 0; font-size: 11px; color: var(--color-muted); flex: 0 0 auto; }
+.graphTools button { padding: 3px 6px; }
 .relations { border-top: 1px solid var(--color-border); padding-top: 8px; margin-top: 0; flex: 0 1 180px; min-height: 85px; overflow: auto; overscroll-behavior: contain; }
 .relationList { max-height: none; overflow-y: auto; overflow: visible; }
 .relationList li { padding: 10px 0; border-bottom: 1px solid var(--color-border); }
@@ -51,10 +53,10 @@
 /* 画面の高さを探索に配分し、詳細と一覧のスクロールをGraphから分離する。 */
 .header h1 { font-size: 19px; }
 .header > p:last-of-type { font-size: 12px; }
-.graphPanel { display: flex; flex-direction: column; overflow: hidden; }
-.graphHeading h2, .graphHeading p { margin-bottom: 6px; }
-.graphPanel > .muted { margin-bottom: 8px; font-size: 12px; }
-.feedback { flex: 0 0 auto; padding: 7px 9px; margin-bottom: 8px; background: var(--color-accent-soft); border-left: 3px solid var(--color-accent); font-size: 12px; }
+.graphPanel { display: flex; flex-direction: column; overflow: hidden; padding: 10px; }
+.graphHeading h2, .graphHeading p { margin: 0; }
+.graphPanel > .muted { margin-bottom: 4px; font-size: 12px; line-height: 1.4; }
+.feedback { display: flex; flex-wrap: wrap; gap: 0 12px; flex: 0 0 auto; padding: 4px 8px; margin-bottom: 4px; background: var(--color-accent-soft); border-left: 3px solid var(--color-accent); font-size: 12px; }
 .feedback p { margin: 0; }
 .relations h3 { position: sticky; top: -8px; background: var(--color-panel); margin-bottom: 5px; padding: 5px 0; z-index: 1; }
 .selectedRelation { border-left: 3px solid var(--color-accent-strong); padding-left: 8px !important; background: var(--color-accent-soft); }
@@ -65,10 +67,7 @@
 .claimFacts dd { margin: 2px 0 0; font-weight: 600; }
 .evidenceTitle { margin-top: 18px !important; }
 @media (max-height: 760px) {
-  .header { padding: 8px 18px; }
   .relations { flex-basis: 100px; }
-  .feedback { padding: 5px 8px; }
-  .graphTools { padding: 5px 0; }
 }
 
 .explorer a { color: var(--color-accent); text-decoration: underline; }
@@ -89,7 +88,7 @@
 .roleFilter { min-width: 0; border: 1px solid var(--color-border); border-radius: 4px; padding: 8px; margin: 10px 0; }
 
 /* 検索・探索条件・選択詳細を分け、条件編集中もGraphを背後に維持する。 */
-.conditionBar { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; margin-bottom: 8px; padding-bottom: 8px; border-bottom: 1px solid var(--color-border); flex: 0 0 auto; font-size: 12px; }
+.conditionBar { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 12px; margin-bottom: 4px; padding-bottom: 4px; border-bottom: 1px solid var(--color-border); flex: 0 0 auto; font-size: 12px; }
 .conditionBar > p { margin: 0; flex: 1 1 220px; }
 .conditionBar > button { padding: 4px 8px; }
 .rootLabel { font-size: 12px; color: var(--color-muted); margin-bottom: 6px !important; }
@@ -113,10 +112,8 @@
 @media (max-height: 760px) {
   .canvas { min-height: 270px; }
   .relations { flex-basis: 70px; min-height: 55px; }
-  .feedback { display: flex; flex-wrap: wrap; gap: 0 8px; }
   .initialFeedback { display: none; }
   .graphPanel > .muted { font-size: 11px; line-height: 1.4; margin-bottom: 4px; }
-  .graphHeading h2, .graphHeading p { margin-bottom: 2px; }
   .graphTools { gap: 4px; padding: 4px 0; }
   .graphTools button { padding: 3px 6px; }
 }
@@ -151,7 +148,7 @@
 
 .rootActions { margin: 12px 0; gap: 8px; }
 
-.rootBar { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 6px 12px; margin-bottom: 6px; flex: 0 0 auto; }
+.rootBar { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 4px 8px; flex: 0 1 auto; }
 .rootBar .rootLabel { margin: 0 !important; }
 .rootBar button { font-size: 12px; padding: 4px 8px; }
 

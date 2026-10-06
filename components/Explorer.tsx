@@ -59,11 +59,13 @@ export default function Explorer({ dataset = "demo" }: { dataset?: DatasetMode }
     <main className={`${styles.columns} ${detailWide ? styles.wideDetails : ""}`}>
       <div className={styles.panel}><SearchPanel placeholder={labels.searchExample} onChoose={chooseRoot} /><StartExamples dataset={dataset} onChoose={(entity) => chooseRoot(entity, true)} /></div>
       <section className={`${styles.panel} ${styles.graphPanel}`} aria-labelledby="graph-title">
-        <div className={styles.graphHeading}><h2 id="graph-title">Graph</h2>
-          <p data-testid="graph-counts">Entity {Object.keys(graph.nodes).length} / Claim {Object.keys(graph.claims).length}</p><p data-testid="relation-counts">Relation {Object.keys(relations).length}</p>
+        <div className={styles.graphHeader}>
+          <div className={styles.graphHeading}><h2 id="graph-title">Graph</h2>
+            <p data-testid="graph-counts">Entity {Object.keys(graph.nodes).length} / Claim {Object.keys(graph.claims).length}</p><p data-testid="relation-counts">Relation {Object.keys(relations).length}</p>
+          </div>
+          <div className={styles.rootBar}><p className={styles.rootLabel} data-testid="exploration-root">{entry.root}：{graph.centerId ? graph.nodes[graph.centerId]?.name : entry.rootEmpty}</p>
+            {previous && <button onClick={restorePrevious}>{overviewLabels().restore}</button>}</div>
         </div>
-        <div className={styles.rootBar}><p className={styles.rootLabel} data-testid="exploration-root">{entry.root}：{graph.centerId ? graph.nodes[graph.centerId]?.name : entry.rootEmpty}</p>
-        {previous && <button onClick={restorePrevious}>{overviewLabels().restore}</button>}</div>
         <RelationFilter eventRoles={graph.eventRoles ?? null} positions={graph.organizationPositions ?? null} roles={graph.contributionRoles ?? null} value={graph.predicates} onApply={changePredicates} />
         {graph.centerId ? <p className={styles.muted}>{entry.selectedHelp}</p> : <div className={styles.empty}><h3>{entry.initialTitle}</h3><p>{entry.initialHelp}</p></div>}
         <div className={`${styles.feedback} ${!graph.centerId ? styles.initialFeedback : ""}`} aria-live="polite"><p data-testid="selection-status">選択中：{selectionText}</p><p>{loading ? `Graphを取得中…（${loading}件）` : selectedEntity ? graph.expansions[selectedEntity.id]?.expanded ? "近傍は展開済みです。" : graph.expansions[selectedEntity.id]?.pages.length ? "展開は閉じています。クリックで取得済みの枝を復元します。" : "クリックで一段階展開します。" : "線ごとに同じ関係の主張をまとめて表示しています。"}</p></div>
