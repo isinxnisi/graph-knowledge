@@ -244,6 +244,62 @@ test("Phase 07: 入口・draft取消・全Roleと無指定・詳細幅とGraph�
   await page.setViewportSize({ width: 1160, height: 650 });
   await page.screenshot({ path: "test-results/phase07-compact.png", fullPage: true });
 });
+test("中央ペイン: 独立Graph高・縦リサイズ・内容に応じた隣接一覧", async ({ page }) => {
+  await page.goto("/");
+  const canvas = page.getByTestId("graph-canvas"), viewport = canvas.locator("..");
+  const panel = page.getByRole("region", { name: "Graph", exact: true });
+  const adjacent = page.getByRole("region", { name: "選択Entityの隣接関係" });
+  await expect.poll(() => canvas.evaluate(el => !!(el as unknown as { _cyreg?: { cy?: unknown } })._cyreg?.cy)).toBe(true);
+  await page.getByRole("button", { name: "PLUTOから探索を開始", exact: true }).click();
+  await expect(page.getByTestId("graph-counts")).toHaveText("Entity 4 / Claim 5");
+  await expect(adjacent.locator("li")).toHaveCount(5);
+  const dimensions = () => adjacent.evaluate(el => ({ height: el.clientHeight, content: el.scrollHeight }));
+  const many = await dimensions();
+  expect(many.content).toBeGreaterThan(many.height);
+  expect(await panel.evaluate(el => el.scrollHeight > el.clientHeight)).toBe(true);
+  await canvas.evaluate(el => {
+    const cy = (el as unknown as { _cyreg: { cy: import("cytoscape").Core } })._cyreg.cy;
+    cy.panBy({ x: 12, y: 8 });
+  });
+  const view = () => canvas.evaluate(el => {
+    const cy = (el as unknown as { _cyreg: { cy: import("cytoscape").Core } })._cyreg.cy;
+    return { nodes: cy.nodes().map(n => ({ id: n.id(), ...n.position() })), edges: cy.edges().map(e => e.id()), selected: cy.elements(".chosen").map(e => e.id()), pan: cy.pan(), zoom: cy.zoom() };
+  });
+  const before = await view();
+  await page.getByTestId("graph-counts").hover(); await page.mouse.wheel(0, 60);
+  await expect.poll(() => panel.evaluate(el => el.scrollTop)).toBeGreaterThan(0);
+  expect(await view()).toEqual(before);
+  await panel.evaluate(el => { el.scrollTop = 0; });
+  const original = (await viewport.boundingBox())!;
+  expect(original.height).toBeGreaterThan(600);
+  await page.mouse.move(original.x + original.width - 3, original.y + original.height - 3);
+  await page.mouse.down(); await page.mouse.move(original.x + original.width - 3, original.y + original.height - 103, { steps: 10 }); await page.mouse.up();
+  await expect.poll(async () => (await viewport.boundingBox())!.height).toBeLessThan(original.height - 80);
+  const resized = (await viewport.boundingBox())!;
+  expect(resized.width).toBe(original.width);
+  await expect.poll(() => canvas.evaluate(el => (el as unknown as { _cyreg: { cy: import("cytoscape").Core } })._cyreg.cy.height())).toBeCloseTo(resized.height - 2, 0);
+  expect(await view()).toEqual(before);
+  await page.getByRole("button", { name: "詳細を広く読む", exact: true }).click();
+  expect(await view()).toEqual(before);
+  expect((await viewport.boundingBox())!.height).toBe(resized.height);
+  await page.getByRole("button", { name: "詳細の幅を戻す", exact: true }).click();
+  await editConditions(page); await editRoles(page);
+  await page.getByRole("checkbox", { name: "プロデュース", exact: true }).check();
+  await page.getByRole("button", { name: "適用", exact: true }).click();
+  await expect(page.getByTestId("graph-counts")).toHaveText("Entity 2 / Claim 1");
+  await expect(adjacent.locator("li")).toHaveCount(1);
+  const few = await dimensions();
+  expect(few.height).toBeLessThan(many.height);
+  expect(few.content).toBe(few.height);
+  expect((await viewport.boundingBox())!.height).toBe(resized.height);
+  await page.setViewportSize({ width: 900, height: 650 });
+  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(900);
+  expect((await viewport.boundingBox())!.height).toBeGreaterThanOrEqual(400);
+  await adjacent.scrollIntoViewIfNeeded();
+  await adjacent.getByRole("button", { name: "主張と出典を見る", exact: true }).click();
+  await expect(page.getByRole("region", { name: "Claim詳細" })).toContainText("プロデュース");
+});
+
 test("Phase08: 実Role概要・作品起点・Role条件解除・直前探索復帰", async ({ page }) => {
   await root(page); await expect(page.getByTestId("graph-counts")).toHaveText("Entity 4 / Claim 6");
   await editConditions(page); await editRoles(page);

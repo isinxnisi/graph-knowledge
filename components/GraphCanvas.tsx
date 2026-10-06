@@ -1,6 +1,7 @@
 "use client";
 
 import { contributionLabels } from "../lib/i18n/contribution";
+import { entryLabels } from "../lib/i18n/exploration-entry";
 import cytoscape, { type Core, type ElementDefinition } from "cytoscape";
 import { useEffect, useImperativeHandle, useRef } from "react";
 import type { Ref } from "react";
@@ -171,6 +172,7 @@ export default function GraphCanvas({ ref, restoration, interactionBlocked, grap
     </div>
     <div className={styles.graphTools}>
       <button onClick={() => core.current?.fit(undefined, 24)} disabled={!graph.centerId}>全体を表示</button>
+      <span>{entryLabels().graphResize}</span>
       <span>丸：人物 ／ 四角：作品 ／ 六角形：組織 ／ ひし形：出来事</span>
       <span>矢印：方向 ／ 破線：否定 ／ {contributionLabels().mixedLegend} ／ 二重枠：展開済 ／ 淡い外枠：新規表示</span>
     </div>
