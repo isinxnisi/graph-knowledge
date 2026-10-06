@@ -9,6 +9,7 @@ import { organizationParticipationLabels } from "./organization-participation";
 const ja = {
   edit: "見る関係を編集", title: "見る関係の編集", applied: "適用中", unrestricted: "すべての関係（追加条件なし）",
   cancel: "キャンセル", draft: "編集中・未適用", unchanged: "適用中の条件と同じです。", apply: "適用",
+  closeEditor: "条件編集を閉じる",
   roleEdit: "制作の役割を調整", noRole: "役割で絞らない", specifyRole: "役割を指定する",
   roleHelp: "選んだ役割の主張を表示します。否定する主張も含みます。役割未指定の主張は対象外です。",
   broadHelp: "役割を限定していない主張も含めて制作関与を辿ります。",

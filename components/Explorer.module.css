@@ -161,6 +161,43 @@
 .facetDescription { display: block; color: var(--color-muted); font-size: 12px; margin-top: 3px; }
 .preciseTitle { font-size: 14px; margin: 18px 0 8px; }
 
+/* 条件の選択・追加条件・適用操作を区切り、スクロールは本文だけにする。 */
+.conditionEditor { padding: 0; width: min(680px, calc(100vw - 32px)); max-height: calc(100dvh - 32px); overflow: hidden; border-radius: 12px; box-shadow: 0 16px 48px rgb(0 0 0 / .18); }
+.conditionEditor[open] { display: flex; flex-direction: column; }
+.conditionHeader { flex-shrink: 0; padding: 18px 22px 14px; border-bottom: 1px solid var(--color-border); }
+.conditionTitle { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 5px; }
+.conditionTitle h2 { margin: 0; font-size: 18px; }
+.conditionTitle button { display: grid; place-items: center; padding: 0; width: 32px; height: 32px; flex-shrink: 0; font-size: 22px; line-height: 1; border-color: transparent; color: var(--color-muted); }
+.conditionHeader > p { margin: 0; }
+.conditionHeader .draftNotice { display: inline-block; margin-top: 8px; padding: 2px 8px; border: 1px solid var(--color-border); border-radius: 4px; font-size: 12px; }
+.conditionBody { min-height: 0; overflow-y: auto; overscroll-behavior: contain; scrollbar-gutter: stable; padding: 18px 22px; }
+.conditionEditor .relationFilter { margin: 0; padding: 12px; border: 1px solid var(--color-border); border-radius: 8px; }
+.conditionEditor .relationFilter legend { padding: 0 5px; }
+.conditionEditor .selectionModes { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; padding-bottom: 12px; border-bottom: 1px solid var(--color-border); }
+.conditionEditor .selectionModes label { align-items: center; padding: 8px; border: 1px solid var(--color-border); border-radius: 6px; font-size: 13px; cursor: pointer; }
+.conditionEditor .filterChoices { gap: 6px; }
+.conditionEditor .filterChoices label { padding: 8px 10px; border: 1px solid var(--color-border); border-radius: 6px; cursor: pointer; }
+.conditionEditor label:has(input:checked) { border-color: var(--color-accent); background: var(--color-accent-soft); }
+.conditionEditor label:focus-within { outline: 2px solid var(--color-accent); outline-offset: 2px; }
+.conditionEditor .preciseTitle { margin: 22px 0 10px; padding-top: 16px; border-top: 1px solid var(--color-border); }
+.conditionEditor .roleSettings { border: 1px solid var(--color-border); border-radius: 8px; margin: 8px 0; overflow: hidden; }
+.conditionEditor .roleSettings > button { display: flex; align-items: center; justify-content: space-between; gap: 12px; width: 100%; padding: 11px 12px; border: 0; border-radius: 0; font-weight: 600; }
+.conditionEditor .roleSettings > button[aria-expanded="true"] { background: var(--color-hover); border-bottom: 1px solid var(--color-border); }
+.conditionChevron { font-size: 18px; line-height: 1; }
+.conditionEditor button[aria-expanded="true"] .conditionChevron { transform: rotate(180deg); }
+.conditionEditor .roleFilter { border: 0; padding: 12px; margin: 8px 0 0; }
+.conditionEditor .roleFilter legend { padding: 0 4px; font-size: 12px; color: var(--color-muted); }
+.conditionEditor .roleFilter .filterChoices:first-of-type { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.draftSummary { margin-top: 18px; padding: 12px; background: var(--color-hover); border-radius: 8px; font-size: 13px; }
+.draftSummary p:last-child { margin: 0; font-size: 12px; }
+.conditionEditor .conditionFooter { position: static; flex-shrink: 0; margin: 0; padding: 12px 22px; border-top: 1px solid var(--color-border); background: var(--color-panel); }
+@media (max-width: 620px) {
+  .conditionHeader { padding: 12px 14px; }
+  .conditionBody { padding: 14px; }
+  .conditionEditor .selectionModes, .conditionEditor .filterChoices, .conditionEditor .roleFilter .filterChoices:first-of-type { grid-template-columns: 1fr; }
+  .conditionEditor .conditionFooter { padding: 12px 14px; }
+}
+
 .relationOverview { border-bottom: 1px solid var(--color-border); padding-bottom: 12px; margin-bottom: 16px; }
 .qualificationSummary { padding: 0; margin: 0 0 8px; list-style: none; }
 .qualificationSummary li { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 2px 8px; padding: 5px 0; }

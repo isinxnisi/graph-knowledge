@@ -137,4 +137,67 @@ test("実ページング・両限定の副作用なし・条件変更中の旧�
 });
 checkStartExamples("pilot-science-v2");
 
+test("条件モーダル: 区切り・固定操作・外側クリック取消と概要の閉じる", async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 720 });
+  let requests = 0;
+  page.on("request", request => { if (request.url().includes("/neighbors")) requests++; });
+  await start(page);
+  await expect.poll(async () => (await view(page)).edges.length).toBe(2);
+  const before = await view(page), initialRequests = requests;
+  const dialog = page.getByRole("dialog", { name: "見る関係の編集" });
+  await editConditions(page);
+  await page.getByRole("button", { name: "選択を解除", exact: true }).click();
+  await page.getByRole("checkbox", { name: "関わりがあった", exact: true }).check();
+  await page.getByRole("button", { name: "組織との関わりの立場を調整", exact: true }).click();
+  await page.getByRole("radio", { name: "立場を指定する", exact: true }).check();
+  await page.getByRole("checkbox", { name: "Visitor", exact: true }).check();
+  await expect(page.getByTestId("draft-conditions")).toContainText("Visitor");
+  await expect(page.getByTestId("active-predicates")).toContainText("追加条件なし");
+  await page.getByTestId("draft-conditions").scrollIntoViewIfNeeded();
+  await expect(dialog.getByRole("heading", { name: "見る関係の編集", exact: true })).toBeInViewport();
+  await expect(dialog.getByRole("button", { name: "適用", exact: true })).toBeInViewport();
+  await page.getByRole("checkbox", { name: "Visitor", exact: true }).scrollIntoViewIfNeeded();
+  await page.screenshot({ path: "test-results/condition-modal-science.png" });
+  // 内側の余白や、内側から背景へドラッグした操作では閉じない。
+  const box = (await dialog.boundingBox())!;
+  await page.mouse.click(box.x + 3, box.y + 50);
+  await expect(dialog).toBeVisible();
+  const heading = (await dialog.getByRole("heading", { name: "見る関係の編集", exact: true }).boundingBox())!;
+  await page.mouse.move(heading.x + 8, heading.y + 8); await page.mouse.down();
+  await page.mouse.move(8, 8); await page.mouse.up();
+  await expect(dialog).toBeVisible();
+  await page.mouse.click(8, 8);
+  await expect(dialog).toHaveCount(0);
+  expect(await view(page)).toEqual(before); expect(requests).toBe(initialRequests);
+  await expect(page.getByRole("button", { name: "見る関係を編集", exact: true })).toBeFocused();
+  await page.getByRole("button", { name: "見る関係を編集", exact: true }).click();
+  await expect(page.getByRole("radio", { name: "すべての関係", exact: true })).toBeChecked();
+  await page.getByRole("button", { name: "条件編集を閉じる", exact: true }).click();
+  await editConditions(page); await page.keyboard.press("Escape");
+  expect(await view(page)).toEqual(before); expect(requests).toBe(initialRequests);
+  // 狭い画面・ダーク配色でも、見出しと適用操作が本文スクロールに埋もれない。
+  await page.getByRole("button", { name: "ダークモード", exact: true }).click();
+  await page.setViewportSize({ width: 600, height: 700 });
+  await editConditions(page);
+  await page.getByRole("button", { name: "組織との関わりの立場を調整", exact: true }).click();
+  await page.getByRole("radio", { name: "立場を指定する", exact: true }).check();
+  await page.getByRole("checkbox", { name: "Visitor", exact: true }).check();
+  await page.getByRole("checkbox", { name: "Visitor", exact: true }).scrollIntoViewIfNeeded();
+  await expect(dialog.getByRole("heading", { name: "見る関係の編集", exact: true })).toBeInViewport();
+  await expect(dialog.getByRole("button", { name: "適用", exact: true })).toBeInViewport();
+  expect(await dialog.evaluate(el => el.scrollWidth <= el.clientWidth)).toBe(true);
+  await page.screenshot({ path: "test-results/condition-modal-narrow-dark.png" });
+  await page.getByRole("button", { name: "適用", exact: true }).click();
+  await expect(page.getByTestId("graph-counts")).toHaveText("Entity 2 / Claim 1");
+  expect(requests).toBe(initialRequests + 1);
+  await page.setViewportSize({ width: 1280, height: 720 });
+  const applied = await view(page);
+  await page.getByRole("button", { name: "関係概要を見る", exact: true }).click();
+  const overview = page.getByRole("dialog", { name: "このデータセットに登録された関係概要" });
+  await expect(overview.getByTestId("overview-AFFILIATED_WITH-subject")).toBeVisible();
+  await page.mouse.click(8, 8); await expect(overview).toHaveCount(0);
+  expect(await view(page)).toEqual(applied); expect(requests).toBe(initialRequests + 1);
+  await expect(page.getByRole("button", { name: "関係概要を見る", exact: true })).toBeFocused();
+});
+
 checkRelationFacets("pilot-science-v2", "ヴェルナー・ハイゼンベルク", ["人物と組織の関わり"], ["AFFILIATED_WITH"], { toggle: "組織との関わりの立場を調整", mode: "立場を指定する", label: "Visitor", parameter: "organizationPositions", value: "VISITOR" }, "Entity 2 / Claim 1");

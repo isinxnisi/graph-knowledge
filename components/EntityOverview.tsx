@@ -1,4 +1,6 @@
 "use client";
+
+import { useDialogBackdrop } from "../lib/client/use-dialog-backdrop";
 import { useEffect, useRef, useState } from "react";
 import type { EntityOverviewResponse, EntitySummary } from "../lib/domain/api";
 import type { DatasetMode } from "../lib/domain/dataset";
@@ -68,7 +70,8 @@ export default function EntityOverview({ entity, dataset, restricted, onClose, o
     });
     return () => controller.abort();
   }, [entity.id, dataset, attempt]);
-  return <dialog ref={dialog} className={`${styles.conditionDialog} ${styles.overviewDialog}`} aria-labelledby="overview-title" onCancel={(event) => { event.preventDefault(); onClose(); }}>
+  const backdrop = useDialogBackdrop(onClose);
+  return <dialog ref={dialog} className={`${styles.conditionDialog} ${styles.overviewDialog}`} aria-labelledby="overview-title" onCancel={(event) => { event.preventDefault(); onClose(); }} {...backdrop}>
     <div className={styles.detailHeading}><h2 id="overview-title">{labels.title}</h2><button onClick={onClose}>{labels.close}</button></div>
     <div className={styles.overviewBody}>
     <p className={styles.muted}>{datasetLabels(dataset).badge}</p>
