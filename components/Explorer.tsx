@@ -37,7 +37,7 @@ export default function Explorer({ dataset = "demo" }: { dataset?: DatasetMode }
   const selectedRelation = selection?.kind === "relation" ? relations[selection.id] : null;
   const selectedEntity = selection?.kind === "entity" ? graph.nodes[selection.id] : null;
   const selectedClaim = selection?.kind === "claim" ? graph.claims[selection.id] : null;
-  const selectionText = selectedEntity ? entityLabel(selectedEntity, graph.nodes).replace("\n", " / ") : selectedClaim ? `${graph.nodes[selectedClaim.subjectId]?.name} → ${relationLabel(selectedClaim)} → ${graph.nodes[selectedClaim.objectId]?.name}` : selectedRelation ? `${graph.nodes[selectedRelation.subjectId]?.name} → ${selectedRelation.label.replace("\n", " / ")} → ${graph.nodes[selectedRelation.objectId]?.name}` : "未選択";
+  const selectionText = selectedEntity ? entityLabel(selectedEntity, graph.nodes).replace("\n", " / ") : selectedClaim ? `${graph.nodes[selectedClaim.subjectId]?.name} → ${relationLabel(selectedClaim)} → ${graph.nodes[selectedClaim.objectId]?.name}` : selectedRelation ? `${graph.nodes[selectedRelation.subjectId]?.name} → ${selectedRelation.label.replaceAll("\n", " / ")} → ${graph.nodes[selectedRelation.objectId]?.name}` : "未選択";
   const key = `${graph.generation}:${selection?.kind}:${selection?.id}`;
   const loading = Object.values(graph.expansions).filter((meta) => meta.loading).length;
   const blocked = Object.values(graph.expansions).find((meta) => meta.blocked);

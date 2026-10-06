@@ -723,7 +723,7 @@ describe("Relationの概要と独立した主張の読み分け", () => {
   const denied = { ...base, id: "denied", polarity: "denied", contribution: { roleId: "SCRIPT_WRITING", scope: null } } as ClaimDetail;
   it("別の限定に掛かる否定を役割の肯定や自動対立に変換しない", () => {
     const summary = relationPresentation([base, qualified, denied]);
-    expect(summary.graphQualification).toBe("脚本（否定のみ）・監修＋指定なし");
+    expect(summary.graphQualification).toBe("脚本（否定のみ）・監修");
     expect(summary.qualification?.entries.find(e => e.id === null)).toMatchObject({ affirmed: 1, denied: 0 });
     const relation = Object.values(displayRelations({ [base.id]: base, qualified, denied }))[0];
     expect(relation.label).toContain("肯定・否定あり"); expect(relation.label).not.toMatch(/異説|矛盾/);
@@ -731,17 +731,48 @@ describe("Relationの概要と独立した主張の読み分け", () => {
     expect(relationPresentationLabels("en").title).toBe(relationPresentationLabels("ja-JP").title);
   });
   it.each([
-    { predicate: "AFFILIATED_WITH", key: "organizationParticipation", value: { positionId: "VISITOR" }, label: "Visitor＋指定なし" },
-    { predicate: "PARTICIPATED_IN", key: "eventParticipation", value: { roleId: "CHAIR" }, label: "会議議長＋指定なし" },
-  ] as const)("$predicateは固有の値を保持して広い主張と併記する", ({ predicate, key, value, label }) => {
+    { predicate: "AFFILIATED_WITH", key: "organizationParticipation", value: { positionId: "VISITOR" }, category: "組織", label: "Visitor" },
+    { predicate: "PARTICIPATED_IN", key: "eventParticipation", value: { roleId: "CHAIR" }, category: "参加", label: "会議議長" },
+  ] as const)("$predicateは具体語をGraphへ、広い主張の構成を詳細へ残す", ({ predicate, key, value, category, label }) => {
     const broad = { ...base, predicate, contribution: null } as ClaimSummary;
     const narrow = { ...broad, id: "narrow", [key]: value } as ClaimSummary;
     expect(relationPresentation([broad, narrow]).graphQualification).toBe(label);
-    expect(Object.keys(displayRelations({ broad, narrow }))).toHaveLength(1);
+    const relations = Object.values(displayRelations({ broad, narrow }));
+    expect(relations).toHaveLength(1);
+    expect(relations[0].label).toBe(`${category}\n${label}`);
+    expect(relationPresentation([broad, narrow]).qualification?.entries.find(e => e.id === null)).toMatchObject({ affirmed: 1 });
+    expect(relations[0].label).toBe(Object.values(displayRelations({ narrow }))[0].label);
+  });
+  it("長い二立場を種類数で消さず、期間の異なる具体語を両方読める", () => {
+    const claims = scienceV2.claims.filter(c => c.subjectId === "1530af15-129d-40bf-a1ca-ce8343dc7491" && c.objectId === "8e322435-4318-4ad0-835b-3f71d2537421");
+    const summaries = claims.map(c => ({ ...c, sourceCount: 1, eventParticipation: null }) as ClaimSummary);
+    const relation = Object.values(displayRelations(Object.fromEntries(summaries.map(c => [c.id, c]))))[0];
+    expect(relation.label).toBe("組織\nAssociate professor\nVisitor");
+    expect(relation.claimIds).toHaveLength(3);
+    expect(relation.label).not.toMatch(/指定なし|種類|192[4567]/);
+  });
+  it("三値以上でも具体名を残し、詳細には省略した値と指定なしも保持する", () => {
+    const producing = { ...qualified, id: "producing", contribution: { roleId: "PRODUCING", scope: null } } as ClaimDetail;
+    const story = { ...qualified, id: "story", contribution: { roleId: "STORY_CO_CREATION", scope: null } } as ClaimDetail;
+    const claims = [base, qualified, denied, producing, story];
+    const summary = relationPresentation(claims);
+    expect(summary.graphCategory).toBe("制作");
+    expect(summary.graphQualification).toBe("プロデュース・脚本（否定のみ）\nほか2件");
+    expect(summary.qualification?.entries).toHaveLength(5);
+    expect(summary.qualification?.entries.map(e => e.label)).toContain("ストーリー共同制作");
+    expect(relationPresentation([...claims].reverse())).toEqual(summary);
+  });
+  it("具体Roleが否定しかない時もその役割を肯定済みに見せない", () => {
+    const relation = Object.values(displayRelations({ denied }))[0];
+    expect(relation.label).toContain("制作\n脚本（否定のみ）");
+    expect(relation.polarity).toBe("denied");
+    const sameRoleAffirmed = { ...denied, id: "affirmed", polarity: "affirmed" } as ClaimSummary;
+    expect(relationPresentation([denied, sameRoleAffirmed]).graphQualification).toBe("脚本（肯否あり）");
   });
   it("資料の役割表記を未構造化Claimから推定しない", () => {
     const claim = { ...base, citations: base.citations.map(c => ({ ...c, note: "作画としてクレジット" })) };
     expect(relationPresentation([claim]).graphQualification).toBe("");
+    expect(Object.values(displayRelations({ claim }))[0].label).toBe("制作に関わった");
     expect(relationPresentation([claim]).qualification?.entries).toEqual([{ id: null, label: "役割指定なし", affirmed: 1, denied: 0 }]);
     render(<ClaimCard claim={claim} nodes={{}} title="主張" />);
     expect(screen.getAllByText("作画としてクレジット")).toHaveLength(2);

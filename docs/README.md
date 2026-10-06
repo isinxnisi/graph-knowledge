@@ -13,7 +13,7 @@
 | [小さい探索分類と条件解決](design/EXPLORATION_CLASSIFICATION_RESOLUTION_REVIEW.md) | Phase 19設計検証完了・提案。5候補／24記録への仮付与、Visitor三状態と検索三契約。relation facet三入口は現条件へ解決可能、学術は未解決、仕事は非採用。研究prototypeのみ、公開API／UIは未接続 |
 | [関係探索モデルの再レビュー](design/RELATION_EXPLORATION_MODEL_REVIEW.md) | Phase 18レビュー完了・提案。意味限定／多軸の探索分類／原語・語彙検索を分離し、A〜Dを多分野で比較。runtime変更・新分類の採用なし。[比較資料v1](research/phase-18-exploration-model/v1/README.md)に根拠と受入境界 |
 | [Entity概要のpresentation](design/ENTITY_OVERVIEW_PRESENTATION.md) | Phase 17採用。種類・視点別関係名・向き優先、統計折り畳み、domain限定の記録、最小overview API拡張 |
-| [Graphの関係概要とClaim詳細](design/RELATION_PRESENTATION_CONTRACTS.md) | Phase 21採用。構造化済み限定と中立的な肯否、関係全体から独立Claim／根拠へ、表示中／未表示／条件外の分離 |
+| [Graphの関係概要とClaim詳細](design/RELATION_PRESENTATION_CONTRACTS.md) | Phase 21〜22採用。Graphは短い関係見出しと具体語優先、構成は詳細へ。中立的な肯否、関係全体から独立Claim／根拠へ、表示中／未表示／条件外の分離 |
 | [関係モデルの基本設計](design/RELATION_MODEL_PRINCIPLES.md) | Phase 16採用。独立命題／domain固有限定／共通処理の判断基準、null・肯否・期間・identity／比較／表示、由来と根拠、追加レビュー手順。語彙追加時は個別契約と併読 |
 | [現在地点と次フェーズ](design/CURRENT_STATE_AND_NEXT_PHASE.md) | 2026-10-03の棚卸し。候補Aは承認・実装へ進んだ。棚卸し時点の状態を確認する記録 |
 | [プロダクト像と設計原則](design/PRODUCT_VISION_AND_PRINCIPLES.md) | 成熟したサービスの目標・実現意向・未確定候補・守る境界。直近の実装要件ではない |
@@ -81,6 +81,7 @@ Phase 14で、既存制作Roleと組織立場（Visitor / Associate professor）
 | Phase 19：小さい探索分類の条件解決 | 5候補・24記録仮付与、Visitor三状態、既存条件の純粋prototype。三入口は解決可、学術は未解決、仕事は非採用。runtime変更なし | [完了記録](archive/phase-19-exploration-classification/README.md) |
 | Phase 20：三relation facetのUI接続 | 小さいcatalog・resolver、種類／個別条件・精密条件、既存取得・開閉・起点・復帰の再利用 | [完了記録](archive/phase-20-relation-facet/README.md) |
 | Phase 21：GraphとClaim詳細の整合 | 限定と中立肯否、Relation全体→範囲別Claim→原資料、4 datasetの実画面評価と不足の分離 | [完了記録](archive/phase-21-relation-presentation/README.md) |
+| Phase 22：Graphラベルの意味優先 | 短い見出しと具体Role／立場、構成は詳細へ、長い語を消さない | [完了記録](archive/phase-22-semantic-edge-labels/README.md) |
 
 Phase 02後のNode再クリックの採用・検証は、現役の[操作と設定](design/GRAPH_INTERACTION_AND_SETTINGS.md)へ記録している。今後、設定機能の検討が終わるまでは現役文書として維持する。
 

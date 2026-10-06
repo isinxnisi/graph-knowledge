@@ -61,7 +61,7 @@ test("2立場・2期間・広いClaimを独立表示し、1本のGraphと詳細�
   await page.getByRole("button", { name: "詳細を広く読む", exact: true }).click();
   await page.screenshot({ path: "test-results/phase14-science-v2-detail.png" });
   const label = await canvas(page).evaluate((el, claimId) => (el as unknown as { _cyreg: { cy: import("cytoscape").Core } })._cyreg.cy.edges().filter(e => e.data("claimIds").includes(claimId)).first().data("label"), visitor.claimId);
-  expect(label).not.toContain("1924"); expect(label).not.toContain("異説"); expect(label).toContain("立場 2種類");
+  expect(label).not.toContain("1924"); expect(label).not.toContain("異説"); expect(label).toBe("組織\nAssociate professor\nVisitor");
   await tap(page, heisenberg); const entity = page.getByRole("region", { name: "Entity詳細" });
   const before = await view(page);
   await entity.getByRole("button", { name: "展開を閉じる", exact: true }).click(); await expect(page.getByTestId("graph-counts")).toHaveText("Entity 1 / Claim 0");

@@ -1,6 +1,7 @@
 const ja = {
   title: "この関係の概要", claimsTitle: "個別の主張と根拠", mixed: "肯定・否定あり", denied: "否定のみ",
   role: "役割", position: "立場", unspecified: "指定なし", termDenied: "否定のみ", termMixed: "肯否あり",
+  graphCategories: { CONTRIBUTED_TO: "制作", AFFILIATED_WITH: "組織", PARTICIPATED_IN: "参加" },
   qualificationHelp: "限定の読み方", graphScope: "この線は現在Graphに表示している主張をまとめたものです。",
   noRole: "この主張では制作の役割を指定していません。資料の記載は下の根拠で確認できます。",
   noPosition: "この主張では組織との関わりの立場を指定していません。資料の記載は下の根拠で確認できます。",
@@ -14,7 +15,7 @@ const ja = {
   loading: "関連主張を確認中…", partial: "関連主張の取得が完了していません。以下は取得できた範囲です。",
   graphClaims: (n: number) => `Graphに表示中の主張 ${n}件`, claimCount: (n: number) => `${n}件の主張`,
   counts: (affirmed: number, denied: number) => `肯定 ${affirmed}件 ／ 否定 ${denied}件`,
-  terms: (n: number) => `${n}種類`, jump: (n: number) => `主張 ${n}を読む`,
+  moreTerms: (n: number) => `ほか${n}件`, jump: (n: number) => `主張 ${n}を読む`,
 };
 // 新しい表示文言を識別子や知識語彙へ混ぜない。翻訳はここへ追加する。
 export function relationPresentationLabels(locale = "ja") {

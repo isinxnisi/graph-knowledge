@@ -32,7 +32,7 @@ export function displayRelations(claims: Record<string, ClaimSummary>): Record<s
     const presentation = relationPresentation(group);
     return [id, { id, subjectId: first.subjectId, objectId: first.objectId, predicate: first.predicate,
       claimIds: group.map((claim) => claim.id).sort(), polarity,
-      label: PREDICATES[first.predicate].label + (presentation.graphQualification ? `\n${presentation.graphQualification}` : "") + (polarity === "mixed" ? `\n${relationPresentationLabels().mixed}` : polarity === "denied" ? "\n（否定）" : ""),
+      label: (presentation.graphQualification ? `${presentation.graphCategory}\n${presentation.graphQualification}` : PREDICATES[first.predicate].label) + (polarity === "mixed" ? `\n${relationPresentationLabels().mixed}` : polarity === "denied" ? "\n（否定）" : ""),
     }];
   }));
 }

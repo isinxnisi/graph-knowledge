@@ -1,16 +1,20 @@
 # Graphの関係概要と独立Claim詳細
 
-Phase 21の採用契約。Phase 16の[意味モデル原則](RELATION_MODEL_PRINCIPLES.md)を維持し、既存データを読み取るpresentationだけを変更する。実画面・不足の観察は[完了記録](../archive/phase-21-relation-presentation/README.md)を参照。
+Phase 21〜22の採用契約。Phase 16の[意味モデル原則](RELATION_MODEL_PRINCIPLES.md)を維持し、既存データを読み取るpresentationだけを変更する。詳細の整合・不足は[Phase 21](../archive/phase-21-relation-presentation/README.md)、Graphラベルの意味優先は[Phase 22](../archive/phase-22-semantic-edge-labels/README.md)を参照。
 
 ## 線が表す範囲
 
 DisplayRelationは表示中の同じsubjectId / predicate / objectIdのClaim UUIDをまとめたもの。方向・表示ID・独立Claim・比較キー・DB保存意味は変更しない。条件外やGraph未表示の関連Claimを線のラベル・肯否・限定内訳へ加えない。
 
-線にはpredicateの既存表示名と、構造化済みのdomain限定の短い概要を示す。制作Role、組織関与立場、Event参加立場の語彙は別々の辞書を使う。単なる期間・Source数はラベルへ出さない。限定値が多い／長い場合は「役割 N種類」「立場 N種類」へ圧縮し、値はRelation詳細で全て読める。限定値と指定なしが併存すると「＋指定なし」を添える。指定なしだけの場合、通常のpredicateラベルに説明を増やさない。
+線では「この二者がどう関係するか」を先に示す。構造化済みの具体値がある場合、短い見出し（制作／組織／参加）と具体語を表示し、長いpredicate表示名を繰り返さない。制作Role、組織関与立場、Event参加立場の語彙は別々の辞書を使う。短い見出しは表示文言であり、新taxonomy・保存語彙・条件ではない。
 
-affirmed / denied混在は全predicateで「肯定・否定あり」＋点線。異説・矛盾・信頼度・正しさを判定しない。否定だけなら「否定」＋破線を維持する。特定の限定値だけに否定がある場合、値を列挙するラベルには「否定のみ」「肯否あり」を添え、否定のRoleを肯定済みRoleへ変換しない。種類数への圧縮は値の存在の概要であり、全値を肯定する意味ではない。
+具体語は二値まで表示する。ID順で安定させ、信頼度・頻度・期間で順位付けしない。二語の合計が区切り込み24文字を超える場合、語の間で改行する（文字数はUnicodeコードポイント）。長い語を「N種類」へ置き換えない。三値以上は具体語二つと「ほかN件」を示す。このNは未表示の限定値数で、Claim／Source／接続Entity数ではない。全ての値は詳細で確認できる。
 
-「＋指定なし」は当該domainの役割／立場を指定しないClaimも含むことを示す。scopeや期間まで無限定という意味ではない。nullを全Role・全期間・全巻の認定へ変換しない。Citation.noteやEntity descriptionからRole等を推定しない。
+Graphでは「指定なし」「Claim件数」「期間」「scope」「Source数」をラベルへ出さない。Role／立場の具体値がない場合は従来のpredicate表示名へfallbackする。例えば浦沢直樹→PLUTOは「制作に関わった」のまま。具体値がある線でも刊行物・期間等の適用範囲を全作品・全期間へ一般化しない。
+
+affirmed / denied混在は全predicateで「肯定・否定あり」＋点線。異説・矛盾・信頼度・正しさを判定しない。否定だけなら「否定」＋破線を維持する。特定の限定値だけに否定がある場合、値を列挙するラベルには「否定のみ」「肯否あり」を添え、否定のRoleを肯定済みRoleへ変換しない。省略された値も全て肯定済みとは解釈しない。
+
+指定なしのClaimも独立して保持し、Relation詳細の限定内訳と個別Claimで確認できる。具体語のラベルは、線に含まれる全Claimが同じ限定を持つという意味ではない。nullを全Role・全期間・全巻の認定へ変換しない。Citation.noteやEntity descriptionからRole等を推定しない。
 
 ## 関係全体から根拠へ
 
