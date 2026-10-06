@@ -4,6 +4,8 @@
 
 目的の基準は [PROJECT_CONTEXT.md](../PROJECT_CONTEXT.md)、現行仕様は [ARCHITECTURE.md](../ARCHITECTURE.md)。今回の依頼原文は [追加プロダクト像](../prompt/20261003_追加プロダクト像.md)。探索、操作、プリセットの詳細は既存設計を維持する。
 
+2026-10-06に初めて共有された[Capsule・User Contribution・Global KG構想](CAPSULE_AND_USER_CONTRIBUTION_VISION.md)を将来構想として併読する。Global／localの境界、投稿・受入・moderation、保存と公開共有、discussion、provenance、AI構造化、import／exportの設計時は同文書へ戻る。本書の保存ビュー・知識正本の説明からCapsule-localの扱いを自動決定しない。詳細は同文書を正本とし、ここへ重複しない。
+
 ## 1. プロダクトとしての目標
 
 中心は「関係性をGraphで検索・探索して遊べること」。資料を調べる価値と、自分の関心に沿って関係を絵として組み立てる楽しさを両立する。Entity一覧や議論ページが増えても、Graph Explorerと検索への導線を主要な体験として保つ。

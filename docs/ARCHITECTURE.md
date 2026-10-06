@@ -10,6 +10,8 @@ Phase 16で[Relation・Claim・Predicate・typed qualificationの基本設計](d
 
 成熟したプロダクト像と、投稿・議論・保存・履歴等の初回設計で守る境界は [PRODUCT_VISION_AND_PRINCIPLES.md](design/PRODUCT_VISION_AND_PRINCIPLES.md) を参照する。構想の保存であり、現行API・DB契約や着手範囲を変更しない。
 
+Global／localのidentity・読取範囲、投稿／審査、保存／公開共有／議論、provenance、AI構造化、import／exportの変更前には[Capsule・User Contribution・Global KG構想](design/CAPSULE_AND_USER_CONTRIBUTION_VISION.md)も参照する。下記の知識正本・Claim由来の表示・published読取は現行KGの契約であり、Capsule-localの保存先や全公開コンテンツのGlobal受入を定めていない。Capsuleの内容とSaved View、公開と受入を分ける。Capsuleの物理schema・投稿flowは未決・未実装。
+
 ## 多言語対応の設計前提
 
 多言語対応は必須の設計前提であり、将来選択するオプションではない。現在は日本語のみの実装だが、新しい設計では以下の境界を守る。対応言語、翻訳の拡充、言語切替UI、名称モデルとAPIの具体的な移行時期は別途決める。

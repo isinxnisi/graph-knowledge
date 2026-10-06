@@ -16,6 +16,8 @@
 
 Graphで関係性を検索・探索して遊べることをサービスの主要な体験とする。成熟したサービスで実現したい方向と、現在から守る境界・関連機能の初回設計で決める事項は [プロダクト像と設計原則](design/PRODUCT_VISION_AND_PRINCIPLES.md) に整理する。直近の実装要件ではない。
 
+ユーザーが文脈を保存・共有するCapsuleと、User Contribution／Global KGの将来構想は[専用文書](design/CAPSULE_AND_USER_CONTRIBUTION_VISION.md)を正本とする。Global／local、Entity・Claim同一性、投稿・審査・moderation、Saved View・公開共有・discussion、provenance、AI構造化、import／exportを設計・変更する時に読み返す。公開とGlobal受入、Capsuleと保存ビューを分ける構想であり、現行schemaや実装範囲の変更指示ではない。
+
 ## 重視する設計思想
 
 Phase 17では概要を関係名・方向優先の一覧へ整理し、主張統計を二段目に置いた。知識の意味やClaimは変更せず、三domainの限定を別々の短い記録として示す。[採用契約](design/ENTITY_OVERVIEW_PRESENTATION.md)を参照。

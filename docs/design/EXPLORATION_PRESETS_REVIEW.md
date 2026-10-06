@@ -4,6 +4,8 @@
 
 このレビュー後、既存predicate集合だけの条件付き近傍取得を実装した。最新契約は [CONDITIONAL_EXPLORATION_PHASE.md](CONDITIONAL_EXPLORATION_PHASE.md)。本レビューのtaxonomy・公式カタログ・会員保存・言語切替は未実装で、以下の現状分析はレビュー時点の記録。
 
+保存・共有へ着手する時は、2026-10-06に共有された[Capsule構想](CAPSULE_AND_USER_CONTRIBUTION_VISION.md)も読む。本書のSaved View／保存ワークスペースは既存KGの見方・探索途中を保存する提案。local Entity・assertion・仮説等を持つCapsuleのコンテンツ保存とは区別し、Capsule公開をGlobal受入と同一視しない。Capsuleの具体方式は未決。
+
 ## 現状と判断
 
 実際に確認したファイル:
