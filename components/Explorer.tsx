@@ -58,6 +58,7 @@ export default function Explorer({ dataset = "demo" }: { dataset?: DatasetMode }
     </header>
     <main className={`${styles.columns} ${detailWide ? styles.wideDetails : ""}`}>
       <div className={styles.panel}><SearchPanel placeholder={labels.searchExample} onChoose={chooseRoot} /><StartExamples dataset={dataset} onChoose={(entity) => chooseRoot(entity, true)} /></div>
+      <div className={styles.centralScroll}>
       <section className={`${styles.panel} ${styles.graphPanel}`} aria-labelledby="graph-title">
         <div className={styles.graphHeader}>
           <div className={styles.graphHeading}><h2 id="graph-title">Graph</h2>
@@ -76,6 +77,7 @@ export default function Explorer({ dataset = "demo" }: { dataset?: DatasetMode }
         <GraphCanvas ref={canvas} restoration={viewRestoration} interactionBlocked={!!overview} onEntityDoubleClick={(id) => { if (graph.nodes[id]) setOverview(graph.nodes[id]); }} graph={graph} selection={selection} onEntity={selectEntity} onRelation={selectRelation} onToggleEntity={toggleEntity} />
         <RelationsList dataset={dataset} graph={graph} selection={selection} onEntity={selectEntity} onClaim={selectClaim} onExpand={(id) => void expand(id)} onClose={close} />
       </section>
+      </div>
       <aside className={styles.panel} aria-labelledby="detail-title">
         <div className={styles.detailHeading}><h2 id="detail-title">詳細</h2>{selection && <button aria-pressed={detailWide} onClick={() => setDetailWide(!detailWide)}>{detailWide ? entry.detailNormal : entry.detailWide}</button>}</div>
         {!selection && <p className={styles.muted}>{entry.detailHelp}</p>}

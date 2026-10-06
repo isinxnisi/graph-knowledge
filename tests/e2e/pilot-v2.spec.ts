@@ -244,10 +244,10 @@ test("Phase 07: 入口・draft取消・全Roleと無指定・詳細幅とGraph�
   await page.setViewportSize({ width: 1160, height: 650 });
   await page.screenshot({ path: "test-results/phase07-compact.png", fullPage: true });
 });
-test("中央ペイン: 独立Graph高・縦リサイズ・内容に応じた隣接一覧", async ({ page }) => {
+test("中央ペイン: 単一スクロール・左右独立・Graph縦リサイズ", async ({ page }) => {
   await page.goto("/");
   const canvas = page.getByTestId("graph-canvas"), viewport = canvas.locator("..");
-  const panel = page.getByRole("region", { name: "Graph", exact: true });
+  const card = page.getByRole("region", { name: "Graph", exact: true }), panel = card.locator("..");
   const adjacent = page.getByRole("region", { name: "選択Entityの隣接関係" });
   await expect.poll(() => canvas.evaluate(el => !!(el as unknown as { _cyreg?: { cy?: unknown } })._cyreg?.cy)).toBe(true);
   await page.getByRole("button", { name: "PLUTOから探索を開始", exact: true }).click();
@@ -255,7 +255,14 @@ test("中央ペイン: 独立Graph高・縦リサイズ・内容に応じた隣�
   await expect(adjacent.locator("li")).toHaveCount(5);
   const dimensions = () => adjacent.evaluate(el => ({ height: el.clientHeight, content: el.scrollHeight }));
   const many = await dimensions();
-  expect(many.content).toBeGreaterThan(many.height);
+  expect(many.content).toBe(many.height);
+  const sides = async () => ({
+    left: { box: await page.locator("main > div").first().boundingBox(), scroll: await page.locator("main > div").first().evaluate(el => el.scrollTop) },
+    right: { box: await page.getByRole("complementary").boundingBox(), scroll: await page.getByRole("complementary").evaluate(el => el.scrollTop) },
+    pageScroll: await page.evaluate(() => window.scrollY),
+  });
+  const initialSides = await sides();
+  const cardTop = (await card.boundingBox())!.y;
   expect(await panel.evaluate(el => el.scrollHeight > el.clientHeight)).toBe(true);
   await canvas.evaluate(el => {
     const cy = (el as unknown as { _cyreg: { cy: import("cytoscape").Core } })._cyreg.cy;
@@ -268,10 +275,21 @@ test("中央ペイン: 独立Graph高・縦リサイズ・内容に応じた隣�
   const before = await view();
   await page.getByTestId("graph-counts").hover(); await page.mouse.wheel(0, 60);
   await expect.poll(() => panel.evaluate(el => el.scrollTop)).toBeGreaterThan(0);
+  expect((await card.boundingBox())!.y).toBeLessThan(cardTop);
+  expect(await card.evaluate(el => el.scrollTop)).toBe(0);
+  expect(await sides()).toEqual(initialSides);
+  expect(await view()).toEqual(before);
+  await adjacent.locator("li").first().scrollIntoViewIfNeeded();
+  const scrolled = await panel.evaluate(el => el.scrollTop);
+  await adjacent.locator("li").first().hover(); await page.mouse.wheel(0, 60);
+  await expect.poll(() => panel.evaluate(el => el.scrollTop)).toBeGreaterThan(scrolled);
+  expect(await adjacent.evaluate(el => el.scrollTop)).toBe(0);
+  expect(await sides()).toEqual(initialSides);
   expect(await view()).toEqual(before);
   await panel.evaluate(el => { el.scrollTop = 0; });
   const original = (await viewport.boundingBox())!;
-  expect(original.height).toBeGreaterThan(600);
+  expect(original.height).toBeGreaterThan(500);
+  expect(original.height).toBeLessThan(680);
   await page.mouse.move(original.x + original.width - 3, original.y + original.height - 3);
   await page.mouse.down(); await page.mouse.move(original.x + original.width - 3, original.y + original.height - 103, { steps: 10 }); await page.mouse.up();
   await expect.poll(async () => (await viewport.boundingBox())!.height).toBeLessThan(original.height - 80);
@@ -298,6 +316,14 @@ test("中央ペイン: 独立Graph高・縦リサイズ・内容に応じた隣�
   await adjacent.scrollIntoViewIfNeeded();
   await adjacent.getByRole("button", { name: "主張と出典を見る", exact: true }).click();
   await expect(page.getByRole("region", { name: "Claim詳細" })).toContainText("プロデュース");
+  await page.locator("main > div").first().evaluate(el => { el.scrollTop = 20; });
+  await page.getByRole("complementary").evaluate(el => { el.scrollTop = 30; });
+  const movedSides = await sides();
+  expect(movedSides.left.scroll).toBeGreaterThan(0); expect(movedSides.right.scroll).toBeGreaterThan(0);
+  const centerBefore = await panel.evaluate(el => el.scrollTop);
+  await adjacent.locator("li").first().hover(); await page.mouse.wheel(0, -60);
+  await expect.poll(() => panel.evaluate(el => el.scrollTop)).toBeLessThan(centerBefore);
+  expect(await sides()).toEqual(movedSides);
 });
 
 test("Phase08: 実Role概要・作品起点・Role条件解除・直前探索復帰", async ({ page }) => {
