@@ -643,5 +643,3 @@ SPO集約・claimIds・方向・中立的な肯否表現・個別限定の否定
 
 
 Phase 22後の局所視覚調整：構造化済み具体語を持つRelationだけ、カテゴリを11pxの小さい背景付きpatchとして左に添える。主表示は15pxの具体語で、自然なpredicate表示とfallbackにはpatchを付けない。Cytoscapeラベルと補助DOMの描画上の分離であり、Relationの意味・claimIds・API・DB・datasetは不変。詳細は[現行presentation契約](design/RELATION_PRESENTATION_CONTRACTS.md)を参照。
-
-制作fallbackの表示比較では、「制作に関わった」という文言を保ち、そのラベル自体を背景・境界線・角丸付きのbadge風に描画する。具体Roleありのカテゴリpatch、他predicateの表示、探索挙動は維持する。

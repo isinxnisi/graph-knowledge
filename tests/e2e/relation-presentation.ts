@@ -24,18 +24,14 @@ const view = (page: Page) => canvas(page).evaluate(el => {
   const cy = (el as unknown as { _cyreg: { cy: import("cytoscape").Core } })._cyreg.cy;
   return { positions: cy.nodes().map(n => ({ id: n.id(), ...n.position() })).sort((a,b) => a.id.localeCompare(b.id)), edges: cy.edges().map(e => e.id()).sort(), selected: cy.elements(".chosen").map(e => e.id()), pan: cy.pan(), zoom: cy.zoom() };
 });
-async function clickRelation(page: Page, subject: string, object: string, label = false) {
+async function clickRelation(page: Page, subject: string, object: string) {
   const position = await canvas(page).evaluate(async (el, args) => {
     const cy = (el as unknown as { _cyreg: { cy: import("cytoscape").Core } })._cyreg.cy;
     const edge = cy.edges().filter(e => e.data("source") === args.subject && e.data("target") === args.object).first();
     cy.zoom(1); cy.center(edge);
     await new Promise<void>(r => requestAnimationFrame(() => requestAnimationFrame(() => r())));
-    if (args.label) {
-      const box = edge.boundingBox({ includeNodes: false, includeEdges: false, includeLabels: true });
-      return { x: (box.x1 + box.x2) / 2 * cy.zoom() + cy.pan().x, y: (box.y1 + box.y2) / 2 * cy.zoom() + cy.pan().y };
-    }
     return (edge as import("cytoscape").EdgeSingular).renderedMidpoint();
-  }, { subject, object, label });
+  }, { subject, object });
   await canvas(page).click({ position });
   await expect(page.getByTestId("relation-overview")).toBeVisible();
 }
@@ -55,15 +51,7 @@ export function checkRelationPresentation(mode: keyof typeof datasets) {
     expect(labels).toHaveLength(1); expect(labels[0].ids).toHaveLength(c.claimCount);
     expect(labels[0].label).toContain(c.label); expect(labels[0].label).not.toMatch(/異説|192[467]|200[1234]/);
     expect(labels[0].label).not.toMatch(/指定なし|種類|Claim|主張\s*\d/);
-    if (mode === "manga") {
-      expect(labels[0].label).not.toMatch(/作画|作者|原作/);
-      const labelStyle = await canvas(page).evaluate((el, args) => {
-        const cy = (el as unknown as { _cyreg: { cy: import("cytoscape").Core } })._cyreg.cy;
-        const edge = cy.edges().filter(e => e.data("source") === args.subject && e.data("target") === args.object).first();
-        return { text: edge.data("canvasLabel"), shape: edge.style("text-background-shape"), border: edge.numericStyle("text-border-width"), opacity: edge.numericStyle("text-border-opacity"), font: edge.numericStyle("font-size") };
-      }, { subject: id(c.subject), object: id(c.object) });
-      expect(labelStyle).toEqual({ text: "制作に関わった", shape: "roundrectangle", border: 1, opacity: 1, font: 13 });
-    }
+    if (mode === "manga") expect(labels[0].label).not.toMatch(/作画|作者|原作/);
     const patch = canvas(page).locator("..").locator(`button[data-relation-id="relation:${id(c.subject)}:${pair[0].predicate}:${id(c.object)}"]`);
     if (mode === "science" || mode === "event") {
       await expect(patch).toHaveText(mode === "science" ? "組織" : "参加");
@@ -85,7 +73,7 @@ export function checkRelationPresentation(mode: keyof typeof datasets) {
       await expect(page.getByTestId("relation-overview")).toContainText(c.subject);
       await expect(page.getByTestId("relation-overview")).toContainText(c.object);
     }
-    await clickRelation(page, id(c.subject), id(c.object), mode === "manga");
+    await clickRelation(page, id(c.subject), id(c.object));
     await expect(page.getByTestId("selection-status")).toContainText(labels[0].label.replaceAll("\n", " / "));
     const detail = page.getByRole("region", { name: "Claim詳細" }), summary = page.getByTestId("relation-overview");
     await expect(summary).toContainText(`${c.subject} →`); await expect(summary).toContainText(c.object);
