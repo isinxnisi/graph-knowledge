@@ -7,7 +7,7 @@ import { datasetLabels } from "../lib/i18n/dataset";
 import type { EntitySummary } from "../lib/domain/api";
 import { overviewLabels } from "../lib/i18n/entity-overview";
 import EntityOverview from "./EntityOverview";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { displayRelations, entityLabel } from "../lib/client/graph-presentation";
 import { relationLabel } from "../lib/client/format";
 import { useGraphExplorer } from "../lib/client/use-graph-explorer";
@@ -19,6 +19,16 @@ import RelationsList from "./RelationsList";
 import EntityDetails from "./EntityDetails";
 import ClaimDetails from "./ClaimDetails";
 import styles from "./Explorer.module.css";
+
+function GraphNotice({ message, transient }: { message: string; transient: boolean }) {
+  const [visible, setVisible] = useState(true);
+  useEffect(() => {
+    if (!transient) return;
+    const timer = setTimeout(() => setVisible(false), 3500);
+    return () => clearTimeout(timer);
+  }, [transient]);
+  return visible ? <p className={styles.graphNotice} role="status">{message}</p> : null;
+}
 
 export default function Explorer({ dataset = "demo" }: { dataset?: DatasetMode }) {
   const labels = datasetLabels(dataset);
@@ -69,12 +79,13 @@ export default function Explorer({ dataset = "demo" }: { dataset?: DatasetMode }
         </div>
         <RelationFilter eventRoles={graph.eventRoles ?? null} positions={graph.organizationPositions ?? null} roles={graph.contributionRoles ?? null} value={graph.predicates} onApply={changePredicates} />
         {graph.centerId ? <p className={styles.muted}>{entry.selectedHelp}</p> : <div className={styles.empty}><h3>{entry.initialTitle}</h3><p>{entry.initialHelp}</p></div>}
-        <div className={`${styles.feedback} ${!graph.centerId ? styles.initialFeedback : ""}`} aria-live="polite"><p data-testid="selection-status">選択中：{selectionText}</p><p>{loading ? `Graphを取得中…（${loading}件）` : selectedEntity ? graph.expansions[selectedEntity.id]?.expanded ? "近傍は展開済みです。" : graph.expansions[selectedEntity.id]?.pages.length ? "展開は閉じています。クリックで取得済みの枝を復元します。" : "クリックで一段階展開します。" : "線ごとに同じ関係の主張をまとめて表示しています。"}</p></div>
         {Object.values(graph.expansions).some((meta) => meta.active && meta.hasMore) && <p className={styles.muted}>Graphの関係表示は取得済みの主張に基づきます。続きは各Entityの詳細から取得できます。</p>}
-        {graph.notice && <p role="status">{graph.notice}</p>}
         {blocked && <p role="alert" className={styles.error}>{blocked.error}</p>}
         {Object.values(graph.claims).some((claim) => claim.contribution?.roleId) && <p className={styles.muted}>{contributionLabels().partial}</p>}
-        <GraphCanvas ref={canvas} restoration={viewRestoration} interactionBlocked={!!overview} onEntityDoubleClick={(id) => { if (graph.nodes[id]) setOverview(graph.nodes[id]); }} graph={graph} selection={selection} onEntity={selectEntity} onRelation={selectRelation} onToggleEntity={toggleEntity} />
+        <GraphCanvas ref={canvas} restoration={viewRestoration} interactionBlocked={!!overview} onEntityDoubleClick={(id) => { if (graph.nodes[id]) setOverview(graph.nodes[id]); }} graph={graph} selection={selection} onEntity={selectEntity} onRelation={selectRelation} onToggleEntity={toggleEntity} feedback={<>
+          <div className={`${styles.feedback} ${!graph.centerId ? styles.initialFeedback : ""}`} aria-live="polite"><p data-testid="selection-status">選択中：{selectionText}</p><p>{loading ? `Graphを取得中…（${loading}件）` : selectedEntity ? graph.expansions[selectedEntity.id]?.expanded ? "近傍は展開済みです。" : graph.expansions[selectedEntity.id]?.pages.length ? "展開は閉じています。クリックで取得済みの枝を復元します。" : "クリックで一段階展開します。" : "線ごとに同じ関係の主張をまとめて表示しています。"}</p></div>
+          {graph.notice && <GraphNotice key={`${graph.generation}:${graph.clock}:${graph.notice}`} message={graph.notice} transient={graph.notice === "取得済みの枝を復元しました。" || graph.notice === overviewLabels().restored} />}
+        </>} />
         <RelationsList dataset={dataset} graph={graph} selection={selection} onEntity={selectEntity} onClaim={selectClaim} onExpand={(id) => void expand(id)} onClose={close} />
       </section>
       </div>

@@ -244,6 +244,51 @@ test("Phase 07: 入口・draft取消・全Roleと無指定・詳細幅とGraph�
   await page.setViewportSize({ width: 1160, height: 650 });
   await page.screenshot({ path: "test-results/phase07-compact.png", fullPage: true });
 });
+test("Graphオーバーレイ: 選択状態・一時復元通知・操作の透過", async ({ page }) => {
+  await page.goto("/");
+  let requests = 0;
+  page.on("request", request => { if (request.url().includes("/neighbors")) requests++; });
+  await page.getByRole("button", { name: "PLUTOから探索を開始", exact: true }).click();
+  await expect(page.getByTestId("graph-counts")).toHaveText("Entity 4 / Claim 5");
+  const canvas = page.getByTestId("graph-canvas"), overlay = page.getByTestId("graph-overlay");
+  await expect(overlay.getByTestId("selection-status")).toContainText("PLUTO");
+  expect(await overlay.evaluate(el => getComputedStyle(el).pointerEvents)).toBe("none");
+  const snapshot = () => canvas.evaluate(el => {
+    const cy = (el as unknown as { _cyreg: { cy: import("cytoscape").Core } })._cyreg.cy;
+    return { nodes: cy.nodes().map(n => ({ id: n.id(), ...n.position() })).sort((a,b) => a.id.localeCompare(b.id)), pan: cy.pan(), zoom: cy.zoom(), selected: cy.elements(".chosen").map(e => e.id()) };
+  });
+  const before = await snapshot(), initialRequests = requests;
+  const detail = page.getByRole("region", { name: "Entity詳細" });
+  await detail.getByRole("button", { name: "展開を閉じる", exact: true }).click();
+  await expect(page.getByTestId("graph-counts")).toHaveText("Entity 1 / Claim 0");
+  await detail.getByRole("button", { name: "展開を再開", exact: true }).click();
+  const notice = overlay.getByRole("status");
+  await expect(notice).toHaveText("取得済みの枝を復元しました。");
+  await expect(page.getByTestId("graph-counts")).toHaveText("Entity 4 / Claim 5");
+  await expect.poll(snapshot).toEqual(before);
+  const box = (await canvas.boundingBox())!;
+  await page.screenshot({ path: "test-results/graph-feedback-overlay.png" });
+  await expect(notice).toHaveCount(0, { timeout: 6000 });
+  expect(await snapshot()).toEqual(before); expect(requests).toBe(initialRequests);
+  expect((await canvas.boundingBox())!.y).toBe(box.y);
+  // 同じ枝の再復元でも通知を出し直す。
+  await detail.getByRole("button", { name: "展開を閉じる", exact: true }).click();
+  await detail.getByRole("button", { name: "展開を再開", exact: true }).click();
+  await expect(notice).toHaveText("取得済みの枝を復元しました。");
+  // 選択表示の下へNodeをpanし、文字の上からでもそのNodeを選択・展開できる。
+  const status = (await overlay.getByTestId("selection-status").boundingBox())!;
+  const point = { x: status.x + status.width / 2, y: status.y + status.height / 2 };
+  await canvas.evaluate((el, args) => {
+    const cy = (el as unknown as { _cyreg: { cy: import("cytoscape").Core } })._cyreg.cy;
+    const node = cy.getElementById(args.id), current = (node as import("cytoscape").NodeSingular).renderedPosition();
+    const bounds = el.getBoundingClientRect();
+    cy.panBy({ x: args.x - bounds.left - current.x, y: args.y - bounds.top - current.y });
+  }, { ...point, id: id("長崎尚志") });
+  await page.mouse.click(point.x, point.y);
+  await expect(overlay.getByTestId("selection-status")).toContainText("長崎尚志");
+  await expect(detail).toContainText("長崎尚志");
+});
+
 test("中央ペイン: 単一スクロール・左右独立・Graph縦リサイズ", async ({ page }) => {
   await page.goto("/");
   const canvas = page.getByTestId("graph-canvas"), viewport = canvas.locator("..");

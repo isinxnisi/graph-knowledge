@@ -57,6 +57,13 @@ export function checkRelationPresentation(mode: keyof typeof datasets) {
       await expect(patch).toHaveText(mode === "science" ? "組織" : "参加");
       expect(await patch.evaluate(el => getComputedStyle(el).fontSize)).toBe("11px");
       const before = (await patch.boundingBox())!;
+      const labelLeft = await canvas(page).evaluate((el, args) => {
+        const cy = (el as unknown as { _cyreg: { cy: import("cytoscape").Core } })._cyreg.cy;
+        const edge = cy.edges().filter(e => e.data("source") === args.subject && e.data("target") === args.object).first();
+        const box = edge.boundingBox({ includeNodes: false, includeEdges: false, includeLabels: true });
+        return { x: el.getBoundingClientRect().left + box.x1 * cy.zoom() + cy.pan().x, zoom: cy.zoom() };
+      }, { subject: id(c.subject), object: id(c.object) });
+      expect(labelLeft.x - before.x - before.width).toBeCloseTo(3 * labelLeft.zoom, 0);
       await canvas(page).evaluate(el => { (el as unknown as { _cyreg: { cy: import("cytoscape").Core } })._cyreg.cy.panBy({ x: 20, y: 12 }); });
       await expect.poll(async () => (await patch.boundingBox())?.x).toBeCloseTo(before.x + 20, 0);
       await expect.poll(async () => (await patch.boundingBox())?.y).toBeCloseTo(before.y + 12, 0);

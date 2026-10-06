@@ -10,6 +10,8 @@ DisplayRelationは表示中の同じsubjectId / predicate / objectIdのClaim UUI
 
 2026-10-07の視覚調整：具体値がある場合だけカテゴリを小さいpatch（11px・控えめな背景と境界・4px角丸）として具体語の左へ添える。具体語は既存15pxのCytoscapeラベル。「影響を受けた」「アシスタントだった」や具体値なしのfallbackにpatchを付けない。Cytoscapeの部分文字装飾を補う小さいDOMレイヤーで、公開labelのboundsに合わせ、pan／zoom／移動／選択に追随する。patchのクリックも同じRelationを選択する。Graphのテキスト代替・選択説明にはカテゴリを含む従来の文字列を残し、描画用の`badge`と`canvasLabel`だけ分離する。新しいGraph要素・保存分類ではない。
 
+同日の間隔調整では、patch右端から主ラベルの背景bounds左端までの距離を8→3に縮めた（Graphの座標単位、zoomに追随）。約5px分だけ具体語へ近づけ、文字・色・意味・選択対応を維持する。
+
 具体語は二値まで表示する。ID順で安定させ、信頼度・頻度・期間で順位付けしない。二語の合計が区切り込み24文字を超える場合、語の間で改行する（文字数はUnicodeコードポイント）。長い語を「N種類」へ置き換えない。三値以上は具体語二つと「ほかN件」を示す。このNは未表示の限定値数で、Claim／Source／接続Entity数ではない。全ての値は詳細で確認できる。
 
 Graphでは「指定なし」「Claim件数」「期間」「scope」「Source数」をラベルへ出さない。Role／立場の具体値がない場合は従来のpredicate表示名へfallbackする。例えば浦沢直樹→PLUTOは「制作に関わった」のまま。具体値がある線でも刊行物・期間等の適用範囲を全作品・全期間へ一般化しない。
@@ -56,3 +58,5 @@ API契約、Cypher、DBモデル、語彙契約、Claim schema、三typed型、�
 ## 局所badge調整の検証（2026-10-07）
 
 `tests/ui-state.test.tsx`の71件と、既存Playwrightの漫画PLUTO・science・Event・demo代表表示4ケースが成功。patchの有無・11px・クリック対応・pan／zoomへの追随、条件変更後のpatch削除、自然なラベル／fallback、独立Claim／Sourceと既存座標を検証した。実ブラウザのPLUTO・science・Eventのスクリーンショットで視覚階層も確認した。typecheck・変更したTS/TSXへのeslint・buildも成功。専用API integration／seedは実行せず、意味モデル・API・DB・datasetには差分なし。新しい画像アーカイブは追加していない。
+
+同日のオーバーレイ・間隔調整はUI／概要unit 77件とPlaywright 5件で検証した。漫画PLUTOで選択状態・再復元通知・通知消去前後の座標／pan／zoom保持、表示の下のNodeクリック、既存中央スクロール／縦リサイズ、具体RoleとSource・条件変更を確認。science／Eventではpatchと主ラベルbounds間の距離・pan／zoom追随・patchクリックとRelation詳細を確認した。復元通知はUIだけで消し、再復元で出し直す。文字列・独立Claim・API・DB・datasetは不変。

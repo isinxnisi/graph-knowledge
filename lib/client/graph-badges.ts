@@ -25,7 +25,7 @@ export function attachGraphBadges(cy: Core, layer: HTMLElement, className: strin
       badge.textContent = category;
       badge.dataset.selected = String(edge.hasClass("chosen"));
       // 主ラベルの左、最初の行に揃える。拡大縮小・pan・Node移動にも追随する。
-      badge.style.left = `${(box.x1 - 8) * zoom + pan.x}px`;
+      badge.style.left = `${(box.x1 - 3) * zoom + pan.x}px`;
       // labelのboundsには背景paddingとCytoscapeの計測誤差用2pxが含まれる。
       const labelPadding = edge.numericStyle("text-background-padding") + 2;
       badge.style.top = `${(box.y1 + labelPadding + edge.numericStyle("font-size") / 2) * zoom + pan.y}px`;

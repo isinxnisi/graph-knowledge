@@ -4,7 +4,7 @@ import { contributionLabels } from "../lib/i18n/contribution";
 import { entryLabels } from "../lib/i18n/exploration-entry";
 import cytoscape, { type Core, type ElementDefinition } from "cytoscape";
 import { useEffect, useImperativeHandle, useRef } from "react";
-import type { Ref } from "react";
+import type { ReactNode, Ref } from "react";
 import { restorationPositions } from "../lib/client/graph-view";
 import type { GraphView, ViewRestoration } from "../lib/client/graph-view";
 export type GraphCanvasHandle = { capture: () => GraphView | null };
@@ -15,9 +15,9 @@ import { createNodeClickHandler } from "../lib/client/graph-interaction";
 import { attachGraphBadges } from "../lib/client/graph-badges";
 import styles from "./Explorer.module.css";
 
-type Props = { ref?: Ref<GraphCanvasHandle>; restoration?: ViewRestoration | null; interactionBlocked?: boolean; graph: GraphState; selection: Selection; onEntity: (id: string) => void; onRelation: (id: string) => void; onToggleEntity: (id: string) => void; onEntityDoubleClick?: (id: string) => void };
+type Props = { ref?: Ref<GraphCanvasHandle>; feedback?: ReactNode; restoration?: ViewRestoration | null; interactionBlocked?: boolean; graph: GraphState; selection: Selection; onEntity: (id: string) => void; onRelation: (id: string) => void; onToggleEntity: (id: string) => void; onEntityDoubleClick?: (id: string) => void };
 
-export default function GraphCanvas({ ref, restoration, interactionBlocked, graph, selection, onEntity, onRelation, onToggleEntity, onEntityDoubleClick }: Props) {
+export default function GraphCanvas({ ref, feedback, restoration, interactionBlocked, graph, selection, onEntity, onRelation, onToggleEntity, onEntityDoubleClick }: Props) {
   const container = useRef<HTMLDivElement>(null);
   const badgeLayer = useRef<HTMLDivElement>(null);
   const core = useRef<Core | null>(null);
@@ -169,6 +169,7 @@ export default function GraphCanvas({ ref, restoration, interactionBlocked, grap
     <div className={styles.canvas}>
       <div className={styles.cySurface} ref={container} data-testid="graph-canvas" tabIndex={-1} role="img" aria-label="人物・作品・組織・出来事の関係グラフ。操作できるテキスト一覧は下にあります。" />
       <div className={styles.relationPatches} ref={badgeLayer} aria-hidden="true" />
+      <div className={styles.graphOverlay} data-testid="graph-overlay">{feedback}</div>
     </div>
     <div className={styles.graphTools}>
       <button onClick={() => core.current?.fit(undefined, 24)} disabled={!graph.centerId}>全体を表示</button>
