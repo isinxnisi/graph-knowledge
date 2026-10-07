@@ -561,7 +561,7 @@ type EntityOverviewResponse = {
 
 応答itemsは既存EntityDetail（id・kind・name・description・aliases・nullable event）であり、DB searchNamesや外部IDを露出しない。Webクライアントだけの契約を直接更新し、旧人物専用版のversioning／互換経路は追加しない。Phase 09ではneighbors等の応答を変更せず、Phase 15でnullable eventParticipation等を追加した。
 
-左に一つの名前／別名検索と任意の検索対象selectを置く。初期はすべて。候補はkindの文字、名前、説明、別名で見分け、同じ名前・kind・説明が重なる場合は内部IDも補助表示する。候補取得・検索kind変更だけではGraph／探索条件／直前探索を変更しない。検索kind変更では旧検索を取消し候補をクリアするが自動取得しない。候補選択だけ既存chooseRootで確定predicate／Roleを保持した新世代へ移り、旧枝・通信・直前探索をリセットする。
+左に一つの名前／別名検索と任意の検索対象selectを置く。初期はすべて。候補はkindの文字、名前、説明、別名で見分け、同じ名前・kind・説明が重なる場合は内部IDも補助表示する。候補取得・検索kind変更だけではGraph／探索条件／直前探索を変更しない。名前／別名入力・検索kindの変更では旧検索を取消し、候補・エラー・検索中表示をクリアするが自動取得しない。取消後に届く旧検索の成功・失敗は表示せず、新しい検索の待機状態にも影響させない。候補選択だけ既存chooseRootで確定predicate／Roleを保持した新世代へ移り、旧枝・通信・直前探索をリセットする。
 
 検索kindはGraphState・探索conditionKey・cursorへ入れない。作品／組織から人物も通常どおり辿る。関係概要、明示的な広く見る／同条件切替、一件復帰、開閉／休止枝復元、Claim／Sourceは同じ契約を再利用する。UI文字列はlib/i18n/entity-search.ts等でlocale解決し、Entityの原語別名は知識データとして返す。言語付き名称のAPI、形態素解析、全文検索基盤は追加しない。
 

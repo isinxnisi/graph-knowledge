@@ -607,6 +607,54 @@ it("受理済み・未描画Nodeの復帰は保存座標を固定し、欠けた
 
 
 describe("一般Entity検索の境界", () => {
+  it.each(["成功", "失敗"])("名前変更で旧検索を取消し、遅い%s応答が次の検索を妨げない", async (outcome) => {
+    type Response = import("../lib/domain/api").EntitySearchResponse;
+    let resolveOld!: (value: Response) => void;
+    let rejectOld!: (reason: Error) => void;
+    let resolveNext!: (value: Response) => void;
+    vi.mocked(searchEntities)
+      .mockReturnValueOnce(new Promise((resolve, reject) => { resolveOld = resolve; rejectOld = reject; }))
+      .mockReturnValueOnce(new Promise((resolve) => { resolveNext = resolve; }));
+    const choose = vi.fn();
+    render(<SearchPanel onChoose={choose} />);
+    fireEvent.change(screen.getByLabelText("名前・別名"), { target: { value: "変更前" } });
+    fireEvent.click(screen.getByRole("button", { name: "検索" }));
+    const signal = vi.mocked(searchEntities).mock.calls[0][1];
+    fireEvent.change(screen.getByLabelText("名前・別名"), { target: { value: "変更後" } });
+    expect(signal.aborted).toBe(true);
+    expect((screen.getByRole("button", { name: "検索" }) as HTMLButtonElement).disabled).toBe(false);
+    expect(searchEntities).toHaveBeenCalledTimes(1);
+    fireEvent.click(screen.getByRole("button", { name: "検索" }));
+    await act(async () => {
+      if (outcome === "成功") resolveOld({ items: [{ ...root, aliases: [], event: null }], hasMore: false });
+      else rejectOld(new Error("古い検索の失敗"));
+    });
+    expect(screen.queryByRole("button", { name: new RegExp(`^${root.name} —`) })).toBeNull();
+    expect(screen.queryByRole("alert")).toBeNull();
+    expect((screen.getByRole("button", { name: "検索中…" }) as HTMLButtonElement).disabled).toBe(true);
+    const next = { ...root, name: "変更後の候補", aliases: [], event: null };
+    await act(async () => resolveNext({ items: [next], hasMore: false }));
+    expect(searchEntities).toHaveBeenLastCalledWith("変更後", expect.any(AbortSignal), null);
+    fireEvent.click(screen.getByRole("button", { name: /^変更後の候補 —/ }));
+    expect(choose).toHaveBeenCalledWith(next);
+  });
+  it("名前を消すと表示済み候補も消え、入力を直すと古いエラーも消える", async () => {
+    vi.mocked(searchEntities).mockResolvedValueOnce({ items: [{ ...root, aliases: [], event: null }], hasMore: false });
+    const choose = vi.fn();
+    render(<SearchPanel onChoose={choose} />);
+    const input = screen.getByLabelText("名前・別名");
+    fireEvent.change(input, { target: { value: root.name } });
+    fireEvent.click(screen.getByRole("button", { name: "検索" }));
+    await screen.findByRole("button", { name: new RegExp(`^${root.name} —`) });
+    fireEvent.change(input, { target: { value: "" } });
+    expect(screen.queryByRole("button", { name: new RegExp(`^${root.name} —`) })).toBeNull();
+    fireEvent.click(screen.getByRole("button", { name: "検索" }));
+    expect(screen.getByRole("alert")).toBeDefined();
+    fireEvent.change(input, { target: { value: "別の名前" } });
+    expect(screen.queryByRole("alert")).toBeNull();
+    expect(searchEntities).toHaveBeenCalledTimes(1);
+    expect(choose).not.toHaveBeenCalled();
+  });
   it("候補の取得・種別変更では起点を選ばず、別名を提示して明示選択する", async () => {
     const choose = vi.fn();
     vi.mocked(searchEntities).mockResolvedValue({ items: [{ ...root, kind: "work", event: null, aliases: ["原語名"] }], hasMore: false });
