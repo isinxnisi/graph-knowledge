@@ -11,6 +11,7 @@ import { emptyGraph, mergePage, closeExpansion, reopenExpansion, projectGraph } 
 import { useGraphExplorer } from "../lib/client/use-graph-explorer";
 import SearchPanel from "../components/SearchPanel";
 import GraphNavigator from "../components/GraphNavigator";
+import RelationsList from "../components/RelationsList";
 import ClaimDetails, { ClaimCard } from "../components/ClaimDetails";
 import { relationPresentation } from "../lib/client/relation-presentation";
 import { relationPresentationLabels } from "../lib/i18n/relation-presentation";
@@ -23,6 +24,82 @@ const page = examples.neighbors as NeighborsResponse;
 const root = page.nodes[0];
 const entity = (id: string): EntitySummary => ({ ...root, id });
 const deferred = () => { let resolve!: (p: NeighborsResponse) => void; const promise = new Promise<NeighborsResponse>((r) => { resolve = r; }); return { promise, resolve }; };
+describe("関係詳細から対象の確認", () => {
+  for (const mode of ["claim", "relation"] as const) {
+    it(`${mode}の取得失敗中も既知の両端から対象を選べる`, async () => {
+      vi.mocked(fetchClaim).mockRejectedValue(new Error("unavailable"));
+      const claim = page.claims[0];
+      const nodes = Object.fromEntries(page.nodes.map(node => [node.id, node]));
+      const onInspectEntity = vi.fn();
+      render(<ClaimDetails id={claim.id} nodes={nodes} mode={mode} onInspectEntity={onInspectEntity}
+        claimSummary={mode === "claim" ? claim : undefined} visibleClaims={mode === "relation" ? [claim] : undefined} />);
+      await waitFor(() => expect(screen.getByRole("alert")).toBeDefined());
+      const navigation = screen.getByRole("navigation", { name: "関係する対象" });
+      for (const id of [claim.subjectId, claim.objectId]) {
+        fireEvent.click(within(navigation).getByRole("button", { name: `${nodes[id].name}の詳細を見る` }));
+        expect(onInspectEntity).toHaveBeenLastCalledWith(id);
+      }
+      expect(fetchNeighbors).not.toHaveBeenCalled();
+    });
+  }
+  it("同名は説明で見分け、表示中Graphにない対象への操作は提供しない", () => {
+    vi.mocked(fetchClaim).mockReturnValue(new Promise(() => {}));
+    const claim = page.claims[0];
+    const nodes = {
+      [claim.subjectId]: { ...root, id: claim.subjectId, name: "同名", description: "漫画家" },
+      [claim.objectId]: { ...root, id: claim.objectId, name: "同名", description: "編集者" },
+    };
+    const onInspectEntity = vi.fn();
+    const { rerender } = render(<ClaimDetails id={claim.id} nodes={nodes} claimSummary={claim} onInspectEntity={onInspectEntity} />);
+    expect(screen.getByRole("button", { name: "同名 / 漫画家の詳細を見る" })).toBeDefined();
+    expect(screen.getByRole("button", { name: "同名 / 編集者の詳細を見る" })).toBeDefined();
+    rerender(<ClaimDetails id={claim.id} nodes={{ [claim.subjectId]: nodes[claim.subjectId] }} claimSummary={claim} onInspectEntity={onInspectEntity} />);
+    expect(within(screen.getByRole("navigation")).getAllByRole("button")).toHaveLength(1);
+    expect(screen.queryByRole("button", { name: /編集者/ })).toBeNull();
+  });
+});
+describe("隣接一覧からの取得", () => {
+  const props = () => ({ onEntity: vi.fn(), onClaim: vi.fn(), onExpand: vi.fn(), onClose: vi.fn() });
+  it("Claim選択中も主体の続きへ進み、上限・通信中は追加取得を無効にする", () => {
+    const graph = mergePage(emptyGraph(), { ...page, page: { hasMore: true, nextCursor: "next" } });
+    const handlers = props();
+    const selection = { kind: "claim" as const, id: page.claims[0].id };
+    const { rerender } = render(<RelationsList {...handlers} graph={graph} selection={selection} />);
+    fireEvent.click(screen.getByRole("button", { name: "隣接関係の続きを表示" }));
+    expect(handlers.onExpand).toHaveBeenCalledWith(root.id, true);
+    const expansion = graph.expansions[root.id];
+    for (const state of [{ blocked: true }, { loading: true }]) {
+      rerender(<RelationsList {...handlers} graph={{ ...graph, expansions: { [root.id]: { ...expansion, ...state } } }} selection={selection} />);
+      const button = screen.getByRole("button", { name: state.loading ? "隣接関係の続きを取得中…" : "隣接関係の続きを表示" });
+      expect((button as HTMLButtonElement).disabled).toBe(true);
+      fireEvent.click(button);
+    }
+    expect(handlers.onExpand).toHaveBeenCalledTimes(1);
+  });
+  it("初回失敗と続きの失敗で再試行先を分け、取得済みの一覧を残す", () => {
+    const accepted = mergePage(emptyGraph(), { ...page, page: { hasMore: true, nextCursor: "next" } });
+    const handlers = props();
+    const selection = { kind: "entity" as const, id: root.id };
+    const failed = { ...accepted, expansions: { [root.id]: { ...accepted.expansions[root.id], error: "通信失敗" } } };
+    const { rerender } = render(<RelationsList {...handlers} graph={failed} selection={selection} />);
+    expect(screen.getByRole("alert").textContent).toContain("通信失敗");
+    expect(screen.getAllByRole("button", { name: "主張と出典を見る" })).toHaveLength(page.claims.length);
+    fireEvent.click(screen.getByRole("button", { name: "隣接関係の取得を再試行" }));
+    expect(handlers.onExpand).toHaveBeenLastCalledWith(root.id, true);
+    rerender(<RelationsList {...handlers} graph={{ ...failed, claims: {}, expansions: { [root.id]: { ...failed.expansions[root.id], pages: [], expanded: false, hasMore: false } } }} selection={selection} />);
+    fireEvent.click(screen.getByRole("button", { name: "隣接関係の取得を再試行" }));
+    expect(handlers.onExpand).toHaveBeenLastCalledWith(root.id, false);
+    expect(screen.queryByRole("status")).toBeNull();
+  });
+  it("閉じた枝は続きの取得より復元を先に行う", () => {
+    const graph = closeExpansion(mergePage(emptyGraph(), { ...page, page: { hasMore: true, nextCursor: "next" } }), root.id);
+    const handlers = props();
+    render(<RelationsList {...handlers} graph={graph} selection={{ kind: "entity", id: root.id }} />);
+    expect(screen.queryByRole("button", { name: "隣接関係の続きを表示" })).toBeNull();
+    fireEvent.click(screen.getByRole("button", { name: "展開を再開" }));
+    expect(handlers.onExpand).toHaveBeenCalledWith(root.id);
+  });
+});
 describe("ページのマージ", () => {
   it("循環・再取得をIDで重複排除する", () => {
     const first = mergePage(emptyGraph(), page); const second = mergePage(first, page);
@@ -459,6 +536,81 @@ describe("条件付き探索", () => {
     expect(fetchNeighbors).toHaveBeenCalledTimes(1);
     act(() => result.current.chooseRoot(page.nodes[1]));
     expect(result.current.graph.predicates).toEqual([]);
+  });
+  it("条件変更前の受理ページ・休止枝・選択・viewを通信なしで復元する", async () => {
+    const paged = { ...page, page: { hasMore: true, nextCursor: "accepted-cursor" } };
+    vi.mocked(fetchNeighbors).mockResolvedValueOnce(paged).mockResolvedValueOnce({ ...page, centerId: page.nodes[1].id });
+    const { result } = renderHook(useGraphExplorer);
+    act(() => result.current.chooseRoot(root));
+    await waitFor(() => expect(result.current.graph.expansions[root.id].expanded).toBe(true));
+    await act(async () => { await result.current.expand(page.nodes[1].id); });
+    act(() => result.current.close(root.id));
+    const saved = result.current.graph;
+    const view = { positions: { [root.id]: { x: 12, y: 34 }, [page.nodes[1].id]: { x: 100, y: 90 } }, pan: { x: 40, y: 50 }, zoom: 0.8, initialLayoutDone: true };
+    const next = deferred(); vi.mocked(fetchNeighbors).mockReturnValueOnce(next.promise);
+    act(() => result.current.changePredicates([], null, null, null, view));
+    expect(result.current.previous?.graph).toMatchObject({ cacheClaims: saved.cacheClaims });
+    const signal = vi.mocked(fetchNeighbors).mock.calls.at(-1)![2];
+    act(() => result.current.restorePrevious());
+    expect(signal.aborted).toBe(true);
+    expect(result.current.graph).toMatchObject({ predicates: null, cacheClaims: saved.cacheClaims, nodes: saved.nodes, claims: saved.claims });
+    expect(result.current.graph.expansions[root.id]).toMatchObject({ open: false, nextCursor: "accepted-cursor", pages: saved.expansions[root.id].pages });
+    expect(result.current.graph.expansions[page.nodes[1].id]).toMatchObject({ open: true, active: false });
+    expect(result.current.selection).toEqual({ kind: "entity", id: root.id });
+    expect(result.current.viewRestoration?.view).toEqual(view);
+    expect(result.current.previous).toBeNull();
+    await act(async () => { next.resolve({ ...page, claims: [] }); await next.promise; });
+    expect(result.current.graph.predicates).toBeNull();
+    act(() => result.current.toggleEntity(root.id));
+    expect(result.current.graph.claims).toEqual(Object.fromEntries(page.claims.map(claim => [claim.id, claim])));
+    expect(fetchNeighbors).toHaveBeenCalledTimes(3);
+  });
+  it("実効条件の変更だけ直前一件を置換し、三限定とRelation選択も復元する", async () => {
+    vi.mocked(fetchNeighbors).mockImplementation(async id => ({ ...page, centerId: id }));
+    const { result } = renderHook(useGraphExplorer);
+    act(() => result.current.chooseRoot(root));
+    await waitFor(() => expect(result.current.graph.expansions[root.id].expanded).toBe(true));
+    act(() => result.current.switchRoot(page.nodes[1], "same", null));
+    await waitFor(() => expect(result.current.graph.expansions[page.nodes[1].id].expanded).toBe(true));
+    const oldPrevious = result.current.previous;
+    act(() => result.current.changePredicates(null));
+    expect(result.current.previous).toBe(oldPrevious);
+    // A fresh root replaces the older root-switch snapshot before testing all typed filters.
+    act(() => result.current.chooseRoot(root));
+    await waitFor(() => expect(result.current.graph.expansions[root.id].expanded).toBe(true));
+    const relation = Object.values(displayRelations(result.current.graph.claims))[0];
+    act(() => result.current.selectRelation(relation.id));
+    const pending = deferred(); vi.mocked(fetchNeighbors).mockReturnValue(pending.promise);
+    act(() => result.current.changePredicates(null, ["SUPERVISION"], ["VISITOR"], ["CHAIR"]));
+    expect(result.current.previous?.selection).toEqual({ kind: "relation", id: relation.id });
+    const first = result.current.previous;
+    act(() => result.current.changePredicates(null, ["SUPERVISION", "SUPERVISION"], ["VISITOR"], ["CHAIR"]));
+    expect(result.current.previous).toBe(first);
+    act(() => result.current.changePredicates([]));
+    expect(result.current.previous).not.toBe(first);
+    act(() => result.current.restorePrevious());
+    expect(result.current.graph).toMatchObject({ predicates: null, contributionRoles: ["SUPERVISION"], organizationPositions: ["VISITOR"], eventRoles: ["CHAIR"] });
+    expect(result.current.graph.expansions[root.id]).toMatchObject({ loading: false, nextCursor: null });
+    expect(result.current.graph.expansions[root.id].error).toContain("中断");
+    expect(result.current.viewRestoration).toBeNull();
+    expect(result.current.previous).toBeNull();
+  });
+  it("起点未指定の条件変更は復帰を作らず、再取得失敗から元の選択に戻れる", async () => {
+    const { result } = renderHook(useGraphExplorer);
+    act(() => result.current.changePredicates([]));
+    expect(result.current.previous).toBeNull();
+    expect(fetchNeighbors).not.toHaveBeenCalled();
+    vi.mocked(fetchNeighbors).mockResolvedValueOnce(page).mockRejectedValueOnce(new Error("offline"));
+    act(() => result.current.chooseRoot(root, true));
+    await waitFor(() => expect(result.current.graph.expansions[root.id].expanded).toBe(true));
+    const relation = Object.values(displayRelations(result.current.graph.claims))[0];
+    act(() => result.current.selectRelation(relation.id));
+    act(() => result.current.changePredicates([]));
+    await waitFor(() => expect(result.current.graph.expansions[root.id].error).toBeTruthy());
+    act(() => result.current.restorePrevious());
+    expect(result.current.selection).toEqual({ kind: "relation", id: relation.id });
+    expect(Object.keys(result.current.graph.claims)).toHaveLength(page.claims.length);
+    expect(fetchNeighbors).toHaveBeenCalledTimes(2);
   });
   it("別条件のページを受理せず、表示投影にも混ぜない", () => {
     const graph = { ...emptyGraph(), predicates: ["INFLUENCED_BY"] as const };

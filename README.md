@@ -111,6 +111,21 @@ DBをseed済みにして実行してください。ブラウザテストは3210�
 
 [Step 4実施記録](docs/archive/phase-01-vertical-slice/IMPLEMENTATION_STEP_4.md)にファイル・状態管理・レイアウト・検証範囲を記録しています。
 
+## 手動の画面確認とテスト用Webの違い
+
+自動開発のcommit・テスト成功と、手動確認用Webの常駐は別です。Playwrightが起動したWebは試験終了時に停止します。DBの起動だけでは探索画面は開きません。以下のコマンドを各terminalで保持すると、同じmainのコードをdataset別に確認できます。起動済みWebでPlaywrightを実行する時は `GRAPH_TEST_REUSE=1` を付け、手動用Webを再利用します。
+
+| データ | URL | Web起動 |
+| --- | --- | --- |
+| demo | http://127.0.0.1:3210 | `npm run dev -- --port 3210` |
+| 漫画v1（広いClaim） | http://127.0.0.1:3211 | `npm run pilot:dev` |
+| 漫画v2（制作Role） | http://127.0.0.1:3212 | `npm run pilot:v2:dev` |
+| 科学v1（広いClaim） | http://127.0.0.1:3213 | `npm run science:dev` |
+| 科学v2（組織立場） | http://127.0.0.1:3214 | `npm run science:v2:dev` |
+| Event（特定開催回参加） | http://127.0.0.1:3215 | `npm run event:dev` |
+
+各環境の既存env・専用DBを使います。DBが停止している場合は下記の各dataset節のCompose起動を行い、healthyを待ちます。既存volumeへ画面確認のために再seedする必要はありません。全環境の同時起動・初回コンパイル・試験の並行実行はPC負荷が増えるため、重い検証は順に行います。DBのhealthcheckは認証付きHTTP経由で `RETURN 1` を30秒間隔で実行し、HTTP成功・空のerrors配列を確認します。毎回Javaを起動せず、wgetの5秒timeoutで失敗を戻します。Bolt経由のAPIは別途画面確認で検証します。プロセス終了やPC再起動後の自動復帰は今回追加していません。
+
 ## Step 5の画面確認
 
 ```bash
@@ -239,7 +254,7 @@ demoは `npm run dev -- --port 3210` で http://127.0.0.1:3210 、実Roleのv2�
 
 一つの「対象を探す」フォームから人物・作品・組織を検索できます。既定はすべて。検索対象の選択や検索だけではGraphを変えず、候補を選ぶと適用中の関係／Role条件を保って探索を開始します。デモでは「青葉ハル」「星の航路」「青空出版」、実データv2では「PLUTO」「Master Keaton」から開始できます。Phase 09時点の対象は三種。Phase 15では特定開催回のeventも検索へ公開しています。
 
-現在動作中の画面はdemo http://127.0.0.1:3210、実データv2 http://127.0.0.1:3212。通常の`npm run dev`では起動ログのURLを使ってください。[実施記録](docs/archive/phase-09-entity-search/IMPLEMENTATION_ENTITY_SEARCH.md)に検証経路を記録しています。
+起動先はdemo http://127.0.0.1:3210、実データv2 http://127.0.0.1:3212。常時起動を保証する表示ではありません。通常の`npm run dev`では起動ログのURLを使ってください。[実施記録](docs/archive/phase-09-entity-search/IMPLEMENTATION_ENTITY_SEARCH.md)に検証経路を記録しています。
 
 ## 科学・研究機関パイロット（Phase 10）
 

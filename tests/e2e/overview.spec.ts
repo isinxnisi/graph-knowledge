@@ -117,7 +117,7 @@ test("概要404は切替不可・通信途中の切替/復帰は未受理応答�
   await expect(page.getByTestId("exploration-root")).toContainText(root.name);
   release(); await page.unroute(`**/api/entities/${other.id}/neighbors*`);
   await expect(page.getByTestId("graph-counts")).toHaveText("Entity 5 / Claim 7");
-  await expect(page.getByRole("alert").filter({ hasText: "切替時に取得を中断" })).toContainText("切替時に取得を中断");
+  await expect(page.getByRole("region", { name: "Entity詳細", exact: true }).getByRole("alert")).toContainText("切替時に取得を中断");
   await page.getByRole("button", { name: "Graph取得を再試行" }).click();
   await expect(page.getByTestId("graph-counts")).toHaveText("Entity 6 / Claim 8");
 });

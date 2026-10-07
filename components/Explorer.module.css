@@ -217,3 +217,23 @@
 .claimGroup > h4 { padding-bottom: 5px; border-bottom: 1px solid var(--color-border); }
 .citation details { margin-top: 10px; }
 .citation summary { cursor: pointer; color: var(--color-accent); }
+
+.paneNavigation { display: none; }
+@media (max-width: 800px) {
+  .header { padding: 6px 10px; gap: 4px 8px; }
+  .header h1 { font-size: 16px; }
+  .header .demo { padding: 2px 6px; font-size: 12px; }
+  .header > p:last-of-type { width: 100%; line-height: 1.4; }
+  .paneNavigation { display: flex; gap: 6px; padding: 6px 8px; flex: 0 0 auto; background: var(--color-panel); border-bottom: 1px solid var(--color-border); }
+  .paneNavigation button { flex: 1; min-height: 44px; text-align: center; }
+  .columns, .wideDetails { grid-template-columns: minmax(0, 1fr); gap: 0; padding: 6px; overflow: hidden; }
+  /* Keep the mounted Canvas measurable while hidden, including during pending requests. */
+  .columns > * { grid-area: 1 / 1; visibility: hidden; pointer-events: none; }
+  .columns[data-active-pane="search"] > :first-child,
+  .columns[data-active-pane="graph"] > .centralScroll,
+  .columns[data-active-pane="detail"] > aside { visibility: visible; pointer-events: auto; }
+  .detailHeading > button { display: none; }
+  .canvas { height: clamp(320px, 52dvh, 520px); min-height: 320px; resize: none; }
+  .graphTools > span:first-of-type { display: none; }
+  .actions button, .graphTools button, .graphNavigator > button { min-height: 44px; }
+}

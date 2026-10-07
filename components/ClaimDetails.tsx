@@ -89,13 +89,13 @@ function comparisonText(reference: ClaimDetail, claim: ClaimDetail): string | nu
   return null;
 }
 
-type ClaimDetailsProps = { id: string; nodes: Record<string, EntitySummary>; mode?: "claim" | "relation"; visibleClaimIds?: string[]; visibleClaims?: ClaimSummary[]; predicates?: PredicateFilter; roles?: ContributionRoleFilter; positions?: OrganizationPositionFilter; eventRoles?: EventRoleFilter };
+type ClaimDetailsProps = { id: string; nodes: Record<string, EntitySummary>; claimSummary?: ClaimSummary; onInspectEntity?: (id: string) => void; mode?: "claim" | "relation"; visibleClaimIds?: string[]; visibleClaims?: ClaimSummary[]; predicates?: PredicateFilter; roles?: ContributionRoleFilter; positions?: OrganizationPositionFilter; eventRoles?: EventRoleFilter };
 
 export default function ClaimDetails(props: ClaimDetailsProps) {
   return <ClaimDetailsSession key={props.id} {...props} />;
 }
 
-function ClaimDetailsSession({ id, nodes, mode = "claim", visibleClaimIds, visibleClaims, predicates = null, roles = null, positions = null, eventRoles = null }: ClaimDetailsProps) {
+function ClaimDetailsSession({ id, nodes, claimSummary, onInspectEntity, mode = "claim", visibleClaimIds, visibleClaims, predicates = null, roles = null, positions = null, eventRoles = null }: ClaimDetailsProps) {
   const roleText = contributionLabels(), text = relationPresentationLabels();
   const { primary, related, error, failedCount, pending, retry } = useClaimDetails(id);
   // Reserve numbers from the complete ID list, including details still loading or failed.
@@ -109,8 +109,17 @@ function ClaimDetailsSession({ id, nodes, mode = "claim", visibleClaimIds, visib
     { key: "unseen", title: explorationLabels().unseen, claims: unseen, help: text.unseenHelp },
     { key: "outside", title: explorationLabels().outside, claims: outside, help: text.outsideHelp }];
   const reference = primary ? contributionOf(primary.claim) : null;
+  // The graph already knows both endpoints, even while evidence is unavailable.
+  const relation = claimSummary ?? visibleClaims?.[0] ?? primary?.claim;
+  const endpoints = relation ? [...new Set([relation.subjectId, relation.objectId])].filter(id => nodes[id]) : [];
   return <section aria-label="Claim詳細">
     {mode === "relation" && <RelationOverview claims={visibleClaims ?? shown} nodes={nodes} />}
+    {onInspectEntity && endpoints.length > 0 && <nav aria-label={text.endpoints}>
+      <p className={styles.muted}>{text.endpointHelp}</p>
+      <div className={styles.actions}>{endpoints.map(entityId => <button key={entityId} onClick={() => onInspectEntity(entityId)}>
+        {text.inspectEntity(entityLabel(nodes[entityId], nodes).replace("\n", " / "))}
+      </button>)}</div>
+    </nav>}
     <h3>{mode === "relation" ? text.claimsTitle : "主張と出典"}</h3>
     {!primary && !error && <p role="status">主張の詳細を取得中…</p>}
     {error && <div className={styles.error} role="alert"><p>{error}</p><button onClick={retry}>主張の取得を再試行</button></div>}

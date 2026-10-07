@@ -13,9 +13,9 @@ services:
     volumes:
       - event-data:/data
     healthcheck:
-      test: ["CMD-SHELL", "cypher-shell -u neo4j -p \"$${NEO4J_AUTH#neo4j/}\" 'RETURN 1' >/dev/null 2>&1"]
-      interval: 5s
-      timeout: 10s
+      test: ["CMD-SHELL", "wget -q -T 5 --auth-no-challenge --user=neo4j --password=\"$${NEO4J_AUTH#neo4j/}\" --header='Content-Type: application/json' --post-data='{\"statements\":[{\"statement\":\"RETURN 1\"}]}' -O - http://127.0.0.1:7474/db/neo4j/tx/commit | grep -q '\"errors\":\\[\\]'"]
+      interval: 30s
+      timeout: 30s
       retries: 24
       start_period: 30s
 volumes:

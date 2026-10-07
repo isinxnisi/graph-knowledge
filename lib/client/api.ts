@@ -5,10 +5,20 @@ export class ClientApiError extends Error {
   constructor(message: string, public status: number) { super(message); }
 }
 
+// Bound the entire read, including the response body, so retry stays reachable.
+export const CLIENT_REQUEST_TIMEOUT_MS = 15_000;
+
 async function get<T>(path: string, signal: AbortSignal): Promise<T> {
+  signal.throwIfAborted();
+  const controller = new AbortController();
+  const cancel = () => controller.abort(signal.reason);
+  signal.addEventListener("abort", cancel, { once: true });
+  const timer = setTimeout(() => controller.abort(), CLIENT_REQUEST_TIMEOUT_MS);
   try {
-    const response = await fetch(path, { signal, cache: "no-store" });
+    const response = await fetch(path, { signal: controller.signal, cache: "no-store" });
     const body = await response.json().catch(() => null);
+    // json() can reject on abort too; do not report that as malformed JSON.
+    controller.signal.throwIfAborted();
     if (!response.ok) {
       const message = response.status === 503 ? "データベースを利用できません。時間をおいて再試行してください。"
         : typeof body?.error?.message === "string" ? body.error.message : "情報を取得できませんでした。再試行してください。";
@@ -17,8 +27,13 @@ async function get<T>(path: string, signal: AbortSignal): Promise<T> {
     if (body === null) throw new ClientApiError("応答を読み取れませんでした。再試行してください。", response.status);
     return body as T;
   } catch (error) {
-    if (signal.aborted || error instanceof ClientApiError) throw error;
+    if (signal.aborted) throw signal.reason;
+    if (controller.signal.aborted) throw new ClientApiError("取得に時間がかかりすぎたため中断しました。再試行してください。", 0);
+    if (error instanceof ClientApiError) throw error;
     throw new ClientApiError("通信に失敗しました。再試行してください。", 0);
+  } finally {
+    clearTimeout(timer);
+    signal.removeEventListener("abort", cancel);
   }
 }
 

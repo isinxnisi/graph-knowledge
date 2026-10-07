@@ -65,7 +65,7 @@ test("実DB: ページング・取得中・二重取得抑止", async ({ page })
   await choose(page); await expect(page.getByTestId("graph-counts")).toContainText("Claim 2");
   for (const count of [4, 6, 7]) {
     await page.getByRole("button", { name: "続きを表示", exact: true }).click();
-    await expect(page.getByRole("button", { name: "続きを取得中…" })).toBeDisabled();
+    await expect(page.getByRole("button", { name: "続きを取得中…", exact: true })).toBeDisabled();
     await expect(page.getByTestId("graph-counts")).toContainText(`Claim ${count}`);
   }
   await expect(page.getByTestId("relation-counts")).toHaveText("Relation 5");
@@ -98,7 +98,7 @@ test("API失敗・DB unavailable・Graph再試行", async ({ page }) => {
   await search(page, "青葉ハル"); await expect(page.getByRole("alert").filter({ hasText: "データベース" })).toContainText("データベース");
   await page.unroute("**/api/entities?*");
   await page.route("**/api/entities/*/neighbors*", (r) => r.fulfill({ status: 500, json: { error: { code: "INTERNAL_ERROR", message: "取得に失敗しました。" } } }));
-  await choose(page); await expect(page.getByRole("alert").filter({ hasText: "取得に失敗しました。" })).toContainText("取得に失敗しました。");
+  await choose(page); await expect(page.getByRole("region", { name: "Entity詳細", exact: true }).getByRole("alert")).toContainText("取得に失敗しました。");
   await page.unroute("**/api/entities/*/neighbors*"); await page.getByRole("button", { name: "Graph取得を再試行" }).click();
   await expect(page.getByTestId("graph-counts")).toHaveText("Entity 5 / Claim 7");
 });
