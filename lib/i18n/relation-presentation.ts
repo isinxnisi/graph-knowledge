@@ -1,5 +1,7 @@
 const ja = {
   title: "この関係の概要", claimsTitle: "個別の主張と根拠", mixed: "肯定・否定あり", denied: "否定のみ",
+  endpoints: "関係する対象", endpointHelp: "対象の詳細から、関係概要の確認や探索の起点切替ができます。",
+  inspectEntity: (name: string) => `${name}の詳細を見る`,
   role: "役割", position: "立場", unspecified: "指定なし", termDenied: "否定のみ", termMixed: "肯否あり",
   graphCategories: { CONTRIBUTED_TO: "制作", AFFILIATED_WITH: "組織", PARTICIPATED_IN: "参加" },
   qualificationHelp: "限定の読み方", graphScope: "この線は現在Graphに表示している主張をまとめたものです。",

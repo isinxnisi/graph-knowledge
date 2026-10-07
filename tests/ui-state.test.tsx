@@ -24,6 +24,40 @@ const page = examples.neighbors as NeighborsResponse;
 const root = page.nodes[0];
 const entity = (id: string): EntitySummary => ({ ...root, id });
 const deferred = () => { let resolve!: (p: NeighborsResponse) => void; const promise = new Promise<NeighborsResponse>((r) => { resolve = r; }); return { promise, resolve }; };
+describe("関係詳細から対象の確認", () => {
+  for (const mode of ["claim", "relation"] as const) {
+    it(`${mode}の取得失敗中も既知の両端から対象を選べる`, async () => {
+      vi.mocked(fetchClaim).mockRejectedValue(new Error("unavailable"));
+      const claim = page.claims[0];
+      const nodes = Object.fromEntries(page.nodes.map(node => [node.id, node]));
+      const onInspectEntity = vi.fn();
+      render(<ClaimDetails id={claim.id} nodes={nodes} mode={mode} onInspectEntity={onInspectEntity}
+        claimSummary={mode === "claim" ? claim : undefined} visibleClaims={mode === "relation" ? [claim] : undefined} />);
+      await waitFor(() => expect(screen.getByRole("alert")).toBeDefined());
+      const navigation = screen.getByRole("navigation", { name: "関係する対象" });
+      for (const id of [claim.subjectId, claim.objectId]) {
+        fireEvent.click(within(navigation).getByRole("button", { name: `${nodes[id].name}の詳細を見る` }));
+        expect(onInspectEntity).toHaveBeenLastCalledWith(id);
+      }
+      expect(fetchNeighbors).not.toHaveBeenCalled();
+    });
+  }
+  it("同名は説明で見分け、表示中Graphにない対象への操作は提供しない", () => {
+    vi.mocked(fetchClaim).mockReturnValue(new Promise(() => {}));
+    const claim = page.claims[0];
+    const nodes = {
+      [claim.subjectId]: { ...root, id: claim.subjectId, name: "同名", description: "漫画家" },
+      [claim.objectId]: { ...root, id: claim.objectId, name: "同名", description: "編集者" },
+    };
+    const onInspectEntity = vi.fn();
+    const { rerender } = render(<ClaimDetails id={claim.id} nodes={nodes} claimSummary={claim} onInspectEntity={onInspectEntity} />);
+    expect(screen.getByRole("button", { name: "同名 / 漫画家の詳細を見る" })).toBeDefined();
+    expect(screen.getByRole("button", { name: "同名 / 編集者の詳細を見る" })).toBeDefined();
+    rerender(<ClaimDetails id={claim.id} nodes={{ [claim.subjectId]: nodes[claim.subjectId] }} claimSummary={claim} onInspectEntity={onInspectEntity} />);
+    expect(within(screen.getByRole("navigation")).getAllByRole("button")).toHaveLength(1);
+    expect(screen.queryByRole("button", { name: /編集者/ })).toBeNull();
+  });
+});
 describe("隣接一覧からの取得", () => {
   const props = () => ({ onEntity: vi.fn(), onClaim: vi.fn(), onExpand: vi.fn(), onClose: vi.fn() });
   it("Claim選択中も主体の続きへ進み、上限・通信中は追加取得を無効にする", () => {
