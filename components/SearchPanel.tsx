@@ -16,6 +16,11 @@ export default function SearchPanel({ onChoose, placeholder = "例：青葉ハ�
   const [error, setError] = useState<string | null>(null);
   const pending = useRef<AbortController | null>(null);
   useEffect(() => () => pending.current?.abort(), []);
+  function clearSearch() {
+    pending.current?.abort();
+    pending.current = null;
+    setLoading(false); setResult(null); setError(null);
+  }
   async function submit(event: FormEvent) {
     event.preventDefault();
     pending.current?.abort();
@@ -33,9 +38,9 @@ export default function SearchPanel({ onChoose, placeholder = "例：青葉ハ�
     <h2 id="search-title">{text.title}</h2>
     <form onSubmit={submit} className={styles.searchForm}>
       <label htmlFor="entity-search">{text.name}</label>
-      <input id="entity-search" value={q} onChange={(event) => setQ(event.target.value)} placeholder={placeholder} autoComplete="off" />
+      <input id="entity-search" value={q} onChange={(event) => { clearSearch(); setQ(event.target.value); }} placeholder={placeholder} autoComplete="off" />
       <label htmlFor="search-kind">{text.kind}</label>
-      <select id="search-kind" value={kind ?? ""} onChange={(event) => { pending.current?.abort(); setLoading(false); setResult(null); setError(null); setKind(event.target.value === "" ? null : event.target.value as SearchKind); }}>
+      <select id="search-kind" value={kind ?? ""} onChange={(event) => { clearSearch(); setKind(event.target.value === "" ? null : event.target.value as SearchKind); }}>
         <option value="">{text.all}</option>
         {SEARCH_KINDS.map((value) => <option key={value} value={value}>{text.kinds[value]}</option>)}
       </select>

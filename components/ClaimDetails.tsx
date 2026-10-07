@@ -9,9 +9,8 @@ import { contributionLabels } from "../lib/i18n/contribution";
 
 import { matchesClaim, type EventRoleFilter, type OrganizationPositionFilter, type ContributionRoleFilter, type PredicateFilter } from "../lib/domain/exploration";
 import { explorationLabels } from "../lib/i18n/exploration";
-import { useEffect, useState } from "react";
-import type { ClaimDetail, ClaimSummary, ClaimResponse, EntitySummary, SourceDetail } from "../lib/domain/api";
-import { fetchClaim, errorMessage } from "../lib/client/api";
+import { useClaimDetails } from "../lib/client/use-claim-details";
+import type { ClaimDetail, ClaimSummary, EntitySummary, SourceDetail } from "../lib/domain/api";
 import { formatDate, formatPeriod, polarityLabel } from "../lib/client/format";
 import { entityLabel } from "../lib/client/graph-presentation";
 import { PREDICATES } from "../lib/domain/predicates";
@@ -90,30 +89,18 @@ function comparisonText(reference: ClaimDetail, claim: ClaimDetail): string | nu
   return null;
 }
 
-export default function ClaimDetails({ id, nodes, mode = "claim", visibleClaimIds, visibleClaims, predicates = null, roles = null, positions = null, eventRoles = null }: { id: string; nodes: Record<string, EntitySummary>; mode?: "claim" | "relation"; visibleClaimIds?: string[]; visibleClaims?: ClaimSummary[]; predicates?: PredicateFilter; roles?: ContributionRoleFilter; positions?: OrganizationPositionFilter; eventRoles?: EventRoleFilter }) {
+type ClaimDetailsProps = { id: string; nodes: Record<string, EntitySummary>; mode?: "claim" | "relation"; visibleClaimIds?: string[]; visibleClaims?: ClaimSummary[]; predicates?: PredicateFilter; roles?: ContributionRoleFilter; positions?: OrganizationPositionFilter; eventRoles?: EventRoleFilter };
+
+export default function ClaimDetails(props: ClaimDetailsProps) {
+  return <ClaimDetailsSession key={props.id} {...props} />;
+}
+
+function ClaimDetailsSession({ id, nodes, mode = "claim", visibleClaimIds, visibleClaims, predicates = null, roles = null, positions = null, eventRoles = null }: ClaimDetailsProps) {
   const roleText = contributionLabels(), text = relationPresentationLabels();
-  const [primary, setPrimary] = useState<ClaimResponse | null>(null);
-  const [related, setRelated] = useState<ClaimDetail[]>([]);
-  const [error, setError] = useState<string | null>(null);
-  const [relatedError, setRelatedError] = useState<string | null>(null);
-  const [relatedLoading, setRelatedLoading] = useState(false);
-  const [attempt, setAttempt] = useState(0);
-  useEffect(() => {
-    const controller = new AbortController();
-    async function load() {
-      try {
-        const result = await fetchClaim(id, controller.signal);
-        if (controller.signal.aborted) return;
-        setPrimary(result); setRelatedLoading(result.relatedClaimIds.length > 0);
-        const responses = await Promise.allSettled(result.relatedClaimIds.map((relatedId) => fetchClaim(relatedId, controller.signal)));
-        if (controller.signal.aborted) return;
-        setRelated(responses.flatMap((response) => response.status === "fulfilled" ? [response.value.claim] : []));
-        if (responses.some((response) => response.status === "rejected")) setRelatedError("他の主張の一部を取得できませんでした。");
-        setRelatedLoading(false);
-      } catch (error) { if (!controller.signal.aborted) setError(errorMessage(error)); }
-    }
-    void load(); return () => controller.abort();
-  }, [id, attempt]);
+  const { primary, related, error, failedCount, pending, retry } = useClaimDetails(id);
+  // Reserve numbers from the complete ID list, including details still loading or failed.
+  const claimIds = primary ? [primary.claim.id, ...primary.relatedClaimIds].sort((a, b) => a.localeCompare(b)) : [];
+  const claimNumber = (claimId: string) => claimIds.indexOf(claimId) + 1;
   const claims = primary ? [primary.claim, ...related].sort((a, b) => a.id.localeCompare(b.id)) : [];
   const shown = claims.filter(claim => visibleClaimIds === undefined || visibleClaimIds.includes(claim.id));
   const unseen = claims.filter(claim => visibleClaimIds !== undefined && !visibleClaimIds.includes(claim.id) && matchesClaim(claim, predicates, roles, positions, eventRoles));
@@ -122,24 +109,21 @@ export default function ClaimDetails({ id, nodes, mode = "claim", visibleClaimId
     { key: "unseen", title: explorationLabels().unseen, claims: unseen, help: text.unseenHelp },
     { key: "outside", title: explorationLabels().outside, claims: outside, help: text.outsideHelp }];
   const reference = primary ? contributionOf(primary.claim) : null;
-  function retry() {
-    setPrimary(null); setRelated([]); setError(null); setRelatedError(null); setRelatedLoading(false); setAttempt(value => value + 1);
-  }
   return <section aria-label="Claim詳細">
     {mode === "relation" && <RelationOverview claims={visibleClaims ?? shown} nodes={nodes} />}
     <h3>{mode === "relation" ? text.claimsTitle : "主張と出典"}</h3>
     {!primary && !error && <p role="status">主張の詳細を取得中…</p>}
     {error && <div className={styles.error} role="alert"><p>{error}</p><button onClick={retry}>主張の取得を再試行</button></div>}
     {primary && <>
-      {relatedLoading && <p role="status">{text.loading}</p>}
-      {relatedError && <div className={styles.error} role="alert"><p>{relatedError}</p><p>{text.partial}</p><button onClick={retry}>他の主張を再試行</button></div>}
+      {pending > 0 && <p role="status">{text.loadingProgress(claims.length, claimIds.length)}</p>}
+      {failedCount > 0 && <div className={styles.error} role="alert"><p>{text.failed(failedCount)}</p><p>{text.partial}</p><button disabled={pending > 0} onClick={retry}>他の主張を再試行</button></div>}
       {mode === "relation" ? <>
         <p className={styles.muted}>{text.reading}</p>
-        <nav className={styles.claimNavigation} aria-label="主張への移動">{claims.map((claim, index) => <button key={claim.id} onClick={() => moveToClaim(claim.id)}>{text.jump(index + 1)}</button>)}</nav>
+        <nav className={styles.claimNavigation} aria-label="主張への移動">{claims.map(claim => <button key={claim.id} onClick={() => moveToClaim(claim.id)}>{text.jump(claimNumber(claim.id))}</button>)}</nav>
         {groups.filter(group => group.claims.length).map(group => <section key={group.key} className={styles.claimGroup} data-testid={`claim-group-${group.key}`} aria-label={group.title}>
           <h4>{group.title} · {text.claimCount(group.claims.length)}</h4>
           {group.help && <p className={styles.muted}>{group.help}</p>}
-          {group.claims.map(claim => <ClaimCard key={claim.id} claim={claim} nodes={nodes} title={`主張 ${claims.findIndex(item => item.id === claim.id) + 1}`} />)}
+          {group.claims.map(claim => <ClaimCard key={claim.id} claim={claim} nodes={nodes} title={`主張 ${claimNumber(claim.id)}`} />)}
         </section>)}
       </> : <>
         {reference && <p className={styles.muted}>{roleText.comparisonReference}：{reference.roleId ? roleText.roles[reference.roleId] : roleText.none} ／ {reference.scope ? `ISBN ${reference.scope.isbn13}` : roleText.scopeUnknown}</p>}

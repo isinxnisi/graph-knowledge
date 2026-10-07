@@ -255,9 +255,11 @@ test("テーマ: 画面とGraphの色を共有し文字・操作境界のコン�
     const style = getComputedStyle(el);
     const token = (name: string) => style.getPropertyValue(`--color-${name}`).trim();
     const cy = (el as unknown as { _cyreg: { cy: import("cytoscape").Core } })._cyreg.cy;
+    // オーバーレイ対応後の描画面は透明。背景色は外側のGraph領域が担う。
+    const viewport = getComputedStyle(el.parentElement!);
     const input = getComputedStyle(document.querySelector("input")!);
     const button = getComputedStyle(document.querySelector("form button")!);
-    return { surface: style.backgroundColor, canvas: token("canvas"),
+    return { surface: viewport.backgroundColor, canvas: token("canvas"),
       controlPairs: [[input.color, input.backgroundColor], [button.color, button.backgroundColor]],
       controlBorder: [input.borderTopColor, input.backgroundColor],
       textPairs: ["panel", "canvas", "person", "work", "organization", "accent-soft"].map((name) => [token("text"), token(name)]),

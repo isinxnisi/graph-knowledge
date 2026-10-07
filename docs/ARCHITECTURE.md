@@ -345,6 +345,8 @@ Neo4jではPartialDateをネストしたpropertyとして保存せず、`validFr
 
 追加展開はEntity IDとClaim IDで重複排除し、既存のノード位置は極力維持する。中心と隣接関係のテキスト一覧も提供し、一覧から展開・詳細確認ができるようにする。複雑なレイアウト最適化やモバイル専用画面は後回し。
 
+Graph上部の「表示中の対象へ移動」では現在の表示Nodeだけを名前・説明で絞り、選択とCanvasの表示位置を切り替えられる。通常の選択・展開と分け、近傍取得・枝の開閉・起点・条件・cursor・座標を変更しない。詳細は[操作契約](design/GRAPH_INTERACTION_AND_SETTINGS.md#表示中の対象への移動2026-10-07追加)を参照。
+
 ページのマージ前に、重複を除いた追加件数と全端点を確認する。画面全体の上限を超える場合はそのページを丸ごと追加せず、cursorも進めない。「表示上限に達したため、他の展開を閉じて再試行してください」と示す。中心を選び直すとグラフと全cursorをリセットする。受理できたページだけcursorを更新し、hasMoreがtrueなら「続きを表示」を出す。同じEntityの同時リクエストを防ぎ、失敗時は再試行可能にする。
 
 初期値は小さなデモで操作と上限処理を確認するための値で、性能保証ではない。上限・ページングは別の生成したテストデータで検証し、手作業fixtureを巨大化しない。
@@ -561,7 +563,7 @@ type EntityOverviewResponse = {
 
 応答itemsは既存EntityDetail（id・kind・name・description・aliases・nullable event）であり、DB searchNamesや外部IDを露出しない。Webクライアントだけの契約を直接更新し、旧人物専用版のversioning／互換経路は追加しない。Phase 09ではneighbors等の応答を変更せず、Phase 15でnullable eventParticipation等を追加した。
 
-左に一つの名前／別名検索と任意の検索対象selectを置く。初期はすべて。候補はkindの文字、名前、説明、別名で見分け、同じ名前・kind・説明が重なる場合は内部IDも補助表示する。候補取得・検索kind変更だけではGraph／探索条件／直前探索を変更しない。検索kind変更では旧検索を取消し候補をクリアするが自動取得しない。候補選択だけ既存chooseRootで確定predicate／Roleを保持した新世代へ移り、旧枝・通信・直前探索をリセットする。
+左に一つの名前／別名検索と任意の検索対象selectを置く。初期はすべて。候補はkindの文字、名前、説明、別名で見分け、同じ名前・kind・説明が重なる場合は内部IDも補助表示する。候補取得・検索kind変更だけではGraph／探索条件／直前探索を変更しない。名前／別名入力・検索kindの変更では旧検索を取消し、候補・エラー・検索中表示をクリアするが自動取得しない。取消後に届く旧検索の成功・失敗は表示せず、新しい検索の待機状態にも影響させない。候補選択だけ既存chooseRootで確定predicate／Roleを保持した新世代へ移り、旧枝・通信・直前探索をリセットする。
 
 検索kindはGraphState・探索conditionKey・cursorへ入れない。作品／組織から人物も通常どおり辿る。関係概要、明示的な広く見る／同条件切替、一件復帰、開閉／休止枝復元、Claim／Sourceは同じ契約を再利用する。UI文字列はlib/i18n/entity-search.ts等でlocale解決し、Entityの原語別名は知識データとして返す。言語付き名称のAPI、形態素解析、全文検索基盤は追加しない。
 
@@ -633,6 +635,8 @@ API・Cypher・GraphState・condition key・cursor・snapshotを変更しない�
 Edge選択時、表示中ClaimSummaryで関係全体の概要を先に示す。先頭UUIDは既存API取得の入口だけ。独立ClaimはUUID順で、Graph内／条件内だがGraph未表示／条件外の関連主張を分ける。部分取得・失敗を明示し、確認だけでGraphやcursorを進めない。個別Claim選択は従来の明示基準比較を維持する。
 
 各主張と根拠へスクロールでき、Citationではタイトル・locator・URL・原表記／言語・確認範囲を先に、書誌情報を折り畳みに置く。Roleや著者性をCitation.noteから補完しない。API・DB・schema・語彙・条件／cursor・開閉／復帰・凍結data・レイアウトは不変。[実画面評価・検証・次の不足](archive/phase-21-relation-presentation/README.md)を参照。
+
+2026-10-07の詳細取得改善では、関連Claimを応答到着ごとに表示し、取得件数・失敗件数を明示する。再試行は失敗IDだけに限定し、取得済みの根拠と書誌情報の開閉を維持する。Relation詳細の番号は全関連IDから固定し、遅延・再試行で変えない。対象切替時は通信を取り消し、旧応答を排除する。[取得と表示の契約](design/RELATION_PRESENTATION_CONTRACTS.md#関係全体から根拠へ)を参照。
 
 
 ## Phase 22：Graphの関係ラベルは意味を先に示す

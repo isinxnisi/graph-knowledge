@@ -4,6 +4,8 @@
 
 手動Codexと自動開発を併用する場合は、[自動開発の確認・排他・受け入れ](AUTOPILOT_COLLABORATION.md)を読む。作業開始時の未反映検知と、予定実行との共通ロックを使う。
 
+[2026-10-07の受け入れ記録](archive/autopilot-acceptance/20261007.md)：検索状態、表示中対象への移動、関連主張の順次表示・部分再試行。
+
 ## 作業前に読む文書
 
 1. [PROJECT_CONTEXT.md](PROJECT_CONTEXT.md)：目的と判断基準。
@@ -23,7 +25,7 @@
 | [少数実データパイロット](design/REAL_DATA_PILOT.md) | 最小案を採用しPhase 04で実装。対象・根拠・外部ID・言語・再投入の境界、残る候補。利用者評価はこれから |
 | [条件付き探索の第一段階](design/CONDITIONAL_EXPLORATION_PHASE.md) | 既存predicate集合の選択・条件変更UX・API・cursorの採用契約 |
 | [探索モデル](design/EXPLORATION_MODEL_REVIEW.md) | 開閉・最小predicate条件は実装済み。kind・期間条件・複数起点・時系列の残りは提案。探索の拡張時に参照 |
-| [操作と設定](design/GRAPH_INTERACTION_AND_SETTINGS.md) | 再クリック・300ms判定は実装済み。設定モーダル・永続化・管理設定は検討中 |
+| [操作と設定](design/GRAPH_INTERACTION_AND_SETTINGS.md) | 再クリック・300ms判定・表示中対象への移動は実装済み。設定モーダル・永続化・管理設定は検討中 |
 | [プリセット・分類・多言語・会員保存](design/EXPLORATION_PRESETS_REVIEW.md) | 多言語対応は設計前提として採用済み。具体方式・プリセット・保存は設計案。predicate条件APIは実装済み。taxonomy・言語切替・認証・保存は未実装 |
 | [Predicate意味契約・チェック](design/PREDICATE_CONTRACTS.md) | 既存4語彙の契約・基準版・比較票・validatorを実装済み。Phase 15でPARTICIPATED_INを追加。追加と変更の手順。制作RoleはPhase 06で導入済み |
 | [関係語彙・役割・意味境界](design/RELATION_VOCABULARY_REVIEW.md) | 凍結パイロット後の設計レビュー。意味契約、役割限定、追加審査、分類・表示の分離。提案を採用し、既存4語彙の契約・チェックを実装。制作RoleはPhase 06を参照。複数predicateの表示束は未実装 |

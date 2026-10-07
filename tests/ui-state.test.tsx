@@ -10,6 +10,7 @@ import { initialPositions, additionalPositions } from "../lib/client/graph-layou
 import { emptyGraph, mergePage, closeExpansion, reopenExpansion, projectGraph } from "../lib/client/graph-state";
 import { useGraphExplorer } from "../lib/client/use-graph-explorer";
 import SearchPanel from "../components/SearchPanel";
+import GraphNavigator from "../components/GraphNavigator";
 import ClaimDetails, { ClaimCard } from "../components/ClaimDetails";
 import { relationPresentation } from "../lib/client/relation-presentation";
 import { relationPresentationLabels } from "../lib/i18n/relation-presentation";
@@ -45,6 +46,47 @@ describe("ページのマージ", () => {
   });
 });
 describe("探索の通信", () => {
+  it("表示中の対象の確認だけでは未展開・閉鎖した枝やcursor・条件・履歴を変更しない", async () => {
+    vi.mocked(fetchNeighbors).mockImplementation(async id => ({ ...page, centerId: id }));
+    const { result } = renderHook(useGraphExplorer);
+    act(() => result.current.chooseRoot(root));
+    await waitFor(() => expect(result.current.graph.expansions[root.id].expanded).toBe(true));
+    const before = result.current.graph;
+    const other = page.nodes[1];
+    act(() => result.current.inspectEntity(other.id));
+    expect(result.current.selection).toEqual({ kind: "entity", id: other.id });
+    expect(result.current.graph).toBe(before);
+    expect(fetchNeighbors).toHaveBeenCalledTimes(1);
+
+    await act(async () => { await result.current.expand(other.id); });
+    act(() => result.current.close(other.id));
+    const closed = result.current.graph;
+    act(() => result.current.inspectEntity(other.id));
+    expect(result.current.graph).toBe(closed);
+    expect(fetchNeighbors).toHaveBeenCalledTimes(2);
+
+    act(() => result.current.switchRoot(other, "broad", null));
+    await waitFor(() => expect(result.current.graph.expansions[other.id].loading).toBe(false));
+    const previous = result.current.previous;
+    act(() => result.current.inspectEntity(other.id));
+    expect(result.current.previous).toBe(previous);
+    act(() => result.current.restorePrevious());
+    expect(result.current.selection).toEqual({ kind: "entity", id: other.id });
+  });
+
+  it("閉鎖によって非表示になったキャッシュ内の対象を確認対象にしない", async () => {
+    vi.mocked(fetchNeighbors).mockResolvedValue(page);
+    const { result } = renderHook(useGraphExplorer);
+    act(() => result.current.chooseRoot(root));
+    await waitFor(() => expect(result.current.graph.expansions[root.id].expanded).toBe(true));
+    act(() => result.current.close(root.id));
+    expect(result.current.graph.cacheNodes[page.nodes[1].id]).toBeDefined();
+    const before = result.current.graph;
+    act(() => result.current.inspectEntity(page.nodes[1].id));
+    expect(result.current.selection).toEqual({ kind: "entity", id: root.id });
+    expect(result.current.graph).toBe(before);
+    expect(fetchNeighbors).toHaveBeenCalledTimes(1);
+  });
   it("同じEntityの同時取得と取得済みの再展開を抑止する", async () => {
     const d = deferred(); vi.mocked(fetchNeighbors).mockReturnValue(d.promise);
     const { result } = renderHook(useGraphExplorer);
@@ -82,6 +124,51 @@ describe("探索の通信", () => {
     await act(async () => { await result.current.expand(root.id, true); });
     expect(result.current.graph.expansions[root.id].error).toBeNull();
     expect(vi.mocked(fetchNeighbors).mock.calls[2][1]).toBe("saved");
+  });
+});
+describe("表示中Graphの移動パネル", () => {
+  it("名前・説明の正規化検索、同名識別、選択後とEscapeのフォーカス復帰", () => {
+    const a = { ...root, id: "a", name: "Ａｌｉｃｅ", description: "研究者" };
+    const b = { ...a, id: "b" };
+    const c = { ...root, id: "c", name: "別人", description: "編集者" };
+    const onNavigate = vi.fn();
+    render(<GraphNavigator nodes={{ a, b, c }} selection={{ kind: "entity", id: "a" }} onNavigate={onNavigate} />);
+    const trigger = screen.getByRole("button", { name: /表示中の対象へ移動/ });
+    fireEvent.click(trigger);
+    const input = screen.getByRole("searchbox");
+    fireEvent.change(input, { target: { value: " alice " } });
+    expect(screen.getByRole("status").textContent).toBe("3件中 2件");
+    expect(screen.getByRole("button", { name: /ID：a/ }).getAttribute("aria-pressed")).toBe("true");
+    fireEvent.click(screen.getByRole("button", { name: /ID：b/ }));
+    expect(onNavigate).toHaveBeenCalledWith("b");
+    expect(document.activeElement).toBe(trigger);
+    expect(screen.queryByRole("searchbox")).toBeNull();
+    fireEvent.click(trigger);
+    fireEvent.change(input, { target: { value: "編集" } });
+    expect(screen.getByRole("status").textContent).toBe("3件中 1件");
+    expect(screen.getByRole("button", { name: /別人/ })).toBeDefined();
+    fireEvent.change(input, { target: { value: "未知" } });
+    expect(screen.getByRole("status").textContent).toContain("表示中の対象に一致しません");
+    fireEvent.keyDown(input, { key: "Escape" });
+    expect(document.activeElement).toBe(trigger);
+    expect(onNavigate).toHaveBeenCalledTimes(1);
+  });
+
+  it("表示対象の増減に追従し、世代変更で絞り込みと開閉をリセットする", () => {
+    const nodes = Object.fromEntries(page.nodes.map(node => [node.id, node]));
+    const onNavigate = vi.fn();
+    const { rerender } = render(<GraphNavigator key={1} nodes={nodes} selection={null} onNavigate={onNavigate} />);
+    fireEvent.click(screen.getByRole("button", { name: /表示中の対象へ移動/ }));
+    fireEvent.change(screen.getByRole("searchbox"), { target: { value: page.nodes[2].name } });
+    rerender(<GraphNavigator key={1} nodes={{ [root.id]: root }} selection={null} onNavigate={onNavigate} />);
+    expect(screen.getByRole("status").textContent).toContain("表示中の対象に一致しません");
+    rerender(<GraphNavigator key={2} nodes={nodes} selection={null} onNavigate={onNavigate} />);
+    expect(screen.queryByRole("searchbox")).toBeNull();
+    fireEvent.click(screen.getByRole("button", { name: /表示中の対象へ移動/ }));
+    expect((screen.getByRole("searchbox") as HTMLInputElement).value).toBe("");
+    expect(screen.getByRole("status").textContent).toBe("5件中 5件");
+    rerender(<GraphNavigator key={3} nodes={{}} selection={null} onNavigate={onNavigate} />);
+    expect((screen.getByRole("button", { name: /表示中の対象へ移動/ }) as HTMLButtonElement).disabled).toBe(true);
   });
 });
 describe("主張カード", () => {
@@ -607,6 +694,54 @@ it("受理済み・未描画Nodeの復帰は保存座標を固定し、欠けた
 
 
 describe("一般Entity検索の境界", () => {
+  it.each(["成功", "失敗"])("名前変更で旧検索を取消し、遅い%s応答が次の検索を妨げない", async (outcome) => {
+    type Response = import("../lib/domain/api").EntitySearchResponse;
+    let resolveOld!: (value: Response) => void;
+    let rejectOld!: (reason: Error) => void;
+    let resolveNext!: (value: Response) => void;
+    vi.mocked(searchEntities)
+      .mockReturnValueOnce(new Promise((resolve, reject) => { resolveOld = resolve; rejectOld = reject; }))
+      .mockReturnValueOnce(new Promise((resolve) => { resolveNext = resolve; }));
+    const choose = vi.fn();
+    render(<SearchPanel onChoose={choose} />);
+    fireEvent.change(screen.getByLabelText("名前・別名"), { target: { value: "変更前" } });
+    fireEvent.click(screen.getByRole("button", { name: "検索" }));
+    const signal = vi.mocked(searchEntities).mock.calls[0][1];
+    fireEvent.change(screen.getByLabelText("名前・別名"), { target: { value: "変更後" } });
+    expect(signal.aborted).toBe(true);
+    expect((screen.getByRole("button", { name: "検索" }) as HTMLButtonElement).disabled).toBe(false);
+    expect(searchEntities).toHaveBeenCalledTimes(1);
+    fireEvent.click(screen.getByRole("button", { name: "検索" }));
+    await act(async () => {
+      if (outcome === "成功") resolveOld({ items: [{ ...root, aliases: [], event: null }], hasMore: false });
+      else rejectOld(new Error("古い検索の失敗"));
+    });
+    expect(screen.queryByRole("button", { name: new RegExp(`^${root.name} —`) })).toBeNull();
+    expect(screen.queryByRole("alert")).toBeNull();
+    expect((screen.getByRole("button", { name: "検索中…" }) as HTMLButtonElement).disabled).toBe(true);
+    const next = { ...root, name: "変更後の候補", aliases: [], event: null };
+    await act(async () => resolveNext({ items: [next], hasMore: false }));
+    expect(searchEntities).toHaveBeenLastCalledWith("変更後", expect.any(AbortSignal), null);
+    fireEvent.click(screen.getByRole("button", { name: /^変更後の候補 —/ }));
+    expect(choose).toHaveBeenCalledWith(next);
+  });
+  it("名前を消すと表示済み候補も消え、入力を直すと古いエラーも消える", async () => {
+    vi.mocked(searchEntities).mockResolvedValueOnce({ items: [{ ...root, aliases: [], event: null }], hasMore: false });
+    const choose = vi.fn();
+    render(<SearchPanel onChoose={choose} />);
+    const input = screen.getByLabelText("名前・別名");
+    fireEvent.change(input, { target: { value: root.name } });
+    fireEvent.click(screen.getByRole("button", { name: "検索" }));
+    await screen.findByRole("button", { name: new RegExp(`^${root.name} —`) });
+    fireEvent.change(input, { target: { value: "" } });
+    expect(screen.queryByRole("button", { name: new RegExp(`^${root.name} —`) })).toBeNull();
+    fireEvent.click(screen.getByRole("button", { name: "検索" }));
+    expect(screen.getByRole("alert")).toBeDefined();
+    fireEvent.change(input, { target: { value: "別の名前" } });
+    expect(screen.queryByRole("alert")).toBeNull();
+    expect(searchEntities).toHaveBeenCalledTimes(1);
+    expect(choose).not.toHaveBeenCalled();
+  });
   it("候補の取得・種別変更では起点を選ばず、別名を提示して明示選択する", async () => {
     const choose = vi.fn();
     vi.mocked(searchEntities).mockResolvedValue({ items: [{ ...root, kind: "work", event: null, aliases: ["原語名"] }], hasMore: false });
@@ -807,6 +942,79 @@ describe("Relationの概要と独立した主張の読み分け", () => {
     expect(screen.getByTestId("claim-card-qualified")).toBeDefined();
     expect(screen.queryByTestId("claim-card-denied")).toBeNull();
     expect(screen.getByTestId("relation-overview").textContent).toContain("Graphに表示中の主張 1件");
+  });
+  it("遅い関連主張を待たず根拠を表示し、取得完了後も主張番号を変えない", async () => {
+    let finish!: (value: ClaimResponse) => void;
+    vi.mocked(fetchClaim).mockImplementation(async id => {
+      if (id === denied.id) return new Promise<ClaimResponse>(resolve => { finish = resolve; });
+      return { claim: id === base.id ? base : qualified, relatedClaimIds: id === base.id ? [denied.id, qualified.id] : [] };
+    });
+    render(<ClaimDetails id={base.id} nodes={{}} mode="relation" />);
+    const card = await screen.findByTestId("claim-card-qualified");
+    expect(screen.getByRole("status").textContent).toContain("2 / 3件");
+    const heading = within(card).getByRole("heading", { level: 4 }).textContent;
+    expect(heading).toBe("主張 3");
+    await act(async () => finish({ claim: denied, relatedClaimIds: [] }));
+    expect(screen.queryByRole("status")).toBeNull();
+    expect(within(card).getByRole("heading", { level: 4 }).textContent).toBe(heading);
+    expect(screen.getAllByRole("button", { name: /^主張 \dを読む$/ }).map(button => button.textContent)).toEqual(["主張 1を読む", "主張 2を読む", "主張 3を読む"]);
+  });
+  it.each(["claim", "relation"] as const)("%sの再試行は失敗分だけを取得し、読んでいる根拠と書誌の開閉を維持する", async mode => {
+    let finish!: (value: ClaimResponse) => void;
+    let attempts = 0;
+    vi.mocked(fetchClaim).mockImplementation(async id => {
+      if (id === denied.id) {
+        attempts++;
+        if (attempts < 3) throw new Error("DB");
+        return new Promise<ClaimResponse>(resolve => { finish = resolve; });
+      }
+      return { claim: id === base.id ? base : qualified, relatedClaimIds: id === base.id ? [qualified.id, denied.id] : [] };
+    });
+    render(<ClaimDetails id={base.id} nodes={{}} mode={mode} />);
+    await screen.findByRole("alert");
+    const card = screen.getByTestId(`claim-card-${base.id}`);
+    const metadata = card.querySelector("details")!;
+    metadata.open = true;
+    const successfulCard = screen.getByTestId("claim-card-qualified");
+    fireEvent.click(screen.getByRole("button", { name: "他の主張を再試行" }));
+    await screen.findByRole("alert");
+    fireEvent.click(screen.getByRole("button", { name: "他の主張を再試行" }));
+    await waitFor(() => expect(attempts).toBe(3));
+    expect(screen.getByTestId(`claim-card-${base.id}`)).toBe(card);
+    expect(screen.getByTestId("claim-card-qualified")).toBe(successfulCard);
+    expect(metadata.open).toBe(true);
+    expect(screen.getByRole("status").textContent).toContain("2 / 3件");
+    await act(async () => finish({ claim: denied, relatedClaimIds: [] }));
+    expect(screen.queryByRole("alert")).toBeNull();
+    expect(screen.queryByRole("status")).toBeNull();
+    expect(screen.getAllByTestId(/^claim-card-/)).toHaveLength(3);
+    expect(vi.mocked(fetchClaim).mock.calls.map(([id]) => id)).toEqual([base.id, qualified.id, denied.id, denied.id, denied.id]);
+  });
+  it("関連取得中は重複再試行せず、対象切替で中断した旧応答を混ぜない", async () => {
+    let finish!: (value: ClaimResponse) => void;
+    let oldSignal!: AbortSignal;
+    vi.mocked(fetchClaim).mockImplementation(async (id, signal) => {
+      if (id === denied.id) throw new Error("DB");
+      if (id === qualified.id) {
+        oldSignal = signal;
+        return new Promise<ClaimResponse>(resolve => { finish = resolve; });
+      }
+      return { claim: { ...base, id }, relatedClaimIds: id === base.id ? [qualified.id, denied.id] : [] };
+    });
+    const { rerender } = render(<ClaimDetails id={base.id} nodes={{}} mode="relation" />);
+    await screen.findByRole("alert");
+    const retry = screen.getByRole("button", { name: "他の主張を再試行" }) as HTMLButtonElement;
+    expect(retry.disabled).toBe(true);
+    fireEvent.click(retry);
+    expect(fetchClaim).toHaveBeenCalledTimes(3);
+    rerender(<ClaimDetails id="new-selection" nodes={{}} mode="relation" />);
+    expect(oldSignal.aborted).toBe(true);
+    expect(screen.queryByTestId(`claim-card-${base.id}`)).toBeNull();
+    await screen.findByTestId("claim-card-new-selection");
+    await act(async () => finish({ claim: qualified, relatedClaimIds: [] }));
+    expect(screen.queryByTestId("claim-card-qualified")).toBeNull();
+    expect(screen.queryByRole("alert")).toBeNull();
+    expect(screen.queryByRole("status")).toBeNull();
   });
   it("取得失敗でもGraphの概要を保持し、再試行で根拠まで復帰する", async () => {
     vi.mocked(fetchClaim).mockRejectedValueOnce(new Error("DB")).mockResolvedValueOnce({ claim: base, relatedClaimIds: [] });

@@ -36,6 +36,10 @@ Graph未表示は「通信で一度も取得していない」とは断定しな
 
 APIは既存 `/api/claims/{id}` とrelatedClaimIdsを再利用する。広い関連Claimと比較同一性を混同しない。取得中・一部失敗は個別主張の先頭付近に表示し、取得できた範囲を全件と見せない。再試行とAbort／探索世代の境界を維持する。
 
+2026-10-07の取得改善：関連主張は一件ごとの応答到着時に表示し、遅い一件のために他の根拠を待たせない。取得中は入口Claimを含む取得済み件数／全ID件数を表示する。失敗件数と未完了の説明を残し、進行中の一括取得が終わってから失敗IDだけを再試行する。取得済みカードと書誌情報の開閉状態は再試行中も維持する。Relation詳細の主張番号は入口とrelatedClaimIdsの全IDをUUID順に並べて先に割り当て、未取得分は欠番として、応答順や再試行で読んでいる番号が変わらないようにする。移動ボタンは取得済みカードだけに提供する。
+
+対象切替・探索世代変更で詳細セッションを破棄し、進行中の通信をabortする。取消後に到着する成功・失敗は受理しない。個別Claim詳細にも同じ逐次表示と失敗分再試行を適用する。APIの全ID返却・並列取得は小規模datasetを前提とした既存仕様を維持し、大量データ向けの上限・ページングは別途設計する。
+
 「主張 Nを読む」でカードへ移動し、「根拠を読む」でそのClaimの最初のCitationへ移動できる。Graph座標・選択・pan/zoomは変えない。個別Claimを選ぶテキスト一覧では、選んだClaimを基準とする従来比較を維持する。
 
 ## 個別ClaimとCitation
@@ -60,3 +64,9 @@ API契約、Cypher、DBモデル、語彙契約、Claim schema、三typed型、�
 `tests/ui-state.test.tsx`の71件と、既存Playwrightの漫画PLUTO・science・Event・demo代表表示4ケースが成功。patchの有無・11px・クリック対応・pan／zoomへの追随、条件変更後のpatch削除、自然なラベル／fallback、独立Claim／Sourceと既存座標を検証した。実ブラウザのPLUTO・science・Eventのスクリーンショットで視覚階層も確認した。typecheck・変更したTS/TSXへのeslint・buildも成功。専用API integration／seedは実行せず、意味モデル・API・DB・datasetには差分なし。新しい画像アーカイブは追加していない。
 
 同日のオーバーレイ・間隔調整はUI／概要unit 77件とPlaywright 5件で検証した。漫画PLUTOで選択状態・再復元通知・通知消去前後の座標／pan／zoom保持、表示の下のNodeクリック、既存中央スクロール／縦リサイズ、具体RoleとSource・条件変更を確認。science／Eventではpatchと主ラベルbounds間の距離・pan／zoom追随・patchクリックとRelation詳細を確認した。復元通知はUIだけで消し、再復元で出し直す。文字列・独立Claim・API・DB・datasetは不変。
+
+## 詳細の逐次取得・再試行の検証（2026-10-07）
+
+`npm test -- --no-file-parallelism` の240件、typecheck・lint・build・`git diff --check`が成功。追加した4ケースで、遅い関連主張と独立した表示、固定番号、個別／Relation双方の繰り返し失敗と失敗分だけの再試行、既存カード・書誌開閉の維持、取得中の重複再試行抑止、対象切替時のabortと旧応答排除を確認した。最初の全体並列実行では既存の条件editorテストが5秒でtimeoutしたため、テスト内容や制限時間を変えず直列で再検証した。
+
+API応答を固定したPlaywrightの `claim-loading.spec.ts` と既存 `graph-navigation.spec.ts` が成功。実ブラウザで逐次表示・失敗分だけの追加通信・書誌情報の開閉維持・番号維持・近傍通信とGraph件数の不変、および既存移動操作を確認した。初回の通信回数アサーションは開発Strict Modeの取消済み初回要求も数えて失敗したため、再試行前後の増分を検証するよう修正した。API／DB／datasetは変更しておらず、DB integrationや全datasetのE2Eは実行していない。
