@@ -1,6 +1,6 @@
 # 現行技術設計
 
-更新日: 2026-10-07 / 状態: 初期Vertical Sliceと探索の開閉・Node再クリックまで実装済み。既存predicateと限定制作Roleによる条件付き探索を追加。v2 Role Claim 5件を人間受入後に投入・検証済み。関係概要・明示起点切替・直前一件復帰、人物・作品・組織の統一検索入口も実装。科学・研究機関pilot v1を別環境へ投入・観察済み。Phase 14では科学v2と組織立場のtyped限定を追加し、制作Roleと独立した語彙を保って条件・比較処理を共有。Phase 15の特定Event参加（第三のtyped限定）を実装。実資料E01/E03と特定開催回・開催期間を人間受入後に生成・専用DBへ投入・観察済み。Phase 20で三relation facetを条件editorへ接続し、具体条件を使う既存取得・復帰を維持。Phase 21でGraphの限定概要・中立的な肯否と、関係全体から独立主張／根拠へ降りる詳細を整合。Phase 22でGraphラベルを短い関係見出しと構造化済みの具体語優先へ変更。汎用taxonomy・プリセット・会員保存は未実装。[文書の入口](README.md)に現役設計とフェーズ別履歴をまとめる。
+更新日: 2026-10-08 / 状態: 初期Vertical Sliceと探索の開閉・Node再クリックまで実装済み。既存predicateと限定制作Roleによる条件付き探索を追加。v2 Role Claim 5件を人間受入後に投入・検証済み。関係概要・明示起点切替・直前一件復帰、人物・作品・組織の統一検索入口も実装。科学・研究機関pilot v1を別環境へ投入・観察済み。Phase 14では科学v2と組織立場のtyped限定を追加し、制作Roleと独立した語彙を保って条件・比較処理を共有。Phase 15の特定Event参加（第三のtyped限定）を実装。実資料E01/E03と特定開催回・開催期間を人間受入後に生成・専用DBへ投入・観察済み。Phase 20で三relation facetを条件editorへ接続し、具体条件を使う既存取得・復帰を維持。Phase 21でGraphの限定概要・中立的な肯否と、関係全体から独立主張／根拠へ降りる詳細を整合。Phase 22でGraphラベルを短い関係見出しと構造化済みの具体語優先へ変更。汎用taxonomy・プリセット・会員保存は未実装。[文書の入口](README.md)に現役設計とフェーズ別履歴をまとめる。
 
 ## 前提と設計の位置づけ
 
@@ -11,6 +11,8 @@ Phase 16で[Relation・Claim・Predicate・typed qualificationの基本設計](d
 成熟したプロダクト像と、投稿・議論・保存・履歴等の初回設計で守る境界は [PRODUCT_VISION_AND_PRINCIPLES.md](design/PRODUCT_VISION_AND_PRINCIPLES.md) を参照する。構想の保存であり、現行API・DB契約や着手範囲を変更しない。
 
 Global／localのidentity・読取範囲、投稿／審査、保存／公開共有／議論、provenance、AI構造化、import／exportの変更前には[Capsule・User Contribution・Global KG構想](design/CAPSULE_AND_USER_CONTRIBUTION_VISION.md)も参照する。下記の知識正本・Claim由来の表示・published読取は現行KGの契約であり、Capsule-localの保存先や全公開コンテンツのGlobal受入を定めていない。Capsuleの内容とSaved View、公開と受入を分ける。Capsuleの物理schema・投稿flowは未決・未実装。
+
+AI候補整理・Source解析・分類・moderation等の設計時は[AI処理の検証順序と運用方針](design/AI_PROCESSING_DIRECTION.md)を参照する。Kevの実検証を先に行い、Webと推論の疎結合・低コスト・非同期の余地を守る。outbound HTTPSのLocal Workerは候補であり、Job Queue・Worker API・Provider abstraction・具体的なモデル統合は未決・未実装。それ以前の設計では、この方向を後から選ぶことを著しく困難にする判断がある場合だけ考慮する。
 
 ## 多言語対応の設計前提
 

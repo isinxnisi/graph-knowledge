@@ -80,11 +80,11 @@ AIの出力候補はEntity、Predicate、qualification／Role、scope／period�
 
 ```text
 submission → Pending／queue → 低コストvalidation・local処理
-           → 必要なものだけLLM／JEV等 → 必要ならhuman review
+           → 必要なものだけ用途別のAI処理 → 必要ならhuman review
            → 結果保存 → ユーザーへ通知
 ```
 
-全投稿に高価な同期AI処理を要求せず、画面上で完了を待たせない。URLだけの捏造・誤読を即Global公開せず、意味正規化が難しいものをreviewへ回す。LLM／JEV等の具体的な役割・採否・実行方式は未決。
+全投稿に高価な同期AI処理を要求せず、画面上で完了を待たせない。URLだけの捏造・誤読を即Global公開せず、意味正規化が難しいものをreviewへ回す。2026-10-08共有の[AI処理方針](AI_PROCESSING_DIRECTION.md)では、限定的な判定はまずKevで検証し、広い文脈理解の外部LLMとは用途を分ける。同じ処理を無料APIへ振り分けるフォールバックを既定にせず、具体的な採否・実行方式は実検証後に決める。Job Queue等の先行実装を指示するものではない。
 
 Global受入、ユーザー確認待ち、review中、修正依頼、Global不採用、Capsule-local保持可能等が結果候補。正式な状態名・判定基準・遷移ではない。「処理中の投稿」「要確認」「審査結果」「完了通知」の導線を初回Contribution UI設計で検討する。
 
