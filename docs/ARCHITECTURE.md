@@ -636,6 +636,8 @@ Edge選択時、表示中ClaimSummaryで関係全体の概要を先に示す。�
 
 各主張と根拠へスクロールでき、Citationではタイトル・locator・URL・原表記／言語・確認範囲を先に、書誌情報を折り畳みに置く。Roleや著者性をCitation.noteから補完しない。API・DB・schema・語彙・条件／cursor・開閉／復帰・凍結data・レイアウトは不変。[実画面評価・検証・次の不足](archive/phase-21-relation-presentation/README.md)を参照。
 
+2026-10-07の詳細取得改善では、関連Claimを応答到着ごとに表示し、取得件数・失敗件数を明示する。再試行は失敗IDだけに限定し、取得済みの根拠と書誌情報の開閉を維持する。Relation詳細の番号は全関連IDから固定し、遅延・再試行で変えない。対象切替時は通信を取り消し、旧応答を排除する。[取得と表示の契約](design/RELATION_PRESENTATION_CONTRACTS.md#関係全体から根拠へ)を参照。
+
 
 ## Phase 22：Graphの関係ラベルは意味を先に示す
 

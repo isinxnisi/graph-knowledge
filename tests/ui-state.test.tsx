@@ -943,6 +943,79 @@ describe("Relationの概要と独立した主張の読み分け", () => {
     expect(screen.queryByTestId("claim-card-denied")).toBeNull();
     expect(screen.getByTestId("relation-overview").textContent).toContain("Graphに表示中の主張 1件");
   });
+  it("遅い関連主張を待たず根拠を表示し、取得完了後も主張番号を変えない", async () => {
+    let finish!: (value: ClaimResponse) => void;
+    vi.mocked(fetchClaim).mockImplementation(async id => {
+      if (id === denied.id) return new Promise<ClaimResponse>(resolve => { finish = resolve; });
+      return { claim: id === base.id ? base : qualified, relatedClaimIds: id === base.id ? [denied.id, qualified.id] : [] };
+    });
+    render(<ClaimDetails id={base.id} nodes={{}} mode="relation" />);
+    const card = await screen.findByTestId("claim-card-qualified");
+    expect(screen.getByRole("status").textContent).toContain("2 / 3件");
+    const heading = within(card).getByRole("heading", { level: 4 }).textContent;
+    expect(heading).toBe("主張 3");
+    await act(async () => finish({ claim: denied, relatedClaimIds: [] }));
+    expect(screen.queryByRole("status")).toBeNull();
+    expect(within(card).getByRole("heading", { level: 4 }).textContent).toBe(heading);
+    expect(screen.getAllByRole("button", { name: /^主張 \dを読む$/ }).map(button => button.textContent)).toEqual(["主張 1を読む", "主張 2を読む", "主張 3を読む"]);
+  });
+  it.each(["claim", "relation"] as const)("%sの再試行は失敗分だけを取得し、読んでいる根拠と書誌の開閉を維持する", async mode => {
+    let finish!: (value: ClaimResponse) => void;
+    let attempts = 0;
+    vi.mocked(fetchClaim).mockImplementation(async id => {
+      if (id === denied.id) {
+        attempts++;
+        if (attempts < 3) throw new Error("DB");
+        return new Promise<ClaimResponse>(resolve => { finish = resolve; });
+      }
+      return { claim: id === base.id ? base : qualified, relatedClaimIds: id === base.id ? [qualified.id, denied.id] : [] };
+    });
+    render(<ClaimDetails id={base.id} nodes={{}} mode={mode} />);
+    await screen.findByRole("alert");
+    const card = screen.getByTestId(`claim-card-${base.id}`);
+    const metadata = card.querySelector("details")!;
+    metadata.open = true;
+    const successfulCard = screen.getByTestId("claim-card-qualified");
+    fireEvent.click(screen.getByRole("button", { name: "他の主張を再試行" }));
+    await screen.findByRole("alert");
+    fireEvent.click(screen.getByRole("button", { name: "他の主張を再試行" }));
+    await waitFor(() => expect(attempts).toBe(3));
+    expect(screen.getByTestId(`claim-card-${base.id}`)).toBe(card);
+    expect(screen.getByTestId("claim-card-qualified")).toBe(successfulCard);
+    expect(metadata.open).toBe(true);
+    expect(screen.getByRole("status").textContent).toContain("2 / 3件");
+    await act(async () => finish({ claim: denied, relatedClaimIds: [] }));
+    expect(screen.queryByRole("alert")).toBeNull();
+    expect(screen.queryByRole("status")).toBeNull();
+    expect(screen.getAllByTestId(/^claim-card-/)).toHaveLength(3);
+    expect(vi.mocked(fetchClaim).mock.calls.map(([id]) => id)).toEqual([base.id, qualified.id, denied.id, denied.id, denied.id]);
+  });
+  it("関連取得中は重複再試行せず、対象切替で中断した旧応答を混ぜない", async () => {
+    let finish!: (value: ClaimResponse) => void;
+    let oldSignal!: AbortSignal;
+    vi.mocked(fetchClaim).mockImplementation(async (id, signal) => {
+      if (id === denied.id) throw new Error("DB");
+      if (id === qualified.id) {
+        oldSignal = signal;
+        return new Promise<ClaimResponse>(resolve => { finish = resolve; });
+      }
+      return { claim: { ...base, id }, relatedClaimIds: id === base.id ? [qualified.id, denied.id] : [] };
+    });
+    const { rerender } = render(<ClaimDetails id={base.id} nodes={{}} mode="relation" />);
+    await screen.findByRole("alert");
+    const retry = screen.getByRole("button", { name: "他の主張を再試行" }) as HTMLButtonElement;
+    expect(retry.disabled).toBe(true);
+    fireEvent.click(retry);
+    expect(fetchClaim).toHaveBeenCalledTimes(3);
+    rerender(<ClaimDetails id="new-selection" nodes={{}} mode="relation" />);
+    expect(oldSignal.aborted).toBe(true);
+    expect(screen.queryByTestId(`claim-card-${base.id}`)).toBeNull();
+    await screen.findByTestId("claim-card-new-selection");
+    await act(async () => finish({ claim: qualified, relatedClaimIds: [] }));
+    expect(screen.queryByTestId("claim-card-qualified")).toBeNull();
+    expect(screen.queryByRole("alert")).toBeNull();
+    expect(screen.queryByRole("status")).toBeNull();
+  });
   it("取得失敗でもGraphの概要を保持し、再試行で根拠まで復帰する", async () => {
     vi.mocked(fetchClaim).mockRejectedValueOnce(new Error("DB")).mockResolvedValueOnce({ claim: base, relatedClaimIds: [] });
     render(<ClaimDetails id={base.id} nodes={{}} mode="relation" visibleClaimIds={[base.id]} visibleClaims={[base]} />);
