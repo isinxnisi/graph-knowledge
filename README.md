@@ -319,9 +319,14 @@ Graphの関係ラベルは、構造化済みの具体語がある場合「制作
 
 このディレクトリで `make` または `make autopilot-help` を実行すると操作一覧を表示します。
 
+手動Codexは作業開始時に未反映変更を確認し、変更・検証中は共通ロックを保持します。手順は[自動開発との協調](docs/AUTOPILOT_COLLABORATION.md)。`make autopilot-review` は確認だけで、受け入れや取り込みはしません。`make autopilot-hold` を別terminalで保持している間、予定実行はスキップされます。完了時Enterで解放すると、次回予定から自動開発が続きます。
+
 | やりたいこと | コマンド |
 | --- | --- |
 | 状態・次回予定を見る | `make autopilot-status` |
+| 未反映commit・固定SHA・開発結果を確認 | `make autopilot-review` |
+| 手動作業中の競合を防ぐ（別terminalで保持） | `make autopilot-hold` |
+| 検知・排他を隔離環境でテスト | `make autopilot-test` |
 | 次回以降を止める（今の作業は続行） | `make autopilot-off` |
 | 自動実行を再開する | `make autopilot-on` |
 | 今すぐ開発を1回実行する | `make autopilot-run` |

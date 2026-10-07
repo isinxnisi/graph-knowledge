@@ -16,6 +16,8 @@ WINDOWS = Path("/mnt/c/Users/nishr/graph-autopilot")
 POWERSHELL = "/mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe"
 HELP = """自動開発の操作（このプロジェクトで実行）
   make autopilot-status  今の状態・次回予定・直前の結果を見る
+  make autopilot-review  未反映commit・開発結果・競合を確認する
+  make autopilot-hold    手動作業中の共通ロックを保持する（Enterで解放）
   make autopilot-on      自動実行を再開する（今すぐは動かさない）
   make autopilot-off     次回以降を止める（実行中の作業は止めない）
   make autopilot-run     今すぐ1回実行する（実装・テスト・commitが走る）
@@ -99,6 +101,9 @@ def windows(action):
     print("Linux設定:", config["START_DATE"], "〜", config["END_DATE"], "/", config["RUN_TIMES"])
 
 def main():
+    if len(sys.argv) > 1 and sys.argv[1] in ("review", "hold", "guard", "assert-held"):
+        from autopilot_review import run
+        return run(sys.argv[1:], KIT)
     action = sys.argv[1] if len(sys.argv) == 2 else "help"
     if action == "help":
         print(HELP)

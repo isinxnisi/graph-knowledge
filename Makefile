@@ -8,7 +8,7 @@
 #
 # 変更・実行操作ではWindowsの管理者確認（UAC）が出ます。
 .DEFAULT_GOAL := autopilot-help
-.PHONY: autopilot-help autopilot-status autopilot-on autopilot-off autopilot-run autopilot-config autopilot-apply autopilot-check autopilot-logs
+.PHONY: autopilot-help autopilot-status autopilot-review autopilot-hold autopilot-test autopilot-on autopilot-off autopilot-run autopilot-config autopilot-apply autopilot-check autopilot-logs
 
 # 操作一覧と使い方を表示します。迷ったらこれを実行してください。
 autopilot-help:
@@ -17,6 +17,19 @@ autopilot-help:
 # 自動実行が有効か、次回はいつか、前回は成功したかを確認します。
 autopilot-status:
 	@python3 scripts/autopilot.py status
+
+# 未反映commit・固定SHA・開発ログ・dirtyを確認します。取り込みや自動実行はしません。
+autopilot-review:
+	@python3 scripts/autopilot.py review
+
+# 同じロックで手動作業と自動実行を排他します。別terminalで保持し、完了時Enterで解放。
+# 既定60分。時間を変える場合は python3 scripts/autopilot.py hold --minutes 120。
+autopilot-hold:
+	@python3 scripts/autopilot.py hold
+
+# 一時Gitリポジトリを使い、検知・排他を検証します。実開発や実DBには触れません。
+autopilot-test:
+	@python3 -m unittest discover -s tests -p 'test_autopilot*.py' -v
 
 # 停止していた定期実行を再開します。今すぐ開発を始める操作ではありません。
 autopilot-on:

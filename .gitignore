@@ -5,6 +5,8 @@ node_modules/
 !.env.example
 *.tsbuildinfo
 coverage/
+__pycache__/
+*.pyc
 next-env.d.ts
 
 test-results/
