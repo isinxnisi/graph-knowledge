@@ -314,3 +314,25 @@ Phase 21では線の構造化済み限定と中立的な肯否を表示し、詳
 
 
 Graphの関係ラベルは、構造化済みの具体語がある場合「制作／プロデュース」「組織／Associate professor・Visitor」「参加／会議議長」のように短い見出しと具体語を先に示す。指定なしやClaim構成は詳細へ残す。具体値がない線は従来表示を維持し、資料から役割を推定しない。[現行契約](docs/design/RELATION_PRESENTATION_CONTRACTS.md)／[Phase 22の実画面・検証](docs/archive/phase-22-semantic-edge-labels/README.md)。
+
+## 自動開発のスケジュール操作（WSL）
+
+このディレクトリで `make` または `make autopilot-help` を実行すると操作一覧を表示します。
+
+| やりたいこと | コマンド |
+| --- | --- |
+| 状態・次回予定を見る | `make autopilot-status` |
+| 次回以降を止める（今の作業は続行） | `make autopilot-off` |
+| 自動実行を再開する | `make autopilot-on` |
+| 今すぐ開発を1回実行する | `make autopilot-run` |
+| 最新ログを見る | `make autopilot-logs` |
+| 起動条件だけ確認する | `make autopilot-check` |
+| 期間・時刻の設定を編集する | `make autopilot-config` |
+| 編集した設定をWindowsへ反映する | `make autopilot-apply` |
+
+期間変更は **config → apply → status** の順です。設定画面では `START_DATE`・`END_DATE`・`RUN_TIMES` を編集します。
+`apply` は停止中なら停止を維持し、開発実行中は変更を拒否します。実行先は既存の専用worktreeで、このプロジェクト直下で開発を始めるコマンドではありません。
+変更・実行時のWindows管理者確認（UAC）は人が許可してください。コントローラーの一時ファイルは処理終了時に削除します。
+
+設定ファイルは `~/.local/share/graph-autopilot/autopilot.env` です。保存するとLinux側の期間ガードは即時反映されますが、Windowsの発火予定は `apply` するまで変わりません。反映に失敗した場合はエラーを解消して再適用するか、設定を元に戻してください。
+これはこのPCの既存自動実行を操作する入口です。PC起動・ネット接続が必要で、スリープ解除は行いません。`off` は実行中のCodexを強制終了しません。
