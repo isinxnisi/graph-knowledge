@@ -104,7 +104,7 @@ export default function Explorer({ dataset = "demo" }: { dataset?: DatasetMode }
           <div className={styles.rootBar}><p className={styles.rootLabel} data-testid="exploration-root">{entry.root}：{graph.centerId ? graph.nodes[graph.centerId]?.name : entry.rootEmpty}</p>
             {previous && <button onClick={restorePrevious}>{overviewLabels().restore}</button>}</div>
         </div>
-        <RelationFilter eventRoles={graph.eventRoles ?? null} positions={graph.organizationPositions ?? null} roles={graph.contributionRoles ?? null} value={graph.predicates} onApply={changePredicates} />
+        <RelationFilter eventRoles={graph.eventRoles ?? null} positions={graph.organizationPositions ?? null} roles={graph.contributionRoles ?? null} value={graph.predicates} onApply={(predicates, roles, positions, eventRoles) => changePredicates(predicates, roles, positions, eventRoles, canvas.current?.capture() ?? null)} />
         {graph.centerId ? <p className={styles.muted}>{entry.selectedHelp}</p> : <div className={styles.empty}><h3>{entry.initialTitle}</h3><p>{entry.initialHelp}</p></div>}
         {Object.values(graph.expansions).some((meta) => meta.active && meta.hasMore) && <p className={styles.muted}>{explorationLabels().neighborsPageHelp}</p>}
         {blocked && <p role="alert" className={styles.error}>{blocked.error}</p>}

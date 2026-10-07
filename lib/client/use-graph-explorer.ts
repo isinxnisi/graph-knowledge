@@ -112,22 +112,24 @@ export function useGraphExplorer() {
     commit(projectGraph({ ...snapshot.graph, generation: generation.current, notice: overviewLabels().restored }));
     setSelection(snapshot.selection);
   }, [commit, previous]);
-  const changePredicates = useCallback((values: PredicateFilter, roleValues: ContributionRoleFilter = current.current.contributionRoles ?? null, positionValues: OrganizationPositionFilter = current.current.organizationPositions ?? null, eventRoleValues: EventRoleFilter = current.current.eventRoles ?? null) => {
+  const changePredicates = useCallback((values: PredicateFilter, roleValues: ContributionRoleFilter = current.current.contributionRoles ?? null, positionValues: OrganizationPositionFilter = current.current.organizationPositions ?? null, eventRoleValues: EventRoleFilter = current.current.eventRoles ?? null, view: GraphView | null = null) => {
     const predicates = normalizePredicates(values);
     const eventRoles = normalizeEventRoles(eventRoleValues, predicates);
     const organizationPositions = normalizeOrganizationPositions(positionValues, predicates);
     const contributionRoles = normalizeContributionRoles(roleValues, predicates);
     if (explorationKey(predicates, contributionRoles, organizationPositions, eventRoles) === explorationKey(current.current.predicates, current.current.contributionRoles ?? null, current.current.organizationPositions ?? null, current.current.eventRoles ?? null)) return;
+    const snapshot = captureExploration(current.current, selection, view);
+    setPrevious(snapshot); setViewRestoration(null);
     const rootId = current.current.centerId;
     const root = rootId ? current.current.cacheNodes[rootId] : null;
     pending.current.forEach((controller) => controller.abort()); pending.current.clear();
     generation.current += 1;
     commit(projectGraph({ ...emptyGraph(generation.current), predicates, contributionRoles, organizationPositions, eventRoles, conditionKey: explorationKey(predicates, contributionRoles, organizationPositions, eventRoles),
       centerId: rootId, roots: rootId ? [rootId] : [], cacheNodes: root ? { [root.id]: root } : {},
-      notice: explorationLabels().changed }));
+      notice: root && !snapshot ? overviewLabels().notSaved : explorationLabels().changed }));
     setSelection(root ? { kind: "entity", id: root.id } : null);
     if (root) void expand(root.id);
-  }, [commit, expand]);
+  }, [commit, expand, selection]);
   const inspectEntity = useCallback((id: string) => {
     if (current.current.nodes[id]) setSelection({ kind: "entity", id });
   }, []);

@@ -5,7 +5,7 @@ const ja = {
   unsupported: "未対応の探索条件です。", invalidPredicates: "predicatesには既存の関係タイプを指定してください。",
   invalidCursor: "cursorが不正、または起点・関係の条件が一致しません。",
   title: "辿る関係", apply: "適用", all: "すべて選択", none: "選択を解除",
-  help: "適用すると同じ起点から取得し直します。開閉状態はリセットされます。",
+  help: "適用すると同じ起点から取得し直します。開閉状態はリセットされます。適用前の探索には「直前の探索へ戻る」で戻れます。",
   active: "適用中", allRelations: "すべての関係", noRelations: "関係を表示しない",
   empty: "この条件に一致する関係はありません。",
   outside: "現在の探索条件の対象外の主張",
