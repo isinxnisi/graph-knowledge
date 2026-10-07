@@ -8,7 +8,11 @@
 #
 # 変更・実行操作ではWindowsの管理者確認（UAC）が出ます。
 .DEFAULT_GOAL := autopilot-help
-.PHONY: autopilot-help autopilot-status autopilot-review autopilot-hold autopilot-test autopilot-on autopilot-off autopilot-run autopilot-config autopilot-apply autopilot-check autopilot-logs
+.PHONY: autopilot-help autopilot-status autopilot-review autopilot-hold autopilot-test autopilot-on autopilot-off autopilot-run autopilot-config autopilot-apply autopilot-check autopilot-logs completion-sound
+
+# 手動セッション完了用の通知音を試聴します。Windows側の音量設定を使います。
+completion-sound:
+	@python3 scripts/notify-complete.py --test
 
 # 操作一覧と使い方を表示します。迷ったらこれを実行してください。
 autopilot-help:

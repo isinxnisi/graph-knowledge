@@ -64,6 +64,18 @@ guardはロックを取得してからコマンドを実行し、元の終了コ
 
 この仕組みは通知を会話へ注入するものではない。AGENTS.mdにより、このCodexが作業を開始した時に検知する。常駐通知や多段履歴、受け入れ管理画面は追加していない。
 
+## 手動セッションの完了通知音
+
+このPCのユーザー設定 `~/.codex/config.toml` のトップレベル `notify` に、`["python3", "/home/isinxnisi/1.projects/7.graph-knowledge/scripts/notify-complete.py"]` を設定する。Codexの `agent-turn-complete` 通知で、このmain worktree内をcwdとする手動セッションだけWindowsの短いチャイムを2回再生する。別worktreeの定期開発や別プロジェクトは対象外。追加のAI処理・ネットワーク・会話内容の保存は行わない。
+
+設定の反映は次に起動するCodexセッションで確認する。既存セッションでの再読込やクライアントごとの通知発火を保証しない。フックが利用できない手動セッションでは、最後に `make completion-sound` で同じ音を鳴らせる。通知は応答完了を示し、全テスト成功やmainへの受入を音だけで保証するものではない。
+
+音はWindowsの現在の出力先・音量を使う。ミュートを解除したり音量を変更したりしない。試聴は `make completion-sound`、停止はユーザー設定から当該 `notify` 行を外す。再生失敗は警告だけとし、完了した作業の結果を変えない。
+
+公式の通知契約：[Advanced Configuration](https://learn.chatgpt.com/docs/config-file/config-advanced#notifications)。プロジェクト内 `.codex/config.toml` では `notify` が無視されるため、マシンのユーザー設定へ置く。
+
+2026-10-07検証：mainの完了だけ発火し、定期開発worktree・別project・完了以外・不正payloadでは発火しないこと、通知失敗が作業結果へ影響しないことを再生処理のmockで確認。`codex features list` による設定読込と `make completion-sound` のWindows実再生コマンド成功を確認した。実際に聞こえるかは出力先・ミュート状態に依存する。通知フックからの発火は次回セッションで確認する。既存ユーザー設定のバックアップは `~/.codex/config.toml.before-completion-sound`。
+
 ## 保証範囲と検証
 
 同じロックを使うrunner、hold、guard間の競合をOSが防ぐ。ロックを経由しない任意の手動コマンドまで強制的に禁止する仕組みではなく、手動CodexはAGENTSの手順を守る。長期作業の期限と排他の再確認も必要。Windows側の起動直後でまだLinuxロックに到達していなくても、先に取得した側が優先し、後から来た側は取得できない。
