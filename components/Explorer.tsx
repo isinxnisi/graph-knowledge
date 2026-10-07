@@ -15,6 +15,7 @@ import RelationFilter from "./RelationFilter";
 import SearchPanel from "./SearchPanel";
 import StartExamples from "./StartExamples";
 import GraphCanvas, { type GraphCanvasHandle } from "./GraphCanvas";
+import GraphNavigator from "./GraphNavigator";
 import RelationsList from "./RelationsList";
 import EntityDetails from "./EntityDetails";
 import ClaimDetails from "./ClaimDetails";
@@ -38,7 +39,7 @@ export default function Explorer({ dataset = "demo" }: { dataset?: DatasetMode }
   const [detailWide, setDetailWide] = useState(false);
   const [dark, setDark] = useState(false);
   const [darkPalette, setDarkPalette] = useState<"brown" | "blue">("brown");
-  const { graph, selection, previous, viewRestoration, switchRoot, restorePrevious, changePredicates, chooseRoot, selectEntity, selectClaim, selectRelation, expand, close, toggleEntity } = useGraphExplorer();
+  const { graph, selection, previous, viewRestoration, switchRoot, restorePrevious, changePredicates, chooseRoot, inspectEntity, selectEntity, selectClaim, selectRelation, expand, close, toggleEntity } = useGraphExplorer();
   const restricted = graph.predicates !== null || (graph.contributionRoles ?? null) !== null || (graph.organizationPositions ?? null) !== null || (graph.eventRoles ?? null) !== null;
   const switchFrom = (entity: EntitySummary, mode: "broad" | "same") => {
     switchRoot(entity, mode, canvas.current?.capture() ?? null); setOverview(null);
@@ -81,6 +82,9 @@ export default function Explorer({ dataset = "demo" }: { dataset?: DatasetMode }
         {graph.centerId ? <p className={styles.muted}>{entry.selectedHelp}</p> : <div className={styles.empty}><h3>{entry.initialTitle}</h3><p>{entry.initialHelp}</p></div>}
         {Object.values(graph.expansions).some((meta) => meta.active && meta.hasMore) && <p className={styles.muted}>Graphの関係表示は取得済みの主張に基づきます。続きは各Entityの詳細から取得できます。</p>}
         {blocked && <p role="alert" className={styles.error}>{blocked.error}</p>}
+        <GraphNavigator key={graph.generation} nodes={graph.nodes} selection={selection} onNavigate={(id) => {
+          inspectEntity(id); canvas.current?.focusEntity(id);
+        }} />
         {Object.values(graph.claims).some((claim) => claim.contribution?.roleId) && <p className={styles.muted}>{contributionLabels().partial}</p>}
         <GraphCanvas ref={canvas} restoration={viewRestoration} interactionBlocked={!!overview} onEntityDoubleClick={(id) => { if (graph.nodes[id]) setOverview(graph.nodes[id]); }} graph={graph} selection={selection} onEntity={selectEntity} onRelation={selectRelation} onToggleEntity={toggleEntity} feedback={<>
           <div className={`${styles.feedback} ${!graph.centerId ? styles.initialFeedback : ""}`} aria-live="polite"><p data-testid="selection-status">選択中：{selectionText}</p><p>{loading ? `Graphを取得中…（${loading}件）` : selectedEntity ? graph.expansions[selectedEntity.id]?.expanded ? "近傍は展開済みです。" : graph.expansions[selectedEntity.id]?.pages.length ? "展開は閉じています。クリックで取得済みの枝を復元します。" : "クリックで一段階展開します。" : "線ごとに同じ関係の主張をまとめて表示しています。"}</p></div>

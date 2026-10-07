@@ -128,6 +128,9 @@ export function useGraphExplorer() {
     setSelection(root ? { kind: "entity", id: root.id } : null);
     if (root) void expand(root.id);
   }, [commit, expand]);
+  const inspectEntity = useCallback((id: string) => {
+    if (current.current.nodes[id]) setSelection({ kind: "entity", id });
+  }, []);
   const selectEntity = useCallback((id: string) => {
     if (!current.current.nodes[id]) return;
     setSelection({ kind: "entity", id }); void expand(id);
@@ -143,5 +146,5 @@ export function useGraphExplorer() {
     if (!current.current.nodes[id]) return;
     if (current.current.expansions[id]?.open) close(id); else void expand(id);
   }, [close, expand]);
-  return { graph, selection, previous, viewRestoration, switchRoot, restorePrevious, changePredicates, chooseRoot, selectEntity, selectClaim, selectRelation, expand, close, toggleEntity };
+  return { graph, selection, previous, viewRestoration, switchRoot, restorePrevious, changePredicates, chooseRoot, inspectEntity, selectEntity, selectClaim, selectRelation, expand, close, toggleEntity };
 }

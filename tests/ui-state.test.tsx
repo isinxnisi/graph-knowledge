@@ -10,6 +10,7 @@ import { initialPositions, additionalPositions } from "../lib/client/graph-layou
 import { emptyGraph, mergePage, closeExpansion, reopenExpansion, projectGraph } from "../lib/client/graph-state";
 import { useGraphExplorer } from "../lib/client/use-graph-explorer";
 import SearchPanel from "../components/SearchPanel";
+import GraphNavigator from "../components/GraphNavigator";
 import ClaimDetails, { ClaimCard } from "../components/ClaimDetails";
 import { relationPresentation } from "../lib/client/relation-presentation";
 import { relationPresentationLabels } from "../lib/i18n/relation-presentation";
@@ -45,6 +46,47 @@ describe("ページのマージ", () => {
   });
 });
 describe("探索の通信", () => {
+  it("表示中の対象の確認だけでは未展開・閉鎖した枝やcursor・条件・履歴を変更しない", async () => {
+    vi.mocked(fetchNeighbors).mockImplementation(async id => ({ ...page, centerId: id }));
+    const { result } = renderHook(useGraphExplorer);
+    act(() => result.current.chooseRoot(root));
+    await waitFor(() => expect(result.current.graph.expansions[root.id].expanded).toBe(true));
+    const before = result.current.graph;
+    const other = page.nodes[1];
+    act(() => result.current.inspectEntity(other.id));
+    expect(result.current.selection).toEqual({ kind: "entity", id: other.id });
+    expect(result.current.graph).toBe(before);
+    expect(fetchNeighbors).toHaveBeenCalledTimes(1);
+
+    await act(async () => { await result.current.expand(other.id); });
+    act(() => result.current.close(other.id));
+    const closed = result.current.graph;
+    act(() => result.current.inspectEntity(other.id));
+    expect(result.current.graph).toBe(closed);
+    expect(fetchNeighbors).toHaveBeenCalledTimes(2);
+
+    act(() => result.current.switchRoot(other, "broad", null));
+    await waitFor(() => expect(result.current.graph.expansions[other.id].loading).toBe(false));
+    const previous = result.current.previous;
+    act(() => result.current.inspectEntity(other.id));
+    expect(result.current.previous).toBe(previous);
+    act(() => result.current.restorePrevious());
+    expect(result.current.selection).toEqual({ kind: "entity", id: other.id });
+  });
+
+  it("閉鎖によって非表示になったキャッシュ内の対象を確認対象にしない", async () => {
+    vi.mocked(fetchNeighbors).mockResolvedValue(page);
+    const { result } = renderHook(useGraphExplorer);
+    act(() => result.current.chooseRoot(root));
+    await waitFor(() => expect(result.current.graph.expansions[root.id].expanded).toBe(true));
+    act(() => result.current.close(root.id));
+    expect(result.current.graph.cacheNodes[page.nodes[1].id]).toBeDefined();
+    const before = result.current.graph;
+    act(() => result.current.inspectEntity(page.nodes[1].id));
+    expect(result.current.selection).toEqual({ kind: "entity", id: root.id });
+    expect(result.current.graph).toBe(before);
+    expect(fetchNeighbors).toHaveBeenCalledTimes(1);
+  });
   it("同じEntityの同時取得と取得済みの再展開を抑止する", async () => {
     const d = deferred(); vi.mocked(fetchNeighbors).mockReturnValue(d.promise);
     const { result } = renderHook(useGraphExplorer);
@@ -82,6 +124,51 @@ describe("探索の通信", () => {
     await act(async () => { await result.current.expand(root.id, true); });
     expect(result.current.graph.expansions[root.id].error).toBeNull();
     expect(vi.mocked(fetchNeighbors).mock.calls[2][1]).toBe("saved");
+  });
+});
+describe("表示中Graphの移動パネル", () => {
+  it("名前・説明の正規化検索、同名識別、選択後とEscapeのフォーカス復帰", () => {
+    const a = { ...root, id: "a", name: "Ａｌｉｃｅ", description: "研究者" };
+    const b = { ...a, id: "b" };
+    const c = { ...root, id: "c", name: "別人", description: "編集者" };
+    const onNavigate = vi.fn();
+    render(<GraphNavigator nodes={{ a, b, c }} selection={{ kind: "entity", id: "a" }} onNavigate={onNavigate} />);
+    const trigger = screen.getByRole("button", { name: /表示中の対象へ移動/ });
+    fireEvent.click(trigger);
+    const input = screen.getByRole("searchbox");
+    fireEvent.change(input, { target: { value: " alice " } });
+    expect(screen.getByRole("status").textContent).toBe("3件中 2件");
+    expect(screen.getByRole("button", { name: /ID：a/ }).getAttribute("aria-pressed")).toBe("true");
+    fireEvent.click(screen.getByRole("button", { name: /ID：b/ }));
+    expect(onNavigate).toHaveBeenCalledWith("b");
+    expect(document.activeElement).toBe(trigger);
+    expect(screen.queryByRole("searchbox")).toBeNull();
+    fireEvent.click(trigger);
+    fireEvent.change(input, { target: { value: "編集" } });
+    expect(screen.getByRole("status").textContent).toBe("3件中 1件");
+    expect(screen.getByRole("button", { name: /別人/ })).toBeDefined();
+    fireEvent.change(input, { target: { value: "未知" } });
+    expect(screen.getByRole("status").textContent).toContain("表示中の対象に一致しません");
+    fireEvent.keyDown(input, { key: "Escape" });
+    expect(document.activeElement).toBe(trigger);
+    expect(onNavigate).toHaveBeenCalledTimes(1);
+  });
+
+  it("表示対象の増減に追従し、世代変更で絞り込みと開閉をリセットする", () => {
+    const nodes = Object.fromEntries(page.nodes.map(node => [node.id, node]));
+    const onNavigate = vi.fn();
+    const { rerender } = render(<GraphNavigator key={1} nodes={nodes} selection={null} onNavigate={onNavigate} />);
+    fireEvent.click(screen.getByRole("button", { name: /表示中の対象へ移動/ }));
+    fireEvent.change(screen.getByRole("searchbox"), { target: { value: page.nodes[2].name } });
+    rerender(<GraphNavigator key={1} nodes={{ [root.id]: root }} selection={null} onNavigate={onNavigate} />);
+    expect(screen.getByRole("status").textContent).toContain("表示中の対象に一致しません");
+    rerender(<GraphNavigator key={2} nodes={nodes} selection={null} onNavigate={onNavigate} />);
+    expect(screen.queryByRole("searchbox")).toBeNull();
+    fireEvent.click(screen.getByRole("button", { name: /表示中の対象へ移動/ }));
+    expect((screen.getByRole("searchbox") as HTMLInputElement).value).toBe("");
+    expect(screen.getByRole("status").textContent).toBe("5件中 5件");
+    rerender(<GraphNavigator key={3} nodes={{}} selection={null} onNavigate={onNavigate} />);
+    expect((screen.getByRole("button", { name: /表示中の対象へ移動/ }) as HTMLButtonElement).disabled).toBe(true);
   });
 });
 describe("主張カード", () => {

@@ -7,7 +7,7 @@ import { useEffect, useImperativeHandle, useRef } from "react";
 import type { ReactNode, Ref } from "react";
 import { restorationPositions } from "../lib/client/graph-view";
 import type { GraphView, ViewRestoration } from "../lib/client/graph-view";
-export type GraphCanvasHandle = { capture: () => GraphView | null };
+export type GraphCanvasHandle = { capture: () => GraphView | null; focusEntity: (id: string) => void };
 import type { GraphState, Selection } from "../lib/client/graph-state";
 import { entityLabel, edgeRoutes, displayRelations, relationId } from "../lib/client/graph-presentation";
 import { initialPositions, additionalPositions } from "../lib/client/graph-layout";
@@ -34,6 +34,15 @@ export default function GraphCanvas({ ref, feedback, restoration, interactionBlo
     const positions = { ...savedPositions.current };
     cy.nodes().forEach((node) => { positions[node.id()] = { ...node.position() }; });
     return { positions, pan: { ...cy.pan() }, zoom: cy.zoom(), initialLayoutDone: initialLayoutDone.current };
+  }, focusEntity: (id) => {
+    const cy = core.current;
+    if (!cy) return;
+    const node = cy.getElementById(id);
+    if (!node.length || !node.isNode()) return;
+    gestures.current?.cancel();
+    cy.resize();
+    cy.zoom(Math.max(1, cy.zoom()));
+    cy.center(node);
   } }), []);
   useEffect(() => { if (interactionBlocked) gestures.current?.cancel(); }, [interactionBlocked]);
   useEffect(() => { handlers.current = { onEntity, onRelation, onToggleEntity, onEntityDoubleClick, selection }; }, [onEntity, onRelation, onToggleEntity, onEntityDoubleClick, selection]);
@@ -158,6 +167,8 @@ export default function GraphCanvas({ ref, feedback, restoration, interactionBlo
   useEffect(() => {
     const cy = core.current;
     if (!cy) return;
+    // 移動パネルが閉じた直後も、Canvasの画面内位置とクリック座標を揃える。
+    cy.resize();
     cy.elements().removeClass("chosen");
     if (selection) {
       const id = selection.kind === "claim" && graph.claims[selection.id] ? relationId(graph.claims[selection.id]) : selection.id;
@@ -167,7 +178,7 @@ export default function GraphCanvas({ ref, feedback, restoration, interactionBlo
 
   return <>
     <div className={styles.canvas}>
-      <div className={styles.cySurface} ref={container} data-testid="graph-canvas" tabIndex={-1} role="img" aria-label="人物・作品・組織・出来事の関係グラフ。操作できるテキスト一覧は下にあります。" />
+      <div className={styles.cySurface} ref={container} onPointerDownCapture={() => core.current?.resize()} data-testid="graph-canvas" tabIndex={-1} role="img" aria-label="人物・作品・組織・出来事の関係グラフ。操作できるテキスト一覧は下にあります。" />
       <div className={styles.relationPatches} ref={badgeLayer} aria-hidden="true" />
       <div className={styles.graphOverlay} data-testid="graph-overlay">{feedback}</div>
     </div>
