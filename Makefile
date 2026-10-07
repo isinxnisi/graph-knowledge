@@ -8,7 +8,7 @@
 #
 # 変更・実行操作ではWindowsの管理者確認（UAC）が出ます。
 .DEFAULT_GOAL := autopilot-help
-.PHONY: autopilot-help autopilot-status autopilot-review autopilot-hold autopilot-test autopilot-on autopilot-off autopilot-run autopilot-config autopilot-apply autopilot-check autopilot-logs completion-sound
+.PHONY: autopilot-help autopilot-status autopilot-review autopilot-reports autopilot-hold autopilot-test autopilot-on autopilot-off autopilot-run autopilot-config autopilot-apply autopilot-check autopilot-logs completion-sound
 
 # 手動セッション完了用の通知音を試聴します。Windows側の音量設定を使います。
 completion-sound:
@@ -25,6 +25,10 @@ autopilot-status:
 # 未反映commit・固定SHA・開発ログ・dirtyを確認します。取り込みや自動実行はしません。
 autopilot-review:
 	@python3 scripts/autopilot.py review
+
+# mainへの反映を確認し、受入済み記録をDriveのアーカイブへ移します。開発は実行しません。
+autopilot-reports:
+	@python3 scripts/autopilot.py reports
 
 # 同じロックで手動作業と自動実行を排他します。別terminalで保持し、完了時Enterで解放。
 # 既定60分。時間を変える場合は python3 scripts/autopilot.py hold --minutes 120。

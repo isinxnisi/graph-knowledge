@@ -17,6 +17,7 @@ POWERSHELL = "/mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe"
 HELP = """自動開発の操作（このプロジェクトで実行）
   make autopilot-status  今の状態・次回予定・直前の結果を見る
   make autopilot-review  未反映commit・開発結果・競合を確認する
+  make autopilot-reports 受入済みのスマホ向け記録をアーカイブして一覧を更新する
   make autopilot-hold    手動作業中の共通ロックを保持する（Enterで解放）
   make autopilot-on      自動実行を再開する（今すぐは動かさない）
   make autopilot-off     次回以降を止める（実行中の作業は止めない）
@@ -120,6 +121,8 @@ def main():
         return process.returncode
     elif action == "logs":
         show_log()
+    elif action == "reports":
+        return subprocess.run(["python3", str(KIT / "report.py"), "--refresh"], stdin=subprocess.DEVNULL).returncode
     else:
         raise ValueError("不明な操作です。make autopilot-help を実行してください。")
     return 0
