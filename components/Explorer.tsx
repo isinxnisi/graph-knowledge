@@ -1,4 +1,5 @@
 "use client";
+import { explorerPaneLabels } from "../lib/i18n/explorer-panes";
 import { entryLabels } from "../lib/i18n/exploration-entry";
 import { contributionLabels } from "../lib/i18n/contribution";
 
@@ -34,6 +35,18 @@ function GraphNotice({ message, transient }: { message: string; transient: boole
 export default function Explorer({ dataset = "demo" }: { dataset?: DatasetMode }) {
   const labels = datasetLabels(dataset);
   const entry = entryLabels();
+  const panes = explorerPaneLabels();
+  const [activePane, setActivePane] = useState<"search" | "graph" | "detail">("search");
+  const paneNavigation = useRef<HTMLElement>(null);
+  const previousPane = useRef(activePane);
+  useEffect(() => {
+    if (previousPane.current === activePane) return;
+    previousPane.current = activePane;
+    // CSS alone controls the breakpoint; desktop keeps its existing focus behavior.
+    if (paneNavigation.current?.getClientRects().length) {
+      document.getElementById(`explorer-${activePane}`)?.focus({ preventScroll: true });
+    }
+  }, [activePane]);
   const canvas = useRef<GraphCanvasHandle>(null);
   const [overview, setOverview] = useState<EntitySummary | null>(null);
   const [detailWide, setDetailWide] = useState(false);
@@ -42,7 +55,10 @@ export default function Explorer({ dataset = "demo" }: { dataset?: DatasetMode }
   const { graph, selection, previous, viewRestoration, switchRoot, restorePrevious, changePredicates, chooseRoot, inspectEntity, selectEntity, selectClaim, selectRelation, expand, close, toggleEntity } = useGraphExplorer();
   const restricted = graph.predicates !== null || (graph.contributionRoles ?? null) !== null || (graph.organizationPositions ?? null) !== null || (graph.eventRoles ?? null) !== null;
   const switchFrom = (entity: EntitySummary, mode: "broad" | "same") => {
-    switchRoot(entity, mode, canvas.current?.capture() ?? null); setOverview(null);
+    switchRoot(entity, mode, canvas.current?.capture() ?? null); setOverview(null); setActivePane("graph");
+  };
+  const startFrom = (entity: EntitySummary, broad = false) => {
+    chooseRoot(entity, broad); setActivePane("graph");
   };
   const relations = displayRelations(graph.claims);
   const selectedRelation = selection?.kind === "relation" ? relations[selection.id] : null;
@@ -67,9 +83,12 @@ export default function Explorer({ dataset = "demo" }: { dataset?: DatasetMode }
         }}><option value="brown">ブラウン</option><option value="blue">ブルー</option></select>
       </label>}
     </header>
-    <main className={`${styles.columns} ${detailWide ? styles.wideDetails : ""}`}>
-      <div className={styles.panel}><SearchPanel placeholder={labels.searchExample} onChoose={chooseRoot} /><StartExamples dataset={dataset} onChoose={(entity) => chooseRoot(entity, true)} /></div>
-      <div className={styles.centralScroll}>
+    <nav ref={paneNavigation} className={styles.paneNavigation} aria-label={panes.navigation}>
+      {(["search", "graph", "detail"] as const).map(pane => <button key={pane} aria-pressed={activePane === pane} aria-controls={`explorer-${pane}`} onClick={() => setActivePane(pane)}>{panes[pane]}</button>)}
+    </nav>
+    <main data-active-pane={activePane} className={`${styles.columns} ${detailWide ? styles.wideDetails : ""}`}>
+      <div id="explorer-search" role="group" tabIndex={-1} aria-label={panes.search} className={styles.panel}><SearchPanel placeholder={labels.searchExample} onChoose={startFrom} /><StartExamples dataset={dataset} onChoose={(entity) => startFrom(entity, true)} /></div>
+      <div id="explorer-graph" role="group" tabIndex={-1} aria-label={panes.graph} className={styles.centralScroll}>
       <section className={`${styles.panel} ${styles.graphPanel}`} aria-labelledby="graph-title">
         <div className={styles.graphHeader}>
           <div className={styles.graphHeading}><h2 id="graph-title">Graph</h2>
@@ -86,14 +105,14 @@ export default function Explorer({ dataset = "demo" }: { dataset?: DatasetMode }
           inspectEntity(id); canvas.current?.focusEntity(id);
         }} />
         {Object.values(graph.claims).some((claim) => claim.contribution?.roleId) && <p className={styles.muted}>{contributionLabels().partial}</p>}
-        <GraphCanvas ref={canvas} restoration={viewRestoration} interactionBlocked={!!overview} onEntityDoubleClick={(id) => { if (graph.nodes[id]) setOverview(graph.nodes[id]); }} graph={graph} selection={selection} onEntity={selectEntity} onRelation={selectRelation} onToggleEntity={toggleEntity} feedback={<>
+        <GraphCanvas ref={canvas} restoration={viewRestoration} interactionBlocked={!!overview} onEntityDoubleClick={(id) => { if (graph.nodes[id]) setOverview(graph.nodes[id]); }} graph={graph} selection={selection} onEntity={selectEntity} onRelation={(id) => { selectRelation(id); setActivePane("detail"); }} onToggleEntity={toggleEntity} feedback={<>
           <div className={`${styles.feedback} ${!graph.centerId ? styles.initialFeedback : ""}`} aria-live="polite"><p data-testid="selection-status">選択中：{selectionText}</p><p>{loading ? `Graphを取得中…（${loading}件）` : selectedEntity ? graph.expansions[selectedEntity.id]?.expanded ? "近傍は展開済みです。" : graph.expansions[selectedEntity.id]?.pages.length ? "展開は閉じています。クリックで取得済みの枝を復元します。" : "クリックで一段階展開します。" : "線ごとに同じ関係の主張をまとめて表示しています。"}</p></div>
           {graph.notice && <GraphNotice key={`${graph.generation}:${graph.clock}:${graph.notice}`} message={graph.notice} transient={graph.notice === "取得済みの枝を復元しました。" || graph.notice === overviewLabels().restored} />}
         </>} />
-        <RelationsList dataset={dataset} graph={graph} selection={selection} onEntity={selectEntity} onClaim={selectClaim} onExpand={(id) => void expand(id)} onClose={close} />
+        <RelationsList dataset={dataset} graph={graph} selection={selection} onEntity={selectEntity} onClaim={(id) => { selectClaim(id); setActivePane("detail"); }} onExpand={(id) => void expand(id)} onClose={close} />
       </section>
       </div>
-      <aside className={styles.panel} aria-labelledby="detail-title">
+      <aside id="explorer-detail" tabIndex={-1} className={styles.panel} aria-labelledby="detail-title">
         <div className={styles.detailHeading}><h2 id="detail-title">詳細</h2>{selection && <button aria-pressed={detailWide} onClick={() => setDetailWide(!detailWide)}>{detailWide ? entry.detailNormal : entry.detailWide}</button>}</div>
         {!selection && <p className={styles.muted}>{entry.detailHelp}</p>}
         {selectedEntity && <EntityDetails key={key} entity={selectedEntity} expansion={graph.expansions[selectedEntity.id]} onExpand={(more) => void expand(selectedEntity.id, more)} onClose={() => close(selectedEntity.id)} restricted={restricted} onOverview={() => setOverview(selectedEntity)} onSwitch={(mode) => switchFrom(selectedEntity, mode)} />}
