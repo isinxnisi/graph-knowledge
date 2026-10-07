@@ -2,6 +2,7 @@
 import { explorerPaneLabels } from "../lib/i18n/explorer-panes";
 import { entryLabels } from "../lib/i18n/exploration-entry";
 import { contributionLabels } from "../lib/i18n/contribution";
+import { explorationLabels } from "../lib/i18n/exploration";
 
 import type { DatasetMode } from "../lib/domain/dataset";
 import { datasetLabels } from "../lib/i18n/dataset";
@@ -99,7 +100,7 @@ export default function Explorer({ dataset = "demo" }: { dataset?: DatasetMode }
         </div>
         <RelationFilter eventRoles={graph.eventRoles ?? null} positions={graph.organizationPositions ?? null} roles={graph.contributionRoles ?? null} value={graph.predicates} onApply={changePredicates} />
         {graph.centerId ? <p className={styles.muted}>{entry.selectedHelp}</p> : <div className={styles.empty}><h3>{entry.initialTitle}</h3><p>{entry.initialHelp}</p></div>}
-        {Object.values(graph.expansions).some((meta) => meta.active && meta.hasMore) && <p className={styles.muted}>Graphの関係表示は取得済みの主張に基づきます。続きは各Entityの詳細から取得できます。</p>}
+        {Object.values(graph.expansions).some((meta) => meta.active && meta.hasMore) && <p className={styles.muted}>{explorationLabels().neighborsPageHelp}</p>}
         {blocked && <p role="alert" className={styles.error}>{blocked.error}</p>}
         <GraphNavigator key={graph.generation} nodes={graph.nodes} selection={selection} onNavigate={(id) => {
           inspectEntity(id); canvas.current?.focusEntity(id);
@@ -109,7 +110,7 @@ export default function Explorer({ dataset = "demo" }: { dataset?: DatasetMode }
           <div className={`${styles.feedback} ${!graph.centerId ? styles.initialFeedback : ""}`} aria-live="polite"><p data-testid="selection-status">選択中：{selectionText}</p><p>{loading ? `Graphを取得中…（${loading}件）` : selectedEntity ? graph.expansions[selectedEntity.id]?.expanded ? "近傍は展開済みです。" : graph.expansions[selectedEntity.id]?.pages.length ? "展開は閉じています。クリックで取得済みの枝を復元します。" : "クリックで一段階展開します。" : "線ごとに同じ関係の主張をまとめて表示しています。"}</p></div>
           {graph.notice && <GraphNotice key={`${graph.generation}:${graph.clock}:${graph.notice}`} message={graph.notice} transient={graph.notice === "取得済みの枝を復元しました。" || graph.notice === overviewLabels().restored} />}
         </>} />
-        <RelationsList dataset={dataset} graph={graph} selection={selection} onEntity={selectEntity} onClaim={(id) => { selectClaim(id); setActivePane("detail"); }} onExpand={(id) => void expand(id)} onClose={close} />
+        <RelationsList dataset={dataset} graph={graph} selection={selection} onEntity={selectEntity} onClaim={(id) => { selectClaim(id); setActivePane("detail"); }} onExpand={(id, more) => void expand(id, more)} onClose={close} />
       </section>
       </div>
       <aside id="explorer-detail" tabIndex={-1} className={styles.panel} aria-labelledby="detail-title">

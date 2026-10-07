@@ -11,6 +11,12 @@ const ja = {
   outside: "現在の探索条件の対象外の主張",
   shown: "Graphに表示中の主張", unseen: "Graphには未表示の主張",
   changed: "関係の条件を変更しました。同じ起点から取得し直します。",
+  neighborsMore: "隣接関係の続きを表示",
+  neighborsRetry: "隣接関係の取得を再試行",
+  neighborsLoading: "隣接関係を取得中…",
+  neighborsLoadingMore: "隣接関係の続きを取得中…",
+  neighborsPartial: "取得済みの関係を表示しています。この対象には未取得の続きがあります。",
+  neighborsPageHelp: "Graphの関係表示は取得済みの主張に基づきます。続きは各対象の隣接一覧または詳細から取得できます。",
   predicates: {
     ASSISTANT_OF: "アシスタントだった", INFLUENCED_BY: "影響を受けた",
     CONTRIBUTED_TO: "制作に関わった", AFFILIATED_WITH: "関わりがあった", PARTICIPATED_IN: "参加した",

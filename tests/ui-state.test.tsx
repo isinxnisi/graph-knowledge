@@ -11,6 +11,7 @@ import { emptyGraph, mergePage, closeExpansion, reopenExpansion, projectGraph } 
 import { useGraphExplorer } from "../lib/client/use-graph-explorer";
 import SearchPanel from "../components/SearchPanel";
 import GraphNavigator from "../components/GraphNavigator";
+import RelationsList from "../components/RelationsList";
 import ClaimDetails, { ClaimCard } from "../components/ClaimDetails";
 import { relationPresentation } from "../lib/client/relation-presentation";
 import { relationPresentationLabels } from "../lib/i18n/relation-presentation";
@@ -23,6 +24,48 @@ const page = examples.neighbors as NeighborsResponse;
 const root = page.nodes[0];
 const entity = (id: string): EntitySummary => ({ ...root, id });
 const deferred = () => { let resolve!: (p: NeighborsResponse) => void; const promise = new Promise<NeighborsResponse>((r) => { resolve = r; }); return { promise, resolve }; };
+describe("隣接一覧からの取得", () => {
+  const props = () => ({ onEntity: vi.fn(), onClaim: vi.fn(), onExpand: vi.fn(), onClose: vi.fn() });
+  it("Claim選択中も主体の続きへ進み、上限・通信中は追加取得を無効にする", () => {
+    const graph = mergePage(emptyGraph(), { ...page, page: { hasMore: true, nextCursor: "next" } });
+    const handlers = props();
+    const selection = { kind: "claim" as const, id: page.claims[0].id };
+    const { rerender } = render(<RelationsList {...handlers} graph={graph} selection={selection} />);
+    fireEvent.click(screen.getByRole("button", { name: "隣接関係の続きを表示" }));
+    expect(handlers.onExpand).toHaveBeenCalledWith(root.id, true);
+    const expansion = graph.expansions[root.id];
+    for (const state of [{ blocked: true }, { loading: true }]) {
+      rerender(<RelationsList {...handlers} graph={{ ...graph, expansions: { [root.id]: { ...expansion, ...state } } }} selection={selection} />);
+      const button = screen.getByRole("button", { name: state.loading ? "隣接関係の続きを取得中…" : "隣接関係の続きを表示" });
+      expect((button as HTMLButtonElement).disabled).toBe(true);
+      fireEvent.click(button);
+    }
+    expect(handlers.onExpand).toHaveBeenCalledTimes(1);
+  });
+  it("初回失敗と続きの失敗で再試行先を分け、取得済みの一覧を残す", () => {
+    const accepted = mergePage(emptyGraph(), { ...page, page: { hasMore: true, nextCursor: "next" } });
+    const handlers = props();
+    const selection = { kind: "entity" as const, id: root.id };
+    const failed = { ...accepted, expansions: { [root.id]: { ...accepted.expansions[root.id], error: "通信失敗" } } };
+    const { rerender } = render(<RelationsList {...handlers} graph={failed} selection={selection} />);
+    expect(screen.getByRole("alert").textContent).toContain("通信失敗");
+    expect(screen.getAllByRole("button", { name: "主張と出典を見る" })).toHaveLength(page.claims.length);
+    fireEvent.click(screen.getByRole("button", { name: "隣接関係の取得を再試行" }));
+    expect(handlers.onExpand).toHaveBeenLastCalledWith(root.id, true);
+    rerender(<RelationsList {...handlers} graph={{ ...failed, claims: {}, expansions: { [root.id]: { ...failed.expansions[root.id], pages: [], expanded: false, hasMore: false } } }} selection={selection} />);
+    fireEvent.click(screen.getByRole("button", { name: "隣接関係の取得を再試行" }));
+    expect(handlers.onExpand).toHaveBeenLastCalledWith(root.id, false);
+    expect(screen.queryByRole("status")).toBeNull();
+  });
+  it("閉じた枝は続きの取得より復元を先に行う", () => {
+    const graph = closeExpansion(mergePage(emptyGraph(), { ...page, page: { hasMore: true, nextCursor: "next" } }), root.id);
+    const handlers = props();
+    render(<RelationsList {...handlers} graph={graph} selection={{ kind: "entity", id: root.id }} />);
+    expect(screen.queryByRole("button", { name: "隣接関係の続きを表示" })).toBeNull();
+    fireEvent.click(screen.getByRole("button", { name: "展開を再開" }));
+    expect(handlers.onExpand).toHaveBeenCalledWith(root.id);
+  });
+});
 describe("ページのマージ", () => {
   it("循環・再取得をIDで重複排除する", () => {
     const first = mergePage(emptyGraph(), page); const second = mergePage(first, page);
