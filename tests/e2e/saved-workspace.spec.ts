@@ -53,7 +53,7 @@ for (const width of [390, 1440]) {
     await dialog.getByRole("button", { name: "現在の探索途中を保存", exact: true }).click();
     await expect(dialog.getByRole("status")).toContainText("探索途中を保存しました");
     expect(requests).toHaveLength(2);
-    const stored = await page.evaluate(() => JSON.parse(localStorage.getItem("graph-knowledge:workspace:demo")!));
+    const stored = await page.evaluate(() => JSON.parse(localStorage.getItem("graph-knowledge:workspace:demo")!).workspaces[0]);
     expect(stored.branches).toEqual([{ id: root.id, open: false, pages: 1 }, { id: work.id, open: true, pages: 1 }]);
     expect(stored.view.positions).toEqual(before.positions);
     expect(stored).not.toHaveProperty("claims");
@@ -92,6 +92,7 @@ for (const width of [390, 1440]) {
     expect((await canvasView(page)).positions).toEqual(before.positions);
     await launch.click();
     await dialog.getByRole("button", { name: "途中保存を削除", exact: true }).click();
+    await dialog.getByRole("button", { name: "この途中保存を削除する", exact: true }).click();
     await expect(dialog).toContainText("探索途中はまだ保存していません");
     await page.keyboard.press("Escape");
     await expect(dialog).toHaveCount(0); await expect(launch).toBeFocused();

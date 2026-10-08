@@ -10,6 +10,8 @@ import { viewConditionsSchema } from "./saved-views";
 
 export const WORKSPACE_PAGE_LIMIT = 40;
 export const WORKSPACE_FILE_LIMIT = 100_000;
+export const WORKSPACE_COUNT_LIMIT = 10;
+const WORKSPACE_STORAGE_LIMIT = WORKSPACE_COUNT_LIMIT * WORKSPACE_FILE_LIMIT + 4096;
 const point = z.strictObject({ x: z.number().finite(), y: z.number().finite() });
 export const workspaceSchema = z.strictObject({
   version: z.literal(1), dataset: z.enum(DATASET_MODES), id: z.uuidv4(),
@@ -26,7 +28,7 @@ export type SavedWorkspace = z.infer<typeof workspaceSchema>;
 export type RebuiltWorkspace = { graph: GraphState; view: GraphView | null; skippedBranches: number };
 export const workspaceKey = (dataset: DatasetMode) => `graph-knowledge:workspace:${dataset}`;
 export class WorkspaceError extends Error {
-  constructor(public reason: "invalid" | "storage" | "conflict" | "limit" | "loading" | "response" | "fileInvalid" | "dataset" | "emptyFile") { super(reason); }
+  constructor(public reason: "invalid" | "storage" | "conflict" | "limit" | "loading" | "response" | "fileInvalid" | "dataset" | "emptyFile" | "countLimit") { super(reason); }
 }
 type StorageAccess = Pick<Storage, "getItem" | "setItem" | "removeItem">;
 
@@ -42,27 +44,48 @@ export function captureWorkspace(dataset: DatasetMode, title: string, graph: Gra
   });
 }
 
-export function readWorkspace(storage: StorageAccess, dataset: DatasetMode): SavedWorkspace | null {
+const workspaceCollectionSchema = z.strictObject({
+  version: z.literal(2), dataset: z.enum(DATASET_MODES),
+  workspaces: z.array(workspaceSchema).max(WORKSPACE_COUNT_LIMIT),
+}).refine(value => new Set(value.workspaces.map(item => item.id)).size === value.workspaces.length
+  && value.workspaces.every(item => item.dataset === value.dataset));
+
+export function readWorkspaces(storage: StorageAccess, dataset: DatasetMode): SavedWorkspace[] {
   let raw: string | null;
   try { raw = storage.getItem(workspaceKey(dataset)); } catch { throw new WorkspaceError("storage"); }
-  if (raw === null) return null;
+  if (raw === null) return [];
   try {
-    if (raw.length > 100_000) throw new Error("Oversized workspace");
-    const workspace = workspaceSchema.parse(JSON.parse(raw));
-    if (workspace.dataset !== dataset) throw new Error("Unexpected dataset");
-    return workspace;
+    if (raw.length > WORKSPACE_STORAGE_LIMIT) throw new Error("Oversized collection");
+    const input = JSON.parse(raw);
+    // Reading a legacy slot is side-effect free. The first successful edit writes
+    // the collection in one setItem, retaining the legacy entry unless selected.
+    const collection = input?.version === 1
+      ? { version: 2, dataset, workspaces: [workspaceSchema.parse(input)] }
+      : input;
+    const parsed = workspaceCollectionSchema.parse(collection);
+    if (parsed.dataset !== dataset) throw new Error("Unexpected dataset");
+    parsed.workspaces.forEach(item => parseWorkspaceBackup(JSON.stringify(item), dataset));
+    return parsed.workspaces;
   } catch { throw new WorkspaceError("invalid"); }
 }
 
-// A single explicit slot, independent of saved-view v1 and its backup files.
-// Do not replace a slot that changed after the user reviewed it.
+// null means add a new entry. Replacement/deletion targets the exact reviewed
+// revision, preserving other entries, including additions from another tab.
 export function writeWorkspace(storage: StorageAccess, dataset: DatasetMode, expectedId: string | null, value: SavedWorkspace | null) {
-  if ((readWorkspace(storage, dataset)?.id ?? null) !== expectedId) throw new WorkspaceError("conflict");
-  const workspace = value === null ? null : workspaceSchema.parse(value);
-  if (workspace && workspace.dataset !== dataset) throw new WorkspaceError("invalid");
+  const current = readWorkspaces(storage, dataset);
+  if (expectedId !== null && !current.some(item => item.id === expectedId)) throw new WorkspaceError("conflict");
+  let workspace: SavedWorkspace | null = null;
+  if (value !== null) {
+    try { workspace = parseWorkspaceBackup(JSON.stringify(value), dataset); }
+    catch { throw new WorkspaceError("invalid"); }
+    if (current.some(item => item.id === workspace!.id)) throw new WorkspaceError("invalid");
+  }
+  const remaining = current.filter(item => item.id !== expectedId);
+  const workspaces = workspace ? [workspace, ...remaining] : remaining;
+  if (workspaces.length > WORKSPACE_COUNT_LIMIT) throw new WorkspaceError("countLimit");
   try {
-    if (workspace) storage.setItem(workspaceKey(dataset), JSON.stringify(workspace));
-    else storage.removeItem(workspaceKey(dataset));
+    if (workspaces.length) storage.setItem(workspaceKey(dataset), JSON.stringify({ version: 2, dataset, workspaces }));
+    else if (expectedId !== null) storage.removeItem(workspaceKey(dataset));
   } catch { throw new WorkspaceError("storage"); }
   return workspace;
 }
@@ -77,8 +100,8 @@ export function parseWorkspaceBackup(raw: string, dataset: DatasetMode): SavedWo
   return workspace;
 }
 
-export function exportWorkspace(storage: StorageAccess, dataset: DatasetMode): string {
-  const workspace = readWorkspace(storage, dataset);
+export function exportWorkspace(storage: StorageAccess, dataset: DatasetMode, id: string): string {
+  const workspace = readWorkspaces(storage, dataset).find(item => item.id === id);
   if (!workspace) throw new WorkspaceError("emptyFile");
   // Compact output keeps even a full 400-position workspace within the input budget.
   const raw = JSON.stringify(workspace);

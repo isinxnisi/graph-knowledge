@@ -15,7 +15,10 @@ const workspace = {
     pan: { x: 31, y: 47 }, zoom: 0.7, initialLayoutDone: true,
   },
 };
-const readWorkspace = (page: Page) => page.evaluate(key => JSON.parse(localStorage.getItem(key)!), key);
+const readWorkspace = (page: Page) => page.evaluate(key => {
+  const stored = JSON.parse(localStorage.getItem(key)!);
+  return stored?.version === 2 ? stored.workspaces[0] ?? null : stored;
+}, key);
 
 for (const width of [390, 1440]) {
   test(`途中保存の控えを別ブラウザで確認し、枝と配置から再開する（${width}px）`, async ({ page, browser }, testInfo) => {
@@ -75,7 +78,8 @@ for (const width of [390, 1440]) {
       expect({ ...imported, id: workspace.id }).toEqual(workspace);
       expect(requests).toEqual([]);
 
-      // A real second tab changes the reviewed slot: it must not be overwritten.
+      // Replacement is now opt-in; additions preserve all existing entries.
+      await dialog.getByRole("checkbox").check();
       await input.setInputFiles(path);
       await expect(preview).toContainText(`「${workspace.title}」を置き換えます`);
       const otherTab = await context.newPage();
@@ -86,6 +90,7 @@ for (const width of [390, 1440]) {
       await expect(dialog.getByRole("alert")).toContainText("確認中に保存内容が変わりました");
       await expect(dialog.getByRole("button", { name: "確認したファイルで途中保存を置き換える", exact: true })).toBeDisabled();
       expect(await readWorkspace(destination)).toEqual(changed);
+      await dialog.getByLabel("再開・管理する途中保存").selectOption(changed.id);
       await input.setInputFiles(path);
       await expect(preview).toContainText("「別タブの続き」を置き換えます");
       await dialog.getByRole("button", { name: "確認したファイルで途中保存を置き換える", exact: true }).click();

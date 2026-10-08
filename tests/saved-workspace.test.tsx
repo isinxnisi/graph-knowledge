@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { act, cleanup, fireEvent, render, renderHook, screen, waitFor } from "@testing-library/react";
-import { captureWorkspace, readWorkspace, rebuildWorkspace, writeWorkspace, workspaceKey, workspaceSchema, WorkspaceError, exportWorkspace, importWorkspace, parseWorkspaceBackup, WORKSPACE_FILE_LIMIT, type SavedWorkspace } from "../lib/client/saved-workspace";
+import { captureWorkspace, readWorkspaces, rebuildWorkspace, writeWorkspace, workspaceKey, workspaceSchema, WorkspaceError, exportWorkspace, importWorkspace, parseWorkspaceBackup, WORKSPACE_FILE_LIMIT, WORKSPACE_COUNT_LIMIT, type SavedWorkspace } from "../lib/client/saved-workspace";
 import { closeExpansion, emptyGraph, mergePage, reopenExpansion } from "../lib/client/graph-state";
 import { fetchEntity, fetchNeighbors, ClientApiError } from "../lib/client/api";
 import { useGraphExplorer } from "../lib/client/use-graph-explorer";
@@ -19,6 +19,7 @@ const workPage: NeighborsResponse = { centerId: work.id, nodes: [root, work, ext
 const view = { positions: { [root.id]: { x: 17, y: 31 }, [work.id]: { x: 400, y: 50 } }, pan: { x: -21, y: 81 }, zoom: 0.7, initialLayoutDone: true };
 const graph = () => mergePage(mergePage(emptyGraph(), page), workPage);
 const saved = (): SavedWorkspace => captureWorkspace("demo", "制作の途中", graph(), view);
+const readWorkspace = (storage: Pick<Storage, "getItem" | "setItem" | "removeItem">, dataset: Parameters<typeof readWorkspaces>[1]) => readWorkspaces(storage, dataset)[0] ?? null;
 const signal = () => new AbortController().signal;
 const entityResponse = (entity = root): EntityResponse => ({ entity: { ...entity, aliases: [], event: null } });
 beforeEach(() => {
@@ -166,6 +167,7 @@ describe("途中保存ダイアログと原子的な探索切替", () => {
     mounted.unmount(); render(<WorkspaceDialog {...props()} graph={emptyGraph()} />);
     expect(screen.getByRole("button", { name: "保存した途中を再開" })).toBeDefined();
     fireEvent.click(screen.getByRole("button", { name: "途中保存を削除" }));
+    fireEvent.click(screen.getByRole("button", { name: "この途中保存を削除する" }));
     expect(readWorkspace(localStorage, "demo")).toBeNull();
   });
   it("途中取得の失敗では切り替えず、同じ保存を再試行できる", async () => {
@@ -232,7 +234,7 @@ describe("途中保存ファイルの持ち運び", () => {
   it("閉鎖・休止枝と配置を控え、別保存領域へ新しい版として取り込む", () => {
     const value = captureWorkspace("demo", "閉じた途中", closeExpansion(graph(), root.id), view);
     writeWorkspace(localStorage, "demo", null, value);
-    const raw = exportWorkspace(localStorage, "demo");
+    const raw = exportWorkspace(localStorage, "demo", readWorkspace(localStorage, "demo")?.id ?? "");
     expect(JSON.parse(raw)).toEqual(value);
     localStorage.clear();
     const imported = importWorkspace(localStorage, "demo", null, raw);
@@ -247,7 +249,7 @@ describe("途中保存ファイルの持ち運び", () => {
     value.branches = ids.map(id => ({ id, open: true, pages: 0 }));
     value.view!.positions = Object.fromEntries(ids.map(id => [id, { x: -1.2345678901234567e+308, y: Number.MIN_VALUE }]));
     writeWorkspace(localStorage, "demo", null, value);
-    const raw = exportWorkspace(localStorage, "demo");
+    const raw = exportWorkspace(localStorage, "demo", readWorkspace(localStorage, "demo")?.id ?? "");
     expect(new TextEncoder().encode(raw).length).toBeLessThanOrEqual(WORKSPACE_FILE_LIMIT);
     expect(parseWorkspaceBackup(raw, "demo")).toEqual(value);
   });
@@ -270,10 +272,10 @@ describe("途中保存ファイルの持ち運び", () => {
   it("dataset違いと保存領域の破損・書込み拒否を区別する", () => {
     const value = saved(); const raw = JSON.stringify(value);
     expect(() => parseWorkspaceBackup(raw, "pilot-event-v1")).toThrow(new WorkspaceError("dataset"));
-    expect(() => exportWorkspace(localStorage, "demo")).toThrow(new WorkspaceError("emptyFile"));
+    expect(() => exportWorkspace(localStorage, "demo", readWorkspace(localStorage, "demo")?.id ?? "")).toThrow(new WorkspaceError("emptyFile"));
     localStorage.setItem(workspaceKey("demo"), "unknown format");
     expect(() => importWorkspace(localStorage, "demo", null, raw)).toThrow(new WorkspaceError("invalid"));
-    expect(() => exportWorkspace(localStorage, "demo")).toThrow(new WorkspaceError("invalid"));
+    expect(() => exportWorkspace(localStorage, "demo", readWorkspace(localStorage, "demo")?.id ?? "")).toThrow(new WorkspaceError("invalid"));
     expect(localStorage.getItem(workspaceKey("demo"))).toBe("unknown format");
     const denied = { getItem: () => null, setItem: () => { throw new Error("denied"); }, removeItem: vi.fn() };
     expect(() => importWorkspace(denied, "demo", null, raw)).toThrow(new WorkspaceError("storage"));
@@ -311,6 +313,7 @@ describe("途中保存ファイルの確認画面", () => {
   it("置換対象を表示し、取消では保存もGraphも変えない", async () => {
     const previous = saved(); previous.title = "残したい途中"; writeWorkspace(localStorage, "demo", null, previous);
     const callbacks = props(); render(<WorkspaceDialog {...callbacks} />);
+    fireEvent.click(screen.getByRole("checkbox"));
     selectFile(saved()); await screen.findByRole("region");
     expect(screen.getByRole("region").textContent).toContain("「残したい途中」を置き換えます");
     fireEvent.click(screen.getByRole("button", { name: "ファイルの読み込みを取り消す" }));
@@ -324,6 +327,7 @@ describe("途中保存ファイルの確認画面", () => {
   it.each([true, false])("確認後の他タブ更新を拒否する（storage event=%s）", async event => {
     const previous = saved(); writeWorkspace(localStorage, "demo", null, previous);
     render(<WorkspaceDialog {...props()} />);
+    fireEvent.click(screen.getByRole("checkbox"));
     selectFile(saved()); await screen.findByRole("region");
     const changed = saved(); changed.title = "別タブの途中";
     writeWorkspace(localStorage, "demo", previous.id, changed);
@@ -335,6 +339,7 @@ describe("途中保存ファイルの確認画面", () => {
     expect(readWorkspace(localStorage, "demo")).toEqual(changed);
     // Re-reading storage and reselecting the file is explicit new review.
     fireEvent(window, new StorageEvent("storage", { key: workspaceKey("demo") }));
+    fireEvent.change(screen.getByLabelText("再開・管理する途中保存"), { target: { value: changed.id } });
     selectFile(saved()); await screen.findByRole("region");
     expect(screen.getByRole("region").textContent).toContain("「別タブの途中」を置き換えます");
     expect((screen.getByRole("button", { name: "確認したファイルで途中保存を置き換える" }) as HTMLButtonElement).disabled).toBe(false);
@@ -358,5 +363,148 @@ describe("途中保存ファイルの確認画面", () => {
     if (action === "replace") expect(screen.getByRole("region").textContent).toContain("後から選んだ途中");
     else expect(screen.queryByRole("region")).toBeNull();
     expect(readWorkspace(localStorage, "demo")).toBeNull(); expect(fetchEntity).not.toHaveBeenCalled();
+  });
+});
+
+describe("複数の探索途中の保存・管理", () => {
+  const props = () => ({ dataset: "demo" as const, graph: graph(), captureView: () => view, onOpen: vi.fn(), onClose: vi.fn() });
+  it("旧1件は読むだけでは変更せず、最初の追加でそのまま引き継ぐ", () => {
+    const legacy = saved(); const raw = JSON.stringify(legacy);
+    localStorage.setItem(workspaceKey("demo"), raw);
+    expect(readWorkspaces(localStorage, "demo")).toEqual([legacy]);
+    expect(localStorage.getItem(workspaceKey("demo"))).toBe(raw);
+    const next = saved(); next.title = "別の調査";
+    writeWorkspace(localStorage, "demo", null, next);
+    expect(readWorkspaces(localStorage, "demo")).toEqual([next, legacy]);
+    expect(JSON.parse(localStorage.getItem(workspaceKey("demo"))!)).toEqual({ version: 2, dataset: "demo", workspaces: [next, legacy] });
+    expect(JSON.parse(exportWorkspace(localStorage, "demo", legacy.id))).toEqual(legacy);
+  });
+  it("移行時に保存拒否が起きても旧形式の元データを維持する", () => {
+    const legacy = saved(); const raw = JSON.stringify(legacy);
+    localStorage.setItem(workspaceKey("demo"), raw);
+    const denied = { getItem: (key: string) => localStorage.getItem(key), setItem: () => { throw new Error("quota"); }, removeItem: vi.fn() };
+    expect(() => writeWorkspace(denied, "demo", null, saved())).toThrow(new WorkspaceError("storage"));
+    expect(localStorage.getItem(workspaceKey("demo"))).toBe(raw);
+    expect(denied.removeItem).not.toHaveBeenCalled();
+  });
+  it("最新一覧へ追加し、選択した版だけを置換・削除する", () => {
+    const first = saved(); const second = saved(); const otherTab = saved(); const replacement = saved();
+    writeWorkspace(localStorage, "demo", null, first);
+    writeWorkspace(localStorage, "demo", null, second);
+    writeWorkspace(localStorage, "demo", null, otherTab);
+    writeWorkspace(localStorage, "demo", first.id, replacement);
+    expect(readWorkspaces(localStorage, "demo")).toEqual([replacement, otherTab, second]);
+    expect(() => writeWorkspace(localStorage, "demo", first.id, null)).toThrow(new WorkspaceError("conflict"));
+    expect(() => exportWorkspace(localStorage, "demo", first.id)).toThrow(new WorkspaceError("emptyFile"));
+    writeWorkspace(localStorage, "demo", second.id, null);
+    expect(readWorkspaces(localStorage, "demo")).toEqual([replacement, otherTab]);
+  });
+  it("10件上限では追加・取込を拒否し、選択した1件の置換は許可する", () => {
+    const values = Array.from({ length: WORKSPACE_COUNT_LIMIT }, saved);
+    values.forEach(value => writeWorkspace(localStorage, "demo", null, value));
+    const before = localStorage.getItem(workspaceKey("demo"));
+    expect(() => writeWorkspace(localStorage, "demo", null, saved())).toThrow(new WorkspaceError("countLimit"));
+    expect(() => importWorkspace(localStorage, "demo", null, JSON.stringify(saved()))).toThrow(new WorkspaceError("countLimit"));
+    expect(localStorage.getItem(workspaceKey("demo"))).toBe(before);
+    const replacement = saved(); writeWorkspace(localStorage, "demo", values[0].id, replacement);
+    expect(readWorkspaces(localStorage, "demo")).toEqual([replacement, ...values.slice(1).reverse()]);
+  });
+  it.each(["duplicate", "dataset", "unknown", "count", "broken-item"])("不正collectionを一部だけ受理せず保持する: %s", mode => {
+    const first = saved();
+    const collection = { version: 2, dataset: "demo", workspaces: [first] };
+    if (mode === "duplicate") collection.workspaces.push(first);
+    if (mode === "dataset") first.dataset = "pilot-event-v1";
+    if (mode === "unknown") collection.version = 3;
+    if (mode === "count") collection.workspaces = Array.from({ length: 11 }, saved);
+    if (mode === "broken-item") first.title = "";
+    const raw = JSON.stringify(collection); localStorage.setItem(workspaceKey("demo"), raw);
+    expect(() => readWorkspaces(localStorage, "demo")).toThrow(new WorkspaceError("invalid"));
+    expect(() => writeWorkspace(localStorage, "demo", first.id, saved())).toThrow(new WorkspaceError("invalid"));
+    expect(localStorage.getItem(workspaceKey("demo"))).toBe(raw);
+  });
+  it("同じUUIDの書込みを拒否し、既存の版・別件との衝突を防ぐ", () => {
+    const first = saved(); const second = saved();
+    writeWorkspace(localStorage, "demo", null, first);
+    writeWorkspace(localStorage, "demo", null, second);
+    expect(() => writeWorkspace(localStorage, "demo", first.id, { ...first, title: "同版更新" })).toThrow(new WorkspaceError("invalid"));
+    expect(() => writeWorkspace(localStorage, "demo", first.id, second)).toThrow(new WorkspaceError("invalid"));
+    expect(readWorkspaces(localStorage, "demo")).toEqual([second, first]);
+  });
+  it("選択して別々に再開でき、新規保存では前の調査を失わない", async () => {
+    const first = captureWorkspace("demo", "閉じた調査", closeExpansion(graph(), root.id), view);
+    writeWorkspace(localStorage, "demo", null, first);
+    const callbacks = props(); const mounted = render(<WorkspaceDialog {...callbacks} />);
+    fireEvent.change(screen.getByLabelText("途中保存の名前"), { target: { value: "開いた調査" } });
+    fireEvent.click(screen.getByRole("button", { name: "現在の探索途中を保存" }));
+    const values = readWorkspaces(localStorage, "demo");
+    expect(values.map(item => item.title)).toEqual(["開いた調査", "閉じた調査"]);
+    fireEvent.change(screen.getByLabelText("再開・管理する途中保存"), { target: { value: first.id } });
+    fireEvent.click(screen.getByRole("button", { name: "保存した途中を再開" }));
+    await waitFor(() => expect(callbacks.onOpen).toHaveBeenCalledOnce());
+    expect(Object.keys(callbacks.onOpen.mock.calls[0][0].graph.nodes)).toEqual([root.id]);
+    mounted.unmount();
+    const next = props(); render(<WorkspaceDialog {...next} />);
+    fireEvent.click(screen.getByRole("button", { name: "保存した途中を再開" }));
+    await waitFor(() => expect(next.onOpen).toHaveBeenCalledOnce());
+    expect(next.onOpen.mock.calls[0][0].graph.nodes).toEqual(graph().nodes);
+  });
+  it("削除は名前の確認後だけ行い、選択変更は確認を取り消す", () => {
+    const first = saved(); first.title = "残す"; const second = saved(); second.title = "削除対象";
+    writeWorkspace(localStorage, "demo", null, first); writeWorkspace(localStorage, "demo", null, second);
+    const callbacks = props(); render(<WorkspaceDialog {...callbacks} />);
+    fireEvent.click(screen.getByRole("button", { name: "途中保存を削除" }));
+    expect(readWorkspaces(localStorage, "demo")).toHaveLength(2);
+    fireEvent.change(screen.getByLabelText("再開・管理する途中保存"), { target: { value: first.id } });
+    expect(screen.queryByRole("button", { name: "この途中保存を削除する" })).toBeNull();
+    fireEvent.change(screen.getByLabelText("再開・管理する途中保存"), { target: { value: second.id } });
+    fireEvent.click(screen.getByRole("button", { name: "途中保存を削除" }));
+    fireEvent.click(screen.getByRole("button", { name: "この途中保存を削除する" }));
+    expect(readWorkspaces(localStorage, "demo")).toEqual([first]);
+    expect((screen.getByLabelText("再開・管理する途中保存") as HTMLSelectElement).value).toBe("");
+    expect(callbacks.onOpen).not.toHaveBeenCalled();
+  });
+  it.each([true, false])("選択した版が別タブで変わると置換・削除を拒否する（event=%s）", event => {
+    const first = saved(); const second = saved();
+    writeWorkspace(localStorage, "demo", null, first); writeWorkspace(localStorage, "demo", null, second);
+    render(<WorkspaceDialog {...props()} />);
+    fireEvent.click(screen.getByRole("button", { name: "途中保存を削除" }));
+    const changed = saved(); writeWorkspace(localStorage, "demo", second.id, changed);
+    if (event) {
+      fireEvent(window, new StorageEvent("storage", { key: workspaceKey("demo") }));
+      expect((screen.getByRole("button", { name: "この途中保存を削除する" }) as HTMLButtonElement).disabled).toBe(true);
+      expect(screen.queryByRole("button", { name: /を現在の探索で置き換える/ })).toBeNull();
+    } else {
+      fireEvent.click(screen.getByRole("button", { name: /を現在の探索で置き換える/ }));
+      fireEvent.click(screen.getByRole("button", { name: "この途中保存を削除する" }));
+    }
+    expect(screen.getByRole("alert").textContent).toContain("別のタブ");
+    expect(readWorkspaces(localStorage, "demo")).toEqual([changed, first]);
+  });
+  it("ファイルは既定で別件として追加し、同じファイルでも保存を上書きしない", async () => {
+    const previous = saved(); writeWorkspace(localStorage, "demo", null, previous);
+    render(<WorkspaceDialog {...props()} />);
+    const raw = JSON.stringify(previous);
+    fireEvent.change(screen.getByLabelText("途中保存のJSONファイル"), { target: { files: [{ name: "backup.json", size: raw.length, text: async () => raw }] } });
+    await screen.findByRole("region");
+    expect(screen.queryByRole("button", { name: "確認したファイルで途中保存を置き換える" })).toBeNull();
+    const other = saved(); writeWorkspace(localStorage, "demo", null, other);
+    fireEvent.click(screen.getByRole("button", { name: "確認した途中保存を読み込む" }));
+    const values = readWorkspaces(localStorage, "demo");
+    expect(values).toHaveLength(3); expect(values.slice(1)).toEqual([other, previous]);
+    expect(values[0].id).not.toBe(previous.id);
+    expect(fetchEntity).not.toHaveBeenCalled();
+  });
+  it("ファイル置換の確認後に別件を選択しても、その別件を上書きしない", async () => {
+    const first = saved(); const second = saved();
+    writeWorkspace(localStorage, "demo", null, first); writeWorkspace(localStorage, "demo", null, second);
+    render(<WorkspaceDialog {...props()} />);
+    fireEvent.click(screen.getByRole("checkbox"));
+    let resolve!: (raw: string) => void;
+    fireEvent.change(screen.getByLabelText("途中保存のJSONファイル"), { target: { files: [{ name: "slow.json", size: 1000, text: () => new Promise<string>(done => { resolve = done; }) }] } });
+    fireEvent.change(screen.getByLabelText("再開・管理する途中保存"), { target: { value: first.id } });
+    await act(async () => resolve(JSON.stringify(saved())));
+    expect((screen.getByRole("button", { name: "確認したファイルで途中保存を置き換える" }) as HTMLButtonElement).disabled).toBe(true);
+    expect(screen.getByRole("alert").textContent).toContain("確認中に保存内容が変わりました");
+    expect(readWorkspaces(localStorage, "demo")).toEqual([second, first]);
   });
 });
