@@ -2,8 +2,9 @@
 
 import { contributionLabels } from "../lib/i18n/contribution";
 import { entryLabels } from "../lib/i18n/exploration-entry";
+import { graphViewportLabels } from "../lib/i18n/graph-viewport";
 import cytoscape, { type Core, type ElementDefinition } from "cytoscape";
-import { useEffect, useImperativeHandle, useRef } from "react";
+import { useEffect, useImperativeHandle, useRef, useState } from "react";
 import type { ReactNode, Ref } from "react";
 import { restorationPositions } from "../lib/client/graph-view";
 import type { GraphView, ViewRestoration } from "../lib/client/graph-view";
@@ -18,6 +19,8 @@ import styles from "./Explorer.module.css";
 type Props = { ref?: Ref<GraphCanvasHandle>; feedback?: ReactNode; restoration?: ViewRestoration | null; interactionBlocked?: boolean; graph: GraphState; selection: Selection; onEntity: (id: string) => void; onRelation: (id: string) => void; onToggleEntity: (id: string) => void; onEntityDoubleClick?: (id: string) => void };
 
 export default function GraphCanvas({ ref, feedback, restoration, interactionBlocked, graph, selection, onEntity, onRelation, onToggleEntity, onEntityDoubleClick }: Props) {
+  const viewportLabels = graphViewportLabels();
+  const [zoom, setZoom] = useState(1);
   const container = useRef<HTMLDivElement>(null);
   const badgeLayer = useRef<HTMLDivElement>(null);
   const core = useRef<Core | null>(null);
@@ -28,6 +31,38 @@ export default function GraphCanvas({ ref, feedback, restoration, interactionBlo
   const previousCondition = useRef("all");
   const savedPositions = useRef<Record<string, { x: number; y: number }>>({});
   const initialLayoutDone = useRef(false);
+  const hasNodes = Object.keys(graph.nodes).length > 0;
+  const selectedId = selection?.kind === "claim"
+    ? graph.claims[selection.id] && relationId(graph.claims[selection.id])
+    : selection?.id;
+  const canFocusSelection = !!selectedId && (selection?.kind === "entity"
+    ? !!graph.nodes[selectedId]
+    : !!displayRelations(graph.claims)[selectedId]);
+  function changeZoom(factor: number) {
+    const cy = core.current;
+    if (!cy || !hasNodes || interactionBlocked) return;
+    gestures.current?.cancel();
+    cy.resize();
+    cy.zoom({ level: Math.min(cy.maxZoom(), Math.max(cy.minZoom(), cy.zoom() * factor)),
+      renderedPosition: { x: cy.width() / 2, y: cy.height() / 2 } });
+  }
+  function showSelection() {
+    const cy = core.current;
+    if (!cy || !selectedId || interactionBlocked) return;
+    const selected = cy.getElementById(selectedId);
+    if (!selected.length) return;
+    gestures.current?.cancel();
+    cy.resize();
+    if (selection?.kind === "entity") {
+      cy.zoom(Math.max(1, cy.zoom()));
+      cy.center(selected);
+    } else {
+      const elements = selected.union(selected.connectedNodes());
+      cy.fit(elements, 40);
+      cy.zoom(Math.min(1.15, cy.zoom()));
+      cy.center(elements);
+    }
+  }
   useImperativeHandle(ref, () => ({ capture: () => {
     const cy = core.current;
     if (!cy) return null;
@@ -78,6 +113,8 @@ export default function GraphCanvas({ ref, feedback, restoration, interactionBlo
     const themeObserver = new MutationObserver(() => cy.style(themeStyles()));
     themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
     core.current = cy;
+    const updateZoom = () => setZoom(cy.zoom());
+    cy.on("zoom", updateZoom);
     const clicks = createNodeClickHandler({
       isSelected: (id) => handlers.current.selection?.kind === "entity" && handlers.current.selection.id === id,
       select: (id) => handlers.current.onEntity(id), toggle: (id) => handlers.current.onToggleEntity(id),
@@ -177,13 +214,23 @@ export default function GraphCanvas({ ref, feedback, restoration, interactionBlo
   }, [selection, graph]);
 
   return <>
+    <div className={styles.viewportTools} role="group" aria-label={viewportLabels.title}>
+      <button aria-label={viewportLabels.zoomOut} disabled={!hasNodes || interactionBlocked || zoom <= 0.15} onClick={() => changeZoom(1 / 1.25)}>−</button>
+      <output aria-label={viewportLabels.zoom} aria-live="off">{Math.round(zoom * 100)}%</output>
+      <button aria-label={viewportLabels.zoomIn} disabled={!hasNodes || interactionBlocked || zoom >= 2} onClick={() => changeZoom(1.25)}>＋</button>
+      <button disabled={!hasNodes || interactionBlocked} onClick={() => {
+        gestures.current?.cancel();
+        core.current?.resize();
+        core.current?.fit(undefined, 24);
+      }}>{viewportLabels.fit}</button>
+      <button disabled={!canFocusSelection || interactionBlocked} title={viewportLabels.selectionHelp} onClick={showSelection}>{viewportLabels.selection}</button>
+    </div>
     <div className={styles.canvas}>
       <div className={styles.cySurface} ref={container} onPointerDownCapture={() => core.current?.resize()} data-testid="graph-canvas" tabIndex={-1} role="img" aria-label="人物・作品・組織・出来事の関係グラフ。操作できるテキスト一覧は下にあります。" />
       <div className={styles.relationPatches} ref={badgeLayer} aria-hidden="true" />
       <div className={styles.graphOverlay} data-testid="graph-overlay">{feedback}</div>
     </div>
     <div className={styles.graphTools}>
-      <button onClick={() => core.current?.fit(undefined, 24)} disabled={!graph.centerId}>全体を表示</button>
       <span>{entryLabels().graphResize}</span>
       <span>丸：人物 ／ 四角：作品 ／ 六角形：組織 ／ ひし形：出来事</span>
       <span>矢印：方向 ／ 破線：否定 ／ {contributionLabels().mixedLegend} ／ 二重枠：展開済 ／ 淡い外枠：新規表示</span>
