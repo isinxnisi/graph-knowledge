@@ -1,12 +1,12 @@
 # 近い将来のAI処理：検証順序と運用方針
 
-2026-10-08共有。Claim候補整理・Source解析・分類・moderation等へAI処理を導入する前に参照する背景方針。遠い将来のアイデアとして扱わないが、現在のフェーズへ実装を追加する指示でもない。**Kevの実タスク検証を先に行い、適用範囲と実行構成は結果を見て決める。**
+2026-10-08共有、2026-10-09共通Kevサービスの実構成を確認して更新。Claim候補整理・Source解析・分類・moderation等へAI処理を導入する前に参照する背景方針。**共通サービスは稼働済みだが、グラフ用途の実タスク検証・連携は未実装。適用範囲とグラフ側の実行構成は検証結果を見て決める。**
 
-目的と知識の境界は[PROJECT_CONTEXT](../PROJECT_CONTEXT.md)、現行実装は[ARCHITECTURE](../ARCHITECTURE.md)、投稿候補・人間受入の境界は[Capsule・User Contribution構想](CAPSULE_AND_USER_CONTRIBUTION_VISION.md)を併読する。本書はモデルの公開仕様・性能・商用利用条件を検証した記録ではない。
+目的と知識の境界は[PROJECT_CONTEXT](../PROJECT_CONTEXT.md)、現行実装は[ARCHITECTURE](../ARCHITECTURE.md)、投稿候補・人間受入の境界は[Capsule・User Contribution構想](CAPSULE_AND_USER_CONTRIBUTION_VISION.md)を併読する。本書の接続情報はローカル配備の確認記録であり、グラフ用途の精度・性能・商用利用条件を検証した記録ではない。
 
 ## 1. 第一候補と検証の順序
 
-ユーザーが指定した第一候補は、Jev系Decision ModelのKev。初期検証はKev 0.8B程度を想定する。モデルの具体的な配布物・版・実行方法は検証開始時に確認し、今は固定しない。
+ユーザーが指定した第一候補は、Jev系Decision ModelのKev。現在の共通サービスはKev 0.8Bを配備している（識別と接続は末尾の第7節）。グラフ側が独自にモデルを選び直したり、サービスを再構築したりせず、まずこの公開APIで実タスクを検証する。検証時には実際のruntime・版を再確認する。
 
 ```text
 Kev 0.8B等を、実データと実際の処理候補で試す
@@ -54,7 +54,7 @@ AIのスコア・分類・語彙候補は、Sourceの支持や人間の意味受
 
 VPS上にKev等を常駐させる案を排除しないが、RAM・swap・CPU競合と、Web／Neo4j／将来のPostgreSQLへの影響を確認する必要がある。モデルが軽量であることだけで同居可能と判断しない。
 
-開発用PCのGPUをLocal AI Workerとして使う構成は有力候補。常時オンライン・リアルタイム応答を当然の前提にしない。Web処理とAI推論を密結合せず、必要な処理量と応答時間を検証してから実行場所を決める。
+開発用PCでは、独立した共通KevサービスがGPU推論を提供している。VPSとの間を仲介するLocal AI Workerは引き続き候補であり、実装済みではない。常時オンライン・リアルタイム応答を当然の前提にしない。Web処理とAI推論を密結合せず、必要な処理量と応答時間を検証してからグラフ側の実行方式を決める。
 
 ## 5. 非同期Local Workerは候補構成
 
@@ -63,7 +63,7 @@ VPS：Web／API、Neo4j、将来のPostgreSQL、AI処理待ちJob
     ↑                           ↓
 結果登録                 pending Job取得
     ↑                           ↓
-Local AI Worker：Kevで判定
+Local AI Worker → 共通Kevの公開APIで判定
 ```
 
 接続は**Local WorkerからVPSへのoutbound HTTPS**を想定する。ローカルPCへ外部から接続せず、ローカル推論APIをインターネットへ公開しない。WorkerのcredentialはJob取得・結果登録等に必要な最小限へ限定する。
@@ -85,3 +85,67 @@ AI関連機能を設計する際は、本書を読み返し、次を判断基準
 それ以前のフェーズでは、後からこの構成を選ぶことを著しく困難にする判断が発生する場合だけ考慮する。例えば、閲覧・投稿のWeb要求へ長い推論を必須の同期処理として埋め込む判断では立ち戻る。無関係なUI・探索改善を止めたり、汎用非同期層を先行実装したりしない。
 
 **今回実装しないもの**：Job Queue、Worker API、AI Provider abstraction、Kev integration、外部LLM連携。次にAI導入へ着手する際の第一歩はKevの実データ・実タスク検証であり、Worker基盤の完成ではない。
+
+## 7. 共通Kevサービスの接続・責務（2026-10-09確認）
+
+### 配備と確認元
+
+Kevはグラフ専用コンポーネントではなく、`resale-research`も利用する独立した共有サービス。グラフのCompose・起動停止・DB管理へ取り込まない。仕様・運用の正本はKev側の[README](/home/isinxnisi/1.projects/9.kev-service/README.md)、[技術構成](/home/isinxnisi/1.projects/9.kev-service/docs/ARCHITECTURE.md)、[検証記録](/home/isinxnisi/1.projects/9.kev-service/docs/VALIDATION.md)、[引継ぎ](/home/isinxnisi/1.projects/9.kev-service/docs/HANDOFF.md)。ここに記す絶対パスはこのPCの参照先であり、他環境への配備を保証しない。
+
+| 項目 | 確認した現在値 |
+| --- | --- |
+| 配置 | `/home/isinxnisi/1.projects/9.kev-service` |
+| ホスト側の推論API | `POST http://localhost:8009/v1/systemone` |
+| Docker間の推論API | `POST http://kev-api:8008/v1/systemone`（`kev-shared`参加時） |
+| 共有ネットワーク | Kev側が管理する`kev-shared`。将来の呼出アプリ側はexternal networkとして参照 |
+| 配備モデル | `jaredpalmer/kev-0.8b`、revision `bf75a6a8848ea6960ff2ed108d9ed44c2941174f` |
+| 上流Kev | commit `5e42a7a03f28134853dd3ff77461457e921e5ec1` |
+| 実機runtime | GTX 1070 Max-Q／VRAM 8GB、CUDA、FP32、torch `2.8.0+cu126` |
+| 公開・認証 | ホストは`127.0.0.1:8009`のみ。API認証は未導入、信頼するローカル／Docker接続用 |
+
+`GET /health`、`GET /v1/runtime`、`GET /v1/models`、`GET /openapi.json`へ読み取りアクセスし、稼働・モデル識別・入力schemaを確認した。今回は推論を実行していない。`kev-latest`というAPI上のモデル名だけでは版を識別できないため、検証ではruntimeのrevisionを記録する。
+
+Docker内の`localhost:8009`はホストのKevを指さない。接続するときは呼出元のサーバー／Workerだけを共有ネットワークへ参加させればよく、Neo4jやブラウザを接続する必要はない。現在のグラフ環境には接続設定を追加していない。
+
+### 公開APIの使い方と制約
+
+`/v1/systemone`は`state`と、質問名をキーにした`questions`を受け取る。質問型は`choice`（選択肢）、`noul`、`score`。例えば分類では、資料の必要部分を`state`へ渡し、`choice`の`instructions`と`criteria`に判定基準・候補を指定する。これは限定された判定APIであり、自由な文章生成や任意個数のEntity／Claim抽出が既に可能と扱わない。
+
+```json
+{
+  "state": "確認対象の資料抜粋",
+  "questions": {
+    "reviewNeed": {
+      "type": "choice",
+      "instructions": "資料の明示性を分類する。事実の最終受入は行わない。",
+      "criteria": {
+        "explicit": "対象の関係が明示されている",
+        "needs_review": "解釈や限定の確認が必要",
+        "not_stated": "資料に記載がない"
+      }
+    }
+  }
+}
+```
+
+これは入力形式の例であり、グラフ用途の採用済み判定基準ではない。応答には質問ごとの`answers`（型に応じた確率等）と、通常の`/v1/systemone`では配備情報`kev`が付く。OpenAPIの成功応答schemaは詳細未定義のため、将来のクライアント実装時は実応答を確認・検証する。確率はClaimの真偽・信頼度や人間レビューの不要性を保証しない。`/separate`・`/permute`も存在するが、現時点でグラフ側に利用方式を固定しない。
+
+現行のサービス側制限は本文64KiB、最大8質問、質問のcriteria最大16項目、合計入力4096 token、permute最大8回。モデルカード／OpenAPIの上限よりサービス側の制限が小さい箇所があるため、両方を確認する。超過入力は拒否され、勝手な切り詰めを前提にしない。
+
+推論は直列処理で、実行中＋待機中の受理枠は最大2件。過負荷は`429`＋`Retry-After`、本文超過は`413`、schema／token等の不正は`422`。停止・通信失敗・timeoutを判定結果へ置き換えない。接続を中断しても受理済み推論のキャンセルは保証されず、枠は処理終了まで占有されるため、timeout後の無条件再送を既定にしない。共有サービスに永続業務Job Queue・利用プロジェクト間の公平な配分は未実装。
+
+### グラフ側との責務分担・変更管理
+
+| 担当 | 責務 |
+| --- | --- |
+| 共通Kev | モデル配備・推論、公開API、GPU／CPU・メモリ・受理枠の管理。業務固有のstate／questionsや知識を保持しない |
+| グラフのサーバー／将来のWorker | 処理対象・資料抜粋・言語・質問／選択肢・語彙の選定、入力／出力検証、処理履歴、失敗・再試行の扱い、人間確認への導線 |
+| 既存知識登録と人間レビュー | Entity同一性、Predicate／限定の意味、Source／Citationの支持、受入・公開の判断。AI出力だけで登録・確定しない |
+
+接続境界は**グラフのサーバー／Worker → Kev公開HTTP API**。ブラウザから直接呼ばず、モデルや推論ライブラリをWeb／Neo4jへ組み込まない。VPSの同期Web要求にローカルKevの常時稼働を必須化しない。将来の非同期Workerは第5節の候補を利用できるが、現在の同期推論APIがそのWorkerを提供しているわけではない。
+
+将来の評価履歴では、資料・locator・原語、入力契約の版、モデル／runtime、出力、失敗を辿れるようにする。既存利用例ではJSONB保存で選択肢順が変わったため、再現には送信時の順序を含む入力本文（`request_wire`等）も必要。AI実行履歴は処理の由来であり、関係を支持するSource／Citationの代わりにしない。保存先やJob schemaは今は設計・実装しない。
+
+Kev側のソース・モデル・設定・API・共有ネットワーク・起動停止は共有資産として扱う。**グラフ側の都合で直接変更しない。必要なら変更目的、他プロジェクトへの影響、グラフ側で対応する代替案を整理して実施前にユーザーへ相談する。** グラフ側の判定契約・クライアントは、その時点の承認済み範囲で設計する。
+
+既存サービスのCPU／GPU検証は稼働確認の根拠であり、グラフの分類・抽出精度の受入ではない。既存タスクにも誤判定・不安定例がある。次にAIを導入する場合は、このサービスを使った小さい実タスク評価から始める。

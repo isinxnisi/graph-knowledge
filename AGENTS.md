@@ -4,6 +4,8 @@ Read docs/PROJECT_CONTEXT.md and docs/ARCHITECTURE.md before changing this proje
 
 作業完了時は必要な検証を行い、今回の作業に関する変更を日本語のコミットメッセージでコミットする。ユーザーから別の指示がある場合はその指示を優先する。
 
+AI関連の設計・作業前に [共通Kevの接続・責務と検証方針](docs/design/AI_PROCESSING_DIRECTION.md) を読む。Kevは他プロジェクトも使う独立サービスであり、利用は公開APIを原則とする。Kev本体の変更が必要なら目的・他利用者への影響・代替案を整理し、実施前にユーザーへ相談する。
+
 ## 自動開発との協調（手動セッション）
 
 main側などの手動作業では、最初に `make autopilot-review` と必要に応じて `make autopilot-status` を実行し、未反映commit・開発失敗・dirty・実行中を確認する。詳細は [docs/AUTOPILOT_COLLABORATION.md](docs/AUTOPILOT_COLLABORATION.md)。
