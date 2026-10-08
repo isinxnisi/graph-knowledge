@@ -9,6 +9,7 @@ import type { GraphView } from "./graph-view";
 import { viewConditionsSchema } from "./saved-views";
 
 export const WORKSPACE_PAGE_LIMIT = 40;
+export const WORKSPACE_FILE_LIMIT = 100_000;
 const point = z.strictObject({ x: z.number().finite(), y: z.number().finite() });
 export const workspaceSchema = z.strictObject({
   version: z.literal(1), dataset: z.enum(DATASET_MODES), id: z.uuidv4(),
@@ -25,7 +26,7 @@ export type SavedWorkspace = z.infer<typeof workspaceSchema>;
 export type RebuiltWorkspace = { graph: GraphState; view: GraphView | null; skippedBranches: number };
 export const workspaceKey = (dataset: DatasetMode) => `graph-knowledge:workspace:${dataset}`;
 export class WorkspaceError extends Error {
-  constructor(public reason: "invalid" | "storage" | "conflict" | "limit" | "loading" | "response") { super(reason); }
+  constructor(public reason: "invalid" | "storage" | "conflict" | "limit" | "loading" | "response" | "fileInvalid" | "dataset" | "emptyFile") { super(reason); }
 }
 type StorageAccess = Pick<Storage, "getItem" | "setItem" | "removeItem">;
 
@@ -63,6 +64,34 @@ export function writeWorkspace(storage: StorageAccess, dataset: DatasetMode, exp
     if (workspace) storage.setItem(workspaceKey(dataset), JSON.stringify(workspace));
     else storage.removeItem(workspaceKey(dataset));
   } catch { throw new WorkspaceError("storage"); }
+  return workspace;
+}
+
+export function parseWorkspaceBackup(raw: string, dataset: DatasetMode): SavedWorkspace {
+  let workspace: SavedWorkspace;
+  try {
+    if (raw.length > WORKSPACE_FILE_LIMIT || new TextEncoder().encode(raw).length > WORKSPACE_FILE_LIMIT) throw new Error("Oversized workspace");
+    workspace = workspaceSchema.parse(JSON.parse(raw));
+  } catch { throw new WorkspaceError("fileInvalid"); }
+  if (workspace.dataset !== dataset) throw new WorkspaceError("dataset");
+  return workspace;
+}
+
+export function exportWorkspace(storage: StorageAccess, dataset: DatasetMode): string {
+  const workspace = readWorkspace(storage, dataset);
+  if (!workspace) throw new WorkspaceError("emptyFile");
+  // Compact output keeps even a full 400-position workspace within the input budget.
+  const raw = JSON.stringify(workspace);
+  parseWorkspaceBackup(raw, dataset);
+  return raw;
+}
+
+export function importWorkspace(storage: StorageAccess, dataset: DatasetMode, expectedId: string | null, raw: string): SavedWorkspace {
+  const incoming = parseWorkspaceBackup(raw, dataset);
+  // A file can retain an old ID while its contents change. Every accepted import
+  // is a new local revision, so other tabs cannot mistake it for their reviewed slot.
+  const workspace = { ...incoming, id: crypto.randomUUID() };
+  writeWorkspace(storage, dataset, expectedId, workspace);
   return workspace;
 }
 

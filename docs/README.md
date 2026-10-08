@@ -10,7 +10,7 @@
 
 | 現役の設計文書 | 状態・読む場面 |
 | --- | --- |
-| [ブラウザ内の探索途中保存](design/LOCAL_SAVED_WORKSPACE.md) | 2026-10-09。datasetごと1件、枝の開閉・取得ページ数・配置の保存と現在データからの再開。会員同期・複数件・ファイル持ち運びは未実装 |
+| [ブラウザ内の探索途中保存](design/LOCAL_SAVED_WORKSPACE.md) | 2026-10-09。datasetごと1件、枝の開閉・取得ページ数・配置の保存と現在データからの再開。専用JSONの控え・内容確認後の読込を追加。会員同期・複数件は未実装 |
 | [ブラウザ内の保存ビュー](design/LOCAL_SAVED_VIEWS.md) | 2026-10-09。起点と確定条件のローカル保存・再訪、JSONの控えと確認後の追加。会員保存・自動同期は未実装。枝と配置の再開は別の探索途中保存を参照 |
 | [小さい探索分類と条件解決](design/EXPLORATION_CLASSIFICATION_RESOLUTION_REVIEW.md) | Phase 19設計検証完了・提案。5候補／24記録への仮付与、Visitor三状態と検索三契約。relation facet三入口は現条件へ解決可能、学術は未解決、仕事は非採用。研究prototypeのみ、公開API／UIは未接続 |
 | [関係探索モデルの再レビュー](design/RELATION_EXPLORATION_MODEL_REVIEW.md) | Phase 18レビュー完了・提案。意味限定／多軸の探索分類／原語・語彙検索を分離し、A〜Dを多分野で比較。runtime変更・新分類の採用なし。[比較資料v1](research/phase-18-exploration-model/v1/README.md)に根拠と受入境界 |

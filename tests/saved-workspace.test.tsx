@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { act, cleanup, fireEvent, render, renderHook, screen, waitFor } from "@testing-library/react";
-import { captureWorkspace, readWorkspace, rebuildWorkspace, writeWorkspace, workspaceKey, workspaceSchema, WorkspaceError, type SavedWorkspace } from "../lib/client/saved-workspace";
+import { captureWorkspace, readWorkspace, rebuildWorkspace, writeWorkspace, workspaceKey, workspaceSchema, WorkspaceError, exportWorkspace, importWorkspace, parseWorkspaceBackup, WORKSPACE_FILE_LIMIT, type SavedWorkspace } from "../lib/client/saved-workspace";
 import { closeExpansion, emptyGraph, mergePage, reopenExpansion } from "../lib/client/graph-state";
 import { fetchEntity, fetchNeighbors, ClientApiError } from "../lib/client/api";
 import { useGraphExplorer } from "../lib/client/use-graph-explorer";
@@ -225,5 +225,138 @@ describe("途中保存ダイアログと原子的な探索切替", () => {
     expect(result.current.graph.centerId).toBe(work.id);
     expect(result.current.graph.expansions[work.id].loading).toBe(false);
     expect(result.current.viewRestoration?.view).toEqual({ ...view, positions: { [work.id]: view.positions[work.id] } });
+  });
+});
+
+describe("途中保存ファイルの持ち運び", () => {
+  it("閉鎖・休止枝と配置を控え、別保存領域へ新しい版として取り込む", () => {
+    const value = captureWorkspace("demo", "閉じた途中", closeExpansion(graph(), root.id), view);
+    writeWorkspace(localStorage, "demo", null, value);
+    const raw = exportWorkspace(localStorage, "demo");
+    expect(JSON.parse(raw)).toEqual(value);
+    localStorage.clear();
+    const imported = importWorkspace(localStorage, "demo", null, raw);
+    expect(imported.id).not.toBe(value.id);
+    expect({ ...imported, id: value.id }).toEqual(value);
+    expect(readWorkspace(localStorage, "demo")).toEqual(imported);
+    expect(fetchEntity).not.toHaveBeenCalled(); expect(fetchNeighbors).not.toHaveBeenCalled();
+  });
+  it("最大400枝・座標の書出しも読込サイズ内に収める", () => {
+    const value = saved();
+    const ids = Array.from({ length: 400 }, () => crypto.randomUUID());
+    value.branches = ids.map(id => ({ id, open: true, pages: 0 }));
+    value.view!.positions = Object.fromEntries(ids.map(id => [id, { x: -1.2345678901234567e+308, y: Number.MIN_VALUE }]));
+    writeWorkspace(localStorage, "demo", null, value);
+    const raw = exportWorkspace(localStorage, "demo");
+    expect(new TextEncoder().encode(raw).length).toBeLessThanOrEqual(WORKSPACE_FILE_LIMIT);
+    expect(parseWorkspaceBackup(raw, "demo")).toEqual(value);
+  });
+  it.each([
+    () => "not JSON",
+    (value: SavedWorkspace) => JSON.stringify({ ...value, version: 2 }),
+    (value: SavedWorkspace) => JSON.stringify({ ...value, claims: [] }),
+    (value: SavedWorkspace) => JSON.stringify({ ...value, conditions: { ...value.conditions, eventRoles: ["INVITED"] } }),
+    (value: SavedWorkspace) => JSON.stringify({ ...value, branches: [{ id: root.id, open: true, pages: 41 }] }),
+    (value: SavedWorkspace) => JSON.stringify({ ...value, view: { ...view, zoom: 3 } }),
+    () => JSON.stringify({ version: 1, dataset: "demo", views: [] }),
+    (value: SavedWorkspace) => " ".repeat(WORKSPACE_FILE_LIMIT) + JSON.stringify(value),
+    // Under the character budget but above the byte budget.
+    (value: SavedWorkspace) => JSON.stringify({ ...value, title: "あ".repeat(80) }).padEnd(99_950, " "),
+  ])("不正形式・語彙・上限・別形式を拒否し、既存保存を残す", raw => {
+    const value = saved(); writeWorkspace(localStorage, "demo", null, value);
+    expect(() => importWorkspace(localStorage, "demo", value.id, raw(value))).toThrow(new WorkspaceError("fileInvalid"));
+    expect(readWorkspace(localStorage, "demo")).toEqual(value);
+  });
+  it("dataset違いと保存領域の破損・書込み拒否を区別する", () => {
+    const value = saved(); const raw = JSON.stringify(value);
+    expect(() => parseWorkspaceBackup(raw, "pilot-event-v1")).toThrow(new WorkspaceError("dataset"));
+    expect(() => exportWorkspace(localStorage, "demo")).toThrow(new WorkspaceError("emptyFile"));
+    localStorage.setItem(workspaceKey("demo"), "unknown format");
+    expect(() => importWorkspace(localStorage, "demo", null, raw)).toThrow(new WorkspaceError("invalid"));
+    expect(() => exportWorkspace(localStorage, "demo")).toThrow(new WorkspaceError("invalid"));
+    expect(localStorage.getItem(workspaceKey("demo"))).toBe("unknown format");
+    const denied = { getItem: () => null, setItem: () => { throw new Error("denied"); }, removeItem: vi.fn() };
+    expect(() => importWorkspace(denied, "demo", null, raw)).toThrow(new WorkspaceError("storage"));
+  });
+  it("同IDのファイルでも取込ごとに版を変え、確認後の別タブ更新を上書きしない", () => {
+    const original = saved(); writeWorkspace(localStorage, "demo", null, original);
+    const changed = importWorkspace(localStorage, "demo", original.id, JSON.stringify({ ...original, title: "外で編集" }));
+    expect(changed.id).not.toBe(original.id);
+    expect(() => importWorkspace(localStorage, "demo", original.id, JSON.stringify(original))).toThrow(new WorkspaceError("conflict"));
+    expect(() => writeWorkspace(localStorage, "demo", original.id, null)).toThrow(new WorkspaceError("conflict"));
+    expect(readWorkspace(localStorage, "demo")).toEqual(changed);
+  });
+});
+
+describe("途中保存ファイルの確認画面", () => {
+  const props = () => ({ dataset: "demo" as const, graph: emptyGraph(), captureView: () => null, onOpen: vi.fn(), onClose: vi.fn() });
+  const selectFile = (value: SavedWorkspace, name = "workspace.json") => {
+    const file = { name, size: JSON.stringify(value).length, text: async () => JSON.stringify(value) };
+    fireEvent.change(screen.getByLabelText("途中保存のJSONファイル"), { target: { files: [file] } });
+  };
+  it("起点なしで内容を確認し、明示保存まで何も変更しない", async () => {
+    const callbacks = props(); render(<WorkspaceDialog {...callbacks} />);
+    const value = saved(); selectFile(value);
+    await screen.findByRole("region", { name: "読み込む途中保存の確認" });
+    expect(screen.getByRole("region").textContent).toContain(value.rootId);
+    expect(screen.getByRole("region").textContent).toContain("保存した枝：2件 / 取得済み：2ページ");
+    expect(readWorkspace(localStorage, "demo")).toBeNull();
+    fireEvent.click(screen.getByRole("button", { name: "確認した途中保存を読み込む" }));
+    expect(readWorkspace(localStorage, "demo")?.title).toBe(value.title);
+    expect(screen.queryByRole("region")).toBeNull();
+    expect(callbacks.onOpen).not.toHaveBeenCalled(); expect(fetchEntity).not.toHaveBeenCalled();
+    expect(fetchNeighbors).not.toHaveBeenCalled();
+    expect(document.activeElement).toBe(screen.getByLabelText("途中保存のJSONファイル"));
+  });
+  it("置換対象を表示し、取消では保存もGraphも変えない", async () => {
+    const previous = saved(); previous.title = "残したい途中"; writeWorkspace(localStorage, "demo", null, previous);
+    const callbacks = props(); render(<WorkspaceDialog {...callbacks} />);
+    selectFile(saved()); await screen.findByRole("region");
+    expect(screen.getByRole("region").textContent).toContain("「残したい途中」を置き換えます");
+    fireEvent.click(screen.getByRole("button", { name: "ファイルの読み込みを取り消す" }));
+    expect(readWorkspace(localStorage, "demo")).toEqual(previous);
+    expect(screen.queryByRole("region")).toBeNull();
+    selectFile(saved()); await screen.findByRole("region");
+    fireEvent.click(screen.getByRole("button", { name: "確認したファイルで途中保存を置き換える" }));
+    expect(readWorkspace(localStorage, "demo")?.title).toBe("制作の途中");
+    expect(callbacks.onOpen).not.toHaveBeenCalled();
+  });
+  it.each([true, false])("確認後の他タブ更新を拒否する（storage event=%s）", async event => {
+    const previous = saved(); writeWorkspace(localStorage, "demo", null, previous);
+    render(<WorkspaceDialog {...props()} />);
+    selectFile(saved()); await screen.findByRole("region");
+    const changed = saved(); changed.title = "別タブの途中";
+    writeWorkspace(localStorage, "demo", previous.id, changed);
+    if (event) fireEvent(window, new StorageEvent("storage", { key: workspaceKey("demo") }));
+    const confirm = screen.getByRole("button", { name: "確認したファイルで途中保存を置き換える" }) as HTMLButtonElement;
+    if (event) expect(confirm.disabled).toBe(true);
+    else fireEvent.click(confirm);
+    expect(screen.getByRole("alert").textContent).toContain("確認中に保存内容が変わりました");
+    expect(readWorkspace(localStorage, "demo")).toEqual(changed);
+    // Re-reading storage and reselecting the file is explicit new review.
+    fireEvent(window, new StorageEvent("storage", { key: workspaceKey("demo") }));
+    selectFile(saved()); await screen.findByRole("region");
+    expect(screen.getByRole("region").textContent).toContain("「別タブの途中」を置き換えます");
+    expect((screen.getByRole("button", { name: "確認したファイルで途中保存を置き換える" }) as HTMLButtonElement).disabled).toBe(false);
+  });
+  it("サイズ超過は本文読込前に拒否する", async () => {
+    render(<WorkspaceDialog {...props()} />);
+    const file = { name: "huge.json", size: WORKSPACE_FILE_LIMIT + 1, text: vi.fn() };
+    fireEvent.change(screen.getByLabelText("途中保存のJSONファイル"), { target: { files: [file] } });
+    await screen.findByRole("alert"); expect(file.text).not.toHaveBeenCalled();
+    expect(readWorkspace(localStorage, "demo")).toBeNull();
+  });
+  it.each(["cancel", "replace", "unmount"])("遅いファイル読込を%s後に適用しない", async action => {
+    const mounted = render(<WorkspaceDialog {...props()} />);
+    let resolve!: (raw: string) => void;
+    const file = { name: "slow.json", size: 1000, text: () => new Promise<string>(done => { resolve = done; }) };
+    fireEvent.change(screen.getByLabelText("途中保存のJSONファイル"), { target: { files: [file] } });
+    if (action === "cancel") fireEvent.click(screen.getByRole("button", { name: "ファイルの読み込みを取り消す" }));
+    if (action === "replace") { const value = saved(); value.title = "後から選んだ途中"; selectFile(value); await screen.findByRole("region"); }
+    if (action === "unmount") mounted.unmount();
+    await act(async () => resolve(JSON.stringify(saved())));
+    if (action === "replace") expect(screen.getByRole("region").textContent).toContain("後から選んだ途中");
+    else expect(screen.queryByRole("region")).toBeNull();
+    expect(readWorkspace(localStorage, "demo")).toBeNull(); expect(fetchEntity).not.toHaveBeenCalled();
   });
 });

@@ -10,6 +10,7 @@ import { useDialogBackdrop } from "../lib/client/use-dialog-backdrop";
 import { workspaceLabels } from "../lib/i18n/workspace";
 import { conditionSummary } from "../lib/i18n/exploration-entry";
 import styles from "./Explorer.module.css";
+import WorkspaceBackup from "./WorkspaceBackup";
 
 export default function WorkspaceDialog({ dataset, graph, captureView, onOpen, onClose }: {
   dataset: DatasetMode; graph: GraphState; captureView: () => GraphView | null;
@@ -100,5 +101,8 @@ export default function WorkspaceDialog({ dataset, graph, captureView, onOpen, o
       <div className={styles.actions}><button disabled={!ready || !!progress} onClick={() => void open()}>{text.open}</button><button disabled={!ready || !!progress} onClick={remove}>{text.remove}</button></div>
     </div>}
     {progress && <div><p role="status">{text.opening(progress.done, progress.total)}</p><button onClick={cancel}>{text.cancel}</button></div>}
+    <WorkspaceBackup dataset={dataset} workspace={workspace} ready={ready} disabled={!!progress} onImported={value => {
+      setWorkspace(value); setError(null); setMessage(null);
+    }} />
   </dialog>;
 }
