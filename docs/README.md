@@ -6,6 +6,8 @@
 
 [自動開発の現在の進め方](AUTOPILOT_DIRECTION.md)：将来像に沿う体験・導線を小さく実装して判断する。毎回の価値立証を関門にしない。45分を超える機能も一件のメモで段階的に継続し、利用量上限時は当日休止する。[引き継ぎの実装・試験記録](archive/operations/20261008_AUTOPILOT_HANDOFF.md)を参照。
 
+[2026-10-09の設計・優先順位補強](archive/operations/20261009_AUTOPILOT_DESIGN_PRIORITY.md)：未設計の重要機能も自分で契約を決めて段階実装する。完了メモの次候補を固定せず比較し、最小Capsule等の初期案を次回promptへ渡す。
+
 [2026-10-07の受け入れ記録](archive/autopilot-acceptance/20261007.md)：検索状態、表示中対象への移動、関連主張の順次表示・部分再試行。
 
 [2026-10-08の受け入れ記録](archive/autopilot-acceptance/20261008.md)：狭い画面、隣接一覧、関係両端への移動、通信timeout、条件変更前への復帰。手動画面起動とhealthcheckも確認。
