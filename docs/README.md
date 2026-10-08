@@ -8,6 +8,8 @@
 
 [2026-10-08の受け入れ記録](archive/autopilot-acceptance/20261008.md)：狭い画面、隣接一覧、関係両端への移動、通信timeout、条件変更前への復帰。手動画面起動とhealthcheckも確認。
 
+[2026-10-08のDocker容量整理](archive/operations/20261008_DOCKER_CLEANUP.md)：停止17コンテナ・未使用イメージ・キャッシュを削除。稼働環境と全volumeを保持し、6画面を再確認。
+
 ## 作業前に読む文書
 
 1. [PROJECT_CONTEXT.md](PROJECT_CONTEXT.md)：目的と判断基準。
