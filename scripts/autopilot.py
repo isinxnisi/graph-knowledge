@@ -18,6 +18,8 @@ HELP = """自動開発の操作（このプロジェクトで実行）
   make autopilot-status  今の状態・次回予定・直前の結果を見る
   make autopilot-review  未反映commit・開発結果・競合を確認する
   make autopilot-reports 受入済みのスマホ向け記録をアーカイブして一覧を更新する
+  python3 scripts/autopilot.py reports --acknowledge 実行ID ... --note 確認理由
+                        確認済みの停止・失敗をアーカイブする（未受入は変更しない）
   受入完了後は hold 内で complete-acceptance --token TOKEN --target SHA を使い休止も解除する
   make autopilot-hold    手動作業中の共通ロックを保持する（Enterで解放）
   make autopilot-on      自動実行を再開する（今すぐは動かさない）
@@ -106,6 +108,9 @@ def main():
     if len(sys.argv) > 1 and sys.argv[1] in ("review", "hold", "guard", "assert-held", "complete-acceptance"):
         from autopilot_review import run
         return run(sys.argv[1:], KIT)
+    if len(sys.argv) > 1 and sys.argv[1] == 'reports':
+        arguments = sys.argv[2:] or ['--refresh']
+        return subprocess.run([sys.executable, str(KIT / 'report.py'), *arguments], stdin=subprocess.DEVNULL).returncode
     action = sys.argv[1] if len(sys.argv) == 2 else "help"
     if action == "help":
         print(HELP)
@@ -122,8 +127,6 @@ def main():
         return process.returncode
     elif action == "logs":
         show_log()
-    elif action == "reports":
-        return subprocess.run(["python3", str(KIT / "report.py"), "--refresh"], stdin=subprocess.DEVNULL).returncode
     else:
         raise ValueError("不明な操作です。make autopilot-help を実行してください。")
     return 0

@@ -14,6 +14,8 @@
 
 [受入完了時の休止解除](archive/operations/20261008_AUTOPILOT_ACCEPTANCE_RESET.md)：受入後は次の予定で再試行する追加契約。確認だけでは解除せず、元の休止と失敗記録は保持。
 
+[確認済み失敗のDrive整理](archive/operations/20261009_AUTOPILOT_FAILURE_ARCHIVE.md)：確認した停止・失敗だけをアーカイブへ移し、未確認・未受入を一覧に残す。原ログと確認履歴は保持。
+
 [2026-10-08のDocker容量整理](archive/operations/20261008_DOCKER_CLEANUP.md)：停止17コンテナ・未使用イメージ・キャッシュを削除。稼働環境と全volumeを保持し、6画面を再確認。
 
 ## 作業前に読む文書
