@@ -665,3 +665,7 @@ SPO集約・claimIds・方向・中立的な肯否表現・個別限定の否定
 
 
 Phase 22後の局所視覚調整：構造化済み具体語を持つRelationだけ、カテゴリを11pxの小さい背景付きpatchとして左に添える。主表示は15pxの具体語で、自然なpredicate表示とfallbackにはpatchを付けない。Cytoscapeラベルと補助DOMの描画上の分離であり、Relationの意味・claimIds・API・DB・datasetは不変。詳細は[現行presentation契約](design/RELATION_PRESENTATION_CONTRACTS.md)を参照。
+
+## ブラウザ内の保存ビュー（2026-10-09）
+
+[保存契約](design/LOCAL_SAVED_VIEWS.md)に従い、dataset別のlocalStorageへ起点ID・四つの具体条件・名前・保存日時を20件まで保持する。version=1の形式を検証し、未知語彙・dataset不一致・破損は上書きしない。Entity／Claim／Sourceの複製・cursor・枝・配置は保存しない。起点を現在のEntity APIで確認後、一世代で起点＋条件を適用して一段階だけ取得する。確認失敗・中止では旧Graphを維持し、成功時は既存の直前一件復帰へ旧探索を保持する。保存領域の失敗を明示し、知識DB・API・dataset・認可契約は不変。会員保存・同期・共有・探索ワークスペースは未実装。

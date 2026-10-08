@@ -12,6 +12,8 @@
 
 [2026-10-08夕方の受け入れ・運用改善](archive/autopilot-acceptance/20261008_evening.md)：表示中の経路から根拠へ進む導線、上限で中断したGraph表示操作の完成、当日休止と途中変更の保持。
 
+[2026-10-09の受け入れ](archive/autopilot-acceptance/20261009.md)：既存構想に沿うブラウザ内の起点・条件保存と再訪。枝や配置の永続復元は含まない。
+
 [受入完了時の休止解除](archive/operations/20261008_AUTOPILOT_ACCEPTANCE_RESET.md)：受入後は次の予定で再試行する追加契約。確認だけでは解除せず、元の休止と失敗記録は保持。
 
 [確認済み失敗のDrive整理](archive/operations/20261009_AUTOPILOT_FAILURE_ARCHIVE.md)：確認した停止・失敗だけをアーカイブへ移し、未確認・未受入を一覧に残す。原ログと確認履歴は保持。
@@ -26,6 +28,7 @@
 
 | 現役の設計文書 | 状態・読む場面 |
 | --- | --- |
+| [ブラウザ内の保存ビュー](design/LOCAL_SAVED_VIEWS.md) | 2026-10-09。起点と確定条件のローカル保存・再訪。会員保存・同期・枝と配置の再開は未実装 |
 | [小さい探索分類と条件解決](design/EXPLORATION_CLASSIFICATION_RESOLUTION_REVIEW.md) | Phase 19設計検証完了・提案。5候補／24記録への仮付与、Visitor三状態と検索三契約。relation facet三入口は現条件へ解決可能、学術は未解決、仕事は非採用。研究prototypeのみ、公開API／UIは未接続 |
 | [関係探索モデルの再レビュー](design/RELATION_EXPLORATION_MODEL_REVIEW.md) | Phase 18レビュー完了・提案。意味限定／多軸の探索分類／原語・語彙検索を分離し、A〜Dを多分野で比較。runtime変更・新分類の採用なし。[比較資料v1](research/phase-18-exploration-model/v1/README.md)に根拠と受入境界 |
 | [Entity概要のpresentation](design/ENTITY_OVERVIEW_PRESENTATION.md) | Phase 17採用。種類・視点別関係名・向き優先、統計折り畳み、domain限定の記録、最小overview API拡張 |

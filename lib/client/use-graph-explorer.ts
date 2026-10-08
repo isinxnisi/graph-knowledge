@@ -2,6 +2,7 @@
 
 import { captureExploration, type ExplorationSnapshot } from "./exploration-snapshot";
 import type { GraphView, ViewRestoration } from "./graph-view";
+import { viewConditionsSchema, type ViewConditions } from "./saved-views";
 import { overviewLabels } from "../i18n/entity-overview";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { normalizePredicates, normalizeContributionRoles, normalizeOrganizationPositions, normalizeEventRoles, type EventRoleFilter, explorationKey, type OrganizationPositionFilter, type ContributionRoleFilter, type PredicateFilter } from "../domain/exploration";
@@ -112,6 +113,19 @@ export function useGraphExplorer() {
     commit(projectGraph({ ...snapshot.graph, generation: generation.current, notice: overviewLabels().restored }));
     setSelection(snapshot.selection);
   }, [commit, previous]);
+  const openSavedView = useCallback((entity: EntitySummary, values: ViewConditions, view: GraphView | null) => {
+    const conditions = viewConditionsSchema.parse(values);
+    const snapshot = captureExploration(current.current, selection, view);
+    setPrevious(snapshot); setViewRestoration(null);
+    pending.current.forEach(controller => controller.abort()); pending.current.clear();
+    generation.current += 1;
+    commit(projectGraph({ ...emptyGraph(generation.current), ...conditions,
+      conditionKey: explorationKey(conditions.predicates, conditions.contributionRoles, conditions.organizationPositions, conditions.eventRoles),
+      roots: [entity.id], centerId: entity.id, cacheNodes: { [entity.id]: entity },
+      notice: current.current.centerId && !snapshot ? overviewLabels().notSaved : null,
+    }));
+    setSelection({ kind: "entity", id: entity.id }); void expand(entity.id);
+  }, [commit, expand, selection]);
   const changePredicates = useCallback((values: PredicateFilter, roleValues: ContributionRoleFilter = current.current.contributionRoles ?? null, positionValues: OrganizationPositionFilter = current.current.organizationPositions ?? null, eventRoleValues: EventRoleFilter = current.current.eventRoles ?? null, view: GraphView | null = null) => {
     const predicates = normalizePredicates(values);
     const eventRoles = normalizeEventRoles(eventRoleValues, predicates);
@@ -148,5 +162,5 @@ export function useGraphExplorer() {
     if (!current.current.nodes[id]) return;
     if (current.current.expansions[id]?.open) close(id); else void expand(id);
   }, [close, expand]);
-  return { graph, selection, previous, viewRestoration, switchRoot, restorePrevious, changePredicates, chooseRoot, inspectEntity, selectEntity, selectClaim, selectRelation, expand, close, toggleEntity };
+  return { graph, selection, previous, viewRestoration, switchRoot, restorePrevious, openSavedView, changePredicates, chooseRoot, inspectEntity, selectEntity, selectClaim, selectRelation, expand, close, toggleEntity };
 }

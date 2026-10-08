@@ -107,6 +107,13 @@
 .rootLabel { font-size: 12px; color: var(--color-muted); margin-bottom: 6px !important; }
 .conditionDialog { background: var(--color-panel); color: var(--color-text); border: 1px solid var(--color-control-border); border-radius: 8px; padding: 20px; width: min(620px, calc(100vw - 40px)); max-height: calc(100dvh - 60px); overflow: auto; }
 .conditionDialog::backdrop { background: rgb(0 0 0 / .25); }
+.savedViews { overflow-wrap: anywhere; }
+.savedViewForm { display: grid; gap: 8px; padding: 14px; margin: 16px 0; background: var(--color-canvas); border: 1px solid var(--color-border); border-radius: 6px; }
+.savedViewForm p { margin: 0; }
+.savedViewList { list-style: none; padding: 0; margin: 0; display: grid; gap: 12px; }
+.savedViewList li { padding: 12px; border: 1px solid var(--color-border); border-radius: 6px; }
+.savedViews .actions button { min-height: 44px; }
+.savedViews .conditionTitle button { width: 44px; height: 44px; }
 .conditionDialog .relationFilter { margin-top: 8px; }
 .conditionDialog .filterChoices { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .conditionDialog .roleFilter .filterChoices:first-of-type { grid-template-columns: 1fr; }

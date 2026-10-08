@@ -23,6 +23,8 @@ import RelationsList from "./RelationsList";
 import EntityDetails from "./EntityDetails";
 import ClaimDetails from "./ClaimDetails";
 import styles from "./Explorer.module.css";
+import SavedViews from "./SavedViews";
+import { savedViewLabels } from "../lib/i18n/saved-views";
 
 function GraphNotice({ message, transient }: { message: string; transient: boolean }) {
   const [visible, setVisible] = useState(true);
@@ -51,10 +53,11 @@ export default function Explorer({ dataset = "demo" }: { dataset?: DatasetMode }
   }, [activePane]);
   const canvas = useRef<GraphCanvasHandle>(null);
   const [overview, setOverview] = useState<EntitySummary | null>(null);
+  const [savedViewsOpen, setSavedViewsOpen] = useState(false);
   const [detailWide, setDetailWide] = useState(false);
   const [dark, setDark] = useState(false);
   const [darkPalette, setDarkPalette] = useState<"brown" | "blue">("brown");
-  const { graph, selection, previous, viewRestoration, switchRoot, restorePrevious, changePredicates, chooseRoot, inspectEntity, selectEntity, selectClaim, selectRelation, expand, close, toggleEntity } = useGraphExplorer();
+  const { graph, selection, previous, viewRestoration, switchRoot, restorePrevious, openSavedView, changePredicates, chooseRoot, inspectEntity, selectEntity, selectClaim, selectRelation, expand, close, toggleEntity } = useGraphExplorer();
   const restricted = graph.predicates !== null || (graph.contributionRoles ?? null) !== null || (graph.organizationPositions ?? null) !== null || (graph.eventRoles ?? null) !== null;
   const switchFrom = (entity: EntitySummary, mode: "broad" | "same") => {
     switchRoot(entity, mode, canvas.current?.capture() ?? null); setOverview(null); setActivePane("graph");
@@ -95,7 +98,7 @@ export default function Explorer({ dataset = "demo" }: { dataset?: DatasetMode }
       {(["search", "graph", "detail"] as const).map(pane => <button key={pane} aria-pressed={activePane === pane} aria-controls={`explorer-${pane}`} onClick={() => setActivePane(pane)}>{panes[pane]}</button>)}
     </nav>
     <main data-active-pane={activePane} className={`${styles.columns} ${detailWide ? styles.wideDetails : ""}`}>
-      <div id="explorer-search" role="group" tabIndex={-1} aria-label={panes.search} className={styles.panel}><SearchPanel placeholder={labels.searchExample} onChoose={startFrom} /><StartExamples dataset={dataset} onChoose={(entity) => startFrom(entity, true)} /></div>
+      <div id="explorer-search" role="group" tabIndex={-1} aria-label={panes.search} className={styles.panel}><SearchPanel placeholder={labels.searchExample} onChoose={startFrom} /><button onClick={() => setSavedViewsOpen(true)}>{savedViewLabels().launch}</button><StartExamples dataset={dataset} onChoose={(entity) => startFrom(entity, true)} /></div>
       <div id="explorer-graph" role="group" tabIndex={-1} aria-label={panes.graph} className={styles.centralScroll}>
       <section className={`${styles.panel} ${styles.graphPanel}`} aria-labelledby="graph-title">
         <div className={styles.graphHeader}>
@@ -103,6 +106,7 @@ export default function Explorer({ dataset = "demo" }: { dataset?: DatasetMode }
             <p data-testid="graph-counts">Entity {Object.keys(graph.nodes).length} / Claim {Object.keys(graph.claims).length}</p><p data-testid="relation-counts">Relation {Object.keys(relations).length}</p>
           </div>
           <div className={styles.rootBar}><p className={styles.rootLabel} data-testid="exploration-root">{entry.root}：{graph.centerId ? graph.nodes[graph.centerId]?.name : entry.rootEmpty}</p>
+            <button onClick={() => setSavedViewsOpen(true)}>{savedViewLabels().launch}</button>
             {previous && <button onClick={restorePrevious}>{overviewLabels().restore}</button>}</div>
         </div>
         <RelationFilter eventRoles={graph.eventRoles ?? null} positions={graph.organizationPositions ?? null} roles={graph.contributionRoles ?? null} value={graph.predicates} onApply={(predicates, roles, positions, eventRoles) => changePredicates(predicates, roles, positions, eventRoles, canvas.current?.capture() ?? null)} />
@@ -113,7 +117,7 @@ export default function Explorer({ dataset = "demo" }: { dataset?: DatasetMode }
           inspectEntity(id); canvas.current?.focusEntity(id);
         }} />
         {Object.values(graph.claims).some((claim) => claim.contribution?.roleId) && <p className={styles.muted}>{contributionLabels().partial}</p>}
-        <GraphCanvas ref={canvas} restoration={viewRestoration} interactionBlocked={!!overview} onEntityDoubleClick={(id) => { if (graph.nodes[id]) setOverview(graph.nodes[id]); }} graph={graph} selection={selection} onEntity={selectEntity} onRelation={(id) => { selectRelation(id); setActivePane("detail"); }} onToggleEntity={toggleEntity} feedback={<>
+        <GraphCanvas ref={canvas} restoration={viewRestoration} interactionBlocked={!!overview || savedViewsOpen} onEntityDoubleClick={(id) => { if (graph.nodes[id]) setOverview(graph.nodes[id]); }} graph={graph} selection={selection} onEntity={selectEntity} onRelation={(id) => { selectRelation(id); setActivePane("detail"); }} onToggleEntity={toggleEntity} feedback={<>
           <div className={`${styles.feedback} ${!graph.centerId ? styles.initialFeedback : ""}`} aria-live="polite"><p data-testid="selection-status">選択中：{selectionText}</p><p>{loading ? `Graphを取得中…（${loading}件）` : selectedEntity ? graph.expansions[selectedEntity.id]?.expanded ? "近傍は展開済みです。" : graph.expansions[selectedEntity.id]?.pages.length ? "展開は閉じています。クリックで取得済みの枝を復元します。" : "クリックで一段階展開します。" : "線ごとに同じ関係の主張をまとめて表示しています。"}</p></div>
           {graph.notice && <GraphNotice key={`${graph.generation}:${graph.clock}:${graph.notice}`} message={graph.notice} transient={graph.notice === "取得済みの枝を復元しました。" || graph.notice === overviewLabels().restored} />}
         </>} />
@@ -134,5 +138,10 @@ export default function Explorer({ dataset = "demo" }: { dataset?: DatasetMode }
       </aside>
     </main>
     {overview && <EntityOverview key={overview.id} entity={overview} dataset={dataset} restricted={restricted} onClose={() => setOverview(null)} onSwitch={(mode) => switchFrom(overview, mode)} />}
+    {savedViewsOpen && <SavedViews dataset={dataset} root={graph.centerId ? graph.nodes[graph.centerId] : null}
+      conditions={{ predicates: graph.predicates, contributionRoles: graph.contributionRoles ?? null, organizationPositions: graph.organizationPositions ?? null, eventRoles: graph.eventRoles ?? null }}
+      onClose={() => setSavedViewsOpen(false)} onOpen={(entity, conditions) => {
+        openSavedView(entity, conditions, canvas.current?.capture() ?? null); setActivePane("graph");
+      }} />}
   </div>;
 }
