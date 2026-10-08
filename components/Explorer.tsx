@@ -18,6 +18,7 @@ import SearchPanel from "./SearchPanel";
 import StartExamples from "./StartExamples";
 import GraphCanvas, { type GraphCanvasHandle } from "./GraphCanvas";
 import GraphNavigator from "./GraphNavigator";
+import GraphPath from "./GraphPath";
 import RelationsList from "./RelationsList";
 import EntityDetails from "./EntityDetails";
 import ClaimDetails from "./ClaimDetails";
@@ -123,6 +124,11 @@ export default function Explorer({ dataset = "demo" }: { dataset?: DatasetMode }
         <div className={styles.detailHeading}><h2 id="detail-title">詳細</h2>{selection && <button aria-pressed={detailWide} onClick={() => setDetailWide(!detailWide)}>{detailWide ? entry.detailNormal : entry.detailWide}</button>}</div>
         {!selection && <p className={styles.muted}>{entry.detailHelp}</p>}
         {selectedEntity && <EntityDetails key={key} entity={selectedEntity} expansion={graph.expansions[selectedEntity.id]} onExpand={(more) => void expand(selectedEntity.id, more)} onClose={() => close(selectedEntity.id)} restricted={restricted} onOverview={() => setOverview(selectedEntity)} onSwitch={(mode) => switchFrom(selectedEntity, mode)} />}
+        {selectedEntity && graph.centerId && <GraphPath key={`path:${key}`} nodes={graph.nodes} relations={relations} rootId={graph.centerId} targetId={selectedEntity.id} onRelation={(id) => {
+          selectRelation(id); setActivePane("detail");
+          document.getElementById("explorer-detail")?.focus({ preventScroll: true });
+          document.getElementById("explorer-detail")?.scrollTo({ top: 0 });
+        }} />}
         {selectedRelation && <ClaimDetails key={`${key}:${selectedRelation.claimIds[0]}`} id={selectedRelation.claimIds[0]} nodes={graph.nodes} onInspectEntity={inspectFromClaim} mode="relation" visibleClaimIds={selectedRelation.claimIds} visibleClaims={selectedRelation.claimIds.map(id => graph.claims[id])} eventRoles={graph.eventRoles ?? null} positions={graph.organizationPositions ?? null} roles={graph.contributionRoles ?? null} predicates={graph.predicates} />}
         {selection?.kind === "claim" && <ClaimDetails key={key} id={selection.id} nodes={graph.nodes} claimSummary={selectedClaim ?? undefined} onInspectEntity={inspectFromClaim} eventRoles={graph.eventRoles ?? null} positions={graph.organizationPositions ?? null} roles={graph.contributionRoles ?? null} predicates={graph.predicates} />}
       </aside>
