@@ -9,6 +9,7 @@ import { savedViewLabels } from "../lib/i18n/saved-views";
 import { conditionSummary } from "../lib/i18n/exploration-entry";
 import { useDialogBackdrop } from "../lib/client/use-dialog-backdrop";
 import styles from "./Explorer.module.css";
+import SavedViewsBackup from "./SavedViewsBackup";
 
 const summary = (conditions: ViewConditions) => conditionSummary(conditions.predicates, conditions.contributionRoles, "ja", conditions.organizationPositions, conditions.eventRoles);
 
@@ -107,5 +108,8 @@ export default function SavedViews({ dataset, root, conditions, onOpen, onClose 
       {opening === view.id && <p role="status">{text.opening}</p>}
       {openError?.id === view.id && <p role="alert" className={styles.error}>{openError.message}</p>}
     </li>)}</ul>
+    <SavedViewsBackup key={dataset} dataset={dataset} views={views} ready={ready} disabled={!!opening} onImported={views => {
+      setViews(views); setStorageError(null); setMessage(null); setOpenError(null);
+    }} />
   </dialog>;
 }

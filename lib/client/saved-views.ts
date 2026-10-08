@@ -8,6 +8,7 @@ import { normalizePredicates, normalizeContributionRoles, normalizeOrganizationP
 
 export const SAVED_VIEW_LIMIT = 20;
 export const SAVED_VIEW_TITLE_LIMIT = 80;
+export const SAVED_VIEWS_FILE_LIMIT = 100_000;
 // Version 1 fixes the current predicate/qualification vocabulary. Reject unknown
 // versions or IDs rather than silently broadening a stored view.
 export const viewConditionsSchema = z.strictObject({
@@ -41,7 +42,17 @@ const collectionSchema = z.strictObject({
 export const savedViewsKey = (dataset: DatasetMode) => `graph-knowledge:saved-views:${dataset}`;
 type StorageAccess = Pick<Storage, "getItem" | "setItem">;
 export class SavedViewsError extends Error {
-  constructor(public reason: "invalid" | "storage" | "limit") { super(reason); }
+  constructor(public reason: "invalid" | "storage" | "limit" | "dataset" | "conflict") { super(reason); }
+}
+
+export function parseSavedViewsBackup(raw: string, dataset: DatasetMode): SavedView[] {
+  let collection: z.infer<typeof collectionSchema>;
+  try {
+    if (raw.length > SAVED_VIEWS_FILE_LIMIT) throw new Error("Oversized collection");
+    collection = collectionSchema.parse(JSON.parse(raw));
+  } catch { throw new SavedViewsError("invalid"); }
+  if (collection.dataset !== dataset) throw new SavedViewsError("dataset");
+  return collection.views;
 }
 
 export function readSavedViews(storage: StorageAccess, dataset: DatasetMode): SavedView[] {
@@ -50,11 +61,45 @@ export function readSavedViews(storage: StorageAccess, dataset: DatasetMode): Sa
   catch { throw new SavedViewsError("storage"); }
   if (raw === null) return [];
   try {
-    if (raw.length > 100_000) throw new Error("Oversized collection");
-    const collection = collectionSchema.parse(JSON.parse(raw));
-    if (collection.dataset !== dataset) throw new Error("Dataset mismatch");
-    return collection.views;
+    return parseSavedViewsBackup(raw, dataset);
   } catch { throw new SavedViewsError("invalid"); }
+}
+
+export function exportSavedViews(storage: StorageAccess, dataset: DatasetMode): string {
+  return JSON.stringify({ version: 1, dataset, views: readSavedViews(storage, dataset) }, null, 2);
+}
+
+// Normalize through the schema before comparing, so JSON property order and
+// predicate ordering do not turn an unchanged backup into a conflict.
+export function planSavedViewsImport(previous: SavedView[], incoming: SavedView[]) {
+  const existing = new Map(previous.map(view => [view.id, savedViewSchema.parse(view)]));
+  const additions: SavedView[] = [];
+  let skipped = 0;
+  for (const candidate of incoming) {
+    const view = savedViewSchema.parse(candidate);
+    const sameId = existing.get(view.id);
+    if (sameId) {
+      if (JSON.stringify(sameId) !== JSON.stringify(view)) throw new SavedViewsError("conflict");
+      skipped++;
+    } else {
+      additions.push(view);
+      existing.set(view.id, view);
+    }
+  }
+  if (previous.length + additions.length > SAVED_VIEW_LIMIT) throw new SavedViewsError("limit");
+  return { views: [...additions, ...previous], added: additions.length, skipped };
+}
+
+// Re-parse the original file and re-read storage at confirmation time. A failed
+// merge never partially imports a collection or overwrites an existing view.
+export function importSavedViews(storage: StorageAccess, dataset: DatasetMode, raw: string) {
+  const incoming = parseSavedViewsBackup(raw, dataset);
+  const result = planSavedViewsImport(readSavedViews(storage, dataset), incoming);
+  if (result.added > 0) {
+    try { storage.setItem(savedViewsKey(dataset), JSON.stringify({ version: 1, dataset, views: result.views })); }
+    catch { throw new SavedViewsError("storage"); }
+  }
+  return result;
 }
 
 // Re-read before each user action so a stale mounted list does not overwrite

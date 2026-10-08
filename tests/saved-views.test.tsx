@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { act, cleanup, fireEvent, render, renderHook, screen, waitFor } from "@testing-library/react";
-import { editSavedViews, readSavedViews, savedViewsKey, SavedViewsError, viewConditionsSchema, type SavedView, type ViewConditions } from "../lib/client/saved-views";
+import { editSavedViews, exportSavedViews, importSavedViews, parseSavedViewsBackup, planSavedViewsImport, readSavedViews, savedViewsKey, SavedViewsError, SAVED_VIEWS_FILE_LIMIT, viewConditionsSchema, type SavedView, type ViewConditions } from "../lib/client/saved-views";
 import { useGraphExplorer } from "../lib/client/use-graph-explorer";
 import { ClientApiError, fetchEntity, fetchNeighbors } from "../lib/client/api";
 import SavedViews from "../components/SavedViews";
@@ -150,5 +150,172 @@ describe("保存ビューの操作と失敗", () => {
     fireEvent(window, new StorageEvent("storage", { key: savedViewsKey("demo") }));
     expect((screen.getByRole("button", { name: "また辿る関係を開く" }) as HTMLButtonElement).disabled).toBe(true);
     expect(screen.getByRole("alert").textContent).toContain("元のデータは変更していません");
+  });
+});
+
+const backup = (views: SavedView[], dataset = "demo") => JSON.stringify({ version: 1, dataset, views });
+
+describe("保存ビューのファイル往復と非破壊import", () => {
+  it("三限定と空条件を書き出し、新しい保存領域へ同じ内容で追加できる", () => {
+    const first = view({ conditions });
+    const second = view({ conditions: { ...all, predicates: [] } });
+    editSavedViews(localStorage, "demo", { add: first });
+    editSavedViews(localStorage, "demo", { add: second });
+    const expected = readSavedViews(localStorage, "demo");
+    const raw = exportSavedViews(localStorage, "demo");
+    expect(JSON.parse(raw)).toEqual({ version: 1, dataset: "demo", views: expected });
+    localStorage.clear();
+    expect(importSavedViews(localStorage, "demo", raw)).toEqual({ views: expected, added: 2, skipped: 0 });
+    expect(readSavedViews(localStorage, "demo")).toEqual(expected);
+    expect(readSavedViews(localStorage, "pilot-event-v1")).toEqual([]);
+    const write = vi.spyOn(Storage.prototype, "setItem");
+    expect(importSavedViews(localStorage, "demo", raw)).toEqual({ views: expected, added: 0, skipped: 2 });
+    expect(write).not.toHaveBeenCalled();
+  });
+  it("条件とJSONプロパティの順序差は重複として扱い、別IDの同名ビューは残す", () => {
+    const first = view({ conditions });
+    editSavedViews(localStorage, "demo", { add: first });
+    const { id, title, rootId, createdAt } = first;
+    const reordered = { createdAt, conditions: { ...conditions, predicates: [...conditions.predicates!].reverse() }, rootId, title, id };
+    const second = view({ title: first.title });
+    const result = importSavedViews(localStorage, "demo", backup([reordered, second]));
+    expect(result).toMatchObject({ added: 1, skipped: 1 });
+    expect(result.views.map(view => view.id)).toEqual([second.id, first.id]);
+  });
+  it("同じIDで内容が異なる場合は一部追加せず、元の保存を保持する", () => {
+    const first = view();
+    editSavedViews(localStorage, "demo", { add: first });
+    const before = localStorage.getItem(savedViewsKey("demo"));
+    expect(() => importSavedViews(localStorage, "demo", backup([view(), { ...first, title: "変更された名前" }]))).toThrow(new SavedViewsError("conflict"));
+    expect(localStorage.getItem(savedViewsKey("demo"))).toBe(before);
+  });
+  it.each([
+    ["JSON破損", "{"],
+    ["未知version", JSON.stringify({ version: 2, dataset: "demo", views: [] })],
+    ["未知語彙", backup([view({ conditions: { ...all, predicates: ["UNKNOWN"] as never } })])],
+    ["不要な知識データ", JSON.stringify({ version: 1, dataset: "demo", views: [], claims: [] })],
+    ["長すぎる入力", " ".repeat(SAVED_VIEWS_FILE_LIMIT + 1)],
+    ["ファイル内件数超過", backup(Array.from({ length: 21 }, () => view()))],
+  ])("%sを拒否し保存領域を変更しない", (_name, raw) => {
+    editSavedViews(localStorage, "demo", { add: view() });
+    const before = localStorage.getItem(savedViewsKey("demo"));
+    expect(() => importSavedViews(localStorage, "demo", raw)).toThrow(new SavedViewsError("invalid"));
+    expect(localStorage.getItem(savedViewsKey("demo"))).toBe(before);
+  });
+  it("別datasetとファイル内の重複IDを拒否する", () => {
+    const saved = view();
+    expect(() => parseSavedViewsBackup(backup([saved], "pilot-event-v1"), "demo")).toThrow(new SavedViewsError("dataset"));
+    expect(() => parseSavedViewsBackup(backup([saved, saved]), "demo")).toThrow(new SavedViewsError("invalid"));
+  });
+  it("プレビュー後に増えた既存保存も保持し、最新状態で上限と衝突を確認する", () => {
+    const incoming = view();
+    expect(planSavedViewsImport([], [incoming]).added).toBe(1);
+    const concurrent = view();
+    editSavedViews(localStorage, "demo", { add: concurrent });
+    expect(importSavedViews(localStorage, "demo", backup([incoming])).views).toEqual([incoming, concurrent]);
+    for (let i = 0; i < 18; i++) editSavedViews(localStorage, "demo", { add: view() });
+    const before = localStorage.getItem(savedViewsKey("demo"));
+    expect(() => importSavedViews(localStorage, "demo", backup([view()]))).toThrow(new SavedViewsError("limit"));
+    expect(localStorage.getItem(savedViewsKey("demo"))).toBe(before);
+    expect(importSavedViews(localStorage, "demo", backup([incoming])).skipped).toBe(1);
+    expect(() => importSavedViews(localStorage, "demo", backup([{ ...incoming, rootId: other.id }]))).toThrow(new SavedViewsError("conflict"));
+  });
+  it("読み書き拒否と壊れた保存領域を成功扱いしない", () => {
+    const saved = view();
+    const readDenied = { getItem: () => { throw new Error("Denied"); }, setItem: vi.fn() };
+    expect(() => exportSavedViews(readDenied, "demo")).toThrow(new SavedViewsError("storage"));
+    expect(() => importSavedViews(readDenied, "demo", backup([saved]))).toThrow(new SavedViewsError("storage"));
+    expect(readDenied.setItem).not.toHaveBeenCalled();
+    const writeDenied = { getItem: () => null, setItem: () => { throw new Error("Quota"); } };
+    expect(() => importSavedViews(writeDenied, "demo", backup([saved]))).toThrow(new SavedViewsError("storage"));
+    localStorage.setItem(savedViewsKey("demo"), "broken");
+    expect(() => exportSavedViews(localStorage, "demo")).toThrow(new SavedViewsError("invalid"));
+    expect(() => importSavedViews(localStorage, "demo", backup([saved]))).toThrow(new SavedViewsError("invalid"));
+    expect(localStorage.getItem(savedViewsKey("demo"))).toBe("broken");
+  });
+});
+
+describe("保存ファイルの確認と取消", () => {
+  const props = () => ({ dataset: "demo" as const, root: null, conditions: all, onOpen: vi.fn(), onClose: vi.fn() });
+  const chooseFile = (raw: string, name = "saved-views.json", text = () => Promise.resolve(raw), size = raw.length) => {
+    const file = new File([raw], name, { type: "application/json" });
+    // jsdom's File does not implement Blob.text yet.
+    Object.defineProperties(file, { text: { value: text }, size: { value: size } });
+    fireEvent.change(screen.getByLabelText("保存ビューのJSONファイル"), { target: { files: [file] } });
+  };
+  const openBackup = () => { fireEvent.click(screen.getByText("ファイルに控える・読み込む")); };
+  it("起点なしでも内容確認後に追加でき、確認や取消だけでは保存・探索を変えない", async () => {
+    const callbacks = props(); render(<SavedViews {...callbacks} />); openBackup();
+    const incoming = view({ title: "ファイルから再訪", conditions });
+    chooseFile(backup([incoming]));
+    await screen.findByRole("region", { name: "読み込む内容の確認" });
+    expect(screen.getByText(/追加予定：1件/)).toBeDefined();
+    expect(screen.getByText(/起点ID：/).textContent).toContain(root.id);
+    expect(readSavedViews(localStorage, "demo")).toEqual([]);
+    fireEvent.click(screen.getByRole("button", { name: "読み込みを取り消す" }));
+    expect(screen.queryByRole("region", { name: "読み込む内容の確認" })).toBeNull();
+    expect(readSavedViews(localStorage, "demo")).toEqual([]);
+    chooseFile(backup([incoming]));
+    await screen.findByRole("region", { name: "読み込む内容の確認" });
+    fireEvent.click(screen.getByRole("button", { name: "確認したビューを追加" }));
+    expect(screen.getByRole("status").textContent).toContain("1件を追加しました");
+    expect(screen.getByRole("button", { name: "ファイルから再訪を開く" })).toBeDefined();
+    expect(callbacks.onOpen).not.toHaveBeenCalled();
+    expect(fetchEntity).not.toHaveBeenCalled();
+    expect(fetchNeighbors).not.toHaveBeenCalled();
+  });
+  it("拒否されたファイルを明示し、同じ入力から正しいファイルを再選択できる", async () => {
+    render(<SavedViews {...props()} />); openBackup();
+    chooseFile(backup([view()], "pilot-event-v1"));
+    await waitFor(() => expect(screen.getByRole("alert").textContent).toContain("別のデータセット"));
+    chooseFile("broken");
+    await waitFor(() => expect(screen.getByRole("alert").textContent).toContain("破損"));
+    const read = vi.fn().mockResolvedValue("{}");
+    chooseFile("{}", "large.json", read, SAVED_VIEWS_FILE_LIMIT + 1);
+    await waitFor(() => expect(screen.getByRole("alert").textContent).toContain("上限超過"));
+    expect(read).not.toHaveBeenCalled();
+    chooseFile(backup([view()]));
+    await screen.findByRole("region", { name: "読み込む内容の確認" });
+    expect(screen.queryByRole("alert")).toBeNull();
+  });
+  it("古いファイルの遅延読込を無視し、読込中の取消も保持する", async () => {
+    render(<SavedViews {...props()} />); openBackup();
+    let resolve!: (value: string) => void;
+    chooseFile("", "old.json", () => new Promise(done => { resolve = done; }));
+    chooseFile(backup([view({ title: "新しいファイル" })]), "new.json");
+    await screen.findByRole("region", { name: "読み込む内容の確認" });
+    await act(async () => resolve(backup([view({ title: "古いファイル" })])));
+    expect(screen.queryByText("古いファイル")).toBeNull();
+    expect(screen.getByText("新しいファイル")).toBeDefined();
+    chooseFile("", "cancel.json", () => new Promise(done => { resolve = done; }));
+    fireEvent.click(screen.getByRole("button", { name: "読み込みを取り消す" }));
+    await act(async () => resolve(backup([view()])));
+    expect(screen.queryByRole("region", { name: "読み込む内容の確認" })).toBeNull();
+    expect(readSavedViews(localStorage, "demo")).toEqual([]);
+  });
+  it("確認時の書込拒否は一覧へ反映せず、再試行して追加できる", async () => {
+    render(<SavedViews {...props()} />); openBackup();
+    chooseFile(backup([view()]));
+    await screen.findByRole("region", { name: "読み込む内容の確認" });
+    const denied = vi.spyOn(Storage.prototype, "setItem").mockImplementation(() => { throw new Error("Denied"); });
+    fireEvent.click(screen.getByRole("button", { name: "確認したビューを追加" }));
+    expect(screen.getByRole("alert").textContent).toContain("保存領域を利用できません");
+    expect(screen.queryByRole("button", { name: "また辿る関係を開く" })).toBeNull();
+    denied.mockRestore();
+    fireEvent.click(screen.getByRole("button", { name: "確認したビューを追加" }));
+    expect(screen.getByRole("button", { name: "また辿る関係を開く" })).toBeDefined();
+  });
+  it("別タブで上限に達したら確認ボタンを止め、削除後は確認できる", async () => {
+    render(<SavedViews {...props()} />); openBackup();
+    chooseFile(backup([view()]));
+    await screen.findByRole("region", { name: "読み込む内容の確認" });
+    for (let i = 0; i < 20; i++) editSavedViews(localStorage, "demo", { add: view() });
+    fireEvent(window, new StorageEvent("storage", { key: savedViewsKey("demo") }));
+    expect((screen.getByRole("button", { name: "確認したビューを追加" }) as HTMLButtonElement).disabled).toBe(true);
+    expect(screen.getByRole("alert").textContent).toContain("20件まで");
+    editSavedViews(localStorage, "demo", { remove: readSavedViews(localStorage, "demo")[0].id });
+    fireEvent(window, new StorageEvent("storage", { key: savedViewsKey("demo") }));
+    expect((screen.getByRole("button", { name: "確認したビューを追加" }) as HTMLButtonElement).disabled).toBe(false);
+    expect(screen.queryByRole("alert")).toBeNull();
   });
 });

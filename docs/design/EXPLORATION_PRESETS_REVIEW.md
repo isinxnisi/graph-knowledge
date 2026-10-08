@@ -6,7 +6,7 @@
 
 保存・共有へ着手する時は、2026-10-06に共有された[Capsule構想](CAPSULE_AND_USER_CONTRIBUTION_VISION.md)も読む。本書のSaved View／保存ワークスペースは既存KGの見方・探索途中を保存する提案。local Entity・assertion・仮説等を持つCapsuleのコンテンツ保存とは区別し、Capsule公開をGlobal受入と同一視しない。Capsuleの具体方式は未決。
 
-2026-10-09追記：[ブラウザ内保存ビュー](LOCAL_SAVED_VIEWS.md)として起点＋具体条件の保存・再訪を先に試作した。以下の会員保存・同期・保存ワークスペースの提案は未実装。
+2026-10-09追記：[ブラウザ内保存ビュー](LOCAL_SAVED_VIEWS.md)として起点＋具体条件の保存・再訪を先に試作した。[探索途中保存](LOCAL_SAVED_WORKSPACE.md)もdatasetごと1件のローカルprototypeとして追加した。以下の会員保存・同期は未実装。
 
 ## 現状と判断
 
