@@ -12,6 +12,8 @@
 
 [2026-10-08夕方の受け入れ・運用改善](archive/autopilot-acceptance/20261008_evening.md)：表示中の経路から根拠へ進む導線、上限で中断したGraph表示操作の完成、当日休止と途中変更の保持。
 
+[受入完了時の休止解除](archive/operations/20261008_AUTOPILOT_ACCEPTANCE_RESET.md)：受入後は次の予定で再試行する追加契約。確認だけでは解除せず、元の休止と失敗記録は保持。
+
 [2026-10-08のDocker容量整理](archive/operations/20261008_DOCKER_CLEANUP.md)：停止17コンテナ・未使用イメージ・キャッシュを削除。稼働環境と全volumeを保持し、6画面を再確認。
 
 ## 作業前に読む文書

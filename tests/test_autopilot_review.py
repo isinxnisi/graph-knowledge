@@ -86,6 +86,100 @@ class AutopilotReviewTest(unittest.TestCase):
         self.git(self.source, "merge", "--ff-only", target)
         self.assertEqual(review.snapshot(self.kit)["pendingCommits"], [])
 
+    def pause(self):
+        state = {"reason": "codex_usage_limit", "day": "2026-10-08", "runId": "test-run"}
+        (self.kit / ".usage-limit.json").write_text(json.dumps(state))
+        return state
+
+    def accepted_target(self):
+        target = self.commit(self.tree, "accepted-change")
+        self.git(self.source, "merge", "--ff-only", target)
+        return target
+
+    def test_acceptance_completion_clears_pause_and_keeps_audit(self):
+        target = self.accepted_target()
+        original = self.pause()
+        _, token = self.hold()
+        with redirect_stdout(io.StringIO()):
+            self.assertEqual(review.run(["complete-acceptance", "--token", token, "--target", target], self.kit), 0)
+        self.assertFalse((self.kit / ".usage-limit.json").exists())
+        audits = list((self.kit / "logs").glob("usage-limit-reset-*.json"))
+        self.assertEqual(len(audits), 1)
+        audit = json.loads(audits[0].read_text())
+        self.assertEqual(audit["previousPause"], original)
+        self.assertEqual(audit["targetHead"], target)
+        self.assertEqual(audit["sourceHead"], self.git(self.source, "rev-parse", "HEAD"))
+        self.assertEqual(audits[0].stat().st_mode & 0o777, 0o600)
+        with redirect_stdout(io.StringIO()):
+            self.assertEqual(review.complete_acceptance(self.kit, token, target), 0)
+        self.assertEqual(list((self.kit / "logs").glob("usage-limit-reset-*.json")), audits)
+
+    def test_review_alone_keeps_daily_pause(self):
+        self.accepted_target()
+        self.pause()
+        review.snapshot(self.kit)
+        self.assertTrue((self.kit / ".usage-limit.json").exists())
+
+    def test_acceptance_completion_rejects_pending_and_wrong_target(self):
+        target = self.commit(self.tree)
+        self.pause()
+        _, token = self.hold()
+        with self.assertRaises(RuntimeError):
+            review.complete_acceptance(self.kit, token, target)
+        self.git(self.source, "merge", "--ff-only", target)
+        with self.assertRaises(RuntimeError):
+            review.complete_acceptance(self.kit, token, self.base)
+        self.assertTrue((self.kit / ".usage-limit.json").exists())
+
+    def test_acceptance_completion_rejects_dirty_and_git_operation(self):
+        target = self.accepted_target()
+        self.pause()
+        _, token = self.hold()
+        for repo in (self.source, self.tree):
+            dirty = repo / "unfinished"
+            dirty.write_text("preserve")
+            with self.assertRaises(RuntimeError):
+                review.complete_acceptance(self.kit, token, target)
+            self.assertEqual(dirty.read_text(), "preserve")
+            self.assertTrue((self.kit / ".usage-limit.json").exists())
+            dirty.unlink()
+        marker = Path(self.git(self.source, "rev-parse", "--path-format=absolute", "--git-path", "CHERRY_PICK_HEAD"))
+        marker.write_text(target)
+        with self.assertRaises(RuntimeError):
+            review.complete_acceptance(self.kit, token, target)
+        self.assertTrue((self.kit / ".usage-limit.json").exists())
+
+    def test_acceptance_completion_requires_held_token_and_main(self):
+        target = self.accepted_target()
+        self.pause()
+        with self.assertRaises(RuntimeError):
+            review.complete_acceptance(self.kit, "missing", target)
+        _, token = self.hold()
+        with self.assertRaises(RuntimeError):
+            review.complete_acceptance(self.kit, "wrong", target)
+        self.git(self.source, "checkout", "-qb", "manual-prototype")
+        with self.assertRaises(RuntimeError):
+            review.complete_acceptance(self.kit, token, target)
+        self.assertTrue((self.kit / ".usage-limit.json").exists())
+
+    def test_acceptance_completion_rejects_invalid_pause(self):
+        target = self.accepted_target()
+        marker = self.kit / ".usage-limit.json"
+        marker.write_text('{"reason":"unknown"}')
+        _, token = self.hold()
+        with self.assertRaises(RuntimeError):
+            review.complete_acceptance(self.kit, token, target)
+        self.assertEqual(marker.read_text(), '{"reason":"unknown"}')
+
+    def test_acceptance_completion_refresh_failure_keeps_reset(self):
+        target = self.accepted_target()
+        self.pause()
+        (self.kit / "report.py").write_text('raise SystemExit(1)\n')
+        _, token = self.hold()
+        with redirect_stdout(io.StringIO()):
+            self.assertEqual(review.complete_acceptance(self.kit, token, target), 0)
+        self.assertFalse((self.kit / ".usage-limit.json").exists())
+
     def test_dirty_and_git_operation_are_reported(self):
         (self.tree / "uncommitted").write_text("keep")
         (self.source / "manual-dirty").write_text("keep")

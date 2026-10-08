@@ -170,6 +170,43 @@ def print_review(data):
     print("作業開始には make autopilot-hold を別terminalで保持してください。確認だけでは次回実行を止めません。")
 
 
+def complete_acceptance(kit, token, target):
+    """A reviewed, committed acceptance also clears the local daily pause."""
+    with review_lock(kit, token):
+        data = snapshot(kit, token)
+        if data["targetHead"] != target:
+            raise RuntimeError("確認した固定SHAと自動側HEADが異なります。再レビューしてください。")
+        if data["pendingCommits"] or not data["integrationReady"]:
+            raise RuntimeError("未反映commit・途中変更・Git操作途中があります。受入を完了してから休止を解除してください。")
+        if git(data["source"], "branch", "--show-current") != "main":
+            raise RuntimeError("main側で受入を完了してください。別branchの取り込みでは休止を解除しません。")
+        marker = kit / ".usage-limit.json"
+        if marker.exists():
+            state = json.loads(marker.read_text())
+            if not isinstance(state, dict) or state.get("reason") != "codex_usage_limit":
+                raise RuntimeError("利用上限の休止状態が不正です。変更せず確認してください。")
+            logs = kit / "logs"
+            logs.mkdir(exist_ok=True)
+            audit = logs / ("usage-limit-reset-" + uuid.uuid4().hex + ".json")
+            content = {"reason": "acceptance_completed", "resetAt": data["checkedAt"],
+                       "sourceHead": data["sourceHead"], "targetHead": target, "previousPause": state}
+            # Preserve the original evidence before removing only the pause marker.
+            with audit.open("x") as out:
+                audit.chmod(0o600)
+                json.dump(content, out, ensure_ascii=False)
+                out.write("\n")
+            marker.unlink()
+            print("受入完了：利用上限による当日休止を解除しました。次の予定で再試行します。")
+        else:
+            print("受入完了：利用上限による休止はありません。次の予定はそのままです。")
+        reporter = kit / "report.py"
+        if reporter.exists():
+            rc = subprocess.run([sys.executable, str(reporter), "--refresh"], stdin=subprocess.DEVNULL).returncode
+            if rc:
+                print("報告更新に失敗しました。休止解除の結果とローカル記録は保持しています。", file=sys.stderr)
+        return 0
+
+
 def assert_held(kit, token, quiet=False):
     path = kit / "manual-session.json"
     if not path.exists():
@@ -234,6 +271,9 @@ def run(arguments, kit):
     guarded.add_argument("command", nargs=argparse.REMAINDER)
     assertion = commands.add_parser("assert-held")
     assertion.add_argument("--token", required=True)
+    accepted = commands.add_parser("complete-acceptance")
+    accepted.add_argument("--token", required=True)
+    accepted.add_argument("--target", required=True, help="レビュー・受入した固定SHA")
     options = parser.parse_args(arguments)
     try:
         if options.action == "review":
@@ -245,6 +285,8 @@ def run(arguments, kit):
             return 0
         if options.action == "assert-held":
             return assert_held(kit, options.token)
+        if options.action == "complete-acceptance":
+            return complete_acceptance(kit, options.token, options.target)
         configuration(kit)
         if options.action == "hold":
             return hold(kit, options.minutes)
