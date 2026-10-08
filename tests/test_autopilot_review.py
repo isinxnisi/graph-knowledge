@@ -191,6 +191,7 @@ class AutopilotReviewTest(unittest.TestCase):
         if not runner.exists():
             self.skipTest("既存runnerがない環境。flock・プロセス排他の他テストは実施")
         shutil.copyfile(runner, self.kit / "autopilot-run.sh")
+        shutil.copyfile(runner.with_name("usage_limit.py"), self.kit / "usage_limit.py")
         binaries = self.kit / "bin"
         binaries.mkdir()
         for name in ("node", "npm", "fake-codex"):

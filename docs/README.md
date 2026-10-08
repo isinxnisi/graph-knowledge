@@ -4,9 +4,13 @@
 
 手動Codexと自動開発を併用する場合は、[自動開発の確認・排他・受け入れ](AUTOPILOT_COLLABORATION.md)を読む。作業開始時の未反映検知と、予定実行との共通ロックを使う。
 
+[自動開発の現在の進め方](AUTOPILOT_DIRECTION.md)：将来像に沿う体験・導線を小さく実装して判断する。毎回の価値立証を関門にしない。利用量上限時は当日休止する。
+
 [2026-10-07の受け入れ記録](archive/autopilot-acceptance/20261007.md)：検索状態、表示中対象への移動、関連主張の順次表示・部分再試行。
 
 [2026-10-08の受け入れ記録](archive/autopilot-acceptance/20261008.md)：狭い画面、隣接一覧、関係両端への移動、通信timeout、条件変更前への復帰。手動画面起動とhealthcheckも確認。
+
+[2026-10-08夕方の受け入れ・運用改善](archive/autopilot-acceptance/20261008_evening.md)：表示中の経路から根拠へ進む導線、上限で中断したGraph表示操作の完成、当日休止と途中変更の保持。
 
 [2026-10-08のDocker容量整理](archive/operations/20261008_DOCKER_CLEANUP.md)：停止17コンテナ・未使用イメージ・キャッシュを削除。稼働環境と全volumeを保持し、6画面を再確認。
 
