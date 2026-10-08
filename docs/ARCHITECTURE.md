@@ -1,6 +1,6 @@
 # 現行技術設計
 
-更新日: 2026-10-08 / 状態: 初期Vertical Sliceと探索の開閉・Node再クリックまで実装済み。既存predicateと限定制作Roleによる条件付き探索を追加。v2 Role Claim 5件を人間受入後に投入・検証済み。関係概要・明示起点切替・直前一件復帰、人物・作品・組織の統一検索入口も実装。科学・研究機関pilot v1を別環境へ投入・観察済み。Phase 14では科学v2と組織立場のtyped限定を追加し、制作Roleと独立した語彙を保って条件・比較処理を共有。Phase 15の特定Event参加（第三のtyped限定）を実装。実資料E01/E03と特定開催回・開催期間を人間受入後に生成・専用DBへ投入・観察済み。Phase 20で三relation facetを条件editorへ接続し、具体条件を使う既存取得・復帰を維持。Phase 21でGraphの限定概要・中立的な肯否と、関係全体から独立主張／根拠へ降りる詳細を整合。Phase 22でGraphラベルを短い関係見出しと構造化済みの具体語優先へ変更。汎用taxonomy・プリセット・会員保存は未実装。[文書の入口](README.md)に現役設計とフェーズ別履歴をまとめる。
+更新日: 2026-10-09 / 状態: 初期Vertical Sliceと探索の開閉・Node再クリックまで実装済み。既存predicateと限定制作Roleによる条件付き探索を追加。v2 Role Claim 5件を人間受入後に投入・検証済み。関係概要・明示起点切替・直前一件復帰、人物・作品・組織の統一検索入口も実装。科学・研究機関pilot v1を別環境へ投入・観察済み。Phase 14では科学v2と組織立場のtyped限定を追加し、制作Roleと独立した語彙を保って条件・比較処理を共有。Phase 15の特定Event参加（第三のtyped限定）を実装。実資料E01/E03と特定開催回・開催期間を人間受入後に生成・専用DBへ投入・観察済み。Phase 20で三relation facetを条件editorへ接続し、具体条件を使う既存取得・復帰を維持。Phase 21でGraphの限定概要・中立的な肯否と、関係全体から独立主張／根拠へ降りる詳細を整合。Phase 22でGraphラベルを短い関係見出しと構造化済みの具体語優先へ変更。汎用taxonomy・プリセット・会員保存は未実装。[文書の入口](README.md)に現役設計とフェーズ別履歴をまとめる。
 
 ## 前提と設計の位置づけ
 
@@ -663,3 +663,7 @@ SPO集約・claimIds・方向・中立的な肯否表現・個別限定の否定
 
 
 Phase 22後の局所視覚調整：構造化済み具体語を持つRelationだけ、カテゴリを11pxの小さい背景付きpatchとして左に添える。主表示は15pxの具体語で、自然なpredicate表示とfallbackにはpatchを付けない。Cytoscapeラベルと補助DOMの描画上の分離であり、Relationの意味・claimIds・API・DB・datasetは不変。詳細は[現行presentation契約](design/RELATION_PRESENTATION_CONTRACTS.md)を参照。
+
+## ブラウザ内の保存ビュー（2026-10-09）
+
+[保存契約](design/LOCAL_SAVED_VIEWS.md)に従い、dataset別のlocalStorageへ起点ID・四つの具体条件・名前・保存日時を20件まで保持する。version=1の形式を検証し、未知語彙・dataset不一致・破損は上書きしない。Entity／Claim／Sourceの複製・cursor・枝・配置は保存しない。起点を現在のEntity APIで確認後、一世代で起点＋条件を適用して一段階だけ取得する。確認失敗・中止では旧Graphを維持し、成功時は既存の直前一件復帰へ旧探索を保持する。保存領域の失敗を明示し、知識DB・API・dataset・認可契約は不変。会員保存・同期・共有・探索ワークスペースは未実装。

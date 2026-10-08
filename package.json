@@ -11,7 +11,7 @@
     "start": "next start --hostname 127.0.0.1",
     "typecheck": "next typegen && tsc --noEmit",
     "lint": "npm run vocabulary:check && npm run qualification:check && eslint .",
-    "test": "npm run vocabulary:check && npm run qualification:check && vitest run tests/graph-path.test.tsx tests/client-api.test.tsx tests/domain.test.ts tests/http.test.ts tests/ui-state.test.tsx tests/pilot.test.ts tests/vocabulary.test.ts tests/contribution.test.ts tests/science.test.ts tests/qualification.test.ts tests/event.test.ts tests/overview.test.tsx",
+    "test": "npm run vocabulary:check && npm run qualification:check && vitest run tests/saved-views.test.tsx tests/graph-path.test.tsx tests/client-api.test.tsx tests/domain.test.ts tests/http.test.ts tests/ui-state.test.tsx tests/pilot.test.ts tests/vocabulary.test.ts tests/contribution.test.ts tests/science.test.ts tests/qualification.test.ts tests/event.test.ts tests/overview.test.tsx",
     "test:integration": "vitest run tests/seed.integration.test.ts tests/api.integration.test.ts --no-file-parallelism",
     "fixture:validate": "tsx scripts/validate-fixture.ts",
     "db:constraints": "tsx scripts/constraints.ts",
