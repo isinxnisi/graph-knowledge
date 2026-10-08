@@ -1,5 +1,7 @@
 "use client";
 
+import type { RebuiltWorkspace } from "./saved-workspace";
+import { workspaceLabels } from "../i18n/workspace";
 import { captureExploration, type ExplorationSnapshot } from "./exploration-snapshot";
 import type { GraphView, ViewRestoration } from "./graph-view";
 import { viewConditionsSchema, type ViewConditions } from "./saved-views";
@@ -126,6 +128,14 @@ export function useGraphExplorer() {
     }));
     setSelection({ kind: "entity", id: entity.id }); void expand(entity.id);
   }, [commit, expand, selection]);
+  const openWorkspace = useCallback((workspace: RebuiltWorkspace, view: GraphView | null) => {
+    setPrevious(captureExploration(current.current, selection, view));
+    pending.current.forEach(controller => controller.abort()); pending.current.clear();
+    generation.current += 1;
+    setViewRestoration(workspace.view ? { generation: generation.current, view: workspace.view } : null);
+    commit({ ...workspace.graph, generation: generation.current, notice: workspaceLabels().restored(workspace.skippedBranches) });
+    setSelection(workspace.graph.centerId ? { kind: "entity", id: workspace.graph.centerId } : null);
+  }, [commit, selection]);
   const changePredicates = useCallback((values: PredicateFilter, roleValues: ContributionRoleFilter = current.current.contributionRoles ?? null, positionValues: OrganizationPositionFilter = current.current.organizationPositions ?? null, eventRoleValues: EventRoleFilter = current.current.eventRoles ?? null, view: GraphView | null = null) => {
     const predicates = normalizePredicates(values);
     const eventRoles = normalizeEventRoles(eventRoleValues, predicates);
@@ -162,5 +172,5 @@ export function useGraphExplorer() {
     if (!current.current.nodes[id]) return;
     if (current.current.expansions[id]?.open) close(id); else void expand(id);
   }, [close, expand]);
-  return { graph, selection, previous, viewRestoration, switchRoot, restorePrevious, openSavedView, changePredicates, chooseRoot, inspectEntity, selectEntity, selectClaim, selectRelation, expand, close, toggleEntity };
+  return { graph, selection, previous, viewRestoration, switchRoot, restorePrevious, openSavedView, openWorkspace, changePredicates, chooseRoot, inspectEntity, selectEntity, selectClaim, selectRelation, expand, close, toggleEntity };
 }

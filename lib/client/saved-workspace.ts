@@ -1,0 +1,133 @@
+import { z } from "zod";
+import { workspaceLabels } from "../i18n/workspace";
+import { DATASET_MODES, type DatasetMode } from "../domain/dataset";
+import { claimSummarySchema, entitySummarySchema } from "../domain/api";
+import { explorationKey, matchesClaim } from "../domain/exploration";
+import { fetchEntity, fetchNeighbors } from "./api";
+import { CACHE_LIMITS, emptyExpansion, emptyGraph, projectGraph, withinLimits, type GraphState } from "./graph-state";
+import type { GraphView } from "./graph-view";
+import { viewConditionsSchema } from "./saved-views";
+
+export const WORKSPACE_PAGE_LIMIT = 40;
+const point = z.strictObject({ x: z.number().finite(), y: z.number().finite() });
+export const workspaceSchema = z.strictObject({
+  version: z.literal(1), dataset: z.enum(DATASET_MODES), id: z.uuidv4(),
+  title: z.string().trim().min(1).max(80), savedAt: z.iso.datetime(), rootId: z.uuidv4(),
+  conditions: viewConditionsSchema,
+  branches: z.array(z.strictObject({ id: z.uuidv4(), open: z.boolean(), pages: z.number().int().min(0).max(WORKSPACE_PAGE_LIMIT) })).max(CACHE_LIMITS.entities),
+  view: z.strictObject({
+    positions: z.record(z.uuidv4(), point).refine(value => Object.keys(value).length <= CACHE_LIMITS.entities),
+    pan: point, zoom: z.number().min(0.15).max(2), initialLayoutDone: z.boolean(),
+  }).nullable(),
+}).refine(value => new Set(value.branches.map(branch => branch.id)).size === value.branches.length
+  && value.branches.reduce((sum, branch) => sum + branch.pages, 0) <= WORKSPACE_PAGE_LIMIT);
+export type SavedWorkspace = z.infer<typeof workspaceSchema>;
+export type RebuiltWorkspace = { graph: GraphState; view: GraphView | null; skippedBranches: number };
+export const workspaceKey = (dataset: DatasetMode) => `graph-knowledge:workspace:${dataset}`;
+export class WorkspaceError extends Error {
+  constructor(public reason: "invalid" | "storage" | "conflict" | "limit" | "loading" | "response") { super(reason); }
+}
+type StorageAccess = Pick<Storage, "getItem" | "setItem" | "removeItem">;
+
+export function captureWorkspace(dataset: DatasetMode, title: string, graph: GraphState, view: GraphView | null): SavedWorkspace {
+  if (Object.values(graph.expansions).some(meta => meta.loading)) throw new WorkspaceError("loading");
+  const branches = Object.entries(graph.expansions).map(([id, meta]) => ({ id, open: meta.open, pages: meta.pages.length }));
+  if (branches.reduce((sum, branch) => sum + branch.pages, 0) > WORKSPACE_PAGE_LIMIT) throw new WorkspaceError("limit");
+  return workspaceSchema.parse({
+    version: 1, dataset, id: crypto.randomUUID(), title, savedAt: new Date().toISOString(), rootId: graph.centerId,
+    conditions: { predicates: graph.predicates, contributionRoles: graph.contributionRoles, organizationPositions: graph.organizationPositions, eventRoles: graph.eventRoles },
+    branches,
+    view: view ? { ...view, positions: Object.fromEntries(Object.entries(view.positions).filter(([id]) => graph.cacheNodes[id])) } : null,
+  });
+}
+
+export function readWorkspace(storage: StorageAccess, dataset: DatasetMode): SavedWorkspace | null {
+  let raw: string | null;
+  try { raw = storage.getItem(workspaceKey(dataset)); } catch { throw new WorkspaceError("storage"); }
+  if (raw === null) return null;
+  try {
+    if (raw.length > 100_000) throw new Error("Oversized workspace");
+    const workspace = workspaceSchema.parse(JSON.parse(raw));
+    if (workspace.dataset !== dataset) throw new Error("Unexpected dataset");
+    return workspace;
+  } catch { throw new WorkspaceError("invalid"); }
+}
+
+// A single explicit slot, independent of saved-view v1 and its backup files.
+// Do not replace a slot that changed after the user reviewed it.
+export function writeWorkspace(storage: StorageAccess, dataset: DatasetMode, expectedId: string | null, value: SavedWorkspace | null) {
+  if ((readWorkspace(storage, dataset)?.id ?? null) !== expectedId) throw new WorkspaceError("conflict");
+  const workspace = value === null ? null : workspaceSchema.parse(value);
+  if (workspace && workspace.dataset !== dataset) throw new WorkspaceError("invalid");
+  try {
+    if (workspace) storage.setItem(workspaceKey(dataset), JSON.stringify(workspace));
+    else storage.removeItem(workspaceKey(dataset));
+  } catch { throw new WorkspaceError("storage"); }
+  return workspace;
+}
+
+const neighborsSchema = z.object({
+  centerId: z.uuidv4(), nodes: z.array(entitySummarySchema).max(51), claims: z.array(claimSummarySchema).max(50),
+  page: z.object({ hasMore: z.boolean(), nextCursor: z.string().min(1).nullable() }),
+});
+
+// Re-resolve references using current data, never old claims or old cursors.
+// Build off-screen; cancellation, invalid responses and limits cannot replace
+// the active exploration with a partially replayed graph.
+export async function rebuildWorkspace(value: SavedWorkspace, signal: AbortSignal, progress: (done: number, total: number) => void = () => {}): Promise<RebuiltWorkspace> {
+  const workspace = workspaceSchema.parse(value);
+  const conditions = workspace.conditions;
+  signal.throwIfAborted();
+  const root = entitySummarySchema.strip().parse((await fetchEntity(workspace.rootId, signal)).entity);
+  signal.throwIfAborted();
+  if (root.id !== workspace.rootId) throw new WorkspaceError("response");
+  let graph: GraphState = { ...emptyGraph(), ...conditions,
+    conditionKey: explorationKey(conditions.predicates, conditions.contributionRoles, conditions.organizationPositions, conditions.eventRoles),
+    roots: [root.id], centerId: root.id, cacheNodes: { [root.id]: root },
+  };
+  const remaining = new Map(workspace.branches.map(branch => [branch.id, branch]));
+  const total = workspace.branches.reduce((sum, branch) => sum + branch.pages, 0);
+  let done = 0;
+  progress(done, total);
+  while (remaining.size) {
+    // A closed ancestor still supplies references for its dormant descendants.
+    // Unreachable references are never promoted to new roots.
+    const branch = [...remaining.values()].find(item => graph.cacheNodes[item.id]);
+    if (!branch) break;
+    remaining.delete(branch.id);
+    const meta = emptyExpansion();
+    meta.open = branch.open;
+    if (branch.open && branch.pages === 0) meta.error = workspaceLabels().unfetched;
+    const seenCursors = new Set<string>();
+    for (let index = 0; index < branch.pages; index++) {
+      signal.throwIfAborted();
+      const after = meta.nextCursor;
+      const parsed = neighborsSchema.safeParse(await fetchNeighbors(branch.id, after, signal, conditions.predicates, conditions.contributionRoles, conditions.organizationPositions, conditions.eventRoles));
+      signal.throwIfAborted();
+      if (!parsed.success) throw new WorkspaceError("response");
+      const page = parsed.data;
+      const nodes = new Set(page.nodes.map(node => node.id));
+      if (page.centerId !== branch.id || !nodes.has(branch.id)
+        || page.page.hasMore !== (page.page.nextCursor !== null)
+        || (page.page.nextCursor !== null && seenCursors.has(page.page.nextCursor))
+        || page.claims.some(claim => (claim.subjectId !== branch.id && claim.objectId !== branch.id)
+          || !nodes.has(claim.subjectId) || !nodes.has(claim.objectId)
+          || !matchesClaim(claim, conditions.predicates, conditions.contributionRoles, conditions.organizationPositions, conditions.eventRoles))) throw new WorkspaceError("response");
+      page.nodes.forEach(node => { graph.cacheNodes[node.id] = node; });
+      page.claims.forEach(claim => { graph.cacheClaims[claim.id] = claim; });
+      if (Object.keys(graph.cacheNodes).length > CACHE_LIMITS.entities || Object.keys(graph.cacheClaims).length > CACHE_LIMITS.claims) throw new WorkspaceError("limit");
+      meta.pages.push({ after, claimIds: page.claims.map(claim => claim.id), nextCursor: page.page.nextCursor });
+      meta.nextCursor = page.page.nextCursor; meta.hasMore = page.page.hasMore;
+      if (meta.nextCursor) seenCursors.add(meta.nextCursor);
+      progress(++done, total);
+      if (!meta.hasMore) break;
+    }
+    meta.used = ++graph.clock;
+    graph.expansions[branch.id] = meta;
+  }
+  graph = projectGraph(graph);
+  if (!withinLimits(graph)) throw new WorkspaceError("limit");
+  signal.throwIfAborted();
+  const view = workspace.view ? { ...workspace.view, positions: Object.fromEntries(Object.entries(workspace.view.positions).filter(([id]) => graph.cacheNodes[id])) } : null;
+  return { graph, view, skippedBranches: remaining.size };
+}
