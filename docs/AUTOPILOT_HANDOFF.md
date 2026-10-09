@@ -1,24 +1,25 @@
 # 自動開発チェックポイント
-- 状態：完了（ブラウザ内Capsuleの説明・構成編集の初回。会員保存・人間受入とは別）
-- 目的：調査の追記や訂正のたびに作り直さず、同じCapsuleを育てて根拠へ戻れるようにする。
-- Starting HEADの直接閲覧と最小Capsuleは完了済み。会員保存・Capsule編集・閲覧リンク拡張を比較した。
-- main側ACCOUNT_AND_OWNERSHIP_DESIGN.mdを参照。今回は再作成・旧内容削除が必要な具体的障害を優先。会員保存の前提として編集の完全版を求めない。
-- 閲覧→編集→題名・説明・Entity／独立Claimの追加／削除→保存→次版閲覧→出典→探索へ戻る経路を追加。
-- 候補は保存済み参照とモーダル開始時の探索Graph。追加は明示選択。既存対象は初期選択を保ち、主張を外しても対象を自動削除しない。
-- 保存済み参照は現在データを再解決。失敗・404・端点不一致をGraphのcacheで補完しない。未解決参照はUUIDを示して保持する。
-- 未解決Claimを選択する間は元のEntity全件を保持し、端点を推論しない。主張を明示的に外した後は対象も外せる。
-- 同ID／dataset／作成日時／説明言語を保ち、保存成功時だけrevisionを1進めてupdatedAtを付ける。過去版の履歴保存・復元は未実装。
-- collection v1は無書込で読み、書込時に全件を維持してv2へ移す。旧アプリはv2を拒否する。rollback時は保存領域JSONを保全する。
-- 編集・削除前に開始時のレコード全体を照合。他タブの更新／削除を検出し、入力を保持して上書きを拒否。storageイベントにも追従。
-- 10件満杯でも編集可能。他のCapsuleを保持し、無変更では版を作らない。取消・Escape・一覧へ戻る時は未保存差分だけ破棄確認。
-- localStorage完全同時writeの後勝ちという既存限界は残る。サーバー認可・原子的な競合制御・版固定共有の代用ではない。
-- 採用契約はdocs/design/LOCAL_CAPSULES.md。ARCHITECTURE／PROJECT_CONTEXT／READMEも現状へ整合。
-- 通常テスト442件成功（追加19件、maxWorkers=2）。lint・最終変更ファイルESLint・型検査込み本番build・最終tsc・差分検査成功。
-- 本番E2E15件・新規編集の開発E2E4件成功：新規編集4、既存Capsule3、条件復帰2、複数途中保存2、直接閲覧4。既存API応答fixtureで検証。検証server3220は終了。
-- 390/1440pxで追加・削除→内容版2/3→reload→Source、元Graphの枝・座標・pan/zoom・フォーカス保持を確認。両幅の画面を目視し横はみ出しなし。
-- 実際の二つのタブによる更新／削除競合、参照404／通信失敗中の編集と回復後の出典再閲覧をE2Eで確認。
-- 初回の並列テストは2件が時間切れ、並列数2で全件成功。新E2Eの初期値付きtextarea検索をrole指定へ修正。
-- 既存Capsule E2Eの開発StrictModeでの要求回数assertは失敗、本番では成功。製品の取得・abort契約は変更していない。
-- 実DB・実データ利用評価・人間受入は未実施。KG／API／凍結dataset／既存探索保存形式は不変。公開・外部送信・課金・credential変更なし。
-- 次候補は会員Capsule保存。専用PostgreSQL・Better Auth・開発OIDC fixtureで2所有者のprivate保存縦経路へ進む。今回の編集を磨き続ける前提にはしない。
-- 外部判断待ちなし。実Google接続のcredential・公開運用は将来の該当段階だけに限定して人間判断を残す。
+- 状態：継続中（会員Capsule保存。認証・所有者付きAPIのチェックポイント）
+- 目的：別ブラウザでも本人の説明付きCapsuleを読み返し、現在の根拠・探索へ戻れるようにする。
+- Starting HEADのブラウザ内編集は完了。編集の細部・直接閲覧拡張・会員保存を比較し、新しい再訪体験を優先した。
+- main側ACCOUNT_AND_OWNERSHIP_DESIGN.mdを読み取り専用で参照。今回の採用契約はdocs/design/MEMBER_CAPSULES.md。
+- Better Auth 1.7.7／pg 8.23.1を固定導入。専用PostgreSQLにUser・account・sessionとprivate Capsuleを保存する。
+- 無設定では会員APIだけ503。既存Explorer／KG API／Neo4j／凍結dataset／ブラウザ保存形式は不変。会員UIはまだない。
+- /api/authの限定経路、/api/member/profile GET、capsules一覧／作成／読取／更新／削除を追加。
+- ownerはDB sessionから決定。UserはKG Personと別UUID、メール一致linking無効、provider token破棄、active確認。
+- 7日session・1日更新、cookie cacheなし。Origin／CSRF／callback検査はテスト時も有効、private応答no-store。
+- 内容だけを明示取込する契約。server新ID・内容版1、既存local保存は自動送信・削除しない。
+- 所有者・dataset・期待revisionをSQLで確認。非所有者404、失効401、競合409、運営DB不通503。
+- User行lockで同時作成上限10件と冪等性を保証。削除後もID／digest receiptを残し、遅延再送で復活させない。
+- 参照の構文を検証して保持する段階。実在・端点の保証はせず、次のUIで既存Capsuleの現在KG再解決を使う。
+- 固定SQLをtransaction／checksum付きで明示migration。npm run member:migrate。起動時実行・DROPなし。
+- npm run test:memberは専用一時PGと署名OIDCを起動・破棄。production／別origin／別DBでfixtureを拒否。
+- 通常448件、実OIDC・実PG17件成功。2所有者、偽装／他人拒否、同時再送／更新／上限、失効、DB停止・回復・停止中初回起動を確認。
+- migration再実行と正式schema整合、nonce／issuer／state不正、メール一致別identity、cookie環境分離も確認。
+- lint・型検査込み本番build・最終tsc・変更ファイルESLint・差分検査成功。本番Explorer200と会員3経路503/no-storeを確認。
+- 専用PG・OIDC・本番smokeサーバーは終了。初回のテスト既定Origin省略とmigration前の認証初期化を修正して再検証済み。
+- PATH Node 24.15.0はengines 24.21.0と差がありnpm警告。npm auditは既存ESLint系5 high、今回追加依存の指摘なし。
+- 次の具体作業：Explorerの会員入口→ログイン→local Capsuleの明示保存→本人一覧／再閲覧→Claim／Source→探索のUI接続。
+- 390/1440px・二つのブラウザ・reload・失効時の内容保持をE2E化。プロフィール設定UIも未実装。API調査からやり直さない。
+- Google実接続・実KG・ブラウザUI・人間受入は未検証。公開前にreceipt保持／頻度制限・停止操作と全session削除・退会等を設計。
+- 外部判断待ちなし。実Google credentialと公開運用は該当段階だけに残す。公開・外部送信・課金・既存credential変更なし。
