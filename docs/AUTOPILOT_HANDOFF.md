@@ -1,24 +1,25 @@
 # 自動開発チェックポイント
-- 状態：完了・2026-10-10手動実装受入。実Google・公開運用・discussionの完了ではない。
-- 目的：説明付き関係図を他人へ渡し、同じ版から根拠と探索へ進み、必要なら共有を止められるようにする。
-- 前回の会員編集は完了。新参照追加・プロフィール設定より、新しい共有体験を優先した。
-- main側COMMUNITY_VERTICAL_SLICES.mdを読み取り専用で参照。採用契約はdocs/design/CAPSULE_LINK_SHARING.md。
-- /memberの閲覧→版の確認→発行／コピー→/sharedの匿名閲覧→独立Claim／Source→別タブのExplorerを接続。
-- PGへ追加migration 002。明示共有した内容版だけ固定し、安定参照はCapsule UUID＋revision。KG・凍結datasetは不変。
-- 有効リンクは同時1件。256bit tokenはDBにhashだけ保存。URL fragmentから専用headerで読取り、owner情報を返さない。
-- private編集は共有先へ反映しない。新しい版の共有は明示再発行し、旧リンクを失効する。
-- 発行は期待内容版・期待link ID・session ownerを照合。停止・再発行・更新・削除はCapsule行lockで直列化する。
-- 共有版は最大50。停止後も版を保持し、Capsule削除で版とlinkを削除。active=false中はリンク読取を拒否する。
-- 応答消失後は状態を再確認し、明示再発行／停止。token全文を再取得するAPIはない。
-- 内容・tokenはlocal/sessionStorageへ保存しない（URLは履歴に残り得る）。非表示で本文を消し、復帰・明示操作・30秒ごとに再認可。
-- /sharedは本文なしSSR・noindex／no-referrer。本番ページ・本文APIはno-store。既取得のコピーまでは回収できない。
-- 通常単体461件＋追加共有UI6件成功。最終関連58件、実OIDC／一時PGの20件、Lint・型検査込みbuild・差分検査成功。
-- 既存会員E2E10件成功。最終の共有E2E2件で390/1440pxの匿名別context・根拠・探索・版固定・再発行・停止を確認。
-- 同一fragment URLの再移動はreloadにならない。失効検証は明示再確認／reloadで行い、dev殻のno-cacheと本文no-storeを区別。
-- npm run test:member:e2e -- --grep 限定リンク で絞り込み可。既存の一時DB guard・時間上限・cleanupは維持。
-- 両幅を目視し横溢れ・page errorなし。本番smokeで共有200、無設定API503、Explorer／member200を確認。
-- 受入で単体467件・実PG20件・通常ブラウザ16件・実Neo4j6件・会員ブラウザ12件（分割）を確認。会員のKG応答はfixtureで、実Google／実KG＋会員の組合せは未検証。
-- 次の第一候補：Capsuleを安定対象にする2 Userの短いスレッド。投稿時版・非共有版の非表示・投稿認可・撤回を狭く設計して接続する。
-- 共有済み旧版の本人向け再閲覧・新参照追加も候補。共有UIの細部磨きだけを既定の次作業にしない。
-- 公開前の頻度制限・headerログ方針・保持／退会・通報／運営非表示は未了。外部判断待ちはなく、実接続・公開だけ別判断。
-- 受入時にPG借出中切断の処理を補強。会員E2Eは専用.next-member-test／Webpack／route preflight、全体15分・runner16分。詳細はdocs/archive/autopilot-acceptance/20261010.md。
+- 状態：完了・2026-10-10共有版コメントの初回実装。人間受入・実Google・実公開・運営対応の完了ではない。
+- 目的：説明付きの同じ関係図を読みながら、別Userと根拠について話せるようにする。
+- 前回の限定共有は受入済み。旧版再閲覧・新参照追加と比較し、2 Userの会話という新しい体験を優先した。
+- 採用契約：docs/design/CAPSULE_DISCUSSION.md。Capsuleに一つのthread、投稿には固定した共有revisionを保持する。
+- /member・/sharedのReader→明示してコメントを開く→受付開始→ログイン別Userの投稿→回答・根拠・撤回・停止を接続。
+- 既存リンクは読取のまま。受付は既定停止で、ownerが明示開始する。受付状態は全版共通。
+- 一覧は閲覧中の一版だけ。tokenはそのCapsule＋版だけを許し、別版の一覧・件数・本文を返さない。
+- 投稿にはDB session・active・読取認可・受付中・Originが必要。作者・ownerはserverで付与し、期待Userを照合する。
+- 追加migration 003。KG／既存migration／凍結datasetは不変。Capsule削除でthread/postも削除する。
+- 作者だけが本文をNULLへ撤回し、時刻を残す。ownerに他人の撤回権限はない。停止Userの投稿本文・名前は非表示。
+- Capsule行lockで共有失効・private更新・削除・受付・投稿を直列化。User行lockで全Capsuleを通じた1分5投稿を守る。
+- 本文2,000文字、全版合計200投稿（撤回も含む）。author＋request UUIDの同一内容再送を冪等にする。
+- 入力・結果不明キーは本人＋版に拘束したタブ内メモリだけ。別User・非表示時に隠し、本人復帰で戻す。
+- 結果不明後の再送が401でも先の受理は否定できないため元のキーを維持。会員の401は親へ通知してprivate閲覧も閉じる。
+- 通常単体473件（maxWorkers=2）成功。その後、失効通知1件を追加し、最終の会話・共有・会員UI16件が成功。
+- 最終の実OIDC／一時PG22件成功。既定停止・認可・非共有版隔離・再送・同時上限・停止User・削除cascade・migration再適用を確認。
+- 新規E2Eは --grep 共有版のコメント。390／1440pxの2件成功。匿名→実ログイン→2 Userの会話→根拠→撤回・停止を確認。
+- 両幅を目視し横溢れ・page errorなし。KG応答はfixtureで、実Google／実KGの組合せと人間受入は未検証。
+- 全体lint＋最終変更箇所lint、型検査、型検査込みbuild、差分検査成功。本番smokeで既存3ページ200、無設定コメントAPI503と非cacheを確認。
+- 全並列の既存8件時間切れは並列数2で解消。ブラウザは共有lib指定・popup前面復帰・明示再確認・新規経路240秒で成功。詳細は採用契約末尾。
+- テスト用PG・OIDC・Next dev・本番smokeは終了。runner・guard・設定・実credentialは変更せず、push／merge／外部公開なし。
+- 次の候補：共有済み旧版の本文とコメントを本人が選んで読む入口／リンク失効後の本人投稿管理。未共有private版の投稿は不可。
+- APIはownerの旧共有版読取・作者の失効後撤回に対応するが、そのUIは未実装。公開前の通報・運営非表示／監査・保持／退会も残る。
+- 外部判断待ちはなし。実接続・公開・課金・実データの意味受入は別判断。

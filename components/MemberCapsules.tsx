@@ -11,6 +11,7 @@ import { datasetLabels } from "../lib/i18n/dataset";
 import { capsuleLabels } from "../lib/i18n/capsules";
 import MemberCapsuleEditor from "./MemberCapsuleEditor";
 import CapsuleShareControls from "./CapsuleShareControls";
+import CapsuleDiscussion, { useDiscussionDraft } from "./CapsuleDiscussion";
 import { memberDraftContent, sameMemberContent, type MemberCapsuleDraft } from "../lib/client/member-capsule-edit";
 import { CapsuleReader } from "./CapsuleDialog";
 import css from "./MemberCapsules.module.css";
@@ -34,6 +35,7 @@ export default function MemberCapsules({ dataset, initialImport = "" }: { datase
   const draftRef = useRef<MemberCapsuleDraft | null>(null);
   const setDraft = useCallback((value: MemberCapsuleDraft | null) => { draftRef.current = value; setDraftState(value); }, []);
   const active = useRef<AbortController | null>(null);
+  const discussionDraft = useDiscussionDraft();
   const heading = useRef<HTMLHeadingElement>(null);
   const source = local.find(value => value.id === sourceId);
   const reading = useMemo(() => selected ? memberReaderCapsule(selected, dataset) : null, [selected, dataset]);
@@ -202,6 +204,7 @@ export default function MemberCapsules({ dataset, initialImport = "" }: { datase
           setDraft({ ownerId: user.id, base: selected, expected: selected, content: selected.content, resolved, needsCheck: false }); setError(null); setMessage(null);
         } : undefined} />
         <CapsuleShareControls key={`share:${selected.id}:${selected.revision}`} capsule={selected} userId={user.id} disabled={busy} onUnauthorized={() => fail(new MemberClientError(401, "UNAUTHENTICATED"))} />
+        <CapsuleDiscussion key={`discussion:${selected.id}:${selected.revision}:${user.id}`} capsuleId={selected.id} revision={selected.revision} userId={user.id} draftCache={discussionDraft} onUnauthorized={() => fail(new MemberClientError(401, "UNAUTHENTICATED"))} />
         <button disabled={busy} onClick={() => setConfirm("remove")}>{text.remove}</button>
         {confirm === "remove" && <div role="alert"><p>{text.removeHelp}</p><button onClick={remove}>{text.removeConfirm}</button><button onClick={() => setConfirm(null)}>{text.cancel}</button></div>}
       </> : <><h2>{text.library}</h2><p>{items.length} / 10</p>{!items.length && <p>{text.empty}</p>}

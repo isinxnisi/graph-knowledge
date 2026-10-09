@@ -2,6 +2,8 @@
 
 2026-10-09採用。会員Capsuleの限定共有をローカルで試す初回。外部公開・一般公開検索・discussion・人間受入は別の段階。
 
+2026-10-10追記：discussionは[版別コメント契約](CAPSULE_DISCUSSION.md)を追加した。既存リンクは読取のままで、作成者が明示して受付を開始した場合だけログインUserが投稿できる。以下のdiscussion未実装は共有初回当時の範囲。
+
 ## 選択と縦経路
 
 会員編集初回が完了したため、新参照追加・プロフィール設定と比較し、別の人へ説明付き関係図を渡す体験を優先した。main側 `/home/isinxnisi/1.projects/7.graph-knowledge/docs/design/COMMUNITY_VERTICAL_SLICES.md` を読み取り専用で参照した。[Capsule構想](CAPSULE_AND_USER_CONTRIBUTION_VISION.md)と[会員保存](MEMBER_CAPSULES.md)の境界を維持する。

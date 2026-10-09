@@ -44,6 +44,7 @@ test.beforeAll(async ({ request }) => {
     expect((await request.get(path, { timeout: 60_000 })).status()).toBe(401);
   }
   expect((await request.get("/api/auth/get-session", { timeout: 60_000 })).status()).toBe(200);
+  expect((await request.get("/api/capsules/00000000-0000-4000-8000-000000000001/discussion?revision=1", { timeout: 60_000 })).status()).toBe(404);
 });
 test.beforeEach(clearPrivateTestData);
 for (const width of [390, 1440]) {
@@ -411,3 +412,77 @@ test("未解決参照の説明訂正と他端末削除でも入力を保持し�
   await editor.getByRole("button", { name: "保存せず戻る", exact: true }).click();
   await expect(page.getByText("このアカウントにはCapsuleがまだありません。", { exact: true })).toBeVisible();
 });
+
+for (const width of [390, 1440]) {
+  test(`共有版のコメントを2 Userで投稿し、根拠・撤回・受付停止へ進む ${width}px`, async ({ page, context, browser }, testInfo) => {
+    test.setTimeout(240_000);
+    await page.setViewportSize({ width, height: 900 }); await mockKnowledge(context);
+    const errors: string[] = []; page.on("pageerror", error => errors.push(error.message));
+    await page.goto("/member"); await login(page);
+    const content = { dataset: saved.dataset, title: saved.title, note: saved.note, language: saved.language, entityIds: saved.entityIds, claimIds: saved.claimIds };
+    const { capsule } = await (await page.request.post("/api/member/capsules", { headers: { Origin: "http://127.0.0.1:3221" }, data: { requestId: crypto.randomUUID(), content } })).json();
+    const { token } = await (await page.request.post(`/api/member/capsules/${capsule.id}/share`, { headers: { Origin: "http://127.0.0.1:3221" }, data: { expectedRevision: 1, expectedShareId: null } })).json();
+    const link = `/shared#${token}`;
+    await page.goto(`/member?capsule=${capsule.id}`);
+    const ownerThread = page.getByRole("region", { name: "この版のコメント", exact: true });
+    await ownerThread.getByRole("button", { name: "この版のコメントを見る", exact: true }).click();
+    await expect(ownerThread.getByRole("button", { name: "投稿を受け付ける", exact: true })).toBeVisible();
+    await expect(ownerThread.getByLabel("コメント本文", { exact: true })).toHaveCount(0);
+    await ownerThread.getByRole("button", { name: "投稿を受け付ける", exact: true }).click();
+    await expect(ownerThread.getByLabel("コメント本文", { exact: true })).toBeVisible();
+    const other = await browser.newContext({ baseURL: "http://127.0.0.1:3221", viewport: { width, height: 900 } });
+    try {
+      await mockKnowledge(other); const reader = await other.newPage(); reader.on("pageerror", error => errors.push(error.message));
+      await reader.goto(link);
+      const thread = reader.getByRole("region", { name: "この版のコメント", exact: true });
+      await thread.getByRole("button", { name: "この版のコメントを見る", exact: true }).click();
+      await expect(thread.getByRole("link", { name: /投稿するにはアカウントへログイン/ })).toBeVisible();
+      await expect(thread.getByLabel("コメント本文", { exact: true })).toHaveCount(0);
+      const popup = other.waitForEvent("page");
+      await thread.getByRole("link", { name: /投稿するにはアカウントへログイン/ }).click();
+      const account = await popup; await account.bringToFront();
+      await account.getByRole("button", { name: "検証用OIDCでログイン", exact: true }).click();
+      await account.getByRole("link", { name: "検証ユーザーB", exact: true }).click();
+      await account.waitForURL(url => url.pathname === "/member");
+      await account.bringToFront();
+      await expect(account.getByText("検証ユーザーB", { exact: true })).toBeVisible();
+      await expect(account.getByRole("button", { name: "アカウントと一覧を再確認", exact: true })).toBeEnabled();
+      await account.close(); await reader.bringToFront(); await reader.getByRole("button", { name: "リンクを再確認", exact: true }).click();
+      await thread.getByRole("button", { name: "この版のコメントを見る", exact: true }).click();
+      await thread.getByLabel("コメント本文", { exact: true }).fill("本文の期間は、どの資料から確認できますか？");
+      await thread.getByRole("button", { name: "この版へ投稿する", exact: true }).click();
+      await expect(thread.getByText("本文の期間は、どの資料から確認できますか？", { exact: true })).toBeVisible();
+      await expect(thread.getByLabel("コメント本文", { exact: true })).toHaveValue("");
+      await page.bringToFront(); await page.getByRole("button", { name: "アカウントと一覧を再確認", exact: true }).click();
+      await ownerThread.getByRole("button", { name: "この版のコメントを見る", exact: true }).click();
+      await expect(ownerThread.getByText("本文の期間は、どの資料から確認できますか？", { exact: true })).toBeVisible();
+      await expect(ownerThread.getByRole("button", { name: "自分の投稿を撤回", exact: true })).toHaveCount(0);
+      await ownerThread.getByLabel("コメント本文", { exact: true }).fill("個別の主張を開くと、インタビューの参照箇所を読めます。");
+      await ownerThread.getByRole("button", { name: "この版へ投稿する", exact: true }).click();
+      await expect(ownerThread.getByText("個別の主張を開くと、インタビューの参照箇所を読めます。", { exact: true })).toBeVisible();
+      await expect(ownerThread.getByLabel("コメント本文", { exact: true })).toHaveValue("");
+      await reader.bringToFront(); await reader.getByRole("button", { name: "リンクを再確認", exact: true }).click();
+      await thread.getByRole("button", { name: "この版のコメントを見る", exact: true }).click();
+      await expect(thread.getByText("個別の主張を開くと、インタビューの参照箇所を読めます。", { exact: true })).toBeVisible();
+      await reader.getByRole("button", { name: /青葉ハル → アシスタントだった → 黒川レン.*2001年〜2003年/ }).click();
+      await expect(reader.getByRole("heading", { name: "青葉ハルへのインタビュー", exact: true })).toBeVisible();
+      await expect(reader.getByText("参照箇所：pp.12–13", { exact: true })).toBeVisible();
+      await reader.screenshot({ path: testInfo.outputPath(`discussion-${width}.png`), fullPage: true });
+      expect(await reader.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+      await thread.getByRole("button", { name: "自分の投稿を撤回", exact: true }).click();
+      await thread.getByRole("button", { name: "本文を削除して撤回する", exact: true }).click();
+      await expect(thread.getByText("投稿者が撤回しました。", { exact: true })).toBeVisible();
+      await expect(thread.getByText("本文の期間は、どの資料から確認できますか？", { exact: true })).toHaveCount(0);
+      await page.bringToFront(); await page.getByRole("button", { name: "アカウントと一覧を再確認", exact: true }).click();
+      await ownerThread.getByRole("button", { name: "この版のコメントを見る", exact: true }).click();
+      await ownerThread.getByRole("button", { name: "新しい投稿を停止する", exact: true }).click();
+      await expect(ownerThread.getByRole("button", { name: "投稿を受け付ける", exact: true })).toBeVisible();
+      await reader.bringToFront(); await reader.getByRole("button", { name: "リンクを再確認", exact: true }).click();
+      await thread.getByRole("button", { name: "この版のコメントを見る", exact: true }).click();
+      await expect(thread.getByText(/新しい投稿は受け付けていません/)).toBeVisible();
+      await expect(thread.getByLabel("コメント本文", { exact: true })).toHaveCount(0);
+      await expect(thread.getByText("個別の主張を開くと、インタビューの参照箇所を読めます。", { exact: true })).toBeVisible();
+    } finally { await other.close(); }
+    expect(errors).toEqual([]);
+  });
+}

@@ -8,12 +8,14 @@ import { capsuleSharingLabels } from "../lib/i18n/capsule-sharing";
 import { datasetLabels } from "../lib/i18n/dataset";
 import { CapsuleReader } from "./CapsuleDialog";
 import css from "./MemberCapsules.module.css";
+import CapsuleDiscussion, { useDiscussionDraft } from "./CapsuleDiscussion";
 
 export default function SharedCapsule({ dataset }: { dataset: DatasetMode }) {
   const text = capsuleSharingLabels();
   const [capsule, setCapsule] = useState<MemberCapsule | null>(null);
   const [error, setError] = useState<string | null>(null), [busy, setBusy] = useState(true);
   const active = useRef<AbortController | null>(null);
+  const discussionDraft = useDiscussionDraft();
   const reading = useMemo(() => capsule ? memberReaderCapsule(capsule, dataset) : null, [capsule, dataset]);
   const refresh = useCallback(async (quiet = false) => {
     active.current?.abort();
@@ -53,7 +55,8 @@ export default function SharedCapsule({ dataset }: { dataset: DatasetMode }) {
     <section className={css.card}>
       <button disabled={busy} onClick={() => void refresh()}>{text.readRefresh}</button>
       {busy && <p role="status">{text.reading}</p>}{error && <p role="alert">{error}</p>}
-      {reading && <CapsuleReader key={`${reading.id}:${reading.revision}`} capsule={reading} explorationLinks noteAttribution="author" />}
+      {reading && <><CapsuleReader key={`${reading.id}:${reading.revision}`} capsule={reading} explorationLinks noteAttribution="author" />
+        <CapsuleDiscussion key={`discussion:${reading.id}:${reading.revision}`} capsuleId={reading.id} revision={reading.revision} token={location.hash.slice(1)} draftCache={discussionDraft} /></>}
       <p className={css.muted}>{text.lifecycle}</p>
     </section>
   </main>;
