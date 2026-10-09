@@ -11,14 +11,14 @@ import type { GraphView, ViewRestoration } from "../lib/client/graph-view";
 export type GraphCanvasHandle = { capture: () => GraphView | null; focusEntity: (id: string) => void };
 import type { GraphState, Selection } from "../lib/client/graph-state";
 import { entityLabel, edgeRoutes, displayRelations, relationId } from "../lib/client/graph-presentation";
-import { initialPositions, additionalPositions } from "../lib/client/graph-layout";
+import { initialPositions, additionalPositions, contentPositions } from "../lib/client/graph-layout";
 import { createNodeClickHandler } from "../lib/client/graph-interaction";
 import { attachGraphBadges } from "../lib/client/graph-badges";
 import styles from "./Explorer.module.css";
 
-type Props = { ref?: Ref<GraphCanvasHandle>; feedback?: ReactNode; restoration?: ViewRestoration | null; interactionBlocked?: boolean; graph: GraphState; selection: Selection; onEntity: (id: string) => void; onRelation: (id: string) => void; onToggleEntity: (id: string) => void; onEntityDoubleClick?: (id: string) => void };
+type Props = { contentOnly?: boolean; ref?: Ref<GraphCanvasHandle>; feedback?: ReactNode; restoration?: ViewRestoration | null; interactionBlocked?: boolean; graph: GraphState; selection: Selection; onEntity: (id: string) => void; onRelation: (id: string) => void; onToggleEntity: (id: string) => void; onEntityDoubleClick?: (id: string) => void };
 
-export default function GraphCanvas({ ref, feedback, restoration, interactionBlocked, graph, selection, onEntity, onRelation, onToggleEntity, onEntityDoubleClick }: Props) {
+export default function GraphCanvas({ contentOnly = false, ref, feedback, restoration, interactionBlocked, graph, selection, onEntity, onRelation, onToggleEntity, onEntityDoubleClick }: Props) {
   const viewportLabels = graphViewportLabels();
   const [zoom, setZoom] = useState(1);
   const container = useRef<HTMLDivElement>(null);
@@ -170,6 +170,12 @@ export default function GraphCanvas({ ref, feedback, restoration, interactionBlo
       if (Object.keys(restored.positions).some((id) => graph.nodes[id])) { cy.zoom(restored.zoom); cy.pan(restored.pan); }
       else cy.fit(undefined, 40);
       if (graph.centerId && graph.expansions[graph.centerId]?.expanded) initialLayoutDone.current = true;
+    } else if (contentOnly && !initialLayoutDone.current && newNodes.length) {
+      const ids = cy.nodes().map(node => node.id());
+      const positions = contentPositions(ids, relations, cy.width() < cy.height());
+      Object.entries(positions).forEach(([id, point]) => cy.getElementById(id).position(point));
+      cy.fit(undefined, 40); cy.zoom(Math.min(1.15, cy.zoom())); cy.center();
+      initialLayoutDone.current = true;
     } else if (!initialLayoutDone.current && graph.centerId && graph.expansions[graph.centerId]?.expanded) {
       const positions = initialPositions(graph.centerId, cy.nodes().filter((node) => node.id() !== graph.centerId).map((node) => node.id()), cy.height());
       Object.entries(positions).forEach(([id, point]) => cy.getElementById(id).position(point));
@@ -199,7 +205,7 @@ export default function GraphCanvas({ ref, feedback, restoration, interactionBlo
     updateRoutes();
     cy.on("dragfree", "node", updateRoutes);
     return () => { cy.off("dragfree", "node", updateRoutes); };
-  }, [graph, restoration]);
+  }, [graph, restoration, contentOnly]);
 
   useEffect(() => {
     const cy = core.current;
@@ -233,7 +239,7 @@ export default function GraphCanvas({ ref, feedback, restoration, interactionBlo
     <div className={styles.graphTools}>
       <span>{entryLabels().graphResize}</span>
       <span>丸：人物 ／ 四角：作品 ／ 六角形：組織 ／ ひし形：出来事</span>
-      <span>矢印：方向 ／ 破線：否定 ／ {contributionLabels().mixedLegend} ／ 二重枠：展開済 ／ 淡い外枠：新規表示</span>
+      <span>矢印：方向 ／ 破線：否定 ／ {contributionLabels().mixedLegend}{!contentOnly && " ／ 二重枠：展開済 ／ 淡い外枠：新規表示"}</span>
     </div>
   </>;
 }

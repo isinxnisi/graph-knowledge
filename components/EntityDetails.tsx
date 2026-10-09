@@ -1,6 +1,8 @@
 "use client";
 
 import { eventParticipationLabels } from "../lib/i18n/event-participation";
+import type { DatasetMode } from "../lib/domain/dataset";
+import ReadingLink from "./ReadingLink";
 import RootActions from "./RootActions";
 import { overviewLabels } from "../lib/i18n/entity-overview";
 import { useEffect, useState } from "react";
@@ -10,7 +12,8 @@ import { ClientApiError, fetchEntity, errorMessage } from "../lib/client/api";
 import { KIND_LABELS, formatPeriod } from "../lib/client/format";
 import styles from "./Explorer.module.css";
 
-export default function EntityDetails({ entity, expansion, onExpand, onClose, onOverview, onSwitch, restricted }: {
+export default function EntityDetails({ entity, expansion, onExpand, onClose, onOverview, onSwitch, restricted, dataset }: {
+  dataset?: DatasetMode;
   onOverview: () => void; onSwitch: (mode: "broad" | "same") => void; restricted: boolean;
   entity: EntitySummary; expansion?: Expansion; onExpand: (more: boolean) => void; onClose: () => void;
 }) {
@@ -32,6 +35,7 @@ export default function EntityDetails({ entity, expansion, onExpand, onClose, on
     {detail && <p>別名：{detail.aliases.length ? detail.aliases.join("、") : "未登録"}</p>}
     {detail?.event && <><dl className={styles.claimFacts}><dt>{eventParticipationLabels().eventPeriod}</dt><dd>{formatPeriod(detail.event.period)}</dd></dl><p className={styles.muted}>{eventParticipationLabels().periodHelp}</p></>}
     {error && <div role="alert" className={styles.error}><p>{error}</p><button onClick={() => { setError(null); setDetail(null); setAttempt((value) => value + 1); }}>Entity詳細を再試行</button></div>}
+    {dataset && <p><ReadingLink reference={{ kind: "entity", dataset, id: entity.id }} /></p>}
     <button onClick={onOverview}>{overviewLabels().open}</button>
     <RootActions restricted={restricted} disabled={missing} onSwitch={onSwitch} />
     <div className={styles.actions}>

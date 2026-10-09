@@ -1,6 +1,6 @@
 # 現行技術設計
 
-更新日: 2026-10-09 / 状態: 初期Vertical Sliceと探索の開閉・Node再クリックまで実装済み。既存predicateと限定制作Roleによる条件付き探索を追加。v2 Role Claim 5件を人間受入後に投入・検証済み。関係概要・明示起点切替・直前一件復帰、人物・作品・組織の統一検索入口も実装。科学・研究機関pilot v1を別環境へ投入・観察済み。Phase 14では科学v2と組織立場のtyped限定を追加し、制作Roleと独立した語彙を保って条件・比較処理を共有。Phase 15の特定Event参加（第三のtyped限定）を実装。実資料E01/E03と特定開催回・開催期間を人間受入後に生成・専用DBへ投入・観察済み。Phase 20で三relation facetを条件editorへ接続し、具体条件を使う既存取得・復帰を維持。Phase 21でGraphの限定概要・中立的な肯否と、関係全体から独立主張／根拠へ降りる詳細を整合。Phase 22でGraphラベルを短い関係見出しと構造化済みの具体語優先へ変更。汎用taxonomy・プリセット・会員保存は未実装。[文書の入口](README.md)に現役設計とフェーズ別履歴をまとめる。
+更新日: 2026-10-10 / 状態: 初期Vertical Sliceと探索の開閉・Node再クリックまで実装済み。既存predicateと限定制作Roleによる条件付き探索を追加。v2 Role Claim 5件を人間受入後に投入・検証済み。関係概要・明示起点切替・直前一件復帰、人物・作品・組織の統一検索入口も実装。科学・研究機関pilot v1を別環境へ投入・観察済み。Phase 14では科学v2と組織立場のtyped限定を追加し、制作Roleと独立した語彙を保って条件・比較処理を共有。Phase 15の特定Event参加（第三のtyped限定）を実装。実資料E01/E03と特定開催回・開催期間を人間受入後に生成・専用DBへ投入・観察済み。Phase 20で三relation facetを条件editorへ接続し、具体条件を使う既存取得・復帰を維持。Phase 21でGraphの限定概要・中立的な肯否と、関係全体から独立主張／根拠へ降りる詳細を整合。Phase 22でGraphラベルを短い関係見出しと構造化済みの具体語優先へ変更。汎用taxonomy・プリセットは未実装。会員Capsuleは認証・所有者付きAPI、明示保存・再閲覧・編集、指定版の限定リンク共有まで接続。実Googleと設定UIは未了。[文書の入口](README.md)に現役設計とフェーズ別履歴をまとめる。
 
 ## 前提と設計の位置づけ
 
@@ -10,7 +10,7 @@ Phase 16で[Relation・Claim・Predicate・typed qualificationの基本設計](d
 
 成熟したプロダクト像と、投稿・議論・保存・履歴等の初回設計で守る境界は [PRODUCT_VISION_AND_PRINCIPLES.md](design/PRODUCT_VISION_AND_PRINCIPLES.md) を参照する。構想の保存であり、現行API・DB契約や着手範囲を変更しない。
 
-Global／localのidentity・読取範囲、投稿／審査、保存／公開共有／議論、provenance、AI構造化、import／exportの変更前には[Capsule・User Contribution・Global KG構想](design/CAPSULE_AND_USER_CONTRIBUTION_VISION.md)も参照する。下記の知識正本・Claim由来の表示・published読取は現行KGの契約であり、Capsule-localの保存先や全公開コンテンツのGlobal受入を定めていない。Capsuleの内容とSaved View、公開と受入を分ける。Capsuleの物理schema・投稿flowは未決・未実装。
+Global／localのidentity・読取範囲、投稿／審査、保存／公開共有／議論、provenance、AI構造化、import／exportの変更前には[Capsule・User Contribution・Global KG構想](design/CAPSULE_AND_USER_CONTRIBUTION_VISION.md)も参照する。下記の知識正本・Claim由来の表示・published読取は現行KGの契約であり、Capsule-localの保存先や全公開コンテンツのGlobal受入を定めていない。Capsuleの内容とSaved View、公開と受入を分ける。既存KG参照と説明だけのCapsuleはブラウザ内保存・PostgreSQLの会員保存・特定版の限定リンク共有まで実装。末尾の各採用契約を参照する。Capsule-local Entity/assertionと投稿flowは未決・未実装。
 
 AI候補整理・Source解析・分類・moderation等の設計時は[AI処理の検証順序・共通Kevの接続と責務](design/AI_PROCESSING_DIRECTION.md)を参照する。独立した共通Kevサービスは稼働済みだが、グラフ用途の精度と連携は未検証・未実装。接続境界はサーバー／将来のWorkerから公開HTTP APIとし、Kev本体の変更は事前相談する。Webと推論の疎結合・低コスト・非同期の余地を守る。outbound HTTPSのLocal Worker、Job Queue・Worker API・Provider abstractionは候補で未実装。それ以前の設計では、この方向を後から選ぶことを著しく困難にする判断がある場合だけ考慮する。
 
@@ -129,7 +129,7 @@ Claimは0件以上のCitationを持てるが、0件は「出典未確認」と�
 | --- | --- | --- |
 | Entity・名称・外部ID | Neo4j | PostgreSQLへ同じマスタを複製しない |
 | Claim・期間・Source・Citation | Neo4j | 知識の内容と参照関係 |
-| User・認証情報・権限 | PostgreSQL | 未実装。初回案はNext内のBetter AuthとDB session。詳細は下記設計 |
+| User・認証情報・権限 | PostgreSQL | Better AuthとDB sessionによる会員Capsuleを実装。実Googleは未接続。詳細は末尾の採用契約 |
 | Bookmark | PostgreSQL | 対象の内部IDだけを参照 |
 | 編集操作の監査・審査・通報 | PostgreSQL | 誰がどの操作をしたか、承認手続き |
 | Notification・配信状態 | PostgreSQL | サービス運営情報 |
@@ -138,7 +138,7 @@ Claimは0件以上のCitationを持てるが、0件は「出典未確認」と�
 
 DB間の外部キーや単一トランザクションは前提にしない。将来の編集時にはPostgreSQLに操作IDと指示を記録し、Neo4jへ冪等に適用後、完了を記録する方式を検討する。再試行・未完了操作の照合が必要。Outbox、可視性反映、権限確認の具体的な手順は投稿機能導入時に決定する。
 
-2026-10-09に[アカウント・所有者・会員保存](design/ACCOUNT_AND_OWNERSHIP_DESIGN.md)と[共有・議論の初回設計](design/COMMUNITY_VERTICAL_SLICES.md)を用意した。runtimeは未変更。初回は一種類のprivate内容をPostgreSQLへ所有者付きで保存し、KGはNeo4j参照を維持する。参照中心Capsuleの内容版・共有token・スレッドは必要な縦経路ごとに導入する。Capsule-local Entity/assertionの正式保存方式、Global書込、課金制度まで決定したことにはしない。
+2026-10-09に[アカウント・所有者・会員保存](design/ACCOUNT_AND_OWNERSHIP_DESIGN.md)と[共有・議論の初回設計](design/COMMUNITY_VERTICAL_SLICES.md)を用意し、会員Capsuleと限定リンク共有まで実装した。private内容・共有版・token hashをPostgreSQLへ保存し、KGはNeo4j参照を維持する。スレッド以降は必要な縦経路ごとに導入する。Capsule-local Entity/assertionの正式保存方式、Global書込、課金制度まで決定したことにはしない。
 
 ## ID設計
 
@@ -678,6 +678,40 @@ Phase 22後の局所視覚調整：構造化済み具体語を持つRelationだ�
 
 [探索途中保存の契約](design/LOCAL_SAVED_WORKSPACE.md)に従い、datasetごと最大10件を別localStorageキーのcollection v2へ保持する。各要素は途中保存v1で、旧1件形式は無書込で読み、最初の追加・置換成功時に内容を引き継ぐ。名前・時刻付き一覧から1件を選び、再開・名前を明示した置換・確認付き削除を行う。起点・具体的な四条件・枝のUUID／open意図／受理ページ数・座標・pan／zoomを保存し、知識本文・Claim一覧・旧cursor・通信状態は永続化しない。取得中は保存不可、各保存を合計40ページに制限する。現在の起点から参照を辿って保存された枝だけを再取得し、既存表示・キャッシュ上限内で画面外に再構成する。閉じた枝の休止子孫は意図を維持し、現在辿れない枝は除外件数を表示する。
 
-全取得成功後だけ一世代で適用し、旧探索を直前一件復帰に残す。失敗・中止・上限超過では現在の探索を変更しない。各API15秒に加え全体60秒の中断、取消後の遅延応答排除を行う。保存ビューv1・JSON控えは不変で、途中保存は専用JSONの控えとして分ける。DB／API／意味モデル／datasetは不変。会員同期・公開共有・Capsuleは未実装。
+全取得成功後だけ一世代で適用し、旧探索を直前一件復帰に残す。失敗・中止・上限超過では現在の探索を変更しない。各API15秒に加え全体60秒の中断、取消後の遅延応答排除を行う。保存ビューv1・JSON控えは不変で、途中保存は専用JSONの控えとして分ける。DB／API／意味モデル／datasetは不変。会員同期・公開共有は未実装。Capsuleは下記の別コンテンツとして保存する。
 
 途中保存のファイル持ち運びでは、選択した保存済み1件を従来の途中保存v1 JSONとして控える。100,000 bytes以下の同datasetだけを検証し、名前・条件・起点・枝数・ページ数を確認後、既定で新しい1件として追加する。対象を選んで明示した場合だけ置換し、ファイル選択時の保存UUIDが変われば取り込まない。取込ごとに新しいローカルUUIDを付け、古い確認画面からの置換・削除を防ぐ。追加・置換・削除は最新一覧へ適用し、対象以外を保持する。ファイル操作ではGraph・APIを変更せず、従来の明示再開で現在の知識を再取得する。ファイル形式・保存キーは不変、保存領域だけcollectionへ移行する。[保存・移行・ファイル契約](design/LOCAL_SAVED_WORKSPACE.md)を参照。
+
+## ブラウザ内の最小Capsule（2026-10-09）
+
+[採用契約](design/LOCAL_CAPSULES.md)。表示中のEntity／独立Claimから構成を明示選択し、題名・説明とともに独立したlocalStorage領域へ保存する。dataset・UUID参照・Capsule内容版（新規1、編集ごとに増加）を保持し、知識本文・通信・表示束ID・探索途中を保存形式へ混ぜない。主張の両端は構成対象として表示・保存する。30対象／60主張・10件まで。未知形式・失敗・別datasetを拒否し、既存保存ビュー／途中保存は移行しない。
+
+再閲覧はEntity／Claim詳細の現在データを同時4要求・全体60秒以内で取得し、schemaとIDを確認する。失効・取得失敗・構成外端点を区別し、保存参照を消さず再試行できる。明示構成から閲覧用Graphを作り、孤立対象を残し、`projectGraph`は通さない。GraphCanvasの閲覧モードは既存配置計算を使って接続対象から配置し、独立対象が線ラベルに重なりにくくする。pan/zoom・選択は可能、展開・配置保存は行わない。個別ClaimCardで出典を読み、関連Claimは自動追加しない。
+
+説明は利用者のメモであり、Source支持やGlobal受入ではない。内容版は知識の履歴固定ではない。
+
+題名・説明・明示構成は同IDの次版へ編集できる。候補は保存参照と現在の探索Graphで、選択を明示する。未解決参照は初期選択を保ち、未解決Claimを保持する間は保存済みEntityを外さない。collection v1は無書込で読み、次の書込でv2へ移す。編集・削除は最新保存と開始時レコード全体を照合し、競合・書込失敗では入力を保持する。UUID・作成日時を維持し、更新日時を付ける。過去版の履歴保存・同時writeの原子性は提供しない。
+
+サーバー認可・正本・会員同期・公開共有は未実装。既存KG schema・読み取りAPI・凍結datasetは変更しない。
+
+## 対象・主張の直接閲覧URL（2026-10-09）
+
+[採用契約](design/DIRECT_READING_LINKS.md)。`read=entity|claim`・dataset・内部UUIDをqueryに持つ閲覧入口を追加した。実行datasetとの一致とURL形式を検査し、現在のEntity／Claim APIを読む。内容版・探索途中・Capsule共有のURLではない。schema／要求IDを照合し、既存15秒上限・abort・遅着排除を使う。Claimを先に読み、最大2端点の失敗は根拠を残して個別再試行する。関連Claimの自動追加は行わない。
+
+Native History APIと`useSearchParams`で既存Explorerを保持し、閲覧中は近傍を取得しない。戻る／進むで閲覧対象を辿り、閉鎖は現在履歴の閲覧queryだけを除去する。明示探索でだけ条件なしの起点切替と既存一件復帰を使う。reloadでは背景を空のExplorerにし、過去の探索の復元と区別する。入口全体はnoindex／nofollow。DB・API・凍結dataset・保存形式・認可は不変。
+
+## 会員Capsule保存：認証と再閲覧UI（2026-10-09）
+
+[採用契約](design/MEMBER_CAPSULES.md)。Better Auth 1.7.7とPostgreSQLを運営・所有者付き保存へ追加した。環境で明示有効化し、未設定でも既存KGは起動できる。UserとKG Personは分離。DB session／activeとownerをprivate操作ごとに確認し、cookie cacheを使わない。account linking無効、token破棄、Origin検査、no-store応答。開発OIDCはproduction・別origin・別DBで拒否する。
+
+会員Capsuleは既存KG参照と利用者の説明だけ。ローカルのID・版・ownerを取り込まずserverが割り当てる。request IDの冪等性と件数をUser行lockで確認し、更新・削除は期待revisionをSQL条件へ含める。非所有者／不存在404、競合409、運営DB不通503。独立PGへの追加migrationだけで、知識DB・凍結dataset・ブラウザ保存を移行しない。既存Capsule Readerを使い、現在KGへ再解決し、未解決・取得失敗を保持して示す。
+
+`/member` の登録／ログイン・表示名／locale・明示保存・一覧／再閲覧・確認削除・ログアウト／全端末ログアウトを接続した。Explorerからは別タブで開き、元の探索を維持する。UIの期待利用者headerをsessionと照合し、タブの復帰時はprivate内容を再認可する。再送キーは同じタブのsessionStorageに保持し、会員内容自体は永続cacheに置かない。会員の題名・説明・既存構成の編集も接続した。入力はタブのメモリだけに残し、失効時は本人の再認可まで非表示。競合は最新版を確認してから期待版を明示更新し、次の保存でも原子的に照合する。新参照追加・プロフィール変更UI、実Google接続、一般公開・discussionは未実装。限定共有は次節。既存のサーバー保存未実装という記述は初期／ローカル機能の範囲であり、今回の進捗は本節を優先する。
+
+## 会員Capsuleの特定版を限定リンクで共有（2026-10-09）
+
+[採用契約](design/CAPSULE_LINK_SHARING.md)。表示中の受理版を明示確認して、PostgreSQLへ参照と説明のsnapshotを固定する。既存のprivate編集・KG内容は不変。Capsuleごと1つの有効リンク、50共有版まで。共有済み版は更新せず、Capsule UUID＋revisionで保持する。追加migrationだけで、既存保存を移行しない。
+
+所有者の発行／状態／停止APIはDB session・owner・dataset・Origin・期待利用者を確認する。発行は期待内容版と期待link IDを照合し、停止・再発行・内容更新とCapsule行lockで直列化する。256bit tokenはhashだけ保存し、再発行で旧リンクを失効する。Capsule削除で共有版も削除し、User停止中はリンク読取を拒否する。
+
+匿名Readerは `/shared#token` からheaderでtokenを送り、指定版だけをno-storeで取得する。内容をSSR・metadata・永続browser cacheへ入れず、noindex・no-referrerを付ける。タブ非表示で本文を消し、復帰・明示操作・表示中30秒ごとに有効性を再確認する。既存Readerで現在KG・独立Claim・Sourceを読み、別タブの対象閲覧から探索へ進む。一般公開検索、運営のCapsule非表示／通報、discussion、実Google接続・外部公開は含めない。

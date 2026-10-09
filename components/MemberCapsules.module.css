@@ -1,0 +1,16 @@
+.page { max-width: 1000px; margin: 0 auto; padding: 28px 20px 64px; color: var(--color-text); overflow-wrap: anywhere; }
+.page h1 { margin: 8px 0 16px; }
+.page h2 { font-size: 1.3rem; }
+.page a { color: var(--color-accent); }
+.page button { min-height: 44px; margin: 4px; padding: 8px 14px; border: 1px solid var(--color-border); border-radius: 8px; background: var(--color-panel); color: var(--color-text); cursor: pointer; font: inherit; max-width: 100%; }
+.page button:disabled { opacity: .5; cursor: default; }
+.page button:hover:not(:disabled) { background: var(--color-accent-soft); }
+.page :focus-visible { outline: 2px solid var(--color-accent); outline-offset: 3px; }
+.page [role="alert"] { border-left: 3px solid var(--color-accent); padding: 10px; }
+.card, .account { margin: 20px 0; padding: 20px; border: 1px solid var(--color-border); border-radius: 12px; background: var(--color-panel); }
+.eyebrow, .muted { color: var(--color-muted); font-size: .9rem; }
+.source { display: grid; gap: 8px; }
+.sharing { border-bottom: 1px solid var(--color-border); padding-bottom: 20px; margin-bottom: 20px; }
+.source input { width: 100%; min-width: 0; box-sizing: border-box; padding: 12px; background: var(--color-panel); color: var(--color-text); border: 1px solid var(--color-border); border-radius: 8px; font: inherit; }
+.source select { width: 100%; min-width: 0; padding: 12px; background: var(--color-panel); color: var(--color-text); border: 1px solid var(--color-border); border-radius: 8px; font: inherit; }
+@media (max-width: 600px) { .page { padding: 20px 12px 48px; } .card, .account { padding: 14px; } }

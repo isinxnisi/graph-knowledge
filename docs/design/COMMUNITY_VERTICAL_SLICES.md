@@ -1,6 +1,6 @@
 # 共有・議論・投稿を小さく進める設計
 
-2026-10-09。**初回実装のたたき台として採用。未実装**。今回は設計のみ。Capsuleの構想は[既存の正本文書](CAPSULE_AND_USER_CONTRIBUTION_VISION.md)、Userと所有者・認可の初回案は[アカウント設計](ACCOUNT_AND_OWNERSHIP_DESIGN.md)を参照する。将来像を置き換えず、着手時に迷いやすい共有／議論の境界を具体化する。
+2026-10-09採用。最小Capsule・会員保存・特定版の限定リンク共有まで実装。現行契約は[会員Capsule](MEMBER_CAPSULES.md)と[限定リンク共有](CAPSULE_LINK_SHARING.md)。スレッド・投稿候補・一般公開・運営対応は未実装。構想の正本は[Capsule・User Contribution](CAPSULE_AND_USER_CONTRIBUTION_VISION.md)、Userの境界は[アカウント設計](ACCOUNT_AND_OWNERSHIP_DESIGN.md)を参照する。
 
 ## 到達点と進め方
 

@@ -1,6 +1,6 @@
 # アカウント・所有者・会員保存の初回設計
 
-2026-10-09。**初回実装のたたき台として採用。未実装**。ユーザーの依頼に基づき、アカウントとコミュニティ機能の着手を妨げる未決事項を先に整理する。今回の変更は文書だけで、認証・PostgreSQL・UIを導入していない。技術選択は実装時に導入版との適合を確認し、可逆な変更は理由を記録して調整できる。
+2026-10-09採用。認証・PostgreSQL・会員Capsuleの所有者APIと保存／再閲覧／既存構成編集まで実装。現行の実装契約は[会員Capsule](MEMBER_CAPSULES.md)、共有は[限定リンク](CAPSULE_LINK_SHARING.md)を参照する。実Google接続・プロフィール変更・退会等は未実装。本書の未実装項目は先回り設計であり、実装済み範囲を上書きしない。
 
 構想の正本は[Capsule・User Contribution](CAPSULE_AND_USER_CONTRIBUTION_VISION.md)、DB境界は[ARCHITECTURE](../ARCHITECTURE.md)。共有・議論の初回経路は[コミュニティ設計](COMMUNITY_VERTICAL_SLICES.md)。本書はすべての将来機能の完成をログイン実装の前提にしない。
 

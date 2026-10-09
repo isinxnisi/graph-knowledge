@@ -58,3 +58,17 @@ export function additionalPositions(existing: Record<string, Point>, ids: string
   }
   return positions;
 }
+
+// Explicit content may have unrelated entities. Place connected nodes first and
+// isolated members last, so an unrelated center does not sit on a relation label.
+export function contentPositions(ids: string[], relations: Record<string, DisplayRelation>, portrait = false): Record<string, Point> {
+  if (!ids.length) return {};
+  const degree = new Map(ids.map(id => [id, 0]));
+  for (const relation of Object.values(relations)) {
+    degree.set(relation.subjectId, (degree.get(relation.subjectId) ?? 0) + 1);
+    degree.set(relation.objectId, (degree.get(relation.objectId) ?? 0) + 1);
+  }
+  const ordered = [...ids].sort((a, b) => (degree.get(b) ?? 0) - (degree.get(a) ?? 0) || a.localeCompare(b));
+  const positions = additionalPositions({ [ordered[0]]: { x: 0, y: 0 } }, ordered.slice(1), relations, ordered[0]);
+  return portrait ? Object.fromEntries(Object.entries(positions).map(([id, point]) => [id, { x: point.y, y: point.x }])) : positions;
+}

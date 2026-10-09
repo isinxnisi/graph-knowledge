@@ -40,7 +40,9 @@
     ".next-event-contract-test/types/**/*.ts",
     ".next-event-contract-test/dev/types/**/*.ts",
     ".next-event/types/**/*.ts",
-    ".next-event/dev/types/**/*.ts"
+    ".next-event/dev/types/**/*.ts",
+    ".next-member-test/types/**/*.ts",
+    ".next-member-test/dev/types/**/*.ts"
   ],
   "exclude": [
     "node_modules"

@@ -1,6 +1,6 @@
 # ドキュメントの入口
 
-2026-10-09。現行仕様・継続検討・完了履歴を分ける。フェーズ番号は記録の整理用であり、未実装機能の着手順や承認を意味しない。
+2026-10-10。現行仕様・継続検討・完了履歴を分ける。フェーズ番号は記録の整理用であり、未実装機能の着手順や承認を意味しない。
 
 手動Codexと自動開発を併用する場合は、[自動開発の確認・排他・受け入れ](AUTOPILOT_COLLABORATION.md)を読む。作業開始時の未反映検知と、予定実行との共通ロックを使う。
 
@@ -20,6 +20,8 @@
 
 [2026-10-09朝の受け入れ](archive/autopilot-acceptance/20261009_morning.md)：保存ビューのJSON持ち運び、探索途中の枝・配置保存と現在データからの再開、最大10件の選択・置換・削除。
 
+[2026-10-10の受け入れ](archive/autopilot-acceptance/20261010.md)：説明付きCapsule、対象／主張の直接閲覧URL、所有者限定の会員保存・編集、指定版の限定リンク共有。通常環境の実Google接続は未了。
+
 [受入完了時の休止解除](archive/operations/20261008_AUTOPILOT_ACCEPTANCE_RESET.md)：受入後は次の予定で再試行する追加契約。確認だけでは解除せず、元の休止と失敗記録は保持。
 
 [確認済み失敗のDrive整理](archive/operations/20261009_AUTOPILOT_FAILURE_ARCHIVE.md)：確認した停止・失敗だけをアーカイブへ移し、未確認・未受入を一覧に残す。原ログと確認履歴は保持。
@@ -34,9 +36,13 @@
 
 | 現役の設計文書 | 状態・読む場面 |
 | --- | --- |
-| [アカウント・所有者・会員保存](design/ACCOUNT_AND_OWNERSHIP_DESIGN.md) | 未実装の初回設計。認証・UserとKG Person・所有者認可・一種類のprivate保存、実credential待ちの範囲とテストを具体化 |
-| [共有・議論の最小縦経路](design/COMMUNITY_VERTICAL_SLICES.md) | 未実装の初回設計。Capsule版・限定リンク・スレッド対象・投稿時版・運営／知識受入の分離。全コミュニティ基盤を先行導入しない |
+| [アカウント・所有者・会員保存](design/ACCOUNT_AND_OWNERSHIP_DESIGN.md) | 初回設計。会員Capsuleを実装済み（実Googleは未接続）。認証・UserとKG Person・所有者認可・一種類のprivate保存、実credential待ちの範囲とテストを具体化 |
+| [共有・議論の最小縦経路](design/COMMUNITY_VERTICAL_SLICES.md) | 初回設計。限定リンク共有まで実装、スレッド以降は未実装。Capsule版・限定リンク・スレッド対象・投稿時版・運営／知識受入の分離。全コミュニティ基盤を先行導入しない |
+| [Capsuleの限定リンク共有](design/CAPSULE_LINK_SHARING.md) | 2026-10-09。特定版の固定・匿名閲覧・根拠／探索への導線・明示再発行と失効。実公開・discussion・運営非表示は未実装 |
+| [会員Capsule保存の初回](design/MEMBER_CAPSULES.md) | 2026-10-09。実認証・PostgreSQL・所有者APIと明示保存・再訪・既存構成編集UIを接続。新参照追加／設定UI・実Googleは未了 |
+| [ブラウザ内の最小Capsule](design/LOCAL_CAPSULES.md) | 2026-10-09。明示した対象・独立主張と説明のprivate保存・現在データでの再閲覧・確認削除。保存ビュー／途中保存とは別コンテンツ。同IDの編集も実装。会員同期・公開共有は未実装 |
 | [ブラウザ内の探索途中保存](design/LOCAL_SAVED_WORKSPACE.md) | 2026-10-09。datasetごと最大10件、枝の開閉・取得ページ数・配置の保存と現在データからの再開。専用JSONの控え・内容確認後の読込を追加。旧1件を引き継ぎ、選択・置換・確認削除に対応。会員同期は未実装 |
+| [対象・主張の直接閲覧URL](design/DIRECT_READING_LINKS.md) | 2026-10-09。dataset・Entity／Claim IDから現在の説明・根拠を読む。履歴・明示探索・元Graphへの復帰。公開運用・検索掲載・内容版固定は含めない |
 | [ブラウザ内の保存ビュー](design/LOCAL_SAVED_VIEWS.md) | 2026-10-09。起点と確定条件のローカル保存・再訪、JSONの控えと確認後の追加。会員保存・自動同期は未実装。枝と配置の再開は別の探索途中保存を参照 |
 | [小さい探索分類と条件解決](design/EXPLORATION_CLASSIFICATION_RESOLUTION_REVIEW.md) | Phase 19設計検証完了・提案。5候補／24記録への仮付与、Visitor三状態と検索三契約。relation facet三入口は現条件へ解決可能、学術は未解決、仕事は非採用。研究prototypeのみ、公開API／UIは未接続 |
 | [関係探索モデルの再レビュー](design/RELATION_EXPLORATION_MODEL_REVIEW.md) | Phase 18レビュー完了・提案。意味限定／多軸の探索分類／原語・語彙検索を分離し、A〜Dを多分野で比較。runtime変更・新分類の採用なし。[比較資料v1](research/phase-18-exploration-model/v1/README.md)に根拠と受入境界 |
@@ -45,7 +51,7 @@
 | [関係モデルの基本設計](design/RELATION_MODEL_PRINCIPLES.md) | Phase 16採用。独立命題／domain固有限定／共通処理の判断基準、null・肯否・期間・identity／比較／表示、由来と根拠、追加レビュー手順。語彙追加時は個別契約と併読 |
 | [現在地点と次フェーズ](design/CURRENT_STATE_AND_NEXT_PHASE.md) | 2026-10-03の棚卸し。候補Aは承認・実装へ進んだ。棚卸し時点の状態を確認する記録 |
 | [プロダクト像と設計原則](design/PRODUCT_VISION_AND_PRINCIPLES.md) | 成熟したサービスの目標・実現意向・未確定候補・守る境界。直近の実装要件ではない |
-| [Capsule・User Contribution・Global KG](design/CAPSULE_AND_USER_CONTRIBUTION_VISION.md) | 2026-10-06共有の将来構想の正本。Global／local・identity・投稿／審査／moderation・保存／公開共有／議論・provenance・AI構造化・import／export変更時に読む。具体方式は未決・未実装 |
+| [Capsule・User Contribution・Global KG](design/CAPSULE_AND_USER_CONTRIBUTION_VISION.md) | 2026-10-06共有の将来構想の正本。Global／local・identity・投稿／審査／moderation・保存／公開共有／議論・provenance・AI構造化・import／export変更時に読む。既存KG参照と説明だけの初回は上記最小Capsuleを参照。他の具体方式は未決・未実装 |
 | [AI処理の検証順序・共通Kevの接続と責務](design/AI_PROCESSING_DIRECTION.md) | 2026-10-09共通サービスの公開API・実構成を確認。共有資産の変更は事前相談。グラフ実タスク検証・連携は未実装。Decision Model／文脈理解用LLM／人間を分離し、Local Workerは候補 |
 | [少数実データパイロット](design/REAL_DATA_PILOT.md) | 最小案を採用しPhase 04で実装。対象・根拠・外部ID・言語・再投入の境界、残る候補。利用者評価はこれから |
 | [条件付き探索の第一段階](design/CONDITIONAL_EXPLORATION_PHASE.md) | 既存predicate集合の選択・条件変更UX・API・cursor・変更直前の探索への一件復帰の採用契約 |
@@ -72,6 +78,10 @@
 未実装部分を含む文書は、完了した内容が一部あっても丸ごとアーカイブしない。設計案を採用済みとみなさず、最新のユーザー指示を優先する。
 
 ## 現在地点
+
+2026-10-09、[会員Capsule保存](design/MEMBER_CAPSULES.md)の認証・所有者付き保存APIを追加した。専用PostgreSQLと開発OIDCによる検証段階で、明示保存・本人一覧・現在の根拠・別ブラウザ再訪のUIも接続した。通常の探索・ブラウザ保存を維持し、題名・説明・既存構成の編集と失効時の入力保持も接続した。新参照追加・設定UIと実Googleは未実装。
+
+2026-10-09、保存・再開に続き、対象・主張を選んで説明とともに読み返す[最小Capsule](design/LOCAL_CAPSULES.md)を追加した。ブラウザ内privateの初回であり、題名・説明・構成を同IDの次版へ編集できる。公開共有・会員保存・投稿は含めない。
 
 Phase 21でGraphの限定概要と独立Claim詳細を整合した。全Predicateの肯否混在を中立表示し、Relation全体→Graph内／Graph未表示／条件外の各主張→原資料・確認範囲へ進める。API・意味契約・凍結datasetは不変。浦沢→PLUTOのRoleを推定せず、既存情報で改善できた範囲とデータ／モデルの不足を分けて記録した。[現行presentation契約](design/RELATION_PRESENTATION_CONTRACTS.md)／[実画面評価・検証記録](archive/phase-21-relation-presentation/README.md)。
 
