@@ -8,6 +8,8 @@
 
 [2026-10-09の設計・優先順位補強](archive/operations/20261009_AUTOPILOT_DESIGN_PRIORITY.md)：未設計の重要機能も自分で契約を決めて段階実装する。完了メモの次候補を固定せず比較し、最小Capsule等の初期案を次回promptへ渡す。
 
+[アカウント・コミュニティの先回り設計](archive/operations/20261009_ACCOUNT_COMMUNITY_PREPARATION.md)：private会員保存→限定共有→Capsuleスレッドの初回契約。自動実行の認証保護とサービス認証開発を区別し、必要なmain設計だけを読めるようにした。
+
 [2026-10-07の受け入れ記録](archive/autopilot-acceptance/20261007.md)：検索状態、表示中対象への移動、関連主張の順次表示・部分再試行。
 
 [2026-10-08の受け入れ記録](archive/autopilot-acceptance/20261008.md)：狭い画面、隣接一覧、関係両端への移動、通信timeout、条件変更前への復帰。手動画面起動とhealthcheckも確認。
@@ -32,6 +34,8 @@
 
 | 現役の設計文書 | 状態・読む場面 |
 | --- | --- |
+| [アカウント・所有者・会員保存](design/ACCOUNT_AND_OWNERSHIP_DESIGN.md) | 未実装の初回設計。認証・UserとKG Person・所有者認可・一種類のprivate保存、実credential待ちの範囲とテストを具体化 |
+| [共有・議論の最小縦経路](design/COMMUNITY_VERTICAL_SLICES.md) | 未実装の初回設計。Capsule版・限定リンク・スレッド対象・投稿時版・運営／知識受入の分離。全コミュニティ基盤を先行導入しない |
 | [ブラウザ内の探索途中保存](design/LOCAL_SAVED_WORKSPACE.md) | 2026-10-09。datasetごと最大10件、枝の開閉・取得ページ数・配置の保存と現在データからの再開。専用JSONの控え・内容確認後の読込を追加。旧1件を引き継ぎ、選択・置換・確認削除に対応。会員同期は未実装 |
 | [ブラウザ内の保存ビュー](design/LOCAL_SAVED_VIEWS.md) | 2026-10-09。起点と確定条件のローカル保存・再訪、JSONの控えと確認後の追加。会員保存・自動同期は未実装。枝と配置の再開は別の探索途中保存を参照 |
 | [小さい探索分類と条件解決](design/EXPLORATION_CLASSIFICATION_RESOLUTION_REVIEW.md) | Phase 19設計検証完了・提案。5候補／24記録への仮付与、Visitor三状態と検索三契約。relation facet三入口は現条件へ解決可能、学術は未解決、仕事は非採用。研究prototypeのみ、公開API／UIは未接続 |

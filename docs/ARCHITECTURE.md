@@ -129,7 +129,7 @@ Claimは0件以上のCitationを持てるが、0件は「出典未確認」と�
 | --- | --- | --- |
 | Entity・名称・外部ID | Neo4j | PostgreSQLへ同じマスタを複製しない |
 | Claim・期間・Source・Citation | Neo4j | 知識の内容と参照関係 |
-| User・認証情報・権限 | PostgreSQL | 認証サービス利用の有無は未確定 |
+| User・認証情報・権限 | PostgreSQL | 未実装。初回案はNext内のBetter AuthとDB session。詳細は下記設計 |
 | Bookmark | PostgreSQL | 対象の内部IDだけを参照 |
 | 編集操作の監査・審査・通報 | PostgreSQL | 誰がどの操作をしたか、承認手続き |
 | Notification・配信状態 | PostgreSQL | サービス運営情報 |
@@ -137,6 +137,8 @@ Claimは0件以上のCitationを持てるが、0件は「出典未確認」と�
 監査ログに差分や復元用の過去スナップショットを残すことはあり得るが、現在のグラフを検索・探索する第二の正本にはしない。知識の現行内容はNeo4jから読む。運営上の審査状態はPostgreSQLが正本、Neo4jの`visibility`は公開読取用の反映結果とする将来案。初期fixtureでは静的に設定する。
 
 DB間の外部キーや単一トランザクションは前提にしない。将来の編集時にはPostgreSQLに操作IDと指示を記録し、Neo4jへ冪等に適用後、完了を記録する方式を検討する。再試行・未完了操作の照合が必要。Outbox、可視性反映、権限確認の具体的な手順は投稿機能導入時に決定する。
+
+2026-10-09に[アカウント・所有者・会員保存](design/ACCOUNT_AND_OWNERSHIP_DESIGN.md)と[共有・議論の初回設計](design/COMMUNITY_VERTICAL_SLICES.md)を用意した。runtimeは未変更。初回は一種類のprivate内容をPostgreSQLへ所有者付きで保存し、KGはNeo4j参照を維持する。参照中心Capsuleの内容版・共有token・スレッドは必要な縦経路ごとに導入する。Capsule-local Entity/assertionの正式保存方式、Global書込、課金制度まで決定したことにはしない。
 
 ## ID設計
 

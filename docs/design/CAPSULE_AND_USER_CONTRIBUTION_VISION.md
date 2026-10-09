@@ -4,6 +4,8 @@
 
 原文は[Capsuleについての共有](../prompt/20261006_Capsuleとか.md)。Capsuleは今回初めて正式共有された概念。本書をこの構想の正本とし、[PROJECT_CONTEXT](../PROJECT_CONTEXT.md)の目的、[プロダクト像](PRODUCT_VISION_AND_PRINCIPLES.md)、[関係モデルの基本設計](RELATION_MODEL_PRINCIPLES.md)と併読する。現行実装の契約は[ARCHITECTURE](../ARCHITECTURE.md)に従う。
 
+2026-10-09に[アカウント・所有者・会員保存](ACCOUNT_AND_OWNERSHIP_DESIGN.md)と[限定共有・Capsuleスレッド](COMMUNITY_VERTICAL_SLICES.md)の初回設計を具体化した。未実装。以下の将来構想全体を確定したものではなく、参照中心の小さい縦経路で先に決める境界を別文書に置く。
+
 ## 1. 読み返す判断点
 
 Global／localの境界、Entity・Claimの同一性、User Contribution、submission／審査／moderation、Saved View・探索途中の保存、公開共有、discussion、provenance、AI構造化、import／exportを設計・変更する時は本書を読む。閲覧画面から投稿へ繋ぐ導線を初めて設計する時も対象とする。

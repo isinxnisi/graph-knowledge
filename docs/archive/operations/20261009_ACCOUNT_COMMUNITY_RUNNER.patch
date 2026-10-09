@@ -1,0 +1,24 @@
+--- a/autopilot-run.sh
++++ b/autopilot-run.sh
+@@ -123,2 +123,2 @@
+-Use non-interactive commands. Do not start login/setup wizards, password prompts, watch mode, or servers without a bounded test and cleanup. If authentication or a prerequisite is missing, log the blocker and exit.
+-Work ONLY in $WORKTREE_DIR and its Git metadata. Never push, merge, force-push, publish, or modify the source working tree. Do not modify the scheduler, runner, guards, authentication or policy.
++Use non-interactive commands. Do not start login/setup wizards, password prompts, watch mode, or servers without a bounded test and cleanup. If Codex authentication itself is missing, log the blocker and exit. Missing product credentials block only their live integration; continue authorized local design, implementation and tests that do not need them.
++Work ONLY in $WORKTREE_DIR and its Git metadata. Never push, merge, force-push, publish, or modify the source working tree. Do not modify the automation scheduler, runner, guards, Codex authentication credentials or execution policy. This restriction does not prohibit designing or implementing the project's user authentication and authorization when permitted by current source guidance. You may read referenced design documents from $SOURCE_REPO/docs/design, but never modify that source tree or run its app/tests/DB operations.
+--- a/tests/test-handoff.py
++++ b/tests/test-handoff.py
+@@ -108,0 +109,14 @@
++    def test_product_auth_scope_and_read_only_source_designs(self):
++        before = self.git('rev-parse', 'HEAD')
++        self.assertEqual(self.run_turn().returncode, 0)
++        prompt = self.prompt()
++        self.assertIn('If Codex authentication itself is missing', prompt)
++        self.assertIn('Missing product credentials block only their live integration', prompt)
++        self.assertIn("the project's user authentication and authorization", prompt)
++        self.assertIn(str(self.source_docs / 'design'), prompt)
++        self.assertIn('never modify that source tree or run its app/tests/DB operations', prompt)
++        self.assertIn('Never push, merge, force-push, publish', prompt)
++        self.assertNotIn('If authentication or a prerequisite is missing', prompt)
++        self.assertEqual(self.git('rev-parse', 'HEAD'), before)
++        self.assertEqual(list(self.source_docs.iterdir()), [self.source_docs / 'AUTOPILOT_DIRECTION.md'])
++
