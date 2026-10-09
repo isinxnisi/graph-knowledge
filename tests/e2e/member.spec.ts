@@ -30,6 +30,92 @@ async function clearPrivateTestData() {
 }
 test.beforeEach(clearPrivateTestData);
 for (const width of [390, 1440]) {
+  test(`限定リンクで指定版を別ブラウザへ渡し、根拠・探索・再発行・停止へ進む ${width}px`, async ({ page, context, browser }, testInfo) => {
+    await page.setViewportSize({ width, height: 900 }); await mockKnowledge(context);
+    const errors: string[] = []; page.on("pageerror", error => errors.push(error.message));
+    await page.goto("/member"); await login(page);
+    const content = { dataset: saved.dataset, title: saved.title, note: saved.note, language: saved.language, entityIds: saved.entityIds, claimIds: saved.claimIds };
+    const { capsule } = await (await page.request.post("/api/member/capsules", { headers: { Origin: "http://127.0.0.1:3221" }, data: { requestId: crypto.randomUUID(), content } })).json();
+    await page.goto(`/member?capsule=${capsule.id}`);
+    const controls = page.getByRole("region", { name: "限定リンク共有", exact: true });
+    await expect(controls.getByText("有効な共有リンクはありません。本人だけが読めます。", { exact: true })).toBeVisible();
+    await controls.getByRole("button", { name: "この版の共有リンクを作る", exact: true }).click();
+    await controls.getByRole("button", { name: "この版をリンクで閲覧可能にする", exact: true }).click();
+    await expect(controls.getByLabel("共有リンク", { exact: true })).toBeVisible();
+    const link = await controls.getByLabel("共有リンク", { exact: true }).inputValue();
+    const token = new URL(link).hash.slice(1);
+    expect(token).toHaveLength(43);
+    await page.screenshot({ path: testInfo.outputPath(`share-owner-${width}.png`), fullPage: true });
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+    const other = await browser.newContext({ baseURL: "http://127.0.0.1:3221", viewport: { width, height: 900 } });
+    try {
+      await mockKnowledge(other); const reader = await other.newPage();
+      reader.on("pageerror", error => errors.push(error.message));
+      const requests: { url: string; referer?: string }[] = [];
+      reader.on("request", request => requests.push({ url: request.url(), referer: request.headers().referer }));
+      const response = await reader.goto(link);
+      expect(response?.headers()["referrer-policy"]).toBe("no-referrer");
+      expect(response?.headers()["x-robots-tag"]).toContain("noindex");
+      // Next dev supplies no-cache for the content-free shell; production is
+      // checked separately. The content-bearing API must always be no-store.
+      expect(response?.headers()["cache-control"]).toMatch(/no-(store|cache)/);
+      const sharedResponse = await reader.request.get("/api/shared/capsule", { headers: { "X-Capsule-Token": token } });
+      expect(sharedResponse.headers()["cache-control"]).toBe("private, no-store");
+      await expect(reader.getByText("現在のGraph：対象 2件 / 主張 1件", { exact: true })).toBeVisible();
+      await expect(reader.getByRole("heading", { name: "作成者の説明", exact: true })).toBeVisible();
+      expect((await reader.request.get(`/api/member/capsules/${capsule.id}`)).status()).toBe(401);
+      expect(await other.cookies()).toHaveLength(0);
+      await reader.getByRole("button", { name: /青葉ハル → アシスタントだった → 黒川レン.*2001年〜2003年/ }).click();
+      await expect(reader.getByRole("heading", { name: "青葉ハルへのインタビュー", exact: true })).toBeVisible();
+      await expect(reader.getByText("参照箇所：pp.12–13", { exact: true })).toBeVisible();
+      await reader.screenshot({ path: testInfo.outputPath(`share-reader-${width}.png`), fullPage: true });
+      expect(await reader.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+      await reader.getByRole("button", { name: "青葉ハル · 人物", exact: true }).click();
+      const popup = other.waitForEvent("page");
+      await reader.getByRole("link", { name: "この対象を開いて探索する（別タブ）", exact: true }).click();
+      const explorer = await popup;
+      await expect.poll(() => explorer.getByTestId("graph-canvas").evaluate(el => !!(el as unknown as { _cyreg?: { cy?: unknown } })._cyreg?.cy)).toBe(true);
+      await explorer.getByRole("button", { name: "この対象から関係を探索する", exact: true }).click();
+      await expect(explorer.getByTestId("graph-counts")).toHaveText("Entity 5 / Claim 7");
+      await explorer.close(); await reader.bringToFront();
+      // Editing the private current version cannot silently alter the shared one.
+      const update = await page.request.put(`/api/member/capsules/${capsule.id}`, { headers: { Origin: "http://127.0.0.1:3221" }, data: { expectedRevision: 1, content: { ...content, note: "次の版だけの説明" } } });
+      expect(update.status()).toBe(200);
+      await reader.reload();
+      await expect(reader.getByText(saved.note, { exact: true })).toBeVisible();
+      await expect(reader.getByText("次の版だけの説明", { exact: true })).toHaveCount(0);
+      await page.bringToFront(); await page.reload();
+      await expect(controls.getByText("内容版 1 の限定リンクが有効です。", { exact: true })).toBeVisible();
+      await expect(page.getByText("次の版だけの説明", { exact: true })).toBeVisible();
+      // Token plaintext is not retrievable after returning/reloading the owner UI.
+      await expect(controls.getByLabel("共有リンク", { exact: true })).toHaveCount(0);
+      await controls.getByRole("button", { name: "この版でリンクを作り直す", exact: true }).click();
+      await expect(controls.getByText("今表示している内容版 2 を共有します。", { exact: true })).toBeVisible();
+      await controls.getByRole("button", { name: "この版をリンクで閲覧可能にする", exact: true }).click();
+      await expect(controls.getByLabel("共有リンク", { exact: true })).toBeVisible();
+      const newLink = await controls.getByLabel("共有リンク", { exact: true }).inputValue();
+      // Navigating to an identical fragment URL can be a same-document no-op.
+      // Recheck explicitly, as the UI promises (or wait for the 30s poll).
+      await reader.bringToFront(); await reader.goto(link); await reader.reload();
+      await expect(reader.getByRole("main").getByRole("alert")).toContainText("このリンクでは閲覧できません");
+      await expect(reader.getByRole("heading", { name: saved.title, exact: true })).toHaveCount(0);
+      await reader.goto(newLink);
+      await expect(reader.getByText("次の版だけの説明", { exact: true })).toBeVisible();
+      await page.bringToFront();
+      await controls.getByRole("button", { name: "共有を停止する", exact: true }).click();
+      await controls.getByRole("button", { name: "リンクを失効する", exact: true }).click();
+      await expect(controls.getByText("共有を停止しました。", { exact: true })).toBeVisible();
+      await reader.bringToFront();
+      await reader.getByRole("button", { name: "リンクを再確認", exact: true }).click();
+      await expect(reader.getByRole("main").getByRole("alert")).toContainText("このリンクでは閲覧できません");
+      await expect(reader.getByRole("heading", { name: saved.title, exact: true })).toHaveCount(0);
+      expect(requests.every(request => !request.url.includes(token) && !request.referer?.includes(token))).toBe(true);
+    } finally { await other.close(); }
+    expect(errors).toEqual([]);
+  });
+}
+
+for (const width of [390, 1440]) {
   test(`探索を保持し、実認証から明示保存・別ブラウザ再訪・根拠へ進む ${width}px`, async ({ page, context, browser }, testInfo) => {
     await page.setViewportSize({ width, height: 900 }); await mockKnowledge(context);
     const errors: string[] = []; page.on("pageerror", error => errors.push(error.message));

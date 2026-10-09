@@ -6,6 +6,7 @@ import { memberAuthReady, type MemberAuth } from "./auth";
 import { MemberUnavailable, type MemberConfig } from "./config";
 import { APIError } from "better-auth/api";
 import { assertMemberOrigin, MemberError, memberId, memberInput, memberJson } from "./http";
+import { createCapsuleSharing } from "./sharing";
 
 function dto(row: QueryResultRow) {
   return memberCapsuleSchema.parse({ id: row.id, schemaVersion: row.schema_version, revision: Number(row.revision),
@@ -15,8 +16,8 @@ function digest(content: MemberCapsuleContent) {
   return createHash("sha256").update(JSON.stringify({ ...content, entityIds: [...content.entityIds].sort(), claimIds: [...content.claimIds].sort() })).digest("hex");
 }
 
-// No public method accepts an owner. Every operation reads the current database
-// session and active user, then constrains every content query to that owner.
+// No public method accepts an owner. Private operations read the database
+// session and active user; shared reads use a separate pinned-revision capability.
 export function createMemberService(config: MemberConfig, pool: Pool, auth: MemberAuth, dataset: DatasetMode) {
   async function owner(request: Request) {
     await memberAuthReady(auth);
@@ -33,6 +34,7 @@ export function createMemberService(config: MemberConfig, pool: Pool, auth: Memb
     if (content.dataset !== dataset) throw new MemberError(400, "DATASET_MISMATCH");
   }
   return {
+    ...createCapsuleSharing(pool, dataset, config.origin, owner),
     async profile(request: Request) {
       const user = await owner(request);
       return memberJson({ user: { id: user.id, name: user.name, locale: user.locale } });

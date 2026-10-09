@@ -16,6 +16,8 @@ import * as authRoute from "../app/api/auth/[...all]/route";
 import * as collection from "../app/api/member/capsules/route";
 import * as item from "../app/api/member/capsules/[id]/route";
 import * as profile from "../app/api/member/profile/route";
+import * as sharing from "../app/api/member/capsules/[id]/share/route";
+import * as shared from "../app/api/shared/capsule/route";
 
 const origin = "http://127.0.0.1:3221";
 function request(path: string, cookie = "", method = "GET", body?: unknown, headers: Record<string, string> = {}) {
@@ -176,6 +178,87 @@ describe("実OIDC・PostgreSQLによるprivate Capsule", () => {
     expect((await item.DELETE(request("/", alice.cookies.value, "DELETE", { expectedRevision: 1 }), context(capsule.id))).status).toBe(200);
     expect((await item.GET(request("/", alice.cookies.value), context(capsule.id))).status).toBe(404);
     expect((await create(alice.cookies.value, value, requestId)).status).toBe(409);
+  });
+  it("限定リンクは本人が確認した版だけを固定し、匿名にownerや非共有の更新を渡さない", async () => {
+    const { capsule } = await (await create(alice.cookies.value)).json();
+    const ctx = context(capsule.id);
+    const issue = { expectedRevision: 1, expectedShareId: null };
+    for (const cookie of ["", bob.cookies.value]) {
+      const status = cookie ? 404 : 401;
+      expect((await sharing.GET(request("/", cookie), ctx)).status).toBe(status);
+      expect((await sharing.POST(request("/", cookie, "POST", issue), ctx)).status).toBe(status);
+      expect((await sharing.DELETE(request("/", cookie, "DELETE", { expectedShareId: randomUUID() }), ctx)).status).toBe(status);
+    }
+    expect((await sharing.POST(request("/", alice.cookies.value, "POST", issue, { origin: "https://other.invalid" }), ctx)).status).toBe(403);
+    const { user } = await (await profile.GET(request("/", alice.cookies.value))).json();
+    expect((await sharing.POST(request("/", bob.cookies.value, "POST", issue, { "x-member-user": user.id }), ctx)).status).toBe(401);
+    expect((await sharing.POST(request("/", alice.cookies.value, "POST", { ...issue, ownerUserId: user.id }), ctx)).status).toBe(400);
+    expect((await sharing.GET(request("/", alice.cookies.value), ctx)).status).toBe(200);
+    const issued = await sharing.POST(request("/", alice.cookies.value, "POST", issue), ctx);
+    expect(issued.status).toBe(201);
+    const { share, token } = await issued.json();
+    expect(token).toMatch(/^[A-Za-z0-9_-]{43}$/);
+    const status = await (await sharing.GET(request("/", alice.cookies.value), ctx)).json();
+    expect(status).toEqual({ share });
+    const rows = await memberRuntime().pool.query("SELECT * FROM member_capsule_share WHERE capsule_id = $1", [capsule.id]);
+    expect(rows.rows[0].token_hash).toHaveLength(64);
+    expect(JSON.stringify(rows.rows)).not.toContain(token);
+    const read = () => shared.GET(request("/api/shared/capsule", "", "GET", undefined, { "x-capsule-token": token }));
+    const response = await read();
+    expect(response.status).toBe(200);
+    expect(response.headers.get("cache-control")).toBe("private, no-store");
+    expect(response.headers.get("vary")).toBe("X-Capsule-Token");
+    expect(response.headers.get("referrer-policy")).toBe("no-referrer");
+    expect(response.headers.get("x-robots-tag")).toContain("noindex");
+    expect(await response.json()).toEqual({ capsule });
+    for (const headers of [{}, { "x-capsule-token": "invalid" }, { "x-capsule-token": "a".repeat(43) }] as Record<string, string>[]) {
+      expect((await shared.GET(request("/api/shared/capsule", alice.cookies.value, "GET", undefined, headers))).status).toBe(404);
+    }
+    const runtime = memberRuntime();
+    const otherDataset = createMemberService(runtime.config, runtime.pool, runtime.auth, "pilot-science-v1");
+    expect((await memberHandle(() => otherDataset.readShared(request("/", "", "GET", undefined, { "x-capsule-token": token })))).status).toBe(404);
+    expect((await item.PUT(request("/", alice.cookies.value, "PUT", { expectedRevision: 1, content: { ...capsule.content, title: "非共有の訂正", note: "private revision" } }), ctx)).status).toBe(200);
+    expect(await (await read()).json()).toEqual({ capsule });
+    expect((await sharing.POST(request("/", alice.cookies.value, "POST", { expectedRevision: 1, expectedShareId: share.id }), ctx)).status).toBe(409);
+    await runtime.pool.query('UPDATE "user" SET active = false WHERE id = $1', [user.id]);
+    try { expect((await read()).status).toBe(404); }
+    finally { await runtime.pool.query('UPDATE "user" SET active = true WHERE id = $1', [user.id]); }
+    expect((await item.DELETE(request("/", alice.cookies.value, "DELETE", { expectedRevision: 2 }), ctx)).status).toBe(200);
+    expect((await read()).status).toBe(404);
+    expect((await runtime.pool.query("SELECT * FROM member_capsule_revision WHERE capsule_id = $1", [capsule.id])).rowCount).toBe(0);
+  });
+  it("同時発行・旧画面からの再発行と停止を競合にし、失効・再送・版保持を原子的に扱う", async () => {
+    const { capsule } = await (await create(alice.cookies.value)).json();
+    const ctx = context(capsule.id);
+    const issue = (expectedShareId: string | null, expectedRevision = 1) => sharing.POST(request("/", alice.cookies.value, "POST", { expectedRevision, expectedShareId }), ctx);
+    const revoke = (id: string) => sharing.DELETE(request("/", alice.cookies.value, "DELETE", { expectedShareId: id }), ctx);
+    const read = (token: string) => shared.GET(request("/", "", "GET", undefined, { "x-capsule-token": token }));
+    const responses = await Promise.all([issue(null), issue(null)]);
+    expect(responses.map(r => r.status).sort()).toEqual([201, 409]);
+    const first = await responses.find(r => r.status === 201)!.json();
+    const rotated = await (await issue(first.share.id)).json();
+    expect(rotated.token).not.toBe(first.token);
+    expect((await read(first.token)).status).toBe(404);
+    expect((await read(rotated.token)).status).toBe(200);
+    expect((await revoke(first.share.id)).status).toBe(409);
+    expect((await issue(first.share.id)).status).toBe(409);
+    expect((await revoke(rotated.share.id)).status).toBe(200);
+    expect((await revoke(rotated.share.id)).status).toBe(200);
+    expect((await read(rotated.token)).status).toBe(404);
+    expect(await (await sharing.GET(request("/", alice.cookies.value), ctx)).json()).toEqual({ share: null });
+    expect((await memberRuntime().pool.query("SELECT * FROM member_capsule_revision WHERE capsule_id = $1", [capsule.id])).rowCount).toBe(1);
+    const next = await (await issue(null)).json();
+    expect((await read(next.token)).status).toBe(200);
+    const pool = memberRuntime().pool;
+    // A bounded snapshot history must not disable revocation or same-version rotation.
+    await pool.query(`INSERT INTO member_capsule_revision (capsule_id, revision, snapshot)
+      SELECT $1, n, $2 FROM generate_series(2, 50) n`, [capsule.id, JSON.stringify(capsule)]);
+    expect((await issue(next.share.id)).status).toBe(201);
+    await pool.query("UPDATE member_capsule SET revision = 51 WHERE id = $1", [capsule.id]);
+    const latest = await (await sharing.GET(request("/", alice.cookies.value), ctx)).json();
+    expect((await issue(latest.share.id, 51)).status).toBe(422);
+    expect((await revoke(latest.share.id)).status).toBe(200);
+    await item.DELETE(request("/", alice.cookies.value, "DELETE", { expectedRevision: 51 }), ctx);
   });
   it("nonce・issuer不一致とメール一致だけの別identityを受け入れない", async () => {
     for (const mode of ["nonce", "issuer"]) {

@@ -26,6 +26,7 @@ beforeEach(() => {
     if (path === "/api/member/profile") return Response.json({ user: { id: identity, name: identity === owner ? "本人" : "別人", locale: "ja" } });
     if (path === "/api/member/capsules") return Response.json({ capsules: identity === owner ? [capsule] : [] });
     if (identity !== owner) return Response.json({ error: { code: "NOT_FOUND" } }, { status: 404 });
+    if (path.endsWith("/share")) return Response.json({ share: null });
     return Response.json({ capsule });
   });
   vi.stubGlobal("fetch", fetchMock);

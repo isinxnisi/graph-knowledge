@@ -10,5 +10,7 @@
 .card, .account { margin: 20px 0; padding: 20px; border: 1px solid var(--color-border); border-radius: 12px; background: var(--color-panel); }
 .eyebrow, .muted { color: var(--color-muted); font-size: .9rem; }
 .source { display: grid; gap: 8px; }
+.sharing { border-bottom: 1px solid var(--color-border); padding-bottom: 20px; margin-bottom: 20px; }
+.source input { width: 100%; min-width: 0; box-sizing: border-box; padding: 12px; background: var(--color-panel); color: var(--color-text); border: 1px solid var(--color-border); border-radius: 8px; font: inherit; }
 .source select { width: 100%; min-width: 0; padding: 12px; background: var(--color-panel); color: var(--color-text); border: 1px solid var(--color-border); border-radius: 8px; font: inherit; }
 @media (max-width: 600px) { .page { padding: 20px 12px 48px; } .card, .account { padding: 14px; } }

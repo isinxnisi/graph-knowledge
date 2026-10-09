@@ -28,7 +28,7 @@ export function ClaimCaption({ claim, nodes }: { claim: ClaimSummary; nodes: Rec
     <small className={styles.muted}>ID: {claim.id}</small></>;
 }
 
-export function CapsuleReader({ capsule, onEdit, explorationLinks = false }: { capsule: LocalCapsule; onEdit?: (resolved: ResolvedCapsule) => void; explorationLinks?: boolean }) {
+export function CapsuleReader({ capsule, onEdit, explorationLinks = false, noteAttribution = "self" }: { capsule: LocalCapsule; onEdit?: (resolved: ResolvedCapsule) => void; explorationLinks?: boolean; noteAttribution?: "self" | "author" }) {
   const text = capsuleLabels();
   const [resolved, setResolved] = useState<ResolvedCapsule | null>(null);
   const [failed, setFailed] = useState(false);
@@ -56,7 +56,7 @@ export function CapsuleReader({ capsule, onEdit, explorationLinks = false }: { c
   return <section aria-label={text.content}>
     <h3 tabIndex={-1} data-capsule-focus>{capsule.title}</h3><p className={styles.muted}>{text.version(capsule.revision)} · {new Date(capsule.updatedAt ?? capsule.createdAt).toLocaleString("ja-JP")}</p>
     {onEdit && <button disabled={!resolved && !failed} onClick={() => onEdit(resolved ?? { entities: {}, claims: {}, issues: [] })}>{text.edit}</button>}
-    <h4>{text.note}</h4><p className={css.note}>{capsule.note || text.noNote}</p><p className={styles.muted}>{text.noteHelp}</p>
+    <h4>{noteAttribution === "author" ? text.authorNote : text.note}</h4><p className={css.note}>{capsule.note || text.noNote}</p><p className={styles.muted}>{noteAttribution === "author" ? text.authorNoteHelp : text.noteHelp}</p>
     <p>{text.current}</p>
     {!resolved && !failed && <p role="status">{text.reading}</p>}
     {failed && <p role="alert">{text.timeout}</p>}

@@ -30,7 +30,7 @@ try {
   }
   if (!ready) throw new Error("Dedicated member PostgreSQL did not become ready");
   child = spawn("node", browserTests
-    ? ["--import", "tsx", "scripts/test-member-browser.ts"]
+    ? ["--import", "tsx", "scripts/test-member-browser.ts", ...process.argv.slice(2).filter(arg => arg !== "--e2e")]
     : ["node_modules/vitest/vitest.mjs", "run", "tests/member.integration.test.ts", "tests/member-cold.integration.test.ts", "--maxWorkers=1", "--no-file-parallelism"], { env, stdio: "inherit" });
   const timer = setTimeout(() => child?.kill("SIGTERM"), browserTests ? 600_000 : 180_000);
   const code = await new Promise<number>((resolve, reject) => { child!.once("error", reject); child!.once("exit", code => resolve(code ?? 1)); });

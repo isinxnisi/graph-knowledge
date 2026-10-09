@@ -5,6 +5,7 @@ const ja = {
   new: "表示中のGraphから作る", noGraph: "対象を検索してGraphを開くと、ここからCapsuleを作れます。",
   empty: "Capsuleはまだありません。", libraryTitle: "保存したCapsule", library: "保存したCapsuleの一覧へ", create: "Capsuleを保存", saved: "Capsuleを保存しました。",
   name: "Capsuleの題名", note: "自分の説明", noteHelp: "説明はあなたのメモです。KGの主張や出典には変換されません。",
+  authorNote: "作成者の説明", authorNoteHelp: "説明は作成者のメモです。KGの主張や出典ではありません。",
   entities: "含める対象", claims: "含める主張", selectionHelp: "主張を選ぶと、その両端の対象も含めます。同じ場所に置くだけで新しい関係は作りません。",
   limits: "対象30件・主張60件まで。主張なしで対象だけを保存することもできます。",
   required: "選んだ主張の対象", selected: (entities: number, claims: number) => `選択：対象 ${entities}件 / 主張 ${claims}件`,
