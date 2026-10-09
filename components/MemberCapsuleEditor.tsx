@@ -10,6 +10,7 @@ import { KIND_LABELS } from "../lib/client/format";
 import { memberLabels } from "../lib/i18n/member";
 import { capsuleLabels } from "../lib/i18n/capsules";
 import { CapsuleReader, ClaimCaption } from "./CapsuleDialog";
+import MemberReferencePicker from "./MemberReferencePicker";
 import css from "./CapsuleDialog.module.css";
 
 export default function MemberCapsuleEditor({ draft, current, busy, onChange, onSave, onCancel, onCheck }: {
@@ -44,16 +45,18 @@ export default function MemberCapsuleEditor({ draft, current, busy, onChange, on
       <label>{captions.name}<input ref={title} required maxLength={MEMBER_CAPSULE_LIMITS.title} disabled={busy} value={draft.content.title} onChange={event => change({ title: event.target.value })} /></label>
       <label>{captions.note}<textarea rows={6} maxLength={MEMBER_CAPSULE_LIMITS.note} disabled={busy} value={draft.content.note} onChange={event => change({ note: event.target.value })} /></label><p>{captions.noteHelp}</p>
       {unresolved && <p role="status">{captions.unresolvedEdit}</p>}
-      <fieldset disabled={busy}><legend>{captions.entities}</legend>{draft.base.content.entityIds.map(id => {
+      <fieldset disabled={busy}><legend>{captions.entities}</legend>{[...new Set([...draft.base.content.entityIds, ...Object.keys(draft.resolved.entities)])].map(id => {
         const entity = draft.resolved.entities[id];
         return <label className={css.choice} key={id}><input type="checkbox" checked={members.includes(id)} disabled={required.has(id)} onChange={event => change({ entityIds: event.target.checked ? [...draft.content.entityIds, id] : draft.content.entityIds.filter(value => value !== id) })} /><span>{entity ? <>{entityLabel(entity, draft.resolved.entities).replace("\n", " / ")} · {KIND_LABELS[entity.kind]}</> : <>{captions.unresolvedReference} <code>{id}</code></>}{required.has(id) && <small>{unresolved ? captions.preserveEndpoint : captions.required}</small>}</span></label>;
       })}</fieldset>
-      <fieldset disabled={busy}><legend>{captions.claims}</legend>{draft.base.content.claimIds.map(id => {
+      <fieldset disabled={busy}><legend>{captions.claims}</legend>{[...new Set([...draft.base.content.claimIds, ...Object.keys(draft.resolved.claims)])].map(id => {
         const claim = draft.resolved.claims[id];
         return <label className={css.choice} key={id}><input type="checkbox" checked={draft.content.claimIds.includes(id)} onChange={event => change({ claimIds: event.target.checked ? [...draft.content.claimIds, id] : draft.content.claimIds.filter(value => value !== id) })} /><span className={css.claimChoice}>{claim ? <ClaimCaption claim={claim} nodes={draft.resolved.entities} /> : <>{captions.unresolvedReference} <code>{id}</code></>}</span></label>;
       })}</fieldset>
       <p role="status">{captions.selected(members.length, draft.content.claimIds.length)}</p>
+      {(members.length > MEMBER_CAPSULE_LIMITS.entities || draft.content.claimIds.length > MEMBER_CAPSULE_LIMITS.claims) && <p role="alert">{text.referenceLimit}</p>}
       <button disabled={!current || !valid || !changed || busy || conflict || draft.needsCheck}>{text.saveEdit}</button>
     </form>
+    {!busy && <MemberReferencePicker draft={draft} onChange={onChange} />}
   </section>;
 }

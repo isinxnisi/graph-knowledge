@@ -1,6 +1,6 @@
 # 会員Capsule保存：初回の縦経路
 
-2026-10-09採用、**会員保存・再閲覧・既存構成の編集UIを接続**。実OIDC／専用PostgreSQLで、Explorer→明示保存→別ブラウザ再訪→現在の根拠を試せる段階。プロフィール設定、Google実接続・人間受入は未了。
+2026-10-09採用、**会員保存・再閲覧・構成の編集UIを接続**（2026-10-10に閲覧リンクからの参照追加を実装）。実OIDC／専用PostgreSQLで、Explorer→明示保存→別ブラウザ再訪→現在の根拠を試せる段階。プロフィール設定、Google実接続・人間受入は未了。
 
 同日後続：[特定版の限定リンク共有](CAPSULE_LINK_SHARING.md)を追加した。以下の共有・過去版保存が未実装という記述は会員保存／編集初回の範囲。明示共有した版だけを追加snapshotへ固定し、private編集APIと既存形式は維持する。一般公開・discussionは引き続き未実装。
 
@@ -19,7 +19,7 @@ Capsule編集の初回は完了している。編集の細部、直接閲覧の�
 - 認証開始→OIDC callback→DB session→本人の作成／一覧／読取／更新／削除をRoute Handlerで実装した。現在のUserの限定DTO取得、ログアウト、全session失効も提供する。
 - 開発・テスト限定の署名付きOIDC issuerを使い、ライブラリ自身のnonce・issuer・PKCE・state・cookieと実DBを通す。User IDを直接渡すログインAPIは作らない。
 - `/member` で登録／ログイン、現在の表示名・locale、明示保存、本人一覧・読取・確認削除、ログアウト・確認付き全端末ログアウトを接続。現在KGの再解決は既存Capsule Readerを使う。
-- 会員Capsuleの題名・説明・既存構成の編集UIを接続。新しいKG参照の追加、設定UI（表示名／locale）、実Google、公開・共有・議論・退会は未実装。サーバー更新API・schemaは維持する。
+- 会員Capsuleの題名・説明・構成の編集UIを接続。2026-10-10に閲覧リンクから新しいKG参照を追加する経路も実装（末尾）。設定UI（表示名／locale）、実Google、一般公開・退会は未実装。限定共有・議論は別契約。サーバー更新API・schemaは維持する。
 
 ## identity・session・認可
 
@@ -110,3 +110,27 @@ fixtureはNODE_ENVがproduction以外、MEMBER_FIXTURE_ENABLED=1、固定loopbac
 DB切断の再現試験で、クエリを実行していない借出中clientにも切断通知が届くことを確認した。poolだけでなく生成clientにも機密を出さないerror handlerを置き、切断済みclientのエラーは503とする。実DBで借出中のbackendを終了し、未処理例外が起きず、復旧後に同じsessionで読み直せることを検証する。[pgのclient error契約](https://node-postgres.com/apis/client#events)も参照。
 
 fixtureのブラウザ試験は `.next-member-test` にキャッシュを分離し、`next dev --webpack`を使う。Turbopackの開発起動では既存の共有routeがHTMLの404になり、キャッシュ分離後も再現したため、専用試験だけbundlerを変更した。匿名APIの401 JSONまでpreflightで確認し、初回routeコンパイルを操作試験の時間から分ける。通常6画面・本番buildのbundlerは変更しない。fixtureの公開禁止・専用DB制限は従来どおり。390／1440pxの共有を含む12経路を順に実行するため、Playwright全体上限を15分、runner上限を16分へ広げる。個別テスト120秒・assertion15秒・製品API timeoutは維持する。根本原因をNext内部の特定処理まで断定するものではない。
+
+
+## 探索で見つけた参照を会員Capsuleへ追加する（2026-10-10）
+
+共有失効後の本人投稿管理は完了済み。版の比較・プロフィール設定と比較し、保存後に新しい発見を加えられず作り直す障害を優先した。既存の閲覧リンクを受け渡しに使い、探索stateや会員のprivate内容をタブ間で同期する基盤は追加しない。
+
+操作は会員Capsuleの現在版→編集→別タブのExplorerで対象／個別Claimの閲覧リンクを開く→閲覧URLをコピー→編集画面へ貼付→内容・根拠を確認→編集中の構成へ追加→既存の変更保存→同IDの次版→reload→Claim／Source。リンクの入力・確認だけでは構成を変えず、構成への追加だけでもサーバー保存は行わない。
+
+- 入力は同origin・root path・同datasetの `read=entity|claim`／`dataset`／UUID v4を各一つ持つ閲覧URLに限定。相対URLも可。別origin・別dataset・認証情報付きURL・fragment・追加query・共有／会員URL・表示束IDを拒否する。貼付URL自体はfetchせず、内部参照だけを既存KG APIで取得する。
+- Entityは名称・種別・説明・IDを確認して一件だけ追加する。Claimは現在の独立主張と両端のEntityをschema・要求ID照合付きで読み、期間・限定・肯否・Citation／Sourceを確認して一件と両端だけを追加する。relatedClaimIds・neighborsは取得しない。同じSPOでも異なるClaimは独立したまま、同じIDだけを重複排除する。共存から新たな関係を生成しない。
+- 新規参照またはClaimの端点の取得失敗では追加しない。既存の保存済み未解決参照は従来どおり残せる。追加済みの主張を保持する間は両端のチェックを外せず、主張を外しても対象は自動削除しない。30対象／60主張の上限は必要端点を含めて検証し、超過では追加全体を拒否して草稿・previewを保持する。
+- 草稿・追加済み参照・取得した表示データは既存の本人付きタブメモリだけ。入力URLと未確認previewはpickerのメモリだけとし、非表示／再認可／編集終了で破棄する。確認済みの追加は既存編集入力とともに非表示で保持し、同じ本人の再認可後だけ戻す。URL・永続storageへprivate内容を保存しない。
+- 各取得15秒の既存制限。Claim取得後に両端最大2要求を並列取得する。リンク変更・確認取消・unmountで中断し遅い応答を捨てる。保存開始でpickerを外し、確認中に保存しても遅い追加が草稿へ戻らない。送信時の期待User・期待revision・競合／結果不明の再確認は既存契約を維持する。
+- 追加はprivateな現在版の明示編集。共有済みsnapshot・会話の参照版を変更しない。保存時のKG実在保証・KG履歴固定・新しいClaim生成・Global受入ではない。サーバーAPI／schema／migration／KG／凍結datasetは不変。旧UIへ戻しても同じ保存形式を読める。
+
+初回はリンクを一件ずつ確認する経路。Graphからの複数一括選択や直接送る操作は次候補であり、会員内容の自動同期ではない。実Google・実KGを組み合わせた人間受入・外部公開は別判断。
+
+
+### 参照追加の検証結果
+
+- 通常単体499件成功後、最終変更と本人草稿の追加回帰を含む関連26件が成功。別origin／dataset・不正応答・端点欠落・独立主張・重複・上限・遅着取消・別User隔離を確認。
+- 実OIDC／一時PostgreSQLの新規390pxが成功。実際の別タブ閲覧URL取得、根拠確認、Claim／孤立対象の追加、再認可、同ID次版、旧共有版保持、reload、Sourceを確認。1440pxは重複する別タブ往復を除いた追加／保存／reloadの経路で成功。既存編集390pxの取消・構成更新・根拠復帰も成功（計3件）。両幅の追加前後を目視し、横溢れ・page errorなし。
+- 初回の新規テストはtextareaのlocator不一致をrole指定へ修正。冷間コンパイルによる準備上限超過は独立読取を最大3並列にし、statusも事前確認。ログインは会員URLへの遷移完了を待つ。1440pxの長い重複経路は120秒全体上限に達したため、成功済み390pxとの責務を分けて再実行。通信・テスト上限は変更していない。初期証跡はローカルtest-resultsに保持。
+- 型検査、全体lint、最終テストの局所lint、型検査込み本番build、差分検査が成功。検証サーバー・一時DBの終了とport解放を確認。実Google／実KGの組合せ、会員E2E全体、人間受入は今回の検証外。

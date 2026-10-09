@@ -17,6 +17,7 @@ async function mockKnowledge(context: BrowserContext) {
 async function login(page: Page, identity = "検証ユーザーA") {
   await page.getByRole("button", { name: "検証用OIDCでログイン", exact: true }).click();
   await page.getByRole("link", { name: identity, exact: true }).click();
+  await page.waitForURL(url => url.pathname === "/member");
   await expect(page.getByText(identity, { exact: true })).toBeVisible();
   await expect(page.getByRole("button", { name: "アカウントと一覧を再確認", exact: true })).toBeEnabled();
 }
@@ -29,22 +30,26 @@ async function clearPrivateTestData() {
   finally { await pool.end(); }
 }
 test.beforeAll(async ({ request }) => {
-  // Verify real HTTP routing before interaction. Next dev compiles these
-  // routes on first access; API availability must not be inferred from a label.
-  const share = await request.get("/api/member/capsules/00000000-0000-4000-8000-000000000001/share", { timeout: 60_000 });
-  expect(share.status()).toBe(401);
-  expect(share.headers()["content-type"]).toContain("application/json");
-  const anonymous = await request.get("/api/shared/capsule", { timeout: 60_000 });
-  expect(anonymous.status()).toBe(404);
-  expect((await request.get("/shared", { timeout: 60_000 })).status()).toBe(200);
-  expect((await request.get("/", { timeout: 60_000 })).status()).toBe(200);
-  // Cold route compilation belongs to setup, rather than consuming the
-  // interaction budget of the first narrow-screen, multi-tab journey.
-  for (const path of ["/api/member/posts", "/api/member/profile", "/api/member/capsules", "/api/member/capsules/00000000-0000-4000-8000-000000000001"]) {
-    expect((await request.get(path, { timeout: 60_000 })).status()).toBe(401);
-  }
-  expect((await request.get("/api/auth/get-session", { timeout: 60_000 })).status()).toBe(200);
-  expect((await request.get("/api/capsules/00000000-0000-4000-8000-000000000001/discussion?revision=1", { timeout: 60_000 })).status()).toBe(404);
+  // Warm independent routes before interaction, with bounded concurrency. A
+  // serial cold compile can exhaust the hook budget before the browser opens.
+  const checks: [string, number][] = [
+    ["/api/member/capsules/00000000-0000-4000-8000-000000000001/share", 401],
+    ["/api/shared/capsule", 404], ["/shared", 200], ["/", 200],
+    ["/api/member/status", 200], ["/api/member/posts", 401],
+    ["/api/member/profile", 401], ["/api/member/capsules", 401],
+    ["/api/member/capsules/00000000-0000-4000-8000-000000000001", 401],
+    ["/api/auth/get-session", 200],
+    ["/api/capsules/00000000-0000-4000-8000-000000000001/discussion?revision=1", 404],
+  ];
+  let cursor = 0;
+  await Promise.all(Array.from({ length: 3 }, async () => {
+    while (cursor < checks.length) {
+      const [path, status] = checks[cursor++];
+      const response = await request.get(path, { timeout: 60_000 });
+      expect(response.status()).toBe(status);
+      if (path.startsWith("/api/")) expect(response.headers()["content-type"]).toContain("application/json");
+    }
+  }));
 });
 test.beforeEach(clearPrivateTestData);
 for (const width of [390, 1440]) {
@@ -617,6 +622,73 @@ for (const width of [390, 1440]) {
       await expect(account.getByRole("region", { name: "自分の投稿", exact: true })).toHaveCount(0);
       expect(await account.evaluate(() => Object.values(localStorage).join(" ") + Object.values(sessionStorage).join(" "))).not.toContain("共有停止後も自分で取り消すコメント");
     } finally { await other.close(); }
+    expect(errors).toEqual([]);
+  });
+}
+
+for (const width of [390, 1440]) {
+  test(`閲覧リンクから会員Capsuleへ独立主張と対象を追加する ${width}px`, async ({ page, context }, testInfo) => {
+    await page.setViewportSize({ width, height: 900 }); await mockKnowledge(context);
+    const errors: string[] = []; page.on("pageerror", error => errors.push(error.message));
+    await page.goto("/member"); await login(page);
+    const headers = { Origin: "http://127.0.0.1:3221" };
+    const content = { dataset: "demo", title: "探索の発見を追記する関係図", note: "最初は人物だけを保存", language: "ja", entityIds: [claim.subjectId], claimIds: [] };
+    const created = await page.request.post("/api/member/capsules", { headers, data: { requestId: crypto.randomUUID(), content } });
+    expect(created.status()).toBe(201); const { capsule } = await created.json();
+    const path = `/api/member/capsules/${capsule.id}`;
+    expect((await page.request.post(`${path}/share`, { headers, data: { expectedRevision: 1, expectedShareId: null } })).status()).toBe(201);
+    await page.goto(`/member?capsule=${capsule.id}`);
+    await page.getByRole("button", { name: "このCapsuleを編集", exact: true }).click();
+    await page.getByRole("textbox", { name: "自分の説明", exact: true }).fill("根拠を読んで主張を追記した");
+    let link = `http://127.0.0.1:3221/?read=claim&dataset=demo&id=${claim.id}`;
+    // The narrow-screen journey covers crossing tabs and copying the actual
+    // Explorer URL. Desktop focuses on the addition/preview/save layout.
+    if (width === 390) {
+      const explorer = await context.newPage(); await explorer.bringToFront();
+      await explorer.goto(link);
+      await expect(explorer.getByRole("heading", { name: "青葉ハルへのインタビュー", exact: true })).toBeVisible();
+      await explorer.locator("summary").filter({ hasText: /^閲覧URL$/ }).click();
+      link = await explorer.getByLabel("閲覧URL", { exact: true }).inputValue();
+      await explorer.close(); await page.bringToFront();
+    }
+    await expect(page.getByRole("textbox", { name: "自分の説明", exact: true })).toHaveValue("根拠を読んで主張を追記した");
+    const picker = page.getByRole("region", { name: "探索で見つけた対象・主張を追加", exact: true });
+    await picker.getByLabel("対象・主張の閲覧リンク", { exact: true }).fill(link.replace("dataset=demo", "dataset=pilot-science-v1"));
+    await picker.getByRole("button", { name: "リンクの内容を確認", exact: true }).click();
+    await expect(picker.getByRole("alert")).toContainText("この環境・データセット");
+    await picker.getByLabel("対象・主張の閲覧リンク", { exact: true }).fill(link);
+    await picker.getByRole("button", { name: "リンクの内容を確認", exact: true }).click();
+    await expect(picker.getByRole("heading", { name: "青葉ハルへのインタビュー", exact: true })).toBeVisible();
+    await expect(picker.getByText("参照箇所：pp.12–13", { exact: true })).toBeVisible();
+    expect((await (await page.request.get(path)).json()).capsule.revision).toBe(1);
+    await page.screenshot({ path: testInfo.outputPath(`reference-preview-${width}.png`), fullPage: true });
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+    await picker.getByRole("button", { name: "確認した参照を編集中の構成へ追加", exact: true }).click();
+    await expect(page.getByRole("checkbox", { name: /青葉ハル · 人物/ })).toBeChecked();
+    await expect(page.getByRole("checkbox", { name: /黒川レン · 人物/ })).toBeDisabled();
+    await expect(page.getByRole("checkbox", { name: /青葉ハル → アシスタントだった → 黒川レン/ })).toBeChecked();
+    // A standalone entity adds no inferred relationship.
+    const isolated = examples.neighbors.nodes.find(entity => entity.id !== claim.subjectId && entity.id !== claim.objectId)!;
+    await picker.getByLabel("対象・主張の閲覧リンク", { exact: true }).fill(`http://127.0.0.1:3221/?read=entity&dataset=demo&id=${isolated.id}`);
+    await picker.getByRole("button", { name: "リンクの内容を確認", exact: true }).click();
+    await picker.getByRole("button", { name: "確認した参照を編集中の構成へ追加", exact: true }).click();
+    // Confirmed additions survive reauthorization without persisting private drafts.
+    if (width === 390) await page.getByRole("button", { name: "アカウントと一覧を再確認", exact: true }).click();
+    await expect(page.getByRole("checkbox", { name: /青葉ハル → アシスタントだった → 黒川レン/ })).toBeChecked();
+    await page.getByRole("button", { name: "アカウントの変更を保存", exact: true }).click();
+    await expect(page.getByText("アカウントのCapsuleを更新しました。", { exact: true })).toBeVisible();
+    const updated = (await (await page.request.get(path)).json()).capsule;
+    expect(updated.revision).toBe(2); expect(updated.content.claimIds).toEqual([claim.id]);
+    expect(updated.content.entityIds).toEqual([claim.subjectId, claim.objectId, isolated.id]);
+    const historical = (await (await page.request.get(`${path}/revisions?revision=1`)).json()).capsule;
+    expect(historical.content).toEqual(content);
+    await page.reload();
+    await expect(page.getByText("現在のGraph：対象 3件 / 主張 1件", { exact: true })).toBeVisible();
+    await page.getByRole("button", { name: /青葉ハル → アシスタントだった → 黒川レン.*2001年〜2003年/ }).click();
+    await expect(page.getByRole("heading", { name: "青葉ハルへのインタビュー", exact: true })).toBeVisible();
+    await page.screenshot({ path: testInfo.outputPath(`reference-saved-${width}.png`), fullPage: true });
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+    expect(await page.evaluate(() => Object.values(localStorage).join(" ") + Object.values(sessionStorage).join(" "))).not.toContain("根拠を読んで主張を追記した");
     expect(errors).toEqual([]);
   });
 }

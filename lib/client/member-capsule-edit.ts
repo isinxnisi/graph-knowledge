@@ -23,9 +23,9 @@ export function memberDraftRequired(draft: MemberCapsuleDraft) {
 }
 export function memberDraftContent(draft: MemberCapsuleDraft) {
   const entityIds = [...new Set([...draft.content.entityIds, ...memberDraftRequired(draft)])];
-  // This editor only rearranges existing references. It neither guesses missing
-  // endpoints nor imports another local/server Capsule implicitly.
-  if (entityIds.some(id => !draft.base.content.entityIds.includes(id))
-    || draft.content.claimIds.some(id => !draft.base.content.claimIds.includes(id))) throw new Error("Unknown reference");
+  // New references must have been explicitly resolved and confirmed. Existing
+  // unresolved references remain editable without guessing their endpoints.
+  if (entityIds.some(id => !draft.base.content.entityIds.includes(id) && !draft.resolved.entities[id])
+    || draft.content.claimIds.some(id => !draft.base.content.claimIds.includes(id) && !draft.resolved.claims[id])) throw new Error("Unknown reference");
   return memberCapsuleContentSchema.parse({ ...draft.content, entityIds });
 }

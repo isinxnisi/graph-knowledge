@@ -1,6 +1,7 @@
 // @vitest-environment jsdom
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { cleanup, fireEvent, render, screen, waitFor, act, configure } from "@testing-library/react";
+import examples from "../docs/API_RESPONSE_EXAMPLES.json";
 import MemberCapsules from "../components/MemberCapsules";
 import type { MemberCapsule } from "../lib/domain/member-capsule";
 import type { LocalCapsule, ResolvedCapsule } from "../lib/client/local-capsules";
@@ -183,5 +184,37 @@ describe("共有済み版の所有者再閲覧", () => {
     render(<MemberCapsules dataset="demo" />);
     await screen.findByText(/処理を完了できませんでした/);
     expect(screen.queryByRole("heading", { name: capsule.content.title })).toBeNull();
+  });
+});
+
+
+describe("追加した参照の所有者付き草稿", () => {
+  it("追加を本人の草稿へ保持し、失効・別Userには隠して同じ本人だけ再開する", async () => {
+    const fallback = fetchMock.getMockImplementation() as (path: string, options?: RequestInit) => Promise<Response>;
+    const claim = examples.claim.claim;
+    fetchMock.mockImplementation((path: string, options: RequestInit = {}) => {
+      if (path.startsWith("/api/claims/")) return Response.json(examples.claim);
+      if (path.startsWith("/api/entities/")) return Response.json({ entity: { ...examples.neighbors.nodes.find(node => path.endsWith(node.id)), aliases: [], event: null } });
+      return fallback(path, options);
+    });
+    await edit();
+    fireEvent.change(screen.getByLabelText("対象・主張の閲覧リンク"), { target: { value: `/?read=claim&dataset=demo&id=${claim.id}` } });
+    fireEvent.click(screen.getByRole("button", { name: "リンクの内容を確認" }));
+    fireEvent.click(await screen.findByRole("button", { name: "確認した参照を編集中の構成へ追加" }));
+    expect((screen.getByRole("checkbox", { name: /黒川レン · 人物/ }) as HTMLInputElement).checked).toBe(true);
+    await visibility("hidden"); identity = other; await visibility("visible");
+    await screen.findByText("別人", { exact: true });
+    expect(screen.queryByLabelText("対象・主張の閲覧リンク")).toBeNull();
+    expect(document.body.textContent).not.toContain("黒川レン");
+    await waitFor(() => expect(screen.getByRole("button", { name: "アカウントと一覧を再確認" }).hasAttribute("disabled")).toBe(false));
+    identity = owner; fireEvent.click(screen.getByRole("button", { name: "アカウントと一覧を再確認" }));
+    const restored = await screen.findByRole("checkbox", { name: /黒川レン · 人物/ }) as HTMLInputElement;
+    expect(restored.checked).toBe(true); expect(restored.disabled).toBe(true);
+    fireEvent.click(screen.getByRole("button", { name: "アカウントの変更を保存" }));
+    await waitFor(() => expect(fetchMock.mock.calls.some(call => call[1]?.method === "PUT")).toBe(true));
+    const update = fetchMock.mock.calls.find(call => call[1]?.method === "PUT")!;
+    expect(update[1]?.headers).toMatchObject({ "X-Member-User": owner });
+    expect(JSON.parse(update[1]?.body as string)).toMatchObject({ expectedRevision: 1, content: { claimIds: [claim.id], note: "残したい未保存の入力" } });
+    expect(localStorage.length).toBe(0); expect(sessionStorage.length).toBe(0);
   });
 });
