@@ -486,3 +486,73 @@ for (const width of [390, 1440]) {
     expect(errors).toEqual([]);
   });
 }
+
+for (const width of [390, 1440]) {
+  test(`共有済み旧版の説明とコメントを選び直し現在版へ戻る ${width}px`, async ({ page, context }, testInfo) => {
+    test.setTimeout(180_000);
+    await page.setViewportSize({ width, height: 900 }); await mockKnowledge(context);
+    const errors: string[] = []; page.on("pageerror", error => errors.push(error.message));
+    await page.goto("/member"); await login(page);
+    const content = { dataset: saved.dataset, title: saved.title, note: "最初に共有した説明", language: saved.language, entityIds: saved.entityIds, claimIds: saved.claimIds };
+    const headers = { Origin: "http://127.0.0.1:3221" };
+    const created = await page.request.post("/api/member/capsules", { headers, data: { requestId: crypto.randomUUID(), content } });
+    expect(created.status()).toBe(201);
+    const { capsule } = await created.json();
+    const path = `/api/member/capsules/${capsule.id}`;
+    const thread = `/api/capsules/${capsule.id}/discussion`;
+    const share = await (await page.request.post(`${path}/share`, { headers, data: { expectedRevision: 1, expectedShareId: null } })).json();
+    expect((await page.request.patch(thread, { headers, data: { closed: false, expectedClosed: true } })).status()).toBe(200);
+    expect((await page.request.post(thread, { headers, data: { requestId: crypto.randomUUID(), revision: 1, body: "初版で確認した根拠について" } })).status()).toBe(201);
+    expect((await page.request.put(path, { headers, data: { expectedRevision: 1, content: { ...content, note: "共有しない中間版" } } })).status()).toBe(200);
+    expect((await page.request.put(path, { headers, data: { expectedRevision: 2, content: { ...content, note: "三版で訂正した説明" } } })).status()).toBe(200);
+    const third = await (await page.request.post(`${path}/share`, { headers, data: { expectedRevision: 3, expectedShareId: share.share.id } })).json();
+    expect((await page.request.post(thread, { headers, data: { requestId: crypto.randomUUID(), revision: 3, body: "三版だけについてのコメント" } })).status()).toBe(201);
+    expect((await page.request.put(path, { headers, data: { expectedRevision: 3, content: { ...content, note: "現在の非共有の説明" } } })).status()).toBe(200);
+    // Compile the added route outside the UI's per-request 15 second bound.
+    expect((await page.request.get(`${path}/revisions`, { timeout: 60_000 })).status()).toBe(200);
+    await page.goto(`/member?capsule=${capsule.id}`);
+    await expect(page.getByText("現在の非共有の説明", { exact: true })).toBeVisible();
+    await page.getByRole("button", { name: "共有した版を選ぶ", exact: true }).click();
+    await expect(page.getByRole("button", { name: "内容版 3 を読む", exact: true })).toBeVisible();
+    await expect(page.getByRole("button", { name: "内容版 2 を読む", exact: true })).toHaveCount(0);
+    await expect(page.getByRole("button", { name: "内容版 4 を読む", exact: true })).toHaveCount(0);
+    await page.getByRole("button", { name: "内容版 1 を読む", exact: true }).click();
+    await expect(page.getByRole("heading", { name: "共有時の内容版 1 を閲覧中", exact: true })).toBeVisible();
+    await expect(page.getByText("最初に共有した説明", { exact: true })).toBeVisible();
+    await expect(page.getByText("現在の非共有の説明", { exact: true })).toHaveCount(0);
+    await expect(page.getByRole("button", { name: "このCapsuleを編集", exact: true })).toHaveCount(0);
+    await expect(page.getByRole("button", { name: "アカウントから削除", exact: true })).toHaveCount(0);
+    await expect(page.getByRole("region", { name: "限定リンク共有", exact: true })).toHaveCount(0);
+    await page.getByRole("button", { name: "この版のコメントを見る", exact: true }).click();
+    await expect(page.getByText("初版で確認した根拠について", { exact: true })).toBeVisible();
+    await expect(page.getByText("三版だけについてのコメント", { exact: true })).toHaveCount(0);
+    await page.getByRole("textbox", { name: "コメント本文", exact: true }).fill("初版へ残す未送信のメモ");
+    await page.getByRole("button", { name: "共有した版を選ぶ", exact: true }).click();
+    await page.getByRole("button", { name: "内容版 3 を読む", exact: true }).click();
+    await expect(page.getByText("三版で訂正した説明", { exact: true })).toBeVisible();
+    await page.getByRole("button", { name: "この版のコメントを見る", exact: true }).click();
+    await expect(page.getByText("三版だけについてのコメント", { exact: true })).toBeVisible();
+    await expect(page.getByText("初版で確認した根拠について", { exact: true })).toHaveCount(0);
+    await expect(page.getByRole("textbox", { name: "コメント本文", exact: true })).toHaveValue("");
+    await page.getByRole("button", { name: "共有した版を選ぶ", exact: true }).click();
+    await page.getByRole("button", { name: "内容版 1 を読む", exact: true }).click();
+    await page.getByRole("button", { name: "この版のコメントを見る", exact: true }).click();
+    await expect(page.getByRole("textbox", { name: "コメント本文", exact: true })).toHaveValue("初版へ残す未送信のメモ");
+    await page.getByRole("textbox", { name: "コメント本文", exact: true }).fill("");
+    // Revocation changes visitors' access, not the owner's preserved snapshot.
+    expect((await page.request.delete(`${path}/share`, { headers, data: { expectedShareId: third.share.id } })).status()).toBe(200);
+    await page.reload();
+    await expect(page.getByRole("heading", { name: "共有時の内容版 1 を閲覧中", exact: true })).toBeVisible();
+    await expect(page.getByText("最初に共有した説明", { exact: true })).toBeVisible();
+    await page.getByRole("button", { name: /青葉ハル → アシスタントだった → 黒川レン.*2001年〜2003年/ }).click();
+    await expect(page.getByRole("heading", { name: "青葉ハルへのインタビュー", exact: true })).toBeVisible();
+    await expect(page.getByText("参照箇所：pp.12–13", { exact: true })).toBeVisible();
+    await page.screenshot({ path: testInfo.outputPath(`revision-reader-${width}.png`), fullPage: true });
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+    await page.getByRole("button", { name: "現在の保存内容へ戻る", exact: true }).click();
+    await expect(page.getByText("現在の非共有の説明", { exact: true })).toBeVisible();
+    await expect(page.getByRole("button", { name: "このCapsuleを編集", exact: true })).toBeVisible();
+    expect(new URL(page.url()).searchParams.has("revision")).toBe(false);
+    expect(errors).toEqual([]);
+  });
+}

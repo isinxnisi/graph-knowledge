@@ -39,7 +39,7 @@
 | [アカウント・所有者・会員保存](design/ACCOUNT_AND_OWNERSHIP_DESIGN.md) | 初回設計。会員Capsuleを実装済み（実Googleは未接続）。認証・UserとKG Person・所有者認可・一種類のprivate保存、実credential待ちの範囲とテストを具体化 |
 | [共有・議論の最小縦経路](design/COMMUNITY_VERTICAL_SLICES.md) | 初回設計。限定リンク共有と短い版別コメントを実装。投稿候補・一般公開・運営対応は未実装。Capsule版・限定リンク・スレッド対象・投稿時版・運営／知識受入の分離。全コミュニティ基盤を先行導入しない |
 | [Capsuleの限定リンク共有](design/CAPSULE_LINK_SHARING.md) | 2026-10-09。特定版の固定・匿名閲覧・根拠／探索への導線・明示再発行と失効。実公開・運営非表示は未実装。discussionは次行の別契約 |
-| [Capsuleの版についての会話](design/CAPSULE_DISCUSSION.md) | 2026-10-10。明示受付・2 Userの投稿・投稿時版・非共有版隔離・本人撤回・所有者停止。旧版選択UI・公開運営は未実装 |
+| [Capsuleの版についての会話](design/CAPSULE_DISCUSSION.md) | 2026-10-10。明示受付・2 Userの投稿・投稿時版・非共有版隔離・本人撤回・所有者停止。所有者の旧共有版選択・説明と会話の再閲覧も接続。失効後の本人投稿管理・公開運営は未実装 |
 | [会員Capsule保存の初回](design/MEMBER_CAPSULES.md) | 2026-10-09。実認証・PostgreSQL・所有者APIと明示保存・再訪・既存構成編集UIを接続。新参照追加／設定UI・実Googleは未了 |
 | [ブラウザ内の最小Capsule](design/LOCAL_CAPSULES.md) | 2026-10-09。明示した対象・独立主張と説明のprivate保存・現在データでの再閲覧・確認削除。保存ビュー／途中保存とは別コンテンツ。同IDの編集も実装。会員同期・公開共有は未実装 |
 | [ブラウザ内の探索途中保存](design/LOCAL_SAVED_WORKSPACE.md) | 2026-10-09。datasetごと最大10件、枝の開閉・取得ページ数・配置の保存と現在データからの再開。専用JSONの控え・内容確認後の読込を追加。旧1件を引き継ぎ、選択・置換・確認削除に対応。会員同期は未実装 |

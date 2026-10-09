@@ -51,3 +51,5 @@
 - 既存会員E2E10件が成功。新規共有E2Eは最終 `npm run test:member:e2e -- --grep 限定リンク` の390／1440px・2件が成功した。発行→匿名別context→独立Claim／Source→Explorer→private編集の非反映→次版の明示共有→旧リンク失効→共有停止を通した。両幅の画面を目視し、横溢れとpage errorなしを確認した。KG応答だけfixtureで、実Google／実KGの人間受入ではない。
 - 初回E2Eでdevサーバーの殻は`no-cache, must-revalidate`（API本文は`no-store`）と判明。また、同一fragment URLへの移動は再読込にならないため、失効後は前面への復帰と明示reloadで確認するようテストを修正した。共有Readerの初回表示で「自分の説明」を「作成者の説明」へ訂正した。範囲を絞った再試行のため、一時PG runnerはPlaywrightの`--grep`等を引き渡せるようにした。時間上限・専用DB guard・cleanupは維持する。
 - Lint、最終の型検査込みbuild、差分検査が成功。本番起動のsmokeで `/shared` の200・no-store／noindex／no-referrer、無設定共有APIの503・no-store、既存Explorer／memberの200を確認した。一時PG・OIDC・Next dev・本番smokeサーバーは終了。実credential・外部送信・公開・課金・push／mergeは行っていない。
+
+2026-10-10追加：所有者は共有済みsnapshotの一覧から旧版の説明・Graph・コメントを再閲覧できる。リンク停止後も本人認可で取得し、他の利用者へ旧版の権限を広げない。[旧版の再閲覧契約](CAPSULE_DISCUSSION.md#所有者が共有済みの版へ戻る2026-10-10追加)を参照。

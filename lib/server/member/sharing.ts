@@ -2,7 +2,7 @@ import { createHash, randomBytes, randomUUID } from "node:crypto";
 import type { Pool, QueryResultRow } from "pg";
 import type { DatasetMode } from "../../domain/dataset";
 import { memberCapsuleSchema } from "../../domain/member-capsule";
-import { capsuleShareIssueSchema, capsuleShareRevokeSchema, capsuleShareSchema, capsuleShareTokenSchema, SHARED_REVISION_LIMIT } from "../../domain/capsule-sharing";
+import { capsuleShareIssueSchema, capsuleShareRevokeSchema, capsuleShareSchema, capsuleShareTokenSchema, sharedRevisionListSchema, SHARED_REVISION_LIMIT } from "../../domain/capsule-sharing";
 import { assertMemberOrigin, MemberError, memberId, memberInput, memberJson } from "./http";
 
 const hashToken = (token: string) => createHash("sha256").update(token).digest("hex");
@@ -11,6 +11,26 @@ function shareDto(row: QueryResultRow) {
 }
 export function createCapsuleSharing(pool: Pool, dataset: DatasetMode, origin: string, owner: (request: Request) => Promise<{ id: string }>) {
   return {
+    async readSharedRevisions(request: Request, rawId: string) {
+      const user = await owner(request), id = memberId(rawId);
+      const query = new URL(request.url).searchParams;
+      const rawRevision = query.get("revision");
+      if (query.getAll("revision").length > 1 || (rawRevision !== null && (!/^[1-9]\d*$/.test(rawRevision) || !Number.isSafeInteger(Number(rawRevision))))) throw new MemberError(400, "INVALID_ARGUMENT");
+      // One statement authorizes and reads an immutable snapshot. A live link
+      // grants no access to this owner-only endpoint, even for the same version.
+      const result = await pool.query(`SELECT r.snapshot FROM member_capsule c
+        JOIN "user" u ON u.id = c.owner_user_id AND u.active = true
+        LEFT JOIN member_capsule_revision r ON r.capsule_id = c.id AND ($4::bigint IS NULL OR r.revision = $4)
+        WHERE c.id = $1 AND c.owner_user_id = $2 AND c.dataset = $3
+        ORDER BY r.revision DESC`, [id, user.id, dataset, rawRevision]);
+      if (!result.rows.length) throw new MemberError(404, "NOT_FOUND");
+      const snapshots = result.rows.filter(row => row.snapshot !== null).map(row => memberCapsuleSchema.parse(row.snapshot));
+      if (rawRevision !== null) {
+        if (!snapshots.length) throw new MemberError(404, "NOT_FOUND");
+        return memberJson({ capsule: snapshots[0] });
+      }
+      return memberJson(sharedRevisionListSchema.parse({ revisions: snapshots.map(value => ({ revision: value.revision, updatedAt: value.updatedAt, title: value.content.title })) }));
+    },
     async shareStatus(request: Request, rawId: string) {
       const user = await owner(request), id = memberId(rawId);
       const result = await pool.query(`SELECT s.id, s.revision, s.created_at FROM member_capsule c

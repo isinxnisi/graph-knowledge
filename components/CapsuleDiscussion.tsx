@@ -7,10 +7,22 @@ import { capsuleDiscussionLabels } from "../lib/i18n/capsule-discussion";
 import css from "./MemberCapsules.module.css";
 
 export type DiscussionDraft = { key: string; body: string; requestId: string | null };
-export type DiscussionDraftStore = { get: () => DiscussionDraft | null; set: (draft: DiscussionDraft | null) => void };
+export type DiscussionDraftStore = { get: (key: string) => DiscussionDraft | null; set: (draft: DiscussionDraft) => void; remove: (key: string) => void };
 export function useDiscussionDraft(): DiscussionDraftStore {
-  const value = useRef<DiscussionDraft | null>(null);
-  return useMemo(() => ({ get: () => value.current, set: (draft: DiscussionDraft | null) => { value.current = draft; } }), []);
+  const values = useRef(new Map<string, DiscussionDraft>());
+  useEffect(() => {
+    const warn = (event: BeforeUnloadEvent) => {
+      if (!values.current.size) return;
+      event.preventDefault(); event.returnValue = "";
+    };
+    window.addEventListener("beforeunload", warn);
+    return () => window.removeEventListener("beforeunload", warn);
+  }, []);
+  return useMemo(() => ({
+    get: (key: string) => values.current.get(key) ?? null,
+    set: (draft: DiscussionDraft) => { if (draft.body || draft.requestId) values.current.set(draft.key, draft); else values.current.delete(draft.key); },
+    remove: (key: string) => { values.current.delete(key); },
+  }), []);
 }
 export default function CapsuleDiscussion({ capsuleId, revision, token, userId, draftCache, onUnauthorized }: {
   capsuleId: string; revision: number; token?: string; userId?: string; draftCache?: DiscussionDraftStore; onUnauthorized?: () => void;
@@ -53,8 +65,8 @@ export default function CapsuleDiscussion({ capsuleId, revision, token, userId, 
       if (controller.signal.aborted) return;
       if (result.capsuleId !== capsuleId || result.revision !== revision) throw new Error("Context mismatch");
       setData(result);
-      const draft = cache.get();
       const key = `${capsuleId}:${revision}:${result.viewer?.id}`;
+      const draft = cache.get(key);
       setBody(draft?.key === key ? draft.body : ""); setPending(draft?.key === key && draft.requestId !== null);
     } catch (cause) { if (!controller.signal.aborted) { setData(null); setBody(""); setPending(false); setError(failure(cause));
       if (cause instanceof MemberClientError && cause.status === 401) unauthorized.current?.();
@@ -90,13 +102,13 @@ export default function CapsuleDiscussion({ capsuleId, revision, token, userId, 
     try {
       if (kind === "post") {
         const key = `${capsuleId}:${revision}:${expectedUser}`;
-        const stored = cache.get();
+        const stored = cache.get(key);
         const previous = stored?.key === key ? stored : null;
         const draft = { key, body, requestId: previous?.requestId ?? crypto.randomUUID() };
         cache.set(draft); setPending(true);
         await request(z.object({ postId: z.uuidv4(), replayed: z.boolean() }), controller.signal, "POST", { requestId: draft.requestId, revision, body: draft.body }, expectedUser);
         if (controller.signal.aborted) return;
-        cache.set(null); setBody(""); setPending(false); setMessage(text.posted);
+        cache.remove(key); setBody(""); setPending(false); setMessage(text.posted);
       } else if (kind === "close") {
         await request(z.object({ closed: z.boolean() }), controller.signal, "PATCH", { closed: !data.closed, expectedClosed: data.closed }, expectedUser);
         if (controller.signal.aborted) return;
@@ -112,7 +124,7 @@ export default function CapsuleDiscussion({ capsuleId, revision, token, userId, 
       // A rejection of a retry cannot disprove the earlier ambiguous commit.
       // Keep its key/body until a successful receipt, even across re-login.
       if (kind === "post" && !retrying && cause instanceof MemberClientError && cause.status < 500) {
-        const stored = cache.get();
+        const stored = cache.get(`${capsuleId}:${revision}:${expectedUser}`);
         if (stored) cache.set({ ...stored, requestId: null });
         setPending(false);
       }
@@ -135,7 +147,7 @@ export default function CapsuleDiscussion({ capsuleId, revision, token, userId, 
           {confirm === post.id && <div role="alert"><p>{text.withdrawHelp}</p><button disabled={busy} onClick={() => void mutate("withdraw")}>{text.confirmWithdraw}</button><button onClick={() => setConfirm(null)}>{text.cancel}</button></div>}
         </li>)}</ol>
         {data.closed && <p>{text.closed}</p>}
-        {data.canManage && <button disabled={busy} onClick={() => void mutate("close")}>{data.closed ? text.reopen : text.close}</button>}
+        {data.canManage && <><p className={css.muted}>{text.manageHelp}</p><button disabled={busy} onClick={() => void mutate("close")}>{data.closed ? text.reopen : text.close}</button></>}
         {!data.viewer ? <p><a href="/member" target="_blank" rel="noopener noreferrer">{text.login}</a><br />{text.loginHelp}</p> : <>
           <p>{text.as(data.viewer.name)}</p>
           {(!data.closed || pending) && <form onSubmit={event => { event.preventDefault(); void mutate("post"); }}>

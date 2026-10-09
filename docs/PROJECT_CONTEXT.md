@@ -59,7 +59,7 @@ Phase 16で[関係モデルの基本設計](design/RELATION_MODEL_PRINCIPLES.md)
 
 ## 将来の拡張
 
-アカウントとコミュニティ機能は、[所有者付きの会員保存](design/ACCOUNT_AND_OWNERSHIP_DESIGN.md)と[Capsuleの共有・議論](design/COMMUNITY_VERTICAL_SLICES.md)の初回設計を用意し、会員保存・限定リンク共有と[短い版別コメント](design/CAPSULE_DISCUSSION.md)を実装した。実Googleと公開運営は未了。匿名探索を維持し、ログインして自分の内容を保存する経路から段階導入する。公開／会話と知識の受入を分け、投稿制度全体や実provider設定待ちをprivateな実装の前提にしない。
+アカウントとコミュニティ機能は、[所有者付きの会員保存](design/ACCOUNT_AND_OWNERSHIP_DESIGN.md)と[Capsuleの共有・議論](design/COMMUNITY_VERTICAL_SLICES.md)の初回設計を用意し、会員保存・限定リンク共有と[短い版別コメント](design/CAPSULE_DISCUSSION.md)を実装した。会員画面では共有済み旧版を選び、当時の説明と同じ版の会話へ戻れる。実Googleと公開運営は未了。匿名探索を維持し、ログインして自分の内容を保存する経路から段階導入する。公開／会話と知識の受入を分け、投稿制度全体や実provider設定待ちをprivateな実装の前提にしない。
 
 音楽、映画、ゲーム、科学、美術、企業史、歴史上の人物、家系、その他の文化・歴史へ対象を広げたい。分野ごとの関係タイプや限定条件を追加しても、関係・主張・出典の共通モデルを維持する。
 

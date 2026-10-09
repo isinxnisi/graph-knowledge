@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { act, cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
-import CapsuleDiscussion, { type DiscussionDraft, type DiscussionDraftStore } from "../components/CapsuleDiscussion";
+import { act, cleanup, fireEvent, render, renderHook, screen, waitFor } from "@testing-library/react";
+import CapsuleDiscussion, { useDiscussionDraft, type DiscussionDraftStore } from "../components/CapsuleDiscussion";
 import type { CapsuleDiscussion as Discussion } from "../lib/domain/capsule-discussion";
 
 const capsuleId = "10000000-0000-4000-8000-000000000001", userId = "20000000-0000-4000-8000-000000000001", postId = "30000000-0000-4000-8000-000000000001";
@@ -48,8 +48,8 @@ describe("共有版の会話", () => {
     expect(localStorage.length).toBe(0); expect(sessionStorage.length).toBe(0);
   });
   it("失効で本文を隠し、別Userへ草稿を渡さず、同じ本人の復帰で入力を戻す", async () => {
-    let draft: DiscussionDraft | null = null;
-    const cache: DiscussionDraftStore = { get: () => draft, set: value => { draft = value; } };
+    const { result } = renderHook(() => useDiscussionDraft());
+    const cache = result.current;
     const view = await open(data, cache);
     fireEvent.change(screen.getByLabelText("コメント本文"), { target: { value: "未送信の説明" } });
     fetchMock.mockResolvedValueOnce(Response.json({ error: { code: "UNAUTHENTICATED" } }, { status: 401 }));
@@ -59,6 +59,7 @@ describe("共有版の会話", () => {
     view.unmount();
     const other = await open({ ...data, viewer: { id: postId, name: "別の人" } }, cache);
     expect((screen.getByLabelText("コメント本文") as HTMLTextAreaElement).value).toBe("");
+    fireEvent.change(screen.getByLabelText("コメント本文"), { target: { value: "別Userの草稿" } });
     other.unmount();
     await open(data, cache);
     expect((screen.getByLabelText("コメント本文") as HTMLTextAreaElement).value).toBe("未送信の説明");
@@ -82,6 +83,40 @@ describe("共有版の会話", () => {
     fireEvent.click(screen.getByRole("button", { name: "同じ投稿の結果を確認・再送" }));
     await screen.findByText("投稿しました。");
     expect(fetchMock.mock.calls[4][1].body).toBe(original);
+  });
+  it("別版に投稿しても元の版の結果不明キーを保ち、戻った本人だけが同じ投稿を再送する", async () => {
+    const { result } = renderHook(() => useDiscussionDraft());
+    const first = await open(data, result.current);
+    fireEvent.change(screen.getByLabelText("コメント本文"), { target: { value: "旧版への結果不明の投稿" } });
+    fetchMock.mockRejectedValueOnce(new TypeError("lost response"));
+    fireEvent.click(screen.getByRole("button", { name: "この版へ投稿する" }));
+    await screen.findByText(/投稿結果が不明/);
+    const original = fetchMock.mock.calls[1][1].body;
+    first.unmount();
+    const unload = new Event("beforeunload", { cancelable: true });
+    window.dispatchEvent(unload); expect(unload.defaultPrevented).toBe(true);
+    const secondData = { ...data, revision: 2 };
+    fetchMock.mockResolvedValueOnce(Response.json(secondData));
+    const second = render(<CapsuleDiscussion capsuleId={capsuleId} revision={2} userId={userId} draftCache={result.current} />);
+    fireEvent.click(screen.getByRole("button", { name: "この版のコメントを見る" }));
+    await screen.findByLabelText("コメント本文");
+    expect((screen.getByLabelText("コメント本文") as HTMLTextAreaElement).value).toBe("");
+    fireEvent.change(screen.getByLabelText("コメント本文"), { target: { value: "新しい版への投稿" } });
+    fetchMock.mockResolvedValueOnce(Response.json({ postId, replayed: false }));
+    fetchMock.mockResolvedValueOnce(Response.json(secondData));
+    fireEvent.click(screen.getByRole("button", { name: "この版へ投稿する" }));
+    await screen.findByText("投稿しました。");
+    second.unmount();
+    await open(data, result.current);
+    expect((screen.getByLabelText("コメント本文") as HTMLTextAreaElement).value).toBe("旧版への結果不明の投稿");
+    fetchMock.mockResolvedValueOnce(Response.json({ postId, replayed: true }));
+    fetchMock.mockResolvedValueOnce(Response.json(data));
+    fireEvent.click(screen.getByRole("button", { name: "同じ投稿の結果を確認・再送" }));
+    await screen.findByText("投稿しました。");
+    const posts = fetchMock.mock.calls.filter(call => call[1].method === "POST");
+    expect(posts[2][1].body).toBe(original);
+    expect(JSON.parse(posts[1][1].body).revision).toBe(2);
+    expect(localStorage.length).toBe(0); expect(sessionStorage.length).toBe(0);
   });
   it("会員の失効を親へ通知し、同じ画面のprivate閲覧も閉じられる", async () => {
     const onUnauthorized = vi.fn();

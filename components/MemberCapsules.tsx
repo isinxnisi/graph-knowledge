@@ -11,6 +11,8 @@ import { datasetLabels } from "../lib/i18n/dataset";
 import { capsuleLabels } from "../lib/i18n/capsules";
 import MemberCapsuleEditor from "./MemberCapsuleEditor";
 import CapsuleShareControls from "./CapsuleShareControls";
+import CapsuleRevisionList from "./CapsuleRevisionList";
+import { capsuleHistoryLabels } from "../lib/i18n/capsule-history";
 import CapsuleDiscussion, { useDiscussionDraft } from "./CapsuleDiscussion";
 import { memberDraftContent, sameMemberContent, type MemberCapsuleDraft } from "../lib/client/member-capsule-edit";
 import { CapsuleReader } from "./CapsuleDialog";
@@ -19,11 +21,12 @@ import capsuleCss from "./CapsuleDialog.module.css";
 
 const authEventKey = "graph-knowledge:member-session-changed";
 export default function MemberCapsules({ dataset, initialImport = "" }: { dataset: DatasetMode; initialImport?: string }) {
-  const text = memberLabels(), captions = capsuleLabels();
+  const text = memberLabels(), captions = capsuleLabels(), historyText = capsuleHistoryLabels();
   const [user, setUser] = useState<MemberUser | null>(null);
   const [provider, setProvider] = useState<"google" | "fixture" | null>(null);
   const [items, setItems] = useState<MemberCapsule[]>([]);
   const [selected, setSelected] = useState<MemberCapsule | null>(null);
+  const [historical, setHistorical] = useState(false);
   const [local, setLocal] = useState<LocalCapsule[]>([]);
   const [sourceId, setSourceId] = useState(initialImport);
   const [localError, setLocalError] = useState<string | null>(null);
@@ -39,7 +42,7 @@ export default function MemberCapsules({ dataset, initialImport = "" }: { datase
   const heading = useRef<HTMLHeadingElement>(null);
   const source = local.find(value => value.id === sourceId);
   const reading = useMemo(() => selected ? memberReaderCapsule(selected, dataset) : null, [selected, dataset]);
-  const clearPrivate = useCallback(() => { setUser(null); setItems([]); setSelected(null); setConfirm(null); }, []);
+  const clearPrivate = useCallback(() => { setUser(null); setItems([]); setSelected(null); setHistorical(false); setConfirm(null); }, []);
   const fail = useCallback((cause: unknown) => {
     if (cause instanceof MemberClientError) {
       if (cause.status === 401) { clearPrivate(); setError(text.expired); return; }
@@ -72,14 +75,18 @@ export default function MemberCapsules({ dataset, initialImport = "" }: { datase
       if (signal.aborted) return;
       setUser(profile.user); setItems(result.capsules);
       const id = new URL(location.href).searchParams.get("capsule");
+      const query = new URL(location.href).searchParams;
+      const revision = query.get("revision");
+      if (query.getAll("revision").length > 1 || (revision !== null && (!/^[1-9]\d*$/.test(revision) || !Number.isSafeInteger(Number(revision))))) throw new MemberClientError(400, "INVALID_ARGUMENT");
       let opened: MemberCapsule | null = null;
       if (id && z.uuidv4().safeParse(id).success) {
         // Always authorize the current read; a list snapshot is not permission.
-        opened = (await memberRequest(`/api/member/capsules/${id}`, memberItemSchema, { user: profile.user.id, signal })).capsule;
+        opened = (await memberRequest(`/api/member/capsules/${id}${revision === null ? "" : `/revisions?revision=${revision}`}`, memberItemSchema, { user: profile.user.id, signal })).capsule;
         memberReaderCapsule(opened, dataset);
+        if (opened.id !== id.toLowerCase() || (revision !== null && opened.revision !== Number(revision))) throw new Error("Context mismatch");
       }
       if (signal.aborted) return;
-      setUser(profile.user); setItems(result.capsules); setSelected(opened);
+      setUser(profile.user); setItems(result.capsules); setSelected(opened); setHistorical(revision !== null);
       const retained = draftRef.current;
       if (retained && retained.ownerId === profile.user.id && opened?.id === retained.base.id) setDraft({ ...retained, needsCheck: false });
     });
@@ -111,9 +118,10 @@ export default function MemberCapsules({ dataset, initialImport = "" }: { datase
     window.addEventListener("beforeunload", warn);
     return () => window.removeEventListener("beforeunload", warn);
   }, [draft]);
-  function navigate(id: string | null) {
+  function navigate(id: string | null, revision?: number) {
     const url = new URL(location.href);
     if (id) url.searchParams.set("capsule", id); else url.searchParams.delete("capsule");
+    if (id && revision !== undefined) url.searchParams.set("revision", String(revision)); else url.searchParams.delete("revision");
     history.replaceState(null, "", url);
     requestAnimationFrame(() => heading.current?.focus());
   }
@@ -143,19 +151,21 @@ export default function MemberCapsules({ dataset, initialImport = "" }: { datase
       memberReaderCapsule(result.capsule, dataset);
       if (signal.aborted) return;
       setItems(previous => [result.capsule, ...previous.filter(item => item.id !== result.capsule.id)]);
-      setSelected(result.capsule); setMessage(result.replayed ? text.replayed : text.saved); navigate(result.capsule.id);
+      setSelected(result.capsule); setHistorical(false); setMessage(result.replayed ? text.replayed : text.saved); navigate(result.capsule.id);
     });
   }
-  function read(id: string) {
+  function read(id: string, revision?: number) {
     if (!user) return;
+    setSelected(null); navigate(id, revision);
     void run(async signal => {
-      const result = await memberRequest(`/api/member/capsules/${id}`, memberItemSchema, { user: user.id, signal });
+      const result = await memberRequest(`/api/member/capsules/${id}${revision === undefined ? "" : `/revisions?revision=${revision}`}`, memberItemSchema, { user: user.id, signal });
       memberReaderCapsule(result.capsule, dataset);
-      if (!signal.aborted) { setSelected(result.capsule); navigate(id); }
+      if (result.capsule.id !== id || (revision !== undefined && result.capsule.revision !== revision)) throw new Error("Context mismatch");
+      if (!signal.aborted) { setSelected(result.capsule); setHistorical(revision !== undefined); }
     });
   }
   function update() {
-    if (!user || !selected || !draft || draft.ownerId !== user.id || draft.needsCheck || selected.id !== draft.base.id || selected.revision !== draft.expected.revision) return;
+    if (historical || !user || !selected || !draft || draft.ownerId !== user.id || draft.needsCheck || selected.id !== draft.base.id || selected.revision !== draft.expected.revision) return;
     let content;
     try { content = memberDraftContent(draft); } catch { setError(text.failed); return; }
     if (sameMemberContent(draft.expected.content, content)) return;
@@ -174,7 +184,7 @@ export default function MemberCapsules({ dataset, initialImport = "" }: { datase
   }
   function cancelEdit() { setConfirm(null); setDraft(null); setError(null); setMessage(null); navigate(selected?.id ?? null); }
   function remove() {
-    if (!user || !selected) return;
+    if (historical || !user || !selected) return;
     void run(async signal => {
       await memberRequest(`/api/member/capsules/${selected.id}`, z.object({ deleted: z.literal(true) }), { method: "DELETE", body: { expectedRevision: selected.revision }, user: user.id, signal });
       if (!signal.aborted) { setItems(previous => previous.filter(item => item.id !== selected.id)); setSelected(null); setMessage(text.removed); navigate(null); }
@@ -200,13 +210,15 @@ export default function MemberCapsules({ dataset, initialImport = "" }: { datase
     </section>}
     {user && <section className={css.card} aria-label={text.library}>
       {draft && user.id === draft.ownerId ? <MemberCapsuleEditor draft={draft} current={selected} busy={busy} onChange={setDraft} onSave={update} onCancel={cancelEdit} onCheck={refresh} /> : selected && reading ? <><button disabled={busy} onClick={() => { setSelected(null); setConfirm(null); navigate(null); }}>{text.back}</button>
-        <CapsuleReader key={`${selected.id}:${selected.revision}`} capsule={reading} explorationLinks onEdit={!busy && !draft ? resolved => {
+        {historical && <div role="status"><h2>{historyText.reading(selected.revision)}</h2><p>{historyText.snapshotHelp}</p><button disabled={busy} onClick={() => read(selected.id)}>{historyText.current}</button></div>}
+        <CapsuleRevisionList key={`revisions:${selected.id}:${selected.revision}:${user.id}`} capsuleId={selected.id} userId={user.id} disabled={busy} onRead={revision => read(selected.id, revision)} onUnauthorized={() => fail(new MemberClientError(401, "UNAUTHENTICATED"))} />
+        <CapsuleReader key={`${selected.id}:${selected.revision}`} capsule={reading} explorationLinks onEdit={!historical && !busy && !draft ? resolved => {
           setDraft({ ownerId: user.id, base: selected, expected: selected, content: selected.content, resolved, needsCheck: false }); setError(null); setMessage(null);
         } : undefined} />
-        <CapsuleShareControls key={`share:${selected.id}:${selected.revision}`} capsule={selected} userId={user.id} disabled={busy} onUnauthorized={() => fail(new MemberClientError(401, "UNAUTHENTICATED"))} />
+        {!historical && <CapsuleShareControls key={`share:${selected.id}:${selected.revision}`} capsule={selected} userId={user.id} disabled={busy} onUnauthorized={() => fail(new MemberClientError(401, "UNAUTHENTICATED"))} />}
         <CapsuleDiscussion key={`discussion:${selected.id}:${selected.revision}:${user.id}`} capsuleId={selected.id} revision={selected.revision} userId={user.id} draftCache={discussionDraft} onUnauthorized={() => fail(new MemberClientError(401, "UNAUTHENTICATED"))} />
-        <button disabled={busy} onClick={() => setConfirm("remove")}>{text.remove}</button>
-        {confirm === "remove" && <div role="alert"><p>{text.removeHelp}</p><button onClick={remove}>{text.removeConfirm}</button><button onClick={() => setConfirm(null)}>{text.cancel}</button></div>}
+        {!historical && <button disabled={busy} onClick={() => setConfirm("remove")}>{text.remove}</button>}
+        {!historical && confirm === "remove" && <div role="alert"><p>{text.removeHelp}</p><button onClick={remove}>{text.removeConfirm}</button><button onClick={() => setConfirm(null)}>{text.cancel}</button></div>}
       </> : <><h2>{text.library}</h2><p>{items.length} / 10</p>{!items.length && <p>{text.empty}</p>}
         <ul className={capsuleCss.library}>{items.map(item => <li key={item.id}><h3>{item.content.title}</h3><p>{captions.version(item.revision)} · {captions.selected(item.content.entityIds.length, item.content.claimIds.length)}</p><button disabled={busy || !!draft} onClick={() => read(item.id)}>{text.read}</button></li>)}</ul></>}
     </section>}

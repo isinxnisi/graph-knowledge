@@ -15,3 +15,8 @@ export const capsuleShareIssueSchema = z.strictObject({
 export const capsuleShareRevokeSchema = z.strictObject({ expectedShareId: z.uuidv4() });
 export const capsuleShareIssuedSchema = z.object({ share: capsuleShareSchema, token: capsuleShareTokenSchema });
 export const sharedCapsuleSchema = z.object({ capsule: memberCapsuleSchema });
+export const sharedRevisionSchema = memberCapsuleSchema.pick({ revision: true, updatedAt: true }).extend({
+  title: z.string().min(1).max(80),
+});
+export const sharedRevisionListSchema = z.object({ revisions: z.array(sharedRevisionSchema).max(SHARED_REVISION_LIMIT) });
+export type SharedRevision = z.infer<typeof sharedRevisionSchema>;
