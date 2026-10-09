@@ -1,4 +1,7 @@
 "use client";
+import { useSearchParams } from "next/navigation";
+import ReferenceReader from "./ReferenceReader";
+import { parseReadingLocation, withoutReadingReference } from "../lib/client/reading-reference";
 import { explorerPaneLabels } from "../lib/i18n/explorer-panes";
 import { entryLabels } from "../lib/i18n/exploration-entry";
 import { contributionLabels } from "../lib/i18n/contribution";
@@ -41,6 +44,9 @@ function GraphNotice({ message, transient }: { message: string; transient: boole
 }
 
 export default function Explorer({ dataset = "demo" }: { dataset?: DatasetMode }) {
+  const searchParams = useSearchParams();
+  const reading = parseReadingLocation(searchParams, dataset);
+  const closeReading = () => window.history.replaceState(null, "", withoutReadingReference(new URL(window.location.href)));
   const labels = datasetLabels(dataset);
   const entry = entryLabels();
   const panes = explorerPaneLabels();
@@ -123,7 +129,7 @@ export default function Explorer({ dataset = "demo" }: { dataset?: DatasetMode }
           inspectEntity(id); canvas.current?.focusEntity(id);
         }} />
         {Object.values(graph.claims).some((claim) => claim.contribution?.roleId) && <p className={styles.muted}>{contributionLabels().partial}</p>}
-        <GraphCanvas ref={canvas} restoration={viewRestoration} interactionBlocked={!!overview || savedViewsOpen || workspaceOpen || capsuleOpen} onEntityDoubleClick={(id) => { if (graph.nodes[id]) setOverview(graph.nodes[id]); }} graph={graph} selection={selection} onEntity={selectEntity} onRelation={(id) => { selectRelation(id); setActivePane("detail"); }} onToggleEntity={toggleEntity} feedback={<>
+        <GraphCanvas ref={canvas} restoration={viewRestoration} interactionBlocked={!!overview || savedViewsOpen || workspaceOpen || capsuleOpen || !!reading} onEntityDoubleClick={(id) => { if (graph.nodes[id]) setOverview(graph.nodes[id]); }} graph={graph} selection={selection} onEntity={selectEntity} onRelation={(id) => { selectRelation(id); setActivePane("detail"); }} onToggleEntity={toggleEntity} feedback={<>
           <div className={`${styles.feedback} ${!graph.centerId ? styles.initialFeedback : ""}`} aria-live="polite"><p data-testid="selection-status">選択中：{selectionText}</p><p>{loading ? `Graphを取得中…（${loading}件）` : selectedEntity ? graph.expansions[selectedEntity.id]?.expanded ? "近傍は展開済みです。" : graph.expansions[selectedEntity.id]?.pages.length ? "展開は閉じています。クリックで取得済みの枝を復元します。" : "クリックで一段階展開します。" : "線ごとに同じ関係の主張をまとめて表示しています。"}</p></div>
           {graph.notice && <GraphNotice key={`${graph.generation}:${graph.clock}:${graph.notice}`} message={graph.notice} transient={graph.notice === "取得済みの枝を復元しました。" || graph.notice === overviewLabels().restored} />}
         </>} />
@@ -133,16 +139,19 @@ export default function Explorer({ dataset = "demo" }: { dataset?: DatasetMode }
       <aside id="explorer-detail" tabIndex={-1} className={styles.panel} aria-labelledby="detail-title">
         <div className={styles.detailHeading}><h2 id="detail-title">詳細</h2>{selection && <button aria-pressed={detailWide} onClick={() => setDetailWide(!detailWide)}>{detailWide ? entry.detailNormal : entry.detailWide}</button>}</div>
         {!selection && <p className={styles.muted}>{entry.detailHelp}</p>}
-        {selectedEntity && <EntityDetails key={key} entity={selectedEntity} expansion={graph.expansions[selectedEntity.id]} onExpand={(more) => void expand(selectedEntity.id, more)} onClose={() => close(selectedEntity.id)} restricted={restricted} onOverview={() => setOverview(selectedEntity)} onSwitch={(mode) => switchFrom(selectedEntity, mode)} />}
+        {selectedEntity && <EntityDetails dataset={dataset} key={key} entity={selectedEntity} expansion={graph.expansions[selectedEntity.id]} onExpand={(more) => void expand(selectedEntity.id, more)} onClose={() => close(selectedEntity.id)} restricted={restricted} onOverview={() => setOverview(selectedEntity)} onSwitch={(mode) => switchFrom(selectedEntity, mode)} />}
         {selectedEntity && graph.centerId && <GraphPath key={`path:${key}`} nodes={graph.nodes} relations={relations} rootId={graph.centerId} targetId={selectedEntity.id} onRelation={(id) => {
           selectRelation(id); setActivePane("detail");
           document.getElementById("explorer-detail")?.focus({ preventScroll: true });
           document.getElementById("explorer-detail")?.scrollTo({ top: 0 });
         }} />}
-        {selectedRelation && <ClaimDetails key={`${key}:${selectedRelation.claimIds[0]}`} id={selectedRelation.claimIds[0]} nodes={graph.nodes} onInspectEntity={inspectFromClaim} mode="relation" visibleClaimIds={selectedRelation.claimIds} visibleClaims={selectedRelation.claimIds.map(id => graph.claims[id])} eventRoles={graph.eventRoles ?? null} positions={graph.organizationPositions ?? null} roles={graph.contributionRoles ?? null} predicates={graph.predicates} />}
-        {selection?.kind === "claim" && <ClaimDetails key={key} id={selection.id} nodes={graph.nodes} claimSummary={selectedClaim ?? undefined} onInspectEntity={inspectFromClaim} eventRoles={graph.eventRoles ?? null} positions={graph.organizationPositions ?? null} roles={graph.contributionRoles ?? null} predicates={graph.predicates} />}
+        {selectedRelation && <ClaimDetails dataset={dataset} key={`${key}:${selectedRelation.claimIds[0]}`} id={selectedRelation.claimIds[0]} nodes={graph.nodes} onInspectEntity={inspectFromClaim} mode="relation" visibleClaimIds={selectedRelation.claimIds} visibleClaims={selectedRelation.claimIds.map(id => graph.claims[id])} eventRoles={graph.eventRoles ?? null} positions={graph.organizationPositions ?? null} roles={graph.contributionRoles ?? null} predicates={graph.predicates} />}
+        {selection?.kind === "claim" && <ClaimDetails dataset={dataset} key={key} id={selection.id} nodes={graph.nodes} claimSummary={selectedClaim ?? undefined} onInspectEntity={inspectFromClaim} eventRoles={graph.eventRoles ?? null} positions={graph.organizationPositions ?? null} roles={graph.contributionRoles ?? null} predicates={graph.predicates} />}
       </aside>
     </main>
+    {reading && <ReferenceReader key={searchParams.toString()} location={reading} dataset={dataset} onClose={closeReading} onExplore={entity => {
+      switchFrom(entity, "broad"); closeReading();
+    }} />}
     {overview && <EntityOverview key={overview.id} entity={overview} dataset={dataset} restricted={restricted} onClose={() => setOverview(null)} onSwitch={(mode) => switchFrom(overview, mode)} />}
     {capsuleOpen && <CapsuleDialog dataset={dataset} graph={graph} onClose={() => setCapsuleOpen(false)} />}
     {workspaceOpen && <WorkspaceDialog dataset={dataset} graph={graph} captureView={() => canvas.current?.capture() ?? null}

@@ -685,3 +685,9 @@ Phase 22後の局所視覚調整：構造化済み具体語を持つRelationだ�
 再閲覧はEntity／Claim詳細の現在データを同時4要求・全体60秒以内で取得し、schemaとIDを確認する。失効・取得失敗・構成外端点を区別し、保存参照を消さず再試行できる。明示構成から閲覧用Graphを作り、孤立対象を残し、`projectGraph`は通さない。GraphCanvasの閲覧モードは既存配置計算を使って接続対象から配置し、独立対象が線ラベルに重なりにくくする。pan/zoom・選択は可能、展開・配置保存は行わない。個別ClaimCardで出典を読み、関連Claimは自動追加しない。
 
 説明は利用者のメモであり、Source支持やGlobal受入ではない。内容版は知識の履歴固定ではない。サーバー認可・正本・会員同期・公開共有は未実装。既存KG schema・読み取りAPI・凍結datasetは変更しない。
+
+## 対象・主張の直接閲覧URL（2026-10-09）
+
+[採用契約](design/DIRECT_READING_LINKS.md)。`read=entity|claim`・dataset・内部UUIDをqueryに持つ閲覧入口を追加した。実行datasetとの一致とURL形式を検査し、現在のEntity／Claim APIを読む。内容版・探索途中・Capsule共有のURLではない。schema／要求IDを照合し、既存15秒上限・abort・遅着排除を使う。Claimを先に読み、最大2端点の失敗は根拠を残して個別再試行する。関連Claimの自動追加は行わない。
+
+Native History APIと`useSearchParams`で既存Explorerを保持し、閲覧中は近傍を取得しない。戻る／進むで閲覧対象を辿り、閉鎖は現在履歴の閲覧queryだけを除去する。明示探索でだけ条件なしの起点切替と既存一件復帰を使う。reloadでは背景を空のExplorerにし、過去の探索の復元と区別する。入口全体はnoindex／nofollow。DB・API・凍結dataset・保存形式・認可は不変。
