@@ -25,14 +25,14 @@ function usableUrl(source: SourceDetail): boolean {
   catch { return false; }
 }
 
-export function ClaimCard({ claim, nodes, title }: { claim: ClaimDetail; nodes: Record<string, EntitySummary>; title: string }) {
+export function ClaimCard({ claim, nodes, title, idPrefix = "" }: { idPrefix?: string; claim: ClaimDetail; nodes: Record<string, EntitySummary>; title: string }) {
   const text = relationPresentationLabels();
   const eventParticipation = eventParticipationOf(claim), eventText = eventParticipationLabels();
   const position = organizationParticipationOf(claim);
   const positionText = organizationParticipationLabels();
   const contribution = contributionOf(claim);
   const roleText = contributionLabels();
-  return <article id={`claim-${claim.id}`} tabIndex={-1} className={styles.claimCard} data-testid={`claim-card-${claim.id}`}>
+  return <article id={`${idPrefix}claim-${claim.id}`} tabIndex={-1} className={styles.claimCard} data-testid={`claim-card-${claim.id}`}>
     <h4>{title}</h4>
     <span className={styles.muted}>関係についての主張</span>
     <p><strong>{nodes[claim.subjectId] ? entityLabel(nodes[claim.subjectId], nodes).replace("\n", " / ") : "主体"} → {PREDICATES[claim.predicate].label} → {nodes[claim.objectId] ? entityLabel(nodes[claim.objectId], nodes).replace("\n", " / ") : "対象"}</strong></p>
@@ -45,11 +45,11 @@ export function ClaimCard({ claim, nodes, title }: { claim: ClaimDetail; nodes: 
     {contribution && !contribution.roleId && <p className={styles.muted}>{text.noRole}</p>}
     {claim.predicate === "AFFILIATED_WITH" && !position && <p className={styles.muted}>{text.noPosition}</p>}
     {claim.predicate === "PARTICIPATED_IN" && !eventParticipation && <p className={styles.muted}>{text.noEventRole}</p>}
-    {!!claim.citations.length && <button onClick={() => document.getElementById(`citation-${claim.citations[0].id}`)?.scrollIntoView({ block: "nearest" })}>{text.evidence}</button>}
+    {!!claim.citations.length && <button onClick={() => document.getElementById(`${idPrefix}citation-${claim.citations[0].id}`)?.scrollIntoView({ block: "nearest" })}>{text.evidence}</button>}
     <p>{claim.sourceCount ? `出典 ${claim.sourceCount}件` : "出典未確認"}</p>
     {!claim.citations.length && <p className={styles.muted}>この主張の出典はまだ登録されていません。</p>}
     {!!claim.citations.length && <h5 className={styles.evidenceTitle}>根拠となる出典と参照箇所</h5>}
-    {claim.citations.map((citation, index) => <section id={`citation-${citation.id}`} key={citation.id} className={styles.citation} aria-label="出典と参照箇所">
+    {claim.citations.map((citation, index) => <section id={`${idPrefix}citation-${citation.id}`} key={citation.id} className={styles.citation} aria-label="出典と参照箇所">
       <p className={styles.muted}>出典 {index + 1} · {SOURCE_KINDS[citation.source.kind]}</p>
       <h5>{citation.source.title}</h5>
       <p>{SOURCE_KINDS[citation.source.kind]} · {citation.stance === "support" ? "この主張を支持" : citation.stance === "refute" ? "この主張への反証" : "背景資料"}</p>

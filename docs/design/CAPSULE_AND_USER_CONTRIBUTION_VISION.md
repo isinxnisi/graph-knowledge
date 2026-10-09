@@ -1,6 +1,8 @@
 # Capsule・User Contribution・Global KGの将来構想
 
-更新日: 2026-10-06 / 状態: ユーザー共有の将来構想を保存。未実装。物理schema・API・UI・投稿経路・審査方式の採用仕様ではない。
+更新日: 2026-10-09 / 状態: 2026-10-06共有の将来構想を保存。物理schema・API・UI・投稿経路・審査方式の採用仕様ではない。
+
+2026-10-09追記：既存KG参照と説明だけのブラウザ内private保存・再閲覧を[最小Capsule契約](LOCAL_CAPSULES.md)として別途採用・実装した。以下の「今回」「未実装」は構想整理時点の記録。local assertion・投稿・公開共有等は引き続き未実装。
 
 原文は[Capsuleについての共有](../prompt/20261006_Capsuleとか.md)。Capsuleは今回初めて正式共有された概念。本書をこの構想の正本とし、[PROJECT_CONTEXT](../PROJECT_CONTEXT.md)の目的、[プロダクト像](PRODUCT_VISION_AND_PRINCIPLES.md)、[関係モデルの基本設計](RELATION_MODEL_PRINCIPLES.md)と併読する。現行実装の契約は[ARCHITECTURE](../ARCHITECTURE.md)に従う。
 

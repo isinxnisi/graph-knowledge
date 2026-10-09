@@ -10,7 +10,7 @@ Phase 16で[Relation・Claim・Predicate・typed qualificationの基本設計](d
 
 成熟したプロダクト像と、投稿・議論・保存・履歴等の初回設計で守る境界は [PRODUCT_VISION_AND_PRINCIPLES.md](design/PRODUCT_VISION_AND_PRINCIPLES.md) を参照する。構想の保存であり、現行API・DB契約や着手範囲を変更しない。
 
-Global／localのidentity・読取範囲、投稿／審査、保存／公開共有／議論、provenance、AI構造化、import／exportの変更前には[Capsule・User Contribution・Global KG構想](design/CAPSULE_AND_USER_CONTRIBUTION_VISION.md)も参照する。下記の知識正本・Claim由来の表示・published読取は現行KGの契約であり、Capsule-localの保存先や全公開コンテンツのGlobal受入を定めていない。Capsuleの内容とSaved View、公開と受入を分ける。Capsuleの物理schema・投稿flowは未決・未実装。
+Global／localのidentity・読取範囲、投稿／審査、保存／公開共有／議論、provenance、AI構造化、import／exportの変更前には[Capsule・User Contribution・Global KG構想](design/CAPSULE_AND_USER_CONTRIBUTION_VISION.md)も参照する。下記の知識正本・Claim由来の表示・published読取は現行KGの契約であり、Capsule-localの保存先や全公開コンテンツのGlobal受入を定めていない。Capsuleの内容とSaved View、公開と受入を分ける。Capsuleのserver正本・投稿flowは未決・未実装。2026-10-09に既存KG参照と説明だけのブラウザ内private prototypeを末尾の契約で採用した。
 
 ## 多言語対応の設計前提
 
@@ -674,6 +674,14 @@ Phase 22後の局所視覚調整：構造化済み具体語を持つRelationだ�
 
 [探索途中保存の契約](design/LOCAL_SAVED_WORKSPACE.md)に従い、datasetごと最大10件を別localStorageキーのcollection v2へ保持する。各要素は途中保存v1で、旧1件形式は無書込で読み、最初の追加・置換成功時に内容を引き継ぐ。名前・時刻付き一覧から1件を選び、再開・名前を明示した置換・確認付き削除を行う。起点・具体的な四条件・枝のUUID／open意図／受理ページ数・座標・pan／zoomを保存し、知識本文・Claim一覧・旧cursor・通信状態は永続化しない。取得中は保存不可、各保存を合計40ページに制限する。現在の起点から参照を辿って保存された枝だけを再取得し、既存表示・キャッシュ上限内で画面外に再構成する。閉じた枝の休止子孫は意図を維持し、現在辿れない枝は除外件数を表示する。
 
-全取得成功後だけ一世代で適用し、旧探索を直前一件復帰に残す。失敗・中止・上限超過では現在の探索を変更しない。各API15秒に加え全体60秒の中断、取消後の遅延応答排除を行う。保存ビューv1・JSON控えは不変で、途中保存は専用JSONの控えとして分ける。DB／API／意味モデル／datasetは不変。会員同期・公開共有・Capsuleは未実装。
+全取得成功後だけ一世代で適用し、旧探索を直前一件復帰に残す。失敗・中止・上限超過では現在の探索を変更しない。各API15秒に加え全体60秒の中断、取消後の遅延応答排除を行う。保存ビューv1・JSON控えは不変で、途中保存は専用JSONの控えとして分ける。DB／API／意味モデル／datasetは不変。会員同期・公開共有は未実装。Capsuleは下記の別コンテンツとして保存する。
 
 途中保存のファイル持ち運びでは、選択した保存済み1件を従来の途中保存v1 JSONとして控える。100,000 bytes以下の同datasetだけを検証し、名前・条件・起点・枝数・ページ数を確認後、既定で新しい1件として追加する。対象を選んで明示した場合だけ置換し、ファイル選択時の保存UUIDが変われば取り込まない。取込ごとに新しいローカルUUIDを付け、古い確認画面からの置換・削除を防ぐ。追加・置換・削除は最新一覧へ適用し、対象以外を保持する。ファイル操作ではGraph・APIを変更せず、従来の明示再開で現在の知識を再取得する。ファイル形式・保存キーは不変、保存領域だけcollectionへ移行する。[保存・移行・ファイル契約](design/LOCAL_SAVED_WORKSPACE.md)を参照。
+
+## ブラウザ内の最小Capsule（2026-10-09）
+
+[採用契約](design/LOCAL_CAPSULES.md)。表示中のEntity／独立Claimから構成を明示選択し、題名・説明とともに独立したlocalStorage領域へ保存する。dataset・UUID参照・Capsule内容版1を保持し、知識本文・通信・表示束ID・探索途中を保存形式へ混ぜない。主張の両端は構成対象として表示・保存する。30対象／60主張・10件まで。未知形式・失敗・別datasetを拒否し、既存保存ビュー／途中保存は移行しない。
+
+再閲覧はEntity／Claim詳細の現在データを同時4要求・全体60秒以内で取得し、schemaとIDを確認する。失効・取得失敗・構成外端点を区別し、保存参照を消さず再試行できる。明示構成から閲覧用Graphを作り、孤立対象を残し、`projectGraph`は通さない。GraphCanvasの閲覧モードは既存配置計算を使って接続対象から配置し、独立対象が線ラベルに重なりにくくする。pan/zoom・選択は可能、展開・配置保存は行わない。個別ClaimCardで出典を読み、関連Claimは自動追加しない。
+
+説明は利用者のメモであり、Source支持やGlobal受入ではない。内容版は知識の履歴固定ではない。サーバー認可・正本・会員同期・公開共有は未実装。既存KG schema・読み取りAPI・凍結datasetは変更しない。

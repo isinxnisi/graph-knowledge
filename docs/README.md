@@ -10,6 +10,7 @@
 
 | 現役の設計文書 | 状態・読む場面 |
 | --- | --- |
+| [ブラウザ内の最小Capsule](design/LOCAL_CAPSULES.md) | 2026-10-09。明示した対象・独立主張と説明のprivate保存・現在データでの再閲覧・確認削除。保存ビュー／途中保存とは別コンテンツ。編集・会員同期・公開共有は未実装 |
 | [ブラウザ内の探索途中保存](design/LOCAL_SAVED_WORKSPACE.md) | 2026-10-09。datasetごと最大10件、枝の開閉・取得ページ数・配置の保存と現在データからの再開。専用JSONの控え・内容確認後の読込を追加。旧1件を引き継ぎ、選択・置換・確認削除に対応。会員同期は未実装 |
 | [ブラウザ内の保存ビュー](design/LOCAL_SAVED_VIEWS.md) | 2026-10-09。起点と確定条件のローカル保存・再訪、JSONの控えと確認後の追加。会員保存・自動同期は未実装。枝と配置の再開は別の探索途中保存を参照 |
 | [小さい探索分類と条件解決](design/EXPLORATION_CLASSIFICATION_RESOLUTION_REVIEW.md) | Phase 19設計検証完了・提案。5候補／24記録への仮付与、Visitor三状態と検索三契約。relation facet三入口は現条件へ解決可能、学術は未解決、仕事は非採用。研究prototypeのみ、公開API／UIは未接続 |
@@ -19,7 +20,7 @@
 | [関係モデルの基本設計](design/RELATION_MODEL_PRINCIPLES.md) | Phase 16採用。独立命題／domain固有限定／共通処理の判断基準、null・肯否・期間・identity／比較／表示、由来と根拠、追加レビュー手順。語彙追加時は個別契約と併読 |
 | [現在地点と次フェーズ](design/CURRENT_STATE_AND_NEXT_PHASE.md) | 2026-10-03の棚卸し。候補Aは承認・実装へ進んだ。棚卸し時点の状態を確認する記録 |
 | [プロダクト像と設計原則](design/PRODUCT_VISION_AND_PRINCIPLES.md) | 成熟したサービスの目標・実現意向・未確定候補・守る境界。直近の実装要件ではない |
-| [Capsule・User Contribution・Global KG](design/CAPSULE_AND_USER_CONTRIBUTION_VISION.md) | 2026-10-06共有の将来構想の正本。Global／local・identity・投稿／審査／moderation・保存／公開共有／議論・provenance・AI構造化・import／export変更時に読む。具体方式は未決・未実装 |
+| [Capsule・User Contribution・Global KG](design/CAPSULE_AND_USER_CONTRIBUTION_VISION.md) | 2026-10-06共有の将来構想の正本。Global／local・identity・投稿／審査／moderation・保存／公開共有／議論・provenance・AI構造化・import／export変更時に読む。既存KG参照と説明だけの初回は上記最小Capsuleを参照。他の具体方式は未決・未実装 |
 | [少数実データパイロット](design/REAL_DATA_PILOT.md) | 最小案を採用しPhase 04で実装。対象・根拠・外部ID・言語・再投入の境界、残る候補。利用者評価はこれから |
 | [条件付き探索の第一段階](design/CONDITIONAL_EXPLORATION_PHASE.md) | 既存predicate集合の選択・条件変更UX・API・cursor・変更直前の探索への一件復帰の採用契約 |
 | [探索モデル](design/EXPLORATION_MODEL_REVIEW.md) | 開閉・最小predicate条件は実装済み。kind・期間条件・複数起点・時系列の残りは提案。探索の拡張時に参照 |
@@ -45,6 +46,8 @@
 未実装部分を含む文書は、完了した内容が一部あっても丸ごとアーカイブしない。設計案を採用済みとみなさず、最新のユーザー指示を優先する。
 
 ## 現在地点
+
+2026-10-09、保存・再開に続き、対象・主張を選んで説明とともに読み返す[最小Capsule](design/LOCAL_CAPSULES.md)を追加した。ブラウザ内privateの初回であり、公開共有・会員保存・投稿は含めない。
 
 Phase 21でGraphの限定概要と独立Claim詳細を整合した。全Predicateの肯否混在を中立表示し、Relation全体→Graph内／Graph未表示／条件外の各主張→原資料・確認範囲へ進める。API・意味契約・凍結datasetは不変。浦沢→PLUTOのRoleを推定せず、既存情報で改善できた範囲とデータ／モデルの不足を分けて記録した。[現行presentation契約](design/RELATION_PRESENTATION_CONTRACTS.md)／[実画面評価・検証記録](archive/phase-21-relation-presentation/README.md)。
 
