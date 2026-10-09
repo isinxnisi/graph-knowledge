@@ -170,3 +170,141 @@ test("認証失敗は元のCapsule選択を保ち、再ログインできる", a
   expect(new URL(page.url()).searchParams.get("import")).toBe(saved.id);
   await expect(page.getByRole("button", { name: "検証用OIDCでログイン", exact: true })).toBeVisible();
 });
+
+async function createForEditing(page: Page, content = { dataset: saved.dataset, title: saved.title, note: saved.note, language: saved.language, entityIds: saved.entityIds, claimIds: saved.claimIds }) {
+  await page.goto("/member"); await login(page);
+  const response = await page.request.post("/api/member/capsules", { headers: { Origin: "http://127.0.0.1:3221" }, data: { requestId: crypto.randomUUID(), content } });
+  expect(response.status()).toBe(201);
+  const { capsule } = await response.json();
+  await page.goto(`/member?capsule=${capsule.id}`);
+  await page.getByRole("button", { name: "このCapsuleを編集", exact: true }).click();
+  return capsule;
+}
+
+for (const width of [390, 1440]) {
+  test(`会員の説明と構成を次版へ編集し、取消・reload・根拠閲覧へ戻る ${width}px`, async ({ page, context }, testInfo) => {
+    await page.setViewportSize({ width, height: 900 }); await mockKnowledge(context);
+    const isolated = examples.neighbors.nodes.find(node => !saved.entityIds.includes(node.id))!;
+    const capsule = await createForEditing(page, { dataset: saved.dataset, title: saved.title, note: saved.note, language: saved.language, entityIds: [...saved.entityIds, isolated.id], claimIds: saved.claimIds });
+    const editor = page.getByRole("region", { name: "アカウントのCapsuleを編集", exact: true });
+    await expect(editor.getByRole("button", { name: "アカウントの変更を保存", exact: true })).toBeDisabled();
+    await expect(editor.getByRole("checkbox", { name: /青葉ハル/ }).first()).toBeDisabled();
+    await editor.getByLabel("Capsuleの題名", { exact: true }).fill("訂正して育てる関係図");
+    await editor.getByRole("textbox", { name: "自分の説明", exact: true }).fill("出典の対象期間を追記した。\n同じ場所に置いた対象の関係は推定しない。");
+    await editor.getByRole("checkbox", { name: new RegExp(isolated.name) }).uncheck();
+    await page.screenshot({ path: testInfo.outputPath(`member-edit-${width}.png`), fullPage: true });
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+    await editor.getByRole("button", { name: "アカウントの変更を保存", exact: true }).click();
+    await expect(page.getByText("アカウントのCapsuleを更新しました。", { exact: true })).toBeVisible();
+    await page.reload();
+    await expect(page.getByRole("heading", { name: "訂正して育てる関係図", exact: true })).toBeVisible();
+    await expect(page.getByText("現在のGraph：対象 2件 / 主張 1件", { exact: true })).toBeVisible();
+    await page.getByRole("button", { name: /青葉ハル → アシスタントだった → 黒川レン.*2001年〜2003年/ }).click();
+    await expect(page.getByRole("heading", { name: "青葉ハルへのインタビュー", exact: true })).toBeVisible();
+    await page.getByRole("button", { name: "このCapsuleを編集", exact: true }).click();
+    await editor.getByRole("textbox", { name: "自分の説明", exact: true }).fill("取り消す説明");
+    await editor.getByRole("button", { name: "編集を取り消す", exact: true }).click();
+    await editor.getByRole("button", { name: "編集を続ける", exact: true }).click();
+    await expect(editor.getByRole("textbox", { name: "自分の説明", exact: true })).toHaveValue("取り消す説明");
+    await editor.getByRole("button", { name: "編集を取り消す", exact: true }).click();
+    await editor.getByRole("button", { name: "保存せず戻る", exact: true }).click();
+    await expect(page.getByText("取り消す説明", { exact: true })).toHaveCount(0);
+    await page.getByRole("button", { name: "このCapsuleを編集", exact: true }).click();
+    await editor.getByRole("group", { name: "含める主張", exact: true }).getByRole("checkbox").uncheck();
+    await editor.getByRole("group", { name: "含める対象", exact: true }).getByRole("checkbox", { name: /黒川レン/ }).uncheck();
+    await editor.getByRole("button", { name: "アカウントの変更を保存", exact: true }).click();
+    await expect(page.getByText("現在のGraph：対象 1件 / 主張 0件", { exact: true })).toBeVisible();
+    const updated = (await (await page.request.get(`/api/member/capsules/${capsule.id}`)).json()).capsule;
+    expect(updated.revision).toBe(3); expect(updated.createdAt).toBe(capsule.createdAt);
+    expect(updated.content.entityIds).toEqual([claim.subjectId]); expect(updated.content.claimIds).toEqual([]);
+    expect(await page.evaluate(() => Object.values(localStorage).join(" ") + Object.values(sessionStorage).join(" "))).not.toContain("訂正して育てる関係図");
+  });
+}
+
+test("更新競合は入力と最新版を比較し、応答消失後も二重更新しない", async ({ page, context }) => {
+  await mockKnowledge(context); const capsule = await createForEditing(page);
+  const editor = page.getByRole("region", { name: "アカウントのCapsuleを編集", exact: true });
+  await editor.getByRole("textbox", { name: "自分の説明", exact: true }).fill("こちらで加えた説明");
+  const competitor = { ...capsule.content, note: "別端末で訂正した説明", claimIds: [] };
+  expect((await page.request.put(`/api/member/capsules/${capsule.id}`, { headers: { Origin: "http://127.0.0.1:3221" }, data: { expectedRevision: 1, content: competitor } })).status()).toBe(200);
+  await editor.getByRole("button", { name: "アカウントの変更を保存", exact: true }).click();
+  await expect(editor.getByRole("button", { name: "入力を保って最新版を確認", exact: true })).toBeVisible();
+  await expect(editor.getByRole("textbox", { name: "自分の説明", exact: true })).toHaveValue("こちらで加えた説明");
+  await editor.getByRole("button", { name: "入力を保って最新版を確認", exact: true }).click();
+  await expect(editor.getByRole("button", { name: "アカウントの変更を保存", exact: true })).toBeDisabled();
+  await editor.getByText("サーバーの最新版・構成・根拠を読む", { exact: true }).click();
+  await expect(editor.getByText("別端末で訂正した説明", { exact: true })).toBeVisible();
+  await expect(editor.getByText("現在のGraph：対象 2件 / 主張 0件", { exact: true })).toBeVisible();
+  await editor.getByRole("button", { name: "最新版を確認したので、この入力で編集を続ける", exact: true }).click();
+  await page.route(`**/api/member/capsules/${capsule.id}`, async route => {
+    if (route.request().method() !== "PUT") return route.continue();
+    const response = await route.fetch(); expect(response.status()).toBe(200); await route.abort("failed");
+  }, { times: 1 });
+  await editor.getByRole("button", { name: "アカウントの変更を保存", exact: true }).click();
+  await editor.getByRole("button", { name: "入力を保って最新版を確認", exact: true }).click();
+  await expect(editor.getByRole("textbox", { name: "自分の説明", exact: true })).toHaveValue("こちらで加えた説明");
+  await editor.getByRole("button", { name: "一致する最新版へ戻る", exact: true }).click();
+  await expect(page.getByText("こちらで加えた説明", { exact: true })).toBeVisible();
+  const current = (await (await page.request.get(`/api/member/capsules/${capsule.id}`)).json()).capsule;
+  expect(current.revision).toBe(3); expect(current.content.claimIds).toEqual(saved.claimIds);
+});
+
+test("編集の失効・別アカウント・非表示を越えて、本人にだけ入力を戻す", async ({ page, context }) => {
+  await mockKnowledge(context); const capsule = await createForEditing(page);
+  const editor = page.getByRole("region", { name: "アカウントのCapsuleを編集", exact: true });
+  await editor.getByRole("textbox", { name: "自分の説明", exact: true }).fill("本人にだけ戻す未保存の入力");
+  await page.route(`**/api/member/capsules/${capsule.id}`, async route => {
+    if (route.request().method() !== "PUT") return route.continue();
+    await context.request.post("/api/auth/revoke-sessions", { headers: { Origin: "http://127.0.0.1:3221" }, data: {} });
+    await route.continue();
+  }, { times: 1 });
+  await editor.getByRole("button", { name: "アカウントの変更を保存", exact: true }).click();
+  await expect(page.getByRole("main").getByRole("alert")).toContainText("ログインが失効したか");
+  await expect(page.getByRole("textbox", { name: "自分の説明", exact: true })).toHaveCount(0);
+  expect(await page.evaluate(() => Object.values(localStorage).join(" ") + Object.values(sessionStorage).join(" "))).not.toContain("本人にだけ戻す");
+  const popup = context.waitForEvent("page");
+  await page.getByRole("link", { name: "別タブでログインし直す", exact: true }).click();
+  const auth = await popup;
+  await login(auth, "検証ユーザーB"); await page.bringToFront();
+  await page.getByRole("button", { name: "アカウントと一覧を再確認", exact: true }).click();
+  await expect(page.getByText("検証ユーザーB", { exact: true })).toBeVisible();
+  await expect(page.getByRole("textbox", { name: "自分の説明", exact: true })).toHaveCount(0);
+  await auth.bringToFront();
+  await auth.getByRole("button", { name: "ログアウト", exact: true }).click();
+  await login(auth); await auth.close(); await page.bringToFront();
+  await page.getByRole("button", { name: "アカウントと一覧を再確認", exact: true }).click();
+  await expect(editor.getByRole("textbox", { name: "自分の説明", exact: true })).toHaveValue("本人にだけ戻す未保存の入力");
+  // Simulate the document lifecycle directly so headless visibility is deterministic.
+  await page.evaluate(() => { Object.defineProperty(document, "visibilityState", { configurable: true, value: "hidden" }); document.dispatchEvent(new Event("visibilitychange")); });
+  await expect(page.getByRole("textbox", { name: "自分の説明", exact: true })).toHaveCount(0);
+  await page.evaluate(() => { Object.defineProperty(document, "visibilityState", { configurable: true, value: "visible" }); document.dispatchEvent(new Event("visibilitychange")); });
+  await expect(editor.getByRole("textbox", { name: "自分の説明", exact: true })).toHaveValue("本人にだけ戻す未保存の入力");
+  await editor.getByRole("button", { name: "アカウントの変更を保存", exact: true }).click();
+  await expect(page.getByText("アカウントのCapsuleを更新しました。", { exact: true })).toBeVisible();
+  expect((await (await page.request.get(`/api/member/capsules/${capsule.id}`)).json()).capsule.revision).toBe(2);
+});
+
+test("未解決参照の説明訂正と他端末削除でも入力を保持し、復活させない", async ({ page, context }) => {
+  await mockKnowledge(context);
+  await context.route("**/api/claims/**", route => route.fulfill({ status: 404, json: { error: { code: "NOT_FOUND" } } }));
+  const capsule = await createForEditing(page);
+  const editor = page.getByRole("region", { name: "アカウントのCapsuleを編集", exact: true });
+  await expect(editor.getByText(/確認できない主張も選択したまま保持/)).toBeVisible();
+  for (const input of await editor.getByRole("group", { name: "含める対象", exact: true }).getByRole("checkbox").all()) await expect(input).toBeDisabled();
+  await editor.getByRole("textbox", { name: "自分の説明", exact: true }).fill("未確認の参照はそのまま残す");
+  await editor.getByRole("button", { name: "アカウントの変更を保存", exact: true }).click();
+  await expect(page.getByText("アカウントのCapsuleを更新しました。", { exact: true })).toBeVisible();
+  let current = (await (await page.request.get(`/api/member/capsules/${capsule.id}`)).json()).capsule;
+  expect(current.content.entityIds).toEqual(saved.entityIds); expect(current.content.claimIds).toEqual(saved.claimIds);
+  await page.getByRole("button", { name: "このCapsuleを編集", exact: true }).click();
+  await editor.getByRole("textbox", { name: "自分の説明", exact: true }).fill("削除されても残す入力");
+  expect((await page.request.delete(`/api/member/capsules/${capsule.id}`, { headers: { Origin: "http://127.0.0.1:3221" }, data: { expectedRevision: 2 } })).status()).toBe(200);
+  await editor.getByRole("button", { name: "アカウントの変更を保存", exact: true }).click();
+  await editor.getByRole("button", { name: "入力を保って最新版を確認", exact: true }).click();
+  await expect(editor.getByRole("textbox", { name: "自分の説明", exact: true })).toHaveValue("削除されても残す入力");
+  await expect(editor.getByRole("button", { name: "アカウントの変更を保存", exact: true })).toBeDisabled();
+  current = await page.request.get(`/api/member/capsules/${capsule.id}`); expect(current.status()).toBe(404);
+  await editor.getByRole("button", { name: "編集を取り消す", exact: true }).click();
+  await editor.getByRole("button", { name: "保存せず戻る", exact: true }).click();
+  await expect(page.getByText("このアカウントにはCapsuleがまだありません。", { exact: true })).toBeVisible();
+});

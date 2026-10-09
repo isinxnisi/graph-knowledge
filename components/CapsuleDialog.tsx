@@ -21,7 +21,7 @@ import css from "./CapsuleDialog.module.css";
 function claimLabel(claim: ClaimSummary, nodes: Record<string, EntitySummary>) {
   return `${nodes[claim.subjectId]?.name ?? claim.subjectId} → ${relationLabel(claim)} → ${nodes[claim.objectId]?.name ?? claim.objectId}`;
 }
-function ClaimCaption({ claim, nodes }: { claim: ClaimSummary; nodes: Record<string, EntitySummary> }) {
+export function ClaimCaption({ claim, nodes }: { claim: ClaimSummary; nodes: Record<string, EntitySummary> }) {
   const scope = claim.contribution?.scope, contribution = contributionLabels();
   return <><strong>{claimLabel(claim, nodes)}</strong>{" "}<span>{[polarityLabel(claim), qualificationLabel(claim), formatPeriod(claim.period)].filter(Boolean).join(" / ")}</span>
     {scope && <span>{contribution.scope}：{scope.volumeLabel ?? contribution.volumeUnknown} / {scope.editionLabel ?? contribution.editionUnknown} / ISBN {scope.isbn13} / {scope.language}</span>}
