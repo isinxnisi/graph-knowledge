@@ -91,6 +91,18 @@ describe("実OIDC・PostgreSQLによるprivate Capsule", () => {
     expect(accounts.rows).toHaveLength(2);
     for (const row of accounts.rows) expect(Object.values(row)).toEqual([null, null, null]);
   });
+  it("表示中と異なる利用者sessionへ変わった要求を拒否する", async () => {
+    const response = await profile.GET(request("/api/member/profile", alice.cookies.value));
+    const { user } = await response.json();
+    const mismatch = await collection.POST(request("/api/member/capsules", bob.cookies.value, "POST", { requestId: randomUUID(), content: content() }, { "x-member-user": user.id }));
+    expect(mismatch.status).toBe(401);
+    for (const path of ["/sign-out", "/revoke-sessions"]) {
+      expect((await authRoute.POST(request(`/api/auth${path}`, bob.cookies.value, "POST", {}, { "x-member-user": user.id }))).status).toBe(401);
+    }
+    expect((await profile.GET(request("/api/member/profile", bob.cookies.value))).status).toBe(200);
+    expect((await collection.GET(request("/api/member/capsules", bob.cookies.value, "GET", undefined, { "x-member-user": user.id }))).status).toBe(401);
+    expect((await collection.GET(request("/api/member/capsules", alice.cookies.value, "GET", undefined, { "x-member-user": user.id }))).status).toBe(200);
+  });
   it("本人だけが作成・一覧・読取でき、再ログインしても同じ所有物を読む", async () => {
     const saved = await create(alice.cookies.value);
     expect(saved.status).toBe(201);
@@ -129,6 +141,8 @@ describe("実OIDC・PostgreSQLによるprivate Capsule", () => {
       const response = await collection.POST(request("/", alice.cookies.value, "POST", { requestId: randomUUID(), content: content() }, { origin: badOrigin }));
       expect(response.status).toBe(403);
     }
+    const malformed = await authRoute.POST(request("/api/auth/sign-in/social", "", "POST", { provider: "fixture", callbackURL: "http://[" }));
+    expect(malformed.status).toBe(400);
     const external = await authRoute.POST(request("/api/auth/sign-in/social", "", "POST", { provider: "fixture", callbackURL: "http://evil.invalid" }));
     expect(external.status).toBe(403);
   });

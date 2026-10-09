@@ -10,7 +10,7 @@
 
 | 現役の設計文書 | 状態・読む場面 |
 | --- | --- |
-| [会員Capsule保存の初回](design/MEMBER_CAPSULES.md) | 2026-10-09継続中。実認証・PostgreSQL・所有者付き保存APIを実装。UI接続・実Google・会員体験の完成は未了 |
+| [会員Capsule保存の初回](design/MEMBER_CAPSULES.md) | 2026-10-09継続中。実認証・PostgreSQL・所有者APIと明示保存・別ブラウザ再訪UIを接続。会員編集／設定UI・実Googleは未了 |
 | [ブラウザ内の最小Capsule](design/LOCAL_CAPSULES.md) | 2026-10-09。明示した対象・独立主張と説明のprivate保存・現在データでの再閲覧・確認削除。保存ビュー／途中保存とは別コンテンツ。同IDの編集も実装。会員同期・公開共有は未実装 |
 | [ブラウザ内の探索途中保存](design/LOCAL_SAVED_WORKSPACE.md) | 2026-10-09。datasetごと最大10件、枝の開閉・取得ページ数・配置の保存と現在データからの再開。専用JSONの控え・内容確認後の読込を追加。旧1件を引き継ぎ、選択・置換・確認削除に対応。会員同期は未実装 |
 | [対象・主張の直接閲覧URL](design/DIRECT_READING_LINKS.md) | 2026-10-09。dataset・Entity／Claim IDから現在の説明・根拠を読む。履歴・明示探索・元Graphへの復帰。公開運用・検索掲載・内容版固定は含めない |
@@ -49,7 +49,7 @@
 
 ## 現在地点
 
-2026-10-09、[会員Capsule保存](design/MEMBER_CAPSULES.md)の認証・所有者付き保存APIを追加した。専用PostgreSQLと開発OIDCによる検証段階。UI接続は次の実装単位で、通常の探索・ブラウザ保存は維持する。
+2026-10-09、[会員Capsule保存](design/MEMBER_CAPSULES.md)の認証・所有者付き保存APIを追加した。専用PostgreSQLと開発OIDCによる検証段階で、明示保存・本人一覧・現在の根拠・別ブラウザ再訪のUIも接続した。通常の探索・ブラウザ保存を維持し、会員編集・設定UIと実Googleは次の単位。
 
 2026-10-09、保存・再開に続き、対象・主張を選んで説明とともに読み返す[最小Capsule](design/LOCAL_CAPSULES.md)を追加した。ブラウザ内privateの初回であり、題名・説明・構成を同IDの次版へ編集できる。公開共有・会員保存・投稿は含めない。
 

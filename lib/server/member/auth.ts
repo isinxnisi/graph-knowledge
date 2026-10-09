@@ -15,7 +15,7 @@ export function createMemberAuth(config: MemberConfig, pool: Pool) {
   return betterAuth({
     appName: "Graph Knowledge", baseURL: config.origin, basePath: "/api/auth",
     secret: config.secret, database: pool, trustedOrigins: [config.origin],
-    logger: { disabled: true },
+    logger: { disabled: true }, onAPIError: { errorURL: `${config.origin}/member` },
     socialProviders: provider.kind === "google" ? { google: { clientId: provider.clientId, clientSecret: provider.clientSecret } } : {},
     plugins: provider.kind === "fixture" ? [genericOAuth({ config: [{
       providerId: "fixture", clientId: "graph-member-fixture", discoveryUrl: `${provider.issuer}/.well-known/openid-configuration`,

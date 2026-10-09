@@ -14,7 +14,13 @@ for (const width of [390, 1440]) {
   test(`説明付きCapsuleを作成・reload・出典確認して探索へ戻る（${width}px）`, async ({ page }, testInfo) => {
     await page.setViewportSize({ width, height: 900 });
     const errors: string[] = []; page.on("pageerror", error => errors.push(error.message));
-    const claimRequests: string[] = []; let neighbors = 0;
+    const claimRequests: string[] = [], requestedClaims = new Set<string>(); let neighbors = 0;
+    // StrictMode can cancel a mount's first request before replaying it. Count
+    // completed reads, while still rejecting requests for any unselected Claim.
+    page.on("response", response => {
+      const url = new URL(response.url());
+      if (url.pathname.startsWith("/api/claims/") && response.ok()) claimRequests.push(url.pathname.split("/").at(-1)!);
+    });
     await page.route("**/api/entities/**", async route => {
       const url = new URL(route.request().url());
       if (url.pathname.endsWith("/neighbors")) { neighbors++; await route.fulfill({ json: examples.neighbors }); }
@@ -23,7 +29,7 @@ for (const width of [390, 1440]) {
         await route.fulfill({ json: { entity: { ...entity, aliases: [], event: null } } });
       }
     });
-    await page.route("**/api/claims/**", async route => { claimRequests.push(route.request().url().split("/").at(-1)!); await route.fulfill({ json: examples.claim }); });
+    await page.route("**/api/claims/**", async route => { requestedClaims.add(route.request().url().split("/").at(-1)!); await route.fulfill({ json: examples.claim }); });
     await page.goto("/");
     await page.getByRole("button", { name: "青葉ハルから探索を開始", exact: true }).click();
     await expect(page.getByTestId("graph-counts")).toHaveText("Entity 5 / Claim 7");
@@ -56,7 +62,7 @@ for (const width of [390, 1440]) {
     await expect(dialog.getByRole("heading", { name: "青葉ハルへのインタビュー", exact: true })).toBeVisible();
     await expect(dialog).toContainText("pp.12–13");
     await page.screenshot({ path: testInfo.outputPath(`capsule-evidence-${width}.png`) });
-    expect(claimRequests).toEqual([claim.id]); expect(neighbors).toBe(1);
+    expect([...requestedClaims]).toEqual([claim.id]); expect(claimRequests).toEqual([claim.id]); expect(neighbors).toBe(1);
     expect(await dialog.evaluate(el => el.scrollWidth <= el.clientWidth)).toBe(true);
     await dialog.getByRole("button", { name: "探索へ戻る", exact: true }).click();
     await expect(dialog).toHaveCount(0); await expect(launch).toBeFocused();

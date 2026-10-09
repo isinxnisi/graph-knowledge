@@ -1,0 +1,21 @@
+const ja = {
+  title: "アカウントのCapsule", launch: "アカウントのCapsuleを開く（別タブ）", importLaunch: "この内容をアカウントへ保存（別タブ）",
+  help: "自分の説明付き関係図を非公開で保存し、別のブラウザからも読み返せます。共有・自動同期は行いません。",
+  exploreEntity: "この対象を開いて探索する（別タブ）", loginFailed: "ログインを完了できませんでした。もう一度ログインできます。ブラウザ内の保存は残っています。",
+  explorer: "探索を開く", returnHelp: "探索から別タブで開いた場合は、このタブを閉じると元の探索へ戻れます。",
+  checking: "アカウントを確認しています…", refresh: "アカウントと一覧を再確認", login: "Googleで登録・ログイン", fixtureLogin: "検証用OIDCでログイン",
+  loggedOut: "ログインすると、自分のCapsuleを保存・閲覧できます。", unavailable: "会員保存を現在利用できません。未設定または一時停止中です。ブラウザ内の保存と探索は利用できます。",
+  logout: "ログアウト", logoutAll: "全端末からログアウト", logoutAllConfirm: "すべての端末のログインを解除します。保存したCapsuleは削除しません。",
+  confirmLogoutAll: "全端末のログインを解除する", cancel: "取り消す", localTitle: "ブラウザ内から選んで保存", localHelp: "選んだ内容だけを、新しいCapsuleとしてこのアカウントへ保存します。元のブラウザ保存は残り、以後の編集は同期されません。",
+  source: "保存するブラウザ内Capsule", choose: "Capsuleを選ぶ", noLocal: "このブラウザにCapsuleはありません。探索で対象と主張を選んで作成できます。",
+  missingLocal: "指定されたブラウザ内Capsuleが見つかりません。保存元のブラウザで開いてください。", localError: "ブラウザの保存を読み込めません。元のデータは変更していません。",
+  save: "この内容をアカウントへ保存", saved: "アカウントへ保存しました。元のブラウザ保存も残っています。", busy: "処理しています…",
+  replayed: "この保存操作は処理済みです。重複を作らず、現在のアカウント内容を表示しています。",
+  private: "保存先：アカウント（本人のみ）", local: "取込元：このブラウザ", library: "アカウントの保存一覧", empty: "このアカウントにはCapsuleがまだありません。",
+  read: "内容と根拠を読む", back: "アカウントの一覧へ", remove: "アカウントから削除", removeConfirm: "このCapsuleをアカウントから削除する", removeHelp: "アカウントの内容を削除します。ブラウザ内の元の保存は残ります。", removed: "アカウントから削除しました。",
+  expired: "ログインが失効したか、別のアカウントに変わりました。再確認・ログインしてください。ブラウザ内の内容は保持しています。",
+  conflict: "保存内容が更新・削除されています。一覧を再確認してください。", limit: "保存上限の10件に達しました。不要なCapsuleを削除してから保存してください。",
+  notFound: "このCapsuleを閲覧できません。削除されたか、このアカウントの保存ではありません。",
+  failed: "処理を完了できませんでした。同じ内容の保存を再試行できます。", receiptError: "再送を管理するブラウザ領域を利用できません。保存は送信していません。",
+};
+export function memberLabels(locale = "ja") { const resources: Record<string, typeof ja> = { ja }; return resources[locale] ?? resources[locale.split("-")[0]] ?? ja; }

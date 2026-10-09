@@ -1,25 +1,25 @@
 # 自動開発チェックポイント
-- 状態：継続中（会員Capsule保存。認証・所有者付きAPIのチェックポイント）
-- 目的：別ブラウザでも本人の説明付きCapsuleを読み返し、現在の根拠・探索へ戻れるようにする。
-- Starting HEADのブラウザ内編集は完了。編集の細部・直接閲覧拡張・会員保存を比較し、新しい再訪体験を優先した。
-- main側ACCOUNT_AND_OWNERSHIP_DESIGN.mdを読み取り専用で参照。今回の採用契約はdocs/design/MEMBER_CAPSULES.md。
-- Better Auth 1.7.7／pg 8.23.1を固定導入。専用PostgreSQLにUser・account・sessionとprivate Capsuleを保存する。
-- 無設定では会員APIだけ503。既存Explorer／KG API／Neo4j／凍結dataset／ブラウザ保存形式は不変。会員UIはまだない。
-- /api/authの限定経路、/api/member/profile GET、capsules一覧／作成／読取／更新／削除を追加。
-- ownerはDB sessionから決定。UserはKG Personと別UUID、メール一致linking無効、provider token破棄、active確認。
-- 7日session・1日更新、cookie cacheなし。Origin／CSRF／callback検査はテスト時も有効、private応答no-store。
-- 内容だけを明示取込する契約。server新ID・内容版1、既存local保存は自動送信・削除しない。
-- 所有者・dataset・期待revisionをSQLで確認。非所有者404、失効401、競合409、運営DB不通503。
-- User行lockで同時作成上限10件と冪等性を保証。削除後もID／digest receiptを残し、遅延再送で復活させない。
-- 参照の構文を検証して保持する段階。実在・端点の保証はせず、次のUIで既存Capsuleの現在KG再解決を使う。
-- 固定SQLをtransaction／checksum付きで明示migration。npm run member:migrate。起動時実行・DROPなし。
-- npm run test:memberは専用一時PGと署名OIDCを起動・破棄。production／別origin／別DBでfixtureを拒否。
-- 通常448件、実OIDC・実PG17件成功。2所有者、偽装／他人拒否、同時再送／更新／上限、失効、DB停止・回復・停止中初回起動を確認。
-- migration再実行と正式schema整合、nonce／issuer／state不正、メール一致別identity、cookie環境分離も確認。
-- lint・型検査込み本番build・最終tsc・変更ファイルESLint・差分検査成功。本番Explorer200と会員3経路503/no-storeを確認。
-- 専用PG・OIDC・本番smokeサーバーは終了。初回のテスト既定Origin省略とmigration前の認証初期化を修正して再検証済み。
-- PATH Node 24.15.0はengines 24.21.0と差がありnpm警告。npm auditは既存ESLint系5 high、今回追加依存の指摘なし。
-- 次の具体作業：Explorerの会員入口→ログイン→local Capsuleの明示保存→本人一覧／再閲覧→Claim／Source→探索のUI接続。
-- 390/1440px・二つのブラウザ・reload・失効時の内容保持をE2E化。プロフィール設定UIも未実装。API調査からやり直さない。
-- Google実接続・実KG・ブラウザUI・人間受入は未検証。公開前にreceipt保持／頻度制限・停止操作と全session削除・退会等を設計。
-- 外部判断待ちなし。実Google credentialと公開運用は該当段階だけに残す。公開・外部送信・課金・既存credential変更なし。
+- 状態：継続中（会員Capsuleの明示保存・再閲覧UIを接続。会員編集／設定UIは未了）
+- 目的：別ブラウザでも本人の説明付きCapsuleを読み返し、根拠から関係探索へ戻れるようにする。
+- 前回APIは有効。編集細部・直接閲覧拡張・共有着手と比較し、進行中の別ブラウザ再訪の縦経路を優先した。
+- 採用契約はdocs/design/MEMBER_CAPSULES.md。main側アカウント設計は読み取り専用で参照した。
+- Capsule一覧／閲覧から別タブの/memberへ。元のExplorerのGraph・条件・配置を保持する。
+- 設定済みproviderだけログインを提供。無設定／停止時は利用不可と再確認。dataset・架空データを表示する。
+- ログイン→local Capsuleを選択・確認→明示保存→本人一覧／reload／別ブラウザ→Claim／Sourceまで接続。
+- 元のlocal保存は保持。ログイン時の自動送信・自動同期・会員内容のlocal cacheはない。
+- 既存Readerを再利用し現在KGへ再解決。対象を選び別タブの閲覧URLから関係探索へ進める。
+- 会員UIに表示名／locale、確認削除、ログアウト、確認付き全端末ログアウトを追加した。
+- X-Member-Userは期待利用者との照合だけ。ownerはDB session正本で、不一致は401。従来APIは省略可。
+- private内容はタブ非表示時に破棄し、復帰／bfcache復帰で再認可。ログアウトは他タブへ非機密通知。
+- 同じタブのUser／dataset／local ID／版別に再送キーをsessionStorageへ保持。応答消失・reloadでも重複しない。
+- 再送成功は処理済み操作の現在内容と明示。削除後の再送は409。別タブのコピー操作の重複排除は約束しない。
+- 認証失敗は固定同originの/memberへ戻し、有効な選択IDを保持。任意error redirectや生エラーは受け入れない。
+- npm run test:member:e2eを追加。専用一時PG・署名OIDC本人選択・Next devを期限付き起動し終了時に破棄する。
+- 通常453件（maxWorkers=2）、関連60件、実OIDC／PG18件、会員E2E5件、既存E2E11件が成功。
+- E2EのKG応答はfixture。390/1440px・別context・失効・応答消失・削除競合・全端末失効・認証失敗を確認。
+- lint・型検査込み最終build・最終tsc・変更ESLint・差分検査成功。本番無設定画面／503確認済み。専用サーバー・DB終了。
+- 実Google・実KGとのブラウザ接続・人間受入は未検証。公開・外部送信・課金・既存credential変更なし。
+- 次の具体作業：会員Capsuleの題名／説明・構成の編集UIと、期待revision・失効時の入力保持を接続する。
+- プロフィール設定UI（表示名／locale）も未実装。設定／共有の新体験と比較し、会員編集の必要範囲を選ぶ。
+- 公開前はreceipt保持／頻度制限・運営停止と全session削除・退会等を設計。実Google credentialは実接続だけの未完了。
+- 外部判断待ちなし。実Google接続・公開運用は該当段階まで進めない。KG意味／schema・凍結datasetは不変。

@@ -26,7 +26,7 @@ export function createMemberService(config: MemberConfig, pool: Pool, auth: Memb
       if (error instanceof APIError && error.statusCode >= 500) throw new MemberUnavailable();
       throw error;
     });
-    if (!session || session.user.active !== true) throw new MemberError(401, "UNAUTHENTICATED");
+    if (!session || session.user.active !== true || (request.headers.has("x-member-user") && request.headers.get("x-member-user") !== session.user.id)) throw new MemberError(401, "UNAUTHENTICATED");
     return session.user;
   }
   function contentDataset(content: MemberCapsuleContent) {

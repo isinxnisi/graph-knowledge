@@ -3,6 +3,7 @@ import { randomBytes, randomUUID } from "node:crypto";
 
 // Disposable dedicated PostgreSQL. Never targets a configured product DB, and
 // cleanup only removes the uniquely named container created by this invocation.
+const browserTests = process.argv.includes("--e2e");
 const container = `gk-member-test-${randomUUID()}`;
 const password = randomBytes(24).toString("hex");
 const env: NodeJS.ProcessEnv = { ...process.env, NODE_ENV: "test", GRAPH_DATASET: "demo", MEMBER_STORAGE_ENABLED: "1", MEMBER_FIXTURE_ENABLED: "1",
@@ -28,8 +29,10 @@ try {
     await new Promise(resolve => setTimeout(resolve, 500));
   }
   if (!ready) throw new Error("Dedicated member PostgreSQL did not become ready");
-  child = spawn("node", ["node_modules/vitest/vitest.mjs", "run", "tests/member.integration.test.ts", "tests/member-cold.integration.test.ts", "--maxWorkers=1", "--no-file-parallelism"], { env, stdio: "inherit" });
-  const timer = setTimeout(() => child?.kill("SIGTERM"), 180_000);
+  child = spawn("node", browserTests
+    ? ["--import", "tsx", "scripts/test-member-browser.ts"]
+    : ["node_modules/vitest/vitest.mjs", "run", "tests/member.integration.test.ts", "tests/member-cold.integration.test.ts", "--maxWorkers=1", "--no-file-parallelism"], { env, stdio: "inherit" });
+  const timer = setTimeout(() => child?.kill("SIGTERM"), browserTests ? 600_000 : 180_000);
   const code = await new Promise<number>((resolve, reject) => { child!.once("error", reject); child!.once("exit", code => resolve(code ?? 1)); });
   clearTimeout(timer);
   process.exitCode = code;

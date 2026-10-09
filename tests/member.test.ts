@@ -5,6 +5,7 @@ import { memberCreateSchema } from "../lib/domain/member-capsule";
 import { memberHandle, memberInput } from "../lib/server/member/http";
 
 vi.mock("server-only", () => ({}));
+import { GET as status } from "../app/api/member/status/route";
 import { GET } from "../app/api/member/capsules/route";
 
 const fixtureEnv = (): NodeJS.ProcessEnv => ({ NODE_ENV: "test", MEMBER_STORAGE_ENABLED: "1", MEMBER_FIXTURE_ENABLED: "1", MEMBER_AUTH_PROVIDER: "fixture",
@@ -18,6 +19,14 @@ describe("会員保存の境界", () => {
     const response = await GET(new Request("http://localhost/api/member/capsules"));
     expect(response.status).toBe(503);
     expect(await response.json()).toEqual({ error: { code: "MEMBER_UNAVAILABLE" } });
+  });
+  it("公開capabilityはproviderだけを返し、無効時はno-storeの503", async () => {
+    for (const [key, value] of Object.entries(fixtureEnv())) vi.stubEnv(key, value!);
+    const response = await status();
+    expect(await response.json()).toEqual({ provider: "fixture" });
+    expect(response.headers.get("cache-control")).toBe("private, no-store");
+    vi.stubEnv("MEMBER_STORAGE_ENABLED", "0");
+    expect((await status()).status).toBe(503);
   });
   it("fixtureを本番・外部origin・別DB・別cookie namespaceで起動できない", () => {
     expect(memberConfig(fixtureEnv())?.provider.kind).toBe("fixture");

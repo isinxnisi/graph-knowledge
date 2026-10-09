@@ -1,6 +1,6 @@
 # 現行技術設計
 
-更新日: 2026-10-09 / 状態: 初期Vertical Sliceと探索の開閉・Node再クリックまで実装済み。既存predicateと限定制作Roleによる条件付き探索を追加。v2 Role Claim 5件を人間受入後に投入・検証済み。関係概要・明示起点切替・直前一件復帰、人物・作品・組織の統一検索入口も実装。科学・研究機関pilot v1を別環境へ投入・観察済み。Phase 14では科学v2と組織立場のtyped限定を追加し、制作Roleと独立した語彙を保って条件・比較処理を共有。Phase 15の特定Event参加（第三のtyped限定）を実装。実資料E01/E03と特定開催回・開催期間を人間受入後に生成・専用DBへ投入・観察済み。Phase 20で三relation facetを条件editorへ接続し、具体条件を使う既存取得・復帰を維持。Phase 21でGraphの限定概要・中立的な肯否と、関係全体から独立主張／根拠へ降りる詳細を整合。Phase 22でGraphラベルを短い関係見出しと構造化済みの具体語優先へ変更。汎用taxonomy・プリセットは未実装。会員Capsule保存は認証・所有者付きAPIまで実装し、UI接続は未了。[文書の入口](README.md)に現役設計とフェーズ別履歴をまとめる。
+更新日: 2026-10-09 / 状態: 初期Vertical Sliceと探索の開閉・Node再クリックまで実装済み。既存predicateと限定制作Roleによる条件付き探索を追加。v2 Role Claim 5件を人間受入後に投入・検証済み。関係概要・明示起点切替・直前一件復帰、人物・作品・組織の統一検索入口も実装。科学・研究機関pilot v1を別環境へ投入・観察済み。Phase 14では科学v2と組織立場のtyped限定を追加し、制作Roleと独立した語彙を保って条件・比較処理を共有。Phase 15の特定Event参加（第三のtyped限定）を実装。実資料E01/E03と特定開催回・開催期間を人間受入後に生成・専用DBへ投入・観察済み。Phase 20で三relation facetを条件editorへ接続し、具体条件を使う既存取得・復帰を維持。Phase 21でGraphの限定概要・中立的な肯否と、関係全体から独立主張／根拠へ降りる詳細を整合。Phase 22でGraphラベルを短い関係見出しと構造化済みの具体語優先へ変更。汎用taxonomy・プリセットは未実装。会員Capsule保存は認証・所有者付きAPIと明示保存・再閲覧UIを接続。実Googleと設定UIは未了。[文書の入口](README.md)に現役設計とフェーズ別履歴をまとめる。
 
 ## 前提と設計の位置づけ
 
@@ -696,10 +696,10 @@ Phase 22後の局所視覚調整：構造化済み具体語を持つRelationだ�
 
 Native History APIと`useSearchParams`で既存Explorerを保持し、閲覧中は近傍を取得しない。戻る／進むで閲覧対象を辿り、閉鎖は現在履歴の閲覧queryだけを除去する。明示探索でだけ条件なしの起点切替と既存一件復帰を使う。reloadでは背景を空のExplorerにし、過去の探索の復元と区別する。入口全体はnoindex／nofollow。DB・API・凍結dataset・保存形式・認可は不変。
 
-## 会員Capsule保存：サーバー側チェックポイント（2026-10-09）
+## 会員Capsule保存：認証と再閲覧UI（2026-10-09）
 
 [採用契約](design/MEMBER_CAPSULES.md)。Better Auth 1.7.7とPostgreSQLを運営・所有者付き保存へ追加した。環境で明示有効化し、未設定でも既存KGは起動できる。UserとKG Personは分離。DB session／activeとownerをprivate操作ごとに確認し、cookie cacheを使わない。account linking無効、token破棄、Origin検査、no-store応答。開発OIDCはproduction・別origin・別DBで拒否する。
 
-会員Capsuleは既存KG参照と利用者の説明だけ。ローカルのID・版・ownerを取り込まずserverが割り当てる。request IDの冪等性と件数をUser行lockで確認し、更新・削除は期待revisionをSQL条件へ含める。非所有者／不存在404、競合409、運営DB不通503。独立PGへの追加migrationだけで、知識DB・凍結dataset・ブラウザ保存を移行しない。実在参照の再解決は次のUI接続へ残す。
+会員Capsuleは既存KG参照と利用者の説明だけ。ローカルのID・版・ownerを取り込まずserverが割り当てる。request IDの冪等性と件数をUser行lockで確認し、更新・削除は期待revisionをSQL条件へ含める。非所有者／不存在404、競合409、運営DB不通503。独立PGへの追加migrationだけで、知識DB・凍結dataset・ブラウザ保存を移行しない。既存Capsule Readerを使い、現在KGへ再解決し、未解決・取得失敗を保持して示す。
 
-実DB統合検証は可能だが、会員入口・明示保存・一覧／再閲覧の画面は未実装。保存／再閲覧の製品体験の完成、実Google接続、公開共有・discussionの承認を意味しない。既存のサーバー保存未実装という記述は初期／ローカル機能の範囲であり、今回の進捗は本節を優先する。
+`/member` の登録／ログイン・表示名／locale・明示保存・一覧／再閲覧・確認削除・ログアウト／全端末ログアウトを接続した。Explorerからは別タブで開き、元の探索を維持する。UIの期待利用者headerをsessionと照合し、タブの復帰時はprivate内容を再認可する。再送キーは同じタブのsessionStorageに保持し、会員内容自体は永続cacheに置かない。会員編集・プロフィール変更UI、実Google接続、公開共有・discussionは未実装。既存のサーバー保存未実装という記述は初期／ローカル機能の範囲であり、今回の進捗は本節を優先する。

@@ -23,8 +23,15 @@ export async function startMemberOidc() {
       if (url.pathname === "/jwks") return json({ keys: [key] });
       if (url.pathname === "/authorize") {
         const sub = url.searchParams.get("fixture_identity") ?? "";
-        if (!identities[sub] || url.searchParams.get("client_id") !== "graph-member-fixture" || url.searchParams.get("redirect_uri") !== redirectURI || url.searchParams.get("response_type") !== "code"
+        if (url.searchParams.get("client_id") !== "graph-member-fixture" || url.searchParams.get("redirect_uri") !== redirectURI || url.searchParams.get("response_type") !== "code"
           || url.searchParams.get("code_challenge_method") !== "S256" || !url.searchParams.get("nonce") || !url.searchParams.get("state") || !url.searchParams.get("code_challenge")) return json({ error: "invalid_request" }, 400);
+        if (!sub) {
+          const escape = (value: string) => value.replaceAll("&", "&amp;").replaceAll('"', "&quot;").replaceAll("<", "&lt;");
+          const links = ["alice", "bob"].map(id => { const target = new URL(url); target.searchParams.set("fixture_identity", id); return `<p><a href="${escape(target.href)}">${identities[id].name}</a></p>`; });
+          response.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store" });
+          return response.end(`<!doctype html><html lang="ja"><title>検証用OIDC</title><h1>検証専用の本人確認</h1>${links.join("")}</html>`);
+        }
+        if (!identities[sub]) return json({ error: "invalid_request" }, 400);
         const code = randomUUID();
         codes.set(code, { sub, nonce: url.searchParams.get("nonce")!, challenge: url.searchParams.get("code_challenge")!, expires: Date.now() + 60_000, mode: url.searchParams.get("fixture_mode") ?? "valid" });
         const redirect = new URL(redirectURI);

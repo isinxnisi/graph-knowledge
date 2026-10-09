@@ -10,6 +10,8 @@ import { displayRelations, entityLabel } from "../lib/client/graph-presentation"
 import { useDialogBackdrop } from "../lib/client/use-dialog-backdrop";
 import { contributionLabels } from "../lib/i18n/contribution";
 import { eventParticipationLabels } from "../lib/i18n/event-participation";
+import { readingHref } from "../lib/client/reading-reference";
+import { memberLabels } from "../lib/i18n/member";
 import { capsuleLabels } from "../lib/i18n/capsules";
 import { ClaimCard } from "./ClaimDetails";
 import GraphCanvas from "./GraphCanvas";
@@ -26,7 +28,7 @@ function ClaimCaption({ claim, nodes }: { claim: ClaimSummary; nodes: Record<str
     <small className={styles.muted}>ID: {claim.id}</small></>;
 }
 
-function CapsuleReader({ capsule, onEdit }: { capsule: LocalCapsule; onEdit: (resolved: ResolvedCapsule) => void }) {
+export function CapsuleReader({ capsule, onEdit, explorationLinks = false }: { capsule: LocalCapsule; onEdit?: (resolved: ResolvedCapsule) => void; explorationLinks?: boolean }) {
   const text = capsuleLabels();
   const [resolved, setResolved] = useState<ResolvedCapsule | null>(null);
   const [failed, setFailed] = useState(false);
@@ -53,7 +55,7 @@ function CapsuleReader({ capsule, onEdit }: { capsule: LocalCapsule; onEdit: (re
   }
   return <section aria-label={text.content}>
     <h3 tabIndex={-1} data-capsule-focus>{capsule.title}</h3><p className={styles.muted}>{text.version(capsule.revision)} · {new Date(capsule.updatedAt ?? capsule.createdAt).toLocaleString("ja-JP")}</p>
-    <button disabled={!resolved && !failed} onClick={() => onEdit(resolved ?? { entities: {}, claims: {}, issues: [] })}>{text.edit}</button>
+    {onEdit && <button disabled={!resolved && !failed} onClick={() => onEdit(resolved ?? { entities: {}, claims: {}, issues: [] })}>{text.edit}</button>}
     <h4>{text.note}</h4><p className={css.note}>{capsule.note || text.noNote}</p><p className={styles.muted}>{text.noteHelp}</p>
     <p>{text.current}</p>
     {!resolved && !failed && <p role="status">{text.reading}</p>}
@@ -70,7 +72,8 @@ function CapsuleReader({ capsule, onEdit }: { capsule: LocalCapsule; onEdit: (re
       <div ref={details} tabIndex={-1} className={css.details}>
         {selectedEntity && <><h4>{selectedEntity.name}</h4><p>{KIND_LABELS[selectedEntity.kind]}</p><p>{selectedEntity.description}</p><p>{selectedEntity.aliases.join(" / ")}</p>
           {selectedEntity.event && <><dl className={styles.claimFacts}><dt>{eventParticipationLabels().eventPeriod}</dt><dd>{formatPeriod(selectedEntity.event.period)}</dd></dl><p>{eventParticipationLabels().periodHelp}</p></>}
-          <code>{selectedEntity.id}</code></>}
+          <code>{selectedEntity.id}</code>
+          {explorationLinks && <p><a href={readingHref({ kind: "entity", dataset: capsule.dataset, id: selectedEntity.id })} target="_blank" rel="noopener noreferrer">{memberLabels().exploreEntity}</a></p>}</>}
         {!claimIds.length && <p className={styles.muted}>{text.chooseClaim}</p>}
         {claimIds.map(id => resolved.claims[id] && <ClaimCard key={id} idPrefix="capsule-" title={text.selectedClaim} claim={resolved.claims[id]} nodes={resolved.entities} />)}
       </div>
@@ -160,6 +163,7 @@ export default function CapsuleDialog({ dataset, graph, onClose }: { dataset: Da
   return <dialog ref={dialog} className={`${styles.conditionDialog} ${css.dialog}`} aria-labelledby="capsule-title" onCancel={event => { event.preventDefault(); exit("close"); }} {...backdrop}>
     <div className={css.title}><h2 id="capsule-title">{text.title}</h2><button onClick={() => exit("close")}>{text.close}</button></div>
     <p>{text.help}</p><p className={styles.muted}>{text.local}</p>
+    <p><a href="/member" target="_blank" rel="noopener noreferrer">{memberLabels().launch}</a></p>
     {error && <p role="alert" className={styles.error}>{error}</p>}{message && <p role="status">{message}</p>}
     {!ready && <button onClick={reload}>{text.reload}</button>}
     {leaving ? <section role="alert"><p>{text.draftExit}</p><button onClick={() => exit(leaving, true)}>{text.discard}</button><button data-capsule-focus onClick={() => setLeaving(null)}>{editing ? text.continueEdit : text.continue}</button></section> : <>
@@ -185,6 +189,7 @@ export default function CapsuleDialog({ dataset, graph, onClose }: { dataset: Da
         </form>
       </> : selected ? <>
         <button onClick={() => { setSelected(null); setMessage(null); }}>{text.library}</button>
+        <p><a href={`/member?import=${selected.id}`} target="_blank" rel="noopener noreferrer">{memberLabels().importLaunch}</a></p>
         <CapsuleReader key={`${selected.id}:${selected.revision}`} capsule={selected} onEdit={resolved => {
           setEditing(selected); setCandidates(capsuleEditCandidates(selected, resolved, visible)); setTitle(selected.title); setNote(selected.note); setEntityIds(selected.entityIds); setClaimIds(selected.claimIds); setMode("create"); setMessage(null); setError(null);
         }} />
