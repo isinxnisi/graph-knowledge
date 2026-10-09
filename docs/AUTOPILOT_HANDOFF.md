@@ -1,22 +1,24 @@
 # 自動開発チェックポイント
-- 状態：完了（対象・独立Claimの直接閲覧URLの初回。公開運用・人間受入とは別）
-- 目的：気になる対象と根拠をURLから再訪し、確認した対象から関係の探索へ進めるようにする。
-- Starting HEADの最小Capsuleは完了済み。Capsule編集・会員保存・直接閲覧を比較し、保存とは独立した根拠への入口を今回優先した。
-- Entity詳細／独立Claimカードから `/?read=entity|claim&dataset=...&id=...` を開く。URL欄とコピー／失敗時の手動選択を提供する。
-- dataset・種別・UUID v4を必須検査。重複・不完全・未知値・別datasetでは取得しない。環境のdatasetを自動切替しない。
-- URLは現在のpublished KGへの参照だけ。内容版・探索状態・Capsule・私的説明を持たず、閲覧範囲も変えない。
-- 説明・肯否・期間・三用途の限定・Citation／Sourceは既存詳細を再利用。主張は一件だけ読み、relatedClaimIdsを自動取得しない。
-- Claimを先に表示し、最大2端点を並行取得。失敗端点のIDとリンクを残し、その端点だけ再試行する。根拠は消さない。
-- 応答schema／要求IDを検査。404と通信／不正応答を区別し、既存15秒上限・閉鎖／切替abort・遅着排除を使う。
-- Native History APIとuseSearchParamsでExplorerを維持。閲覧だけでは枝・条件・選択・cursor・座標・pan/zoom・近傍取得を変えない。
-- ブラウザ履歴で閲覧対象を往復。閉じる／Escapeは現在履歴の閲覧queryを除去し、元の探索へ戻る。過去の閲覧履歴は残る。
-- 初回アクセス／reloadの背景は空のExplorer。端点取得後の明示探索でだけ条件なしswitchRootを実行し、既存の直前一件復帰を使う。
-- 採用契約：docs/design/DIRECT_READING_LINKS.md。入口全体をnoindex／nofollowとし、検索掲載・公開運用は開始しない。
-- 通常テスト423件成功（新規31件を含む）。lint・最終変更ファイルESLint・型検査込み本番build・差分検査成功。
-- 本番E2Eは新規4、既存条件復帰2、Capsule3、複数途中保存2、Claim端点4の計15ケース成功（既存API応答fixture）。
-- 開発モードでも新規E2E4件成功。検証は既存ブラウザ共有ライブラリを指定。本番／開発の検証server3220は終了。
-- 390/1440pxで閲覧URL→出典→端点→明示探索→直前復帰、履歴、直接URL／reload、失効／通信失敗から再試行を確認。
-- 両幅のEntity／Claim画面を目視し、横はみ出しなし。Graphの枝・座標・pan/zoom保持、戻る時のフォーカスもE2Eで確認。
-- 実DB・実データ利用評価・人間受入は未実施。DB／API／凍結dataset／既存保存形式は不変。外部送信・公開・課金・実credential変更なし。
-- 次の第一候補は会員Capsule保存。main側ACCOUNT_AND_OWNERSHIP_DESIGN.mdを読み、専用PostgreSQL・開発OIDC fixture・2所有者のprivate保存経路へ進む案をCapsule編集と比較する。
-- Capsuleからの閲覧リンク・比較専用閲覧・公開向けSSR／OGは未実装だが今回の完了条件外。外部判断待ちなし。
+- 状態：完了（ブラウザ内Capsuleの説明・構成編集の初回。会員保存・人間受入とは別）
+- 目的：調査の追記や訂正のたびに作り直さず、同じCapsuleを育てて根拠へ戻れるようにする。
+- Starting HEADの直接閲覧と最小Capsuleは完了済み。会員保存・Capsule編集・閲覧リンク拡張を比較した。
+- main側ACCOUNT_AND_OWNERSHIP_DESIGN.mdを参照。今回は再作成・旧内容削除が必要な具体的障害を優先。会員保存の前提として編集の完全版を求めない。
+- 閲覧→編集→題名・説明・Entity／独立Claimの追加／削除→保存→次版閲覧→出典→探索へ戻る経路を追加。
+- 候補は保存済み参照とモーダル開始時の探索Graph。追加は明示選択。既存対象は初期選択を保ち、主張を外しても対象を自動削除しない。
+- 保存済み参照は現在データを再解決。失敗・404・端点不一致をGraphのcacheで補完しない。未解決参照はUUIDを示して保持する。
+- 未解決Claimを選択する間は元のEntity全件を保持し、端点を推論しない。主張を明示的に外した後は対象も外せる。
+- 同ID／dataset／作成日時／説明言語を保ち、保存成功時だけrevisionを1進めてupdatedAtを付ける。過去版の履歴保存・復元は未実装。
+- collection v1は無書込で読み、書込時に全件を維持してv2へ移す。旧アプリはv2を拒否する。rollback時は保存領域JSONを保全する。
+- 編集・削除前に開始時のレコード全体を照合。他タブの更新／削除を検出し、入力を保持して上書きを拒否。storageイベントにも追従。
+- 10件満杯でも編集可能。他のCapsuleを保持し、無変更では版を作らない。取消・Escape・一覧へ戻る時は未保存差分だけ破棄確認。
+- localStorage完全同時writeの後勝ちという既存限界は残る。サーバー認可・原子的な競合制御・版固定共有の代用ではない。
+- 採用契約はdocs/design/LOCAL_CAPSULES.md。ARCHITECTURE／PROJECT_CONTEXT／READMEも現状へ整合。
+- 通常テスト442件成功（追加19件、maxWorkers=2）。lint・最終変更ファイルESLint・型検査込み本番build・最終tsc・差分検査成功。
+- 本番E2E15件・新規編集の開発E2E4件成功：新規編集4、既存Capsule3、条件復帰2、複数途中保存2、直接閲覧4。既存API応答fixtureで検証。検証server3220は終了。
+- 390/1440pxで追加・削除→内容版2/3→reload→Source、元Graphの枝・座標・pan/zoom・フォーカス保持を確認。両幅の画面を目視し横はみ出しなし。
+- 実際の二つのタブによる更新／削除競合、参照404／通信失敗中の編集と回復後の出典再閲覧をE2Eで確認。
+- 初回の並列テストは2件が時間切れ、並列数2で全件成功。新E2Eの初期値付きtextarea検索をrole指定へ修正。
+- 既存Capsule E2Eの開発StrictModeでの要求回数assertは失敗、本番では成功。製品の取得・abort契約は変更していない。
+- 実DB・実データ利用評価・人間受入は未実施。KG／API／凍結dataset／既存探索保存形式は不変。公開・外部送信・課金・credential変更なし。
+- 次候補は会員Capsule保存。専用PostgreSQL・Better Auth・開発OIDC fixtureで2所有者のprivate保存縦経路へ進む。今回の編集を磨き続ける前提にはしない。
+- 外部判断待ちなし。実Google接続のcredential・公開運用は将来の該当段階だけに限定して人間判断を残す。

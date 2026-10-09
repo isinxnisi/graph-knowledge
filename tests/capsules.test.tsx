@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { act, cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
-import { CAPSULE_LIMITS, CapsuleError, capsuleGraph, capsuleSchema, capsulesKey, createCapsule, readCapsules, resolveCapsule, writeCapsule, type LocalCapsule } from "../lib/client/local-capsules";
+import { CAPSULE_LIMITS, CapsuleError, capsuleContentChanged, capsuleEditCandidates, reviseCapsule, capsuleGraph, capsuleSchema, capsulesKey, createCapsule, readCapsules, resolveCapsule, writeCapsule, type LocalCapsule } from "../lib/client/local-capsules";
 import { contentPositions } from "../lib/client/graph-layout";
 import { displayRelations } from "../lib/client/graph-presentation";
 import { emptyGraph } from "../lib/client/graph-state";
@@ -54,7 +54,7 @@ describe("Capsuleの独立した構成と永続化", () => {
   ])("不正・未対応の構成と上限を拒否 (%#)", overrides => {
     expect(capsuleSchema.safeParse({ ...capsule(), ...overrides }).success).toBe(false);
   });
-  it.each(["not JSON", JSON.stringify({ format: "local-capsules", version: 2, capsules: [] }), JSON.stringify({ format: "local-capsules", version: 1, capsules: [capsule({ dataset: "pilot-event-v1" })] })])("破損・異datasetを上書きしない (%#)", raw => {
+  it.each(["not JSON", JSON.stringify({ format: "local-capsules", version: 3, capsules: [] }), JSON.stringify({ format: "local-capsules", version: 1, capsules: [capsule({ dataset: "pilot-event-v1" })] })])("破損・異datasetを上書きしない (%#)", raw => {
     localStorage.setItem(capsulesKey("demo"), raw);
     expect(() => writeCapsule(localStorage, "demo", { add: capsule() })).toThrow(new CapsuleError("invalid"));
     expect(localStorage.getItem(capsulesKey("demo"))).toBe(raw);
@@ -222,5 +222,159 @@ describe("作成・再閲覧の導線", () => {
     expect(signal.aborted).toBe(true);
     await act(async () => release(examples.claim as ClaimResponse));
     expect(screen.queryByText("Capsule Graph")).toBeNull();
+  });
+});
+
+describe("Capsuleの編集と内容版", () => {
+  it("旧collectionを無書込で読み、編集時だけ次版へ移してID・作成日時を保持する", () => {
+    const original = capsule();
+    const raw = JSON.stringify({ format: "local-capsules", version: 1, capsules: [original] });
+    localStorage.setItem(capsulesKey("demo"), raw);
+    expect(readCapsules(localStorage, "demo")).toEqual([original]);
+    expect(localStorage.getItem(capsulesKey("demo"))).toBe(raw);
+    const revised = reviseCapsule(original, "訂正した題名", "訂正した説明", endpoints, [claim.id], graph);
+    expect(revised).toMatchObject({ id: original.id, createdAt: original.createdAt, dataset: original.dataset, revision: 2, title: "訂正した題名", note: "訂正した説明", entityIds: endpoints });
+    expect(revised.updatedAt).toBeDefined();
+    writeCapsule(localStorage, "demo", { replace: revised, expected: original });
+    expect(readCapsules(localStorage, "demo")).toEqual([revised]);
+    expect(JSON.parse(localStorage.getItem(capsulesKey("demo"))!).version).toBe(2);
+    const third = reviseCapsule(revised, revised.title, "追記", endpoints, [claim.id], graph);
+    writeCapsule(localStorage, "demo", { replace: third, expected: revised });
+    expect(readCapsules(localStorage, "demo")[0].revision).toBe(3);
+  });
+  it("上限10件でも編集でき、編集中に追加された他のCapsuleを保つ", () => {
+    const original = capsule(); writeCapsule(localStorage, "demo", { add: original });
+    for (let i = 1; i < CAPSULE_LIMITS.count; i++) writeCapsule(localStorage, "demo", { add: capsule() });
+    const others = readCapsules(localStorage, "demo").filter(item => item.id !== original.id);
+    const revised = reviseCapsule(original, "変更", original.note, original.entityIds, original.claimIds, graph);
+    const result = writeCapsule(localStorage, "demo", { replace: revised, expected: original });
+    expect(result).toHaveLength(10); expect(result.filter(item => item.id !== original.id)).toEqual(others);
+  });
+  it("編集開始後の更新・削除に競合し、古い編集や削除で上書きしない", () => {
+    const original = capsule(); writeCapsule(localStorage, "demo", { add: original });
+    const revised = reviseCapsule(original, "別タブ", original.note, original.entityIds, original.claimIds, graph);
+    writeCapsule(localStorage, "demo", { replace: revised, expected: original });
+    expect(() => writeCapsule(localStorage, "demo", { replace: { ...revised, note: "古い編集" }, expected: original })).toThrow(new CapsuleError("conflict"));
+    expect(() => writeCapsule(localStorage, "demo", { remove: original })).toThrow(new CapsuleError("conflict"));
+    expect(readCapsules(localStorage, "demo")).toEqual([revised]);
+    writeCapsule(localStorage, "demo", { remove: revised });
+    expect(() => writeCapsule(localStorage, "demo", { replace: revised, expected: original })).toThrow(new CapsuleError("conflict"));
+    expect(readCapsules(localStorage, "demo")).toEqual([]);
+  });
+  it.each([
+    { id: crypto.randomUUID() }, { dataset: "pilot-event-v1" }, { createdAt: "2026-10-10T00:00:00Z" }, { revision: 4 }, { revision: 1 }, { updatedAt: undefined },
+  ])("ID・dataset・作成日時・連続内容版の不正変更を拒否する (%#)", change => {
+    const original = capsule(); writeCapsule(localStorage, "demo", { add: original });
+    const revised = reviseCapsule(original, "更新", original.note, original.entityIds, original.claimIds, graph);
+    expect(() => writeCapsule(localStorage, "demo", { replace: { ...revised, ...change } as LocalCapsule, expected: original })).toThrow(new CapsuleError("invalid"));
+    expect(readCapsules(localStorage, "demo")).toEqual([original]);
+  });
+  it("内容が変わらなければ版を進めず、選択順を意味の差にしない", () => {
+    const original = capsule();
+    expect(capsuleContentChanged(original, ` ${original.title} `, original.note, [...original.entityIds].reverse(), original.claimIds)).toBe(false);
+    expect(reviseCapsule(original, original.title, original.note, original.entityIds, original.claimIds, graph)).toBe(original);
+  });
+  it("未解決の保存参照を保持し、未知の新規参照・端点喪失を拒否する", () => {
+    const original = capsule();
+    expect(reviseCapsule(original, "説明訂正", original.note, original.entityIds, original.claimIds, emptyGraph()).claimIds).toEqual(original.claimIds);
+    expect(() => reviseCapsule(original, "訂正", "", endpoints, original.claimIds, emptyGraph())).toThrow(CapsuleError);
+    expect(() => reviseCapsule(original, "訂正", "", original.entityIds, [crypto.randomUUID()], emptyGraph())).toThrow(CapsuleError);
+    expect(() => reviseCapsule(original, "訂正", "", [...original.entityIds, crypto.randomUUID()], [], emptyGraph())).toThrow(CapsuleError);
+    expect(() => reviseCapsule(original, "訂正", "", [claim.subjectId], [claim.id], graph)).toThrow(CapsuleError);
+    expect(reviseCapsule(original, "主張を除いたメモ", "", [isolated.id], [], emptyGraph()).entityIds).toEqual([isolated.id]);
+  });
+  it("未解決の保存参照を探索cacheで埋めず、追加候補と再解決済み構成だけを使う", () => {
+    const original = capsule({ entityIds: endpoints });
+    const choices = capsuleEditCandidates(original, { entities: {}, claims: {}, issues: [] }, graph);
+    expect(choices.claims[claim.id]).toBeUndefined();
+    expect(choices.nodes[claim.subjectId]).toBeUndefined();
+    expect(choices.nodes[isolated.id]).toEqual(isolated);
+    const resolved = { entities: { [claim.subjectId]: detail(claim.subjectId).entity }, claims: { [claim.id]: claim }, issues: [] };
+    const filled = capsuleEditCandidates(original, resolved, graph);
+    expect(filled.nodes[claim.subjectId]).toEqual(resolved.entities[claim.subjectId]); expect(filled.claims[claim.id]).toEqual(claim);
+  });
+  it("書込失敗では元の内容を残す", () => {
+    const original = capsule(); writeCapsule(localStorage, "demo", { add: original });
+    const revised = reviseCapsule(original, "訂正", original.note, original.entityIds, original.claimIds, graph);
+    const storage = { getItem: (key: string) => localStorage.getItem(key), setItem: () => { throw new Error(); } };
+    expect(() => writeCapsule(storage, "demo", { replace: revised, expected: original })).toThrow(new CapsuleError("storage"));
+    expect(readCapsules(localStorage, "demo")).toEqual([original]);
+  });
+  it("旧envelopeに新しい版を混ぜず、未知版・不正な内容版を拒否する", () => {
+    const original = capsule();
+    const revised = reviseCapsule(original, "訂正", original.note, original.entityIds, original.claimIds, graph);
+    localStorage.setItem(capsulesKey("demo"), JSON.stringify({ format: "local-capsules", version: 1, capsules: [revised] }));
+    expect(() => readCapsules(localStorage, "demo")).toThrow(CapsuleError);
+    for (const revision of [0, -1, 1.5, Number.MAX_SAFE_INTEGER + 1]) expect(capsuleSchema.safeParse({ ...revised, revision }).success).toBe(false);
+  });
+});
+
+async function openEditor(value: LocalCapsule, visible = graph) {
+  writeCapsule(localStorage, "demo", { add: value });
+  render(<CapsuleDialog dataset="demo" graph={visible} onClose={vi.fn()} />);
+  fireEvent.click(screen.getByRole("button", { name: "読む" }));
+  await waitFor(() => expect((screen.getByRole("button", { name: "このCapsuleを編集" }) as HTMLButtonElement).disabled).toBe(false));
+  fireEvent.click(screen.getByRole("button", { name: "このCapsuleを編集" }));
+}
+
+describe("Capsule編集の操作", () => {
+  it("保存済み内容を初期選択し、題名・説明・構成を次版へ更新して出典を読む", async () => {
+    const original = capsule({ entityIds: endpoints }); await openEditor(original);
+    expect((screen.getByLabelText("Capsuleの題名") as HTMLInputElement).value).toBe(original.title);
+    expect((screen.getByRole("button", { name: "変更を保存" }) as HTMLButtonElement).disabled).toBe(true);
+    fireEvent.change(screen.getByLabelText("Capsuleの題名"), { target: { value: "追記した文脈" } });
+    fireEvent.change(screen.getByLabelText("自分の説明"), { target: { value: "新しい説明" } });
+    fireEvent.click(within(screen.getByRole("group", { name: "含める対象" })).getByRole("checkbox", { name: new RegExp(isolated.name) }));
+    fireEvent.click(screen.getByRole("button", { name: "変更を保存" }));
+    await screen.findByText("Capsule Graph");
+    const saved = readCapsules(localStorage, "demo")[0];
+    expect(saved).toMatchObject({ id: original.id, revision: 2, title: "追記した文脈", note: "新しい説明" });
+    expect(saved.entityIds).toContain(isolated.id);
+    fireEvent.click(screen.getByRole("button", { name: /青葉ハル → アシスタントだった → 黒川レン/ }));
+    await screen.findByText("青葉ハルへのインタビュー");
+  });
+  it("確認できない主張・対象を説明の編集で失わず、明示的に外せる", async () => {
+    vi.mocked(fetchClaim).mockRejectedValue(new ClientApiError("missing", 404));
+    vi.mocked(fetchEntity).mockRejectedValue(new ClientApiError("failed", 503));
+    const original = capsule(); await openEditor(original, emptyGraph());
+    const entityGroup = screen.getByRole("group", { name: "含める対象" });
+    expect(within(entityGroup).getAllByRole("checkbox").every(box => (box as HTMLInputElement).checked && (box as HTMLInputElement).disabled)).toBe(true);
+    fireEvent.change(screen.getByLabelText("自分の説明"), { target: { value: "参照失効を確認した" } });
+    fireEvent.click(screen.getByRole("button", { name: "変更を保存" }));
+    await screen.findByText("Capsule Graph");
+    expect(readCapsules(localStorage, "demo")[0]).toMatchObject({ revision: 2, entityIds: original.entityIds, claimIds: original.claimIds });
+    fireEvent.click(screen.getByRole("button", { name: "このCapsuleを編集" }));
+    fireEvent.click(within(screen.getByRole("group", { name: "含める主張" })).getByRole("checkbox"));
+    const boxes = within(screen.getByRole("group", { name: "含める対象" })).getAllByRole("checkbox");
+    expect(boxes.every(box => !(box as HTMLInputElement).disabled)).toBe(true);
+    fireEvent.click(boxes[0]); fireEvent.click(boxes[1]);
+    fireEvent.click(screen.getByRole("button", { name: "変更を保存" }));
+    await screen.findByText("Capsule Graph");
+    expect(readCapsules(localStorage, "demo")[0]).toMatchObject({ revision: 3, entityIds: [isolated.id], claimIds: [] });
+  });
+  it("変更の取消を確認し、編集中の入力を残してから元の版へ戻る", async () => {
+    const original = capsule(); await openEditor(original);
+    fireEvent.change(screen.getByLabelText("自分の説明"), { target: { value: "未保存の訂正" } });
+    fireEvent.click(screen.getByRole("button", { name: "編集を取り消す" }));
+    fireEvent.click(screen.getByRole("button", { name: "編集を続ける" }));
+    expect((screen.getByLabelText("自分の説明") as HTMLTextAreaElement).value).toBe("未保存の訂正");
+    fireEvent.click(screen.getByRole("button", { name: "編集を取り消す" }));
+    fireEvent.click(screen.getByRole("button", { name: "保存せず戻る" }));
+    await screen.findByText("Capsule Graph");
+    expect(readCapsules(localStorage, "demo")).toEqual([original]);
+    expect(screen.queryByText("未保存の訂正")).toBeNull();
+    expect(document.activeElement).toBe(screen.getByRole("heading", { name: original.title }));
+  });
+  it.each(["event", "save"])("別タブ更新を%sで検出し、入力と他タブの版を両方保持する", async mechanism => {
+    const original = capsule(); await openEditor(original);
+    fireEvent.change(screen.getByLabelText("自分の説明"), { target: { value: "自分の未保存入力" } });
+    const other = reviseCapsule(original, "別タブの題名", "他方の説明", original.entityIds, original.claimIds, graph);
+    writeCapsule(localStorage, "demo", { replace: other, expected: original });
+    if (mechanism === "event") act(() => { window.dispatchEvent(new StorageEvent("storage", { key: capsulesKey("demo") })); });
+    else fireEvent.click(screen.getByRole("button", { name: "変更を保存" }));
+    expect(screen.getByText(/別のタブでこのCapsuleが更新・削除されました/)).not.toBeNull();
+    expect((screen.getByLabelText("自分の説明") as HTMLTextAreaElement).value).toBe("自分の未保存入力");
+    expect((screen.getByRole("button", { name: "変更を保存" }) as HTMLButtonElement).disabled).toBe(true);
+    expect(readCapsules(localStorage, "demo")).toEqual([other]);
   });
 });
