@@ -18,3 +18,15 @@ export const discussionSchema = z.strictObject({
   posts: z.array(discussionPostSchema).max(DISCUSSION_LIMITS.posts),
 });
 export type CapsuleDiscussion = z.infer<typeof discussionSchema>;
+
+export const OWN_POSTS_PAGE_SIZE = 20;
+export const ownDiscussionPostSchema = z.strictObject({
+  id: z.uuidv4(), capsuleId: z.uuidv4(), revision: discussionRevisionSchema,
+  body: z.string().max(DISCUSSION_LIMITS.body).nullable(),
+  createdAt: z.iso.datetime(), withdrawnAt: z.iso.datetime().nullable(),
+});
+export const ownDiscussionPostsSchema = z.strictObject({
+  posts: z.array(ownDiscussionPostSchema).max(OWN_POSTS_PAGE_SIZE),
+  nextCursor: z.string().min(1).max(512).nullable(),
+});
+export type OwnDiscussionPosts = z.infer<typeof ownDiscussionPostsSchema>;

@@ -6,6 +6,7 @@ import { capsuleShareTokenSchema, sharedCapsuleSchema } from "../lib/domain/caps
 import { memberReaderCapsule } from "../lib/client/member-api";
 import { capsuleSharingLabels } from "../lib/i18n/capsule-sharing";
 import { datasetLabels } from "../lib/i18n/dataset";
+import { memberPostsLabels } from "../lib/i18n/member-posts";
 import { CapsuleReader } from "./CapsuleDialog";
 import css from "./MemberCapsules.module.css";
 import CapsuleDiscussion, { useDiscussionDraft } from "./CapsuleDiscussion";
@@ -58,6 +59,7 @@ export default function SharedCapsule({ dataset }: { dataset: DatasetMode }) {
       {reading && <><CapsuleReader key={`${reading.id}:${reading.revision}`} capsule={reading} explorationLinks noteAttribution="author" />
         <CapsuleDiscussion key={`discussion:${reading.id}:${reading.revision}`} capsuleId={reading.id} revision={reading.revision} token={location.hash.slice(1)} draftCache={discussionDraft} /></>}
       <p className={css.muted}>{text.lifecycle}</p>
+      <a href="/member#my-posts" target="_blank" rel="noopener noreferrer">{memberPostsLabels().manageLink}</a>
     </section>
   </main>;
 }

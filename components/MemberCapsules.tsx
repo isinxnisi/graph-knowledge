@@ -12,6 +12,7 @@ import { capsuleLabels } from "../lib/i18n/capsules";
 import MemberCapsuleEditor from "./MemberCapsuleEditor";
 import CapsuleShareControls from "./CapsuleShareControls";
 import CapsuleRevisionList from "./CapsuleRevisionList";
+import MemberPosts from "./MemberPosts";
 import { capsuleHistoryLabels } from "../lib/i18n/capsule-history";
 import CapsuleDiscussion, { useDiscussionDraft } from "./CapsuleDiscussion";
 import { memberDraftContent, sameMemberContent, type MemberCapsuleDraft } from "../lib/client/member-capsule-edit";
@@ -202,6 +203,7 @@ export default function MemberCapsules({ dataset, initialImport = "" }: { datase
       {error && <p role="alert">{error}</p>}{message && <p role="status">{message}</p>}
       {confirm === "logoutAll" && <div role="alert"><p>{text.logoutAllConfirm}</p><button onClick={() => logout(true)}>{text.confirmLogoutAll}</button><button onClick={() => setConfirm(null)}>{text.cancel}</button></div>}
     </section>
+    {user && <MemberPosts key={user.id} userId={user.id} onUnauthorized={() => { active.current?.abort(); setBusy(false); fail(new MemberClientError(401, "UNAUTHENTICATED")); }} />}
     {draft && user?.id !== draft.ownerId && <section className={css.card} aria-label={text.editTitle}>
       <p role="status">{text.draftLocked}</p><p>{text.draftMemory}</p>
       <a href="/member" target="_blank" rel="noopener noreferrer">{text.reauthenticate}</a>

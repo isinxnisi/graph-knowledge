@@ -40,7 +40,7 @@ test.beforeAll(async ({ request }) => {
   expect((await request.get("/", { timeout: 60_000 })).status()).toBe(200);
   // Cold route compilation belongs to setup, rather than consuming the
   // interaction budget of the first narrow-screen, multi-tab journey.
-  for (const path of ["/api/member/profile", "/api/member/capsules", "/api/member/capsules/00000000-0000-4000-8000-000000000001"]) {
+  for (const path of ["/api/member/posts", "/api/member/profile", "/api/member/capsules", "/api/member/capsules/00000000-0000-4000-8000-000000000001"]) {
     expect((await request.get(path, { timeout: 60_000 })).status()).toBe(401);
   }
   expect((await request.get("/api/auth/get-session", { timeout: 60_000 })).status()).toBe(200);
@@ -553,6 +553,70 @@ for (const width of [390, 1440]) {
     await expect(page.getByText("現在の非共有の説明", { exact: true })).toBeVisible();
     await expect(page.getByRole("button", { name: "このCapsuleを編集", exact: true })).toBeVisible();
     expect(new URL(page.url()).searchParams.has("revision")).toBe(false);
+    expect(errors).toEqual([]);
+  });
+}
+
+
+for (const width of [390, 1440]) {
+  test(`共有失効後も自分の投稿一覧から本文を撤回できる ${width}px`, async ({ page, context, browser }, testInfo) => {
+    test.setTimeout(180_000);
+    await page.setViewportSize({ width, height: 900 }); await mockKnowledge(context);
+    const errors: string[] = []; page.on("pageerror", error => errors.push(error.message));
+    await page.goto("/member"); await login(page);
+    const headers = { Origin: "http://127.0.0.1:3221" };
+    const content = { dataset: saved.dataset, title: "共有停止で読めなくなる題名", note: "一覧へ返さない作者の説明", language: saved.language, entityIds: saved.entityIds, claimIds: saved.claimIds };
+    const created = await page.request.post("/api/member/capsules", { headers, data: { requestId: crypto.randomUUID(), content } });
+    expect(created.status()).toBe(201); const { capsule } = await created.json();
+    const path = `/api/member/capsules/${capsule.id}`, thread = `/api/capsules/${capsule.id}/discussion`;
+    const { token, share } = await (await page.request.post(`${path}/share`, { headers, data: { expectedRevision: 1, expectedShareId: null } })).json();
+    expect((await page.request.patch(thread, { headers, data: { closed: false, expectedClosed: true } })).status()).toBe(200);
+    expect((await page.request.post(thread, { headers, data: { requestId: crypto.randomUUID(), revision: 1, body: "作者の会話は一覧へ出さない" } })).status()).toBe(201);
+    const other = await browser.newContext({ baseURL: "http://127.0.0.1:3221", viewport: { width, height: 900 } });
+    try {
+      await mockKnowledge(other); const reader = await other.newPage(); reader.on("pageerror", error => errors.push(error.message));
+      await reader.goto("/member"); await login(reader, "検証ユーザーB");
+      await reader.goto(`/shared#${token}`);
+      const comments = reader.getByRole("region", { name: "この版のコメント", exact: true });
+      await comments.getByRole("button", { name: "この版のコメントを見る", exact: true }).click();
+      await comments.getByRole("textbox", { name: "コメント本文", exact: true }).fill("共有停止後も自分で取り消すコメント");
+      await comments.getByRole("button", { name: "この版へ投稿する", exact: true }).click();
+      await expect(comments.getByText("共有停止後も自分で取り消すコメント", { exact: true })).toBeVisible();
+      expect((await page.request.delete(`${path}/share`, { headers, data: { expectedShareId: share.id } })).status()).toBe(200);
+      await reader.getByRole("button", { name: "リンクを再確認", exact: true }).click();
+      await expect(reader.getByText(/このリンクでは閲覧できません/)).toBeVisible();
+      await expect(reader.getByText(content.title, { exact: true })).toHaveCount(0);
+      const popup = other.waitForEvent("page");
+      await reader.getByRole("link", { name: "自分の投稿を確認・撤回（アカウント・別タブ）", exact: true }).click();
+      const account = await popup; account.on("pageerror", error => errors.push(error.message)); await account.bringToFront();
+      const posts = account.getByRole("region", { name: "自分の投稿", exact: true });
+      await posts.getByRole("button", { name: "自分の投稿を見る", exact: true }).click();
+      await expect(posts.getByText("共有停止後も自分で取り消すコメント", { exact: true })).toBeVisible();
+      await expect(posts.getByText("内容版 1 への投稿", { exact: true })).toBeVisible();
+      await expect(account.getByText(content.title, { exact: true })).toHaveCount(0);
+      await expect(account.getByText(content.note, { exact: true })).toHaveCount(0);
+      await expect(account.getByText("作者の会話は一覧へ出さない", { exact: true })).toHaveCount(0);
+      await account.screenshot({ path: testInfo.outputPath(`own-posts-${width}.png`), fullPage: true });
+      expect(await account.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+      await posts.getByRole("button", { name: "自分の投稿を撤回", exact: true }).click();
+      await posts.getByRole("button", { name: "取り消す", exact: true }).click();
+      await expect(posts.getByText("共有停止後も自分で取り消すコメント", { exact: true })).toBeVisible();
+      await posts.getByRole("button", { name: "自分の投稿を撤回", exact: true }).click();
+      await posts.getByRole("button", { name: "本文を削除して撤回する", exact: true }).click();
+      await expect(posts.getByText("この投稿は撤回済みです。", { exact: true })).toBeVisible();
+      await expect(posts.getByText("共有停止後も自分で取り消すコメント", { exact: true })).toHaveCount(0);
+      await expect(posts.getByRole("button", { name: "自分の投稿を撤回", exact: true })).toHaveCount(0);
+      await account.reload(); await posts.getByRole("button", { name: "自分の投稿を見る", exact: true }).click();
+      await expect(posts.getByText("この投稿は撤回済みです。", { exact: true })).toBeVisible();
+      const ownerRead = await page.request.get(`${thread}?revision=1`);
+      expect(ownerRead.status()).toBe(200);
+      const posted = (await ownerRead.json()).posts;
+      expect(posted.find((post: { withdrawnAt: string | null }) => post.withdrawnAt !== null)).toMatchObject({ body: null, authorName: null });
+      expect(posted.find((post: { body: string | null }) => post.body === "作者の会話は一覧へ出さない")).toBeTruthy();
+      await account.getByRole("button", { name: "ログアウト", exact: true }).click();
+      await expect(account.getByRole("region", { name: "自分の投稿", exact: true })).toHaveCount(0);
+      expect(await account.evaluate(() => Object.values(localStorage).join(" ") + Object.values(sessionStorage).join(" "))).not.toContain("共有停止後も自分で取り消すコメント");
+    } finally { await other.close(); }
     expect(errors).toEqual([]);
   });
 }

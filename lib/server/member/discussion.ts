@@ -1,12 +1,25 @@
 import { createHash, randomUUID } from "node:crypto";
 import type { Pool, PoolClient } from "pg";
+import { z } from "zod";
 import type { DatasetMode } from "../../domain/dataset";
 import { capsuleShareTokenSchema } from "../../domain/capsule-sharing";
-import { DISCUSSION_LIMITS, discussionCloseSchema, discussionCreateSchema, discussionRevisionSchema, discussionSchema, discussionWithdrawSchema } from "../../domain/capsule-discussion";
+import { DISCUSSION_LIMITS, OWN_POSTS_PAGE_SIZE, ownDiscussionPostsSchema, discussionCloseSchema, discussionCreateSchema, discussionRevisionSchema, discussionSchema, discussionWithdrawSchema } from "../../domain/capsule-discussion";
 import { assertMemberOrigin, MemberError, memberId, memberInput, memberJson } from "./http";
 
 type Viewer = { id: string; name: string };
 const digest = (value: string) => createHash("sha256").update(value).digest("hex");
+// Preserve PostgreSQL microseconds: JS Date would skip rows at page boundaries.
+const ownCursorSchema = z.strictObject({ at: z.iso.datetime({ precision: 6 }).refine(value => !value.startsWith("0000-")), id: z.uuidv4() });
+function ownCursor(request: Request) {
+  const query = new URL(request.url).searchParams;
+  if ([...query.keys()].some(key => key !== "cursor") || query.getAll("cursor").length > 1) throw new MemberError(400, "INVALID_ARGUMENT");
+  if (!query.has("cursor")) return null;
+  const raw = query.get("cursor")!;
+  try {
+    if (!/^[A-Za-z0-9_-]{1,512}$/.test(raw)) throw new Error();
+    return ownCursorSchema.parse(JSON.parse(Buffer.from(raw, "base64url").toString("utf8")));
+  } catch { throw new MemberError(400, "INVALID_ARGUMENT"); }
+}
 export function createCapsuleDiscussion(pool: Pool, dataset: DatasetMode, origin: string, authenticate: (request: Request) => Promise<Viewer>) {
   async function viewer(request: Request) {
     try { return await authenticate(request); }
@@ -46,6 +59,30 @@ export function createCapsuleDiscussion(pool: Pool, dataset: DatasetMode, origin
     return own;
   }
   return {
+    async listOwnDiscussionPosts(request: Request) {
+      const user = await authenticate(request), cursor = ownCursor(request);
+      return transaction(async client => {
+        const active = await client.query('SELECT active FROM "user" WHERE id = $1 FOR SHARE', [user.id]);
+        if (active.rows[0]?.active !== true) throw new MemberError(401, "UNAUTHENTICATED");
+        // This author-only projection deliberately has no Capsule content,
+        // owner profile, share token, or other author's post. Revocation and
+        // owner suspension do not prevent authors managing their own words.
+        const result = await client.query(`SELECT p.id, p.capsule_id, p.revision, p.body, p.created_at, p.withdrawn_at,
+          to_char(p.created_at AT TIME ZONE 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS.US"Z"') AS cursor_at
+          FROM member_capsule_post p JOIN member_capsule c ON c.id = p.capsule_id
+          WHERE p.author_user_id = $1 AND c.dataset = $2
+            AND ($3::timestamptz IS NULL OR (p.created_at, p.id) < ($3::timestamptz, $4::uuid))
+          ORDER BY p.created_at DESC, p.id DESC LIMIT $5`,
+        [user.id, dataset, cursor?.at ?? null, cursor?.id ?? null, OWN_POSTS_PAGE_SIZE + 1]);
+        const rows = result.rows.slice(0, OWN_POSTS_PAGE_SIZE), last = rows.at(-1);
+        return memberJson(ownDiscussionPostsSchema.parse({
+          posts: rows.map(row => ({ id: row.id, capsuleId: row.capsule_id, revision: Number(row.revision),
+            body: row.withdrawn_at ? null : row.body, createdAt: row.created_at.toISOString(), withdrawnAt: row.withdrawn_at?.toISOString() ?? null })),
+          nextCursor: result.rows.length > OWN_POSTS_PAGE_SIZE && last
+            ? Buffer.from(JSON.stringify({ at: last.cursor_at, id: last.id })).toString("base64url") : null,
+        }));
+      });
+    },
     async readDiscussion(request: Request, rawId: string) {
       const id = memberId(rawId), user = await viewer(request);
       const query = new URL(request.url).searchParams;

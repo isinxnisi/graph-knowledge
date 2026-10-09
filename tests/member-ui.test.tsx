@@ -82,6 +82,26 @@ describe("会員編集中のprivate表示と入力保持", () => {
   });
 });
 
+describe("本人投稿一覧からの失効通知", () => {
+  it("親の処理中の保存も取消し、遅い成功応答からprivate内容を再表示しない", async () => {
+    await edit();
+    let finish!: (response: Response) => void;
+    fetchMock.mockImplementationOnce(() => new Promise<Response>(resolve => { finish = resolve; }));
+    fireEvent.click(screen.getByRole("button", { name: "アカウントの変更を保存" }));
+    const save = fetchMock.mock.calls.find(call => call[1]?.method === "PUT")!;
+    fetchMock.mockResolvedValueOnce(Response.json({ error: { code: "UNAUTHENTICATED" } }, { status: 401 }));
+    fireEvent.click(screen.getByRole("button", { name: "自分の投稿を見る" }));
+    await screen.findByText(/ログインが失効したか/);
+    expect(save[1]?.signal?.aborted).toBe(true);
+    await act(async () => { finish(Response.json({ capsule: { ...capsule, revision: 2 } })); });
+    expect(screen.queryByText("アカウントのCapsuleを更新しました。", { exact: true })).toBeNull();
+    expect(screen.queryByLabelText("自分の説明", { exact: true })).toBeNull();
+    expect(screen.queryByTestId("member-reader")).toBeNull();
+    expect(document.body.textContent).not.toContain(capsule.content.title);
+    expect(screen.getByRole("button", { name: "アカウントと一覧を再確認" }).hasAttribute("disabled")).toBe(false);
+  });
+});
+
 describe("共有済み版の所有者再閲覧", () => {
   function historyResponses() {
     const fallback = fetchMock.getMockImplementation() as (path: string, options?: RequestInit) => Promise<Response>;

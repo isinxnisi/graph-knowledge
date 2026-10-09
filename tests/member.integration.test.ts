@@ -20,6 +20,7 @@ import * as sharing from "../app/api/member/capsules/[id]/share/route";
 import * as shared from "../app/api/shared/capsule/route";
 import * as revisions from "../app/api/member/capsules/[id]/revisions/route";
 import * as discussion from "../app/api/capsules/[id]/discussion/route";
+import * as ownPosts from "../app/api/member/posts/route";
 
 const origin = "http://127.0.0.1:3221";
 function request(path: string, cookie = "", method = "GET", body?: unknown, headers: Record<string, string> = {}) {
@@ -431,6 +432,87 @@ describe("実OIDC・PostgreSQLによるprivate Capsule", () => {
       const ownPost = (await pool.query("SELECT id FROM member_capsule_post WHERE capsule_id=$1 LIMIT 1", [capsule.id])).rows[0].id;
       expect((await discussion.DELETE(request(path, bob.cookies.value, "DELETE", { postId: ownPost }), context(capsule.id))).status).toBe(200);
       expect((await post()).status).toBe(422);
+    } finally { await pool.query("DELETE FROM member_capsule WHERE id=$1", [capsule.id]); }
+  });
+  it("共有失効・owner停止後も作者だけが投稿を一覧し、撤回できる", async () => {
+    const { pool } = memberRuntime();
+    const { capsule } = await (await create(alice.cookies.value)).json();
+    const path = `/api/capsules/${capsule.id}/discussion`, listPath = "/api/member/posts";
+    const { user: author } = await (await profile.GET(request("/", bob.cookies.value))).json();
+    const { user: owner } = await (await profile.GET(request("/", alice.cookies.value))).json();
+    const list = (cookie = bob.cookies.value, headers: Record<string, string> = {}) => ownPosts.GET(request(listPath, cookie, "GET", undefined, headers));
+    try {
+      const { token, share } = await (await sharing.POST(request("/", alice.cookies.value, "POST", { expectedRevision: 1, expectedShareId: null }), context(capsule.id))).json();
+      expect((await discussion.PATCH(request(path, alice.cookies.value, "PATCH", { closed: false, expectedClosed: true }), context(capsule.id))).status).toBe(200);
+      const post = async (cookie: string, body: string) => discussion.POST(request(path, cookie, "POST", { requestId: randomUUID(), revision: 1, body }, { "x-capsule-token": token }), context(capsule.id));
+      const posted = await post(bob.cookies.value, "失効後も管理する本人の文章");
+      expect(posted.status).toBe(201); const { postId } = await posted.json();
+      expect((await post(alice.cookies.value, "返さない他人の文章")).status).toBe(201);
+      expect((await list("")).status).toBe(401);
+      expect((await list("", { "x-capsule-token": token })).status).toBe(401);
+      expect((await list(bob.cookies.value, { "x-member-user": owner.id })).status).toBe(401);
+      expect((await sharing.DELETE(request("/", alice.cookies.value, "DELETE", { expectedShareId: share.id }), context(capsule.id))).status).toBe(200);
+      expect((await discussion.GET(request(`${path}?revision=1`, bob.cookies.value, "GET", undefined, { "x-capsule-token": token }), context(capsule.id))).status).toBe(404);
+      await pool.query('UPDATE "user" SET active=false WHERE id=$1', [owner.id]);
+      const response = await list(bob.cookies.value, { "x-member-user": author.id });
+      expect(response.status).toBe(200);
+      expect(response.headers.get("cache-control")).toContain("no-store");
+      expect(response.headers.get("vary")).toBe("Cookie, X-Member-User");
+      expect(response.headers.get("x-robots-tag")).toContain("noindex");
+      expect(response.headers.get("referrer-policy")).toBe("no-referrer");
+      const result = await response.json();
+      expect(result.posts).toHaveLength(1); expect(result.nextCursor).toBeNull();
+      expect(result.posts[0]).toMatchObject({ id: postId, capsuleId: capsule.id, revision: 1, body: "失効後も管理する本人の文章", withdrawnAt: null });
+      expect(Object.keys(result.posts[0]).sort()).toEqual(["body", "capsuleId", "createdAt", "id", "revision", "withdrawnAt"]);
+      expect(JSON.stringify(result)).not.toMatch(/返さない他人|研究のつながり|自分の説明|owner|author|email|token/);
+      const runtime = memberRuntime();
+      const other = createMemberService(runtime.config, pool, runtime.auth, "pilot-science-v1");
+      expect(await (await other.listOwnDiscussionPosts(request(listPath, bob.cookies.value))).json()).toEqual({ posts: [], nextCursor: null });
+      const withdraw = (cookie: string, headers: Record<string, string> = {}) => discussion.DELETE(request(path, cookie, "DELETE", { postId }, headers), context(capsule.id));
+      expect((await withdraw(bob.cookies.value, { origin: "https://evil.invalid" })).status).toBe(403);
+      expect((await withdraw(bob.cookies.value, { "x-member-user": owner.id })).status).toBe(401);
+      expect((await withdraw(bob.cookies.value)).status).toBe(200);
+      expect((await withdraw(bob.cookies.value)).status).toBe(200);
+      const withdrawn = (await (await list()).json()).posts[0];
+      expect(withdrawn.body).toBeNull(); expect(withdrawn.withdrawnAt).not.toBeNull();
+      await pool.query('UPDATE "user" SET active=false WHERE id=$1', [author.id]);
+      expect((await list()).status).toBe(401);
+      expect((await withdraw(bob.cookies.value)).status).toBe(401);
+      await pool.query('UPDATE "user" SET active=true WHERE id=$1', [author.id]);
+      await pool.query("DELETE FROM member_capsule WHERE id=$1", [capsule.id]);
+      expect(await (await list()).json()).toEqual({ posts: [], nextCursor: null });
+    } finally {
+      await pool.query('UPDATE "user" SET active=true WHERE id=ANY($1::uuid[])', [[owner.id, author.id]]);
+      await pool.query("DELETE FROM member_capsule WHERE id=$1", [capsule.id]);
+    }
+  });
+  it("本人投稿を時刻とIDで20件ずつ辿り、同時刻・microsecond・削除・不正cursorを扱う", async () => {
+    const { pool } = memberRuntime();
+    const { capsule } = await (await create(alice.cookies.value)).json();
+    const { user } = await (await profile.GET(request("/", bob.cookies.value))).json();
+    const list = (query = "", cookie = bob.cookies.value) => ownPosts.GET(request(`/api/member/posts${query}`, cookie));
+    try {
+      await sharing.POST(request("/", alice.cookies.value, "POST", { expectedRevision: 1, expectedShareId: null }), context(capsule.id));
+      await pool.query("INSERT INTO member_capsule_thread(capsule_id) VALUES ($1)", [capsule.id]);
+      await pool.query(`INSERT INTO member_capsule_post(id,capsule_id,revision,author_user_id,request_id,content_hash,body,created_at)
+        SELECT gen_random_uuid(),$1,1,$2,gen_random_uuid(),'test','投稿 '||n,
+          '2026-10-09T00:00:00.123456Z'::timestamptz - greatest(n-23,0)*interval '1 microsecond' FROM generate_series(1,43) n`, [capsule.id, user.id]);
+      const expected = (await pool.query("SELECT id FROM member_capsule_post WHERE capsule_id=$1 ORDER BY created_at DESC,id DESC", [capsule.id])).rows.map(row => row.id);
+      const first = await (await list()).json();
+      expect(first.posts.map((p: { id: string }) => p.id)).toEqual(expected.slice(0,20));
+      expect(first.nextCursor).not.toBeNull();
+      // Cursors are bounded filters, not capabilities. Another user sees only their own rows.
+      expect((await (await list(`?cursor=${first.nextCursor}`, alice.cookies.value)).json()).posts).toEqual([]);
+      // The cursor is self-contained, so losing its boundary post does not lose the next page.
+      await pool.query("DELETE FROM member_capsule_post WHERE id=$1", [expected[19]]);
+      const second = await (await list(`?cursor=${first.nextCursor}`)).json();
+      expect(second.posts.map((p: { id: string }) => p.id)).toEqual(expected.slice(20,40));
+      const third = await (await list(`?cursor=${second.nextCursor}`)).json();
+      expect(third.posts.map((p: { id: string }) => p.id)).toEqual(expected.slice(40));
+      expect(third.nextCursor).toBeNull();
+      for (const query of ["?cursor=", "?cursor=not-json", "?cursor=" + "a".repeat(513), `?cursor=${first.nextCursor}&cursor=${first.nextCursor}`, "?author=" + user.id, "?limit=999", "?cursor=" + Buffer.from(JSON.stringify({ at: "0000-01-01T00:00:00.000000Z", id: randomUUID() })).toString("base64url")]) {
+        expect((await list(query)).status).toBe(400);
+      }
     } finally { await pool.query("DELETE FROM member_capsule WHERE id=$1", [capsule.id]); }
   });
   it("停止Userのsessionを使えず、新しいsessionも作らない", async () => {
