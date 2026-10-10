@@ -179,6 +179,35 @@ describe("共有済み版の所有者再閲覧", () => {
     expect(screen.queryByTestId("member-reader")).toBeNull();
     expect(document.body.textContent).not.toContain("現在の保存題名");
   });
+  it("比較した現在版を非表示時に破棄し、別Userや遅い応答へ引き継がない", async () => {
+    historyResponses(); history.replaceState(null, "", `/member?capsule=${capsule.id}&revision=1`);
+    render(<MemberCapsules dataset="demo" />);
+    fireEvent.click(await screen.findByRole("button", { name: "現在の保存内容と比較" }));
+    await screen.findByText("現在の保存題名", { exact: true });
+    let finish!: (response: Response) => void;
+    fetchMock.mockImplementationOnce(() => new Promise<Response>(resolve => { finish = resolve; }));
+    fireEvent.click(screen.getByRole("button", { name: "現在の保存内容を再取得して比較" }));
+    await visibility("hidden"); identity = other;
+    await act(async () => { finish(Response.json({ capsule: { ...capsule, revision: 4, content: { ...capsule.content, title: "遅い比較の題名" } } })); });
+    expect(document.body.textContent).not.toContain("現在の保存題名");
+    expect(document.body.textContent).not.toContain("遅い比較の題名");
+    await visibility("visible"); await screen.findByText("別人", { exact: true });
+    expect(screen.queryByRole("region", { name: "共有時からの変更" })).toBeNull();
+    identity = owner; fireEvent.click(screen.getByRole("button", { name: "アカウントと一覧を再確認" }));
+    await screen.findByRole("button", { name: "現在の保存内容と比較" });
+    expect(document.body.textContent).not.toContain("現在の保存題名");
+    expect(localStorage.length + sessionStorage.length).toBe(0);
+  });
+  it("比較の認可失効で旧版も閉じ、private現在版を残さない", async () => {
+    historyResponses(); history.replaceState(null, "", `/member?capsule=${capsule.id}&revision=1`);
+    render(<MemberCapsules dataset="demo" />);
+    await screen.findByRole("button", { name: "現在の保存内容と比較" });
+    identity = null;
+    fireEvent.click(screen.getByRole("button", { name: "現在の保存内容と比較" }));
+    await screen.findByText(/ログインが失効したか/);
+    expect(screen.queryByTestId("member-reader")).toBeNull();
+    expect(document.body.textContent).not.toContain(capsule.content.title);
+  });
   it("要求した版と違う成功応答は描画しない", async () => {
     historyResponses(); history.replaceState(null, "", `/member?capsule=${capsule.id}&revision=2`);
     render(<MemberCapsules dataset="demo" />);

@@ -692,3 +692,69 @@ for (const width of [390, 1440]) {
     expect(errors).toEqual([]);
   });
 }
+
+for (const width of [390, 1440]) {
+  test(`共有版と現在版の説明・構成を比較し外した主張の根拠へ進む ${width}px`, async ({ page, context }, testInfo) => {
+    test.setTimeout(180_000);
+    await page.setViewportSize({ width, height: 900 }); await mockKnowledge(context);
+    const errors: string[] = []; page.on("pageerror", error => errors.push(error.message));
+    const alternate = { ...claim, id: "30000000-0000-4000-8000-000000000001", polarity: "denied" };
+    await context.route("**/api/claims/**", route => route.fulfill({ json: { ...examples.claim, claim: route.request().url().endsWith(alternate.id) ? alternate : claim } }));
+    const isolated = examples.neighbors.nodes.filter(node => !saved.entityIds.includes(node.id));
+    await page.goto("/member"); await login(page);
+    const headers = { Origin: "http://127.0.0.1:3221" };
+    const content = { dataset: saved.dataset, title: saved.title, note: "最初の共有時に残した説明", language: saved.language, entityIds: [...saved.entityIds, isolated[0].id], claimIds: saved.claimIds };
+    const created = await page.request.post("/api/member/capsules", { headers, data: { requestId: crypto.randomUUID(), content } });
+    expect(created.status()).toBe(201);
+    const { capsule } = await created.json(), path = `/api/member/capsules/${capsule.id}`;
+    const shareResponse = await page.request.post(`${path}/share`, { headers, data: { expectedRevision: 1, expectedShareId: null } });
+    expect(shareResponse.status()).toBe(201);
+    const share = await shareResponse.json();
+    const changed = { ...content, title: "根拠を追加確認した関係図", note: "確認後に書き直した説明\n対象と主張の構成も見直した。", entityIds: [...saved.entityIds, isolated[1].id], claimIds: [alternate.id] };
+    expect((await page.request.put(path, { headers, data: { expectedRevision: 1, content: changed } })).status()).toBe(200);
+    expect((await page.request.get(`${path}/revisions`, { timeout: 60_000 })).status()).toBe(200);
+    await page.goto(`/member?capsule=${capsule.id}`);
+    await page.getByRole("button", { name: "共有した版を選ぶ", exact: true }).click();
+    await page.getByRole("button", { name: "内容版 1 を読む", exact: true }).click();
+    await page.getByRole("button", { name: "現在の保存内容と比較", exact: true }).click();
+    const comparison = page.getByRole("region", { name: "共有時からの変更", exact: true });
+    await expect(comparison.getByRole("heading", { name: "共有時の内容版 1 → 取得時の現在版 2" })).toBeVisible();
+    await expect(comparison.getByText(changed.title, { exact: true })).toBeVisible();
+    await expect(comparison.getByText(content.note, { exact: true })).toBeVisible();
+    const entities = comparison.getByRole("region", { name: "対象の構成", exact: true });
+    await expect(entities.getByText("追加 1件 · 除外 1件 · 共通 2件", { exact: true })).toBeVisible();
+    await expect(entities.getByText(isolated[0].name, { exact: true })).toBeVisible();
+    await expect(entities.getByText(isolated[1].name, { exact: true })).toBeVisible();
+    const claims = comparison.getByRole("region", { name: "主張の構成", exact: true });
+    await expect(claims.getByText("追加 1件 · 除外 1件 · 共通 0件", { exact: true })).toBeVisible();
+    await expect(claims.getByText("否定 / 2001年〜2003年", { exact: true })).toBeVisible();
+    await comparison.scrollIntoViewIfNeeded();
+    await page.screenshot({ path: testInfo.outputPath(`capsule-comparison-${width}.png`), fullPage: true });
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+    const popupPromise = context.waitForEvent("page");
+    await claims.locator(`a[href$="id=${claim.id}"]`).click();
+    const popup = await popupPromise;
+    popup.on("pageerror", error => errors.push(error.message));
+    try {
+      await popup.waitForLoadState("load"); await popup.bringToFront();
+      await expect(popup.getByRole("heading", { name: "青葉ハルへのインタビュー", exact: true })).toBeVisible();
+      await expect(popup.getByText("参照箇所：pp.12–13", { exact: true })).toBeVisible();
+    } finally { await popup.close(); }
+    await page.bringToFront();
+    // Comparison is intentionally not persisted across a private-tab recheck.
+    await page.reload();
+    await expect(page.getByRole("heading", { name: "共有時の内容版 1 を閲覧中", exact: true })).toBeVisible();
+    await expect(page.getByRole("button", { name: "現在の保存内容と比較", exact: true })).toBeVisible();
+    // Even a revoked link leaves the owner able to compare; no reissue occurs.
+    expect((await page.request.delete(`${path}/share`, { headers, data: { expectedShareId: share.share.id } })).status()).toBe(200);
+    await page.getByRole("button", { name: "現在の保存内容と比較", exact: true }).click();
+    await expect(comparison.getByText(changed.title, { exact: true })).toBeVisible();
+    expect((await (await page.request.get(`${path}/share`)).json()).share).toBeNull();
+    expect((await (await page.request.get(`${path}/revisions?revision=1`)).json()).capsule.content).toEqual(content);
+    expect((await (await page.request.get(path)).json()).capsule.revision).toBe(2);
+    await page.getByRole("button", { name: "現在の保存内容へ戻る", exact: true }).click();
+    await expect(page.getByRole("button", { name: "このCapsuleを編集", exact: true })).toBeVisible();
+    await expect(page.getByRole("region", { name: "共有時からの変更", exact: true })).toHaveCount(0);
+    expect(errors).toEqual([]);
+  });
+}
