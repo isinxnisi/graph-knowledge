@@ -1,6 +1,11 @@
 import type { NextConfig } from "next";
 
 const config: NextConfig = { reactStrictMode: true,
+  // Multi-user fixture tests revisit many routes. Keep compiled entries for
+  // their bounded run instead of repeatedly evicting and compiling them.
+  ...(process.env.MEMBER_FIXTURE_ENABLED === "1" ? {
+    onDemandEntries: { maxInactiveAge: 15 * 60_000, pagesBufferLength: 32 },
+  } : {}),
   async headers() {
     return [{ source: "/shared", headers: [
       { key: "Referrer-Policy", value: "no-referrer" },

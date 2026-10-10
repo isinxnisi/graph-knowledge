@@ -706,7 +706,7 @@ Native History APIと`useSearchParams`で既存Explorerを保持し、閲覧中�
 
 会員Capsuleは既存KG参照と利用者の説明だけ。ローカルのID・版・ownerを取り込まずserverが割り当てる。request IDの冪等性と件数をUser行lockで確認し、更新・削除は期待revisionをSQL条件へ含める。非所有者／不存在404、競合409、運営DB不通503。独立PGへの追加migrationだけで、知識DB・凍結dataset・ブラウザ保存を移行しない。既存Capsule Readerを使い、現在KGへ再解決し、未解決・取得失敗を保持して示す。
 
-`/member` の登録／ログイン・表示名／locale・明示保存・一覧／再閲覧・確認削除・ログアウト／全端末ログアウトを接続した。Explorerからは別タブで開き、元の探索を維持する。UIの期待利用者headerをsessionと照合し、タブの復帰時はprivate内容を再認可する。再送キーは同じタブのsessionStorageに保持し、会員内容自体は永続cacheに置かない。会員の題名・説明・既存構成の編集も接続した。入力はタブのメモリだけに残し、失効時は本人の再認可まで非表示。競合は最新版を確認してから期待版を明示更新し、次の保存でも原子的に照合する。新参照追加・プロフィール変更UI、実Google接続、一般公開・discussionは未実装。限定共有は次節。既存のサーバー保存未実装という記述は初期／ローカル機能の範囲であり、今回の進捗は本節を優先する。
+`/member` の登録／ログイン・表示名／locale・明示保存・一覧／再閲覧・確認削除・ログアウト／全端末ログアウトを接続した。Explorerからは別タブで開き、元の探索を維持する。UIの期待利用者headerをsessionと照合し、タブの復帰時はprivate内容を再認可する。再送キーは同じタブのsessionStorageに保持し、会員内容自体は永続cacheに置かない。会員の題名・説明・既存構成の編集も接続した。入力はタブのメモリだけに残し、失効時は本人の再認可まで非表示。競合は最新版を確認してから期待版を明示更新し、次の保存でも原子的に照合する。新参照は同origin・datasetの閲覧URLから現在の対象／個別Claimと両端を確認して追加できる。草稿への明示追加とサーバーへの版更新を分け、共有済み版は変更しない。プロフィール変更UI、実Google接続、一般公開は未実装。限定共有とdiscussionは末尾の別契約。既存のサーバー保存未実装という記述は初期／ローカル機能の範囲であり、今回の進捗は本節を優先する。
 
 ## 会員Capsuleの特定版を限定リンクで共有（2026-10-09）
 
@@ -715,3 +715,13 @@ Native History APIと`useSearchParams`で既存Explorerを保持し、閲覧中�
 所有者の発行／状態／停止APIはDB session・owner・dataset・Origin・期待利用者を確認する。発行は期待内容版と期待link IDを照合し、停止・再発行・内容更新とCapsule行lockで直列化する。256bit tokenはhashだけ保存し、再発行で旧リンクを失効する。Capsule削除で共有版も削除し、User停止中はリンク読取を拒否する。
 
 匿名Readerは `/shared#token` からheaderでtokenを送り、指定版だけをno-storeで取得する。内容をSSR・metadata・永続browser cacheへ入れず、noindex・no-referrerを付ける。タブ非表示で本文を消し、復帰・明示操作・表示中30秒ごとに有効性を再確認する。既存Readerで現在KG・独立Claim・Sourceを読み、別タブの対象閲覧から探索へ進む。一般公開検索、運営のCapsule非表示／通報、discussion、実Google接続・外部公開は含めない。
+
+## Capsuleの共有版についての会話（2026-10-10）
+
+[採用契約](design/CAPSULE_DISCUSSION.md)。PostgreSQLへ追加migration 003でCapsuleごとのthreadと投稿を置く。投稿はimmutableな共有revisionへの外部キー、server由来のauthor／UUID、plain text、時刻を保持する。初期受付は停止し、ownerが明示して開閉する。本人または有効tokenの読取認可と有効sessionの両方が投稿に必要。表示は閲覧中の一版だけで、別版の一覧・件数・本文を返さない。
+
+Capsule行lockで共有失効・更新・削除・投稿・受付状態を直列化し、author行lockで全Capsuleを通じた1分5投稿を守る。本文2,000文字、全版合計200投稿（撤回も含む）。author＋request UUIDによる再送は同一内容だけを冪等にし、本文撤回後も復活させない。本人だけが撤回でき、ownerに他人の撤回権限を付けない。Capsule削除でthread/postも削除する。
+
+共有・会員Readerから明示して開き、現在版の根拠と探索へ戻れる。名前・本文・投稿をGlobal KGへ変換しない。未送信入力／結果不明のキーは本人と版へ拘束したタブ内メモリだけに保持する。所有者の共有済み版一覧・snapshot閲覧APIと会員画面の選択を追加した。会員URLのrevision指定で再認可し、説明・Graph・同じ版のコメントへ戻れる。旧版の編集・削除・共有は現在版へ戻って行う。入力は本人＋Capsule＋版別に保持する。共有失効後も `/api/member/posts` と会員画面から本人の投稿だけを20件ずつ読み、既存の作者撤回APIで本文を削除できる。所有者停止後も本人は管理できるが、Capsule本文・他人の会話を取得する権限は増やさない。cursorはDB時刻精度を維持したkeysetとし、認可・datasetを毎回確認する。新migrationは不要。運営非表示／通報・退会・公開は別段階。
+
+共有済み版の本人閲覧から、取得時の現在版との題名・説明・明示参照の比較を追加した（2026-10-10）。追加／除外はEntity・独立ClaimのUUID集合で計算し、KGの履歴差分とは分ける。現在版は期待User付きで再取得し、比較はタブメモリだけに保持する。現在の根拠への別タブ導線、未解決参照・取得失敗・非表示時の破棄を維持し、匿名共有へprivate内容を出さない。[比較契約](design/CAPSULE_LINK_SHARING.md#所有者が共有時と現在の構成を比較する2026-10-10追加)を参照。

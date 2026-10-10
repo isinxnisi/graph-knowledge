@@ -1,24 +1,20 @@
 # 自動開発チェックポイント
-- 状態：完了・2026-10-10手動実装受入。実Google・公開運用・discussionの完了ではない。
-- 目的：説明付き関係図を他人へ渡し、同じ版から根拠と探索へ進み、必要なら共有を止められるようにする。
-- 前回の会員編集は完了。新参照追加・プロフィール設定より、新しい共有体験を優先した。
-- main側COMMUNITY_VERTICAL_SLICES.mdを読み取り専用で参照。採用契約はdocs/design/CAPSULE_LINK_SHARING.md。
-- /memberの閲覧→版の確認→発行／コピー→/sharedの匿名閲覧→独立Claim／Source→別タブのExplorerを接続。
-- PGへ追加migration 002。明示共有した内容版だけ固定し、安定参照はCapsule UUID＋revision。KG・凍結datasetは不変。
-- 有効リンクは同時1件。256bit tokenはDBにhashだけ保存。URL fragmentから専用headerで読取り、owner情報を返さない。
-- private編集は共有先へ反映しない。新しい版の共有は明示再発行し、旧リンクを失効する。
-- 発行は期待内容版・期待link ID・session ownerを照合。停止・再発行・更新・削除はCapsule行lockで直列化する。
-- 共有版は最大50。停止後も版を保持し、Capsule削除で版とlinkを削除。active=false中はリンク読取を拒否する。
-- 応答消失後は状態を再確認し、明示再発行／停止。token全文を再取得するAPIはない。
-- 内容・tokenはlocal/sessionStorageへ保存しない（URLは履歴に残り得る）。非表示で本文を消し、復帰・明示操作・30秒ごとに再認可。
-- /sharedは本文なしSSR・noindex／no-referrer。本番ページ・本文APIはno-store。既取得のコピーまでは回収できない。
-- 通常単体461件＋追加共有UI6件成功。最終関連58件、実OIDC／一時PGの20件、Lint・型検査込みbuild・差分検査成功。
-- 既存会員E2E10件成功。最終の共有E2E2件で390/1440pxの匿名別context・根拠・探索・版固定・再発行・停止を確認。
-- 同一fragment URLの再移動はreloadにならない。失効検証は明示再確認／reloadで行い、dev殻のno-cacheと本文no-storeを区別。
-- npm run test:member:e2e -- --grep 限定リンク で絞り込み可。既存の一時DB guard・時間上限・cleanupは維持。
-- 両幅を目視し横溢れ・page errorなし。本番smokeで共有200、無設定API503、Explorer／member200を確認。
-- 受入で単体467件・実PG20件・通常ブラウザ16件・実Neo4j6件・会員ブラウザ12件（分割）を確認。会員のKG応答はfixtureで、実Google／実KG＋会員の組合せは未検証。
-- 次の第一候補：Capsuleを安定対象にする2 Userの短いスレッド。投稿時版・非共有版の非表示・投稿認可・撤回を狭く設計して接続する。
-- 共有済み旧版の本人向け再閲覧・新参照追加も候補。共有UIの細部磨きだけを既定の次作業にしない。
-- 公開前の頻度制限・headerログ方針・保持／退会・通報／運営非表示は未了。外部判断待ちはなく、実接続・公開だけ別判断。
-- 受入時にPG借出中切断の処理を補強。会員E2Eは専用.next-member-test／Webpack／route preflight、全体15分・runner16分。詳細はdocs/archive/autopilot-acceptance/20261010.md。
+- 状態：完了・2026-10-10共有済みCapsuleと現在版の比較。人間受入・実公開の完了ではない。
+- 目的：共有後に加えた発見・外した参照と説明の変化を確認し、現在の根拠へ戻る。
+- 前回の参照追加は完了。Graphからの複数追加・プロフィール設定と比較し、版を跨ぐ内容確認を選択した。
+- 採用契約：docs/design/CAPSULE_LINK_SHARING.md末尾。構想・設計・入口も更新。
+- 共有済み版を本人閲覧→比較を明示→既存GETで現在版を再認可→説明／明示構成の差分。
+- 題名・説明は前後全文。Entity／独立ClaimをID集合で追加・除外・共通に分け、順序は差分にしない。
+- 名称・主張は現在KG。知識履歴の復元・事実の訂正・SPOによる統合・新しい関係の生成ではない。
+- 各版の端点構成・最大4並列／15秒／全体60秒を維持。KG失敗でもID差分を残し、現在の根拠を別タブで読める。
+- 比較はタブメモリだけ。非表示・本人再確認・版切替・閉鎖で破棄し、遅着を排除。401は親も閉じる。
+- 手動受入でコメントを補強：別タブの会員変更通知では応答を待たず草稿を隠す。本人＋版別キーは保持し、再認可後だけ復元する。取消した投稿応答は別Userの草稿を変更しない。
+- API／schema／migration／共有snapshot／token／コメント版／KG・凍結datasetは不変。
+- 通常単体521件、補強後の最終比較19件、全体lint、型検査込み本番build、差分検査が成功。
+- 実OIDC／一時PG E2Eは390／1440pxの2件成功。比較→外したClaim／Source→reload→共有停止→比較→現在版を確認。
+- 両幅を目視、横溢れ・page errorなし。共有snapshot・現在版の非変更を確認。検証サーバー・DBを終了、port解放済み。
+- 初回は並行検査の時間切れとE2E全体120秒／別タブ読込待ちで失敗。直列化、load／前面待ちで補正して成功。
+- 新規E2Eだけ既存旧版閲覧と同じ180秒。assertion15秒・製品上限・runner全体は不変。失敗証跡はtest-results/comparison-first-*。
+- 次の候補：Graphから複数参照を会員Capsuleへ加える導線。現状は閲覧リンク一件ずつ。任意旧版同士・Graph差分は未実装。
+- 実Google／実KG・全会員E2E・公開は未検証。5件の手動受入の検証・最終状態はdocs/archive/autopilot-acceptance/20261010_daytime.mdを参照。
+- 自動runner・設定・実credentialは不変。push／mergeなし。

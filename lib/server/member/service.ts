@@ -7,6 +7,7 @@ import { MemberUnavailable, type MemberConfig } from "./config";
 import { APIError } from "better-auth/api";
 import { assertMemberOrigin, MemberError, memberId, memberInput, memberJson } from "./http";
 import { createCapsuleSharing } from "./sharing";
+import { createCapsuleDiscussion } from "./discussion";
 
 function dto(row: QueryResultRow) {
   return memberCapsuleSchema.parse({ id: row.id, schemaVersion: row.schema_version, revision: Number(row.revision),
@@ -35,6 +36,7 @@ export function createMemberService(config: MemberConfig, pool: Pool, auth: Memb
   }
   return {
     ...createCapsuleSharing(pool, dataset, config.origin, owner),
+    ...createCapsuleDiscussion(pool, dataset, config.origin, owner),
     async profile(request: Request) {
       const user = await owner(request);
       return memberJson({ user: { id: user.id, name: user.name, locale: user.locale } });

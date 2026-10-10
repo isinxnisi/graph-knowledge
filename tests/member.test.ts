@@ -7,6 +7,7 @@ import { memberHandle, memberInput } from "../lib/server/member/http";
 vi.mock("server-only", () => ({}));
 import { GET as status } from "../app/api/member/status/route";
 import { GET } from "../app/api/member/capsules/route";
+import { GET as ownPosts } from "../app/api/member/posts/route";
 
 const fixtureEnv = (): NodeJS.ProcessEnv => ({ NODE_ENV: "test", MEMBER_STORAGE_ENABLED: "1", MEMBER_FIXTURE_ENABLED: "1", MEMBER_AUTH_PROVIDER: "fixture",
   MEMBER_ORIGIN: "http://127.0.0.1:3221", MEMBER_COOKIE_PREFIX: "gk-member-fixture", MEMBER_AUTH_SECRET: randomBytes(32).toString("hex"),
@@ -19,6 +20,10 @@ describe("会員保存の境界", () => {
     const response = await GET(new Request("http://localhost/api/member/capsules"));
     expect(response.status).toBe(503);
     expect(await response.json()).toEqual({ error: { code: "MEMBER_UNAVAILABLE" } });
+    const posts = await ownPosts(new Request("http://localhost/api/member/posts"));
+    expect(posts.status).toBe(503);
+    expect(posts.headers.get("cache-control")).toContain("no-store");
+    expect(posts.headers.get("x-robots-tag")).toContain("noindex");
   });
   it("公開capabilityはproviderだけを返し、無効時はno-storeの503", async () => {
     for (const [key, value] of Object.entries(fixtureEnv())) vi.stubEnv(key, value!);

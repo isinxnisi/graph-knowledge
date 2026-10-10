@@ -17,6 +17,7 @@ async function mockKnowledge(context: BrowserContext) {
 async function login(page: Page, identity = "検証ユーザーA") {
   await page.getByRole("button", { name: "検証用OIDCでログイン", exact: true }).click();
   await page.getByRole("link", { name: identity, exact: true }).click();
+  await page.waitForURL(url => url.pathname === "/member");
   await expect(page.getByText(identity, { exact: true })).toBeVisible();
   await expect(page.getByRole("button", { name: "アカウントと一覧を再確認", exact: true })).toBeEnabled();
 }
@@ -29,21 +30,26 @@ async function clearPrivateTestData() {
   finally { await pool.end(); }
 }
 test.beforeAll(async ({ request }) => {
-  // Verify real HTTP routing before interaction. Next dev compiles these
-  // routes on first access; API availability must not be inferred from a label.
-  const share = await request.get("/api/member/capsules/00000000-0000-4000-8000-000000000001/share", { timeout: 60_000 });
-  expect(share.status()).toBe(401);
-  expect(share.headers()["content-type"]).toContain("application/json");
-  const anonymous = await request.get("/api/shared/capsule", { timeout: 60_000 });
-  expect(anonymous.status()).toBe(404);
-  expect((await request.get("/shared", { timeout: 60_000 })).status()).toBe(200);
-  expect((await request.get("/", { timeout: 60_000 })).status()).toBe(200);
-  // Cold route compilation belongs to setup, rather than consuming the
-  // interaction budget of the first narrow-screen, multi-tab journey.
-  for (const path of ["/api/member/profile", "/api/member/capsules", "/api/member/capsules/00000000-0000-4000-8000-000000000001"]) {
-    expect((await request.get(path, { timeout: 60_000 })).status()).toBe(401);
-  }
-  expect((await request.get("/api/auth/get-session", { timeout: 60_000 })).status()).toBe(200);
+  // Warm independent routes before interaction, with bounded concurrency. A
+  // serial cold compile can exhaust the hook budget before the browser opens.
+  const checks: [string, number][] = [
+    ["/api/member/capsules/00000000-0000-4000-8000-000000000001/share", 401],
+    ["/api/shared/capsule", 404], ["/shared", 200], ["/", 200],
+    ["/api/member/status", 200], ["/api/member/posts", 401],
+    ["/api/member/profile", 401], ["/api/member/capsules", 401],
+    ["/api/member/capsules/00000000-0000-4000-8000-000000000001", 401],
+    ["/api/auth/get-session", 200],
+    ["/api/capsules/00000000-0000-4000-8000-000000000001/discussion?revision=1", 404],
+  ];
+  let cursor = 0;
+  await Promise.all(Array.from({ length: 3 }, async () => {
+    while (cursor < checks.length) {
+      const [path, status] = checks[cursor++];
+      const response = await request.get(path, { timeout: 60_000 });
+      expect(response.status()).toBe(status);
+      if (path.startsWith("/api/")) expect(response.headers()["content-type"]).toContain("application/json");
+    }
+  }));
 });
 test.beforeEach(clearPrivateTestData);
 for (const width of [390, 1440]) {
@@ -134,6 +140,9 @@ for (const width of [390, 1440]) {
 
 for (const width of [390, 1440]) {
   test(`探索を保持し、実認証から明示保存・別ブラウザ再訪・根拠へ進む ${width}px`, async ({ page, context, browser }, testInfo) => {
+    // This journey includes two authenticated contexts and a return to the
+    // original graph. Keep individual expectations at 15s like other journeys.
+    test.setTimeout(180_000);
     await page.setViewportSize({ width, height: 900 }); await mockKnowledge(context);
     const errors: string[] = []; page.on("pageerror", error => errors.push(error.message));
     await page.goto("/");
@@ -148,7 +157,9 @@ for (const width of [390, 1440]) {
     await dialog.getByRole("button", { name: "読む", exact: true }).click();
     const popup = context.waitForEvent("page");
     await dialog.getByRole("link", { name: "この内容をアカウントへ保存（別タブ）", exact: true }).click();
-    const member = await popup; await member.setViewportSize({ width, height: 900 });
+    // The popup event precedes document loading. Match goto's navigation wait
+    // before checking UI state, including when dev compiles this route cold.
+    const member = await popup; await member.waitForLoadState("load"); await member.bringToFront(); await member.setViewportSize({ width, height: 900 });
     member.on("pageerror", error => errors.push(error.message));
     await expect(member.getByRole("button", { name: "この内容をアカウントへ保存", exact: true })).toBeDisabled();
     await login(member);
@@ -181,7 +192,7 @@ for (const width of [390, 1440]) {
       await revisit.getByRole("button", { name: "青葉ハル · 人物", exact: true }).click();
       const exploration = other.waitForEvent("page");
       await revisit.getByRole("link", { name: "この対象を開いて探索する（別タブ）", exact: true }).click();
-      const graph = await exploration;
+      const graph = await exploration; await graph.waitForLoadState("load"); await graph.bringToFront();
       await expect.poll(() => graph.getByTestId("graph-canvas").evaluate(el => !!(el as unknown as { _cyreg?: { cy?: unknown } })._cyreg?.cy)).toBe(true);
       await graph.getByRole("button", { name: "この対象から関係を探索する", exact: true }).click();
       await expect(graph.getByTestId("graph-counts")).toHaveText("Entity 5 / Claim 7");
@@ -411,3 +422,344 @@ test("未解決参照の説明訂正と他端末削除でも入力を保持し�
   await editor.getByRole("button", { name: "保存せず戻る", exact: true }).click();
   await expect(page.getByText("このアカウントにはCapsuleがまだありません。", { exact: true })).toBeVisible();
 });
+
+for (const width of [390, 1440]) {
+  test(`共有版のコメントを2 Userで投稿し、根拠・撤回・受付停止へ進む ${width}px`, async ({ page, context, browser }, testInfo) => {
+    test.setTimeout(240_000);
+    await page.setViewportSize({ width, height: 900 }); await mockKnowledge(context);
+    const errors: string[] = []; page.on("pageerror", error => errors.push(error.message));
+    await page.goto("/member"); await login(page);
+    const content = { dataset: saved.dataset, title: saved.title, note: saved.note, language: saved.language, entityIds: saved.entityIds, claimIds: saved.claimIds };
+    const { capsule } = await (await page.request.post("/api/member/capsules", { headers: { Origin: "http://127.0.0.1:3221" }, data: { requestId: crypto.randomUUID(), content } })).json();
+    const { token } = await (await page.request.post(`/api/member/capsules/${capsule.id}/share`, { headers: { Origin: "http://127.0.0.1:3221" }, data: { expectedRevision: 1, expectedShareId: null } })).json();
+    const link = `/shared#${token}`;
+    await page.goto(`/member?capsule=${capsule.id}`);
+    const ownerThread = page.getByRole("region", { name: "この版のコメント", exact: true });
+    await ownerThread.getByRole("button", { name: "この版のコメントを見る", exact: true }).click();
+    await expect(ownerThread.getByRole("button", { name: "投稿を受け付ける", exact: true })).toBeVisible();
+    await expect(ownerThread.getByLabel("コメント本文", { exact: true })).toHaveCount(0);
+    await ownerThread.getByRole("button", { name: "投稿を受け付ける", exact: true }).click();
+    await expect(ownerThread.getByLabel("コメント本文", { exact: true })).toBeVisible();
+    const other = await browser.newContext({ baseURL: "http://127.0.0.1:3221", viewport: { width, height: 900 } });
+    try {
+      await mockKnowledge(other); const reader = await other.newPage(); reader.on("pageerror", error => errors.push(error.message));
+      await reader.goto(link);
+      const thread = reader.getByRole("region", { name: "この版のコメント", exact: true });
+      await thread.getByRole("button", { name: "この版のコメントを見る", exact: true }).click();
+      await expect(thread.getByRole("link", { name: /投稿するにはアカウントへログイン/ })).toBeVisible();
+      await expect(thread.getByLabel("コメント本文", { exact: true })).toHaveCount(0);
+      const popup = other.waitForEvent("page");
+      await thread.getByRole("link", { name: /投稿するにはアカウントへログイン/ }).click();
+      const account = await popup; await account.bringToFront();
+      await account.getByRole("button", { name: "検証用OIDCでログイン", exact: true }).click();
+      await account.getByRole("link", { name: "検証ユーザーB", exact: true }).click();
+      await account.waitForURL(url => url.pathname === "/member");
+      await account.bringToFront();
+      await expect(account.getByText("検証ユーザーB", { exact: true })).toBeVisible();
+      await expect(account.getByRole("button", { name: "アカウントと一覧を再確認", exact: true })).toBeEnabled();
+      await account.close(); await reader.bringToFront(); await reader.getByRole("button", { name: "リンクを再確認", exact: true }).click();
+      await thread.getByRole("button", { name: "この版のコメントを見る", exact: true }).click();
+      await thread.getByLabel("コメント本文", { exact: true }).fill("本文の期間は、どの資料から確認できますか？");
+      await thread.getByRole("button", { name: "この版へ投稿する", exact: true }).click();
+      await expect(thread.getByText("本文の期間は、どの資料から確認できますか？", { exact: true })).toBeVisible();
+      await expect(thread.getByLabel("コメント本文", { exact: true })).toHaveValue("");
+      await page.bringToFront(); await page.getByRole("button", { name: "アカウントと一覧を再確認", exact: true }).click();
+      await ownerThread.getByRole("button", { name: "この版のコメントを見る", exact: true }).click();
+      await expect(ownerThread.getByText("本文の期間は、どの資料から確認できますか？", { exact: true })).toBeVisible();
+      await expect(ownerThread.getByRole("button", { name: "自分の投稿を撤回", exact: true })).toHaveCount(0);
+      await ownerThread.getByLabel("コメント本文", { exact: true }).fill("個別の主張を開くと、インタビューの参照箇所を読めます。");
+      await ownerThread.getByRole("button", { name: "この版へ投稿する", exact: true }).click();
+      await expect(ownerThread.getByText("個別の主張を開くと、インタビューの参照箇所を読めます。", { exact: true })).toBeVisible();
+      await expect(ownerThread.getByLabel("コメント本文", { exact: true })).toHaveValue("");
+      await reader.bringToFront(); await reader.getByRole("button", { name: "リンクを再確認", exact: true }).click();
+      await thread.getByRole("button", { name: "この版のコメントを見る", exact: true }).click();
+      await expect(thread.getByText("個別の主張を開くと、インタビューの参照箇所を読めます。", { exact: true })).toBeVisible();
+      await reader.getByRole("button", { name: /青葉ハル → アシスタントだった → 黒川レン.*2001年〜2003年/ }).click();
+      await expect(reader.getByRole("heading", { name: "青葉ハルへのインタビュー", exact: true })).toBeVisible();
+      await expect(reader.getByText("参照箇所：pp.12–13", { exact: true })).toBeVisible();
+      await reader.screenshot({ path: testInfo.outputPath(`discussion-${width}.png`), fullPage: true });
+      expect(await reader.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+      await thread.getByRole("button", { name: "自分の投稿を撤回", exact: true }).click();
+      await thread.getByRole("button", { name: "本文を削除して撤回する", exact: true }).click();
+      await expect(thread.getByText("投稿者が撤回しました。", { exact: true })).toBeVisible();
+      await expect(thread.getByText("本文の期間は、どの資料から確認できますか？", { exact: true })).toHaveCount(0);
+      await page.bringToFront(); await page.getByRole("button", { name: "アカウントと一覧を再確認", exact: true }).click();
+      await ownerThread.getByRole("button", { name: "この版のコメントを見る", exact: true }).click();
+      await ownerThread.getByRole("button", { name: "新しい投稿を停止する", exact: true }).click();
+      await expect(ownerThread.getByRole("button", { name: "投稿を受け付ける", exact: true })).toBeVisible();
+      await reader.bringToFront(); await reader.getByRole("button", { name: "リンクを再確認", exact: true }).click();
+      await thread.getByRole("button", { name: "この版のコメントを見る", exact: true }).click();
+      await expect(thread.getByText(/新しい投稿は受け付けていません/)).toBeVisible();
+      await expect(thread.getByLabel("コメント本文", { exact: true })).toHaveCount(0);
+      await expect(thread.getByText("個別の主張を開くと、インタビューの参照箇所を読めます。", { exact: true })).toBeVisible();
+    } finally { await other.close(); }
+    expect(errors).toEqual([]);
+  });
+}
+
+for (const width of [390, 1440]) {
+  test(`共有済み旧版の説明とコメントを選び直し現在版へ戻る ${width}px`, async ({ page, context }, testInfo) => {
+    test.setTimeout(180_000);
+    await page.setViewportSize({ width, height: 900 }); await mockKnowledge(context);
+    const errors: string[] = []; page.on("pageerror", error => errors.push(error.message));
+    await page.goto("/member"); await login(page);
+    const content = { dataset: saved.dataset, title: saved.title, note: "最初に共有した説明", language: saved.language, entityIds: saved.entityIds, claimIds: saved.claimIds };
+    const headers = { Origin: "http://127.0.0.1:3221" };
+    const created = await page.request.post("/api/member/capsules", { headers, data: { requestId: crypto.randomUUID(), content } });
+    expect(created.status()).toBe(201);
+    const { capsule } = await created.json();
+    const path = `/api/member/capsules/${capsule.id}`;
+    const thread = `/api/capsules/${capsule.id}/discussion`;
+    const share = await (await page.request.post(`${path}/share`, { headers, data: { expectedRevision: 1, expectedShareId: null } })).json();
+    expect((await page.request.patch(thread, { headers, data: { closed: false, expectedClosed: true } })).status()).toBe(200);
+    expect((await page.request.post(thread, { headers, data: { requestId: crypto.randomUUID(), revision: 1, body: "初版で確認した根拠について" } })).status()).toBe(201);
+    expect((await page.request.put(path, { headers, data: { expectedRevision: 1, content: { ...content, note: "共有しない中間版" } } })).status()).toBe(200);
+    expect((await page.request.put(path, { headers, data: { expectedRevision: 2, content: { ...content, note: "三版で訂正した説明" } } })).status()).toBe(200);
+    const third = await (await page.request.post(`${path}/share`, { headers, data: { expectedRevision: 3, expectedShareId: share.share.id } })).json();
+    expect((await page.request.post(thread, { headers, data: { requestId: crypto.randomUUID(), revision: 3, body: "三版だけについてのコメント" } })).status()).toBe(201);
+    expect((await page.request.put(path, { headers, data: { expectedRevision: 3, content: { ...content, note: "現在の非共有の説明" } } })).status()).toBe(200);
+    // Compile the added route outside the UI's per-request 15 second bound.
+    expect((await page.request.get(`${path}/revisions`, { timeout: 60_000 })).status()).toBe(200);
+    await page.goto(`/member?capsule=${capsule.id}`);
+    await expect(page.getByText("現在の非共有の説明", { exact: true })).toBeVisible();
+    await page.getByRole("button", { name: "共有した版を選ぶ", exact: true }).click();
+    await expect(page.getByRole("button", { name: "内容版 3 を読む", exact: true })).toBeVisible();
+    await expect(page.getByRole("button", { name: "内容版 2 を読む", exact: true })).toHaveCount(0);
+    await expect(page.getByRole("button", { name: "内容版 4 を読む", exact: true })).toHaveCount(0);
+    await page.getByRole("button", { name: "内容版 1 を読む", exact: true }).click();
+    await expect(page.getByRole("heading", { name: "共有時の内容版 1 を閲覧中", exact: true })).toBeVisible();
+    await expect(page.getByText("最初に共有した説明", { exact: true })).toBeVisible();
+    await expect(page.getByText("現在の非共有の説明", { exact: true })).toHaveCount(0);
+    await expect(page.getByRole("button", { name: "このCapsuleを編集", exact: true })).toHaveCount(0);
+    await expect(page.getByRole("button", { name: "アカウントから削除", exact: true })).toHaveCount(0);
+    await expect(page.getByRole("region", { name: "限定リンク共有", exact: true })).toHaveCount(0);
+    await page.getByRole("button", { name: "この版のコメントを見る", exact: true }).click();
+    await expect(page.getByText("初版で確認した根拠について", { exact: true })).toBeVisible();
+    await expect(page.getByText("三版だけについてのコメント", { exact: true })).toHaveCount(0);
+    await page.getByRole("textbox", { name: "コメント本文", exact: true }).fill("初版へ残す未送信のメモ");
+    await page.getByRole("button", { name: "共有した版を選ぶ", exact: true }).click();
+    await page.getByRole("button", { name: "内容版 3 を読む", exact: true }).click();
+    await expect(page.getByText("三版で訂正した説明", { exact: true })).toBeVisible();
+    await page.getByRole("button", { name: "この版のコメントを見る", exact: true }).click();
+    await expect(page.getByText("三版だけについてのコメント", { exact: true })).toBeVisible();
+    await expect(page.getByText("初版で確認した根拠について", { exact: true })).toHaveCount(0);
+    await expect(page.getByRole("textbox", { name: "コメント本文", exact: true })).toHaveValue("");
+    await page.getByRole("button", { name: "共有した版を選ぶ", exact: true }).click();
+    await page.getByRole("button", { name: "内容版 1 を読む", exact: true }).click();
+    await page.getByRole("button", { name: "この版のコメントを見る", exact: true }).click();
+    await expect(page.getByRole("textbox", { name: "コメント本文", exact: true })).toHaveValue("初版へ残す未送信のメモ");
+    await page.getByRole("textbox", { name: "コメント本文", exact: true }).fill("");
+    // Revocation changes visitors' access, not the owner's preserved snapshot.
+    expect((await page.request.delete(`${path}/share`, { headers, data: { expectedShareId: third.share.id } })).status()).toBe(200);
+    await page.reload();
+    await expect(page.getByRole("heading", { name: "共有時の内容版 1 を閲覧中", exact: true })).toBeVisible();
+    await expect(page.getByText("最初に共有した説明", { exact: true })).toBeVisible();
+    await page.getByRole("button", { name: /青葉ハル → アシスタントだった → 黒川レン.*2001年〜2003年/ }).click();
+    await expect(page.getByRole("heading", { name: "青葉ハルへのインタビュー", exact: true })).toBeVisible();
+    await expect(page.getByText("参照箇所：pp.12–13", { exact: true })).toBeVisible();
+    await page.screenshot({ path: testInfo.outputPath(`revision-reader-${width}.png`), fullPage: true });
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+    await page.getByRole("button", { name: "現在の保存内容へ戻る", exact: true }).click();
+    await expect(page.getByText("現在の非共有の説明", { exact: true })).toBeVisible();
+    await expect(page.getByRole("button", { name: "このCapsuleを編集", exact: true })).toBeVisible();
+    expect(new URL(page.url()).searchParams.has("revision")).toBe(false);
+    expect(errors).toEqual([]);
+  });
+}
+
+
+for (const width of [390, 1440]) {
+  test(`共有失効後も自分の投稿一覧から本文を撤回できる ${width}px`, async ({ page, context, browser }, testInfo) => {
+    test.setTimeout(180_000);
+    await page.setViewportSize({ width, height: 900 }); await mockKnowledge(context);
+    const errors: string[] = []; page.on("pageerror", error => errors.push(error.message));
+    await page.goto("/member"); await login(page);
+    const headers = { Origin: "http://127.0.0.1:3221" };
+    const content = { dataset: saved.dataset, title: "共有停止で読めなくなる題名", note: "一覧へ返さない作者の説明", language: saved.language, entityIds: saved.entityIds, claimIds: saved.claimIds };
+    const created = await page.request.post("/api/member/capsules", { headers, data: { requestId: crypto.randomUUID(), content } });
+    expect(created.status()).toBe(201); const { capsule } = await created.json();
+    const path = `/api/member/capsules/${capsule.id}`, thread = `/api/capsules/${capsule.id}/discussion`;
+    const { token, share } = await (await page.request.post(`${path}/share`, { headers, data: { expectedRevision: 1, expectedShareId: null } })).json();
+    expect((await page.request.patch(thread, { headers, data: { closed: false, expectedClosed: true } })).status()).toBe(200);
+    expect((await page.request.post(thread, { headers, data: { requestId: crypto.randomUUID(), revision: 1, body: "作者の会話は一覧へ出さない" } })).status()).toBe(201);
+    const other = await browser.newContext({ baseURL: "http://127.0.0.1:3221", viewport: { width, height: 900 } });
+    try {
+      await mockKnowledge(other); const reader = await other.newPage(); reader.on("pageerror", error => errors.push(error.message));
+      await reader.goto("/member"); await login(reader, "検証ユーザーB");
+      await reader.goto(`/shared#${token}`);
+      const comments = reader.getByRole("region", { name: "この版のコメント", exact: true });
+      await comments.getByRole("button", { name: "この版のコメントを見る", exact: true }).click();
+      await comments.getByRole("textbox", { name: "コメント本文", exact: true }).fill("共有停止後も自分で取り消すコメント");
+      await comments.getByRole("button", { name: "この版へ投稿する", exact: true }).click();
+      await expect(comments.getByText("共有停止後も自分で取り消すコメント", { exact: true })).toBeVisible();
+      expect((await page.request.delete(`${path}/share`, { headers, data: { expectedShareId: share.id } })).status()).toBe(200);
+      await reader.getByRole("button", { name: "リンクを再確認", exact: true }).click();
+      await expect(reader.getByText(/このリンクでは閲覧できません/)).toBeVisible();
+      await expect(reader.getByText(content.title, { exact: true })).toHaveCount(0);
+      const popup = other.waitForEvent("page");
+      await reader.getByRole("link", { name: "自分の投稿を確認・撤回（アカウント・別タブ）", exact: true }).click();
+      const account = await popup; account.on("pageerror", error => errors.push(error.message)); await account.bringToFront();
+      const posts = account.getByRole("region", { name: "自分の投稿", exact: true });
+      await posts.getByRole("button", { name: "自分の投稿を見る", exact: true }).click();
+      await expect(posts.getByText("共有停止後も自分で取り消すコメント", { exact: true })).toBeVisible();
+      await expect(posts.getByText("内容版 1 への投稿", { exact: true })).toBeVisible();
+      await expect(account.getByText(content.title, { exact: true })).toHaveCount(0);
+      await expect(account.getByText(content.note, { exact: true })).toHaveCount(0);
+      await expect(account.getByText("作者の会話は一覧へ出さない", { exact: true })).toHaveCount(0);
+      await account.screenshot({ path: testInfo.outputPath(`own-posts-${width}.png`), fullPage: true });
+      expect(await account.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+      await posts.getByRole("button", { name: "自分の投稿を撤回", exact: true }).click();
+      await posts.getByRole("button", { name: "取り消す", exact: true }).click();
+      await expect(posts.getByText("共有停止後も自分で取り消すコメント", { exact: true })).toBeVisible();
+      await posts.getByRole("button", { name: "自分の投稿を撤回", exact: true }).click();
+      await posts.getByRole("button", { name: "本文を削除して撤回する", exact: true }).click();
+      await expect(posts.getByText("この投稿は撤回済みです。", { exact: true })).toBeVisible();
+      await expect(posts.getByText("共有停止後も自分で取り消すコメント", { exact: true })).toHaveCount(0);
+      await expect(posts.getByRole("button", { name: "自分の投稿を撤回", exact: true })).toHaveCount(0);
+      await account.reload(); await posts.getByRole("button", { name: "自分の投稿を見る", exact: true }).click();
+      await expect(posts.getByText("この投稿は撤回済みです。", { exact: true })).toBeVisible();
+      const ownerRead = await page.request.get(`${thread}?revision=1`);
+      expect(ownerRead.status()).toBe(200);
+      const posted = (await ownerRead.json()).posts;
+      expect(posted.find((post: { withdrawnAt: string | null }) => post.withdrawnAt !== null)).toMatchObject({ body: null, authorName: null });
+      expect(posted.find((post: { body: string | null }) => post.body === "作者の会話は一覧へ出さない")).toBeTruthy();
+      await account.getByRole("button", { name: "ログアウト", exact: true }).click();
+      await expect(account.getByRole("region", { name: "自分の投稿", exact: true })).toHaveCount(0);
+      expect(await account.evaluate(() => Object.values(localStorage).join(" ") + Object.values(sessionStorage).join(" "))).not.toContain("共有停止後も自分で取り消すコメント");
+    } finally { await other.close(); }
+    expect(errors).toEqual([]);
+  });
+}
+
+for (const width of [390, 1440]) {
+  test(`閲覧リンクから会員Capsuleへ独立主張と対象を追加する ${width}px`, async ({ page, context }, testInfo) => {
+    await page.setViewportSize({ width, height: 900 }); await mockKnowledge(context);
+    const errors: string[] = []; page.on("pageerror", error => errors.push(error.message));
+    await page.goto("/member"); await login(page);
+    const headers = { Origin: "http://127.0.0.1:3221" };
+    const content = { dataset: "demo", title: "探索の発見を追記する関係図", note: "最初は人物だけを保存", language: "ja", entityIds: [claim.subjectId], claimIds: [] };
+    const created = await page.request.post("/api/member/capsules", { headers, data: { requestId: crypto.randomUUID(), content } });
+    expect(created.status()).toBe(201); const { capsule } = await created.json();
+    const path = `/api/member/capsules/${capsule.id}`;
+    expect((await page.request.post(`${path}/share`, { headers, data: { expectedRevision: 1, expectedShareId: null } })).status()).toBe(201);
+    await page.goto(`/member?capsule=${capsule.id}`);
+    await page.getByRole("button", { name: "このCapsuleを編集", exact: true }).click();
+    await page.getByRole("textbox", { name: "自分の説明", exact: true }).fill("根拠を読んで主張を追記した");
+    let link = `http://127.0.0.1:3221/?read=claim&dataset=demo&id=${claim.id}`;
+    // The narrow-screen journey covers crossing tabs and copying the actual
+    // Explorer URL. Desktop focuses on the addition/preview/save layout.
+    if (width === 390) {
+      const explorer = await context.newPage(); await explorer.bringToFront();
+      await explorer.goto(link);
+      await expect(explorer.getByRole("heading", { name: "青葉ハルへのインタビュー", exact: true })).toBeVisible();
+      await explorer.locator("summary").filter({ hasText: /^閲覧URL$/ }).click();
+      link = await explorer.getByLabel("閲覧URL", { exact: true }).inputValue();
+      await explorer.close(); await page.bringToFront();
+    }
+    await expect(page.getByRole("textbox", { name: "自分の説明", exact: true })).toHaveValue("根拠を読んで主張を追記した");
+    const picker = page.getByRole("region", { name: "探索で見つけた対象・主張を追加", exact: true });
+    await picker.getByLabel("対象・主張の閲覧リンク", { exact: true }).fill(link.replace("dataset=demo", "dataset=pilot-science-v1"));
+    await picker.getByRole("button", { name: "リンクの内容を確認", exact: true }).click();
+    await expect(picker.getByRole("alert")).toContainText("この環境・データセット");
+    await picker.getByLabel("対象・主張の閲覧リンク", { exact: true }).fill(link);
+    await picker.getByRole("button", { name: "リンクの内容を確認", exact: true }).click();
+    await expect(picker.getByRole("heading", { name: "青葉ハルへのインタビュー", exact: true })).toBeVisible();
+    await expect(picker.getByText("参照箇所：pp.12–13", { exact: true })).toBeVisible();
+    expect((await (await page.request.get(path)).json()).capsule.revision).toBe(1);
+    await page.screenshot({ path: testInfo.outputPath(`reference-preview-${width}.png`), fullPage: true });
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+    await picker.getByRole("button", { name: "確認した参照を編集中の構成へ追加", exact: true }).click();
+    await expect(page.getByRole("checkbox", { name: /青葉ハル · 人物/ })).toBeChecked();
+    await expect(page.getByRole("checkbox", { name: /黒川レン · 人物/ })).toBeDisabled();
+    await expect(page.getByRole("checkbox", { name: /青葉ハル → アシスタントだった → 黒川レン/ })).toBeChecked();
+    // A standalone entity adds no inferred relationship.
+    const isolated = examples.neighbors.nodes.find(entity => entity.id !== claim.subjectId && entity.id !== claim.objectId)!;
+    await picker.getByLabel("対象・主張の閲覧リンク", { exact: true }).fill(`http://127.0.0.1:3221/?read=entity&dataset=demo&id=${isolated.id}`);
+    await picker.getByRole("button", { name: "リンクの内容を確認", exact: true }).click();
+    await picker.getByRole("button", { name: "確認した参照を編集中の構成へ追加", exact: true }).click();
+    // Confirmed additions survive reauthorization without persisting private drafts.
+    if (width === 390) await page.getByRole("button", { name: "アカウントと一覧を再確認", exact: true }).click();
+    await expect(page.getByRole("checkbox", { name: /青葉ハル → アシスタントだった → 黒川レン/ })).toBeChecked();
+    await page.getByRole("button", { name: "アカウントの変更を保存", exact: true }).click();
+    await expect(page.getByText("アカウントのCapsuleを更新しました。", { exact: true })).toBeVisible();
+    const updated = (await (await page.request.get(path)).json()).capsule;
+    expect(updated.revision).toBe(2); expect(updated.content.claimIds).toEqual([claim.id]);
+    expect(updated.content.entityIds).toEqual([claim.subjectId, claim.objectId, isolated.id]);
+    const historical = (await (await page.request.get(`${path}/revisions?revision=1`)).json()).capsule;
+    expect(historical.content).toEqual(content);
+    await page.reload();
+    await expect(page.getByText("現在のGraph：対象 3件 / 主張 1件", { exact: true })).toBeVisible();
+    await page.getByRole("button", { name: /青葉ハル → アシスタントだった → 黒川レン.*2001年〜2003年/ }).click();
+    await expect(page.getByRole("heading", { name: "青葉ハルへのインタビュー", exact: true })).toBeVisible();
+    await page.screenshot({ path: testInfo.outputPath(`reference-saved-${width}.png`), fullPage: true });
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+    expect(await page.evaluate(() => Object.values(localStorage).join(" ") + Object.values(sessionStorage).join(" "))).not.toContain("根拠を読んで主張を追記した");
+    expect(errors).toEqual([]);
+  });
+}
+
+for (const width of [390, 1440]) {
+  test(`共有版と現在版の説明・構成を比較し外した主張の根拠へ進む ${width}px`, async ({ page, context }, testInfo) => {
+    test.setTimeout(180_000);
+    await page.setViewportSize({ width, height: 900 }); await mockKnowledge(context);
+    const errors: string[] = []; page.on("pageerror", error => errors.push(error.message));
+    const alternate = { ...claim, id: "30000000-0000-4000-8000-000000000001", polarity: "denied" };
+    await context.route("**/api/claims/**", route => route.fulfill({ json: { ...examples.claim, claim: route.request().url().endsWith(alternate.id) ? alternate : claim } }));
+    const isolated = examples.neighbors.nodes.filter(node => !saved.entityIds.includes(node.id));
+    await page.goto("/member"); await login(page);
+    const headers = { Origin: "http://127.0.0.1:3221" };
+    const content = { dataset: saved.dataset, title: saved.title, note: "最初の共有時に残した説明", language: saved.language, entityIds: [...saved.entityIds, isolated[0].id], claimIds: saved.claimIds };
+    const created = await page.request.post("/api/member/capsules", { headers, data: { requestId: crypto.randomUUID(), content } });
+    expect(created.status()).toBe(201);
+    const { capsule } = await created.json(), path = `/api/member/capsules/${capsule.id}`;
+    const shareResponse = await page.request.post(`${path}/share`, { headers, data: { expectedRevision: 1, expectedShareId: null } });
+    expect(shareResponse.status()).toBe(201);
+    const share = await shareResponse.json();
+    const changed = { ...content, title: "根拠を追加確認した関係図", note: "確認後に書き直した説明\n対象と主張の構成も見直した。", entityIds: [...saved.entityIds, isolated[1].id], claimIds: [alternate.id] };
+    expect((await page.request.put(path, { headers, data: { expectedRevision: 1, content: changed } })).status()).toBe(200);
+    expect((await page.request.get(`${path}/revisions`, { timeout: 60_000 })).status()).toBe(200);
+    await page.goto(`/member?capsule=${capsule.id}`);
+    await page.getByRole("button", { name: "共有した版を選ぶ", exact: true }).click();
+    await page.getByRole("button", { name: "内容版 1 を読む", exact: true }).click();
+    await page.getByRole("button", { name: "現在の保存内容と比較", exact: true }).click();
+    const comparison = page.getByRole("region", { name: "共有時からの変更", exact: true });
+    await expect(comparison.getByRole("heading", { name: "共有時の内容版 1 → 取得時の現在版 2" })).toBeVisible();
+    await expect(comparison.getByText(changed.title, { exact: true })).toBeVisible();
+    await expect(comparison.getByText(content.note, { exact: true })).toBeVisible();
+    const entities = comparison.getByRole("region", { name: "対象の構成", exact: true });
+    await expect(entities.getByText("追加 1件 · 除外 1件 · 共通 2件", { exact: true })).toBeVisible();
+    await expect(entities.getByText(isolated[0].name, { exact: true })).toBeVisible();
+    await expect(entities.getByText(isolated[1].name, { exact: true })).toBeVisible();
+    const claims = comparison.getByRole("region", { name: "主張の構成", exact: true });
+    await expect(claims.getByText("追加 1件 · 除外 1件 · 共通 0件", { exact: true })).toBeVisible();
+    await expect(claims.getByText("否定 / 2001年〜2003年", { exact: true })).toBeVisible();
+    await comparison.scrollIntoViewIfNeeded();
+    await page.screenshot({ path: testInfo.outputPath(`capsule-comparison-${width}.png`), fullPage: true });
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+    const popupPromise = context.waitForEvent("page");
+    await claims.locator(`a[href$="id=${claim.id}"]`).click();
+    const popup = await popupPromise;
+    popup.on("pageerror", error => errors.push(error.message));
+    try {
+      await popup.waitForLoadState("load"); await popup.bringToFront();
+      await expect(popup.getByRole("heading", { name: "青葉ハルへのインタビュー", exact: true })).toBeVisible();
+      await expect(popup.getByText("参照箇所：pp.12–13", { exact: true })).toBeVisible();
+    } finally { await popup.close(); }
+    await page.bringToFront();
+    // Comparison is intentionally not persisted across a private-tab recheck.
+    await page.reload();
+    await expect(page.getByRole("heading", { name: "共有時の内容版 1 を閲覧中", exact: true })).toBeVisible();
+    await expect(page.getByRole("button", { name: "現在の保存内容と比較", exact: true })).toBeVisible();
+    // Even a revoked link leaves the owner able to compare; no reissue occurs.
+    expect((await page.request.delete(`${path}/share`, { headers, data: { expectedShareId: share.share.id } })).status()).toBe(200);
+    await page.getByRole("button", { name: "現在の保存内容と比較", exact: true }).click();
+    await expect(comparison.getByText(changed.title, { exact: true })).toBeVisible();
+    expect((await (await page.request.get(`${path}/share`)).json()).share).toBeNull();
+    expect((await (await page.request.get(`${path}/revisions?revision=1`)).json()).capsule.content).toEqual(content);
+    expect((await (await page.request.get(path)).json()).capsule.revision).toBe(2);
+    await page.getByRole("button", { name: "現在の保存内容へ戻る", exact: true }).click();
+    await expect(page.getByRole("button", { name: "このCapsuleを編集", exact: true })).toBeVisible();
+    await expect(page.getByRole("region", { name: "共有時からの変更", exact: true })).toHaveCount(0);
+    expect(errors).toEqual([]);
+  });
+}
