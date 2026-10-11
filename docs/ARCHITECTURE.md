@@ -4,7 +4,7 @@
 
 ## 前提と設計の位置づけ
 
-2026-10-11に公開準備へ着手。検証用の凍結datasetを維持し、安定dataset `public-kg` と投入releaseを分離した[共通KG適用経路](design/PUBLIC_KG_RELEASES.md)を追加。現在はローカルの生成・dry-run・追加/表記訂正のtransaction適用まで。既存Claimの意味を上書きせず、撤回/差替え・更新時cursor・backup/restoreは次の作業単位。公開先は `graph.isinxnisi.net`、単一Web＋Neo4j＋会員公開時のPGを既存Caddy配下へ配置する方針。[進捗と未完了](PUBLIC_BETA_PROGRESS.md)を参照。
+2026-10-11に公開準備へ着手。検証用の凍結datasetを維持し、安定dataset `public-kg` と投入releaseを分離した[共通KG適用経路](design/PUBLIC_KG_RELEASES.md)を追加。ローカルの生成・dry-run・追加/表記訂正に加え、明示撤回/新UUID差替え、revision付きcursor/探索失効、KG単独backup/restoreを実装。旧Claimの意味・根拠と会員PGを維持する。次は単一本番構成の試験起動。公開先は `graph.isinxnisi.net`、単一Web＋Neo4j＋会員公開時のPGを既存Caddy配下へ配置する方針。[進捗と未完了](PUBLIC_BETA_PROGRESS.md)を参照。
 
 Phase 16で[Relation・Claim・Predicate・typed qualificationの基本設計](design/RELATION_MODEL_PRINCIPLES.md)を採用した。独立命題とdomain固有限定、null／polarity／期間、identity・比較・表示、根拠と取込由来の境界を今後の設計基準とする。三用途の実装は維持し、新しい語彙・schema・API・UI・datasetは追加していない。下記の初期仕様とPhase別記録を読む際は、後続の採用契約とこの基本設計を併せて確認する。
 
@@ -464,7 +464,7 @@ Step 4のDB/API契約と探索機能を維持し、表示のみ調整した。�
 
 ### 探索モデルの設計レビューと開閉フェーズ
 
-閉じる・条件付き探索・時系列の設計提案は [EXPLORATION_MODEL_REVIEW.md](design/EXPLORATION_MODEL_REVIEW.md) を参照する。移行順序1〜4を採用し実装済み。React state内の取得キャッシュとページ所属・open意図から表示対象を導出する。単一起点のUIを維持し、閉じるでは当該展開の利用を解除する。共有対象は残し、起点から切れた循環は除く。休止した子孫の受理済み範囲は再到達時に復元し、明示的に閉じた子孫は閉じたまま。復元で通信は行わない。
+閉じる・条件付き探索・時系列の設計提案は [EXPLORATION_MODEL_REVIEW.md](design/EXPLORATION_MODEL_REVIEW.md) を参照する。移行順序1〜4を採用し実装済み。React state内の取得キャッシュとページ所属・open意図から表示対象を導出する。単一起点のUIを維持し、閉じるでは当該展開の利用を解除する。共有対象は残し、起点から切れた循環は除く。休止した子孫の受理済み範囲は再到達時に復元し、明示的に閉じた子孫は閉じたまま。凍結datasetの復元では通信を行わない。更新可能なpublic-kgではcache復元前にrevisionだけを確認し、失効時は同じ起点/条件から明示再取得する。
 
 - 表示上限は100 Entity / 200独立Claim。新規ページ・枝の復元を全体で検査し、超過時は拒否する。閉じる後に再試行でき、cursorは受理時だけ進める。
 - 一時キャッシュは400 Entity / 800 Claim。非活動かつ非通信中の展開を古い利用順に所属・cursorごと破棄し、再取得を可能にする。起点変更で全てリセット。
@@ -572,7 +572,7 @@ type EntityOverviewResponse = {
 
 寿命は同じdatasetの画面内セッション。起点切替と条件変更で共通の一件を使い、次の実効的な変更で置換、復帰で消費、検索候補からの新探索・dataset変更による再mount・再読込で失効する。凍結datasetの読み取り環境で、時間による失効やDB版固定は導入しない。将来更新／認可を追加する前に版・認可変更時の失効を決める。検索語・検索結果・条件draft・概要・進行中通信は保存しない。
 
-復帰も新世代にし、通信は再開しない。未完了要求があったEntityはloadingを解除して中断表示／明示再試行を提供し、受理cursorを進めない。座標・pan/zoomはCanvasの小さいview境界から取得／復元する。受理直後で未描画だったNodeは保存座標がないため、既知座標を固定して既存の追加配置ルールで補う。表示Nodeの座標が一つも保存できていなければ初期配置・fitを使い、同じ表示範囲の復元を保証しない。保存がない時は復帰操作を表示せず、元Graphの完全復元を約束しない。DB利用不可でも受理済みGraphへ戻れるが、詳細の再取得・続きを取得する操作は失敗し得る。
+復帰も新世代にし、通信は再開しない。未完了要求があったEntityはloadingを解除して中断表示／明示再試行を提供し、受理cursorを進めない。座標・pan/zoomはCanvasの小さいview境界から取得／復元する。受理直後で未描画だったNodeは保存座標がないため、既知座標を固定して既存の追加配置ルールで補う。表示Nodeの座標が一つも保存できていなければ初期配置・fitを使い、同じ表示範囲の復元を保証しない。保存がない時は復帰操作を表示せず、元Graphの完全復元を約束しない。凍結datasetではDB利用不可でも受理済みGraphへ戻れるが、詳細の再取得・続きを取得する操作は失敗し得る。public-kgは復帰前のrevision確認が必要で、確認に失敗した場合は現在Graphと復帰候補を保持して再試行する。失効した候補は復元しない。
 
 
 ## Phase 09：既存Entity kindへの検索入口の一般化

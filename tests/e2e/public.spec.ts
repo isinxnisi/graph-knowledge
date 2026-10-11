@@ -59,3 +59,45 @@ test("単一APIで全kindを取得し、三限定とdataset境界を維持する
   }
   expect((await (await request.get("/api/entities?q=青葉ハル")).json()).items).toEqual([]);
 });
+
+test("更新失効では旧Graphへ混ぜず、同じ起点・条件を明示読み直しできる", async ({ page }) => {
+  await page.goto("/");
+  await page.getByRole("button", { name: "PLUTOから探索を開始", exact: true }).click();
+  await expect(page.getByTestId("graph-counts")).toHaveText("Entity 4 / Claim 5");
+  let rejected = false;
+  await page.route("**/api/entities/*/neighbors*", async route => {
+    if (rejected) return route.continue();
+    rejected = true;
+    await route.fulfill({ status: 409, contentType: "application/json", body: JSON.stringify({ error: { code: "DATASET_CHANGED", message: "登録データが更新されました。" } }) });
+  });
+  await page.getByTestId("graph-canvas").evaluate(el => {
+    const cy = (el as unknown as { _cyreg: { cy: import("cytoscape").Core } })._cyreg.cy;
+    cy.nodes().filter(node => node.data("kind") === "person").first().emit("tap");
+  });
+  const reload = page.getByRole("button", { name: "更新データで探索を読み直す", exact: true });
+  await expect(reload).toBeVisible();
+  await expect(page.getByText("登録データが更新されました。古い探索へ混ぜず、同じ起点と条件で読み直してください。", { exact: true })).toHaveCount(1);
+  await page.screenshot({ path: "test-results/public-data-changed.png" });
+  await expect(page.getByTestId("graph-counts")).toHaveText("Entity 4 / Claim 5");
+  await reload.click();
+  await expect(reload).toHaveCount(0);
+  await expect(page.getByTestId("graph-counts")).toHaveText("Entity 4 / Claim 5");
+  await expect(page.getByTestId("exploration-root")).toContainText("PLUTO");
+});
+
+test("旧Claimリンクでは撤回理由・元の出典・明示差替え先を読める", async ({ page, request }) => {
+  const search = await (await request.get("/api/entities?q=PLUTO")).json();
+  const neighbors = await (await request.get(`/api/entities/${search.items[0].id}/neighbors`)).json();
+  const old = await (await request.get(`/api/claims/${neighbors.claims[0].id}`)).json();
+  const replacement = neighbors.claims[1].id;
+  await page.route(`**/api/claims/${old.claim.id}`, route => route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify({ ...old,
+    claim: { ...old.claim, withdrawal: { reason: "ブラウザ表示だけの撤回試験", release: "browser-test-only", replacementClaimId: replacement } },
+  }) }));
+  await page.goto(`/?read=claim&dataset=public-kg&id=${old.claim.id}`);
+  const dialog = page.getByRole("dialog");
+  await expect(dialog).toContainText("撤回された主張");
+  await expect(dialog).toContainText("ブラウザ表示だけの撤回試験");
+  await expect(dialog.getByRole("link", { name: "出典のURLを開く" }).first()).toBeVisible();
+  await expect(dialog.getByRole("link", { name: "差替え先の主張を読む" })).toHaveAttribute("href", `/?read=claim&dataset=public-kg&id=${replacement}`);
+  await page.screenshot({ path: "test-results/public-withdrawn-reference.png" });
+});

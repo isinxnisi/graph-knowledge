@@ -12,7 +12,7 @@ Entity詳細／独立Claimカードの閲覧リンクから、対象または一
 
 - `/?read=entity&dataset=<dataset>&id=<UUID>`、`read=claim`の二種。datasetと内部UUID v4は必須。UUIDは小文字へ正規化する。三パラメータの欠損・重複・未知種別・未知datasetは拒否する。
 - 実行環境のdatasetと一致した場合だけ、既存のEntity／Claim APIへ取得する。別datasetを現在環境へ読み替えず、自動接続・自動切替しない。リンクが要求するdataset名を表示する。
-- URLは現在閲覧可能なKG参照。内容版の固定、認可、公開範囲の変更、Global受入を意味しない。閲覧は既存APIのpublished境界に従う。私的Capsule・メモをURLに含めない。
+- URLは現在閲覧可能なKG参照。内容版の固定、認可、公開範囲の変更、Global受入を意味しない。閲覧はpublished境界を基本とする。public-kgの明示撤回Claimだけは[公開KG契約](PUBLIC_KG_RELEASES.md)に従い撤回理由・元の主張/根拠・差替え先を表示する。通常hiddenを公開せず、自動転送しない。私的Capsule・メモをURLに含めない。
 - 枝・条件・配置・履歴・Source本文・表示束IDはURLへ保存しない。既存の保存ビュー／途中保存／Capsuleの形式とキーは変更しない。DB/schema・知識のidentity・datasetの変更・移行はない。
 - この初回はクライアントの閲覧画面。検索向けのSSR本文・OG・sitemap・一般公開は対象外。入口ページ全体に`noindex, nofollow`を設定し、検索掲載をこの導線の追加で許可しない。認可の代替ではない。
 

@@ -17,8 +17,8 @@ import { relationPresentation } from "../lib/client/relation-presentation";
 import { relationPresentationLabels } from "../lib/i18n/relation-presentation";
 import examples from "../docs/API_RESPONSE_EXAMPLES.json";
 import type { ClaimSummary, ClaimDetail, ClaimResponse, NeighborsResponse, EntitySummary } from "../lib/domain/api";
-import { fetchNeighbors, fetchClaim, searchEntities } from "../lib/client/api";
-vi.mock("../lib/client/api", () => ({ fetchNeighbors: vi.fn(), fetchClaim: vi.fn(), searchEntities: vi.fn(), errorMessage: () => "取得失敗" }));
+import { ClientApiError, fetchDatasetRevision, fetchNeighbors, fetchClaim, searchEntities } from "../lib/client/api";
+vi.mock("../lib/client/api", async importOriginal => ({ ...(await importOriginal<typeof import("../lib/client/api")>()), fetchDatasetRevision: vi.fn(), fetchNeighbors: vi.fn(), fetchClaim: vi.fn(), searchEntities: vi.fn(), errorMessage: () => "取得失敗" }));
 afterEach(() => { cleanup(); vi.clearAllMocks(); });
 const page = examples.neighbors as NeighborsResponse;
 const root = page.nodes[0];
@@ -1178,4 +1178,78 @@ describe("Relationの概要と独立した主張の読み分け", () => {
     await waitFor(() => expect(screen.getByTestId(`claim-card-${base.id}`)).toBeDefined());
     expect(screen.queryByRole("alert")).toBeNull();
   });
+});
+
+describe("共通KGの更新と探索キャッシュ", () => {
+  it("ページの版が違う場合、Claim・cursor・座標用cacheを一切マージしない", () => {
+    const first = mergePage(emptyGraph(), { ...page, revision: "a" });
+    expect(() => mergePage(first, { ...page, revision: "b" })).toThrow(/更新/);
+    expect(first.revision).toBe("a");
+    expect(first.cacheClaims).toEqual(Object.fromEntries(page.claims.map(claim => [claim.id, claim])));
+  });
+  it("409で探索を保持し、明示読み直しだけが新世代・新しい版になる", async () => {
+    vi.mocked(fetchNeighbors).mockResolvedValueOnce({ ...page, revision: "a" });
+    const { result } = renderHook(() => useGraphExplorer());
+    act(() => result.current.chooseRoot(root));
+    await waitFor(() => expect(result.current.graph.revision).toBe("a"));
+    const other = page.nodes.find(node => node.id !== root.id)!;
+    vi.mocked(fetchNeighbors).mockRejectedValueOnce(new ClientApiError("更新", 409));
+    await act(() => result.current.expand(other.id));
+    expect(result.current.dataChanged).toBe(true);
+    expect(Object.keys(result.current.graph.claims)).toHaveLength(page.claims.length);
+    vi.mocked(fetchNeighbors).mockResolvedValueOnce({ ...page, revision: "b" });
+    act(() => result.current.reloadData());
+    await waitFor(() => expect(result.current.graph.revision).toBe("b"));
+    expect(result.current.dataChanged).toBe(false);
+    expect(result.current.previous).toBeNull();
+  });
+  it("古い閉枝と直前探索はrevision確認なしに復元せず、異なる版を拒否", async () => {
+    vi.mocked(fetchNeighbors).mockResolvedValue({ ...page, revision: "a" });
+    vi.mocked(fetchDatasetRevision).mockResolvedValue({ dataset: "public-kg", revision: "b" });
+    const { result } = renderHook(() => useGraphExplorer());
+    act(() => result.current.chooseRoot(root));
+    await waitFor(() => expect(result.current.graph.revision).toBe("a"));
+    act(() => result.current.close(root.id));
+    await act(() => result.current.expand(root.id));
+    expect(result.current.graph.expansions[root.id].open).toBe(false);
+    expect(result.current.dataChanged).toBe(true);
+    act(() => result.current.switchRoot(root, "broad", null));
+    // 同じ起点/同じ条件への切替は新しい探索を作らない。
+    expect(result.current.dataChanged).toBe(true);
+  });
+  it("新しいGraphから旧版の直前探索へ戻ろうとしても、新Graphを失わない", async () => {
+    vi.mocked(fetchNeighbors).mockResolvedValueOnce({ ...page, revision: "a" });
+    const { result } = renderHook(() => useGraphExplorer());
+    act(() => result.current.chooseRoot(root));
+    await waitFor(() => expect(result.current.graph.revision).toBe("a"));
+    const other = page.nodes.find(node => node.id !== root.id)!;
+    vi.mocked(fetchNeighbors).mockResolvedValueOnce({ ...page, centerId: other.id, revision: "b" });
+    act(() => result.current.switchRoot(other, "same", null));
+    await waitFor(() => expect(result.current.graph.revision).toBe("b"));
+    vi.mocked(fetchDatasetRevision).mockResolvedValue({ dataset: "public-kg", revision: "b" });
+    await act(() => result.current.restorePrevious());
+    expect(result.current.graph.centerId).toBe(other.id);
+    expect(result.current.graph.revision).toBe("b");
+    expect(result.current.previous).toBeNull();
+    expect(result.current.dataChanged).toBe(false);
+  });
+});
+
+it("版失効後の遅い応答は新しい探索へ混ざらない", async () => {
+  const late = deferred();
+  vi.mocked(fetchNeighbors).mockResolvedValueOnce({ ...page, revision: "a" });
+  const { result } = renderHook(() => useGraphExplorer());
+  act(() => result.current.chooseRoot(root));
+  await waitFor(() => expect(result.current.graph.revision).toBe("a"));
+  const others = page.nodes.filter(node => node.id !== root.id);
+  vi.mocked(fetchNeighbors).mockReturnValueOnce(late.promise).mockRejectedValueOnce(new ClientApiError("更新", 409));
+  act(() => { void result.current.expand(others[0].id); });
+  await act(() => result.current.expand(others[1].id));
+  expect(result.current.dataChanged).toBe(true);
+  vi.mocked(fetchNeighbors).mockResolvedValueOnce({ ...page, revision: "b" });
+  act(() => result.current.reloadData());
+  await waitFor(() => expect(result.current.graph.revision).toBe("b"));
+  const before = result.current.graph;
+  await act(() => late.resolve({ ...page, centerId: others[0].id, revision: "a" }));
+  expect(result.current.graph).toBe(before);
 });

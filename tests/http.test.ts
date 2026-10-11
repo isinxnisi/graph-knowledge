@@ -1,8 +1,22 @@
 import { vi, describe, expect, it } from "vitest";
 import { Neo4jError } from "neo4j-driver";
-import { handle, neighborsInput, parseId, searchInput } from "../lib/server/http";
+import { ApiError, handle, neighborsInput, parseId, searchInput, revisionInput } from "../lib/server/http";
 
 describe("API input and errors", () => {
+  it("revisionはpublicだけで単一の識別子を受け付け、更新競合を409で返す", async () => {
+    try {
+      vi.stubEnv("GRAPH_DATASET", "public-kg");
+      expect(revisionInput(new Request("http://localhost/?revision=legacy:20261011-001"))).toBe("legacy:20261011-001");
+      for (const query of ["revision=", "revision=x&revision=y", "revision=%20x"]) {
+        expect(() => revisionInput(new Request(`http://localhost/?${query}`))).toThrow();
+      }
+      const response = await handle(async () => { throw new ApiError(409, "DATASET_CHANGED", "更新済み"); });
+      expect(response.status).toBe(409);
+      expect((await response.json()).error.code).toBe("DATASET_CHANGED");
+      vi.stubEnv("GRAPH_DATASET", "demo");
+      expect(() => revisionInput(new Request("http://localhost/?revision=x"))).toThrow();
+    } finally { vi.unstubAllEnvs(); }
+  });
   it("normalizes search with the same function used by seed", () => {
     expect(searchInput(new Request("http://localhost/api/entities?q=%20ＡＢＣ%20"))).toEqual({ q: "abc", limit: 10, kinds: ["person", "work", "organization", "event"] });
     expect(searchInput(new Request("http://localhost/api/entities?q=x&kind=work&limit=1"))).toEqual({ q: "x", limit: 1, kinds: ["work"] });

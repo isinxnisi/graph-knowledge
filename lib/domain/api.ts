@@ -14,6 +14,7 @@ export const citationDetailSchema = citationSchema.omit({ claimId: true, sourceI
 export const claimDetailSchema = claimSummarySchema.extend({
   createdAt: claimSchema.shape.createdAt, updatedAt: claimSchema.shape.updatedAt,
   citations: z.array(citationDetailSchema),
+  withdrawal: z.strictObject({ reason: z.string().min(1), release: z.string().min(1), replacementClaimId: z.uuidv4().nullable() }).optional(),
 });
 
 export type EntitySummary = z.infer<typeof entitySummarySchema>;
@@ -25,10 +26,11 @@ export type SourceDetail = z.infer<typeof sourceSchema>;
 export type EntitySearchResponse = { items: EntityDetail[]; hasMore: boolean };
 export type EntityResponse = { entity: EntityDetail };
 export type NeighborsResponse = {
+  revision?: string;
   centerId: string; nodes: EntitySummary[]; claims: ClaimSummary[];
   page: { nextCursor: string | null; hasMore: boolean };
 };
-export type ClaimResponse = { claim: ClaimDetail; relatedClaimIds: string[] };
+export type ClaimResponse = { claim: ClaimDetail; relatedClaimIds: string[]; revision?: string };
 
 // 登録主張の集計。関係先・根拠・探索cursorは含めない。
 export const overviewCountsSchema = z.strictObject({ affirmed: z.number().int().nonnegative(), denied: z.number().int().nonnegative() });

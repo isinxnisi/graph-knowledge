@@ -39,9 +39,11 @@ async function get<T>(path: string, signal: AbortSignal): Promise<T> {
 
 export const searchEntities = (q: string, signal: AbortSignal, kind: import("../domain/search").SearchKind | null = null) => get<EntitySearchResponse>(`/api/entities?${new URLSearchParams({ q, ...(kind === null ? {} : { kind }) })}`, signal);
 export const fetchEntity = (id: string, signal: AbortSignal) => get<EntityResponse>(`/api/entities/${encodeURIComponent(id)}`, signal);
-export const fetchClaim = (id: string, signal: AbortSignal) => get<ClaimResponse>(`/api/claims/${encodeURIComponent(id)}`, signal);
-export const fetchNeighbors = (id: string, after: string | null, signal: AbortSignal, predicates: PredicateFilter = null, roles: ContributionRoleFilter = null, positions: OrganizationPositionFilter = null, eventRoles: EventRoleFilter = null) => {
+export const fetchClaim = (id: string, signal: AbortSignal, revision: string | null = null) => get<ClaimResponse>(`/api/claims/${encodeURIComponent(id)}${revision ? `?${new URLSearchParams({ revision })}` : ""}`, signal);
+export const fetchDatasetRevision = (signal: AbortSignal) => get<{ dataset: string; revision: string | null }>("/api/dataset", signal);
+export const fetchNeighbors = (id: string, after: string | null, signal: AbortSignal, predicates: PredicateFilter = null, roles: ContributionRoleFilter = null, positions: OrganizationPositionFilter = null, eventRoles: EventRoleFilter = null, revision: string | null = null) => {
   const params = new URLSearchParams();
+  if (revision) params.set("revision", revision);
   if (eventRoles !== null) params.set("eventRoles", eventRoles.join(","));
   if (after !== null) params.set("after", after);
   if (positions !== null) params.set("organizationPositions", positions.join(","));

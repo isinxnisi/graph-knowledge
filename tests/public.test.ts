@@ -78,3 +78,45 @@ describe("公開準備の共通KG", () => {
     expect(() => validatePublicRelease(duplicate)).toThrow(/origin/);
   });
 });
+
+it("明示撤回だけを許可し、差替え循環・由来欠落・既存意味の変更を拒否", async () => {
+  const { sha256 } = await import("../lib/server/public-dataset");
+  const first = await loadPublicRelease(), changed = structuredClone(first);
+  const old = changed.fixture.claims[0]; old.visibility = "hidden";
+  changed.manifest.release = "unit-withdrawal"; changed.manifest.baseRelease = first.manifest.release;
+  changed.manifest.dataSha256 = sha256(JSON.stringify(changed.fixture, null, 2) + "\n");
+  expect(() => validatePublicRelease(changed)).toThrow(/explicit withdrawal/);
+  changed.manifest.withdrawals = [{ claimId: old.id, reason: "検証用", release: changed.manifest.release, replacementClaimId: null }];
+  expect(() => validatePublicRelease(changed)).not.toThrow();
+  expect(planPublicGraph(publicGraph(first.fixture), publicGraph(changed.fixture, changed.manifest.withdrawals)).updated).toEqual([`Claim:${old.id}`]);
+  const semantics = structuredClone(changed.fixture); semantics.claims[0].polarity = "denied";
+  expect(() => planPublicGraph(publicGraph(first.fixture), publicGraph(semantics, changed.manifest.withdrawals))).toThrow(/Claim meaning/);
+  changed.manifest.withdrawals[0].replacementClaimId = old.id;
+  expect(() => validatePublicRelease(changed)).toThrow(/Replacement/);
+});
+
+it("public cursorは無条件でも版・起点・三限定へ結合し、旧UUID形式を受け入れない", async () => {
+  const { encodeNeighborCursor, decodeNeighborCursor } = await import("../lib/server/neighbor-cursor");
+  const first = await loadPublicRelease(), claim = first.fixture.claims[0];
+  const cursor = encodeNeighborCursor(claim.subjectId, null, claim.id, null, "public-kg", null, null, "revision-a");
+  expect(decodeNeighborCursor(cursor, claim.subjectId, null, null, "public-kg", null, null, "revision-a")).toBe(claim.id);
+  expect(() => decodeNeighborCursor(cursor, claim.subjectId, null, null, "public-kg", null, null, "revision-b")).toThrow(/更新/);
+  expect(() => decodeNeighborCursor(cursor, claim.objectId, null, null, "public-kg", null, null, "revision-a")).toThrow();
+  expect(() => decodeNeighborCursor(claim.id, claim.subjectId, null, null, "public-kg", null, null, "revision-a")).toThrow();
+  expect(() => decodeNeighborCursor(cursor, claim.subjectId, null, ["PRODUCING"], "public-kg", null, null, "revision-a")).toThrow();
+});
+
+it("復旧用の指紋は表記・撤回を意味変更と扱わず、Claimの命題差を検出する", async () => {
+  const { graphIdentities, mergeIdentities } = await import("../lib/server/public-identities");
+  const { fixture } = await loadPublicRelease();
+  const identities = graphIdentities(publicGraph(fixture));
+  const changed = structuredClone(fixture); changed.entities[0].description = "表記訂正"; changed.claims[0].visibility = "hidden";
+  expect(() => mergeIdentities(identities, graphIdentities(publicGraph(changed)))).not.toThrow();
+  changed.claims[0].polarity = changed.claims[0].polarity === "affirmed" ? "denied" : "affirmed";
+  expect(() => mergeIdentities(identities, graphIdentities(publicGraph(changed)))).toThrow(/identity.*meaning/);
+  const moved = structuredClone(fixture);
+  const owner = moved.entities.find(entity => entity.externalIds.length)!;
+  const target = moved.entities.find(entity => entity.id !== owner.id)!;
+  target.externalIds.push(owner.externalIds.pop()!);
+  expect(() => mergeIdentities(identities, graphIdentities(publicGraph(moved)))).toThrow(/identity.*meaning/);
+});

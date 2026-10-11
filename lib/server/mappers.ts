@@ -38,7 +38,7 @@ export function claimSummary(properties: Properties, subject: EntitySummary, obj
   if (subject.kind !== definition.subjectKind || object.kind !== definition.objectKind) throw new Error("Invalid stored predicate kinds");
   return result;
 }
-function sourceDetail(properties: Properties) {
+export function sourceDetail(properties: Properties) {
   return sourceSchema.parse({
     id: properties.id, kind: properties.kind, title: properties.title, authors: properties.authors ?? [],
     publisher: properties.publisher ?? null, url: properties.url ?? null,

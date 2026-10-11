@@ -132,3 +132,15 @@ describe("直接閲覧の表示と探索境界", () => {
     await waitFor(() => expect(within(screen.getByRole("dialog")).getByText("青葉ハルへのインタビュー")).toBeTruthy());
   });
 });
+
+it("撤回された直接参照は元の根拠と同datasetの差替え先を明示し、自動転送しない", async () => {
+  const replacement = claim.objectId;
+  vi.mocked(fetchClaim).mockResolvedValue({ claim: { ...claim, withdrawal: { reason: "資料再確認による撤回", release: "test-release", replacementClaimId: replacement } }, relatedClaimIds: [] });
+  const onExplore = vi.fn();
+  render(<ReferenceReader dataset="demo" location={location} onClose={vi.fn()} onExplore={onExplore} />);
+  await screen.findByText("撤回された主張");
+  expect(screen.getByText("資料再確認による撤回")).toBeDefined();
+  expect(screen.getByRole("link", { name: "差替え先の主張を読む" }).getAttribute("href")).toBe(readingHref({ kind: "claim", dataset: "demo", id: replacement }));
+  expect(screen.getByText(`参照箇所：${claim.citations[0].locator}`)).toBeDefined();
+  expect(onExplore).not.toHaveBeenCalled();
+});

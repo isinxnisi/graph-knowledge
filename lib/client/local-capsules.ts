@@ -1,7 +1,8 @@
+import { dataReleaseLabels } from "../i18n/data-release";
 import { z } from "zod";
 import { DATASET_MODES, type DatasetMode } from "../domain/dataset";
 import { claimDetailSchema, entityDetailSchema, type ClaimDetail, type EntityDetail } from "../domain/api";
-import { ClientApiError, fetchClaim, fetchEntity } from "./api";
+import { ClientApiError, fetchDatasetRevision, fetchClaim, fetchEntity } from "./api";
 import { emptyGraph, type GraphState } from "./graph-state";
 
 export const CAPSULE_LIMITS = { count: 10, entities: 30, claims: 60, title: 80, note: 4000, bytes: 300_000 } as const;
@@ -112,6 +113,7 @@ export type ResolvedCapsule = { entities: Record<string, EntityDetail>; claims: 
 // Four workers bound requests; the owning UI bounds the whole read and aborts on exit.
 export async function resolveCapsule(capsule: LocalCapsule, signal: AbortSignal): Promise<ResolvedCapsule> {
   const value = capsuleSchema.parse(capsule);
+  const revision = value.dataset === "public-kg" ? (await fetchDatasetRevision(signal)).revision : null;
   const result: ResolvedCapsule = { entities: {}, claims: {}, issues: [] };
   const tasks = [...value.entityIds.map(id => ({ kind: "entity" as const, id })), ...value.claimIds.map(id => ({ kind: "claim" as const, id }))];
   let cursor = 0;
@@ -125,7 +127,7 @@ export async function resolveCapsule(capsule: LocalCapsule, signal: AbortSignal)
           if (entity.id !== task.id) throw new Error();
           result.entities[task.id] = entity;
         } else {
-          const claim = claimDetailSchema.parse((await fetchClaim(task.id, signal)).claim);
+          const claim = claimDetailSchema.parse((await (revision ? fetchClaim(task.id, signal, revision) : fetchClaim(task.id, signal))).claim);
           if (claim.id !== task.id) throw new Error();
           if (!value.entityIds.includes(claim.subjectId) || !value.entityIds.includes(claim.objectId)) {
             result.issues.push({ ...task, reason: "endpoints" });
@@ -138,11 +140,12 @@ export async function resolveCapsule(capsule: LocalCapsule, signal: AbortSignal)
     }
   }));
   signal.throwIfAborted();
+  if (revision && (await fetchDatasetRevision(signal)).revision !== revision) throw new ClientApiError(dataReleaseLabels().readingChanged, 409);
   return result;
 }
 export function capsuleGraph(resolved: ResolvedCapsule): GraphState {
   // This is a renderer adapter, never projectGraph/exploration persistence.
   const nodes = resolved.entities;
-  const claims = Object.fromEntries(Object.entries(resolved.claims).filter(([, claim]) => nodes[claim.subjectId] && nodes[claim.objectId]));
+  const claims = Object.fromEntries(Object.entries(resolved.claims).filter(([, claim]) => !claim.withdrawal && nodes[claim.subjectId] && nodes[claim.objectId]));
   return { ...emptyGraph(), nodes, claims };
 }

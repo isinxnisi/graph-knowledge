@@ -5,12 +5,12 @@ import { CAPSULE_LIMITS, CapsuleError, capsuleContentChanged, capsuleEditCandida
 import { contentPositions } from "../lib/client/graph-layout";
 import { displayRelations } from "../lib/client/graph-presentation";
 import { emptyGraph } from "../lib/client/graph-state";
-import { ClientApiError, fetchClaim, fetchEntity } from "../lib/client/api";
+import { ClientApiError, fetchDatasetRevision, fetchClaim, fetchEntity } from "../lib/client/api";
 import type { ClaimResponse, EntityResponse, NeighborsResponse } from "../lib/domain/api";
 import CapsuleDialog from "../components/CapsuleDialog";
 import examples from "../docs/API_RESPONSE_EXAMPLES.json";
 
-vi.mock("../lib/client/api", async original => ({ ...await original<typeof import("../lib/client/api")>(), fetchEntity: vi.fn(), fetchClaim: vi.fn() }));
+vi.mock("../lib/client/api", async original => ({ ...await original<typeof import("../lib/client/api")>(), fetchDatasetRevision: vi.fn(), fetchEntity: vi.fn(), fetchClaim: vi.fn() }));
 vi.mock("../components/GraphCanvas", () => ({ default: () => <div>Capsule Graph</div> }));
 const page = examples.neighbors as NeighborsResponse;
 const claim = examples.claim.claim as ClaimResponse["claim"];
@@ -377,4 +377,20 @@ describe("Capsule編集の操作", () => {
     expect((screen.getByRole("button", { name: "変更を保存" }) as HTMLButtonElement).disabled).toBe(true);
     expect(readCapsules(localStorage, "demo")).toEqual([other]);
   });
+});
+
+it("保存された撤回Claimの根拠を残し、現在の関係線へ混ぜない", async () => {
+  const withdrawn = { ...claim, withdrawal: { reason: "撤回の試験", release: "test-release", replacementClaimId: null } };
+  vi.mocked(fetchClaim).mockResolvedValue({ claim: withdrawn, relatedClaimIds: [] });
+  const resolved = await resolveCapsule(capsule(), new AbortController().signal);
+  expect(resolved.claims[claim.id].withdrawal?.reason).toBe("撤回の試験");
+  expect(resolved.claims[claim.id].citations).toEqual(claim.citations);
+  expect(capsuleGraph(resolved).claims[claim.id]).toBeUndefined();
+  expect(capsule().claimIds).toContain(claim.id);
+});
+
+it("public Capsuleは一つのrevisionへ結合し、再読込途中の更新では部分表示しない", async () => {
+  vi.mocked(fetchDatasetRevision).mockResolvedValueOnce({ dataset: "public-kg", revision: "a" }).mockResolvedValueOnce({ dataset: "public-kg", revision: "b" });
+  await expect(resolveCapsule(capsule({ dataset: "public-kg" }), new AbortController().signal)).rejects.toMatchObject({ status: 409 });
+  expect(fetchClaim).toHaveBeenCalledWith(claim.id, expect.any(AbortSignal), "a");
 });

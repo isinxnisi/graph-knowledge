@@ -2,7 +2,8 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { DatasetMode } from "../lib/domain/dataset";
-import type { ClaimSummary, EntitySummary } from "../lib/domain/api";
+import { dataReleaseLabels } from "../lib/i18n/data-release";
+import type { ClaimDetail, ClaimSummary, EntitySummary } from "../lib/domain/api";
 import type { GraphState, Selection } from "../lib/client/graph-state";
 import { CAPSULE_LIMITS, CapsuleError, capsuleContentChanged, capsuleEditCandidates, capsuleGraph, capsulesKey, createCapsule, readCapsules, resolveCapsule, reviseCapsule, writeCapsule, type LocalCapsule, type ResolvedCapsule } from "../lib/client/local-capsules";
 import { formatPeriod, KIND_LABELS, polarityLabel, qualificationLabel, relationLabel } from "../lib/client/format";
@@ -21,9 +22,9 @@ import css from "./CapsuleDialog.module.css";
 function claimLabel(claim: ClaimSummary, nodes: Record<string, EntitySummary>) {
   return `${nodes[claim.subjectId]?.name ?? claim.subjectId} → ${relationLabel(claim)} → ${nodes[claim.objectId]?.name ?? claim.objectId}`;
 }
-export function ClaimCaption({ claim, nodes }: { claim: ClaimSummary; nodes: Record<string, EntitySummary> }) {
+export function ClaimCaption({ claim, nodes }: { claim: ClaimSummary & { withdrawal?: ClaimDetail["withdrawal"] }; nodes: Record<string, EntitySummary> }) {
   const scope = claim.contribution?.scope, contribution = contributionLabels();
-  return <><strong>{claimLabel(claim, nodes)}</strong>{" "}<span>{[polarityLabel(claim), qualificationLabel(claim), formatPeriod(claim.period)].filter(Boolean).join(" / ")}</span>
+  return <>{claim.withdrawal && <strong>{dataReleaseLabels().withdrawn} · </strong>}<strong>{claimLabel(claim, nodes)}</strong>{" "}<span>{[polarityLabel(claim), qualificationLabel(claim), formatPeriod(claim.period)].filter(Boolean).join(" / ")}</span>
     {scope && <span>{contribution.scope}：{scope.volumeLabel ?? contribution.volumeUnknown} / {scope.editionLabel ?? contribution.editionUnknown} / ISBN {scope.isbn13} / {scope.language}</span>}
     <small className={styles.muted}>ID: {claim.id}</small></>;
 }
@@ -75,7 +76,7 @@ export function CapsuleReader({ capsule, onEdit, explorationLinks = false, noteA
           <code>{selectedEntity.id}</code>
           {explorationLinks && <p><a href={readingHref({ kind: "entity", dataset: capsule.dataset, id: selectedEntity.id })} target="_blank" rel="noopener noreferrer">{memberLabels().exploreEntity}</a></p>}</>}
         {!claimIds.length && <p className={styles.muted}>{text.chooseClaim}</p>}
-        {claimIds.map(id => resolved.claims[id] && <ClaimCard key={id} idPrefix="capsule-" title={text.selectedClaim} claim={resolved.claims[id]} nodes={resolved.entities} />)}
+        {claimIds.map(id => resolved.claims[id] && <ClaimCard referenceDataset={capsule.dataset} key={id} idPrefix="capsule-" title={text.selectedClaim} claim={resolved.claims[id]} nodes={resolved.entities} />)}
       </div>
     </>}
   </section>;

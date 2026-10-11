@@ -8,7 +8,8 @@ import { eventRoleSchema } from "../domain/event-participation";
 import { int } from "neo4j-driver";
 import { claimDetailSchema, type EntitySearchResponse, type EntityResponse, type NeighborsResponse, type ClaimResponse } from "../domain/api";
 import type { EventRoleFilter, ContributionRoleFilter, OrganizationPositionFilter, PredicateFilter } from "../domain/exploration";
-import { encodeNeighborCursor } from "./neighbor-cursor";
+import { readPublicRevision } from "./public-revision";
+import { encodeNeighborCursor, decodeNeighborCursor } from "./neighbor-cursor";
 import { ApiError } from "./http";
 import { readTransaction } from "./read-db";
 import { entitySummary, entityDetail, claimSummary, citationDetail, relatedId } from "./mappers";
@@ -31,12 +32,14 @@ export function getEntity(id: string): Promise<EntityResponse> {
   });
 }
 
-export function getNeighbors(id: string, limit: number, after: string | null, predicates: PredicateFilter = null, contributionRoles: ContributionRoleFilter = null, organizationPositions: OrganizationPositionFilter = null, eventRoles: EventRoleFilter = null): Promise<NeighborsResponse> {
+export function getNeighbors(id: string, limit: number, after: string | null, predicates: PredicateFilter = null, contributionRoles: ContributionRoleFilter = null, organizationPositions: OrganizationPositionFilter = null, eventRoles: EventRoleFilter = null, expectedRevision: string | null = null): Promise<NeighborsResponse> {
   return readTransaction(async (tx) => {
+    const revision = process.env.GRAPH_DATASET === "public-kg" ? await readPublicRevision(tx, expectedRevision) : null;
+    const queryAfter = revision ? decodeNeighborCursor(after, id, predicates, contributionRoles, "public-kg", organizationPositions, eventRoles, revision) : after;
     const centerResult = await tx.run(ENTITY_DETAIL, { id });
     if (!centerResult.records.length) throw notFound();
     const center = entitySummary(centerResult.records[0].get("entity"));
-    const result = await tx.run(eventRoles !== null ? NEIGHBORS_BY_EVENT : organizationPositions !== null ? NEIGHBORS_BY_QUALIFICATION : contributionRoles === null ? NEIGHBORS : NEIGHBORS_BY_ROLE, { id, after, predicates, contributionRoles, organizationPositions, eventRoles, take: int(limit + 1) });
+    const result = await tx.run(eventRoles !== null ? NEIGHBORS_BY_EVENT : organizationPositions !== null ? NEIGHBORS_BY_QUALIFICATION : contributionRoles === null ? NEIGHBORS : NEIGHBORS_BY_ROLE, { id, after: queryAfter, predicates, contributionRoles, organizationPositions, eventRoles, take: int(limit + 1) });
     const nodes = new Map([[center.id, center]]);
     const claims = result.records.slice(0, limit).map((record) => {
       const subject = entitySummary(record.get("subject"));
@@ -45,25 +48,35 @@ export function getNeighbors(id: string, limit: number, after: string | null, pr
       return claimSummary(record.get("claim"), subject, object, record.get("sourceCount").toNumber());
     });
     const hasMore = result.records.length > limit;
-    return { centerId: id, nodes: [...nodes.values()], claims,
-      page: { hasMore, nextCursor: hasMore ? encodeNeighborCursor(id, predicates, claims.at(-1)!.id, contributionRoles, undefined, organizationPositions, eventRoles) : null } };
+    if (revision) await readPublicRevision(tx, revision);
+    return { ...(revision ? { revision } : {}), centerId: id, nodes: [...nodes.values()], claims,
+      page: { hasMore, nextCursor: hasMore ? encodeNeighborCursor(id, predicates, claims.at(-1)!.id, contributionRoles, undefined, organizationPositions, eventRoles, revision ?? undefined) : null } };
   });
 }
 
-export function getClaim(id: string): Promise<ClaimResponse> {
+export function getClaim(id: string, expectedRevision: string | null = null): Promise<ClaimResponse> {
   return readTransaction(async (tx) => {
-    const result = await tx.run(CLAIM_DETAIL, { id });
+    const revision = process.env.GRAPH_DATASET === "public-kg" ? await readPublicRevision(tx, expectedRevision) : null;
+    const query = revision ? CLAIM_DETAIL.replace("WHERE c.visibility = 'published'", "WHERE c.visibility IN ['published', 'hidden']") : CLAIM_DETAIL;
+    const result = await tx.run(query, { id });
     if (!result.records.length) throw notFound();
     if (result.records.length !== 1) throw new Error("Invalid claim cardinality");
     const record = result.records[0];
     const properties = record.get("claim");
+    // 明示撤回だけ旧参照を読める。通常の非公開Claimは公開KGでも返さない。
+    const withdrawn = revision && properties.visibility === "hidden" &&
+      typeof properties.withdrawalReason === "string" && properties.withdrawalReason.trim().length > 0 &&
+      typeof properties.withdrawnInRelease === "string" && properties.withdrawnInRelease.trim().length > 0;
+    if (properties.visibility !== "published" && !withdrawn) throw notFound();
     const summary = claimSummary(properties, entitySummary(record.get("subject")), entitySummary(record.get("object")), record.get("sourceCount").toNumber());
     const citations = (record.get("citations") as { citation: Record<string, unknown>; source: Record<string, unknown> }[])
       .map(({ citation, source }) => citationDetail(citation, source));
     if (citations.some(c => c.eventParticipationEvidence && !summary.eventParticipation || c.positionEvidence && !summary.organizationParticipation || c.roleEvidence && summary.predicate !== "CONTRIBUTED_TO")) throw new Error("Stored evidence qualification mismatch");
-    const claim = claimDetailSchema.parse({ ...summary, createdAt: properties.createdAt, updatedAt: properties.updatedAt, citations });
+    const claim = claimDetailSchema.parse({ ...summary, createdAt: properties.createdAt, updatedAt: properties.updatedAt, citations,
+      ...(withdrawn ? { withdrawal: { reason: properties.withdrawalReason, release: properties.withdrawnInRelease, replacementClaimId: properties.replacementClaimId ?? null } } : {}) });
     const related = await tx.run(RELATED_CLAIMS, { id, subjectId: summary.subjectId, objectId: summary.objectId, predicate: summary.predicate });
-    return { claim, relatedClaimIds: related.records.map((r) => relatedId(r.get("id"))) };
+    if (revision) await readPublicRevision(tx, revision);
+    return { ...(revision ? { revision } : {}), claim, relatedClaimIds: related.records.map((r) => relatedId(r.get("id"))) };
   });
 }
 

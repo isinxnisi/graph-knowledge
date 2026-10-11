@@ -1,5 +1,7 @@
 import { matchesClaim, predicateKey, type EventRoleFilter, type ContributionRoleFilter, type OrganizationPositionFilter, type PredicateFilter } from "../domain/exploration";
 import type { ClaimSummary, EntitySummary, NeighborsResponse } from "../domain/api";
+import { ClientApiError } from "./api";
+import { dataReleaseLabels } from "../i18n/data-release";
 
 export const GRAPH_LIMITS = { entities: 100, claims: 200 } as const;
 export const CACHE_LIMITS = { entities: 400, claims: 800 } as const;
@@ -12,6 +14,7 @@ export type Expansion = {
   loading: boolean; error: string | null; blocked: boolean; request: number; used: number;
 };
 export type GraphState = {
+  revision?: string;
   predicates: PredicateFilter; contributionRoles: ContributionRoleFilter; organizationPositions: OrganizationPositionFilter; eventRoles: EventRoleFilter; conditionKey: string;
   generation: number; roots: string[]; centerId: string | null;
   nodes: Record<string, EntitySummary>; claims: Record<string, ClaimSummary>;
@@ -74,6 +77,7 @@ function reject(graph: GraphState, id: string, message = GRAPH_LIMIT_MESSAGE): G
 }
 
 export function mergePage(graph: GraphState, page: NeighborsResponse, after: string | null = null): GraphState {
+  if (graph.revision && graph.revision !== page.revision) throw new ClientApiError(dataReleaseLabels().changed, 409);
   if (page.claims.some((claim) => !matchesClaim(claim, graph.predicates, graph.contributionRoles ?? null, graph.organizationPositions ?? null, graph.eventRoles ?? null))) throw new Error("Unexpected predicate");
   const previous = graph.expansions[page.centerId] ?? emptyExpansion();
   const cacheNodes = { ...graph.cacheNodes }; const cacheClaims = { ...graph.cacheClaims };
@@ -82,7 +86,7 @@ export function mergePage(graph: GraphState, page: NeighborsResponse, after: str
   const roots = graph.roots.length ? graph.roots : [page.centerId];
   const accepted = { after, claimIds: page.claims.map((claim) => claim.id), nextCursor: page.page.nextCursor };
   const pages = [...previous.pages.filter((entry) => entry.after !== after), accepted];
-  let candidate = projectGraph({ ...graph, roots, centerId: roots[0], cacheNodes, cacheClaims, lastExpandedId: page.centerId, evictedIds: graph.evictedIds.filter((id) => id !== page.centerId), clock: graph.clock + 1, notice: null,
+  let candidate = projectGraph({ ...graph, ...(page.revision ? { revision: page.revision } : {}), roots, centerId: roots[0], cacheNodes, cacheClaims, lastExpandedId: page.centerId, evictedIds: graph.evictedIds.filter((id) => id !== page.centerId), clock: graph.clock + 1, notice: null,
     expansions: { ...graph.expansions, [page.centerId]: { ...previous, open: true, pages,
       nextCursor: page.page.nextCursor, hasMore: page.page.hasMore, loading: false, error: null, blocked: false, used: graph.clock + 1 } } });
   if (!withinLimits(candidate)) return reject(graph, page.centerId);

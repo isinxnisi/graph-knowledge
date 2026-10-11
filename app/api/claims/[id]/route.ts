@@ -1,10 +1,10 @@
 import { getClaim } from "../../../../lib/server/graph";
-import { handle, parseId } from "../../../../lib/server/http";
+import { handle, parseId, revisionInput } from "../../../../lib/server/http";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
-export async function GET(_request: Request, context: { params: Promise<{ id: string }> }) {
-  return handle(async () => getClaim(parseId((await context.params).id)));
+export async function GET(request: Request, context: { params: Promise<{ id: string }> }) {
+  return handle(async () => getClaim(parseId((await context.params).id), revisionInput(request)));
 }
 export {
   methodNotAllowed as POST, methodNotAllowed as PUT, methodNotAllowed as PATCH,

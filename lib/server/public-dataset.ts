@@ -16,6 +16,7 @@ export type PublicManifest = {
   reason: string; dataSha256: string;
   inputs: { dataset: string; file: string; sha256: string }[];
   claimOrigins: { claimId: string; dataset: string; sourceClaimId: string }[];
+  withdrawals?: { claimId: string; reason: string; release: string; replacementClaimId: string | null }[];
 };
 export type PublicRelease = { manifest: PublicManifest; fixture: Fixture };
 
@@ -25,6 +26,21 @@ export function validatePublicRelease(input: PublicRelease): PublicRelease {
   if (fixture.sources.some(source => source.isDemo)) throw new Error("Demo sources cannot enter public-kg");
   if (sha256(JSON.stringify(fixture, null, 2) + "\n") !== manifest.dataSha256) throw new Error("Public release data hash mismatch");
   if (manifest.claimOrigins.length !== fixture.claims.length || new Set(manifest.claimOrigins.map(row => row.claimId)).size !== fixture.claims.length || manifest.claimOrigins.some(row => !fixture.claims.some(claim => claim.id === row.claimId))) throw new Error("Every public claim needs exactly one recorded origin");
+  const withdrawals = manifest.withdrawals ?? [];
+  const claims = new Map(fixture.claims.map(claim => [claim.id, claim]));
+  if (new Set(withdrawals.map(row => row.claimId)).size !== withdrawals.length) throw new Error("Duplicate withdrawal");
+  for (const row of withdrawals) {
+    if (claims.get(row.claimId)?.visibility !== "hidden") throw new Error("Withdrawal must retain a hidden Claim");
+    if (row.replacementClaimId && (row.replacementClaimId === row.claimId || !claims.has(row.replacementClaimId))) throw new Error("Replacement must be a distinct retained Claim");
+  }
+  for (const row of withdrawals) {
+    const seen = new Set([row.claimId]); let next = row.replacementClaimId;
+    while (next) {
+      if (seen.has(next)) throw new Error("Replacement cycle is not allowed");
+      seen.add(next); next = withdrawals.find(item => item.claimId === next)?.replacementClaimId ?? null;
+    }
+  }
+  if (fixture.claims.some(claim => claim.visibility !== "published" && !withdrawals.some(row => row.claimId === claim.id))) throw new Error("Hidden public Claim needs explicit withdrawal");
   return { manifest, fixture };
 }
 

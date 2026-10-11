@@ -32,3 +32,6 @@ playwright-report/
 .next-member-test/
 !.env.public.example
 .next-public/
+
+# 公開KGの私有運用backup
+/backups/

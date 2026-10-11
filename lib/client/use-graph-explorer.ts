@@ -1,6 +1,7 @@
 "use client";
 
 import type { RebuiltWorkspace } from "./saved-workspace";
+import { dataReleaseLabels } from "../i18n/data-release";
 import { workspaceLabels } from "../i18n/workspace";
 import { captureExploration, type ExplorationSnapshot } from "./exploration-snapshot";
 import type { GraphView, ViewRestoration } from "./graph-view";
@@ -11,14 +12,16 @@ import { normalizePredicates, normalizeContributionRoles, normalizeOrganizationP
 import { explorationLabels } from "../i18n/exploration";
 import type { EntitySummary } from "../domain/api";
 import { displayRelations } from "./graph-presentation";
-import { fetchNeighbors, errorMessage } from "./api";
+import { ClientApiError, fetchDatasetRevision, fetchNeighbors, errorMessage } from "./api";
 import { closeExpansion, reopenExpansion, projectGraph, emptyExpansion, emptyGraph, mergePage, type GraphState, type Selection } from "./graph-state";
 
 export function useGraphExplorer() {
   const [graph, setGraph] = useState<GraphState>(emptyGraph);
   const [selection, setSelection] = useState<Selection>(null);
+  const [dataChanged, setDataChanged] = useState(false);
   const [previous, setPrevious] = useState<ExplorationSnapshot | null>(null);
   const [viewRestoration, setViewRestoration] = useState<ViewRestoration | null>(null);
+  const stale = useRef(false);
   const current = useRef(graph);
   const generation = useRef(0);
   const pending = useRef(new Map<string, AbortController>());
@@ -42,15 +45,38 @@ export function useGraphExplorer() {
 
   useEffect(() => {
     const requests = pending.current;
-    return () => { requests.forEach((controller) => controller.abort()); requests.clear(); };
+    return () => { generation.current += 1; requests.forEach((controller) => controller.abort()); requests.clear(); };
   }, []);
 
+  const invalidate = useCallback(() => {
+    if (stale.current) return;
+    pending.current.forEach(controller => controller.abort()); pending.current.clear(); generation.current += 1;
+    stale.current = true; setDataChanged(true);
+    const state = current.current;
+    commit({ ...state, notice: dataReleaseLabels().changed, expansions: Object.fromEntries(Object.entries(state.expansions).map(([id, meta]) => [id, { ...meta, loading: false }])) });
+  }, [commit]);
+  const checkRevision = useCallback(async (revision: string, signal: AbortSignal) => {
+    if ((await fetchDatasetRevision(signal)).revision !== revision) throw new ClientApiError(dataReleaseLabels().changed, 409);
+  }, []);
   const expand = useCallback(async (id: string, more = false) => {
+    if (stale.current) return;
     let state = current.current;
     const meta = state.expansions[id] ?? emptyExpansion();
     if (!state.nodes[id] || pending.current.has(id)) return;
     if (!more && meta.pages.length && !meta.open) {
-      commit(reopenExpansion(state, id)); return;
+      if (!state.revision) { commit(reopenExpansion(state, id)); return; }
+      const epoch = generation.current, controller = new AbortController();
+      pending.current.set(id, controller);
+      try {
+        await checkRevision(state.revision, controller.signal);
+        if (!controller.signal.aborted && generation.current === epoch) commit(reopenExpansion(current.current, id));
+      } catch (error) {
+        if (!controller.signal.aborted && generation.current === epoch) {
+          if (error instanceof ClientApiError && error.status === 409) invalidate();
+          else commit({ ...current.current, notice: errorMessage(error) });
+        }
+      } finally { if (pending.current.get(id) === controller) pending.current.delete(id); }
+      return;
     }
     if (more ? !meta.expanded || !meta.hasMore : meta.expanded) return;
     const epoch = generation.current;
@@ -62,12 +88,13 @@ export function useGraphExplorer() {
     pending.current.set(id, controller); commit(state);
     const valid = () => !controller.signal.aborted && generation.current === epoch && current.current.expansions[id]?.request === request && current.current.expansions[id]?.active;
     try {
-      const page = await fetchNeighbors(id, after, controller.signal, state.predicates, state.contributionRoles ?? null, state.organizationPositions ?? null, state.eventRoles ?? null);
+      const page = await fetchNeighbors(id, after, controller.signal, state.predicates, state.contributionRoles ?? null, state.organizationPositions ?? null, state.eventRoles ?? null, ...(state.revision ? [state.revision] as const : []));
       if (!valid()) return;
       if (page.centerId !== id) throw new Error("Unexpected center");
       commit(mergePage(current.current, page, after));
     } catch (error) {
       if (!valid()) return;
+      if (error instanceof ClientApiError && error.status === 409) { invalidate(); return; }
       const latest = current.current;
       commit({ ...latest, expansions: { ...latest.expansions, [id]: {
         ...(latest.expansions[id] ?? emptyExpansion()), loading: false, error: errorMessage(error),
@@ -75,10 +102,10 @@ export function useGraphExplorer() {
     } finally {
       if (pending.current.get(id) === controller) pending.current.delete(id);
     }
-  }, [commit]);
+  }, [commit, checkRevision, invalidate]);
 
   const chooseRoot = useCallback((entity: EntitySummary, resetConditions = false) => {
-    setPrevious(null); setViewRestoration(null);
+    stale.current = false; setDataChanged(false); setPrevious(null); setViewRestoration(null);
     pending.current.forEach((controller) => controller.abort()); pending.current.clear();
     generation.current += 1;
     const predicates = resetConditions ? null : current.current.predicates;
@@ -97,7 +124,7 @@ export function useGraphExplorer() {
     const conditionKey = explorationKey(predicates, contributionRoles, organizationPositions, eventRoles);
     if (old.centerId === entity.id && old.conditionKey === conditionKey) return;
     const snapshot = captureExploration(old, selection, view);
-    setPrevious(snapshot); setViewRestoration(null);
+    stale.current = false; setDataChanged(false); setPrevious(snapshot); setViewRestoration(null);
     pending.current.forEach((controller) => controller.abort()); pending.current.clear();
     generation.current += 1;
     commit(projectGraph({ ...emptyGraph(generation.current), predicates, contributionRoles, organizationPositions, eventRoles, conditionKey,
@@ -107,18 +134,29 @@ export function useGraphExplorer() {
   }, [commit, expand, selection]);
   const restorePrevious = useCallback(() => {
     if (!previous) return;
-    pending.current.forEach((controller) => controller.abort()); pending.current.clear();
-    generation.current += 1;
-    const snapshot = previous;
-    setPrevious(null);
-    setViewRestoration(snapshot.view ? { generation: generation.current, view: snapshot.view } : null);
-    commit(projectGraph({ ...snapshot.graph, generation: generation.current, notice: overviewLabels().restored }));
-    setSelection(snapshot.selection);
-  }, [commit, previous]);
+    const snapshot = previous, restoreEpoch = generation.current;
+    const restore = () => {
+      if (generation.current !== restoreEpoch) return;
+      stale.current = false; setDataChanged(false);
+      pending.current.forEach(controller => controller.abort()); pending.current.clear();
+      generation.current += 1;
+      setPrevious(null);
+      setViewRestoration(snapshot.view ? { generation: generation.current, view: snapshot.view } : null);
+      commit(projectGraph({ ...snapshot.graph, generation: generation.current, notice: overviewLabels().restored }));
+      setSelection(snapshot.selection);
+    };
+    if (!snapshot.graph.revision) { restore(); return; }
+    void checkRevision(snapshot.graph.revision, new AbortController().signal).then(restore).catch(error => {
+      if (generation.current !== restoreEpoch) return;
+      // 一時的な取得失敗では復帰先を保持。版の失効だけを破棄する。
+      if (error instanceof ClientApiError && error.status === 409) setPrevious(null);
+      commit({ ...current.current, notice: error instanceof ClientApiError && error.status === 409 ? dataReleaseLabels().changed : errorMessage(error) });
+    });
+  }, [commit, previous, checkRevision]);
   const openSavedView = useCallback((entity: EntitySummary, values: ViewConditions, view: GraphView | null) => {
     const conditions = viewConditionsSchema.parse(values);
     const snapshot = captureExploration(current.current, selection, view);
-    setPrevious(snapshot); setViewRestoration(null);
+    stale.current = false; setDataChanged(false); setPrevious(snapshot); setViewRestoration(null);
     pending.current.forEach(controller => controller.abort()); pending.current.clear();
     generation.current += 1;
     commit(projectGraph({ ...emptyGraph(generation.current), ...conditions,
@@ -129,6 +167,7 @@ export function useGraphExplorer() {
     setSelection({ kind: "entity", id: entity.id }); void expand(entity.id);
   }, [commit, expand, selection]);
   const openWorkspace = useCallback((workspace: RebuiltWorkspace, view: GraphView | null) => {
+    stale.current = false; setDataChanged(false);
     setPrevious(captureExploration(current.current, selection, view));
     pending.current.forEach(controller => controller.abort()); pending.current.clear();
     generation.current += 1;
@@ -143,7 +182,7 @@ export function useGraphExplorer() {
     const contributionRoles = normalizeContributionRoles(roleValues, predicates);
     if (explorationKey(predicates, contributionRoles, organizationPositions, eventRoles) === explorationKey(current.current.predicates, current.current.contributionRoles ?? null, current.current.organizationPositions ?? null, current.current.eventRoles ?? null)) return;
     const snapshot = captureExploration(current.current, selection, view);
-    setPrevious(snapshot); setViewRestoration(null);
+    stale.current = false; setDataChanged(false); setPrevious(snapshot); setViewRestoration(null);
     const rootId = current.current.centerId;
     const root = rootId ? current.current.cacheNodes[rootId] : null;
     pending.current.forEach((controller) => controller.abort()); pending.current.clear();
@@ -172,5 +211,10 @@ export function useGraphExplorer() {
     if (!current.current.nodes[id]) return;
     if (current.current.expansions[id]?.open) close(id); else void expand(id);
   }, [close, expand]);
-  return { graph, selection, previous, viewRestoration, switchRoot, restorePrevious, openSavedView, openWorkspace, changePredicates, chooseRoot, inspectEntity, selectEntity, selectClaim, selectRelation, expand, close, toggleEntity };
+  const reloadData = useCallback(() => {
+    const state = current.current;
+    const root = state.centerId ? state.cacheNodes[state.centerId] : null;
+    if (root) chooseRoot(root);
+  }, [chooseRoot]);
+  return { invalidateData: invalidate, dataChanged, reloadData, graph, selection, previous, viewRestoration, switchRoot, restorePrevious, openSavedView, openWorkspace, changePredicates, chooseRoot, inspectEntity, selectEntity, selectClaim, selectRelation, expand, close, toggleEntity };
 }

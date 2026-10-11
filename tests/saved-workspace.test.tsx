@@ -79,6 +79,15 @@ describe("途中保存の参照と永続化", () => {
 });
 
 describe("現在のデータから探索途中を組み立てる", () => {
+  it("公開KGの再構築途中で版が変わったら部分Graphを返さない", async () => {
+    const value = captureWorkspace("public-kg", "公開の途中", graph(), view);
+    vi.mocked(fetchNeighbors).mockResolvedValueOnce({ ...page, revision: "before-update" })
+      .mockResolvedValueOnce({ ...workPage, revision: "after-update" });
+    await expect(rebuildWorkspace(value, signal())).rejects.toThrow();
+    expect(vi.mocked(fetchNeighbors).mock.calls[1][7]).toBe("before-update");
+    // 保存自体は版更新のために削除しない。次回も現データから再構築できる。
+    expect(value.dataset).toBe("public-kg");
+  });
   it("閉じた祖先と休止した子孫を復元し、再開後は追加通信なしで開ける", async () => {
     const value = captureWorkspace("demo", "閉じた途中", closeExpansion(graph(), root.id), view);
     // Storage array order is not a traversal order.

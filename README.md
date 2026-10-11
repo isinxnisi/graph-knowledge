@@ -18,7 +18,20 @@ npm run public:apply
 npm run public:dev
 ```
 
-画面は http://127.0.0.1:3200 。初回は18 Entity・27 Claimで、個々のSource/Citation/限定を保持します。後続releaseは `npm run public:plan -- <directory>` / `npm run public:apply -- <directory>` 。現時点ではWeb停止中に適用し、新しく探索を開始してください。撤回・差替え・稼働中更新と復旧は未完了です。初回生成物の再作成は `public:prepare`、一時DBの更新試験は `public:integration`、画面試験は `public:e2e` です。
+画面は http://127.0.0.1:3200 。初回は18 Entity・27 Claimで、個々のSource/Citation/限定を保持します。後続releaseは `npm run public:plan -- <directory>` / `npm run public:apply -- <directory>` 。公開KGは明示撤回・差替えとrevision付きcursorに対応します。更新を検知した画面は同じ起点/条件から明示的に読み直します。初回生成物の再作成は `public:prepare`、一時DBの更新試験は `public:integration`、画面試験は `public:e2e` です。
+
+KGのbackup/復元（会員PGは対象外）:
+
+```bash
+mkdir -p backups
+npm run public:backup -- backups/public-kg-before-update.json
+curl http://127.0.0.1:3200/api/dataset
+PUBLIC_RESTORE_EXPECTED_REVISION='<対象DBの現在revision>' npm run public:restore:plan -- backups/public-kg-before-update.json
+PUBLIC_RESTORE_EXPECTED_REVISION='<plan時と同じrevision>' npm run public:restore -- backups/public-kg-before-update.json
+```
+
+空の専用DBへ復元する場合だけ期待revisionを `empty` にします。backup自体にある過去revisionと、復元先DBの現在revisionは異なり得ます。更新作業を止め、現在KGもbackupしてからplanを確認してください。復元後は新revisionになり旧cursorは失効します。既知schemaの論理backupの範囲と撤回manifestは[適用・復旧契約](docs/design/PUBLIC_KG_RELEASES.md)を参照してください。
+
 
 ## 起点と条件を保存して再訪する
 

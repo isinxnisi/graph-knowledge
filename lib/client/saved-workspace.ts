@@ -1,9 +1,10 @@
+import { dataReleaseLabels } from "../i18n/data-release";
 import { z } from "zod";
 import { workspaceLabels } from "../i18n/workspace";
 import { DATASET_MODES, type DatasetMode } from "../domain/dataset";
 import { claimSummarySchema, entitySummarySchema } from "../domain/api";
 import { explorationKey, matchesClaim } from "../domain/exploration";
-import { fetchEntity, fetchNeighbors } from "./api";
+import { ClientApiError, fetchEntity, fetchNeighbors } from "./api";
 import { CACHE_LIMITS, emptyExpansion, emptyGraph, projectGraph, withinLimits, type GraphState } from "./graph-state";
 import type { GraphView } from "./graph-view";
 import { viewConditionsSchema } from "./saved-views";
@@ -119,7 +120,7 @@ export function importWorkspace(storage: StorageAccess, dataset: DatasetMode, ex
 }
 
 const neighborsSchema = z.object({
-  centerId: z.uuidv4(), nodes: z.array(entitySummarySchema).max(51), claims: z.array(claimSummarySchema).max(50),
+  revision: z.string().min(1).optional(), centerId: z.uuidv4(), nodes: z.array(entitySummarySchema).max(51), claims: z.array(claimSummarySchema).max(50),
   page: z.object({ hasMore: z.boolean(), nextCursor: z.string().min(1).nullable() }),
 });
 
@@ -154,10 +155,12 @@ export async function rebuildWorkspace(value: SavedWorkspace, signal: AbortSigna
     for (let index = 0; index < branch.pages; index++) {
       signal.throwIfAborted();
       const after = meta.nextCursor;
-      const parsed = neighborsSchema.safeParse(await fetchNeighbors(branch.id, after, signal, conditions.predicates, conditions.contributionRoles, conditions.organizationPositions, conditions.eventRoles));
+      const parsed = neighborsSchema.safeParse(await fetchNeighbors(branch.id, after, signal, conditions.predicates, conditions.contributionRoles, conditions.organizationPositions, conditions.eventRoles, ...(graph.revision ? [graph.revision] as const : [])));
       signal.throwIfAborted();
       if (!parsed.success) throw new WorkspaceError("response");
       const page = parsed.data;
+      if (graph.revision && graph.revision !== page.revision) throw new ClientApiError(dataReleaseLabels().workspaceChanged, 409);
+      if (page.revision) graph.revision = page.revision;
       const nodes = new Set(page.nodes.map(node => node.id));
       if (page.centerId !== branch.id || !nodes.has(branch.id)
         || page.page.hasMore !== (page.page.nextCursor !== null)

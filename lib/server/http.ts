@@ -10,7 +10,7 @@ import { normalizeEventRoles, normalizeContributionRoles, normalizeOrganizationP
 import { PREDICATE_KEYS } from "../domain/predicates";
 import { SEARCH_KINDS, normalizeSearch } from "../domain/search";
 
-type ErrorCode = "INVALID_ARGUMENT" | "NOT_FOUND" | "SERVICE_UNAVAILABLE" | "INTERNAL_ERROR";
+type ErrorCode = "INVALID_ARGUMENT" | "NOT_FOUND" | "SERVICE_UNAVAILABLE" | "INTERNAL_ERROR" | "DATASET_CHANGED";
 export class ApiError extends Error {
   constructor(public status: number, public code: ErrorCode, message: string) { super(message); }
 }
@@ -59,6 +59,13 @@ function single(params: URLSearchParams, key: string) {
   return params.get(key);
 }
 
+export function revisionInput(request: Request): string | null {
+  const revision = single(new URL(request.url).searchParams, "revision");
+  if (revision === null) return null;
+  if (process.env.GRAPH_DATASET !== "public-kg") throw new ApiError(400, "INVALID_ARGUMENT", "このdatasetではrevisionを指定できません。");
+  return parse(z.string().regex(/^[a-zA-Z0-9:._-]{1,160}$/), revision, "revisionが不正です。");
+}
+
 function limit(params: URLSearchParams, defaultValue: number, max: number): number {
   const value = single(params, "limit");
   if (value === null) return defaultValue;
@@ -83,7 +90,7 @@ export function searchInput(request: Request) {
 export function neighborsInput(request: Request) {
   const params = new URL(request.url).searchParams;
   const after = single(params, "after");
-  for (const key of params.keys()) if (!["after", "limit", "predicates", "contributionRoles", "organizationPositions", "eventRoles"].includes(key)) {
+  for (const key of params.keys()) if (!["after", "limit", "predicates", "contributionRoles", "organizationPositions", "eventRoles", ...(process.env.GRAPH_DATASET === "public-kg" ? ["revision"] : [])].includes(key)) {
     throw new ApiError(400, "INVALID_ARGUMENT", explorationLabels().unsupported);
   }
   const raw = single(params, "predicates");

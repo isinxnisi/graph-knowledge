@@ -60,7 +60,7 @@ function ClaimReader({ reference, onExplore }: { reference: ReadingReference; on
   const nodes = Object.fromEntries(endpoints.flatMap(({ resource }) => resource.result?.data ? [[resource.result.data.id, resource.result.data]] : []));
   return <>
     <p className={styles.muted}>{text.individual}</p>
-    <ClaimCard claim={claim} nodes={nodes} title={text.claim} idPrefix="reference-" />
+    <ClaimCard referenceDataset={reference.dataset} claim={claim} nodes={nodes} title={text.claim} idPrefix="reference-" />
     <section aria-label={text.endpoints}><h3>{text.endpoints}</h3>
       {endpoints.map(({ id, label, resource }) => <div key={id} className={css.endpoint}>
         <p>{label}：<ReadingLink reference={{ kind: "entity", dataset: reference.dataset, id }}>{resource.result?.data?.name ?? id}</ReadingLink></p>

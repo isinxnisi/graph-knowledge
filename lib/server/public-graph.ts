@@ -6,6 +6,7 @@ import { contributionProperties } from "../domain/contribution";
 import { organizationParticipationProperties } from "../domain/organization-participation";
 import { eventProperties, eventParticipationProperties } from "../domain/event-participation";
 import { normalizeSearch } from "../domain/search";
+import { graphIdentities, mergeIdentities, readRetainedIdentities } from "./public-identities";
 import { applyConstraints } from "./seed";
 import { PUBLIC_DATASET, sha256, stableJson, validatePublicRelease, type PublicRelease } from "./public-dataset";
 
@@ -21,7 +22,7 @@ const clean = (properties: Record<string, unknown>) => Object.fromEntries(Object
 const sortedGraph = (graph: PublicGraph): PublicGraph => ({ nodes: Object.fromEntries(Object.entries(graph.nodes).sort(([a], [b]) => a.localeCompare(b))), edges: graph.edges.sort((a, b) => stableJson(a).localeCompare(stableJson(b))) });
 export const publicGraphDigest = (graph: PublicGraph) => sha256(stableJson(sortedGraph(graph)));
 
-export function publicGraph(fixture: Fixture): PublicGraph {
+export function publicGraph(fixture: Fixture, withdrawals: NonNullable<PublicRelease["manifest"]["withdrawals"]> = []): PublicGraph {
   const graph: PublicGraph = { nodes: {}, edges: [] };
   const add = (label: Label, properties: Record<string, unknown>) => {
     const props = clean(properties), id = key(label, props);
@@ -50,6 +51,7 @@ export function publicGraph(fixture: Fixture): PublicGraph {
       eventOriginalText: eventParticipationEvidence?.originalText, eventOriginalLanguage: eventParticipationEvidence?.language });
     edge(`Claim:${claimId}`, "HAS_CITATION", id); edge(id, "CITES", `Source:${sourceId}`);
   }
+  for (const row of withdrawals) Object.assign(graph.nodes[`Claim:${row.claimId}`].properties, clean({ withdrawalReason: row.reason, withdrawnInRelease: row.release, replacementClaimId: row.replacementClaimId }));
   return sortedGraph(graph);
 }
 
@@ -65,7 +67,8 @@ export function planPublicGraph(before: PublicGraph, after: PublicGraph): Public
     if (stableJson(old) === stableJson(node)) continue;
     if (old.properties.createdAt !== node.properties.createdAt || old.properties.kind !== node.properties.kind) throw new Error("Existing identity/createdAt cannot change");
     if (node.label === "Claim") {
-      const semantics = (props: Properties) => Object.fromEntries(Object.entries(props).filter(([field]) => field !== "updatedAt"));
+      const withdrawing = old.properties.visibility === "published" && node.properties.visibility === "hidden" && typeof node.properties.withdrawalReason === "string" && typeof node.properties.withdrawnInRelease === "string";
+      const semantics = (props: Properties) => Object.fromEntries(Object.entries(props).filter(([field]) => field !== "updatedAt" && !(withdrawing && ["visibility", "withdrawalReason", "withdrawnInRelease", "replacementClaimId"].includes(field))));
       if (stableJson(semantics(old.properties)) !== stableJson(semantics(node.properties))) throw new Error("Claim meaning/visibility cannot change in place; use a reviewed replacement or withdrawal");
     }
     plan.updated.push(id);
@@ -74,8 +77,8 @@ export function planPublicGraph(before: PublicGraph, after: PublicGraph): Public
   return plan;
 }
 
-async function readGraph(tx: ManagedTransaction): Promise<PublicGraph> {
-  const nodes = await tx.run("MATCH (n) WHERE NOT n:DatasetState AND NOT n:DatasetRelease RETURN elementId(n) AS internal, labels(n) AS labels, properties(n) AS props");
+export async function readPublicGraph(tx: ManagedTransaction): Promise<PublicGraph> {
+  const nodes = await tx.run("MATCH (n) WHERE NOT n:DatasetState AND NOT n:DatasetRelease AND NOT n:DatasetIdentity RETURN elementId(n) AS internal, labels(n) AS labels, properties(n) AS props");
   const graph: PublicGraph = { nodes: {}, edges: [] }, internals = new Map<string, string>();
   for (const record of nodes.records) {
     const found = record.get("labels") as Label[];
@@ -101,7 +104,8 @@ async function readGraph(tx: ManagedTransaction): Promise<PublicGraph> {
 async function checkRelease(tx: ManagedTransaction, release: PublicRelease) {
   const state = (await tx.run("MATCH (s:DatasetState) RETURN properties(s) AS state")).records;
   if (state.length > 1 || state.length === 1 && state[0].get("state").id !== PUBLIC_DATASET) throw new Error("Wrong database dataset marker");
-  const before = await readGraph(tx), after = publicGraph(release.fixture);
+  const before = await readPublicGraph(tx), after = publicGraph(release.fixture, release.manifest.withdrawals);
+  mergeIdentities(await readRetainedIdentities(tx), graphIdentities(after));
   const current = state[0]?.get("state") as { release?: string; graphDigest?: string } | undefined;
   if (!current?.release && Object.keys(before.nodes).length) throw new Error("Refusing to adopt a nonempty unmarked database");
   if (current?.release && current.graphDigest !== publicGraphDigest(before)) throw new Error("Database drift detected; inspect before applying a release");
@@ -113,6 +117,12 @@ async function checkRelease(tx: ManagedTransaction, release: PublicRelease) {
     return { before, after, plan: { added: [], updated: [], relationshipsAdded: 0 } as PublicPlan, unchanged: true, digest };
   }
   if (previous || (current?.release ?? null) !== release.manifest.baseRelease) throw new Error("Base release mismatch");
+  for (const row of release.manifest.withdrawals ?? []) {
+    const old = before.nodes[`Claim:${row.claimId}`];
+    if (!old) throw new Error("Only an existing Claim can be withdrawn");
+    if (old.properties.visibility === "published" && row.release !== release.manifest.release) throw new Error("New withdrawal must name this release");
+    if (old.properties.visibility === "published" && row.replacementClaimId && (before.nodes[`Claim:${row.replacementClaimId}`] || after.nodes[`Claim:${row.replacementClaimId}`]?.properties.visibility !== "published")) throw new Error("Replacement must use a new Claim UUID");
+  }
   return { before, after, plan: planPublicGraph(before, after), unchanged: false, digest };
 }
 
@@ -156,9 +166,9 @@ export async function applyPublicRelease(driver: Driver, database: string, relea
           ? "UNWIND $rows AS row MATCH (s:Entity {id:row.from}), (t:ExternalIdentifier {namespace:row.target.namespace, value:row.target.value}) MERGE (s)-[:HAS_EXTERNAL_ID]->(t)"
           : `UNWIND $rows AS row MATCH (s:${fromLabel} {id:row.from}), (t:${toLabel} {id:row.target.id}) MERGE (s)-[:${type}]->(t)`, { rows });
       }
-      if (publicGraphDigest(await readGraph(tx)) !== publicGraphDigest(checked.after)) throw new Error("Applied graph differs from release; rolling back");
-      await tx.run("MATCH (s:DatasetState {id:$id}) SET s.release=$release, s.graphDigest=$graphDigest CREATE (:DatasetRelease {id:$release, digest:$digest, dataSha256:$dataSha256, reason:$reason, appliedAt:$appliedAt})",
-        { id: PUBLIC_DATASET, release: release.manifest.release, digest: checked.digest, graphDigest: publicGraphDigest(checked.after), dataSha256: release.manifest.dataSha256, reason: release.manifest.reason, appliedAt: new Date().toISOString() });
+      if (publicGraphDigest(await readPublicGraph(tx)) !== publicGraphDigest(checked.after)) throw new Error("Applied graph differs from release; rolling back");
+      await tx.run("MATCH (s:DatasetState {id:$id}) SET s.release=$release, s.revision=$revision, s.graphDigest=$graphDigest CREATE (:DatasetRelease {id:$release, digest:$digest, dataSha256:$dataSha256, reason:$reason, appliedAt:$appliedAt})",
+        { id: PUBLIC_DATASET, release: release.manifest.release, revision: randomUUID(), digest: checked.digest, graphDigest: publicGraphDigest(checked.after), dataSha256: release.manifest.dataSha256, reason: release.manifest.reason, appliedAt: new Date().toISOString() });
       return { release: release.manifest.release, unchanged: false, ...checked.plan };
     }, { timeout: 60000 });
   } finally { await session.close(); }

@@ -1,5 +1,7 @@
 "use client";
 import type { DatasetMode } from "../lib/domain/dataset";
+import { dataReleaseLabels } from "../lib/i18n/data-release";
+import { readingHref } from "../lib/client/reading-reference";
 import ReadingLink from "./ReadingLink";
 import { eventParticipationOf } from "../lib/domain/event-participation";
 import { eventParticipationLabels } from "../lib/i18n/event-participation";
@@ -27,7 +29,7 @@ function usableUrl(source: SourceDetail): boolean {
   catch { return false; }
 }
 
-export function ClaimCard({ claim, nodes, title, dataset, idPrefix = "" }: { dataset?: DatasetMode; idPrefix?: string; claim: ClaimDetail; nodes: Record<string, EntitySummary>; title: string }) {
+export function ClaimCard({ claim, nodes, title, dataset, referenceDataset = dataset, idPrefix = "" }: { referenceDataset?: DatasetMode; dataset?: DatasetMode; idPrefix?: string; claim: ClaimDetail; nodes: Record<string, EntitySummary>; title: string }) {
   const text = relationPresentationLabels();
   const eventParticipation = eventParticipationOf(claim), eventText = eventParticipationLabels();
   const position = organizationParticipationOf(claim);
@@ -36,6 +38,9 @@ export function ClaimCard({ claim, nodes, title, dataset, idPrefix = "" }: { dat
   const roleText = contributionLabels();
   return <article id={`${idPrefix}claim-${claim.id}`} tabIndex={-1} className={styles.claimCard} data-testid={`claim-card-${claim.id}`}>
     <h4>{title}</h4>
+    {claim.withdrawal && <section role="note" className={styles.error}><strong>{dataReleaseLabels().withdrawn}</strong><p>{dataReleaseLabels().withdrawnHelp}</p><p>{claim.withdrawal.reason}</p>
+      {referenceDataset && claim.withdrawal.replacementClaimId && <a href={readingHref({ dataset: referenceDataset, kind: "claim", id: claim.withdrawal.replacementClaimId })}>{dataReleaseLabels().replacement}</a>}
+    </section>}
     {dataset && <p><ReadingLink reference={{ kind: "claim", dataset, id: claim.id }} /></p>}
     <span className={styles.muted}>関係についての主張</span>
     <p><strong>{nodes[claim.subjectId] ? entityLabel(nodes[claim.subjectId], nodes).replace("\n", " / ") : "主体"} → {PREDICATES[claim.predicate].label} → {nodes[claim.objectId] ? entityLabel(nodes[claim.objectId], nodes).replace("\n", " / ") : "対象"}</strong></p>
@@ -92,15 +97,15 @@ function comparisonText(reference: ClaimDetail, claim: ClaimDetail): string | nu
   return null;
 }
 
-type ClaimDetailsProps = { dataset?: DatasetMode; id: string; nodes: Record<string, EntitySummary>; claimSummary?: ClaimSummary; onInspectEntity?: (id: string) => void; mode?: "claim" | "relation"; visibleClaimIds?: string[]; visibleClaims?: ClaimSummary[]; predicates?: PredicateFilter; roles?: ContributionRoleFilter; positions?: OrganizationPositionFilter; eventRoles?: EventRoleFilter };
+type ClaimDetailsProps = { onDataChanged?: () => void; revision?: string; dataset?: DatasetMode; id: string; nodes: Record<string, EntitySummary>; claimSummary?: ClaimSummary; onInspectEntity?: (id: string) => void; mode?: "claim" | "relation"; visibleClaimIds?: string[]; visibleClaims?: ClaimSummary[]; predicates?: PredicateFilter; roles?: ContributionRoleFilter; positions?: OrganizationPositionFilter; eventRoles?: EventRoleFilter };
 
 export default function ClaimDetails(props: ClaimDetailsProps) {
   return <ClaimDetailsSession key={props.id} {...props} />;
 }
 
-function ClaimDetailsSession({ dataset, id, nodes, claimSummary, onInspectEntity, mode = "claim", visibleClaimIds, visibleClaims, predicates = null, roles = null, positions = null, eventRoles = null }: ClaimDetailsProps) {
+function ClaimDetailsSession({ onDataChanged, revision, dataset, id, nodes, claimSummary, onInspectEntity, mode = "claim", visibleClaimIds, visibleClaims, predicates = null, roles = null, positions = null, eventRoles = null }: ClaimDetailsProps) {
   const roleText = contributionLabels(), text = relationPresentationLabels();
-  const { primary, related, error, failedCount, pending, retry } = useClaimDetails(id);
+  const { primary, related, error, failedCount, pending, retry } = useClaimDetails(id, revision, onDataChanged);
   // Reserve numbers from the complete ID list, including details still loading or failed.
   const claimIds = primary ? [primary.claim.id, ...primary.relatedClaimIds].sort((a, b) => a.localeCompare(b)) : [];
   const claimNumber = (claimId: string) => claimIds.indexOf(claimId) + 1;

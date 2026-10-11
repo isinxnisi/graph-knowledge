@@ -52,7 +52,7 @@ export default function MemberReferencePicker({ draft, onChange }: {
     {(loading || preview) && <button type="button" onClick={reset}>{text.referenceCancel}</button>}
     {preview && <div>
       <ul>{preview.entities.map(entity => <li key={entity.id}><strong>{entity.name} · {KIND_LABELS[entity.kind]}</strong>{entity.description && <p>{entity.description}</p>}<code>{entity.id}</code></li>)}</ul>
-      {preview.claim ? <><p>{text.referenceNote}</p><ClaimCard claim={preview.claim} nodes={Object.fromEntries(preview.entities.map(entity => [entity.id, entity]))} title={text.referenceClaimTitle} idPrefix="member-addition-" /></> : <p>{text.referenceEntityNote}</p>}
+      {preview.claim ? <><p>{text.referenceNote}</p><ClaimCard referenceDataset={preview.reference.dataset} claim={preview.claim} nodes={Object.fromEntries(preview.entities.map(entity => [entity.id, entity]))} title={text.referenceClaimTitle} idPrefix="member-addition-" /></> : <p>{text.referenceEntityNote}</p>}
       <button type="button" onClick={confirm}>{text.referenceConfirm}</button>
     </div>}
     {error && <p role="alert">{error}</p>}{message && <p role="status">{message}</p>}

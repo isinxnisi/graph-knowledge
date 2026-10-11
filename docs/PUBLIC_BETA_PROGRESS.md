@@ -2,7 +2,7 @@
 
 2026-10-11。ユーザーが[対応プラン](design/PUBLIC_BETA_AND_PRODUCT_PLAN.md)を採用。今回からの差分を**全24ステップ**で管理する。以前のPhase完了率とは別。
 
-**現在：4/24完了（約17%）、残20。** 今回は1〜4を実装・検証した。次は5〜6。既存全機能の完成率ではなく、今回の公開β計画24工程から見た概算進捗。
+**現在：6/24完了（約25%）、残18。** 今回は5〜6を実装・検証した。次は7。既存全機能の完成率ではなく、今回の公開β計画24工程から見た概算進捗。
 
 ## 数え方と完了範囲
 
@@ -21,8 +21,8 @@
 | 2 | 受入済み漫画・科学・Eventの共通データと由来manifest | 完了 |
 | 3 | 入力・衝突検証、無書込dry-run、専用環境の誤投入防止 | 完了 |
 | 4 | 追加・表記訂正の一括適用、再適用・失敗rollback、単一Web | 完了 |
-| 5 | 明示撤回・差替え、旧参照とrelease更新時のcursor/再取得 | 未着手 |
-| 6 | KG backup/restoreと会員データを巻き戻さない復旧試験 | 未着手 |
+| 5 | 明示撤回・差替え、旧参照とrelease更新時のcursor/再取得 | 完了 |
+| 6 | KG backup/restoreと会員データを巻き戻さない復旧試験 | 完了（ローカル論理backup。本番運用は7/19） |
 | 7 | VPSに単一本番構成の試験起動、既存Caddy/HTTPSとの接続 | 未着手 |
 | 8 | 共通ヘッダ・アカウント入口・文字/余白/操作のデザイン統一 | 未着手 |
 | 9 | Graphの選択・展開等の短い動きとreduced-motion | 未着手 |
@@ -53,6 +53,8 @@
 
 ## 今回の範囲と次
 
-1〜4を実装・検証済み。共通KGの初回は18 Entity / 27 Claim / 15 Source / 29 Citation / 16 ExternalIdentifier。元の内部UUID・限定・根拠を維持する。通常テスト530件、実DB6件、本番buildを使ったPlaywright2件、typecheck/lint/buildが成功。初回投入105知識Node・128 Relationship、再適用は追加/更新0。ローカル確認は http://127.0.0.1:3200 。[検証・制限](design/PUBLIC_KG_RELEASES.md#検証記録)を参照。
+1〜6を実装・検証済み。共通KGの初回は18 Entity / 27 Claim / 15 Source / 29 Citation / 16 ExternalIdentifier。元の内部UUID・限定・根拠を維持する。通常テスト543件、実DB11件、本番buildを使ったPlaywright4件、typecheck/lint/buildが成功。初回投入105知識Node・128 Relationshipは不変。ローカル確認は http://127.0.0.1:3200 。[検証・制限](design/PUBLIC_KG_RELEASES.md#検証記録)を参照。
 
-**次は5〜6**。撤回・差替え・cursor失効とbackup/restoreが揃うまで、稼働中Webへのデータ更新や本番公開を完成扱いにしない。[初回適用契約](design/PUBLIC_KG_RELEASES.md)を参照。
+5〜6では、理由付き撤回・新UUID差替えと旧参照、revision付き取得/cursor/探索復帰、KG単独backup/restoreを追加した。隔離Neo4j・PGで会員側の保存を巻き戻さないこと、復元途中失敗のrollback、復旧で消えたUUIDの別命題への再利用拒否まで確認した。実在Claimの撤回判断や本番復旧は行っていない。
+
+**次は7：VPSに単一本番構成を試験起動し、既存Caddy/HTTPSへ接続する。** ローカル復旧だけで本番運用完成とはしない。既存serviceを維持し、接続先guard・credential・backupの退避先/readinessを具体化する。残り18の分母や達成範囲は変更していない。[適用・復旧契約](design/PUBLIC_KG_RELEASES.md)を参照。
