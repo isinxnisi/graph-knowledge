@@ -8,6 +8,8 @@ AI関連の設計・作業前に [共通Kevの接続・責務と検証方針](do
 
 ## 自動開発との協調（手動セッション）
 
+手動セッションの通常の完了手順は、必要な検証→日本語メッセージでコミット→設定済みupstreamへの通常pushまでとする。pushの結果も完了報告に含める。
+
 main側などの手動作業では、最初に `make autopilot-review` と必要に応じて `make autopilot-status` を実行し、未反映commit・開発失敗・dirty・実行中を確認する。詳細は [docs/AUTOPILOT_COLLABORATION.md](docs/AUTOPILOT_COLLABORATION.md)。
 
 - 変更・テスト・DB操作・受け入れ作業の前に、別terminalで `make autopilot-hold` を起動し、そのterminalを作業完了まで保持する。Codexは `exec_command` の `tty: true` でセッションを保持できる。共通ロックが使用中なら変更せず、終了後に再確認する。ロックファイルを削除したり、実行中の自動開発を強制終了しない。
