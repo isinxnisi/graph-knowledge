@@ -4,7 +4,7 @@
 
 ## 前提と設計の位置づけ
 
-2026-10-11に公開準備へ着手。検証用の凍結datasetを維持し、安定dataset `public-kg` と投入releaseを分離した[共通KG適用経路](design/PUBLIC_KG_RELEASES.md)を追加。ローカルの生成・dry-run・追加/表記訂正に加え、明示撤回/新UUID差替え、revision付きcursor/探索失効、KG単独backup/restoreを実装。旧Claimの意味・根拠と会員PGを維持する。次は単一本番構成の試験起動。公開先は `graph.isinxnisi.net`、単一Web＋Neo4j＋会員公開時のPGを既存Caddy配下へ配置する方針。[進捗と未完了](PUBLIC_BETA_PROGRESS.md)を参照。
+2026-10-11に公開準備へ着手。検証用の凍結datasetを維持し、安定dataset `public-kg` と投入releaseを分離した[共通KG適用経路](design/PUBLIC_KG_RELEASES.md)を追加。ローカルの生成・dry-run・追加/表記訂正に加え、明示撤回/新UUID差替え、revision付きcursor/探索失効、KG単独backup/restoreを実装。旧Claimの意味・根拠と会員PGを維持する。2026-10-12、単一Web＋Neo4jを既存Caddy配下へ配置し、`graph.isinxnisi.net` のpreview認証付きHTTPS・実ブラウザを確認した。一般公開は未実施。会員公開時のPGは未接続で、次は共通ヘッダ等のUI統一。[進捗と未完了](PUBLIC_BETA_PROGRESS.md)を参照。
 
 Phase 16で[Relation・Claim・Predicate・typed qualificationの基本設計](design/RELATION_MODEL_PRINCIPLES.md)を採用した。独立命題とdomain固有限定、null／polarity／期間、identity・比較・表示、根拠と取込由来の境界を今後の設計基準とする。三用途の実装は維持し、新しい語彙・schema・API・UI・datasetは追加していない。下記の初期仕様とPhase別記録を読む際は、後続の採用契約とこの基本設計を併せて確認する。
 

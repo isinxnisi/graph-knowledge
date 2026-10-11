@@ -1,6 +1,6 @@
 # 単一Webと共通KGの本番配置
 
-2026-10-11。公開β計画step7の構成。[進捗](../PUBLIC_BETA_PROGRESS.md)と[共通KGの適用・復旧契約](PUBLIC_KG_RELEASES.md)を併読する。構成の準備とVPSでの実起動は区別する。閲覧認証を外すβ公開はstep22。
+2026-10-12更新。公開β計画step7は認証付きHTTPSの実起動確認まで完了。[進捗](../PUBLIC_BETA_PROGRESS.md)と[共通KGの適用・復旧契約](PUBLIC_KG_RELEASES.md)を併読する。構成の準備とVPSでの実起動は区別する。閲覧認証を外すβ公開はstep22。
 
 ## 構成と境界
 
@@ -90,7 +90,7 @@ VPSでは、管理者が`docker compose --env-file /opt/graph-knowledge/app.env 
 - 本番image上の既存Playwright4件が成功（48.2秒）。漫画・科学・Event、三限定、Source、概要、起点切替／復帰、更新失効、旧Claimリンクを確認。スクリーンショットも確認し、CSS／Graph表示を保持した。
 - 初回・再試験ではcold近傍取得が約6秒で503となった。読み取りだけ10000msの有限設定にし、先行warmupなしで再起動後の全4件と停止／復旧を通した。接続・接続取得の5秒、API返却契約、データは維持。高次数・本番VPSの応答性能は別工程。
 - Web／operatorはuid1000。operatorにもmemo／`.env*`／Git／backup／テスト用server／prompt文書が入らないことを実imageで確認した。
-- VPSの既存Caddy2.6.2で追加site候補のvalidateが成功。DNS Aも対象VPSを指す。sudo passwordが必要なためDocker導入・配置・Caddy反映・HTTPS実接続は未実施。VPSホームへ配置用ファイルを準備することと、サービスの起動成功は区別する。
+- 2026-10-11時点では、VPSの既存Caddy2.6.2で追加site候補のvalidateとDNS Aを確認し、配置artifactを転送するところまで。管理者配置とHTTPSの確認は翌日の記録を参照。
 
 今回の配置候補tagは`beta-step7-20261011`。Web image `7c1c1f399014`、operator image `977c223500e5`。転送用archiveは896,415,973 bytes、SHA-256は`769094dc9af90371d726690dce9a164894f86f7b93c26a54d20bb33c86559dec`。VPSでは以下の一回で初期配置する。secretは実行時に生成され、Gitや転送imageには入っていない。
 
@@ -102,4 +102,14 @@ sudo bash /home/develop/graph-production-bootstrap/scripts/deploy-production.sh 
 
 typecheck初回は既存ignoredのEvent dev生成型2 fileが破損していたため、その生成物を除去して再確認した。sourceは変更せず、その後のtypecheckは成功。既存Web3200／3210〜3215は全てAPI200、凍結fixture／dataset／資料台帳／schema／UI sourceの差分はない。
 
-VPS実起動を確認するまではstep7未完了。管理者コマンドの実行後、HTTPS・preview認証・実ブラウザ・既存通知サービスを確認して完了数を更新する。
+## VPS実起動後の確認
+
+2026-10-12（JST）、ユーザーが上記管理者コマンドを実行し、previewへの接続を確認。その後、実VPSへ以下の読み取り検証を実施し、step7を完了とした。
+
+- `https://graph.isinxnisi.net` の証明書検証が成功。未認証の `/` と `/api/dataset` は401、`X-Robots-Tag: noindex, nofollow, noarchive`。認証後のdatasetとPLUTO検索は200。
+- 既存 `tests/e2e/public.spec.ts` をHTTPSへ接続し4/4成功（19.0秒）。検索・開始例、漫画／科学／Event、三限定、関係概要、起点切替／直前復帰、Claim／仏語原表記／Sourceを確認。更新失効と旧撤回参照の表示はテスト内の応答差替えであり、本番KGへ撤回や更新を実行していない。
+- PLUTO起点の実スクリーンショットでGraph・文字・3ペインを確認。認証は一時0600 credential fileからブラウザへ渡し、traceは無効化。credentialをGit・画面・コマンド引数・報告へ残さず、検証後に一時fileを削除した。
+- 初回backup `ready-20261011T155518Z.json` はdevelop所有・0600。18 Entity / 27 Claim / 15 Source / 29 Citation / 16 ExternalIdentifier（知識Node105）、release `20261011-001`、receipt1、撤回0。backup内revisionと実APIのrevisionが一致した。冪等再投入・DB停止復旧は前述の隔離試験で確認済みで、今回稼働中のVPSでは繰り返していない。
+- `systemctl is-active docker caddy resale-ebay-notifications` は全てactive。Webはloopback 3200だけ、Neo4jのhost公開portなし。既存通知siteのHTTPS rootは従来どおり404（rootには経路がない）で、通知serviceも継続稼働。
+
+現在は認証付き試験環境であり、一般β公開・実Google会員接続・運用復旧全体の完了ではない。全体は7/24（約29%）、次は8のUI統一。定期backup／外部退避等はstep19、認証を外す判断はstep22に残す。今回の追確認は文書更新だけで、DB・API・UI・本番設定を変更していない。

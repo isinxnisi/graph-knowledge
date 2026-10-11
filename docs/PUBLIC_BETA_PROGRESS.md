@@ -2,7 +2,7 @@
 
 2026-10-11。ユーザーが[対応プラン](design/PUBLIC_BETA_AND_PRODUCT_PLAN.md)を採用。今回からの差分を**全24ステップ**で管理する。以前のPhase完了率とは別。
 
-**現在：6/24完了（約25%）、残18。** 7の本番構成とローカル検証を進めたが、VPSの管理者初期設定・HTTPS実起動は待ち。既存全機能の完成率ではなく、今回の公開β計画24工程から見た概算進捗。
+**現在：7/24完了（約29%）、残17。** 2026-10-12、ユーザーによる管理者配置後にVPSのHTTPS・preview認証・実ブラウザ探索を確認。一般公開はstep22。既存全機能の完成率ではなく、今回の公開β計画24工程から見た概算進捗。
 
 ## 数え方と完了範囲
 
@@ -23,7 +23,7 @@
 | 4 | 追加・表記訂正の一括適用、再適用・失敗rollback、単一Web | 完了 |
 | 5 | 明示撤回・差替え、旧参照とrelease更新時のcursor/再取得 | 完了 |
 | 6 | KG backup/restoreと会員データを巻き戻さない復旧試験 | 完了（ローカル論理backup。本番運用は7/19） |
-| 7 | VPSに単一本番構成の試験起動、既存Caddy/HTTPSとの接続 | 進行中（本番imageの隔離検証済み。VPS管理者操作待ち） |
+| 7 | VPSに単一本番構成の試験起動、既存Caddy/HTTPSとの接続 | 完了（VPSの認証付きHTTPSと実ブラウザ4経路を確認） |
 | 8 | 共通ヘッダ・アカウント入口・文字/余白/操作のデザイン統一 | 未着手 |
 | 9 | Graphの選択・展開等の短い動きとreduced-motion | 未着手 |
 | 10 | スマホGraph/詳細/隣接一覧の代表経路 | 未着手 |
@@ -46,8 +46,8 @@
 
 ## 先に確認した環境・外部待ち
 
-- 公開先はユーザー指定の `graph.isinxnisi.net`。DNS Aは対象VPSへ解決した（2026-10-11）。HTTPS設定・公開は未実施。
-- VPSを読み取り確認：4 vCPU、RAM約4GB、swap約2GB、disk空き約189GB。既存Caddyと別プロジェクトの通知serviceが稼働。Docker/Node未導入。既存serviceを維持して構築する。今回リモート変更なし。
+- 公開先はユーザー指定の `graph.isinxnisi.net`。DNS Aは対象VPSへ解決した（2026-10-11）。2026-10-12にpreview認証付きHTTPSを確認。一般公開は未実施。
+- VPSを読み取り確認：4 vCPU、RAM約4GB、swap約2GB、disk空き約189GB。既存Caddyと別プロジェクトの通知serviceが稼働。初回確認時はDocker/Node未導入。2026-10-12にユーザーが配置scriptを実行し、Dockerと専用containerが稼働。既存serviceの継続稼働も確認。
 - Google OAuth credential/redirect設定、GA4 measurement IDは未確認。値はgitへ保存せず、実接続に着手する前に設定を案内する。AdMaxはmemoの候補を使い、タグを設計文書へ転載しない。
 - 公開書込の対象と運営操作は14/19までに具体化。認証待ちなら匿名探索を先に公開し、会員公開の残数を別表示する。
 
@@ -57,8 +57,10 @@
 
 5〜6では、理由付き撤回・新UUID差替えと旧参照、revision付き取得/cursor/探索復帰、KG単独backup/restoreを追加した。隔離Neo4j・PGで会員側の保存を巻き戻さないこと、復元途中失敗のrollback、復旧で消えたUUIDの別命題への再利用拒否まで確認した。実在Claimの撤回判断や本番復旧は行っていない。
 
-**次は7：VPSに単一本番構成を試験起動し、既存Caddy/HTTPSへ接続する。** ローカル復旧だけで本番運用完成とはしない。既存serviceを維持し、接続先guard・credential・backupの退避先/readinessを具体化する。残り18の分母や達成範囲は変更していない。[適用・復旧契約](design/PUBLIC_KG_RELEASES.md)を参照。
+**次は8：共通ヘッダ・アカウント入口・文字／余白／操作のデザイン統一。** 単一本番構成の試験起動は完了。全24工程の分母・達成範囲は変更せず、残り17。定期backup・VPS外退避・運用復旧は19、preview認証を外す一般公開は22で扱う。
 
 7では専用Compose、Node24.21.0のstandalone Web／operator image、内部DBだけを許可する本番guard、readiness、管理者配置scriptを追加した。隔離環境で初回投入・再適用・backup0600・再起動保持・DB停止503と復旧、本番imageでのPlaywright4経路を確認。cold起動直後の取得で既定5秒制限に達したため、本番readだけ上限付き設定10000msを採用して再検証した。意味・返却型・凍結dataは変更していない。
 
-VPSのdevelop接続はsudo passwordを必要とし、このセッションでは管理者操作を実行できない。配置用ファイルと検証済みimageをホーム内へ準備し、[一回の管理者コマンド](design/PRODUCTION_DEPLOYMENT.md#vpsへの初回配置)で初期配置できる形にした。稼働設定・DB・既存Caddy siteはまだ変更していない。管理者操作待ちの間は独立した8のUI統一へ進めてよいが、7を完了数に加えない。
+2026-10-12にユーザーが管理者配置を実行。その後、証明書検証付きHTTPS、未認証の画面／APIが401・noindex、認証後のAPI200、実VPSを使う既存Playwright4/4（19.0秒）を確認した。検索→漫画／科学／Event探索→三限定→概要→起点切替／復帰→仏語原表記とSourceまで通過。更新失効・撤回参照の画面はブラウザ内の応答差替えで検証し、実データは変更していない。PLUTOの実画面スクリーンショットも確認。
+
+VPSの初回backupは0600で、18 Entity / 27 Claim / 15 Source / 29 Citation / 16 ExternalIdentifier、release `20261011-001`・receipt1件を確認。Docker／Caddy／既存通知serviceはactive。Webは127.0.0.1:3200、Neo4jのhost公開portはない。今回の追確認ではDB停止・再投入・管理設定変更は行わず、直前工程の隔離試験結果と区別する。[配置検証記録](design/PRODUCTION_DEPLOYMENT.md#vps実起動後の確認)を参照。
