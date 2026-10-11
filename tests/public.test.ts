@@ -2,12 +2,30 @@ import { describe, expect, it } from "vitest";
 import { loadPublicRelease, combineAcceptedFixtures, validateInitialPublicDataset, validatePublicRelease } from "../lib/server/public-dataset";
 import { planPublicGraph, publicGraph, publicGraphDigest } from "../lib/server/public-graph";
 import { assertDatasetTarget } from "../lib/domain/dataset";
+import { readQueryTimeout } from "../lib/server/neo4j";
 import { START_EXAMPLES } from "../lib/client/start-examples";
 import { loadPilotV2 } from "../lib/server/pilot-v2-dataset";
 import { loadEventPilot } from "../lib/server/event-dataset";
 import { displayRelations } from "../lib/client/graph-presentation";
 
 describe("公開準備の共通KG", () => {
+  it("読取制限の既定5秒を維持し、本番の明示設定にも有限の上限を課す", () => {
+    expect(readQueryTimeout({})).toBe(5000);
+    expect(readQueryTimeout({ NEO4J_READ_TIMEOUT_MS: "10000" })).toBe(10000);
+    for (const value of ["", "0", "4999", "15001", "10000.5", "10s", "Infinity"]) expect(() => readQueryTimeout({ NEO4J_READ_TIMEOUT_MS: value })).toThrow();
+  });
+  it("本番DBを明示的な単一構成に限定し、凍結版・開発接続・設定ミスを拒否する", () => {
+    expect(() => assertDatasetTarget("public-kg", "bolt://graph-neo4j:7687", "production")).not.toThrow();
+    for (const uri of ["bolt://localhost:7694", "bolt://remote:7687", "neo4j://graph-neo4j:7687", "bolt://graph-neo4j:7687?x=1", "bolt://user:password@graph-neo4j:7687"]) {
+      expect(() => assertDatasetTarget("public-kg", uri, "production")).toThrow();
+    }
+    for (const mode of ["demo", "pilot-urasawa-v2", "pilot-science-v2", "pilot-event-v1"] as const) {
+      expect(() => assertDatasetTarget(mode, "bolt://graph-neo4j:7687", "production")).toThrow();
+      expect(() => assertDatasetTarget(mode, "bolt://graph-neo4j:7687", undefined)).toThrow();
+    }
+    expect(() => assertDatasetTarget("public-kg", "bolt://graph-neo4j:7687", undefined)).toThrow();
+    expect(() => assertDatasetTarget("public-kg", "bolt://localhost:7694", "prod")).toThrow();
+  });
   it("受入済み27 Claimだけを再現し、科学の対照コピーを重複させない", async () => {
     const counts = await validateInitialPublicDataset();
     expect(counts.nodes).toMatchObject({ Entity: 18, Claim: 27, Source: 15, Citation: 29, ExternalIdentifier: 16 });

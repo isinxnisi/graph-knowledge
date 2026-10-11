@@ -1,6 +1,7 @@
 import type { NextConfig } from "next";
 
 const config: NextConfig = { reactStrictMode: true,
+  ...(process.env.GRAPH_DEPLOYMENT === "production" ? { output: "standalone" as const } : {}),
   // Multi-user fixture tests revisit many routes. Keep compiled entries for
   // their bounded run instead of repeatedly evicting and compiling them.
   ...(process.env.MEMBER_FIXTURE_ENABLED === "1" ? {

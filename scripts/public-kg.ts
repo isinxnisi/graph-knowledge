@@ -21,7 +21,8 @@ if (command === "prepare") {
   const counts = directory ? fixtureCounts((await loadPublicRelease(directory)).fixture) : await validateInitialPublicDataset();
   console.log(JSON.stringify({ valid: true, counts }, null, 2));
 } else if (["plan", "apply", "backup", "restore-plan", "restore", "dev", "build", "start"].includes(command)) {
-  process.loadEnvFile(".env.public");
+  // 本番はComposeから注入する。開発用ファイルをimageへ持ち込まない。
+  if (process.env.GRAPH_DEPLOYMENT !== "production") process.loadEnvFile(".env.public");
   if (process.env.GRAPH_DATASET !== "public-kg") throw new Error("Public commands require GRAPH_DATASET=public-kg");
   assertDatasetTarget("public-kg", process.env.NEO4J_URI ?? "");
   if (["backup", "restore-plan", "restore"].includes(command)) {

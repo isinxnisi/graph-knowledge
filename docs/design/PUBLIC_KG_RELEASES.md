@@ -30,7 +30,7 @@ DatasetState（現在版・Graph fingerprint）とDatasetRelease（適用理由�
 
 専用Compose/.env.public、Bolt7694 / Browser7481、Web3200、build directory `.next-public`。同じ既存API/画面を利用し、探索の意味モデルは維持し、publicだけ更新識別子と撤回情報を返す。検索・開始例から漫画/科学/Eventを選べる。
 
-public接続はローカル専用7694、一時統合DBは7695。凍結datasetとのportguardは双方向に維持。既存 `db:seed` はpublicを拒否する。通常の凍結seedを緩めない。本番接続はstep7で明示設定する。
+public接続はローカル専用7694、一時統合DBは7695。凍結datasetとのportguardは双方向に維持。既存 `db:seed` はpublicを拒否する。通常の凍結seedを緩めない。step7では明示的な本番markerと専用Compose内部接続だけを追加した。[本番配置と検証状態](PRODUCTION_DEPLOYMENT.md)を参照する。
 
 ## 明示撤回・差替え（step5）
 
@@ -72,7 +72,7 @@ PostgreSQLへ接続せず、会員・Capsule・共有・会話は復元しない
 ## 未完了・運用制限
 
 - VPSの単一本番構成・HTTPS、実Google、公開書込の運営操作、数千規模試験は残作業。ローカルの更新・復旧だけで公開準備全体の完了にしない。
-- public接続先guardはローカル専用のまま。本番接続設定はstep7。
+- 本番構成と接続guardは追加したが、VPSの管理者初期設定と実起動／HTTPS検証は待ち。ローカル成功をVPSの成功と扱わない。
 - 凍結pilot参照を共通KGへ自動移行しない。今回も元の6datasetと初回公開releaseの内容は変更していない。
 
 ## 検証記録
