@@ -2,7 +2,7 @@
 
 2026-10-11。ユーザーが[対応プラン](design/PUBLIC_BETA_AND_PRODUCT_PLAN.md)を採用。今回からの差分を**全24ステップ**で管理する。以前のPhase完了率とは別。
 
-**現在：7/24完了（約29%）、残17。** 2026-10-12、ユーザーによる管理者配置後にVPSのHTTPS・preview認証・実ブラウザ探索を確認。一般公開はstep22。既存全機能の完成率ではなく、今回の公開β計画24工程から見た概算進捗。
+**現在：8/24完了（約33%）、残16。** 2026-10-12、共通ヘッダ・アカウント入口・UI基礎をローカル本番buildで確認。VPSは工程7の認証付き試験版を維持し、今回のUIは未配置。一般公開はstep22。既存全機能の完成率ではなく、今回の公開β計画24工程から見た概算進捗。
 
 ## 数え方と完了範囲
 
@@ -24,7 +24,7 @@
 | 5 | 明示撤回・差替え、旧参照とrelease更新時のcursor/再取得 | 完了 |
 | 6 | KG backup/restoreと会員データを巻き戻さない復旧試験 | 完了（ローカル論理backup。本番運用は7/19） |
 | 7 | VPSに単一本番構成の試験起動、既存Caddy/HTTPSとの接続 | 完了（VPSの認証付きHTTPSと実ブラウザ4経路を確認） |
-| 8 | 共通ヘッダ・アカウント入口・文字/余白/操作のデザイン統一 | 未着手 |
+| 8 | 共通ヘッダ・アカウント入口・文字/余白/操作のデザイン統一 | 完了（ローカル本番build・PC/狭幅・会員/共有の代表経路） |
 | 9 | Graphの選択・展開等の短い動きとreduced-motion | 未着手 |
 | 10 | スマホGraph/詳細/隣接一覧の代表経路 | 未着手 |
 | 11 | スマホの閲覧・会員画面と探索への往復 | 未着手 |
@@ -57,10 +57,33 @@
 
 5〜6では、理由付き撤回・新UUID差替えと旧参照、revision付き取得/cursor/探索復帰、KG単独backup/restoreを追加した。隔離Neo4j・PGで会員側の保存を巻き戻さないこと、復元途中失敗のrollback、復旧で消えたUUIDの別命題への再利用拒否まで確認した。実在Claimの撤回判断や本番復旧は行っていない。
 
-**次は8：共通ヘッダ・アカウント入口・文字／余白／操作のデザイン統一。** 単一本番構成の試験起動は完了。全24工程の分母・達成範囲は変更せず、残り17。定期backup・VPS外退避・運用復旧は19、preview認証を外す一般公開は22で扱う。
+**次は9：Graphの選択・新規表示・開閉等の操作結果を伝える短い動きとreduced-motion。** 既存の座標・pan/zoom・応答性を保つ。全24工程の分母・達成範囲は変更せず、残16。スマホの情報配置全体は10〜11、会員設定は12、実Googleは13、VPS運用復旧は19、一般公開は22に残す。
 
 7では専用Compose、Node24.21.0のstandalone Web／operator image、内部DBだけを許可する本番guard、readiness、管理者配置scriptを追加した。隔離環境で初回投入・再適用・backup0600・再起動保持・DB停止503と復旧、本番imageでのPlaywright4経路を確認。cold起動直後の取得で既定5秒制限に達したため、本番readだけ上限付き設定10000msを採用して再検証した。意味・返却型・凍結dataは変更していない。
 
 2026-10-12にユーザーが管理者配置を実行。その後、証明書検証付きHTTPS、未認証の画面／APIが401・noindex、認証後のAPI200、実VPSを使う既存Playwright4/4（19.0秒）を確認した。検索→漫画／科学／Event探索→三限定→概要→起点切替／復帰→仏語原表記とSourceまで通過。更新失効・撤回参照の画面はブラウザ内の応答差替えで検証し、実データは変更していない。PLUTOの実画面スクリーンショットも確認。
 
 VPSの初回backupは0600で、18 Entity / 27 Claim / 15 Source / 29 Citation / 16 ExternalIdentifier、release `20261011-001`・receipt1件を確認。Docker／Caddy／既存通知serviceはactive。Webは127.0.0.1:3200、Neo4jのhost公開portはない。今回の追確認ではDB停止・再投入・管理設定変更は行わず、直前工程の隔離試験結果と区別する。[配置検証記録](design/PRODUCTION_DEPLOYMENT.md#vps実起動後の確認)を参照。
+
+## 工程8の実装・検証（2026-10-12）
+
+[共通UI契約](design/PRODUCT_UI_FOUNDATIONS.md)を採用。探索／会員／共有に同じSiteHeaderを設け、dataset識別・アカウント／探索の別タブ入口・三テーマを共用。探索途中と未保存入力を入口操作で失わない。ヘッダ自身はprivate情報を取得しない。会員未設定時は既存の利用不可表示へ案内し、Googleログインを使えるように見せない。
+
+基本文字・行高・control／panel角丸・panel余白を共通変数へ集約し、全画面の背景・字体・focusを揃えた。探索の左の保存操作は縦の間隔を整理、会員／共有の見出しと説明を区切った。配色三種、Graphの意味表現、3ペインと中央カード単独スクロール、Graph高さ調整は維持。ブラウザ題名の固定demo表記も除去した。
+
+| 検証 | 結果 |
+| --- | --- |
+| `npm test -- --no-file-parallelism --testTimeout=15000` | 26 file・545/545成功（159.36秒） |
+| `npm run lint` / `npm run typecheck` / `npm run public:build` | 成功。既存の語彙warning1件は増加なし |
+| `GRAPH_TEST_BASE_URL=http://127.0.0.1:3200 npm run public:e2e` | 最終buildで6/6（31.9秒）。漫画／科学／Event、限定・概要・根拠・切替／復帰・更新失効と旧参照、PC／390pxのヘッダと別タブ往復 |
+| `GRAPH_TEST_REUSE=1 npx playwright test tests/e2e/site-header.spec.ts tests/e2e/compact-explorer.spec.ts tests/e2e/graph-viewport.spec.ts` | 8/8（2.6分）。demo、320px／390pxの検索・詳細往復、フォーカス、表示倍率、条件／起点／復帰 |
+| `explorer.spec.ts` のテーマ／ダークモード既存E2E | 2/2（31.9秒）。三テーマのコントラスト、Graph位置・選択・pan/zoom維持 |
+| `npm run test:member:e2e -- --grep '限定リンクで指定版を別ブラウザへ渡し、根拠・探索・再発行・停止へ進む 1440px'` | 専用一時PG＋検証用OIDCで1/1（3.3分）。会員保存・共有版・根拠・探索往復・再発行・停止。専用環境は終了時に削除 |
+
+テーマ確認の実行コマンドは `GRAPH_TEST_REUSE=1 npx playwright test tests/e2e/explorer.spec.ts --grep 'テーマ:|ダークモード:'`。検証Nodeは既存のローカル24.15.0。本番VPSのNode24.21.0 imageは更新していない。
+
+Playwrightは計17件成功。新しい入口テストは別タブ往復・テーマ変更後のNode／Edge・座標・pan/zoom一致、neighbors追加通信なしを確認。最終publicのPCケースでは中央へのwheelで中央だけがスクロールし、左右位置が動かないことも確認した。実スクリーンショットでPLUTO起点、会員未設定画面、共有の根拠閲覧、狭幅、ブラウン／ブルーダークを確認。API・DB・探索state・凍結dataset・依存packageは変更なし。KG統合試験の再実行ではなく、実DBを読む公開探索E2Eと専用会員PGの経路で今回のUIを検証した。
+
+初回は3200が旧buildのままで、新ヘッダが見つからなかった。最新版をbuildして再起動し、さらにNextのroute announcerも拾っていた新規テストのalert指定を本文へ限定した。最終6件は修正後の本番buildで全て成功している。
+
+確認先は http://127.0.0.1:3200 。VPSの https://graph.isinxnisi.net は工程7のimageのままで、今回のUI変更・会員有効化・一般公開は反映していない。ローカル確認とVPS配置を区別し、後続の配置時にartifactとHTTPSを再確認する。会員設定／実Google・スマホ配置全体・操作アニメーションの完了には数えない。

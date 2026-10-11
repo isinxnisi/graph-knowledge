@@ -1,5 +1,9 @@
 /* 画面とCytoscapeで共有するテーマ。色の変更はこの一覧を起点に行う。 */
 :root {
+  --font-body: 14px/1.65 system-ui, sans-serif;
+  --radius-control: 6px;
+  --radius-panel: 10px;
+  --space-panel: 16px;
   --color-page: #eef1ed;
   --color-panel: #fafbf8;
   --color-canvas: #f5f7f3;

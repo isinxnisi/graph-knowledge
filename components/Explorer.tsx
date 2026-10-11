@@ -1,6 +1,7 @@
 "use client";
 import { useSearchParams } from "next/navigation";
 import ReferenceReader from "./ReferenceReader";
+import SiteHeader from "./SiteHeader";
 import { parseReadingLocation, withoutReadingReference } from "../lib/client/reading-reference";
 import { explorerPaneLabels } from "../lib/i18n/explorer-panes";
 import { entryLabels } from "../lib/i18n/exploration-entry";
@@ -68,8 +69,6 @@ export default function Explorer({ dataset = "demo" }: { dataset?: DatasetMode }
   const [workspaceOpen, setWorkspaceOpen] = useState(false);
   const [savedViewsOpen, setSavedViewsOpen] = useState(false);
   const [detailWide, setDetailWide] = useState(false);
-  const [dark, setDark] = useState(false);
-  const [darkPalette, setDarkPalette] = useState<"brown" | "blue">("brown");
   const { invalidateData, dataChanged, reloadData, graph, selection, previous, viewRestoration, switchRoot, restorePrevious, openSavedView, openWorkspace, changePredicates, chooseRoot, inspectEntity, selectEntity, selectClaim, selectRelation, expand, close, toggleEntity } = useGraphExplorer();
   const restricted = graph.predicates !== null || (graph.contributionRoles ?? null) !== null || (graph.organizationPositions ?? null) !== null || (graph.eventRoles ?? null) !== null;
   const switchFrom = (entity: EntitySummary, mode: "broad" | "same") => {
@@ -93,25 +92,12 @@ export default function Explorer({ dataset = "demo" }: { dataset?: DatasetMode }
   const loading = Object.values(graph.expansions).filter((meta) => meta.loading).length;
   const blocked = Object.values(graph.expansions).find((meta) => meta.blocked);
   return <div className={styles.explorer}>
-    <header className={styles.header}>
-      <h1>関係性を探索する</h1><p className={styles.demo}>{labels.badge}</p>
-      <p>{labels.description}</p>
-      <button className={styles.themeToggle} aria-label="ダークモード" aria-pressed={dark} onClick={() => {
-        const next = !dark; setDark(next);
-        document.documentElement.dataset.theme = next ? `dark-${darkPalette}` : "light";
-      }}>{dark ? "ライトモードへ" : "ダークモードへ"}</button>
-      {dark && <label className={styles.themePalette}>ダーク配色
-        <select value={darkPalette} onChange={(event) => {
-          const palette = event.target.value === "blue" ? "blue" : "brown";
-          setDarkPalette(palette); document.documentElement.dataset.theme = `dark-${palette}`;
-        }}><option value="brown">ブラウン</option><option value="blue">ブルー</option></select>
-      </label>}
-    </header>
+    <SiteHeader dataset={dataset} />
     <nav ref={paneNavigation} className={styles.paneNavigation} aria-label={panes.navigation}>
       {(["search", "graph", "detail"] as const).map(pane => <button key={pane} aria-pressed={activePane === pane} aria-controls={`explorer-${pane}`} onClick={() => setActivePane(pane)}>{panes[pane]}</button>)}
     </nav>
     <main data-active-pane={activePane} className={`${styles.columns} ${detailWide ? styles.wideDetails : ""}`}>
-      <div id="explorer-search" role="group" tabIndex={-1} aria-label={panes.search} className={styles.panel}><SearchPanel placeholder={labels.searchExample} onChoose={startFrom} /><button onClick={() => setSavedViewsOpen(true)}>{savedViewLabels().launch}</button><button onClick={() => setWorkspaceOpen(true)}>{workspaceLabels().launch}</button><button onClick={() => setCapsuleOpen(true)}>{capsuleLabels().launch}</button><StartExamples dataset={dataset} onChoose={(entity) => startFrom(entity, true)} /></div>
+      <div id="explorer-search" role="group" tabIndex={-1} aria-label={panes.search} className={styles.panel}><SearchPanel placeholder={labels.searchExample} onChoose={startFrom} /><div className={styles.localActions}><button onClick={() => setSavedViewsOpen(true)}>{savedViewLabels().launch}</button><button onClick={() => setWorkspaceOpen(true)}>{workspaceLabels().launch}</button><button onClick={() => setCapsuleOpen(true)}>{capsuleLabels().launch}</button></div><StartExamples dataset={dataset} onChoose={(entity) => startFrom(entity, true)} /></div>
       <div id="explorer-graph" role="group" tabIndex={-1} aria-label={panes.graph} className={styles.centralScroll}>
       <section className={`${styles.panel} ${styles.graphPanel}`} aria-labelledby="graph-title">
         <div className={styles.graphHeader}>

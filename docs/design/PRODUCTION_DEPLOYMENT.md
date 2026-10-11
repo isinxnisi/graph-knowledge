@@ -33,7 +33,7 @@ docker build --target ops -t graph-knowledge-ops:TAG .
 npx tsx scripts/test-production.ts TAG
 ```
 
-検証scriptは3201番の専用projectを作り、空DB・投入・冪等性・backup・再起動・本番imageを使う既存Playwright4経路・DB停止と復旧を確認して、自分で作ったcontainer／volumeだけを削除する。実行中の3200／凍結版には触れない。
+検証scriptは3201番の専用projectを作り、空DB・投入・冪等性・backup・再起動・本番imageを使うpublic Playwright（現在6件）・DB停止と復旧を確認して、自分で作ったcontainer／volumeだけを削除する。実行中の3200／凍結版には触れない。
 
 本番構成のローカル試験には、専用Compose project名とprivate envを使う。`GRAPH_WEB_PORT=3201`を指定し、既存3200／凍結版を停止・上書きしない。envには`NEO4J_PASSWORD`、`GRAPH_IMAGE_TAG`、`GRAPH_BACKUP_DIRECTORY`を記載する。`docker compose config`をそのまま表示するとpasswordを展開するため`config --quiet`を使う。
 
@@ -112,4 +112,4 @@ typecheck初回は既存ignoredのEvent dev生成型2 fileが破損していた�
 - 初回backup `ready-20261011T155518Z.json` はdevelop所有・0600。18 Entity / 27 Claim / 15 Source / 29 Citation / 16 ExternalIdentifier（知識Node105）、release `20261011-001`、receipt1、撤回0。backup内revisionと実APIのrevisionが一致した。冪等再投入・DB停止復旧は前述の隔離試験で確認済みで、今回稼働中のVPSでは繰り返していない。
 - `systemctl is-active docker caddy resale-ebay-notifications` は全てactive。Webはloopback 3200だけ、Neo4jのhost公開portなし。既存通知siteのHTTPS rootは従来どおり404（rootには経路がない）で、通知serviceも継続稼働。
 
-現在は認証付き試験環境であり、一般β公開・実Google会員接続・運用復旧全体の完了ではない。全体は7/24（約29%）、次は8のUI統一。定期backup／外部退避等はstep19、認証を外す判断はstep22に残す。今回の追確認は文書更新だけで、DB・API・UI・本番設定を変更していない。
+現在は認証付き試験環境であり、一般β公開・実Google会員接続・運用復旧全体の完了ではない。試験起動確認時は7/24（約29%）。以後の完了数は[進捗](../PUBLIC_BETA_PROGRESS.md)を正本とする。定期backup／外部退避等はstep19、認証を外す判断はstep22に残す。今回の追確認は文書更新だけで、DB・API・UI・本番設定を変更していない。

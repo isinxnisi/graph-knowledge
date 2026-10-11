@@ -7,7 +7,7 @@ import type { MemberCapsule } from "../lib/domain/member-capsule";
 import { capsulesKey, readCapsules, type LocalCapsule } from "../lib/client/local-capsules";
 import { MemberClientError, memberCreateResultSchema, memberImportRequest, memberItemSchema, memberListSchema, memberProfileSchema, memberReaderCapsule, memberRequest, type MemberUser } from "../lib/client/member-api";
 import { memberLabels } from "../lib/i18n/member";
-import { datasetLabels } from "../lib/i18n/dataset";
+import SiteHeader from "./SiteHeader";
 import { capsuleLabels } from "../lib/i18n/capsules";
 import MemberCapsuleEditor from "./MemberCapsuleEditor";
 import CapsuleShareControls from "./CapsuleShareControls";
@@ -192,9 +192,9 @@ export default function MemberCapsules({ dataset, initialImport = "" }: { datase
       if (!signal.aborted) { setItems(previous => previous.filter(item => item.id !== selected.id)); setSelected(null); setMessage(text.removed); navigate(null); }
     });
   }
-  return <main className={css.page}>
-    <header><p className={css.eyebrow}>{text.private}</p><h1 ref={heading} tabIndex={-1}>{text.title}</h1><p>{datasetLabels(dataset).badge}</p><p>{text.help}</p>
-      <a href="/" target="_blank" rel="noopener noreferrer">{text.explorer}</a><p className={css.muted}>{text.returnHelp}</p>
+  return <><SiteHeader dataset={dataset} page="member" /><main className={css.page}>
+    <header className={css.pageHeader}><p className={css.eyebrow}>{text.private}</p><h1 ref={heading} tabIndex={-1}>{text.title}</h1><p>{text.help}</p>
+      <p className={css.muted}>{text.returnHelp}</p>
     </header>
     <section className={css.account} aria-label={text.title}>
       {user ? <><p><strong>{user.name}</strong> · {user.locale}</p><button disabled={busy || !!draft} onClick={() => logout(false)}>{text.logout}</button><button disabled={busy || !!draft} onClick={() => setConfirm("logoutAll")}>{text.logoutAll}</button></> : !busy && provider && <><p>{text.loggedOut}</p><button disabled={!!draft} onClick={login}>{provider === "fixture" ? text.fixtureLogin : text.login}</button></>}
@@ -238,5 +238,5 @@ export default function MemberCapsules({ dataset, initialImport = "" }: { datase
       {source && <><p className={css.eyebrow}>{text.local}</p><h3>{source.title}</h3><p className={capsuleCss.note}>{source.note || captions.noNote}</p><p>{captions.selected(source.entityIds.length, source.claimIds.length)} · {captions.version(source.revision)}</p>
         <button disabled={busy || !user || !!draft} onClick={save}>{text.save}</button></>}
     </section>
-  </main>;
+  </main></>;
 }

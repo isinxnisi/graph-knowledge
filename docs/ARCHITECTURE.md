@@ -4,7 +4,7 @@
 
 ## 前提と設計の位置づけ
 
-2026-10-11に公開準備へ着手。検証用の凍結datasetを維持し、安定dataset `public-kg` と投入releaseを分離した[共通KG適用経路](design/PUBLIC_KG_RELEASES.md)を追加。ローカルの生成・dry-run・追加/表記訂正に加え、明示撤回/新UUID差替え、revision付きcursor/探索失効、KG単独backup/restoreを実装。旧Claimの意味・根拠と会員PGを維持する。2026-10-12、単一Web＋Neo4jを既存Caddy配下へ配置し、`graph.isinxnisi.net` のpreview認証付きHTTPS・実ブラウザを確認した。一般公開は未実施。会員公開時のPGは未接続で、次は共通ヘッダ等のUI統一。[進捗と未完了](PUBLIC_BETA_PROGRESS.md)を参照。
+2026-10-11に公開準備へ着手。検証用の凍結datasetを維持し、安定dataset `public-kg` と投入releaseを分離した[共通KG適用経路](design/PUBLIC_KG_RELEASES.md)を追加。ローカルの生成・dry-run・追加/表記訂正に加え、明示撤回/新UUID差替え、revision付きcursor/探索失効、KG単独backup/restoreを実装。旧Claimの意味・根拠と会員PGを維持する。2026-10-12、単一Web＋Neo4jを既存Caddy配下へ配置し、`graph.isinxnisi.net` のpreview認証付きHTTPS・実ブラウザを確認した。一般公開は未実施。会員公開時のPGは未接続。共通ヘッダ・アカウント入口とUI基礎の採用範囲は[共通UI契約](design/PRODUCT_UI_FOUNDATIONS.md)を参照する。[進捗と未完了](PUBLIC_BETA_PROGRESS.md)を参照。
 
 Phase 16で[Relation・Claim・Predicate・typed qualificationの基本設計](design/RELATION_MODEL_PRINCIPLES.md)を採用した。独立命題とdomain固有限定、null／polarity／期間、identity・比較・表示、根拠と取込由来の境界を今後の設計基準とする。三用途の実装は維持し、新しい語彙・schema・API・UI・datasetは追加していない。下記の初期仕様とPhase別記録を読む際は、後続の採用契約とこの基本設計を併せて確認する。
 
@@ -461,6 +461,8 @@ Step 4のDB/API契約と探索機能を維持し、表示のみ調整した。�
 - レイアウト、Node配置、曲率、意味表現、API・DB・fixtureは維持する。選択の太い枠、展開済みの二重枠、新規表示の淡い外枠、Node形状、否定の文字と破線、肯否混在の文字と点線も維持する。
 - 検証した文字と背景の比率は4.5以上、Graph線・Node境界・入力境界は3以上を確認。包括的なアクセシビリティ適合の認証ではない。
 - 初期の検索→探索→Claim比較→出典確認までのローカルデモを完了として区切る。将来機能や本番公開準備は対象外。配色と確認画像は [IMPLEMENTATION_THEME.md](archive/phase-01-vertical-slice/IMPLEMENTATION_THEME.md) を参照。
+
+公開β step8では探索・会員・共有に `SiteHeader` を共用し、別タブのアカウント／探索入口を設けた。配色は維持し、文字・余白・control／panelの共通値を `app/theme.css` へ、全画面の基礎を `app/ui.css` へ整理。画面配置はCSS Modules、Graphと探索stateは既存の責務を維持する。ヘッダ自身はsession・private情報を取得せず、会員未設定時の状態は既存会員画面が表示する。[採用範囲](design/PRODUCT_UI_FOUNDATIONS.md)を参照。
 
 ### 探索モデルの設計レビューと開閉フェーズ
 

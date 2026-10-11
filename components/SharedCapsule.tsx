@@ -5,7 +5,7 @@ import type { MemberCapsule } from "../lib/domain/member-capsule";
 import { capsuleShareTokenSchema, sharedCapsuleSchema } from "../lib/domain/capsule-sharing";
 import { memberReaderCapsule } from "../lib/client/member-api";
 import { capsuleSharingLabels } from "../lib/i18n/capsule-sharing";
-import { datasetLabels } from "../lib/i18n/dataset";
+import SiteHeader from "./SiteHeader";
 import { memberPostsLabels } from "../lib/i18n/member-posts";
 import { CapsuleReader } from "./CapsuleDialog";
 import css from "./MemberCapsules.module.css";
@@ -49,9 +49,9 @@ export default function SharedCapsule({ dataset }: { dataset: DatasetMode }) {
     document.addEventListener("visibilitychange", visibility); window.addEventListener("hashchange", changed); window.addEventListener("pageshow", restored);
     return () => { clearTimeout(timer); clearInterval(poll); active.current?.abort(); document.removeEventListener("visibilitychange", visibility); window.removeEventListener("hashchange", changed); window.removeEventListener("pageshow", restored); };
   }, [refresh]);
-  return <main className={css.page}>
-    <header><p className={css.eyebrow}>{text.title}</p><h1>{text.readTitle}</h1><p>{datasetLabels(dataset).badge}</p><p>{text.readHelp}</p>
-      <a href="/" target="_blank" rel="noopener noreferrer">{text.explorer}</a><p className={css.muted}>{text.returnHelp}</p>
+  return <><SiteHeader dataset={dataset} page="shared" /><main className={css.page}>
+    <header className={css.pageHeader}><p className={css.eyebrow}>{text.title}</p><h1>{text.readTitle}</h1><p>{text.readHelp}</p>
+      <p className={css.muted}>{text.returnHelp}</p>
     </header>
     <section className={css.card}>
       <button disabled={busy} onClick={() => void refresh()}>{text.readRefresh}</button>
@@ -61,5 +61,5 @@ export default function SharedCapsule({ dataset }: { dataset: DatasetMode }) {
       <p className={css.muted}>{text.lifecycle}</p>
       <a href="/member#my-posts" target="_blank" rel="noopener noreferrer">{memberPostsLabels().manageLink}</a>
     </section>
-  </main>;
+  </main></>;
 }
