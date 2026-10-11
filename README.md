@@ -4,6 +4,22 @@
 
 初期Vertical Slice（ローカルの読み取り専用デモ）は、実装順序5のUI・テーマ調整まで完了しています。ルートに検索・Cytoscape.jsのGraph・詳細を一画面で表示します。既定環境は架空のデモデータです。別環境の少数実データパイロットは末尾を参照してください。会員Capsuleの認証・保存は任意設定のprototypeです。投稿・Wikidataの大量取り込みや自動同期は未実装です。Graphの可読性・同名表示・選択とスクロールの操作を調整しています。
 
+## 共通KG・公開準備の画面
+
+受入済みの漫画・科学・Eventを一つの検索入口から辿れる `public-kg` を追加しました。公開βへの進捗は[全24ステップ](docs/PUBLIC_BETA_PROGRESS.md)、投入の契約と制限は[共通KGのrelease適用](docs/design/PUBLIC_KG_RELEASES.md)を参照してください。旧検証画面は変更しません。
+
+```bash
+cp .env.public.example .env.public
+# .env.publicのNEO4J_PASSWORDをローカル用の値へ変更
+docker compose --env-file .env.public -f compose.public.yaml up -d --wait
+npm run public:validate
+npm run public:plan
+npm run public:apply
+npm run public:dev
+```
+
+画面は http://127.0.0.1:3200 。初回は18 Entity・27 Claimで、個々のSource/Citation/限定を保持します。後続releaseは `npm run public:plan -- <directory>` / `npm run public:apply -- <directory>` 。現時点ではWeb停止中に適用し、新しく探索を開始してください。撤回・差替え・稼働中更新と復旧は未完了です。初回生成物の再作成は `public:prepare`、一時DBの更新試験は `public:integration`、画面試験は `public:e2e` です。
+
 ## 起点と条件を保存して再訪する
 
 検索欄またはGraph起点欄の「保存・再訪」から、現在の起点と適用中の条件を名前付きで保存できます。同じブラウザで再読込した後も一覧から開けます。保存はdatasetごと20件までで、ブラウザのデータ削除で失われます。

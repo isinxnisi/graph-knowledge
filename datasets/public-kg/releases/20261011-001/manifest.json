@@ -1,0 +1,176 @@
+{
+  "dataset": "public-kg",
+  "release": "20261011-001",
+  "baseRelease": null,
+  "reason": "人間受入済み漫画v2とEvent（科学v2を含む）をUUID・根拠・限定を保持して共通KGへ構成。新規事実の受入ではない。",
+  "dataSha256": "71d8bb6eca810da8eeb491c931b7c821d2aae196078b0f56925707b8aee381cb",
+  "inputs": [
+    {
+      "dataset": "pilot-urasawa-v2",
+      "file": "datasets/pilot-urasawa/v2/ledger.json",
+      "sha256": "0b22ed0add4df4b780669f45815282975f143225bbaa9b35eef4cf32206f6537"
+    },
+    {
+      "dataset": "pilot-urasawa-v2",
+      "file": "datasets/pilot-urasawa/v2/manifest.json",
+      "sha256": "b16f7152158c9dd9cd117dabda97761b8034e3ece9941ed6c6e6f7a3a3acfca3"
+    },
+    {
+      "dataset": "pilot-urasawa-v2",
+      "file": "datasets/pilot-urasawa/v2/data.json",
+      "sha256": "63798471bded3b9d31666c45165d9296d8ccfcd476c042872a02375143981c17"
+    },
+    {
+      "dataset": "pilot-event-v1",
+      "file": "datasets/pilot-event/v1/ledger.json",
+      "sha256": "fbb0099391bdabdc970221719ac2bdec84a043c89ac4a2eb1d5bfa5be308cdbf"
+    },
+    {
+      "dataset": "pilot-event-v1",
+      "file": "datasets/pilot-event/v1/manifest.json",
+      "sha256": "a5fce11502f89f7d5e6a5c01b946e1f615e0f13493f093ad02b26f8f5156fd46"
+    },
+    {
+      "dataset": "pilot-event-v1",
+      "file": "datasets/pilot-event/v1/data.json",
+      "sha256": "3e7e1a9f0380b5bd19547f8538395e3ba3965e3309e311fa9bf201c660a1dc86"
+    }
+  ],
+  "claimOrigins": [
+    {
+      "claimId": "aacddf82-87ae-4981-8542-0470e981a94f",
+      "dataset": "pilot-urasawa-v2",
+      "sourceClaimId": "aacddf82-87ae-4981-8542-0470e981a94f"
+    },
+    {
+      "claimId": "e3b37447-87f5-40ed-b738-6ba37578c8c3",
+      "dataset": "pilot-urasawa-v2",
+      "sourceClaimId": "e3b37447-87f5-40ed-b738-6ba37578c8c3"
+    },
+    {
+      "claimId": "75f911ca-a247-42bd-8bf0-c166649ce145",
+      "dataset": "pilot-urasawa-v2",
+      "sourceClaimId": "75f911ca-a247-42bd-8bf0-c166649ce145"
+    },
+    {
+      "claimId": "d9780089-361d-49a0-b95a-a54c2cd2fa7a",
+      "dataset": "pilot-urasawa-v2",
+      "sourceClaimId": "d9780089-361d-49a0-b95a-a54c2cd2fa7a"
+    },
+    {
+      "claimId": "3ee2132d-436a-44cf-a33e-851faddd3163",
+      "dataset": "pilot-urasawa-v2",
+      "sourceClaimId": "3ee2132d-436a-44cf-a33e-851faddd3163"
+    },
+    {
+      "claimId": "48c3605b-34d8-409d-a4d2-fdd50c524c74",
+      "dataset": "pilot-urasawa-v2",
+      "sourceClaimId": "48c3605b-34d8-409d-a4d2-fdd50c524c74"
+    },
+    {
+      "claimId": "11d202ab-e9a4-4da5-9ff2-735f48f83133",
+      "dataset": "pilot-urasawa-v2",
+      "sourceClaimId": "11d202ab-e9a4-4da5-9ff2-735f48f83133"
+    },
+    {
+      "claimId": "1ad08ee5-bbc3-41bf-b647-4b7419820a14",
+      "dataset": "pilot-urasawa-v2",
+      "sourceClaimId": "1ad08ee5-bbc3-41bf-b647-4b7419820a14"
+    },
+    {
+      "claimId": "b6ce3407-e3bb-44c9-867b-7b7434861af5",
+      "dataset": "pilot-urasawa-v2",
+      "sourceClaimId": "b6ce3407-e3bb-44c9-867b-7b7434861af5"
+    },
+    {
+      "claimId": "dbc08a85-9165-4cc8-a3af-d133c83d8f67",
+      "dataset": "pilot-urasawa-v2",
+      "sourceClaimId": "dbc08a85-9165-4cc8-a3af-d133c83d8f67"
+    },
+    {
+      "claimId": "cc2bc0c3-d8e7-47fe-8aaf-1b219bff0137",
+      "dataset": "pilot-urasawa-v2",
+      "sourceClaimId": "cc2bc0c3-d8e7-47fe-8aaf-1b219bff0137"
+    },
+    {
+      "claimId": "52c9fa30-bac5-40f1-bbe5-75d7420081d8",
+      "dataset": "pilot-urasawa-v2",
+      "sourceClaimId": "52c9fa30-bac5-40f1-bbe5-75d7420081d8"
+    },
+    {
+      "claimId": "7142e160-c0d5-4358-9b70-63c03bfd44ad",
+      "dataset": "pilot-urasawa-v2",
+      "sourceClaimId": "7142e160-c0d5-4358-9b70-63c03bfd44ad"
+    },
+    {
+      "claimId": "29f3bd67-b461-49a8-bdfa-d98b1d7dcfe1",
+      "dataset": "pilot-urasawa-v2",
+      "sourceClaimId": "29f3bd67-b461-49a8-bdfa-d98b1d7dcfe1"
+    },
+    {
+      "claimId": "ef4dc9ea-b8e2-4959-b594-5d27ebccb054",
+      "dataset": "pilot-event-v1",
+      "sourceClaimId": "ef4dc9ea-b8e2-4959-b594-5d27ebccb054"
+    },
+    {
+      "claimId": "47d46b69-b111-4b76-addb-632d679ae4f8",
+      "dataset": "pilot-event-v1",
+      "sourceClaimId": "47d46b69-b111-4b76-addb-632d679ae4f8"
+    },
+    {
+      "claimId": "2bdd7207-c8af-4936-ac23-961a8450eaad",
+      "dataset": "pilot-event-v1",
+      "sourceClaimId": "2bdd7207-c8af-4936-ac23-961a8450eaad"
+    },
+    {
+      "claimId": "3ce6d2ff-9cdf-4568-b246-719a0e07c410",
+      "dataset": "pilot-event-v1",
+      "sourceClaimId": "3ce6d2ff-9cdf-4568-b246-719a0e07c410"
+    },
+    {
+      "claimId": "eb7182aa-e7f1-4064-a731-bffe7c59227c",
+      "dataset": "pilot-event-v1",
+      "sourceClaimId": "eb7182aa-e7f1-4064-a731-bffe7c59227c"
+    },
+    {
+      "claimId": "c23fe1f3-fae6-43c1-9ed7-af1d94e4712c",
+      "dataset": "pilot-event-v1",
+      "sourceClaimId": "c23fe1f3-fae6-43c1-9ed7-af1d94e4712c"
+    },
+    {
+      "claimId": "f05e54fa-67a1-49c6-876a-0f4b01534cb0",
+      "dataset": "pilot-event-v1",
+      "sourceClaimId": "f05e54fa-67a1-49c6-876a-0f4b01534cb0"
+    },
+    {
+      "claimId": "0bac17e3-5832-4e48-9616-27c3de12ea83",
+      "dataset": "pilot-event-v1",
+      "sourceClaimId": "0bac17e3-5832-4e48-9616-27c3de12ea83"
+    },
+    {
+      "claimId": "e71f548b-65c2-4032-a40f-342ab75b5d3e",
+      "dataset": "pilot-event-v1",
+      "sourceClaimId": "e71f548b-65c2-4032-a40f-342ab75b5d3e"
+    },
+    {
+      "claimId": "ffbe8c65-5435-4373-85c7-c091892e51d9",
+      "dataset": "pilot-event-v1",
+      "sourceClaimId": "ffbe8c65-5435-4373-85c7-c091892e51d9"
+    },
+    {
+      "claimId": "341f1523-3e1a-4779-a441-c813706a80a9",
+      "dataset": "pilot-event-v1",
+      "sourceClaimId": "341f1523-3e1a-4779-a441-c813706a80a9"
+    },
+    {
+      "claimId": "e84b2f8d-b173-47f9-8511-eb02bc0a2e39",
+      "dataset": "pilot-event-v1",
+      "sourceClaimId": "e84b2f8d-b173-47f9-8511-eb02bc0a2e39"
+    },
+    {
+      "claimId": "d01a21f2-a6b8-4eb1-9276-8850081fcf69",
+      "dataset": "pilot-event-v1",
+      "sourceClaimId": "d01a21f2-a6b8-4eb1-9276-8850081fcf69"
+    }
+  ]
+}

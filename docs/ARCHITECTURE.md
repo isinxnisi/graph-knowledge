@@ -4,6 +4,8 @@
 
 ## 前提と設計の位置づけ
 
+2026-10-11に公開準備へ着手。検証用の凍結datasetを維持し、安定dataset `public-kg` と投入releaseを分離した[共通KG適用経路](design/PUBLIC_KG_RELEASES.md)を追加。現在はローカルの生成・dry-run・追加/表記訂正のtransaction適用まで。既存Claimの意味を上書きせず、撤回/差替え・更新時cursor・backup/restoreは次の作業単位。公開先は `graph.isinxnisi.net`、単一Web＋Neo4j＋会員公開時のPGを既存Caddy配下へ配置する方針。[進捗と未完了](PUBLIC_BETA_PROGRESS.md)を参照。
+
 Phase 16で[Relation・Claim・Predicate・typed qualificationの基本設計](design/RELATION_MODEL_PRINCIPLES.md)を採用した。独立命題とdomain固有限定、null／polarity／期間、identity・比較・表示、根拠と取込由来の境界を今後の設計基準とする。三用途の実装は維持し、新しい語彙・schema・API・UI・datasetは追加していない。下記の初期仕様とPhase別記録を読む際は、後続の採用契約とこの基本設計を併せて確認する。
 
 [PROJECT_CONTEXT.md](PROJECT_CONTEXT.md)を目的とスコープの基準とする。Neo4jを関係性データの正本、PostgreSQLをサービス運営データの正本とする構成を想定する。初期はClaimノード方式を採用し、fixtureで検証する。今回決めた実装範囲は末尾の「最小Vertical Sliceの初期採用仕様」にまとめる。将来の拡張案と初期仕様を区別する。

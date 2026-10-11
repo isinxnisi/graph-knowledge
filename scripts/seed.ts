@@ -14,6 +14,7 @@ if (existsSync(".env")) process.loadEnvFile(".env");
 const args = process.argv.slice(2);
 if (args.length > 1 || (args[0] && !args[0].startsWith("--dataset="))) throw new Error("Use --dataset=<GRAPH_DATASET>");
 const selected = datasetMode(args[0]?.slice("--dataset=".length));
+if (selected === "public-kg") throw new Error("Public KG uses public:plan / public:apply, not frozen fixture seed");
 if (selected !== datasetMode(process.env.GRAPH_DATASET)) throw new Error("Selected dataset does not match GRAPH_DATASET; refusing seed");
 assertDatasetTarget(selected, process.env.NEO4J_URI ?? "");
 const fixture = selected === "pilot-event-v1" ? await loadEventPilot() : selected === "demo" ? await loadFixture() : selected === "pilot-science-v2" ? await loadScienceV2() : selected === "pilot-science-v1" ? await loadSciencePilot() : selected === "pilot-urasawa-v2" ? await loadPilotV2() : await loadPilot();

@@ -1,5 +1,6 @@
 import type { DatasetMode } from "../domain/dataset";
 const ja = {
+  "public-kg": { searchExample: "例：PLUTO・ハイゼンベルク・ソルヴェイ", badge: "共通Knowledge Graph · 公開準備中", description: "資料で確認された人物・作品・組織・出来事の関係を辿ります。登録範囲は網羅的ではありません。", empty: "登録範囲では関係がありません。実世界の不存在を示しません。" },
   "pilot-event-v1": { searchExample: "例：ソルヴェイ・ローレンツ・ディラック", badge: "特定Event参加パイロット v1", description: "資料で確認した開催回への参加を辿ります。招待・全日程出席・全回参加を示しません。", empty: "今回の登録範囲では関係がありません。実世界の不存在を示しません。" },
   "pilot-science-v2": { searchExample: "例：ハイゼンベルク・ニールス・ボーア研究所", badge: "科学・研究機関パイロット v2", description: "資料で確認した関わりと立場を辿ります。同時在籍・面識・雇用形態を示しません。", empty: "今回の登録範囲では関係がありません。実世界の不存在を示しません。" },
   "pilot-science-v1": { searchExample: "例：ゲッティンゲン大学・パウリ", badge: "科学・研究機関パイロット v1", description: "資料で確認した人物と機関の関わりを辿ります。同時在籍・面識・共同研究を示しません。", empty: "今回の登録範囲では関係がありません。実世界の不存在を示しません。" },

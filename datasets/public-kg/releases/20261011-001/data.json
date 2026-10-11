@@ -1,0 +1,1502 @@
+{
+  "schemaVersion": 4,
+  "entities": [
+    {
+      "id": "1530af15-129d-40bf-a1ca-ce8343dc7491",
+      "kind": "person",
+      "name": "ヴェルナー・ハイゼンベルク",
+      "description": "理論物理学者。大学での早期経歴と研究所への訪問を収録。",
+      "aliases": [
+        "Werner Heisenberg"
+      ],
+      "externalIds": [
+        {
+          "namespace": "wikidata",
+          "value": "Q40904"
+        }
+      ],
+      "createdAt": "2026-10-04T19:55:53.444311Z",
+      "updatedAt": "2026-10-04T19:55:53.444311Z",
+      "event": null
+    },
+    {
+      "id": "247d3efb-6172-4a3e-aa09-dad69914b47c",
+      "kind": "event",
+      "name": "第5回ソルヴェイ物理会議（1927）",
+      "description": "ブリュッセルで1927年10月24〜29日に開催された特定回。会議シリーズ全体とは別。",
+      "aliases": [
+        "1927 Solvay Conference",
+        "Fifth Solvay Physics Conference",
+        "Electrons et photons",
+        "第5回ソルヴェイ会議"
+      ],
+      "externalIds": [],
+      "createdAt": "2026-10-05T14:30:00Z",
+      "updatedAt": "2026-10-05T14:30:00Z",
+      "event": {
+        "granularity": "occurrence",
+        "period": {
+          "from": {
+            "value": "1927-10-24",
+            "precision": "day"
+          },
+          "to": {
+            "value": "1927-10-29",
+            "precision": "day"
+          }
+        }
+      }
+    },
+    {
+      "id": "29e9caea-6c44-4c1f-9abc-f4350003ca3b",
+      "kind": "person",
+      "name": "長崎尚志",
+      "description": "PLUTOのプロデュース、MASTERキートンの脚本、BILLY BATのストーリー共同制作。",
+      "aliases": [
+        "Takashi Nagasaki"
+      ],
+      "externalIds": [
+        {
+          "namespace": "wikidata",
+          "value": "Q3514203"
+        }
+      ],
+      "createdAt": "2026-10-03T05:13:37Z",
+      "updatedAt": "2026-10-03T05:13:37Z",
+      "event": null
+    },
+    {
+      "id": "2b7c6289-d050-4dc0-93e3-9307681253cc",
+      "kind": "work",
+      "name": "PLUTO",
+      "description": "漫画作品。根拠は小学館の第1巻商品情報。アニメ版とは別。",
+      "aliases": [
+        "Pluto"
+      ],
+      "externalIds": [
+        {
+          "namespace": "wikidata",
+          "value": "Q1197216"
+        }
+      ],
+      "createdAt": "2026-10-03T05:13:37Z",
+      "updatedAt": "2026-10-03T05:13:37Z",
+      "event": null
+    },
+    {
+      "id": "326dd821-2ca6-406a-a683-e424eb534998",
+      "kind": "work",
+      "name": "BILLY BAT",
+      "description": "漫画作品。根拠は講談社の第4巻商品情報。",
+      "aliases": [
+        "Billy Bat"
+      ],
+      "externalIds": [
+        {
+          "namespace": "wikidata",
+          "value": "Q594758"
+        }
+      ],
+      "createdAt": "2026-10-03T05:13:37Z",
+      "updatedAt": "2026-10-03T05:13:37Z",
+      "event": null
+    },
+    {
+      "id": "32f5aa9e-1d60-40c9-9ba0-ce12f72cf524",
+      "kind": "person",
+      "name": "ヘンドリック・ローレンツ",
+      "description": "1927年第5回ソルヴェイ物理会議の参加者欄で会議議長と記載。",
+      "aliases": [
+        "Hendrik Lorentz",
+        "H.-A. Lorentz",
+        "ローレンツ"
+      ],
+      "externalIds": [],
+      "createdAt": "2026-10-05T14:30:00Z",
+      "updatedAt": "2026-10-05T14:30:00Z",
+      "event": null
+    },
+    {
+      "id": "39e8e984-c530-4b2a-834a-85e85642eacb",
+      "kind": "person",
+      "name": "マックス・ボルン",
+      "description": "物理学者。ゲッティンゲン大学との教授としての関わりを収録。",
+      "aliases": [
+        "Max Born"
+      ],
+      "externalIds": [
+        {
+          "namespace": "wikidata",
+          "value": "Q58978"
+        }
+      ],
+      "createdAt": "2026-10-04T19:55:53.444311Z",
+      "updatedAt": "2026-10-04T19:55:53.444311Z",
+      "event": null
+    },
+    {
+      "id": "52a671d1-bc5c-4a52-9d98-8c9418f5ec5c",
+      "kind": "person",
+      "name": "ヴォルフガング・パウリ",
+      "description": "物理学者。大学での学術的助手と研究所への訪問を収録。",
+      "aliases": [
+        "Wolfgang Pauli"
+      ],
+      "externalIds": [
+        {
+          "namespace": "wikidata",
+          "value": "Q65989"
+        }
+      ],
+      "createdAt": "2026-10-04T19:55:53.444311Z",
+      "updatedAt": "2026-10-04T19:55:53.444311Z",
+      "event": null
+    },
+    {
+      "id": "5cda395a-4927-4cae-92fe-839b29d05095",
+      "kind": "person",
+      "name": "ポール・ディラック",
+      "description": "理論物理学者。研究所への訪問とケンブリッジ大学の教授経歴を収録。",
+      "aliases": [
+        "Paul Dirac",
+        "Paul Adrien Maurice Dirac",
+        "Paul A.M. Dirac"
+      ],
+      "externalIds": [
+        {
+          "namespace": "wikidata",
+          "value": "Q47480"
+        }
+      ],
+      "createdAt": "2026-10-04T19:55:53.444311Z",
+      "updatedAt": "2026-10-04T19:55:53.444311Z",
+      "event": null
+    },
+    {
+      "id": "8e322435-4318-4ad0-835b-3f71d2537421",
+      "kind": "organization",
+      "name": "ニールス・ボーア研究所",
+      "description": "コペンハーゲン大学の研究所。旧理論物理学研究所を1965年改称。現在名で表示。",
+      "aliases": [
+        "University of Copenhagen Niels Bohr Institute",
+        "Niels-Bohr-Institut",
+        "Niels Bohr Institutet ved Københavns Universitet",
+        "Niels Bohr Institute",
+        "Niels Bohr Institutet",
+        "University Institute of Theoretical Physics",
+        "Institute for Theoretical Physics"
+      ],
+      "externalIds": [
+        {
+          "namespace": "wikidata",
+          "value": "Q263761"
+        }
+      ],
+      "createdAt": "2026-10-04T19:55:53.444311Z",
+      "updatedAt": "2026-10-04T19:55:53.444311Z",
+      "event": null
+    },
+    {
+      "id": "93630265-9c44-4bc8-8e7e-4efc7deef14d",
+      "kind": "person",
+      "name": "勝鹿北星",
+      "description": "MASTERキートン完全版第1巻の出版社情報に脚本として記載。",
+      "aliases": [
+        "Hokusei Katsushika"
+      ],
+      "externalIds": [
+        {
+          "namespace": "wikidata",
+          "value": "Q11264988"
+        }
+      ],
+      "createdAt": "2026-10-03T05:13:37Z",
+      "updatedAt": "2026-10-03T05:13:37Z",
+      "event": null
+    },
+    {
+      "id": "a1af9abb-843a-4611-853c-50f630b817ae",
+      "kind": "organization",
+      "name": "ゲッティンゲン大学",
+      "description": "ドイツの大学。都市や同市の別研究所とは区別する。",
+      "aliases": [
+        "ゲオルク・アウグスト大学ゲッティンゲン",
+        "University of Göttingen",
+        "Georg-August-Universität Göttingen"
+      ],
+      "externalIds": [
+        {
+          "namespace": "wikidata",
+          "value": "Q152838"
+        }
+      ],
+      "createdAt": "2026-10-04T19:55:53.444311Z",
+      "updatedAt": "2026-10-04T19:55:53.444311Z",
+      "event": null
+    },
+    {
+      "id": "a58b8ae8-e68f-4e6c-9463-539c106a5f19",
+      "kind": "person",
+      "name": "ニールス・ボーア",
+      "description": "デンマークの物理学者。研究所の設立・活動についての資料を収録。",
+      "aliases": [
+        "Niels Bohr"
+      ],
+      "externalIds": [
+        {
+          "namespace": "wikidata",
+          "value": "Q7085"
+        }
+      ],
+      "createdAt": "2026-10-04T19:55:53.444311Z",
+      "updatedAt": "2026-10-04T19:55:53.444311Z",
+      "event": null
+    },
+    {
+      "id": "bdb742c2-2973-4c1c-a523-c828374111fc",
+      "kind": "person",
+      "name": "手塚眞",
+      "description": "PLUTO第1巻の出版社情報に監修として記載。",
+      "aliases": [
+        "Makoto Tezuka"
+      ],
+      "externalIds": [
+        {
+          "namespace": "wikidata",
+          "value": "Q6724933"
+        }
+      ],
+      "createdAt": "2026-10-03T05:13:37Z",
+      "updatedAt": "2026-10-03T05:13:37Z",
+      "event": null
+    },
+    {
+      "id": "d900543a-9c11-48c1-be76-1822b756fcc4",
+      "kind": "person",
+      "name": "浦沢直樹",
+      "description": "漫画家。今回の収録作品：PLUTO、MASTERキートン、BILLY BAT。",
+      "aliases": [
+        "Naoki Urasawa"
+      ],
+      "externalIds": [
+        {
+          "namespace": "wikidata",
+          "value": "Q348436"
+        }
+      ],
+      "createdAt": "2026-10-03T05:13:37Z",
+      "updatedAt": "2026-10-03T05:13:37Z",
+      "event": null
+    },
+    {
+      "id": "e87a40f9-3139-47a1-a962-6610eb2b8878",
+      "kind": "work",
+      "name": "MASTERキートン",
+      "description": "漫画作品。根拠は完全版第1巻のクレジット。続編・アニメとは別。",
+      "aliases": [
+        "Master Keaton"
+      ],
+      "externalIds": [
+        {
+          "namespace": "wikidata",
+          "value": "Q1185624"
+        }
+      ],
+      "createdAt": "2026-10-03T05:13:37Z",
+      "updatedAt": "2026-10-03T05:13:37Z",
+      "event": null
+    },
+    {
+      "id": "eb0af7e1-caa6-435f-86fb-0591421982b5",
+      "kind": "person",
+      "name": "手塚治虫",
+      "description": "浦沢直樹がインタビューで影響を受けた漫画家として言及。",
+      "aliases": [
+        "Osamu Tezuka"
+      ],
+      "externalIds": [
+        {
+          "namespace": "wikidata",
+          "value": "Q193300"
+        }
+      ],
+      "createdAt": "2026-10-03T05:13:37Z",
+      "updatedAt": "2026-10-03T05:13:37Z",
+      "event": null
+    },
+    {
+      "id": "eccec249-00fb-423b-8ce9-04f243bcda29",
+      "kind": "organization",
+      "name": "ケンブリッジ大学",
+      "description": "英国の大学。Cambridge市・St John's College・Cavendish Laboratoryとは区別する。",
+      "aliases": [
+        "University of Cambridge"
+      ],
+      "externalIds": [
+        {
+          "namespace": "wikidata",
+          "value": "Q35794"
+        }
+      ],
+      "createdAt": "2026-10-04T19:55:53.444311Z",
+      "updatedAt": "2026-10-04T19:55:53.444311Z",
+      "event": null
+    }
+  ],
+  "claims": [
+    {
+      "id": "0bac17e3-5832-4e48-9616-27c3de12ea83",
+      "subjectId": "5cda395a-4927-4cae-92fe-839b29d05095",
+      "objectId": "eccec249-00fb-423b-8ce9-04f243bcda29",
+      "predicate": "AFFILIATED_WITH",
+      "polarity": "affirmed",
+      "period": {
+        "from": {
+          "value": "1932",
+          "precision": "year"
+        },
+        "to": {
+          "value": "1969",
+          "precision": "year"
+        }
+      },
+      "visibility": "published",
+      "createdAt": "2026-10-04T19:55:53.444311Z",
+      "updatedAt": "2026-10-04T19:55:53.444311Z",
+      "contribution": null,
+      "organizationParticipation": null,
+      "eventParticipation": null
+    },
+    {
+      "id": "11d202ab-e9a4-4da5-9ff2-735f48f83133",
+      "subjectId": "d900543a-9c11-48c1-be76-1822b756fcc4",
+      "objectId": "326dd821-2ca6-406a-a683-e424eb534998",
+      "predicate": "CONTRIBUTED_TO",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "visibility": "published",
+      "createdAt": "2026-10-03T05:13:37Z",
+      "updatedAt": "2026-10-03T05:13:37Z",
+      "contribution": {
+        "roleId": null,
+        "scope": null
+      },
+      "organizationParticipation": null,
+      "eventParticipation": null
+    },
+    {
+      "id": "1ad08ee5-bbc3-41bf-b647-4b7419820a14",
+      "subjectId": "29e9caea-6c44-4c1f-9abc-f4350003ca3b",
+      "objectId": "326dd821-2ca6-406a-a683-e424eb534998",
+      "predicate": "CONTRIBUTED_TO",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "visibility": "published",
+      "createdAt": "2026-10-03T05:13:37Z",
+      "updatedAt": "2026-10-03T05:13:37Z",
+      "contribution": {
+        "roleId": null,
+        "scope": null
+      },
+      "organizationParticipation": null,
+      "eventParticipation": null
+    },
+    {
+      "id": "29f3bd67-b461-49a8-bdfa-d98b1d7dcfe1",
+      "subjectId": "29e9caea-6c44-4c1f-9abc-f4350003ca3b",
+      "objectId": "326dd821-2ca6-406a-a683-e424eb534998",
+      "predicate": "CONTRIBUTED_TO",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "visibility": "published",
+      "createdAt": "2026-10-03T15:00:00Z",
+      "updatedAt": "2026-10-03T15:00:00Z",
+      "contribution": {
+        "roleId": "STORY_CO_CREATION",
+        "scope": {
+          "kind": "publication",
+          "isbn13": "9784063729221",
+          "volumeLabel": "第4巻",
+          "editionLabel": null,
+          "language": "ja"
+        }
+      },
+      "organizationParticipation": null,
+      "eventParticipation": null
+    },
+    {
+      "id": "2bdd7207-c8af-4936-ac23-961a8450eaad",
+      "subjectId": "52a671d1-bc5c-4a52-9d98-8c9418f5ec5c",
+      "objectId": "a1af9abb-843a-4611-853c-50f630b817ae",
+      "predicate": "AFFILIATED_WITH",
+      "polarity": "affirmed",
+      "period": {
+        "from": {
+          "value": "1921",
+          "precision": "year"
+        },
+        "to": {
+          "value": "1922",
+          "precision": "year"
+        }
+      },
+      "visibility": "published",
+      "createdAt": "2026-10-04T19:55:53.444311Z",
+      "updatedAt": "2026-10-04T19:55:53.444311Z",
+      "contribution": null,
+      "organizationParticipation": null,
+      "eventParticipation": null
+    },
+    {
+      "id": "341f1523-3e1a-4779-a441-c813706a80a9",
+      "subjectId": "32f5aa9e-1d60-40c9-9ba0-ce12f72cf524",
+      "objectId": "247d3efb-6172-4a3e-aa09-dad69914b47c",
+      "predicate": "PARTICIPATED_IN",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "visibility": "published",
+      "createdAt": "2026-10-05T14:30:00Z",
+      "updatedAt": "2026-10-05T14:30:00Z",
+      "contribution": null,
+      "organizationParticipation": null,
+      "eventParticipation": null
+    },
+    {
+      "id": "3ce6d2ff-9cdf-4568-b246-719a0e07c410",
+      "subjectId": "a58b8ae8-e68f-4e6c-9463-539c106a5f19",
+      "objectId": "8e322435-4318-4ad0-835b-3f71d2537421",
+      "predicate": "AFFILIATED_WITH",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "visibility": "published",
+      "createdAt": "2026-10-04T19:55:53.444311Z",
+      "updatedAt": "2026-10-04T19:55:53.444311Z",
+      "contribution": null,
+      "organizationParticipation": null,
+      "eventParticipation": null
+    },
+    {
+      "id": "3ee2132d-436a-44cf-a33e-851faddd3163",
+      "subjectId": "93630265-9c44-4bc8-8e7e-4efc7deef14d",
+      "objectId": "e87a40f9-3139-47a1-a962-6610eb2b8878",
+      "predicate": "CONTRIBUTED_TO",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "visibility": "published",
+      "createdAt": "2026-10-03T05:13:37Z",
+      "updatedAt": "2026-10-03T05:13:37Z",
+      "contribution": {
+        "roleId": null,
+        "scope": null
+      },
+      "organizationParticipation": null,
+      "eventParticipation": null
+    },
+    {
+      "id": "47d46b69-b111-4b76-addb-632d679ae4f8",
+      "subjectId": "1530af15-129d-40bf-a1ca-ce8343dc7491",
+      "objectId": "a1af9abb-843a-4611-853c-50f630b817ae",
+      "predicate": "AFFILIATED_WITH",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "visibility": "published",
+      "createdAt": "2026-10-04T19:55:53.444311Z",
+      "updatedAt": "2026-10-04T19:55:53.444311Z",
+      "contribution": null,
+      "organizationParticipation": null,
+      "eventParticipation": null
+    },
+    {
+      "id": "48c3605b-34d8-409d-a4d2-fdd50c524c74",
+      "subjectId": "29e9caea-6c44-4c1f-9abc-f4350003ca3b",
+      "objectId": "e87a40f9-3139-47a1-a962-6610eb2b8878",
+      "predicate": "CONTRIBUTED_TO",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "visibility": "published",
+      "createdAt": "2026-10-03T05:13:37Z",
+      "updatedAt": "2026-10-03T05:13:37Z",
+      "contribution": {
+        "roleId": null,
+        "scope": null
+      },
+      "organizationParticipation": null,
+      "eventParticipation": null
+    },
+    {
+      "id": "52c9fa30-bac5-40f1-bbe5-75d7420081d8",
+      "subjectId": "93630265-9c44-4bc8-8e7e-4efc7deef14d",
+      "objectId": "e87a40f9-3139-47a1-a962-6610eb2b8878",
+      "predicate": "CONTRIBUTED_TO",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "visibility": "published",
+      "createdAt": "2026-10-03T15:00:00Z",
+      "updatedAt": "2026-10-03T15:00:00Z",
+      "contribution": {
+        "roleId": "SCRIPT_WRITING",
+        "scope": {
+          "kind": "publication",
+          "isbn13": "9784091841612",
+          "volumeLabel": "第1巻",
+          "editionLabel": "完全版",
+          "language": "ja"
+        }
+      },
+      "organizationParticipation": null,
+      "eventParticipation": null
+    },
+    {
+      "id": "7142e160-c0d5-4358-9b70-63c03bfd44ad",
+      "subjectId": "29e9caea-6c44-4c1f-9abc-f4350003ca3b",
+      "objectId": "e87a40f9-3139-47a1-a962-6610eb2b8878",
+      "predicate": "CONTRIBUTED_TO",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "visibility": "published",
+      "createdAt": "2026-10-03T15:00:00Z",
+      "updatedAt": "2026-10-03T15:00:00Z",
+      "contribution": {
+        "roleId": "SCRIPT_WRITING",
+        "scope": {
+          "kind": "publication",
+          "isbn13": "9784091841612",
+          "volumeLabel": "第1巻",
+          "editionLabel": "完全版",
+          "language": "ja"
+        }
+      },
+      "organizationParticipation": null,
+      "eventParticipation": null
+    },
+    {
+      "id": "75f911ca-a247-42bd-8bf0-c166649ce145",
+      "subjectId": "bdb742c2-2973-4c1c-a523-c828374111fc",
+      "objectId": "2b7c6289-d050-4dc0-93e3-9307681253cc",
+      "predicate": "CONTRIBUTED_TO",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "visibility": "published",
+      "createdAt": "2026-10-03T05:13:37Z",
+      "updatedAt": "2026-10-03T05:13:37Z",
+      "contribution": {
+        "roleId": null,
+        "scope": null
+      },
+      "organizationParticipation": null,
+      "eventParticipation": null
+    },
+    {
+      "id": "aacddf82-87ae-4981-8542-0470e981a94f",
+      "subjectId": "d900543a-9c11-48c1-be76-1822b756fcc4",
+      "objectId": "2b7c6289-d050-4dc0-93e3-9307681253cc",
+      "predicate": "CONTRIBUTED_TO",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "visibility": "published",
+      "createdAt": "2026-10-03T05:13:37Z",
+      "updatedAt": "2026-10-03T05:13:37Z",
+      "contribution": {
+        "roleId": null,
+        "scope": null
+      },
+      "organizationParticipation": null,
+      "eventParticipation": null
+    },
+    {
+      "id": "b6ce3407-e3bb-44c9-867b-7b7434861af5",
+      "subjectId": "d900543a-9c11-48c1-be76-1822b756fcc4",
+      "objectId": "eb0af7e1-caa6-435f-86fb-0591421982b5",
+      "predicate": "INFLUENCED_BY",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "visibility": "published",
+      "createdAt": "2026-10-03T05:13:37Z",
+      "updatedAt": "2026-10-03T05:13:37Z",
+      "contribution": null,
+      "organizationParticipation": null,
+      "eventParticipation": null
+    },
+    {
+      "id": "c23fe1f3-fae6-43c1-9ed7-af1d94e4712c",
+      "subjectId": "52a671d1-bc5c-4a52-9d98-8c9418f5ec5c",
+      "objectId": "8e322435-4318-4ad0-835b-3f71d2537421",
+      "predicate": "AFFILIATED_WITH",
+      "polarity": "affirmed",
+      "period": {
+        "from": {
+          "value": "1922",
+          "precision": "year"
+        },
+        "to": {
+          "value": "1923",
+          "precision": "year"
+        }
+      },
+      "visibility": "published",
+      "createdAt": "2026-10-04T19:55:53.444311Z",
+      "updatedAt": "2026-10-04T19:55:53.444311Z",
+      "contribution": null,
+      "organizationParticipation": null,
+      "eventParticipation": null
+    },
+    {
+      "id": "cc2bc0c3-d8e7-47fe-8aaf-1b219bff0137",
+      "subjectId": "bdb742c2-2973-4c1c-a523-c828374111fc",
+      "objectId": "2b7c6289-d050-4dc0-93e3-9307681253cc",
+      "predicate": "CONTRIBUTED_TO",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "visibility": "published",
+      "createdAt": "2026-10-03T15:00:00Z",
+      "updatedAt": "2026-10-03T15:00:00Z",
+      "contribution": {
+        "roleId": "SUPERVISION",
+        "scope": {
+          "kind": "publication",
+          "isbn13": "9784091874313",
+          "volumeLabel": "第1巻",
+          "editionLabel": null,
+          "language": "ja"
+        }
+      },
+      "organizationParticipation": null,
+      "eventParticipation": null
+    },
+    {
+      "id": "d01a21f2-a6b8-4eb1-9276-8850081fcf69",
+      "subjectId": "5cda395a-4927-4cae-92fe-839b29d05095",
+      "objectId": "247d3efb-6172-4a3e-aa09-dad69914b47c",
+      "predicate": "PARTICIPATED_IN",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "visibility": "published",
+      "createdAt": "2026-10-05T14:30:00Z",
+      "updatedAt": "2026-10-05T14:30:00Z",
+      "contribution": null,
+      "organizationParticipation": null,
+      "eventParticipation": null
+    },
+    {
+      "id": "d9780089-361d-49a0-b95a-a54c2cd2fa7a",
+      "subjectId": "d900543a-9c11-48c1-be76-1822b756fcc4",
+      "objectId": "e87a40f9-3139-47a1-a962-6610eb2b8878",
+      "predicate": "CONTRIBUTED_TO",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "visibility": "published",
+      "createdAt": "2026-10-03T05:13:37Z",
+      "updatedAt": "2026-10-03T05:13:37Z",
+      "contribution": {
+        "roleId": null,
+        "scope": null
+      },
+      "organizationParticipation": null,
+      "eventParticipation": null
+    },
+    {
+      "id": "dbc08a85-9165-4cc8-a3af-d133c83d8f67",
+      "subjectId": "29e9caea-6c44-4c1f-9abc-f4350003ca3b",
+      "objectId": "2b7c6289-d050-4dc0-93e3-9307681253cc",
+      "predicate": "CONTRIBUTED_TO",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "visibility": "published",
+      "createdAt": "2026-10-03T15:00:00Z",
+      "updatedAt": "2026-10-03T15:00:00Z",
+      "contribution": {
+        "roleId": "PRODUCING",
+        "scope": {
+          "kind": "publication",
+          "isbn13": "9784091874313",
+          "volumeLabel": "第1巻",
+          "editionLabel": null,
+          "language": "ja"
+        }
+      },
+      "organizationParticipation": null,
+      "eventParticipation": null
+    },
+    {
+      "id": "e3b37447-87f5-40ed-b738-6ba37578c8c3",
+      "subjectId": "29e9caea-6c44-4c1f-9abc-f4350003ca3b",
+      "objectId": "2b7c6289-d050-4dc0-93e3-9307681253cc",
+      "predicate": "CONTRIBUTED_TO",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "visibility": "published",
+      "createdAt": "2026-10-03T05:13:37Z",
+      "updatedAt": "2026-10-03T05:13:37Z",
+      "contribution": {
+        "roleId": null,
+        "scope": null
+      },
+      "organizationParticipation": null,
+      "eventParticipation": null
+    },
+    {
+      "id": "e71f548b-65c2-4032-a40f-342ab75b5d3e",
+      "subjectId": "1530af15-129d-40bf-a1ca-ce8343dc7491",
+      "objectId": "8e322435-4318-4ad0-835b-3f71d2537421",
+      "predicate": "AFFILIATED_WITH",
+      "polarity": "affirmed",
+      "period": {
+        "from": {
+          "value": "1924",
+          "precision": "year"
+        },
+        "to": {
+          "value": "1925",
+          "precision": "year"
+        }
+      },
+      "visibility": "published",
+      "createdAt": "2026-10-05T12:14:06.652778Z",
+      "updatedAt": "2026-10-05T12:14:06.652778Z",
+      "contribution": null,
+      "organizationParticipation": {
+        "positionId": "VISITOR"
+      },
+      "eventParticipation": null
+    },
+    {
+      "id": "e84b2f8d-b173-47f9-8511-eb02bc0a2e39",
+      "subjectId": "32f5aa9e-1d60-40c9-9ba0-ce12f72cf524",
+      "objectId": "247d3efb-6172-4a3e-aa09-dad69914b47c",
+      "predicate": "PARTICIPATED_IN",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "visibility": "published",
+      "createdAt": "2026-10-05T14:30:00Z",
+      "updatedAt": "2026-10-05T14:30:00Z",
+      "contribution": null,
+      "organizationParticipation": null,
+      "eventParticipation": {
+        "roleId": "CHAIR"
+      }
+    },
+    {
+      "id": "eb7182aa-e7f1-4064-a731-bffe7c59227c",
+      "subjectId": "1530af15-129d-40bf-a1ca-ce8343dc7491",
+      "objectId": "8e322435-4318-4ad0-835b-3f71d2537421",
+      "predicate": "AFFILIATED_WITH",
+      "polarity": "affirmed",
+      "period": {
+        "from": {
+          "value": "1924",
+          "precision": "year"
+        },
+        "to": {
+          "value": "1925",
+          "precision": "year"
+        }
+      },
+      "visibility": "published",
+      "createdAt": "2026-10-04T19:55:53.444311Z",
+      "updatedAt": "2026-10-04T19:55:53.444311Z",
+      "contribution": null,
+      "organizationParticipation": null,
+      "eventParticipation": null
+    },
+    {
+      "id": "ef4dc9ea-b8e2-4959-b594-5d27ebccb054",
+      "subjectId": "39e8e984-c530-4b2a-834a-85e85642eacb",
+      "objectId": "a1af9abb-843a-4611-853c-50f630b817ae",
+      "predicate": "AFFILIATED_WITH",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "visibility": "published",
+      "createdAt": "2026-10-04T19:55:53.444311Z",
+      "updatedAt": "2026-10-04T19:55:53.444311Z",
+      "contribution": null,
+      "organizationParticipation": null,
+      "eventParticipation": null
+    },
+    {
+      "id": "f05e54fa-67a1-49c6-876a-0f4b01534cb0",
+      "subjectId": "5cda395a-4927-4cae-92fe-839b29d05095",
+      "objectId": "8e322435-4318-4ad0-835b-3f71d2537421",
+      "predicate": "AFFILIATED_WITH",
+      "polarity": "affirmed",
+      "period": {
+        "from": {
+          "value": "1926",
+          "precision": "year"
+        },
+        "to": {
+          "value": "1927",
+          "precision": "year"
+        }
+      },
+      "visibility": "published",
+      "createdAt": "2026-10-04T19:55:53.444311Z",
+      "updatedAt": "2026-10-04T19:55:53.444311Z",
+      "contribution": null,
+      "organizationParticipation": null,
+      "eventParticipation": null
+    },
+    {
+      "id": "ffbe8c65-5435-4373-85c7-c091892e51d9",
+      "subjectId": "1530af15-129d-40bf-a1ca-ce8343dc7491",
+      "objectId": "8e322435-4318-4ad0-835b-3f71d2537421",
+      "predicate": "AFFILIATED_WITH",
+      "polarity": "affirmed",
+      "period": {
+        "from": {
+          "value": "1926",
+          "precision": "year"
+        },
+        "to": {
+          "value": "1927",
+          "precision": "year"
+        }
+      },
+      "visibility": "published",
+      "createdAt": "2026-10-05T12:14:06.652778Z",
+      "updatedAt": "2026-10-05T12:14:06.652778Z",
+      "contribution": null,
+      "organizationParticipation": {
+        "positionId": "ASSOCIATE_PROFESSOR"
+      },
+      "eventParticipation": null
+    }
+  ],
+  "sources": [
+    {
+      "id": "02e2f940-31d5-41bb-900e-7c76a1dd3561",
+      "kind": "web",
+      "title": "Wolfgang Pauli",
+      "authors": [],
+      "publisher": "Niels Bohr Institute / University of Copenhagen",
+      "url": "https://nbi.ku.dk/hhh/nobel/associated_with_nbi/wolfgang_pauli/",
+      "publishedAt": {
+        "value": "2010-06-02",
+        "precision": "day"
+      },
+      "edition": null,
+      "note": "原資料本文の言語：en。研究所へのVisitorとして1922–23を明示。",
+      "isDemo": false
+    },
+    {
+      "id": "13bb6182-df5f-4cf7-871d-18f2b605ec4b",
+      "kind": "interview",
+      "title": "関弁連がゆく：浦沢直樹さん インタビュー",
+      "authors": [],
+      "publisher": "関東弁護士会連合会",
+      "url": "https://www.kanto-ba.org/series/211/",
+      "publishedAt": null,
+      "edition": null,
+      "note": "本人インタビュー。記載の2025年8月8日は取材日であり、公開日・影響を受けた期間ではありません。",
+      "isDemo": false
+    },
+    {
+      "id": "1fe1b07a-9d60-4cc9-8024-be5821d3abee",
+      "kind": "web",
+      "title": "Asymptopia June 2002: Paul Dirac: predictor of antimatter",
+      "authors": [
+        "Peter Goddard"
+      ],
+      "publisher": "University of Cambridge, Faculty of Mathematics",
+      "url": "https://www.maths.cam.ac.uk/friends/newsletters/news15",
+      "publishedAt": null,
+      "edition": "Asymptopia June 2002",
+      "note": "原資料本文の言語：en。CambridgeのLucasian Professorとして1932–1969を明示。2002-06は資料号の年月でWeb公開日とは別。",
+      "isDemo": false
+    },
+    {
+      "id": "2efd23f2-e6b2-4131-93cc-6c3824313741",
+      "kind": "web",
+      "title": "Paul A.M. Dirac",
+      "authors": [],
+      "publisher": "Niels Bohr Institute / University of Copenhagen",
+      "url": "https://nbi.ku.dk/hhh/nobel/associated_with_nbi/paul_dirac/",
+      "publishedAt": {
+        "value": "2010-06-02",
+        "precision": "day"
+      },
+      "edition": null,
+      "note": "原資料本文の言語：en。研究所へのVisitorとして1926–27を明示。受賞時のCambridge所属欄とは別。",
+      "isDemo": false
+    },
+    {
+      "id": "3b00d7a4-2c90-4771-94b6-870c64e12f57",
+      "kind": "web",
+      "title": "小学館：MASTERキートン 完全版 第1巻 商品情報",
+      "authors": [],
+      "publisher": "小学館",
+      "url": "https://shogakukan-comic.jp/book?isbn=9784091841612",
+      "publishedAt": null,
+      "edition": "MASTERキートン 完全版 第1巻",
+      "note": "出版社のWeb商品情報を確認。書籍本文は未確認。発売日はWeb公開日や制作関与期間ではありません。",
+      "isDemo": false
+    },
+    {
+      "id": "3d8bfd32-31fd-4e8a-aff6-7b7fb80265c0",
+      "kind": "web",
+      "title": "Werner Heisenberg",
+      "authors": [],
+      "publisher": "Niels Bohr Institute / University of Copenhagen",
+      "url": "https://nbi.ku.dk/hhh/nobel/associated_with_nbi/werner_heisenberg/",
+      "publishedAt": {
+        "value": "2010-06-02",
+        "precision": "day"
+      },
+      "edition": null,
+      "note": "原資料本文の言語：en。1924–25のVisitorと1926–27の別役職を列記。今回Visitorのみ受入。",
+      "isDemo": false
+    },
+    {
+      "id": "4d414446-24d5-42c1-942f-7a968e04d466",
+      "kind": "web",
+      "title": "Conferences archives — Physics 1927",
+      "authors": [],
+      "publisher": "International Solvay Institutes",
+      "url": "https://solvayinstitutes.be/home/archives/conferences-archives/",
+      "publishedAt": null,
+      "edition": null,
+      "note": "主催機関の現行索引。1927年5thとchairを明記。ページ公開日不明、URLのupload年は1927年の開催日ではない。",
+      "isDemo": false
+    },
+    {
+      "id": "5756c883-e9e9-45eb-8caa-f85c91cc7f45",
+      "kind": "book",
+      "title": "Électrons et photons : rapports et discussions du cinquième Conseil de physique",
+      "authors": [],
+      "publisher": "Institut international de physique Solvay / Gauthier-Villars / ULB digitisation",
+      "url": "https://solvayinstitutes.be/wp-content/uploads/2025/10/Proceedings-Physics-1927.pdf",
+      "publishedAt": {
+        "value": "1928",
+        "precision": "year"
+      },
+      "edition": null,
+      "note": "1928年議事録のULBデジタル複製を主催機関が配信。PDF第1頁APA/ULB来歴、第2頁title、12/13頁参加・欠席。開催は24–29Oct1927、URL2025/10は開催・出版日ではない。W.H.BraggとW.L.Braggを別人物と読む。",
+      "isDemo": false
+    },
+    {
+      "id": "5d880ab0-1a13-4621-8c4e-7e4a45e864d1",
+      "kind": "web",
+      "title": "Werner Heisenberg, Physics (1901 to 1976)",
+      "authors": [],
+      "publisher": "University of Göttingen",
+      "url": "https://www.uni-goettingen.de/en/62607.html",
+      "publishedAt": null,
+      "edition": null,
+      "note": "原資料本文の言語：en。大学での早期経歴を説明。後年の都市Göttingenや別研究所の経歴をこのClaimへ混ぜない。",
+      "isDemo": false
+    },
+    {
+      "id": "699c3147-79e2-43c8-8c08-9369eab559fa",
+      "kind": "web",
+      "title": "講談社：BILLY BAT 第4巻 商品情報",
+      "authors": [],
+      "publisher": "講談社",
+      "url": "https://www.kodansha.co.jp/comic/products/0000014047",
+      "publishedAt": null,
+      "edition": "BILLY BAT 第4巻",
+      "note": "出版社のWeb商品情報を確認。書籍本文は未確認。発売日はWeb公開日や制作関与期間ではありません。",
+      "isDemo": false
+    },
+    {
+      "id": "b7266fbf-a778-407e-8a4b-374b97523a26",
+      "kind": "web",
+      "title": "小学館：PLUTO 第1巻 商品情報",
+      "authors": [],
+      "publisher": "小学館",
+      "url": "https://shogakukan-comic.jp/book?isbn=9784091874313",
+      "publishedAt": null,
+      "edition": "PLUTO 第1巻",
+      "note": "出版社のWeb商品情報を確認。書籍本文は未確認。発売日はWeb公開日や制作関与期間ではありません。",
+      "isDemo": false
+    },
+    {
+      "id": "cddce742-cdc2-4360-9c95-1e3561add7f9",
+      "kind": "web",
+      "title": "Niels Bohr",
+      "authors": [],
+      "publisher": "Niels Bohr Institute / University of Copenhagen",
+      "url": "https://nbi.ku.dk/hhh/nobel/associated_with_nbi/niels_bohr/",
+      "publishedAt": {
+        "value": "2010-06-02",
+        "precision": "day"
+      },
+      "edition": null,
+      "note": "原資料本文の言語：en。研究所のDirectorとしてボーアを紹介。開始年1916は沿革と不整合のためClaim期間に採用しない。",
+      "isDemo": false
+    },
+    {
+      "id": "e25f3776-1c9d-440c-9687-43e854112960",
+      "kind": "web",
+      "title": "The establishment of an institute",
+      "authors": [
+        "Finn Aaserud"
+      ],
+      "publisher": "Niels Bohr Institute / University of Copenhagen",
+      "url": "https://nbi.ku.dk/english/www/institute/History/history/",
+      "publishedAt": null,
+      "edition": null,
+      "note": "原資料本文の言語：en。旧理論物理学研究所が1965年に改称されたと説明。大学教授任命と研究所開設を分ける。",
+      "isDemo": false
+    },
+    {
+      "id": "e3184fed-e704-41ef-9206-29345baed6ad",
+      "kind": "web",
+      "title": "Wolfgang Pauli's biography",
+      "authors": [],
+      "publisher": "CERN Archives",
+      "url": "https://archives.web.cern.ch/Pauli_archive/biography/",
+      "publishedAt": null,
+      "edition": null,
+      "note": "原資料本文の言語：en。冬学期のゲッティンゲン大学でのBornの助手という具体的関与。学術的助手をASSISTANT_OFへ変換しない。",
+      "isDemo": false
+    },
+    {
+      "id": "e5a8cc21-2c3e-4c52-abde-d347a708b498",
+      "kind": "web",
+      "title": "Max Born, Physik (1882 bis 1970)",
+      "authors": [],
+      "publisher": "University of Göttingen",
+      "url": "https://www.uni-goettingen.de/de/62603.html",
+      "publishedAt": null,
+      "edition": null,
+      "note": "原資料本文の言語：de。教授として大学と関わった記述。開始1921は公式英語沿革の1922と不一致のため期間は採用しない。",
+      "isDemo": false
+    }
+  ],
+  "citations": [
+    {
+      "id": "021f7c10-51a9-4f61-af63-d5efd8488a14",
+      "claimId": "e71f548b-65c2-4032-a40f-342ab75b5d3e",
+      "sourceId": "3d8bfd32-31fd-4e8a-aff6-7b7fb80265c0",
+      "locator": "Werner Heisenberg見出し直下、Niels Bohr Institute行",
+      "note": "NBIの資料がVisitorとして1924–25に関与したと記す。雇用種別を認定しない。 期間原表記：1924-25。対象はこの研究所への資料記載の関与。日本の客員職・有給・専任を保証しない。 資料が記すNBIでの立場と各期間に限定。既存広いClaimの受入だけから立場を自動構造化していない。 同じSourceからの限定付き主張であり独立した新しい根拠ではない。Sourceの「今回Visitorのみ受入」はv1の収集履歴。v2では2立場を個別に受け入れている。",
+      "accessedAt": "2026-10-05",
+      "stance": "support",
+      "roleEvidence": null,
+      "positionEvidence": {
+        "originalText": "Visitor",
+        "language": "en"
+      },
+      "eventParticipationEvidence": null
+    },
+    {
+      "id": "0872be3c-16bf-4bb9-bc64-ddb9b408f9ad",
+      "claimId": "aacddf82-87ae-4981-8542-0470e981a94f",
+      "sourceId": "b7266fbf-a778-407e-8a4b-374b97523a26",
+      "locator": "タイトル直下のクレジット",
+      "note": "役割・内容：制作クレジット。資料の原表記：浦沢直樹×手塚治虫。確認範囲：PLUTO 第1巻の商品情報。漫画作品への関与を示し、全巻・全期間の役割を断定しません。 原作由来の手塚治虫のクレジットと、浦沢直樹の制作関与を区別する。",
+      "accessedAt": "2026-10-03",
+      "stance": "support",
+      "roleEvidence": null,
+      "positionEvidence": null,
+      "eventParticipationEvidence": null
+    },
+    {
+      "id": "0a54276e-291e-4379-8258-18b3cc30cc5b",
+      "claimId": "eb7182aa-e7f1-4064-a731-bffe7c59227c",
+      "sourceId": "3d8bfd32-31fd-4e8a-aff6-7b7fb80265c0",
+      "locator": "Niels Bohr InstituteのVisitor欄",
+      "note": "研究所にVisitorとして関わったことを確認。 原表記（en）：Visitor。期間原表記：1924-25。別記のAssociate professor, 1926-27は今回のClaimへ結合しない。 この原表記は根拠の説明でありClaimの構造化した職位ではない。全経歴・連続在籍・期間外の不存在を認定しない。 受入：ユーザーの2026-10-05受入。資料の具体的関与に基づく広いAFFILIATED_WITHに限る。職位・雇用形態・所属種別の構造化保証、同時在籍・面識・共同研究は意味しない。",
+      "accessedAt": "2026-10-04",
+      "stance": "support",
+      "roleEvidence": null,
+      "positionEvidence": null,
+      "eventParticipationEvidence": null
+    },
+    {
+      "id": "0ed1a966-f6e1-4ac4-a125-78453c4e3811",
+      "claimId": "48c3605b-34d8-409d-a4d2-fdd50c524c74",
+      "sourceId": "3b00d7a4-2c90-4771-94b6-870c64e12f57",
+      "locator": "タイトル直下のクレジット",
+      "note": "役割・内容：脚本。資料の原表記：脚本。確認範囲：MASTERキートン 完全版 第1巻の商品情報。漫画作品への関与を示し、全巻・全期間の役割を断定しません。 完全版第1巻のクレジットが根拠。",
+      "accessedAt": "2026-10-03",
+      "stance": "support",
+      "roleEvidence": null,
+      "positionEvidence": null,
+      "eventParticipationEvidence": null
+    },
+    {
+      "id": "0efa871c-46d0-4761-923d-e0ef758652a2",
+      "claimId": "11d202ab-e9a4-4da5-9ff2-735f48f83133",
+      "sourceId": "699c3147-79e2-43c8-8c08-9369eab559fa",
+      "locator": "タイトル直下のクレジット",
+      "note": "役割・内容：著者クレジット。資料の原表記：著。確認範囲：BILLY BAT 第4巻の商品情報。漫画作品への関与を示し、全巻・全期間の役割を断定しません。 第4巻の著者欄が根拠。",
+      "accessedAt": "2026-10-03",
+      "stance": "support",
+      "roleEvidence": null,
+      "positionEvidence": null,
+      "eventParticipationEvidence": null
+    },
+    {
+      "id": "11e50f95-30da-4173-9014-c829f93a55ba",
+      "claimId": "52c9fa30-bac5-40f1-bbe5-75d7420081d8",
+      "sourceId": "3b00d7a4-2c90-4771-94b6-870c64e12f57",
+      "locator": "タイトル直下のクレジット",
+      "note": "v1の広いClaim 3ee2132d-436a-44cf-a33e-851faddd3163 と同じ資料に由来する限定Claim。ユーザーが公式の商品情報上のRole表記と対象刊行物を確認して受入。指定された刊行物の商品情報において、その人物が当該Roleでクレジットされている範囲。当該巻だけの担当、全巻・全版での担当、全期間の担当を意味しない。受入日は記録日、時刻は未確認のため日付境界を用いる。",
+      "accessedAt": "2026-10-03",
+      "stance": "support",
+      "roleEvidence": {
+        "originalText": "脚本",
+        "language": "ja"
+      },
+      "positionEvidence": null,
+      "eventParticipationEvidence": null
+    },
+    {
+      "id": "11e7ab73-485d-4433-99e1-47793f9d13dc",
+      "claimId": "0bac17e3-5832-4e48-9616-27c3de12ea83",
+      "sourceId": "1fe1b07a-9d60-4cc9-8024-be5821d3abee",
+      "locator": "Dirac Centennial節の冒頭と退任段落",
+      "note": "大学でLucasian Professorとして関わったことを確認。 原表記（en）：Lucasian Professor of Mathematics。期間原表記：1932 to 1969。College・研究所へ自動転写しない。2002年の号の日付を所属時期へ使わない。 この原表記は根拠の説明でありClaimの構造化した職位ではない。全経歴・連続在籍・期間外の不存在を認定しない。 受入：ユーザーの2026-10-05受入。資料の具体的関与に基づく広いAFFILIATED_WITHに限る。職位・雇用形態・所属種別の構造化保証、同時在籍・面識・共同研究は意味しない。",
+      "accessedAt": "2026-10-04",
+      "stance": "support",
+      "roleEvidence": null,
+      "positionEvidence": null,
+      "eventParticipationEvidence": null
+    },
+    {
+      "id": "1e122ac6-db31-4a76-bb32-ec8a7e9d8ab4",
+      "claimId": "c23fe1f3-fae6-43c1-9ed7-af1d94e4712c",
+      "sourceId": "02e2f940-31d5-41bb-900e-7c76a1dd3561",
+      "locator": "Niels Bohr InstituteのVisitor欄",
+      "note": "研究所にVisitorとして関わったことを確認。 原表記（en）：Visitor。期間原表記：1922-23。常勤・雇用・全期間の所属へ強めない。 この原表記は根拠の説明でありClaimの構造化した職位ではない。全経歴・連続在籍・期間外の不存在を認定しない。 受入：ユーザーの2026-10-05受入。資料の具体的関与に基づく広いAFFILIATED_WITHに限る。職位・雇用形態・所属種別の構造化保証、同時在籍・面識・共同研究は意味しない。",
+      "accessedAt": "2026-10-04",
+      "stance": "support",
+      "roleEvidence": null,
+      "positionEvidence": null,
+      "eventParticipationEvidence": null
+    },
+    {
+      "id": "1f2f13a8-edfb-4dd6-8341-6665e06aa598",
+      "claimId": "341f1523-3e1a-4779-a441-c813706a80a9",
+      "sourceId": "5756c883-e9e9-45eb-8caa-f85c91cc7f45",
+      "locator": "PDF第12ページ／印刷p.VII、Lorentz行",
+      "note": "参加者のPrésidentとして記載。 1927年特定回、会議議長。series全回の役職でも全日程の出席保証でもない。 開催期間原表記：24 au 29 octobre 1927（会議の期間）。Eventの期間であり人物の全日程出席を保証しない。このClaimでは参加上の立場を限定しない。 Lorentzの広い参加と議長参加は同じ資料事実の別粒度であり独立した根拠数を意味しない。",
+      "accessedAt": "2026-10-05",
+      "stance": "support",
+      "roleEvidence": null,
+      "positionEvidence": null,
+      "eventParticipationEvidence": null
+    },
+    {
+      "id": "29e47b6f-3e2c-460f-b659-e3104cb79609",
+      "claimId": "3ce6d2ff-9cdf-4568-b246-719a0e07c410",
+      "sourceId": "e25f3776-1c9d-440c-9687-43e854112960",
+      "locator": "設立沿革の冒頭、1916年教授任命と1921年開設の段落",
+      "note": "研究所の設立・研究教育活動と旧称から現在名への改称を確認。 原表記（en）：未特定。期間原表記：1916（大学教授任命）; 1921（研究所開設）。設立日から関与開始を補完しない。旧研究所と現在名は今回同一Entityに受入。 この原表記は根拠の説明でありClaimの構造化した職位ではない。全経歴・連続在籍・期間外の不存在を認定しない。 受入：ユーザーの2026-10-05受入。資料の具体的関与に基づく広いAFFILIATED_WITHに限る。職位・雇用形態・所属種別の構造化保証、同時在籍・面識・共同研究は意味しない。",
+      "accessedAt": "2026-10-04",
+      "stance": "support",
+      "roleEvidence": null,
+      "positionEvidence": null,
+      "eventParticipationEvidence": null
+    },
+    {
+      "id": "2c3c2891-fb58-47f8-a40b-591999532432",
+      "claimId": "7142e160-c0d5-4358-9b70-63c03bfd44ad",
+      "sourceId": "3b00d7a4-2c90-4771-94b6-870c64e12f57",
+      "locator": "タイトル直下のクレジット",
+      "note": "v1の広いClaim 48c3605b-34d8-409d-a4d2-fdd50c524c74 と同じ資料に由来する限定Claim。ユーザーが公式の商品情報上のRole表記と対象刊行物を確認して受入。指定された刊行物の商品情報において、その人物が当該Roleでクレジットされている範囲。当該巻だけの担当、全巻・全版での担当、全期間の担当を意味しない。受入日は記録日、時刻は未確認のため日付境界を用いる。",
+      "accessedAt": "2026-10-03",
+      "stance": "support",
+      "roleEvidence": {
+        "originalText": "脚本",
+        "language": "ja"
+      },
+      "positionEvidence": null,
+      "eventParticipationEvidence": null
+    },
+    {
+      "id": "2d1e9423-8a0f-4106-9f26-5d52a075200c",
+      "claimId": "b6ce3407-e3bb-44c9-867b-7b7434861af5",
+      "sourceId": "13bb6182-df5f-4cf7-871d-18f2b605ec4b",
+      "locator": "「当時から今のような絵柄でしたか」という質問への本人回答",
+      "note": "役割・内容：絵のタッチへの影響。確認範囲：絵のタッチに関する本人回答。影響の強さ・全創作への影響・開始終了時期は断定しません。 本人が影響を受けた人物を明示。作品から作者への推測ではない。",
+      "accessedAt": "2026-10-03",
+      "stance": "support",
+      "roleEvidence": null,
+      "positionEvidence": null,
+      "eventParticipationEvidence": null
+    },
+    {
+      "id": "357428c7-f168-486b-8a7a-d983b637b8ab",
+      "claimId": "2bdd7207-c8af-4936-ac23-961a8450eaad",
+      "sourceId": "e3184fed-e704-41ef-9206-29345baed6ad",
+      "locator": "学位後の経歴、winter term 1921-1922の段落（参考文献6–8を伴う周辺）",
+      "note": "ゲッティンゲン大学で冬学期にBornの学術的助手として関わったことを確認。 原表記（en）：assistant of Max Born。期間原表記：winter term 1921-1922。冬学期を年精度で保持し、月日は推定しない。漫画のASSISTANT_OFを使わない。 この原表記は根拠の説明でありClaimの構造化した職位ではない。全経歴・連続在籍・期間外の不存在を認定しない。 受入：ユーザーの2026-10-05受入。資料の具体的関与に基づく広いAFFILIATED_WITHに限る。職位・雇用形態・所属種別の構造化保証、同時在籍・面識・共同研究は意味しない。",
+      "accessedAt": "2026-10-04",
+      "stance": "support",
+      "roleEvidence": null,
+      "positionEvidence": null,
+      "eventParticipationEvidence": null
+    },
+    {
+      "id": "48922d83-9686-4bc9-b5b4-5f4bf1ffd8b4",
+      "claimId": "dbc08a85-9165-4cc8-a3af-d133c83d8f67",
+      "sourceId": "b7266fbf-a778-407e-8a4b-374b97523a26",
+      "locator": "タイトル直下のクレジット",
+      "note": "v1の広いClaim e3b37447-87f5-40ed-b738-6ba37578c8c3 と同じ資料に由来する限定Claim。ユーザーが公式の商品情報上のRole表記と対象刊行物を確認して受入。指定された刊行物の商品情報において、その人物が当該Roleでクレジットされている範囲。当該巻だけの担当、全巻・全版での担当、全期間の担当を意味しない。受入日は記録日、時刻は未確認のため日付境界を用いる。",
+      "accessedAt": "2026-10-03",
+      "stance": "support",
+      "roleEvidence": {
+        "originalText": "長崎尚志プロデュース",
+        "language": "ja"
+      },
+      "positionEvidence": null,
+      "eventParticipationEvidence": null
+    },
+    {
+      "id": "6ff140bb-6dff-411a-93f8-5a2ea12d0fba",
+      "claimId": "f05e54fa-67a1-49c6-876a-0f4b01534cb0",
+      "sourceId": "2efd23f2-e6b2-4131-93cc-6c3824313741",
+      "locator": "Niels Bohr InstituteのVisitor欄",
+      "note": "研究所にVisitorとして関わったことを確認。 原表記（en）：Visitor。期間原表記：1926-27。受賞時Cambridge所属欄とは別の関係。 この原表記は根拠の説明でありClaimの構造化した職位ではない。全経歴・連続在籍・期間外の不存在を認定しない。 受入：ユーザーの2026-10-05受入。資料の具体的関与に基づく広いAFFILIATED_WITHに限る。職位・雇用形態・所属種別の構造化保証、同時在籍・面識・共同研究は意味しない。",
+      "accessedAt": "2026-10-04",
+      "stance": "support",
+      "roleEvidence": null,
+      "positionEvidence": null,
+      "eventParticipationEvidence": null
+    },
+    {
+      "id": "704c7ebc-74cc-46b6-a3a4-9998a009febf",
+      "claimId": "ef4dc9ea-b8e2-4959-b594-5d27ebccb054",
+      "sourceId": "e5a8cc21-2c3e-4c52-abde-d347a708b498",
+      "locator": "冒頭のPrivatdozent／Professor経歴",
+      "note": "大学で教授として関わったことを確認。 原表記（de）：Professor für Theoretische Physik。期間原表記：von 1921 an; 1933 emigrierte er nach England。S12では教授開始1922とされる。1921/1922は保留し、渡英年から終了を推定しない。 この原表記は根拠の説明でありClaimの構造化した職位ではない。全経歴・連続在籍・期間外の不存在を認定しない。 受入：ユーザーの2026-10-05受入。資料の具体的関与に基づく広いAFFILIATED_WITHに限る。職位・雇用形態・所属種別の構造化保証、同時在籍・面識・共同研究は意味しない。",
+      "accessedAt": "2026-10-04",
+      "stance": "support",
+      "roleEvidence": null,
+      "positionEvidence": null,
+      "eventParticipationEvidence": null
+    },
+    {
+      "id": "7bdf687b-8b94-40d7-a92e-9576518c27ad",
+      "claimId": "ffbe8c65-5435-4373-85c7-c091892e51d9",
+      "sourceId": "3d8bfd32-31fd-4e8a-aff6-7b7fb80265c0",
+      "locator": "Werner Heisenberg見出し直下、Niels Bohr Institute行",
+      "note": "NBIの資料がAssociate professorとして1926–27に関与したと記す。 期間原表記：1926-27。当該研究所・当該時期の記載された立場。職制・雇用条件・他職位への同義対応は対象外。 資料が記すNBIでの立場と各期間に限定。既存広いClaimの受入だけから立場を自動構造化していない。 同じSourceからの限定付き主張であり独立した新しい根拠ではない。Sourceの「今回Visitorのみ受入」はv1の収集履歴。v2では2立場を個別に受け入れている。",
+      "accessedAt": "2026-10-05",
+      "stance": "support",
+      "roleEvidence": null,
+      "positionEvidence": {
+        "originalText": "Associate professor",
+        "language": "en"
+      },
+      "eventParticipationEvidence": null
+    },
+    {
+      "id": "7c831c01-8513-4ce2-ad79-e670a6f54b16",
+      "claimId": "e84b2f8d-b173-47f9-8511-eb02bc0a2e39",
+      "sourceId": "4d414446-24d5-42c1-942f-7a968e04d466",
+      "locator": "Physics > 1927 > 5th",
+      "note": "特定会議のchair。 1927年特定回、会議議長。series全回の役職でも全日程の出席保証でもない。 開催期間原表記：索引は開催年のみ。Eventの期間であり人物の全日程出席を保証しない。会議議長としての参加。 Lorentzの広い参加と議長参加は同じ資料事実の別粒度であり独立した根拠数を意味しない。",
+      "accessedAt": "2026-10-05",
+      "stance": "support",
+      "roleEvidence": null,
+      "positionEvidence": null,
+      "eventParticipationEvidence": {
+        "originalText": "Chair",
+        "language": "en"
+      }
+    },
+    {
+      "id": "931dc662-fe56-49c6-a629-6374416e8129",
+      "claimId": "47d46b69-b111-4b76-addb-632d679ae4f8",
+      "sourceId": "5d880ab0-1a13-4621-8c4e-7e4a45e864d1",
+      "locator": "冒頭、学業・助手・1924年資格取得とPrivatdozentの段落",
+      "note": "大学での学業・Bornの助手・Privatdozentという早期経歴を確認。 原表記（en）：assistant; Privatdozent [associate professor]。期間原表記：habilitated here in 1924。1924は資格取得年。関与開始や連続在籍期間を補完せず、後年の別研究所の経歴も混ぜない。 この原表記は根拠の説明でありClaimの構造化した職位ではない。全経歴・連続在籍・期間外の不存在を認定しない。 受入：ユーザーの2026-10-05受入。資料の具体的関与に基づく広いAFFILIATED_WITHに限る。職位・雇用形態・所属種別の構造化保証、同時在籍・面識・共同研究は意味しない。",
+      "accessedAt": "2026-10-04",
+      "stance": "support",
+      "roleEvidence": null,
+      "positionEvidence": null,
+      "eventParticipationEvidence": null
+    },
+    {
+      "id": "a00075dd-726c-4f12-8494-7cb8e85705bd",
+      "claimId": "75f911ca-a247-42bd-8bf0-c166649ce145",
+      "sourceId": "b7266fbf-a778-407e-8a4b-374b97523a26",
+      "locator": "タイトル直下のクレジット",
+      "note": "役割・内容：監修。資料の原表記：監修。確認範囲：PLUTO 第1巻の商品情報。漫画作品への関与を示し、全巻・全期間の役割を断定しません。 手塚眞の監修クレジット。作者であるとは断定しない。",
+      "accessedAt": "2026-10-03",
+      "stance": "support",
+      "roleEvidence": null,
+      "positionEvidence": null,
+      "eventParticipationEvidence": null
+    },
+    {
+      "id": "a981fb3c-612b-4574-9d26-8c444bdc6322",
+      "claimId": "d9780089-361d-49a0-b95a-a54c2cd2fa7a",
+      "sourceId": "3b00d7a4-2c90-4771-94b6-870c64e12f57",
+      "locator": "タイトル直下のクレジット",
+      "note": "役割・内容：制作クレジット。資料の原表記：浦沢直樹。確認範囲：MASTERキートン 完全版 第1巻の商品情報。漫画作品への関与を示し、全巻・全期間の役割を断定しません。 脚本担当名の並列クレジットと区別する。",
+      "accessedAt": "2026-10-03",
+      "stance": "support",
+      "roleEvidence": null,
+      "positionEvidence": null,
+      "eventParticipationEvidence": null
+    },
+    {
+      "id": "aad5ed89-1055-4980-b242-bf9f53679ce8",
+      "claimId": "1ad08ee5-bbc3-41bf-b647-4b7419820a14",
+      "sourceId": "699c3147-79e2-43c8-8c08-9369eab559fa",
+      "locator": "タイトル直下のクレジット・内容紹介末尾",
+      "note": "役割・内容：ストーリー共同制作。資料の原表記：ストーリー共同制作。確認範囲：BILLY BAT 第4巻の商品情報。漫画作品への関与を示し、全巻・全期間の役割を断定しません。 著者欄と内容紹介末尾の共同制作表記を確認。",
+      "accessedAt": "2026-10-03",
+      "stance": "support",
+      "roleEvidence": null,
+      "positionEvidence": null,
+      "eventParticipationEvidence": null
+    },
+    {
+      "id": "b51dfb86-4e23-4e9f-bc34-295fccdfc5cd",
+      "claimId": "3ce6d2ff-9cdf-4568-b246-719a0e07c410",
+      "sourceId": "cddce742-cdc2-4360-9c95-1e3561add7f9",
+      "locator": "Niels Bohr InstituteのDirector欄",
+      "note": "研究所のDirectorとしての関わりを確認。 原表記（en）：Director。期間原表記：1916-1962。S2の1921年研究所開設と開始年が不整合。1916は大学教授任命と混同し得るため期間を採用しない。 この原表記は根拠の説明でありClaimの構造化した職位ではない。全経歴・連続在籍・期間外の不存在を認定しない。 受入：ユーザーの2026-10-05受入。資料の具体的関与に基づく広いAFFILIATED_WITHに限る。職位・雇用形態・所属種別の構造化保証、同時在籍・面識・共同研究は意味しない。",
+      "accessedAt": "2026-10-04",
+      "stance": "support",
+      "roleEvidence": null,
+      "positionEvidence": null,
+      "eventParticipationEvidence": null
+    },
+    {
+      "id": "b5d9217d-5eec-4b11-9c93-07163522902f",
+      "claimId": "3ee2132d-436a-44cf-a33e-851faddd3163",
+      "sourceId": "3b00d7a4-2c90-4771-94b6-870c64e12f57",
+      "locator": "タイトル直下のクレジット",
+      "note": "役割・内容：脚本。資料の原表記：脚本。確認範囲：MASTERキートン 完全版 第1巻の商品情報。漫画作品への関与を示し、全巻・全期間の役割を断定しません。 完全版第1巻のクレジットが根拠。",
+      "accessedAt": "2026-10-03",
+      "stance": "support",
+      "roleEvidence": null,
+      "positionEvidence": null,
+      "eventParticipationEvidence": null
+    },
+    {
+      "id": "b775cbf3-4cff-41ea-986d-1f067e14f073",
+      "claimId": "cc2bc0c3-d8e7-47fe-8aaf-1b219bff0137",
+      "sourceId": "b7266fbf-a778-407e-8a4b-374b97523a26",
+      "locator": "タイトル直下のクレジット",
+      "note": "v1の広いClaim 75f911ca-a247-42bd-8bf0-c166649ce145 と同じ資料に由来する限定Claim。ユーザーが公式の商品情報上のRole表記と対象刊行物を確認して受入。指定された刊行物の商品情報において、その人物が当該Roleでクレジットされている範囲。当該巻だけの担当、全巻・全版での担当、全期間の担当を意味しない。受入日は記録日、時刻は未確認のため日付境界を用いる。",
+      "accessedAt": "2026-10-03",
+      "stance": "support",
+      "roleEvidence": {
+        "originalText": "監修",
+        "language": "ja"
+      },
+      "positionEvidence": null,
+      "eventParticipationEvidence": null
+    },
+    {
+      "id": "cd3ae7e0-95e3-4396-b38c-395fde2182a9",
+      "claimId": "d01a21f2-a6b8-4eb1-9276-8850081fcf69",
+      "sourceId": "5756c883-e9e9-45eb-8caa-f85c91cc7f45",
+      "locator": "PDF第12ページ／印刷p.VII、Dirac de Cambridge行",
+      "note": "参加者一覧への明示掲載。 1927年特定回の参加記述。全日程・全session・報告者／主導者を認定しない。 開催期間原表記：24 au 29 octobre 1927（会議の期間）。Eventの期間であり人物の全日程出席を保証しない。このClaimでは参加上の立場を限定しない。",
+      "accessedAt": "2026-10-05",
+      "stance": "support",
+      "roleEvidence": null,
+      "positionEvidence": null,
+      "eventParticipationEvidence": null
+    },
+    {
+      "id": "d72a9d71-c06e-4ec7-84c6-926cb90aeb14",
+      "claimId": "e3b37447-87f5-40ed-b738-6ba37578c8c3",
+      "sourceId": "b7266fbf-a778-407e-8a4b-374b97523a26",
+      "locator": "タイトル直下のクレジット",
+      "note": "役割・内容：プロデュース。資料の原表記：長崎尚志プロデュース。確認範囲：PLUTO 第1巻の商品情報。漫画作品への関与を示し、全巻・全期間の役割を断定しません。 監修・作画・原作とは役割を区別する。",
+      "accessedAt": "2026-10-03",
+      "stance": "support",
+      "roleEvidence": null,
+      "positionEvidence": null,
+      "eventParticipationEvidence": null
+    },
+    {
+      "id": "ef69e88a-9351-4a14-a6ec-db4f4eec0bdc",
+      "claimId": "29f3bd67-b461-49a8-bdfa-d98b1d7dcfe1",
+      "sourceId": "699c3147-79e2-43c8-8c08-9369eab559fa",
+      "locator": "タイトル直下のクレジット・内容紹介末尾",
+      "note": "v1の広いClaim 1ad08ee5-bbc3-41bf-b647-4b7419820a14 と同じ資料に由来する限定Claim。ユーザーが公式の商品情報上のRole表記と対象刊行物を確認して受入。指定された刊行物の商品情報において、その人物が当該Roleでクレジットされている範囲。当該巻だけの担当、全巻・全版での担当、全期間の担当を意味しない。受入日は記録日、時刻は未確認のため日付境界を用いる。",
+      "accessedAt": "2026-10-03",
+      "stance": "support",
+      "roleEvidence": {
+        "originalText": "ストーリー共同制作",
+        "language": "ja"
+      },
+      "positionEvidence": null,
+      "eventParticipationEvidence": null
+    },
+    {
+      "id": "f49d6fde-edfb-4867-a331-07ebebf67502",
+      "claimId": "e84b2f8d-b173-47f9-8511-eb02bc0a2e39",
+      "sourceId": "5756c883-e9e9-45eb-8caa-f85c91cc7f45",
+      "locator": "PDF第12ページ／印刷p.VII、Lorentz行",
+      "note": "参加者のPrésidentとして記載。 1927年特定回、会議議長。series全回の役職でも全日程の出席保証でもない。 開催期間原表記：24 au 29 octobre 1927（会議の期間）。Eventの期間であり人物の全日程出席を保証しない。会議議長としての参加。 Lorentzの広い参加と議長参加は同じ資料事実の別粒度であり独立した根拠数を意味しない。",
+      "accessedAt": "2026-10-05",
+      "stance": "support",
+      "roleEvidence": null,
+      "positionEvidence": null,
+      "eventParticipationEvidence": {
+        "originalText": "Président",
+        "language": "fr"
+      }
+    }
+  ]
+}

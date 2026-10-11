@@ -1,0 +1,22 @@
+name: graph-knowledge-public
+services:
+  neo4j:
+    image: neo4j:5.26.31-community
+    ports:
+      - "127.0.0.1:7481:7474"
+      - "127.0.0.1:7694:7687"
+    environment:
+      NEO4J_AUTH: "neo4j/${NEO4J_PASSWORD:?Set NEO4J_PASSWORD in .env.public}"
+      NEO4J_server_memory_heap_initial__size: 256m
+      NEO4J_server_memory_heap_max__size: 512m
+      NEO4J_server_memory_pagecache_size: 256m
+    volumes:
+      - public-data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -T 5 --auth-no-challenge --user=neo4j --password=\"$${NEO4J_AUTH#neo4j/}\" --header='Content-Type: application/json' --post-data='{\"statements\":[{\"statement\":\"RETURN 1\"}]}' -O - http://127.0.0.1:7474/db/neo4j/tx/commit | grep -q '\"errors\":\\[\\]'"]
+      interval: 30s
+      timeout: 10s
+      retries: 24
+      start_period: 30s
+volumes:
+  public-data:

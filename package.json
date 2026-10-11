@@ -11,7 +11,7 @@
     "start": "next start --hostname 127.0.0.1",
     "typecheck": "next typegen && tsc --noEmit",
     "lint": "npm run vocabulary:check && npm run qualification:check && eslint .",
-    "test": "npm run vocabulary:check && npm run qualification:check && vitest run tests/capsule-comparison.test.tsx tests/member-reference-addition.test.tsx tests/member-posts-ui.test.tsx tests/capsule-discussion-ui.test.tsx tests/capsule-sharing-ui.test.tsx tests/member.test.ts tests/member-client.test.ts tests/member-capsule-edit.test.ts tests/member-ui.test.tsx tests/reading-reference.test.tsx tests/capsules.test.tsx tests/saved-workspace.test.tsx tests/saved-views.test.tsx tests/graph-path.test.tsx tests/client-api.test.tsx tests/domain.test.ts tests/http.test.ts tests/ui-state.test.tsx tests/pilot.test.ts tests/vocabulary.test.ts tests/contribution.test.ts tests/science.test.ts tests/qualification.test.ts tests/event.test.ts tests/overview.test.tsx",
+    "test": "npm run vocabulary:check && npm run qualification:check && vitest run tests/capsule-comparison.test.tsx tests/member-reference-addition.test.tsx tests/member-posts-ui.test.tsx tests/capsule-discussion-ui.test.tsx tests/capsule-sharing-ui.test.tsx tests/member.test.ts tests/member-client.test.ts tests/member-capsule-edit.test.ts tests/member-ui.test.tsx tests/reading-reference.test.tsx tests/capsules.test.tsx tests/saved-workspace.test.tsx tests/saved-views.test.tsx tests/graph-path.test.tsx tests/client-api.test.tsx tests/domain.test.ts tests/http.test.ts tests/ui-state.test.tsx tests/pilot.test.ts tests/vocabulary.test.ts tests/contribution.test.ts tests/science.test.ts tests/qualification.test.ts tests/event.test.ts tests/overview.test.tsx tests/public.test.ts",
     "test:integration": "vitest run tests/seed.integration.test.ts tests/api.integration.test.ts --no-file-parallelism",
     "fixture:validate": "tsx scripts/validate-fixture.ts",
     "db:constraints": "tsx scripts/constraints.ts",
@@ -57,7 +57,16 @@
     "event:e2e": "playwright test --config=playwright.event.config.ts",
     "test:member": "tsx scripts/test-member.ts",
     "member:migrate": "tsx scripts/member-migrate.ts",
-    "test:member:e2e": "tsx scripts/test-member.ts --e2e"
+    "test:member:e2e": "tsx scripts/test-member.ts --e2e",
+    "public:prepare": "tsx scripts/public-kg.ts prepare",
+    "public:validate": "tsx scripts/public-kg.ts validate",
+    "public:plan": "tsx scripts/public-kg.ts plan",
+    "public:apply": "tsx scripts/public-kg.ts apply",
+    "public:dev": "tsx scripts/public-kg.ts dev",
+    "public:build": "tsx scripts/public-kg.ts build",
+    "public:start": "tsx scripts/public-kg.ts start",
+    "public:integration": "tsx scripts/test-public.ts",
+    "public:e2e": "playwright test --config=playwright.public.config.ts"
   },
   "dependencies": {
     "better-auth": "1.7.7",

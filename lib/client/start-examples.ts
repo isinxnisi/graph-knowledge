@@ -1,8 +1,14 @@
 import type { EntitySummary } from "../domain/api";
 import type { DatasetMode } from "../domain/dataset";
 
-// 凍結datasetの固定入口。条件・順位・推薦情報は含めない。
+// datasetごとの固定入口。条件・順位・推薦情報は含めない。
 export const START_EXAMPLES: Record<DatasetMode, EntitySummary[]> = {
+  "public-kg": [
+    { id: "2b7c6289-d050-4dc0-93e3-9307681253cc", kind: "work", name: "PLUTO", description: "人物・制作の役割と、指定刊行物の根拠を辿る。" },
+    { id: "29e9caea-6c44-4c1f-9abc-f4350003ca3b", kind: "person", name: "長崎尚志", description: "複数作品の制作における関わりを辿る。" },
+    { id: "8e322435-4318-4ad0-835b-3f71d2537421", kind: "organization", name: "ニールス・ボーア研究所", description: "研究者との関わりと資料上の立場を辿る。" },
+    { id: "247d3efb-6172-4a3e-aa09-dad69914b47c", kind: "event", name: "第5回ソルヴェイ物理会議（1927）", description: "特定開催回への参加と会議議長の記録を辿る。" },
+  ],
   "pilot-event-v1": [
     {
       "id": "247d3efb-6172-4a3e-aa09-dad69914b47c",

@@ -30,3 +30,5 @@ playwright-report/
 .next-event-contract-test/
 
 .next-member-test/
+!.env.public.example
+.next-public/

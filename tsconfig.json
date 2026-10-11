@@ -42,7 +42,9 @@
     ".next-event/types/**/*.ts",
     ".next-event/dev/types/**/*.ts",
     ".next-member-test/types/**/*.ts",
-    ".next-member-test/dev/types/**/*.ts"
+    ".next-member-test/dev/types/**/*.ts",
+    ".next-public/types/**/*.ts",
+    ".next-public/dev/types/**/*.ts"
   ],
   "exclude": [
     "node_modules"
