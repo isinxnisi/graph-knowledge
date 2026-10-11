@@ -38,6 +38,7 @@
 
 | 現役の設計文書 | 状態・読む場面 |
 | --- | --- |
+| [公開して育てるための対応プラン](design/PUBLIC_BETA_AND_PRODUCT_PLAN.md) | 2026-10-11の推奨計画。memoのデザイン・スマホ・会員・英語・広告・計測・外部公開を評価し、更新可能な共通KGと製品UIからβ公開へ進む案。精度改善の優先境界を明示。計画作成のみでruntime・公開設定・自動開発方針は不変 |
 | [アカウント・所有者・会員保存](design/ACCOUNT_AND_OWNERSHIP_DESIGN.md) | 初回設計。会員Capsuleを実装済み（実Googleは未接続）。認証・UserとKG Person・所有者認可・一種類のprivate保存、実credential待ちの範囲とテストを具体化 |
 | [共有・議論の最小縦経路](design/COMMUNITY_VERTICAL_SLICES.md) | 初回設計。限定リンク共有と短い版別コメントを実装。投稿候補・一般公開・運営対応は未実装。Capsule版・限定リンク・スレッド対象・投稿時版・運営／知識受入の分離。全コミュニティ基盤を先行導入しない |
 | [Capsuleの限定リンク共有](design/CAPSULE_LINK_SHARING.md) | 2026-10-09。特定版の固定・匿名閲覧・根拠／探索への導線・明示再発行と失効。実公開・運営非表示は未実装。discussionは次行の別契約 |
