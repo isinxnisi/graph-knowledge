@@ -24,9 +24,11 @@
 
 ## 公開準備の優先順位と、既存の初回契約
 
-2026-10-11にユーザーが[公開して育てるプラン](design/PUBLIC_BETA_AND_PRODUCT_PLAN.md)を採用した。**当面は[24ステップの進捗](PUBLIC_BETA_PROGRESS.md)の次の未完了単位を優先する**。既存Capsuleの細部だけを続けない。共通KGの初回と撤回/差替え・cursor/復旧は手動側で実装。単一本番構成の認証付き試験起動も2026-10-12に確認済み。step8の共通ヘッダ／アカウント入口／UI基礎、step9の短い操作フィードバックとreduced-motion、step10のスマホGraph／詳細／隣接一覧もローカルで検証済み。次はstep11のスマホ閲覧／会員／共有と探索への往復。共通UIは[採用契約](design/PRODUCT_UI_FOUNDATIONS.md)を使い、VPSは工程7のimageのままと区別する。main側文書がworktreeへ未反映なら読み取り参照し、必要なコードを安全に使えない場合は独立して進められるUI単位を選ぶ。runner・予定時刻は変更しない。報告では完了数/24・残数を短く示し、分母や達成条件を黙って増減しない。公開先指定はリモートの全設定や広告/認証credential変更の包括承認とは扱わない。
+2026-10-11にユーザーが[公開して育てるプラン](design/PUBLIC_BETA_AND_PRODUCT_PLAN.md)を採用した。**当面は[24ステップの進捗](PUBLIC_BETA_PROGRESS.md)の次の未完了単位を優先する**。既存Capsuleの細部だけを続けない。共通KGの初回と撤回/差替え・cursor/復旧は手動側で実装。単一本番構成の認証付き試験起動も2026-10-12に確認済み。step8の共通ヘッダ／アカウント入口／UI基礎、step9の短い操作フィードバックとreduced-motion、step10のスマホGraph／詳細／隣接一覧もローカルで検証済み。次はstep11のスマホ閲覧／会員／共有と探索への往復。共通UIは[採用契約](design/PRODUCT_UI_FOUNDATIONS.md)を使い、日常確認先とVPSの反映版を区別する。main側文書がworktreeへ未反映なら読み取り参照し、必要なコードを安全に使えない場合は独立して進められるUI単位を選ぶ。runner・予定時刻は変更しない。報告では完了数/24・残数を短く示し、分母や達成条件を黙って増減しない。公開先指定はリモートの全設定や広告/認証credential変更の包括承認とは扱わない。
 
-step7の[本番構成とHTTPS検証](design/PRODUCTION_DEPLOYMENT.md#vps実起動後の確認)は完了し、step8〜10も検証済みで現在10/24・残14。古い管理アクセス待ちを理由に調査を繰り返さない。次はstep11を優先する。[共通UI契約](design/PRODUCT_UI_FOUNDATIONS.md)を再利用し、ヘッダを作り直さない。VPSは工程7のimageを維持し、step8〜10のUIはローカルのみ反映済み。preview認証を外す一般公開はstep22であり、自動実行から本番設定・credential・稼働DBを変更しない。
+step7の[本番構成とHTTPS検証](design/PRODUCTION_DEPLOYMENT.md#vps実起動後の確認)は完了し、step8〜10も検証済みで現在10/24・残14。古い管理アクセス待ちを理由に調査を繰り返さない。次はstep11を優先する。[共通UI契約](design/PRODUCT_UI_FOUNDATIONS.md)を再利用し、ヘッダを作り直さない。日常確認先 `https://graph-beta.isinxnisi.com/` はローカル3200の工程10まで反映済み。VPSは現在工程7のimageで、次の定期更新は工程12。preview認証を外す一般公開はstep22であり、自動実行から本番設定・credential・稼働DBを変更しない。
+
+画面・機能変更の受け入れ時は、main側が[確認環境の更新契約](design/PRODUCTION_DEPLOYMENT.md#確認環境の更新契約)に従い3200への反映とTunnel経由の確認まで行う。無人実行は未受入worktreeを3200／VPSへ配置せず、引き継ぎに反映待ちの内容と確認経路を短く残す。runner・スケジュールの変更は不要。
 
 以下は2026-10-09に整理した初回候補と境界。最小Capsule・直接閲覧・会員保存・限定共有・版別会話は実装済みなので、未着手の第一候補として選び直さない。今の優先順位は上記の公開準備とする。具体的な障害は直してよいが、既存保存機能の細部だけを次の到達点にしない。
 

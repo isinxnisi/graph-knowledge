@@ -20,6 +20,8 @@ npm run public:dev
 
 画面は http://127.0.0.1:3200 。初回は18 Entity・27 Claimで、個々のSource/Citation/限定を保持します。後続releaseは `npm run public:plan -- <directory>` / `npm run public:apply -- <directory>` 。公開KGは明示撤回・差替えとrevision付きcursorに対応します。更新を検知した画面は同じ起点/条件から明示的に読み直します。初回生成物の再作成は `public:prepare`、一時DBの更新試験は `public:integration`、画面試験は `public:e2e` です。
 
+日常のPC／スマホ確認は https://graph-beta.isinxnisi.com/ （Cloudflare経由でこのPCの3200へ接続）。画面・機能の作業／受け入れ完了時に3200を更新します。VPSの https://graph.isinxnisi.net は工程の区切りで更新するため、反映版が異なる場合があります。[更新のタイミングと確認手順](docs/design/PRODUCTION_DEPLOYMENT.md#確認環境の更新契約)を参照してください。PC・Web・Tunnelの停止中は日常確認先も利用できません。
+
 ローカルで本番buildの画面を確認する場合は、3200の開発serverを終了してから次で起動します。read timeoutはVPSと同じ10秒（許容範囲5〜15秒）です。ブラウザを更新して最新buildを確認してください。VPSへ自動配置するコマンドではありません。
 
 ```bash

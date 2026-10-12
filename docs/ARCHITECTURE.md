@@ -16,6 +16,8 @@ Global／localのidentity・読取範囲、投稿／審査、保存／公開共�
 
 AI候補整理・Source解析・分類・moderation等の設計時は[AI処理の検証順序・共通Kevの接続と責務](design/AI_PROCESSING_DIRECTION.md)を参照する。独立した共通Kevサービスは稼働済みだが、グラフ用途の精度と連携は未検証・未実装。接続境界はサーバー／将来のWorkerから公開HTTP APIとし、Kev本体の変更は事前相談する。Webと推論の疎結合・低コスト・非同期の余地を守る。outbound HTTPSのLocal Worker、Job Queue・Worker API・Provider abstractionは候補で未実装。それ以前の設計では、この方向を後から選ぶことを著しく困難にする判断がある場合だけ考慮する。
 
+日常確認は `https://graph-beta.isinxnisi.com/` → 開発PCの `127.0.0.1:3200`。検証済みmainの画面・機能変更を作業／受け入れ完了ごとに反映する。VPSは独立した配置物・DBとして工程の区切りで更新し、両者を自動同期とは扱わない。[更新・確認の契約](design/PRODUCTION_DEPLOYMENT.md#確認環境の更新契約)を参照。
+
 ## 多言語対応の設計前提
 
 多言語対応は必須の設計前提であり、将来選択するオプションではない。現在は日本語のみの実装だが、新しい設計では以下の境界を守る。対応言語、翻訳の拡充、言語切替UI、名称モデルとAPIの具体的な移行時期は別途決める。

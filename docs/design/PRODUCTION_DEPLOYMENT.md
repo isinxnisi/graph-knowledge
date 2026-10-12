@@ -2,6 +2,24 @@
 
 2026-10-12更新。公開β計画step7は認証付きHTTPSの実起動確認まで完了。[進捗](../PUBLIC_BETA_PROGRESS.md)と[共通KGの適用・復旧契約](PUBLIC_KG_RELEASES.md)を併読する。構成の準備とVPSでの実起動は区別する。閲覧認証を外すβ公開はstep22。
 
+## 確認環境の更新契約
+
+2026-10-12、ユーザー指定により日常確認とVPSの確認を分ける。Cloudflare Tunnelはユーザーが接続済み。
+
+| 確認先 | 接続先・更新のタイミング |
+| --- | --- |
+| `https://graph-beta.isinxnisi.com/` | 開発PCの `127.0.0.1:3200`。画面・機能の手動作業／自動開発の受け入れを完了するたびに、検証済みmainの変更を反映する |
+| `https://graph.isinxnisi.net` | VPS上の独立したWeb／DB。まとまった工程の区切りで反映する。次の必須更新は工程12、以後16・19・22。工程13の実認証接続などVPS配置が必要な検証や、稼働版の不具合修正はその時点で更新する |
+
+- 更新は担当Codexの完了作業に含め、追加の更新指示を待たない。各工程の検証は維持し、配置だけを上記の頻度で行う。24工程の分母は増やさない。
+- 3200は `npm run public:build` → `NEO4J_READ_TIMEOUT_MS=10000 npm run public:start` で更新する。占有プロセスがこのrepoの3200であることを確認して停止・build・再起動し、起動セッションを保持する。既存の凍結版serverやCloudflareの設定は変更しない。文書だけの変更で実行物に影響がなければ再buildは不要。
+- 反映後は `/api/dataset` と変更に対応する代表経路を実際の確認URLから確認する。ローカルだけの成功をTunnel経由の成功として報告しない。完了報告には日常確認URLと反映したコードのcommit、VPSを更新したか／どこまで反映済みかを短く示す。
+- VPSでは検証済みimageを配置し、HTTPS・readiness・代表経路と既存サービスの継続を確認する。通常のWeb更新でKGの再seed、volume削除、preview認証解除は行わない。初回配置scriptの再実行にはKG applyも含まれるため、Web更新だけの手順と混同しない。
+- 配置・起動・外部接続が失敗した場合は、実装完了と確認環境への反映完了を分け、未反映内容・原因・次の対応を残す。権限等で管理者操作が必要なら、具体的な配置物・実行手順を準備して報告する。失敗を黙って飛ばさず、該当する配置の完了扱いにしない。
+- 自動開発の未受入worktreeは隔離検証までとし、受入時にmain側が3200へ反映する。無人実行からmain／3200／VPSを上書きしない。
+
+Tunnelはローカル3200の現在の画面を転送する。PC・Web server・Tunnelの停止中は利用できず、VPSの常時稼働とは別。同じ `public-kg` でもローカルとVPSは別DBで、自動同期はしない。ブラウザ内保存もoriginごとであり、localhost／beta／VPS間で自動移行しない。
+
 ## 構成と境界
 
 ```text
@@ -113,3 +131,9 @@ typecheck初回は既存ignoredのEvent dev生成型2 fileが破損していた�
 - `systemctl is-active docker caddy resale-ebay-notifications` は全てactive。Webはloopback 3200だけ、Neo4jのhost公開portなし。既存通知siteのHTTPS rootは従来どおり404（rootには経路がない）で、通知serviceも継続稼働。
 
 現在は認証付き試験環境であり、一般β公開・実Google会員接続・運用復旧全体の完了ではない。試験起動確認時は7/24（約29%）。以後の完了数は[進捗](../PUBLIC_BETA_PROGRESS.md)を正本とする。定期backup／外部退避等はstep19、認証を外す判断はstep22に残す。今回の追確認は文書更新だけで、DB・API・UI・本番設定を変更していない。
+
+## 日常確認入口の接続確認
+
+2026-10-12、工程10までのコード `8c0364f` のローカル本番buildをTunnel経由でも確認した。HTTPSの `/`・`/api/dataset` は200、datasetは `public-kg`、revisionは `legacy:20261011-001`。既存Playwrightの320pxタッチ探索／一覧・出典往復と、漫画・科学・Event／限定・概要・起点切替・復帰の2ケースが成功（18.8秒）。実データの書込みはない。
+
+今回は更新契約と文書だけを変更し、既に最新の3200は再buildしていない。VPSはユーザーの更新頻度の変更に従い、工程7の `beta-step7-20261011` のまま。工程8〜10は日常確認先で確認でき、次の定期VPS反映は工程12とする。

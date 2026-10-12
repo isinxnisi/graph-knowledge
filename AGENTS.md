@@ -10,6 +10,8 @@ AI関連の設計・作業前に [共通Kevの接続・責務と検証方針](do
 
 手動セッションの通常の完了手順は、必要な検証→日本語メッセージでコミット→設定済みupstreamへの通常pushまでとする。pushの結果も完了報告に含める。
 
+画面・機能を変更した手動作業と自動開発の受け入れでは、完了報告までに検証済みmainの変更をローカル3200へ反映し、日常確認先 `https://graph-beta.isinxnisi.com/` でも代表経路を確認する。ユーザーから更新を指示されるのを待たない。VPSの `https://graph.isinxnisi.net` は[確認環境の更新契約](docs/design/PRODUCTION_DEPLOYMENT.md#確認環境の更新契約)の区切りで必ず更新する。文書だけの変更は不要な再buildをせず、両環境の反映状態と未反映・失敗があれば報告する。自動worktreeの未受入変更を3200やVPSへ直接配置しない。
+
 main側などの手動作業では、最初に `make autopilot-review` と必要に応じて `make autopilot-status` を実行し、未反映commit・開発失敗・dirty・実行中を確認する。詳細は [docs/AUTOPILOT_COLLABORATION.md](docs/AUTOPILOT_COLLABORATION.md)。
 
 - 変更・テスト・DB操作・受け入れ作業の前に、別terminalで `make autopilot-hold` を起動し、そのterminalを作業完了まで保持する。Codexは `exec_command` の `tty: true` でセッションを保持できる。共通ロックが使用中なら変更せず、終了後に再確認する。ロックファイルを削除したり、実行中の自動開発を強制終了しない。

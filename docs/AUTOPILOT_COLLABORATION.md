@@ -62,6 +62,8 @@ guardはロックを取得してからコマンドを実行し、元の終了コ
 4. 受け入れ指示がある場合だけ、固定SHAを通常mergeする。最新のbranch名を対象にした無条件merge、レビューを省略した自動acceptはしない。dirty／Git操作途中なら先に内容を整理する。
 5. 取り込み後の検証・commit・未反映確認を行い、`python3 scripts/autopilot.py complete-acceptance --token TOKEN --target SHA` で完了する。未反映0件・双方clean・Git操作途中なし・固定SHA一致を確認して、利用上限の当日休止も解除し、スマホ記録を整理する。その後holdを解放する。次の予定で再試行し、今すぐCodexを呼ばない。自動側はそのbranchを継続し、mainへの自動同期・rebaseは行わない。
 
+画面・機能が変わる受け入れは、hold解放前にmainの変更を3200へ反映し、日常確認先 `https://graph-beta.isinxnisi.com/` の代表経路まで確認する。[配置頻度と失敗時の扱い](design/PRODUCTION_DEPLOYMENT.md#確認環境の更新契約)に従い、VPSは工程の区切りで更新する。自動実行の検証成功だけでは確認環境への反映済みとしない。
+
 この仕組みは通知を会話へ注入するものではない。AGENTS.mdにより、このCodexが作業を開始した時に検知する。常駐通知や多段履歴、受け入れ管理画面は追加していない。
 
 受け入れ時にmainへ不具合修正を加えた場合は、`complete-acceptance`で固定候補の受入を完了した後もholdを保ち、cleanな専用worktreeを受入済みmainへ`git merge --ff-only <受入済みmainのSHA>`で同期できる。専用側HEADが確認済み候補のままで、候補がmainの祖先であることを直前に確認する。履歴を捨てるreset・forceは使わず、fast-forwardできなければ止めて差分を確認する。最後にreviewで未反映0件・両方cleanを確認する。これにより受入時の修正を次の自動開発へ引き継ぐ。自動runnerからmainへmergeする許可ではない。
