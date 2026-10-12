@@ -464,6 +464,8 @@ Step 4のDB/API契約と探索機能を維持し、表示のみ調整した。�
 
 公開β step8では探索・会員・共有に `SiteHeader` を共用し、別タブのアカウント／探索入口を設けた。配色は維持し、文字・余白・control／panelの共通値を `app/theme.css` へ、全画面の基礎を `app/ui.css` へ整理。画面配置はCSS Modules、Graphと探索stateは既存の責務を維持する。ヘッダ自身はsession・private情報を取得せず、会員未設定時の状態は既存会員画面が表示する。[採用範囲](design/PRODUCT_UI_FOUNDATIONS.md)を参照。
 
+公開β step9では新規表示Nodeだけの180msフェードと、選択／開閉メッセージ・ダイアログの140msフェードを追加。reduced-motionをCSS・Cytoscape双方で尊重し、途中変更も反映する。演出は一時的なstyleであり、GraphState・snapshot・座標・pan/zoom・取得・クリック契約を変更しない。閉鎖と探索復帰は即時。[操作フィードバック契約](design/PRODUCT_UI_FOUNDATIONS.md#操作フィードバックと動き公開β-step9)を参照。
+
 ### 探索モデルの設計レビューと開閉フェーズ
 
 閉じる・条件付き探索・時系列の設計提案は [EXPLORATION_MODEL_REVIEW.md](design/EXPLORATION_MODEL_REVIEW.md) を参照する。移行順序1〜4を採用し実装済み。React state内の取得キャッシュとページ所属・open意図から表示対象を導出する。単一起点のUIを維持し、閉じるでは当該展開の利用を解除する。共有対象は残し、起点から切れた循環は除く。休止した子孫の受理済み範囲は再到達時に復元し、明示的に閉じた子孫は閉じたまま。凍結datasetの復元では通信を行わない。更新可能なpublic-kgではcache復元前にrevisionだけを確認し、失効時は同じ起点/条件から明示再取得する。

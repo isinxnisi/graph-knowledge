@@ -466,8 +466,15 @@ test("Node再クリック: 300msで開閉、ダブルクリックは開閉を抑
   // 判定待ち中に明示ボタンで閉じても、古いトグルが再開させない。
   await canvasTap(page, root.id);
   await page.waitForTimeout(320);
-  await canvasTap(page, root.id);
-  await closeInDetail(page);
+  // 2回のPlaywright通信の間に300msを超えないよう、同じbrowser taskで入力する。
+  // 通常のCanvas入力・ダブルクリックは上段で実際のpointer操作を確認している。
+  await page.getByTestId("graph-canvas").evaluate((el, id) => {
+    const cy = (el as unknown as { _cyreg: { cy: import("cytoscape").Core } })._cyreg.cy;
+    cy.getElementById(id).emit("tap");
+    const close = [...document.querySelectorAll<HTMLButtonElement>("#explorer-detail button")].find(button => button.textContent === "展開を閉じる");
+    if (!close) throw new Error("選択Entityの閉じるボタンがありません");
+    close.click();
+  }, root.id);
   await page.waitForTimeout(400);
   await expect(page.getByTestId("graph-counts")).toHaveText("Entity 1 / Claim 0");
 });

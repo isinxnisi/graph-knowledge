@@ -14,6 +14,7 @@ import { entityLabel, edgeRoutes, displayRelations, relationId } from "../lib/cl
 import { initialPositions, additionalPositions, contentPositions } from "../lib/client/graph-layout";
 import { createNodeClickHandler } from "../lib/client/graph-interaction";
 import { attachGraphBadges } from "../lib/client/graph-badges";
+import { createGraphMotion } from "../lib/client/graph-motion";
 import styles from "./Explorer.module.css";
 
 type Props = { contentOnly?: boolean; ref?: Ref<GraphCanvasHandle>; feedback?: ReactNode; restoration?: ViewRestoration | null; interactionBlocked?: boolean; graph: GraphState; selection: Selection; onEntity: (id: string) => void; onRelation: (id: string) => void; onToggleEntity: (id: string) => void; onEntityDoubleClick?: (id: string) => void };
@@ -24,6 +25,7 @@ export default function GraphCanvas({ contentOnly = false, ref, feedback, restor
   const container = useRef<HTMLDivElement>(null);
   const badgeLayer = useRef<HTMLDivElement>(null);
   const core = useRef<Core | null>(null);
+  const motion = useRef<ReturnType<typeof createGraphMotion> | null>(null);
   const handlers = useRef({ onEntity, onRelation, onToggleEntity, onEntityDoubleClick, selection });
   const gestures = useRef<ReturnType<typeof createNodeClickHandler> | null>(null);
   const generation = useRef(-1);
@@ -113,6 +115,7 @@ export default function GraphCanvas({ contentOnly = false, ref, feedback, restor
     const themeObserver = new MutationObserver(() => cy.style(themeStyles()));
     themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
     core.current = cy;
+    motion.current = createGraphMotion(cy, window.matchMedia?.("(prefers-reduced-motion: reduce)") ?? null);
     const updateZoom = () => setZoom(cy.zoom());
     cy.on("zoom", updateZoom);
     const clicks = createNodeClickHandler({
@@ -128,7 +131,7 @@ export default function GraphCanvas({ contentOnly = false, ref, feedback, restor
     cy.on("drag", "node", () => clicks.cancel());
     const resize = new ResizeObserver(() => cy.resize());
     resize.observe(container.current);
-    return () => { removeBadges(); clicks.cancel(); gestures.current = null; themeObserver.disconnect(); resize.disconnect(); cy.destroy(); core.current = null; generation.current = -1; initialLayoutDone.current = false; };
+    return () => { motion.current?.dispose(); motion.current = null; removeBadges(); clicks.cancel(); gestures.current = null; themeObserver.disconnect(); resize.disconnect(); cy.destroy(); core.current = null; generation.current = -1; initialLayoutDone.current = false; };
   }, []);
 
   useEffect(() => {
@@ -139,6 +142,7 @@ export default function GraphCanvas({ contentOnly = false, ref, feedback, restor
     const reset = generation.current !== graph.generation;
     const restored = reset && restoration?.generation === graph.generation ? restoration.view : null;
     if (reset) {
+      motion.current?.settle();
       const sameCenter = graph.centerId !== null && previousCenter.current === graph.centerId && previousCondition.current !== graph.conditionKey;
       if (sameCenter) cy.nodes().forEach((node) => { savedPositions.current[node.id()] = { ...node.position() }; });
       else { savedPositions.current = {}; cy.elements().remove(); initialLayoutDone.current = false; }
@@ -203,6 +207,11 @@ export default function GraphCanvas({ contentOnly = false, ref, feedback, restor
       cy.batch(() => Object.entries(routes).forEach(([id, route]) => cy.getElementById(id).data(route)));
     };
     updateRoutes();
+    // 追加／再開したNodeのみ、配置完了後に短く表示する。保存からの復帰は即時。
+    if (!contentOnly && !reset && !restored && newNodes.length) {
+      const ids = new Set(newNodes.map(node => node.id));
+      motion.current?.reveal(cy.nodes().filter(node => ids.has(node.id())));
+    }
     cy.on("dragfree", "node", updateRoutes);
     return () => { cy.off("dragfree", "node", updateRoutes); };
   }, [graph, restoration, contentOnly]);
