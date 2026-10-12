@@ -166,3 +166,8 @@ sudo bash /home/develop/graph-production-step12/update-production-web.sh beta-st
 工程12のimageは、隔離した本番Composeで空DB503・無書込plan・105知識Node／128 Relationship・二回目unchanged・backup0600・DB再起動保持・ブラウザ14/14（2.1分）・DB停止503・Web再起動なしの復旧を確認済み。停止／再開後は新規HTTP接続と90秒以内のHTTP／Docker health回復を待ち、古いunhealthy判定だけで打ち切らない。試験環境は終了時に専用volumeごと破棄した。VPSの稼働DBへ同じ停止試験を行った意味ではない。
 
 日常確認先は代表4/4（49.6秒）、ローカル3200と既存3210〜3215のdataset APIは全て200。[実装・検証記録](../PUBLIC_BETA_PROGRESS.md#工程12の実装検証2026-10-1213)を参照。VPSへの適用・適用後確認は上記管理者操作待ちであり、ローカル／imageの成功をVPS更新成功として扱わない。
+
+
+### 工程12のVPS反映確認（2026-10-13）
+
+管理者による更新後、HTTPS上のbuild ID `GJuUVUK2vkXbILCQsR2ET`・設定メニューと、更新前backup／更新後APIのrevision一致を確認した。backup `before-web-20261012T232138Z.json` は0600、revisionは `5b6ccb7b-7a5d-4005-ab34-01c490e93b1c`。既存Playwrightの代表4/4（37.1秒）、Docker／Caddy／通知serviceのactiveを確認。preview credentialは一時fileだけで扱い、traceは無効化した。前節の管理者操作待ちは解消し、工程12を完了とした。次の通常のVPS更新は工程16、工程13の実認証接続は必要な時点で反映する。会員機能はまだ無効。
