@@ -137,3 +137,5 @@ typecheck初回は既存ignoredのEvent dev生成型2 fileが破損していた�
 2026-10-12、工程10までのコード `8c0364f` のローカル本番buildをTunnel経由でも確認した。HTTPSの `/`・`/api/dataset` は200、datasetは `public-kg`、revisionは `legacy:20261011-001`。既存Playwrightの320pxタッチ探索／一覧・出典往復と、漫画・科学・Event／限定・概要・起点切替・復帰の2ケースが成功（18.8秒）。実データの書込みはない。
 
 今回は更新契約と文書だけを変更し、既に最新の3200は再buildしていない。VPSはユーザーの更新頻度の変更に従い、工程7の `beta-step7-20261011` のまま。工程8〜10は日常確認先で確認でき、次の定期VPS反映は工程12とする。
+
+2026-10-12、工程11の閲覧／Capsule／会員・共有のスマホ調整後、3200を再build・再起動した。最終build IDは `dZ0DHR4oT4Znt2oBzHsiC`。Tunnel側も同じbuildと `public-kg`／revision `legacy:20261011-001` を返す。最終buildでローカルの閲覧3経路、Tunnelの320px閲覧／制作Role Capsule／漫画・科学・Event探索3経路が成功。会員の実PG検証は隔離環境で行い、Tunnel／VPSへ検証用認証を公開していない。VPSは工程7のまま、次の必須更新は工程12。[進捗末尾の工程11検証結果](../PUBLIC_BETA_PROGRESS.md)を参照。

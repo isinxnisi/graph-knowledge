@@ -36,6 +36,7 @@ export function CapsuleReader({ capsule, onEdit, explorationLinks = false, noteA
   const [attempt, setAttempt] = useState(0);
   const [selection, setSelection] = useState<Selection>(null);
   const details = useRef<HTMLDivElement>(null);
+  const overview = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), 60_000);
@@ -54,7 +55,7 @@ export function CapsuleReader({ capsule, onEdit, explorationLinks = false, noteA
     // Let the selected content render before moving keyboard focus to it.
     requestAnimationFrame(() => { details.current?.focus({ preventScroll: true }); details.current?.scrollIntoView({ block: "nearest" }); });
   }
-  return <section aria-label={text.content}>
+  return <section className={css.reader} aria-label={text.content}>
     <h3 tabIndex={-1} data-capsule-focus>{capsule.title}</h3><p className={styles.muted}>{text.version(capsule.revision)} · {new Date(capsule.updatedAt ?? capsule.createdAt).toLocaleString("ja-JP")}</p>
     {onEdit && <button disabled={!resolved && !failed} onClick={() => onEdit(resolved ?? { entities: {}, claims: {}, issues: [] })}>{text.edit}</button>}
     <h4>{noteAttribution === "author" ? text.authorNote : text.note}</h4><p className={css.note}>{capsule.note || text.noNote}</p><p className={styles.muted}>{noteAttribution === "author" ? text.authorNoteHelp : text.noteHelp}</p>
@@ -66,10 +67,12 @@ export function CapsuleReader({ capsule, onEdit, explorationLinks = false, noteA
       {!!resolved.issues.length && <div role="status"><p>{text.incomplete}</p><ul>{resolved.issues.map(issue => <li key={`${issue.kind}:${issue.id}`}>{text.item(issue.kind)} <code>{issue.id}</code>：{text[issue.reason]}</li>)}</ul></div>}
       <p>{text.displayed(Object.keys(graph.nodes).length, Object.keys(graph.claims).length)}</p>
       <p className={styles.muted}>{text.graphHelp}</p>
-      <GraphCanvas contentOnly graph={graph} selection={selection} onEntity={id => inspect({ kind: "entity", id })} onRelation={id => inspect({ kind: "relation", id })} onToggleEntity={() => {}} />
-      <h4>{text.entities}</h4><ul className={css.memberList}>{capsule.entityIds.map(id => <li key={id}>{resolved.entities[id] ? <button aria-pressed={selection?.kind === "entity" && selection.id === id} onClick={() => inspect({ kind: "entity", id })}>{entityLabel(resolved.entities[id], resolved.entities).replace("\n", " / ")} · {KIND_LABELS[resolved.entities[id].kind]}</button> : <code>{id}</code>}</li>)}</ul>
-      <h4>{text.claims}</h4>{!capsule.claimIds.length && <p>{text.noClaims}</p>}
-      <ul className={css.memberList}>{capsule.claimIds.map(id => <li key={id}>{resolved.claims[id] ? <button className={css.claimChoice} aria-pressed={claimIds.includes(id)} onClick={() => inspect({ kind: "claim", id })}><ClaimCaption claim={resolved.claims[id]} nodes={resolved.entities} /></button> : <code>{id}</code>}</li>)}</ul>
+      <div ref={overview} tabIndex={-1} role="region" aria-label={text.overview} className={css.overview}>
+        <GraphCanvas contentOnly graph={graph} selection={selection} onEntity={id => inspect({ kind: "entity", id })} onRelation={id => inspect({ kind: "relation", id })} onToggleEntity={() => {}} />
+        <h4>{text.entities}</h4><ul className={css.memberList}>{capsule.entityIds.map(id => <li key={id}>{resolved.entities[id] ? <button aria-pressed={selection?.kind === "entity" && selection.id === id} onClick={() => inspect({ kind: "entity", id })}>{entityLabel(resolved.entities[id], resolved.entities).replace("\n", " / ")} · {KIND_LABELS[resolved.entities[id].kind]}</button> : <code>{id}</code>}</li>)}</ul>
+        <h4>{text.claims}</h4>{!capsule.claimIds.length && <p>{text.noClaims}</p>}
+        <ul className={css.memberList}>{capsule.claimIds.map(id => <li key={id}>{resolved.claims[id] ? <button className={css.claimChoice} aria-pressed={claimIds.includes(id)} onClick={() => inspect({ kind: "claim", id })}><ClaimCaption claim={resolved.claims[id]} nodes={resolved.entities} /></button> : <code>{id}</code>}</li>)}</ul>
+      </div>
       <div ref={details} tabIndex={-1} className={css.details}>
         {selectedEntity && <><h4>{selectedEntity.name}</h4><p>{KIND_LABELS[selectedEntity.kind]}</p><p>{selectedEntity.description}</p><p>{selectedEntity.aliases.join(" / ")}</p>
           {selectedEntity.event && <><dl className={styles.claimFacts}><dt>{eventParticipationLabels().eventPeriod}</dt><dd>{formatPeriod(selectedEntity.event.period)}</dd></dl><p>{eventParticipationLabels().periodHelp}</p></>}
@@ -77,6 +80,10 @@ export function CapsuleReader({ capsule, onEdit, explorationLinks = false, noteA
           {explorationLinks && <p><a href={readingHref({ kind: "entity", dataset: capsule.dataset, id: selectedEntity.id })} target="_blank" rel="noopener noreferrer">{memberLabels().exploreEntity}</a></p>}</>}
         {!claimIds.length && <p className={styles.muted}>{text.chooseClaim}</p>}
         {claimIds.map(id => resolved.claims[id] && <ClaimCard referenceDataset={capsule.dataset} key={id} idPrefix="capsule-" title={text.selectedClaim} claim={resolved.claims[id]} nodes={resolved.entities} />)}
+        {selection && <div className={css.readerNavigation}><button onClick={() => {
+          overview.current?.focus({ preventScroll: true });
+          overview.current?.scrollIntoView({ block: "start" });
+        }}>{text.backToOverview}</button></div>}
       </div>
     </>}
   </section>;

@@ -168,6 +168,10 @@ describe("作成・再閲覧の導線", () => {
     fireEvent.click(screen.getByRole("button", { name: /青葉ハル → アシスタントだった → 黒川レン/ }));
     await screen.findByText("青葉ハルへのインタビュー");
     expect(document.getElementById(`capsule-citation-${claim.citations[0].id}`)).not.toBeNull();
+    fireEvent.click(screen.getByRole("button", { name: "関係図・一覧へ戻る" }));
+    expect(screen.getByRole("region", { name: "関係図と一覧" })).toBe(document.activeElement);
+    expect(screen.getByRole("button", { name: /青葉ハル → アシスタントだった → 黒川レン/ }).getAttribute("aria-pressed")).toBe("true");
+    expect(document.getElementById(`capsule-citation-${claim.citations[0].id}`)).not.toBeNull();
     expect(fetchClaim).toHaveBeenCalledTimes(1);
   });
   it("制作Roleと刊行物の違いを選択前に読み分けられる", () => {

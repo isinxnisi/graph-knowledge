@@ -9,3 +9,12 @@
 .url label { display: grid; gap: 8px; margin: 12px 0; }
 .url input { width: 100%; min-width: 0; box-sizing: border-box; padding: 10px; border: 1px solid var(--color-border); border-radius: 6px; background: var(--color-panel); color: var(--color-text); font: inherit; }
 @media (max-width: 600px) { .dialog { width: calc(100vw - 20px); padding: 14px; max-height: calc(100dvh - 24px); } }
+@media (max-width: 800px) {
+  .dialog { padding: 14px; scroll-padding-top: 88px; }
+  .header { position: sticky; top: -14px; z-index: 2; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 10px; margin: -14px -14px 12px; padding: 10px 14px; background: var(--color-panel); border-bottom: 1px solid var(--color-border); }
+  .header h2 { font-size: 16px; line-height: 1.4; }
+  .dialog button, .dialog summary { min-height: 44px; }
+  .dialog summary { box-sizing: border-box; padding: 10px 0; }
+  .dialog a { display: inline-flex; align-items: center; min-height: 44px; max-width: 100%; }
+  .url input { min-height: 44px; font-size: 16px; }
+}

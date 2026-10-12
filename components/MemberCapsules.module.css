@@ -32,3 +32,12 @@
 .pageHeader p { margin: 8px 0; }
 .pageHeader > p:not(.eyebrow) { max-width: 72ch; color: var(--color-muted); }
 .card h2, .account h2 { margin-top: 0; }
+
+@media (max-width: 800px) {
+  .page { padding: 16px 10px 48px; }
+  .card, .account { padding: 12px; }
+  .page button { margin: 4px 0; }
+  .page a { display: inline-flex; align-items: center; min-height: 44px; max-width: 100%; }
+  .page summary { box-sizing: border-box; min-height: 44px; padding: 10px 0; cursor: pointer; }
+  .page input:not([type="checkbox"]):not([type="radio"]), .page select, .page textarea { box-sizing: border-box; min-height: 44px; font-size: 16px; }
+}
