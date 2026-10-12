@@ -139,3 +139,30 @@ typecheck初回は既存ignoredのEvent dev生成型2 fileが破損していた�
 今回は更新契約と文書だけを変更し、既に最新の3200は再buildしていない。VPSはユーザーの更新頻度の変更に従い、工程7の `beta-step7-20261011` のまま。工程8〜10は日常確認先で確認でき、次の定期VPS反映は工程12とする。
 
 2026-10-12、工程11の閲覧／Capsule／会員・共有のスマホ調整後、3200を再build・再起動した。最終build IDは `dZ0DHR4oT4Znt2oBzHsiC`。Tunnel側も同じbuildと `public-kg`／revision `legacy:20261011-001` を返す。最終buildでローカルの閲覧3経路、Tunnelの320px閲覧／制作Role Capsule／漫画・科学・Event探索3経路が成功。会員の実PG検証は隔離環境で行い、Tunnel／VPSへ検証用認証を公開していない。VPSは工程7のまま、次の必須更新は工程12。[進捗末尾の工程11検証結果](../PUBLIC_BETA_PROGRESS.md)を参照。
+
+## 既存Webだけの節目更新（step12以後）
+
+`scripts/update-production-web.sh TAG ARCHIVE.tar.gz` をVPSの管理者がsudoで実行する。検証済みWeb／operator imageのarchiveとbasenameを記載したSHA-256 fileを事前転送する。既存の `/opt/graph-knowledge/compose.yaml`／private env／Caddy／preview認証を維持し、image tagだけ更新する。
+
+既存operatorでKGをbackupしてから、`up --no-deps --pull never --wait web` とreadinessで更新する。KGのapply／再seed、DBの再起動、volume削除、会員有効化は含まない。Web更新が失敗した場合は以前のprivate envを戻し旧imageでの起動を試み、失敗ならその旨を報告する。汎用運用復旧の完成とはせず、外部HTTPS・代表経路と既存サービスの確認までを担当作業に含める。
+
+2026-10-12、step12着手時のSSHユーザーでは `sudo -n` がpassword必須、Docker socketもpermission deniedだった。root SSHも許可されていない。権限設定の恒久変更や初回scriptの再実行で回避せず、具体的な配置物を準備して管理者操作を依頼する。ユーザーの実行後に担当CodexがHTTPS・実ブラウザを確認するまで、VPSへの反映は完了に数えない。
+
+## 工程12の配置物と反映状態
+
+2026-10-13（JST）。設定メニュー・本人表示名・外観保存のWeb更新を準備した。日常確認先は工程12の本番build ID `DgGcElZlO4DGW2isuF962` を返し、dataset／revisionはローカルと同じ `public-kg`／`legacy:20261011-001`。会員設定の実保存は隔離PG＋OIDCで検証し、この入口の会員未設定状態は維持する。
+
+VPS用のtagは `beta-step12-20261012`。Web imageは `sha256:c1eabfbf84d16aa5ea899fd4decd280305cb0bf6f59998117715ebc553cdaf7d`、operatorは `sha256:da4acebbe53d8e591c514bdae722e46b5f14f62e6dcc779b165a02b4b8d27caa`。imageのNodeは24.21.0、Web build IDは `GJuUVUK2vkXbILCQsR2ET`。archiveはVPSの `/home/develop/graph-production-step12/images.tar.gz` へ転送済みで、現地SHA-256検証・script構文検証は成功した。checksumは `4fbf35f080581e0466cbcf0b826e704049c10eaa18254d57e05b5870a8571bff`。
+
+現在のSSHユーザーはDocker socketを操作できず、`sudo -n` も管理者パスワードを要求する。権限変更・迂回は行わず、管理者による次の一回の操作を残している。
+
+```bash
+sudo bash /home/develop/graph-production-step12/update-production-web.sh beta-step12-20261012 /home/develop/graph-production-step12/images.tar.gz
+```
+
+更新前のVPS dataset revisionは `5b6ccb7b-7a5d-4005-ab34-01c490e93b1c`。ローカルのlegacy revisionと一致させるための再投入は行わない。更新後、同じrevisionの維持・HTTPS・imageのbuild ID・代表的な設定／探索操作・既存サービス継続を確認して工程12を完了にする。現時点でVPSは工程7のまま。preview認証・会員無効化も維持する。
+
+
+工程12のimageは、隔離した本番Composeで空DB503・無書込plan・105知識Node／128 Relationship・二回目unchanged・backup0600・DB再起動保持・ブラウザ14/14（2.1分）・DB停止503・Web再起動なしの復旧を確認済み。停止／再開後は新規HTTP接続と90秒以内のHTTP／Docker health回復を待ち、古いunhealthy判定だけで打ち切らない。試験環境は終了時に専用volumeごと破棄した。VPSの稼働DBへ同じ停止試験を行った意味ではない。
+
+日常確認先は代表4/4（49.6秒）、ローカル3200と既存3210〜3215のdataset APIは全て200。[実装・検証記録](../PUBLIC_BETA_PROGRESS.md#工程12の実装検証2026-10-1213)を参照。VPSへの適用・適用後確認は上記管理者操作待ちであり、ローカル／imageの成功をVPS更新成功として扱わない。

@@ -23,13 +23,31 @@ function ops(command: string) {
   return JSON.parse(docker(["run", "--rm", "ops", command]).stdout);
 }
 async function request(path: string) {
-  return fetch(`http://127.0.0.1:3201${path}`, { signal: AbortSignal.timeout(15000) });
+  // 同期Docker操作中はevent loopも止まる。古いkeep-alive接続を再利用せず、
+  // DB停止・再開後の新しいHTTP応答を確認する。
+  return fetch(`http://127.0.0.1:3201${path}`, { headers: { Connection: "close" }, signal: AbortSignal.timeout(15000) });
 }
 async function waitForHttp() {
   for (let attempt = 0; attempt < 60; attempt++) {
     try { return await request("/api/dataset"); } catch { await new Promise(resolve => setTimeout(resolve, 500)); }
   }
   throw new Error("Production image did not listen on 3201");
+}
+async function waitForRecovery(revision: string) {
+  // DB復旧直後には直前のunhealthyが残る。Webを再起動せず、実際の
+  // HTTP応答と定期healthcheckが回復するまで期限付きで確認する。
+  const deadline = Date.now() + 90_000;
+  while (Date.now() < deadline) {
+    const response = await request("/api/dataset").catch(() => null);
+    if (response?.ok) {
+      assert.equal((await response.json()).revision, revision);
+      const id = docker(["ps", "-q", "web"]).stdout.trim();
+      const health = spawnSync("docker", ["inspect", "--format", "{{.State.Health.Status}}", id], { encoding: "utf8" });
+      if (health.status === 0 && health.stdout.trim() === "healthy") return;
+    }
+    await new Promise(resolve => setTimeout(resolve, 1000));
+  }
+  throw new Error("Production Web did not recover HTTP/readiness/health within 90 seconds");
 }
 try {
   // container内node（uid1000）がbackup先を通過できるよう、外側だけ0755。
@@ -59,7 +77,8 @@ try {
   assert.equal((await stat(join(backups, "ready.json"))).mode & 0o777, 0o600);
   assert.ok(JSON.parse(await readFile(join(backups, "ready.json"), "utf8")).checksum);
   docker(["restart", "graph-neo4j"]);
-  docker(["up", "-d", "--wait", "--wait-timeout", "360", "graph-neo4j", "web"]);
+  docker(["up", "-d", "--wait", "--wait-timeout", "360", "graph-neo4j"]);
+  await waitForRecovery(initial.revision);
   assert.equal((await (await request("/api/dataset")).json()).revision, initial.revision);
   console.log("backup・再起動保持: 成功。ブラウザを確認します。");
   const browser = spawnSync(process.execPath, ["node_modules/@playwright/test/cli.js", "test", "--config=playwright.public.config.ts"], {
@@ -69,7 +88,8 @@ try {
   docker(["stop", "graph-neo4j"]);
   assert.equal((await request("/api/dataset")).status, 503);
   assert.notEqual(docker(["exec", "-T", "web", "node", "scripts/production-readiness.mjs"], false).status, 0);
-  docker(["up", "-d", "--wait", "--wait-timeout", "360", "graph-neo4j", "web"]);
+  docker(["up", "-d", "--wait", "--wait-timeout", "360", "graph-neo4j"]);
+  await waitForRecovery(initial.revision);
   assert.equal((await request("/api/dataset")).status, 200);
   assert.equal((await (await request("/api/dataset")).json()).revision, initial.revision);
   console.log("本番image検証: 空DB503／plan無書込み／105知識Node・128Relationship／再適用unchanged／backup0600／再起動保持／Playwright／DB停止503・復旧: 成功");

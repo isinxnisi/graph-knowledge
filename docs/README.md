@@ -42,12 +42,12 @@
 | [公開して育てるための対応プラン](design/PUBLIC_BETA_AND_PRODUCT_PLAN.md) | 採用・実装開始。デザイン・スマホ・会員・英語・広告・計測・共通KGからβ公開への方向と優先境界 |
 | [共通KGのrelease適用](design/PUBLIC_KG_RELEASES.md) | public-kgの生成・検証・dry-run・冪等更新、明示撤回/差替え、revision付き探索、KG単独backup/restore。凍結版は維持。本番配置は次行 |
 | [単一本番構成の配置](design/PRODUCTION_DEPLOYMENT.md) | step7。専用Docker、厳密な本番接続guard、standalone Web、readiness、既存Caddyにpreview認証付きで接続する管理者手順。2026-10-12、ユーザーによる配置後にVPSの認証付きHTTPS・実ブラウザ4経路を確認。一般公開は未実施。日常確認先beta→ローカル3200の毎回反映、VPSの節目更新もここを正本とする |
-| [共通ヘッダとUI基礎](design/PRODUCT_UI_FOUNDATIONS.md) | 公開β step8〜9。共通ヘッダ・別タブのアカウント入口・三テーマ・共通値、操作フィードバックとreduced-motion。会員有効化・設定・永続化は別工程 |
+| [共通ヘッダとUI基礎](design/PRODUCT_UI_FOUNDATIONS.md) | 公開β step8〜12。共通ヘッダ・別タブのアカウント入口・三テーマ・操作フィードバックとreduced-motion、設定メニュー・本人表示名・ブラウザ外観保存。実Googleは別工程 |
 | [アカウント・所有者・会員保存](design/ACCOUNT_AND_OWNERSHIP_DESIGN.md) | 初回設計。会員Capsuleを実装済み（実Googleは未接続）。認証・UserとKG Person・所有者認可・一種類のprivate保存、実credential待ちの範囲とテストを具体化 |
 | [共有・議論の最小縦経路](design/COMMUNITY_VERTICAL_SLICES.md) | 初回設計。限定リンク共有と短い版別コメントを実装。投稿候補・一般公開・運営対応は未実装。Capsule版・限定リンク・スレッド対象・投稿時版・運営／知識受入の分離。全コミュニティ基盤を先行導入しない |
 | [Capsuleの限定リンク共有](design/CAPSULE_LINK_SHARING.md) | 2026-10-09。特定版の固定・匿名閲覧・根拠／探索への導線・明示再発行と失効。実公開・運営非表示は未実装。discussionは次行の別契約 |
 | [Capsuleの版についての会話](design/CAPSULE_DISCUSSION.md) | 2026-10-10。明示受付・2 Userの投稿・投稿時版・非共有版隔離・本人撤回・所有者停止。所有者の旧共有版選択・説明と会話の再閲覧も接続。失効後の本人投稿一覧・撤回も接続。公開運営は未実装 |
-| [会員Capsule保存の初回](design/MEMBER_CAPSULES.md) | 2026-10-09。実認証・PostgreSQL・所有者APIと明示保存・再訪・既存構成編集UIを接続。2026-10-10に閲覧リンクからの参照追加も接続。設定UI・実Googleは未了 |
+| [会員Capsule保存の初回](design/MEMBER_CAPSULES.md) | 2026-10-09。実認証・PostgreSQL・所有者APIと明示保存・再訪・既存構成編集UIを接続。2026-10-10に閲覧リンクからの参照追加も接続。表示名設定はstep12。実Googleは未了 |
 | [ブラウザ内の最小Capsule](design/LOCAL_CAPSULES.md) | 2026-10-09。明示した対象・独立主張と説明のprivate保存・現在データでの再閲覧・確認削除。保存ビュー／途中保存とは別コンテンツ。同IDの編集も実装。会員同期・公開共有は未実装 |
 | [ブラウザ内の探索途中保存](design/LOCAL_SAVED_WORKSPACE.md) | 2026-10-09。datasetごと最大10件、枝の開閉・取得ページ数・配置の保存と現在データからの再開。専用JSONの控え・内容確認後の読込を追加。旧1件を引き継ぎ、選択・置換・確認削除に対応。会員同期は未実装 |
 | [対象・主張の直接閲覧URL](design/DIRECT_READING_LINKS.md) | 2026-10-09。dataset・Entity／Claim IDから現在の説明・根拠を読む。履歴・明示探索・元Graphへの復帰。公開運用・検索掲載・内容版固定は含めない |
@@ -87,7 +87,7 @@
 
 ## 現在地点
 
-2026-10-09、[会員Capsule保存](design/MEMBER_CAPSULES.md)の認証・所有者付き保存APIを追加した。専用PostgreSQLと開発OIDCによる検証段階で、明示保存・本人一覧・現在の根拠・別ブラウザ再訪のUIも接続した。通常の探索・ブラウザ保存を維持し、題名・説明・既存構成の編集と失効時の入力保持も接続した。2026-10-10に閲覧リンクから対象・個別主張を確認して構成へ追加する経路も接続した。共有済み版と現在版の説明・明示構成を比較する本人用の導線も追加した（[契約](design/CAPSULE_LINK_SHARING.md#所有者が共有時と現在の構成を比較する2026-10-10追加)）。設定UIと実Googleは未実装。
+2026-10-09、[会員Capsule保存](design/MEMBER_CAPSULES.md)の認証・所有者付き保存APIを追加した。専用PostgreSQLと開発OIDCによる検証段階で、明示保存・本人一覧・現在の根拠・別ブラウザ再訪のUIも接続した。通常の探索・ブラウザ保存を維持し、題名・説明・既存構成の編集と失効時の入力保持も接続した。2026-10-10に閲覧リンクから対象・個別主張を確認して構成へ追加する経路も接続した。共有済み版と現在版の説明・明示構成を比較する本人用の導線も追加した（[契約](design/CAPSULE_LINK_SHARING.md#所有者が共有時と現在の構成を比較する2026-10-10追加)）。表示名設定は公開β step12で実装し、実Googleは未接続。
 
 2026-10-09、保存・再開に続き、対象・主張を選んで説明とともに読み返す[最小Capsule](design/LOCAL_CAPSULES.md)を追加した。ブラウザ内privateの初回であり、題名・説明・構成を同IDの次版へ編集できる。公開共有・会員保存・投稿は含めない。
 

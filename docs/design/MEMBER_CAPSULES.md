@@ -1,6 +1,6 @@
 # 会員Capsule保存：初回の縦経路
 
-2026-10-09採用、**会員保存・再閲覧・構成の編集UIを接続**（2026-10-10に閲覧リンクからの参照追加を実装）。実OIDC／専用PostgreSQLで、Explorer→明示保存→別ブラウザ再訪→現在の根拠を試せる段階。プロフィール設定、Google実接続・人間受入は未了。
+2026-10-09採用、**会員保存・再閲覧・構成の編集UIを接続**（2026-10-10に閲覧リンクからの参照追加を実装）。実OIDC／専用PostgreSQLで、Explorer→明示保存→別ブラウザ再訪→現在の根拠を試せる段階。本人表示名の設定は公開β step12で追加（[契約](PRODUCT_UI_FOUNDATIONS.md#アカウントメニューと最小設定公開β-step12)）。Google実接続は未了。
 
 同日後続：[特定版の限定リンク共有](CAPSULE_LINK_SHARING.md)を追加した。以下の共有・過去版保存が未実装という記述は会員保存／編集初回の範囲。明示共有した版だけを追加snapshotへ固定し、private編集APIと既存形式は維持する。一般公開・discussionは引き続き未実装。
 
@@ -19,7 +19,7 @@ Capsule編集の初回は完了している。編集の細部、直接閲覧の�
 - 認証開始→OIDC callback→DB session→本人の作成／一覧／読取／更新／削除をRoute Handlerで実装した。現在のUserの限定DTO取得、ログアウト、全session失効も提供する。
 - 開発・テスト限定の署名付きOIDC issuerを使い、ライブラリ自身のnonce・issuer・PKCE・state・cookieと実DBを通す。User IDを直接渡すログインAPIは作らない。
 - `/member` で登録／ログイン、現在の表示名・locale、明示保存、本人一覧・読取・確認削除、ログアウト・確認付き全端末ログアウトを接続。現在KGの再解決は既存Capsule Readerを使う。
-- 会員Capsuleの題名・説明・構成の編集UIを接続。2026-10-10に閲覧リンクから新しいKG参照を追加する経路も実装（末尾）。設定UI（表示名／locale）、実Google、一般公開・退会は未実装。限定共有・議論は別契約。サーバー更新API・schemaは維持する。
+- 会員Capsuleの題名・説明・構成の編集UIを接続。2026-10-10に閲覧リンクから新しいKG参照を追加する経路も実装（末尾）。表示名設定は公開β step12で追加。locale設定・実Google・一般公開・退会は未実装。限定共有・議論は別契約。サーバー更新API・schemaは維持する。
 
 ## identity・session・認可
 
@@ -68,7 +68,7 @@ fixtureはNODE_ENVがproduction以外、MEMBER_FIXTURE_ENABLED=1、固定loopbac
 - 明示保存の前にsessionStorageへUser／dataset／local ID／内容版別のrequest IDと送信内容を保持する。応答消失・reload・再ログイン後の同じタブでの再送は同じrequest IDを使う。保持失敗・同版の内容不一致は送信しない。serverが再送を検出した場合は新規保存と区別し、処理済み操作の現在内容を表示していると明示する。別タブ・別ブラウザは別の明示コピー操作となり、自動重複排除／同期を約束しない。
 - 取得・送信は15秒上限で、世代変更／非表示／unmount時に取消し、遅い応答を表示しない。送信中断はserver取消の保証ではなく、再送キーで結果を確認する。失効や停止でもブラウザ内の元の内容を保持する。
 - 削除は表示版を条件にし、409では新しい版を自動削除せず再確認を案内する。会員編集は下記の追加契約。local編集の自動反映、会員内容のlocal自動コピー・過去版復元は提供しない。
-- UI文字列はlocale解決境界へ分離。日本語の初回であり、表示名・localeの変更画面は次の単位。`/member` はnoindex／nofollow、private APIはno-store。public KGの描画・dataset・DBに変更はない。
+- UI文字列はlocale解決境界へ分離。日本語の初回であり、表示名変更は公開β step12で追加。locale変更は後続工程。`/member` はnoindex／nofollow、private APIはno-store。public KGの描画・dataset・DBに変更はない。
 
 `npm run test:member:e2e` は既存の専用一時PG runnerを使い、明示migration・開発専用OIDCの本人選択画面・3221のNext dev・Playwrightを起動し、終了時に破棄する。現行の時間上限・bundler・キャッシュ分離は末尾の受け入れ時補強を参照。実Google・外部認証・本番DBへ接続せず、KG応答だけを既存fixtureで置き換える。実KG内容の受入を代替しない。
 

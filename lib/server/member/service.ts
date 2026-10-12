@@ -8,6 +8,7 @@ import { APIError } from "better-auth/api";
 import { assertMemberOrigin, MemberError, memberId, memberInput, memberJson } from "./http";
 import { createCapsuleSharing } from "./sharing";
 import { createCapsuleDiscussion } from "./discussion";
+import { memberProfileUpdateSchema } from "../../domain/member-profile";
 
 function dto(row: QueryResultRow) {
   return memberCapsuleSchema.parse({ id: row.id, schemaVersion: row.schema_version, revision: Number(row.revision),
@@ -40,6 +41,15 @@ export function createMemberService(config: MemberConfig, pool: Pool, auth: Memb
     async profile(request: Request) {
       const user = await owner(request);
       return memberJson({ user: { id: user.id, name: user.name, locale: user.locale } });
+    },
+    async updateProfile(request: Request) {
+      assertMemberOrigin(request, config.origin);
+      if (!request.headers.has("x-member-user")) throw new MemberError(400, "INVALID_ARGUMENT");
+      const user = await owner(request);
+      const input = await memberInput(request, memberProfileUpdateSchema);
+      const result = await pool.query('UPDATE "user" SET name = $1, "updatedAt" = clock_timestamp() WHERE id = $2 AND active = true RETURNING id, name, locale', [input.name, user.id]);
+      if (!result.rows[0]) throw new MemberError(401, "UNAUTHENTICATED");
+      return memberJson({ user: result.rows[0] });
     },
     async list(request: Request) {
       const user = await owner(request);

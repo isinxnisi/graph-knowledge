@@ -24,9 +24,9 @@
 
 ## 公開準備の優先順位と、既存の初回契約
 
-2026-10-11にユーザーが[公開して育てるプラン](design/PUBLIC_BETA_AND_PRODUCT_PLAN.md)を採用した。**当面は[24ステップの進捗](PUBLIC_BETA_PROGRESS.md)の次の未完了単位を優先する**。既存Capsuleの細部だけを続けない。共通KGの初回と撤回/差替え・cursor/復旧は手動側で実装。単一本番構成の認証付き試験起動も2026-10-12に確認済み。step8の共通ヘッダ／アカウント入口／UI基礎、step9の短い操作フィードバックとreduced-motion、step10のスマホGraph／詳細／隣接一覧、step11の閲覧／Capsule／会員・共有と探索への往復も検証済み。次はstep12のアカウントメニュー・表示名／外観等の最小設定。共通UIは[採用契約](design/PRODUCT_UI_FOUNDATIONS.md)を使い、日常確認先とVPSの反映版を区別する。main側文書がworktreeへ未反映なら読み取り参照し、必要なコードを安全に使えない場合は独立して進められるUI単位を選ぶ。runner・予定時刻は変更しない。報告では完了数/24・残数を短く示し、分母や達成条件を黙って増減しない。公開先指定はリモートの全設定や広告/認証credential変更の包括承認とは扱わない。
+2026-10-11にユーザーが[公開して育てるプラン](design/PUBLIC_BETA_AND_PRODUCT_PLAN.md)を採用した。**当面は[24ステップの進捗](PUBLIC_BETA_PROGRESS.md)の次の未完了単位を優先する**。既存Capsuleの細部だけを続けない。共通KGの初回と撤回/差替え・cursor/復旧は手動側で実装。単一本番構成の認証付き試験起動も2026-10-12に確認済み。step8の共通ヘッダ／アカウント入口／UI基礎、step9の短い操作フィードバックとreduced-motion、step10のスマホGraph／詳細／隣接一覧、step11の閲覧／Capsule／会員・共有と探索への往復も検証済み。step12のアカウントメニュー・表示名／外観等の最小設定は実装・ローカル検証済みで、必須のVPS更新だけが管理者操作待ち。共通UIは[採用契約](design/PRODUCT_UI_FOUNDATIONS.md)を使い、日常確認先とVPSの反映版を区別する。main側文書がworktreeへ未反映なら読み取り参照し、必要なコードを安全に使えない場合は独立して進められるUI単位を選ぶ。runner・予定時刻は変更しない。報告では完了数/24・残数を短く示し、分母や達成条件を黙って増減しない。公開先指定はリモートの全設定や広告/認証credential変更の包括承認とは扱わない。
 
-step7の[本番構成とHTTPS検証](design/PRODUCTION_DEPLOYMENT.md#vps実起動後の確認)は完了し、step8〜11も検証済みで現在11/24・残13。古い管理アクセス待ちを理由に調査を繰り返さない。次はstep12を優先する。[共通UI契約](design/PRODUCT_UI_FOUNDATIONS.md)を再利用し、ヘッダを作り直さない。日常確認先 `https://graph-beta.isinxnisi.com/` はローカル3200の工程11まで反映済み。VPSは現在工程7のimageで、次の定期更新は工程12。preview認証を外す一般公開はstep22であり、自動実行から本番設定・credential・稼働DBを変更しない。
+step7の[本番構成とHTTPS検証](design/PRODUCTION_DEPLOYMENT.md#vps実起動後の確認)とstep8〜11は完了し、現在11/24・残13。step12の設定は実装・検証・Tunnel反映済みだが、VPS更新を残しているのでまだ完了に数えない。[配置物と反映状態](design/PRODUCTION_DEPLOYMENT.md#工程12の配置物と反映状態)を参照し、設定UIを未実装と誤認して作り直さない。管理者操作待ちを繰り返し調査する必要はない。次の実装候補はstep13の実Google接続で、外部設定に依存する範囲を確認する。設定待ちならstep14等の独立した単位を選び、未設定の認証を本物として公開しない。共通UIは[採用契約](design/PRODUCT_UI_FOUNDATIONS.md)を再利用する。日常確認先 `https://graph-beta.isinxnisi.com/` は工程12まで反映。VPSは工程7のimageで、工程12への必須更新待ち。preview認証を外す一般公開はstep22であり、自動実行から本番設定・credential・稼働DBを変更しない。
 
 画面・機能変更の受け入れ時は、main側が[確認環境の更新契約](design/PRODUCTION_DEPLOYMENT.md#確認環境の更新契約)に従い3200への反映とTunnel経由の確認まで行う。無人実行は未受入worktreeを3200／VPSへ配置せず、引き継ぎに反映待ちの内容と確認経路を短く残す。runner・スケジュールの変更は不要。
 

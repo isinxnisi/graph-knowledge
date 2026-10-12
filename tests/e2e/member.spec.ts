@@ -850,3 +850,43 @@ test.describe("スマホの会員・共有と探索の往復", () => {
     await shared.close();
   });
 });
+
+for (const width of [320, 1440]) {
+  test(`アカウント設定: 表示名を保存・再訪し、Capsule入力と所有者を維持する ${width}px`, async ({ page, context }, testInfo) => {
+    await page.setViewportSize({ width, height: 900 }); await mockKnowledge(context);
+    const capsule = await createForEditing(page);
+    const original = (await (await page.request.get("/api/member/profile")).json()).user;
+    const editor = page.getByRole("region", { name: "アカウントのCapsuleを編集", exact: true });
+    const settings = page.getByRole("region", { name: "アカウント設定", exact: true });
+    await editor.getByRole("textbox", { name: "自分の説明", exact: true }).fill("設定中も残すCapsuleの入力");
+    try {
+      await page.getByTestId("site-header").locator("summary").click();
+      await page.getByRole("link", { name: "アカウント設定", exact: true }).click();
+      expect(new URL(page.url()).searchParams.get("capsule")).toBe(capsule.id);
+      await settings.getByLabel("表示名", { exact: true }).fill("調査する人");
+      await page.route("**/api/member/profile", async route => {
+        if (route.request().method() === "PUT") return route.fulfill({ status: 503, json: { error: { code: "MEMBER_UNAVAILABLE" } } });
+        return route.continue();
+      }, { times: 1 });
+      await settings.getByRole("button", { name: "表示名を保存", exact: true }).click();
+      await expect(settings.getByRole("alert")).toContainText("会員保存を現在利用できません");
+      await expect(settings.getByLabel("表示名", { exact: true })).toHaveValue("調査する人");
+      await settings.getByRole("button", { name: "表示名を保存", exact: true }).click();
+      await expect(settings.getByRole("status")).toHaveText("表示名を保存しました。");
+      await expect(editor.getByRole("textbox", { name: "自分の説明", exact: true })).toHaveValue("設定中も残すCapsuleの入力");
+      const current = (await (await page.request.get("/api/member/profile")).json()).user;
+      expect(current).toEqual({ ...original, name: "調査する人" });
+      expect((await (await page.request.get(`/api/member/capsules/${capsule.id}`)).json()).capsule).toEqual(capsule);
+      expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+      await settings.scrollIntoViewIfNeeded();
+      await page.screenshot({ path: testInfo.outputPath(`account-settings-${width}.png`) });
+      await editor.getByRole("button", { name: "編集を取り消す", exact: true }).click();
+      await editor.getByRole("button", { name: "保存せず戻る", exact: true }).click();
+      await page.reload();
+      await expect(settings.getByLabel("表示名", { exact: true })).toHaveValue("調査する人");
+      await expect(page.getByText("設定中も残すCapsuleの入力", { exact: true })).toHaveCount(0);
+    } finally {
+      await page.request.put("/api/member/profile", { headers: { Origin: "http://127.0.0.1:3221", "X-Member-User": original.id }, data: { name: original.name } });
+    }
+  });
+}

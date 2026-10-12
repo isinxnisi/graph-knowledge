@@ -42,6 +42,16 @@ async function visibility(value: "hidden" | "visible") {
   await act(async () => { Object.defineProperty(document, "visibilityState", { configurable: true, value }); document.dispatchEvent(new Event("visibilitychange")); });
 }
 describe("会員編集中のprivate表示と入力保持", () => {
+  it("未保存の表示名は別タブ復帰で本人だけに戻り、別人には出ない", async () => {
+    render(<MemberCapsules dataset="demo" />);
+    fireEvent.change(await screen.findByLabelText("表示名", { exact: true }), { target: { value: "未保存の自分の名前" } });
+    await visibility("hidden"); identity = other; await visibility("visible");
+    await waitFor(() => expect((screen.getByLabelText("表示名") as HTMLInputElement).value).toBe("別人"));
+    expect(document.body.textContent).not.toContain("未保存の自分の名前");
+    await visibility("hidden"); identity = owner; await visibility("visible");
+    await waitFor(() => expect((screen.getByLabelText("表示名") as HTMLInputElement).value).toBe("未保存の自分の名前"));
+    expect(localStorage.length).toBe(0); expect(sessionStorage.length).toBe(0);
+  });
   it("非表示中の他タブ通知では再取得・描画せず、復帰して本人を確認してから戻す", async () => {
     await edit(); await visibility("hidden");
     expect(screen.queryByLabelText("自分の説明", { exact: true })).toBeNull();

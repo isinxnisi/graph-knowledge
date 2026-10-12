@@ -8,6 +8,29 @@ async function graphView(page: Page) {
 }
 
 export function checkSiteHeader(example: string, counts: string) {
+  test("設定: テーマを再訪・別タブで引き継ぎ、外側・Escapeで閉じられる", async ({ page, context }) => {
+    await page.goto("/");
+    const header = page.getByTestId("site-header");
+    await header.locator("summary").click();
+    await header.getByRole("button", { name: "ダークモード", exact: true }).click();
+    await header.getByLabel("ダーク配色").selectOption("blue");
+    await page.reload();
+    await expect(page.locator("html")).toHaveAttribute("data-theme", "dark-blue");
+    const other = await context.newPage();
+    await other.goto("/member");
+    await expect(other.locator("html")).toHaveAttribute("data-theme", "dark-blue");
+    await other.getByTestId("site-header").locator("summary").click();
+    await other.getByRole("button", { name: "ダークモード", exact: true }).click();
+    await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
+    await other.close(); await page.bringToFront();
+    await header.locator("summary").click();
+    await page.keyboard.press("Escape");
+    await expect(header.locator("details")).not.toHaveAttribute("open");
+    await expect(header.locator("summary")).toBeFocused();
+    await header.locator("summary").click();
+    await page.getByRole("heading", { name: "対象を探す", exact: true }).click();
+    await expect(header.locator("details")).not.toHaveAttribute("open");
+  });
   for (const width of [1440, 390]) {
     test(`共通ヘッダのテーマ・別タブ入口が探索状態を維持する ${width}px`, async ({ page }) => {
       await page.setViewportSize({ width, height: 1000 });
@@ -29,6 +52,7 @@ export function checkSiteHeader(example: string, counts: string) {
       const before = await graphView(page);
       let requests = 0;
       page.on("request", request => { if (request.url().includes("/neighbors")) requests++; });
+      await header.locator("summary").click();
       await header.getByRole("button", { name: "ダークモード", exact: true }).click();
       await expect(page.locator("html")).toHaveAttribute("data-theme", "dark-brown");
       await header.getByLabel("ダーク配色").selectOption("blue");

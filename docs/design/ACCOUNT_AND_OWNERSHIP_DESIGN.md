@@ -1,6 +1,6 @@
 # アカウント・所有者・会員保存の初回設計
 
-2026-10-09採用。認証・PostgreSQL・会員Capsuleの所有者APIと保存／再閲覧／既存構成編集まで実装。現行の実装契約は[会員Capsule](MEMBER_CAPSULES.md)、共有は[限定リンク](CAPSULE_LINK_SHARING.md)を参照する。実Google接続・プロフィール変更・退会等は未実装。本書の未実装項目は先回り設計であり、実装済み範囲を上書きしない。
+2026-10-09採用。認証・PostgreSQL・会員Capsuleの所有者APIと保存／再閲覧／既存構成編集まで実装。現行の実装契約は[会員Capsule](MEMBER_CAPSULES.md)、共有は[限定リンク](CAPSULE_LINK_SHARING.md)を参照する。本人表示名変更は公開β step12で追加。実Google接続・locale変更・退会等は未実装。本書の未実装項目は先回り設計であり、実装済み範囲を上書きしない。
 
 構想の正本は[Capsule・User Contribution](CAPSULE_AND_USER_CONTRIBUTION_VISION.md)、DB境界は[ARCHITECTURE](../ARCHITECTURE.md)。共有・議論の初回経路は[コミュニティ設計](COMMUNITY_VERTICAL_SLICES.md)。本書はすべての将来機能の完成をログイン実装の前提にしない。
 
@@ -100,3 +100,7 @@ route名の最終形は実装時に既存構成へ合わせる。初回に必要
 各回はこの一件の引き継ぎを続け、DB構築だけ／登録画面だけで製品体験が完成したことにしない。owner偽装、他Userの読取・更新・削除、session偽造・失効、CSRF、環境間cookie混入、PG停止、local保存不変、Graphへの復帰を必要なunit／実DB／Playwrightで確認する。
 
 **先に進められる**：private保存、session認可、設定UI、テスト、ローカルの共有／議論prototype。**実設定時に相談する**：外部providerの実credential・公開domain・外部公開。**一般公開前に決める**：利用規約／privacy／退会と保持、公開投稿の運用。後者の未決を理由にprivateな縦経路まで着手不能にしない。
+
+## 公開β step12の本人設定
+
+2026-10-12、[最小設定の採用契約](PRODUCT_UI_FOUNDATIONS.md#アカウントメニューと最小設定公開β-step12)を追加。本人profileのGETに加え、表示名だけのPUTとUIを実装した。認証ID・権限・localeをこの入力から変更しない。名前変更はUser UUIDを維持し、既存のコメント表示名も次回読取から更新する。テーマは匿名でも使うブラウザ設定として分離する。実Googleの接続・公開会員環境の有効化は工程13へ残す。

@@ -8,6 +8,7 @@ import { capsulesKey, readCapsules, type LocalCapsule } from "../lib/client/loca
 import { MemberClientError, memberCreateResultSchema, memberImportRequest, memberItemSchema, memberListSchema, memberProfileSchema, memberReaderCapsule, memberRequest, type MemberUser } from "../lib/client/member-api";
 import { memberLabels } from "../lib/i18n/member";
 import SiteHeader from "./SiteHeader";
+import MemberProfileSettings from "./MemberProfileSettings";
 import { capsuleLabels } from "../lib/i18n/capsules";
 import MemberCapsuleEditor from "./MemberCapsuleEditor";
 import CapsuleShareControls from "./CapsuleShareControls";
@@ -25,6 +26,7 @@ const authEventKey = "graph-knowledge:member-session-changed";
 export default function MemberCapsules({ dataset, initialImport = "" }: { dataset: DatasetMode; initialImport?: string }) {
   const text = memberLabels(), captions = capsuleLabels(), historyText = capsuleHistoryLabels();
   const [user, setUser] = useState<MemberUser | null>(null);
+  const [profileDraft, setProfileDraft] = useState<{ ownerId: string; name: string } | null>(null);
   const [provider, setProvider] = useState<"google" | "fixture" | null>(null);
   const [items, setItems] = useState<MemberCapsule[]>([]);
   const [selected, setSelected] = useState<MemberCapsule | null>(null);
@@ -115,11 +117,11 @@ export default function MemberCapsules({ dataset, initialImport = "" }: { datase
     return () => { window.clearTimeout(initial); active.current?.abort(); window.removeEventListener("storage", changed); document.removeEventListener("visibilitychange", visibility); window.removeEventListener("pageshow", restored); };
   }, [dataset, refresh, clearPrivate, text]);
   useEffect(() => {
-    if (!draft) return;
+    if (!draft && !profileDraft) return;
     const warn = (event: BeforeUnloadEvent) => { event.preventDefault(); event.returnValue = ""; };
     window.addEventListener("beforeunload", warn);
     return () => window.removeEventListener("beforeunload", warn);
-  }, [draft]);
+  }, [draft, profileDraft]);
   function navigate(id: string | null, revision?: number) {
     const url = new URL(location.href);
     if (id) url.searchParams.set("capsule", id); else url.searchParams.delete("capsule");
@@ -204,6 +206,10 @@ export default function MemberCapsules({ dataset, initialImport = "" }: { datase
       {error && <p role="alert">{error}</p>}{message && <p role="status">{message}</p>}
       {confirm === "logoutAll" && <div role="alert"><p>{text.logoutAllConfirm}</p><button onClick={() => logout(true)}>{text.confirmLogoutAll}</button><button onClick={() => setConfirm(null)}>{text.cancel}</button></div>}
     </section>
+    {user && <MemberProfileSettings key={`profile:${user.id}`} user={user} value={profileDraft?.ownerId === user.id ? profileDraft.name : user.name} disabled={busy}
+      onChange={name => setProfileDraft(name === null || name === user.name ? null : { ownerId: user.id, name })}
+      onSaved={updated => { setUser(current => current?.id === updated.id ? updated : current); setProfileDraft(null); signalAuthChange(); }}
+      onUnauthorized={() => fail(new MemberClientError(401, "UNAUTHENTICATED"))} />}
     {user && <MemberPosts key={user.id} userId={user.id} onUnauthorized={() => { active.current?.abort(); setBusy(false); fail(new MemberClientError(401, "UNAUTHENTICATED")); }} />}
     {draft && user?.id !== draft.ownerId && <section className={css.card} aria-label={text.editTitle}>
       <p role="status">{text.draftLocked}</p><p>{text.draftMemory}</p>
@@ -211,7 +217,7 @@ export default function MemberCapsules({ dataset, initialImport = "" }: { datase
       <button disabled={busy} onClick={() => setConfirm("discard")}>{text.discardLocked}</button>
       {confirm === "discard" && <div role="alert"><p>{text.discardLockedConfirm}</p><button onClick={cancelEdit}>{captions.discard}</button><button onClick={() => setConfirm(null)}>{text.cancel}</button></div>}
     </section>}
-    {user && <section className={css.card} aria-label={text.library}>
+    {user && <section id="my-capsules" className={css.card} aria-label={text.library}>
       {draft && user.id === draft.ownerId ? <MemberCapsuleEditor draft={draft} current={selected} busy={busy} onChange={setDraft} onSave={update} onCancel={cancelEdit} onCheck={refresh} /> : selected && reading ? <><button disabled={busy} onClick={() => { setSelected(null); setConfirm(null); navigate(null); }}>{text.back}</button>
         {historical && <div role="status"><h2>{historyText.reading(selected.revision)}</h2><p>{historyText.snapshotHelp}</p><button disabled={busy} onClick={() => read(selected.id)}>{historyText.current}</button></div>}
         <CapsuleRevisionList key={`revisions:${selected.id}:${selected.revision}:${user.id}`} capsuleId={selected.id} userId={user.id} disabled={busy} onRead={revision => read(selected.id, revision)} onUnauthorized={() => fail(new MemberClientError(401, "UNAUTHENTICATED"))} />

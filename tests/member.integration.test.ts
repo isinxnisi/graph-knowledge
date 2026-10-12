@@ -108,6 +108,29 @@ describe("実OIDC・PostgreSQLによるprivate Capsule", () => {
     expect((await collection.GET(request("/api/member/capsules", bob.cookies.value, "GET", undefined, { "x-member-user": user.id }))).status).toBe(401);
     expect((await collection.GET(request("/api/member/capsules", alice.cookies.value, "GET", undefined, { "x-member-user": user.id }))).status).toBe(200);
   });
+  it("本人の表示名だけ更新でき、所有者・保存物・他人・認証情報を変えない", async () => {
+    const before = (await (await profile.GET(request("/api/member/profile", alice.cookies.value))).json()).user;
+    const own = { "x-member-user": before.id };
+    const update = (body: unknown, cookie = alice.cookies.value, headers: Record<string, string> = own) => profile.PUT(request("/api/member/profile", cookie, "PUT", body, headers));
+    const created = await (await create(alice.cookies.value)).json();
+    try {
+      expect((await update({ name: "他人の変更" }, bob.cookies.value)).status).toBe(401);
+      expect((await update({ name: "匿名" }, "")).status).toBe(401);
+      expect((await update({ name: "表示名" }, alice.cookies.value, { ...own, origin: "https://other.invalid" })).status).toBe(403);
+      expect((await update({ name: "表示名" }, alice.cookies.value, {})).status).toBe(400);
+      for (const body of [{ name: " " }, { name: "x".repeat(81) }, { name: "a\nb" }, { name: "表示名", active: false }, { name: "表示名", id: randomUUID() }, { name: "表示名", locale: "en" }, { name: "表示名", email: "x@example.invalid" }]) expect((await update(body)).status).toBe(400);
+      const changed = await update({ name: "  調査する人  " });
+      expect(changed.status).toBe(200); expect(changed.headers.get("cache-control")).toBe("private, no-store");
+      expect(await changed.json()).toEqual({ user: { ...before, name: "調査する人" } });
+      expect((await (await profile.GET(request("/api/member/profile", alice.cookies.value))).json()).user.name).toBe("調査する人");
+      const stored = await (await item.GET(request("/", alice.cookies.value), context(created.capsule.id))).json();
+      expect(stored.capsule).toEqual(created.capsule);
+      expect((await authRoute.POST(request("/api/auth/update-user", alice.cookies.value, "POST", { name: "迂回" }))).status).toBe(404);
+    } finally {
+      await update({ name: before.name });
+      await item.DELETE(request("/", alice.cookies.value, "DELETE", { expectedRevision: created.capsule.revision }), context(created.capsule.id));
+    }
+  });
   it("本人だけが作成・一覧・読取でき、再ログインしても同じ所有物を読む", async () => {
     const saved = await create(alice.cookies.value);
     expect(saved.status).toBe(201);

@@ -176,7 +176,9 @@ test("条件モーダル: 区切り・固定操作・外側クリック取消と
   await editConditions(page); await page.keyboard.press("Escape");
   expect(await view(page)).toEqual(before); expect(requests).toBe(initialRequests);
   // 狭い画面・ダーク配色でも、見出しと適用操作が本文スクロールに埋もれない。
+  await page.getByTestId("site-header").locator("summary").click();
   await page.getByRole("button", { name: "ダークモード", exact: true }).click();
+  await page.keyboard.press("Escape");
   await page.setViewportSize({ width: 600, height: 700 });
   await editConditions(page);
   await page.getByRole("button", { name: "組織との関わりの立場を調整", exact: true }).click();
