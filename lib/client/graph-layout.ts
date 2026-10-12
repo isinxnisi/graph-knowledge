@@ -5,14 +5,15 @@ const length = (a: Point, b: Point) => Math.hypot(a.x - b.x, a.y - b.y);
 const midpoint = (a: Point, b: Point): Point => ({ x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 });
 
 // 縦に長い十字配置を避け、横書きラベルの余白を確保する。
-export function initialPositions(centerId: string, ids: string[], canvasHeight = 600): Record<string, Point> {
+export function initialPositions(centerId: string, ids: string[], canvasHeight = 600, portrait = false): Record<string, Point> {
   const result: Record<string, Point> = { [centerId]: { x: 0, y: 0 } };
   const verticalRadius = Math.min(220, Math.max(155, (canvasHeight - 80) / 2));
   const rx = Math.max(verticalRadius < 180 ? 360 : 300, ids.length * 42);
   const ry = Math.max(verticalRadius, ids.length * 28);
   ids.forEach((id, index) => {
     const angle = -Math.PI / 4 + index * 2 * Math.PI / ids.length;
-    result[id] = { x: Math.cos(angle) * rx, y: Math.sin(angle) * ry };
+    const point = { x: Math.cos(angle) * rx, y: Math.sin(angle) * ry };
+    result[id] = portrait ? { x: point.y, y: point.x } : point;
   });
   return result;
 }

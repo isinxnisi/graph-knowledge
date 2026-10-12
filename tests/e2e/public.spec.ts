@@ -1,7 +1,9 @@
 import { expect, test } from "@playwright/test";
 import { checkSiteHeader } from "./site-header";
+import { checkPhoneExplorer } from "./phone-explorer";
 
 checkSiteHeader("PLUTO", "Entity 4 / Claim 5");
+checkPhoneExplorer();
 
 test("同じ入口から漫画・科学・Eventを検索し、開始例・限定・根拠・概要・復帰へ進む", async ({ page }) => {
   await page.goto("/");

@@ -89,6 +89,13 @@ export default function Explorer({ dataset = "demo" }: { dataset?: DatasetMode }
   const selectedClaim = selection?.kind === "claim" ? graph.claims[selection.id] : null;
   const selectionText = selectedEntity ? entityLabel(selectedEntity, graph.nodes).replace("\n", " / ") : selectedClaim ? `${graph.nodes[selectedClaim.subjectId]?.name} → ${relationLabel(selectedClaim)} → ${graph.nodes[selectedClaim.objectId]?.name}` : selectedRelation ? `${graph.nodes[selectedRelation.subjectId]?.name} → ${selectedRelation.label.replaceAll("\n", " / ")} → ${graph.nodes[selectedRelation.objectId]?.name}` : "未選択";
   const key = `${graph.generation}:${selection?.kind}:${selection?.id}`;
+  const lastDetail = useRef<string | null>(null);
+  useEffect(() => {
+    if (activePane !== "detail" || !paneNavigation.current?.getClientRects().length) return;
+    // 同じ根拠への往復は読書位置を保ち、別の対象は先頭から読む。
+    if (lastDetail.current !== key) document.getElementById("explorer-detail")?.scrollTo({ top: 0 });
+    lastDetail.current = key;
+  }, [activePane, key]);
   const loading = Object.values(graph.expansions).filter((meta) => meta.loading).length;
   const feedbackKey = `${key}:${loading}:${selectedEntity ? graph.expansions[selectedEntity.id]?.open : ""}`;
   const blocked = Object.values(graph.expansions).find((meta) => meta.blocked);
@@ -106,17 +113,22 @@ export default function Explorer({ dataset = "demo" }: { dataset?: DatasetMode }
             <p data-testid="graph-counts">Entity {Object.keys(graph.nodes).length} / Claim {Object.keys(graph.claims).length}</p><p data-testid="relation-counts">Relation {Object.keys(relations).length}</p>
           </div>
           <div className={styles.rootBar}><p className={styles.rootLabel} data-testid="exploration-root">{entry.root}：{graph.centerId ? graph.nodes[graph.centerId]?.name : entry.rootEmpty}</p>
-            <button onClick={() => setSavedViewsOpen(true)}>{savedViewLabels().launch}</button><button onClick={() => setWorkspaceOpen(true)}>{workspaceLabels().launch}</button><button onClick={() => setCapsuleOpen(true)}>{capsuleLabels().launch}</button>
+            <div className={styles.rootSaveActions}><button onClick={() => setSavedViewsOpen(true)}>{savedViewLabels().launch}</button><button onClick={() => setWorkspaceOpen(true)}>{workspaceLabels().launch}</button><button onClick={() => setCapsuleOpen(true)}>{capsuleLabels().launch}</button></div>
             {previous && <button onClick={restorePrevious}>{overviewLabels().restore}</button>}</div>
         </div>
         {dataChanged && <div role="alert" className={styles.error}><p>{dataReleaseLabels().changed}</p><button onClick={reloadData}>{dataReleaseLabels().reload}</button></div>}
         <RelationFilter eventRoles={graph.eventRoles ?? null} positions={graph.organizationPositions ?? null} roles={graph.contributionRoles ?? null} value={graph.predicates} onApply={(predicates, roles, positions, eventRoles) => changePredicates(predicates, roles, positions, eventRoles, canvas.current?.capture() ?? null)} />
-        {graph.centerId ? <p className={styles.muted}>{entry.selectedHelp}</p> : <div className={styles.empty}><h3>{entry.initialTitle}</h3><p>{entry.initialHelp}</p></div>}
+        {graph.centerId ? <p className={styles.muted}><span className={styles.wideLabel}>{entry.selectedHelp}</span><span className={styles.compactLabel}>{panes.touchHelp}</span></p> : <div className={styles.empty}><h3>{entry.initialTitle}</h3><p>{entry.initialHelp}</p></div>}
         {Object.values(graph.expansions).some((meta) => meta.active && meta.hasMore) && <p className={styles.muted}>{explorationLabels().neighborsPageHelp}</p>}
         {blocked && <p role="alert" className={styles.error}>{blocked.error}</p>}
-        <GraphNavigator key={graph.generation} nodes={graph.nodes} selection={selection} onNavigate={(id) => {
+        <div className={styles.graphNavigationRow}><GraphNavigator key={graph.generation} nodes={graph.nodes} selection={selection} onNavigate={(id) => {
           inspectEntity(id); canvas.current?.focusEntity(id);
         }} />
+          <button className={styles.compactLink} disabled={!selection} onClick={() => {
+            document.getElementById("explorer-relations")?.scrollIntoView({ block: "start" });
+            document.getElementById("explorer-relations")?.focus({ preventScroll: true });
+          }}>{panes.toRelations}</button>
+        </div>
         {Object.values(graph.claims).some((claim) => claim.contribution?.roleId) && <p className={styles.muted}>{contributionLabels().partial}</p>}
         <GraphCanvas ref={canvas} restoration={viewRestoration} interactionBlocked={!!overview || savedViewsOpen || workspaceOpen || capsuleOpen || !!reading} onEntityDoubleClick={(id) => { if (graph.nodes[id]) setOverview(graph.nodes[id]); }} graph={graph} selection={selection} onEntity={selectEntity} onRelation={(id) => { selectRelation(id); setActivePane("detail"); }} onToggleEntity={toggleEntity} feedback={<>
           <div className={`${styles.feedback} ${!graph.centerId ? styles.initialFeedback : ""}`} aria-live="polite"><div key={feedbackKey} className={styles.feedbackContent}><p data-testid="selection-status">選択中：{selectionText}</p><p>{loading ? `Graphを取得中…（${loading}件）` : selectedEntity ? graph.expansions[selectedEntity.id]?.expanded ? "近傍は展開済みです。" : graph.expansions[selectedEntity.id]?.pages.length ? "展開は閉じています。クリックで取得済みの枝を復元します。" : "クリックで一段階展開します。" : "線ごとに同じ関係の主張をまとめて表示しています。"}</p></div></div>

@@ -20,6 +20,15 @@ npm run public:dev
 
 画面は http://127.0.0.1:3200 。初回は18 Entity・27 Claimで、個々のSource/Citation/限定を保持します。後続releaseは `npm run public:plan -- <directory>` / `npm run public:apply -- <directory>` 。公開KGは明示撤回・差替えとrevision付きcursorに対応します。更新を検知した画面は同じ起点/条件から明示的に読み直します。初回生成物の再作成は `public:prepare`、一時DBの更新試験は `public:integration`、画面試験は `public:e2e` です。
 
+ローカルで本番buildの画面を確認する場合は、3200の開発serverを終了してから次で起動します。read timeoutはVPSと同じ10秒（許容範囲5〜15秒）です。ブラウザを更新して最新buildを確認してください。VPSへ自動配置するコマンドではありません。
+
+```bash
+npm run public:build
+NEO4J_READ_TIMEOUT_MS=10000 npm run public:start
+```
+
+800px以下では「検索／Graph／選択の詳細」で切り替えます。Graph内の「隣接一覧へ」、一覧の「Graphへ戻る」で中央を移動でき、保存入口は検索領域にあります。タップ・ピンチ、既存の表示倍率ボタンとテキスト一覧で探索できます。
+
 KGのbackup/復元（会員PGは対象外）:
 
 ```bash

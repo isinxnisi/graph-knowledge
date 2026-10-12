@@ -181,10 +181,12 @@ export default function GraphCanvas({ contentOnly = false, ref, feedback, restor
       cy.fit(undefined, 40); cy.zoom(Math.min(1.15, cy.zoom())); cy.center();
       initialLayoutDone.current = true;
     } else if (!initialLayoutDone.current && graph.centerId && graph.expansions[graph.centerId]?.expanded) {
-      const positions = initialPositions(graph.centerId, cy.nodes().filter((node) => node.id() !== graph.centerId).map((node) => node.id()), cy.height());
+      const compact = window.matchMedia("(max-width: 800px)").matches;
+      const positions = initialPositions(graph.centerId, cy.nodes().filter((node) => node.id() !== graph.centerId).map((node) => node.id()), cy.height(), compact && cy.width() < cy.height());
       Object.entries(positions).forEach(([id, point]) => cy.getElementById(id).position(point));
       cy.fit(undefined, 40);
-      cy.zoom(Math.min(1.15, Math.max(graph.expansions[graph.centerId]?.hasMore ? 0.65 : 0.8, cy.zoom())));
+      // 狭い画面の初回だけは全Nodeを収める。追加展開・領域切替では倍率を変えない。
+      cy.zoom(compact ? Math.min(1.15, cy.zoom()) : Math.min(1.15, Math.max(graph.expansions[graph.centerId]?.hasMore ? 0.65 : 0.8, cy.zoom())));
       cy.center(); initialLayoutDone.current = true;
     } else if (reset && newNodes.length) {
       cy.fit(cy.nodes(), 60); if (cy.zoom() > 1.2) cy.zoom(1.2); cy.center();

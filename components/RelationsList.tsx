@@ -1,6 +1,7 @@
 import type { DatasetMode } from "../lib/domain/dataset";
 import { datasetLabels } from "../lib/i18n/dataset";
 import { explorationLabels } from "../lib/i18n/exploration";
+import { explorerPaneLabels } from "../lib/i18n/explorer-panes";
 import type { GraphState, Selection } from "../lib/client/graph-state";
 import { displayRelations, entityLabel, relationId } from "../lib/client/graph-presentation";
 import { formatPeriod, polarityLabel, relationLabel, qualificationLabel } from "../lib/client/format";
@@ -17,8 +18,13 @@ export default function RelationsList({ graph, selection, onEntity, onClaim, onE
   const claims = Object.values(graph.claims).filter((claim) => claim.subjectId === entity.id || claim.objectId === entity.id);
   const expansion = graph.expansions[entity.id];
   const text = explorationLabels();
-  return <section className={styles.relations} aria-label="選択Entityの隣接関係">
-    <h3>{entity.name}の隣接関係</h3>
+  return <section id="explorer-relations" tabIndex={-1} className={styles.relations} aria-label="選択Entityの隣接関係">
+    <div className={styles.relationsHeading}><h3>{entity.name}の隣接関係</h3>
+      <button className={styles.compactLink} onClick={() => {
+        document.getElementById("explorer-graph")?.scrollTo({ top: 0 });
+        document.getElementById("explorer-graph")?.focus({ preventScroll: true });
+      }}>{explorerPaneLabels().backToGraph}</button>
+    </div>
     <div className={styles.actions}>{expansion?.open ? <button onClick={() => onClose(entity.id)}>展開を閉じる</button> : <button onClick={() => onExpand(entity.id)}>{expansion?.pages.length ? "展開を再開" : "近傍を展開"}</button>}</div>
     {expansion?.loading && <p role="status">{expansion.expanded ? text.neighborsLoadingMore : text.neighborsLoading}</p>}
     {expansion?.error && <div role="alert" className={styles.error}>

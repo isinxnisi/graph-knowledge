@@ -169,6 +169,10 @@
 .rootBar { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 4px 8px; flex: 0 1 auto; }
 .rootBar .rootLabel { margin: 0 !important; }
 .rootBar button { font-size: 12px; padding: 4px 8px; }
+.rootSaveActions { display: flex; flex-wrap: wrap; gap: 4px 8px; }
+.compactLink { display: none; }
+.compactLabel { display: none; }
+.relationsHeading { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 4px 8px; }
 
 .searchForm select { background: var(--color-panel); color: var(--color-text); width: 100%; }
 
@@ -252,8 +256,24 @@
   .columns[data-active-pane="search"] > :first-child,
   .columns[data-active-pane="graph"] > .centralScroll,
   .columns[data-active-pane="detail"] > aside { visibility: visible; pointer-events: auto; }
-  .detailHeading > button { display: none; }
-  .canvas { height: clamp(320px, 52dvh, 520px); min-height: 320px; resize: none; }
+  .columns > aside > .detailHeading > button { display: none; }
+  .canvas { height: clamp(360px, 56dvh, 560px); min-height: 360px; resize: none; }
+  .rootSaveActions { display: none; }
+  .compactLink { display: inline-flex; align-items: center; font-size: 12px; padding: 4px 8px; }
+  .graphHeading { gap: 4px 8px; }
+  .graphNavigationRow { display: flex; align-items: flex-start; gap: 6px; margin-bottom: 6px; }
+  .graphNavigationRow .graphNavigator { flex: 1; min-width: 0; margin: 0; }
+  .graphNavigationRow .graphNavigator > button { width: 100%; }
+  .wideLabel { display: none; }
+  .compactLabel { display: inline; }
+  .rootBar { width: 100%; }
+  .conditionBar > p { flex-basis: 170px; }
+  .viewportTools { display: grid; grid-template-columns: 44px 4ch 44px 1fr 1fr; }
+  .viewportTools button { min-width: 0; padding: 4px; text-align: center; }
+  .explorer button:not(.relationPatch), .explorer summary { min-height: 44px; }
+  .explorer summary { padding-top: 10px; padding-bottom: 10px; }
+  .explorer input:not([type="checkbox"]):not([type="radio"]), .explorer select { font-size: 16px; min-height: 44px; }
+  .citation a { display: inline-flex; align-items: center; min-height: 44px; }
   .graphTools > span:first-of-type { display: none; }
   .actions button, .graphTools button, .graphNavigator > button { min-height: 44px; }
 }

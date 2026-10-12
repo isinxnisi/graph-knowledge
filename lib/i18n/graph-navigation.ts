@@ -1,5 +1,6 @@
 const ja = {
   title: "表示中の対象へ移動",
+  compactTitle: "対象へ移動",
   filter: "表示中の名前・説明で絞り込む",
   help: "今のGraphに表示されている対象から選びます。位置と詳細へ移動し、枝の開閉は変えません。",
   count: (matched: number, total: number) => `${total}件中 ${matched}件`,

@@ -3,6 +3,9 @@ const ja = {
   search: "検索",
   graph: "Graph",
   detail: "選択の詳細",
+  toRelations: "隣接一覧へ",
+  backToGraph: "Graphへ戻る",
+  touchHelp: "対象をタップして展開。線を選ぶと主張と出典へ。",
 };
 
 export function explorerPaneLabels(locale = "ja") {

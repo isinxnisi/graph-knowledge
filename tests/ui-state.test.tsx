@@ -318,6 +318,15 @@ describe("Graphの表示補助", () => {
 });
 
 describe("Graphの配置", () => {
+  it("縦長の初期配置だけ向きを変え、同じ接続と距離を保つ", () => {
+    const ids = ["a", "b", "c", "d"];
+    const landscape = initialPositions("root", ids, 470);
+    const portrait = initialPositions("root", ids, 470, true);
+    for (const id of ["root", ...ids]) {
+      expect(portrait[id]).toEqual({ x: landscape[id].y, y: landscape[id].x });
+    }
+    expect(Math.max(...Object.values(portrait).map(p => Math.abs(p.y)))).toBeGreaterThan(Math.max(...Object.values(portrait).map(p => Math.abs(p.x))));
+  });
   it("初期配置は横書きの余白を確保し、縦に長い十字を避ける", () => {
     const positions = initialPositions("root", ["a", "b", "c", "d"]);
     expect(positions.root).toEqual({ x: 0, y: 0 });

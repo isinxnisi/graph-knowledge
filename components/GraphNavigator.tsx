@@ -28,8 +28,8 @@ export default function GraphNavigator({ nodes, selection, onNavigate }: {
       event.stopPropagation(); setOpen(false); trigger.current?.focus();
     }
   }}>
-    <button ref={trigger} aria-expanded={open} aria-controls={id} disabled={!entities.length} onClick={() => setOpen(!open)}>
-      {text.title}（{entities.length}件）
+    <button ref={trigger} aria-label={`${text.title}（${entities.length}件）`} aria-expanded={open} aria-controls={id} disabled={!entities.length} onClick={() => setOpen(!open)}>
+      <span className={styles.wideLabel}>{text.title}</span><span className={styles.compactLabel}>{text.compactTitle}</span>（{entities.length}件）
     </button>
     <div id={id} hidden={!open} className={styles.graphNavigatorBody}>
       <p id={`${id}-help`} className={styles.muted}>{text.help}</p>
