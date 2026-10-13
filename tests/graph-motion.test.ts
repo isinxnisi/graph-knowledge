@@ -24,7 +24,7 @@ describe("Graphの短い表示効果", () => {
     const position = nodes.map(node => ({ ...node.position() }));
     cy.zoom(1.3); cy.pan({ x: 50, y: 70 }); nodes.first().addClass("chosen");
     motion.reveal(nodes.first());
-    expect(nodes.first().numericStyle("opacity")).toBe(0.72);
+    expect(nodes.first().numericStyle("opacity")).toBe(0.45);
     expect(nodes.last().numericStyle("opacity")).toBe(0.9);
     await expect.poll(() => nodes.first().numericStyle("opacity")).toBe(0.9);
     expect(nodes.map(node => ({ ...node.position() }))).toEqual(position);
@@ -44,7 +44,7 @@ describe("Graphの短い表示効果", () => {
     expect(nodes.map(node => node.numericStyle("opacity"))).toEqual([0.9, 0.9]);
     expect(nodes.first().animated()).toBe(false);
     preference.reduce(false); motion.reveal(nodes);
-    expect(nodes.first().numericStyle("opacity")).toBe(0.72);
+    expect(nodes.first().numericStyle("opacity")).toBe(0.45);
   });
   it("閉鎖で消えたNodeに効果を残さず、再表示のstyleを汚さない", () => {
     const nodes = setup(); motion.reveal(nodes);

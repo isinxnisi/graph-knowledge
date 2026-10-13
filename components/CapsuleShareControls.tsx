@@ -74,7 +74,7 @@ export default function CapsuleShareControls({ capsule, userId, disabled, onUnau
     {share && <button disabled={busy || disabled || !known} onClick={() => setConfirm("revoke")}>{text.revoke}</button>}
     {confirm && <div role="alert"><p>{confirm === "issue" ? text.current(capsule.revision) : text.revokeHelp}</p>
       {confirm === "issue" && share && <p>{text.rotationHelp}</p>}
-      <button disabled={busy || disabled} onClick={confirm === "issue" ? issue : revoke}>{confirm === "issue" ? text.confirmIssue : text.confirmRevoke}</button>
+      <button data-variant={confirm === "issue" ? "primary" : "danger"} disabled={busy || disabled} onClick={confirm === "issue" ? issue : revoke}>{confirm === "issue" ? text.confirmIssue : text.confirmRevoke}</button>
       <button onClick={() => setConfirm(null)}>{text.cancel}</button>
     </div>}
     {url && <div className={css.source}><label htmlFor="capsule-share-url">{text.url}</label><input id="capsule-share-url" readOnly value={url} onFocus={event => event.target.select()} />

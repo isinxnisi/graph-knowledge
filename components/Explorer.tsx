@@ -1,4 +1,6 @@
 "use client";
+import Icon from "./Icon";
+import { designLabels } from "../lib/i18n/design";
 import { contentMessage } from "../lib/i18n/content";
 import { useUiLocale } from "../lib/client/ui-locale";
 import { explorerLabels, explorerMessage } from "../lib/i18n/explorer";
@@ -107,10 +109,10 @@ export default function Explorer({ dataset = "demo" }: { dataset?: DatasetMode }
   return <div className={styles.explorer}>
     <SiteHeader dataset={dataset} />
     <nav ref={paneNavigation} className={styles.paneNavigation} aria-label={panes.navigation}>
-      {(["search", "graph", "detail"] as const).map(pane => <button key={pane} aria-pressed={activePane === pane} aria-controls={`explorer-${pane}`} onClick={() => setActivePane(pane)}>{panes[pane]}</button>)}
+      {(["search", "graph", "detail"] as const).map(pane => <button key={pane} aria-pressed={activePane === pane} aria-controls={`explorer-${pane}`} onClick={() => setActivePane(pane)}><Icon name={pane === "search" ? "search" : pane === "graph" ? "graph" : "book"} />{panes[pane]}</button>)}
     </nav>
     <main data-active-pane={activePane} className={`${styles.columns} ${detailWide ? styles.wideDetails : ""}`}>
-      <div id="explorer-search" role="group" tabIndex={-1} aria-label={panes.search} className={styles.panel}><SearchPanel placeholder={labels.searchExample} onChoose={startFrom} /><div lang={locale} className={styles.localActions}><button onClick={() => setSavedViewsOpen(true)}>{savedViewLabels(locale).launch}</button><button onClick={() => setWorkspaceOpen(true)}>{workspaceLabels(locale).launch}</button><button onClick={() => setCapsuleOpen(true)}>{capsuleLabels(locale).launch}</button></div><StartExamples dataset={dataset} onChoose={(entity) => startFrom(entity, true)} /></div>
+      <div id="explorer-search" role="group" tabIndex={-1} aria-label={panes.search} className={styles.panel}><SearchPanel placeholder={labels.searchExample} onChoose={startFrom} /><div lang={locale} className={styles.localActions}><h3>{designLabels(locale).tools}</h3><button onClick={() => setSavedViewsOpen(true)}><Icon name="bookmark" />{savedViewLabels(locale).launch}</button><button onClick={() => setWorkspaceOpen(true)}><Icon name="history" />{workspaceLabels(locale).launch}</button><button onClick={() => setCapsuleOpen(true)}><Icon name="capsule" />{capsuleLabels(locale).launch}</button></div><StartExamples dataset={dataset} onChoose={(entity) => startFrom(entity, true)} /></div>
       <div id="explorer-graph" role="group" tabIndex={-1} aria-label={panes.graph} className={styles.centralScroll}>
       <section className={`${styles.panel} ${styles.graphPanel}`} aria-labelledby="graph-title">
         <div className={styles.graphHeader}>
@@ -118,7 +120,7 @@ export default function Explorer({ dataset = "demo" }: { dataset?: DatasetMode }
             <p data-testid="graph-counts">Entity {Object.keys(graph.nodes).length} / Claim {Object.keys(graph.claims).length}</p><p data-testid="relation-counts">Relation {Object.keys(relations).length}</p>
           </div>
           <div className={styles.rootBar}><p className={styles.rootLabel} data-testid="exploration-root">{entry.root}：{graph.centerId ? graph.nodes[graph.centerId]?.name : entry.rootEmpty}</p>
-            <div lang={locale} className={styles.rootSaveActions}><button onClick={() => setSavedViewsOpen(true)}>{savedViewLabels(locale).launch}</button><button onClick={() => setWorkspaceOpen(true)}>{workspaceLabels(locale).launch}</button><button onClick={() => setCapsuleOpen(true)}>{capsuleLabels(locale).launch}</button></div>
+            <div lang={locale} className={styles.rootSaveActions}><button onClick={() => setSavedViewsOpen(true)}><Icon name="bookmark" />{savedViewLabels(locale).launch}</button><button onClick={() => setWorkspaceOpen(true)}><Icon name="history" />{workspaceLabels(locale).launch}</button><button onClick={() => setCapsuleOpen(true)}><Icon name="capsule" />{capsuleLabels(locale).launch}</button></div>
             {previous && <button onClick={restorePrevious}>{overviewLabels(locale).restore}</button>}</div>
         </div>
         {dataChanged && <div role="alert" className={styles.error}><p>{dataReleaseLabels(locale).changed}</p><button onClick={reloadData}>{dataReleaseLabels(locale).reload}</button></div>}
@@ -134,16 +136,16 @@ export default function Explorer({ dataset = "demo" }: { dataset?: DatasetMode }
             document.getElementById("explorer-relations")?.focus({ preventScroll: true });
           }}>{panes.toRelations}</button>
         </div>
-        {Object.values(graph.claims).some((claim) => claim.contribution?.roleId) && <p className={styles.muted}>{contributionLabels(locale).partial}</p>}
         <GraphCanvas ref={canvas} restoration={viewRestoration} interactionBlocked={!!overview || savedViewsOpen || workspaceOpen || capsuleOpen || !!reading} onEntityDoubleClick={(id) => { if (graph.nodes[id]) setOverview(graph.nodes[id]); }} graph={graph} selection={selection} onEntity={selectEntity} onRelation={(id) => { selectRelation(id); setActivePane("detail"); }} onToggleEntity={toggleEntity} feedback={<>
           <div className={`${styles.feedback} ${!graph.centerId ? styles.initialFeedback : ""}`} aria-live="polite"><div key={feedbackKey} className={styles.feedbackContent}><p data-testid="selection-status">{ui.selected}：{selectionText}</p><p>{loading ? ui.graphLoading(loading) : selectedEntity ? graph.expansions[selectedEntity.id]?.expanded ? ui.expanded : graph.expansions[selectedEntity.id]?.pages.length ? ui.closed : ui.expandHelp : ui.grouped}</p></div></div>
           {graph.notice && !dataChanged && <GraphNotice key={`${graph.generation}:${graph.clock}:${graph.notice}`} message={contentMessage(graph.notice, locale)} transient={graph.notice === "取得済みの枝を復元しました。" || graph.notice === overviewLabels("ja").restored} />}
         </>} />
+        {Object.values(graph.claims).some((claim) => claim.contribution?.roleId) && <p className={styles.muted}>{contributionLabels(locale).partial}</p>}
         <RelationsList dataset={dataset} graph={graph} selection={selection} onEntity={selectEntity} onClaim={(id) => { selectClaim(id); setActivePane("detail"); }} onExpand={(id, more) => void expand(id, more)} onClose={close} />
       </section>
       </div>
       <aside id="explorer-detail" tabIndex={-1} className={styles.panel} aria-labelledby="detail-title">
-        <div className={styles.detailHeading}><h2 id="detail-title">{ui.detail}</h2>{selection && <button aria-pressed={detailWide} onClick={() => setDetailWide(!detailWide)}>{detailWide ? entry.detailNormal : entry.detailWide}</button>}</div>
+        <div className={styles.detailHeading}><h2 id="detail-title"><Icon name="book" />{ui.detail}</h2>{selection && <button aria-pressed={detailWide} onClick={() => setDetailWide(!detailWide)}>{detailWide ? entry.detailNormal : entry.detailWide}</button>}</div>
         {!selection && <p className={styles.muted}>{entry.detailHelp}</p>}
         {selectedEntity && <EntityDetails dataset={dataset} key={key} entity={selectedEntity} expansion={graph.expansions[selectedEntity.id]} onExpand={(more) => void expand(selectedEntity.id, more)} onClose={() => close(selectedEntity.id)} restricted={restricted} onOverview={() => setOverview(selectedEntity)} onSwitch={(mode) => switchFrom(selectedEntity, mode)} />}
         {selectedEntity && graph.centerId && <GraphPath key={`path:${key}`} nodes={graph.nodes} relations={relations} rootId={graph.centerId} targetId={selectedEntity.id} onRelation={(id) => {

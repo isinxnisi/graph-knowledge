@@ -1,6 +1,6 @@
 import type { Core, EventObject, NodeCollection, NodeSingular } from "cytoscape";
 
-export const GRAPH_REVEAL_MS = 180;
+export const GRAPH_REVEAL_MS = 220;
 type Preference = Pick<MediaQueryList, "matches" | "addEventListener" | "removeEventListener">;
 
 // 表示だけの一時効果。座標・探索state・クリック判定・snapshotには触れない。
@@ -24,7 +24,7 @@ export function createGraphMotion(cy: Core, preference: Preference | null) {
       nodes.forEach(node => {
         if (active.has(node)) finish(node);
         active.add(node);
-        node.style("opacity", 0.72).animate({ style: { opacity: 1 } }, {
+        node.style("opacity", 0.45).animate({ style: { opacity: 1 } }, {
           duration: GRAPH_REVEAL_MS, queue: false,
           complete: () => { node.removeStyle("opacity"); active.delete(node); },
         });

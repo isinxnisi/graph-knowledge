@@ -1,4 +1,5 @@
 "use client";
+import Icon from "./Icon";
 import { useUiLocale } from "../lib/client/ui-locale";
 import { explorerLabels } from "../lib/i18n/explorer";
 
@@ -98,12 +99,13 @@ export default function GraphCanvas({ contentOnly = false, ref, feedback, restor
       const theme = getComputedStyle(container.current!);
       const color = (name: string) => theme.getPropertyValue(`--color-${name}`).trim();
       return [
-        { selector: "node", style: { label: "data(label)", "background-color": color("person"), color: color("text"), "border-width": 1, "border-color": color("node-border"), width: 116, height: 64, "font-size": 16, "text-valign": "center", "text-halign": "center", "text-wrap": "wrap", "text-max-width": "108px", "text-overflow-wrap": "anywhere" } },
+        { selector: "node", style: { label: "data(label)", "background-color": color("person"), color: color("text"), "border-width": 1.3, "border-color": color("node-border"), width: 116, height: 64, "font-size": 15, "font-weight": 600, "font-family": "system-ui, sans-serif", "text-valign": "center", "text-halign": "center", "text-wrap": "wrap", "text-max-width": "108px", "text-overflow-wrap": "anywhere" } },
         { selector: 'node[kind="work"]', style: { shape: "round-rectangle", "background-color": color("work") } },
         { selector: 'node[kind="organization"]', style: { shape: "hexagon", "background-color": color("organization") } },
+        { selector: "node.hovered", style: { "border-color": color("accent"), "underlay-color": color("accent"), "underlay-opacity": 0.08, "underlay-padding": 5 } },
         { selector: "node.center", style: { "border-width": 3, "border-color": color("accent") } },
         { selector: 'node[kind="event"]', style: { shape: "diamond", "background-color": color("work") } },
-        { selector: "edge", style: { label: "data(canvasLabel)", color: color("text"), "curve-style": "unbundled-bezier", "control-point-distances": "data(distance)", "control-point-weights": "data(weight)", "target-arrow-shape": "triangle", "source-arrow-shape": "none", "arrow-scale": 1.2, "line-color": color("edge"), "target-arrow-color": color("edge"), width: 2, "font-size": 15, "text-margin-y": (edge: cytoscape.EdgeSingular) => Number(edge.data("labelOffset")), "text-background-color": color("panel"), "text-background-opacity": 1, "text-background-padding": "5px", "text-wrap": "wrap", "text-max-width": "165px", "text-overflow-wrap": "anywhere", "text-events": "yes" } },
+        { selector: "edge", style: { label: "data(canvasLabel)", color: color("text"), "curve-style": "unbundled-bezier", "control-point-distances": "data(distance)", "control-point-weights": "data(weight)", "target-arrow-shape": "triangle", "source-arrow-shape": "none", "arrow-scale": 1.2, "line-color": color("edge"), "target-arrow-color": color("edge"), width: 1.7, "font-size": 14, "text-margin-y": (edge: cytoscape.EdgeSingular) => Number(edge.data("labelOffset")), "text-background-color": color("panel"), "text-background-opacity": 1, "text-background-padding": "5px", "text-background-shape": "roundrectangle", "text-wrap": "wrap", "text-max-width": "165px", "text-overflow-wrap": "anywhere", "text-events": "yes" } },
         { selector: 'edge[polarity="denied"]', style: { "line-style": "dashed", "line-color": color("denied"), "target-arrow-color": color("denied") } },
         { selector: 'edge[polarity="mixed"]', style: { "line-style": "dotted" } },
         { selector: "node[expanded = 1]", style: { "border-style": "double", "border-width": 4 } },
@@ -129,6 +131,8 @@ export default function GraphCanvas({ contentOnly = false, ref, feedback, restor
     });
     gestures.current = clicks;
     const removeBadges = attachGraphBadges(cy, badgeLayer.current!, styles.relationPatch, id => { clicks.cancel(); handlers.current.onRelation(id); });
+    cy.on("mouseover", "node", event => event.target.addClass("hovered"));
+    cy.on("mouseout", "node", event => event.target.removeClass("hovered"));
     cy.on("tap", "node", (event) => clicks.click(event.target.id(), event.originalEvent?.timeStamp));
     cy.on("tap", "edge", (event) => { clicks.cancel(); handlers.current.onRelation(event.target.id()); });
     cy.on("tap", (event) => { if (event.target === cy) clicks.cancel(); });
@@ -243,8 +247,8 @@ export default function GraphCanvas({ contentOnly = false, ref, feedback, restor
         gestures.current?.cancel();
         core.current?.resize();
         core.current?.fit(undefined, 24);
-      }}>{viewportLabels.fit}</button>
-      <button disabled={!canFocusSelection || interactionBlocked} title={viewportLabels.selectionHelp} onClick={showSelection}>{viewportLabels.selection}</button>
+      }}><Icon name="fit" />{viewportLabels.fit}</button>
+      <button disabled={!canFocusSelection || interactionBlocked} title={viewportLabels.selectionHelp} onClick={showSelection}><Icon name="focus" />{viewportLabels.selection}</button>
     </div>
     <div className={styles.canvas}>
       <div className={styles.cySurface} ref={container} onPointerDownCapture={() => core.current?.resize()} data-testid="graph-canvas" tabIndex={-1} role="img" aria-label={ui.graphAria} />

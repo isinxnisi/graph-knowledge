@@ -38,7 +38,7 @@ export default function MemberAccountDeletion({ user, disabled, onDeleted, onUna
       <p><strong>{user.name}</strong> {text.deleteAccountHelp}</p>
       <p className={css.muted}>{text.deleteAccountBoundary}</p>
       <label><input type="checkbox" checked={accepted} disabled={busy || disabled} onChange={event => setAccepted(event.target.checked)} />{text.deleteAccountAcknowledgement}</label>
-      <div><button disabled={!accepted || busy || disabled} onClick={() => void remove()}>{text.deleteAccountConfirm}</button>
+      <div><button data-variant="danger" disabled={!accepted || busy || disabled} onClick={() => void remove()}>{text.deleteAccountConfirm}</button>
         <button disabled={busy} onClick={() => { setConfirm(false); setAccepted(false); setError(null); }}>{text.cancel}</button></div>
       {busy && <p role="status">{text.busy}</p>}{error && <p role="alert">{contentMessage(error, locale)}</p>}
     </div>}

@@ -6,7 +6,7 @@
 
 2026-10-06に初めて共有された[Capsule・User Contribution・Global KG構想](CAPSULE_AND_USER_CONTRIBUTION_VISION.md)を将来構想として併読する。Global／localの境界、投稿・受入・moderation、保存と公開共有、discussion、provenance、AI構造化、import／exportの設計時は同文書へ戻る。本書の保存ビュー・知識正本の説明からCapsule-localの扱いを自動決定しない。詳細は同文書を正本とし、ここへ重複しない。
 
-会員保存と共有／議論の初回判断は、2026-10-09の[アカウント設計](ACCOUNT_AND_OWNERSHIP_DESIGN.md)／[コミュニティ設計](COMMUNITY_VERTICAL_SLICES.md)で具体化した。未実装。成熟したサービスの全機能や公開運用を先に完成させず、一つの所有者付き保存から段階導入する。
+会員保存と共有／議論の初回判断は、2026-10-09の[アカウント設計](ACCOUNT_AND_OWNERSHIP_DESIGN.md)／[コミュニティ設計](COMMUNITY_VERTICAL_SLICES.md)で具体化した。会員保存・限定共有・版別コメントは実装済みで、実Google接続・公開運用は未了。成熟したサービスの全機能や公開運用を先に完成させず、一つの所有者付き保存から段階導入する。
 
 ## 1. プロダクトとしての目標
 

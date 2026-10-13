@@ -1,3 +1,4 @@
+import Icon from "./Icon";
 import { useUiLocale } from "../lib/client/ui-locale";
 import type { EntitySummary } from "../lib/domain/api";
 import type { DatasetMode } from "../lib/domain/dataset";
@@ -17,7 +18,7 @@ export default function StartExamples({ dataset, onChoose }: { dataset: DatasetM
     <ul className={styles.results}>
       {examples.map((entity) => <li key={entity.id}>
         <button type="button" className={styles.resultButton} aria-label={text.start(entity.name) + (examples.some((other) => other.id !== entity.id && other.name === entity.name) ? ` — ${entity.description}` : "")} onClick={() => onChoose(entity)}>
-          <strong>{entity.name}</strong><span>{kinds[entity.kind as keyof typeof kinds]}{examples.some((other) => other.id !== entity.id && other.name === entity.name) ? ` ／ ${entity.description}` : ""}</span>
+          <Icon name={entity.kind === "work" ? "book" : entity.kind === "organization" ? "organization" : entity.kind === "event" ? "event" : "person"} /><strong>{entity.name}</strong><span>{kinds[entity.kind as keyof typeof kinds]}{examples.some((other) => other.id !== entity.id && other.name === entity.name) ? ` ／ ${entity.description}` : ""}</span>
         </button>
       </li>)}
     </ul>

@@ -1,4 +1,5 @@
 "use client";
+import Icon from "./Icon";
 import { useUiLocale } from "../lib/client/ui-locale";
 
 import { EVENT_ROLE_IDS } from "../lib/domain/event-participation";
@@ -120,7 +121,7 @@ export default function RelationFilter({ value, roles = null, positions = null, 
   const text = entryLabels(locale), relations = explorationLabels(locale);
   return <div className={styles.conditionBar}>
     <p data-testid="active-predicates"><strong>{text.applied}：</strong>{conditionSummary(value, roles, locale, positions, eventRoles)}</p>
-    <button aria-haspopup="dialog" aria-expanded={editing} onClick={() => setEditing(true)}>{text.edit}</button>
+    <button aria-haspopup="dialog" aria-expanded={editing} onClick={() => setEditing(true)}><Icon name="settings" />{text.edit}</button>
     {editing && <ConditionEditor value={value} roles={roles} positions={positions} eventRoles={eventRoles} onCancel={() => setEditing(false)} onApply={(predicates, nextRoles, nextPositions, nextEventRoles) => { onApply(predicates, nextRoles, nextPositions, nextEventRoles); setEditing(false); }} />}
     <span className={styles.srOnly}>{relations.help}</span>
   </div>;

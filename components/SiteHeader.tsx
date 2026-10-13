@@ -1,4 +1,5 @@
 "use client";
+import Icon from "./Icon";
 import { useUiLocale } from "../lib/client/ui-locale";
 import { explorerLabels } from "../lib/i18n/explorer";
 import { useEffect, useRef, useState } from "react";
@@ -34,17 +35,18 @@ export default function SiteHeader({ dataset, page = "explore" }: { dataset: Dat
   }
   return <header className={styles.header} data-testid="site-header">
     <div className={styles.identity}>
+      <span className={styles.brandMark}><Icon name="graph" /></span>
       {page === "explore" ? <h1 className={styles.brand}>{text.name}</h1> : <span className={styles.brand}>{text.name}</span>}
       <p className={styles.dataset}>{data.badge}</p>
     </div>
     <p className={styles.description}>{data.description}</p>
     <div className={styles.tools}>
       <nav aria-label={text.navigation} className={styles.navigation}>
-        {page !== "explore" && <a href="/" target="_blank" rel="noopener noreferrer" aria-label={text.exploreLink}>{text.explore}<span aria-hidden="true"> ↗</span></a>}
-        {page === "member" ? <span aria-current="page">{text.account}</span> : <a href="/member" target="_blank" rel="noopener noreferrer" aria-label={text.accountLink}>{text.account}<span aria-hidden="true"> ↗</span></a>}
+        {page !== "explore" && <a href="/" target="_blank" rel="noopener noreferrer" aria-label={text.exploreLink}><Icon name="graph" />{text.explore}<span aria-hidden="true"> ↗</span></a>}
+        {page === "member" ? <span aria-current="page">{text.account}</span> : <a href="/member" target="_blank" rel="noopener noreferrer" aria-label={text.accountLink}><Icon name="person" />{text.account}<span aria-hidden="true"> ↗</span></a>}
       </nav>
-      <details className={styles.settings} ref={menu}>
-        <summary>{text.settings}</summary>
+      <details data-floating-menu className={styles.settings} ref={menu}>
+        <summary><Icon name="settings" />{text.settings}</summary>
         <div className={styles.settingsPanel}>
           <nav aria-label={text.accountSettings} className={styles.settingsLinks}>
             <a href={page === "member" ? "#my-capsules" : "/member#my-capsules"} target={page === "member" ? undefined : "_blank"} rel="noopener noreferrer" onClick={() => { if (menu.current) menu.current.open = false; }}>{text.library}</a>

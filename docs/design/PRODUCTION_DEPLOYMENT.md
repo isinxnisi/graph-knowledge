@@ -195,3 +195,7 @@ sudo bash /home/develop/graph-production-step16/update-production-web.sh beta-st
 前節の管理者操作待ちは解消。証明書検証付きHTTPSが工程16 build `2sDd_pNucKRYWsHCCq6AK` を返し、dataset revisionは更新前の `5b6ccb7b-7a5d-4005-ab34-01c490e93b1c` を維持した。実装commit `ebf24b8` のimageに対する代表Playwright4/4（1.3分）が成功。英語の閲覧／ブラウザ保存、三domainの探索・三条件・関係概要・起点切替／復帰、Event期間・仏語根拠を確認した。
 
 未認証APIは401・noindex、会員statusは未設定503を維持。Docker／Caddy／既存通知serviceはactive。credentialはGit外0600 fileから渡し、traceは無効化した。今回の確認ではVPSのDB停止・再投入・設定変更は行っていない。隔離Composeの復旧試験と稼働VPSの読み取り確認を区別する。工程16を完了とし、次の通常更新は工程19。実Google接続の構成追加は別途その接続時に反映する。
+
+## デザイン刷新初回案の日常確認先（2026-10-14）
+
+日常確認先3200／Tunnelはbuild `6EDDklJLu6NG_VR-zrYxt` に更新。最終代表2/2（1.1分）、HTMLのbuild一致、dataset／revision維持を確認した。[実装・実画面評価](EDITORIAL_EXPLORER_DESIGN.md)を参照。VPSは工程16のbuild／KG revisionを読み取り確認し、今回の案は未配置。VPS用imageの再作成も今回は行っていない。通常更新は19の契約を維持し、まずユーザーが日常確認先で今回案を評価する。会員未設定503とpreview認証は維持する。

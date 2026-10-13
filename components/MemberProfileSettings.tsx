@@ -45,7 +45,7 @@ export default function MemberProfileSettings({ user, value, disabled, onChange,
         aria-describedby="member-display-name-help" onChange={event => { onChange(event.target.value); setSaved(false); setError(null); }} />
       <p id="member-display-name-help" className={css.muted}>{text.displayNameHelp}</p>
       {!parsed.success && <p role="status">{text.profileInvalid}</p>}
-      <div><button type="submit" disabled={busy || disabled || !parsed.success || parsed.data.name === user.name}>{text.saveProfile}</button>
+      <div><button data-variant="primary" type="submit" disabled={busy || disabled || !parsed.success || parsed.data.name === user.name}>{text.saveProfile}</button>
         {value !== user.name && <button type="button" disabled={busy} onClick={() => { onChange(null); setError(null); setSaved(false); }}>{text.cancel}</button>}</div>
       {busy && <p role="status">{text.busy}</p>}{error && <p role="alert">{contentMessage(error, locale)}</p>}{saved && <p role="status">{text.profileSaved}</p>}
     </form>

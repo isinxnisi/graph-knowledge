@@ -35,3 +35,8 @@
   .reader a { display: inline-flex; align-items: center; min-height: 44px; max-width: 100%; }
   .memberList button { box-sizing: border-box; width: 100%; margin: 4px 0; text-align: left; }
 }
+
+.title { border-bottom: 1px solid var(--color-border); padding-bottom: 14px; margin-bottom: 18px; }
+.title h2 { font-family: var(--font-editorial); font-size: 25px; }
+.note { border-left: 3px solid var(--color-accent); line-height: 1.85; }
+@media (max-width: 800px) { .title { padding-bottom: 10px; } .title h2 { font-size: 19px; } }

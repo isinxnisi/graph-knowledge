@@ -1,4 +1,5 @@
 "use client";
+import Icon from "./Icon";
 import { useUiLocale } from "../lib/client/ui-locale";
 import { explorerMessage } from "../lib/i18n/explorer";
 
@@ -38,7 +39,7 @@ export default function SearchPanel({ onChoose, placeholder = "例：青葉ハ�
     finally { if (!controller.signal.aborted) setLoading(false); }
   }
   return <section className={styles.panel} aria-labelledby="search-title">
-    <h2 id="search-title">{text.title}</h2>
+    <h2 id="search-title"><Icon name="search" />{text.title}</h2>
     <form onSubmit={submit} className={styles.searchForm}>
       <label htmlFor="entity-search">{text.name}</label>
       <input id="entity-search" value={q} onChange={(event) => { clearSearch(); setQ(event.target.value); }} placeholder={placeholder} autoComplete="off" />
@@ -47,7 +48,7 @@ export default function SearchPanel({ onChoose, placeholder = "例：青葉ハ�
         <option value="">{text.all}</option>
         {SEARCH_KINDS.map((value) => <option key={value} value={value}>{text.kinds[value]}</option>)}
       </select>
-      <button type="submit" disabled={loading}>{loading ? text.submitting : text.submit}</button>
+      <button type="submit" disabled={loading}><Icon name="search" />{loading ? text.submitting : text.submit}</button>
     </form>
     {error && <p role="alert" className={styles.error}>{explorerMessage(error, locale)}</p>}
     {loading && <p role="status">{text.loading}</p>}

@@ -1,10 +1,38 @@
-/* 画面共通の基礎だけを置く。情報の配置と個別状態は各CSS Moduleで扱う。 */
+/* 全画面で共有する資料面・操作の基礎。配置と意味は各componentに残す。 */
 body { background: var(--color-page); color: var(--color-text); font: var(--font-body); }
 button, input, select, textarea { font: inherit; }
-button { cursor: pointer; transition: background-color 120ms ease-out, border-color 120ms ease-out; }
+button, summary, a { -webkit-tap-highlight-color: transparent; }
+button { cursor: pointer; transition: background-color var(--motion-quick) ease, border-color var(--motion-quick) ease, box-shadow var(--motion-quick) ease, color var(--motion-quick) ease; }
 button:disabled { cursor: default; }
+button:active:not(:disabled) { box-shadow: inset 0 1px 3px rgb(20 40 65 / .14); }
 a { color: var(--color-accent); text-underline-offset: 3px; }
-:focus-visible { outline: 3px solid var(--color-accent); outline-offset: 2px; }
+:focus-visible { outline: 3px solid var(--color-accent); outline-offset: 3px; }
+input, select, textarea { accent-color: var(--color-accent); }
+* { scrollbar-width: thin; scrollbar-color: var(--color-control-border) transparent; }
+::selection { background: var(--color-accent-soft); color: var(--color-text); }
+.ui-icon { display: inline-block; width: 18px; height: 18px; flex: 0 0 auto; vertical-align: -.2em; }
+.ui-icon + span { min-width: 0; }
+button > .ui-icon, summary > .ui-icon, a > .ui-icon, h2 > .ui-icon, h3 > .ui-icon { margin-inline-end: 7px; }
+@keyframes ui-reveal { from { opacity: .35; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes ui-fade { from { opacity: .4; } to { opacity: 1; } }
+dialog[open] { animation: ui-reveal 180ms ease-out; box-shadow: var(--shadow-floating); }
+dialog::backdrop { background: rgb(20 35 55 / .32); backdrop-filter: blur(3px); animation: ui-fade 160ms ease-out; }
+details[open] > :not(summary) { animation: ui-fade 180ms ease-out; }
+summary { cursor: pointer; }
 @media (prefers-reduced-motion: reduce) {
   button { transition: none; }
+  dialog[open], dialog::backdrop, details[open] > :not(summary) { animation: none; }
 }
+
+/* 対応ブラウザでは資料の開閉も短く補間。浮動メニューは高さ計算から除外。 */
+@supports (interpolate-size: allow-keywords) {
+  details:not([data-floating-menu]) { interpolate-size: allow-keywords; }
+  details:not([data-floating-menu])::details-content { block-size: 0; overflow: clip; transition: block-size 180ms ease, content-visibility 180ms allow-discrete; }
+  details:not([data-floating-menu])[open]::details-content { block-size: auto; }
+}
+@media (prefers-reduced-motion: reduce) { details::details-content { transition: none !important; } }
+
+body button[data-variant="primary"] { border-color: var(--color-accent); background: var(--color-accent); color: var(--color-on-accent); font-weight: 600; }
+body button[data-variant="primary"]:hover:not(:disabled) { background: var(--color-accent-strong); border-color: var(--color-accent-strong); }
+body button[data-variant="danger"] { color: var(--color-denied); border-color: var(--color-denied); }
+body button[data-variant="danger"]:hover:not(:disabled) { background: var(--color-denied-soft); border-color: var(--color-denied); }

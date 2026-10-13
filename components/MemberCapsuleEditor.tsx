@@ -57,7 +57,7 @@ export default function MemberCapsuleEditor({ draft, current, busy, onChange, on
       })}</fieldset>
       <p role="status">{captions.selected(members.length, draft.content.claimIds.length)}</p>
       {(members.length > MEMBER_CAPSULE_LIMITS.entities || draft.content.claimIds.length > MEMBER_CAPSULE_LIMITS.claims) && <p role="alert">{text.referenceLimit}</p>}
-      <button disabled={!current || !valid || !changed || busy || conflict || draft.needsCheck}>{text.saveEdit}</button>
+      <button data-variant="primary" disabled={!current || !valid || !changed || busy || conflict || draft.needsCheck}>{text.saveEdit}</button>
     </form>
     {!busy && <MemberReferencePicker draft={draft} onChange={onChange} />}
   </section>;

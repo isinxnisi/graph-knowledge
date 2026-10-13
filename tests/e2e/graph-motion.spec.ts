@@ -20,7 +20,7 @@ for (const reducedMotion of ["no-preference", "reduce"] as const) {
     const animation = await fade.evaluate(el => getComputedStyle(el).animationName);
     expect(animation === "none").toBe(reducedMotion === "reduce");
     expect(await page.getByRole("button", { name: "Graphを拡大", exact: true }).evaluate(el => getComputedStyle(el).transitionDuration))
-      .toBe(reducedMotion === "reduce" ? "0s" : "0.12s, 0.12s");
+      .toBe(reducedMotion === "reduce" ? "0s" : "0.16s, 0.16s, 0.16s, 0.16s");
 
     // 実DBの応答だけを保留し、選択・通信中表示と取得後の追加効果を分けて確認する。
     let release!: () => void;

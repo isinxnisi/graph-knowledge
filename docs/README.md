@@ -38,6 +38,7 @@
 
 | 現役の設計文書 | 状態・読む場面 |
 | --- | --- |
+| [探索画面のデザイン刷新](design/EDITORIAL_EXPLORER_DESIGN.md) | 2026-10-14採用。明朝の文化的知性とGraphの科学的探索感。工程17より優先し、実装案の実物評価と最終の好みを区別。スマホ詳細配置は別の未解決要求 |
 | [公開βまでの進捗](PUBLIC_BETA_PROGRESS.md) | 2026-10-11採用。全24ステップの完了数・残数・外部待ちと次の作業範囲。公開先はgraph.isinxnisi.net |
 | [公開して育てるための対応プラン](design/PUBLIC_BETA_AND_PRODUCT_PLAN.md) | 採用・実装開始。デザイン・スマホ・会員・英語・広告・計測・共通KGからβ公開への方向と優先境界 |
 | [共通KGのrelease適用](design/PUBLIC_KG_RELEASES.md) | public-kgの生成・検証・dry-run・冪等更新、明示撤回/差替え、revision付き探索、KG単独backup/restore。凍結版は維持。本番配置は次行 |

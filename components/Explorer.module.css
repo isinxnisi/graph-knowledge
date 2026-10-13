@@ -2,7 +2,7 @@
 .explorer * { box-sizing: border-box; }
 .explorer h1, .explorer h2, .explorer h3, .explorer h4, .explorer h5, .explorer p { margin: 0 0 12px; }
 .explorer h1 { font-size: 22px; }
-.explorer h2 { font-size: 17px; }
+.explorer h2 { font-size: 17px; font-family: var(--font-editorial); font-weight: 400; }
 .explorer h3 { font-size: 15px; }
 .explorer h4, .explorer h5 { font-size: 14px; }
 .explorer button, .explorer input, .explorer select { font: inherit; border: 1px solid var(--color-control-border); border-radius: var(--radius-control); padding: 7px 10px; }
@@ -12,27 +12,27 @@
 .explorer input { background: var(--color-panel); color: var(--color-text); width: 100%; }
 .explorer button:focus-visible, .explorer input:focus-visible, .explorer select:focus-visible, .explorer a:focus-visible { outline: 3px solid var(--color-accent); outline-offset: 2px; }
 .demo { padding: 4px 12px; background: var(--color-demo); color: var(--color-demo-text); border: 1px solid var(--color-demo-border); border-radius: 4px; font-weight: 600; }
-.columns { display: grid; grid-template-columns: clamp(150px, 15vw, 190px) minmax(280px, 1fr) clamp(220px, 24vw, 300px); grid-template-rows: minmax(0, 1fr); align-items: start; gap: 12px; padding: 8px; flex: 1; min-height: 0; overflow-x: auto; overflow-y: hidden; }
-.panel { background: var(--color-panel); border: 1px solid var(--color-border); border-radius: var(--radius-panel); padding: var(--space-panel); min-width: 0; overflow-wrap: anywhere; height: 100%; min-height: 0; }
+.columns { display: grid; grid-template-columns: clamp(190px, 17vw, 236px) minmax(280px, 1fr) clamp(250px, 24vw, 330px); grid-template-rows: minmax(0, 1fr); align-items: start; gap: 12px; padding: 12px; flex: 1; min-height: 0; overflow-x: auto; overflow-y: hidden; }
+.panel { background: var(--color-panel); border: 1px solid var(--color-border); border-radius: var(--radius-panel); padding: var(--space-panel); min-width: 0; overflow-wrap: anywhere; height: 100%; min-height: 0; box-shadow: var(--shadow-panel); }
 .columns > .panel:first-child, .columns > aside { max-height: none; overflow-y: auto; position: static; top: 95px; overscroll-behavior: contain; }
 .searchForm { display: grid; gap: 8px; margin-bottom: 16px; }
-.searchForm button { text-align: center; background: var(--color-accent); color: var(--color-on-accent); }
+.searchForm button { display: flex; align-items: center; justify-content: center; font-weight: 600; box-shadow: 0 3px 8px rgb(32 84 132 / .12); text-align: center; background: var(--color-accent); color: var(--color-on-accent); }
 .searchForm button:hover:not(:disabled) { background: var(--color-accent-strong); }
 .results, .relationList { list-style: none; padding: 0; margin: 0; }
 .results li { margin-bottom: 8px; }
-.resultButton { width: 100%; display: grid; gap: 3px; }
+.resultButton { width: 100%; display: grid; gap: 3px; padding: 10px 12px !important; border-color: var(--color-border) !important; }
 .resultButton span { font-size: 12px; color: var(--color-muted); }
 .muted { color: var(--color-muted); font-size: 13px; }
 .error { border-left: 3px solid var(--color-denied); background: var(--color-denied-soft); padding: 10px; color: var(--color-denied); }
 .error p:last-child { margin: 0; }
 .graphHeader { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 4px 16px; margin-bottom: 4px; flex: 0 0 auto; }
 .graphHeading { display: flex; align-items: center; flex-wrap: wrap; gap: 4px 12px; flex: 0 1 auto; min-width: 0; max-width: 100%; }
-.graphHeading p { font-size: 12px; color: var(--color-muted); }
+.graphHeading p { font-size: 11px; color: var(--color-muted); font-variant-numeric: tabular-nums; }
 .empty { padding: 12px; background: var(--color-hover); }
-.canvas { position: relative; height: clamp(440px, 60dvh, 760px); width: 100%; background: var(--color-canvas); border: 1px solid var(--color-border); border-radius: 4px; min-height: 400px; overflow: hidden; resize: vertical; }
+.canvas { position: relative; height: clamp(440px, 60dvh, 760px); width: 100%; background: var(--color-canvas); border: 1px solid var(--color-border); border-radius: 9px; min-height: 400px; background-image: radial-gradient(var(--color-grid) .75px, transparent .75px); background-size: 24px 24px; overflow: hidden; resize: vertical; }
 .cySurface { position: absolute; inset: 0; }
 .relationPatches { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 10; }
-.canvas .relationPatch { position: absolute; transform-origin: right center; pointer-events: auto; white-space: nowrap; font: 11px/1.2 system-ui, sans-serif; min-height: 0; margin: 0; padding: 2px 5px; border: 1px solid var(--color-border); border-radius: 4px; background: var(--color-hover); color: var(--color-muted); }
+.canvas .relationPatch { box-shadow: 0 1px 3px rgb(24 44 68 / .04); position: absolute; transform-origin: right center; pointer-events: auto; white-space: nowrap; font: 11px/1.2 system-ui, sans-serif; min-height: 0; margin: 0; padding: 2px 5px; border: 1px solid var(--color-border); border-radius: 4px; background: var(--color-accent-soft); color: var(--color-accent); }
 .canvas .relationPatch[data-selected="true"] { background: var(--color-accent-soft); color: var(--color-accent); }
 .graphTools { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; padding: 4px 0; font-size: 11px; color: var(--color-muted); flex: 0 0 auto; }
 .graphTools button { padding: 3px 6px; }
@@ -63,13 +63,13 @@
 
 /* 左右を固定し、中央カード全体を外側の一つの領域でスクロールする。 */
 .centralScroll { height: 100%; min-height: 0; min-width: 0; overflow-x: hidden; overflow-y: auto; overscroll-behavior: contain; scrollbar-gutter: stable; }
-.graphPanel { height: auto; overflow: visible; padding: 10px; }
+.graphPanel { height: auto; overflow: visible; padding: 16px; }
 .graphHeading h2, .graphHeading p { margin: 0; }
 .graphPanel > .muted { margin-bottom: 4px; font-size: 12px; line-height: 1.4; }
 .feedback { display: flex; flex-wrap: wrap; gap: 0 12px; flex: 0 0 auto; padding: 4px 8px; margin-bottom: 4px; background: var(--color-accent-soft); border-left: 3px solid var(--color-accent); font-size: 12px; }
 .feedback p { margin: 0; }
 .feedbackContent { display: flex; flex-wrap: wrap; gap: 0 12px; animation: feedbackAppear 140ms ease-out; }
-.graphNotice, .conditionDialog[open] { animation: feedbackAppear 140ms ease-out; }
+.graphNotice { animation: feedbackAppear 140ms ease-out; }
 @keyframes feedbackAppear { from { opacity: .72; } to { opacity: 1; } }
 @media (prefers-reduced-motion: reduce) {
   .feedbackContent, .graphNotice, .conditionDialog[open] { animation: none; }
@@ -89,7 +89,7 @@
 
 
 
-.columns > .panel:first-child > .panel { border: 0; padding: 0; height: auto; overflow: visible; }
+.columns > .panel:first-child > .panel { box-shadow: none; border: 0; padding: 0; height: auto; overflow: visible; }
 .relationFilter { border: 0; border-top: 1px solid var(--color-border); margin: 16px 0 0; padding: 12px 0 0; min-width: 0; }
 .relationFilter legend { font-weight: 600; }
 .filterChoices { display: grid; gap: 8px; margin-bottom: 12px; }
@@ -105,7 +105,7 @@
 .conditionBar > button { padding: 4px 8px; }
 .rootLabel { font-size: 12px; color: var(--color-muted); margin-bottom: 6px !important; }
 .conditionDialog { background: var(--color-panel); color: var(--color-text); border: 1px solid var(--color-control-border); border-radius: 8px; padding: 20px; width: min(620px, calc(100vw - 40px)); max-height: calc(100dvh - 60px); overflow: auto; }
-.conditionDialog::backdrop { background: rgb(0 0 0 / .25); }
+.conditionDialog::backdrop { background: rgb(20 35 55 / .32); }
 .savedViews { overflow-wrap: anywhere; }
 .savedViewForm { display: grid; gap: 8px; padding: 14px; margin: 16px 0; background: var(--color-canvas); border: 1px solid var(--color-border); border-radius: 6px; }
 .savedViewForm p { margin: 0; }
@@ -249,7 +249,9 @@
 .paneNavigation { display: none; }
 @media (max-width: 800px) {
   .paneNavigation { display: flex; gap: 6px; padding: 6px 8px; flex: 0 0 auto; background: var(--color-panel); border-bottom: 1px solid var(--color-border); }
-  .paneNavigation button { flex: 1; min-height: 44px; text-align: center; }
+  .paneNavigation button { flex: 1; min-height: 44px; text-align: center; border: 0 !important; border-radius: 0; background: transparent; position: relative; color: var(--color-muted); }
+  .paneNavigation button[aria-pressed="true"] { color: var(--color-accent-strong); background: var(--color-accent-soft); }
+  .paneNavigation button[aria-pressed="true"]::after { content: ""; position: absolute; bottom: 0; left: 16px; right: 16px; height: 3px; border-radius: 3px 3px 0 0; background: var(--color-accent); }
   .columns, .wideDetails { grid-template-columns: minmax(0, 1fr); gap: 0; padding: 6px; overflow: hidden; }
   /* Keep the mounted Canvas measurable while hidden, including during pending requests. */
   .columns > * { grid-area: 1 / 1; visibility: hidden; pointer-events: none; }
@@ -280,3 +282,61 @@
 
 .localActions { display: grid; gap: 6px; margin: 12px 0 16px; }
 .localActions button { width: 100%; font-size: 12px; }
+
+/* エディトリアルの見出しと、探索ツールの操作階層。 */
+.graphHeading h2, .detailHeading h2, .conditionTitle h2 { font-family: var(--font-editorial); font-size: 21px; letter-spacing: .015em; }
+.explorer h2 > :global(.ui-icon) { color: var(--color-accent); }
+.localActions { padding: 18px 0 0; border-top: 1px solid var(--color-border); margin: 20px 0; }
+.localActions h3 { margin: 0 0 4px; font-size: 12px; color: var(--color-muted); font-weight: 500; }
+.localActions button { border-color: transparent; background: transparent; display: flex; align-items: center; padding: 7px 4px; font-size: 12px; }
+.localActions button:hover:not(:disabled) { background: var(--color-accent-soft); }
+.startExamples { margin-top: 20px; padding-top: 18px; border-top: 1px solid var(--color-border); }
+.startExamples h3 { font-size: 14px; }
+.startExamples .resultButton { grid-template-columns: 28px minmax(0, 1fr); text-align: left; align-items: center; }
+.startExamples .resultButton > :global(.ui-icon) { grid-row: 1 / 3; color: var(--color-accent); }
+.startExamples .resultButton > span { grid-column: 2; }
+.startExamples .resultButton strong { font-size: 13px; font-weight: 600; }
+.graphHeader { padding-bottom: 8px; }
+.rootSaveActions { display: none; }
+.rootSaveActions button { font-size: 11px; padding: 5px 8px; border-color: var(--color-border); }
+.rootBar { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin-left: auto; }
+.rootLabel { margin: 0 !important; }
+.conditionBar { padding-block: 8px; margin-bottom: 10px; }
+.conditionBar > button { font-size: 12px; border-color: var(--color-border); }
+.viewportTools { gap: 6px; margin: 10px 0; }
+.viewportTools button { display: inline-flex; justify-content: center; align-items: center; border-color: var(--color-border); }
+.viewportTools button:nth-of-type(3) { margin-left: 8px; }
+.columns > aside { padding: 20px; }
+.columns > aside > section > h3 { font: 400 25px/1.4 var(--font-editorial); margin: 16px 0 10px; }
+.columns > aside > section > button { width: 100%; margin: 6px 0; }
+.rootActions { margin-block: 10px; }
+.rootActions button { flex: 1 1 auto; }
+.claimCard { border-left-color: var(--color-accent); }
+.claimCard h4 { font-size: 15px; }
+.claimFacts { display: grid; gap: 5px; }
+.overviewRow, .citation { box-shadow: var(--shadow-panel); }
+.conditionEditor > .conditionBody > section, .conditionEditor .roleFilter { animation: ui-fade 180ms ease-out; }
+.graphNavigatorBody, .conditionDialog .overviewBody { animation: ui-fade 160ms ease-out; }
+@media (max-width: 800px) {
+  .graphPanel { padding: 12px; }
+  .rootSaveActions { display: none; }
+  .rootBar { margin-left: 0; }
+  .graphHeading h2, .detailHeading h2 { font-size: 19px; }
+  .columns > aside { padding: 16px; }
+  .paneNavigation :global(.ui-icon) { width: 16px; height: 16px; margin-inline-end: 4px; }
+  .columns[data-active-pane="search"] > :first-child, .columns[data-active-pane="graph"] > .centralScroll, .columns[data-active-pane="detail"] > aside { animation: ui-fade 160ms ease-out; }
+  .viewportTools { gap: 4px; }
+  .viewportTools button:nth-of-type(3) { margin-left: 0; }
+  .viewportTools :global(.ui-icon) { width: 15px; height: 15px; margin-inline-end: 3px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .conditionEditor > .conditionBody > section, .conditionEditor .roleFilter, .graphNavigatorBody, .conditionDialog .overviewBody, .columns > * { animation: none !important; }
+}
+
+@media (max-width: 800px) {
+  .viewportTools button:nth-of-type(n+3) :global(.ui-icon) { display: none; }
+  .viewportTools button { overflow-wrap: normal; word-break: normal; }
+}
+
+/* CSS Modules内の参照先も同じscopeで定義する。 */
+@keyframes ui-fade { from { opacity: .4; } to { opacity: 1; } }

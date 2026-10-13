@@ -1,3 +1,4 @@
+import { checkEditorialDesign } from "./editorial-design";
 import { checkExplorerLocale } from "./explorer-locale";
 import { checkContentLocale } from "./content-locale";
 import { expect, test } from "@playwright/test";
@@ -6,6 +7,7 @@ import { checkPhoneExplorer } from "./phone-explorer";
 import { checkPhoneReading } from "./phone-reading";
 
 checkSiteHeader("PLUTO", "Entity 4 / Claim 5");
+checkEditorialDesign();
 checkPhoneExplorer();
 checkPhoneReading();
 checkContentLocale();
