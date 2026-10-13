@@ -1,5 +1,6 @@
 import { describe, expect, it, vi, afterEach } from "vitest";
 import { randomBytes, randomUUID } from "node:crypto";
+import { memberOperationSchema } from "../lib/server/member/operations";
 import { memberConfig } from "../lib/server/member/config";
 import { memberCreateSchema } from "../lib/domain/member-capsule";
 import { memberHandle, memberInput } from "../lib/server/member/http";
@@ -90,4 +91,11 @@ describe("会員保存の境界", () => {
       }
     } finally { spy.mockRestore(); }
   });
+});
+
+
+it("運営CLIの操作と理由を閉じた集合にし、任意SQL・本文・owner指定を受け取らない", () => {
+  const input = { action: "suspend-user", target: randomUUID(), actor: "operator", reason: "security" };
+  expect(memberOperationSchema.safeParse(input).success).toBe(true);
+  for (const extra of [{ action: "delete-everything" }, { action: "delete-account" }, { target: "invalid" }, { actor: "personal free text" }, { reason: "free text" }, { body: "retained content" }]) expect(memberOperationSchema.safeParse({ ...input, ...extra }).success).toBe(false);
 });

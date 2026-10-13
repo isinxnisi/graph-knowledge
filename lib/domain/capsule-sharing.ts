@@ -7,7 +7,7 @@ export const capsuleShareSchema = z.strictObject({
   id: z.uuidv4(), revision: z.number().int().positive().max(Number.MAX_SAFE_INTEGER), createdAt: z.iso.datetime(),
 });
 export type CapsuleShare = z.infer<typeof capsuleShareSchema>;
-export const capsuleShareStatusSchema = z.object({ share: capsuleShareSchema.nullable() });
+export const capsuleShareStatusSchema = z.object({ share: capsuleShareSchema.nullable(), blocked: z.boolean().default(false) });
 export const capsuleShareIssueSchema = z.strictObject({
   expectedRevision: z.number().int().positive().max(Number.MAX_SAFE_INTEGER),
   expectedShareId: z.uuidv4().nullable(),

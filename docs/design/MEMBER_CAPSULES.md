@@ -19,7 +19,7 @@ Capsule編集の初回は完了している。編集の細部、直接閲覧の�
 - 認証開始→OIDC callback→DB session→本人の作成／一覧／読取／更新／削除をRoute Handlerで実装した。現在のUserの限定DTO取得、ログアウト、全session失効も提供する。
 - 開発・テスト限定の署名付きOIDC issuerを使い、ライブラリ自身のnonce・issuer・PKCE・state・cookieと実DBを通す。User IDを直接渡すログインAPIは作らない。
 - `/member` で登録／ログイン、現在の表示名・locale、明示保存、本人一覧・読取・確認削除、ログアウト・確認付き全端末ログアウトを接続。現在KGの再解決は既存Capsule Readerを使う。
-- 会員Capsuleの題名・説明・構成の編集UIを接続。2026-10-10に閲覧リンクから新しいKG参照を追加する経路も実装（末尾）。表示名設定は公開β step12で追加。locale設定・実Google・一般公開・退会は未実装。限定共有・議論は別契約。サーバー更新API・schemaは維持する。
+- 会員Capsuleの題名・説明・構成の編集UIを接続。2026-10-10に閲覧リンクから新しいKG参照を追加する経路も実装（末尾）。表示名設定は公開β step12で追加。退会・利用停止等は[公開β step14の採用契約](ACCOUNT_LIFECYCLE_OPERATIONS.md)で追加。locale設定・実Google・一般公開は未実装。限定共有・議論は別契約。サーバー更新API・schemaは維持する。
 
 ## identity・session・認可
 

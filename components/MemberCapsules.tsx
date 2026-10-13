@@ -8,6 +8,7 @@ import { capsulesKey, readCapsules, type LocalCapsule } from "../lib/client/loca
 import { MemberClientError, memberCreateResultSchema, memberImportRequest, memberItemSchema, memberListSchema, memberProfileSchema, memberReaderCapsule, memberRequest, type MemberUser } from "../lib/client/member-api";
 import { memberLabels } from "../lib/i18n/member";
 import SiteHeader from "./SiteHeader";
+import MemberAccountDeletion from "./MemberAccountDeletion";
 import MemberProfileSettings from "./MemberProfileSettings";
 import { capsuleLabels } from "../lib/i18n/capsules";
 import MemberCapsuleEditor from "./MemberCapsuleEditor";
@@ -210,6 +211,9 @@ export default function MemberCapsules({ dataset, initialImport = "" }: { datase
       onChange={name => setProfileDraft(name === null || name === user.name ? null : { ownerId: user.id, name })}
       onSaved={updated => { setUser(current => current?.id === updated.id ? updated : current); setProfileDraft(null); signalAuthChange(); }}
       onUnauthorized={() => fail(new MemberClientError(401, "UNAUTHENTICATED"))} />}
+    {user && <MemberAccountDeletion key={`deletion:${user.id}`} user={user} disabled={busy || !!draft || !!profileDraft}
+      onDeleted={() => { active.current?.abort(); clearPrivate(); setDraft(null); setProfileDraft(null); setBusy(false); setError(null); setMessage(text.accountDeleted); navigate(null); signalAuthChange(); }}
+      onUnauthorized={() => { active.current?.abort(); setBusy(false); fail(new MemberClientError(401, "UNAUTHENTICATED")); }} />}
     {user && <MemberPosts key={user.id} userId={user.id} onUnauthorized={() => { active.current?.abort(); setBusy(false); fail(new MemberClientError(401, "UNAUTHENTICATED")); }} />}
     {draft && user?.id !== draft.ownerId && <section className={css.card} aria-label={text.editTitle}>
       <p role="status">{text.draftLocked}</p><p>{text.draftMemory}</p>

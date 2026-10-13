@@ -47,7 +47,7 @@ try {
   assert.equal(sql("SELECT rolsuper OR rolcreatedb OR rolcreaterole FROM pg_roles WHERE rolname='gk_member'"), "f");
   docker(["run", "--rm", "--no-deps", "member-ops"]);
   docker(["run", "--rm", "--no-deps", "member-ops"]);
-  assert.equal(sql("SELECT count(*) FROM member_migration"), "4");
+  assert.equal(sql("SELECT count(*) FROM member_migration"), "5");
   assert.equal(sql('SELECT count(*) FROM "user"'), "0");
   // この試験は会員PG・認証開始専用。KGのreadinessはtest-production.tsで別途検証する。
   docker(["up", "-d", "--no-deps", "web"]);
@@ -70,14 +70,14 @@ try {
   assert.equal((await request("/api/auth/sign-in/social", { ...input, scopes: ["https://www.googleapis.com/auth/drive"] })).status, 400);
   assert.equal((await request("/api/auth/sign-in/social", { ...input, callbackURL: "https://other.invalid/member" })).status, 403);
   assert.equal(sql('SELECT count(*) FROM "user"'), "0");
-  console.log("本番会員準備: 非superuser／migration二回で4件／Google認証開始URL・最小scope・state cookie／Origin・追加scope・外部redirect拒否: 成功");
+  console.log("本番会員準備: 非superuser／migration二回で5件／Google認証開始URL・最小scope・state cookie／Origin・追加scope・外部redirect拒否: 成功");
   docker(["stop", "graph-member-postgres"]);
   // 匿名profileはDB照会なしで401になる。DBへstateを保存する認証開始で停止を確認する。
   await waitForStatus("/api/auth/sign-in/social", 503, input);
   docker(["up", "-d", "--wait", "--wait-timeout", "120", "graph-member-postgres"]);
   await waitForStatus("/api/auth/sign-in/social", 200, input);
   await waitForStatus("/api/member/profile", 401);
-  assert.equal(sql("SELECT count(*) FROM member_migration"), "4");
+  assert.equal(sql("SELECT count(*) FROM member_migration"), "5");
   console.log("会員PG停止503・Web再起動なしの復旧・migration保持: 成功。実Google callback／本人ログインは未検証。");
 } finally {
   docker(["down", "-v", "--remove-orphans"], false);

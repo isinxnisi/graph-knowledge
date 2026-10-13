@@ -1,4 +1,5 @@
 import { test, expect, type Page, type BrowserContext } from "@playwright/test";
+import { spawnSync } from "node:child_process";
 import { Pool } from "pg";
 import examples from "../../docs/API_RESPONSE_EXAMPLES.json" with { type: "json" };
 
@@ -97,7 +98,9 @@ for (const width of [390, 1440]) {
       const popup = other.waitForEvent("page");
       await reader.getByRole("link", { name: "この対象を開いて探索する（別タブ）", exact: true }).click();
       const explorer = await popup;
-      await expect.poll(() => explorer.getByTestId("graph-canvas").evaluate(el => !!(el as unknown as { _cyreg?: { cy?: unknown } })._cyreg?.cy)).toBe(true);
+      await explorer.bringToFront();
+      // Next devの初回Graph import／初期化だけ別枠で待つ。APIの待機上限は変えない。
+      await expect.poll(() => explorer.getByTestId("graph-canvas").evaluate(el => !!(el as unknown as { _cyreg?: { cy?: unknown } })._cyreg?.cy), { timeout: 45_000 }).toBe(true);
       await explorer.getByRole("button", { name: "この対象から関係を探索する", exact: true }).click();
       await expect(explorer.getByTestId("graph-counts")).toHaveText("Entity 5 / Claim 7");
       await explorer.close(); await reader.bringToFront();
@@ -890,3 +893,78 @@ for (const width of [320, 1440]) {
     }
   });
 }
+
+
+for (const width of [390, 1440]) {
+  test(`本人退会: 確認・取消・削除・リンク失効とブラウザ保存維持 ${width}px`, async ({ page, context }, testInfo) => {
+    await page.setViewportSize({ width, height: 900 }); await mockKnowledge(context);
+    await page.goto("/member");
+    await page.evaluate(({ key, capsule }) => localStorage.setItem(key, JSON.stringify({ schemaVersion: 2, dataset: "demo", capsules: [capsule] })), { key: localKey, capsule: saved });
+    const before = await page.evaluate(key => localStorage.getItem(key), localKey);
+    await login(page);
+    const content = { dataset: saved.dataset, title: saved.title, note: saved.note, language: saved.language, entityIds: saved.entityIds, claimIds: saved.claimIds };
+    const { capsule } = await (await page.request.post("/api/member/capsules", { headers: { Origin: "http://127.0.0.1:3221" }, data: { requestId: crypto.randomUUID(), content } })).json();
+    const share = await (await page.request.post(`/api/member/capsules/${capsule.id}/share`, { headers: { Origin: "http://127.0.0.1:3221" }, data: { expectedRevision: 1, expectedShareId: null } })).json();
+    await page.goto(`/member?capsule=${capsule.id}`);
+    const region = page.getByRole("region", { name: "退会・アカウント削除", exact: true });
+    await region.getByRole("button", { name: "削除する内容を確認", exact: true }).click();
+    await expect(region.getByRole("button", { name: "退会してアカウントを削除する", exact: true })).toBeDisabled();
+    await region.getByRole("button", { name: "取り消す", exact: true }).click();
+    expect((await page.request.get("/api/member/profile")).status()).toBe(200);
+    await region.getByRole("button", { name: "削除する内容を確認", exact: true }).click();
+    await region.getByRole("checkbox").check();
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+    await region.screenshot({ path: testInfo.outputPath(`account-delete-${width}.png`) });
+    await region.getByRole("button", { name: "退会してアカウントを削除する", exact: true }).click();
+    await expect(page.getByText("アカウントと会員保存を削除しました。ブラウザ内の保存と探索は引き続き利用できます。", { exact: true })).toBeVisible();
+    expect((await page.request.get("/api/member/profile")).status()).toBe(401);
+    expect((await page.request.get("/api/shared/capsule", { headers: { "X-Capsule-Token": share.token } })).status()).toBe(404);
+    expect(await page.evaluate(key => localStorage.getItem(key), localKey)).toBe(before);
+    await page.reload();
+    await expect(page.getByRole("button", { name: "検証用OIDCでログイン", exact: true })).toBeVisible();
+  });
+}
+
+test("運営CLI: 投稿非表示・共有停止・User停止と再開を画面へ反映する", async ({ page, context, browser }) => {
+  // 四つの独立CLI起動と二回のOIDC往復を含む。APIの待機上限は変えない。
+  test.setTimeout(180_000);
+  await mockKnowledge(context); await page.goto("/member"); await login(page);
+  const headers = { Origin: "http://127.0.0.1:3221" };
+  const content = { dataset: saved.dataset, title: saved.title, note: saved.note, language: saved.language, entityIds: saved.entityIds, claimIds: saved.claimIds };
+  const { capsule } = await (await page.request.post("/api/member/capsules", { headers, data: { requestId: crypto.randomUUID(), content } })).json();
+  const { token } = await (await page.request.post(`/api/member/capsules/${capsule.id}/share`, { headers, data: { expectedRevision: 1, expectedShareId: null } })).json();
+  await page.request.patch(`/api/capsules/${capsule.id}/discussion`, { headers, data: { closed: false, expectedClosed: true } });
+  const other = await browser.newContext({ baseURL: "http://127.0.0.1:3221" });
+  const operate = (action: string, target: string) => {
+    const result = spawnSync(process.execPath, ["--import", "tsx", "scripts/member-ops.ts", action, target,
+      "--actor", "browser-test", "--reason", "security", "--origin", headers.Origin, "--apply", "--confirm", target], { encoding: "utf8", timeout: 20_000 });
+    expect(result.status, result.stderr).toBe(0);
+  };
+  try {
+    await mockKnowledge(other); const reader = await other.newPage();
+    await reader.goto("/member"); await login(reader, "検証ユーザーB");
+    const user = (await (await reader.request.get("/api/member/profile")).json()).user;
+    const posted = await reader.request.post(`/api/capsules/${capsule.id}/discussion`, { headers: { ...headers, "X-Capsule-Token": token }, data: { requestId: crypto.randomUUID(), revision: 1, body: "非表示確認の本文" } });
+    expect(posted.status()).toBe(201); const { postId } = await posted.json();
+    await reader.getByRole("button", { name: "自分の投稿を見る", exact: true }).click();
+    await expect(reader.getByText("非表示確認の本文", { exact: true })).toBeVisible();
+    operate("hide-post", postId);
+    await reader.getByRole("button", { name: "この一覧を再確認", exact: true }).click();
+    await expect(reader.getByText("この投稿は表示できません。本文を削除して撤回することはできます。", { exact: true })).toBeVisible();
+    await expect(reader.getByText("非表示確認の本文", { exact: true })).toHaveCount(0);
+    operate("suspend-user", user.id);
+    await reader.getByRole("button", { name: "アカウントと一覧を再確認", exact: true }).click();
+    await expect(reader.getByRole("button", { name: "検証用OIDCでログイン", exact: true })).toBeVisible();
+    expect((await reader.request.get("/api/member/profile")).status()).toBe(401);
+    operate("resume-user", user.id);
+    expect((await reader.request.get("/api/member/profile")).status()).toBe(401);
+    await login(reader, "検証ユーザーB");
+    operate("block-sharing", capsule.id);
+    expect((await reader.request.get("/api/shared/capsule", { headers: { "X-Capsule-Token": token } })).status()).toBe(404);
+    await page.bringToFront(); await page.goto(`/member?capsule=${capsule.id}`);
+    const controls = page.getByRole("region", { name: "限定リンク共有", exact: true });
+    await expect(controls.getByText("運営によりこのCapsuleの共有を停止しています。新しいリンクは作れません。本人の保存内容は閲覧できます。", { exact: true })).toBeVisible();
+    await expect(controls.getByRole("button", { name: "この版の共有リンクを作る", exact: true })).toBeDisabled();
+    await expect(page.getByText(saved.note, { exact: true })).toBeVisible();
+  } finally { await other.close(); }
+});

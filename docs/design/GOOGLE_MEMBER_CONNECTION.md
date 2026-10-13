@@ -83,3 +83,6 @@ npx tsx scripts/test-production-member.ts beta-step13-20261013
 - 匿名や別Userへprivate内容が見えず、一般公開・共有有効化を勝手に広げない。
 
 Google本人認証を含む確認が終わるまで、[進捗](../PUBLIC_BETA_PROGRESS.md)は12/24のまま。設定待ちの間は工程14等の独立した実装へ進める。
+
+
+工程14で退会・停止・共有停止・投稿非表示の追加migration004と運営CLIを加えた。これから本番会員を有効化する場合は最新operator imageで000〜004の5件を明示適用する。既存の000〜003の内容は変えていない。[削除範囲・運営手順](ACCOUNT_LIFECYCLE_OPERATIONS.md)を併読する。過去の工程13検証記録の4件は当時の結果である。

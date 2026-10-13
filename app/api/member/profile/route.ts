@@ -4,3 +4,4 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 export function GET(request: Request) { return memberHandle(() => memberRuntime().service.profile(request)); }
 export function PUT(request: Request) { return memberHandle(() => memberRuntime().service.updateProfile(request)); }
+export function DELETE(request: Request) { return memberHandle(() => memberRuntime().service.deleteAccount(request)); }

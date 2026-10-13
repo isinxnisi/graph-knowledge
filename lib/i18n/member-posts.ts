@@ -6,6 +6,7 @@ const ja = {
   loading: "自分の投稿を確認しています…", empty: "このページに自分の投稿はありません。",
   context: (revision: number) => `内容版 ${revision} への投稿`,
   target: "投稿先の識別情報", capsule: "Capsule ID", post: "投稿 ID",
+  hidden: "この投稿は表示できません。本文を削除して撤回することはできます。",
   withdrawn: "この投稿は撤回済みです。", done: "投稿を撤回しました。",
   failed: "投稿一覧を取得できませんでした。再確認してください。",
   uncertain: "撤回結果を確認できませんでした。この一覧を再確認して状態を確かめてください。",

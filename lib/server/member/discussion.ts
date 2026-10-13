@@ -43,7 +43,7 @@ export function createCapsuleDiscussion(pool: Pool, dataset: DatasetMode, origin
   async function authorize(client: PoolClient, request: Request, id: string, revision: number, user: Viewer | null, write: boolean) {
     // Sharing, content deletion, closure and posting use the same Capsule lock.
     const result = await client.query(`SELECT c.owner_user_id FROM member_capsule c JOIN "user" u ON u.id = c.owner_user_id
-      WHERE c.id = $1 AND c.dataset = $2 AND u.active = true ${write ? "FOR UPDATE OF c" : "FOR SHARE OF c"}`, [id, dataset]);
+      WHERE c.id = $1 AND c.dataset = $2 AND u.active = true AND c.sharing_blocked = false ${write ? "FOR UPDATE OF c" : "FOR SHARE OF c"}`, [id, dataset]);
     const capsule = result.rows[0];
     if (!capsule) throw new MemberError(404, "NOT_FOUND");
     const own = capsule.owner_user_id === user?.id;
@@ -67,7 +67,7 @@ export function createCapsuleDiscussion(pool: Pool, dataset: DatasetMode, origin
         // This author-only projection deliberately has no Capsule content,
         // owner profile, share token, or other author's post. Revocation and
         // owner suspension do not prevent authors managing their own words.
-        const result = await client.query(`SELECT p.id, p.capsule_id, p.revision, p.body, p.created_at, p.withdrawn_at,
+        const result = await client.query(`SELECT p.id, p.capsule_id, p.revision, p.body, p.created_at, p.withdrawn_at, p.hidden_at,
           to_char(p.created_at AT TIME ZONE 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS.US"Z"') AS cursor_at
           FROM member_capsule_post p JOIN member_capsule c ON c.id = p.capsule_id
           WHERE p.author_user_id = $1 AND c.dataset = $2
@@ -77,7 +77,7 @@ export function createCapsuleDiscussion(pool: Pool, dataset: DatasetMode, origin
         const rows = result.rows.slice(0, OWN_POSTS_PAGE_SIZE), last = rows.at(-1);
         return memberJson(ownDiscussionPostsSchema.parse({
           posts: rows.map(row => ({ id: row.id, capsuleId: row.capsule_id, revision: Number(row.revision),
-            body: row.withdrawn_at ? null : row.body, createdAt: row.created_at.toISOString(), withdrawnAt: row.withdrawn_at?.toISOString() ?? null })),
+            body: row.withdrawn_at || row.hidden_at ? null : row.body, createdAt: row.created_at.toISOString(), withdrawnAt: row.withdrawn_at?.toISOString() ?? null })),
           nextCursor: result.rows.length > OWN_POSTS_PAGE_SIZE && last
             ? Buffer.from(JSON.stringify({ at: last.cursor_at, id: last.id })).toString("base64url") : null,
         }));
@@ -95,8 +95,8 @@ export function createCapsuleDiscussion(pool: Pool, dataset: DatasetMode, origin
         const posts = await client.query(`SELECT p.*, u.name, u.active FROM member_capsule_post p JOIN "user" u ON u.id = p.author_user_id
           WHERE p.capsule_id = $1 AND p.revision = $2 ORDER BY p.created_at, p.id LIMIT $3`, [id, revision.data, DISCUSSION_LIMITS.posts]);
         return memberJson(discussionSchema.parse({ capsuleId: id, revision: revision.data, closed: thread.rows[0]?.closed ?? true, viewer: user ? { id: user.id, name: user.name } : null, canManage,
-          posts: posts.rows.map(row => ({ id: row.id, revision: Number(row.revision), authorName: row.withdrawn_at || !row.active ? null : row.name,
-            body: row.withdrawn_at || !row.active ? null : row.body, createdAt: row.created_at.toISOString(), withdrawnAt: row.withdrawn_at?.toISOString() ?? null, own: row.author_user_id === user?.id })) }));
+          posts: posts.rows.map(row => ({ id: row.id, revision: Number(row.revision), authorName: row.withdrawn_at || row.hidden_at || !row.active ? null : row.name,
+            body: row.withdrawn_at || row.hidden_at || !row.active ? null : row.body, createdAt: row.created_at.toISOString(), withdrawnAt: row.withdrawn_at?.toISOString() ?? null, own: row.author_user_id === user?.id })) }));
       });
     },
     async createDiscussionPost(request: Request, rawId: string) {
@@ -128,7 +128,7 @@ export function createCapsuleDiscussion(pool: Pool, dataset: DatasetMode, origin
       const user = await authenticate(request), id = memberId(rawId), input = await memberInput(request, discussionCloseSchema);
       return transaction(async client => {
         await activeWriter(client, user);
-        const own = await client.query("SELECT id FROM member_capsule WHERE id = $1 AND owner_user_id = $2 AND dataset = $3 FOR UPDATE", [id, user.id, dataset]);
+        const own = await client.query("SELECT id FROM member_capsule WHERE id = $1 AND owner_user_id = $2 AND dataset = $3 AND sharing_blocked = false FOR UPDATE", [id, user.id, dataset]);
         if (!own.rowCount) throw new MemberError(404, "NOT_FOUND");
         await client.query("INSERT INTO member_capsule_thread (capsule_id) VALUES ($1) ON CONFLICT DO NOTHING", [id]);
         const updated = await client.query("UPDATE member_capsule_thread SET closed = $2 WHERE capsule_id = $1 AND closed = $3 RETURNING closed", [id, input.closed, input.expectedClosed]);

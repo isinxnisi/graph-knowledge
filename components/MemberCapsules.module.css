@@ -41,3 +41,5 @@
   .page summary { box-sizing: border-box; min-height: 44px; padding: 10px 0; cursor: pointer; }
   .page input:not([type="checkbox"]):not([type="radio"]), .page select, .page textarea { box-sizing: border-box; min-height: 44px; font-size: 16px; }
 }
+
+.source input[type="checkbox"] { width: auto; padding: 0; margin-inline-end: 8px; }

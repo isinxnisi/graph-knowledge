@@ -8,6 +8,8 @@ import { APIError } from "better-auth/api";
 import { assertMemberOrigin, MemberError, memberId, memberInput, memberJson } from "./http";
 import { createCapsuleSharing } from "./sharing";
 import { createCapsuleDiscussion } from "./discussion";
+import { z } from "zod";
+import { activeMember, deleteMember, memberTransaction } from "./operations";
 import { memberProfileUpdateSchema } from "../../domain/member-profile";
 
 function dto(row: QueryResultRow) {
@@ -30,7 +32,7 @@ export function createMemberService(config: MemberConfig, pool: Pool, auth: Memb
       throw error;
     });
     if (!session || session.user.active !== true || (request.headers.has("x-member-user") && request.headers.get("x-member-user") !== session.user.id)) throw new MemberError(401, "UNAUTHENTICATED");
-    return session.user;
+    return { ...session.user, sessionId: session.session.id };
   }
   function contentDataset(content: MemberCapsuleContent) {
     if (content.dataset !== dataset) throw new MemberError(400, "DATASET_MISMATCH");
@@ -41,6 +43,15 @@ export function createMemberService(config: MemberConfig, pool: Pool, auth: Memb
     async profile(request: Request) {
       const user = await owner(request);
       return memberJson({ user: { id: user.id, name: user.name, locale: user.locale } });
+    },
+    async deleteAccount(request: Request) {
+      assertMemberOrigin(request, config.origin);
+      if (!request.headers.has("x-member-user")) throw new MemberError(400, "INVALID_ARGUMENT");
+      const user = await owner(request);
+      await memberInput(request, z.strictObject({ confirmation: z.literal("delete-account") }));
+      await deleteMember(pool, user.id, user.sessionId);
+      // 古いcookieは認証に使えない。全端末のsessionをDBで削除済み。
+      return memberJson({ deleted: true });
     },
     async updateProfile(request: Request) {
       assertMemberOrigin(request, config.origin);
@@ -102,26 +113,32 @@ export function createMemberService(config: MemberConfig, pool: Pool, auth: Memb
       const id = memberId(rawId);
       const input = await memberInput(request, memberUpdateSchema);
       contentDataset(input.content);
-      const result = await pool.query(`UPDATE member_capsule SET content = $1, revision = revision + 1, updated_at = clock_timestamp()
-        WHERE id = $2 AND owner_user_id = $3 AND dataset = $4 AND revision = $5 RETURNING *`,
-      [JSON.stringify(input.content), id, user.id, dataset, input.expectedRevision]);
-      if (!result.rows[0]) {
-        const exists = await pool.query("SELECT id FROM member_capsule WHERE id = $1 AND owner_user_id = $2 AND dataset = $3", [id, user.id, dataset]);
-        throw new MemberError(exists.rowCount ? 409 : 404, exists.rowCount ? "REVISION_CONFLICT" : "NOT_FOUND");
-      }
-      return memberJson({ capsule: dto(result.rows[0]) });
+      return memberTransaction(pool, async client => {
+        await activeMember(client, user.id);
+        const result = await client.query(`UPDATE member_capsule SET content = $1, revision = revision + 1, updated_at = clock_timestamp()
+          WHERE id = $2 AND owner_user_id = $3 AND dataset = $4 AND revision = $5 RETURNING *`,
+        [JSON.stringify(input.content), id, user.id, dataset, input.expectedRevision]);
+        if (!result.rows[0]) {
+          const exists = await client.query("SELECT id FROM member_capsule WHERE id = $1 AND owner_user_id = $2 AND dataset = $3", [id, user.id, dataset]);
+          throw new MemberError(exists.rowCount ? 409 : 404, exists.rowCount ? "REVISION_CONFLICT" : "NOT_FOUND");
+        }
+        return memberJson({ capsule: dto(result.rows[0]) });
+      });
     },
     async remove(request: Request, rawId: string) {
       assertMemberOrigin(request, config.origin);
       const user = await owner(request);
       const id = memberId(rawId);
       const input = await memberInput(request, memberDeleteSchema);
-      const result = await pool.query("DELETE FROM member_capsule WHERE id = $1 AND owner_user_id = $2 AND dataset = $3 AND revision = $4 RETURNING id", [id, user.id, dataset, input.expectedRevision]);
-      if (!result.rowCount) {
-        const exists = await pool.query("SELECT id FROM member_capsule WHERE id = $1 AND owner_user_id = $2 AND dataset = $3", [id, user.id, dataset]);
-        throw new MemberError(exists.rowCount ? 409 : 404, exists.rowCount ? "REVISION_CONFLICT" : "NOT_FOUND");
-      }
-      return memberJson({ deleted: true });
+      return memberTransaction(pool, async client => {
+        await activeMember(client, user.id);
+        const result = await client.query("DELETE FROM member_capsule WHERE id = $1 AND owner_user_id = $2 AND dataset = $3 AND revision = $4 RETURNING id", [id, user.id, dataset, input.expectedRevision]);
+        if (!result.rowCount) {
+          const exists = await client.query("SELECT id FROM member_capsule WHERE id = $1 AND owner_user_id = $2 AND dataset = $3", [id, user.id, dataset]);
+          throw new MemberError(exists.rowCount ? 409 : 404, exists.rowCount ? "REVISION_CONFLICT" : "NOT_FOUND");
+        }
+        return memberJson({ deleted: true });
+      });
     },
   };
 }

@@ -56,6 +56,7 @@
     "event:integration": "vitest run tests/event.integration.test.ts --no-file-parallelism",
     "event:e2e": "playwright test --config=playwright.event.config.ts",
     "test:member": "tsx scripts/test-member.ts",
+    "member:ops": "tsx scripts/member-ops.ts",
     "member:migrate": "tsx scripts/member-migrate.ts",
     "test:member:e2e": "tsx scripts/test-member.ts --e2e",
     "public:prepare": "tsx scripts/public-kg.ts prepare",

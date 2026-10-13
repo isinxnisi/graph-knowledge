@@ -2,7 +2,7 @@
 
 2026-10-11。ユーザーが[対応プラン](design/PUBLIC_BETA_AND_PRODUCT_PLAN.md)を採用。今回からの差分を**全24ステップ**で管理する。以前のPhase完了率とは別。
 
-**現在：12/24完了（50%）、残12。** 2026-10-13、工程12の設定メニュー・本人表示名・外観保存と必須VPS更新確認が完了。工程13の専用PG・migration・安全な設定生成と隔離検証も準備したが、実Google設定／本人ログイン待ちで未完了。日常確認先 https://graph-beta.isinxnisi.com/ は今回コードへ更新し、VPS https://graph.isinxnisi.net は工程12の画面。両確認先の会員未設定状態とVPS preview認証は維持する。一般公開はstep22。この公開β計画24工程から見た概算進捗であり、既存全機能の完成率ではない。
+**現在：13/24完了（約54%）、残11。** 2026-10-13、工程14の確認付き退会・利用停止・共有停止・投稿非表示と実PG／ブラウザ検証が完了。工程13の専用PG・migration・安全な設定生成と隔離検証は準備済みだが、実Google設定／本人ログイン待ちで未完了。日常確認先 https://graph-beta.isinxnisi.com/ は今回コードへ更新し、VPS https://graph.isinxnisi.net は工程12の画面。両確認先の会員未設定状態とVPS preview認証は維持する。一般公開はstep22。この公開β計画24工程から見た概算進捗であり、既存全機能の完成率ではない。
 
 ## 数え方と完了範囲
 
@@ -30,7 +30,7 @@
 | 11 | スマホの閲覧・会員画面と探索への往復 | 完了（320／390pxの閲覧・根拠／図の往復、会員編集・未送信入力・共有と別タブ探索を確認） |
 | 12 | アカウントメニュー・表示名/外観等の最小設定 | 完了（Tunnel反映・VPS更新後のHTTPS／代表4経路・KG revision維持を確認） |
 | 13 | 実Google登録・ログイン・再訪の接続試験 | 専用PG・設定生成・隔離試験済。実Google client設定／本人ログイン待ち・未完了 |
-| 14 | 本人削除/停止・共有停止・公開書込に必要な最小運営操作 | 未着手 |
+| 14 | 本人削除/停止・共有停止・公開書込に必要な最小運営操作 | 完了（実PG33件、退会390／1440px・運営操作と既存設定／共有を確認） |
 | 15 | 探索・条件・詳細の日本語/英語切替 | 未着手 |
 | 16 | 閲覧・会員・共有の主要経路の日本語/英語 | 未着手 |
 | 17 | 一資料群の収集/受入単位を決め、実在データを一バッチ拡充 | 未着手 |
@@ -57,7 +57,7 @@
 
 5〜6では、理由付き撤回・新UUID差替えと旧参照、revision付き取得/cursor/探索復帰、KG単独backup/restoreを追加した。隔離Neo4j・PGで会員側の保存を巻き戻さないこと、復元途中失敗のrollback、復旧で消えたUUIDの別命題への再利用拒否まで確認した。実在Claimの撤回判断や本番復旧は行っていない。
 
-**次は13：実Google登録・ログイン・再訪の接続試験。** [専用PG・候補env・本番接続手順](design/GOOGLE_MEMBER_CONNECTION.md)を用意した。既存の認証・所有者APIを再利用する。実credentialとGoogle側のredirect設定は別途必要で、設定済みWeb client JSONのGit外保存先をユーザーへ確認中。未設定の会員機能を有効にせず、本人認証・保存／再訪まで終わるまで工程13を完了に数えない。設定待ちの間は工程14等の独立した単位へ進める。全24工程の分母は維持し、残12。
+**次は15：探索・条件・詳細の日本語／英語切替。** 工程14までの既存機能を維持し、表示localeと探索条件・知識原語を分ける。工程13の[専用PG・候補env・本番接続手順](design/GOOGLE_MEMBER_CONNECTION.md)は準備済みで、設定済みWeb client JSONのGit外保存先をユーザーへ確認中。実credentialとGoogle側のredirect設定が届けば接続試験を再開する。未設定の会員機能を有効にせず、本人認証・保存／再訪まで終わるまで工程13を完了に数えない。全24工程の分母は維持し、残11。
 
 7では専用Compose、Node24.21.0のstandalone Web／operator image、内部DBだけを許可する本番guard、readiness、管理者配置scriptを追加した。隔離環境で初回投入・再適用・backup0600・再起動保持・DB停止503と復旧、本番imageでのPlaywright4経路を確認。cold起動直後の取得で既定5秒制限に達したため、本番readだけ上限付き設定10000msを採用して再検証した。意味・返却型・凍結dataは変更していない。
 
@@ -210,3 +210,26 @@ GoogleのWeb client JSONと既存private envから、稼働設定とは別の候
 本番KG回帰の失敗は二回とも1440pxの初回PLUTO展開。初回traceではneighbors応答が約11.34秒で503となり、GraphがEntity1／Claim0に留まった。同じ稼働imageで通常時の個別ケースは成功したが、cold時の失敗を解消した意味ではない。既存の10秒read上限・query・UI挙動は今回変更していない。cold時の取得課題として工程18〜19へ残し、今回の会員専用PG試験の成功とは分ける。ブラウザのassert失敗で本番KG runnerが終了するため、その後の停止／復旧試験は今回タグで完了したと報告しない（工程12では検証済み）。試験終了時に専用container／volumeを削除した。VPSの認証付きHTTPSでは本ターン冒頭に代表4/4成功しているが、今回のimageをVPSへ配置した意味ではない。
 
 DB schemaの既存4 migration・KG意味モデル・凍結dataset・fixture・UI・探索state・依存packageは変更なし。VPSは検証済み工程12のままで、会員配置は実credentialが届いてから行う。両確認先では会員無効、VPSではpreview認証を維持し、工程13は完了に数えない。次は実Google設定からの接続か、外部待ちと独立した工程14。累計12/24・残12。
+
+
+## 工程14の実装・検証（2026-10-13）
+
+実Googleの設定待ちと独立して、[退会・停止と運営操作](design/ACCOUNT_LIFECYCLE_OPERATIONS.md)を実装。本人退会は確認／同意・Origin・期待User・直近30分のsessionを要求し、全datasetの本人Capsule／共有版／リンク／本人投稿／認証情報をPG transactionで削除する。運営停止は内容を保持し、session／共有リンクを失効する。共有停止と投稿非表示は認可されたCLIから行う。一般管理API・管理画面・新しい認証方式は追加していない。
+
+追加migration004だけで、既存000〜003は不変。保存／版更新／共有／投稿と停止・削除のlockを揃え、相互投稿の二人の同時退会・共有停止と発行の競合も実PGで確認。本人退会の受理記録にはUUID・self・定型理由・時刻だけを残し、内容・認証情報を複製しない。バックアップから復旧する際の退会／停止再適用と、運営記録の保持期限・問い合わせ窓口は公開前の運用確認へ残す。削除画面にもbackup／運営記録・受信者コピーが対象外であることを明記した。
+
+初回の実PG検証で本人投稿一覧がhidden_atをSELECTしていない漏れを検出・修正した。共有statusへblockedを追加し、所有者の画面で停止を確認・再発行を無効化する。投稿非表示を本人撤回と表示しない。KG意味モデル・API・Graph state・凍結dataset・依存packageは不変（会員のprofile DELETEと共有statusだけを追加）。
+
+| 検証 | 結果 |
+| --- | --- |
+| `npm test -- --no-file-parallelism --testTimeout=15000` | 28 file・563/563成功（311.14秒） |
+| `npx vitest run tests/member.test.ts tests/account-settings.test.tsx --no-file-parallelism --testTimeout=15000` | 最終の本人削除確認・運営入力境界18/18成功 |
+| `npm run test:member` | 最終33/33成功（56.74秒）。実OIDC・一時PG、再migration5件、CLI dry-run／confirm必須、停止／再開、共有停止、投稿非表示、全dataset退会、再登録別UUID、二人同時退会、共有発行との競合 |
+| `npm run test:member:e2e -- --grep '本人退会\|運営CLI\|アカウント設定:.*1440px\|限定リンクで指定版.*1440px'` と対象再実行 | 5種類を最終確認。390／1440pxの確認・取消・退会・リンク失効・ブラウザ保存維持、運営非表示／共有停止／User停止・再開、既存設定・共有の回帰 |
+| `npm run typecheck` / `npm run lint` / `npm run public:build` | 最終版で成功。語彙warning1件は既存どおり。通常テスト後に追加した競合・削除記録は最終実PG33件と対象unit18件で再確認 |
+| Docker Web／ops build | Node24.21.0で両target成功。tag `beta-step14-20261013`。operatorへmigrationと閉じた四操作のCLIを収録 |
+| `npx tsx scripts/test-production-member.ts beta-step14-20261013` | 本番image＋専用実PGで成功。非superuser・migration二回で5件・Google開始URL／最小scope／state cookie・Origin／追加scope／外部redirect拒否。PG停止503とWeb再起動なしの復旧。実Google callback／本人ログインは未検証 |
+
+ブラウザの初回5件では設定・390/1440pxの退会が成功。長い共有と運営CLIの二件は2分の総実行枠へ到達した。3分枠で運営CLIは成功（2.5分）。同時の共有再試験は別タブの初回Graph初期化15秒で失敗したため、Graphの準備確認だけを45秒へ分離し、別タブを前面へ出して単独再実行した。共有→根拠／探索→編集→再発行→停止が最後まで成功（本体2.4分、準備込み4.0分）。製品のAPI timeout・探索挙動は変更していない。最終の確認環境更新は下記へ記録する。
+
+ローカル3200とTunnelをbuild `6QkgMb3Pp_1Pb3jkTS4_S` へ更新し、HTMLのbuild一致・dataset API200・KG revision `legacy:20261011-001` を確認した。Tunnelの既存設定／別タブ・漫画／科学／Event探索と限定・根拠・概要・起点復帰が2/2成功（22.1秒）。3210〜3215もdataset APIは全て200。両日常入口の会員statusは意図した未設定503のままで、検証OIDCを公開していない。実Google待ちの工程13は未完了、VPSは工程12までの配置を維持し、次の通常更新は工程16（実Google接続の設定時は別途配置）とする。既知のKG cold取得503は工程18〜19へ残し、今回の成功で解消扱いにしない。累計13/24・残11、次は工程15。

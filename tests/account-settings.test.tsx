@@ -2,6 +2,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import SiteHeader from "../components/SiteHeader";
+import MemberAccountDeletion from "../components/MemberAccountDeletion";
 import MemberProfileSettings from "../components/MemberProfileSettings";
 import { appearanceKey, readAppearance } from "../lib/client/appearance";
 import { memberProfileUpdateSchema } from "../lib/domain/member-profile";
@@ -74,5 +75,33 @@ describe("最小アカウント設定", () => {
     finish(Response.json({ user: { ...user, name: "新しい名前" } }));
     await new Promise(resolve => setTimeout(resolve, 0));
     expect(saved).not.toHaveBeenCalled();
+  });
+});
+
+
+describe("本人のアカウント削除確認", () => {
+  const user = { id: "10000000-0000-4000-8000-000000000001", name: "本人", locale: "ja" };
+  it("確認と同意までは送信せず、失敗では完了扱いにせず、成功時だけ閉じる", async () => {
+    const deleted = vi.fn();
+    const fetch = vi.fn().mockResolvedValueOnce(Response.json({ error: { code: "RECENT_LOGIN_REQUIRED" } }, { status: 403 }))
+      .mockResolvedValueOnce(Response.json({ deleted: true })); vi.stubGlobal("fetch", fetch);
+    render(<MemberAccountDeletion user={user} disabled={false} onDeleted={deleted} onUnauthorized={vi.fn()} />);
+    fireEvent.click(screen.getByRole("button", { name: "削除する内容を確認" }));
+    const submit = screen.getByRole("button", { name: "退会してアカウントを削除する" });
+    expect(submit.hasAttribute("disabled")).toBe(true); expect(fetch).not.toHaveBeenCalled();
+    fireEvent.click(screen.getByRole("checkbox")); fireEvent.click(submit);
+    expect((await screen.findByRole("alert")).textContent).toContain("30分以内"); expect(deleted).not.toHaveBeenCalled();
+    expect(fetch.mock.calls[0][1].headers["X-Member-User"]).toBe(user.id);
+    expect(JSON.parse(fetch.mock.calls[0][1].body)).toEqual({ confirmation: "delete-account" });
+    fireEvent.click(submit); await waitFor(() => expect(deleted).toHaveBeenCalledOnce());
+  });
+  it("取消や未保存入力による無効状態では削除しない", () => {
+    const fetch = vi.fn(); vi.stubGlobal("fetch", fetch);
+    const view = render(<MemberAccountDeletion user={user} disabled={false} onDeleted={vi.fn()} onUnauthorized={vi.fn()} />);
+    fireEvent.click(screen.getByRole("button", { name: "削除する内容を確認" }));
+    fireEvent.click(screen.getByRole("button", { name: "取り消す" }));
+    expect(screen.queryByRole("checkbox")).toBeNull(); expect(fetch).not.toHaveBeenCalled();
+    view.rerender(<MemberAccountDeletion user={user} disabled={true} onDeleted={vi.fn()} onUnauthorized={vi.fn()} />);
+    expect(screen.getByRole("button", { name: "削除する内容を確認" }).hasAttribute("disabled")).toBe(true);
   });
 });

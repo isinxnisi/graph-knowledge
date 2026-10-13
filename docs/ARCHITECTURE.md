@@ -1,6 +1,6 @@
 # 現行技術設計
 
-更新日: 2026-10-12 / 状態: 初期Vertical Sliceと探索の開閉・Node再クリックまで実装済み。既存predicateと限定制作Roleによる条件付き探索を追加。v2 Role Claim 5件を人間受入後に投入・検証済み。関係概要・明示起点切替・直前一件復帰、人物・作品・組織の統一検索入口も実装。科学・研究機関pilot v1を別環境へ投入・観察済み。Phase 14では科学v2と組織立場のtyped限定を追加し、制作Roleと独立した語彙を保って条件・比較処理を共有。Phase 15の特定Event参加（第三のtyped限定）を実装。実資料E01/E03と特定開催回・開催期間を人間受入後に生成・専用DBへ投入・観察済み。Phase 20で三relation facetを条件editorへ接続し、具体条件を使う既存取得・復帰を維持。Phase 21でGraphの限定概要・中立的な肯否と、関係全体から独立主張／根拠へ降りる詳細を整合。Phase 22でGraphラベルを短い関係見出しと構造化済みの具体語優先へ変更。汎用taxonomy・プリセットは未実装。会員Capsuleは認証・所有者付きAPI、明示保存・再閲覧・編集、指定版の限定リンク共有まで接続。本人の表示名PUT／設定UIとブラウザ単位の外観保存を実装。実Google接続は未了。[文書の入口](README.md)に現役設計とフェーズ別履歴をまとめる。
+更新日: 2026-10-13 / 状態: 初期Vertical Sliceと探索の開閉・Node再クリックまで実装済み。既存predicateと限定制作Roleによる条件付き探索を追加。v2 Role Claim 5件を人間受入後に投入・検証済み。関係概要・明示起点切替・直前一件復帰、人物・作品・組織の統一検索入口も実装。科学・研究機関pilot v1を別環境へ投入・観察済み。Phase 14では科学v2と組織立場のtyped限定を追加し、制作Roleと独立した語彙を保って条件・比較処理を共有。Phase 15の特定Event参加（第三のtyped限定）を実装。実資料E01/E03と特定開催回・開催期間を人間受入後に生成・専用DBへ投入・観察済み。Phase 20で三relation facetを条件editorへ接続し、具体条件を使う既存取得・復帰を維持。Phase 21でGraphの限定概要・中立的な肯否と、関係全体から独立主張／根拠へ降りる詳細を整合。Phase 22でGraphラベルを短い関係見出しと構造化済みの具体語優先へ変更。汎用taxonomy・プリセットは未実装。会員Capsuleは認証・所有者付きAPI、明示保存・再閲覧・編集、指定版の限定リンク共有まで接続。本人の表示名PUT／設定UIとブラウザ単位の外観保存を実装。実Google接続は未了。[文書の入口](README.md)に現役設計とフェーズ別履歴をまとめる。
 
 ## 前提と設計の位置づけ
 
@@ -718,6 +718,8 @@ Native History APIと`useSearchParams`で既存Explorerを保持し、閲覧中�
 
 公開β step13では、本番Composeへ任意起動の専用PGと明示migration用operatorを追加した。Webは非superuserで接続し、会員volumeをKGから分離する。本番は指定HTTPS origin・内部PG・専用cookieを検証し、既定は無効のまま。[本番Google接続の準備](design/GOOGLE_MEMBER_CONNECTION.md)を正本とする。実Google credential／本人ログインは未了で、隔離した認証開始試験を接続完了とは扱わない。
 
+公開β step14で[退会・停止と最小運営操作](design/ACCOUNT_LIFECYCLE_OPERATIONS.md)を追加。本人退会は直近30分のDB session・Origin・期待User・明示確認を要求し、全datasetの本人Capsule／共有版／リンク／本人投稿／認証情報を一つのPG transactionで削除する。Neo4jとブラウザ保存は維持。利用停止はデータを保持し、全session／有効共有を失効する独立した運営CLI操作。Capsuleの共有停止と投稿非表示もCLIに限定し、一般Userへ管理権限を公開しない。追加migration004のみ。運営操作記録とbackupの扱いは上記契約を参照する。
+
 ## 会員Capsuleの特定版を限定リンクで共有（2026-10-09）
 
 [採用契約](design/CAPSULE_LINK_SHARING.md)。表示中の受理版を明示確認して、PostgreSQLへ参照と説明のsnapshotを固定する。既存のprivate編集・KG内容は不変。Capsuleごと1つの有効リンク、50共有版まで。共有済み版は更新せず、Capsule UUID＋revisionで保持する。追加migrationだけで、既存保存を移行しない。
@@ -732,6 +734,6 @@ Native History APIと`useSearchParams`で既存Explorerを保持し、閲覧中�
 
 Capsule行lockで共有失効・更新・削除・投稿・受付状態を直列化し、author行lockで全Capsuleを通じた1分5投稿を守る。本文2,000文字、全版合計200投稿（撤回も含む）。author＋request UUIDによる再送は同一内容だけを冪等にし、本文撤回後も復活させない。本人だけが撤回でき、ownerに他人の撤回権限を付けない。Capsule削除でthread/postも削除する。
 
-共有・会員Readerから明示して開き、現在版の根拠と探索へ戻れる。名前・本文・投稿をGlobal KGへ変換しない。未送信入力／結果不明のキーは本人と版へ拘束したタブ内メモリだけに保持する。所有者の共有済み版一覧・snapshot閲覧APIと会員画面の選択を追加した。会員URLのrevision指定で再認可し、説明・Graph・同じ版のコメントへ戻れる。旧版の編集・削除・共有は現在版へ戻って行う。入力は本人＋Capsule＋版別に保持する。共有失効後も `/api/member/posts` と会員画面から本人の投稿だけを20件ずつ読み、既存の作者撤回APIで本文を削除できる。所有者停止後も本人は管理できるが、Capsule本文・他人の会話を取得する権限は増やさない。cursorはDB時刻精度を維持したkeysetとし、認可・datasetを毎回確認する。新migrationは不要。運営非表示／通報・退会・公開は別段階。
+共有・会員Readerから明示して開き、現在版の根拠と探索へ戻れる。名前・本文・投稿をGlobal KGへ変換しない。未送信入力／結果不明のキーは本人と版へ拘束したタブ内メモリだけに保持する。所有者の共有済み版一覧・snapshot閲覧APIと会員画面の選択を追加した。会員URLのrevision指定で再認可し、説明・Graph・同じ版のコメントへ戻れる。旧版の編集・削除・共有は現在版へ戻って行う。入力は本人＋Capsule＋版別に保持する。共有失効後も `/api/member/posts` と会員画面から本人の投稿だけを20件ずつ読み、既存の作者撤回APIで本文を削除できる。所有者停止後も本人は管理できるが、Capsule本文・他人の会話を取得する権限は増やさない。cursorはDB時刻精度を維持したkeysetとし、認可・datasetを毎回確認する。この本人投稿一覧の追加にmigrationは不要。運営非表示・退会は公開β step14の契約で追加し、通報・一般公開は別段階。
 
 共有済み版の本人閲覧から、取得時の現在版との題名・説明・明示参照の比較を追加した（2026-10-10）。追加／除外はEntity・独立ClaimのUUID集合で計算し、KGの履歴差分とは分ける。現在版は期待User付きで再取得し、比較はタブメモリだけに保持する。現在の根拠への別タブ導線、未解決参照・取得失敗・非表示時の破棄を維持し、匿名共有へprivate内容を出さない。[比較契約](design/CAPSULE_LINK_SHARING.md#所有者が共有時と現在の構成を比較する2026-10-10追加)を参照。

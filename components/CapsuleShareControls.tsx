@@ -11,6 +11,7 @@ export default function CapsuleShareControls({ capsule, userId, disabled, onUnau
   capsule: MemberCapsule; userId: string; disabled: boolean; onUnauthorized: () => void;
 }) {
   const text = capsuleSharingLabels();
+  const [blocked, setBlocked] = useState(false);
   const [share, setShare] = useState<CapsuleShare | null>(null);
   const [known, setKnown] = useState(false), [busy, setBusy] = useState(true);
   const [url, setUrl] = useState("");
@@ -29,12 +30,12 @@ export default function CapsuleShareControls({ capsule, userId, disabled, onUnau
       if (controller.signal.aborted) return;
       setKnown(false);
       if (cause instanceof MemberClientError && cause.status === 401) { unauthorized.current(); return; }
-      setError(cause instanceof MemberClientError && cause.status === 409 ? text.conflict : cause instanceof MemberClientError && cause.code === "SHARE_REVISION_LIMIT" ? text.limit : text.failed);
+      setError(cause instanceof MemberClientError && cause.code === "SHARING_BLOCKED" ? text.blocked : cause instanceof MemberClientError && cause.status === 409 ? text.conflict : cause instanceof MemberClientError && cause.code === "SHARE_REVISION_LIMIT" ? text.limit : text.failed);
     } finally { if (!controller.signal.aborted) setBusy(false); }
   }, [text]);
   const refresh = useCallback(() => { void run(async signal => {
     const result = await memberRequest(path, capsuleShareStatusSchema, { user: userId, signal });
-    if (!signal.aborted) { setShare(result.share); setKnown(true); }
+    if (!signal.aborted) { setShare(result.share); setBlocked(result.blocked); setKnown(true); }
   }); }, [path, run, userId]);
   useEffect(() => {
     const timer = setTimeout(refresh, 0);
@@ -61,10 +62,10 @@ export default function CapsuleShareControls({ capsule, userId, disabled, onUnau
   return <section className={css.sharing} aria-label={text.title}>
     <h2>{text.title}</h2><p>{text.help}</p>
     {busy && <p role="status">{text.checking}</p>}
-    {known && <p>{share ? text.active(share.revision) : text.stopped}</p>}
+    {known && <p>{blocked ? text.blocked : share ? text.active(share.revision) : text.stopped}</p>}
     {error && <p role="alert">{error}</p>}{message && <p role="status">{message}</p>}
     <button disabled={busy || disabled} onClick={refresh}>{text.refresh}</button>
-    <button disabled={busy || disabled || !known} onClick={() => setConfirm("issue")}>{share ? text.rotate : text.issue}</button>
+    <button disabled={busy || disabled || !known || blocked} onClick={() => setConfirm("issue")}>{share ? text.rotate : text.issue}</button>
     {share && <button disabled={busy || disabled || !known} onClick={() => setConfirm("revoke")}>{text.revoke}</button>}
     {confirm && <div role="alert"><p>{confirm === "issue" ? text.current(capsule.revision) : text.revokeHelp}</p>
       {confirm === "issue" && share && <p>{text.rotationHelp}</p>}

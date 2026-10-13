@@ -3,6 +3,7 @@ import type { Pool, QueryResultRow } from "pg";
 import type { DatasetMode } from "../../domain/dataset";
 import { memberCapsuleSchema } from "../../domain/member-capsule";
 import { capsuleShareIssueSchema, capsuleShareRevokeSchema, capsuleShareSchema, capsuleShareTokenSchema, sharedRevisionListSchema, SHARED_REVISION_LIMIT } from "../../domain/capsule-sharing";
+import { activeMember } from "./operations";
 import { assertMemberOrigin, MemberError, memberId, memberInput, memberJson } from "./http";
 
 const hashToken = (token: string) => createHash("sha256").update(token).digest("hex");
@@ -33,11 +34,11 @@ export function createCapsuleSharing(pool: Pool, dataset: DatasetMode, origin: s
     },
     async shareStatus(request: Request, rawId: string) {
       const user = await owner(request), id = memberId(rawId);
-      const result = await pool.query(`SELECT s.id, s.revision, s.created_at FROM member_capsule c
+      const result = await pool.query(`SELECT s.id, s.revision, s.created_at, c.sharing_blocked FROM member_capsule c
         LEFT JOIN member_capsule_share s ON s.capsule_id = c.id
         WHERE c.id = $1 AND c.owner_user_id = $2 AND c.dataset = $3`, [id, user.id, dataset]);
       if (!result.rows[0]) throw new MemberError(404, "NOT_FOUND");
-      return memberJson({ share: result.rows[0].id ? shareDto(result.rows[0]) : null });
+      return memberJson({ share: result.rows[0].id ? shareDto(result.rows[0]) : null, blocked: result.rows[0].sharing_blocked });
     },
     async issueShare(request: Request, rawId: string) {
       assertMemberOrigin(request, origin);
@@ -52,6 +53,7 @@ export function createCapsuleSharing(pool: Pool, dataset: DatasetMode, origin: s
         const current = await client.query("SELECT * FROM member_capsule WHERE id = $1 AND owner_user_id = $2 AND dataset = $3 FOR UPDATE", [id, user.id, dataset]);
         const row = current.rows[0];
         if (!row) throw new MemberError(404, "NOT_FOUND");
+        if (row.sharing_blocked) throw new MemberError(403, "SHARING_BLOCKED");
         if (Number(row.revision) !== input.expectedRevision) throw new MemberError(409, "REVISION_CONFLICT");
         const existing = await client.query("SELECT id FROM member_capsule_share WHERE capsule_id = $1", [id]);
         if ((existing.rows[0]?.id ?? null) !== input.expectedShareId) throw new MemberError(409, "SHARE_CONFLICT");
@@ -78,6 +80,7 @@ export function createCapsuleSharing(pool: Pool, dataset: DatasetMode, origin: s
       const client = await pool.connect();
       try {
         await client.query("BEGIN");
+        await activeMember(client, user.id);
         const current = await client.query("SELECT id FROM member_capsule WHERE id = $1 AND owner_user_id = $2 AND dataset = $3 FOR UPDATE", [id, user.id, dataset]);
         if (!current.rowCount) throw new MemberError(404, "NOT_FOUND");
         const existing = await client.query("SELECT id FROM member_capsule_share WHERE capsule_id = $1", [id]);
@@ -97,7 +100,7 @@ export function createCapsuleSharing(pool: Pool, dataset: DatasetMode, origin: s
       const result = await pool.query(`SELECT r.snapshot FROM member_capsule_share s
         JOIN member_capsule_revision r ON r.capsule_id = s.capsule_id AND r.revision = s.revision
         JOIN member_capsule c ON c.id = s.capsule_id JOIN "user" u ON u.id = c.owner_user_id
-        WHERE s.token_hash = $1 AND c.dataset = $2 AND u.active = true`, [hashToken(token.data), dataset]);
+        WHERE s.token_hash = $1 AND c.dataset = $2 AND u.active = true AND c.sharing_blocked = false`, [hashToken(token.data), dataset]);
       if (!result.rows[0]) throw new MemberError(404, "NOT_FOUND");
       return memberJson({ capsule: memberCapsuleSchema.parse(result.rows[0].snapshot) });
     },

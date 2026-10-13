@@ -1,4 +1,11 @@
 const ja = {
+  deleteAccount: "退会・アカウント削除", deleteAccountReview: "削除する内容を確認",
+  deleteAccountHelp: "のアカウントと、すべてのデータセットの会員Capsule・共有した版・共有リンク・自分の投稿を削除します。自分のCapsule内の他の人の投稿も削除されます。全端末のログインが失効し、元に戻せません。",
+  deleteAccountBoundary: "ブラウザ内の保存と公開Knowledge Graphは削除しません。Googleアカウント自体は削除しません。受け取った人のコピー・画面記録は回収できません。バックアップと運営操作記録はこの操作の対象外です。",
+  deleteAccountAcknowledgement: "削除範囲を確認し、元に戻せないことを理解しました",
+  deleteAccountConfirm: "退会してアカウントを削除する", accountDeleted: "アカウントと会員保存を削除しました。ブラウザ内の保存と探索は引き続き利用できます。",
+  deleteReauthenticate: "安全のため、別タブでログアウトしてログインし直し、この画面を再確認してください（ログインから30分以内）。",
+  deleteFailed: "削除結果を確認できませんでした。アカウントを再確認してください。完了済みの場合、以前のログインは使えません。再ログインは新しいアカウントの登録になる場合があります。",
   settings: "アカウント設定", displayName: "表示名", saveProfile: "表示名を保存",
   displayNameHelp: "1〜80文字。コメントにもこの名前を表示します。保存済みのコメントも、次に読み込むと新しい名前になります。ログイン情報・保存したCapsuleは変わりません。",
   profileInvalid: "表示名は1〜80文字で入力してください。改行・制御文字は使えません。",

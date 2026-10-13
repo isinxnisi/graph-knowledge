@@ -58,6 +58,8 @@ PUBLIC_RESTORE_EXPECTED_REVISION='<plan時と同じrevision>' npm run public:res
 
 「Capsuleを作る・読む」で対象と主張を選び、題名と自分の説明をブラウザ内に保存できます。会員保存を設定した環境では、閲覧中の「この内容をアカウントへ保存」から別タブでログインし、選んだ内容だけを非公開で保存できます。`/member` から本人の一覧・現在の根拠を読み、対象から探索へ進めます。元のブラウザ保存は残り、編集は自動同期されません。
 
+会員設定には確認付き退会を追加しました。利用停止・共有停止・投稿非表示は認可された運営CLIから扱います。[削除範囲・操作手順](docs/design/ACCOUNT_LIFECYCLE_OPERATIONS.md)を参照してください。実Google設定待ちの通常環境では会員機能を有効化していません。
+
 会員保存の無設定時は利用不可を表示し、既存の探索は利用できます。[設定・保存境界・未実装範囲](docs/design/MEMBER_CAPSULES.md)を参照してください。外部認証情報なしの検証は `npm run test:member`（実DB・API）、`npm run test:member:e2e`（ブラウザ）で実行できます。専用の一時PostgreSQLと開発OIDCを起動して終了時に破棄します。試験用開発ビルドはWebpackと、通常画面・buildとは別の `.next-member-test` を使います。55432・3221・3222が空いている必要があり、E2EにはPlaywrightのChromiumとそのLinux依存ライブラリも必要です。
 
 本番Google接続は[専用PG・credential準備・完了条件](docs/design/GOOGLE_MEMBER_CONNECTION.md)を参照してください。GoogleのWeb client JSONはGit外の0600 fileへ保存し、チャットには保存先だけを伝えてください。実Googleログインはまだ未検証で、通常の確認先は会員無効のままです。

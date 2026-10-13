@@ -1,6 +1,6 @@
 # アカウント・所有者・会員保存の初回設計
 
-2026-10-09採用。認証・PostgreSQL・会員Capsuleの所有者APIと保存／再閲覧／既存構成編集まで実装。現行の実装契約は[会員Capsule](MEMBER_CAPSULES.md)、共有は[限定リンク](CAPSULE_LINK_SHARING.md)を参照する。本人表示名変更は公開β step12で追加。実Google接続・locale変更・退会等は未実装。本書の未実装項目は先回り設計であり、実装済み範囲を上書きしない。
+2026-10-09採用。認証・PostgreSQL・会員Capsuleの所有者APIと保存／再閲覧／既存構成編集まで実装。現行の実装契約は[会員Capsule](MEMBER_CAPSULES.md)、共有は[限定リンク](CAPSULE_LINK_SHARING.md)を参照する。本人表示名変更は公開β step12で追加。退会・利用停止等は[公開β step14の採用契約](ACCOUNT_LIFECYCLE_OPERATIONS.md)で実装。実Google接続・locale変更は未実装。本書の未実装項目は先回り設計であり、実装済み範囲を上書きしない。
 
 構想の正本は[Capsule・User Contribution](CAPSULE_AND_USER_CONTRIBUTION_VISION.md)、DB境界は[ARCHITECTURE](../ARCHITECTURE.md)。共有・議論の初回経路は[コミュニティ設計](COMMUNITY_VERTICAL_SLICES.md)。本書はすべての将来機能の完成をログイン実装の前提にしない。
 

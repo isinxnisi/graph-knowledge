@@ -70,7 +70,7 @@ export default function MemberPosts({ userId, onUnauthorized }: { userId: string
         {!data.posts.length && <p>{text.empty}</p>}
         <ol className={css.posts}>{data.posts.map(post => <li key={post.id}>
           <p><strong>{text.context(post.revision)}</strong> · <time dateTime={post.createdAt}>{new Date(post.createdAt).toLocaleString("ja-JP")}</time></p>
-          <p className={css.postBody}>{post.body ?? text.withdrawn}</p>
+          <p className={css.postBody}>{post.body ?? (post.withdrawnAt ? text.withdrawn : text.hidden)}</p>
           {post.withdrawnAt && <p className={css.muted}><time dateTime={post.withdrawnAt}>{new Date(post.withdrawnAt).toLocaleString("ja-JP")}</time></p>}
           <details className={css.muted}><summary>{text.target}</summary><p>{text.capsule}: {post.capsuleId}<br />{text.post}: {post.id}</p></details>
           {!post.withdrawnAt && <button disabled={busy} onClick={() => setConfirm(post.id)}>{discussion.withdraw}</button>}
