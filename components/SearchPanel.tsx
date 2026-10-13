@@ -1,4 +1,6 @@
 "use client";
+import { useUiLocale } from "../lib/client/ui-locale";
+import { explorerMessage } from "../lib/i18n/explorer";
 
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import type { EntitySearchResponse, EntitySummary } from "../lib/domain/api";
@@ -8,7 +10,8 @@ import { searchLabels } from "../lib/i18n/entity-search";
 import styles from "./Explorer.module.css";
 
 export default function SearchPanel({ onChoose, placeholder = "例：青葉ハル" }: { placeholder?: string; onChoose: (entity: EntitySummary) => void }) {
-  const text = searchLabels();
+  const { locale } = useUiLocale();
+  const text = searchLabels(locale);
   const [kind, setKind] = useState<SearchKind | null>(null);
   const [q, setQ] = useState("");
   const [result, setResult] = useState<EntitySearchResponse | null>(null);
@@ -25,7 +28,7 @@ export default function SearchPanel({ onChoose, placeholder = "例：青葉ハ�
     event.preventDefault();
     pending.current?.abort();
     setResult(null); setError(null);
-    if (!q.trim()) { setLoading(false); setError(text.emptyInput); return; }
+    if (!q.trim()) { setLoading(false); setError(searchLabels("ja").emptyInput); return; }
     const controller = new AbortController(); pending.current = controller;
     setLoading(true);
     try {
@@ -46,7 +49,7 @@ export default function SearchPanel({ onChoose, placeholder = "例：青葉ハ�
       </select>
       <button type="submit" disabled={loading}>{loading ? text.submitting : text.submit}</button>
     </form>
-    {error && <p role="alert" className={styles.error}>{error}</p>}
+    {error && <p role="alert" className={styles.error}>{explorerMessage(error, locale)}</p>}
     {loading && <p role="status">{text.loading}</p>}
     {!result && !loading && !error && <p className={styles.muted}>{text.help}</p>}
     {result && <>

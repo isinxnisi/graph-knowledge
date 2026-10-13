@@ -951,7 +951,8 @@ describe("固定の探索開始例", () => {
     const names = screen.getAllByRole("button", { name: /佐藤アキから探索を開始/ });
     expect(names).toHaveLength(2); expect(names[0].getAttribute("aria-label")).not.toBe(names[1].getAttribute("aria-label"));
     fireEvent.click(names[1]); expect(choose).toHaveBeenCalledWith(START_EXAMPLES.demo.at(-1));
-    expect(startExampleLabels("en").title).toBe(startExampleLabels("ja-JP").title);
+    expect(startExampleLabels("en").title).toBe("Try exploring");
+    expect(startExampleLabels("fr").title).toBe(startExampleLabels("ja-JP").title);
   });
   it("開始例は既存の起点選択で条件を同時解除し、旧通信・旧ページを混在させない", async () => {
     const old = deferred(); vi.mocked(fetchNeighbors).mockReturnValueOnce(old.promise).mockResolvedValueOnce({ ...page, centerId: page.nodes[1].id });
@@ -1024,7 +1025,8 @@ describe("Relationの概要と独立した主張の読み分け", () => {
     const relation = Object.values(displayRelations({ [base.id]: base, qualified, denied }))[0];
     expect(relation.label).toContain("肯定・否定あり"); expect(relation.label).not.toMatch(/異説|矛盾/);
     expect(relation.claimIds).toHaveLength(3);
-    expect(relationPresentationLabels("en").title).toBe(relationPresentationLabels("ja-JP").title);
+    expect(relationPresentationLabels("en").title).toBe("Relation overview");
+    expect(relationPresentationLabels("fr").title).toBe(relationPresentationLabels("ja-JP").title);
   });
   it.each([
     { predicate: "AFFILIATED_WITH", key: "organizationParticipation", value: { positionId: "VISITOR" }, category: "組織", label: "Visitor" },

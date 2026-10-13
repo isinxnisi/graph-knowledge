@@ -9,4 +9,29 @@ const ja = {
   comparison: { same: "同じ限定の比較候補（期間・肯否は個別確認）", role: "Roleが異なる", scope: "scopeが異なる", unstructured: "適用範囲が未構造化のため限定の一致を判定しない" },
   evidence: "資料の原役割表記", language: "資料表記の言語", scope: "Claimの適用刊行物", broader: "広い主張と役割付き主張は別の意味です。同じSource由来でも独立した新資料の追加ではありません。",
 };
-export function contributionLabels(locale = "ja") { const resources: Record<string, typeof ja> = { ja }; return resources[locale] ?? resources[locale.split("-")[0]] ?? ja; }
+const en: typeof ja = {
+  roles: { SCRIPT_WRITING: "Script writing", SUPERVISION: "Supervision", PRODUCING: "Producing", STORY_CO_CREATION: "Story co-creation" },
+  mixedLegend: "Dotted: affirmed and denied",
+  roleTitle: "Production role",
+  volumeUnknown: "Volume not verified",
+  editionUnknown: "Edition not verified",
+  publicationOnly: "A credit verified in the product information for this publication. It does not establish work only on this volume, or across all volumes, editions or periods.",
+  emptyRoles: "No production roles selected",
+  roleCount: (n: number) => `${n} production roles`,
+  moreRoles: (n: number) => ` and ${n} more roles`,
+  title: "Production roles",
+  all: "All contributions (including claims without a role)",
+  none: "No role limitation",
+  scopeUnknown: "Scope not structured",
+  mixed: "Affirmed and denied",
+  help: "Role conditions apply only to production contributions, including denied claims. Unspecified roles are not inferred.",
+  partial: "Roles summarize fetched claims. Check volume, edition and other scope in the details.",
+  differentPeriod: "Same role and publication, different period",
+  comparisonReference: "Reference for qualifier comparison",
+  comparison: { same: "Candidate with the same qualifiers (check period and polarity individually)", role: "Different role", scope: "Different scope", unstructured: "Scope is not structured; qualifier equality is not determined" },
+  evidence: "Original role wording",
+  language: "Language of the wording",
+  scope: "Applicable publication",
+  broader: "Broad and role-qualified claims have different meanings. Sharing a source does not add independent evidence.",
+};
+export function contributionLabels(locale = "ja") { const resources: Record<string, typeof ja> = { ja, en }; return resources[locale] ?? resources[locale.split("-")[0]] ?? ja; }

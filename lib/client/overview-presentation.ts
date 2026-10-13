@@ -1,3 +1,4 @@
+import { explorationLabels } from "../i18n/exploration";
 import type { EntityOverviewResponse } from "../domain/api";
 import { PREDICATES } from "../domain/predicates";
 import { overviewLabels } from "../i18n/entity-overview";
@@ -28,6 +29,6 @@ export function overviewPresentation(relation: OverviewRelation, locale = "ja") 
   const specified = qualification?.entries.filter(value => value.id !== null).sort((a, b) => a.id!.localeCompare(b.id!)) ?? [];
   const summary = specified.slice(0, 2).map(value => `${value.label}${value.counts.affirmed === 0 ? `（${labels.termDenied}）` : value.counts.denied > 0 ? `（${labels.termMixed}）` : ""}`);
   if (specified.length > 2) summary.push(labels.moreTerms(specified.length - 2));
-  return { title: labels.relation(relation.predicate, relation.perspective), start, end, verb: predicate.label, fromCenter, status,
+  return { title: labels.relation(relation.predicate, relation.perspective), start, end, verb: explorationLabels(locale).predicates[relation.predicate], fromCenter, status,
     qualification, qualificationSummary: summary.join("・") };
 }

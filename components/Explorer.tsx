@@ -1,4 +1,6 @@
 "use client";
+import { useUiLocale } from "../lib/client/ui-locale";
+import { explorerLabels, explorerMessage } from "../lib/i18n/explorer";
 import { useSearchParams } from "next/navigation";
 import ReferenceReader from "./ReferenceReader";
 import SiteHeader from "./SiteHeader";
@@ -47,11 +49,13 @@ function GraphNotice({ message, transient }: { message: string; transient: boole
 
 export default function Explorer({ dataset = "demo" }: { dataset?: DatasetMode }) {
   const searchParams = useSearchParams();
+  const { locale } = useUiLocale();
+  const ui = explorerLabels(locale);
   const reading = parseReadingLocation(searchParams, dataset);
   const closeReading = () => window.history.replaceState(null, "", withoutReadingReference(new URL(window.location.href)));
-  const labels = datasetLabels(dataset);
-  const entry = entryLabels();
-  const panes = explorerPaneLabels();
+  const labels = datasetLabels(dataset, locale);
+  const entry = entryLabels(locale);
+  const panes = explorerPaneLabels(locale);
   const [activePane, setActivePane] = useState<"search" | "graph" | "detail">("search");
   const paneNavigation = useRef<HTMLElement>(null);
   const previousPane = useRef(activePane);
@@ -83,11 +87,11 @@ export default function Explorer({ dataset = "demo" }: { dataset?: DatasetMode }
     document.getElementById("explorer-detail")?.focus({ preventScroll: true });
     document.getElementById("explorer-detail")?.scrollTo({ top: 0 });
   };
-  const relations = displayRelations(graph.claims);
+  const relations = displayRelations(graph.claims, locale);
   const selectedRelation = selection?.kind === "relation" ? relations[selection.id] : null;
   const selectedEntity = selection?.kind === "entity" ? graph.nodes[selection.id] : null;
   const selectedClaim = selection?.kind === "claim" ? graph.claims[selection.id] : null;
-  const selectionText = selectedEntity ? entityLabel(selectedEntity, graph.nodes).replace("\n", " / ") : selectedClaim ? `${graph.nodes[selectedClaim.subjectId]?.name} → ${relationLabel(selectedClaim)} → ${graph.nodes[selectedClaim.objectId]?.name}` : selectedRelation ? `${graph.nodes[selectedRelation.subjectId]?.name} → ${selectedRelation.label.replaceAll("\n", " / ")} → ${graph.nodes[selectedRelation.objectId]?.name}` : "未選択";
+  const selectionText = selectedEntity ? entityLabel(selectedEntity, graph.nodes, locale).replace("\n", " / ") : selectedClaim ? `${graph.nodes[selectedClaim.subjectId]?.name} → ${relationLabel(selectedClaim, locale)} → ${graph.nodes[selectedClaim.objectId]?.name}` : selectedRelation ? `${graph.nodes[selectedRelation.subjectId]?.name} → ${selectedRelation.label.replaceAll("\n", " / ")} → ${graph.nodes[selectedRelation.objectId]?.name}` : ui.unselected;
   const key = `${graph.generation}:${selection?.kind}:${selection?.id}`;
   const lastDetail = useRef<string | null>(null);
   useEffect(() => {
@@ -105,7 +109,7 @@ export default function Explorer({ dataset = "demo" }: { dataset?: DatasetMode }
       {(["search", "graph", "detail"] as const).map(pane => <button key={pane} aria-pressed={activePane === pane} aria-controls={`explorer-${pane}`} onClick={() => setActivePane(pane)}>{panes[pane]}</button>)}
     </nav>
     <main data-active-pane={activePane} className={`${styles.columns} ${detailWide ? styles.wideDetails : ""}`}>
-      <div id="explorer-search" role="group" tabIndex={-1} aria-label={panes.search} className={styles.panel}><SearchPanel placeholder={labels.searchExample} onChoose={startFrom} /><div className={styles.localActions}><button onClick={() => setSavedViewsOpen(true)}>{savedViewLabels().launch}</button><button onClick={() => setWorkspaceOpen(true)}>{workspaceLabels().launch}</button><button onClick={() => setCapsuleOpen(true)}>{capsuleLabels().launch}</button></div><StartExamples dataset={dataset} onChoose={(entity) => startFrom(entity, true)} /></div>
+      <div id="explorer-search" role="group" tabIndex={-1} aria-label={panes.search} className={styles.panel}><SearchPanel placeholder={labels.searchExample} onChoose={startFrom} /><div lang="ja" className={styles.localActions}><button onClick={() => setSavedViewsOpen(true)}>{savedViewLabels().launch}</button><button onClick={() => setWorkspaceOpen(true)}>{workspaceLabels().launch}</button><button onClick={() => setCapsuleOpen(true)}>{capsuleLabels().launch}</button></div><StartExamples dataset={dataset} onChoose={(entity) => startFrom(entity, true)} /></div>
       <div id="explorer-graph" role="group" tabIndex={-1} aria-label={panes.graph} className={styles.centralScroll}>
       <section className={`${styles.panel} ${styles.graphPanel}`} aria-labelledby="graph-title">
         <div className={styles.graphHeader}>
@@ -113,14 +117,14 @@ export default function Explorer({ dataset = "demo" }: { dataset?: DatasetMode }
             <p data-testid="graph-counts">Entity {Object.keys(graph.nodes).length} / Claim {Object.keys(graph.claims).length}</p><p data-testid="relation-counts">Relation {Object.keys(relations).length}</p>
           </div>
           <div className={styles.rootBar}><p className={styles.rootLabel} data-testid="exploration-root">{entry.root}：{graph.centerId ? graph.nodes[graph.centerId]?.name : entry.rootEmpty}</p>
-            <div className={styles.rootSaveActions}><button onClick={() => setSavedViewsOpen(true)}>{savedViewLabels().launch}</button><button onClick={() => setWorkspaceOpen(true)}>{workspaceLabels().launch}</button><button onClick={() => setCapsuleOpen(true)}>{capsuleLabels().launch}</button></div>
-            {previous && <button onClick={restorePrevious}>{overviewLabels().restore}</button>}</div>
+            <div lang="ja" className={styles.rootSaveActions}><button onClick={() => setSavedViewsOpen(true)}>{savedViewLabels().launch}</button><button onClick={() => setWorkspaceOpen(true)}>{workspaceLabels().launch}</button><button onClick={() => setCapsuleOpen(true)}>{capsuleLabels().launch}</button></div>
+            {previous && <button onClick={restorePrevious}>{overviewLabels(locale).restore}</button>}</div>
         </div>
-        {dataChanged && <div role="alert" className={styles.error}><p>{dataReleaseLabels().changed}</p><button onClick={reloadData}>{dataReleaseLabels().reload}</button></div>}
+        {dataChanged && <div role="alert" className={styles.error}><p>{dataReleaseLabels(locale).changed}</p><button onClick={reloadData}>{dataReleaseLabels(locale).reload}</button></div>}
         <RelationFilter eventRoles={graph.eventRoles ?? null} positions={graph.organizationPositions ?? null} roles={graph.contributionRoles ?? null} value={graph.predicates} onApply={(predicates, roles, positions, eventRoles) => changePredicates(predicates, roles, positions, eventRoles, canvas.current?.capture() ?? null)} />
         {graph.centerId ? <p className={styles.muted}><span className={styles.wideLabel}>{entry.selectedHelp}</span><span className={styles.compactLabel}>{panes.touchHelp}</span></p> : <div className={styles.empty}><h3>{entry.initialTitle}</h3><p>{entry.initialHelp}</p></div>}
-        {Object.values(graph.expansions).some((meta) => meta.active && meta.hasMore) && <p className={styles.muted}>{explorationLabels().neighborsPageHelp}</p>}
-        {blocked && <p role="alert" className={styles.error}>{blocked.error}</p>}
+        {Object.values(graph.expansions).some((meta) => meta.active && meta.hasMore) && <p className={styles.muted}>{explorationLabels(locale).neighborsPageHelp}</p>}
+        {blocked && <p role="alert" className={styles.error}>{explorerMessage(blocked.error!, locale)}</p>}
         <div className={styles.graphNavigationRow}><GraphNavigator key={graph.generation} nodes={graph.nodes} selection={selection} onNavigate={(id) => {
           inspectEntity(id); canvas.current?.focusEntity(id);
         }} />
@@ -129,16 +133,16 @@ export default function Explorer({ dataset = "demo" }: { dataset?: DatasetMode }
             document.getElementById("explorer-relations")?.focus({ preventScroll: true });
           }}>{panes.toRelations}</button>
         </div>
-        {Object.values(graph.claims).some((claim) => claim.contribution?.roleId) && <p className={styles.muted}>{contributionLabels().partial}</p>}
+        {Object.values(graph.claims).some((claim) => claim.contribution?.roleId) && <p className={styles.muted}>{contributionLabels(locale).partial}</p>}
         <GraphCanvas ref={canvas} restoration={viewRestoration} interactionBlocked={!!overview || savedViewsOpen || workspaceOpen || capsuleOpen || !!reading} onEntityDoubleClick={(id) => { if (graph.nodes[id]) setOverview(graph.nodes[id]); }} graph={graph} selection={selection} onEntity={selectEntity} onRelation={(id) => { selectRelation(id); setActivePane("detail"); }} onToggleEntity={toggleEntity} feedback={<>
-          <div className={`${styles.feedback} ${!graph.centerId ? styles.initialFeedback : ""}`} aria-live="polite"><div key={feedbackKey} className={styles.feedbackContent}><p data-testid="selection-status">選択中：{selectionText}</p><p>{loading ? `Graphを取得中…（${loading}件）` : selectedEntity ? graph.expansions[selectedEntity.id]?.expanded ? "近傍は展開済みです。" : graph.expansions[selectedEntity.id]?.pages.length ? "展開は閉じています。クリックで取得済みの枝を復元します。" : "クリックで一段階展開します。" : "線ごとに同じ関係の主張をまとめて表示しています。"}</p></div></div>
-          {graph.notice && !dataChanged && <GraphNotice key={`${graph.generation}:${graph.clock}:${graph.notice}`} message={graph.notice} transient={graph.notice === "取得済みの枝を復元しました。" || graph.notice === overviewLabels().restored} />}
+          <div className={`${styles.feedback} ${!graph.centerId ? styles.initialFeedback : ""}`} aria-live="polite"><div key={feedbackKey} className={styles.feedbackContent}><p data-testid="selection-status">{ui.selected}：{selectionText}</p><p>{loading ? ui.graphLoading(loading) : selectedEntity ? graph.expansions[selectedEntity.id]?.expanded ? ui.expanded : graph.expansions[selectedEntity.id]?.pages.length ? ui.closed : ui.expandHelp : ui.grouped}</p></div></div>
+          {graph.notice && !dataChanged && <GraphNotice key={`${graph.generation}:${graph.clock}:${graph.notice}`} message={explorerMessage(graph.notice, locale)} transient={graph.notice === "取得済みの枝を復元しました。" || graph.notice === overviewLabels("ja").restored} />}
         </>} />
         <RelationsList dataset={dataset} graph={graph} selection={selection} onEntity={selectEntity} onClaim={(id) => { selectClaim(id); setActivePane("detail"); }} onExpand={(id, more) => void expand(id, more)} onClose={close} />
       </section>
       </div>
       <aside id="explorer-detail" tabIndex={-1} className={styles.panel} aria-labelledby="detail-title">
-        <div className={styles.detailHeading}><h2 id="detail-title">詳細</h2>{selection && <button aria-pressed={detailWide} onClick={() => setDetailWide(!detailWide)}>{detailWide ? entry.detailNormal : entry.detailWide}</button>}</div>
+        <div className={styles.detailHeading}><h2 id="detail-title">{ui.detail}</h2>{selection && <button aria-pressed={detailWide} onClick={() => setDetailWide(!detailWide)}>{detailWide ? entry.detailNormal : entry.detailWide}</button>}</div>
         {!selection && <p className={styles.muted}>{entry.detailHelp}</p>}
         {selectedEntity && <EntityDetails dataset={dataset} key={key} entity={selectedEntity} expansion={graph.expansions[selectedEntity.id]} onExpand={(more) => void expand(selectedEntity.id, more)} onClose={() => close(selectedEntity.id)} restricted={restricted} onOverview={() => setOverview(selectedEntity)} onSwitch={(mode) => switchFrom(selectedEntity, mode)} />}
         {selectedEntity && graph.centerId && <GraphPath key={`path:${key}`} nodes={graph.nodes} relations={relations} rootId={graph.centerId} targetId={selectedEntity.id} onRelation={(id) => {

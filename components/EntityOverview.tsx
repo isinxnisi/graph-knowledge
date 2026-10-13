@@ -1,4 +1,6 @@
 "use client";
+import { useUiLocale } from "../lib/client/ui-locale";
+import { explorerLabels, explorerMessage } from "../lib/i18n/explorer";
 
 import { useDialogBackdrop } from "../lib/client/use-dialog-backdrop";
 import { useEffect, useRef, useState } from "react";
@@ -8,13 +10,13 @@ import { ClientApiError, errorMessage, fetchOverview } from "../lib/client/api";
 import { overviewLabels } from "../lib/i18n/entity-overview";
 import { datasetLabels } from "../lib/i18n/dataset";
 import { overviewPresentation, type OverviewRelation } from "../lib/client/overview-presentation";
-import { KIND_LABELS } from "../lib/client/format";
 import RootActions from "./RootActions";
 import styles from "./Explorer.module.css";
 
 function RelationOverview({ relation }: { relation: OverviewRelation }) {
-  const labels = overviewLabels();
-  const view = overviewPresentation(relation);
+  const { locale } = useUiLocale();
+  const labels = overviewLabels(locale);
+  const view = overviewPresentation(relation, locale);
   return <li className={styles.overviewRow} data-testid={`overview-${relation.predicate}-${relation.perspective}`} data-polarity={view.status}>
     <div className={styles.overviewRelationHeading}>
       <h4>{view.title}</h4>
@@ -45,7 +47,9 @@ function RelationOverview({ relation }: { relation: OverviewRelation }) {
 export default function EntityOverview({ entity, dataset, restricted, onClose, onSwitch }: {
   entity: EntitySummary; dataset: DatasetMode; restricted: boolean; onClose: () => void; onSwitch: (mode: "broad" | "same") => void;
 }) {
-  const labels = overviewLabels();
+  const { locale } = useUiLocale();
+  const ui = explorerLabels(locale);
+  const labels = overviewLabels(locale);
   const dialog = useRef<HTMLDialogElement>(null);
   const [result, setResult] = useState<EntityOverviewResponse | null>(null);
   const [failure, setFailure] = useState<{ message: string; missing: boolean } | null>(null);
@@ -74,12 +78,12 @@ export default function EntityOverview({ entity, dataset, restricted, onClose, o
   return <dialog ref={dialog} className={`${styles.conditionDialog} ${styles.overviewDialog}`} aria-labelledby="overview-title" onCancel={(event) => { event.preventDefault(); onClose(); }} {...backdrop}>
     <div className={styles.detailHeading}><h2 id="overview-title">{labels.title}</h2><button onClick={onClose}>{labels.close}</button></div>
     <div className={styles.overviewBody}>
-    <p className={styles.muted}>{datasetLabels(dataset).badge}</p>
-    <div className={styles.overviewEntity}><h3>{entity.name}</h3><span className={styles.badge}>{KIND_LABELS[entity.kind]}</span></div>
+    <p className={styles.muted}>{datasetLabels(dataset, locale).badge}</p>
+    <div className={styles.overviewEntity}><h3>{entity.name}</h3><span className={styles.badge}>{ui.kinds[entity.kind]}</span></div>
     {entity.description && <p>{entity.description}</p>}
     <p className={styles.muted}>{labels.scope}</p>
     {!result && !failure && <p role="status">{labels.loading}</p>}
-    {failure && <div role="alert"><p>{failure.message}</p>{failure.missing && <p>{labels.unavailable}</p>}
+    {failure && <div role="alert"><p>{explorerMessage(failure.message, locale)}</p>{failure.missing && <p>{labels.unavailable}</p>}
       <button onClick={() => { setFailure(null); setResult(null); setAttempt((value) => value + 1); }}>{labels.retry}</button></div>}
     {result && !result.relations.length && <p>{labels.noClaims}</p>}
     {!!result?.relations.length && <>

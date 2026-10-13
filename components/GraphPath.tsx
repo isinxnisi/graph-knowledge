@@ -1,4 +1,5 @@
 "use client";
+import { useUiLocale } from "../lib/client/ui-locale";
 
 import type { EntitySummary } from "../lib/domain/api";
 import { entityLabel, type DisplayRelation } from "../lib/client/graph-presentation";
@@ -13,10 +14,11 @@ export default function GraphPath({ nodes, relations, rootId, targetId, onRelati
   targetId: string;
   onRelation: (id: string) => void;
 }) {
+  const { locale } = useUiLocale();
   if (rootId === targetId) return null;
-  const text = graphPathLabels();
+  const text = graphPathLabels(locale);
   const path = shortestVisiblePath(nodes, relations, rootId, targetId);
-  const name = (id: string) => entityLabel(nodes[id], nodes).replaceAll("\n", " / ");
+  const name = (id: string) => entityLabel(nodes[id], nodes, locale).replaceAll("\n", " / ");
   return <section className={styles.graphPath} aria-label={text.title}>
     <h3>{text.title}</h3>
     {path ? <details>

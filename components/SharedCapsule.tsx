@@ -49,7 +49,7 @@ export default function SharedCapsule({ dataset }: { dataset: DatasetMode }) {
     document.addEventListener("visibilitychange", visibility); window.addEventListener("hashchange", changed); window.addEventListener("pageshow", restored);
     return () => { clearTimeout(timer); clearInterval(poll); active.current?.abort(); document.removeEventListener("visibilitychange", visibility); window.removeEventListener("hashchange", changed); window.removeEventListener("pageshow", restored); };
   }, [refresh]);
-  return <><SiteHeader dataset={dataset} page="shared" /><main className={css.page}>
+  return <><SiteHeader dataset={dataset} page="shared" /><main lang="ja" className={css.page}>
     <header className={css.pageHeader}><p className={css.eyebrow}>{text.title}</p><h1>{text.readTitle}</h1><p>{text.readHelp}</p>
       <p className={css.muted}>{text.returnHelp}</p>
     </header>

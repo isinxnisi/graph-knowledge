@@ -9,7 +9,26 @@ const ja = {
   invalidKind: "検索対象の種類が不正です。", unsupported: "未対応の検索条件です。",
   aliases: "別名", count: (count: number) => `${count}件の候補`,
 };
+const en: typeof ja = {
+  title: "Find an entity",
+  name: "Name or alias",
+  kind: "Search for",
+  all: "All kinds",
+  kinds: { person: "Person", work: "Work", organization: "Organization", event: "Event" },
+  submit: "Search",
+  submitting: "Searching…",
+  loading: "Loading search results…",
+  emptyInput: "Enter a name or alias.",
+  descriptionMissing: "No description",
+  help: "Choose a person, work, organization or event to explore its relations and sources.",
+  noResults: "No results. Try a different name or entity kind.",
+  more: "More matches exist. Narrow the name or entity kind.",
+  invalidKind: "Invalid search kind.",
+  unsupported: "Unsupported search condition.",
+  aliases: "Aliases",
+  count: (n: number) => `${n} result${n === 1 ? "" : "s"}`,
+};
 export function searchLabels(locale = "ja") {
-  const resources: Record<string, typeof ja> = { ja };
+  const resources: Record<string, typeof ja> = { ja, en };
   return resources[locale] ?? resources[locale.split("-")[0]] ?? ja;
 }

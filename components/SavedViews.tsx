@@ -83,7 +83,7 @@ export default function SavedViews({ dataset, root, conditions, onOpen, onClose 
       if (pending.current === controller) pending.current = null;
     }
   };
-  return <dialog ref={dialog} className={`${styles.conditionDialog} ${styles.savedViews}`} aria-labelledby="saved-views-title" onCancel={event => { event.preventDefault(); close(); }} {...backdrop}>
+  return <dialog lang="ja" ref={dialog} className={`${styles.conditionDialog} ${styles.savedViews}`} aria-labelledby="saved-views-title" onCancel={event => { event.preventDefault(); close(); }} {...backdrop}>
     <div className={styles.conditionTitle}><h2 id="saved-views-title">{text.title}</h2><button aria-label={text.close} onClick={close}>×</button></div>
     <p>{text.help}</p><p className={styles.muted}>{text.local}</p>
     {root ? <form className={styles.savedViewForm} onSubmit={event => { event.preventDefault(); save(); }}>

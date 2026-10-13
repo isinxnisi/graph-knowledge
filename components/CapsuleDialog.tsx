@@ -168,7 +168,7 @@ export default function CapsuleDialog({ dataset, graph, onClose }: { dataset: Da
     }
   }
   const overLimit = members.length > CAPSULE_LIMITS.entities || claimIds.length > CAPSULE_LIMITS.claims;
-  return <dialog ref={dialog} className={`${styles.conditionDialog} ${css.dialog}`} aria-labelledby="capsule-title" onCancel={event => { event.preventDefault(); exit("close"); }} {...backdrop}>
+  return <dialog lang="ja" ref={dialog} className={`${styles.conditionDialog} ${css.dialog}`} aria-labelledby="capsule-title" onCancel={event => { event.preventDefault(); exit("close"); }} {...backdrop}>
     <div className={css.title}><h2 id="capsule-title">{text.title}</h2><button onClick={() => exit("close")}>{text.close}</button></div>
     <p>{text.help}</p><p className={styles.muted}>{text.local}</p>
     <p><a href="/member" target="_blank" rel="noopener noreferrer">{memberLabels().launch}</a></p>

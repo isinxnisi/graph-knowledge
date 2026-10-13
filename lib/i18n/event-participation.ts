@@ -10,4 +10,24 @@ const ja = {
   comparison: "立場や期間の異なる主張と、立場を限定していない参加を含みます。互いの肯否を自動判定しません。",
   eventPeriod: "開催期間", periodHelp: "この開催回自体の期間です。人物の全日程参加を示しません。",
 };
-export function eventParticipationLabels(locale = "ja") { const resources: Record<string, typeof ja> = { ja }; return resources[locale] ?? resources[locale.split("-")[0]] ?? ja; }
+const en: typeof ja = {
+  roles: { CHAIR: "Conference chair" },
+  invalid: "Invalid event participation position.",
+  title: "Position in event participation",
+  edit: "Adjust participation positions",
+  noRole: "Do not filter by participation position",
+  specify: "Choose participation positions",
+  none: "No participation position limitation",
+  empty: "No positions selected · hide participation relations",
+  help: "Show participation claims specifying these positions, including denied claims. Other relations are not filtered.",
+  broad: "Include participation claims with no position limitation.",
+  limitation: "Conference chair with participation in this occurrence. It does not mean honorary chair, committee office, or attendance throughout the event.",
+  evidence: "Original participation position wording",
+  language: "Language of the wording",
+  sameComparison: "Same participation position and period (not a truth assessment)",
+  differentComparison: "Different participation position limitation or period",
+  comparison: "Includes different positions and periods, as well as unqualified participation. Their polarity is not automatically compared.",
+  eventPeriod: "Event dates",
+  periodHelp: "Dates of this event occurrence, not a claim of attendance throughout it.",
+};
+export function eventParticipationLabels(locale = "ja") { const resources: Record<string, typeof ja> = { ja, en }; return resources[locale] ?? resources[locale.split("-")[0]] ?? ja; }

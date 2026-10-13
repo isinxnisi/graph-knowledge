@@ -8,7 +8,17 @@ const ja = {
   withdrawnHelp: "現在の探索には含まれません。元の主張と、その参照資料を表示しています。",
   replacement: "差替え先の主張を読む",
 };
+const en: typeof ja = {
+  changed: "The dataset has changed. Reload from the same starting entity and conditions without mixing it into the old exploration.",
+  readingChanged: "The dataset has changed. Reload the saved content.",
+  workspaceChanged: "The dataset has changed. Restore the exploration again.",
+  preparing: "Preparing public data.",
+  reload: "Reload exploration with updated data",
+  withdrawn: "Withdrawn claim",
+  withdrawnHelp: "Excluded from current exploration. The original claim and its sources are shown here.",
+  replacement: "Read replacement claim",
+};
 export function dataReleaseLabels(locale = "ja") {
-  const resources: Record<string, typeof ja> = { ja };
+  const resources: Record<string, typeof ja> = { ja, en };
   return resources[locale] ?? resources[locale.split("-")[0]] ?? ja;
 }

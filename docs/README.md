@@ -43,6 +43,7 @@
 | [共通KGのrelease適用](design/PUBLIC_KG_RELEASES.md) | public-kgの生成・検証・dry-run・冪等更新、明示撤回/差替え、revision付き探索、KG単独backup/restore。凍結版は維持。本番配置は次行 |
 | [単一本番構成の配置](design/PRODUCTION_DEPLOYMENT.md) | step7。専用Docker、厳密な本番接続guard、standalone Web、readiness、既存Caddyにpreview認証付きで接続する管理者手順。2026-10-12、ユーザーによる配置後にVPSの認証付きHTTPS・実ブラウザ4経路を確認。一般公開は未実施。日常確認先beta→ローカル3200の毎回反映、VPSの節目更新もここを正本とする |
 | [退会・停止と最小運営操作](design/ACCOUNT_LIFECYCLE_OPERATIONS.md) | 公開β step14。確認付き本人退会・全datasetの会員保存削除、CLIによる利用停止／再開・共有停止・投稿非表示。実Google・本番会員有効化は別工程 |
+| [探索UIの表示言語](design/UI_LOCALE.md) | 公開β step15。ブラウザ単位の日英切替、検索・条件・Graph・概要・根拠の表示と探索state／原資料の分離。会員／共有の全体対応はstep16 |
 | [共通ヘッダとUI基礎](design/PRODUCT_UI_FOUNDATIONS.md) | 公開β step8〜12。共通ヘッダ・別タブのアカウント入口・三テーマ・操作フィードバックとreduced-motion、設定メニュー・本人表示名・ブラウザ外観保存。実Googleは別工程 |
 | [アカウント・所有者・会員保存](design/ACCOUNT_AND_OWNERSHIP_DESIGN.md) | 初回設計。会員Capsuleを実装済み（実Googleは未接続）。認証・UserとKG Person・所有者認可・一種類のprivate保存、実credential待ちの範囲とテストを具体化 |
 | [共有・議論の最小縦経路](design/COMMUNITY_VERTICAL_SLICES.md) | 初回設計。限定リンク共有と短い版別コメントを実装。投稿候補・一般公開・運営対応は未実装。Capsule版・限定リンク・スレッド対象・投稿時版・運営／知識受入の分離。全コミュニティ基盤を先行導入しない |
@@ -67,7 +68,7 @@
 | [条件付き探索の第一段階](design/CONDITIONAL_EXPLORATION_PHASE.md) | 既存predicate集合の選択・条件変更UX・API・cursor・変更直前の探索への一件復帰の採用契約 |
 | [探索モデル](design/EXPLORATION_MODEL_REVIEW.md) | 開閉・最小predicate条件は実装済み。kind・期間条件・複数起点・時系列の残りは提案。探索の拡張時に参照 |
 | [操作と設定](design/GRAPH_INTERACTION_AND_SETTINGS.md) | 再クリック・300ms判定・表示中対象への移動・起点からの表示中経路・狭い画面の領域切り替え・隣接一覧の追加取得と再試行は実装済み。設定モーダル・永続化・管理設定は検討中 |
-| [プリセット・分類・多言語・会員保存](design/EXPLORATION_PRESETS_REVIEW.md) | 多言語対応は設計前提として採用済み。具体方式・プリセット・保存は設計案。predicate条件APIは実装済み。taxonomy・言語切替・認証・保存は未実装 |
+| [プリセット・分類・多言語・会員保存](design/EXPLORATION_PRESETS_REVIEW.md) | 多言語対応は設計前提として採用済み。具体方式・プリセット・保存は設計案。predicate条件APIは実装済み。taxonomy・presetは未実装。探索の日英切替と会員保存は上記の個別契約を参照 |
 | [Predicate意味契約・チェック](design/PREDICATE_CONTRACTS.md) | 既存4語彙の契約・基準版・比較票・validatorを実装済み。Phase 15でPARTICIPATED_INを追加。追加と変更の手順。制作RoleはPhase 06で導入済み |
 | [関係語彙・役割・意味境界](design/RELATION_VOCABULARY_REVIEW.md) | 凍結パイロット後の設計レビュー。意味契約、役割限定、追加審査、分類・表示の分離。提案を採用し、既存4語彙の契約・チェックを実装。制作RoleはPhase 06を参照。複数predicateの表示束は未実装 |
 | [制作Roleの最小設計](design/CONTRIBUTION_ROLE_REVIEW.md) | CONTRIBUTED_TO限定の4 Role候補・刊行物scope・肯否／比較・条件／cursor・表示・v2方針。採用済み。現行契約と受入状態はPhase 06を参照 |

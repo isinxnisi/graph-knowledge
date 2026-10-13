@@ -1,4 +1,6 @@
 "use client";
+import { useUiLocale } from "../lib/client/ui-locale";
+import { explorerLabels } from "../lib/i18n/explorer";
 import { useEffect, useRef, useState } from "react";
 import type { DatasetMode } from "../lib/domain/dataset";
 import { datasetLabels } from "../lib/i18n/dataset";
@@ -7,7 +9,8 @@ import styles from "./SiteHeader.module.css";
 import { appearanceKey, defaultAppearance, readAppearance, type Appearance } from "../lib/client/appearance";
 
 export default function SiteHeader({ dataset, page = "explore" }: { dataset: DatasetMode; page?: "explore" | "member" | "shared" }) {
-  const text = siteLabels(), data = datasetLabels(dataset);
+  const { locale, setLocale, storageError: languageError } = useUiLocale();
+  const ui = explorerLabels(locale), text = siteLabels(locale), data = datasetLabels(dataset, locale);
   const [appearance, setAppearance] = useState(defaultAppearance);
   const [storageError, setStorageError] = useState(false);
   const menu = useRef<HTMLDetailsElement>(null);
@@ -57,6 +60,9 @@ export default function SiteHeader({ dataset, page = "explore" }: { dataset: Dat
             }}><option value="brown">{text.brown}</option><option value="blue">{text.blue}</option></select></label>}
           </div>
           <p>{text.appearanceHelp}</p>
+          <label className={styles.language}>{ui.language}<select value={locale} onChange={event => setLocale(event.target.value === "en" ? "en" : "ja")}><option value="ja">日本語</option><option value="en">English</option></select></label>
+          <p>{ui.languageHelp}</p>
+          {languageError && <p role="status">{ui.languageFailed}</p>}
           {storageError && <p role="status">{text.appearanceFailed}</p>}
         </div>
       </details>

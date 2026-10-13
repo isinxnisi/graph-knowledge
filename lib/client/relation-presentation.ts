@@ -29,7 +29,7 @@ export function relationPresentation(claims: readonly ClaimSummary[], locale = "
   const counts = (items: readonly ClaimSummary[]) => ({ affirmed: items.filter(c => c.polarity === "affirmed").length, denied: items.filter(c => c.polarity === "denied").length });
   const status = counts(claims);
   const ids = qualification ? [...new Set(claims.map(qualification.value))].sort((a, b) => a === null ? 1 : b === null ? -1 : a.localeCompare(b)) : [];
-  const entries = ids.map(id => ({ id, label: id === null ? `${qualification!.short}${text.unspecified}` : qualification!.label(id), ...counts(claims.filter(c => qualification!.value(c) === id)) }));
+  const entries = ids.map(id => ({ id, label: id === null ? text.unqualified(qualification!.short) : qualification!.label(id), ...counts(claims.filter(c => qualification!.value(c) === id)) }));
   const specified = entries.filter(e => e.id !== null);
   // Graphは具体語を先に読む。指定なし・件数は詳細へ残し、長い語を種類数へ置き換えない。
   // ID順の先頭二値を表示するだけで、頻度・正しさ・期間による順位付けではない。

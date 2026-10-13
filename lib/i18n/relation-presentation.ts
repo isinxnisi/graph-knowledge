@@ -2,7 +2,7 @@ const ja = {
   title: "この関係の概要", claimsTitle: "個別の主張と根拠", mixed: "肯定・否定あり", denied: "否定のみ",
   endpoints: "関係する対象", endpointHelp: "対象の詳細から、関係概要の確認や探索の起点切替ができます。",
   inspectEntity: (name: string) => `${name}の詳細を見る`,
-  role: "役割", position: "立場", unspecified: "指定なし", termDenied: "否定のみ", termMixed: "肯否あり",
+  role: "役割", position: "立場", unqualified: (label: string) => `${label}指定なし`, termDenied: "否定のみ", termMixed: "肯否あり",
   graphCategories: { CONTRIBUTED_TO: "制作", AFFILIATED_WITH: "組織", PARTICIPATED_IN: "参加" },
   qualificationHelp: "限定の読み方", graphScope: "この線は現在Graphに表示している主張をまとめたものです。",
   noRole: "この主張では制作の役割を指定していません。資料の記載は下の根拠で確認できます。",
@@ -22,7 +22,43 @@ const ja = {
   moreTerms: (n: number) => `ほか${n}件`, jump: (n: number) => `主張 ${n}を読む`,
 };
 // 新しい表示文言を識別子や知識語彙へ混ぜない。翻訳はここへ追加する。
+const en: typeof ja = {
+  title: "Relation overview",
+  claimsTitle: "Individual claims and evidence",
+  mixed: "Affirmed and denied",
+  denied: "Denied only",
+  endpoints: "Related entities",
+  endpointHelp: "Open an entity's details to view its relation overview or change the starting entity.",
+  inspectEntity: (name: string) => `View details of ${name}`,
+  role: "Role",
+  position: "Position",
+  unqualified: (label: string) => `${label} unspecified`,
+  termDenied: "Denied only",
+  termMixed: "Affirmed and denied",
+  graphCategories: { CONTRIBUTED_TO: "Production", AFFILIATED_WITH: "Organization", PARTICIPATED_IN: "Participation" },
+  qualificationHelp: "How to read qualifiers",
+  graphScope: "This line summarizes the claims currently shown in the graph.",
+  noRole: "This claim does not specify a production role. Read the source wording below.",
+  noPosition: "This claim does not specify a position in the organization. Read the source wording below.",
+  noEventRole: "This claim does not specify a participation position. It does not affirm every position.",
+  unspecifiedHelp: "Unspecified means that the claim has no limitation for this field. It does not affirm all roles or positions.",
+  mixedHelp: "Claims may have different qualifiers or periods. Mixed polarity alone does not establish a contradiction.",
+  unseenHelp: "Matches current conditions but is not included in this line. It may belong to an unfetched page or a closed branch.",
+  outsideHelp: "Shown for comparison. Not added to the current graph.",
+  reading: "Check each claim's qualifiers, period and evidence. Order does not indicate truth or reliability.",
+  original: "Source wording and the accepted scope of this claim",
+  metadata: "Source bibliographic details",
+  evidence: "Read evidence",
+  partial: "Some related claims have not loaded. Only the fetched portion is shown.",
+  loadingProgress: (n: number, total: number) => `Loading related claims… (${n} / ${total} details loaded)`,
+  failed: (n: number) => `Could not load ${n} related claims.`,
+  graphClaims: (n: number) => `${n} claims shown in the graph`,
+  claimCount: (n: number) => `${n} claims`,
+  counts: (a: number, d: number) => `Affirmed ${a} / Denied ${d}`,
+  moreTerms: (n: number) => `${n} more`,
+  jump: (n: number) => `Read claim ${n}`,
+};
 export function relationPresentationLabels(locale = "ja") {
-  const resources: Record<string, typeof ja> = { ja };
+  const resources: Record<string, typeof ja> = { ja, en };
   return resources[locale] ?? resources[locale.split("-")[0]] ?? ja;
 }

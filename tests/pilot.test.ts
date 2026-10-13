@@ -49,7 +49,8 @@ describe("dataset target separation", () => {
   });
   it("labels pilot and registration limits through the locale boundary", () => {
     expect(datasetLabels("demo").badge).toBe("架空のデモデータ");
-    expect(datasetLabels("pilot-urasawa-v1", "en").badge).toContain("実データ");
+    expect(datasetLabels("pilot-urasawa-v1", "en").badge).toBe("Small real-data pilot v1");
+    expect(datasetLabels("pilot-urasawa-v1", "fr").badge).toContain("実データ");
     expect(datasetLabels("pilot-urasawa-v1").empty).toContain("登録範囲");
   });
 });

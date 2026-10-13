@@ -8,7 +8,16 @@ const ja = {
   selectionHelp: "選択中の対象、または関係と両端を表示します。枝の開閉は変えません。",
 };
 
+const en: typeof ja = {
+  title: "Graph view controls",
+  zoomIn: "Zoom in",
+  zoomOut: "Zoom out",
+  zoom: "Graph zoom",
+  fit: "Show all",
+  selection: "Show selection",
+  selectionHelp: "Show the selected entity or relation and its endpoints. Branches stay open or closed as before.",
+};
 export function graphViewportLabels(locale = "ja") {
-  const resources: Record<string, typeof ja> = { ja };
+  const resources: Record<string, typeof ja> = { ja, en };
   return resources[locale] ?? resources[locale.split("-")[0]] ?? ja;
 }

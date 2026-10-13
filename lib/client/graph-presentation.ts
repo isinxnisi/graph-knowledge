@@ -1,14 +1,15 @@
 import { relationPresentation } from "./relation-presentation";
 import { relationPresentationLabels } from "../i18n/relation-presentation";
-import { PREDICATES } from "../domain/predicates";
+import { explorationLabels } from "../i18n/exploration";
+import { explorerLabels } from "../i18n/explorer";
 import type { EntitySummary, ClaimSummary } from "../domain/api";
 
 // 同名がGraph内に存在するときだけ、登録済みの説明を補助ラベルに使う。
-export function entityLabel(entity: EntitySummary, nodes: Record<string, EntitySummary>): string {
+export function entityLabel(entity: EntitySummary, nodes: Record<string, EntitySummary>, locale = "ja"): string {
   const peers = Object.values(nodes).filter((node) => node.name === entity.name);
   if (peers.length < 2) return entity.name;
-  const description = entity.description?.split(/[、。]/)[0] || "説明なし";
-  const duplicateDescription = peers.some((node) => node.id !== entity.id && (node.description?.split(/[、。]/)[0] || "説明なし") === description);
+  const description = entity.description?.split(/[、。]/)[0] || explorerLabels(locale).noDescription;
+  const duplicateDescription = peers.some((node) => node.id !== entity.id && (node.description?.split(/[、。]/)[0] || explorerLabels(locale).noDescription) === description);
   return `${entity.name}\n${description}${duplicateDescription ? ` (${entity.id.slice(0, 8)})` : ""}`;
 }
 
@@ -20,7 +21,7 @@ export type DisplayRelation = {
   claimIds: string[]; polarity: "affirmed" | "denied" | "mixed"; label: string;
   badge: string; canvasLabel: string;
 };
-export function displayRelations(claims: Record<string, ClaimSummary>): Record<string, DisplayRelation> {
+export function displayRelations(claims: Record<string, ClaimSummary>, locale = "ja"): Record<string, DisplayRelation> {
   const groups = new Map<string, ClaimSummary[]>();
   Object.values(claims).forEach((claim) => {
     const id = relationId(claim);
@@ -30,9 +31,9 @@ export function displayRelations(claims: Record<string, ClaimSummary>): Record<s
     const first = group[0];
     const polarities = new Set(group.map((claim) => claim.polarity));
     const polarity = polarities.size > 1 ? "mixed" : first.polarity;
-    const presentation = relationPresentation(group);
-    const suffix = polarity === "mixed" ? `\n${relationPresentationLabels().mixed}` : polarity === "denied" ? "\n（否定）" : "";
-    const canvasLabel = (presentation.graphQualification || PREDICATES[first.predicate].label) + suffix;
+    const presentation = relationPresentation(group, locale);
+    const suffix = polarity === "mixed" ? `\n${relationPresentationLabels(locale).mixed}` : polarity === "denied" ? `\n（${explorerLabels(locale).denied}）` : "";
+    const canvasLabel = (presentation.graphQualification || explorationLabels(locale).predicates[first.predicate]) + suffix;
     return [id, { id, subjectId: first.subjectId, objectId: first.objectId, predicate: first.predicate,
       claimIds: group.map((claim) => claim.id).sort(), polarity,
       label: (presentation.graphCategory ? `${presentation.graphCategory}\n` : "") + canvasLabel,

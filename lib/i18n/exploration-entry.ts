@@ -23,7 +23,37 @@ const ja = {
   root: "探索の起点", rootEmpty: "未指定", detailWide: "詳細を広く読む", detailNormal: "詳細の幅を戻す",
   detailHelp: "Graphで対象や線を選ぶと、ここで内容と根拠を確認できます。",
 };
-export function entryLabels(locale = "ja") { const resources: Record<string, typeof ja> = { ja }; return resources[locale] ?? resources[locale.split("-")[0]] ?? ja; }
+const en: typeof ja = {
+  edit: "Edit relations to follow",
+  title: "Edit exploration conditions",
+  applied: "Applied",
+  unrestricted: "All relations (no additional conditions)",
+  cancel: "Cancel",
+  draft: "Editing · not applied",
+  unchanged: "Same as the applied conditions.",
+  apply: "Apply",
+  closeEditor: "Close condition editor",
+  roleEdit: "Adjust production roles",
+  noRole: "Do not filter by role",
+  specifyRole: "Choose roles",
+  roleHelp: "Show claims with the selected roles, including denied claims. Claims without a role are excluded.",
+  broadHelp: "Include contributions with no role limitation.",
+  noContribution: "Production relations will not be shown. Other selected relations remain available.",
+  none: "Show no relations",
+  noRoles: "No roles selected · hide production relations",
+  scope: "Conditions apply to the exploration, not search results.",
+  restart: "Applying refetches from the same starting entity and resets open branches. Return to the previous exploration to undo. Cancel leaves the exploration unchanged.",
+  initialTitle: "Start with an entity, follow its connections",
+  initialHelp: "Choose a starting example or search for a name or alias. Adjust relations later.",
+  selectedHelp: "Click an entity to expand its surroundings. Select a line to read claims and sources.",
+  graphResize: "Drag the bottom-right corner to adjust height",
+  root: "Starting entity",
+  rootEmpty: "Not selected",
+  detailWide: "Widen details",
+  detailNormal: "Restore detail width",
+  detailHelp: "Select an entity or line in the graph to read its details and evidence.",
+};
+export function entryLabels(locale = "ja") { const resources: Record<string, typeof ja> = { ja, en }; return resources[locale] ?? resources[locale.split("-")[0]] ?? ja; }
 export function conditionSummary(predicates: PredicateFilter, roles: ContributionRoleFilter, locale = "ja", positions: OrganizationPositionFilter = null, eventRoles: EventRoleFilter = null) {
   const text = entryLabels(locale), relations = explorationLabels(locale), roleText = contributionLabels(locale);
   if (predicates === null && roles === null && positions === null && eventRoles === null) return text.unrestricted;

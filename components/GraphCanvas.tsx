@@ -1,4 +1,6 @@
 "use client";
+import { useUiLocale } from "../lib/client/ui-locale";
+import { explorerLabels } from "../lib/i18n/explorer";
 
 import { contributionLabels } from "../lib/i18n/contribution";
 import { entryLabels } from "../lib/i18n/exploration-entry";
@@ -20,7 +22,9 @@ import styles from "./Explorer.module.css";
 type Props = { contentOnly?: boolean; ref?: Ref<GraphCanvasHandle>; feedback?: ReactNode; restoration?: ViewRestoration | null; interactionBlocked?: boolean; graph: GraphState; selection: Selection; onEntity: (id: string) => void; onRelation: (id: string) => void; onToggleEntity: (id: string) => void; onEntityDoubleClick?: (id: string) => void };
 
 export default function GraphCanvas({ contentOnly = false, ref, feedback, restoration, interactionBlocked, graph, selection, onEntity, onRelation, onToggleEntity, onEntityDoubleClick }: Props) {
-  const viewportLabels = graphViewportLabels();
+  const { locale } = useUiLocale();
+  const ui = explorerLabels(locale);
+  const viewportLabels = graphViewportLabels(locale);
   const [zoom, setZoom] = useState(1);
   const container = useRef<HTMLDivElement>(null);
   const badgeLayer = useRef<HTMLDivElement>(null);
@@ -39,7 +43,7 @@ export default function GraphCanvas({ contentOnly = false, ref, feedback, restor
     : selection?.id;
   const canFocusSelection = !!selectedId && (selection?.kind === "entity"
     ? !!graph.nodes[selectedId]
-    : !!displayRelations(graph.claims)[selectedId]);
+    : !!displayRelations(graph.claims, locale)[selectedId]);
   function changeZoom(factor: number) {
     const cy = core.current;
     if (!cy || !hasNodes || interactionBlocked) return;
@@ -150,13 +154,13 @@ export default function GraphCanvas({ contentOnly = false, ref, feedback, restor
       generation.current = graph.generation; previousCenter.current = graph.centerId; previousCondition.current = graph.conditionKey;
     }
     const newNodes = Object.values(graph.nodes).filter((node) => !cy.getElementById(node.id).length);
-    const relations = displayRelations(graph.claims);
+    const relations = displayRelations(graph.claims, locale);
     // 同じ世代でも表示対象は減る。端点を消す前に辺を削除する。
     cy.nodes().forEach((node) => { if (!graph.nodes[node.id()]) savedPositions.current[node.id()] = { ...node.position() }; });
     Object.keys(savedPositions.current).forEach((id) => { if (!graph.cacheNodes[id] && (!initialLayoutDone.current || (graph.centerId && graph.expansions[graph.centerId]?.expanded))) delete savedPositions.current[id]; });
     cy.batch(() => { cy.edges().filter((edge) => !relations[edge.id()]).remove(); cy.nodes().filter((node) => !graph.nodes[node.id()]).remove(); });
     const routes = edgeRoutes(relations);
-    const elements: ElementDefinition[] = newNodes.map((node) => ({ group: "nodes", data: { id: node.id, label: entityLabel(node, graph.nodes), kind: node.kind }, position: { x: 0, y: 0 } }));
+    const elements: ElementDefinition[] = newNodes.map((node) => ({ group: "nodes", data: { id: node.id, label: entityLabel(node, graph.nodes, locale), kind: node.kind }, position: { x: 0, y: 0 } }));
     Object.values(relations).forEach((claim) => {
       if (!cy.getElementById(claim.id).length) elements.push({ group: "edges", data: { id: claim.id, source: claim.subjectId, target: claim.objectId, polarity: claim.polarity, claimIds: claim.claimIds, badge: claim.badge, canvasLabel: claim.canvasLabel, ...routes[claim.id] } });
     });
@@ -165,7 +169,7 @@ export default function GraphCanvas({ contentOnly = false, ref, feedback, restor
       Object.values(graph.nodes).forEach((node) => cy.getElementById(node.id).data({ expanded: graph.expansions[node.id]?.expanded ? 1 : 0 }));
       Object.entries(relations).forEach(([id, relation]) => cy.getElementById(id).data({ polarity: relation.polarity, claimIds: relation.claimIds, badge: relation.badge, canvasLabel: relation.canvasLabel, ...routes[id] }));
       if (newNodes.length) { cy.nodes().removeClass("added"); if (!reset && initialLayoutDone.current) newNodes.forEach((node) => cy.getElementById(node.id).addClass("added")); }
-      Object.values(graph.nodes).forEach((node) => { const element = cy.getElementById(node.id); element.data("label", entityLabel(node, graph.nodes)); });
+      Object.values(graph.nodes).forEach((node) => { const element = cy.getElementById(node.id); element.data("label", entityLabel(node, graph.nodes, locale)); });
       cy.nodes().removeClass("center");
       if (graph.centerId) cy.getElementById(graph.centerId).addClass("center");
     });
@@ -216,7 +220,7 @@ export default function GraphCanvas({ contentOnly = false, ref, feedback, restor
     }
     cy.on("dragfree", "node", updateRoutes);
     return () => { cy.off("dragfree", "node", updateRoutes); };
-  }, [graph, restoration, contentOnly]);
+  }, [graph, restoration, contentOnly, locale]);
 
   useEffect(() => {
     const cy = core.current;
@@ -243,14 +247,14 @@ export default function GraphCanvas({ contentOnly = false, ref, feedback, restor
       <button disabled={!canFocusSelection || interactionBlocked} title={viewportLabels.selectionHelp} onClick={showSelection}>{viewportLabels.selection}</button>
     </div>
     <div className={styles.canvas}>
-      <div className={styles.cySurface} ref={container} onPointerDownCapture={() => core.current?.resize()} data-testid="graph-canvas" tabIndex={-1} role="img" aria-label="人物・作品・組織・出来事の関係グラフ。操作できるテキスト一覧は下にあります。" />
+      <div className={styles.cySurface} ref={container} onPointerDownCapture={() => core.current?.resize()} data-testid="graph-canvas" tabIndex={-1} role="img" aria-label={ui.graphAria} />
       <div className={styles.relationPatches} ref={badgeLayer} aria-hidden="true" />
       <div className={styles.graphOverlay} data-testid="graph-overlay">{feedback}</div>
     </div>
     <div className={styles.graphTools}>
-      <span>{entryLabels().graphResize}</span>
-      <span>丸：人物 ／ 四角：作品 ／ 六角形：組織 ／ ひし形：出来事</span>
-      <span>矢印：方向 ／ 破線：否定 ／ {contributionLabels().mixedLegend}{!contentOnly && " ／ 二重枠：展開済 ／ 淡い外枠：新規表示"}</span>
+      <span>{entryLabels(locale).graphResize}</span>
+      <span>{ui.shapes}</span>
+      <span>{ui.edges} ／ {contributionLabels(locale).mixedLegend}{!contentOnly && ` ／ ${ui.nodeStates}`}</span>
     </div>
   </>;
 }

@@ -9,7 +9,17 @@ const ja = {
   descriptionMissing: "説明なし",
 };
 
+const en: typeof ja = {
+  title: "Go to a visible entity",
+  compactTitle: "Go to entity",
+  filter: "Filter visible names and descriptions",
+  help: "Choose an entity already in this graph. Move to its position and details without opening or closing branches.",
+  count: (n: number, total: number) => `${n} of ${total}`,
+  empty: "No visible entities match. Try a different name or description.",
+  move: "Go to position and details",
+  descriptionMissing: "No description",
+};
 export function graphNavigationLabels(locale = "ja") {
-  const resources: Record<string, typeof ja> = { ja };
+  const resources: Record<string, typeof ja> = { ja, en };
   return resources[locale] ?? resources[locale.split("-")[0]] ?? ja;
 }

@@ -10,4 +10,23 @@ const ja = {
   sameComparison: "同じ立場・期間の比較候補（真偽の判定ではありません）", differentComparison: "立場の限定または期間が異なる主張",
   comparison: "立場・期間の違う主張や、立場の限定なしの主張も含みます。同じ二者の関わりとしてまとめており、互いの肯否を自動判定しません。",
 };
-export function organizationParticipationLabels(locale = "ja") { const resources: Record<string, typeof ja> = { ja }; return resources[locale] ?? resources[locale.split("-")[0]] ?? ja; }
+const en: typeof ja = {
+  invalid: "Invalid organization participation position.",
+  positions: { VISITOR: "Visitor", ASSOCIATE_PROFESSOR: "Associate professor" },
+  title: "Position in organization involvement",
+  edit: "Adjust organization positions",
+  noPosition: "Do not filter by position",
+  specify: "Choose positions",
+  none: "No position limitation",
+  empty: "No positions selected · hide organization involvement",
+  help: "Show only claims specifying these positions, including denied claims. Unqualified claims are excluded. Other relations are not filtered.",
+  broad: "Include claims with no position limitation.",
+  limitation: "Wording from the source, not a determination of employment type, full-time status, or equivalence to a Japanese academic title. Check each claim's period.",
+  evidence: "Original position wording",
+  language: "Language of the wording",
+  count: (n: number) => `${n} positions`,
+  sameComparison: "Same position and period (not a truth assessment)",
+  differentComparison: "Different position limitation or period",
+  comparison: "Includes different positions, periods and unqualified claims for the same pair. Their polarity is not automatically compared.",
+};
+export function organizationParticipationLabels(locale = "ja") { const resources: Record<string, typeof ja> = { ja, en }; return resources[locale] ?? resources[locale.split("-")[0]] ?? ja; }

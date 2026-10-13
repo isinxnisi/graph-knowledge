@@ -1,3 +1,5 @@
+import { useUiLocale } from "../lib/client/ui-locale";
+import { explorerLabels, explorerMessage } from "../lib/i18n/explorer";
 import type { DatasetMode } from "../lib/domain/dataset";
 import { datasetLabels } from "../lib/i18n/dataset";
 import { explorationLabels } from "../lib/i18n/exploration";
@@ -11,24 +13,26 @@ export default function RelationsList({ graph, selection, onEntity, onClaim, onE
   dataset?: DatasetMode;
   graph: GraphState; selection: Selection; onEntity: (id: string) => void; onClaim: (id: string) => void; onExpand: (id: string, more?: boolean) => void; onClose: (id: string) => void;
 }) {
-  const relation = selection?.kind === "relation" ? displayRelations(graph.claims)[selection.id] : null;
+  const { locale } = useUiLocale();
+  const ui = explorerLabels(locale);
+  const relation = selection?.kind === "relation" ? displayRelations(graph.claims, locale)[selection.id] : null;
   const entityId = selection?.kind === "entity" ? selection.id : selection?.kind === "claim" ? graph.claims[selection.id]?.subjectId : relation?.subjectId ?? null;
   const entity = entityId ? graph.nodes[entityId] : null;
-  if (!entity) return <p className={styles.muted}>Nodeを選ぶと、そのEntityの隣接関係をテキストで確認できます。</p>;
+  if (!entity) return <p className={styles.muted}>{ui.listHelp}</p>;
   const claims = Object.values(graph.claims).filter((claim) => claim.subjectId === entity.id || claim.objectId === entity.id);
   const expansion = graph.expansions[entity.id];
-  const text = explorationLabels();
-  return <section id="explorer-relations" tabIndex={-1} className={styles.relations} aria-label="選択Entityの隣接関係">
-    <div className={styles.relationsHeading}><h3>{entity.name}の隣接関係</h3>
+  const text = explorationLabels(locale);
+  return <section id="explorer-relations" tabIndex={-1} className={styles.relations} aria-label={ui.adjacentAria}>
+    <div className={styles.relationsHeading}><h3>{ui.adjacent(entity.name)}</h3>
       <button className={styles.compactLink} onClick={() => {
         document.getElementById("explorer-graph")?.scrollTo({ top: 0 });
         document.getElementById("explorer-graph")?.focus({ preventScroll: true });
-      }}>{explorerPaneLabels().backToGraph}</button>
+      }}>{explorerPaneLabels(locale).backToGraph}</button>
     </div>
-    <div className={styles.actions}>{expansion?.open ? <button onClick={() => onClose(entity.id)}>展開を閉じる</button> : <button onClick={() => onExpand(entity.id)}>{expansion?.pages.length ? "展開を再開" : "近傍を展開"}</button>}</div>
+    <div className={styles.actions}>{expansion?.open ? <button onClick={() => onClose(entity.id)}>{ui.closeBranch}</button> : <button onClick={() => onExpand(entity.id)}>{expansion?.pages.length ? ui.reopenBranch : ui.expand}</button>}</div>
     {expansion?.loading && <p role="status">{expansion.expanded ? text.neighborsLoadingMore : text.neighborsLoading}</p>}
     {expansion?.error && <div role="alert" className={styles.error}>
-      <p>{expansion.error}</p>
+      <p>{explorerMessage(expansion.error, locale)}</p>
       <button disabled={expansion.loading} onClick={() => onExpand(entity.id, expansion.open && expansion.expanded)}>{text.neighborsRetry}</button>
     </div>}
     {expansion?.open && expansion.hasMore && <div>
@@ -37,17 +41,17 @@ export default function RelationsList({ graph, selection, onEntity, onClaim, onE
         {expansion.loading ? text.neighborsLoadingMore : text.neighborsMore}
       </button>
     </div>}
-    {!claims.length && !expansion?.loading && !expansion?.error && <p role="status">{expansion?.expanded && expansion.pages.every((page) => !page.claimIds.length) && !expansion.hasMore ? graph.predicates === null && graph.contributionRoles === null && graph.organizationPositions === null && graph.eventRoles === null ? datasetLabels(dataset).empty : text.empty : !expansion?.open ? "展開は閉じています。再開すると取得済みの枝を復元します。" : "表示中の隣接関係はありません。"}</p>}
+    {!claims.length && !expansion?.loading && !expansion?.error && <p role="status">{expansion?.expanded && expansion.pages.every((page) => !page.claimIds.length) && !expansion.hasMore ? graph.predicates === null && graph.contributionRoles === null && graph.organizationPositions === null && graph.eventRoles === null ? datasetLabels(dataset, locale).empty : text.empty : !expansion?.open ? ui.closedHelp : ui.noAdjacent}</p>}
     <ul className={styles.relationList}>
       {claims.map((claim) => {
         const neighbor = graph.nodes[claim.subjectId === entity.id ? claim.objectId : claim.subjectId];
         const selected = (selection?.kind === "claim" && selection.id === claim.id) || (selection?.kind === "relation" && selection.id === relationId(claim));
         return <li key={claim.id} className={selected ? styles.selectedRelation : undefined} data-testid={`relation-${claim.id}`}>
-          <p>{entityLabel(graph.nodes[claim.subjectId], graph.nodes).replace("\n", " / ")} → {relationLabel(claim)} → {entityLabel(graph.nodes[claim.objectId], graph.nodes).replace("\n", " / ")}</p>
-          <p className={styles.muted}>{polarityLabel(claim)} · {qualificationLabel(claim) && `${qualificationLabel(claim)} · `}{formatPeriod(claim.period)} · {claim.sourceCount ? `出典 ${claim.sourceCount}件` : "出典未確認"}</p>
+          <p>{entityLabel(graph.nodes[claim.subjectId], graph.nodes, locale).replace("\n", " / ")} → {relationLabel(claim, locale)} → {entityLabel(graph.nodes[claim.objectId], graph.nodes, locale).replace("\n", " / ")}</p>
+          <p className={styles.muted}>{polarityLabel(claim, locale)} · {qualificationLabel(claim, locale) && `${qualificationLabel(claim, locale)} · `}{formatPeriod(claim.period, locale)} · {claim.sourceCount ? ui.sourceCount(claim.sourceCount) : ui.unverified}</p>
           <div className={styles.actions}>
-            <button aria-pressed={selection?.kind === "entity" && selection.id === neighbor.id} onClick={() => onEntity(neighbor.id)}>{neighbor.name}を選択・展開</button>
-            <button aria-pressed={selected} onClick={() => onClaim(claim.id)}>主張と出典を見る</button>
+            <button aria-pressed={selection?.kind === "entity" && selection.id === neighbor.id} onClick={() => onEntity(neighbor.id)}>{ui.selectExpand(neighbor.name)}</button>
+            <button aria-pressed={selected} onClick={() => onClaim(claim.id)}>{ui.claimOpen}</button>
           </div>
         </li>;
       })}

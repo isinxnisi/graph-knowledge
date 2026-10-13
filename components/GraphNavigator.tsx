@@ -1,9 +1,10 @@
 "use client";
+import { useUiLocale } from "../lib/client/ui-locale";
+import { explorerLabels } from "../lib/i18n/explorer";
 
 import { useId, useRef, useState } from "react";
 import type { EntitySummary } from "../lib/domain/api";
 import type { Selection } from "../lib/client/graph-state";
-import { KIND_LABELS } from "../lib/client/format";
 import { graphNavigationLabels } from "../lib/i18n/graph-navigation";
 import styles from "./Explorer.module.css";
 
@@ -12,7 +13,9 @@ export default function GraphNavigator({ nodes, selection, onNavigate }: {
   selection: Selection;
   onNavigate: (id: string) => void;
 }) {
-  const text = graphNavigationLabels();
+  const { locale } = useUiLocale();
+  const ui = explorerLabels(locale);
+  const text = graphNavigationLabels(locale);
   const id = useId();
   const trigger = useRef<HTMLButtonElement>(null);
   const [open, setOpen] = useState(false);
@@ -28,8 +31,8 @@ export default function GraphNavigator({ nodes, selection, onNavigate }: {
       event.stopPropagation(); setOpen(false); trigger.current?.focus();
     }
   }}>
-    <button ref={trigger} aria-label={`${text.title}（${entities.length}件）`} aria-expanded={open} aria-controls={id} disabled={!entities.length} onClick={() => setOpen(!open)}>
-      <span className={styles.wideLabel}>{text.title}</span><span className={styles.compactLabel}>{text.compactTitle}</span>（{entities.length}件）
+    <button ref={trigger} aria-label={`${text.title}${ui.navigatorCount(entities.length)}`} aria-expanded={open} aria-controls={id} disabled={!entities.length} onClick={() => setOpen(!open)}>
+      <span className={styles.wideLabel}>{text.title}</span><span className={styles.compactLabel}>{text.compactTitle}</span>{ui.navigatorCount(entities.length)}
     </button>
     <div id={id} hidden={!open} className={styles.graphNavigatorBody}>
       <p id={`${id}-help`} className={styles.muted}>{text.help}</p>
@@ -44,7 +47,7 @@ export default function GraphNavigator({ nodes, selection, onNavigate }: {
               onNavigate(entity.id); setOpen(false); trigger.current?.focus();
             }}>
               <strong>{entity.name}</strong>
-              <span>{KIND_LABELS[entity.kind]} ／ {entity.description ?? text.descriptionMissing}</span>
+              <span>{ui.kinds[entity.kind]} ／ {entity.description ?? text.descriptionMissing}</span>
               {ambiguous && <span>ID：{entity.id}</span>}
               <span>{text.move}</span>
             </button>

@@ -1,3 +1,4 @@
+import { checkExplorerLocale } from "./explorer-locale";
 import { expect, test } from "@playwright/test";
 import { checkSiteHeader } from "./site-header";
 import { checkPhoneExplorer } from "./phone-explorer";
@@ -108,3 +109,5 @@ test("旧Claimリンクでは撤回理由・元の出典・明示差替え先を
   await expect(dialog.getByRole("link", { name: "差替え先の主張を読む" })).toHaveAttribute("href", `/?read=claim&dataset=public-kg&id=${replacement}`);
   await page.screenshot({ path: "test-results/public-withdrawn-reference.png" });
 });
+
+checkExplorerLocale();

@@ -8,7 +8,27 @@ const ja = {
   appearanceHelp: "表示テーマはこのブラウザに保存します。ログインは不要です。",
   appearanceFailed: "テーマを保存できません。この画面には反映しています。",
 };
+const en: typeof ja = {
+  name: "Explore connections",
+  navigation: "Site navigation",
+  explore: "Explore",
+  exploreLink: "Open explorer (new tab)",
+  account: "Account",
+  accountLink: "Open account (new tab)",
+  appearance: "Appearance",
+  dark: "Dark mode",
+  toLight: "Use light mode",
+  toDark: "Use dark mode",
+  palette: "Dark palette",
+  brown: "Brown",
+  blue: "Blue",
+  settings: "Settings",
+  accountSettings: "Account settings",
+  library: "My Capsules",
+  appearanceHelp: "Appearance is saved in this browser. No login is required.",
+  appearanceFailed: "Could not save appearance. It is applied to this page.",
+};
 export function siteLabels(locale = "ja") {
-  const resources: Record<string, typeof ja> = { ja };
+  const resources: Record<string, typeof ja> = { ja, en };
   return resources[locale] ?? resources[locale.split("-")[0]] ?? ja;
 }

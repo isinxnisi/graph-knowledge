@@ -1,4 +1,6 @@
 "use client";
+import { useUiLocale } from "../lib/client/ui-locale";
+import { explorerLabels, explorerMessage } from "../lib/i18n/explorer";
 import type { DatasetMode } from "../lib/domain/dataset";
 import { dataReleaseLabels } from "../lib/i18n/data-release";
 import { readingHref } from "../lib/client/reading-reference";
@@ -15,14 +17,12 @@ import { matchesClaim, type EventRoleFilter, type OrganizationPositionFilter, ty
 import { explorationLabels } from "../lib/i18n/exploration";
 import { useClaimDetails } from "../lib/client/use-claim-details";
 import type { ClaimDetail, ClaimSummary, EntitySummary, SourceDetail } from "../lib/domain/api";
-import { formatDate, formatPeriod, polarityLabel } from "../lib/client/format";
+import { formatDate, formatPeriod } from "../lib/client/format";
 import { entityLabel } from "../lib/client/graph-presentation";
-import { PREDICATES } from "../lib/domain/predicates";
 import RelationOverview from "./RelationOverview";
 import { relationPresentationLabels } from "../lib/i18n/relation-presentation";
 import styles from "./Explorer.module.css";
 
-const SOURCE_KINDS = { book: "書籍", interview: "インタビュー", magazine: "雑誌", web: "ウェブ", paper: "論文" };
 function usableUrl(source: SourceDetail): boolean {
   if (!source.url || source.isDemo) return false;
   try { const url = new URL(source.url); return ["http:", "https:"].includes(url.protocol) && !url.hostname.endsWith(".invalid"); }
@@ -30,22 +30,24 @@ function usableUrl(source: SourceDetail): boolean {
 }
 
 export function ClaimCard({ claim, nodes, title, dataset, referenceDataset = dataset, idPrefix = "" }: { referenceDataset?: DatasetMode; dataset?: DatasetMode; idPrefix?: string; claim: ClaimDetail; nodes: Record<string, EntitySummary>; title: string }) {
-  const text = relationPresentationLabels();
-  const eventParticipation = eventParticipationOf(claim), eventText = eventParticipationLabels();
+  const { locale } = useUiLocale();
+  const ui = explorerLabels(locale);
+  const text = relationPresentationLabels(locale);
+  const eventParticipation = eventParticipationOf(claim), eventText = eventParticipationLabels(locale);
   const position = organizationParticipationOf(claim);
-  const positionText = organizationParticipationLabels();
+  const positionText = organizationParticipationLabels(locale);
   const contribution = contributionOf(claim);
-  const roleText = contributionLabels();
+  const roleText = contributionLabels(locale);
   return <article id={`${idPrefix}claim-${claim.id}`} tabIndex={-1} className={styles.claimCard} data-testid={`claim-card-${claim.id}`}>
     <h4>{title}</h4>
-    {claim.withdrawal && <section role="note" className={styles.error}><strong>{dataReleaseLabels().withdrawn}</strong><p>{dataReleaseLabels().withdrawnHelp}</p><p>{claim.withdrawal.reason}</p>
-      {referenceDataset && claim.withdrawal.replacementClaimId && <a href={readingHref({ dataset: referenceDataset, kind: "claim", id: claim.withdrawal.replacementClaimId })}>{dataReleaseLabels().replacement}</a>}
+    {claim.withdrawal && <section role="note" className={styles.error}><strong>{dataReleaseLabels(locale).withdrawn}</strong><p>{dataReleaseLabels(locale).withdrawnHelp}</p><p>{claim.withdrawal.reason}</p>
+      {referenceDataset && claim.withdrawal.replacementClaimId && <a href={readingHref({ dataset: referenceDataset, kind: "claim", id: claim.withdrawal.replacementClaimId })}>{dataReleaseLabels(locale).replacement}</a>}
     </section>}
     {dataset && <p><ReadingLink reference={{ kind: "claim", dataset, id: claim.id }} /></p>}
-    <span className={styles.muted}>関係についての主張</span>
-    <p><strong>{nodes[claim.subjectId] ? entityLabel(nodes[claim.subjectId], nodes).replace("\n", " / ") : "主体"} → {PREDICATES[claim.predicate].label} → {nodes[claim.objectId] ? entityLabel(nodes[claim.objectId], nodes).replace("\n", " / ") : "対象"}</strong></p>
-    <p className={claim.polarity === "denied" ? styles.denied : styles.badge}>{polarityLabel(claim)}する主張</p>
-    <dl className={styles.claimFacts}><dt>関係の期間</dt><dd>{formatPeriod(claim.period)}</dd></dl>
+    <span className={styles.muted}>{ui.assertion}</span>
+    <p><strong>{nodes[claim.subjectId] ? entityLabel(nodes[claim.subjectId], nodes, locale).replace("\n", " / ") : ui.subject} → {explorationLabels(locale).predicates[claim.predicate]} → {nodes[claim.objectId] ? entityLabel(nodes[claim.objectId], nodes, locale).replace("\n", " / ") : ui.object}</strong></p>
+    <p className={claim.polarity === "denied" ? styles.denied : styles.badge}>{ui.polarity(claim.polarity === "denied")}</p>
+    <dl className={styles.claimFacts}><dt>{ui.relationPeriod}</dt><dd>{formatPeriod(claim.period, locale)}</dd></dl>
     {contribution && <dl className={styles.claimFacts}><dt>{roleText.roleTitle}</dt><dd>{contribution.roleId ? roleText.roles[contribution.roleId] : roleText.none}</dd>
       <dt>{roleText.scope}</dt><dd>{contribution.scope ? <>{contribution.scope.volumeLabel ?? roleText.volumeUnknown} / {contribution.scope.editionLabel ?? roleText.editionUnknown}<br />ISBN {contribution.scope.isbn13} · {contribution.scope.language}<br />{roleText.publicationOnly}</> : roleText.scopeUnknown}</dd></dl>}
     {claim.predicate === "AFFILIATED_WITH" && <dl className={styles.claimFacts}><dt>{positionText.title}</dt><dd>{position ? positionText.positions[position.positionId] : positionText.none}{position && <><br />{positionText.limitation}</>}</dd></dl>}
@@ -54,27 +56,27 @@ export function ClaimCard({ claim, nodes, title, dataset, referenceDataset = dat
     {claim.predicate === "AFFILIATED_WITH" && !position && <p className={styles.muted}>{text.noPosition}</p>}
     {claim.predicate === "PARTICIPATED_IN" && !eventParticipation && <p className={styles.muted}>{text.noEventRole}</p>}
     {!!claim.citations.length && <button onClick={() => document.getElementById(`${idPrefix}citation-${claim.citations[0].id}`)?.scrollIntoView({ block: "nearest" })}>{text.evidence}</button>}
-    <p>{claim.sourceCount ? `出典 ${claim.sourceCount}件` : "出典未確認"}</p>
-    {!claim.citations.length && <p className={styles.muted}>この主張の出典はまだ登録されていません。</p>}
-    {!!claim.citations.length && <h5 className={styles.evidenceTitle}>根拠となる出典と参照箇所</h5>}
-    {claim.citations.map((citation, index) => <section id={`${idPrefix}citation-${citation.id}`} key={citation.id} className={styles.citation} aria-label="出典と参照箇所">
-      <p className={styles.muted}>出典 {index + 1} · {SOURCE_KINDS[citation.source.kind]}</p>
+    <p>{claim.sourceCount ? ui.sourceCount(claim.sourceCount) : ui.unverified}</p>
+    {!claim.citations.length && <p className={styles.muted}>{ui.noCitations}</p>}
+    {!!claim.citations.length && <h5 className={styles.evidenceTitle}>{ui.evidence}</h5>}
+    {claim.citations.map((citation, index) => <section id={`${idPrefix}citation-${citation.id}`} key={citation.id} className={styles.citation} aria-label={ui.citation}>
+      <p className={styles.muted}>{ui.source(index + 1)} · {ui.sourceKinds[citation.source.kind]}</p>
       <h5>{citation.source.title}</h5>
-      <p>{SOURCE_KINDS[citation.source.kind]} · {citation.stance === "support" ? "この主張を支持" : citation.stance === "refute" ? "この主張への反証" : "背景資料"}</p>
-      <p><strong>参照箇所：{citation.locator}</strong></p>
+      <p>{ui.sourceKinds[citation.source.kind]} · {ui.stances[citation.stance]}</p>
+      <p><strong>{ui.locator}：{citation.locator}</strong></p>
       {citation.source.url && <p>{usableUrl(citation.source)
-        ? <a href={citation.source.url} target="_blank" rel="noopener noreferrer">出典のURLを開く</a>
-        : <span>デモURL（リンク無効）：{citation.source.url}</span>}</p>}
+        ? <a href={citation.source.url} target="_blank" rel="noopener noreferrer">{ui.openSource}</a>
+        : <span>{ui.demoUrl}：{citation.source.url}</span>}</p>}
       {citation.eventParticipationEvidence && <p><strong>{eventText.evidence}：</strong>{citation.eventParticipationEvidence.originalText}<br />{eventText.language}：{citation.eventParticipationEvidence.language}</p>}
       {citation.positionEvidence && <p><strong>{positionText.evidence}：</strong>{citation.positionEvidence.originalText}<br />{positionText.language}：{citation.positionEvidence.language}</p>}
       {citation.roleEvidence && <p><strong>{roleText.evidence}：</strong>{citation.roleEvidence.originalText}<br />{roleText.language}：{citation.roleEvidence.language}</p>}
       {citation.note && <><p className={styles.muted}>{text.original}</p><p>{citation.note}</p></>}
       <details><summary>{text.metadata}</summary>
-      <p>公開日：{formatDate(citation.source.publishedAt)}</p>
-      <p>著者：{citation.source.authors.length ? citation.source.authors.join("、") : "不明"}</p>
-      {citation.source.publisher && <p>発行者：{citation.source.publisher}</p>}
-      {citation.source.edition && <p>版・号：{citation.source.edition}</p>}
-      {citation.accessedAt && <p>アクセス日：{formatDate({ value: citation.accessedAt, precision: "day" })}</p>}
+      <p>{ui.published}：{formatDate(citation.source.publishedAt, locale)}</p>
+      <p>{ui.authors}：{citation.source.authors.length ? citation.source.authors.join("、") : ui.unknown}</p>
+      {citation.source.publisher && <p>{ui.publisher}：{citation.source.publisher}</p>}
+      {citation.source.edition && <p>{ui.edition}：{citation.source.edition}</p>}
+      {citation.accessedAt && <p>{ui.accessed}：{formatDate({ value: citation.accessedAt, precision: "day" }, locale)}</p>}
       {citation.source.note && <p className={styles.muted}>{citation.source.note}</p>}
       </details>
     </section>)}
@@ -86,12 +88,12 @@ function moveToClaim(id: string) {
   card?.focus({ preventScroll: true }); card?.scrollIntoView({ block: "nearest" });
 }
 
-function comparisonText(reference: ClaimDetail, claim: ClaimDetail): string | null {
+function comparisonText(reference: ClaimDetail, claim: ClaimDetail, locale: string): string | null {
   const same = claimComparisonKey(reference) === claimComparisonKey(claim);
-  if (reference.predicate === "PARTICIPATED_IN") return same ? eventParticipationLabels().sameComparison : eventParticipationLabels().differentComparison;
-  if (reference.predicate === "AFFILIATED_WITH") return same ? organizationParticipationLabels().sameComparison : organizationParticipationLabels().differentComparison;
+  if (reference.predicate === "PARTICIPATED_IN") return same ? eventParticipationLabels(locale).sameComparison : eventParticipationLabels(locale).differentComparison;
+  if (reference.predicate === "AFFILIATED_WITH") return same ? organizationParticipationLabels(locale).sameComparison : organizationParticipationLabels(locale).differentComparison;
   if (reference.predicate === "CONTRIBUTED_TO") {
-    const category = comparisonCategory(reference, claim), text = contributionLabels();
+    const category = comparisonCategory(reference, claim), text = contributionLabels(locale);
     return category === "same" && !same ? text.differentPeriod : text.comparison[category];
   }
   return null;
@@ -104,7 +106,9 @@ export default function ClaimDetails(props: ClaimDetailsProps) {
 }
 
 function ClaimDetailsSession({ onDataChanged, revision, dataset, id, nodes, claimSummary, onInspectEntity, mode = "claim", visibleClaimIds, visibleClaims, predicates = null, roles = null, positions = null, eventRoles = null }: ClaimDetailsProps) {
-  const roleText = contributionLabels(), text = relationPresentationLabels();
+  const { locale } = useUiLocale();
+  const ui = explorerLabels(locale);
+  const roleText = contributionLabels(locale), text = relationPresentationLabels(locale);
   const { primary, related, error, failedCount, pending, retry } = useClaimDetails(id, revision, onDataChanged);
   // Reserve numbers from the complete ID list, including details still loading or failed.
   const claimIds = primary ? [primary.claim.id, ...primary.relatedClaimIds].sort((a, b) => a.localeCompare(b)) : [];
@@ -113,45 +117,45 @@ function ClaimDetailsSession({ onDataChanged, revision, dataset, id, nodes, clai
   const shown = claims.filter(claim => visibleClaimIds === undefined || visibleClaimIds.includes(claim.id));
   const unseen = claims.filter(claim => visibleClaimIds !== undefined && !visibleClaimIds.includes(claim.id) && matchesClaim(claim, predicates, roles, positions, eventRoles));
   const outside = claims.filter(claim => visibleClaimIds !== undefined && !visibleClaimIds.includes(claim.id) && !matchesClaim(claim, predicates, roles, positions, eventRoles));
-  const groups = [{ key: "shown", title: explorationLabels().shown, claims: shown, help: "" },
-    { key: "unseen", title: explorationLabels().unseen, claims: unseen, help: text.unseenHelp },
-    { key: "outside", title: explorationLabels().outside, claims: outside, help: text.outsideHelp }];
+  const groups = [{ key: "shown", title: explorationLabels(locale).shown, claims: shown, help: "" },
+    { key: "unseen", title: explorationLabels(locale).unseen, claims: unseen, help: text.unseenHelp },
+    { key: "outside", title: explorationLabels(locale).outside, claims: outside, help: text.outsideHelp }];
   const reference = primary ? contributionOf(primary.claim) : null;
   // The graph already knows both endpoints, even while evidence is unavailable.
   const relation = claimSummary ?? visibleClaims?.[0] ?? primary?.claim;
   const endpoints = relation ? [...new Set([relation.subjectId, relation.objectId])].filter(id => nodes[id]) : [];
-  return <section aria-label="Claim詳細">
+  return <section aria-label={ui.claimDetails}>
     {mode === "relation" && <RelationOverview claims={visibleClaims ?? shown} nodes={nodes} />}
     {onInspectEntity && endpoints.length > 0 && <nav aria-label={text.endpoints}>
       <p className={styles.muted}>{text.endpointHelp}</p>
       <div className={styles.actions}>{endpoints.map(entityId => <button key={entityId} onClick={() => onInspectEntity(entityId)}>
-        {text.inspectEntity(entityLabel(nodes[entityId], nodes).replace("\n", " / "))}
+        {text.inspectEntity(entityLabel(nodes[entityId], nodes, locale).replace("\n", " / "))}
       </button>)}</div>
     </nav>}
-    <h3>{mode === "relation" ? text.claimsTitle : "主張と出典"}</h3>
-    {!primary && !error && <p role="status">主張の詳細を取得中…</p>}
-    {error && <div className={styles.error} role="alert"><p>{error}</p><button onClick={retry}>主張の取得を再試行</button></div>}
+    <h3>{mode === "relation" ? text.claimsTitle : ui.claimTitle}</h3>
+    {!primary && !error && <p role="status">{ui.claimLoading}</p>}
+    {error && <div className={styles.error} role="alert"><p>{explorerMessage(error, locale)}</p><button onClick={retry}>{ui.claimRetry}</button></div>}
     {primary && <>
       {pending > 0 && <p role="status">{text.loadingProgress(claims.length, claimIds.length)}</p>}
-      {failedCount > 0 && <div className={styles.error} role="alert"><p>{text.failed(failedCount)}</p><p>{text.partial}</p><button disabled={pending > 0} onClick={retry}>他の主張を再試行</button></div>}
+      {failedCount > 0 && <div className={styles.error} role="alert"><p>{text.failed(failedCount)}</p><p>{text.partial}</p><button disabled={pending > 0} onClick={retry}>{ui.otherRetry}</button></div>}
       {mode === "relation" ? <>
         <p className={styles.muted}>{text.reading}</p>
-        <nav className={styles.claimNavigation} aria-label="主張への移動">{claims.map(claim => <button key={claim.id} onClick={() => moveToClaim(claim.id)}>{text.jump(claimNumber(claim.id))}</button>)}</nav>
+        <nav className={styles.claimNavigation} aria-label={ui.claimNavigation}>{claims.map(claim => <button key={claim.id} onClick={() => moveToClaim(claim.id)}>{text.jump(claimNumber(claim.id))}</button>)}</nav>
         {groups.filter(group => group.claims.length).map(group => <section key={group.key} className={styles.claimGroup} data-testid={`claim-group-${group.key}`} aria-label={group.title}>
           <h4>{group.title} · {text.claimCount(group.claims.length)}</h4>
           {group.help && <p className={styles.muted}>{group.help}</p>}
-          {group.claims.map(claim => <ClaimCard dataset={dataset} key={claim.id} claim={claim} nodes={nodes} title={`主張 ${claimNumber(claim.id)}`} />)}
+          {group.claims.map(claim => <ClaimCard dataset={dataset} key={claim.id} claim={claim} nodes={nodes} title={ui.claimNumber(claimNumber(claim.id))} />)}
         </section>)}
       </> : <>
         {reference && <p className={styles.muted}>{roleText.comparisonReference}：{reference.roleId ? roleText.roles[reference.roleId] : roleText.none} ／ {reference.scope ? `ISBN ${reference.scope.isbn13}` : roleText.scopeUnknown}</p>}
-        <ClaimCard dataset={dataset} claim={primary.claim} nodes={nodes} title="選択した主張" />
-        <h3>同じ関係についての他の主張</h3>
+        <ClaimCard dataset={dataset} claim={primary.claim} nodes={nodes} title={ui.selectedClaim} />
+        <h3>{ui.related}</h3>
         <p className={styles.muted}>{text.reading}</p>
-        {!primary.relatedClaimIds.length && <p className={styles.muted}>他の主張は登録されていません。</p>}
+        {!primary.relatedClaimIds.length && <p className={styles.muted}>{ui.noRelated}</p>}
         {related.map(claim => <div key={claim.id}>
-          {!matchesClaim(claim, predicates, roles, positions, eventRoles) && <p className={styles.muted}>{explorationLabels().outside}</p>}
-          {comparisonText(primary.claim, claim) && <p className={styles.muted}>{comparisonText(primary.claim, claim)}</p>}
-          <ClaimCard dataset={dataset} claim={claim} nodes={nodes} title="他の主張" />
+          {!matchesClaim(claim, predicates, roles, positions, eventRoles) && <p className={styles.muted}>{explorationLabels(locale).outside}</p>}
+          {comparisonText(primary.claim, claim, locale) && <p className={styles.muted}>{comparisonText(primary.claim, claim, locale)}</p>}
+          <ClaimCard dataset={dataset} claim={claim} nodes={nodes} title={ui.otherClaim} />
         </div>)}
       </>}
     </>}

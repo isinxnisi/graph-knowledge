@@ -27,3 +27,5 @@
   .settings > summary { min-height: 40px; display: flex; align-items: center; gap: 6px; }
   .settingsPanel a, .settingsPanel button, .settingsPanel select { min-height: 44px; }
 }
+
+.header .language { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--color-border); flex-wrap: wrap; }

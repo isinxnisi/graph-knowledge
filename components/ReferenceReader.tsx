@@ -99,7 +99,7 @@ export default function ReferenceReader({ location, dataset, onClose, onExplore 
     return () => { element?.close(); if (opener?.isConnected) opener.focus({ preventScroll: true }); };
   }, []);
   const backdrop = useDialogBackdrop(onClose);
-  return <dialog ref={dialog} className={`${styles.conditionDialog} ${css.dialog}`} aria-labelledby="reference-title" onCancel={event => { event.preventDefault(); onClose(); }} {...backdrop}>
+  return <dialog lang="ja" ref={dialog} className={`${styles.conditionDialog} ${css.dialog}`} aria-labelledby="reference-title" onCancel={event => { event.preventDefault(); onClose(); }} {...backdrop}>
     <div className={css.header}><h2 ref={heading} id="reference-title" tabIndex={-1}>{text.title}</h2><button onClick={onClose}>{text.close}</button></div>
     <p className={styles.demo}>{datasetLabels(dataset).badge}</p><p>{text.help}</p>
     {location.status === "invalid" && <p role="alert">{text.invalid}</p>}

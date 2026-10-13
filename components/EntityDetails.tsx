@@ -1,4 +1,6 @@
 "use client";
+import { useUiLocale } from "../lib/client/ui-locale";
+import { explorerLabels, explorerMessage } from "../lib/i18n/explorer";
 
 import { eventParticipationLabels } from "../lib/i18n/event-participation";
 import type { DatasetMode } from "../lib/domain/dataset";
@@ -9,7 +11,7 @@ import { useEffect, useState } from "react";
 import type { EntityDetail, EntitySummary } from "../lib/domain/api";
 import type { Expansion } from "../lib/client/graph-state";
 import { ClientApiError, fetchEntity, errorMessage } from "../lib/client/api";
-import { KIND_LABELS, formatPeriod } from "../lib/client/format";
+import { formatPeriod } from "../lib/client/format";
 import styles from "./Explorer.module.css";
 
 export default function EntityDetails({ entity, expansion, onExpand, onClose, onOverview, onSwitch, restricted, dataset }: {
@@ -18,6 +20,8 @@ export default function EntityDetails({ entity, expansion, onExpand, onClose, on
   entity: EntitySummary; expansion?: Expansion; onExpand: (more: boolean) => void; onClose: () => void;
 }) {
   const [detail, setDetail] = useState<EntityDetail | null>(null);
+  const { locale } = useUiLocale();
+  const ui = explorerLabels(locale);
   const [error, setError] = useState<string | null>(null);
   const [missing, setMissing] = useState(false);
   const [attempt, setAttempt] = useState(0);
@@ -28,27 +32,27 @@ export default function EntityDetails({ entity, expansion, onExpand, onClose, on
     }).catch((error) => { if (!controller.signal.aborted) { setError(errorMessage(error)); setMissing(error instanceof ClientApiError && error.status === 404); } });
     return () => controller.abort();
   }, [entity.id, attempt]);
-  return <section aria-label="Entity詳細">
-    <h3>{entity.name}</h3><p className={styles.badge}>{KIND_LABELS[entity.kind]}</p>
-    <p>{entity.description ?? "説明は未登録です。"}</p>
-    {!detail && !error && <p role="status">Entity詳細を取得中…</p>}
-    {detail && <p>別名：{detail.aliases.length ? detail.aliases.join("、") : "未登録"}</p>}
-    {detail?.event && <><dl className={styles.claimFacts}><dt>{eventParticipationLabels().eventPeriod}</dt><dd>{formatPeriod(detail.event.period)}</dd></dl><p className={styles.muted}>{eventParticipationLabels().periodHelp}</p></>}
-    {error && <div role="alert" className={styles.error}><p>{error}</p><button onClick={() => { setError(null); setDetail(null); setAttempt((value) => value + 1); }}>Entity詳細を再試行</button></div>}
+  return <section aria-label={ui.entityDetails}>
+    <h3>{entity.name}</h3><p className={styles.badge}>{ui.kinds[entity.kind]}</p>
+    <p>{entity.description ?? ui.descriptionMissing}</p>
+    {!detail && !error && <p role="status">{ui.entityLoading}</p>}
+    {detail && <p>{ui.aliases}：{detail.aliases.length ? detail.aliases.join("、") : ui.unregistered}</p>}
+    {detail?.event && <><dl className={styles.claimFacts}><dt>{eventParticipationLabels(locale).eventPeriod}</dt><dd>{formatPeriod(detail.event.period, locale)}</dd></dl><p className={styles.muted}>{eventParticipationLabels(locale).periodHelp}</p></>}
+    {error && <div role="alert" className={styles.error}><p>{explorerMessage(error, locale)}</p><button onClick={() => { setError(null); setDetail(null); setAttempt((value) => value + 1); }}>{ui.entityRetry}</button></div>}
     {dataset && <p><ReadingLink reference={{ kind: "entity", dataset, id: entity.id }} /></p>}
-    <button onClick={onOverview}>{overviewLabels().open}</button>
+    <button onClick={onOverview}>{overviewLabels(locale).open}</button>
     <RootActions restricted={restricted} disabled={missing} onSwitch={onSwitch} />
     <div className={styles.actions}>
-      {expansion?.open ? <button onClick={onClose}>展開を閉じる</button> : <button onClick={() => onExpand(false)}>{expansion?.pages.length ? "展開を再開" : "近傍を展開"}</button>}
+      {expansion?.open ? <button onClick={onClose}>{ui.closeBranch}</button> : <button onClick={() => onExpand(false)}>{expansion?.pages.length ? ui.reopenBranch : ui.expand}</button>}
     </div>
-    {!expansion?.open && !!expansion?.pages.length && <p className={styles.muted}>取得済みの枝も復元します。明示的に閉じた子孫は閉じたままです。</p>}
-    {expansion?.loading && <p role="status">{expansion.expanded ? "続きを取得中…" : "隣接関係を取得中…"}</p>}
-    {expansion?.error && <div role="alert" className={styles.error}><p>{expansion.error}</p>
-      <button onClick={() => onExpand(expansion.open && expansion.expanded)}>Graph取得を再試行</button>
+    {!expansion?.open && !!expansion?.pages.length && <p className={styles.muted}>{ui.restoreHelp}</p>}
+    {expansion?.loading && <p role="status">{expansion.expanded ? ui.moreLoading : ui.neighborsLoading}</p>}
+    {expansion?.error && <div role="alert" className={styles.error}><p>{explorerMessage(expansion.error, locale)}</p>
+      <button onClick={() => onExpand(expansion.open && expansion.expanded)}>{ui.graphRetry}</button>
     </div>}
-    {expansion?.expanded && !expansion.hasMore && <p className={styles.muted}>このEntityの近傍は取得済みです。</p>}
+    {expansion?.expanded && !expansion.hasMore && <p className={styles.muted}>{ui.fetched}</p>}
     {expansion?.open && expansion.hasMore && <button onClick={() => onExpand(true)} disabled={expansion.loading || expansion.blocked}>
-      {expansion.loading ? "続きを取得中…" : "続きを表示"}
+      {expansion.loading ? ui.moreLoading : ui.more}
     </button>}
   </section>;
 }

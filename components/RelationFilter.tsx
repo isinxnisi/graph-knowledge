@@ -1,4 +1,5 @@
 "use client";
+import { useUiLocale } from "../lib/client/ui-locale";
 
 import { EVENT_ROLE_IDS } from "../lib/domain/event-participation";
 import { eventParticipationLabels } from "../lib/i18n/event-participation";
@@ -18,17 +19,18 @@ import styles from "./Explorer.module.css";
 
 function ConditionEditor({ value, roles, positions, eventRoles, onApply, onCancel }: { value: PredicateFilter; roles: ContributionRoleFilter; positions: OrganizationPositionFilter; eventRoles: EventRoleFilter; onApply: (value: PredicateFilter, roles: ContributionRoleFilter, positions: OrganizationPositionFilter, eventRoles: EventRoleFilter) => void; onCancel: () => void }) {
   const [draftEventRoles, setDraftEventRoles] = useState<EventRoleFilter>(eventRoles);
+  const { locale } = useUiLocale();
   const [eventOpen, setEventOpen] = useState(eventRoles !== null);
-  const eventText = eventParticipationLabels();
+  const eventText = eventParticipationLabels(locale);
   const [selection, setSelection] = useState<RelationSelection>(() => selectionFromPredicates(value));
-  const facetText = relationFacetLabels();
+  const facetText = relationFacetLabels(locale);
   const [draftRoles, setDraftRoles] = useState<ContributionRoleFilter>(roles);
   const [draftPositions, setDraftPositions] = useState<OrganizationPositionFilter>(positions);
   const [positionOpen, setPositionOpen] = useState(positions !== null);
-  const positionText = organizationParticipationLabels();
+  const positionText = organizationParticipationLabels(locale);
   const [roleOpen, setRoleOpen] = useState(roles !== null);
   const dialog = useRef<HTMLDialogElement>(null);
-  const text = entryLabels(), relations = explorationLabels(), roleText = contributionLabels();
+  const text = entryLabels(locale), relations = explorationLabels(locale), roleText = contributionLabels(locale);
   const normalized = resolveRelationSelection(selection);
   const draft = normalized ?? [...PREDICATE_KEYS];
   const normalizedRoles = normalizeContributionRoles(draftRoles, normalized);
@@ -106,17 +108,18 @@ function ConditionEditor({ value, roles, positions, eventRoles, onApply, onCance
       </fieldset>}
     </section>}
     {draft.length === 0 && <p className={styles.empty}>{text.none}</p>}
-    <div className={styles.draftSummary}><p data-testid="draft-conditions"><strong>{text.draft}：</strong>{conditionSummary(normalized, normalizedRoles, "ja", normalizedPositions, normalizedEventRoles)}</p><p className={styles.muted}>{text.restart}</p></div>
+    <div className={styles.draftSummary}><p data-testid="draft-conditions"><strong>{text.draft}：</strong>{conditionSummary(normalized, normalizedRoles, locale, normalizedPositions, normalizedEventRoles)}</p><p className={styles.muted}>{text.restart}</p></div>
     </div>
     <footer className={`${styles.editorActions} ${styles.conditionFooter}`}><button onClick={cancel}>{text.cancel}</button><button disabled={!dirty} onClick={() => { dialog.current?.close(); onApply(normalized, normalizedRoles, normalizedPositions, normalizedEventRoles); }}>{text.apply}</button></footer>
   </dialog>;
 }
 
 export default function RelationFilter({ value, roles = null, positions = null, eventRoles = null, onApply }: { value: PredicateFilter; roles?: ContributionRoleFilter; positions?: OrganizationPositionFilter; eventRoles?: EventRoleFilter; onApply: (value: PredicateFilter, roles: ContributionRoleFilter, positions: OrganizationPositionFilter, eventRoles: EventRoleFilter) => void }) {
+  const { locale } = useUiLocale();
   const [editing, setEditing] = useState(false);
-  const text = entryLabels(), relations = explorationLabels();
+  const text = entryLabels(locale), relations = explorationLabels(locale);
   return <div className={styles.conditionBar}>
-    <p data-testid="active-predicates"><strong>{text.applied}：</strong>{conditionSummary(value, roles, "ja", positions, eventRoles)}</p>
+    <p data-testid="active-predicates"><strong>{text.applied}：</strong>{conditionSummary(value, roles, locale, positions, eventRoles)}</p>
     <button aria-haspopup="dialog" aria-expanded={editing} onClick={() => setEditing(true)}>{text.edit}</button>
     {editing && <ConditionEditor value={value} roles={roles} positions={positions} eventRoles={eventRoles} onCancel={() => setEditing(false)} onApply={(predicates, nextRoles, nextPositions, nextEventRoles) => { onApply(predicates, nextRoles, nextPositions, nextEventRoles); setEditing(false); }} />}
     <span className={styles.srOnly}>{relations.help}</span>

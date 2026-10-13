@@ -1,6 +1,6 @@
 import type { Predicate } from "../domain/predicates";
 
-// 表示言語と条件IDは別。今はjaのみ、将来のlocale追加はここで解決する。
+// 表示言語と条件IDは別。翻訳を探索条件や知識IDへ混ぜない。
 const ja = {
   unsupported: "未対応の探索条件です。", invalidPredicates: "predicatesには既存の関係タイプを指定してください。",
   invalidCursor: "cursorが不正、または起点・関係の条件が一致しません。",
@@ -22,8 +22,33 @@ const ja = {
     CONTRIBUTED_TO: "制作に関わった", AFFILIATED_WITH: "関わりがあった", PARTICIPATED_IN: "参加した",
   } satisfies Record<Predicate, string>,
 };
-const resources: Record<string, typeof ja> = { ja };
+const en: typeof ja = {
+  unsupported: "Unsupported exploration condition.",
+  invalidPredicates: "Use existing relation types in predicates.",
+  invalidCursor: "Invalid cursor or mismatched starting entity or conditions.",
+  title: "Relations to follow",
+  apply: "Apply",
+  all: "Select all",
+  none: "Clear selection",
+  help: "Applying refetches from the same starting entity and resets open branches. You can return to the previous exploration.",
+  active: "Applied",
+  allRelations: "All relations",
+  noRelations: "Show no relations",
+  empty: "No relations match these conditions.",
+  outside: "Claims outside current conditions",
+  shown: "Claims shown in the graph",
+  unseen: "Claims not shown in the graph",
+  changed: "Relation conditions changed. Refetching from the same starting entity.",
+  neighborsMore: "Show more adjacent relations",
+  neighborsRetry: "Retry adjacent relations",
+  neighborsLoading: "Loading adjacent relations…",
+  neighborsLoadingMore: "Loading more adjacent relations…",
+  neighborsPartial: "Showing fetched relations. More are available for this entity.",
+  neighborsPageHelp: "Graph relations summarize fetched claims. Fetch more from each entity's adjacent list or details.",
+  predicates: { ASSISTANT_OF: "Was an assistant to", INFLUENCED_BY: "Was influenced by", CONTRIBUTED_TO: "Contributed to", AFFILIATED_WITH: "Was involved with", PARTICIPATED_IN: "Participated in" },
+};
+const resources: Record<string, typeof ja> = { ja, en };
 export function explorationLabels(locale = "ja") {
-  // 未対応localeはjaへフォールバック。既存UI全体の言語切替ではない。
+  // 未対応localeはjaへフォールバック。
   return resources[locale] ?? resources[locale.split("-")[0]] ?? ja;
 }

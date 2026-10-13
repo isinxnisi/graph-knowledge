@@ -24,6 +24,8 @@ npm run public:dev
 
 日常のPC／スマホ確認は https://graph-beta.isinxnisi.com/ （Cloudflare経由でこのPCの3200へ接続）。画面・機能の作業／受け入れ完了時に3200を更新します。VPSの https://graph.isinxnisi.net は工程の区切りで更新するため、反映版が異なる場合があります。[更新のタイミングと確認手順](docs/design/PRODUCTION_DEPLOYMENT.md#確認環境の更新契約)を参照してください。PC・Web・Tunnelの停止中は日常確認先も利用できません。
 
+探索画面の「設定 → 表示言語（探索画面）」から日本語／Englishを切り替えられます。言語はブラウザへ保存し、探索状態や取得条件は変わりません。対象名・資料原文は登録表記のままです。会員／共有・保存画面全体の英語対応は次工程です。[表示言語の契約](docs/design/UI_LOCALE.md)を参照してください。
+
 ローカルで本番buildの画面を確認する場合は、3200の開発serverを終了してから次で起動します。read timeoutはVPSと同じ10秒（許容範囲5〜15秒）です。ブラウザを更新して最新buildを確認してください。VPSへ自動配置するコマンドではありません。
 
 ```bash
