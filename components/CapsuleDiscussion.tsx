@@ -1,4 +1,7 @@
 "use client";
+import { useUiLocale } from "../lib/client/ui-locale";
+import { contentMessage } from "../lib/i18n/content";
+
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { z } from "zod";
 import { DISCUSSION_LIMITS, discussionSchema, type CapsuleDiscussion as Discussion } from "../lib/domain/capsule-discussion";
@@ -24,10 +27,12 @@ export function useDiscussionDraft(): DiscussionDraftStore {
     remove: (key: string) => { values.current.delete(key); },
   }), []);
 }
+const textMessages = capsuleDiscussionLabels();
 export default function CapsuleDiscussion({ capsuleId, revision, token, userId, draftCache, onUnauthorized }: {
   capsuleId: string; revision: number; token?: string; userId?: string; draftCache?: DiscussionDraftStore; onUnauthorized?: () => void;
 }) {
-  const text = capsuleDiscussionLabels();
+  const { locale } = useUiLocale();
+  const text = capsuleDiscussionLabels(locale);
   const ownCache = useDiscussionDraft(), cache = draftCache ?? ownCache;
   const [opened, setOpened] = useState(false), [data, setData] = useState<Discussion | null>(null);
   const [busy, setBusy] = useState(false), [error, setError] = useState<string | null>(null), [message, setMessage] = useState<string | null>(null);
@@ -47,15 +52,15 @@ export default function CapsuleDiscussion({ capsuleId, revision, token, userId, 
   }, [path, revision, token]);
   const failure = useCallback((cause: unknown) => {
     if (cause instanceof MemberClientError) {
-      if (cause.status === 401) return text.expired;
-      if (cause.status === 404) return text.unavailable;
-      if (cause.status === 409) return text.conflict;
-      if (cause.code === "THREAD_CLOSED") return text.closed;
-      if (cause.code === "POST_RATE_LIMIT") return text.rate;
-      if (cause.code === "THREAD_LIMIT") return text.full;
+      if (cause.status === 401) return textMessages.expired;
+      if (cause.status === 404) return textMessages.unavailable;
+      if (cause.status === 409) return textMessages.conflict;
+      if (cause.code === "THREAD_CLOSED") return textMessages.closed;
+      if (cause.code === "POST_RATE_LIMIT") return textMessages.rate;
+      if (cause.code === "THREAD_LIMIT") return textMessages.full;
     }
-    return text.failed;
-  }, [text]);
+    return textMessages.failed;
+  }, []);
   const refresh = useCallback(async () => {
     if (mutating.current || document.visibilityState === "hidden") return;
     active.current?.abort(); const controller = new AbortController(); active.current = controller;
@@ -140,11 +145,11 @@ export default function CapsuleDiscussion({ capsuleId, revision, token, userId, 
     <h2>{text.title}</h2><p>{text.context(revision)}</p><p className={css.muted}>{text.help}</p>
     {!opened ? <button onClick={() => setOpened(true)}>{text.open}</button> : <>
       <button disabled={busy} onClick={() => void refresh()}>{text.refresh}</button>
-      {busy && <p role="status">{text.loading}</p>}{error && <p role="alert">{error}</p>}{message && <p role="status">{message}</p>}
+      {busy && <p role="status">{text.loading}</p>}{error && <p role="alert">{contentMessage(error, locale)}</p>}{message && <p role="status">{contentMessage(message, locale)}</p>}
       {data && <>
         {data.posts.length === 0 && <p>{text.empty}</p>}
         <ol className={css.posts}>{data.posts.map(post => <li key={post.id}>
-          <p className={css.muted}>{post.authorName ?? ""} · <time dateTime={post.createdAt}>{new Date(post.createdAt).toLocaleString("ja-JP")}</time></p>
+          <p className={css.muted}>{post.authorName ?? ""} · <time dateTime={post.createdAt}>{new Date(post.createdAt).toLocaleString(locale === "en" ? "en-GB" : "ja-JP")}</time></p>
           <p className={css.postBody}>{post.body ?? (post.withdrawnAt ? text.withdrawn : text.hidden)}</p>
           {post.own && !post.withdrawnAt && <button disabled={busy} onClick={() => setConfirm(post.id)}>{text.withdraw}</button>}
           {confirm === post.id && <div role="alert"><p>{text.withdrawHelp}</p><button disabled={busy} onClick={() => void mutate("withdraw")}>{text.confirmWithdraw}</button><button onClick={() => setConfirm(null)}>{text.cancel}</button></div>}

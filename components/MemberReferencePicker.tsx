@@ -1,17 +1,20 @@
 "use client";
+import { useUiLocale } from "../lib/client/ui-locale";
+import { contentMessage } from "../lib/i18n/content";
+import { explorerLabels } from "../lib/i18n/explorer";
 
 import { useEffect, useRef, useState } from "react";
 import type { MemberCapsuleDraft } from "../lib/client/member-capsule-edit";
 import { addMemberReference, loadMemberReference, parseMemberReferenceLink, type MemberReferenceAddition } from "../lib/client/member-reference-addition";
 import { memberLabels } from "../lib/i18n/member";
-import { KIND_LABELS } from "../lib/client/format";
 import { ClaimCard } from "./ClaimDetails";
 import css from "./CapsuleDialog.module.css";
 
 export default function MemberReferencePicker({ draft, onChange }: {
   draft: MemberCapsuleDraft; onChange: (draft: MemberCapsuleDraft) => void;
 }) {
-  const text = memberLabels();
+  const { locale } = useUiLocale();
+  const text = memberLabels(locale);
   const [link, setLink] = useState("");
   const [loading, setLoading] = useState(false);
   const [preview, setPreview] = useState<MemberReferenceAddition | null>(null);
@@ -51,10 +54,10 @@ export default function MemberReferencePicker({ draft, onChange }: {
     {loading && <p role="status">{text.referenceLoading}</p>}
     {(loading || preview) && <button type="button" onClick={reset}>{text.referenceCancel}</button>}
     {preview && <div>
-      <ul>{preview.entities.map(entity => <li key={entity.id}><strong>{entity.name} · {KIND_LABELS[entity.kind]}</strong>{entity.description && <p>{entity.description}</p>}<code>{entity.id}</code></li>)}</ul>
+      <ul>{preview.entities.map(entity => <li key={entity.id}><strong>{entity.name} · {explorerLabels(locale).kinds[entity.kind]}</strong>{entity.description && <p>{entity.description}</p>}<code>{entity.id}</code></li>)}</ul>
       {preview.claim ? <><p>{text.referenceNote}</p><ClaimCard referenceDataset={preview.reference.dataset} claim={preview.claim} nodes={Object.fromEntries(preview.entities.map(entity => [entity.id, entity]))} title={text.referenceClaimTitle} idPrefix="member-addition-" /></> : <p>{text.referenceEntityNote}</p>}
       <button type="button" onClick={confirm}>{text.referenceConfirm}</button>
     </div>}
-    {error && <p role="alert">{error}</p>}{message && <p role="status">{message}</p>}
+    {error && <p role="alert">{contentMessage(error, locale)}</p>}{message && <p role="status">{contentMessage(message, locale)}</p>}
   </section>;
 }

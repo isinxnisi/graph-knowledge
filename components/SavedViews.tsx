@@ -1,4 +1,6 @@
 "use client";
+import { useUiLocale } from "../lib/client/ui-locale";
+import { contentMessage } from "../lib/i18n/content";
 
 import { useEffect, useRef, useState } from "react";
 import type { DatasetMode } from "../lib/domain/dataset";
@@ -11,13 +13,15 @@ import { useDialogBackdrop } from "../lib/client/use-dialog-backdrop";
 import styles from "./Explorer.module.css";
 import SavedViewsBackup from "./SavedViewsBackup";
 
-const summary = (conditions: ViewConditions) => conditionSummary(conditions.predicates, conditions.contributionRoles, "ja", conditions.organizationPositions, conditions.eventRoles);
+const summary = (conditions: ViewConditions, locale: string) => conditionSummary(conditions.predicates, conditions.contributionRoles, locale, conditions.organizationPositions, conditions.eventRoles);
 
+const textMessages = savedViewLabels();
 export default function SavedViews({ dataset, root, conditions, onOpen, onClose }: {
   dataset: DatasetMode; root: EntitySummary | null; conditions: ViewConditions;
   onOpen: (entity: EntitySummary, conditions: ViewConditions) => void; onClose: () => void;
 }) {
-  const text = savedViewLabels();
+  const { locale } = useUiLocale();
+  const text = savedViewLabels(locale);
   const dialog = useRef<HTMLDialogElement>(null);
   const pending = useRef<AbortController | null>(null);
   const [views, setViews] = useState<SavedView[]>([]);
@@ -39,7 +43,7 @@ export default function SavedViews({ dataset, root, conditions, onOpen, onClose 
     dialog.current?.showModal();
     const refresh = () => {
       try { setViews(readSavedViews(window.localStorage, dataset)); setStorageError(null); setReady(true); }
-      catch (error) { setStorageError(error instanceof SavedViewsError ? text[error.reason] : text.storage); setReady(false); }
+      catch (error) { setStorageError(error instanceof SavedViewsError ? textMessages[error.reason] : textMessages.storage); setReady(false); }
     };
     refresh();
     const changed = (event: StorageEvent) => {
@@ -47,7 +51,7 @@ export default function SavedViews({ dataset, root, conditions, onOpen, onClose 
     };
     window.addEventListener("storage", changed);
     return () => { pending.current?.abort(); window.removeEventListener("storage", changed); };
-  }, [dataset, text]);
+  }, [dataset]);
   const close = () => { pending.current?.abort(); dialog.current?.close(); onClose(); };
   const backdrop = useDialogBackdrop(close);
   const save = () => {
@@ -83,30 +87,30 @@ export default function SavedViews({ dataset, root, conditions, onOpen, onClose 
       if (pending.current === controller) pending.current = null;
     }
   };
-  return <dialog lang="ja" ref={dialog} className={`${styles.conditionDialog} ${styles.savedViews}`} aria-labelledby="saved-views-title" onCancel={event => { event.preventDefault(); close(); }} {...backdrop}>
+  return <dialog lang={locale} ref={dialog} className={`${styles.conditionDialog} ${styles.savedViews}`} aria-labelledby="saved-views-title" onCancel={event => { event.preventDefault(); close(); }} {...backdrop}>
     <div className={styles.conditionTitle}><h2 id="saved-views-title">{text.title}</h2><button aria-label={text.close} onClick={close}>×</button></div>
     <p>{text.help}</p><p className={styles.muted}>{text.local}</p>
     {root ? <form className={styles.savedViewForm} onSubmit={event => { event.preventDefault(); save(); }}>
       <p>{text.root}：<strong>{root.name}</strong><span className={styles.muted}> / {root.description}</span></p>
-      <p className={styles.muted}>{summary(conditions)}</p>
+      <p className={styles.muted}>{summary(conditions, locale)}</p>
       <label htmlFor="saved-view-name">{text.name}</label>
       <input id="saved-view-name" value={title} maxLength={SAVED_VIEW_TITLE_LIMIT} required onChange={event => setTitle(event.target.value)} />
       <button disabled={!ready || !!opening || !title.trim() || views.length >= SAVED_VIEW_LIMIT}>{text.save}</button>
     </form> : <p className={styles.empty}>{text.noRoot}</p>}
-    {message && <p role="status">{message}</p>}
-    {storageError && <div role="alert" className={styles.error}><p>{storageError}</p><button onClick={reload}>{text.retry}</button></div>}
+    {message && <p role="status">{contentMessage(message, locale)}</p>}
+    {storageError && <div role="alert" className={styles.error}><p>{contentMessage(storageError, locale)}</p><button onClick={reload}>{text.retry}</button></div>}
     <h3>{text.list}（{views.length} / {SAVED_VIEW_LIMIT}）</h3>
     {views.length >= SAVED_VIEW_LIMIT && <p>{text.limit}</p>}
     {ready && views.length === 0 && <p className={styles.empty}>{text.empty}</p>}
     <ul className={styles.savedViewList}>{views.map(view => <li key={view.id}>
-      <h4>{view.title}</h4><p className={styles.muted}>{summary(view.conditions)}</p>
+      <h4>{view.title}</h4><p className={styles.muted}>{summary(view.conditions, locale)}</p>
       <p className={styles.muted}><time dateTime={view.createdAt}>{text.savedAt(view.createdAt)}</time></p>
       <div className={styles.actions}>
         <button disabled={!ready || !!opening} aria-label={text.openNamed(view.title)} onClick={() => void open(view)}>{opening === view.id ? text.opening : text.open}</button>
         <button disabled={!ready || !!opening} aria-label={text.removeNamed(view.title)} onClick={() => remove(view.id)}>{text.remove}</button>
       </div>
       {opening === view.id && <p role="status">{text.opening}</p>}
-      {openError?.id === view.id && <p role="alert" className={styles.error}>{openError.message}</p>}
+      {openError?.id === view.id && <p role="alert" className={styles.error}>{contentMessage(openError.message, locale)}</p>}
     </li>)}</ul>
     <SavedViewsBackup key={dataset} dataset={dataset} views={views} ready={ready} disabled={!!opening} onImported={views => {
       setViews(views); setStorageError(null); setMessage(null); setOpenError(null);

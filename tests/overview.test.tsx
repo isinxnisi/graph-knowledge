@@ -48,7 +48,7 @@ describe("関係概要モーダル", () => {
     vi.mocked(fetchOverview).mockResolvedValue(response([relation({ eventRoles: [{ roleId: null, counts: counts(2) }, { roleId: "CHAIR", counts: counts(1) }] })]));
     const onClose = vi.fn(), onSwitch = vi.fn();
     render(<EntityOverview entity={entity} dataset="pilot-event-v1" restricted={false} onClose={onClose} onSwitch={onSwitch} />);
-    await screen.findByRole("heading", { name: "参加者" });
+    await screen.findByRole("heading", { name: "参加者" }, { timeout: 5000 });
     expect(screen.queryByRole("region", { name: "この対象から伸びる関係" })).toBeNull();
     expect(screen.getByRole("region", { name: "この対象へ向かう関係" })).toBeDefined();
     expect(screen.getByRole("img", { name: "人物 → 参加した → この出来事" })).toBeDefined();

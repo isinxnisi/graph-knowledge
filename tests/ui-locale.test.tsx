@@ -44,10 +44,10 @@ describe("表示localeと探索の分離", () => {
     render(<UiLocaleProvider><SiteHeader dataset="demo" /></UiLocaleProvider>);
     await waitFor(() => expect(document.documentElement.lang).toBe("ja"));
     (screen.getByText("設定").parentElement as HTMLDetailsElement).open = true;
-    fireEvent.change(screen.getByLabelText("表示言語（探索画面）"), { target: { value: "en" } });
+    fireEvent.change(screen.getByLabelText("表示言語"), { target: { value: "en" } });
     expect(localStorage.getItem(uiLocaleKey)).toBe("en");
     vi.spyOn(Storage.prototype, "setItem").mockImplementation(() => { throw new Error("blocked"); });
-    fireEvent.change(screen.getByLabelText("Language (explorer)"), { target: { value: "ja" } });
+    fireEvent.change(screen.getByLabelText("Language"), { target: { value: "ja" } });
     expect(document.documentElement.lang).toBe("ja");
     expect(screen.getByRole("status").textContent).toContain("表示言語を保存できません");
   });

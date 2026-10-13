@@ -1,4 +1,6 @@
 "use client";
+import { useUiLocale } from "../lib/client/ui-locale";
+import { contentMessage } from "../lib/i18n/content";
 
 import { useEffect, useRef, useState } from "react";
 import type { DatasetMode } from "../lib/domain/dataset";
@@ -11,7 +13,8 @@ export default function WorkspaceBackup({ dataset, workspace, full, ready, disab
   dataset: DatasetMode; workspace: SavedWorkspace | null; full: boolean; ready: boolean; disabled: boolean;
   onImported: (workspace: SavedWorkspace) => void;
 }) {
-  const text = workspaceLabels();
+  const { locale } = useUiLocale();
+  const text = workspaceLabels(locale);
   const request = useRef(0);
   const input = useRef<HTMLInputElement>(null);
   const [replace, setReplace] = useState(false);
@@ -84,7 +87,7 @@ export default function WorkspaceBackup({ dataset, workspace, full, ready, disab
       <div className={styles.backupPreview}>
         <strong>{preview.incoming.title}</strong>
         <p><time dateTime={preview.incoming.savedAt}>{text.savedAt(preview.incoming.savedAt)}</time></p>
-        <p>{conditionSummary(preview.incoming.conditions.predicates, preview.incoming.conditions.contributionRoles, "ja", preview.incoming.conditions.organizationPositions, preview.incoming.conditions.eventRoles)}</p>
+        <p>{conditionSummary(preview.incoming.conditions.predicates, preview.incoming.conditions.contributionRoles, locale, preview.incoming.conditions.organizationPositions, preview.incoming.conditions.eventRoles)}</p>
         <p>{text.rootId}：{preview.incoming.rootId}</p>
         <p>{text.scope(preview.incoming.branches.length, preview.incoming.branches.reduce((sum, branch) => sum + branch.pages, 0))}</p>
       </div>
@@ -95,6 +98,6 @@ export default function WorkspaceBackup({ dataset, workspace, full, ready, disab
     </section>}
     {(reading || preview) && <button onClick={cancel}>{text.cancelImport}</button>}
     {(error || conflict) && <p role="alert" className={styles.error}>{error ?? text.importConflict}</p>}
-    {message && <p role="status">{message}</p>}
+    {message && <p role="status">{contentMessage(message, locale)}</p>}
   </details>;
 }

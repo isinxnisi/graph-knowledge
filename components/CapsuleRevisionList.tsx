@@ -1,4 +1,6 @@
 "use client";
+import { useUiLocale } from "../lib/client/ui-locale";
+
 import { useEffect, useRef, useState } from "react";
 import { MemberClientError, memberRequest } from "../lib/client/member-api";
 import { sharedRevisionListSchema, type SharedRevision } from "../lib/domain/capsule-sharing";
@@ -8,7 +10,8 @@ import css from "./MemberCapsules.module.css";
 export default function CapsuleRevisionList({ capsuleId, userId, disabled, onRead, onUnauthorized }: {
   capsuleId: string; userId: string; disabled: boolean; onRead: (revision: number) => void; onUnauthorized: () => void;
 }) {
-  const text = capsuleHistoryLabels();
+  const { locale } = useUiLocale();
+  const text = capsuleHistoryLabels(locale);
   const [opened, setOpened] = useState(false), [busy, setBusy] = useState(false), [failed, setFailed] = useState(false);
   const [items, setItems] = useState<SharedRevision[]>([]);
   const active = useRef<AbortController | null>(null);
@@ -31,7 +34,7 @@ export default function CapsuleRevisionList({ capsuleId, userId, disabled, onRea
     }}>{opened ? text.close : text.open}</button>
     {opened && <><h2>{text.title}</h2><p>{text.help}</p>
       {busy ? <p role="status">{text.loading}</p> : failed ? <p role="alert">{text.failed}</p> : !items.length ? <p>{text.empty}</p> :
-        <ul className={css.posts}>{items.map(item => <li key={item.revision}><strong>{item.title}</strong><p className={css.muted}>{text.updated}<time dateTime={item.updatedAt}>{new Date(item.updatedAt).toLocaleString("ja-JP")}</time></p><button disabled={disabled} onClick={() => onRead(item.revision)}>{text.read(item.revision)}</button></li>)}</ul>}
+        <ul className={css.posts}>{items.map(item => <li key={item.revision}><strong>{item.title}</strong><p className={css.muted}>{text.updated}<time dateTime={item.updatedAt}>{new Date(item.updatedAt).toLocaleString(locale === "en" ? "en-GB" : "ja-JP")}</time></p><button disabled={disabled} onClick={() => onRead(item.revision)}>{text.read(item.revision)}</button></li>)}</ul>}
       <button disabled={disabled || busy} onClick={() => void load()}>{text.retry}</button>
     </>}
   </section>;

@@ -1,4 +1,6 @@
 "use client";
+import { useUiLocale } from "../lib/client/ui-locale";
+import { contentMessage } from "../lib/i18n/content";
 
 import { useEffect, useRef, useState } from "react";
 import type { DatasetMode } from "../lib/domain/dataset";
@@ -12,11 +14,13 @@ import { conditionSummary } from "../lib/i18n/exploration-entry";
 import styles from "./Explorer.module.css";
 import WorkspaceBackup from "./WorkspaceBackup";
 
+const textMessages = workspaceLabels();
 export default function WorkspaceDialog({ dataset, graph, captureView, onOpen, onClose }: {
   dataset: DatasetMode; graph: GraphState; captureView: () => GraphView | null;
   onOpen: (workspace: RebuiltWorkspace) => void; onClose: () => void;
 }) {
-  const text = workspaceLabels();
+  const { locale } = useUiLocale();
+  const text = workspaceLabels(locale);
   const dialog = useRef<HTMLDialogElement>(null);
   const selection = useRef<HTMLSelectElement>(null);
   const nameInput = useRef<HTMLInputElement>(null);
@@ -48,13 +52,13 @@ export default function WorkspaceDialog({ dataset, graph, captureView, onOpen, o
         if (initial) setSelectedId(values[0]?.id ?? null);
         setReady(true); setError(null);
       }
-      catch (error) { setReady(false); setError(error instanceof WorkspaceError ? text[error.reason] : text.storage); }
+      catch (error) { setReady(false); setError(error instanceof WorkspaceError ? textMessages[error.reason] : textMessages.storage); }
     };
     reload(true);
     const changed = (event: StorageEvent) => { if (event.key === null || event.key === workspaceKey(dataset)) reload(); };
     window.addEventListener("storage", changed);
     return () => { pending.current?.abort(); window.removeEventListener("storage", changed); };
-  }, [dataset, text]);
+  }, [dataset]);
   const cancel = () => { pending.current?.abort(); pending.current = null; setProgress(null); };
   const close = () => { cancel(); dialog.current?.close(); onClose(); };
   const backdrop = useDialogBackdrop(close);
@@ -102,11 +106,11 @@ export default function WorkspaceDialog({ dataset, graph, captureView, onOpen, o
   };
   const loading = Object.values(graph.expansions).some(meta => meta.loading);
   const tooLarge = Object.values(graph.expansions).reduce((sum, meta) => sum + meta.pages.length, 0) > WORKSPACE_PAGE_LIMIT;
-  return <dialog lang="ja" ref={dialog} className={`${styles.conditionDialog} ${styles.savedViews}`} aria-labelledby="workspace-title" onCancel={event => { event.preventDefault(); close(); }} {...backdrop}>
+  return <dialog lang={locale} ref={dialog} className={`${styles.conditionDialog} ${styles.savedViews}`} aria-labelledby="workspace-title" onCancel={event => { event.preventDefault(); close(); }} {...backdrop}>
     <div className={styles.conditionTitle}><h2 id="workspace-title">{text.title}</h2><button ref={closeButton} aria-label={text.close} onClick={close}>×</button></div>
     <p>{text.help}</p><p className={styles.muted}>{text.local}</p>
     {graph.centerId ? <form className={styles.savedViewForm} onSubmit={event => { event.preventDefault(); save(); }}>
-      <p>起点：<strong>{graph.nodes[graph.centerId]?.name}</strong></p>
+      <p>{text.root}：<strong>{graph.nodes[graph.centerId]?.name}</strong></p>
       <label htmlFor="workspace-name">{text.name}</label>
       <input ref={nameInput} id="workspace-name" maxLength={80} required value={title} onChange={event => setTitle(event.target.value)} />
       <button disabled={!ready || !!progress || loading || tooLarge || !title.trim() || workspaces.length >= WORKSPACE_COUNT_LIMIT}>{text.save}</button>
@@ -115,8 +119,8 @@ export default function WorkspaceDialog({ dataset, graph, captureView, onOpen, o
       {workspaces.length >= WORKSPACE_COUNT_LIMIT && <p>{text.countLimit}</p>}
       {loading && <p role="status">{text.loading}</p>}{tooLarge && <p>{text.limit}</p>}
     </form> : <p className={styles.empty}>{text.noRoot}</p>}
-    {message && <p role="status">{message}</p>}
-    {error && <div className={styles.error} role="alert"><p>{error}</p><button disabled={!!progress} onClick={refresh}>{text.retry}</button></div>}
+    {message && <p role="status">{contentMessage(message, locale)}</p>}
+    {error && <div className={styles.error} role="alert"><p>{contentMessage(error, locale)}</p><button disabled={!!progress} onClick={refresh}>{text.retry}</button></div>}
     <h3>{text.stored}</h3>
     <p className={styles.muted}>{text.count(workspaces.length, WORKSPACE_COUNT_LIMIT)}</p>
     {ready && workspaces.length === 0 && <p className={styles.empty}>{text.empty}</p>}
@@ -133,7 +137,7 @@ export default function WorkspaceDialog({ dataset, graph, captureView, onOpen, o
     {workspace && <div className={styles.savedViewForm}>
       <h4>{workspace.title}</h4>
       <p className={styles.muted}><time dateTime={workspace.savedAt}>{text.savedAt(workspace.savedAt)}</time></p>
-      <p>{conditionSummary(workspace.conditions.predicates, workspace.conditions.contributionRoles, "ja", workspace.conditions.organizationPositions, workspace.conditions.eventRoles)}</p>
+      <p>{conditionSummary(workspace.conditions.predicates, workspace.conditions.contributionRoles, locale, workspace.conditions.organizationPositions, workspace.conditions.eventRoles)}</p>
       <p>{text.scope(workspace.branches.length, workspace.branches.reduce((sum, branch) => sum + branch.pages, 0))}</p>
       <div className={styles.actions}><button disabled={!ready || !!progress} onClick={() => void open()}>{text.open}</button><button disabled={!ready || !!progress} onClick={() => setRemoving(workspace)}>{text.remove}</button></div>
     </div>}

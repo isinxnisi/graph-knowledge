@@ -1,4 +1,5 @@
 const ja = {
+  root: "起点",
   launch: "探索途中を保存・再開", title: "探索途中の保存", close: "探索途中の保存を閉じる",
   help: "枝の開閉・取得したページ数・配置を、このブラウザに名前を付けて保存します。再開時は現在のデータを読み直すため、関係や表示件数が変わることがあります。",
   local: "データセットごとに10件まで。自動保存・同期はありません。ブラウザのデータ削除で失われます。下の専用JSONファイルに控えると、別ブラウザへ持ち運べます。",
@@ -45,7 +46,27 @@ const ja = {
   retry: "途中保存を再読込",
   restored: (skipped: number) => `現在のデータで探索途中を再開しました。保存時から関係が変わることがあります。${skipped ? `現在の関係から辿れない枝${skipped}件は再開していません。` : ""}`,
 };
-export function workspaceLabels(locale = "ja") {
-  const resources: Record<string, typeof ja> = { ja };
+const en: typeof ja = {
+  root: "Starting entity",
+launch: "Save or resume exploration", title: "Saved exploration sessions", close: "Close saved sessions",
+  help: "Save branches, fetched page counts and positions in this browser under a name. Resuming refetches current data, so relations and displayed counts may change.",
+  local: "Up to 10 sessions per dataset. No autosave or sync. Clearing browser data removes them. Export the dedicated JSON below to use another browser.",
+  select: "Session to resume or manage", choose: "Choose a saved session", chooseHelp: "Choose one to resume, replace or delete. Select again if another tab changes the chosen save.", count: (count: number, limit: number) => `${count} / ${limit} sessions saved`,
+  countLimit: "Up to 10 sessions. Delete one or replace the selected session.", replaceSelected: (title: string) => `Replace “${title}” with current exploration`, removeHelp: (title: string) => `Delete “${title}”? Other saves and the current graph remain.`, confirmRemove: "Delete this saved session", keep: "Cancel deletion",
+  importReplace: "Replace the selected session with a file", importReplaceSelected: (title: string) => `Replace “${title}” with the file`, importAsNew: "Files are normally added as a new save. To replace one, select it above and check the option before choosing a file.",
+  backup: "Export or import a session", backupHelp: "Export one selected session's branches and positions as dedicated JSON. This differs from saved-view files containing only a start and conditions. Knowledge text and evidence are not included.", export: "Export saved session", importFile: "Saved session JSON file",
+  fileHelp: "Up to 100 KB, using the same dataset. Files are processed in the browser and not sent to the server.", readingFile: "Reading session file…", preview: "Review imported session", rootId: "Starting entity ID",
+  importHelp: "Reading a file does not switch exploration. After saving, use Resume saved session to fetch current data.", replaceHelp: (title: string) => `Replaces “${title}” in this browser. Export it first if you want to keep it.`,
+  confirmImport: "Import reviewed session", confirmReplace: "Replace saved session with reviewed file", cancelImport: "Cancel file import", imported: "Session saved from file. Continue with Resume saved session.", downloadStarted: "Session download started.", fileFailed: "Could not process the file. Select it again.",
+  fileInvalid: "Unsupported, damaged or oversized session file. Import saved-view files from Save or revisit.", dataset: "This session uses another dataset. Open the matching dataset to import it.", emptyFile: "No session available to export. Reload saved content.", importConflict: "Saved content changed during review. Check it and select the file again.",
+  name: "Session name", save: "Save current exploration session", replace: "Replace a saved session with current exploration", saved: "Exploration saved. Resume here even after reloading.", stored: "Saved session", empty: "No exploration sessions saved yet.", noRoot: "Choose a starting entity and explore before saving.",
+  savedAt: (date: string) => `Saved: ${new Date(date).toLocaleString("en-GB")}`, scope: (branches: number, pages: number) => `Saved branches: ${branches} / Fetched pages: ${pages}`,
+  open: "Resume saved session", cancel: "Cancel resuming", remove: "Delete saved session", removed: "Saved session deleted.", opening: (done: number, total: number) => `Loading current data… ${done} / Up to ${total} pages`,
+  loading: "Wait for graph loading to finish before saving.", unfetched: "No fetched branches were saved. Fetch adjacent relations to continue.", invalid: "Unsupported or damaged session. Original save is unchanged.", storage: "Browser storage is unavailable. Check settings or free space.", conflict: "Sessions changed in another tab. Reload and check their content.",
+  limit: "Up to 40 pages per session. Resuming also stops if current relations exceed display or fetch limits. Start again from a saved view containing the start and conditions.", response: "Could not check current relations. Current exploration is unchanged. Try resuming again.", timeout: "Resuming timed out. Current exploration is unchanged. You can retry.", missing: "Saved entity not found. Current exploration and saved session are unchanged.", retry: "Reload saved sessions",
+  restored: (skipped: number) => `Resumed with current data. Relations may differ from saving time.${skipped ? ` Did not resume ${skipped} branches unreachable through current relations.` : ""}`,
+};
+export function workspaceLabels(locale = "ja"): typeof ja {
+  const resources: Record<string, typeof ja> = { ja, en };
   return resources[locale] ?? resources[locale.split("-")[0]] ?? ja;
 }

@@ -1,4 +1,7 @@
 "use client";
+import { useUiLocale } from "../lib/client/ui-locale";
+import { contentMessage } from "../lib/i18n/content";
+
 import { useEffect, useRef, useState } from "react";
 import { z } from "zod";
 import { MemberClientError, memberRequest, type MemberUser } from "../lib/client/member-api";
@@ -8,7 +11,8 @@ import css from "./MemberCapsules.module.css";
 export default function MemberAccountDeletion({ user, disabled, onDeleted, onUnauthorized }: {
   user: MemberUser; disabled: boolean; onDeleted: () => void; onUnauthorized: () => void;
 }) {
-  const text = memberLabels();
+  const { locale } = useUiLocale();
+  const text = memberLabels(locale);
   const [confirm, setConfirm] = useState(false), [accepted, setAccepted] = useState(false);
   const [busy, setBusy] = useState(false), [error, setError] = useState<string | null>(null);
   const active = useRef<AbortController | null>(null);
@@ -36,7 +40,7 @@ export default function MemberAccountDeletion({ user, disabled, onDeleted, onUna
       <label><input type="checkbox" checked={accepted} disabled={busy || disabled} onChange={event => setAccepted(event.target.checked)} />{text.deleteAccountAcknowledgement}</label>
       <div><button disabled={!accepted || busy || disabled} onClick={() => void remove()}>{text.deleteAccountConfirm}</button>
         <button disabled={busy} onClick={() => { setConfirm(false); setAccepted(false); setError(null); }}>{text.cancel}</button></div>
-      {busy && <p role="status">{text.busy}</p>}{error && <p role="alert">{error}</p>}
+      {busy && <p role="status">{text.busy}</p>}{error && <p role="alert">{contentMessage(error, locale)}</p>}
     </div>}
   </section>;
 }

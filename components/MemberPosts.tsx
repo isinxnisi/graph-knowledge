@@ -1,4 +1,7 @@
 "use client";
+import { useUiLocale } from "../lib/client/ui-locale";
+import { contentMessage } from "../lib/i18n/content";
+
 import { useCallback, useEffect, useRef, useState } from "react";
 import { z } from "zod";
 import { ownDiscussionPostsSchema, type OwnDiscussionPosts } from "../lib/domain/capsule-discussion";
@@ -7,8 +10,10 @@ import { memberPostsLabels } from "../lib/i18n/member-posts";
 import { capsuleDiscussionLabels } from "../lib/i18n/capsule-discussion";
 import css from "./MemberCapsules.module.css";
 
+const textMessages = memberPostsLabels();
 export default function MemberPosts({ userId, onUnauthorized }: { userId: string; onUnauthorized: () => void }) {
-  const text = memberPostsLabels(), discussion = capsuleDiscussionLabels();
+  const { locale } = useUiLocale();
+  const text = memberPostsLabels(locale), discussion = capsuleDiscussionLabels(locale);
   const [opened, setOpened] = useState(false), [data, setData] = useState<OwnDiscussionPosts | null>(null);
   const [busy, setBusy] = useState(false), [error, setError] = useState<string | null>(null), [message, setMessage] = useState<string | null>(null);
   const [confirm, setConfirm] = useState<string | null>(null), [cursor, setCursor] = useState<string | null>(null);
@@ -18,9 +23,9 @@ export default function MemberPosts({ userId, onUnauthorized }: { userId: string
   useEffect(() => { unauthorized.current = onUnauthorized; }, [onUnauthorized]);
   const failed = useCallback((cause: unknown, fallback: string) => {
     setData(null); setConfirm(null);
-    if (cause instanceof MemberClientError && cause.status === 401) { setError(text.expired); unauthorized.current(); }
+    if (cause instanceof MemberClientError && cause.status === 401) { setError(textMessages.expired); unauthorized.current(); }
     else setError(fallback);
-  }, [text]);
+  }, []);
   const refresh = useCallback(async (pageCursor: string | null) => {
     if (mutating.current || document.visibilityState === "hidden") return;
     active.current?.abort(); const controller = new AbortController(); active.current = controller;
@@ -28,9 +33,9 @@ export default function MemberPosts({ userId, onUnauthorized }: { userId: string
     try {
       const result = await memberRequest(`/api/member/posts${pageCursor ? `?cursor=${encodeURIComponent(pageCursor)}` : ""}`, ownDiscussionPostsSchema, { user: userId, signal: controller.signal });
       if (!controller.signal.aborted) { setData(result); currentCursor.current = pageCursor; setCursor(pageCursor); }
-    } catch (cause) { if (!controller.signal.aborted) failed(cause, text.failed); }
+    } catch (cause) { if (!controller.signal.aborted) failed(cause, textMessages.failed); }
     finally { if (!controller.signal.aborted) setBusy(false); }
-  }, [userId, failed, text]);
+  }, [userId, failed]);
   useEffect(() => {
     if (!opened) return;
     const initial = setTimeout(() => void refresh(currentCursor.current), 0);
@@ -65,13 +70,13 @@ export default function MemberPosts({ userId, onUnauthorized }: { userId: string
       <p className={css.muted}>{text.boundary}</p>
       <button disabled={busy} onClick={() => { setMessage(null); void refresh(cursor); }}>{text.refresh}</button>
       <button onClick={() => { active.current?.abort(); mutating.current = false; setOpened(false); setData(null); setConfirm(null); setMessage(null); setError(null); currentCursor.current = null; setCursor(null); }}>{text.hide}</button>
-      {busy && <p role="status">{text.loading}</p>}{error && <p role="alert">{error}</p>}{message && <p role="status">{message}</p>}
+      {busy && <p role="status">{text.loading}</p>}{error && <p role="alert">{contentMessage(error, locale)}</p>}{message && <p role="status">{contentMessage(message, locale)}</p>}
       {data && <>
         {!data.posts.length && <p>{text.empty}</p>}
         <ol className={css.posts}>{data.posts.map(post => <li key={post.id}>
-          <p><strong>{text.context(post.revision)}</strong> · <time dateTime={post.createdAt}>{new Date(post.createdAt).toLocaleString("ja-JP")}</time></p>
+          <p><strong>{text.context(post.revision)}</strong> · <time dateTime={post.createdAt}>{new Date(post.createdAt).toLocaleString(locale === "en" ? "en-GB" : "ja-JP")}</time></p>
           <p className={css.postBody}>{post.body ?? (post.withdrawnAt ? text.withdrawn : text.hidden)}</p>
-          {post.withdrawnAt && <p className={css.muted}><time dateTime={post.withdrawnAt}>{new Date(post.withdrawnAt).toLocaleString("ja-JP")}</time></p>}
+          {post.withdrawnAt && <p className={css.muted}><time dateTime={post.withdrawnAt}>{new Date(post.withdrawnAt).toLocaleString(locale === "en" ? "en-GB" : "ja-JP")}</time></p>}
           <details className={css.muted}><summary>{text.target}</summary><p>{text.capsule}: {post.capsuleId}<br />{text.post}: {post.id}</p></details>
           {!post.withdrawnAt && <button disabled={busy} onClick={() => setConfirm(post.id)}>{discussion.withdraw}</button>}
           {confirm === post.id && <div role="alert"><p>{discussion.withdrawHelp}</p><button disabled={busy} onClick={() => void withdraw()}>{discussion.confirmWithdraw}</button><button disabled={busy} onClick={() => setConfirm(null)}>{discussion.cancel}</button></div>}

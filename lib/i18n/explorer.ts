@@ -6,7 +6,7 @@ import { dataReleaseLabels } from "./data-release";
 import { searchLabels } from "./entity-search";
 // 探索画面のUIだけ。Entity名・原資料・locator・noteには適用しない。
 const ja = {
-  language: "表示言語（探索画面）", languageHelp: "このブラウザに保存します。会員・共有・保存画面の英語対応は次の工程です。", languageFailed: "表示言語を保存できません。この画面には反映しています。",
+  language: "表示言語", languageHelp: "このブラウザに保存します。名前・説明・資料原文は登録表記のまま表示します。", languageFailed: "表示言語を保存できません。この画面には反映しています。",
   detail: "詳細", unselected: "未選択", selected: "選択中", graphLoading: (n: number) => `Graphを取得中…（${n}件）`, expanded: "近傍は展開済みです。", closed: "展開は閉じています。クリックで取得済みの枝を復元します。", expandHelp: "クリックで一段階展開します。", grouped: "線ごとに同じ関係の主張をまとめて表示しています。",
   graphAria: "人物・作品・組織・出来事の関係グラフ。操作できるテキスト一覧は下にあります。", shapes: "丸：人物 ／ 四角：作品 ／ 六角形：組織 ／ ひし形：出来事", edges: "矢印：方向 ／ 破線：否定", nodeStates: "二重枠：展開済 ／ 淡い外枠：新規表示",
   kinds: { person: "人物", work: "作品", organization: "組織", event: "出来事" }, unknown: "不明", periodUnknown: "期間不明", fromUnknown: "開始不明", toUnknown: "終了不明", affirmed: "肯定", denied: "否定", descriptionMissing: "説明は未登録です。", noDescription: "説明なし", aliases: "別名", unregistered: "未登録",
@@ -15,8 +15,8 @@ const ja = {
   claimDetails: "Claim詳細", claimTitle: "主張と出典", claimLoading: "主張の詳細を取得中…", claimRetry: "主張の取得を再試行", otherRetry: "他の主張を再試行", claimNavigation: "主張への移動", claimNumber: (n: number) => `主張 ${n}`, selectedClaim: "選択した主張", otherClaim: "他の主張", related: "同じ関係についての他の主張", noRelated: "他の主張は登録されていません。", assertion: "関係についての主張", subject: "主体", object: "対象", polarity: (denied: boolean) => `${denied ? "否定" : "肯定"}する主張`, relationPeriod: "関係の期間", noCitations: "この主張の出典はまだ登録されていません。", evidence: "根拠となる出典と参照箇所", citation: "出典と参照箇所", source: (n: number) => `出典 ${n}`, sourceKinds: { book: "書籍", interview: "インタビュー", magazine: "雑誌", web: "ウェブ", paper: "論文" }, stances: { support: "この主張を支持", refute: "この主張への反証", background: "背景資料" }, locator: "参照箇所", openSource: "出典のURLを開く", demoUrl: "デモURL（リンク無効）", published: "公開日", authors: "著者", publisher: "発行者", edition: "版・号", accessed: "アクセス日", entityLink: "この対象の閲覧リンク", claimLink: "この主張の閲覧リンク",
 };
 const en: typeof ja = {
-  language: "Language (explorer)",
-  languageHelp: "Saved in this browser. Account, sharing and saved-content screens will support English in the next step.",
+  language: "Language",
+  languageHelp: "Saved in this browser. Names, descriptions and source text keep their registered wording.",
   languageFailed: "Could not save language. It is applied to this page.",
   detail: "Details",
   unselected: "None",

@@ -1,4 +1,5 @@
 import { test, expect, type Page, type BrowserContext } from "@playwright/test";
+import { checkMemberLocale } from "./member-locale";
 import { spawnSync } from "node:child_process";
 import { Pool } from "pg";
 import examples from "../../docs/API_RESPONSE_EXAMPLES.json" with { type: "json" };
@@ -22,6 +23,7 @@ async function login(page: Page, identity = "検証ユーザーA") {
   await expect(page.getByText(identity, { exact: true })).toBeVisible();
   await expect(page.getByRole("button", { name: "アカウントと一覧を再確認", exact: true })).toBeEnabled();
 }
+checkMemberLocale(login, mockKnowledge);
 async function clearPrivateTestData() {
   // Only the explicitly guarded disposable fixture DB used by this runner.
   const url = new URL(process.env.MEMBER_DATABASE_URL!);
@@ -55,6 +57,8 @@ test.beforeAll(async ({ request }) => {
 test.beforeEach(clearPrivateTestData);
 for (const width of [390, 1440]) {
   test(`限定リンクで指定版を別ブラウザへ渡し、根拠・探索・再発行・停止へ進む ${width}px`, async ({ page, context, browser }, testInfo) => {
+    // 二つのcontextと探索のcold compileを含む。個別の期待値は15秒のまま。
+    test.setTimeout(180_000);
     await page.setViewportSize({ width, height: 900 }); await mockKnowledge(context);
     const errors: string[] = []; page.on("pageerror", error => errors.push(error.message));
     await page.goto("/member"); await login(page);

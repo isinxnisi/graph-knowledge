@@ -9,7 +9,7 @@
 | 確認先 | 接続先・更新のタイミング |
 | --- | --- |
 | `https://graph-beta.isinxnisi.com/` | 開発PCの `127.0.0.1:3200`。画面・機能の手動作業／自動開発の受け入れを完了するたびに、検証済みmainの変更を反映する |
-| `https://graph.isinxnisi.net` | VPS上の独立したWeb／DB。まとまった工程の区切りで反映する。次の必須更新は工程12、以後16・19・22。工程13の実認証接続などVPS配置が必要な検証や、稼働版の不具合修正はその時点で更新する |
+| `https://graph.isinxnisi.net` | VPS上の独立したWeb／DB。まとまった工程の区切りで反映する。必須更新の節目は工程12・16・19・22。工程13の実認証接続などVPS配置が必要な検証や、稼働版の不具合修正はその時点で更新する |
 
 - 更新は担当Codexの完了作業に含め、追加の更新指示を待たない。各工程の検証は維持し、配置だけを上記の頻度で行う。24工程の分母は増やさない。
 - 3200は `npm run public:build` → `NEO4J_READ_TIMEOUT_MS=10000 npm run public:start` で更新する。占有プロセスがこのrepoの3200であることを確認して停止・build・再起動し、起動セッションを保持する。既存の凍結版serverやCloudflareの設定は変更しない。文書だけの変更で実行物に影響がなければ再buildは不要。
@@ -175,3 +175,17 @@ sudo bash /home/develop/graph-production-step12/update-production-web.sh beta-st
 ## 工程13の会員接続準備
 
 2026-10-13。本番Composeへ任意のmember profile・専用PG volumeと非superuser、operator imageへ既存migrationを追加した。既定は会員無効で、KG operatorへ会員credentialを渡さない。実Googleが未設定のVPSにはまだ配置しない。[接続・privateな候補env生成・本人認証の完了条件](GOOGLE_MEMBER_CONNECTION.md)を正本とする。通常Web更新と、初回のCompose／PG構成追加を区別する。
+
+## 工程16の配置物と反映状態
+
+2026-10-13。探索に加え、閲覧・保存・会員・共有・コメントの日英UIを準備した。ローカル3200／Tunnelはbuild `98eAc3Mw3apKr3syvIefS`・revision `legacy:20261011-001`、代表2/2を確認済み。会員未設定を維持する。
+
+VPS用tagは `beta-step16-20261013`。Web imageは `sha256:4f6a10e3295c88579b830c2aeab9169f13e81462dedb77e64e1d144f2f6e570a`、operatorは `sha256:de135d1bebbbbdaea3703a4c00f7fd88bf0536e0a6c632df0f7fc4eaff1db497`。Node24.21.0、Web build ID `2sDd_pNucKRYWsHCCq6AK`。app／components／libのsourceは現在の作業内容とbyte単位で一致する。隔離Composeで本番imageのブラウザ19/19・backup・停止／復旧まで検証した。[検証記録](../PUBLIC_BETA_PROGRESS.md#工程16の実装検証2026-10-13)を参照。
+
+archiveと既存更新scriptはVPSの `/home/develop/graph-production-step16/` に転送済み。SHA-256 `9559a5232827b6b4575566ab72db1eced97bf1057eecf6e99bd17712ffb1ef92` の現地検証とscriptの `bash -n` は成功した。既存SSHユーザーの `sudo -n` はパスワードを要求するため、管理者が次を一回実行する。権限の恒久変更は行わない。
+
+```bash
+sudo bash /home/develop/graph-production-step16/update-production-web.sh beta-step16-20261013 /home/develop/graph-production-step16/images.tar.gz
+```
+
+適用前のVPS dataset revisionは `5b6ccb7b-7a5d-4005-ab34-01c490e93b1c`。既存DB・private env・Compose・Caddy・preview認証を維持するWeb更新であり、会員機能を有効化する操作ではない。適用後に担当CodexがHTTPSのbuild、revision維持、日英の閲覧／保存・既存探索と既存サービス継続を確認する。現時点ではVPS反映／工程16の完了は管理者操作待ち。

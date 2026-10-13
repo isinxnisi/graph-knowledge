@@ -29,6 +29,34 @@ const ja = {
   invalid: "内容が不正か、未対応の形式です。既存の保存は変更していません。",
   limit: "保存の上限に達しました。不要なCapsuleを削除してから保存してください。",
   conflict: "別のタブで保存が変わりました。一覧を再読込してください。", reload: "保存一覧を再読込",
-  version: (revision: number) => `内容版 ${revision}`, item: (kind: "entity" | "claim") => kind === "entity" ? "対象" : "主張",
+  version: (revision: number) => `内容版 ${revision}`, item: (kind: "entity" | "claim"): string => kind === "entity" ? "対象" : "主張",
 };
-export function capsuleLabels(locale = "ja") { const resources: Record<string, typeof ja> = { ja }; return resources[locale] ?? resources[locale.split("-")[0]] ?? ja; }
+const en: typeof ja = {
+launch: "Create or read a Capsule", title: "My Capsules", close: "Return to exploration",
+  help: "Select entities and claims and add your description to save a relation diagram. This is separate content from a saved exploration session.",
+  local: "A private prototype stored only in this browser, up to 10 items. No sync, sharing or autosave. Clearing browser data removes it.",
+  new: "Create from the visible graph", noGraph: "Search for an entity and open a graph to create a Capsule here.", empty: "No Capsules yet.", libraryTitle: "Saved Capsules", library: "Back to saved Capsules", create: "Save Capsule", saved: "Capsule saved.",
+  name: "Capsule title", note: "My description", noteHelp: "Your description is a personal note. It is not converted into KG claims or sources.",
+  authorNote: "Creator's description", authorNoteHelp: "This is the creator's note, not a KG claim or source.", entities: "Included entities", claims: "Included claims",
+  selectionHelp: "Selecting a claim also includes its endpoints. Placing entities together does not create a new relation.", overview: "Diagram and list", backToOverview: "Return to diagram and list",
+  limits: "Up to 30 entities and 60 claims. You can save entities without claims.", required: "Endpoint of a selected claim",
+  selected: (entities: number, claims: number) => `Selected: ${entities} ${entities === 1 ? "entity" : "entities"} / ${claims} ${claims === 1 ? "claim" : "claims"}`, displayed: (entities: number, claims: number) => `Current graph: ${entities} ${entities === 1 ? "entity" : "entities"} / ${claims} ${claims === 1 ? "claim" : "claims"}`,
+  content: "Capsule content", current: "Entities, claims and sources use current data at reading time. This does not reproduce past knowledge versions. Unselected claims are not included.",
+  reading: "Loading current entities and claims…", retry: "Reload current data", timeout: "Loading was interrupted. Retry without changing the saved content.",
+  missing: "Reference not found in current data", failed: "Could not load", endpoints: "Claim endpoints do not match the saved selection", incomplete: "Some content cannot be shown. References are retained.",
+  graphHelp: "Select entities or lines to inspect them in the list below. Positions are not saved.", selectedClaim: "Claim selected in this Capsule", chooseClaim: "Select a claim to read its qualifiers, period and individual sources.",
+  noClaims: "No claims selected. This does not assert relations between the entities.", noNote: "No description.", read: "Read", remove: "Delete", confirmRemove: "Delete this Capsule", keep: "Cancel deletion", removeHelp: (title: string) => `Delete “${title}”?`,
+  draftExit: "You have unsaved content. Returning discards these changes without changing saved content.", discard: "Return without saving", continue: "Continue creating", continueEdit: "Continue editing",
+  edit: "Edit this Capsule", cancelEdit: "Cancel editing", saveEdit: "Save changes", editHelp: "Change the title, description and selected entities and claims. The visible exploration graph is also available for selection. Original content stays unchanged until saving.",
+  editVersion: (revision: number) => `Editing version ${revision}. Saving creates the next version. Past versions are not retained.`,
+  unresolvedReference: "Reference unavailable in current data", preserveEndpoint: "Retained for an unchecked claim",
+  unresolvedEdit: "Unchecked claims remain selected. While retaining them, all saved entities are kept to preserve endpoints. Remove the claim first to remove its entities.",
+  editConflict: "This Capsule changed or was deleted in another tab. Input is retained. Return to the list and open the latest content.",
+  storage: "Browser storage is unavailable. Check settings or free space.", invalid: "Invalid or unsupported content. Existing saves are unchanged.",
+  limit: "Save limit reached. Delete an unused Capsule before saving.", conflict: "Saves changed in another tab. Reload the list.", reload: "Reload saved list",
+  version: (revision: number) => `Version ${revision}`, item: (kind: "entity" | "claim"): string => kind === "entity" ? "Entity" : "Claim",
+};
+export function capsuleLabels(locale = "ja"): typeof ja {
+  const resources: Record<string, typeof ja> = { ja, en };
+  return resources[locale] ?? resources[locale.split("-")[0]] ?? ja;
+}

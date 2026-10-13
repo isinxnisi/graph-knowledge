@@ -1,4 +1,6 @@
 "use client";
+import { useUiLocale } from "../lib/client/ui-locale";
+import { contentMessage } from "../lib/i18n/content";
 
 import { useEffect, useRef, useState } from "react";
 import type { DatasetMode } from "../lib/domain/dataset";
@@ -11,7 +13,8 @@ export default function SavedViewsBackup({ dataset, views, ready, disabled, onIm
   dataset: DatasetMode; views: SavedView[]; ready: boolean; disabled: boolean;
   onImported: (views: SavedView[]) => void;
 }) {
-  const text = savedViewLabels();
+  const { locale } = useUiLocale();
+  const text = savedViewLabels(locale);
   const request = useRef(0);
   const input = useRef<HTMLInputElement>(null);
   const [reading, setReading] = useState(false);
@@ -92,7 +95,7 @@ export default function SavedViewsBackup({ dataset, views, ready, disabled, onIm
       {preview.views.length === 0 && <p>{text.emptyBackup}</p>}
       <ul className={styles.backupPreview}>{preview.views.map(view => <li key={view.id}>
         <strong>{view.title}</strong>
-        <p className={styles.muted}>{conditionSummary(view.conditions.predicates, view.conditions.contributionRoles, "ja", view.conditions.organizationPositions, view.conditions.eventRoles)}</p>
+        <p className={styles.muted}>{conditionSummary(view.conditions.predicates, view.conditions.contributionRoles, locale, view.conditions.organizationPositions, view.conditions.eventRoles)}</p>
         <p className={styles.muted}>{text.rootId}：{view.rootId}</p>
       </li>)}</ul>
       <p className={styles.muted}>{text.importHelp}</p>
@@ -100,6 +103,6 @@ export default function SavedViewsBackup({ dataset, views, ready, disabled, onIm
     </section>}
     {(reading || preview) && <button onClick={cancel}>{text.cancelImport}</button>}
     {(error || planError) && <p role="alert" className={styles.error}>{error ?? planError}</p>}
-    {message && <p role="status">{message}</p>}
+    {message && <p role="status">{contentMessage(message, locale)}</p>}
   </details>;
 }

@@ -1,4 +1,7 @@
 "use client";
+import { useUiLocale } from "../lib/client/ui-locale";
+import { contentMessage } from "../lib/i18n/content";
+
 import { useEffect, useRef, useState } from "react";
 import { memberProfileUpdateSchema } from "../lib/domain/member-profile";
 import { MemberClientError, memberProfileSchema, memberRequest, type MemberUser } from "../lib/client/member-api";
@@ -9,7 +12,8 @@ export default function MemberProfileSettings({ user, value, disabled, onChange,
   user: MemberUser; value: string; disabled: boolean; onChange: (name: string | null) => void;
   onSaved: (user: MemberUser) => void; onUnauthorized: () => void;
 }) {
-  const text = memberLabels();
+  const { locale } = useUiLocale();
+  const text = memberLabels(locale);
   const active = useRef<AbortController | null>(null);
   const [busy, setBusy] = useState(false), [error, setError] = useState<string | null>(null), [saved, setSaved] = useState(false);
   useEffect(() => {
@@ -43,7 +47,7 @@ export default function MemberProfileSettings({ user, value, disabled, onChange,
       {!parsed.success && <p role="status">{text.profileInvalid}</p>}
       <div><button type="submit" disabled={busy || disabled || !parsed.success || parsed.data.name === user.name}>{text.saveProfile}</button>
         {value !== user.name && <button type="button" disabled={busy} onClick={() => { onChange(null); setError(null); setSaved(false); }}>{text.cancel}</button>}</div>
-      {busy && <p role="status">{text.busy}</p>}{error && <p role="alert">{error}</p>}{saved && <p role="status">{text.profileSaved}</p>}
+      {busy && <p role="status">{text.busy}</p>}{error && <p role="alert">{contentMessage(error, locale)}</p>}{saved && <p role="status">{text.profileSaved}</p>}
     </form>
   </section>;
 }

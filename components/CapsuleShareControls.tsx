@@ -1,4 +1,7 @@
 "use client";
+import { useUiLocale } from "../lib/client/ui-locale";
+import { contentMessage } from "../lib/i18n/content";
+
 import { useCallback, useEffect, useRef, useState } from "react";
 import { z } from "zod";
 import type { MemberCapsule } from "../lib/domain/member-capsule";
@@ -7,10 +10,12 @@ import { MemberClientError, memberRequest } from "../lib/client/member-api";
 import { capsuleSharingLabels } from "../lib/i18n/capsule-sharing";
 import css from "./MemberCapsules.module.css";
 
+const textMessages = capsuleSharingLabels();
 export default function CapsuleShareControls({ capsule, userId, disabled, onUnauthorized }: {
   capsule: MemberCapsule; userId: string; disabled: boolean; onUnauthorized: () => void;
 }) {
-  const text = capsuleSharingLabels();
+  const { locale } = useUiLocale();
+  const text = capsuleSharingLabels(locale);
   const [blocked, setBlocked] = useState(false);
   const [share, setShare] = useState<CapsuleShare | null>(null);
   const [known, setKnown] = useState(false), [busy, setBusy] = useState(true);
@@ -30,9 +35,9 @@ export default function CapsuleShareControls({ capsule, userId, disabled, onUnau
       if (controller.signal.aborted) return;
       setKnown(false);
       if (cause instanceof MemberClientError && cause.status === 401) { unauthorized.current(); return; }
-      setError(cause instanceof MemberClientError && cause.code === "SHARING_BLOCKED" ? text.blocked : cause instanceof MemberClientError && cause.status === 409 ? text.conflict : cause instanceof MemberClientError && cause.code === "SHARE_REVISION_LIMIT" ? text.limit : text.failed);
+      setError(cause instanceof MemberClientError && cause.code === "SHARING_BLOCKED" ? textMessages.blocked : cause instanceof MemberClientError && cause.status === 409 ? textMessages.conflict : cause instanceof MemberClientError && cause.code === "SHARE_REVISION_LIMIT" ? textMessages.limit : textMessages.failed);
     } finally { if (!controller.signal.aborted) setBusy(false); }
-  }, [text]);
+  }, []);
   const refresh = useCallback(() => { void run(async signal => {
     const result = await memberRequest(path, capsuleShareStatusSchema, { user: userId, signal });
     if (!signal.aborted) { setShare(result.share); setBlocked(result.blocked); setKnown(true); }
@@ -63,7 +68,7 @@ export default function CapsuleShareControls({ capsule, userId, disabled, onUnau
     <h2>{text.title}</h2><p>{text.help}</p>
     {busy && <p role="status">{text.checking}</p>}
     {known && <p>{blocked ? text.blocked : share ? text.active(share.revision) : text.stopped}</p>}
-    {error && <p role="alert">{error}</p>}{message && <p role="status">{message}</p>}
+    {error && <p role="alert">{contentMessage(error, locale)}</p>}{message && <p role="status">{contentMessage(message, locale)}</p>}
     <button disabled={busy || disabled} onClick={refresh}>{text.refresh}</button>
     <button disabled={busy || disabled || !known || blocked} onClick={() => setConfirm("issue")}>{share ? text.rotate : text.issue}</button>
     {share && <button disabled={busy || disabled || !known} onClick={() => setConfirm("revoke")}>{text.revoke}</button>}

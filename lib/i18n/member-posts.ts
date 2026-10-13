@@ -13,5 +13,19 @@ const ja = {
   gone: "投稿が見つかりません。投稿先が削除された可能性があります。一覧を再確認してください。",
   expired: "ログインが変わったか期限が切れました。アカウントを再確認してください。",
   manageLink: "自分の投稿を確認・撤回（アカウント・別タブ）",
-} as const;
-export function memberPostsLabels(locale = "ja") { void locale; return ja; }
+};
+const en: typeof ja = {
+title: "My comments", open: "View my comments", hide: "Close comment list",
+  help: "Your comments in this environment, newest first. You can withdraw them even after a sharing link expires.",
+  boundary: "The target's title, description and other people's comments are not shown. Deleting a Capsule also removes its comments from this list.",
+  refresh: "Refresh this list", newest: "Show newest comments", next: "Show 20 earlier comments", loading: "Loading your comments…", empty: "You have no comments on this page.",
+  context: (revision: number) => `Comment on version ${revision}`, target: "Target identifiers", capsule: "Capsule ID", post: "Comment ID",
+  hidden: "This comment cannot be displayed. You can still delete its text and withdraw it.", withdrawn: "This comment was withdrawn.", done: "Comment withdrawn.",
+  failed: "Could not load your comments. Please retry.", uncertain: "Could not confirm withdrawal. Refresh this list to check its status.",
+  gone: "Comment not found. Its Capsule may have been deleted. Refresh the list.", expired: "Your login changed or expired. Check your account again.",
+  manageLink: "Review or withdraw my comments (account, new tab)",
+};
+export function memberPostsLabels(locale = "ja"): typeof ja {
+  const resources: Record<string, typeof ja> = { ja, en };
+  return resources[locale] ?? resources[locale.split("-")[0]] ?? ja;
+}

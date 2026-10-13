@@ -1,4 +1,6 @@
 "use client";
+import { useUiLocale } from "../lib/client/ui-locale";
+import { explorerLabels } from "../lib/i18n/explorer";
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { MemberCapsule } from "../lib/domain/member-capsule";
@@ -6,7 +8,6 @@ import { MEMBER_CAPSULE_LIMITS } from "../lib/domain/member-capsule";
 import { memberDraftContent, memberDraftRequired, sameMemberContent, type MemberCapsuleDraft } from "../lib/client/member-capsule-edit";
 import { memberReaderCapsule } from "../lib/client/member-api";
 import { entityLabel } from "../lib/client/graph-presentation";
-import { KIND_LABELS } from "../lib/client/format";
 import { memberLabels } from "../lib/i18n/member";
 import { capsuleLabels } from "../lib/i18n/capsules";
 import { CapsuleReader, ClaimCaption } from "./CapsuleDialog";
@@ -17,7 +18,8 @@ export default function MemberCapsuleEditor({ draft, current, busy, onChange, on
   draft: MemberCapsuleDraft; current: MemberCapsule | null; busy: boolean;
   onChange: (draft: MemberCapsuleDraft) => void; onSave: () => void; onCancel: () => void; onCheck: () => void;
 }) {
-  const text = memberLabels(), captions = capsuleLabels();
+  const { locale } = useUiLocale();
+  const text = memberLabels(locale), captions = capsuleLabels(locale);
   const [discarding, setDiscarding] = useState(false);
   const title = useRef<HTMLInputElement>(null);
   const latestReading = useMemo(() => current ? memberReaderCapsule(current, draft.content.dataset) : null, [current, draft.content.dataset]);
@@ -47,7 +49,7 @@ export default function MemberCapsuleEditor({ draft, current, busy, onChange, on
       {unresolved && <p role="status">{captions.unresolvedEdit}</p>}
       <fieldset disabled={busy}><legend>{captions.entities}</legend>{[...new Set([...draft.base.content.entityIds, ...Object.keys(draft.resolved.entities)])].map(id => {
         const entity = draft.resolved.entities[id];
-        return <label className={css.choice} key={id}><input type="checkbox" checked={members.includes(id)} disabled={required.has(id)} onChange={event => change({ entityIds: event.target.checked ? [...draft.content.entityIds, id] : draft.content.entityIds.filter(value => value !== id) })} /><span>{entity ? <>{entityLabel(entity, draft.resolved.entities).replace("\n", " / ")} · {KIND_LABELS[entity.kind]}</> : <>{captions.unresolvedReference} <code>{id}</code></>}{required.has(id) && <small>{unresolved ? captions.preserveEndpoint : captions.required}</small>}</span></label>;
+        return <label className={css.choice} key={id}><input type="checkbox" checked={members.includes(id)} disabled={required.has(id)} onChange={event => change({ entityIds: event.target.checked ? [...draft.content.entityIds, id] : draft.content.entityIds.filter(value => value !== id) })} /><span>{entity ? <>{entityLabel(entity, draft.resolved.entities, locale).replace("\n", " / ")} · {explorerLabels(locale).kinds[entity.kind]}</> : <>{captions.unresolvedReference} <code>{id}</code></>}{required.has(id) && <small>{unresolved ? captions.preserveEndpoint : captions.required}</small>}</span></label>;
       })}</fieldset>
       <fieldset disabled={busy}><legend>{captions.claims}</legend>{[...new Set([...draft.base.content.claimIds, ...Object.keys(draft.resolved.claims)])].map(id => {
         const claim = draft.resolved.claims[id];

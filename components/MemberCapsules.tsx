@@ -1,4 +1,6 @@
 "use client";
+import { useUiLocale } from "../lib/client/ui-locale";
+import { contentMessage } from "../lib/i18n/content";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { z } from "zod";
@@ -24,8 +26,10 @@ import css from "./MemberCapsules.module.css";
 import capsuleCss from "./CapsuleDialog.module.css";
 
 const authEventKey = "graph-knowledge:member-session-changed";
+const textMessages = memberLabels();
 export default function MemberCapsules({ dataset, initialImport = "" }: { dataset: DatasetMode; initialImport?: string }) {
-  const text = memberLabels(), captions = capsuleLabels(), historyText = capsuleHistoryLabels();
+  const { locale } = useUiLocale();
+  const text = memberLabels(locale), captions = capsuleLabels(locale), historyText = capsuleHistoryLabels(locale);
   const [user, setUser] = useState<MemberUser | null>(null);
   const [profileDraft, setProfileDraft] = useState<{ ownerId: string; name: string } | null>(null);
   const [provider, setProvider] = useState<"google" | "fixture" | null>(null);
@@ -50,11 +54,11 @@ export default function MemberCapsules({ dataset, initialImport = "" }: { datase
   const clearPrivate = useCallback(() => { setUser(null); setItems([]); setSelected(null); setHistorical(false); setConfirm(null); }, []);
   const fail = useCallback((cause: unknown) => {
     if (cause instanceof MemberClientError) {
-      if (cause.status === 401) { clearPrivate(); setError(text.expired); return; }
+      if (cause.status === 401) { clearPrivate(); setError(textMessages.expired); return; }
       if (cause.status === 503) setProvider(null);
-      setError(cause.status === 503 ? text.unavailable : cause.status === 404 ? text.notFound : cause.status === 409 ? text.conflict : cause.code === "CAPSULE_LIMIT" ? text.limit : text.failed);
-    } else setError(text.failed);
-  }, [clearPrivate, text]);
+      setError(cause.status === 503 ? textMessages.unavailable : cause.status === 404 ? textMessages.notFound : cause.status === 409 ? textMessages.conflict : cause.code === "CAPSULE_LIMIT" ? textMessages.limit : textMessages.failed);
+    } else setError(textMessages.failed);
+  }, [clearPrivate]);
   const run = useCallback(async (action: (signal: AbortSignal) => Promise<void>) => {
     active.current?.abort();
     const controller = new AbortController(); active.current = controller;
@@ -74,7 +78,7 @@ export default function MemberCapsules({ dataset, initialImport = "" }: { datase
       setProvider(status.provider);
       let profile;
       try { profile = await memberRequest("/api/member/profile", memberProfileSchema, { signal }); }
-      catch (cause) { if (cause instanceof MemberClientError && cause.status === 401) { if (!signal.aborted && new URL(location.href).searchParams.has("error")) setError(text.loginFailed); return; } throw cause; }
+      catch (cause) { if (cause instanceof MemberClientError && cause.status === 401) { if (!signal.aborted && new URL(location.href).searchParams.has("error")) setError(textMessages.loginFailed); return; } throw cause; }
       const result = await memberRequest("/api/member/capsules", memberListSchema, { user: profile.user.id, signal });
       for (const item of result.capsules) memberReaderCapsule(item, dataset);
       if (signal.aborted) return;
@@ -95,11 +99,11 @@ export default function MemberCapsules({ dataset, initialImport = "" }: { datase
       const retained = draftRef.current;
       if (retained && retained.ownerId === profile.user.id && opened?.id === retained.base.id) setDraft({ ...retained, needsCheck: false });
     });
-  }, [clearPrivate, dataset, run, setDraft, text.loginFailed]);
+  }, [clearPrivate, dataset, run, setDraft]);
   useEffect(() => {
     const readLocal = () => {
       try { setLocal(readCapsules(localStorage, dataset)); setLocalError(null); }
-      catch { setLocal([]); setLocalError(text.localError); }
+      catch { setLocal([]); setLocalError(textMessages.localError); }
     };
     // Defer browser/session synchronization until hydration has committed.
     const initial = window.setTimeout(() => { readLocal(); refresh(); }, 0);
@@ -116,7 +120,7 @@ export default function MemberCapsules({ dataset, initialImport = "" }: { datase
     const restored = (event: PageTransitionEvent) => { if (event.persisted) refresh(); };
     window.addEventListener("storage", changed); document.addEventListener("visibilitychange", visibility); window.addEventListener("pageshow", restored);
     return () => { window.clearTimeout(initial); active.current?.abort(); window.removeEventListener("storage", changed); document.removeEventListener("visibilitychange", visibility); window.removeEventListener("pageshow", restored); };
-  }, [dataset, refresh, clearPrivate, text]);
+  }, [dataset, refresh, clearPrivate]);
   useEffect(() => {
     if (!draft && !profileDraft) return;
     const warn = (event: BeforeUnloadEvent) => { event.preventDefault(); event.returnValue = ""; };
@@ -195,16 +199,16 @@ export default function MemberCapsules({ dataset, initialImport = "" }: { datase
       if (!signal.aborted) { setItems(previous => previous.filter(item => item.id !== selected.id)); setSelected(null); setMessage(text.removed); navigate(null); }
     });
   }
-  return <><SiteHeader dataset={dataset} page="member" /><main lang="ja" className={css.page}>
+  return <><SiteHeader dataset={dataset} page="member" /><main lang={locale} className={css.page}>
     <header className={css.pageHeader}><p className={css.eyebrow}>{text.private}</p><h1 ref={heading} tabIndex={-1}>{text.title}</h1><p>{text.help}</p>
       <p className={css.muted}>{text.returnHelp}</p>
     </header>
     <section className={css.account} aria-label={text.title}>
-      {user ? <><p><strong>{user.name}</strong> · {user.locale}</p><button disabled={busy || !!draft} onClick={() => logout(false)}>{text.logout}</button><button disabled={busy || !!draft} onClick={() => setConfirm("logoutAll")}>{text.logoutAll}</button></> : !busy && provider && <><p>{text.loggedOut}</p><button disabled={!!draft} onClick={login}>{provider === "fixture" ? text.fixtureLogin : text.login}</button></>}
+      {user ? <><p><strong>{user.name}</strong></p><button disabled={busy || !!draft} onClick={() => logout(false)}>{text.logout}</button><button disabled={busy || !!draft} onClick={() => setConfirm("logoutAll")}>{text.logoutAll}</button></> : !busy && provider && <><p>{text.loggedOut}</p><button disabled={!!draft} onClick={login}>{provider === "fixture" ? text.fixtureLogin : text.login}</button></>}
       <button disabled={busy} onClick={refresh}>{text.refresh}</button>
       {draft && <p>{text.editingAccountHelp}</p>}
       {busy && <p role="status">{user ? text.busy : text.checking}</p>}
-      {error && <p role="alert">{error}</p>}{message && <p role="status">{message}</p>}
+      {error && <p role="alert">{contentMessage(error, locale)}</p>}{message && <p role="status">{contentMessage(message, locale)}</p>}
       {confirm === "logoutAll" && <div role="alert"><p>{text.logoutAllConfirm}</p><button onClick={() => logout(true)}>{text.confirmLogoutAll}</button><button onClick={() => setConfirm(null)}>{text.cancel}</button></div>}
     </section>
     {user && <MemberProfileSettings key={`profile:${user.id}`} user={user} value={profileDraft?.ownerId === user.id ? profileDraft.name : user.name} disabled={busy}
@@ -238,7 +242,7 @@ export default function MemberCapsules({ dataset, initialImport = "" }: { datase
     </section>}
     <section className={css.card} aria-label={text.localTitle}>
       <h2>{text.localTitle}</h2><p>{text.localHelp}</p>
-      {localError && <p role="alert">{localError}</p>}
+      {localError && <p role="alert">{contentMessage(localError, locale)}</p>}
       {!local.length && !localError && <p>{text.noLocal}</p>}
       {sourceId && !source && !localError && <p role="status">{text.missingLocal}</p>}
       {!!local.length && <div className={css.source}><label htmlFor="member-local-source">{text.source}</label><select id="member-local-source" value={sourceId} disabled={busy} onChange={event => {

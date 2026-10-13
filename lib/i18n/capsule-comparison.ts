@@ -13,4 +13,20 @@ const ja = {
   referencesFailed: "一部の参照を確認できませんでした。IDと構成差分は保持しています。",
   referenceUnavailable: "現在の内容を確認できません", inspect: "現在の内容・根拠を開く（別タブ）",
 };
-export function capsuleComparisonLabels(locale = "ja") { const resources: Record<string, typeof ja> = { ja }; return resources[locale] ?? resources[locale.split("-")[0]] ?? ja; }
+const en: typeof ja = {
+title: "Changes since sharing", open: "Compare with the current saved content", close: "Close comparison", retry: "Reload current content and compare",
+  loading: "Loading content for comparison…", failed: "Could not load the content to compare. Please retry.",
+  direction: (before: number, after: number) => `Shared version ${before} → Current version ${after} at retrieval`,
+  help: "Changes to the title, description and selected references. This is not a history of knowledge or source updates, or a correction of facts. The shared link and comment version stay the same.",
+  before: (revision: number) => `When shared (version ${revision})`, after: (revision: number) => `Current at retrieval (version ${revision})`,
+  titleField: "Title changes", noteField: "Description changes", noNote: "No description", unchangedText: "Title and description are unchanged.",
+  unchanged: "Title, description and selected entities and claims are unchanged.", entities: "Entity selection", claims: "Claim selection", added: "Added references", removed: "Removed references", none: "None",
+  counts: (added: number, removed: number, retained: number) => `Added ${added} · Removed ${removed} · Retained ${retained}`,
+  referencesLoading: "Checking current names and claims for changed references…",
+  referencesHelp: "Names and claims use current data. You can open removed references in another tab to check their current content and evidence.",
+  referencesFailed: "Some references could not be checked. IDs and selection changes are retained.", referenceUnavailable: "Current content unavailable", inspect: "Open current content and evidence (new tab)",
+};
+export function capsuleComparisonLabels(locale = "ja"): typeof ja {
+  const resources: Record<string, typeof ja> = { ja, en };
+  return resources[locale] ?? resources[locale.split("-")[0]] ?? ja;
+}

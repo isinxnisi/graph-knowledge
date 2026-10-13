@@ -26,7 +26,25 @@ const ja = {
   conflict: "同じ保存IDで内容の異なるビューがあります。上書きを避けるため追加していません。別のブラウザで確認するか、別の控えを選んでください。",
   fileFailed: "ファイルを扱えませんでした。ファイルを選び直すか、もう一度お試しください。",
 };
-export function savedViewLabels(locale = "ja") {
-  const resources: Record<string, typeof ja> = { ja };
+const en: typeof ja = {
+launch: "Save or revisit", title: "Saved views in this browser", close: "Close saved views",
+  help: "Save the starting entity and applied conditions. Opening fetches current data. Expanded branches, positions and evidence content are not saved.",
+  local: "Stored only on this device and browser. Clearing browser data removes it. You can export a backup file. No automatic sync.",
+  name: "Saved view name", save: "Save current start and conditions", saved: "Saved. Open it next time from Save or revisit.", list: "Saved views", empty: "No saved views yet. Choose a starting entity and save with your preferred conditions.",
+  noRoot: "Choose a starting entity to save a view.", open: "Open", opening: "Checking starting entity…", remove: "Delete", removed: "Saved view deleted.", root: "Starting entity to save",
+  limit: "Up to 20 views. Delete an unused view to add another.", savedAt: (value: string) => `Saved: ${new Date(value).toLocaleString("en-GB")}`,
+  openNamed: (title: string) => `Open ${title}`, removeNamed: (title: string) => `Delete ${title}`,
+  storage: "Browser storage is unavailable. Check settings or free space and retry.", invalid: "Unsupported or damaged saved data. Original data is unchanged.", retry: "Reload saved list", missing: "Saved starting entity not found. Current exploration is unchanged.",
+  failed: "Could not check the starting entity. Current exploration is retained. Retry with Open.",
+  backup: "Export or import a backup", backupHelp: "Save a JSON backup and import it in another browser using the same dataset. The file is not sent to the server.", export: "Export saved views", downloadStarted: "Download started. Check your browser's download location.",
+  importFile: "Saved views JSON file", fileHelp: "Up to 100 KB and 20 views. Review before adding.", readingFile: "Checking file…", preview: "Review imported content", rootId: "Starting entity ID",
+  importPlan: (added: number, skipped: number) => `To add: ${added} / Already saved: ${skipped}`,
+  importHelp: "Existing saved views are not overwritten. Open added views from the list. The starting entity and current relations are checked when opening.", confirmImport: "Add reviewed views", cancelImport: "Cancel import", emptyBackup: "The file contains no saved views.",
+  imported: (added: number, skipped: number) => `Added ${added} views. Kept ${skipped} already saved views.`,
+  backupInvalid: "Unsupported, damaged or oversized saved-view file. Existing saved data is unchanged.", dataset: "This file uses another dataset. Import it in the matching dataset's view.",
+  conflict: "A view with this ID has different content. Nothing was added to avoid overwriting. Check another browser or choose another backup.", fileFailed: "Could not process the file. Select it again or retry.",
+};
+export function savedViewLabels(locale = "ja"): typeof ja {
+  const resources: Record<string, typeof ja> = { ja, en };
   return resources[locale] ?? resources[locale.split("-")[0]] ?? ja;
 }

@@ -1,4 +1,6 @@
 "use client";
+import { useUiLocale } from "../lib/client/ui-locale";
+
 import { useEffect, useRef, useState } from "react";
 import type { MemberCapsule } from "../lib/domain/member-capsule";
 import { MemberClientError, memberItemSchema, memberReaderCapsule, memberRequest } from "../lib/client/member-api";
@@ -12,7 +14,8 @@ import css from "./MemberCapsules.module.css";
 export default function CapsuleComparison({ snapshot, userId, disabled, onUnauthorized }: {
   snapshot: MemberCapsule; userId: string; disabled: boolean; onUnauthorized: () => void;
 }) {
-  const text = capsuleComparisonLabels();
+  const { locale } = useUiLocale();
+  const text = capsuleComparisonLabels(locale);
   const [opened, setOpened] = useState(false), [busy, setBusy] = useState(false), [failed, setFailed] = useState(false);
   const [current, setCurrent] = useState<MemberCapsule | null>(null);
   const [references, setReferences] = useState<ComparisonReferences | null>(null);

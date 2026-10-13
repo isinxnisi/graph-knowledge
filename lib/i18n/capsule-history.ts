@@ -8,4 +8,15 @@ const ja = {
   snapshotHelp: "題名・説明・選んだ参照は共有時の内容です。対象・主張・出典は現在のデータを読みます。この画面を開いても共有リンクは再開しません。",
   current: "現在の保存内容へ戻る", updated: "内容の更新日時：",
 };
-export function capsuleHistoryLabels(locale = "ja") { const resources: Record<string, typeof ja> = { ja }; return resources[locale] ?? resources[locale.split("-")[0]] ?? ja; }
+const en: typeof ja = {
+title: "Revisit shared versions", open: "Choose a shared version", close: "Close version list",
+  help: "Only versions that have been shared are listed. You can read your own versions after their links expire. Unshared past versions are not retained.",
+  empty: "No versions have been shared yet.", loading: "Checking shared versions…", failed: "Could not load the version list. Please retry.", retry: "Reload version list",
+  read: (revision: number) => `Read version ${revision}`, reading: (revision: number) => `Reading shared version ${revision}`,
+  snapshotHelp: "The title, description and selected references are from the shared version. Entities, claims and sources use current data. Opening this view does not reactivate the sharing link.",
+  current: "Return to current saved content", updated: "Content updated: ",
+};
+export function capsuleHistoryLabels(locale = "ja"): typeof ja {
+  const resources: Record<string, typeof ja> = { ja, en };
+  return resources[locale] ?? resources[locale.split("-")[0]] ?? ja;
+}

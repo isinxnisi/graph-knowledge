@@ -1,4 +1,7 @@
 "use client";
+import { useUiLocale } from "../lib/client/ui-locale";
+import { contentMessage } from "../lib/i18n/content";
+import { explorerLabels } from "../lib/i18n/explorer";
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { DatasetMode } from "../lib/domain/dataset";
@@ -6,7 +9,7 @@ import { dataReleaseLabels } from "../lib/i18n/data-release";
 import type { ClaimDetail, ClaimSummary, EntitySummary } from "../lib/domain/api";
 import type { GraphState, Selection } from "../lib/client/graph-state";
 import { CAPSULE_LIMITS, CapsuleError, capsuleContentChanged, capsuleEditCandidates, capsuleGraph, capsulesKey, createCapsule, readCapsules, resolveCapsule, reviseCapsule, writeCapsule, type LocalCapsule, type ResolvedCapsule } from "../lib/client/local-capsules";
-import { formatPeriod, KIND_LABELS, polarityLabel, qualificationLabel, relationLabel } from "../lib/client/format";
+import { formatPeriod, polarityLabel, qualificationLabel, relationLabel } from "../lib/client/format";
 import { displayRelations, entityLabel } from "../lib/client/graph-presentation";
 import { useDialogBackdrop } from "../lib/client/use-dialog-backdrop";
 import { contributionLabels } from "../lib/i18n/contribution";
@@ -19,18 +22,21 @@ import GraphCanvas from "./GraphCanvas";
 import styles from "./Explorer.module.css";
 import css from "./CapsuleDialog.module.css";
 
-function claimLabel(claim: ClaimSummary, nodes: Record<string, EntitySummary>) {
-  return `${nodes[claim.subjectId]?.name ?? claim.subjectId} → ${relationLabel(claim)} → ${nodes[claim.objectId]?.name ?? claim.objectId}`;
+function claimLabel(claim: ClaimSummary, nodes: Record<string, EntitySummary>, locale: string) {
+  return `${nodes[claim.subjectId]?.name ?? claim.subjectId} → ${relationLabel(claim, locale)} → ${nodes[claim.objectId]?.name ?? claim.objectId}`;
 }
+const textMessages = capsuleLabels();
 export function ClaimCaption({ claim, nodes }: { claim: ClaimSummary & { withdrawal?: ClaimDetail["withdrawal"] }; nodes: Record<string, EntitySummary> }) {
-  const scope = claim.contribution?.scope, contribution = contributionLabels();
-  return <>{claim.withdrawal && <strong>{dataReleaseLabels().withdrawn} · </strong>}<strong>{claimLabel(claim, nodes)}</strong>{" "}<span>{[polarityLabel(claim), qualificationLabel(claim), formatPeriod(claim.period)].filter(Boolean).join(" / ")}</span>
+  const { locale } = useUiLocale();
+  const scope = claim.contribution?.scope, contribution = contributionLabels(locale);
+  return <>{claim.withdrawal && <strong>{dataReleaseLabels(locale).withdrawn} · </strong>}<strong>{claimLabel(claim, nodes, locale)}</strong>{" "}<span>{[polarityLabel(claim, locale), qualificationLabel(claim, locale), formatPeriod(claim.period, locale)].filter(Boolean).join(" / ")}</span>
     {scope && <span>{contribution.scope}：{scope.volumeLabel ?? contribution.volumeUnknown} / {scope.editionLabel ?? contribution.editionUnknown} / ISBN {scope.isbn13} / {scope.language}</span>}
     <small className={styles.muted}>ID: {claim.id}</small></>;
 }
 
 export function CapsuleReader({ capsule, onEdit, explorationLinks = false, noteAttribution = "self" }: { capsule: LocalCapsule; onEdit?: (resolved: ResolvedCapsule) => void; explorationLinks?: boolean; noteAttribution?: "self" | "author" }) {
-  const text = capsuleLabels();
+  const { locale } = useUiLocale();
+  const text = capsuleLabels(locale);
   const [resolved, setResolved] = useState<ResolvedCapsule | null>(null);
   const [failed, setFailed] = useState(false);
   const [attempt, setAttempt] = useState(0);
@@ -47,7 +53,7 @@ export function CapsuleReader({ capsule, onEdit, explorationLinks = false, noteA
     return () => { active = false; controller.abort(); clearTimeout(timer); };
   }, [capsule, attempt]);
   const graph = useMemo(() => resolved ? capsuleGraph(resolved) : null, [resolved]);
-  const relations = useMemo(() => graph ? displayRelations(graph.claims) : {}, [graph]);
+  const relations = useMemo(() => graph ? displayRelations(graph.claims, locale) : {}, [graph, locale]);
   const selectedEntity = selection?.kind === "entity" ? resolved?.entities[selection.id] : null;
   const claimIds = selection?.kind === "claim" ? [selection.id] : selection?.kind === "relation" ? relations[selection.id]?.claimIds ?? [] : [];
   function inspect(value: Selection) {
@@ -56,7 +62,7 @@ export function CapsuleReader({ capsule, onEdit, explorationLinks = false, noteA
     requestAnimationFrame(() => { details.current?.focus({ preventScroll: true }); details.current?.scrollIntoView({ block: "nearest" }); });
   }
   return <section className={css.reader} aria-label={text.content}>
-    <h3 tabIndex={-1} data-capsule-focus>{capsule.title}</h3><p className={styles.muted}>{text.version(capsule.revision)} · {new Date(capsule.updatedAt ?? capsule.createdAt).toLocaleString("ja-JP")}</p>
+    <h3 tabIndex={-1} data-capsule-focus>{capsule.title}</h3><p className={styles.muted}>{text.version(capsule.revision)} · {new Date(capsule.updatedAt ?? capsule.createdAt).toLocaleString(locale === "en" ? "en-GB" : "ja-JP")}</p>
     {onEdit && <button disabled={!resolved && !failed} onClick={() => onEdit(resolved ?? { entities: {}, claims: {}, issues: [] })}>{text.edit}</button>}
     <h4>{noteAttribution === "author" ? text.authorNote : text.note}</h4><p className={css.note}>{capsule.note || text.noNote}</p><p className={styles.muted}>{noteAttribution === "author" ? text.authorNoteHelp : text.noteHelp}</p>
     <p>{text.current}</p>
@@ -69,15 +75,15 @@ export function CapsuleReader({ capsule, onEdit, explorationLinks = false, noteA
       <p className={styles.muted}>{text.graphHelp}</p>
       <div ref={overview} tabIndex={-1} role="region" aria-label={text.overview} className={css.overview}>
         <GraphCanvas contentOnly graph={graph} selection={selection} onEntity={id => inspect({ kind: "entity", id })} onRelation={id => inspect({ kind: "relation", id })} onToggleEntity={() => {}} />
-        <h4>{text.entities}</h4><ul className={css.memberList}>{capsule.entityIds.map(id => <li key={id}>{resolved.entities[id] ? <button aria-pressed={selection?.kind === "entity" && selection.id === id} onClick={() => inspect({ kind: "entity", id })}>{entityLabel(resolved.entities[id], resolved.entities).replace("\n", " / ")} · {KIND_LABELS[resolved.entities[id].kind]}</button> : <code>{id}</code>}</li>)}</ul>
+        <h4>{text.entities}</h4><ul className={css.memberList}>{capsule.entityIds.map(id => <li key={id}>{resolved.entities[id] ? <button aria-pressed={selection?.kind === "entity" && selection.id === id} onClick={() => inspect({ kind: "entity", id })}>{entityLabel(resolved.entities[id], resolved.entities, locale).replace("\n", " / ")} · {explorerLabels(locale).kinds[resolved.entities[id].kind]}</button> : <code>{id}</code>}</li>)}</ul>
         <h4>{text.claims}</h4>{!capsule.claimIds.length && <p>{text.noClaims}</p>}
         <ul className={css.memberList}>{capsule.claimIds.map(id => <li key={id}>{resolved.claims[id] ? <button className={css.claimChoice} aria-pressed={claimIds.includes(id)} onClick={() => inspect({ kind: "claim", id })}><ClaimCaption claim={resolved.claims[id]} nodes={resolved.entities} /></button> : <code>{id}</code>}</li>)}</ul>
       </div>
       <div ref={details} tabIndex={-1} className={css.details}>
-        {selectedEntity && <><h4>{selectedEntity.name}</h4><p>{KIND_LABELS[selectedEntity.kind]}</p><p>{selectedEntity.description}</p><p>{selectedEntity.aliases.join(" / ")}</p>
-          {selectedEntity.event && <><dl className={styles.claimFacts}><dt>{eventParticipationLabels().eventPeriod}</dt><dd>{formatPeriod(selectedEntity.event.period)}</dd></dl><p>{eventParticipationLabels().periodHelp}</p></>}
+        {selectedEntity && <><h4>{selectedEntity.name}</h4><p>{explorerLabels(locale).kinds[selectedEntity.kind]}</p><p>{selectedEntity.description}</p><p>{selectedEntity.aliases.join(" / ")}</p>
+          {selectedEntity.event && <><dl className={styles.claimFacts}><dt>{eventParticipationLabels(locale).eventPeriod}</dt><dd>{formatPeriod(selectedEntity.event.period, locale)}</dd></dl><p>{eventParticipationLabels(locale).periodHelp}</p></>}
           <code>{selectedEntity.id}</code>
-          {explorationLinks && <p><a href={readingHref({ kind: "entity", dataset: capsule.dataset, id: selectedEntity.id })} target="_blank" rel="noopener noreferrer">{memberLabels().exploreEntity}</a></p>}</>}
+          {explorationLinks && <p><a href={readingHref({ kind: "entity", dataset: capsule.dataset, id: selectedEntity.id })} target="_blank" rel="noopener noreferrer">{memberLabels(locale).exploreEntity}</a></p>}</>}
         {!claimIds.length && <p className={styles.muted}>{text.chooseClaim}</p>}
         {claimIds.map(id => resolved.claims[id] && <ClaimCard referenceDataset={capsule.dataset} key={id} idPrefix="capsule-" title={text.selectedClaim} claim={resolved.claims[id]} nodes={resolved.entities} />)}
         {selection && <div className={css.readerNavigation}><button onClick={() => {
@@ -90,7 +96,8 @@ export function CapsuleReader({ capsule, onEdit, explorationLinks = false, noteA
 }
 
 export default function CapsuleDialog({ dataset, graph, onClose }: { dataset: DatasetMode; graph: GraphState; onClose: () => void }) {
-  const text = capsuleLabels();
+  const { locale } = useUiLocale();
+  const text = capsuleLabels(locale);
   const dialog = useRef<HTMLDialogElement>(null);
   // Freeze the candidate set for this authoring session, even if Explorer's
   // outstanding request finishes behind the modal.
@@ -142,13 +149,13 @@ export default function CapsuleDialog({ dataset, graph, onClose }: { dataset: Da
     dialog.current?.showModal();
     const read = () => {
       try { setCapsules(readCapsules(window.localStorage, dataset)); setReady(true); setError(null); }
-      catch (error) { setReady(false); setError(text[error instanceof CapsuleError ? error.reason : "storage"]); }
+      catch (error) { setReady(false); setError(textMessages[error instanceof CapsuleError ? error.reason : "storage"]); }
     };
     read();
     const changed = (event: StorageEvent) => { if (event.key === null || event.key === capsulesKey(dataset)) read(); };
     window.addEventListener("storage", changed);
     return () => window.removeEventListener("storage", changed);
-  }, [dataset, text]);
+  }, [dataset]);
   function exit(destination: "close" | "library" | "reader", force = false) {
     if (dirty && !force) { setLeaving(destination); return; }
     setLeaving(null);
@@ -168,11 +175,11 @@ export default function CapsuleDialog({ dataset, graph, onClose }: { dataset: Da
     }
   }
   const overLimit = members.length > CAPSULE_LIMITS.entities || claimIds.length > CAPSULE_LIMITS.claims;
-  return <dialog lang="ja" ref={dialog} className={`${styles.conditionDialog} ${css.dialog}`} aria-labelledby="capsule-title" onCancel={event => { event.preventDefault(); exit("close"); }} {...backdrop}>
+  return <dialog lang={locale} ref={dialog} className={`${styles.conditionDialog} ${css.dialog}`} aria-labelledby="capsule-title" onCancel={event => { event.preventDefault(); exit("close"); }} {...backdrop}>
     <div className={css.title}><h2 id="capsule-title">{text.title}</h2><button onClick={() => exit("close")}>{text.close}</button></div>
     <p>{text.help}</p><p className={styles.muted}>{text.local}</p>
-    <p><a href="/member" target="_blank" rel="noopener noreferrer">{memberLabels().launch}</a></p>
-    {error && <p role="alert" className={styles.error}>{error}</p>}{message && <p role="status">{message}</p>}
+    <p><a href="/member" target="_blank" rel="noopener noreferrer">{memberLabels(locale).launch}</a></p>
+    {error && <p role="alert" className={styles.error}>{contentMessage(error, locale)}</p>}{message && <p role="status">{contentMessage(message, locale)}</p>}
     {!ready && <button onClick={reload}>{text.reload}</button>}
     {leaving ? <section role="alert"><p>{text.draftExit}</p><button onClick={() => exit(leaving, true)}>{text.discard}</button><button data-capsule-focus onClick={() => setLeaving(null)}>{editing ? text.continueEdit : text.continue}</button></section> : <>
       {mode === "create" ? <>
@@ -186,7 +193,7 @@ export default function CapsuleDialog({ dataset, graph, onClose }: { dataset: Da
           {editing && unresolvedClaims && <p role="status">{text.unresolvedEdit}</p>}
           <fieldset><legend>{text.entities}</legend>{entityChoices.map(id => {
             const entity = candidates.nodes[id];
-            return <label className={css.choice} key={id}><input type="checkbox" checked={members.includes(id)} disabled={required.has(id)} onChange={event => setEntityIds(ids => event.target.checked ? [...ids, id] : ids.filter(value => value !== id))} /><span>{entity ? <>{entityLabel(entity, candidates.nodes).replace("\n", " / ")} · {KIND_LABELS[entity.kind]}</> : <>{text.unresolvedReference} <code>{id}</code></>}{required.has(id) && <small>{unresolvedClaims && editing?.entityIds.includes(id) ? text.preserveEndpoint : text.required}</small>}</span></label>;
+            return <label className={css.choice} key={id}><input type="checkbox" checked={members.includes(id)} disabled={required.has(id)} onChange={event => setEntityIds(ids => event.target.checked ? [...ids, id] : ids.filter(value => value !== id))} /><span>{entity ? <>{entityLabel(entity, candidates.nodes, locale).replace("\n", " / ")} · {explorerLabels(locale).kinds[entity.kind]}</> : <>{text.unresolvedReference} <code>{id}</code></>}{required.has(id) && <small>{unresolvedClaims && editing?.entityIds.includes(id) ? text.preserveEndpoint : text.required}</small>}</span></label>;
           })}</fieldset>
           <fieldset><legend>{text.claims}</legend>{claimChoices.map(id => {
             const claim = candidates.claims[id];
@@ -197,7 +204,7 @@ export default function CapsuleDialog({ dataset, graph, onClose }: { dataset: Da
         </form>
       </> : selected ? <>
         <button onClick={() => { setSelected(null); setMessage(null); }}>{text.library}</button>
-        <p><a href={`/member?import=${selected.id}`} target="_blank" rel="noopener noreferrer">{memberLabels().importLaunch}</a></p>
+        <p><a href={`/member?import=${selected.id}`} target="_blank" rel="noopener noreferrer">{memberLabels(locale).importLaunch}</a></p>
         <CapsuleReader key={`${selected.id}:${selected.revision}`} capsule={selected} onEdit={resolved => {
           setEditing(selected); setCandidates(capsuleEditCandidates(selected, resolved, visible)); setTitle(selected.title); setNote(selected.note); setEntityIds(selected.entityIds); setClaimIds(selected.claimIds); setMode("create"); setMessage(null); setError(null);
         }} />
@@ -205,9 +212,9 @@ export default function CapsuleDialog({ dataset, graph, onClose }: { dataset: Da
         <h3 tabIndex={-1} data-capsule-focus>{text.libraryTitle}</h3>
         <button disabled={!Object.keys(visible.nodes).length || !ready || capsules.length >= CAPSULE_LIMITS.count} onClick={() => { setCandidates(visible); setEditing(null); setMode("create"); setMessage(null); setRemoving(null); }}>{text.new}</button>
         {!Object.keys(visible.nodes).length && <p>{text.noGraph}</p>}
-        <p>{capsules.length} / {CAPSULE_LIMITS.count}件</p>{capsules.length >= CAPSULE_LIMITS.count && <p>{text.limit}</p>}
+        <p>{capsules.length} / {CAPSULE_LIMITS.count}</p>{capsules.length >= CAPSULE_LIMITS.count && <p>{text.limit}</p>}
         {ready && !capsules.length && <p>{text.empty}</p>}
-        <ul className={css.library}>{capsules.map(capsule => <li key={capsule.id}><h3>{capsule.title}</h3><p>{text.selected(capsule.entityIds.length, capsule.claimIds.length)} · {text.version(capsule.revision)}</p><p className={styles.muted}>{new Date(capsule.updatedAt ?? capsule.createdAt).toLocaleString("ja-JP")}</p><button onClick={() => { setSelected(capsule); setRemoving(null); }}>{text.read}</button><button data-capsule-remove={capsule.id} onClick={() => setRemoving(capsule)}>{text.remove}</button></li>)}</ul>
+        <ul className={css.library}>{capsules.map(capsule => <li key={capsule.id}><h3>{capsule.title}</h3><p>{text.selected(capsule.entityIds.length, capsule.claimIds.length)} · {text.version(capsule.revision)}</p><p className={styles.muted}>{new Date(capsule.updatedAt ?? capsule.createdAt).toLocaleString(locale === "en" ? "en-GB" : "ja-JP")}</p><button onClick={() => { setSelected(capsule); setRemoving(null); }}>{text.read}</button><button data-capsule-remove={capsule.id} onClick={() => setRemoving(capsule)}>{text.remove}</button></li>)}</ul>
         {removing && <section ref={removalPrompt} tabIndex={-1} role="alert"><p>{text.removeHelp(removing.title)}</p><button onClick={() => {
           try { setCapsules(writeCapsule(window.localStorage, dataset, { remove: removing })); setRemoving(null); setError(null); requestAnimationFrame(() => dialog.current?.querySelector<HTMLElement>("[data-capsule-focus]")?.focus()); }
           catch (error) { fail(error); }

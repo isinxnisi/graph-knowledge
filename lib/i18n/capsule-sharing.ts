@@ -20,5 +20,27 @@ const ja = {
   readFailed: "共有内容を取得できませんでした。時間をおいて再確認してください。", readRefresh: "リンクを再確認",
   lifecycle: "リンクの有効性は再確認・タブ復帰時と表示中30秒ごとに確認します。共有の停止後は次の確認で内容を閉じます。",
   explorer: "新しい探索を開く", returnHelp: "元の探索から別タブで開いた場合は、このタブを閉じると元の探索へ戻れます。",
-} as const;
-export function capsuleSharingLabels(_locale = "ja") { void _locale; return ja; }
+};
+const en: typeof ja = {
+title: "Share by private link", help: "Anyone with the link can read this version's title, description, selected entities and claims without logging in. Later edits do not appear. It is not listed in search or catalogs. Existing comments on this version are readable. Logged-in readers can post only when the creator opens comments.",
+  blocked: "Sharing for this Capsule is suspended by the operator. New links cannot be created. You can still read your own saved content.",
+  stopped: "No active sharing link. Only you can read this content.", active: (revision: number) => `The link to version ${revision} is active.`, current: (revision: number) => `Share the displayed version ${revision}.`,
+  issue: "Create a link to this version", rotate: "Replace link with this version", revoke: "Stop sharing", confirmIssue: "Make this version readable by link", confirmRevoke: "Expire the link", cancel: "Cancel",
+  rotationHelp: "Creating a new link disables previous links. Give out only the new link.",
+  revokeHelp: "Stops reading by link. Shared versions remain until you delete the Capsule from your account. Copies or screenshots already received cannot be recalled.",
+  issued: "Link created. Copy it to share.", revoked: "Sharing stopped.", oneTime: "The full link is shown only here. Create a new one if needed after reloading. Recipients can forward it.",
+  url: "Sharing link", copy: "Copy link", copied: "Link copied.", copyFailed: "Could not copy. Select and copy the link field.",
+  preview: "Check shared content (new tab)", refresh: "Refresh sharing status", checking: "Checking sharing status…",
+  failed: "Could not confirm the sharing action. Refresh its status. A link may have been issued or stopped even if the response was lost.",
+  conflict: "Content or the link changed in another view. Refresh the account and list before continuing.",
+  limit: "This Capsule has reached its limit of 50 shared versions. Existing links can still be stopped.",
+  readTitle: "Shared Capsule", readHelp: "Reading the description and selection from sharing time. Knowledge and evidence use current data. Sharing does not mean Global acceptance or factual approval.",
+  reading: "Checking the sharing link…", unavailable: "This link is unavailable. It may be incomplete, expired or from another environment.",
+  readFailed: "Could not load shared content. Please try again later.", readRefresh: "Check link again",
+  lifecycle: "The link is checked on refresh, return to this tab, and every 30 seconds while visible. Stopped sharing closes the content at the next check.",
+  explorer: "Open a new exploration", returnHelp: "If you opened this in a new tab from exploration, close this tab to return to it.",
+};
+export function capsuleSharingLabels(locale = "ja"): typeof ja {
+  const resources: Record<string, typeof ja> = { ja, en };
+  return resources[locale] ?? resources[locale.split("-")[0]] ?? ja;
+}
