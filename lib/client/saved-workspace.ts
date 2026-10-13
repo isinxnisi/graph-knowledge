@@ -28,6 +28,9 @@ export const workspaceSchema = z.strictObject({
 export type SavedWorkspace = z.infer<typeof workspaceSchema>;
 export type RebuiltWorkspace = { graph: GraphState; view: GraphView | null; skippedBranches: number };
 export const workspaceKey = (dataset: DatasetMode) => `graph-knowledge:workspace:${dataset}`;
+export class WorkspaceRootNotFound extends ClientApiError {
+  constructor() { super("起点の対象が見つかりません。", 404); }
+}
 export class WorkspaceError extends Error {
   constructor(public reason: "invalid" | "storage" | "conflict" | "limit" | "loading" | "response" | "fileInvalid" | "dataset" | "emptyFile" | "countLimit") { super(reason); }
 }
@@ -131,7 +134,11 @@ export async function rebuildWorkspace(value: SavedWorkspace, signal: AbortSigna
   const workspace = workspaceSchema.parse(value);
   const conditions = workspace.conditions;
   signal.throwIfAborted();
-  const root = entitySummarySchema.strip().parse((await fetchEntity(workspace.rootId, signal)).entity);
+  const rootResponse = await fetchEntity(workspace.rootId, signal).catch(error => {
+    if (error instanceof ClientApiError && error.status === 404) throw new WorkspaceRootNotFound();
+    throw error;
+  });
+  const root = entitySummarySchema.strip().parse(rootResponse.entity);
   signal.throwIfAborted();
   if (root.id !== workspace.rootId) throw new WorkspaceError("response");
   let graph: GraphState = { ...emptyGraph(), ...conditions,

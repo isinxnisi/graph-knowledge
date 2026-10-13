@@ -20,13 +20,15 @@ import { attachGraphBadges } from "../lib/client/graph-badges";
 import { createGraphMotion } from "../lib/client/graph-motion";
 import styles from "./Explorer.module.css";
 
-type Props = { contentOnly?: boolean; ref?: Ref<GraphCanvasHandle>; feedback?: ReactNode; navigation?: ReactNode; restoration?: ViewRestoration | null; interactionBlocked?: boolean; graph: GraphState; selection: Selection; onEntity: (id: string) => void; onRelation: (id: string) => void; onToggleEntity: (id: string) => void; onEntityDoubleClick?: (id: string) => void };
+type Props = { onViewChange?: () => void; contentOnly?: boolean; ref?: Ref<GraphCanvasHandle>; feedback?: ReactNode; navigation?: ReactNode; restoration?: ViewRestoration | null; interactionBlocked?: boolean; graph: GraphState; selection: Selection; onEntity: (id: string) => void; onRelation: (id: string) => void; onToggleEntity: (id: string) => void; onEntityDoubleClick?: (id: string) => void };
 
-export default function GraphCanvas({ contentOnly = false, ref, feedback, navigation, restoration, interactionBlocked, graph, selection, onEntity, onRelation, onToggleEntity, onEntityDoubleClick }: Props) {
+export default function GraphCanvas({ onViewChange, contentOnly = false, ref, feedback, navigation, restoration, interactionBlocked, graph, selection, onEntity, onRelation, onToggleEntity, onEntityDoubleClick }: Props) {
   const { locale } = useUiLocale();
   const ui = explorerLabels(locale);
   const viewportLabels = graphViewportLabels(locale);
   const [zoom, setZoom] = useState(1);
+  const viewChange = useRef(onViewChange);
+  useEffect(() => { viewChange.current = onViewChange; }, [onViewChange]);
   const container = useRef<HTMLDivElement>(null);
   const badgeLayer = useRef<HTMLDivElement>(null);
   const core = useRef<Core | null>(null);
@@ -124,6 +126,7 @@ export default function GraphCanvas({ contentOnly = false, ref, feedback, naviga
     motion.current = createGraphMotion(cy, window.matchMedia?.("(prefers-reduced-motion: reduce)") ?? null);
     const updateZoom = () => setZoom(cy.zoom());
     cy.on("zoom", updateZoom);
+    cy.on("dragfree zoom pan layoutstop", () => viewChange.current?.());
     const clicks = createNodeClickHandler({
       isSelected: (id) => handlers.current.selection?.kind === "entity" && handlers.current.selection.id === id,
       select: (id) => handlers.current.onEntity(id), toggle: (id) => handlers.current.onToggleEntity(id),
@@ -179,7 +182,7 @@ export default function GraphCanvas({ contentOnly = false, ref, feedback, naviga
     });
     if (restored) {
       Object.entries(restorationPositions(graph, restored)).forEach(([id, point]) => cy.getElementById(id).position(point));
-      if (Object.keys(restored.positions).some((id) => graph.nodes[id])) { cy.zoom(restored.zoom); cy.pan(restored.pan); }
+      if (Object.keys(restored.positions).some((id) => graph.nodes[id])) { cy.zoom(restored.zoom); cy.pan(restored.pan); if (restored.recenter) cy.center(); }
       else cy.fit(undefined, 40);
       if (graph.centerId && graph.expansions[graph.centerId]?.expanded) initialLayoutDone.current = true;
     } else if (contentOnly && !initialLayoutDone.current && newNodes.length) {

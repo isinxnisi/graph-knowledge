@@ -1,6 +1,7 @@
 import type { CSSProperties } from "react";
 
 const paths = {
+  link: <><path d="m10 13 4-4M8 16l-2 2a4 4 0 0 1-6-6l4-4m12 8 4-4a4 4 0 0 0-6-6l-2 2" /></>,
   list: <><path d="M9 6h12M9 12h12M9 18h12M3 6h1m-1 6h1m-1 6h1" /></>,
   plus: <path d="M12 5v14M5 12h14" />,
   minus: <path d="M5 12h14" />,

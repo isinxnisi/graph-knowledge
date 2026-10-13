@@ -351,3 +351,120 @@ test("Graph内操作: アイコン配置・ズーム・対象一覧とpanを分�
     await canvas.screenshot({ path: `/tmp/graph-overlay-tools-${width}.png` });
   }
 });
+
+test("探索URLは枝・閉鎖休止・座標・倍率をreloadと独立ブラウザへ復元する", async ({ page, browser }) => {
+  await page.goto("/");
+  await page.getByRole("button", { name: "PLUTOから探索を開始", exact: true }).click();
+  await expect(page.getByTestId("graph-counts")).toHaveText("Entity 4 / Claim 5");
+  const nagasaki = (await (await page.request.get("/api/entities?q=長崎尚志")).json()).items[0].id;
+  await page.getByTestId("graph-canvas").evaluate((el, id) => {
+    (el as unknown as { _cyreg: { cy: import("cytoscape").Core } })._cyreg.cy.getElementById(id).emit("tap");
+  }, nagasaki);
+  await expect(page.getByTestId("graph-counts")).toHaveText("Entity 6 / Claim 9");
+  await page.screenshot({ path: "/tmp/graph-url-pc.png" });
+  const captured = await page.getByTestId("graph-canvas").evaluate(el => {
+    const cy = (el as unknown as { _cyreg: { cy: import("cytoscape").Core } })._cyreg.cy;
+    cy.nodes().forEach((node, i) => { node.position({ x: 100 + i * 113.123456789, y: 100 + i * 37.123456789 }); });
+    cy.nodes().first().emit("dragfree"); cy.zoom(0.72);
+    return cy.nodes().map(node => ({ id: node.id(), position: node.position() })).sort((a, b) => a.id.localeCompare(b.id));
+  });
+  const copy = page.getByRole("button", { name: "探索URLをコピー", exact: true });
+  await expect(copy).toBeEnabled();
+  await expect.poll(() => new URL(page.url()).searchParams.get("s")).toBeTruthy();
+  // The debounce has to finish after the last viewport change, before bookmarking.
+  await page.waitForTimeout(500);
+  await page.context().grantPermissions(["clipboard-read", "clipboard-write"]);
+  await copy.click();
+  const shared = await page.evaluate(() => navigator.clipboard.readText());
+  await expect(page).toHaveTitle("PLUTO — 関係性を探索する");
+  expect(shared).toBe(page.url());
+  console.log(`URL measurement: 6 Entity / 9 Claim / 2 branches: ${shared.length} chars`);
+  const historyLength = await page.evaluate(() => history.length);
+  await page.reload();
+  await expect(page.getByTestId("graph-counts")).toHaveText("Entity 6 / Claim 9");
+  const snapshot = () => page.getByTestId("graph-canvas").evaluate(el => {
+    const cy = (el as unknown as { _cyreg: { cy: import("cytoscape").Core } })._cyreg.cy;
+    return { positions: cy.nodes().map(node => ({ id: node.id(), position: node.position() })).sort((a, b) => a.id.localeCompare(b.id)), zoom: cy.zoom() };
+  });
+  expect(await snapshot()).toEqual({ positions: captured, zoom: 0.72 });
+  expect(await page.evaluate(() => history.length)).toBe(historyLength);
+  await page.getByRole("link", { name: "この対象の閲覧リンクを開く", exact: true }).click();
+  await expect(page.getByRole("dialog")).toBeVisible();
+  await page.getByRole("dialog").getByRole("button", { name: "探索画面へ戻る", exact: true }).click();
+  await expect.poll(() => new URL(page.url()).searchParams.get("s")).toBeTruthy();
+  expect(await snapshot()).toEqual({ positions: captured, zoom: 0.72 });
+  // A separately launched browser process, with no saved workspaces/localStorage.
+  const independent = await browser.browserType().launch();
+  try {
+    const mobile = await independent.newContext({ viewport: { width: 390, height: 844 } });
+    const phone = await mobile.newPage(); await phone.goto(shared);
+    await expect(phone.getByTestId("graph-counts")).toHaveText("Entity 6 / Claim 9");
+    expect(await phone.getByTestId("graph-canvas").evaluate(el => {
+      const cy = (el as unknown as { _cyreg: { cy: import("cytoscape").Core } })._cyreg.cy;
+      return { positions: cy.nodes().map(node => ({ id: node.id(), position: node.position() })).sort((a, b) => a.id.localeCompare(b.id)), zoom: cy.zoom() };
+    })).toEqual({ positions: captured, zoom: 0.72 });
+    await phone.screenshot({ path: "/tmp/graph-url-phone.png" });
+  } finally { await independent.close(); }
+  // Close the root: its expanded descendant becomes dormant, then comes back.
+  await page.getByTestId("graph-canvas").evaluate(el => {
+    const cy = (el as unknown as { _cyreg: { cy: import("cytoscape").Core } })._cyreg.cy;
+    cy.nodes().filter(n => n.data("label") === "PLUTO").first().emit("tap");
+  });
+  await page.getByRole("region", { name: "Entity詳細" }).getByRole("button", { name: "展開を閉じる", exact: true }).click();
+  await expect(page.getByTestId("graph-counts")).toHaveText("Entity 1 / Claim 0");
+  await page.waitForTimeout(500); await page.reload();
+  await expect(page.getByTestId("graph-counts")).toHaveText("Entity 1 / Claim 0");
+  await page.getByTestId("graph-canvas").evaluate(el => { (el as unknown as { _cyreg: { cy: import("cytoscape").Core } })._cyreg.cy.nodes().first().emit("tap"); });
+  await expect(page.getByTestId("graph-counts")).toHaveText("Entity 6 / Claim 9");
+});
+
+test("探索URLは不正状態・起点404・枝欠損・通信失敗を正常復元にしない", async ({ page }) => {
+  await page.goto("/explore/2b7c6289-d050-4dc0-93e3-9307681253cc?s=invalid");
+  await expect(page.locator("div[role=alert]").filter({ has: page.getByRole("button", { name: "再試行", exact: true }) })).toContainText("探索URLの状態が無効");
+  await expect(page.getByTestId("graph-counts")).toHaveText("Entity 0 / Claim 0");
+  await page.getByRole("button", { name: "復元をやめて検索から始める", exact: true }).click();
+  await expect(page.getByLabel("名前・別名")).toBeEnabled();
+  await page.goto("/explore/00000000-0000-4000-8000-000000000000");
+  await expect(page.locator("div[role=alert]").filter({ has: page.getByRole("button", { name: "再試行", exact: true }) })).toContainText("起点の対象が現在見つかりません");
+  await page.goto("/"); await page.getByRole("button", { name: "PLUTOから探索を開始", exact: true }).click();
+  await expect(page.getByTestId("graph-counts")).toHaveText("Entity 4 / Claim 5");
+  await expect.poll(() => new URL(page.url()).searchParams.get("s")).toBeTruthy(); const shared = page.url();
+  await page.route("**/api/entities/*/neighbors*", async route => {
+    const response = await route.fetch(); const body = await response.json();
+    body.nodes = body.nodes.filter((node: { kind: string }) => node.kind === "work"); body.claims = [];
+    await route.fulfill({ response, json: body });
+  });
+  await page.goto(shared);
+  await expect(page.locator("div[role=alert]").filter({ has: page.getByRole("button", { name: "再試行", exact: true }) })).toContainText("完全には復元できませんでした");
+  await expect(page.getByTestId("graph-counts")).toHaveText("Entity 0 / Claim 0");
+  await page.unrouteAll();
+  await page.route("**/api/entities/*/neighbors*", route => route.fulfill({ status: 503, json: { error: { message: "unavailable" } } }));
+  await page.getByRole("button", { name: "再試行", exact: true }).click();
+  await expect(page.locator("div[role=alert]").filter({ has: page.getByRole("button", { name: "再試行", exact: true }) })).toContainText("完全には復元できませんでした");
+  await page.unrouteAll(); await page.getByRole("button", { name: "再試行", exact: true }).click();
+  await expect(page.getByTestId("graph-counts")).toHaveText("Entity 4 / Claim 5");
+});
+
+test("探索URLの確定条件とOG metadataは再訪でも維持される", async ({ page }) => {
+  const { decodeExploration, explorationHref } = await import("../../lib/client/exploration-url");
+  await page.goto("/"); await page.getByRole("button", { name: "PLUTOから探索を開始", exact: true }).click();
+  await expect(page.getByTestId("graph-counts")).toHaveText("Entity 4 / Claim 5");
+  await expect.poll(() => new URL(page.url()).searchParams.get("s")).toBeTruthy();
+  const url = new URL(page.url()), root = url.pathname.split("/").at(-1)!;
+  const state = decodeExploration(url.searchParams.get("s")!, root, "public-kg");
+  state.conditions = { predicates: ["CONTRIBUTED_TO"], contributionRoles: ["PRODUCING"], organizationPositions: null, eventRoles: null };
+  state.branches = [{ id: root, open: true, pages: 1 }];
+  const data = await (await page.request.get(`/api/entities/${root}/neighbors?predicates=CONTRIBUTED_TO&contributionRoles=PRODUCING`)).json();
+  const ids = new Set(data.nodes.map((node: { id: string }) => node.id));
+  state.view!.positions = Object.fromEntries(Object.entries(state.view!.positions).filter(([id]) => ids.has(id)));
+  await page.goto(explorationHref(state));
+  await expect(page.getByTestId("graph-counts")).toHaveText("Entity 2 / Claim 1");
+  await expect(page.locator('meta[property="og:title"]')).toHaveAttribute("content", "PLUTO — 関係性を探索する");
+  await page.waitForTimeout(500); const before = page.url();
+  await page.getByRole("button", { name: "見る関係を編集", exact: true }).click();
+  await page.getByRole("dialog").getByRole("radio", { name: "すべての関係", exact: true }).check();
+  await page.getByRole("dialog").getByRole("button", { name: "キャンセル", exact: true }).click();
+  expect(page.url()).toBe(before);
+  await page.reload(); await expect(page.getByTestId("graph-counts")).toHaveText("Entity 2 / Claim 1");
+  expect(decodeExploration(new URL(page.url()).searchParams.get("s")!, root, "public-kg").conditions).toEqual(state.conditions);
+});

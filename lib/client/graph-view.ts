@@ -3,6 +3,7 @@ import { additionalPositions, initialPositions } from "./graph-layout";
 import { displayRelations } from "./graph-presentation";
 
 export type GraphView = {
+  recenter?: boolean;
   positions: Record<string, { x: number; y: number }>;
   pan: { x: number; y: number }; zoom: number; initialLayoutDone: boolean;
 };
