@@ -1,6 +1,9 @@
 import type { CSSProperties } from "react";
 
 const paths = {
+  list: <><path d="M9 6h12M9 12h12M9 18h12M3 6h1m-1 6h1m-1 6h1" /></>,
+  plus: <path d="M12 5v14M5 12h14" />,
+  minus: <path d="M5 12h14" />,
   graph: <><path d="m6 7 11 2M6 8l4 10m7-8-6 8" /><circle cx="5" cy="6" r="3" /><circle cx="19" cy="9" r="3" /><circle cx="11" cy="20" r="2" /></>,
   search: <><circle cx="10.5" cy="10.5" r="6.5" /><path d="m16 16 5 5" /></>,
   book: <><path d="M12 5v15M3 4c4-1 6 0 9 1 3-1 5-2 9-1v15c-4-1-6 0-9 1-3-1-5-2-9-1Z" /></>,

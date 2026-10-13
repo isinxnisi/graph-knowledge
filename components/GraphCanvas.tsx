@@ -20,9 +20,9 @@ import { attachGraphBadges } from "../lib/client/graph-badges";
 import { createGraphMotion } from "../lib/client/graph-motion";
 import styles from "./Explorer.module.css";
 
-type Props = { contentOnly?: boolean; ref?: Ref<GraphCanvasHandle>; feedback?: ReactNode; restoration?: ViewRestoration | null; interactionBlocked?: boolean; graph: GraphState; selection: Selection; onEntity: (id: string) => void; onRelation: (id: string) => void; onToggleEntity: (id: string) => void; onEntityDoubleClick?: (id: string) => void };
+type Props = { contentOnly?: boolean; ref?: Ref<GraphCanvasHandle>; feedback?: ReactNode; navigation?: ReactNode; restoration?: ViewRestoration | null; interactionBlocked?: boolean; graph: GraphState; selection: Selection; onEntity: (id: string) => void; onRelation: (id: string) => void; onToggleEntity: (id: string) => void; onEntityDoubleClick?: (id: string) => void };
 
-export default function GraphCanvas({ contentOnly = false, ref, feedback, restoration, interactionBlocked, graph, selection, onEntity, onRelation, onToggleEntity, onEntityDoubleClick }: Props) {
+export default function GraphCanvas({ contentOnly = false, ref, feedback, navigation, restoration, interactionBlocked, graph, selection, onEntity, onRelation, onToggleEntity, onEntityDoubleClick }: Props) {
   const { locale } = useUiLocale();
   const ui = explorerLabels(locale);
   const viewportLabels = graphViewportLabels(locale);
@@ -239,18 +239,17 @@ export default function GraphCanvas({ contentOnly = false, ref, feedback, restor
   }, [selection, graph]);
 
   return <>
-    <div className={styles.viewportTools} role="group" aria-label={viewportLabels.title}>
-      <button aria-label={viewportLabels.zoomOut} disabled={!hasNodes || interactionBlocked || zoom <= 0.15} onClick={() => changeZoom(1 / 1.25)}>−</button>
-      <output aria-label={viewportLabels.zoom} aria-live="off">{Math.round(zoom * 100)}%</output>
-      <button aria-label={viewportLabels.zoomIn} disabled={!hasNodes || interactionBlocked || zoom >= 2} onClick={() => changeZoom(1.25)}>＋</button>
-      <button disabled={!hasNodes || interactionBlocked} onClick={() => {
-        gestures.current?.cancel();
-        core.current?.resize();
-        core.current?.fit(undefined, 24);
-      }}><Icon name="fit" />{viewportLabels.fit}</button>
-      <button disabled={!canFocusSelection || interactionBlocked} title={viewportLabels.selectionHelp} onClick={showSelection}><Icon name="focus" />{viewportLabels.selection}</button>
-    </div>
-    <div className={styles.canvas}>
+    <div className={`${styles.canvas} ${navigation ? styles.withNavigation : ""}`}>
+      {navigation && <div className={styles.canvasNavigation} onPointerDown={event => event.stopPropagation()} onDoubleClick={event => event.stopPropagation()} onWheel={event => event.stopPropagation()}>{navigation}</div>}
+      <div className={`${styles.viewportTools} ${styles.canvasViewportTools}`} role="group" aria-label={viewportLabels.title} onPointerDown={event => event.stopPropagation()} onWheel={event => event.stopPropagation()}>
+        <button aria-label={viewportLabels.selection} disabled={!canFocusSelection || interactionBlocked} title={`${viewportLabels.selection} — ${viewportLabels.selectionHelp}`} onClick={showSelection}><Icon name="focus" /></button>
+        <button aria-label={viewportLabels.zoomIn} title={viewportLabels.zoomIn} disabled={!hasNodes || interactionBlocked || zoom >= 2} onClick={() => changeZoom(1.25)}><Icon name="plus" /></button>
+        <output aria-label={viewportLabels.zoom} aria-live="off">{Math.round(zoom * 100)}%</output>
+        <button aria-label={viewportLabels.zoomOut} title={viewportLabels.zoomOut} disabled={!hasNodes || interactionBlocked || zoom <= 0.15} onClick={() => changeZoom(1 / 1.25)}><Icon name="minus" /></button>
+        <button aria-label={viewportLabels.fit} title={viewportLabels.fit} disabled={!hasNodes || interactionBlocked} onClick={() => {
+          gestures.current?.cancel(); core.current?.resize(); core.current?.fit(undefined, 24);
+        }}><Icon name="fit" /></button>
+      </div>
       <div className={styles.cySurface} ref={container} onPointerDownCapture={() => core.current?.resize()} data-testid="graph-canvas" tabIndex={-1} role="img" aria-label={ui.graphAria} />
       <div className={styles.relationPatches} ref={badgeLayer} aria-hidden="true" />
       <div className={styles.graphOverlay} data-testid="graph-overlay">{feedback}</div>

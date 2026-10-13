@@ -299,3 +299,55 @@ test("対象ナビゲータ: 横幅を候補の列へ使い、検索と移動の
   await expect(trigger).toBeFocused();
   await expect(navigator.getByRole("searchbox")).toBeHidden();
 });
+
+test("Graph内操作: アイコン配置・ズーム・対象一覧とpanを分離する", async ({ page }) => {
+  await page.goto("/");
+  await page.getByRole("button", { name: "PLUTOから探索を開始", exact: true }).click();
+  await expect(page.getByTestId("graph-counts")).toHaveText("Entity 4 / Claim 5");
+  const surface = page.getByTestId("graph-canvas"), canvas = surface.locator("..");
+  const controls = page.getByRole("group", { name: "Graphの表示操作", exact: true });
+  const state = () => surface.evaluate(el => {
+    const cy = (el as unknown as { _cyreg: { cy: import("cytoscape").Core } })._cyreg.cy;
+    return { zoom: cy.zoom(), pan: cy.pan(), positions: cy.nodes().map(n => ({ id: n.id(), position: n.position() })) };
+  });
+  const initial = await state();
+  await controls.getByRole("button", { name: "Graphを拡大", exact: true }).click();
+  expect((await state()).zoom).toBeGreaterThan(initial.zoom);
+  await controls.getByRole("button", { name: "Graphを縮小", exact: true }).click();
+  expect((await state()).zoom).toBeCloseTo(initial.zoom, 6);
+  await controls.getByRole("button", { name: "全体を表示", exact: true }).click();
+  await controls.getByRole("button", { name: "選択を表示", exact: true }).click();
+  expect((await state()).positions).toEqual(initial.positions);
+  await expect(page.getByTestId("graph-counts")).toHaveText("Entity 4 / Claim 5");
+  const navigator = page.getByRole("region", { name: "表示中の対象へ移動", exact: true });
+  const trigger = navigator.getByRole("button", { name: /^表示中の対象へ移動/ });
+  const view = await state();
+  await trigger.click();
+  await navigator.getByRole("searchbox").click();
+  await page.mouse.wheel(0, 100);
+  expect(await state()).toEqual(view);
+  await navigator.getByRole("searchbox").press("Escape");
+  const box = (await canvas.boundingBox())!;
+  await page.mouse.move(box.x + 25, box.y + box.height - 70);
+  await page.mouse.down();
+  await page.mouse.move(box.x + 85, box.y + box.height - 50, { steps: 5 });
+  await page.mouse.up();
+  expect((await state()).pan).not.toEqual(view.pan);
+  expect((await state()).positions).toEqual(initial.positions);
+  for (const width of [1440, 390]) {
+    await page.setViewportSize({ width, height: width === 390 ? 844 : 1000 });
+    await controls.scrollIntoViewIfNeeded();
+    await controls.getByRole("button", { name: "全体を表示", exact: true }).click();
+    const frame = (await canvas.boundingBox())!, toolbar = (await controls.boundingBox())!, entry = (await trigger.boundingBox())!;
+    expect(toolbar.x).toBeGreaterThan(frame.x + frame.width / 2);
+    expect(toolbar.y + toolbar.height).toBeLessThan(frame.y + frame.height);
+    expect(entry.x).toBeLessThan(frame.x + 20);
+    expect(entry.y).toBeLessThan(frame.y + 20);
+    for (const button of await controls.getByRole("button").all()) {
+      expect(await button.innerText()).toBe("");
+      expect(await button.getAttribute("title")).toBeTruthy();
+      expect((await button.boundingBox())!.height).toBeGreaterThanOrEqual(44);
+    }
+    await canvas.screenshot({ path: `/tmp/graph-overlay-tools-${width}.png` });
+  }
+});

@@ -209,3 +209,5 @@ sudo bash /home/develop/graph-production-step16/update-production-web.sh beta-st
 build `3awuKfeso0k1VBm0ivnTR` で伸縮中のみの本文スクロールバー非表示を3200／Tunnelへ反映。完了後の表示復旧・必要な本文スクロール・reduceをローカル／Tunnel各2/2で確認。VPS・DB・APIは変更していない。
 
 build `Ej9VGg9Qk82Rf1n9UdXqm` で対象ナビゲータの複数列・可読幅・スマホ配置を3200／Tunnelへ反映。PC／スマホの移動と絞り込みをローカル／Tunnel各1/1で確認。VPS・DB・APIは変更していない。
+
+build `BI02b5kFo9fV6Z2Y7_uVt` でGraph内左上の対象一覧と右下の表示操作アイコンを3200／Tunnelへ反映。ローカル代表3/3・Tunnel2/2とPC／スマホの実画像を確認。VPS・DB・APIは変更していない。

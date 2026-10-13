@@ -9,7 +9,8 @@ import type { Selection } from "../lib/client/graph-state";
 import { graphNavigationLabels } from "../lib/i18n/graph-navigation";
 import styles from "./Explorer.module.css";
 
-export default function GraphNavigator({ nodes, selection, onNavigate }: {
+export default function GraphNavigator({ nodes, selection, onNavigate, compact = false }: {
+  compact?: boolean;
   nodes: Record<string, EntitySummary>;
   selection: Selection;
   onNavigate: (id: string) => void;
@@ -32,8 +33,8 @@ export default function GraphNavigator({ nodes, selection, onNavigate }: {
       event.stopPropagation(); setOpen(false); trigger.current?.focus();
     }
   }}>
-    <button ref={trigger} aria-label={`${text.title}${ui.navigatorCount(entities.length)}`} aria-expanded={open} aria-controls={id} disabled={!entities.length} onClick={() => setOpen(!open)}>
-      <span className={styles.wideLabel}>{text.title}</span><span className={styles.compactLabel}>{text.compactTitle}</span>{ui.navigatorCount(entities.length)}
+    <button ref={trigger} title={`${text.title}${ui.navigatorCount(entities.length)}`} className={compact ? styles.navigatorIconTrigger : undefined} aria-label={`${text.title}${ui.navigatorCount(entities.length)}`} aria-expanded={open} aria-controls={id} disabled={!entities.length} onClick={() => setOpen(!open)}>
+      {compact ? <Icon name="list" /> : <><span className={styles.wideLabel}>{text.title}</span><span className={styles.compactLabel}>{text.compactTitle}</span>{ui.navigatorCount(entities.length)}</>}
     </button>
     <div id={id} hidden={!open} className={styles.graphNavigatorBody}>
       <p id={`${id}-help`} className={styles.muted}>{text.help}</p>
