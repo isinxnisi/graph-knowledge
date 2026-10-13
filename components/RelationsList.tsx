@@ -7,6 +7,7 @@ import { explorerPaneLabels } from "../lib/i18n/explorer-panes";
 import type { GraphState, Selection } from "../lib/client/graph-state";
 import { displayRelations, entityLabel, relationId } from "../lib/client/graph-presentation";
 import { formatPeriod, polarityLabel, relationLabel, qualificationLabel } from "../lib/client/format";
+import Icon from "./Icon";
 import styles from "./Explorer.module.css";
 
 export default function RelationsList({ graph, selection, onEntity, onClaim, onExpand, onClose, dataset = "demo" }: {
@@ -23,12 +24,15 @@ export default function RelationsList({ graph, selection, onEntity, onClaim, onE
   const expansion = graph.expansions[entity.id];
   const text = explorationLabels(locale);
   return <section id="explorer-relations" tabIndex={-1} className={styles.relations} aria-label={ui.adjacentAria}>
-    <div className={styles.relationsHeading}><h3>{ui.adjacent(entity.name)}</h3>
+    <div className={styles.relationsHeading}>
       <button className={styles.compactLink} onClick={() => {
         document.getElementById("explorer-graph")?.scrollTo({ top: 0 });
         document.getElementById("explorer-graph")?.focus({ preventScroll: true });
       }}>{explorerPaneLabels(locale).backToGraph}</button>
     </div>
+    <details key={entity.id} open className={styles.adjacencyDisclosure}>
+      <summary><h3>{ui.adjacent(entity.name)}<small className={styles.muted}>{ui.adjacentHelp}</small></h3><span className={styles.disclosureChevron} aria-hidden="true">⌄</span></summary>
+    <div className={styles.adjacencyBody}>
     <div className={styles.actions}>{expansion?.open ? <button onClick={() => onClose(entity.id)}>{ui.closeBranch}</button> : <button onClick={() => onExpand(entity.id)}>{expansion?.pages.length ? ui.reopenBranch : ui.expand}</button>}</div>
     {expansion?.loading && <p role="status">{expansion.expanded ? text.neighborsLoadingMore : text.neighborsLoading}</p>}
     {expansion?.error && <div role="alert" className={styles.error}>
@@ -47,14 +51,17 @@ export default function RelationsList({ graph, selection, onEntity, onClaim, onE
         const neighbor = graph.nodes[claim.subjectId === entity.id ? claim.objectId : claim.subjectId];
         const selected = (selection?.kind === "claim" && selection.id === claim.id) || (selection?.kind === "relation" && selection.id === relationId(claim));
         return <li key={claim.id} className={selected ? styles.selectedRelation : undefined} data-testid={`relation-${claim.id}`}>
-          <p>{entityLabel(graph.nodes[claim.subjectId], graph.nodes, locale).replace("\n", " / ")} → {relationLabel(claim, locale)} → {entityLabel(graph.nodes[claim.objectId], graph.nodes, locale).replace("\n", " / ")}</p>
+          <p className={styles.adjacencyPredicate}>{relationLabel(claim, locale)}</p>
+          <p className={styles.adjacencyPair}><span>{entityLabel(graph.nodes[claim.subjectId], graph.nodes, locale).replace("\n", " / ")}</span><Icon name="arrow" /><span>{entityLabel(graph.nodes[claim.objectId], graph.nodes, locale).replace("\n", " / ")}</span></p>
           <p className={styles.muted}>{polarityLabel(claim, locale)} · {qualificationLabel(claim, locale) && `${qualificationLabel(claim, locale)} · `}{formatPeriod(claim.period, locale)} · {claim.sourceCount ? ui.sourceCount(claim.sourceCount) : ui.unverified}</p>
           <div className={styles.actions}>
             <button aria-pressed={selection?.kind === "entity" && selection.id === neighbor.id} onClick={() => onEntity(neighbor.id)}>{ui.selectExpand(neighbor.name)}</button>
-            <button aria-pressed={selected} onClick={() => onClaim(claim.id)}>{ui.claimOpen}</button>
+            <button aria-pressed={selected} onClick={() => onClaim(claim.id)}><Icon name="book" />{ui.claimOpen}</button>
           </div>
         </li>;
       })}
     </ul>
+    </div>
+    </details>
   </section>;
 }

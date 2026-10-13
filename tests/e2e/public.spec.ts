@@ -115,3 +115,45 @@ test("旧Claimリンクでは撤回理由・元の出典・明示差替え先を
 });
 
 checkExplorerLocale();
+
+
+test("隣接一覧: カードの列幅・折り畳み・根拠への移動を保つ", async ({ page }) => {
+  await page.goto("/");
+  await page.getByRole("button", { name: "PLUTOから探索を開始", exact: true }).click();
+  await expect(page.getByTestId("graph-counts")).toHaveText("Entity 4 / Claim 5");
+  const section = page.getByRole("region", { name: "選択Entityの隣接関係" });
+  const disclosure = section.locator("details");
+  const cards = section.locator("li");
+  await expect(cards).toHaveCount(5);
+  const ids = await cards.evaluateAll(elements => elements.map(el => el.getAttribute("data-testid")));
+  const state = () => page.getByTestId("graph-canvas").evaluate(el => {
+    const cy = (el as unknown as { _cyreg: { cy: import("cytoscape").Core } })._cyreg.cy;
+    return { nodes: cy.nodes().map(n => ({ id: n.id(), position: n.position() })), pan: cy.pan(), zoom: cy.zoom() };
+  });
+  const before = await state();
+  await section.scrollIntoViewIfNeeded();
+  const first = await cards.nth(0).boundingBox(), second = await cards.nth(1).boundingBox();
+  expect(Math.abs(first!.y - second!.y)).toBeLessThan(2);
+  await disclosure.locator("summary").click();
+  await expect(disclosure).not.toHaveAttribute("open");
+  await expect(cards.first()).toBeHidden();
+  expect(await state()).toEqual(before);
+  await disclosure.locator("summary + div").evaluate(el => el.addEventListener("animationstart", () => el.setAttribute("data-animation-observed", "true"), { once: true }));
+  await disclosure.locator("summary").focus();
+  await disclosure.locator("summary").press("Enter");
+  await expect(cards.first()).toBeVisible();
+  await expect(disclosure.locator("summary + div")).toHaveAttribute("data-animation-observed", "true");
+  expect(await cards.evaluateAll(elements => elements.map(el => el.getAttribute("data-testid")))).toEqual(ids);
+  await cards.first().scrollIntoViewIfNeeded();
+  await page.screenshot({ path: "/tmp/graph-adjacency-desktop.png" });
+  await cards.first().getByRole("button", { name: "主張と出典を見る" }).click();
+  await expect(page.getByRole("region", { name: "Claim詳細" })).toBeVisible();
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.getByRole("button", { name: "Graph", exact: true }).click();
+  await section.scrollIntoViewIfNeeded();
+  const card = await cards.first().boundingBox();
+  expect(card!.width).toBeLessThan(390);
+  const overflow = await section.evaluate(el => el.scrollWidth > el.clientWidth);
+  expect(overflow).toBe(false);
+  await page.screenshot({ path: "/tmp/graph-adjacency-mobile.png" });
+});

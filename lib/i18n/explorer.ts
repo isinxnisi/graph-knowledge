@@ -11,6 +11,7 @@ const ja = {
   graphAria: "人物・作品・組織・出来事の関係グラフ。操作できるテキスト一覧は下にあります。", shapes: "丸：人物 ／ 四角：作品 ／ 六角形：組織 ／ ひし形：出来事", edges: "矢印：方向 ／ 破線：否定", nodeStates: "二重枠：展開済 ／ 淡い外枠：新規表示",
   kinds: { person: "人物", work: "作品", organization: "組織", event: "出来事" }, unknown: "不明", periodUnknown: "期間不明", fromUnknown: "開始不明", toUnknown: "終了不明", affirmed: "肯定", denied: "否定", descriptionMissing: "説明は未登録です。", noDescription: "説明なし", aliases: "別名", unregistered: "未登録",
   entityDetails: "Entity詳細", entityLoading: "Entity詳細を取得中…", entityRetry: "Entity詳細を再試行", closeBranch: "展開を閉じる", reopenBranch: "展開を再開", expand: "近傍を展開", restoreHelp: "取得済みの枝も復元します。明示的に閉じた子孫は閉じたままです。", moreLoading: "続きを取得中…", neighborsLoading: "隣接関係を取得中…", graphRetry: "Graph取得を再試行", fetched: "このEntityの近傍は取得済みです。", more: "続きを表示",
+  adjacentHelp: "表示中の主張から、相手や根拠へ辿れます。",
   listHelp: "Nodeを選ぶと、そのEntityの隣接関係をテキストで確認できます。", adjacent: (name: string) => `${name}の隣接関係`, adjacentAria: "選択Entityの隣接関係", closedHelp: "展開は閉じています。再開すると取得済みの枝を復元します。", noAdjacent: "表示中の隣接関係はありません。", selectExpand: (name: string) => `${name}を選択・展開`, claimOpen: "主張と出典を見る", sourceCount: (n: number) => `出典 ${n}件`, unverified: "出典未確認", navigatorCount: (n: number) => `（${n}件）`,
   claimDetails: "Claim詳細", claimTitle: "主張と出典", claimLoading: "主張の詳細を取得中…", claimRetry: "主張の取得を再試行", otherRetry: "他の主張を再試行", claimNavigation: "主張への移動", claimNumber: (n: number) => `主張 ${n}`, selectedClaim: "選択した主張", otherClaim: "他の主張", related: "同じ関係についての他の主張", noRelated: "他の主張は登録されていません。", assertion: "関係についての主張", subject: "主体", object: "対象", polarity: (denied: boolean) => `${denied ? "否定" : "肯定"}する主張`, relationPeriod: "関係の期間", noCitations: "この主張の出典はまだ登録されていません。", evidence: "根拠となる出典と参照箇所", citation: "出典と参照箇所", source: (n: number) => `出典 ${n}`, sourceKinds: { book: "書籍", interview: "インタビュー", magazine: "雑誌", web: "ウェブ", paper: "論文" }, stances: { support: "この主張を支持", refute: "この主張への反証", background: "背景資料" }, locator: "参照箇所", openSource: "出典のURLを開く", demoUrl: "デモURL（リンク無効）", published: "公開日", authors: "著者", publisher: "発行者", edition: "版・号", accessed: "アクセス日", entityLink: "この対象の閲覧リンク", claimLink: "この主張の閲覧リンク",
 };
@@ -53,6 +54,7 @@ const en: typeof ja = {
   graphRetry: "Retry graph",
   fetched: "Adjacent relations have been fetched.",
   more: "Show more",
+  adjacentHelp: "Explore connected subjects and evidence from the displayed claims.",
   listHelp: "Select a node to read its adjacent relations in text.",
   adjacent: (name: string) => `Adjacent relations of ${name}`,
   adjacentAria: "Selected entity's adjacent relations",

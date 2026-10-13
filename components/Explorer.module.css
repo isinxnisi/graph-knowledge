@@ -340,3 +340,24 @@
 
 /* CSS Modules内の参照先も同じscopeで定義する。 */
 @keyframes ui-fade { from { opacity: .4; } to { opacity: 1; } }
+
+/* 隣接する独立主張を、余白ではなく読みやすい列幅で並べる。内部スクロールは持たない。 */
+.adjacencyDisclosure { margin-top: 4px; }
+.adjacencyDisclosure > summary { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 12px 0; list-style: none; }
+.adjacencyDisclosure > summary::-webkit-details-marker { display: none; }
+.adjacencyDisclosure > summary h3 { margin: 0 0 4px; padding: 0; }
+.adjacencyDisclosure > summary .muted { display: block; margin-top: 5px; font: 400 12px/1.6 var(--font-body, sans-serif); }
+.disclosureChevron { display: grid; place-items: center; width: 28px; height: 28px; flex-shrink: 0; border-radius: 50%; background: var(--color-accent-soft); color: var(--color-accent-strong); transform: rotate(-90deg); transition: transform 180ms ease; }
+.adjacencyDisclosure[open] .disclosureChevron { transform: rotate(0); }
+.adjacencyBody > .actions { margin-bottom: 12px; }
+.adjacencyBody .relationList { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 290px), 1fr)); gap: 10px; }
+.adjacencyBody .relationList > li { display: flex; flex-direction: column; align-items: stretch; min-width: 0; padding: 14px; border: 1px solid var(--color-border); border-radius: 10px; background: var(--color-panel); transition: border-color 160ms ease, box-shadow 160ms ease; }
+.adjacencyBody .relationList > li:hover { border-color: var(--color-accent); box-shadow: var(--shadow-panel); }
+.adjacencyBody .relationList > .selectedRelation { padding-left: 14px !important; border-color: var(--color-accent); background: var(--color-accent-soft); box-shadow: inset 3px 0 var(--color-accent); }
+.adjacencyPredicate { color: var(--color-accent-strong); font-size: 12px; font-weight: 600; }
+.adjacencyPair { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; font-size: 15px; font-weight: 600; line-height: 1.6; }
+.adjacencyPair :global(.ui-icon) { width: 18px; height: 18px; margin: 0; color: var(--color-muted); flex-shrink: 0; }
+.adjacencyBody .relationList > li > .muted { font-size: 12px; line-height: 1.7; margin-bottom: 12px; }
+.adjacencyBody .relationList .actions { margin-top: auto; padding-top: 10px; border-top: 1px solid var(--color-border); }
+.adjacencyBody .relationList .actions button { padding: 6px 8px; }
+@media (prefers-reduced-motion: reduce) { .disclosureChevron, .adjacencyBody .relationList > li { transition: none; } }
