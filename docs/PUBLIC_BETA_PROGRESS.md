@@ -2,7 +2,7 @@
 
 2026-10-11。ユーザーが[対応プラン](design/PUBLIC_BETA_AND_PRODUCT_PLAN.md)を採用。今回からの差分を**全24ステップ**で管理する。以前のPhase完了率とは別。
 
-**現在：12/24完了（50%）、残12。** 2026-10-13、工程12の設定メニュー・本人表示名・外観保存の実装と、必須のVPS更新確認まで完了した。日常確認先 https://graph-beta.isinxnisi.com/ とVPS https://graph.isinxnisi.net はともに工程12の画面。会員の実保存・表示名設定は隔離PG＋検証用OIDCで確認し、両確認先の会員未設定状態とVPS preview認証は維持する。次は工程13の実Google接続。一般公開はstep22。この公開β計画24工程から見た概算進捗であり、既存全機能の完成率ではない。
+**現在：12/24完了（50%）、残12。** 2026-10-13、工程12の設定メニュー・本人表示名・外観保存と必須VPS更新確認が完了。工程13の専用PG・migration・安全な設定生成と隔離検証も準備したが、実Google設定／本人ログイン待ちで未完了。日常確認先 https://graph-beta.isinxnisi.com/ は今回コードへ更新し、VPS https://graph.isinxnisi.net は工程12の画面。両確認先の会員未設定状態とVPS preview認証は維持する。一般公開はstep22。この公開β計画24工程から見た概算進捗であり、既存全機能の完成率ではない。
 
 ## 数え方と完了範囲
 
@@ -29,7 +29,7 @@
 | 10 | スマホGraph/詳細/隣接一覧の代表経路 | 完了（320／390pxのtouch、一覧／根拠往復・初回配置・モーダル・復帰を確認） |
 | 11 | スマホの閲覧・会員画面と探索への往復 | 完了（320／390pxの閲覧・根拠／図の往復、会員編集・未送信入力・共有と別タブ探索を確認） |
 | 12 | アカウントメニュー・表示名/外観等の最小設定 | 完了（Tunnel反映・VPS更新後のHTTPS／代表4経路・KG revision維持を確認） |
-| 13 | 実Google登録・ログイン・再訪の接続試験 | 外部設定待ち・未着手 |
+| 13 | 実Google登録・ログイン・再訪の接続試験 | 専用PG・設定生成・隔離試験済。実Google client設定／本人ログイン待ち・未完了 |
 | 14 | 本人削除/停止・共有停止・公開書込に必要な最小運営操作 | 未着手 |
 | 15 | 探索・条件・詳細の日本語/英語切替 | 未着手 |
 | 16 | 閲覧・会員・共有の主要経路の日本語/英語 | 未着手 |
@@ -57,7 +57,7 @@
 
 5〜6では、理由付き撤回・新UUID差替えと旧参照、revision付き取得/cursor/探索復帰、KG単独backup/restoreを追加した。隔離Neo4j・PGで会員側の保存を巻き戻さないこと、復元途中失敗のrollback、復旧で消えたUUIDの別命題への再利用拒否まで確認した。実在Claimの撤回判断や本番復旧は行っていない。
 
-**次は13：実Google登録・ログイン・再訪の接続試験。** 既存の認証・所有者APIを再利用し、専用PGと本番migration・設定／認証開始の検証を進める。実credentialとGoogle側のredirect設定は別途必要。未設定の会員機能を有効にせず、接続試験完了までは工程13を完了に数えない。全24工程の分母は維持し、残12。
+**次は13：実Google登録・ログイン・再訪の接続試験。** [専用PG・候補env・本番接続手順](design/GOOGLE_MEMBER_CONNECTION.md)を用意した。既存の認証・所有者APIを再利用する。実credentialとGoogle側のredirect設定は別途必要で、設定済みWeb client JSONのGit外保存先をユーザーへ確認中。未設定の会員機能を有効にせず、本人認証・保存／再訪まで終わるまで工程13を完了に数えない。設定待ちの間は工程14等の独立した単位へ進める。全24工程の分母は維持し、残12。
 
 7では専用Compose、Node24.21.0のstandalone Web／operator image、内部DBだけを許可する本番guard、readiness、管理者配置scriptを追加した。隔離環境で初回投入・再適用・backup0600・再起動保持・DB停止503と復旧、本番imageでのPlaywright4経路を確認。cold起動直後の取得で既定5秒制限に達したため、本番readだけ上限付き設定10000msを採用して再検証した。意味・返却型・凍結dataは変更していない。
 
@@ -187,3 +187,26 @@ KGデータ・意味モデル・DB schema・GraphState・snapshot・依存packag
 ユーザーによる管理者更新後、HTTPSのHTMLが工程12の本番image build `GJuUVUK2vkXbILCQsR2ET` を返すこと、設定メニューがあることを確認。更新前backupは `before-web-20261012T232138Z.json`・0600で、backupと更新後APIのrevisionはともに `5b6ccb7b-7a5d-4005-ab34-01c490e93b1c`。KGをローカルへ同期・再投入していない。
 
 VPSへ既存Playwrightを接続し4/4（37.1秒）成功。設定の外観保存・別タブ同期・Escape／外側閉鎖、PCでの探索state維持、390pxの長いEvent名／根拠／ダブルタップ概要／起点切替と復帰、漫画／科学／Event・三限定の経路を確認した。privateなpreview credentialは一時0600 fileだけに置き、traceを無効化して使用した。Docker／Caddy／既存通知serviceはactive。会員有効化・一般公開は含めない。累計12/24・残12とする。
+
+## 工程13の接続準備（2026-10-13、実Googleは未了）
+
+[接続手順と完了条件](design/GOOGLE_MEMBER_CONNECTION.md)を追加した。本番Composeへ任意起動の専用PostgreSQL・独立volumeと、既存4 migrationを明示適用するmember operatorを追加。Web用の非superuserとPG管理者のcredentialを分け、host portを公開しない。本番guardで指定origin・内部DB・User・cookie prefixを照合する。無設定では会員無効でKGは動く。
+
+GoogleのWeb client JSONと既存private envから、稼働設定とは別の候補envを0600で生成する小さいscriptを追加。既存secret保持・redirect登録照合・上書き／credentialの無断差替え拒否を確認した。Google設定自体の作成・VPSへの会員配置・実本人ログインはまだ行っていない。
+
+| 検証 | 結果 |
+| --- | --- |
+| `npm test -- --no-file-parallelism --testTimeout=15000` | 28 file・560/560成功（227.48秒） |
+| `python3 -m unittest discover -s tests -p test_production_member.py -v` | 5/5成功。候補だけの作成・private権限・secret保持・不正redirect／client形式・差替え拒否 |
+| `npm run test:member` | 実PG＋検証OIDCで26/26成功（23.47秒）。保存・本人表示名・所有者・失効等の既存API回帰 |
+| `npm run typecheck` / `npm run lint` / `npm run public:build` | 成功。変更後のscriptも個別eslint／最終typecheck成功。既存語彙warning1件は増加なし |
+| Docker Web／ops build | Node24.21.0で成功。tag `beta-step13-20261013`。migrationはopsだけに含める |
+| `npx tsx scripts/test-production-member.ts beta-step13-20261013` | 本番image＋専用実PGで成功。非superuser・migration二回で適用4件・Google開始URL／最小scope／state cookie・Origin／追加scope／外部redirect拒否。PG停止503とWeb再起動なしの回復、User0件を確認 |
+| `npx tsx scripts/test-production.ts beta-step13-20261013` | KG投入105知識Node／128 Relationship・二回目unchanged・backup0600・再起動保持を確認。Playwrightは初回13/14（4.5分）、build終了後の単独再実行も13/14（3.8分）。再起動直後の初回neighbors取得503により失敗。全成功とは扱わない。通常時に同じ1440pxケースを個別実行し1/1成功（31.7秒） |
+| 日常確認先の最終build | Tunnelの設定保存／別タブと漫画・科学・Event探索2/2（57.2秒）。3200とTunnelのbuild `y-G0WQGAq9ES2qx3wvWR5` 一致、KG revision `legacy:20261011-001` 維持。3210〜3215のdataset APIも全て200 |
+
+初回の本番会員試験では、匿名profileがDBを照会せず401になるため、停止確認をstate保存が必要な認証開始APIへ修正した。PG初期化中の一時Unix socket serverをreadyと誤認する問題も検出し、healthcheckを初期化後のTCP接続へ修正して成功した。認証開始試験には架空のclient設定を使い、Googleへの通信・本人認証・User作成をしていない。
+
+本番KG回帰の失敗は二回とも1440pxの初回PLUTO展開。初回traceではneighbors応答が約11.34秒で503となり、GraphがEntity1／Claim0に留まった。同じ稼働imageで通常時の個別ケースは成功したが、cold時の失敗を解消した意味ではない。既存の10秒read上限・query・UI挙動は今回変更していない。cold時の取得課題として工程18〜19へ残し、今回の会員専用PG試験の成功とは分ける。ブラウザのassert失敗で本番KG runnerが終了するため、その後の停止／復旧試験は今回タグで完了したと報告しない（工程12では検証済み）。試験終了時に専用container／volumeを削除した。VPSの認証付きHTTPSでは本ターン冒頭に代表4/4成功しているが、今回のimageをVPSへ配置した意味ではない。
+
+DB schemaの既存4 migration・KG意味モデル・凍結dataset・fixture・UI・探索state・依存packageは変更なし。VPSは検証済み工程12のままで、会員配置は実credentialが届いてから行う。両確認先では会員無効、VPSではpreview認証を維持し、工程13は完了に数えない。次は実Google設定からの接続か、外部待ちと独立した工程14。累計12/24・残12。

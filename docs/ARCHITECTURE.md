@@ -716,6 +716,8 @@ Native History APIと`useSearchParams`で既存Explorerを保持し、閲覧中�
 
 `/member` の登録／ログイン・表示名／locale・明示保存・一覧／再閲覧・確認削除・ログアウト／全端末ログアウトを接続した。Explorerからは別タブで開き、元の探索を維持する。UIの期待利用者headerをsessionと照合し、タブの復帰時はprivate内容を再認可する。再送キーは同じタブのsessionStorageに保持し、会員内容自体は永続cacheに置かない。会員の題名・説明・既存構成の編集も接続した。入力はタブのメモリだけに残し、失効時は本人の再認可まで非表示。競合は最新版を確認してから期待版を明示更新し、次の保存でも原子的に照合する。新参照は同origin・datasetの閲覧URLから現在の対象／個別Claimと両端を確認して追加できる。草稿への明示追加とサーバーへの版更新を分け、共有済み版は変更しない。本人表示名変更は公開β step12で追加。locale変更UI・実Google接続・一般公開は未実装。限定共有とdiscussionは末尾の別契約。既存のサーバー保存未実装という記述は初期／ローカル機能の範囲であり、今回の進捗は本節を優先する。
 
+公開β step13では、本番Composeへ任意起動の専用PGと明示migration用operatorを追加した。Webは非superuserで接続し、会員volumeをKGから分離する。本番は指定HTTPS origin・内部PG・専用cookieを検証し、既定は無効のまま。[本番Google接続の準備](design/GOOGLE_MEMBER_CONNECTION.md)を正本とする。実Google credential／本人ログインは未了で、隔離した認証開始試験を接続完了とは扱わない。
+
 ## 会員Capsuleの特定版を限定リンクで共有（2026-10-09）
 
 [採用契約](design/CAPSULE_LINK_SHARING.md)。表示中の受理版を明示確認して、PostgreSQLへ参照と説明のsnapshotを固定する。既存のprivate編集・KG内容は不変。Capsuleごと1つの有効リンク、50共有版まで。共有済み版は更新せず、Capsule UUID＋revisionで保持する。追加migrationだけで、既存保存を移行しない。

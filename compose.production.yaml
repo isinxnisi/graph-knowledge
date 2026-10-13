@@ -7,7 +7,15 @@ x-graph-environment: &graph-environment
   NEO4J_PASSWORD: "${NEO4J_PASSWORD:?Set a private production password}"
   NEO4J_DATABASE: neo4j
   NEO4J_READ_TIMEOUT_MS: "10000"
-  MEMBER_STORAGE_ENABLED: "0"
+x-member-environment: &member-environment
+  MEMBER_STORAGE_ENABLED: "${MEMBER_STORAGE_ENABLED:-0}"
+  MEMBER_AUTH_PROVIDER: google
+  MEMBER_ORIGIN: "${MEMBER_ORIGIN:-https://graph.isinxnisi.net}"
+  MEMBER_DATABASE_URL: "${MEMBER_DATABASE_URL:-}"
+  MEMBER_AUTH_SECRET: "${MEMBER_AUTH_SECRET:-}"
+  MEMBER_COOKIE_PREFIX: gk-member-production
+  MEMBER_GOOGLE_CLIENT_ID: "${MEMBER_GOOGLE_CLIENT_ID:-}"
+  MEMBER_GOOGLE_CLIENT_SECRET: "${MEMBER_GOOGLE_CLIENT_SECRET:-}"
 services:
   graph-neo4j:
     image: neo4j:5.26.31-community
@@ -35,7 +43,8 @@ services:
     init: true
     depends_on:
       graph-neo4j: { condition: service_healthy }
-    environment: *graph-environment
+    environment:
+      <<: [*graph-environment, *member-environment]
     ports:
       - "127.0.0.1:${GRAPH_WEB_PORT:-3200}:3000"
     mem_limit: 768m
@@ -46,9 +55,43 @@ services:
     init: true
     depends_on:
       graph-neo4j: { condition: service_healthy }
-    environment: *graph-environment
+    environment:
+      <<: *graph-environment
+      MEMBER_STORAGE_ENABLED: "0"
     volumes:
       - "${GRAPH_BACKUP_DIRECTORY:?Set a private backup directory}:/backups"
     logging: *logging
+  graph-member-postgres:
+    profiles: [member]
+    image: postgres:17-alpine@sha256:b0f9560a2de083e2cc7382e75f808c7381a32852a7ec49117deedb300e552b24
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_DB: graph_member
+      POSTGRES_PASSWORD: "${MEMBER_POSTGRES_ADMIN_PASSWORD:-}"
+      MEMBER_POSTGRES_PASSWORD: "${MEMBER_POSTGRES_PASSWORD:-}"
+    command: [postgres, -c, shared_buffers=64MB, -c, max_connections=30]
+    mem_limit: 512m
+    volumes:
+      - member_data:/var/lib/postgresql/data
+      - ./db/member/production-init.sql:/docker-entrypoint-initdb.d/010-member.sql:ro
+    healthcheck:
+      # 初期化中の一時Unix socket serverではなく、init完了後のTCPを待つ。
+      test: [CMD-SHELL, "pg_isready -h 127.0.0.1 -U postgres -d graph_member"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    logging: *logging
+  member-ops:
+    profiles: [ops]
+    image: "graph-knowledge-ops:${GRAPH_IMAGE_TAG:?Set the tested image tag}"
+    init: true
+    entrypoint: [node, --import, tsx]
+    command: [scripts/member-migrate.ts]
+    environment:
+      <<: *member-environment
+      GRAPH_DEPLOYMENT: production
+    logging: *logging
 volumes:
   knowledge:
+  member_data:

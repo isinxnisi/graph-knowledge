@@ -19,6 +19,8 @@ RUN npm run build
 # 運用CLIだけはtsxと受入資料を必要とする。Webへは含めない。
 FROM builder AS ops
 COPY fixtures/demo.json ./fixtures/demo.json
+COPY db/member ./db/member
+COPY scripts/member-migrate.ts ./scripts/member-migrate.ts
 ENV NODE_ENV=production
 USER node
 ENTRYPOINT ["node", "--import", "tsx", "scripts/public-kg.ts"]

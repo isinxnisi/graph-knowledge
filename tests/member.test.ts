@@ -48,6 +48,19 @@ describe("会員保存の境界", () => {
     expect(memberConfig({ ...base, MEMBER_GOOGLE_CLIENT_ID: "test-id", MEMBER_GOOGLE_CLIENT_SECRET: "test-only" })?.provider.kind).toBe("google");
     expect(() => memberConfig({ ...base, MEMBER_ORIGIN: "http://example.invalid", MEMBER_GOOGLE_CLIENT_ID: "test-id", MEMBER_GOOGLE_CLIENT_SECRET: "test-only" })).toThrow();
   });
+  it("本番会員は指定origin・専用内部PG・cookie namespaceでのみ起動する", () => {
+    const base = { GRAPH_DEPLOYMENT: "production", MEMBER_STORAGE_ENABLED: "1", MEMBER_AUTH_PROVIDER: "google",
+      MEMBER_ORIGIN: "https://graph.isinxnisi.net", MEMBER_DATABASE_URL: "postgresql://gk_member:test-only@graph-member-postgres:5432/graph_member",
+      MEMBER_COOKIE_PREFIX: "gk-member-production", MEMBER_AUTH_SECRET: randomBytes(32).toString("hex"), MEMBER_GOOGLE_CLIENT_ID: "test-id", MEMBER_GOOGLE_CLIENT_SECRET: "test-only" };
+    expect(memberConfig(base)?.provider.kind).toBe("google");
+    for (const extra of [{ MEMBER_ORIGIN: "https://other.invalid" }, { MEMBER_AUTH_PROVIDER: "fixture" },
+      { MEMBER_COOKIE_PREFIX: "gk-member-fixture" }, ...[
+        "postgresql://gk_member:test-only@127.0.0.1:5432/graph_member", "postgresql://postgres:test-only@graph-member-postgres:5432/graph_member",
+        "postgresql://gk_member:test-only@graph-member-postgres:5432/other", "postgresql://gk_member@graph-member-postgres:5432/graph_member",
+        "postgresql://gk_member:test-only@graph-member-postgres:5432/graph_member?host=other",
+      ].map(MEMBER_DATABASE_URL => ({ MEMBER_DATABASE_URL }))]) expect(() => memberConfig({ ...base, ...extra })).toThrow("Member service unavailable");
+    expect(memberConfig({ ...base, MEMBER_STORAGE_ENABLED: "0" })).toBeNull();
+  });
   it("owner・時刻・版を含むlocal形式をそのまま受け入れない", () => {
     const value = { requestId: randomUUID(), content: { dataset: "demo", title: " メモ ", note: "", language: "ja", entityIds: [randomUUID()], claimIds: [] } };
     expect(memberCreateSchema.parse(value).content.title).toBe("メモ");

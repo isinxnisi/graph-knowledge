@@ -41,7 +41,7 @@ PUTは`{expectedRevision, content}`、DELETEは`{expectedRevision}`。所有者�
 
 ## 設定・migration・戻し方
 
-通常は`MEMBER_STORAGE_ENABLED`を指定しない。Googleを実接続する段階でMEMBER_ORIGIN（HTTPSのorigin）、MEMBER_DATABASE_URL（専用運営DB）、MEMBER_AUTH_SECRET（32文字以上の生成値）、MEMBER_COOKIE_PREFIX（gk-から始まる環境固有値）、MEMBER_AUTH_PROVIDER=google、MEMBER_GOOGLE_CLIENT_ID／SECRETを設定する。実credential・外部公開は今回実施していない。同じhostnameの別portでもcookieは分離されないので、環境ごとにprefix／secret／DBを分ける。
+通常は`MEMBER_STORAGE_ENABLED`を指定しない。Googleを実接続する段階でMEMBER_ORIGIN（HTTPSのorigin）、MEMBER_DATABASE_URL（専用運営DB）、MEMBER_AUTH_SECRET（32文字以上の生成値）、MEMBER_COOKIE_PREFIX（gk-から始まる環境固有値）、MEMBER_AUTH_PROVIDER=google、MEMBER_GOOGLE_CLIENT_ID／SECRETを設定する。実credential・外部公開は今回実施していない。同じhostnameの別portでもcookieは分離されないので、環境ごとにprefix／secret／DBを分ける。公開β step13の専用PG・固定本番接続先・候補envと実Googleの完了条件は[本番接続手順](GOOGLE_MEMBER_CONNECTION.md)を優先する。
 
 fixtureはNODE_ENVがproduction以外、MEMBER_FIXTURE_ENABLED=1、固定loopback origin 3221／issuer 3222、DB 55432/graph_member_test、専用cookie prefixのすべてを要求する。productionでは拒否する。fixture issuerはtests/supportにあり製品routeに含まれない。
 

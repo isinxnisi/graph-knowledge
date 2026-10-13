@@ -30,3 +30,8 @@ docs/research/phase-13-relation-model/v2/*
 scripts/*
 !scripts/public-kg.ts
 !scripts/production-readiness.mjs
+!scripts/member-migrate.ts
+!db/
+db/*
+!db/member/
+!db/member/**

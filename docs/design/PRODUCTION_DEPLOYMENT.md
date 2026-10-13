@@ -171,3 +171,7 @@ sudo bash /home/develop/graph-production-step12/update-production-web.sh beta-st
 ### 工程12のVPS反映確認（2026-10-13）
 
 管理者による更新後、HTTPS上のbuild ID `GJuUVUK2vkXbILCQsR2ET`・設定メニューと、更新前backup／更新後APIのrevision一致を確認した。backup `before-web-20261012T232138Z.json` は0600、revisionは `5b6ccb7b-7a5d-4005-ab34-01c490e93b1c`。既存Playwrightの代表4/4（37.1秒）、Docker／Caddy／通知serviceのactiveを確認。preview credentialは一時fileだけで扱い、traceは無効化した。前節の管理者操作待ちは解消し、工程12を完了とした。次の通常のVPS更新は工程16、工程13の実認証接続は必要な時点で反映する。会員機能はまだ無効。
+
+## 工程13の会員接続準備
+
+2026-10-13。本番Composeへ任意のmember profile・専用PG volumeと非superuser、operator imageへ既存migrationを追加した。既定は会員無効で、KG operatorへ会員credentialを渡さない。実Googleが未設定のVPSにはまだ配置しない。[接続・privateな候補env生成・本人認証の完了条件](GOOGLE_MEMBER_CONNECTION.md)を正本とする。通常Web更新と、初回のCompose／PG構成追加を区別する。
