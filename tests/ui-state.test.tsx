@@ -91,6 +91,24 @@ describe("隣接一覧からの取得", () => {
     expect(handlers.onExpand).toHaveBeenLastCalledWith(root.id, false);
     expect(screen.queryByRole("status")).toBeNull();
   });
+  it("主張や線を読んでも一覧の対象・カードを変えず、対象選択と新探索で切り替える", () => {
+    const graph = mergePage(emptyGraph(), page);
+    const claim = page.claims.find(c => c.subjectId !== root.id || c.objectId !== root.id)!;
+    const object = graph.nodes[claim.objectId];
+    const handlers = props();
+    const { rerender } = render(<RelationsList {...handlers} graph={graph} selection={{ kind: "entity", id: object.id }} />);
+    const count = screen.getAllByRole("button", { name: "主張と出典を見る" }).length;
+    const title = `${object.name}の隣接関係`;
+    rerender(<RelationsList {...handlers} graph={graph} selection={{ kind: "claim", id: claim.id }} />);
+    expect(screen.getByRole("heading", { name: new RegExp(title) })).toBeDefined();
+    expect(screen.getAllByRole("button", { name: "主張と出典を見る" })).toHaveLength(count);
+    rerender(<RelationsList {...handlers} graph={graph} selection={{ kind: "relation", id: relationId(claim) }} />);
+    expect(screen.getByRole("heading", { name: new RegExp(title) })).toBeDefined();
+    rerender(<RelationsList {...handlers} graph={graph} selection={{ kind: "entity", id: claim.subjectId }} />);
+    expect(screen.getByRole("heading", { name: new RegExp(`${graph.nodes[claim.subjectId].name}の隣接関係`) })).toBeDefined();
+    rerender(<RelationsList {...handlers} graph={{ ...graph, generation: graph.generation + 1, centerId: object.id }} selection={{ kind: "claim", id: claim.id }} />);
+    expect(screen.getByRole("heading", { name: new RegExp(title) })).toBeDefined();
+  });
   it("閉じた枝は続きの取得より復元を先に行う", () => {
     const graph = closeExpansion(mergePage(emptyGraph(), { ...page, page: { hasMore: true, nextCursor: "next" } }), root.id);
     const handlers = props();

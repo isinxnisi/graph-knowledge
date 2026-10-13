@@ -201,3 +201,5 @@ sudo bash /home/develop/graph-production-step16/update-production-web.sh beta-st
 日常確認先3200／Tunnelはbuild `6EDDklJLu6NG_VR-zrYxt` に更新。最終代表2/2（1.1分）、HTMLのbuild一致、dataset／revision維持を確認した。[実装・実画面評価](EDITORIAL_EXPLORER_DESIGN.md)を参照。VPSは工程16のbuild／KG revisionを読み取り確認し、今回の案は未配置。VPS用imageの再作成も今回は行っていない。通常更新は19の契約を維持し、まずユーザーが日常確認先で今回案を評価する。会員未設定503とpreview認証は維持する。
 
 同日、隣接一覧のカード化・折り畳みをbuild `6DegX8bGU-kyUihEL-Xey` として3200／Tunnelへ更新。ローカル代表2/2とTunnel一覧1/1成功。データ・API・VPSの配置は変更していない。自動リロード復元／展開GraphのURL共有は未実装。
+
+続けて、一覧の文脈維持と開閉の動きをbuild `AhF3GECgY4cWkdb66zNpe` で3200／Tunnelへ反映。PLUTOの主張を開いても5カードを維持し、通常／reduce設定での一覧とモーダル操作をローカル3/3・Tunnel2/2で確認。VPS・DB・APIは変更していない。

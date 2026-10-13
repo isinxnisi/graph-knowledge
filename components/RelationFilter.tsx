@@ -1,4 +1,5 @@
 "use client";
+import { useDialogDismiss } from "../lib/client/use-dialog-dismiss";
 import Icon from "./Icon";
 import { useUiLocale } from "../lib/client/ui-locale";
 
@@ -39,7 +40,7 @@ function ConditionEditor({ value, roles, positions, eventRoles, onApply, onCance
   const normalizedEventRoles = normalizeEventRoles(draftEventRoles, normalized);
   const dirty = explorationKey(normalized, normalizedRoles, normalizedPositions, normalizedEventRoles) !== explorationKey(value, roles, positions, eventRoles);
   useEffect(() => { dialog.current?.showModal(); }, []);
-  const cancel = () => { dialog.current?.close(); onCancel(); };
+  const cancel = useDialogDismiss(dialog, () => { dialog.current?.close(); onCancel(); });
   const backdrop = useDialogBackdrop(cancel);
   return <dialog ref={dialog} className={`${styles.conditionDialog} ${styles.conditionEditor}`} aria-labelledby="condition-title" onCancel={(event) => { event.preventDefault(); cancel(); }} {...backdrop}>
     <header className={styles.conditionHeader}>

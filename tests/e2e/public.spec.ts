@@ -134,7 +134,13 @@ test("隣接一覧: カードの列幅・折り畳み・根拠への移動を保
   await section.scrollIntoViewIfNeeded();
   const first = await cards.nth(0).boundingBox(), second = await cards.nth(1).boundingBox();
   expect(Math.abs(first!.y - second!.y)).toBeLessThan(2);
-  await disclosure.locator("summary").click();
+  const motion = await disclosure.evaluate(el => {
+    el.querySelector("summary")!.click();
+    const a = el.getAnimations().find(a => (a.effect as KeyframeEffect).target === el)!;
+    return { duration: a.effect!.getTiming().duration, heights: (a.effect as KeyframeEffect).getKeyframes().map(frame => frame.height) };
+  });
+  expect(motion.duration).toBe(240);
+  expect(motion.heights[0]).not.toEqual(motion.heights[1]);
   await expect(disclosure).not.toHaveAttribute("open");
   await expect(cards.first()).toBeHidden();
   expect(await state()).toEqual(before);
@@ -148,6 +154,9 @@ test("隣接一覧: カードの列幅・折り畳み・根拠への移動を保
   await page.screenshot({ path: "/tmp/graph-adjacency-desktop.png" });
   await cards.first().getByRole("button", { name: "主張と出典を見る" }).click();
   await expect(page.getByRole("region", { name: "Claim詳細" })).toBeVisible();
+  await expect(cards).toHaveCount(5);
+  expect(await cards.evaluateAll(elements => elements.map(el => el.getAttribute("data-testid")))).toEqual(ids);
+  await expect(section.getByRole("heading")).toContainText("PLUTOの隣接関係");
   await page.setViewportSize({ width: 390, height: 844 });
   await page.getByRole("button", { name: "Graph", exact: true }).click();
   await section.scrollIntoViewIfNeeded();
@@ -156,4 +165,40 @@ test("隣接一覧: カードの列幅・折り畳み・根拠への移動を保
   const overflow = await section.evaluate(el => el.scrollWidth > el.clientWidth);
   expect(overflow).toBe(false);
   await page.screenshot({ path: "/tmp/graph-adjacency-mobile.png" });
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  const reduced = await disclosure.evaluate(el => {
+    el.querySelector("summary")!.click();
+    return { open: (el as HTMLDetailsElement).open, moving: el.hasAttribute("data-motion-state") };
+  });
+  expect(reduced).toEqual({ open: false, moving: false });
+});
+
+
+test("モーダル: 開閉の動き・背景クリック・Escape・動きを減らす設定", async ({ page }) => {
+  await page.goto("/");
+  await page.getByRole("button", { name: "PLUTOから探索を開始", exact: true }).click();
+  await expect(page.getByTestId("graph-counts")).toHaveText("Entity 4 / Claim 5");
+  await page.getByRole("button", { name: "見る関係を編集", exact: true }).click();
+  const dialog = page.getByRole("dialog");
+  await expect(dialog).toBeVisible();
+  expect(await dialog.evaluate(el => getComputedStyle(el).animationDuration)).toBe("0.26s");
+  await dialog.evaluate(el => {
+    (el.querySelector('button') as HTMLButtonElement).click();
+    el.setAttribute("data-dismiss-duration", String(el.getAnimations().find(a => a.effect?.getTiming().duration === 160)?.effect?.getTiming().duration));
+  });
+  await expect(dialog).toHaveAttribute("data-dismiss-duration", "160");
+  await expect(dialog).toHaveCount(0);
+  await page.getByRole("button", { name: "見る関係を編集", exact: true }).click();
+  await page.keyboard.press("Escape");
+  await expect(dialog).toHaveCount(0);
+  await page.getByRole("region", { name: "Entity詳細" }).getByRole("button", { name: "関係概要を見る", exact: true }).click();
+  await expect(dialog).toBeVisible();
+  await page.mouse.click(2, 2);
+  await expect(dialog).toHaveCount(0);
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.getByRole("button", { name: "見る関係を編集", exact: true }).click();
+  expect(await dialog.evaluate(el => getComputedStyle(el).animationName)).toBe("none");
+  await page.keyboard.press("Escape");
+  await expect(dialog).toHaveCount(0);
+  await expect(page.getByTestId("graph-counts")).toHaveText("Entity 4 / Claim 5");
 });

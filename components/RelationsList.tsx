@@ -1,3 +1,5 @@
+import { useState } from "react";
+import AnimatedDetails from "./AnimatedDetails";
 import { useUiLocale } from "../lib/client/ui-locale";
 import { explorerLabels, explorerMessage } from "../lib/i18n/explorer";
 import type { DatasetMode } from "../lib/domain/dataset";
@@ -17,7 +19,13 @@ export default function RelationsList({ graph, selection, onEntity, onClaim, onE
   const { locale } = useUiLocale();
   const ui = explorerLabels(locale);
   const relation = selection?.kind === "relation" ? displayRelations(graph.claims, locale)[selection.id] : null;
-  const entityId = selection?.kind === "entity" ? selection.id : selection?.kind === "claim" ? graph.claims[selection.id]?.subjectId : relation?.subjectId ?? null;
+  const initialId = selection?.kind === "entity" ? selection.id : selection?.kind === "claim" ? graph.claims[selection.id]?.subjectId : relation?.subjectId ?? graph.centerId;
+  const [context, setContext] = useState({ generation: graph.generation, id: initialId });
+  // 主張／線の詳細選択で一覧の主題を変えない。対象の選択と新探索だけが切替契機。
+  const candidateId = context.generation !== graph.generation ? graph.centerId : selection?.kind === "entity" ? selection.id : context.id;
+  const nextId = candidateId && graph.nodes[candidateId] ? candidateId : graph.centerId;
+  if (context.generation !== graph.generation || context.id !== nextId) setContext({ generation: graph.generation, id: nextId });
+  const entityId = nextId;
   const entity = entityId ? graph.nodes[entityId] : null;
   if (!entity) return <p className={styles.muted}>{ui.listHelp}</p>;
   const claims = Object.values(graph.claims).filter((claim) => claim.subjectId === entity.id || claim.objectId === entity.id);
@@ -30,9 +38,7 @@ export default function RelationsList({ graph, selection, onEntity, onClaim, onE
         document.getElementById("explorer-graph")?.focus({ preventScroll: true });
       }}>{explorerPaneLabels(locale).backToGraph}</button>
     </div>
-    <details key={entity.id} open className={styles.adjacencyDisclosure}>
-      <summary><h3>{ui.adjacent(entity.name)}<small className={styles.muted}>{ui.adjacentHelp}</small></h3><span className={styles.disclosureChevron} aria-hidden="true">⌄</span></summary>
-    <div className={styles.adjacencyBody}>
+    <AnimatedDetails key={entity.id} open className={styles.adjacencyDisclosure} bodyClassName={styles.adjacencyBody} summary={<><h3>{ui.adjacent(entity.name)}<small className={styles.muted}>{ui.adjacentHelp}</small></h3><span className={styles.disclosureChevron} aria-hidden="true">⌄</span></>}>
     <div className={styles.actions}>{expansion?.open ? <button onClick={() => onClose(entity.id)}>{ui.closeBranch}</button> : <button onClick={() => onExpand(entity.id)}>{expansion?.pages.length ? ui.reopenBranch : ui.expand}</button>}</div>
     {expansion?.loading && <p role="status">{expansion.expanded ? text.neighborsLoadingMore : text.neighborsLoading}</p>}
     {expansion?.error && <div role="alert" className={styles.error}>
@@ -61,7 +67,6 @@ export default function RelationsList({ graph, selection, onEntity, onClaim, onE
         </li>;
       })}
     </ul>
-    </div>
-    </details>
+    </AnimatedDetails>
   </section>;
 }

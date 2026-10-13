@@ -1,4 +1,6 @@
 "use client";
+import AnimatedDetails from "./AnimatedDetails";
+import { useDialogDismiss } from "../lib/client/use-dialog-dismiss";
 import { useUiLocale } from "../lib/client/ui-locale";
 import { explorerLabels, explorerMessage } from "../lib/i18n/explorer";
 
@@ -30,8 +32,7 @@ function RelationOverview({ relation }: { relation: OverviewRelation }) {
     </p>
     {view.status === "denied" && <p className={styles.muted}>{labels.deniedHelp}</p>}
     {view.qualificationSummary && <p className={styles.overviewTerms}>{view.qualification!.title}：{view.qualificationSummary}</p>}
-    <details className={styles.overviewStatistics}>
-      <summary>{labels.statistics}</summary>
+    <AnimatedDetails className={styles.overviewStatistics} summary={labels.statistics}>
       <p>{labels.countsUnit}：{labels.counts(relation.counts.affirmed, relation.counts.denied)}</p>
       <p className={styles.muted}>{labels.countsHelp}</p>
       {view.qualification && <section aria-label={view.qualification.details}>
@@ -40,7 +41,7 @@ function RelationOverview({ relation }: { relation: OverviewRelation }) {
           {value.label}：{labels.counts(value.counts.affirmed, value.counts.denied)}
         </li>)}</ul><p className={styles.muted}>{view.qualification.help}</p>
       </section>}
-    </details>
+    </AnimatedDetails>
   </li>;
 }
 
@@ -74,9 +75,10 @@ export default function EntityOverview({ entity, dataset, restricted, onClose, o
     });
     return () => controller.abort();
   }, [entity.id, dataset, attempt]);
-  const backdrop = useDialogBackdrop(onClose);
-  return <dialog ref={dialog} className={`${styles.conditionDialog} ${styles.overviewDialog}`} aria-labelledby="overview-title" onCancel={(event) => { event.preventDefault(); onClose(); }} {...backdrop}>
-    <div className={styles.detailHeading}><h2 id="overview-title">{labels.title}</h2><button onClick={onClose}>{labels.close}</button></div>
+  const dismiss = useDialogDismiss(dialog, onClose);
+  const backdrop = useDialogBackdrop(dismiss);
+  return <dialog ref={dialog} className={`${styles.conditionDialog} ${styles.overviewDialog}`} aria-labelledby="overview-title" onCancel={(event) => { event.preventDefault(); dismiss(); }} {...backdrop}>
+    <div className={styles.detailHeading}><h2 id="overview-title">{labels.title}</h2><button onClick={dismiss}>{labels.close}</button></div>
     <div className={styles.overviewBody}>
     <p className={styles.muted}>{datasetLabels(dataset, locale).badge}</p>
     <div className={styles.overviewEntity}><h3>{entity.name}</h3><span className={styles.badge}>{ui.kinds[entity.kind]}</span></div>
@@ -99,7 +101,7 @@ export default function EntityOverview({ entity, dataset, restricted, onClose, o
     </div>
     <div className={styles.overviewFooter}>
       <p className={styles.muted}>{labels.detailHelp}</p>
-      <button onClick={onClose}>{labels.backToGraph}</button>
+      <button onClick={dismiss}>{labels.backToGraph}</button>
       <RootActions restricted={restricted} disabled={failure?.missing} onSwitch={onSwitch} />
     </div>
   </dialog>;

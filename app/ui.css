@@ -13,22 +13,24 @@ input, select, textarea { accent-color: var(--color-accent); }
 .ui-icon { display: inline-block; width: 18px; height: 18px; flex: 0 0 auto; vertical-align: -.2em; }
 .ui-icon + span { min-width: 0; }
 button > .ui-icon, summary > .ui-icon, a > .ui-icon, h2 > .ui-icon, h3 > .ui-icon { margin-inline-end: 7px; }
-@keyframes ui-reveal { from { opacity: .35; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes ui-reveal { from { opacity: .35; transform: translateY(14px) scale(.975); } to { opacity: 1; transform: translateY(0) scale(1); } }
 @keyframes ui-fade { from { opacity: .4; } to { opacity: 1; } }
-dialog[open] { animation: ui-reveal 180ms ease-out; box-shadow: var(--shadow-floating); }
+dialog[open] { animation: ui-reveal 260ms cubic-bezier(.2,.7,.2,1); box-shadow: var(--shadow-floating); }
 dialog::backdrop { background: rgb(20 35 55 / .32); backdrop-filter: blur(3px); animation: ui-fade 160ms ease-out; }
+@keyframes ui-backdrop-dismiss { from { opacity: 1; } to { opacity: 0; } }
+dialog[data-motion-state="closing"]::backdrop { animation: ui-backdrop-dismiss 160ms ease-in forwards; }
 details[open] > :not(summary) { animation: ui-fade 180ms ease-out; }
 summary { cursor: pointer; }
 @media (prefers-reduced-motion: reduce) {
   button { transition: none; }
-  dialog[open], dialog::backdrop, details[open] > :not(summary) { animation: none; }
+  dialog[open], dialog::backdrop, dialog[data-motion-state="closing"]::backdrop, details[open] > :not(summary) { animation: none; }
 }
 
 /* 対応ブラウザでは資料の開閉も短く補間。浮動メニューは高さ計算から除外。 */
 @supports (interpolate-size: allow-keywords) {
-  details:not([data-floating-menu]) { interpolate-size: allow-keywords; }
-  details:not([data-floating-menu])::details-content { block-size: 0; overflow: clip; transition: block-size 180ms ease, content-visibility 180ms allow-discrete; }
-  details:not([data-floating-menu])[open]::details-content { block-size: auto; }
+  details:not([data-floating-menu]):not([data-animated-disclosure]) { interpolate-size: allow-keywords; }
+  details:not([data-floating-menu]):not([data-animated-disclosure])::details-content { block-size: 0; overflow: clip; transition: block-size 180ms ease, content-visibility 180ms allow-discrete; }
+  details:not([data-floating-menu]):not([data-animated-disclosure])[open]::details-content { block-size: auto; }
 }
 @media (prefers-reduced-motion: reduce) { details::details-content { transition: none !important; } }
 

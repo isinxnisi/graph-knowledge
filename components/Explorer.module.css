@@ -361,3 +361,5 @@
 .adjacencyBody .relationList .actions { margin-top: auto; padding-top: 10px; border-top: 1px solid var(--color-border); }
 .adjacencyBody .relationList .actions button { padding: 6px 8px; }
 @media (prefers-reduced-motion: reduce) { .disclosureChevron, .adjacencyBody .relationList > li { transition: none; } }
+
+.adjacencyDisclosure[data-motion-state="closing"] .disclosureChevron { transform: rotate(-90deg); }
