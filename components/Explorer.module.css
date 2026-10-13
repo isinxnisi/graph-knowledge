@@ -363,3 +363,7 @@
 @media (prefers-reduced-motion: reduce) { .disclosureChevron, .adjacencyBody .relationList > li { transition: none; } }
 
 .adjacencyDisclosure[data-motion-state="closing"] .disclosureChevron { transform: rotate(-90deg); }
+
+/* 伸縮途中の一時的なoverflowだけでスクロールバーを点滅させない。スクロール自体は維持。 */
+.overviewDialog[data-size-animating] .overviewBody { scrollbar-width: none; }
+.overviewDialog[data-size-animating] .overviewBody::-webkit-scrollbar { display: none; }

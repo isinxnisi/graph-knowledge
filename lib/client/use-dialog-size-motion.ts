@@ -6,8 +6,9 @@ export function useDialogSizeMotion(dialog: RefObject<HTMLDialogElement | null>,
   const previous = useRef(0);
   const running = useRef<Animation | null>(null);
   useEffect(() => {
-    previous.current = dialog.current?.offsetHeight ?? 0;
-    return () => running.current?.cancel();
+    const element = dialog.current;
+    previous.current = element?.offsetHeight ?? 0;
+    return () => { running.current?.cancel(); element?.removeAttribute("data-size-animating"); };
   }, [dialog]);
   useLayoutEffect(() => {
     const element = dialog.current;
@@ -15,11 +16,15 @@ export function useDialogSizeMotion(dialog: RefObject<HTMLDialogElement | null>,
     const start = running.current ? element.offsetHeight : previous.current;
     running.current?.cancel();
     running.current = null;
+    element.removeAttribute("data-size-animating");
     const end = element.offsetHeight;
     previous.current = end;
     if (!element.animate || !start || Math.abs(end - start) < 2 || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    element.setAttribute("data-size-animating", "");
     const animation = element.animate([{ height: `${start}px` }, { height: `${end}px` }], { duration: 240, easing: "cubic-bezier(.2,.7,.2,1)" });
     running.current = animation;
-    animation.onfinish = () => { if (running.current === animation) running.current = null; };
+    animation.onfinish = () => {
+      if (running.current === animation) { running.current = null; element.removeAttribute("data-size-animating"); }
+    };
   }, [dialog, content]);
 }

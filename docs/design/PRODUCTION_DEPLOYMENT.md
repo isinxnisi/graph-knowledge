@@ -205,3 +205,5 @@ sudo bash /home/develop/graph-production-step16/update-production-web.sh beta-st
 続けて、一覧の文脈維持と開閉の動きをbuild `AhF3GECgY4cWkdb66zNpe` で3200／Tunnelへ反映。PLUTOの主張を開いても5カードを維持し、通常／reduce設定での一覧とモーダル操作をローカル3/3・Tunnel2/2で確認。VPS・DB・APIは変更していない。
 
 関係概要の非同期取得後の高さ変化をbuild `OssbVLzK-oyavNkwJ4Vef` として3200／Tunnelへ反映。高さを固定せず240msで補間し、通常PC／reduceスマホをTunnel2/2で確認した。VPS・DB・APIは変更していない。
+
+build `3awuKfeso0k1VBm0ivnTR` で伸縮中のみの本文スクロールバー非表示を3200／Tunnelへ反映。完了後の表示復旧・必要な本文スクロール・reduceをローカル／Tunnel各2/2で確認。VPS・DB・APIは変更していない。

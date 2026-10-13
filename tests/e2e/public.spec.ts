@@ -243,20 +243,30 @@ for (const reduced of [false, true]) test(`関係概要: 遅延取得後の高�
       const boxes = [0, 80, 160, 240].map(time => {
         animation.currentTime = time;
         const box = el.getBoundingClientRect();
-        return { height: box.height, y: box.y };
+        return { height: box.height, y: box.y, scrollbar: getComputedStyle(el.querySelector('[class*="overviewBody"]')!).scrollbarWidth };
       });
       animation.currentTime = 0; animation.play();
       return boxes;
     });
+    expect(frames.every(frame => frame.scrollbar === "none")).toBe(true);
     expect(frames[1].height).toBeGreaterThan(frames[0].height + 3);
     expect(frames[1].height).toBeLessThan(frames[3].height - 3);
     expect(frames[1].y).toBeLessThan(frames[0].y - 1);
     expect(frames[1].y).toBeGreaterThan(frames[3].y + 1);
   } else expect(await dialog.evaluate(el => !!(el as HTMLElement & { sizeAnimation?: Animation }).sizeAnimation)).toBe(false);
   await expect.poll(() => dialog.evaluate(el => el.getAnimations().length)).toBe(0);
+  await expect(dialog).not.toHaveAttribute("data-size-animating");
+  expect(await dialog.locator('[class*="overviewBody"]').evaluate(el => getComputedStyle(el).scrollbarWidth)).not.toBe("none");
   const after = await dialog.boundingBox();
   expect(after!.height).toBeGreaterThan(before!.height + 30);
   await expect(dialog.getByRole("button", { name: "閉じる", exact: true })).toBeVisible();
+  if (!reduced) {
+    await page.setViewportSize({ width: 1440, height: 500 });
+    const body = dialog.locator('[class*="overviewBody"]');
+    expect(await body.evaluate(el => el.scrollHeight > el.clientHeight)).toBe(true);
+    await body.evaluate(el => { el.scrollTop = el.scrollHeight; });
+    expect(await body.evaluate(el => el.scrollTop)).toBeGreaterThan(0);
+  }
   await page.keyboard.press("Escape");
   await expect(dialog).toHaveCount(0);
 });
