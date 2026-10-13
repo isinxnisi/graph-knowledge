@@ -1,4 +1,5 @@
 "use client";
+import { useDialogSizeMotion } from "../lib/client/use-dialog-size-motion";
 import AnimatedDetails from "./AnimatedDetails";
 import { useDialogDismiss } from "../lib/client/use-dialog-dismiss";
 import { useUiLocale } from "../lib/client/ui-locale";
@@ -75,6 +76,7 @@ export default function EntityOverview({ entity, dataset, restricted, onClose, o
     });
     return () => controller.abort();
   }, [entity.id, dataset, attempt]);
+  useDialogSizeMotion(dialog, result ?? failure ?? attempt);
   const dismiss = useDialogDismiss(dialog, onClose);
   const backdrop = useDialogBackdrop(dismiss);
   return <dialog ref={dialog} className={`${styles.conditionDialog} ${styles.overviewDialog}`} aria-labelledby="overview-title" onCancel={(event) => { event.preventDefault(); dismiss(); }} {...backdrop}>

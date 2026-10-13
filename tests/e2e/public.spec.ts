@@ -202,3 +202,61 @@ test("モーダル: 開閉の動き・背景クリック・Escape・動きを減
   await expect(dialog).toHaveCount(0);
   await expect(page.getByTestId("graph-counts")).toHaveText("Entity 4 / Claim 5");
 });
+
+
+for (const reduced of [false, true]) test(`関係概要: 遅延取得後の高さと中央位置を滑らかに変える（${reduced ? "動きを減らす・スマホ" : "通常・PC"}）`, async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: reduced ? "reduce" : "no-preference" });
+  await page.setViewportSize(reduced ? { width: 390, height: 844 } : { width: 1440, height: 1000 });
+  await page.goto("/");
+  await page.getByRole("button", { name: "PLUTOから探索を開始", exact: true }).click();
+  await expect(page.getByTestId("graph-counts")).toHaveText("Entity 4 / Claim 5");
+  let release!: () => void;
+  const gate = new Promise<void>(resolve => { release = resolve; });
+  await page.route("**/api/entities/*/overview", async route => {
+    const response = await route.fetch();
+    await gate;
+    await route.fulfill({ response });
+  });
+  if (reduced) await page.getByRole("button", { name: "選択の詳細", exact: true }).click();
+  await page.getByRole("region", { name: "Entity詳細" }).getByRole("button", { name: "関係概要を見る", exact: true }).click();
+  const dialog = page.getByRole("dialog");
+  await expect(dialog.getByRole("status")).toBeVisible();
+  await dialog.evaluate(async el => { await Promise.all(el.getAnimations().map(a => a.finished)); });
+  const before = await dialog.boundingBox();
+  // 自動テスト環境のフレーム間引きに依存せず、描画上の中間サイズを確かめる。
+  await dialog.evaluate(el => {
+    const invoke = el.animate.bind(el);
+    el.animate = (frames, options) => {
+      const animation = invoke(frames, options);
+      if (Array.isArray(frames) && frames[0]?.height) {
+        animation.pause();
+        (el as HTMLElement & { sizeAnimation?: Animation }).sizeAnimation = animation;
+      }
+      return animation;
+    };
+  });
+  release();
+  await expect(dialog.getByText("この対象へ向かう関係", { exact: true })).toBeAttached();
+  if (!reduced) {
+    const frames = await dialog.evaluate(el => {
+      const animation = (el as HTMLElement & { sizeAnimation: Animation }).sizeAnimation;
+      const boxes = [0, 80, 160, 240].map(time => {
+        animation.currentTime = time;
+        const box = el.getBoundingClientRect();
+        return { height: box.height, y: box.y };
+      });
+      animation.currentTime = 0; animation.play();
+      return boxes;
+    });
+    expect(frames[1].height).toBeGreaterThan(frames[0].height + 3);
+    expect(frames[1].height).toBeLessThan(frames[3].height - 3);
+    expect(frames[1].y).toBeLessThan(frames[0].y - 1);
+    expect(frames[1].y).toBeGreaterThan(frames[3].y + 1);
+  } else expect(await dialog.evaluate(el => !!(el as HTMLElement & { sizeAnimation?: Animation }).sizeAnimation)).toBe(false);
+  await expect.poll(() => dialog.evaluate(el => el.getAnimations().length)).toBe(0);
+  const after = await dialog.boundingBox();
+  expect(after!.height).toBeGreaterThan(before!.height + 30);
+  await expect(dialog.getByRole("button", { name: "閉じる", exact: true })).toBeVisible();
+  await page.keyboard.press("Escape");
+  await expect(dialog).toHaveCount(0);
+});
