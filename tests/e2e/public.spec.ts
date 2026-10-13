@@ -270,3 +270,32 @@ for (const reduced of [false, true]) test(`関係概要: 遅延取得後の高�
   await page.keyboard.press("Escape");
   await expect(dialog).toHaveCount(0);
 });
+
+test("対象ナビゲータ: 横幅を候補の列へ使い、検索と移動の契約を保つ", async ({ page }) => {
+  await page.goto("/");
+  await page.getByRole("button", { name: "PLUTOから探索を開始", exact: true }).click();
+  await expect(page.getByTestId("graph-counts")).toHaveText("Entity 4 / Claim 5");
+  const navigator = page.getByRole("region", { name: "表示中の対象へ移動", exact: true });
+  const trigger = navigator.getByRole("button", { name: /^表示中の対象へ移動/ });
+  await trigger.click();
+  const cards = navigator.locator("li");
+  await expect(cards).toHaveCount(4);
+  const first = await cards.nth(0).boundingBox(), second = await cards.nth(1).boundingBox();
+  expect(Math.abs(first!.y - second!.y)).toBeLessThan(2);
+  expect(first!.width).toBeLessThan(360);
+  expect((await navigator.getByRole("searchbox").boundingBox())!.width).toBeLessThanOrEqual(441);
+  await navigator.screenshot({ path: "/tmp/graph-navigator-pc.png" });
+  await navigator.getByRole("button", { name: /長崎尚志/ }).click();
+  await expect(page.getByRole("region", { name: "Entity詳細" })).toContainText("長崎尚志");
+  await expect(trigger).toBeFocused();
+  await expect(page.getByTestId("graph-counts")).toHaveText("Entity 4 / Claim 5");
+  await page.setViewportSize({ width: 390, height: 844 });
+  await trigger.click();
+  await navigator.getByRole("searchbox").fill("長崎尚志");
+  await expect(cards).toHaveCount(1);
+  expect(await navigator.evaluate(el => el.scrollWidth > el.clientWidth)).toBe(false);
+  await navigator.screenshot({ path: "/tmp/graph-navigator-phone.png" });
+  await navigator.getByRole("searchbox").press("Escape");
+  await expect(trigger).toBeFocused();
+  await expect(navigator.getByRole("searchbox")).toBeHidden();
+});

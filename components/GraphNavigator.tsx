@@ -1,4 +1,5 @@
 "use client";
+import Icon from "./Icon";
 import { useUiLocale } from "../lib/client/ui-locale";
 import { explorerLabels } from "../lib/i18n/explorer";
 
@@ -36,20 +37,21 @@ export default function GraphNavigator({ nodes, selection, onNavigate }: {
     </button>
     <div id={id} hidden={!open} className={styles.graphNavigatorBody}>
       <p id={`${id}-help`} className={styles.muted}>{text.help}</p>
-      <label htmlFor={`${id}-query`}>{text.filter}</label>
-      <input id={`${id}-query`} type="search" value={query} onChange={event => setQuery(event.target.value)} aria-describedby={`${id}-help`} autoComplete="off" />
-      <p role="status" className={styles.muted}>{matches.length ? text.count(matches.length, entities.length) : text.empty}</p>
+      <div className={styles.navigatorFilter}><label htmlFor={`${id}-query`}>{text.filter}<input id={`${id}-query`} type="search" value={query} onChange={event => setQuery(event.target.value)} aria-describedby={`${id}-help`} autoComplete="off" /></label>
+      <p role="status" className={styles.muted}>{matches.length ? text.count(matches.length, entities.length) : text.empty}</p></div>
       <ul className={styles.navigatorResults}>
         {matches.map(entity => {
           const ambiguous = entities.some(other => other.id !== entity.id && other.name === entity.name && other.kind === entity.kind && other.description === entity.description);
           return <li key={entity.id}>
-            <button className={styles.resultButton} aria-pressed={selection?.kind === "entity" && selection.id === entity.id} onClick={() => {
+            <button className={styles.navigatorButton} aria-pressed={selection?.kind === "entity" && selection.id === entity.id} onClick={() => {
               onNavigate(entity.id); setOpen(false); trigger.current?.focus();
             }}>
-              <strong>{entity.name}</strong>
-              <span>{ui.kinds[entity.kind]} ／ {entity.description ?? text.descriptionMissing}</span>
-              {ambiguous && <span>ID：{entity.id}</span>}
-              <span>{text.move}</span>
+              <span className={styles.navigatorKindIcon}><Icon name={entity.kind === "work" ? "book" : entity.kind} /></span>
+              <span className={styles.navigatorText}><strong>{entity.name}</strong><span className={styles.navigatorKind}>{ui.kinds[entity.kind]}</span>
+                <span className={styles.navigatorDescription}>{entity.description ?? text.descriptionMissing}</span>
+                {ambiguous && <span className={styles.navigatorDescription}>ID：{entity.id}</span>}
+              </span>
+              <span className={styles.navigatorMove} title={text.move}><Icon name="arrow" /><span className={styles.srOnly}>{text.move}</span></span>
             </button>
           </li>;
         })}

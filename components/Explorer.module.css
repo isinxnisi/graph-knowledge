@@ -367,3 +367,26 @@
 /* 伸縮途中の一時的なoverflowだけでスクロールバーを点滅させない。スクロール自体は維持。 */
 .overviewDialog[data-size-animating] .overviewBody { scrollbar-width: none; }
 .overviewDialog[data-size-animating] .overviewBody::-webkit-scrollbar { display: none; }
+
+/* 対象ナビゲータは全幅の一行カードではなく、幅に応じたコンパクトな候補棚。 */
+.graphNavigatorBody { padding: 14px; border-radius: 10px; }
+.graphNavigatorBody > p { margin: 0 0 12px; }
+.navigatorFilter { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 8px 14px; margin-bottom: 12px; }
+.navigatorFilter label { display: grid; gap: 5px; min-width: 0; flex: 1 1 240px; max-width: 440px; }
+.navigatorFilter input { width: 100%; min-width: 0; }
+.navigatorFilter > p { margin: 0 0 8px; font-size: 12px; }
+.navigatorResults { grid-template-columns: repeat(auto-fill, minmax(min(100%, 230px), 1fr)); gap: 8px; max-height: 320px; align-items: stretch; }
+.navigatorButton { display: grid; grid-template-columns: 28px minmax(0, 1fr) 16px; gap: 9px; align-items: start; width: 100%; height: 100%; padding: 12px; text-align: left; border-radius: 8px; }
+.navigatorKindIcon { display: grid; place-items: center; width: 28px; height: 28px; background: var(--color-accent-soft); color: var(--color-accent); border-radius: 7px; }
+.navigatorText { display: grid; gap: 4px; min-width: 0; }
+.navigatorText strong { font-size: 14px; line-height: 1.5; }
+.navigatorKind { font-size: 11px; color: var(--color-accent-strong); }
+.navigatorDescription { font-size: 12px; line-height: 1.6; color: var(--color-muted); overflow-wrap: anywhere; }
+.navigatorMove { align-self: center; color: var(--color-muted); }
+.navigatorMove :global(.ui-icon) { width: 16px; height: 16px; }
+.navigatorButton[aria-pressed="true"] { background: var(--color-accent-soft); border-color: var(--color-accent); }
+
+@media (max-width: 800px) {
+  .graphNavigationRow:has(.graphNavigatorBody:not([hidden])) { display: block; }
+  .graphNavigationRow:has(.graphNavigatorBody:not([hidden])) > .compactLink { margin-top: 6px; }
+}

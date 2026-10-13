@@ -207,3 +207,5 @@ sudo bash /home/develop/graph-production-step16/update-production-web.sh beta-st
 関係概要の非同期取得後の高さ変化をbuild `OssbVLzK-oyavNkwJ4Vef` として3200／Tunnelへ反映。高さを固定せず240msで補間し、通常PC／reduceスマホをTunnel2/2で確認した。VPS・DB・APIは変更していない。
 
 build `3awuKfeso0k1VBm0ivnTR` で伸縮中のみの本文スクロールバー非表示を3200／Tunnelへ反映。完了後の表示復旧・必要な本文スクロール・reduceをローカル／Tunnel各2/2で確認。VPS・DB・APIは変更していない。
+
+build `Ej9VGg9Qk82Rf1n9UdXqm` で対象ナビゲータの複数列・可読幅・スマホ配置を3200／Tunnelへ反映。PC／スマホの移動と絞り込みをローカル／Tunnel各1/1で確認。VPS・DB・APIは変更していない。
