@@ -188,4 +188,10 @@ archiveと既存更新scriptはVPSの `/home/develop/graph-production-step16/` �
 sudo bash /home/develop/graph-production-step16/update-production-web.sh beta-step16-20261013 /home/develop/graph-production-step16/images.tar.gz
 ```
 
-適用前のVPS dataset revisionは `5b6ccb7b-7a5d-4005-ab34-01c490e93b1c`。既存DB・private env・Compose・Caddy・preview認証を維持するWeb更新であり、会員機能を有効化する操作ではない。適用後に担当CodexがHTTPSのbuild、revision維持、日英の閲覧／保存・既存探索と既存サービス継続を確認する。現時点ではVPS反映／工程16の完了は管理者操作待ち。
+適用前のVPS dataset revisionは `5b6ccb7b-7a5d-4005-ab34-01c490e93b1c`。既存DB・private env・Compose・Caddy・preview認証を維持するWeb更新であり、会員機能を有効化する操作ではない。適用後に担当CodexがHTTPSのbuild、revision維持、日英の閲覧／保存・既存探索と既存サービス継続を確認する。配置準備時点では管理者操作待ちだったが、次節の反映確認で解消した。
+
+### 工程16のVPS反映確認（2026-10-13）
+
+前節の管理者操作待ちは解消。証明書検証付きHTTPSが工程16 build `2sDd_pNucKRYWsHCCq6AK` を返し、dataset revisionは更新前の `5b6ccb7b-7a5d-4005-ab34-01c490e93b1c` を維持した。実装commit `ebf24b8` のimageに対する代表Playwright4/4（1.3分）が成功。英語の閲覧／ブラウザ保存、三domainの探索・三条件・関係概要・起点切替／復帰、Event期間・仏語根拠を確認した。
+
+未認証APIは401・noindex、会員statusは未設定503を維持。Docker／Caddy／既存通知serviceはactive。credentialはGit外0600 fileから渡し、traceは無効化した。今回の確認ではVPSのDB停止・再投入・設定変更は行っていない。隔離Composeの復旧試験と稼働VPSの読み取り確認を区別する。工程16を完了とし、次の通常更新は工程19。実Google接続の構成追加は別途その接続時に反映する。

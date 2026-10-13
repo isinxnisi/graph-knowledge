@@ -2,7 +2,7 @@
 
 2026-10-11。ユーザーが[対応プラン](design/PUBLIC_BETA_AND_PRODUCT_PLAN.md)を採用。今回からの差分を**全24ステップ**で管理する。以前のPhase完了率とは別。
 
-**現在：14/24完了（約58%）、残10。** 2026-10-13、工程16の閲覧・保存・会員・共有・コメントの日英UIを実装・検証し、日常確認先へ反映。工程16はVPSの管理者更新／HTTPS確認を残すため、まだ完了に数えない。工程13は実Google設定／本人ログイン待ち。日常確認先 https://graph-beta.isinxnisi.com/ は今回コード、VPS https://graph.isinxnisi.net は工程12の画面。両確認先の会員未設定状態とVPS preview認証は維持する。一般公開はstep22。この公開β計画24工程から見た概算進捗であり、既存全機能の完成率ではない。
+**現在：15/24完了（約63%）、残9。** 2026-10-13、工程16の閲覧・保存・会員・共有・コメントの日英UIを実装・検証し、日常確認先とVPSへの反映後確認まで完了。工程13は実Google設定／本人ログイン待ち。日常確認先 https://graph-beta.isinxnisi.com/ とVPS https://graph.isinxnisi.net は工程16の画面。両確認先の会員未設定状態とVPS preview認証は維持する。一般公開はstep22。この公開β計画24工程から見た概算進捗であり、既存全機能の完成率ではない。
 
 ## 数え方と完了範囲
 
@@ -32,7 +32,7 @@
 | 13 | 実Google登録・ログイン・再訪の接続試験 | 専用PG・設定生成・隔離試験済。実Google client設定／本人ログイン待ち・未完了 |
 | 14 | 本人削除/停止・共有停止・公開書込に必要な最小運営操作 | 完了（実PG33件、退会390／1440px・運営操作と既存設定／共有を確認） |
 | 15 | 探索・条件・詳細の日本語/英語切替 | 完了（ブラウザ設定・別タブ同期、座標／条件／原資料保持と代表経路を確認） |
-| 16 | 閲覧・会員・共有の主要経路の日本語/英語 | UI実装・検証済。VPSの管理者更新／HTTPS確認待ち |
+| 16 | 閲覧・会員・共有の主要経路の日本語/英語 | 完了（VPS反映後のHTTPS・代表4経路・KG revision維持を確認） |
 | 17 | 一資料群の収集/受入単位を決め、実在データを一バッチ拡充 | 未着手 |
 | 18 | 数千規模・高次数Entityの検索/集計/ページング実測と必要修正 | 未着手 |
 | 19 | 本番設定・自動復帰・更新/復旧・主要回帰をVPSで確認 | 未着手 |
@@ -57,7 +57,7 @@
 
 5〜6では、理由付き撤回・新UUID差替えと旧参照、revision付き取得/cursor/探索復帰、KG単独backup/restoreを追加した。隔離Neo4j・PGで会員側の保存を巻き戻さないこと、復元途中失敗のrollback、復旧で消えたUUIDの別命題への再利用拒否まで確認した。実在Claimの撤回判断や本番復旧は行っていない。
 
-**工程16の残りは、準備済みimageのVPS適用とHTTPS確認。** [表示locale契約](design/UI_LOCALE.md)に沿う主要UIは実装・検証済み。管理者が末尾の一回の更新操作を行い、担当Codexが反映を確認してから完了に数える。次の開発単位は17：既存意味契約で表せる一資料群を選び、受入範囲を限定して実在データを一バッチ拡充する。工程13の[専用PG・候補env・本番接続手順](design/GOOGLE_MEMBER_CONNECTION.md)は準備済みで、設定済みWeb client JSONのGit外保存先をユーザーへ確認中。実credentialとGoogle側のredirect設定が届けば接続試験を再開する。未設定の会員機能を有効にせず、本人認証・保存／再訪まで終わるまで工程13を完了に数えない。全24工程の分母は維持し、残10。
+**工程16はVPS反映後の確認まで完了。** [表示locale契約](design/UI_LOCALE.md)に沿う主要UIとHTTPSの代表4経路を検証済み。次の開発単位は17：既存意味契約で表せる一資料群を選び、受入範囲を限定して実在データを一バッチ拡充する。工程13の[専用PG・候補env・本番接続手順](design/GOOGLE_MEMBER_CONNECTION.md)は準備済みで、設定済みWeb client JSONのGit外保存先をユーザーへ確認中。実credentialとGoogle側のredirect設定が届けば接続試験を再開する。未設定の会員機能を有効にせず、本人認証・保存／再訪まで終わるまで工程13を完了に数えない。全24工程の分母は維持し、残9。
 
 7では専用Compose、Node24.21.0のstandalone Web／operator image、内部DBだけを許可する本番guard、readiness、管理者配置scriptを追加した。隔離環境で初回投入・再適用・backup0600・再起動保持・DB停止503と復旧、本番imageでのPlaywright4経路を確認。cold起動直後の取得で既定5秒制限に達したため、本番readだけ上限付き設定10000msを採用して再検証した。意味・返却型・凍結dataは変更していない。
 
@@ -276,4 +276,12 @@ DB schemaの既存4 migration・KG意味モデル・凍結dataset・fixture・UI
 
 ローカル3200／Tunnelはbuild `98eAc3Mw3apKr3syvIefS` のHTML一致・dataset API200・revision `legacy:20261011-001` を確認。3210〜3215もdataset API200。会員statusはローカル／Tunnelとも意図した未設定503。API・DB・意味契約・GraphState／snapshot・凍結dataset・依存packageを変更していない。会員の実保存は隔離PG＋OIDCでの検証であり、Google接続／会員機能を本番で有効にした意味ではない。
 
-VPS用imageと更新scriptは転送・checksum／構文検証済み。tag・digest・管理者の一回の適用操作は[配置記録](design/PRODUCTION_DEPLOYMENT.md#工程16の配置物と反映状態)を参照。現時点ではVPSは工程12、更新前のrevision `5b6ccb7b-7a5d-4005-ab34-01c490e93b1c` を確認した。適用後のHTTPS・代表経路確認を残しているため、工程16を完了に数えない。
+VPS用imageと更新scriptは転送・checksum／構文検証済み。tag・digest・管理者の一回の適用操作は[配置記録](design/PRODUCTION_DEPLOYMENT.md#工程16の配置物と反映状態)を参照。配置準備時はVPSが工程12で、更新前のrevision `5b6ccb7b-7a5d-4005-ab34-01c490e93b1c` を記録した。その後の適用・HTTPS確認は次節の通り完了。
+
+### 工程16のVPS反映後確認（2026-10-13）
+
+VPSのHTTPSが工程16のbuild `2sDd_pNucKRYWsHCCq6AK` を返すことを確認。実装commitは `ebf24b8`。datasetは `public-kg`、revisionは更新前と同じ `5b6ccb7b-7a5d-4005-ab34-01c490e93b1c`。認証付きHTTPSへ既存Playwrightを接続し、代表4/4成功（1.3分）。320pxの英語根拠閲覧からGraphへ復帰、Capsule草稿・原資料・座標保持と保存／再訪、漫画／科学／Event探索、三条件、概要、起点切替／直前復帰、Event期間と仏語資料の日英切替を確認した。今回VPSのDBへ書込み・seed・停止試験は行っていない。
+
+未認証APIは401とnoindexを維持。会員statusは意図した未設定503で、実Googleを有効にした意味ではない。Docker／Caddy／既存通知serviceは全てactive。ローカル3200／Tunnelも工程16のbuild・既存revisionを維持。TunnelはPythonのHTTP取得で一度403だったが、curlの再確認では画面／datasetとも200・build一致。Cloudflare側の一時的な拒否かクライアント差かは未特定であり、常時の疎通保証にはしない。
+
+工程16を完了に数え、累計15/24・残9。次は工程17の一資料群・受入一バッチ、次の通常VPS更新は工程19。工程13の実Google設定待ちは別に残す。
