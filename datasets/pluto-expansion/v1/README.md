@@ -1,6 +1,6 @@
 # PLUTOから辿る次の小さい実データ拡充
 
-2026-10-14。大量拡充候補（追加1,795 Claim）は変更せず、その次の更新単位として追加10 Entity／12 Claim／9 Source／12 Citationを生成。2026-10-14の後続指示で大量分とともに3200/Tunnel・VPSへの反映を人間承認。3200へ適用済み、VPSは管理者実行待ち。[受入記録](../../public-kg/releases/20261014-pluto-001/acceptance.json)。収集ledgerは承認前snapshotとして不変。既存のPLUTOを自動初期表示へ変更するUIは実装しない。
+2026-10-14。大量拡充候補（追加1,795 Claim）は変更せず、その次の更新単位として追加10 Entity／12 Claim／9 Source／12 Citationを生成。2026-10-14の後続指示で大量分とともに3200/Tunnel・VPSへの反映を人間承認。3200へ適用済み、VPSも適用・HTTPS実ブラウザ4件の確認済み。[受入記録](../../public-kg/releases/20261014-pluto-001/acceptance.json)。収集ledgerは承認前snapshotとして不変。既存のPLUTOを自動初期表示へ変更するUIは実装しない。
 
 ## この追加で作る探索経路
 
@@ -40,7 +40,7 @@ CONTRIBUTED_TOは制作参加の広い命題だけ。新しい作画・作者Rol
 
 `python3 scripts/prepare-pluto-expansion.py [--check]`で次release `20261014-pluto-001`を生成。baseReleaseは未反映の大量分 `20261014-expanded-001`。大量分→本版の順に適用する。3200ではこの順序で適用し、各直前のKG backupを保持した。
 
-fixture／hash検証とunit3件で、既存全知識内容不変、10 Entity・12 Claimの追加、3探索経路の各独立関係、7つの刊行物scope、原表記と根拠保持、偽の原作ショートカット不在を確認。大量分からの差分は43知識Node・48 Relationship、既存変更0件。承認後3200の実DBへ適用し、最終版の再適用無変更を確認。専用Playwrightで上記3経路の展開、線から原表記／Source、概要、起点切替／復帰を確認した。VPSの実適用は管理者実行待ち。
+fixture／hash検証とunit3件で、既存全知識内容不変、10 Entity・12 Claimの追加、3探索経路の各独立関係、7つの刊行物scope、原表記と根拠保持、偽の原作ショートカット不在を確認。大量分からの差分は43知識Node・48 Relationship、既存変更0件。承認後3200の実DBへ適用し、最終版の再適用無変更を確認。専用Playwrightで上記3経路の展開、線から原表記／Source、概要、起点切替／復帰を確認した。VPSも管理者適用後にHTTPS実ブラウザで同じ4件を確認した。
 
 現行3200の実ブラウザでは、開始例PLUTOからEntity 4／Claim 5のGraphが表示され、浦沢直樹Nodeの選択と詳細表示、neighborsの200応答（4 Claim）を確認した。続く手塚治虫への自動操作は、その時点のGraphに対象Nodeがなく待機失敗したため、連続経路を操作確認済みとはしない。上記の新しい3経路は候補データの構造検証であり、実ブラウザ確認は未了。
 

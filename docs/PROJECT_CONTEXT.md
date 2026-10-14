@@ -152,4 +152,4 @@ Phase 10当時は原職位をCitationから読めても、機械的な立場条�
 
 同日の補足で、PLUTOを初期の有力な代表入口として、件数だけでなく別作品・別作者・組織への複数段階の探索を重点補充する。大量分は維持し、[公式資料による次の12 Claim候補](../datasets/pluto-expansion/v1/README.md)を別単位で準備。初期表示／おすすめUIを採用・実装済みとは扱わない。
 
-2026-10-14後続の「3200/TunnelとVPSへ反映」で大量拡充とPLUTO重点補充の公開KG適用を承認。3200/Tunnelは20261014-expanded-001→20261014-pluto-001を適用し、2,109 Entity／1,834 Claim／1,746 Source／1,870 Citation。PLUTOの3複数段階経路・根拠・概要・起点切替／復帰と三用途条件を実ブラウザ／APIで確認済み。VPSは専用bundleの転送・照合後、sudo管理者実行待ち。会員PG・凍結dataset・UIは変更していない。
+2026-10-14後続の「3200/TunnelとVPSへ反映」で大量拡充とPLUTO重点補充の公開KG適用を承認。3200/Tunnelは20261014-expanded-001→20261014-pluto-001を適用し、2,109 Entity／1,834 Claim／1,746 Source／1,870 Citation。PLUTOの3複数段階経路・根拠・概要・起点切替／復帰と三用途条件を実ブラウザ／APIで確認済み。VPSもユーザーのsudo管理者適用後、HTTPS実ブラウザ4件・KG revision・preview認証・Google会員有効状態を確認済み。会員PG・凍結dataset・UIは変更していない。

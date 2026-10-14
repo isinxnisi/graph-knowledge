@@ -37,7 +37,7 @@
 | 14 | 本人削除/停止・共有停止・公開書込に必要な最小運営操作 | 完了（実PG33件、退会390／1440px・運営操作と既存設定／共有を確認） |
 | 15 | 探索・条件・詳細の日本語/英語切替 | 完了（ブラウザ設定・別タブ同期、座標／条件／原資料保持と代表経路を確認） |
 | 16 | 閲覧・会員・共有の主要経路の日本語/英語 | 完了（VPS反映後のHTTPS・代表4経路・KG revision維持を確認） |
-| 17 | 実在データをまとまった量だけ拡充し検索・探索へ反映（一資料群／一バッチへ機械的に制限しない） | 収集・生成・隔離投入検証済み。公開反映の人間確認待ち |
+| 17 | 実在データをまとまった量だけ拡充し検索・探索へ反映（一資料群／一バッチへ機械的に制限しない） | 完了（大量分＋PLUTO補充を人間受入後3200/Tunnel・VPSへ反映、HTTPS実ブラウザ確認済み） |
 | 18 | 数千規模・高次数Entityの検索/集計/ページング実測と必要修正 | 未着手 |
 | 19 | 本番設定・自動復帰・更新/復旧・主要回帰をVPSで確認 | 未着手 |
 | 20 | 公開Explorerのみの最小analytics接続と送信確認 | 外部設定待ち・未着手 |
@@ -402,3 +402,16 @@ sudo bash /home/develop/graph-expanded-pluto-20261014/scripts/apply-expanded-plu
 ```
 
 PLUTO→手塚眞→会社→手塚治虫→鉄腕アトムの1440×1000画面を作業用1枚で確認。新しい枝が現在viewport外へ伸びる場合があり、既存「全体を表示」で見渡せる。自動追従・配置・UI変更は行わない。広い制作／組織関与のfallbackは残るが、原表記と根拠へ降りられる。根拠にある画・著・設立を未実装Roleとして表示だけで補わない。
+
+
+### VPS反映後の確認（2026-10-14）
+
+ユーザーが上記sudo scriptを実行。提示ログで2releaseのvalidate、KG backup、大量分9,889知識Node／9,710 Relationship＋PLUTO43／48の追加、既存更新0件、各版の再適用無変更、Web／KG／会員PG再起動なしを確認。最終2,109 Entity／1,834 Claim／1,746 Source／1,870 Citation／2,478 ExternalIdentifier。会員PG書込なし。
+
+VPSのKG復旧控えは `/backups/before-expanded-pluto-20261014T101719Z.json`、private記録は `/opt/graph-knowledge/expanded-pluto-release.IEwap51f`。backup対象は初回版20261011-001、checksum `2e57bb9d36a5c279ddb2a705d38d3d1b3589af239b8dfc68d634d8d76668827d`。復旧は既存KG-only restore経路を使用し、会員PGを巻き戻さない。
+
+こちらから `https://plunode.net` を独立確認。未認証401、preview認証後dataset 200／revision `9f61fec9-928e-4151-a324-7a4ecc57e77a`（適用ログと一致）、member/status 200／provider google。credentialはSSHでprivateファイルからメモリへ取得し、ログ・Gitへ出力していない。実ユーザーのGoogle再ログイン・Capsule保存をこの確認で再実行したわけではない。
+
+VPSのHTTPSを対象に `playwright.expanded.config.ts` の読み取り専用4件が成功（1.2分）。PLUTOから別作者・会社・鉄腕アトム等への3経路、原表記とSourceへの到達、概要、広く見る／直前復帰、Harvardの29 Claim概要、既存三用途条件とpredicate限定適用を確認。応答差替え・seed・DB操作は試験に含まない。代表画面1枚を目視し、展開枝がviewport外へ伸びる既知課題は残るが「全体を表示」で俯瞰できる。原表記から未実装Roleを補完しない。
+
+要求照合：まとまった実在データを増やし検索・Graphを実際に評価可能にする目的に対し、追加2,091 Entity／1,807 Claim／1,731 Source／1,841 Citationを両環境へ反映した。Wikidata P108とNobel公式を採用し、PLUTO周辺は公式出版社等の12 Claimで複数段階の探索を追加。工程17を今回の証拠に基づき完了へ更新する。工程18の性能実測、工程8〜10の未充足、会員の未確認操作、一般公開22まで完了したとはしない。監査前の累計を要求充足率へ読み替えない。
