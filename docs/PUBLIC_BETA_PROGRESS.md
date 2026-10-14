@@ -448,3 +448,11 @@ VPSのHTTPSを対象に `playwright.expanded.config.ts` の読み取り専用4�
 VPSは反映承認済みだが、配置物の転送・管理者実行・HTTPS検証が揃うまで反映済みとはしない。工程や要求充足率の追加完了には読み替えない。
 
 後続の再確認：build終了後、同じ既存public integration 11件を無変更のtest期限で再実行し、全件成功（210.97秒）。backup／restore、外部Node UUID・根拠・撤回、会員PGの保護、cursor失効、復元失敗時rollbackを含む。初回失敗を隠さず、公開apply・再適用と実ブラウザでの独立確認も併記した。
+
+VPSの配置物を `/home/develop/graph-credits-20261014` へ転送し、全SHA256SUMSと両shellの構文を独立確認。archive SHA256 `fec70291056a1c679678c72f8a6791cede4d3a6e7ce0437cd0bf7024da0187dc`。Web image `fef63b780b6f4f5a6aefefa8599c8b1feb23230f0b5b2ff99b8cdcad7e38a7cd`、operator image `b0e0bc42b156935ae6915b1dcb39bcc25338dcd25657a92ed41a8944fa569e9a`。実装は245dab4でcommit・push済み。
+
+既存のpassword付きsudo境界に従い、次の管理者実行だけをユーザーへ依頼。実行結果とHTTPS実表示を確認するまでVPS反映済みとはしない。
+
+```bash
+sudo bash /home/develop/graph-credits-20261014/scripts/activate-contribution-credits.sh
+```
