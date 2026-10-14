@@ -61,7 +61,7 @@ afterEach(() => { cleanup(); vi.clearAllMocks(); vi.unstubAllGlobals(); vi.resto
 describe("閲覧・会員・共有の表示言語と保存内容を分ける", () => {
   it("英語辞書を解決し、未対応言語は日本語、UI通知だけを両方向へ解決する", () => {
     expect(memberLabels("en-US").deleteAccount).toBe("Delete account");
-    expect(readingLabels("en").title).toBe("Linked entity or claim");
+    expect(readingLabels("en").title).toBe("Individual view");
     expect(capsuleSharingLabels("en").readTitle).toBe("Shared Capsule");
     expect(capsuleDiscussionLabels("en").body).toBe("Comment text");
     expect(capsuleLabels("fr").title).toBe(capsuleLabels().title);
@@ -86,7 +86,7 @@ describe("閲覧・会員・共有の表示言語と保存内容を分ける", (
     await screen.findByText("青葉ハルへのインタビュー");
     await screen.findByRole("button", { name: "Explore relations from 黒川レン" });
     const count = vi.mocked(fetchEntity).mock.calls.length;
-    language("ja"); await screen.findByRole("heading", { name: "リンク先の主張" });
+    language("ja"); await screen.findByRole("heading", { name: "このURLの記録" });
     expect(screen.getByText("青葉ハルへのインタビュー")).toBeTruthy();
     expect(fetchEntity).toHaveBeenCalledTimes(count); expect(fetchClaim).toHaveBeenCalledTimes(1);
   });

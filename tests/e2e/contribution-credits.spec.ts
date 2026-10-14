@@ -37,7 +37,7 @@ test("浦沢の8作品で具体語を先に表示し、限定・原語・Source�
   await expect(detail).toContainText("画: 浦沢直樹");
   await expect(detail).toContainText("9784091921116");
   await expect(detail).toContainText("役割指定なし");
-  await expect(detail).toContainText("独立した根拠の数とは解釈しない");
+  await expect(detail).toContainText("別の根拠が増えたことにはなりません");
   await expect(detail.getByRole("link", { name: "出典のURLを開く" }).first()).toBeVisible();
 });
 

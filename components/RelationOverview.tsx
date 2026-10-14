@@ -20,7 +20,7 @@ export default function RelationOverview({ claims, nodes }: { claims: ClaimSumma
       {summary.qualification.entries.filter(entry => entry.id !== null).map(entry => <li key={entry.id}>{entry.label}{entry.affirmed === 0 ? ` · ${text.termDenied}` : entry.denied ? ` · ${text.termMixed}` : ""}</li>)}
     </ul>}
     {summary.denied > 0 && <p className={styles.relationCaution}>{summary.affirmed ? text.mixedHelp : text.denied}</p>}
-    <details className={styles.relationNotes}><summary>{text.qualificationHelp}</summary>
+    <details className={`${styles.relationNotes} ${styles.disclosure}`}><summary>{text.qualificationHelp}</summary><div className={styles.disclosureBody}>
       <p className={styles.muted}>{text.graphScope}</p>
       <p>{text.graphClaims(claims.length)} · {text.counts(summary.affirmed, summary.denied)}</p>
       <p className={styles.muted}>{text.recordsHelp}</p>
@@ -34,6 +34,6 @@ export default function RelationOverview({ claims, nodes }: { claims: ClaimSumma
         {summary.qualification.entries.some(entry => entry.id !== null) && <p className={styles.muted}>{summary.qualification.help}</p>}
         {first.predicate === "CONTRIBUTED_TO" && summary.qualification.entries.some(entry => entry.id === null) && summary.qualification.entries.some(entry => entry.id !== null) && <p className={styles.muted}>{contributionLabels(locale).broader}</p>}
       </>}
-    </details>
+    </div></details>
   </section>;
 }

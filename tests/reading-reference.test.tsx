@@ -123,10 +123,10 @@ describe("直接閲覧の表示と探索境界", () => {
   });
   it("コピー失敗時にはURLを選択できる", async () => {
     render(<ReferenceReader location={location} dataset="demo" onClose={vi.fn()} onExplore={vi.fn()} />);
-    fireEvent.click(screen.getByText("閲覧URL", { selector: "summary" }));
-    fireEvent.click(screen.getByRole("button", { name: "URLをコピー" }));
+    fireEvent.click(screen.getByRole("button", { name: "この表示のURLをコピー" }));
     await screen.findByText(/コピーできませんでした/);
     const input = screen.getByRole("textbox") as HTMLInputElement;
+    expect(input.closest("details")?.open).toBe(true);
     expect(input.value).toContain(readingHref(reference));
     expect(input.selectionStart).toBe(0); expect(input.selectionEnd).toBe(input.value.length);
     await waitFor(() => expect(within(screen.getByRole("dialog")).getByText("青葉ハルへのインタビュー")).toBeTruthy());

@@ -15,6 +15,7 @@ import { datasetLabels } from "../lib/i18n/dataset";
 import { eventParticipationLabels } from "../lib/i18n/event-participation";
 import { ClaimCard } from "./ClaimDetails";
 import ReadingLink from "./ReadingLink";
+import Icon from "./Icon";
 import styles from "./Explorer.module.css";
 import css from "./ReferenceReader.module.css";
 
@@ -62,17 +63,17 @@ function ClaimReader({ reference, onExplore }: { reference: ReadingReference; on
   const subject = useReference(claim?.subjectId ?? null, readEntityReference);
   const object = useReference(claim && claim.objectId !== claim.subjectId ? claim.objectId : null, readEntityReference);
   if (!claim) return <ReadStatus error={result?.error} retry={retry} />;
-  const endpoints = [{ id: claim.subjectId, label: text.subject, resource: subject }, ...(claim.objectId === claim.subjectId ? [] : [{ id: claim.objectId, label: text.object, resource: object }])];
+  const endpoints = [{ id: claim.subjectId, resource: subject }, ...(claim.objectId === claim.subjectId ? [] : [{ id: claim.objectId, resource: object }])];
   const nodes = Object.fromEntries(endpoints.flatMap(({ resource }) => resource.result?.data ? [[resource.result.data.id, resource.result.data]] : []));
   return <>
     <p className={styles.muted}>{text.individual}</p>
     <ClaimCard referenceDataset={reference.dataset} claim={claim} nodes={nodes} title={text.claim} idPrefix="reference-" />
-    <section aria-label={text.endpoints}><h3>{text.endpoints}</h3>
-      {endpoints.map(({ id, label, resource }) => <div key={id} className={css.endpoint}>
-        <p>{label}：<ReadingLink reference={{ kind: "entity", dataset: reference.dataset, id }}>{resource.result?.data?.name ?? id}</ReadingLink></p>
+    <section aria-label={text.endpoints} className={css.endpoints}><h3>{text.endpoints}</h3><div className={css.endpointGrid}>
+      {endpoints.map(({ id, resource }) => <div key={id} className={css.endpoint}>
+        <p className={css.endpointName}>{resource.result?.data && <span className={css.kind}><Icon name={resource.result.data.kind === "work" ? "book" : resource.result.data.kind} />{explorerLabels(locale).kinds[resource.result.data.kind]}</span>}<ReadingLink reference={{ kind: "entity", dataset: reference.dataset, id }}>{resource.result?.data?.name ?? id}</ReadingLink></p>
         {resource.result?.data ? <><p>{resource.result.data.description}</p><button onClick={() => onExplore(resource.result!.data!)}>{text.exploreFrom(resource.result.data.name)}</button></> : <ReadStatus error={resource.result?.error} retry={resource.retry} />}
       </div>)}
-      <p className={styles.muted}>{text.exploreHelp}</p>
+      </div><p className={styles.muted}>{text.exploreHelp}</p>
     </section>
   </>;
 }
@@ -84,14 +85,17 @@ function ReferenceUrl({ reference }: { reference: ReadingReference }) {
   const [message, setMessage] = useState<string | null>(null);
   // Origin is only available in the browser. The relative link is usable before hydration.
   useEffect(() => { if (input.current) input.current.value = new URL(readingHref(reference), window.location.origin).href; }, [reference]);
-  return <details className={css.url}><summary>{text.url}</summary>
-    <label>{text.url}<input ref={input} readOnly defaultValue={readingHref(reference)} onFocus={event => event.currentTarget.select()} /></label>
+  return <section className={css.url} aria-label={text.url}>
     <button onClick={async () => {
       try { await navigator.clipboard.writeText(new URL(readingHref(reference), window.location.origin).href); setMessage(text.copied); }
-      catch { setMessage(text.copyFailed); input.current?.focus(); input.current?.select(); }
-    }}>{text.copy}</button>
-    {message && <p role="status">{contentMessage(message, locale)}</p>}<p className={styles.muted}>{text.linkHelp}</p>
-  </details>;
+      catch { setMessage(text.copyFailed); const details = input.current?.closest("details"); if (details) details.open = true; input.current?.focus(); input.current?.select(); }
+    }}><Icon name="copy" />{text.copy}</button>
+    {message && <p role="status">{contentMessage(message, locale)}</p>}
+    <details className={styles.disclosure}><summary>{text.urlDetails}</summary><div className={styles.disclosureBody}>
+      <label>{text.url}<input ref={input} readOnly defaultValue={readingHref(reference)} onFocus={event => event.currentTarget.select()} /></label>
+      <p>{text.linkHelp}</p><p>{text.accessHelp}</p><p className={css.identity}>{text.identity}：<code>{reference.id}</code></p>
+    </div></details>
+  </section>;
 }
 
 export default function ReferenceReader({ location, dataset, onClose, onExplore }: {
@@ -107,15 +111,15 @@ export default function ReferenceReader({ location, dataset, onClose, onExplore 
     return () => { element?.close(); if (opener?.isConnected) opener.focus({ preventScroll: true }); };
   }, []);
   const backdrop = useDialogBackdrop(onClose);
+  const title = location.status === "ready" ? (location.reference.kind === "entity" ? text.entityTitle : text.claimTitle) : text.title;
   return <dialog lang={locale} ref={dialog} className={`${styles.conditionDialog} ${css.dialog}`} aria-labelledby="reference-title" onCancel={event => { event.preventDefault(); onClose(); }} {...backdrop}>
-    <div className={css.header}><h2 ref={heading} id="reference-title" tabIndex={-1}>{text.title}</h2><button onClick={onClose}>{text.close}</button></div>
-    <p className={styles.demo}>{datasetLabels(dataset, locale).badge}</p><p>{text.help}</p>
+    <div className={css.header}><h2 ref={heading} id="reference-title" tabIndex={-1}>{title}</h2><button onClick={onClose}>{text.close}</button></div>
+    <p className={css.dataset}>{datasetLabels(dataset, locale).badge}</p><p className={css.intro}>{text.help}</p>
     {location.status === "invalid" && <p role="alert">{text.invalid}</p>}
     {location.status === "dataset" && <div role="alert"><p>{text.mismatch}</p><p>{text.linkedDataset}：{datasetLabels(location.dataset, locale).badge}</p></div>}
     {location.status === "ready" && <>
-      <p className={css.identity}>{location.reference.kind === "entity" ? "Entity" : "Claim"} ID：<code>{location.reference.id}</code></p>
-      {location.reference.kind === "entity" ? <EntityReader reference={location.reference} onExplore={onExplore} /> : <ClaimReader reference={location.reference} onExplore={onExplore} />}
       <ReferenceUrl reference={location.reference} />
+      {location.reference.kind === "entity" ? <EntityReader reference={location.reference} onExplore={onExplore} /> : <ClaimReader reference={location.reference} onExplore={onExplore} />}
     </>}
   </dialog>;
 }

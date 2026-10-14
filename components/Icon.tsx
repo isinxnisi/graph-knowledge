@@ -1,7 +1,8 @@
 import type { CSSProperties } from "react";
 
 const paths = {
-  link: <><path d="m10 13 4-4M8 16l-2 2a4 4 0 0 1-6-6l4-4m12 8 4-4a4 4 0 0 0-6-6l-2 2" /></>,
+  link: <><path d="M10 13a5 5 0 0 0 7.07 0l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71M14 11a5 5 0 0 0-7.07 0l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" /></>,
+  copy: <><rect x="9" y="9" width="12" height="12" rx="2" /><path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1" /></>,
   list: <><path d="M9 6h12M9 12h12M9 18h12M3 6h1m-1 6h1m-1 6h1" /></>,
   plus: <path d="M12 5v14M5 12h14" />,
   minus: <path d="M5 12h14" />,

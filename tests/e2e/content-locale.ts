@@ -28,10 +28,10 @@ export function checkContentLocale() {
     const link = detail.locator(`a[href*="read=claim"][href*="id=${id}"]`);
     await expect(link).toBeVisible(); const before = await graph(page);
     await link.click();
-    const reader = page.getByRole("dialog", { name: "Linked entity or claim" });
+    const reader = page.getByRole("dialog", { name: /^(Entity details|Record and sources)$/ });
     await expect(reader).toContainText("Producing"); await expect(reader).toContainText("第1巻");
     await expect(reader.getByRole("link", { name: "Open source URL", exact: true })).toBeVisible();
-    await reader.getByText("Reading URL", { exact: true }).first().click();
+    await reader.getByText("URL details", { exact: true }).first().click();
     await reader.evaluate(el => { el.scrollTop = el.scrollHeight; });
     expect(await reader.evaluate(el => el.scrollWidth <= el.clientWidth)).toBe(true);
     await page.screenshot({ path: "test-results/public/step16-reading-320.png" });

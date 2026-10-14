@@ -1118,7 +1118,7 @@ describe("Relationの概要と独立した主張の読み分け", () => {
     vi.mocked(fetchClaim).mockImplementation(async id => ({ claim: id === base.id ? base : qualified, relatedClaimIds: id === base.id ? [qualified.id] : [] }));
     render(<ClaimDetails id={base.id} nodes={{}} mode="relation" visibleClaimIds={[base.id, qualified.id]} visibleClaims={[base, qualified]} />);
     const shared = await screen.findByRole("complementary", { name: relationPresentationLabels().sharedSources });
-    expect(shared.textContent).toContain("独立した根拠の数とは解釈しない");
+    expect(shared.textContent).toContain("別の根拠が増えたことにはなりません");
     expect(screen.getByTestId("relation-overview").textContent).toContain("独立した新資料の追加ではありません");
     expect(screen.getByTestId(`claim-card-${base.id}`)).toBeDefined();
     expect(screen.getByTestId("claim-card-qualified")).toBeDefined();

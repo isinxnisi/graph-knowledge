@@ -1,5 +1,5 @@
 "use client";
-import { useId, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { useUiLocale } from "../lib/client/ui-locale";
 import { explorerLabels, explorerMessage } from "../lib/i18n/explorer";
 import type { DatasetMode } from "../lib/domain/dataset";
@@ -36,11 +36,24 @@ function SourceNote({ note }: { note: string }) {
   const text = relationPresentationLabels(locale);
   const [expanded, setExpanded] = useState(false);
   const id = useId();
-  const collapsible = note.length > 100;
+  const paragraph = useRef<HTMLParagraphElement>(null);
+  const [collapsible, setCollapsible] = useState(false);
+  useEffect(() => {
+    const element = paragraph.current;
+    if (!element) return;
+    const measure = () => {
+      const lineHeight = parseFloat(getComputedStyle(element).lineHeight);
+      setCollapsible(element.scrollHeight > lineHeight * 3 + 1);
+    };
+    measure();
+    const observer = typeof ResizeObserver === "undefined" ? null : new ResizeObserver(measure);
+    observer?.observe(element);
+    return () => observer?.disconnect();
+  }, [note]);
   return <div className={styles.sourceNote}>
     <p className={styles.muted}>{text.original}</p>
-    <p id={id} className={collapsible && !expanded ? styles.notePreview : undefined}>{note}</p>
-    {collapsible && <button className={styles.noteToggle} aria-expanded={expanded} aria-controls={id} onClick={() => setExpanded(value => !value)}>{expanded ? text.collapseNote : text.expandNote}</button>}
+    <p id={id} ref={paragraph} className={!expanded ? styles.notePreview : undefined}>{note}</p>
+    {collapsible && <button className={styles.noteToggle} data-expanded={expanded} aria-expanded={expanded} aria-controls={id} onClick={() => setExpanded(value => !value)}>{expanded ? text.collapseNote : text.expandNote}</button>}
   </div>;
 }
 
@@ -57,7 +70,7 @@ export function ClaimCard({ claim, nodes, title, dataset, referenceDataset = dat
     : claim.predicate === "AFFILIATED_WITH" ? (position ? positionText.positions[position.positionId] : null)
     : claim.predicate === "PARTICIPATED_IN" ? (eventParticipation ? eventText.roles[eventParticipation.roleId] : null) : null;
   return <article id={`${idPrefix}claim-${claim.id}`} tabIndex={-1} className={styles.claimCard} data-testid={`claim-card-${claim.id}`}>
-    <header className={styles.recordHeader}><h4>{title}</h4><span className={claim.polarity === "denied" ? styles.recordDenied : styles.recordStatus}>{claim.polarity === "denied" ? text.recordDenied : text.recordAffirmed}</span>{!!claim.citations.length && <button className={styles.recordEvidence} onClick={() => document.getElementById(`${idPrefix}citation-${claim.citations[0].id}`)?.scrollIntoView({ block: "nearest" })}>{text.evidence}</button>}</header>
+    <header className={styles.recordHeader}><h4>{title}</h4><span className={claim.polarity === "denied" ? styles.recordDenied : styles.recordStatus}>{claim.polarity === "denied" ? text.recordDenied : text.recordAffirmed}</span></header>
     {term && <p className={styles.recordTerm}>{term}</p>}
     {contribution?.scope && <p className={styles.recordScopeHint}>{text.verifiedPublication}：{contribution.scope.volumeLabel ?? roleText.volumeUnknown}{contribution.scope.editionLabel ? ` / ${contribution.scope.editionLabel}` : ""}</p>}
     {claim.withdrawal && <section role="note" className={styles.error}><strong>{dataReleaseLabels(locale).withdrawn}</strong><p>{dataReleaseLabels(locale).withdrawnHelp}</p><p>{claim.withdrawal.reason}</p>
@@ -78,16 +91,16 @@ export function ClaimCard({ claim, nodes, title, dataset, referenceDataset = dat
       {citation.positionEvidence && <p><strong>{positionText.evidence}：</strong>{citation.positionEvidence.originalText}<br />{positionText.language}：{citation.positionEvidence.language}</p>}
       {citation.roleEvidence && <p><strong>{roleText.evidence}：</strong>{citation.roleEvidence.originalText}<br />{roleText.language}：{citation.roleEvidence.language}</p>}
       {citation.note && <SourceNote note={citation.note} />}
-      <details><summary>{text.metadata}</summary>
+      <details className={styles.disclosure}><summary>{text.metadata}</summary><div className={styles.disclosureBody}>
       <p>{ui.published}：{formatDate(citation.source.publishedAt, locale)}</p>
       <p>{ui.authors}：{citation.source.authors.length ? citation.source.authors.join("、") : ui.unknown}</p>
       {citation.source.publisher && <p>{ui.publisher}：{citation.source.publisher}</p>}
       {citation.source.edition && <p>{ui.edition}：{citation.source.edition}</p>}
       {citation.accessedAt && <p>{ui.accessed}：{formatDate({ value: citation.accessedAt, precision: "day" }, locale)}</p>}
       {citation.source.note && <p className={styles.muted}>{citation.source.note}</p>}
-      </details>
+      </div></details>
     </section>)}
-    <details className={styles.recordScope}><summary>{text.recordScope}</summary>
+    <details className={`${styles.recordScope} ${styles.disclosure}`}><summary>{text.recordScope}</summary><div className={styles.disclosureBody}>
     {!!claim.sourceCount && <p className={styles.recordSourceCount}>{ui.sourceCount(claim.sourceCount)}</p>}
     <dl className={styles.claimFacts}><dt>{ui.relationPeriod}</dt><dd>{formatPeriod(claim.period, locale)}</dd></dl>
     {contribution && <dl className={styles.claimFacts}><dt>{roleText.roleTitle}</dt><dd>{contribution.roleId ? roleText.roles[contribution.roleId] : roleText.none}</dd>
@@ -97,8 +110,8 @@ export function ClaimCard({ claim, nodes, title, dataset, referenceDataset = dat
     {contribution && !contribution.roleId && <p className={styles.muted}>{text.noRole}</p>}
     {claim.predicate === "AFFILIATED_WITH" && !position && <p className={styles.muted}>{text.noPosition}</p>}
     {claim.predicate === "PARTICIPATED_IN" && !eventParticipation && <p className={styles.muted}>{text.noEventRole}</p>}
-    </details>
-    {dataset && <div className={styles.recordPermalink}><ReadingLink reference={{ kind: "claim", dataset, id: claim.id }}>{text.recordLink}</ReadingLink></div>}
+    </div></details>
+    {dataset && <div className={styles.recordPermalink}><ReadingLink reference={{ kind: "claim", dataset, id: claim.id }}><Icon name="link" />{text.recordLink}</ReadingLink><span>{text.recordLinkHelp}</span></div>}
   </article>;
 }
 
@@ -167,7 +180,7 @@ function ClaimDetailsSession({ onDataChanged, revision, dataset, id, nodes, clai
     {!primary && !error && <p role="status">{ui.claimLoading}</p>}
     {error && <div className={styles.error} role="alert"><p>{explorerMessage(error, locale)}</p><button onClick={retry}>{ui.claimRetry}</button></div>}
     {primary && <>
-      {sharedSources.length > 0 && <aside aria-label={text.sharedSources} className={styles.muted}><p>{text.sharedSourcesHelp}</p><ul>{sharedSources.map(source => <li key={source.id}>{source.title}</li>)}</ul></aside>}
+      {sharedSources.length > 0 && <aside aria-label={text.sharedSources} className={styles.sharedEvidence}><p>{text.sharedSourcesHelp}</p><ul>{sharedSources.map(source => <li key={source.id}>{source.title}</li>)}</ul></aside>}
       {pending > 0 && <p role="status">{text.loadingProgress(claims.length, claimIds.length)}</p>}
       {failedCount > 0 && <div className={styles.error} role="alert"><p>{text.failed(failedCount)}</p><p>{text.partial}</p><button disabled={pending > 0} onClick={retry}>{ui.otherRetry}</button></div>}
       {mode === "relation" ? <>

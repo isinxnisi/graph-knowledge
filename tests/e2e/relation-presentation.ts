@@ -117,7 +117,7 @@ export function checkRelationPresentation(mode: keyof typeof datasets) {
       await detail.getByRole("button", { name: "記録 1へ", exact: true }).click();
       await expect(first).toBeFocused();
     }
-    await first.getByRole("button", { name: "根拠を読む", exact: true }).click();
+    await first.locator("[id*=citation-]").first().scrollIntoViewIfNeeded();
     await page.screenshot({ path: `test-results/phase22/${mode}-source.png` });
     expect(await view(page)).toEqual(before);
     await expect(page.getByTestId("graph-counts")).toHaveText(c.counts);

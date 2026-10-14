@@ -492,3 +492,25 @@
 .sourceNote { margin-top: 8px; }
 .sourceNote > .muted { font-size: 11px !important; }
 .citation .noteToggle { margin-top: 2px; }
+
+/* Local disclosures are controls; blue underlined text remains navigation. */
+.disclosure { margin: 10px 0; font-size: 12px; }
+.disclosure > summary { display: flex; align-items: baseline; gap: 9px; list-style: none; color: var(--color-text); font-weight: 500; line-height: 1.65; padding: 5px 0; }
+.disclosure > summary::-webkit-details-marker { display: none; }
+.disclosure > summary::before, .citation .noteToggle::before { content: ""; display: inline-block; flex: 0 0 5px; width: 5px; height: 5px; border-right: 1.5px solid var(--color-muted); border-bottom: 1.5px solid var(--color-muted); transform: rotate(-45deg); transition: transform var(--motion-quick) ease; }
+.disclosure[open] > summary::before, .citation .noteToggle[data-expanded="true"]::before { transform: rotate(45deg); }
+.disclosure[open] > summary { margin-bottom: 0; }
+.disclosureBody { margin: 5px 0 8px 3px; padding: 2px 0 2px 12px; border-left: 1px solid var(--color-border); }
+.disclosureBody > :last-child { margin-bottom: 0; }
+.claimCard .citation { background: color-mix(in srgb, var(--color-canvas) 96%, var(--color-accent)); border: 1px solid color-mix(in srgb, var(--color-border) 85%, var(--color-accent)); padding: 10px 12px; }
+.claimCard .citation .sourceEyebrow > span { background: var(--color-panel); border-radius: 3px; padding: 0 4px; }
+.citation .noteToggle { display: inline-flex; align-items: center; gap: 8px; color: var(--color-muted); text-decoration: none; }
+.citation .noteToggle:hover { color: var(--color-text); text-decoration: none; }
+.claimCard .recordPermalink { display: flex; flex-wrap: wrap; align-items: baseline; gap: 3px 10px; margin-top: 12px; }
+.recordPermalink a { display: inline-flex; align-items: center; }
+.recordPermalink a > svg { width: 13px; height: 13px; }
+.recordPermalink > span { color: var(--color-muted); font-size: 10px; }
+.sharedEvidence { font-size: 11px; color: var(--color-muted); padding: 8px 10px; background: var(--color-canvas); border-radius: 5px; margin: 8px 0 12px; }
+.sharedEvidence p { margin-bottom: 4px; }
+.sharedEvidence ul { margin: 0; padding-left: 16px; }
+@media (prefers-reduced-motion: reduce) { .disclosure > summary::before, .citation .noteToggle::before { transition: none; } }

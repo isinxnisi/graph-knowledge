@@ -18,3 +18,23 @@
   .dialog a { display: inline-flex; align-items: center; min-height: 44px; max-width: 100%; }
   .url input { min-height: 44px; font-size: 16px; }
 }
+
+/* The URL action leads the individual view; identifiers stay in its details. */
+.dialog .dataset { color: var(--color-muted); font-size: 11px; margin: 10px 0 6px; }
+.dialog .intro { font-size: 12px; line-height: 1.75; color: var(--color-muted); margin-bottom: 10px; }
+.url { margin: 0 0 18px; padding: 0 0 10px; border-top: 0; border-bottom: 1px solid var(--color-border); }
+.url > button { display: inline-flex; align-items: center; font-size: 12px; min-height: 36px; margin: 0 0 4px; }
+.url details { margin: 2px 0 0; }
+.url p { font-size: 12px; line-height: 1.7; }
+.url label { font-size: 11px; gap: 6px; margin: 6px 0 10px; color: var(--color-muted); }
+.url input { font-size: 12px; padding: 8px; }
+.url .identity { font-size: 10px; }
+.endpoints { border-top: 1px solid var(--color-border); padding-top: 14px; }
+.endpointGrid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-bottom: 12px; }
+.endpoint { padding: 10px 12px; border: 0; border-radius: 6px; background: var(--color-canvas); }
+.endpoint .endpointName { display: grid; gap: 3px; }
+.kind { display: inline-flex; align-items: center; gap: 5px; font-size: 10px; color: var(--color-muted); }
+.kind svg { width: 12px; height: 12px; }
+.endpoint p { font-size: 12px; line-height: 1.7; }
+.endpoint button { font-size: 11px; }
+@media (max-width: 600px) { .endpointGrid { grid-template-columns: 1fr; gap: 8px; } }

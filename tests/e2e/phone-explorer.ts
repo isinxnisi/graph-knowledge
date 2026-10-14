@@ -78,7 +78,7 @@ export function checkPhoneExplorer() {
         await list.getByRole("button", { name: "主張と出典を見る", exact: true }).first().tap();
         await expect(detail).toBeFocused();
         const claim = page.getByRole("region", { name: "Claim詳細", exact: true });
-        await claim.getByRole("button", { name: "根拠を読む", exact: true }).first().tap();
+        await claim.getByRole("link", { name: "出典のURLを開く", exact: true }).first().scrollIntoViewIfNeeded();
         await expect(claim.getByRole("link", { name: "出典のURLを開く", exact: true }).first()).toBeVisible();
         const metadata = claim.locator("details").first();
         await metadata.locator("summary").tap();

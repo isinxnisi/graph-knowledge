@@ -5,7 +5,7 @@ import { readingHref } from "../../lib/client/reading-reference";
 const claim = examples.claim.claim;
 const nodes = examples.neighbors.nodes;
 const href = (kind: "entity" | "claim", id: string) => readingHref({ kind, dataset: "demo", id });
-const reader = (page: Page) => page.getByRole("dialog", { name: "リンク先の対象・主張" });
+const reader = (page: Page) => page.getByRole("dialog", { name: /^(対象の詳細|記録と出典|個別表示)$/ });
 const canvasState = (page: Page) => page.getByTestId("graph-canvas").evaluate(el => {
   const cy = (el as unknown as { _cyreg: { cy: import("cytoscape").Core } })._cyreg.cy;
   return { positions: Object.fromEntries(cy.nodes().map(node => [node.id(), node.position()])), pan: cy.pan(), zoom: cy.zoom() };
@@ -45,7 +45,7 @@ for (const width of [390, 1440]) {
     await entityLink.click();
     await expect(page).toHaveURL(href("entity", claim.subjectId));
     await expect(reader(page).getByRole("heading", { name: "青葉ハル", exact: true })).toBeVisible();
-    await expect(reader(page).getByRole("heading", { name: "リンク先の対象・主張" })).toBeFocused();
+    await expect(reader(page).getByRole("heading", { name: /^(対象の詳細|記録と出典|個別表示)$/ })).toBeFocused();
     await page.screenshot({ path: testInfo.outputPath(`reference-entity-${width}.png`) });
     await page.goBack();
     await expect(reader(page)).toHaveCount(0);
@@ -58,13 +58,13 @@ for (const width of [390, 1440]) {
     expect(requests.neighbors).toBe(1);
     if (width < 800) await page.getByRole("navigation", { name: "探索画面の切り替え" }).getByRole("button", { name: "Graph", exact: true }).click();
     await page.getByTestId(`relation-${claim.id}`).getByRole("button", { name: "主張と出典を見る" }).click();
-    await page.getByRole("link", { name: "この記録の閲覧リンク" }).click();
+    await page.getByRole("link", { name: "この記録を個別に開く" }).click();
     await expect(page).toHaveURL(href("claim", claim.id));
     await expect(reader(page).getByRole("heading", { name: "青葉ハルへのインタビュー", exact: true })).toBeVisible();
     await expect(reader(page)).toContainText("pp.12–13");
     await page.screenshot({ path: testInfo.outputPath(`reference-claim-${width}.png`) });
     expect(await reader(page).evaluate(el => el.scrollWidth <= el.clientWidth)).toBe(true);
-    const endpoints = reader(page).getByRole("region", { name: "この主張の対象" });
+    const endpoints = reader(page).getByRole("region", { name: "この記録に出てくる対象" });
     await endpoints.getByRole("link", { name: "黒川レン", exact: true }).click();
     await expect(page).toHaveURL(href("entity", claim.objectId));
     await expect(reader(page).getByRole("heading", { name: "黒川レン", exact: true })).toBeVisible();
@@ -104,8 +104,8 @@ test("直接URLとreloadは指定Claimだけを読み、端点失敗中も根拠
   await expect(reader(page).getByRole("button", { name: "黒川レンから関係を探索する", exact: true })).toBeVisible();
   expect(requests.neighbors).toBe(0); expect(requests.claims).toHaveLength(claimsBeforeRetry);
   expect(new Set(requests.claims)).toEqual(new Set([claim.id]));
-  await reader(page).locator("summary").filter({ hasText: "閲覧URL" }).click();
-  await expect(reader(page).getByRole("textbox", { name: "閲覧URL" })).toHaveValue(new URL(href("claim", claim.id), page.url()).href);
+  await reader(page).locator("summary").filter({ hasText: "URLの詳細" }).click();
+  await expect(reader(page).getByRole("textbox", { name: "この表示のURL" })).toHaveValue(new URL(href("claim", claim.id), page.url()).href);
   await expect(page.locator('meta[name="robots"]')).toHaveAttribute("content", "noindex, nofollow");
   await reader(page).getByRole("button", { name: "探索画面へ戻る", exact: true }).click();
   await expect(page).toHaveURL("/");

@@ -32,11 +32,11 @@ export function checkPhoneReading() {
         await expect(link).toBeVisible();
         const before = await view(page);
         await link.tap();
-        const reader = page.getByRole("dialog", { name: "リンク先の対象・主張", exact: true });
+        const reader = page.getByRole("dialog", { name: "記録と出典", exact: true });
         await expect(reader).toContainText("プロデュース");
         await expect(reader).toContainText("第1巻");
-        await reader.getByText("閲覧URL", { exact: true }).first().tap();
-        await reader.getByRole("textbox", { name: "閲覧URL", exact: true }).scrollIntoViewIfNeeded();
+        await reader.getByText("URLの詳細", { exact: true }).first().tap();
+        await reader.getByRole("textbox", { name: "この表示のURL", exact: true }).scrollIntoViewIfNeeded();
         await reader.evaluate(el => { el.scrollTop = el.scrollHeight; });
         const close = reader.getByRole("button", { name: "探索画面へ戻る", exact: true });
         // tapによる自動スクロール前にも、戻る操作が画面内に残っていること。

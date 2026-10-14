@@ -7,6 +7,8 @@ const paths: [string, string, string, number?][] = [
   ["手塚眞", "手塚プロダクション", "取締役"],
   ["手塚眞", "手塚プロダクション", "取締役", 390],
   ["浦沢直樹", "PLUTO", "著者"],
+  ["浦沢直樹", "パイナップルARMY", "画", 1440],
+  ["浦沢直樹", "パイナップルARMY", "画", 390],
   ["ヴェルナー・ハイゼンベルク", "ニールス・ボーア研究所", "Visitor"],
   ["ヘンドリック・ローレンツ", "第5回ソルヴェイ物理会議（1927）", "Président"],
 ];
@@ -35,6 +37,7 @@ for (const [subject, object, wording, width = 1440] of paths) test(`${width}px�
   await expect(endpoints.getByRole("button", { name: `${subject}の詳細を見る` })).toBeVisible();
   await expect(endpoints.getByRole("button", { name: `${object}の詳細を見る` })).toBeVisible();
   await expect(detail.getByRole("heading", { name: "資料と記録", exact: true })).toBeVisible();
+  await expect(detail.getByRole("button", { name: "根拠を読む", exact: true })).toHaveCount(0);
   await expect(detail.locator('[data-testid^="claim-card-"]').first()).toBeVisible();
   await expect(detail).toContainText(wording);
   await expect(detail.getByRole("link", { name: "出典のURLを開く" }).first()).toBeVisible();
@@ -57,7 +60,40 @@ for (const [subject, object, wording, width = 1440] of paths) test(`${width}px�
     const cy = (el as unknown as { _cyreg: { cy: Core } })._cyreg.cy;
     return { points: cy.nodes().map(n => [n.id(), n.position()]), edges: cy.edges().map(e => e.id()), pan: cy.pan(), zoom: cy.zoom() };
   });
-  if (subject === "手塚眞" || subject === "浦沢直樹") await page.screenshot({ path: `test-results/relation-reading-${subject}-${width}.png` });
+  if (object === "パイナップルARMY") {
+    if (width < 800) await page.getByRole("navigation", { name: "探索画面の切り替え" }).getByRole("button", { name: "Graph", exact: true }).click();
+    const copyIcon = page.getByRole("button", { name: "探索URLをコピー", exact: true }).locator("svg");
+    expect(await copyIcon.evaluate(el => {
+      const b = (el as SVGSVGElement).getBBox(); return b.x >= 1 && b.y >= 1 && b.x + b.width <= 23 && b.y + b.height <= 23;
+    })).toBe(true);
+    if (width < 800) await page.getByRole("navigation", { name: "探索画面の切り替え" }).getByRole("button", { name: "選択の詳細", exact: true }).click();
+    const memo = record.getByRole("button", { name: "確認メモを全文表示" });
+    if (await memo.count()) await memo.click();
+    const bibliography = record.locator("summary").filter({ hasText: "資料の書誌情報" });
+    await bibliography.click(); await expect(record).toContainText("発行者");
+    await scope.click(); await expect(record.getByText("関係の期間", { exact: true })).toBeVisible();
+    await record.scrollIntoViewIfNeeded();
+    await page.screenshot({ path: `test-results/reading-polish-detail-${width}.png` });
+    await record.getByRole("link", { name: "この記録を個別に開く", exact: true }).click();
+    const reader = page.getByRole("dialog", { name: "記録と出典", exact: true });
+    await expect(reader.getByRole("button", { name: "この表示のURLをコピー" })).toBeVisible();
+    await expect(reader).toContainText("一つの記録とその出典");
+    await expect(reader).not.toContainText("同じ環境");
+    await expect(reader.getByRole("heading", { name: /パイナップルARMY.*小学館/ }).first()).toBeVisible();
+    await page.context().grantPermissions(["clipboard-read", "clipboard-write"]);
+    await reader.getByRole("button", { name: "この表示のURLをコピー" }).click();
+    await expect(reader.getByRole("status")).toContainText("URLをコピーしました");
+    const copied = new URL(await page.evaluate(() => navigator.clipboard.readText()));
+    expect(copied.searchParams.get("read")).toBe("claim");
+    expect(copied.searchParams.has("s")).toBe(false);
+    await reader.getByText("URLの詳細", { exact: true }).click();
+    await expect(reader).toContainText("その時点で登録されている内容");
+    await expect(reader.getByRole("textbox", { name: "この表示のURL", exact: true })).toHaveValue(copied.href);
+    await reader.getByRole("heading", { name: "記録と出典", exact: true }).scrollIntoViewIfNeeded();
+    await page.screenshot({ path: `test-results/reading-polish-modal-${width}.png` });
+    await page.keyboard.press("Escape");
+    await expect(reader).toHaveCount(0);
+  }
   let neighborReads = 0;
   page.on("request", r => { if (r.url().includes("/neighbors")) neighborReads++; });
   if (subject === "手塚眞" && width === 1440) {

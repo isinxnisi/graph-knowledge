@@ -660,8 +660,8 @@ for (const width of [390, 1440]) {
       const explorer = await context.newPage(); await explorer.bringToFront();
       await explorer.goto(link);
       await expect(explorer.getByRole("heading", { name: "青葉ハルへのインタビュー", exact: true })).toBeVisible();
-      await explorer.locator("summary").filter({ hasText: /^閲覧URL$/ }).click();
-      link = await explorer.getByLabel("閲覧URL", { exact: true }).inputValue();
+      await explorer.locator("summary").filter({ hasText: /^URLの詳細$/ }).click();
+      link = await explorer.getByRole("textbox", { name: "この表示のURL", exact: true }).inputValue();
       await explorer.close(); await page.bringToFront();
     }
     await expect(page.getByRole("textbox", { name: "自分の説明", exact: true })).toHaveValue("根拠を読んで主張を追記した");
