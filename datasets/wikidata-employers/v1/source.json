@@ -1,0 +1,15 @@
+{
+  "source": "Wikidata Query Service",
+  "retrievalDate": "2026-10-14",
+  "endpoint": "https://query.wikidata.org/sparql",
+  "query": "query.rq",
+  "receivedRows": 1000,
+  "observedOrganizations": [
+    "Q7842"
+  ],
+  "coverage": "Bounded result, not the complete employer population or all query VALUES. Results explicitly state P108 and P31=Q5; deprecated ranks excluded.",
+  "license": "CC0-1.0",
+  "termsUrl": "https://www.wikidata.org/wiki/Wikidata:Licensing",
+  "propertyUrl": "https://www.wikidata.org/wiki/Property:P108",
+  "sourceLevel": "Wikidata statements; independent original references not verified."
+}

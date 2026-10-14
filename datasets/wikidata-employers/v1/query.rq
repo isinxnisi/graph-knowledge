@@ -1,0 +1,9 @@
+SELECT ?person ?personLabel ?org ?orgLabel ?statement ?rank WHERE {
+ { SELECT ?person ?org ?statement ?rank WHERE {
+ VALUES ?org { wd:Q35794 wd:Q13371 wd:Q49115 wd:Q41506 wd:Q152838 wd:Q7836 wd:Q7842 }
+ ?statement ps:P108 ?org; wikibase:rank ?rank.
+ ?person p:P108 ?statement; wdt:P31 wd:Q5.
+ FILTER(?rank != wikibase:DeprecatedRank)
+ } LIMIT 1000 }
+ SERVICE wikibase:label { bd:serviceParam wikibase:language "ja,en". }
+}

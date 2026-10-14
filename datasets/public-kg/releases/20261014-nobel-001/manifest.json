@@ -1,0 +1,4331 @@
+{
+  "dataset": "public-kg",
+  "release": "20261014-nobel-001",
+  "baseRelease": "20261011-001",
+  "reason": "Nobel Prize公式APIが受賞時のaffiliationとして明示した人物→組織の広い関与。公開反映は件数・差分・復旧手段の人間確認後に行う。期間・職位を推測しない。",
+  "dataSha256": "a706a41988f2afa71413d40c15712fef2f09d8fa754155fb15514221855abcd3",
+  "inputs": [
+    {
+      "dataset": "pilot-urasawa-v2",
+      "file": "datasets/pilot-urasawa/v2/ledger.json",
+      "sha256": "0b22ed0add4df4b780669f45815282975f143225bbaa9b35eef4cf32206f6537"
+    },
+    {
+      "dataset": "pilot-urasawa-v2",
+      "file": "datasets/pilot-urasawa/v2/manifest.json",
+      "sha256": "b16f7152158c9dd9cd117dabda97761b8034e3ece9941ed6c6e6f7a3a3acfca3"
+    },
+    {
+      "dataset": "pilot-urasawa-v2",
+      "file": "datasets/pilot-urasawa/v2/data.json",
+      "sha256": "63798471bded3b9d31666c45165d9296d8ccfcd476c042872a02375143981c17"
+    },
+    {
+      "dataset": "pilot-event-v1",
+      "file": "datasets/pilot-event/v1/ledger.json",
+      "sha256": "fbb0099391bdabdc970221719ac2bdec84a043c89ac4a2eb1d5bfa5be308cdbf"
+    },
+    {
+      "dataset": "pilot-event-v1",
+      "file": "datasets/pilot-event/v1/manifest.json",
+      "sha256": "a5fce11502f89f7d5e6a5c01b946e1f615e0f13493f093ad02b26f8f5156fd46"
+    },
+    {
+      "dataset": "pilot-event-v1",
+      "file": "datasets/pilot-event/v1/data.json",
+      "sha256": "3e7e1a9f0380b5bd19547f8538395e3ba3965e3309e311fa9bf201c660a1dc86"
+    },
+    {
+      "dataset": "nobel-affiliations-v1",
+      "file": "datasets/nobel-affiliations/v1/raw/laureates-0000.json",
+      "sha256": "76649ef3171e269feb9e8274dbb38c8b7dc2acdbd8a01a0ecab3c1b606d524d5"
+    },
+    {
+      "dataset": "nobel-affiliations-v1",
+      "file": "datasets/nobel-affiliations/v1/raw/laureates-1000.json",
+      "sha256": "d2ca79d15f8a969a9439ed325b5248effd3e6ff5194c14e0c043e13154ff65e7"
+    },
+    {
+      "dataset": "nobel-affiliations-v1",
+      "file": "datasets/nobel-affiliations/v1/source.json",
+      "sha256": "a43c5fbd394944f275eeffa607c3e9975bd1a8da3db08560e715a3d568778b3f"
+    },
+    {
+      "dataset": "nobel-affiliations-v1",
+      "file": "datasets/nobel-affiliations/v1/ledger.json",
+      "sha256": "69b25509135af4d10691aa540a30ee6a5f5f30d8d56d8787e144b8d964f6bec3"
+    }
+  ],
+  "claimOrigins": [
+    {
+      "claimId": "aacddf82-87ae-4981-8542-0470e981a94f",
+      "dataset": "pilot-urasawa-v2",
+      "sourceClaimId": "aacddf82-87ae-4981-8542-0470e981a94f"
+    },
+    {
+      "claimId": "e3b37447-87f5-40ed-b738-6ba37578c8c3",
+      "dataset": "pilot-urasawa-v2",
+      "sourceClaimId": "e3b37447-87f5-40ed-b738-6ba37578c8c3"
+    },
+    {
+      "claimId": "75f911ca-a247-42bd-8bf0-c166649ce145",
+      "dataset": "pilot-urasawa-v2",
+      "sourceClaimId": "75f911ca-a247-42bd-8bf0-c166649ce145"
+    },
+    {
+      "claimId": "d9780089-361d-49a0-b95a-a54c2cd2fa7a",
+      "dataset": "pilot-urasawa-v2",
+      "sourceClaimId": "d9780089-361d-49a0-b95a-a54c2cd2fa7a"
+    },
+    {
+      "claimId": "3ee2132d-436a-44cf-a33e-851faddd3163",
+      "dataset": "pilot-urasawa-v2",
+      "sourceClaimId": "3ee2132d-436a-44cf-a33e-851faddd3163"
+    },
+    {
+      "claimId": "48c3605b-34d8-409d-a4d2-fdd50c524c74",
+      "dataset": "pilot-urasawa-v2",
+      "sourceClaimId": "48c3605b-34d8-409d-a4d2-fdd50c524c74"
+    },
+    {
+      "claimId": "11d202ab-e9a4-4da5-9ff2-735f48f83133",
+      "dataset": "pilot-urasawa-v2",
+      "sourceClaimId": "11d202ab-e9a4-4da5-9ff2-735f48f83133"
+    },
+    {
+      "claimId": "1ad08ee5-bbc3-41bf-b647-4b7419820a14",
+      "dataset": "pilot-urasawa-v2",
+      "sourceClaimId": "1ad08ee5-bbc3-41bf-b647-4b7419820a14"
+    },
+    {
+      "claimId": "b6ce3407-e3bb-44c9-867b-7b7434861af5",
+      "dataset": "pilot-urasawa-v2",
+      "sourceClaimId": "b6ce3407-e3bb-44c9-867b-7b7434861af5"
+    },
+    {
+      "claimId": "dbc08a85-9165-4cc8-a3af-d133c83d8f67",
+      "dataset": "pilot-urasawa-v2",
+      "sourceClaimId": "dbc08a85-9165-4cc8-a3af-d133c83d8f67"
+    },
+    {
+      "claimId": "cc2bc0c3-d8e7-47fe-8aaf-1b219bff0137",
+      "dataset": "pilot-urasawa-v2",
+      "sourceClaimId": "cc2bc0c3-d8e7-47fe-8aaf-1b219bff0137"
+    },
+    {
+      "claimId": "52c9fa30-bac5-40f1-bbe5-75d7420081d8",
+      "dataset": "pilot-urasawa-v2",
+      "sourceClaimId": "52c9fa30-bac5-40f1-bbe5-75d7420081d8"
+    },
+    {
+      "claimId": "7142e160-c0d5-4358-9b70-63c03bfd44ad",
+      "dataset": "pilot-urasawa-v2",
+      "sourceClaimId": "7142e160-c0d5-4358-9b70-63c03bfd44ad"
+    },
+    {
+      "claimId": "29f3bd67-b461-49a8-bdfa-d98b1d7dcfe1",
+      "dataset": "pilot-urasawa-v2",
+      "sourceClaimId": "29f3bd67-b461-49a8-bdfa-d98b1d7dcfe1"
+    },
+    {
+      "claimId": "ef4dc9ea-b8e2-4959-b594-5d27ebccb054",
+      "dataset": "pilot-event-v1",
+      "sourceClaimId": "ef4dc9ea-b8e2-4959-b594-5d27ebccb054"
+    },
+    {
+      "claimId": "47d46b69-b111-4b76-addb-632d679ae4f8",
+      "dataset": "pilot-event-v1",
+      "sourceClaimId": "47d46b69-b111-4b76-addb-632d679ae4f8"
+    },
+    {
+      "claimId": "2bdd7207-c8af-4936-ac23-961a8450eaad",
+      "dataset": "pilot-event-v1",
+      "sourceClaimId": "2bdd7207-c8af-4936-ac23-961a8450eaad"
+    },
+    {
+      "claimId": "3ce6d2ff-9cdf-4568-b246-719a0e07c410",
+      "dataset": "pilot-event-v1",
+      "sourceClaimId": "3ce6d2ff-9cdf-4568-b246-719a0e07c410"
+    },
+    {
+      "claimId": "eb7182aa-e7f1-4064-a731-bffe7c59227c",
+      "dataset": "pilot-event-v1",
+      "sourceClaimId": "eb7182aa-e7f1-4064-a731-bffe7c59227c"
+    },
+    {
+      "claimId": "c23fe1f3-fae6-43c1-9ed7-af1d94e4712c",
+      "dataset": "pilot-event-v1",
+      "sourceClaimId": "c23fe1f3-fae6-43c1-9ed7-af1d94e4712c"
+    },
+    {
+      "claimId": "f05e54fa-67a1-49c6-876a-0f4b01534cb0",
+      "dataset": "pilot-event-v1",
+      "sourceClaimId": "f05e54fa-67a1-49c6-876a-0f4b01534cb0"
+    },
+    {
+      "claimId": "0bac17e3-5832-4e48-9616-27c3de12ea83",
+      "dataset": "pilot-event-v1",
+      "sourceClaimId": "0bac17e3-5832-4e48-9616-27c3de12ea83"
+    },
+    {
+      "claimId": "e71f548b-65c2-4032-a40f-342ab75b5d3e",
+      "dataset": "pilot-event-v1",
+      "sourceClaimId": "e71f548b-65c2-4032-a40f-342ab75b5d3e"
+    },
+    {
+      "claimId": "ffbe8c65-5435-4373-85c7-c091892e51d9",
+      "dataset": "pilot-event-v1",
+      "sourceClaimId": "ffbe8c65-5435-4373-85c7-c091892e51d9"
+    },
+    {
+      "claimId": "341f1523-3e1a-4779-a441-c813706a80a9",
+      "dataset": "pilot-event-v1",
+      "sourceClaimId": "341f1523-3e1a-4779-a441-c813706a80a9"
+    },
+    {
+      "claimId": "e84b2f8d-b173-47f9-8511-eb02bc0a2e39",
+      "dataset": "pilot-event-v1",
+      "sourceClaimId": "e84b2f8d-b173-47f9-8511-eb02bc0a2e39"
+    },
+    {
+      "claimId": "d01a21f2-a6b8-4eb1-9276-8850081fcf69",
+      "dataset": "pilot-event-v1",
+      "sourceClaimId": "d01a21f2-a6b8-4eb1-9276-8850081fcf69"
+    },
+    {
+      "claimId": "00514925-a7be-402c-b482-88b5eaabc492",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "00514925-a7be-402c-b482-88b5eaabc492"
+    },
+    {
+      "claimId": "009a48d9-37cc-4c03-9e9c-a1496efc508d",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "009a48d9-37cc-4c03-9e9c-a1496efc508d"
+    },
+    {
+      "claimId": "00fda7ab-29c0-490c-a037-d65f4bfe208f",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "00fda7ab-29c0-490c-a037-d65f4bfe208f"
+    },
+    {
+      "claimId": "01818647-8162-4baa-b3d3-a14c9646e90d",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "01818647-8162-4baa-b3d3-a14c9646e90d"
+    },
+    {
+      "claimId": "01a8c027-65ee-412c-b994-0ebc3ee17913",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "01a8c027-65ee-412c-b994-0ebc3ee17913"
+    },
+    {
+      "claimId": "01fd1b11-3fd6-4ddc-8c4a-83d4b6b47ce4",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "01fd1b11-3fd6-4ddc-8c4a-83d4b6b47ce4"
+    },
+    {
+      "claimId": "0212f4e0-1693-4992-885a-dada142d665e",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "0212f4e0-1693-4992-885a-dada142d665e"
+    },
+    {
+      "claimId": "02320cca-7f85-43d2-8a68-8289c75763d5",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "02320cca-7f85-43d2-8a68-8289c75763d5"
+    },
+    {
+      "claimId": "036a5b8f-6a0d-4e4d-a8c4-15b3810875d7",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "036a5b8f-6a0d-4e4d-a8c4-15b3810875d7"
+    },
+    {
+      "claimId": "044c2462-3254-4264-9088-07efe788e72f",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "044c2462-3254-4264-9088-07efe788e72f"
+    },
+    {
+      "claimId": "046a11a2-f08f-4a19-b0f8-7dc5deb8c7b1",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "046a11a2-f08f-4a19-b0f8-7dc5deb8c7b1"
+    },
+    {
+      "claimId": "048830d2-5176-44aa-9994-2ab84f26f104",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "048830d2-5176-44aa-9994-2ab84f26f104"
+    },
+    {
+      "claimId": "04abd576-a572-4545-a21c-5652d02c54cf",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "04abd576-a572-4545-a21c-5652d02c54cf"
+    },
+    {
+      "claimId": "04c081ff-8409-4bf4-8751-1641fc565c01",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "04c081ff-8409-4bf4-8751-1641fc565c01"
+    },
+    {
+      "claimId": "04e6a005-f316-40bd-a4fd-2b3441ff461c",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "04e6a005-f316-40bd-a4fd-2b3441ff461c"
+    },
+    {
+      "claimId": "04e79222-18c8-46bf-8217-d8d6b1cae43b",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "04e79222-18c8-46bf-8217-d8d6b1cae43b"
+    },
+    {
+      "claimId": "05856753-292c-4ffd-a05e-f00395148d8a",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "05856753-292c-4ffd-a05e-f00395148d8a"
+    },
+    {
+      "claimId": "05936d6e-eb40-4032-972d-06c4ef207001",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "05936d6e-eb40-4032-972d-06c4ef207001"
+    },
+    {
+      "claimId": "05ce4d5b-ecdb-4d3f-9abc-ff49f21cd91c",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "05ce4d5b-ecdb-4d3f-9abc-ff49f21cd91c"
+    },
+    {
+      "claimId": "065953b5-6aa2-4b40-bb23-78c8ec864452",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "065953b5-6aa2-4b40-bb23-78c8ec864452"
+    },
+    {
+      "claimId": "0685d71f-df32-47c7-866d-4baf3befe091",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "0685d71f-df32-47c7-866d-4baf3befe091"
+    },
+    {
+      "claimId": "07a78d11-9df4-437c-b78a-0a3da41e67c0",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "07a78d11-9df4-437c-b78a-0a3da41e67c0"
+    },
+    {
+      "claimId": "07b6d434-e1ce-45ec-9fa9-0184f96c161b",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "07b6d434-e1ce-45ec-9fa9-0184f96c161b"
+    },
+    {
+      "claimId": "07c5a465-7ed2-4c12-aaf9-6a3c22e8bcb5",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "07c5a465-7ed2-4c12-aaf9-6a3c22e8bcb5"
+    },
+    {
+      "claimId": "083ede4d-3032-4ffd-9675-9330918a5dc3",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "083ede4d-3032-4ffd-9675-9330918a5dc3"
+    },
+    {
+      "claimId": "08941b77-08fc-46e3-814f-153ad7c41c60",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "08941b77-08fc-46e3-814f-153ad7c41c60"
+    },
+    {
+      "claimId": "0897ea5f-5cd7-4b0d-899f-b0cd43a15815",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "0897ea5f-5cd7-4b0d-899f-b0cd43a15815"
+    },
+    {
+      "claimId": "08bb7bb3-2b63-4e48-a55e-fbc6ee66a00d",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "08bb7bb3-2b63-4e48-a55e-fbc6ee66a00d"
+    },
+    {
+      "claimId": "08d831cc-9164-44f3-843f-e9df0363b161",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "08d831cc-9164-44f3-843f-e9df0363b161"
+    },
+    {
+      "claimId": "097abc7c-77d5-44fc-826c-2fa29d42cdc8",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "097abc7c-77d5-44fc-826c-2fa29d42cdc8"
+    },
+    {
+      "claimId": "097de217-6544-4fbb-9539-9184bbbe2d3b",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "097de217-6544-4fbb-9539-9184bbbe2d3b"
+    },
+    {
+      "claimId": "09de0150-45a4-4e03-921e-d49bd7da43b3",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "09de0150-45a4-4e03-921e-d49bd7da43b3"
+    },
+    {
+      "claimId": "0a66bdfd-5b6a-420a-94ea-68654f2102c5",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "0a66bdfd-5b6a-420a-94ea-68654f2102c5"
+    },
+    {
+      "claimId": "0a9dd93e-7553-4cf6-936f-a979019db45a",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "0a9dd93e-7553-4cf6-936f-a979019db45a"
+    },
+    {
+      "claimId": "0aa8c73e-d509-4c2f-9e94-94f24887475b",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "0aa8c73e-d509-4c2f-9e94-94f24887475b"
+    },
+    {
+      "claimId": "0ac5b9d9-8ab0-4632-96b6-107b1855080f",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "0ac5b9d9-8ab0-4632-96b6-107b1855080f"
+    },
+    {
+      "claimId": "0b045749-cca7-4a1c-a232-07d1b45c4bf2",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "0b045749-cca7-4a1c-a232-07d1b45c4bf2"
+    },
+    {
+      "claimId": "0b1b2bea-4cf4-4761-bd5d-a442c8ab9147",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "0b1b2bea-4cf4-4761-bd5d-a442c8ab9147"
+    },
+    {
+      "claimId": "0bc8b57f-710b-460b-8b9f-af9e31f8aa67",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "0bc8b57f-710b-460b-8b9f-af9e31f8aa67"
+    },
+    {
+      "claimId": "0c076831-8403-4d4d-911f-5ca78a5b66a6",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "0c076831-8403-4d4d-911f-5ca78a5b66a6"
+    },
+    {
+      "claimId": "0caaeb46-3d8e-4988-b13a-bca4b1db754b",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "0caaeb46-3d8e-4988-b13a-bca4b1db754b"
+    },
+    {
+      "claimId": "0ce4bf3c-c959-4bef-95c9-0f52ef37054b",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "0ce4bf3c-c959-4bef-95c9-0f52ef37054b"
+    },
+    {
+      "claimId": "0dfc4a11-3ce3-44f0-8b3c-294b561f24c6",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "0dfc4a11-3ce3-44f0-8b3c-294b561f24c6"
+    },
+    {
+      "claimId": "0f5056d5-cbd3-4dad-9333-45f21e4dc342",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "0f5056d5-cbd3-4dad-9333-45f21e4dc342"
+    },
+    {
+      "claimId": "0f6533fa-fe15-4a2e-8aaf-dc02bca6bec1",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "0f6533fa-fe15-4a2e-8aaf-dc02bca6bec1"
+    },
+    {
+      "claimId": "0f9b9b97-9d6b-48fa-8ade-99f433cb23d5",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "0f9b9b97-9d6b-48fa-8ade-99f433cb23d5"
+    },
+    {
+      "claimId": "0fa883de-f316-4e95-a35a-c6b28693e00c",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "0fa883de-f316-4e95-a35a-c6b28693e00c"
+    },
+    {
+      "claimId": "0fbe19ff-f7ed-4b68-98b5-dcb9565b778a",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "0fbe19ff-f7ed-4b68-98b5-dcb9565b778a"
+    },
+    {
+      "claimId": "0fc69262-2dbc-47e4-b8d9-dbdbf708cf62",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "0fc69262-2dbc-47e4-b8d9-dbdbf708cf62"
+    },
+    {
+      "claimId": "100030fa-e462-43ae-ada1-e7daff914e6d",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "100030fa-e462-43ae-ada1-e7daff914e6d"
+    },
+    {
+      "claimId": "1035158c-8d3a-4df7-b8bb-206d99fc8d6a",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "1035158c-8d3a-4df7-b8bb-206d99fc8d6a"
+    },
+    {
+      "claimId": "1049e62d-6db7-418a-9b53-6dd9338fe73e",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "1049e62d-6db7-418a-9b53-6dd9338fe73e"
+    },
+    {
+      "claimId": "105fda6b-b50f-4b84-ab2c-36b8634a5e2f",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "105fda6b-b50f-4b84-ab2c-36b8634a5e2f"
+    },
+    {
+      "claimId": "10a4b27e-6ede-48ff-8584-ca547fd0b7e7",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "10a4b27e-6ede-48ff-8584-ca547fd0b7e7"
+    },
+    {
+      "claimId": "10c7414b-a081-4fff-a706-c925bfe69f49",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "10c7414b-a081-4fff-a706-c925bfe69f49"
+    },
+    {
+      "claimId": "11a6f4eb-5c5e-4e20-906d-f6547958cdd9",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "11a6f4eb-5c5e-4e20-906d-f6547958cdd9"
+    },
+    {
+      "claimId": "11bbe5b7-0a51-4cab-b26a-771fd0b61d85",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "11bbe5b7-0a51-4cab-b26a-771fd0b61d85"
+    },
+    {
+      "claimId": "122fde50-0e18-4bc6-8b42-f5f341686467",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "122fde50-0e18-4bc6-8b42-f5f341686467"
+    },
+    {
+      "claimId": "1237db45-c0d3-4b21-a624-fab948e585d6",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "1237db45-c0d3-4b21-a624-fab948e585d6"
+    },
+    {
+      "claimId": "127106bc-fae0-432a-b536-20d83a1a3637",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "127106bc-fae0-432a-b536-20d83a1a3637"
+    },
+    {
+      "claimId": "1281391c-5b90-41f4-9a9f-b20199a77e52",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "1281391c-5b90-41f4-9a9f-b20199a77e52"
+    },
+    {
+      "claimId": "12c41688-aea5-46d1-9c4e-b4ef5aafe352",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "12c41688-aea5-46d1-9c4e-b4ef5aafe352"
+    },
+    {
+      "claimId": "12e8aafd-cee5-4f52-9b51-4432f23e789d",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "12e8aafd-cee5-4f52-9b51-4432f23e789d"
+    },
+    {
+      "claimId": "12ff1fb1-a593-442f-995f-4e397225c69c",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "12ff1fb1-a593-442f-995f-4e397225c69c"
+    },
+    {
+      "claimId": "13009621-4d51-4805-8e09-f2567134a886",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "13009621-4d51-4805-8e09-f2567134a886"
+    },
+    {
+      "claimId": "132f5d3c-a8c9-4508-b3f8-94538b2125ae",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "132f5d3c-a8c9-4508-b3f8-94538b2125ae"
+    },
+    {
+      "claimId": "135cd2be-7a17-418d-addc-1517a0c79e2c",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "135cd2be-7a17-418d-addc-1517a0c79e2c"
+    },
+    {
+      "claimId": "1378a767-1672-4569-8dc3-c857cc27f373",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "1378a767-1672-4569-8dc3-c857cc27f373"
+    },
+    {
+      "claimId": "13f94480-7685-4ec9-b1ba-e2900dcbb576",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "13f94480-7685-4ec9-b1ba-e2900dcbb576"
+    },
+    {
+      "claimId": "1495af53-61d5-4e3f-a1cf-cd6049170808",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "1495af53-61d5-4e3f-a1cf-cd6049170808"
+    },
+    {
+      "claimId": "1589396e-44d1-48ba-a3c6-11e01008020a",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "1589396e-44d1-48ba-a3c6-11e01008020a"
+    },
+    {
+      "claimId": "15962547-fa79-4e20-954a-880dd934e3ab",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "15962547-fa79-4e20-954a-880dd934e3ab"
+    },
+    {
+      "claimId": "159f0263-b1e7-443b-83ec-ad6fd8d50210",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "159f0263-b1e7-443b-83ec-ad6fd8d50210"
+    },
+    {
+      "claimId": "15a861b4-068d-40d5-ad44-fc056359a0c7",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "15a861b4-068d-40d5-ad44-fc056359a0c7"
+    },
+    {
+      "claimId": "15c51a8e-afc0-43bc-abb0-c161205d48f9",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "15c51a8e-afc0-43bc-abb0-c161205d48f9"
+    },
+    {
+      "claimId": "164a807a-2480-4288-9a35-6a4beadb107d",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "164a807a-2480-4288-9a35-6a4beadb107d"
+    },
+    {
+      "claimId": "168c4ab8-8625-4605-9295-a1251f2e4c79",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "168c4ab8-8625-4605-9295-a1251f2e4c79"
+    },
+    {
+      "claimId": "16a23d3b-aa00-4bbd-9474-ac1bc513853a",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "16a23d3b-aa00-4bbd-9474-ac1bc513853a"
+    },
+    {
+      "claimId": "1771bfee-dea8-4618-9734-fbb9b042fc8d",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "1771bfee-dea8-4618-9734-fbb9b042fc8d"
+    },
+    {
+      "claimId": "17c33217-1436-4282-9c8c-007db955657d",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "17c33217-1436-4282-9c8c-007db955657d"
+    },
+    {
+      "claimId": "17c48004-6b42-4eca-8d69-1ab58c49f8f5",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "17c48004-6b42-4eca-8d69-1ab58c49f8f5"
+    },
+    {
+      "claimId": "17e6da48-40c4-406d-ac93-72336bc042f0",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "17e6da48-40c4-406d-ac93-72336bc042f0"
+    },
+    {
+      "claimId": "17f6f2d0-898d-4764-9f29-028e30ab69a9",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "17f6f2d0-898d-4764-9f29-028e30ab69a9"
+    },
+    {
+      "claimId": "18cffb9a-5db1-42a8-8b56-7602de5fe54d",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "18cffb9a-5db1-42a8-8b56-7602de5fe54d"
+    },
+    {
+      "claimId": "18f71ddd-59af-45ff-8424-26f278d45fe9",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "18f71ddd-59af-45ff-8424-26f278d45fe9"
+    },
+    {
+      "claimId": "1963d297-8340-43b6-9706-8ca5cd6976ad",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "1963d297-8340-43b6-9706-8ca5cd6976ad"
+    },
+    {
+      "claimId": "1971e045-61f6-4c86-b32b-073580a4cb79",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "1971e045-61f6-4c86-b32b-073580a4cb79"
+    },
+    {
+      "claimId": "1a0aed14-cd0f-476e-8192-808850a2d089",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "1a0aed14-cd0f-476e-8192-808850a2d089"
+    },
+    {
+      "claimId": "1ac79fa6-0ee3-465a-a2d7-e04eced4fe7f",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "1ac79fa6-0ee3-465a-a2d7-e04eced4fe7f"
+    },
+    {
+      "claimId": "1ae1dfcf-855a-42bc-ba95-8a8520b56472",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "1ae1dfcf-855a-42bc-ba95-8a8520b56472"
+    },
+    {
+      "claimId": "1b07f135-afa1-4947-b36a-ed27fedf9e4e",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "1b07f135-afa1-4947-b36a-ed27fedf9e4e"
+    },
+    {
+      "claimId": "1b0fc2b5-e130-4548-aafb-5ba9f0cc0f39",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "1b0fc2b5-e130-4548-aafb-5ba9f0cc0f39"
+    },
+    {
+      "claimId": "1b111e6e-886b-4c40-bc61-e177b2606d6a",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "1b111e6e-886b-4c40-bc61-e177b2606d6a"
+    },
+    {
+      "claimId": "1b25d27d-9d4d-4e1b-8a21-a36f0b03c98a",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "1b25d27d-9d4d-4e1b-8a21-a36f0b03c98a"
+    },
+    {
+      "claimId": "1b8952a9-0866-4a97-995e-98a483373962",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "1b8952a9-0866-4a97-995e-98a483373962"
+    },
+    {
+      "claimId": "1bd71892-ed37-4fad-b29f-41a22b055416",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "1bd71892-ed37-4fad-b29f-41a22b055416"
+    },
+    {
+      "claimId": "1c08a011-24e9-4c13-9a78-6f6d6c170ca5",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "1c08a011-24e9-4c13-9a78-6f6d6c170ca5"
+    },
+    {
+      "claimId": "1c21ec73-305a-4d7c-ae72-cad73caefc94",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "1c21ec73-305a-4d7c-ae72-cad73caefc94"
+    },
+    {
+      "claimId": "1c824bc1-7bdc-4efb-b84b-1571d723e740",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "1c824bc1-7bdc-4efb-b84b-1571d723e740"
+    },
+    {
+      "claimId": "1c8d4a5d-896a-40bd-b84c-0d7feb504413",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "1c8d4a5d-896a-40bd-b84c-0d7feb504413"
+    },
+    {
+      "claimId": "1c99fcea-6732-4bf9-af87-bc59165bfe6e",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "1c99fcea-6732-4bf9-af87-bc59165bfe6e"
+    },
+    {
+      "claimId": "1cb8c2d6-520c-4bd7-a0c9-4d31938c4a60",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "1cb8c2d6-520c-4bd7-a0c9-4d31938c4a60"
+    },
+    {
+      "claimId": "1ce4dd88-cf32-4d04-b81d-1231c929016d",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "1ce4dd88-cf32-4d04-b81d-1231c929016d"
+    },
+    {
+      "claimId": "1d421a91-1fd4-4896-99af-24ddcbfbabf9",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "1d421a91-1fd4-4896-99af-24ddcbfbabf9"
+    },
+    {
+      "claimId": "1d7c3a49-d09b-4fbe-b7ef-002e4a37a435",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "1d7c3a49-d09b-4fbe-b7ef-002e4a37a435"
+    },
+    {
+      "claimId": "1de9a726-b6fb-41d6-a850-abe456a8f0e8",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "1de9a726-b6fb-41d6-a850-abe456a8f0e8"
+    },
+    {
+      "claimId": "1e09d0d2-cbb6-4f90-8030-5bcbb98789f4",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "1e09d0d2-cbb6-4f90-8030-5bcbb98789f4"
+    },
+    {
+      "claimId": "1e54b58e-f65d-4bbd-b5f9-72d8fb759214",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "1e54b58e-f65d-4bbd-b5f9-72d8fb759214"
+    },
+    {
+      "claimId": "1e59dc15-f77a-463d-9dc6-a08e3f1cf32e",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "1e59dc15-f77a-463d-9dc6-a08e3f1cf32e"
+    },
+    {
+      "claimId": "1eb36abe-8603-423d-aa34-b4837460ee6e",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "1eb36abe-8603-423d-aa34-b4837460ee6e"
+    },
+    {
+      "claimId": "1f63bd4c-519a-488f-b827-412ba05f8b7b",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "1f63bd4c-519a-488f-b827-412ba05f8b7b"
+    },
+    {
+      "claimId": "1f99e84c-1b39-4513-9b7c-7e258063b072",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "1f99e84c-1b39-4513-9b7c-7e258063b072"
+    },
+    {
+      "claimId": "207d0e0b-2d5b-4976-8bd1-2aa24f5ec7e9",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "207d0e0b-2d5b-4976-8bd1-2aa24f5ec7e9"
+    },
+    {
+      "claimId": "21791d46-c1ba-4fcc-a2eb-7649ab46221f",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "21791d46-c1ba-4fcc-a2eb-7649ab46221f"
+    },
+    {
+      "claimId": "219a5d4b-53ce-4495-93c2-cb99dafb5857",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "219a5d4b-53ce-4495-93c2-cb99dafb5857"
+    },
+    {
+      "claimId": "22048dbf-9f2b-4fa6-ab4d-b5a1826c0b43",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "22048dbf-9f2b-4fa6-ab4d-b5a1826c0b43"
+    },
+    {
+      "claimId": "22ff7d4d-da56-4a08-9a72-a017191f7d14",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "22ff7d4d-da56-4a08-9a72-a017191f7d14"
+    },
+    {
+      "claimId": "2305312b-3b9a-4c18-a628-570182ef2be9",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "2305312b-3b9a-4c18-a628-570182ef2be9"
+    },
+    {
+      "claimId": "2306e6ea-5728-4c20-b17c-dd9fb974e26a",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "2306e6ea-5728-4c20-b17c-dd9fb974e26a"
+    },
+    {
+      "claimId": "23915a33-408f-4a42-b772-8d0e74c852e4",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "23915a33-408f-4a42-b772-8d0e74c852e4"
+    },
+    {
+      "claimId": "24045fd6-e9d7-403e-901b-6870b2d0e16e",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "24045fd6-e9d7-403e-901b-6870b2d0e16e"
+    },
+    {
+      "claimId": "242eec86-b318-4441-8742-4862252fdcd9",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "242eec86-b318-4441-8742-4862252fdcd9"
+    },
+    {
+      "claimId": "253f8bc9-14c2-4d46-8028-5628e0f6905d",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "253f8bc9-14c2-4d46-8028-5628e0f6905d"
+    },
+    {
+      "claimId": "2572493d-f043-4279-be9e-532af6f32249",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "2572493d-f043-4279-be9e-532af6f32249"
+    },
+    {
+      "claimId": "25bc2534-a80f-4be4-9c94-e258e2a775d1",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "25bc2534-a80f-4be4-9c94-e258e2a775d1"
+    },
+    {
+      "claimId": "25c0dfe0-13d1-4589-96e6-2e9e5fd8b73d",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "25c0dfe0-13d1-4589-96e6-2e9e5fd8b73d"
+    },
+    {
+      "claimId": "25c89512-2f07-4079-a233-73cd244b3171",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "25c89512-2f07-4079-a233-73cd244b3171"
+    },
+    {
+      "claimId": "262790ae-20df-4bae-a4f3-ecdf463577b2",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "262790ae-20df-4bae-a4f3-ecdf463577b2"
+    },
+    {
+      "claimId": "26ce7310-603d-4fb7-9ef4-d393f4ce5a09",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "26ce7310-603d-4fb7-9ef4-d393f4ce5a09"
+    },
+    {
+      "claimId": "27ef9947-a76b-4635-bc2b-c4f194283c55",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "27ef9947-a76b-4635-bc2b-c4f194283c55"
+    },
+    {
+      "claimId": "28684e3c-16b1-4e22-86df-23437b68cf5f",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "28684e3c-16b1-4e22-86df-23437b68cf5f"
+    },
+    {
+      "claimId": "28af658b-d767-48d1-8187-7d4ebb9c0b89",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "28af658b-d767-48d1-8187-7d4ebb9c0b89"
+    },
+    {
+      "claimId": "28e98c3f-e0a3-4d53-a8fb-cab090f9347b",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "28e98c3f-e0a3-4d53-a8fb-cab090f9347b"
+    },
+    {
+      "claimId": "28fd62c8-efa8-4d6b-b917-b0557c4478eb",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "28fd62c8-efa8-4d6b-b917-b0557c4478eb"
+    },
+    {
+      "claimId": "294c584a-13fd-4a6c-99cb-17d5358daac1",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "294c584a-13fd-4a6c-99cb-17d5358daac1"
+    },
+    {
+      "claimId": "298ef0e9-8f87-4619-a5cd-63ff098b0190",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "298ef0e9-8f87-4619-a5cd-63ff098b0190"
+    },
+    {
+      "claimId": "29be2ff3-fc79-4329-a58c-6a6b7f19bf88",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "29be2ff3-fc79-4329-a58c-6a6b7f19bf88"
+    },
+    {
+      "claimId": "2a170629-30c5-4f2f-ae60-81643b479fc6",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "2a170629-30c5-4f2f-ae60-81643b479fc6"
+    },
+    {
+      "claimId": "2a45de3a-b55b-4978-908e-85fd1912aa8e",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "2a45de3a-b55b-4978-908e-85fd1912aa8e"
+    },
+    {
+      "claimId": "2a79d4dd-35b1-4fd8-bc6b-4d75dcb72763",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "2a79d4dd-35b1-4fd8-bc6b-4d75dcb72763"
+    },
+    {
+      "claimId": "2ae8ba22-15d1-4cb1-bbbe-93fdb57fe152",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "2ae8ba22-15d1-4cb1-bbbe-93fdb57fe152"
+    },
+    {
+      "claimId": "2b0c223d-c7eb-437c-881c-63d050581e03",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "2b0c223d-c7eb-437c-881c-63d050581e03"
+    },
+    {
+      "claimId": "2b2e9dfe-6252-4908-869c-b19a54f84057",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "2b2e9dfe-6252-4908-869c-b19a54f84057"
+    },
+    {
+      "claimId": "2b8f8457-2461-4b0a-a135-df81e20a6c7e",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "2b8f8457-2461-4b0a-a135-df81e20a6c7e"
+    },
+    {
+      "claimId": "2c1cc313-240f-4af9-b062-4351742b6da1",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "2c1cc313-240f-4af9-b062-4351742b6da1"
+    },
+    {
+      "claimId": "2c43e8f4-f52b-4712-97cd-3ae52d57fb2c",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "2c43e8f4-f52b-4712-97cd-3ae52d57fb2c"
+    },
+    {
+      "claimId": "2c493d5c-cb8a-45a8-bda6-dd68d369be8d",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "2c493d5c-cb8a-45a8-bda6-dd68d369be8d"
+    },
+    {
+      "claimId": "2cd78e61-992c-4c18-bd01-ef614722bdc6",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "2cd78e61-992c-4c18-bd01-ef614722bdc6"
+    },
+    {
+      "claimId": "2d0de15a-ce9b-47dd-9a2a-674a42937cfa",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "2d0de15a-ce9b-47dd-9a2a-674a42937cfa"
+    },
+    {
+      "claimId": "2d42d135-4ffd-4fd3-8fd4-37e6240b8f0f",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "2d42d135-4ffd-4fd3-8fd4-37e6240b8f0f"
+    },
+    {
+      "claimId": "2d8c505c-1dbe-4e94-9dd5-6583ff7d119a",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "2d8c505c-1dbe-4e94-9dd5-6583ff7d119a"
+    },
+    {
+      "claimId": "2dae72be-b26a-43c5-9808-45b04c5f0a95",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "2dae72be-b26a-43c5-9808-45b04c5f0a95"
+    },
+    {
+      "claimId": "2e22e660-1ee4-4bbc-a13e-5aba152bd926",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "2e22e660-1ee4-4bbc-a13e-5aba152bd926"
+    },
+    {
+      "claimId": "2e3b574e-27ca-4766-b5d5-12e3a6b645b0",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "2e3b574e-27ca-4766-b5d5-12e3a6b645b0"
+    },
+    {
+      "claimId": "2e5ed8fe-ea0e-4a23-963a-0f4f4919e7b1",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "2e5ed8fe-ea0e-4a23-963a-0f4f4919e7b1"
+    },
+    {
+      "claimId": "2ecf1fa7-3a0c-44b5-8f44-c20ce569947d",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "2ecf1fa7-3a0c-44b5-8f44-c20ce569947d"
+    },
+    {
+      "claimId": "2f12523c-cafa-4031-887b-b0c90a54c333",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "2f12523c-cafa-4031-887b-b0c90a54c333"
+    },
+    {
+      "claimId": "2fd1a5be-73b4-42f1-906d-6f55cd698f05",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "2fd1a5be-73b4-42f1-906d-6f55cd698f05"
+    },
+    {
+      "claimId": "3076d934-9c37-4134-b0d7-7f854f7a8285",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "3076d934-9c37-4134-b0d7-7f854f7a8285"
+    },
+    {
+      "claimId": "30ba1782-3689-498c-8a34-b789082b37cd",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "30ba1782-3689-498c-8a34-b789082b37cd"
+    },
+    {
+      "claimId": "30cef5c0-68d1-49db-a0e4-c38f7930b759",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "30cef5c0-68d1-49db-a0e4-c38f7930b759"
+    },
+    {
+      "claimId": "31b4354b-a83b-45e2-a3e9-951188b43883",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "31b4354b-a83b-45e2-a3e9-951188b43883"
+    },
+    {
+      "claimId": "320eebfd-9781-462b-9031-6dcd74619328",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "320eebfd-9781-462b-9031-6dcd74619328"
+    },
+    {
+      "claimId": "3273fe68-2a81-48f2-bd2e-39c818f58e69",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "3273fe68-2a81-48f2-bd2e-39c818f58e69"
+    },
+    {
+      "claimId": "329107c8-eb8a-40b9-a531-693662979cb6",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "329107c8-eb8a-40b9-a531-693662979cb6"
+    },
+    {
+      "claimId": "329fa244-728a-4835-9e08-954d35485668",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "329fa244-728a-4835-9e08-954d35485668"
+    },
+    {
+      "claimId": "32ec8b42-45e1-4d4d-8499-b8116adb6b9c",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "32ec8b42-45e1-4d4d-8499-b8116adb6b9c"
+    },
+    {
+      "claimId": "33e43e96-b87d-410c-b9b6-7ab28f7ab234",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "33e43e96-b87d-410c-b9b6-7ab28f7ab234"
+    },
+    {
+      "claimId": "33eb3d76-1aa2-4ac8-9c32-3714d5184b0b",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "33eb3d76-1aa2-4ac8-9c32-3714d5184b0b"
+    },
+    {
+      "claimId": "346a19eb-f52b-4c14-9223-0ca528bdf8d2",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "346a19eb-f52b-4c14-9223-0ca528bdf8d2"
+    },
+    {
+      "claimId": "34c3a534-2d1c-4628-a9c0-d5254a99f4fd",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "34c3a534-2d1c-4628-a9c0-d5254a99f4fd"
+    },
+    {
+      "claimId": "3580d110-7e69-47fe-95f6-ccb5e3b1ce53",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "3580d110-7e69-47fe-95f6-ccb5e3b1ce53"
+    },
+    {
+      "claimId": "35b48e8c-f3bf-4a14-a92d-8518989cd77b",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "35b48e8c-f3bf-4a14-a92d-8518989cd77b"
+    },
+    {
+      "claimId": "35d073fe-35bf-48fe-9f6b-78c197eefeab",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "35d073fe-35bf-48fe-9f6b-78c197eefeab"
+    },
+    {
+      "claimId": "36ae9c0f-5eb1-4d7a-b40e-40c364831754",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "36ae9c0f-5eb1-4d7a-b40e-40c364831754"
+    },
+    {
+      "claimId": "377aa726-239d-4f62-a801-6e0869df9950",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "377aa726-239d-4f62-a801-6e0869df9950"
+    },
+    {
+      "claimId": "3792027d-b914-462e-a8dc-0dcc160d5792",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "3792027d-b914-462e-a8dc-0dcc160d5792"
+    },
+    {
+      "claimId": "37a4b50d-23e2-485b-a8b5-700b57e1fe39",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "37a4b50d-23e2-485b-a8b5-700b57e1fe39"
+    },
+    {
+      "claimId": "37a9c582-6461-4a8d-9a4d-74c81f4a800f",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "37a9c582-6461-4a8d-9a4d-74c81f4a800f"
+    },
+    {
+      "claimId": "37b6c108-5bce-44e6-9ac9-3955a40b4815",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "37b6c108-5bce-44e6-9ac9-3955a40b4815"
+    },
+    {
+      "claimId": "37c36fa5-8f8f-4e21-9ffb-2fe01d964a1f",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "37c36fa5-8f8f-4e21-9ffb-2fe01d964a1f"
+    },
+    {
+      "claimId": "38f34bdc-199a-4459-88b3-0be16b110f55",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "38f34bdc-199a-4459-88b3-0be16b110f55"
+    },
+    {
+      "claimId": "39094db0-5d96-4797-b9a7-119525b7cf8c",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "39094db0-5d96-4797-b9a7-119525b7cf8c"
+    },
+    {
+      "claimId": "391b231a-0dfb-41d4-a407-69a1a76d390e",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "391b231a-0dfb-41d4-a407-69a1a76d390e"
+    },
+    {
+      "claimId": "39503ced-eebc-4d48-aa78-a53233088a83",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "39503ced-eebc-4d48-aa78-a53233088a83"
+    },
+    {
+      "claimId": "395e7f7d-3e8b-4cd5-8e72-e8b0e94fb519",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "395e7f7d-3e8b-4cd5-8e72-e8b0e94fb519"
+    },
+    {
+      "claimId": "395f398b-8321-454a-9ce4-a8e32bfcb3cf",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "395f398b-8321-454a-9ce4-a8e32bfcb3cf"
+    },
+    {
+      "claimId": "39e82950-4b79-4fe0-be74-45a9c7a4e2df",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "39e82950-4b79-4fe0-be74-45a9c7a4e2df"
+    },
+    {
+      "claimId": "3a886c44-03de-4008-a9a9-99b0119703e4",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "3a886c44-03de-4008-a9a9-99b0119703e4"
+    },
+    {
+      "claimId": "3b3102b8-945d-4601-90eb-97dbe95ad415",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "3b3102b8-945d-4601-90eb-97dbe95ad415"
+    },
+    {
+      "claimId": "3b9573c3-dc5c-4887-a1f0-e84dd12407f7",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "3b9573c3-dc5c-4887-a1f0-e84dd12407f7"
+    },
+    {
+      "claimId": "3be6100d-5d1b-4582-adf7-77bb9ce86441",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "3be6100d-5d1b-4582-adf7-77bb9ce86441"
+    },
+    {
+      "claimId": "3bfefc69-866f-4983-bb22-1cbd7c730ac4",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "3bfefc69-866f-4983-bb22-1cbd7c730ac4"
+    },
+    {
+      "claimId": "3c1a19c7-e361-4d67-afcc-1040feb3af9b",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "3c1a19c7-e361-4d67-afcc-1040feb3af9b"
+    },
+    {
+      "claimId": "3c474216-2ee0-46ba-9f6a-e22d0883493e",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "3c474216-2ee0-46ba-9f6a-e22d0883493e"
+    },
+    {
+      "claimId": "3c59bf8d-1cc4-433d-a81b-c0986fc8af77",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "3c59bf8d-1cc4-433d-a81b-c0986fc8af77"
+    },
+    {
+      "claimId": "3c60ab9f-185f-4763-a961-c508f72819d5",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "3c60ab9f-185f-4763-a961-c508f72819d5"
+    },
+    {
+      "claimId": "3cb0bcca-43dd-4711-a0d7-ed00dbf5bf39",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "3cb0bcca-43dd-4711-a0d7-ed00dbf5bf39"
+    },
+    {
+      "claimId": "3cca3942-8868-49d9-9199-4f5e546c998c",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "3cca3942-8868-49d9-9199-4f5e546c998c"
+    },
+    {
+      "claimId": "3d8aa380-7eea-4ee8-a02c-e3c7e36ea9af",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "3d8aa380-7eea-4ee8-a02c-e3c7e36ea9af"
+    },
+    {
+      "claimId": "3d8ca655-b49d-475e-a0d9-201638d3b108",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "3d8ca655-b49d-475e-a0d9-201638d3b108"
+    },
+    {
+      "claimId": "3dd5b740-1c5a-41da-98d8-b1e24cc6d95c",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "3dd5b740-1c5a-41da-98d8-b1e24cc6d95c"
+    },
+    {
+      "claimId": "3e013604-efbf-48ef-9135-dc919cf738b0",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "3e013604-efbf-48ef-9135-dc919cf738b0"
+    },
+    {
+      "claimId": "3e19f945-8b34-49b1-a93f-153eb39fc048",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "3e19f945-8b34-49b1-a93f-153eb39fc048"
+    },
+    {
+      "claimId": "3e23386a-6741-4cb9-b622-6fde36980307",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "3e23386a-6741-4cb9-b622-6fde36980307"
+    },
+    {
+      "claimId": "3e64cbe9-487f-400a-be68-8ff17a9658a8",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "3e64cbe9-487f-400a-be68-8ff17a9658a8"
+    },
+    {
+      "claimId": "3eb8f9d3-0f3f-4618-a05f-8d203e060189",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "3eb8f9d3-0f3f-4618-a05f-8d203e060189"
+    },
+    {
+      "claimId": "3ebe299b-0e2a-4ef5-a5a3-e27a08a1d8e3",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "3ebe299b-0e2a-4ef5-a5a3-e27a08a1d8e3"
+    },
+    {
+      "claimId": "3f8c6d6c-2ea8-4884-8f59-b5b23820810d",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "3f8c6d6c-2ea8-4884-8f59-b5b23820810d"
+    },
+    {
+      "claimId": "3f8f3780-3237-4f7f-8c69-dea45a8ee2df",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "3f8f3780-3237-4f7f-8c69-dea45a8ee2df"
+    },
+    {
+      "claimId": "3fc4563a-b10d-4d61-99a0-c60844fa41dd",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "3fc4563a-b10d-4d61-99a0-c60844fa41dd"
+    },
+    {
+      "claimId": "3febc11d-199f-4602-96c9-d5182ca00114",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "3febc11d-199f-4602-96c9-d5182ca00114"
+    },
+    {
+      "claimId": "403142bc-84dc-4fcd-b670-563654d36ae1",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "403142bc-84dc-4fcd-b670-563654d36ae1"
+    },
+    {
+      "claimId": "41125c4c-d61a-4266-a562-5f5ec556dfd8",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "41125c4c-d61a-4266-a562-5f5ec556dfd8"
+    },
+    {
+      "claimId": "41168638-9b8a-4d87-a3f4-5a8b7f1643e7",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "41168638-9b8a-4d87-a3f4-5a8b7f1643e7"
+    },
+    {
+      "claimId": "4145905b-8038-4283-9294-6d24a6deb5f0",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "4145905b-8038-4283-9294-6d24a6deb5f0"
+    },
+    {
+      "claimId": "41605d3a-f3a2-4afb-925c-d292510c7630",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "41605d3a-f3a2-4afb-925c-d292510c7630"
+    },
+    {
+      "claimId": "41c83e2a-8cd2-48c7-a456-cffa3dce5537",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "41c83e2a-8cd2-48c7-a456-cffa3dce5537"
+    },
+    {
+      "claimId": "424f41ed-7680-4860-a786-88e6e1f11e14",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "424f41ed-7680-4860-a786-88e6e1f11e14"
+    },
+    {
+      "claimId": "42aefd39-2bea-4a2f-a740-92c77cc457e4",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "42aefd39-2bea-4a2f-a740-92c77cc457e4"
+    },
+    {
+      "claimId": "432b2008-4580-46c6-9225-8a942c447dd7",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "432b2008-4580-46c6-9225-8a942c447dd7"
+    },
+    {
+      "claimId": "4366d53f-981f-4134-b9fb-b47eb2a7b03e",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "4366d53f-981f-4134-b9fb-b47eb2a7b03e"
+    },
+    {
+      "claimId": "43c905a5-4772-4c23-8dfe-a24ee7764e6c",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "43c905a5-4772-4c23-8dfe-a24ee7764e6c"
+    },
+    {
+      "claimId": "44438d81-e4f7-4360-a478-eacc3830acca",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "44438d81-e4f7-4360-a478-eacc3830acca"
+    },
+    {
+      "claimId": "44924556-7dd4-4d7a-9581-6ffb73a6e8e3",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "44924556-7dd4-4d7a-9581-6ffb73a6e8e3"
+    },
+    {
+      "claimId": "456cd48b-c5d7-48f3-9ae7-8a3169c0e555",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "456cd48b-c5d7-48f3-9ae7-8a3169c0e555"
+    },
+    {
+      "claimId": "45a0fdda-24b5-4d6a-b630-bce3c6f573dc",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "45a0fdda-24b5-4d6a-b630-bce3c6f573dc"
+    },
+    {
+      "claimId": "45f9a9c0-4809-45a6-8433-67801d4976d3",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "45f9a9c0-4809-45a6-8433-67801d4976d3"
+    },
+    {
+      "claimId": "46129974-05ec-4518-b0f3-795287c2b30e",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "46129974-05ec-4518-b0f3-795287c2b30e"
+    },
+    {
+      "claimId": "46740a2c-62e5-42de-933d-a758ba7b10cb",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "46740a2c-62e5-42de-933d-a758ba7b10cb"
+    },
+    {
+      "claimId": "4760648f-f80d-4c6e-993d-d2d90cc09ef7",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "4760648f-f80d-4c6e-993d-d2d90cc09ef7"
+    },
+    {
+      "claimId": "478d1f1c-fd41-4ff4-8e36-3b4cd43b2eb9",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "478d1f1c-fd41-4ff4-8e36-3b4cd43b2eb9"
+    },
+    {
+      "claimId": "48380921-b402-493a-b4e6-357ff69f76f6",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "48380921-b402-493a-b4e6-357ff69f76f6"
+    },
+    {
+      "claimId": "485a6754-b4b1-4ea2-9ee9-113ce7d91e9a",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "485a6754-b4b1-4ea2-9ee9-113ce7d91e9a"
+    },
+    {
+      "claimId": "48ac6b4a-74c1-4f10-b8d1-44b695917651",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "48ac6b4a-74c1-4f10-b8d1-44b695917651"
+    },
+    {
+      "claimId": "4944bd87-452d-4ee7-b455-864991e49aab",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "4944bd87-452d-4ee7-b455-864991e49aab"
+    },
+    {
+      "claimId": "4954a03f-50e2-4245-bb48-af76c87455d1",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "4954a03f-50e2-4245-bb48-af76c87455d1"
+    },
+    {
+      "claimId": "498c67ce-72b4-4a2c-92a8-ef1cd8979f9b",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "498c67ce-72b4-4a2c-92a8-ef1cd8979f9b"
+    },
+    {
+      "claimId": "49999602-ea6e-4e4b-aba1-5d49d1739bd1",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "49999602-ea6e-4e4b-aba1-5d49d1739bd1"
+    },
+    {
+      "claimId": "49bd3658-c1ed-443a-a71b-4450b47c4921",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "49bd3658-c1ed-443a-a71b-4450b47c4921"
+    },
+    {
+      "claimId": "49c35865-8e70-4633-9ef5-eddaf5a08001",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "49c35865-8e70-4633-9ef5-eddaf5a08001"
+    },
+    {
+      "claimId": "4a7ad496-85cb-4fcf-b713-f3e14ee8e29d",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "4a7ad496-85cb-4fcf-b713-f3e14ee8e29d"
+    },
+    {
+      "claimId": "4afc156d-bc36-4967-8c4d-5c3d57ca1331",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "4afc156d-bc36-4967-8c4d-5c3d57ca1331"
+    },
+    {
+      "claimId": "4b4192b5-40b1-4503-b1a5-e8c62d9b62d8",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "4b4192b5-40b1-4503-b1a5-e8c62d9b62d8"
+    },
+    {
+      "claimId": "4c2735ba-0c5e-4dcc-9459-fea7b22ecb55",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "4c2735ba-0c5e-4dcc-9459-fea7b22ecb55"
+    },
+    {
+      "claimId": "4d4ace51-7e98-40c2-a0eb-31b59b1fb11f",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "4d4ace51-7e98-40c2-a0eb-31b59b1fb11f"
+    },
+    {
+      "claimId": "4d6d2231-a1e6-4f8d-aaf9-ed397081ac7e",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "4d6d2231-a1e6-4f8d-aaf9-ed397081ac7e"
+    },
+    {
+      "claimId": "4d999f00-d867-4487-bb2f-2bc302324d00",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "4d999f00-d867-4487-bb2f-2bc302324d00"
+    },
+    {
+      "claimId": "4da7ef0d-51fc-4de7-b8a4-055f7eb882a4",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "4da7ef0d-51fc-4de7-b8a4-055f7eb882a4"
+    },
+    {
+      "claimId": "4e179cf3-d737-455e-b44b-981402a1fc4d",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "4e179cf3-d737-455e-b44b-981402a1fc4d"
+    },
+    {
+      "claimId": "4e9d1d13-cbf4-4015-87ec-0c4d2e55366e",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "4e9d1d13-cbf4-4015-87ec-0c4d2e55366e"
+    },
+    {
+      "claimId": "4eb44a5a-227a-4481-8747-9d31c32c4cd1",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "4eb44a5a-227a-4481-8747-9d31c32c4cd1"
+    },
+    {
+      "claimId": "4ef59516-380f-485d-adee-17dd7a15e864",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "4ef59516-380f-485d-adee-17dd7a15e864"
+    },
+    {
+      "claimId": "4f2db95f-a3b8-4dca-9cfd-04773bd7f6b0",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "4f2db95f-a3b8-4dca-9cfd-04773bd7f6b0"
+    },
+    {
+      "claimId": "4fa6af07-0424-41d4-a648-1343711f7bba",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "4fa6af07-0424-41d4-a648-1343711f7bba"
+    },
+    {
+      "claimId": "4faaa8d6-a273-4204-a36c-e3aab36adda0",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "4faaa8d6-a273-4204-a36c-e3aab36adda0"
+    },
+    {
+      "claimId": "4fccb6aa-f04a-4ece-8132-9b527edb649d",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "4fccb6aa-f04a-4ece-8132-9b527edb649d"
+    },
+    {
+      "claimId": "502d2345-bcd0-46c9-98b6-741e31d6fa93",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "502d2345-bcd0-46c9-98b6-741e31d6fa93"
+    },
+    {
+      "claimId": "5037927f-d767-40ec-8b2c-8578fe1cb527",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "5037927f-d767-40ec-8b2c-8578fe1cb527"
+    },
+    {
+      "claimId": "50dee17a-de83-4588-b3df-953d7ab68ce3",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "50dee17a-de83-4588-b3df-953d7ab68ce3"
+    },
+    {
+      "claimId": "53b08bc5-90e0-458f-9d9f-a8b09ec7723a",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "53b08bc5-90e0-458f-9d9f-a8b09ec7723a"
+    },
+    {
+      "claimId": "53ef8795-1fbf-40d0-9451-6ede47f04ab4",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "53ef8795-1fbf-40d0-9451-6ede47f04ab4"
+    },
+    {
+      "claimId": "5447949b-3147-4dfd-a0d5-4df0b61f8053",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "5447949b-3147-4dfd-a0d5-4df0b61f8053"
+    },
+    {
+      "claimId": "547b18df-6b20-4f94-9c18-2984afe080d4",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "547b18df-6b20-4f94-9c18-2984afe080d4"
+    },
+    {
+      "claimId": "54a56cf8-4fa3-4778-9084-a316cf69184d",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "54a56cf8-4fa3-4778-9084-a316cf69184d"
+    },
+    {
+      "claimId": "54f450be-00e8-4bf8-b828-4dc2ad5dd4dd",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "54f450be-00e8-4bf8-b828-4dc2ad5dd4dd"
+    },
+    {
+      "claimId": "550f45e0-aff1-432d-b59c-20320d624d0b",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "550f45e0-aff1-432d-b59c-20320d624d0b"
+    },
+    {
+      "claimId": "55374556-a2d4-44ec-9c65-8054c8a87efd",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "55374556-a2d4-44ec-9c65-8054c8a87efd"
+    },
+    {
+      "claimId": "55497e38-d216-4223-9634-e9326c99e43e",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "55497e38-d216-4223-9634-e9326c99e43e"
+    },
+    {
+      "claimId": "554bbc81-73df-498e-b867-c90219496e2f",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "554bbc81-73df-498e-b867-c90219496e2f"
+    },
+    {
+      "claimId": "5558f057-54f2-4c5c-ad56-9e055d3ca692",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "5558f057-54f2-4c5c-ad56-9e055d3ca692"
+    },
+    {
+      "claimId": "574dea40-9293-4018-996f-95e8ed4c2807",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "574dea40-9293-4018-996f-95e8ed4c2807"
+    },
+    {
+      "claimId": "578cca7c-f8eb-4af0-99bf-d1291fca1031",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "578cca7c-f8eb-4af0-99bf-d1291fca1031"
+    },
+    {
+      "claimId": "57932768-f72c-45ad-8cd4-5e9be53cb3b0",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "57932768-f72c-45ad-8cd4-5e9be53cb3b0"
+    },
+    {
+      "claimId": "58b3f3b8-5c83-4937-8f9e-761a2a362239",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "58b3f3b8-5c83-4937-8f9e-761a2a362239"
+    },
+    {
+      "claimId": "58f0da62-30af-4959-b9b0-ac09ce166d72",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "58f0da62-30af-4959-b9b0-ac09ce166d72"
+    },
+    {
+      "claimId": "5917cb5b-346f-4389-b4b4-bd0d20c80a39",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "5917cb5b-346f-4389-b4b4-bd0d20c80a39"
+    },
+    {
+      "claimId": "595611ea-b509-4bc0-876c-bc5f9b83c200",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "595611ea-b509-4bc0-876c-bc5f9b83c200"
+    },
+    {
+      "claimId": "596ccdf5-cd34-42c0-9dc3-871481b768e6",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "596ccdf5-cd34-42c0-9dc3-871481b768e6"
+    },
+    {
+      "claimId": "59ca56ff-cf57-4c7c-9d54-6de5e469e658",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "59ca56ff-cf57-4c7c-9d54-6de5e469e658"
+    },
+    {
+      "claimId": "59fba03d-0d25-48b1-86b0-3206d39044b0",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "59fba03d-0d25-48b1-86b0-3206d39044b0"
+    },
+    {
+      "claimId": "5a67e4b7-b2b1-4ada-a75c-cd0bae1c5193",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "5a67e4b7-b2b1-4ada-a75c-cd0bae1c5193"
+    },
+    {
+      "claimId": "5a945bbd-8e7a-4598-b168-40298c18ab8d",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "5a945bbd-8e7a-4598-b168-40298c18ab8d"
+    },
+    {
+      "claimId": "5b303e76-0dde-4237-a4f6-8e515c70b5d2",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "5b303e76-0dde-4237-a4f6-8e515c70b5d2"
+    },
+    {
+      "claimId": "5b68ec57-2bf7-4813-a14e-5f874b047e30",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "5b68ec57-2bf7-4813-a14e-5f874b047e30"
+    },
+    {
+      "claimId": "5bd0c66e-618c-4d5a-8816-6dd5f48b6575",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "5bd0c66e-618c-4d5a-8816-6dd5f48b6575"
+    },
+    {
+      "claimId": "5c34fd42-26bb-48a8-8d69-caa0ed552103",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "5c34fd42-26bb-48a8-8d69-caa0ed552103"
+    },
+    {
+      "claimId": "5c9b21dd-069b-41b5-86e3-12c43394dd44",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "5c9b21dd-069b-41b5-86e3-12c43394dd44"
+    },
+    {
+      "claimId": "5e17750f-67ba-4ffb-914f-0890ce62d202",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "5e17750f-67ba-4ffb-914f-0890ce62d202"
+    },
+    {
+      "claimId": "5e3f4407-9ba8-4f48-b19c-581695e7c317",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "5e3f4407-9ba8-4f48-b19c-581695e7c317"
+    },
+    {
+      "claimId": "5e53bca5-d5b4-4c70-b509-1c0f66341f01",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "5e53bca5-d5b4-4c70-b509-1c0f66341f01"
+    },
+    {
+      "claimId": "5e55cb52-443d-45ec-a99d-6ca30957bc1a",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "5e55cb52-443d-45ec-a99d-6ca30957bc1a"
+    },
+    {
+      "claimId": "5ebefc65-bd03-445b-a979-bdefe948efee",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "5ebefc65-bd03-445b-a979-bdefe948efee"
+    },
+    {
+      "claimId": "5f44825d-fbe7-47c1-82cb-bc80d93910dc",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "5f44825d-fbe7-47c1-82cb-bc80d93910dc"
+    },
+    {
+      "claimId": "5f88d973-46c9-4e37-a751-af36d5b21a4d",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "5f88d973-46c9-4e37-a751-af36d5b21a4d"
+    },
+    {
+      "claimId": "6009f66b-975e-42fe-bb91-f5f12ce81385",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "6009f66b-975e-42fe-bb91-f5f12ce81385"
+    },
+    {
+      "claimId": "61195a28-b483-4860-b3aa-4f09deda1c3e",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "61195a28-b483-4860-b3aa-4f09deda1c3e"
+    },
+    {
+      "claimId": "6145a793-8d4b-4093-affe-3e8523281c0b",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "6145a793-8d4b-4093-affe-3e8523281c0b"
+    },
+    {
+      "claimId": "61b37643-ea8d-4f52-b097-69d6464c6d6d",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "61b37643-ea8d-4f52-b097-69d6464c6d6d"
+    },
+    {
+      "claimId": "61c0c1b9-8bf8-4948-9e1a-a4cacb6afd8c",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "61c0c1b9-8bf8-4948-9e1a-a4cacb6afd8c"
+    },
+    {
+      "claimId": "61c9decd-de1c-4e91-96d8-570c105e955c",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "61c9decd-de1c-4e91-96d8-570c105e955c"
+    },
+    {
+      "claimId": "620dfbbf-76f3-4c55-aece-acb3baccefa2",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "620dfbbf-76f3-4c55-aece-acb3baccefa2"
+    },
+    {
+      "claimId": "624e0b57-ef3a-4935-a09b-8fda64d65011",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "624e0b57-ef3a-4935-a09b-8fda64d65011"
+    },
+    {
+      "claimId": "6281514a-a2ca-44ca-9a8c-569b44612e4d",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "6281514a-a2ca-44ca-9a8c-569b44612e4d"
+    },
+    {
+      "claimId": "62d692fc-2f03-4ee5-8d65-d6f89d9bdd35",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "62d692fc-2f03-4ee5-8d65-d6f89d9bdd35"
+    },
+    {
+      "claimId": "63a30f90-6c69-4c7a-91e0-18a85fa59f21",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "63a30f90-6c69-4c7a-91e0-18a85fa59f21"
+    },
+    {
+      "claimId": "642207ca-b9bf-4b15-a11f-72598048b9da",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "642207ca-b9bf-4b15-a11f-72598048b9da"
+    },
+    {
+      "claimId": "64315a5d-e9eb-4d80-b4ef-18b7c749234d",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "64315a5d-e9eb-4d80-b4ef-18b7c749234d"
+    },
+    {
+      "claimId": "64810315-72c7-4985-aecb-bee4d0040b22",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "64810315-72c7-4985-aecb-bee4d0040b22"
+    },
+    {
+      "claimId": "64824c10-fe2b-459c-952e-23178cd93fb0",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "64824c10-fe2b-459c-952e-23178cd93fb0"
+    },
+    {
+      "claimId": "64c728b2-9efe-452b-b819-171d0bcbee87",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "64c728b2-9efe-452b-b819-171d0bcbee87"
+    },
+    {
+      "claimId": "64c828d5-f140-46a9-b0ee-d50af117c129",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "64c828d5-f140-46a9-b0ee-d50af117c129"
+    },
+    {
+      "claimId": "6552bb10-5165-4840-87da-eb2b0da61c94",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "6552bb10-5165-4840-87da-eb2b0da61c94"
+    },
+    {
+      "claimId": "65594372-9eac-46a7-b90d-e8e2961d2301",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "65594372-9eac-46a7-b90d-e8e2961d2301"
+    },
+    {
+      "claimId": "65896eec-629e-42c6-b4a5-4f039bf3e3b8",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "65896eec-629e-42c6-b4a5-4f039bf3e3b8"
+    },
+    {
+      "claimId": "65a14f70-78fa-4041-8a99-fc7562403c2a",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "65a14f70-78fa-4041-8a99-fc7562403c2a"
+    },
+    {
+      "claimId": "661821c8-87f8-4a30-98be-e31e0fbca423",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "661821c8-87f8-4a30-98be-e31e0fbca423"
+    },
+    {
+      "claimId": "662ca99c-47f6-4630-9e27-ab6911f8b13c",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "662ca99c-47f6-4630-9e27-ab6911f8b13c"
+    },
+    {
+      "claimId": "66849ec3-6f61-4396-94f0-e4c76b908085",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "66849ec3-6f61-4396-94f0-e4c76b908085"
+    },
+    {
+      "claimId": "66a7dedc-db48-4b2f-816a-8877b092545c",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "66a7dedc-db48-4b2f-816a-8877b092545c"
+    },
+    {
+      "claimId": "6728bbaa-7dbc-4643-92b3-93e406cce4fe",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "6728bbaa-7dbc-4643-92b3-93e406cce4fe"
+    },
+    {
+      "claimId": "677bc37a-d9d5-4c18-9e68-43edd8ca197c",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "677bc37a-d9d5-4c18-9e68-43edd8ca197c"
+    },
+    {
+      "claimId": "682d3de2-3abd-4e61-a51b-b01636aceaa2",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "682d3de2-3abd-4e61-a51b-b01636aceaa2"
+    },
+    {
+      "claimId": "6859d307-e452-41d2-b0e6-b15e4b698fda",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "6859d307-e452-41d2-b0e6-b15e4b698fda"
+    },
+    {
+      "claimId": "687c4916-e14a-4701-9556-21a8c47916a0",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "687c4916-e14a-4701-9556-21a8c47916a0"
+    },
+    {
+      "claimId": "68b89e79-1429-453d-ba37-a82e00b7463e",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "68b89e79-1429-453d-ba37-a82e00b7463e"
+    },
+    {
+      "claimId": "68d8cbc1-b8a7-4d7f-aa28-64415e7ea970",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "68d8cbc1-b8a7-4d7f-aa28-64415e7ea970"
+    },
+    {
+      "claimId": "6a5f037f-e6eb-47e7-90dd-cb10b3895281",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "6a5f037f-e6eb-47e7-90dd-cb10b3895281"
+    },
+    {
+      "claimId": "6a63edb6-f751-453e-9b75-c402ca47b89b",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "6a63edb6-f751-453e-9b75-c402ca47b89b"
+    },
+    {
+      "claimId": "6a6d23a6-a92a-47f9-b88d-536ee2b934e8",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "6a6d23a6-a92a-47f9-b88d-536ee2b934e8"
+    },
+    {
+      "claimId": "6a8947da-9009-4bdc-988b-79928eff97ac",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "6a8947da-9009-4bdc-988b-79928eff97ac"
+    },
+    {
+      "claimId": "6aa08b64-4fa0-4085-a7a8-7f5d3c5981e7",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "6aa08b64-4fa0-4085-a7a8-7f5d3c5981e7"
+    },
+    {
+      "claimId": "6aa1c5b2-a2cf-4b56-b283-f17686f12a83",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "6aa1c5b2-a2cf-4b56-b283-f17686f12a83"
+    },
+    {
+      "claimId": "6ac9c275-8de2-415a-9ce4-617bee65ece3",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "6ac9c275-8de2-415a-9ce4-617bee65ece3"
+    },
+    {
+      "claimId": "6b3e3e19-d16a-4c6f-a420-de4343724485",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "6b3e3e19-d16a-4c6f-a420-de4343724485"
+    },
+    {
+      "claimId": "6b3fde6e-ecf1-4788-aa7e-a8b234bd4260",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "6b3fde6e-ecf1-4788-aa7e-a8b234bd4260"
+    },
+    {
+      "claimId": "6b7366f8-33fb-4a30-bfbe-ed37cfb1fa93",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "6b7366f8-33fb-4a30-bfbe-ed37cfb1fa93"
+    },
+    {
+      "claimId": "6ba7d71e-2318-4dcf-8167-e2de9395d577",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "6ba7d71e-2318-4dcf-8167-e2de9395d577"
+    },
+    {
+      "claimId": "6c093561-0218-4541-8397-a0e0662312d7",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "6c093561-0218-4541-8397-a0e0662312d7"
+    },
+    {
+      "claimId": "6c467f25-c665-4114-86a7-6e9b17d22018",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "6c467f25-c665-4114-86a7-6e9b17d22018"
+    },
+    {
+      "claimId": "6c639568-caa0-463c-a23d-83df8e7d6b96",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "6c639568-caa0-463c-a23d-83df8e7d6b96"
+    },
+    {
+      "claimId": "6c91726f-459e-4141-acc6-8b9d5d6f4389",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "6c91726f-459e-4141-acc6-8b9d5d6f4389"
+    },
+    {
+      "claimId": "6e0b8f3a-3526-4bac-8441-7f33b0c21112",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "6e0b8f3a-3526-4bac-8441-7f33b0c21112"
+    },
+    {
+      "claimId": "6e65d5a3-45a5-4c19-8d1e-56a4047a4b7b",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "6e65d5a3-45a5-4c19-8d1e-56a4047a4b7b"
+    },
+    {
+      "claimId": "6ed1c689-4fae-41d6-afb8-9ff561dcc3c2",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "6ed1c689-4fae-41d6-afb8-9ff561dcc3c2"
+    },
+    {
+      "claimId": "6ee87879-0a5f-456c-95ce-1bf335ff7926",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "6ee87879-0a5f-456c-95ce-1bf335ff7926"
+    },
+    {
+      "claimId": "6ef2ccf1-ac6f-4216-a0dd-6cc8e7100604",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "6ef2ccf1-ac6f-4216-a0dd-6cc8e7100604"
+    },
+    {
+      "claimId": "6f4d0089-d968-47c8-932e-d1b8ef1b31a5",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "6f4d0089-d968-47c8-932e-d1b8ef1b31a5"
+    },
+    {
+      "claimId": "6f820a6a-e0c1-4ead-9f49-7f048c21d406",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "6f820a6a-e0c1-4ead-9f49-7f048c21d406"
+    },
+    {
+      "claimId": "7027db5e-cb82-49ed-b369-21c9552efbde",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "7027db5e-cb82-49ed-b369-21c9552efbde"
+    },
+    {
+      "claimId": "707cddc8-a85f-4071-bd96-4a6dcce0b7db",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "707cddc8-a85f-4071-bd96-4a6dcce0b7db"
+    },
+    {
+      "claimId": "70c4e726-f80e-433c-ab61-5af25f4e5b8b",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "70c4e726-f80e-433c-ab61-5af25f4e5b8b"
+    },
+    {
+      "claimId": "70d37dda-75f6-4351-ad4c-1d48fd36c18e",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "70d37dda-75f6-4351-ad4c-1d48fd36c18e"
+    },
+    {
+      "claimId": "70e1b974-70f1-416c-9625-86950bce493e",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "70e1b974-70f1-416c-9625-86950bce493e"
+    },
+    {
+      "claimId": "712cec44-55c1-46d5-ba1a-cacc2c0f87f6",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "712cec44-55c1-46d5-ba1a-cacc2c0f87f6"
+    },
+    {
+      "claimId": "71d76968-27a8-4c79-ba99-9d3a809f5cb1",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "71d76968-27a8-4c79-ba99-9d3a809f5cb1"
+    },
+    {
+      "claimId": "71eaeae4-f3fd-491d-b4cc-215eafdb6c4f",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "71eaeae4-f3fd-491d-b4cc-215eafdb6c4f"
+    },
+    {
+      "claimId": "7204cf8b-c43e-4c68-9f39-7bd32fbd4dec",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "7204cf8b-c43e-4c68-9f39-7bd32fbd4dec"
+    },
+    {
+      "claimId": "7243d6fa-f29b-441c-bfc9-3bb288f2f395",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "7243d6fa-f29b-441c-bfc9-3bb288f2f395"
+    },
+    {
+      "claimId": "72ac2088-d895-47b9-8e8e-fef3d51b6005",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "72ac2088-d895-47b9-8e8e-fef3d51b6005"
+    },
+    {
+      "claimId": "72d9832b-d2bb-4861-9830-044e1fbd7bfd",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "72d9832b-d2bb-4861-9830-044e1fbd7bfd"
+    },
+    {
+      "claimId": "730aa053-c94a-4d35-b229-3c56eeadd206",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "730aa053-c94a-4d35-b229-3c56eeadd206"
+    },
+    {
+      "claimId": "73f002a2-5b67-4fcd-a4fe-b07a4de375dc",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "73f002a2-5b67-4fcd-a4fe-b07a4de375dc"
+    },
+    {
+      "claimId": "740566b6-3c2a-4675-977e-51e503d9d546",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "740566b6-3c2a-4675-977e-51e503d9d546"
+    },
+    {
+      "claimId": "7410814c-5763-4c2d-8a86-8cdda2c32b66",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "7410814c-5763-4c2d-8a86-8cdda2c32b66"
+    },
+    {
+      "claimId": "74333012-8474-4f7a-a187-77c2d71b801f",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "74333012-8474-4f7a-a187-77c2d71b801f"
+    },
+    {
+      "claimId": "7433f28e-f632-4a1f-ac07-482038e71610",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "7433f28e-f632-4a1f-ac07-482038e71610"
+    },
+    {
+      "claimId": "74bcf80e-1096-4a8c-8694-a924a10ba9e7",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "74bcf80e-1096-4a8c-8694-a924a10ba9e7"
+    },
+    {
+      "claimId": "74bd1382-df1b-4615-bc34-6273dc81921a",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "74bd1382-df1b-4615-bc34-6273dc81921a"
+    },
+    {
+      "claimId": "74be6c61-a860-4d2e-b16c-b8ad11bc916b",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "74be6c61-a860-4d2e-b16c-b8ad11bc916b"
+    },
+    {
+      "claimId": "74ddc84c-cc46-4722-8804-7e0bdc1ec0ba",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "74ddc84c-cc46-4722-8804-7e0bdc1ec0ba"
+    },
+    {
+      "claimId": "7541b128-28bb-4c11-bb15-5b46db247777",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "7541b128-28bb-4c11-bb15-5b46db247777"
+    },
+    {
+      "claimId": "7580f467-2171-4228-a431-87a73c120fd8",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "7580f467-2171-4228-a431-87a73c120fd8"
+    },
+    {
+      "claimId": "75a55771-a8b8-4ced-814c-36616424e9c0",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "75a55771-a8b8-4ced-814c-36616424e9c0"
+    },
+    {
+      "claimId": "75d80c52-f11a-4b84-85f6-b6a5c068c2b6",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "75d80c52-f11a-4b84-85f6-b6a5c068c2b6"
+    },
+    {
+      "claimId": "75f1d6f6-f1c3-4b10-b77b-e910ecc64b82",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "75f1d6f6-f1c3-4b10-b77b-e910ecc64b82"
+    },
+    {
+      "claimId": "761cd565-9a14-4dfc-8871-2a637660c4a6",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "761cd565-9a14-4dfc-8871-2a637660c4a6"
+    },
+    {
+      "claimId": "76620664-a9f0-4a1e-ad8c-ff13aae20035",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "76620664-a9f0-4a1e-ad8c-ff13aae20035"
+    },
+    {
+      "claimId": "76ba6914-8cc1-46ac-be01-5352b67da763",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "76ba6914-8cc1-46ac-be01-5352b67da763"
+    },
+    {
+      "claimId": "7745ce65-4f98-46a1-8e5f-d42965f1edf3",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "7745ce65-4f98-46a1-8e5f-d42965f1edf3"
+    },
+    {
+      "claimId": "7774ae1b-b1e8-4e03-bae0-c4436de7add3",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "7774ae1b-b1e8-4e03-bae0-c4436de7add3"
+    },
+    {
+      "claimId": "78222661-5bad-4ca6-a2af-224af3e6b33b",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "78222661-5bad-4ca6-a2af-224af3e6b33b"
+    },
+    {
+      "claimId": "782e313d-8402-4b57-9711-c83604b0d7f6",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "782e313d-8402-4b57-9711-c83604b0d7f6"
+    },
+    {
+      "claimId": "786798ab-daa9-403c-9556-6ae4cde794f8",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "786798ab-daa9-403c-9556-6ae4cde794f8"
+    },
+    {
+      "claimId": "787eb2cf-ed12-4c5c-8484-14fb69c69450",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "787eb2cf-ed12-4c5c-8484-14fb69c69450"
+    },
+    {
+      "claimId": "7883f5a9-da83-41ac-920c-02d7669be4e9",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "7883f5a9-da83-41ac-920c-02d7669be4e9"
+    },
+    {
+      "claimId": "789448f7-2fd2-4d9e-a917-9a59a6984bef",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "789448f7-2fd2-4d9e-a917-9a59a6984bef"
+    },
+    {
+      "claimId": "78d59365-8159-43fc-abb5-25967152c608",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "78d59365-8159-43fc-abb5-25967152c608"
+    },
+    {
+      "claimId": "7921e32d-1d3f-4942-ae8d-c0ccc9f8b286",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "7921e32d-1d3f-4942-ae8d-c0ccc9f8b286"
+    },
+    {
+      "claimId": "794f6a9c-ea5d-4985-821b-f9e9905743f4",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "794f6a9c-ea5d-4985-821b-f9e9905743f4"
+    },
+    {
+      "claimId": "795a2c3d-b710-44c2-aacd-54b682f18719",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "795a2c3d-b710-44c2-aacd-54b682f18719"
+    },
+    {
+      "claimId": "7997e149-65b0-43c4-bc1b-8caa49186b6b",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "7997e149-65b0-43c4-bc1b-8caa49186b6b"
+    },
+    {
+      "claimId": "79a5dd01-52b4-4f24-9c27-7a2991241985",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "79a5dd01-52b4-4f24-9c27-7a2991241985"
+    },
+    {
+      "claimId": "79ad249c-4e5c-49f9-bbf2-063aa8788a49",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "79ad249c-4e5c-49f9-bbf2-063aa8788a49"
+    },
+    {
+      "claimId": "79ba46f4-b522-48a6-bdb0-204d453469fa",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "79ba46f4-b522-48a6-bdb0-204d453469fa"
+    },
+    {
+      "claimId": "7a079288-59c8-427f-8a16-840ff9006596",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "7a079288-59c8-427f-8a16-840ff9006596"
+    },
+    {
+      "claimId": "7a352dd4-bb6a-4ed6-9689-a3c9bcb178a2",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "7a352dd4-bb6a-4ed6-9689-a3c9bcb178a2"
+    },
+    {
+      "claimId": "7a55632b-2ab6-42a5-8931-99420271e507",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "7a55632b-2ab6-42a5-8931-99420271e507"
+    },
+    {
+      "claimId": "7b89dede-13a2-4a60-a721-222917f4be33",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "7b89dede-13a2-4a60-a721-222917f4be33"
+    },
+    {
+      "claimId": "7c33d1d7-4851-45a6-b687-6f31e47f36d0",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "7c33d1d7-4851-45a6-b687-6f31e47f36d0"
+    },
+    {
+      "claimId": "7c4c6c5f-d09a-43ee-b1db-8152cc078813",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "7c4c6c5f-d09a-43ee-b1db-8152cc078813"
+    },
+    {
+      "claimId": "7c867ef7-53b5-4078-8705-c2578f29fd51",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "7c867ef7-53b5-4078-8705-c2578f29fd51"
+    },
+    {
+      "claimId": "7c94fede-06b3-444e-a0c8-be393833b5bc",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "7c94fede-06b3-444e-a0c8-be393833b5bc"
+    },
+    {
+      "claimId": "7ca11241-40fc-43b6-87e7-53a9269ce019",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "7ca11241-40fc-43b6-87e7-53a9269ce019"
+    },
+    {
+      "claimId": "7ce26d8b-1c16-43f0-9999-453032a14a1b",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "7ce26d8b-1c16-43f0-9999-453032a14a1b"
+    },
+    {
+      "claimId": "7cf74dd9-5788-4f53-9a58-f8207bb40235",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "7cf74dd9-5788-4f53-9a58-f8207bb40235"
+    },
+    {
+      "claimId": "7d24f91b-5027-4814-8991-405a1d5a832c",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "7d24f91b-5027-4814-8991-405a1d5a832c"
+    },
+    {
+      "claimId": "7d29f8b2-0c9a-4470-a801-7eef7efd5bef",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "7d29f8b2-0c9a-4470-a801-7eef7efd5bef"
+    },
+    {
+      "claimId": "7d301fd6-497e-4d72-8240-17422332d127",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "7d301fd6-497e-4d72-8240-17422332d127"
+    },
+    {
+      "claimId": "7e23b49d-0619-4ab7-9596-98cd58a722b9",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "7e23b49d-0619-4ab7-9596-98cd58a722b9"
+    },
+    {
+      "claimId": "7e41c736-7f25-46c8-bc14-c84dcc3d5394",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "7e41c736-7f25-46c8-bc14-c84dcc3d5394"
+    },
+    {
+      "claimId": "7e9d9717-a372-4d48-8ee2-99a4afbcb39b",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "7e9d9717-a372-4d48-8ee2-99a4afbcb39b"
+    },
+    {
+      "claimId": "7ef70c21-0e39-4329-8724-7f897fa33c68",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "7ef70c21-0e39-4329-8724-7f897fa33c68"
+    },
+    {
+      "claimId": "7f03b122-b893-4a5c-96f0-a536c56d2ab4",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "7f03b122-b893-4a5c-96f0-a536c56d2ab4"
+    },
+    {
+      "claimId": "7f1cce4f-a843-4f99-a9cd-921f98c159db",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "7f1cce4f-a843-4f99-a9cd-921f98c159db"
+    },
+    {
+      "claimId": "7fa26d83-58a0-4f99-ae22-37a9f91e09d3",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "7fa26d83-58a0-4f99-ae22-37a9f91e09d3"
+    },
+    {
+      "claimId": "7feb566d-d7be-47ab-a257-d255c9896865",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "7feb566d-d7be-47ab-a257-d255c9896865"
+    },
+    {
+      "claimId": "80177477-6e95-45e2-ada8-67fc52586c82",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "80177477-6e95-45e2-ada8-67fc52586c82"
+    },
+    {
+      "claimId": "8030f059-7797-4062-9a23-f0f07bf251a0",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "8030f059-7797-4062-9a23-f0f07bf251a0"
+    },
+    {
+      "claimId": "80976bb6-4d59-4d2f-bf08-a52fa9b5c029",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "80976bb6-4d59-4d2f-bf08-a52fa9b5c029"
+    },
+    {
+      "claimId": "80a29340-af5b-418b-9960-e58fe71926ae",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "80a29340-af5b-418b-9960-e58fe71926ae"
+    },
+    {
+      "claimId": "811d03ec-d36c-4c3c-818d-9416cd6ec1cd",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "811d03ec-d36c-4c3c-818d-9416cd6ec1cd"
+    },
+    {
+      "claimId": "812ef9ef-748c-4f96-b50e-654b5a68f5e6",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "812ef9ef-748c-4f96-b50e-654b5a68f5e6"
+    },
+    {
+      "claimId": "81568db6-fd6a-4153-8e99-35c749cf30cb",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "81568db6-fd6a-4153-8e99-35c749cf30cb"
+    },
+    {
+      "claimId": "817a1822-3a35-4ca2-a7b6-173c17212b9f",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "817a1822-3a35-4ca2-a7b6-173c17212b9f"
+    },
+    {
+      "claimId": "81d98bf2-3764-46bf-b4da-da4bd41368da",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "81d98bf2-3764-46bf-b4da-da4bd41368da"
+    },
+    {
+      "claimId": "81df33ba-6dd0-4d42-b58d-ecbe106c0801",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "81df33ba-6dd0-4d42-b58d-ecbe106c0801"
+    },
+    {
+      "claimId": "82260eec-242c-425e-99b7-347b11954199",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "82260eec-242c-425e-99b7-347b11954199"
+    },
+    {
+      "claimId": "82685ca1-8974-472e-a670-2a1d8c513819",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "82685ca1-8974-472e-a670-2a1d8c513819"
+    },
+    {
+      "claimId": "8270f4d2-21f7-473f-9e75-78ab4ae93fa5",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "8270f4d2-21f7-473f-9e75-78ab4ae93fa5"
+    },
+    {
+      "claimId": "83034493-efdc-429e-bac4-c6f7210cd3df",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "83034493-efdc-429e-bac4-c6f7210cd3df"
+    },
+    {
+      "claimId": "830f0595-4afc-4057-8ec6-546c6fee59c4",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "830f0595-4afc-4057-8ec6-546c6fee59c4"
+    },
+    {
+      "claimId": "83267b6b-e83a-423a-b76b-402a8049d7e5",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "83267b6b-e83a-423a-b76b-402a8049d7e5"
+    },
+    {
+      "claimId": "837382e9-c945-4c5d-95ba-fa4e95a63c98",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "837382e9-c945-4c5d-95ba-fa4e95a63c98"
+    },
+    {
+      "claimId": "83879794-1db0-4671-9b01-964de1347047",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "83879794-1db0-4671-9b01-964de1347047"
+    },
+    {
+      "claimId": "839d10eb-3dc6-434f-899b-593a05eabc6d",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "839d10eb-3dc6-434f-899b-593a05eabc6d"
+    },
+    {
+      "claimId": "83c7a464-0555-4091-9272-750449cf3fb9",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "83c7a464-0555-4091-9272-750449cf3fb9"
+    },
+    {
+      "claimId": "84533f57-41d8-49c8-9d57-a4b62117d6ea",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "84533f57-41d8-49c8-9d57-a4b62117d6ea"
+    },
+    {
+      "claimId": "850f159f-5f4f-4aeb-a79e-21ea5bd4a536",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "850f159f-5f4f-4aeb-a79e-21ea5bd4a536"
+    },
+    {
+      "claimId": "85280e7f-76a0-416e-a586-2f1555870ee5",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "85280e7f-76a0-416e-a586-2f1555870ee5"
+    },
+    {
+      "claimId": "85c8d619-fcd2-4276-8064-bbef4f92e165",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "85c8d619-fcd2-4276-8064-bbef4f92e165"
+    },
+    {
+      "claimId": "85e8d453-7cd6-4895-9a48-385d2255e9a0",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "85e8d453-7cd6-4895-9a48-385d2255e9a0"
+    },
+    {
+      "claimId": "864dbba4-41c8-4f23-ab6e-98d37f727ab5",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "864dbba4-41c8-4f23-ab6e-98d37f727ab5"
+    },
+    {
+      "claimId": "8732e115-7e2d-4235-b0c4-12de20afa498",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "8732e115-7e2d-4235-b0c4-12de20afa498"
+    },
+    {
+      "claimId": "87ad9eb1-e6a2-42de-906c-9cd60431429c",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "87ad9eb1-e6a2-42de-906c-9cd60431429c"
+    },
+    {
+      "claimId": "889168d3-d9fe-4bd3-af77-2902fd1f74b8",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "889168d3-d9fe-4bd3-af77-2902fd1f74b8"
+    },
+    {
+      "claimId": "88b306ea-58a8-4e0b-a88c-bbcad5642d2e",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "88b306ea-58a8-4e0b-a88c-bbcad5642d2e"
+    },
+    {
+      "claimId": "88d5348e-f3ae-4e5d-82f3-ca3ec11e7cfa",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "88d5348e-f3ae-4e5d-82f3-ca3ec11e7cfa"
+    },
+    {
+      "claimId": "88ea6a91-99b6-4f2d-ae5b-251742ee9fe2",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "88ea6a91-99b6-4f2d-ae5b-251742ee9fe2"
+    },
+    {
+      "claimId": "8920848b-0ae4-454e-b772-a39c8894cf04",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "8920848b-0ae4-454e-b772-a39c8894cf04"
+    },
+    {
+      "claimId": "89954183-b4c2-4927-a31f-02d73e58b1dc",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "89954183-b4c2-4927-a31f-02d73e58b1dc"
+    },
+    {
+      "claimId": "89bc2f86-3a73-48be-b6e5-88a26bd83367",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "89bc2f86-3a73-48be-b6e5-88a26bd83367"
+    },
+    {
+      "claimId": "89eecb8f-b912-4b20-9e63-ad0f8dc7e3f1",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "89eecb8f-b912-4b20-9e63-ad0f8dc7e3f1"
+    },
+    {
+      "claimId": "8a7795fc-2641-43e4-879b-f7522935b9ec",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "8a7795fc-2641-43e4-879b-f7522935b9ec"
+    },
+    {
+      "claimId": "8adbe076-889a-46dc-8497-d6616040f6c9",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "8adbe076-889a-46dc-8497-d6616040f6c9"
+    },
+    {
+      "claimId": "8b3812cc-0cdc-4ac5-b244-8fa38af79c64",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "8b3812cc-0cdc-4ac5-b244-8fa38af79c64"
+    },
+    {
+      "claimId": "8b8d8a88-30de-44a5-b285-7a7488c212bc",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "8b8d8a88-30de-44a5-b285-7a7488c212bc"
+    },
+    {
+      "claimId": "8bbc7ddb-b600-4498-a305-0c920b771b51",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "8bbc7ddb-b600-4498-a305-0c920b771b51"
+    },
+    {
+      "claimId": "8c25f199-7d29-4dc9-aa83-8f3407d68930",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "8c25f199-7d29-4dc9-aa83-8f3407d68930"
+    },
+    {
+      "claimId": "8cadb0e5-ceaf-4a74-9924-e5ed258084ff",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "8cadb0e5-ceaf-4a74-9924-e5ed258084ff"
+    },
+    {
+      "claimId": "8cd5e371-6414-4b69-b858-311304452f09",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "8cd5e371-6414-4b69-b858-311304452f09"
+    },
+    {
+      "claimId": "8d6102a2-0fce-421a-b84c-5478d697fe9a",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "8d6102a2-0fce-421a-b84c-5478d697fe9a"
+    },
+    {
+      "claimId": "8d7f6c8c-d386-4f06-ab11-73083c01ce44",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "8d7f6c8c-d386-4f06-ab11-73083c01ce44"
+    },
+    {
+      "claimId": "8d8c3898-77af-4008-b870-af7bbbdd2f9b",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "8d8c3898-77af-4008-b870-af7bbbdd2f9b"
+    },
+    {
+      "claimId": "8e02d35f-9f37-41a8-b3b1-df7a9a5456aa",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "8e02d35f-9f37-41a8-b3b1-df7a9a5456aa"
+    },
+    {
+      "claimId": "8e4eaf6b-058f-47a0-baa8-599401467f3d",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "8e4eaf6b-058f-47a0-baa8-599401467f3d"
+    },
+    {
+      "claimId": "8ed04086-6f4d-4c40-a116-441c0a444e9c",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "8ed04086-6f4d-4c40-a116-441c0a444e9c"
+    },
+    {
+      "claimId": "8fb25f18-1974-4829-8ca7-ddfbccb6f1e7",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "8fb25f18-1974-4829-8ca7-ddfbccb6f1e7"
+    },
+    {
+      "claimId": "8fe84e0b-06e9-4501-bfd7-82728fcbc616",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "8fe84e0b-06e9-4501-bfd7-82728fcbc616"
+    },
+    {
+      "claimId": "8fe8b377-788d-4d28-9f38-0cf01725d8d1",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "8fe8b377-788d-4d28-9f38-0cf01725d8d1"
+    },
+    {
+      "claimId": "90813bb8-cf6e-4317-a219-8279dffbff17",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "90813bb8-cf6e-4317-a219-8279dffbff17"
+    },
+    {
+      "claimId": "9085beb7-1000-41dc-b520-a4fe907bee70",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "9085beb7-1000-41dc-b520-a4fe907bee70"
+    },
+    {
+      "claimId": "90c62de2-e72a-48a0-ba3e-08a49534d930",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "90c62de2-e72a-48a0-ba3e-08a49534d930"
+    },
+    {
+      "claimId": "90e2b01d-fab1-4993-8314-d6efe27ec8ec",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "90e2b01d-fab1-4993-8314-d6efe27ec8ec"
+    },
+    {
+      "claimId": "90e6ba85-192f-4d3f-9de8-2d1e4dcc325d",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "90e6ba85-192f-4d3f-9de8-2d1e4dcc325d"
+    },
+    {
+      "claimId": "90f41a1e-0d46-411f-8d7b-58e96bc18bc2",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "90f41a1e-0d46-411f-8d7b-58e96bc18bc2"
+    },
+    {
+      "claimId": "9152101f-0152-4c6a-af35-25497832fff9",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "9152101f-0152-4c6a-af35-25497832fff9"
+    },
+    {
+      "claimId": "91698da4-18e6-4d8a-9cdc-970d60f24e07",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "91698da4-18e6-4d8a-9cdc-970d60f24e07"
+    },
+    {
+      "claimId": "926637f5-24a3-4432-856c-52c8ca724efd",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "926637f5-24a3-4432-856c-52c8ca724efd"
+    },
+    {
+      "claimId": "92992257-afdc-43de-afac-d9645be08d97",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "92992257-afdc-43de-afac-d9645be08d97"
+    },
+    {
+      "claimId": "92a76070-8006-4bbd-ba4f-b43a1c395a47",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "92a76070-8006-4bbd-ba4f-b43a1c395a47"
+    },
+    {
+      "claimId": "92d87faa-bfac-4df4-a47c-2cab9ceec2be",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "92d87faa-bfac-4df4-a47c-2cab9ceec2be"
+    },
+    {
+      "claimId": "934d68cb-75e2-448a-a243-9061469b1fcc",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "934d68cb-75e2-448a-a243-9061469b1fcc"
+    },
+    {
+      "claimId": "9350e434-138f-41c4-b839-79eac3b60ca3",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "9350e434-138f-41c4-b839-79eac3b60ca3"
+    },
+    {
+      "claimId": "94179f3e-1a91-469d-ac59-79a31e11e36b",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "94179f3e-1a91-469d-ac59-79a31e11e36b"
+    },
+    {
+      "claimId": "9448b4f9-3dcc-4c98-82b9-bc2bfd94fbf8",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "9448b4f9-3dcc-4c98-82b9-bc2bfd94fbf8"
+    },
+    {
+      "claimId": "94d9ad24-a74c-43bf-b4f3-d9c2babef50e",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "94d9ad24-a74c-43bf-b4f3-d9c2babef50e"
+    },
+    {
+      "claimId": "951bab7d-4b80-4164-a10e-79cfb0eb1506",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "951bab7d-4b80-4164-a10e-79cfb0eb1506"
+    },
+    {
+      "claimId": "966af607-e7a6-4d8c-a949-af878d67a0cf",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "966af607-e7a6-4d8c-a949-af878d67a0cf"
+    },
+    {
+      "claimId": "966cac96-5648-40cd-948c-5b3f13d986ac",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "966cac96-5648-40cd-948c-5b3f13d986ac"
+    },
+    {
+      "claimId": "97d4a94c-8f59-4849-9636-c74c53e78fd4",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "97d4a94c-8f59-4849-9636-c74c53e78fd4"
+    },
+    {
+      "claimId": "97d4f50a-e09a-4357-b2f7-bba0d1bef3c5",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "97d4f50a-e09a-4357-b2f7-bba0d1bef3c5"
+    },
+    {
+      "claimId": "97ff36f2-1b4b-42a9-a029-764480e0d28d",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "97ff36f2-1b4b-42a9-a029-764480e0d28d"
+    },
+    {
+      "claimId": "985c61f5-fd1a-4878-82c2-2d08d87cab28",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "985c61f5-fd1a-4878-82c2-2d08d87cab28"
+    },
+    {
+      "claimId": "98d1eff6-cff3-4e97-b79c-cb7b5be9bec5",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "98d1eff6-cff3-4e97-b79c-cb7b5be9bec5"
+    },
+    {
+      "claimId": "98f23d95-1031-453f-8cc5-222084982939",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "98f23d95-1031-453f-8cc5-222084982939"
+    },
+    {
+      "claimId": "98f7433a-515d-4b45-b839-6e631e36a84b",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "98f7433a-515d-4b45-b839-6e631e36a84b"
+    },
+    {
+      "claimId": "991ff7d6-8828-4de6-9c92-328a7220a229",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "991ff7d6-8828-4de6-9c92-328a7220a229"
+    },
+    {
+      "claimId": "9af57592-d9cf-4dd6-836c-e60718882010",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "9af57592-d9cf-4dd6-836c-e60718882010"
+    },
+    {
+      "claimId": "9b0fe77c-3aee-46f7-8d48-dd55a3b0ed1f",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "9b0fe77c-3aee-46f7-8d48-dd55a3b0ed1f"
+    },
+    {
+      "claimId": "9b60ab60-02b4-42a7-8d99-06d27119f22f",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "9b60ab60-02b4-42a7-8d99-06d27119f22f"
+    },
+    {
+      "claimId": "9b77d263-5ad9-42d2-9c3c-5cddbe7c5c07",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "9b77d263-5ad9-42d2-9c3c-5cddbe7c5c07"
+    },
+    {
+      "claimId": "9b83e613-29ce-499f-855d-86cc00bed478",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "9b83e613-29ce-499f-855d-86cc00bed478"
+    },
+    {
+      "claimId": "9bc432c3-85b7-4389-a5e1-1e6003927e5d",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "9bc432c3-85b7-4389-a5e1-1e6003927e5d"
+    },
+    {
+      "claimId": "9c208b55-545c-4d5c-9021-843cbd587304",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "9c208b55-545c-4d5c-9021-843cbd587304"
+    },
+    {
+      "claimId": "9c738e04-a394-4602-8140-cbe321384af7",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "9c738e04-a394-4602-8140-cbe321384af7"
+    },
+    {
+      "claimId": "9c7459fe-67f1-47e9-b779-fca084af0f33",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "9c7459fe-67f1-47e9-b779-fca084af0f33"
+    },
+    {
+      "claimId": "9ca7a6e3-b7aa-4c33-b7ee-39235c672f0b",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "9ca7a6e3-b7aa-4c33-b7ee-39235c672f0b"
+    },
+    {
+      "claimId": "9cc6e157-6b0c-4cf3-b710-475be77465b9",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "9cc6e157-6b0c-4cf3-b710-475be77465b9"
+    },
+    {
+      "claimId": "9ce2270c-2f8a-4410-a190-305d0751817d",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "9ce2270c-2f8a-4410-a190-305d0751817d"
+    },
+    {
+      "claimId": "9d0fb6bc-04ac-4737-986f-1f3699ae93ca",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "9d0fb6bc-04ac-4737-986f-1f3699ae93ca"
+    },
+    {
+      "claimId": "9d314d15-3d83-4027-9382-8e3aaf559c1e",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "9d314d15-3d83-4027-9382-8e3aaf559c1e"
+    },
+    {
+      "claimId": "9d7b0ab5-fb30-4a86-8068-91f0587d0537",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "9d7b0ab5-fb30-4a86-8068-91f0587d0537"
+    },
+    {
+      "claimId": "9dc237b0-8b98-4d4f-8190-a19eb2bbe588",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "9dc237b0-8b98-4d4f-8190-a19eb2bbe588"
+    },
+    {
+      "claimId": "9dc468de-7390-45ee-aa13-12efb25f1183",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "9dc468de-7390-45ee-aa13-12efb25f1183"
+    },
+    {
+      "claimId": "9dd2614a-7fad-43a1-a8d3-a3953b379b60",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "9dd2614a-7fad-43a1-a8d3-a3953b379b60"
+    },
+    {
+      "claimId": "9deea07e-4eb6-4636-8b61-eca5a9e2ef4b",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "9deea07e-4eb6-4636-8b61-eca5a9e2ef4b"
+    },
+    {
+      "claimId": "9e1e63ca-7ab5-46d1-b42f-9f1da283039d",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "9e1e63ca-7ab5-46d1-b42f-9f1da283039d"
+    },
+    {
+      "claimId": "9e414366-5fb8-48fd-b2ff-66b61a4a7b92",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "9e414366-5fb8-48fd-b2ff-66b61a4a7b92"
+    },
+    {
+      "claimId": "9e543847-83e3-46b4-bfae-e32a232316e1",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "9e543847-83e3-46b4-bfae-e32a232316e1"
+    },
+    {
+      "claimId": "9e64c1bd-76f7-471a-8ec5-4fc58b316d05",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "9e64c1bd-76f7-471a-8ec5-4fc58b316d05"
+    },
+    {
+      "claimId": "9fa8ddfd-1ca3-424f-b8c8-84137080936d",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "9fa8ddfd-1ca3-424f-b8c8-84137080936d"
+    },
+    {
+      "claimId": "9fcc83c0-4a33-45da-9051-a57862b99b02",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "9fcc83c0-4a33-45da-9051-a57862b99b02"
+    },
+    {
+      "claimId": "9fcf27b1-9bb8-4018-8d63-c28e61024dc8",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "9fcf27b1-9bb8-4018-8d63-c28e61024dc8"
+    },
+    {
+      "claimId": "9ffda035-f596-422a-875c-a72ef7eae898",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "9ffda035-f596-422a-875c-a72ef7eae898"
+    },
+    {
+      "claimId": "a0b84ef7-55f6-463d-843c-5f3a8694e946",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "a0b84ef7-55f6-463d-843c-5f3a8694e946"
+    },
+    {
+      "claimId": "a191093c-4826-43a5-a0e3-9b96f8e567cf",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "a191093c-4826-43a5-a0e3-9b96f8e567cf"
+    },
+    {
+      "claimId": "a1b7d362-0bad-452d-b37c-7506b9462342",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "a1b7d362-0bad-452d-b37c-7506b9462342"
+    },
+    {
+      "claimId": "a25f04f0-f4b6-477a-bf4d-8ca92cf8266c",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "a25f04f0-f4b6-477a-bf4d-8ca92cf8266c"
+    },
+    {
+      "claimId": "a2ab9ee2-f1fd-4404-a7e4-ef70d04aea80",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "a2ab9ee2-f1fd-4404-a7e4-ef70d04aea80"
+    },
+    {
+      "claimId": "a2f2b970-9873-455a-ae48-993903bc7df6",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "a2f2b970-9873-455a-ae48-993903bc7df6"
+    },
+    {
+      "claimId": "a3652308-7b54-49c9-85ca-86cd16a944b2",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "a3652308-7b54-49c9-85ca-86cd16a944b2"
+    },
+    {
+      "claimId": "a48611ad-aa73-4801-bdba-250a27aca935",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "a48611ad-aa73-4801-bdba-250a27aca935"
+    },
+    {
+      "claimId": "a51611b5-b103-4139-8de8-91a715f8cb1a",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "a51611b5-b103-4139-8de8-91a715f8cb1a"
+    },
+    {
+      "claimId": "a5389c59-21cd-4ca4-a920-264d558c952a",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "a5389c59-21cd-4ca4-a920-264d558c952a"
+    },
+    {
+      "claimId": "a57c39fc-892a-4dab-aae3-f2293d260a87",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "a57c39fc-892a-4dab-aae3-f2293d260a87"
+    },
+    {
+      "claimId": "a64a427e-dffc-4f66-919b-bca34dceb47e",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "a64a427e-dffc-4f66-919b-bca34dceb47e"
+    },
+    {
+      "claimId": "a657b7a2-ecfb-4e6a-aabf-14280f3606ba",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "a657b7a2-ecfb-4e6a-aabf-14280f3606ba"
+    },
+    {
+      "claimId": "a67699b3-eb1f-47ac-a500-41b4a98a8163",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "a67699b3-eb1f-47ac-a500-41b4a98a8163"
+    },
+    {
+      "claimId": "a6ae3063-de85-4b2f-b372-2e6cd5c29d77",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "a6ae3063-de85-4b2f-b372-2e6cd5c29d77"
+    },
+    {
+      "claimId": "a6bc8a37-d9fe-43c0-8547-73a15d1f96e2",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "a6bc8a37-d9fe-43c0-8547-73a15d1f96e2"
+    },
+    {
+      "claimId": "a6ddd38b-bec5-452d-b1a3-5b78223d0522",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "a6ddd38b-bec5-452d-b1a3-5b78223d0522"
+    },
+    {
+      "claimId": "a6ea7d9b-8ca8-4165-81e4-39742383050e",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "a6ea7d9b-8ca8-4165-81e4-39742383050e"
+    },
+    {
+      "claimId": "a7137d59-8daa-46db-9b75-a40780dea8d5",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "a7137d59-8daa-46db-9b75-a40780dea8d5"
+    },
+    {
+      "claimId": "a733ee3d-e178-4edd-ad2d-78ba7a80bc31",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "a733ee3d-e178-4edd-ad2d-78ba7a80bc31"
+    },
+    {
+      "claimId": "a7f2ef74-d1d9-4702-accf-ea8cbb0daa97",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "a7f2ef74-d1d9-4702-accf-ea8cbb0daa97"
+    },
+    {
+      "claimId": "a97a287b-cd78-4b78-bce4-ad43e453435c",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "a97a287b-cd78-4b78-bce4-ad43e453435c"
+    },
+    {
+      "claimId": "a9bc1d8b-678b-4c82-ad3a-780b4e6fe761",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "a9bc1d8b-678b-4c82-ad3a-780b4e6fe761"
+    },
+    {
+      "claimId": "aa1c68f5-649e-457f-8395-555248249c70",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "aa1c68f5-649e-457f-8395-555248249c70"
+    },
+    {
+      "claimId": "aa3b0339-0c4b-4e23-b002-072863b6038d",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "aa3b0339-0c4b-4e23-b002-072863b6038d"
+    },
+    {
+      "claimId": "aae90fd4-eec7-4f22-ba8d-c34019803cdb",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "aae90fd4-eec7-4f22-ba8d-c34019803cdb"
+    },
+    {
+      "claimId": "ab16fa8d-fefc-4cbe-bc08-f31ff566248b",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "ab16fa8d-fefc-4cbe-bc08-f31ff566248b"
+    },
+    {
+      "claimId": "ab564cf5-a7e7-46aa-939a-969b61a9202f",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "ab564cf5-a7e7-46aa-939a-969b61a9202f"
+    },
+    {
+      "claimId": "ab8456cc-ffbd-4a3c-9d14-fa2f55bf96e2",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "ab8456cc-ffbd-4a3c-9d14-fa2f55bf96e2"
+    },
+    {
+      "claimId": "ac3891af-7117-482b-9480-4bc7915b3633",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "ac3891af-7117-482b-9480-4bc7915b3633"
+    },
+    {
+      "claimId": "ac8f7370-3f49-4272-a210-08c00625d620",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "ac8f7370-3f49-4272-a210-08c00625d620"
+    },
+    {
+      "claimId": "ad410ca0-66b7-49e2-8e54-55dba99e79b3",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "ad410ca0-66b7-49e2-8e54-55dba99e79b3"
+    },
+    {
+      "claimId": "ad7bbed7-af29-4c04-b731-ffa96679bba9",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "ad7bbed7-af29-4c04-b731-ffa96679bba9"
+    },
+    {
+      "claimId": "adb42ea5-37a5-43ce-b193-c46593bf88c1",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "adb42ea5-37a5-43ce-b193-c46593bf88c1"
+    },
+    {
+      "claimId": "ae08e45b-b637-4205-a8b6-025151ffacbf",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "ae08e45b-b637-4205-a8b6-025151ffacbf"
+    },
+    {
+      "claimId": "ae2e6106-6deb-4b9b-8b4a-598e51f1d69b",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "ae2e6106-6deb-4b9b-8b4a-598e51f1d69b"
+    },
+    {
+      "claimId": "ae847f22-5e3f-41c1-9730-0df7cf7def76",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "ae847f22-5e3f-41c1-9730-0df7cf7def76"
+    },
+    {
+      "claimId": "ae9cf02e-fe1d-43fc-b304-ebf4516b001f",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "ae9cf02e-fe1d-43fc-b304-ebf4516b001f"
+    },
+    {
+      "claimId": "aeb0bb47-0ba2-4591-957a-7ae83ec94137",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "aeb0bb47-0ba2-4591-957a-7ae83ec94137"
+    },
+    {
+      "claimId": "aeed8058-829b-4286-814e-2a697e7bd4de",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "aeed8058-829b-4286-814e-2a697e7bd4de"
+    },
+    {
+      "claimId": "aefd3783-05e3-4588-8193-3e0c54eed900",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "aefd3783-05e3-4588-8193-3e0c54eed900"
+    },
+    {
+      "claimId": "af744209-e3dd-478a-99b7-d4543f4c0621",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "af744209-e3dd-478a-99b7-d4543f4c0621"
+    },
+    {
+      "claimId": "afa3905e-3f17-41d5-974c-78b9d938d6ac",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "afa3905e-3f17-41d5-974c-78b9d938d6ac"
+    },
+    {
+      "claimId": "afe48a52-611e-4774-8e86-3023f0ed356d",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "afe48a52-611e-4774-8e86-3023f0ed356d"
+    },
+    {
+      "claimId": "aff010af-32b8-4417-ab79-4b315e2b9ecc",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "aff010af-32b8-4417-ab79-4b315e2b9ecc"
+    },
+    {
+      "claimId": "b03b9109-ec06-438b-a1de-32b4dc506bd7",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "b03b9109-ec06-438b-a1de-32b4dc506bd7"
+    },
+    {
+      "claimId": "b04d38d6-d3e1-4a59-8c0e-172902041b38",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "b04d38d6-d3e1-4a59-8c0e-172902041b38"
+    },
+    {
+      "claimId": "b0933017-67a7-4157-9b39-4f952962c327",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "b0933017-67a7-4157-9b39-4f952962c327"
+    },
+    {
+      "claimId": "b158aad1-a739-400d-8478-8f875ce578a6",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "b158aad1-a739-400d-8478-8f875ce578a6"
+    },
+    {
+      "claimId": "b1644801-4b54-4629-b17a-4d70e15bb9a2",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "b1644801-4b54-4629-b17a-4d70e15bb9a2"
+    },
+    {
+      "claimId": "b19e4681-b4fd-4056-ad6f-312464ac30f1",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "b19e4681-b4fd-4056-ad6f-312464ac30f1"
+    },
+    {
+      "claimId": "b1ae1a10-d333-4c46-a79e-51cf5d722834",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "b1ae1a10-d333-4c46-a79e-51cf5d722834"
+    },
+    {
+      "claimId": "b25df257-39a6-4f0c-bcab-9566c1e21a75",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "b25df257-39a6-4f0c-bcab-9566c1e21a75"
+    },
+    {
+      "claimId": "b3349ec5-a296-4490-8f95-3905027355e2",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "b3349ec5-a296-4490-8f95-3905027355e2"
+    },
+    {
+      "claimId": "b37d2861-61ba-4494-bd02-875319af792c",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "b37d2861-61ba-4494-bd02-875319af792c"
+    },
+    {
+      "claimId": "b3b0e35e-86e9-4b40-af5f-361a91c00d49",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "b3b0e35e-86e9-4b40-af5f-361a91c00d49"
+    },
+    {
+      "claimId": "b41cfea2-b5b1-43d3-998e-4203e26e11df",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "b41cfea2-b5b1-43d3-998e-4203e26e11df"
+    },
+    {
+      "claimId": "b437d932-59c0-4215-96b7-d7da19072a1d",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "b437d932-59c0-4215-96b7-d7da19072a1d"
+    },
+    {
+      "claimId": "b49b7628-9328-43b4-811a-48abe6ed8979",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "b49b7628-9328-43b4-811a-48abe6ed8979"
+    },
+    {
+      "claimId": "b5699e3a-bb1c-498a-977f-d375b3c6371a",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "b5699e3a-bb1c-498a-977f-d375b3c6371a"
+    },
+    {
+      "claimId": "b5b157fe-4c77-4c73-a657-710780d6d57b",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "b5b157fe-4c77-4c73-a657-710780d6d57b"
+    },
+    {
+      "claimId": "b5e2529e-efb4-4620-bd3e-ca17a2e51173",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "b5e2529e-efb4-4620-bd3e-ca17a2e51173"
+    },
+    {
+      "claimId": "b63b17ac-97fa-4e9b-a3f3-9e3a00603bc0",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "b63b17ac-97fa-4e9b-a3f3-9e3a00603bc0"
+    },
+    {
+      "claimId": "b6517636-7d32-4fe8-9136-22cae04c9d05",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "b6517636-7d32-4fe8-9136-22cae04c9d05"
+    },
+    {
+      "claimId": "b68e15f4-217c-4a88-b3bf-b915624050d3",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "b68e15f4-217c-4a88-b3bf-b915624050d3"
+    },
+    {
+      "claimId": "b6f41ca6-e84e-4543-857d-24f31058bb25",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "b6f41ca6-e84e-4543-857d-24f31058bb25"
+    },
+    {
+      "claimId": "b78a3093-2c9d-4471-a5a2-239a1bb73c42",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "b78a3093-2c9d-4471-a5a2-239a1bb73c42"
+    },
+    {
+      "claimId": "b81f6025-db68-4160-bdc2-0ca865dd334a",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "b81f6025-db68-4160-bdc2-0ca865dd334a"
+    },
+    {
+      "claimId": "b871aa4f-8a77-4b05-87bd-9e74ebb5bd94",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "b871aa4f-8a77-4b05-87bd-9e74ebb5bd94"
+    },
+    {
+      "claimId": "b8c79bd1-5f6c-40b5-b7a8-6889198eb808",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "b8c79bd1-5f6c-40b5-b7a8-6889198eb808"
+    },
+    {
+      "claimId": "b934cabf-da44-4d42-9140-275fe3010e2f",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "b934cabf-da44-4d42-9140-275fe3010e2f"
+    },
+    {
+      "claimId": "b93ded99-634c-4986-8a15-643d76cd7f77",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "b93ded99-634c-4986-8a15-643d76cd7f77"
+    },
+    {
+      "claimId": "b95cc7ac-7035-45e4-b2ab-b8f1ec857efe",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "b95cc7ac-7035-45e4-b2ab-b8f1ec857efe"
+    },
+    {
+      "claimId": "b9bdafb5-b68c-438b-801e-15334e0f1862",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "b9bdafb5-b68c-438b-801e-15334e0f1862"
+    },
+    {
+      "claimId": "b9c8035d-6731-4e89-a03b-3e6dd705344b",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "b9c8035d-6731-4e89-a03b-3e6dd705344b"
+    },
+    {
+      "claimId": "b9e716ff-081a-4b59-9f5f-2d3274d060e5",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "b9e716ff-081a-4b59-9f5f-2d3274d060e5"
+    },
+    {
+      "claimId": "ba4ffe73-4f05-4b1b-86e0-ac8c757223cb",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "ba4ffe73-4f05-4b1b-86e0-ac8c757223cb"
+    },
+    {
+      "claimId": "bbbd3bb7-91d3-425f-80ec-b39d4675bf21",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "bbbd3bb7-91d3-425f-80ec-b39d4675bf21"
+    },
+    {
+      "claimId": "bc2e3b5c-33a5-4dcd-b9eb-f345f9b81aee",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "bc2e3b5c-33a5-4dcd-b9eb-f345f9b81aee"
+    },
+    {
+      "claimId": "bc8fd803-7374-4467-8bfb-9cc9ee1cbb6a",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "bc8fd803-7374-4467-8bfb-9cc9ee1cbb6a"
+    },
+    {
+      "claimId": "bccb9772-dcd9-4029-b0e9-55bf4ce1d42f",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "bccb9772-dcd9-4029-b0e9-55bf4ce1d42f"
+    },
+    {
+      "claimId": "bea7565b-843b-4187-9361-9be217b6cc3a",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "bea7565b-843b-4187-9361-9be217b6cc3a"
+    },
+    {
+      "claimId": "c0645968-5d04-4aaf-b0ff-fc706d79e7e3",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "c0645968-5d04-4aaf-b0ff-fc706d79e7e3"
+    },
+    {
+      "claimId": "c0829587-d16d-4e8d-a6ae-4e523ba820f3",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "c0829587-d16d-4e8d-a6ae-4e523ba820f3"
+    },
+    {
+      "claimId": "c0c01681-24fe-4d95-9136-50ce3f7f5469",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "c0c01681-24fe-4d95-9136-50ce3f7f5469"
+    },
+    {
+      "claimId": "c157e3ba-be66-4afc-ad73-f1a20d08ee9d",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "c157e3ba-be66-4afc-ad73-f1a20d08ee9d"
+    },
+    {
+      "claimId": "c2a24948-1b5b-42f6-8202-a7dd32dc5b26",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "c2a24948-1b5b-42f6-8202-a7dd32dc5b26"
+    },
+    {
+      "claimId": "c2a84692-7fcc-4077-ad83-c9d43e4a4b71",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "c2a84692-7fcc-4077-ad83-c9d43e4a4b71"
+    },
+    {
+      "claimId": "c2fdcf6a-66b7-48a8-aac0-5c8e07db36ae",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "c2fdcf6a-66b7-48a8-aac0-5c8e07db36ae"
+    },
+    {
+      "claimId": "c3043369-5474-47df-84cc-bc92faa0311e",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "c3043369-5474-47df-84cc-bc92faa0311e"
+    },
+    {
+      "claimId": "c3416548-767a-455c-a64b-48c5da1ffcd8",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "c3416548-767a-455c-a64b-48c5da1ffcd8"
+    },
+    {
+      "claimId": "c3431d86-02d0-4266-8f04-c631c566c0b5",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "c3431d86-02d0-4266-8f04-c631c566c0b5"
+    },
+    {
+      "claimId": "c3b26faf-0fe9-48a9-84ae-0f8b4d9c1183",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "c3b26faf-0fe9-48a9-84ae-0f8b4d9c1183"
+    },
+    {
+      "claimId": "c3d38a9d-ee74-476d-b0b5-e5f71346a62d",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "c3d38a9d-ee74-476d-b0b5-e5f71346a62d"
+    },
+    {
+      "claimId": "c3fd7272-d4f1-48e7-87cf-26cf325a0901",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "c3fd7272-d4f1-48e7-87cf-26cf325a0901"
+    },
+    {
+      "claimId": "c46c1ecc-3252-460a-91ca-6e20781391fd",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "c46c1ecc-3252-460a-91ca-6e20781391fd"
+    },
+    {
+      "claimId": "c47879aa-db6e-4eee-91c0-bc7b71feb2f7",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "c47879aa-db6e-4eee-91c0-bc7b71feb2f7"
+    },
+    {
+      "claimId": "c484afde-cbcf-4691-9723-cf8077527af8",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "c484afde-cbcf-4691-9723-cf8077527af8"
+    },
+    {
+      "claimId": "c487e844-66f7-4451-9b86-112997e9e1ac",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "c487e844-66f7-4451-9b86-112997e9e1ac"
+    },
+    {
+      "claimId": "c654f347-068a-45a5-8dfc-34a8fa4a621f",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "c654f347-068a-45a5-8dfc-34a8fa4a621f"
+    },
+    {
+      "claimId": "c67eb15e-9f7a-40da-94db-1ffa8635dbe3",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "c67eb15e-9f7a-40da-94db-1ffa8635dbe3"
+    },
+    {
+      "claimId": "c759297d-9f4d-417c-b130-63abfc486f1e",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "c759297d-9f4d-417c-b130-63abfc486f1e"
+    },
+    {
+      "claimId": "c76bc4a8-a7fe-40c1-8d1e-549d6101ac5e",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "c76bc4a8-a7fe-40c1-8d1e-549d6101ac5e"
+    },
+    {
+      "claimId": "c7a89c69-c3c8-45f5-9ae8-c73f74cf5e8f",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "c7a89c69-c3c8-45f5-9ae8-c73f74cf5e8f"
+    },
+    {
+      "claimId": "c7a93b97-65d8-4ecf-84b9-cff9c8af5bd2",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "c7a93b97-65d8-4ecf-84b9-cff9c8af5bd2"
+    },
+    {
+      "claimId": "c7c68d24-e2b2-45e9-b20b-4405e4237ba5",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "c7c68d24-e2b2-45e9-b20b-4405e4237ba5"
+    },
+    {
+      "claimId": "c8555d1b-2f69-46d0-b8e8-13c8c4320d2f",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "c8555d1b-2f69-46d0-b8e8-13c8c4320d2f"
+    },
+    {
+      "claimId": "c8af6f4c-51c7-4a6f-b092-8cfcb0d5cdaa",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "c8af6f4c-51c7-4a6f-b092-8cfcb0d5cdaa"
+    },
+    {
+      "claimId": "c8c2e927-a53a-4fb5-8866-c79b73685f34",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "c8c2e927-a53a-4fb5-8866-c79b73685f34"
+    },
+    {
+      "claimId": "c9ef4965-959e-418c-abbd-8354200a542c",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "c9ef4965-959e-418c-abbd-8354200a542c"
+    },
+    {
+      "claimId": "ca4c148d-64c1-4477-906a-547730a57fe0",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "ca4c148d-64c1-4477-906a-547730a57fe0"
+    },
+    {
+      "claimId": "ca4d9cac-c108-4e5d-b332-6ab90ee48f51",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "ca4d9cac-c108-4e5d-b332-6ab90ee48f51"
+    },
+    {
+      "claimId": "ca8242cd-83bb-4050-949f-8ff2bf7ea8cd",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "ca8242cd-83bb-4050-949f-8ff2bf7ea8cd"
+    },
+    {
+      "claimId": "cbb426bb-fec8-435e-a27c-65bb61d90cfc",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "cbb426bb-fec8-435e-a27c-65bb61d90cfc"
+    },
+    {
+      "claimId": "cbfa0860-0777-4919-a2ba-0377c2d56ad9",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "cbfa0860-0777-4919-a2ba-0377c2d56ad9"
+    },
+    {
+      "claimId": "cc27ac87-fdc7-4699-95c1-44cbf8c7276c",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "cc27ac87-fdc7-4699-95c1-44cbf8c7276c"
+    },
+    {
+      "claimId": "cc413e7d-d852-4b43-a13e-8c5672ee3a45",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "cc413e7d-d852-4b43-a13e-8c5672ee3a45"
+    },
+    {
+      "claimId": "ccc69edf-a0dd-4dfd-8dbb-e2d1090d1066",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "ccc69edf-a0dd-4dfd-8dbb-e2d1090d1066"
+    },
+    {
+      "claimId": "ccc838d7-04a0-4ddf-a253-b45ce1c36d3a",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "ccc838d7-04a0-4ddf-a253-b45ce1c36d3a"
+    },
+    {
+      "claimId": "ccfb4a5f-0356-4137-93bf-61da20cb764e",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "ccfb4a5f-0356-4137-93bf-61da20cb764e"
+    },
+    {
+      "claimId": "ce65f23d-8844-4964-abc9-29a4746cbcc6",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "ce65f23d-8844-4964-abc9-29a4746cbcc6"
+    },
+    {
+      "claimId": "ce6bce77-f58d-41ca-8fcd-e1bff73bfed5",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "ce6bce77-f58d-41ca-8fcd-e1bff73bfed5"
+    },
+    {
+      "claimId": "ce9d95f5-b1fa-42d7-8497-a798198a2cd7",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "ce9d95f5-b1fa-42d7-8497-a798198a2cd7"
+    },
+    {
+      "claimId": "cee490b0-fdcb-4352-97bb-8a0ac49f841a",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "cee490b0-fdcb-4352-97bb-8a0ac49f841a"
+    },
+    {
+      "claimId": "cf41a04d-98a0-4311-a4b9-27ea712318a8",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "cf41a04d-98a0-4311-a4b9-27ea712318a8"
+    },
+    {
+      "claimId": "cf424963-694f-45e7-8691-fdf03a5ee895",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "cf424963-694f-45e7-8691-fdf03a5ee895"
+    },
+    {
+      "claimId": "cf691e9e-ffd4-4204-b241-e98ba7e2c8ba",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "cf691e9e-ffd4-4204-b241-e98ba7e2c8ba"
+    },
+    {
+      "claimId": "cf7df443-4c10-4309-a220-cc627a230b7f",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "cf7df443-4c10-4309-a220-cc627a230b7f"
+    },
+    {
+      "claimId": "cfe97fd2-0d8e-4eea-99e4-c75e87524991",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "cfe97fd2-0d8e-4eea-99e4-c75e87524991"
+    },
+    {
+      "claimId": "d06a7530-2cae-4499-96ba-f5635c093acb",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "d06a7530-2cae-4499-96ba-f5635c093acb"
+    },
+    {
+      "claimId": "d10ed363-e49c-4882-98d5-4b2b5917d961",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "d10ed363-e49c-4882-98d5-4b2b5917d961"
+    },
+    {
+      "claimId": "d178829b-b11f-4cf3-998c-50832678dfb0",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "d178829b-b11f-4cf3-998c-50832678dfb0"
+    },
+    {
+      "claimId": "d1879b91-8e49-4bcd-957d-5a6f76581bd8",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "d1879b91-8e49-4bcd-957d-5a6f76581bd8"
+    },
+    {
+      "claimId": "d1aa5b61-7fbd-4c2a-a7fa-2ce779a4454b",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "d1aa5b61-7fbd-4c2a-a7fa-2ce779a4454b"
+    },
+    {
+      "claimId": "d1f7c819-7728-4ceb-9447-3776ba2050f8",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "d1f7c819-7728-4ceb-9447-3776ba2050f8"
+    },
+    {
+      "claimId": "d2298443-a215-4fe5-89b9-742e3993f9a1",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "d2298443-a215-4fe5-89b9-742e3993f9a1"
+    },
+    {
+      "claimId": "d2351ccb-3794-41e3-9121-e190c15fca26",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "d2351ccb-3794-41e3-9121-e190c15fca26"
+    },
+    {
+      "claimId": "d23ea917-980a-45de-a194-81c5afccd8c3",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "d23ea917-980a-45de-a194-81c5afccd8c3"
+    },
+    {
+      "claimId": "d2b3ff8b-f751-4307-9a72-fa0884614e7a",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "d2b3ff8b-f751-4307-9a72-fa0884614e7a"
+    },
+    {
+      "claimId": "d3512a01-a2f9-460b-8b7a-8720a7884509",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "d3512a01-a2f9-460b-8b7a-8720a7884509"
+    },
+    {
+      "claimId": "d35ed638-3bb3-4cc3-8eec-700933dd8c4d",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "d35ed638-3bb3-4cc3-8eec-700933dd8c4d"
+    },
+    {
+      "claimId": "d3c7d6b1-3701-4fc8-9c35-68843c6e249d",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "d3c7d6b1-3701-4fc8-9c35-68843c6e249d"
+    },
+    {
+      "claimId": "d413bd30-3810-4155-a8cf-f38ff02d2f12",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "d413bd30-3810-4155-a8cf-f38ff02d2f12"
+    },
+    {
+      "claimId": "d4344696-7aa7-4e41-aefa-541d21c8a123",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "d4344696-7aa7-4e41-aefa-541d21c8a123"
+    },
+    {
+      "claimId": "d4380256-4d84-4404-a44b-dc5a9fbf0b6b",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "d4380256-4d84-4404-a44b-dc5a9fbf0b6b"
+    },
+    {
+      "claimId": "d4a623e8-2a52-4a09-9c69-7b14fe192088",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "d4a623e8-2a52-4a09-9c69-7b14fe192088"
+    },
+    {
+      "claimId": "d4cc1195-25d9-4919-a0a6-e30cf279fc84",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "d4cc1195-25d9-4919-a0a6-e30cf279fc84"
+    },
+    {
+      "claimId": "d5290257-8894-41cd-a9cd-016ca0147a8a",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "d5290257-8894-41cd-a9cd-016ca0147a8a"
+    },
+    {
+      "claimId": "d5815aa2-19b4-4c7e-b3ac-c1d02401dafa",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "d5815aa2-19b4-4c7e-b3ac-c1d02401dafa"
+    },
+    {
+      "claimId": "d59de075-2794-4416-b542-6aa96e767bbd",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "d59de075-2794-4416-b542-6aa96e767bbd"
+    },
+    {
+      "claimId": "d5a80244-c1d2-4a01-a123-9b4e3b210c8f",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "d5a80244-c1d2-4a01-a123-9b4e3b210c8f"
+    },
+    {
+      "claimId": "d5aed4c5-ce45-4f07-b065-e26301ac16cf",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "d5aed4c5-ce45-4f07-b065-e26301ac16cf"
+    },
+    {
+      "claimId": "d60a936e-1355-4889-af86-a572eecb98fe",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "d60a936e-1355-4889-af86-a572eecb98fe"
+    },
+    {
+      "claimId": "d698e6d2-e4a1-49b8-a0a5-a335f25cbc98",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "d698e6d2-e4a1-49b8-a0a5-a335f25cbc98"
+    },
+    {
+      "claimId": "d6a1a927-17a6-449c-be08-aeb616a8cb01",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "d6a1a927-17a6-449c-be08-aeb616a8cb01"
+    },
+    {
+      "claimId": "d6c0dc4d-05dd-4ed4-9a4f-5a5b58fcb09f",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "d6c0dc4d-05dd-4ed4-9a4f-5a5b58fcb09f"
+    },
+    {
+      "claimId": "d70c6822-be5d-4bbf-ad52-aaf756ed24c3",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "d70c6822-be5d-4bbf-ad52-aaf756ed24c3"
+    },
+    {
+      "claimId": "d730db13-47ab-417e-a0eb-3f1e44864018",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "d730db13-47ab-417e-a0eb-3f1e44864018"
+    },
+    {
+      "claimId": "d7862873-1bbb-4dbf-8f63-9d3b9319c1df",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "d7862873-1bbb-4dbf-8f63-9d3b9319c1df"
+    },
+    {
+      "claimId": "d8043e1e-bb7a-4469-ad61-f8eae3758962",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "d8043e1e-bb7a-4469-ad61-f8eae3758962"
+    },
+    {
+      "claimId": "d809e634-e5fa-413a-ac0b-97e16d703c68",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "d809e634-e5fa-413a-ac0b-97e16d703c68"
+    },
+    {
+      "claimId": "d8377688-6ee6-4c00-b662-4fb344e1a78f",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "d8377688-6ee6-4c00-b662-4fb344e1a78f"
+    },
+    {
+      "claimId": "d8e28e53-1e06-42a1-b639-9db8468f516a",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "d8e28e53-1e06-42a1-b639-9db8468f516a"
+    },
+    {
+      "claimId": "d9371319-9d65-4d1e-b169-423eaeb794fc",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "d9371319-9d65-4d1e-b169-423eaeb794fc"
+    },
+    {
+      "claimId": "d9489932-982e-4b65-88c0-caad4bcaec9b",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "d9489932-982e-4b65-88c0-caad4bcaec9b"
+    },
+    {
+      "claimId": "d951bf5b-8eb9-491a-acd6-cb9595d2414c",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "d951bf5b-8eb9-491a-acd6-cb9595d2414c"
+    },
+    {
+      "claimId": "d956defa-dd56-448c-9ba8-a35e6c2ce290",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "d956defa-dd56-448c-9ba8-a35e6c2ce290"
+    },
+    {
+      "claimId": "d97b1b6e-32af-4ad9-bf56-4e2df0120a51",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "d97b1b6e-32af-4ad9-bf56-4e2df0120a51"
+    },
+    {
+      "claimId": "d985b6ce-0bba-4238-b713-2132cf38cd65",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "d985b6ce-0bba-4238-b713-2132cf38cd65"
+    },
+    {
+      "claimId": "d9d522ca-63e6-44d7-b164-25799fb3503a",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "d9d522ca-63e6-44d7-b164-25799fb3503a"
+    },
+    {
+      "claimId": "da0e0cb5-e0c7-4578-82af-4a7e75727aae",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "da0e0cb5-e0c7-4578-82af-4a7e75727aae"
+    },
+    {
+      "claimId": "db65d583-ac71-4a43-805c-be20ffcc3735",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "db65d583-ac71-4a43-805c-be20ffcc3735"
+    },
+    {
+      "claimId": "dbcfd9a4-effe-4cb6-894f-fdc65abf5d6d",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "dbcfd9a4-effe-4cb6-894f-fdc65abf5d6d"
+    },
+    {
+      "claimId": "dbe8180b-378c-4a77-aeab-883baf61f067",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "dbe8180b-378c-4a77-aeab-883baf61f067"
+    },
+    {
+      "claimId": "dc30e7f1-7659-4751-9d57-569a9a489f0a",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "dc30e7f1-7659-4751-9d57-569a9a489f0a"
+    },
+    {
+      "claimId": "dc68c614-5aee-44f6-83e8-ade7e4a0c3db",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "dc68c614-5aee-44f6-83e8-ade7e4a0c3db"
+    },
+    {
+      "claimId": "dc7d4e6d-d0dd-47f6-b594-867d9c122493",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "dc7d4e6d-d0dd-47f6-b594-867d9c122493"
+    },
+    {
+      "claimId": "dcee3cd0-15a7-4647-859a-6ff4ab05ac15",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "dcee3cd0-15a7-4647-859a-6ff4ab05ac15"
+    },
+    {
+      "claimId": "dcf4dbe0-85c2-476c-935b-0acc1a43875b",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "dcf4dbe0-85c2-476c-935b-0acc1a43875b"
+    },
+    {
+      "claimId": "dd155f2e-2191-46a7-9c19-0d391ee4ff12",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "dd155f2e-2191-46a7-9c19-0d391ee4ff12"
+    },
+    {
+      "claimId": "dd4f50ae-0b19-4d38-9990-61bbfba527d6",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "dd4f50ae-0b19-4d38-9990-61bbfba527d6"
+    },
+    {
+      "claimId": "de128021-619b-4f8f-a385-36a68b228ebb",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "de128021-619b-4f8f-a385-36a68b228ebb"
+    },
+    {
+      "claimId": "deaede30-b9cf-4812-8087-7116f813fb87",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "deaede30-b9cf-4812-8087-7116f813fb87"
+    },
+    {
+      "claimId": "df17fe06-4bc3-4167-8b4d-1a1859f69016",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "df17fe06-4bc3-4167-8b4d-1a1859f69016"
+    },
+    {
+      "claimId": "df1db06b-95f6-4840-a9f5-b47209b28835",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "df1db06b-95f6-4840-a9f5-b47209b28835"
+    },
+    {
+      "claimId": "dfbb4a0d-ab11-41f3-ab3a-e9368160e053",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "dfbb4a0d-ab11-41f3-ab3a-e9368160e053"
+    },
+    {
+      "claimId": "e05addc1-29e5-406d-842c-3228cc813ca4",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "e05addc1-29e5-406d-842c-3228cc813ca4"
+    },
+    {
+      "claimId": "e0b68701-b80d-4d77-b321-52bb9ef8487e",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "e0b68701-b80d-4d77-b321-52bb9ef8487e"
+    },
+    {
+      "claimId": "e13ddf00-1faa-48df-86d8-f73d1c5813cc",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "e13ddf00-1faa-48df-86d8-f73d1c5813cc"
+    },
+    {
+      "claimId": "e17fd783-110b-42dd-9378-dfc26626e45e",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "e17fd783-110b-42dd-9378-dfc26626e45e"
+    },
+    {
+      "claimId": "e1d2e571-57db-4b02-84d9-9975e43c55ed",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "e1d2e571-57db-4b02-84d9-9975e43c55ed"
+    },
+    {
+      "claimId": "e2081b44-56e7-49a5-9a74-a387c162d58c",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "e2081b44-56e7-49a5-9a74-a387c162d58c"
+    },
+    {
+      "claimId": "e21e85e4-6a64-4197-ba82-a8353284dbcd",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "e21e85e4-6a64-4197-ba82-a8353284dbcd"
+    },
+    {
+      "claimId": "e2390b27-763a-4e35-b9a3-12736e286739",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "e2390b27-763a-4e35-b9a3-12736e286739"
+    },
+    {
+      "claimId": "e25c2961-5011-44b3-832e-31df3e1e828d",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "e25c2961-5011-44b3-832e-31df3e1e828d"
+    },
+    {
+      "claimId": "e27f3bb9-6f44-4a78-8d2d-d93af65fe5f8",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "e27f3bb9-6f44-4a78-8d2d-d93af65fe5f8"
+    },
+    {
+      "claimId": "e2884698-52ba-461e-b6c9-403263e54cf3",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "e2884698-52ba-461e-b6c9-403263e54cf3"
+    },
+    {
+      "claimId": "e2f663c0-1ac7-4e96-9510-fbaef054c3b4",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "e2f663c0-1ac7-4e96-9510-fbaef054c3b4"
+    },
+    {
+      "claimId": "e344278e-6ed1-48e9-baba-a4710cf6dcd4",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "e344278e-6ed1-48e9-baba-a4710cf6dcd4"
+    },
+    {
+      "claimId": "e359fc35-263f-4b59-9f7a-03129ca3d91a",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "e359fc35-263f-4b59-9f7a-03129ca3d91a"
+    },
+    {
+      "claimId": "e362f44a-325a-4a24-8439-f4c1f096a7c8",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "e362f44a-325a-4a24-8439-f4c1f096a7c8"
+    },
+    {
+      "claimId": "e36b84e0-305b-4b38-9fc5-ca37ec997384",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "e36b84e0-305b-4b38-9fc5-ca37ec997384"
+    },
+    {
+      "claimId": "e39ab338-46bc-43b4-952a-a24063cd2190",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "e39ab338-46bc-43b4-952a-a24063cd2190"
+    },
+    {
+      "claimId": "e3bc19e9-d5e2-4319-97ff-418f80b659d2",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "e3bc19e9-d5e2-4319-97ff-418f80b659d2"
+    },
+    {
+      "claimId": "e3ca63d4-dca8-42c1-b223-6f14bfa89648",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "e3ca63d4-dca8-42c1-b223-6f14bfa89648"
+    },
+    {
+      "claimId": "e3cb4ef1-7844-4191-927f-3a0ae43ad43e",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "e3cb4ef1-7844-4191-927f-3a0ae43ad43e"
+    },
+    {
+      "claimId": "e4aac6f2-74e8-4509-b4c5-e3c15f469c88",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "e4aac6f2-74e8-4509-b4c5-e3c15f469c88"
+    },
+    {
+      "claimId": "e4d16f3d-8aab-4e0b-ae75-05a620373390",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "e4d16f3d-8aab-4e0b-ae75-05a620373390"
+    },
+    {
+      "claimId": "e4e254a6-ff24-4160-8c2b-d8e9162dde01",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "e4e254a6-ff24-4160-8c2b-d8e9162dde01"
+    },
+    {
+      "claimId": "e556b432-1f4c-4826-b3b9-f593a7e55c1e",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "e556b432-1f4c-4826-b3b9-f593a7e55c1e"
+    },
+    {
+      "claimId": "e665de28-9ddb-4cab-a678-ea9e5e5adae6",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "e665de28-9ddb-4cab-a678-ea9e5e5adae6"
+    },
+    {
+      "claimId": "e68c812e-e6bc-4c38-ac71-2449c29c0b33",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "e68c812e-e6bc-4c38-ac71-2449c29c0b33"
+    },
+    {
+      "claimId": "e71b9a67-1202-4850-a87a-539dbe82663b",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "e71b9a67-1202-4850-a87a-539dbe82663b"
+    },
+    {
+      "claimId": "e7777b5b-8c10-43c6-aa80-9abec962b6cf",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "e7777b5b-8c10-43c6-aa80-9abec962b6cf"
+    },
+    {
+      "claimId": "e84a2b13-be69-47d2-97ff-14f9abf1d795",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "e84a2b13-be69-47d2-97ff-14f9abf1d795"
+    },
+    {
+      "claimId": "e85868e4-6287-4b11-9f95-1f10f797da5e",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "e85868e4-6287-4b11-9f95-1f10f797da5e"
+    },
+    {
+      "claimId": "e8addeff-3c9b-4cc0-8004-bc4fe9f3cf11",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "e8addeff-3c9b-4cc0-8004-bc4fe9f3cf11"
+    },
+    {
+      "claimId": "e92bc706-9afe-4c21-ac4c-8ac9fbb7d2cb",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "e92bc706-9afe-4c21-ac4c-8ac9fbb7d2cb"
+    },
+    {
+      "claimId": "e96177bf-2248-467a-be5f-51a543ba1cbc",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "e96177bf-2248-467a-be5f-51a543ba1cbc"
+    },
+    {
+      "claimId": "e9a31847-86dd-49fd-8803-34d94e4fc215",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "e9a31847-86dd-49fd-8803-34d94e4fc215"
+    },
+    {
+      "claimId": "e9ecc43d-04db-4ff5-8263-43553ea3bc3e",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "e9ecc43d-04db-4ff5-8263-43553ea3bc3e"
+    },
+    {
+      "claimId": "ea1eaf70-b326-484d-9366-c683878745f7",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "ea1eaf70-b326-484d-9366-c683878745f7"
+    },
+    {
+      "claimId": "ec2e5dbb-b15e-406c-896d-a3c6056b9fa0",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "ec2e5dbb-b15e-406c-896d-a3c6056b9fa0"
+    },
+    {
+      "claimId": "ec497893-2f0b-45d1-9b8b-167f0ee6e7ae",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "ec497893-2f0b-45d1-9b8b-167f0ee6e7ae"
+    },
+    {
+      "claimId": "ecbaa7d7-af2e-4873-8cbe-4974f860272a",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "ecbaa7d7-af2e-4873-8cbe-4974f860272a"
+    },
+    {
+      "claimId": "ecbb2334-72c8-485f-9149-eb7b0861f792",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "ecbb2334-72c8-485f-9149-eb7b0861f792"
+    },
+    {
+      "claimId": "ed13f5fc-5e0c-4742-a4a6-362a658ae876",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "ed13f5fc-5e0c-4742-a4a6-362a658ae876"
+    },
+    {
+      "claimId": "ed1d57ba-87ae-4033-957e-818c70196838",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "ed1d57ba-87ae-4033-957e-818c70196838"
+    },
+    {
+      "claimId": "ed534a1c-c986-41a3-9607-df7eba35c2d9",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "ed534a1c-c986-41a3-9607-df7eba35c2d9"
+    },
+    {
+      "claimId": "ee18a280-ab85-4586-b899-ea52ca6504cd",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "ee18a280-ab85-4586-b899-ea52ca6504cd"
+    },
+    {
+      "claimId": "ee51827f-71c3-4443-b532-f10210f1e0c6",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "ee51827f-71c3-4443-b532-f10210f1e0c6"
+    },
+    {
+      "claimId": "ee607e24-4f6d-4fea-865f-f7d59f6832ff",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "ee607e24-4f6d-4fea-865f-f7d59f6832ff"
+    },
+    {
+      "claimId": "ee716b1e-66d5-405c-a94d-af0b6a5e1e04",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "ee716b1e-66d5-405c-a94d-af0b6a5e1e04"
+    },
+    {
+      "claimId": "ee966aba-984f-4e09-b9c3-883de348a701",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "ee966aba-984f-4e09-b9c3-883de348a701"
+    },
+    {
+      "claimId": "eef0c337-55a7-4e0e-836d-40f4e6f18d8d",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "eef0c337-55a7-4e0e-836d-40f4e6f18d8d"
+    },
+    {
+      "claimId": "eef0f885-7fd9-47f7-a359-22822bd5bed6",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "eef0f885-7fd9-47f7-a359-22822bd5bed6"
+    },
+    {
+      "claimId": "ef4f9d90-3a20-4ab8-9323-1f6cdeef83e3",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "ef4f9d90-3a20-4ab8-9323-1f6cdeef83e3"
+    },
+    {
+      "claimId": "ef5b584c-026b-4fca-958a-babcf82c1e0c",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "ef5b584c-026b-4fca-958a-babcf82c1e0c"
+    },
+    {
+      "claimId": "effa9a60-161e-435f-bf53-7b26e6ef4520",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "effa9a60-161e-435f-bf53-7b26e6ef4520"
+    },
+    {
+      "claimId": "f00a2042-c111-4ddf-823e-be1ecab41e20",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "f00a2042-c111-4ddf-823e-be1ecab41e20"
+    },
+    {
+      "claimId": "f052b940-0985-4c41-a3e4-59dedb6c5795",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "f052b940-0985-4c41-a3e4-59dedb6c5795"
+    },
+    {
+      "claimId": "f070e72a-4eed-47c7-9881-09cff4d69f36",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "f070e72a-4eed-47c7-9881-09cff4d69f36"
+    },
+    {
+      "claimId": "f0743364-a325-4f34-a332-e1a5e806387b",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "f0743364-a325-4f34-a332-e1a5e806387b"
+    },
+    {
+      "claimId": "f0fd8b9f-4d46-468d-a7d2-3e991321d8dc",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "f0fd8b9f-4d46-468d-a7d2-3e991321d8dc"
+    },
+    {
+      "claimId": "f13d4a24-6dfb-4825-8d8e-d20451391dbc",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "f13d4a24-6dfb-4825-8d8e-d20451391dbc"
+    },
+    {
+      "claimId": "f158fd01-0310-42a2-be9c-e31676d3911b",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "f158fd01-0310-42a2-be9c-e31676d3911b"
+    },
+    {
+      "claimId": "f1d7aa63-f88c-4871-b916-3d603aaf6b69",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "f1d7aa63-f88c-4871-b916-3d603aaf6b69"
+    },
+    {
+      "claimId": "f1fdb585-b081-4b92-b386-be167632f587",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "f1fdb585-b081-4b92-b386-be167632f587"
+    },
+    {
+      "claimId": "f257d9ff-f6cd-4e5a-a746-10fc1dcaf60c",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "f257d9ff-f6cd-4e5a-a746-10fc1dcaf60c"
+    },
+    {
+      "claimId": "f25aeef6-2f6a-4037-93d9-5ebb1090c129",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "f25aeef6-2f6a-4037-93d9-5ebb1090c129"
+    },
+    {
+      "claimId": "f2ca3190-823f-418a-a050-b27b543d4038",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "f2ca3190-823f-418a-a050-b27b543d4038"
+    },
+    {
+      "claimId": "f364f257-cfd6-47cf-8729-a80073abf765",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "f364f257-cfd6-47cf-8729-a80073abf765"
+    },
+    {
+      "claimId": "f37def59-de2e-44fe-8497-c1c98986d9d2",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "f37def59-de2e-44fe-8497-c1c98986d9d2"
+    },
+    {
+      "claimId": "f3b86a4c-f282-477f-a818-59a2ebffc1be",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "f3b86a4c-f282-477f-a818-59a2ebffc1be"
+    },
+    {
+      "claimId": "f3e70459-06da-43cd-a034-a0b1f1dda75d",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "f3e70459-06da-43cd-a034-a0b1f1dda75d"
+    },
+    {
+      "claimId": "f403eeca-7727-470d-ab3f-2b9e420c648d",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "f403eeca-7727-470d-ab3f-2b9e420c648d"
+    },
+    {
+      "claimId": "f41206ac-b50b-4caf-b0eb-24cfb1b4580c",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "f41206ac-b50b-4caf-b0eb-24cfb1b4580c"
+    },
+    {
+      "claimId": "f422ef14-44f3-4aa8-b829-1a095f9d25cc",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "f422ef14-44f3-4aa8-b829-1a095f9d25cc"
+    },
+    {
+      "claimId": "f44309f0-3c31-4965-ae45-a397f04e339c",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "f44309f0-3c31-4965-ae45-a397f04e339c"
+    },
+    {
+      "claimId": "f443c0fb-6c87-44db-b19e-0501bbc83b27",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "f443c0fb-6c87-44db-b19e-0501bbc83b27"
+    },
+    {
+      "claimId": "f49245ef-2799-47a1-b84c-7b7ad9c21439",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "f49245ef-2799-47a1-b84c-7b7ad9c21439"
+    },
+    {
+      "claimId": "f4dfea0f-5d6c-4869-8598-052fce1415db",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "f4dfea0f-5d6c-4869-8598-052fce1415db"
+    },
+    {
+      "claimId": "f51d3f39-e7b5-4e54-907d-346c6c184920",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "f51d3f39-e7b5-4e54-907d-346c6c184920"
+    },
+    {
+      "claimId": "f571be91-1fb2-4594-9a17-f5736f115d24",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "f571be91-1fb2-4594-9a17-f5736f115d24"
+    },
+    {
+      "claimId": "f57e34bf-7889-4c17-a5fb-4f1ee61a0f44",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "f57e34bf-7889-4c17-a5fb-4f1ee61a0f44"
+    },
+    {
+      "claimId": "f5a1da17-e489-4c8b-aae1-35fe2429690f",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "f5a1da17-e489-4c8b-aae1-35fe2429690f"
+    },
+    {
+      "claimId": "f5b48d29-9789-4a94-96c7-f5f36189df63",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "f5b48d29-9789-4a94-96c7-f5f36189df63"
+    },
+    {
+      "claimId": "f5cb2f7a-ea8f-4444-b4dd-6b8189c7511b",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "f5cb2f7a-ea8f-4444-b4dd-6b8189c7511b"
+    },
+    {
+      "claimId": "f5e76b49-323e-4a0a-b4ea-b77866d291cb",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "f5e76b49-323e-4a0a-b4ea-b77866d291cb"
+    },
+    {
+      "claimId": "f6050521-2ffa-43cb-b42f-1aa8025d0dc0",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "f6050521-2ffa-43cb-b42f-1aa8025d0dc0"
+    },
+    {
+      "claimId": "f688fb46-6ea8-4df5-ac06-47fa13a93f5c",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "f688fb46-6ea8-4df5-ac06-47fa13a93f5c"
+    },
+    {
+      "claimId": "f6a10dbb-b8c3-4385-a8bd-e1a94e329248",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "f6a10dbb-b8c3-4385-a8bd-e1a94e329248"
+    },
+    {
+      "claimId": "f6edeabf-ef1f-48bd-9a3c-f43c041750ee",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "f6edeabf-ef1f-48bd-9a3c-f43c041750ee"
+    },
+    {
+      "claimId": "f7109ffe-0726-4f3f-9746-abded17aa1f1",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "f7109ffe-0726-4f3f-9746-abded17aa1f1"
+    },
+    {
+      "claimId": "f754d461-0c2d-45eb-9c78-de21c0900c28",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "f754d461-0c2d-45eb-9c78-de21c0900c28"
+    },
+    {
+      "claimId": "f78e9756-9d43-4f55-8771-6e7709ff646f",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "f78e9756-9d43-4f55-8771-6e7709ff646f"
+    },
+    {
+      "claimId": "f7c6bbb2-c76f-4fc9-9cb9-7a0a8aab0059",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "f7c6bbb2-c76f-4fc9-9cb9-7a0a8aab0059"
+    },
+    {
+      "claimId": "f7e6d187-ddae-43b0-89af-d46bda6e0704",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "f7e6d187-ddae-43b0-89af-d46bda6e0704"
+    },
+    {
+      "claimId": "f7e904d4-28f2-4175-991d-4ff9ffd8b174",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "f7e904d4-28f2-4175-991d-4ff9ffd8b174"
+    },
+    {
+      "claimId": "f8056860-e996-44aa-b8dd-a7aaa0ea3d62",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "f8056860-e996-44aa-b8dd-a7aaa0ea3d62"
+    },
+    {
+      "claimId": "f8216383-d576-4e66-8a2b-712f60f06cb0",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "f8216383-d576-4e66-8a2b-712f60f06cb0"
+    },
+    {
+      "claimId": "f87975fe-aaff-446f-8a3e-5102e69c0369",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "f87975fe-aaff-446f-8a3e-5102e69c0369"
+    },
+    {
+      "claimId": "f888d246-6d0f-4fb0-8459-86db0011366e",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "f888d246-6d0f-4fb0-8459-86db0011366e"
+    },
+    {
+      "claimId": "f8ca9635-33ce-450a-baef-75cdb1670a1d",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "f8ca9635-33ce-450a-baef-75cdb1670a1d"
+    },
+    {
+      "claimId": "f92f9a4c-9ae7-458d-8b86-9f8bc33a9570",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "f92f9a4c-9ae7-458d-8b86-9f8bc33a9570"
+    },
+    {
+      "claimId": "f9eea88d-4e1d-4cea-9798-22158353ea9d",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "f9eea88d-4e1d-4cea-9798-22158353ea9d"
+    },
+    {
+      "claimId": "fa9d47ec-c416-4bf8-a13e-d4b9a1bae619",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "fa9d47ec-c416-4bf8-a13e-d4b9a1bae619"
+    },
+    {
+      "claimId": "faa1f9de-8ab0-4477-854c-d94b9dfa5f6a",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "faa1f9de-8ab0-4477-854c-d94b9dfa5f6a"
+    },
+    {
+      "claimId": "fab4b823-8631-4a16-b59c-ef2203e7e745",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "fab4b823-8631-4a16-b59c-ef2203e7e745"
+    },
+    {
+      "claimId": "fabede40-17ba-4315-966e-604a3d7e31d1",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "fabede40-17ba-4315-966e-604a3d7e31d1"
+    },
+    {
+      "claimId": "faea1fec-dd2a-4bb1-ad58-f66b177c1b58",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "faea1fec-dd2a-4bb1-ad58-f66b177c1b58"
+    },
+    {
+      "claimId": "fb6861fe-60c4-46e6-a8d7-d4bc5b589a07",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "fb6861fe-60c4-46e6-a8d7-d4bc5b589a07"
+    },
+    {
+      "claimId": "fb6bd91c-83a8-4242-a423-0582c91993f1",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "fb6bd91c-83a8-4242-a423-0582c91993f1"
+    },
+    {
+      "claimId": "fbd9b8a4-8b76-4020-9997-240fcebe0f94",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "fbd9b8a4-8b76-4020-9997-240fcebe0f94"
+    },
+    {
+      "claimId": "fc13f1d5-f5a8-49ed-a0dd-8c13c87b576c",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "fc13f1d5-f5a8-49ed-a0dd-8c13c87b576c"
+    },
+    {
+      "claimId": "fc9573eb-2e5a-4253-a497-5735ef898b4e",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "fc9573eb-2e5a-4253-a497-5735ef898b4e"
+    },
+    {
+      "claimId": "fd1421a1-6f52-4fd5-be2c-a56c0f3fc9a7",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "fd1421a1-6f52-4fd5-be2c-a56c0f3fc9a7"
+    },
+    {
+      "claimId": "fda9a07f-1548-41d4-9816-b197913c3089",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "fda9a07f-1548-41d4-9816-b197913c3089"
+    },
+    {
+      "claimId": "fdff1ca0-50ad-4779-aaf9-36d81d74161b",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "fdff1ca0-50ad-4779-aaf9-36d81d74161b"
+    },
+    {
+      "claimId": "fe5c9659-18aa-4f99-82bf-a733031c6e8e",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "fe5c9659-18aa-4f99-82bf-a733031c6e8e"
+    },
+    {
+      "claimId": "ff56cba7-b52b-410c-97c5-c1cfaaa0a1c1",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "ff56cba7-b52b-410c-97c5-c1cfaaa0a1c1"
+    },
+    {
+      "claimId": "ff604520-8740-44ee-8d0d-5917cd02dfae",
+      "dataset": "nobel-affiliations-v1",
+      "sourceClaimId": "ff604520-8740-44ee-8d0d-5917cd02dfae"
+    }
+  ]
+}

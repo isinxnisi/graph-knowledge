@@ -1,0 +1,14 @@
+{
+  "source": "Nobel Prize API 2.1",
+  "retrievalDate": "2026-10-14",
+  "urls": [
+    "https://api.nobelprize.org/2.1/laureates?limit=1000",
+    "https://api.nobelprize.org/2.1/laureates?offset=1000&limit=1000"
+  ],
+  "reportedTotal": 1028,
+  "receivedTotal": 1028,
+  "awardCutoff": 2025,
+  "license": "CC0-1.0",
+  "termsUrl": "https://www.nobelprize.org/about/terms-of-use-for-api-nobelprize-org-and-data-nobelprize-org/",
+  "termsChecked": "Official terms downloaded and checked: CC0, cache/minimize calls, cite source, no false endorsement. No images or biography text imported."
+}
