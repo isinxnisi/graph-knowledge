@@ -1,0 +1,407 @@
+{
+  "version": 1,
+  "status": "pending-public-approval",
+  "date": "2026-10-14",
+  "purpose": "PLUTOから別作品・別作者・組織へ複数段階で辿れる関係を補充する。",
+  "entities": [
+    {
+      "key": "urasawa",
+      "existingId": "d900543a-9c11-48c1-be76-1822b756fcc4"
+    },
+    {
+      "key": "nagasaki",
+      "existingId": "29e9caea-6c44-4c1f-9abc-f4350003ca3b"
+    },
+    {
+      "key": "makoto",
+      "existingId": "bdb742c2-2973-4c1c-a523-c828374111fc"
+    },
+    {
+      "key": "osamu",
+      "existingId": "eb0af7e1-caa6-435f-86fb-0591421982b5"
+    },
+    {
+      "key": "pine",
+      "kind": "work",
+      "name": "パイナップルARMY",
+      "aliases": [],
+      "description": "工藤かずや・浦沢直樹の漫画。今回のクレジット確認は小学館文庫第1巻。"
+    },
+    {
+      "key": "nobunaga",
+      "kind": "work",
+      "name": "信長",
+      "aliases": [],
+      "description": "工藤かずや・池上遼一の漫画シリーズ。歴史上の人物そのものではありません。"
+    },
+    {
+      "key": "monster",
+      "kind": "work",
+      "name": "MONSTER",
+      "aliases": [],
+      "description": "浦沢直樹の漫画。アニメ版とは別。今回のクレジット確認は完全版第1巻。"
+    },
+    {
+      "key": "yawara",
+      "kind": "work",
+      "name": "YAWARA!",
+      "aliases": [],
+      "description": "浦沢直樹の漫画。今回のクレジット確認は小学館文庫第1巻。"
+    },
+    {
+      "key": "20cb",
+      "kind": "work",
+      "name": "20世紀少年",
+      "aliases": [
+        "２０世紀少年"
+      ],
+      "description": "浦沢直樹の漫画。映画版とは別。今回のクレジット確認は完全版第1巻。"
+    },
+    {
+      "key": "remaster",
+      "kind": "work",
+      "name": "MASTERキートン Reマスター",
+      "aliases": [
+        "ＭＡＳＴＥＲキートン Ｒｅマスター"
+      ],
+      "description": "浦沢直樹・長崎尚志の漫画。MASTERキートン本編とは別作品。"
+    },
+    {
+      "key": "astro",
+      "kind": "work",
+      "name": "鉄腕アトム",
+      "aliases": [
+        "鉄腕アトム（漫画）"
+      ],
+      "description": "手塚治虫の漫画。キャラクター・各アニメ版・PLUTOとは別の対象。"
+    },
+    {
+      "key": "kudo",
+      "kind": "person",
+      "name": "工藤かずや",
+      "aliases": [],
+      "description": "パイナップルARMY・信長の出版社クレジットで確認される作者。"
+    },
+    {
+      "key": "ikegami",
+      "kind": "person",
+      "name": "池上遼一",
+      "aliases": [],
+      "description": "信長の出版社クレジットで確認される作者。"
+    },
+    {
+      "key": "tezukapro",
+      "kind": "organization",
+      "name": "手塚プロダクション",
+      "aliases": [
+        "株式会社手塚プロダクション",
+        "Tezuka Productions"
+      ],
+      "description": "1968年設立の株式会社手塚プロダクション。虫プロダクションとは別組織。"
+    }
+  ],
+  "sources": [
+    {
+      "key": "pine",
+      "title": "パイナップルARMY〔小学館文庫〕 1 — 小学館商品情報",
+      "url": "https://shogakukan-comic.jp/book?isbn=9784091921116",
+      "publisher": "小学館"
+    },
+    {
+      "key": "monster",
+      "title": "MONSTER 完全版 1 — 小学館商品情報",
+      "url": "https://shogakukan-comic.jp/book?isbn=9784091817907",
+      "publisher": "小学館"
+    },
+    {
+      "key": "yawara",
+      "title": "YAWARA! 1 — 小学館商品情報",
+      "url": "https://shogakukan-comic.jp/book?isbn=9784091922816",
+      "publisher": "小学館"
+    },
+    {
+      "key": "20cb",
+      "title": "20世紀少年 完全版 1 — 小学館商品情報",
+      "url": "https://shogakukan-comic.jp/book?isbn=9784091875365",
+      "publisher": "小学館"
+    },
+    {
+      "key": "remaster",
+      "title": "MASTERキートン Reマスター — 小学館商品情報",
+      "url": "https://shogakukan-comic.jp/book?isbn=9784091867261",
+      "publisher": "小学館"
+    },
+    {
+      "key": "nobunaga",
+      "title": "池上遼一・工藤かずやの作品一覧 — 信長",
+      "url": "https://e-comi.shogakukan.co.jp/authors?ids=328%2C859",
+      "publisher": "小学館"
+    },
+    {
+      "key": "astro",
+      "title": "鉄腕アトム — マンガ・手塚治虫が語る鉄腕アトム",
+      "url": "https://tezukaosamu.net/jp/manga/291.html",
+      "publisher": "手塚プロダクション"
+    },
+    {
+      "key": "company",
+      "title": "企業情報・沿革 — 手塚プロダクション",
+      "url": "https://tezuka.co.jp/company/about.html",
+      "publisher": "手塚プロダクション"
+    },
+    {
+      "key": "founder",
+      "title": "常設展2 作家、手塚治虫 3",
+      "url": "https://tezukaosamu.net/jp/museum/permanent02_03.html",
+      "publisher": "手塚プロダクション"
+    }
+  ],
+  "rows": [
+    {
+      "subject": "urasawa",
+      "predicate": "CONTRIBUTED_TO",
+      "object": "pine",
+      "source": "pine",
+      "locator": "題名直下の著者・クレジット欄",
+      "originalText": "画: 浦沢直樹",
+      "language": "ja",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "scope": {
+        "kind": "publication",
+        "isbn13": "9784091921116",
+        "volumeLabel": "第1巻",
+        "editionLabel": "小学館文庫",
+        "language": "ja"
+      },
+      "qualificationId": null,
+      "acceptance": "pending-public-approval"
+    },
+    {
+      "subject": "kudo",
+      "predicate": "CONTRIBUTED_TO",
+      "object": "pine",
+      "source": "pine",
+      "locator": "題名直下の著者・クレジット欄",
+      "originalText": "工藤かずや",
+      "language": "ja",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "scope": {
+        "kind": "publication",
+        "isbn13": "9784091921116",
+        "volumeLabel": "第1巻",
+        "editionLabel": "小学館文庫",
+        "language": "ja"
+      },
+      "qualificationId": null,
+      "acceptance": "pending-public-approval"
+    },
+    {
+      "subject": "kudo",
+      "predicate": "CONTRIBUTED_TO",
+      "object": "nobunaga",
+      "source": "nobunaga",
+      "locator": "作品一覧の「信長」項目・著者欄（全8巻完結のシリーズ表示）",
+      "originalText": "池上遼一 / 工藤かずや",
+      "language": "ja",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "scope": null,
+      "qualificationId": null,
+      "acceptance": "pending-public-approval"
+    },
+    {
+      "subject": "ikegami",
+      "predicate": "CONTRIBUTED_TO",
+      "object": "nobunaga",
+      "source": "nobunaga",
+      "locator": "作品一覧の「信長」項目・著者欄（全8巻完結のシリーズ表示）",
+      "originalText": "池上遼一 / 工藤かずや",
+      "language": "ja",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "scope": null,
+      "qualificationId": null,
+      "acceptance": "pending-public-approval"
+    },
+    {
+      "subject": "urasawa",
+      "predicate": "CONTRIBUTED_TO",
+      "object": "monster",
+      "source": "monster",
+      "locator": "題名直下の著者・クレジット欄",
+      "originalText": "浦沢直樹",
+      "language": "ja",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "scope": {
+        "kind": "publication",
+        "isbn13": "9784091817907",
+        "volumeLabel": "第1巻",
+        "editionLabel": "完全版",
+        "language": "ja"
+      },
+      "qualificationId": null,
+      "acceptance": "pending-public-approval"
+    },
+    {
+      "subject": "urasawa",
+      "predicate": "CONTRIBUTED_TO",
+      "object": "yawara",
+      "source": "yawara",
+      "locator": "題名直下の著者・クレジット欄",
+      "originalText": "作: 浦沢直樹",
+      "language": "ja",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "scope": {
+        "kind": "publication",
+        "isbn13": "9784091922816",
+        "volumeLabel": "第1巻",
+        "editionLabel": "小学館文庫",
+        "language": "ja"
+      },
+      "qualificationId": null,
+      "acceptance": "pending-public-approval"
+    },
+    {
+      "subject": "urasawa",
+      "predicate": "CONTRIBUTED_TO",
+      "object": "20cb",
+      "source": "20cb",
+      "locator": "題名直下の著者・クレジット欄",
+      "originalText": "浦沢直樹",
+      "language": "ja",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "scope": {
+        "kind": "publication",
+        "isbn13": "9784091875365",
+        "volumeLabel": "第1巻",
+        "editionLabel": "完全版",
+        "language": "ja"
+      },
+      "qualificationId": null,
+      "acceptance": "pending-public-approval"
+    },
+    {
+      "subject": "urasawa",
+      "predicate": "CONTRIBUTED_TO",
+      "object": "remaster",
+      "source": "remaster",
+      "locator": "題名直下の著者・クレジット欄",
+      "originalText": "著: 浦沢直樹",
+      "language": "ja",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "scope": {
+        "kind": "publication",
+        "isbn13": "9784091867261",
+        "volumeLabel": null,
+        "editionLabel": null,
+        "language": "ja"
+      },
+      "qualificationId": null,
+      "acceptance": "pending-public-approval"
+    },
+    {
+      "subject": "nagasaki",
+      "predicate": "CONTRIBUTED_TO",
+      "object": "remaster",
+      "source": "remaster",
+      "locator": "題名直下の著者・クレジット欄",
+      "originalText": "著: 長崎尚志",
+      "language": "ja",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "scope": {
+        "kind": "publication",
+        "isbn13": "9784091867261",
+        "volumeLabel": null,
+        "editionLabel": null,
+        "language": "ja"
+      },
+      "qualificationId": null,
+      "acceptance": "pending-public-approval"
+    },
+    {
+      "subject": "osamu",
+      "predicate": "CONTRIBUTED_TO",
+      "object": "astro",
+      "source": "astro",
+      "locator": "手塚治虫が語る「鉄腕アトム」・本人の制作回想（漫画版）",
+      "originalText": "アトムは、もう、あしかけ十五年描いています。",
+      "language": "ja",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "scope": null,
+      "qualificationId": null,
+      "acceptance": "pending-public-approval"
+    },
+    {
+      "subject": "makoto",
+      "predicate": "AFFILIATED_WITH",
+      "object": "tezukapro",
+      "source": "company",
+      "locator": "企業情報・取締役欄",
+      "originalText": "取締役 手塚眞",
+      "language": "ja",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "scope": null,
+      "qualificationId": null,
+      "acceptance": "pending-public-approval"
+    },
+    {
+      "subject": "osamu",
+      "predicate": "AFFILIATED_WITH",
+      "object": "tezukapro",
+      "source": "founder",
+      "locator": "常設展本文・1968年の会社設立についての段落",
+      "originalText": "1968年1月手塚はマンガ制作のために株式会社手塚プロダクションを設立した。",
+      "language": "ja",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "scope": null,
+      "qualificationId": null,
+      "acceptance": "pending-public-approval"
+    }
+  ],
+  "boundaries": [
+    "原資料で作／画／著／取締役／設立が確認されても新Roleへ自動正規化しない。",
+    "刊行物scopeはクレジットを確認した指定刊行物の適用範囲で、全巻全版・当該巻だけの担当を意味しない。",
+    "書籍の発売日、漫画の連載期間、会社設立日をClaim.periodへ転記しない。",
+    "漫画／アニメ／キャラクター、MASTERキートンとReマスター、手塚プロダクションと虫プロを統合しない。",
+    "PLUTOから鉄腕アトムへの派生をCONTRIBUTED_TO等に置換しない。手塚治虫をPLUTOの直接制作参加者にしない。",
+    "著者の出版社への所属や、創作者同士の面識・共同作業期間・家族を推測しない。"
+  ],
+  "collectionNotes": [
+    "Wikidataの4人物・3制作property横断queryは65秒timeout。今回は小さい出版社／公式資料の明示クレジットで補充する。大量分のWikidata候補は変更しない。",
+    "ウェブ本文・画像・あらすじを転載せず、最小の事実メタデータ・短いクレジット・出典URLを保存する。"
+  ]
+}

@@ -365,3 +365,14 @@ VPSを読み取り確認し、preview認証なし401、認証後dataset 200・�
 実画面：Harvard Universityを検索→本体を選択→20 ClaimのGraph→関係概要→線→Claudia GoldinのClaim／受賞時Citationへ到達。研究所・部局は別検索候補として区別できる。周辺Nodeが初期のviewport外に出やすいこと、長い機関名の改行、すべて広い組織関与で線の違いが出にくい点を観察。軽微なpresentation課題であり全データを戻す理由にはしない。スクリーンショットは作業用1枚を目視し、repoへ大量追加しない。
 
 VPS候補bundle `/home/develop/graph-expanded-20261014` を転送・SHA256／構文照合済み。管理者scriptはdry-runの追加数・既存変更0件を再確認し、KG単独backup後にapply／再apply、全container ID・起動時刻不変とreadinessを確認する。会員PG・credential・Caddyは変更しない。**まだローカル3200/Tunnel／VPSのKGへ反映していない。** ご指定の公開反映前確認を質問済みで、受入・反映承認を待つ。今回の区切りを工程17完了や一般β公開へ読み替えず、完了数は増やさない。
+
+
+### PLUTOを代表入口とする重点補充（2026-10-14追加指示）
+
+ユーザーが、全体拡充を維持しつつPLUTOからの複数段階の探索を優先補充するよう指定。今回の補足を大量分の反映承認とは扱わない。大量分1,795 Claimと既存VPS bundleは不変で、人間確認待ちを維持する。
+
+次の小さい拡充候補として、公式出版社・会社／記念館資料から追加10 Entity／12 Claim／9 Source／12 Citationを生成。[対象・探索経路・限界](../datasets/pluto-expansion/v1/README.md)。PLUTOから浦沢→パイナップルARMY→工藤かずや→信長→池上遼一、手塚眞→会社→手塚治虫→鉄腕アトム、長崎→Reマスター→浦沢→20世紀少年を辿れる構成。初期表示の自動選択や新しいおすすめUIは追加していない。
+
+schema／hash・生成一致・既存知識不変・3経路・刊行物限定・誤った原作／制作Claim不在のunit3件、typecheck／対象lintを確認。公開反映・新候補の実DB／新しい枝の実ブラウザ検証は未了。大量分を先に受入・適用した後の次releaseとして扱う。資料上の画・著・役職はCitationへ残し、現行Roleへ無理に正規化しない。
+
+現行画面の実ブラウザ確認は、開始例PLUTO（Entity 4／Claim 5）→浦沢直樹の選択・詳細とneighbors 200（4 Claim）まで。手塚治虫への続く自動操作は未表示Nodeの待機で失敗し、連続経路の確認済みとは扱わない。新候補の3経路はunit上の構造確認であり、実画面で辿った結果ではない。

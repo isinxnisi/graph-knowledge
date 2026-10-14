@@ -42,6 +42,7 @@
 | [探索画面のデザイン刷新](design/EDITORIAL_EXPLORER_DESIGN.md) | 2026-10-14採用。明朝の文化的知性とGraphの科学的探索感。実装案の実物評価と最終の好みを区別。後続依頼で当面は工程13の会員実接続を優先。スマホ詳細配置は別の未解決要求 |
 | [公開βまでの進捗](PUBLIC_BETA_PROGRESS.md) | 2026-10-11採用。全24ステップの完了数・残数・外部待ちと次の作業範囲。正式名Plunode・公開先はplunode.net（旧graphはpreview維持） |
 | [公開して育てるための対応プラン](design/PUBLIC_BETA_AND_PRODUCT_PLAN.md) | 採用・実装開始。デザイン・スマホ・会員・英語・広告・計測・共通KGからβ公開への方向と優先境界 |
+| [PLUTO周辺の重点補充候補](../datasets/pluto-expansion/v1/README.md) | 2026-10-14追加。別作品・別作者・組織へ辿る10 Entity／12 Claim。大量分の後の別候補、生成検証済み・受入／実DB／公開反映は未了 |
 | [今回の実データ拡充候補](../datasets/public-kg/releases/20261014-expanded-001/README.md) | 2026-10-14。Nobel公式＋Wikidata明示P108、追加2,081 Entity／1,795 Claim。隔離投入確認済み、公開反映の人間確認待ち |
 | [共通KGのrelease適用](design/PUBLIC_KG_RELEASES.md) | public-kgの生成・検証・dry-run・冪等更新、明示撤回/差替え、revision付き探索、KG単独backup/restore。凍結版は維持。本番配置は次行 |
 | [単一本番構成の配置](design/PRODUCTION_DEPLOYMENT.md) | step7。専用Docker、厳密な本番接続guard、standalone Web、readiness、既存Caddyにpreview認証付きで接続する管理者手順。2026-10-12、ユーザーによる配置後にVPSの認証付きHTTPS・実ブラウザ4経路を確認。一般公開は未実施。日常確認先beta→ローカル3200の毎回反映、VPSの節目更新もここを正本とする |
