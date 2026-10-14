@@ -157,3 +157,5 @@ Phase 10当時は原職位をCitationから読めても、機械的な立場条�
 2026-10-14後続：ユーザーが著者・作・画等をGraphでも具体的に表すよう依頼。既存4 Roleで未構造化だった具体性を、AUTHORSHIP／CREATION／DRAWINGという別の制作限定へ載せる実装候補を用意。原作・脚本との推測同一視やCitation.noteの表示時解析は行わない。3定義と10限定Claimの3200/Tunnel・VPS反映はユーザー明示承認済み。実資料の隔離DB／実ブラウザ検証は成功し、新Role対応Webを先行更新してからKGを適用する。[具体案・境界](design/CONTRIBUTION_CREDITS.md)。
 
 制作クレジットの3 Roleと10限定Claimは人間受入後、3200/Tunnelへ適用・再適用無変更・実ブラウザ3件を確認。浦沢8作品などの具体表示を既存Role経路で再利用する。公開KGは2,109 Entity／1,844 Claim／1,751 Source／1,880 Citation。旧Claim・凍結dataset・会員PGを維持。同じ出典を独立根拠増加と見せない注記を追加。VPSの適用状況は公開β進捗の最新記録を参照する。
+
+制作クレジットのVPS適用も完了。ユーザーの管理者適用後、HTTPSから10限定Claimと実ブラウザ3件、preview認証・Google会員有効状態を独立確認した。原作等への推測変換や、新predicate・qualification構造の追加は行っていない。

@@ -456,3 +456,13 @@ VPSの配置物を `/home/develop/graph-credits-20261014` へ転送し、全SHA2
 ```bash
 sudo bash /home/develop/graph-credits-20261014/scripts/activate-contribution-credits.sh
 ```
+
+### 制作クレジットのVPS反映・HTTPS確認完了（2026-10-14）
+
+ユーザーが上記管理者scriptを実行。新Role対応Webを先行更新してから10 Claimを追加し、既存更新0／追加25知識Node・40接続、再適用無変更を確認。最終2,109 Entity／1,844 Claim／1,751 Source／1,880 Citation／2,478 ExternalIdentifier。Neo4j／会員PGのcontainer identity・起動時刻を維持し、会員PG書込なし。KG復旧控え `/backups/before-credits-20261014T120302Z.json`、checksum `b970f426501a282589187f4121b94326d8bb99e10c6353df3cb4a8f077518cd9`、private記録 `/opt/graph-knowledge/credit-release.z88pgbQJ`。
+
+こちらからHTTPSを独立確認し、revision `5e2a94af-9061-4087-bb7a-045a3c0133f4` が適用ログと一致、承認した10 Claimの各RoleがAPIから取得できることを照合した。未認証401／認証後dataset 200／member/status 200・provider googleを維持。実ユーザー本人の再ログイン・Capsule保存を今回再実行したとはしない。
+
+Plunodeの実ブラウザ3件が成功（51.6秒）。浦沢8作品の具体Role、長崎→Reマスターの著者と既存脚本、手塚→鉄腕アトムの作画と組織関与fallback、Role絞り込み、画原語・ISBN・広いClaim・同一Source注記・出典URLを確認。代表画面を目視し、「制作」badgeと具体語が先に読めること、接続Entity・線を増やさずClaimの限定を保持することを確認した。3200/TunnelとVPSへの反映・確認が完了。表示文言だけで未登録Roleを補わず、根拠不足の分担はfallbackに残した。
+
+VPSの既存PRODUCING／VISITOR／CHAIR条件、Harvard概要と制作Role条件の組織関与への非干渉も実ブラウザAPI回帰1件で成功（8.6秒）。
