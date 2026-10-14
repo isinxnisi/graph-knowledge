@@ -247,3 +247,24 @@ sudo bash /home/develop/graph-production-plunode-20261014/scripts/activate-produ
 - 1440／390pxの実ブラウザでGoogle登録・ログインボタンが有効、横はみ出しなし。390pxの実画像でログイン案内・ブラウザ内保存との区別を確認。両幅でPLUTO探索がEntity4／Claim5になることも確認した。
 
 認証開始検証はPGへ一時OAuth stateを作るが、Googleへブラウザを送ったり、本人session・Capsule保存を作ったりはしていない。残りは **本人のGoogle callback→表示名確認、ログアウト／再ログイン、本人保存・再閲覧／編集、限定共有・停止、別User保護、実機操作**。会員有効化の管理者コマンドをもう一度実行する必要はない。これらの実利用確認まで工程13未完了。
+
+### 本人callbackのinvalid_code調査（2026-10-14）
+
+ユーザーはGoogle認証画面を通過したが、正式hostの `/member?error=invalid_code` へ戻った。本人ログイン成功とは扱わず、工程13を障害調査中とする。
+
+導入済みBetter Auth1.7.7のcallback実装では、`validateAuthorizationCode` の例外／tokenなしをinvalid_codeへまとめる。Google providerは `https://oauth2.googleapis.com/token` へコード交換する。画面のerrorだけではコード失効／PKCE／client設定／コンテナのDNS・通信・TLSを区別できない。生のBetter Auth loggerを有効化してcode・token・Secretをログへ出す対応は取らない。
+
+VPS本体のPythonから、受領JSONと人工の無効codeでtoken endpointへprobeしHTTP400／invalid_grantを確認した。これはhostの疎通確認であり、実codeの失敗原因やWebコンテナの通信成功、client secretの実認証成功を保証しない。
+
+`scripts/diagnose-production-google.sh` と `scripts/diagnose-google-token.mjs` を追加し、VPSの `/home/develop/graph-google-diagnostic-20261014` へ転送・hash／構文確認した。管理者が次を実行する。
+
+```bash
+sudo bash /home/develop/graph-google-diagnostic-20261014/diagnose-production-google.sh
+```
+
+- 受領JSONと稼働Webのclient ID／Secretはprivate pipeでdigestだけを照合し、出力は一致booleanのみ。origin一致も確認する。
+- WebコンテナからGoogleのJWKSとtoken endpointを各15秒で確認。redirectは追わず、人工codeだけを使用。invalid_grantはこのprobeの想定結果で、本人callbackの原因確定ではない。
+- 出力はHTTP statusと許可したOAuth error名／transport error codeのみ。生の例外、error_description、レスポンス本文、token、code、state、個人情報を出さない。
+- DB／env／会員データを変更せず、WebやDBを再起動しない。Google本人認証やcallbackの再送は代行しない。
+
+秘匿性と判定のPython／Nodeテスト1件（invalid_grant、invalid_client、不明errorの秘匿、transport code、Secret不一致）成功。eslint／shell構文・差分check成功。これは診断処理の検証で、本人ログインの修正完了ではない。コンテナ操作は既存のsudo運用に従い、結果を待って原因を絞る。Google credentialや認証モデルを推測で変更しない。

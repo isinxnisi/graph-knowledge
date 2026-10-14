@@ -31,7 +31,7 @@
 | 10 | スマホGraph/詳細/隣接一覧の代表経路 | 操作回帰は検証済。詳細配置の比較検討・詳細優先・一覧整理は未対応 |
 | 11 | スマホの閲覧・会員画面と探索への往復 | 完了（320／390pxの閲覧・根拠／図の往復、会員編集・未送信入力・共有と別タブ探索を確認） |
 | 12 | アカウントメニュー・表示名/外観等の最小設定 | 完了（Tunnel反映・VPS更新後のHTTPS／代表4経路・KG revision維持を確認） |
-| 13 | 実Google登録・ログイン・再訪の接続試験 | 隔離PGで検証済。正式HTTPS／専用PG／Google認証開始を実接続確認済。本人ログイン・保存再訪は未確認 |
+| 13 | 実Google登録・ログイン・再訪の接続試験 | 正式HTTPS／専用PG／認証開始は確認済。本人callbackがinvalid_codeとなり調査中。保存再訪は未確認 |
 | 14 | 本人削除/停止・共有停止・公開書込に必要な最小運営操作 | 完了（実PG33件、退会390／1440px・運営操作と既存設定／共有を確認） |
 | 15 | 探索・条件・詳細の日本語/英語切替 | 完了（ブラウザ設定・別タブ同期、座標／条件／原資料保持と代表経路を確認） |
 | 16 | 閲覧・会員・共有の主要経路の日本語/英語 | 完了（VPS反映後のHTTPS・代表4経路・KG revision維持を確認） |
@@ -315,3 +315,5 @@ VPSを読み取り確認し、preview認証なし401、認証後dataset 200・�
 同日後続の確認：ユーザーによるDNS確定・Caddy追加後、正式hostの証明書／未認証401・noindex、preview後のKG200・旧revision維持、旧会員URL転送と旧callback409、実ブラウザPC／390pxと代表Playwright1/1を確認。既存Caddy／Docker／通知serviceもactive。Google Web JSONを受領・正式callback検証・VPSへ0600でprivate配置済み。DNS／Caddy／JSON待ちは解消。会員statusはまだ503で、残りは管理者の会員有効化、その後の本人ログイン・保存／再訪・共有停止と実機確認。工程13は準備とHTTPS開通だけで完了へ増やさない。
 
 会員有効化後：ユーザーの管理者実行で専用PG・5 migration・本番Webを適用。別途実HTTPSでstatus200／Google、未ログインprivate API401、実clientの正式callback・最小scope・host-only Secure Cookie、旧Origin403、KG revision維持を確認した。buildは検証済みimageと一致する `pmbu-6SRzMtrUalkhnuSw`。PC／390pxのログイン入口・PLUTO探索、既存service継続も確認。管理者適用待ちは解消。残りは本人Googleログインと保存／再訪・編集／共有停止・実機等の実利用確認であり、工程13の完了数はまだ増やさない。認証開始成功を本人認証成功に読み替えない。
+
+本人の初回ログイン結果：Google認証画面通過後にinvalid_codeで失敗。原因未確定で、修正完了／本人ログイン成功にしない。hostからの人工code probeはGoogleへ到達したが、Webコンテナ内の設定・通信は別確認が必要。秘密値を出さない専用診断を転送・検証し、既存sudo運用での診断結果を依頼した。[原因切分けと境界](design/GOOGLE_MEMBER_CONNECTION.md#本人callbackのinvalid_code調査2026-10-14)を参照。KG・会員データ・稼働設定は変更していない。
