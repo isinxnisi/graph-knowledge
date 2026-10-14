@@ -58,7 +58,7 @@ for (const width of [390, 1440]) {
     expect(requests.neighbors).toBe(1);
     if (width < 800) await page.getByRole("navigation", { name: "探索画面の切り替え" }).getByRole("button", { name: "Graph", exact: true }).click();
     await page.getByTestId(`relation-${claim.id}`).getByRole("button", { name: "主張と出典を見る" }).click();
-    await page.getByRole("link", { name: "この主張の閲覧リンクを開く" }).click();
+    await page.getByRole("link", { name: "この記録の閲覧リンク" }).click();
     await expect(page).toHaveURL(href("claim", claim.id));
     await expect(reader(page).getByRole("heading", { name: "青葉ハルへのインタビュー", exact: true })).toBeVisible();
     await expect(reader(page)).toContainText("pp.12–13");

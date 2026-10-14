@@ -405,3 +405,90 @@
 .canvasNavigation .navigatorResults { max-height: none; overflow: visible; }
 .withNavigation .graphOverlay { left: 64px; right: 12px; top: 12px; }
 .graphUsageHelp { margin: 2px 0 6px; color: var(--color-muted); font-size: 11px; line-height: 1.5; }
+
+/* Relation reading: meaning → endpoints → records → source wording → scope. */
+.relationDetails { container: relation-detail / inline-size; }
+.relationOverview { padding-bottom: 16px; margin-bottom: 22px; border-bottom: 1px solid var(--color-border); }
+.detailEyebrow { margin: 0 0 6px; color: var(--color-muted); font-size: 11px; letter-spacing: .08em; }
+.relationOverview .relationMeaning { margin: 0 0 8px; font-size: 23px; font-weight: 500; line-height: 1.45; }
+.relationPair { font-size: 13px; line-height: 1.8; overflow-wrap: anywhere; }
+.relationPair > span { margin: 0 5px; color: var(--color-accent); }
+.relationTerms { display: flex; flex-wrap: wrap; gap: 6px; list-style: none; margin: 12px 0; padding: 0; }
+.relationTerms li { padding: 3px 9px; border-radius: 5px; background: var(--color-accent-soft); color: var(--color-text); font-size: 13px; }
+.relationNotes { margin-top: 14px; font-size: 12px; }
+.relationNotes > summary, .recordScope > summary { cursor: pointer; color: var(--color-muted); }
+.relationNotes[open] > summary, .recordScope[open] > summary { margin-bottom: 12px; color: var(--color-text); }
+.relationCaution { padding-left: 10px; border-left: 2px solid var(--color-accent); font-size: 12px; }
+.relationEndpoints { margin: 0 0 26px; }
+.relationEndpoints h4 { margin: 0 0 10px; color: var(--color-muted); font-size: 12px; font-weight: 500; }
+.endpointPair { display: grid; gap: 0; }
+.endpointItem { min-width: 0; }
+.endpointButton { width: 100%; display: flex; align-items: center; gap: 10px; padding: 10px 12px; text-align: left; color: var(--color-text); background: var(--color-canvas); border: 1px solid var(--color-border); border-radius: 8px; box-shadow: none; }
+.endpointButton:hover { border-color: var(--color-accent); background: var(--color-accent-soft); }
+.endpointIcon { color: var(--color-accent); display: grid; place-items: center; padding: 7px; background: var(--color-panel); border-radius: 50%; flex: 0 0 auto; }
+.endpointIdentity { display: grid; gap: 2px; min-width: 0; flex: 1; overflow-wrap: anywhere; }
+.endpointIdentity small { color: var(--color-muted); font-size: 10px; }
+.endpointIdentity strong { font-size: 14px; line-height: 1.6; }
+.endpointAction { display: flex; align-items: center; gap: 3px; color: var(--color-accent); font-size: 10px; flex: 0 0 auto; }
+.endpointAction svg { width: 13px; height: 13px; }
+.endpointDirection { display: flex; justify-content: center; height: 22px; color: var(--color-muted); }
+.endpointDirection svg { transform: rotate(90deg); width: 16px; height: 16px; }
+.endpointHelp { margin: 9px 2px 0; color: var(--color-muted); font-size: 11px; line-height: 1.7; }
+.relationDetails .recordsHeading { font-size: 21px; margin-bottom: 8px; }
+.claimGroup > h4 { border: 0; font-size: 12px; color: var(--color-muted); margin-bottom: 12px; }
+.claimCard { border: 0; border-top: 1px solid var(--color-border); border-radius: 0; background: transparent; padding: 16px 0 0; margin: 0 0 24px; box-shadow: none; }
+.recordHeader { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px; margin-bottom: 10px; }
+.claimCard .recordHeader h4 { margin: 0; padding: 0; border: 0; font-size: 13px; color: var(--color-muted); font-weight: 500; }
+.recordStatus, .recordDenied { font-size: 10px; color: var(--color-muted); }
+.recordDenied { color: var(--color-accent); text-decoration: underline dotted; text-underline-offset: 3px; }
+.recordTerm { font-size: 17px; font-weight: 600; line-height: 1.6; margin-bottom: 6px; }
+.recordStatement { font-size: 12px; color: var(--color-muted); overflow-wrap: anywhere; }
+.recordStatement strong { font-weight: 400; }
+.recordSourceCount { font-size: 11px; color: var(--color-muted); margin: 8px 0; }
+.claimCard > button { border: 0; padding: 2px 0; font-size: 12px; box-shadow: none; background: transparent; }
+.claimCard .evidenceTitle { font-size: 12px; font-weight: 500; color: var(--color-muted); margin: 14px 0 8px; }
+.claimCard .citation { margin: 8px 0 12px; padding: 14px; background: var(--color-canvas); border: 0; border-radius: 8px; box-shadow: none; }
+.citation h5 { margin: 6px 0 10px; font-size: 15px; font-weight: 600; line-height: 1.65; }
+.claimCard .citation p { font-size: 13px; line-height: 1.85; overflow-wrap: anywhere; }
+.claimCard .citation .sourceEyebrow { font-size: 10px; color: var(--color-muted); display: flex; flex-wrap: wrap; gap: 3px 10px; justify-content: space-between; }
+.claimCard .citation .sourceLocator { font-size: 11px; color: var(--color-muted); }
+.recordScope { font-size: 12px; margin-top: 14px; }
+.recordScope .claimFacts { margin-top: 12px; }
+.recordScope .claimFacts dd { font-weight: 400; }
+.recordPermalink { margin-top: 10px; font-size: 11px; }
+@container relation-detail (min-width: 540px) {
+  .endpointPair { grid-template-columns: 1fr 1fr; gap: 26px; }
+  .endpointItem { position: relative; display: flex; }
+  .endpointDirection { position: absolute; left: -25px; top: calc(50% - 8px); width: 24px; }
+  .endpointDirection svg { transform: none; }
+}
+
+.recordScopeHint { font-size: 11px; color: var(--color-muted); margin: 0 0 8px; }
+.recordDenied { color: var(--color-denied); }
+
+.relationEndpoints { margin-bottom: 20px; }
+.recordHeader { justify-content: flex-start; }
+.recordHeader > span { margin-left: auto; }
+.recordEvidence { padding: 0; border: 0; border-radius: 0; background: transparent; box-shadow: none; font-size: 10px; }
+.recordEvidence:hover { text-decoration: underline; background: transparent; }
+
+/* Dense reading surfaces: retain the hierarchy without oversized cards. */
+.relationOverview { padding-bottom: 12px; margin-bottom: 16px; }
+.relationOverview .relationMeaning { font-size: 21px; }
+.relationEndpoints .endpointButton { padding: 6px 9px; min-height: 48px; }
+.endpointIcon { padding: 5px; }
+.endpointDirection { height: 16px; }
+.relationEndpoints { margin-bottom: 16px; }
+.endpointHelp { margin-top: 6px; }
+.relationDetails .recordsHeading { font-size: 19px; }
+.claimCard { padding-top: 10px; margin-bottom: 18px; }
+.recordHeader { margin-bottom: 6px; }
+.claimCard .recordEvidence, .citation .noteToggle { padding: 0; border: 0; background: transparent; box-shadow: none; font-size: 11px; }
+.claimCard .recordEvidence:hover, .citation .noteToggle:hover { background: transparent; text-decoration: underline; }
+.claimCard .citation { padding: 10px; margin-top: 6px; }
+.claimCard .citation p { line-height: 1.7; margin-bottom: 5px; }
+.citation h5 { margin: 4px 0 7px; }
+.notePreview { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.sourceNote { margin-top: 8px; }
+.sourceNote > .muted { font-size: 11px !important; }
+.citation .noteToggle { margin-top: 2px; }

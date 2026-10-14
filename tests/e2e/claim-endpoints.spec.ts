@@ -46,7 +46,7 @@ for (const width of [390, 1440]) for (const mode of ["claim", "relation"] as con
         await expect(page.getByRole("region", { name: "Claim詳細", exact: true }).getByRole("alert")).toBeVisible();
       }
       const entity = nodes.find(node => node.id === id)!;
-      const button = page.getByRole("navigation", { name: "関係する対象" }).getByRole("button", { name: `${entity.name}の詳細を見る` });
+      const button = page.getByRole("navigation", { name: "この関係に出てくる対象" }).getByRole("button", { name: `${entity.name}の詳細を見る` });
       await button.focus();
       await page.keyboard.press("Enter");
       const detail = page.getByRole("region", { name: "Entity詳細", exact: true });

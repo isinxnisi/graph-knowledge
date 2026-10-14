@@ -31,8 +31,8 @@ export function checkExplorerLocale() {
     });
     await tap(page, relationId);
     const detail = page.locator("#explorer-detail");
-    await expect(detail.getByRole("heading", { name: "個別の主張と根拠" })).toBeVisible();
-    await expect(detail.getByText("根拠となる出典と参照箇所").first()).toBeVisible();
+    await expect(detail.getByRole("heading", { name: "資料と記録" })).toBeVisible();
+    await expect(detail.getByText("出典と資料の記載").first()).toBeVisible();
     // 関連Claimの取得中に言語を変えると、通信完了による通常の追記も差分になる。
     await expect(detail.locator('[data-testid^="claim-card-"]')).toHaveCount(2);
     await expect(detail.getByRole("status")).toHaveCount(0);
@@ -41,9 +41,9 @@ export function checkExplorerLocale() {
     let reads = 0;
     page.on("request", request => { if (/\/api\/entities|\/api\/claims/.test(request.url())) reads++; });
     await language(page, "en");
-    await expect(detail.getByRole("heading", { name: "Individual claims and evidence" })).toBeVisible();
+    await expect(detail.getByRole("heading", { name: "Sources and records" })).toBeVisible();
     await expect(detail.getByText("Producing", { exact: true }).first()).toBeVisible();
-    expect(await detail.locator('[data-testid^="claim-card-"] h5').allTextContents()).toEqual(source.map(s => s === "根拠となる出典と参照箇所" ? "Supporting sources and references" : s));
+    expect(await detail.locator('[data-testid^="claim-card-"] h5').allTextContents()).toEqual(source.map(s => s === "出典と資料の記載" ? "Sources and recorded wording" : s));
     await expect(page.locator('[data-relation-id="' + relationId + '"]')).toHaveText("Production");
     expect(await view(page)).toEqual(before); expect(reads).toBe(0);
     await page.screenshot({ path: "test-results/public/locale-manga.png", fullPage: true });

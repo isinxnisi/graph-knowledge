@@ -84,7 +84,7 @@ export function checkRelationPresentation(mode: keyof typeof datasets) {
     await expect(page.getByTestId("selection-status")).toContainText(labels[0].label.replaceAll("\n", " / "));
     const detail = page.getByRole("region", { name: "Claim詳細" }), summary = page.getByTestId("relation-overview");
     await expect(summary).toContainText(`${c.subject} →`); await expect(summary).toContainText(c.object);
-    await expect(summary).toContainText(`Graphに表示中の主張 ${c.claimCount}件`);
+    await expect(summary).toContainText(`Graphに表示中の記録 ${c.claimCount}件`);
     const shown = page.getByTestId("claim-group-shown");
     await expect(shown.locator('[data-testid^="claim-card-"]')).toHaveCount(c.claimCount);
     await expect(detail).not.toContainText("限定比較の参照");
@@ -97,24 +97,26 @@ export function checkRelationPresentation(mode: keyof typeof datasets) {
       await expect(shown.getByRole("region", { name: "出典と参照箇所" })).toHaveCount(4);
     }
     if (mode === "manga") {
-      await expect(summary).toContainText("役割指定なし");
+      await expect(summary).toContainText("役割を特定しない記録");
       await expect(shown).toContainText("浦沢直樹×手塚治虫");
       await expect(shown).toContainText("PLUTO 第1巻の商品情報");
       await expect(shown.getByRole("link", { name: "出典のURLを開く" })).toHaveAttribute("href", "https://shogakukan-comic.jp/book?isbn=9784091874313");
     }
     if (mode === "science") {
       await expect(summary).toContainText("Visitor"); await expect(summary).toContainText("Associate professor");
-      await expect(summary).toContainText("立場指定なし");
+      await expect(summary).toContainText("立場を特定しない記録");
       await expect(shown).toContainText("1924年〜1925年"); await expect(shown).toContainText("1926年〜1927年");
     }
     if (mode === "event") {
-      await expect(summary).toContainText("会議議長"); await expect(summary).toContainText("立場指定なし");
+      await expect(summary).toContainText("会議議長"); await expect(summary).toContainText("参加上の立場を特定しない記録");
       await expect(shown).toContainText("Président"); await expect(shown).toContainText("言語：fr");
       for (const claim of pair) await expect(page.getByTestId(`claim-card-${claim.id}`)).toContainText("期間不明");
     }
-    await detail.getByRole("button", { name: "主張 1を読む", exact: true }).click();
     const first = shown.locator('[data-testid^="claim-card-"]').first();
-    await expect(first).toBeFocused();
+    if (c.claimCount > 1) {
+      await detail.getByRole("button", { name: "記録 1へ", exact: true }).click();
+      await expect(first).toBeFocused();
+    }
     await first.getByRole("button", { name: "根拠を読む", exact: true }).click();
     await page.screenshot({ path: `test-results/phase22/${mode}-source.png` });
     expect(await view(page)).toEqual(before);
@@ -143,7 +145,7 @@ export function checkRelationPresentation(mode: keyof typeof datasets) {
     await page.screenshot({ path: "test-results/phase22/manga-pluto-graph.png" });
     await clickRelation(page, id("長崎尚志"), id("PLUTO"));
     const summary = page.getByTestId("relation-overview");
-    await expect(summary).toContainText("プロデュース"); await expect(summary).toContainText("役割指定なし");
+    await expect(summary).toContainText("プロデュース"); await expect(summary).toContainText("役割を特定しない記録");
     await expect(page.getByTestId("claim-group-shown").locator('[data-testid^="claim-card-"]')).toHaveCount(2);
     await page.getByRole("button", { name: "詳細を広く読む", exact: true }).click();
     await page.screenshot({ path: "test-results/phase22/manga-pluto-detail.png" });
@@ -154,7 +156,7 @@ export function checkRelationPresentation(mode: keyof typeof datasets) {
     await expect(canvas(page).locator("..").locator('button[data-relation-id]')).toHaveCount(1);
     expect(await canvas(page).evaluate(el => (el as unknown as { _cyreg: { cy: import("cytoscape").Core } })._cyreg.cy.edges().first().data("label"))).toBe("制作\nプロデュース");
     await clickRelation(page, id("長崎尚志"), id("PLUTO"));
-    await expect(summary).not.toContainText("役割指定なし");
+    await expect(summary).not.toContainText("役割を特定しない記録");
     const outside = page.getByTestId("claim-group-outside");
     await expect(outside).toContainText("役割の限定なし");
     await expect(page.getByTestId("claim-group-shown")).toContainText("この巻だけの担当や、全巻・全版・全期間の担当を示しません");

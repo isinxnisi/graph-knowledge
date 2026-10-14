@@ -34,7 +34,7 @@ describe("関係詳細から対象の確認", () => {
       render(<ClaimDetails id={claim.id} nodes={nodes} mode={mode} onInspectEntity={onInspectEntity}
         claimSummary={mode === "claim" ? claim : undefined} visibleClaims={mode === "relation" ? [claim] : undefined} />);
       await waitFor(() => expect(screen.getByRole("alert")).toBeDefined());
-      const navigation = screen.getByRole("navigation", { name: "関係する対象" });
+      const navigation = screen.getByRole("navigation", { name: "この関係に出てくる対象" });
       for (const id of [claim.subjectId, claim.objectId]) {
         fireEvent.click(within(navigation).getByRole("button", { name: `${nodes[id].name}の詳細を見る` }));
         expect(onInspectEntity).toHaveBeenLastCalledWith(id);
@@ -275,7 +275,7 @@ describe("主張カード", () => {
   it("否定と出典未確認を文字で表示する", () => {
     const claim = { ...examples.claim.claim, polarity: "denied", sourceCount: 0, citations: [] } as ClaimDetail;
     render(<ClaimCard claim={claim} nodes={{}} title="主張" />);
-    expect(screen.getByText("否定する主張")).toBeDefined(); expect(screen.getByText("出典未確認")).toBeDefined();
+    expect(screen.getByText("関係を否定する記録")).toBeDefined(); expect(screen.getByText("出典未確認")).toBeDefined();
   });
 });
 
@@ -321,6 +321,21 @@ describe("Graphの表示補助", () => {
     expect(displayRelations({ a: { ...a, polarity: "denied" } })[relationId(a)].label).toContain("否定");
     expect(displayRelations({ a, b })[relationId(a)].id).toBe(displayRelations({ a })[relationId(a)].id);
   });
+  it("単一の否定記録は出典を先に読め、目次を省いても否定と確認範囲を保持する", async () => {
+    const claim = { ...examples.claim.claim, polarity: "denied" as const } as ClaimDetail;
+    vi.mocked(fetchClaim).mockResolvedValue({ claim, relatedClaimIds: [] });
+    render(<ClaimDetails id={claim.id} nodes={{}} mode="relation" visibleClaims={[claim]} />);
+    const card = await screen.findByTestId(`claim-card-${claim.id}`);
+    expect(within(card).getByText("関係を否定する記録")).toBeDefined();
+    expect(screen.queryByRole("button", { name: /^記録 \dへ$/ })).toBeNull();
+    const scope = within(card).getByText("期間・役割と確認範囲").closest("details")!;
+    expect(scope.open).toBe(false);
+    const source = within(card).getByRole("heading", { name: claim.citations[0].source.title });
+    expect(source.compareDocumentPosition(scope) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    const overview = screen.getByTestId("relation-overview");
+    expect(within(overview).getByText("否定のみ").closest("details")).toBeNull();
+    expect(within(overview).getByText(/肯定 0件 ／ 否定 1件/).closest("details")?.open).toBe(false);
+  });
   it("Relation詳細は未取得ページにある関連Claimも取得し、同格のカードで比較する", async () => {
     const primary = examples.claim;
     const related = primary.relatedClaimIds.map((id, index) => ({ ...primary.claim, id,
@@ -328,7 +343,7 @@ describe("Graphの表示補助", () => {
     vi.mocked(fetchClaim).mockImplementation(async (id) => id === primary.claim.id ? primary as ClaimResponse : { claim: related.find((claim) => claim.id === id)!, relatedClaimIds: [] });
     render(<ClaimDetails id={primary.claim.id} nodes={{}} mode="relation" />);
     await waitFor(() => expect(screen.getAllByTestId(/^claim-card-/)).toHaveLength(3));
-    expect(screen.getByText("否定する主張")).toBeDefined();
+    expect(screen.getByText("関係を否定する記録")).toBeDefined();
     expect(screen.getAllByText("出典未確認")).toHaveLength(2);
     expect(screen.queryByText("選択した主張")).toBeNull();
     expect(fetchClaim).toHaveBeenCalledTimes(3);
@@ -1123,10 +1138,10 @@ describe("Relationの概要と独立した主張の読み分け", () => {
     expect(within(screen.getByTestId("claim-group-shown")).getByTestId("claim-card-qualified")).toBeDefined();
     expect(within(screen.getByTestId("claim-group-unseen")).getByTestId("claim-card-unseen")).toBeDefined();
     expect(within(screen.getByTestId("claim-group-outside")).getByTestId(`claim-card-${base.id}`)).toBeDefined();
-    expect(screen.getByTestId("relation-overview").textContent).toContain("Graphに表示中の主張 1件");
+    expect(screen.getByTestId("relation-overview").textContent).toContain("Graphに表示中の記録 1件");
     expect(screen.getByTestId("relation-overview").textContent).not.toContain("脚本");
     expect(screen.queryByText(/限定比較の参照/)).toBeNull();
-    expect(screen.getAllByRole("button", { name: /^主張 \dを読む$/ })).toHaveLength(3);
+    expect(screen.getAllByRole("button", { name: /^記録 \dへ$/ })).toHaveLength(3);
   });
   it("関連Claimの一部失敗を完全取得と見せず、表示中概要と取得済み根拠を残す", async () => {
     vi.mocked(fetchClaim).mockImplementation(async id => {
@@ -1138,7 +1153,7 @@ describe("Relationの概要と独立した主張の読み分け", () => {
     expect(screen.getByRole("alert").textContent).toContain("取得できた範囲");
     expect(screen.getByTestId("claim-card-qualified")).toBeDefined();
     expect(screen.queryByTestId("claim-card-denied")).toBeNull();
-    expect(screen.getByTestId("relation-overview").textContent).toContain("Graphに表示中の主張 1件");
+    expect(screen.getByTestId("relation-overview").textContent).toContain("Graphに表示中の記録 1件");
   });
   it("遅い関連主張を待たず根拠を表示し、取得完了後も主張番号を変えない", async () => {
     let finish!: (value: ClaimResponse) => void;
@@ -1150,11 +1165,11 @@ describe("Relationの概要と独立した主張の読み分け", () => {
     const card = await screen.findByTestId("claim-card-qualified");
     expect(screen.getByRole("status").textContent).toContain("2 / 3件");
     const heading = within(card).getByRole("heading", { level: 4 }).textContent;
-    expect(heading).toBe("主張 3");
+    expect(heading).toBe("記録 3");
     await act(async () => finish({ claim: denied, relatedClaimIds: [] }));
     expect(screen.queryByRole("status")).toBeNull();
     expect(within(card).getByRole("heading", { level: 4 }).textContent).toBe(heading);
-    expect(screen.getAllByRole("button", { name: /^主張 \dを読む$/ }).map(button => button.textContent)).toEqual(["主張 1を読む", "主張 2を読む", "主張 3を読む"]);
+    expect(screen.getAllByRole("button", { name: /^記録 \dへ$/ }).map(button => button.textContent)).toEqual(["記録 1へ", "記録 2へ", "記録 3へ"]);
   });
   it.each(["claim", "relation"] as const)("%sの再試行は失敗分だけを取得し、読んでいる根拠と書誌の開閉を維持する", async mode => {
     let finish!: (value: ClaimResponse) => void;
