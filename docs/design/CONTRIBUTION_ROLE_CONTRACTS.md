@@ -6,7 +6,7 @@ Predicate／限定の追加判断と比較・表示等の共通境界は、Phase
 
 ## 意味・保存・根拠
 
-対象はCONTRIBUTED_TOだけ。一Claim一Role。SCRIPT_WRITING（脚本）、SUPERVISION（監修）、PRODUCING（プロデュース）、STORY_CO_CREATION（ストーリー共同制作）の4 ID。作画は推定しない。
+対象はCONTRIBUTED_TOだけ。一Claim一Role。SCRIPT_WRITING（脚本）、SUPERVISION（監修）、PRODUCING（プロデュース）、STORY_CO_CREATION（ストーリー共同制作）の初期4 ID。2026-10-14にユーザーがAUTHORSHIP（著者）、CREATION（作）、DRAWING（作画）の3定義を明示承認し、合計7 IDへ拡張した。[具体語の意味・根拠・非同一視](CONTRIBUTION_CREDITS.md)。作画を著者・原作から推定しない。
 
 ClaimSummary/Detailの必須contributionは他predicateではnull、CONTRIBUTED_TOでは `{roleId: RoleId|null, scope: PublicationScope|null}`。roleId=nullはこのClaimではRoleを限定していない。scope=nullは適用範囲が未構造化。全Role・全巻へ補完しない。scopeは `{kind:"publication", isbn13, volumeLabel|null, editionLabel|null, language}`。ISBNは978/979で始まる13桁とチェック桁、languageはBCP 47形式を検証する。資料が当該刊行物についてのクレジットを支持するかは人間の受入判断。その巻だけの担当・全巻／全版／全期間を意味しない。
 
@@ -18,7 +18,7 @@ CitationDetailの必須roleEvidenceはnullまたは `{originalText, language}`�
 
 ## 取得・cursor・探索セッション
 
-neighborsにcontributionRoles CSVを追加。省略=null、空文字=[]、配列はOR。全4 RoleもRoleなしを除外するためnullとは異なる。他predicateには掛けない。CONTRIBUTED_TOを選ばない条件では、入力検証後Role条件をnullへ正規化する。未知ID・重複queryパラメータは400。
+neighborsにcontributionRoles CSVを追加。省略=null、空文字=[]、配列はOR。全登録Roleの指定もRoleなしを除外するためnullとは異なる。他predicateには掛けない。CONTRIBUTED_TOを選ばない条件では、入力検証後Role条件をnullへ正規化する。未知ID・重複queryパラメータは400。
 
 Neo4jのpublished・predicate・Role・after条件をLIMIT前に適用する。肯否・人物側／作品側とも同じ条件。condition key、ページ受理、projectGraph、詳細の条件外判定は同じmatchesClaim契約を使う。条件変更は既存どおり世代更新、abort、枝／cursorのリセットと再取得。閉じる・休止復元・上限100 Entity / 200独立Claimは継承する。
 
@@ -42,7 +42,7 @@ vocabulary/contribution-roles/catalog.jsonに4定義・包含／除外／境界�
 
 Role専用の`vocabulary/contribution-roles/TEMPLATE.json`はdraftのひな形。`npm run vocabulary:check -- --hashes`でRoleの変更前後hashも取得できる。未記入TBDを承認票へ残せない。
 
-baseline-v1.jsonは固定。npm run vocabulary:checkで実行labelとの一致、4 ID、必須例、比較、hashに対応する変更票、基準版／承認票のGit書換えを検証する。Predicate票とは比較対象を分ける。意味変更は既存IDで拒否、翻訳を装う意味変更も拒否。同一labelは警告。意味の同一性・資料解釈は機械保証しない。
+baseline-v1.jsonは固定。npm run vocabulary:checkで実行labelとの一致、全登録ID、必須例、比較、hashに対応する変更票、基準版／承認票のGit書換えを検証する。Predicate票とは比較対象を分ける。意味変更は既存IDで拒否、翻訳を装う意味変更も拒否。同一labelは警告。意味の同一性・資料解釈は機械保証しない。
 
 新Roleを追加する場合は、先に資料と既存Roleとの差を人が審査し、安定ID・locale表示・型enumを拡張して専用catalogと比較票に登録する。新規側で既存Role全件と比較し、CONTRIBUTED_TO限定である理由を書く。旧契約へ新Role比較を一斉追加することは要求しない。承認者／日付・before/after hashを記録し、Git変更前とのチェック、schema/API/探索/表示テストを実行する。今回の4集合を超える変更は今回の実装許可には含まれない。
 

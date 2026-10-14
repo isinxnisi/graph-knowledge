@@ -24,7 +24,18 @@ export type PublicBackup = z.infer<typeof backupSchema>;
 // 既知schemaへ逆変換して再構成できることを要求する。未知属性を黙って捨てない。
 function graphFixture(graph: PublicGraph) {
   const byLabel = (label: string) => Object.entries(graph.nodes).filter(([, node]) => node.label === label);
-  const linked = (id: string, type: string) => graph.edges.filter(edge => edge.from === id && edge.type === type).map(edge => graph.nodes[edge.to]);
+  const outgoing = new Map<string, Map<string, string[]>>();
+  const citationOwners = new Map<string, string[]>();
+  for (const edge of graph.edges) {
+    const types = outgoing.get(edge.from) ?? new Map<string, string[]>();
+    const targets = types.get(edge.type) ?? [];
+    targets.push(edge.to); types.set(edge.type, targets); outgoing.set(edge.from, types);
+    if (edge.type === "HAS_CITATION") {
+      const owners = citationOwners.get(edge.to) ?? [];
+      owners.push(edge.from); citationOwners.set(edge.to, owners);
+    }
+  }
+  const linked = (id: string, type: string) => (outgoing.get(id)?.get(type) ?? []).map(target => graph.nodes[target]);
   const one = (id: string, type: string) => {
     const nodes = linked(id, type);
     if (nodes.length !== 1) throw new Error("Invalid backup connection cardinality");
@@ -41,9 +52,9 @@ function graphFixture(graph: PublicGraph) {
     sources: byLabel("Source").map(([, { properties }]) => sourceDetail(properties)),
     citations: byLabel("Citation").map(([key, { properties }]) => {
       const { source, ...citation } = citationDetail(properties, one(key, "CITES"));
-      const claims = graph.edges.filter(edge => edge.to === key && edge.type === "HAS_CITATION");
+      const claims = citationOwners.get(key) ?? [];
       if (claims.length !== 1) throw new Error("Invalid backup citation owner");
-      return { ...citation, claimId: graph.nodes[claims[0].from].properties.id, sourceId: source.id };
+      return { ...citation, claimId: graph.nodes[claims[0]].properties.id, sourceId: source.id };
     }),
   });
 }
@@ -102,7 +113,7 @@ export async function createPublicBackup(driver: Driver, database: string): Prom
     const payload = payloadSchema.parse({ version: 1, dataset: "public-kg", savedAt: new Date().toISOString(), release: before.release, revision: before.revision,
       graphDigest: publicGraphDigest(before.graph), fixture, withdrawals, receipts, externalNodeIds, identities });
     return validatePublicBackup({ payload, checksum: sha256(stableJson(payload)) });
-  }, { timeout: 60000 }); } finally { await session.close(); }
+  }, { timeout: 180000 }); } finally { await session.close(); }
 }
 
 async function checkRestore(tx: ManagedTransaction, backup: PublicBackup, expectedRevision: string) {

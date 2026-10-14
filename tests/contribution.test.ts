@@ -12,6 +12,7 @@ import roleTemplate from "../vocabulary/contribution-roles/TEMPLATE.json";
 import { vocabularyHash } from "../lib/domain/vocabulary";
 import roles from "../vocabulary/contribution-roles/catalog.json";
 import baseline from "../vocabulary/contribution-roles/baseline-v1.json";
+import creditReviews from "../vocabulary/contribution-roles/reviews.json";
 import demo from "../fixtures/demo.json";
 import type { ClaimSummary } from "../lib/domain/api";
 const ledgerV2 = pilotV2LedgerSchema.parse(rawLedgerV2);
@@ -27,7 +28,7 @@ describe("制作限定の意味と厳格な保存境界", () => {
     expect(matchesClaim({ ...claim, contribution: { roleId: null, scope: null } }, null, ["SUPERVISION"])).toBe(false);
   });
   it.each([
-    { roleId: ["SUPERVISION"], scope }, { roleId: "DRAWING", scope },
+    { roleId: ["SUPERVISION"], scope }, { roleId: "UNKNOWN_ROLE", scope },
     { roleId: "SUPERVISION", scope: { ...scope, isbn13: "9784091874314" } },
     { roleId: "SUPERVISION", scope: { ...scope, language: "invalid_language" } },
     { roleId: "SUPERVISION", scope: { ...scope, kind: "whole-work" } },
@@ -61,7 +62,7 @@ describe("Role条件・cursor・表示", () => {
   });
   it("Roleのqueryを検証する", () => {
     expect(neighborsInput(new Request("http://localhost/api/neighbors?" + ("contributionRoles=SUPERVISION,SUPERVISION")))).toMatchObject({ contributionRoles: ["SUPERVISION"] });
-    expect(() => neighborsInput(new Request("http://localhost/api/neighbors?" + ("contributionRoles=DRAWING")))).toThrow();
+    expect(() => neighborsInput(new Request("http://localhost/api/neighbors?" + ("contributionRoles=UNKNOWN_ROLE")))).toThrow();
     expect(() => neighborsInput(new Request("http://localhost/api/neighbors?" + ("contributionRoles=SUPERVISION&contributionRoles=PRODUCING")))).toThrow();
   });
   it("v2 cursorを起点・条件・datasetへ拘束し、旧cursorを拒否する", () => {
@@ -82,7 +83,7 @@ describe("Role条件・cursor・表示", () => {
     expect(result[0].label).toContain("脚本（否定のみ）・監修"); expect(result[0].label).toContain("肯定・否定あり"); expect(result[0].label).not.toContain("異説"); expect(result[0].label).not.toContain("ISBN");
   });
   it("Role意味契約の黙った変更、Role間同義、比較欠落を拒否する", () => {
-    expect(checkRoleVocabulary(roles, baseline, []).errors).toEqual([]);
+    expect(checkRoleVocabulary(roles, baseline, creditReviews).errors).toEqual([]);
     const changed = structuredClone(roles); changed.entries[0].meaning.definition += "変更";
     expect(checkRoleVocabulary(changed, baseline, []).errors.join()).toContain("review");
     const missing = structuredClone(roles); missing.entries[0].comparisons = [];
@@ -104,8 +105,8 @@ it("v2受入待ち候補を生成せず、人間判断が空のacceptedを拒否
 it("Role承認票も対象・比較・未記入・意味変更を検証する", () => {
   const changed = roleCatalogSchema.parse(structuredClone(roles)); changed.entries[0].translations.ja.aliases.push("スクリプト担当");
   const review = { ...roleTemplate, targetId: changed.entries[0].id, beforeHash: vocabularyHash(roles.entries[0]), afterHash: vocabularyHash(changed.entries[0]), status: "approved", reviewer: "Test Reviewer", reviewedAt: "2026-10-03", outcome: "alias", motivation: "同じRoleの表示別名", evidenceExample: "脚本担当の原表記", counterexample: "原作は別概念", predicateRationale: "制作への関与の限定", rationale: "意味を保つ別名", comparisons: roles.entries.filter((entry) => entry.id !== changed.entries[0].id).map((entry) => ({ roleId: entry.id, relation: "distinct", rationale: "既存Roleとは別の制作役割" })), impacts: { claims: "意味不変", conditions: "ID不変", translations: "別名追加", presentation: "件数不変" } };
-  expect(checkRoleVocabulary(changed, baseline, [review]).errors).toEqual([]);
-  expect(checkRoleVocabulary(changed, baseline, [{ ...review, rationale: "TBD" }]).errors.join()).toContain("unfinished");
-  expect(checkRoleVocabulary(changed, baseline, [{ ...review, change: "meaning-change" }]).errors.join()).toContain("review");
-  expect(checkRoleVocabulary(changed, baseline, [{ ...review, comparisons: [] }]).errors.join()).toContain("incomplete");
+  expect(checkRoleVocabulary(changed, baseline, [...creditReviews, review]).errors).toEqual([]);
+  expect(checkRoleVocabulary(changed, baseline, [...creditReviews, { ...review, rationale: "TBD" }]).errors.join()).toContain("unfinished");
+  expect(checkRoleVocabulary(changed, baseline, [...creditReviews, { ...review, change: "meaning-change" }]).errors.join()).toContain("review");
+  expect(checkRoleVocabulary(changed, baseline, [...creditReviews, { ...review, comparisons: [] }]).errors.join()).toContain("incomplete");
 });

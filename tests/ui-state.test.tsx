@@ -1099,6 +1099,22 @@ describe("Relationの概要と独立した主張の読み分け", () => {
     expect(screen.getByText(relationPresentationLabels().noRole)).toBeDefined();
     expect(screen.getAllByText("資料の書誌情報")[0].closest("details")?.open).toBe(false);
   });
+  it("同じSourceを共有する広いClaimと限定Claimを独立した根拠の増加と見せない", async () => {
+    vi.mocked(fetchClaim).mockImplementation(async id => ({ claim: id === base.id ? base : qualified, relatedClaimIds: id === base.id ? [qualified.id] : [] }));
+    render(<ClaimDetails id={base.id} nodes={{}} mode="relation" visibleClaimIds={[base.id, qualified.id]} visibleClaims={[base, qualified]} />);
+    const shared = await screen.findByRole("complementary", { name: relationPresentationLabels().sharedSources });
+    expect(shared.textContent).toContain("独立した根拠の数とは解釈しない");
+    expect(screen.getByTestId("relation-overview").textContent).toContain("独立した新資料の追加ではありません");
+    expect(screen.getByTestId(`claim-card-${base.id}`)).toBeDefined();
+    expect(screen.getByTestId("claim-card-qualified")).toBeDefined();
+  });
+  it("同名の別Sourceや一Claim内の複数Citationを根拠共有と誤認しない", async () => {
+    const otherSource = { ...qualified, citations: qualified.citations.map(c => ({ ...c, source: { ...c.source, id: "fb20d57c-754b-4e69-8bf0-4233789b8481" } })) };
+    vi.mocked(fetchClaim).mockImplementation(async id => ({ claim: id === base.id ? base : otherSource, relatedClaimIds: id === base.id ? [qualified.id] : [] }));
+    render(<ClaimDetails id={base.id} nodes={{}} mode="relation" visibleClaimIds={[base.id, qualified.id]} visibleClaims={[base, qualified]} />);
+    await screen.findByTestId("claim-card-qualified");
+    expect(screen.queryByRole("complementary", { name: relationPresentationLabels().sharedSources })).toBeNull();
+  });
   it("Graph内・未表示・条件外を分け、Relation概要は表示中のClaimだけで作る", async () => {
     const sameRole = { ...qualified, id: "unseen" };
     vi.mocked(fetchClaim).mockImplementation(async id => ({ claim: id === base.id ? base : id === qualified.id ? qualified : sameRole, relatedClaimIds: id === qualified.id ? [base.id, sameRole.id] : [] }));

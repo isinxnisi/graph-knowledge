@@ -12,7 +12,7 @@ export function relationPresentation(claims: readonly ClaimSummary[], locale = "
   const text = relationPresentationLabels(locale), first = claims[0];
   const qualification = first?.predicate === "CONTRIBUTED_TO" ? {
     category: text.graphCategories.CONTRIBUTED_TO,
-    title: contributionLabels(locale).title, short: text.role, help: contributionLabels(locale).publicationOnly,
+    title: contributionLabels(locale).title, short: text.role, help: contributionLabels(locale).partial,
     value: (claim: ClaimSummary) => contributionOf(claim)?.roleId ?? null,
     label: (id: string) => contributionLabels(locale).roles[id as keyof ReturnType<typeof contributionLabels>["roles"]],
   } : first?.predicate === "AFFILIATED_WITH" ? {

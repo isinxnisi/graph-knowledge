@@ -114,6 +114,12 @@ function ClaimDetailsSession({ onDataChanged, revision, dataset, id, nodes, clai
   const claimIds = primary ? [primary.claim.id, ...primary.relatedClaimIds].sort((a, b) => a.localeCompare(b)) : [];
   const claimNumber = (claimId: string) => claimIds.indexOf(claimId) + 1;
   const claims = primary ? [primary.claim, ...related].sort((a, b) => a.id.localeCompare(b.id)) : [];
+  const sourceClaims = new Map<string, { id: string; title: string; claimIds: Set<string> }>();
+  for (const claim of claims) for (const citation of claim.citations) {
+    const record = sourceClaims.get(citation.source.id) ?? { id: citation.source.id, title: citation.source.title, claimIds: new Set<string>() };
+    record.claimIds.add(claim.id); sourceClaims.set(citation.source.id, record);
+  }
+  const sharedSources = [...sourceClaims.values()].filter(source => source.claimIds.size > 1);
   const shown = claims.filter(claim => visibleClaimIds === undefined || visibleClaimIds.includes(claim.id));
   const unseen = claims.filter(claim => visibleClaimIds !== undefined && !visibleClaimIds.includes(claim.id) && matchesClaim(claim, predicates, roles, positions, eventRoles));
   const outside = claims.filter(claim => visibleClaimIds !== undefined && !visibleClaimIds.includes(claim.id) && !matchesClaim(claim, predicates, roles, positions, eventRoles));
@@ -136,6 +142,7 @@ function ClaimDetailsSession({ onDataChanged, revision, dataset, id, nodes, clai
     {!primary && !error && <p role="status">{ui.claimLoading}</p>}
     {error && <div className={styles.error} role="alert"><p>{explorerMessage(error, locale)}</p><button onClick={retry}>{ui.claimRetry}</button></div>}
     {primary && <>
+      {sharedSources.length > 0 && <aside aria-label={text.sharedSources} className={styles.muted}><p>{text.sharedSourcesHelp}</p><ul>{sharedSources.map(source => <li key={source.id}>{source.title}</li>)}</ul></aside>}
       {pending > 0 && <p role="status">{text.loadingProgress(claims.length, claimIds.length)}</p>}
       {failedCount > 0 && <div className={styles.error} role="alert"><p>{text.failed(failedCount)}</p><p>{text.partial}</p><button disabled={pending > 0} onClick={retry}>{ui.otherRetry}</button></div>}
       {mode === "relation" ? <>

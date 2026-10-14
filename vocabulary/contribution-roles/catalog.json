@@ -268,6 +268,291 @@
           "rationale": "ストーリー共同制作とプロデュースの明示表記・命題は別。片方から他方を推論しない。"
         }
       ]
+    },
+    {
+      "id": "AUTHORSHIP",
+      "predicate": "CONTRIBUTED_TO",
+      "definitionLanguage": "ja",
+      "meaning": {
+        "definition": "資料の著／著者クレジットとして明示された制作関与。原作・脚本・作画・単独著者・著作権者を認定しない。",
+        "subjectRole": "制作関与者",
+        "objectRole": "対象作品（確認された適用範囲）",
+        "direction": "subject-to-object",
+        "rules": [
+          "一Claim一Role。肯否はRole・scope・periodを含む限定全体に掛かる。",
+          "Roleなしは全役割の肯定ではない。原表記から表示時に自動認定しない。",
+          "刊行物scopeは確認されたクレジットの適用範囲で、全巻全版・当該巻だけの担当ではない。"
+        ],
+        "examples": [
+          {
+            "id": "AUTHORSHIP-include",
+            "category": "include",
+            "scenario": "出版社のReマスター商品情報が両者に著を明記",
+            "rationale": "原表記とRoleの正規化・支持対象を別々に確認する。"
+          },
+          {
+            "id": "AUTHORSHIP-exclude",
+            "category": "exclude",
+            "scenario": "原作由来の人名との併記だけでは個別の著者Roleを認定しない",
+            "rationale": "原表記とRoleの正規化・支持対象を別々に確認する。"
+          },
+          {
+            "id": "AUTHORSHIP-boundary",
+            "category": "boundary",
+            "scenario": "著者という書誌上の責任表示であり創作内容の全担当とは限らない",
+            "rationale": "原表記とRoleの正規化・支持対象を別々に確認する。"
+          }
+        ],
+        "nearbyConcepts": [
+          {
+            "term": "原作",
+            "difference": "同義として扱わず、原表記と根拠を個別に保持する。"
+          },
+          {
+            "term": "脚本",
+            "difference": "同義として扱わず、原表記と根拠を個別に保持する。"
+          },
+          {
+            "term": "作画",
+            "difference": "同義として扱わず、原表記と根拠を個別に保持する。"
+          },
+          {
+            "term": "作",
+            "difference": "同義として扱わず、原表記と根拠を個別に保持する。"
+          }
+        ]
+      },
+      "translations": {
+        "ja": {
+          "label": "著者",
+          "reverseLabel": "著者としての制作関与",
+          "description": "資料の著／著者クレジットとして明示された制作関与。原作・脚本・作画・単独著者・著作権者を認定しない。",
+          "aliases": []
+        }
+      },
+      "predicateRationale": "制作に関与したというCONTRIBUTED_TOの命題内の役割限定であり、端点・保存方向・Predicate意味を変えない。",
+      "comparisons": [
+        {
+          "roleId": "SCRIPT_WRITING",
+          "relation": "distinct",
+          "rationale": "資料上の制作役割の命題は別。同じ人物の兼務を排除せず、片方から他方を推論しない。"
+        },
+        {
+          "roleId": "SUPERVISION",
+          "relation": "distinct",
+          "rationale": "資料上の制作役割の命題は別。同じ人物の兼務を排除せず、片方から他方を推論しない。"
+        },
+        {
+          "roleId": "PRODUCING",
+          "relation": "distinct",
+          "rationale": "資料上の制作役割の命題は別。同じ人物の兼務を排除せず、片方から他方を推論しない。"
+        },
+        {
+          "roleId": "STORY_CO_CREATION",
+          "relation": "distinct",
+          "rationale": "資料上の制作役割の命題は別。同じ人物の兼務を排除せず、片方から他方を推論しない。"
+        },
+        {
+          "roleId": "CREATION",
+          "relation": "distinct",
+          "rationale": "資料上の制作役割の命題は別。同じ人物の兼務を排除せず、片方から他方を推論しない。"
+        },
+        {
+          "roleId": "DRAWING",
+          "relation": "distinct",
+          "rationale": "資料上の制作役割の命題は別。同じ人物の兼務を排除せず、片方から他方を推論しない。"
+        }
+      ]
+    },
+    {
+      "id": "CREATION",
+      "predicate": "CONTRIBUTED_TO",
+      "definitionLanguage": "ja",
+      "meaning": {
+        "definition": "原資料の作クレジットとして明示された制作関与。原作・脚本・著者・作画へ自動変換しない。",
+        "subjectRole": "制作関与者",
+        "objectRole": "対象作品（確認された適用範囲）",
+        "direction": "subject-to-object",
+        "rules": [
+          "一Claim一Role。肯否はRole・scope・periodを含む限定全体に掛かる。",
+          "Roleなしは全役割の肯定ではない。原表記から表示時に自動認定しない。",
+          "刊行物scopeは確認されたクレジットの適用範囲で、全巻全版・当該巻だけの担当ではない。"
+        ],
+        "examples": [
+          {
+            "id": "CREATION-include",
+            "category": "include",
+            "scenario": "YAWARA!第1巻商品情報に作と明記",
+            "rationale": "原表記とRoleの正規化・支持対象を別々に確認する。"
+          },
+          {
+            "id": "CREATION-exclude",
+            "category": "exclude",
+            "scenario": "作家という肩書や原作という別表記だけでは作を認定しない",
+            "rationale": "原表記とRoleの正規化・支持対象を別々に確認する。"
+          },
+          {
+            "id": "CREATION-boundary",
+            "category": "boundary",
+            "scenario": "同じ人が作と画を担っても資料支持を別々に確認する",
+            "rationale": "原表記とRoleの正規化・支持対象を別々に確認する。"
+          }
+        ],
+        "nearbyConcepts": [
+          {
+            "term": "原作",
+            "difference": "同義として扱わず、原表記と根拠を個別に保持する。"
+          },
+          {
+            "term": "脚本",
+            "difference": "同義として扱わず、原表記と根拠を個別に保持する。"
+          },
+          {
+            "term": "作画",
+            "difference": "同義として扱わず、原表記と根拠を個別に保持する。"
+          },
+          {
+            "term": "著者",
+            "difference": "同義として扱わず、原表記と根拠を個別に保持する。"
+          }
+        ]
+      },
+      "translations": {
+        "ja": {
+          "label": "作",
+          "reverseLabel": "作としての制作関与",
+          "description": "原資料の作クレジットとして明示された制作関与。原作・脚本・著者・作画へ自動変換しない。",
+          "aliases": []
+        }
+      },
+      "predicateRationale": "制作に関与したというCONTRIBUTED_TOの命題内の役割限定であり、端点・保存方向・Predicate意味を変えない。",
+      "comparisons": [
+        {
+          "roleId": "SCRIPT_WRITING",
+          "relation": "distinct",
+          "rationale": "資料上の制作役割の命題は別。同じ人物の兼務を排除せず、片方から他方を推論しない。"
+        },
+        {
+          "roleId": "SUPERVISION",
+          "relation": "distinct",
+          "rationale": "資料上の制作役割の命題は別。同じ人物の兼務を排除せず、片方から他方を推論しない。"
+        },
+        {
+          "roleId": "PRODUCING",
+          "relation": "distinct",
+          "rationale": "資料上の制作役割の命題は別。同じ人物の兼務を排除せず、片方から他方を推論しない。"
+        },
+        {
+          "roleId": "STORY_CO_CREATION",
+          "relation": "distinct",
+          "rationale": "資料上の制作役割の命題は別。同じ人物の兼務を排除せず、片方から他方を推論しない。"
+        },
+        {
+          "roleId": "AUTHORSHIP",
+          "relation": "distinct",
+          "rationale": "資料上の制作役割の命題は別。同じ人物の兼務を排除せず、片方から他方を推論しない。"
+        },
+        {
+          "roleId": "DRAWING",
+          "relation": "distinct",
+          "rationale": "資料上の制作役割の命題は別。同じ人物の兼務を排除せず、片方から他方を推論しない。"
+        }
+      ]
+    },
+    {
+      "id": "DRAWING",
+      "predicate": "CONTRIBUTED_TO",
+      "definitionLanguage": "ja",
+      "meaning": {
+        "definition": "漫画の画／作画、または本人が当該漫画を描いたと明示する制作関与。原作・脚本・著者の兼務を認定しない。",
+        "subjectRole": "制作関与者",
+        "objectRole": "対象作品（確認された適用範囲）",
+        "direction": "subject-to-object",
+        "rules": [
+          "一Claim一Role。肯否はRole・scope・periodを含む限定全体に掛かる。",
+          "Roleなしは全役割の肯定ではない。原表記から表示時に自動認定しない。",
+          "刊行物scopeは確認されたクレジットの適用範囲で、全巻全版・当該巻だけの担当ではない。"
+        ],
+        "examples": [
+          {
+            "id": "DRAWING-include",
+            "category": "include",
+            "scenario": "パイナップルARMY第1巻で画と明記",
+            "rationale": "原表記とRoleの正規化・支持対象を別々に確認する。"
+          },
+          {
+            "id": "DRAWING-exclude",
+            "category": "exclude",
+            "scenario": "著者欄の人名や作品の絵柄から作画担当を推定しない",
+            "rationale": "原表記とRoleの正規化・支持対象を別々に確認する。"
+          },
+          {
+            "id": "DRAWING-boundary",
+            "category": "boundary",
+            "scenario": "描いたという本人回想は対象漫画の特定と前後文脈を確認し期間は補完しない",
+            "rationale": "原表記とRoleの正規化・支持対象を別々に確認する。"
+          }
+        ],
+        "nearbyConcepts": [
+          {
+            "term": "原作",
+            "difference": "同義として扱わず、原表記と根拠を個別に保持する。"
+          },
+          {
+            "term": "脚本",
+            "difference": "同義として扱わず、原表記と根拠を個別に保持する。"
+          },
+          {
+            "term": "著者",
+            "difference": "同義として扱わず、原表記と根拠を個別に保持する。"
+          },
+          {
+            "term": "作",
+            "difference": "同義として扱わず、原表記と根拠を個別に保持する。"
+          }
+        ]
+      },
+      "translations": {
+        "ja": {
+          "label": "作画",
+          "reverseLabel": "作画としての制作関与",
+          "description": "漫画の画／作画、または本人が当該漫画を描いたと明示する制作関与。原作・脚本・著者の兼務を認定しない。",
+          "aliases": []
+        }
+      },
+      "predicateRationale": "制作に関与したというCONTRIBUTED_TOの命題内の役割限定であり、端点・保存方向・Predicate意味を変えない。",
+      "comparisons": [
+        {
+          "roleId": "SCRIPT_WRITING",
+          "relation": "distinct",
+          "rationale": "資料上の制作役割の命題は別。同じ人物の兼務を排除せず、片方から他方を推論しない。"
+        },
+        {
+          "roleId": "SUPERVISION",
+          "relation": "distinct",
+          "rationale": "資料上の制作役割の命題は別。同じ人物の兼務を排除せず、片方から他方を推論しない。"
+        },
+        {
+          "roleId": "PRODUCING",
+          "relation": "distinct",
+          "rationale": "資料上の制作役割の命題は別。同じ人物の兼務を排除せず、片方から他方を推論しない。"
+        },
+        {
+          "roleId": "STORY_CO_CREATION",
+          "relation": "distinct",
+          "rationale": "資料上の制作役割の命題は別。同じ人物の兼務を排除せず、片方から他方を推論しない。"
+        },
+        {
+          "roleId": "AUTHORSHIP",
+          "relation": "distinct",
+          "rationale": "資料上の制作役割の命題は別。同じ人物の兼務を排除せず、片方から他方を推論しない。"
+        },
+        {
+          "roleId": "CREATION",
+          "relation": "distinct",
+          "rationale": "資料上の制作役割の命題は別。同じ人物の兼務を排除せず、片方から他方を推論しない。"
+        }
+      ]
     }
   ]
 }

@@ -57,7 +57,7 @@ it("v2 seed/real API and isolated synthetic role cases", async () => {
     expect((await get(work, "contributionRoles=SUPERVISION")).claims).toHaveLength(3);
     expect((await get(center, "contributionRoles=")).claims).toEqual([]);
     expect((await get(center, "contributionRoles=PRODUCING,SCRIPT_WRITING,STORY_CO_CREATION,SUPERVISION")).claims).toHaveLength(5);
-    for (const query of [`after=${ids[0]}`, `contributionRoles=PRODUCING&after=${first.page.nextCursor}`, `after=${first.page.nextCursor}`, "contributionRoles=DRAWING"]) expect((await fetch(`${base}/api/entities/${center}/neighbors?${query}`)).status).toBe(400);
+    for (const query of [`after=${ids[0]}`, `contributionRoles=PRODUCING&after=${first.page.nextCursor}`, `after=${first.page.nextCursor}`, "contributionRoles=UNKNOWN_ROLE"]) expect((await fetch(`${base}/api/entities/${center}/neighbors?${query}`)).status).toBe(400);
     const detail = await fetch(`${base}/api/claims/${ids[2]}`); expect(detail.status).toBe(200);
     const body = await detail.json() as ClaimResponse;
     expect(body.relatedClaimIds).toEqual(ids.filter((id) => id !== ids[2]));

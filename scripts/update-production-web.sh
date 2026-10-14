@@ -15,8 +15,9 @@ docker load --input "$image_archive"
 docker image inspect "graph-knowledge-web:$image_tag" "graph-knowledge-ops:$image_tag" >/dev/null
 dc=(docker compose --env-file "$env_file" -f /opt/graph-knowledge/compose.yaml)
 "${dc[@]}" config --quiet
-# 既存operatorでKGを読み取りbackup。Web更新のための再投入はしない。
-"${dc[@]}" run --rm --no-deps ops backup "/backups/before-web-$(date -u +%Y%m%dT%H%M%SZ).json"
+# 更新先operatorで旧KGを読み取りbackup。新Role対応と運用timeoutを先に利用する。
+# Web更新のための再投入はしない。
+GRAPH_IMAGE_TAG="$image_tag" "${dc[@]}" run --rm --no-deps ops backup "/backups/before-web-$(date -u +%Y%m%dT%H%M%SZ).json"
 env_previous=$(mktemp /opt/graph-knowledge/.env-before-web.XXXXXX)
 cp -p "$env_file" "$env_previous"
 changed=0

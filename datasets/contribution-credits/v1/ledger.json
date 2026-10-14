@@ -1,0 +1,211 @@
+{
+  "version": 1,
+  "date": "2026-10-14",
+  "status": "pending-human-role-review-and-public-application",
+  "baseRelease": "20261014-pluto-001",
+  "rows": [
+    {
+      "baseClaimId": "aacddf82-87ae-4981-8542-0470e981a94f",
+      "roleId": "AUTHORSHIP",
+      "originalText": "手塚眞 監修,浦沢直樹 [ほか]著",
+      "language": "ja",
+      "scope": {
+        "kind": "publication",
+        "isbn13": "9784091874313",
+        "volumeLabel": "第1巻",
+        "editionLabel": null,
+        "language": "ja"
+      },
+      "source": {
+        "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I000007510854",
+        "title": "国立国会図書館サーチ：PLUTO 第1巻 書誌",
+        "publisher": "国立国会図書館"
+      },
+      "locator": "書誌の責任表示（ISBN一致をOpenSearchでも照合）",
+      "evidenceFile": "raw/pluto.json",
+      "interpretation": "本人名に掛かる著だけを認定し、併記された他の人・組織の役割は生成しない。書誌確認であり原本実見ではない。"
+    },
+    {
+      "baseClaimId": "cdbcaa44-689b-4e96-8a0f-2c4f0c36028d",
+      "roleId": "AUTHORSHIP",
+      "originalText": "浦沢直樹, スタジオ・ナッツ 著",
+      "language": "ja",
+      "scope": {
+        "kind": "publication",
+        "isbn13": "9784091817907",
+        "volumeLabel": "第1巻",
+        "editionLabel": "完全版",
+        "language": "ja"
+      },
+      "source": {
+        "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I000009251143",
+        "title": "国立国会図書館サーチ：MONSTER 第1巻 書誌",
+        "publisher": "国立国会図書館"
+      },
+      "locator": "書誌の責任表示（ISBN一致をOpenSearchでも照合）",
+      "evidenceFile": "raw/monster.json",
+      "interpretation": "本人名に掛かる著だけを認定し、併記された他の人・組織の役割は生成しない。書誌確認であり原本実見ではない。"
+    },
+    {
+      "baseClaimId": "6698edea-a6d6-4f44-94d8-f262331bd429",
+      "roleId": "AUTHORSHIP",
+      "originalText": "浦沢直樹 著,長崎尚志 ストーリー共同制作",
+      "language": "ja",
+      "scope": {
+        "kind": "publication",
+        "isbn13": "9784091875365",
+        "volumeLabel": "第1巻",
+        "editionLabel": "完全版",
+        "language": "ja"
+      },
+      "source": {
+        "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I027053470",
+        "title": "国立国会図書館サーチ：20世紀少年 第1巻 書誌",
+        "publisher": "国立国会図書館"
+      },
+      "locator": "書誌の責任表示（ISBN一致をOpenSearchでも照合）",
+      "evidenceFile": "raw/20cb.json",
+      "interpretation": "本人名に掛かる著だけを認定し、併記された他の人・組織の役割は生成しない。書誌確認であり原本実見ではない。"
+    },
+    {
+      "baseClaimId": "d9780089-361d-49a0-b95a-a54c2cd2fa7a",
+      "roleId": "AUTHORSHIP",
+      "originalText": "浦沢直樹, スタジオ・ナッツ 著,勝鹿北星, 長崎尚志 脚本",
+      "language": "ja",
+      "scope": {
+        "kind": "publication",
+        "isbn13": "9784091841612",
+        "volumeLabel": "第1巻",
+        "editionLabel": "完全版",
+        "language": "ja"
+      },
+      "source": {
+        "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I000011268012",
+        "title": "国立国会図書館サーチ：MASTERキートン 第1巻 書誌",
+        "publisher": "国立国会図書館"
+      },
+      "locator": "書誌の責任表示（ISBN一致をOpenSearchでも照合）",
+      "evidenceFile": "raw/master.json",
+      "interpretation": "本人名に掛かる著だけを認定し、併記された他の人・組織の役割は生成しない。書誌確認であり原本実見ではない。"
+    },
+    {
+      "baseClaimId": "11d202ab-e9a4-4da5-9ff2-735f48f83133",
+      "roleId": "AUTHORSHIP",
+      "originalText": "浦沢直樹 著,長崎尚志 ストーリー共同制作",
+      "language": "ja",
+      "scope": {
+        "kind": "publication",
+        "isbn13": "9784063729221",
+        "volumeLabel": "第4巻",
+        "editionLabel": null,
+        "language": "ja"
+      },
+      "source": {
+        "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I000010940410",
+        "title": "国立国会図書館サーチ：BILLY BAT 第4巻 書誌",
+        "publisher": "国立国会図書館"
+      },
+      "locator": "書誌の責任表示（ISBN一致をOpenSearchでも照合）",
+      "evidenceFile": "raw/billy.json",
+      "interpretation": "本人名に掛かる著だけを認定し、併記された他の人・組織の役割は生成しない。書誌確認であり原本実見ではない。"
+    },
+    {
+      "baseClaimId": "524b2cb1-f0f9-4c0d-8bee-1892d2256dcf",
+      "roleId": "DRAWING",
+      "originalText": "画: 浦沢直樹",
+      "language": "ja",
+      "scope": {
+        "kind": "publication",
+        "isbn13": "9784091921116",
+        "volumeLabel": "第1巻",
+        "editionLabel": "小学館文庫",
+        "language": "ja"
+      },
+      "existingSourceId": "811123b5-100e-47b7-879f-5103a53178cf",
+      "locator": "題名直下の著者・クレジット欄",
+      "evidenceFile": "datasets/pluto-expansion/v1/ledger.json",
+      "interpretation": "資料の明示クレジット、または漫画の本人制作回想だけ。語の置換や期間の転記をしない。"
+    },
+    {
+      "baseClaimId": "ed25d35b-1dd8-4a73-ae84-649682afadf2",
+      "roleId": "CREATION",
+      "originalText": "作: 浦沢直樹",
+      "language": "ja",
+      "scope": {
+        "kind": "publication",
+        "isbn13": "9784091922816",
+        "volumeLabel": "第1巻",
+        "editionLabel": "小学館文庫",
+        "language": "ja"
+      },
+      "existingSourceId": "36de2fd2-9bbb-4bf2-b4de-c0d1167e43b3",
+      "locator": "題名直下の著者・クレジット欄",
+      "evidenceFile": "datasets/pluto-expansion/v1/ledger.json",
+      "interpretation": "資料の明示クレジット、または漫画の本人制作回想だけ。語の置換や期間の転記をしない。"
+    },
+    {
+      "baseClaimId": "88c2e0d1-f65e-4d6c-818d-3a7f39d9b45f",
+      "roleId": "AUTHORSHIP",
+      "originalText": "著: 浦沢直樹",
+      "language": "ja",
+      "scope": {
+        "kind": "publication",
+        "isbn13": "9784091867261",
+        "volumeLabel": null,
+        "editionLabel": null,
+        "language": "ja"
+      },
+      "existingSourceId": "80505354-d721-4297-bb2c-1eb4451ebd80",
+      "locator": "題名直下の著者・クレジット欄",
+      "evidenceFile": "datasets/pluto-expansion/v1/ledger.json",
+      "interpretation": "資料の明示クレジット、または漫画の本人制作回想だけ。語の置換や期間の転記をしない。"
+    },
+    {
+      "baseClaimId": "54ca01b9-b0d3-45c7-bd11-f37f6e0df4e5",
+      "roleId": "AUTHORSHIP",
+      "originalText": "著: 長崎尚志",
+      "language": "ja",
+      "scope": {
+        "kind": "publication",
+        "isbn13": "9784091867261",
+        "volumeLabel": null,
+        "editionLabel": null,
+        "language": "ja"
+      },
+      "existingSourceId": "80505354-d721-4297-bb2c-1eb4451ebd80",
+      "locator": "題名直下の著者・クレジット欄",
+      "evidenceFile": "datasets/pluto-expansion/v1/ledger.json",
+      "interpretation": "資料の明示クレジット、または漫画の本人制作回想だけ。語の置換や期間の転記をしない。"
+    },
+    {
+      "baseClaimId": "7bed90e9-58ec-44ac-969c-9dd53dd17772",
+      "roleId": "DRAWING",
+      "originalText": "アトムは、もう、あしかけ十五年描いています。",
+      "language": "ja",
+      "scope": null,
+      "existingSourceId": "2a414ecb-7fa1-485a-9296-c92b6f748353",
+      "locator": "手塚治虫が語る「鉄腕アトム」・本人の制作回想（漫画版）",
+      "evidenceFile": "datasets/pluto-expansion/v1/ledger.json",
+      "interpretation": "資料の明示クレジット、または漫画の本人制作回想だけ。語の置換や期間の転記をしない。"
+    }
+  ],
+  "retainedBroad": [
+    {
+      "subject": "工藤かずや",
+      "object": "パイナップルARMY",
+      "reason": "原資料は人名のみ。原作／脚本へ正規化しない。"
+    },
+    {
+      "subject": "工藤かずや・池上遼一",
+      "object": "信長",
+      "reason": "両作者名のみで具体的分担を認定しない。"
+    }
+  ],
+  "boundaries": [
+    "旧Claim・Citation・Source・凍結datasetを変更しない。",
+    "著者・作・作画を相互に含意させない。原作Roleは追加しない。",
+    "刊行物scopeは確認されたクレジットの適用範囲。全巻全版やその巻だけの担当ではない。",
+    "Sourceの日付や本人回想の十五年をClaim.periodへ転記しない。",
+    "広いClaimと限定Claimが増えても独立資料が増えたことにはしない。"
+  ]
+}

@@ -415,3 +415,36 @@ VPSのKG復旧控えは `/backups/before-expanded-pluto-20261014T101719Z.json`�
 VPSのHTTPSを対象に `playwright.expanded.config.ts` の読み取り専用4件が成功（1.2分）。PLUTOから別作者・会社・鉄腕アトム等への3経路、原表記とSourceへの到達、概要、広く見る／直前復帰、Harvardの29 Claim概要、既存三用途条件とpredicate限定適用を確認。応答差替え・seed・DB操作は試験に含まない。代表画面1枚を目視し、展開枝がviewport外へ伸びる既知課題は残るが「全体を表示」で俯瞰できる。原表記から未実装Roleを補完しない。
 
 要求照合：まとまった実在データを増やし検索・Graphを実際に評価可能にする目的に対し、追加2,091 Entity／1,807 Claim／1,731 Source／1,841 Citationを両環境へ反映した。Wikidata P108とNobel公式を採用し、PLUTO周辺は公式出版社等の12 Claimで複数段階の探索を追加。工程17を今回の証拠に基づき完了へ更新する。工程18の性能実測、工程8〜10の未充足、会員の未確認操作、一般公開22まで完了したとはしない。監査前の累計を要求充足率へ読み替えない。
+
+
+### 明示制作クレジットのRole対応候補（2026-10-14）
+
+ユーザーから、原資料に著者・作・画等が明記される関係をGraphでも具体的に表すよう依頼。原因は新規資料の具体性がCitationに残る一方、現行4 Roleに対応値がなく広いClaimだけを投入していたこと。表示時にnoteを解析して役割を認定せず、AUTHORSHIP（著者）・CREATION（作）・DRAWING（作画）の3つの独立した制作限定を提案した。[定義と境界](design/CONTRIBUTION_CREDITS.md)。
+
+新Role契約は既存CONTRIBUTION_ROLE_CONTRACTSの人間意味レビュー要求に従い確認待ち。比較票はdraft／reviewer=nullのままで、Codexの資料確認を人間承認へ置換しない。語彙チェックはこの3件の未承認を正しく拒否する（基準版とGit前版の両照合で計6 error）。初期4 ID／基準版・既存承認票は変更しない。
+
+資料の著／作／画を10限定Claimへ投影する候補を生成。追加Entity 0／Claim 10／Source 5／Citation 10、差分25知識Node・40 Relationship・既存変更0件。出版社・本人回想に加えISBNを照合した国会図書館の責任表示を明示Sourceにした。PLUTOは「浦沢直樹 [ほか]著」から著者までを認定する候補であり、作画を推論しない。工藤かずや→パイナップルARMY、両作者→信長は分担未確認でfallbackを維持する。刊行物scope 9件と期間不明を保持する。原作Role・作品派生・会社立場の拡張は行わない。
+
+既存の広いClaim・UUIDと全旧知識内容を保持し、新限定Claimを既存DisplayRelationへ束ねる。Graphは既存「制作」badge＋具体Role表示を再利用し、線数・接続Entityは増やさない。条件UI、API enum、LIMIT前filter、cursor、比較キー、保存・URL・復帰は既存typed処理を利用する。DB schema／API項目／自由qualifierを追加しない。新Roleを受け入れた後はWeb／operatorを更新してからKGへ適用する。旧Webへ新Roleを先に投入しない。
+
+生成・schema検証、新規unit4件を含む対象156件、対象lint・typecheck、本番Web image buildが成功。公開反映はしておらず、3200/Tunnel・VPS・会員PG・凍結datasetは不変。隔離7695／3216で実DBと実ブラウザ検証を行い、結果を追記する。
+
+後続の人間判断：ユーザーがAUTHORSHIP・CREATION・DRAWINGの3定義、原表記の違いを尊重して推測同一視しない境界、旧広いClaimを保持する方式を明示承認。同じ資料由来を独立根拠の増加と見せない点も指定した。3比較票を実際の判断者・日付・hashに対応するapprovedへ更新し、語彙チェックは0 error（通常の意味確認warningを維持）。10件の環境反映とは別状態として記録する。
+
+### 明示制作クレジットの受入・3200反映（2026-10-14）
+
+ユーザーは3 Role定義に続き、対象10 Claimを3200/TunnelとVPSへ反映することを明示承認。受入は `datasets/public-kg/releases/20261014-credits-001/acceptance.json` にdata／manifest hash、範囲、旧Claim・会員PG保護とともに記録した。収集時点のledgerは遡及変更しない。
+
+3200は新Role対応Webを先に更新し、KG-only backup後に20261014-credits-001を適用。追加25知識Node／40接続、既存更新・削除0件。再適用は無変更。最終2,109 Entity／1,844 Claim／1,751 Source／1,880 Citation／2,478 ExternalIdentifier、revision `82b01515-594c-48ca-b4b6-515eefac83ca`。Tunnel `/api/dataset` でも同revisionを確認。復旧控え `backups/before-credits-20261014.json`、checksum `ade7b0bd8076ba092ab1fed6a9e6ed2c5a870e47c01b71835eabcdb1f3f186d9`。会員PG操作・DB再起動なし。
+
+実ブラウザ3件が隔離実資料Graph・3200の両方で成功。浦沢→PLUTO／MONSTER／20世紀少年／MASTERキートン／BILLY BAT／Reマスターは「制作＋著者」、パイナップルARMYは「制作＋作画」、YAWARA!は「制作＋作」。長崎→Reマスターは著者、手塚治虫→鉄腕アトムは作画。元の広いClaimは保持し、各線は一本のまま。画の原語・ISBN・広いClaim・同一Source共有注記・出典URLまで確認した。著者条件では広いClaimを役割全指定扱いせず、影響関係には作用しない。既存PRODUCING／VISITOR／CHAIRのAPI実ブラウザ回帰1件も成功。Source原文が不十分な工藤→パイナップルARMY、信長の分担は広い関係のまま。
+
+限定なしと限定ありの併存が独立根拠の増加ではない旨を関係概要で明示。詳細は取得済みClaim間の同一Source UUID共有を注記する（同名別Source・同一Claim内複数Citationでは誤表示しない）。刊行物scope説明から全資料を「商品情報」と見なす表現を除去し、本人回想のscope未指定と区別した。
+
+実運用で60秒以内のKG backupが失敗したため、反復接続走査とsort時のJSON再生成を索引化し、backup読取transactionだけ180秒にした。検索／Graph API、KG apply／restoreのtimeout・fingerprint・未知属性拒否は不変。更新時は新operatorで旧KGをbackupする。canonical fingerprintの従来順一致unit13件、実資料隔離integration1件、本番build／TypeScript、対象lint、語彙／限定契約checkは成功。旧知識の全内容不変と25／40差分をunit／公開planで確認。凍結dataset／基準版は変更していない。
+
+追加で実行した既存public integration初回は8/11成功（backup／restore・会員PG保護を含む）。高負荷のcold初回適用がtestの60秒を超え、後続2件に連鎖した。これを全件成功とは扱わず、build終了後に同じsuiteを再実行して結果を追記する。新Role専用integrationは実資料49 Claimの部分Graphで成功している。隔離Webの環境変数不足とrelatedClaimIdsの自己除外に関する試験設定の誤りも修正した。公開artifactは全KG snapshotを維持する。
+
+VPSは反映承認済みだが、配置物の転送・管理者実行・HTTPS検証が揃うまで反映済みとはしない。工程や要求充足率の追加完了には読み替えない。
+
+後続の再確認：build終了後、同じ既存public integration 11件を無変更のtest期限で再実行し、全件成功（210.97秒）。backup／restore、外部Node UUID・根拠・撤回、会員PGの保護、cursor失効、復元失敗時rollbackを含む。初回失敗を隠さず、公開apply・再適用と実ブラウザでの独立確認も併記した。

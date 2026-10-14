@@ -1,1 +1,167 @@
-[]
+[
+  {
+    "id": "credit-authorship-20261014",
+    "targetId": "AUTHORSHIP",
+    "kind": "role",
+    "change": "addition",
+    "beforeHash": null,
+    "afterHash": "3a06303020dcf6370119aedd792ff0a832abc6fdd876062fbcdd72dbdadd0ebd",
+    "status": "approved",
+    "reviewer": "ユーザー（2026-10-14の3 Role定義の明示承認）",
+    "reviewedAt": "2026-10-14",
+    "outcome": "qualifier",
+    "motivation": "今回の明示クレジットを広い制作関与だけに圧縮せずGraphと詳細で保持する。",
+    "evidenceExample": "出版社のReマスター商品情報が両者に著を明記",
+    "counterexample": "原作由来の人名との併記だけでは個別の著者Roleを認定しない",
+    "predicateRationale": "制作に関与したというCONTRIBUTED_TOの命題内の役割限定であり、端点・保存方向・Predicate意味を変えない。",
+    "comparisons": [
+      {
+        "roleId": "SCRIPT_WRITING",
+        "relation": "distinct",
+        "rationale": "資料上の制作役割の命題は別。同じ人物の兼務を排除せず、片方から他方を推論しない。"
+      },
+      {
+        "roleId": "SUPERVISION",
+        "relation": "distinct",
+        "rationale": "資料上の制作役割の命題は別。同じ人物の兼務を排除せず、片方から他方を推論しない。"
+      },
+      {
+        "roleId": "PRODUCING",
+        "relation": "distinct",
+        "rationale": "資料上の制作役割の命題は別。同じ人物の兼務を排除せず、片方から他方を推論しない。"
+      },
+      {
+        "roleId": "STORY_CO_CREATION",
+        "relation": "distinct",
+        "rationale": "資料上の制作役割の命題は別。同じ人物の兼務を排除せず、片方から他方を推論しない。"
+      },
+      {
+        "roleId": "CREATION",
+        "relation": "distinct",
+        "rationale": "資料上の制作役割の命題は別。同じ人物の兼務を排除せず、片方から他方を推論しない。"
+      },
+      {
+        "roleId": "DRAWING",
+        "relation": "distinct",
+        "rationale": "資料上の制作役割の命題は別。同じ人物の兼務を排除せず、片方から他方を推論しない。"
+      }
+    ],
+    "impacts": {
+      "claims": "既存Claimは不変。確認されたRole付き新UUIDを追加する。",
+      "conditions": "既存contributionRolesのOR・LIMIT前適用・cursor bindingを再利用する。",
+      "translations": "日本語の具体語と保守的な英語表示を追加する。",
+      "presentation": "既存制作badgeとRole名を利用。SourceのnoteをGraphで解析しない。"
+    },
+    "rationale": "資料の著／著者クレジットとして明示された制作関与。原作・脚本・作画・単独著者・著作権者を認定しない。 ユーザーがこの3定義・広いClaimを保持する投影・独立根拠数を増やしたように扱わない境界を明示承認した。"
+  },
+  {
+    "id": "credit-creation-20261014",
+    "targetId": "CREATION",
+    "kind": "role",
+    "change": "addition",
+    "beforeHash": null,
+    "afterHash": "fe32923d4feeb40e49d823983bd423a6a48b23fd47edb2051ac6e02f2526b3ae",
+    "status": "approved",
+    "reviewer": "ユーザー（2026-10-14の3 Role定義の明示承認）",
+    "reviewedAt": "2026-10-14",
+    "outcome": "qualifier",
+    "motivation": "今回の明示クレジットを広い制作関与だけに圧縮せずGraphと詳細で保持する。",
+    "evidenceExample": "YAWARA!第1巻商品情報に作と明記",
+    "counterexample": "作家という肩書や原作という別表記だけでは作を認定しない",
+    "predicateRationale": "制作に関与したというCONTRIBUTED_TOの命題内の役割限定であり、端点・保存方向・Predicate意味を変えない。",
+    "comparisons": [
+      {
+        "roleId": "SCRIPT_WRITING",
+        "relation": "distinct",
+        "rationale": "資料上の制作役割の命題は別。同じ人物の兼務を排除せず、片方から他方を推論しない。"
+      },
+      {
+        "roleId": "SUPERVISION",
+        "relation": "distinct",
+        "rationale": "資料上の制作役割の命題は別。同じ人物の兼務を排除せず、片方から他方を推論しない。"
+      },
+      {
+        "roleId": "PRODUCING",
+        "relation": "distinct",
+        "rationale": "資料上の制作役割の命題は別。同じ人物の兼務を排除せず、片方から他方を推論しない。"
+      },
+      {
+        "roleId": "STORY_CO_CREATION",
+        "relation": "distinct",
+        "rationale": "資料上の制作役割の命題は別。同じ人物の兼務を排除せず、片方から他方を推論しない。"
+      },
+      {
+        "roleId": "AUTHORSHIP",
+        "relation": "distinct",
+        "rationale": "資料上の制作役割の命題は別。同じ人物の兼務を排除せず、片方から他方を推論しない。"
+      },
+      {
+        "roleId": "DRAWING",
+        "relation": "distinct",
+        "rationale": "資料上の制作役割の命題は別。同じ人物の兼務を排除せず、片方から他方を推論しない。"
+      }
+    ],
+    "impacts": {
+      "claims": "既存Claimは不変。確認されたRole付き新UUIDを追加する。",
+      "conditions": "既存contributionRolesのOR・LIMIT前適用・cursor bindingを再利用する。",
+      "translations": "日本語の具体語と保守的な英語表示を追加する。",
+      "presentation": "既存制作badgeとRole名を利用。SourceのnoteをGraphで解析しない。"
+    },
+    "rationale": "原資料の作クレジットとして明示された制作関与。原作・脚本・著者・作画へ自動変換しない。 ユーザーがこの3定義・広いClaimを保持する投影・独立根拠数を増やしたように扱わない境界を明示承認した。"
+  },
+  {
+    "id": "credit-drawing-20261014",
+    "targetId": "DRAWING",
+    "kind": "role",
+    "change": "addition",
+    "beforeHash": null,
+    "afterHash": "ab72af78770ab23d7a3c3cee7f11aedc226ad8c3fb53240e78acadc7db4de141",
+    "status": "approved",
+    "reviewer": "ユーザー（2026-10-14の3 Role定義の明示承認）",
+    "reviewedAt": "2026-10-14",
+    "outcome": "qualifier",
+    "motivation": "今回の明示クレジットを広い制作関与だけに圧縮せずGraphと詳細で保持する。",
+    "evidenceExample": "パイナップルARMY第1巻で画と明記",
+    "counterexample": "著者欄の人名や作品の絵柄から作画担当を推定しない",
+    "predicateRationale": "制作に関与したというCONTRIBUTED_TOの命題内の役割限定であり、端点・保存方向・Predicate意味を変えない。",
+    "comparisons": [
+      {
+        "roleId": "SCRIPT_WRITING",
+        "relation": "distinct",
+        "rationale": "資料上の制作役割の命題は別。同じ人物の兼務を排除せず、片方から他方を推論しない。"
+      },
+      {
+        "roleId": "SUPERVISION",
+        "relation": "distinct",
+        "rationale": "資料上の制作役割の命題は別。同じ人物の兼務を排除せず、片方から他方を推論しない。"
+      },
+      {
+        "roleId": "PRODUCING",
+        "relation": "distinct",
+        "rationale": "資料上の制作役割の命題は別。同じ人物の兼務を排除せず、片方から他方を推論しない。"
+      },
+      {
+        "roleId": "STORY_CO_CREATION",
+        "relation": "distinct",
+        "rationale": "資料上の制作役割の命題は別。同じ人物の兼務を排除せず、片方から他方を推論しない。"
+      },
+      {
+        "roleId": "AUTHORSHIP",
+        "relation": "distinct",
+        "rationale": "資料上の制作役割の命題は別。同じ人物の兼務を排除せず、片方から他方を推論しない。"
+      },
+      {
+        "roleId": "CREATION",
+        "relation": "distinct",
+        "rationale": "資料上の制作役割の命題は別。同じ人物の兼務を排除せず、片方から他方を推論しない。"
+      }
+    ],
+    "impacts": {
+      "claims": "既存Claimは不変。確認されたRole付き新UUIDを追加する。",
+      "conditions": "既存contributionRolesのOR・LIMIT前適用・cursor bindingを再利用する。",
+      "translations": "日本語の具体語と保守的な英語表示を追加する。",
+      "presentation": "既存制作badgeとRole名を利用。SourceのnoteをGraphで解析しない。"
+    },
+    "rationale": "漫画の画／作画、または本人が当該漫画を描いたと明示する制作関与。原作・脚本・著者の兼務を認定しない。 ユーザーがこの3定義・広いClaimを保持する投影・独立根拠数を増やしたように扱わない境界を明示承認した。"
+  }
+]

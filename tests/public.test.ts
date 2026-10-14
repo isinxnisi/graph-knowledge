@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { sha256, stableJson } from "../lib/server/public-dataset";
 import { loadPublicRelease, combineAcceptedFixtures, validateInitialPublicDataset, validatePublicRelease } from "../lib/server/public-dataset";
 import { planPublicGraph, publicGraph, publicGraphDigest } from "../lib/server/public-graph";
 import { assertDatasetTarget } from "../lib/domain/dataset";
@@ -9,6 +10,14 @@ import { loadEventPilot } from "../lib/server/event-dataset";
 import { displayRelations } from "../lib/client/graph-presentation";
 
 describe("公開準備の共通KG", () => {
+  it("接続索引化後も既存のcanonical順とfingerprintを変えない", async () => {
+    const { fixture } = await loadPublicRelease();
+    const graph = publicGraph(fixture);
+    graph.edges.reverse();
+    const legacy = { nodes: Object.fromEntries(Object.entries(graph.nodes).sort(([a], [b]) => a.localeCompare(b))),
+      edges: [...graph.edges].sort((a, b) => stableJson(a).localeCompare(stableJson(b))) };
+    expect(publicGraphDigest(graph)).toBe(sha256(stableJson(legacy)));
+  });
   it("読取制限の既定5秒を維持し、本番の明示設定にも有限の上限を課す", () => {
     expect(readQueryTimeout({})).toBe(5000);
     expect(readQueryTimeout({ NEO4J_READ_TIMEOUT_MS: "10000" })).toBe(10000);

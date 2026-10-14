@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "date": "2026-10-14",
+  "status": "accepted-for-local-and-vps-application",
+  "humanInstruction": "AUTHORSHIP・CREATION・DRAWINGの3定義、旧広いClaimを保持する方式、および10件の両環境反映をユーザーが明示承認。",
+  "release": "20261014-credits-001",
+  "baseRelease": "20261014-pluto-001",
+  "dataSha256": "ea91b16f52a211b5a8464382ad498b7b2bb2be69a6f33fe125a73a3c7b9da2b5",
+  "manifestSha256": "e4aa3b58ed884f7d1f8fffee43b260261cc2b4d3a867fda942919f439d2bce17",
+  "added": {
+    "Entity": 0,
+    "Claim": 10,
+    "Source": 5,
+    "Citation": 10
+  },
+  "existingChanged": 0,
+  "preserved": [
+    "既存UUID・広いClaim・凍結dataset",
+    "会員PG・Capsule・認証設定"
+  ],
+  "meaning": "原資料の著／著者・作・画／作画の区別を保持。原作・脚本へ推測変換せず、同じ資料由来を独立根拠の増加と表示しない。"
+}

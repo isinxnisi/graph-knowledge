@@ -19,7 +19,12 @@ export type PublicPlan = { added: string[]; updated: string[]; relationshipsAdde
 const labels: Label[] = ["Entity", "Claim", "Source", "Citation", "ExternalIdentifier"];
 const key = (label: Label, properties: Properties) => `${label}:${label === "ExternalIdentifier" ? stableJson([properties.namespace, properties.value]) : properties.id}`;
 const clean = (properties: Record<string, unknown>) => Object.fromEntries(Object.entries(properties).filter(([, value]) => value !== null && value !== undefined)) as Properties;
-const sortedGraph = (graph: PublicGraph): PublicGraph => ({ nodes: Object.fromEntries(Object.entries(graph.nodes).sort(([a], [b]) => a.localeCompare(b))), edges: graph.edges.sort((a, b) => stableJson(a).localeCompare(stableJson(b))) });
+const sortedGraph = (graph: PublicGraph): PublicGraph => {
+  // Keep the exact canonical ordering without serializing each edge on every comparison.
+  const edgeKeys = new Map(graph.edges.map(edge => [edge, stableJson(edge)]));
+  return { nodes: Object.fromEntries(Object.entries(graph.nodes).sort(([a], [b]) => a.localeCompare(b))),
+    edges: graph.edges.sort((a, b) => edgeKeys.get(a)!.localeCompare(edgeKeys.get(b)!)) };
+};
 export const publicGraphDigest = (graph: PublicGraph) => sha256(stableJson(sortedGraph(graph)));
 
 export function publicGraph(fixture: Fixture, withdrawals: NonNullable<PublicRelease["manifest"]["withdrawals"]> = []): PublicGraph {

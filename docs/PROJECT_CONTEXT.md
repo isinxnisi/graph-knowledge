@@ -153,3 +153,7 @@ Phase 10当時は原職位をCitationから読めても、機械的な立場条�
 同日の補足で、PLUTOを初期の有力な代表入口として、件数だけでなく別作品・別作者・組織への複数段階の探索を重点補充する。大量分は維持し、[公式資料による次の12 Claim候補](../datasets/pluto-expansion/v1/README.md)を別単位で準備。初期表示／おすすめUIを採用・実装済みとは扱わない。
 
 2026-10-14後続の「3200/TunnelとVPSへ反映」で大量拡充とPLUTO重点補充の公開KG適用を承認。3200/Tunnelは20261014-expanded-001→20261014-pluto-001を適用し、2,109 Entity／1,834 Claim／1,746 Source／1,870 Citation。PLUTOの3複数段階経路・根拠・概要・起点切替／復帰と三用途条件を実ブラウザ／APIで確認済み。VPSもユーザーのsudo管理者適用後、HTTPS実ブラウザ4件・KG revision・preview認証・Google会員有効状態を確認済み。会員PG・凍結dataset・UIは変更していない。
+
+2026-10-14後続：ユーザーが著者・作・画等をGraphでも具体的に表すよう依頼。既存4 Roleで未構造化だった具体性を、AUTHORSHIP／CREATION／DRAWINGという別の制作限定へ載せる実装候補を用意。原作・脚本との推測同一視やCitation.noteの表示時解析は行わない。3定義と10限定Claimの3200/Tunnel・VPS反映はユーザー明示承認済み。実資料の隔離DB／実ブラウザ検証は成功し、新Role対応Webを先行更新してからKGを適用する。[具体案・境界](design/CONTRIBUTION_CREDITS.md)。
+
+制作クレジットの3 Roleと10限定Claimは人間受入後、3200/Tunnelへ適用・再適用無変更・実ブラウザ3件を確認。浦沢8作品などの具体表示を既存Role経路で再利用する。公開KGは2,109 Entity／1,844 Claim／1,751 Source／1,880 Citation。旧Claim・凍結dataset・会員PGを維持。同じ出典を独立根拠増加と見せない注記を追加。VPSの適用状況は公開β進捗の最新記録を参照する。

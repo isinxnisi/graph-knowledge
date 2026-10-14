@@ -1,0 +1,12 @@
+{
+  "isbn": "9784091841612",
+  "url": "https://ndlsearch.ndl.go.jp/api/opensearch?isbn=9784091841612&cnt=1",
+  "accessedAt": "2026-10-14",
+  "entries": [
+    {
+      "title": "Master Keaton",
+      "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I000011268012",
+      "responsibility": "浦沢直樹, スタジオ・ナッツ 著,勝鹿北星, 長崎尚志 脚本"
+    }
+  ]
+}

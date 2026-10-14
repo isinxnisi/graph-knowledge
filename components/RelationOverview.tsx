@@ -2,6 +2,7 @@ import { useUiLocale } from "../lib/client/ui-locale";
 import type { ClaimSummary, EntitySummary } from "../lib/domain/api";
 import { relationPresentation } from "../lib/client/relation-presentation";
 import { entityLabel } from "../lib/client/graph-presentation";
+import { contributionLabels } from "../lib/i18n/contribution";
 import { explorationLabels } from "../lib/i18n/exploration";
 import { relationPresentationLabels } from "../lib/i18n/relation-presentation";
 import styles from "./Explorer.module.css";
@@ -22,6 +23,7 @@ export default function RelationOverview({ claims, nodes }: { claims: ClaimSumma
       <ul className={styles.qualificationSummary}>{summary.qualification.entries.map(entry => <li key={entry.id ?? "unspecified"}>
         <strong>{entry.label}</strong><span>{text.counts(entry.affirmed, entry.denied)}</span>
       </li>)}</ul>
+      {first.predicate === "CONTRIBUTED_TO" && summary.qualification.entries.some(entry => entry.id === null) && summary.qualification.entries.some(entry => entry.id !== null) && <p className={styles.muted}>{contributionLabels(locale).broader}</p>}
       <details><summary>{text.qualificationHelp}</summary>
         {summary.qualification.entries.some(entry => entry.id === null) && <p className={styles.muted}>{text.unspecifiedHelp}</p>}
         {summary.qualification.entries.some(entry => entry.id !== null) && <p className={styles.muted}>{summary.qualification.help}</p>}

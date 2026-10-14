@@ -51,7 +51,7 @@ const roleResult = checkRoleVocabulary(roleValues[0], roleValues[1], roleValues[
 if (roleTree.includes(rolePaths[0])) roleResult.errors.push(...checkRoleVocabulary(roleValues[0], fromGit(rolePaths[0]), roleValues[2]).errors);
 for (const warning of roleResult.warnings) console.warn(`WARN ${warning}`);
 for (const error of roleResult.errors) console.error(`ERROR ${error}`);
-console.log(`Role検証: 4 role / ${roleResult.errors.length} error`);
+console.log(`Role検証: ${roleValues[0].entries.length} role / ${roleResult.errors.length} error`);
 if (roleResult.errors.length) process.exitCode = 1;
 
 if (printHashes) {
