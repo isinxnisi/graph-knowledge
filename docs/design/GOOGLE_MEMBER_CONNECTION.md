@@ -1,6 +1,6 @@
 # Plunodeの本番Google接続と完了条件
 
-2026-10-14更新。公開βの工程13。既存の[会員Capsule](MEMBER_CAPSULES.md)の認証・所有者契約を維持し、専用PostgreSQLと本番設定の接続を準備する。**正式hostのHTTPS・VPS専用PG／Google認証開始の実接続は確認済み。本人ログイン・保存再訪は未確認で、工程13はまだ完了ではない。** 公開KG、会員保存、限定共有の意味を変更しない。
+2026-10-14更新。公開βの工程13。既存の[会員Capsule](MEMBER_CAPSULES.md)の認証・所有者契約を維持し、専用PostgreSQLと本番設定の接続を準備する。**正式hostのHTTPS・VPS専用PG／Google認証開始の実接続は確認済み。本人Googleログイン・表示名は確認済み。MTU永続適用も確認済み。保存再訪は未確認で、工程13はまだ完了ではない。** 公開KG、会員保存、限定共有の意味を変更しない。
 
 ## 接続先
 
@@ -95,11 +95,11 @@ Google本人認証を含む確認が終わるまで、[進捗](../PUBLIC_BETA_PR
 | --- | --- |
 | 実装済み | Google provider、DB session、本人設定、Capsuleの明示保存／読取／編集、限定共有／停止、所有者認可 |
 | 隔離環境で確認 | 実PG＋検証OIDCの2 User認可・保存・再訪。実Googleとは別 |
-| 実接続済み | 正式HTTPS・KG・専用PG・Google認証開始。本人callbackは未確認 |
+| 実接続済み | 正式HTTPS・KG・専用PG・本人Googleログイン・表示名を確認済み |
 | 受領・確認済み | 正式callbackを含むGoogle Web client JSON。2026-10-14にprivate配置・VPS有効化済み |
-| 人間操作待ち | 本人のGoogleログイン・保存／再訪確認 |
+| 人間操作待ち | 本人の保存／再訪確認 |
 | 適用済み | 専用PG・5 migration・本番Web。ユーザーが管理者scriptを実行 |
-| 未確認 | 実Google callback、実sessionでの保存・logout後再訪、実機スマホ。これらを隔離試験で代用しない |
+| 未確認 | 実sessionでの保存・logout後再訪、実機スマホ。これらを隔離試験で代用しない |
 
 ### Google Cloudの操作
 
@@ -268,3 +268,44 @@ sudo bash /home/develop/graph-google-diagnostic-20261014/diagnose-production-goo
 - DB／env／会員データを変更せず、WebやDBを再起動しない。Google本人認証やcallbackの再送は代行しない。
 
 秘匿性と判定のPython／Nodeテスト1件（invalid_grant、invalid_client、不明errorの秘匿、transport code、Secret不一致）成功。eslint／shell構文・差分check成功。これは診断処理の検証で、本人ログインの修正完了ではない。コンテナ操作は既存のsudo運用に従い、結果を待って原因を絞る。Google credentialや認証モデルを推測で変更しない。
+
+### コンテナ通信timeoutとMTUの切分け（2026-10-14）
+
+ユーザーの診断結果はorigin／client ID／Secretすべて一致、JWKS／tokenとも `UND_ERR_CONNECT_TIMEOUT`。設定不一致より前に、稼働WebからGoogleへの接続失敗が確認された。VPS本体はIPv4 forwarding=1、GoogleのA／AAAAを解決し、Docker daemonの独自設定fileなし。hostの外向き `enp3s0` のMTUは **1442**、docker0／プロジェクトbridgeは **1500**。MTU不一致によるTLS通信の停滞を有力候補とするが、変更前後の実疎通で確認するまで原因確定とはしない。
+
+`scripts/repair-google-egress-mtu.sh` を既存診断directoryへ転送・hash／構文確認した。管理者操作は次の一つ。
+
+```bash
+sudo bash /home/develop/graph-google-diagnostic-20261014/repair-google-egress-mtu.sh
+```
+
+- 実host default routeと現在のWeb namespaceのdefault route・interface・MTUを読む。1280〜1500のhost MTUよりWeb側が大きい場合だけ対象とし、コンテナPIDも前後照合する。
+- **現在のWeb interfaceだけ**をhost MTUへ合わせ、既存の秘匿診断を再実行する。JWKS200／人工codeのtoken400・invalid_grant／credential一致とKG readinessが全部成功した時だけ変更を維持する。
+- 失敗時は同じWebの旧MTUへ戻す。DB／host interface／iptables／Docker daemon／Caddy／envを変更せず、container・DBを再起動しない。Webが入れ替わっていれば古いnamespaceへ書かない。
+- 一時変更であり、Web再作成後の永続化は未実装。成功後は[Docker bridgeのMTU option](https://docs.docker.com/engine/network/drivers/bridge/)を使うプロジェクト限定の永続化を、必要な停止範囲・volume維持・復旧と合わせて別途準備する。host全体のdaemon／firewall設定を推測で変えない。
+
+隔離コンテナ・stubによる1 test内4 scenario（成功、Google失敗の復元、readiness失敗の復元、不一致なしの無変更）成功。shell構文／差分check成功。これは手順の制御フロー検証で、本番のMTU変更・通信回復・本人ログインはまだ未確認。ユーザーの実行結果を待つ。
+
+
+### 一時修正の成功と永続化の準備（2026-10-14続報）
+
+ユーザーの実行結果でWeb MTU1500→1442、JWKS200／人工codeのtoken400・invalid_grant／KG readiness成功を確認した。続けて本人が実Googleログイン・表示名表示の成功を申告した。MTU変更前後で回復したことを確認し、credential再生成は行っていない。一時修正はWeb再作成で失われる。
+
+永続設定は`compose.production.yaml`のWebに専用`web-egress` bridge（`GRAPH_EGRESS_MTU`既定1442）を接続し、`gw_priority: 1`で外向き経路にする。既存default networkはDB接続用に維持する。ホスト全体のDocker設定は変更しない。[Composeのgateway priority](https://docs.docker.com/reference/compose-file/services/#gw_priority)を使い、Docker API1.48以上が必要。実VPSのDocker29.1.3／Compose2.40.3を確認済み。異なる回線では既定値を無条件に使わずhost MTUを確認する。
+
+`scripts/persist-google-egress.sh`を専用bundleから管理者実行する。稼働Composeの独自差分、host MTU不一致、既存egress networkの異なるMTUを拒否。KG backupとprivate PG dumpを取得し、Webだけを再作成する。Neo4j／PGのcontainer ID・起動時刻、KG revisionの不変、Web default-route MTU、Google疎通を確認する。失敗時は旧ComposeでWebを再作成し、従前の一時MTUへ戻す。DB／volume／secret／Caddyは変更せず、進行中HTTPだけ短時間中断し得る。
+
+隔離実Composeで二回のWeb新規実行後のMTU1442、専用networkのdriver optionを確認。本番imageの実PG試験でも5 migration二回・非superuser・認証開始・Origin検証・PG停止503と復旧が成功。これらは実VPSでの永続適用とは区別する。
+
+本人保存確認の案内で段階が抜けていた。現行UIは「Capsuleを作る・読む」→「表示中のGraphから作る」→「Capsuleを保存」（ブラウザ内）→「読む」→「この内容をアカウントへ保存（別タブ）」→会員画面の「この内容をアカウントへ保存」。会員画面の「ブラウザ内から選んで保存」でも選択できる。ブラウザ内保存はorigin単位で、別domainから自動移行しない。二段階の発見性を改善課題とし、保存再訪・logout後再login・編集・共有停止・実機スマホは未確認のまま残す。
+
+永続化bundleは `/home/develop/graph-google-egress-20261014` へ転送し、全6 fileのSHA256とshell構文を照合済み。管理者実行は `sudo bash /home/develop/graph-google-egress-20261014/scripts/persist-google-egress.sh`。転送・検証は適用ではなく、本人の保存確認後に実行結果を確認する。恒久適用scriptの隔離stubは成功・Google失敗復旧・readiness失敗復旧・独自Compose拒否・host MTU不一致拒否の5 scenarioが成功した。
+
+
+### VPSでの恒久適用結果（2026-10-14）
+
+ユーザーが上記scriptを実行し成功。KG backup・private PG dump後に専用egress networkを作成しWebだけ再作成、Healthyまで5.8秒。default-route MTU1442、JWKS200／人工codeのtoken400・invalid_grant、設定一致を確認。scriptのDB container ID・起動時刻不変、KG revision不変の検査も通過した。private控えは `/opt/graph-knowledge/member-rollbacks/egress-1bTaSt7H`。恒久設定は適用済みで、次はWeb再作成後の本人session継続・Capsule保存／再訪を確認する。本人保存の確認を適用成功から推測しない。
+
+診断・一時修正・恒久適用のPython testは各1（うち一時4／恒久5 scenario）が成功。まとめ実行の診断1件は既定Node12で失敗したため、プロジェクトのNode24へPATHを合わせて再実行し成功。アプリコードは変更しておらず、既存本番imageでの会員接続integrationを実施した。UI build／全Graph E2Eの再実行は今回のCompose・運用script変更の検証には含めない。
+
+適用後の別途HTTPS確認：正式トップ200・dataset200（revision `5b6ccb7b-7a5d-4005-ab34-01c490e93b1c`）・会員status200。preview認証のみで会員sessionを持たないprofile／capsulesは401。Caddy／Dockerはactive。ユーザー本人のsessionやprivate Capsuleの内容は取得していない。

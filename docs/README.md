@@ -52,7 +52,7 @@
 | [Capsuleの限定リンク共有](design/CAPSULE_LINK_SHARING.md) | 2026-10-09。特定版の固定・匿名閲覧・根拠／探索への導線・明示再発行と失効。実公開・運営非表示は未実装。discussionは次行の別契約 |
 | [Capsuleの版についての会話](design/CAPSULE_DISCUSSION.md) | 2026-10-10。明示受付・2 Userの投稿・投稿時版・非共有版隔離・本人撤回・所有者停止。所有者の旧共有版選択・説明と会話の再閲覧も接続。失効後の本人投稿一覧・撤回も接続。公開運営は未実装 |
 | [会員Capsule保存の初回](design/MEMBER_CAPSULES.md) | 2026-10-09。実認証・PostgreSQL・所有者APIと明示保存・再訪・既存構成編集UIを接続。2026-10-10に閲覧リンクからの参照追加も接続。表示名設定はstep12。実Googleは未了 |
-| [本番Google接続の準備](design/GOOGLE_MEMBER_CONNECTION.md) | 公開β step13・現在の最優先。内部専用PG・非superuser・明示migration・privateな候補env、失敗復旧付き適用script・本番imageの試験。Google Cloud手順／配置資材／本人確認経路を記録。正式HTTPS／専用PG／Google認証開始を実接続確認済。本人ログイン・保存再訪待ちで未完了 |
+| [本番Google接続の準備](design/GOOGLE_MEMBER_CONNECTION.md) | 公開β step13・現在の最優先。内部専用PG・非superuser・明示migration・privateな候補env、失敗復旧付き適用script・本番imageの試験。Google Cloud手順／配置資材／本人確認経路を記録。正式HTTPS／専用PG／Google認証開始を実接続確認済。本人ログイン確認済み。MTU永続適用確認済み。保存再訪待ちで未完了 |
 | [ブラウザ内の最小Capsule](design/LOCAL_CAPSULES.md) | 2026-10-09。明示した対象・独立主張と説明のprivate保存・現在データでの再閲覧・確認削除。保存ビュー／途中保存とは別コンテンツ。同IDの編集も実装。会員同期・公開共有は未実装 |
 | [ブラウザ内の探索途中保存](design/LOCAL_SAVED_WORKSPACE.md) | 2026-10-09。datasetごと最大10件、枝の開閉・取得ページ数・配置の保存と現在データからの再開。専用JSONの控え・内容確認後の読込を追加。旧1件を引き継ぎ、選択・置換・確認削除に対応。会員同期は未実装 |
 | [対象・主張の直接閲覧URL](design/DIRECT_READING_LINKS.md) | 2026-10-09。dataset・Entity／Claim IDから現在の説明・根拠を読む。履歴・明示探索・元Graphへの復帰。公開運用・検索掲載・内容版固定は含めない |

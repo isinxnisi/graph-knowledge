@@ -45,6 +45,9 @@ services:
       graph-neo4j: { condition: service_healthy }
     environment:
       <<: [*graph-environment, *member-environment]
+    networks:
+      default: { gw_priority: 0 }
+      web-egress: { gw_priority: 1 }
     ports:
       - "127.0.0.1:${GRAPH_WEB_PORT:-3200}:3000"
     mem_limit: 768m
@@ -95,3 +98,8 @@ services:
 volumes:
   knowledge:
   member_data:
+networks:
+  web-egress:
+    driver: bridge
+    driver_opts:
+      com.docker.network.driver.mtu: "${GRAPH_EGRESS_MTU:-1442}"
