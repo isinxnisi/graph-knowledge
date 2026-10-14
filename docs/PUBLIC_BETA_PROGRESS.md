@@ -376,3 +376,29 @@ VPS候補bundle `/home/develop/graph-expanded-20261014` を転送・SHA256／構
 schema／hash・生成一致・既存知識不変・3経路・刊行物限定・誤った原作／制作Claim不在のunit3件、typecheck／対象lintを確認。公開反映・新候補の実DB／新しい枝の実ブラウザ検証は未了。大量分を先に受入・適用した後の次releaseとして扱う。資料上の画・著・役職はCitationへ残し、現行Roleへ無理に正規化しない。
 
 現行画面の実ブラウザ確認は、開始例PLUTO（Entity 4／Claim 5）→浦沢直樹の選択・詳細とneighbors 200（4 Claim）まで。手塚治虫への続く自動操作は未表示Nodeの待機で失敗し、連続経路の確認済みとは扱わない。新候補の3経路はunit上の構造確認であり、実画面で辿った結果ではない。
+
+
+### 大量拡充＋PLUTO補充の承認後反映（2026-10-14）
+
+ユーザーの「3200/TunnelとVPSへ反映」を、前段で説明した大量分＋PLUTO補充の追加全体に対する人間受入・環境適用承認として記録。[対象版・hashを固定した受入記録](../datasets/public-kg/releases/20261014-pluto-001/acceptance.json)。元の収集ledgerと生成artifactは変更せず、承認前pendingの記録を消さない。
+
+3200のKGを `backups/before-expanded-pluto-20261014.json`（初回版）へbackup後、大量分をplan照合して適用。続いて `backups/before-pluto-20261014.json`（大量分適用後）を保存し、PLUTO追加43知識Node／48 Relationship・既存変更0件を照合して適用。最終再適用は全追加・更新0件。最終2,109 Entity／1,834 Claim／1,746 Source／1,870 Citation／2,478 ExternalIdentifier、revision `7b98d9ff-fcf4-4d81-a176-9b629843abde`。3200とTunnelのdataset応答で同一revisionを確認。Web再起動・会員PG操作・凍結dataset変更なし。
+
+`playwright.expanded.config.ts` の専用読み取り検証4件で、以下を実ブラウザ確認した（seed・応答差替えなし）。
+
+- PLUTO→浦沢→パイナップルARMY→工藤かずや→信長→池上遼一。
+- PLUTO→手塚眞→手塚プロダクション→手塚治虫→鉄腕アトム。
+- PLUTO→長崎→Reマスター→浦沢→20世紀少年。
+- 各経路の線から原表記／Source URL、Entity概要、広く見る、一件復帰。Harvardの検索・29肯定Claim概要、制作PRODUCING／組織VISITOR／Event CHAIRの三条件とpredicate限定適用も成功。
+
+最初の試験は詳細ボタンのaccessible nameが「<対象名>の詳細を見る」であるのに「詳細を見る」完全一致としたtest locatorの不備で失敗。locatorを修正後4件成功。実装・データ意味・API・探索操作は変更していない。対象lint／typecheck／shell構文・凍結ファイル差分なしを確認。アプリ本体変更がないためWebの再build／再起動はしない。
+
+VPSは `/home/develop/graph-expanded-pluto-20261014` へ承認済み2releaseと `scripts/apply-expanded-pluto-public-kg.sh` を転送、SHA256とbash構文を照合。既存専用ops imageを使い、KG backup→各plan→apply／再apply→container ID／起動時刻・readinessを確認する。初回版／大量分適用後／PLUTO適用後からの再実行を許容し、別版・既存変更・件数不一致を拒否する。復旧は既存KG-only restoreへ事前控えと現在revisionを渡す。二版目失敗時に第一版が未反映だったと扱わず、private記録から現在版を確認する。
+
+VPSではdevelopのsudoにpasswordが必要で、こちらの非対話SSHでは実行できない。ユーザーに次の管理者操作だけ依頼済み。**VPSは実行結果とHTTPS確認が揃うまで反映済みとしない。** 一般公開、preview認証解除、会員PG・credential・他サービスの変更は行わない。
+
+```bash
+sudo bash /home/develop/graph-expanded-pluto-20261014/scripts/apply-expanded-pluto-public-kg.sh
+```
+
+PLUTO→手塚眞→会社→手塚治虫→鉄腕アトムの1440×1000画面を作業用1枚で確認。新しい枝が現在viewport外へ伸びる場合があり、既存「全体を表示」で見渡せる。自動追従・配置・UI変更は行わない。広い制作／組織関与のfallbackは残るが、原表記と根拠へ降りられる。根拠にある画・著・設立を未実装Roleとして表示だけで補わない。

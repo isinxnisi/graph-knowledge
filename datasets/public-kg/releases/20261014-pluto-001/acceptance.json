@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "date": "2026-10-14",
+  "status": "accepted-for-local-and-vps-application",
+  "humanInstruction": "3200/TunnelとVPSへ反映",
+  "scope": "大量拡充1,795 ClaimとPLUTO重点補充12 Claimの追加。既存知識の変更・削除0件。",
+  "releases": [
+    {
+      "release": "20261014-expanded-001",
+      "baseRelease": "20261011-001",
+      "dataSha256": "51c3733e327dd63235e156d31c305c9a38cd37a565887663c0626652bbe3a10b",
+      "manifestSha256": "48789257cb6d67fe355534949d1277cc836fba7298f94193c53fd986dc86edc3"
+    },
+    {
+      "release": "20261014-pluto-001",
+      "baseRelease": "20261014-expanded-001",
+      "dataSha256": "fca5df55fa5cea94302822c72cd0995ca2635475a52aeb1a302f4cd8392e8d61",
+      "manifestSha256": "acfbb5ec6df78e7aaadc84d0ec996d792e28e718320553e99d7f5ab05f8a55eb"
+    }
+  ],
+  "meaning": "収集台帳に記録した狭い資料支持と既存predicateの広い意味で受け入れる。未構造化の原表記・期間・刊行物限定をRoleや全期間へ一般化しない。",
+  "boundaries": [
+    "会員PG・凍結datasetは変更しない。",
+    "人間受入と実際の環境適用・画面確認は別状態。",
+    "元の収集snapshotとmanifestを変更せず、この受入記録でpendingを更新する。"
+  ]
+}
