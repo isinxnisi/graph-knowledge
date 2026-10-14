@@ -528,3 +528,13 @@ VPS用の最終Web imageを `/home/develop/graph-ui-balance-20261014` へ転送�
 隔離containerでDocker操作をstubに置き換えた6経路を確認。config形式・manifest形式は照合したIDでのみ次段へ進み、別image・別platform・inspect失敗・checksum不一致はtag付替えと更新前に停止した。wrapper／既存更新scriptのBash構文確認も成功。3200/Tunnel・稼働DBへの変更はない。修正配置物のVPS転送・現地checksum確認後に同じ管理者コマンドを再実行し、その後のHTTPS確認までVPS反映は未完了として維持する。24工程の完了数は変更しない。
 
 修正したwrapper・manifest・README・SHA256SUMSを同じVPS配置先へ転送し、全6ファイルのchecksumと両shellの構文を現地で確認済み。変更前の配布用script・metadataは配置先の `guard-before-fix-20261015` に保存した。Web archiveは従来のchecksumを維持。管理者の再実行と更新後のHTTPS確認が残る。
+
+### UI更新のVPS反映・HTTPS確認完了（2026-10-15）
+
+ユーザーの管理者再実行が成功。実VPSのoperator IDは受入済みmanifest `sha256:edc660a29b7bb6d500021d4a187155414e8440361e0cbe3e742142fdbddb78ed`／linux/amd64と確認でき、前節で未確認とした識別形式の差が確定した。KG backup後、Webを `beta-ui-balance-20261014` へ更新してHealthy。backupのreleaseは `20261014-credits-001`、revision `5e2a94af-9061-4087-bb7a-045a3c0133f4`、checksum `34e5a8ff5136799f6d997738231afedc282bbbc1699893896d24c0de8234c192`。既存更新scriptはWebのみを再作成し、KG apply・会員PG操作・Caddy／認証／egress設定変更を含まない。ログ上のNeo4jは3日間の稼働を維持している。
+
+こちらから正式HTTPSの配信build `_40aIWNe4ZQXLqp-deda6` と、更新前backup・更新後APIのrevision一致を確認。正式／旧previewとも未認証401・noindex、認証後dataset 200を維持。member/statusは200・provider google、会員sessionなしのprofileは401。Docker・Caddy・既存通知serviceは全てactive。実Google callback、更新後の本人sessionでの新ヘッダ表示・Capsule再訪、実行中WebのMTU再測定は今回実施しておらず、設定を変更しない更新手順と区別する。
+
+Plunodeの実ブラウザ3件が成功（51.6秒）。375×667のGraph面積・メニューの重なり・本人表示の状態切替・右上×と背景クリックによるmodal閉鎖、PCの浦沢→PLUTOと390pxの浦沢→パイナップルARMYで資料／原役割・折り畳み・個別URLコピー・対象との往復・元の関係／記録への復帰・新探索での復帰破棄を確認した。Graphの枝・座標・pan/zoom不変と不要な近傍取得なしも確認。本人表示の状態切替だけはブラウザ内profile応答fixtureで、実Googleログイン検証には数えない。traceとvideoは無効、preview credentialはprocess内だけで扱った。PC・スマホの実画面を目視し、詰めたヘッダ・対象行・読み順・開閉範囲と戻る操作の配置を確認した。
+
+3200はrevision `82b01515-594c-48ca-b4b6-515eefac83ca` を維持。Tunnelも実ブラウザでroot／dataset 200・同revision・既存build `hGwXwE66vhQxPuU5e8iJU` を確認した。Python既定User-Agentの一回は403で、Mozilla指定と実ブラウザでは200だった。Cloudflare設定には触れていない。今回のUI更新は両確認環境へ反映済み。デザインの最終的な好み、スマホのGraph下段詳細という別要求、実会員の未確認経路は未解決として維持し、24工程の完了数は変更しない。
