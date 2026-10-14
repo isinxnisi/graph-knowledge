@@ -39,7 +39,7 @@
 | 現役の設計文書 | 状態・読む場面 |
 | --- | --- |
 | [探索GraphのURL復元・共有](design/EXPLORATION_URL_RESTORE.md) | 2026-10-14採用。起点UUID＋可逆圧縮query。枝・条件・座標・zoomの現在KGからの再構成、長さ上限と失敗の明示。Capsuleとは別 |
-| [探索画面のデザイン刷新](design/EDITORIAL_EXPLORER_DESIGN.md) | 2026-10-14採用。明朝の文化的知性とGraphの科学的探索感。工程17より優先し、実装案の実物評価と最終の好みを区別。スマホ詳細配置は別の未解決要求 |
+| [探索画面のデザイン刷新](design/EDITORIAL_EXPLORER_DESIGN.md) | 2026-10-14採用。明朝の文化的知性とGraphの科学的探索感。実装案の実物評価と最終の好みを区別。後続依頼で当面は工程13の会員実接続を優先。スマホ詳細配置は別の未解決要求 |
 | [公開βまでの進捗](PUBLIC_BETA_PROGRESS.md) | 2026-10-11採用。全24ステップの完了数・残数・外部待ちと次の作業範囲。公開先はgraph.isinxnisi.net |
 | [公開して育てるための対応プラン](design/PUBLIC_BETA_AND_PRODUCT_PLAN.md) | 採用・実装開始。デザイン・スマホ・会員・英語・広告・計測・共通KGからβ公開への方向と優先境界 |
 | [共通KGのrelease適用](design/PUBLIC_KG_RELEASES.md) | public-kgの生成・検証・dry-run・冪等更新、明示撤回/差替え、revision付き探索、KG単独backup/restore。凍結版は維持。本番配置は次行 |
@@ -52,7 +52,7 @@
 | [Capsuleの限定リンク共有](design/CAPSULE_LINK_SHARING.md) | 2026-10-09。特定版の固定・匿名閲覧・根拠／探索への導線・明示再発行と失効。実公開・運営非表示は未実装。discussionは次行の別契約 |
 | [Capsuleの版についての会話](design/CAPSULE_DISCUSSION.md) | 2026-10-10。明示受付・2 Userの投稿・投稿時版・非共有版隔離・本人撤回・所有者停止。所有者の旧共有版選択・説明と会話の再閲覧も接続。失効後の本人投稿一覧・撤回も接続。公開運営は未実装 |
 | [会員Capsule保存の初回](design/MEMBER_CAPSULES.md) | 2026-10-09。実認証・PostgreSQL・所有者APIと明示保存・再訪・既存構成編集UIを接続。2026-10-10に閲覧リンクからの参照追加も接続。表示名設定はstep12。実Googleは未了 |
-| [本番Google接続の準備](design/GOOGLE_MEMBER_CONNECTION.md) | 公開β step13。内部専用PG・非superuser・明示migration・privateな候補env生成と本番imageでの認証開始試験。実Google設定／本人ログイン待ちで工程は未完了 |
+| [本番Google接続の準備](design/GOOGLE_MEMBER_CONNECTION.md) | 公開β step13・現在の最優先。内部専用PG・非superuser・明示migration・privateな候補env、失敗復旧付き適用script・本番imageの試験。Google Cloud手順／配置資材／本人確認経路を記録。実Google設定／VPS適用／本人ログイン待ちで未完了 |
 | [ブラウザ内の最小Capsule](design/LOCAL_CAPSULES.md) | 2026-10-09。明示した対象・独立主張と説明のprivate保存・現在データでの再閲覧・確認削除。保存ビュー／途中保存とは別コンテンツ。同IDの編集も実装。会員同期・公開共有は未実装 |
 | [ブラウザ内の探索途中保存](design/LOCAL_SAVED_WORKSPACE.md) | 2026-10-09。datasetごと最大10件、枝の開閉・取得ページ数・配置の保存と現在データからの再開。専用JSONの控え・内容確認後の読込を追加。旧1件を引き継ぎ、選択・置換・確認削除に対応。会員同期は未実装 |
 | [対象・主張の直接閲覧URL](design/DIRECT_READING_LINKS.md) | 2026-10-09。dataset・Entity／Claim IDから現在の説明・根拠を読む。履歴・明示探索・元Graphへの復帰。公開運用・検索掲載・内容版固定は含めない |

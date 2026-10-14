@@ -21,4 +21,6 @@ try {
   await migrateMemberDatabase(pool);
   child = spawn("node", ["node_modules/@playwright/test/cli.js", "test", "--config=playwright.member.config.ts", ...process.argv.slice(2)], { env: process.env, stdio: "inherit" });
   process.exitCode = await new Promise<number>((resolve, reject) => { child!.once("error", reject); child!.once("exit", code => resolve(code ?? 1)); });
+  // Normal completion must not signal the already-exited Playwright process.
+  child = undefined;
 } finally { await stop(); }

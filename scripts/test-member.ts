@@ -35,6 +35,7 @@ try {
   const timer = setTimeout(() => child?.kill("SIGTERM"), browserTests ? 960_000 : 180_000);
   const code = await new Promise<number>((resolve, reject) => { child!.once("error", reject); child!.once("exit", code => resolve(code ?? 1)); });
   clearTimeout(timer);
+  child = undefined;
   process.exitCode = code;
 } catch (error) {
   console.error(error instanceof Error ? error.message : "Member test setup failed");

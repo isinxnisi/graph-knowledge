@@ -55,7 +55,7 @@ sudo python3 prepare-production-member.py \
 1. 現行env／Composeをprivateに控え、既存operatorでKG backup。既存Caddy・preview認証・KG revisionを維持する。
 2. `compose.production.yaml` を本番の `compose.yaml`、`db/member/production-init.sql` を同directory配下の同相対pathへ配置する。テスト済みWeb／ops imageを検証してloadする。
 3. 候補envを指定して `--profile member up -d --wait graph-member-postgres`。init SQLは空volumeの初回だけ実行される。既存volumeを削除・再初期化しない。
-4. 会員PGをprivateなcustom-format `pg_dump` へ控え、候補envで `run --rm --no-deps member-ops`。既存4 migrationをtransaction・advisory lock・checksumで適用する。二回目は無変更。
+4. 会員PGをprivateなcustom-format `pg_dump` へ控え、候補envで `run --rm --no-deps member-ops`。既存5 migration（000〜004）をtransaction・advisory lock・checksumで適用する。二回目は無変更。
 5. 候補envを稼働envへ明示適用し、`up -d --no-deps --pull never --wait web`。KG再seed・Neo4j再起動はしない。
 6. 外部HTTPSから認証開始・本人Googleログイン・保存・再訪を確認する。会員PG停止試験は隔離環境で行い、稼働VPSのDBを試験目的で停止しない。
 
@@ -82,7 +82,81 @@ npx tsx scripts/test-production-member.ts beta-step13-20261013
 - 保存内容から現在のKG／Claim／Sourceへ戻れ、元の探索が維持される。
 - 匿名や別Userへprivate内容が見えず、一般公開・共有有効化を勝手に広げない。
 
-Google本人認証を含む確認が終わるまで、[進捗](../PUBLIC_BETA_PROGRESS.md)は12/24のまま。設定待ちの間は工程14等の独立した実装へ進める。
+Google本人認証を含む確認が終わるまで、[進捗](../PUBLIC_BETA_PROGRESS.md)では工程13を未完了のままとする。全体の要求充足と過去の完了数は要求監査を踏まえて別に扱い、準備だけで増やさない。
 
 
 工程14で退会・停止・共有停止・投稿非表示の追加migration004と運営CLIを加えた。これから本番会員を有効化する場合は最新operator imageで000〜004の5件を明示適用する。既存の000〜003の内容は変えていない。[削除範囲・運営手順](ACCOUNT_LIFECYCLE_OPERATIONS.md)を併読する。過去の工程13検証記録の4件は当時の結果である。
+
+## 2026-10-14：実接続再開の作業境界
+
+会員実接続を最優先とする。最新mainの機能を使い、認証・保存・共有UIを再実装しない。工程17以降への復帰は、工程13の本人ログイン・保存／再訪と実利用の確認を終えた後に判断する。デザイン刷新・スマホの詳細配置・Graphの残課題は引き続き未解決だが、実認証接続の不要な前提にしない。
+
+| 区分 | 現在の状態 |
+| --- | --- |
+| 実装済み | Google provider、DB session、本人設定、Capsuleの明示保存／読取／編集、限定共有／停止、所有者認可 |
+| 隔離環境で確認 | 実PG＋検証OIDCの2 User認可・保存・再訪。実Googleとは別 |
+| 実接続済み | VPSのKG・preview認証付きHTTPS。会員は未接続 |
+| 外部設定待ち | Google Web client JSON、callback登録、本人のGoogle操作 |
+| 適用待ち | VPSのmember profile／専用PG、migration、有効化。管理者sudoが必要 |
+| 未確認 | 実Google callback、実sessionでの保存・logout後再訪、実機スマホ。これらを隔離試験で代用しない |
+
+### Google Cloudの操作
+
+1. [Google Auth Platform](https://console.cloud.google.com/auth/overview)で、このサービス専用のprojectを作成／選択する。
+2. Brandingでアプリ名・サポートメール・連絡先を設定。今回は初回接続試験で、公開審査を開始する指示ではない。
+3. AudienceはExternal／Testing。今回使用する本人アカウントをtest userへ追加する。Testingをアクセス制御の代わりにせず、サービスのpreview認証は維持する。
+4. Clientsで「ウェブアプリケーション」を作成し、redirectを完全一致で登録する。`https://graph.isinxnisi.net/api/auth/callback/google`。今回 `.com` やlocalhostのcallbackを追加しない。
+5. client作成時にWeb JSONをダウンロードする。要求scopeはコードが指定するopenid／email／profileだけ。Drive等を追加しない。
+6. Git外の `~/.config/graph-knowledge/google-web.json` へ0600で保存する。directoryは0700で準備済み。チャットへは保存先だけを伝え、JSON／Secret本文は貼らない。WindowsのDownloadsにある場合もWSL側のこの保存先へコピーしてから使う。
+
+[Google公式のWeb client作成・秘密情報管理](https://developers.google.com/identity/protocols/oauth2/web-server)、[OpenID Connect設定](https://developers.google.com/identity/openid-connect/openid-connect)、[Better Authのcallback仕様](https://better-auth.com/docs/authentication/google)を照合。画面の名称差があれば目的・callbackを基準に案内し直す。
+
+### 一回の管理者適用
+
+`scripts/activate-production-member.sh TAG ARCHIVE GOOGLE_JSON`を追加。**実credentialの有効化は管理者の明示操作時だけ**行う。通常のWeb更新scriptではなく、初回PG構成の追加を含む専用手順である。
+
+- 配置bundleのSHA256SUMSとimage archive checksumを検査する。
+- 候補envを初回だけ生成。再試行は同じ候補を `prepare-production-member.py --check` で既存env・Google JSON・tagと照合し、秘密値を生成し直さない。
+- 候補envがなく既存member volumeがある場合は、初回とみなさず停止する。生成済みvolumeを削除して通さない。
+- 旧operatorでKGをbackupし、env／Compose／既存initをprivateに退避。PG起動後はcustom-format dumpを0600で保存する。
+- 非superuserを確認し、実Web用の接続情報でmigrationを二回実行、5件とchecksumの維持を確認する。
+- 成功後だけ稼働envを切替え、Webだけ更新する。KGの再seed・Neo4j再起動・Caddy／preview認証変更は行わない。
+- WebのKG readiness・member status・匿名profile拒否に加え、実Webから認証開始URLを作成してPG接続／state保存・callback／最小scopeを確認する。Googleへブラウザを送る処理や、本人sessionの作成を代行しない。URL・state・cookie・credentialはログへ出さない。
+- 途中失敗は旧env／Composeへ戻し、Webを切替えた後なら旧Webも復旧する。会員volume・candidate・privateな退避は保持し、再試行時に再利用する。DBをrollback／DROPして古い状態へ戻さない。
+
+配置物の実パス・検証結果は下の実施記録へ追記する。Google JSONが届くまでは稼働構成を変更しない。sudoパスワードはチャットへ要求しない。管理者コマンドは配置物の検証を終えてから提示する。
+
+### 本人が確認する利用経路
+
+会員の確認は **https://graph.isinxnisi.net/** で行う。`.com`の日常画面は匿名探索の検証を継続し、会員無効のまま。originごとのブラウザ保存・cookie／sessionを共有しない。今回の保存試験はVPS画面で探索から始める。
+
+1. preview認証→`/member`→Google登録／ログイン。本人の表示名を確認し、設定変更→再読込→logout／login後にも維持されるか確認する。
+2. 同じVPS画面のGraphでPLUTO等を探索し、選んだ対象／主張からCapsuleを作る。「この内容をアカウントへ保存」で本人と内容を確認して明示保存する。ログインだけでlocal内容を送信しない。
+3. 保存したCapsuleを再閲覧・編集し、別ブラウザ／再ログインでも同じ所有者の一覧へ戻れるか確認する。参照のClaim／SourceとGraphへ往復する。
+4. 限定共有を発行し、別ブラウザで明示した版だけを確認する。受け手も現在はpreview認証が必要。会員のprivate URLは共有URLではない。共有停止後は旧リンクが失効することを確認する。
+5. 匿名private要求の拒否を実VPSで確認。別Userの404・所有者偽装拒否は隔離2 User試験の結果と区別し、第二の実Googleアカウントでの確認をしていなければ未確認と記録する。
+6. 実機スマホで登録／再訪と保存・根拠往復の代表操作を確認する。390pxブラウザ検証だけを実機Safari等の確認として報告しない。
+
+評価は目的・実際の対応・判断理由・未解決事項で記録する。Capsuleは説明と明示参照の保存であり、URL Graphの枝／座標保存とは別。今回この意味や保存形式を変えない。
+
+### 接続準備の実施記録（2026-10-14）
+
+- application sourceはmain `61bb9f1`。Web／opsをNode24.21.0でbuildし、tag `beta-member-20261014` を作成。秘密情報を含めない専用bundleを `/home/develop/graph-production-member-20261014` へ転送し、全配置fileとimage archiveのchecksum・shell構文をVPS上で確認した。まだ稼働構成へ適用していない。
+- archive SHA256は `4c6d1bdd722ccb19295dd074c0e6812e4b46f616ed6179e6807a59436b5dd33c`。Web image IDは `sha256:c39562dae161ff3df75de92b004a3faa8e8349f00c4369ea4ec0b04e37f90661`、opsは `sha256:ac5a40eeaed12b6f3d1d1848ce46d8f65be4537a7a06a3d9adb738ec7de5c8a6`。bundleのmanifestにも記録した。
+- 候補envのPythonテスト8/8。root適用scriptの制御フロー試験は1 test内4 scenario（正常／再実行、migration失敗→再試行、Web失敗→旧Web復旧、不明な既存volumeの拒否）が成功。これはnetworkなし・Docker socketなしのコンテナ内stub試験で、本番適用の実施を意味しない。
+- `npm run test:member` は専用PG＋検証OIDCで33/33成功。`test-production-member.ts beta-member-20261014` は実image・実PGで非superuser、5 migrationの二回適用、Google認証開始、最小scope／state cookie、Origin等の拒否、PG停止503→Web再起動なしの回復を確認。Google本人認証は行っていない。
+- 会員Playwrightは共有・停止、Graphから保存／再訪／非所有者拒否、編集、本人設定を390／1440px（設定は320／1440px）で確認。初回8件中7件成功、PCの保存テスト1件は古い中央ペインの非表示ボタン指定で失敗したため、現在の正規導線である左ペインへ修正。再実行1/1成功後、runnerの終了後cleanupも整え、最終再実行1/1・command exit 0を確認した。
+- スマホ幅の設定・共有先の実画像で、設定保存、説明→Graph→参照／根拠→コメントの順と横はみ出しがないことを確認。共有閲覧は縦に長く、実機での読みやすさは本人確認へ残す。実Googleの登録・再ログイン・第二アカウント保護をこの結果で代替しない。
+- `npm run typecheck`／`npm run lint`成功。既存のpredicate比較warning1件のみ。公開imageの初回回帰は28/29成功、リロード後にGraphが復元される新契約に対して検索パネルを開かず入力する旧テストが1件失敗した。復元完了を確認して検索パネルへ切り替える操作へ更新し、対象ケースの単独再実行1/1成功。認証や探索の実装を変更してテストを通したものではない。
+- 修正後の `test-production.ts beta-member-20261014` は公開Playwright29/29成功（9.5分）。隔離KGの無書込plan、105知識Node／128 Relationship、再適用unchanged、backup0600、再起動保持、DB停止503→Web再起動なしの復旧を含め正常終了した。既存3200と3210〜3215のdataset API、TunnelのHTMLも200を確認。稼働VPS・凍結datasetへのseed／DB変更は行っていない。
+
+Google JSONの受領・private転送と確認後、管理者へ次の一回の操作を案内する。credentialがない現在は実行しない。
+
+```bash
+sudo bash /home/develop/graph-production-member-20261014/scripts/activate-production-member.sh \
+  beta-member-20261014 \
+  /home/develop/graph-production-member-20261014/images.tar.gz \
+  /home/develop/graph-production-member-20261014/google-web.json
+```
+
+適用後のHTTPS確認、本人のGoogleログイン、保存／再訪・共有停止の結果を追記するまでは工程13未完了。本人操作とsudoが必要な境界であり、配置準備の成功を実接続へ読み替えない。

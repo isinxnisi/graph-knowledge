@@ -47,6 +47,38 @@ class ProductionMemberPreparation(unittest.TestCase):
         self.run_prepare()
         self.assertEqual(self.output.read_text(), previous)
 
+    def test_check_candidate_reuses_initial_passwords_without_writing(self):
+        self.run_prepare()
+        before = self.output.read_bytes()
+        module.check_candidate(self.base, self.google, self.output, "test-step13")
+        self.assertEqual(self.output.read_bytes(), before)
+        self.base.write_bytes(before)  # Retry after successful activation is also valid.
+        module.check_candidate(self.base, self.google, self.output, "test-step13")
+
+    def test_check_rejects_tag_google_or_base_changes(self):
+        self.run_prepare()
+        with self.assertRaises(ValueError):
+            module.check_candidate(self.base, self.google, self.output, "different-tag")
+        self.data["web"]["client_secret"] = "another-google-secret"
+        self.write_google()
+        with self.assertRaises(ValueError):
+            module.check_candidate(self.base, self.google, self.output, "test-step13")
+        self.data["web"]["client_secret"] = "test-only-google-secret"
+        self.write_google()
+        self.base.write_text("NEO4J_PASSWORD=changed\nGRAPH_IMAGE_TAG=previous\n")
+        with self.assertRaises(ValueError):
+            module.check_candidate(self.base, self.google, self.output, "test-step13")
+
+    def test_check_rejects_candidate_tampering_and_provider_change(self):
+        self.run_prepare()
+        self.output.write_text(self.output.read_text() + "EXTRA_SETTING=unexpected\n")
+        with self.assertRaises(ValueError):
+            module.check_candidate(self.base, self.google, self.output, "test-step13")
+        self.output.unlink()
+        self.base.write_text("MEMBER_AUTH_PROVIDER=fixture\n")
+        with self.assertRaises(ValueError):
+            self.run_prepare()
+
     def test_reject_wrong_redirect_and_non_web_client(self):
         for data in [{"installed": self.data["web"]}, {"web": {**self.data["web"], "redirect_uris": ["https://other.invalid/callback"]}}]:
             self.data = data

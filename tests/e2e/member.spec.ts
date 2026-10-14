@@ -160,7 +160,7 @@ for (const width of [390, 1440]) {
     await page.getByRole("button", { name: "青葉ハルから探索を開始", exact: true }).click();
     await expect(page.getByTestId("graph-counts")).toHaveText("Entity 5 / Claim 7");
     if (width < 800) await page.getByRole("navigation", { name: "探索画面の切り替え" }).getByRole("button", { name: "検索", exact: true }).click();
-    await page.locator(width < 800 ? "#explorer-search" : "#explorer-graph").getByRole("button", { name: "Capsuleを作る・読む", exact: true }).click();
+    await page.locator("#explorer-search").getByRole("button", { name: "Capsuleを作る・読む", exact: true }).click();
     const dialog = page.getByRole("dialog", { name: "自分のCapsule" });
     await dialog.getByRole("button", { name: "読む", exact: true }).click();
     const popup = context.waitForEvent("page");

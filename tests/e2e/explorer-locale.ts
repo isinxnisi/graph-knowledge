@@ -146,6 +146,9 @@ export function checkExplorerLocale() {
     await page.getByRole("button", { name: "キャンセル", exact: true }).click();
     await other.close(); await language(page, "en");
     await page.reload(); await expect(page.locator("html")).toHaveAttribute("lang", "en");
+    // URL restoration now retains the Graph panel on reload; open search explicitly.
+    await expect(page.getByTestId("graph-counts")).toHaveText("Entity 4 / Claim 5");
+    await page.getByRole("navigation", { name: "Explorer panels" }).getByRole("button", { name: "Search", exact: true }).click();
     await page.route("**/api/entities?**", route => route.fulfill({ status: 503, json: { error: { message: "データベースを利用できません。時間をおいて再試行してください。" } } }));
     await page.getByLabel("Name or alias").fill("PLUTO"); await page.locator("#explorer-search").getByRole("button", { name: "Search", exact: true }).click();
     await expect(page.locator("#explorer-search").getByRole("alert")).toContainText("database is unavailable");
