@@ -1,5 +1,8 @@
 "use client";
 import Icon from "./Icon";
+import PublicServices from "./PublicServices";
+import type { PublicServicesPolicy } from "../lib/domain/publication";
+import { trackPublicEvent } from "../lib/client/public-events";
 import { rememberExplorationReturn } from "../lib/client/account-navigation";
 import { explorationUrlLabels } from "../lib/i18n/exploration-url";
 import { useExplorationUrl } from "../lib/client/use-exploration-url";
@@ -53,7 +56,7 @@ function GraphNotice({ message, transient }: { message: string; transient: boole
   return visible ? <p className={styles.graphNotice} role="status">{message}</p> : null;
 }
 
-export default function Explorer({ dataset = "demo", initialRoot }: { dataset?: DatasetMode; initialRoot?: string }) {
+export default function Explorer({ dataset = "demo", initialRoot, services }: { dataset?: DatasetMode; initialRoot?: string; services?: PublicServicesPolicy }) {
   const searchParams = useSearchParams();
   const { locale } = useUiLocale();
   const ui = explorerLabels(locale);
@@ -95,6 +98,7 @@ export default function Explorer({ dataset = "demo", initialRoot }: { dataset?: 
     switchRoot(entity, mode, canvas.current?.capture() ?? null); setOverview(null); setActivePane("graph");
   };
   const startFrom = (entity: EntitySummary, broad = false) => {
+    trackPublicEvent("explore_start");
     chooseRoot(entity, broad); setActivePane("graph");
   };
   const inspectFromClaim = (id: string) => {
@@ -131,7 +135,7 @@ export default function Explorer({ dataset = "demo", initialRoot }: { dataset?: 
   const loading = Object.values(graph.expansions).filter((meta) => meta.loading).length;
   const feedbackKey = `${key}:${loading}:${selectedEntity ? graph.expansions[selectedEntity.id]?.open : ""}`;
   const blocked = Object.values(graph.expansions).find((meta) => meta.blocked);
-  return <div className={styles.explorer}>
+  return <><div className={styles.explorer}>
     <SiteHeader dataset={dataset} onBeforeAccountNavigation={beforeAccountNavigation} />
     {navigationError && <p role="alert">{locale === "en" ? "The exploration is not ready to restore. Wait for loading to finish, or save the workspace before leaving." : "探索を復元できる状態にできませんでした。取得の完了を待つか、探索途中を保存してから移動してください。"}</p>}
     <nav ref={paneNavigation} className={styles.paneNavigation} aria-label={panes.navigation}>
@@ -158,7 +162,7 @@ export default function Explorer({ dataset = "demo", initialRoot }: { dataset?: 
         {blocked && <p role="alert" className={styles.error}>{explorerMessage(blocked.error!, locale)}</p>}
         <GraphCanvas onViewChange={urlState.schedule} navigation={<GraphNavigator compact key={graph.generation} nodes={graph.nodes} selection={selection} onNavigate={(id) => {
           inspectEntity(id); canvas.current?.focusEntity(id);
-        }} />} ref={canvas} restoration={viewRestoration} interactionBlocked={!!overview || savedViewsOpen || workspaceOpen || capsuleOpen || !!reading} onEntityDoubleClick={(id) => { if (graph.nodes[id]) setOverview(graph.nodes[id]); }} graph={graph} selection={selection} onEntity={selectEntity} onRelation={selectRelation} onRelationDoubleClick={(id) => { selectRelation(id); setActivePane("detail"); }} onToggleEntity={toggleEntity} feedback={<>
+        }} />} ref={canvas} restoration={viewRestoration} interactionBlocked={!!overview || savedViewsOpen || workspaceOpen || capsuleOpen || !!reading} onEntityDoubleClick={(id) => { if (graph.nodes[id]) setOverview(graph.nodes[id]); }} graph={graph} selection={selection} onEntity={selectEntity} onRelation={id => { selectRelation(id); if (matchMedia("(min-width: 801px)").matches) trackPublicEvent("relation_detail"); }} onRelationDoubleClick={(id) => { selectRelation(id); setActivePane("detail"); if (matchMedia("(max-width: 800px)").matches) trackPublicEvent("relation_detail"); }} onToggleEntity={id => { if (!graph.expansions[id]?.open) trackPublicEvent("graph_expand"); toggleEntity(id); }} feedback={<>
           <div className={`${styles.feedback} ${!graph.centerId ? styles.initialFeedback : ""}`} aria-live="polite"><div key={feedbackKey} className={styles.feedbackContent}><p data-testid="selection-status">{ui.selected}：{selectionText}</p><p>{loading ? ui.graphLoading(loading) : selectedEntity ? graph.expansions[selectedEntity.id]?.expanded ? ui.expanded : graph.expansions[selectedEntity.id]?.pages.length ? ui.closed : ui.expandHelp : <><span className={styles.desktopRelationHelp}>{ui.grouped}</span><span className={styles.touchRelationHelp}>{entry.touchRelationHelp}</span></>}</p></div></div>
           {graph.notice && !dataChanged && <GraphNotice key={`${graph.generation}:${graph.clock}:${graph.notice}`} message={contentMessage(graph.notice, locale)} transient={graph.notice === "取得済みの枝を復元しました。" || graph.notice === overviewLabels("ja").restored} />}
         </>} />
@@ -198,5 +202,5 @@ export default function Explorer({ dataset = "demo", initialRoot }: { dataset?: 
       onClose={() => setSavedViewsOpen(false)} onOpen={(entity, conditions) => {
         openSavedView(entity, conditions, canvas.current?.capture() ?? null); setActivePane("graph");
       }} />}
-  </div>;
+  </div>{services && (services.ads || services.analytics) && <PublicServices policy={services} beforeNavigation={beforeAccountNavigation} />}</>;
 }

@@ -1,4 +1,5 @@
 "use client";
+import { trackPublicEvent } from "../lib/client/public-events";
 import { useEffect, useId, useRef, useState } from "react";
 import { useUiLocale } from "../lib/client/ui-locale";
 import { explorerLabels, explorerMessage } from "../lib/i18n/explorer";
@@ -85,7 +86,7 @@ export function ClaimCard({ claim, nodes, title, dataset, referenceDataset = dat
       <h5>{citation.source.title}</h5>
       <p className={styles.sourceLocator}>{ui.locator}：{citation.locator}</p>
       {citation.source.url && <p>{usableUrl(citation.source)
-        ? <a href={citation.source.url} target="_blank" rel="noopener noreferrer" aria-label={ui.openSource}>{text.openSource}<span aria-hidden="true"> ↗</span></a>
+        ? <a href={citation.source.url} target="_blank" rel="noopener noreferrer" aria-label={ui.openSource} onClick={() => trackPublicEvent("source_open")}>{text.openSource}<span aria-hidden="true"> ↗</span></a>
         : <span>{ui.demoUrl}：{citation.source.url}</span>}</p>}
       {citation.eventParticipationEvidence && <p><strong>{eventText.evidence}：</strong>{citation.eventParticipationEvidence.originalText}<br />{eventText.language}：{citation.eventParticipationEvidence.language}</p>}
       {citation.positionEvidence && <p><strong>{positionText.evidence}：</strong>{citation.positionEvidence.originalText}<br />{positionText.language}：{citation.positionEvidence.language}</p>}

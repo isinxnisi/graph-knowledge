@@ -101,6 +101,7 @@ export default function SiteHeader({ dataset, page = "explore", user, onBeforeAc
           <label className={styles.language}>{ui.language}<select value={locale} onChange={event => setLocale(event.target.value === "en" ? "en" : "ja")}><option value="ja">日本語</option><option value="en">English</option></select></label>
           <p>{ui.languageHelp}</p>
           <p className={styles.dataHelp}>{text.datasetAbout}：{data.badge}<br />{data.description}</p>
+          <p><a href="/privacy" onClick={closeAccount}>{locale === "en" ? "Privacy & external data transmission" : "プライバシー・外部送信について"}</a></p>
           {languageError && <p role="status">{ui.languageFailed}</p>}
           {storageError && <p role="status">{text.appearanceFailed}</p>}
         </div>

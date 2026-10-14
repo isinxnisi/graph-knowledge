@@ -1,6 +1,6 @@
 import type { DatasetMode } from "../domain/dataset";
 const ja = {
-  "public-kg": { searchExample: "例：PLUTO・ハイゼンベルク・ソルヴェイ", badge: "共通Knowledge Graph · 公開準備中", description: "資料で確認された人物・作品・組織・出来事の関係を辿ります。登録範囲は網羅的ではありません。", empty: "登録範囲では関係がありません。実世界の不存在を示しません。" },
+  "public-kg": { searchExample: "例：PLUTO・ハイゼンベルク・ソルヴェイ", badge: "知識の地図 · 公開β", description: "資料で確認された人物・作品・組織・出来事の関係を辿ります。登録範囲は網羅的ではありません。", empty: "登録範囲では関係がありません。実世界の不存在を示しません。" },
   "pilot-event-v1": { searchExample: "例：ソルヴェイ・ローレンツ・ディラック", badge: "特定Event参加パイロット v1", description: "資料で確認した開催回への参加を辿ります。招待・全日程出席・全回参加を示しません。", empty: "今回の登録範囲では関係がありません。実世界の不存在を示しません。" },
   "pilot-science-v2": { searchExample: "例：ハイゼンベルク・ニールス・ボーア研究所", badge: "科学・研究機関パイロット v2", description: "資料で確認した関わりと立場を辿ります。同時在籍・面識・雇用形態を示しません。", empty: "今回の登録範囲では関係がありません。実世界の不存在を示しません。" },
   "pilot-science-v1": { searchExample: "例：ゲッティンゲン大学・パウリ", badge: "科学・研究機関パイロット v1", description: "資料で確認した人物と機関の関わりを辿ります。同時在籍・面識・共同研究を示しません。", empty: "今回の登録範囲では関係がありません。実世界の不存在を示しません。" },
@@ -9,7 +9,7 @@ const ja = {
   "pilot-urasawa-v2": { searchExample: "例：長崎尚志・PLUTO", badge: "少数実データパイロット v2", description: "確認した資料の範囲を辿る少量の実データです。網羅的ではありません。", empty: "今回の登録範囲では関係がありません。実世界の不存在を示しません。" },
 };
 const en: typeof ja = {
-  "public-kg": { searchExample: "e.g. PLUTO, Heisenberg, Solvay", badge: "Shared Knowledge Graph · Preview", description: "Explore documented relations between people, works, organizations and events. Coverage is not comprehensive.", empty: "No relations in the registered data. This does not imply absence in the real world." },
+  "public-kg": { searchExample: "e.g. PLUTO, Heisenberg, Solvay", badge: "Knowledge map · Public beta", description: "Explore documented relations between people, works, organizations and events. Coverage is not comprehensive.", empty: "No relations in the registered data. This does not imply absence in the real world." },
   "pilot-event-v1": { searchExample: "e.g. Solvay, Lorentz, Dirac", badge: "Specific event participation pilot v1", description: "Explore documented participation in a specific occurrence. Not invitations, attendance throughout, or the entire series.", empty: "No relations in this dataset. This does not imply absence in the real world." },
   "pilot-science-v2": { searchExample: "e.g. Heisenberg, Niels Bohr Institute", badge: "Science and research institutions pilot v2", description: "Explore documented involvement and positions. Not concurrent presence, acquaintance or employment type.", empty: "No relations in this dataset. This does not imply absence in the real world." },
   "pilot-science-v1": { searchExample: "e.g. Göttingen, Pauli", badge: "Science and research institutions pilot v1", description: "Explore documented involvement between people and institutions. Not concurrent presence, acquaintance or collaboration.", empty: "No relations in this dataset. This does not imply absence in the real world." },

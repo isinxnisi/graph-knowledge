@@ -570,3 +570,27 @@ VPS用Web `beta-member-ux-20261015` はbuild `Jxmhq1WXHENGO5dDJa-22`、config di
 ```bash
 sudo bash /home/develop/graph-member-ux-20261015/scripts/activate-ui-update.sh
 ```
+
+### 会員UXの反映確認・公開β／GA4／AdMaxの実装と適用準備（2026-10-15）
+
+ユーザーが会員UXのVPS反映を確認。その後、こちらから正式／旧previewの認証後build `Jxmhq1WXHENGO5dDJa-22`、正式dataset revision `5e2a94af-9061-4087-bb7a-045a3c0133f4`、Google有効・匿名profile 401を独立確認した。ユーザーは一般公開を承認し、GA4 `G-PSKLWY33K4`・AdMax二寸法・検索掲載の実装と、翌日の最小操作で適用できる準備を依頼。初期の本番限定方針はGA4に適用し、後続指定により広告はローカル・Tunnelでも検証する。[現在の適用・復旧・外部サービス確認](design/PUBLIC_BETA_LAUNCH.md)を正本とする。
+
+正式Host＋公開flagのmetadata・robots・sitemapを追加。rootと状態なしEntity探索、privacyだけindexを許可し、query付き探索はnoindex・状態なしcanonicalとする。会員／認証／限定共有／APIはnoindexを維持。sitemapはpublished Claimに接続する2,109 Entityとroot／privacyの2,111 URLで、Graph状態やprivate URLを含まない。共通OGP画像はサービスの基本表現に留め、保存された構図を描く基盤や永続保存を増やさない。
+
+GA4は公開Explorerだけで利用者の許可後に読み込み、会員・認証・限定共有・privacy・確認環境へ置かない。gtagは入力欄やGraph履歴のない専用文書で動かし、親からは許可した操作名だけを渡す。ページ位置は正式root／UUID pathだけ、referrerは空、titleは固定。初期自動page_viewを止め、明示閲覧は一文書一回。検索・開始・展開・関係詳細・資料を開く操作に本文・検索語・本人情報・Capsule・共有tokenを含めない。privacy説明・個別設定・拒否／撤回を追加し、拒否しても探索・会員機能を利用できる。
+
+AdMaxは探索workspaceの下へ非固定で配置し、Graphの高さ・座標・選択・zoomを広告で変えない。PC728×90・スマホ320×50を幅に応じて切り替え、未配信や空の描画iframeだけでは高さを確保しない。最初のopaque sandbox案は親の保護には成功したが、実SDKが子iframeへ書き込めないことを実ブラウザで確認した。テストfixtureが当初この描画方法を再現していなかった点も補正した。広告を `ads.plunode.net`（ローカルは `ads.localhost:3200`）へ分け、子文書描画を許す一方、広告originからアプリ・会員・認証・KG APIをCaddy／Next Proxyで404にする構成へ変更。parent DOMを読めないことと、子iframeへ書けることの両方を確認した。指定のスマホtagにoverlay設定を観察したが、SDKはiframe内でoverlayを要求しない動作だった。Cloudflare設定は変更しない。
+
+公開scriptはchecksum・既存operatorの受入済みconfig／manifest digest・platform・既存構成を確認し、KG backup→Web更新→候補の公開meta・匿名会員API保護→Caddy切替→HTTPS・旧preview・広告originの非公開経路拒否を確認する。以前のsite・env・composeをprivateに控え、失敗時は境界を先に戻して旧Webへ復帰する。DB再投入・会員書込・DB再起動・Google設定変更・MTU変更は含めない。DNSを追加できる権限とパスワード付きsudoは既存境界に従い本人へ残す。追加承認待ちとはしない。
+
+検証：関連unitは当初126件成功、その後の広告origin隔離test追加・UI初期化補正後の新8件が成功（既存120件と合わせ128件）。jsdomのdialog.closeをmockし、初期timerを明示actでflushした。初期のrole検索はtimerの反映前に1秒で失敗していたため、期限を延ばさず初期化待ちを修正した。root TypeScript・対象ESLint・host／Dockerの本番buildが成功。Pythonの候補生成4件＋shell orchestrationの5経路（正常、Web失敗、HTTPS失敗、operator不一致、未審査site）を成功確認。shell試験はpathを一時領域へ置換し、Docker／外部通信等をstubにした隔離試験であり、VPSの実適用ではない。VPS実Caddy2.6でも三siteの候補をvalidateし、サービスreloadは行っていない。
+
+最終版の実ブラウザ5件が成功（37.7秒）。正式／previewのindex差、2,111 URLのsitemap、匿名会員API 401、広告originのアプリ／会員API 404、OGP PNG、1440／375／320pxの配信・空描画／非配信・撤回・親の保護とGraph不変、GA4同意・一回の閲覧・query更新で増やさないこと・private画面へのtagなし・日英表示を確認。最初のbrowser試験ではNextのcanonical正規化による末尾slash差と、試験proxyのFetch Metadata／接続の扱いを修正し、製品の保護条件を緩めず再確認した。配信fixtureはAdMaxと同じ子iframeへのdocument.writeを使い、実広告の配信成功とは数えない。
+
+最終Docker imageでもPC／375／320pxの広告と実KG Graphの3件が成功（27.9秒）。ローカル実タグはPC／スマホともtag 200、SDKの302経由までは観察したが、creativeは未表示。一般ブラウザ・正式広告originでの実配信は未確認として残す。実Google tagは200で読み込み、page_view一回・scroll・searchの送信requestを捕捉した。query／fragmentの検証用文字列を含まないことを確認し、送信自体は試験で遮断したためGA4の実受信とはしない。自動scrollを探索行動と混同しないよう、本人手順へ拡張計測オフを記載した。
+
+3200をbuild `klK0VYMdieifGUjjyJCu3` へ更新。旧build・private設定の控えを `/tmp/plunode-public-before-launch-20261015` に保持し、広告flagだけを追加。GA4／index公開flagは確認環境で有効にしない。ローカル／Tunnelともroot 200・同build、revision `82b01515-594c-48ca-b4b6-515eefac83ca` 維持、Google有効、robots全拒否、analytics文書404を確認。Tunnel経由の広告3寸法が成功（29.5秒）。DNS適用前の広告originだけをbrowser内で3200へ接続し、配信fixtureを使った。Tunnelでの実広告配信とは区別する。同じ最終版でPC／375pxの会員往復・枝／位置／zoom復元・表示名更新・logout・1タップ選択／ダブルタップ詳細の2件も成功（35.5秒）。会員応答だけはbrowser fixtureで、本人Google操作は別に残す。
+
+VPS用Web `beta-public-20261015` はconfig `sha256:f773689a7d047d469ab45b03de9bde3052a0620ebf941e6a4c6b7bbcfef4a982`、build `rd_DddxGbCU5kpZ57caJp`。Webだけのarchiveは109,457,583 bytes、SHA256 `b46f793ff7a63dc73cee83fba1e7e73f9b65157bee7eb7a883bf2cdf78b13988`。`/home/develop/graph-public-beta-20261015` への転送と最終照合・commit／pushの結果を追記する。現時点のVPSは既存会員UX版・Basic／noindexを維持。`ads.plunode.net` のCNAME追加→sudo一回が残る。一般公開・GA4受信・実広告配信・Search Console・Google側の一般利用者受付状態を、準備済みだけで完了と扱わない。Capsule上位UX・スマホ探索全体・既存の公開β未達と24工程の完了数は維持する。
+
+最終の目視ではfull-page screenshotに伴う同一media判定の再通知で広告の表示flagが消えることを発見。幅分類が本当に変わる時だけ初期化するよう修正し、再通知・tag切替のunitと最終buildで確認した。画像取得はviewportを変えない方式に揃え、PC・320pxの広告が描画された状態を目視した。検証用送信のGA4受信、実広告表示、本人の公開操作とは区別する。

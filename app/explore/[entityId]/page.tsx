@@ -2,17 +2,17 @@ import Explorer from "../../../components/Explorer";
 import { datasetMode } from "../../../lib/domain/dataset";
 import { getEntity } from "../../../lib/server/graph";
 import { z } from "zod";
+import { explorationMetadata, publicationPolicy } from "../../../lib/server/publication";
 
 export const dynamic = "force-dynamic";
-export async function generateMetadata({ params }: { params: Promise<{ entityId: string }> }) {
+export async function generateMetadata({ params, searchParams }: { params: Promise<{ entityId: string }>; searchParams: Promise<Record<string, string | string[] | undefined>> }) {
   const { entityId } = await params;
-  let title = "関係性を探索する";
+  let title = "Plunode — 知識のつながりを探索する", description = "現在のKnowledge Graphから関係を辿り、資料を確認できます。", exists = false;
   if (z.uuidv4().safeParse(entityId).success) {
-    try { title = `${(await getEntity(entityId)).entity.name} — 関係性を探索する`; } catch { /* Client shows the read failure with retry. */ }
+    try { const { entity } = await getEntity(entityId); title = `${entity.name}の関係を探索する — Plunode`; description = entity.description || description; exists = true; } catch { /* Client shows the read failure with retry. */ }
   }
-  const description = "現在のKnowledge Graphから、URLに記録した探索条件・枝・配置を復元します。";
-  return { title, description, robots: { index: false, follow: false }, openGraph: { title, description } };
+  return explorationMetadata(`/explore/${entityId}`, Object.keys(await searchParams).length > 0, title, description, exists);
 }
 export default async function Page({ params }: { params: Promise<{ entityId: string }> }) {
-  return <Explorer dataset={datasetMode(process.env.GRAPH_DATASET)} initialRoot={(await params).entityId} />;
+  return <Explorer services={await publicationPolicy()} dataset={datasetMode(process.env.GRAPH_DATASET)} initialRoot={(await params).entityId} />;
 }

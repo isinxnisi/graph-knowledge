@@ -5,7 +5,7 @@ COPY package.json package-lock.json ./
 RUN npm ci --no-audit --no-fund
 
 FROM dependencies AS builder
-COPY tsconfig.json next.config.ts ./
+COPY tsconfig.json next.config.ts proxy.ts ./
 COPY app ./app
 COPY components ./components
 COPY lib ./lib

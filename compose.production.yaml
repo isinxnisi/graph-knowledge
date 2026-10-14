@@ -45,6 +45,8 @@ services:
       graph-neo4j: { condition: service_healthy }
     environment:
       <<: [*graph-environment, *member-environment]
+      PLUNODE_PUBLIC_ENABLED: "${PLUNODE_PUBLIC_ENABLED:-0}"
+      PLUNODE_ADS_ENABLED: "${PLUNODE_ADS_ENABLED:-0}"
     networks:
       default: { gw_priority: 0 }
       web-egress: { gw_priority: 1 }

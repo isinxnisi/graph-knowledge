@@ -1,0 +1,23 @@
+.services { margin: 12px auto; padding: 0 12px; box-sizing: border-box; width: 100%; max-width: 1080px; color: var(--color-muted); font: var(--font-body); font-size: 11px; }
+.footer { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 14px; padding: 8px 0; border-top: 1px solid var(--color-border); }
+.services .footer button { padding: 4px 0; border: 0; background: transparent; color: var(--color-muted); font-size: 11px; }
+.footer a, .dialog a { color: var(--color-accent); }
+.notice { display: flex; align-items: center; flex-wrap: wrap; gap: 6px 12px; padding: 8px 10px; border-radius: 5px; background: var(--color-canvas); }
+.services .notice p { margin: 0; flex: 1 1 220px; font-size: 11px; }
+.notice > div { display: flex; flex-wrap: wrap; gap: 6px; }
+.services .notice button { padding: 5px 9px; font-size: 11px; }
+.adSlot { height: 0; overflow: hidden; text-align: center; max-width: 100%; }
+.adSlot[data-filled="true"] { height: 108px; padding: 3px 0; }
+.adSlot[data-filled="true"][data-device="mobile"] { height: 68px; }
+.adLabel { display: block; font-size: 9px; line-height: 12px; color: var(--color-muted); }
+.adSlot iframe { display: block; border: 0; margin: auto; max-width: none; }
+.dialog { width: min(460px, calc(100vw - 32px)); padding: 20px; box-sizing: border-box; color: var(--color-text); background: var(--color-panel); border: 1px solid var(--color-control-border); border-radius: var(--radius-panel); max-height: calc(100dvh - 32px); overflow-y: auto; font: var(--font-body); font-size: 13px; }
+.dialog::backdrop { background: rgb(20 35 55 / .32); }
+.heading { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 12px; }
+.heading h2 { margin: 0; font: 22px var(--font-editorial); }
+.dialog label { display: flex; gap: 10px; align-items: flex-start; padding: 12px 0; }
+.dialog label input { width: 18px; height: 18px; flex: 0 0 auto; accent-color: var(--color-accent); }
+.dialog small { display: block; font-size: 12px; color: var(--color-muted); margin-top: 4px; }
+.dialog button, .notice button { min-height: 34px; border: 1px solid var(--color-control-border); border-radius: var(--radius-control); background: var(--color-panel); color: var(--color-accent); cursor: pointer; }
+.dialog .save { padding: 8px 14px; background: var(--color-accent); color: var(--color-on-accent); }
+@media (max-width: 800px) { .services { padding: 0; } .footer, .notice { padding-inline: 12px; } .services .footer button, .services .notice button, .dialog button { min-height: 44px; } }

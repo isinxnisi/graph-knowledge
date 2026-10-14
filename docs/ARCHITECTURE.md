@@ -4,6 +4,8 @@
 
 ## 前提と設計の位置づけ
 
+2026-10-15、一般公開はユーザー承認済み。公開flag＋正式Hostでmetadata／robots／sitemapとGA4を分け、広告は専用originだけで配信する。AdMaxの子iframe描画互換を保ちつつ、Caddy／Next Proxyで広告originから会員・認証・KG API・アプリ画面を除外する。GA4は公開探索の専用文書＋許可した操作名だけのbridgeとし、探索状態URL・本文・private情報を渡さない。既存の認証・所有権・KG・会員PGモデルは維持。[公開βの現行境界と適用](design/PUBLIC_BETA_LAUNCH.md)を参照。
+
 2026-10-11に公開準備へ着手。検証用の凍結datasetを維持し、安定dataset `public-kg` と投入releaseを分離した[共通KG適用経路](design/PUBLIC_KG_RELEASES.md)を追加。ローカルの生成・dry-run・追加/表記訂正に加え、明示撤回/新UUID差替え、revision付きcursor/探索失効、KG単独backup/restoreを実装。旧Claimの意味・根拠と会員PGを維持する。2026-10-12、単一Web＋Neo4jを既存Caddy配下へ配置し、`graph.isinxnisi.net` のpreview認証付きHTTPS・実ブラウザを確認した。一般公開は未実施。会員公開時のPGは未接続。共通ヘッダ・アカウント入口とUI基礎の採用範囲は[共通UI契約](design/PRODUCT_UI_FOUNDATIONS.md)を参照する。[進捗と未完了](PUBLIC_BETA_PROGRESS.md)を参照。
 
 Phase 16で[Relation・Claim・Predicate・typed qualificationの基本設計](design/RELATION_MODEL_PRINCIPLES.md)を採用した。独立命題とdomain固有限定、null／polarity／期間、identity・比較・表示、根拠と取込由来の境界を今後の設計基準とする。三用途の実装は維持し、新しい語彙・schema・API・UI・datasetは追加していない。下記の初期仕様とPhase別記録を読む際は、後続の採用契約とこの基本設計を併せて確認する。

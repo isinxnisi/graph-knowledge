@@ -1,5 +1,6 @@
 "use client";
 import Icon from "./Icon";
+import { trackPublicEvent } from "../lib/client/public-events";
 import { useUiLocale } from "../lib/client/ui-locale";
 import { explorerMessage } from "../lib/i18n/explorer";
 
@@ -34,7 +35,7 @@ export default function SearchPanel({ onChoose, placeholder = "例：青葉ハ�
     setLoading(true);
     try {
       const response = await searchEntities(q, controller.signal, kind);
-      if (!controller.signal.aborted) setResult(response);
+      if (!controller.signal.aborted) { setResult(response); trackPublicEvent("search"); }
     } catch (error) { if (!controller.signal.aborted) setError(errorMessage(error)); }
     finally { if (!controller.signal.aborted) setLoading(false); }
   }
