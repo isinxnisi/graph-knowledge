@@ -97,7 +97,7 @@ export function useExplorationUrl({ dataset, initialRoot, graph, capture, apply,
     return () => { disposed = true; clearTimeout(timeout); controller.abort(); };
     // Restore only on entry/retry, never in response to our own replaceState.
   }, [initialRoot, dataset, attempt, schedule]);
-  return { busy, failure, notice, ready, schedule, retry: () => { setBusy(true); setFailure(null); setAttempt(a => a + 1); },
+  return { busy, failure, notice, ready, schedule, flush: update, retry: () => { setBusy(true); setFailure(null); setAttempt(a => a + 1); },
     abandon: () => { failed.current = false; setFailure(null); history.replaceState(history.state, "", "/"); },
     copy: async () => { if (!update()) return; try { await navigator.clipboard.writeText(location.href); setNotice(explorationUrlLabels(locale).copied); } catch { setNotice(explorationUrlLabels(locale).manualCopy); } } };
 }

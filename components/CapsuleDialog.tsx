@@ -84,7 +84,7 @@ export function CapsuleReader({ capsule, onEdit, explorationLinks = false, noteA
         {selectedEntity && <><h4>{selectedEntity.name}</h4><p>{explorerLabels(locale).kinds[selectedEntity.kind]}</p><p>{selectedEntity.description}</p><p>{selectedEntity.aliases.join(" / ")}</p>
           {selectedEntity.event && <><dl className={styles.claimFacts}><dt>{eventParticipationLabels(locale).eventPeriod}</dt><dd>{formatPeriod(selectedEntity.event.period, locale)}</dd></dl><p>{eventParticipationLabels(locale).periodHelp}</p></>}
           <code>{selectedEntity.id}</code>
-          {explorationLinks && <p><a href={readingHref({ kind: "entity", dataset: capsule.dataset, id: selectedEntity.id })} target="_blank" rel="noopener noreferrer">{memberLabels(locale).exploreEntity}</a></p>}</>}
+          {explorationLinks && <p><a href={readingHref({ kind: "entity", dataset: capsule.dataset, id: selectedEntity.id })}>{memberLabels(locale).exploreEntity}</a></p>}</>}
         {!claimIds.length && <p className={styles.muted}>{text.chooseClaim}</p>}
         {claimIds.map(id => resolved.claims[id] && <ClaimCard referenceDataset={capsule.dataset} key={id} idPrefix="capsule-" title={text.selectedClaim} claim={resolved.claims[id]} nodes={resolved.entities} />)}
         {selection && <div className={css.readerNavigation}><button onClick={() => {
@@ -96,7 +96,7 @@ export function CapsuleReader({ capsule, onEdit, explorationLinks = false, noteA
   </section>;
 }
 
-export default function CapsuleDialog({ dataset, graph, onClose }: { dataset: DatasetMode; graph: GraphState; onClose: () => void }) {
+export default function CapsuleDialog({ dataset, graph, onClose, onBeforeAccountNavigation }: { onBeforeAccountNavigation?: () => boolean; dataset: DatasetMode; graph: GraphState; onClose: () => void }) {
   const { locale } = useUiLocale();
   const text = capsuleLabels(locale);
   const dialog = useRef<HTMLDialogElement>(null);
@@ -179,7 +179,7 @@ export default function CapsuleDialog({ dataset, graph, onClose }: { dataset: Da
   return <dialog lang={locale} ref={dialog} className={`${styles.conditionDialog} ${css.dialog}`} aria-labelledby="capsule-title" onCancel={event => { event.preventDefault(); exit("close"); }} {...backdrop}>
     <div className={css.title}><h2 id="capsule-title">{text.title}</h2><DialogCloseButton label={text.close} onClick={() => exit("close")} /></div>
     <p>{text.help}</p><p className={styles.muted}>{text.local}</p>
-    <p><a href="/member" target="_blank" rel="noopener noreferrer">{memberLabels(locale).launch}</a></p>
+    {mode !== "create" && <p><a href="/member" onClick={event => { if (onBeforeAccountNavigation && !onBeforeAccountNavigation()) event.preventDefault(); }}>{memberLabels(locale).launch}</a></p>}
     {error && <p role="alert" className={styles.error}>{contentMessage(error, locale)}</p>}{message && <p role="status">{contentMessage(message, locale)}</p>}
     {!ready && <button onClick={reload}>{text.reload}</button>}
     {leaving ? <section role="alert"><p>{text.draftExit}</p><button onClick={() => exit(leaving, true)}>{text.discard}</button><button data-capsule-focus onClick={() => setLeaving(null)}>{editing ? text.continueEdit : text.continue}</button></section> : <>
@@ -205,7 +205,7 @@ export default function CapsuleDialog({ dataset, graph, onClose }: { dataset: Da
         </form>
       </> : selected ? <>
         <button onClick={() => { setSelected(null); setMessage(null); }}>{text.library}</button>
-        <p><a href={`/member?import=${selected.id}`} target="_blank" rel="noopener noreferrer">{memberLabels(locale).importLaunch}</a></p>
+        <p><a href={`/member?import=${selected.id}`} onClick={event => { if (onBeforeAccountNavigation && !onBeforeAccountNavigation()) event.preventDefault(); }}>{memberLabels(locale).importLaunch}</a></p>
         <CapsuleReader key={`${selected.id}:${selected.revision}`} capsule={selected} onEdit={resolved => {
           setEditing(selected); setCandidates(capsuleEditCandidates(selected, resolved, visible)); setTitle(selected.title); setNote(selected.note); setEntityIds(selected.entityIds); setClaimIds(selected.claimIds); setMode("create"); setMessage(null); setError(null);
         }} />

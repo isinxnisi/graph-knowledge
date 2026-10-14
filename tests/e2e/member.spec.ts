@@ -20,7 +20,7 @@ async function login(page: Page, identity = "検証ユーザーA") {
   await page.getByRole("button", { name: "検証用OIDCでログイン", exact: true }).click();
   await page.getByRole("link", { name: identity, exact: true }).click();
   await page.waitForURL(url => url.pathname === "/member");
-  await expect(page.getByText(identity, { exact: true })).toBeVisible();
+  await expect(page.getByTestId("site-header").getByLabel(`${identity}のアカウントメニュー`, { exact: true })).toBeVisible();
   await expect(page.getByRole("button", { name: "アカウントと一覧を再確認", exact: true })).toBeEnabled();
 }
 checkMemberLocale(login, mockKnowledge);

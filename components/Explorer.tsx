@@ -1,5 +1,6 @@
 "use client";
 import Icon from "./Icon";
+import { rememberExplorationReturn } from "../lib/client/account-navigation";
 import { explorationUrlLabels } from "../lib/i18n/exploration-url";
 import { useExplorationUrl } from "../lib/client/use-exploration-url";
 import { designLabels } from "../lib/i18n/design";
@@ -84,6 +85,11 @@ export default function Explorer({ dataset = "demo", initialRoot }: { dataset?: 
   const [detailReturn, setDetailReturn] = useState<{ generation: number; entityId: string; source: { kind: "claim" | "relation"; id: string } } | null>(null);
   const { invalidateData, dataChanged, reloadData, graph, selection, previous, viewRestoration, switchRoot, restorePrevious, openSavedView, openWorkspace, changePredicates, chooseRoot, inspectEntity, selectEntity, selectClaim, selectRelation, expand, close, toggleEntity } = useGraphExplorer();
   const urlState = useExplorationUrl({ dataset, initialRoot, graph, locale, capture: () => canvas.current?.capture() ?? null, apply: value => { openWorkspace(value, canvas.current?.capture() ?? null); setActivePane("graph"); } });
+  const [navigationError, setNavigationError] = useState(false);
+  const beforeAccountNavigation = () => {
+    if (graph.centerId && !urlState.flush()) { setNavigationError(true); return false; }
+    rememberExplorationReturn(); setNavigationError(false); return true;
+  };
   const restricted = graph.predicates !== null || (graph.contributionRoles ?? null) !== null || (graph.organizationPositions ?? null) !== null || (graph.eventRoles ?? null) !== null;
   const switchFrom = (entity: EntitySummary, mode: "broad" | "same") => {
     switchRoot(entity, mode, canvas.current?.capture() ?? null); setOverview(null); setActivePane("graph");
@@ -126,7 +132,8 @@ export default function Explorer({ dataset = "demo", initialRoot }: { dataset?: 
   const feedbackKey = `${key}:${loading}:${selectedEntity ? graph.expansions[selectedEntity.id]?.open : ""}`;
   const blocked = Object.values(graph.expansions).find((meta) => meta.blocked);
   return <div className={styles.explorer}>
-    <SiteHeader dataset={dataset} />
+    <SiteHeader dataset={dataset} onBeforeAccountNavigation={beforeAccountNavigation} />
+    {navigationError && <p role="alert">{locale === "en" ? "The exploration is not ready to restore. Wait for loading to finish, or save the workspace before leaving." : "探索を復元できる状態にできませんでした。取得の完了を待つか、探索途中を保存してから移動してください。"}</p>}
     <nav ref={paneNavigation} className={styles.paneNavigation} aria-label={panes.navigation}>
       {(["search", "graph", "detail"] as const).map(pane => <button key={pane} aria-label={panes[pane]} aria-pressed={activePane === pane} aria-controls={`explorer-${pane}`} onClick={() => setActivePane(pane)}><Icon name={pane === "search" ? "search" : pane === "graph" ? "graph" : "book"} /><span>{pane === "detail" ? ui.detail : panes[pane]}</span></button>)}
     </nav>
@@ -151,8 +158,8 @@ export default function Explorer({ dataset = "demo", initialRoot }: { dataset?: 
         {blocked && <p role="alert" className={styles.error}>{explorerMessage(blocked.error!, locale)}</p>}
         <GraphCanvas onViewChange={urlState.schedule} navigation={<GraphNavigator compact key={graph.generation} nodes={graph.nodes} selection={selection} onNavigate={(id) => {
           inspectEntity(id); canvas.current?.focusEntity(id);
-        }} />} ref={canvas} restoration={viewRestoration} interactionBlocked={!!overview || savedViewsOpen || workspaceOpen || capsuleOpen || !!reading} onEntityDoubleClick={(id) => { if (graph.nodes[id]) setOverview(graph.nodes[id]); }} graph={graph} selection={selection} onEntity={selectEntity} onRelation={(id) => { selectRelation(id); setActivePane("detail"); }} onToggleEntity={toggleEntity} feedback={<>
-          <div className={`${styles.feedback} ${!graph.centerId ? styles.initialFeedback : ""}`} aria-live="polite"><div key={feedbackKey} className={styles.feedbackContent}><p data-testid="selection-status">{ui.selected}：{selectionText}</p><p>{loading ? ui.graphLoading(loading) : selectedEntity ? graph.expansions[selectedEntity.id]?.expanded ? ui.expanded : graph.expansions[selectedEntity.id]?.pages.length ? ui.closed : ui.expandHelp : ui.grouped}</p></div></div>
+        }} />} ref={canvas} restoration={viewRestoration} interactionBlocked={!!overview || savedViewsOpen || workspaceOpen || capsuleOpen || !!reading} onEntityDoubleClick={(id) => { if (graph.nodes[id]) setOverview(graph.nodes[id]); }} graph={graph} selection={selection} onEntity={selectEntity} onRelation={selectRelation} onRelationDoubleClick={(id) => { selectRelation(id); setActivePane("detail"); }} onToggleEntity={toggleEntity} feedback={<>
+          <div className={`${styles.feedback} ${!graph.centerId ? styles.initialFeedback : ""}`} aria-live="polite"><div key={feedbackKey} className={styles.feedbackContent}><p data-testid="selection-status">{ui.selected}：{selectionText}</p><p>{loading ? ui.graphLoading(loading) : selectedEntity ? graph.expansions[selectedEntity.id]?.expanded ? ui.expanded : graph.expansions[selectedEntity.id]?.pages.length ? ui.closed : ui.expandHelp : <><span className={styles.desktopRelationHelp}>{ui.grouped}</span><span className={styles.touchRelationHelp}>{entry.touchRelationHelp}</span></>}</p></div></div>
           {graph.notice && !dataChanged && <GraphNotice key={`${graph.generation}:${graph.clock}:${graph.notice}`} message={contentMessage(graph.notice, locale)} transient={graph.notice === "取得済みの枝を復元しました。" || graph.notice === overviewLabels("ja").restored} />}
         </>} />
         <p className={styles.graphUsageHelp}>{entry.selectedHelp}</p>
@@ -181,7 +188,7 @@ export default function Explorer({ dataset = "demo", initialRoot }: { dataset?: 
       switchFrom(entity, "broad"); closeReading();
     }} />}
     {overview && <EntityOverview key={overview.id} entity={overview} dataset={dataset} restricted={restricted} onClose={() => setOverview(null)} onSwitch={(mode) => switchFrom(overview, mode)} />}
-    {capsuleOpen && <CapsuleDialog dataset={dataset} graph={graph} onClose={() => setCapsuleOpen(false)} />}
+    {capsuleOpen && <CapsuleDialog onBeforeAccountNavigation={beforeAccountNavigation} dataset={dataset} graph={graph} onClose={() => setCapsuleOpen(false)} />}
     {workspaceOpen && <WorkspaceDialog dataset={dataset} graph={graph} captureView={() => canvas.current?.capture() ?? null}
       onClose={() => setWorkspaceOpen(false)} onOpen={workspace => {
         openWorkspace(workspace, canvas.current?.capture() ?? null); setActivePane("graph");

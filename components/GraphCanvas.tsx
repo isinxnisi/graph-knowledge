@@ -15,14 +15,14 @@ export type GraphCanvasHandle = { capture: () => GraphView | null; focusEntity: 
 import type { GraphState, Selection } from "../lib/client/graph-state";
 import { entityLabel, edgeRoutes, displayRelations, relationId } from "../lib/client/graph-presentation";
 import { initialPositions, additionalPositions, contentPositions } from "../lib/client/graph-layout";
-import { createNodeClickHandler } from "../lib/client/graph-interaction";
+import { createNodeClickHandler, createRelationClickHandler } from "../lib/client/graph-interaction";
 import { attachGraphBadges } from "../lib/client/graph-badges";
 import { createGraphMotion } from "../lib/client/graph-motion";
 import styles from "./Explorer.module.css";
 
-type Props = { onViewChange?: () => void; contentOnly?: boolean; ref?: Ref<GraphCanvasHandle>; feedback?: ReactNode; navigation?: ReactNode; restoration?: ViewRestoration | null; interactionBlocked?: boolean; graph: GraphState; selection: Selection; onEntity: (id: string) => void; onRelation: (id: string) => void; onToggleEntity: (id: string) => void; onEntityDoubleClick?: (id: string) => void };
+type Props = { onViewChange?: () => void; contentOnly?: boolean; ref?: Ref<GraphCanvasHandle>; feedback?: ReactNode; navigation?: ReactNode; restoration?: ViewRestoration | null; interactionBlocked?: boolean; graph: GraphState; selection: Selection; onEntity: (id: string) => void; onRelation: (id: string) => void; onRelationDoubleClick?: (id: string) => void; onToggleEntity: (id: string) => void; onEntityDoubleClick?: (id: string) => void };
 
-export default function GraphCanvas({ onViewChange, contentOnly = false, ref, feedback, navigation, restoration, interactionBlocked, graph, selection, onEntity, onRelation, onToggleEntity, onEntityDoubleClick }: Props) {
+export default function GraphCanvas({ onViewChange, contentOnly = false, ref, feedback, navigation, restoration, interactionBlocked, graph, selection, onEntity, onRelation, onRelationDoubleClick, onToggleEntity, onEntityDoubleClick }: Props) {
   const { locale } = useUiLocale();
   const ui = explorerLabels(locale);
   const viewportLabels = graphViewportLabels(locale);
@@ -33,8 +33,9 @@ export default function GraphCanvas({ onViewChange, contentOnly = false, ref, fe
   const badgeLayer = useRef<HTMLDivElement>(null);
   const core = useRef<Core | null>(null);
   const motion = useRef<ReturnType<typeof createGraphMotion> | null>(null);
-  const handlers = useRef({ onEntity, onRelation, onToggleEntity, onEntityDoubleClick, selection });
+  const handlers = useRef({ onEntity, onRelation, onRelationDoubleClick, onToggleEntity, onEntityDoubleClick, selection });
   const gestures = useRef<ReturnType<typeof createNodeClickHandler> | null>(null);
+  const relationGestures = useRef<ReturnType<typeof createRelationClickHandler> | null>(null);
   const generation = useRef(-1);
   const previousCenter = useRef<string | null>(null);
   const previousCondition = useRef("all");
@@ -50,7 +51,7 @@ export default function GraphCanvas({ onViewChange, contentOnly = false, ref, fe
   function changeZoom(factor: number) {
     const cy = core.current;
     if (!cy || !hasNodes || interactionBlocked) return;
-    gestures.current?.cancel();
+    gestures.current?.cancel(); relationGestures.current?.cancel();
     cy.resize();
     cy.zoom({ level: Math.min(cy.maxZoom(), Math.max(cy.minZoom(), cy.zoom() * factor)),
       renderedPosition: { x: cy.width() / 2, y: cy.height() / 2 } });
@@ -60,7 +61,7 @@ export default function GraphCanvas({ onViewChange, contentOnly = false, ref, fe
     if (!cy || !selectedId || interactionBlocked) return;
     const selected = cy.getElementById(selectedId);
     if (!selected.length) return;
-    gestures.current?.cancel();
+    gestures.current?.cancel(); relationGestures.current?.cancel();
     cy.resize();
     if (selection?.kind === "entity") {
       cy.zoom(Math.max(1, cy.zoom()));
@@ -83,14 +84,14 @@ export default function GraphCanvas({ onViewChange, contentOnly = false, ref, fe
     if (!cy) return;
     const node = cy.getElementById(id);
     if (!node.length || !node.isNode()) return;
-    gestures.current?.cancel();
+    gestures.current?.cancel(); relationGestures.current?.cancel();
     cy.resize();
     cy.zoom(Math.max(1, cy.zoom()));
     cy.center(node);
   } }), []);
-  useEffect(() => { if (interactionBlocked) gestures.current?.cancel(); }, [interactionBlocked]);
-  useEffect(() => { handlers.current = { onEntity, onRelation, onToggleEntity, onEntityDoubleClick, selection }; }, [onEntity, onRelation, onToggleEntity, onEntityDoubleClick, selection]);
-  useEffect(() => { gestures.current?.cancel(); }, [graph.generation]);
+  useEffect(() => { if (interactionBlocked) { gestures.current?.cancel(); relationGestures.current?.cancel(); } }, [interactionBlocked]);
+  useEffect(() => { handlers.current = { onEntity, onRelation, onRelationDoubleClick, onToggleEntity, onEntityDoubleClick, selection }; }, [onEntity, onRelation, onRelationDoubleClick, onToggleEntity, onEntityDoubleClick, selection]);
+  useEffect(() => { gestures.current?.cancel(); relationGestures.current?.cancel(); }, [graph.generation]);
   useEffect(() => { gestures.current?.selectionChanged(selection?.kind === "entity" ? selection.id : null); }, [selection?.kind, selection?.id]);
   const selectedOpen = selection?.kind === "entity" ? graph.expansions[selection.id]?.open : undefined;
   useEffect(() => { gestures.current?.cancelPending(); }, [selectedOpen]);
@@ -132,17 +133,19 @@ export default function GraphCanvas({ onViewChange, contentOnly = false, ref, fe
       select: (id) => handlers.current.onEntity(id), toggle: (id) => handlers.current.onToggleEntity(id),
       doubleClick: (id) => handlers.current.onEntityDoubleClick?.(id),
     });
+    const relationClicks = createRelationClickHandler(id => handlers.current.onRelation(id), id => handlers.current.onRelationDoubleClick?.(id));
+    relationGestures.current = relationClicks;
     gestures.current = clicks;
-    const removeBadges = attachGraphBadges(cy, badgeLayer.current!, styles.relationPatch, id => { clicks.cancel(); handlers.current.onRelation(id); });
+    const removeBadges = attachGraphBadges(cy, badgeLayer.current!, styles.relationPatch, id => { clicks.cancel(); relationClicks.click(id); });
     cy.on("mouseover", "node", event => event.target.addClass("hovered"));
     cy.on("mouseout", "node", event => event.target.removeClass("hovered"));
-    cy.on("tap", "node", (event) => clicks.click(event.target.id(), event.originalEvent?.timeStamp));
-    cy.on("tap", "edge", (event) => { clicks.cancel(); handlers.current.onRelation(event.target.id()); });
-    cy.on("tap", (event) => { if (event.target === cy) clicks.cancel(); });
-    cy.on("drag", "node", () => clicks.cancel());
+    cy.on("tap", "node", (event) => { relationClicks.cancel(); clicks.click(event.target.id(), event.originalEvent?.timeStamp); });
+    cy.on("tap", "edge", (event) => { clicks.cancel(); relationClicks.click(event.target.id()); });
+    cy.on("tap", (event) => { if (event.target === cy) { clicks.cancel(); relationClicks.cancel(); } });
+    cy.on("drag pan zoom", () => { clicks.cancel(); relationClicks.cancel(); });
     const resize = new ResizeObserver(() => cy.resize());
     resize.observe(container.current);
-    return () => { motion.current?.dispose(); motion.current = null; removeBadges(); clicks.cancel(); gestures.current = null; themeObserver.disconnect(); resize.disconnect(); cy.destroy(); core.current = null; generation.current = -1; initialLayoutDone.current = false; };
+    return () => { motion.current?.dispose(); motion.current = null; removeBadges(); clicks.cancel(); relationClicks.cancel(); relationGestures.current = null; gestures.current = null; themeObserver.disconnect(); resize.disconnect(); cy.destroy(); core.current = null; generation.current = -1; initialLayoutDone.current = false; };
   }, []);
 
   useEffect(() => {
@@ -250,7 +253,7 @@ export default function GraphCanvas({ onViewChange, contentOnly = false, ref, fe
         <output aria-label={viewportLabels.zoom} aria-live="off">{Math.round(zoom * 100)}%</output>
         <button aria-label={viewportLabels.zoomOut} title={viewportLabels.zoomOut} disabled={!hasNodes || interactionBlocked || zoom <= 0.15} onClick={() => changeZoom(1 / 1.25)}><Icon name="minus" /></button>
         <button aria-label={viewportLabels.fit} title={viewportLabels.fit} disabled={!hasNodes || interactionBlocked} onClick={() => {
-          gestures.current?.cancel(); core.current?.resize(); core.current?.fit(undefined, 24);
+          gestures.current?.cancel(); relationGestures.current?.cancel(); core.current?.resize(); core.current?.fit(undefined, 24);
         }}><Icon name="fit" /></button>
       </div>
       <div className={styles.cySurface} ref={container} onPointerDownCapture={() => core.current?.resize()} data-testid="graph-canvas" tabIndex={-1} role="img" aria-label={ui.graphAria} />

@@ -13,7 +13,7 @@ for (const [width, height] of [[375, 667], [320, 568]]) test(`${width}x${height}
     ? { json: { user: { ...user, name } } } : { status: 401, json: { error: { code: "UNAUTHENTICATED" } } }));
   await page.goto("/");
   const header = page.getByTestId("site-header");
-  await expect(header.getByRole("link", { name: `${name}のアカウントを開く（別タブ）` })).toBeVisible();
+  await expect(header.getByLabel(`${name}のアカウントメニュー`, { exact: true })).toBeVisible();
   await page.getByRole("button", { name: "PLUTOから探索を開始", exact: true }).click();
   const nav = page.getByRole("navigation", { name: "探索画面の切り替え" });
   await nav.getByRole("button", { name: "Graph", exact: true }).click();
@@ -34,8 +34,8 @@ for (const [width, height] of [[375, 667], [320, 568]]) test(`${width}x${height}
   const before = await view(page);
   let neighbors = 0;
   page.on("request", r => { if (r.url().includes("/neighbors")) neighbors++; });
-  await header.locator("summary").click();
-  await expect(header.getByText("ログイン中", { exact: true })).toBeVisible();
+  await header.getByLabel("表示設定", { exact: true }).click();
+  await expect(header.getByLabel(`${name}のアカウントメニュー`, { exact: true })).toBeVisible();
   await expect(header.getByRole("button", { name: "ダークモード", exact: true })).toBeVisible();
   const panel = header.getByRole("group", { name: "表示テーマ", exact: true }).locator("..");
   expect(await panel.evaluate(el => {
@@ -49,7 +49,7 @@ for (const [width, height] of [[375, 667], [320, 568]]) test(`${width}x${height}
   await page.keyboard.press("Escape");
   name = "切替後の本人";
   await page.evaluate(() => window.dispatchEvent(new StorageEvent("storage", { key: "graph-knowledge:member-session-changed", newValue: "changed" })));
-  await expect(header.getByRole("link", { name: `${name}のアカウントを開く（別タブ）` })).toBeVisible();
+  await expect(header.getByLabel(`${name}のアカウントメニュー`, { exact: true })).toBeVisible();
   expect(await view(page)).toEqual(before); expect(neighbors).toBe(0);
   if (width === 375) await page.screenshot({ path: "test-results/mobile-shell-graph.png" });
   await nav.getByRole("button", { name: "選択の詳細", exact: true }).click();
@@ -72,6 +72,6 @@ for (const [width, height] of [[375, 667], [320, 568]]) test(`${width}x${height}
   expect(await view(page)).toEqual(before); expect(neighbors).toBe(0);
   signedIn = false;
   await page.evaluate(() => window.dispatchEvent(new StorageEvent("storage", { key: "graph-knowledge:member-session-changed", newValue: "logout" })));
-  await expect(header.getByRole("link", { name: "アカウントを開く（別タブ）", exact: true })).toHaveAttribute("data-signed-in", "false");
+  await expect(header.getByRole("link", { name: "ログイン", exact: true })).toHaveAttribute("data-signed-in", "false");
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
 });

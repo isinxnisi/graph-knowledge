@@ -37,8 +37,8 @@ export default function MemberProfileSettings({ user, value, disabled, onChange,
       setError(cause instanceof MemberClientError && cause.status === 503 ? text.unavailable : text.profileFailed);
     } finally { if (!controller.signal.aborted) setBusy(false); }
   }
-  return <section id="account-settings" className={css.card} aria-labelledby="account-settings-title">
-    <h2 id="account-settings-title">{text.settings}</h2>
+  return <section id="account-settings" className={css.card} aria-label={text.settings}>
+    <h2 id="account-settings-title">{text.displayName}</h2>
     <form className={css.source} onSubmit={event => { event.preventDefault(); void save(); }}>
       <label htmlFor="member-display-name">{text.displayName}</label>
       <input id="member-display-name" value={value} maxLength={80} autoComplete="nickname" disabled={busy || disabled}

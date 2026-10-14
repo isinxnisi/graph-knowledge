@@ -54,7 +54,7 @@
 /* Header menus sit above the graph's internal overlays. */
 .header { z-index: 50; }
 .memberMark { display: inline-grid; place-items: center; flex: 0 0 auto; width: 26px; height: 26px; border-radius: 50%; background: var(--color-accent-soft); color: var(--color-accent-strong); font-size: 12px; font-weight: 600; }
-.accountLabel { max-width: 12ch; overflow: hidden; text-overflow: ellipsis; }
+.accountLabel { min-width: 0; max-width: 12ch; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
 .header .accountIdentity { display: grid; gap: 2px; margin: 0 0 12px; padding: 0 0 12px; border-bottom: 1px solid var(--color-border); color: var(--color-text); }
 .accountIdentity > span { font-size: 10px; color: var(--color-muted); }
 .settingsPanel { max-height: min(640px, calc(100dvh - 100px)); overflow-y: auto; overscroll-behavior: contain; }
@@ -68,9 +68,33 @@
   .navigation { padding: 0; border: 0; }
   .header .navigation a, .header .navigation > span, .settings > summary { display: inline-flex; justify-content: center; padding: 0; width: 44px; height: 44px; min-height: 44px; }
   .settings > summary { border-color: transparent; }
-  .header .accountLabel, .header .externalMark, .header .toolLabel { display: none; }
+  .header .externalMark, .header .toolLabel { display: none; }
   .navigation a > :global(.ui-icon), .settings > summary > :global(.ui-icon) { margin: 0; }
   .settingsPanel { max-height: calc(100dvh - 72px); }
   .header .dataHelp { display: block; font-size: 10px; margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--color-border); }
 }
 .accountIdentity strong { overflow-wrap: anywhere; }
+.accountMenu > summary { gap: 6px; border-color: transparent; }
+.accountMenu > summary > :global(.ui-icon:last-child) { width: 14px; height: 14px; }
+.accountMenu .settingsLinks { gap: 2px; margin-bottom: 6px; padding-bottom: 8px; }
+.accountMenu .settingsLinks a { gap: 10px; min-height: 40px; }
+.header .logout { width: 100%; justify-content: flex-start; min-height: 40px; }
+.header .accountMenu .settingsPanel { white-space: normal; }
+@media (max-width: 800px) {
+  .header .accountMenu > summary { width: auto; max-width: 158px; gap: 5px; padding: 0 5px; }
+  .header .accountLabel { display: block; max-width: 7em; font-size: 12px; }
+  .header .navigation > a[data-signed-in="false"] { width: auto; padding: 0 6px; gap: 4px; font-size: 12px; }
+  .header .exploreReturn > span { display: none; }
+  .header .accountMenu .settingsLinks a, .header .logout { min-height: 44px; width: 100%; justify-content: flex-start; }
+  .accountMenu .settingsPanel { right: -44px; }
+}
+@media (max-width: 360px) { .header:has(.exploreReturn) .memberMark { display: none; } }
+@media (max-width: 800px) {
+  .identity { flex: 0 0 auto; max-width: 92px; }
+  .brandMark { flex-shrink: 0; }
+  .tools { flex: 1; min-width: 0; justify-content: flex-end; }
+  .navigation { flex: 0 1 auto; min-width: 0; }
+  .accountMenu { flex: 0 1 auto; min-width: 0; max-width: 158px; }
+  .header .accountMenu > summary { max-width: 100%; min-width: 0; }
+  .tools > .settings { flex: 0 0 44px; }
+}

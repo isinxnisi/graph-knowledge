@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { memberProfileSchema, memberRequest, type MemberUser } from "./member-api";
+import { memberSessionEvent } from "./account-navigation";
 
 // Display identity only. Authorization and private content stay in the member APIs.
 export function useMemberIdentity(enabled = true) {
@@ -24,10 +25,12 @@ export function useMemberIdentity(enabled = true) {
     const restored = (event: PageTransitionEvent) => { if (event.persisted) refresh(); };
     refresh();
     window.addEventListener("focus", refresh); window.addEventListener("storage", storage);
+    window.addEventListener(memberSessionEvent, refresh);
     window.addEventListener("pageshow", restored); document.addEventListener("visibilitychange", refresh);
     return () => {
       controller?.abort(); clearTimeout(timer);
       window.removeEventListener("focus", refresh); window.removeEventListener("storage", storage);
+      window.removeEventListener(memberSessionEvent, refresh);
       window.removeEventListener("pageshow", restored); document.removeEventListener("visibilitychange", refresh);
     };
   }, [enabled]);

@@ -18,6 +18,7 @@ configure({ asyncUtilTimeout: 5000 });
 let identity: string | null;
 let fetchMock: ReturnType<typeof vi.fn>;
 beforeEach(() => {
+  vi.spyOn(window, "scrollTo").mockImplementation(() => {});
   identity = owner; localStorage.clear(); sessionStorage.clear();
   history.replaceState(null, "", `/member?capsule=${capsule.id}`);
   Object.defineProperty(document, "visibilityState", { configurable: true, value: "visible" });
@@ -43,6 +44,7 @@ async function visibility(value: "hidden" | "visible") {
 }
 describe("会員編集中のprivate表示と入力保持", () => {
   it("未保存の表示名は別タブ復帰で本人だけに戻り、別人には出ない", async () => {
+    history.replaceState(null, "", "/member#account-settings");
     render(<MemberCapsules dataset="demo" />);
     fireEvent.change(await screen.findByLabelText("表示名", { exact: true }), { target: { value: "未保存の自分の名前" } });
     await visibility("hidden"); identity = other; await visibility("visible");
@@ -71,7 +73,7 @@ describe("会員編集中のprivate表示と入力保持", () => {
     expect(update?.[1]?.headers).toMatchObject({ "X-Member-User": owner });
     expect(screen.queryByLabelText("自分の説明", { exact: true })).toBeNull();
     fireEvent.click(screen.getByRole("button", { name: "アカウントと一覧を再確認" }));
-    await screen.findByText("別人", { exact: true });
+    await screen.findByLabelText("別人のアカウントメニュー");
     await waitFor(() => expect(screen.getByRole("button", { name: "アカウントと一覧を再確認" }).hasAttribute("disabled")).toBe(false));
     expect(screen.queryByLabelText("自分の説明", { exact: true })).toBeNull();
     expect(document.body.textContent).not.toContain("本人だけの題名");
@@ -101,7 +103,7 @@ describe("本人投稿一覧からの失効通知", () => {
     fireEvent.click(screen.getByRole("button", { name: "アカウントの変更を保存" }));
     const save = fetchMock.mock.calls.find(call => call[1]?.method === "PUT")!;
     fetchMock.mockResolvedValueOnce(Response.json({ error: { code: "UNAUTHENTICATED" } }, { status: 401 }));
-    fireEvent.click(screen.getByRole("button", { name: "自分の投稿を見る" }));
+    fireEvent.click(screen.getByRole("navigation", { name: "アカウント内の移動" }).querySelector('a[href="#my-posts"]')!);
     await screen.findByText(/ログインが失効したか/);
     expect(save[1]?.signal?.aborted).toBe(true);
     await act(async () => { finish(Response.json({ capsule: { ...capsule, revision: 2 } })); });
@@ -161,7 +163,7 @@ describe("共有済み版の所有者再閲覧", () => {
     expect(document.body.textContent).not.toContain(capsule.content.title);
     expect(document.body.textContent).not.toContain("遅れて届く旧版の題名");
     await visibility("visible");
-    await screen.findByText("別人", { exact: true });
+    await screen.findByLabelText("別人のアカウントメニュー");
     await screen.findByText(/このCapsuleを閲覧できません/);
     expect(document.body.textContent).not.toContain(capsule.content.title);
     identity = owner; fireEvent.click(screen.getByRole("button", { name: "アカウントと一覧を再確認" }));
@@ -201,7 +203,7 @@ describe("共有済み版の所有者再閲覧", () => {
     await act(async () => { finish(Response.json({ capsule: { ...capsule, revision: 4, content: { ...capsule.content, title: "遅い比較の題名" } } })); });
     expect(document.body.textContent).not.toContain("現在の保存題名");
     expect(document.body.textContent).not.toContain("遅い比較の題名");
-    await visibility("visible"); await screen.findByText("別人", { exact: true });
+    await visibility("visible"); await screen.findByLabelText("別人のアカウントメニュー");
     expect(screen.queryByRole("region", { name: "共有時からの変更" })).toBeNull();
     identity = owner; fireEvent.click(screen.getByRole("button", { name: "アカウントと一覧を再確認" }));
     await screen.findByRole("button", { name: "現在の保存内容と比較" });
@@ -242,7 +244,7 @@ describe("追加した参照の所有者付き草稿", () => {
     fireEvent.click(await screen.findByRole("button", { name: "確認した参照を編集中の構成へ追加" }));
     expect((screen.getByRole("checkbox", { name: /黒川レン · 人物/ }) as HTMLInputElement).checked).toBe(true);
     await visibility("hidden"); identity = other; await visibility("visible");
-    await screen.findByText("別人", { exact: true });
+    await screen.findByLabelText("別人のアカウントメニュー");
     expect(screen.queryByLabelText("対象・主張の閲覧リンク")).toBeNull();
     expect(document.body.textContent).not.toContain("黒川レン");
     await waitFor(() => expect(screen.getByRole("button", { name: "アカウントと一覧を再確認" }).hasAttribute("disabled")).toBe(false));

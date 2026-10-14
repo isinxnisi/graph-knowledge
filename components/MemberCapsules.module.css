@@ -52,3 +52,56 @@
 .page button:hover:not(:disabled) { border-color: var(--color-accent); }
 .source input:focus, .source textarea:focus { border-color: var(--color-accent); }
 @media (prefers-reduced-motion: reduce) { .page button { transition: none; } }
+
+.memberLayout { display: grid; grid-template-columns: 190px minmax(0, 1fr); gap: 28px; align-items: start; }
+.memberContent { min-width: 0; }
+.memberLayout:not(:has(.memberNavigation)) { grid-template-columns: minmax(0, 680px); justify-content: center; }
+.memberNavigation { position: sticky; top: 16px; display: grid; gap: 4px; padding: 4px 0; }
+.memberNavigation a { box-sizing: border-box; display: flex; align-items: center; gap: 9px; min-height: 44px; padding: 5px 10px; border-radius: var(--radius-control); color: var(--color-muted); text-decoration: none; font-size: 13px; }
+.memberNavigation a[aria-current="page"] { color: var(--color-accent-strong); background: var(--color-accent-soft); font-weight: 600; }
+.memberNavigation a:hover { background: var(--color-hover); }
+.memberContent .pageHeader { padding: 0 0 12px; }
+.memberContent .pageHeader h1 { margin: 0 0 8px; font-size: 28px; }
+.memberContent .pageHeader p { margin: 0; font-size: 13px; }
+.feedback { padding: 8px 0 0; font-size: 13px; }
+.page .refresh { display: inline-flex; align-items: center; gap: 6px; min-height: 32px; margin: 0; padding: 4px 0; border-color: transparent; font-size: 12px; color: var(--color-muted); }
+.feedback:has(> .refresh:only-child) { padding-bottom: 0; }
+.memberContent .card { margin: 12px 0; padding: 16px; }
+.memberContent .card h2 { font-size: 20px; margin-bottom: 12px; }
+.listHeading { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
+.count { font-size: 12px; color: var(--color-muted); }
+.savedList { list-style: none; padding: 0; margin: 0; }
+.savedList > li { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 0; border-bottom: 1px solid var(--color-border); }
+.savedList > li:last-child { border: 0; padding-bottom: 0; }
+.savedList > li:first-child { padding-top: 0; }
+.savedList h3 { margin: 0 0 5px; padding: 0; border: 0; font-size: 15px; font-weight: 600; }
+.savedList p { margin: 0; color: var(--color-muted); font-size: 12px; }
+.actions { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; }
+.page .actions button { margin: 0; padding: 6px 10px; font-size: 12px; white-space: nowrap; }
+.readingTabs { display: flex; gap: 16px; margin: 8px 0 16px; border-bottom: 1px solid var(--color-border); }
+.page .readingTabs button { padding: 7px 4px; margin: 0; border: 0; border-bottom: 2px solid transparent; border-radius: 0; color: var(--color-muted); }
+.page .readingTabs button[aria-pressed="true"] { color: var(--color-accent-strong); border-bottom-color: var(--color-accent); }
+.importPanel > summary { display: flex; align-items: center; gap: 8px; cursor: pointer; list-style: none; font-size: 13px; min-height: 32px; }
+.importPanel > summary::-webkit-details-marker { display: none; }
+.importPanel > summary > :global(.ui-icon) { margin-left: auto; width: 14px; height: 14px; transition: transform var(--motion-quick) ease; }
+.importPanel[open] > summary > :global(.ui-icon) { transform: rotate(180deg); }
+.importBody { margin-top: 12px; padding-left: 12px; border-left: 1px solid var(--color-border); }
+.importBody h2 { display: none; }
+.importBody p { font-size: 13px; }
+@media (max-width: 800px) {
+  .memberLayout { grid-template-columns: minmax(0, 1fr); gap: 14px; }
+  .memberNavigation { position: static; display: flex; flex-wrap: wrap; gap: 2px; padding: 0 0 8px; border-bottom: 1px solid var(--color-border); }
+  .memberNavigation a { padding: 5px 8px; font-size: 12px; gap: 5px; }
+  .memberContent .pageHeader h1 { font-size: 25px; }
+  .savedList > li { display: block; }
+  .savedList .actions { margin-top: 10px; }
+  .page .actions button, .page .refresh, .importPanel > summary { min-height: 44px; }
+}
+
+.listHeading { margin-bottom: 12px; }
+.listCaption { color: var(--color-muted); font-size: 12px; }
+@media (max-width: 800px) {
+  .memberNavigation { flex-wrap: nowrap; }
+  .memberNavigation a { flex: 1; min-width: 0; justify-content: center; padding-inline: 4px; white-space: nowrap; }
+  .memberNavigation :global(.ui-icon) { display: none; }
+}

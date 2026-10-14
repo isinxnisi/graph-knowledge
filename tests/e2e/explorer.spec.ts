@@ -302,7 +302,7 @@ test("ダークモード: トグルでGraphも更新し探索・選択・表示�
       muted: [css.getPropertyValue("--color-muted").trim(), css.getPropertyValue("--color-panel").trim()] };
   });
   const before = await inspect();
-  await page.getByTestId("site-header").locator("summary").click();
+  await page.getByTestId("site-header").getByLabel("表示設定", { exact: true }).click();
   await page.getByRole("button", { name: "ダークモード", exact: true }).click();
   await expect(page.getByRole("button", { name: "ダークモード", exact: true })).toHaveAttribute("aria-pressed", "true");
   await expect.poll(async () => (await inspect()).text).not.toBe(before.text);

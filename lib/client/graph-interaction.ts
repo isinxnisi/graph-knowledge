@@ -1,6 +1,18 @@
 // 利用者向け操作の初期値。表示・DBの上限や管理ポリシーとは分離する。
 export const GRAPH_INTERACTION_DEFAULTS = Object.freeze({ doubleClickMs: 300 });
 
+export function createRelationClickHandler(select: (id: string) => void, open: (id: string) => void) {
+  let previous: { id: string; time: number } | null = null;
+  return {
+    cancel: () => { previous = null; },
+    click: (id: string, now = performance.now()) => {
+      const double = previous?.id === id && now - previous.time >= 0 && now - previous.time < GRAPH_INTERACTION_DEFAULTS.doubleClickMs;
+      previous = double ? null : { id, time: now };
+      if (double) open(id); else select(id);
+    },
+  };
+}
+
 type Actions = {
   isSelected: (id: string) => boolean;
   select: (id: string) => void;

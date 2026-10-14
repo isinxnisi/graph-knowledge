@@ -2,7 +2,7 @@ import { expect, test, type Page } from "@playwright/test";
 
 async function language(page: Page, locale: "ja" | "en") {
   const header = page.getByTestId("site-header");
-  await header.locator("summary").click();
+  await header.getByLabel("表示設定", { exact: true }).click();
   await header.locator('select').last().selectOption(locale);
   await page.keyboard.press("Escape");
   await expect(page.locator("html")).toHaveAttribute("lang", locale);

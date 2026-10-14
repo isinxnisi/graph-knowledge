@@ -117,7 +117,7 @@ export function checkPhoneExplorer() {
       const nav = page.getByRole("navigation", { name: "探索画面の切り替え" });
       const person = (await (await page.request.get("/api/entities?q=ローレンツ")).json()).items[0];
       const edge = await page.getByTestId("graph-canvas").evaluate((el, id) => (el as unknown as { _cyreg: { cy: import("cytoscape").Core } })._cyreg.cy.edges().filter(edge => edge.source().id() === id).first().id(), person.id);
-      await tapGraph(page, edge, true);
+      await tapGraph(page, edge, true, true);
       const detail = page.getByRole("region", { name: "Claim詳細", exact: true });
       await expect(detail).toContainText("会議議長");
       await expect(detail).toContainText("Président");

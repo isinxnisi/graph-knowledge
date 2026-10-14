@@ -28,6 +28,7 @@ for (const [subject, object, wording, width = 1440] of paths) test(`${width}px�
     const cy = (el as unknown as { _cyreg: { cy: Core } })._cyreg.cy;
     cy.edges().filter(e => e.source().id() === pair[0] && e.target().id() === pair[1]).first().emit("tap");
   }, [id(subject), id(object)]);
+  if (width < 800) await page.getByRole("navigation", { name: "探索画面の切り替え" }).getByRole("button", { name: "選択の詳細", exact: true }).click();
   const detail = page.getByRole("region", { name: "Claim詳細" });
   const overview = detail.getByTestId("relation-overview");
   const notes = overview.locator("details");
@@ -110,12 +111,12 @@ for (const [subject, object, wording, width = 1440] of paths) test(`${width}px�
   page.on("request", r => { if (r.url().includes("/neighbors")) neighborReads++; });
   if (subject === "手塚眞" && width === 1440) {
     const header = page.getByTestId("site-header");
-    await header.locator("summary").click();
+    await header.getByLabel("表示設定", { exact: true }).click();
     await header.locator("select").last().selectOption("en");
     await page.keyboard.press("Escape");
     await expect(page.getByRole("region", { name: "Claim details", exact: true }).getByRole("heading", { name: "Sources and records", exact: true })).toBeVisible();
     await expect(page.getByRole("region", { name: "Claim details", exact: true }).getByRole("navigation", { name: "Entities in this relation" })).toContainText("Person");
-    await header.locator("summary").click();
+    await header.getByLabel("表示設定", { exact: true }).click();
     await header.locator("select").last().selectOption("ja");
     await page.keyboard.press("Escape");
   }

@@ -10,6 +10,9 @@ import { capsulesKey, readCapsules, type LocalCapsule } from "../lib/client/loca
 import { MemberClientError, memberCreateResultSchema, memberImportRequest, memberItemSchema, memberListSchema, memberProfileSchema, memberReaderCapsule, memberRequest, type MemberUser } from "../lib/client/member-api";
 import { memberLabels } from "../lib/i18n/member";
 import SiteHeader from "./SiteHeader";
+import Icon from "./Icon";
+import AnimatedDetails from "./AnimatedDetails";
+import { notifyMemberSessionChange } from "../lib/client/account-navigation";
 import MemberAccountDeletion from "./MemberAccountDeletion";
 import MemberProfileSettings from "./MemberProfileSettings";
 import { capsuleLabels } from "../lib/i18n/capsules";
@@ -30,6 +33,8 @@ const textMessages = memberLabels();
 export default function MemberCapsules({ dataset, initialImport = "" }: { dataset: DatasetMode; initialImport?: string }) {
   const { locale } = useUiLocale();
   const text = memberLabels(locale), captions = capsuleLabels(locale), historyText = capsuleHistoryLabels(locale);
+  const [section, setSection] = useState<"saved" | "settings" | "posts">("saved");
+  const [readingTab, setReadingTab] = useState<"content" | "sharing">("content");
   const [user, setUser] = useState<MemberUser | null>(null);
   const [profileDraft, setProfileDraft] = useState<{ ownerId: string; name: string } | null>(null);
   const [provider, setProvider] = useState<"google" | "fixture" | null>(null);
@@ -95,7 +100,7 @@ export default function MemberCapsules({ dataset, initialImport = "" }: { datase
         if (opened.id !== id.toLowerCase() || (revision !== null && opened.revision !== Number(revision))) throw new Error("Context mismatch");
       }
       if (signal.aborted) return;
-      setUser(profile.user); setItems(result.capsules); setSelected(opened); setHistorical(revision !== null);
+      setUser(profile.user); setItems(result.capsules); setSelected(opened); setHistorical(revision !== null); setReadingTab(revision === null && query.get("manage") === "sharing" ? "sharing" : "content");
       const retained = draftRef.current;
       if (retained && retained.ownerId === profile.user.id && opened?.id === retained.base.id) setDraft({ ...retained, needsCheck: false });
     });
@@ -122,24 +127,35 @@ export default function MemberCapsules({ dataset, initialImport = "" }: { datase
     return () => { window.clearTimeout(initial); active.current?.abort(); window.removeEventListener("storage", changed); document.removeEventListener("visibilitychange", visibility); window.removeEventListener("pageshow", restored); };
   }, [dataset, refresh, clearPrivate]);
   useEffect(() => {
+    const sync = () => {
+      setSection(location.hash === "#account-settings" ? "settings" : location.hash === "#my-posts" ? "posts" : "saved");
+      requestAnimationFrame(() => { heading.current?.focus({ preventScroll: true }); window.scrollTo({ top: 0 }); });
+    };
+    const initial = setTimeout(sync, 0);
+    window.addEventListener("hashchange", sync);
+    return () => { clearTimeout(initial); window.removeEventListener("hashchange", sync); };
+  }, []);
+  useEffect(() => {
     if (!draft && !profileDraft) return;
     const warn = (event: BeforeUnloadEvent) => { event.preventDefault(); event.returnValue = ""; };
     window.addEventListener("beforeunload", warn);
     return () => window.removeEventListener("beforeunload", warn);
   }, [draft, profileDraft]);
-  function navigate(id: string | null, revision?: number) {
+  function navigate(id: string | null, revision?: number, sharing = false) {
     const url = new URL(location.href);
     if (id) url.searchParams.set("capsule", id); else url.searchParams.delete("capsule");
     if (id && revision !== undefined) url.searchParams.set("revision", String(revision)); else url.searchParams.delete("revision");
-    history.replaceState(null, "", url);
+    if (sharing) url.searchParams.set("manage", "sharing"); else url.searchParams.delete("manage");
+    history.replaceState(history.state, "", url);
     requestAnimationFrame(() => heading.current?.focus());
   }
-  function signalAuthChange() { try { localStorage.setItem(authEventKey, crypto.randomUUID()); } catch { /* Refresh on tab return still reauthorizes. */ } }
+  function signalAuthChange() { notifyMemberSessionChange(); }
   function logout(all: boolean) {
     void run(async signal => {
       await memberRequest(all ? "/api/auth/revoke-sessions" : "/api/auth/sign-out", z.unknown(), { method: "POST", body: {}, user: user?.id, signal });
       if (signal.aborted) return;
       clearPrivate(); navigate(null); signalAuthChange();
+      requestAnimationFrame(() => document.querySelector<HTMLElement>('[data-signed-in="false"]')?.focus());
     });
   }
   function login() {
@@ -160,12 +176,12 @@ export default function MemberCapsules({ dataset, initialImport = "" }: { datase
       memberReaderCapsule(result.capsule, dataset);
       if (signal.aborted) return;
       setItems(previous => [result.capsule, ...previous.filter(item => item.id !== result.capsule.id)]);
-      setSelected(result.capsule); setHistorical(false); setMessage(result.replayed ? text.replayed : text.saved); navigate(result.capsule.id);
+      setSelected(result.capsule); setHistorical(false); setReadingTab("content"); setMessage(result.replayed ? text.replayed : text.saved); navigate(result.capsule.id);
     });
   }
-  function read(id: string, revision?: number) {
+  function read(id: string, revision?: number, sharing = false) {
     if (!user) return;
-    setSelected(null); navigate(id, revision);
+    setSelected(null); setReadingTab(sharing ? "sharing" : "content"); navigate(id, revision, sharing);
     void run(async signal => {
       const result = await memberRequest(`/api/member/capsules/${id}${revision === undefined ? "" : `/revisions?revision=${revision}`}`, memberItemSchema, { user: user.id, signal });
       memberReaderCapsule(result.capsule, dataset);
@@ -199,26 +215,40 @@ export default function MemberCapsules({ dataset, initialImport = "" }: { datase
       if (!signal.aborted) { setItems(previous => previous.filter(item => item.id !== selected.id)); setSelected(null); setMessage(text.removed); navigate(null); }
     });
   }
-  return <><SiteHeader dataset={dataset} page="member" user={user} /><main lang={locale} className={css.page}>
-    <header className={css.pageHeader}><p className={css.eyebrow}>{text.private}</p><h1 ref={heading} tabIndex={-1}>{text.title}</h1><p>{text.help}</p>
-      <p className={css.muted}>{text.returnHelp}</p>
-    </header>
-    <section className={css.account} aria-label={text.title}>
-      {user ? <><p><strong>{user.name}</strong></p><button disabled={busy || !!draft} onClick={() => logout(false)}>{text.logout}</button><button disabled={busy || !!draft} onClick={() => setConfirm("logoutAll")}>{text.logoutAll}</button></> : !busy && provider && <><p>{text.loggedOut}</p><button disabled={!!draft} onClick={login}>{provider === "fixture" ? text.fixtureLogin : text.login}</button></>}
-      <button disabled={busy} onClick={refresh}>{text.refresh}</button>
+  const title = !user ? text.loginTitle : section === "settings" ? text.settings : section === "posts" ? text.postsTitle : text.savedTitle;
+  return <><SiteHeader dataset={dataset} page="member" user={user} onLogout={() => logout(false)} accountBusy={busy || !!draft || !!profileDraft} /><main lang={locale} className={css.page}>
+    <div className={css.memberLayout}>
+    {user && <nav className={css.memberNavigation} aria-label={text.navigation}>
+      <a href="#my-capsules" aria-current={section === "saved" ? "page" : undefined}><Icon name="capsule" />{text.savedTitle}</a>
+      <a href="#account-settings" aria-current={section === "settings" ? "page" : undefined}><Icon name="person" />{text.settings}</a>
+      <a href="#my-posts" aria-current={section === "posts" ? "page" : undefined}><Icon name="book" />{text.postsTitle}</a>
+    </nav>}
+    <div className={css.memberContent}>
+    <header className={css.pageHeader}><h1 ref={heading} tabIndex={-1}>{title}</h1><p>{user ? section === "settings" ? text.settingsHelp : section === "posts" ? text.postsHelp : text.savedHelp : text.loggedOut}</p></header>
+    <section id="member-login" className={user ? css.feedback : css.account} aria-label={text.title}>
+      {!user && !busy && provider && <button data-variant="primary" disabled={!!draft} onClick={login}>{provider === "fixture" ? text.fixtureLogin : text.login}</button>}
+      <button className={css.refresh} disabled={busy} onClick={refresh}><Icon name="history" />{text.refresh}</button>
       {draft && <p>{text.editingAccountHelp}</p>}
       {busy && <p role="status">{user ? text.busy : text.checking}</p>}
       {error && <p role="alert">{contentMessage(error, locale)}</p>}{message && <p role="status">{contentMessage(message, locale)}</p>}
       {confirm === "logoutAll" && <div role="alert"><p>{text.logoutAllConfirm}</p><button onClick={() => logout(true)}>{text.confirmLogoutAll}</button><button onClick={() => setConfirm(null)}>{text.cancel}</button></div>}
     </section>
-    {user && <MemberProfileSettings key={`profile:${user.id}`} user={user} value={profileDraft?.ownerId === user.id ? profileDraft.name : user.name} disabled={busy}
+    <div hidden={section !== "settings"}>
+    {user && (section === "settings" || !!profileDraft) && <MemberProfileSettings key={`profile:${user.id}`} user={user} value={profileDraft?.ownerId === user.id ? profileDraft.name : user.name} disabled={busy}
       onChange={name => setProfileDraft(name === null || name === user.name ? null : { ownerId: user.id, name })}
       onSaved={updated => { setUser(current => current?.id === updated.id ? updated : current); setProfileDraft(null); signalAuthChange(); }}
       onUnauthorized={() => fail(new MemberClientError(401, "UNAUTHENTICATED"))} />}
-    {user && <MemberAccountDeletion key={`deletion:${user.id}`} user={user} disabled={busy || !!draft || !!profileDraft}
+    {user && section === "settings" && <section className={css.card} aria-label={text.sessionTitle}><h2>{text.sessionTitle}</h2><p>{text.accountNavigationHelp}</p>
+      <div className={css.actions}><button disabled={busy || !!draft || !!profileDraft} onClick={() => logout(false)}>{text.logout}</button><button disabled={busy || !!draft || !!profileDraft} onClick={() => setConfirm("logoutAll")}>{text.logoutAll}</button></div>
+    </section>}
+    {user && section === "settings" && <MemberAccountDeletion key={`deletion:${user.id}`} user={user} disabled={busy || !!draft || !!profileDraft}
       onDeleted={() => { active.current?.abort(); clearPrivate(); setDraft(null); setProfileDraft(null); setBusy(false); setError(null); setMessage(text.accountDeleted); navigate(null); signalAuthChange(); }}
       onUnauthorized={() => { active.current?.abort(); setBusy(false); fail(new MemberClientError(401, "UNAUTHENTICATED")); }} />}
-    {user && <MemberPosts key={user.id} userId={user.id} onUnauthorized={() => { active.current?.abort(); setBusy(false); fail(new MemberClientError(401, "UNAUTHENTICATED")); }} />}
+    </div>
+    <div hidden={section !== "posts"}>
+    {user && section === "posts" && <MemberPosts initiallyOpen key={user.id} userId={user.id} onUnauthorized={() => { active.current?.abort(); setBusy(false); fail(new MemberClientError(401, "UNAUTHENTICATED")); }} />}
+    </div>
+    <div hidden={section !== "saved"}>
     {draft && user?.id !== draft.ownerId && <section className={css.card} aria-label={text.editTitle}>
       <p role="status">{text.draftLocked}</p><p>{text.draftMemory}</p>
       <a href="/member" target="_blank" rel="noopener noreferrer">{text.reauthenticate}</a>
@@ -227,30 +257,44 @@ export default function MemberCapsules({ dataset, initialImport = "" }: { datase
     </section>}
     {user && <section id="my-capsules" className={css.card} aria-label={text.library}>
       {draft && user.id === draft.ownerId ? <MemberCapsuleEditor draft={draft} current={selected} busy={busy} onChange={setDraft} onSave={update} onCancel={cancelEdit} onCheck={refresh} /> : selected && reading ? <><button disabled={busy} onClick={() => { setSelected(null); setConfirm(null); navigate(null); }}>{text.back}</button>
+        {!historical && <nav className={css.readingTabs} aria-label={selected.content.title}>
+          <button aria-pressed={readingTab === "content"} onClick={() => { setReadingTab("content"); navigate(selected.id); }}>{text.contentTab}</button>
+          <button aria-pressed={readingTab === "sharing"} onClick={() => { setReadingTab("sharing"); navigate(selected.id, undefined, true); }}>{text.sharingTab}</button>
+        </nav>}
+        <div hidden={readingTab !== "content"}>
         {historical && <div role="status"><h2>{historyText.reading(selected.revision)}</h2><p>{historyText.snapshotHelp}</p><button disabled={busy} onClick={() => read(selected.id)}>{historyText.current}</button></div>}
         <CapsuleRevisionList key={`revisions:${selected.id}:${selected.revision}:${user.id}`} capsuleId={selected.id} userId={user.id} disabled={busy} onRead={revision => read(selected.id, revision)} onUnauthorized={() => fail(new MemberClientError(401, "UNAUTHENTICATED"))} />
         {historical && <CapsuleComparison key={`comparison:${selected.id}:${selected.revision}:${user.id}`} snapshot={selected} userId={user.id} disabled={busy} onUnauthorized={() => fail(new MemberClientError(401, "UNAUTHENTICATED"))} />}
         <CapsuleReader key={`${selected.id}:${selected.revision}`} capsule={reading} explorationLinks onEdit={!historical && !busy && !draft ? resolved => {
           setDraft({ ownerId: user.id, base: selected, expected: selected, content: selected.content, resolved, needsCheck: false }); setError(null); setMessage(null);
         } : undefined} />
+        </div>
+        <div hidden={readingTab !== "sharing"}>
         {!historical && <CapsuleShareControls key={`share:${selected.id}:${selected.revision}`} capsule={selected} userId={user.id} disabled={busy} onUnauthorized={() => fail(new MemberClientError(401, "UNAUTHENTICATED"))} />}
+        </div>
+        <div hidden={readingTab !== "content"}>
         <CapsuleDiscussion key={`discussion:${selected.id}:${selected.revision}:${user.id}`} capsuleId={selected.id} revision={selected.revision} userId={user.id} draftCache={discussionDraft} onUnauthorized={() => fail(new MemberClientError(401, "UNAUTHENTICATED"))} />
         {!historical && <button disabled={busy} onClick={() => setConfirm("remove")}>{text.remove}</button>}
         {!historical && confirm === "remove" && <div role="alert"><p>{text.removeHelp}</p><button onClick={remove}>{text.removeConfirm}</button><button onClick={() => setConfirm(null)}>{text.cancel}</button></div>}
-      </> : <><h2>{text.library}</h2><p>{items.length} / 10</p>{!items.length && <p>{text.empty}</p>}
-        <ul className={capsuleCss.library}>{items.map(item => <li key={item.id}><h3>{item.content.title}</h3><p>{captions.version(item.revision)} · {captions.selected(item.content.entityIds.length, item.content.claimIds.length)}</p><button disabled={busy || !!draft} onClick={() => read(item.id)}>{text.read}</button></li>)}</ul></>}
+        </div>
+      </> : <><div className={css.listHeading}><span className={css.listCaption}>{locale === "en" ? "Saved in your account" : "アカウントに保存"}</span><span className={css.count}>{items.length} / 10</span></div>{!items.length && <p>{text.empty}</p>}
+        <ul className={css.savedList}>{items.map(item => <li key={item.id}><div><h3>{item.content.title}</h3><p>{captions.version(item.revision)} · {captions.selected(item.content.entityIds.length, item.content.claimIds.length)}</p></div><div className={css.actions}><button disabled={busy || !!draft} onClick={() => read(item.id)}>{text.read}</button><button disabled={busy || !!draft} onClick={() => read(item.id, undefined, true)}>{text.manageShare}</button></div></li>)}</ul></>}
     </section>}
-    <section className={css.card} aria-label={text.localTitle}>
+    <AnimatedDetails className={`${css.card} ${css.importPanel}`} bodyClassName={css.importBody} open={!!sourceId} summary={<>{text.importReview}<Icon name="chevron" /></>}>
+    <section aria-label={text.localTitle}>
       <h2>{text.localTitle}</h2><p>{text.localHelp}</p>
       {localError && <p role="alert">{contentMessage(localError, locale)}</p>}
       {!local.length && !localError && <p>{text.noLocal}</p>}
       {sourceId && !source && !localError && <p role="status">{text.missingLocal}</p>}
       {!!local.length && <div className={css.source}><label htmlFor="member-local-source">{text.source}</label><select id="member-local-source" value={sourceId} disabled={busy} onChange={event => {
         setSourceId(event.target.value); const url = new URL(location.href);
-        if (event.target.value) url.searchParams.set("import", event.target.value); else url.searchParams.delete("import"); history.replaceState(null, "", url); setMessage(null);
+        if (event.target.value) url.searchParams.set("import", event.target.value); else url.searchParams.delete("import"); history.replaceState(history.state, "", url); setMessage(null);
       }}><option value="">{text.choose}</option>{local.map(item => <option key={item.id} value={item.id}>{item.title} · {captions.version(item.revision)}</option>)}</select></div>}
       {source && <><p className={css.eyebrow}>{text.local}</p><h3>{source.title}</h3><p className={capsuleCss.note}>{source.note || captions.noNote}</p><p>{captions.selected(source.entityIds.length, source.claimIds.length)} · {captions.version(source.revision)}</p>
         <button disabled={busy || !user || !!draft} onClick={save}>{text.save}</button></>}
     </section>
+    </AnimatedDetails>
+    </div>
+    </div></div>
   </main></>;
 }

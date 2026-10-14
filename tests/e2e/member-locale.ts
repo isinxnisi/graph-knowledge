@@ -3,7 +3,7 @@ import examples from "../../docs/API_RESPONSE_EXAMPLES.json" with { type: "json"
 
 async function language(page: Page, locale: "ja" | "en") {
   const header = page.getByTestId("site-header");
-  await header.locator("summary").click(); await header.locator("select").last().selectOption(locale);
+  await header.getByLabel("表示設定", { exact: true }).click(); await header.locator("select").last().selectOption(locale);
   await page.keyboard.press("Escape"); await expect(page.locator("html")).toHaveAttribute("lang", locale);
 }
 export function checkMemberLocale(login: (page: Page) => Promise<void>, knowledge: (context: BrowserContext) => Promise<void>) {

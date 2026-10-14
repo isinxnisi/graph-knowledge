@@ -64,7 +64,7 @@ export default function SharedCapsule({ dataset }: { dataset: DatasetMode }) {
       {reading && <><CapsuleReader key={`${reading.id}:${reading.revision}`} capsule={reading} explorationLinks noteAttribution="author" />
         <CapsuleDiscussion key={`discussion:${reading.id}:${reading.revision}`} capsuleId={reading.id} revision={reading.revision} token={location.hash.slice(1)} draftCache={discussionDraft} /></>}
       <p className={css.muted}>{text.lifecycle}</p>
-      <a href="/member#my-posts" target="_blank" rel="noopener noreferrer">{memberPostsLabels(locale).manageLink}</a>
+      <a href="/member#my-posts">{memberPostsLabels(locale).manageLink}</a>
     </section>
   </main></>;
 }

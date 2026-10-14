@@ -27,7 +27,7 @@ describe("最小アカウント設定", () => {
   it("テーマ変更を保存し、Escape・外側クリックで設定を閉じる", async () => {
     render(<SiteHeader dataset="demo" />);
     await waitFor(() => expect(document.documentElement.dataset.theme).toBe("light"));
-    const details = screen.getByLabelText("設定").closest("details") as HTMLDetailsElement;
+    const details = screen.getByLabelText("表示設定").closest("details") as HTMLDetailsElement;
     details.open = true;
     fireEvent.click(screen.getByRole("button", { name: "ダークモード" }));
     expect(readAppearance(localStorage.getItem(appearanceKey)).theme).toBe("dark-brown");
@@ -40,21 +40,21 @@ describe("最小アカウント設定", () => {
     vi.spyOn(Storage.prototype, "setItem").mockImplementation(() => { throw new Error("blocked"); });
     render(<SiteHeader dataset="demo" />);
     await waitFor(() => expect(document.documentElement.dataset.theme).toBe("light"));
-    (screen.getByLabelText("設定").closest("details") as HTMLDetailsElement).open = true;
+    (screen.getByLabelText("表示設定").closest("details") as HTMLDetailsElement).open = true;
     fireEvent.click(screen.getByRole("button", { name: "ダークモード" }));
     expect(document.documentElement.dataset.theme).toBe("dark-brown");
     expect(screen.getByRole("status").textContent).toContain("テーマを保存できません");
   });
   it("会員ページ内のメニューは編集中URLを変更するnavigationをしない", () => {
-    render(<SiteHeader dataset="demo" page="member" />);
-    (screen.getByLabelText("設定").closest("details") as HTMLDetailsElement).open = true;
+    render(<SiteHeader dataset="demo" page="member" user={{ id: "10000000-0000-4000-8000-000000000001", name: "本人", locale: "ja" }} />);
+    (screen.getByLabelText("本人のアカウントメニュー").closest("details") as HTMLDetailsElement).open = true;
     expect(screen.getByRole("link", { name: "アカウント設定" }).getAttribute("href")).toBe("#account-settings");
   });
   it("ヘッダは本人確認済みの名前を表示し、会員内容や名前をブラウザへ保存しない", async () => {
     const user = { id: "10000000-0000-4000-8000-000000000001", name: "本人の表示名", locale: "ja" };
     const fetch = vi.fn().mockResolvedValue(Response.json({ user })); vi.stubGlobal("fetch", fetch);
     render(<SiteHeader dataset="demo" />);
-    const account = await screen.findByRole("link", { name: "本人の表示名のアカウントを開く（別タブ）" });
+    const account = await screen.findByLabelText("本人の表示名のアカウントメニュー");
     expect(account.getAttribute("data-signed-in")).toBe("true");
     expect(fetch.mock.calls.map(call => call[0])).toEqual(["/api/member/profile"]);
     expect(fetch.mock.calls[0][1]).toMatchObject({ cache: "no-store", credentials: "same-origin" });
@@ -67,16 +67,16 @@ describe("最小アカウント設定", () => {
       .mockImplementationOnce(() => new Promise<Response>(resolve => { finish = resolve; }))
       .mockResolvedValue(Response.json({ error: { code: "UNAUTHENTICATED" } }, { status: 401 }));
     vi.stubGlobal("fetch", fetch); render(<SiteHeader dataset="demo" />);
-    await screen.findByRole("link", { name: "前の本人のアカウントを開く（別タブ）" });
+    await screen.findByLabelText("前の本人のアカウントメニュー");
     Object.defineProperty(document, "visibilityState", { configurable: true, value: "hidden" }); fireEvent(document, new Event("visibilitychange"));
-    expect(screen.queryByText("前の本人")).toBeNull();
+    expect(screen.queryAllByText("前の本人")).toHaveLength(0);
     Object.defineProperty(document, "visibilityState", { configurable: true, value: "visible" }); fireEvent(document, new Event("visibilitychange"));
     await waitFor(() => expect(fetch).toHaveBeenCalledTimes(2));
     fireEvent(window, new StorageEvent("storage", { key: "graph-knowledge:member-session-changed", newValue: "changed" }));
     await waitFor(() => expect(fetch).toHaveBeenCalledTimes(3));
     finish(Response.json({ user }));
-    await waitFor(() => expect(screen.getByRole("link", { name: "アカウントを開く（別タブ）" })).toBeDefined());
-    expect(screen.queryByText("前の本人")).toBeNull();
+    await waitFor(() => expect(screen.getByRole("link", { name: "ログイン" })).toBeDefined());
+    expect(screen.queryAllByText("前の本人")).toHaveLength(0);
   });
   it("会員画面のヘッダは親で確認した名前を使い、余分な本人取得を行わない", () => {
     const fetch = vi.fn(); vi.stubGlobal("fetch", fetch);
@@ -139,5 +139,21 @@ describe("本人のアカウント削除確認", () => {
     expect(screen.queryByRole("checkbox")).toBeNull(); expect(fetch).not.toHaveBeenCalled();
     view.rerender(<MemberAccountDeletion user={user} disabled={true} onDeleted={vi.fn()} onUnauthorized={vi.fn()} />);
     expect(screen.getByRole("button", { name: "削除する内容を確認" }).hasAttribute("disabled")).toBe(true);
+  });
+});
+
+describe("探索と会員の戻り先", () => {
+  it("公開Graph URLだけをタブ内へ残し、外部URLや会員URLには戻さない", async () => {
+    const { rememberExplorationReturn, explorationReturnHref } = await import("../lib/client/account-navigation");
+    sessionStorage.clear();
+    history.replaceState(null, "", "/explore/10000000-0000-4000-8000-000000000001?s=example");
+    rememberExplorationReturn();
+    history.replaceState(null, "", "/member");
+    expect(explorationReturnHref()).toBe("/explore/10000000-0000-4000-8000-000000000001?s=example");
+    for (const value of ["https://elsewhere.example/explore/10000000-0000-4000-8000-000000000001", "/member?capsule=private", "/shared#private", "javascript:alert(1)"]) {
+      sessionStorage.setItem("graph-knowledge:account-return:v1", value);
+      expect(explorationReturnHref()).toBe("/");
+    }
+    sessionStorage.clear(); history.replaceState(null, "", "/");
   });
 });

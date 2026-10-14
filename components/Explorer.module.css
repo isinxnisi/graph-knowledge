@@ -580,3 +580,6 @@
 .pathDisclosure > summary { color: var(--color-text); font-size: 12px; font-weight: 500; }
 .columns > aside > .entityDetails > h3 { margin: 0 0 6px; }
 .entityDetails > p { margin-bottom: 8px; }
+
+.touchRelationHelp { display: none; }
+@media (max-width: 800px) { .touchRelationHelp { display: inline; } .desktopRelationHelp { display: none; } }

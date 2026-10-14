@@ -1313,3 +1313,16 @@ it("版失効後の遅い応答は新しい探索へ混ざらない", async () =
   await act(() => late.resolve({ ...page, centerId: others[0].id, revision: "a" }));
   expect(result.current.graph).toBe(before);
 });
+
+
+describe("関係線の単独選択と明示的な詳細表示", () => {
+  it("1回で選択、同じ線の300ms内の2回目だけで詳細を開く", async () => {
+    const { createRelationClickHandler } = await import("../lib/client/graph-interaction");
+    const select = vi.fn(), open = vi.fn(), clicks = createRelationClickHandler(select, open);
+    clicks.click("A", 100); expect(select).toHaveBeenCalledExactlyOnceWith("A"); expect(open).not.toHaveBeenCalled();
+    clicks.click("A", 200); expect(open).toHaveBeenCalledExactlyOnceWith("A");
+    clicks.click("B", 600); clicks.click("A", 700); expect(open).toHaveBeenCalledTimes(1);
+    clicks.cancel(); clicks.click("A", 750); expect(open).toHaveBeenCalledTimes(1);
+    clicks.click("A", 1100); expect(open).toHaveBeenCalledTimes(1);
+  });
+});

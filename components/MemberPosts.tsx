@@ -11,10 +11,10 @@ import { capsuleDiscussionLabels } from "../lib/i18n/capsule-discussion";
 import css from "./MemberCapsules.module.css";
 
 const textMessages = memberPostsLabels();
-export default function MemberPosts({ userId, onUnauthorized }: { userId: string; onUnauthorized: () => void }) {
+export default function MemberPosts({ userId, onUnauthorized, initiallyOpen = false }: { userId: string; onUnauthorized: () => void; initiallyOpen?: boolean }) {
   const { locale } = useUiLocale();
   const text = memberPostsLabels(locale), discussion = capsuleDiscussionLabels(locale);
-  const [opened, setOpened] = useState(false), [data, setData] = useState<OwnDiscussionPosts | null>(null);
+  const [opened, setOpened] = useState(initiallyOpen), [data, setData] = useState<OwnDiscussionPosts | null>(null);
   const [busy, setBusy] = useState(false), [error, setError] = useState<string | null>(null), [message, setMessage] = useState<string | null>(null);
   const [confirm, setConfirm] = useState<string | null>(null), [cursor, setCursor] = useState<string | null>(null);
   const active = useRef<AbortController | null>(null), mutating = useRef(false);
