@@ -150,6 +150,8 @@ typecheck初回は既存ignoredのEvent dev生成型2 fileが破損していた�
 
 2026-10-12、step12着手時のSSHユーザーでは `sudo -n` がpassword必須、Docker socketもpermission deniedだった。root SSHも許可されていない。権限設定の恒久変更や初回scriptの再実行で回避せず、具体的な配置物を準備して管理者操作を依頼する。ユーザーの実行後に担当CodexがHTTPS・実ブラウザを確認するまで、VPSへの反映は完了に数えない。
 
+UIだけの `beta-ui-balance-20261014` 更新は `scripts/activate-ui-update.sh` で受入済みcredits operatorを再利用する。識別子は受入済みarchive内のconfig／manifestを区別して記録し、同じimageを表す二つのdigestと `linux/amd64` だけを許可する。ローカルのconfig IDをVPSの唯一のimage IDと仮定せず、tag名だけでも通さない。照合不一致はWeb更新前に停止し、照合した不変IDでtagを付けて既存更新scriptへ進む。[今回の停止・修正記録](../PUBLIC_BETA_PROGRESS.md#ui更新のoperator照合修正2026-10-15)を参照。
+
 ## 工程12の配置物と反映状態
 
 2026-10-13（JST）。設定メニュー・本人表示名・外観保存のWeb更新を準備した。日常確認先は工程12の本番build ID `DgGcElZlO4DGW2isuF962` を返し、dataset／revisionはローカルと同じ `public-kg`／`legacy:20261011-001`。会員設定の実保存は隔離PG＋OIDCで検証し、この入口の会員未設定状態は維持する。

@@ -516,3 +516,15 @@ VPSの既存PRODUCING／VISITOR／CHAIR条件、Harvard概要と制作Role条件
 最終追記：スマホの既存「詳細幅切替を隠す」CSSが戻る操作も隠していたため、非表示対象から戻るボタンを除外した。最終build `hGwXwE66vhQxPuU5e8iJU` を3200/Tunnelへ反映し、390pxの浦沢→パイナップルARMYで開閉・対象往復・戻る操作・配置不変を成功確認。ユーザーがbetaの実Googleログインと表示名を確認した。Cloudflare設定の追加なし。betaでのCapsule保存・再訪は未確認で、VPSの会員保存確認とは区別する。
 
 VPS用の最終Web imageを `/home/develop/graph-ui-balance-20261014` へ転送し、全checksum・両shellの構文を現地確認した。archive SHA256 `8ecbd0da56e0543eb01b2cecc7494af419e0ffd61cfb013b472f1dac74e9acc4`、Web build `_40aIWNe4ZQXLqp-deda6`。今回はUIのみで運用CLIの実行sourceが制作Role受入時から不変のため、受入済みoperator `beta-credits-20261014` を固定image ID一致で確認して再利用する。Webだけを更新し、既存のKG backup／失敗時の旧Web復帰手順を使う。VPSのGoogle設定・MTU・KG・会員PG・Caddyは変更しない。管理者の `sudo bash /home/develop/graph-ui-balance-20261014/scripts/activate-ui-update.sh` 実行と、その後のHTTPS確認が残る。
+
+### UI更新のoperator照合修正（2026-10-15）
+
+ユーザーの管理者実行は全checksum成功後、operatorのID照合で停止した。この位置ではtag付替え・Web image読込・KG backup・設定変更・Web再起動に進んでおらず、UI更新は未適用。以前の転送・構文確認だけで、この照合条件を実VPSでも通ると判断した点が不足していた。
+
+受入済みcredits archiveのSHA256 `fec70291056a1c679678c72f8a6791cede4d3a6e7ce0437cd0bf7024da0187dc` を再照合し、config `sha256:b0e0bc42b156935ae6915b1dcb39bcc25338dcd25657a92ed41a8944fa569e9a` と、これを参照するmanifest `sha256:edc660a29b7bb6d500021d4a187155414e8440361e0cbe3e742142fdbddb78ed` の実blob hash・参照関係、configのlinux/amd64を確認した。VPSのDocker CLIは29.1.3。Docker image storeによる識別形式の差を考慮せず、ローカルのconfig IDだけと比較していた。containerd storeの前提は [Docker公式資料](https://docs.docker.com/engine/storage/containerd/) も参照した。今回停止時のVPS `.Id` 自体はsudo境界により取得できておらず、manifest IDだったとの確定記録にはしない。
+
+専用wrapperを `scripts/activate-ui-update.sh` として管理し、受入済みarchiveで裏付けられた二つのdigestだけをlinux/amd64との組で許可する。他imageや他platformは拒否し、tag名だけの照合へ緩めない。tag付替えにも照合済みの不変IDを使う。不一致時には秘密情報を含まない確認値を出す。配布manifestもconfig／manifestを別項目に訂正し、最終Web archiveと実装sourceは変更しない。
+
+隔離containerでDocker操作をstubに置き換えた6経路を確認。config形式・manifest形式は照合したIDでのみ次段へ進み、別image・別platform・inspect失敗・checksum不一致はtag付替えと更新前に停止した。wrapper／既存更新scriptのBash構文確認も成功。3200/Tunnel・稼働DBへの変更はない。修正配置物のVPS転送・現地checksum確認後に同じ管理者コマンドを再実行し、その後のHTTPS確認までVPS反映は未完了として維持する。24工程の完了数は変更しない。
+
+修正したwrapper・manifest・README・SHA256SUMSを同じVPS配置先へ転送し、全6ファイルのchecksumと両shellの構文を現地で確認済み。変更前の配布用script・metadataは配置先の `guard-before-fix-20261015` に保存した。Web archiveは従来のchecksumを維持。管理者の再実行と更新後のHTTPS確認が残る。
