@@ -33,7 +33,7 @@ export default function EntityDetails({ entity, expansion, onExpand, onClose, on
     }).catch((error) => { if (!controller.signal.aborted) { setError(errorMessage(error)); setMissing(error instanceof ClientApiError && error.status === 404); } });
     return () => controller.abort();
   }, [entity.id, attempt]);
-  return <section aria-label={ui.entityDetails}>
+  return <section aria-label={ui.entityDetails} className={styles.entityDetails}>
     <h3>{entity.name}</h3><p className={styles.badge}>{ui.kinds[entity.kind]}</p>
     <p>{entity.description ?? ui.descriptionMissing}</p>
     {!detail && !error && <p role="status">{ui.entityLoading}</p>}

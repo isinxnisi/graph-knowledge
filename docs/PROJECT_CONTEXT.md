@@ -6,7 +6,7 @@
 
 2026-10-11に[公開して育てる対応プラン](design/PUBLIC_BETA_AND_PRODUCT_PLAN.md)を採用。[全24ステップ](PUBLIC_BETA_PROGRESS.md)で差分の進捗を管理する。受入済み漫画・科学・Eventを共通KGへ構成し、データを増やしながら訂正・復旧できる単一の公開入口を目指す。完全な精度・価値の立証を公開前の無期限の関門にしない。正式サービス名は **Plunode**、正式originは `https://plunode.net`（2026-10-14指定）。旧 `graph.isinxnisi.net` はプレビューとして維持する。2026-10-12に認証付き試験起動を確認した。一般β公開は未実施で、preview認証を維持する。 同日に共通ヘッダ・アカウント入口・UI基礎をローカルで検証した。実Google接続や会員設定の完成ではなく、探索と既存保存機能を同じ画面体系へ繋ぐ工程とする。
 
-日常の確認先は `https://graph-beta.isinxnisi.com/` とし、開発PCの3200へCloudflare経由で接続する。画面・機能の作業／受け入れ完了ごとに更新し、VPSは工程の区切りで更新する。[確認環境の更新契約](design/PRODUCTION_DEPLOYMENT.md#確認環境の更新契約)に従い、追加の更新指示を待たず反映・確認まで行う。一般公開先の変更やDBの自動同期を意味しない。
+日常の確認先は `https://graph-beta.isinxnisi.com/` とし、開発PCの3200へCloudflare経由で接続する。2026-10-15より実Googleログインも接続し、本人のログイン・表示名を確認済み。専用のローカル会員PGを使い、VPSの会員データ・Cookieとは共有しない。接続の現行手順は [Google接続](design/GOOGLE_MEMBER_CONNECTION.md#日常確認先betaの実google接続2026-10-15) を参照。画面・機能の作業／受け入れ完了ごとに更新し、VPSは工程の区切りで更新する。[確認環境の更新契約](design/PRODUCTION_DEPLOYMENT.md#確認環境の更新契約)に従い、追加の更新指示を待たず反映・確認まで行う。一般公開先の変更やDBの自動同期を意味しない。
 
 今後のCodex作業で、機能提案・設計・実装の前にこの文書と[ARCHITECTURE.md](ARCHITECTURE.md)を参照する。ここにはサービスの目的と優先順位を記録し、技術上の判断はARCHITECTURE.mdに記録する。文書の状態と完了フェーズの履歴は[README.md](README.md)を参照する。構想が変わった場合は両文書の整合性を更新する。提案や未確定事項を、承認済みの要件として扱わない。
 

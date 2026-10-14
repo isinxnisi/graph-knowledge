@@ -168,10 +168,10 @@ function ClaimDetailsSession({ onDataChanged, revision, dataset, id, nodes, clai
       <h4>{text.endpoints}</h4>
       <div className={styles.endpointPair}>{endpoints.map((entityId, index) => <div key={entityId} className={styles.endpointItem}>
         {index > 0 && <span className={styles.endpointDirection} aria-hidden="true"><Icon name="arrow" /></span>}
-        <button aria-label={text.inspectEntity(entityLabel(nodes[entityId], nodes, locale).replace("\n", " / "))} onClick={() => onInspectEntity(entityId)} className={styles.endpointButton}>
+        <button aria-label={text.inspectEntity(entityLabel(nodes[entityId], nodes, locale).replace("\n", " / "))} title={text.inspectEntity(entityLabel(nodes[entityId], nodes, locale).replace("\n", " / "))} onClick={() => onInspectEntity(entityId)} className={styles.endpointButton}>
           <span className={styles.endpointIcon}><Icon name={nodes[entityId].kind === "work" ? "book" : nodes[entityId].kind} /></span>
-          <span className={styles.endpointIdentity}><small>{ui.kinds[nodes[entityId].kind]}</small><strong>{entityLabel(nodes[entityId], nodes, locale).replace("\n", " / ")}</strong></span>
-          <span className={styles.endpointAction}>{text.detailAction}<Icon name="arrow" /></span>
+          <span className={styles.endpointIdentity}><strong>{entityLabel(nodes[entityId], nodes, locale).replace("\n", " / ")}</strong><small>{ui.kinds[nodes[entityId].kind]}</small></span>
+          <span className={styles.endpointAction} aria-hidden="true"><Icon name="chevron" /></span>
         </button>
       </div>)}</div>
       <p className={styles.endpointHelp}>{text.endpointHelp}</p>

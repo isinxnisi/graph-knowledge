@@ -1,4 +1,5 @@
 const ja = {
+  signedIn: "ログイン中", signedInAs: (name: string) => `${name}でログイン中`, memberLink: (name: string) => `${name}のアカウントを開く（別タブ）`, datasetAbout: "表示中のデータ",
   name: "関係性を探索する", navigation: "サービス内の移動",
   explore: "探索", exploreLink: "探索を開く（別タブ）",
   account: "アカウント", accountLink: "アカウントを開く（別タブ）",
@@ -9,6 +10,7 @@ const ja = {
   appearanceFailed: "テーマを保存できません。この画面には反映しています。",
 };
 const en: typeof ja = {
+  signedIn: "Signed in", signedInAs: (name: string) => `Signed in as ${name}`, memberLink: (name: string) => `Open account for ${name} (new tab)`, datasetAbout: "Current data",
   name: "Explore connections",
   navigation: "Site navigation",
   explore: "Explore",

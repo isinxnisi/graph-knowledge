@@ -56,6 +56,18 @@ for (const [subject, object, wording, width = 1440] of paths) test(`${width}px�
     await record.getByRole("button", { name: "短く表示" }).first().click();
   }
   await overview.scrollIntoViewIfNeeded();
+  if (subject === "浦沢直樹" && object === "PLUTO" && width === 1440) {
+    const adjacency = page.getByRole("region", { name: "選択Entityの隣接関係", exact: true });
+    const disclosure = adjacency.locator("details").first(), summary = disclosure.locator("summary");
+    await summary.scrollIntoViewIfNeeded();
+    // Click the heading's blank padding, then use its native keyboard toggle.
+    await summary.click({ position: { x: 6, y: 6 } });
+    await expect(disclosure).not.toHaveAttribute("open");
+    await summary.focus(); await page.keyboard.press("Enter");
+    await expect(disclosure).toHaveAttribute("open");
+    await expect(disclosure).not.toHaveAttribute("data-motion-state");
+    await page.screenshot({ path: "test-results/reading-panel-balance.png" });
+  }
   const before = await canvas.evaluate(el => {
     const cy = (el as unknown as { _cyreg: { cy: Core } })._cyreg.cy;
     return { points: cy.nodes().map(n => [n.id(), n.position()]), edges: cy.edges().map(e => e.id()), pan: cy.pan(), zoom: cy.zoom() };
@@ -109,10 +121,41 @@ for (const [subject, object, wording, width = 1440] of paths) test(`${width}px�
   }
   await endpoints.getByRole("button", { name: `${object}の詳細を見る` }).click();
   await expect(page.getByRole("region", { name: "Entity詳細" })).toContainText(object);
+  if (subject === "浦沢直樹" && (object === "PLUTO" || width === 390)) {
+    const path = page.getByRole("region", { name: "起点からの経路", exact: true });
+    const summary = path.locator("summary");
+    await summary.focus(); await page.keyboard.press("Enter");
+    await expect(path.getByText(/実際に操作した履歴ではありません/)).toBeVisible();
+    await expect(path.locator("details")).not.toHaveAttribute("data-motion-state");
+    await summary.evaluate(el => (el as HTMLElement).blur());
+    await page.screenshot({ path: `test-results/reading-path-disclosure-${width}.png` });
+    await summary.click({ position: { x: 6, y: 6 } });
+    await expect(path.locator("details")).not.toHaveAttribute("open");
+  }
+  const returnButton = page.getByRole("button", { name: "元の関係へ戻る", exact: true });
+  await expect(returnButton).toBeVisible();
+  await returnButton.click();
+  await expect(overview).toBeVisible();
+  await expect(endpoints.getByRole("button")).toHaveCount(2);
+  await expect(returnButton).toHaveCount(0);
+  await endpoints.getByRole("button", { name: `${object}の詳細を見る` }).click();
+  await expect(returnButton).toBeVisible();
   const after = await canvas.evaluate(el => {
     const cy = (el as unknown as { _cyreg: { cy: Core } })._cyreg.cy;
     return { points: cy.nodes().map(n => [n.id(), n.position()]), edges: cy.edges().map(e => e.id()), pan: cy.pan(), zoom: cy.zoom() };
   });
   expect(after).toEqual(before); expect(neighborReads).toBe(0);
+  if (subject === "浦沢直樹" && object === "PLUTO" && width === 1440) {
+    await page.getByRole("region", { name: "選択Entityの隣接関係", exact: true }).getByRole("button", { name: "主張と出典を見る", exact: true }).first().click();
+    await endpoints.getByRole("button", { name: `${subject}の詳細を見る` }).click();
+    const returnRecord = page.getByRole("button", { name: "元の記録へ戻る", exact: true });
+    await returnRecord.click();
+    await expect(detail).toBeVisible(); await expect(overview).toHaveCount(0);
+    await endpoints.getByRole("button", { name: `${object}の詳細を見る` }).click();
+    await expect(returnRecord).toBeVisible();
+    await page.getByRole("button", { name: "PLUTOから探索を開始", exact: true }).click();
+    await expect(page.getByTestId("exploration-root")).toContainText("PLUTO");
+    await expect(returnButton).toHaveCount(0); await expect(returnRecord).toHaveCount(0);
+  }
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
 });

@@ -81,6 +81,7 @@ export default function Explorer({ dataset = "demo", initialRoot }: { dataset?: 
   const [workspaceOpen, setWorkspaceOpen] = useState(false);
   const [savedViewsOpen, setSavedViewsOpen] = useState(false);
   const [detailWide, setDetailWide] = useState(false);
+  const [detailReturn, setDetailReturn] = useState<{ generation: number; entityId: string; source: { kind: "claim" | "relation"; id: string } } | null>(null);
   const { invalidateData, dataChanged, reloadData, graph, selection, previous, viewRestoration, switchRoot, restorePrevious, openSavedView, openWorkspace, changePredicates, chooseRoot, inspectEntity, selectEntity, selectClaim, selectRelation, expand, close, toggleEntity } = useGraphExplorer();
   const urlState = useExplorationUrl({ dataset, initialRoot, graph, locale, capture: () => canvas.current?.capture() ?? null, apply: value => { openWorkspace(value, canvas.current?.capture() ?? null); setActivePane("graph"); } });
   const restricted = graph.predicates !== null || (graph.contributionRoles ?? null) !== null || (graph.organizationPositions ?? null) !== null || (graph.eventRoles ?? null) !== null;
@@ -91,12 +92,24 @@ export default function Explorer({ dataset = "demo", initialRoot }: { dataset?: 
     chooseRoot(entity, broad); setActivePane("graph");
   };
   const inspectFromClaim = (id: string) => {
+    if (selection && selection.kind !== "entity") setDetailReturn({ generation: graph.generation, entityId: id, source: { kind: selection.kind, id: selection.id } });
     inspectEntity(id); setActivePane("detail");
     // The clicked button is removed with ClaimDetails; keep keyboard focus in the reader.
     document.getElementById("explorer-detail")?.focus({ preventScroll: true });
     document.getElementById("explorer-detail")?.scrollTo({ top: 0 });
   };
   const relations = displayRelations(graph.claims, locale);
+  // A reader return belongs to this graph and this endpoint, not a later search or selection.
+  const returnTarget = detailReturn && !dataChanged && detailReturn.generation === graph.generation && selection?.kind === "entity" && selection.id === detailReturn.entityId
+    && (detailReturn.source.kind === "relation" ? relations[detailReturn.source.id] : graph.claims[detailReturn.source.id]) ? detailReturn.source : null;
+  if (detailReturn && !returnTarget) setDetailReturn(null);
+  const returnToDetail = () => {
+    if (!returnTarget) return;
+    if (returnTarget.kind === "relation") selectRelation(returnTarget.id); else selectClaim(returnTarget.id);
+    setDetailReturn(null); setActivePane("detail");
+    document.getElementById("explorer-detail")?.focus({ preventScroll: true });
+    document.getElementById("explorer-detail")?.scrollTo({ top: 0 });
+  };
   const selectedRelation = selection?.kind === "relation" ? relations[selection.id] : null;
   const selectedEntity = selection?.kind === "entity" ? graph.nodes[selection.id] : null;
   const selectedClaim = selection?.kind === "claim" ? graph.claims[selection.id] : null;
@@ -115,7 +128,7 @@ export default function Explorer({ dataset = "demo", initialRoot }: { dataset?: 
   return <div className={styles.explorer}>
     <SiteHeader dataset={dataset} />
     <nav ref={paneNavigation} className={styles.paneNavigation} aria-label={panes.navigation}>
-      {(["search", "graph", "detail"] as const).map(pane => <button key={pane} aria-pressed={activePane === pane} aria-controls={`explorer-${pane}`} onClick={() => setActivePane(pane)}><Icon name={pane === "search" ? "search" : pane === "graph" ? "graph" : "book"} />{panes[pane]}</button>)}
+      {(["search", "graph", "detail"] as const).map(pane => <button key={pane} aria-label={panes[pane]} aria-pressed={activePane === pane} aria-controls={`explorer-${pane}`} onClick={() => setActivePane(pane)}><Icon name={pane === "search" ? "search" : pane === "graph" ? "graph" : "book"} /><span>{pane === "detail" ? ui.detail : panes[pane]}</span></button>)}
     </nav>
     <div lang={locale} aria-live="polite">{urlState.busy && <p role="status">{explorationUrlLabels(locale).restoring}</p>}{urlState.failure && <div role="alert" className={styles.error}><p>{urlState.failure}</p><button onClick={urlState.retry}>{explorationUrlLabels(locale).retry}</button><button onClick={urlState.abandon}>{explorationUrlLabels(locale).abandon}</button></div>}</div>
     <main inert={urlState.busy || !!urlState.failure} data-active-pane={activePane} className={`${styles.columns} ${detailWide ? styles.wideDetails : ""}`}>
@@ -127,8 +140,8 @@ export default function Explorer({ dataset = "demo", initialRoot }: { dataset?: 
             <p data-testid="graph-counts">Entity {Object.keys(graph.nodes).length} / Claim {Object.keys(graph.claims).length}</p><p data-testid="relation-counts">Relation {Object.keys(relations).length}</p>
           </div>
           <div className={styles.rootBar}><p className={styles.rootLabel} data-testid="exploration-root">{entry.root}：{graph.centerId ? graph.nodes[graph.centerId]?.name : entry.rootEmpty}</p>
-            <button disabled={!urlState.ready || urlState.busy || !!urlState.failure || loading > 0} onClick={() => void urlState.copy()}><Icon name="copy" />{explorationUrlLabels(locale).copy}</button><div lang={locale} className={styles.rootSaveActions}><button onClick={() => setSavedViewsOpen(true)}><Icon name="bookmark" />{savedViewLabels(locale).launch}</button><button onClick={() => setWorkspaceOpen(true)}><Icon name="history" />{workspaceLabels(locale).launch}</button><button onClick={() => setCapsuleOpen(true)}><Icon name="capsule" />{capsuleLabels(locale).launch}</button></div>
-            {previous && <button onClick={restorePrevious}>{overviewLabels(locale).restore}</button>}</div>
+            <button className={styles.copyExploration} aria-label={explorationUrlLabels(locale).copy} title={explorationUrlLabels(locale).copy} disabled={!urlState.ready || urlState.busy || !!urlState.failure || loading > 0} onClick={() => void urlState.copy()}><Icon name="copy" /><span>{explorationUrlLabels(locale).copy}</span></button><div lang={locale} className={styles.rootSaveActions}><button onClick={() => setSavedViewsOpen(true)}><Icon name="bookmark" />{savedViewLabels(locale).launch}</button><button onClick={() => setWorkspaceOpen(true)}><Icon name="history" />{workspaceLabels(locale).launch}</button><button onClick={() => setCapsuleOpen(true)}><Icon name="capsule" />{capsuleLabels(locale).launch}</button></div>
+            {previous && <button className={styles.restoreExploration} aria-label={overviewLabels(locale).restore} title={overviewLabels(locale).restore} onClick={restorePrevious}><Icon name="back" /><span>{overviewLabels(locale).restore}</span></button>}</div>
         </div>
         {urlState.notice && <p role="status" className={styles.muted}>{urlState.notice}</p>}
         {dataChanged && <div role="alert" className={styles.error}><p>{dataReleaseLabels(locale).changed}</p><button onClick={reloadData}>{dataReleaseLabels(locale).reload}</button></div>}
@@ -152,7 +165,7 @@ export default function Explorer({ dataset = "demo", initialRoot }: { dataset?: 
       </section>
       </div>
       <aside id="explorer-detail" tabIndex={-1} className={styles.panel} aria-labelledby="detail-title">
-        <div className={styles.detailHeading}><h2 id="detail-title"><Icon name="book" />{ui.detail}</h2>{selection && <button aria-pressed={detailWide} onClick={() => setDetailWide(!detailWide)}>{detailWide ? entry.detailNormal : entry.detailWide}</button>}</div>
+        <div className={styles.detailHeading}><h2 id="detail-title" className={returnTarget ? styles.srOnly : undefined}><Icon name="book" />{ui.detail}</h2>{returnTarget && <button className={styles.detailBack} onClick={returnToDetail}><Icon name="back" />{returnTarget.kind === "relation" ? panes.backToRelation : panes.backToClaim}</button>}{selection && <button aria-pressed={detailWide} onClick={() => setDetailWide(!detailWide)}>{detailWide ? entry.detailNormal : entry.detailWide}</button>}</div>
         {!selection && <p className={styles.muted}>{entry.detailHelp}</p>}
         {selectedEntity && <EntityDetails dataset={dataset} key={key} entity={selectedEntity} expansion={graph.expansions[selectedEntity.id]} onExpand={(more) => void expand(selectedEntity.id, more)} onClose={() => close(selectedEntity.id)} restricted={restricted} onOverview={() => setOverview(selectedEntity)} onSwitch={(mode) => switchFrom(selectedEntity, mode)} />}
         {selectedEntity && graph.centerId && <GraphPath key={`path:${key}`} nodes={graph.nodes} relations={relations} rootId={graph.centerId} targetId={selectedEntity.id} onRelation={(id) => {

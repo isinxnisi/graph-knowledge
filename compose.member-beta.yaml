@@ -1,0 +1,26 @@
+name: graph-knowledge-member-beta
+services:
+  postgres:
+    image: postgres:17-alpine@sha256:b0f9560a2de083e2cc7382e75f808c7381a32852a7ec49117deedb300e552b24
+    restart: unless-stopped
+    ports: ["127.0.0.1:55433:5432"]
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_DB: graph_member
+      POSTGRES_PASSWORD: "${MEMBER_POSTGRES_ADMIN_PASSWORD:?Set in .env.member-beta}"
+      MEMBER_POSTGRES_PASSWORD: "${MEMBER_POSTGRES_PASSWORD:?Set in .env.member-beta}"
+    command: [postgres, -c, shared_buffers=64MB, -c, max_connections=30]
+    mem_limit: 512m
+    volumes:
+      - member-data:/var/lib/postgresql/data
+      - ./db/member/production-init.sql:/docker-entrypoint-initdb.d/010-member.sql:ro
+    healthcheck:
+      test: [CMD-SHELL, "pg_isready -h 127.0.0.1 -U postgres -d graph_member"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    logging:
+      driver: json-file
+      options: {max-size: 10m, max-file: "3"}
+volumes:
+  member-data:

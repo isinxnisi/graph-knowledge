@@ -1,4 +1,5 @@
 "use client";
+import DialogCloseButton from "./DialogCloseButton";
 import { useUiLocale } from "../lib/client/ui-locale";
 import { contentMessage } from "../lib/i18n/content";
 
@@ -88,7 +89,7 @@ export default function SavedViews({ dataset, root, conditions, onOpen, onClose 
     }
   };
   return <dialog lang={locale} ref={dialog} className={`${styles.conditionDialog} ${styles.savedViews}`} aria-labelledby="saved-views-title" onCancel={event => { event.preventDefault(); close(); }} {...backdrop}>
-    <div className={styles.conditionTitle}><h2 id="saved-views-title">{text.title}</h2><button aria-label={text.close} onClick={close}>×</button></div>
+    <div className={styles.conditionTitle}><h2 id="saved-views-title">{text.title}</h2><DialogCloseButton label={text.close} onClick={close} /></div>
     <p>{text.help}</p><p className={styles.muted}>{text.local}</p>
     {root ? <form className={styles.savedViewForm} onSubmit={event => { event.preventDefault(); save(); }}>
       <p>{text.root}：<strong>{root.name}</strong><span className={styles.muted}> / {root.description}</span></p>

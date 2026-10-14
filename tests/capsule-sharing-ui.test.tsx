@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi, type Mock } from "vitest";
 import { act, cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import CapsuleShareControls from "../components/CapsuleShareControls";
 import SharedCapsule from "../components/SharedCapsule";
@@ -12,13 +12,16 @@ const capsule: MemberCapsule = { id: "20000000-0000-4000-8000-000000000001", sch
   content: { dataset: "demo", title: "共有した版の説明付き関係図", note: "説明", language: "ja", entityIds: ["30000000-0000-4000-8000-000000000001"], claimIds: [] } };
 const share = { id: "40000000-0000-4000-8000-000000000001", revision: 1, createdAt: capsule.createdAt };
 const token = "a".repeat(43);
-let fetchMock: ReturnType<typeof vi.fn>;
+let fetchMock: Mock;
 beforeEach(() => {
   localStorage.clear(); sessionStorage.clear();
   history.replaceState(null, "", `/shared#${token}`);
   Object.defineProperty(document, "visibilityState", { configurable: true, value: "visible" });
   fetchMock = vi.fn(async () => Response.json({ capsule }));
-  vi.stubGlobal("fetch", fetchMock);
+  // This suite counts sharing operations; the header's independent identity read is anonymous.
+  vi.stubGlobal("fetch", (path: string, options?: RequestInit) => path === "/api/member/profile"
+    ? Promise.resolve(Response.json({ error: { code: "UNAUTHENTICATED" } }, { status: 401 }))
+    : fetchMock(path, options));
 });
 afterEach(() => { cleanup(); vi.unstubAllGlobals(); vi.restoreAllMocks(); vi.useRealTimers(); });
 async function visibility(value: "hidden" | "visible") {

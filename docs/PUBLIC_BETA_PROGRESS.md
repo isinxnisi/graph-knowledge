@@ -490,3 +490,29 @@ VPSの既存PRODUCING／VISITOR／CHAIR条件、Harvard概要と制作Role条件
 共通linkアイコンのviewBox外にはみ出すパスを修正し、探索URLコピーにはcopyアイコンを使った。KG・会員PG・API・意味モデル・語彙・凍結datasetへの変更なし。3200/Tunnelのrevision `82b01515-594c-48ca-b4b6-515eefac83ca` を維持。VPSは今回未更新。
 
 本番build（TypeScriptを含む）・対象lint・root typecheckが成功。対象unit144件を確認（3ファイル138件、表示名の旧期待値を更新したlocale6件）。幅に応じたメモの最終調整前に、実資料のPC／390px、漫画・科学・Eventの7経路が成功。最終buildの3200/Tunnel反映後は、日常確認先のHTTPSからパイナップルARMYのPC／390pxの2経路が成功し、出典表示・実clipboardへのURLコピー・個別表示の閉鎖・Graph配置不変を確認。実画面で出典の控えめな境界、書誌／期間の開いた範囲、コピーアイコン、個別URLとGraph URLの違いを確認した。最初の追加browser試験はURL欄と同名regionを曖昧に選んだため失敗し、textboxを明示して同じ経路を成功確認。実機や全画面のデザイン完成とは扱わず、既存工程の完了数は変更しない。
+
+### スマホのGraph面積・本人表示・左右の密度調整（2026-10-14〜15）
+
+小さいスマホのヘッダを一行へまとめ、長いデータ説明は設定内へ移した。Graphの見出し・起点・コピー・直前復帰と条件編集を小さい帯にまとめ、44pxの操作領域を維持する。設定メニューはGraph内の操作より前面へ表示し、探索の主要6モーダルの閉じる操作を右上のSVGの×へ揃えた。
+
+本人表示は既存の同origin profile APIだけへ接続し、PCでは名前、スマホでは頭文字と設定内の名前を表示する。未確認・未設定・失敗では一般アカウント入口を保つ。非表示時・ログアウト通知時に名前を消し、復帰時に再確認する。会員ページでは親の確認済みUserを利用し、認可や保存処理の判断にヘッダ表示を使わない。
+
+左の「探索してみる」のカードは押しやすさを維持し、検索・保存操作の区切りを少し詰めた。右は関係名と資料を主役にし、二対象の導線を控えめな行へ変更。追加指摘に対し、記録内訳の折り畳み末尾の空きを減らし、対象名・種別を同じ行に寄せ、列と移動シェブロンを揃えた。隣接関係の折り畳みは見出し全体を操作面とし、文字の矢印をSVGへ変更した。意味・API・知識データ・Graph状態・保存形式は不変。スマホのGraph下段詳細という別要求と、最終的なデザイン評価は未完了のまま維持する。
+
+追加依頼：対象ペアからの詳細移動には「元の関係へ戻る」を追加。個別記録からは「元の記録へ戻る」とする。パネル内の直前一件だけを保持し、新探索・別選択・データ失効・元の関係消失で破棄する。Graphの起点復帰やURL履歴とは分離し、近傍取得・Graph配置変更を伴わない。
+
+「起点からの経路」の開閉も隣接一覧と同じ中立色・見出し全面の操作・SVG chevron・高さアニメーションへ揃え、本文に字下げガイドを設けた。最短経路の計算、向き・肯否の表示、因果や操作履歴ではないという注意は維持する。
+
+検証：関連unit316件と追加の経路7件を成功確認。最初のunit実行では既存のCapsule／途中保存の2件が5秒で時間切れになり、同じ期限で再実行して成功した。root TypeScript・対象ESLint・最終の本番buildが成功。最終追加前に実資料7経路＋375／320pxの9経路を確認し、パネル内復帰・経路の開閉追加後はPCの浦沢→PLUTOで関係／独立記録への復帰、新探索での破棄、Graphの線・位置・pan/zoom不変とneighbors追加取得なしを成功確認した。途中の検証用server／browserが終了コード143で終了したため、未実行5経路は起動し直して成功した。
+
+3200をbuild `8iUlD2m3MevH7yxHB5bxL` へ更新。ローカルとTunnelでrevision `82b01515-594c-48ca-b4b6-515eefac83ca` を維持。最終版のTunnel経由で375／320pxの本人表示・メニュー重なり・Graph面積・モーダルの閉じる操作、390pxの浦沢→パイナップルARMYの関係／対象往復・経路の開閉・配置不変が成功。375pxの初回モーダル位置検証は高さアニメーション中の異なるフレームを比較して失敗したため、幅の演出終了を待ち、同一フレームで座標を比べて同じ経路を成功確認した。PC／スマホの実画面を目視し、元のGraph開始位置約361pxを約227pxへ改善した。実機の最終評価とは区別する。
+
+本人表示のbrowser試験はブラウザ内だけのprofile応答fixtureであり、serverに試験Userや会員有効化を追加していない。Tunnelの会員無効とVPSの実Google会員は別環境・別Cookieのまま。VPS更新後の本人Google sessionでの新ヘッダ実表示は未確認とする。24工程の完了数は変更しない。
+
+追記：ユーザーから余白過大を再指摘されたため、戻る操作を「詳細」と別段に置く構成をやめ、パネル上部の同じ行へ統合した。対象名の既定の上marginも除き、種別・本文までの間隔を詰めた。最終3200 buildは `pCEJkUWH1QBA_poJSsQA5`。反映作業で稼働中buildの出力先を一度取り違え、停止・検証済み控えから復旧した後、別ディレクトリでbuildして切り替えた。
+
+同日の追加依頼でbetaの会員検証を有効化。既存Google credentialのbeta callback登録を確認し、専用PGの永続volume・loopback 55433・非superuserを用意、5 migrationを二回適用。privateな設定だけを追加し、VPSのDB／認証設定、KG、Cloudflare設定は変更していない。Google JWKS 200／人工の無効codeのtoken応答400 invalid_grant、Tunnelのmember/status 200 google／認証開始200・callback一致・Secure／HttpOnly／host-only cookie／匿名profile 401を確認。本人の実Google callback・表示名・保存再訪はユーザー確認待ち。旧「betaは会員無効」はこの後続指定で更新し、VPSとの会員データ・cookie共有は行わない。
+
+最終追記：スマホの既存「詳細幅切替を隠す」CSSが戻る操作も隠していたため、非表示対象から戻るボタンを除外した。最終build `hGwXwE66vhQxPuU5e8iJU` を3200/Tunnelへ反映し、390pxの浦沢→パイナップルARMYで開閉・対象往復・戻る操作・配置不変を成功確認。ユーザーがbetaの実Googleログインと表示名を確認した。Cloudflare設定の追加なし。betaでのCapsule保存・再訪は未確認で、VPSの会員保存確認とは区別する。
+
+VPS用の最終Web imageを `/home/develop/graph-ui-balance-20261014` へ転送し、全checksum・両shellの構文を現地確認した。archive SHA256 `8ecbd0da56e0543eb01b2cecc7494af419e0ffd61cfb013b472f1dac74e9acc4`、Web build `_40aIWNe4ZQXLqp-deda6`。今回はUIのみで運用CLIの実行sourceが制作Role受入時から不変のため、受入済みoperator `beta-credits-20261014` を固定image ID一致で確認して再利用する。Webだけを更新し、既存のKG backup／失敗時の旧Web復帰手順を使う。VPSのGoogle設定・MTU・KG・会員PG・Caddyは変更しない。管理者の `sudo bash /home/develop/graph-ui-balance-20261014/scripts/activate-ui-update.sh` 実行と、その後のHTTPS確認が残る。

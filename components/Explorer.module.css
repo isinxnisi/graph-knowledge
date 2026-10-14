@@ -258,7 +258,7 @@
   .columns[data-active-pane="search"] > :first-child,
   .columns[data-active-pane="graph"] > .centralScroll,
   .columns[data-active-pane="detail"] > aside { visibility: visible; pointer-events: auto; }
-  .columns > aside > .detailHeading > button { display: none; }
+  .columns > aside > .detailHeading > button:not(.detailBack) { display: none; }
   .canvas { height: clamp(360px, 56dvh, 560px); min-height: 360px; resize: none; }
   .rootSaveActions { display: none; }
   .compactLink { display: inline-flex; align-items: center; font-size: 12px; padding: 4px 8px; }
@@ -514,3 +514,69 @@
 .sharedEvidence p { margin-bottom: 4px; }
 .sharedEvidence ul { margin: 0; padding-left: 16px; }
 @media (prefers-reduced-motion: reduce) { .disclosure > summary::before, .citation .noteToggle::before { transition: none; } }
+
+/* Keep each graph overlay within the workspace, below the site menu. */
+.columns { isolation: isolate; }
+.detailHeading:has([data-dialog-close]), .conditionTitle:has([data-dialog-close]) { flex-wrap: nowrap; align-items: flex-start; }
+.detailHeading:has([data-dialog-close]) h2, .conditionTitle:has([data-dialog-close]) h2 { min-width: 0; flex: 1; }
+@media (max-width: 800px) {
+  .paneNavigation { gap: 0; padding: 0 6px; }
+  .paneNavigation button { padding: 4px 8px; }
+  .graphHeader { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: 0 4px; padding-bottom: 4px; margin: 0; align-items: center; }
+  .graphHeading { grid-column: 1; grid-row: 1; gap: 4px; flex-wrap: nowrap; }
+  .graphHeading h2 { font-size: 17px; }
+  .graphHeading p { font-size: 10px; white-space: nowrap; }
+  .graphHeader .graphHeading > * { margin: 0; }
+  .rootBar { display: contents; }
+  .rootLabel { grid-column: 1; grid-row: 2; font-size: 11px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .copyExploration, .restoreExploration { grid-row: 1 / 3; width: 44px; height: 44px; display: grid; place-items: center; padding: 0 !important; border-color: transparent !important; }
+  .copyExploration { grid-column: 2; }
+  .restoreExploration { grid-column: 3; }
+  .copyExploration > span, .restoreExploration > span, .conditionBar > button > span { display: none; }
+  .copyExploration > :global(.ui-icon), .restoreExploration > :global(.ui-icon), .conditionBar > button > :global(.ui-icon) { margin: 0; }
+  .conditionBar { flex-wrap: nowrap; gap: 8px; padding: 2px 0 4px; margin-bottom: 8px; font-size: 11px; }
+  .conditionBar > p { flex: 1; min-width: 0; }
+  .conditionBar > button { display: grid; place-items: center; flex: 0 0 44px; width: 44px; height: 44px; padding: 0; border-color: transparent; }
+  .canvas { height: clamp(360px, calc(100dvh - 220px), 640px); }
+}
+@media (max-width: 480px) { .graphHeading > [data-testid="relation-counts"] { display: none; } }
+
+/* The whole adjacency heading toggles; the chevron is an indicator, not a second button. */
+.adjacencyDisclosure > summary { min-height: 44px; padding: 8px 10px; margin-bottom: 8px; border-radius: 6px; background: var(--color-canvas); cursor: pointer; transition: background-color var(--motion-quick) ease; }
+.adjacencyDisclosure > summary:hover { background: var(--color-accent-soft); }
+.adjacencyDisclosure > summary h3 { margin: 0; font-size: 14px; line-height: 1.45; }
+.adjacencyDisclosure > summary .muted { margin-top: 2px; font-size: 11px; line-height: 1.5; }
+.adjacencyDisclosure .disclosureChevron { width: 18px; height: 18px; border-radius: 0; background: transparent; color: var(--color-muted); }
+.disclosureChevron > :global(.ui-icon) { width: 18px; height: 18px; margin: 0; }
+.columns > .panel:first-child { padding: 14px; }
+.columns > aside { padding: 16px; }
+.searchForm { gap: 6px; margin-bottom: 12px; }
+.localActions { gap: 2px; margin: 12px 0; padding-top: 12px; }
+.startExamples { margin-top: 12px; padding-top: 12px; }
+.startExamples h3 { margin-bottom: 8px; }
+.detailHeading { margin-bottom: 8px; }
+.relationOverview .detailEyebrow { margin-bottom: 4px; }
+.relationOverview .relationPair { margin-bottom: 8px; }
+.relationEndpoints { margin-bottom: 12px; }
+.relationEndpoints h4 { margin-bottom: 8px; }
+@media (prefers-reduced-motion: reduce) { .adjacencyDisclosure > summary { transition: none; } }
+
+/* Endpoints support the reading flow; the relation and sources remain primary. */
+.relationEndpoints .endpointButton { display: grid; grid-template-columns: 20px minmax(0, 1fr) 14px; gap: 8px; min-height: 44px; padding: 2px 0; border-color: transparent; background: transparent; color: var(--color-text); }
+.relationEndpoints .endpointButton:hover { border-color: transparent; background: var(--color-hover); }
+.relationEndpoints .endpointIcon { padding: 0; background: transparent; color: var(--color-muted); }
+.relationEndpoints .endpointIdentity { display: flex; align-items: baseline; flex-wrap: wrap; gap: 2px 7px; }
+.relationEndpoints .endpointIdentity strong { font-size: 13px; font-weight: 500; line-height: 1.5; }
+.relationEndpoints .endpointAction { justify-content: center; color: var(--color-muted); }
+.relationEndpoints .endpointAction > svg { transform: rotate(-90deg); margin: 0; }
+.relationEndpoints .endpointDirection { justify-content: flex-start; align-items: center; padding-left: 2px; height: 8px; }
+.relationEndpoints h4 { font-size: 11px; font-weight: 400; }
+.relationOverview { padding-bottom: 6px; margin-bottom: 12px; }
+.relationOverview .relationNotes { margin: 6px 0 0; }
+.relationOverview .relationNotes > summary { align-items: center; padding: 4px 0; }
+@container relation-detail (min-width: 540px) { .relationEndpoints .endpointDirection { justify-content: center; padding-left: 0; } }
+.panel .detailBack { display: inline-flex; align-items: center; min-height: 32px; margin: 0; padding: 4px 0; border-color: transparent; background: transparent; font-size: 12px; }
+@media (max-width: 800px) { .panel .detailBack { min-height: 44px; } }
+.pathDisclosure > summary { color: var(--color-text); font-size: 12px; font-weight: 500; }
+.columns > aside > .entityDetails > h3 { margin: 0 0 6px; }
+.entityDetails > p { margin-bottom: 8px; }

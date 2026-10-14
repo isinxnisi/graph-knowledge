@@ -1,4 +1,5 @@
 "use client";
+import DialogCloseButton from "./DialogCloseButton";
 import { useUiLocale } from "../lib/client/ui-locale";
 import { contentMessage } from "../lib/i18n/content";
 import { explorerLabels, explorerMessage } from "../lib/i18n/explorer";
@@ -113,7 +114,7 @@ export default function ReferenceReader({ location, dataset, onClose, onExplore 
   const backdrop = useDialogBackdrop(onClose);
   const title = location.status === "ready" ? (location.reference.kind === "entity" ? text.entityTitle : text.claimTitle) : text.title;
   return <dialog lang={locale} ref={dialog} className={`${styles.conditionDialog} ${css.dialog}`} aria-labelledby="reference-title" onCancel={event => { event.preventDefault(); onClose(); }} {...backdrop}>
-    <div className={css.header}><h2 ref={heading} id="reference-title" tabIndex={-1}>{title}</h2><button onClick={onClose}>{text.close}</button></div>
+    <div className={css.header}><h2 ref={heading} id="reference-title" tabIndex={-1}>{title}</h2><DialogCloseButton label={text.close} onClick={onClose} /></div>
     <p className={css.dataset}>{datasetLabels(dataset, locale).badge}</p><p className={css.intro}>{text.help}</p>
     {location.status === "invalid" && <p role="alert">{text.invalid}</p>}
     {location.status === "dataset" && <div role="alert"><p>{text.mismatch}</p><p>{text.linkedDataset}：{datasetLabels(location.dataset, locale).badge}</p></div>}

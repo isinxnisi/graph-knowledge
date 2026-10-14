@@ -1,5 +1,7 @@
 "use client";
 import Icon from "./Icon";
+import { useMemberIdentity } from "../lib/client/use-member-identity";
+import type { MemberUser } from "../lib/client/member-api";
 import { useUiLocale } from "../lib/client/ui-locale";
 import { explorerLabels } from "../lib/i18n/explorer";
 import { useEffect, useRef, useState } from "react";
@@ -9,9 +11,13 @@ import { siteLabels } from "../lib/i18n/site";
 import styles from "./SiteHeader.module.css";
 import { appearanceKey, defaultAppearance, readAppearance, type Appearance } from "../lib/client/appearance";
 
-export default function SiteHeader({ dataset, page = "explore" }: { dataset: DatasetMode; page?: "explore" | "member" | "shared" }) {
+export default function SiteHeader({ dataset, page = "explore", user }: { user?: MemberUser | null; dataset: DatasetMode; page?: "explore" | "member" | "shared" }) {
   const { locale, setLocale, storageError: languageError } = useUiLocale();
   const ui = explorerLabels(locale), text = siteLabels(locale), data = datasetLabels(dataset, locale);
+  const identity = useMemberIdentity(page !== "member");
+  const currentUser = page === "member" ? user ?? null : identity;
+  const displayName = currentUser?.name.trim() || text.account;
+  const mark = currentUser ? <span className={styles.memberMark} aria-hidden="true">{Array.from(displayName)[0]}</span> : <Icon name="person" />;
   const [appearance, setAppearance] = useState(defaultAppearance);
   const [storageError, setStorageError] = useState(false);
   const menu = useRef<HTMLDetailsElement>(null);
@@ -43,11 +49,12 @@ export default function SiteHeader({ dataset, page = "explore" }: { dataset: Dat
     <div className={styles.tools}>
       <nav aria-label={text.navigation} className={styles.navigation}>
         {page !== "explore" && <a href="/" target="_blank" rel="noopener noreferrer" aria-label={text.exploreLink}><Icon name="graph" />{text.explore}<span aria-hidden="true"> ↗</span></a>}
-        {page === "member" ? <span aria-current="page">{text.account}</span> : <a href="/member" target="_blank" rel="noopener noreferrer" aria-label={text.accountLink}><Icon name="person" />{text.account}<span aria-hidden="true"> ↗</span></a>}
+        {page === "member" ? <span aria-current="page" title={currentUser ? text.signedInAs(displayName) : text.account}>{mark}<span className={styles.accountLabel}>{displayName}</span></span> : <a href="/member" target="_blank" rel="noopener noreferrer" aria-label={currentUser ? text.memberLink(displayName) : text.accountLink} title={currentUser ? text.signedInAs(displayName) : text.account} data-signed-in={!!currentUser}>{mark}<span className={styles.accountLabel}>{displayName}</span><span className={styles.externalMark} aria-hidden="true"> ↗</span></a>}
       </nav>
       <details data-floating-menu className={styles.settings} ref={menu}>
-        <summary><Icon name="settings" />{text.settings}</summary>
+        <summary aria-label={text.settings} title={text.settings}><Icon name="settings" /><span className={styles.toolLabel}>{text.settings}</span></summary>
         <div className={styles.settingsPanel}>
+          {currentUser && <p className={styles.accountIdentity}><strong>{displayName}</strong><span>{text.signedIn}</span></p>}
           <nav aria-label={text.accountSettings} className={styles.settingsLinks}>
             <a href={page === "member" ? "#my-capsules" : "/member#my-capsules"} target={page === "member" ? undefined : "_blank"} rel="noopener noreferrer" onClick={() => { if (menu.current) menu.current.open = false; }}>{text.library}</a>
             <a href={page === "member" ? "#account-settings" : "/member#account-settings"} target={page === "member" ? undefined : "_blank"} rel="noopener noreferrer" onClick={() => { if (menu.current) menu.current.open = false; }}>{text.accountSettings}</a>
@@ -64,6 +71,7 @@ export default function SiteHeader({ dataset, page = "explore" }: { dataset: Dat
           <p>{text.appearanceHelp}</p>
           <label className={styles.language}>{ui.language}<select value={locale} onChange={event => setLocale(event.target.value === "en" ? "en" : "ja")}><option value="ja">日本語</option><option value="en">English</option></select></label>
           <p>{ui.languageHelp}</p>
+          <p className={styles.dataHelp}>{text.datasetAbout}：{data.badge}<br />{data.description}</p>
           {languageError && <p role="status">{ui.languageFailed}</p>}
           {storageError && <p role="status">{text.appearanceFailed}</p>}
         </div>

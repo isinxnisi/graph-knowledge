@@ -20,6 +20,7 @@ import { fetchClaim, searchEntities } from "../lib/client/api";
 vi.mock("../lib/client/api", async original => ({ ...(await original<typeof import("../lib/client/api")>()), searchEntities: vi.fn(), fetchClaim: vi.fn() }));
 beforeEach(() => {
   localStorage.clear(); document.documentElement.lang = "ja";
+  Object.defineProperty(document, "visibilityState", { configurable: true, value: "visible" });
   HTMLDialogElement.prototype.showModal = function () { this.open = true; };
   HTMLDialogElement.prototype.close = function () { this.open = false; };
 });
@@ -32,13 +33,14 @@ describe("表示localeと探索の分離", () => {
   it("初期日本語・保存値の復元・別タブの変更/削除・未対応値のfallback", async () => {
     expect(normalizeUiLocale("en-US")).toBe("en"); expect(normalizeUiLocale("fr")).toBe("ja");
     localStorage.setItem(uiLocaleKey, "en-GB");
-    const fetch = vi.fn(); vi.stubGlobal("fetch", fetch);
+    const fetch = vi.fn().mockResolvedValue(Response.json({ error: { code: "UNAUTHENTICATED" } }, { status: 401 })); vi.stubGlobal("fetch", fetch);
     render(<UiLocaleProvider><SiteHeader dataset="demo" /></UiLocaleProvider>);
     await waitFor(() => expect(document.documentElement.lang).toBe("en"), { timeout: 5000 });
     expect(screen.getByRole("heading", { name: "Explore connections" })).toBeTruthy();
     sync(null); expect(screen.getByRole("heading", { name: "関係性を探索する" })).toBeTruthy();
     sync("xx"); expect(document.documentElement.lang).toBe("ja");
-    expect(fetch).not.toHaveBeenCalled(); vi.unstubAllGlobals();
+    await waitFor(() => expect(fetch).toHaveBeenCalledTimes(1));
+    expect(fetch.mock.calls[0][0]).toBe("/api/member/profile"); vi.unstubAllGlobals();
   });
   it("明示選択を保存し、保存不能でも画面には反映する", async () => {
     render(<UiLocaleProvider><SiteHeader dataset="demo" /></UiLocaleProvider>);

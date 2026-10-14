@@ -1,4 +1,5 @@
 "use client";
+import DialogCloseButton from "./DialogCloseButton";
 import { useDialogSizeMotion } from "../lib/client/use-dialog-size-motion";
 import AnimatedDetails from "./AnimatedDetails";
 import { useDialogDismiss } from "../lib/client/use-dialog-dismiss";
@@ -80,7 +81,7 @@ export default function EntityOverview({ entity, dataset, restricted, onClose, o
   const dismiss = useDialogDismiss(dialog, onClose);
   const backdrop = useDialogBackdrop(dismiss);
   return <dialog ref={dialog} className={`${styles.conditionDialog} ${styles.overviewDialog}`} aria-labelledby="overview-title" onCancel={(event) => { event.preventDefault(); dismiss(); }} {...backdrop}>
-    <div className={styles.detailHeading}><h2 id="overview-title">{labels.title}</h2><button onClick={dismiss}>{labels.close}</button></div>
+    <div className={styles.detailHeading}><h2 id="overview-title">{labels.title}</h2><DialogCloseButton label={labels.close} onClick={dismiss} /></div>
     <div className={styles.overviewBody}>
     <p className={styles.muted}>{datasetLabels(dataset, locale).badge}</p>
     <div className={styles.overviewEntity}><h3>{entity.name}</h3><span className={styles.badge}>{ui.kinds[entity.kind]}</span></div>

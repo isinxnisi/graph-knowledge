@@ -17,7 +17,7 @@
 
 本番guardは上記origin・内部DB・User・prefix・Googleを照合する。無効設定のままなら公開KGは動き、会員APIは503。設定不良や会員PG停止でもKG全体の起動を妨げない。readinessは引き続き公開KG用であり、会員正常性の代用にしない。
 
-日常確認先 `graph-beta.isinxnisi.com` の会員機能は無効のまま。VPSとは別origin・別DBであり、Google cookieやsessionを共有する設定を足さない。preview認証の解除は工程22、本人削除等の運営操作は工程14に残す。
+2026-10-15のユーザー指定で、日常確認先 `graph-beta.isinxnisi.com` も実Google会員の検証先へ変更する。末尾のbeta接続を現行手順とする。VPSとは別origin・別DBとし、Google cookieやsessionを共有しない。preview認証の解除は工程22、本人削除等の運営操作は工程14に残す。
 
 ## Google側で必要な操作
 
@@ -323,3 +323,16 @@ sudo bash /home/develop/graph-google-diagnostic-20261014/repair-google-egress-mt
 上記の「会員導線改善」という整理はユーザーから明確に否定された。デザインが成立していないため意図が伝わらず、保存の流れがどうあるべきかも判断できず、先に進めない状態と定義する。保存導線の分かりにくさとは別課題であり、デザイン全体をその局所問題に縮小しない。[訂正後の設計基準](EDITORIAL_EXPLORER_DESIGN.md#デザイン未成立の定義と次の作業2026-10-14訂正)に従う。本人の保存再訪成功は機能確認として維持する。
 
 現行操作の再確認：新規のブラウザ内Capsule保存後は自動で内容表示へ進み、アカウント保存への別タブリンクが現れる。「読む」が必要なのは既存保存を一覧から開く時であり、上記の一律の案内は訂正する。[現状の操作体験表](EDITORIAL_EXPLORER_DESIGN.md#現在の操作体験を絶対軸にした導線整理2026-10-14)を参照。
+
+## 日常確認先betaの実Google接続（2026-10-15）
+
+ユーザーがbetaのOAuth redirectも登録済みであることを確認し、Cloudflareの追加設定が必要なら止める条件で接続を指定した。旧節の「.comは会員無効」はVPS初回接続時の範囲で、今後のbetaへは適用しない。
+
+- originは `https://graph-beta.isinxnisi.com`、callbackは同originの `/api/auth/callback/google`。既存Tunnel→3200をそのまま使い、Cloudflare設定は変更しない。
+- `compose.member-beta.yaml` の専用PGを `127.0.0.1:55433` にだけ公開。VPS・fixture DB・KGから独立した永続volumeとし、Webは非superuser `gk_member` で接続する。既存5 migrationを明示適用する。
+- PG管理者設定はGit対象外の `.env.member-beta`、WebのGoogle credential・専用secret・非superuser接続は既存のprivate `.env.public` に置く。両方0600。cookie prefixは `gk-member-beta`、Secure／HttpOnly／SameSite=Lax／host-onlyを維持する。
+- productionのcanonical originとguardは引き続きPlunodeのみ。betaとVPSのUser・Capsule・ブラウザ保存・cookieは共有しない。betaで作成・保存した内容はbeta側へ保存される。
+- 起動は `docker compose --env-file .env.member-beta -f compose.member-beta.yaml up -d --wait`、migrationは `node --env-file=.env.public --import tsx scripts/member-migrate.ts`。既存の `npm run public:start` がWeb設定を読み込む。秘密を標準出力へ出さない。
+- 認証開始と実Google本人callback／保存再訪を分けて確認する。Cloudflare側の追加調整が必要なら、ユーザーの指定に従いその調整へ進まず停止する。
+
+2026-10-15確認：Tunnel経由のGoogle認証開始200・callback URI一致・Secure／HttpOnly／host-only cookie・匿名profile 401、Google JWKS 200／人工の無効codeでtoken 400 invalid_grantを確認。ユーザーが実Googleログインと表示名の表示に成功。Cloudflareの追加設定は不要だった。betaでの保存・再訪は別途未確認。

@@ -1,4 +1,5 @@
 "use client";
+import DialogCloseButton from "./DialogCloseButton";
 import { useDialogDismiss } from "../lib/client/use-dialog-dismiss";
 import Icon from "./Icon";
 import { useUiLocale } from "../lib/client/ui-locale";
@@ -44,7 +45,7 @@ function ConditionEditor({ value, roles, positions, eventRoles, onApply, onCance
   const backdrop = useDialogBackdrop(cancel);
   return <dialog ref={dialog} className={`${styles.conditionDialog} ${styles.conditionEditor}`} aria-labelledby="condition-title" onCancel={(event) => { event.preventDefault(); cancel(); }} {...backdrop}>
     <header className={styles.conditionHeader}>
-      <div className={styles.conditionTitle}><h2 id="condition-title">{text.title}</h2><button aria-label={text.closeEditor} onClick={cancel}><span aria-hidden="true">×</span></button></div>
+      <div className={styles.conditionTitle}><h2 id="condition-title">{text.title}</h2><DialogCloseButton label={text.closeEditor} onClick={cancel} /></div>
       <p className={styles.muted}>{text.scope}</p>
       <p className={styles.draftNotice}>{dirty ? text.draft : text.unchanged}</p>
     </header>
@@ -72,7 +73,7 @@ function ConditionEditor({ value, roles, positions, eventRoles, onApply, onCance
     </fieldset>
     {draft.some(predicate => ["CONTRIBUTED_TO", "AFFILIATED_WITH", "PARTICIPATED_IN"].includes(predicate)) && <h3 className={styles.preciseTitle}>{facetText.precise}</h3>}
     {draft.includes("CONTRIBUTED_TO") && <section className={styles.roleSettings}>
-      <button aria-expanded={roleOpen} aria-controls="role-editor" onClick={() => setRoleOpen(!roleOpen)}>{text.roleEdit}<span aria-hidden="true" className={styles.conditionChevron}>⌄</span></button>
+      <button aria-expanded={roleOpen} aria-controls="role-editor" onClick={() => setRoleOpen(!roleOpen)}>{text.roleEdit}<span aria-hidden="true" className={styles.conditionChevron}><Icon name="chevron" /></span></button>
       {roleOpen && <fieldset id="role-editor" className={styles.roleFilter}><legend>{roleText.title}</legend>
         <div className={styles.filterChoices}>
           <label><input type="radio" name="role-mode" checked={draftRoles === null} onChange={() => setDraftRoles(null)} />{text.noRole}</label>
@@ -84,7 +85,7 @@ function ConditionEditor({ value, roles, positions, eventRoles, onApply, onCance
       </fieldset>}
     </section>}
     {draft.includes("AFFILIATED_WITH") && <section className={styles.roleSettings}>
-      <button aria-expanded={positionOpen} aria-controls="position-editor" onClick={() => setPositionOpen(!positionOpen)}>{positionText.edit}<span aria-hidden="true" className={styles.conditionChevron}>⌄</span></button>
+      <button aria-expanded={positionOpen} aria-controls="position-editor" onClick={() => setPositionOpen(!positionOpen)}>{positionText.edit}<span aria-hidden="true" className={styles.conditionChevron}><Icon name="chevron" /></span></button>
       {positionOpen && <fieldset id="position-editor" className={styles.roleFilter}><legend>{positionText.title}</legend>
         <div className={styles.filterChoices}>
           <label><input type="radio" name="position-mode" checked={draftPositions === null} onChange={() => setDraftPositions(null)} />{positionText.noPosition}</label>
@@ -97,7 +98,7 @@ function ConditionEditor({ value, roles, positions, eventRoles, onApply, onCance
       </fieldset>}
     </section>}
     {draft.includes("PARTICIPATED_IN") && <section className={styles.roleSettings}>
-      <button aria-expanded={eventOpen} aria-controls="event-role-editor" onClick={() => setEventOpen(!eventOpen)}>{eventText.edit}<span aria-hidden="true" className={styles.conditionChevron}>⌄</span></button>
+      <button aria-expanded={eventOpen} aria-controls="event-role-editor" onClick={() => setEventOpen(!eventOpen)}>{eventText.edit}<span aria-hidden="true" className={styles.conditionChevron}><Icon name="chevron" /></span></button>
       {eventOpen && <fieldset id="event-role-editor" className={styles.roleFilter}><legend>{eventText.title}</legend>
         <div className={styles.filterChoices}>
           <label><input type="radio" name="event-role-mode" checked={draftEventRoles === null} onChange={() => setDraftEventRoles(null)} />{eventText.noRole}</label>
@@ -122,7 +123,7 @@ export default function RelationFilter({ value, roles = null, positions = null, 
   const text = entryLabels(locale), relations = explorationLabels(locale);
   return <div className={styles.conditionBar}>
     <p data-testid="active-predicates"><strong>{text.applied}：</strong>{conditionSummary(value, roles, locale, positions, eventRoles)}</p>
-    <button aria-haspopup="dialog" aria-expanded={editing} onClick={() => setEditing(true)}><Icon name="settings" />{text.edit}</button>
+    <button aria-label={text.edit} title={text.edit} aria-haspopup="dialog" aria-expanded={editing} onClick={() => setEditing(true)}><Icon name="settings" /><span>{text.edit}</span></button>
     {editing && <ConditionEditor value={value} roles={roles} positions={positions} eventRoles={eventRoles} onCancel={() => setEditing(false)} onApply={(predicates, nextRoles, nextPositions, nextEventRoles) => { onApply(predicates, nextRoles, nextPositions, nextEventRoles); setEditing(false); }} />}
     <span className={styles.srOnly}>{relations.help}</span>
   </div>;

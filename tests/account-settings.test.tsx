@@ -14,20 +14,20 @@ describe("最小アカウント設定", () => {
     expect(memberProfileUpdateSchema.parse({ name: "  名 前  " })).toEqual({ name: "名 前" });
     for (const value of [{ name: " " }, { name: "n\na" }, { name: "x".repeat(81) }, { name: "名前", active: true }, { name: "名前", userId: "other" }]) expect(memberProfileUpdateSchema.safeParse(value).success).toBe(false);
   });
-  it("保存テーマを復元し、他タブの変更・削除を反映する。private取得はしない", async () => {
-    const fetch = vi.fn(); vi.stubGlobal("fetch", fetch);
+  it("保存テーマを復元し、テーマ変更では本人表示以外の会員内容を取得しない", async () => {
+    const fetch = vi.fn().mockResolvedValue(Response.json({ error: { code: "MEMBER_UNAVAILABLE" } }, { status: 503 })); vi.stubGlobal("fetch", fetch);
     localStorage.setItem(appearanceKey, JSON.stringify({ theme: "dark-blue", palette: "blue" }));
     render(<SiteHeader dataset="demo" />);
     await waitFor(() => expect(document.documentElement.dataset.theme).toBe("dark-blue"));
     fireEvent(window, new StorageEvent("storage", { key: appearanceKey, newValue: JSON.stringify({ theme: "dark-brown", palette: "brown" }) }));
     expect(document.documentElement.dataset.theme).toBe("dark-brown");
     fireEvent(window, new StorageEvent("storage", { key: appearanceKey, newValue: null }));
-    expect(document.documentElement.dataset.theme).toBe("light"); expect(fetch).not.toHaveBeenCalled();
+    expect(document.documentElement.dataset.theme).toBe("light"); expect(fetch.mock.calls.map(call => call[0])).toEqual(["/api/member/profile"]);
   });
   it("テーマ変更を保存し、Escape・外側クリックで設定を閉じる", async () => {
     render(<SiteHeader dataset="demo" />);
     await waitFor(() => expect(document.documentElement.dataset.theme).toBe("light"));
-    const details = screen.getByText("設定").parentElement as HTMLDetailsElement;
+    const details = screen.getByLabelText("設定").closest("details") as HTMLDetailsElement;
     details.open = true;
     fireEvent.click(screen.getByRole("button", { name: "ダークモード" }));
     expect(readAppearance(localStorage.getItem(appearanceKey)).theme).toBe("dark-brown");
@@ -40,15 +40,51 @@ describe("最小アカウント設定", () => {
     vi.spyOn(Storage.prototype, "setItem").mockImplementation(() => { throw new Error("blocked"); });
     render(<SiteHeader dataset="demo" />);
     await waitFor(() => expect(document.documentElement.dataset.theme).toBe("light"));
-    (screen.getByText("設定").parentElement as HTMLDetailsElement).open = true;
+    (screen.getByLabelText("設定").closest("details") as HTMLDetailsElement).open = true;
     fireEvent.click(screen.getByRole("button", { name: "ダークモード" }));
     expect(document.documentElement.dataset.theme).toBe("dark-brown");
     expect(screen.getByRole("status").textContent).toContain("テーマを保存できません");
   });
   it("会員ページ内のメニューは編集中URLを変更するnavigationをしない", () => {
     render(<SiteHeader dataset="demo" page="member" />);
-    (screen.getByText("設定").parentElement as HTMLDetailsElement).open = true;
+    (screen.getByLabelText("設定").closest("details") as HTMLDetailsElement).open = true;
     expect(screen.getByRole("link", { name: "アカウント設定" }).getAttribute("href")).toBe("#account-settings");
+  });
+  it("ヘッダは本人確認済みの名前を表示し、会員内容や名前をブラウザへ保存しない", async () => {
+    const user = { id: "10000000-0000-4000-8000-000000000001", name: "本人の表示名", locale: "ja" };
+    const fetch = vi.fn().mockResolvedValue(Response.json({ user })); vi.stubGlobal("fetch", fetch);
+    render(<SiteHeader dataset="demo" />);
+    const account = await screen.findByRole("link", { name: "本人の表示名のアカウントを開く（別タブ）" });
+    expect(account.getAttribute("data-signed-in")).toBe("true");
+    expect(fetch.mock.calls.map(call => call[0])).toEqual(["/api/member/profile"]);
+    expect(fetch.mock.calls[0][1]).toMatchObject({ cache: "no-store", credentials: "same-origin" });
+    expect(JSON.stringify(localStorage)).not.toContain(user.name);
+  });
+  it("非表示と他タブのログアウトで名前を消し、遅い本人応答を受け入れない", async () => {
+    const user = { id: "10000000-0000-4000-8000-000000000001", name: "前の本人", locale: "ja" };
+    let finish!: (response: Response) => void;
+    const fetch = vi.fn().mockResolvedValueOnce(Response.json({ user }))
+      .mockImplementationOnce(() => new Promise<Response>(resolve => { finish = resolve; }))
+      .mockResolvedValue(Response.json({ error: { code: "UNAUTHENTICATED" } }, { status: 401 }));
+    vi.stubGlobal("fetch", fetch); render(<SiteHeader dataset="demo" />);
+    await screen.findByRole("link", { name: "前の本人のアカウントを開く（別タブ）" });
+    Object.defineProperty(document, "visibilityState", { configurable: true, value: "hidden" }); fireEvent(document, new Event("visibilitychange"));
+    expect(screen.queryByText("前の本人")).toBeNull();
+    Object.defineProperty(document, "visibilityState", { configurable: true, value: "visible" }); fireEvent(document, new Event("visibilitychange"));
+    await waitFor(() => expect(fetch).toHaveBeenCalledTimes(2));
+    fireEvent(window, new StorageEvent("storage", { key: "graph-knowledge:member-session-changed", newValue: "changed" }));
+    await waitFor(() => expect(fetch).toHaveBeenCalledTimes(3));
+    finish(Response.json({ user }));
+    await waitFor(() => expect(screen.getByRole("link", { name: "アカウントを開く（別タブ）" })).toBeDefined());
+    expect(screen.queryByText("前の本人")).toBeNull();
+  });
+  it("会員画面のヘッダは親で確認した名前を使い、余分な本人取得を行わない", () => {
+    const fetch = vi.fn(); vi.stubGlobal("fetch", fetch);
+    const user = { id: "10000000-0000-4000-8000-000000000001", name: "確認済み", locale: "ja" };
+    const view = render(<SiteHeader dataset="demo" page="member" user={user} />);
+    expect(screen.getByTitle("確認済みでログイン中")).toBeDefined();
+    view.rerender(<SiteHeader dataset="demo" page="member" user={null} />);
+    expect(screen.queryByTitle("確認済みでログイン中")).toBeNull(); expect(fetch).not.toHaveBeenCalled();
   });
   it("名前の保存失敗でも入力を消さず、利用者を固定して送り、成功のときだけ反映する", async () => {
     const user = { id: "10000000-0000-4000-8000-000000000001", name: "元の名前", locale: "ja" };

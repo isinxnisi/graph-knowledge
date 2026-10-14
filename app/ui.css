@@ -38,3 +38,9 @@ body button[data-variant="primary"] { border-color: var(--color-accent); backgro
 body button[data-variant="primary"]:hover:not(:disabled) { background: var(--color-accent-strong); border-color: var(--color-accent-strong); }
 body button[data-variant="danger"] { color: var(--color-denied); border-color: var(--color-denied); }
 body button[data-variant="danger"]:hover:not(:disabled) { background: var(--color-denied-soft); border-color: var(--color-denied); }
+
+/* The same quiet close affordance in exploration dialogs; action labels stay accessible. */
+body dialog button[data-dialog-close][type="button"] { display: inline-grid; place-items: center; flex: 0 0 auto; width: 36px; height: 36px; min-height: 36px; margin: 0; padding: 0; border: 0; border-radius: 50%; background: var(--color-hover); color: var(--color-muted); box-shadow: none; }
+body dialog button[data-dialog-close][type="button"]:hover { background: var(--color-accent-soft); color: var(--color-text); }
+body dialog button[data-dialog-close] > .ui-icon { width: 18px; height: 18px; margin: 0; }
+@media (max-width: 800px) { body dialog button[data-dialog-close][type="button"] { width: 44px; height: 44px; min-height: 44px; } }

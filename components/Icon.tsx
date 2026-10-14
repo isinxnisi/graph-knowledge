@@ -18,6 +18,8 @@ const paths = {
   settings: <><path d="M4 7h16M4 17h16" /><circle cx="8" cy="7" r="3" /><circle cx="16" cy="17" r="3" /></>,
   fit: <path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5" />,
   focus: <><circle cx="12" cy="12" r="7" /><circle cx="12" cy="12" r="2" /><path d="M12 2v3m0 14v3M2 12h3m14 0h3" /></>,
+  chevron: <path d="m6 9 6 6 6-6" />,
+  back: <path d="M20 12H4m6-6-6 6 6 6" />,
   arrow: <path d="M4 12h16m-6-6 6 6-6 6" />,
   close: <path d="m6 6 12 12M6 18 18 6" />,
 } as const;

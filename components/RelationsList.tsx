@@ -38,7 +38,7 @@ export default function RelationsList({ graph, selection, onEntity, onClaim, onE
         document.getElementById("explorer-graph")?.focus({ preventScroll: true });
       }}>{explorerPaneLabels(locale).backToGraph}</button>
     </div>
-    <AnimatedDetails key={entity.id} open className={styles.adjacencyDisclosure} bodyClassName={styles.adjacencyBody} summary={<><h3>{ui.adjacent(entity.name)}<small className={styles.muted}>{ui.adjacentHelp}</small></h3><span className={styles.disclosureChevron} aria-hidden="true">⌄</span></>}>
+    <AnimatedDetails key={entity.id} open className={styles.adjacencyDisclosure} bodyClassName={styles.adjacencyBody} summary={<><h3>{ui.adjacent(entity.name)}<small className={styles.muted}>{ui.adjacentHelp}</small></h3><span className={styles.disclosureChevron} aria-hidden="true"><Icon name="chevron" /></span></>}>
     <div className={styles.actions}>{expansion?.open ? <button onClick={() => onClose(entity.id)}>{ui.closeBranch}</button> : <button onClick={() => onExpand(entity.id)}>{expansion?.pages.length ? ui.reopenBranch : ui.expand}</button>}</div>
     {expansion?.loading && <p role="status">{expansion.expanded ? text.neighborsLoadingMore : text.neighborsLoading}</p>}
     {expansion?.error && <div role="alert" className={styles.error}>

@@ -1,4 +1,5 @@
 "use client";
+import DialogCloseButton from "./DialogCloseButton";
 import { useUiLocale } from "../lib/client/ui-locale";
 import { contentMessage } from "../lib/i18n/content";
 
@@ -107,7 +108,7 @@ export default function WorkspaceDialog({ dataset, graph, captureView, onOpen, o
   const loading = Object.values(graph.expansions).some(meta => meta.loading);
   const tooLarge = Object.values(graph.expansions).reduce((sum, meta) => sum + meta.pages.length, 0) > WORKSPACE_PAGE_LIMIT;
   return <dialog lang={locale} ref={dialog} className={`${styles.conditionDialog} ${styles.savedViews}`} aria-labelledby="workspace-title" onCancel={event => { event.preventDefault(); close(); }} {...backdrop}>
-    <div className={styles.conditionTitle}><h2 id="workspace-title">{text.title}</h2><button ref={closeButton} aria-label={text.close} onClick={close}>×</button></div>
+    <div className={styles.conditionTitle}><h2 id="workspace-title">{text.title}</h2><DialogCloseButton buttonRef={closeButton} label={text.close} onClick={close} /></div>
     <p>{text.help}</p><p className={styles.muted}>{text.local}</p>
     {graph.centerId ? <form className={styles.savedViewForm} onSubmit={event => { event.preventDefault(); save(); }}>
       <p>{text.root}：<strong>{graph.nodes[graph.centerId]?.name}</strong></p>

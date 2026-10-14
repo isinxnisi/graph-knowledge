@@ -1,4 +1,5 @@
 "use client";
+import DialogCloseButton from "./DialogCloseButton";
 import { useUiLocale } from "../lib/client/ui-locale";
 import { contentMessage } from "../lib/i18n/content";
 import { explorerLabels } from "../lib/i18n/explorer";
@@ -176,7 +177,7 @@ export default function CapsuleDialog({ dataset, graph, onClose }: { dataset: Da
   }
   const overLimit = members.length > CAPSULE_LIMITS.entities || claimIds.length > CAPSULE_LIMITS.claims;
   return <dialog lang={locale} ref={dialog} className={`${styles.conditionDialog} ${css.dialog}`} aria-labelledby="capsule-title" onCancel={event => { event.preventDefault(); exit("close"); }} {...backdrop}>
-    <div className={css.title}><h2 id="capsule-title">{text.title}</h2><button onClick={() => exit("close")}>{text.close}</button></div>
+    <div className={css.title}><h2 id="capsule-title">{text.title}</h2><DialogCloseButton label={text.close} onClick={() => exit("close")} /></div>
     <p>{text.help}</p><p className={styles.muted}>{text.local}</p>
     <p><a href="/member" target="_blank" rel="noopener noreferrer">{memberLabels(locale).launch}</a></p>
     {error && <p role="alert" className={styles.error}>{contentMessage(error, locale)}</p>}{message && <p role="status">{contentMessage(message, locale)}</p>}

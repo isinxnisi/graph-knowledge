@@ -199,7 +199,7 @@ export default function MemberCapsules({ dataset, initialImport = "" }: { datase
       if (!signal.aborted) { setItems(previous => previous.filter(item => item.id !== selected.id)); setSelected(null); setMessage(text.removed); navigate(null); }
     });
   }
-  return <><SiteHeader dataset={dataset} page="member" /><main lang={locale} className={css.page}>
+  return <><SiteHeader dataset={dataset} page="member" user={user} /><main lang={locale} className={css.page}>
     <header className={css.pageHeader}><p className={css.eyebrow}>{text.private}</p><h1 ref={heading} tabIndex={-1}>{text.title}</h1><p>{text.help}</p>
       <p className={css.muted}>{text.returnHelp}</p>
     </header>

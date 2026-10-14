@@ -1,5 +1,7 @@
 "use client";
 import { useUiLocale } from "../lib/client/ui-locale";
+import AnimatedDetails from "./AnimatedDetails";
+import Icon from "./Icon";
 
 import type { EntitySummary } from "../lib/domain/api";
 import { entityLabel, type DisplayRelation } from "../lib/client/graph-presentation";
@@ -21,8 +23,7 @@ export default function GraphPath({ nodes, relations, rootId, targetId, onRelati
   const name = (id: string) => entityLabel(nodes[id], nodes, locale).replaceAll("\n", " / ");
   return <section className={styles.graphPath} aria-label={text.title}>
     <h3>{text.title}</h3>
-    {path ? <details>
-      <summary>{text.summary(path.length)}</summary>
+    {path ? <AnimatedDetails className={`${styles.adjacencyDisclosure} ${styles.pathDisclosure}`} bodyClassName={styles.disclosureBody} summary={<><span>{text.summary(path.length)}</span><span className={styles.disclosureChevron} aria-hidden="true"><Icon name="chevron" /></span></>}>
       <p className={styles.muted}>{text.help}</p>
       <p className={styles.muted}>{text.meaning}</p>
       <ol className={styles.pathSteps}>
@@ -39,6 +40,6 @@ export default function GraphPath({ nodes, relations, rootId, targetId, onRelati
           </li>;
         })}
       </ol>
-    </details> : <p className={styles.muted}>{text.empty}</p>}
+    </AnimatedDetails> : <p className={styles.muted}>{text.empty}</p>}
   </section>;
 }
