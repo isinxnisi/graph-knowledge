@@ -1,6 +1,6 @@
 # Plunodeの本番Google接続と完了条件
 
-2026-10-14更新。公開βの工程13。既存の[会員Capsule](MEMBER_CAPSULES.md)の認証・所有者契約を維持し、専用PostgreSQLと本番設定の接続を準備する。**正式hostのHTTPS・VPS専用PG／Google認証開始の実接続は確認済み。本人Googleログイン・表示名は確認済み。MTU永続適用も確認済み。保存再訪は未確認で、工程13はまだ完了ではない。** 公開KG、会員保存、限定共有の意味を変更しない。
+2026-10-14更新。公開βの工程13。既存の[会員Capsule](MEMBER_CAPSULES.md)の認証・所有者契約を維持し、専用PostgreSQLと本番設定の接続を準備する。**正式hostのHTTPS・VPS専用PG／Google認証開始の実接続は確認済み。本人Googleログイン・表示名は確認済み。MTU永続適用も確認済み。本人のアカウント保存・logout→login後の再閲覧も確認済み。編集／限定共有・停止／実機等は未確認で、工程13はまだ完了ではない。** 公開KG、会員保存、限定共有の意味を変更しない。
 
 ## 接続先
 
@@ -97,9 +97,9 @@ Google本人認証を含む確認が終わるまで、[進捗](../PUBLIC_BETA_PR
 | 隔離環境で確認 | 実PG＋検証OIDCの2 User認可・保存・再訪。実Googleとは別 |
 | 実接続済み | 正式HTTPS・KG・専用PG・本人Googleログイン・表示名を確認済み |
 | 受領・確認済み | 正式callbackを含むGoogle Web client JSON。2026-10-14にprivate配置・VPS有効化済み |
-| 人間操作待ち | 本人の保存／再訪確認 |
+| 人間操作待ち | 編集・限定共有／停止・実機等の残る本人確認 |
 | 適用済み | 専用PG・5 migration・本番Web。ユーザーが管理者scriptを実行 |
-| 未確認 | 実sessionでの保存・logout後再訪、実機スマホ。これらを隔離試験で代用しない |
+| 未確認 | 実sessionでの編集・限定共有／停止、実機スマホ、第二の実Google Userによる隔離。これらを隔離試験で代用しない |
 
 ### Google Cloudの操作
 
@@ -309,3 +309,10 @@ sudo bash /home/develop/graph-google-diagnostic-20261014/repair-google-egress-mt
 診断・一時修正・恒久適用のPython testは各1（うち一時4／恒久5 scenario）が成功。まとめ実行の診断1件は既定Node12で失敗したため、プロジェクトのNode24へPATHを合わせて再実行し成功。アプリコードは変更しておらず、既存本番imageでの会員接続integrationを実施した。UI build／全Graph E2Eの再実行は今回のCompose・運用script変更の検証には含めない。
 
 適用後の別途HTTPS確認：正式トップ200・dataset200（revision `5b6ccb7b-7a5d-4005-ab34-01c490e93b1c`）・会員status200。preview認証のみで会員sessionを持たないprofile／capsulesは401。Caddy／Dockerはactive。ユーザー本人のsessionやprivate Capsuleの内容は取得していない。
+
+
+### 本人の実アカウント保存・再ログイン後再訪（2026-10-14）
+
+ユーザーが「ログアウト→ログインで保存したCapsuleは表示できている」と確認。本人の実Google sessionでのアカウント保存と再ログイン後再訪は確認済みへ更新する。恒久適用後の対話で得た本人確認であり、Codexが本人のprivate内容を閲覧した結果ではない。編集・共有発行／停止・実機スマホ・第二の実Google Userは未確認のまま。
+
+リンク／ボタンの役割、レイアウト、発見性、操作の予測しづらさが実利用上の問題として指摘された。保存できることと、自然に保存へ進めることを別に評価する。次の会員導線改善は[現行デザイン方針](EDITORIAL_EXPLORER_DESIGN.md#会員capsule導線の次の改善単位2026-10-14)に記録し、機能実接続の成功でデザインを完了扱いにしない。
