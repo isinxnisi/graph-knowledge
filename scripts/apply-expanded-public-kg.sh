@@ -8,7 +8,7 @@ bundle=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)
 app=/opt/graph-knowledge
 exec 9>"$app/.member-activation.lock"
 flock -n 9 || { echo '別の構成操作が実行中です。' >&2; exit 1; }
-dc=(docker compose --env-file "$app/app.env" -f "$app/compose.yaml")
+dc=(docker compose --env-file "$app/app.env" -f "$app/compose.yaml" --profile member)
 "${dc[@]}" config --quiet
 identity() { docker inspect --format '{{.Id}} {{.State.StartedAt}}' "$("${dc[@]}" ps -q "$1")"; }
 neo4j_before=$(identity graph-neo4j)
