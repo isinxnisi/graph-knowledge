@@ -1,6 +1,6 @@
 # Plunodeの本番Google接続と完了条件
 
-2026-10-14更新。公開βの工程13。既存の[会員Capsule](MEMBER_CAPSULES.md)の認証・所有者契約を維持し、専用PostgreSQLと本番設定の接続を準備する。**正式hostのHTTPS確認・Google Web JSON受領は完了。VPS会員有効化・本人ログインは未了で、工程13はまだ完了ではない。** 公開KG、会員保存、限定共有の意味を変更しない。
+2026-10-14更新。公開βの工程13。既存の[会員Capsule](MEMBER_CAPSULES.md)の認証・所有者契約を維持し、専用PostgreSQLと本番設定の接続を準備する。**正式hostのHTTPS・VPS専用PG／Google認証開始の実接続は確認済み。本人ログイン・保存再訪は未確認で、工程13はまだ完了ではない。** 公開KG、会員保存、限定共有の意味を変更しない。
 
 ## 接続先
 
@@ -95,10 +95,10 @@ Google本人認証を含む確認が終わるまで、[進捗](../PUBLIC_BETA_PR
 | --- | --- |
 | 実装済み | Google provider、DB session、本人設定、Capsuleの明示保存／読取／編集、限定共有／停止、所有者認可 |
 | 隔離環境で確認 | 実PG＋検証OIDCの2 User認可・保存・再訪。実Googleとは別 |
-| 実接続済み | VPSのKG・preview認証付きHTTPS。会員は未接続 |
-| 受領・確認済み | 正式callbackを含むGoogle Web client JSON。2026-10-14にprivate配置、まだ未有効化 |
-| 人間操作待ち | VPS会員有効化と本人のGoogle操作 |
-| 適用待ち | VPSのmember profile／専用PG、migration、有効化。管理者sudoが必要 |
+| 実接続済み | 正式HTTPS・KG・専用PG・Google認証開始。本人callbackは未確認 |
+| 受領・確認済み | 正式callbackを含むGoogle Web client JSON。2026-10-14にprivate配置・VPS有効化済み |
+| 人間操作待ち | 本人のGoogleログイン・保存／再訪確認 |
+| 適用済み | 専用PG・5 migration・本番Web。ユーザーが管理者scriptを実行 |
 | 未確認 | 実Google callback、実sessionでの保存・logout後再訪、実機スマホ。これらを隔離試験で代用しない |
 
 ### Google Cloudの操作
@@ -233,3 +233,17 @@ sudo bash /home/develop/graph-production-plunode-20261014/scripts/activate-produ
 - ユーザー指定のWindows JSONを内容を表示せず検証し、Web client形式・正式callbackを確認。Git外 `~/.config/graph-knowledge/google-web.json` とVPSの `/home/develop/graph-production-plunode-20261014/google-web.json` に0600で配置した。元fileは変更せず、Git／image／manifest／ログにSecretを含めない。JSON受領は実Google認証成功とは別。
 
 **残りは管理者による上記 `activate-production-member.sh` の実行、その後のHTTPS状態確認と本人Googleログイン・保存／再訪・共有停止・実機確認。** Caddy追加を再実行する必要はない。本人sessionをCodexが代行作成せず、preview認証・既存KGを維持する。会員適用前にPG／DBや稼働envを変更していない。
+
+### 会員有効化後の実HTTPS確認（2026-10-14）
+
+ユーザーが `activate-production-member.sh` を実行。提出ログではKG backup成功、専用PG作成・healthy、migration二回成功、`beta-plunode-20261014` のWeb更新・healthy、会員status200／匿名profile401／Google認証開始を確認した。script内の5 migration・非superuser検査も通過している。private退避は `/opt/graph-knowledge/member-rollbacks/activation-jDfirZp3`。これはユーザー実行ログに基づく確認で、Codexが本番Docker／PGへ管理者接続したものではない。
+
+適用後に実HTTPSを別途確認した。
+
+- 未preview認証は401・noindexを維持。preview認証後のKG200・revision `5b6ccb7b-7a5d-4005-ab34-01c490e93b1c` を維持。
+- member status200／Google。会員未ログインのprofile・Capsule一覧・本人投稿APIはJSONの401で、preview認証だけではprivateデータを読めない。
+- 実clientの認証開始200。client IDは受領JSONと一致し、redirectは正式callback、scopeはopenid／email／profileだけ。state CookieはSecure／HttpOnly／SameSite=Lax、Domainなし。旧graph Originからの認証開始は403。
+- HTTPSのbuild `pmbu-6SRzMtrUalkhnuSw` は検証済みimageと一致。Caddy／Docker／既存通知serviceは全てactive。
+- 1440／390pxの実ブラウザでGoogle登録・ログインボタンが有効、横はみ出しなし。390pxの実画像でログイン案内・ブラウザ内保存との区別を確認。両幅でPLUTO探索がEntity4／Claim5になることも確認した。
+
+認証開始検証はPGへ一時OAuth stateを作るが、Googleへブラウザを送ったり、本人session・Capsule保存を作ったりはしていない。残りは **本人のGoogle callback→表示名確認、ログアウト／再ログイン、本人保存・再閲覧／編集、限定共有・停止、別User保護、実機操作**。会員有効化の管理者コマンドをもう一度実行する必要はない。これらの実利用確認まで工程13未完了。

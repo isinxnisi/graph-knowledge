@@ -1,6 +1,6 @@
 # 現行技術設計
 
-更新日: 2026-10-14 / 状態: 初期Vertical Sliceと探索の開閉・Node再クリックまで実装済み。既存predicateと限定制作Roleによる条件付き探索を追加。v2 Role Claim 5件を人間受入後に投入・検証済み。関係概要・明示起点切替・直前一件復帰、人物・作品・組織の統一検索入口も実装。科学・研究機関pilot v1を別環境へ投入・観察済み。Phase 14では科学v2と組織立場のtyped限定を追加し、制作Roleと独立した語彙を保って条件・比較処理を共有。Phase 15の特定Event参加（第三のtyped限定）を実装。実資料E01/E03と特定開催回・開催期間を人間受入後に生成・専用DBへ投入・観察済み。Phase 20で三relation facetを条件editorへ接続し、具体条件を使う既存取得・復帰を維持。Phase 21でGraphの限定概要・中立的な肯否と、関係全体から独立主張／根拠へ降りる詳細を整合。Phase 22でGraphラベルを短い関係見出しと構造化済みの具体語優先へ変更。汎用taxonomy・プリセットは未実装。会員Capsuleは認証・所有者付きAPI、明示保存・再閲覧・編集、指定版の限定リンク共有まで接続。本人の表示名PUT／設定UIとブラウザ単位の外観保存を実装。実Google接続は未了。[文書の入口](README.md)に現役設計とフェーズ別履歴をまとめる。
+更新日: 2026-10-14 / 状態: 初期Vertical Sliceと探索の開閉・Node再クリックまで実装済み。既存predicateと限定制作Roleによる条件付き探索を追加。v2 Role Claim 5件を人間受入後に投入・検証済み。関係概要・明示起点切替・直前一件復帰、人物・作品・組織の統一検索入口も実装。科学・研究機関pilot v1を別環境へ投入・観察済み。Phase 14では科学v2と組織立場のtyped限定を追加し、制作Roleと独立した語彙を保って条件・比較処理を共有。Phase 15の特定Event参加（第三のtyped限定）を実装。実資料E01/E03と特定開催回・開催期間を人間受入後に生成・専用DBへ投入・観察済み。Phase 20で三relation facetを条件editorへ接続し、具体条件を使う既存取得・復帰を維持。Phase 21でGraphの限定概要・中立的な肯否と、関係全体から独立主張／根拠へ降りる詳細を整合。Phase 22でGraphラベルを短い関係見出しと構造化済みの具体語優先へ変更。汎用taxonomy・プリセットは未実装。会員Capsuleは認証・所有者付きAPI、明示保存・再閲覧・編集、指定版の限定リンク共有まで接続。本人の表示名PUT／設定UIとブラウザ単位の外観保存を実装。VPSの専用PG・Google認証開始は実接続済み。本人Googleログイン・保存再訪は未確認。[文書の入口](README.md)に現役設計とフェーズ別履歴をまとめる。
 
 ## 前提と設計の位置づけ
 
@@ -718,7 +718,7 @@ Native History APIと`useSearchParams`で既存Explorerを保持し、閲覧中�
 
 `/member` の登録／ログイン・表示名／locale・明示保存・一覧／再閲覧・確認削除・ログアウト／全端末ログアウトを接続した。Explorerからは別タブで開き、元の探索を維持する。UIの期待利用者headerをsessionと照合し、タブの復帰時はprivate内容を再認可する。再送キーは同じタブのsessionStorageに保持し、会員内容自体は永続cacheに置かない。会員の題名・説明・既存構成の編集も接続した。入力はタブのメモリだけに残し、失効時は本人の再認可まで非表示。競合は最新版を確認してから期待版を明示更新し、次の保存でも原子的に照合する。新参照は同origin・datasetの閲覧URLから現在の対象／個別Claimと両端を確認して追加できる。草稿への明示追加とサーバーへの版更新を分け、共有済み版は変更しない。本人表示名変更は公開β step12で追加。locale変更UI・実Google接続・一般公開は未実装。限定共有とdiscussionは末尾の別契約。既存のサーバー保存未実装という記述は初期／ローカル機能の範囲であり、今回の進捗は本節を優先する。
 
-公開β step13では、本番Composeへ任意起動の専用PGと明示migration用operatorを追加した。Webは非superuserで接続し、会員volumeをKGから分離する。本番は指定HTTPS origin・内部PG・専用cookieを検証し、既定は無効のまま。[本番Google接続の準備](design/GOOGLE_MEMBER_CONNECTION.md)を正本とする。実Google credential／本人ログインは未了で、隔離した認証開始試験を接続完了とは扱わない。
+公開β step13では、本番Composeへ任意起動の専用PGと明示migration用operatorを追加した。Webは非superuserで接続し、会員volumeをKGから分離する。本番は指定HTTPS origin・内部PG・専用cookieを検証し、既定は無効のまま。[本番Google接続の準備](design/GOOGLE_MEMBER_CONNECTION.md)を正本とする。2026-10-14にユーザーが専用PG・5 migration・本番Webを管理者適用し、正式HTTPS上のGoogle認証開始・Cookieを確認した。本人callback／保存再訪は未確認で、認証開始成功を本人ログイン完了とは扱わない。
 
 2026-10-14の正式名／domain指定：Plunodeの会員canonical originは `https://plunode.net`、Google callbackは同originの `/api/auth/callback/google`。production guardは旧graph originを許可しない。Cookieは既存prefix・host-onlyを維持し、KG／User／Capsuleの識別やDBを移行しない。旧 `graph.isinxnisi.net` はGraph previewとして残し、会員画面は正式hostへ案内する。DNS／Caddy／実Googleの適用確認は[現行切替手順](design/GOOGLE_MEMBER_CONNECTION.md#正式名plunode正式originへの切替2026-10-14)を参照。brandのための知識モデル変更はない。
 
