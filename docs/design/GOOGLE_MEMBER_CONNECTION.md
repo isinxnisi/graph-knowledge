@@ -1,4 +1,4 @@
-# 本番Google接続の準備と完了条件
+# Plunodeの本番Google接続と完了条件
 
 2026-10-13。公開βの工程13。既存の[会員Capsule](MEMBER_CAPSULES.md)の認証・所有者契約を維持し、専用PostgreSQLと本番設定の接続を準備する。**実Googleのclient設定・本人ログインは未了。工程13はまだ完了ではない。** 公開KG、会員保存、限定共有の意味を変更しない。
 
@@ -6,8 +6,8 @@
 
 | 項目 | 採用値・境界 |
 | --- | --- |
-| 会員のcanonical origin | `https://graph.isinxnisi.net` |
-| Google authorized redirect URI | `https://graph.isinxnisi.net/api/auth/callback/google` |
+| 会員のcanonical origin | `https://plunode.net` |
+| Google authorized redirect URI | `https://plunode.net/api/auth/callback/google` |
 | Provider | Google一種類。認証開始で要求するscopeは `openid email profile` のみ |
 | DB | Compose内部の `graph-member-postgres:5432/graph_member`。host portは公開しない |
 | Web / migrationのDB User | `gk_member`。superuser・CREATEDB・CREATEROLE権限を持たない |
@@ -105,7 +105,7 @@ Google本人認証を含む確認が終わるまで、[進捗](../PUBLIC_BETA_PR
 1. [Google Auth Platform](https://console.cloud.google.com/auth/overview)で、このサービス専用のprojectを作成／選択する。
 2. Brandingでアプリ名・サポートメール・連絡先を設定。今回は初回接続試験で、公開審査を開始する指示ではない。
 3. AudienceはExternal／Testing。今回使用する本人アカウントをtest userへ追加する。Testingをアクセス制御の代わりにせず、サービスのpreview認証は維持する。
-4. Clientsで「ウェブアプリケーション」を作成し、redirectを完全一致で登録する。`https://graph.isinxnisi.net/api/auth/callback/google`。今回 `.com` やlocalhostのcallbackを追加しない。
+4. Clientsで「ウェブアプリケーション」を作成し、redirectを完全一致で登録する。`https://plunode.net/api/auth/callback/google`。旧previewのcallbackは今回の認証先にせず、今回 `.com` やlocalhostのcallbackを追加しない。
 5. client作成時にWeb JSONをダウンロードする。要求scopeはコードが指定するopenid／email／profileだけ。Drive等を追加しない。
 6. Git外の `~/.config/graph-knowledge/google-web.json` へ0600で保存する。directoryは0700で準備済み。チャットへは保存先だけを伝え、JSON／Secret本文は貼らない。WindowsのDownloadsにある場合もWSL側のこの保存先へコピーしてから使う。
 
@@ -128,7 +128,7 @@ Google本人認証を含む確認が終わるまで、[進捗](../PUBLIC_BETA_PR
 
 ### 本人が確認する利用経路
 
-会員の確認は **https://graph.isinxnisi.net/** で行う。`.com`の日常画面は匿名探索の検証を継続し、会員無効のまま。originごとのブラウザ保存・cookie／sessionを共有しない。今回の保存試験はVPS画面で探索から始める。
+会員の確認は **https://plunode.net/** で行う。`.com`の日常画面は匿名探索の検証を継続し、会員無効のまま。originごとのブラウザ保存・cookie／sessionを共有しない。今回の保存試験はVPS画面で探索から始める。
 
 1. preview認証→`/member`→Google登録／ログイン。本人の表示名を確認し、設定変更→再読込→logout／login後にも維持されるか確認する。
 2. 同じVPS画面のGraphでPLUTO等を探索し、選んだ対象／主張からCapsuleを作る。「この内容をアカウントへ保存」で本人と内容を確認して明示保存する。ログインだけでlocal内容を送信しない。
@@ -150,7 +150,7 @@ Google本人認証を含む確認が終わるまで、[進捗](../PUBLIC_BETA_PR
 - `npm run typecheck`／`npm run lint`成功。既存のpredicate比較warning1件のみ。公開imageの初回回帰は28/29成功、リロード後にGraphが復元される新契約に対して検索パネルを開かず入力する旧テストが1件失敗した。復元完了を確認して検索パネルへ切り替える操作へ更新し、対象ケースの単独再実行1/1成功。認証や探索の実装を変更してテストを通したものではない。
 - 修正後の `test-production.ts beta-member-20261014` は公開Playwright29/29成功（9.5分）。隔離KGの無書込plan、105知識Node／128 Relationship、再適用unchanged、backup0600、再起動保持、DB停止503→Web再起動なしの復旧を含め正常終了した。既存3200と3210〜3215のdataset API、TunnelのHTMLも200を確認。稼働VPS・凍結datasetへのseed／DB変更は行っていない。
 
-Google JSONの受領・private転送と確認後、管理者へ次の一回の操作を案内する。credentialがない現在は実行しない。
+以下は正式origin決定前の配置記録。**旧bundleはsuperseded。以下の旧コマンドは実行しない。** 現行手順は末尾のPlunode切替を参照。
 
 ```bash
 sudo bash /home/develop/graph-production-member-20261014/scripts/activate-production-member.sh \
@@ -160,3 +160,62 @@ sudo bash /home/develop/graph-production-member-20261014/scripts/activate-produc
 ```
 
 適用後のHTTPS確認、本人のGoogleログイン、保存／再訪・共有停止の結果を追記するまでは工程13未完了。本人操作とsudoが必要な境界であり、配置準備の成功を実接続へ読み替えない。
+
+## 正式名Plunode・正式originへの切替（2026-10-14）
+
+ユーザー指定により正式名を **Plunode**、正式originを **https://plunode.net** にする。Google本人認証をまだ有効化していないため、既存アカウント移行ではなく初回接続先の変更とする。上の旧bundle／旧管理者コマンドは履歴であり、実行しない。
+
+| 対象 | 採用する扱い |
+| --- | --- |
+| 正式origin／redirect | `https://plunode.net`／`https://plunode.net/api/auth/callback/google`。production guard・Compose・候補env・認証開始検証を変更 |
+| Better Auth | appNameはPlunode、baseURL／trustedOriginsは正式originのみ。旧originをtrustedへ足さない |
+| Cookie | `gk-member-production`を維持。Secure／HttpOnly／SameSite=Lax／host-only。親domain指定や他originとのsession共有はしない |
+| Caddy／preview | 既存graph siteと既存のBasic認証hashを維持し、同じ保護を持つplunode siteを追加。Caddyfileの他siteは不変。HTTP→HTTPSはCaddy、証明書は既存と同じLet's Encrypt |
+| 旧 `/member`・`/shared` | GET／HEADは正式originの同path／queryへ302。旧auth／member APIは409として拒否。OAuth codeを旧callbackから新callbackへ転送しない |
+| 旧Graph／閲覧URL | 旧previewで引き続き読む。Graph・Claim・Source ID／KG revisionは不変。自動的に全URLを新originへ転送してブラウザ保存を見失わせない |
+| 共有URL | 現在は実会員／実共有未接続。新規発行は正式origin上で `${location.origin}/shared#TOKEN` を使う既存処理。tokenと版はPG側でdomainを持たず、DB変更不要 |
+| fragment | サーバーは共有tokenやGraph fragmentを読まない。旧sharedへの302にfragmentを指定せずブラウザの継承を使う。実HTTPSで確認するまでは既存共有リンクの移行を検証済みにしない |
+| 同一originの参照入力 | 新originの会員画面に旧hostの閲覧URLを貼る操作は既存のsame-origin検証で拒否する。旧URLを新hostへ替えて同じ参照を開き直す。クロスorigin認可は足さない |
+| ブラウザ内保存 | localStorage／sessionStorage・未送信草稿・外観設定は自動移行しない。旧previewで必要な保存ビュー／途中保存／CapsuleのJSONを書き出し、新originで明示読込。`/member?import=...` のIDだけでは別originのlocal内容を取得できない |
+| DB／データ | Neo4j／専用PG／volume／User ID／Capsule／共有token／秘密値はそのまま。新DBや再seedは不要 |
+| ブランド | 今回は認証appName・運用文書だけ。npm名／Docker名／内部prefixや画面全体の刷新は行わない |
+
+正式hostはapexの `plunode.net` だけ。`www`や別subdomainを今回自動追加しない。現在のOG metadataは起点のtitle／descriptionで、旧hostを焼き込んだGraph画像／canonical URLはない。Graphの可逆URL、閲覧URL、共有URLは表示中originか相対pathを使用するため、URLの状態形式やデータは変更しない。
+
+### 外部操作と適用順
+
+1. お名前.comのルート（ホスト名空欄／@）Aを **153.115.17.82** にする。競合するA／CNAMEや別接続先のAAAAを残さない。DNS providerを自動変更しない。2026-10-14の調査ではローカル・VPS・1.1.1.1・8.8.8.8・dns1/dns2.onamae.comが **150.95.255.38** を返した（TTL300）、AAAAは空。設定画面と権威DNSへの反映をユーザーに確認中。
+2. Google Auth PlatformのBranding名をPlunodeにし、Web clientのauthorized redirectへ上記完全一致のURIを設定。JavaScript origin欄を使う場合は `https://plunode.net`（pathなし）。サーバーのGoogleログインにGoogle JS SDKは追加しない。旧graphのredirectは今回不要。External／Testingと本人test user、scopeはopenid／email／profileを維持。Googleから要求された所有権確認は本人側で実施する。
+3. JSONをGit外へ0600で保存し、保存先だけ伝える。既存clientのredirectだけ変更した場合、client secretを不要に作り直さない。手元JSONのredirect metadataが古い場合は、Console上の登録確認とJSONの非秘密metadata更新を区別して扱う。
+4. 検証済みbundleを使い、管理者が `activate-plunode-origin.sh` を実行。これはDNS確認・既存生成形式との照合・Caddy全体validate・private backup・reloadだけ。失敗時は旧siteへ戻す。会員PGやWeb image、preview認証、KGは変更しない。独自編集があれば推測で上書きせず停止する。
+5. 正式hostの証明書・未認証401／noindex・previewログイン後KG、旧preview、既存通知サービスを実確認する。DNS／HTTPSの準備だけで会員接続済みにしない。
+6. 正式origin対応の新image／Composeを使って `activate-production-member.sh` を管理者適用。scriptはsecret生成前にDNS一致と正式hostの検証済みHTTPS・未認証401／noindexを確認し、未開通／preview保護なしなら停止する。旧bundleを再利用しない。Google JSON・候補env・DB secretはGit外。旧originの候補envが既にある場合は自動書換えず停止して確認する。
+7. 正式hostでGoogle本人ログイン・保存・再訪・共有停止・別User保護・実機を確認。旧previewからの会員導線、共有fragmentとqueryの継承もここで検証する。工程13の完了はここまで必要。
+
+DNS／Caddy／実Googleの未適用・未確認は進捗へ残し、一般公開は引き続き別工程22。HTTP/HTTPSへのアクセス確認と認証有効化を混同しない。
+
+### Plunode対応の準備・検証結果
+
+- 候補env9/9、member unit9/9、実PG＋検証OIDC33/33成功。Caddy候補2/2、会員適用のstub制御フロー1 test内5 scenario（正常／再実行、migration失敗、Web失敗、不明volume、正式host事前確認失敗）成功。stub成功は実HTTPS適用を意味しない。
+- Caddy候補をVPSの2.6.2で `validate` し成功。人工のBasic認証hashを使った独立fixtureであり、稼働Caddyfileを変更／reloadしたものではない。
+- `beta-plunode-20261014` のWeb／opsをbuild、typecheck／lint成功（既存warning1件）。専用実PG＋本番imageで5 migrationの二回適用、正式Google redirect、最小scope、host-only Secure Cookie、旧originからの開始／旧originへのcallback拒否、PG停止503→Web再起動なしの復旧を確認した。実Googleへの通信・本人session作成はしていない。
+- ローカル3200をbuild `Eb71auKshJDbMcLNBe2g8` へ更新。ローカル／TunnelのHTMLとdataset API200を確認し、Tunnel経由の漫画／科学／Event・条件・根拠・概要・起点復帰の代表Playwright1/1成功。会員はローカル503で意図した無効状態。Tunnelの会員status直接probeは403で理由未特定であり、同hostで会員接続を確認したとはしない。
+- 新bundleは `/home/develop/graph-production-plunode-20261014` へ転送・全checksum／構文確認済み。Google credentialは含めず、まだ管理者適用していない。旧 `/home/develop/graph-production-member-20261014` は履歴として保持するが、実行しない。
+- image archive SHA256は `c240b38eaa44bca55a449ca2b7e7cf8538638829bcd293a0c3ad5496f8b34a8a`。Web ID `sha256:7feea8cf0d94443842f9294b1e96b5c2595b873534518edb1ed2fd931ae183ec`、ops ID `sha256:03c25817f73a968163d81a16c7d3d969c0321cff60756d1387fcc42db8fa3671`。manifestにはsource base commit `8a405ac` とアプリ変更差分SHA256を記録し、旧imageとの混同を避ける。
+
+DNSがVPSへ一致してから、VPS端末でCaddyだけを追加する。
+
+```bash
+sudo bash /home/develop/graph-production-plunode-20261014/scripts/activate-plunode-origin.sh
+```
+
+正式hostのHTTPS／preview確認後、Google JSONをprivate転送・確認してから次を案内する。JSON未配置の現在は実行しない。
+
+```bash
+sudo bash /home/develop/graph-production-plunode-20261014/scripts/activate-production-member.sh \
+  beta-plunode-20261014 \
+  /home/develop/graph-production-plunode-20261014/images.tar.gz \
+  /home/develop/graph-production-plunode-20261014/google-web.json
+```
+
+外部待ち：ルートAのVPS一致。管理者待ち：Caddy追加と会員有効化。設定待ち：Google JSON。未確認：新hostの証明書／実Google／本人保存・再訪／実共有fragment移行・実機。今回の準備を工程13完了や一般公開として数えない。

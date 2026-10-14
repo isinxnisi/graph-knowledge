@@ -7,7 +7,7 @@ import re
 import secrets
 import sys
 
-ORIGIN = "https://graph.isinxnisi.net"
+ORIGIN = "https://plunode.net"
 CALLBACK = ORIGIN + "/api/auth/callback/google"
 
 

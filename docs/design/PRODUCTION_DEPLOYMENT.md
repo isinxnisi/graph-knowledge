@@ -9,7 +9,7 @@
 | 確認先 | 接続先・更新のタイミング |
 | --- | --- |
 | `https://graph-beta.isinxnisi.com/` | 開発PCの `127.0.0.1:3200`。画面・機能の手動作業／自動開発の受け入れを完了するたびに、検証済みmainの変更を反映する |
-| `https://graph.isinxnisi.net` | VPS上の独立したWeb／DB。まとまった工程の区切りで反映する。必須更新の節目は工程12・16・19・22。工程13の実認証接続などVPS配置が必要な検証や、稼働版の不具合修正はその時点で更新する |
+| `https://plunode.net`（正式）／`https://graph.isinxnisi.net`（旧preview） | VPS上の独立したWeb／DB。まとまった工程の区切りで反映する。必須更新の節目は工程12・16・19・22。工程13の実認証接続などVPS配置が必要な検証や、稼働版の不具合修正はその時点で更新する |
 
 - 更新は担当Codexの完了作業に含め、追加の更新指示を待たない。各工程の検証は維持し、配置だけを上記の頻度で行う。24工程の分母は増やさない。
 - 3200は `npm run public:build` → `NEO4J_READ_TIMEOUT_MS=10000 npm run public:start` で更新する。占有プロセスがこのrepoの3200であることを確認して停止・build・再起動し、起動セッションを保持する。既存の凍結版serverやCloudflareの設定は変更しない。文書だけの変更で実行物に影響がなければ再buildは不要。
@@ -22,8 +22,10 @@ Tunnelはローカル3200の現在の画面を転送する。PC・Web server・T
 
 ## 構成と境界
 
+2026-10-14、正式名Plunode・正式origin `https://plunode.net` を採用。旧graph previewは残す。[接続と旧リンクの扱い](GOOGLE_MEMBER_CONNECTION.md#正式名plunode正式originへの切替2026-10-14)が現行。`activate-plunode-origin.sh` は既存site追加のみ、`activate-production-member.sh` は別の会員有効化手順。初回配置scriptを既存VPSへ再実行して切替えない。
+
 ```text
-https://graph.isinxnisi.net
+https://plunode.net（正式）／graph.isinxnisi.net（旧preview）
   → 既存Caddy（試験中はpreview認証）
   → 127.0.0.1:3200 → Web container:3000
                           → graph-neo4j:7687

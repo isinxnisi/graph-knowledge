@@ -16,7 +16,7 @@ export function memberConfig(env: Record<string, string | undefined> = process.e
     const url = new URL(origin);
     const db = new URL(databaseUrl);
     if (url.origin !== origin || url.username || url.password || !["postgres:", "postgresql:"].includes(db.protocol)) throw new Error();
-    if (env.GRAPH_DEPLOYMENT === "production" && (origin !== "https://graph.isinxnisi.net"
+    if (env.GRAPH_DEPLOYMENT === "production" && (origin !== "https://plunode.net"
       || db.hostname !== "graph-member-postgres" || db.port !== "5432" || db.pathname !== "/graph_member"
       || db.username !== "gk_member" || !db.password || db.search || db.hash
       || cookiePrefix !== "gk-member-production" || env.MEMBER_AUTH_PROVIDER !== "google")) throw new Error();

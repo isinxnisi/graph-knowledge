@@ -9,7 +9,7 @@ import { join } from "node:path";
 const tag = process.argv[2];
 if (process.argv.length !== 3 || !/^[a-zA-Z0-9][a-zA-Z0-9_.-]{0,79}$/.test(tag ?? "")) throw new Error("Specify the built image tag");
 const directory = await mkdtemp(join(tmpdir(), "graph-member-production-test-"));
-const envFile = join(directory, "app.env"), origin = "https://graph.isinxnisi.net";
+const envFile = join(directory, "app.env"), origin = "https://plunode.net";
 const password = randomBytes(32).toString("hex");
 const args = ["compose", "-p", `graph-member-production-test-${process.pid}`, "--env-file", envFile, "-f", "compose.production.yaml", "--profile", "member"];
 function docker(command: string[], success = true) {
@@ -65,10 +65,13 @@ try {
   assert.ok(authorization.searchParams.get("state"));
   const cookies = start.headers.getSetCookie();
   assert.ok(cookies.some(value => value.includes("gk-member-production") && value.includes("Secure") && value.includes("HttpOnly") && value.includes("SameSite=Lax")));
+  assert.ok(cookies.every(value => !/;\s*domain=/i.test(value)), "Session/state cookies must remain host-only");
   assert.equal(start.headers.get("cache-control"), "private, no-store");
   assert.equal((await request("/api/auth/sign-in/social", input, "https://other.invalid")).status, 403);
+  assert.equal((await request("/api/auth/sign-in/social", input, "https://graph.isinxnisi.net")).status, 403);
   assert.equal((await request("/api/auth/sign-in/social", { ...input, scopes: ["https://www.googleapis.com/auth/drive"] })).status, 400);
   assert.equal((await request("/api/auth/sign-in/social", { ...input, callbackURL: "https://other.invalid/member" })).status, 403);
+  assert.equal((await request("/api/auth/sign-in/social", { ...input, callbackURL: "https://graph.isinxnisi.net/member" })).status, 403);
   assert.equal(sql('SELECT count(*) FROM "user"'), "0");
   console.log("本番会員準備: 非superuser／migration二回で5件／Google認証開始URL・最小scope・state cookie／Origin・追加scope・外部redirect拒否: 成功");
   docker(["stop", "graph-member-postgres"]);

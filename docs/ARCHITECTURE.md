@@ -720,6 +720,8 @@ Native History APIと`useSearchParams`で既存Explorerを保持し、閲覧中�
 
 公開β step13では、本番Composeへ任意起動の専用PGと明示migration用operatorを追加した。Webは非superuserで接続し、会員volumeをKGから分離する。本番は指定HTTPS origin・内部PG・専用cookieを検証し、既定は無効のまま。[本番Google接続の準備](design/GOOGLE_MEMBER_CONNECTION.md)を正本とする。実Google credential／本人ログインは未了で、隔離した認証開始試験を接続完了とは扱わない。
 
+2026-10-14の正式名／domain指定：Plunodeの会員canonical originは `https://plunode.net`、Google callbackは同originの `/api/auth/callback/google`。production guardは旧graph originを許可しない。Cookieは既存prefix・host-onlyを維持し、KG／User／Capsuleの識別やDBを移行しない。旧 `graph.isinxnisi.net` はGraph previewとして残し、会員画面は正式hostへ案内する。DNS／Caddy／実Googleの適用確認は[現行切替手順](design/GOOGLE_MEMBER_CONNECTION.md#正式名plunode正式originへの切替2026-10-14)を参照。brandのための知識モデル変更はない。
+
 公開β step14で[退会・停止と最小運営操作](design/ACCOUNT_LIFECYCLE_OPERATIONS.md)を追加。本人退会は直近30分のDB session・Origin・期待User・明示確認を要求し、全datasetの本人Capsule／共有版／リンク／本人投稿／認証情報を一つのPG transactionで削除する。Neo4jとブラウザ保存は維持。利用停止はデータを保持し、全session／有効共有を失効する独立した運営CLI操作。Capsuleの共有停止と投稿非表示もCLIに限定し、一般Userへ管理権限を公開しない。追加migration004のみ。運営操作記録とbackupの扱いは上記契約を参照する。
 
 ## 会員Capsuleの特定版を限定リンクで共有（2026-10-09）

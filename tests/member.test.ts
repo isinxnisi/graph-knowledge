@@ -51,10 +51,10 @@ describe("会員保存の境界", () => {
   });
   it("本番会員は指定origin・専用内部PG・cookie namespaceでのみ起動する", () => {
     const base = { GRAPH_DEPLOYMENT: "production", MEMBER_STORAGE_ENABLED: "1", MEMBER_AUTH_PROVIDER: "google",
-      MEMBER_ORIGIN: "https://graph.isinxnisi.net", MEMBER_DATABASE_URL: "postgresql://gk_member:test-only@graph-member-postgres:5432/graph_member",
+      MEMBER_ORIGIN: "https://plunode.net", MEMBER_DATABASE_URL: "postgresql://gk_member:test-only@graph-member-postgres:5432/graph_member",
       MEMBER_COOKIE_PREFIX: "gk-member-production", MEMBER_AUTH_SECRET: randomBytes(32).toString("hex"), MEMBER_GOOGLE_CLIENT_ID: "test-id", MEMBER_GOOGLE_CLIENT_SECRET: "test-only" };
     expect(memberConfig(base)?.provider.kind).toBe("google");
-    for (const extra of [{ MEMBER_ORIGIN: "https://other.invalid" }, { MEMBER_AUTH_PROVIDER: "fixture" },
+    for (const extra of [{ MEMBER_ORIGIN: "https://other.invalid" }, { MEMBER_ORIGIN: "https://graph.isinxnisi.net" }, { MEMBER_AUTH_PROVIDER: "fixture" },
       { MEMBER_COOKIE_PREFIX: "gk-member-fixture" }, ...[
         "postgresql://gk_member:test-only@127.0.0.1:5432/graph_member", "postgresql://postgres:test-only@graph-member-postgres:5432/graph_member",
         "postgresql://gk_member:test-only@graph-member-postgres:5432/other", "postgresql://gk_member@graph-member-postgres:5432/graph_member",

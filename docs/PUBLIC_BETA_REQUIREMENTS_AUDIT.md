@@ -127,3 +127,5 @@
 | 保存・編集・限定共有・Source往復の自然さ | PC／390pxの既存経路を再検証し、本人の実使用も確認する | 隔離OIDCの動作成功を本人Google確認へ読み替えない | 実Google・実機の使いやすさ、別User保護の確認範囲を分離 |
 | 一般公開とpreviewを分ける | `.net` canonical・Caddy preview認証を維持。`.com`の会員は無効 | 現在のVPSは匿名401、会員未設定503を読み取り確認 | 管理者適用後もpreview認証・KG revision・既存サービスを確認 |
 | 未解決UI要求を消さず本線へ戻る | 工程13の後に17以降へ戻る。外観／スマホ詳細配置は別に保持 | 工程8〜10を再び形式的に完了へ戻さない | 工程13と独立した未解決要求の比較・評価 |
+
+2026-10-14後続指定：正式名Plunode・正式origin `https://plunode.net` へ会員初回接続先を変更。旧previewと他サービスを維持し、DNS／Caddy／HTTPS／Google／Cookie／共有URLを[現行手順](design/GOOGLE_MEMBER_CONNECTION.md#正式名plunode正式originへの切替2026-10-14)で照合する。コードのorigin変更と外部開通は別評価。既存リンク／ブラウザ内保存の扱いを明示し、大規模UI刷新・データ移行・公開へ置換しない。

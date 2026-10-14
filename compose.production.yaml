@@ -10,7 +10,7 @@ x-graph-environment: &graph-environment
 x-member-environment: &member-environment
   MEMBER_STORAGE_ENABLED: "${MEMBER_STORAGE_ENABLED:-0}"
   MEMBER_AUTH_PROVIDER: google
-  MEMBER_ORIGIN: "${MEMBER_ORIGIN:-https://graph.isinxnisi.net}"
+  MEMBER_ORIGIN: "${MEMBER_ORIGIN:-https://plunode.net}"
   MEMBER_DATABASE_URL: "${MEMBER_DATABASE_URL:-}"
   MEMBER_AUTH_SECRET: "${MEMBER_AUTH_SECRET:-}"
   MEMBER_COOKIE_PREFIX: gk-member-production

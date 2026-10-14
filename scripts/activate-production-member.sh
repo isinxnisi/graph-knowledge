@@ -18,6 +18,25 @@ for required in "$env_file" "$compose" "$google_json" "$image_archive" "$image_a
 (cd -- "$bundle" && sha256sum --check SHA256SUMS)
 exec 9>"$app/.member-activation.lock"
 flock -n 9 || { echo '会員接続の別操作が実行中です。' >&2; exit 1; }
+# Do not enable credentials while the formal host still points at parking DNS
+# or lacks verified TLS/preview protection. No secret is read by this preflight.
+python3 - <<'PY'
+import socket
+import urllib.request
+import urllib.error
+origin = 'https://plunode.net'
+addresses = {entry[4][0] for entry in socket.getaddrinfo('plunode.net', 443, type=socket.SOCK_STREAM)}
+if addresses != {'153.115.17.82'}:
+    raise SystemExit('正式hostのDNSが対象VPSと一致しません。会員は未有効化です。')
+try:
+    urllib.request.urlopen(origin + '/api/dataset', timeout=20)
+except urllib.error.HTTPError as response:
+    if response.code != 401 or response.url != origin + '/api/dataset' or 'noindex' not in response.headers.get('X-Robots-Tag', ''):
+        raise SystemExit('正式hostのHTTPS／preview認証を先に確認してください。')
+else:
+    raise SystemExit('正式hostのpreview認証が維持されていません。会員は未有効化です。')
+print('正式hostのDNS／検証済みHTTPS／preview認証を確認しました。')
+PY
 # First initialization refuses an unexplained existing volume. Retry requires the
 # original private candidate, then verifies the app DB password by real migration.
 if [[ ! -f $candidate ]]; then
@@ -78,7 +97,7 @@ web_changed=1
 "${old_dc[@]}" up -d --no-deps --pull never --wait --wait-timeout 180 web
 "${old_dc[@]}" exec -T web node scripts/production-readiness.mjs
 "${old_dc[@]}" exec -T web node --input-type=module <<'JS'
-const origin = "https://graph.isinxnisi.net";
+const origin = "https://plunode.net";
 const response = await fetch("http://127.0.0.1:3000/api/member/status", { signal: AbortSignal.timeout(15000) });
 if (response.status !== 200 || (await response.json()).provider !== "google") throw Error("Member capability check failed");
 const profile = await fetch("http://127.0.0.1:3000/api/member/profile", { signal: AbortSignal.timeout(15000) });

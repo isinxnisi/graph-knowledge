@@ -40,7 +40,7 @@
 | 19 | 本番設定・自動復帰・更新/復旧・主要回帰をVPSで確認 | 未着手 |
 | 20 | 公開Explorerのみの最小analytics接続と送信確認 | 外部設定待ち・未着手 |
 | 21 | 検証済みの非固定広告一枠を接続、無配信時/スマホ確認 | 未着手 |
-| 22 | 公開範囲を確定し `graph.isinxnisi.net` のβを有効化 | 未着手 |
+| 22 | 公開範囲を確定し `plunode.net` のβを有効化 | 未着手 |
 | 23 | 外部PC/スマホで検索→探索→根拠、公開会員経路を最終確認 | 未着手 |
 | 24 | 運用・残課題・更新手順を引き渡し、この計画を完了 | 未着手 |
 
@@ -48,7 +48,7 @@
 
 ## 先に確認した環境・外部待ち
 
-- 公開先はユーザー指定の `graph.isinxnisi.net`。DNS Aは対象VPSへ解決した（2026-10-11）。2026-10-12にpreview認証付きHTTPSを確認。一般公開は未実施。
+- 正式名Plunode・正式originはユーザー指定の `https://plunode.net`（2026-10-14）。旧 `graph.isinxnisi.net` のpreviewは維持。新originのDNS／HTTPS／Google有効化は下記切替記録を参照。一般公開は未実施。
 - VPSを読み取り確認：4 vCPU、RAM約4GB、swap約2GB、disk空き約189GB。既存Caddyと別プロジェクトの通知serviceが稼働。初回確認時はDocker/Node未導入。2026-10-12にユーザーが配置scriptを実行し、Dockerと専用containerが稼働。既存serviceの継続稼働も確認。
 - Google OAuth credential/redirect設定、GA4 measurement IDは未確認。値はgitへ保存せず、実接続に着手する前に設定を案内する。AdMaxはmemoの候補を使い、タグを設計文書へ転載しない。
 - 公開書込の対象と運営操作は14/19までに具体化。認証待ちなら匿名探索を先に公開し、会員公開の残数を別表示する。
@@ -307,3 +307,7 @@ VPSを読み取り確認し、preview認証なし401、認証後dataset 200・�
 [Google接続手順](design/GOOGLE_MEMBER_CONNECTION.md#2026-10-14実接続再開の作業境界)へ、Google Cloud操作、初回適用script、秘密値を変えない再試行、rollback、本人の実利用確認を整理する。隔離試験と実Google本人確認を別表示し、工程13を準備だけで完了に数えない。今回の依頼で分母24・過去の監査結果や工程8〜10の未解決事項を再解釈しない。
 
 接続準備の最終確認：候補envテスト8/8、適用scriptの4制御フロー、実PG＋検証OIDC33/33、会員ブラウザの保存・編集・設定・限定共有の対象8ケースを確認。本番用imageの会員認証開始／5 migration二回適用／PG停止復旧も成功。古い非表示ボタンとURL復元前の検索操作を前提にした2件のE2Eを現行導線へ修正し、最終公開ブラウザ29/29とKG停止復旧を確認した。typecheck／lint／Docker build成功。配置bundleはVPSへ転送・checksum確認済みで、実Google credential未受領・管理者適用待ち・本人実利用未確認のまま。工程13の完了数は増やさない。image・配置先・区別した検証結果は上記接続手順の実施記録へ残す。
+
+### 正式名／origin指定への対応（2026-10-14）
+
+正式名Plunode・正式origin `https://plunode.net` を採用。工程13の本番guard・Compose・候補env・Google redirect・検証先を変更し、旧graphのGraph previewを維持するCaddy追加手順を用意する。旧originの会員APIは許可せず、旧会員画面は正式hostへ案内する。既存DB・Capsule・token・秘密値を移行／再生成する工程ではない。現在の外部待ちは新hostのDNS一致、Caddy管理者適用、Google client設定・会員有効化、本人実使用。正式domain取得／A設定の申告をHTTPS開通済みとは扱わない。[切替・旧リンクと検証記録](design/GOOGLE_MEMBER_CONNECTION.md#正式名plunode正式originへの切替2026-10-14)を参照。工程13は未完了。

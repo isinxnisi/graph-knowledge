@@ -22,7 +22,7 @@ npm run public:dev
 
 画面は http://127.0.0.1:3200 。初回は18 Entity・27 Claimで、個々のSource/Citation/限定を保持します。後続releaseは `npm run public:plan -- <directory>` / `npm run public:apply -- <directory>` 。公開KGは明示撤回・差替えとrevision付きcursorに対応します。更新を検知した画面は同じ起点/条件から明示的に読み直します。初回生成物の再作成は `public:prepare`、一時DBの更新試験は `public:integration`、画面試験は `public:e2e` です。
 
-日常のPC／スマホ確認は https://graph-beta.isinxnisi.com/ （Cloudflare経由でこのPCの3200へ接続）。画面・機能の作業／受け入れ完了時に3200を更新します。VPSの https://graph.isinxnisi.net は工程の区切りで更新するため、反映版が異なる場合があります。[更新のタイミングと確認手順](docs/design/PRODUCTION_DEPLOYMENT.md#確認環境の更新契約)を参照してください。PC・Web・Tunnelの停止中は日常確認先も利用できません。
+正式サービス名は **Plunode**、正式originは https://plunode.net です（DNS／HTTPS／実Googleの開通は準備中）。日常のPC／スマホ確認は https://graph-beta.isinxnisi.com/ （Cloudflare経由でこのPCの3200へ接続）。画面・機能の作業／受け入れ完了時に3200を更新します。旧VPSの https://graph.isinxnisi.net はpreviewとして維持し、VPSは工程の区切りで更新するため反映版が異なる場合があります。[更新のタイミングと確認手順](docs/design/PRODUCTION_DEPLOYMENT.md#確認環境の更新契約)を参照してください。PC・Web・Tunnelの停止中は日常確認先も利用できません。
 
 画面上部の「設定 → 表示言語」から日本語／Englishを切り替えられます。言語はブラウザへ保存し、探索状態や取得条件は変わりません。対象名・資料原文は登録表記のままです。閲覧・会員・共有とブラウザ保存でも同じ設定を使います。[表示言語の契約](docs/design/UI_LOCALE.md)を参照してください。
 

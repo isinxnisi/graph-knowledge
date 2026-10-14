@@ -95,11 +95,18 @@ class ProductionMemberPreparation(unittest.TestCase):
             path.chmod(0o600)
 
     def test_reject_silent_rotation_and_wrong_database(self):
-        for line in ["MEMBER_GOOGLE_CLIENT_ID=other.apps.googleusercontent.com", "MEMBER_AUTH_SECRET=short", "MEMBER_DATABASE_URL=postgresql://another.invalid/other"]:
+        for line in ["MEMBER_ORIGIN=https://graph.isinxnisi.net", "MEMBER_GOOGLE_CLIENT_ID=other.apps.googleusercontent.com", "MEMBER_AUTH_SECRET=short", "MEMBER_DATABASE_URL=postgresql://another.invalid/other"]:
             self.base.write_text("NEO4J_PASSWORD=unchanged\n" + line + "\n")
             with self.assertRaises(ValueError):
                 self.run_prepare()
             self.assertFalse(self.output.exists())
+
+    def test_old_domain_callback_is_not_a_production_google_config(self):
+        self.data['web']['redirect_uris'] = ['https://graph.isinxnisi.net/api/auth/callback/google']
+        self.write_google()
+        with self.assertRaises(ValueError):
+            self.run_prepare()
+        self.assertFalse(self.output.exists())
 
 
 if __name__ == "__main__":

@@ -71,20 +71,20 @@ from pathlib import Path
 password = secrets.token_urlsafe(24)
 hashed = subprocess.run(['caddy', 'hash-password'], input=password + '\n', text=True, capture_output=True, check=True).stdout.strip()
 assert hashed.startswith('$2')
-snippet = 'graph.isinxnisi.net {\n    tls {\n        ca https://acme-v02.api.letsencrypt.org/directory\n    }\n    basicauth {\n        preview ' + hashed + '\n    }\n    header X-Robots-Tag "noindex, nofollow, noarchive"\n    reverse_proxy 127.0.0.1:3200\n}\n'
+snippet = 'plunode.net {\n    tls {\n        ca https://acme-v02.api.letsencrypt.org/directory\n    }\n    basicauth {\n        preview ' + hashed + '\n    }\n    header X-Robots-Tag "noindex, nofollow, noarchive"\n    reverse_proxy 127.0.0.1:3200\n}\n'
 target = Path('/etc/caddy/graph-knowledge.caddy')
 with os.fdopen(os.open(target, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o640), 'w') as out:
     out.write(snippet)
 os.chown(target, 0, pwd.getpwnam('caddy').pw_gid)
 login = Path('/home/develop/graph-preview-login.txt')
 with os.fdopen(os.open(login, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600), 'w') as out:
-    out.write('https://graph.isinxnisi.net\nUser: preview\nPassword: ' + password + '\n')
+    out.write('https://plunode.net\nUser: preview\nPassword: ' + password + '\n')
 user = pwd.getpwnam('develop')
 os.chown(login, user.pw_uid, user.pw_gid)
 PY
 fi
 if ! grep -Fxq 'import /etc/caddy/graph-knowledge.caddy' /etc/caddy/Caddyfile; then
-  if grep -q 'graph.isinxnisi.net' /etc/caddy/Caddyfile; then
+  if grep -Eq 'plunode\.net|graph\.isinxnisi\.net' /etc/caddy/Caddyfile; then
     echo '既存graph siteを自動変更しません。Caddyfileを確認してください。' >&2; exit 1
   fi
   caddy_backup="/etc/caddy/Caddyfile.before-graph-$(date -u +%Y%m%dT%H%M%SZ)"

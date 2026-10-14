@@ -40,17 +40,17 @@ Git外の対象環境設定を読み込んだshell、または本番 `member-ops
 ```bash
 # 既定はdry-run。対象の存在を確認するが、状態・監査記録は変更しない。
 npm run member:ops -- suspend-user USER_UUID \
-  --origin https://graph.isinxnisi.net --actor OPERATOR --reason security
+  --origin https://plunode.net --actor OPERATOR --reason security
 
 # 適用には同じ対象UUIDの再指定が必要。
 npm run member:ops -- suspend-user USER_UUID \
-  --origin https://graph.isinxnisi.net --actor OPERATOR --reason security \
+  --origin https://plunode.net --actor OPERATOR --reason security \
   --apply --confirm USER_UUID
 
 # 本番operator imageはmigrationと同じ会員設定境界を使う。
 docker compose --env-file PRIVATE_ENV -f compose.production.yaml run --rm \
   member-ops scripts/member-ops.ts block-sharing CAPSULE_UUID \
-  --origin https://graph.isinxnisi.net --actor OPERATOR --reason abuse \
+  --origin https://plunode.net --actor OPERATOR --reason abuse \
   --apply --confirm CAPSULE_UUID
 ```
 

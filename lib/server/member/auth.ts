@@ -18,7 +18,7 @@ export function memberPool(config: MemberConfig) {
 export function createMemberAuth(config: MemberConfig, pool: Pool) {
   const provider = config.provider;
   return betterAuth({
-    appName: "Graph Knowledge", baseURL: config.origin, basePath: "/api/auth",
+    appName: "Plunode", baseURL: config.origin, basePath: "/api/auth",
     secret: config.secret, database: pool, trustedOrigins: [config.origin],
     logger: { disabled: true }, onAPIError: { errorURL: `${config.origin}/member` },
     socialProviders: provider.kind === "google" ? { google: { clientId: provider.clientId, clientSecret: provider.clientSecret } } : {},

@@ -25,6 +25,7 @@ esac
 '''
 PYTHON = r'''#!/bin/bash
 set -eu
+if [[ $# = 1 && $1 = - ]]; then cat >/dev/null; [[ ${FAIL_ORIGIN:-0} = 0 ]]; exit $?; fi
 if [[ $2 = --check ]]; then exit 0; fi
 echo generated >> /tmp/generations
 install -m 0600 /test/candidate.env "$4"
@@ -38,7 +39,10 @@ fs.writeFileSync(dir+'/app.env',oldEnv,{mode:0o600}); fs.writeFileSync(dir+'/com
 const run=(flags={})=>spawnSync('bash',['/test/scripts/activate-production-member.sh','test-member','/test/images.tar.gz','/test/google.json'],{
  env:{...process.env,PATH:'/test/bin:'+process.env.PATH,...flags},encoding:'utf8',maxBuffer:300000});
 const restored=()=>{assert.equal(fs.readFileSync(dir+'/app.env','utf8'),oldEnv);assert.equal(fs.readFileSync(dir+'/compose.yaml','utf8'),oldCompose);};
-if(scenario==='unknown-volume') {
+if(scenario==='origin-failure') {
+ assert.notEqual(run({FAIL_ORIGIN:'1'}).status,0); restored();
+ assert.ok(!fs.existsSync(dir+'/member-candidate.env'));assert.ok(!fs.existsSync('/tmp/member-volume'));
+} else if(scenario==='unknown-volume') {
  fs.writeFileSync('/tmp/member-volume',''); assert.notEqual(run().status,0); restored();
  assert.ok(!fs.existsSync(dir+'/member-candidate.env')); assert.ok(!fs.existsSync('/tmp/generations'));
 } else {
@@ -86,7 +90,7 @@ class ActivationControlFlow(unittest.TestCase):
             (root / "images.tar.gz.sha256").write_text(checksum)
             files = ["scripts/activate-production-member.sh", "scripts/prepare-production-member.py", "compose.production.yaml", "db/member/production-init.sql", "images.tar.gz.sha256"]
             (root / "SHA256SUMS").write_text(subprocess.check_output(["sha256sum", *files], cwd=root, text=True))
-            for scenario in ["success", "migration-failure", "web-failure", "unknown-volume"]:
+            for scenario in ["success", "migration-failure", "web-failure", "unknown-volume", "origin-failure"]:
                 with self.subTest(scenario=scenario):
                     result = subprocess.run(["docker", "run", "--rm", "--network", "none", "--user", "0", "-v", f"{root}:/test:ro", "node:24.21.0-bookworm-slim", "node", "/test/scenario.js", scenario], capture_output=True, text=True, timeout=60)
                     self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
