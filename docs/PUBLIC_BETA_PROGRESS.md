@@ -564,3 +564,9 @@ Plunodeの実ブラウザ3件が成功（51.6秒）。375×667のGraph面積・�
 VPS用Web `beta-member-ux-20261015` はbuild `Jxmhq1WXHENGO5dDJa-22`、config digest `sha256:04ec881c81df829fe8f193307c53637242063da22bb6d031d1529445fb79ff8d`。108,394,529 bytesのWebのみarchiveを `/home/develop/graph-member-ux-20261015` へ転送し、現地SHA256 `3b8e3d001cf974afc991b19504a7894ece66a4b241c39bedf59e7418597e5a91` を独立照合した。運用CLIの実行sourceは受入済みcreditsから変更なし。wrapperは受入済みscriptの配布tagだけを変更し、config／manifest両digestとlinux/amd64の照合・不変IDによる再利用を維持すること、既存更新scriptが同一であること、両Bash構文を確認した。metadata／scriptの最終転送・現地確認と、パスワード付きsudoによるWeb更新、その後のHTTPS確認まではVPS反映済みと扱わない。
 
 今回でCapsuleの独立作成・ブラウザからの明示取込・構成編集を自然な完成体験にしたとは判定しない。Miroで進む上位UX、スマホ探索全体、実会員の未確認経路、公開βの性能観察・運営復旧・計測・一般公開判断は残る。質感の合格と個々の画面・操作の合格を区別し、既存24工程の完了数は変更しない。
+
+配布準備完了：実装source `9d80c7bf14a2ddc69af42f221d47dcc143ea9634` を日本語メッセージでcommit・mainへpush。VPSにmetadataと両scriptも転送し、全6ファイルのchecksum・両Bash構文を現地確認した。Web archiveは上記SHA256を維持する。管理者実行を依頼済みで、VPSは旧 `beta-ui-balance-20261014` のまま、今回更新の適用とHTTPS確認は未完了。既存のパスワード付きsudo境界による操作だけをユーザーへ依頼している。
+
+```bash
+sudo bash /home/develop/graph-member-ux-20261015/scripts/activate-ui-update.sh
+```
