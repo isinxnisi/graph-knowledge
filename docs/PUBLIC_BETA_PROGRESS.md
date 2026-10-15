@@ -638,3 +638,7 @@ VPS `/home/develop/graph-ad-layout-20261015` へWebのみbundleを転送し、�
 前回は同じPublicServices部品にあった広告・プライバシー・設定をまとめて中央へ移し、実装上のまとまりをUIへ持ち込んでしまった。本人の指摘により、Graphと隣接関係の間は広告だけに修正。プライバシーは既存ヘッダの共通リンクへ集約し、計測・広告設定も同じ共通メニューから開く。広告未配信時は常設リンク／設定や余白帯を残さない。地域別初期設定・同意・GA4分離・広告origin・データは維持。
 
 スマホの検索／詳細ペインからでも設定modalを開けるよう、非表示Graphのvisibility／pointer-eventsをmodalで継承しない。閉じると共通メニューのsummaryへfocusを戻す。関連unit10件、対象ESLint、TypeScript込みhost／Docker build成功。PC1440／375／320pxの配信・非配信・撤回とGraph不変、GA4分離、PC／375pxの共通メニューと非Graphペインからの設定開閉の6経路成功（42.5秒）。確認環境反映とVPS配布は後続記録へ追記する。
+
+反映記録：実装 `3139ac8` をcommit／通常pushし、3200をhost build `ZXWQvvsedxeA5P3vMOIim` へ反映。revision `82b01515-594c-48ca-b4b6-515eefac83ca` を維持。実TunnelのPC1440／スマホ375pxで共通設定の配置・検索／詳細ペインからのmodal・focus復帰・Graph不変の2経路成功（9.8秒）。本番imageでも同じ2経路成功（8.0秒）。広告の地域別初期設定・認証・DB・KGは変更なし。
+
+VPSへ `/home/develop/graph-privacy-layout-20261015` を転送し全checksum／shell構文を遠隔照合済み。Web `beta-privacy-layout-20261015` のconfigは `sha256:e0df880e858ed65c48e5f27ddd033f26d852d6be5ba293bf2cb2f90e5bd98042`、build `uSMQIH5UElJLICdHMPS2f`、archive 110,007,580 bytes、SHA256 `2f5b80e9d43dea37fbeec95901c071928743629c0861fcaa42324eecced09964`。パスワード付きsudoは本人実行待ち：`sudo bash /home/develop/graph-privacy-layout-20261015/scripts/activate-privacy-layout.sh`。前回の広告配置も含むため今回一回だけでよく、旧bundleと二段階適用しない。Webのみ更新・KG backup・失敗時の旧Web復帰は既存手順。実広告画像の可視配信未確認は前回記録から変更なし。
