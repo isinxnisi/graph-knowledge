@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useImperativeHandle, useRef, useState, type Ref } from "react";
 import { useUiLocale } from "../lib/client/ui-locale";
 import { advertisingAllowed, privacyKey, readPrivacy, type PrivacyPreferences } from "../lib/client/privacy-preferences";
 import { AD_ORIGIN, PUBLIC_EVENTS, PUBLIC_ORIGIN, publicPagePath, type PublicServicesPolicy } from "../lib/domain/publication";
@@ -7,7 +7,8 @@ import { publicEventName } from "../lib/client/public-events";
 import DialogCloseButton from "./DialogCloseButton";
 import styles from "./PublicServices.module.css";
 
-export default function PublicServices({ policy, inline = false, active = true, preferencesOnly = false, beforeNavigation }: { policy: PublicServicesPolicy; inline?: boolean; active?: boolean; preferencesOnly?: boolean; beforeNavigation?: () => boolean }) {
+export type PublicServicesHandle = { openSettings: () => void };
+export default function PublicServices({ ref, policy, inline = false, active = true, preferencesOnly = false, beforeNavigation }: { ref?: Ref<PublicServicesHandle>; policy: PublicServicesPolicy; inline?: boolean; active?: boolean; preferencesOnly?: boolean; beforeNavigation?: () => boolean }) {
   const { locale } = useUiLocale(), en = locale === "en";
   const [choice, setChoice] = useState<PrivacyPreferences | null>(null), [ready, setReady] = useState(false), [storageFailed, setStorageFailed] = useState(false);
   const [draft, setDraft] = useState<PrivacyPreferences>({ analytics: false, ads: false });
@@ -20,6 +21,11 @@ export default function PublicServices({ policy, inline = false, active = true, 
   const measure = policy.analytics && choice?.analytics && !preferencesOnly;
   const defaultOn = policy.adDefault === true;
   const effectiveAds = advertisingAllowed(choice, defaultOn);
+  function openSettings() {
+    setDraft({ analytics: choice?.analytics ?? false, ads: effectiveAds, adsConsent: choice?.ads === true && choice.adsConsent !== false });
+    dialog.current?.showModal();
+  }
+  useImperativeHandle(ref, () => ({ openSettings }));
   const advertise = ready && adActivated && policy.ads && effectiveAds && !preferencesOnly;
   useEffect(() => {
     const media = matchMedia("(max-width: 800px)");
@@ -67,7 +73,7 @@ export default function PublicServices({ policy, inline = false, active = true, 
       <iframe ref={ad} title={en ? "Advertisement" : "広告"} width={device === "mobile" ? 320 : 728} height={device === "mobile" ? 50 : 90} src={`${adOrigin}/integrations/ad/${device}`} sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox" referrerPolicy="origin" scrolling="no" />
     </div>}
     {measure && <iframe ref={analytics} title="Analytics" hidden src="/integrations/analytics" referrerPolicy="no-referrer" onLoad={() => { metricReady.current = true; analytics.current?.contentWindow?.postMessage({ type: "plunode-metric", event: "page_view", path: publicPagePath(location.pathname) }, PUBLIC_ORIGIN); }} />}
-    <footer className={styles.footer}>{!inline && <span>Plunode β</span>}{!preferencesOnly && <a href="/privacy" onClick={event => { if (beforeNavigation && !beforeNavigation()) event.preventDefault(); }}>{en ? "Privacy" : "プライバシー"}</a>}<button onClick={() => { setDraft({ analytics: choice?.analytics ?? false, ads: effectiveAds, adsConsent: choice?.ads === true && choice.adsConsent !== false }); dialog.current?.showModal(); }}>{en ? "Analytics & ads settings" : "計測・広告の設定"}</button></footer>
+    {!inline && <footer className={styles.footer}><span>Plunode β</span>{!preferencesOnly && <a href="/privacy" onClick={event => { if (beforeNavigation && !beforeNavigation()) event.preventDefault(); }}>{en ? "Privacy" : "プライバシー"}</a>}<button onClick={openSettings}>{en ? "Analytics & ads settings" : "計測・広告の設定"}</button></footer>}
     {ready && device && !defaultOn && policy.ads && !preferencesOnly && (!choice || (choice.ads && choice.adsConsent === false)) && <div className={styles.notice}><p>{en ? "Ads support Plunode. With your permission, Ninja AdMax and its partners use cookies and device information for ad delivery, measurement and personalization. Exploration works without ads. Analytics is a separate setting." : "広告でPlunodeの運営を支えています。許可した場合、忍者AdMaxと配信事業者がCookie・端末情報等を広告配信・効果測定・パーソナライズに利用します。広告なしでも探索でき、利用状況の計測は別の設定です。"} <a href="https://corp.ninja.co.jp/privacy/tieup/" target="_blank" rel="noopener noreferrer">{en ? "Advertising partners" : "配信事業者の一覧"}</a></p><div><button onClick={() => save({ analytics: choice?.analytics ?? false, ads: true, adsConsent: true })}>{en ? "Allow ads" : "広告を許可"}</button><button onClick={() => save({ analytics: choice?.analytics ?? false, ads: false, adsConsent: false })}>{en ? "Continue without ads" : "広告なしで続ける"}</button></div></div>}
     {storageFailed && <p role="status">{en ? "Your choice applies in this tab; browser storage is unavailable." : "設定を保存できないため、このタブでのみ適用します。"}</p>}
     <dialog ref={dialog} className={styles.dialog} aria-labelledby="privacy-settings-title"><div className={styles.heading}><h2 id="privacy-settings-title">{en ? "Analytics & ads" : "計測と広告"}</h2><DialogCloseButton label={en ? "Close" : "閉じる"} onClick={() => dialog.current?.close()} /></div>

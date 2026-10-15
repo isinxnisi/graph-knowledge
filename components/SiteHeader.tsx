@@ -13,7 +13,7 @@ import { siteLabels } from "../lib/i18n/site";
 import styles from "./SiteHeader.module.css";
 import { appearanceKey, defaultAppearance, readAppearance, type Appearance } from "../lib/client/appearance";
 
-export default function SiteHeader({ dataset, page = "explore", user, onBeforeAccountNavigation, onLogout, accountBusy = false }: { onBeforeAccountNavigation?: () => boolean; onLogout?: () => void; accountBusy?: boolean; user?: MemberUser | null; dataset: DatasetMode; page?: "explore" | "member" | "shared" }) {
+export default function SiteHeader({ dataset, page = "explore", user, onBeforeAccountNavigation, onPrivacySettings, onLogout, accountBusy = false }: { onBeforeAccountNavigation?: () => boolean; onPrivacySettings?: () => void; onLogout?: () => void; accountBusy?: boolean; user?: MemberUser | null; dataset: DatasetMode; page?: "explore" | "member" | "shared" }) {
   const { locale, setLocale, storageError: languageError } = useUiLocale();
   const ui = explorerLabels(locale), text = siteLabels(locale), data = datasetLabels(dataset, locale);
   const identity = useMemberIdentity(page !== "member");
@@ -101,7 +101,10 @@ export default function SiteHeader({ dataset, page = "explore", user, onBeforeAc
           <label className={styles.language}>{ui.language}<select value={locale} onChange={event => setLocale(event.target.value === "en" ? "en" : "ja")}><option value="ja">日本語</option><option value="en">English</option></select></label>
           <p>{ui.languageHelp}</p>
           <p className={styles.dataHelp}>{text.datasetAbout}：{data.badge}<br />{data.description}</p>
-          <p><a href="/privacy" onClick={closeAccount}>{locale === "en" ? "Privacy & external data transmission" : "プライバシー・外部送信について"}</a></p>
+          <div className={styles.privacyLinks}>
+            {onPrivacySettings && <button onClick={() => { if (menu.current) { menu.current.open = false; menu.current.querySelector("summary")?.focus(); } onPrivacySettings(); }}>{locale === "en" ? "Analytics & ads settings" : "計測・広告の設定"}</button>}
+            <a href="/privacy" onClick={closeAccount}>{locale === "en" ? "Privacy & external data transmission" : "プライバシー・外部送信について"}</a>
+          </div>
           {languageError && <p role="status">{ui.languageFailed}</p>}
           {storageError && <p role="status">{text.appearanceFailed}</p>}
         </div>

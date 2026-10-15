@@ -632,3 +632,9 @@ VPS用Webは `graph-knowledge-web:beta-ad-layout-20261015`、config `sha256:f8b9
 反映記録：実装commit `2d243ec` を通常push済み。検証済みhost build `bm0ZxYEHSclj-lI7zep_1` を3200へ反映し、旧buildは `/tmp/plunode-ad-layout-20261015/before-3200-build` に保持。dataset revision `82b01515-594c-48ca-b4b6-515eefac83ca` 不変、robots全拒否、analytics文書404。実Tunnelでもroot／dataset200・広告初期判定ONを確認。保存設定のないPC1280px／スマホ375pxの初回訪問で、許可操作なしに正しい広告tagへ一回到達し、GA4は0・privacy保存値はnullのままとなることも確認（tag本文は試験で空応答へ差替え、収益広告表示とは数えない）。Tunnel経由のPC1440／375／320px配信fixture・空描画・撤回・Graph不変の3経路成功（12.5秒）。本番imageではJP／GB／DE／不明の4接続元で初回タグ・許可待ち・GA4分離を確認し、HTMLはprivate／no-store（1 test、7.5秒）。
 
 VPS `/home/develop/graph-ad-layout-20261015` へWebのみbundleを転送し、全checksum・shell構文を遠隔照合済み。sourceRevisionは `2d243ec79c2f1690c15da7bac3d5ab57c032a9a3`。本人実行は `sudo bash /home/develop/graph-ad-layout-20261015/scripts/activate-ad-layout.sh` 一回。sudoはパスワードが必要で、今回の本番Webは未適用。公開解除script・DNS変更・広告枠再登録は再実行しない。DB再起動・会員PG書込・KG再投入なし。fixtureの可視表示と実AdMaxの可視配信未確認は引き続き分ける。
+
+## 広告と共通設定の配置を分離（2026-10-15）
+
+前回は同じPublicServices部品にあった広告・プライバシー・設定をまとめて中央へ移し、実装上のまとまりをUIへ持ち込んでしまった。本人の指摘により、Graphと隣接関係の間は広告だけに修正。プライバシーは既存ヘッダの共通リンクへ集約し、計測・広告設定も同じ共通メニューから開く。広告未配信時は常設リンク／設定や余白帯を残さない。地域別初期設定・同意・GA4分離・広告origin・データは維持。
+
+スマホの検索／詳細ペインからでも設定modalを開けるよう、非表示Graphのvisibility／pointer-eventsをmodalで継承しない。閉じると共通メニューのsummaryへfocusを戻す。関連unit10件、対象ESLint、TypeScript込みhost／Docker build成功。PC1440／375／320pxの配信・非配信・撤回とGraph不変、GA4分離、PC／375pxの共通メニューと非Graphペインからの設定開閉の6経路成功（42.5秒）。確認環境反映とVPS配布は後続記録へ追記する。

@@ -61,7 +61,7 @@ KG／会員PGの復元はこのWeb公開切替の復旧に含めない。
 
 1. 管理→データストリーム→対象のWeb streamで測定IDと正式URLを確認。
 2. 「拡張計測機能」をオフにする。実タグの検証で計測用文書の `scroll` も送られることを確認したため、アプリが明示する上記イベントに揃え、探索操作と混同しない。
-3. 正式サイトのGraphと隣接関係の間にある「計測・広告の設定」で計測を許可し、検索・探索を行う。レポート→リアルタイムで `page_view`・`search`・`explore_start` を確認。読み込みをブロックする拡張機能も確認する。
+3. 正式サイトのヘッダ「表示設定」→「計測・広告の設定」で計測を許可し、検索・探索を行う。レポート→リアルタイムで `page_view`・`search`・`explore_start` を確認。読み込みをブロックする拡張機能も確認する。
 
 送信コード／条件の検証と、GA4管理画面の実受信は別。実受信は未実施である。[Googleのpage_view仕様](https://developers.google.com/analytics/devguides/collection/ga4/views)、[拡張計測の設定](https://support.google.com/analytics/answer/9216061?hl=ja)、[リアルタイム](https://support.google.com/analytics/answer/9271392?hl=ja)を参照。
 

@@ -1,6 +1,6 @@
 "use client";
 import Icon from "./Icon";
-import PublicServices from "./PublicServices";
+import PublicServices, { type PublicServicesHandle } from "./PublicServices";
 import type { PublicServicesPolicy } from "../lib/domain/publication";
 import { trackPublicEvent } from "../lib/client/public-events";
 import { rememberExplorationReturn } from "../lib/client/account-navigation";
@@ -79,6 +79,7 @@ export default function Explorer({ dataset = "demo", initialRoot, services }: { 
     }
   }, [activePane]);
   const canvas = useRef<GraphCanvasHandle>(null);
+  const publicServices = useRef<PublicServicesHandle>(null);
   const [overview, setOverview] = useState<EntitySummary | null>(null);
   const [capsuleOpen, setCapsuleOpen] = useState(false);
   const [workspaceOpen, setWorkspaceOpen] = useState(false);
@@ -135,7 +136,7 @@ export default function Explorer({ dataset = "demo", initialRoot, services }: { 
   const feedbackKey = `${key}:${loading}:${selectedEntity ? graph.expansions[selectedEntity.id]?.open : ""}`;
   const blocked = Object.values(graph.expansions).find((meta) => meta.blocked);
   return <div className={styles.explorer}>
-    <SiteHeader dataset={dataset} onBeforeAccountNavigation={beforeAccountNavigation} />
+    <SiteHeader dataset={dataset} onBeforeAccountNavigation={beforeAccountNavigation} onPrivacySettings={services && (services.ads || services.analytics) ? () => publicServices.current?.openSettings() : undefined} />
     {navigationError && <p role="alert">{locale === "en" ? "The exploration is not ready to restore. Wait for loading to finish, or save the workspace before leaving." : "探索を復元できる状態にできませんでした。取得の完了を待つか、探索途中を保存してから移動してください。"}</p>}
     <nav ref={paneNavigation} className={styles.paneNavigation} aria-label={panes.navigation}>
       {(["search", "graph", "detail"] as const).map(pane => <button key={pane} aria-label={panes[pane]} aria-pressed={activePane === pane} aria-controls={`explorer-${pane}`} onClick={() => setActivePane(pane)}><Icon name={pane === "search" ? "search" : pane === "graph" ? "graph" : "book"} /><span>{pane === "detail" ? ui.detail : panes[pane]}</span></button>)}
@@ -169,7 +170,7 @@ export default function Explorer({ dataset = "demo", initialRoot, services }: { 
           {graph.notice && !dataChanged && <GraphNotice key={`${graph.generation}:${graph.clock}:${graph.notice}`} message={contentMessage(graph.notice, locale)} transient={graph.notice === "取得済みの枝を復元しました。" || graph.notice === overviewLabels("ja").restored} />}
         </>} />
       </section>
-      {services && (services.ads || services.analytics) && <PublicServices inline active={activePane === "graph"} policy={services} beforeNavigation={beforeAccountNavigation} />}
+      {services && (services.ads || services.analytics) && <PublicServices ref={publicServices} inline active={activePane === "graph"} policy={services} beforeNavigation={beforeAccountNavigation} />}
       <section className={`${styles.panel} ${styles.adjacencyPanel}`} data-testid="adjacency-card">
         <RelationsList dataset={dataset} graph={graph} selection={selection} onEntity={selectEntity} onClaim={(id) => { selectClaim(id); setActivePane("detail"); }} onExpand={(id, more) => void expand(id, more)} onClose={close} />
       </section>

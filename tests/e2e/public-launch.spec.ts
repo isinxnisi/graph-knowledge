@@ -24,6 +24,11 @@ async function formalProxy(page: Page, base: string, clientIp?: string) {
   };
   await page.route(PUBLIC_ORIGIN + "/**", handler); await page.route(AD_ORIGIN + "/**", handler);
 }
+async function openPrivacySettings(page: Page) {
+  const button = page.getByRole("button", { name: "計測・広告の設定", exact: true });
+  if (!await button.isVisible()) await page.getByTestId("site-header").getByLabel("表示設定", { exact: true }).click();
+  await button.click();
+}
 const view = (page: Page) => page.getByTestId("graph-canvas").evaluate(el => {
   const cy = (el as unknown as { _cyreg: { cy: Core } })._cyreg.cy;
   return { positions: Object.fromEntries(cy.nodes().map(n => [n.id(), n.position()])), edges: cy.edges().map(e => e.id()).sort(), zoom: cy.zoom() };
@@ -97,7 +102,7 @@ for (const width of [1440, 375, 320]) test(`広告の配信・非配信でGraph�
     expect(tags[0]).toContain(width < 800 ? "93ba1c5c8d797794cf1c721bce01ff42" : "ef4ef4eaf302d0f6b49e5114ad6d5213");
     await slot.scrollIntoViewIfNeeded(); await page.screenshot({ path: info.outputPath(`advertisement-${width}.png`) });
     await expect(slot).toHaveAttribute("data-filled", "true");
-    await page.getByRole("button", { name: "計測・広告の設定", exact: true }).click();
+    await openPrivacySettings(page);
     await expect(page.getByRole("dialog")).toBeVisible();
     await page.getByRole("checkbox", { name: /^広告/ }).uncheck(); await page.getByRole("button", { name: "設定を保存", exact: true }).click();
     await expect(frame).toHaveCount(0);
@@ -123,7 +128,7 @@ test("初回の標準広告はGA4を伴わず、狭いPC幅では読込を止め
     await expect(page.getByTitle("広告")).toHaveCount(0);
     await page.setViewportSize({ width: 1280, height: 900 });
     await expect(page.getByTitle("広告")).toHaveCount(1);
-    await page.getByRole("button", { name: "計測・広告の設定", exact: true }).click();
+    await openPrivacySettings(page);
     await page.getByRole("checkbox", { name: /^広告/ }).uncheck(); await page.getByRole("button", { name: "設定を保存", exact: true }).click();
     await expect(page.getByTitle("広告")).toHaveCount(0);
     const count = ads; await page.reload();
@@ -164,7 +169,7 @@ test("広告同意後だけ掲載originをSDKへ渡し、探索パス・query・
     await expect(page.getByRole("button", { name: "広告を許可" })).toBeVisible();
     expect(tagLoads).toBe(0); expect(page.frames()).toHaveLength(1);
     await page.evaluate(() => history.replaceState(history.state, "", "/explore/10000000-0000-4000-8000-000000000001?private=SECRET#SHARED_TOKEN"));
-    await page.getByRole("button", { name: "計測・広告の設定", exact: true }).click();
+    await openPrivacySettings(page);
     await page.getByRole("checkbox", { name: /^広告/ }).check();
     await page.getByRole("button", { name: "設定を保存", exact: true }).click();
     await expect.poll(() => tagLoads).toBe(1);
@@ -172,7 +177,7 @@ test("広告同意後だけ掲載originをSDKへ渡し、探索パス・query・
     await expect.poll(() => frame.evaluate(() => (window as unknown as { __admaxListing?: string }).__admaxListing)).toBe(PUBLIC_ORIGIN + "/");
     expect(await frame.evaluate(() => { try { return !!parent.document.body; } catch { return false; } })).toBe(false);
     expect(page.frames().some(f => f.url().includes("/integrations/analytics"))).toBe(false);
-    await page.getByRole("button", { name: "計測・広告の設定", exact: true }).click();
+    await openPrivacySettings(page);
     await page.getByRole("checkbox", { name: /^広告/ }).uncheck();
     await page.getByRole("button", { name: "設定を保存", exact: true }).click();
     await expect(page.getByTitle("広告", { exact: true })).toHaveCount(0);
@@ -188,7 +193,7 @@ test("GA4は同意後の公開探索だけ。URL更新・非公開画面へ本�
   try {
     await page.goto(PUBLIC_ORIGIN + "/");
     expect(tagLoads).toBe(0); expect(page.frames()).toHaveLength(1);
-    await page.getByRole("button", { name: "計測・広告の設定", exact: true }).click();
+    await openPrivacySettings(page);
     await page.getByRole("checkbox", { name: /^利用状況/ }).check();
     await page.getByRole("button", { name: "設定を保存", exact: true }).click();
     await expect.poll(() => tagLoads).toBe(1);
@@ -207,11 +212,37 @@ test("GA4は同意後の公開探索だけ。URL更新・非公開画面へ本�
     for (const path of ["/member", "/shared#SHARED_TOKEN", "/privacy"]) {
       await page.goto(PUBLIC_ORIGIN + path); expect(page.frames()).toHaveLength(1); expect(tagLoads).toBe(1);
     }
-    await page.getByRole("button", { name: "計測・広告の設定", exact: true }).click();
+    await openPrivacySettings(page);
     await page.getByRole("checkbox", { name: /^利用状況/ }).uncheck(); await page.getByRole("button", { name: "設定を保存", exact: true }).click();
     await page.goto(PUBLIC_ORIGIN + "/"); expect(tagLoads).toBe(1);
     const gear = page.getByTestId('site-header').getByLabel('表示設定'); await gear.click();
     await page.getByRole("combobox", { name: "表示言語", exact: true }).selectOption("en");
     await expect(page.getByRole("button", { name: "Analytics & ads settings", exact: true })).toHaveCount(1);
+  } finally { await context.close(); }
+});
+
+for (const width of [1440, 375]) test(`共通設定を広告枠から分離し、どのペインからも開閉できる ${width}px`, async ({ browser }, info) => {
+  const context = await browser.newContext({ viewport: { width, height: 900 }, isMobile: width < 800, hasTouch: width < 800 });
+  await context.route("https://adm.shinobi.jp/**", route => route.fulfill({ contentType: "application/javascript", body: "" }));
+  const page = await context.newPage();
+  try {
+    await page.goto(info.project.use.baseURL!);
+    const services = page.getByTestId("public-services"), header = page.getByTestId("site-header");
+    await expect(services.locator("footer")).toHaveCount(0);
+    await openPrivacySettings(page);
+    await expect(page.getByRole("dialog")).toBeVisible();
+    await expect(page.getByRole("checkbox", { name: /^広告/ })).toBeVisible();
+    await page.keyboard.press("Escape");
+    await expect(header.getByLabel("表示設定", { exact: true })).toBeFocused();
+    await page.getByRole("button", { name: "PLUTOから探索を開始", exact: true }).click();
+    await expect(page.getByTestId("graph-counts")).toContainText("Entity 4");
+    const before = await view(page);
+    if (width < 800) await page.getByRole("navigation", { name: "探索画面の切り替え" }).getByRole("button", { name: "選択の詳細", exact: true }).click();
+    await openPrivacySettings(page); await expect(page.getByRole("dialog")).toBeVisible();
+    await page.getByRole("button", { name: "設定を保存", exact: true }).click();
+    expect(await view(page)).toEqual(before);
+    await header.getByLabel("表示設定", { exact: true }).click();
+    await expect(header.getByRole("link", { name: "プライバシー・外部送信について", exact: true })).toBeVisible();
+    await page.screenshot({ path: info.outputPath(`privacy-menu-${width}.png`) });
   } finally { await context.close(); }
 });
