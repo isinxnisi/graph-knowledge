@@ -614,3 +614,17 @@ VPS用Web `beta-public-20261015` はconfig `sha256:f773689a7d047d469ab45b03de9bd
 - 日常確認先 `https://graph-beta.isinxnisi.com/` でPC1440／スマホ375・320pxの広告3/3成功（30.8秒）。PC／320pxの画像も確認。親は実Tunnel、広告文書はブラウザ内でローカル3200へ接続し配信fixtureを使う。正式VPSの広告文書へ修正済みという意味ではない。
 - VPSの `/home/develop/graph-admax-review-20261015` へWeb imageと既存更新script・専用wrapperを転送。現地6 fileのchecksumと両Bash構文の検証が成功した。archive 109,462,340 byte、SHA-256 `cc598026e5de1703d2d21d754284ea2e61fc2948162bb3c6152c4ac4742e2c97`。
 - SSHの `sudo -n` はpassword必須。権限を変更せず、上記wrapperの本人実行を残す。**VPSへの修正適用・自社バナーの可視表示・管理画面の審査完了は未確認**。ads.txtの本人用内容と既存枠の登録URL照合も外部確認として残す。今回のコード修正で審査が完了したとは扱わない。
+
+## 広告配置・地域別初期設定（2026-10-15）
+
+本人報告でAdMaxは「配信中」へ変化。全workspace末尾の配置を改め、中央スクロールをGraphカード→広告→隣接関係カードに分離。図の説明を折り畳み、選択詳細／左右の操作面積とGraphの高さを維持。1280px通常3列で728px広告を収め、実内幅不足のPCでは読み込まない。スマホは内幅320px以上で320×50、Graphを開くまで広告読込を待つ。現行の分離origin／sandbox／掲載URLのoriginのみ送信を保持。
+
+EEA・英国にも提供する本人指定を反映。日本のIP判定だけ初期広告ON、海外・不明は事前許可、GA4は独立した許可後。従来OFFを維持し、日本の自動ONを明示同意へ変換しない。日本範囲959,814 bytesのDB-IP Lite派生データを同梱し、Caddy／Cloudflareの接続元をサーバー内で照合。利用者IPを外部geo APIへ送らず、表の90日期限切れも許可待ち。日英privacy・事業者／目的・撤回・提供者クレジットを更新。[理由・法令／事業者資料・保守・適用手順](design/ADMAX_OPERATIONS.md#配置と地域別初期設定2026-10-15)を正本とする。
+
+検証：関連unit13件＋既存Graph／URL状態119件、対象ESLint・TypeScript込みhost／Docker build成功。最終hostの公開・広告・GA4経路7件成功（27.9秒）。PC1440／スマホ375／320pxで配信fixture／空描画／撤回・画面幅変更・広告origin隔離・Graphの座標／選択／zoom不変を確認。初回自動広告とGA4分離・旧OFF再訪、1280px確保／1024px抑止も実ブラウザで確認。本番imageの広告関連5経路も成功。会員無効で起動した検証imageは会員API503であり、401を期待するtest全体の成功に数えない。実会員接続済みhostでは匿名API401を確認。最初のimage検証でDBの内部名を誤指定した件は、専用DB契約を緩めず検証Webの名前解決だけ修正した。
+
+会員との同一タブ往復・枝／座標／zoom復元・本人表示・logout／スマホタップと関係詳細7経路は成功。日英の復帰testが切替後も日本語の設定labelを探していたので、英語labelへ修正しその経路も再成功。製品のラベルは変更しない。wrapperは隔離stubで正常／operator不一致／独自proxy設定／checksum不一致の4経路を確認し、停止時は更新処理へ進まない。
+
+実AdMaxはPC／スマホともtag200と掲載URL付き `/b/` 200。PC本文0 byte、スマホは配信JSと第三者通信が返るが、検証ブラウザで可視creativeは確認できず。配信中という本人報告と、可視配信／fixture表示を区別する。在庫不足・審査未完了を原因と断定しない。狭いPCへも配信する場合はPC用320×50枠の新規発行が残るが、現行幅での反映に追加発行は不要。
+
+VPS用Webは `graph-knowledge-web:beta-ad-layout-20261015`、config `sha256:f8b97f4cca3cd7b0ecf41f518e2172e0c270ae0b3e469adaa3d20170656914ea`、build `FV0yTlyoCYZ5Z59L0k93a`。Webのみarchive 110,006,676 bytes、SHA256 `7800057ecbcf4f13b4d813a7cb98d3f5b93525449c39e96e936227cdb57df984`。既存operatorを保持する適用scriptとKG backup／旧Web復帰を準備。本番は現在root匿名200・robots公開・旧preview401・revision `5e2a94af-9061-4087-bb7a-045a3c0133f4` を確認。パスワード付きsudoが必要なため、今回の本番反映は本人実行待ちとする。3200／Tunnel反映と転送照合は後続記録へ追記する。今回で既存の公開β未達や最終ユーザー体験評価を完了扱いにしない。

@@ -4,13 +4,13 @@ import { privacyKey } from "../../lib/client/privacy-preferences";
 import { AD_ORIGIN, PUBLIC_ORIGIN } from "../../lib/domain/publication";
 import http from "node:http";
 
-async function formalProxy(page: Page, base: string) {
+async function formalProxy(page: Page, base: string, clientIp?: string) {
   const handler: Parameters<Page["route"]>[1] = async route => {
     const request = route.request();
     const destination = request.resourceType() === "document" ? (request.frame().parentFrame() ? "iframe" : "document") : "empty";
     // Keep the real browser origin and Fetch Metadata; no product auth bypass.
     const target = new URL(request.url());
-    const headers = { ...await request.allHeaders(), host: target.hostname, "sec-fetch-dest": destination, "accept-encoding": "identity" };
+    const headers = { ...await request.allHeaders(), host: target.hostname, "sec-fetch-dest": destination, "accept-encoding": "identity", ...(clientIp ? { "x-forwarded-for": clientIp } : {}) };
     try {
       const response = await new Promise<{ status: number; headers: Record<string, string>; body: Buffer }>((resolve, reject) => {
         const outgoing = http.request(base + target.pathname + target.search, { method: request.method(), headers }, incoming => {
@@ -88,6 +88,9 @@ for (const width of [1440, 375, 320]) test(`広告の配信・非配信でGraph�
     const frame = page.getByTitle("広告"); const box = await frame.boundingBox();
     expect(box!.width).toBe(width < 800 ? 320 : 728); expect(box!.height).toBe(width < 800 ? 50 : 90);
     expect(box!.x).toBeGreaterThanOrEqual(0); expect(box!.x + box!.width).toBeLessThanOrEqual(width);
+    const adjacency = await page.getByTestId("adjacency-card").boundingBox();
+    expect(box!.y).toBeGreaterThan(canvasBefore!.y + canvasBefore!.height);
+    expect(adjacency!.y).toBeGreaterThan(box!.y + box!.height);
     const iframe = page.frames().find(f => f.url().includes("/integrations/ad/"))!;
     expect(await iframe.evaluate(() => { try { return !!parent.document.body; } catch { return false; } })).toBe(false);
     expect(page.frames().some(f => f.url().includes("/integrations/analytics"))).toBe(false);
@@ -98,7 +101,53 @@ for (const width of [1440, 375, 320]) test(`広告の配信・非配信でGraph�
     await expect(page.getByRole("dialog")).toBeVisible();
     await page.getByRole("checkbox", { name: /^広告/ }).uncheck(); await page.getByRole("button", { name: "設定を保存", exact: true }).click();
     await expect(frame).toHaveCount(0);
+    expect(await view(page)).toEqual(previous);
+    await page.setViewportSize({ width: width < 800 ? 390 : 1024, height: 900 });
+    expect((await view(page)).positions).toEqual(previous.positions);
   } finally { await context.close(); }
+});
+
+test("初回の標準広告はGA4を伴わず、狭いPC幅では読込を止め、拒否を再訪でも保つ", async ({ browser }, info) => {
+  const context = await browser.newContext({ viewport: { width: 1280, height: 900 } });
+  const page = await context.newPage(); let ads = 0, metrics = 0;
+  await context.route("https://adm.shinobi.jp/**", route => { ads++; return route.fulfill({ contentType: "application/javascript", body: "" }); });
+  await context.route("https://www.googletagmanager.com/**", route => { metrics++; return route.abort(); });
+  try {
+    // Loopback is explicitly allowed for layout testing; country headers are covered separately.
+    await page.goto(info.project.use.baseURL!);
+    await expect(page.getByTestId("public-services")).toHaveAttribute("data-ad-default", "on");
+    await expect.poll(() => ads).toBe(1); expect(metrics).toBe(0);
+    expect(await page.evaluate(key => localStorage.getItem(key), privacyKey)).toBeNull();
+    expect((await page.getByTitle("広告").boundingBox())!.width).toBe(728);
+    await page.setViewportSize({ width: 1024, height: 900 });
+    await expect(page.getByTitle("広告")).toHaveCount(0);
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await expect(page.getByTitle("広告")).toHaveCount(1);
+    await page.getByRole("button", { name: "計測・広告の設定", exact: true }).click();
+    await page.getByRole("checkbox", { name: /^広告/ }).uncheck(); await page.getByRole("button", { name: "設定を保存", exact: true }).click();
+    await expect(page.getByTitle("広告")).toHaveCount(0);
+    const count = ads; await page.reload();
+    await expect(page.getByTestId("public-services")).toHaveAttribute("data-ad-default", "on");
+    expect(await page.getByTitle("広告").count()).toBe(0); expect(ads).toBe(count); expect(metrics).toBe(0);
+  } finally { await context.close(); }
+});
+
+test("本番imageの接続元判定で日本は初回広告、海外・不明は明示許可後、GA4は別", async ({ browser }, info) => {
+  test.skip(process.env.GRAPH_TEST_PRODUCTION !== "1", "Production image with a trusted reverse-proxy fixture only");
+  for (const ip of ["1.0.16.1", "81.2.69.142", "80.128.0.1", undefined]) {
+    const context = await browser.newContext({ viewport: { width: 1280, height: 900 } });
+    const page = await context.newPage(); let ads = 0, metrics = 0;
+    await formalProxy(page, info.project.use.baseURL!, ip);
+    await context.route("https://adm.shinobi.jp/**", route => { ads++; return route.fulfill({ contentType: "application/javascript", body: "" }); });
+    await context.route("https://www.googletagmanager.com/**", route => { metrics++; return route.abort(); });
+    try {
+      const response = await page.goto(PUBLIC_ORIGIN + "/");
+      expect(response!.headers()["cache-control"]).toContain("no-store");
+      await expect(page.getByTestId("public-services")).toHaveAttribute("data-ad-default", ip === "1.0.16.1" ? "on" : "consent");
+      if (ip !== "1.0.16.1") { await expect(page.getByRole("button", { name: "広告を許可" })).toBeVisible(); expect(ads).toBe(0); await page.getByRole("button", { name: "広告を許可" }).click(); }
+      await expect.poll(() => ads).toBe(1); expect(metrics).toBe(0);
+    } finally { await context.close(); }
+  }
 });
 
 test("広告同意後だけ掲載originをSDKへ渡し、探索パス・query・hashを参照元に含めない", async ({ browser }, info) => {
@@ -112,7 +161,7 @@ test("広告同意後だけ掲載originをSDKへ渡し、探索パス・query・
   });
   try {
     await page.goto(PUBLIC_ORIGIN + "/?private=SECRET#SHARED_TOKEN");
-    await expect(page.getByRole("button", { name: "両方を許可" })).toBeVisible();
+    await expect(page.getByRole("button", { name: "広告を許可" })).toBeVisible();
     expect(tagLoads).toBe(0); expect(page.frames()).toHaveLength(1);
     await page.evaluate(() => history.replaceState(history.state, "", "/explore/10000000-0000-4000-8000-000000000001?private=SECRET#SHARED_TOKEN"));
     await page.getByRole("button", { name: "計測・広告の設定", exact: true }).click();
@@ -139,7 +188,9 @@ test("GA4は同意後の公開探索だけ。URL更新・非公開画面へ本�
   try {
     await page.goto(PUBLIC_ORIGIN + "/");
     expect(tagLoads).toBe(0); expect(page.frames()).toHaveLength(1);
-    await page.getByRole("button", { name: "両方を許可" }).click();
+    await page.getByRole("button", { name: "計測・広告の設定", exact: true }).click();
+    await page.getByRole("checkbox", { name: /^利用状況/ }).check();
+    await page.getByRole("button", { name: "設定を保存", exact: true }).click();
     await expect.poll(() => tagLoads).toBe(1);
     const frame = page.frames().find(f => f.url().includes("/integrations/analytics"))!;
     const commands = () => frame.evaluate(() => (window as unknown as { __commands: unknown[][] }).__commands);

@@ -1,8 +1,35 @@
 # AdMaxの登録・設置確認・審査・配信
 
-2026-10-15。既存の公開・同意・広告origin分離を維持し、広告配信だけでなく設置確認と審査開始までを扱う。[公開βの適用手順](PUBLIC_BETA_LAUNCH.md)を併読する。
+2026-10-15。既存の公開・広告origin分離を維持し、広告配信だけでなく設置確認と審査開始までを扱う。[公開βの適用手順](PUBLIC_BETA_LAUNCH.md)を併読する。
 
-## 確認された障害と修正
+後続の本人報告で広告枠が「配信中」へ変化。以下の審査記録は当時の障害であり、現在も審査待ちという意味ではない。現在の配置と初期設定は次節を正本とする。
+
+## 配置と地域別初期設定（2026-10-15）
+
+- Graphと隣接関係は独立カードとし、同じ中央スクロールに **Graph→広告→隣接関係** の順で置く。図の凡例は「図の見方」へ畳み、広告より上の説明量を減らす。隣接一覧／Graphへの移動はスクロールとfocusだけで、枝・位置・選択・zoomを変えない。広告の出入りはCanvasを再作成しない。
+- PCは実内幅728px以上で728×90、スマホは画面幅800px以下かつ実内幅320px以上で320×50。1280pxの通常3列は左右190／250pxに収めて728px枠を確保。狭いPC／詳細を広げた状態など、728px未満はタグなし。既存スマホtagはPC用の代用にしない。狭いPCにも配信するなら管理画面で **PC用320×50のインライン枠を新規発行**し、取得した実tagを追加する（未発行・未実装）。広告自体を縮小／切抜きしない。
+- スマホの広告はGraphの下へスクロールすると見え、Graphや詳細を覆わない。Graphの高さを広告のために縮めない。最初の検索ペインでは広告を読み込まず、Graphを開いた後はペイン切替だけで広告文書を再生成しない。空の配信内容では高さ0、実際の表示内容がある場合に90／50pxと小さなラベルの枠を確保する。
+- ユーザーはEEA・英国にも提供すると指定。**日本と判定した新規接続では広告を標準表示、海外・地域不明では明示許可後。GA4は常に別の許可後。** 以前の広告OFFを維持し、従来の広告ONは明示許可として引き継ぐ。日本の自動ONを海外の同意とみなさないため、設定に `adsConsent` を保持する。設定を開いただけ／計測だけを変更した場合は広告の同意へ変換しない。撤回で広告文書を破棄し、別タブからの設定変更も反映する。
+- 地域はDB-IP Liteの日本範囲だけを同梱し、サーバー内で接続元IPを二分探索する。IPを位置情報APIへ送らない／地域判定用に保存しない。言語・timezone・任意の国名headerで代用しない。正式VPSはloopback Webの手前でCaddyが上書きした単一XFF、TunnelはCloudflareの `CF-Connecting-IP`（pseudo IPv4時はIPv6）を使う。ローカルのみ標準表示で確認可能。Caddyに独自のtrusted proxy／XFF変更があれば適用scriptは停止する。複数IP・欠落・不正・表の期限切れは許可待ち。IP判定にはVPN等による誤差がある。
+- [DB-IP](https://db-ip.com/db/download/ip-to-country-lite)のCC BY 4.0を守り、設定画面にクレジットリンク、派生データに原本URL・checksum・licenseを保持する。現在2026-10版、959,814 bytes（日本IPv4 13,877／IPv6 8,700範囲）。月次更新は `python3 scripts/update-advertising-country.py YYYY-MM` →関連test→通常Web build／反映。表が発行月初から90日を超えると自動ONを停止する。生成対象は広告の国判定でありKGへ投入しない。
+
+### Cookie・外部送信の判断根拠
+
+[AdMaxのCookie方針](https://corp.ninja.co.jp/privacy/cookie/)はCookie／広告ID・IP・端末情報等による配信・測定・最適化とオプトアウトを説明している。Cookieなし配信やTCF対応を推測で追加しない。日本で一律の事前opt-inを求めるAdMax公開要件は確認できず、外部送信の情報公開といつでもOFFにする操作を設ける。[電気通信事業法の外部送信規律の公式解説](https://public-comment.e-gov.go.jp/pcm/download?seqNo=0000268124)と[個人情報保護委員会Q&A](https://www.ppc.go.jp/personalinfo/faq/APPI_QA/)を参照。PPC Q8-3の個人関連情報の提供規律を、全Cookieの一律opt-in義務へ読み替えない。
+
+EEAは[ePrivacy指令5条3項](https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:02002L0058-20091219)、英国は[ICOの広告Cookie等の指針](https://ico.org.uk/for-organisations/direct-marketing-and-privacy-and-electronic-communications/guidance-on-the-use-of-storage-and-access-technologies/how-do-the-rules-apply-to-online-advertising/)に従い、広告による端末への保存・アクセスは事前許可で分ける。[Planet49判決](https://eur-lex.europa.eu/legal-content/en/SUM/?uri=CELEX%3A62017CJ0673)を踏まえ、日本の初期ON／予めチェックしただけの値を海外の積極的同意として使わない。許可／拒否の両方を表示し、拒否しても探索可能。許可時に事業者・配信／測定／パーソナライズ・設定変更を説明し、配信事業者一覧とprivacyへリンクする。
+
+これはPlunodeからのタグ読込を制御する実装であり、AdMax／各配信事業者の処理全体の適法性やTCF連携を保証するものではない。既送信データは撤回操作で削除されず、Cookie管理・事業者のオプトアウトはprivacyの公式リンクを案内する。サービス側に撤回伝達APIの独自仕様を捏造しない。
+
+### 今回の適用
+
+```bash
+sudo bash /home/develop/graph-ad-layout-20261015/scripts/activate-ad-layout.sh
+```
+
+Webのみの短時間更新。受入済みoperatorをaliasし、KG backup・readiness・失敗時の旧Web復帰は既存更新処理を使う。Caddy・Google・DB構造・既存データを変更しない。新しい広告枠やCloudflare操作は今回の適用に不要。地域判定はHTTPSからの新規匿名訪問で確認し、古いOFF設定があるブラウザを初回状態と混同しない。
+
+## 確認された障害と修正（審査時の記録）
 
 本人の管理画面ではPC／スマホとも「審査中」、広告未表示。公式FAQでは、掲載タグの広告リクエストを確認してコンテンツチェックが始まる。審査中の未表示を広告在庫不足と判断しない。
 

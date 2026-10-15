@@ -116,7 +116,7 @@ for (const [subject, object, wording, width = 1440] of paths) test(`${width}px�
     await page.keyboard.press("Escape");
     await expect(page.getByRole("region", { name: "Claim details", exact: true }).getByRole("heading", { name: "Sources and records", exact: true })).toBeVisible();
     await expect(page.getByRole("region", { name: "Claim details", exact: true }).getByRole("navigation", { name: "Entities in this relation" })).toContainText("Person");
-    await header.getByLabel("表示設定", { exact: true }).click();
+    await header.getByLabel("Display settings", { exact: true }).click();
     await header.locator("select").last().selectOption("ja");
     await page.keyboard.press("Escape");
   }

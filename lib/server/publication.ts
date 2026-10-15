@@ -3,10 +3,11 @@ import { headers } from "next/headers";
 import type { Metadata } from "next";
 import { PUBLIC_ORIGIN, publicSiteEnabled, publicServicesPolicy } from "../domain/publication";
 import { readTransaction } from "./read-db";
+import { defaultAdvertising } from "./advertising-country";
 
 export async function publicationPolicy() {
-  const host = (await headers()).get("host");
-  return { public: publicSiteEnabled(host), ...publicServicesPolicy(host) };
+  const requestHeaders = await headers(), host = requestHeaders.get("host"), services = publicServicesPolicy(host);
+  return { public: publicSiteEnabled(host), ...services, adDefault: services.ads && defaultAdvertising(requestHeaders) };
 }
 export async function explorationMetadata(path: string, stateful: boolean, title = "Plunode — 知識のつながりを探索する", description = "人物・作品・組織・出来事の関係を、資料とともに辿る知識の地図。小さな発見から、次の好奇心へ。", exists = true): Promise<Metadata> {
   const policy = await publicationPolicy();

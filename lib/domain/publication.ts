@@ -2,7 +2,7 @@ export const PUBLIC_ORIGIN = "https://plunode.net";
 export const AD_ORIGIN = "https://ads.plunode.net";
 export const GA_MEASUREMENT_ID = "G-PSKLWY33K4";
 export const AD_TAGS = { desktop: "ef4ef4eaf302d0f6b49e5114ad6d5213", mobile: "93ba1c5c8d797794cf1c721bce01ff42" } as const;
-export type PublicServicesPolicy = { analytics: boolean; ads: boolean };
+export type PublicServicesPolicy = { analytics: boolean; ads: boolean; adDefault?: boolean };
 export function publicSiteEnabled(host: string | null, env: Record<string, string | undefined> = process.env) {
   return env.GRAPH_DATASET === "public-kg" && env.PLUNODE_PUBLIC_ENABLED === "1" && (host === "plunode.net" || host === "plunode.net:443");
 }

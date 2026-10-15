@@ -11,6 +11,7 @@ COPY components ./components
 COPY lib ./lib
 COPY neo4j ./neo4j
 COPY datasets ./datasets
+COPY data/advertising ./data/advertising
 COPY docs/research/phase-13-relation-model/v2/ledger.json ./docs/research/phase-13-relation-model/v2/ledger.json
 COPY scripts/public-kg.ts scripts/production-readiness.mjs ./scripts/
 ENV GRAPH_DATASET=public-kg GRAPH_DEPLOYMENT=production

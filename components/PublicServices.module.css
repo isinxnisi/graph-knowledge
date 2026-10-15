@@ -1,4 +1,8 @@
 .services { margin: 12px auto; padding: 0 12px; box-sizing: border-box; width: 100%; max-width: 1080px; color: var(--color-muted); font: var(--font-body); font-size: 11px; }
+.inline { margin: 8px 0; padding: 0; max-width: none; }
+.inline .footer { justify-content: flex-end; border-top: 0; padding: 2px 4px; gap: 12px; }
+.inline .footer button { min-height: 28px; }
+.regionNote { font-size: 11px; line-height: 1.6; color: var(--color-muted); }
 .footer { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 14px; padding: 8px 0; border-top: 1px solid var(--color-border); }
 .services .footer button { padding: 4px 0; border: 0; background: transparent; color: var(--color-muted); font-size: 11px; }
 .footer a, .dialog a { color: var(--color-accent); }

@@ -19,10 +19,11 @@ import { createNodeClickHandler, createRelationClickHandler } from "../lib/clien
 import { attachGraphBadges } from "../lib/client/graph-badges";
 import { createGraphMotion } from "../lib/client/graph-motion";
 import styles from "./Explorer.module.css";
+import AnimatedDetails from "./AnimatedDetails";
 
-type Props = { onViewChange?: () => void; contentOnly?: boolean; ref?: Ref<GraphCanvasHandle>; feedback?: ReactNode; navigation?: ReactNode; restoration?: ViewRestoration | null; interactionBlocked?: boolean; graph: GraphState; selection: Selection; onEntity: (id: string) => void; onRelation: (id: string) => void; onRelationDoubleClick?: (id: string) => void; onToggleEntity: (id: string) => void; onEntityDoubleClick?: (id: string) => void };
+type Props = { compactGuide?: boolean; footerAction?: ReactNode; onViewChange?: () => void; contentOnly?: boolean; ref?: Ref<GraphCanvasHandle>; feedback?: ReactNode; navigation?: ReactNode; restoration?: ViewRestoration | null; interactionBlocked?: boolean; graph: GraphState; selection: Selection; onEntity: (id: string) => void; onRelation: (id: string) => void; onRelationDoubleClick?: (id: string) => void; onToggleEntity: (id: string) => void; onEntityDoubleClick?: (id: string) => void };
 
-export default function GraphCanvas({ onViewChange, contentOnly = false, ref, feedback, navigation, restoration, interactionBlocked, graph, selection, onEntity, onRelation, onRelationDoubleClick, onToggleEntity, onEntityDoubleClick }: Props) {
+export default function GraphCanvas({ compactGuide = false, footerAction, onViewChange, contentOnly = false, ref, feedback, navigation, restoration, interactionBlocked, graph, selection, onEntity, onRelation, onRelationDoubleClick, onToggleEntity, onEntityDoubleClick }: Props) {
   const { locale } = useUiLocale();
   const ui = explorerLabels(locale);
   const viewportLabels = graphViewportLabels(locale);
@@ -260,10 +261,16 @@ export default function GraphCanvas({ onViewChange, contentOnly = false, ref, fe
       <div className={styles.relationPatches} ref={badgeLayer} aria-hidden="true" />
       <div className={styles.graphOverlay} data-testid="graph-overlay">{feedback}</div>
     </div>
-    <div className={styles.graphTools}>
+    {compactGuide ? <div className={styles.graphFooter}>
+      <AnimatedDetails className={styles.graphGuide} summary={<><Icon name="chevron" />{locale === "en" ? "Graph guide" : "図の見方"}</>}>
+        <p>{entryLabels(locale).selectedHelp}</p><p>{ui.shapes}</p><p>{ui.edges} ／ {contributionLabels(locale).mixedLegend} ／ {ui.nodeStates}</p>
+        <p>{entryLabels(locale).graphResize}</p>
+        {Object.values(graph.claims).some(claim => claim.contribution?.roleId) && <p>{contributionLabels(locale).partial}</p>}
+      </AnimatedDetails>{footerAction}
+    </div> : <div className={styles.graphTools}>
       <span>{entryLabels(locale).graphResize}</span>
       <span>{ui.shapes}</span>
       <span>{ui.edges} ／ {contributionLabels(locale).mixedLegend}{!contentOnly && ` ／ ${ui.nodeStates}`}</span>
-    </div>
+    </div>}
   </>;
 }

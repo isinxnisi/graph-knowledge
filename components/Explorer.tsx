@@ -16,7 +16,6 @@ import SiteHeader from "./SiteHeader";
 import { parseReadingLocation, withoutReadingReference } from "../lib/client/reading-reference";
 import { explorerPaneLabels } from "../lib/i18n/explorer-panes";
 import { entryLabels } from "../lib/i18n/exploration-entry";
-import { contributionLabels } from "../lib/i18n/contribution";
 import { explorationLabels } from "../lib/i18n/exploration";
 
 import type { DatasetMode } from "../lib/domain/dataset";
@@ -135,7 +134,7 @@ export default function Explorer({ dataset = "demo", initialRoot, services }: { 
   const loading = Object.values(graph.expansions).filter((meta) => meta.loading).length;
   const feedbackKey = `${key}:${loading}:${selectedEntity ? graph.expansions[selectedEntity.id]?.open : ""}`;
   const blocked = Object.values(graph.expansions).find((meta) => meta.blocked);
-  return <><div className={styles.explorer}>
+  return <div className={styles.explorer}>
     <SiteHeader dataset={dataset} onBeforeAccountNavigation={beforeAccountNavigation} />
     {navigationError && <p role="alert">{locale === "en" ? "The exploration is not ready to restore. Wait for loading to finish, or save the workspace before leaving." : "探索を復元できる状態にできませんでした。取得の完了を待つか、探索途中を保存してから移動してください。"}</p>}
     <nav ref={paneNavigation} className={styles.paneNavigation} aria-label={panes.navigation}>
@@ -160,18 +159,18 @@ export default function Explorer({ dataset = "demo", initialRoot, services }: { 
         {!graph.centerId && <div className={styles.empty}><h3>{entry.initialTitle}</h3><p>{entry.initialHelp}</p></div>}
         {Object.values(graph.expansions).some((meta) => meta.active && meta.hasMore) && <p className={styles.muted}>{explorationLabels(locale).neighborsPageHelp}</p>}
         {blocked && <p role="alert" className={styles.error}>{explorerMessage(blocked.error!, locale)}</p>}
-        <GraphCanvas onViewChange={urlState.schedule} navigation={<GraphNavigator compact key={graph.generation} nodes={graph.nodes} selection={selection} onNavigate={(id) => {
+        <GraphCanvas compactGuide footerAction={<button className={styles.adjacentJump} disabled={!selection} onClick={() => {
+          document.getElementById("explorer-relations")?.scrollIntoView({ block: "start" });
+          document.getElementById("explorer-relations")?.focus({ preventScroll: true });
+        }}>{panes.toRelations}<Icon name="chevron" /></button>} onViewChange={urlState.schedule} navigation={<GraphNavigator compact key={graph.generation} nodes={graph.nodes} selection={selection} onNavigate={(id) => {
           inspectEntity(id); canvas.current?.focusEntity(id);
         }} />} ref={canvas} restoration={viewRestoration} interactionBlocked={!!overview || savedViewsOpen || workspaceOpen || capsuleOpen || !!reading} onEntityDoubleClick={(id) => { if (graph.nodes[id]) setOverview(graph.nodes[id]); }} graph={graph} selection={selection} onEntity={selectEntity} onRelation={id => { selectRelation(id); if (matchMedia("(min-width: 801px)").matches) trackPublicEvent("relation_detail"); }} onRelationDoubleClick={(id) => { selectRelation(id); setActivePane("detail"); if (matchMedia("(max-width: 800px)").matches) trackPublicEvent("relation_detail"); }} onToggleEntity={id => { if (!graph.expansions[id]?.open) trackPublicEvent("graph_expand"); toggleEntity(id); }} feedback={<>
           <div className={`${styles.feedback} ${!graph.centerId ? styles.initialFeedback : ""}`} aria-live="polite"><div key={feedbackKey} className={styles.feedbackContent}><p data-testid="selection-status">{ui.selected}：{selectionText}</p><p>{loading ? ui.graphLoading(loading) : selectedEntity ? graph.expansions[selectedEntity.id]?.expanded ? ui.expanded : graph.expansions[selectedEntity.id]?.pages.length ? ui.closed : ui.expandHelp : <><span className={styles.desktopRelationHelp}>{ui.grouped}</span><span className={styles.touchRelationHelp}>{entry.touchRelationHelp}</span></>}</p></div></div>
           {graph.notice && !dataChanged && <GraphNotice key={`${graph.generation}:${graph.clock}:${graph.notice}`} message={contentMessage(graph.notice, locale)} transient={graph.notice === "取得済みの枝を復元しました。" || graph.notice === overviewLabels("ja").restored} />}
         </>} />
-        <p className={styles.graphUsageHelp}>{entry.selectedHelp}</p>
-          <button className={styles.compactLink} disabled={!selection} onClick={() => {
-            document.getElementById("explorer-relations")?.scrollIntoView({ block: "start" });
-            document.getElementById("explorer-relations")?.focus({ preventScroll: true });
-          }}>{panes.toRelations}</button>
-        {Object.values(graph.claims).some((claim) => claim.contribution?.roleId) && <p className={styles.muted}>{contributionLabels(locale).partial}</p>}
+      </section>
+      {services && (services.ads || services.analytics) && <PublicServices inline active={activePane === "graph"} policy={services} beforeNavigation={beforeAccountNavigation} />}
+      <section className={`${styles.panel} ${styles.adjacencyPanel}`} data-testid="adjacency-card">
         <RelationsList dataset={dataset} graph={graph} selection={selection} onEntity={selectEntity} onClaim={(id) => { selectClaim(id); setActivePane("detail"); }} onExpand={(id, more) => void expand(id, more)} onClose={close} />
       </section>
       </div>
@@ -202,5 +201,5 @@ export default function Explorer({ dataset = "demo", initialRoot, services }: { 
       onClose={() => setSavedViewsOpen(false)} onOpen={(entity, conditions) => {
         openSavedView(entity, conditions, canvas.current?.capture() ?? null); setActivePane("graph");
       }} />}
-  </div>{services && (services.ads || services.analytics) && <PublicServices policy={services} beforeNavigation={beforeAccountNavigation} />}</>;
+  </div>;
 }

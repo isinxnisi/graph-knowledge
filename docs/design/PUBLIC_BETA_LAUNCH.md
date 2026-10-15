@@ -4,7 +4,7 @@
 
 同日の後続確認で正式rootの匿名200、広告originのDNS／HTTPS／iframe200を確認した。初回公開切替を再実行する必要はない。AdMaxの設置確認・審査で見つかった障害とWebだけの修正適用は [AdMax実運用手順](ADMAX_OPERATIONS.md) を参照。
 
-## 翌日の操作
+## 初回公開の操作（実施済みの履歴）
 
 1. お名前.comのDNS設定で **CNAME：ホスト名 `ads`、値 `plunode.net`** を追加する。既存のルートA・MX・TXTは変更しない。広告専用の `ads.plunode.net` を同じVPSへ向けるための追加一件である。
 2. VPSで次の一回を実行する。DNS未反映なら、変更前に停止するので反映後に再実行する。
@@ -61,21 +61,23 @@ KG／会員PGの復元はこのWeb公開切替の復旧に含めない。
 
 1. 管理→データストリーム→対象のWeb streamで測定IDと正式URLを確認。
 2. 「拡張計測機能」をオフにする。実タグの検証で計測用文書の `scroll` も送られることを確認したため、アプリが明示する上記イベントに揃え、探索操作と混同しない。
-3. 正式サイト最下部の「計測・広告の設定」で計測を許可し、検索・探索を行う。レポート→リアルタイムで `page_view`・`search`・`explore_start` を確認。読み込みをブロックする拡張機能も確認する。
+3. 正式サイトのGraphと隣接関係の間にある「計測・広告の設定」で計測を許可し、検索・探索を行う。レポート→リアルタイムで `page_view`・`search`・`explore_start` を確認。読み込みをブロックする拡張機能も確認する。
 
 送信コード／条件の検証と、GA4管理画面の実受信は別。実受信は未実施である。[Googleのpage_view仕様](https://developers.google.com/analytics/devguides/collection/ga4/views)、[拡張計測の設定](https://support.google.com/analytics/answer/9216061?hl=ja)、[リアルタイム](https://support.google.com/analytics/answer/9271392?hl=ja)を参照。
 
 ## AdMax
 
-PC728×90・スマホ320×50のユーザー指定tagをそのまま使う。探索workspaceの**下**へ非固定で配置する。狭い中央カラムに728pxを押し込まず、スマホのGraph面積を広告のために減らしたり重ねたりしない。画面幅の切替でtagも切り替える。未配信や空の描画iframeだけでは広告の高さを確保せず、表示内容を確認してから枠を開く。広告の状態変化はGraphのcontainer寸法・座標・選択・zoomを変えない。
+PC728×90・スマホ320×50のユーザー指定tagをそのまま使う。**Graphカード→広告→隣接関係カード**の順で、中央スクロール領域に非固定で配置する。狭い中央カラムに728pxを押し込まず、スマホのGraph面積を広告のために減らしたり重ねたりしない。スマホ判定と実コンテナ幅の両方でtagを選ぶ。PC内幅728px未満／スマホ320px未満は読み込まず、縮小・切抜き・スマホtagのPC流用をしない。未配信や空の描画iframeだけでは広告の高さを確保せず、表示内容を確認してから枠を開く。広告の状態変化はGraphのcontainer寸法・座標・選択・zoomを変えない。
 
 AdMax SDKは子iframeへ `document.write` する。opaque sandboxではこの処理が失敗することを実ブラウザで確認したため、**広告専用origin＋sandbox**を採用した。`allow-same-origin`は広告の子文書用であり、親のPlunodeとはoriginが異なる。広告originにはアプリ・会員APIを提供せず、親画面の会員情報・保存内容・URLを読ませない。CaddyとNext Proxyの双方で制限する。広告文書のCSP内だけで配信先通信を許可し、親画面の通信許可を一括で緩めない。親→広告iframeには掲載サイトのoriginだけを参照元として渡す。これを完全に消すとSDKの掲載URLが空になり400となることを実通信で確認した。広告文書から外部へのHTTP Refererは送らず、探索path・query・hashも送らない。SDKが自身のbanner IDを消すため、固定した独自containerで実表示内容を判定する。
 
 ローカルは `ads.localhost:3200` を使い、追加の常駐service・portやCloudflare設定を必要としない。Tunnelと正式環境は `https://ads.plunode.net` を使うため、DNSとVPS適用前は広告の実配信が利用できない。管理者操作前にもローカル実画面と配信fixtureでPC・スマホの寸法・非配信・分離を評価できる。
 
-**AdMax管理画面で本人が確認すること：** 広告枠設定→対象のPC／スマホ枠で、サイトURL `https://plunode.net/`、サイズ、一般向けの属性・表示除外を確認。提供されたスマホtagにはoverlay指定も含まれていた。SDKはiframe内でoverlayを要求しない動作だったが、枠設定もインライン用途として確認する。広告を許可してPC・実スマホで実配信を確認する。配信結果はコード接続やfixtureの表示とは別に扱い、運営者による広告クリック試験は行わない。[AdMax公式手順](https://www.ninja.co.jp/admax/help/manual/10494/)を参照。
+**AdMax管理画面で本人が確認すること：** 広告枠設定→対象のPC／スマホ枠で、サイトURL `https://plunode.net/`、サイズ、一般向けの属性・表示除外を確認。提供されたスマホtagにはoverlay指定も含まれていた。SDKはiframe内でoverlayを要求しない動作だったが、枠設定もインライン用途として確認する。日本の新規訪問は標準表示、海外・地域不明は広告を許可してPC・実スマホで実配信を確認する。配信結果はコード接続やfixtureの表示とは別に扱い、運営者による広告クリック試験は行わない。[AdMax公式手順](https://www.ninja.co.jp/admax/help/manual/10494/)を参照。
 
-本人報告の「審査中・未表示」は在庫不足として扱わない。広告の掲載リクエスト受理→AdMax自社バナーの表示→管理画面の審査→通常配信を区別する。同意条件を迂回せず、広告だけを許可して確認する具体操作とads.txtの取得は [AdMax実運用手順](ADMAX_OPERATIONS.md) に記載。
+2026-10-15の後続本人報告で「配信中」へ変化。過去の「審査中・未表示」は在庫不足として扱わない。広告の掲載リクエスト受理→AdMax自社バナーの表示→管理画面の審査→通常配信を区別する。同意条件を迂回せず、広告だけを許可して確認する具体操作とads.txtの取得は [AdMax実運用手順](ADMAX_OPERATIONS.md) に記載。
+
+広告の初期設定・地域判定・同意の現行契約は [配置と地域別初期設定](ADMAX_OPERATIONS.md#配置と地域別初期設定2026-10-15)を参照。GA4は引き続き地域に関係なく別途許可後だけ読み込む。
 
 ## Google認証・Search Console
 
