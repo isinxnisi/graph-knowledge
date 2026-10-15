@@ -607,3 +607,10 @@ VPS用Web `beta-public-20261015` はconfig `sha256:f773689a7d047d469ab45b03de9bd
 - 実配信の候補検証は、PCが200・空本文、スマホが200・配信scriptと外部配信先接続まで。可視の自社バナー／通常広告、AdMax管理画面の審査完了は未確認。可視の枠を確保する切り分けだけでも表示せず、在庫や審査原因を断定していない。
 - ads.txtは正式rootで404。公式は推奨としており、管理画面で取得する本人用の内容が必要。空ファイルや推測した広告販売者IDを登録しない。未設置だけを審査停止の確定原因としない。
 - VPSはWebだけを更新する `activate-admax-update.sh` を準備。受入済みoperatorと既存のbackup・失敗時復帰を使い、Caddy／Google設定／KG／会員PGを維持する。管理者sudo適用と本人の管理画面確認は別に残す。
+
+### 確認環境と配布の最終確認
+
+- 実装commit `0e6e4b9` をmainへcommit・通常push済み。ローカル3200は検証済みbuild `xJUQ_I8MPNO2uP169zQvT` へ更新。ローカル／Tunnelのdataset API200、revision `82b01515-594c-48ca-b4b6-515eefac83ca` 維持を確認した。
+- 日常確認先 `https://graph-beta.isinxnisi.com/` でPC1440／スマホ375・320pxの広告3/3成功（30.8秒）。PC／320pxの画像も確認。親は実Tunnel、広告文書はブラウザ内でローカル3200へ接続し配信fixtureを使う。正式VPSの広告文書へ修正済みという意味ではない。
+- VPSの `/home/develop/graph-admax-review-20261015` へWeb imageと既存更新script・専用wrapperを転送。現地6 fileのchecksumと両Bash構文の検証が成功した。archive 109,462,340 byte、SHA-256 `cc598026e5de1703d2d21d754284ea2e61fc2948162bb3c6152c4ac4742e2c97`。
+- SSHの `sudo -n` はpassword必須。権限を変更せず、上記wrapperの本人実行を残す。**VPSへの修正適用・自社バナーの可視表示・管理画面の審査完了は未確認**。ads.txtの本人用内容と既存枠の登録URL照合も外部確認として残す。今回のコード修正で審査が完了したとは扱わない。
