@@ -740,3 +740,15 @@ JSなしのクリック検証は、移動中の要素に対するブラウザ自
 反映記録：実装 `8ff12aadfb87bebc01c0f0b0fc97739d1ce9c448` を日本語メッセージでcommit・通常push済み。3200を検証済みbuild `xxzCg0jGw9guLTvQ7jxVZ` へ反映し、会員・広告runtime設定とローカルKG revision `82b01515-594c-48ca-b4b6-515eefac83ca` を維持。Google provider設定も確認。実Tunnelで日英・1440／390／320pxの9経路が成功（59.8秒）。TOP紹介の重複なし・captionの非重複／幅内収容・JSなし・探索復元とフッター言語変更を含む。演出の進行・親ペイン無演出・reduced-motionも実Tunnelで確認した。3217の最終候補と3218のDocker確認用は本人が見比べられるよう起動を維持する。物理スマホ／別ブラウザの包括評価を確認済みとはしない。
 
 VPS `/home/develop/graph-m3-home-polish-20261016` へ最新版を転送し、6 fileのchecksumと両Bash構文を遠隔照合済み。Web `beta-m3-home-polish-20261016`、config `sha256:4d659e20da8ff467f89637537573294fbc580dc70784456237c1e6467450ed57`、build `b42TNZssZAlMCooj9sY60`、archive 118,277,785 bytes。本番は本人申告どおりM3未適用。初期版と今回までの改善を含む `sudo bash /home/develop/graph-m3-home-polish-20261016/scripts/activate-m3-home.sh` 一回へ集約する。更新wrapperのTOP重複なし・caption・Entity本文・会員noindex確認もローカルimageで成功。実本番反映と混同しない。KG再投入・DB再起動・会員PG書込・Caddy／OAuth変更はなし。M3全体の完成や本人の最終デザイン評価にはしない。
+
+### Discovery Home改善の正式反映（2026-10-16）
+
+本人が上記 `graph-m3-home-polish-20261016` のscriptを実行し、Web healthy・正式HTTPS確認成功と「良い感じ」との評価を報告。正式HTTPSでもDiscovery Homeあり・TOP紹介の重複なし、KG revision `5e2a94af-9061-4087-bb7a-045a3c0133f4` 維持を確認した。前段の本番未適用は解消。ペイン末尾からページへスクロールが繋がらない問題は別の改善として扱い、M3全体の完成にはしない。
+
+### ペイン末尾から共通フッターへのスクロール（2026-10-16）
+
+目的：検索・中央（Discovery Home／Graph）・詳細を最後まで読んだ後、隙間やヘッダへポインタを移さず、通常のwheel／タッチ操作でページ末尾へ進めるようにする。
+
+原因を実ブラウザで再現。3ペインの `overscroll-behavior: contain` が縦のスクロール連鎖を止めていた。`contain auto` へ変更し、独立スクロールと横方向の封じ込めを維持する。外枠／カラムのoverflowを残してもページへ連鎖することを実測し、スマホの重ねた非表示ペイン・カラム寸法・横スクロールは変更しない。Graph入力処理と状態／URL復元、モーダル／設定／Graph内ナビゲータの封じ込めは変更せず、独自のスクロール転送も追加しない。
+
+検証：修正前buildではwheelでHome末尾からfooterへ到達できず、新E2Eが失敗。修正後host buildでは1440／390／320pxの3件が成功（1.4分）。Home内部→端→ページ、検索／Graph／詳細の端→正式な共通footer全体の可視表示をwheelまたはCDPの実タッチ入力で確認。Graphの配置・Zoom・選択と他ペインのscrollTopを維持し、Canvas上のマウスdrag／wheel zoom・タッチpan／pinch zoom・再読込復元が成功。日英のHome→探索展開→ロゴHome→Back→再読込2件も成功（20.9秒）。変更範囲ESLint・Bash構文・host／standalone image build成功。スマホはChromiumのタッチエミュレーションであり、物理端末の確認とは区別する。反映結果は後続へ記録する。

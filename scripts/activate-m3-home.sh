@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# M3 Discovery Homeの初期実装をWebのみ更新する。
+# M3 Discovery Homeとペインのスクロール改善をWebのみ更新する。
 set -euo pipefail
 [[ ${EUID} -eq 0 && $# -eq 0 ]] || { echo 'Usage: sudo bash activate-m3-home.sh' >&2; exit 1; }
 bundle=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)
@@ -12,8 +12,8 @@ case "$actual" in
   'sha256:b0e0bc42b156935ae6915b1dcb39bcc25338dcd25657a92ed41a8944fa569e9a linux/amd64'|'sha256:edc660a29b7bb6d500021d4a187155414e8440361e0cbe3e742142fdbddb78ed linux/amd64') ;;
   *) echo 'operatorが受入済みdigest／platformと異なります。未適用です。' >&2; exit 1 ;;
 esac
-docker tag "${actual%% *}" graph-knowledge-ops:beta-m3-home-polish-20261016
-bash "$bundle/scripts/update-production-web.sh" beta-m3-home-polish-20261016 "$bundle/images.tar.gz"
+docker tag "${actual%% *}" graph-knowledge-ops:beta-m3-scroll-20261016
+bash "$bundle/scripts/update-production-web.sh" beta-m3-scroll-20261016 "$bundle/images.tar.gz"
 echo 'Web更新とreadinessに成功しました。KG・会員PG・Caddy・認証設定は変更していません。'
 if python3 - <<'PY'
 import re, urllib.request
@@ -41,4 +41,4 @@ else
   echo 'Web更新済みですが正式HTTPSの事後確認に失敗しました。旧Webへ戻した状態ではありません。該当URLを確認してください。' >&2
   exit 1
 fi
-echo '日英Home→探索→ロゴHome→ブラウザBack、テーマ・新着・資料と名前検索を確認してください。'
+echo 'Home・検索・Graph・詳細の末尾からフッターへのスクロール、GraphのZoom・Panを確認してください。'

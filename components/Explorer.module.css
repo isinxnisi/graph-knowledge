@@ -14,7 +14,8 @@
 .demo { padding: 4px 12px; background: var(--color-demo); color: var(--color-demo-text); border: 1px solid var(--color-demo-border); border-radius: 4px; font-weight: 600; }
 .columns { display: grid; grid-template-columns: clamp(190px, 17vw, 236px) minmax(280px, 1fr) clamp(250px, 24vw, 330px); grid-template-rows: minmax(0, 1fr); align-items: start; gap: 12px; padding: 12px; flex: 1; min-height: 0; overflow-x: auto; overflow-y: hidden; }
 .panel { background: var(--color-panel); border: 1px solid var(--color-border); border-radius: var(--radius-panel); padding: var(--space-panel); min-width: 0; overflow-wrap: anywhere; height: 100%; min-height: 0; box-shadow: var(--shadow-panel); }
-.columns > .panel:first-child, .columns > aside { max-height: none; overflow-y: auto; position: static; top: 95px; overscroll-behavior: contain; }
+/* Keep independent panes; at vertical boundaries the document takes over. */
+.columns > .panel:first-child, .columns > aside { max-height: none; overflow-y: auto; position: static; top: 95px; overscroll-behavior: contain auto; }
 .searchForm { display: grid; gap: 8px; margin-bottom: 16px; }
 .searchForm button { display: flex; align-items: center; justify-content: center; font-weight: 600; box-shadow: 0 3px 8px rgb(32 84 132 / .12); text-align: center; background: var(--color-accent); color: var(--color-on-accent); }
 .searchForm button:hover:not(:disabled) { background: var(--color-accent-strong); }
@@ -62,7 +63,7 @@
 .citation p { font-size: 12px; margin-bottom: 6px; }
 
 /* 左右を固定し、中央カード全体を外側の一つの領域でスクロールする。 */
-.centralScroll { height: 100%; min-height: 0; min-width: 0; overflow-x: hidden; overflow-y: auto; overscroll-behavior: contain; scrollbar-gutter: stable; }
+.centralScroll { height: 100%; min-height: 0; min-width: 0; overflow-x: hidden; overflow-y: auto; overscroll-behavior: contain auto; scrollbar-gutter: stable; }
 .graphPanel { height: auto; overflow: visible; padding: 16px; }
 .adjacencyPanel { height: auto; margin-top: 10px; padding: 12px 14px; }
 .adjacencyPanel .relations { border-top: 0; padding-top: 0; }
