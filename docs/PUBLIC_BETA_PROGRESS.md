@@ -656,3 +656,7 @@ VPSは `sudo -n` がパスワード要求のため直接適用不可。既存ope
 反映記録：実装 `5e16141` をcommit／通常pushし、3200を検証済みhost build `ZgbI73GyrMFpn9CQbHFav` へ更新。旧buildは `/tmp/plunode-m1-support-20261015/before-3200-build` に保持。dataset revision `82b01515-594c-48ca-b4b6-515eefac83ca` 不変、robots全拒否。実Tunnelの日英×1440／390／320pxの6経路が成功（42.8秒）。正式用imageでもPC日本語／320px英語／公開meta等の3経路が成功（12.3秒）。変更前後の実測は1440pxでヘッダー55px・Canvas538px、390／320pxでヘッダー53px・Canvas638pxと同じで、支援導線によりGraph面積を縮めていない。
 
 VPS `/home/develop/graph-m1-support-20261015` へWebのみbundleを転送し、全checksum／shell構文を遠隔照合。Web `beta-m1-support-20261015`、config `sha256:952f384bb013ce05bedfb0939e6377ce8cdd2df25d7a2e7dca0fc771692d99a0`、build `4oOeE8TgUOo0wFAKHVojo`、archive 110,156,976 bytes、SHA256 `0315c16b71884824a953d34fe7a9e3d76e87e36f3b6c0ad34df9888f290c97e0`。sudoパスワードのため本番未適用。本人の残操作は `sudo bash /home/develop/graph-m1-support-20261015/scripts/activate-m1-support.sh` 一回。ROADMAPとIssue #1の完了確認を実装済み／実画面確認済み／本番未確認で更新し、IssueはOpenを維持した。銀行入金・申告の適合性を完了条件へ追加して公開を停止しない。
+
+### M1正式反映・完了（2026-10-15）
+
+本人の適用ログで `beta-m1-support-20261015` healthy・正式HTTPS検証成功を確認。本人がヘッダー／共通フッター→支援案内→Buy Me a Coffeeを確認済み。Codexも正式HTTPSの支援URL・canonicalとKG revision維持を確認。ROADMAPのM1を達成へ更新する。銀行入金を今回確認したとはしない。

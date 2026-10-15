@@ -33,7 +33,7 @@ export function analyticsFrame() {
     const data=event.data;if(!data||data.type!=='plunode-metric')return;
     if(data.event==='page_view'){
       if(viewed)return;viewed=true;
-      const path=typeof data.path==='string'&&/^\\/explore\\/[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/.test(data.path)?data.path:'/';
+      const path=typeof data.path==='string'&&(/^(?:\\/en)?\\/explore\\/[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/.test(data.path)||data.path==='/en')?data.path:'/';
       safe.page_location='${PUBLIC_ORIGIN}'+path;
       gtag('set',safe);gtag('event','page_view',safe);
     }else if(viewed&&names.includes(data.event))gtag('event',data.event,safe);

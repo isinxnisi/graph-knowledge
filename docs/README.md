@@ -40,6 +40,7 @@
 
 | 現役の設計文書 | 状態・読む場面 |
 | --- | --- |
+| [日英SEO・OGP・ブランドアイコン](design/PUBLIC_DISCOVERY.md) | M2。日英SSR公開ページ、公開KGの概要と出典、対象別OG画像、favicon、検索境界・適用 |
 | [探索GraphのURL復元・共有](design/EXPLORATION_URL_RESTORE.md) | 2026-10-14採用。起点UUID＋可逆圧縮query。枝・条件・座標・zoomの現在KGからの再構成、長さ上限と失敗の明示。Capsuleとは別 |
 | [探索画面のデザイン刷新](design/EDITORIAL_EXPLORER_DESIGN.md) | 2026-10-14採用。明朝の文化的知性とGraphの科学的探索感。実装案の実物評価と最終の好みを区別。後続依頼で当面は工程13の会員実接続を優先。スマホ詳細配置は別の未解決要求 |
 | [公開βまでの進捗](PUBLIC_BETA_PROGRESS.md) | 2026-10-11採用。全24ステップの完了数・残数・外部待ちと次の作業範囲。正式名Plunode・公開先はplunode.net（旧graphはpreview維持） |

@@ -1,0 +1,14 @@
+.overview { max-width: 1080px; margin: 0 auto; padding: 1.5rem clamp(1rem, 4vw, 2rem); color: var(--color-text); border-top: 1px solid var(--color-border); font-size: .875rem; line-height: 1.75; }
+.overview h2 { font-family: var(--font-editorial); font-size: clamp(1.35rem, 3vw, 1.8rem); margin: .25rem 0 .5rem; font-weight: 400; }
+.overview h3 { font-size: .875rem; margin: .75rem 0 .35rem; }
+.overview p { margin: .5rem 0; }
+.eyebrow, .note { font-size: .75rem; color: var(--color-muted); }
+.languages nav { display: flex; gap: 1.25rem; font-size: .75rem; }
+.columns { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+.overview ul { padding-left: 1.1rem; margin: .25rem 0; }
+.overview li { margin: .4rem 0; overflow-wrap: anywhere; }
+.relation { color: var(--color-muted); font-size: .75rem; padding: 0 .5rem; }
+.examples { display: grid; grid-template-columns: repeat(4, 1fr); gap: .75rem; list-style: none; padding: 0 !important; }
+.examples a { display: flex; flex-direction: column; text-decoration: none; padding: .5rem 0; }
+.examples small { color: var(--color-muted); }
+@media (max-width: 700px) { .columns { grid-template-columns: 1fr; gap: .5rem; } .examples { grid-template-columns: 1fr 1fr; } }

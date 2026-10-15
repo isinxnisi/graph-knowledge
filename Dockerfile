@@ -32,6 +32,7 @@ WORKDIR /app
 ENV NODE_ENV=production NEXT_TELEMETRY_DISABLED=1 HOSTNAME=0.0.0.0 PORT=3000
 COPY --from=builder --chown=node:node /app/.next-public/standalone ./
 COPY --from=builder --chown=node:node /app/.next-public/static ./.next-public/static
+COPY --from=builder --chown=node:node /app/app/fonts/BIZUDPMincho-OG.woff ./app/fonts/BIZUDPMincho-OG.woff
 COPY --from=builder --chown=node:node /app/app/fonts/OFL.txt ./font-licenses/BIZUDPMincho-OFL.txt
 COPY --chown=node:node scripts/production-readiness.mjs ./scripts/production-readiness.mjs
 USER node

@@ -14,7 +14,7 @@ export function adFrameEnabled(host: string | null, env: Record<string, string |
   return env.GRAPH_DATASET === "public-kg" && env.PLUNODE_ADS_ENABLED === "1" && host !== null && /^(?:ads\.plunode\.net(?::443)?|ads\.localhost:\d+)$/.test(host);
 }
 export function publicPagePath(path: string) {
-  return /^\/explore\/[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/.test(path) ? path : "/";
+  return /^(?:\/en)?\/explore\/[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/.test(path) ? path : path === "/en" ? "/en" : "/";
 }
 export const PUBLIC_EVENTS = ["search", "explore_start", "graph_expand", "relation_detail", "source_open"] as const;
 export type PublicEvent = typeof PUBLIC_EVENTS[number];

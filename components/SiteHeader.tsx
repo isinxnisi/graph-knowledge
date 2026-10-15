@@ -1,4 +1,5 @@
 "use client";
+import { localizedPublicHref } from "../lib/domain/public-routes";
 import Icon from "./Icon";
 import { useMemberIdentity } from "../lib/client/use-member-identity";
 import { memberRequest, type MemberUser } from "../lib/client/member-api";
@@ -31,7 +32,7 @@ export default function SiteHeader({ dataset, page = "explore", user, onBeforeAc
   useEffect(() => {
     const apply = (value: Appearance) => { document.documentElement.dataset.theme = value.theme; setAppearance(value); };
     const timer = window.setTimeout(() => {
-      setReturnHref(explorationReturnHref());
+      setReturnHref(explorationReturnHref() === "/" ? localizedPublicHref("/", locale) : explorationReturnHref());
       try { apply(readAppearance(localStorage.getItem(appearanceKey))); }
       catch { setStorageError(true); }
     }, 0);
@@ -40,7 +41,7 @@ export default function SiteHeader({ dataset, page = "explore", user, onBeforeAc
     const escape = (event: KeyboardEvent) => { if (event.key === "Escape") for (const ref of [menu, accountMenu]) if (ref.current?.open) { ref.current.open = false; ref.current.querySelector("summary")?.focus(); } };
     window.addEventListener("storage", sync); document.addEventListener("pointerdown", outside); document.addEventListener("keydown", escape);
     return () => { window.clearTimeout(timer); window.removeEventListener("storage", sync); document.removeEventListener("pointerdown", outside); document.removeEventListener("keydown", escape); };
-  }, []);
+  }, [locale]);
   function change(value: Appearance) {
     setAppearance(value); document.documentElement.dataset.theme = value.theme;
     try { localStorage.setItem(appearanceKey, JSON.stringify(value)); setStorageError(false); }
@@ -70,7 +71,7 @@ export default function SiteHeader({ dataset, page = "explore", user, onBeforeAc
     </div>
     <p className={styles.description}>{data.description}</p>
     <div className={styles.tools}>
-      <a className={styles.supportLink} href="/support" onClick={closeAccount} aria-current={page === "support" ? "page" : undefined}><Icon name="heart" /><span>{supportLabels(locale).link}</span></a>
+      <a className={styles.supportLink} href={localizedPublicHref("/support", locale)} onClick={closeAccount} aria-current={page === "support" ? "page" : undefined}><Icon name="heart" /><span>{supportLabels(locale).link}</span></a>
       <nav aria-label={text.navigation} className={styles.navigation}>
         {page !== "explore" && <a className={styles.exploreReturn} href={returnHref} aria-label={text.exploreLink} title={text.exploreLink}><Icon name="back" /><span>{text.explore}</span></a>}
         {currentUser ? <details className={`${styles.settings} ${styles.accountMenu}`} data-floating-menu ref={accountMenu} onToggle={event => { if (event.currentTarget.open && menu.current) menu.current.open = false; }}>
@@ -100,14 +101,20 @@ export default function SiteHeader({ dataset, page = "explore", user, onBeforeAc
             }}><option value="brown">{text.brown}</option><option value="blue">{text.blue}</option></select></label>}
           </div>
           <p>{text.appearanceHelp}</p>
-          <label className={styles.language}>{ui.language}<select value={locale} onChange={event => setLocale(event.target.value === "en" ? "en" : "ja")}><option value="ja">日本語</option><option value="en">English</option></select></label>
+          <label className={styles.language}>{ui.language}<select value={locale} onChange={event => {
+            if (onBeforeAccountNavigation && !onBeforeAccountNavigation()) return;
+            const next = event.target.value === "en" ? "en" : "ja";
+            setLocale(next);
+            const path = localizedPublicHref(location.pathname, next);
+            if (path !== location.pathname) location.assign(path + location.search + location.hash);
+          }}><option value="ja">日本語</option><option value="en">English</option></select></label>
           <p>{ui.languageHelp}</p>
           <p className={styles.dataHelp}>{text.datasetAbout}：{data.badge}<br />{data.description}</p>
           <div className={styles.privacyLinks}>
             {onPrivacySettings && <button onClick={() => { if (menu.current) { menu.current.open = false; menu.current.querySelector("summary")?.focus(); } onPrivacySettings(); }}>{locale === "en" ? "Analytics & ads settings" : "計測・広告の設定"}</button>}
-            <a href="/privacy" onClick={closeAccount}>{locale === "en" ? "Privacy & external data transmission" : "プライバシー・外部送信について"}</a>
+            <a href={localizedPublicHref("/privacy", locale)} onClick={closeAccount}>{locale === "en" ? "Privacy & external data transmission" : "プライバシー・外部送信について"}</a>
           </div>
-          <a className={styles.supportMenuLink} href="/support" onClick={closeAccount} aria-current={page === "support" ? "page" : undefined}><Icon name="heart" /><span>{supportLabels(locale).link}</span></a>
+          <a className={styles.supportMenuLink} href={localizedPublicHref("/support", locale)} onClick={closeAccount} aria-current={page === "support" ? "page" : undefined}><Icon name="heart" /><span>{supportLabels(locale).link}</span></a>
           {languageError && <p role="status">{ui.languageFailed}</p>}
           {storageError && <p role="status">{text.appearanceFailed}</p>}
         </div>

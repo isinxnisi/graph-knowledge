@@ -33,11 +33,11 @@ describe("公開・計測・広告の境界", () => {
     expect(config[1]).toBe(GA_MEASUREMENT_ID); expect(config[2].send_page_view).toBe(false);
     const send = (event: string, path = "/?s=SECRET&name=PRIVATE", source: object = parent, origin = "https://plunode.net") => messages[0]({ source, origin, data: { type: "plunode-metric", event, path, name: "PRIVATE", token: "SECRET" } });
     send("page_view", "/member", {}); send("page_view", "/", parent, "https://evil.example");
-    send("page_view"); send("page_view"); send("private_capsule"); send("search");
+    send("page_view", "/en/explore/10000000-0000-4000-8000-000000000001"); send("page_view"); send("private_capsule"); send("search");
     const events = dataLayer.filter(args => args[0] === "event");
     expect(events.map(args => args[1])).toEqual(["page_view", "search"]);
     expect(JSON.stringify(events)).not.toMatch(/SECRET|PRIVATE|private_capsule|\?s=/);
-    expect(events[0][2]).toMatchObject({ page_location: "https://plunode.net/", page_referrer: "", page_title: "Plunode" });
+    expect(events[0][2]).toMatchObject({ page_location: "https://plunode.net/en/explore/10000000-0000-4000-8000-000000000001", page_referrer: "", page_title: "Plunode" });
   });
   it("広告タグは分離文書へ一つだけ。sandboxとno-referrer・noindexを維持", () => {
     expect(adFrame("mobile")).toContain("93ba1c5c8d797794cf1c721bce01ff42");

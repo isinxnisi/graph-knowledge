@@ -31,3 +31,7 @@ sudo bash /home/develop/graph-m1-support-20261015/scripts/activate-m1-support.sh
 Web切替／readiness失敗は既存更新処理が旧Webへ復帰する。readiness成功後のHTTPS確認だけが失敗した場合は、更新済みであることを明示して停止し、HTTPSの原因を確認する。稼働中の他サービスを操作しない。
 
 実装・ローカル検証・転送準備だけではM1を本番達成として閉じない。正式HTTPSと日英の代表経路を確認したらROADMAPとIssueの本番チェックを更新する。実行物・検証結果・commit／push・本番反映状況は [進捗末尾](../PUBLIC_BETA_PROGRESS.md)へ記録する。
+
+## 本番完了（2026-10-15）
+
+本人が適用scriptを実行し、Web healthy・正式HTTPS・支援先・canonicalが成功。ヘッダー／共通フッター→支援案内→Buy Me a Coffeeも本人確認済み。Codexが正式HTTPSの支援先・canonicalを再確認し、KG revision `5e2a94af-9061-4087-bb7a-045a3c0133f4` の維持を確認した。M1は本番達成とし、決済動作は本人確認、銀行入金は後続運用として引き続き区別する。

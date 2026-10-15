@@ -3,7 +3,7 @@ const returnKey = "graph-knowledge:account-return:v1";
 export const memberSessionEvent = "graph-knowledge:member-session-changed";
 function safeExplorationHref(value: string) {
   const url = new URL(value, location.origin);
-  if (url.origin !== location.origin || !/^\/(?:explore\/[0-9a-f-]{36})?$/.test(url.pathname)) return "/";
+  if (url.origin !== location.origin || !/^\/(?:en(?:\/explore\/[0-9a-f-]{36})?|explore\/[0-9a-f-]{36})?$/.test(url.pathname)) return "/";
   if ([...url.searchParams.keys()].some(key => key !== "s") || url.hash) return "/";
   return url.pathname + url.search;
 }

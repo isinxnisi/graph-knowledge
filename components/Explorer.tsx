@@ -56,7 +56,7 @@ function GraphNotice({ message, transient }: { message: string; transient: boole
   return visible ? <p className={styles.graphNotice} role="status">{message}</p> : null;
 }
 
-export default function Explorer({ dataset = "demo", initialRoot, services }: { dataset?: DatasetMode; initialRoot?: string; services?: PublicServicesPolicy }) {
+export default function Explorer({ dataset = "demo", initialRoot, services, publicOverview }: { dataset?: DatasetMode; initialRoot?: string; services?: PublicServicesPolicy; publicOverview?: import("react").ReactNode }) {
   const searchParams = useSearchParams();
   const { locale } = useUiLocale();
   const ui = explorerLabels(locale);
@@ -203,5 +203,5 @@ export default function Explorer({ dataset = "demo", initialRoot, services }: { 
       onClose={() => setSavedViewsOpen(false)} onOpen={(entity, conditions) => {
         openSavedView(entity, conditions, canvas.current?.capture() ?? null); setActivePane("graph");
       }} />}
-  </div><SiteFooter beforeNavigation={beforeAccountNavigation} /></>;
+  </div>{(!initialRoot || !graph.centerId || initialRoot === graph.centerId) && publicOverview}<SiteFooter beforeNavigation={beforeAccountNavigation} /></>;
 }

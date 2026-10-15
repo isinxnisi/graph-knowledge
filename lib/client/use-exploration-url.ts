@@ -1,11 +1,12 @@
 "use client";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { z } from "zod";
+import { publicLocalePath } from "../domain/public-routes";
 import type { DatasetMode } from "../domain/dataset";
 import type { GraphState } from "./graph-state";
 import type { GraphView } from "./graph-view";
 import { captureWorkspace, type RebuiltWorkspace } from "./saved-workspace";
-import { assertUrlReplayable, decodeExploration, explorationHref, ExplorationUrlError, rebuildExplorationUrl, URL_STATE_TARGET, isWorkspaceLoading } from "./exploration-url";
+import { assertUrlReplayable, decodeExploration, explorationHref, ExplorationUrlError, rebuildExplorationUrl, URL_STATE_TARGET, URL_STATE_LIMIT, isWorkspaceLoading } from "./exploration-url";
 import { explorationUrlLabels } from "../i18n/exploration-url";
 import { WorkspaceError, WorkspaceRootNotFound } from "./saved-workspace";
 
@@ -29,7 +30,9 @@ export function useExplorationUrl({ dataset, initialRoot, graph, capture, apply,
     if (restoring.current || failed.current || !graph.centerId || new URLSearchParams(location.search).has("read")) return false;
     try {
       const view = capture(); if (!view) return false;
-      const href = explorationHref(captureWorkspace(dataset, "URL", graph, view));
+      const rawHref = explorationHref(captureWorkspace(dataset, "URL", graph, view));
+      const href = (publicLocalePath(rawHref.split("?")[0], location.pathname.startsWith("/en") ? "en" : "ja") ?? rawHref.split("?")[0]) + rawHref.slice(rawHref.indexOf("?"));
+      if (href.length > URL_STATE_LIMIT) throw new ExplorationUrlError("limit");
       assertUrlReplayable(graph, view);
       // Native History integrates with Next searchParams without adding history entries.
       if (`${location.pathname}${location.search}` !== href) history.replaceState(history.state, "", href);
@@ -55,7 +58,7 @@ export function useExplorationUrl({ dataset, initialRoot, graph, capture, apply,
     return () => { window.removeEventListener("pagehide", update); if (timer.current) clearTimeout(timer.current); };
   }, [update]);
   useEffect(() => {
-    const rootId = initialRoot ?? /^\/explore\/([^/]+)$/.exec(location.pathname)?.[1];
+    const rootId = initialRoot ?? /^(?:\/en)?\/explore\/([^/]+)$/.exec(location.pathname)?.[1];
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 60_000);
     restoring.current = true; failed.current = false;
@@ -98,6 +101,6 @@ export function useExplorationUrl({ dataset, initialRoot, graph, capture, apply,
     // Restore only on entry/retry, never in response to our own replaceState.
   }, [initialRoot, dataset, attempt, schedule]);
   return { busy, failure, notice, ready, schedule, flush: update, retry: () => { setBusy(true); setFailure(null); setAttempt(a => a + 1); },
-    abandon: () => { failed.current = false; setFailure(null); history.replaceState(history.state, "", "/"); },
+    abandon: () => { failed.current = false; setFailure(null); history.replaceState(history.state, "", location.pathname.startsWith("/en") ? "/en" : "/"); },
     copy: async () => { if (!update()) return; try { await navigator.clipboard.writeText(location.href); setNotice(explorationUrlLabels(locale).copied); } catch { setNotice(explorationUrlLabels(locale).manualCopy); } } };
 }

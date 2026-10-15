@@ -217,6 +217,8 @@ test("GA4は同意後の公開探索だけ。URL更新・非公開画面へ本�
     await page.goto(PUBLIC_ORIGIN + "/"); expect(tagLoads).toBe(1);
     const gear = page.getByTestId('site-header').getByLabel('表示設定'); await gear.click();
     await page.getByRole("combobox", { name: "表示言語", exact: true }).selectOption("en");
+    await expect(page).toHaveURL(PUBLIC_ORIGIN + "/en");
+    await page.getByTestId("site-header").getByLabel("Display settings", { exact: true }).click();
     await expect(page.getByRole("button", { name: "Analytics & ads settings", exact: true })).toHaveCount(1);
   } finally { await context.close(); }
 });

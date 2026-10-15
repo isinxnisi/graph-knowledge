@@ -1,4 +1,5 @@
 "use client";
+import { localizedPublicHref } from "../lib/domain/public-routes";
 import { useUiLocale } from "../lib/client/ui-locale";
 import { SUPPORT_URL, supportLabels } from "../lib/i18n/support";
 import SiteHeader from "./SiteHeader";
@@ -15,7 +16,7 @@ export default function SupportPage() {
       <section className={styles.contribution} aria-labelledby="support-contribution"><h2 id="support-contribution">{text.link}</h2><p>{text.optional}</p>
         <a className={styles.action} href={SUPPORT_URL} target="_blank" rel="noopener noreferrer" referrerPolicy="no-referrer" aria-describedby="support-external"><span>{text.action}</span><Icon name="external" /></a>
         <p id="support-external" className={styles.note}>{text.external}</p><p className={styles.note}>{text.payment}</p>
-        <a className={styles.privacy} href="/privacy">{text.privacy}</a>
+        <a className={styles.privacy} href={localizedPublicHref("/privacy", locale)}>{text.privacy}</a>
       </section>
     </div>
   </main><SiteFooter /></div>;

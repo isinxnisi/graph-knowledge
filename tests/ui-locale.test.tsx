@@ -30,6 +30,13 @@ function sync(locale: string | null) { fireEvent(window, new StorageEvent("stora
 const page = examples.neighbors as NeighborsResponse;
 
 describe("表示localeと探索の分離", () => {
+  it("公開英語URLの言語が保存設定に優先し、ページ固有titleを保持する", async () => {
+    localStorage.setItem(uiLocaleKey, "ja"); document.title = "PLUTO — Connections and sources | Plunode";
+    render(<UiLocaleProvider initialLocale="en"><Controls /></UiLocaleProvider>);
+    await waitFor(() => expect(localStorage.getItem(uiLocaleKey)).toBe("en"));
+    expect(document.documentElement.lang).toBe("en"); sync("ja"); expect(document.documentElement.lang).toBe("en");
+    expect(document.title).toBe("PLUTO — Connections and sources | Plunode");
+  });
   it("初期日本語・保存値の復元・別タブの変更/削除・未対応値のfallback", async () => {
     expect(normalizeUiLocale("en-US")).toBe("en"); expect(normalizeUiLocale("fr")).toBe("ja");
     localStorage.setItem(uiLocaleKey, "en-GB");

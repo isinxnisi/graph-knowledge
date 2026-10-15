@@ -4,5 +4,6 @@ import { PUBLIC_ORIGIN } from "../lib/domain/publication";
 export const dynamic = "force-dynamic";
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   if (!(await publicationPolicy()).public) return [];
-  return [{ url: PUBLIC_ORIGIN + "/" }, { url: PUBLIC_ORIGIN + "/privacy" }, { url: PUBLIC_ORIGIN + "/support" }, ...(await sitemapEntities()).map(id => ({ url: `${PUBLIC_ORIGIN}/explore/${id}` }))];
+  const paths = ["/", "/privacy", "/support", ...(await sitemapEntities()).map(id => `/explore/${id}`)];
+  return paths.flatMap(path => [{ url: PUBLIC_ORIGIN + path }, { url: PUBLIC_ORIGIN + "/en" + (path === "/" ? "" : path) }]);
 }

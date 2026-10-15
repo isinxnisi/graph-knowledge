@@ -15,7 +15,7 @@ for (const locale of ["ja", "en"]) for (const width of [1440, 390, 320]) test(`$
     await route.fulfill({ contentType: "text/html", body: "<title>External support page fixture</title><p>Buy Me a Coffee</p>" });
   });
   try {
-    await page.goto(info.project.use.baseURL!);
+    await page.goto(info.project.use.baseURL! + (en ? "/en" : "/"));
     const header = page.getByTestId("site-header"), footer = page.getByTestId("site-footer");
     if (width < 800) expect((await header.boundingBox())!.height).toBeLessThanOrEqual(56);
     await page.getByRole("button", { name: en ? "Explore from PLUTO" : "PLUTOから探索を開始", exact: true }).click();
