@@ -1,6 +1,7 @@
 .header { position: relative; z-index: 2; display: flex; flex-wrap: wrap; align-items: center; gap: 6px 16px; padding: 10px 20px; flex: 0 0 auto; background: var(--color-panel); color: var(--color-text); border-bottom: 1px solid var(--color-border); font: var(--font-body); }
 .header, .header * { box-sizing: border-box; }
 .identity { display: flex; align-items: center; flex-wrap: wrap; gap: 6px 12px; min-width: 0; }
+.header .brandLink { gap: 10px; padding: 0; border: 0; color: var(--color-text); min-width: 0; }
 .header .brand { margin: 0; font-family: var(--font-editorial); font-size: 19px; font-weight: 400; line-height: 1.4; letter-spacing: -.02em; }
 .header .dataset { margin: 0; padding: 3px 8px; border: 1px solid var(--color-demo-border); border-radius: var(--radius-control); background: var(--color-demo); color: var(--color-demo-text); font-size: 12px; line-height: 1.5; }
 .header .description { margin: 0; flex: 1 1 260px; font-size: 12px; color: var(--color-muted); line-height: 1.5; }
@@ -99,7 +100,7 @@
 }
 @media (max-width: 360px) { .header:has(.exploreReturn) .memberMark { display: none; } }
 @media (max-width: 800px) {
-  .identity { flex: 0 0 auto; max-width: 92px; }
+  .identity { flex: 0 1 112px; max-width: 112px; }
   .brandMark { flex-shrink: 0; }
   .tools { flex: 1; min-width: 0; justify-content: flex-end; }
   .navigation { flex: 0 1 auto; min-width: 0; }

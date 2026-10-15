@@ -18,7 +18,7 @@ for (const width of [1440, 375]) test(`会員との同一タブ往復で枝・�
   try {
     await page.goto('/');
     await expect(page.getByTestId('site-header').getByLabel('探索する利用者のアカウントメニュー')).toBeVisible();
-    await page.getByRole('button', { name: 'PLUTOから探索を開始', exact: true }).click();
+    await page.getByTestId('discovery-featured').click();
     const canvas = page.getByTestId('graph-canvas');
     await expect.poll(() => canvas.evaluate(el => (el as unknown as { _cyreg?: { cy: Core } })._cyreg?.cy.nodes().length ?? 0)).toBe(4);
     const nav = page.getByRole('navigation', { name: '探索画面の切り替え' });

@@ -698,3 +698,17 @@ VPS `/home/develop/graph-m1-support-20261015` へWebのみbundleを転送し、�
 反映記録：実装commit `10064981aee3e0849476e52b477a105904d18ae3` を日本語メッセージでcommit・通常push済み。3200を検証済みhost build `IpSv-ZQCQDoj_2TvVk8ON` へ更新し、旧buildを `/tmp/plunode-focus-20261015/before-3200-build` に保持。ローカルKG revision `82b01515-594c-48ca-b4b6-515eefac83ca` は不変。実TunnelのPC1440／スマホ390・320pxで新E2E7件が成功（48.7秒）。初期自動focus、タッチ、キーボード、モーダル復帰、復元通知と失敗警告、footer、画面幅を確認。PCの関係→出典→閲覧modal→関係の両端→元の関係への代表経路も成功（1件、14.8秒）。ブラウザ検証はChromiumのタッチ・小画面エミュレーションであり、物理スマホ確認とは区別する。
 
 VPS `/home/develop/graph-focus-feedback-20261015` へWebのみbundleを転送し、全checksumと両Bash構文を遠隔照合済み。image `graph-knowledge-web:beta-focus-feedback-20261015`、config `sha256:36761a19a61ad487c20c87251e1fc46fec5ccc569c556f9bb2fbf4b81e1d73e3`、build `IKc804QmGzLzAQ80s3sQv`、archive 118,261,511 bytes。既存operatorとKG backup・旧Web復帰を再利用し、DB／会員PGの再起動や書込は行わない。遠隔 `sudo -n true` はパスワード要求のため、今回の修正は**本番未適用**。本人の残操作は `sudo bash /home/develop/graph-focus-feedback-20261015/scripts/activate-focus-feedback.sh` 一回。M1・M2を含むため旧bundleの再適用は不要。適用後の正式HTTPS代表操作と本人の実画面評価は未確認として残す。
+
+### フォーカス・通知・footerの正式反映（2026-10-16）
+
+本人の適用ログで `beta-focus-feedback-20261015` healthy・正式HTTPS検証成功を確認。Codexも正式URLで1440／390／320pxのURL復元通知・3.5秒での消去・配置維持と、短い会員ページ／長いprivacy本文のfooterの4件が成功（54.3秒）。正式KG revision `5e2a94af-9061-4087-bb7a-045a3c0133f4` 不変、旧preview未認証401を確認。本人の物理スマホ評価・包括的アクセシビリティ評価は別に残す。
+
+## M3 Discovery Home 初期実装（2026-10-16）
+
+開始時のmainは `00c7664`。origin/mainの文書2 commitを固定SHA `a082ba7` まで確認してfast-forwardし、[体験目標・不満・仮案・判断経緯](design/M3_DISCOVERY_EXPERIENCE_CONTEXT.md)を読んで着手した。自動開発の未受入変更はない。本人の既存 `memo.txt` は変更・読取・commit対象にしない。
+
+[今回の契約](design/DISCOVERY_HOME.md)。日英トップの中央をDiscovery Homeへ変更し、スマホの初期面もHomeへ。PLUTOの実在する人物・役割を使った紹介図と探索リンク、長崎尚志／研究所／会議へのテーマ入口、公開KGの新着Entity・Claim各4件、現在の公開対象／関係件数を表示する。追加の日時はKGのcreatedAtであり、歴史上の出来事・資料発行日・VPS適用日と区別する。同日内の並びを投入順や人気順と見せない。
+
+ロゴからHomeへ戻る前に既存URLを確定し、Backで枝・座標・Zoomを復元する。Homeで名前検索した後の開始も実際の探索routeへのpushとして履歴に残す。初期検証でnative HistoryだけのHome→検索開始はBack時にGraphが残ることを確認し、Nextのroute遷移へ修正した。Graph codec・モデル・復元処理・認証・会員保存・広告同意は変更しない。Rich Discovery Search・分類・プリセット・個別関係の閉鎖・公開Capsule発見を完成扱いにせず、今回の初期実装と分けて残す。
+
+検証：関連unit125件、変更範囲ESLint・TypeScript・host／standalone image buildが成功。最終hostのHome8件（日英×1440／390／320px、テーマ・新着・資料modal・検索とBack、JSなし）が成功（1.1分）。会員往復・本人表示・logout／タッチ／keyboard・footer・スマホ広告の配信fixture／非配信／撤回とGraph維持・共通設定・日英支援の12件が成功。地域判定の本番image専用既存1件はhostでskip。GA4はpreview設定の候補では送信されないことを確認し、検証serverだけ正式公開flagを有効にして許可後のタグ・本文／tokenの非送信・private除外の1件が成功（30.8秒）。日英SEOの公開境界／JSなしの既存2件も成功（25.4秒）。広告のfixture確認と実広告の可視配信、会員API fixtureと本人Googleログインを混同しない。3200／TunnelとVPS配布状況は後続へ追記する。

@@ -1,6 +1,6 @@
 # Plunode ロードマップ（公開β以降）
 
-更新：2026-10-15
+更新：2026-10-16
 
 ## 基本方針
 
@@ -59,6 +59,8 @@ M1は本人による本番適用・導線確認をもって達成。支援特典
 - 実データを継続追加。大量データの出典・同一性・Claim意味・公開範囲の既存契約を守る。
 
 ### M3 検索・発見体験
+
+Discovery Homeの初期実装を進行中。[今回の操作・データ・履歴の契約](docs/design/DISCOVERY_HOME.md)。日英Home、PLUTO・テーマ・新着からの探索、ロゴHomeとBackの復元を最初の単位とする。Rich Discovery Search・分類属性・プリセット・公開Capsule発見・個別関係の閉鎖は後続であり、M3全体を完了にしない。
 
 UXの課題・達成したい体験・実装仮案・未決論点・判断経緯は [M3 Discovery UX構想メモ](docs/design/M3_DISCOVERY_EXPERIENCE_CONTEXT.md) に保存。**Capsuleの発見への組込みとGraphの個別関係を閉じる操作は実現したい課題**であり、画面／操作方式が仮案であることと混同しない。
 

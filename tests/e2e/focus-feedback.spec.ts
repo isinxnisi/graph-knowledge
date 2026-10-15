@@ -11,8 +11,9 @@ for (const [width, height] of [[320,568],[390,844]]) test(`${width}px タッチ�
   await context.addInitScript(()=>localStorage.setItem("plunode:privacy:v1",'{"analytics":false,"ads":false}'));
   const page=await context.newPage(); await page.goto(info.project.use.baseURL! + "/");
   const nav=page.getByRole("navigation",{name:"探索画面の切り替え"});
+  await nav.getByRole("button",{name:"検索",exact:true}).tap();
   await page.getByLabel("名前・別名",{exact:true}).tap(); await page.keyboard.type("PLUTO");
-  await nav.getByRole("button",{name:"Graph",exact:true}).tap();
+  await nav.getByRole("button",{name:"Home",exact:true}).tap();
   await expect(page.locator("#explorer-graph")).toBeFocused(); expect((await outline(page.locator("#explorer-graph"))).style).toBe("none");
   await nav.getByRole("button",{name:"検索",exact:true}).tap();
   await expect(page.locator("#explorer-search")).toBeFocused(); expect((await outline(page.locator("#explorer-search"))).style).toBe("none");

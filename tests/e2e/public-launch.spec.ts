@@ -77,8 +77,7 @@ for (const width of [1440, 375, 320]) test(`広告の配信・非配信でGraph�
   });
   await context.route("https://ad.example/**", route => route.fulfill({ contentType: "text/html; charset=utf-8", body: '<meta charset="utf-8"><body style="margin:0;background:#edf2f5;display:grid;place-items:center;font:14px sans-serif;height:100vh">広告・配置確認</body>' }));
   try {
-    await page.goto(info.project.use.baseURL!);
-    await page.getByRole("button", { name: "PLUTOから探索を開始", exact: true }).click();
+    await page.goto(info.project.use.baseURL! + "/explore/2b7c6289-d050-4dc0-93e3-9307681253cc");
     await expect(page.getByTestId("graph-counts")).toContainText("Entity 4");
     await expect.poll(() => tags.length).toBe(1);
     const slot = page.locator('[data-testid="public-services"] > [data-device]');
@@ -191,7 +190,7 @@ test("GA4は同意後の公開探索だけ。URL更新・非公開画面へ本�
   await context.route("https://www.googletagmanager.com/**", route => { tagLoads++; return route.fulfill({ contentType: "application/javascript", body: "window.__commands=window.dataLayer.map(args=>Array.from(args));const old=window.dataLayer.push.bind(window.dataLayer);window.dataLayer.push=function(args){window.__commands.push(Array.from(args));return old(args)}" }); });
   await context.route("https://adm.shinobi.jp/**", route => route.fulfill({ contentType: "application/javascript", body: "" }));
   try {
-    await page.goto(PUBLIC_ORIGIN + "/");
+    await page.goto(PUBLIC_ORIGIN + "/explore/2b7c6289-d050-4dc0-93e3-9307681253cc");
     expect(tagLoads).toBe(0); expect(page.frames()).toHaveLength(1);
     await openPrivacySettings(page);
     await page.getByRole("checkbox", { name: /^利用状況/ }).check();
@@ -236,7 +235,7 @@ for (const width of [1440, 375]) test(`共通設定を広告枠から分離し�
     await expect(page.getByRole("checkbox", { name: /^広告/ })).toBeVisible();
     await page.keyboard.press("Escape");
     await expect(header.getByLabel("表示設定", { exact: true })).toBeFocused();
-    await page.getByRole("button", { name: "PLUTOから探索を開始", exact: true }).click();
+    await page.getByTestId("discovery-featured").click();
     await expect(page.getByTestId("graph-counts")).toContainText("Entity 4");
     const before = await view(page);
     if (width < 800) await page.getByRole("navigation", { name: "探索画面の切り替え" }).getByRole("button", { name: "選択の詳細", exact: true }).click();

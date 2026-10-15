@@ -1,0 +1,53 @@
+.home { padding: 22px; background: var(--color-panel); border: 1px solid var(--color-border); border-radius: var(--radius-panel); color: var(--color-text); }
+.home .eyebrow { margin: 0 0 8px; color: var(--color-muted); font-size: 10px; letter-spacing: .1em; }
+.home .introduction h2 { margin: 0 0 10px; font-family: var(--font-editorial); font-size: clamp(23px, 2.1vw, 31px); line-height: 1.5; font-weight: 400; text-wrap: balance; }
+.introduction > p:not(.eyebrow) { max-width: 50em; color: var(--color-muted); font-size: 13px; line-height: 1.8; margin: 0 0 8px; }
+.introduction > small { color: var(--color-muted); font-size: 10px; font-variant-numeric: tabular-nums; }
+.home .featured { display: block; margin-top: 22px; padding: 18px 20px 14px; color: var(--color-text); text-decoration: none; border-radius: 8px; background: linear-gradient(125deg, var(--color-accent-soft), var(--color-canvas)); border: 1px solid var(--color-border); }
+.home .featured h3 { margin: 0 0 8px; font-family: var(--font-editorial); font-size: 23px; font-weight: 400; line-height: 1.5; }
+.home .featureDescription { margin: 0; max-width: 48em; font-size: 12px; line-height: 1.8; color: var(--color-muted); }
+.map { width: 100%; max-width: 520px; display: block; margin: 10px auto 0; overflow: visible; }
+.map path { stroke: var(--color-node-border); stroke-width: 1.2; }
+.map rect { fill: var(--color-panel); stroke: var(--color-node-border); stroke-width: 1; }
+.map .mapRoot { fill: var(--color-accent-soft); stroke: var(--color-accent); }
+.map text { fill: var(--color-text); font-size: 12px; }
+.map .mapRole { font-size: 9px; paint-order: stroke; stroke: var(--color-canvas); stroke-width: 6px; stroke-linejoin: round; }
+.start { display: flex; align-items: center; gap: 7px; font-size: 13px; font-weight: 600; color: var(--color-accent); }
+.start > :last-child { margin-left: auto; }
+.featured:hover { border-color: var(--color-accent); }
+.home .fields h3, .home .recent h3, .home .search h3 { margin: 0 0 12px; font-family: var(--font-editorial); font-size: 21px; font-weight: 400; }
+.fields, .recent { margin-top: 26px; }
+.fieldGrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr)); gap: 8px; }
+.home .fieldGrid a { display: flex; align-items: flex-start; gap: 8px; padding: 10px 8px; text-decoration: none; color: var(--color-text); border-radius: 5px; background: var(--color-canvas); }
+.fieldGrid a > :global(.ui-icon) { color: var(--color-accent); flex: 0 0 auto; width: 16px; margin-top: 3px; }
+.fieldGrid a > :last-child { margin-left: auto; width: 13px; }
+.fieldGrid a > span { min-width: 0; display: grid; gap: 3px; }
+.fieldGrid small { color: var(--color-muted); font-size: 10px; }
+.fieldGrid strong { font-size: 13px; font-weight: 600; }
+.fieldGrid span > span { font-size: 11px; color: var(--color-muted); line-height: 1.6; }
+.home .fieldGrid a:hover { background: var(--color-hover); }
+.home .recent h4 { margin: 14px 0 4px; font-size: 11px; color: var(--color-muted); font-weight: 500; }
+.recent ul { padding: 0; margin: 0; list-style: none; }
+.recent li { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--color-border); font-size: 12px; }
+.home .recent li a { text-decoration: none; }
+.home .recent li a:hover { text-decoration: underline; }
+.recent li > a { display: flex; flex-wrap: wrap; align-items: baseline; gap: 5px 10px; }
+.recent li > a span { font-size: 10px; color: var(--color-muted); }
+.recent time { flex-shrink: 0; font-size: 10px; color: var(--color-muted); font-variant-numeric: tabular-nums; }
+.recentClaim > div { display: flex; flex-wrap: wrap; align-items: baseline; gap: 3px 7px; }
+.recentClaim small { width: 100%; font-size: 10px; }
+.relation { font-size: 10px; color: var(--color-muted); }
+.home .note { margin: 8px 0 0; color: var(--color-muted); font-size: 10px; line-height: 1.6; }
+.search { margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--color-border); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+.home .search h3 { margin-bottom: 4px; font-size: 18px; }
+.home .search p { margin: 0; font-size: 11px; color: var(--color-muted); }
+.home .search button { display: inline-flex; align-items: center; gap: 6px; padding: 6px 0; min-height: 44px; border: 0; font-size: 12px; }
+@media (max-width: 800px) {
+  .home { margin: 6px; padding: 16px; }
+  .home .featured { margin-top: 16px; padding: 14px 12px 12px; }
+  .home .featured h3 { font-size: 21px; }
+  .fields, .recent { margin-top: 22px; }
+  .fieldGrid { grid-template-columns: 1fr; gap: 5px; }
+  .home .recent li > a, .recentClaim > div > a { min-height: 32px; display: inline-flex; align-items: center; }
+  .recentClaim small a { min-height: 32px; display: inline-flex; align-items: center; }
+}

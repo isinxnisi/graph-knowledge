@@ -18,7 +18,7 @@ for (const locale of ["ja", "en"]) for (const width of [1440, 390, 320]) test(`$
     await page.goto(info.project.use.baseURL! + (en ? "/en" : "/"));
     const header = page.getByTestId("site-header"), footer = page.getByTestId("site-footer");
     if (width < 800) expect((await header.boundingBox())!.height).toBeLessThanOrEqual(56);
-    await page.getByRole("button", { name: en ? "Explore from PLUTO" : "PLUTOから探索を開始", exact: true }).click();
+    await page.getByTestId("discovery-featured").click();
     await expect(page.getByTestId("graph-counts")).toContainText("Entity 4");
     await page.getByTestId("graph-canvas").evaluate(el => {
       const cy = (el as unknown as { _cyreg: { cy: Core } })._cyreg.cy;

@@ -65,8 +65,10 @@ export default function SiteHeader({ dataset, page = "explore", user, onBeforeAc
   }
   return <header className={styles.header} data-testid="site-header">
     <div className={styles.identity}>
+      <a className={styles.brandLink} href={localizedPublicHref("/", locale)} aria-label={locale === "en" ? "Plunode Home" : "Plunode ホーム"} onClick={closeAccount}>
       <span className={styles.brandMark}><Icon name="graph" /></span>
       {page === "explore" ? <h1 className={styles.brand}>{text.name}</h1> : <span className={styles.brand}>{text.name}</span>}
+      </a>
       <p className={styles.dataset}>{data.badge}</p>
     </div>
     <p className={styles.description}>{data.description}</p>
