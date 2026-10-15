@@ -1,4 +1,5 @@
 "use client";
+import { focusDestination } from "../lib/client/focus-destination";
 import DialogCloseButton from "./DialogCloseButton";
 import { useDialogSizeMotion } from "../lib/client/use-dialog-size-motion";
 import AnimatedDetails from "./AnimatedDetails";
@@ -62,8 +63,8 @@ export default function EntityOverview({ entity, dataset, restricted, onClose, o
     const element = dialog.current!; element.showModal();
     return () => {
       element.close();
-      if (previousFocus?.isConnected && previousFocus !== document.body) previousFocus.focus();
-      else document.querySelector<HTMLElement>('[data-testid="graph-canvas"]')?.focus();
+      if (previousFocus?.isConnected && previousFocus !== document.body) focusDestination(previousFocus, {});
+      else focusDestination(document.querySelector<HTMLElement>('[data-testid="graph-canvas"]'), {});
     };
   }, []);
   useEffect(() => {

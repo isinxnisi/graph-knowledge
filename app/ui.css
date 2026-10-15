@@ -44,3 +44,8 @@ body dialog button[data-dialog-close][type="button"] { display: inline-grid; pla
 body dialog button[data-dialog-close][type="button"]:hover { background: var(--color-accent-soft); color: var(--color-text); }
 body dialog button[data-dialog-close] > .ui-icon { width: 18px; height: 18px; margin: 0; }
 @media (max-width: 800px) { body dialog button[data-dialog-close][type="button"] { width: 44px; height: 44px; min-height: 44px; } }
+
+/* Programmatic destinations are reading locations, not selected cards.
+   Only pointer-driven destination rings are suppressed; controls keep focus-visible. */
+html:is([data-input-modality="pointer"], [data-input-modality="initial"]) [data-focus-destination]:focus { outline: none; }
+html[data-input-modality="keyboard"] [data-focus-destination]:focus { outline: 2px solid var(--color-accent); outline-offset: 3px; }

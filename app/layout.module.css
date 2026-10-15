@@ -1,1 +1,4 @@
-.body { margin: 0; }
+.body { margin: 0; min-height: 100dvh; display: flex; flex-direction: column; }
+
+/* Preserve the full available width of ordinary pages inside the column shell. */
+.body > main, .body > section { box-sizing: border-box; width: 100%; }

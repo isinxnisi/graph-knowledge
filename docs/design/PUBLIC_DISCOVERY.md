@@ -41,7 +41,7 @@ Search Consoleのサイトマップは本人が提出済み。同じ `/sitemap.x
 - M1の日英PC／390／320px導線6件、既存会員往復3件、広告・GA4・共通設定の代表経路を回帰確認。会員更新・広告creative・GA tagは既存fixture検証であり、新たな実Google認証・決済・実広告配信の確認とは区別する。
 - [共有画像の中央cropと小サイズアイコン](../assets/public-discovery/share-and-icons.png)を実ブラウザで確認。
 
-本番の残操作：
+本番の適用手順（2026-10-15適用・代表検証済み）：
 
 ```bash
 sudo bash /home/develop/graph-m2-discovery-20261015/scripts/activate-m2-discovery.sh
@@ -50,3 +50,7 @@ sudo bash /home/develop/graph-m2-discovery-20261015/scripts/activate-m2-discover
 M1を含むmainのWebのみ更新し、旧Web復帰を備えたreadiness確認後、正式HTTPSで英語SSR・支援先・PNG寸法・faviconを検証する。事後HTTPSだけ失敗した場合は更新済みであることを明示する。実装・転送だけでは本番適用済みとして扱わない。
 
 反映後のSearch Console：`https://plunode.net/en` と代表の `/en/explore/2b7c6289-d050-4dc0-93e3-9307681253cc` をURL検査→公開URLをテスト→必要ならインデックス登録をリクエスト。SNS側に旧画像が残る場合は各社の再取得・キャッシュ更新を別途確認する。
+
+## 正式反映の確認
+
+本人の適用ログでM2のWeb healthy・正式HTTPS成功を確認。Codexも正式サイトでJSなしの英語入口、画像／クローラーmeta、PC1440・390・320pxの探索／支援／会員往復とURL復元の5件が成功（35.5秒）。本人の実画面・Search Console／SNS側確認は並行中。

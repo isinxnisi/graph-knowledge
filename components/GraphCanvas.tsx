@@ -21,9 +21,9 @@ import { createGraphMotion } from "../lib/client/graph-motion";
 import styles from "./Explorer.module.css";
 import AnimatedDetails from "./AnimatedDetails";
 
-type Props = { compactGuide?: boolean; footerAction?: ReactNode; onViewChange?: () => void; contentOnly?: boolean; ref?: Ref<GraphCanvasHandle>; feedback?: ReactNode; navigation?: ReactNode; restoration?: ViewRestoration | null; interactionBlocked?: boolean; graph: GraphState; selection: Selection; onEntity: (id: string) => void; onRelation: (id: string) => void; onRelationDoubleClick?: (id: string) => void; onToggleEntity: (id: string) => void; onEntityDoubleClick?: (id: string) => void };
+type Props = { compactGuide?: boolean; footerAction?: ReactNode; onViewChange?: () => void; contentOnly?: boolean; ref?: Ref<GraphCanvasHandle>; notification?: ReactNode; feedback?: ReactNode; navigation?: ReactNode; restoration?: ViewRestoration | null; interactionBlocked?: boolean; graph: GraphState; selection: Selection; onEntity: (id: string) => void; onRelation: (id: string) => void; onRelationDoubleClick?: (id: string) => void; onToggleEntity: (id: string) => void; onEntityDoubleClick?: (id: string) => void };
 
-export default function GraphCanvas({ compactGuide = false, footerAction, onViewChange, contentOnly = false, ref, feedback, navigation, restoration, interactionBlocked, graph, selection, onEntity, onRelation, onRelationDoubleClick, onToggleEntity, onEntityDoubleClick }: Props) {
+export default function GraphCanvas({ compactGuide = false, footerAction, onViewChange, contentOnly = false, ref, feedback, notification, navigation, restoration, interactionBlocked, graph, selection, onEntity, onRelation, onRelationDoubleClick, onToggleEntity, onEntityDoubleClick }: Props) {
   const { locale } = useUiLocale();
   const ui = explorerLabels(locale);
   const viewportLabels = graphViewportLabels(locale);
@@ -257,9 +257,10 @@ export default function GraphCanvas({ compactGuide = false, footerAction, onView
           gestures.current?.cancel(); relationGestures.current?.cancel(); core.current?.resize(); core.current?.fit(undefined, 24);
         }}><Icon name="fit" /></button>
       </div>
-      <div className={styles.cySurface} ref={container} onPointerDownCapture={() => core.current?.resize()} data-testid="graph-canvas" tabIndex={-1} role="img" aria-label={ui.graphAria} />
+      <div className={styles.cySurface} ref={container} onPointerDownCapture={() => core.current?.resize()} data-testid="graph-canvas" tabIndex={-1} data-focus-destination role="img" aria-label={ui.graphAria} />
       <div className={styles.relationPatches} ref={badgeLayer} aria-hidden="true" />
       <div className={styles.graphOverlay} data-testid="graph-overlay">{feedback}</div>
+      {notification && <div className={styles.canvasNotification}>{notification}</div>}
     </div>
     {compactGuide ? <div className={styles.graphFooter}>
       <AnimatedDetails className={styles.graphGuide} summary={<><Icon name="chevron" />{locale === "en" ? "Graph guide" : "図の見方"}</>}>

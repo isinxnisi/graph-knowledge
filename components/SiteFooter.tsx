@@ -9,8 +9,8 @@ export default function SiteFooter({ beforeNavigation }: { beforeNavigation?: ()
   const { locale } = useUiLocale(), text = supportLabels(locale);
   const navigate = (event: MouseEvent<HTMLAnchorElement>) => { if (beforeNavigation && !beforeNavigation()) event.preventDefault(); };
   return <footer className={styles.footer} data-testid="site-footer" lang={locale}>
-    <span>Plunode</span><nav aria-label={text.footer}>
+    <div className={styles.content}><span>Plunode</span><nav aria-label={text.footer}>
       <a href={localizedPublicHref("/support", locale)} onClick={navigate}>{text.link}</a><a href={localizedPublicHref("/privacy", locale)} onClick={navigate}>{text.privacy}</a>
-    </nav>
+    </nav></div>
   </footer>;
 }

@@ -1,4 +1,7 @@
 "use client";
+import { focusDestination } from "../lib/client/focus-destination";
+import { graphNoticePresentation } from "../lib/client/graph-notice";
+import GraphNotice from "./GraphNotice";
 import Icon from "./Icon";
 import PublicServices, { type PublicServicesHandle } from "./PublicServices";
 import type { PublicServicesPolicy } from "../lib/domain/publication";
@@ -7,7 +10,6 @@ import { rememberExplorationReturn } from "../lib/client/account-navigation";
 import { explorationUrlLabels } from "../lib/i18n/exploration-url";
 import { useExplorationUrl } from "../lib/client/use-exploration-url";
 import { designLabels } from "../lib/i18n/design";
-import { contentMessage } from "../lib/i18n/content";
 import { useUiLocale } from "../lib/client/ui-locale";
 import { explorerLabels, explorerMessage } from "../lib/i18n/explorer";
 import { useSearchParams } from "next/navigation";
@@ -46,16 +48,6 @@ import { workspaceLabels } from "../lib/i18n/workspace";
 import SavedViews from "./SavedViews";
 import { savedViewLabels } from "../lib/i18n/saved-views";
 
-function GraphNotice({ message, transient }: { message: string; transient: boolean }) {
-  const [visible, setVisible] = useState(true);
-  useEffect(() => {
-    if (!transient) return;
-    const timer = setTimeout(() => setVisible(false), 3500);
-    return () => clearTimeout(timer);
-  }, [transient]);
-  return visible ? <p className={styles.graphNotice} role="status">{message}</p> : null;
-}
-
 export default function Explorer({ dataset = "demo", initialRoot, services, publicOverview }: { dataset?: DatasetMode; initialRoot?: string; services?: PublicServicesPolicy; publicOverview?: import("react").ReactNode }) {
   const searchParams = useSearchParams();
   const { locale } = useUiLocale();
@@ -71,13 +63,19 @@ export default function Explorer({ dataset = "demo", initialRoot, services, publ
   const [activePane, setActivePane] = useState<"search" | "graph" | "detail">("search");
   const paneNavigation = useRef<HTMLElement>(null);
   const previousPane = useRef(activePane);
+  const paneFocusRequested = useRef(false);
+  const moveToPane = (pane: "search" | "graph" | "detail") => {
+    paneFocusRequested.current = pane !== activePane;
+    setActivePane(pane);
+  };
   useEffect(() => {
     if (previousPane.current === activePane) return;
     previousPane.current = activePane;
     // CSS alone controls the breakpoint; desktop keeps its existing focus behavior.
-    if (paneNavigation.current?.getClientRects().length) {
-      document.getElementById(`explorer-${activePane}`)?.focus({ preventScroll: true });
+    if (paneNavigation.current?.getClientRects().length && (paneFocusRequested.current || document.activeElement !== document.body)) {
+      focusDestination(document.getElementById(`explorer-${activePane}`));
     }
+    paneFocusRequested.current = false;
   }, [activePane]);
   const canvas = useRef<GraphCanvasHandle>(null);
   const publicServices = useRef<PublicServicesHandle>(null);
@@ -96,17 +94,17 @@ export default function Explorer({ dataset = "demo", initialRoot, services, publ
   };
   const restricted = graph.predicates !== null || (graph.contributionRoles ?? null) !== null || (graph.organizationPositions ?? null) !== null || (graph.eventRoles ?? null) !== null;
   const switchFrom = (entity: EntitySummary, mode: "broad" | "same") => {
-    switchRoot(entity, mode, canvas.current?.capture() ?? null); setOverview(null); setActivePane("graph");
+    switchRoot(entity, mode, canvas.current?.capture() ?? null); setOverview(null); moveToPane("graph");
   };
   const startFrom = (entity: EntitySummary, broad = false) => {
     trackPublicEvent("explore_start");
-    chooseRoot(entity, broad); setActivePane("graph");
+    chooseRoot(entity, broad); moveToPane("graph");
   };
   const inspectFromClaim = (id: string) => {
     if (selection && selection.kind !== "entity") setDetailReturn({ generation: graph.generation, entityId: id, source: { kind: selection.kind, id: selection.id } });
-    inspectEntity(id); setActivePane("detail");
+    inspectEntity(id); moveToPane("detail");
     // The clicked button is removed with ClaimDetails; keep keyboard focus in the reader.
-    document.getElementById("explorer-detail")?.focus({ preventScroll: true });
+    focusDestination(document.getElementById("explorer-detail"));
     document.getElementById("explorer-detail")?.scrollTo({ top: 0 });
   };
   const relations = displayRelations(graph.claims, locale);
@@ -117,8 +115,8 @@ export default function Explorer({ dataset = "demo", initialRoot, services, publ
   const returnToDetail = () => {
     if (!returnTarget) return;
     if (returnTarget.kind === "relation") selectRelation(returnTarget.id); else selectClaim(returnTarget.id);
-    setDetailReturn(null); setActivePane("detail");
-    document.getElementById("explorer-detail")?.focus({ preventScroll: true });
+    setDetailReturn(null); moveToPane("detail");
+    focusDestination(document.getElementById("explorer-detail"));
     document.getElementById("explorer-detail")?.scrollTo({ top: 0 });
   };
   const selectedRelation = selection?.kind === "relation" ? relations[selection.id] : null;
@@ -136,16 +134,17 @@ export default function Explorer({ dataset = "demo", initialRoot, services, publ
   const loading = Object.values(graph.expansions).filter((meta) => meta.loading).length;
   const feedbackKey = `${key}:${loading}:${selectedEntity ? graph.expansions[selectedEntity.id]?.open : ""}`;
   const blocked = Object.values(graph.expansions).find((meta) => meta.blocked);
+  const notice = !dataChanged ? graphNoticePresentation(graph.notice, locale) : null;
   return <><div className={styles.explorer}>
     <SiteHeader dataset={dataset} onBeforeAccountNavigation={beforeAccountNavigation} onPrivacySettings={services && (services.ads || services.analytics) ? () => publicServices.current?.openSettings() : undefined} />
     {navigationError && <p role="alert">{locale === "en" ? "The exploration is not ready to restore. Wait for loading to finish, or save the workspace before leaving." : "探索を復元できる状態にできませんでした。取得の完了を待つか、探索途中を保存してから移動してください。"}</p>}
     <nav ref={paneNavigation} className={styles.paneNavigation} aria-label={panes.navigation}>
-      {(["search", "graph", "detail"] as const).map(pane => <button key={pane} aria-label={panes[pane]} aria-pressed={activePane === pane} aria-controls={`explorer-${pane}`} onClick={() => setActivePane(pane)}><Icon name={pane === "search" ? "search" : pane === "graph" ? "graph" : "book"} /><span>{pane === "detail" ? ui.detail : panes[pane]}</span></button>)}
+      {(["search", "graph", "detail"] as const).map(pane => <button key={pane} aria-label={panes[pane]} aria-pressed={activePane === pane} aria-controls={`explorer-${pane}`} onClick={() => moveToPane(pane)}><Icon name={pane === "search" ? "search" : pane === "graph" ? "graph" : "book"} /><span>{pane === "detail" ? ui.detail : panes[pane]}</span></button>)}
     </nav>
     <div lang={locale} aria-live="polite">{urlState.busy && <p role="status">{explorationUrlLabels(locale).restoring}</p>}{urlState.failure && <div role="alert" className={styles.error}><p>{urlState.failure}</p><button onClick={urlState.retry}>{explorationUrlLabels(locale).retry}</button><button onClick={urlState.abandon}>{explorationUrlLabels(locale).abandon}</button></div>}</div>
     <main inert={urlState.busy || !!urlState.failure} data-active-pane={activePane} className={`${styles.columns} ${detailWide ? styles.wideDetails : ""}`}>
-      <div id="explorer-search" role="group" tabIndex={-1} aria-label={panes.search} className={styles.panel}><SearchPanel placeholder={labels.searchExample} onChoose={startFrom} /><div lang={locale} className={styles.localActions}><h3>{designLabels(locale).tools}</h3><button onClick={() => setSavedViewsOpen(true)}><Icon name="bookmark" />{savedViewLabels(locale).launch}</button><button onClick={() => setWorkspaceOpen(true)}><Icon name="history" />{workspaceLabels(locale).launch}</button><button onClick={() => setCapsuleOpen(true)}><Icon name="capsule" />{capsuleLabels(locale).launch}</button></div><StartExamples dataset={dataset} onChoose={(entity) => startFrom(entity, true)} /></div>
-      <div id="explorer-graph" role="group" tabIndex={-1} aria-label={panes.graph} className={styles.centralScroll}>
+      <div id="explorer-search" role="group" tabIndex={-1} data-focus-destination aria-label={panes.search} className={styles.panel}><SearchPanel placeholder={labels.searchExample} onChoose={startFrom} /><div lang={locale} className={styles.localActions}><h3>{designLabels(locale).tools}</h3><button onClick={() => setSavedViewsOpen(true)}><Icon name="bookmark" />{savedViewLabels(locale).launch}</button><button onClick={() => setWorkspaceOpen(true)}><Icon name="history" />{workspaceLabels(locale).launch}</button><button onClick={() => setCapsuleOpen(true)}><Icon name="capsule" />{capsuleLabels(locale).launch}</button></div><StartExamples dataset={dataset} onChoose={(entity) => startFrom(entity, true)} /></div>
+      <div id="explorer-graph" role="group" tabIndex={-1} data-focus-destination aria-label={panes.graph} className={styles.centralScroll}>
       <section className={`${styles.panel} ${styles.graphPanel}`} aria-labelledby="graph-title">
         <div className={styles.graphHeader}>
           <div className={styles.graphHeading}><h2 id="graph-title">Graph</h2>
@@ -161,28 +160,28 @@ export default function Explorer({ dataset = "demo", initialRoot, services, publ
         {!graph.centerId && <div className={styles.empty}><h3>{entry.initialTitle}</h3><p>{entry.initialHelp}</p></div>}
         {Object.values(graph.expansions).some((meta) => meta.active && meta.hasMore) && <p className={styles.muted}>{explorationLabels(locale).neighborsPageHelp}</p>}
         {blocked && <p role="alert" className={styles.error}>{explorerMessage(blocked.error!, locale)}</p>}
-        <GraphCanvas compactGuide footerAction={<button className={styles.adjacentJump} disabled={!selection} onClick={() => {
+        {notice?.kind === "warning" && <GraphNotice notice={notice} />}
+        <GraphCanvas notification={notice?.kind === "info" ? <GraphNotice key={`${graph.generation}:${graph.notice}`} notice={notice} /> : null} compactGuide footerAction={<button className={styles.adjacentJump} disabled={!selection} onClick={() => {
           document.getElementById("explorer-relations")?.scrollIntoView({ block: "start" });
-          document.getElementById("explorer-relations")?.focus({ preventScroll: true });
+          focusDestination(document.getElementById("explorer-relations"));
         }}>{panes.toRelations}<Icon name="chevron" /></button>} onViewChange={urlState.schedule} navigation={<GraphNavigator compact key={graph.generation} nodes={graph.nodes} selection={selection} onNavigate={(id) => {
           inspectEntity(id); canvas.current?.focusEntity(id);
-        }} />} ref={canvas} restoration={viewRestoration} interactionBlocked={!!overview || savedViewsOpen || workspaceOpen || capsuleOpen || !!reading} onEntityDoubleClick={(id) => { if (graph.nodes[id]) setOverview(graph.nodes[id]); }} graph={graph} selection={selection} onEntity={selectEntity} onRelation={id => { selectRelation(id); if (matchMedia("(min-width: 801px)").matches) trackPublicEvent("relation_detail"); }} onRelationDoubleClick={(id) => { selectRelation(id); setActivePane("detail"); if (matchMedia("(max-width: 800px)").matches) trackPublicEvent("relation_detail"); }} onToggleEntity={id => { if (!graph.expansions[id]?.open) trackPublicEvent("graph_expand"); toggleEntity(id); }} feedback={<>
+        }} />} ref={canvas} restoration={viewRestoration} interactionBlocked={!!overview || savedViewsOpen || workspaceOpen || capsuleOpen || !!reading} onEntityDoubleClick={(id) => { if (graph.nodes[id]) setOverview(graph.nodes[id]); }} graph={graph} selection={selection} onEntity={selectEntity} onRelation={id => { selectRelation(id); if (matchMedia("(min-width: 801px)").matches) trackPublicEvent("relation_detail"); }} onRelationDoubleClick={(id) => { selectRelation(id); moveToPane("detail"); if (matchMedia("(max-width: 800px)").matches) trackPublicEvent("relation_detail"); }} onToggleEntity={id => { if (!graph.expansions[id]?.open) trackPublicEvent("graph_expand"); toggleEntity(id); }} feedback={<>
           <div className={`${styles.feedback} ${!graph.centerId ? styles.initialFeedback : ""}`} aria-live="polite"><div key={feedbackKey} className={styles.feedbackContent}><p data-testid="selection-status">{ui.selected}：{selectionText}</p><p>{loading ? ui.graphLoading(loading) : selectedEntity ? graph.expansions[selectedEntity.id]?.expanded ? ui.expanded : graph.expansions[selectedEntity.id]?.pages.length ? ui.closed : ui.expandHelp : <><span className={styles.desktopRelationHelp}>{ui.grouped}</span><span className={styles.touchRelationHelp}>{entry.touchRelationHelp}</span></>}</p></div></div>
-          {graph.notice && !dataChanged && <GraphNotice key={`${graph.generation}:${graph.clock}:${graph.notice}`} message={contentMessage(graph.notice, locale)} transient={graph.notice === "取得済みの枝を復元しました。" || graph.notice === overviewLabels("ja").restored} />}
         </>} />
       </section>
       {services && (services.ads || services.analytics) && <PublicServices ref={publicServices} inline active={activePane === "graph"} policy={services} beforeNavigation={beforeAccountNavigation} />}
       <section className={`${styles.panel} ${styles.adjacencyPanel}`} data-testid="adjacency-card">
-        <RelationsList dataset={dataset} graph={graph} selection={selection} onEntity={selectEntity} onClaim={(id) => { selectClaim(id); setActivePane("detail"); }} onExpand={(id, more) => void expand(id, more)} onClose={close} />
+        <RelationsList dataset={dataset} graph={graph} selection={selection} onEntity={selectEntity} onClaim={(id) => { selectClaim(id); moveToPane("detail"); }} onExpand={(id, more) => void expand(id, more)} onClose={close} />
       </section>
       </div>
-      <aside id="explorer-detail" tabIndex={-1} className={styles.panel} aria-labelledby="detail-title">
+      <aside id="explorer-detail" tabIndex={-1} data-focus-destination className={styles.panel} aria-labelledby="detail-title">
         <div className={styles.detailHeading}><h2 id="detail-title" className={returnTarget ? styles.srOnly : undefined}><Icon name="book" />{ui.detail}</h2>{returnTarget && <button className={styles.detailBack} onClick={returnToDetail}><Icon name="back" />{returnTarget.kind === "relation" ? panes.backToRelation : panes.backToClaim}</button>}{selection && <button aria-pressed={detailWide} onClick={() => setDetailWide(!detailWide)}>{detailWide ? entry.detailNormal : entry.detailWide}</button>}</div>
         {!selection && <p className={styles.muted}>{entry.detailHelp}</p>}
         {selectedEntity && <EntityDetails dataset={dataset} key={key} entity={selectedEntity} expansion={graph.expansions[selectedEntity.id]} onExpand={(more) => void expand(selectedEntity.id, more)} onClose={() => close(selectedEntity.id)} restricted={restricted} onOverview={() => setOverview(selectedEntity)} onSwitch={(mode) => switchFrom(selectedEntity, mode)} />}
         {selectedEntity && graph.centerId && <GraphPath key={`path:${key}`} nodes={graph.nodes} relations={relations} rootId={graph.centerId} targetId={selectedEntity.id} onRelation={(id) => {
-          selectRelation(id); setActivePane("detail");
-          document.getElementById("explorer-detail")?.focus({ preventScroll: true });
+          selectRelation(id); moveToPane("detail");
+          focusDestination(document.getElementById("explorer-detail"));
           document.getElementById("explorer-detail")?.scrollTo({ top: 0 });
         }} />}
         {selectedRelation && <ClaimDetails onDataChanged={invalidateData} revision={graph.revision} dataset={dataset} key={`${key}:${selectedRelation.claimIds[0]}`} id={selectedRelation.claimIds[0]} nodes={graph.nodes} onInspectEntity={inspectFromClaim} mode="relation" visibleClaimIds={selectedRelation.claimIds} visibleClaims={selectedRelation.claimIds.map(id => graph.claims[id])} eventRoles={graph.eventRoles ?? null} positions={graph.organizationPositions ?? null} roles={graph.contributionRoles ?? null} predicates={graph.predicates} />}
@@ -196,12 +195,12 @@ export default function Explorer({ dataset = "demo", initialRoot, services, publ
     {capsuleOpen && <CapsuleDialog onBeforeAccountNavigation={beforeAccountNavigation} dataset={dataset} graph={graph} onClose={() => setCapsuleOpen(false)} />}
     {workspaceOpen && <WorkspaceDialog dataset={dataset} graph={graph} captureView={() => canvas.current?.capture() ?? null}
       onClose={() => setWorkspaceOpen(false)} onOpen={workspace => {
-        openWorkspace(workspace, canvas.current?.capture() ?? null); setActivePane("graph");
+        openWorkspace(workspace, canvas.current?.capture() ?? null); moveToPane("graph");
       }} />}
     {savedViewsOpen && <SavedViews dataset={dataset} root={graph.centerId ? graph.nodes[graph.centerId] : null}
       conditions={{ predicates: graph.predicates, contributionRoles: graph.contributionRoles ?? null, organizationPositions: graph.organizationPositions ?? null, eventRoles: graph.eventRoles ?? null }}
       onClose={() => setSavedViewsOpen(false)} onOpen={(entity, conditions) => {
-        openSavedView(entity, conditions, canvas.current?.capture() ?? null); setActivePane("graph");
+        openSavedView(entity, conditions, canvas.current?.capture() ?? null); moveToPane("graph");
       }} />}
   </div>{(!initialRoot || !graph.centerId || initialRoot === graph.centerId) && publicOverview}<SiteFooter beforeNavigation={beforeAccountNavigation} /></>;
 }

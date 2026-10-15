@@ -676,3 +676,21 @@ VPS `/home/develop/graph-m1-support-20261015` へWebのみbundleを転送し、�
 本番image `graph-knowledge-web:beta-m2-discovery-20261015`（linux/amd64、config `sha256:c3604be667d6987ec626f17049021d3c31828b36c9372b5bf5425079682208f7`、build `UenpB_aqITdZemY3dgSin`）。Webのみの118,257,324 byte archiveと、既存operatorを再利用する一回scriptを準備。パスワード付きsudo境界のため本番は未適用で、M2を本番達成として閉じない。
 
 配布先 `/home/develop/graph-m2-discovery-20261015` へ転送完了。全checksum・bash構文を遠隔照合済み。`activate-m2-discovery.sh` は既存operatorを照合してWebのみ更新し、正式HTTPSの英語SSR・支援先・PNG寸法・faviconを検証する。Issue #2にも確認済み範囲・本番未適用・Search Consoleの英語URL検査を記録し、Openを維持した。M1 Issue #1は本人による本番導線確認を受けて完了済み。
+
+### M2 正式反映の確認（2026-10-15）
+
+本人が `activate-m2-discovery.sh` を実行。Web healthy・正式HTTPSの英語SSR／支援先／PNG／faviconが成功し、KG revision `5e2a94af-9061-4087-bb7a-045a3c0133f4` を維持。Codexも `https://plunode.net` でJSなしの英語入口→PLUTO→関連対象・Source、OG画像／クローラーmeta、PC1440／390／320pxの探索→支援／会員→復元→日英切替の5件が成功（35.5秒）。ROADMAPは本番反映・代表検証済／本人確認中へ更新する。検索掲載やSNS各社の実表示を確認済みとはしない。
+
+## スマホのフォーカス・Graph通知・共通フッター（2026-10-15）
+
+本人の指摘：通常のタッチ／画面遷移後に検索・Graph・詳細・見出しが青い枠で囲まれる。URL復元成功の長文が選択帯に積み重なりGraphを覆う。会員画面の共通フッターが画面途中に浮く。
+
+対応は[共通UI契約](design/PRODUCT_UI_FOUNDATIONS.md#タッチキーボードのフォーカスとgraph通知2026-10-15)へ記録。入力手段をdocument captureで判定し、プログラムによる読取移動先を明示。タッチと初期自動focusは外枠を抑え、キーボードの移動先・入力・操作要素の枠と、モーダル復帰を維持する。初期のURL復元はbodyからfocusを奪わず、利用者の操作では移動する。
+
+通常の復元／枝操作はGraph下端の短いstatusへ整理し、3.5秒で消す。欠落した枝・上限・未分類通知はGraph外のalertで保持。URL復元失敗・データ更新・再試行の既存処理を維持し、GraphState／URL codec／取得・復元処理自体は変更しない。
+
+共通フッターを通常フローの下端へ置き、内容を最大1080pxへ揃える。短い会員ページと長いprivacy本文を確認。column化によるmainの縮小と公開概要の横overflowは、従来の幅を明示しborder-boxで計算して修正した。
+
+検証：関連unit176件成功（焦点／通知4件を最終修正後にも確認）。変更範囲ESLint・TypeScript・host／standalone image build成功。新E2E7件で320/390pxのタッチ→キーボード、検索・Graph・詳細・モーダルの開始／終了／focus復帰、1440/390/320pxの短い復元通知・消去・配置と選択の維持、失敗と再試行の継続、会員／privacyのfooter位置と幅が成功。実測Graph領域は従来と同じ（1440px: header55px／canvas538px、390/320px: header53px／canvas638px）。会員往復と小画面メニュー5件、英語探索往復3件、最終版の英語1440/320px2件も成功。最終imageのタッチ320px・会員footer2件が成功し、事後HTTPS確認用Pythonもレビューimageに向けた検証で成功。
+
+物理端末・スクリーンリーダーの音声評価は本人の実画面確認と区別する。本番は検証済みWebだけを更新し、KG・会員PG・Caddy・認証・支援・広告同意は維持する。3200／Tunnelの反映と本番配布状況は後続記録へ追記する。

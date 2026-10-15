@@ -1,4 +1,5 @@
 "use client";
+import { focusDestination } from "../lib/client/focus-destination";
 import DialogCloseButton from "./DialogCloseButton";
 import { useUiLocale } from "../lib/client/ui-locale";
 import { contentMessage } from "../lib/i18n/content";
@@ -60,10 +61,10 @@ export function CapsuleReader({ capsule, onEdit, explorationLinks = false, noteA
   function inspect(value: Selection) {
     setSelection(value);
     // Let the selected content render before moving keyboard focus to it.
-    requestAnimationFrame(() => { details.current?.focus({ preventScroll: true }); details.current?.scrollIntoView({ block: "nearest" }); });
+    requestAnimationFrame(() => { focusDestination(details.current); details.current?.scrollIntoView({ block: "nearest" }); });
   }
   return <section className={css.reader} aria-label={text.content}>
-    <h3 tabIndex={-1} data-capsule-focus>{capsule.title}</h3><p className={styles.muted}>{text.version(capsule.revision)} · {new Date(capsule.updatedAt ?? capsule.createdAt).toLocaleString(locale === "en" ? "en-GB" : "ja-JP")}</p>
+    <h3 tabIndex={-1} data-focus-destination data-capsule-focus>{capsule.title}</h3><p className={styles.muted}>{text.version(capsule.revision)} · {new Date(capsule.updatedAt ?? capsule.createdAt).toLocaleString(locale === "en" ? "en-GB" : "ja-JP")}</p>
     {onEdit && <button disabled={!resolved && !failed} onClick={() => onEdit(resolved ?? { entities: {}, claims: {}, issues: [] })}>{text.edit}</button>}
     <h4>{noteAttribution === "author" ? text.authorNote : text.note}</h4><p className={css.note}>{capsule.note || text.noNote}</p><p className={styles.muted}>{noteAttribution === "author" ? text.authorNoteHelp : text.noteHelp}</p>
     <p>{text.current}</p>
@@ -74,13 +75,13 @@ export function CapsuleReader({ capsule, onEdit, explorationLinks = false, noteA
       {!!resolved.issues.length && <div role="status"><p>{text.incomplete}</p><ul>{resolved.issues.map(issue => <li key={`${issue.kind}:${issue.id}`}>{text.item(issue.kind)} <code>{issue.id}</code>：{text[issue.reason]}</li>)}</ul></div>}
       <p>{text.displayed(Object.keys(graph.nodes).length, Object.keys(graph.claims).length)}</p>
       <p className={styles.muted}>{text.graphHelp}</p>
-      <div ref={overview} tabIndex={-1} role="region" aria-label={text.overview} className={css.overview}>
+      <div ref={overview} tabIndex={-1} data-focus-destination role="region" aria-label={text.overview} className={css.overview}>
         <GraphCanvas contentOnly graph={graph} selection={selection} onEntity={id => inspect({ kind: "entity", id })} onRelation={id => inspect({ kind: "relation", id })} onToggleEntity={() => {}} />
         <h4>{text.entities}</h4><ul className={css.memberList}>{capsule.entityIds.map(id => <li key={id}>{resolved.entities[id] ? <button aria-pressed={selection?.kind === "entity" && selection.id === id} onClick={() => inspect({ kind: "entity", id })}>{entityLabel(resolved.entities[id], resolved.entities, locale).replace("\n", " / ")} · {explorerLabels(locale).kinds[resolved.entities[id].kind]}</button> : <code>{id}</code>}</li>)}</ul>
         <h4>{text.claims}</h4>{!capsule.claimIds.length && <p>{text.noClaims}</p>}
         <ul className={css.memberList}>{capsule.claimIds.map(id => <li key={id}>{resolved.claims[id] ? <button className={css.claimChoice} aria-pressed={claimIds.includes(id)} onClick={() => inspect({ kind: "claim", id })}><ClaimCaption claim={resolved.claims[id]} nodes={resolved.entities} /></button> : <code>{id}</code>}</li>)}</ul>
       </div>
-      <div ref={details} tabIndex={-1} className={css.details}>
+      <div ref={details} tabIndex={-1} data-focus-destination className={css.details}>
         {selectedEntity && <><h4>{selectedEntity.name}</h4><p>{explorerLabels(locale).kinds[selectedEntity.kind]}</p><p>{selectedEntity.description}</p><p>{selectedEntity.aliases.join(" / ")}</p>
           {selectedEntity.event && <><dl className={styles.claimFacts}><dt>{eventParticipationLabels(locale).eventPeriod}</dt><dd>{formatPeriod(selectedEntity.event.period, locale)}</dd></dl><p>{eventParticipationLabels(locale).periodHelp}</p></>}
           <code>{selectedEntity.id}</code>
@@ -88,7 +89,7 @@ export function CapsuleReader({ capsule, onEdit, explorationLinks = false, noteA
         {!claimIds.length && <p className={styles.muted}>{text.chooseClaim}</p>}
         {claimIds.map(id => resolved.claims[id] && <ClaimCard referenceDataset={capsule.dataset} key={id} idPrefix="capsule-" title={text.selectedClaim} claim={resolved.claims[id]} nodes={resolved.entities} />)}
         {selection && <div className={css.readerNavigation}><button onClick={() => {
-          overview.current?.focus({ preventScroll: true });
+          focusDestination(overview.current);
           overview.current?.scrollIntoView({ block: "start" });
         }}>{text.backToOverview}</button></div>}
       </div>
@@ -112,7 +113,7 @@ export default function CapsuleDialog({ dataset, graph, onClose, onBeforeAccount
   const [removing, setRemoving] = useState<LocalCapsule | null>(null);
   const removalPrompt = useRef<HTMLElement>(null);
   useEffect(() => {
-    if (removing) { removalPrompt.current?.focus({ preventScroll: true }); removalPrompt.current?.scrollIntoView({ block: "nearest" }); }
+    if (removing) { focusDestination(removalPrompt.current); removalPrompt.current?.scrollIntoView({ block: "nearest" }); }
   }, [removing]);
   const [title, setTitle] = useState("");
   const [note, setNote] = useState("");
@@ -128,7 +129,7 @@ export default function CapsuleDialog({ dataset, graph, onClose, onBeforeAccount
     previousScreen.current = screenKey;
     if (dialog.current) {
       dialog.current.scrollTop = 0;
-      dialog.current.querySelector<HTMLElement>("[data-capsule-focus]")?.focus({ preventScroll: true });
+      focusDestination(dialog.current.querySelector<HTMLElement>("[data-capsule-focus]"));
     }
   }, [screenKey]);
   const unresolvedClaims = claimIds.some(id => !candidates.claims[id]);
@@ -210,14 +211,14 @@ export default function CapsuleDialog({ dataset, graph, onClose, onBeforeAccount
           setEditing(selected); setCandidates(capsuleEditCandidates(selected, resolved, visible)); setTitle(selected.title); setNote(selected.note); setEntityIds(selected.entityIds); setClaimIds(selected.claimIds); setMode("create"); setMessage(null); setError(null);
         }} />
       </> : <>
-        <h3 tabIndex={-1} data-capsule-focus>{text.libraryTitle}</h3>
+        <h3 tabIndex={-1} data-focus-destination data-capsule-focus>{text.libraryTitle}</h3>
         <button disabled={!Object.keys(visible.nodes).length || !ready || capsules.length >= CAPSULE_LIMITS.count} onClick={() => { setCandidates(visible); setEditing(null); setMode("create"); setMessage(null); setRemoving(null); }}>{text.new}</button>
         {!Object.keys(visible.nodes).length && <p>{text.noGraph}</p>}
         <p>{capsules.length} / {CAPSULE_LIMITS.count}</p>{capsules.length >= CAPSULE_LIMITS.count && <p>{text.limit}</p>}
         {ready && !capsules.length && <p>{text.empty}</p>}
         <ul className={css.library}>{capsules.map(capsule => <li key={capsule.id}><h3>{capsule.title}</h3><p>{text.selected(capsule.entityIds.length, capsule.claimIds.length)} · {text.version(capsule.revision)}</p><p className={styles.muted}>{new Date(capsule.updatedAt ?? capsule.createdAt).toLocaleString(locale === "en" ? "en-GB" : "ja-JP")}</p><button onClick={() => { setSelected(capsule); setRemoving(null); }}>{text.read}</button><button data-capsule-remove={capsule.id} onClick={() => setRemoving(capsule)}>{text.remove}</button></li>)}</ul>
-        {removing && <section ref={removalPrompt} tabIndex={-1} role="alert"><p>{text.removeHelp(removing.title)}</p><button onClick={() => {
-          try { setCapsules(writeCapsule(window.localStorage, dataset, { remove: removing })); setRemoving(null); setError(null); requestAnimationFrame(() => dialog.current?.querySelector<HTMLElement>("[data-capsule-focus]")?.focus()); }
+        {removing && <section ref={removalPrompt} tabIndex={-1} data-focus-destination role="alert"><p>{text.removeHelp(removing.title)}</p><button onClick={() => {
+          try { setCapsules(writeCapsule(window.localStorage, dataset, { remove: removing })); setRemoving(null); setError(null); requestAnimationFrame(() => focusDestination(dialog.current?.querySelector<HTMLElement>("[data-capsule-focus]"), {})); }
           catch (error) { fail(error); }
         }}>{text.confirmRemove}</button><button onClick={() => { const id = removing.id; setRemoving(null); requestAnimationFrame(() => dialog.current?.querySelector<HTMLElement>(`[data-capsule-remove="${id}"]`)?.focus()); }}>{text.keep}</button></section>}
         {ready && <button onClick={reload}>{text.reload}</button>}

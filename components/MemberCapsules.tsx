@@ -1,4 +1,5 @@
 "use client";
+import { focusDestination } from "../lib/client/focus-destination";
 import { useUiLocale } from "../lib/client/ui-locale";
 import { contentMessage } from "../lib/i18n/content";
 
@@ -130,7 +131,7 @@ export default function MemberCapsules({ dataset, initialImport = "" }: { datase
   useEffect(() => {
     const sync = () => {
       setSection(location.hash === "#account-settings" ? "settings" : location.hash === "#my-posts" ? "posts" : "saved");
-      requestAnimationFrame(() => { heading.current?.focus({ preventScroll: true }); window.scrollTo({ top: 0 }); });
+      requestAnimationFrame(() => { focusDestination(heading.current); window.scrollTo({ top: 0 }); });
     };
     const initial = setTimeout(sync, 0);
     window.addEventListener("hashchange", sync);
@@ -148,7 +149,7 @@ export default function MemberCapsules({ dataset, initialImport = "" }: { datase
     if (id && revision !== undefined) url.searchParams.set("revision", String(revision)); else url.searchParams.delete("revision");
     if (sharing) url.searchParams.set("manage", "sharing"); else url.searchParams.delete("manage");
     history.replaceState(history.state, "", url);
-    requestAnimationFrame(() => heading.current?.focus());
+    requestAnimationFrame(() => focusDestination(heading.current, {}));
   }
   function signalAuthChange() { notifyMemberSessionChange(); }
   function logout(all: boolean) {
@@ -225,7 +226,7 @@ export default function MemberCapsules({ dataset, initialImport = "" }: { datase
       <a href="#my-posts" aria-current={section === "posts" ? "page" : undefined}><Icon name="book" />{text.postsTitle}</a>
     </nav>}
     <div className={css.memberContent}>
-    <header className={css.pageHeader}><h1 ref={heading} tabIndex={-1}>{title}</h1><p>{user ? section === "settings" ? text.settingsHelp : section === "posts" ? text.postsHelp : text.savedHelp : text.loggedOut}</p></header>
+    <header className={css.pageHeader}><h1 ref={heading} tabIndex={-1} data-focus-destination>{title}</h1><p>{user ? section === "settings" ? text.settingsHelp : section === "posts" ? text.postsHelp : text.savedHelp : text.loggedOut}</p></header>
     <section id="member-login" className={user ? css.feedback : css.account} aria-label={text.title}>
       {!user && !busy && provider && <button data-variant="primary" disabled={!!draft} onClick={login}>{provider === "fixture" ? text.fixtureLogin : text.login}</button>}
       <button className={css.refresh} disabled={busy} onClick={refresh}><Icon name="history" />{text.refresh}</button>
