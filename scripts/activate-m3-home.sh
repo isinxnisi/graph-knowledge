@@ -29,11 +29,18 @@ for path in ['/', '/en', '/member', '/explore/2b7c6289-d050-4dc0-93e3-9307681253
         assert 'name="robots" content="index, follow' in html and 'PLUTO' in html
     if path == '/en':
         assert 'lang="en"' in html and 'Recently added knowledge' in html
+    if path == '/':
+        css_paths=set(re.findall(r'href="([^"\s]+\.css(?:\?[^"\s]*)?)"', html))
+        css=''
+        for asset in css_paths:
+            with urllib.request.urlopen(origin+asset, timeout=30) as response:
+                css+=response.read().decode()
+        assert css.count('overscroll-behavior:contain auto') >= 2, '探索ペインの縦スクロール連鎖CSS'
     if path == '/member':
         assert 'name="robots" content="noindex' in html
     if path.startswith('/explore/'):
         assert 'data-testid="public-discovery"' in html and 'data-testid="discovery-home"' not in html
-print('正式HTTPSの日英Discovery Home・探索直接URL・会員noindexを確認しました。')
+print('正式HTTPSの日英Discovery Home・探索直接URL・会員noindex・スクロールCSSを確認しました。')
 PY
 then
   :
