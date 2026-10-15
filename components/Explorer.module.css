@@ -64,6 +64,9 @@
 /* 左右を固定し、中央カード全体を外側の一つの領域でスクロールする。 */
 .centralScroll { height: 100%; min-height: 0; min-width: 0; overflow-x: hidden; overflow-y: auto; overscroll-behavior: contain; scrollbar-gutter: stable; }
 .graphPanel { height: auto; overflow: visible; padding: 16px; }
+.graphPanel[data-motion-ready="true"] { animation: graphArrive 220ms ease-out; }
+@keyframes graphArrive { from { opacity: .35; } to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .graphPanel[data-motion-ready="true"] { animation: none; } }
 .adjacencyPanel { height: auto; margin-top: 10px; padding: 12px 14px; }
 .adjacencyPanel .relations { border-top: 0; padding-top: 0; }
 .graphFooter { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; margin-top: 4px; }

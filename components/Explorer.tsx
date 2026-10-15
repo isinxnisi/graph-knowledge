@@ -159,7 +159,7 @@ export default function Explorer({ dataset = "demo", initialRoot, services, publ
         moveToPane("search");
         requestAnimationFrame(() => document.querySelector<HTMLInputElement>("#explorer-search input")?.focus({ preventScroll: true }));
       }} />}
-      <section hidden={atHome} className={`${styles.panel} ${styles.graphPanel}`} aria-labelledby="graph-title">
+      <section hidden={atHome} data-motion-ready={!!graph.centerId && (graph.expansions[graph.centerId]?.pages.length ?? 0) > 0} className={`${styles.panel} ${styles.graphPanel}`} aria-labelledby="graph-title">
         <div className={styles.graphHeader}>
           <div className={styles.graphHeading}><h2 id="graph-title">Graph</h2>
             <p data-testid="graph-counts">Entity {Object.keys(graph.nodes).length} / Claim {Object.keys(graph.claims).length}</p><p data-testid="relation-counts">Relation {Object.keys(relations).length}</p>
