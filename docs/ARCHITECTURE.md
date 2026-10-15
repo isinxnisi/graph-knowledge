@@ -1,5 +1,7 @@
 # 現行技術設計
 
+2026-10-16、[Discovery Search初期実装](design/DISCOVERY_SEARCH.md)は既存のキーワード必須検索APIを保持し、空欄・種別・直接の関係・revision付きページングを `/api/discovery/entities` へ追加する。公開KGのread-only取得だけで、会員PGやデータモデルを変更しない。検索条件はGraphの関係条件と区別する。
+
 2026-10-16、M3のDiscovery Homeを日英トップの中央／スマホ初期面へ追加。公開KGの紹介例・published Claimと接続Entityの新着・記録日をread-onlyでSSRし、通常の探索URLへ接続する。ロゴHomeへの移動前に既存のURL更新を確定し、Backで現在KGから復元する。Graph codec・会員保存・認可・広告同意を変更せず、分類／プリセット／Rich Searchの完成と区別する。[初期実装の契約](design/DISCOVERY_HOME.md)を参照。
 
 2026-10-15 M2では、既存の日本語URLとGraph状態復元を保持し、`/en` 配下の英語SSR、公開KGの関係・出典概要、対象別OG画像、P型ネットワークのfaviconを追加する。公開・非公開・previewの境界は維持する。[日英の発見入口の契約](design/PUBLIC_DISCOVERY.md)を参照。

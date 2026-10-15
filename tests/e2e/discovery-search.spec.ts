@@ -1,0 +1,77 @@
+import { test, expect, type Page } from "@playwright/test";
+import type { Core } from "cytoscape";
+const pluto = "2b7c6289-d050-4dc0-93e3-9307681253cc";
+const view = (page: Page) => page.getByTestId("graph-canvas").evaluate(el => {
+  const cy = (el as unknown as { _cyreg?: { cy: Core } })._cyreg?.cy;
+  if (!cy) return { points: {}, edges: [], zoom: 0, pan: { x: 0, y: 0 } };
+  return { points: Object.fromEntries(cy.nodes().map(n => [n.id(), n.position()])), edges: cy.edges().map(e => e.id()).sort(), zoom: cy.zoom(), pan: cy.pan() };
+});
+for (const locale of ["ja", "en"]) for (const width of [1440, 390, 320]) test(`${locale} ${width}px 空欄・一覧・候補→Graphと閉じる／Back`, async ({ browser }, info) => {
+  const context = await browser.newContext({ viewport: { width, height: 800 }, isMobile: width < 800, hasTouch: width < 800 });
+  await context.addInitScript(() => localStorage.setItem("plunode:privacy:v1", '{"analytics":false,"ads":false}'));
+  const page = await context.newPage(), errors: string[] = []; page.on("pageerror", e => errors.push(e.message));
+  const en = locale === "en", base = info.project.use.baseURL!, root = en ? "/en" : "/";
+  await page.goto(base + root); await page.getByTestId("discovery-search-entry").click();
+  const dialog = page.getByRole("dialog"), name = en ? "Name or alias" : "名前・別名";
+  await expect(dialog).toBeVisible(); await expect(dialog.getByLabel(name, { exact: true })).toHaveValue("");
+  const results = dialog.locator("ul > li > button"); await expect(results).toHaveCount(20);
+  const firstPage = await results.first().getAttribute("aria-label");
+  await dialog.getByRole("button", { name: en ? "Next 20" : "次の20件", exact: true }).click();
+  await expect(results).toHaveCount(20); await expect(results.first()).not.toHaveAttribute("aria-label", firstPage!);
+  await dialog.getByRole("button", { name: en ? "Previous 20" : "前の20件", exact: true }).click();
+  await expect(results.first()).toHaveAttribute("aria-label", firstPage!);
+  await dialog.getByRole("button", { name: en ? "Around PLUTO" : "PLUTOの周辺", exact: true }).click();
+  await expect(results).toHaveCount(4);
+  await dialog.getByRole("button", { name: en ? "Work" : "作品", exact: true }).click(); await expect(results).toHaveCount(1);
+  await dialog.getByLabel(name, { exact: true }).fill("該当なし__");
+  await expect(dialog).toContainText(en ? "No registered entities match" : "この条件に一致する登録対象はありません");
+  await dialog.getByRole("button", { name: en ? "Clear filters" : "条件をクリア", exact: true }).click(); await expect(results).toHaveCount(20);
+  expect(await dialog.evaluate(el => el.scrollWidth <= el.clientWidth + 1)).toBe(true);
+  await page.screenshot({ path: info.outputPath(`search-${locale}-${width}.png`) });
+  // Browser Back closes just this search, retaining Home and its route.
+  await page.goBack(); await expect(dialog).toHaveCount(0); await expect(page).toHaveURL(base + root);
+  await page.goForward(); await expect(dialog).toBeVisible(); await expect(results).toHaveCount(20);
+  await dialog.getByRole("button", { name: en ? "Close search" : "検索を閉じる", exact: true }).click(); await expect(dialog).toHaveCount(0); await expect(page).toHaveURL(base + root);
+  if (width < 800) await page.getByRole("navigation", { name: en ? "Explorer panels" : "探索画面の切り替え" }).getByRole("button", { name: en ? "Search" : "検索", exact: true }).click();
+  const pane = page.locator("#explorer-search");
+  await pane.getByLabel(name, { exact: true }).fill("PLUTO");
+  await expect(pane.getByRole("button", { name: /^PLUTO —/ })).toBeVisible();
+  // Carry the existing name and kind into the wider search without a new input step.
+  await pane.getByLabel(en ? "Search for" : "検索対象", { exact: true }).selectOption("work");
+  await pane.getByRole("button", { name: en ? "See all results" : "すべての結果を見る", exact: true }).click();
+  await expect(dialog.getByLabel(name, { exact: true })).toHaveValue("PLUTO");
+  await expect(dialog.getByRole("button", { name: en ? "Work" : "作品", exact: true })).toHaveAttribute("aria-pressed", "true");
+  await dialog.getByLabel(en ? "Language" : "表示言語", { exact: true }).selectOption(en ? "ja" : "en");
+  await expect(dialog.getByLabel(en ? "名前・別名" : "Name or alias", { exact: true })).toHaveValue("PLUTO");
+  await dialog.getByLabel(en ? "表示言語" : "Language", { exact: true }).selectOption(locale);
+  await dialog.getByRole("button", { name: /^PLUTO —/ }).click();
+  await expect(dialog).toHaveCount(0); await expect.poll(async () => Object.keys((await view(page)).points).length).toBe(4);
+  await expect(page).toHaveURL(new RegExp(`/explore/${pluto}\\?s=`));
+  const before = await view(page);
+  if (width < 800) await page.getByRole("navigation", { name: en ? "Explorer panels" : "探索画面の切り替え" }).getByRole("button", { name: en ? "Search" : "検索", exact: true }).click();
+  await pane.getByRole("button", { name: en ? "Browse & refine" : "一覧・条件から探す", exact: true }).click();
+  await expect(dialog).toBeVisible(); await page.keyboard.press("Escape"); await expect(dialog).toHaveCount(0); expect(await view(page)).toEqual(before);
+  await pane.getByLabel(en ? "Search for" : "検索対象", { exact: true }).selectOption("");
+  await pane.getByLabel(name, { exact: true }).fill("浦沢");
+  await expect(pane.getByRole("button", { name: /^浦沢直樹 —/ })).toBeVisible();
+  await pane.getByRole("button", { name: /^浦沢直樹 —/ }).click();
+  await expect(page.getByTestId("exploration-root")).toContainText("浦沢直樹");
+  await expect.poll(async () => Object.keys((await view(page)).points).length).toBeGreaterThan(4);
+  await page.getByRole("link", { name: en ? "Plunode Home" : "Plunode ホーム", exact: true }).click(); await expect(page.getByTestId("discovery-home")).toBeVisible();
+  await page.goBack(); await expect.poll(async () => Object.keys((await view(page)).points).length).toBeGreaterThan(4);
+  const saved = await view(page); await page.reload(); await expect.poll(async () => Object.keys((await view(page)).points).length).toBe(Object.keys(saved.points).length);
+  expect((await view(page)).edges).toEqual(saved.edges); expect((await view(page)).zoom).toBeCloseTo(saved.zoom, 2);
+  expect(errors).toEqual([]); await context.close();
+});
+
+test("Discovery APIは空欄・ページ条件・公開境界を守る", async ({ request }, info) => {
+  const url = info.project.use.baseURL! + "/api/discovery/entities";
+  const first = await (await request.get(url)).json(); expect(first.items).toHaveLength(20);
+  const second = await (await request.get(url, { params: { after: first.nextCursor } })).json();
+  expect(second.items.some((e: { id: string }) => first.items.some((x: { id: string }) => x.id === e.id))).toBe(false);
+  const invalid: Record<string, string>[] = [{ after: first.nextCursor, kind: "work" }, { after: "invalid" }, { tag: "manga" }, { q: "x".repeat(101) }];
+  for (const params of invalid) expect((await request.get(url, { params })).status()).toBe(400);
+  const works = await (await request.get(url, { params: { kind: "work" } })).json(); expect(works.items.every((e: { kind: string }) => e.kind === "work")).toBe(true);
+  expect((await request.post(url)).status()).toBe(405);
+  expect((await request.get(url, { headers: { host: "ads.plunode.net" } })).status()).toBe(404);
+});

@@ -38,6 +38,7 @@ async function get<T>(path: string, signal: AbortSignal): Promise<T> {
 }
 
 export const searchEntities = (q: string, signal: AbortSignal, kind: import("../domain/search").SearchKind | null = null) => get<EntitySearchResponse>(`/api/entities?${new URLSearchParams({ q, ...(kind === null ? {} : { kind }) })}`, signal);
+export const discoverEntities = (params: URLSearchParams, signal: AbortSignal) => get<import("../domain/api").DiscoverySearchResponse>(`/api/discovery/entities?${params}`, signal);
 export const fetchEntity = (id: string, signal: AbortSignal) => get<EntityResponse>(`/api/entities/${encodeURIComponent(id)}`, signal);
 export const fetchClaim = (id: string, signal: AbortSignal, revision: string | null = null) => get<ClaimResponse>(`/api/claims/${encodeURIComponent(id)}${revision ? `?${new URLSearchParams({ revision })}` : ""}`, signal);
 export const fetchDatasetRevision = (signal: AbortSignal) => get<{ dataset: string; revision: string | null }>("/api/dataset", signal);

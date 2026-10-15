@@ -888,6 +888,32 @@ it("受理済み・未描画Nodeの復帰は保存座標を固定し、欠けた
 
 
 describe("一般Entity検索の境界", () => {
+  it("入力が落ち着くと候補を取得し、IME変換中は検索しない", async () => {
+    vi.useFakeTimers();
+    try {
+      vi.mocked(searchEntities).mockResolvedValue({ items: [{ ...root, aliases: [], event: null }], hasMore: false });
+      render(<SearchPanel onChoose={vi.fn()} />);
+      const input = screen.getByLabelText("名前・別名");
+      fireEvent.change(input, { target: { value: "P" } });
+      await act(() => vi.advanceTimersByTimeAsync(150));
+      fireEvent.change(input, { target: { value: "PLUTO" } });
+      await act(() => vi.advanceTimersByTimeAsync(249));
+      expect(searchEntities).not.toHaveBeenCalled();
+      await act(() => vi.advanceTimersByTimeAsync(1));
+      expect(searchEntities).toHaveBeenCalledExactlyOnceWith("PLUTO", expect.any(AbortSignal), null);
+      fireEvent.compositionStart(input); fireEvent.change(input, { target: { value: "浦沢" } });
+      await act(() => vi.advanceTimersByTimeAsync(1000)); expect(searchEntities).toHaveBeenCalledTimes(1);
+      fireEvent.compositionEnd(input); await act(() => vi.advanceTimersByTimeAsync(250));
+      expect(searchEntities).toHaveBeenLastCalledWith("浦沢", expect.any(AbortSignal), null);
+    } finally { vi.useRealTimers(); }
+  });
+  it("空欄の検索は種別を保って一覧検索を開き、入力エラーやGraph開始にしない", () => {
+    const open = vi.fn(), choose = vi.fn(); render(<SearchPanel onChoose={choose} onDiscover={open} />);
+    fireEvent.change(screen.getByLabelText("検索対象"), { target: { value: "work" } });
+    fireEvent.click(screen.getByRole("button", { name: "検索" }));
+    expect(open).toHaveBeenCalledWith({ q: "", kind: "work" });
+    expect(screen.queryByRole("alert")).toBeNull(); expect(searchEntities).not.toHaveBeenCalled(); expect(choose).not.toHaveBeenCalled();
+  });
   it.each(["成功", "失敗"])("名前変更で旧検索を取消し、遅い%s応答が次の検索を妨げない", async (outcome) => {
     type Response = import("../lib/domain/api").EntitySearchResponse;
     let resolveOld!: (value: Response) => void;

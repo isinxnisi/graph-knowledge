@@ -10,6 +10,8 @@
 .home .introduction h2 { margin: 0 0 10px; font-family: var(--font-editorial); font-size: clamp(23px, 2.1vw, 31px); line-height: 1.5; font-weight: 400; text-wrap: balance; }
 .introduction > p:not(.eyebrow) { max-width: 50em; color: var(--color-muted); font-size: 13px; line-height: 1.8; margin: 0 0 8px; }
 .introMeta { display: flex; flex-wrap: wrap; gap: 4px 16px; color: var(--color-muted); font-size: 10px; font-variant-numeric: tabular-nums; }
+.home .searchLaunch { display: flex; align-items: center; gap: 10px; width: 100%; max-width: 460px; min-height: 44px; margin-top: 16px; padding: 8px 12px; background: var(--color-canvas); border-color: var(--color-border); color: var(--color-muted); font-size: 13px; }
+.searchLaunch > :last-child { margin-left: auto; width: 14px; }
 .home .featured { display: block; margin-top: 22px; padding: 18px 20px 14px; color: var(--color-text); text-decoration: none; border-radius: 8px; background: linear-gradient(125deg, var(--color-accent-soft), var(--color-canvas)); border: 1px solid var(--color-border); }
 .home .featured h3 { margin: 0 0 8px; font-family: var(--font-editorial); font-size: 23px; font-weight: 400; line-height: 1.5; }
 .home .featureDescription { margin: 0; max-width: 48em; font-size: 12px; line-height: 1.8; color: var(--color-muted); }

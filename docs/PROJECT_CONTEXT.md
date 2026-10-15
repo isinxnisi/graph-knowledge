@@ -1,5 +1,7 @@
 # プロジェクトの構想と判断基準
 
+2026-10-16、M3の次単位として[Discovery Search](design/DISCOVERY_SEARCH.md)を実装する。Home／検索ペインから空欄の一回入口、入力中の候補、名前・種別・公開関係の直接の相手から探す一覧をつなぐ。分類タグ・探索プリセット・Capsule発見・個別関係閉鎖は重要な後続目標として維持し、今回の周辺検索やkind条件で代用した完成扱いにしない。
+
 2026-10-16、M3はDiscovery Homeから開始する。空の中央Graphを実在する起点と最近の公開知識への入口に変え、スマホの初期表示・ロゴからHome・Backによる探索復元を実装する。Rich Discovery Search・プリセット・分類・公開Capsuleの発見等は[体験目標と判断経緯](design/M3_DISCOVERY_EXPERIENCE_CONTEXT.md)に維持し、[今回の初期実装](design/DISCOVERY_HOME.md)でM3全体を完了にしない。
 
 2026-10-15 M2では、既存の日本語URLとGraph状態復元を保持し、`/en` 配下の英語SSR、公開KGの関係・出典概要、対象別OG画像、P型ネットワークのfaviconを追加する。公開・非公開・previewの境界は維持する。[日英の発見入口の契約](design/PUBLIC_DISCOVERY.md)を参照。

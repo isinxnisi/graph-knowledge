@@ -3,72 +3,57 @@ import Icon from "./Icon";
 import { trackPublicEvent } from "../lib/client/public-events";
 import { useUiLocale } from "../lib/client/ui-locale";
 import { explorerMessage } from "../lib/i18n/explorer";
-
-import { useEffect, useRef, useState, type FormEvent } from "react";
+import { useCallback, useEffect, useRef, useState, type FormEvent } from "react";
 import type { EntitySearchResponse, EntitySummary } from "../lib/domain/api";
 import { searchEntities, errorMessage } from "../lib/client/api";
 import { SEARCH_KINDS, type SearchKind } from "../lib/domain/search";
 import { searchLabels } from "../lib/i18n/entity-search";
+import { discoverySearchLabels } from "../lib/i18n/discovery-search";
+import type { DiscoveryCriteria } from "../lib/client/use-discovery-search";
+import EntitySearchResults from "./EntitySearchResults";
 import styles from "./Explorer.module.css";
+import searchStyles from "./DiscoverySearch.module.css";
 
-export default function SearchPanel({ onChoose, placeholder = "例：青葉ハル" }: { placeholder?: string; onChoose: (entity: EntitySummary) => void }) {
-  const { locale } = useUiLocale();
-  const text = searchLabels(locale);
-  const [kind, setKind] = useState<SearchKind | null>(null);
-  const [q, setQ] = useState("");
-  const [result, setResult] = useState<EntitySearchResponse | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const pending = useRef<AbortController | null>(null);
-  useEffect(() => () => pending.current?.abort(), []);
+export default function SearchPanel({ onChoose, onDiscover, placeholder = "例：青葉ハル" }: { placeholder?: string; onChoose: (entity: EntitySummary) => void; onDiscover?: (criteria: DiscoveryCriteria) => void }) {
+  const { locale } = useUiLocale(), text = searchLabels(locale), discovery = discoverySearchLabels(locale);
+  const [kind, setKind] = useState<SearchKind | null>(null), [q, setQ] = useState("");
+  const [result, setResult] = useState<EntitySearchResponse | null>(null), [loading, setLoading] = useState(false), [error, setError] = useState<string | null>(null), [composing, setComposing] = useState(false);
+  const pending = useRef<AbortController | null>(null), timer = useRef<ReturnType<typeof setTimeout> | null>(null);
   function clearSearch() {
-    pending.current?.abort();
-    pending.current = null;
+    if (timer.current) clearTimeout(timer.current);
+    pending.current?.abort(); pending.current = null;
     setLoading(false); setResult(null); setError(null);
   }
-  async function submit(event: FormEvent) {
-    event.preventDefault();
-    pending.current?.abort();
-    setResult(null); setError(null);
+  const runSearch = useCallback(async () => {
+    if (timer.current) clearTimeout(timer.current);
+    pending.current?.abort(); setResult(null); setError(null);
     if (!q.trim()) { setLoading(false); setError(searchLabels("ja").emptyInput); return; }
-    const controller = new AbortController(); pending.current = controller;
-    setLoading(true);
-    try {
-      const response = await searchEntities(q, controller.signal, kind);
-      if (!controller.signal.aborted) { setResult(response); trackPublicEvent("search"); }
-    } catch (error) { if (!controller.signal.aborted) setError(errorMessage(error)); }
+    const controller = new AbortController(); pending.current = controller; setLoading(true);
+    try { const response = await searchEntities(q, controller.signal, kind); if (!controller.signal.aborted) { setResult(response); trackPublicEvent("search"); } }
+    catch (e) { if (!controller.signal.aborted) setError(errorMessage(e)); }
     finally { if (!controller.signal.aborted) setLoading(false); }
-  }
+  }, [q, kind]);
+  useEffect(() => {
+    if (q.trim() && !composing) timer.current = setTimeout(() => void runSearch(), 250);
+    return () => { if (timer.current) clearTimeout(timer.current); pending.current?.abort(); };
+  }, [q, kind, composing, runSearch]);
+  function submit(event: FormEvent) { event.preventDefault(); if (composing) return; if (!q.trim() && onDiscover) onDiscover({ q: "", kind }); else void runSearch(); }
   return <section className={styles.panel} aria-labelledby="search-title">
     <h2 id="search-title"><Icon name="search" />{text.title}</h2>
+    {onDiscover && <button type="button" className={searchStyles.entry} onClick={() => onDiscover({ q, kind })}>{discovery.entry}<Icon name="chevron" /></button>}
     <form onSubmit={submit} className={styles.searchForm}>
       <label htmlFor="entity-search">{text.name}</label>
-      <input id="entity-search" value={q} onChange={(event) => { clearSearch(); setQ(event.target.value); }} placeholder={placeholder} autoComplete="off" />
+      <input id="entity-search" value={q} maxLength={100} aria-controls="entity-suggestions" onCompositionStart={() => { clearSearch(); setComposing(true); }} onCompositionEnd={() => setComposing(false)} onKeyDown={event => { if (event.key === "ArrowDown") { const first = document.querySelector<HTMLButtonElement>("#entity-suggestions button"); if (first) { event.preventDefault(); first.focus(); } } }} onChange={event => { clearSearch(); setQ(event.target.value); }} placeholder={placeholder} autoComplete="off" />
       <label htmlFor="search-kind">{text.kind}</label>
-      <select id="search-kind" value={kind ?? ""} onChange={(event) => { clearSearch(); setKind(event.target.value === "" ? null : event.target.value as SearchKind); }}>
-        <option value="">{text.all}</option>
-        {SEARCH_KINDS.map((value) => <option key={value} value={value}>{text.kinds[value]}</option>)}
-      </select>
+      <select id="search-kind" value={kind ?? ""} onChange={event => { clearSearch(); setKind(event.target.value === "" ? null : event.target.value as SearchKind); }}><option value="">{text.all}</option>{SEARCH_KINDS.map(value => <option key={value} value={value}>{text.kinds[value]}</option>)}</select>
       <button type="submit" disabled={loading}><Icon name="search" />{loading ? text.submitting : text.submit}</button>
     </form>
     {error && <p role="alert" className={styles.error}>{explorerMessage(error, locale)}</p>}
     {loading && <p role="status">{text.loading}</p>}
     {!result && !loading && !error && <p className={styles.muted}>{text.help}</p>}
-    {result && <>
-      <p role="status">{result.items.length ? text.count(result.items.length) : text.noResults}</p>
-      <ul className={styles.results}>
-        {result.items.map((entity) => {
-          const ambiguous = result.items.some((other) => other.id !== entity.id && other.name === entity.name && other.kind === entity.kind && other.description === entity.description);
-          return <li key={entity.id}>
-            <button className={styles.resultButton} onClick={() => onChoose(entity)} aria-label={`${entity.name} — ${entity.description ?? text.descriptionMissing} ／ ${text.kinds[entity.kind as SearchKind]}${entity.aliases.length ? ` ／ ${text.aliases}：${entity.aliases.join("・")}` : ""}${ambiguous ? ` ／ ID：${entity.id}` : ""}`}>
-              <span>{text.kinds[entity.kind as SearchKind]}</span><strong>{entity.name}</strong><span>{entity.description ?? text.descriptionMissing}</span>
-              {entity.aliases.length > 0 && <span>{text.aliases}：{entity.aliases.join("・")}</span>}
-              {ambiguous && <span>ID：{entity.id}</span>}
-            </button>
-          </li>;
-        })}
-      </ul>
-      {result.hasMore && <p className={styles.muted}>{text.more}</p>}
+    {result && <><p role="status">{text.count(Math.min(result.items.length, onDiscover ? 5 : 10))}</p>
+      <EntitySearchResults id="entity-suggestions" items={result.items.slice(0, onDiscover ? 5 : 10)} locale={locale} onChoose={onChoose} />
+      {onDiscover ? <button className={searchStyles.entry} onClick={() => onDiscover({ q, kind })}>{discovery.more}<Icon name="chevron" /></button> : result.hasMore && <p className={styles.muted}>{text.more}</p>}
     </>}
   </section>;
 }

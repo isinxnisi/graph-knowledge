@@ -1,0 +1,66 @@
+.dialog { width: min(1000px, calc(100vw - 48px)); max-height: calc(100dvh - 48px); padding: 0; border: 1px solid var(--color-border); border-radius: 12px; color: var(--color-text); background: var(--color-panel); overscroll-behavior: contain; overflow: auto; }
+.dialog::backdrop { background: rgb(20 35 55 / .32); }
+.header { position: sticky; top: 0; z-index: 2; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 16px 24px 12px; background: var(--color-panel); border-bottom: 1px solid var(--color-border); }
+.eyebrow { display: block; color: var(--color-muted); font-size: 10px; letter-spacing: .12em; }
+.dialog .header h2 { font-family: var(--font-editorial); font-size: 25px; line-height: 1.3; font-weight: 400; margin: 2px 0 0; }
+.headerActions { display: flex; align-items: center; gap: 8px; }
+.headerActions select { max-width: 105px; font-size: 12px; }
+.body { padding: 16px 24px 24px; }
+.introduction { color: var(--color-muted); font-size: 12px; }
+.form label, .kinds legend { font-size: 12px; color: var(--color-muted); }
+.inputRow { display: flex; align-items: center; gap: 8px; margin: 4px 0 12px; }
+.inputRow > svg { flex-shrink: 0; color: var(--color-muted); }
+.inputRow input { min-width: 0; flex: 1; }
+.inputRow button { flex-shrink: 0; }
+.kinds { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 18px; border: 0; padding: 0; }
+.kinds legend { margin-bottom: 6px; }
+.dialog .kinds button { border-color: transparent; border-radius: 20px; padding: 5px 12px; color: var(--color-muted); background: var(--color-canvas); }
+.dialog .kinds button[aria-pressed="true"] { background: var(--color-accent-soft); color: var(--color-accent); }
+.layout { display: grid; grid-template-columns: 190px minmax(0, 1fr); gap: 24px; }
+.connections { min-width: 0; }
+.dialog .connections h3 { font-size: 12px; margin: 0 0 8px; }
+.dialog .connections button { display: block; width: 100%; margin: 2px 0; padding: 7px 8px; font-size: 12px; border: 0; background: transparent; overflow-wrap: anywhere; }
+.dialog .connections button[aria-pressed="true"] { background: var(--color-accent-soft); color: var(--color-accent); }
+.connections p { font-size: 11px; line-height: 1.7; color: var(--color-muted); margin-top: 10px; }
+.matches { min-width: 0; min-height: 180px; }
+.resultHeading { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+.dialog .resultHeading p { font-size: 13px; margin: 0; }
+.resultHeading small, .order { font-size: 10px; color: var(--color-muted); }
+.order { margin: 4px 0 10px; }
+.results { list-style: none; padding: 0; margin: 0; }
+.results > li { margin: 0; border-bottom: 1px solid var(--color-border); }
+.results > li > button { width: 100%; display: grid; grid-template-columns: 18px minmax(0, 1fr) 12px; align-items: center; gap: 10px; padding: 10px 4px; border: 0; border-radius: 4px; color: var(--color-text); background: transparent; text-align: left; }
+.results button > svg { width: 16px; height: 16px; color: var(--color-muted); margin: 0; }
+.results button > svg:last-child { width: 12px; height: 12px; transform: rotate(-90deg); }
+.identity { display: grid; gap: 2px; min-width: 0; }
+.name { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 8px; overflow-wrap: anywhere; }
+.name strong { font-size: 13px; font-weight: 600; color: var(--color-accent); }
+.name small { padding: 1px 5px; border-radius: 3px; background: var(--color-canvas); color: var(--color-muted); font-size: 10px; }
+.description, .aliases { font-size: 11px; color: var(--color-muted); overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow-wrap: anywhere; }
+.aliases { -webkit-line-clamp: 1; font-size: 10px; }
+.pagination { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+.pagination button { font-size: 12px; }
+.pagination span { font-size: 11px; color: var(--color-muted); }
+.empty { font-size: 13px; }
+.empty button { display: block; margin: 12px 0; }
+button.entry { display: inline-flex; align-items: center; gap: 6px; min-height: 32px; padding: 3px 0; margin: 0 0 8px; border: 0; background: transparent; color: var(--color-accent); font-size: 12px; }
+.entry svg { width: 12px; height: 12px; margin: 0; transform: rotate(-90deg); }
+@media (max-width: 800px) {
+  .dialog { width: calc(100vw - 12px); max-width: none; max-height: calc(100dvh - 12px); border-radius: 9px; }
+  .header { padding: 10px 12px; }
+  .dialog .header h2 { font-size: 22px; }
+  .body { padding: 12px; }
+  .layout { grid-template-columns: minmax(0, 1fr); gap: 16px; }
+  .connectionChoices { display: flex; gap: 4px; overflow-x: auto; overscroll-behavior-x: contain; scrollbar-width: thin; padding-bottom: 4px; }
+  .dialog .connections h3 { margin-bottom: 6px; }
+  .dialog .connections button { flex: 0 0 auto; max-width: 260px; width: auto; font-size: 11px; padding: 5px 8px; background: var(--color-canvas); }
+  .dialog .connections p { display: none; }
+  .inputRow { gap: 6px; }
+  .inputRow > svg { display: none; }
+  .inputRow input { font-size: 16px; }
+  .kinds { margin-bottom: 14px; gap: 4px; }
+  .dialog .kinds button { padding: 4px 10px; font-size: 12px; }
+  .pagination span { flex: 0 0 100%; order: 1; }
+  .headerActions select { font-size: 12px; min-height: 36px; }
+  button.entry { min-height: 44px; }
+}

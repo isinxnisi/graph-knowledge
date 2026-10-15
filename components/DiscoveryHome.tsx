@@ -8,6 +8,7 @@ import { trackPublicEvent } from "../lib/client/public-events";
 import { discoveryHomeLabels } from "../lib/i18n/discovery-home";
 import { searchLabels } from "../lib/i18n/entity-search";
 import Icon from "./Icon";
+import { discoverySearchLabels } from "../lib/i18n/discovery-search";
 import styles from "./DiscoveryHome.module.css";
 
 function FeatureMap({ feature, locale }: { feature: DiscoveryFeature; locale: string }) {
@@ -37,7 +38,7 @@ function FeatureMap({ feature, locale }: { feature: DiscoveryFeature; locale: st
   </figure>;
 }
 
-export default function DiscoveryHome({ data, onSearch }: { data: DiscoveryHomeData; onSearch: () => void }) {
+export default function DiscoveryHome({ data, onSearch, onDiscover }: { data: DiscoveryHomeData; onSearch: () => void; onDiscover: () => void }) {
   const { locale } = useUiLocale(), text = discoveryHomeLabels(locale), kinds = searchLabels(locale).kinds;
   const href = (id: string) => localizedPublicHref(`/explore/${id}`, locale);
   const explore = () => trackPublicEvent("explore_start");
@@ -45,6 +46,7 @@ export default function DiscoveryHome({ data, onSearch }: { data: DiscoveryHomeD
   return <section className={styles.home} aria-labelledby="discovery-home-title" data-testid="discovery-home" lang={locale}>
     <header className={styles.introduction} data-discovery-reveal><p className={styles.eyebrow}>{text.eyebrow}</p><h2 id="discovery-home-title">{text.title}</h2><p>{text.introduction}</p>
       <div className={styles.introMeta}><span>{text.access}</span>{data.counts && <span>{text.knowledge(data.counts.entities.toLocaleString(locale), data.counts.claims.toLocaleString(locale))}</span>}</div>
+      <button className={styles.searchLaunch} onClick={onDiscover} aria-haspopup="dialog" data-testid="discovery-search-entry"><Icon name="search" /><span>{discoverySearchLabels(locale).homeEntry}</span><Icon name="arrow" /></button>
     </header>
     {data.unavailable && <p role="status">{text.unavailable}</p>}
     {featured && <a className={styles.featured} href={href(featured.entity.id)} onClick={explore} data-testid="discovery-featured" data-discovery-reveal>

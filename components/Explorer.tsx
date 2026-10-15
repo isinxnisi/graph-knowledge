@@ -29,13 +29,15 @@ import { datasetLabels } from "../lib/i18n/dataset";
 import type { EntitySummary } from "../lib/domain/api";
 import { overviewLabels } from "../lib/i18n/entity-overview";
 import EntityOverview from "./EntityOverview";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { displayRelations, entityLabel } from "../lib/client/graph-presentation";
 import { relationLabel } from "../lib/client/format";
 import { dataReleaseLabels } from "../lib/i18n/data-release";
 import { useGraphExplorer } from "../lib/client/use-graph-explorer";
 import RelationFilter from "./RelationFilter";
 import SearchPanel from "./SearchPanel";
+import DiscoverySearch from "./DiscoverySearch";
+import type { DiscoveryCriteria } from "../lib/client/use-discovery-search";
 import StartExamples from "./StartExamples";
 import GraphCanvas, { type GraphCanvasHandle } from "./GraphCanvas";
 import GraphNavigator from "./GraphNavigator";
@@ -83,6 +85,16 @@ export default function Explorer({ dataset = "demo", initialRoot, services, publ
   }, [activePane]);
   const canvas = useRef<GraphCanvasHandle>(null);
   const publicServices = useRef<PublicServicesHandle>(null);
+  const [discoveryCriteria, setDiscoveryCriteria] = useState<DiscoveryCriteria | null>(null);
+  const closeDiscovery = useCallback(() => setDiscoveryCriteria(null), []);
+  useEffect(() => {
+    const sync = () => {
+      const value = window.history.state?.plunodeDiscovery;
+      setDiscoveryCriteria(value && typeof value.q === "string" ? value : null);
+    };
+    const timer = setTimeout(sync, 0); window.addEventListener("popstate", sync);
+    return () => { clearTimeout(timer); window.removeEventListener("popstate", sync); };
+  }, []);
   const [overview, setOverview] = useState<EntitySummary | null>(null);
   const [capsuleOpen, setCapsuleOpen] = useState(false);
   const [workspaceOpen, setWorkspaceOpen] = useState(false);
@@ -95,6 +107,10 @@ export default function Explorer({ dataset = "demo", initialRoot, services, publ
   const beforeAccountNavigation = () => {
     if (graph.centerId && !urlState.flush()) { setNavigationError(true); return false; }
     rememberExplorationReturn(); setNavigationError(false); return true;
+  };
+  const openDiscovery = (criteria: DiscoveryCriteria) => {
+    if (graph.centerId && !urlState.flush()) { setNavigationError(true); return; }
+    setDiscoveryCriteria(criteria);
   };
   const restricted = graph.predicates !== null || (graph.contributionRoles ?? null) !== null || (graph.organizationPositions ?? null) !== null || (graph.eventRoles ?? null) !== null;
   const switchFrom = (entity: EntitySummary, mode: "broad" | "same") => {
@@ -153,9 +169,9 @@ export default function Explorer({ dataset = "demo", initialRoot, services, publ
     </nav>
     <div lang={locale} aria-live="polite">{urlState.busy && <p role="status">{explorationUrlLabels(locale).restoring}</p>}{urlState.failure && <div role="alert" className={styles.error}><p>{urlState.failure}</p><button onClick={urlState.retry}>{explorationUrlLabels(locale).retry}</button><button onClick={urlState.abandon}>{explorationUrlLabels(locale).abandon}</button></div>}</div>
     <main inert={urlState.busy || !!urlState.failure} data-active-pane={activePane} className={`${styles.columns} ${detailWide ? styles.wideDetails : ""}`}>
-      <div id="explorer-search" role="group" tabIndex={-1} data-focus-destination aria-label={panes.search} className={styles.panel}><SearchPanel placeholder={labels.searchExample} onChoose={startFrom} /><div lang={locale} className={styles.localActions}><h3>{designLabels(locale).tools}</h3><button onClick={() => setSavedViewsOpen(true)}><Icon name="bookmark" />{savedViewLabels(locale).launch}</button><button onClick={() => setWorkspaceOpen(true)}><Icon name="history" />{workspaceLabels(locale).launch}</button><button onClick={() => setCapsuleOpen(true)}><Icon name="capsule" />{capsuleLabels(locale).launch}</button></div><StartExamples dataset={dataset} onChoose={(entity) => startFrom(entity, true)} /></div>
+      <div id="explorer-search" role="group" tabIndex={-1} data-focus-destination aria-label={panes.search} className={styles.panel}><SearchPanel placeholder={labels.searchExample} onChoose={startFrom} onDiscover={openDiscovery} /><div lang={locale} className={styles.localActions}><h3>{designLabels(locale).tools}</h3><button onClick={() => setSavedViewsOpen(true)}><Icon name="bookmark" />{savedViewLabels(locale).launch}</button><button onClick={() => setWorkspaceOpen(true)}><Icon name="history" />{workspaceLabels(locale).launch}</button><button onClick={() => setCapsuleOpen(true)}><Icon name="capsule" />{capsuleLabels(locale).launch}</button></div><StartExamples dataset={dataset} onChoose={(entity) => startFrom(entity, true)} /></div>
       <div id="explorer-graph" role="group" tabIndex={-1} data-focus-destination data-discovery-home={atHome || undefined} aria-label={panes.graph} className={styles.centralScroll}>
-      {atHome && <DiscoveryHome data={discoveryHome} onSearch={() => {
+      {atHome && <DiscoveryHome data={discoveryHome} onDiscover={() => openDiscovery({ q: "", kind: null })} onSearch={() => {
         moveToPane("search");
         requestAnimationFrame(() => document.querySelector<HTMLInputElement>("#explorer-search input")?.focus({ preventScroll: true }));
       }} />}
@@ -180,7 +196,7 @@ export default function Explorer({ dataset = "demo", initialRoot, services, publ
           focusDestination(document.getElementById("explorer-relations"));
         }}>{panes.toRelations}<Icon name="chevron" /></button>} onViewChange={urlState.schedule} navigation={<GraphNavigator compact key={graph.generation} nodes={graph.nodes} selection={selection} onNavigate={(id) => {
           inspectEntity(id); canvas.current?.focusEntity(id);
-        }} />} ref={canvas} restoration={viewRestoration} interactionBlocked={!!overview || savedViewsOpen || workspaceOpen || capsuleOpen || !!reading} onEntityDoubleClick={(id) => { if (graph.nodes[id]) setOverview(graph.nodes[id]); }} graph={graph} selection={selection} onEntity={selectEntity} onRelation={id => { selectRelation(id); if (matchMedia("(min-width: 801px)").matches) trackPublicEvent("relation_detail"); }} onRelationDoubleClick={(id) => { selectRelation(id); moveToPane("detail"); if (matchMedia("(max-width: 800px)").matches) trackPublicEvent("relation_detail"); }} onToggleEntity={id => { if (!graph.expansions[id]?.open) trackPublicEvent("graph_expand"); toggleEntity(id); }} feedback={<>
+        }} />} ref={canvas} restoration={viewRestoration} interactionBlocked={!!discoveryCriteria || !!overview || savedViewsOpen || workspaceOpen || capsuleOpen || !!reading} onEntityDoubleClick={(id) => { if (graph.nodes[id]) setOverview(graph.nodes[id]); }} graph={graph} selection={selection} onEntity={selectEntity} onRelation={id => { selectRelation(id); if (matchMedia("(min-width: 801px)").matches) trackPublicEvent("relation_detail"); }} onRelationDoubleClick={(id) => { selectRelation(id); moveToPane("detail"); if (matchMedia("(max-width: 800px)").matches) trackPublicEvent("relation_detail"); }} onToggleEntity={id => { if (!graph.expansions[id]?.open) trackPublicEvent("graph_expand"); toggleEntity(id); }} feedback={<>
           <div className={`${styles.feedback} ${!graph.centerId ? styles.initialFeedback : ""}`} aria-live="polite"><div key={feedbackKey} className={styles.feedbackContent}><p data-testid="selection-status">{ui.selected}：{selectionText}</p><p>{loading ? ui.graphLoading(loading) : selectedEntity ? graph.expansions[selectedEntity.id]?.expanded ? ui.expanded : graph.expansions[selectedEntity.id]?.pages.length ? ui.closed : ui.expandHelp : <><span className={styles.desktopRelationHelp}>{ui.grouped}</span><span className={styles.touchRelationHelp}>{entry.touchRelationHelp}</span></>}</p></div></div>
         </>} />
       </section>
@@ -202,6 +218,7 @@ export default function Explorer({ dataset = "demo", initialRoot, services, publ
         {selection?.kind === "claim" && <ClaimDetails onDataChanged={invalidateData} revision={graph.revision} dataset={dataset} key={key} id={selection.id} nodes={graph.nodes} claimSummary={selectedClaim ?? undefined} onInspectEntity={inspectFromClaim} eventRoles={graph.eventRoles ?? null} positions={graph.organizationPositions ?? null} roles={graph.contributionRoles ?? null} predicates={graph.predicates} />}
       </aside>
     </main>
+    {discoveryCriteria && <DiscoverySearch initial={discoveryCriteria} onClose={closeDiscovery} onChoose={startFrom} />}
     {reading && <ReferenceReader key={searchParams.toString()} location={reading} dataset={dataset} onClose={closeReading} onExplore={entity => {
       switchFrom(entity, "broad"); closeReading();
     }} />}

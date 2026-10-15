@@ -758,3 +758,19 @@ VPS `/home/develop/graph-m3-home-polish-20261016` へ最新版を転送し、6 f
 VPS `/home/develop/graph-m3-scroll-20261016` へWebのみbundleを転送し、6 fileのchecksum・Bash構文を遠隔照合済み。Web `beta-m3-scroll-20261016`、config `sha256:de9453daeae7f6de3357b02be10685f3b7392647fb382bec3e3911d8b6786180`、build `JUea5fx8Hh5O3YXE9Rxh9`、archive 118,276,207 bytes、SHA256 `8b2efec58e83c1ea9fe59b1492732f21759f5bab2584bfd126e129e7c753e88c`。wrapperの正式HTTPS事後検証へ縦連鎖CSSの取得も追加し、ローカルimageを正式Hostで照合して成功。VPSのCaddy／Docker／既存通知serviceはactive。
 
 今回のスクロール修正は**本番未適用**。既存のパスワード付きsudo境界に従い、残操作を `sudo bash /home/develop/graph-m3-scroll-20261016/scripts/activate-m3-home.sh` 一回へ集約。適用済みDiscovery Homeを含む最新版で、KG backup後にWebのみ短時間更新する。切替／readiness失敗時は旧Webへ復帰し、正式HTTPSだけの事後確認失敗は更新済みと明示する。手動復旧は直前に本人が適用した `graph-m3-home-polish-20261016` のscriptを再実行する手順をREADMEへ記載。KG再投入・DB／会員PG再起動・会員PG書込・Caddy／OAuth変更はなし。ブラウザ標準の連鎖に秒数の設定や独自の待機は追加していない。本番適用後の代表操作・物理スマホ評価とM3の後続は別に残す。
+
+### スクロール改善の正式反映・本人確認（2026-10-16）
+
+本人が `graph-m3-scroll-20261016` のscriptを実行し、healthy・正式HTTPS確認成功と実画面の「OK」を報告。正式HTTPSでも縦連鎖CSSの2宣言とDiscovery Home、KG revision `5e2a94af-9061-4087-bb7a-045a3c0133f4` 維持を確認した。前段の本番未適用は解消。
+
+## M3 Discovery Search初期実装（2026-10-16）
+
+[Issue #4](https://github.com/isinxnisi/graph-knowledge/issues/4)／[採用した初期版の契約](design/DISCOVERY_SEARCH.md)。Homeと検索ペインから入力なしの一回入口、250ms後の入力候補・IME中の抑制、名前／種別の引継ぎ、広い一覧と20件ごとのページングを実装した。スマホは起点を横一列にして一覧の縦幅を確保する。結果行は名前・小さな種別・短い説明・別名を優先し、巨大カードやダミー画像を追加しない。
+
+新API `/api/discovery/entities` はpublished Claimに接続したEntityだけをread-onlyで返す。既存キーワード必須APIは保持する。実在の起点と直接の相手から絞る入口を接続し、分類タグ・分野全体の検索・多段プリセットと混同しない。cursorを条件・dataset・revision・最後の並び順に束縛し、更新競合は再試行へ。入力の取消・古い応答の排除、直近24条件／30秒のメモリキャッシュを実装する。Graph条件・URL保存形式・会員PG・認可・広告origin／同意は変更しない。
+
+検索は一時的なnative History stateを一件使い、閉じる／Escape／BackでGraphを維持し、Forwardで検索を戻す。中間検証でunmount時とBackの二重履歴移動を発見し、cleanupから履歴操作を除去した。候補選択時は検索の一件を戻してから既存Graph開始へ接続する。全6表示で修正後のBack／Forward・Graph往復が成功している。
+
+検証：関連unit155件（入力・cursor／公開境界3件と、debounce／IME・空欄入口を含む既存UI等）が成功。host build・standalone image build・変更範囲ESLint・Bash構文が成功。新E2E7件（日英×1440／390／320pxとAPI）が成功（2.5分）。空欄→ページ前後→PLUTO周辺→種別→一致なしとクリア、入力候補→Graph、条件引継ぎ、検索内の言語切替、閉じる／Escape／Back／Forward、Home再訪と再読込復元を確認。Docker版でもJA1440／EN320とAPIの3件が成功（1.2分）。Home既存3件、会員／支援往復5件、wheel／touchスクロールとGraphジェスチャー2件、広告配信fixture／非配信・公開／private境界2件も成功。会員はAPI fixture、広告は配信fixtureでの回帰であり、新たな本人Googleログインや広告の実配信確認とは区別する。物理スマホは未確認。
+
+途中で作業ディレクトリを誤り、3200の配信buildへ書き始めたため直ちに中断。直前の検証済みスクロール版を戻し、3200のページ／KG／会員API200と元build IDを確認した。DB／会員データへの操作はなく、本人へ経緯と復旧を報告済み。以後は分離した最終buildを検証し、受入済みmainだけを3200へ反映する。反映と配布結果は後続に記録する。分類タグ・探索プリセット・Graph条件引継ぎ・Capsule発見・個別関係閉鎖は重要な未実装目標として残し、M3全体を完了にしない。

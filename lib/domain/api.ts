@@ -24,6 +24,7 @@ export type ClaimDetail = z.infer<typeof claimDetailSchema>;
 export type CitationDetail = z.infer<typeof citationDetailSchema>;
 export type SourceDetail = z.infer<typeof sourceSchema>;
 export type EntitySearchResponse = { items: EntityDetail[]; hasMore: boolean };
+export type DiscoverySearchResponse = EntitySearchResponse & { nextCursor: string | null; starts: EntitySummary[] };
 export type EntityResponse = { entity: EntityDetail };
 export type NeighborsResponse = {
   revision?: string;
