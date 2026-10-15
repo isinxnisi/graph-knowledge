@@ -154,12 +154,12 @@ export default function Explorer({ dataset = "demo", initialRoot, services, publ
     <div lang={locale} aria-live="polite">{urlState.busy && <p role="status">{explorationUrlLabels(locale).restoring}</p>}{urlState.failure && <div role="alert" className={styles.error}><p>{urlState.failure}</p><button onClick={urlState.retry}>{explorationUrlLabels(locale).retry}</button><button onClick={urlState.abandon}>{explorationUrlLabels(locale).abandon}</button></div>}</div>
     <main inert={urlState.busy || !!urlState.failure} data-active-pane={activePane} className={`${styles.columns} ${detailWide ? styles.wideDetails : ""}`}>
       <div id="explorer-search" role="group" tabIndex={-1} data-focus-destination aria-label={panes.search} className={styles.panel}><SearchPanel placeholder={labels.searchExample} onChoose={startFrom} /><div lang={locale} className={styles.localActions}><h3>{designLabels(locale).tools}</h3><button onClick={() => setSavedViewsOpen(true)}><Icon name="bookmark" />{savedViewLabels(locale).launch}</button><button onClick={() => setWorkspaceOpen(true)}><Icon name="history" />{workspaceLabels(locale).launch}</button><button onClick={() => setCapsuleOpen(true)}><Icon name="capsule" />{capsuleLabels(locale).launch}</button></div><StartExamples dataset={dataset} onChoose={(entity) => startFrom(entity, true)} /></div>
-      <div id="explorer-graph" role="group" tabIndex={-1} data-focus-destination aria-label={panes.graph} className={styles.centralScroll}>
+      <div id="explorer-graph" role="group" tabIndex={-1} data-focus-destination data-discovery-home={atHome || undefined} aria-label={panes.graph} className={styles.centralScroll}>
       {atHome && <DiscoveryHome data={discoveryHome} onSearch={() => {
         moveToPane("search");
         requestAnimationFrame(() => document.querySelector<HTMLInputElement>("#explorer-search input")?.focus({ preventScroll: true }));
       }} />}
-      <section hidden={atHome} data-motion-ready={!!graph.centerId && (graph.expansions[graph.centerId]?.pages.length ?? 0) > 0} className={`${styles.panel} ${styles.graphPanel}`} aria-labelledby="graph-title">
+      <section hidden={atHome} className={`${styles.panel} ${styles.graphPanel}`} aria-labelledby="graph-title">
         <div className={styles.graphHeader}>
           <div className={styles.graphHeading}><h2 id="graph-title">Graph</h2>
             <p data-testid="graph-counts">Entity {Object.keys(graph.nodes).length} / Claim {Object.keys(graph.claims).length}</p><p data-testid="relation-counts">Relation {Object.keys(relations).length}</p>
@@ -216,5 +216,5 @@ export default function Explorer({ dataset = "demo", initialRoot, services, publ
       onClose={() => setSavedViewsOpen(false)} onOpen={(entity, conditions) => {
         openSavedView(entity, conditions, canvas.current?.capture() ?? null); moveToPane("graph");
       }} />}
-  </div>{(!initialRoot || !graph.centerId || initialRoot === graph.centerId) && publicOverview}<SiteFooter beforeNavigation={beforeAccountNavigation} /></>;
+  </div>{(!initialRoot || !graph.centerId || initialRoot === graph.centerId) && publicOverview}<SiteFooter languagePath={graph.centerId || initialRoot ? `/explore/${graph.centerId ?? initialRoot}` : "/"} beforeNavigation={beforeAccountNavigation} /></>;
 }

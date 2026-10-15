@@ -12,8 +12,8 @@ case "$actual" in
   'sha256:b0e0bc42b156935ae6915b1dcb39bcc25338dcd25657a92ed41a8944fa569e9a linux/amd64'|'sha256:edc660a29b7bb6d500021d4a187155414e8440361e0cbe3e742142fdbddb78ed linux/amd64') ;;
   *) echo 'operatorが受入済みdigest／platformと異なります。未適用です。' >&2; exit 1 ;;
 esac
-docker tag "${actual%% *}" graph-knowledge-ops:beta-m3-home-motion-20261016
-bash "$bundle/scripts/update-production-web.sh" beta-m3-home-motion-20261016 "$bundle/images.tar.gz"
+docker tag "${actual%% *}" graph-knowledge-ops:beta-m3-home-polish-20261016
+bash "$bundle/scripts/update-production-web.sh" beta-m3-home-polish-20261016 "$bundle/images.tar.gz"
 echo 'Web更新とreadinessに成功しました。KG・会員PG・Caddy・認証設定は変更していません。'
 if python3 - <<'PY'
 import re, urllib.request
@@ -24,6 +24,8 @@ for path in ['/', '/en', '/member', '/explore/2b7c6289-d050-4dc0-93e3-9307681253
     assert re.search(r'<footer[^>]*data-testid="site-footer"[^>]*>\s*<div', html), path
     if path in ['/', '/en']:
         assert 'data-testid="discovery-home"' in html and 'data-testid="discovery-featured"' in html
+        assert 'data-testid="public-discovery"' not in html
+        assert 'data-testid="featured-connections"' in html and 'data-testid="featured-credit"' in html
         assert 'name="robots" content="index, follow' in html and 'PLUTO' in html
     if path == '/en':
         assert 'lang="en"' in html and 'Recently added knowledge' in html

@@ -5,7 +5,7 @@ import { datasetMode } from "../domain/dataset";
 import { localizedPublicHref, type PublicLocale } from "../domain/public-routes";
 import { discoveryLabels } from "../i18n/public-discovery";
 import { explorationMetadata, publicationPolicy } from "./publication";
-import { publicSubject, publicExamples } from "./public-discovery";
+import { publicSubject } from "./public-discovery";
 import { notFound } from "next/navigation";
 import { discoveryHomeData } from "./discovery-home";
 export async function discoveryMetadata(locale: PublicLocale, stateful: boolean, id?: string) {
@@ -18,7 +18,7 @@ export async function discoveryMetadata(locale: PublicLocale, stateful: boolean,
 export async function ExplorationPage({ locale, id }: { locale: PublicLocale; id?: string }) {
   const dataset = datasetMode(process.env.GRAPH_DATASET), subject = dataset === "public-kg" && id ? await publicSubject(id) : undefined;
   if (dataset === "public-kg" && id && !subject) notFound();
-  const overview = dataset === "public-kg" ? <PublicDiscovery locale={locale} subject={subject ?? undefined} examples={!id ? await publicExamples() : []} /> : undefined;
+  const overview = subject ? <PublicDiscovery locale={locale} subject={subject} /> : undefined;
   const home = dataset === "public-kg" && !id ? await discoveryHomeData() : undefined;
   return <Explorer dataset={dataset} initialRoot={id} services={await publicationPolicy()} publicOverview={overview} discoveryHome={home} />;
 }

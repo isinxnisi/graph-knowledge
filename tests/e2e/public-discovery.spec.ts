@@ -17,6 +17,7 @@ test("公開日英のSSR本文・自己canonical・相互言語リンク・公�
     expect(html).toContain('hrefLang="en"'); expect(html).toContain('hrefLang="ja"');
     expect(html).toContain('name="robots" content="index, follow');
     if (path.startsWith("/explore")) { expect(html).toContain('data-testid="public-discovery"'); expect(html).toContain("PLUTO"); expect(html).toContain("浦沢直樹"); expect(html).toContain(locale === "en" ? "Sources for these records" : "この記録の出典"); }
+    if (!path) { expect(html).toContain('data-testid="discovery-home"'); expect(html).not.toContain('data-testid="public-discovery"'); expect(html).toContain('data-testid="featured-credit"'); }
     if (prefix && !path) expect(html).toContain("Public exploration is free and does not require an account");
     const stateful = await (await request.get(base + url + "?s=PRIVATE_GRAPH&secret=PRIVATE", { headers: formal })).text();
     if (!path || path.startsWith("/explore")) { expect(stateful).toContain('name="robots" content="noindex'); expect(stateful).not.toMatch(/property="og:[^"]+" content="[^"]*PRIVATE/); }
@@ -31,8 +32,10 @@ test("公開日英のSSR本文・自己canonical・相互言語リンク・公�
 test("JSなしでも英語の紹介・関係・出典を読み、実在する対象へ進める", async ({ browser }, info) => {
   const context = await browser.newContext({ javaScriptEnabled: false }); const page = await context.newPage();
   await page.goto(info.project.use.baseURL! + "/en");
-  await expect(page.getByTestId("public-discovery")).toContainText("interactive knowledge graph");
-  await page.getByTestId("public-discovery").getByRole("link", { name: /PLUTO/ }).click();
+  await expect(page.getByTestId("discovery-home")).toContainText("interactive knowledge graph");
+  await expect(page.getByTestId("public-discovery")).toHaveCount(0);
+  await expect(page.getByTestId("discovery-featured")).toHaveCSS("transform", "none");
+  await page.getByTestId("discovery-featured").click();
   await expect(page).toHaveURL(new RegExp(`/en/explore/${pluto}$`));
   const overview = page.getByTestId("public-discovery"); await expect(overview).toContainText("Sources for these records");
   expect(await overview.locator('a[target="_blank"]').count()).toBeGreaterThan(0);

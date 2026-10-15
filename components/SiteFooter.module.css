@@ -4,3 +4,10 @@
 .footer a { display: inline-flex; align-items: center; min-height: 28px; color: var(--color-muted); text-decoration: none; }
 .footer a:hover { color: var(--color-accent); text-decoration: underline; }
 @media (max-width: 800px) { .content { padding: 6px 12px; } .footer nav { gap: 0 16px; } .footer a { min-height: 44px; } }
+@media (max-width: 800px) {
+  .content { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 0 12px; }
+  .content > span { grid-area: 1 / 1; }
+  .content > nav:first-of-type { grid-area: 2 / 1 / 3 / -1; }
+  .content > nav:first-of-type a { flex: 1 1 0; min-width: 0; }
+  .content > nav + nav { grid-area: 1 / 2; }
+}

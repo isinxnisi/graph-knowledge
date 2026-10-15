@@ -1,6 +1,7 @@
 const ja = {
   home: "Home", eyebrow: "DISCOVER · PLUNODE", title: "ひとつの興味から、つながりの先へ。",
-  introduction: "好きな作品から作者へ。ひとりの研究者から、別の時代へ。気になる対象を選んで、知識の地図を広げてみませんか。",
+  introduction: "好きな作品から作者へ、研究者から研究機関へ。Plunodeは人物・作品・組織・出来事のつながりを、根拠の資料とともに辿る知識の地図です。",
+  access: "無料・登録なしで探索できます。",
   featured: "ここから辿ってみる", featureTitle: "PLUTOから広がる、作者たちの世界",
   featureDescription: "作品に関わった人を辿ると、ほかの作品へ。制作の役割や資料を読みながら、その先のつながりを見つけられます。",
   explore: (name: string) => `${name}から探索する`, connected: "この作品につながる人物",
@@ -14,7 +15,8 @@ const ja = {
 };
 const en: typeof ja = {
   home: "Home", eyebrow: "DISCOVER · PLUNODE", title: "One curiosity. Many connections.",
-  introduction: "From a favourite work to its creators. From a researcher to another era. Pick a starting point and see where the connections lead.",
+  introduction: "From a favourite work to its creators. Plunode is an interactive knowledge graph connecting people, works, organizations and events, with records and sources to explore.",
+  access: "Public exploration is free and does not require an account.",
   featured: "A place to begin", featureTitle: "The creators connected to PLUTO",
   featureDescription: "Follow the people behind a work to discover their other works. Explore creative roles and the sources behind each connection.",
   explore: name => `Explore from ${name}`, connected: "People connected to this work",

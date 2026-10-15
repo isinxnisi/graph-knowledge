@@ -64,9 +64,6 @@
 /* 左右を固定し、中央カード全体を外側の一つの領域でスクロールする。 */
 .centralScroll { height: 100%; min-height: 0; min-width: 0; overflow-x: hidden; overflow-y: auto; overscroll-behavior: contain; scrollbar-gutter: stable; }
 .graphPanel { height: auto; overflow: visible; padding: 16px; }
-.graphPanel[data-motion-ready="true"] { animation: graphArrive 220ms ease-out; }
-@keyframes graphArrive { from { opacity: .35; } to { opacity: 1; } }
-@media (prefers-reduced-motion: reduce) { .graphPanel[data-motion-ready="true"] { animation: none; } }
 .adjacencyPanel { height: auto; margin-top: 10px; padding: 12px 14px; }
 .adjacencyPanel .relations { border-top: 0; padding-top: 0; }
 .graphFooter { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; margin-top: 4px; }
@@ -345,7 +342,7 @@
   .graphHeading h2, .detailHeading h2 { font-size: 19px; }
   .columns > aside { padding: 16px; }
   .paneNavigation :global(.ui-icon) { width: 16px; height: 16px; margin-inline-end: 4px; }
-  .columns[data-active-pane="search"] > :first-child, .columns[data-active-pane="graph"] > .centralScroll, .columns[data-active-pane="detail"] > aside { animation: ui-fade 160ms ease-out; }
+  .columns[data-active-pane="search"] > :first-child, .columns[data-active-pane="graph"] > .centralScroll:not([data-discovery-home]), .columns[data-active-pane="detail"] > aside { animation: ui-fade 160ms ease-out; }
   .viewportTools { gap: 4px; }
   .viewportTools button:nth-of-type(3) { margin-left: 0; }
   .viewportTools :global(.ui-icon) { width: 15px; height: 15px; margin-inline-end: 3px; }

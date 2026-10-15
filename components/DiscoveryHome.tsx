@@ -19,13 +19,22 @@ function FeatureMap({ feature, locale }: { feature: DiscoveryFeature; locale: st
     if (nodes[id]?.kind !== "person" || seen.has(id)) return false;
     seen.add(id); return true;
   }).slice(0, 3);
-  return <svg viewBox="0 0 440 184" className={styles.map} role="img" aria-label={people.map(r => `${nodes[r.subjectId].name} → ${r.label.replaceAll("\n", " / ")} → ${nodes[r.objectId].name}`).join("、")}>
-    {people.map((r, i) => {
-      const id = r.subjectId === feature.entity.id ? r.objectId : r.subjectId, x = 78 + i * 142;
-      return <g key={id}><path d={`M220 121 L${x} 47`} /><rect x={x - 62} y="16" width="124" height="32" rx="16" /><text x={x} y="37" textAnchor="middle">{nodes[id].name}</text><text className={styles.mapRole} x={(220 + x) / 2} y={83 + (i % 2) * 5} textAnchor="middle">{r.label.replaceAll("\n", " · ")}</text></g>;
-    })}
-    <rect className={styles.mapRoot} x="158" y="120" width="124" height="42" rx="5" /><text x="220" y="147" textAnchor="middle">{feature.entity.name}</text>
-  </svg>;
+  if (!people.length) return null;
+  return <figure className={styles.featureVisual} data-testid="featured-connections">
+    <div className={styles.constellation} aria-hidden="true">
+      <svg viewBox="0 0 180 124" fill="none" focusable="false">
+        <circle className={styles.halo} cx="59" cy="62" r="36" /><circle className={styles.halo} cx="59" cy="62" r="49" />
+        {people.map((r, i) => <g key={r.id}><path d={`M59 62 Q${106 + i * 5} ${18 + i * 43} 151 ${18 + i * 43}`} /><circle cx="151" cy={18 + i * 43} r="5" /></g>)}
+        <circle className={styles.visualRoot} cx="59" cy="62" r="20" /><circle cx="59" cy="62" r="5" />
+      </svg><strong>{feature.entity.name}</strong>
+    </div>
+    <figcaption><p className={styles.creditsLabel}>{discoveryHomeLabels(locale).connected}</p><ul className={styles.credits}>
+      {people.map(r => {
+        const id = r.subjectId === feature.entity.id ? r.objectId : r.subjectId;
+        return <li key={id} data-testid="featured-credit"><span className={styles.creditDot} aria-hidden="true" /><div><strong>{nodes[id].name}</strong><span>{r.canvasLabel.replaceAll("\n", " · ")}</span></div></li>;
+      })}
+    </ul></figcaption>
+  </figure>;
 }
 
 export default function DiscoveryHome({ data, onSearch }: { data: DiscoveryHomeData; onSearch: () => void }) {
@@ -34,19 +43,19 @@ export default function DiscoveryHome({ data, onSearch }: { data: DiscoveryHomeD
   const explore = () => trackPublicEvent("explore_start");
   const featured = data.features.find(f => f.entity.name === "PLUTO") ?? data.features[0];
   return <section className={styles.home} aria-labelledby="discovery-home-title" data-testid="discovery-home" lang={locale}>
-    <header className={styles.introduction}><p className={styles.eyebrow}>{text.eyebrow}</p><h2 id="discovery-home-title">{text.title}</h2><p>{text.introduction}</p>
-      {data.counts && <small>{text.knowledge(data.counts.entities.toLocaleString(locale), data.counts.claims.toLocaleString(locale))}</small>}
+    <header className={styles.introduction} data-discovery-reveal><p className={styles.eyebrow}>{text.eyebrow}</p><h2 id="discovery-home-title">{text.title}</h2><p>{text.introduction}</p>
+      <div className={styles.introMeta}><span>{text.access}</span>{data.counts && <span>{text.knowledge(data.counts.entities.toLocaleString(locale), data.counts.claims.toLocaleString(locale))}</span>}</div>
     </header>
     {data.unavailable && <p role="status">{text.unavailable}</p>}
-    {featured && <a className={styles.featured} href={href(featured.entity.id)} onClick={explore} data-testid="discovery-featured">
+    {featured && <a className={styles.featured} href={href(featured.entity.id)} onClick={explore} data-testid="discovery-featured" data-discovery-reveal>
       <p className={styles.eyebrow}>{text.featured}</p><h3>{featured.entity.name === "PLUTO" ? text.featureTitle : featured.entity.name}</h3>
       {featured.entity.name === "PLUTO" && <p className={styles.featureDescription}>{text.featureDescription}</p>}
       <FeatureMap feature={featured} locale={locale} /><span className={styles.start}><Icon name="graph" />{text.explore(featured.entity.name)}<Icon name="arrow" /></span>
     </a>}
-    {!!data.features.filter(f => f !== featured).length && <section className={styles.fields} aria-labelledby="discovery-fields-title"><h3 id="discovery-fields-title">{text.fields}</h3><div className={styles.fieldGrid}>
+    {!!data.features.filter(f => f !== featured).length && <section className={styles.fields} aria-labelledby="discovery-fields-title" data-discovery-reveal><h3 id="discovery-fields-title">{text.fields}</h3><div className={styles.fieldGrid}>
       {data.features.filter(f => f !== featured).map(f => <a key={f.entity.id} href={href(f.entity.id)} onClick={explore} data-testid="discovery-field"><Icon name={f.entity.kind === "event" ? "event" : f.entity.kind === "organization" ? "organization" : "person"} /><span><small>{f.entity.kind === "event" ? text.event : f.entity.kind === "organization" ? text.science : text.manga}</small><strong>{f.entity.name}</strong><span>{f.entity.kind === "event" ? text.eventDescription : f.entity.kind === "organization" ? text.scienceDescription : text.mangaDescription}</span></span><Icon name="arrow" /></a>)}
     </div></section>}
-    <section className={styles.recent} aria-labelledby="discovery-recent-title"><h3 id="discovery-recent-title">{text.recent}</h3>
+    <section className={styles.recent} aria-labelledby="discovery-recent-title" data-discovery-reveal><h3 id="discovery-recent-title">{text.recent}</h3>
       <h4>{text.entities}</h4><ul>{data.recentEntities.map(({ entity, addedAt }) => <li key={entity.id}><a href={href(entity.id)} onClick={explore}><strong>{entity.name}</strong><span>{kinds[entity.kind]}</span></a><time dateTime={addedAt}>{addedAt.slice(0, 10)}</time></li>)}</ul>
       <h4>{text.claims}</h4><ul>{data.recentClaims.map(({ claim, subject, object, addedAt }) => {
         const relation = Object.values(displayRelations({ [claim.id]: claim }, locale))[0];
@@ -54,6 +63,6 @@ export default function DiscoveryHome({ data, onSearch }: { data: DiscoveryHomeD
       })}</ul>
       {!data.recentEntities.length && !data.recentClaims.length && !data.unavailable && <p>{text.noRecent}</p>}<p className={styles.note}>{text.dateNote}</p>
     </section>
-    <section className={styles.search}><div><h3>{text.searchTitle}</h3><p>{text.searchHint}</p></div><button onClick={onSearch}><Icon name="search" />{text.search}<Icon name="arrow" /></button></section>
+    <section className={styles.search} data-discovery-reveal><div><h3>{text.searchTitle}</h3><p>{text.searchHint}</p></div><button onClick={onSearch}><Icon name="search" />{text.search}<Icon name="arrow" /></button></section>
   </section>;
 }

@@ -726,3 +726,13 @@ VPS `/home/develop/graph-focus-feedback-20261015` へWebのみbundleを転送し
 反映記録：実装 `905cec890bbe010fd3e3bb846b97a4aa0e2361db` をcommit・通常push済み。3200を検証済みbuild `s7tiEqH7ObozngjILKiaV` へ更新し、既存会員・広告runtime設定とKG revision `82b01515-594c-48ca-b4b6-515eefac83ca` を維持。実Tunnelでも3幅×通常／reduceの6通りが成功。旧buildは `/tmp/plunode-m3-motion-20261016/before-3200-build` に保持。
 
 M3初期版と演出を含む最新版を `/home/develop/graph-m3-home-motion-20261016` へ転送し、全checksum・Bash構文を遠隔照合済み。Web `beta-m3-home-motion-20261016`、config `sha256:7282634d56de2c326af9ec114c3f3a6a97da56b5de4e2641219cbeaccd249858`、build `bZ2Xo5z8g7-7ZqA_PdFpX`、archive 118,271,707 bytes。本番は未適用で、本人の残操作を `sudo bash /home/develop/graph-m3-home-motion-20261016/scripts/activate-m3-home.sh` の一回に集約する。前回の初期版bundleを先に適用する必要はない。Webだけの更新・KG backup・失敗時の旧Web復帰を維持し、DB／会員PG／Caddy／OAuthは変更しない。
+
+### TOP本文統合・Featured・導入演出の整理（2026-10-16）
+
+本人はM3のshを引き続き未実行。初期版の方向性はよいとの評価を受け、TOP下段の紹介重複・図の英語ラベル重なり・ペイン全体のフェードを修正した。TOPではPublicDiscoveryを生成せず、サービス説明・無料／登録不要・実在の探索入口と新着をDiscovery HomeのSSR本文へ一本化。PublicDiscoveryはEntity専用とし、対象の関係・出典・日英SEOを維持する。共通フッターへ通常の日英リンクを配置し、スマホではブランド／言語と共通リンクの二段に整理。Graph表示中の言語リンクも既存URLを確定して枝・条件・配置を保持する。
+
+FeaturedのSVGから文字ラベルをすべて外し、作品から広がる控えめな点・曲線と、人物名・具体的役割を読むHTMLのcaptionへ分けた。役割は既存presentationから読み、英語の文量は自然に折り返す。固定座標のラベル移動や切抜き・省略で問題を隠さない。TOP中央の5まとまりだけ420msのfade＋12pxの浮き上がりを80msずつずらし、Graphカード全体とHomeの親ペインのフェードは追加しない。reduced-motion・操作・Graph座標・URL codec・データを維持する。[現行Home契約](design/DISCOVERY_HOME.md)と[日英本文](design/PUBLIC_DISCOVERY.md)を更新。
+
+検証：変更範囲ESLint、TypeScript込みhost／image buildが成功。日英×1440／390／320pxのHome→展開→ロゴ→Back→再読込、テーマ・新着・資料・検索の7経路と、JSなし日英2経路を確認。captionの人物／役割の上下・各行の非重複・幅内収容・SVG内の文字なしを実ブラウザで検証し、英語320px／1440pxの画像も確認。PC／320pxのフッター言語変更でも12 Node・枝・座標・Zoomが維持された。日英SEO・公開境界・JSなし・OGP／favicon・会員／支援往復の既存6件も成功（32.8秒）。短い会員／長いprivacyのフッター1件が成功（14.2秒、3幅）。演出のopacity・transform・5群の時間差、親ペインの無演出、初期／途中のreduced-motionを日英×3幅で確認した。
+
+JSなしのクリック検証は、移動中の要素に対するブラウザ自動操作の安定待ちが止まる例を確認。実際にはCSSが有限時間で終了し、リンクから遷移できることを別ブラウザで確認したうえで、test側でtransformが通常状態へ戻ったことを待つよう修正。製品へ待機時間やJS依存を追加していない。本番imageも英語320pxのHome往復・日英のJSなしが成功。3217は修正候補、3218はDocker確認用として起動し、ポートを本人へ案内済み。3200／TunnelとVPSの最新版配布は後続に記録する。
