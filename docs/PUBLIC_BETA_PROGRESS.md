@@ -596,3 +596,14 @@ VPS用Web `beta-public-20261015` はconfig `sha256:f773689a7d047d469ab45b03de9bd
 最終の目視ではfull-page screenshotに伴う同一media判定の再通知で広告の表示flagが消えることを発見。幅分類が本当に変わる時だけ初期化するよう修正し、再通知・tag切替のunitと最終buildで確認した。画像取得はviewportを変えない方式に揃え、PC・320pxの広告が描画された状態を目視した。検証用送信のGA4受信、実広告表示、本人の公開操作とは区別する。
 
 配布完了：実装source `74c74f59087321e0a3ad45ab57cab7f48dbc724c` を日本語メッセージでcommitし、mainへpush成功。最終Web archive・metadata・README・5 scriptを `/home/develop/graph-public-beta-20261015` へ転送し、**全9ファイルのchecksum、3 Bash構文、2 Python compileをVPSで確認**。Caddy／Docker／既存通知serviceはactiveを維持。こちらから正式／旧previewが未認証401・noindexのままであることも確認し、一般公開済みとは報告しない。CNAME `ads` → `plunode.net` の追加と、runbookに記載したsudo一回、外部サービスの本人確認が残る。現在の権限で進められる実装・検証・3200/Tunnel反映・commit／push・安全な配置準備を完了した。
+## AdMaxの設置確認・審査経路の修正（2026-10-15）
+
+本人報告は「広告未表示・AdMax管理画面は審査中」。[実運用手順](design/ADMAX_OPERATIONS.md)へ、登録→設置確認→審査→通常配信を分けて記録した。審査前の未表示を広告在庫不足として扱わない。
+
+- 正式rootの匿名200、広告専用originのDNS／HTTPS／iframe200を確認。現行Webでは同意前にタグ通信なし。同意後の `/b/{tagId}` は掲載URLが空で、PC／スマホとも400だった。
+- 親→広告iframeだけoriginを参照元として渡す修正で、実SDKが `url=https://plunode.net/` を送り両枠とも200へ変化。SDKの親DOM参照は引き続き拒否し、探索path／query／hashを送らない。広告文書から外部へのHTTP Refererはno-referrerを維持する。
+- 実SDKが自身のbanner IDを削除することも確認。固定containerでの描画検出へ変更し、SDKと同じID削除をするfixtureで空枠・表示・撤回・PC／スマホの寸法・Graph維持を再確認した。
+- 関連unit 8/8、ホスト候補のPlaywright 6/6（49.4秒）、実Docker imageの広告4/4（34.3秒）、変更箇所ESLint、両buildのTypeScript、Bash構文・diff check成功。ホスト候補build `xJUQ_I8MPNO2uP169zQvT`、VPS候補build `Bb52tzOSmAcnjkAriYlDx`、Web image `sha256:11a58eb0f39828212ed279150709282a381f3a087cf16072e7f6e1ac892349b4`。
+- 実配信の候補検証は、PCが200・空本文、スマホが200・配信scriptと外部配信先接続まで。可視の自社バナー／通常広告、AdMax管理画面の審査完了は未確認。可視の枠を確保する切り分けだけでも表示せず、在庫や審査原因を断定していない。
+- ads.txtは正式rootで404。公式は推奨としており、管理画面で取得する本人用の内容が必要。空ファイルや推測した広告販売者IDを登録しない。未設置だけを審査停止の確定原因としない。
+- VPSはWebだけを更新する `activate-admax-update.sh` を準備。受入済みoperatorと既存のbackup・失敗時復帰を使い、Caddy／Google設定／KG／会員PGを維持する。管理者sudo適用と本人の管理画面確認は別に残す。

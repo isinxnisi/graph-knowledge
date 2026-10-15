@@ -50,7 +50,8 @@ export default function PublicServices({ policy, preferencesOnly = false, before
   return <div className={styles.services} data-testid="public-services">
     {advertise && device && <div className={styles.adSlot} data-filled={adReady} data-device={device}>
       <span className={styles.adLabel}>{en ? "Advertisement" : "広告"}</span>
-      <iframe ref={ad} title={en ? "Advertisement" : "広告"} width={device === "mobile" ? 320 : 728} height={device === "mobile" ? 50 : 90} src={`${adOrigin}/integrations/ad/${device}`} sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox" referrerPolicy="no-referrer" scrolling="no" />
+      {/* AdMax uses document.referrer when the parent is cross-origin. Send only the site origin, never the exploration path, query or hash. */}
+      <iframe ref={ad} title={en ? "Advertisement" : "広告"} width={device === "mobile" ? 320 : 728} height={device === "mobile" ? 50 : 90} src={`${adOrigin}/integrations/ad/${device}`} sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox" referrerPolicy="origin" scrolling="no" />
     </div>}
     {measure && <iframe ref={analytics} title="Analytics" hidden src="/integrations/analytics" referrerPolicy="no-referrer" onLoad={() => { metricReady.current = true; analytics.current?.contentWindow?.postMessage({ type: "plunode-metric", event: "page_view", path: publicPagePath(location.pathname) }, PUBLIC_ORIGIN); }} />}
     <footer className={styles.footer}><span>Plunode β</span>{!preferencesOnly && <a href="/privacy" onClick={event => { if (beforeNavigation && !beforeNavigation()) event.preventDefault(); }}>{en ? "Privacy" : "プライバシー"}</a>}<button onClick={() => { setDraft(choice ?? { analytics: false, ads: false }); dialog.current?.showModal(); }}>{en ? "Analytics & ads settings" : "計測・広告の設定"}</button></footer>

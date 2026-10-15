@@ -43,6 +43,7 @@
 | [公開βまでの進捗](PUBLIC_BETA_PROGRESS.md) | 2026-10-11採用。全24ステップの完了数・残数・外部待ちと次の作業範囲。正式名Plunode・公開先はplunode.net（旧graphはpreview維持） |
 | [公開して育てるための対応プラン](design/PUBLIC_BETA_AND_PRODUCT_PLAN.md) | 採用・実装開始。デザイン・スマホ・会員・英語・広告・計測・共通KGからβ公開への方向と優先境界 |
 | [Plunode公開βの適用手順](design/PUBLIC_BETA_LAUNCH.md) | 2026-10-15一般公開承認。正式／previewの境界、GA4本番限定・同意、AdMax専用origin、DNS一件＋管理者一回の適用・復旧、外部サービスの本人確認 |
+| [AdMaxの登録・設置確認・審査・配信](design/ADMAX_OPERATIONS.md) | 2026-10-15。空の掲載URLによる400とSDKのID削除による非表示を修正。同意とorigin分離を維持し、既存枠の照合・本人の審査確認・ads.txt取得を区別 |
 | [PLUTO周辺の重点補充候補](../datasets/pluto-expansion/v1/README.md) | 2026-10-14追加。別作品・別作者・組織へ辿る10 Entity／12 Claim。大量分の後の別候補、生成検証済み・受入／実DB／公開反映は未了 |
 | [明示制作クレジットのRole対応](design/CONTRIBUTION_CREDITS.md) | 2026-10-14。著者・作・作画の3定義、10限定Claim。3定義・10限定Claimの両環境反映を人間承認。3200/Tunnel・VPSへ適用・再適用無変更・実ブラウザ確認済み |
 | [今回の実データ拡充候補](../datasets/public-kg/releases/20261014-expanded-001/README.md) | 2026-10-14。Nobel公式＋Wikidata明示P108、追加2,081 Entity／1,795 Claim。隔離投入確認済み。2026-10-14に大量分＋PLUTO補充の反映承認、3200/TunnelとVPS適用・各実ブラウザ4件確認済み |

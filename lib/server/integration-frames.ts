@@ -11,13 +11,14 @@ export function adFrame(device: keyof typeof AD_TAGS) {
     if(el.tagName==='IFRAME'&&depth<3){try{const d=el.contentDocument;if(d)return !!d.body?.innerText.trim()||[...d.querySelectorAll('iframe,img,object,embed,canvas,svg,a')].some(child=>content(child,depth+1))}catch{}return !!el.src&&el.src!=='about:blank'}
     return true;
   }
-  function report(){const banner=document.querySelector('[id^="admax-banner-"]');if(!banner)return;
+  // The AdMax SDK removes its own banner id. Observe our stable container instead.
+  function report(){const banner=document.getElementById('plunode-ad-content');if(!banner)return;
     const visible=[...banner.querySelectorAll('iframe,img,object,embed,canvas,svg,a')].some(el=>content(el));
     if(visible!==shown){shown=visible;parent.postMessage({type:'plunode-ad-status',filled:visible,height:${height}},'*')}
   }
   new MutationObserver(report).observe(document.documentElement,{childList:true,subtree:true,attributes:true});
   document.addEventListener('load',report,true);setInterval(report,1000);
-  </script><script src="https://adm.shinobi.jp/s/${AD_TAGS[device]}"></script></body></html>`;
+  </script><div id="plunode-ad-content"><script src="https://adm.shinobi.jp/s/${AD_TAGS[device]}"></script></div></body></html>`;
 }
 export function analyticsFrame() {
   return head + `<script>

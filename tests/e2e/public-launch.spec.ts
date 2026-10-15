@@ -67,7 +67,8 @@ for (const width of [1440, 375, 320]) test(`広告の配信・非配信でGraph�
     tags.push(route.request().url());
     const [w, h] = width < 800 ? [320, 50] : [728, 90];
     const creative = `<meta charset="utf-8"><body style="margin:0;background:#edf2f5;display:grid;place-items:center;font:14px sans-serif;height:100vh">広告・配置確認</body>`;
-    return route.fulfill({ contentType: "application/javascript", body: `document.write('<div id="admax-banner-fixture"></div>');const f=document.createElement('iframe');f.width=${w};f.height=${h};f.style.border='0';document.getElementById('admax-banner-fixture').append(f);const d=f.contentWindow.document;d.open();d.write(${JSON.stringify(filled ? creative : "")});d.close();` });
+    // Real AdMax removes the banner id before rendering; it must not hide filled ads.
+    return route.fulfill({ contentType: "application/javascript", body: `document.write('<div id="admax-banner-fixture"></div>');const banner=document.getElementById('admax-banner-fixture');banner.removeAttribute('id');const f=document.createElement('iframe');f.width=${w};f.height=${h};f.style.border='0';banner.append(f);const d=f.contentWindow.document;d.open();d.write(${JSON.stringify(filled ? creative : "")});d.close();` });
   });
   await context.route("https://ad.example/**", route => route.fulfill({ contentType: "text/html; charset=utf-8", body: '<meta charset="utf-8"><body style="margin:0;background:#edf2f5;display:grid;place-items:center;font:14px sans-serif;height:100vh">広告・配置確認</body>' }));
   try {
@@ -97,6 +98,35 @@ for (const width of [1440, 375, 320]) test(`広告の配信・非配信でGraph�
     await expect(page.getByRole("dialog")).toBeVisible();
     await page.getByRole("checkbox", { name: /^広告/ }).uncheck(); await page.getByRole("button", { name: "設定を保存", exact: true }).click();
     await expect(frame).toHaveCount(0);
+  } finally { await context.close(); }
+});
+
+test("広告同意後だけ掲載originをSDKへ渡し、探索パス・query・hashを参照元に含めない", async ({ browser }, info) => {
+  const context = await browser.newContext({ viewport: { width: 1440, height: 900 } });
+  const page = await context.newPage(); await formalProxy(page, info.project.use.baseURL!);
+  let tagLoads = 0;
+  await context.route("https://adm.shinobi.jp/s/**", route => {
+    tagLoads++;
+    // The documented browser behaviour used by the real SDK for a cross-origin parent.
+    return route.fulfill({ contentType: "application/javascript", body: "try{window.__admaxListing=parent.document.URL}catch{window.__admaxListing=document.referrer}" });
+  });
+  try {
+    await page.goto(PUBLIC_ORIGIN + "/?private=SECRET#SHARED_TOKEN");
+    await expect(page.getByRole("button", { name: "両方を許可" })).toBeVisible();
+    expect(tagLoads).toBe(0); expect(page.frames()).toHaveLength(1);
+    await page.evaluate(() => history.replaceState(history.state, "", "/explore/10000000-0000-4000-8000-000000000001?private=SECRET#SHARED_TOKEN"));
+    await page.getByRole("button", { name: "計測・広告の設定", exact: true }).click();
+    await page.getByRole("checkbox", { name: /^広告/ }).check();
+    await page.getByRole("button", { name: "設定を保存", exact: true }).click();
+    await expect.poll(() => tagLoads).toBe(1);
+    const frame = page.frames().find(f => f.url().startsWith(AD_ORIGIN))!;
+    await expect.poll(() => frame.evaluate(() => (window as unknown as { __admaxListing?: string }).__admaxListing)).toBe(PUBLIC_ORIGIN + "/");
+    expect(await frame.evaluate(() => { try { return !!parent.document.body; } catch { return false; } })).toBe(false);
+    expect(page.frames().some(f => f.url().includes("/integrations/analytics"))).toBe(false);
+    await page.getByRole("button", { name: "計測・広告の設定", exact: true }).click();
+    await page.getByRole("checkbox", { name: /^広告/ }).uncheck();
+    await page.getByRole("button", { name: "設定を保存", exact: true }).click();
+    await expect(page.getByTitle("広告", { exact: true })).toHaveCount(0);
   } finally { await context.close(); }
 });
 

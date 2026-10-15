@@ -2,6 +2,8 @@
 
 2026-10-15。ユーザーは一般公開を承認済み。今回の管理者操作待ちは、追加の公開承認待ちではない。デザインの全面再検討やCapsule上位UXの完成を公開条件にしない。
 
+同日の後続確認で正式rootの匿名200、広告originのDNS／HTTPS／iframe200を確認した。初回公開切替を再実行する必要はない。AdMaxの設置確認・審査で見つかった障害とWebだけの修正適用は [AdMax実運用手順](ADMAX_OPERATIONS.md) を参照。
+
 ## 翌日の操作
 
 1. お名前.comのDNS設定で **CNAME：ホスト名 `ads`、値 `plunode.net`** を追加する。既存のルートA・MX・TXTは変更しない。広告専用の `ads.plunode.net` を同じVPSへ向けるための追加一件である。
@@ -67,11 +69,13 @@ KG／会員PGの復元はこのWeb公開切替の復旧に含めない。
 
 PC728×90・スマホ320×50のユーザー指定tagをそのまま使う。探索workspaceの**下**へ非固定で配置する。狭い中央カラムに728pxを押し込まず、スマホのGraph面積を広告のために減らしたり重ねたりしない。画面幅の切替でtagも切り替える。未配信や空の描画iframeだけでは広告の高さを確保せず、表示内容を確認してから枠を開く。広告の状態変化はGraphのcontainer寸法・座標・選択・zoomを変えない。
 
-AdMax SDKは子iframeへ `document.write` する。opaque sandboxではこの処理が失敗することを実ブラウザで確認したため、**広告専用origin＋sandbox**を採用した。`allow-same-origin`は広告の子文書用であり、親のPlunodeとはoriginが異なる。広告originにはアプリ・会員APIを提供せず、親画面の会員情報・保存内容・URLを読ませない。CaddyとNext Proxyの双方で制限する。広告文書のCSP内だけで配信先通信を許可し、親画面の通信許可を一括で緩めない。referrerは送らない。
+AdMax SDKは子iframeへ `document.write` する。opaque sandboxではこの処理が失敗することを実ブラウザで確認したため、**広告専用origin＋sandbox**を採用した。`allow-same-origin`は広告の子文書用であり、親のPlunodeとはoriginが異なる。広告originにはアプリ・会員APIを提供せず、親画面の会員情報・保存内容・URLを読ませない。CaddyとNext Proxyの双方で制限する。広告文書のCSP内だけで配信先通信を許可し、親画面の通信許可を一括で緩めない。親→広告iframeには掲載サイトのoriginだけを参照元として渡す。これを完全に消すとSDKの掲載URLが空になり400となることを実通信で確認した。広告文書から外部へのHTTP Refererは送らず、探索path・query・hashも送らない。SDKが自身のbanner IDを消すため、固定した独自containerで実表示内容を判定する。
 
 ローカルは `ads.localhost:3200` を使い、追加の常駐service・portやCloudflare設定を必要としない。Tunnelと正式環境は `https://ads.plunode.net` を使うため、DNSとVPS適用前は広告の実配信が利用できない。管理者操作前にもローカル実画面と配信fixtureでPC・スマホの寸法・非配信・分離を評価できる。
 
 **AdMax管理画面で本人が確認すること：** 広告枠設定→対象のPC／スマホ枠で、サイトURL `https://plunode.net/`、サイズ、一般向けの属性・表示除外を確認。提供されたスマホtagにはoverlay指定も含まれていた。SDKはiframe内でoverlayを要求しない動作だったが、枠設定もインライン用途として確認する。広告を許可してPC・実スマホで実配信を確認する。配信結果はコード接続やfixtureの表示とは別に扱い、運営者による広告クリック試験は行わない。[AdMax公式手順](https://www.ninja.co.jp/admax/help/manual/10494/)を参照。
+
+本人報告の「審査中・未表示」は在庫不足として扱わない。広告の掲載リクエスト受理→AdMax自社バナーの表示→管理画面の審査→通常配信を区別する。同意条件を迂回せず、広告だけを許可して確認する具体操作とads.txtの取得は [AdMax実運用手順](ADMAX_OPERATIONS.md) に記載。
 
 ## Google認証・Search Console
 
