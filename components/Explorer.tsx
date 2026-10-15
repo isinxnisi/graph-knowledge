@@ -13,6 +13,7 @@ import { explorerLabels, explorerMessage } from "../lib/i18n/explorer";
 import { useSearchParams } from "next/navigation";
 import ReferenceReader from "./ReferenceReader";
 import SiteHeader from "./SiteHeader";
+import SiteFooter from "./SiteFooter";
 import { parseReadingLocation, withoutReadingReference } from "../lib/client/reading-reference";
 import { explorerPaneLabels } from "../lib/i18n/explorer-panes";
 import { entryLabels } from "../lib/i18n/exploration-entry";
@@ -135,7 +136,7 @@ export default function Explorer({ dataset = "demo", initialRoot, services }: { 
   const loading = Object.values(graph.expansions).filter((meta) => meta.loading).length;
   const feedbackKey = `${key}:${loading}:${selectedEntity ? graph.expansions[selectedEntity.id]?.open : ""}`;
   const blocked = Object.values(graph.expansions).find((meta) => meta.blocked);
-  return <div className={styles.explorer}>
+  return <><div className={styles.explorer}>
     <SiteHeader dataset={dataset} onBeforeAccountNavigation={beforeAccountNavigation} onPrivacySettings={services && (services.ads || services.analytics) ? () => publicServices.current?.openSettings() : undefined} />
     {navigationError && <p role="alert">{locale === "en" ? "The exploration is not ready to restore. Wait for loading to finish, or save the workspace before leaving." : "探索を復元できる状態にできませんでした。取得の完了を待つか、探索途中を保存してから移動してください。"}</p>}
     <nav ref={paneNavigation} className={styles.paneNavigation} aria-label={panes.navigation}>
@@ -202,5 +203,5 @@ export default function Explorer({ dataset = "demo", initialRoot, services }: { 
       onClose={() => setSavedViewsOpen(false)} onOpen={(entity, conditions) => {
         openSavedView(entity, conditions, canvas.current?.capture() ?? null); setActivePane("graph");
       }} />}
-  </div>;
+  </div><SiteFooter beforeNavigation={beforeAccountNavigation} /></>;
 }

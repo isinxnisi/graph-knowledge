@@ -10,6 +10,7 @@ import { capsulesKey, readCapsules, type LocalCapsule } from "../lib/client/loca
 import { MemberClientError, memberCreateResultSchema, memberImportRequest, memberItemSchema, memberListSchema, memberProfileSchema, memberReaderCapsule, memberRequest, type MemberUser } from "../lib/client/member-api";
 import { memberLabels } from "../lib/i18n/member";
 import SiteHeader from "./SiteHeader";
+import SiteFooter from "./SiteFooter";
 import Icon from "./Icon";
 import AnimatedDetails from "./AnimatedDetails";
 import { notifyMemberSessionChange } from "../lib/client/account-navigation";
@@ -296,5 +297,5 @@ export default function MemberCapsules({ dataset, initialImport = "" }: { datase
     </AnimatedDetails>
     </div>
     </div></div>
-  </main></>;
+  </main><SiteFooter /></>;
 }

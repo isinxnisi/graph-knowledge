@@ -11,9 +11,10 @@ import type { DatasetMode } from "../lib/domain/dataset";
 import { datasetLabels } from "../lib/i18n/dataset";
 import { siteLabels } from "../lib/i18n/site";
 import styles from "./SiteHeader.module.css";
+import { supportLabels } from "../lib/i18n/support";
 import { appearanceKey, defaultAppearance, readAppearance, type Appearance } from "../lib/client/appearance";
 
-export default function SiteHeader({ dataset, page = "explore", user, onBeforeAccountNavigation, onPrivacySettings, onLogout, accountBusy = false }: { onBeforeAccountNavigation?: () => boolean; onPrivacySettings?: () => void; onLogout?: () => void; accountBusy?: boolean; user?: MemberUser | null; dataset: DatasetMode; page?: "explore" | "member" | "shared" }) {
+export default function SiteHeader({ dataset, page = "explore", user, onBeforeAccountNavigation, onPrivacySettings, onLogout, accountBusy = false }: { onBeforeAccountNavigation?: () => boolean; onPrivacySettings?: () => void; onLogout?: () => void; accountBusy?: boolean; user?: MemberUser | null; dataset: DatasetMode; page?: "explore" | "member" | "shared" | "support" }) {
   const { locale, setLocale, storageError: languageError } = useUiLocale();
   const ui = explorerLabels(locale), text = siteLabels(locale), data = datasetLabels(dataset, locale);
   const identity = useMemberIdentity(page !== "member");
@@ -69,6 +70,7 @@ export default function SiteHeader({ dataset, page = "explore", user, onBeforeAc
     </div>
     <p className={styles.description}>{data.description}</p>
     <div className={styles.tools}>
+      <a className={styles.supportLink} href="/support" onClick={closeAccount} aria-current={page === "support" ? "page" : undefined}><Icon name="heart" /><span>{supportLabels(locale).link}</span></a>
       <nav aria-label={text.navigation} className={styles.navigation}>
         {page !== "explore" && <a className={styles.exploreReturn} href={returnHref} aria-label={text.exploreLink} title={text.exploreLink}><Icon name="back" /><span>{text.explore}</span></a>}
         {currentUser ? <details className={`${styles.settings} ${styles.accountMenu}`} data-floating-menu ref={accountMenu} onToggle={event => { if (event.currentTarget.open && menu.current) menu.current.open = false; }}>
@@ -105,6 +107,7 @@ export default function SiteHeader({ dataset, page = "explore", user, onBeforeAc
             {onPrivacySettings && <button onClick={() => { if (menu.current) { menu.current.open = false; menu.current.querySelector("summary")?.focus(); } onPrivacySettings(); }}>{locale === "en" ? "Analytics & ads settings" : "計測・広告の設定"}</button>}
             <a href="/privacy" onClick={closeAccount}>{locale === "en" ? "Privacy & external data transmission" : "プライバシー・外部送信について"}</a>
           </div>
+          <a className={styles.supportMenuLink} href="/support" onClick={closeAccount} aria-current={page === "support" ? "page" : undefined}><Icon name="heart" /><span>{supportLabels(locale).link}</span></a>
           {languageError && <p role="status">{ui.languageFailed}</p>}
           {storageError && <p role="status">{text.appearanceFailed}</p>}
         </div>

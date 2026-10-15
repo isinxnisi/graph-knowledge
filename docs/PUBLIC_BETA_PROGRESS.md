@@ -642,3 +642,13 @@ VPS `/home/develop/graph-ad-layout-20261015` へWebのみbundleを転送し、�
 反映記録：実装 `3139ac8` をcommit／通常pushし、3200をhost build `ZXWQvvsedxeA5P3vMOIim` へ反映。revision `82b01515-594c-48ca-b4b6-515eefac83ca` を維持。実TunnelのPC1440／スマホ375pxで共通設定の配置・検索／詳細ペインからのmodal・focus復帰・Graph不変の2経路成功（9.8秒）。本番imageでも同じ2経路成功（8.0秒）。広告の地域別初期設定・認証・DB・KGは変更なし。
 
 VPSへ `/home/develop/graph-privacy-layout-20261015` を転送し全checksum／shell構文を遠隔照合済み。Web `beta-privacy-layout-20261015` のconfigは `sha256:e0df880e858ed65c48e5f27ddd033f26d852d6be5ba293bf2cb2f90e5bd98042`、build `uSMQIH5UElJLICdHMPS2f`、archive 110,007,580 bytes、SHA256 `2f5b80e9d43dea37fbeec95901c071928743629c0861fcaa42324eecced09964`。パスワード付きsudoは本人実行待ち：`sudo bash /home/develop/graph-privacy-layout-20261015/scripts/activate-privacy-layout.sh`。前回の広告配置も含むため今回一回だけでよく、旧bundleと二段階適用しない。Webのみ更新・KG backup・失敗時の旧Web復帰は既存手順。実広告画像の可視配信未確認は前回記録から変更なし。
+
+## M1 開発支援受付（2026-10-15）
+
+GitHub mainに追加されたロードマップcommit `829ee55`（ROADMAP.mdのみ）を固定差分で確認し、fast-forwardで取り込んだ。[Issue #1](https://github.com/isinxnisi/graph-knowledge/issues/1)を正本に、日英 `/support`、PCヘッダー／スマホの既存メニュー、広告と独立した共通フッターを実装。フッターは探索100dvhの外に置き、Graphを覆わず、枝・座標・zoomを保って支援案内と往復する。用途・任意性・外部の新しいタブ／決済を説明し、確認済み `https://buymeacoffee.com/plunode` だけへ接続。外部script・iframe・決済API・カード情報取得・特典や費用の架空表示を追加しない。privacy説明・canonical／OGP／sitemapを最小更新。
+
+実支援ページはブラウザで200・Plunode名義・支援操作の入口を確認。決済成功は本人確認であり、今回再決済・銀行入金・申告の適合性確認を行ったとはしない。これらを公開ブロッカーにしない。M1の状態はROADMAPへ「実装・検証済／本番反映待ち」と記録し、[現行契約と適用](design/DEVELOPMENT_SUPPORT.md)を追加した。
+
+検証：関連unitは旧ブランド／設定labelを期待していたlocale test2件を現在のPlunodeと表示設定へ修正し、locale8件成功（他112件は先のrunで成功、合計120件）。対象ESLint・root TypeScript・host／Docker build成功。最終hostの日英×1440／390／320pxと公開meta／sitemap／広告origin拒否の7経路成功（31.5秒）。支援先の新タブとnoreferrer、選択前の支援サービス通信なし、探索12 Node・枝・移動座標・zoom復帰、フッター入口とスマホヘッダー高さを確認。決済先はbrowser fixtureで遮断し、テスト課金はない。Graph初期化前の読出しはtest helperで待機し、復元の精度は緩めていない。広告配信fixture／空描画／撤回・GA4分離・共通設定6経路（46.3秒）、会員往復／本人表示／logout／スマホ操作3経路（38.4秒）も成功。会員応答はfixtureであり、本人の再Googleログインとは区別する。
+
+VPSは `sudo -n` がパスワード要求のため直接適用不可。既存operator照合・KG backup・Webのみ更新・readiness・正式HTTPS検証の一回scriptを用意し、隔離stubの正常／operator不一致／checksum不一致／独自proxy／HTTPS事後確認失敗の5経路が成功。Web／readiness失敗時の旧Web復帰と、更新後のHTTPSだけ失敗した状態を区別する。3200／Tunnelの反映、配布照合、commit／pushは後続記録に追記。本番未確認のままM1達成やIssue完了にはしない。

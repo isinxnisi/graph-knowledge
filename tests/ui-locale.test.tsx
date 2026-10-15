@@ -36,8 +36,8 @@ describe("表示localeと探索の分離", () => {
     const fetch = vi.fn().mockResolvedValue(Response.json({ error: { code: "UNAUTHENTICATED" } }, { status: 401 })); vi.stubGlobal("fetch", fetch);
     render(<UiLocaleProvider><SiteHeader dataset="demo" /></UiLocaleProvider>);
     await waitFor(() => expect(document.documentElement.lang).toBe("en"), { timeout: 5000 });
-    expect(screen.getByRole("heading", { name: "Explore connections" })).toBeTruthy();
-    sync(null); expect(screen.getByRole("heading", { name: "関係性を探索する" })).toBeTruthy();
+    expect(screen.getByRole("heading", { name: "Plunode" })).toBeTruthy();
+    sync(null); expect(document.documentElement.lang).toBe("ja"); expect(screen.getByRole("heading", { name: "Plunode" })).toBeTruthy();
     sync("xx"); expect(document.documentElement.lang).toBe("ja");
     await waitFor(() => expect(fetch).toHaveBeenCalledTimes(1));
     expect(fetch.mock.calls[0][0]).toBe("/api/member/profile"); vi.unstubAllGlobals();
@@ -45,7 +45,7 @@ describe("表示localeと探索の分離", () => {
   it("明示選択を保存し、保存不能でも画面には反映する", async () => {
     render(<UiLocaleProvider><SiteHeader dataset="demo" /></UiLocaleProvider>);
     await waitFor(() => expect(document.documentElement.lang).toBe("ja"));
-    (screen.getByText("設定").parentElement as HTMLDetailsElement).open = true;
+    (screen.getByLabelText("表示設定").parentElement as HTMLDetailsElement).open = true;
     fireEvent.change(screen.getByLabelText("表示言語"), { target: { value: "en" } });
     expect(localStorage.getItem(uiLocaleKey)).toBe("en");
     vi.spyOn(Storage.prototype, "setItem").mockImplementation(() => { throw new Error("blocked"); });
