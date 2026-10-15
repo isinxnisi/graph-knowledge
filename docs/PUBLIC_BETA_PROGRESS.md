@@ -660,3 +660,19 @@ VPS `/home/develop/graph-m1-support-20261015` へWebのみbundleを転送し、�
 ### M1正式反映・完了（2026-10-15）
 
 本人の適用ログで `beta-m1-support-20261015` healthy・正式HTTPS検証成功を確認。本人がヘッダー／共通フッター→支援案内→Buy Me a Coffeeを確認済み。Codexも正式HTTPSの支援URL・canonicalとKG revision維持を確認。ROADMAPのM1を達成へ更新する。銀行入金を今回確認したとはしない。
+
+## M2 日英SEO・OGP・ブランドアイコン（2026-10-15）
+
+[現行契約](design/PUBLIC_DISCOVERY.md)／[Issue #2](https://github.com/isinxnisi/graph-knowledge/issues/2)。実装commit `55ee8f8` を通常push済み。M1の支援ページ・会員データ・Graph codec・広告同意とorigin分離を保持する。
+
+- `/en`・`/en/explore/{UUID}`・`/en/support`・`/en/privacy` の英語SSRを追加。日本語URLと自己canonicalを保持し、相互hreflangと日英sitemapを生成。状態query・会員／限定共有・previewの検索境界を検証。
+- Graphの高さを維持して、ワークスペース下に人が読めるサービス紹介・探索入口・代表の公開関係とSourceをSSR表示。英語の本文・種別・関係語と、登録された名称・別名・資料原文を区別し、未登録の翻訳を作らない。
+- トップ／Entity別1200×630 PNG、X／Facebook／Googlebot向けheadのOGメタ、中央540pxの安全範囲を確認。P型ネットワークのSVG・16/32/48px ICO・180px touch iconを実ブラウザで確認。SNS各社の実表示・キャッシュ更新は別確認。
+- unit 27件、変更範囲ESLint・TypeScript、host／standalone image build成功。M2のSSR／JSなし／画像・公開境界3件とPC1440／390／320pxの探索→支援／会員→再読み込み→日本語切替3件が成功。M1の日英PC／390／320px6件、既存会員3件、広告・GA4／共通設定9件の代表経路が成功。接続元地域の本番image専用既存テスト1件はhost検証でskipし、今回の変更と無関係な地域判定の再実装はしない。
+- 新しいtestは初期言語設定を各遷移で上書きしないよう修正。既存のGA4 testは言語URL移動後に設定メニューを再度開く操作へ更新し、同意・送信の境界を確認した。検証失敗を製品の完成結果として扱わず、修正後の成功で記録する。
+- standalone imageの実応答で日英4画像の200／PNG寸法、3クローラーのhead、favicon類を確認（1件成功）。DBを書き換えず、ローカルのpublic KGをread-onlyで使用。
+- 3200は検証済みmainのhost build `-sCN3cWmHxYZOZRRJYw1w` へ反映。TunnelでJSなしの入口→PLUTO→関連対象／Source、PC1440・390・320pxの支援／会員往復・URL復元・日英切替の4件が成功（35.1秒）。ローカルKG revision `82b01515-594c-48ca-b4b6-515eefac83ca` を維持。
+
+本番image `graph-knowledge-web:beta-m2-discovery-20261015`（linux/amd64、config `sha256:c3604be667d6987ec626f17049021d3c31828b36c9372b5bf5425079682208f7`、build `UenpB_aqITdZemY3dgSin`）。Webのみの118,257,324 byte archiveと、既存operatorを再利用する一回scriptを準備。パスワード付きsudo境界のため本番は未適用で、M2を本番達成として閉じない。
+
+配布先 `/home/develop/graph-m2-discovery-20261015` へ転送完了。全checksum・bash構文を遠隔照合済み。`activate-m2-discovery.sh` は既存operatorを照合してWebのみ更新し、正式HTTPSの英語SSR・支援先・PNG寸法・faviconを検証する。Issue #2にも確認済み範囲・本番未適用・Search Consoleの英語URL検査を記録し、Openを維持した。M1 Issue #1は本人による本番導線確認を受けて完了済み。
