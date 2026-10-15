@@ -722,3 +722,7 @@ VPS `/home/develop/graph-focus-feedback-20261015` へWebのみbundleを転送し
 本人より体験を重視したフェード等の要望、M3のshは未実行との補足。**本番は引き続きM3未適用**。Homeの読み順に240ms・最大90ms差のフェード、起点の最初のページ取得後にGraphカードの220msフェード、紹介リンクの控えめなhover／focus移行を追加した。選択・Zoom・子の展開ごとにカード全体を再フェードせず、既存のNode効果を維持。位置・寸法・履歴・取得を変更せず、操作をアニメーション完了まで待たせない。reduced-motionは初期・途中変更とも即時無効化する。[Home契約](design/DISCOVERY_HOME.md)へ追記。
 
 変更範囲ESLintとTypeScript込みhost／image buildが成功。日英×1440／390／320pxの既存Home8経路が成功（1.5分）。別途、実ブラウザのopacity進行・240／220ms・reduced-motion・設定途中変更・枝展開時のカード再フェードなし・配置／Zoom不変・Backを、hostと本番imageそれぞれ3幅×通常／reduceの6通りで確認した。新しい一般アニメーション基盤・実験的Next設定・待機timer・保存stateは追加しない。3200／Tunnel反映と、本番の初期M3を含めた一回適用bundleの配布を後続へ記録する。
+
+反映記録：実装 `905cec890bbe010fd3e3bb846b97a4aa0e2361db` をcommit・通常push済み。3200を検証済みbuild `s7tiEqH7ObozngjILKiaV` へ更新し、既存会員・広告runtime設定とKG revision `82b01515-594c-48ca-b4b6-515eefac83ca` を維持。実Tunnelでも3幅×通常／reduceの6通りが成功。旧buildは `/tmp/plunode-m3-motion-20261016/before-3200-build` に保持。
+
+M3初期版と演出を含む最新版を `/home/develop/graph-m3-home-motion-20261016` へ転送し、全checksum・Bash構文を遠隔照合済み。Web `beta-m3-home-motion-20261016`、config `sha256:7282634d56de2c326af9ec114c3f3a6a97da56b5de4e2641219cbeaccd249858`、build `bZ2Xo5z8g7-7ZqA_PdFpX`、archive 118,271,707 bytes。本番は未適用で、本人の残操作を `sudo bash /home/develop/graph-m3-home-motion-20261016/scripts/activate-m3-home.sh` の一回に集約する。前回の初期版bundleを先に適用する必要はない。Webだけの更新・KG backup・失敗時の旧Web復帰を維持し、DB／会員PG／Caddy／OAuthは変更しない。
