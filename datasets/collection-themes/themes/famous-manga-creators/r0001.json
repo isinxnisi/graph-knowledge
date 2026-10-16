@@ -1,0 +1,63 @@
+{
+  "schemaVersion": 1,
+  "id": "famous-manga-creators",
+  "revision": 1,
+  "title": "有名漫画家と代表作品",
+  "purpose": "作品から作者の別作品へ辿れる入口を広げる。代表作の選定は編集判断として説明し、人気順位の事実とは扱わない。",
+  "worlds": [
+    "漫画・アニメ",
+    "美術・文学"
+  ],
+  "relatedThemes": [],
+  "scope": {
+    "include": [
+      "既存の浦沢直樹・手塚治虫周辺を足場に、人物と出典で確認できる作品クレジットを候補化する",
+      "具体的な収集人物・作品数の上限は実行版のレビューで確定する"
+    ],
+    "exclude": [
+      "代表作ランキング・人気度の自動生成",
+      "著者・原作・脚本・作画の推測による同一視"
+    ]
+  },
+  "dataRequirements": [
+    {
+      "kind": "entity",
+      "description": "漫画家・作品の名前、別名、外部ID",
+      "granularity": "人物と作品を分け、シリーズ・巻の範囲を明記"
+    },
+    {
+      "kind": "claim",
+      "description": "資料で明記された人物→作品の制作関係と役割",
+      "granularity": "資料の原語と確認できる刊行物の範囲。未確認の役割は広い関係を保持"
+    },
+    {
+      "kind": "citation",
+      "description": "出典と判断根拠を既存台帳へ残す",
+      "granularity": "資料URL・参照箇所・取得日・原語・同一性判断と保留理由"
+    }
+  ],
+  "sources": [
+    {
+      "name": "Wikidata（取得候補）",
+      "url": "https://www.wikidata.org/",
+      "usage": "外部ID・関係の取得候補。propertyと原資料が表す意味を個別確認し、役割や期間を推測しない。",
+      "termsNote": "取得方式・利用条件・参照原資料の扱いは実行定義のレビュー時に確認する。未確認のため実行adapterは未指定。"
+    }
+  ],
+  "exploration": {
+    "questions": [
+      "この作者の別の作品は？",
+      "同じ作品に関わる他の作り手は？"
+    ],
+    "existingPredicates": [
+      "CONTRIBUTED_TO"
+    ],
+    "modelGaps": [
+      "シリーズと巻・版の構造化は必要性を別途検討"
+    ]
+  },
+  "coverageReferences": [
+    "docs/design/KNOWLEDGE_WORLDS_AND_COVERAGE_PLAN.md（2026-10-16調査基準。網羅的監査ではない）"
+  ],
+  "execution": null
+}

@@ -1,0 +1,65 @@
+{
+  "schemaVersion": 1,
+  "id": "screen-games-music-production",
+  "revision": 1,
+  "title": "映画・ゲーム・音楽の制作の系譜",
+  "purpose": "異なるメディアの制作を一つの意味へ潰さず、作品と作り手を辿る入口を増やす。",
+  "worlds": [
+    "映画・ドラマ",
+    "ゲーム",
+    "音楽",
+    "企業・産業"
+  ],
+  "relatedThemes": [],
+  "scope": {
+    "include": [
+      "公式クレジットが確認できる作品・人物・制作組織",
+      "最初の実行ではメディアまたは対象作品群を限定し、必要ならテーマを分割する"
+    ],
+    "exclude": [
+      "監督・脚本・出演・作曲・演奏等を推測で同一視すること",
+      "未定義の関係やRoleをテーマ承認だけで公開すること"
+    ]
+  },
+  "dataRequirements": [
+    {
+      "kind": "entity",
+      "description": "作品・人物・制作組織",
+      "granularity": "作品と版・リメイク・シリーズ・楽曲とアルバムを区別"
+    },
+    {
+      "kind": "claim",
+      "description": "原資料の役割を伴う制作候補",
+      "granularity": "既存Roleで表現できる部分と新語彙候補を区別"
+    },
+    {
+      "kind": "citation",
+      "description": "出典と判断根拠を既存台帳へ残す",
+      "granularity": "資料URL・参照箇所・取得日・原語・同一性判断と保留理由"
+    }
+  ],
+  "sources": [
+    {
+      "name": "Wikidata（取得候補）",
+      "url": "https://www.wikidata.org/",
+      "usage": "外部ID・関係の取得候補。propertyと原資料が表す意味を個別確認し、役割や期間を推測しない。",
+      "termsNote": "取得方式・利用条件・参照原資料の扱いは実行定義のレビュー時に確認する。未確認のため実行adapterは未指定。"
+    }
+  ],
+  "exploration": {
+    "questions": [
+      "この作品の作り手が手がけた別作品は？",
+      "メディアをまたいだ共通の関係者は？"
+    ],
+    "existingPredicates": [
+      "CONTRIBUTED_TO"
+    ],
+    "modelGaps": [
+      "出演・作曲・演奏・翻案等の個別語彙は別レビュー"
+    ]
+  },
+  "coverageReferences": [
+    "docs/design/KNOWLEDGE_WORLDS_AND_COVERAGE_PLAN.md（2026-10-16調査基準。網羅的監査ではない）"
+  ],
+  "execution": null
+}

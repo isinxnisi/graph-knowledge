@@ -1,0 +1,70 @@
+{
+  "schemaVersion": 1,
+  "id": "nobel-laureates-research",
+  "revision": 1,
+  "title": "ノーベル賞受賞者と研究成果",
+  "purpose": "既存の受賞時所属データから、何を研究し何が評価されたかを知る探索へ広げる。",
+  "worlds": [
+    "科学・発見",
+    "歴史",
+    "発明・技術"
+  ],
+  "relatedThemes": [],
+  "scope": {
+    "include": [
+      "公式受賞者記録、受賞年・カテゴリ、研究成果の識別可能な候補",
+      "成果の説明と独立した理論・論文Entityの必要性をレビューする"
+    ],
+    "exclude": [
+      "受賞時所属を現在所属・所属全期間として扱うこと",
+      "受賞理由本文から未審査の因果関係を大量生成すること"
+    ]
+  },
+  "dataRequirements": [
+    {
+      "kind": "entity",
+      "description": "受賞者、研究機関、研究成果の候補",
+      "granularity": "人・組織・成果・受賞回を混同しない"
+    },
+    {
+      "kind": "model-gap",
+      "description": "受賞と研究成果を結ぶ意味モデル",
+      "granularity": "現行の所属関係だけで代用せず、必要な新関係は別途審査"
+    },
+    {
+      "kind": "citation",
+      "description": "出典と判断根拠を既存台帳へ残す",
+      "granularity": "資料URL・参照箇所・取得日・原語・同一性判断と保留理由"
+    }
+  ],
+  "sources": [
+    {
+      "name": "Nobel Prize公式API（取得候補）",
+      "url": "https://api.nobelprize.org/2.1/",
+      "usage": "受賞者・受賞年・カテゴリ・成果を区別し、受賞時所属と現在所属を混同しない。",
+      "termsNote": "既存スナップショットには2026-10-14の条件確認記録がある。新規取得時の利用条件・成果本文の転載範囲は別途確認する。"
+    },
+    {
+      "name": "Wikidata（取得候補）",
+      "url": "https://www.wikidata.org/",
+      "usage": "外部ID・関係の取得候補。propertyと原資料が表す意味を個別確認し、役割や期間を推測しない。",
+      "termsNote": "取得方式・利用条件・参照原資料の扱いは実行定義のレビュー時に確認する。未確認のため実行adapterは未指定。"
+    }
+  ],
+  "exploration": {
+    "questions": [
+      "この受賞者は何の研究で評価された？",
+      "同じ研究分野の受賞者や所属機関へ辿れる？"
+    ],
+    "existingPredicates": [
+      "AFFILIATED_WITH"
+    ],
+    "modelGaps": [
+      "賞・受賞回・研究成果の型と関係は未確定"
+    ]
+  },
+  "coverageReferences": [
+    "docs/design/KNOWLEDGE_WORLDS_AND_COVERAGE_PLAN.md（2026-10-16調査基準。網羅的監査ではない）"
+  ],
+  "execution": null
+}

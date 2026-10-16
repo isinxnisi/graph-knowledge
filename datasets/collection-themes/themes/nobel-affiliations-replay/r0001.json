@@ -1,0 +1,92 @@
+{
+  "schemaVersion": 1,
+  "id": "nobel-affiliations-replay",
+  "revision": 1,
+  "title": "凍結ノーベル賞所属資料の候補再生成試験",
+  "purpose": "テーマの承認版を既存の台帳・fixture生成へ接続する小さな試験。新規取得や本番追加はしない。",
+  "worlds": [
+    "科学・発見",
+    "歴史"
+  ],
+  "relatedThemes": [
+    "nobel-laureates-research"
+  ],
+  "scope": {
+    "include": [
+      "2026-10-14取得済み公式APIの2ページ（計1028受賞者）のみ",
+      "2025年までの人物受賞者に明記された所属。既存20261011-001を保持した当時の候補の再生成",
+      "受賞者名、所属組織、外部ID、元資料のJSON Pointerと既存の同一性判断"
+    ],
+    "exclude": [
+      "外部通信と新しい資料取得",
+      "受賞理由・研究成果・現在所属・期間・職位の推論",
+      "現在の公開KGへの適用、Entity/Claimの自動受入"
+    ]
+  },
+  "dataRequirements": [
+    {
+      "kind": "claim",
+      "description": "人物→組織の広い関与 AFFILIATED_WITH",
+      "granularity": "人物と組織の組。同じ受賞者の複数原資料参照はCitationで保持。期間・職位を推測しない。"
+    },
+    {
+      "kind": "citation",
+      "description": "公式所属原表記と受賞年・カテゴリ、JSON Pointer",
+      "granularity": "賞と所属記録の参照単位。元の台帳のpending-public-approval状態を維持。"
+    },
+    {
+      "kind": "identity",
+      "description": "既存生成器の明示的な同一人物・組織対応",
+      "granularity": "Wikidata同一IDまたは固定された審査済み対応のみ。曖昧な名前結合を追加しない。"
+    }
+  ],
+  "sources": [
+    {
+      "name": "Nobel Prize API 2.1 凍結資料",
+      "url": "https://api.nobelprize.org/2.1/",
+      "usage": "取得済みJSONと既存のsource.jsonから所属記録だけを再生成する。画像・伝記本文・受賞理由を取り込まない。",
+      "termsNote": "2026-10-14のsource.jsonにCC0-1.0と利用条件確認の記録あり。今回の再生成は新規取得を伴わない。"
+    }
+  ],
+  "exploration": {
+    "questions": [
+      "受賞者と受賞時の所属機関を辿る候補を、承認版と結び付けて確認できるか？"
+    ],
+    "existingPredicates": [
+      "AFFILIATED_WITH"
+    ],
+    "modelGaps": []
+  },
+  "coverageReferences": [
+    "datasets/nobel-affiliations/v1/source.json",
+    "datasets/public-kg/releases/20261014-nobel-001（過去の候補。現在の公開版ではない）"
+  ],
+  "execution": {
+    "adapter": "nobel-affiliations-replay-v1",
+    "codeSha256": "51c7e09fb943c7a62990822cd284fd828c193b59d4796d040fe25cd515a7812b",
+    "inputs": [
+      {
+        "file": "datasets/nobel-affiliations/v1/raw/laureates-0000.json",
+        "sha256": "76649ef3171e269feb9e8274dbb38c8b7dc2acdbd8a01a0ecab3c1b606d524d5"
+      },
+      {
+        "file": "datasets/nobel-affiliations/v1/raw/laureates-1000.json",
+        "sha256": "d2ca79d15f8a969a9439ed325b5248effd3e6ff5194c14e0c043e13154ff65e7"
+      },
+      {
+        "file": "datasets/nobel-affiliations/v1/source.json",
+        "sha256": "a43c5fbd394944f275eeffa607c3e9975bd1a8da3db08560e715a3d568778b3f"
+      },
+      {
+        "file": "datasets/public-kg/releases/20261011-001/data.json",
+        "sha256": "71d8bb6eca810da8eeb491c931b7c821d2aae196078b0f56925707b8aee381cb"
+      },
+      {
+        "file": "datasets/public-kg/releases/20261011-001/manifest.json",
+        "sha256": "25e12ca066755c2005d08c1ec475c92f0937f4f7531aef8c6d1fbc5dd87d5d8b"
+      }
+    ],
+    "maxEntities": 1200,
+    "maxClaims": 1000
+  }
+}

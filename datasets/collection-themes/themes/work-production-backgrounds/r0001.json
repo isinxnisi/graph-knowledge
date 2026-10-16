@@ -1,0 +1,65 @@
+{
+  "schemaVersion": 1,
+  "id": "work-production-backgrounds",
+  "revision": 1,
+  "title": "作品の制作背景と関係者",
+  "purpose": "作品を中心に役割の異なる関係者と制作背景の資料へ進めるようにする。",
+  "worlds": [
+    "漫画・アニメ",
+    "映画・ドラマ",
+    "ゲーム",
+    "音楽"
+  ],
+  "relatedThemes": [],
+  "scope": {
+    "include": [
+      "PLUTO等の既存作品から、公式クレジットで確認できる人物・組織",
+      "資料にあるが未構造化の情報を候補として区別する"
+    ],
+    "exclude": [
+      "Source本文に名前があるだけで制作Claimにすること",
+      "作品同士の翻案・影響を制作関与へ読み替えること"
+    ]
+  },
+  "dataRequirements": [
+    {
+      "kind": "claim",
+      "description": "人物・組織と作品の役割付き制作関係",
+      "granularity": "資料原語・刊行物や版・役割の適用範囲"
+    },
+    {
+      "kind": "citation",
+      "description": "制作背景の発言やクレジットの参照箇所",
+      "granularity": "独立資料数と記録数を区別し、本文の転載を避ける"
+    },
+    {
+      "kind": "citation",
+      "description": "出典と判断根拠を既存台帳へ残す",
+      "granularity": "資料URL・参照箇所・取得日・原語・同一性判断と保留理由"
+    }
+  ],
+  "sources": [
+    {
+      "name": "Wikidata（取得候補）",
+      "url": "https://www.wikidata.org/",
+      "usage": "外部ID・関係の取得候補。propertyと原資料が表す意味を個別確認し、役割や期間を推測しない。",
+      "termsNote": "取得方式・利用条件・参照原資料の扱いは実行定義のレビュー時に確認する。未確認のため実行adapterは未指定。"
+    }
+  ],
+  "exploration": {
+    "questions": [
+      "この作品の制作には誰がどう関わった？",
+      "別作品にも同じ関係者がいる？"
+    ],
+    "existingPredicates": [
+      "CONTRIBUTED_TO"
+    ],
+    "modelGaps": [
+      "映画化・掲載媒体・原作と翻案を表す関係は未確定"
+    ]
+  },
+  "coverageReferences": [
+    "docs/design/KNOWLEDGE_WORLDS_AND_COVERAGE_PLAN.md（2026-10-16調査基準。網羅的監査ではない）"
+  ],
+  "execution": null
+}

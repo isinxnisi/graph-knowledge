@@ -40,6 +40,8 @@
 
 | 現役の設計文書 | 状態・読む場面 |
 | --- | --- |
+| [収集テーマのレビューと実行](design/COLLECTION_THEMES.md)／[候補一覧](../datasets/collection-themes/README.md) | 2026-10-16。知識世界・収集企画・Discovery Model・公開収録状況・ジョブを分離。版/hash承認と既存生成器の隔離再生成。7企画＋1試験は未承認、公開KG変更なし |
+| [知識世界とカバレッジ計画](design/KNOWLEDGE_WORLDS_AND_COVERAGE_PLAN.md) | 企画の作業台。世界は非排他的な編集的入口。DB分類・検索メニュー・収集予定への自動変換はしない |
 | [Discovery Search初期実装](design/DISCOVERY_SEARCH.md) | M3 Issue #4。空欄の一回入口、インライン候補、種別・直接の関係から探す一覧、ページングとGraph復帰。タグ・プリセット・Capsule発見とは区別 |
 | [M3の体験目標・判断経緯](design/M3_DISCOVERY_EXPERIENCE_CONTEXT.md)／[Discovery Home初期実装](design/DISCOVERY_HOME.md) | 2026-10-16。Homeの実在起点・新着・スマホ初期表示・ロゴ帰還とBack。Rich Search・プリセット・Capsule発見等の目標と今回の範囲を区別 |
 | [日英SEO・OGP・ブランドアイコン](design/PUBLIC_DISCOVERY.md) | M2。日英SSR公開ページ、公開KGの概要と出典、対象別OG画像、favicon、検索境界・適用 |

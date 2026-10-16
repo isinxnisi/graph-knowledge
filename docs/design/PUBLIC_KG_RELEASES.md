@@ -4,6 +4,8 @@
 
 ## 領域・生成・由来
 
+2026-10-16追加：[収集テーマのレビューゲート](COLLECTION_THEMES.md)は、このrelease経路の前段で収集企画と実行条件を承認する。テーマ承認・候補生成成功は個別知識の受入／公開承認ではない。テーマID・承認版・実行履歴・候補hashはジョブsidecarへ置き、既存manifest schemaと原資料台帳を保持する。初期adapterの過去候補再生成を、現在版への公開適用と混同しない。
+
 - dataset IDは版更新でも `public-kg` のまま。release IDを別管理し、`baseRelease` が現在版と一致する時だけ適用。初回は `20261011-001` / base=null。
 - 漫画v2＋Event v1（科学v2を含む）の受入済み入力から構成。demo・未受入研究台帳は含めない。新規事実の受入やSource評価は行っていない。
 - Entity/Claim/Source/Citation UUID、外部ID、期間、三typed限定、原表記・locatorは元のまま。各Claimの元dataset/元UUID、入力台帳・manifest・生成物hashをmanifestへ記録。取込由来とClaimを支持するSource/Citationは別。
