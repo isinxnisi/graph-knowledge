@@ -4,6 +4,8 @@
 
 定義・操作・公開との境界は [収集テーマの契約](../../docs/design/COLLECTION_THEMES.md) を参照する。
 
+`famous-manga-creators` の具体化は [初回収集レビュー案](../../docs/design/FAMOUS_MANGA_CREATORS_REVIEW.md)を参照。40中心作家＋9共同制作者・96作品を候補比較し、実資料確認の範囲を区別した。r0002は `docs/research/famous-manga-creators/20261016/r0002.draft.json` にある未登録草稿で、現行r0001の承認状態は変更していない。
+
 | ID | 目的 | 現時点の実行条件 |
 | --- | --- | --- |
 | `famous-manga-creators` | 漫画家と別作品への入口を増やす | 未指定。具体的対象・件数・資料条件のレビューが必要 |

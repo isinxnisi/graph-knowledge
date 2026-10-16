@@ -1,0 +1,883 @@
+{
+  "status": "unapproved-editorial-research-proposal",
+  "date": "2026-10-16",
+  "theme": "famous-manga-creators",
+  "baselineRevision": "5e2a94af-9061-4087-bb7a-045a3c0133f4",
+  "notice": "Research candidates, not an ingest ledger or accepted Claims. checkedWorks confirms only the stated source assessment, not all roles or all editions.",
+  "counts": {
+    "centralCreators": 40,
+    "additionalContributors": 9,
+    "peopleCandidates": 49,
+    "distinctWorkCandidates": 96,
+    "personWorkPairCandidates": 115,
+    "existingPeopleReused": 6,
+    "existingWorksReused": 10,
+    "potentialNewPeople": 43,
+    "potentialNewWorks": 86,
+    "creatorsWithSomeSourceCheck": 21
+  },
+  "creators": [
+    {
+      "reviewId": "M01",
+      "name": "手塚治虫",
+      "editorialEraFocus": "戦後〜1980年代",
+      "works": [
+        "鉄腕アトム",
+        "ブラック・ジャック",
+        "火の鳥（黎明編・COM版）",
+        "アドルフに告ぐ"
+      ],
+      "selectionReason": "既存PLUTO周辺から、SF・医療・歴史へ広げる",
+      "lookupSources": "手塚公式作品解説／NDL",
+      "checkedWorks": [
+        "鉄腕アトム",
+        "ブラック・ジャック",
+        "火の鳥（黎明編・COM版）"
+      ],
+      "evidenceUrls": [
+        "https://tezukaosamu.net/jp/manga/438.html",
+        "https://tezukaosamu.net/jp/manga/403.html"
+      ],
+      "boundary": "火の鳥全シリーズと初期別版を一作品へ自動統合しない",
+      "existingEntityId": "eb0af7e1-caa6-435f-86fb-0591421982b5"
+    },
+    {
+      "reviewId": "M02",
+      "name": "浦沢直樹",
+      "editorialEraFocus": "1980年代〜現代",
+      "works": [
+        "PLUTO",
+        "MONSTER",
+        "20世紀少年",
+        "YAWARA!",
+        "MASTERキートン",
+        "BILLY BAT",
+        "MASTERキートン Reマスター",
+        "パイナップルARMY",
+        "あさドラ！"
+      ],
+      "selectionReason": "既存8作品と異なる制作Roleを足場にする",
+      "lookupSources": "既存公開台帳／小学館／講談社／NDL",
+      "checkedWorks": [
+        "PLUTO",
+        "MONSTER",
+        "20世紀少年",
+        "YAWARA!",
+        "MASTERキートン",
+        "BILLY BAT",
+        "MASTERキートン Reマスター",
+        "パイナップルARMY"
+      ],
+      "evidenceUrls": [],
+      "boundary": "あさドラ！は今回の新規候補。既存クレジットを再投入しない",
+      "existingEntityId": "d900543a-9c11-48c1-be76-1822b756fcc4"
+    },
+    {
+      "reviewId": "M03",
+      "name": "池上遼一",
+      "editorialEraFocus": "1970年代〜現代",
+      "works": [
+        "信長",
+        "サンクチュアリ",
+        "トリリオンゲーム"
+      ],
+      "selectionReason": "工藤かずやから稲垣理一郎へ渡る橋",
+      "lookupSources": "小学館公式／NDL",
+      "checkedWorks": [
+        "信長",
+        "サンクチュアリ",
+        "トリリオンゲーム"
+      ],
+      "evidenceUrls": [
+        "https://www.shogakukan.co.jp/storage/files/article/2024/20240118.pdf",
+        "https://e-comi.shogakukan.co.jp/books/091823610000d0000000"
+      ],
+      "boundary": "史村翔名義を保存。作品名だけで歴史人物の信長と結合しない",
+      "existingEntityId": "710bc8a7-efed-4c2e-a4b4-6c65b0aff695"
+    },
+    {
+      "reviewId": "M04",
+      "name": "藤子・F・不二雄",
+      "editorialEraFocus": "1960〜1980年代",
+      "works": [
+        "ドラえもん",
+        "パーマン",
+        "キテレツ大百科"
+      ],
+      "selectionReason": "児童・日常SFの入口と同作者の別作",
+      "lookupSources": "藤子・F・不二雄ミュージアム／小学館／NDL",
+      "checkedWorks": [
+        "パーマン",
+        "キテレツ大百科"
+      ],
+      "evidenceUrls": [
+        "https://fujiko-museum.com/blog/?p=30458/"
+      ],
+      "boundary": "藤子不二雄の共同名義、FとA、漫画と劇場版を区別。刊行物クレジットは未確認",
+      "existingEntityId": null
+    },
+    {
+      "reviewId": "M05",
+      "name": "藤子不二雄Ⓐ",
+      "editorialEraFocus": "1960〜1980年代",
+      "works": [
+        "忍者ハットリくん",
+        "笑ゥせぇるすまん"
+      ],
+      "selectionReason": "Fとは異なる児童漫画・風刺の世界",
+      "lookupSources": "小学館／中央公論新社／NDL",
+      "checkedWorks": [],
+      "evidenceUrls": [],
+      "boundary": "共同筆名と個人を自動同定しない",
+      "existingEntityId": null
+    },
+    {
+      "reviewId": "M06",
+      "name": "石ノ森章太郎",
+      "editorialEraFocus": "1960〜1970年代",
+      "works": [
+        "サイボーグ009",
+        "仮面ライダー（漫画版）",
+        "佐武と市捕物控"
+      ],
+      "selectionReason": "SF・特撮・時代劇にまたがる作品入口",
+      "lookupSources": "石森プロ／講談社／小学館／NDL",
+      "checkedWorks": [],
+      "evidenceUrls": [],
+      "boundary": "仮面ライダーの漫画・TV・フランチャイズを別対象として同定する",
+      "existingEntityId": null
+    },
+    {
+      "reviewId": "M07",
+      "name": "赤塚不二夫",
+      "editorialEraFocus": "1960年代",
+      "works": [
+        "おそ松くん",
+        "天才バカボン"
+      ],
+      "selectionReason": "ギャグ漫画の入口を作る",
+      "lookupSources": "フジオ・プロ／小学館／講談社／NDL",
+      "checkedWorks": [],
+      "evidenceUrls": [],
+      "boundary": "おそ松さんのアニメをおそ松くんへ合流させない",
+      "existingEntityId": null
+    },
+    {
+      "reviewId": "M08",
+      "name": "水木しげる",
+      "editorialEraFocus": "1960年代〜",
+      "works": [
+        "ゲゲゲの鬼太郎",
+        "のんのんばあとオレ"
+      ],
+      "selectionReason": "妖怪世界と回想漫画を往復する",
+      "lookupSources": "水木プロ／講談社／NDL",
+      "checkedWorks": [],
+      "evidenceUrls": [],
+      "boundary": "墓場鬼太郎等の版・前身とTV版の同一性は要確認",
+      "existingEntityId": null
+    },
+    {
+      "reviewId": "M09",
+      "name": "萩尾望都",
+      "editorialEraFocus": "1970年代〜",
+      "works": [
+        "ポーの一族",
+        "11人いる！"
+      ],
+      "selectionReason": "少女漫画からSFへ、同一作者で興味を横断する",
+      "lookupSources": "小学館flowers／NDL",
+      "checkedWorks": [
+        "ポーの一族",
+        "11人いる！"
+      ],
+      "evidenceUrls": [
+        "https://flowers.shogakukan.co.jp/author/282/"
+      ],
+      "boundary": "ポーの一族の後年の副題付き新作は別候補に広げすぎない",
+      "existingEntityId": null
+    },
+    {
+      "reviewId": "M10",
+      "name": "竹宮惠子",
+      "editorialEraFocus": "1970年代",
+      "works": [
+        "風と木の詩",
+        "地球へ…"
+      ],
+      "selectionReason": "少女漫画とSFを別の入口から辿れる",
+      "lookupSources": "小学館／中央公論新社／NDL",
+      "checkedWorks": [],
+      "evidenceUrls": [],
+      "boundary": "表記の別名は典拠で確認",
+      "existingEntityId": null
+    },
+    {
+      "reviewId": "M11",
+      "name": "大島弓子",
+      "editorialEraFocus": "1970年代〜",
+      "works": [
+        "綿の国星",
+        "グーグーだって猫である"
+      ],
+      "selectionReason": "幻想とコミックエッセイの幅を増やす",
+      "lookupSources": "白泉社／KADOKAWA／NDL",
+      "checkedWorks": [],
+      "evidenceUrls": [],
+      "boundary": "エッセイ漫画と映像化作品を混同しない",
+      "existingEntityId": null
+    },
+    {
+      "reviewId": "M12",
+      "name": "高橋留美子",
+      "editorialEraFocus": "1970〜1990年代",
+      "works": [
+        "うる星やつら",
+        "らんま1/2",
+        "犬夜叉"
+      ],
+      "selectionReason": "恋愛・ギャグ・冒険へ同作者の別作を発見する",
+      "lookupSources": "小学館作者作品一覧／NDL",
+      "checkedWorks": [
+        "うる星やつら",
+        "らんま1/2",
+        "犬夜叉"
+      ],
+      "evidenceUrls": [
+        "https://e-comi.shogakukan.co.jp/authors/36"
+      ],
+      "boundary": "TVアニメの新旧シリーズとは別",
+      "existingEntityId": null
+    },
+    {
+      "reviewId": "M13",
+      "name": "あだち充",
+      "editorialEraFocus": "1980〜2010年代",
+      "works": [
+        "タッチ",
+        "H2",
+        "MIX"
+      ],
+      "selectionReason": "スポーツと恋愛、異なる世代の入口",
+      "lookupSources": "小学館／NDL",
+      "checkedWorks": [],
+      "evidenceUrls": [],
+      "boundary": "作品間の舞台共有を続編Claimへ自動変換しない",
+      "existingEntityId": null
+    },
+    {
+      "reviewId": "M14",
+      "name": "鳥山明",
+      "editorialEraFocus": "1980〜2000年代",
+      "works": [
+        "DRAGON BALL",
+        "Dr.スランプ",
+        "SAND LAND"
+      ],
+      "selectionReason": "大衆的な入口から別のSF・冒険へ",
+      "lookupSources": "集英社／NDL",
+      "checkedWorks": [],
+      "evidenceUrls": [],
+      "boundary": "ゲームのキャラクターデザインは今回の作品範囲外",
+      "existingEntityId": null
+    },
+    {
+      "reviewId": "M15",
+      "name": "尾田栄一郎",
+      "editorialEraFocus": "1990年代〜",
+      "works": [
+        "ONE PIECE"
+      ],
+      "selectionReason": "知名度の高い入口。初回は長編一作品に限定",
+      "lookupSources": "集英社／NDL",
+      "checkedWorks": [],
+      "evidenceUrls": [],
+      "boundary": "短編集WANTED!やアニメ・劇場版の追加は別判断",
+      "existingEntityId": null
+    },
+    {
+      "reviewId": "M16",
+      "name": "岸本斉史",
+      "editorialEraFocus": "1990〜2010年代",
+      "works": [
+        "NARUTO",
+        "サムライ8 八丸伝"
+      ],
+      "selectionReason": "単独制作と原作担当の違いを見る",
+      "lookupSources": "集英社／NDL",
+      "checkedWorks": [
+        "サムライ8 八丸伝"
+      ],
+      "evidenceUrls": [
+        "https://www.shueisha.co.jp/books/items/contents.html?jdcn=08882022882022315501"
+      ],
+      "boundary": "BORUTOの制作体制・時期変更を一括で収録しない",
+      "existingEntityId": null
+    },
+    {
+      "reviewId": "M17",
+      "name": "久保帯人",
+      "editorialEraFocus": "2000〜2020年代",
+      "works": [
+        "BLEACH",
+        "BURN THE WITCH"
+      ],
+      "selectionReason": "既知の長編から別作品へ",
+      "lookupSources": "集英社／NDL",
+      "checkedWorks": [],
+      "evidenceUrls": [],
+      "boundary": "世界観共有から作品間の関係を捏造しない",
+      "existingEntityId": null
+    },
+    {
+      "reviewId": "M18",
+      "name": "井上雄彦",
+      "editorialEraFocus": "1990年代〜",
+      "works": [
+        "SLAM DUNK",
+        "バガボンド",
+        "リアル"
+      ],
+      "selectionReason": "スポーツ・歴史・人間ドラマを横断する",
+      "lookupSources": "集英社／講談社／本人公式／NDL",
+      "checkedWorks": [],
+      "evidenceUrls": [],
+      "boundary": "バガボンドと原作小説は同一作品ではない。原作人物の追加は別途範囲確定",
+      "existingEntityId": null
+    },
+    {
+      "reviewId": "M19",
+      "name": "冨樫義博",
+      "editorialEraFocus": "1990年代〜",
+      "works": [
+        "幽☆遊☆白書",
+        "HUNTER×HUNTER"
+      ],
+      "selectionReason": "大衆的な二入口で作者を介した探索",
+      "lookupSources": "集英社／NDL",
+      "checkedWorks": [],
+      "evidenceUrls": [],
+      "boundary": "休載・刊行状況を今回のClaimにしない",
+      "existingEntityId": null
+    },
+    {
+      "reviewId": "M20",
+      "name": "小畑健",
+      "editorialEraFocus": "1990〜2000年代",
+      "works": [
+        "DEATH NOTE",
+        "ヒカルの碁",
+        "バクマン。"
+      ],
+      "selectionReason": "複数の原作者と組む作家の接点",
+      "lookupSources": "集英社刊行物別書誌／NDL",
+      "checkedWorks": [
+        "DEATH NOTE",
+        "ヒカルの碁",
+        "バクマン。"
+      ],
+      "evidenceUrls": [
+        "https://www.shueisha.co.jp/books/items/contents.html?isbn=978-4-08-873621-1",
+        "https://www.shueisha.co.jp/books/items/contents.html?isbn=978-4-08-872717-2",
+        "https://www.shueisha.co.jp/books/items/contents.html?isbn=978-4-08-874622-7"
+      ],
+      "boundary": "紙版の著者とデジタル版の漫画を無条件に同一Roleへ変換しない",
+      "existingEntityId": null
+    },
+    {
+      "reviewId": "M21",
+      "name": "稲垣理一郎",
+      "editorialEraFocus": "2000〜2020年代",
+      "works": [
+        "アイシールド21",
+        "Dr.STONE",
+        "トリリオンゲーム"
+      ],
+      "selectionReason": "既存池上遼一からスポーツ・科学冒険へ渡る",
+      "lookupSources": "小学館公式発表／集英社／NDL",
+      "checkedWorks": [
+        "アイシールド21",
+        "Dr.STONE",
+        "トリリオンゲーム"
+      ],
+      "evidenceUrls": [
+        "https://www.shogakukan.co.jp/storage/files/article/2024/20240118.pdf",
+        "https://www.shueisha.co.jp/books/items/contents_amp.html?jdcn=08881184881184315501&rf=ak"
+      ],
+      "boundary": "原作は現行7Roleに存在しない。広い関与と原語を保持する案",
+      "existingEntityId": null
+    },
+    {
+      "reviewId": "M22",
+      "name": "Boichi",
+      "editorialEraFocus": "2000〜2010年代",
+      "works": [
+        "Dr.STONE",
+        "ORIGIN"
+      ],
+      "selectionReason": "共同制作と別作品を比較する",
+      "lookupSources": "集英社／講談社／NDL",
+      "checkedWorks": [
+        "Dr.STONE"
+      ],
+      "evidenceUrls": [
+        "https://www.shueisha.co.jp/books/items/contents_amp.html?jdcn=08881184881184315501&rf=ak"
+      ],
+      "boundary": "国籍でなく日本で刊行される漫画を中心とする選定案。ORIGINの個別書誌は未照合",
+      "existingEntityId": null
+    },
+    {
+      "reviewId": "M23",
+      "name": "村田雄介",
+      "editorialEraFocus": "2000〜2010年代",
+      "works": [
+        "アイシールド21",
+        "ワンパンマン（村田雄介版）"
+      ],
+      "selectionReason": "稲垣理一郎とONEの接続点",
+      "lookupSources": "集英社／小学館公式発表／NDL",
+      "checkedWorks": [
+        "アイシールド21",
+        "ワンパンマン（村田雄介版）"
+      ],
+      "evidenceUrls": [
+        "https://www.shueisha.co.jp/books/items/contents.html?jdcn=08873370873370315501",
+        "https://www.shueisha.co.jp/books/items/contents.html?jdcn=08870701870701315501"
+      ],
+      "boundary": "ONE自身のWeb漫画版と村田雄介版を区別する",
+      "existingEntityId": null
+    },
+    {
+      "reviewId": "M24",
+      "name": "ONE",
+      "editorialEraFocus": "2010年代",
+      "works": [
+        "ワンパンマン（村田雄介版）",
+        "モブサイコ100"
+      ],
+      "selectionReason": "共同制作者から本人の別漫画へ",
+      "lookupSources": "集英社／小学館／NDL",
+      "checkedWorks": [
+        "ワンパンマン（村田雄介版）"
+      ],
+      "evidenceUrls": [
+        "https://www.shueisha.co.jp/books/items/contents.html?jdcn=08870701870701315501"
+      ],
+      "boundary": "村田版での原作と本人Web版の制作を同一視しない",
+      "existingEntityId": null
+    },
+    {
+      "reviewId": "M25",
+      "name": "赤坂アカ",
+      "editorialEraFocus": "2010〜2020年代",
+      "works": [
+        "かぐや様は告らせたい",
+        "【推しの子】"
+      ],
+      "selectionReason": "制作の組み方が変わる作品を比較する",
+      "lookupSources": "集英社／NDL",
+      "checkedWorks": [
+        "【推しの子】"
+      ],
+      "evidenceUrls": [
+        "https://www.shueisha.co.jp/books/items/contents.html?isbn=978-4-08-891650-7"
+      ],
+      "boundary": "×表記を新たな共同著者Entityにせず、個人を同定する",
+      "existingEntityId": null
+    },
+    {
+      "reviewId": "M26",
+      "name": "横槍メンゴ",
+      "editorialEraFocus": "2010〜2020年代",
+      "works": [
+        "【推しの子】",
+        "クズの本懐"
+      ],
+      "selectionReason": "共同制作から別出版社の作品へ渡る",
+      "lookupSources": "集英社／スクウェア・エニックス／NDL",
+      "checkedWorks": [
+        "【推しの子】",
+        "クズの本懐"
+      ],
+      "evidenceUrls": [
+        "https://www.shueisha.co.jp/books/items/contents.html?isbn=978-4-08-891650-7",
+        "https://magazine.jp.square-enix.com/top/comics/detail/9784757538870/"
+      ],
+      "boundary": "推しの子のノベライズの原作・絵表記を漫画クレジットへ転用しない",
+      "existingEntityId": null
+    },
+    {
+      "reviewId": "M27",
+      "name": "荒川弘",
+      "editorialEraFocus": "2000〜2020年代",
+      "works": [
+        "鋼の錬金術師",
+        "銀の匙 Silver Spoon",
+        "黄泉のツガイ"
+      ],
+      "selectionReason": "ファンタジーと農業の世界を同作者で行き来する",
+      "lookupSources": "小学館／スクウェア・エニックス／NDL",
+      "checkedWorks": [
+        "鋼の錬金術師",
+        "銀の匙 Silver Spoon",
+        "黄泉のツガイ"
+      ],
+      "evidenceUrls": [
+        "https://magazine.jp.square-enix.com/gangan/campaign/hagaren_yomi_ten/",
+        "https://www.shogakukan.co.jp/st/files/20130123pressrelease.pdf"
+      ],
+      "boundary": "アルスラーン戦記など翻案・原作小説を伴う対象は今回の追加範囲外",
+      "existingEntityId": null
+    },
+    {
+      "reviewId": "M28",
+      "name": "田村由美",
+      "editorialEraFocus": "1990〜2010年代",
+      "works": [
+        "BASARA",
+        "7SEEDS",
+        "ミステリと言う勿れ"
+      ],
+      "selectionReason": "冒険・SF・謎解きへ渡る少女漫画の広い入口",
+      "lookupSources": "小学館flowers／NDL",
+      "checkedWorks": [
+        "BASARA",
+        "7SEEDS",
+        "ミステリと言う勿れ"
+      ],
+      "evidenceUrls": [
+        "https://flowers.shogakukan.co.jp/author/275/"
+      ],
+      "boundary": "作品分類は編集上の説明であり正式taxonomyではない",
+      "existingEntityId": null
+    },
+    {
+      "reviewId": "M29",
+      "name": "矢沢あい",
+      "editorialEraFocus": "1990〜2000年代",
+      "works": [
+        "天使なんかじゃない",
+        "ご近所物語",
+        "NANA"
+      ],
+      "selectionReason": "少女漫画から服飾・音楽への好奇心の入口",
+      "lookupSources": "集英社作者検索／NDL",
+      "checkedWorks": [
+        "天使なんかじゃない",
+        "ご近所物語",
+        "NANA"
+      ],
+      "evidenceUrls": [
+        "https://www.shueisha.co.jp/books/search/search.html?titleauthor=%E7%9F%A2%E6%B2%A2+%E3%81%82%E3%81%84"
+      ],
+      "boundary": "作中の音楽活動を実在の音楽家の関係へ変換しない",
+      "existingEntityId": null
+    },
+    {
+      "reviewId": "M30",
+      "name": "高屋奈月",
+      "editorialEraFocus": "1990〜2000年代",
+      "works": [
+        "フルーツバスケット",
+        "翼を持つ者"
+      ],
+      "selectionReason": "既知の代表作から別作へ",
+      "lookupSources": "白泉社／NDL",
+      "checkedWorks": [
+        "フルーツバスケット",
+        "翼を持つ者"
+      ],
+      "evidenceUrls": [
+        "https://www.hakusensha.co.jp/hbstation/lineup/200701.html"
+      ],
+      "boundary": "原作漫画と新旧アニメの制作情報を区別する",
+      "existingEntityId": null
+    },
+    {
+      "reviewId": "M31",
+      "name": "武内直子",
+      "editorialEraFocus": "1990年代",
+      "works": [
+        "美少女戦士セーラームーン（漫画）",
+        "コードネームはセーラーV"
+      ],
+      "selectionReason": "広く知られた入口と関連する別漫画",
+      "lookupSources": "講談社／NDL",
+      "checkedWorks": [],
+      "evidenceUrls": [],
+      "boundary": "同じキャラクターの登場から続編・原作関係を自動生成しない",
+      "existingEntityId": null
+    },
+    {
+      "reviewId": "M32",
+      "name": "漆原友紀",
+      "editorialEraFocus": "2000年代",
+      "works": [
+        "蟲師",
+        "水域"
+      ],
+      "selectionReason": "民俗的幻想と別の静かな物語へ",
+      "lookupSources": "講談社／NDL",
+      "checkedWorks": [],
+      "evidenceUrls": [],
+      "boundary": "短編集・アニメとの範囲を分ける",
+      "existingEntityId": null
+    },
+    {
+      "reviewId": "M33",
+      "name": "市川春子",
+      "editorialEraFocus": "2010年代",
+      "works": [
+        "宝石の国"
+      ],
+      "selectionReason": "独自の幻想世界への入口",
+      "lookupSources": "講談社／NDL",
+      "checkedWorks": [],
+      "evidenceUrls": [],
+      "boundary": "虫と歌等の短編集は構成作品の粒度が未決のため初回に含めない",
+      "existingEntityId": null
+    },
+    {
+      "reviewId": "M34",
+      "name": "九井諒子",
+      "editorialEraFocus": "2010年代",
+      "works": [
+        "ダンジョン飯"
+      ],
+      "selectionReason": "ファンタジー・食への入口を増やす",
+      "lookupSources": "KADOKAWA／NDL",
+      "checkedWorks": [
+        "ダンジョン飯"
+      ],
+      "evidenceUrls": [
+        "https://www.kadokawa.co.jp/product/301412001073/"
+      ],
+      "boundary": "公式レシピブック・画集・アニメは漫画と別。短編集は初回対象外",
+      "existingEntityId": null
+    },
+    {
+      "reviewId": "M35",
+      "name": "大友克洋",
+      "editorialEraFocus": "1980年代",
+      "works": [
+        "AKIRA",
+        "童夢"
+      ],
+      "selectionReason": "大都市SFと短い長編の別入口",
+      "lookupSources": "講談社／双葉社／NDL",
+      "checkedWorks": [],
+      "evidenceUrls": [],
+      "boundary": "AKIRAの漫画と映画を同じworkへまとめない",
+      "existingEntityId": null
+    },
+    {
+      "reviewId": "M36",
+      "name": "幸村誠",
+      "editorialEraFocus": "2000年代",
+      "works": [
+        "プラネテス",
+        "ヴィンランド・サガ"
+      ],
+      "selectionReason": "SFと歴史漫画へ同作者で渡る",
+      "lookupSources": "講談社／NDL",
+      "checkedWorks": [],
+      "evidenceUrls": [],
+      "boundary": "歴史人物・史実・創作上の設定のClaimは今回対象外",
+      "existingEntityId": null
+    },
+    {
+      "reviewId": "M37",
+      "name": "原哲夫",
+      "editorialEraFocus": "1980〜2000年代",
+      "works": [
+        "北斗の拳",
+        "蒼天の拳"
+      ],
+      "selectionReason": "史村翔／武論尊を介し既存池上群の先へ広げる",
+      "lookupSources": "本人公式／コアミックス／NDL",
+      "checkedWorks": [
+        "北斗の拳",
+        "蒼天の拳"
+      ],
+      "evidenceUrls": [
+        "https://haratetsuo.com/archives/13898"
+      ],
+      "boundary": "本人回想の描いた明示は作画候補。外伝の全制作を本人へ帰属させない",
+      "existingEntityId": null
+    },
+    {
+      "reviewId": "M38",
+      "name": "青山剛昌",
+      "editorialEraFocus": "1980〜1990年代",
+      "works": [
+        "名探偵コナン",
+        "YAIBA",
+        "まじっく快斗"
+      ],
+      "selectionReason": "推理・冒険という認知度の高い入口",
+      "lookupSources": "小学館／NDL",
+      "checkedWorks": [],
+      "evidenceUrls": [],
+      "boundary": "テレビ作品や新アニメ版と別。人物の共演は今回の関係ではない",
+      "existingEntityId": null
+    },
+    {
+      "reviewId": "M39",
+      "name": "荒木飛呂彦",
+      "editorialEraFocus": "1980年代〜",
+      "works": [
+        "ジョジョの奇妙な冒険 第1部 ファントムブラッド",
+        "岸辺露伴は動かない"
+      ],
+      "selectionReason": "長いシリーズの具体的な部と別作品を区別して紹介",
+      "lookupSources": "集英社／NDL",
+      "checkedWorks": [
+        "ジョジョの奇妙な冒険 第1部 ファントムブラッド"
+      ],
+      "evidenceUrls": [
+        "https://www.shueisha.co.jp/books/items/contents.html?isbn=4-08-617784-6"
+      ],
+      "boundary": "ジョジョ全体・部・巻を一つへ統合しない",
+      "existingEntityId": null
+    },
+    {
+      "reviewId": "M40",
+      "name": "松本大洋",
+      "editorialEraFocus": "1990〜2010年代",
+      "works": [
+        "ピンポン",
+        "鉄コン筋クリート",
+        "Sunny"
+      ],
+      "selectionReason": "スポーツ・都市幻想・生活の別入口",
+      "lookupSources": "小学館／NDL",
+      "checkedWorks": [],
+      "evidenceUrls": [],
+      "boundary": "同じ版元やジャンルだけで作者間を結ばない",
+      "existingEntityId": null
+    }
+  ],
+  "additionalContributors": [
+    {
+      "name": "大場つぐみ",
+      "works": [
+        "DEATH NOTE",
+        "バクマン。"
+      ],
+      "reviewNote": "集英社の原作表記。役割の既存変換なし",
+      "existingEntityId": null
+    },
+    {
+      "name": "ほったゆみ",
+      "works": [
+        "ヒカルの碁"
+      ],
+      "reviewNote": "集英社の原作表記。紙版・電子版の原語と刊行物を分ける",
+      "existingEntityId": null
+    },
+    {
+      "name": "武論尊（史村翔名義を含む）",
+      "works": [
+        "サンクチュアリ",
+        "北斗の拳"
+      ],
+      "reviewNote": "新潮社／さくまんが舎で同一人物の別筆名を確認。資料ごとの名義を保存",
+      "existingEntityId": null
+    },
+    {
+      "name": "大久保彰",
+      "works": [
+        "サムライ8 八丸伝"
+      ],
+      "reviewNote": "集英社の作画表記",
+      "existingEntityId": null
+    },
+    {
+      "name": "山田鐘人",
+      "works": [
+        "葬送のフリーレン"
+      ],
+      "reviewNote": "小学館公式の原作表記",
+      "existingEntityId": null
+    },
+    {
+      "name": "アベツカサ",
+      "works": [
+        "葬送のフリーレン"
+      ],
+      "reviewNote": "小学館公式の作画表記",
+      "existingEntityId": null
+    },
+    {
+      "name": "工藤かずや",
+      "works": [
+        "パイナップルARMY",
+        "信長"
+      ],
+      "reviewNote": "既存Entity・既存関係の再利用",
+      "existingEntityId": "a012632c-6fd8-4559-8f38-cc60f9b28b05"
+    },
+    {
+      "name": "長崎尚志",
+      "works": [
+        "PLUTO",
+        "BILLY BAT",
+        "MASTERキートン",
+        "MASTERキートン Reマスター"
+      ],
+      "reviewNote": "既存Entity・既存関係の再利用。20世紀少年の追加Role候補は別レビュー",
+      "existingEntityId": "29e9caea-6c44-4c1f-9abc-f4350003ca3b"
+    },
+    {
+      "name": "勝鹿北星",
+      "works": [
+        "MASTERキートン"
+      ],
+      "reviewNote": "既存Entity・既存関係の再利用",
+      "existingEntityId": "93630265-9c44-4bc8-8e7e-4efc7deef14d"
+    }
+  ],
+  "supplementalWorks": [
+    "葬送のフリーレン"
+  ],
+  "reserveCandidates": [
+    {
+      "name": "吾峠呼世晴",
+      "works": [
+        "鬼滅の刃"
+      ]
+    },
+    {
+      "name": "藤本タツキ",
+      "works": [
+        "チェンソーマン",
+        "ファイアパンチ"
+      ]
+    },
+    {
+      "name": "遠藤達哉",
+      "works": [
+        "SPY×FAMILY",
+        "TISTA"
+      ]
+    },
+    {
+      "name": "芥見下々",
+      "works": [
+        "呪術廻戦"
+      ]
+    }
+  ],
+  "existingWorksReused": [
+    "20世紀少年",
+    "BILLY BAT",
+    "MASTERキートン",
+    "MASTERキートン Reマスター",
+    "MONSTER",
+    "PLUTO",
+    "YAWARA!",
+    "パイナップルARMY",
+    "信長",
+    "鉄腕アトム"
+  ]
+}
