@@ -39,3 +39,4 @@ playwright-report/
 # 収集テーマCLIの排他と未公開候補・実行履歴
 /datasets/collection-themes/.lock
 /.local/collection-jobs/
+/.local/collection-trials/

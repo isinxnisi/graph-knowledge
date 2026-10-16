@@ -1,0 +1,668 @@
+{
+  "id": "Q193300",
+  "lastrevid": 2557061986,
+  "labels": {
+    "nan": {
+      "language": "nan",
+      "value": "Tezuka Osamu"
+    },
+    "zh-hans": {
+      "language": "zh-hans",
+      "value": "手冢治虫"
+    },
+    "zh-hant": {
+      "language": "zh-hant",
+      "value": "手塚治虫"
+    },
+    "zh-hk": {
+      "language": "zh-hk",
+      "value": "手塚治虫"
+    },
+    "zh-cn": {
+      "language": "zh-cn",
+      "value": "手冢治虫"
+    },
+    "zh-sg": {
+      "language": "zh-sg",
+      "value": "手冢治虫"
+    },
+    "zh-tw": {
+      "language": "zh-tw",
+      "value": "手塚治虫"
+    },
+    "pl": {
+      "language": "pl",
+      "value": "Osamu Tezuka"
+    },
+    "be": {
+      "language": "be",
+      "value": "Осаму Тэдзука"
+    },
+    "rup": {
+      "language": "rup",
+      "value": "Osamu Tezuka"
+    },
+    "fr": {
+      "language": "fr",
+      "value": "Osamu Tezuka"
+    },
+    "ko": {
+      "language": "ko",
+      "value": "데즈카 오사무"
+    },
+    "es": {
+      "language": "es",
+      "value": "Osamu Tezuka"
+    },
+    "ms": {
+      "language": "ms",
+      "value": "Osamu Tezuka"
+    },
+    "it": {
+      "language": "it",
+      "value": "Osamu Tezuka"
+    },
+    "de": {
+      "language": "de",
+      "value": "Osamu Tezuka"
+    },
+    "id": {
+      "language": "id",
+      "value": "Osamu Tezuka"
+    },
+    "ja": {
+      "language": "ja",
+      "value": "手塚治虫"
+    },
+    "vi": {
+      "language": "vi",
+      "value": "Tezuka Osamu"
+    },
+    "en": {
+      "language": "en",
+      "value": "Osamu Tezuka"
+    },
+    "yue": {
+      "language": "yue",
+      "value": "手塚治蟲"
+    },
+    "nl": {
+      "language": "nl",
+      "value": "Osamu Tezuka"
+    },
+    "sv": {
+      "language": "sv",
+      "value": "Osamu Tezuka"
+    },
+    "ar": {
+      "language": "ar",
+      "value": "أوسامو تيزوكا"
+    },
+    "pt": {
+      "language": "pt",
+      "value": "Osamu Tezuka"
+    },
+    "eo": {
+      "language": "eo",
+      "value": "Tezuka Osamu"
+    },
+    "sk": {
+      "language": "sk",
+      "value": "Osamu Tezuka"
+    },
+    "ru": {
+      "language": "ru",
+      "value": "Осаму Тэдзука"
+    },
+    "sr-el": {
+      "language": "sr-el",
+      "value": "Osamu Tezuka"
+    },
+    "sr-ec": {
+      "language": "sr-ec",
+      "value": "Осаму Тезука"
+    },
+    "tr": {
+      "language": "tr",
+      "value": "Osamu Tezuka"
+    },
+    "ro": {
+      "language": "ro",
+      "value": "Osamu Tezuka"
+    },
+    "th": {
+      "language": "th",
+      "value": "เทะซึกะ โอะซะมุ"
+    },
+    "ca": {
+      "language": "ca",
+      "value": "Osamu Tezuka"
+    },
+    "fi": {
+      "language": "fi",
+      "value": "Osamu Tezuka"
+    },
+    "uk": {
+      "language": "uk",
+      "value": "Тедзука Осаму"
+    },
+    "la": {
+      "language": "la",
+      "value": "Tezuka Osamu"
+    },
+    "cs": {
+      "language": "cs",
+      "value": "Osamu Tezuka"
+    },
+    "fa": {
+      "language": "fa",
+      "value": "اوسامو تزوکا"
+    },
+    "tl": {
+      "language": "tl",
+      "value": "Osamu Tezuka"
+    },
+    "gv": {
+      "language": "gv",
+      "value": "Tezuka Osamu"
+    },
+    "da": {
+      "language": "da",
+      "value": "Osamu Tezuka"
+    },
+    "zh": {
+      "language": "zh",
+      "value": "手塚治虫"
+    },
+    "en-ca": {
+      "language": "en-ca",
+      "value": "Osamu Tezuka"
+    },
+    "en-gb": {
+      "language": "en-gb",
+      "value": "Osamu Tezuka"
+    },
+    "gl": {
+      "language": "gl",
+      "value": "Osamu Tezuka"
+    },
+    "nb": {
+      "language": "nb",
+      "value": "Osamu Tezuka"
+    },
+    "pt-br": {
+      "language": "pt-br",
+      "value": "Osamu Tezuka"
+    },
+    "sr": {
+      "language": "sr",
+      "value": "Osamu Tezuka"
+    },
+    "lt": {
+      "language": "lt",
+      "value": "Osamu Tezuka"
+    },
+    "hu": {
+      "language": "hu",
+      "value": "Oszamu Tezuka"
+    },
+    "hr": {
+      "language": "hr",
+      "value": "Osamu Tezuka"
+    },
+    "sh": {
+      "language": "sh",
+      "value": "Osamu Tezuka"
+    },
+    "war": {
+      "language": "war",
+      "value": "Osamu Tezuka"
+    },
+    "eu": {
+      "language": "eu",
+      "value": "Osamu Tezuka"
+    },
+    "ceb": {
+      "language": "ceb",
+      "value": "Osamu Tezuka"
+    },
+    "mg": {
+      "language": "mg",
+      "value": "Osamu Tezuka"
+    },
+    "ta": {
+      "language": "ta",
+      "value": "ஒசாமு தெசூகா"
+    },
+    "az": {
+      "language": "az",
+      "value": "Osamu Tezuka"
+    },
+    "lo": {
+      "language": "lo",
+      "value": "ເທະຊຶກະ ໂອະຊະມຸ"
+    },
+    "he": {
+      "language": "he",
+      "value": "אוסמו טזאקו"
+    },
+    "bg": {
+      "language": "bg",
+      "value": "Осаму Тедзука"
+    },
+    "cy": {
+      "language": "cy",
+      "value": "Osamu Tezuka"
+    },
+    "hy": {
+      "language": "hy",
+      "value": "Օսամու Տեձուկա"
+    },
+    "lzh": {
+      "language": "lzh",
+      "value": "手塚治蟲"
+    },
+    "cdo": {
+      "language": "cdo",
+      "value": "Tezuka Osamu"
+    },
+    "ast": {
+      "language": "ast",
+      "value": "Osamu Tezuka"
+    },
+    "arz": {
+      "language": "arz",
+      "value": "اوسامو تيزوكا"
+    },
+    "wuu": {
+      "language": "wuu",
+      "value": "手冢治虫"
+    },
+    "sq": {
+      "language": "sq",
+      "value": "Osamu Tezuka"
+    },
+    "pap": {
+      "language": "pap",
+      "value": "Osamu Tezuka"
+    },
+    "sl": {
+      "language": "sl",
+      "value": "Osamu Tezuka"
+    },
+    "el": {
+      "language": "el",
+      "value": "Οσάμου Τεζούκα"
+    },
+    "ga": {
+      "language": "ga",
+      "value": "Osamu Tezuka"
+    },
+    "nn": {
+      "language": "nn",
+      "value": "Osamu Tezuka"
+    },
+    "mk": {
+      "language": "mk",
+      "value": "Осаму Тезука"
+    },
+    "ur": {
+      "language": "ur",
+      "value": "اسامو تیزوکا"
+    },
+    "io": {
+      "language": "io",
+      "value": "Osamu Tezuka"
+    },
+    "mul": {
+      "language": "mul",
+      "value": "Osamu Tezuka"
+    }
+  },
+  "aliases": {
+    "zh": [
+      {
+        "language": "zh",
+        "value": "手塚治"
+      },
+      {
+        "language": "zh",
+        "value": "手塚治蟲"
+      },
+      {
+        "language": "zh",
+        "value": "手冢治虫"
+      }
+    ],
+    "fr": [
+      {
+        "language": "fr",
+        "value": "Tezuka"
+      },
+      {
+        "language": "fr",
+        "value": "Osamushi Tezuka"
+      }
+    ],
+    "ko": [
+      {
+        "language": "ko",
+        "value": "수총치충"
+      },
+      {
+        "language": "ko",
+        "value": "테즈카 오사무"
+      },
+      {
+        "language": "ko",
+        "value": "데스카 오사무"
+      },
+      {
+        "language": "ko",
+        "value": "데츠카 오사무"
+      }
+    ],
+    "es": [
+      {
+        "language": "es",
+        "value": "Osam Tezka"
+      },
+      {
+        "language": "es",
+        "value": "Tezuka Osamu"
+      }
+    ],
+    "it": [
+      {
+        "language": "it",
+        "value": "Tezuka Osamu"
+      }
+    ],
+    "de": [
+      {
+        "language": "de",
+        "value": "Tezuka Osamu"
+      },
+      {
+        "language": "de",
+        "value": "Tezuka Osamushi"
+      },
+      {
+        "language": "de",
+        "value": "Teduka Osamusi"
+      },
+      {
+        "language": "de",
+        "value": "Teduka Osamu"
+      }
+    ],
+    "id": [
+      {
+        "language": "id",
+        "value": "Ozamu Tezuka"
+      }
+    ],
+    "ja": [
+      {
+        "language": "ja",
+        "value": "手塚治"
+      },
+      {
+        "language": "ja",
+        "value": "マンガの神様"
+      },
+      {
+        "language": "ja",
+        "value": "伯藝院殿覚圓蟲聖大居士"
+      },
+      {
+        "language": "ja",
+        "value": "てづか おさむ"
+      }
+    ],
+    "vi": [
+      {
+        "language": "vi",
+        "value": "Tezuka"
+      },
+      {
+        "language": "vi",
+        "value": "Osamu Tezuka"
+      }
+    ],
+    "nl": [
+      {
+        "language": "nl",
+        "value": "Tezuka Osamu"
+      },
+      {
+        "language": "nl",
+        "value": "O. Tezuka"
+      }
+    ],
+    "sv": [
+      {
+        "language": "sv",
+        "value": "Tezuka Osamu"
+      },
+      {
+        "language": "sv",
+        "value": "Tezuka"
+      }
+    ],
+    "ar": [
+      {
+        "language": "ar",
+        "value": "تيزوكا أوسامو"
+      }
+    ],
+    "ru": [
+      {
+        "language": "ru",
+        "value": "Осаму Тезука"
+      },
+      {
+        "language": "ru",
+        "value": "Осама, Тэдзука"
+      },
+      {
+        "language": "ru",
+        "value": "Osamu Tezuka"
+      },
+      {
+        "language": "ru",
+        "value": "Тэдзуки, Осаму"
+      },
+      {
+        "language": "ru",
+        "value": "Тэдзука"
+      },
+      {
+        "language": "ru",
+        "value": "Тэдзука О."
+      },
+      {
+        "language": "ru",
+        "value": "Осаму Тезуки"
+      },
+      {
+        "language": "ru",
+        "value": "Тэдзука, Осаму"
+      },
+      {
+        "language": "ru",
+        "value": "Тэдзука Осаму"
+      }
+    ],
+    "th": [
+      {
+        "language": "th",
+        "value": "โอซามุ เท็ตซึกะ"
+      },
+      {
+        "language": "th",
+        "value": "เทะซึกะ โอซะมุ"
+      }
+    ],
+    "fi": [
+      {
+        "language": "fi",
+        "value": "Osamu Tetsuka"
+      }
+    ],
+    "uk": [
+      {
+        "language": "uk",
+        "value": "Тедзука"
+      },
+      {
+        "language": "uk",
+        "value": "Осаму Тедзука"
+      }
+    ],
+    "la": [
+      {
+        "language": "la",
+        "value": "Tezuca Osamu"
+      },
+      {
+        "language": "la",
+        "value": "Tesuca Osamus"
+      },
+      {
+        "language": "la",
+        "value": "Osamus Tesuca"
+      }
+    ],
+    "gv": [
+      {
+        "language": "gv",
+        "value": "Osamu Tezuka"
+      }
+    ],
+    "en": [
+      {
+        "language": "en",
+        "value": "Tezuka Osamu"
+      }
+    ],
+    "nb": [
+      {
+        "language": "nb",
+        "value": "Tezuka Osamu"
+      }
+    ],
+    "cs": [
+      {
+        "language": "cs",
+        "value": "Osamu Tetsuka"
+      },
+      {
+        "language": "cs",
+        "value": "Harumushi Tezuka"
+      }
+    ],
+    "sl": [
+      {
+        "language": "sl",
+        "value": "Tezuka, Osamu"
+      }
+    ],
+    "pt": [
+      {
+        "language": "pt",
+        "value": "Tezuka Osamu"
+      }
+    ],
+    "pt-br": [
+      {
+        "language": "pt-br",
+        "value": "Tezuka Osamu"
+      }
+    ]
+  },
+  "claims": {
+    "P31": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P31",
+          "hash": "ad7d38a03cdd40cdc373de0dc4e7b7fcbccb31d9",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 5,
+              "id": "Q5"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q193300$86CFCA0C-8B9D-4B6B-8FA5-1A6B667A1E28",
+        "rank": "normal",
+        "references": [
+          {
+            "hash": "eeb620a6d27562e422e74b300b078b4f5bb3eed9",
+            "snaks": {
+              "P248": [
+                {
+                  "snaktype": "value",
+                  "property": "P248",
+                  "hash": "def9f19d84b65167a2a17ce38364d264c16127fc",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 19938912,
+                      "id": "Q19938912"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ],
+              "P268": [
+                {
+                  "snaktype": "value",
+                  "property": "P268",
+                  "hash": "8fb6881a1133099d6c124e92a882fd8439134fb9",
+                  "datavalue": {
+                    "value": "12567895z",
+                    "type": "string"
+                  },
+                  "datatype": "external-id"
+                }
+              ],
+              "P813": [
+                {
+                  "snaktype": "value",
+                  "property": "P813",
+                  "hash": "d6162a1716489623c6e595e448b17f8dca4fb2e8",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2015-10-10T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P248",
+              "P268",
+              "P813"
+            ]
+          }
+        ]
+      }
+    ],
+    "P50": [],
+    "P110": []
+  }
+}

@@ -1,0 +1,123 @@
+{
+  "id": "Q106575051",
+  "lastrevid": 2552553524,
+  "labels": {
+    "ja": {
+      "language": "ja",
+      "value": "トリリオンゲーム"
+    },
+    "en": {
+      "language": "en",
+      "value": "Trillion Game"
+    },
+    "zh": {
+      "language": "zh",
+      "value": "一兆$遊戲"
+    },
+    "es": {
+      "language": "es",
+      "value": "Trillion Game"
+    },
+    "fr": {
+      "language": "fr",
+      "value": "Trillion Game"
+    },
+    "ko": {
+      "language": "ko",
+      "value": "트릴리온 게임"
+    },
+    "th": {
+      "language": "th",
+      "value": "เกมชีวิตพิชิตล้านล้าน"
+    },
+    "ru": {
+      "language": "ru",
+      "value": "Trillion Game"
+    },
+    "zh-hant": {
+      "language": "zh-hant",
+      "value": "一兆$遊戲"
+    },
+    "de": {
+      "language": "de",
+      "value": "Trillion Game"
+    },
+    "zh-tw": {
+      "language": "zh-tw",
+      "value": "一兆$遊戲"
+    }
+  },
+  "aliases": {
+    "zh": [
+      {
+        "language": "zh",
+        "value": "一兆遊戲"
+      }
+    ]
+  },
+  "claims": {
+    "P31": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P31",
+          "hash": "549c072d6be8a6a43f999d1d0e82640b16c4260e",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 21198342,
+              "id": "Q21198342"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q106575051$BA5192DC-7AB7-4529-A0F7-909F2C662DC8",
+        "rank": "normal"
+      }
+    ],
+    "P50": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P50",
+          "hash": "1f4ed6f817229c3cce729c643f4a456fbbc0d178",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 2602357,
+              "id": "Q2602357"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q106575051$e7181b4f-4a47-9e11-ea8b-4a6dbbf27fc8",
+        "rank": "normal"
+      }
+    ],
+    "P110": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P110",
+          "hash": "b8aa5736b1178f61e0a8d86e131bfb8928657d92",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 1332841,
+              "id": "Q1332841"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q106575051$1100dfc5-4dd0-fd4a-7cbf-feb0171652b3",
+        "rank": "normal"
+      }
+    ]
+  }
+}

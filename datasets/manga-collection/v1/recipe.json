@@ -1,0 +1,152 @@
+{
+  "schemaVersion": 1,
+  "id": "manga-pilot-8-v1",
+  "catalog": "docs/research/famous-manga-creators/20261016/candidates.json",
+  "baseRelease": "datasets/public-kg/releases/20261014-credits-001",
+  "stamp": "2026-10-16T00:00:00Z",
+  "requestPolicy": {
+    "maxAttempts": 64,
+    "attemptsPerRequest": 2,
+    "minIntervalSeconds": 1,
+    "timeoutSeconds": 20,
+    "maxBytes": 4194304
+  },
+  "outputPolicy": {
+    "maxNewEntities": 40,
+    "maxNewClaims": 32,
+    "newClaimVisibility": "hidden"
+  },
+  "people": [
+    {
+      "name": "浦沢直樹",
+      "wikidata": "Q348436"
+    },
+    {
+      "name": "長崎尚志",
+      "wikidata": "Q3514203"
+    },
+    {
+      "name": "手塚治虫",
+      "wikidata": "Q193300"
+    },
+    {
+      "name": "稲垣理一郎",
+      "wikidata": "Q2602357"
+    },
+    {
+      "name": "池上遼一",
+      "wikidata": "Q1332841"
+    },
+    {
+      "name": "Boichi",
+      "wikidata": "Q624839"
+    },
+    {
+      "name": "村田雄介",
+      "wikidata": "Q2602377"
+    },
+    {
+      "name": "小畑健",
+      "wikidata": "Q313703"
+    },
+    {
+      "name": "大場つぐみ",
+      "wikidata": "Q558858"
+    },
+    {
+      "name": "ほったゆみ",
+      "wikidata": "Q263303"
+    },
+    {
+      "name": "藤本タツキ",
+      "wikidata": "Q24864023"
+    },
+    {
+      "name": "遠藤達哉",
+      "wikidata": "Q3981526"
+    }
+  ],
+  "works": [
+    {
+      "name": "PLUTO",
+      "wikidata": "Q1197216",
+      "isbn13": "9784091874313",
+      "ndlMainTitles": [
+        "PLUTO",
+        "Pluto"
+      ],
+      "volumeLabel": "第1巻",
+      "identityNote": "漫画作品のWikidata IDと指定ISBNの第1巻書誌を照合。漫画作品と刊行物は別単位。全巻・全版へクレジットを外挿しない。"
+    },
+    {
+      "name": "トリリオンゲーム",
+      "wikidata": "Q106575051",
+      "isbn13": "9784098610105",
+      "ndlMainTitles": [
+        "トリリオンゲーム"
+      ],
+      "volumeLabel": "第1巻",
+      "identityNote": "漫画作品のWikidata IDと指定ISBNの第1巻書誌を照合。漫画作品と刊行物は別単位。全巻・全版へクレジットを外挿しない。"
+    },
+    {
+      "name": "Dr.STONE",
+      "wikidata": "Q38275959",
+      "isbn13": "9784088811840",
+      "ndlMainTitles": [
+        "Dr.STONE"
+      ],
+      "volumeLabel": "第1巻",
+      "identityNote": "漫画作品のWikidata IDと指定ISBNの第1巻書誌を照合。漫画作品と刊行物は別単位。全巻・全版へクレジットを外挿しない。"
+    },
+    {
+      "name": "アイシールド21",
+      "wikidata": "Q696941",
+      "isbn13": "9784088733708",
+      "ndlMainTitles": [
+        "アイシールド21"
+      ],
+      "volumeLabel": "第1巻",
+      "identityNote": "漫画作品のWikidata IDと指定ISBNの第1巻書誌を照合。漫画作品と刊行物は別単位。全巻・全版へクレジットを外挿しない。"
+    },
+    {
+      "name": "DEATH NOTE",
+      "wikidata": "Q1834",
+      "isbn13": "9784088736211",
+      "ndlMainTitles": [
+        "DEATH NOTE"
+      ],
+      "volumeLabel": "第1巻",
+      "identityNote": "漫画作品のWikidata IDと指定ISBNの第1巻書誌を照合。漫画作品と刊行物は別単位。全巻・全版へクレジットを外挿しない。"
+    },
+    {
+      "name": "ヒカルの碁",
+      "wikidata": "Q582763",
+      "isbn13": "9784088727172",
+      "ndlMainTitles": [
+        "ヒカルの碁"
+      ],
+      "volumeLabel": "第1巻",
+      "identityNote": "漫画作品のWikidata IDと指定ISBNの第1巻書誌を照合。漫画作品と刊行物は別単位。全巻・全版へクレジットを外挿しない。"
+    },
+    {
+      "name": "チェンソーマン",
+      "wikidata": "Q65240543",
+      "isbn13": "9784088817804",
+      "ndlMainTitles": [
+        "チェンソーマン"
+      ],
+      "volumeLabel": "第1巻",
+      "identityNote": "漫画作品のWikidata IDと指定ISBNの第1巻書誌を照合。漫画作品と刊行物は別単位。全巻・全版へクレジットを外挿しない。"
+    },
+    {
+      "name": "SPY×FAMILY",
+      "wikidata": "Q65231576",
+      "isbn13": "9784088820118",
+      "ndlMainTitles": [
+        "SPY×FAMILY"
+      ],
+      "volumeLabel": "第1巻",
+      "identityNote": "漫画作品のWikidata IDと指定ISBNの第1巻書誌を照合。漫画作品と刊行物は別単位。全巻・全版へクレジットを外挿しない。"
+    }
+  ]
+}

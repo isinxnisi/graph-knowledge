@@ -1,0 +1,38 @@
+{
+  "provider": "iss-ndl-opac / 国立国会図書館",
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "terms": "https://ndlsearch.ndl.go.jp/help/api/provider",
+  "records": [
+    {
+      "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I000002788748",
+      "isbn13": [
+        "9784088727172"
+      ],
+      "title": [
+        "ヒカルの碁. 1"
+      ],
+      "mainTitles": [
+        "ヒカルの碁"
+      ],
+      "volume": [
+        "1"
+      ],
+      "edition": [],
+      "responsibilities": [
+        "ほったゆみ 原作",
+        "小畑健 漫画",
+        "梅澤由香里 監修"
+      ],
+      "publisher": [
+        "集英社"
+      ],
+      "language": [
+        "jpn"
+      ],
+      "genre": [
+        "漫画"
+      ]
+    }
+  ],
+  "error": null
+}

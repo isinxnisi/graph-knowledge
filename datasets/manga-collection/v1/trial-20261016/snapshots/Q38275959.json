@@ -1,0 +1,301 @@
+{
+  "id": "Q38275959",
+  "lastrevid": 2556979875,
+  "labels": {
+    "ja": {
+      "language": "ja",
+      "value": "Dr.STONE"
+    },
+    "zh": {
+      "language": "zh",
+      "value": "Dr.STONE 新石紀"
+    },
+    "ko": {
+      "language": "ko",
+      "value": "닥터 스톤"
+    },
+    "en": {
+      "language": "en",
+      "value": "Dr. Stone"
+    },
+    "it": {
+      "language": "it",
+      "value": "Dr. Stone"
+    },
+    "fr": {
+      "language": "fr",
+      "value": "Dr. Stone"
+    },
+    "es": {
+      "language": "es",
+      "value": "Dr. Stone"
+    },
+    "id": {
+      "language": "id",
+      "value": "Dr. Stone"
+    },
+    "th": {
+      "language": "th",
+      "value": "Dr. Stone"
+    },
+    "ru": {
+      "language": "ru",
+      "value": "Dr. Stone"
+    },
+    "vi": {
+      "language": "vi",
+      "value": "Dr.STONE"
+    },
+    "ca": {
+      "language": "ca",
+      "value": "Dr. Stone"
+    },
+    "de": {
+      "language": "de",
+      "value": "Dr. Stone"
+    },
+    "bjn": {
+      "language": "bjn",
+      "value": "Dr. Stone"
+    },
+    "gor": {
+      "language": "gor",
+      "value": "Dr. Stone"
+    },
+    "jv": {
+      "language": "jv",
+      "value": "Dr. Stone"
+    },
+    "ms": {
+      "language": "ms",
+      "value": "Dr. Stone"
+    },
+    "su": {
+      "language": "su",
+      "value": "Dr. Stone"
+    },
+    "pt": {
+      "language": "pt",
+      "value": "Dr. Stone"
+    },
+    "ar": {
+      "language": "ar",
+      "value": "دكتور ستون"
+    },
+    "mn": {
+      "language": "mn",
+      "value": "Dr. Stone"
+    },
+    "tr": {
+      "language": "tr",
+      "value": "Dr. Stone"
+    },
+    "hy": {
+      "language": "hy",
+      "value": "Dr. Stone"
+    },
+    "pl": {
+      "language": "pl",
+      "value": "Dr. Stone"
+    },
+    "fa": {
+      "language": "fa",
+      "value": "دکتر استون"
+    },
+    "ckb": {
+      "language": "ckb",
+      "value": "دکتۆر ستۆن"
+    },
+    "he": {
+      "language": "he",
+      "value": "ד\"ר סטון"
+    },
+    "zh-tw": {
+      "language": "zh-tw",
+      "value": "Dr.STONE 新石紀"
+    },
+    "uk": {
+      "language": "uk",
+      "value": "Dr. Stone"
+    },
+    "bn": {
+      "language": "bn",
+      "value": "ডাঃ স্টোন"
+    },
+    "zh-hk": {
+      "language": "zh-hk",
+      "value": "Dr.STONE"
+    },
+    "zh-mo": {
+      "language": "zh-mo",
+      "value": "Dr.STONE"
+    },
+    "zh-cn": {
+      "language": "zh-cn",
+      "value": "Dr.STONE 石纪元"
+    },
+    "ro": {
+      "language": "ro",
+      "value": "Dr. Stone"
+    },
+    "zh-sg": {
+      "language": "zh-sg",
+      "value": "Dr.STONE 新石纪"
+    },
+    "zh-my": {
+      "language": "zh-my",
+      "value": "Dr.STONE 新石纪"
+    },
+    "da": {
+      "language": "da",
+      "value": "Dr. Stone"
+    },
+    "fi": {
+      "language": "fi",
+      "value": "Dr. Stone"
+    }
+  },
+  "aliases": {
+    "en": [
+      {
+        "language": "en",
+        "value": "Dr Stone"
+      }
+    ],
+    "fr": [
+      {
+        "language": "fr",
+        "value": "Dr.STONE"
+      }
+    ],
+    "mn": [
+      {
+        "language": "mn",
+        "value": "Др. Стоун"
+      }
+    ],
+    "pt": [
+      {
+        "language": "pt",
+        "value": "Dr Stone"
+      },
+      {
+        "language": "pt",
+        "value": "Dr.Stone"
+      }
+    ],
+    "ar": [
+      {
+        "language": "ar",
+        "value": "د. ستون"
+      }
+    ],
+    "ru": [
+      {
+        "language": "ru",
+        "value": "Доктор Стоун"
+      },
+      {
+        "language": "ru",
+        "value": "Доктора Стоуна"
+      }
+    ],
+    "ja": [
+      {
+        "language": "ja",
+        "value": "ドクターストーン"
+      }
+    ],
+    "zh": [
+      {
+        "language": "zh",
+        "value": "新石紀"
+      },
+      {
+        "language": "zh",
+        "value": "石紀元"
+      }
+    ],
+    "zh-tw": [
+      {
+        "language": "zh-tw",
+        "value": "新石紀"
+      },
+      {
+        "language": "zh-tw",
+        "value": "石紀元"
+      }
+    ],
+    "zh-cn": [
+      {
+        "language": "zh-cn",
+        "value": "石纪元"
+      }
+    ]
+  },
+  "claims": {
+    "P31": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P31",
+          "hash": "549c072d6be8a6a43f999d1d0e82640b16c4260e",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 21198342,
+              "id": "Q21198342"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q38275959$4e7297a1-4bc4-52f8-9336-caf9a4d301af",
+        "rank": "normal"
+      }
+    ],
+    "P50": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P50",
+          "hash": "1f4ed6f817229c3cce729c643f4a456fbbc0d178",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 2602357,
+              "id": "Q2602357"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q38275959$638045ca-4122-557d-cd37-8ef9bfa3b9e4",
+        "rank": "normal"
+      }
+    ],
+    "P110": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P110",
+          "hash": "9cd0675da565539906bbfa5de8797777b85bd493",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 624839,
+              "id": "Q624839"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q38275959$14fd4b6b-4f8f-102e-6f4c-8de3b0b01a6b",
+        "rank": "normal"
+      }
+    ]
+  }
+}

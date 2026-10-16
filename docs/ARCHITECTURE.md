@@ -1,5 +1,7 @@
 # 現行技術設計
 
+2026-10-16、漫画収集は44中心作家＋9共同制作者・102作品の企画範囲を合意。[新規adapter](design/MANGA_COLLECTION_ADAPTER.md)を既存ゲートへ接続し、Wikidata／NDLの8作品を隔離検証した。実テーマr0002はコード・入力hashと実行上限を固定して未承認登録。個別知識の受入・公開KG更新は行わず、収集企画の合意を実行承認に置き換えない。
+
 2026-10-16、[収集テーマCLI](design/COLLECTION_THEMES.md)を開発側の管理経路として追加。Git管理の定義revisionと内容hashへの人間承認を照合し、固定adapter・固定入力の候補生成だけを実行する。生成物・試行履歴はGit外のジョブディレクトリに置く。既存のPython台帳／fixture生成と `public:validate` を再利用し、テーマ由来はsidecarへ記録する。Neo4j／会員PG／Web API／release manifest schemaは変更しない。収集承認・知識受入・公開適用は独立した境界とする。
 
 2026-10-16、[Discovery Search初期実装](design/DISCOVERY_SEARCH.md)は既存のキーワード必須検索APIを保持し、空欄・種別・直接の関係・revision付きページングを `/api/discovery/entities` へ追加する。公開KGのread-only取得だけで、会員PGやデータモデルを変更しない。検索条件はGraphの関係条件と区別する。

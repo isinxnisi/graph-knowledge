@@ -1,19 +1,19 @@
 {
-  "status": "unapproved-editorial-research-proposal",
+  "status": "editorial-scope-agreed-execution-unapproved",
   "date": "2026-10-16",
   "theme": "famous-manga-creators",
   "baselineRevision": "5e2a94af-9061-4087-bb7a-045a3c0133f4",
   "notice": "Research candidates, not an ingest ledger or accepted Claims. checkedWorks confirms only the stated source assessment, not all roles or all editions.",
   "counts": {
-    "centralCreators": 40,
+    "centralCreators": 44,
     "additionalContributors": 9,
-    "peopleCandidates": 49,
-    "distinctWorkCandidates": 96,
-    "personWorkPairCandidates": 115,
+    "peopleCandidates": 53,
+    "distinctWorkCandidates": 102,
+    "personWorkPairCandidates": 121,
     "existingPeopleReused": 6,
     "existingWorksReused": 10,
-    "potentialNewPeople": 43,
-    "potentialNewWorks": 86,
+    "potentialNewPeople": 47,
+    "potentialNewWorks": 92,
     "creatorsWithSomeSourceCheck": 21
   },
   "creators": [
@@ -404,7 +404,7 @@
         "https://www.shogakukan.co.jp/storage/files/article/2024/20240118.pdf",
         "https://www.shueisha.co.jp/books/items/contents_amp.html?jdcn=08881184881184315501&rf=ak"
       ],
-      "boundary": "原作は現行7Roleに存在しない。広い関与と原語を保持する案",
+      "boundary": "原作は現行7Roleに存在しない。原語を台帳に残して意味確認まで保留。原作由来だけを広い制作関与へ変換しない",
       "existingEntityId": null
     },
     {
@@ -755,6 +755,64 @@
       "evidenceUrls": [],
       "boundary": "同じ版元やジャンルだけで作者間を結ばない",
       "existingEntityId": null
+    },
+    {
+      "reviewId": "M41",
+      "name": "吾峠呼世晴",
+      "editorialEraFocus": "2010年代〜",
+      "works": [
+        "鬼滅の刃"
+      ],
+      "selectionReason": "ユーザー採用：現代の著名作品への入口を広げ、既知作品から作者と別作品へ進む",
+      "lookupSources": "集英社／NDL／Wikidata",
+      "checkedWorks": [],
+      "evidenceUrls": [],
+      "boundary": "漫画版・小説・映像化作品を区別する。具体クレジットは実資料から収集して審査する",
+      "existingEntityId": null
+    },
+    {
+      "reviewId": "M42",
+      "name": "藤本タツキ",
+      "editorialEraFocus": "2010年代〜",
+      "works": [
+        "チェンソーマン",
+        "ファイアパンチ"
+      ],
+      "selectionReason": "ユーザー採用：現代の著名作品への入口を広げ、既知作品から作者と別作品へ進む",
+      "lookupSources": "集英社／NDL／Wikidata",
+      "checkedWorks": [],
+      "evidenceUrls": [],
+      "boundary": "漫画版・小説・映像化作品を区別する。具体クレジットは実資料から収集して審査する",
+      "existingEntityId": null
+    },
+    {
+      "reviewId": "M43",
+      "name": "遠藤達哉",
+      "editorialEraFocus": "2010年代〜",
+      "works": [
+        "SPY×FAMILY",
+        "TISTA"
+      ],
+      "selectionReason": "ユーザー採用：現代の著名作品への入口を広げ、既知作品から作者と別作品へ進む",
+      "lookupSources": "集英社／NDL／Wikidata",
+      "checkedWorks": [],
+      "evidenceUrls": [],
+      "boundary": "漫画版・小説・映像化作品を区別する。具体クレジットは実資料から収集して審査する",
+      "existingEntityId": null
+    },
+    {
+      "reviewId": "M44",
+      "name": "芥見下々",
+      "editorialEraFocus": "2010年代〜",
+      "works": [
+        "呪術廻戦"
+      ],
+      "selectionReason": "ユーザー採用：現代の著名作品への入口を広げ、既知作品から作者と別作品へ進む",
+      "lookupSources": "集英社／NDL／Wikidata",
+      "checkedWorks": [],
+      "evidenceUrls": [],
+      "boundary": "漫画版・小説・映像化作品を区別する。具体クレジットは実資料から収集して審査する",
+      "existingEntityId": null
     }
   ],
   "additionalContributors": [
@@ -840,34 +898,6 @@
   "supplementalWorks": [
     "葬送のフリーレン"
   ],
-  "reserveCandidates": [
-    {
-      "name": "吾峠呼世晴",
-      "works": [
-        "鬼滅の刃"
-      ]
-    },
-    {
-      "name": "藤本タツキ",
-      "works": [
-        "チェンソーマン",
-        "ファイアパンチ"
-      ]
-    },
-    {
-      "name": "遠藤達哉",
-      "works": [
-        "SPY×FAMILY",
-        "TISTA"
-      ]
-    },
-    {
-      "name": "芥見下々",
-      "works": [
-        "呪術廻戦"
-      ]
-    }
-  ],
   "existingWorksReused": [
     "20世紀少年",
     "BILLY BAT",
@@ -879,5 +909,6 @@
     "パイナップルARMY",
     "信長",
     "鉄腕アトム"
-  ]
+  ],
+  "scopeDecision": "2026-10-16：ユーザーが中心44名＋共同制作者9名・102作品の基本候補を採用。revision/hash承認・個別知識受入は別判断。"
 }

@@ -1,0 +1,273 @@
+{
+  "id": "Q582763",
+  "lastrevid": 2555667528,
+  "labels": {
+    "hu": {
+      "language": "hu",
+      "value": "Hikaru no go"
+    },
+    "ar": {
+      "language": "ar",
+      "value": "هيكارو نو غو"
+    },
+    "ca": {
+      "language": "ca",
+      "value": "Hikaru no Go"
+    },
+    "cs": {
+      "language": "cs",
+      "value": "Hikaru no go"
+    },
+    "de": {
+      "language": "de",
+      "value": "Hikaru no Go"
+    },
+    "en": {
+      "language": "en",
+      "value": "Hikaru no Go"
+    },
+    "es": {
+      "language": "es",
+      "value": "Hikaru no Go"
+    },
+    "fi": {
+      "language": "fi",
+      "value": "Hikaru no go"
+    },
+    "fr": {
+      "language": "fr",
+      "value": "Hikaru no go"
+    },
+    "he": {
+      "language": "he",
+      "value": "היקארו נו גו"
+    },
+    "id": {
+      "language": "id",
+      "value": "Hikaru's Go"
+    },
+    "it": {
+      "language": "it",
+      "value": "Hikaru no go"
+    },
+    "ja": {
+      "language": "ja",
+      "value": "ヒカルの碁"
+    },
+    "ko": {
+      "language": "ko",
+      "value": "고스트 바둑왕"
+    },
+    "ms": {
+      "language": "ms",
+      "value": "Hikaru no Go"
+    },
+    "nl": {
+      "language": "nl",
+      "value": "Hikaru no go"
+    },
+    "pl": {
+      "language": "pl",
+      "value": "Hikaru no go"
+    },
+    "pt": {
+      "language": "pt",
+      "value": "Hikaru no Go"
+    },
+    "ru": {
+      "language": "ru",
+      "value": "Hikaru no Go"
+    },
+    "sv": {
+      "language": "sv",
+      "value": "Hikaru no Go"
+    },
+    "th": {
+      "language": "th",
+      "value": "ฮิคารุเซียนโกะ"
+    },
+    "tl": {
+      "language": "tl",
+      "value": "Hikaru no Go"
+    },
+    "vi": {
+      "language": "vi",
+      "value": "Hikaru - Kì thủ cờ vây"
+    },
+    "zh": {
+      "language": "zh",
+      "value": "棋魂"
+    },
+    "nan": {
+      "language": "nan",
+      "value": "Hikaru no Go"
+    },
+    "uk": {
+      "language": "uk",
+      "value": "Hikaru no Go"
+    },
+    "zh-hant": {
+      "language": "zh-hant",
+      "value": "棋魂"
+    },
+    "tr": {
+      "language": "tr",
+      "value": "Hikaru no Go"
+    },
+    "zh-sg": {
+      "language": "zh-sg",
+      "value": "棋灵王"
+    },
+    "szy": {
+      "language": "szy",
+      "value": "ci-hun"
+    },
+    "uz": {
+      "language": "uz",
+      "value": "Hikaru no Go"
+    },
+    "lzh": {
+      "language": "lzh",
+      "value": "棋靈王"
+    }
+  },
+  "aliases": {
+    "en": [
+      {
+        "language": "en",
+        "value": "Hikaru's Go"
+      },
+      {
+        "language": "en",
+        "value": "HnG"
+      }
+    ],
+    "zh": [
+      {
+        "language": "zh",
+        "value": "棋靈王"
+      },
+      {
+        "language": "zh",
+        "value": "棋魂·光之棋"
+      },
+      {
+        "language": "zh",
+        "value": "光的圍棋"
+      },
+      {
+        "language": "zh",
+        "value": "光之棋"
+      }
+    ],
+    "zh-hant": [
+      {
+        "language": "zh-hant",
+        "value": "棋靈王"
+      },
+      {
+        "language": "zh-hant",
+        "value": "光的圍棋"
+      },
+      {
+        "language": "zh-hant",
+        "value": "光之棋"
+      },
+      {
+        "language": "zh-hant",
+        "value": "棋魂·光之棋"
+      }
+    ]
+  },
+  "claims": {
+    "P31": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P31",
+          "hash": "549c072d6be8a6a43f999d1d0e82640b16c4260e",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 21198342,
+              "id": "Q21198342"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q582763$133DB1D4-139E-4740-90DB-F77EDDD85ADD",
+        "rank": "normal"
+      }
+    ],
+    "P50": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P50",
+          "hash": "a5ca31e957c860eac370ec2f88972278f92db8de",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 263303,
+              "id": "Q263303"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q582763$06DE7F4F-D7EA-4946-B31D-7CDE6A18E2F4",
+        "rank": "normal",
+        "references": [
+          {
+            "hash": "d4bd87b862b12d99d26e86472d44f26858dee639",
+            "snaks": {
+              "P143": [
+                {
+                  "snaktype": "value",
+                  "property": "P143",
+                  "hash": "f30cbd35620c4ea6d0633aaf0210a8916130469b",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 8447,
+                      "id": "Q8447"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P143"
+            ]
+          }
+        ]
+      }
+    ],
+    "P110": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P110",
+          "hash": "e358be57d74bb11adad4110f08cd1804b714787d",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 313703,
+              "id": "Q313703"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q582763$82c297e4-42a4-29ed-4ccb-fc806f38bbae",
+        "rank": "normal"
+      }
+    ]
+  }
+}

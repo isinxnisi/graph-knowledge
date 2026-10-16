@@ -1,0 +1,284 @@
+{
+  "id": "Q24864023",
+  "lastrevid": 2536411399,
+  "labels": {
+    "ja": {
+      "language": "ja",
+      "value": "藤本タツキ"
+    },
+    "zh": {
+      "language": "zh",
+      "value": "藤本樹"
+    },
+    "en": {
+      "language": "en",
+      "value": "Tatsuki Fujimoto"
+    },
+    "es": {
+      "language": "es",
+      "value": "Tatsuki Fujimoto"
+    },
+    "ast": {
+      "language": "ast",
+      "value": "Tatsuki Fujimoto"
+    },
+    "id": {
+      "language": "id",
+      "value": "Tatsuki Fujimoto"
+    },
+    "fr": {
+      "language": "fr",
+      "value": "Tatsuki Fujimoto"
+    },
+    "zh-hk": {
+      "language": "zh-hk",
+      "value": "藤本樹"
+    },
+    "zh-hant": {
+      "language": "zh-hant",
+      "value": "藤本樹"
+    },
+    "it": {
+      "language": "it",
+      "value": "Tatsuki Fujimoto"
+    },
+    "zh-tw": {
+      "language": "zh-tw",
+      "value": "藤本樹"
+    },
+    "pl": {
+      "language": "pl",
+      "value": "Tatsuki Fujimoto"
+    },
+    "ar": {
+      "language": "ar",
+      "value": "تاتسوكي فوجيموتو"
+    },
+    "ko": {
+      "language": "ko",
+      "value": "후지모토 타츠키"
+    },
+    "sq": {
+      "language": "sq",
+      "value": "Tatsuki Fujimoto"
+    },
+    "ru": {
+      "language": "ru",
+      "value": "Тацуки Фудзимото"
+    },
+    "vi": {
+      "language": "vi",
+      "value": "Fujimoto Tatsuki"
+    },
+    "ca": {
+      "language": "ca",
+      "value": "Tatsuki Fujimoto"
+    },
+    "ckb": {
+      "language": "ckb",
+      "value": "تاتسووکی فوجیمۆتۆ"
+    },
+    "uk": {
+      "language": "uk",
+      "value": "Тацукі Фудзімото"
+    },
+    "fa": {
+      "language": "fa",
+      "value": "تاتسوکی فوجیموتو"
+    },
+    "be-tarask": {
+      "language": "be-tarask",
+      "value": "Тацукі Фудзімота"
+    },
+    "tr": {
+      "language": "tr",
+      "value": "Tatsuki Fujimoto"
+    },
+    "sr": {
+      "language": "sr",
+      "value": "Тацуки Фуџимото"
+    },
+    "cs": {
+      "language": "cs",
+      "value": "Tatsuki Fujimoto"
+    },
+    "az": {
+      "language": "az",
+      "value": "Tatsuki Fucimoto"
+    },
+    "mul": {
+      "language": "mul",
+      "value": "Tatsuki Fujimoto"
+    },
+    "pt": {
+      "language": "pt",
+      "value": "Tatsuki Fujimoto"
+    },
+    "pt-br": {
+      "language": "pt-br",
+      "value": "Tatsuki Fujimoto"
+    },
+    "de": {
+      "language": "de",
+      "value": "Tatsuki Fujimoto"
+    },
+    "el": {
+      "language": "el",
+      "value": "Τατσούκι Φουτζιμότο"
+    },
+    "hi": {
+      "language": "hi",
+      "value": "तात्सुकी फुजीमोतो"
+    },
+    "hu": {
+      "language": "hu",
+      "value": "Fujimoto Tatsuki"
+    },
+    "he": {
+      "language": "he",
+      "value": "טאצוקי פוג'ימוטו"
+    },
+    "ka": {
+      "language": "ka",
+      "value": "ტაცუკი ფუჯიმოტო"
+    }
+  },
+  "aliases": {
+    "en": [
+      {
+        "language": "en",
+        "value": "Fujimoto Tatsuki"
+      },
+      {
+        "language": "en",
+        "value": "Nagayama Koharu"
+      }
+    ],
+    "fr": [
+      {
+        "language": "fr",
+        "value": "Fujimoto Tatsuki"
+      }
+    ],
+    "ru": [
+      {
+        "language": "ru",
+        "value": "Кохару Нагаяма"
+      },
+      {
+        "language": "ru",
+        "value": "Фудзимото, Тацуки"
+      }
+    ],
+    "uk": [
+      {
+        "language": "uk",
+        "value": "Фудзімото Тацукі"
+      }
+    ],
+    "ja": [
+      {
+        "language": "ja",
+        "value": "藤本 タツキ"
+      }
+    ],
+    "cs": [
+      {
+        "language": "cs",
+        "value": "Tacuki Fudžimoto"
+      },
+      {
+        "language": "cs",
+        "value": "タツキ 藤本"
+      },
+      {
+        "language": "cs",
+        "value": "タツキ フジモト"
+      }
+    ]
+  },
+  "claims": {
+    "P31": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P31",
+          "hash": "ad7d38a03cdd40cdc373de0dc4e7b7fcbccb31d9",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 5,
+              "id": "Q5"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q24864023$BB323464-2C03-4168-A3FF-E3D630623945",
+        "rank": "normal",
+        "references": [
+          {
+            "hash": "2845e2791ddfe13eb5dcc58c42f156024ad1a67f",
+            "snaks": {
+              "P248": [
+                {
+                  "snaktype": "value",
+                  "property": "P248",
+                  "hash": "45037a2d1d89deebcdfc5840e9adbaa4b64cebc6",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 50358336,
+                      "id": "Q50358336"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ],
+              "P813": [
+                {
+                  "snaktype": "value",
+                  "property": "P813",
+                  "hash": "7ba162ea84215e1bac99e9275cfa3107b6b3afc3",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2024-05-18T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ],
+              "P950": [
+                {
+                  "snaktype": "value",
+                  "property": "P950",
+                  "hash": "5ccff7b0e446a0fc5d1c1a96e8102761fc0792ac",
+                  "datavalue": {
+                    "value": "XX6035219",
+                    "type": "string"
+                  },
+                  "datatype": "external-id"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P248",
+              "P813",
+              "P950"
+            ]
+          }
+        ]
+      }
+    ],
+    "P50": [],
+    "P110": []
+  }
+}

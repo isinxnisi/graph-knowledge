@@ -1,0 +1,485 @@
+{
+  "id": "Q1834",
+  "lastrevid": 2556978475,
+  "labels": {
+    "it": {
+      "language": "it",
+      "value": "Death Note"
+    },
+    "en": {
+      "language": "en",
+      "value": "Death Note"
+    },
+    "fr": {
+      "language": "fr",
+      "value": "Death Note"
+    },
+    "en-ca": {
+      "language": "en-ca",
+      "value": "Death Note"
+    },
+    "en-gb": {
+      "language": "en-gb",
+      "value": "Death Note"
+    },
+    "eo": {
+      "language": "eo",
+      "value": "Kajero de Morto"
+    },
+    "es": {
+      "language": "es",
+      "value": "Death Note"
+    },
+    "ang": {
+      "language": "ang",
+      "value": "Death Note"
+    },
+    "ar": {
+      "language": "ar",
+      "value": "مذكرة الموت"
+    },
+    "ast": {
+      "language": "ast",
+      "value": "Death Note"
+    },
+    "bg": {
+      "language": "bg",
+      "value": "Death Note"
+    },
+    "bn": {
+      "language": "bn",
+      "value": "ডেথ নোট"
+    },
+    "br": {
+      "language": "br",
+      "value": "Death Note"
+    },
+    "ca": {
+      "language": "ca",
+      "value": "Death Note"
+    },
+    "cs": {
+      "language": "cs",
+      "value": "Death Note"
+    },
+    "da": {
+      "language": "da",
+      "value": "Death Note"
+    },
+    "de": {
+      "language": "de",
+      "value": "Death Note"
+    },
+    "el": {
+      "language": "el",
+      "value": "Death Note"
+    },
+    "et": {
+      "language": "et",
+      "value": "Death Note"
+    },
+    "fa": {
+      "language": "fa",
+      "value": "دفتر مرگ"
+    },
+    "fi": {
+      "language": "fi",
+      "value": "Death Note"
+    },
+    "gl": {
+      "language": "gl",
+      "value": "Death Note"
+    },
+    "he": {
+      "language": "he",
+      "value": "מחברת המוות"
+    },
+    "hr": {
+      "language": "hr",
+      "value": "Death Note"
+    },
+    "hu": {
+      "language": "hu",
+      "value": "A halállista"
+    },
+    "id": {
+      "language": "id",
+      "value": "Death Note"
+    },
+    "is": {
+      "language": "is",
+      "value": "Death Note"
+    },
+    "ja": {
+      "language": "ja",
+      "value": "DEATH NOTE"
+    },
+    "kab": {
+      "language": "kab",
+      "value": "Death Note"
+    },
+    "ko": {
+      "language": "ko",
+      "value": "데스노트"
+    },
+    "la": {
+      "language": "la",
+      "value": "Death Note"
+    },
+    "lt": {
+      "language": "lt",
+      "value": "Death Note"
+    },
+    "lv": {
+      "language": "lv",
+      "value": "Death Note"
+    },
+    "mk": {
+      "language": "mk",
+      "value": "Тетратка на смртта"
+    },
+    "ms": {
+      "language": "ms",
+      "value": "Death Note"
+    },
+    "nl": {
+      "language": "nl",
+      "value": "Death Note"
+    },
+    "pl": {
+      "language": "pl",
+      "value": "Death Note"
+    },
+    "pt": {
+      "language": "pt",
+      "value": "Death Note"
+    },
+    "pt-br": {
+      "language": "pt-br",
+      "value": "Death Note"
+    },
+    "ro": {
+      "language": "ro",
+      "value": "Death Note"
+    },
+    "ru": {
+      "language": "ru",
+      "value": "Тетрадь смерти"
+    },
+    "scn": {
+      "language": "scn",
+      "value": "Death note"
+    },
+    "sh": {
+      "language": "sh",
+      "value": "Death Note"
+    },
+    "sk": {
+      "language": "sk",
+      "value": "Death Note – Desu Noto"
+    },
+    "sq": {
+      "language": "sq",
+      "value": "Death Note"
+    },
+    "su": {
+      "language": "su",
+      "value": "Death Note"
+    },
+    "sv": {
+      "language": "sv",
+      "value": "Death Note"
+    },
+    "th": {
+      "language": "th",
+      "value": "เดธโน้ต"
+    },
+    "tl": {
+      "language": "tl",
+      "value": "Death Note"
+    },
+    "tr": {
+      "language": "tr",
+      "value": "Death Note"
+    },
+    "uk": {
+      "language": "uk",
+      "value": "Death Note"
+    },
+    "vi": {
+      "language": "vi",
+      "value": "Death Note"
+    },
+    "zh": {
+      "language": "zh",
+      "value": "死亡筆記"
+    },
+    "yue": {
+      "language": "yue",
+      "value": "死亡筆記"
+    },
+    "oc": {
+      "language": "oc",
+      "value": "Death Note"
+    },
+    "nb": {
+      "language": "nb",
+      "value": "Death Note"
+    },
+    "sc": {
+      "language": "sc",
+      "value": "Death Note"
+    },
+    "hy": {
+      "language": "hy",
+      "value": "Մահվան տետրը"
+    },
+    "az": {
+      "language": "az",
+      "value": "Ölüm dəftəri"
+    },
+    "be": {
+      "language": "be",
+      "value": "Сшытак смерці"
+    },
+    "ckb": {
+      "language": "ckb",
+      "value": "پەرتووکی مەرگ"
+    },
+    "ka": {
+      "language": "ka",
+      "value": "სიკვდილის რვეული"
+    },
+    "nan": {
+      "language": "nan",
+      "value": "Death Note"
+    },
+    "sco": {
+      "language": "sco",
+      "value": "Death Note"
+    },
+    "sl": {
+      "language": "sl",
+      "value": "Death Note"
+    },
+    "ku": {
+      "language": "ku",
+      "value": "Death Note"
+    },
+    "sr": {
+      "language": "sr",
+      "value": "Knjiga smrti"
+    },
+    "ta": {
+      "language": "ta",
+      "value": "மரணக்குறிப்பு"
+    },
+    "ky": {
+      "language": "ky",
+      "value": "Ажал дептери"
+    },
+    "lb": {
+      "language": "lb",
+      "value": "Death Note"
+    },
+    "hi": {
+      "language": "hi",
+      "value": "डेथ नोट"
+    },
+    "be-tarask": {
+      "language": "be-tarask",
+      "value": "Сшытак сьмерці"
+    },
+    "ug": {
+      "language": "ug",
+      "value": "ئەجەل پۈتۈكى"
+    },
+    "ug-arab": {
+      "language": "ug-arab",
+      "value": "ئەجەل پۈتۈكى"
+    },
+    "de-ch": {
+      "language": "de-ch",
+      "value": "Death Note"
+    },
+    "mt": {
+      "language": "mt",
+      "value": "Death Note"
+    },
+    "wuu": {
+      "language": "wuu",
+      "value": "死亡笔记"
+    },
+    "ga": {
+      "language": "ga",
+      "value": "Death Note"
+    },
+    "zh-hant": {
+      "language": "zh-hant",
+      "value": "死亡筆記"
+    },
+    "ce": {
+      "language": "ce",
+      "value": "Iожаллин тептар"
+    },
+    "ary": {
+      "language": "ary",
+      "value": "ديث نوط"
+    },
+    "uz": {
+      "language": "uz",
+      "value": "Death Note"
+    },
+    "tg": {
+      "language": "tg",
+      "value": "Дафтари марг"
+    },
+    "lld": {
+      "language": "lld",
+      "value": "Death Note"
+    },
+    "tt": {
+      "language": "tt",
+      "value": "Үлем дәфтәре"
+    },
+    "nn": {
+      "language": "nn",
+      "value": "Death Note"
+    },
+    "eu": {
+      "language": "eu",
+      "value": "Death Note"
+    },
+    "lzh": {
+      "language": "lzh",
+      "value": "死亡筆記"
+    },
+    "bcl": {
+      "language": "bcl",
+      "value": "Death Note"
+    },
+    "wa": {
+      "language": "wa",
+      "value": "Cayé del Moirt (shonene)"
+    },
+    "ne": {
+      "language": "ne",
+      "value": "डेथ नोट"
+    },
+    "zh-sg": {
+      "language": "zh-sg",
+      "value": "死神笔记簿"
+    },
+    "cbk-zam": {
+      "language": "cbk-zam",
+      "value": "Death Note"
+    },
+    "zh-tw": {
+      "language": "zh-tw",
+      "value": "死亡筆記本"
+    }
+  },
+  "aliases": {
+    "hu": [
+      {
+        "language": "hu",
+        "value": "Desu Nōto"
+      }
+    ],
+    "pl": [
+      {
+        "language": "pl",
+        "value": "Notatnik śmierci"
+      }
+    ],
+    "zh": [
+      {
+        "language": "zh",
+        "value": "死亡笔记"
+      }
+    ],
+    "mk": [
+      {
+        "language": "mk",
+        "value": "Death Note"
+      }
+    ],
+    "ar": [
+      {
+        "language": "ar",
+        "value": "مفكرة الموت"
+      }
+    ],
+    "ru": [
+      {
+        "language": "ru",
+        "value": "Тетрадь смерти (манга)"
+      }
+    ]
+  },
+  "claims": {
+    "P31": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P31",
+          "hash": "549c072d6be8a6a43f999d1d0e82640b16c4260e",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 21198342,
+              "id": "Q21198342"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "q1834$ED7DD85A-1996-4E34-B8A6-BDAB3E694097",
+        "rank": "normal"
+      }
+    ],
+    "P50": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P50",
+          "hash": "e616ac6026d913dd25b3539f9a30dda3a8717acf",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 558858,
+              "id": "Q558858"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "q1834$E3FBC142-F5C9-4ECF-8593-E03FBADD435E",
+        "rank": "normal"
+      }
+    ],
+    "P110": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P110",
+          "hash": "e358be57d74bb11adad4110f08cd1804b714787d",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 313703,
+              "id": "Q313703"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q1834$FFFF535A-FBEE-4C44-87D0-B60AE68C8E06",
+        "rank": "normal"
+      }
+    ]
+  }
+}

@@ -1,0 +1,250 @@
+{
+  "id": "Q1197216",
+  "lastrevid": 2502191106,
+  "labels": {
+    "zh-hans": {
+      "language": "zh-hans",
+      "value": "布鲁图"
+    },
+    "zh-hant": {
+      "language": "zh-hant",
+      "value": "PLUTO ～冥王～"
+    },
+    "zh-hk": {
+      "language": "zh-hk",
+      "value": "布魯圖"
+    },
+    "zh-sg": {
+      "language": "zh-sg",
+      "value": "PLUTO"
+    },
+    "pt": {
+      "language": "pt",
+      "value": "Pluto"
+    },
+    "de": {
+      "language": "de",
+      "value": "Pluto: Urasawa × Tezuka"
+    },
+    "ja": {
+      "language": "ja",
+      "value": "PLUTO"
+    },
+    "vi": {
+      "language": "vi",
+      "value": "Pluto"
+    },
+    "ko": {
+      "language": "ko",
+      "value": "플루토"
+    },
+    "fr": {
+      "language": "fr",
+      "value": "Pluto"
+    },
+    "en": {
+      "language": "en",
+      "value": "Pluto"
+    },
+    "es": {
+      "language": "es",
+      "value": "Pluto"
+    },
+    "th": {
+      "language": "th",
+      "value": "ตามล่านักฆ่าแอนดรอยด์"
+    },
+    "tl": {
+      "language": "tl",
+      "value": "Pluto"
+    },
+    "it": {
+      "language": "it",
+      "value": "Pluto"
+    },
+    "nl": {
+      "language": "nl",
+      "value": "Pluto"
+    },
+    "zh": {
+      "language": "zh",
+      "value": "布魯圖"
+    },
+    "fi": {
+      "language": "fi",
+      "value": "Pluto"
+    },
+    "ar": {
+      "language": "ar",
+      "value": "بلوتو"
+    },
+    "ru": {
+      "language": "ru",
+      "value": "Pluto (манга)"
+    },
+    "pl": {
+      "language": "pl",
+      "value": "Pluto"
+    },
+    "ca": {
+      "language": "ca",
+      "value": "Pluto"
+    },
+    "pa": {
+      "language": "pa",
+      "value": "ਪਲੂਟੋ (ਮਾਂਗਾ)"
+    },
+    "id": {
+      "language": "id",
+      "value": "Pluto"
+    },
+    "fa": {
+      "language": "fa",
+      "value": "پلوتو"
+    },
+    "tr": {
+      "language": "tr",
+      "value": "Pluto (manga)"
+    },
+    "mk": {
+      "language": "mk",
+      "value": "Pluto"
+    },
+    "uk": {
+      "language": "uk",
+      "value": "Pluto"
+    },
+    "gl": {
+      "language": "gl",
+      "value": "Pluto"
+    }
+  },
+  "aliases": {
+    "zh": [
+      {
+        "language": "zh",
+        "value": "PLUTO"
+      }
+    ],
+    "de": [
+      {
+        "language": "de",
+        "value": "Pluto: Urasawa x Tezuka"
+      }
+    ],
+    "ja": [
+      {
+        "language": "ja",
+        "value": "プルートウ"
+      }
+    ],
+    "th": [
+      {
+        "language": "th",
+        "value": "ตามล่า นักฆ่าแอนดรอยด์"
+      }
+    ],
+    "uk": [
+      {
+        "language": "uk",
+        "value": "Плутон"
+      }
+    ],
+    "it": [
+      {
+        "language": "it",
+        "value": "Pluto (Urasawa)"
+      }
+    ]
+  },
+  "claims": {
+    "P31": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P31",
+          "hash": "549c072d6be8a6a43f999d1d0e82640b16c4260e",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 21198342,
+              "id": "Q21198342"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q1197216$339851B0-98BE-4477-934D-F37D52543209",
+        "rank": "normal"
+      }
+    ],
+    "P50": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P50",
+          "hash": "6bb0f772e367defecb77ffddd0b9fdbd812a1bd6",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 348436,
+              "id": "Q348436"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q1197216$0BE07572-CF1C-41DA-B12C-5976100E56BF",
+        "rank": "normal",
+        "references": [
+          {
+            "hash": "d4bd87b862b12d99d26e86472d44f26858dee639",
+            "snaks": {
+              "P143": [
+                {
+                  "snaktype": "value",
+                  "property": "P143",
+                  "hash": "f30cbd35620c4ea6d0633aaf0210a8916130469b",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 8447,
+                      "id": "Q8447"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P143"
+            ]
+          }
+        ]
+      },
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P50",
+          "hash": "482d5b8f4e18abe76f035ce6aed1379d9b8ef19c",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 3514203,
+              "id": "Q3514203"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q1197216$a73923fd-490d-8cb4-6a9f-9d5b76417000",
+        "rank": "normal"
+      }
+    ],
+    "P110": []
+  }
+}

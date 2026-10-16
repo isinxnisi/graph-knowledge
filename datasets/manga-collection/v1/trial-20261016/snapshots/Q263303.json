@@ -1,0 +1,210 @@
+{
+  "id": "Q263303",
+  "lastrevid": 2531901631,
+  "labels": {
+    "pt": {
+      "language": "pt",
+      "value": "Yumi Hotta"
+    },
+    "de": {
+      "language": "de",
+      "value": "Yumi Hotta"
+    },
+    "id": {
+      "language": "id",
+      "value": "Yumi Hotta"
+    },
+    "ja": {
+      "language": "ja",
+      "value": "ほったゆみ"
+    },
+    "pl": {
+      "language": "pl",
+      "value": "Yumi Hotta"
+    },
+    "fr": {
+      "language": "fr",
+      "value": "Yumi Hotta"
+    },
+    "ko": {
+      "language": "ko",
+      "value": "홋타 유미"
+    },
+    "en": {
+      "language": "en",
+      "value": "Yumi Hotta"
+    },
+    "fi": {
+      "language": "fi",
+      "value": "Yumi Hotta"
+    },
+    "it": {
+      "language": "it",
+      "value": "Yumi Hotta"
+    },
+    "sv": {
+      "language": "sv",
+      "value": "Yumi Hotta"
+    },
+    "nl": {
+      "language": "nl",
+      "value": "Yumi Hotta"
+    },
+    "es": {
+      "language": "es",
+      "value": "Yumi Hotta"
+    },
+    "zh": {
+      "language": "zh",
+      "value": "堀田由美"
+    },
+    "nan": {
+      "language": "nan",
+      "value": "Hotta Yumi"
+    },
+    "ast": {
+      "language": "ast",
+      "value": "Yumi Hotta"
+    },
+    "sq": {
+      "language": "sq",
+      "value": "Yumi Hotta"
+    },
+    "pt-br": {
+      "language": "pt-br",
+      "value": "Yumi Hotta"
+    },
+    "pap": {
+      "language": "pap",
+      "value": "Yumi Hotta"
+    },
+    "ga": {
+      "language": "ga",
+      "value": "Yumi Hotta"
+    },
+    "ig": {
+      "language": "ig",
+      "value": "Yumi Hotta"
+    },
+    "tr": {
+      "language": "tr",
+      "value": "Yūmi Hotta"
+    }
+  },
+  "aliases": {
+    "pt": [
+      {
+        "language": "pt",
+        "value": "Hotta Yumi"
+      }
+    ],
+    "de": [
+      {
+        "language": "de",
+        "value": "Hotta Yumi"
+      }
+    ],
+    "ko": [
+      {
+        "language": "ko",
+        "value": "호타 유미"
+      }
+    ],
+    "it": [
+      {
+        "language": "it",
+        "value": "Hotta Yumi"
+      }
+    ],
+    "sv": [
+      {
+        "language": "sv",
+        "value": "Hotta"
+      }
+    ]
+  },
+  "claims": {
+    "P31": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P31",
+          "hash": "ad7d38a03cdd40cdc373de0dc4e7b7fcbccb31d9",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 5,
+              "id": "Q5"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q263303$DC7D024E-737A-4B80-8F6E-7D7D79C15951",
+        "rank": "normal",
+        "references": [
+          {
+            "hash": "d769eb37c9f1b2f12337495828448613b1fb4999",
+            "snaks": {
+              "P248": [
+                {
+                  "snaktype": "value",
+                  "property": "P248",
+                  "hash": "def9f19d84b65167a2a17ce38364d264c16127fc",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 19938912,
+                      "id": "Q19938912"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ],
+              "P268": [
+                {
+                  "snaktype": "value",
+                  "property": "P268",
+                  "hash": "851bf39fc1a95b16a90d593dc1e3370dc13d960a",
+                  "datavalue": {
+                    "value": "144635880",
+                    "type": "string"
+                  },
+                  "datatype": "external-id"
+                }
+              ],
+              "P813": [
+                {
+                  "snaktype": "value",
+                  "property": "P813",
+                  "hash": "d6162a1716489623c6e595e448b17f8dca4fb2e8",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2015-10-10T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P248",
+              "P268",
+              "P813"
+            ]
+          }
+        ]
+      }
+    ],
+    "P50": [],
+    "P110": []
+  }
+}

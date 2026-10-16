@@ -1,0 +1,329 @@
+{
+  "id": "Q2602377",
+  "lastrevid": 2554345404,
+  "labels": {
+    "pt": {
+      "language": "pt",
+      "value": "Yusuke Murata"
+    },
+    "zh-hans": {
+      "language": "zh-hans",
+      "value": "村田雄介"
+    },
+    "zh-hant": {
+      "language": "zh-hant",
+      "value": "村田雄介"
+    },
+    "zh-hk": {
+      "language": "zh-hk",
+      "value": "村田雄介"
+    },
+    "ja": {
+      "language": "ja",
+      "value": "村田雄介"
+    },
+    "fr": {
+      "language": "fr",
+      "value": "Yusuke Murata"
+    },
+    "en": {
+      "language": "en",
+      "value": "Yūsuke Murata"
+    },
+    "it": {
+      "language": "it",
+      "value": "Yūsuke Murata"
+    },
+    "es": {
+      "language": "es",
+      "value": "Yūsuke Murata"
+    },
+    "zh": {
+      "language": "zh",
+      "value": "村田雄介"
+    },
+    "de": {
+      "language": "de",
+      "value": "Yusuke Murata"
+    },
+    "ko": {
+      "language": "ko",
+      "value": "무라타 유스케"
+    },
+    "nl": {
+      "language": "nl",
+      "value": "Yusuke Murata"
+    },
+    "ru": {
+      "language": "ru",
+      "value": "Юсукэ Мурата"
+    },
+    "nan": {
+      "language": "nan",
+      "value": "Murata Yusuke"
+    },
+    "pt-br": {
+      "language": "pt-br",
+      "value": "Yusuke Murata"
+    },
+    "gl": {
+      "language": "gl",
+      "value": "Yusuke Murata"
+    },
+    "ar": {
+      "language": "ar",
+      "value": "يوسوك موراتا"
+    },
+    "id": {
+      "language": "id",
+      "value": "Yūsuke Murata"
+    },
+    "cs": {
+      "language": "cs",
+      "value": "Júsuke Murata"
+    },
+    "tr": {
+      "language": "tr",
+      "value": "Yūsuke Murata"
+    },
+    "sk": {
+      "language": "sk",
+      "value": "Yusuke Murata"
+    },
+    "sq": {
+      "language": "sq",
+      "value": "Yusuke Murata"
+    },
+    "ms": {
+      "language": "ms",
+      "value": "Yusuke Murata"
+    },
+    "uk": {
+      "language": "uk",
+      "value": "Юсуке Мурата"
+    },
+    "ro": {
+      "language": "ro",
+      "value": "Yūsuke Murata"
+    }
+  },
+  "aliases": {
+    "fr": [
+      {
+        "language": "fr",
+        "value": "Yūsuke Murata"
+      }
+    ],
+    "it": [
+      {
+        "language": "it",
+        "value": "Yusuke Murata"
+      },
+      {
+        "language": "it",
+        "value": "Yuusuke Murata"
+      }
+    ],
+    "ru": [
+      {
+        "language": "ru",
+        "value": "Мурата, Юсукэ"
+      }
+    ],
+    "en": [
+      {
+        "language": "en",
+        "value": "Yusuke Murata"
+      },
+      {
+        "language": "en",
+        "value": "Yuusuke Murata"
+      },
+      {
+        "language": "en",
+        "value": "Murata Yūsuke"
+      },
+      {
+        "language": "en",
+        "value": "Murata Yusuke"
+      },
+      {
+        "language": "en",
+        "value": "Murata Yuusuke"
+      }
+    ],
+    "es": [
+      {
+        "language": "es",
+        "value": "Yusuke Murata"
+      },
+      {
+        "language": "es",
+        "value": "Yuusuke Murata"
+      },
+      {
+        "language": "es",
+        "value": "Murata Yūsuke"
+      },
+      {
+        "language": "es",
+        "value": "Murata Yusuke"
+      },
+      {
+        "language": "es",
+        "value": "Murata Yuusuke"
+      },
+      {
+        "language": "es",
+        "value": "Yūusúke Murata"
+      }
+    ],
+    "cs": [
+      {
+        "language": "cs",
+        "value": "Yusuke Murata"
+      }
+    ]
+  },
+  "claims": {
+    "P31": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P31",
+          "hash": "ad7d38a03cdd40cdc373de0dc4e7b7fcbccb31d9",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 5,
+              "id": "Q5"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q2602377$6B1D5D6D-8834-44B0-AC02-BD0AB91E4BC6",
+        "rank": "normal",
+        "references": [
+          {
+            "hash": "e03d604b04b633ea02cdf6fe58f312e71a634627",
+            "snaks": {
+              "P248": [
+                {
+                  "snaktype": "value",
+                  "property": "P248",
+                  "hash": "def9f19d84b65167a2a17ce38364d264c16127fc",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 19938912,
+                      "id": "Q19938912"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ],
+              "P268": [
+                {
+                  "snaktype": "value",
+                  "property": "P268",
+                  "hash": "cc80c2ea5a80846ed41ad2b949adc1a3176b5ce8",
+                  "datavalue": {
+                    "value": "14641735d",
+                    "type": "string"
+                  },
+                  "datatype": "external-id"
+                }
+              ],
+              "P813": [
+                {
+                  "snaktype": "value",
+                  "property": "P813",
+                  "hash": "d6162a1716489623c6e595e448b17f8dca4fb2e8",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2015-10-10T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P248",
+              "P268",
+              "P813"
+            ]
+          },
+          {
+            "hash": "41afb191a5edea7d7fc5fd0651f79356043590a2",
+            "snaks": {
+              "P248": [
+                {
+                  "snaktype": "value",
+                  "property": "P248",
+                  "hash": "80047f9d5b0d2daf06989e71bd5f4ba15b215fd6",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 13550863,
+                      "id": "Q13550863"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ],
+              "P691": [
+                {
+                  "snaktype": "value",
+                  "property": "P691",
+                  "hash": "a218e5ddfa99bd4a7964c59f1dad242fbcd211f4",
+                  "datavalue": {
+                    "value": "xx0264941",
+                    "type": "string"
+                  },
+                  "datatype": "external-id"
+                }
+              ],
+              "P813": [
+                {
+                  "snaktype": "value",
+                  "property": "P813",
+                  "hash": "4028e0e52e5897c425ca4d233306fe7ee0093fc9",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2022-06-08T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P248",
+              "P691",
+              "P813"
+            ]
+          }
+        ]
+      }
+    ],
+    "P50": [],
+    "P110": []
+  }
+}

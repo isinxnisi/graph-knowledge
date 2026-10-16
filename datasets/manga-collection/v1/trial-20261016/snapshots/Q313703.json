@@ -1,0 +1,467 @@
+{
+  "id": "Q313703",
+  "lastrevid": 2549534991,
+  "labels": {
+    "zh-hans": {
+      "language": "zh-hans",
+      "value": "小畑健"
+    },
+    "zh-hant": {
+      "language": "zh-hant",
+      "value": "小畑健"
+    },
+    "zh-hk": {
+      "language": "zh-hk",
+      "value": "小畑健"
+    },
+    "zh-cn": {
+      "language": "zh-cn",
+      "value": "小畑健"
+    },
+    "zh-sg": {
+      "language": "zh-sg",
+      "value": "小畑健"
+    },
+    "zh-tw": {
+      "language": "zh-tw",
+      "value": "小畑健"
+    },
+    "pl": {
+      "language": "pl",
+      "value": "Takeshi Obata"
+    },
+    "ru": {
+      "language": "ru",
+      "value": "Такэси Обата"
+    },
+    "fr": {
+      "language": "fr",
+      "value": "Takeshi Obata"
+    },
+    "ko": {
+      "language": "ko",
+      "value": "오바타 다케시"
+    },
+    "es": {
+      "language": "es",
+      "value": "Takeshi Obata"
+    },
+    "en": {
+      "language": "en",
+      "value": "Takeshi Obata"
+    },
+    "th": {
+      "language": "th",
+      "value": "ทะเกะชิ โอะบะตะ"
+    },
+    "ro": {
+      "language": "ro",
+      "value": "Takeshi Obata"
+    },
+    "ca": {
+      "language": "ca",
+      "value": "Takeshi Obata"
+    },
+    "hu": {
+      "language": "hu",
+      "value": "Obata Takesi"
+    },
+    "fi": {
+      "language": "fi",
+      "value": "Takeshi Obata"
+    },
+    "ms": {
+      "language": "ms",
+      "value": "Obata Takeshi"
+    },
+    "it": {
+      "language": "it",
+      "value": "Takeshi Obata"
+    },
+    "gl": {
+      "language": "gl",
+      "value": "Takeshi Obata"
+    },
+    "de": {
+      "language": "de",
+      "value": "Takeshi Obata"
+    },
+    "id": {
+      "language": "id",
+      "value": "Takeshi Obata"
+    },
+    "ja": {
+      "language": "ja",
+      "value": "小畑健"
+    },
+    "vi": {
+      "language": "vi",
+      "value": "Obata Takeshi"
+    },
+    "sv": {
+      "language": "sv",
+      "value": "Takeshi Obata"
+    },
+    "nl": {
+      "language": "nl",
+      "value": "Takeshi Obata"
+    },
+    "nb": {
+      "language": "nb",
+      "value": "Takeshi Obata"
+    },
+    "fa": {
+      "language": "fa",
+      "value": "تاکه‌شی اوباتا"
+    },
+    "hy": {
+      "language": "hy",
+      "value": "Թաքեշի Օբատա"
+    },
+    "zh": {
+      "language": "zh",
+      "value": "小畑健"
+    },
+    "az": {
+      "language": "az",
+      "value": "Takeşi Obata"
+    },
+    "ar": {
+      "language": "ar",
+      "value": "تاكيشي أوباتا"
+    },
+    "pt": {
+      "language": "pt",
+      "value": "Takeshi Obata"
+    },
+    "tr": {
+      "language": "tr",
+      "value": "Takeshi Obata"
+    },
+    "cs": {
+      "language": "cs",
+      "value": "Takeši Obata"
+    },
+    "sk": {
+      "language": "sk",
+      "value": "Takeshi Obata"
+    },
+    "ckb": {
+      "language": "ckb",
+      "value": "تاکێشی ئۆباتا"
+    },
+    "an": {
+      "language": "an",
+      "value": "Takeshi Obata"
+    },
+    "ast": {
+      "language": "ast",
+      "value": "Takeshi Obata"
+    },
+    "ext": {
+      "language": "ext",
+      "value": "Takeshi Obata"
+    },
+    "nan": {
+      "language": "nan",
+      "value": "Obata Takeshi"
+    },
+    "pt-br": {
+      "language": "pt-br",
+      "value": "Takeshi Obata"
+    },
+    "arz": {
+      "language": "arz",
+      "value": "تاكيشى اوباتا"
+    },
+    "ku": {
+      "language": "ku",
+      "value": "Takeshi Obata"
+    },
+    "sq": {
+      "language": "sq",
+      "value": "Takeshi Obata"
+    },
+    "el": {
+      "language": "el",
+      "value": "Τακέσι Ομπάτα"
+    },
+    "sr": {
+      "language": "sr",
+      "value": "Такеши Обата"
+    },
+    "he": {
+      "language": "he",
+      "value": "טאקשי אובאטה"
+    }
+  },
+  "aliases": {
+    "ru": [
+      {
+        "language": "ru",
+        "value": "Такеси Обата"
+      },
+      {
+        "language": "ru",
+        "value": "Такеши Обата"
+      },
+      {
+        "language": "ru",
+        "value": "Обата, Такэси"
+      }
+    ],
+    "fr": [
+      {
+        "language": "fr",
+        "value": "Ken Kobatake"
+      }
+    ],
+    "ko": [
+      {
+        "language": "ko",
+        "value": "오바타 타케시"
+      }
+    ],
+    "th": [
+      {
+        "language": "th",
+        "value": "ทาเคชิ โอบาตะ"
+      },
+      {
+        "language": "th",
+        "value": "โอบาตะ ทาเคชิ"
+      },
+      {
+        "language": "th",
+        "value": "โอะบะตะ ทะเกะชิ"
+      }
+    ],
+    "ms": [
+      {
+        "language": "ms",
+        "value": "Takeshi Obata"
+      }
+    ],
+    "de": [
+      {
+        "language": "de",
+        "value": "Obata Takeshi"
+      }
+    ],
+    "ja": [
+      {
+        "language": "ja",
+        "value": "土方茂"
+      },
+      {
+        "language": "ja",
+        "value": "おばた たけし"
+      }
+    ],
+    "sv": [
+      {
+        "language": "sv",
+        "value": "Takashei Obata"
+      },
+      {
+        "language": "sv",
+        "value": "Obata"
+      },
+      {
+        "language": "sv",
+        "value": "Takashi Obata"
+      }
+    ],
+    "en": [
+      {
+        "language": "en",
+        "value": "Obata Takeshi"
+      }
+    ],
+    "cs": [
+      {
+        "language": "cs",
+        "value": "Obata Takeši"
+      },
+      {
+        "language": "cs",
+        "value": "Takeshi Obata"
+      },
+      {
+        "language": "cs",
+        "value": "Obata Takeshi"
+      }
+    ],
+    "sk": [
+      {
+        "language": "sk",
+        "value": "Obata Takeshi"
+      }
+    ],
+    "nl": [
+      {
+        "language": "nl",
+        "value": "Takeshi Obata Takeshi Obata"
+      },
+      {
+        "language": "nl",
+        "value": "T. Obata"
+      }
+    ],
+    "he": [
+      {
+        "language": "he",
+        "value": "טקשי אובטה"
+      },
+      {
+        "language": "he",
+        "value": "אובאטה טאקשי"
+      },
+      {
+        "language": "he",
+        "value": "אובטה טקשי"
+      }
+    ]
+  },
+  "claims": {
+    "P31": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P31",
+          "hash": "ad7d38a03cdd40cdc373de0dc4e7b7fcbccb31d9",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 5,
+              "id": "Q5"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q313703$039F6178-E014-454C-975C-1282D47D5C57",
+        "rank": "normal",
+        "references": [
+          {
+            "hash": "688c0de435ecbc5fd0cf27a0a3d26767101d7c40",
+            "snaks": {
+              "P248": [
+                {
+                  "snaktype": "value",
+                  "property": "P248",
+                  "hash": "def9f19d84b65167a2a17ce38364d264c16127fc",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 19938912,
+                      "id": "Q19938912"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ],
+              "P268": [
+                {
+                  "snaktype": "value",
+                  "property": "P268",
+                  "hash": "5518653a5983d6b623ecc024c85cf182fa8b0dcb",
+                  "datavalue": {
+                    "value": "133248418",
+                    "type": "string"
+                  },
+                  "datatype": "external-id"
+                }
+              ],
+              "P813": [
+                {
+                  "snaktype": "value",
+                  "property": "P813",
+                  "hash": "d6162a1716489623c6e595e448b17f8dca4fb2e8",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2015-10-10T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P248",
+              "P268",
+              "P813"
+            ]
+          },
+          {
+            "hash": "5212693ec02df28f88185ac53757794d1c4a4577",
+            "snaks": {
+              "P248": [
+                {
+                  "snaktype": "value",
+                  "property": "P248",
+                  "hash": "45037a2d1d89deebcdfc5840e9adbaa4b64cebc6",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 50358336,
+                      "id": "Q50358336"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ],
+              "P813": [
+                {
+                  "snaktype": "value",
+                  "property": "P813",
+                  "hash": "e8dfbedb95cdb42fdca02aa9fd2fdb859040899e",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2024-05-23T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ],
+              "P950": [
+                {
+                  "snaktype": "value",
+                  "property": "P950",
+                  "hash": "39019f500b326d6bd29e08e4dfff70d3db34230d",
+                  "datavalue": {
+                    "value": "XX4614904",
+                    "type": "string"
+                  },
+                  "datatype": "external-id"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P248",
+              "P813",
+              "P950"
+            ]
+          }
+        ]
+      }
+    ],
+    "P50": [],
+    "P110": []
+  }
+}

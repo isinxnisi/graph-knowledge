@@ -1,0 +1,128 @@
+{
+  "schemaVersion": 1,
+  "id": "famous-manga-creators",
+  "revision": 2,
+  "title": "有名漫画家と代表作品：44中心作家と共同制作の入口／8作品の初回取得（実行条件レビュー・未承認）",
+  "purpose": "中心作家44名・共同制作者9名・102作品の企画範囲は合意済み。本版の自動取得は固定レシピ8作品・12人物照合に限定する。特定revision/hashの実行承認、個々の知識の受入、公開は別判断。",
+  "worlds": [
+    "漫画・アニメ",
+    "美術・文学"
+  ],
+  "relatedThemes": [
+    "manga-influence-mentorship",
+    "work-production-backgrounds"
+  ],
+  "scope": {
+    "include": [
+      "企画上の基本対象は候補一覧 docs/research/famous-manga-creators/20261016/candidates.json、SHA256 8531fada01e5c635ba2ee278a7ef944a73f64676af14ed42ae0e690f5a1ff978 の53人・102作品・121人物作品組。候補数を満たすために弱い根拠を採用しない。",
+      "本版で取得するのは datasets/manga-collection/v1/recipe.json の8作品：PLUTO、トリリオンゲーム、Dr.STONE、アイシールド21、DEATH NOTE、ヒカルの碁、チェンソーマン、SPY×FAMILY。各作品の明示QID・第1巻ISBNを照合する。",
+      "人物照合はレシピ内の12名のみ。WikidataのP31・日英名／別名・P50／P110と参照情報を取得。propertyだけで具体Roleや直接制作を認定しない。NDL作成書誌のISBN・主書名・巻・言語・責任表示を照合する。",
+      "著／著者→AUTHORSHIP、作→CREATION、画／作画→DRAWINGは明示された一人の責任表示だけを候補化する。原作・原著・漫画・監修・[ほか]著等は原語を台帳へ残して保留する。刊行物scopeを全巻・全版へ外挿しない。",
+      "一実行の通信は逐次、最小間隔1秒、timeout20秒、各レスポンス4MiB以下、試行総数64回以下（同一要求2回以下、失敗・再開を通算）。HTTP429／503のRetry-Afterを保持し、通信失敗を未収録と扱わない。",
+      "凍結baseは20261014-credits-001。既存の全Entity・Claim・Source・Citationを無変更で保持。新規上限Entity40・Claim32、全体上限Entity2200・Claim1900。候補本体は新規Claim hidden。検証専用の一時公開形式だけを既存public:validateで確認して削除する。",
+      "取得元、取得日時、応答hash、判断根拠、保留理由、テーマID・revision・定義hash・承認hashを台帳とジョブに保持。既存UUID・同一Role／scopeのClaim・同一Sourceを再利用する。"
+    ],
+    "exclude": [
+      "この企画範囲への合意を本版のCLI承認とみなすこと。未承認テーマの収集実行、個別Entity／Claimの自動受入、本番KG・会員PGへの書込、公開適用。",
+      "レシピの8作品・12人物照合を超える自動取得。残る94作品はアンカー・代表ISBN・上限を固定した次版でレビューする。",
+      "原作・原著を著者・作・脚本・広いCONTRIBUTED_TOへ自動変換すること。漫画・監修・集約著者表記を本adapterの3Roleへ推測変換すること。",
+      "収集上限を埋めるための人物作品組の推論、Wikidata参照先への連鎖取得、未知の共同制作者の自動追加、同名だけの統合。",
+      "新規の影響・師弟・助手経験、編集担当、掲載誌・出版社の所属、翻案・アニメ化・シリーズ／巻／版の新関係。",
+      "本文・あらすじ・画像・書影の転載、出版社HTMLの一括取得、NDL以外の提供元や第三者所蔵情報の再配布、定期取得・外部フォーム送信。",
+      "新規収集候補をwithdrawalとして装うこと。公開検証のために既存の非公開・受入・撤回契約を弱めること。"
+    ]
+  },
+  "dataRequirements": [
+    {
+      "kind": "entity",
+      "description": "一覧内の人物と漫画作品、確認された日英別名・外部ID",
+      "granularity": "個人と共同筆名を区別し、漫画版・特定部・特定初出版を同定する。既存UUIDは再利用"
+    },
+    {
+      "kind": "claim",
+      "description": "資料が支持する人物→漫画作品の制作関与と既存制作Role",
+      "granularity": "刊行物scopeを保持。著者・作・作画・脚本等を自動同一視せず、新規関係や新Roleは別レビュー"
+    },
+    {
+      "kind": "citation",
+      "description": "資料URL、参照箇所、取得日、担当原語、刊行物と利用条件",
+      "granularity": "資料と取込由来を分け、同資料を共有する記録を独立根拠として数えない"
+    },
+    {
+      "kind": "identity",
+      "description": "作品単位と筆名・既存Entity対応の判断",
+      "granularity": "武論尊／史村翔、藤子共同名義、ワンパンマンの版、火の鳥の初出版等を個別に判断"
+    },
+    {
+      "kind": "model-gap",
+      "description": "原作・漫画等の未対応Role、掲載・翻案・シリーズ／巻／版の構造",
+      "granularity": "この企画の承認だけでは実装・語彙承認しない。必要なら個別レビューへ分ける"
+    }
+  ],
+  "sources": [
+    {
+      "name": "Wikidata（構造化取得の有力候補）",
+      "url": "https://www.wikidata.org/wiki/Help:Data_access",
+      "usage": "識別子・日英名・別名・作品関係候補と参照先。propertyから既存Roleを推測しない。",
+      "termsNote": "公式CC0構造化データ。明示QIDのSpecial:EntityData HTTPSのみ、User-Agent・逐次1秒間隔・64試行／20秒／4MiB／同一2回以下。429／503のRetry-Afterは通算ジョブで保持。画像・本文は取得しない。"
+    },
+    {
+      "name": "NDLサーチ・NDL作成書誌",
+      "url": "https://ndlsearch.ndl.go.jp/help/api/provider",
+      "usage": "SRUのiss-ndl-opac限定、固定ISBN検索（最大5件）。NDL作成の主書名・ISBN・巻・言語・責任表示を照合し、元レスポンスの第三者所蔵情報を公開用snapshotに含めない。",
+      "termsNote": "NDL作成メタデータのCC BY互換条件と広告収益を含むAPI利用説明を確認。Source／snapshotに国立国会図書館の帰属・CC BY4.0・提供元条件URLを保持する。全NDL提供元へ包括適用しない。継続利用の連絡協力依頼は次の定期運用判断で確認。今回は申請・連絡・定期取得なし。"
+    },
+    {
+      "name": "出版社・本人の公式資料（個別照合）",
+      "url": "https://www.shogakukan.co.jp/storage/files/article/2024/20240118.pdf",
+      "usage": "個別の人間による資料確認の参照。本版adapterの通信対象には含めない。",
+      "termsNote": "閲覧可能な資料が存在することと自動取得・再利用許可を区別。本文・あらすじ・画像転載は対象外。各サイトの取得方法・利用条件は実行版で確認する。"
+    }
+  ],
+  "exploration": {
+    "questions": [
+      "既知の漫画作品から作者の別作品へ進めるか？",
+      "既存の池上遼一からトリリオンゲーム、稲垣理一郎と別作品へ渡れるか？",
+      "同じ作り手でも相手や原資料の役割が違うことを、根拠とともに読み取れるか？"
+    ],
+    "existingPredicates": [
+      "CONTRIBUTED_TO"
+    ],
+    "modelGaps": [
+      "原作・原著・漫画等の意味は現行Roleへ自動変換できない。原作由来だけを制作関与として扱わない。",
+      "掲載・翻案・シリーズ／巻／版の独立関係は初回範囲外",
+      "分類タグ・ジャンル検索はデータの関与関係と別の設計"
+    ]
+  },
+  "coverageReferences": [
+    "docs/design/FAMOUS_MANGA_CREATORS_REVIEW.md",
+    "docs/design/KNOWLEDGE_WORLDS_AND_COVERAGE_PLAN.md",
+    "public-kg revision 5e2a94af-9061-4087-bb7a-045a3c0133f4（2026-10-16 08:17 JSTバックアップと今回の正式API応答を照合）",
+    "docs/design/MANGA_COLLECTION_ADAPTER.md",
+    "datasets/manga-collection/v1/trial-20261016/evidence.json（隔離試験のみ。テーマ承認・個別受入・公開を意味しない）"
+  ],
+  "execution": {
+    "adapter": "manga-discovery-v1",
+    "codeSha256": "b99443d49c7403f2ec0e014f21dcc271524c38a0ca9b062954815bfd8832a8f9",
+    "inputs": [
+      {
+        "file": "datasets/manga-collection/v1/recipe.json",
+        "sha256": "88724c3fef2f3e61d40e71cdcf7f90bdd1330d3ffefed9ce4fa6e12698b70ccc"
+      },
+      {
+        "file": "docs/research/famous-manga-creators/20261016/candidates.json",
+        "sha256": "8531fada01e5c635ba2ee278a7ef944a73f64676af14ed42ae0e690f5a1ff978"
+      },
+      {
+        "file": "datasets/public-kg/releases/20261014-credits-001/data.json",
+        "sha256": "ea91b16f52a211b5a8464382ad498b7b2bb2be69a6f33fe125a73a3c7b9da2b5"
+      },
+      {
+        "file": "datasets/public-kg/releases/20261014-credits-001/manifest.json",
+        "sha256": "e4aa3b58ed884f7d1f8fffee43b260261cc2b4d3a867fda942919f439d2bce17"
+      }
+    ],
+    "maxEntities": 2200,
+    "maxClaims": 1900
+  }
+}

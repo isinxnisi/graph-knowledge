@@ -1,0 +1,600 @@
+{
+  "id": "Q558858",
+  "lastrevid": 2542906021,
+  "labels": {
+    "pt": {
+      "language": "pt",
+      "value": "Tsugumi Ooba"
+    },
+    "zh-hans": {
+      "language": "zh-hans",
+      "value": "大场鸫"
+    },
+    "zh-hant": {
+      "language": "zh-hant",
+      "value": "大場鶇"
+    },
+    "zh-hk": {
+      "language": "zh-hk",
+      "value": "大場鶇"
+    },
+    "pl": {
+      "language": "pl",
+      "value": "Tsugumi Ōba"
+    },
+    "ko": {
+      "language": "ko",
+      "value": "오바 쓰구미"
+    },
+    "fr": {
+      "language": "fr",
+      "value": "Tsugumi Ōba"
+    },
+    "ru": {
+      "language": "ru",
+      "value": "Цугуми Оба"
+    },
+    "es": {
+      "language": "es",
+      "value": "Tsugumi Ōba"
+    },
+    "en": {
+      "language": "en",
+      "value": "Tsugumi Ohba"
+    },
+    "th": {
+      "language": "th",
+      "value": "สึงุมิ โอบะ"
+    },
+    "ca": {
+      "language": "ca",
+      "value": "Tsugumi Ōba"
+    },
+    "fi": {
+      "language": "fi",
+      "value": "Tsugumi Ōba"
+    },
+    "ms": {
+      "language": "ms",
+      "value": "Ohba Tsugumi"
+    },
+    "it": {
+      "language": "it",
+      "value": "Tsugumi Ōba"
+    },
+    "de": {
+      "language": "de",
+      "value": "Tsugumi Ōba"
+    },
+    "id": {
+      "language": "id",
+      "value": "Tsugumi Ohba"
+    },
+    "bn": {
+      "language": "bn",
+      "value": "সুগুমি ওহতা"
+    },
+    "ja": {
+      "language": "ja",
+      "value": "大場つぐみ"
+    },
+    "nl": {
+      "language": "nl",
+      "value": "Tsugumi Oba"
+    },
+    "ar": {
+      "language": "ar",
+      "value": "تسوغومي أوبا"
+    },
+    "fa": {
+      "language": "fa",
+      "value": "تسوگومی اوبا"
+    },
+    "hy": {
+      "language": "hy",
+      "value": "Ցուգումի Օբա"
+    },
+    "zh": {
+      "language": "zh",
+      "value": "大場鶇"
+    },
+    "az": {
+      "language": "az",
+      "value": "Tsuqumi Oba"
+    },
+    "gl": {
+      "language": "gl",
+      "value": "Tsugumi Ōba"
+    },
+    "be": {
+      "language": "be",
+      "value": "Цугумі Оба"
+    },
+    "hu": {
+      "language": "hu",
+      "value": "Tsugumi Ohba"
+    },
+    "ro": {
+      "language": "ro",
+      "value": "Tsugumi Ohba"
+    },
+    "cs": {
+      "language": "cs",
+      "value": "Cugumi Óba"
+    },
+    "tr": {
+      "language": "tr",
+      "value": "Tsugumi Ōba"
+    },
+    "ckb": {
+      "language": "ckb",
+      "value": "تسوگومی ئۆبا"
+    },
+    "nan": {
+      "language": "nan",
+      "value": "Ôba Tugumi"
+    },
+    "sv": {
+      "language": "sv",
+      "value": "Tsugumi Oba"
+    },
+    "pt-br": {
+      "language": "pt-br",
+      "value": "Tsugumi Ooba"
+    },
+    "arz": {
+      "language": "arz",
+      "value": "تسوجومى اوبا"
+    },
+    "vi": {
+      "language": "vi",
+      "value": "Ohba Tsugumi"
+    },
+    "ku": {
+      "language": "ku",
+      "value": "Tsugumi Oba"
+    },
+    "sq": {
+      "language": "sq",
+      "value": "Tsugumi Ohba"
+    },
+    "pap": {
+      "language": "pap",
+      "value": "Tsugumi Ooba"
+    },
+    "ary": {
+      "language": "ary",
+      "value": "تسوݣومي أوبا"
+    },
+    "sr": {
+      "language": "sr",
+      "value": "Цугуми Оба"
+    },
+    "uk": {
+      "language": "uk",
+      "value": "Оба Цуґумі"
+    },
+    "min": {
+      "language": "min",
+      "value": "Tsugumi Ohba"
+    }
+  },
+  "aliases": {
+    "pt": [
+      {
+        "language": "pt",
+        "value": "Tsugumi Ohba"
+      },
+      {
+        "language": "pt",
+        "value": "Tsugumi Ōba"
+      }
+    ],
+    "zh": [
+      {
+        "language": "zh",
+        "value": "大場つぐみ"
+      }
+    ],
+    "pl": [
+      {
+        "language": "pl",
+        "value": "Tsugumi Ohba"
+      }
+    ],
+    "ko": [
+      {
+        "language": "ko",
+        "value": "오바 츠구미"
+      }
+    ],
+    "fr": [
+      {
+        "language": "fr",
+        "value": "Tsugumi Ohba"
+      },
+      {
+        "language": "fr",
+        "value": "Tsugumi Oba"
+      },
+      {
+        "language": "fr",
+        "value": "Tsugumi Ôba"
+      }
+    ],
+    "ru": [
+      {
+        "language": "ru",
+        "value": "Цугуми Ооба"
+      },
+      {
+        "language": "ru",
+        "value": "Ооба, Цугуми"
+      },
+      {
+        "language": "ru",
+        "value": "Оба, Цугуми"
+      }
+    ],
+    "es": [
+      {
+        "language": "es",
+        "value": "Tsugumi Ohba"
+      },
+      {
+        "language": "es",
+        "value": "Ōba Tsugumi"
+      },
+      {
+        "language": "es",
+        "value": "Tsugumi Oba"
+      },
+      {
+        "language": "es",
+        "value": "Oba Tsugumi"
+      }
+    ],
+    "th": [
+      {
+        "language": "th",
+        "value": "ซึงุมิ โอบะ"
+      },
+      {
+        "language": "th",
+        "value": "โอบะ สึงุมิ"
+      }
+    ],
+    "fi": [
+      {
+        "language": "fi",
+        "value": "Tsugumi Ohba"
+      }
+    ],
+    "ms": [
+      {
+        "language": "ms",
+        "value": "Tsugumi Ohba"
+      },
+      {
+        "language": "ms",
+        "value": "Broken/Ohba Tsugumi"
+      }
+    ],
+    "it": [
+      {
+        "language": "it",
+        "value": "Ohba Tsugumi"
+      },
+      {
+        "language": "it",
+        "value": "Tsugumi Ohba"
+      }
+    ],
+    "de": [
+      {
+        "language": "de",
+        "value": "Tsugumi Ooba"
+      },
+      {
+        "language": "de",
+        "value": "Ōba Tsugumi"
+      },
+      {
+        "language": "de",
+        "value": "Tsugumi Oba"
+      },
+      {
+        "language": "de",
+        "value": "Oba Tsugumi"
+      }
+    ],
+    "nl": [
+      {
+        "language": "nl",
+        "value": "Tsugumi Ohba"
+      }
+    ],
+    "en": [
+      {
+        "language": "en",
+        "value": "Ōba Tsugumi"
+      }
+    ],
+    "gl": [
+      {
+        "language": "gl",
+        "value": "Tsugumi Ohba"
+      },
+      {
+        "language": "gl",
+        "value": "Ōba Tsugumi"
+      },
+      {
+        "language": "gl",
+        "value": "大場 つぐみ"
+      }
+    ],
+    "ro": [
+      {
+        "language": "ro",
+        "value": "Ţugumi Ohba"
+      }
+    ],
+    "cs": [
+      {
+        "language": "cs",
+        "value": "Cugumi Ōba"
+      },
+      {
+        "language": "cs",
+        "value": "Óba Cugumi"
+      },
+      {
+        "language": "cs",
+        "value": "Ōba Cugumi"
+      },
+      {
+        "language": "cs",
+        "value": "Tsugumi Ōba"
+      },
+      {
+        "language": "cs",
+        "value": "Tsugumi Ohba"
+      },
+      {
+        "language": "cs",
+        "value": "Cugumi Oba"
+      }
+    ],
+    "ar": [
+      {
+        "language": "ar",
+        "value": "تسوجومي أوبا"
+      }
+    ],
+    "ja": [
+      {
+        "language": "ja",
+        "value": "おおば つぐみ"
+      }
+    ]
+  },
+  "claims": {
+    "P31": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P31",
+          "hash": "ad7d38a03cdd40cdc373de0dc4e7b7fcbccb31d9",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 5,
+              "id": "Q5"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q558858$14403BE7-013D-4D80-BB95-365671F0A1B9",
+        "rank": "normal",
+        "references": [
+          {
+            "hash": "3759c953b9fb69b3e5a9e6d450cd37eb7c540268",
+            "snaks": {
+              "P248": [
+                {
+                  "snaktype": "value",
+                  "property": "P248",
+                  "hash": "def9f19d84b65167a2a17ce38364d264c16127fc",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 19938912,
+                      "id": "Q19938912"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ],
+              "P268": [
+                {
+                  "snaktype": "value",
+                  "property": "P268",
+                  "hash": "ad0dc5b656cc55c3d785d5b9236bf2464d419ca1",
+                  "datavalue": {
+                    "value": "155192657",
+                    "type": "string"
+                  },
+                  "datatype": "external-id"
+                }
+              ],
+              "P813": [
+                {
+                  "snaktype": "value",
+                  "property": "P813",
+                  "hash": "d6162a1716489623c6e595e448b17f8dca4fb2e8",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2015-10-10T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P248",
+              "P268",
+              "P813"
+            ]
+          },
+          {
+            "hash": "4a305c33463d38576b9004d17ecc2d7c00255833",
+            "snaks": {
+              "P248": [
+                {
+                  "snaktype": "value",
+                  "property": "P248",
+                  "hash": "f487c993a88b7e91732ae6e2ad2910710a462ad8",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 1798125,
+                      "id": "Q1798125"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ],
+              "P5587": [
+                {
+                  "snaktype": "value",
+                  "property": "P5587",
+                  "hash": "7478b99df74aaaf9b224302cd4e1e5b57ed8604c",
+                  "datavalue": {
+                    "value": "qn259sc81x2ngzw",
+                    "type": "string"
+                  },
+                  "datatype": "external-id"
+                }
+              ],
+              "P577": [
+                {
+                  "snaktype": "value",
+                  "property": "P577",
+                  "hash": "0e399d3b76f1dd42d1d750c3cf3cc81a2006aa96",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2018-03-26T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ],
+              "P813": [
+                {
+                  "snaktype": "value",
+                  "property": "P813",
+                  "hash": "a11d62bd1cf10c4155401fd7884e6013285efeaa",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2018-08-24T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P248",
+              "P5587",
+              "P577",
+              "P813"
+            ]
+          },
+          {
+            "hash": "f52b7647936ab436df9cfeb3dceceda65375dde1",
+            "snaks": {
+              "P248": [
+                {
+                  "snaktype": "value",
+                  "property": "P248",
+                  "hash": "45037a2d1d89deebcdfc5840e9adbaa4b64cebc6",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 50358336,
+                      "id": "Q50358336"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ],
+              "P813": [
+                {
+                  "snaktype": "value",
+                  "property": "P813",
+                  "hash": "43a7708c7df91eb6332c27ac333cd381773b1c79",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2024-02-17T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ],
+              "P950": [
+                {
+                  "snaktype": "value",
+                  "property": "P950",
+                  "hash": "3ede1df5e439b35134c6c702bf6ec61917aa0fe7",
+                  "datavalue": {
+                    "value": "XX4705003",
+                    "type": "string"
+                  },
+                  "datatype": "external-id"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P248",
+              "P813",
+              "P950"
+            ]
+          }
+        ]
+      }
+    ],
+    "P50": [],
+    "P110": []
+  }
+}

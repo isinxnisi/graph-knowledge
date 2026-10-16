@@ -27,6 +27,14 @@ INPUTS = [
     'datasets/public-kg/releases/20261011-001/data.json',
     'datasets/public-kg/releases/20261011-001/manifest.json',
 ]
+MANGA_ADAPTER = 'manga-discovery-v1'
+MANGA_GENERATOR = 'scripts/collect-manga.py'
+MANGA_INPUTS = [
+    'datasets/manga-collection/v1/recipe.json',
+    'docs/research/famous-manga-creators/20261016/candidates.json',
+    'datasets/public-kg/releases/20261014-credits-001/data.json',
+    'datasets/public-kg/releases/20261014-credits-001/manifest.json',
+]
 CHECKS = ['purpose', 'scope', 'data-granularity', 'sources-and-terms', 'exploration', 'execution-boundary']
 ID = re.compile(r'[a-z][a-z0-9]*(?:-[a-z0-9]+)*\Z')
 SHA = re.compile(r'[0-9a-f]{64}\Z')
@@ -149,13 +157,14 @@ def validate(value):
     execution = value['execution']
     if execution is not None:
         keys(execution, ['adapter', 'codeSha256', 'inputs', 'maxEntities', 'maxClaims'], 'execution')
-        require(execution['adapter'] == ADAPTER, 'Adapter is not allowlisted')
+        require(execution['adapter'] in [ADAPTER, MANGA_ADAPTER], 'Adapter is not allowlisted')
         require(isinstance(execution['codeSha256'], str) and SHA.fullmatch(execution['codeSha256']), 'Invalid code hash')
         require(isinstance(execution['inputs'], list), 'Invalid input inventory')
         for item in execution['inputs']:
             keys(item, ['file', 'sha256'], 'input')
             require(isinstance(item['sha256'], str) and SHA.fullmatch(item['sha256']), 'Invalid input hash')
-        require([i['file'] for i in execution['inputs']] == INPUTS, 'Adapter input inventory must match the fixed recipe')
+        expected = INPUTS if execution['adapter'] == ADAPTER else MANGA_INPUTS
+        require([i['file'] for i in execution['inputs']] == expected, 'Adapter input inventory must match the fixed recipe')
         for field in ['maxEntities', 'maxClaims']:
             require(type(execution[field]) is int and 1 <= execution[field] <= 10000, f'Invalid {field}')
     return value
@@ -198,7 +207,14 @@ def status(registry, value):
         return 'approval-invalid'
 
 
-def plan():
+def plan(adapter=ADAPTER):
+    require(adapter in [ADAPTER, MANGA_ADAPTER], 'Adapter is not allowlisted')
+    if adapter == MANGA_ADAPTER:
+        # Bind dispatch/approval enforcement as well as the external acquisition code.
+        code = content_hash({p: file_hash(ROOT / p) for p in ['scripts/collection-themes.py', MANGA_GENERATOR]})
+        return {'adapter': adapter, 'codeSha256': code,
+                'inputs': [{'file': p, 'sha256': file_hash(ROOT / p)} for p in MANGA_INPUTS],
+                'maxEntities': 2200, 'maxClaims': 1900}
     return {'adapter': ADAPTER, 'codeSha256': file_hash(ROOT / GENERATOR),
             'inputs': [{'file': p, 'sha256': file_hash(ROOT / p)} for p in INPUTS],
             'maxEntities': 1200, 'maxClaims': 1000}
@@ -206,7 +222,7 @@ def plan():
 
 def verify_execution(execution):
     require(execution is not None, 'No executable adapter: export the approved definition or review a revision with execution conditions')
-    current = plan()
+    current = plan(execution['adapter'])
     for field in ['adapter', 'codeSha256', 'inputs']:
         require(execution[field] == current[field], f'Execution {field} changed; a new revision and review are required')
 
@@ -234,6 +250,15 @@ def technical_validation(directory):
 
 
 def generate(execution, staging):
+    if execution['adapter'] == MANGA_ADAPTER:
+        module = runpy.run_path(str(ROOT / MANGA_GENERATOR))
+        summary = module['build'](ROOT, execution, staging, staging.parent / 'request-cache')
+        summary['validation'] = technical_validation(staging / 'validation-only')
+        summary['validationMode'] = 'temporary-public-projection; retained-candidate-claims-stay-hidden'
+        # A pending candidate is not a public release. Do not retain the applyable projection.
+        shutil.rmtree(staging / 'validation-only')
+        save(staging / 'summary.json', summary)
+        return summary
     # Only the allowlisted, hash-checked generator is loaded. Its __main__ writer never runs.
     module = runpy.run_path(str(ROOT / GENERATOR))
     generated = module['build']()
@@ -339,7 +364,7 @@ def parser():
     item = commands.add_parser('register')
     item.add_argument('--file', type=Path, required=True)
     item = commands.add_parser('plan')
-    item.add_argument('adapter', choices=[ADAPTER])
+    item.add_argument('adapter', choices=[ADAPTER, MANGA_ADAPTER])
     for command in ['review', 'approve', 'revoke', 'export', 'run']:
         item = commands.add_parser(command)
         item.add_argument('theme_id')
@@ -359,7 +384,7 @@ def execute(args):
     registry, jobs = args.registry.resolve(), args.jobs.resolve()
     require(registry != jobs, 'Registry and jobs must use different directories')
     if args.command == 'plan':
-        return plan()
+        return plan(args.adapter)
     with locked(registry):
         if args.command == 'register':
             value = validate(read(args.file))

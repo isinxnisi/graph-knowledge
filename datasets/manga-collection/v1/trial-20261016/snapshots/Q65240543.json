@@ -1,0 +1,379 @@
+{
+  "id": "Q65240543",
+  "lastrevid": 2556976425,
+  "labels": {
+    "ja": {
+      "language": "ja",
+      "value": "チェンソーマン"
+    },
+    "zh": {
+      "language": "zh",
+      "value": "鏈鋸人"
+    },
+    "id": {
+      "language": "id",
+      "value": "Chainsaw Man"
+    },
+    "en": {
+      "language": "en",
+      "value": "Chainsaw Man"
+    },
+    "it": {
+      "language": "it",
+      "value": "Chainsaw Man"
+    },
+    "es": {
+      "language": "es",
+      "value": "Chainsaw Man"
+    },
+    "fr": {
+      "language": "fr",
+      "value": "Chainsaw Man"
+    },
+    "pl": {
+      "language": "pl",
+      "value": "Chainsaw Man"
+    },
+    "zh-hk": {
+      "language": "zh-hk",
+      "value": "鏈鋸人"
+    },
+    "zh-hant": {
+      "language": "zh-hant",
+      "value": "鏈鋸人"
+    },
+    "de": {
+      "language": "de",
+      "value": "Chainsaw Man"
+    },
+    "ms": {
+      "language": "ms",
+      "value": "Chainsaw Man"
+    },
+    "zh-tw": {
+      "language": "zh-tw",
+      "value": "鏈鋸人"
+    },
+    "fa": {
+      "language": "fa",
+      "value": "چنسا من"
+    },
+    "ru": {
+      "language": "ru",
+      "value": "Человек-бензопила"
+    },
+    "ar": {
+      "language": "ar",
+      "value": "رجل المنشار"
+    },
+    "pt": {
+      "language": "pt",
+      "value": "Chainsaw Man"
+    },
+    "cs": {
+      "language": "cs",
+      "value": "Chainsaw Man"
+    },
+    "ko": {
+      "language": "ko",
+      "value": "체인소 맨"
+    },
+    "nl": {
+      "language": "nl",
+      "value": "Chainsaw Man"
+    },
+    "ca": {
+      "language": "ca",
+      "value": "Chainsaw Man"
+    },
+    "et": {
+      "language": "et",
+      "value": "Chainsaw Man"
+    },
+    "uk": {
+      "language": "uk",
+      "value": "Людина-бензопила"
+    },
+    "vi": {
+      "language": "vi",
+      "value": "Chainsaw Man"
+    },
+    "th": {
+      "language": "th",
+      "value": "เชนซอว์แมน"
+    },
+    "sk": {
+      "language": "sk",
+      "value": "Chainsaw Man"
+    },
+    "ckb": {
+      "language": "ckb",
+      "value": "پیاوی مشاری زنجیری"
+    },
+    "ka": {
+      "language": "ka",
+      "value": "მხერხავი (მანგა)"
+    },
+    "tr": {
+      "language": "tr",
+      "value": "Chainsaw Man"
+    },
+    "uz": {
+      "language": "uz",
+      "value": "Arraodam"
+    },
+    "hi": {
+      "language": "hi",
+      "value": "चेनसॉ मैन"
+    },
+    "hy": {
+      "language": "hy",
+      "value": "Սղոց-մարդը"
+    },
+    "fi": {
+      "language": "fi",
+      "value": "Chainsaw Man"
+    },
+    "ms-arab": {
+      "language": "ms-arab",
+      "value": "چينسومن"
+    },
+    "be": {
+      "language": "be",
+      "value": "Чалавек-бензапіла"
+    },
+    "az": {
+      "language": "az",
+      "value": "Chainsaw Man"
+    },
+    "be-tarask": {
+      "language": "be-tarask",
+      "value": "Чалавек-бэнзапіла"
+    },
+    "ro": {
+      "language": "ro",
+      "value": "Chainsaw Man"
+    },
+    "mk": {
+      "language": "mk",
+      "value": "Верижниот Човек"
+    },
+    "kk": {
+      "language": "kk",
+      "value": "Шынжырлы Ара Адам"
+    },
+    "he": {
+      "language": "he",
+      "value": "Chainsaw Man"
+    },
+    "lt": {
+      "language": "lt",
+      "value": "Chainsaw Man"
+    },
+    "zh-sg": {
+      "language": "zh-sg",
+      "value": "电锯人"
+    },
+    "zh-my": {
+      "language": "zh-my",
+      "value": "电锯人"
+    },
+    "ary": {
+      "language": "ary",
+      "value": "تشنساو مان"
+    },
+    "sv": {
+      "language": "sv",
+      "value": "Chainsaw Man"
+    },
+    "zh-cn": {
+      "language": "zh-cn",
+      "value": "电锯人"
+    },
+    "da": {
+      "language": "da",
+      "value": "Chainsaw Man"
+    },
+    "sr": {
+      "language": "sr",
+      "value": "Chainsaw Man"
+    },
+    "hu": {
+      "language": "hu",
+      "value": "Láncfűrészfej"
+    }
+  },
+  "aliases": {
+    "en": [
+      {
+        "language": "en",
+        "value": "Chainsawman"
+      },
+      {
+        "language": "en",
+        "value": "CSM"
+      }
+    ],
+    "es": [
+      {
+        "language": "es",
+        "value": "Chainsawman"
+      }
+    ],
+    "ko": [
+      {
+        "language": "ko",
+        "value": "전기톱 맨"
+      }
+    ],
+    "pl": [
+      {
+        "language": "pl",
+        "value": "Chainsawman"
+      }
+    ],
+    "fr": [
+      {
+        "language": "fr",
+        "value": "Chainsawman"
+      }
+    ],
+    "pt": [
+      {
+        "language": "pt",
+        "value": "Chainsawman"
+      }
+    ],
+    "kk": [
+      {
+        "language": "kk",
+        "value": "Бензинара Адам"
+      }
+    ],
+    "hi": [
+      {
+        "language": "hi",
+        "value": "चेनसॉमैन"
+      },
+      {
+        "language": "hi",
+        "value": "चैनसॉ आदमी"
+      },
+      {
+        "language": "hi",
+        "value": "चैनसॉ मर्द"
+      },
+      {
+        "language": "hi",
+        "value": "चैनसॉ पुरुष"
+      }
+    ],
+    "zh": [
+      {
+        "language": "zh",
+        "value": "電鋸人"
+      }
+    ],
+    "nl": [
+      {
+        "language": "nl",
+        "value": "Chainsawman"
+      },
+      {
+        "language": "nl",
+        "value": "チェンソーマン"
+      }
+    ],
+    "uk": [
+      {
+        "language": "uk",
+        "value": "Chainsaw Man"
+      },
+      {
+        "language": "uk",
+        "value": "Chainsawman"
+      }
+    ],
+    "ar": [
+      {
+        "language": "ar",
+        "value": "تشين سو مان"
+      }
+    ],
+    "hu": [
+      {
+        "language": "hu",
+        "value": "Chainsaw Man"
+      },
+      {
+        "language": "hu",
+        "value": "CSM"
+      }
+    ]
+  },
+  "claims": {
+    "P31": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P31",
+          "hash": "549c072d6be8a6a43f999d1d0e82640b16c4260e",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 21198342,
+              "id": "Q21198342"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q65240543$451e7045-4952-5e4e-47d6-d603eecbc81f",
+        "rank": "normal"
+      }
+    ],
+    "P50": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P50",
+          "hash": "ec399e243b8144e78eba0f136545ca6523ffb416",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 24864023,
+              "id": "Q24864023"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q65240543$403a8091-4cc4-b330-f280-cfba51ce916c",
+        "rank": "normal"
+      }
+    ],
+    "P110": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P110",
+          "hash": "0c0927042ed41233f13d665eb34d96196c336629",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 24864023,
+              "id": "Q24864023"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q65240543$6386FD83-A1A4-42CF-A9B8-CB9F1BE9DEEE",
+        "rank": "normal"
+      }
+    ]
+  }
+}

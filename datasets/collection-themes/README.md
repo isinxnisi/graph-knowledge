@@ -4,11 +4,11 @@
 
 定義・操作・公開との境界は [収集テーマの契約](../../docs/design/COLLECTION_THEMES.md) を参照する。
 
-`famous-manga-creators` の具体化は [初回収集レビュー案](../../docs/design/FAMOUS_MANGA_CREATORS_REVIEW.md)を参照。40中心作家＋9共同制作者・96作品を候補比較し、実資料確認の範囲を区別した。r0002は `docs/research/famous-manga-creators/20261016/r0002.draft.json` にある未登録草稿で、現行r0001の承認状態は変更していない。
+`famous-manga-creators` は[企画レビュー](../../docs/design/FAMOUS_MANGA_CREATORS_REVIEW.md)の44中心作家＋9共同制作者・102作品を対象範囲として合意した。r0002へ8作品の実行条件を登録済みだが**未承認**。旧草稿も登録版と同じレビュー用控えに更新した。[新規adapterと隔離試験](../../docs/design/MANGA_COLLECTION_ADAPTER.md)を参照。試験専用registryの承認を実テーマへ転用していない。
 
 | ID | 目的 | 現時点の実行条件 |
 | --- | --- | --- |
-| `famous-manga-creators` | 漫画家と別作品への入口を増やす | 未指定。具体的対象・件数・資料条件のレビューが必要 |
+| `famous-manga-creators` | 漫画家と別作品への入口を増やす | r0002は8作品／12人物照合・通信／出力上限・コード／入力hash固定済み。未承認で実行不可 |
 | `manga-influence-mentorship` | 根拠のある影響・助手経験を辿る | 未指定。師弟・影響・助手を同一視しない |
 | `work-production-backgrounds` | 作品の制作背景と異なる役割の関係者 | 未指定。原語・版・役割の範囲を確認する |
 | `nobel-laureates-research` | 受賞者から研究内容へ広げる | 未指定。研究成果・受賞モデルは未確定 |

@@ -1,0 +1,612 @@
+{
+  "id": "Q65231576",
+  "lastrevid": 2523266426,
+  "labels": {
+    "ja": {
+      "language": "ja",
+      "value": "SPY×FAMILY"
+    },
+    "id": {
+      "language": "id",
+      "value": "Spy × Family"
+    },
+    "en": {
+      "language": "en",
+      "value": "Spy × Family"
+    },
+    "zh": {
+      "language": "zh",
+      "value": "SPY×FAMILY間諜家家酒"
+    },
+    "it": {
+      "language": "it",
+      "value": "Spy × Family"
+    },
+    "es": {
+      "language": "es",
+      "value": "Spy × Family"
+    },
+    "pt": {
+      "language": "pt",
+      "value": "Spy × Family"
+    },
+    "fr": {
+      "language": "fr",
+      "value": "Spy × Family"
+    },
+    "pl": {
+      "language": "pl",
+      "value": "Spy × Family"
+    },
+    "de": {
+      "language": "de",
+      "value": "Spy × Family"
+    },
+    "zh-cn": {
+      "language": "zh-cn",
+      "value": "间谍过家家"
+    },
+    "zh-tw": {
+      "language": "zh-tw",
+      "value": "SPY×FAMILY間諜家家酒"
+    },
+    "ar": {
+      "language": "ar",
+      "value": "عائلة × جاسوس"
+    },
+    "vi": {
+      "language": "vi",
+      "value": "SPY×FAMILY"
+    },
+    "br": {
+      "language": "br",
+      "value": "Spy × Family"
+    },
+    "th": {
+      "language": "th",
+      "value": "สปาย × แฟมิลี"
+    },
+    "ru": {
+      "language": "ru",
+      "value": "Семья шпиона"
+    },
+    "ko": {
+      "language": "ko",
+      "value": "SPY×FAMILY"
+    },
+    "ms": {
+      "language": "ms",
+      "value": "Spy × Family"
+    },
+    "hi": {
+      "language": "hi",
+      "value": "स्पाई × फैमिली"
+    },
+    "zh-hant": {
+      "language": "zh-hant",
+      "value": "SPY×FAMILY間諜家家酒"
+    },
+    "ca": {
+      "language": "ca",
+      "value": "Spy × Family"
+    },
+    "hy": {
+      "language": "hy",
+      "value": "Լրտեսի ընտանիք"
+    },
+    "ckb": {
+      "language": "ckb",
+      "value": "سیخوڕ × خێزان"
+    },
+    "cs": {
+      "language": "cs",
+      "value": "Spy × Family"
+    },
+    "uk": {
+      "language": "uk",
+      "value": "Spy × Family"
+    },
+    "km": {
+      "language": "km",
+      "value": "Spy × Family"
+    },
+    "kab": {
+      "language": "kab",
+      "value": "Spy × Family"
+    },
+    "nan": {
+      "language": "nan",
+      "value": "Spy × Family"
+    },
+    "he": {
+      "language": "he",
+      "value": "Spy × Family"
+    },
+    "zh-hk": {
+      "language": "zh-hk",
+      "value": "SPY×FAMILY間諜家家酒"
+    },
+    "fa": {
+      "language": "fa",
+      "value": "جاسوس × خانواده"
+    },
+    "uz": {
+      "language": "uz",
+      "value": "Josuslar oilasi"
+    },
+    "tr": {
+      "language": "tr",
+      "value": "Spy × Family"
+    },
+    "yue": {
+      "language": "yue",
+      "value": "SPY×FAMILY間諜家家酒"
+    },
+    "fi": {
+      "language": "fi",
+      "value": "Spy × Family"
+    },
+    "tl": {
+      "language": "tl",
+      "value": "Spy × Family"
+    },
+    "el": {
+      "language": "el",
+      "value": "Spy × Family"
+    },
+    "lt": {
+      "language": "lt",
+      "value": "Spy × Family"
+    },
+    "haw": {
+      "language": "haw",
+      "value": "Spy × Family"
+    },
+    "tk": {
+      "language": "tk",
+      "value": "Spy × Family"
+    },
+    "wa": {
+      "language": "wa",
+      "value": "Spy × Family"
+    },
+    "gl": {
+      "language": "gl",
+      "value": "Spy x Family"
+    },
+    "eu": {
+      "language": "eu",
+      "value": "Spy x Family"
+    },
+    "ast": {
+      "language": "ast",
+      "value": "Spy × Family"
+    },
+    "an": {
+      "language": "an",
+      "value": "Spy x Family"
+    },
+    "lo": {
+      "language": "lo",
+      "value": "ສະປາຍ × ແຟມິລີ"
+    },
+    "nl": {
+      "language": "nl",
+      "value": "Spy × Family"
+    },
+    "ro": {
+      "language": "ro",
+      "value": "Spy × Family"
+    },
+    "lzh": {
+      "language": "lzh",
+      "value": "間諜與家眷"
+    },
+    "mk": {
+      "language": "mk",
+      "value": "Шпионско семејство"
+    },
+    "zh-hans": {
+      "language": "zh-hans",
+      "value": "间谍过家家"
+    },
+    "zh-sg": {
+      "language": "zh-sg",
+      "value": "SPY×FAMILY间谍家家酒"
+    },
+    "zh-my": {
+      "language": "zh-my",
+      "value": "SPY×FAMILY间谍家家酒"
+    },
+    "hu": {
+      "language": "hu",
+      "value": "A kémcsalád"
+    },
+    "sr": {
+      "language": "sr",
+      "value": "Porodica špijuna"
+    },
+    "ab": {
+      "language": "ab",
+      "value": "Ашпионцәа рҭаацәа"
+    }
+  },
+  "aliases": {
+    "en": [
+      {
+        "language": "en",
+        "value": "S×F"
+      },
+      {
+        "language": "en",
+        "value": "SxF"
+      },
+      {
+        "language": "en",
+        "value": "Spy x Family"
+      },
+      {
+        "language": "en",
+        "value": "SPY FAMILY"
+      },
+      {
+        "language": "en",
+        "value": "Spy Family"
+      },
+      {
+        "language": "en",
+        "value": "SPY×FAMILY"
+      }
+    ],
+    "ja": [
+      {
+        "language": "ja",
+        "value": "スパイファミリー"
+      }
+    ],
+    "zh-cn": [
+      {
+        "language": "zh-cn",
+        "value": "间谍家家酒"
+      }
+    ],
+    "hi": [
+      {
+        "language": "hi",
+        "value": "एस × एफ"
+      },
+      {
+        "language": "hi",
+        "value": "स्पाई फैमिली"
+      }
+    ],
+    "zh": [
+      {
+        "language": "zh",
+        "value": "間諜家家酒"
+      },
+      {
+        "language": "zh",
+        "value": "間諜過家家"
+      },
+      {
+        "language": "zh",
+        "value": "间谍过家家"
+      },
+      {
+        "language": "zh",
+        "value": "间谍家家酒"
+      },
+      {
+        "language": "zh",
+        "value": "SPY×FAMILY间谍家家酒"
+      }
+    ],
+    "zh-hant": [
+      {
+        "language": "zh-hant",
+        "value": "間諜過家家"
+      },
+      {
+        "language": "zh-hant",
+        "value": "間諜家家酒"
+      }
+    ],
+    "zh-tw": [
+      {
+        "language": "zh-tw",
+        "value": "間諜家家酒"
+      },
+      {
+        "language": "zh-tw",
+        "value": "間諜過家家"
+      },
+      {
+        "language": "zh-tw",
+        "value": "SPYxFAMILY"
+      }
+    ],
+    "cs": [
+      {
+        "language": "cs",
+        "value": "SPY×FAMILY"
+      }
+    ],
+    "fa": [
+      {
+        "language": "fa",
+        "value": "اسپای فمیلی"
+      },
+      {
+        "language": "fa",
+        "value": "اسپای × فمیلی"
+      }
+    ],
+    "tr": [
+      {
+        "language": "tr",
+        "value": "S×F"
+      },
+      {
+        "language": "tr",
+        "value": "SxF"
+      },
+      {
+        "language": "tr",
+        "value": "Spy x Family"
+      },
+      {
+        "language": "tr",
+        "value": "Spy Family"
+      },
+      {
+        "language": "tr",
+        "value": "SPY FAMILY"
+      }
+    ],
+    "he": [
+      {
+        "language": "he",
+        "value": "משפחה חשאית"
+      },
+      {
+        "language": "he",
+        "value": "משפחה × חשאית"
+      },
+      {
+        "language": "he",
+        "value": "משפחה x חשאית"
+      }
+    ],
+    "el": [
+      {
+        "language": "el",
+        "value": "Κατάσκοπος × Οικογένεια"
+      }
+    ],
+    "ko": [
+      {
+        "language": "ko",
+        "value": "스파이 패밀리"
+      }
+    ],
+    "zh-hans": [
+      {
+        "language": "zh-hans",
+        "value": "间谍家家酒"
+      }
+    ],
+    "nl": [
+      {
+        "language": "nl",
+        "value": "Spy x Family"
+      }
+    ],
+    "zh-sg": [
+      {
+        "language": "zh-sg",
+        "value": "间谍家家酒"
+      }
+    ],
+    "zh-my": [
+      {
+        "language": "zh-my",
+        "value": "间谍家家酒"
+      }
+    ],
+    "ar": [
+      {
+        "language": "ar",
+        "value": "Spy × Family"
+      },
+      {
+        "language": "ar",
+        "value": "SPY×FAMILY"
+      },
+      {
+        "language": "ar",
+        "value": "سباي × فاميلي"
+      },
+      {
+        "language": "ar",
+        "value": "سباي فاميلي"
+      },
+      {
+        "language": "ar",
+        "value": "سبي × فاميلي"
+      },
+      {
+        "language": "ar",
+        "value": "سبي فاميلي"
+      },
+      {
+        "language": "ar",
+        "value": "عائلة الجاسوس"
+      },
+      {
+        "language": "ar",
+        "value": "جاسوس × عائلة"
+      },
+      {
+        "language": "ar",
+        "value": "عائلة جاسوس"
+      },
+      {
+        "language": "ar",
+        "value": "الجاسوس والعائلة"
+      },
+      {
+        "language": "ar",
+        "value": "الجاسوس وعائلته"
+      },
+      {
+        "language": "ar",
+        "value": "عائلة الجواسيس"
+      },
+      {
+        "language": "ar",
+        "value": "جاسوس وعائلة"
+      },
+      {
+        "language": "ar",
+        "value": "سباي إكس فاميلي"
+      },
+      {
+        "language": "ar",
+        "value": "سبي إكس فاميلي"
+      },
+      {
+        "language": "ar",
+        "value": "سباي x فاميلي"
+      },
+      {
+        "language": "ar",
+        "value": "سبي x فاميلي"
+      }
+    ]
+  },
+  "claims": {
+    "P31": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P31",
+          "hash": "549c072d6be8a6a43f999d1d0e82640b16c4260e",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 21198342,
+              "id": "Q21198342"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q65231576$fa105fb3-4657-9049-079e-b09649fe85c1",
+        "rank": "normal"
+      }
+    ],
+    "P50": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P50",
+          "hash": "636f89e206209b976893caf516288a44fbb7820d",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 3981526,
+              "id": "Q3981526"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q65231576$767cd1e8-4aa1-00c1-1b8a-9cab94728a5f",
+        "rank": "normal"
+      }
+    ],
+    "P110": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P110",
+          "hash": "d06a92f8de1c850e5df747e304c1ba8dca5f9b08",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 3981526,
+              "id": "Q3981526"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q65231576$2504D29F-9A25-4EDE-BD84-1951F44EF71F",
+        "rank": "normal",
+        "references": [
+          {
+            "hash": "23129358f1f80b9abea948dc424f0a2ba492967d",
+            "snaks": {
+              "P143": [
+                {
+                  "snaktype": "value",
+                  "property": "P143",
+                  "hash": "e4f6d9441d0600513c4533c672b5ab472dc73694",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 328,
+                      "id": "Q328"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ],
+              "P813": [
+                {
+                  "snaktype": "value",
+                  "property": "P813",
+                  "hash": "f4a04d83a591285a0e2b86c50b96242118e54719",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2022-12-20T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ],
+              "P4656": [
+                {
+                  "snaktype": "value",
+                  "property": "P4656",
+                  "hash": "f263a00fb00e80adae3948a6616a0d98184408e1",
+                  "datavalue": {
+                    "value": "https://en.wikipedia.org/w/index.php?title=Spy_%C3%97_Family&oldid=1128175873",
+                    "type": "string"
+                  },
+                  "datatype": "url"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P143",
+              "P813",
+              "P4656"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
