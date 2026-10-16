@@ -47,3 +47,19 @@ Homeの既存「知識を探す」ボタンから、新しいDiscoveryダイア�
 公開用build・TypeScript・lintを通過し、3200を本番モードで再起動。`https://graph-beta.isinxnisi.com/` の代表7件（正式入口のJA/EN×1241/390/320px、既存Graph→一覧→条件付きGraph→直前の配置・枝への復帰）を通過した。ローカルとbetaの公開revisionは更新前後とも `82b01515-594c-48ca-b4b6-515eefac83ca`。単体17件も通過。
 
 [PCの正式入口](../research/discovery-adoption/20261017/beta-ja-1241-entrance.png)／[添付と同じ名前候補](../research/discovery-adoption/20261017/beta-ja-1241-names.png)／[スマホの一覧](../research/discovery-adoption/20261017/beta-ja-390-list.png)／[英語の入口](../research/discovery-adoption/20261017/beta-en-390-entrance.png)。[実幅の計測](../research/discovery-adoption/20261017/beta-measurements.json)も保存する。
+
+### 正式VPS：Web配置物の準備と管理者操作待ち
+
+実装commit `75a8152` のWeb-only image `beta-m3-discovery-20261017` をbuild。build ID `Eieg0jcFJQ-MI5TvrJRft`、linux/amd64、Node24.21.0、[固定digest等のmanifest](../research/discovery-adoption/20261017/web-manifest.json)を記録する。正式用イメージをローカル公開KGへread-only接続し、readinessと代表7件を通過した。既存DB側のnetworkやデータを変更せず、試験コンテナ側のホスト名だけを合わせた。試験では会員保存・公開・広告を無効にした。
+
+Web imageだけのarchiveは106,820,861 bytes、SHA-256 `05a1dc10aca63e65f4c87c68a66ae666444e5446379f7b92caaa793a93f7e36d`。VPSの `/home/develop/graph-m3-discovery-20261017/` へmanifest・共通更新script・activation scriptと転送し、現地の全checksum・shell構文検証が成功した。私有env・credential・新operatorは同梱しない。
+
+更新直前の正式サイトは匿名200、KG revision `5e2a94af-9061-4087-bb7a-045a3c0133f4`、会員statusはGoogle。Docker／Caddy／既存通知サービスはactive。3200／betaとは別KGのまま維持する。
+
+SSHユーザーのsudoはパスワード必須で、既存の[配置契約](PRODUCTION_DEPLOYMENT.md#既存webだけの節目更新step12以後)に従って権限を変更せず管理者実行を待つ。これは準備完了の記録であり、正式サイトの反映・公開後の代表操作はまだ未完了。
+
+```bash
+sudo bash /home/develop/graph-m3-discovery-20261017/scripts/activate-discovery-search.sh
+```
+
+管理者実行後は、正式HTTPS上の同build、KG revision維持、日英PC／スマホの正式入口→条件変更→結果→Graph→Back、研究機関・根拠・未対応表示、会員status／匿名profile401、旧preview401、既存serviceを確認して追記する。
