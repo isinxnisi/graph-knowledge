@@ -1,5 +1,7 @@
 # Discovery Search — テーマと切り口を試す初期版
 
+後続の[Discovery Modelと検索体験の再設計](DISCOVERY_MODEL_REDESIGN.md)では、11世界と現有データの提案を共通文脈で扱う方針、操作別能力・収録状況・次のUI比較を整理した。設計案であり、以下の現行API・3テーマ・画面を置き換えたものではない。
+
 2026-10-16。[Issue #4](https://github.com/isinxnisi/graph-knowledge/issues/4)の実装単位。[M3構想](M3_DISCOVERY_EXPERIENCE_CONTEXT.md)と[探索プリセットのレビュー](EXPLORATION_PRESETS_REVIEW.md)を参照する。今回の体験を評価するための実装であり、分類体系・多段プリセットの最終仕様ではない。
 
 ## 体験と読み順

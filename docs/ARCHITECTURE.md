@@ -1,5 +1,7 @@
 # 現行技術設計
 
+2026-10-16、[Discovery Model再設計](design/DISCOVERY_MODEL_REDESIGN.md)は未実装の設計レビュー。共通Contextから既存の検索・近傍・概要・根拠取得へ解決し、操作ごとの対応条件と公開revision別の収録観測を区別する。世界カタログ・収集テーマ・DB分類を直接対応させず、未対応条件を除去した代替検索は明示選択とする。新しいAPI・Graph条件・URL codec・分類索引は本書の現行契約へまだ追加しない。具体シナリオと次のUI比較は同レビューを参照。
+
 2026-10-16、漫画収集は44中心作家＋9共同制作者・102作品の企画範囲を合意。[新規adapter](design/MANGA_COLLECTION_ADAPTER.md)の隔離試験後、プロジェクト運営者がr0002の特定hash・8作品／12人物の候補生成を明示承認し、正式実行を完了した。固定コード・入力は不変、15 Entity・4 hidden Claim候補をGit外ジョブへ保存した。[結果と証跡](research/famous-manga-creators/20261016/r0002-run-review.md)を参照。個別知識の受入・公開KG更新は行っていない。
 
 2026-10-16、[収集テーマCLI](design/COLLECTION_THEMES.md)を開発側の管理経路として追加。Git管理の定義revisionと内容hashへの人間承認を照合し、固定adapter・固定入力の候補生成だけを実行する。生成物・試行履歴はGit外のジョブディレクトリに置く。既存のPython台帳／fixture生成と `public:validate` を再利用し、テーマ由来はsidecarへ記録する。Neo4j／会員PG／Web API／release manifest schemaは変更しない。収集承認・知識受入・公開適用は独立した境界とする。
