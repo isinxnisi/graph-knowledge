@@ -1,0 +1,56 @@
+[
+  {
+    "width": 1440,
+    "height": 900,
+    "initial": {
+      "bodyHeight": 773,
+      "scrollHeight": 773,
+      "keywordTop": 131,
+      "resultsTop": 216.140625,
+      "visibleClaims": 0
+    },
+    "pluto": {
+      "bodyHeight": 773,
+      "scrollHeight": 901,
+      "keywordTop": 146,
+      "resultsTop": 233.28125,
+      "visibleClaims": 4
+    }
+  },
+  {
+    "width": 390,
+    "height": 844,
+    "initial": {
+      "bodyHeight": 771,
+      "scrollHeight": 771,
+      "keywordTop": 363.59375,
+      "resultsTop": 446.125,
+      "visibleClaims": 0
+    },
+    "pluto": {
+      "bodyHeight": 771,
+      "scrollHeight": 1813,
+      "keywordTop": 360,
+      "resultsTop": 444.78125,
+      "visibleClaims": 1
+    }
+  },
+  {
+    "width": 320,
+    "height": 650,
+    "initial": {
+      "bodyHeight": 577,
+      "scrollHeight": 793,
+      "keywordTop": 434.703125,
+      "resultsTop": 517.234375,
+      "visibleClaims": 0
+    },
+    "pluto": {
+      "bodyHeight": 577,
+      "scrollHeight": 2063,
+      "keywordTop": 477.28125,
+      "resultsTop": 559.8125,
+      "visibleClaims": 0
+    }
+  }
+]

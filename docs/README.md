@@ -42,6 +42,7 @@
 | --- | --- |
 | [漫画r0002の正式受入・release準備](design/MANGA_R0002_ACCEPTED_RELEASE.md)／[ORIGINAL_STORY](design/ORIGINAL_STORY.md) | 2026-10-17。4 Claim・7 Entity・4 Source・4 Citationを人間が正式受入。原作Role実装、原作5件は個別受入待ち。release候補のvalidate・無書込plan、公開applyは未許可 |
 | [漫画r0002の個別受入・公開準備](design/MANGA_R0002_ACCEPTANCE_REVIEW.md)／[制作Role意味レビュー](design/MANGA_PRODUCTION_ROLE_REVIEW.md) | 2026-10-17の初回レビュー記録（hash保全）。4 Claim・15新規Entityの推奨、保留11件と既存2 Claim重複。後続の正式受入・Role採用・release候補は上記記録を参照 |
+| [Discovery Labの画面全体・探索操作の改善](design/DISCOVERY_LAB_EDITORIAL_REVIEW.md) | 2026-10-17。PCの探索／記録の並置、スマホの結果優先、実接点が見えるプリセット、視覚階層と操作後の移動 |
 | [Discovery Labの情報密度・操作改善](design/DISCOVERY_LAB_DENSITY_REVIEW.md) | 2026-10-17。入口タブ、直接編集と解除、初期プリセットと関連候補の強弱、結果横のGraph、PC／スマホの変更前後比較 |
 | [Discovery Modelの操作比較試作](design/DISCOVERY_MODEL_PROTOTYPE.md) | 2026-10-17。既存検索と共存する `/discovery-lab`。段階／二タブ、11世界、公開APIの接点と根拠、未対応の明示、PC／スマホ検証 |
 | [Discovery Modelと検索体験の再設計](design/DISCOVERY_MODEL_REDESIGN.md)／[シナリオ照合](research/discovery-model/20261016/REVIEW.md) | 2026-10-16。共通探索文脈、11世界、操作別の能力、公開revision別の収録観測、提案と世界探索の往復を設計。採用方針・UI試作候補・未決を分離。runtime・収集・公開KGは変更なし |

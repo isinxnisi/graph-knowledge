@@ -1,5 +1,7 @@
 # Discovery Lab：情報密度と操作の改善
 
+**後続の画面改善**：[画面全体と探索操作の再構成](DISCOVERY_LAB_EDITORIAL_REVIEW.md)が現在のUI。以下は前回版の変更と比較記録。
+
 2026-10-17。[探索モデル](DISCOVERY_MODEL_REDESIGN.md)・[初回試作](DISCOVERY_MODEL_PROTOTYPE.md)を維持し、`/discovery-lab` の画面とUI状態だけを改善した。既存Discovery Searchとは共存する。
 
 ## 採用した画面構成

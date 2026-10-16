@@ -1,3 +1,4 @@
+import { writeFile } from "node:fs/promises";
 import { test, expect, type Page } from "@playwright/test";
 import { decodeExploration } from "../../lib/client/exploration-url";
 const pluto = "2b7c6289-d050-4dc0-93e3-9307681253cc";
@@ -34,12 +35,14 @@ for (const [locale, width, height] of [["ja", 1440, 900], ["ja", 390, 844], ["en
     const en = locale === "en"; await open(page, info.project.use.baseURL!);
     const dialog = page.getByRole("dialog"), results = page.getByTestId("prototype-results");
     await expect(page.getByTestId("prototype-presets").getByRole("button").first()).toBeEnabled();
-    await page.screenshot({ path: info.outputPath("initial-" + width + ".png") });
+    await page.screenshot({ animations: "disabled", path: info.outputPath("initial-" + width + ".png") });
     const initial = await metrics(page);
     await expect(dialog.locator("details")).toHaveCount(0);
     const navTop = (await dialog.getByRole("tablist").boundingBox())!.y;
     const summaryTop = (await dialog.getByLabel(en ? "Selection summary" : "選択要約").boundingBox())!.y;
     expect(navTop).toBeLessThan(summaryTop);
+    const entrances = await dialog.getByRole("tab").all();
+    expect(Math.abs((await entrances[0].boundingBox())!.y - (await entrances[1].boundingBox())!.y)).toBeLessThan(2);
     // Every search step below uses the condition controls and name results, never recommendations.
     await chooseWorld(page, "science");
     await dialog.getByLabel(en ? "Relation criteria" : "関係の条件", { exact: true }).getByRole("button", { name: en ? "Production" : "制作", exact: true }).click();
@@ -48,8 +51,16 @@ for (const [locale, width, height] of [["ja", 1440, 900], ["ja", 390, 844], ["en
     const selected = await metrics(page);
     expect(selected.resultsTop).toBeLessThan(width === 320 ? 950 : width === 390 ? 680 : 540);
     expect(selected.visibleClaims).toBeGreaterThanOrEqual(width === 320 ? 0 : 1);
-    await page.screenshot({ path: info.outputPath("pluto-" + width + ".png") });
+    const criteriaBox = (await dialog.getByLabel(en ? "Edit relation criteria" : "関係の条件を編集", { exact: true }).boundingBox())!;
+    const resultsBox = (await page.getByTestId("prototype-keyword").boundingBox())!;
+    if (width > 850) expect(criteriaBox.x + criteriaBox.width).toBeLessThan(resultsBox.x);
+    else expect((await page.getByTestId("prototype-next-targets").boundingBox())!.y).toBeGreaterThan(resultsBox.y);
+    // Text must fit each segment, including narrow English labels.
+    const segments = dialog.getByLabel(en ? "Relation criteria" : "関係の条件", { exact: true }).getByRole("button");
+    for (const segment of await segments.all()) expect(await segment.evaluate(el => el.scrollWidth <= el.clientWidth + 1)).toBe(true);
+    await page.screenshot({ animations: "disabled", path: info.outputPath("pluto-" + width + ".png") });
     await info.attach("density", { body: JSON.stringify({ width, height, initial, pluto: selected }), contentType: "application/json" });
+    await writeFile(info.outputPath("metrics.json"), JSON.stringify({ width, height, initial, pluto: selected }, null, 2));
     console.log("density", JSON.stringify({ width, height, initial, pluto: selected }));
     const first = results.getByTestId("prototype-claim").first();
     await first.getByRole("button", { name: en ? "Read evidence ＋" : "根拠を開く ＋", exact: true }).click();
@@ -209,5 +220,22 @@ test("390px touch centers select only their intended condition", async ({ browse
     await expect(button).toHaveAttribute("aria-pressed", "true");
     await expect(relations.locator('[aria-pressed="true"]')).toHaveCount(1);
   }
+  await context.close();
+});
+
+test("mobile subject navigation reveals new context without changing other criteria", async ({ browser }, info) => {
+  const context = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
+  const page = await context.newPage(); await open(page, info.project.use.baseURL!);
+  await page.locator('[data-seed="' + pluto + '"]').getByRole("button").click();
+  const targets = page.getByTestId("prototype-next-targets");
+  await targets.getByRole("button", { name: "長崎尚志を対象にする", exact: true }).click();
+  await expect(page.locator("#prototype-subject")).toContainText("長崎尚志");
+  await expect(page.getByTestId("prototype-results")).not.toHaveAttribute("data-updating", "true");
+  expect(await page.getByTestId("prototype-body").evaluate(el => el.scrollTop)).toBe(0);
+  await expect(page.getByLabel("関係の条件", { exact: true }).getByRole("button", { name: "制作", exact: true })).toHaveAttribute("aria-pressed", "true");
+  await page.getByRole("tab", { name: "知識世界から", exact: true }).click();
+  await expect(page.locator('[data-world="film"]')).toBeVisible();
+  expect(await page.getByTestId("prototype-body").evaluate(el => el.scrollTop)).toBe(0);
+  await expect(page.locator("#prototype-subject")).toContainText("長崎尚志");
   await context.close();
 });
