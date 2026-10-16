@@ -1,0 +1,38 @@
+[
+  {
+    "width": 1440,
+    "height": 900,
+    "initial": {
+      "bodyHeight": 662.609375,
+      "scrollHeight": 1058,
+      "keywordTop": 613.1875,
+      "resultsTop": 707.953125,
+      "visibleClaims": 0
+    },
+    "pluto": {
+      "bodyHeight": 662.609375,
+      "scrollHeight": 2173,
+      "keywordTop": 699.75,
+      "resultsTop": 794.515625,
+      "visibleClaims": 0
+    }
+  },
+  {
+    "width": 390,
+    "height": 844,
+    "initial": {
+      "bodyHeight": 656.6353759765625,
+      "scrollHeight": 1405,
+      "keywordTop": 929.8662261962891,
+      "resultsTop": 1024.619888305664,
+      "visibleClaims": 0
+    },
+    "pluto": {
+      "bodyHeight": 656.71875,
+      "scrollHeight": 2513,
+      "keywordTop": 954,
+      "resultsTop": 1048.765625,
+      "visibleClaims": 0
+    }
+  }
+]

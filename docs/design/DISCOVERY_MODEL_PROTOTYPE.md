@@ -1,5 +1,7 @@
 # M3 Discovery Model：操作できる比較試作
 
+**2026-10-17 UI改善追記**：[情報密度と操作の改善記録](DISCOVERY_LAB_DENSITY_REVIEW.md)が現在の画面仕様。初期表示は二タブ、世界はチップ、条件解除は直接操作、名前検索では文脈を保持する。本書の以下は初回試作の実装・検証記録であり、旧画面のサイズ・初期値・解除方式を現仕様として扱わない。
+
 2026-10-17。設計の正本は [DISCOVERY_MODEL_REDESIGN.md](DISCOVERY_MODEL_REDESIGN.md)。本書は今回の実装範囲・操作結果・次の判断を記録する。既存のDiscovery Searchを置き換えない。
 
 ## 入口と試し方
