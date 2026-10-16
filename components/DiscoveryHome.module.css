@@ -77,3 +77,4 @@
   .home > [data-discovery-reveal] { animation: none; }
   .home .featured, .home .fieldGrid a { transition: none; }
 }
+.home .prototypeLink { display: inline-block; padding: 10px 0; margin-top: 2px; font-size: 11px; color: var(--color-accent); text-underline-offset: 4px; }

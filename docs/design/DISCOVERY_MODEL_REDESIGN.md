@@ -1,5 +1,7 @@
 # Discovery Modelと検索体験の再設計
 
+2026-10-17：この設計に基づく[操作比較試作と検証](DISCOVERY_MODEL_PROTOTYPE.md)を追加した。既存検索と共存し、現行の公開APIで動く範囲を接続。以下の設計時点の未実装記述と、試作の実装範囲を区別する。
+
 2026-10-16着手、2026-10-17整理／M3設計レビュー。**今回の設計で採用する方針と、次の試作で比較する案**。本書のインターフェイスは未実装であり、現在のAPI契約・UI・データを変更しない。利用者による操作評価は未実施。
 
 [知識世界と収録状況](KNOWLEDGE_WORLDS_AND_COVERAGE_PLAN.md)、[M3の体験目標](M3_DISCOVERY_EXPERIENCE_CONTEXT.md)、[現行検索](DISCOVERY_SEARCH.md)、[プリセット](EXPLORATION_PRESETS_REVIEW.md)、[プロダクト原則](PRODUCT_VISION_AND_PRINCIPLES.md)、[収集管理](COLLECTION_THEMES.md)を踏まえる。意味の基準は[関係モデル](RELATION_MODEL_PRINCIPLES.md)と[制作クレジット](CONTRIBUTION_CREDITS.md)。調査証跡・再確認範囲は[シナリオ照合記録](../research/discovery-model/20261016/REVIEW.md)。
