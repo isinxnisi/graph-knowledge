@@ -800,3 +800,11 @@ VPS `/home/develop/graph-m3-search-20261016` へWebのみbundleを転送し、6 
 Home／JSなしの日英3件、390pxのスクロール連鎖とGraph pan／pinch1件、375pxの会員との同一タブ往復・本人表示・座標保持1件も成功。会員はAPI fixtureであり新しい本人OAuthの実行ではない。PC日英と390／320pxのスクリーンショットで、テーマ・関係選択・結果直前の名前欄、結果の2列／1列と幅内収容を確認した。スマホはChromiumタッチエミュレーションであり物理端末での確認とは分ける。反映結果は後続へ記録する。
 
 最終Docker版でも検索4件（EN320pxのテーマ／Graph引継ぎ、実データAPI、既存Graphと直前復帰、JA1440pxの一覧／周辺／Back）が成功（31.2秒）。ローカル実データのAPIは修正後の初回0.33〜2.38秒、同じ候補取得の反復は0.04〜0.21秒（各3回）。VPSの性能値ではない。正式Hostを付けたローカルimageで適用wrapperの事後確認（日英Home・テーマ／切り口API・Entity直接URL・会員noindex）も成功した。KG／会員PGの書込・再投入・再起動、Caddy／OAuth変更はない。
+
+反映記録：実装 `e959ef99f7b327397b4b1610ae376b2b4e27bc53` を日本語でcommit。最初の通常pushはGitHub mainの4文書commitにより拒否されたため、固定SHA `571dd3e` の差分（M3構想のキーワード配置・タップ主体の方針15行のみ）を確認して統合した。統合commit `709fced` を通常push済み。実行コードは同一なので文書統合による再buildは行わない。
+
+3200を検証済みhost build `8pogz_6LVRvtVLHKWXuc9` へ切り替え、既存会員／広告runtimeとGoogle provider、KG revision `82b01515-594c-48ca-b4b6-515eefac83ca` を維持。旧buildは `/tmp/plunode-discovery-play-20261016/before-3200-build` に保持。実Tunnel `https://graph-beta.isinxnisi.com/` でもJA1440／JA390／EN320のテーマ・切り口・解除・Graph引継ぎ、EN320の一覧／周辺／Backの4件が成功（49.3秒）。3200・候補3217（同じ最終host build）・Docker版3218は起動を維持する。
+
+VPS `/home/develop/graph-m3-discovery-play-20261016` へWebのみbundleを転送し、6 fileのchecksumと両Bash構文を遠隔照合済み。Web `beta-m3-discovery-play-20261016`、config `sha256:263f51bac41aa1bdcd4c13db0d55815df3438ee27abebf028dc393ac503760f7`、image build `6z0mMaXV6OIyJtl9TJNfB`、archive 118,327,372 bytes、SHA256 `76d4d336ad594e7549761a0ee22444e2e013d59cf09e47416a419ec8f9c433ff`。archive内configのhashもローカルimageと一致した。Docker／Caddy／既存通知serviceはactive。
+
+**今回の試作は本番未適用**。既存パスワード付きsudo境界の残操作を `sudo bash /home/develop/graph-m3-discovery-play-20261016/scripts/activate-m3-discovery-play.sh` 一回へまとめた。以前の検索初期版scriptを先に実行する必要はない。受入済operator照合・KG単独backup→Webだけ更新→readiness／正式HTTPS確認。切替失敗の旧Web復帰と、HTTPS事後確認だけの失敗では更新済みと明示する扱いを維持。手動復旧は本人が直前に適用した `graph-m3-scroll-20261016` のscriptを再実行する手順を同梱。KG再投入・会員PG書込／DB再起動・Caddy／OAuth変更はない。M3全体の完了、正式本番での新UI確認、本人の体験評価とは区別する。
