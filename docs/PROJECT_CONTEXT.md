@@ -1,5 +1,7 @@
 # プロジェクトの構想と判断基準
 
+2026-10-17、[漫画r0002の受入レビュー](design/MANGA_R0002_ACCEPTANCE_REVIEW.md)で4 Claim・15新規Entityの同一性を受入推奨として整理。4 Claimの端点になる新規7 Entityの公開草稿を既存validator・無書込planで確認し、個別受入・公開適用は保留する。[制作Roleレビュー](design/MANGA_PRODUCTION_ROLE_REVIEW.md)は当該漫画の原作担当と翻案元を区別し、漫画表記の資料別確認、既存SUPERVISION、集約著者の本人限定・既存再利用を提案。新Roleの採用・実装や残り94作品の実行は今回の承認範囲に含めない。
+
 2026-10-16、M3の[Discovery Modelと検索体験の再設計](design/DISCOVERY_MODEL_REDESIGN.md)をレビュー案として整理。現有データからの提案と11の知識世界からの探索は共通の文脈を使い、世界・意図・具体条件・実行能力・公開revision別の収録状況を分離する。未収録の世界も入口に残し、未対応条件を黙って捨てず、別の探索へ進める。次は共有条件を保つ段階表示と二タブ表示の操作比較。今回の設計で現行UI・収集処理・公開KGを変更せず、M3完了やUIの最終合格とは扱わない。
 
 2026-10-16、漫画収集は44中心作家＋9共同制作者・102作品の企画範囲を合意。[新規adapter](design/MANGA_COLLECTION_ADAPTER.md)の隔離試験後、プロジェクト運営者がr0002の特定hash・8作品／12人物の候補生成を明示承認し、正式実行を完了した。15 Entity・4 Claim候補、既存5 Entity再利用、責任表示11件保留。[次の人間レビューと証跡](research/famous-manga-creators/20261016/r0002-run-review.md)を参照。個別知識は未受入・未公開で、公開KGは変更していない。

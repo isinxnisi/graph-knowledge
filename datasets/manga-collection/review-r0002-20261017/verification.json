@@ -1,0 +1,175 @@
+{
+  "hiddenDraftRejected": true,
+  "newClaimsRemainHidden": true,
+  "temporaryProjectionRetained": false,
+  "validate": {
+    "valid": true,
+    "counts": {
+      "nodes": {
+        "Entity": 2116,
+        "Claim": 1848,
+        "Source": 1755,
+        "Citation": 1884,
+        "ExternalIdentifier": 2485
+      },
+      "relationships": {
+        "SUBJECT": 1848,
+        "OBJECT": 1848,
+        "HAS_CITATION": 1884,
+        "CITES": 1884,
+        "HAS_EXTERNAL_ID": 2485
+      }
+    }
+  },
+  "plan": {
+    "release": "draft-manga-r0002-20261017",
+    "unchanged": false,
+    "added": [
+      "Citation:ad510a01-b4bc-4f29-b4b0-e415a13ae0b7",
+      "Citation:c7058cc5-cc97-4191-a9cd-cd52bb958db7",
+      "Citation:c91fecfc-7389-491b-aca9-d181138ebe35",
+      "Citation:e5af19f9-a054-402e-bd48-c29af7b80ac9",
+      "Claim:07da4e98-1047-46a4-b48a-30f3549c89f9",
+      "Claim:84cb19dd-9e8e-496f-abf6-674885abf185",
+      "Claim:cf18d898-41e5-486f-8dcf-8a666bef83fe",
+      "Claim:fe6d7c19-646b-474a-ad0a-3b20bc816866",
+      "Entity:31f3c278-7d49-4aed-9a36-c722cae25ed2",
+      "Entity:3f962dde-c1bc-4165-897b-e129b8e38983",
+      "Entity:9f43fefa-d878-4e5e-b1a2-0413432e9dbd",
+      "Entity:a7027ea6-d35d-407d-8e25-d98dc5b0cb92",
+      "Entity:b4de3765-e8c4-49f1-a322-a021475ffd09",
+      "Entity:c71ebc3e-ae93-43d6-a525-eb5b1abd609f",
+      "Entity:e9639ece-9288-4098-973c-9dd95131b7ba",
+      "ExternalIdentifier:[\"wikidata\",\"Q106575051\"]",
+      "ExternalIdentifier:[\"wikidata\",\"Q24864023\"]",
+      "ExternalIdentifier:[\"wikidata\",\"Q38275959\"]",
+      "ExternalIdentifier:[\"wikidata\",\"Q3981526\"]",
+      "ExternalIdentifier:[\"wikidata\",\"Q624839\"]",
+      "ExternalIdentifier:[\"wikidata\",\"Q65231576\"]",
+      "ExternalIdentifier:[\"wikidata\",\"Q65240543\"]",
+      "Source:1f388832-0cb6-4ccd-b7e6-80bb0ed0212a",
+      "Source:7187047d-51fc-408b-a473-4f2e04c313c1",
+      "Source:7def5563-ec0a-4709-99aa-22f8b07a5c10",
+      "Source:82665bcb-7da4-408c-91dd-befdc3181629"
+    ],
+    "updated": [],
+    "relationshipsAdded": 23,
+    "counts": {
+      "nodes": {
+        "Entity": 2116,
+        "Claim": 1848,
+        "Source": 1755,
+        "Citation": 1884,
+        "ExternalIdentifier": 2485
+      },
+      "relationships": {
+        "SUBJECT": 1848,
+        "OBJECT": 1848,
+        "HAS_CITATION": 1884,
+        "CITES": 1884,
+        "HAS_EXTERNAL_ID": 2485
+      }
+    }
+  },
+  "status": "technical-review-only",
+  "formalAcceptance": "pending",
+  "tests": {
+    "files": [
+      "tests/public.test.ts",
+      "tests/contribution.test.ts",
+      "tests/contribution-credits.test.ts"
+    ],
+    "passed": 34
+  },
+  "duplicateChecks": {
+    "frozenBase": "20261014-credits-001",
+    "localNewEntityNameSearchMatches": 0,
+    "vpsNewEntityNameSearchMatches": 0,
+    "nameSearchCountPerEnvironment": 15,
+    "notice": "名称検索は外部ID・全DBの一意性保証ではない。ローカルplanは既存公開KG全体の衝突・driftを検査。VPS planは公開前に別実行。"
+  },
+  "observedRevisions": {
+    "local": "82b01515-594c-48ca-b4b6-515eefac83ca",
+    "vps": "5e2a94af-9061-4087-bb7a-045a3c0133f4"
+  },
+  "planSummary": {
+    "addedNodes": 26,
+    "updatedNodes": 0,
+    "addedRelationships": 23
+  },
+  "reviewArtifactHashes": {
+    "review.json": "dec7cd6e012e82be409541418480e95565214c3457bb48ddbc4eca280c12ec76",
+    "proposed-records.json": "8ef5b68ccda860c453078bef5a57615495320eb470e4230fe04ceda8f7262d81"
+  },
+  "privateDraftHashes": {
+    "data.json": "1eedf74c2917abdce1c7d82fc628fd0d43ecdca64d57db8f59a2ddbd452cb499",
+    "manifest.json": "b622452bae90eabe5920ef0e18b03bc67233d8c7a1b0d1da1a25b3ae180fbc20"
+  },
+  "planForDataSha256": "1eedf74c2917abdce1c7d82fc628fd0d43ecdca64d57db8f59a2ddbd452cb499",
+  "reviewAssertions": [
+    "all-15-new-entity-identities-reviewed",
+    "four-claims-sources-citations-traced",
+    "base-records-unchanged",
+    "pending-hidden-boundary-retained",
+    "two-held-pluto-records-already-public",
+    "local-links-valid",
+    "full-hidden-draft-rejected-by-existing-validator",
+    "new-entity-aliases-limited-to-frozen-ja-en-labels"
+  ],
+  "environmentChecks": [
+    {
+      "origin": "http://127.0.0.1:3200",
+      "dataset": {
+        "httpStatus": 200,
+        "body": {
+          "dataset": "public-kg",
+          "revision": "82b01515-594c-48ca-b4b6-515eefac83ca"
+        }
+      },
+      "search": {
+        "httpStatus": 200,
+        "body": {
+          "names": [
+            "PLUTO"
+          ]
+        }
+      }
+    },
+    {
+      "origin": "https://graph-beta.isinxnisi.com",
+      "dataset": {
+        "httpStatus": 200,
+        "body": {
+          "dataset": "public-kg",
+          "revision": "82b01515-594c-48ca-b4b6-515eefac83ca"
+        }
+      },
+      "search": {
+        "httpStatus": 200,
+        "body": {
+          "names": [
+            "PLUTO"
+          ]
+        }
+      }
+    },
+    {
+      "origin": "https://plunode.net",
+      "dataset": {
+        "httpStatus": 200,
+        "body": {
+          "dataset": "public-kg",
+          "revision": "5e2a94af-9061-4087-bb7a-045a3c0133f4"
+        }
+      },
+      "search": {
+        "httpStatus": 200,
+        "body": {
+          "names": [
+            "PLUTO"
+          ]
+        }
+      }
+    }
+  ]
+}

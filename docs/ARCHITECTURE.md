@@ -1,5 +1,7 @@
 # 現行技術設計
 
+2026-10-17、[漫画r0002の公開準備](design/MANGA_R0002_ACCEPTANCE_REVIEW.md)は既存schema・release機構を使用し、元ジョブを変えずにpendingの追加レコードと私有領域のhidden全snapshot草稿を作成した。一時公開形式のvalidator・ローカルread-only planだけを実行し、26 Node・23 Relationship追加／既存更新0を確認。新Role案は[意味レビュー](design/MANGA_PRODUCTION_ROLE_REVIEW.md)に留め、語彙・adapter・DB/API/UI・公開KGは変更しない。
+
 2026-10-16、[Discovery Model再設計](design/DISCOVERY_MODEL_REDESIGN.md)は未実装の設計レビュー。共通Contextから既存の検索・近傍・概要・根拠取得へ解決し、操作ごとの対応条件と公開revision別の収録観測を区別する。世界カタログ・収集テーマ・DB分類を直接対応させず、未対応条件を除去した代替検索は明示選択とする。新しいAPI・Graph条件・URL codec・分類索引は本書の現行契約へまだ追加しない。具体シナリオと次のUI比較は同レビューを参照。
 
 2026-10-16、漫画収集は44中心作家＋9共同制作者・102作品の企画範囲を合意。[新規adapter](design/MANGA_COLLECTION_ADAPTER.md)の隔離試験後、プロジェクト運営者がr0002の特定hash・8作品／12人物の候補生成を明示承認し、正式実行を完了した。固定コード・入力は不変、15 Entity・4 hidden Claim候補をGit外ジョブへ保存した。[結果と証跡](research/famous-manga-creators/20261016/r0002-run-review.md)を参照。個別知識の受入・公開KG更新は行っていない。

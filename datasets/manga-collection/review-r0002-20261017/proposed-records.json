@@ -1,0 +1,353 @@
+{
+  "status": "pending-human-acceptance",
+  "notForPublicApply": true,
+  "baseDirectory": "datasets/public-kg/releases/20261014-credits-001",
+  "sourceJobId": "famous-manga-creators-r0002-97c171eb654963e4",
+  "description": "4 Claimとその端点を先行公開する案。正式受入・公開承認なし。Claimはhidden、未確認別名と候補用説明を除外。",
+  "records": {
+    "entities": [
+      {
+        "id": "31f3c278-7d49-4aed-9a36-c722cae25ed2",
+        "kind": "work",
+        "name": "Dr.STONE",
+        "description": null,
+        "aliases": [
+          "Dr. Stone"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q38275959"
+          }
+        ],
+        "createdAt": "2026-10-16T00:00:00Z",
+        "updatedAt": "2026-10-16T00:00:00Z",
+        "event": null
+      },
+      {
+        "id": "3f962dde-c1bc-4165-897b-e129b8e38983",
+        "kind": "work",
+        "name": "SPY×FAMILY",
+        "description": null,
+        "aliases": [
+          "Spy × Family"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q65231576"
+          }
+        ],
+        "createdAt": "2026-10-16T00:00:00Z",
+        "updatedAt": "2026-10-16T00:00:00Z",
+        "event": null
+      },
+      {
+        "id": "9f43fefa-d878-4e5e-b1a2-0413432e9dbd",
+        "kind": "person",
+        "name": "藤本タツキ",
+        "description": null,
+        "aliases": [
+          "Tatsuki Fujimoto"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q24864023"
+          }
+        ],
+        "createdAt": "2026-10-16T00:00:00Z",
+        "updatedAt": "2026-10-16T00:00:00Z",
+        "event": null
+      },
+      {
+        "id": "a7027ea6-d35d-407d-8e25-d98dc5b0cb92",
+        "kind": "work",
+        "name": "チェンソーマン",
+        "description": null,
+        "aliases": [
+          "Chainsaw Man"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q65240543"
+          }
+        ],
+        "createdAt": "2026-10-16T00:00:00Z",
+        "updatedAt": "2026-10-16T00:00:00Z",
+        "event": null
+      },
+      {
+        "id": "b4de3765-e8c4-49f1-a322-a021475ffd09",
+        "kind": "person",
+        "name": "Boichi",
+        "description": null,
+        "aliases": [],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q624839"
+          }
+        ],
+        "createdAt": "2026-10-16T00:00:00Z",
+        "updatedAt": "2026-10-16T00:00:00Z",
+        "event": null
+      },
+      {
+        "id": "c71ebc3e-ae93-43d6-a525-eb5b1abd609f",
+        "kind": "work",
+        "name": "トリリオンゲーム",
+        "description": null,
+        "aliases": [
+          "Trillion Game"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q106575051"
+          }
+        ],
+        "createdAt": "2026-10-16T00:00:00Z",
+        "updatedAt": "2026-10-16T00:00:00Z",
+        "event": null
+      },
+      {
+        "id": "e9639ece-9288-4098-973c-9dd95131b7ba",
+        "kind": "person",
+        "name": "遠藤達哉",
+        "description": null,
+        "aliases": [
+          "Tatsuya Endō"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q3981526"
+          }
+        ],
+        "createdAt": "2026-10-16T00:00:00Z",
+        "updatedAt": "2026-10-16T00:00:00Z",
+        "event": null
+      }
+    ],
+    "claims": [
+      {
+        "id": "07da4e98-1047-46a4-b48a-30f3549c89f9",
+        "subjectId": "e9639ece-9288-4098-973c-9dd95131b7ba",
+        "objectId": "3f962dde-c1bc-4165-897b-e129b8e38983",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "hidden",
+        "createdAt": "2026-10-16T00:00:00Z",
+        "updatedAt": "2026-10-16T00:00:00Z",
+        "contribution": {
+          "roleId": "AUTHORSHIP",
+          "scope": {
+            "kind": "publication",
+            "isbn13": "9784088820118",
+            "volumeLabel": "第1巻",
+            "editionLabel": null,
+            "language": "ja"
+          }
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      },
+      {
+        "id": "84cb19dd-9e8e-496f-abf6-674885abf185",
+        "subjectId": "9f43fefa-d878-4e5e-b1a2-0413432e9dbd",
+        "objectId": "a7027ea6-d35d-407d-8e25-d98dc5b0cb92",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "hidden",
+        "createdAt": "2026-10-16T00:00:00Z",
+        "updatedAt": "2026-10-16T00:00:00Z",
+        "contribution": {
+          "roleId": "AUTHORSHIP",
+          "scope": {
+            "kind": "publication",
+            "isbn13": "9784088817804",
+            "volumeLabel": "第1巻",
+            "editionLabel": null,
+            "language": "ja"
+          }
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      },
+      {
+        "id": "cf18d898-41e5-486f-8dcf-8a666bef83fe",
+        "subjectId": "710bc8a7-efed-4c2e-a4b4-6c65b0aff695",
+        "objectId": "c71ebc3e-ae93-43d6-a525-eb5b1abd609f",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "hidden",
+        "createdAt": "2026-10-16T00:00:00Z",
+        "updatedAt": "2026-10-16T00:00:00Z",
+        "contribution": {
+          "roleId": "DRAWING",
+          "scope": {
+            "kind": "publication",
+            "isbn13": "9784098610105",
+            "volumeLabel": "第1巻",
+            "editionLabel": null,
+            "language": "ja"
+          }
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      },
+      {
+        "id": "fe6d7c19-646b-474a-ad0a-3b20bc816866",
+        "subjectId": "b4de3765-e8c4-49f1-a322-a021475ffd09",
+        "objectId": "31f3c278-7d49-4aed-9a36-c722cae25ed2",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "hidden",
+        "createdAt": "2026-10-16T00:00:00Z",
+        "updatedAt": "2026-10-16T00:00:00Z",
+        "contribution": {
+          "roleId": "DRAWING",
+          "scope": {
+            "kind": "publication",
+            "isbn13": "9784088811840",
+            "volumeLabel": "第1巻",
+            "editionLabel": null,
+            "language": "ja"
+          }
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      }
+    ],
+    "sources": [
+      {
+        "id": "1f388832-0cb6-4ccd-b7e6-80bb0ed0212a",
+        "kind": "web",
+        "title": "NDLサーチ: トリリオンゲーム = 1,000,000,000,000$ GAME. 1",
+        "authors": [],
+        "publisher": "国立国会図書館",
+        "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I031350948",
+        "publishedAt": null,
+        "edition": null,
+        "note": "国立国会図書館作成書誌（iss-ndl-opac）の責任表示。メタデータ CC BY 4.0: https://creativecommons.org/licenses/by/4.0/ ; 提供元条件 https://ndlsearch.ndl.go.jp/help/api/provider 。本文・画像・第三者所蔵情報は含まない。",
+        "isDemo": false
+      },
+      {
+        "id": "7187047d-51fc-408b-a473-4f2e04c313c1",
+        "kind": "web",
+        "title": "NDLサーチ: チェンソーマン = Chain saw man. 1",
+        "authors": [],
+        "publisher": "国立国会図書館",
+        "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I029534501",
+        "publishedAt": null,
+        "edition": null,
+        "note": "国立国会図書館作成書誌（iss-ndl-opac）の責任表示。メタデータ CC BY 4.0: https://creativecommons.org/licenses/by/4.0/ ; 提供元条件 https://ndlsearch.ndl.go.jp/help/api/provider 。本文・画像・第三者所蔵情報は含まない。",
+        "isDemo": false
+      },
+      {
+        "id": "7def5563-ec0a-4709-99aa-22f8b07a5c10",
+        "kind": "web",
+        "title": "NDLサーチ: Dr.STONE. 1",
+        "authors": [],
+        "publisher": "国立国会図書館",
+        "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I028309496",
+        "publishedAt": null,
+        "edition": null,
+        "note": "国立国会図書館作成書誌（iss-ndl-opac）の責任表示。メタデータ CC BY 4.0: https://creativecommons.org/licenses/by/4.0/ ; 提供元条件 https://ndlsearch.ndl.go.jp/help/api/provider 。本文・画像・第三者所蔵情報は含まない。",
+        "isDemo": false
+      },
+      {
+        "id": "82665bcb-7da4-408c-91dd-befdc3181629",
+        "kind": "web",
+        "title": "NDLサーチ: SPY×FAMILY. 1",
+        "authors": [],
+        "publisher": "国立国会図書館",
+        "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I029763265",
+        "publishedAt": null,
+        "edition": null,
+        "note": "国立国会図書館作成書誌（iss-ndl-opac）の責任表示。メタデータ CC BY 4.0: https://creativecommons.org/licenses/by/4.0/ ; 提供元条件 https://ndlsearch.ndl.go.jp/help/api/provider 。本文・画像・第三者所蔵情報は含まない。",
+        "isDemo": false
+      }
+    ],
+    "citations": [
+      {
+        "id": "ad510a01-b4bc-4f29-b4b0-e415a13ae0b7",
+        "claimId": "cf18d898-41e5-486f-8dcf-8a666bef83fe",
+        "sourceId": "1f388832-0cb6-4ccd-b7e6-80bb0ed0212a",
+        "locator": "dc:creator（責任表示） / ISBN 9784098610105",
+        "note": "原表記（ja）: 池上遼一 作画。指定刊行物の責任表示で確認された担当。全巻・全版・全期間への外挿、原作から別Roleへの変換はしない。同一資料由来の記録を独立した根拠と数えない。",
+        "accessedAt": "2026-10-16",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "池上遼一 作画",
+          "language": "ja"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      },
+      {
+        "id": "c7058cc5-cc97-4191-a9cd-cd52bb958db7",
+        "claimId": "07da4e98-1047-46a4-b48a-30f3549c89f9",
+        "sourceId": "82665bcb-7da4-408c-91dd-befdc3181629",
+        "locator": "dc:creator（責任表示） / ISBN 9784088820118",
+        "note": "原表記（ja）: 遠藤達哉 著。指定刊行物の責任表示で確認された担当。全巻・全版・全期間への外挿、原作から別Roleへの変換はしない。同一資料由来の記録を独立した根拠と数えない。",
+        "accessedAt": "2026-10-16",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "遠藤達哉 著",
+          "language": "ja"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      },
+      {
+        "id": "c91fecfc-7389-491b-aca9-d181138ebe35",
+        "claimId": "fe6d7c19-646b-474a-ad0a-3b20bc816866",
+        "sourceId": "7def5563-ec0a-4709-99aa-22f8b07a5c10",
+        "locator": "dc:creator（責任表示） / ISBN 9784088811840",
+        "note": "原表記（ja）: Boichi 作画。指定刊行物の責任表示で確認された担当。全巻・全版・全期間への外挿、原作から別Roleへの変換はしない。同一資料由来の記録を独立した根拠と数えない。",
+        "accessedAt": "2026-10-16",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "Boichi 作画",
+          "language": "ja"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      },
+      {
+        "id": "e5af19f9-a054-402e-bd48-c29af7b80ac9",
+        "claimId": "84cb19dd-9e8e-496f-abf6-674885abf185",
+        "sourceId": "7187047d-51fc-408b-a473-4f2e04c313c1",
+        "locator": "dc:creator（責任表示） / ISBN 9784088817804",
+        "note": "原表記（ja）: 藤本タツキ 著。指定刊行物の責任表示で確認された担当。全巻・全版・全期間への外挿、原作から別Roleへの変換はしない。同一資料由来の記録を独立した根拠と数えない。",
+        "accessedAt": "2026-10-16",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "藤本タツキ 著",
+          "language": "ja"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      }
+    ]
+  }
+}
