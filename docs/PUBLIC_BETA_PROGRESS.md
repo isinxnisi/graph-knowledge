@@ -780,3 +780,23 @@ VPS `/home/develop/graph-m3-scroll-20261016` へWebのみbundleを転送し、6 
 VPS `/home/develop/graph-m3-search-20261016` へWebのみbundleを転送し、6 fileのchecksum・両Bash構文を遠隔照合済み。Web `beta-m3-search-20261016`、config `sha256:1fbb33251fef1828e70fb550b722863079a5eff666876c3804851c9c57ffdd7a`、build `nSR4r-XPIz0ZtIj8JFhgf`、archive 118,317,774 bytes、SHA256 `e97c6efe75b5a36b4098deaddbe1c79a3f08744f380fd1cb6d233476fd14e101`。wrapperの正式HTTPS事後検証は、ローカルimageへ正式Hostを指定してHome入口・公開検索API・Entity本文・会員noindexを照合し成功。VPSのCaddy／Docker／既存通知serviceはactive。
 
 今回の検索初期版は**本番未適用**。パスワード付きsudoの既存境界に従い、残操作は `sudo bash /home/develop/graph-m3-search-20261016/scripts/activate-m3-search.sh` 一回。既存operator照合・KG backup後にWebのみ更新し、DB／会員PGの再起動や書込、Caddy／OAuth変更は行わない。切替／readiness失敗時の旧Web復帰を維持し、HTTPSだけの事後検証失敗は更新済みと明示する。手動復旧は本人が直前に適用した `graph-m3-scroll-20261016` のscriptを再実行する手順を同梱した。実本番での新検索と本人の最終体験評価は未確認として残す。
+
+## M3 Discovery SearchのUX・インタラクション試作（2026-10-16）
+
+目的：検索フォームの条件追加ではなく、テーマやつながりを試す途中で興味を見つける体験。[今回の構成・動き・API契約](design/DISCOVERY_SEARCH.md)と[構想への追記](design/M3_DISCOVERY_EXPERIENCE_CONTEXT.md#8-テーマ切り口の体験試作2026-10-16)を参照。分類体系・プリセット全体の仕様を今回の試作で確定しない。
+
+実装：3つの編集的なテーマから、現在KGで実際にある関係の切り口へ。複数選択はOR、再タップ・個別チップ・選び直しで解除できる。テーマ変更で次の選択肢が変わる。種別と直接の周辺は補助的な開閉領域へ移し、任意の名前欄は選択領域の後・結果のすぐ上へ配置。PC2列／スマホ1列の小さな結果行、固定ヘッダと一定のダイアログ外寸で一覧性を保つ。
+
+演出：テーマの背景・輪郭・小さな図、切り口の＋／×、選択チップ、変更された選択肢と結果に170〜300msの局所的な反応を付ける。通信中は以前の結果を薄く残し、inertで古い選択を防ぐ。更新文と短い進捗線を表示。演出の終了待ちを操作条件にせず、reduced-motionでは動きを止める。閉じる・Back／Forward・言語変更は従来の文脈を維持する。
+
+検索能力：テーマは実在の起点から最大2段の公開Claimで辿る集合。分類の推定や新しい関係を生成しない。テーマ・名前・種別・直接の周辺と、公開された述語のORを組み合わせる。実データの対象件数は漫画16／科学38／出来事8、漫画＋影響は浦沢直樹と手塚治虫の2対象。切り口をGraphへ引き継ぎ、既存のURL codecで再読込できる。Roleを作者／原作等へ読み替えず、会員PGと公開Capsuleは検索対象に加えない。
+
+実データで確認された問題：最初の対象ごとに経路を再探索するqueryはテーマでtimeoutになった。周辺＋種別の既存操作にも初回timeoutを確認。テーマ／周辺集合をそれぞれ起点から一度取得し、交差した集合を検索・件数・選択肢へ使う方式へ修正した。結果を省略したりtimeoutを成功として扱ったりはしない。修正後の検証・反映結果を後続に記録する。
+
+残る範囲：Entityの分類属性・複数タグ、方向／Role／多段の探索プリセット、アニメ化・掲載媒体のモデルとデータ、公開Capsule発見、Graphの個別関係閉鎖。現在の2段の編集的テーマや述語条件引継ぎで代用して完了にしない。実画面での本人の最終体験評価と物理スマホでの確認は別に残す。
+
+検証：関連unit計232件（検索入力／公開範囲・テーマと周辺の交差・OR・cursor条件／revision・旧cursor・Graph URL引継ぎを含む）が成功。最終host buildとstandalone image build、変更範囲ESLint・TypeScript・Bash構文が成功。hostの検索E2E13/13（2.1分）：日英×1440／390／320pxの空欄・ページ前後・周辺／種別・一致なし、テーマと切り口の複数選択／解除、更新中の旧結果inertと一定外寸、IME、通信失敗／再試行、reduced-motion、検索内言語変更、Graph条件引継ぎと再読込、閉じる／Back／Forward、既存Graphからの移動と直前の座標／枝への復帰を確認。修正前の回帰2件のtimeoutは、範囲取得修正後に全13件で解消した。
+
+Home／JSなしの日英3件、390pxのスクロール連鎖とGraph pan／pinch1件、375pxの会員との同一タブ往復・本人表示・座標保持1件も成功。会員はAPI fixtureであり新しい本人OAuthの実行ではない。PC日英と390／320pxのスクリーンショットで、テーマ・関係選択・結果直前の名前欄、結果の2列／1列と幅内収容を確認した。スマホはChromiumタッチエミュレーションであり物理端末での確認とは分ける。反映結果は後続へ記録する。
+
+最終Docker版でも検索4件（EN320pxのテーマ／Graph引継ぎ、実データAPI、既存Graphと直前復帰、JA1440pxの一覧／周辺／Back）が成功（31.2秒）。ローカル実データのAPIは修正後の初回0.33〜2.38秒、同じ候補取得の反復は0.04〜0.21秒（各3回）。VPSの性能値ではない。正式Hostを付けたローカルimageで適用wrapperの事後確認（日英Home・テーマ／切り口API・Entity直接URL・会員noindex）も成功した。KG／会員PGの書込・再投入・再起動、Caddy／OAuth変更はない。

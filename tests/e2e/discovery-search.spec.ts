@@ -20,6 +20,7 @@ for (const locale of ["ja", "en"]) for (const width of [1440, 390, 320]) test(`$
   await expect(results).toHaveCount(20); await expect(results.first()).not.toHaveAttribute("aria-label", firstPage!);
   await dialog.getByRole("button", { name: en ? "Previous 20" : "前の20件", exact: true }).click();
   await expect(results.first()).toHaveAttribute("aria-label", firstPage!);
+  await dialog.locator("summary").click();
   await dialog.getByRole("button", { name: en ? "Around PLUTO" : "PLUTOの周辺", exact: true }).click();
   await expect(results).toHaveCount(4);
   await dialog.getByRole("button", { name: en ? "Work" : "作品", exact: true }).click(); await expect(results).toHaveCount(1);
@@ -40,6 +41,7 @@ for (const locale of ["ja", "en"]) for (const width of [1440, 390, 320]) test(`$
   await pane.getByLabel(en ? "Search for" : "検索対象", { exact: true }).selectOption("work");
   await pane.getByRole("button", { name: en ? "See all results" : "すべての結果を見る", exact: true }).click();
   await expect(dialog.getByLabel(name, { exact: true })).toHaveValue("PLUTO");
+  await dialog.locator("summary").click();
   await expect(dialog.getByRole("button", { name: en ? "Work" : "作品", exact: true })).toHaveAttribute("aria-pressed", "true");
   await dialog.getByLabel(en ? "Language" : "表示言語", { exact: true }).selectOption(en ? "ja" : "en");
   await expect(dialog.getByLabel(en ? "名前・別名" : "Name or alias", { exact: true })).toHaveValue("PLUTO");
