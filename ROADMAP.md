@@ -62,7 +62,7 @@ M1は本人による本番適用・導線確認をもって達成。支援特典
 
 [Discovery Home](docs/design/DISCOVERY_HOME.md)とペインのスクロール改善は本番適用・本人確認済み。次の単位として[Discovery Search初期版](docs/design/DISCOVERY_SEARCH.md)を実装し、空欄の一回入口、入力中の候補、名前・種別・直接の関係の周辺を探す一覧、20件ごとのページングとGraphへの往復を日英・PC／スマホで検証した。3200／ベータ・VPSの反映結果は[公開β進捗](docs/PUBLIC_BETA_PROGRESS.md)に区別して記録する。続く体験試作ではテーマで変わる実データの切り口、関係の複数選択／解除、結果直前の任意キーワード、操作に応じた局所アニメーションとGraphへの述語条件引継ぎを実装。分類属性・方向／多段の探索プリセット・公開Capsule発見・個別関係閉鎖は重要な後続目標として維持し、M3全体を完了にしない。
 
-UXの課題・達成したい体験・実装仮案・未決論点・判断経緯は [M3 Discovery UX構想メモ](docs/design/M3_DISCOVERY_EXPERIENCE_CONTEXT.md) に保存。**Capsuleの発見への組込みとGraphの個別関係を閉じる操作は実現したい課題**であり、画面／操作方式が仮案であることと混同しない。
+UXの課題・達成したい体験・実装仮案・未決論点・判断経緯は [M3 Discovery UX構想メモ](docs/design/M3_DISCOVERY_EXPERIENCE_CONTEXT.md) に保存。 **知識領域11候補・既存KGの棚卸し・ユーザー目線の探索要求・収集粒度と検索方式の検討は [知識世界とカバレッジ計画](docs/design/KNOWLEDGE_WORLDS_AND_COVERAGE_PLAN.md) に整理する。** この企画マップはDBの固定分類や検索UIの採用仕様ではない。**Capsuleの発見への組込みとGraphの個別関係を閉じる操作は実現したい課題**であり、画面／操作方式が仮案であることと混同しない。
 
 - サジェスト、関連候補、興味を引く探索起点、新規追加されたEntity／Claimを知らせる情報導線。
 - Entityの分類属性を複数保持し、Graph面では簡潔に1〜2件、詳細では全件を読める構想を検討。
