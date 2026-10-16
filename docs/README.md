@@ -40,9 +40,9 @@
 
 | 現役の設計文書 | 状態・読む場面 |
 | --- | --- |
-| [有名漫画家と代表作品：初回収集レビュー案](design/FAMOUS_MANGA_CREATORS_REVIEW.md) | 2026-10-16。44中心作家＋9共同制作者・102作品の企画範囲を合意。広さ／重点補充・実資料・粒度・利用条件と、未承認r0002の実行条件を区別 |
-| [漫画収集adapterと初回実行条件](design/MANGA_COLLECTION_ADAPTER.md) | 2026-10-16。Wikidata／NDLの8作品・12人物を隔離取得。15 Entity／4 Claim候補・11責任表示保留、実テーマr0002は未承認。公開KG変更なし |
-| [収集テーマのレビューと実行](design/COLLECTION_THEMES.md)／[候補一覧](../datasets/collection-themes/README.md) | 2026-10-16。知識世界・収集企画・Discovery Model・公開収録状況・ジョブを分離。版/hash承認と既存生成器の隔離再生成。7企画＋1試験は未承認、公開KG変更なし |
+| [有名漫画家と代表作品：初回収集レビュー案](design/FAMOUS_MANGA_CREATORS_REVIEW.md) | 2026-10-16。44中心作家＋9共同制作者・102作品の企画範囲と、正式承認済みr0002の8作品限定実行を区別 |
+| [漫画収集adapterと初回実行条件](design/MANGA_COLLECTION_ADAPTER.md)／[正式実行と人間レビュー](research/famous-manga-creators/20261016/r0002-run-review.md) | 2026-10-16。r0002を正式承認し8作品・12人物を取得。15 Entity／4 hidden Claim候補・11責任表示保留。未受入・未公開、公開KG変更なし |
+| [収集テーマのレビューと実行](design/COLLECTION_THEMES.md)／[候補一覧](../datasets/collection-themes/README.md) | 2026-10-16。版/hash承認と候補生成。漫画r0002のみ正式承認・実行済み、旧版・他の6企画＋1試験は未承認。公開KG変更なし |
 | [知識世界とカバレッジ計画](design/KNOWLEDGE_WORLDS_AND_COVERAGE_PLAN.md) | 企画の作業台。世界は非排他的な編集的入口。DB分類・検索メニュー・収集予定への自動変換はしない |
 | [Discovery Search初期実装](design/DISCOVERY_SEARCH.md) | M3 Issue #4。空欄の一回入口、インライン候補、種別・直接の関係から探す一覧、ページングとGraph復帰。タグ・プリセット・Capsule発見とは区別 |
 | [M3の体験目標・判断経緯](design/M3_DISCOVERY_EXPERIENCE_CONTEXT.md)／[Discovery Home初期実装](design/DISCOVERY_HOME.md) | 2026-10-16。Homeの実在起点・新着・スマホ初期表示・ロゴ帰還とBack。Rich Search・プリセット・Capsule発見等の目標と今回の範囲を区別 |

@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "themeId": "famous-manga-creators",
+  "revision": 2,
+  "definitionSha256": "c61614326ace666c9c4d498b6349d3d1d524e0b83017695fd960a3e34879b863",
+  "reviewer": "プロジェクト運営者",
+  "reviewedAt": "2026-10-16T14:42:40+00:00",
+  "note": "2026-10-16の人間による明示承認に基づく。r0002の8作品・12人物照合、資料条件、通信・出力上限、定義hashと入力・コードの整合を確認。承認範囲は収集候補生成まで。個別Entity・Claimの受入、公開releaseのapply、本番DB変更は承認しない。",
+  "checks": [
+    "purpose",
+    "scope",
+    "data-granularity",
+    "sources-and-terms",
+    "exploration",
+    "execution-boundary"
+  ]
+}

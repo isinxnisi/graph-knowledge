@@ -2,7 +2,7 @@
 
 2026-10-16。管理用CLIの初期実装。検索UIの分類・公開KGのモデル・本番公開権限を変更しない。
 
-最初の新規テーマの具体化：[有名漫画家と代表作品・レビュー案](FAMOUS_MANGA_CREATORS_REVIEW.md)。44中心作家＋9共同制作者・102作品の企画範囲を合意し、r0002に8作品の実行条件を登録。実テーマは未承認。[新規漫画adapterと隔離試験](MANGA_COLLECTION_ADAPTER.md)を参照。
+最初の新規テーマの具体化：[有名漫画家と代表作品・レビュー案](FAMOUS_MANGA_CREATORS_REVIEW.md)。44中心作家＋9共同制作者・102作品の企画範囲を合意し、r0002に8作品の実行条件を登録。2026-10-16にプロジェクト運営者がr0002の候補生成を正式承認し、実行完了。個別知識の受入・公開は未実施。[新規漫画adapter](MANGA_COLLECTION_ADAPTER.md)と[正式実行レビュー](../research/famous-manga-creators/20261016/r0002-run-review.md)を参照。
 
 ## 概念の責務
 
@@ -85,7 +85,7 @@ python3 scripts/collection-themes.py revoke my-theme --revision 1 --reviewer REV
 
 ## 今回の境界
 
-7企画と1再生成試験の実定義は未承認のまま。漫画adapterの隔離試験のみ実データ取得を行った。管理画面、定期大量収集、検索条件への自動変換、自動公開、Kev連携、分散Workerは作らない。本番KG・会員PG・Webには変更を加えない。実テーマの実行には、r0002の範囲・意味・粒度・情報源と上限・hashへの人間承認が必要。候補受入と公開には引き続き[公開KG release手順](PUBLIC_KG_RELEASES.md)を使う。
+`famous-manga-creators` r0002のみ正式承認・候補生成済み。旧r0001と他の6企画・1再生成試験は未承認のまま。管理画面、定期大量収集、検索条件への自動変換、自動公開、Kev連携、分散Workerは作らない。本番KG・会員PG・Webには変更を加えない。承認範囲はr0002の固定条件による候補生成のみで、候補受入と公開には別の人間判断と[公開KG release手順](PUBLIC_KG_RELEASES.md)を使う。
 
 ## 初期実装の確認記録
 

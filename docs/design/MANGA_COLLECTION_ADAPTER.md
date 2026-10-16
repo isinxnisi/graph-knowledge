@@ -1,8 +1,8 @@
 # 漫画収集adapterと初回実行条件のレビュー
 
-2026-10-16。企画範囲は **44中心作家＋9共同制作者・102作品**で合意済み。**本番用テーマの実行承認・個別知識の受入・公開は未実施**。この資料は実装と隔離試験を説明する。
+2026-10-16。企画範囲は **44中心作家＋9共同制作者・102作品**で合意済み。**r0002の収集実行はプロジェクト運営者が正式承認し、8作品・12人物の候補生成を完了。個別知識の受入・公開は未実施**。[正式実行の結果と人間レビュー](../research/famous-manga-creators/20261016/r0002-run-review.md)に候補・根拠・保留・証跡を記録した。以下の隔離試験は承認前の履歴として保持する。
 
-## 次にレビューするもの
+## 正式承認された実行条件
 
 登録済み定義は [famous-manga-creators/r0002](../../datasets/collection-themes/themes/famous-manga-creators/r0002.json)。[旧草稿のレビュー用控え](../research/famous-manga-creators/20261016/r0002.draft.json)も同じ内容に更新した。r0001は保持する。
 
@@ -81,7 +81,7 @@ Python23テストと既存公開／Nobel／制作Roleの21テストが成功し�
 python3 scripts/collection-themes.py review famous-manga-creators --revision 2
 ```
 
-人が上記定義とhashを確認して承認した後だけ、次を実行する（**今回は未実行**）。
+人が上記定義とhashを確認して承認した後だけ、次を実行する。2026-10-16の正式承認・実行は完了済み。承認記録を作り直さず、結果確認には上記レビュー資料の `inspect` を使う。同じ `run` は検証済み成果物を再利用する。
 
 ```bash
 python3 scripts/collection-themes.py approve famous-manga-creators --revision 2 \
