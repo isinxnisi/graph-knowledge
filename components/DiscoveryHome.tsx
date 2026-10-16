@@ -46,8 +46,7 @@ export default function DiscoveryHome({ data, onSearch, onDiscover }: { data: Di
   return <section className={styles.home} aria-labelledby="discovery-home-title" data-testid="discovery-home" lang={locale}>
     <header className={styles.introduction} data-discovery-reveal><p className={styles.eyebrow}>{text.eyebrow}</p><h2 id="discovery-home-title">{text.title}</h2><p>{text.introduction}</p>
       <div className={styles.introMeta}><span>{text.access}</span>{data.counts && <span>{text.knowledge(data.counts.entities.toLocaleString(locale), data.counts.claims.toLocaleString(locale))}</span>}</div>
-      <button className={styles.searchLaunch} onClick={onDiscover} aria-haspopup="dialog" data-testid="discovery-search-entry"><Icon name="search" /><span>{discoverySearchLabels(locale).homeEntry}</span><Icon name="arrow" /></button>
-      <a className={styles.prototypeLink} href="/discovery-lab" data-testid="discovery-prototype-entry">{locale === "en" ? "Try Discovery Lab: connections & knowledge worlds" : "探索の試作を試す：接点と知識世界"} <span aria-hidden="true">↗</span></a>
+      <button className={styles.searchLaunch} onClick={onDiscover} aria-haspopup="dialog" data-testid="discovery-search-entry" data-discovery-launch="home"><Icon name="search" /><span>{discoverySearchLabels(locale).homeEntry}</span><Icon name="arrow" /></button>
     </header>
     {data.unavailable && <p role="status">{text.unavailable}</p>}
     {featured && <a className={styles.featured} href={href(featured.entity.id)} onClick={explore} data-testid="discovery-featured" data-discovery-reveal>

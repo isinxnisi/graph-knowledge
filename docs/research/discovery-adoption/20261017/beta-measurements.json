@@ -1,0 +1,32 @@
+[
+  {
+    "locale": "ja",
+    "width": 1241,
+    "list": {
+      "clientWidth": 1148,
+      "scrollWidth": 1148,
+      "clientHeight": 771,
+      "scrollHeight": 1602
+    }
+  },
+  {
+    "locale": "ja",
+    "width": 390,
+    "list": {
+      "clientWidth": 372,
+      "scrollWidth": 372,
+      "clientHeight": 803,
+      "scrollHeight": 2431
+    }
+  },
+  {
+    "locale": "en",
+    "width": 390,
+    "list": {
+      "clientWidth": 372,
+      "scrollWidth": 372,
+      "clientHeight": 803,
+      "scrollHeight": 2515
+    }
+  }
+]

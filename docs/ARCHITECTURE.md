@@ -1,5 +1,7 @@
 # 現行技術設計
 
+2026-10-17、[Discovery UIの正式検索統合](design/DISCOVERY_SEARCH_ADOPTION.md)で `DiscoveryExplorer` をLabと正式ダイアログで共有し、既存APIを使う `DiscoveryListPanel` を追加。探索Contextと一覧条件は意味を混ぜず、各入口に保持する。historyによるGraph往復・起動元フォーカスを維持し、名前候補の100%幅＋外marginによる横はみ出しを修正。API・DB・収集schemaは変更しない。
+
 2026-10-17、[Discovery Modelの比較試作](design/DISCOVERY_MODEL_PROTOTYPE.md)を既存検索と独立した `/discovery-lab` に実装。版付きContextと小さいresolver、公開revisionを前後照合する名前／neighbors adapter、独立Claimの根拠表示、既存Graph URLへの関係・Role引継ぎを利用する。Worldは編集的関心で、DB分類ではない。サーバーAPI・Neo4j・収集CLIは変更しない。
 
 2026-10-17、[漫画r0002の公開準備](design/MANGA_R0002_ACCEPTANCE_REVIEW.md)は既存schema・release機構を使用し、元ジョブを変えずにpendingの追加レコードと私有領域のhidden全snapshot草稿を作成した。一時公開形式のvalidator・ローカルread-only planだけを実行し、26 Node・23 Relationship追加／既存更新0を確認。新Role案は[意味レビュー](design/MANGA_PRODUCTION_ROLE_REVIEW.md)に留め、語彙・adapter・DB/API/UI・公開KGは変更しない。

@@ -5,7 +5,7 @@ import type { DiscoverySearchResponse } from "../domain/api";
 import type { SearchKind } from "../domain/search";
 import type { DiscoveryTheme } from "../domain/discovery";
 import type { PredicateFilter } from "../domain/exploration";
-export type DiscoveryCriteria = { q: string; kind: SearchKind | null; around?: string; theme?: DiscoveryTheme; predicates?: PredicateFilter };
+export type DiscoveryCriteria = { presentation?: "explore" | "list"; q: string; kind: SearchKind | null; around?: string; theme?: DiscoveryTheme; predicates?: PredicateFilter };
 const cache = new Map<string, { at: number; result: DiscoverySearchResponse }>();
 
 export function useDiscoverySearch(criteria: DiscoveryCriteria, after: string | null, composing: boolean) {

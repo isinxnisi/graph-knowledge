@@ -12,6 +12,7 @@ for (const locale of ["ja", "en"]) for (const width of [1440, 390, 320]) test(`$
   const page = await context.newPage(), errors: string[] = []; page.on("pageerror", e => errors.push(e.message));
   const en = locale === "en", base = info.project.use.baseURL!, root = en ? "/en" : "/";
   await page.goto(base + root); await page.getByTestId("discovery-search-entry").click();
+  await page.getByRole("tab", { name: en ? "Browse & refine" : "一覧・条件から", exact: true }).click();
   const dialog = page.getByRole("dialog"), name = en ? "Name or alias" : "名前・別名";
   await expect(dialog).toBeVisible(); await expect(dialog.getByLabel(name, { exact: true })).toHaveValue("");
   const results = dialog.locator("ul > li > button"); await expect(results).toHaveCount(20);
@@ -20,13 +21,12 @@ for (const locale of ["ja", "en"]) for (const width of [1440, 390, 320]) test(`$
   await expect(results).toHaveCount(20); await expect(results.first()).not.toHaveAttribute("aria-label", firstPage!);
   await dialog.getByRole("button", { name: en ? "Previous 20" : "前の20件", exact: true }).click();
   await expect(results.first()).toHaveAttribute("aria-label", firstPage!);
-  await dialog.locator("summary").click();
   await dialog.getByRole("button", { name: en ? "Around PLUTO" : "PLUTOの周辺", exact: true }).click();
   await expect(results).toHaveCount(4);
   await dialog.getByRole("button", { name: en ? "Work" : "作品", exact: true }).click(); await expect(results).toHaveCount(1);
   await dialog.getByLabel(name, { exact: true }).fill("該当なし__");
   await expect(dialog).toContainText(en ? "No registered entities match" : "この条件に一致する登録対象はありません");
-  await dialog.getByRole("button", { name: en ? "Clear filters" : "条件をクリア", exact: true }).click(); await expect(results).toHaveCount(20);
+  await dialog.getByRole("complementary").getByRole("button", { name: en ? "Clear filters" : "条件をクリア", exact: true }).click(); await expect(results).toHaveCount(20);
   expect(await dialog.evaluate(el => el.scrollWidth <= el.clientWidth + 1)).toBe(true);
   await page.screenshot({ path: info.outputPath(`search-${locale}-${width}.png`) });
   // Browser Back closes just this search, retaining Home and its route.
@@ -41,11 +41,10 @@ for (const locale of ["ja", "en"]) for (const width of [1440, 390, 320]) test(`$
   await pane.getByLabel(en ? "Search for" : "検索対象", { exact: true }).selectOption("work");
   await pane.getByRole("button", { name: en ? "See all results" : "すべての結果を見る", exact: true }).click();
   await expect(dialog.getByLabel(name, { exact: true })).toHaveValue("PLUTO");
-  await dialog.locator("summary").click();
   await expect(dialog.getByRole("button", { name: en ? "Work" : "作品", exact: true })).toHaveAttribute("aria-pressed", "true");
-  await dialog.getByLabel(en ? "Language" : "表示言語", { exact: true }).selectOption(en ? "ja" : "en");
+  await dialog.getByRole("button", { name: en ? "JA" : "EN", exact: true }).click();
   await expect(dialog.getByLabel(en ? "名前・別名" : "Name or alias", { exact: true })).toHaveValue("PLUTO");
-  await dialog.getByLabel(en ? "表示言語" : "Language", { exact: true }).selectOption(locale);
+  await dialog.getByRole("button", { name: locale.toUpperCase(), exact: true }).click();
   await dialog.getByRole("button", { name: /^PLUTO —/ }).click();
   await expect(dialog).toHaveCount(0); await expect.poll(async () => Object.keys((await view(page)).points).length).toBe(4);
   await expect(page).toHaveURL(new RegExp(`/explore/${pluto}\\?s=`));

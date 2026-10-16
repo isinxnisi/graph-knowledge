@@ -87,7 +87,11 @@ export default function Explorer({ dataset = "demo", initialRoot, services, publ
   const canvas = useRef<GraphCanvasHandle>(null);
   const publicServices = useRef<PublicServicesHandle>(null);
   const [discoveryCriteria, setDiscoveryCriteria] = useState<DiscoveryCriteria | null>(null);
-  const closeDiscovery = useCallback(() => setDiscoveryCriteria(null), []);
+  const closeDiscovery = useCallback((source?: string | null) => {
+    setDiscoveryCriteria(null);
+    if (source === "list" || source === "more") setActivePane("search");
+    else if (source === "home") setActivePane("graph");
+  }, []);
   useEffect(() => {
     const sync = () => {
       const value = window.history.state?.plunodeDiscovery;
@@ -172,7 +176,7 @@ export default function Explorer({ dataset = "demo", initialRoot, services, publ
     <main inert={urlState.busy || !!urlState.failure} data-active-pane={activePane} className={`${styles.columns} ${detailWide ? styles.wideDetails : ""}`}>
       <div id="explorer-search" role="group" tabIndex={-1} data-focus-destination aria-label={panes.search} className={styles.panel}><SearchPanel placeholder={labels.searchExample} onChoose={startFrom} onDiscover={openDiscovery} /><div lang={locale} className={styles.localActions}><h3>{designLabels(locale).tools}</h3><button onClick={() => setSavedViewsOpen(true)}><Icon name="bookmark" />{savedViewLabels(locale).launch}</button><button onClick={() => setWorkspaceOpen(true)}><Icon name="history" />{workspaceLabels(locale).launch}</button><button onClick={() => setCapsuleOpen(true)}><Icon name="capsule" />{capsuleLabels(locale).launch}</button></div><StartExamples dataset={dataset} onChoose={(entity) => startFrom(entity, true)} /></div>
       <div id="explorer-graph" role="group" tabIndex={-1} data-focus-destination data-discovery-home={atHome || undefined} aria-label={panes.graph} className={styles.centralScroll}>
-      {atHome && <DiscoveryHome data={discoveryHome} onDiscover={() => openDiscovery({ q: "", kind: null })} onSearch={() => {
+      {atHome && <DiscoveryHome data={discoveryHome} onDiscover={() => openDiscovery({ q: "", kind: null, presentation: "explore" })} onSearch={() => {
         moveToPane("search");
         requestAnimationFrame(() => document.querySelector<HTMLInputElement>("#explorer-search input")?.focus({ preventScroll: true }));
       }} />}
@@ -219,7 +223,7 @@ export default function Explorer({ dataset = "demo", initialRoot, services, publ
         {selection?.kind === "claim" && <ClaimDetails onDataChanged={invalidateData} revision={graph.revision} dataset={dataset} key={key} id={selection.id} nodes={graph.nodes} claimSummary={selectedClaim ?? undefined} onInspectEntity={inspectFromClaim} eventRoles={graph.eventRoles ?? null} positions={graph.organizationPositions ?? null} roles={graph.contributionRoles ?? null} predicates={graph.predicates} />}
       </aside>
     </main>
-    {discoveryCriteria && <DiscoverySearch initial={discoveryCriteria} onClose={closeDiscovery} onChoose={(entity, predicates) => {
+    {discoveryCriteria && <DiscoverySearch dataset={dataset} initial={discoveryCriteria} onClose={closeDiscovery} onChoose={(entity, predicates) => {
       if (predicates === undefined) { startFrom(entity); return; }
       trackPublicEvent("explore_start");
       if (discoveryHome && !graph.centerId && !initialRoot) router.push(`${locale === "en" ? "/en" : ""}${discoveryExplorationHref(dataset, entity.id, predicates)}`);

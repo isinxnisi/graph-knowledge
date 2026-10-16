@@ -7,6 +7,7 @@ for (const [locale, width, height] of [["ja", 1440, 900], ["ja", 390, 844], ["en
   const page = await context.newPage(), en = locale === "en", errors: string[] = []; page.on("pageerror", e => errors.push(e.message));
   await page.goto(info.project.use.baseURL! + (en ? "/en" : "/"));
   await page.getByTestId("discovery-search-entry").click();
+  await page.getByRole("tab", { name: en ? "Browse & refine" : "一覧・条件から", exact: true }).click();
   const dialog = page.getByRole("dialog"), matches = dialog.locator("section[aria-busy]"), themes = dialog.locator("[data-theme]"), cuts = dialog.getByTestId("discovery-cuts");
   await expect(matches).toHaveAttribute("aria-busy", "false"); await expect(themes).toHaveCount(3);
   const original = await dialog.boundingBox();
@@ -24,10 +25,10 @@ for (const [locale, width, height] of [["ja", 1440, 900], ["ja", 390, 844], ["en
   const making = cuts.getByRole("button", { name: /Making works|作品づくり/ }), influence = cuts.getByRole("button", { name: /Influences|影響のつながり/ });
   await making.click(); await influence.click(); await expect(matches).toHaveAttribute("aria-busy", "false");
   await expect(making).toHaveAttribute("aria-pressed", "true"); await expect(influence).toHaveAttribute("aria-pressed", "true");
-  await dialog.getByRole("button", { name: en ? "Remove Making works" : "作品づくりを外す", exact: true }).click();
+  await making.click();
   await expect(making).toHaveAttribute("aria-pressed", "false"); await expect(matches).toHaveAttribute("aria-busy", "false");
   const keyword = dialog.getByTestId("discovery-keyword"), results = dialog.getByTestId("discovery-results");
-  expect(await keyword.evaluate(el => el.closest("section")?.previousElementSibling?.querySelector("#discovery-cuts-title") !== null)).toBe(true);
+  expect(await keyword.evaluate(el => !!el.nextElementSibling?.querySelector("h3"))).toBe(true);
   await dialog.getByLabel(en ? "Name or alias" : "名前・別名", { exact: true }).fill("浦沢");
   await expect(matches).toHaveAttribute("aria-busy", "false"); await expect(results.locator("ul > li")).toHaveCount(1);
   await page.screenshot({ path: info.outputPath(`play-${locale}-${width}.png`) });
@@ -47,6 +48,7 @@ test("切り口解除で戻れる／通信失敗とreduced-motion／IME入力", 
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.addInitScript(() => localStorage.setItem("plunode:privacy:v1", '{"analytics":false,"ads":false}'));
   await page.goto(info.project.use.baseURL! + "/"); await page.getByTestId("discovery-search-entry").click();
+  await page.getByRole("tab", { name: "一覧・条件から", exact: true }).click();
   const dialog = page.getByRole("dialog"), matches = dialog.locator("section[aria-busy]");
   await expect(matches).toHaveAttribute("aria-busy", "false");
   await dialog.locator('[data-theme="manga"]').click(); await expect(matches).toHaveAttribute("aria-busy", "false");
@@ -64,7 +66,7 @@ test("切り口解除で戻れる／通信失敗とreduced-motion／IME入力", 
   await expect(dialog.locator("[data-testid=discovery-results] > [inert]")).toHaveCount(1);
   await page.unroute("**/api/discovery/entities**"); await dialog.getByRole("button", { name: "検索をやり直す", exact: true }).click();
   await expect(matches).toHaveAttribute("aria-busy", "false"); await expect(dialog.getByRole("alert")).toHaveCount(0);
-  await dialog.getByRole("button", { name: "条件をクリア", exact: true }).click(); await expect(matches).toHaveAttribute("aria-busy", "false");
+  await dialog.getByRole("complementary").getByRole("button", { name: "条件をクリア", exact: true }).click(); await expect(matches).toHaveAttribute("aria-busy", "false");
   await expect(dialog.locator("ul > li")).toHaveCount(20);
 });
 
@@ -87,7 +89,8 @@ test("既存Graphから切り口を引継いで移動し、直前の配置と枝
   await page.goto(info.project.use.baseURL! + `/explore/${pluto}`);
   const canvas = page.getByTestId("graph-canvas");
   const snapshot = () => canvas.evaluate(el => {
-    const cy = (el as unknown as { _cyreg: { cy: import("cytoscape").Core } })._cyreg.cy;
+    const cy = (el as unknown as { _cyreg?: { cy: import("cytoscape").Core } })._cyreg?.cy;
+    if (!cy) return { points: {}, edges: [], zoom: 0 };
     return { points: Object.fromEntries(cy.nodes().map(n => [n.id(), n.position()])), edges: cy.edges().map(e => e.id()).sort(), zoom: cy.zoom() };
   });
   await expect.poll(async () => Object.keys((await snapshot()).points).length).toBe(4);

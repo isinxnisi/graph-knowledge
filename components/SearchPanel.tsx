@@ -40,7 +40,7 @@ export default function SearchPanel({ onChoose, onDiscover, placeholder = "ä¾‹ï¼
   function submit(event: FormEvent) { event.preventDefault(); if (composing) return; if (!q.trim() && onDiscover) onDiscover({ q: "", kind }); else void runSearch(); }
   return <section className={styles.panel} aria-labelledby="search-title">
     <h2 id="search-title"><Icon name="search" />{text.title}</h2>
-    {onDiscover && <button type="button" className={searchStyles.entry} onClick={() => onDiscover({ q, kind })}>{discovery.entry}<Icon name="chevron" /></button>}
+    {onDiscover && <button data-discovery-launch="list" type="button" className={searchStyles.entry} onClick={() => onDiscover({ q, kind })}>{discovery.entry}<Icon name="chevron" /></button>}
     <form onSubmit={submit} className={styles.searchForm}>
       <label htmlFor="entity-search">{text.name}</label>
       <input id="entity-search" value={q} maxLength={100} aria-controls="entity-suggestions" onCompositionStart={() => { clearSearch(); setComposing(true); }} onCompositionEnd={() => setComposing(false)} onKeyDown={event => { if (event.key === "ArrowDown") { const first = document.querySelector<HTMLButtonElement>("#entity-suggestions button"); if (first) { event.preventDefault(); first.focus(); } } }} onChange={event => { clearSearch(); setQ(event.target.value); }} placeholder={placeholder} autoComplete="off" />
@@ -53,7 +53,7 @@ export default function SearchPanel({ onChoose, onDiscover, placeholder = "ä¾‹ï¼
     {!result && !loading && !error && <p className={styles.muted}>{text.help}</p>}
     {result && <><p role="status">{text.count(Math.min(result.items.length, onDiscover ? 5 : 10))}</p>
       <EntitySearchResults id="entity-suggestions" items={result.items.slice(0, onDiscover ? 5 : 10)} locale={locale} onChoose={onChoose} />
-      {onDiscover ? <button className={searchStyles.entry} onClick={() => onDiscover({ q, kind })}>{discovery.more}<Icon name="chevron" /></button> : result.hasMore && <p className={styles.muted}>{text.more}</p>}
+      {onDiscover ? <button data-discovery-launch="more" className={searchStyles.entry} onClick={() => onDiscover({ q, kind })}>{discovery.more}<Icon name="chevron" /></button> : result.hasMore && <p className={styles.muted}>{text.more}</p>}
     </>}
   </section>;
 }

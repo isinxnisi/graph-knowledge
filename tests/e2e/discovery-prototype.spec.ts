@@ -193,7 +193,7 @@ test("coexistence, IME, reduced motion and compact touch controls", async ({ pag
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto(info.project.use.baseURL! + "/"); await page.getByTestId("discovery-search-entry").click();
   await expect(page.getByRole("dialog")).toBeVisible(); await page.keyboard.press("Escape");
-  await page.getByTestId("discovery-prototype-entry").click(); const dialog = page.getByRole("dialog"), input = dialog.locator("#prototype-name");
+  await page.goto(info.project.use.baseURL! + "/discovery-lab"); const dialog = page.getByRole("dialog"), input = dialog.locator("#prototype-name");
   const requests: string[] = []; page.on("request", r => { if (r.url().includes("/api/entities?")) requests.push(r.url()); });
   await input.dispatchEvent("compositionstart"); await input.fill("PLUTO"); await page.waitForTimeout(350); expect(requests).toHaveLength(0);
   await input.dispatchEvent("compositionend"); await page.getByTestId("prototype-results").getByRole("button", { name: "対象をPLUTOに変更", exact: true }).click();
