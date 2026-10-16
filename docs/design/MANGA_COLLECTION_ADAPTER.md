@@ -1,5 +1,7 @@
 # 漫画収集adapterと初回実行条件のレビュー
 
+2026-10-17後続：[4 Claim等の正式受入・release準備](MANGA_R0002_ACCEPTED_RELEASE.md)と[ORIGINAL_STORYの採用実装](ORIGINAL_STORY.md)へ進んだ。原作5件は別のpending候補。r0002のadapter・code/input hash・正式実行artifactは変更していない。新Roleの自動収集対応は新実行版のレビュー後とする。
+
 2026-10-17追記：[r0002の個別受入・公開準備](MANGA_R0002_ACCEPTANCE_REVIEW.md)と[制作Roleレビュー](MANGA_PRODUCTION_ROLE_REVIEW.md)を作成。4 Claim・15新規Entityは受入推奨段階で、人間の個別受入・公開は未実施。保留11件のうちPLUTOの監修・本人の著者は既存Claimを再利用でき、adapterの保留を未収録件数とは扱わない。r0002のコード・入力・定義・正式承認は不変。
 
 2026-10-16。企画範囲は **44中心作家＋9共同制作者・102作品**で合意済み。**r0002の収集実行はプロジェクト運営者が正式承認し、8作品・12人物の候補生成を完了。個別知識の受入・公開は未実施**。[正式実行の結果と人間レビュー](../research/famous-manga-creators/20261016/r0002-run-review.md)に候補・根拠・保留・証跡を記録した。以下の隔離試験は承認前の履歴として保持する。

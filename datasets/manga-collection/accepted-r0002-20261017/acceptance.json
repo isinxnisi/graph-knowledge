@@ -1,0 +1,203 @@
+{
+  "version": 1,
+  "status": "accepted-for-release-preparation-only",
+  "reviewer": "プロジェクト運営者",
+  "recordedAt": "2026-10-16T16:21:29+00:00",
+  "humanInstruction": "本チャットの明示判断：レビュー推奨4 Claim・7 Entity・4 Source・4 Citationを正式受入。ORIGINAL_STORYの意味定義を採用。原作5 Claimの個別受入および全環境の公開KG applyは許可しない。",
+  "sourceGitCommit": "9e93b88d45df1845e2ba760ceb240647b9593993",
+  "sourceJobId": "famous-manga-creators-r0002-97c171eb654963e4",
+  "referenceArtifacts": [
+    {
+      "file": "docs/design/MANGA_R0002_ACCEPTANCE_REVIEW.md",
+      "sha256": "7cdf6a84158f655465a26d7755f528668c23309a5f79ed8cd2d5e01905e00265"
+    },
+    {
+      "file": "datasets/manga-collection/review-r0002-20261017/review.json",
+      "sha256": "dec7cd6e012e82be409541418480e95565214c3457bb48ddbc4eca280c12ec76"
+    },
+    {
+      "file": "datasets/manga-collection/review-r0002-20261017/proposed-records.json",
+      "sha256": "8ef5b68ccda860c453078bef5a57615495320eb470e4230fe04ceda8f7262d81"
+    },
+    {
+      "file": "datasets/manga-collection/review-r0002-20261017/verification.json",
+      "sha256": "2385eebc8bea8ba17b9ad05110785755102d6692c634ae94f0487827d97f6c09"
+    }
+  ],
+  "acceptedRecordIds": {
+    "entities": [
+      "31f3c278-7d49-4aed-9a36-c722cae25ed2",
+      "3f962dde-c1bc-4165-897b-e129b8e38983",
+      "9f43fefa-d878-4e5e-b1a2-0413432e9dbd",
+      "a7027ea6-d35d-407d-8e25-d98dc5b0cb92",
+      "b4de3765-e8c4-49f1-a322-a021475ffd09",
+      "c71ebc3e-ae93-43d6-a525-eb5b1abd609f",
+      "e9639ece-9288-4098-973c-9dd95131b7ba"
+    ],
+    "claims": [
+      "07da4e98-1047-46a4-b48a-30f3549c89f9",
+      "84cb19dd-9e8e-496f-abf6-674885abf185",
+      "cf18d898-41e5-486f-8dcf-8a666bef83fe",
+      "fe6d7c19-646b-474a-ad0a-3b20bc816866"
+    ],
+    "sources": [
+      "1f388832-0cb6-4ccd-b7e6-80bb0ed0212a",
+      "7187047d-51fc-408b-a473-4f2e04c313c1",
+      "7def5563-ec0a-4709-99aa-22f8b07a5c10",
+      "82665bcb-7da4-408c-91dd-befdc3181629"
+    ],
+    "citations": [
+      "ad510a01-b4bc-4f29-b4b0-e415a13ae0b7",
+      "c7058cc5-cc97-4191-a9cd-cd52bb958db7",
+      "c91fecfc-7389-491b-aca9-d181138ebe35",
+      "e5af19f9-a054-402e-bd48-c29af7b80ac9"
+    ]
+  },
+  "acceptedExternalIdentifiers": [
+    {
+      "entityId": "31f3c278-7d49-4aed-9a36-c722cae25ed2",
+      "namespace": "wikidata",
+      "value": "Q38275959"
+    },
+    {
+      "entityId": "3f962dde-c1bc-4165-897b-e129b8e38983",
+      "namespace": "wikidata",
+      "value": "Q65231576"
+    },
+    {
+      "entityId": "9f43fefa-d878-4e5e-b1a2-0413432e9dbd",
+      "namespace": "wikidata",
+      "value": "Q24864023"
+    },
+    {
+      "entityId": "a7027ea6-d35d-407d-8e25-d98dc5b0cb92",
+      "namespace": "wikidata",
+      "value": "Q65240543"
+    },
+    {
+      "entityId": "b4de3765-e8c4-49f1-a322-a021475ffd09",
+      "namespace": "wikidata",
+      "value": "Q624839"
+    },
+    {
+      "entityId": "c71ebc3e-ae93-43d6-a525-eb5b1abd609f",
+      "namespace": "wikidata",
+      "value": "Q106575051"
+    },
+    {
+      "entityId": "e9639ece-9288-4098-973c-9dd95131b7ba",
+      "namespace": "wikidata",
+      "value": "Q3981526"
+    }
+  ],
+  "scopeByClaim": [
+    {
+      "id": "07da4e98-1047-46a4-b48a-30f3549c89f9",
+      "subjectId": "e9639ece-9288-4098-973c-9dd95131b7ba",
+      "objectId": "3f962dde-c1bc-4165-897b-e129b8e38983",
+      "predicate": "CONTRIBUTED_TO",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "contribution": {
+        "roleId": "AUTHORSHIP",
+        "scope": {
+          "kind": "publication",
+          "isbn13": "9784088820118",
+          "volumeLabel": "第1巻",
+          "editionLabel": null,
+          "language": "ja"
+        }
+      }
+    },
+    {
+      "id": "84cb19dd-9e8e-496f-abf6-674885abf185",
+      "subjectId": "9f43fefa-d878-4e5e-b1a2-0413432e9dbd",
+      "objectId": "a7027ea6-d35d-407d-8e25-d98dc5b0cb92",
+      "predicate": "CONTRIBUTED_TO",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "contribution": {
+        "roleId": "AUTHORSHIP",
+        "scope": {
+          "kind": "publication",
+          "isbn13": "9784088817804",
+          "volumeLabel": "第1巻",
+          "editionLabel": null,
+          "language": "ja"
+        }
+      }
+    },
+    {
+      "id": "cf18d898-41e5-486f-8dcf-8a666bef83fe",
+      "subjectId": "710bc8a7-efed-4c2e-a4b4-6c65b0aff695",
+      "objectId": "c71ebc3e-ae93-43d6-a525-eb5b1abd609f",
+      "predicate": "CONTRIBUTED_TO",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "contribution": {
+        "roleId": "DRAWING",
+        "scope": {
+          "kind": "publication",
+          "isbn13": "9784098610105",
+          "volumeLabel": "第1巻",
+          "editionLabel": null,
+          "language": "ja"
+        }
+      }
+    },
+    {
+      "id": "fe6d7c19-646b-474a-ad0a-3b20bc816866",
+      "subjectId": "b4de3765-e8c4-49f1-a322-a021475ffd09",
+      "objectId": "31f3c278-7d49-4aed-9a36-c722cae25ed2",
+      "predicate": "CONTRIBUTED_TO",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "contribution": {
+        "roleId": "DRAWING",
+        "scope": {
+          "kind": "publication",
+          "isbn13": "9784088811840",
+          "volumeLabel": "第1巻",
+          "editionLabel": null,
+          "language": "ja"
+        }
+      }
+    }
+  ],
+  "applyAuthorized": {
+    "local": false,
+    "beta": false,
+    "vps": false
+  },
+  "excludedEntityIds": [
+    "8b0d27c2-1116-4731-a00a-b90c869524a2",
+    "3d279a30-0131-4b37-9429-9a39e8027e05",
+    "d5e39491-5a5f-423c-9222-2eb3c18db9a8",
+    "a13205e2-220c-4b7d-8a1a-39dbefe52db8",
+    "e0183e9c-dc97-4d85-b46e-14a1b76707fd",
+    "0e0ed535-f78e-4cb0-bd3d-7dffd6b7148e",
+    "7ca5fc7d-545a-4d39-a2dc-6cce86390112",
+    "0c29d0e2-685f-4c56-9805-6bf1baf40e7c"
+  ],
+  "pendingOriginalStoryClaims": "5件は別の個別受入待ち。今回のreleaseに混入しない。",
+  "roleAdoption": {
+    "id": "ORIGINAL_STORY",
+    "definition": "対象漫画の制作において、原作担当として資料に明示された人物の制作関与。",
+    "recordedAt": "2026-10-16T16:21:29+00:00",
+    "proposalFile": "docs/design/MANGA_PRODUCTION_ROLE_REVIEW.md",
+    "proposalSha256": "1805ca9fbb49f8d5982945385b9722ce682944a035ff0e35f55322c36db1d049",
+    "individualClaimsAccepted": false
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "valid": true,
+  "counts": {
+    "nodes": {
+      "Entity": 2116,
+      "Claim": 1848,
+      "Source": 1755,
+      "Citation": 1884,
+      "ExternalIdentifier": 2485
+    },
+    "relationships": {
+      "SUBJECT": 1848,
+      "OBJECT": 1848,
+      "HAS_CITATION": 1884,
+      "CITES": 1884,
+      "HAS_EXTERNAL_ID": 2485
+    }
+  }
+}

@@ -1,5 +1,7 @@
 # 作者クレジットをGraphで読めるようにする
 
+2026-10-17追記：漫画制作の原作担当ORIGINAL_STORYを別途人間が採用した。[追加契約](ORIGINAL_STORY.md)。以下の3 Role採用と公開は2026-10-14の記録であり、今回の原作5候補の個別受入・公開を意味しない。
+
 2026-10-14。ユーザーが3 Role定義と広いClaimを保持する方式を明示承認。既存のCONTRIBUTED_TOと一Claim一Role、刊行物scope、Claim identityを維持する。表示専用のCitation.note解析は行わない。
 
 ## 追加する三つの限定（人間意味レビュー済み）

@@ -1,0 +1,500 @@
+{
+  "status": "pending-human-individual-acceptance",
+  "reviewedAt": "2026-10-16T16:34:09+00:00",
+  "reviewer": "Codex（根拠再検証・受入推奨のみ）",
+  "sourceJobId": "famous-manga-creators-r0002-97c171eb654963e4",
+  "roleId": "ORIGINAL_STORY",
+  "roleDefinitionAdopted": true,
+  "humanIndividualAcceptance": false,
+  "includedInPublicRelease": false,
+  "adapterChanged": false,
+  "referenceArtifacts": [
+    {
+      "file": "datasets/manga-collection/original-story-r0002-20261017/ndl-9784098610105.json",
+      "sha256": "a8992f7327ac45150fa7dba2e2ad1877ed7914c4642918442d2ce2c7e9fa2a4a",
+      "sourceJobFile": ".local/collection-jobs/famous-manga-creators-r0002-97c171eb654963e4/artifacts/snapshots/ndl-9784098610105.json"
+    },
+    {
+      "file": "datasets/manga-collection/original-story-r0002-20261017/ndl-9784088811840.json",
+      "sha256": "97ae7be91605bb1d81a54062716132bb0d727b845d811a5b232f487ae4501cb0",
+      "sourceJobFile": ".local/collection-jobs/famous-manga-creators-r0002-97c171eb654963e4/artifacts/snapshots/ndl-9784088811840.json"
+    },
+    {
+      "file": "datasets/manga-collection/original-story-r0002-20261017/ndl-9784088733708.json",
+      "sha256": "035008f311bc5e2e4fdd56e6a216c20f93792583675a2fe5a036e9c99ce71319",
+      "sourceJobFile": ".local/collection-jobs/famous-manga-creators-r0002-97c171eb654963e4/artifacts/snapshots/ndl-9784088733708.json"
+    },
+    {
+      "file": "datasets/manga-collection/original-story-r0002-20261017/ndl-9784088736211.json",
+      "sha256": "42957040ed44ffa3caa223d68d1cbd0ab733434c9c6af1cc3bdc03c59af9858d",
+      "sourceJobFile": ".local/collection-jobs/famous-manga-creators-r0002-97c171eb654963e4/artifacts/snapshots/ndl-9784088736211.json"
+    },
+    {
+      "file": "datasets/manga-collection/original-story-r0002-20261017/ndl-9784088727172.json",
+      "sha256": "9e302be016583de26a8907bef77390d34d1bc45db01a08f6e680076cbd5c975a",
+      "sourceJobFile": ".local/collection-jobs/famous-manga-creators-r0002-97c171eb654963e4/artifacts/snapshots/ndl-9784088727172.json"
+    }
+  ],
+  "entitiesRequiringSeparateAcceptance": [
+    "0c29d0e2-685f-4c56-9805-6bf1baf40e7c",
+    "0e0ed535-f78e-4cb0-bd3d-7dffd6b7148e",
+    "7ca5fc7d-545a-4d39-a2dc-6cce86390112",
+    "8b0d27c2-1116-4731-a00a-b90c869524a2",
+    "a13205e2-220c-4b7d-8a1a-39dbefe52db8",
+    "e0183e9c-dc97-4d85-b46e-14a1b76707fd"
+  ],
+  "dependenciesOnAcceptedRelease": [
+    "20261017-manga-r0002-001"
+  ],
+  "candidates": [
+    {
+      "person": "稲垣理一郎",
+      "work": "トリリオンゲーム",
+      "claimId": "c3f1e013-68cc-42b7-b076-495178247899",
+      "sourceId": "1f388832-0cb6-4ccd-b7e6-80bb0ed0212a",
+      "citationId": "b7241220-539b-43d0-a849-2fd277781288",
+      "isbn13": "9784098610105",
+      "originalText": "稲垣理一郎 原作",
+      "snapshotFile": "datasets/manga-collection/original-story-r0002-20261017/ndl-9784098610105.json",
+      "recommendation": "recommend-acceptance",
+      "formalAcceptance": {
+        "decision": "pending",
+        "reviewer": null,
+        "recordedAt": null
+      },
+      "scopeVerification": "同一NDL書誌のISBN・第1巻・日本語・漫画・責任表示が一致。タイトルは大文字小文字の表記差のみ許容。作品全体・他版へ外挿しない。",
+      "existingEquivalentClaimIds": []
+    },
+    {
+      "person": "稲垣理一郎",
+      "work": "Dr.STONE",
+      "claimId": "f638cf0b-3750-49f6-b833-844d5465b99f",
+      "sourceId": "7def5563-ec0a-4709-99aa-22f8b07a5c10",
+      "citationId": "61f50a3d-d113-4ab8-afae-28bba03401c5",
+      "isbn13": "9784088811840",
+      "originalText": "稲垣理一郎 原作",
+      "snapshotFile": "datasets/manga-collection/original-story-r0002-20261017/ndl-9784088811840.json",
+      "recommendation": "recommend-acceptance",
+      "formalAcceptance": {
+        "decision": "pending",
+        "reviewer": null,
+        "recordedAt": null
+      },
+      "scopeVerification": "同一NDL書誌のISBN・第1巻・日本語・漫画・責任表示が一致。タイトルは大文字小文字の表記差のみ許容。作品全体・他版へ外挿しない。",
+      "existingEquivalentClaimIds": []
+    },
+    {
+      "person": "稲垣理一郎",
+      "work": "アイシールド21",
+      "claimId": "043e8592-5827-4167-9c93-f8201dd110bc",
+      "sourceId": "2bdfa31d-ad7a-4705-8bdf-2be58ae606f6",
+      "citationId": "bb15e42b-438b-46f3-bfe2-2c0676424db4",
+      "isbn13": "9784088733708",
+      "originalText": "稲垣理一郎 原作",
+      "snapshotFile": "datasets/manga-collection/original-story-r0002-20261017/ndl-9784088733708.json",
+      "recommendation": "recommend-acceptance",
+      "formalAcceptance": {
+        "decision": "pending",
+        "reviewer": null,
+        "recordedAt": null
+      },
+      "scopeVerification": "同一NDL書誌のISBN・第1巻・日本語・漫画・責任表示が一致。タイトルは大文字小文字の表記差のみ許容。作品全体・他版へ外挿しない。",
+      "existingEquivalentClaimIds": []
+    },
+    {
+      "person": "大場つぐみ",
+      "work": "DEATH NOTE",
+      "claimId": "6ed29ee4-2b62-4fe7-83a6-aafe300754d7",
+      "sourceId": "4859917b-c4ba-4e2d-b932-52224ff7ebec",
+      "citationId": "2912d1b2-54cf-425a-9428-d0c323f68a01",
+      "isbn13": "9784088736211",
+      "originalText": "大場つぐみ 原作",
+      "snapshotFile": "datasets/manga-collection/original-story-r0002-20261017/ndl-9784088736211.json",
+      "recommendation": "recommend-acceptance",
+      "formalAcceptance": {
+        "decision": "pending",
+        "reviewer": null,
+        "recordedAt": null
+      },
+      "scopeVerification": "同一NDL書誌のISBN・第1巻・日本語・漫画・責任表示が一致。タイトルは大文字小文字の表記差のみ許容。作品全体・他版へ外挿しない。",
+      "existingEquivalentClaimIds": []
+    },
+    {
+      "person": "ほったゆみ",
+      "work": "ヒカルの碁",
+      "claimId": "10f72eb0-3526-4d50-a552-e2239c01fc39",
+      "sourceId": "751742b2-a8c7-40fe-96c1-8e91a116f789",
+      "citationId": "13adf6b0-da63-4be0-abd7-b8aeb54d6bdf",
+      "isbn13": "9784088727172",
+      "originalText": "ほったゆみ 原作",
+      "snapshotFile": "datasets/manga-collection/original-story-r0002-20261017/ndl-9784088727172.json",
+      "recommendation": "recommend-acceptance",
+      "formalAcceptance": {
+        "decision": "pending",
+        "reviewer": null,
+        "recordedAt": null
+      },
+      "scopeVerification": "同一NDL書誌のISBN・第1巻・日本語・漫画・責任表示が一致。タイトルは大文字小文字の表記差のみ許容。作品全体・他版へ外挿しない。",
+      "existingEquivalentClaimIds": []
+    }
+  ],
+  "records": {
+    "entities": [
+      {
+        "id": "0c29d0e2-685f-4c56-9805-6bf1baf40e7c",
+        "kind": "work",
+        "name": "ヒカルの碁",
+        "description": null,
+        "aliases": [
+          "Hikaru no Go"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q582763"
+          }
+        ],
+        "createdAt": "2026-10-16T00:00:00Z",
+        "updatedAt": "2026-10-16T00:00:00Z",
+        "event": null
+      },
+      {
+        "id": "0e0ed535-f78e-4cb0-bd3d-7dffd6b7148e",
+        "kind": "work",
+        "name": "アイシールド21",
+        "description": null,
+        "aliases": [
+          "Eyeshield 21"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q696941"
+          }
+        ],
+        "createdAt": "2026-10-16T00:00:00Z",
+        "updatedAt": "2026-10-16T00:00:00Z",
+        "event": null
+      },
+      {
+        "id": "7ca5fc7d-545a-4d39-a2dc-6cce86390112",
+        "kind": "work",
+        "name": "DEATH NOTE",
+        "description": null,
+        "aliases": [
+          "Death Note"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q1834"
+          }
+        ],
+        "createdAt": "2026-10-16T00:00:00Z",
+        "updatedAt": "2026-10-16T00:00:00Z",
+        "event": null
+      },
+      {
+        "id": "8b0d27c2-1116-4731-a00a-b90c869524a2",
+        "kind": "person",
+        "name": "稲垣理一郎",
+        "description": null,
+        "aliases": [
+          "Riichiro Inagaki"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q2602357"
+          }
+        ],
+        "createdAt": "2026-10-16T00:00:00Z",
+        "updatedAt": "2026-10-16T00:00:00Z",
+        "event": null
+      },
+      {
+        "id": "a13205e2-220c-4b7d-8a1a-39dbefe52db8",
+        "kind": "person",
+        "name": "大場つぐみ",
+        "description": null,
+        "aliases": [
+          "Tsugumi Ohba"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q558858"
+          }
+        ],
+        "createdAt": "2026-10-16T00:00:00Z",
+        "updatedAt": "2026-10-16T00:00:00Z",
+        "event": null
+      },
+      {
+        "id": "e0183e9c-dc97-4d85-b46e-14a1b76707fd",
+        "kind": "person",
+        "name": "ほったゆみ",
+        "description": null,
+        "aliases": [
+          "Yumi Hotta"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q263303"
+          }
+        ],
+        "createdAt": "2026-10-16T00:00:00Z",
+        "updatedAt": "2026-10-16T00:00:00Z",
+        "event": null
+      }
+    ],
+    "claims": [
+      {
+        "id": "c3f1e013-68cc-42b7-b076-495178247899",
+        "subjectId": "8b0d27c2-1116-4731-a00a-b90c869524a2",
+        "objectId": "c71ebc3e-ae93-43d6-a525-eb5b1abd609f",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "hidden",
+        "createdAt": "2026-10-16T16:34:09Z",
+        "updatedAt": "2026-10-16T16:34:09Z",
+        "contribution": {
+          "roleId": "ORIGINAL_STORY",
+          "scope": {
+            "kind": "publication",
+            "isbn13": "9784098610105",
+            "volumeLabel": "第1巻",
+            "editionLabel": null,
+            "language": "ja"
+          }
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      },
+      {
+        "id": "f638cf0b-3750-49f6-b833-844d5465b99f",
+        "subjectId": "8b0d27c2-1116-4731-a00a-b90c869524a2",
+        "objectId": "31f3c278-7d49-4aed-9a36-c722cae25ed2",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "hidden",
+        "createdAt": "2026-10-16T16:34:09Z",
+        "updatedAt": "2026-10-16T16:34:09Z",
+        "contribution": {
+          "roleId": "ORIGINAL_STORY",
+          "scope": {
+            "kind": "publication",
+            "isbn13": "9784088811840",
+            "volumeLabel": "第1巻",
+            "editionLabel": null,
+            "language": "ja"
+          }
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      },
+      {
+        "id": "043e8592-5827-4167-9c93-f8201dd110bc",
+        "subjectId": "8b0d27c2-1116-4731-a00a-b90c869524a2",
+        "objectId": "0e0ed535-f78e-4cb0-bd3d-7dffd6b7148e",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "hidden",
+        "createdAt": "2026-10-16T16:34:09Z",
+        "updatedAt": "2026-10-16T16:34:09Z",
+        "contribution": {
+          "roleId": "ORIGINAL_STORY",
+          "scope": {
+            "kind": "publication",
+            "isbn13": "9784088733708",
+            "volumeLabel": "第1巻",
+            "editionLabel": null,
+            "language": "ja"
+          }
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      },
+      {
+        "id": "6ed29ee4-2b62-4fe7-83a6-aafe300754d7",
+        "subjectId": "a13205e2-220c-4b7d-8a1a-39dbefe52db8",
+        "objectId": "7ca5fc7d-545a-4d39-a2dc-6cce86390112",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "hidden",
+        "createdAt": "2026-10-16T16:34:09Z",
+        "updatedAt": "2026-10-16T16:34:09Z",
+        "contribution": {
+          "roleId": "ORIGINAL_STORY",
+          "scope": {
+            "kind": "publication",
+            "isbn13": "9784088736211",
+            "volumeLabel": "第1巻",
+            "editionLabel": null,
+            "language": "ja"
+          }
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      },
+      {
+        "id": "10f72eb0-3526-4d50-a552-e2239c01fc39",
+        "subjectId": "e0183e9c-dc97-4d85-b46e-14a1b76707fd",
+        "objectId": "0c29d0e2-685f-4c56-9805-6bf1baf40e7c",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "hidden",
+        "createdAt": "2026-10-16T16:34:09Z",
+        "updatedAt": "2026-10-16T16:34:09Z",
+        "contribution": {
+          "roleId": "ORIGINAL_STORY",
+          "scope": {
+            "kind": "publication",
+            "isbn13": "9784088727172",
+            "volumeLabel": "第1巻",
+            "editionLabel": null,
+            "language": "ja"
+          }
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      }
+    ],
+    "sources": [
+      {
+        "id": "2bdfa31d-ad7a-4705-8bdf-2be58ae606f6",
+        "kind": "web",
+        "title": "NDLサーチ: アイシールド21. 1",
+        "authors": [],
+        "publisher": "国立国会図書館",
+        "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I000004050151",
+        "publishedAt": null,
+        "edition": null,
+        "note": "国立国会図書館作成書誌（iss-ndl-opac）の責任表示。メタデータ CC BY 4.0: https://creativecommons.org/licenses/by/4.0/ ; 提供元条件 https://ndlsearch.ndl.go.jp/help/api/provider 。本文・画像・第三者所蔵情報は含まない。",
+        "isDemo": false
+      },
+      {
+        "id": "4859917b-c4ba-4e2d-b932-52224ff7ebec",
+        "kind": "web",
+        "title": "NDLサーチ: Death note. 1",
+        "authors": [],
+        "publisher": "国立国会図書館",
+        "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I000007330339",
+        "publishedAt": null,
+        "edition": null,
+        "note": "国立国会図書館作成書誌（iss-ndl-opac）の責任表示。メタデータ CC BY 4.0: https://creativecommons.org/licenses/by/4.0/ ; 提供元条件 https://ndlsearch.ndl.go.jp/help/api/provider 。本文・画像・第三者所蔵情報は含まない。",
+        "isDemo": false
+      },
+      {
+        "id": "751742b2-a8c7-40fe-96c1-8e91a116f789",
+        "kind": "web",
+        "title": "NDLサーチ: ヒカルの碁. 1",
+        "authors": [],
+        "publisher": "国立国会図書館",
+        "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I000002788748",
+        "publishedAt": null,
+        "edition": null,
+        "note": "国立国会図書館作成書誌（iss-ndl-opac）の責任表示。メタデータ CC BY 4.0: https://creativecommons.org/licenses/by/4.0/ ; 提供元条件 https://ndlsearch.ndl.go.jp/help/api/provider 。本文・画像・第三者所蔵情報は含まない。",
+        "isDemo": false
+      }
+    ],
+    "citations": [
+      {
+        "id": "b7241220-539b-43d0-a849-2fd277781288",
+        "claimId": "c3f1e013-68cc-42b7-b076-495178247899",
+        "sourceId": "1f388832-0cb6-4ccd-b7e6-80bb0ed0212a",
+        "locator": "dc:creator（責任表示） / ISBN 9784098610105",
+        "note": "未受入候補。日本語第1巻のNDL書誌のみ。原本実見ではない。全巻・全版、脚本・ネーム・著作権を推論しない。",
+        "accessedAt": "2026-10-16",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "稲垣理一郎 原作",
+          "language": "ja"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      },
+      {
+        "id": "61f50a3d-d113-4ab8-afae-28bba03401c5",
+        "claimId": "f638cf0b-3750-49f6-b833-844d5465b99f",
+        "sourceId": "7def5563-ec0a-4709-99aa-22f8b07a5c10",
+        "locator": "dc:creator（責任表示） / ISBN 9784088811840",
+        "note": "未受入候補。日本語第1巻のNDL書誌のみ。原本実見ではない。全巻・全版、脚本・ネーム・著作権を推論しない。",
+        "accessedAt": "2026-10-16",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "稲垣理一郎 原作",
+          "language": "ja"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      },
+      {
+        "id": "bb15e42b-438b-46f3-bfe2-2c0676424db4",
+        "claimId": "043e8592-5827-4167-9c93-f8201dd110bc",
+        "sourceId": "2bdfa31d-ad7a-4705-8bdf-2be58ae606f6",
+        "locator": "dc:creator（責任表示） / ISBN 9784088733708",
+        "note": "未受入候補。日本語第1巻のNDL書誌のみ。原本実見ではない。全巻・全版、脚本・ネーム・著作権を推論しない。",
+        "accessedAt": "2026-10-16",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "稲垣理一郎 原作",
+          "language": "ja"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      },
+      {
+        "id": "2912d1b2-54cf-425a-9428-d0c323f68a01",
+        "claimId": "6ed29ee4-2b62-4fe7-83a6-aafe300754d7",
+        "sourceId": "4859917b-c4ba-4e2d-b932-52224ff7ebec",
+        "locator": "dc:creator（責任表示） / ISBN 9784088736211",
+        "note": "未受入候補。日本語第1巻のNDL書誌のみ。原本実見ではない。全巻・全版、脚本・ネーム・著作権を推論しない。",
+        "accessedAt": "2026-10-16",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "大場つぐみ 原作",
+          "language": "ja"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      },
+      {
+        "id": "13adf6b0-da63-4be0-abd7-b8aeb54d6bdf",
+        "claimId": "10f72eb0-3526-4d50-a552-e2239c01fc39",
+        "sourceId": "751742b2-a8c7-40fe-96c1-8e91a116f789",
+        "locator": "dc:creator（責任表示） / ISBN 9784088727172",
+        "note": "未受入候補。日本語第1巻のNDL書誌のみ。原本実見ではない。全巻・全版、脚本・ネーム・著作権を推論しない。",
+        "accessedAt": "2026-10-16",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "ほったゆみ 原作",
+          "language": "ja"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      }
+    ]
+  }
+}

@@ -13,6 +13,7 @@ import { capsuleLabels } from "../lib/i18n/capsules";
 import { capsuleSharingLabels } from "../lib/i18n/capsule-sharing";
 import { capsuleDiscussionLabels } from "../lib/i18n/capsule-discussion";
 import { memberLabels } from "../lib/i18n/member";
+import { memberPostsLabels } from "../lib/i18n/member-posts";
 import { readingLabels } from "../lib/i18n/reading-reference";
 import { savedViewLabels } from "../lib/i18n/saved-views";
 import { workspaceLabels } from "../lib/i18n/workspace";
@@ -95,7 +96,11 @@ describe("閲覧・会員・共有の表示言語と保存内容を分ける", (
     show(<MemberCapsules dataset="demo" />);
     fireEvent.click(await screen.findByRole("button", { name: "test-edit" }));
     fireEvent.change(screen.getByLabelText("自分の説明", { exact: true }), { target: { value: "未保存の日本語メモ" } });
-    fireEvent.change(screen.getByLabelText("表示名", { exact: true }), { target: { value: "未保存の表示名" } });
+    // Display-name editing now lives in the account-settings section. Retain
+    // both drafts while moving between the existing account sections.
+    act(() => { history.replaceState(null, "", `${location.pathname}${location.search}#account-settings`); window.dispatchEvent(new HashChangeEvent("hashchange")); });
+    fireEvent.change(await screen.findByLabelText("表示名", { exact: true }), { target: { value: "未保存の表示名" } });
+    act(() => { history.replaceState(null, "", `${location.pathname}${location.search}#my-capsules`); window.dispatchEvent(new HashChangeEvent("hashchange")); });
     const count = requests.mock.calls.length;
     language("en");
     expect((screen.getByLabelText("My description", { exact: true }) as HTMLTextAreaElement).value).toBe("未保存の日本語メモ");
@@ -111,7 +116,7 @@ describe("閲覧・会員・共有の表示言語と保存内容を分ける", (
     history.replaceState(null, "", `/shared#${token}`);
     show(<SharedCapsule dataset="demo" />);
     await screen.findByRole("heading", { name: capsule.content.title });
-    await screen.findByRole("link", { name: "本人の表示名のアカウントを開く（別タブ）" });
+    await screen.findByRole("link", { name: memberPostsLabels().manageLink });
     expect(requests).toHaveBeenCalledTimes(2);
     language("en"); await screen.findByRole("heading", { name: "Shared Capsule" });
     language("ja"); await screen.findByRole("heading", { name: "共有されたCapsule" });

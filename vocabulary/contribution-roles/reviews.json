@@ -163,5 +163,65 @@
       "presentation": "既存制作badgeとRole名を利用。SourceのnoteをGraphで解析しない。"
     },
     "rationale": "漫画の画／作画、または本人が当該漫画を描いたと明示する制作関与。原作・脚本・著者の兼務を認定しない。 ユーザーがこの3定義・広いClaimを保持する投影・独立根拠数を増やしたように扱わない境界を明示承認した。"
+  },
+  {
+    "id": "original-story-20261017",
+    "targetId": "ORIGINAL_STORY",
+    "kind": "role",
+    "change": "addition",
+    "beforeHash": null,
+    "afterHash": "3571e540f8595f289f2bff23bd1934302a4f322be8819b4f914ab02968e4e312",
+    "status": "approved",
+    "reviewer": "プロジェクト運営者",
+    "reviewedAt": "2026-10-17",
+    "outcome": "qualifier",
+    "motivation": "漫画原作の制作担当を既存Roleへ置換せず保持する。",
+    "evidenceExample": "Dr.STONE公式の原作・作画の分担と同ISBNのNDL書誌。",
+    "counterexample": "PLUTOの翻案元の作者であるだけの手塚治虫。",
+    "predicateRationale": "対象漫画への制作関与の役割限定で、CONTRIBUTED_TOの端点・方向・意味を維持する。翻案元であるだけの人物は対象外。",
+    "comparisons": [
+      {
+        "roleId": "SCRIPT_WRITING",
+        "relation": "distinct",
+        "rationale": "原作担当は脚本・ネームの具体工程を認定しない。脚本の明示とは別。"
+      },
+      {
+        "roleId": "SUPERVISION",
+        "relation": "distinct",
+        "rationale": "原作担当から監修・内容承認を推論しない。"
+      },
+      {
+        "roleId": "PRODUCING",
+        "relation": "distinct",
+        "rationale": "企画統括・プロデュースと原作担当は別のクレジット。"
+      },
+      {
+        "roleId": "STORY_CO_CREATION",
+        "relation": "distinct",
+        "rationale": "共同制作の明示と原作担当の明示は別。原作・作画の併記から共同制作Roleを生成しない。"
+      },
+      {
+        "roleId": "AUTHORSHIP",
+        "relation": "distinct",
+        "rationale": "原作は著／著者クレジットと同義にせず、単独著者・著作権者を認定しない。"
+      },
+      {
+        "roleId": "CREATION",
+        "relation": "distinct",
+        "rationale": "原作と作を文字列の包含で同一視しない。"
+      },
+      {
+        "roleId": "DRAWING",
+        "relation": "distinct",
+        "rationale": "原作担当は完成漫画の作画担当を認定せず、兼務も推測しない。"
+      }
+    ],
+    "impacts": {
+      "claims": "既存7 Role・Claimは不変。原作5件は未受入候補のみ。",
+      "conditions": "既存OR条件・LIMIT前取得・cursor・比較キー・保存復帰を再利用。旧い列挙条件へ新Roleを追加しない。",
+      "translations": "原作（漫画制作）と保守的な英語表示を追加。",
+      "presentation": "制作表示束・詳細・原語を既存UIで表示。"
+    },
+    "rationale": "本チャットで意味定義を明示採用。実記録日時・参照artifact hashはdatasets/manga-collection/accepted-r0002-20261017/acceptance.jsonに保持。個別原作Claimや公開applyの承認ではない。"
   }
 ]

@@ -1,0 +1,190 @@
+{
+  "verifiedAt": "2026-10-16T16:59:03+00:00",
+  "sourceGitBase": "9e93b88d45df1845e2ba760ceb240647b9593993",
+  "releaseCandidate": "20261017-manga-r0002-001",
+  "baseRelease": "20261014-credits-001",
+  "artifactHashes": [
+    {
+      "file": "datasets/manga-collection/accepted-r0002-20261017/acceptance.json",
+      "sha256": "9b28562b9846970cd30b9261d4659d505e9df06e014d2809d6517aa39836f567"
+    },
+    {
+      "file": "datasets/public-kg/releases/20261017-manga-r0002-001/data.json",
+      "sha256": "a52c93f78cbc6a7440dee640d1161d040d88effee494d02045c49637801975db"
+    },
+    {
+      "file": "datasets/public-kg/releases/20261017-manga-r0002-001/manifest.json",
+      "sha256": "5714648b348fff62605f99f3b25c25bc1f22a22e2e4acdaefae7196ddb5712a8"
+    },
+    {
+      "file": "datasets/manga-collection/original-story-r0002-20261017/candidates.json",
+      "sha256": "d13136e8e383bce126e8521bfc1015529210f617da220ccd71a4ce1f9f409348"
+    },
+    {
+      "file": "vocabulary/contribution-roles/catalog.json",
+      "sha256": "2d5370cab52998b822331eafa13292864ae5cc1af37b71c4d9d389b5ecf7f652"
+    },
+    {
+      "file": "vocabulary/contribution-roles/reviews.json",
+      "sha256": "ed6098bff4474c0cd1c8b8658540ecb5b88a6e04aae555f4da1c813842317e9c"
+    }
+  ],
+  "checks": {
+    "frozenR0002": {
+      "status": "passed",
+      "definitionSha256": "c61614326ace666c9c4d498b6349d3d1d524e0b83017695fd960a3e34879b863",
+      "themeStatus": "approved",
+      "executionStatus": "frozen-inputs-match",
+      "inspectStatus": "candidate-ready",
+      "originalArtifactsVerified": true,
+      "rerun": false,
+      "adapterChanged": false
+    },
+    "vocabulary": {
+      "status": "passed",
+      "trustedGitBase": "9e93b88d45df1845e2ba760ceb240647b9593993",
+      "predicates": 5,
+      "roles": 8,
+      "errors": 0,
+      "notes": "既存のpredicate警告1件と人間の意味審査注意を保持。baseline・過去の承認票は不変。"
+    },
+    "qualification": {
+      "status": "passed",
+      "errors": 0,
+      "warnings": 0
+    },
+    "unit": {
+      "status": "passed",
+      "files": 43,
+      "tests": 644,
+      "passed": 644,
+      "failed": 0,
+      "command": "npm test -- --no-file-parallelism --testTimeout=15000 --reporter=json --outputFile=test-results/manga-unit.json",
+      "note": "初回に既存会員画面テスト2件の古い前提を検出。現行sectionへの移動と共有画面linkの期待だけ修正し、全件を再実行して成功。製品の会員機能は変更していない。"
+    },
+    "typecheck": {
+      "status": "passed",
+      "command": "npm run typecheck"
+    },
+    "lint": {
+      "status": "passed",
+      "command": "npm run lint"
+    },
+    "publicBuild": {
+      "status": "passed",
+      "command": "npm run public:build",
+      "buildId": "RxGZcn_57S32qXBl2Qnma"
+    },
+    "isolatedIntegration": {
+      "status": "passed",
+      "command": "npm run manga:integration",
+      "tests": 1,
+      "neo4jTarget": "bolt://127.0.0.1:7695",
+      "disposableDatabaseRemoved": true,
+      "syntheticDataOnly": true,
+      "covered": [
+        "Role条件のLIMIT前適用",
+        "人物側・作品側の一致",
+        "cursor条件拘束とページ送り",
+        "旧Role・限定なしの区別",
+        "新Roleと原語の詳細取得",
+        "関係概要",
+        "非公開Claimの除外",
+        "同じrelease再適用の冪等性"
+      ]
+    },
+    "releaseValidate": {
+      "valid": true,
+      "counts": {
+        "nodes": {
+          "Entity": 2116,
+          "Claim": 1848,
+          "Source": 1755,
+          "Citation": 1884,
+          "ExternalIdentifier": 2485
+        },
+        "relationships": {
+          "SUBJECT": 1848,
+          "OBJECT": 1848,
+          "HAS_CITATION": 1884,
+          "CITES": 1884,
+          "HAS_EXTERNAL_ID": 2485
+        }
+      }
+    },
+    "localPlan": {
+      "status": "passed",
+      "artifact": "datasets/manga-collection/accepted-r0002-20261017/local-plan.json",
+      "addedKnowledgeNodes": 26,
+      "updatedKnowledgeNodes": 0,
+      "relationshipsAdded": 23,
+      "write": false
+    },
+    "baseRead": {
+      "status": "passed",
+      "fixtureMatchesBase": true,
+      "withdrawals": 0,
+      "privateBackup": "backups/manga-r0002-before-preparation-20261017.json",
+      "backupChecksum": "c0325a131a6e4efc3474d30701d3e3622ebf27593d4087b10af1e2d150b97172"
+    },
+    "browser": {
+      "status": "passed",
+      "localTests": 1,
+      "betaTests": 1,
+      "command": "Playwright playwright.manga.config.ts",
+      "covered": [
+        "新Role条件の表示・選択",
+        "取消後のGraph保持",
+        "新Rolequeryの200応答",
+        "受入4 Claimは未公開404（beta）",
+        "dataset revision不変"
+      ],
+      "screenshotReviewed": true,
+      "browserRuntimeNote": "WSLの共有libraryは既存の一時配置を利用。ホストpackageの変更なし。"
+    },
+    "environments": {
+      "local": {
+        "dataset": "public-kg",
+        "revision": "82b01515-594c-48ca-b4b6-515eefac83ca",
+        "currentWebBuild": "RxGZcn_57S32qXBl2Qnma",
+        "kgApplyExecuted": false
+      },
+      "beta": {
+        "dataset": "public-kg",
+        "revision": "82b01515-594c-48ca-b4b6-515eefac83ca",
+        "currentWebBuild": "RxGZcn_57S32qXBl2Qnma",
+        "kgApplyExecuted": false
+      },
+      "vps": {
+        "dataset": "public-kg",
+        "revision": "5e2a94af-9061-4087-bb7a-045a3c0133f4",
+        "currentWebBuild": "previous-build",
+        "kgApplyExecuted": false
+      }
+    },
+    "vpsPlan": {
+      "status": "not-run",
+      "reason": "既存SSH接続先のport22がtimeout。HTTPSの旧KG revisionは確認した。",
+      "webUpdated": false,
+      "write": false
+    },
+    "scope": {
+      "accepted": {
+        "entities": 7,
+        "claims": 4,
+        "sources": 4,
+        "citations": 4,
+        "externalIdentifiers": 7
+      },
+      "pendingOriginalStoryClaims": 5,
+      "excludedEntities": 8,
+      "publicApply": {
+        "local": false,
+        "beta": false,
+        "vps": false
+      },
+      "memberDatabaseChanged": false,
+      "productionDatabaseChanged": false
+    }
+  }
+}

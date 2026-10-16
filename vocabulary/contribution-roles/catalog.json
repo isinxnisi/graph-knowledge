@@ -553,6 +553,106 @@
           "rationale": "資料上の制作役割の命題は別。同じ人物の兼務を排除せず、片方から他方を推論しない。"
         }
       ]
+    },
+    {
+      "id": "ORIGINAL_STORY",
+      "predicate": "CONTRIBUTED_TO",
+      "definitionLanguage": "ja",
+      "meaning": {
+        "definition": "対象漫画の制作において、原作担当として資料に明示された人物の制作関与。",
+        "subjectRole": "対象漫画の原作担当として明示された人物",
+        "objectRole": "対象漫画作品（資料が支持する範囲）",
+        "direction": "subject-to-object",
+        "rules": [
+          "翻案元の原著作者であるだけの人物を当該漫画の原作担当として認定しない。",
+          "原作から著者・作・脚本・作画・ネーム・構成・著作権保有を推論しない。",
+          "作品単位の資料から特定ISBN・全巻全版・期間を自動補完しない。",
+          "一Claim一Role。旧い広いCONTRIBUTED_TO ClaimのUUID・意味を変更しない。",
+          "原語はCitationのoriginalTextとlanguageに保持する。資料支持と個別Claim受入は別判断。"
+        ],
+        "examples": [
+          {
+            "id": "ORIGINAL_STORY-include",
+            "category": "include",
+            "scenario": "Dr.STONE公式の稲垣理一郎・原作とBoichi・作画の分担クレジット。",
+            "rationale": "対象漫画の制作担当として明示。特定刊行物scopeは同ISBNの書誌で別に確認する。"
+          },
+          {
+            "id": "ORIGINAL_STORY-exclude",
+            "category": "exclude",
+            "scenario": "PLUTOの翻案元である鉄腕アトムの作者という理由だけで手塚治虫を当該漫画の原作担当へ変換する。",
+            "rationale": "原著由来のみは制作関与と区別する。"
+          },
+          {
+            "id": "ORIGINAL_STORY-boundary",
+            "category": "boundary",
+            "scenario": "Dr.STONE reboot：百夜の原作名義とストーリー・漫画クレジットの併記。",
+            "rationale": "原作という単語だけで直接制作と由来を区別せず、担当・対象の確認が不足すれば保留。"
+          }
+        ],
+        "nearbyConcepts": [
+          {
+            "term": "翻案元の原著作者",
+            "difference": "作品間の由来と当該漫画の制作担当を分ける。"
+          },
+          {
+            "term": "脚本・ネーム・構成",
+            "difference": "原作担当だけでは具体工程を認定しない。"
+          }
+        ]
+      },
+      "translations": {
+        "ja": {
+          "label": "原作（漫画制作）",
+          "reverseLabel": "原作担当としての制作関与",
+          "description": "対象漫画の制作において、原作担当として資料に明示された人物の制作関与。",
+          "aliases": []
+        },
+        "en": {
+          "label": "Original story credit (manga production)",
+          "reverseLabel": "Contribution credited for the manga original story",
+          "description": "A person explicitly credited for the original story in producing the target manga. A source author alone does not establish this role.",
+          "aliases": []
+        }
+      },
+      "predicateRationale": "対象漫画への制作関与の役割限定で、CONTRIBUTED_TOの端点・方向・意味を維持する。翻案元であるだけの人物は対象外。",
+      "comparisons": [
+        {
+          "roleId": "SCRIPT_WRITING",
+          "relation": "distinct",
+          "rationale": "原作担当は脚本・ネームの具体工程を認定しない。脚本の明示とは別。"
+        },
+        {
+          "roleId": "SUPERVISION",
+          "relation": "distinct",
+          "rationale": "原作担当から監修・内容承認を推論しない。"
+        },
+        {
+          "roleId": "PRODUCING",
+          "relation": "distinct",
+          "rationale": "企画統括・プロデュースと原作担当は別のクレジット。"
+        },
+        {
+          "roleId": "STORY_CO_CREATION",
+          "relation": "distinct",
+          "rationale": "共同制作の明示と原作担当の明示は別。原作・作画の併記から共同制作Roleを生成しない。"
+        },
+        {
+          "roleId": "AUTHORSHIP",
+          "relation": "distinct",
+          "rationale": "原作は著／著者クレジットと同義にせず、単独著者・著作権者を認定しない。"
+        },
+        {
+          "roleId": "CREATION",
+          "relation": "distinct",
+          "rationale": "原作と作を文字列の包含で同一視しない。"
+        },
+        {
+          "roleId": "DRAWING",
+          "relation": "distinct",
+          "rationale": "原作担当は完成漫画の作画担当を認定せず、兼務も推測しない。"
+        }
+      ]
     }
   ]
 }

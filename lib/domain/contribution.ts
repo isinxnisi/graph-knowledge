@@ -1,5 +1,5 @@
 import { z } from "zod";
-export const CONTRIBUTION_ROLE_IDS = ["SCRIPT_WRITING", "SUPERVISION", "PRODUCING", "STORY_CO_CREATION", "AUTHORSHIP", "CREATION", "DRAWING"] as const;
+export const CONTRIBUTION_ROLE_IDS = ["SCRIPT_WRITING", "SUPERVISION", "PRODUCING", "STORY_CO_CREATION", "AUTHORSHIP", "CREATION", "DRAWING", "ORIGINAL_STORY"] as const;
 export type ContributionRoleId = typeof CONTRIBUTION_ROLE_IDS[number];
 export const roleIdSchema = z.enum(CONTRIBUTION_ROLE_IDS);
 import { languageSchema, originalTermEvidenceSchema } from "./evidence";

@@ -33,7 +33,7 @@
 | 現在の3テーマ | 固定起点から公開Claimを最大2段辿った集合。名前・kind・around・predicateをANDで適用 | 漫画／科学／歴史の全収録ではない。3テーマ外の対象は新しく収録されても自動で入らない。起点を確認できないテーマは隠れる |
 | around | 中心自身＋直接の隣接Entity。themeとの併用は集合の交差 | 「選んだpredicateで中心と結ばれる相手」ではない。集合生成と、候補がそのpredicateを持つ判定は別。端点の証人Claimを確認する新能力が必要 |
 | 関係の切り口 | 範囲内Entityに接続する公開Claimの述語を集計。現在の名前・kind・切り口では候補を消さない | 件数はDISTINCT Claim、Entity数でも独立根拠数でもない。肯否混在を含む。意図別の次の候補や比較・橋渡しの提案ではない |
-| Graph neighbors | published、5 predicate、制作7 Role・組織2立場・参加CHAIRをLIMIT前評価。一段ずつ両方向 | 方向制限・期間条件・kind制限・肯否指定・経路自動探索はない。Roleは適用predicateにだけ作用 |
+| Graph neighbors | published、5 predicate、制作8 Role（2026-10-17 ORIGINAL_STORY採用）・組織2立場・参加CHAIRをLIMIT前評価。一段ずつ両方向 | 方向制限・期間条件・kind制限・肯否指定・経路自動探索はない。Roleは適用predicateにだけ作用 |
 | 概要・詳細 | 方向／肯否別集計、独立Claim・scope・期間・根拠の比較 | 概要のClaim数は接続人数ではない。Citation文から担当・分類・受賞条件を検索時に補えない |
 | 検索→Graph | 明示したpredicateを引継ぎ。未指定なら既存Graph条件を維持 | 明示引継ぎ時はRole等をnullにする。theme／kind／aroundはGraph条件ではない。検索文脈を含む永続URLではない |
 | UI／非同期 | 空欄一回入口、仮選択・解除、250ms debounce、IME抑制、Abort、24条件／30秒cache、戻る／進む、局所演出 | 入口の不足を見た目だけでは解決できない。cacheには現在dataset/revisionの明示キーがなく、初頁応答にもrevision欄がない |
@@ -239,7 +239,7 @@ Topicは多対多に紐づく。「量子力学の歴史」は科学＋歴史、
 | S2 機関を介し別分野の人へ | パウリ→Princeton←Nashの2 Claimあり。根拠に1945 Physics／1994 Economic Sciences | 経路は手動で可。異分野の構造化検索と共通相手の自動発見は未対応。編集説明は証跡参照を付け、同時在籍・交流・共同研究を断定しない |
 | S3 成果・理論・実験→人物 | このreleaseのworkは漫画10件。対象kindをworkにしただけでは研究成果を探せない | 成果種別・関係の意味と索引が必要。未対応と表示し「関連する研究機関から」を明示的な別案にする |
 | S4 量子力学の歴史と現代 | NBI、人物の立場／期間、1927年Solvay参加記録が足場 | 歴史は編集Topicで紹介可。期間検索・学術分野条件・最前線判定は未対応。開催期間≠個別参加期間、記録の追加日≠研究の新しさ |
-| T1 映画監督と出演者 | 名前検索の機構は可。監督・出演は現7 Roleにない | Worldは表示。role-unsupported＋coverage-unassessed。一般制作を監督／出演に代用しない |
+| T1 映画監督と出演者 | 名前検索の機構は可。監督・出演は現8 Roleにない | Worldは表示。role-unsupported＋coverage-unassessed。一般制作を監督／出演に代用しない |
 | T2 ゲーム開発者と代表作品 | 名前・work候補の機構はある。ゲーム分類・開発担当は未確認／未対応 | World→問い→不足の説明。「作品名で探す」は独立の代替検索で、代表性を保証しない |
 | T3 音楽家の影響 | person→person INFLUENCED_BYの意味と一段探索は利用可 | 音楽家分類が未対応、経路の収録未確認。既知人物を選んだ影響記録探索へ明示的に切替可能 |
 

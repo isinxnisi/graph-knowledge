@@ -17,6 +17,14 @@ export function checkRoleVocabulary(catalogInput: unknown, baselineInput: unknow
   const catalog = roleCatalogSchema.parse(catalogInput), baseline = roleCatalogSchema.parse(baselineInput);
   const reviews = z.array(roleReviewSchema).parse(reviewsInput);
   const errors: string[] = [], warnings: string[] = [];
+  // An immutable historical approval compares the roles available at that date.
+  // Same-day additions form one cohort; new approvals still compare every prior role.
+  const firstAddition = (id: string) => reviews.filter(review => review.targetId === id && review.change === "addition" && review.status === "approved")
+    .map(review => review.reviewedAt!).sort()[0];
+  const roleIdsAt = (date: string) => CONTRIBUTION_ROLE_IDS.filter(id => {
+    const added = firstAddition(id);
+    return baseline.entries.some(entry => entry.id === id) || !added || added <= date;
+  });
   if (new Set(reviews.map((review) => review.id)).size !== reviews.length) errors.push("Duplicate role review ID");
   for (const review of reviews.filter((item) => item.status === "approved")) {
     if (!catalog.entries.some((entry) => entry.id === review.targetId)) errors.push(`${review.id}: unknown role review target`);
@@ -31,14 +39,17 @@ export function checkRoleVocabulary(catalogInput: unknown, baselineInput: unknow
     if (entry.translations.ja?.label !== contributionLabels().roles[entry.id]) errors.push(`${entry.id}: runtime label mismatch`);
     const ids = entry.comparisons.map((item) => item.roleId);
     if (new Set(ids).size !== ids.length || ids.includes(entry.id)) errors.push(`${entry.id}: invalid comparisons`);
-    for (const id of (baseline.entries.some((old) => old.id === entry.id) ? baseline.entries.map((old) => old.id) : [...CONTRIBUTION_ROLE_IDS]).filter((id) => id !== entry.id)) if (!ids.includes(id)) errors.push(`${entry.id}: missing comparison ${id}`);
+    const addedAt = firstAddition(entry.id);
+    const previous = baseline.entries.find(old => old.id === entry.id);
+    const requiredComparisons = previous ? previous.comparisons.map(item => item.roleId) : addedAt ? roleIdsAt(addedAt) : [...CONTRIBUTION_ROLE_IDS];
+    for (const id of requiredComparisons.filter(id => id !== entry.id)) if (!ids.includes(id)) errors.push(`${entry.id}: missing comparison ${id}`);
     if (entry.comparisons.some((item) => item.relation === "same")) errors.push(`${entry.id}: synonym needs an alias, not another role`);
     const old = baseline.entries.find((item) => item.id === entry.id);
     const before = old ? vocabularyHash(old) : null, after = vocabularyHash(entry);
     if (before !== after) {
       const review = reviews.find((item) => item.targetId === entry.id && item.beforeHash === before && item.afterHash === after && item.status === "approved");
       if (!review || !review.reviewer || !review.reviewedAt || !["qualifier", "meaning-preserving", "alias"].includes(review.outcome) || review.change === "meaning-change") errors.push(`${entry.id}: missing meaning-preserving role review`);
-      if (review && (review.comparisons.some((item) => item.relation === "same") || CONTRIBUTION_ROLE_IDS.filter((id) => id !== entry.id).some((id) => !review.comparisons.some((item) => item.roleId === id)))) errors.push(`${entry.id}: incomplete role review`);
+      if (review && (review.comparisons.some((item) => item.relation === "same") || roleIdsAt(review.reviewedAt!).filter((id) => id !== entry.id).some((id) => !review.comparisons.some((item) => item.roleId === id)))) errors.push(`${entry.id}: incomplete role review`);
       if (review?.change === "translation" && old && vocabularyHash(old.meaning) !== vocabularyHash(entry.meaning)) errors.push(`${entry.id}: semantic edit disguised as translation`);
       warnings.push(`${entry.id}: human semantic review required`);
     }

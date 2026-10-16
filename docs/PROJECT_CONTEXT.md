@@ -1,5 +1,7 @@
 # プロジェクトの構想と判断基準
 
+2026-10-17、プロジェクト運営者が漫画r0002の4 Claim・7 Entity・4 Source・4 Citationを正式受入し、ORIGINAL_STORYの意味定義を採用した。[正式受入とrelease候補](design/MANGA_R0002_ACCEPTED_RELEASE.md)、[原作Role契約](design/ORIGINAL_STORY.md)。候補releaseは20261017-manga-r0002-001（base 20261014-credits-001）。公開applyは全環境で未許可・未実施。原作5件は根拠再検証後のpending候補で、残り8 Entityも正式受入外。r0002の承認・入力・adapter・実行履歴は保全する。
+
 2026-10-17、M3の[操作可能なDiscovery Model試作](design/DISCOVERY_MODEL_PROTOTYPE.md)を `/discovery-lab` に追加。既存検索と共存し、共通Contextの段階表示／二タブ、11世界、現在の公開APIからの接点・役割・根拠、未対応理由と明示的な別案を比較できる。新しい分類・収集処理・公開KGは変更しない。
 
 2026-10-17、[漫画r0002の受入レビュー](design/MANGA_R0002_ACCEPTANCE_REVIEW.md)で4 Claim・15新規Entityの同一性を受入推奨として整理。4 Claimの端点になる新規7 Entityの公開草稿を既存validator・無書込planで確認し、個別受入・公開適用は保留する。[制作Roleレビュー](design/MANGA_PRODUCTION_ROLE_REVIEW.md)は当該漫画の原作担当と翻案元を区別し、漫画表記の資料別確認、既存SUPERVISION、集約著者の本人限定・既存再利用を提案。新Roleの採用・実装や残り94作品の実行は今回の承認範囲に含めない。
