@@ -1,0 +1,235 @@
+{
+  "jobId": "famous-manga-creators-r0003-907fdec3b7f86662",
+  "definitionSha256": "371d297eb8cbf700d429711acc018bd46b5619a36ffb2c3ab1903e7f87a7c728",
+  "approvalSha256": "fd9c62146668cbb79498c7f3db760330b4be91d8259600ae7a46bc837e108711",
+  "jobDirectory": "/home/isinxnisi/1.projects/7.graph-knowledge/.local/collection-jobs/famous-manga-creators-r0003-907fdec3b7f86662",
+  "collectorCodeSha256": "80e05b67bc0129b963653b90df4cfbfa5bd6aff190acda99f54c08541e55801e",
+  "workflowCodeSha256": "47292e87e26c7a29fa87e279f6d0389f1e51c3e5140f4d17286629a7334d5298",
+  "public": {
+    "release": "20261014-credits-001",
+    "revision": "82b01515-594c-48ca-b4b6-515eefac83ca",
+    "observation": "live-readonly-backup",
+    "fixtureSha256": "9dff418c05fad7c07546fa94142bb2d45daaff57a2996357c8311851d5a3cc47",
+    "withdrawals": [],
+    "references": [
+      {
+        "file": "datasets/public-kg/releases/20261014-credits-001/data.json",
+        "sha256": "ea91b16f52a211b5a8464382ad498b7b2bb2be69a6f33fe125a73a3c7b9da2b5"
+      },
+      {
+        "file": "datasets/public-kg/releases/20261014-credits-001/manifest.json",
+        "sha256": "e4aa3b58ed884f7d1f8fffee43b260261cc2b4d3a867fda942919f439d2bce17"
+      }
+    ]
+  },
+  "acceptedReferences": [
+    [
+      "datasets/manga-collection/accepted-original-story-r0002-20261017/acceptance.json",
+      "9fdb9933c0d78795769bf27eebb7ecb4ec7cccc37f6ee6827e55dd119e727801"
+    ],
+    [
+      "datasets/manga-collection/accepted-r0002-20261017/acceptance.json",
+      "9b28562b9846970cd30b9261d4659d505e9df06e014d2809d6517aa39836f567"
+    ],
+    [
+      "datasets/manga-collection/accepted-r0003-20261017/acceptance.json",
+      "7d53abbd472fcbf0cba57fa5202d6fd4f8eb12c9ebda34bd1e7a8badca701831"
+    ],
+    [
+      "datasets/manga-collection/original-story-r0002-20261017/candidates.json",
+      "d13136e8e383bce126e8521bfc1015529210f617da220ccd71a4ce1f9f409348"
+    ],
+    [
+      "datasets/manga-collection/original-story-r0002-20261017/ndl-9784088727172.json",
+      "9e302be016583de26a8907bef77390d34d1bc45db01a08f6e680076cbd5c975a"
+    ],
+    [
+      "datasets/manga-collection/original-story-r0002-20261017/ndl-9784088733708.json",
+      "035008f311bc5e2e4fdd56e6a216c20f93792583675a2fe5a036e9c99ce71319"
+    ],
+    [
+      "datasets/manga-collection/original-story-r0002-20261017/ndl-9784088736211.json",
+      "42957040ed44ffa3caa223d68d1cbd0ab733434c9c6af1cc3bdc03c59af9858d"
+    ],
+    [
+      "datasets/manga-collection/original-story-r0002-20261017/ndl-9784088811840.json",
+      "97ae7be91605bb1d81a54062716132bb0d727b845d811a5b232f487ae4501cb0"
+    ],
+    [
+      "datasets/manga-collection/original-story-r0002-20261017/ndl-9784098610105.json",
+      "a8992f7327ac45150fa7dba2e2ad1877ed7914c4642918442d2ce2c7e9fa2a4a"
+    ],
+    [
+      "datasets/manga-collection/review-r0002-20261017/proposed-records.json",
+      "8ef5b68ccda860c453078bef5a57615495320eb470e4230fe04ceda8f7262d81"
+    ],
+    [
+      "datasets/manga-collection/review-r0002-20261017/review.json",
+      "dec7cd6e012e82be409541418480e95565214c3457bb48ddbc4eca280c12ec76"
+    ],
+    [
+      "datasets/manga-collection/review-r0002-20261017/verification.json",
+      "2385eebc8bea8ba17b9ad05110785755102d6692c634ae94f0487827d97f6c09"
+    ],
+    [
+      "datasets/manga-collection/review-r0003-20261017/additional-evidence.json",
+      "1187f72352c46cd775df22b2de54f2bf52020860832fbfe676cf8c4255baf844"
+    ],
+    [
+      "datasets/manga-collection/review-r0003-20261017/decision-request.json",
+      "bf76be5ab0320e0844a0b3fc2f25fc1602a3922dd534c3fa9f7fb7b4706dd09e"
+    ],
+    [
+      "datasets/manga-collection/review-r0003-20261017/frozen-inputs.json",
+      "6d437879c330de1a1f885f8a8aace6058193e9e83b3f941d764592e6be0ad5ad"
+    ],
+    [
+      "datasets/manga-collection/review-r0003-20261017/identity-evidence.json",
+      "fb3ed6e7b9df51da5b1171afa8047b6ae520630df88e5945aeec9b8f98f85505"
+    ],
+    [
+      "datasets/manga-collection/review-r0003-20261017/proposed-records.json",
+      "b9db863d52318528237fb1f9aa06fb1bfef4bc4ce355dd47229d72e746cb3be4"
+    ],
+    [
+      "datasets/manga-collection/review-r0003-20261017/review.json",
+      "03f0c1ad829a31173d8bc78d4f6f32fcbcf3ca4a5a6a245f14352592cfa25f19"
+    ],
+    [
+      "datasets/manga-collection/review-r0003-20261017/technical-verification.json",
+      "09b3be4c48f93c1327f593e801d71061f847cd1a3a940253095cc6548ae289ac"
+    ],
+    [
+      "datasets/public-kg/releases/20261014-credits-001/data.json",
+      "ea91b16f52a211b5a8464382ad498b7b2bb2be69a6f33fe125a73a3c7b9da2b5"
+    ],
+    [
+      "datasets/public-kg/releases/20261014-credits-001/manifest.json",
+      "e4aa3b58ed884f7d1f8fffee43b260261cc2b4d3a867fda942919f439d2bce17"
+    ],
+    [
+      "datasets/public-kg/releases/20261017-manga-r0002-001/data.json",
+      "a52c93f78cbc6a7440dee640d1161d040d88effee494d02045c49637801975db"
+    ],
+    [
+      "datasets/public-kg/releases/20261017-manga-r0002-001/manifest.json",
+      "5714648b348fff62605f99f3b25c25bc1f22a22e2e4acdaefae7196ddb5712a8"
+    ],
+    [
+      "datasets/public-kg/releases/20261017-manga-r0002-002/data.json",
+      "6180481328c77abb40d16579d1f0cee34cbda6d8438769a95a23df71536f90aa"
+    ],
+    [
+      "datasets/public-kg/releases/20261017-manga-r0002-002/manifest.json",
+      "5ae3f008be8c05f29cafa620a5cb0926792bc2984b0e0694a4bf1986032bd87c"
+    ],
+    [
+      "datasets/public-kg/releases/20261017-manga-r0003-001/data.json",
+      "3bae93608cefa4ccf9ef8b026819575ff738c0133664e1473dca52d15dc60be1"
+    ],
+    [
+      "datasets/public-kg/releases/20261017-manga-r0003-001/manifest.json",
+      "c5e8230be9bd0acb43041fd04d0a6b769c03c99dac9e38a051bca8a768e2e24d"
+    ],
+    [
+      "docs/design/MANGA_R0002_ACCEPTANCE_REVIEW.md",
+      "7cdf6a84158f655465a26d7755f528668c23309a5f79ed8cd2d5e01905e00265"
+    ],
+    [
+      "docs/design/MANGA_R0002_ACCEPTED_RELEASE.md",
+      "4f29556605f1b10241e9275b546db5b43495230e60233eade630df59fcb48113"
+    ],
+    [
+      "docs/design/MANGA_R0003_ACCEPTANCE_REVIEW.md",
+      "af2114355cf8b2a6c6813a1fde71a3683daccb80fbcdabe6a14442342a21cb3f"
+    ],
+    [
+      "docs/design/ORIGINAL_STORY.md",
+      "26cde0cff0d4d3128f6a3b52201f8649cd3f414294f3a81fcddea9f8d54c5a27"
+    ]
+  ],
+  "jobArtifacts": {
+    "candidate/data.json": "03cf5bf33b5dba965aac74884326dc3d044ead4734eefded85beec4b1baf7137",
+    "candidate/manifest.json": "b4cbdffe461a07f80208ba666045b87be2211fac279f4cb87e64d569e9559d22",
+    "ledger.json": "ac82939495778f1da465cb41e760a928bdb1540dabd74e60b318fd32e1e4fc35",
+    "snapshots/Q1016880.json": "8ff623d6ae7e481270476dee9b5c0bfe8b0c1e5212da01188dc91fd20bdb481e",
+    "snapshots/Q102231027.json": "2f307f6aafdc7597acfb01c0b7f52b7c2d9233d06a6ccefb4bd5842c5329823b",
+    "snapshots/Q105258125.json": "ec85747697c31302005530c2ed1e2379a3acc02bb11717527b13edf5ea848d2b",
+    "snapshots/Q108109758.json": "6a5e7086a19eb6438332b04b40056187fb3e23cd2b747bce8776c52c50d6e988",
+    "snapshots/Q1096269.json": "63075fa62c0c4171d8c7379d96862b0cb046cd98f80d058cc94015725c939078",
+    "snapshots/Q11237288.json": "8584c69af4d9de7e8b01f209d4f4482ff442c4cea1a0347b3c9692dde7ca376f",
+    "snapshots/Q11298673.json": "6cd1dd2469666a9a0ba99d8ed0b8d5f3341b8945096157dd8a8db285dc1e90bf",
+    "snapshots/Q11344543.json": "bcc884b0afa4d43dd40339b66454389894053667301dc5b28600f18d331828b7",
+    "snapshots/Q1170375.json": "d9144898436d471ba4903b44c8fc7f4e3a5e48a491689db18936094a29afb17c",
+    "snapshots/Q124312385.json": "14bb05b46698f6867a316675ca0fd0cfd213efa4ac7d6140be0b511436f5bfef",
+    "snapshots/Q1319232.json": "f787a60683160863386624302f095d0a023dccd3b5183ebdcc1c8c12166caa63",
+    "snapshots/Q1332841.json": "4f9ce2e7c22f1596447855e27ea94454ff3fcc62368218bc3a8ed8c58150a14b",
+    "snapshots/Q133691.json": "5b70378f750569fc08e0ab3b3ad559bb1cdd91b7202fcee74cd8bb8eb74aa5ce",
+    "snapshots/Q1338432.json": "e1dff246816a7de82c54d8d96a4f7990815c386efe9e7eb0070cba340c998458",
+    "snapshots/Q17220992.json": "54c8d7ee8d02a3f6bf7564e31bb1f3885bc6e6569aa7b3040e4b7f6283c1c2a0",
+    "snapshots/Q193300.json": "325be4621bc75db0d580c3e6ebaaf250dc2f2856a4c404aaf98b6e183789e64c",
+    "snapshots/Q1993.json": "878fd1312a507e7a8005b06e7e9d0118e493c9c9c55fd7870c5e12e0df4247db",
+    "snapshots/Q219948.json": "945314a7cccaaddb85b2fa0aea37fa8455e6b607cf2d138b4fde2688596fb415",
+    "snapshots/Q2235128.json": "eed942fa530684048eceb3d97a1826008911b5e4e9e40fd6b06d1a5b95298f9d",
+    "snapshots/Q23937543.json": "63aab39c5973886318b931f2e90b2c1c0dd37e323739311bceab645f5a8b1eb4",
+    "snapshots/Q24864023.json": "61e0ca1c95971ede65a3a8b8578286a7b0f2cb8f7e7a5df6284a32b67449b64c",
+    "snapshots/Q2551007.json": "d6dd92afa67f668e3df972a4885f6b86132e860b0ed075f1b28d816dee8c19a9",
+    "snapshots/Q265061.json": "7e2ccaebbd097426856e75019bf7e0ea1aa9df02d3cd5af8eee10f3fa7febb55",
+    "snapshots/Q2668005.json": "a292539512341b8b1b0b1c5b60ce1c9bd81a9d94e2c59941ae39ddf401cdf37f",
+    "snapshots/Q2679175.json": "b468aa42ad1d5a833a8692ca6b12c15bc32fad414ed26eeb51773963d06635f6",
+    "snapshots/Q268789.json": "f3b94704767e3bd137e61ea1c66ff6881b95d9dd0e942abdd0346389b5e80627",
+    "snapshots/Q272015.json": "415016a0d8dbea8d80d43eb4fd6fed3e80627cdab48e6e4ac849a3b02bcb8352",
+    "snapshots/Q28682711.json": "0c29d2783c92ee3c5272b2a09e4ea888c229111247a03c37d1bd175cea7d4299",
+    "snapshots/Q313703.json": "7bdfbd5e35eea5bfd0917efb6c2bd63de90f83a49b2bbf2930a55447ee0d9144",
+    "snapshots/Q3194504.json": "9dd4973bc3e9d97aab414d141837d6061799520a2a036c5a66e6e80630a07753",
+    "snapshots/Q348436.json": "5d9b7f49c33ea339877e557c670270f361048ef279a39619f2569a2c4eddb6cb",
+    "snapshots/Q378710.json": "62f357f83d7042b728e0a33587150e0ddb8f07dd4766353f10299a202c878769",
+    "snapshots/Q38277627.json": "b6cbe2089ff56d7c40b149f38529fa65d1f48139f570420dc254ba5b95206f7e",
+    "snapshots/Q467854.json": "10bfc674e087cd22d408bc3b444636d36eaaaa86fddcee1a8b8370eededcd02a",
+    "snapshots/Q48837273.json": "dc77b87000397a76c7f6780a8c69c39d7f0175460cfc21cb806205ab1fb715b6",
+    "snapshots/Q558858.json": "87a88203b77d1e0d7b875204955a1a2ee7ce047b758229a84ec6d12303812224",
+    "snapshots/Q624839.json": "a9a27da3ce1227992608cb150580fd6a42f550fe1788c44ca9f4ab9d629a367f",
+    "snapshots/Q63323229.json": "3309e58e7012af49d64d3ea36f84d74459279da8591b0e4c16a655d0992dedbf",
+    "snapshots/Q669481.json": "613fc627a1caf37ba6917e8b1864c5f1b5068c988d38b6d0c6abba3b586d1bb4",
+    "snapshots/Q715723.json": "12461940a3fb752d20db8d9601986b3e33e5c25897a506f5574d9e4bfc502d29",
+    "snapshots/Q733498.json": "c568ac0d48c2cb9db1690f50928a87189949334f3fcc7bdcbe2b965603207a38",
+    "snapshots/Q804555.json": "7ef80e34c6e1248bd311be90f41574cbe9c16ea03295ed64e75f698979e77035",
+    "snapshots/Q809789.json": "129deeb4230ec78a8ef2aea45ed005c493034b4c01552623d961b475cf459c92",
+    "snapshots/Q91486.json": "7184c67006fc4842ed27e741f0cab525c36302ee61910545ce2c8046be9da449",
+    "snapshots/Q958256.json": "6369faf5ae811906c8cde6e185456deccd3d16c673e16ad8305106daa4ece270",
+    "snapshots/Q97310775.json": "c9e9e19ca413e41cf5b917fef8bfeb6f1a96b6e23ead1a2845fa0d070ca2eb18",
+    "snapshots/Q98642652.json": "bc843406d72c4aa961fd395734bb4285213ad875d08cb0a3fda7eca1d2f2b046",
+    "snapshots/ndl-9784061037113.json": "f9b484a490ae8472570ba7f2510eeac98ed87cf36263b58a2de7c41d7955081d",
+    "snapshots/ndl-9784063829082.json": "594befc0fca80cd34b932d6ddbf69741ca576018533cd6c52df7cb22a0c84a1d",
+    "snapshots/ndl-9784065262634.json": "569f3a673d3fe5ee0e484e4f3aece89f1e744d44abd7bf311e9723930e4a85ce",
+    "snapshots/ndl-9784086172837.json": "b68a5fde94cc7bf0a90c73ef718803a840177250d0507aace1ebe811d35b2272",
+    "snapshots/ndl-9784086196901.json": "72e16d6116498829e763b12937b082161c06067869b6f357906b18bf938f291a",
+    "snapshots/ndl-9784088807317.json": "db41817ee732ebd3488eeca38100f09e3677f03b1592713bf3a816e1c48b4b9a",
+    "snapshots/ndl-9784088820224.json": "f7f9687b36bef75131215977cef14df775f2996e7075bbab381cfbba2d9d0099",
+    "snapshots/ndl-9784088916507.json": "d6eb8c04f6a5cab22d4724b6f8ff85060f8d32c6600e05fe5495ddfc67b625d8",
+    "snapshots/ndl-9784091220318.json": "124e74a7a69886d53f83eadf973ce8a6a5ba16a2869a44bbd934db57b2c71abd",
+    "snapshots/ndl-9784091228017.json": "a1dbcf253aa5095502de646f02eaaaf66453609946fef384db70b959479bf5b8",
+    "snapshots/ndl-9784091241023.json": "1ec9198096ba8f30b57f3406f90836a5342e77dd2d367b44f951df4b0917fb7b",
+    "snapshots/ndl-9784091380135.json": "091fdff1fd03c679818385146dc6ee220d584503a2be5ed34e7632fa59358eb7",
+    "snapshots/ndl-9784091810816.json": "7728190c001402388c36259e578e0217674865d0bfc40e349396c1d8a92acd0e",
+    "snapshots/ndl-9784091823618.json": "79a965e3b91da67043edbab108167538313928e13ae718151e638c82979b8c2d",
+    "snapshots/ndl-9784091910110.json": "56a783cd8effa1aad11c4f8deaff63dfc9c68553f15df5b1bf97d2eeb1a085fa",
+    "snapshots/ndl-9784091912510.json": "5a897948605df7bd664a9529868ea8237c2d3909c99248b23d04b8109adbf661",
+    "snapshots/ndl-9784091914316.json": "9ad8ed593c97003df506df4ab716e25fef83a93c6272d3ee05cd64517c96beb8",
+    "snapshots/ndl-9784098501809.json": "14af08f81e6fe70ff128569ce2a6e9f8cc0421c33ed9414f140fb63179374a64",
+    "snapshots/ndl-9784098602780.json": "76e869d7d01a7d95627dc7ce2d27d88068aefad453a78e6777d742939bb325cc",
+    "snapshots/ndl-9784253169813.json": "a662ee3fc7245e86bef89e5c82978e2246b618e24c17feb0a7c1ffc22640808a",
+    "snapshots/ndl-9784592881513.json": "d00a0a4b07e6a21179150e015b119c0502910f7060cd5272f738734cff4ea42d",
+    "snapshots/ndl-9784757520097.json": "465be71fd30f7e51237999c842e30b39b5d53ba7cc907337cee786bfb3e879f1",
+    "snapshots/ndl-9784757538870.json": "b8d4dc901a43089c14100b5514821141e08e2c93879ae494a912078d4792da65",
+    "snapshots/ndl-9784884752934.json": "722ba539f542af33b14cb4b044e569d2779cacd9f292bac0d036b376cfd2ceca",
+    "summary.json": "6497fb1ac3eea52fb9234a2c0a2d533a94d360a7db1922fd1e6932172189765d"
+  },
+  "workOrderSha256": "e284544d3451bd7c50afa8eb6f32cde61f09251a6150fcaa57e8f3658bf44a8f",
+  "pathPolicy": {
+    "maxPaths": 6,
+    "adjacencyPerStep": 20,
+    "exhaustive": false
+  },
+  "authority": "review-only-not-formal-acceptance-not-public-apply"
+}

@@ -1,0 +1,336 @@
+[
+  {
+    "state": "formally-accepted-not-applied",
+    "observation": "verified-records-only-not-a-live-exploration-test",
+    "edges": [
+      {
+        "claimId": "121709e5-ea90-4c6a-87d1-d67264e1590d",
+        "subjectId": "743d7fc0-ddc6-446a-8aa1-d9a9b284a326",
+        "objectId": "b1e1232d-b038-4c11-b80c-ab1c2710d2bf",
+        "person": "高橋留美子",
+        "work": "うる星やつら",
+        "roleId": "AUTHORSHIP",
+        "scope": {
+          "kind": "publication",
+          "isbn13": "9784091228017",
+          "volumeLabel": "第1巻",
+          "editionLabel": null,
+          "language": "ja"
+        },
+        "state": "formally-accepted-not-applied",
+        "citationIds": [
+          "fa8985f2-6775-4348-a136-9a5dee986b1a"
+        ],
+        "sourceIds": [
+          "28614027-38d3-4b20-b460-8b1b48b4eb07"
+        ]
+      },
+      {
+        "claimId": "1eb1fe7c-0cbd-48f4-8379-cd7f6e4697e4",
+        "subjectId": "743d7fc0-ddc6-446a-8aa1-d9a9b284a326",
+        "objectId": "aafae4fe-6f56-47bb-af9f-dec69425f136",
+        "person": "高橋留美子",
+        "work": "らんま1/2",
+        "roleId": "AUTHORSHIP",
+        "scope": {
+          "kind": "publication",
+          "isbn13": "9784091220318",
+          "volumeLabel": "第1巻",
+          "editionLabel": null,
+          "language": "ja"
+        },
+        "state": "formally-accepted-not-applied",
+        "citationIds": [
+          "43d7a974-48c0-42e1-a69a-0b196a42dd15"
+        ],
+        "sourceIds": [
+          "df1c52bd-8832-47a1-bc57-30c779f01ad5"
+        ]
+      }
+    ]
+  },
+  {
+    "state": "formally-accepted-not-applied",
+    "observation": "verified-records-only-not-a-live-exploration-test",
+    "edges": [
+      {
+        "claimId": "14e377b1-6be2-446c-8c13-e0d5d425eafa",
+        "subjectId": "c59a1b1d-7477-46a5-9669-644981d1d5d8",
+        "objectId": "ba77a4d0-cf0b-4cc9-bd98-9b153a92b3ba",
+        "person": "大友克洋",
+        "work": "AKIRA",
+        "roleId": "AUTHORSHIP",
+        "scope": {
+          "kind": "publication",
+          "isbn13": "9784061037113",
+          "volumeLabel": "第1巻",
+          "editionLabel": null,
+          "language": "ja"
+        },
+        "state": "formally-accepted-not-applied",
+        "citationIds": [
+          "f3d322c7-cad4-4525-ad55-8664d3e94b2a"
+        ],
+        "sourceIds": [
+          "b1d80a26-19c8-4f5a-8a80-8917719ccbde"
+        ]
+      },
+      {
+        "claimId": "69ed2335-344f-41a6-a17f-77708faa0398",
+        "subjectId": "c59a1b1d-7477-46a5-9669-644981d1d5d8",
+        "objectId": "0914c6bb-701d-4c5a-b8f9-2c63cbff1ef3",
+        "person": "大友克洋",
+        "work": "童夢",
+        "roleId": "AUTHORSHIP",
+        "scope": {
+          "kind": "publication",
+          "isbn13": "9784065262634",
+          "volumeLabel": "全集第8巻（童夢）",
+          "editionLabel": null,
+          "language": "ja"
+        },
+        "state": "formally-accepted-not-applied",
+        "citationIds": [
+          "6b09ad9a-d643-46bb-9e8d-fd600a9d5f90",
+          "c9248d87-f3e6-4ce4-9140-12279fc83004"
+        ],
+        "sourceIds": [
+          "068ea87c-f422-4f69-b61f-5fc6da8836a2",
+          "ef3aa8c2-d2ba-48a0-a724-20b8eac18a31"
+        ]
+      }
+    ]
+  },
+  {
+    "state": "formally-accepted-not-applied",
+    "observation": "verified-records-only-not-a-live-exploration-test",
+    "edges": [
+      {
+        "claimId": "18c75118-e284-4c85-accf-e3894a6da3f3",
+        "subjectId": "d900543a-9c11-48c1-be76-1822b756fcc4",
+        "objectId": "290ab095-192d-4910-90f3-ae741f9d1f32",
+        "person": "浦沢直樹",
+        "work": "パイナップルARMY",
+        "roleId": "DRAWING",
+        "scope": {
+          "kind": "publication",
+          "isbn13": "9784091810816",
+          "volumeLabel": "第1巻",
+          "editionLabel": null,
+          "language": "ja"
+        },
+        "state": "formally-accepted-not-applied",
+        "citationIds": [
+          "3ebff3fe-d0ea-4409-8b16-472b0071971e"
+        ],
+        "sourceIds": [
+          "81a9b025-308d-40ba-ba5b-7654f8bafc72"
+        ]
+      },
+      {
+        "claimId": "1f5ecc6d-509d-477e-8b05-7fa06c59d95c",
+        "subjectId": "a012632c-6fd8-4559-8f38-cc60f9b28b05",
+        "objectId": "290ab095-192d-4910-90f3-ae741f9d1f32",
+        "person": "工藤かずや",
+        "work": "パイナップルARMY",
+        "roleId": "CREATION",
+        "scope": {
+          "kind": "publication",
+          "isbn13": "9784091810816",
+          "volumeLabel": "第1巻",
+          "editionLabel": null,
+          "language": "ja"
+        },
+        "state": "formally-accepted-not-applied",
+        "citationIds": [
+          "f50258bc-9bd0-47c5-9d2d-bb17b85e5e5e"
+        ],
+        "sourceIds": [
+          "81a9b025-308d-40ba-ba5b-7654f8bafc72"
+        ]
+      },
+      {
+        "claimId": "a253fe66-f0ba-4ecd-b862-f39054e17918",
+        "subjectId": "a012632c-6fd8-4559-8f38-cc60f9b28b05",
+        "objectId": "080b2138-c57a-4d0e-8168-09807dda3bc3",
+        "person": "工藤かずや",
+        "work": "信長",
+        "roleId": null,
+        "scope": null,
+        "state": "published-in-public-snapshot",
+        "citationIds": [
+          "ce559acf-bd8a-422b-ab51-cc5131e5aa6a"
+        ],
+        "sourceIds": [
+          "5b0b2ce8-14b4-489d-903a-499a9369d999"
+        ]
+      }
+    ]
+  },
+  {
+    "state": "formally-accepted-not-applied",
+    "observation": "verified-records-only-not-a-live-exploration-test",
+    "edges": [
+      {
+        "claimId": "1f5ecc6d-509d-477e-8b05-7fa06c59d95c",
+        "subjectId": "a012632c-6fd8-4559-8f38-cc60f9b28b05",
+        "objectId": "290ab095-192d-4910-90f3-ae741f9d1f32",
+        "person": "工藤かずや",
+        "work": "パイナップルARMY",
+        "roleId": "CREATION",
+        "scope": {
+          "kind": "publication",
+          "isbn13": "9784091810816",
+          "volumeLabel": "第1巻",
+          "editionLabel": null,
+          "language": "ja"
+        },
+        "state": "formally-accepted-not-applied",
+        "citationIds": [
+          "f50258bc-9bd0-47c5-9d2d-bb17b85e5e5e"
+        ],
+        "sourceIds": [
+          "81a9b025-308d-40ba-ba5b-7654f8bafc72"
+        ]
+      },
+      {
+        "claimId": "18c75118-e284-4c85-accf-e3894a6da3f3",
+        "subjectId": "d900543a-9c11-48c1-be76-1822b756fcc4",
+        "objectId": "290ab095-192d-4910-90f3-ae741f9d1f32",
+        "person": "浦沢直樹",
+        "work": "パイナップルARMY",
+        "roleId": "DRAWING",
+        "scope": {
+          "kind": "publication",
+          "isbn13": "9784091810816",
+          "volumeLabel": "第1巻",
+          "editionLabel": null,
+          "language": "ja"
+        },
+        "state": "formally-accepted-not-applied",
+        "citationIds": [
+          "3ebff3fe-d0ea-4409-8b16-472b0071971e"
+        ],
+        "sourceIds": [
+          "81a9b025-308d-40ba-ba5b-7654f8bafc72"
+        ]
+      },
+      {
+        "claimId": "11d202ab-e9a4-4da5-9ff2-735f48f83133",
+        "subjectId": "d900543a-9c11-48c1-be76-1822b756fcc4",
+        "objectId": "326dd821-2ca6-406a-a683-e424eb534998",
+        "person": "浦沢直樹",
+        "work": "BILLY BAT",
+        "roleId": null,
+        "scope": null,
+        "state": "published-in-public-snapshot",
+        "citationIds": [
+          "0efa871c-46d0-4761-923d-e0ef758652a2"
+        ],
+        "sourceIds": [
+          "699c3147-79e2-43c8-8c08-9369eab559fa"
+        ]
+      }
+    ]
+  },
+  {
+    "state": "formally-accepted-not-applied",
+    "observation": "verified-records-only-not-a-live-exploration-test",
+    "edges": [
+      {
+        "claimId": "24dca7b4-00bf-4f70-92f6-a498a494c29a",
+        "subjectId": "b4de3765-e8c4-49f1-a322-a021475ffd09",
+        "objectId": "1982f262-39f3-4bfa-93a4-af3a86ec3ec8",
+        "person": "Boichi",
+        "work": "ORIGIN",
+        "roleId": "AUTHORSHIP",
+        "scope": {
+          "kind": "publication",
+          "isbn13": "9784063829082",
+          "volumeLabel": "第1巻",
+          "editionLabel": null,
+          "language": "ja"
+        },
+        "state": "formally-accepted-not-applied",
+        "citationIds": [
+          "de59f4e7-fef0-4546-81d2-3dbf1944a96e"
+        ],
+        "sourceIds": [
+          "e059d4f3-9e5d-4c5f-84e1-959b3c932e30"
+        ]
+      },
+      {
+        "claimId": "fe6d7c19-646b-474a-ad0a-3b20bc816866",
+        "subjectId": "b4de3765-e8c4-49f1-a322-a021475ffd09",
+        "objectId": "31f3c278-7d49-4aed-9a36-c722cae25ed2",
+        "person": "Boichi",
+        "work": "Dr.STONE",
+        "roleId": "DRAWING",
+        "scope": {
+          "kind": "publication",
+          "isbn13": "9784088811840",
+          "volumeLabel": "第1巻",
+          "editionLabel": null,
+          "language": "ja"
+        },
+        "state": "formally-accepted-not-applied",
+        "citationIds": [
+          "c91fecfc-7389-491b-aca9-d181138ebe35"
+        ],
+        "sourceIds": [
+          "7def5563-ec0a-4709-99aa-22f8b07a5c10"
+        ]
+      }
+    ]
+  },
+  {
+    "state": "formally-accepted-not-applied",
+    "observation": "verified-records-only-not-a-live-exploration-test",
+    "edges": [
+      {
+        "claimId": "48a9f51e-beb1-4c3a-9c30-5923bc852925",
+        "subjectId": "a13205e2-220c-4b7d-8a1a-39dbefe52db8",
+        "objectId": "3427040b-88fd-4db5-b546-dd237abad032",
+        "person": "大場つぐみ",
+        "work": "バクマン。",
+        "roleId": "ORIGINAL_STORY",
+        "scope": {
+          "kind": "publication",
+          "isbn13": "9784086196901",
+          "volumeLabel": "第1巻",
+          "editionLabel": null,
+          "language": "ja"
+        },
+        "state": "formally-accepted-not-applied",
+        "citationIds": [
+          "85b6215a-d659-4c08-850a-c9611e94bd43"
+        ],
+        "sourceIds": [
+          "fa2da69a-8a61-4364-8dab-05b9678d77aa"
+        ]
+      },
+      {
+        "claimId": "6ed29ee4-2b62-4fe7-83a6-aafe300754d7",
+        "subjectId": "a13205e2-220c-4b7d-8a1a-39dbefe52db8",
+        "objectId": "7ca5fc7d-545a-4d39-a2dc-6cce86390112",
+        "person": "大場つぐみ",
+        "work": "DEATH NOTE",
+        "roleId": "ORIGINAL_STORY",
+        "scope": {
+          "kind": "publication",
+          "isbn13": "9784088736211",
+          "volumeLabel": "第1巻",
+          "editionLabel": null,
+          "language": "ja"
+        },
+        "state": "formally-accepted-not-applied",
+        "citationIds": [
+          "2912d1b2-54cf-425a-9428-d0c323f68a01"
+        ],
+        "sourceIds": [
+          "4859917b-c4ba-4e2d-b932-52224ff7ebec"
+        ]
+      }
+    ]
+  }
+]

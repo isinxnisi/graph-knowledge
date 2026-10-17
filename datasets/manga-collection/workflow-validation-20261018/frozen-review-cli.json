@@ -1,0 +1,17 @@
+{
+  "jobId": "famous-manga-creators-r0003-907fdec3b7f86662",
+  "collectionUnchanged": true,
+  "reviewUnchanged": false,
+  "transportAttemptsAdded": 0,
+  "reviewDirectory": "/home/isinxnisi/1.projects/7.graph-knowledge/.local/collection-trials/workflow-frozen-r0003/famous-manga-creators-r0003-907fdec3b7f86662-review-7740ea893eb85ea0",
+  "reviewOnly": true,
+  "formalAcceptance": false,
+  "publicApply": false,
+  "counts": {
+    "entities": 35,
+    "claims": 25,
+    "sources": 21,
+    "citations": 25
+  },
+  "heldClaims": 3
+}

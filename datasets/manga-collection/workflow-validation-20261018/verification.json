@@ -1,0 +1,128 @@
+{
+  "verifiedAt": "2026-10-18T07:38:34+09:00",
+  "status": "workflow-task1-initial-implementation-only",
+  "productionCollectionRequestsAdded": 0,
+  "formalAcceptancesAdded": 0,
+  "publicApply": false,
+  "vpsChanged": false,
+  "memberDatabaseChanged": false,
+  "collectorCodeSha256": "80e05b67bc0129b963653b90df4cfbfa5bd6aff190acda99f54c08541e55801e",
+  "historicalApprovalRebound": false,
+  "originalJobArtifactsAndAttemptsUnchanged": true,
+  "originalRequestCacheUnchanged": true,
+  "existingAcceptedReleaseReproduced": true,
+  "currentContext": {
+    "release": "20261014-credits-001",
+    "revision": "82b01515-594c-48ca-b4b6-515eefac83ca",
+    "observation": "live-readonly-backup",
+    "acceptedCollectedClaimReuses": 28,
+    "newCandidateCounts": {
+      "entities": 0,
+      "claims": 0,
+      "sources": 0,
+      "citations": 0
+    },
+    "inheritedResponsibilityHolds": 2,
+    "acceptedEntityMappingsReused": 1,
+    "acceptedClaimMappingsReused": 2
+  },
+  "repeatedCommand": {
+    "collectionUnchanged": true,
+    "reviewUnchanged": true,
+    "transportAttemptsAdded": 0
+  },
+  "isolatedTests": {
+    "workflow": 16,
+    "existingCollectionGate": 15,
+    "existingMangaAdapters": 16,
+    "r0003ReviewAndAcceptance": 14,
+    "total": 61,
+    "interruptedAcquisition": {
+      "responses": 71,
+      "attempts": 72,
+      "maxApprovedAttempts": 142,
+      "sameJobResumed": true,
+      "repeatRequestsAdded": 0
+    },
+    "singleCliCommand": {
+      "temporaryThemeApprovalOnly": true,
+      "selectedFieldCachedProviderReplay": true,
+      "normalDecisionCounts": {
+        "entities": 35,
+        "claims": 25,
+        "sources": 21,
+        "citations": 25
+      },
+      "repeatedReviewUnchanged": true
+    },
+    "cases": [
+      "unapproved",
+      "revoked-before-and-during-review",
+      "definition-code-input-hash-mismatch",
+      "transport-interruption",
+      "request-cache-tamper",
+      "communication-budget-exhaustion",
+      "review-only-failure-resume",
+      "duplicate-entity-mapping-required",
+      "unknown-role",
+      "insufficient-citation",
+      "unsupported-publication-scope",
+      "changed-acceptance-hash",
+      "immutable-output-and-new-version",
+      "old-code-readonly-replay-without-acquisition"
+    ]
+  },
+  "environmentChecks": {
+    "local3200": {
+      "datasetStatus": 200,
+      "revision": "82b01515-594c-48ca-b4b6-515eefac83ca"
+    },
+    "beta": {
+      "datasetStatus": 200,
+      "revision": "82b01515-594c-48ca-b4b6-515eefac83ca"
+    },
+    "webChangedOrRebuilt": false
+  },
+  "references": [
+    {
+      "file": "scripts/collection-workflow.py",
+      "sha256": "47292e87e26c7a29fa87e279f6d0389f1e51c3e5140f4d17286629a7334d5298"
+    },
+    {
+      "file": "tests/test_collection_workflow.py",
+      "sha256": "22d07a92b7ef3c32d4a7a4979a36466e5707cfc9389121df04e93518d04eeeb6"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/famous-manga-creators-r0003-907fdec3b7f86662-review-cbc8b5e35025755c/identity-only-records.json",
+      "sha256": "1fc314e4a47717bce195b39fe7f1e66bd31f6af892fca4a9420a653eab927a37"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/famous-manga-creators-r0003-907fdec3b7f86662-review-cbc8b5e35025755c/review-manifest.json",
+      "sha256": "c2942da951065dcde950ec7cc57b13d189f4c099dd003f3f5032fa92fa4e57ce"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/famous-manga-creators-r0003-907fdec3b7f86662-review-cbc8b5e35025755c/proposed-records.json",
+      "sha256": "ff3382e35738eba753a90c55086ebbdfb3ee4a3afb843bf4250d731969f0a91f"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/famous-manga-creators-r0003-907fdec3b7f86662-review-cbc8b5e35025755c/exploration-paths.json",
+      "sha256": "cd3c26f18ffe8c0364eae2c40009fd30e02daf812985ed7ac5ffdad3476ac925"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/famous-manga-creators-r0003-907fdec3b7f86662-review-cbc8b5e35025755c/decision-request.json",
+      "sha256": "7f9281dbf23d197b7165df2dde5b0930e591cc794d1305b7db4266b2a5b3a359"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/famous-manga-creators-r0003-907fdec3b7f86662-review-cbc8b5e35025755c/review.json",
+      "sha256": "018e35f73d1e83bc5cb67753a980ac7819c86b2a7d71145fdb5768054726258a"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/famous-manga-creators-r0003-907fdec3b7f86662-review-cbc8b5e35025755c/context.json",
+      "sha256": "da00506912f10a8f24df4701cb32b45ed47743f1066621e893e234dfc69f1aa5"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/famous-manga-creators-r0003-907fdec3b7f86662-review-cbc8b5e35025755c/README.md",
+      "sha256": "cb4da9291048c97963e11ec91f189f9b0b7c045227e9b51deb4b9cc0a51e761b"
+    }
+  ]
+}

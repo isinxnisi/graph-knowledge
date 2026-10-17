@@ -36,9 +36,13 @@
 
 [漫画r0003の代表経路と接続ごとの状態](MANGA_R0003_ACCEPTANCE_REVIEW.md#discovery-modelへの共有2026-10-17-2006-jst指示)を初回の共有例とする。r0003受入レビューと残り70作品の計画を継続する。
 
+## タスク1の実装済み操作
+
+2026-10-18、[収集→レビューのワークフロー](COLLECTION_WORKFLOW.md)を実装。`python3 scripts/collection-workflow.py collect-review THEME --revision N --definition-sha SHA` で既存run／inspectと公開・既受入照合、通常／同定のみ／保留の資料生成を連結する。承認済みcollector／gateを変更せず、再開・cache・予算を再利用する。既定は公開KGを無書込backupで確認し、正式受入記録で全件を裏付ける累積候補を自動検出。全生成物はhash付きの別レビュー版へ保存し、正式受入・applyは行わない。凍結r0003の旧通常資料との完全一致、隔離CLI、通信／資料生成失敗の再開、無変更再実行を含む61テスト成功。タスク2は下記設計を維持し、まだ実装しない。
+
 ## 次の実装タスク：収集からレビュー、受入からrelease準備
 
-2026-10-17 20:25 JST指示。今回の[r0003正式受入・40 Claim統合release](MANGA_R0003_ACCEPTED_RELEASE.md)を先に完了する。既存gate／job.json／台帳／fixture／受入記録／public CLIをつなぎ、次の2小タスクを順に実装する。以下のコマンド名は**未実装のインターフェース案**であり、現在実行できるものではない。通常処理を決定的なPythonで連結し、新規の管理画面・API・ジョブDB・scheduler・AI判定サービスを前提にしない。
+2026-10-17 20:25 JST指示。今回の[r0003正式受入・40 Claim統合release](MANGA_R0003_ACCEPTED_RELEASE.md)を先に完了する。既存gate／job.json／台帳／fixture／受入記録／public CLIをつなぎ、次の2小タスクを順に実装する。タスク1のcollect-reviewは2026-10-18に[初期実装](COLLECTION_WORKFLOW.md)を完了した。以下は初期設計とタスク2の未実装範囲であり、accept-releaseはまだ実行できない。通常処理を決定的なPythonで連結し、新規の管理画面・API・ジョブDB・scheduler・AI判定サービスを前提にしない。
 
 ### タスク1：承認済み収集からレビュー資料を一回の操作で生成
 

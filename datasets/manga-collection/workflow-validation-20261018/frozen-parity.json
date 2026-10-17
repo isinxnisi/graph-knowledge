@@ -1,0 +1,20 @@
+{
+  "status": "historical-comparison-only-not-current-acceptance-state",
+  "sameNormalRecordIds": true,
+  "sameNormalRecordContents": true,
+  "same36ReviewedEntityIds": true,
+  "normalDecisionCounts": {
+    "entities": 35,
+    "claims": 25,
+    "sources": 21,
+    "citations": 25
+  },
+  "normalReviewedEntityCount": 36,
+  "heldRawClaims": 3,
+  "heldRawEntities": 1,
+  "inheritedResponsibilityHolds": 2,
+  "transportAttemptsAdded": 0,
+  "referenceReview": "datasets/manga-collection/review-r0003-20261017",
+  "sameExistingEntityDependencies": true,
+  "comparisonNotice": "r0002既受入追加集合と旧公開snapshotでの再現。現在はr0003全推奨が正式受入済み。"
+}

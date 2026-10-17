@@ -1,0 +1,17 @@
+{
+  "jobId": "famous-manga-creators-r0003-907fdec3b7f86662",
+  "collectionUnchanged": true,
+  "reviewUnchanged": false,
+  "transportAttemptsAdded": 0,
+  "reviewDirectory": "/home/isinxnisi/1.projects/7.graph-knowledge/datasets/manga-collection/workflow-reviews/famous-manga-creators-r0003-907fdec3b7f86662-review-cbc8b5e35025755c",
+  "reviewOnly": true,
+  "formalAcceptance": false,
+  "publicApply": false,
+  "counts": {
+    "entities": 0,
+    "claims": 0,
+    "sources": 0,
+    "citations": 0
+  },
+  "heldClaims": 0
+}

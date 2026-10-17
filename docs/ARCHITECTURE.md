@@ -1,5 +1,7 @@
 # 現行技術設計
 
+2026-10-18、[承認済み収集から受入レビューまで](design/COLLECTION_WORKFLOW.md)をmanga-discovery-v2向けの薄いCLIとして実装。既存gate／collectorのhashと再開機構を維持し、公開snapshot・既受入追加集合との照合、根拠／Role／scope確認、通常／例外資料・decision-request・状態付き経路を一回の操作で生成する。新規Claimはhidden、承認済み対応だけ参照再利用し、重要な同定・意味は保留。61テスト・凍結再現・実コマンド再実行の追加通信0を確認。個別受入・公開apply・VPS／会員DB変更はなく、タスク2は未実装。
+
 2026-10-18、[探索プリセット](design/DISCOVERY_PATH_PRESETS.md)はdomainの固定版カタログを `/api/discovery/paths` で解決し、各段のkind・正規方向を候補上限前に確認する。既存Graphと同じ有界の近傍・Claim条件・revision・viaを維持し、プリセット参照を応答でも検証。未対応の版や矛盾した条件は拒否し、自由探索の旧API要求は互換。DB・収集schemaは変更しない。
 
 2026-10-17、[複数段Discovery](design/DISCOVERY_MULTI_STEP.md)はread-only `/api/discovery/paths` と最大24対象の有界BFSで既存公開Claimを2〜3段辿る。predicate／制作Roleを各ClaimのLIMIT前に照合し、方向・肯否・scope・根拠を保つ。Graphは既存workspace枝と版付き `via` で全段を検証し、部分復元を適用しない。Neo4j schema・収集処理・公開KG・保存形式は変更しない。

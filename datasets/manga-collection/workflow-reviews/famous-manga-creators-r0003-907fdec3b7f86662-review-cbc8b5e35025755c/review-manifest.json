@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "reviewId": "famous-manga-creators-r0003-907fdec3b7f86662-review-cbc8b5e35025755c",
+  "inputSha256": "cbc8b5e35025755c02803a47aef405fa9104b45f063cf7dc6a5f72305e9612db",
+  "artifacts": {
+    "context.json": "da00506912f10a8f24df4701cb32b45ed47743f1066621e893e234dfc69f1aa5",
+    "review.json": "018e35f73d1e83bc5cb67753a980ac7819c86b2a7d71145fdb5768054726258a",
+    "proposed-records.json": "ff3382e35738eba753a90c55086ebbdfb3ee4a3afb843bf4250d731969f0a91f",
+    "identity-only-records.json": "1fc314e4a47717bce195b39fe7f1e66bd31f6af892fca4a9420a653eab927a37",
+    "exploration-paths.json": "cd3c26f18ffe8c0364eae2c40009fd30e02daf812985ed7ac5ffdad3476ac925",
+    "decision-request.json": "7f9281dbf23d197b7165df2dde5b0930e591cc794d1305b7db4266b2a5b3a359",
+    "README.md": "cb4da9291048c97963e11ec91f189f9b0b7c045227e9b51deb4b9cc0a51e761b"
+  },
+  "authority": "pending-human-review-only"
+}

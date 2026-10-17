@@ -1,0 +1,11 @@
+{
+  "status": "pending-human-acceptance",
+  "formalAcceptance": "pending",
+  "notForPublicApply": true,
+  "records": {
+    "entities": [],
+    "claims": [],
+    "sources": [],
+    "citations": []
+  }
+}
