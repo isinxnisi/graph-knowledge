@@ -1,0 +1,738 @@
+{
+  "schemaVersion": 2,
+  "id": "manga-r0003",
+  "catalog": "docs/research/famous-manga-creators/20261016/candidates.json",
+  "baseRelease": "datasets/public-kg/releases/20261014-credits-001",
+  "stamp": "2026-10-17T00:00:00Z",
+  "requestPolicy": {
+    "maxAttempts": 142,
+    "attemptsPerRequest": 2,
+    "minIntervalSeconds": 3,
+    "timeoutSeconds": 20,
+    "maxBytes": 4194304
+  },
+  "outputPolicy": {
+    "maxNewEntities": 47,
+    "maxNewClaims": 72,
+    "newClaimVisibility": "hidden"
+  },
+  "people": [
+    {
+      "name": "浦沢直樹",
+      "catalogName": "浦沢直樹",
+      "wikidata": "Q348436",
+      "identityNames": [
+        "浦沢直樹"
+      ],
+      "creditNames": [
+        "浦沢直樹"
+      ]
+    },
+    {
+      "name": "工藤かずや",
+      "catalogName": "工藤かずや",
+      "wikidata": "Q3194504",
+      "identityNames": [
+        "工藤かずや"
+      ],
+      "creditNames": [
+        "工藤かずや"
+      ]
+    },
+    {
+      "name": "池上遼一",
+      "catalogName": "池上遼一",
+      "wikidata": "Q1332841",
+      "identityNames": [
+        "池上遼一"
+      ],
+      "creditNames": [
+        "池上遼一"
+      ]
+    },
+    {
+      "name": "武論尊",
+      "catalogName": "武論尊（史村翔名義を含む）",
+      "wikidata": "Q1016880",
+      "identityNames": [
+        "武論尊"
+      ],
+      "creditNames": [
+        "武論尊",
+        "史村翔"
+      ]
+    },
+    {
+      "name": "小畑健",
+      "catalogName": "小畑健",
+      "wikidata": "Q313703",
+      "identityNames": [
+        "小畑健"
+      ],
+      "creditNames": [
+        "小畑健"
+      ]
+    },
+    {
+      "name": "大場つぐみ",
+      "catalogName": "大場つぐみ",
+      "wikidata": "Q558858",
+      "identityNames": [
+        "大場つぐみ"
+      ],
+      "creditNames": [
+        "大場つぐみ"
+      ]
+    },
+    {
+      "name": "岸本斉史",
+      "catalogName": "岸本斉史",
+      "wikidata": "Q1993",
+      "identityNames": [
+        "岸本斉史"
+      ],
+      "creditNames": [
+        "岸本斉史"
+      ]
+    },
+    {
+      "name": "大久保彰",
+      "catalogName": "大久保彰",
+      "wikidata": "Q108109758",
+      "identityNames": [
+        "大久保彰"
+      ],
+      "creditNames": [
+        "大久保彰"
+      ]
+    },
+    {
+      "name": "赤坂アカ",
+      "catalogName": "赤坂アカ",
+      "wikidata": "Q23937543",
+      "identityNames": [
+        "赤坂アカ"
+      ],
+      "creditNames": [
+        "赤坂アカ"
+      ]
+    },
+    {
+      "name": "横槍メンゴ",
+      "catalogName": "横槍メンゴ",
+      "wikidata": "Q17220992",
+      "identityNames": [
+        "横槍メンゴ"
+      ],
+      "creditNames": [
+        "横槍メンゴ"
+      ]
+    },
+    {
+      "name": "山田鐘人",
+      "catalogName": "山田鐘人",
+      "wikidata": "Q38277627",
+      "identityNames": [
+        "山田鐘人"
+      ],
+      "creditNames": [
+        "山田鐘人"
+      ]
+    },
+    {
+      "name": "アベツカサ",
+      "catalogName": "アベツカサ",
+      "wikidata": "Q105258125",
+      "identityNames": [
+        "アベツカサ"
+      ],
+      "creditNames": [
+        "アベツカサ"
+      ]
+    },
+    {
+      "name": "萩尾望都",
+      "catalogName": "萩尾望都",
+      "wikidata": "Q265061",
+      "identityNames": [
+        "萩尾望都"
+      ],
+      "creditNames": [
+        "萩尾望都"
+      ]
+    },
+    {
+      "name": "竹宮惠子",
+      "catalogName": "竹宮惠子",
+      "wikidata": "Q268789",
+      "identityNames": [
+        "竹宮惠子"
+      ],
+      "creditNames": [
+        "竹宮惠子",
+        "竹宮恵子"
+      ]
+    },
+    {
+      "name": "田村由美",
+      "catalogName": "田村由美",
+      "wikidata": "Q2235128",
+      "identityNames": [
+        "田村由美"
+      ],
+      "creditNames": [
+        "田村由美"
+      ]
+    },
+    {
+      "name": "高橋留美子",
+      "catalogName": "高橋留美子",
+      "wikidata": "Q219948",
+      "identityNames": [
+        "高橋留美子"
+      ],
+      "creditNames": [
+        "高橋留美子"
+      ]
+    },
+    {
+      "name": "手塚治虫",
+      "catalogName": "手塚治虫",
+      "wikidata": "Q193300",
+      "identityNames": [
+        "手塚治虫"
+      ],
+      "creditNames": [
+        "手塚治虫"
+      ]
+    },
+    {
+      "name": "赤塚不二夫",
+      "catalogName": "赤塚不二夫",
+      "wikidata": "Q958256",
+      "identityNames": [
+        "赤塚不二夫"
+      ],
+      "creditNames": [
+        "赤塚不二夫"
+      ]
+    },
+    {
+      "name": "大友克洋",
+      "catalogName": "大友克洋",
+      "wikidata": "Q378710",
+      "identityNames": [
+        "大友克洋"
+      ],
+      "creditNames": [
+        "大友克洋"
+      ]
+    },
+    {
+      "name": "Boichi",
+      "catalogName": "Boichi",
+      "wikidata": "Q624839",
+      "identityNames": [
+        "Boichi"
+      ],
+      "creditNames": [
+        "Boichi"
+      ]
+    },
+    {
+      "name": "藤本タツキ",
+      "catalogName": "藤本タツキ",
+      "wikidata": "Q24864023",
+      "identityNames": [
+        "藤本タツキ"
+      ],
+      "creditNames": [
+        "藤本タツキ"
+      ]
+    },
+    {
+      "name": "原哲夫",
+      "catalogName": "原哲夫",
+      "wikidata": "Q1319232",
+      "identityNames": [
+        "原哲夫"
+      ],
+      "creditNames": [
+        "原哲夫"
+      ]
+    },
+    {
+      "name": "ONE",
+      "catalogName": "ONE",
+      "wikidata": "Q11237288",
+      "identityNames": [
+        "ONE"
+      ],
+      "creditNames": [
+        "ONE"
+      ]
+    }
+  ],
+  "works": [
+    {
+      "name": "パイナップルARMY",
+      "wikidata": "Q1096269",
+      "identityNames": [
+        "パイナップルARMY"
+      ],
+      "isbn13": "9784091810816",
+      "ndlMainTitles": [
+        "パイナップルarmy"
+      ],
+      "expectedVolume": [
+        "1"
+      ],
+      "expectedEdition": [],
+      "volumeLabel": "第1巻",
+      "editionLabel": null,
+      "identityNote": "漫画QIDと指定日本語ISBNだけを照合。資料の責任表示・巻・版を保持し、全巻・全版へ外挿しない。",
+      "selectionReason": "既存浦沢直樹・工藤かずやから渡る接続。原資料の作／画の分担を保持する。"
+    },
+    {
+      "name": "あさドラ！",
+      "wikidata": "Q102231027",
+      "identityNames": [
+        "あさドラ！",
+        "連続漫画小説 あさドラ!"
+      ],
+      "isbn13": "9784098602780",
+      "ndlMainTitles": [
+        "あさドラ! : 連続漫画小説"
+      ],
+      "expectedVolume": [
+        "volume1"
+      ],
+      "expectedEdition": [],
+      "volumeLabel": "第1巻",
+      "editionLabel": null,
+      "identityNote": "漫画QIDと指定日本語ISBNだけを照合。資料の責任表示・巻・版を保持し、全巻・全版へ外挿しない。",
+      "selectionReason": "公開Graphの浦沢直樹から別時期の作品へ。巻表示volume1の厳密照合を含む。"
+    },
+    {
+      "name": "サンクチュアリ",
+      "wikidata": "Q669481",
+      "identityNames": [
+        "サンクチュアリ"
+      ],
+      "isbn13": "9784091823618",
+      "ndlMainTitles": [
+        "サンクチュアリ"
+      ],
+      "expectedVolume": [
+        "1"
+      ],
+      "expectedEdition": [],
+      "volumeLabel": "第1巻",
+      "editionLabel": null,
+      "identityNote": "漫画QIDと指定日本語ISBNだけを照合。資料の責任表示・巻・版を保持し、全巻・全版へ外挿しない。",
+      "selectionReason": "池上遼一と史村翔名義の原作担当を結ぶ青年漫画。武論尊と史村翔を別人物にしない。"
+    },
+    {
+      "name": "バクマン。",
+      "wikidata": "Q804555",
+      "identityNames": [
+        "バクマン。"
+      ],
+      "isbn13": "9784086196901",
+      "ndlMainTitles": [
+        "バクマン。"
+      ],
+      "expectedVolume": [
+        "1"
+      ],
+      "expectedEdition": [],
+      "volumeLabel": "第1巻",
+      "editionLabel": null,
+      "identityNote": "漫画QIDと指定日本語ISBNだけを照合。資料の責任表示・巻・版を保持し、全巻・全版へ外挿しない。",
+      "selectionReason": "大場つぐみから別作品へ。原作を拾い、漫画表記の小畑健は保留を維持する。"
+    },
+    {
+      "name": "サムライ8 八丸伝",
+      "wikidata": "Q63323229",
+      "identityNames": [
+        "サムライ8 八丸伝"
+      ],
+      "isbn13": "9784088820224",
+      "ndlMainTitles": [
+        "サムライ8八丸伝"
+      ],
+      "expectedVolume": [
+        "01"
+      ],
+      "expectedEdition": [],
+      "volumeLabel": "第1巻",
+      "editionLabel": null,
+      "identityNote": "漫画QIDと指定日本語ISBNだけを照合。資料の責任表示・巻・版を保持し、全巻・全版へ外挿しない。",
+      "selectionReason": "岸本斉史・大久保彰の原作／作画分担を確認する入口。"
+    },
+    {
+      "name": "【推しの子】",
+      "wikidata": "Q97310775",
+      "identityNames": [
+        "【推しの子】"
+      ],
+      "isbn13": "9784088916507",
+      "ndlMainTitles": [
+        "推しの子"
+      ],
+      "expectedVolume": [
+        "1"
+      ],
+      "expectedEdition": [],
+      "volumeLabel": "第1巻",
+      "editionLabel": null,
+      "identityNote": "漫画QIDと指定日本語ISBNだけを照合。資料の責任表示・巻・版を保持し、全巻・全版へ外挿しない。",
+      "selectionReason": "赤坂アカと横槍メンゴの共同制作候補。NDLの一括著者表記を分割せず保留として可視化する。"
+    },
+    {
+      "name": "葬送のフリーレン",
+      "wikidata": "Q98642652",
+      "identityNames": [
+        "葬送のフリーレン"
+      ],
+      "isbn13": "9784098501809",
+      "ndlMainTitles": [
+        "葬送のフリーレン"
+      ],
+      "expectedVolume": [
+        "VOL.1"
+      ],
+      "expectedEdition": [],
+      "volumeLabel": "第1巻",
+      "editionLabel": null,
+      "identityNote": "漫画QIDと指定日本語ISBNだけを照合。資料の責任表示・巻・版を保持し、全巻・全版へ外挿しない。",
+      "selectionReason": "山田鐘人・アベツカサの明示原作／作画。共同制作の別出版社の入口。"
+    },
+    {
+      "name": "クズの本懐",
+      "wikidata": "Q11298673",
+      "identityNames": [
+        "クズの本懐"
+      ],
+      "isbn13": "9784757538870",
+      "ndlMainTitles": [
+        "クズの本懐"
+      ],
+      "expectedVolume": [
+        "1"
+      ],
+      "expectedEdition": [],
+      "volumeLabel": "第1巻",
+      "editionLabel": null,
+      "identityNote": "漫画QIDと指定日本語ISBNだけを照合。資料の責任表示・巻・版を保持し、全巻・全版へ外挿しない。",
+      "selectionReason": "横槍メンゴの別作品。共同制作表記と単独著者を混同しない。"
+    },
+    {
+      "name": "ポーの一族",
+      "wikidata": "Q467854",
+      "identityNames": [
+        "ポーの一族"
+      ],
+      "isbn13": "9784091912510",
+      "ndlMainTitles": [
+        "ポーの一族"
+      ],
+      "expectedVolume": [
+        "第1巻"
+      ],
+      "expectedEdition": [],
+      "volumeLabel": "第1巻",
+      "editionLabel": null,
+      "identityNote": "漫画QIDと指定日本語ISBNだけを照合。資料の責任表示・巻・版を保持し、全巻・全版へ外挿しない。",
+      "selectionReason": "少女漫画の入口。後年の副題付き新作を混ぜず萩尾望都からSFへ接続する。"
+    },
+    {
+      "name": "11人いる！",
+      "wikidata": "Q124312385",
+      "identityNames": [
+        "11人いる！",
+        "11人いる!"
+      ],
+      "isbn13": "9784091910110",
+      "ndlMainTitles": [
+        "11人いる!"
+      ],
+      "expectedVolume": [],
+      "expectedEdition": [],
+      "volumeLabel": "単巻",
+      "editionLabel": null,
+      "identityNote": "漫画QIDと指定日本語ISBNだけを照合。資料の責任表示・巻・版を保持し、全巻・全版へ外挿しない。",
+      "selectionReason": "萩尾望都による少女漫画からSFへの横断。漫画専用QIDと単巻ISBNを使う。"
+    },
+    {
+      "name": "風と木の詩",
+      "wikidata": "Q1338432",
+      "identityNames": [
+        "風と木の詩"
+      ],
+      "isbn13": "9784592881513",
+      "ndlMainTitles": [
+        "風と木の詩"
+      ],
+      "expectedVolume": [
+        "第1巻"
+      ],
+      "expectedEdition": [],
+      "volumeLabel": "第1巻",
+      "editionLabel": null,
+      "identityNote": "漫画QIDと指定日本語ISBNだけを照合。資料の責任表示・巻・版を保持し、全巻・全版へ外挿しない。",
+      "selectionReason": "少女漫画の歴史的入口。竹宮惠子／恵子の表記を同一典拠で確認する。"
+    },
+    {
+      "name": "地球へ…",
+      "wikidata": "Q2668005",
+      "identityNames": [
+        "地球へ…"
+      ],
+      "isbn13": "9784757520097",
+      "ndlMainTitles": [
+        "地球へ…"
+      ],
+      "expectedVolume": [
+        "1"
+      ],
+      "expectedEdition": [],
+      "volumeLabel": "第1巻",
+      "editionLabel": null,
+      "identityNote": "漫画QIDと指定日本語ISBNだけを照合。資料の責任表示・巻・版を保持し、全巻・全版へ外挿しない。",
+      "selectionReason": "竹宮惠子のSF作品へ渡る。漫画とアニメを区別する。"
+    },
+    {
+      "name": "BASARA",
+      "wikidata": "Q809789",
+      "identityNames": [
+        "BASARA"
+      ],
+      "isbn13": "9784091914316",
+      "ndlMainTitles": [
+        "Basara"
+      ],
+      "expectedVolume": [
+        "第1巻"
+      ],
+      "expectedEdition": [],
+      "volumeLabel": "第1巻",
+      "editionLabel": null,
+      "identityNote": "漫画QIDと指定日本語ISBNだけを照合。資料の責任表示・巻・版を保持し、全巻・全版へ外挿しない。",
+      "selectionReason": "田村由美の少女漫画・冒険の入口。文庫第1巻の刊行物scope。"
+    },
+    {
+      "name": "7SEEDS",
+      "wikidata": "Q2679175",
+      "identityNames": [
+        "7SEEDS"
+      ],
+      "isbn13": "9784091380135",
+      "ndlMainTitles": [
+        "7 seeds"
+      ],
+      "expectedVolume": [
+        "1"
+      ],
+      "expectedEdition": [],
+      "volumeLabel": "第1巻",
+      "editionLabel": null,
+      "identityNote": "漫画QIDと指定日本語ISBNだけを照合。資料の責任表示・巻・版を保持し、全巻・全版へ外挿しない。",
+      "selectionReason": "田村由美の別作品・SF側の入口。同作者で作品を横断する。"
+    },
+    {
+      "name": "うる星やつら",
+      "wikidata": "Q715723",
+      "identityNames": [
+        "うる星やつら"
+      ],
+      "isbn13": "9784091228017",
+      "ndlMainTitles": [
+        "うる星やつら"
+      ],
+      "expectedVolume": [
+        "1"
+      ],
+      "expectedEdition": [],
+      "volumeLabel": "第1巻",
+      "editionLabel": null,
+      "identityNote": "漫画QIDと指定日本語ISBNだけを照合。資料の責任表示・巻・版を保持し、全巻・全版へ外挿しない。",
+      "selectionReason": "高橋留美子のギャグ・SFの入口。"
+    },
+    {
+      "name": "らんま1/2",
+      "wikidata": "Q272015",
+      "identityNames": [
+        "らんま1/2"
+      ],
+      "isbn13": "9784091220318",
+      "ndlMainTitles": [
+        "らんま1/2"
+      ],
+      "expectedVolume": [
+        "1"
+      ],
+      "expectedEdition": [],
+      "volumeLabel": "第1巻",
+      "editionLabel": null,
+      "identityNote": "漫画QIDと指定日本語ISBNだけを照合。資料の責任表示・巻・版を保持し、全巻・全版へ外挿しない。",
+      "selectionReason": "高橋留美子の別作品へ。再編集BOXやアニメのISBNを使わない。"
+    },
+    {
+      "name": "ブラック・ジャック",
+      "wikidata": "Q133691",
+      "identityNames": [
+        "ブラック・ジャック"
+      ],
+      "isbn13": "9784253169813",
+      "ndlMainTitles": [
+        "Black Jack"
+      ],
+      "expectedVolume": [
+        "1"
+      ],
+      "expectedEdition": [],
+      "volumeLabel": "第1巻",
+      "editionLabel": null,
+      "identityNote": "漫画QIDと指定日本語ISBNだけを照合。資料の責任表示・巻・版を保持し、全巻・全版へ外挿しない。",
+      "selectionReason": "既存手塚治虫から医療漫画へ。漫画QIDを確定できないおそ松くんの代替として選定。"
+    },
+    {
+      "name": "天才バカボン",
+      "wikidata": "Q2551007",
+      "identityNames": [
+        "天才バカボン"
+      ],
+      "isbn13": "9784884752934",
+      "ndlMainTitles": [
+        "天才バカボン"
+      ],
+      "expectedVolume": [
+        "1"
+      ],
+      "expectedEdition": [],
+      "volumeLabel": "第1巻",
+      "editionLabel": null,
+      "identityNote": "漫画QIDと指定日本語ISBNだけを照合。資料の責任表示・巻・版を保持し、全巻・全版へ外挿しない。",
+      "selectionReason": "赤塚不二夫によるギャグの入口。平成／深夜の派生作品を混ぜない。"
+    },
+    {
+      "name": "AKIRA",
+      "wikidata": "Q91486",
+      "identityNames": [
+        "AKIRA"
+      ],
+      "isbn13": "9784061037113",
+      "ndlMainTitles": [
+        "Akira"
+      ],
+      "expectedVolume": [
+        "part 1 (鉄雄)"
+      ],
+      "expectedEdition": [],
+      "volumeLabel": "第1巻",
+      "editionLabel": null,
+      "identityNote": "漫画QIDと指定日本語ISBNだけを照合。資料の責任表示・巻・版を保持し、全巻・全版へ外挿しない。",
+      "selectionReason": "大友克洋の都市SF。映画QID・全集版ISBNを混ぜず原単行本第1巻を使う。"
+    },
+    {
+      "name": "童夢",
+      "wikidata": "Q1170375",
+      "identityNames": [
+        "童夢"
+      ],
+      "isbn13": "9784065262634",
+      "ndlMainTitles": [
+        "OTOMO THE COMPLETE WORKS"
+      ],
+      "expectedVolume": [
+        "8"
+      ],
+      "expectedEdition": [],
+      "volumeLabel": "全集第8巻（童夢）",
+      "editionLabel": null,
+      "identityNote": "出版社がISBN9784065262634の収録作品を童夢と明示。NDL主書名はOTOMO THE COMPLETE WORKS・巻8。漫画童夢の第8巻・全全集の著作関与へ外挿しない。",
+      "selectionReason": "同じ大友克洋の別作品。全集第8巻という刊行物と漫画作品を明示的に対応する。"
+    },
+    {
+      "name": "ORIGIN",
+      "wikidata": "Q48837273",
+      "identityNames": [
+        "ORIGIN"
+      ],
+      "isbn13": "9784063829082",
+      "ndlMainTitles": [
+        "ORIGIN"
+      ],
+      "expectedVolume": [
+        "1"
+      ],
+      "expectedEdition": [],
+      "volumeLabel": "第1巻",
+      "editionLabel": null,
+      "identityNote": "漫画QIDと指定日本語ISBNだけを照合。資料の責任表示・巻・版を保持し、全巻・全版へ外挿しない。",
+      "selectionReason": "Boichiの別作品とSFの入口。受入済み未公開r0002との接続は将来のrelease統合時に確認する。"
+    },
+    {
+      "name": "ファイアパンチ",
+      "wikidata": "Q28682711",
+      "identityNames": [
+        "ファイアパンチ"
+      ],
+      "isbn13": "9784088807317",
+      "ndlMainTitles": [
+        "ファイアパンチ"
+      ],
+      "expectedVolume": [
+        "1"
+      ],
+      "expectedEdition": [],
+      "volumeLabel": "第1巻",
+      "editionLabel": null,
+      "identityNote": "漫画QIDと指定日本語ISBNだけを照合。資料の責任表示・巻・版を保持し、全巻・全版へ外挿しない。",
+      "selectionReason": "藤本タツキの別作品。チェンソーマンとの接続はr0002公開後の期待経路。"
+    },
+    {
+      "name": "北斗の拳",
+      "wikidata": "Q733498",
+      "identityNames": [
+        "北斗の拳"
+      ],
+      "isbn13": "9784086172837",
+      "ndlMainTitles": [
+        "北斗の拳"
+      ],
+      "expectedVolume": [
+        "1"
+      ],
+      "expectedEdition": [],
+      "volumeLabel": "第1巻",
+      "editionLabel": null,
+      "identityNote": "漫画QIDと指定日本語ISBNだけを照合。資料の責任表示・巻・版を保持し、全巻・全版へ外挿しない。",
+      "selectionReason": "武論尊が史村翔名義のサンクチュアリへ橋を作る。作を原作へ読み替えない。"
+    },
+    {
+      "name": "モブサイコ100",
+      "wikidata": "Q11344543",
+      "identityNames": [
+        "モブサイコ100"
+      ],
+      "isbn13": "9784091241023",
+      "ndlMainTitles": [
+        "モブサイコ100"
+      ],
+      "expectedVolume": [
+        "1"
+      ],
+      "expectedEdition": [],
+      "volumeLabel": "第1巻",
+      "editionLabel": null,
+      "identityNote": "漫画QIDと指定日本語ISBNだけを照合。資料の責任表示・巻・版を保持し、全巻・全版へ外挿しない。",
+      "selectionReason": "ONEによるギャグ・超能力作品の入口。Web版と村田版ワンパンマンの制作範囲は拡張しない。"
+    }
+  ],
+  "reviewArtifacts": [
+    "datasets/manga-collection/r0003/anchor-review.json",
+    "datasets/manga-collection/r0003/publication-review.json"
+  ]
+}

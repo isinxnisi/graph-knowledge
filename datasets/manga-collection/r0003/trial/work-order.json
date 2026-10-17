@@ -1,0 +1,118 @@
+{
+  "schemaVersion": 1,
+  "theme": {
+    "schemaVersion": 1,
+    "id": "isolated-manga-v2-live-trial",
+    "revision": 1,
+    "title": "TEST-SIMULATION: manga v2 / three representative works",
+    "purpose": "Isolated representative verification only; not official r0003 approval, knowledge acceptance or publication.",
+    "worlds": [
+      "漫画・アニメ",
+      "美術・文学"
+    ],
+    "relatedThemes": [],
+    "scope": {
+      "include": [
+        "既存の浦沢直樹・手塚治虫周辺を足場に、人物と出典で確認できる作品クレジットを候補化する",
+        "具体的な収集人物・作品数の上限は実行版のレビューで確定する"
+      ],
+      "exclude": [
+        "代表作ランキング・人気度の自動生成",
+        "著者・原作・脚本・作画の推測による同一視"
+      ]
+    },
+    "dataRequirements": [
+      {
+        "kind": "entity",
+        "description": "漫画家・作品の名前、別名、外部ID",
+        "granularity": "人物と作品を分け、シリーズ・巻の範囲を明記"
+      },
+      {
+        "kind": "claim",
+        "description": "資料で明記された人物→作品の制作関係と役割",
+        "granularity": "資料の原語と確認できる刊行物の範囲。未確認の役割は広い関係を保持"
+      },
+      {
+        "kind": "citation",
+        "description": "出典と判断根拠を既存台帳へ残す",
+        "granularity": "資料URL・参照箇所・取得日・原語・同一性判断と保留理由"
+      }
+    ],
+    "sources": [
+      {
+        "name": "Wikidata（取得候補）",
+        "url": "https://www.wikidata.org/",
+        "usage": "外部ID・関係の取得候補。propertyと原資料が表す意味を個別確認し、役割や期間を推測しない。",
+        "termsNote": "取得方式・利用条件・参照原資料の扱いは実行定義のレビュー時に確認する。未確認のため実行adapterは未指定。"
+      }
+    ],
+    "exploration": {
+      "questions": [
+        "この作者の別の作品は？",
+        "同じ作品に関わる他の作り手は？"
+      ],
+      "existingPredicates": [
+        "CONTRIBUTED_TO"
+      ],
+      "modelGaps": [
+        "シリーズと巻・版の構造化は必要性を別途検討"
+      ]
+    },
+    "coverageReferences": [
+      "docs/design/KNOWLEDGE_WORLDS_AND_COVERAGE_PLAN.md（2026-10-16調査基準。網羅的監査ではない）"
+    ],
+    "execution": {
+      "adapter": "manga-discovery-v2",
+      "codeSha256": "80e05b67bc0129b963653b90df4cfbfa5bd6aff190acda99f54c08541e55801e",
+      "inputs": [
+        {
+          "file": "datasets/manga-collection/r0003/recipe.json",
+          "sha256": "ea4307501ccc164f9039e945b28a1fedcae974e7d9f8917f316a43b5acd729a0"
+        },
+        {
+          "file": "datasets/manga-collection/r0003/anchor-review.json",
+          "sha256": "11300cff2b8a7b3234819d4b47a11f5e9016daf7af94f8cf4ca1838038000669"
+        },
+        {
+          "file": "datasets/manga-collection/r0003/publication-review.json",
+          "sha256": "bdf3ef6f60ea02ef07aedb3119b8cde6bdbefe0e8e7a002895637fdedf2ebb3a"
+        },
+        {
+          "file": "docs/research/famous-manga-creators/20261016/candidates.json",
+          "sha256": "8531fada01e5c635ba2ee278a7ef944a73f64676af14ed42ae0e690f5a1ff978"
+        },
+        {
+          "file": "datasets/public-kg/releases/20261014-credits-001/data.json",
+          "sha256": "ea91b16f52a211b5a8464382ad498b7b2bb2be69a6f33fe125a73a3c7b9da2b5"
+        },
+        {
+          "file": "datasets/public-kg/releases/20261014-credits-001/manifest.json",
+          "sha256": "e4aa3b58ed884f7d1f8fffee43b260261cc2b4d3a867fda942919f439d2bce17"
+        }
+      ],
+      "maxEntities": 2118,
+      "maxClaims": 1853
+    }
+  },
+  "definitionSha256": "eb30737cc86824bfaba756f359993e49ec1c6fc198f25e506e4aa1e78b20d658",
+  "approval": {
+    "schemaVersion": 1,
+    "themeId": "isolated-manga-v2-live-trial",
+    "revision": 1,
+    "definitionSha256": "eb30737cc86824bfaba756f359993e49ec1c6fc198f25e506e4aa1e78b20d658",
+    "reviewer": "TEST-SIMULATION（隔離試験のみ）",
+    "reviewedAt": "2026-10-17T05:12:03+00:00",
+    "note": "User authorized a few representative isolated checks. Not the famous-manga-creators r0003 approval.",
+    "checks": [
+      "purpose",
+      "scope",
+      "data-granularity",
+      "sources-and-terms",
+      "exploration",
+      "execution-boundary"
+    ]
+  },
+  "approvalSha256": "1b8dd4d0a46b5a6216db5a5ae0e07af1c0cb9a6dbdeb5d98124f4a0f3fe9cd5e",
+  "executionStatus": "frozen-adapter",
+  "authority": "candidate-collection-only; not knowledge acceptance or public release approval"
+}

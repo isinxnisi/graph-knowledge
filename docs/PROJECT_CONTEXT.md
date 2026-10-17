@@ -1,5 +1,7 @@
 # プロジェクトの構想と判断基準
 
+2026-10-17、[漫画r0003の次期バッチ準備](design/MANGA_R0003_COLLECTION_PLAN.md)として残り94作品から24作品・23人物を選定し、代表ISBN・QID・予算を凍結した。既存の収集ゲートとORIGINAL_STORY契約を拡張し、3作品だけを隔離検証する。正式r0003は未承認・未実行。r0002の受入済み未公開release -002を現行baseにせず、個別受入・全環境の公開apply・VPS／会員DB変更は行わない。
+
 2026-10-17、[対象未指定の関係・制作Role検索](design/DISCOVERY_RECORD_SEARCH.md)を追加する。暫定採用した入口・PLUTO／Princeton等のプリセット・3タブを維持し、一覧内でEntityと独立Claimを切り替える。名前・種別・Roleは同じ公開Claimに適用し、根拠とGraphへ接続する。収集側・公開apply・会員データは変更しない。
 
 2026-10-17、プロジェクト運営者が漫画r0002の原作5 Claim・6 Entityを追加正式受入した。[9 Claim統合release候補](design/MANGA_R0002_COMBINED_RELEASE.md)は20261017-manga-r0002-002、baseは現行公開版20261014-credits-001。合計13 Entity・9 Claim・7 Source・9 Citationを準備し、旧候補-001と凍結資料を保全する。全環境の公開applyは禁止。村田・小畑のEntity／未受入制作関係、監修の同定、残り94作品の実行は保留。

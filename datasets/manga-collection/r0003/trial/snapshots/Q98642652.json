@@ -1,0 +1,375 @@
+{
+  "id": "Q98642652",
+  "lastrevid": 2550861507,
+  "labels": {
+    "en": {
+      "language": "en",
+      "value": "Frieren"
+    },
+    "ja": {
+      "language": "ja",
+      "value": "葬送のフリーレン"
+    },
+    "zh": {
+      "language": "zh",
+      "value": "葬送的芙莉蓮"
+    },
+    "zh-hk": {
+      "language": "zh-hk",
+      "value": "葬送的芙莉蓮"
+    },
+    "zh-tw": {
+      "language": "zh-tw",
+      "value": "葬送的芙莉蓮"
+    },
+    "it": {
+      "language": "it",
+      "value": "Frieren - Oltre la fine del viaggio"
+    },
+    "vi": {
+      "language": "vi",
+      "value": "Frieren – Pháp sư tiễn táng"
+    },
+    "id": {
+      "language": "id",
+      "value": "Frieren: After The End"
+    },
+    "ms": {
+      "language": "ms",
+      "value": "Frieren"
+    },
+    "ar": {
+      "language": "ar",
+      "value": "فريرن: ما وراء نهاية الرحلة"
+    },
+    "es": {
+      "language": "es",
+      "value": "Sōsō no Frieren"
+    },
+    "fr": {
+      "language": "fr",
+      "value": "Frieren"
+    },
+    "de": {
+      "language": "de",
+      "value": "Frieren – Nach dem Ende der Reise"
+    },
+    "th": {
+      "language": "th",
+      "value": "คำอธิษฐานในวันที่จากลา"
+    },
+    "pl": {
+      "language": "pl",
+      "value": "Frieren. U kresu drogi"
+    },
+    "ko": {
+      "language": "ko",
+      "value": "장송의 프리렌"
+    },
+    "uk": {
+      "language": "uk",
+      "value": "Проводжальниця Фрірен"
+    },
+    "zh-cn": {
+      "language": "zh-cn",
+      "value": "葬送的芙莉莲"
+    },
+    "gl": {
+      "language": "gl",
+      "value": "Sōsō no Frieren"
+    },
+    "pt": {
+      "language": "pt",
+      "value": "Sōsō no Furīren"
+    },
+    "fi": {
+      "language": "fi",
+      "value": "Frieren"
+    },
+    "lt": {
+      "language": "lt",
+      "value": "Frieren"
+    },
+    "ru": {
+      "language": "ru",
+      "value": "Sousou no Frieren"
+    },
+    "lzh": {
+      "language": "lzh",
+      "value": "葬之芙莉蓮"
+    },
+    "ro": {
+      "language": "ro",
+      "value": "Frieren: Beyond Journey's End"
+    },
+    "fa": {
+      "language": "fa",
+      "value": "فریرن"
+    },
+    "lmo": {
+      "language": "lmo",
+      "value": "Sōsō no Furīren"
+    },
+    "ca": {
+      "language": "ca",
+      "value": "Frieren"
+    },
+    "az": {
+      "language": "az",
+      "value": "Frieren"
+    },
+    "zh-hans": {
+      "language": "zh-hans",
+      "value": "葬送的芙莉莲"
+    },
+    "zh-hant": {
+      "language": "zh-hant",
+      "value": "葬送的芙莉蓮"
+    },
+    "sv": {
+      "language": "sv",
+      "value": "Frieren: Beyond Journey's End"
+    },
+    "hi": {
+      "language": "hi",
+      "value": "फ़्रीरेन"
+    },
+    "sr": {
+      "language": "sr",
+      "value": "Фрирен на сахрани"
+    },
+    "tr": {
+      "language": "tr",
+      "value": "Frieren"
+    }
+  },
+  "aliases": {
+    "en": [
+      {
+        "language": "en",
+        "value": "Sousou no Frieren"
+      },
+      {
+        "language": "en",
+        "value": "Soso no Frieren"
+      },
+      {
+        "language": "en",
+        "value": "Frieren at the Funeral"
+      },
+      {
+        "language": "en",
+        "value": "Sōsō no Frieren"
+      },
+      {
+        "language": "en",
+        "value": "Frieren: Beyond Journey's End"
+      }
+    ],
+    "it": [
+      {
+        "language": "it",
+        "value": "Sousou no Frieren"
+      }
+    ],
+    "es": [
+      {
+        "language": "es",
+        "value": "Sousou no Frieren"
+      },
+      {
+        "language": "es",
+        "value": "Soso no Frieren"
+      },
+      {
+        "language": "es",
+        "value": "Frieren at the Funeral"
+      },
+      {
+        "language": "es",
+        "value": "Frieren: Beyond Journey's End"
+      },
+      {
+        "language": "es",
+        "value": "Frieren"
+      },
+      {
+        "language": "es",
+        "value": "Frieren: Tras finalizar el viaje"
+      }
+    ],
+    "fr": [
+      {
+        "language": "fr",
+        "value": "Sōsō no Frieren"
+      },
+      {
+        "language": "fr",
+        "value": "Sousou no Frieren"
+      },
+      {
+        "language": "fr",
+        "value": "Soso no Frieren"
+      },
+      {
+        "language": "fr",
+        "value": "Frieren: Beyond Journey's End"
+      },
+      {
+        "language": "fr",
+        "value": "Frieren : Au-delà de la fin du voyage"
+      }
+    ],
+    "de": [
+      {
+        "language": "de",
+        "value": "Sōsō no Frieren"
+      }
+    ],
+    "pl": [
+      {
+        "language": "pl",
+        "value": "Sousou no Frieren"
+      },
+      {
+        "language": "pl",
+        "value": "Soso no Frieren"
+      },
+      {
+        "language": "pl",
+        "value": "Frieren"
+      },
+      {
+        "language": "pl",
+        "value": "Sōsō no Frieren"
+      }
+    ],
+    "id": [
+      {
+        "language": "id",
+        "value": "Sousou no Frieren"
+      },
+      {
+        "language": "id",
+        "value": "Frieren: Beyond Journey's End"
+      },
+      {
+        "language": "id",
+        "value": "Sōsō no Furīren"
+      }
+    ],
+    "lt": [
+      {
+        "language": "lt",
+        "value": "Sousou no Frieren"
+      },
+      {
+        "language": "lt",
+        "value": "Soso no Frieren"
+      },
+      {
+        "language": "lt",
+        "value": "Sōsō no Frieren"
+      },
+      {
+        "language": "lt",
+        "value": "Frieren: Beyond Journey's End"
+      }
+    ],
+    "ru": [
+      {
+        "language": "ru",
+        "value": "Провожающая в последний путь Фрирен"
+      }
+    ],
+    "lmo": [
+      {
+        "language": "lmo",
+        "value": "Frieren"
+      }
+    ],
+    "uk": [
+      {
+        "language": "uk",
+        "value": "Фрірен"
+      }
+    ],
+    "pt": [
+      {
+        "language": "pt",
+        "value": "Frieren"
+      }
+    ],
+    "ar": [
+      {
+        "language": "ar",
+        "value": "سوسو نو فوريرين"
+      }
+    ]
+  },
+  "claims": {
+    "P31": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P31",
+          "hash": "549c072d6be8a6a43f999d1d0e82640b16c4260e",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 21198342,
+              "id": "Q21198342"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q98642652$1ba42214-4cb8-5190-2a0d-e4221ecdd06f",
+        "rank": "normal"
+      }
+    ],
+    "P50": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P50",
+          "hash": "94e0561d02b727c8c908f3024645f309097cc391",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 38277627,
+              "id": "Q38277627"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q98642652$4137c16b-40cb-7069-01ee-16b5c5be498f",
+        "rank": "normal"
+      }
+    ],
+    "P110": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P110",
+          "hash": "a80ee41d187d6a4a4b178e293980cfd65fa318fb",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 105258125,
+              "id": "Q105258125"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q98642652$5445ddaa-49fd-2933-c0ec-05e42e317d89",
+        "rank": "normal"
+      }
+    ]
+  }
+}

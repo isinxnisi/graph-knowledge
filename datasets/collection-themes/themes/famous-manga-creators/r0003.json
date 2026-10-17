@@ -1,0 +1,141 @@
+{
+  "schemaVersion": 1,
+  "id": "famous-manga-creators",
+  "revision": 3,
+  "title": "有名漫画家と代表作品：次期24作品・23人物／ORIGINAL_STORY対応（実行承認待ち）",
+  "purpose": "既存44中心作家・9共同制作者・102作品からr0002取得8作品を除いた94作品の次期バッチ。24作品・23人物の取得条件を凍結する。今回は定義登録と隔離検証までで、正式実行・知識受入・公開適用は別途人間判断。",
+  "worlds": [
+    "漫画・アニメ",
+    "美術・文学"
+  ],
+  "relatedThemes": [
+    "manga-influence-mentorship",
+    "work-production-backgrounds"
+  ],
+  "scope": {
+    "include": [
+      "企画範囲は docs/research/famous-manga-creators/20261016/candidates.json（SHA256 8531fada01e5c635ba2ee278a7ef944a73f64676af14ed42ae0e690f5a1ff978）。本版の対象は datasets/manga-collection/r0003/recipe.json に固定した24漫画作品・23人物のみ。各作品の選定理由・QID・日本語代表ISBN・主書名・巻・版・担当者名義を凍結資料でレビューする。",
+      "既存浦沢直樹・工藤かずや・池上遼一・手塚治虫との接続、原作と作画の分担、同作者の別作品、少女漫画・青年漫画・SF・ギャグの入口を組み合わせる。ジャンル説明は編集上の選定理由であり分類Claimを生成しない。",
+      "Wikidataは明示QIDの人物P31=human／作品P31=mangaを名前とともに照合し、P50／P110を根拠未確定の関係行として記録。propertyから具体的な制作Roleを推論しない。NDLはISBN、主書名、巻、版、jpn、漫画の一致が一意なNDL作成書誌だけを利用。",
+      "明示された単独人物の著／著者→AUTHORSHIP、作→CREATION、画／作画→DRAWING、原作→ORIGINAL_STORYを候補生成。監修は照合済み人物・既存企画内人物作品組・指定刊行物で明示される場合だけSUPERVISION候補。漫画・原著・原案・ほか著・集約著者表記は原語付きで保留する。",
+      "武論尊／史村翔と竹宮惠子／恵子はレシピのレビュー済み名義に限定し、providerの別名照合も必要。11人いる！は漫画専用QID・単巻。童夢は出版社が作品を明示する2022年全集第8巻ISBNだけをscopeにし、漫画の第8巻や全集全体へ外挿しない。",
+      "通信は逐次3秒以上、timeout20秒、1応答4MiB以下。正常時71 URL取得（人物23＋作品24＋NDL24）、失敗・再開を通算して最大142試行、同一要求2回以下。429／503のRetry-Afterを永続化し、連鎖取得や自動再送は行わない。",
+      "凍結baseは現行公開の20261014-credits-001。受入済み未適用の20261017-manga-r0002-002を現行baseとみなさない。既存全レコード・UUID・意味・公開状態・撤回履歴を保全。新規Entity47／Claim72、全体Entity2156／Claim1916を上限とする。新規Claimはhidden。",
+      "テーマrevision・定義／承認hash・コードhash・全入力hash、取得日時・応答hash・原語・同一性判断・保留を既存work-order／ledger／jobへ記録。r0002成果と新候補の公開統合は個別受入後に別途最新KGへplanする。"
+    ],
+    "exclude": [
+      "今回の準備依頼や隔離TEST-SIMULATIONをfamous-manga-creators r0003の正式承認とみなすこと。本版の正式収集ジョブ実行、個別Entity／Claimの自動受入。",
+      "ローカル・ベータ・本番の公開KG apply、本番VPS・会員DB変更、Web／operator配置、SSH復旧作業。",
+      "未適用release -002の全体を公開baseへ混入させること。r0002の定義・承認・実行履歴・過去release候補の上書き。",
+      "原作とAUTHORSHIP／CREATION／DRAWING／SCRIPT_WRITINGを同一視すること、原著作者だけを当該漫画の原作担当と認定すること、脚本・ネーム・構成・著作権保有・全巻担当を推論すること。",
+      "村田雄介・小畑健の未受入制作関係、漫画表記からの別Role変換、梅澤由香里の監修・同定をこの定義だけで受入すること。未知共同制作者や候補外人物作品組の自動追加。",
+      "レシピ外の残り作品の取得、参照先への連鎖取得、出版社HTMLの一括取得、本文・画像・あらすじ・第三者所蔵情報の転載、定期取得・外部連絡。",
+      "新規影響・師弟・助手経験・掲載誌・出版社所属・翻案・アニメ化・シリーズ関係の生成、新管理基盤や語彙の追加。",
+      "未受入hidden Claimを撤回に偽装すること、検証用一時公開projectionをreleaseへ流用すること。"
+    ]
+  },
+  "dataRequirements": [
+    {
+      "kind": "entity",
+      "description": "一覧内の人物と漫画作品、確認された日英別名・外部ID",
+      "granularity": "個人と共同筆名を区別し、漫画版・特定部・特定初出版を同定する。既存UUIDは再利用"
+    },
+    {
+      "kind": "claim",
+      "description": "明示された人物→漫画制作のRole候補。ORIGINAL_STORYを含む既存Role契約に従う",
+      "granularity": "代表ISBNごとのpublication scope。原語・巻・版を固定し、作品全体や別Roleへ自動拡張しない"
+    },
+    {
+      "kind": "citation",
+      "description": "資料URL、参照箇所、取得日、担当原語、刊行物と利用条件",
+      "granularity": "資料と取込由来を分け、同資料を共有する記録を独立根拠として数えない"
+    },
+    {
+      "kind": "identity",
+      "description": "作品単位と筆名・既存Entity対応の判断",
+      "granularity": "武論尊／史村翔、藤子共同名義、ワンパンマンの版、火の鳥の初出版等を個別に判断"
+    },
+    {
+      "kind": "model-gap",
+      "description": "漫画表記、原著、原案、集約著者などの未確定関係とシリーズ／巻／版の構造",
+      "granularity": "この企画の承認だけでは実装・語彙承認しない。必要なら個別レビューへ分ける"
+    }
+  ],
+  "sources": [
+    {
+      "name": "Wikidata（構造化取得の有力候補）",
+      "url": "https://www.wikidata.org/wiki/Help:Data_access",
+      "usage": "識別子・日英名・別名・作品関係候補と参照先。propertyから既存Roleを推測しない。",
+      "termsNote": "公式CC0構造化データ。明示QIDのSpecial:EntityData HTTPSのみ。逐次3秒以上・20秒・4MiB・同一2試行、ジョブ全体142試行以内。429／503のRetry-Afterを再開後も守る。"
+    },
+    {
+      "name": "NDLサーチ・NDL作成書誌",
+      "url": "https://ndlsearch.ndl.go.jp/help/api/provider",
+      "usage": "SRUのiss-ndl-opac限定、固定ISBN検索・maximumRecords=5。NDL作成書誌のISBN・主書名・巻・版・言語・漫画種別・責任表示を一意に照合。第三者所蔵情報はsnapshotへ出さない。",
+      "termsNote": "NDL作成メタデータのCC BY互換条件と広告収益を含むAPI利用説明を確認。Source／snapshotに国立国会図書館の帰属・CC BY4.0・提供元条件URLを保持する。全NDL提供元へ包括適用しない。継続利用の連絡協力依頼は次の定期運用判断で確認。今回は申請・連絡・定期取得なし。"
+    },
+    {
+      "name": "出版社・本人の公式資料（アンカーの個別レビューのみ）",
+      "url": "https://www.kodansha.co.jp/comic/products/0000359052",
+      "usage": "童夢の作品と全集第8巻ISBNの対応など、凍結アンカーを個別確認する。本版adapterの通信対象に出版社HTMLは含めない。",
+      "termsNote": "閲覧可能な資料が存在することと自動取得・再利用許可を区別。本文・あらすじ・画像転載は対象外。各サイトの取得方法・利用条件は実行版で確認する。"
+    }
+  ],
+  "exploration": {
+    "questions": [
+      "既存浦沢直樹からあさドラ！・パイナップルARMYと工藤かずやへ渡れるか？",
+      "サンクチュアリと北斗の拳を同じ人物の別名義・異なるRoleの根拠で辿れるか？",
+      "ポーの一族から萩尾望都を経て11人いる！、風と木の詩から竹宮惠子を経て地球へ…に渡れるか？",
+      "r0002公開後に大場つぐみ・Boichi・藤本タツキの別作品へ進めるか？ 未受入・原語未確定の枝を区別できるか？"
+    ],
+    "existingPredicates": [
+      "CONTRIBUTED_TO"
+    ],
+    "modelGaps": [
+      "漫画表記や集約著者表示は既存Roleへ自動変換できない。ORIGINAL_STORYは原作担当の明示に限定する。",
+      "掲載・翻案・シリーズ／巻／版の独立関係は対象外",
+      "ジャンルは編集上の入口説明であり分類Claimは生成しない"
+    ]
+  },
+  "coverageReferences": [
+    "docs/design/MANGA_R0003_COLLECTION_PLAN.md",
+    "docs/design/MANGA_COLLECTION_ADAPTER.md",
+    "docs/design/ORIGINAL_STORY.md",
+    "docs/design/MANGA_R0002_COMBINED_RELEASE.md",
+    "datasets/manga-collection/r0003/anchor-review.json",
+    "datasets/manga-collection/r0003/publication-review.json",
+    "datasets/manga-collection/r0003/trial/evidence.json（3作品だけのTEST-SIMULATION・正式承認ではない）"
+  ],
+  "execution": {
+    "adapter": "manga-discovery-v2",
+    "codeSha256": "80e05b67bc0129b963653b90df4cfbfa5bd6aff190acda99f54c08541e55801e",
+    "inputs": [
+      {
+        "file": "datasets/manga-collection/r0003/recipe.json",
+        "sha256": "eb431b6d6bd450eca85636f5617188f78cc4dc2e0bcdd076f94694ee153faad9"
+      },
+      {
+        "file": "datasets/manga-collection/r0003/anchor-review.json",
+        "sha256": "11300cff2b8a7b3234819d4b47a11f5e9016daf7af94f8cf4ca1838038000669"
+      },
+      {
+        "file": "datasets/manga-collection/r0003/publication-review.json",
+        "sha256": "bdf3ef6f60ea02ef07aedb3119b8cde6bdbefe0e8e7a002895637fdedf2ebb3a"
+      },
+      {
+        "file": "docs/research/famous-manga-creators/20261016/candidates.json",
+        "sha256": "8531fada01e5c635ba2ee278a7ef944a73f64676af14ed42ae0e690f5a1ff978"
+      },
+      {
+        "file": "datasets/public-kg/releases/20261014-credits-001/data.json",
+        "sha256": "ea91b16f52a211b5a8464382ad498b7b2bb2be69a6f33fe125a73a3c7b9da2b5"
+      },
+      {
+        "file": "datasets/public-kg/releases/20261014-credits-001/manifest.json",
+        "sha256": "e4aa3b58ed884f7d1f8fffee43b260261cc2b4d3a867fda942919f439d2bce17"
+      }
+    ],
+    "maxEntities": 2156,
+    "maxClaims": 1916
+  }
+}

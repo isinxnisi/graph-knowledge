@@ -1,0 +1,44 @@
+{
+  "id": "Q108109758",
+  "lastrevid": 2555422955,
+  "labels": {
+    "ja": {
+      "language": "ja",
+      "value": "大久保彰"
+    },
+    "en": {
+      "language": "en",
+      "value": "Akira Ōkubo"
+    },
+    "zh": {
+      "language": "zh",
+      "value": "大久保彰"
+    }
+  },
+  "aliases": {},
+  "claims": {
+    "P31": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P31",
+          "hash": "ad7d38a03cdd40cdc373de0dc4e7b7fcbccb31d9",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 5,
+              "id": "Q5"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q108109758$BF8E69BE-0CFC-4C44-89A0-AC6A0FDCEF51",
+        "rank": "normal"
+      }
+    ],
+    "P50": [],
+    "P110": []
+  }
+}

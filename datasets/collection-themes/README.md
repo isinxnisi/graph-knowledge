@@ -1,5 +1,7 @@
 # 収集テーマ候補
 
+2026-10-17追記：[famous-manga-creators r0003](themes/famous-manga-creators/r0003.json) は24作品・23人物の次期バッチとして登録、**未承認・正式ジョブ未実行**。[選定・取得条件・hash・隔離検証](../../docs/design/MANGA_R0003_COLLECTION_PLAN.md)を参照。r0002の9 Claimは正式受入済みだがrelease -002は未適用。r0002履歴を保持し、過去承認をv2へ転用しない。以下は初期登録時の記録。
+
 2026-10-16。ユーザーが挙げた7企画と、既存生成器への接続を確認する1試験候補。**famous-manga-creators r0002のみ候補生成を正式承認・実行済み。他は未承認**。実行時は管理用CLIが、版・定義hash・承認記録・取消・固定入力を照合する。
 
 定義・操作・公開との境界は [収集テーマの契約](../../docs/design/COLLECTION_THEMES.md) を参照する。

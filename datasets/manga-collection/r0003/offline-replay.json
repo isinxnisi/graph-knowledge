@@ -1,0 +1,402 @@
+{
+  "authority": "offline selected-field test replay; not official r0003 collection or human acceptance",
+  "summary": {
+    "kind": "isolated-manga-collection-candidates",
+    "notForCurrentPublicApply": true,
+    "personCandidates": 23,
+    "workCandidates": 24,
+    "reusedEntities": 4,
+    "wikidataRelationCandidates": 43,
+    "ndlCreditRows": 30,
+    "confirmedRoleRelations": 28,
+    "reusedClaims": 0,
+    "citationsAdded": 28,
+    "addedVsFrozenBase": {
+      "entities": 43,
+      "claims": 28,
+      "sources": 23,
+      "citations": 28
+    },
+    "heldByReason": {
+      "unsupported-responsibility-role": 2
+    },
+    "requests": 71,
+    "counts": {
+      "entities": 2152,
+      "claims": 1872,
+      "sources": 1774,
+      "citations": 1908
+    },
+    "validation": {
+      "valid": true,
+      "counts": {
+        "nodes": {
+          "Entity": 2152,
+          "Claim": 1872,
+          "Source": 1774,
+          "Citation": 1908,
+          "ExternalIdentifier": 2521
+        },
+        "relationships": {
+          "SUBJECT": 1872,
+          "OBJECT": 1872,
+          "HAS_CITATION": 1908,
+          "CITES": 1908,
+          "HAS_EXTERNAL_ID": 2521
+        }
+      }
+    }
+  },
+  "holds": [
+    {
+      "reason": "unsupported-responsibility-role",
+      "work": "バクマン。",
+      "rawResponsibility": "小畑健 漫画",
+      "sourceUrl": "https://ndlsearch.ndl.go.jp/books/R100000002-I028322829"
+    },
+    {
+      "reason": "unsupported-responsibility-role",
+      "work": "【推しの子】",
+      "rawResponsibility": "赤坂アカ, 横槍メンゴ 著",
+      "sourceUrl": "https://ndlsearch.ndl.go.jp/books/R100000002-I030509435"
+    }
+  ],
+  "identityMappings": [
+    {
+      "name": "浦沢直樹",
+      "wikidata": "Q348436",
+      "entityId": "d900543a-9c11-48c1-be76-1822b756fcc4",
+      "basis": "exact-external-id-or-explicit-catalog-uuid",
+      "reused": true
+    },
+    {
+      "name": "工藤かずや",
+      "wikidata": "Q3194504",
+      "entityId": "a012632c-6fd8-4559-8f38-cc60f9b28b05",
+      "basis": "exact-external-id-or-explicit-catalog-uuid",
+      "reused": true
+    },
+    {
+      "name": "池上遼一",
+      "wikidata": "Q1332841",
+      "entityId": "710bc8a7-efed-4c2e-a4b4-6c65b0aff695",
+      "basis": "exact-external-id-or-explicit-catalog-uuid",
+      "reused": true
+    },
+    {
+      "name": "武論尊",
+      "wikidata": "Q1016880",
+      "entityId": "3f22660f-01d7-4a4a-9ae6-f169c9a3dc4a",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "小畑健",
+      "wikidata": "Q313703",
+      "entityId": "d5e39491-5a5f-423c-9222-2eb3c18db9a8",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "大場つぐみ",
+      "wikidata": "Q558858",
+      "entityId": "a13205e2-220c-4b7d-8a1a-39dbefe52db8",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "岸本斉史",
+      "wikidata": "Q1993",
+      "entityId": "1edca4c7-0e4e-4769-859c-dde40e7e973a",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "大久保彰",
+      "wikidata": "Q108109758",
+      "entityId": "d4a3f93f-bbcd-42df-9567-2ba4a485bef3",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "赤坂アカ",
+      "wikidata": "Q23937543",
+      "entityId": "711dc415-45d5-4d35-8cca-068332180cc0",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "横槍メンゴ",
+      "wikidata": "Q17220992",
+      "entityId": "420d89ea-9780-4e01-ac64-9c5e8597d0c8",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "山田鐘人",
+      "wikidata": "Q38277627",
+      "entityId": "20b7ba43-d12d-4d39-9a8e-f9e92e9d40d2",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "アベツカサ",
+      "wikidata": "Q105258125",
+      "entityId": "dfaf30df-2f9e-4c63-9fe1-cbbd0a083b36",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "萩尾望都",
+      "wikidata": "Q265061",
+      "entityId": "6c9095bd-1969-4bcd-9282-2d1e9e411254",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "竹宮惠子",
+      "wikidata": "Q268789",
+      "entityId": "6bf4aeb4-ac2b-499f-bfaa-0588024ef93d",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "田村由美",
+      "wikidata": "Q2235128",
+      "entityId": "1866bbe5-7e00-4afc-965f-5e968481f065",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "高橋留美子",
+      "wikidata": "Q219948",
+      "entityId": "743d7fc0-ddc6-446a-8aa1-d9a9b284a326",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "手塚治虫",
+      "wikidata": "Q193300",
+      "entityId": "eb0af7e1-caa6-435f-86fb-0591421982b5",
+      "basis": "exact-external-id-or-explicit-catalog-uuid",
+      "reused": true
+    },
+    {
+      "name": "赤塚不二夫",
+      "wikidata": "Q958256",
+      "entityId": "a22fd2cd-aadc-4ca9-bf39-cb4bd7e0e953",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "大友克洋",
+      "wikidata": "Q378710",
+      "entityId": "c59a1b1d-7477-46a5-9669-644981d1d5d8",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "Boichi",
+      "wikidata": "Q624839",
+      "entityId": "b4de3765-e8c4-49f1-a322-a021475ffd09",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "藤本タツキ",
+      "wikidata": "Q24864023",
+      "entityId": "9f43fefa-d878-4e5e-b1a2-0413432e9dbd",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "原哲夫",
+      "wikidata": "Q1319232",
+      "entityId": "ccb5ddb2-fb7c-4dad-8178-1a170342d0c6",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "ONE",
+      "wikidata": "Q11237288",
+      "entityId": "afaa3ea0-f273-4481-95c5-5c31f9049cb2",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "パイナップルARMY",
+      "wikidata": "Q1096269",
+      "entityId": "4e506b04-cc57-48e9-b502-0d89476bb5f4",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "あさドラ！",
+      "wikidata": "Q102231027",
+      "entityId": "c1e93fb7-3547-4b64-bd7c-bce073a1198a",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "サンクチュアリ",
+      "wikidata": "Q669481",
+      "entityId": "c9080259-3866-4c25-999f-4a5a22046ac1",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "バクマン。",
+      "wikidata": "Q804555",
+      "entityId": "3427040b-88fd-4db5-b546-dd237abad032",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "サムライ8 八丸伝",
+      "wikidata": "Q63323229",
+      "entityId": "e7b913dd-7ad1-4288-861d-840cb4a3aeef",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "【推しの子】",
+      "wikidata": "Q97310775",
+      "entityId": "8a0d3d5a-feb6-4ba3-8993-64b6ac79de12",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "葬送のフリーレン",
+      "wikidata": "Q98642652",
+      "entityId": "929116a2-77ff-443f-94e6-871c8b78f451",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "クズの本懐",
+      "wikidata": "Q11298673",
+      "entityId": "dc188ef2-1a3d-4251-a445-90f49dd88cd0",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "ポーの一族",
+      "wikidata": "Q467854",
+      "entityId": "c74e0874-eb89-4825-a824-3ff182fe8053",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "11人いる！",
+      "wikidata": "Q124312385",
+      "entityId": "40a8ddd3-f333-485c-a12a-ac3d0961111b",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "風と木の詩",
+      "wikidata": "Q1338432",
+      "entityId": "98b8ca7a-9638-4e5a-8fbd-62a353e4f159",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "地球へ…",
+      "wikidata": "Q2668005",
+      "entityId": "baf73bb9-dda4-474c-acaf-a7a8ce52caf2",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "BASARA",
+      "wikidata": "Q809789",
+      "entityId": "4b90e125-b331-4361-8681-93a12c662cb7",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "7SEEDS",
+      "wikidata": "Q2679175",
+      "entityId": "5c5f452c-1e74-4985-aaec-811a8e329f42",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "うる星やつら",
+      "wikidata": "Q715723",
+      "entityId": "b1e1232d-b038-4c11-b80c-ab1c2710d2bf",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "らんま1/2",
+      "wikidata": "Q272015",
+      "entityId": "aafae4fe-6f56-47bb-af9f-dec69425f136",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "ブラック・ジャック",
+      "wikidata": "Q133691",
+      "entityId": "76884305-ef0d-4cb0-ace2-90cfac57de3e",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "天才バカボン",
+      "wikidata": "Q2551007",
+      "entityId": "398d712d-23d9-455f-8897-f9384dd94930",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "AKIRA",
+      "wikidata": "Q91486",
+      "entityId": "ba77a4d0-cf0b-4cc9-bd98-9b153a92b3ba",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "童夢",
+      "wikidata": "Q1170375",
+      "entityId": "0914c6bb-701d-4c5a-b8f9-2c63cbff1ef3",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "ORIGIN",
+      "wikidata": "Q48837273",
+      "entityId": "1982f262-39f3-4bfa-93a4-af3a86ec3ec8",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "ファイアパンチ",
+      "wikidata": "Q28682711",
+      "entityId": "480df823-5da8-45e4-aa20-1fdabe7ea5a3",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "北斗の拳",
+      "wikidata": "Q733498",
+      "entityId": "cd2e6949-6c1b-4818-990f-4d4dbc5c5d54",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "モブサイコ100",
+      "wikidata": "Q11344543",
+      "entityId": "0c9eb1b7-2b2b-46b7-8110-9705138c3add",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    }
+  ],
+  "roleCounts": {
+    "DRAWING": 5,
+    "CREATION": 2,
+    "AUTHORSHIP": 17,
+    "ORIGINAL_STORY": 4
+  },
+  "verifiedAt": "2026-10-17T05:17:56+00:00"
+}

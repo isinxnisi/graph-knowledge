@@ -1,0 +1,194 @@
+{
+  "id": "Q63323229",
+  "lastrevid": 2493726471,
+  "labels": {
+    "en": {
+      "language": "en",
+      "value": "Samurai 8: The Tale of Hachimaru"
+    },
+    "id": {
+      "language": "id",
+      "value": "Samurai 8: Hachimaru-den"
+    },
+    "ja": {
+      "language": "ja",
+      "value": "サムライ8 八丸伝"
+    },
+    "fr": {
+      "language": "fr",
+      "value": "Samurai 8: La Légende d’Hachimaru"
+    },
+    "it": {
+      "language": "it",
+      "value": "Samurai 8: La leggenda di Hachimaru"
+    },
+    "es": {
+      "language": "es",
+      "value": "Samurai 8: The Tale of Hachimaru"
+    },
+    "zh": {
+      "language": "zh",
+      "value": "SAMURAI8～機侍 八丸傳"
+    },
+    "de": {
+      "language": "de",
+      "value": "Samurai8"
+    },
+    "vi": {
+      "language": "vi",
+      "value": "Samurai 8: Hachimaruden"
+    },
+    "pt": {
+      "language": "pt",
+      "value": "Samurai 8"
+    },
+    "ru": {
+      "language": "ru",
+      "value": "Самурай 8: Хроники Хатимару"
+    }
+  },
+  "aliases": {
+    "en": [
+      {
+        "language": "en",
+        "value": "Samurai 8: Hachimaru-den"
+      }
+    ],
+    "fr": [
+      {
+        "language": "fr",
+        "value": "Samurai 8: Hachimaru-den"
+      }
+    ],
+    "de": [
+      {
+        "language": "de",
+        "value": "Samurai 8: Hachimaru-den"
+      }
+    ]
+  },
+  "claims": {
+    "P31": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P31",
+          "hash": "549c072d6be8a6a43f999d1d0e82640b16c4260e",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 21198342,
+              "id": "Q21198342"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q63323229$62558e50-47cb-7e14-8e08-12633c899b53",
+        "rank": "normal"
+      }
+    ],
+    "P50": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P50",
+          "hash": "a2d1f1c97aaa5537007071f21e706277d30b2981",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 1993,
+              "id": "Q1993"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q63323229$feea1dca-4990-f121-cd6f-d051b4f0635b",
+        "rank": "normal"
+      }
+    ],
+    "P110": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P110",
+          "hash": "45b49a7b31b397fe0de9b89ab011488deed162bb",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 108109758,
+              "id": "Q108109758"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q63323229$7111E89F-16C6-4AF6-82D0-3335F4B98262",
+        "rank": "normal",
+        "references": [
+          {
+            "hash": "948f60aaee26014c750bcb3306bf9a76bbe6f55f",
+            "snaks": {
+              "P143": [
+                {
+                  "snaktype": "value",
+                  "property": "P143",
+                  "hash": "c6f1777471211df31724ac60175786f3872c83e9",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 177837,
+                      "id": "Q177837"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ],
+              "P813": [
+                {
+                  "snaktype": "value",
+                  "property": "P813",
+                  "hash": "48f0e7a98c7b6c7785da77d75ca6f651c3f4e67f",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2024-05-21T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ],
+              "P4656": [
+                {
+                  "snaktype": "value",
+                  "property": "P4656",
+                  "hash": "825fd56112350cce888b2403d6136cddbbdc3840",
+                  "datavalue": {
+                    "value": "https://ja.wikipedia.org/w/index.php?title=%E3%82%B5%E3%83%A0%E3%83%A9%E3%82%A48_%E5%85%AB%E4%B8%B8%E4%BC%9D&oldid=97441823",
+                    "type": "string"
+                  },
+                  "datatype": "url"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P143",
+              "P813",
+              "P4656"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

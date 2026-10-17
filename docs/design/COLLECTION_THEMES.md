@@ -2,6 +2,8 @@
 
 2026-10-16。管理用CLIの初期実装。検索UIの分類・公開KGのモデル・本番公開権限を変更しない。
 
+2026-10-17後続：[漫画r0003の準備](MANGA_R0003_COLLECTION_PLAN.md)で `manga-discovery-v2` を追加。`plan manga-discovery-v2 --recipe datasets/manga-collection/r0003/recipe.json` は版別recipe・2レビューartifact・合意済み候補一覧・指定公開baseのdata／manifestと出力上限を固定する。r0003は未承認・正式実行前。r0002の9 Claimは正式受入済みだが公開未適用で、収集baseとは別に保持する。以下の初期確認記録は履歴。
+
 最初の新規テーマの具体化：[有名漫画家と代表作品・レビュー案](FAMOUS_MANGA_CREATORS_REVIEW.md)。44中心作家＋9共同制作者・102作品の企画範囲を合意し、r0002に8作品の実行条件を登録。2026-10-16にプロジェクト運営者がr0002の候補生成を正式承認し、実行完了。個別知識の受入・公開は未実施。[新規漫画adapter](MANGA_COLLECTION_ADAPTER.md)と[正式実行レビュー](../research/famous-manga-creators/20261016/r0002-run-review.md)を参照。
 
 ## 概念の責務

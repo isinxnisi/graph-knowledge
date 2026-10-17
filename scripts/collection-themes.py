@@ -29,6 +29,8 @@ INPUTS = [
 ]
 MANGA_ADAPTER = 'manga-discovery-v1'
 MANGA_GENERATOR = 'scripts/collect-manga.py'
+MANGA_V2_ADAPTER = 'manga-discovery-v2'
+MANGA_V2_GENERATOR = 'scripts/collect-manga-v2.py'
 MANGA_INPUTS = [
     'datasets/manga-collection/v1/recipe.json',
     'docs/research/famous-manga-creators/20261016/candidates.json',
@@ -157,13 +159,17 @@ def validate(value):
     execution = value['execution']
     if execution is not None:
         keys(execution, ['adapter', 'codeSha256', 'inputs', 'maxEntities', 'maxClaims'], 'execution')
-        require(execution['adapter'] in [ADAPTER, MANGA_ADAPTER], 'Adapter is not allowlisted')
+        require(execution['adapter'] in [ADAPTER, MANGA_ADAPTER, MANGA_V2_ADAPTER], 'Adapter is not allowlisted')
         require(isinstance(execution['codeSha256'], str) and SHA.fullmatch(execution['codeSha256']), 'Invalid code hash')
         require(isinstance(execution['inputs'], list), 'Invalid input inventory')
         for item in execution['inputs']:
             keys(item, ['file', 'sha256'], 'input')
             require(isinstance(item['sha256'], str) and SHA.fullmatch(item['sha256']), 'Invalid input hash')
-        expected = INPUTS if execution['adapter'] == ADAPTER else MANGA_INPUTS
+        if execution['adapter'] == MANGA_V2_ADAPTER:
+            require(execution['inputs'], 'Missing versioned recipe input')
+            expected = runpy.run_path(str(ROOT / MANGA_V2_GENERATOR))['input_files'](ROOT, execution['inputs'][0]['file'])
+        else:
+            expected = INPUTS if execution['adapter'] == ADAPTER else MANGA_INPUTS
         require([i['file'] for i in execution['inputs']] == expected, 'Adapter input inventory must match the fixed recipe')
         for field in ['maxEntities', 'maxClaims']:
             require(type(execution[field]) is int and 1 <= execution[field] <= 10000, f'Invalid {field}')
@@ -207,8 +213,19 @@ def status(registry, value):
         return 'approval-invalid'
 
 
-def plan(adapter=ADAPTER):
-    require(adapter in [ADAPTER, MANGA_ADAPTER], 'Adapter is not allowlisted')
+def plan(adapter=ADAPTER, recipe=None):
+    require(adapter in [ADAPTER, MANGA_ADAPTER, MANGA_V2_ADAPTER], 'Adapter is not allowlisted')
+    if adapter == MANGA_V2_ADAPTER:
+        collector = runpy.run_path(str(ROOT / MANGA_V2_GENERATOR))
+        paths = collector['input_files'](ROOT, recipe)
+        value = read(ROOT / recipe)
+        base = read(ROOT / value['baseRelease'] / 'data.json')
+        code = content_hash({p: file_hash(ROOT / p) for p in ['scripts/collection-themes.py', MANGA_GENERATOR, MANGA_V2_GENERATOR]})
+        return {'adapter': adapter, 'codeSha256': code,
+                'inputs': [{'file': p, 'sha256': file_hash(ROOT / p)} for p in paths],
+                'maxEntities': len(base['entities']) + value['outputPolicy']['maxNewEntities'],
+                'maxClaims': len(base['claims']) + value['outputPolicy']['maxNewClaims']}
+    require(recipe is None, 'Legacy adapters use their fixed recipe')
     if adapter == MANGA_ADAPTER:
         # Bind dispatch/approval enforcement as well as the external acquisition code.
         code = content_hash({p: file_hash(ROOT / p) for p in ['scripts/collection-themes.py', MANGA_GENERATOR]})
@@ -222,8 +239,11 @@ def plan(adapter=ADAPTER):
 
 def verify_execution(execution):
     require(execution is not None, 'No executable adapter: export the approved definition or review a revision with execution conditions')
-    current = plan(execution['adapter'])
-    for field in ['adapter', 'codeSha256', 'inputs']:
+    current = plan(execution['adapter'], execution['inputs'][0]['file'] if execution['adapter'] == MANGA_V2_ADAPTER else None)
+    fields = ['adapter', 'codeSha256', 'inputs']
+    if execution['adapter'] == MANGA_V2_ADAPTER:
+        fields += ['maxEntities', 'maxClaims']
+    for field in fields:
         require(execution[field] == current[field], f'Execution {field} changed; a new revision and review are required')
 
 
@@ -250,8 +270,9 @@ def technical_validation(directory):
 
 
 def generate(execution, staging):
-    if execution['adapter'] == MANGA_ADAPTER:
-        module = runpy.run_path(str(ROOT / MANGA_GENERATOR))
+    if execution['adapter'] in [MANGA_ADAPTER, MANGA_V2_ADAPTER]:
+        generator = MANGA_GENERATOR if execution['adapter'] == MANGA_ADAPTER else MANGA_V2_GENERATOR
+        module = runpy.run_path(str(ROOT / generator))
         summary = module['build'](ROOT, execution, staging, staging.parent / 'request-cache')
         summary['validation'] = technical_validation(staging / 'validation-only')
         summary['validationMode'] = 'temporary-public-projection; retained-candidate-claims-stay-hidden'
@@ -364,7 +385,8 @@ def parser():
     item = commands.add_parser('register')
     item.add_argument('--file', type=Path, required=True)
     item = commands.add_parser('plan')
-    item.add_argument('adapter', choices=[ADAPTER, MANGA_ADAPTER])
+    item.add_argument('adapter', choices=[ADAPTER, MANGA_ADAPTER, MANGA_V2_ADAPTER])
+    item.add_argument('--recipe', help='Reviewed versioned recipe path; required for manga-discovery-v2')
     for command in ['review', 'approve', 'revoke', 'export', 'run']:
         item = commands.add_parser(command)
         item.add_argument('theme_id')
@@ -384,7 +406,7 @@ def execute(args):
     registry, jobs = args.registry.resolve(), args.jobs.resolve()
     require(registry != jobs, 'Registry and jobs must use different directories')
     if args.command == 'plan':
-        return plan(args.adapter)
+        return plan(args.adapter, getattr(args, 'recipe', None))
     with locked(registry):
         if args.command == 'register':
             value = validate(read(args.file))

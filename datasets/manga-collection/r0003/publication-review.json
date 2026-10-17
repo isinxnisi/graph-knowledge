@@ -1,0 +1,956 @@
+{
+  "status": "editorial-publication-review-not-human-approval",
+  "provider": "国立国会図書館作成書誌（iss-ndl-opac）",
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "terms": "https://ndlsearch.ndl.go.jp/help/api/provider",
+  "records": [
+    {
+      "name": "パイナップルARMY",
+      "isbn13": "9784091810816",
+      "status": "ndl-bibliography-checked-not-accepted",
+      "record": {
+        "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I000001794923",
+        "isbn13": [
+          "9784091810816"
+        ],
+        "title": [
+          "パイナップルarmy. 1"
+        ],
+        "mainTitles": [
+          "パイナップルarmy"
+        ],
+        "volume": [
+          "1"
+        ],
+        "edition": [],
+        "responsibilities": [
+          "浦沢直樹 画",
+          "工藤かずや 作"
+        ],
+        "publisher": [
+          "小学館"
+        ],
+        "language": [
+          "jpn"
+        ],
+        "genre": [
+          "漫画"
+        ]
+      },
+      "acquisition": {
+        "queryKind": "planning-title-creator-search",
+        "rawResponseSha256": "6c1e2c3ca14918d24cdcbbe96ae00cfe9f409fbecd20e5b9c72419ec89f430f3",
+        "cacheFile": ".local/collection-trials/r0003-planning/planning-ndl-00.body"
+      }
+    },
+    {
+      "name": "あさドラ！",
+      "isbn13": "9784098602780",
+      "status": "ndl-bibliography-checked-not-accepted",
+      "record": {
+        "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I029585250",
+        "isbn13": [
+          "9784098602780"
+        ],
+        "title": [
+          "あさドラ! : 連続漫画小説. volume1"
+        ],
+        "mainTitles": [
+          "あさドラ! : 連続漫画小説"
+        ],
+        "volume": [
+          "volume1"
+        ],
+        "edition": [],
+        "responsibilities": [
+          "浦沢直樹 著"
+        ],
+        "publisher": [
+          "小学館"
+        ],
+        "language": [
+          "jpn"
+        ],
+        "genre": [
+          "漫画"
+        ]
+      },
+      "acquisition": {
+        "queryKind": "planning-title-creator-search",
+        "rawResponseSha256": "a8946a472763d380783d844fdc8d4058dad569e5c0b6e81407bf682192531660",
+        "cacheFile": ".local/collection-trials/r0003-planning/planning-ndl-01.body"
+      }
+    },
+    {
+      "name": "サンクチュアリ",
+      "isbn13": "9784091823618",
+      "status": "ndl-bibliography-checked-not-accepted",
+      "record": {
+        "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I000002071177",
+        "isbn13": [
+          "9784091823618"
+        ],
+        "title": [
+          "サンクチュアリ. 1"
+        ],
+        "mainTitles": [
+          "サンクチュアリ"
+        ],
+        "volume": [
+          "1"
+        ],
+        "edition": [],
+        "responsibilities": [
+          "池上遼一 作画",
+          "史村翔 原作"
+        ],
+        "publisher": [
+          "小学館"
+        ],
+        "language": [
+          "jpn"
+        ],
+        "genre": [
+          "漫画"
+        ]
+      },
+      "acquisition": {
+        "queryKind": "planning-title-creator-search",
+        "rawResponseSha256": "c39cbbdf92e95a58d06cb6fca8cd38beb5d29264395171081a26aa1eb366adc0",
+        "cacheFile": ".local/collection-trials/r0003-planning/planning-ndl-02.body"
+      }
+    },
+    {
+      "name": "バクマン。",
+      "isbn13": "9784086196901",
+      "status": "ndl-bibliography-checked-not-accepted",
+      "record": {
+        "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I028322829",
+        "isbn13": [
+          "9784086196901"
+        ],
+        "title": [
+          "バクマン。. 1"
+        ],
+        "mainTitles": [
+          "バクマン。"
+        ],
+        "volume": [
+          "1"
+        ],
+        "edition": [],
+        "responsibilities": [
+          "大場つぐみ 原作",
+          "小畑健 漫画"
+        ],
+        "publisher": [
+          "集英社"
+        ],
+        "language": [
+          "jpn"
+        ],
+        "genre": [
+          "漫画"
+        ]
+      },
+      "acquisition": {
+        "queryKind": "planning-title-creator-search",
+        "rawResponseSha256": "112f98273de4879e1cd6186b62365f17b3c58f802ff10be88b6d497036febcbf",
+        "cacheFile": ".local/collection-trials/r0003-planning/planning-ndl-03.body"
+      }
+    },
+    {
+      "name": "サムライ8 八丸伝",
+      "isbn13": "9784088820224",
+      "status": "ndl-bibliography-checked-not-accepted",
+      "record": {
+        "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I029974140",
+        "isbn13": [
+          "9784088820224"
+        ],
+        "title": [
+          "サムライ8八丸伝. 01"
+        ],
+        "mainTitles": [
+          "サムライ8八丸伝"
+        ],
+        "volume": [
+          "01"
+        ],
+        "edition": [],
+        "responsibilities": [
+          "岸本斉史 原作",
+          "大久保彰 作画"
+        ],
+        "publisher": [
+          "集英社"
+        ],
+        "language": [
+          "jpn"
+        ],
+        "genre": [
+          "漫画"
+        ]
+      },
+      "acquisition": {
+        "queryKind": "planning-title-creator-search",
+        "rawResponseSha256": "2a06b2b2fe17c36ee9aa74864e7ff69157bf283630844839bbacae6e5c2f149b",
+        "cacheFile": ".local/collection-trials/r0003-planning/planning-ndl-04.body"
+      }
+    },
+    {
+      "name": "【推しの子】",
+      "isbn13": "9784088916507",
+      "status": "ndl-bibliography-checked-not-accepted",
+      "record": {
+        "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I030509435",
+        "isbn13": [
+          "9784088916507"
+        ],
+        "title": [
+          "推しの子. 1"
+        ],
+        "mainTitles": [
+          "推しの子"
+        ],
+        "volume": [
+          "1"
+        ],
+        "edition": [],
+        "responsibilities": [
+          "赤坂アカ, 横槍メンゴ 著"
+        ],
+        "publisher": [
+          "集英社"
+        ],
+        "language": [
+          "jpn"
+        ],
+        "genre": [
+          "漫画"
+        ]
+      },
+      "acquisition": {
+        "queryKind": "planning-title-creator-search",
+        "rawResponseSha256": "6c21fa609ce6afd292629a7f72bdc7f22918f4ea0eb0bad7e6d312d4b642658c",
+        "cacheFile": ".local/collection-trials/r0003-planning/planning-ndl-05.body"
+      }
+    },
+    {
+      "name": "葬送のフリーレン",
+      "isbn13": "9784098501809",
+      "status": "ndl-bibliography-checked-not-accepted",
+      "record": {
+        "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I030560687",
+        "isbn13": [
+          "9784098501809"
+        ],
+        "title": [
+          "葬送のフリーレン = FRIEREN. VOL.1"
+        ],
+        "mainTitles": [
+          "葬送のフリーレン"
+        ],
+        "volume": [
+          "VOL.1"
+        ],
+        "edition": [],
+        "responsibilities": [
+          "山田鐘人 原作",
+          "アベツカサ 作画"
+        ],
+        "publisher": [
+          "小学館"
+        ],
+        "language": [
+          "jpn"
+        ],
+        "genre": [
+          "漫画"
+        ]
+      },
+      "acquisition": {
+        "queryKind": "planning-title-creator-search",
+        "rawResponseSha256": "3f08ca30201fadc267cb4bc2fccd55aaa9101e1246d926e27679b2d181179c53",
+        "cacheFile": ".local/collection-trials/r0003-planning/planning-ndl-06.body"
+      }
+    },
+    {
+      "name": "クズの本懐",
+      "isbn13": "9784757538870",
+      "status": "ndl-bibliography-checked-not-accepted",
+      "record": {
+        "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I024280614",
+        "isbn13": [
+          "9784757538870"
+        ],
+        "title": [
+          "クズの本懐. 1"
+        ],
+        "mainTitles": [
+          "クズの本懐"
+        ],
+        "volume": [
+          "1"
+        ],
+        "edition": [],
+        "responsibilities": [
+          "横槍メンゴ 著"
+        ],
+        "publisher": [
+          "スクウェア・エニックス"
+        ],
+        "language": [
+          "jpn"
+        ],
+        "genre": [
+          "漫画"
+        ]
+      },
+      "acquisition": {
+        "queryKind": "exact-isbn-iss-ndl-opac-max5",
+        "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&maximumRecords=5&query=isbn%3D%229784757538870%22+AND+dpid%3Diss-ndl-opac",
+        "sha256": "eb74a333a7f949dfc30a0b654332513af4dda1d0be0f2e760cf283072577d516",
+        "bytes": 7415,
+        "fetchedAt": "2026-10-17T05:04:05+00:00"
+      }
+    },
+    {
+      "name": "ポーの一族",
+      "isbn13": "9784091912510",
+      "status": "ndl-bibliography-checked-not-accepted",
+      "record": {
+        "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I000002674181",
+        "isbn13": [
+          "9784091912510"
+        ],
+        "title": [
+          "ポーの一族. 第1巻"
+        ],
+        "mainTitles": [
+          "ポーの一族"
+        ],
+        "volume": [
+          "第1巻"
+        ],
+        "edition": [],
+        "responsibilities": [
+          "萩尾望都 著"
+        ],
+        "publisher": [
+          "小学館"
+        ],
+        "language": [
+          "jpn"
+        ],
+        "genre": [
+          "漫画"
+        ]
+      },
+      "acquisition": {
+        "queryKind": "exact-isbn-iss-ndl-opac-max5",
+        "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&maximumRecords=5&query=isbn%3D%229784091912510%22+AND+dpid%3Diss-ndl-opac",
+        "sha256": "8a79134272e407b9a1c2e39d08f9f25187cce42dc947e1f052e8552af911b41d",
+        "bytes": 24944,
+        "fetchedAt": "2026-10-17T04:58:42+00:00"
+      }
+    },
+    {
+      "name": "11人いる！",
+      "isbn13": "9784091910110",
+      "status": "ndl-bibliography-checked-not-accepted",
+      "record": {
+        "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I000002361592",
+        "isbn13": [
+          "9784091910110"
+        ],
+        "title": [
+          "11人いる!"
+        ],
+        "mainTitles": [
+          "11人いる!"
+        ],
+        "volume": [],
+        "edition": [],
+        "responsibilities": [
+          "萩尾望都 著"
+        ],
+        "publisher": [
+          "小学館"
+        ],
+        "language": [
+          "jpn"
+        ],
+        "genre": [
+          "漫画"
+        ]
+      },
+      "acquisition": {
+        "queryKind": "exact-isbn-iss-ndl-opac-max5",
+        "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&maximumRecords=5&query=isbn%3D%229784091910110%22+AND+dpid%3Diss-ndl-opac",
+        "sha256": "b4bdfd4fe9ab194c4bba70bf3dfedb7c5d099ddb5c71c7f7ef9517d355f55139",
+        "bytes": 27999,
+        "fetchedAt": "2026-10-17T04:58:54+00:00"
+      }
+    },
+    {
+      "name": "風と木の詩",
+      "isbn13": "9784592881513",
+      "status": "ndl-bibliography-checked-not-accepted",
+      "record": {
+        "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I000002388586",
+        "isbn13": [
+          "9784592881513"
+        ],
+        "title": [
+          "風と木の詩. 第1巻"
+        ],
+        "mainTitles": [
+          "風と木の詩"
+        ],
+        "volume": [
+          "第1巻"
+        ],
+        "edition": [],
+        "responsibilities": [
+          "竹宮恵子 著"
+        ],
+        "publisher": [
+          "白泉社"
+        ],
+        "language": [
+          "jpn"
+        ],
+        "genre": [
+          "漫画"
+        ]
+      },
+      "acquisition": {
+        "queryKind": "exact-isbn-iss-ndl-opac-max5",
+        "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&maximumRecords=5&query=isbn%3D%229784592881513%22+AND+dpid%3Diss-ndl-opac",
+        "sha256": "9fa61de705b8e1513c49968848a2d8e67666f97d184d0235cb0650e063f4a78e",
+        "bytes": 23410,
+        "fetchedAt": "2026-10-17T04:58:55+00:00"
+      }
+    },
+    {
+      "name": "地球へ…",
+      "isbn13": "9784757520097",
+      "status": "ndl-bibliography-checked-not-accepted",
+      "record": {
+        "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I000008533176",
+        "isbn13": [
+          "9784757520097"
+        ],
+        "title": [
+          "地球へ…. 1"
+        ],
+        "mainTitles": [
+          "地球へ…"
+        ],
+        "volume": [
+          "1"
+        ],
+        "edition": [],
+        "responsibilities": [
+          "竹宮惠子 著"
+        ],
+        "publisher": [
+          "スクウェア・エニックス"
+        ],
+        "language": [
+          "jpn"
+        ],
+        "genre": [
+          "漫画"
+        ]
+      },
+      "acquisition": {
+        "queryKind": "planning-title-creator-search",
+        "rawResponseSha256": "8cc24359b8bd9600dc37cee2336a6b7ffe08f05d45a43c00b132a532d0478e70",
+        "cacheFile": ".local/collection-trials/r0003-planning/planning-ndl-11.body"
+      }
+    },
+    {
+      "name": "BASARA",
+      "isbn13": "9784091914316",
+      "status": "ndl-bibliography-checked-not-accepted",
+      "record": {
+        "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I000003065584",
+        "isbn13": [
+          "9784091914316"
+        ],
+        "title": [
+          "Basara. 第1巻"
+        ],
+        "mainTitles": [
+          "Basara"
+        ],
+        "volume": [
+          "第1巻"
+        ],
+        "edition": [],
+        "responsibilities": [
+          "田村由美 著"
+        ],
+        "publisher": [
+          "小学館"
+        ],
+        "language": [
+          "jpn"
+        ],
+        "genre": [
+          "漫画"
+        ]
+      },
+      "acquisition": {
+        "queryKind": "exact-isbn-iss-ndl-opac-max5",
+        "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&maximumRecords=5&query=isbn%3D%229784091914316%22+AND+dpid%3Diss-ndl-opac",
+        "sha256": "ff8eaa932dbc230ccdc7b23b2338105418a0989022daf5e888bc1359364eaac0",
+        "bytes": 9298,
+        "fetchedAt": "2026-10-17T05:03:47+00:00"
+      }
+    },
+    {
+      "name": "7SEEDS",
+      "isbn13": "9784091380135",
+      "status": "ndl-bibliography-checked-not-accepted",
+      "record": {
+        "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I000003074463",
+        "isbn13": [
+          "9784091380135"
+        ],
+        "title": [
+          "7 seeds. 1"
+        ],
+        "mainTitles": [
+          "7 seeds"
+        ],
+        "volume": [
+          "1"
+        ],
+        "edition": [],
+        "responsibilities": [
+          "田村由美 著"
+        ],
+        "publisher": [
+          "小学館"
+        ],
+        "language": [
+          "jpn"
+        ],
+        "genre": [
+          "漫画"
+        ]
+      },
+      "acquisition": {
+        "queryKind": "planning-title-creator-search",
+        "rawResponseSha256": "4c7a18cb9b2b634612e1778be72d68ecf62e1e1738065cff6d92b38f1d0b01b4",
+        "cacheFile": ".local/collection-trials/r0003-planning/planning-ndl-13.body"
+      }
+    },
+    {
+      "name": "うる星やつら",
+      "isbn13": "9784091228017",
+      "status": "ndl-bibliography-checked-not-accepted",
+      "record": {
+        "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I000002007879",
+        "isbn13": [
+          "9784091228017"
+        ],
+        "title": [
+          "うる星やつら. 1"
+        ],
+        "mainTitles": [
+          "うる星やつら"
+        ],
+        "volume": [
+          "1"
+        ],
+        "edition": [],
+        "responsibilities": [
+          "高橋留美子 著"
+        ],
+        "publisher": [
+          "小学館"
+        ],
+        "language": [
+          "jpn"
+        ],
+        "genre": [
+          "漫画"
+        ]
+      },
+      "acquisition": {
+        "queryKind": "planning-title-creator-search",
+        "rawResponseSha256": "d424fcb0bd9b5e3b4ac6217c1005d56684a65e967fcaa6746b6fb8a6999faade",
+        "cacheFile": ".local/collection-trials/r0003-planning/planning-ndl-14.body"
+      }
+    },
+    {
+      "name": "らんま1/2",
+      "isbn13": "9784091220318",
+      "status": "ndl-bibliography-checked-not-accepted",
+      "record": {
+        "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I000001908766",
+        "isbn13": [
+          "9784091220318"
+        ],
+        "title": [
+          "らんま1/2. 1"
+        ],
+        "mainTitles": [
+          "らんま1/2"
+        ],
+        "volume": [
+          "1"
+        ],
+        "edition": [],
+        "responsibilities": [
+          "高橋留美子 著"
+        ],
+        "publisher": [
+          "小学館"
+        ],
+        "language": [
+          "jpn"
+        ],
+        "genre": [
+          "漫画"
+        ]
+      },
+      "acquisition": {
+        "queryKind": "exact-isbn-iss-ndl-opac-max5",
+        "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&maximumRecords=5&query=isbn%3D%229784091220318%22+AND+dpid%3Diss-ndl-opac",
+        "sha256": "5eec867879dafce2cae422fb3bc111cc955835ac0409d14d2c711f01a8d525d2",
+        "bytes": 33012,
+        "fetchedAt": "2026-10-17T05:03:50+00:00"
+      }
+    },
+    {
+      "name": "ブラック・ジャック",
+      "isbn13": "9784253169813",
+      "status": "ndl-bibliography-checked-not-accepted",
+      "record": {
+        "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I000002271468",
+        "isbn13": [
+          "9784253169813"
+        ],
+        "title": [
+          "Black Jack. 1"
+        ],
+        "mainTitles": [
+          "Black Jack"
+        ],
+        "volume": [
+          "1"
+        ],
+        "edition": [],
+        "responsibilities": [
+          "手塚治虫 著"
+        ],
+        "publisher": [
+          "秋田書店"
+        ],
+        "language": [
+          "jpn"
+        ],
+        "genre": [
+          "漫画"
+        ]
+      },
+      "acquisition": {
+        "queryKind": "exact-isbn-iss-ndl-opac-max5",
+        "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&maximumRecords=5&query=isbn%3D%229784253169813%22+AND+dpid%3Diss-ndl-opac",
+        "sha256": "4802d4070e7de695b8ca166a6343536d8124795f42d1cc162489f918b2475576",
+        "bytes": 55204,
+        "fetchedAt": "2026-10-17T05:01:19+00:00"
+      }
+    },
+    {
+      "name": "天才バカボン",
+      "isbn13": "9784884752934",
+      "status": "ndl-bibliography-checked-not-accepted",
+      "record": {
+        "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I000002541967",
+        "isbn13": [
+          "9784884752934"
+        ],
+        "title": [
+          "天才バカボン. 1"
+        ],
+        "mainTitles": [
+          "天才バカボン"
+        ],
+        "volume": [
+          "1"
+        ],
+        "edition": [],
+        "responsibilities": [
+          "赤塚不二夫 著"
+        ],
+        "publisher": [
+          "竹書房"
+        ],
+        "language": [
+          "jpn"
+        ],
+        "genre": [
+          "漫画"
+        ]
+      },
+      "acquisition": {
+        "queryKind": "exact-isbn-iss-ndl-opac-max5",
+        "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&maximumRecords=5&query=isbn%3D%229784884752934%22+AND+dpid%3Diss-ndl-opac",
+        "sha256": "c42b6750337660bd2d0c1629bc5a291e90cf1aa04a3c9baf2ca091d533aa6989",
+        "bytes": 18120,
+        "fetchedAt": "2026-10-17T05:00:46+00:00"
+      }
+    },
+    {
+      "name": "AKIRA",
+      "isbn13": "9784061037113",
+      "status": "ndl-bibliography-checked-not-accepted",
+      "record": {
+        "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I000002247557",
+        "isbn13": [
+          "9784061037113"
+        ],
+        "title": [
+          "Akira. part 1 (鉄雄)"
+        ],
+        "mainTitles": [
+          "Akira"
+        ],
+        "volume": [
+          "part 1 (鉄雄)"
+        ],
+        "edition": [],
+        "responsibilities": [
+          "大友克洋 著"
+        ],
+        "publisher": [
+          "講談社"
+        ],
+        "language": [
+          "jpn"
+        ],
+        "genre": [
+          "漫画"
+        ]
+      },
+      "acquisition": {
+        "queryKind": "exact-isbn-iss-ndl-opac-max5",
+        "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&maximumRecords=5&query=isbn%3D%229784061037113%22+AND+dpid%3Diss-ndl-opac",
+        "sha256": "50abcc0a625339b0ab6788f024cf7b7036d6c5b1afeaff8e2cc1619abed74eae",
+        "bytes": 36084,
+        "fetchedAt": "2026-10-17T05:00:52+00:00"
+      }
+    },
+    {
+      "name": "童夢",
+      "isbn13": "9784065262634",
+      "status": "ndl-bibliography-checked-not-accepted",
+      "record": {
+        "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I031906385",
+        "isbn13": [
+          "9784065262634"
+        ],
+        "title": [
+          "OTOMO THE COMPLETE WORKS. 8"
+        ],
+        "mainTitles": [
+          "OTOMO THE COMPLETE WORKS"
+        ],
+        "volume": [
+          "8"
+        ],
+        "edition": [],
+        "responsibilities": [
+          "大友克洋 著"
+        ],
+        "publisher": [
+          "講談社"
+        ],
+        "language": [
+          "jpn"
+        ],
+        "genre": [
+          "漫画"
+        ]
+      },
+      "acquisition": {
+        "queryKind": "exact-isbn-iss-ndl-opac-max5",
+        "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&maximumRecords=5&query=isbn%3D%229784065262634%22+AND+dpid%3Diss-ndl-opac",
+        "sha256": "eecccca238d2c7dcab713da1d731914cf757265210cb295ecf0f117290bb1a5d",
+        "bytes": 15143,
+        "fetchedAt": "2026-10-17T05:04:13+00:00"
+      },
+      "publisherConfirmation": {
+        "url": "https://www.kodansha.co.jp/comic/products/0000359052",
+        "isbn13": "9784065262634",
+        "workTitle": "童夢",
+        "publicationScopeNote": "出版社がISBN9784065262634の収録作品を童夢と明示。NDL主書名はOTOMO THE COMPLETE WORKS・巻8。漫画童夢の第8巻・全全集の著作関与へ外挿しない。"
+      }
+    },
+    {
+      "name": "ORIGIN",
+      "isbn13": "9784063829082",
+      "status": "ndl-bibliography-checked-not-accepted",
+      "record": {
+        "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I027811662",
+        "isbn13": [
+          "9784063829082"
+        ],
+        "title": [
+          "ORIGIN. 1"
+        ],
+        "mainTitles": [
+          "ORIGIN"
+        ],
+        "volume": [
+          "1"
+        ],
+        "edition": [],
+        "responsibilities": [
+          "Boichi 著"
+        ],
+        "publisher": [
+          "講談社"
+        ],
+        "language": [
+          "jpn"
+        ],
+        "genre": [
+          "漫画"
+        ]
+      },
+      "acquisition": {
+        "queryKind": "exact-isbn-iss-ndl-opac-max5",
+        "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&maximumRecords=5&query=isbn%3D%229784063829082%22+AND+dpid%3Diss-ndl-opac",
+        "sha256": "6b727efd7a349cc36eb403f892a0f4ccac207b50773c16326277c11819080237",
+        "bytes": 11104,
+        "fetchedAt": "2026-10-17T05:03:57+00:00"
+      }
+    },
+    {
+      "name": "ファイアパンチ",
+      "isbn13": "9784088807317",
+      "status": "ndl-bibliography-checked-not-accepted",
+      "record": {
+        "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I027447634",
+        "isbn13": [
+          "9784088807317"
+        ],
+        "title": [
+          "ファイアパンチ = FIRE PUNCH. 1"
+        ],
+        "mainTitles": [
+          "ファイアパンチ"
+        ],
+        "volume": [
+          "1"
+        ],
+        "edition": [],
+        "responsibilities": [
+          "藤本タツキ 著"
+        ],
+        "publisher": [
+          "集英社"
+        ],
+        "language": [
+          "jpn"
+        ],
+        "genre": [
+          "漫画"
+        ]
+      },
+      "acquisition": {
+        "queryKind": "exact-isbn-iss-ndl-opac-max5",
+        "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&maximumRecords=5&query=isbn%3D%229784088807317%22+AND+dpid%3Diss-ndl-opac",
+        "sha256": "a22d8c70985cf22e882058dc9fd4d78bb54746aa9c8b2161d39c9f8f06576051",
+        "bytes": 9603,
+        "fetchedAt": "2026-10-17T05:01:13+00:00"
+      }
+    },
+    {
+      "name": "北斗の拳",
+      "isbn13": "9784086172837",
+      "status": "ndl-bibliography-checked-not-accepted",
+      "record": {
+        "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I000002600976",
+        "isbn13": [
+          "9784086172837"
+        ],
+        "title": [
+          "北斗の拳. 1"
+        ],
+        "mainTitles": [
+          "北斗の拳"
+        ],
+        "volume": [
+          "1"
+        ],
+        "edition": [],
+        "responsibilities": [
+          "武論尊 作",
+          "原哲夫 画"
+        ],
+        "publisher": [
+          "集英社"
+        ],
+        "language": [
+          "jpn"
+        ],
+        "genre": [
+          "漫画"
+        ]
+      },
+      "acquisition": {
+        "queryKind": "planning-title-creator-search",
+        "rawResponseSha256": "1606745cc4a1a496e2b34f990b9e0583e23e55f1c6a1088008777c3f22e46a91",
+        "cacheFile": ".local/collection-trials/r0003-planning/planning-ndl-22.body"
+      }
+    },
+    {
+      "name": "モブサイコ100",
+      "isbn13": "9784091241023",
+      "status": "ndl-bibliography-checked-not-accepted",
+      "record": {
+        "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I024077257",
+        "isbn13": [
+          "9784091241023"
+        ],
+        "title": [
+          "モブサイコ100. 1"
+        ],
+        "mainTitles": [
+          "モブサイコ100"
+        ],
+        "volume": [
+          "1"
+        ],
+        "edition": [],
+        "responsibilities": [
+          "ONE 著"
+        ],
+        "publisher": [
+          "小学館"
+        ],
+        "language": [
+          "jpn"
+        ],
+        "genre": [
+          "漫画"
+        ]
+      },
+      "acquisition": {
+        "queryKind": "exact-isbn-iss-ndl-opac-max5",
+        "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&maximumRecords=5&query=isbn%3D%229784091241023%22+AND+dpid%3Diss-ndl-opac",
+        "sha256": "d07038da1d74587d83de3309b01e50f3db6fd2cf678abe3339da6dca255c8c3a",
+        "bytes": 10946,
+        "fetchedAt": "2026-10-17T05:04:39+00:00"
+      }
+    }
+  ]
+}

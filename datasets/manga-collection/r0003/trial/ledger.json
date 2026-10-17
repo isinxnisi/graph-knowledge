@@ -1,0 +1,406 @@
+{
+  "schemaVersion": 2,
+  "status": "pending-human-acceptance",
+  "recipe": "manga-r0003",
+  "collectionContext": {
+    "themeId": "isolated-manga-v2-live-trial",
+    "themeRevision": 1,
+    "definitionSha256": "eb30737cc86824bfaba756f359993e49ec1c6fc198f25e506e4aa1e78b20d658",
+    "approvalSha256": "1b8dd4d0a46b5a6216db5a5ae0e07af1c0cb9a6dbdeb5d98124f4a0f3fe9cd5e"
+  },
+  "execution": {
+    "adapter": "manga-discovery-v2",
+    "codeSha256": "80e05b67bc0129b963653b90df4cfbfa5bd6aff190acda99f54c08541e55801e",
+    "inputs": [
+      {
+        "file": "datasets/manga-collection/r0003/recipe.json",
+        "sha256": "ea4307501ccc164f9039e945b28a1fedcae974e7d9f8917f316a43b5acd729a0"
+      },
+      {
+        "file": "datasets/manga-collection/r0003/anchor-review.json",
+        "sha256": "11300cff2b8a7b3234819d4b47a11f5e9016daf7af94f8cf4ca1838038000669"
+      },
+      {
+        "file": "datasets/manga-collection/r0003/publication-review.json",
+        "sha256": "bdf3ef6f60ea02ef07aedb3119b8cde6bdbefe0e8e7a002895637fdedf2ebb3a"
+      },
+      {
+        "file": "docs/research/famous-manga-creators/20261016/candidates.json",
+        "sha256": "8531fada01e5c635ba2ee278a7ef944a73f64676af14ed42ae0e690f5a1ff978"
+      },
+      {
+        "file": "datasets/public-kg/releases/20261014-credits-001/data.json",
+        "sha256": "ea91b16f52a211b5a8464382ad498b7b2bb2be69a6f33fe125a73a3c7b9da2b5"
+      },
+      {
+        "file": "datasets/public-kg/releases/20261014-credits-001/manifest.json",
+        "sha256": "e4aa3b58ed884f7d1f8fffee43b260261cc2b4d3a867fda942919f439d2bce17"
+      }
+    ],
+    "maxEntities": 2118,
+    "maxClaims": 1853
+  },
+  "identityMappings": [
+    {
+      "name": "池上遼一",
+      "wikidata": "Q1332841",
+      "entityId": "710bc8a7-efed-4c2e-a4b4-6c65b0aff695",
+      "basis": "exact-external-id-or-explicit-catalog-uuid",
+      "reused": true
+    },
+    {
+      "name": "武論尊",
+      "wikidata": "Q1016880",
+      "entityId": "3f22660f-01d7-4a4a-9ae6-f169c9a3dc4a",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "岸本斉史",
+      "wikidata": "Q1993",
+      "entityId": "1edca4c7-0e4e-4769-859c-dde40e7e973a",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "大久保彰",
+      "wikidata": "Q108109758",
+      "entityId": "d4a3f93f-bbcd-42df-9567-2ba4a485bef3",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "山田鐘人",
+      "wikidata": "Q38277627",
+      "entityId": "20b7ba43-d12d-4d39-9a8e-f9e92e9d40d2",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "アベツカサ",
+      "wikidata": "Q105258125",
+      "entityId": "dfaf30df-2f9e-4c63-9fe1-cbbd0a083b36",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "サンクチュアリ",
+      "wikidata": "Q669481",
+      "entityId": "c9080259-3866-4c25-999f-4a5a22046ac1",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "サムライ8 八丸伝",
+      "wikidata": "Q63323229",
+      "entityId": "e7b913dd-7ad1-4288-861d-840cb4a3aeef",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "葬送のフリーレン",
+      "wikidata": "Q98642652",
+      "entityId": "929116a2-77ff-443f-94e6-871c8b78f451",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    }
+  ],
+  "rows": [
+    {
+      "kind": "wikidata-relation",
+      "work": "サンクチュアリ",
+      "property": "P110",
+      "personQid": "Q1332841",
+      "statementId": "Q669481$951289b0-4e1b-e52e-6aac-6141422b3a15",
+      "qualifiers": {},
+      "references": [],
+      "status": "candidate-only-no-role-inference",
+      "reason": "Wikidata propertyだけで具体Roleや直接制作の意味を確定しない"
+    },
+    {
+      "kind": "ndl-credit",
+      "work": "サンクチュアリ",
+      "isbn13": "9784091823618",
+      "rawResponsibility": "池上遼一 作画",
+      "sourceUrl": "https://ndlsearch.ndl.go.jp/books/R100000002-I000002071177",
+      "status": "pending-human-acceptance",
+      "roleId": "DRAWING",
+      "person": "池上遼一",
+      "claimId": "c3fcdaa7-1374-4c62-acab-368dc1ed1bee",
+      "reusedClaim": false,
+      "subjectId": "710bc8a7-efed-4c2e-a4b4-6c65b0aff695",
+      "objectId": "c9080259-3866-4c25-999f-4a5a22046ac1"
+    },
+    {
+      "kind": "ndl-credit",
+      "work": "サンクチュアリ",
+      "isbn13": "9784091823618",
+      "rawResponsibility": "史村翔 原作",
+      "sourceUrl": "https://ndlsearch.ndl.go.jp/books/R100000002-I000002071177",
+      "status": "pending-human-acceptance",
+      "roleId": "ORIGINAL_STORY",
+      "person": "武論尊（史村翔名義を含む）",
+      "claimId": "c19e5b2f-01e2-4233-a7c9-326a1772d7de",
+      "reusedClaim": false,
+      "subjectId": "3f22660f-01d7-4a4a-9ae6-f169c9a3dc4a",
+      "objectId": "c9080259-3866-4c25-999f-4a5a22046ac1"
+    },
+    {
+      "kind": "wikidata-relation",
+      "work": "サムライ8 八丸伝",
+      "property": "P50",
+      "personQid": "Q1993",
+      "statementId": "Q63323229$feea1dca-4990-f121-cd6f-d051b4f0635b",
+      "qualifiers": {},
+      "references": [],
+      "status": "candidate-only-no-role-inference",
+      "reason": "Wikidata propertyだけで具体Roleや直接制作の意味を確定しない"
+    },
+    {
+      "kind": "wikidata-relation",
+      "work": "サムライ8 八丸伝",
+      "property": "P110",
+      "personQid": "Q108109758",
+      "statementId": "Q63323229$7111E89F-16C6-4AF6-82D0-3335F4B98262",
+      "qualifiers": {},
+      "references": [
+        {
+          "hash": "948f60aaee26014c750bcb3306bf9a76bbe6f55f",
+          "snaks": {
+            "P143": [
+              {
+                "snaktype": "value",
+                "property": "P143",
+                "hash": "c6f1777471211df31724ac60175786f3872c83e9",
+                "datavalue": {
+                  "value": {
+                    "entity-type": "item",
+                    "numeric-id": 177837,
+                    "id": "Q177837"
+                  },
+                  "type": "wikibase-entityid"
+                },
+                "datatype": "wikibase-item"
+              }
+            ],
+            "P813": [
+              {
+                "snaktype": "value",
+                "property": "P813",
+                "hash": "48f0e7a98c7b6c7785da77d75ca6f651c3f4e67f",
+                "datavalue": {
+                  "value": {
+                    "time": "+2024-05-21T00:00:00Z",
+                    "timezone": 0,
+                    "before": 0,
+                    "after": 0,
+                    "precision": 11,
+                    "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                  },
+                  "type": "time"
+                },
+                "datatype": "time"
+              }
+            ],
+            "P4656": [
+              {
+                "snaktype": "value",
+                "property": "P4656",
+                "hash": "825fd56112350cce888b2403d6136cddbbdc3840",
+                "datavalue": {
+                  "value": "https://ja.wikipedia.org/w/index.php?title=%E3%82%B5%E3%83%A0%E3%83%A9%E3%82%A48_%E5%85%AB%E4%B8%B8%E4%BC%9D&oldid=97441823",
+                  "type": "string"
+                },
+                "datatype": "url"
+              }
+            ]
+          },
+          "snaks-order": [
+            "P143",
+            "P813",
+            "P4656"
+          ]
+        }
+      ],
+      "status": "candidate-only-no-role-inference",
+      "reason": "Wikidata propertyだけで具体Roleや直接制作の意味を確定しない"
+    },
+    {
+      "kind": "ndl-credit",
+      "work": "サムライ8 八丸伝",
+      "isbn13": "9784088820224",
+      "rawResponsibility": "岸本斉史 原作",
+      "sourceUrl": "https://ndlsearch.ndl.go.jp/books/R100000002-I029974140",
+      "status": "pending-human-acceptance",
+      "roleId": "ORIGINAL_STORY",
+      "person": "岸本斉史",
+      "claimId": "a996412a-7cc9-49d5-8446-9b3cf6a338dd",
+      "reusedClaim": false,
+      "subjectId": "1edca4c7-0e4e-4769-859c-dde40e7e973a",
+      "objectId": "e7b913dd-7ad1-4288-861d-840cb4a3aeef"
+    },
+    {
+      "kind": "ndl-credit",
+      "work": "サムライ8 八丸伝",
+      "isbn13": "9784088820224",
+      "rawResponsibility": "大久保彰 作画",
+      "sourceUrl": "https://ndlsearch.ndl.go.jp/books/R100000002-I029974140",
+      "status": "pending-human-acceptance",
+      "roleId": "DRAWING",
+      "person": "大久保彰",
+      "claimId": "ed33df12-efd1-44bc-84bb-a9d83fa05f8f",
+      "reusedClaim": false,
+      "subjectId": "d4a3f93f-bbcd-42df-9567-2ba4a485bef3",
+      "objectId": "e7b913dd-7ad1-4288-861d-840cb4a3aeef"
+    },
+    {
+      "kind": "wikidata-relation",
+      "work": "葬送のフリーレン",
+      "property": "P50",
+      "personQid": "Q38277627",
+      "statementId": "Q98642652$4137c16b-40cb-7069-01ee-16b5c5be498f",
+      "qualifiers": {},
+      "references": [],
+      "status": "candidate-only-no-role-inference",
+      "reason": "Wikidata propertyだけで具体Roleや直接制作の意味を確定しない"
+    },
+    {
+      "kind": "wikidata-relation",
+      "work": "葬送のフリーレン",
+      "property": "P110",
+      "personQid": "Q105258125",
+      "statementId": "Q98642652$5445ddaa-49fd-2933-c0ec-05e42e317d89",
+      "qualifiers": {},
+      "references": [],
+      "status": "candidate-only-no-role-inference",
+      "reason": "Wikidata propertyだけで具体Roleや直接制作の意味を確定しない"
+    },
+    {
+      "kind": "ndl-credit",
+      "work": "葬送のフリーレン",
+      "isbn13": "9784098501809",
+      "rawResponsibility": "山田鐘人 原作",
+      "sourceUrl": "https://ndlsearch.ndl.go.jp/books/R100000002-I030560687",
+      "status": "pending-human-acceptance",
+      "roleId": "ORIGINAL_STORY",
+      "person": "山田鐘人",
+      "claimId": "431210df-d594-498c-bbd4-9ce93c9dc282",
+      "reusedClaim": false,
+      "subjectId": "20b7ba43-d12d-4d39-9a8e-f9e92e9d40d2",
+      "objectId": "929116a2-77ff-443f-94e6-871c8b78f451"
+    },
+    {
+      "kind": "ndl-credit",
+      "work": "葬送のフリーレン",
+      "isbn13": "9784098501809",
+      "rawResponsibility": "アベツカサ 作画",
+      "sourceUrl": "https://ndlsearch.ndl.go.jp/books/R100000002-I030560687",
+      "status": "pending-human-acceptance",
+      "roleId": "DRAWING",
+      "person": "アベツカサ",
+      "claimId": "36199f3c-f260-473c-a22e-a75911b5fb6d",
+      "reusedClaim": false,
+      "subjectId": "dfaf30df-2f9e-4c63-9fe1-cbbd0a083b36",
+      "objectId": "929116a2-77ff-443f-94e6-871c8b78f451"
+    }
+  ],
+  "holds": [],
+  "acquisitions": [
+    {
+      "kind": "wikidata",
+      "identifier": "Q1332841",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q1332841.json",
+      "sha256": "5b19c00602368b98d05eb556de32a63dc082dc60e3f6bf460c998f83f9221400",
+      "bytes": 51960,
+      "fetchedAt": "2026-10-17T05:12:11+00:00"
+    },
+    {
+      "kind": "wikidata",
+      "identifier": "Q1016880",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q1016880.json",
+      "sha256": "ccbabfe1e4c2acd5a0126d45f3fafa3679dbacd3821108c3ac43e1be61c543a5",
+      "bytes": 43833,
+      "fetchedAt": "2026-10-17T05:12:12+00:00"
+    },
+    {
+      "kind": "wikidata",
+      "identifier": "Q1993",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q1993.json",
+      "sha256": "1cd4e61bac5bf82cee69a57bee79b58c4989372c8d4b540a124add0f440d1f7f",
+      "bytes": 84248,
+      "fetchedAt": "2026-10-17T05:12:15+00:00"
+    },
+    {
+      "kind": "wikidata",
+      "identifier": "Q108109758",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q108109758.json",
+      "sha256": "56f024505f4b2cf7b5aa11ffcbb99077433c39a803c1b2b963ce1e3f94af4610",
+      "bytes": 10302,
+      "fetchedAt": "2026-10-17T05:12:17+00:00"
+    },
+    {
+      "kind": "wikidata",
+      "identifier": "Q38277627",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q38277627.json",
+      "sha256": "4736fe5b59494a4db4ba9f675f122f685dd703e1e944fed63d04aaa45f6eba6c",
+      "bytes": 30629,
+      "fetchedAt": "2026-10-17T05:12:21+00:00"
+    },
+    {
+      "kind": "wikidata",
+      "identifier": "Q105258125",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q105258125.json",
+      "sha256": "94cf54dc7f54ade515b3b6e884e1422a6b6f033682f0edc4de9d0edfa6442713",
+      "bytes": 31778,
+      "fetchedAt": "2026-10-17T05:12:23+00:00"
+    },
+    {
+      "kind": "wikidata",
+      "identifier": "Q669481",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q669481.json",
+      "sha256": "a5d252f8bae7ba24b23c8e27be1c77f98de7a844e45b8e4042ff5516ceec8212",
+      "bytes": 20836,
+      "fetchedAt": "2026-10-17T05:12:27+00:00"
+    },
+    {
+      "kind": "ndl",
+      "identifier": "9784091823618",
+      "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&maximumRecords=5&query=isbn%3D%229784091823618%22+AND+dpid%3Diss-ndl-opac",
+      "sha256": "98cf241933b367852b6abe52573f4d03156b7176e567cf70fec1cf680e960d02",
+      "bytes": 8387,
+      "fetchedAt": "2026-10-17T05:12:32+00:00"
+    },
+    {
+      "kind": "wikidata",
+      "identifier": "Q63323229",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q63323229.json",
+      "sha256": "34e3c7cfb246070a69373cd3ea4a81fb9b14767c71ea714da270fa00876c0512",
+      "bytes": 21749,
+      "fetchedAt": "2026-10-17T05:12:34+00:00"
+    },
+    {
+      "kind": "ndl",
+      "identifier": "9784088820224",
+      "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&maximumRecords=5&query=isbn%3D%229784088820224%22+AND+dpid%3Diss-ndl-opac",
+      "sha256": "896f4a7e244989ee1edcd74b3241d3582ddc3e1d737fe11c470f7a2c699df938",
+      "bytes": 9538,
+      "fetchedAt": "2026-10-17T05:12:36+00:00"
+    },
+    {
+      "kind": "wikidata",
+      "identifier": "Q98642652",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q98642652.json",
+      "sha256": "fc291916fb7651161f2c4c7c2f2afc180735ebcf587bbb6c96f0cef3b8476f73",
+      "bytes": 208729,
+      "fetchedAt": "2026-10-17T05:12:41+00:00"
+    },
+    {
+      "kind": "ndl",
+      "identifier": "9784098501809",
+      "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&maximumRecords=5&query=isbn%3D%229784098501809%22+AND+dpid%3Diss-ndl-opac",
+      "sha256": "8826d00c9d87025e9b7ecb76e42e558a00a373a5bd83254a8634b3bbb5f611d7",
+      "bytes": 19352,
+      "fetchedAt": "2026-10-17T05:12:43+00:00"
+    }
+  ]
+}

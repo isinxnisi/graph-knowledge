@@ -1,0 +1,87 @@
+{
+  "id": "Q105258125",
+  "lastrevid": 2541120902,
+  "labels": {
+    "ja": {
+      "language": "ja",
+      "value": "アベツカサ"
+    },
+    "zh": {
+      "language": "zh",
+      "value": "阿部司"
+    },
+    "en": {
+      "language": "en",
+      "value": "Tsukasa Abe"
+    },
+    "zh-tw": {
+      "language": "zh-tw",
+      "value": "阿部司"
+    },
+    "zh-hans": {
+      "language": "zh-hans",
+      "value": "阿部司"
+    },
+    "zh-hant": {
+      "language": "zh-hant",
+      "value": "阿部司"
+    },
+    "ko": {
+      "language": "ko",
+      "value": "아베 츠카사"
+    },
+    "cs": {
+      "language": "cs",
+      "value": "Tsukasa Abe"
+    },
+    "az": {
+      "language": "az",
+      "value": "Tsukasa Abe (manqaka)"
+    },
+    "id": {
+      "language": "id",
+      "value": "Tsukasa Abe"
+    },
+    "de": {
+      "language": "de",
+      "value": "Tsukasa Abe"
+    }
+  },
+  "aliases": {
+    "cs": [
+      {
+        "language": "cs",
+        "value": "Cukasa Abe"
+      },
+      {
+        "language": "cs",
+        "value": "ツカサ アベ"
+      }
+    ]
+  },
+  "claims": {
+    "P31": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P31",
+          "hash": "ad7d38a03cdd40cdc373de0dc4e7b7fcbccb31d9",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 5,
+              "id": "Q5"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q105258125$DF4BAE48-FB88-4562-A0DB-AB06051F3F61",
+        "rank": "normal"
+      }
+    ],
+    "P50": [],
+    "P110": []
+  }
+}

@@ -1,5 +1,7 @@
 # 漫画収集adapterと初回実行条件のレビュー
 
+2026-10-17後続：[r0003・24作品の収集準備](MANGA_R0003_COLLECTION_PLAN.md)で版別recipeのv2とORIGINAL_STORY対応を追加した。r0003は未承認・正式ジョブ未実行。v1 script・r0002定義／承認／実行artifact・過去release候補は保持。gate拡張後のコードを過去r0002承認で再実行せず、コードhash差を拒否する。以下は初回実行時の履歴として読む。
+
 2026-10-17後続：[4 Claim等の正式受入・release準備](MANGA_R0002_ACCEPTED_RELEASE.md)と[ORIGINAL_STORYの採用実装](ORIGINAL_STORY.md)へ進んだ。原作5件は別のpending候補。r0002のadapter・code/input hash・正式実行artifactは変更していない。新Roleの自動収集対応は新実行版のレビュー後とする。
 
 2026-10-17追記：[r0002の個別受入・公開準備](MANGA_R0002_ACCEPTANCE_REVIEW.md)と[制作Roleレビュー](MANGA_PRODUCTION_ROLE_REVIEW.md)を作成。4 Claim・15新規Entityは受入推奨段階で、人間の個別受入・公開は未実施。保留11件のうちPLUTOの監修・本人の著者は既存Claimを再利用でき、adapterの保留を未収録件数とは扱わない。r0002のコード・入力・定義・正式承認は不変。

@@ -1,0 +1,159 @@
+{
+  "status": "candidate-unapproved-not-executed",
+  "definitionSha256": "371d297eb8cbf700d429711acc018bd46b5619a36ffb2c3ab1903e7f87a7c728",
+  "execution": {
+    "adapter": "manga-discovery-v2",
+    "codeSha256": "80e05b67bc0129b963653b90df4cfbfa5bd6aff190acda99f54c08541e55801e",
+    "inputs": [
+      {
+        "file": "datasets/manga-collection/r0003/recipe.json",
+        "sha256": "eb431b6d6bd450eca85636f5617188f78cc4dc2e0bcdd076f94694ee153faad9"
+      },
+      {
+        "file": "datasets/manga-collection/r0003/anchor-review.json",
+        "sha256": "11300cff2b8a7b3234819d4b47a11f5e9016daf7af94f8cf4ca1838038000669"
+      },
+      {
+        "file": "datasets/manga-collection/r0003/publication-review.json",
+        "sha256": "bdf3ef6f60ea02ef07aedb3119b8cde6bdbefe0e8e7a002895637fdedf2ebb3a"
+      },
+      {
+        "file": "docs/research/famous-manga-creators/20261016/candidates.json",
+        "sha256": "8531fada01e5c635ba2ee278a7ef944a73f64676af14ed42ae0e690f5a1ff978"
+      },
+      {
+        "file": "datasets/public-kg/releases/20261014-credits-001/data.json",
+        "sha256": "ea91b16f52a211b5a8464382ad498b7b2bb2be69a6f33fe125a73a3c7b9da2b5"
+      },
+      {
+        "file": "datasets/public-kg/releases/20261014-credits-001/manifest.json",
+        "sha256": "e4aa3b58ed884f7d1f8fffee43b260261cc2b4d3a867fda942919f439d2bce17"
+      }
+    ],
+    "maxEntities": 2156,
+    "maxClaims": 1916
+  },
+  "mainApprovalExists": false,
+  "mainR0003Jobs": [],
+  "legacyR0002ArtifactsVerified": true,
+  "preservedFiles": [
+    {
+      "file": "datasets/collection-themes/themes/famous-manga-creators/r0002.json",
+      "sha256": "0d02387433880ea563e83cf86707d35e5f6a6925a8663c09b29bcd94851c17ca"
+    },
+    {
+      "file": "datasets/collection-themes/approvals/famous-manga-creators/r0002.json",
+      "sha256": "ae247e12c078f5b03556e3f9fde5f0643598213db670da5280527657ce4f88b7"
+    },
+    {
+      "file": "datasets/manga-collection/v1/recipe.json",
+      "sha256": "88724c3fef2f3e61d40e71cdcf7f90bdd1330d3ffefed9ce4fa6e12698b70ccc"
+    },
+    {
+      "file": "scripts/collect-manga.py",
+      "sha256": "a52864e69386c12e32c62fe5a0bbf7ce6573f8c736acceac1ccd0c1a16dca7cd"
+    },
+    {
+      "file": "datasets/public-kg/releases/20261017-manga-r0002-001/data.json",
+      "sha256": "a52c93f78cbc6a7440dee640d1161d040d88effee494d02045c49637801975db"
+    },
+    {
+      "file": "datasets/public-kg/releases/20261017-manga-r0002-001/manifest.json",
+      "sha256": "5714648b348fff62605f99f3b25c25bc1f22a22e2e4acdaefae7196ddb5712a8"
+    },
+    {
+      "file": "datasets/public-kg/releases/20261017-manga-r0002-002/data.json",
+      "sha256": "6180481328c77abb40d16579d1f0cee34cbda6d8438769a95a23df71536f90aa"
+    },
+    {
+      "file": "datasets/public-kg/releases/20261017-manga-r0002-002/manifest.json",
+      "sha256": "5ae3f008be8c05f29cafa620a5cb0926792bc2984b0e0694a4bf1986032bd87c"
+    }
+  ],
+  "tests": {
+    "python": 31,
+    "vitest": 24,
+    "vocabularyErrors": 0,
+    "roles": 8
+  },
+  "isolatedLiveTrial": {
+    "works": 3,
+    "people": 6,
+    "networkAttempts": 12,
+    "cachedResponses": 12,
+    "attemptStatuses": [
+      "failed",
+      "succeeded"
+    ],
+    "repeatUnchanged": true,
+    "summary": {
+      "kind": "isolated-manga-collection-candidates",
+      "notForCurrentPublicApply": true,
+      "personCandidates": 6,
+      "workCandidates": 3,
+      "reusedEntities": 1,
+      "wikidataRelationCandidates": 5,
+      "ndlCreditRows": 6,
+      "confirmedRoleRelations": 6,
+      "reusedClaims": 0,
+      "citationsAdded": 6,
+      "addedVsFrozenBase": {
+        "entities": 8,
+        "claims": 6,
+        "sources": 3,
+        "citations": 6
+      },
+      "heldByReason": {},
+      "requests": 12,
+      "counts": {
+        "entities": 2117,
+        "claims": 1850,
+        "sources": 1754,
+        "citations": 1886
+      },
+      "validation": {
+        "valid": true,
+        "counts": {
+          "nodes": {
+            "Entity": 2117,
+            "Claim": 1850,
+            "Source": 1754,
+            "Citation": 1886,
+            "ExternalIdentifier": 2486
+          },
+          "relationships": {
+            "SUBJECT": 1850,
+            "OBJECT": 1850,
+            "HAS_CITATION": 1886,
+            "CITES": 1886,
+            "HAS_EXTERNAL_ID": 2486
+          }
+        }
+      },
+      "validationMode": "temporary-public-projection; retained-candidate-claims-stay-hidden"
+    }
+  },
+  "environmentReadOnly": [
+    {
+      "url": "http://127.0.0.1:3200/api/dataset",
+      "status": 200,
+      "dataset": {
+        "dataset": "public-kg",
+        "revision": "82b01515-594c-48ca-b4b6-515eefac83ca"
+      }
+    },
+    {
+      "url": "https://graph-beta.isinxnisi.com/api/dataset",
+      "error": "HTTP Error 403: Forbidden"
+    },
+    {
+      "url": "https://plunode.net/api/dataset",
+      "status": 200,
+      "dataset": {
+        "dataset": "public-kg",
+        "revision": "5e2a94af-9061-4087-bb7a-045a3c0133f4"
+      }
+    }
+  ],
+  "verifiedAt": "2026-10-17T05:17:57+00:00"
+}

@@ -1,0 +1,114 @@
+{
+  "authority": "TEST-SIMULATION only; not formal r0003 approval",
+  "definitionSha256": "eb30737cc86824bfaba756f359993e49ec1c6fc198f25e506e4aa1e78b20d658",
+  "execution": {
+    "adapter": "manga-discovery-v2",
+    "codeSha256": "80e05b67bc0129b963653b90df4cfbfa5bd6aff190acda99f54c08541e55801e",
+    "inputs": [
+      {
+        "file": "datasets/manga-collection/r0003/recipe.json",
+        "sha256": "ea4307501ccc164f9039e945b28a1fedcae974e7d9f8917f316a43b5acd729a0"
+      },
+      {
+        "file": "datasets/manga-collection/r0003/anchor-review.json",
+        "sha256": "11300cff2b8a7b3234819d4b47a11f5e9016daf7af94f8cf4ca1838038000669"
+      },
+      {
+        "file": "datasets/manga-collection/r0003/publication-review.json",
+        "sha256": "bdf3ef6f60ea02ef07aedb3119b8cde6bdbefe0e8e7a002895637fdedf2ebb3a"
+      },
+      {
+        "file": "docs/research/famous-manga-creators/20261016/candidates.json",
+        "sha256": "8531fada01e5c635ba2ee278a7ef944a73f64676af14ed42ae0e690f5a1ff978"
+      },
+      {
+        "file": "datasets/public-kg/releases/20261014-credits-001/data.json",
+        "sha256": "ea91b16f52a211b5a8464382ad498b7b2bb2be69a6f33fe125a73a3c7b9da2b5"
+      },
+      {
+        "file": "datasets/public-kg/releases/20261014-credits-001/manifest.json",
+        "sha256": "e4aa3b58ed884f7d1f8fffee43b260261cc2b4d3a867fda942919f439d2bce17"
+      }
+    ],
+    "maxEntities": 2118,
+    "maxClaims": 1853
+  },
+  "result": {
+    "jobId": "isolated-manga-v2-live-trial-r0001-ced4e7ac32d9a330",
+    "status": "candidate-ready",
+    "unchanged": false,
+    "directory": "/home/isinxnisi/1.projects/7.graph-knowledge/.local/collection-trials/manga-v2-r0003/jobs/isolated-manga-v2-live-trial-r0001-ced4e7ac32d9a330",
+    "summary": {
+      "kind": "isolated-manga-collection-candidates",
+      "notForCurrentPublicApply": true,
+      "personCandidates": 6,
+      "workCandidates": 3,
+      "reusedEntities": 1,
+      "wikidataRelationCandidates": 5,
+      "ndlCreditRows": 6,
+      "confirmedRoleRelations": 6,
+      "reusedClaims": 0,
+      "citationsAdded": 6,
+      "addedVsFrozenBase": {
+        "entities": 8,
+        "claims": 6,
+        "sources": 3,
+        "citations": 6
+      },
+      "heldByReason": {},
+      "requests": 12,
+      "counts": {
+        "entities": 2117,
+        "claims": 1850,
+        "sources": 1754,
+        "citations": 1886
+      },
+      "validation": {
+        "valid": true,
+        "counts": {
+          "nodes": {
+            "Entity": 2117,
+            "Claim": 1850,
+            "Source": 1754,
+            "Citation": 1886,
+            "ExternalIdentifier": 2486
+          },
+          "relationships": {
+            "SUBJECT": 1850,
+            "OBJECT": 1850,
+            "HAS_CITATION": 1886,
+            "CITES": 1886,
+            "HAS_EXTERNAL_ID": 2486
+          }
+        }
+      },
+      "validationMode": "temporary-public-projection; retained-candidate-claims-stay-hidden"
+    }
+  },
+  "repeatUnchanged": true,
+  "jobAttemptStatuses": [
+    "failed",
+    "succeeded"
+  ],
+  "networkAttempts": 12,
+  "cachedResponses": 12,
+  "artifactInventory": {
+    "candidate/data.json": "ae5ddfef0ab524071af0a37a9c63659458bc1e8ea855ee15a0b2da44c6ce44a8",
+    "candidate/manifest.json": "7944c2b974dab227c86f626702e2c65aeba7800cba9e4245bc0145c211fbba96",
+    "ledger.json": "aaabdcf997786c71b8c644f58b6a35353ff2d7d4443d56f18bb7c5b68262ece1",
+    "snapshots/Q1016880.json": "8ff623d6ae7e481270476dee9b5c0bfe8b0c1e5212da01188dc91fd20bdb481e",
+    "snapshots/Q105258125.json": "ec85747697c31302005530c2ed1e2379a3acc02bb11717527b13edf5ea848d2b",
+    "snapshots/Q108109758.json": "6a5e7086a19eb6438332b04b40056187fb3e23cd2b747bce8776c52c50d6e988",
+    "snapshots/Q1332841.json": "4f9ce2e7c22f1596447855e27ea94454ff3fcc62368218bc3a8ed8c58150a14b",
+    "snapshots/Q1993.json": "878fd1312a507e7a8005b06e7e9d0118e493c9c9c55fd7870c5e12e0df4247db",
+    "snapshots/Q38277627.json": "b6cbe2089ff56d7c40b149f38529fa65d1f48139f570420dc254ba5b95206f7e",
+    "snapshots/Q63323229.json": "3309e58e7012af49d64d3ea36f84d74459279da8591b0e4c16a655d0992dedbf",
+    "snapshots/Q669481.json": "613fc627a1caf37ba6917e8b1864c5f1b5068c988d38b6d0c6abba3b586d1bb4",
+    "snapshots/Q98642652.json": "bc843406d72c4aa961fd395734bb4285213ad875d08cb0a3fda7eca1d2f2b046",
+    "snapshots/ndl-9784088820224.json": "f7f9687b36bef75131215977cef14df775f2996e7075bbab381cfbba2d9d0099",
+    "snapshots/ndl-9784091823618.json": "79a965e3b91da67043edbab108167538313928e13ae718151e638c82979b8c2d",
+    "snapshots/ndl-9784098501809.json": "14af08f81e6fe70ff128569ce2a6e9f8cc0421c33ed9414f140fb63179374a64",
+    "summary.json": "3b3459990021417a6ba42718f599caeb916ceb2d9ae027f4d4f907be168b8e9a"
+  },
+  "verifiedAt": "2026-10-17T05:12:50+00:00"
+}

@@ -1,0 +1,113 @@
+{
+  "id": "Q38277627",
+  "lastrevid": 2552355271,
+  "labels": {
+    "ja": {
+      "language": "ja",
+      "value": "山田鐘人"
+    },
+    "en": {
+      "language": "en",
+      "value": "Kanehito Yamada"
+    },
+    "ast": {
+      "language": "ast",
+      "value": "Kanehito Yamada"
+    },
+    "pap": {
+      "language": "pap",
+      "value": "Kanehito Yamada"
+    },
+    "nl": {
+      "language": "nl",
+      "value": "Kanehito Yamada"
+    },
+    "it": {
+      "language": "it",
+      "value": "Kanehito Yamada"
+    },
+    "ga": {
+      "language": "ga",
+      "value": "Kanehito Yamada"
+    },
+    "zh-tw": {
+      "language": "zh-tw",
+      "value": "山田鐘人"
+    },
+    "zh": {
+      "language": "zh",
+      "value": "山田鐘人"
+    },
+    "zh-hans": {
+      "language": "zh-hans",
+      "value": "山田钟人"
+    },
+    "zh-hant": {
+      "language": "zh-hant",
+      "value": "山田鐘人"
+    },
+    "ko": {
+      "language": "ko",
+      "value": "야마다 카네히토"
+    },
+    "tr": {
+      "language": "tr",
+      "value": "Kanehito Yamada"
+    },
+    "cs": {
+      "language": "cs",
+      "value": "Kanehito Yamada"
+    },
+    "gl": {
+      "language": "gl",
+      "value": "Kanehito Yamada"
+    }
+  },
+  "aliases": {
+    "en": [
+      {
+        "language": "en",
+        "value": "Yamada Kanehito"
+      }
+    ],
+    "cs": [
+      {
+        "language": "cs",
+        "value": "鐘人 山田"
+      },
+      {
+        "language": "cs",
+        "value": "カネヒト ヤマダ"
+      },
+      {
+        "language": "cs",
+        "value": "Kanehito Jamada"
+      }
+    ]
+  },
+  "claims": {
+    "P31": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P31",
+          "hash": "ad7d38a03cdd40cdc373de0dc4e7b7fcbccb31d9",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 5,
+              "id": "Q5"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q38277627$7DC05018-A9CC-454B-8AC3-BA0FE9C89E60",
+        "rank": "normal"
+      }
+    ],
+    "P50": [],
+    "P110": []
+  }
+}
