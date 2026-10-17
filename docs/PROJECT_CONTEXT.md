@@ -1,5 +1,7 @@
 # プロジェクトの構想と判断基準
 
+2026-10-17、プロジェクト運営者が漫画r0002の原作5 Claim・6 Entityを追加正式受入した。[9 Claim統合release候補](design/MANGA_R0002_COMBINED_RELEASE.md)は20261017-manga-r0002-002、baseは現行公開版20261014-credits-001。合計13 Entity・9 Claim・7 Source・9 Citationを準備し、旧候補-001と凍結資料を保全する。全環境の公開applyは禁止。村田・小畑のEntity／未受入制作関係、監修の同定、残り94作品の実行は保留。
+
 2026-10-17、運営者がDiscovery Labの現行UIを概ね合格と評価。[暫定採用と正式検索への統合](design/DISCOVERY_SEARCH_ADOPTION.md)としてHome・検索ペインの正式入口へ接続し、既存の空欄／名前／条件一覧・Graph復帰を同一ダイアログで維持する。11世界は編集的関心のまま、未対応表示を残す。収集側・公開KG・会員データは変更しない。
 
 2026-10-17、プロジェクト運営者が漫画r0002の4 Claim・7 Entity・4 Source・4 Citationを正式受入し、ORIGINAL_STORYの意味定義を採用した。[正式受入とrelease候補](design/MANGA_R0002_ACCEPTED_RELEASE.md)、[原作Role契約](design/ORIGINAL_STORY.md)。候補releaseは20261017-manga-r0002-001（base 20261014-credits-001）。公開applyは全環境で未許可・未実施。原作5件は根拠再検証後のpending候補で、残り8 Entityも正式受入外。r0002の承認・入力・adapter・実行履歴は保全する。

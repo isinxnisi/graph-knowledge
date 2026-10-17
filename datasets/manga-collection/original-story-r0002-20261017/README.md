@@ -1,5 +1,7 @@
 # ORIGINAL_STORYの次の個別受入候補
 
+2026-10-17後続：人間がこの5 Claim・6 Entityを正式受入した。[追加受入記録](../accepted-original-story-r0002-20261017/acceptance.json)と[9 Claim統合候補](../../public-kg/releases/20261017-manga-r0002-002/README.md)を参照。以下およびcandidates.jsonは候補化時点の履歴として不変。公開applyは全環境で禁止。
+
 新Roleの人間採用後、凍結r0002のNDL書誌を再確認した5件。[candidates.json](candidates.json) にClaim・Source・Citation・6依存Entityのレコードと、各判断・snapshot hashを保持する。**5 Claimはhidden・pending、人間の正式受入なし、公開releaseへ未収録。** 既存adapterとr0002の承認内容は変更していない。
 
 | 人物 | 漫画 | 日本語第1巻ISBN |

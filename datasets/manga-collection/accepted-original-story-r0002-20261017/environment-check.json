@@ -1,0 +1,65 @@
+{
+  "checkedAt": "2026-10-17T10:41:26+09:00",
+  "local": {
+    "dataset": "public-kg",
+    "revision": "82b01515-594c-48ca-b4b6-515eefac83ca",
+    "datasetStatus": 200,
+    "originalStoryQueryStatus": 200,
+    "originalStoryClaimCount": 0,
+    "matchesLocalWebBuild": true,
+    "localWebBuild": "KSXBMOh_sRI9ZhWrXwsGG",
+    "kgApplyExecuted": false,
+    "webRebuiltThisTask": false
+  },
+  "beta": {
+    "dataset": "public-kg",
+    "revision": "82b01515-594c-48ca-b4b6-515eefac83ca",
+    "datasetStatus": 200,
+    "originalStoryQueryStatus": 200,
+    "originalStoryClaimCount": 0,
+    "matchesLocalWebBuild": true,
+    "localWebBuild": "KSXBMOh_sRI9ZhWrXwsGG",
+    "kgApplyExecuted": false,
+    "webRebuiltThisTask": false
+  },
+  "vps": {
+    "dataset": "public-kg",
+    "revision": "5e2a94af-9061-4087-bb7a-045a3c0133f4",
+    "datasetStatus": 200,
+    "originalStoryQueryStatus": 400,
+    "originalStoryClaimCount": null,
+    "matchesLocalWebBuild": false,
+    "localWebBuild": null,
+    "kgApplyExecuted": false,
+    "webRebuiltThisTask": false
+  },
+  "ssh": {
+    "target": "existing VPS / develop",
+    "status": "unreachable-from-this-WSL",
+    "error": "No route to host (port 22)",
+    "settingsChanged": false,
+    "operatorRoleSupport": "not-inspected; deployed operator validation remains a pre-publication check"
+  },
+  "localWebRestart": {
+    "reason": "3200 stopped before environment inspection; restarted existing verified build with existing .env.public",
+    "configurationChanged": false,
+    "dbMigrationOrApply": false
+  },
+  "acceptedClaimPublicStatus": {
+    "07da4e98-1047-46a4-b48a-30f3549c89f9": 404,
+    "84cb19dd-9e8e-496f-abf6-674885abf185": 404,
+    "cf18d898-41e5-486f-8dcf-8a666bef83fe": 404,
+    "fe6d7c19-646b-474a-ad0a-3b20bc816866": 404,
+    "c3f1e013-68cc-42b7-b076-495178247899": 404,
+    "f638cf0b-3750-49f6-b833-844d5465b99f": 404,
+    "043e8592-5827-4167-9c93-f8201dd110bc": 404,
+    "6ed29ee4-2b62-4fe7-83a6-aafe300754d7": 404,
+    "10f72eb0-3526-4d50-a552-e2239c01fc39": 404
+  },
+  "betaBrowser": {
+    "tests": 1,
+    "passed": 1,
+    "config": "playwright.manga.config.ts",
+    "note": "既存公開KGのRole条件・取消・revision維持・先の4 Claim未公開を確認。新9 Claimはapplyしていない。"
+  }
+}

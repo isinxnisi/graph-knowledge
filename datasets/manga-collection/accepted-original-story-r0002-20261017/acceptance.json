@@ -1,0 +1,371 @@
+{
+  "version": 1,
+  "status": "accepted-for-release-preparation-only",
+  "reviewer": "プロジェクト運営者",
+  "recordedAt": "2026-10-17T10:34:25+09:00",
+  "timeBasis": "今回の人間の追加正式受入指示を記録へ確定した実時刻。過去のCodexレビュー時刻を承認時刻へ読み替えない。",
+  "humanInstruction": "本チャットでORIGINAL_STORY 5 Claimと関連6 Entityの正式受入、および根拠・重複を確認した必要Source/Citationの受入と9 Claim統合release準備を明示承認。全環境の公開applyは禁止。",
+  "sourceGitCommit": "37c6f4abd377a8268b01a4973b59a2911d63e59f",
+  "sourceJobId": "famous-manga-creators-r0002-97c171eb654963e4",
+  "referenceArtifacts": [
+    {
+      "file": "datasets/manga-collection/original-story-r0002-20261017/candidates.json",
+      "sha256": "d13136e8e383bce126e8521bfc1015529210f617da220ccd71a4ce1f9f409348"
+    },
+    {
+      "file": "docs/design/MANGA_R0002_ACCEPTED_RELEASE.md",
+      "sha256": "4f29556605f1b10241e9275b546db5b43495230e60233eade630df59fcb48113"
+    },
+    {
+      "file": "docs/design/ORIGINAL_STORY.md",
+      "sha256": "26cde0cff0d4d3128f6a3b52201f8649cd3f414294f3a81fcddea9f8d54c5a27"
+    },
+    {
+      "file": "datasets/manga-collection/accepted-r0002-20261017/acceptance.json",
+      "sha256": "9b28562b9846970cd30b9261d4659d505e9df06e014d2809d6517aa39836f567"
+    },
+    {
+      "file": "datasets/public-kg/releases/20261017-manga-r0002-001/data.json",
+      "sha256": "a52c93f78cbc6a7440dee640d1161d040d88effee494d02045c49637801975db"
+    },
+    {
+      "file": "datasets/public-kg/releases/20261017-manga-r0002-001/manifest.json",
+      "sha256": "5714648b348fff62605f99f3b25c25bc1f22a22e2e4acdaefae7196ddb5712a8"
+    },
+    {
+      "file": "datasets/public-kg/releases/20261014-credits-001/data.json",
+      "sha256": "ea91b16f52a211b5a8464382ad498b7b2bb2be69a6f33fe125a73a3c7b9da2b5"
+    },
+    {
+      "file": "datasets/public-kg/releases/20261014-credits-001/manifest.json",
+      "sha256": "e4aa3b58ed884f7d1f8fffee43b260261cc2b4d3a867fda942919f439d2bce17"
+    },
+    {
+      "file": "datasets/manga-collection/original-story-r0002-20261017/ndl-9784098610105.json",
+      "sha256": "a8992f7327ac45150fa7dba2e2ad1877ed7914c4642918442d2ce2c7e9fa2a4a"
+    },
+    {
+      "file": "datasets/manga-collection/original-story-r0002-20261017/ndl-9784088811840.json",
+      "sha256": "97ae7be91605bb1d81a54062716132bb0d727b845d811a5b232f487ae4501cb0"
+    },
+    {
+      "file": "datasets/manga-collection/original-story-r0002-20261017/ndl-9784088733708.json",
+      "sha256": "035008f311bc5e2e4fdd56e6a216c20f93792583675a2fe5a036e9c99ce71319"
+    },
+    {
+      "file": "datasets/manga-collection/original-story-r0002-20261017/ndl-9784088736211.json",
+      "sha256": "42957040ed44ffa3caa223d68d1cbd0ab733434c9c6af1cc3bdc03c59af9858d"
+    },
+    {
+      "file": "datasets/manga-collection/original-story-r0002-20261017/ndl-9784088727172.json",
+      "sha256": "9e302be016583de26a8907bef77390d34d1bc45db01a08f6e680076cbd5c975a"
+    }
+  ],
+  "acceptedRecordIds": {
+    "entities": [
+      "0c29d0e2-685f-4c56-9805-6bf1baf40e7c",
+      "0e0ed535-f78e-4cb0-bd3d-7dffd6b7148e",
+      "7ca5fc7d-545a-4d39-a2dc-6cce86390112",
+      "8b0d27c2-1116-4731-a00a-b90c869524a2",
+      "a13205e2-220c-4b7d-8a1a-39dbefe52db8",
+      "e0183e9c-dc97-4d85-b46e-14a1b76707fd"
+    ],
+    "claims": [
+      "c3f1e013-68cc-42b7-b076-495178247899",
+      "f638cf0b-3750-49f6-b833-844d5465b99f",
+      "043e8592-5827-4167-9c93-f8201dd110bc",
+      "6ed29ee4-2b62-4fe7-83a6-aafe300754d7",
+      "10f72eb0-3526-4d50-a552-e2239c01fc39"
+    ],
+    "sources": [
+      "2bdfa31d-ad7a-4705-8bdf-2be58ae606f6",
+      "4859917b-c4ba-4e2d-b932-52224ff7ebec",
+      "751742b2-a8c7-40fe-96c1-8e91a116f789"
+    ],
+    "citations": [
+      "b7241220-539b-43d0-a849-2fd277781288",
+      "61f50a3d-d113-4ab8-afae-28bba03401c5",
+      "bb15e42b-438b-46f3-bfe2-2c0676424db4",
+      "2912d1b2-54cf-425a-9428-d0c323f68a01",
+      "13adf6b0-da63-4be0-abd7-b8aeb54d6bdf"
+    ]
+  },
+  "reusedPreviouslyAcceptedSourceIds": [
+    "1f388832-0cb6-4ccd-b7e6-80bb0ed0212a",
+    "7def5563-ec0a-4709-99aa-22f8b07a5c10"
+  ],
+  "acceptedExternalIdentifiers": [
+    {
+      "entityId": "0c29d0e2-685f-4c56-9805-6bf1baf40e7c",
+      "namespace": "wikidata",
+      "value": "Q582763"
+    },
+    {
+      "entityId": "0e0ed535-f78e-4cb0-bd3d-7dffd6b7148e",
+      "namespace": "wikidata",
+      "value": "Q696941"
+    },
+    {
+      "entityId": "7ca5fc7d-545a-4d39-a2dc-6cce86390112",
+      "namespace": "wikidata",
+      "value": "Q1834"
+    },
+    {
+      "entityId": "8b0d27c2-1116-4731-a00a-b90c869524a2",
+      "namespace": "wikidata",
+      "value": "Q2602357"
+    },
+    {
+      "entityId": "a13205e2-220c-4b7d-8a1a-39dbefe52db8",
+      "namespace": "wikidata",
+      "value": "Q558858"
+    },
+    {
+      "entityId": "e0183e9c-dc97-4d85-b46e-14a1b76707fd",
+      "namespace": "wikidata",
+      "value": "Q263303"
+    }
+  ],
+  "scopeByClaim": [
+    {
+      "id": "c3f1e013-68cc-42b7-b076-495178247899",
+      "subjectId": "8b0d27c2-1116-4731-a00a-b90c869524a2",
+      "objectId": "c71ebc3e-ae93-43d6-a525-eb5b1abd609f",
+      "predicate": "CONTRIBUTED_TO",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "contribution": {
+        "roleId": "ORIGINAL_STORY",
+        "scope": {
+          "kind": "publication",
+          "isbn13": "9784098610105",
+          "volumeLabel": "第1巻",
+          "editionLabel": null,
+          "language": "ja"
+        }
+      }
+    },
+    {
+      "id": "f638cf0b-3750-49f6-b833-844d5465b99f",
+      "subjectId": "8b0d27c2-1116-4731-a00a-b90c869524a2",
+      "objectId": "31f3c278-7d49-4aed-9a36-c722cae25ed2",
+      "predicate": "CONTRIBUTED_TO",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "contribution": {
+        "roleId": "ORIGINAL_STORY",
+        "scope": {
+          "kind": "publication",
+          "isbn13": "9784088811840",
+          "volumeLabel": "第1巻",
+          "editionLabel": null,
+          "language": "ja"
+        }
+      }
+    },
+    {
+      "id": "043e8592-5827-4167-9c93-f8201dd110bc",
+      "subjectId": "8b0d27c2-1116-4731-a00a-b90c869524a2",
+      "objectId": "0e0ed535-f78e-4cb0-bd3d-7dffd6b7148e",
+      "predicate": "CONTRIBUTED_TO",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "contribution": {
+        "roleId": "ORIGINAL_STORY",
+        "scope": {
+          "kind": "publication",
+          "isbn13": "9784088733708",
+          "volumeLabel": "第1巻",
+          "editionLabel": null,
+          "language": "ja"
+        }
+      }
+    },
+    {
+      "id": "6ed29ee4-2b62-4fe7-83a6-aafe300754d7",
+      "subjectId": "a13205e2-220c-4b7d-8a1a-39dbefe52db8",
+      "objectId": "7ca5fc7d-545a-4d39-a2dc-6cce86390112",
+      "predicate": "CONTRIBUTED_TO",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "contribution": {
+        "roleId": "ORIGINAL_STORY",
+        "scope": {
+          "kind": "publication",
+          "isbn13": "9784088736211",
+          "volumeLabel": "第1巻",
+          "editionLabel": null,
+          "language": "ja"
+        }
+      }
+    },
+    {
+      "id": "10f72eb0-3526-4d50-a552-e2239c01fc39",
+      "subjectId": "e0183e9c-dc97-4d85-b46e-14a1b76707fd",
+      "objectId": "0c29d0e2-685f-4c56-9805-6bf1baf40e7c",
+      "predicate": "CONTRIBUTED_TO",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "contribution": {
+        "roleId": "ORIGINAL_STORY",
+        "scope": {
+          "kind": "publication",
+          "isbn13": "9784088727172",
+          "volumeLabel": "第1巻",
+          "editionLabel": null,
+          "language": "ja"
+        }
+      }
+    }
+  ],
+  "evidenceReview": [
+    {
+      "person": "稲垣理一郎",
+      "work": "トリリオンゲーム",
+      "claimId": "c3f1e013-68cc-42b7-b076-495178247899",
+      "sourceId": "1f388832-0cb6-4ccd-b7e6-80bb0ed0212a",
+      "citationId": "b7241220-539b-43d0-a849-2fd277781288",
+      "isbn13": "9784098610105",
+      "originalText": "稲垣理一郎 原作",
+      "snapshotFile": "datasets/manga-collection/original-story-r0002-20261017/ndl-9784098610105.json",
+      "identity": "レビュー済みUUIDとWikidata識別子を維持",
+      "scopeVerified": true,
+      "sourceUrl": "https://ndlsearch.ndl.go.jp/books/R100000002-I031350948",
+      "sourceDisposition": "reuse-previously-accepted",
+      "existingEquivalentClaimIds": []
+    },
+    {
+      "person": "稲垣理一郎",
+      "work": "Dr.STONE",
+      "claimId": "f638cf0b-3750-49f6-b833-844d5465b99f",
+      "sourceId": "7def5563-ec0a-4709-99aa-22f8b07a5c10",
+      "citationId": "61f50a3d-d113-4ab8-afae-28bba03401c5",
+      "isbn13": "9784088811840",
+      "originalText": "稲垣理一郎 原作",
+      "snapshotFile": "datasets/manga-collection/original-story-r0002-20261017/ndl-9784088811840.json",
+      "identity": "レビュー済みUUIDとWikidata識別子を維持",
+      "scopeVerified": true,
+      "sourceUrl": "https://ndlsearch.ndl.go.jp/books/R100000002-I028309496",
+      "sourceDisposition": "reuse-previously-accepted",
+      "existingEquivalentClaimIds": []
+    },
+    {
+      "person": "稲垣理一郎",
+      "work": "アイシールド21",
+      "claimId": "043e8592-5827-4167-9c93-f8201dd110bc",
+      "sourceId": "2bdfa31d-ad7a-4705-8bdf-2be58ae606f6",
+      "citationId": "bb15e42b-438b-46f3-bfe2-2c0676424db4",
+      "isbn13": "9784088733708",
+      "originalText": "稲垣理一郎 原作",
+      "snapshotFile": "datasets/manga-collection/original-story-r0002-20261017/ndl-9784088733708.json",
+      "identity": "レビュー済みUUIDとWikidata識別子を維持",
+      "scopeVerified": true,
+      "sourceUrl": "https://ndlsearch.ndl.go.jp/books/R100000002-I000004050151",
+      "sourceDisposition": "accept-new",
+      "existingEquivalentClaimIds": []
+    },
+    {
+      "person": "大場つぐみ",
+      "work": "DEATH NOTE",
+      "claimId": "6ed29ee4-2b62-4fe7-83a6-aafe300754d7",
+      "sourceId": "4859917b-c4ba-4e2d-b932-52224ff7ebec",
+      "citationId": "2912d1b2-54cf-425a-9428-d0c323f68a01",
+      "isbn13": "9784088736211",
+      "originalText": "大場つぐみ 原作",
+      "snapshotFile": "datasets/manga-collection/original-story-r0002-20261017/ndl-9784088736211.json",
+      "identity": "レビュー済みUUIDとWikidata識別子を維持",
+      "scopeVerified": true,
+      "sourceUrl": "https://ndlsearch.ndl.go.jp/books/R100000002-I000007330339",
+      "sourceDisposition": "accept-new",
+      "existingEquivalentClaimIds": []
+    },
+    {
+      "person": "ほったゆみ",
+      "work": "ヒカルの碁",
+      "claimId": "10f72eb0-3526-4d50-a552-e2239c01fc39",
+      "sourceId": "751742b2-a8c7-40fe-96c1-8e91a116f789",
+      "citationId": "13adf6b0-da63-4be0-abd7-b8aeb54d6bdf",
+      "isbn13": "9784088727172",
+      "originalText": "ほったゆみ 原作",
+      "snapshotFile": "datasets/manga-collection/original-story-r0002-20261017/ndl-9784088727172.json",
+      "identity": "レビュー済みUUIDとWikidata識別子を維持",
+      "scopeVerified": true,
+      "sourceUrl": "https://ndlsearch.ndl.go.jp/books/R100000002-I000002788748",
+      "sourceDisposition": "accept-new",
+      "existingEquivalentClaimIds": []
+    }
+  ],
+  "citationEditorialChanges": [
+    {
+      "citationId": "b7241220-539b-43d0-a849-2fd277781288",
+      "beforeNote": "未受入候補。日本語第1巻のNDL書誌のみ。原本実見ではない。全巻・全版、脚本・ネーム・著作権を推論しない。",
+      "afterNote": "日本語第1巻のNDL書誌のみ。原本実見ではない。全巻・全版、脚本・ネーム・著作権を推論しない。",
+      "reason": "公開候補で未受入と表示しないため候補状態の編集注記だけ除去。UUID・原責任表示・locator・言語・根拠範囲は不変。"
+    },
+    {
+      "citationId": "61f50a3d-d113-4ab8-afae-28bba03401c5",
+      "beforeNote": "未受入候補。日本語第1巻のNDL書誌のみ。原本実見ではない。全巻・全版、脚本・ネーム・著作権を推論しない。",
+      "afterNote": "日本語第1巻のNDL書誌のみ。原本実見ではない。全巻・全版、脚本・ネーム・著作権を推論しない。",
+      "reason": "公開候補で未受入と表示しないため候補状態の編集注記だけ除去。UUID・原責任表示・locator・言語・根拠範囲は不変。"
+    },
+    {
+      "citationId": "bb15e42b-438b-46f3-bfe2-2c0676424db4",
+      "beforeNote": "未受入候補。日本語第1巻のNDL書誌のみ。原本実見ではない。全巻・全版、脚本・ネーム・著作権を推論しない。",
+      "afterNote": "日本語第1巻のNDL書誌のみ。原本実見ではない。全巻・全版、脚本・ネーム・著作権を推論しない。",
+      "reason": "公開候補で未受入と表示しないため候補状態の編集注記だけ除去。UUID・原責任表示・locator・言語・根拠範囲は不変。"
+    },
+    {
+      "citationId": "2912d1b2-54cf-425a-9428-d0c323f68a01",
+      "beforeNote": "未受入候補。日本語第1巻のNDL書誌のみ。原本実見ではない。全巻・全版、脚本・ネーム・著作権を推論しない。",
+      "afterNote": "日本語第1巻のNDL書誌のみ。原本実見ではない。全巻・全版、脚本・ネーム・著作権を推論しない。",
+      "reason": "公開候補で未受入と表示しないため候補状態の編集注記だけ除去。UUID・原責任表示・locator・言語・根拠範囲は不変。"
+    },
+    {
+      "citationId": "13adf6b0-da63-4be0-abd7-b8aeb54d6bdf",
+      "beforeNote": "未受入候補。日本語第1巻のNDL書誌のみ。原本実見ではない。全巻・全版、脚本・ネーム・著作権を推論しない。",
+      "afterNote": "日本語第1巻のNDL書誌のみ。原本実見ではない。全巻・全版、脚本・ネーム・著作権を推論しない。",
+      "reason": "公開候補で未受入と表示しないため候補状態の編集注記だけ除去。UUID・原責任表示・locator・言語・根拠範囲は不変。"
+    }
+  ],
+  "baseRelease": "20261014-credits-001",
+  "baseRevision": "82b01515-594c-48ca-b4b6-515eefac83ca",
+  "baseDirectory": "datasets/public-kg/releases/20261014-credits-001",
+  "baseBackup": {
+    "file": "backups/manga-r0002-before-combined-20261017.json",
+    "checksum": "6b58122b9e3ce40b988184f8e0600803aa1fd8c2f0f16875483ceba5cae3a4a4",
+    "fixtureMatchesRelease": true,
+    "withdrawals": []
+  },
+  "previousAcceptedReleaseCandidate": "20261017-manga-r0002-001",
+  "combinedReleaseCandidate": "20261017-manga-r0002-002",
+  "excludedEntityIds": [
+    "3d279a30-0131-4b37-9429-9a39e8027e05",
+    "d5e39491-5a5f-423c-9222-2eb3c18db9a8"
+  ],
+  "applyAuthorized": {
+    "local": false,
+    "beta": false,
+    "vps": false
+  },
+  "remainingHolds": [
+    "村田雄介・小畑健のEntityと未受入制作関係",
+    "漫画表記に基づく個別関係の追加判断",
+    "梅澤由香里の監修と人物同定",
+    "残り94作品の収集実行承認"
+  ]
+}

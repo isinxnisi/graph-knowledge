@@ -1,0 +1,227 @@
+{
+  "verifiedAt": "2026-10-17T10:45:26+09:00",
+  "sourceGitBase": "37c6f4abd377a8268b01a4973b59a2911d63e59f",
+  "releaseCandidate": "20261017-manga-r0002-002",
+  "baseRelease": "20261014-credits-001",
+  "baseRevision": "82b01515-594c-48ca-b4b6-515eefac83ca",
+  "acceptedThisDecision": {
+    "entities": 6,
+    "claims": 5,
+    "newSources": 3,
+    "citations": 5,
+    "externalIdentifiers": 6,
+    "reusedPreviouslyAcceptedSources": 2
+  },
+  "combinedAdditionsOverLiveBase": {
+    "entities": 13,
+    "claims": 9,
+    "sources": 7,
+    "citations": 9,
+    "externalIdentifiers": 13
+  },
+  "artifactHashes": [
+    {
+      "file": "datasets/manga-collection/accepted-original-story-r0002-20261017/acceptance.json",
+      "sha256": "9fdb9933c0d78795769bf27eebb7ecb4ec7cccc37f6ee6827e55dd119e727801"
+    },
+    {
+      "file": "datasets/public-kg/releases/20261017-manga-r0002-002/data.json",
+      "sha256": "6180481328c77abb40d16579d1f0cee34cbda6d8438769a95a23df71536f90aa"
+    },
+    {
+      "file": "datasets/public-kg/releases/20261017-manga-r0002-002/manifest.json",
+      "sha256": "5ae3f008be8c05f29cafa620a5cb0926792bc2984b0e0694a4bf1986032bd87c"
+    },
+    {
+      "file": "scripts/prepare-manga-release.py",
+      "sha256": "b1aa7818196f13b2402840a8ac51d150fb0c9d3d35f9b2a4e1185254fe0e8763"
+    },
+    {
+      "file": "tests/manga-combined-release.test.ts",
+      "sha256": "93831d755257680bd71b3c4160d0b7bf0fce85723ded26fedf8dcf49ee6b05f7"
+    }
+  ],
+  "checks": {
+    "humanAcceptance": {
+      "status": "passed",
+      "reviewer": "プロジェクト運営者",
+      "recordedAt": "2026-10-17T10:34:25+09:00",
+      "historicalCodexReviewsReinterpreted": false
+    },
+    "frozenInputs": {
+      "status": "passed",
+      "snapshotCount": 5,
+      "sourceJobFilesMatchFrozenCopies": true,
+      "historicalCandidateAndRelease001Unchanged": true,
+      "definitionSha256": "c61614326ace666c9c4d498b6349d3d1d524e0b83017695fd960a3e34879b863",
+      "executionStatus": "frozen-inputs-match",
+      "adapterChanged": false
+    },
+    "generator": {
+      "status": "passed",
+      "command": "python3 -O scripts/prepare-manga-release.py --combined --check",
+      "dbConnection": false
+    },
+    "publicValidate": {
+      "valid": true,
+      "counts": {
+        "nodes": {
+          "Entity": 2122,
+          "Claim": 1853,
+          "Source": 1758,
+          "Citation": 1889,
+          "ExternalIdentifier": 2491
+        },
+        "relationships": {
+          "SUBJECT": 1853,
+          "OBJECT": 1853,
+          "HAS_CITATION": 1889,
+          "CITES": 1889,
+          "HAS_EXTERNAL_ID": 2491
+        }
+      }
+    },
+    "publicPlan": {
+      "status": "passed",
+      "file": "datasets/manga-collection/accepted-original-story-r0002-20261017/local-plan.json",
+      "addedKnowledgeNodes": 51,
+      "updatedKnowledgeNodes": 0,
+      "relationshipsAdded": 49,
+      "write": false
+    },
+    "liveBase": {
+      "status": "passed",
+      "fixtureMatchesRelease": true,
+      "withdrawals": [],
+      "file": "backups/manga-r0002-before-combined-20261017.json",
+      "checksum": "6b58122b9e3ce40b988184f8e0600803aa1fd8c2f0f16875483ceba5cae3a4a4"
+    },
+    "duplicates": {
+      "existingEquivalentClaimCount": 0,
+      "newSourceUrlDuplicateCount": 0,
+      "identityCollisionCount": 0,
+      "reusedPreviousCandidateSources": 2,
+      "alreadyPublicPlutoClaimsNotRegenerated": 2
+    },
+    "unit": {
+      "status": "passed",
+      "files": 5,
+      "tests": 26,
+      "failed": 0,
+      "command": "vitest run tests/manga-combined-release.test.ts tests/manga-release.test.ts tests/original-story.test.ts tests/original-story-ui.test.tsx tests/public.test.ts --no-file-parallelism --testTimeout=15000",
+      "newCombinedTests": 4,
+      "covered": [
+        "旧releaseと既存全レコード・UUID・由来・撤回の保持",
+        "2 Sourceの共有とCitation原語・scope・接続",
+        "原作と作画の非同一視・作品経由の経路",
+        "承認なし・hash変更・誤base・未受入人物混入の拒否"
+      ]
+    },
+    "typecheck": {
+      "status": "passed",
+      "command": "npm run typecheck"
+    },
+    "lint": {
+      "status": "passed",
+      "command": "npm run lint",
+      "predicateErrors": 0,
+      "roleErrors": 0,
+      "qualificationErrors": 0,
+      "note": "既存の語彙warningと人間意味審査の注意を保持。今回のRole契約変更なし。"
+    },
+    "environments": {
+      "checkedAt": "2026-10-17T10:41:26+09:00",
+      "local": {
+        "dataset": "public-kg",
+        "revision": "82b01515-594c-48ca-b4b6-515eefac83ca",
+        "datasetStatus": 200,
+        "originalStoryQueryStatus": 200,
+        "originalStoryClaimCount": 0,
+        "matchesLocalWebBuild": true,
+        "localWebBuild": "KSXBMOh_sRI9ZhWrXwsGG",
+        "kgApplyExecuted": false,
+        "webRebuiltThisTask": false
+      },
+      "beta": {
+        "dataset": "public-kg",
+        "revision": "82b01515-594c-48ca-b4b6-515eefac83ca",
+        "datasetStatus": 200,
+        "originalStoryQueryStatus": 200,
+        "originalStoryClaimCount": 0,
+        "matchesLocalWebBuild": true,
+        "localWebBuild": "KSXBMOh_sRI9ZhWrXwsGG",
+        "kgApplyExecuted": false,
+        "webRebuiltThisTask": false
+      },
+      "vps": {
+        "dataset": "public-kg",
+        "revision": "5e2a94af-9061-4087-bb7a-045a3c0133f4",
+        "datasetStatus": 200,
+        "originalStoryQueryStatus": 400,
+        "originalStoryClaimCount": null,
+        "matchesLocalWebBuild": false,
+        "localWebBuild": null,
+        "kgApplyExecuted": false,
+        "webRebuiltThisTask": false
+      },
+      "ssh": {
+        "target": "existing VPS / develop",
+        "status": "unreachable-from-this-WSL",
+        "error": "No route to host (port 22)",
+        "settingsChanged": false,
+        "operatorRoleSupport": "not-inspected; deployed operator validation remains a pre-publication check"
+      },
+      "localWebRestart": {
+        "reason": "3200 stopped before environment inspection; restarted existing verified build with existing .env.public",
+        "configurationChanged": false,
+        "dbMigrationOrApply": false
+      },
+      "acceptedClaimPublicStatus": {
+        "07da4e98-1047-46a4-b48a-30f3549c89f9": 404,
+        "84cb19dd-9e8e-496f-abf6-674885abf185": 404,
+        "cf18d898-41e5-486f-8dcf-8a666bef83fe": 404,
+        "fe6d7c19-646b-474a-ad0a-3b20bc816866": 404,
+        "c3f1e013-68cc-42b7-b076-495178247899": 404,
+        "f638cf0b-3750-49f6-b833-844d5465b99f": 404,
+        "043e8592-5827-4167-9c93-f8201dd110bc": 404,
+        "6ed29ee4-2b62-4fe7-83a6-aafe300754d7": 404,
+        "10f72eb0-3526-4d50-a552-e2239c01fc39": 404
+      },
+      "betaBrowser": {
+        "tests": 1,
+        "passed": 1,
+        "config": "playwright.manga.config.ts",
+        "note": "既存公開KGのRole条件・取消・revision維持・先の4 Claim未公開を確認。新9 Claimはapplyしていない。"
+      }
+    },
+    "browser": {
+      "status": "passed",
+      "betaTests": 1,
+      "config": "playwright.manga.config.ts"
+    },
+    "vpsPlan": {
+      "status": "not-run",
+      "reason": "このWSLから既存VPSのSSH port22へNo route to host",
+      "deployedWebOriginalStoryQuery": 400,
+      "operatorOriginalStorySupport": "not-inspected; compatible deployment and read-only validation required before publication",
+      "configurationOrDeploymentChanged": false
+    },
+    "publicApply": {
+      "local": false,
+      "beta": false,
+      "vps": false
+    },
+    "databaseMutationCommandsExecuted": [],
+    "memberDatabaseChanged": false,
+    "remainingUnacceptedEntityIds": [
+      "3d279a30-0131-4b37-9429-9a39e8027e05",
+      "d5e39491-5a5f-423c-9222-2eb3c18db9a8"
+    ],
+    "remainingHolds": [
+      "村田雄介・小畑健のEntityと未受入制作関係",
+      "漫画表記に基づく個別関係の追加判断",
+      "梅澤由香里の監修と人物同定",
+      "残り94作品の収集実行承認"
+    ]
+  }
+}
