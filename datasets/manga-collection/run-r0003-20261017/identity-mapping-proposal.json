@@ -1,0 +1,25 @@
+{
+  "status": "proposed-identity-reuse-not-human-acceptance-not-applied",
+  "collectedEntityId": "4e506b04-cc57-48e9-b502-0d89476bb5f4",
+  "existingPublicEntity": {
+    "id": "290ab095-192d-4910-90f3-ae741f9d1f32",
+    "kind": "work",
+    "name": "パイナップルARMY",
+    "description": "工藤かずや・浦沢直樹の漫画。今回のクレジット確認は小学館文庫第1巻。",
+    "aliases": [],
+    "externalIds": [],
+    "createdAt": "2026-10-14T00:00:00Z",
+    "updatedAt": "2026-10-14T00:00:00Z",
+    "event": null
+  },
+  "proposedWikidata": "Q1096269",
+  "basis": "既存作品の名前・工藤かずや／浦沢直樹の制作記録と、r0003の漫画QID・ISBN書誌の対応。異なるISBNは刊行物scopeの差であり、作品Entityを分ける理由とはしない。",
+  "existingPublicationIsbn13": "9784091921116",
+  "newPublicationIsbn13": "9784091810816",
+  "existingSourceId": "811123b5-100e-47b7-879f-5103a53178cf",
+  "collectedClaimIds": [
+    "7e701c62-22f3-4882-844b-d69d2d818561",
+    "c9c1225b-63d2-4b99-9432-55bd009f8cf2"
+  ],
+  "nextAction": "人間による同一性の受入判断後、既存work UUIDを再利用する別の受入草稿へ2 Claimの端点を整理する。旧Claimの意味・UUIDと両ISBN scopeを保全し、凍結r0003成果は書き換えない。"
+}

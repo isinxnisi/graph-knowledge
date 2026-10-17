@@ -1,5 +1,7 @@
 # 漫画収集r0003の準備資料
 
+2026-10-17後続：プロジェクト運営者が収集実行のみ正式承認し、[24作品の正式収集と個別受入への引継ぎ](../../../docs/design/MANGA_R0003_COLLECTION_RESULT.md)を完了。43 Entity・28 Claim候補。個別受入・公開は未実施。以下の未承認状態とverificationは準備時点の履歴として保持する。
+
 2026-10-17。24作品・23人物。**正式承認待ち・正式収集ジョブ未実行**。個別受入・公開applyは全環境で未許可。
 
 - [定義r0003](../../collection-themes/themes/famous-manga-creators/r0003.json)：SHA-256 `371d297eb8cbf700d429711acc018bd46b5619a36ffb2c3ab1903e7f87a7c728`。

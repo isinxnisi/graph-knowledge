@@ -1,0 +1,36 @@
+{
+  "provider": "iss-ndl-opac / 国立国会図書館",
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "terms": "https://ndlsearch.ndl.go.jp/help/api/provider",
+  "records": [
+    {
+      "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I029585250",
+      "isbn13": [
+        "9784098602780"
+      ],
+      "title": [
+        "あさドラ! : 連続漫画小説. volume1"
+      ],
+      "mainTitles": [
+        "あさドラ! : 連続漫画小説"
+      ],
+      "volume": [
+        "volume1"
+      ],
+      "edition": [],
+      "responsibilities": [
+        "浦沢直樹 著"
+      ],
+      "publisher": [
+        "小学館"
+      ],
+      "language": [
+        "jpn"
+      ],
+      "genre": [
+        "漫画"
+      ]
+    }
+  ],
+  "error": null
+}

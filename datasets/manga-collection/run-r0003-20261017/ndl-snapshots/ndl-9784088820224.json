@@ -1,0 +1,37 @@
+{
+  "provider": "iss-ndl-opac / 国立国会図書館",
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "terms": "https://ndlsearch.ndl.go.jp/help/api/provider",
+  "records": [
+    {
+      "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I029974140",
+      "isbn13": [
+        "9784088820224"
+      ],
+      "title": [
+        "サムライ8八丸伝. 01"
+      ],
+      "mainTitles": [
+        "サムライ8八丸伝"
+      ],
+      "volume": [
+        "01"
+      ],
+      "edition": [],
+      "responsibilities": [
+        "岸本斉史 原作",
+        "大久保彰 作画"
+      ],
+      "publisher": [
+        "集英社"
+      ],
+      "language": [
+        "jpn"
+      ],
+      "genre": [
+        "漫画"
+      ]
+    }
+  ],
+  "error": null
+}

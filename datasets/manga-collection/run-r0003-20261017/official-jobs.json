@@ -1,0 +1,16 @@
+[
+  {
+    "jobId": "famous-manga-creators-r0002-97c171eb654963e4",
+    "themeId": "famous-manga-creators",
+    "revision": 2,
+    "status": "candidate-ready",
+    "attempts": 1
+  },
+  {
+    "jobId": "famous-manga-creators-r0003-907fdec3b7f86662",
+    "themeId": "famous-manga-creators",
+    "revision": 3,
+    "status": "candidate-ready",
+    "attempts": 4
+  }
+]

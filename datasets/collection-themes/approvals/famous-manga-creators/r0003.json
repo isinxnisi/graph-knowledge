@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "themeId": "famous-manga-creators",
+  "revision": 3,
+  "definitionSha256": "371d297eb8cbf700d429711acc018bd46b5619a36ffb2c3ab1903e7f87a7c728",
+  "reviewer": "プロジェクト運営者",
+  "reviewedAt": "2026-10-17T05:52:11+00:00",
+  "note": "プロジェクト運営者の明示承認に基づく。登録済み24作品・23人物、最大142試行、新規Entity47・Claim72までの候補収集のみ。個別知識受入・全環境公開apply・VPS／会員DB変更は含まない。",
+  "checks": [
+    "purpose",
+    "scope",
+    "data-granularity",
+    "sources-and-terms",
+    "exploration",
+    "execution-boundary"
+  ]
+}

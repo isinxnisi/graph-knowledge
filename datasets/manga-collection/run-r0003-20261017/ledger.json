@@ -1,0 +1,2440 @@
+{
+  "schemaVersion": 2,
+  "status": "pending-human-acceptance",
+  "recipe": "manga-r0003",
+  "collectionContext": {
+    "themeId": "famous-manga-creators",
+    "themeRevision": 3,
+    "definitionSha256": "371d297eb8cbf700d429711acc018bd46b5619a36ffb2c3ab1903e7f87a7c728",
+    "approvalSha256": "fd9c62146668cbb79498c7f3db760330b4be91d8259600ae7a46bc837e108711"
+  },
+  "execution": {
+    "adapter": "manga-discovery-v2",
+    "codeSha256": "80e05b67bc0129b963653b90df4cfbfa5bd6aff190acda99f54c08541e55801e",
+    "inputs": [
+      {
+        "file": "datasets/manga-collection/r0003/recipe.json",
+        "sha256": "eb431b6d6bd450eca85636f5617188f78cc4dc2e0bcdd076f94694ee153faad9"
+      },
+      {
+        "file": "datasets/manga-collection/r0003/anchor-review.json",
+        "sha256": "11300cff2b8a7b3234819d4b47a11f5e9016daf7af94f8cf4ca1838038000669"
+      },
+      {
+        "file": "datasets/manga-collection/r0003/publication-review.json",
+        "sha256": "bdf3ef6f60ea02ef07aedb3119b8cde6bdbefe0e8e7a002895637fdedf2ebb3a"
+      },
+      {
+        "file": "docs/research/famous-manga-creators/20261016/candidates.json",
+        "sha256": "8531fada01e5c635ba2ee278a7ef944a73f64676af14ed42ae0e690f5a1ff978"
+      },
+      {
+        "file": "datasets/public-kg/releases/20261014-credits-001/data.json",
+        "sha256": "ea91b16f52a211b5a8464382ad498b7b2bb2be69a6f33fe125a73a3c7b9da2b5"
+      },
+      {
+        "file": "datasets/public-kg/releases/20261014-credits-001/manifest.json",
+        "sha256": "e4aa3b58ed884f7d1f8fffee43b260261cc2b4d3a867fda942919f439d2bce17"
+      }
+    ],
+    "maxEntities": 2156,
+    "maxClaims": 1916
+  },
+  "identityMappings": [
+    {
+      "name": "浦沢直樹",
+      "wikidata": "Q348436",
+      "entityId": "d900543a-9c11-48c1-be76-1822b756fcc4",
+      "basis": "exact-external-id-or-explicit-catalog-uuid",
+      "reused": true
+    },
+    {
+      "name": "工藤かずや",
+      "wikidata": "Q3194504",
+      "entityId": "a012632c-6fd8-4559-8f38-cc60f9b28b05",
+      "basis": "exact-external-id-or-explicit-catalog-uuid",
+      "reused": true
+    },
+    {
+      "name": "池上遼一",
+      "wikidata": "Q1332841",
+      "entityId": "710bc8a7-efed-4c2e-a4b4-6c65b0aff695",
+      "basis": "exact-external-id-or-explicit-catalog-uuid",
+      "reused": true
+    },
+    {
+      "name": "武論尊",
+      "wikidata": "Q1016880",
+      "entityId": "3f22660f-01d7-4a4a-9ae6-f169c9a3dc4a",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "小畑健",
+      "wikidata": "Q313703",
+      "entityId": "d5e39491-5a5f-423c-9222-2eb3c18db9a8",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "大場つぐみ",
+      "wikidata": "Q558858",
+      "entityId": "a13205e2-220c-4b7d-8a1a-39dbefe52db8",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "岸本斉史",
+      "wikidata": "Q1993",
+      "entityId": "1edca4c7-0e4e-4769-859c-dde40e7e973a",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "大久保彰",
+      "wikidata": "Q108109758",
+      "entityId": "d4a3f93f-bbcd-42df-9567-2ba4a485bef3",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "赤坂アカ",
+      "wikidata": "Q23937543",
+      "entityId": "711dc415-45d5-4d35-8cca-068332180cc0",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "横槍メンゴ",
+      "wikidata": "Q17220992",
+      "entityId": "420d89ea-9780-4e01-ac64-9c5e8597d0c8",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "山田鐘人",
+      "wikidata": "Q38277627",
+      "entityId": "20b7ba43-d12d-4d39-9a8e-f9e92e9d40d2",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "アベツカサ",
+      "wikidata": "Q105258125",
+      "entityId": "dfaf30df-2f9e-4c63-9fe1-cbbd0a083b36",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "萩尾望都",
+      "wikidata": "Q265061",
+      "entityId": "6c9095bd-1969-4bcd-9282-2d1e9e411254",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "竹宮惠子",
+      "wikidata": "Q268789",
+      "entityId": "6bf4aeb4-ac2b-499f-bfaa-0588024ef93d",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "田村由美",
+      "wikidata": "Q2235128",
+      "entityId": "1866bbe5-7e00-4afc-965f-5e968481f065",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "高橋留美子",
+      "wikidata": "Q219948",
+      "entityId": "743d7fc0-ddc6-446a-8aa1-d9a9b284a326",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "手塚治虫",
+      "wikidata": "Q193300",
+      "entityId": "eb0af7e1-caa6-435f-86fb-0591421982b5",
+      "basis": "exact-external-id-or-explicit-catalog-uuid",
+      "reused": true
+    },
+    {
+      "name": "赤塚不二夫",
+      "wikidata": "Q958256",
+      "entityId": "a22fd2cd-aadc-4ca9-bf39-cb4bd7e0e953",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "大友克洋",
+      "wikidata": "Q378710",
+      "entityId": "c59a1b1d-7477-46a5-9669-644981d1d5d8",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "Boichi",
+      "wikidata": "Q624839",
+      "entityId": "b4de3765-e8c4-49f1-a322-a021475ffd09",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "藤本タツキ",
+      "wikidata": "Q24864023",
+      "entityId": "9f43fefa-d878-4e5e-b1a2-0413432e9dbd",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "原哲夫",
+      "wikidata": "Q1319232",
+      "entityId": "ccb5ddb2-fb7c-4dad-8178-1a170342d0c6",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "ONE",
+      "wikidata": "Q11237288",
+      "entityId": "afaa3ea0-f273-4481-95c5-5c31f9049cb2",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "パイナップルARMY",
+      "wikidata": "Q1096269",
+      "entityId": "4e506b04-cc57-48e9-b502-0d89476bb5f4",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "あさドラ！",
+      "wikidata": "Q102231027",
+      "entityId": "c1e93fb7-3547-4b64-bd7c-bce073a1198a",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "サンクチュアリ",
+      "wikidata": "Q669481",
+      "entityId": "c9080259-3866-4c25-999f-4a5a22046ac1",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "バクマン。",
+      "wikidata": "Q804555",
+      "entityId": "3427040b-88fd-4db5-b546-dd237abad032",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "サムライ8 八丸伝",
+      "wikidata": "Q63323229",
+      "entityId": "e7b913dd-7ad1-4288-861d-840cb4a3aeef",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "【推しの子】",
+      "wikidata": "Q97310775",
+      "entityId": "8a0d3d5a-feb6-4ba3-8993-64b6ac79de12",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "葬送のフリーレン",
+      "wikidata": "Q98642652",
+      "entityId": "929116a2-77ff-443f-94e6-871c8b78f451",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "クズの本懐",
+      "wikidata": "Q11298673",
+      "entityId": "dc188ef2-1a3d-4251-a445-90f49dd88cd0",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "ポーの一族",
+      "wikidata": "Q467854",
+      "entityId": "c74e0874-eb89-4825-a824-3ff182fe8053",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "11人いる！",
+      "wikidata": "Q124312385",
+      "entityId": "40a8ddd3-f333-485c-a12a-ac3d0961111b",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "風と木の詩",
+      "wikidata": "Q1338432",
+      "entityId": "98b8ca7a-9638-4e5a-8fbd-62a353e4f159",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "地球へ…",
+      "wikidata": "Q2668005",
+      "entityId": "baf73bb9-dda4-474c-acaf-a7a8ce52caf2",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "BASARA",
+      "wikidata": "Q809789",
+      "entityId": "4b90e125-b331-4361-8681-93a12c662cb7",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "7SEEDS",
+      "wikidata": "Q2679175",
+      "entityId": "5c5f452c-1e74-4985-aaec-811a8e329f42",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "うる星やつら",
+      "wikidata": "Q715723",
+      "entityId": "b1e1232d-b038-4c11-b80c-ab1c2710d2bf",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "らんま1/2",
+      "wikidata": "Q272015",
+      "entityId": "aafae4fe-6f56-47bb-af9f-dec69425f136",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "ブラック・ジャック",
+      "wikidata": "Q133691",
+      "entityId": "76884305-ef0d-4cb0-ace2-90cfac57de3e",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "天才バカボン",
+      "wikidata": "Q2551007",
+      "entityId": "398d712d-23d9-455f-8897-f9384dd94930",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "AKIRA",
+      "wikidata": "Q91486",
+      "entityId": "ba77a4d0-cf0b-4cc9-bd98-9b153a92b3ba",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "童夢",
+      "wikidata": "Q1170375",
+      "entityId": "0914c6bb-701d-4c5a-b8f9-2c63cbff1ef3",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "ORIGIN",
+      "wikidata": "Q48837273",
+      "entityId": "1982f262-39f3-4bfa-93a4-af3a86ec3ec8",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "ファイアパンチ",
+      "wikidata": "Q28682711",
+      "entityId": "480df823-5da8-45e4-aa20-1fdabe7ea5a3",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "北斗の拳",
+      "wikidata": "Q733498",
+      "entityId": "cd2e6949-6c1b-4818-990f-4d4dbc5c5d54",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "モブサイコ100",
+      "wikidata": "Q11344543",
+      "entityId": "0c9eb1b7-2b2b-46b7-8110-9705138c3add",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    }
+  ],
+  "rows": [
+    {
+      "kind": "wikidata-relation",
+      "work": "パイナップルARMY",
+      "property": "P50",
+      "personQid": "Q3194504",
+      "statementId": "Q1096269$D1EF67A1-C1DC-429F-9032-6E8515DC4B4E",
+      "qualifiers": {},
+      "references": [
+        {
+          "hash": "d556fdde67ad28a4726ec0f5927d1829e4d4cdd2",
+          "snaks": {
+            "P143": [
+              {
+                "snaktype": "value",
+                "property": "P143",
+                "hash": "c6f1777471211df31724ac60175786f3872c83e9",
+                "datavalue": {
+                  "value": {
+                    "entity-type": "item",
+                    "numeric-id": 177837,
+                    "id": "Q177837"
+                  },
+                  "type": "wikibase-entityid"
+                },
+                "datatype": "wikibase-item"
+              }
+            ],
+            "P813": [
+              {
+                "snaktype": "value",
+                "property": "P813",
+                "hash": "77eec2fa5305a4084f4bea553eb90310e6e77ece",
+                "datavalue": {
+                  "value": {
+                    "time": "+2026-07-17T00:00:00Z",
+                    "timezone": 0,
+                    "before": 0,
+                    "after": 0,
+                    "precision": 11,
+                    "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                  },
+                  "type": "time"
+                },
+                "datatype": "time"
+              }
+            ],
+            "P4656": [
+              {
+                "snaktype": "value",
+                "property": "P4656",
+                "hash": "ae17eb79d30d828d678994ceaad95c84dd1988d7",
+                "datavalue": {
+                  "value": "https://ja.wikipedia.org/w/index.php?title=%E3%83%91%E3%82%A4%E3%83%8A%E3%83%83%E3%83%97%E3%83%ABARMY&oldid=109575101",
+                  "type": "string"
+                },
+                "datatype": "url"
+              }
+            ]
+          },
+          "snaks-order": [
+            "P143",
+            "P813",
+            "P4656"
+          ]
+        }
+      ],
+      "status": "candidate-only-no-role-inference",
+      "reason": "Wikidata propertyだけで具体Roleや直接制作の意味を確定しない"
+    },
+    {
+      "kind": "wikidata-relation",
+      "work": "パイナップルARMY",
+      "property": "P110",
+      "personQid": "Q348436",
+      "statementId": "Q1096269$92477539-21F7-4728-90AE-E0BF3B127011",
+      "qualifiers": {},
+      "references": [
+        {
+          "hash": "d556fdde67ad28a4726ec0f5927d1829e4d4cdd2",
+          "snaks": {
+            "P143": [
+              {
+                "snaktype": "value",
+                "property": "P143",
+                "hash": "c6f1777471211df31724ac60175786f3872c83e9",
+                "datavalue": {
+                  "value": {
+                    "entity-type": "item",
+                    "numeric-id": 177837,
+                    "id": "Q177837"
+                  },
+                  "type": "wikibase-entityid"
+                },
+                "datatype": "wikibase-item"
+              }
+            ],
+            "P813": [
+              {
+                "snaktype": "value",
+                "property": "P813",
+                "hash": "77eec2fa5305a4084f4bea553eb90310e6e77ece",
+                "datavalue": {
+                  "value": {
+                    "time": "+2026-07-17T00:00:00Z",
+                    "timezone": 0,
+                    "before": 0,
+                    "after": 0,
+                    "precision": 11,
+                    "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                  },
+                  "type": "time"
+                },
+                "datatype": "time"
+              }
+            ],
+            "P4656": [
+              {
+                "snaktype": "value",
+                "property": "P4656",
+                "hash": "ae17eb79d30d828d678994ceaad95c84dd1988d7",
+                "datavalue": {
+                  "value": "https://ja.wikipedia.org/w/index.php?title=%E3%83%91%E3%82%A4%E3%83%8A%E3%83%83%E3%83%97%E3%83%ABARMY&oldid=109575101",
+                  "type": "string"
+                },
+                "datatype": "url"
+              }
+            ]
+          },
+          "snaks-order": [
+            "P143",
+            "P813",
+            "P4656"
+          ]
+        }
+      ],
+      "status": "candidate-only-no-role-inference",
+      "reason": "Wikidata propertyだけで具体Roleや直接制作の意味を確定しない"
+    },
+    {
+      "kind": "ndl-credit",
+      "work": "パイナップルARMY",
+      "isbn13": "9784091810816",
+      "rawResponsibility": "浦沢直樹 画",
+      "sourceUrl": "https://ndlsearch.ndl.go.jp/books/R100000002-I000001794923",
+      "status": "pending-human-acceptance",
+      "roleId": "DRAWING",
+      "person": "浦沢直樹",
+      "claimId": "c9c1225b-63d2-4b99-9432-55bd009f8cf2",
+      "reusedClaim": false,
+      "subjectId": "d900543a-9c11-48c1-be76-1822b756fcc4",
+      "objectId": "4e506b04-cc57-48e9-b502-0d89476bb5f4"
+    },
+    {
+      "kind": "ndl-credit",
+      "work": "パイナップルARMY",
+      "isbn13": "9784091810816",
+      "rawResponsibility": "工藤かずや 作",
+      "sourceUrl": "https://ndlsearch.ndl.go.jp/books/R100000002-I000001794923",
+      "status": "pending-human-acceptance",
+      "roleId": "CREATION",
+      "person": "工藤かずや",
+      "claimId": "7e701c62-22f3-4882-844b-d69d2d818561",
+      "reusedClaim": false,
+      "subjectId": "a012632c-6fd8-4559-8f38-cc60f9b28b05",
+      "objectId": "4e506b04-cc57-48e9-b502-0d89476bb5f4"
+    },
+    {
+      "kind": "wikidata-relation",
+      "work": "あさドラ！",
+      "property": "P50",
+      "personQid": "Q348436",
+      "statementId": "Q102231027$67e4b688-4682-f579-b8e7-7253ab417d5e",
+      "qualifiers": {},
+      "references": [],
+      "status": "candidate-only-no-role-inference",
+      "reason": "Wikidata propertyだけで具体Roleや直接制作の意味を確定しない"
+    },
+    {
+      "kind": "wikidata-relation",
+      "work": "あさドラ！",
+      "property": "P110",
+      "personQid": "Q348436",
+      "statementId": "Q102231027$74E600F9-4826-41FB-8B52-30AE5411E051",
+      "qualifiers": {},
+      "references": [],
+      "status": "candidate-only-no-role-inference",
+      "reason": "Wikidata propertyだけで具体Roleや直接制作の意味を確定しない"
+    },
+    {
+      "kind": "ndl-credit",
+      "work": "あさドラ！",
+      "isbn13": "9784098602780",
+      "rawResponsibility": "浦沢直樹 著",
+      "sourceUrl": "https://ndlsearch.ndl.go.jp/books/R100000002-I029585250",
+      "status": "pending-human-acceptance",
+      "roleId": "AUTHORSHIP",
+      "person": "浦沢直樹",
+      "claimId": "fb933ff4-2061-4a0c-a72c-6e7dd2958737",
+      "reusedClaim": false,
+      "subjectId": "d900543a-9c11-48c1-be76-1822b756fcc4",
+      "objectId": "c1e93fb7-3547-4b64-bd7c-bce073a1198a"
+    },
+    {
+      "kind": "wikidata-relation",
+      "work": "サンクチュアリ",
+      "property": "P110",
+      "personQid": "Q1332841",
+      "statementId": "Q669481$951289b0-4e1b-e52e-6aac-6141422b3a15",
+      "qualifiers": {},
+      "references": [],
+      "status": "candidate-only-no-role-inference",
+      "reason": "Wikidata propertyだけで具体Roleや直接制作の意味を確定しない"
+    },
+    {
+      "kind": "ndl-credit",
+      "work": "サンクチュアリ",
+      "isbn13": "9784091823618",
+      "rawResponsibility": "池上遼一 作画",
+      "sourceUrl": "https://ndlsearch.ndl.go.jp/books/R100000002-I000002071177",
+      "status": "pending-human-acceptance",
+      "roleId": "DRAWING",
+      "person": "池上遼一",
+      "claimId": "c3fcdaa7-1374-4c62-acab-368dc1ed1bee",
+      "reusedClaim": false,
+      "subjectId": "710bc8a7-efed-4c2e-a4b4-6c65b0aff695",
+      "objectId": "c9080259-3866-4c25-999f-4a5a22046ac1"
+    },
+    {
+      "kind": "ndl-credit",
+      "work": "サンクチュアリ",
+      "isbn13": "9784091823618",
+      "rawResponsibility": "史村翔 原作",
+      "sourceUrl": "https://ndlsearch.ndl.go.jp/books/R100000002-I000002071177",
+      "status": "pending-human-acceptance",
+      "roleId": "ORIGINAL_STORY",
+      "person": "武論尊（史村翔名義を含む）",
+      "claimId": "c19e5b2f-01e2-4233-a7c9-326a1772d7de",
+      "reusedClaim": false,
+      "subjectId": "3f22660f-01d7-4a4a-9ae6-f169c9a3dc4a",
+      "objectId": "c9080259-3866-4c25-999f-4a5a22046ac1"
+    },
+    {
+      "kind": "wikidata-relation",
+      "work": "バクマン。",
+      "property": "P50",
+      "personQid": "Q558858",
+      "statementId": "Q804555$143EE707-7D0A-4447-9A81-0931979419EF",
+      "qualifiers": {},
+      "references": [
+        {
+          "hash": "d4bd87b862b12d99d26e86472d44f26858dee639",
+          "snaks": {
+            "P143": [
+              {
+                "snaktype": "value",
+                "property": "P143",
+                "hash": "f30cbd35620c4ea6d0633aaf0210a8916130469b",
+                "datavalue": {
+                  "value": {
+                    "entity-type": "item",
+                    "numeric-id": 8447,
+                    "id": "Q8447"
+                  },
+                  "type": "wikibase-entityid"
+                },
+                "datatype": "wikibase-item"
+              }
+            ]
+          },
+          "snaks-order": [
+            "P143"
+          ]
+        }
+      ],
+      "status": "candidate-only-no-role-inference",
+      "reason": "Wikidata propertyだけで具体Roleや直接制作の意味を確定しない"
+    },
+    {
+      "kind": "wikidata-relation",
+      "work": "バクマン。",
+      "property": "P110",
+      "personQid": "Q313703",
+      "statementId": "Q804555$06116173-4e9e-d8da-4172-0ae93b65c3ee",
+      "qualifiers": {},
+      "references": [],
+      "status": "candidate-only-no-role-inference",
+      "reason": "Wikidata propertyだけで具体Roleや直接制作の意味を確定しない"
+    },
+    {
+      "kind": "ndl-credit",
+      "work": "バクマン。",
+      "isbn13": "9784086196901",
+      "rawResponsibility": "大場つぐみ 原作",
+      "sourceUrl": "https://ndlsearch.ndl.go.jp/books/R100000002-I028322829",
+      "status": "pending-human-acceptance",
+      "roleId": "ORIGINAL_STORY",
+      "person": "大場つぐみ",
+      "claimId": "48a9f51e-beb1-4c3a-9c30-5923bc852925",
+      "reusedClaim": false,
+      "subjectId": "a13205e2-220c-4b7d-8a1a-39dbefe52db8",
+      "objectId": "3427040b-88fd-4db5-b546-dd237abad032"
+    },
+    {
+      "kind": "ndl-credit",
+      "work": "バクマン。",
+      "isbn13": "9784086196901",
+      "rawResponsibility": "小畑健 漫画",
+      "sourceUrl": "https://ndlsearch.ndl.go.jp/books/R100000002-I028322829",
+      "status": "held"
+    },
+    {
+      "kind": "wikidata-relation",
+      "work": "サムライ8 八丸伝",
+      "property": "P50",
+      "personQid": "Q1993",
+      "statementId": "Q63323229$feea1dca-4990-f121-cd6f-d051b4f0635b",
+      "qualifiers": {},
+      "references": [],
+      "status": "candidate-only-no-role-inference",
+      "reason": "Wikidata propertyだけで具体Roleや直接制作の意味を確定しない"
+    },
+    {
+      "kind": "wikidata-relation",
+      "work": "サムライ8 八丸伝",
+      "property": "P110",
+      "personQid": "Q108109758",
+      "statementId": "Q63323229$7111E89F-16C6-4AF6-82D0-3335F4B98262",
+      "qualifiers": {},
+      "references": [
+        {
+          "hash": "948f60aaee26014c750bcb3306bf9a76bbe6f55f",
+          "snaks": {
+            "P143": [
+              {
+                "snaktype": "value",
+                "property": "P143",
+                "hash": "c6f1777471211df31724ac60175786f3872c83e9",
+                "datavalue": {
+                  "value": {
+                    "entity-type": "item",
+                    "numeric-id": 177837,
+                    "id": "Q177837"
+                  },
+                  "type": "wikibase-entityid"
+                },
+                "datatype": "wikibase-item"
+              }
+            ],
+            "P813": [
+              {
+                "snaktype": "value",
+                "property": "P813",
+                "hash": "48f0e7a98c7b6c7785da77d75ca6f651c3f4e67f",
+                "datavalue": {
+                  "value": {
+                    "time": "+2024-05-21T00:00:00Z",
+                    "timezone": 0,
+                    "before": 0,
+                    "after": 0,
+                    "precision": 11,
+                    "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                  },
+                  "type": "time"
+                },
+                "datatype": "time"
+              }
+            ],
+            "P4656": [
+              {
+                "snaktype": "value",
+                "property": "P4656",
+                "hash": "825fd56112350cce888b2403d6136cddbbdc3840",
+                "datavalue": {
+                  "value": "https://ja.wikipedia.org/w/index.php?title=%E3%82%B5%E3%83%A0%E3%83%A9%E3%82%A48_%E5%85%AB%E4%B8%B8%E4%BC%9D&oldid=97441823",
+                  "type": "string"
+                },
+                "datatype": "url"
+              }
+            ]
+          },
+          "snaks-order": [
+            "P143",
+            "P813",
+            "P4656"
+          ]
+        }
+      ],
+      "status": "candidate-only-no-role-inference",
+      "reason": "Wikidata propertyだけで具体Roleや直接制作の意味を確定しない"
+    },
+    {
+      "kind": "ndl-credit",
+      "work": "サムライ8 八丸伝",
+      "isbn13": "9784088820224",
+      "rawResponsibility": "岸本斉史 原作",
+      "sourceUrl": "https://ndlsearch.ndl.go.jp/books/R100000002-I029974140",
+      "status": "pending-human-acceptance",
+      "roleId": "ORIGINAL_STORY",
+      "person": "岸本斉史",
+      "claimId": "a996412a-7cc9-49d5-8446-9b3cf6a338dd",
+      "reusedClaim": false,
+      "subjectId": "1edca4c7-0e4e-4769-859c-dde40e7e973a",
+      "objectId": "e7b913dd-7ad1-4288-861d-840cb4a3aeef"
+    },
+    {
+      "kind": "ndl-credit",
+      "work": "サムライ8 八丸伝",
+      "isbn13": "9784088820224",
+      "rawResponsibility": "大久保彰 作画",
+      "sourceUrl": "https://ndlsearch.ndl.go.jp/books/R100000002-I029974140",
+      "status": "pending-human-acceptance",
+      "roleId": "DRAWING",
+      "person": "大久保彰",
+      "claimId": "ed33df12-efd1-44bc-84bb-a9d83fa05f8f",
+      "reusedClaim": false,
+      "subjectId": "d4a3f93f-bbcd-42df-9567-2ba4a485bef3",
+      "objectId": "e7b913dd-7ad1-4288-861d-840cb4a3aeef"
+    },
+    {
+      "kind": "wikidata-relation",
+      "work": "【推しの子】",
+      "property": "P50",
+      "personQid": "Q23937543",
+      "statementId": "Q97310775$f54de699-4b80-70c6-f927-623d9cd5de9b",
+      "qualifiers": {},
+      "references": [],
+      "status": "candidate-only-no-role-inference",
+      "reason": "Wikidata propertyだけで具体Roleや直接制作の意味を確定しない"
+    },
+    {
+      "kind": "wikidata-relation",
+      "work": "【推しの子】",
+      "property": "P110",
+      "personQid": "Q17220992",
+      "statementId": "Q97310775$C2B40736-4564-4ABC-8A9E-E201F3C5C461",
+      "qualifiers": {},
+      "references": [],
+      "status": "candidate-only-no-role-inference",
+      "reason": "Wikidata propertyだけで具体Roleや直接制作の意味を確定しない"
+    },
+    {
+      "kind": "ndl-credit",
+      "work": "【推しの子】",
+      "isbn13": "9784088916507",
+      "rawResponsibility": "赤坂アカ, 横槍メンゴ 著",
+      "sourceUrl": "https://ndlsearch.ndl.go.jp/books/R100000002-I030509435",
+      "status": "held"
+    },
+    {
+      "kind": "wikidata-relation",
+      "work": "葬送のフリーレン",
+      "property": "P50",
+      "personQid": "Q38277627",
+      "statementId": "Q98642652$4137c16b-40cb-7069-01ee-16b5c5be498f",
+      "qualifiers": {},
+      "references": [],
+      "status": "candidate-only-no-role-inference",
+      "reason": "Wikidata propertyだけで具体Roleや直接制作の意味を確定しない"
+    },
+    {
+      "kind": "wikidata-relation",
+      "work": "葬送のフリーレン",
+      "property": "P110",
+      "personQid": "Q105258125",
+      "statementId": "Q98642652$5445ddaa-49fd-2933-c0ec-05e42e317d89",
+      "qualifiers": {},
+      "references": [],
+      "status": "candidate-only-no-role-inference",
+      "reason": "Wikidata propertyだけで具体Roleや直接制作の意味を確定しない"
+    },
+    {
+      "kind": "ndl-credit",
+      "work": "葬送のフリーレン",
+      "isbn13": "9784098501809",
+      "rawResponsibility": "山田鐘人 原作",
+      "sourceUrl": "https://ndlsearch.ndl.go.jp/books/R100000002-I030560687",
+      "status": "pending-human-acceptance",
+      "roleId": "ORIGINAL_STORY",
+      "person": "山田鐘人",
+      "claimId": "431210df-d594-498c-bbd4-9ce93c9dc282",
+      "reusedClaim": false,
+      "subjectId": "20b7ba43-d12d-4d39-9a8e-f9e92e9d40d2",
+      "objectId": "929116a2-77ff-443f-94e6-871c8b78f451"
+    },
+    {
+      "kind": "ndl-credit",
+      "work": "葬送のフリーレン",
+      "isbn13": "9784098501809",
+      "rawResponsibility": "アベツカサ 作画",
+      "sourceUrl": "https://ndlsearch.ndl.go.jp/books/R100000002-I030560687",
+      "status": "pending-human-acceptance",
+      "roleId": "DRAWING",
+      "person": "アベツカサ",
+      "claimId": "36199f3c-f260-473c-a22e-a75911b5fb6d",
+      "reusedClaim": false,
+      "subjectId": "dfaf30df-2f9e-4c63-9fe1-cbbd0a083b36",
+      "objectId": "929116a2-77ff-443f-94e6-871c8b78f451"
+    },
+    {
+      "kind": "wikidata-relation",
+      "work": "クズの本懐",
+      "property": "P50",
+      "personQid": "Q17220992",
+      "statementId": "Q11298673$2bd7402d-4443-32f6-e798-5e3ed19a6f04",
+      "qualifiers": {},
+      "references": [],
+      "status": "candidate-only-no-role-inference",
+      "reason": "Wikidata propertyだけで具体Roleや直接制作の意味を確定しない"
+    },
+    {
+      "kind": "ndl-credit",
+      "work": "クズの本懐",
+      "isbn13": "9784757538870",
+      "rawResponsibility": "横槍メンゴ 著",
+      "sourceUrl": "https://ndlsearch.ndl.go.jp/books/R100000002-I024280614",
+      "status": "pending-human-acceptance",
+      "roleId": "AUTHORSHIP",
+      "person": "横槍メンゴ",
+      "claimId": "498cbe28-4703-4ac1-9a99-5cd83831b0e3",
+      "reusedClaim": false,
+      "subjectId": "420d89ea-9780-4e01-ac64-9c5e8597d0c8",
+      "objectId": "dc188ef2-1a3d-4251-a445-90f49dd88cd0"
+    },
+    {
+      "kind": "wikidata-relation",
+      "work": "ポーの一族",
+      "property": "P50",
+      "personQid": "Q265061",
+      "statementId": "Q467854$2B9CCA23-7498-4A6C-949E-AE002B23D688",
+      "qualifiers": {},
+      "references": [
+        {
+          "hash": "d4bd87b862b12d99d26e86472d44f26858dee639",
+          "snaks": {
+            "P143": [
+              {
+                "snaktype": "value",
+                "property": "P143",
+                "hash": "f30cbd35620c4ea6d0633aaf0210a8916130469b",
+                "datavalue": {
+                  "value": {
+                    "entity-type": "item",
+                    "numeric-id": 8447,
+                    "id": "Q8447"
+                  },
+                  "type": "wikibase-entityid"
+                },
+                "datatype": "wikibase-item"
+              }
+            ]
+          },
+          "snaks-order": [
+            "P143"
+          ]
+        }
+      ],
+      "status": "candidate-only-no-role-inference",
+      "reason": "Wikidata propertyだけで具体Roleや直接制作の意味を確定しない"
+    },
+    {
+      "kind": "wikidata-relation",
+      "work": "ポーの一族",
+      "property": "P110",
+      "personQid": "Q265061",
+      "statementId": "Q467854$998F1B6F-DEE5-4046-AF96-83EF33741D2C",
+      "qualifiers": {},
+      "references": [
+        {
+          "hash": "d4bd87b862b12d99d26e86472d44f26858dee639",
+          "snaks": {
+            "P143": [
+              {
+                "snaktype": "value",
+                "property": "P143",
+                "hash": "f30cbd35620c4ea6d0633aaf0210a8916130469b",
+                "datavalue": {
+                  "value": {
+                    "entity-type": "item",
+                    "numeric-id": 8447,
+                    "id": "Q8447"
+                  },
+                  "type": "wikibase-entityid"
+                },
+                "datatype": "wikibase-item"
+              }
+            ]
+          },
+          "snaks-order": [
+            "P143"
+          ]
+        }
+      ],
+      "status": "candidate-only-no-role-inference",
+      "reason": "Wikidata propertyだけで具体Roleや直接制作の意味を確定しない"
+    },
+    {
+      "kind": "ndl-credit",
+      "work": "ポーの一族",
+      "isbn13": "9784091912510",
+      "rawResponsibility": "萩尾望都 著",
+      "sourceUrl": "https://ndlsearch.ndl.go.jp/books/R100000002-I000002674181",
+      "status": "pending-human-acceptance",
+      "roleId": "AUTHORSHIP",
+      "person": "萩尾望都",
+      "claimId": "f4b64248-7b3e-4fae-8ff2-7122410b63f4",
+      "reusedClaim": false,
+      "subjectId": "6c9095bd-1969-4bcd-9282-2d1e9e411254",
+      "objectId": "c74e0874-eb89-4825-a824-3ff182fe8053"
+    },
+    {
+      "kind": "wikidata-relation",
+      "work": "11人いる！",
+      "property": "P50",
+      "personQid": "Q265061",
+      "statementId": "Q124312385$9AFC91B3-7ACC-49F9-B48F-3D5B51937773",
+      "qualifiers": {},
+      "references": [
+        {
+          "hash": "d4bd87b862b12d99d26e86472d44f26858dee639",
+          "snaks": {
+            "P143": [
+              {
+                "snaktype": "value",
+                "property": "P143",
+                "hash": "f30cbd35620c4ea6d0633aaf0210a8916130469b",
+                "datavalue": {
+                  "value": {
+                    "entity-type": "item",
+                    "numeric-id": 8447,
+                    "id": "Q8447"
+                  },
+                  "type": "wikibase-entityid"
+                },
+                "datatype": "wikibase-item"
+              }
+            ]
+          },
+          "snaks-order": [
+            "P143"
+          ]
+        }
+      ],
+      "status": "candidate-only-no-role-inference",
+      "reason": "Wikidata propertyだけで具体Roleや直接制作の意味を確定しない"
+    },
+    {
+      "kind": "ndl-credit",
+      "work": "11人いる！",
+      "isbn13": "9784091910110",
+      "rawResponsibility": "萩尾望都 著",
+      "sourceUrl": "https://ndlsearch.ndl.go.jp/books/R100000002-I000002361592",
+      "status": "pending-human-acceptance",
+      "roleId": "AUTHORSHIP",
+      "person": "萩尾望都",
+      "claimId": "d5d3fef1-fc64-4e61-b049-2f3c81994cb9",
+      "reusedClaim": false,
+      "subjectId": "6c9095bd-1969-4bcd-9282-2d1e9e411254",
+      "objectId": "40a8ddd3-f333-485c-a12a-ac3d0961111b"
+    },
+    {
+      "kind": "wikidata-relation",
+      "work": "風と木の詩",
+      "property": "P50",
+      "personQid": "Q268789",
+      "statementId": "Q1338432$A6FADD55-1B16-4ED5-8F23-5ABB31A12108",
+      "qualifiers": {},
+      "references": [
+        {
+          "hash": "d4bd87b862b12d99d26e86472d44f26858dee639",
+          "snaks": {
+            "P143": [
+              {
+                "snaktype": "value",
+                "property": "P143",
+                "hash": "f30cbd35620c4ea6d0633aaf0210a8916130469b",
+                "datavalue": {
+                  "value": {
+                    "entity-type": "item",
+                    "numeric-id": 8447,
+                    "id": "Q8447"
+                  },
+                  "type": "wikibase-entityid"
+                },
+                "datatype": "wikibase-item"
+              }
+            ]
+          },
+          "snaks-order": [
+            "P143"
+          ]
+        }
+      ],
+      "status": "candidate-only-no-role-inference",
+      "reason": "Wikidata propertyだけで具体Roleや直接制作の意味を確定しない"
+    },
+    {
+      "kind": "wikidata-relation",
+      "work": "風と木の詩",
+      "property": "P110",
+      "personQid": "Q268789",
+      "statementId": "Q1338432$8C707FF3-86FF-4C21-850A-0941567F32D4",
+      "qualifiers": {},
+      "references": [
+        {
+          "hash": "d4bd87b862b12d99d26e86472d44f26858dee639",
+          "snaks": {
+            "P143": [
+              {
+                "snaktype": "value",
+                "property": "P143",
+                "hash": "f30cbd35620c4ea6d0633aaf0210a8916130469b",
+                "datavalue": {
+                  "value": {
+                    "entity-type": "item",
+                    "numeric-id": 8447,
+                    "id": "Q8447"
+                  },
+                  "type": "wikibase-entityid"
+                },
+                "datatype": "wikibase-item"
+              }
+            ]
+          },
+          "snaks-order": [
+            "P143"
+          ]
+        }
+      ],
+      "status": "candidate-only-no-role-inference",
+      "reason": "Wikidata propertyだけで具体Roleや直接制作の意味を確定しない"
+    },
+    {
+      "kind": "ndl-credit",
+      "work": "風と木の詩",
+      "isbn13": "9784592881513",
+      "rawResponsibility": "竹宮恵子 著",
+      "sourceUrl": "https://ndlsearch.ndl.go.jp/books/R100000002-I000002388586",
+      "status": "pending-human-acceptance",
+      "roleId": "AUTHORSHIP",
+      "person": "竹宮惠子",
+      "claimId": "7c2bd016-d9b0-4de2-824e-276941b1a2b2",
+      "reusedClaim": false,
+      "subjectId": "6bf4aeb4-ac2b-499f-bfaa-0588024ef93d",
+      "objectId": "98b8ca7a-9638-4e5a-8fbd-62a353e4f159"
+    },
+    {
+      "kind": "wikidata-relation",
+      "work": "地球へ…",
+      "property": "P50",
+      "personQid": "Q268789",
+      "statementId": "Q2668005$673da30e-475e-8260-bf13-bd9dbdbddf9e",
+      "qualifiers": {},
+      "references": [],
+      "status": "candidate-only-no-role-inference",
+      "reason": "Wikidata propertyだけで具体Roleや直接制作の意味を確定しない"
+    },
+    {
+      "kind": "wikidata-relation",
+      "work": "地球へ…",
+      "property": "P110",
+      "personQid": "Q268789",
+      "statementId": "Q2668005$5EF5AA1D-77ED-4270-8A56-55EFEDD9DF76",
+      "qualifiers": {},
+      "references": [],
+      "status": "candidate-only-no-role-inference",
+      "reason": "Wikidata propertyだけで具体Roleや直接制作の意味を確定しない"
+    },
+    {
+      "kind": "ndl-credit",
+      "work": "地球へ…",
+      "isbn13": "9784757520097",
+      "rawResponsibility": "竹宮惠子 著",
+      "sourceUrl": "https://ndlsearch.ndl.go.jp/books/R100000002-I000008533176",
+      "status": "pending-human-acceptance",
+      "roleId": "AUTHORSHIP",
+      "person": "竹宮惠子",
+      "claimId": "602bc3c1-8a98-49cc-9556-a4c23feb6b0e",
+      "reusedClaim": false,
+      "subjectId": "6bf4aeb4-ac2b-499f-bfaa-0588024ef93d",
+      "objectId": "baf73bb9-dda4-474c-acaf-a7a8ce52caf2"
+    },
+    {
+      "kind": "wikidata-relation",
+      "work": "BASARA",
+      "property": "P50",
+      "personQid": "Q2235128",
+      "statementId": "Q809789$0D594BF6-F902-4A7F-8944-2BD7E68F0AB4",
+      "qualifiers": {},
+      "references": [
+        {
+          "hash": "d4bd87b862b12d99d26e86472d44f26858dee639",
+          "snaks": {
+            "P143": [
+              {
+                "snaktype": "value",
+                "property": "P143",
+                "hash": "f30cbd35620c4ea6d0633aaf0210a8916130469b",
+                "datavalue": {
+                  "value": {
+                    "entity-type": "item",
+                    "numeric-id": 8447,
+                    "id": "Q8447"
+                  },
+                  "type": "wikibase-entityid"
+                },
+                "datatype": "wikibase-item"
+              }
+            ]
+          },
+          "snaks-order": [
+            "P143"
+          ]
+        }
+      ],
+      "status": "candidate-only-no-role-inference",
+      "reason": "Wikidata propertyだけで具体Roleや直接制作の意味を確定しない"
+    },
+    {
+      "kind": "wikidata-relation",
+      "work": "BASARA",
+      "property": "P110",
+      "personQid": "Q2235128",
+      "statementId": "Q809789$BDAAAE97-3094-4537-8DE7-335797F9836C",
+      "qualifiers": {},
+      "references": [
+        {
+          "hash": "d4bd87b862b12d99d26e86472d44f26858dee639",
+          "snaks": {
+            "P143": [
+              {
+                "snaktype": "value",
+                "property": "P143",
+                "hash": "f30cbd35620c4ea6d0633aaf0210a8916130469b",
+                "datavalue": {
+                  "value": {
+                    "entity-type": "item",
+                    "numeric-id": 8447,
+                    "id": "Q8447"
+                  },
+                  "type": "wikibase-entityid"
+                },
+                "datatype": "wikibase-item"
+              }
+            ]
+          },
+          "snaks-order": [
+            "P143"
+          ]
+        }
+      ],
+      "status": "candidate-only-no-role-inference",
+      "reason": "Wikidata propertyだけで具体Roleや直接制作の意味を確定しない"
+    },
+    {
+      "kind": "ndl-credit",
+      "work": "BASARA",
+      "isbn13": "9784091914316",
+      "rawResponsibility": "田村由美 著",
+      "sourceUrl": "https://ndlsearch.ndl.go.jp/books/R100000002-I000003065584",
+      "status": "pending-human-acceptance",
+      "roleId": "AUTHORSHIP",
+      "person": "田村由美",
+      "claimId": "fdfae8cd-b3f0-4c36-b6ed-659e98d24871",
+      "reusedClaim": false,
+      "subjectId": "1866bbe5-7e00-4afc-965f-5e968481f065",
+      "objectId": "4b90e125-b331-4361-8681-93a12c662cb7"
+    },
+    {
+      "kind": "wikidata-relation",
+      "work": "7SEEDS",
+      "property": "P50",
+      "personQid": "Q2235128",
+      "statementId": "Q2679175$A46FBA04-8603-44B1-B75C-4B6F2CFCAEA4",
+      "qualifiers": {},
+      "references": [
+        {
+          "hash": "d4bd87b862b12d99d26e86472d44f26858dee639",
+          "snaks": {
+            "P143": [
+              {
+                "snaktype": "value",
+                "property": "P143",
+                "hash": "f30cbd35620c4ea6d0633aaf0210a8916130469b",
+                "datavalue": {
+                  "value": {
+                    "entity-type": "item",
+                    "numeric-id": 8447,
+                    "id": "Q8447"
+                  },
+                  "type": "wikibase-entityid"
+                },
+                "datatype": "wikibase-item"
+              }
+            ]
+          },
+          "snaks-order": [
+            "P143"
+          ]
+        }
+      ],
+      "status": "candidate-only-no-role-inference",
+      "reason": "Wikidata propertyだけで具体Roleや直接制作の意味を確定しない"
+    },
+    {
+      "kind": "wikidata-relation",
+      "work": "7SEEDS",
+      "property": "P110",
+      "personQid": "Q2235128",
+      "statementId": "Q2679175$C622F30F-70D1-499E-A862-E29BEEA6C11A",
+      "qualifiers": {},
+      "references": [
+        {
+          "hash": "d4bd87b862b12d99d26e86472d44f26858dee639",
+          "snaks": {
+            "P143": [
+              {
+                "snaktype": "value",
+                "property": "P143",
+                "hash": "f30cbd35620c4ea6d0633aaf0210a8916130469b",
+                "datavalue": {
+                  "value": {
+                    "entity-type": "item",
+                    "numeric-id": 8447,
+                    "id": "Q8447"
+                  },
+                  "type": "wikibase-entityid"
+                },
+                "datatype": "wikibase-item"
+              }
+            ]
+          },
+          "snaks-order": [
+            "P143"
+          ]
+        }
+      ],
+      "status": "candidate-only-no-role-inference",
+      "reason": "Wikidata propertyだけで具体Roleや直接制作の意味を確定しない"
+    },
+    {
+      "kind": "ndl-credit",
+      "work": "7SEEDS",
+      "isbn13": "9784091380135",
+      "rawResponsibility": "田村由美 著",
+      "sourceUrl": "https://ndlsearch.ndl.go.jp/books/R100000002-I000003074463",
+      "status": "pending-human-acceptance",
+      "roleId": "AUTHORSHIP",
+      "person": "田村由美",
+      "claimId": "e3b0de8a-f7cc-4188-baa2-b41e2298e2be",
+      "reusedClaim": false,
+      "subjectId": "1866bbe5-7e00-4afc-965f-5e968481f065",
+      "objectId": "5c5f452c-1e74-4985-aaec-811a8e329f42"
+    },
+    {
+      "kind": "wikidata-relation",
+      "work": "うる星やつら",
+      "property": "P50",
+      "personQid": "Q219948",
+      "statementId": "Q715723$C5F365A1-5755-4B4F-AD8B-8A8817EB4EA2",
+      "qualifiers": {},
+      "references": [
+        {
+          "hash": "d4bd87b862b12d99d26e86472d44f26858dee639",
+          "snaks": {
+            "P143": [
+              {
+                "snaktype": "value",
+                "property": "P143",
+                "hash": "f30cbd35620c4ea6d0633aaf0210a8916130469b",
+                "datavalue": {
+                  "value": {
+                    "entity-type": "item",
+                    "numeric-id": 8447,
+                    "id": "Q8447"
+                  },
+                  "type": "wikibase-entityid"
+                },
+                "datatype": "wikibase-item"
+              }
+            ]
+          },
+          "snaks-order": [
+            "P143"
+          ]
+        }
+      ],
+      "status": "candidate-only-no-role-inference",
+      "reason": "Wikidata propertyだけで具体Roleや直接制作の意味を確定しない"
+    },
+    {
+      "kind": "wikidata-relation",
+      "work": "うる星やつら",
+      "property": "P110",
+      "personQid": "Q219948",
+      "statementId": "Q715723$947EED42-AF3E-4F5D-885D-5E64253FBD8F",
+      "qualifiers": {},
+      "references": [
+        {
+          "hash": "d4bd87b862b12d99d26e86472d44f26858dee639",
+          "snaks": {
+            "P143": [
+              {
+                "snaktype": "value",
+                "property": "P143",
+                "hash": "f30cbd35620c4ea6d0633aaf0210a8916130469b",
+                "datavalue": {
+                  "value": {
+                    "entity-type": "item",
+                    "numeric-id": 8447,
+                    "id": "Q8447"
+                  },
+                  "type": "wikibase-entityid"
+                },
+                "datatype": "wikibase-item"
+              }
+            ]
+          },
+          "snaks-order": [
+            "P143"
+          ]
+        }
+      ],
+      "status": "candidate-only-no-role-inference",
+      "reason": "Wikidata propertyだけで具体Roleや直接制作の意味を確定しない"
+    },
+    {
+      "kind": "ndl-credit",
+      "work": "うる星やつら",
+      "isbn13": "9784091228017",
+      "rawResponsibility": "高橋留美子 著",
+      "sourceUrl": "https://ndlsearch.ndl.go.jp/books/R100000002-I000002007879",
+      "status": "pending-human-acceptance",
+      "roleId": "AUTHORSHIP",
+      "person": "高橋留美子",
+      "claimId": "121709e5-ea90-4c6a-87d1-d67264e1590d",
+      "reusedClaim": false,
+      "subjectId": "743d7fc0-ddc6-446a-8aa1-d9a9b284a326",
+      "objectId": "b1e1232d-b038-4c11-b80c-ab1c2710d2bf"
+    },
+    {
+      "kind": "wikidata-relation",
+      "work": "らんま1/2",
+      "property": "P50",
+      "personQid": "Q219948",
+      "statementId": "q272015$566D42CA-E1FD-474B-812C-5A6B354929CD",
+      "qualifiers": {},
+      "references": [],
+      "status": "candidate-only-no-role-inference",
+      "reason": "Wikidata propertyだけで具体Roleや直接制作の意味を確定しない"
+    },
+    {
+      "kind": "wikidata-relation",
+      "work": "らんま1/2",
+      "property": "P110",
+      "personQid": "Q219948",
+      "statementId": "Q272015$DE5D242C-0040-4247-A20A-65537CE25557",
+      "qualifiers": {},
+      "references": [],
+      "status": "candidate-only-no-role-inference",
+      "reason": "Wikidata propertyだけで具体Roleや直接制作の意味を確定しない"
+    },
+    {
+      "kind": "ndl-credit",
+      "work": "らんま1/2",
+      "isbn13": "9784091220318",
+      "rawResponsibility": "高橋留美子 著",
+      "sourceUrl": "https://ndlsearch.ndl.go.jp/books/R100000002-I000001908766",
+      "status": "pending-human-acceptance",
+      "roleId": "AUTHORSHIP",
+      "person": "高橋留美子",
+      "claimId": "1eb1fe7c-0cbd-48f4-8379-cd7f6e4697e4",
+      "reusedClaim": false,
+      "subjectId": "743d7fc0-ddc6-446a-8aa1-d9a9b284a326",
+      "objectId": "aafae4fe-6f56-47bb-af9f-dec69425f136"
+    },
+    {
+      "kind": "wikidata-relation",
+      "work": "ブラック・ジャック",
+      "property": "P50",
+      "personQid": "Q193300",
+      "statementId": "Q133691$1E4EAD4B-69EB-4BD2-B558-2EFAEA51EDAA",
+      "qualifiers": {},
+      "references": [
+        {
+          "hash": "d4bd87b862b12d99d26e86472d44f26858dee639",
+          "snaks": {
+            "P143": [
+              {
+                "snaktype": "value",
+                "property": "P143",
+                "hash": "f30cbd35620c4ea6d0633aaf0210a8916130469b",
+                "datavalue": {
+                  "value": {
+                    "entity-type": "item",
+                    "numeric-id": 8447,
+                    "id": "Q8447"
+                  },
+                  "type": "wikibase-entityid"
+                },
+                "datatype": "wikibase-item"
+              }
+            ]
+          },
+          "snaks-order": [
+            "P143"
+          ]
+        }
+      ],
+      "status": "candidate-only-no-role-inference",
+      "reason": "Wikidata propertyだけで具体Roleや直接制作の意味を確定しない"
+    },
+    {
+      "kind": "wikidata-relation",
+      "work": "ブラック・ジャック",
+      "property": "P110",
+      "personQid": "Q193300",
+      "statementId": "Q133691$39D2E758-37F6-409C-8C5D-6BDC8B2FD1F2",
+      "qualifiers": {},
+      "references": [
+        {
+          "hash": "d4bd87b862b12d99d26e86472d44f26858dee639",
+          "snaks": {
+            "P143": [
+              {
+                "snaktype": "value",
+                "property": "P143",
+                "hash": "f30cbd35620c4ea6d0633aaf0210a8916130469b",
+                "datavalue": {
+                  "value": {
+                    "entity-type": "item",
+                    "numeric-id": 8447,
+                    "id": "Q8447"
+                  },
+                  "type": "wikibase-entityid"
+                },
+                "datatype": "wikibase-item"
+              }
+            ]
+          },
+          "snaks-order": [
+            "P143"
+          ]
+        }
+      ],
+      "status": "candidate-only-no-role-inference",
+      "reason": "Wikidata propertyだけで具体Roleや直接制作の意味を確定しない"
+    },
+    {
+      "kind": "ndl-credit",
+      "work": "ブラック・ジャック",
+      "isbn13": "9784253169813",
+      "rawResponsibility": "手塚治虫 著",
+      "sourceUrl": "https://ndlsearch.ndl.go.jp/books/R100000002-I000002271468",
+      "status": "pending-human-acceptance",
+      "roleId": "AUTHORSHIP",
+      "person": "手塚治虫",
+      "claimId": "f06a6e2c-59c6-4ff3-ad74-13aff65677d3",
+      "reusedClaim": false,
+      "subjectId": "eb0af7e1-caa6-435f-86fb-0591421982b5",
+      "objectId": "76884305-ef0d-4cb0-ace2-90cfac57de3e"
+    },
+    {
+      "kind": "wikidata-relation",
+      "work": "天才バカボン",
+      "property": "P50",
+      "personQid": "Q958256",
+      "statementId": "Q2551007$F70783B8-9274-490F-9A92-6946D7F4A788",
+      "qualifiers": {},
+      "references": [
+        {
+          "hash": "d4bd87b862b12d99d26e86472d44f26858dee639",
+          "snaks": {
+            "P143": [
+              {
+                "snaktype": "value",
+                "property": "P143",
+                "hash": "f30cbd35620c4ea6d0633aaf0210a8916130469b",
+                "datavalue": {
+                  "value": {
+                    "entity-type": "item",
+                    "numeric-id": 8447,
+                    "id": "Q8447"
+                  },
+                  "type": "wikibase-entityid"
+                },
+                "datatype": "wikibase-item"
+              }
+            ]
+          },
+          "snaks-order": [
+            "P143"
+          ]
+        }
+      ],
+      "status": "candidate-only-no-role-inference",
+      "reason": "Wikidata propertyだけで具体Roleや直接制作の意味を確定しない"
+    },
+    {
+      "kind": "wikidata-relation",
+      "work": "天才バカボン",
+      "property": "P110",
+      "personQid": "Q958256",
+      "statementId": "Q2551007$40D2A232-5F6F-44A8-8643-BC2766D9E133",
+      "qualifiers": {},
+      "references": [
+        {
+          "hash": "d4bd87b862b12d99d26e86472d44f26858dee639",
+          "snaks": {
+            "P143": [
+              {
+                "snaktype": "value",
+                "property": "P143",
+                "hash": "f30cbd35620c4ea6d0633aaf0210a8916130469b",
+                "datavalue": {
+                  "value": {
+                    "entity-type": "item",
+                    "numeric-id": 8447,
+                    "id": "Q8447"
+                  },
+                  "type": "wikibase-entityid"
+                },
+                "datatype": "wikibase-item"
+              }
+            ]
+          },
+          "snaks-order": [
+            "P143"
+          ]
+        }
+      ],
+      "status": "candidate-only-no-role-inference",
+      "reason": "Wikidata propertyだけで具体Roleや直接制作の意味を確定しない"
+    },
+    {
+      "kind": "ndl-credit",
+      "work": "天才バカボン",
+      "isbn13": "9784884752934",
+      "rawResponsibility": "赤塚不二夫 著",
+      "sourceUrl": "https://ndlsearch.ndl.go.jp/books/R100000002-I000002541967",
+      "status": "pending-human-acceptance",
+      "roleId": "AUTHORSHIP",
+      "person": "赤塚不二夫",
+      "claimId": "6ad7f063-1fce-4163-8414-437526212c31",
+      "reusedClaim": false,
+      "subjectId": "a22fd2cd-aadc-4ca9-bf39-cb4bd7e0e953",
+      "objectId": "398d712d-23d9-455f-8897-f9384dd94930"
+    },
+    {
+      "kind": "wikidata-relation",
+      "work": "AKIRA",
+      "property": "P50",
+      "personQid": "Q378710",
+      "statementId": "Q91486$1757ee19-413c-33ab-29ff-45f8643d072f",
+      "qualifiers": {},
+      "references": [],
+      "status": "candidate-only-no-role-inference",
+      "reason": "Wikidata propertyだけで具体Roleや直接制作の意味を確定しない"
+    },
+    {
+      "kind": "wikidata-relation",
+      "work": "AKIRA",
+      "property": "P110",
+      "personQid": "Q378710",
+      "statementId": "Q91486$c6ba0878-449d-34a3-4d2f-3a2f77e2d904",
+      "qualifiers": {},
+      "references": [],
+      "status": "candidate-only-no-role-inference",
+      "reason": "Wikidata propertyだけで具体Roleや直接制作の意味を確定しない"
+    },
+    {
+      "kind": "ndl-credit",
+      "work": "AKIRA",
+      "isbn13": "9784061037113",
+      "rawResponsibility": "大友克洋 著",
+      "sourceUrl": "https://ndlsearch.ndl.go.jp/books/R100000002-I000002247557",
+      "status": "pending-human-acceptance",
+      "roleId": "AUTHORSHIP",
+      "person": "大友克洋",
+      "claimId": "14e377b1-6be2-446c-8c13-e0d5d425eafa",
+      "reusedClaim": false,
+      "subjectId": "c59a1b1d-7477-46a5-9669-644981d1d5d8",
+      "objectId": "ba77a4d0-cf0b-4cc9-bd98-9b153a92b3ba"
+    },
+    {
+      "kind": "wikidata-relation",
+      "work": "童夢",
+      "property": "P50",
+      "personQid": "Q378710",
+      "statementId": "Q1170375$4CAD5808-F8BB-4A9E-B62D-B7D4032A2822",
+      "qualifiers": {},
+      "references": [
+        {
+          "hash": "d4bd87b862b12d99d26e86472d44f26858dee639",
+          "snaks": {
+            "P143": [
+              {
+                "snaktype": "value",
+                "property": "P143",
+                "hash": "f30cbd35620c4ea6d0633aaf0210a8916130469b",
+                "datavalue": {
+                  "value": {
+                    "entity-type": "item",
+                    "numeric-id": 8447,
+                    "id": "Q8447"
+                  },
+                  "type": "wikibase-entityid"
+                },
+                "datatype": "wikibase-item"
+              }
+            ]
+          },
+          "snaks-order": [
+            "P143"
+          ]
+        }
+      ],
+      "status": "candidate-only-no-role-inference",
+      "reason": "Wikidata propertyだけで具体Roleや直接制作の意味を確定しない"
+    },
+    {
+      "kind": "wikidata-relation",
+      "work": "童夢",
+      "property": "P110",
+      "personQid": "Q378710",
+      "statementId": "Q1170375$93c21009-4bb9-5e94-1663-0ae2d3e06ae8",
+      "qualifiers": {},
+      "references": [],
+      "status": "candidate-only-no-role-inference",
+      "reason": "Wikidata propertyだけで具体Roleや直接制作の意味を確定しない"
+    },
+    {
+      "kind": "ndl-credit",
+      "work": "童夢",
+      "isbn13": "9784065262634",
+      "rawResponsibility": "大友克洋 著",
+      "sourceUrl": "https://ndlsearch.ndl.go.jp/books/R100000002-I031906385",
+      "status": "pending-human-acceptance",
+      "roleId": "AUTHORSHIP",
+      "person": "大友克洋",
+      "claimId": "69ed2335-344f-41a6-a17f-77708faa0398",
+      "reusedClaim": false,
+      "subjectId": "c59a1b1d-7477-46a5-9669-644981d1d5d8",
+      "objectId": "0914c6bb-701d-4c5a-b8f9-2c63cbff1ef3"
+    },
+    {
+      "kind": "wikidata-relation",
+      "work": "ORIGIN",
+      "property": "P50",
+      "personQid": "Q624839",
+      "statementId": "Q48837273$E165C2E8-9CA5-4828-884B-70105153CE74",
+      "qualifiers": {},
+      "references": [],
+      "status": "candidate-only-no-role-inference",
+      "reason": "Wikidata propertyだけで具体Roleや直接制作の意味を確定しない"
+    },
+    {
+      "kind": "ndl-credit",
+      "work": "ORIGIN",
+      "isbn13": "9784063829082",
+      "rawResponsibility": "Boichi 著",
+      "sourceUrl": "https://ndlsearch.ndl.go.jp/books/R100000002-I027811662",
+      "status": "pending-human-acceptance",
+      "roleId": "AUTHORSHIP",
+      "person": "Boichi",
+      "claimId": "24dca7b4-00bf-4f70-92f6-a498a494c29a",
+      "reusedClaim": false,
+      "subjectId": "b4de3765-e8c4-49f1-a322-a021475ffd09",
+      "objectId": "1982f262-39f3-4bfa-93a4-af3a86ec3ec8"
+    },
+    {
+      "kind": "wikidata-relation",
+      "work": "ファイアパンチ",
+      "property": "P50",
+      "personQid": "Q24864023",
+      "statementId": "Q28682711$2085855e-4441-0197-384a-4ff66921457b",
+      "qualifiers": {},
+      "references": [],
+      "status": "candidate-only-no-role-inference",
+      "reason": "Wikidata propertyだけで具体Roleや直接制作の意味を確定しない"
+    },
+    {
+      "kind": "ndl-credit",
+      "work": "ファイアパンチ",
+      "isbn13": "9784088807317",
+      "rawResponsibility": "藤本タツキ 著",
+      "sourceUrl": "https://ndlsearch.ndl.go.jp/books/R100000002-I027447634",
+      "status": "pending-human-acceptance",
+      "roleId": "AUTHORSHIP",
+      "person": "藤本タツキ",
+      "claimId": "d92e9a4e-4f60-445d-807b-63764f69528b",
+      "reusedClaim": false,
+      "subjectId": "9f43fefa-d878-4e5e-b1a2-0413432e9dbd",
+      "objectId": "480df823-5da8-45e4-aa20-1fdabe7ea5a3"
+    },
+    {
+      "kind": "wikidata-relation",
+      "work": "北斗の拳",
+      "property": "P50",
+      "personQid": "Q1016880",
+      "statementId": "Q733498$46C3DD80-DE1E-4603-BF7B-F10C0BC4B660",
+      "qualifiers": {},
+      "references": [],
+      "status": "candidate-only-no-role-inference",
+      "reason": "Wikidata propertyだけで具体Roleや直接制作の意味を確定しない"
+    },
+    {
+      "kind": "wikidata-relation",
+      "work": "北斗の拳",
+      "property": "P110",
+      "personQid": "Q1319232",
+      "statementId": "Q733498$c39b84a9-4827-d58d-78bc-41e34cacdd19",
+      "qualifiers": {},
+      "references": [],
+      "status": "candidate-only-no-role-inference",
+      "reason": "Wikidata propertyだけで具体Roleや直接制作の意味を確定しない"
+    },
+    {
+      "kind": "ndl-credit",
+      "work": "北斗の拳",
+      "isbn13": "9784086172837",
+      "rawResponsibility": "武論尊 作",
+      "sourceUrl": "https://ndlsearch.ndl.go.jp/books/R100000002-I000002600976",
+      "status": "pending-human-acceptance",
+      "roleId": "CREATION",
+      "person": "武論尊（史村翔名義を含む）",
+      "claimId": "e3bf903c-5d0c-4f91-bf83-2826f5a23db7",
+      "reusedClaim": false,
+      "subjectId": "3f22660f-01d7-4a4a-9ae6-f169c9a3dc4a",
+      "objectId": "cd2e6949-6c1b-4818-990f-4d4dbc5c5d54"
+    },
+    {
+      "kind": "ndl-credit",
+      "work": "北斗の拳",
+      "isbn13": "9784086172837",
+      "rawResponsibility": "原哲夫 画",
+      "sourceUrl": "https://ndlsearch.ndl.go.jp/books/R100000002-I000002600976",
+      "status": "pending-human-acceptance",
+      "roleId": "DRAWING",
+      "person": "原哲夫",
+      "claimId": "81684aff-84cf-4977-a3b5-7c2f5d746e5a",
+      "reusedClaim": false,
+      "subjectId": "ccb5ddb2-fb7c-4dad-8178-1a170342d0c6",
+      "objectId": "cd2e6949-6c1b-4818-990f-4d4dbc5c5d54"
+    },
+    {
+      "kind": "wikidata-relation",
+      "work": "モブサイコ100",
+      "property": "P50",
+      "personQid": "Q11237288",
+      "statementId": "Q11344543$353a272d-4a6c-0dab-ac26-d4e9de439bc1",
+      "qualifiers": {},
+      "references": [],
+      "status": "candidate-only-no-role-inference",
+      "reason": "Wikidata propertyだけで具体Roleや直接制作の意味を確定しない"
+    },
+    {
+      "kind": "wikidata-relation",
+      "work": "モブサイコ100",
+      "property": "P110",
+      "personQid": "Q11237288",
+      "statementId": "Q11344543$FF3A29FA-A88A-4628-AB81-952F60E34592",
+      "qualifiers": {},
+      "references": [],
+      "status": "candidate-only-no-role-inference",
+      "reason": "Wikidata propertyだけで具体Roleや直接制作の意味を確定しない"
+    },
+    {
+      "kind": "ndl-credit",
+      "work": "モブサイコ100",
+      "isbn13": "9784091241023",
+      "rawResponsibility": "ONE 著",
+      "sourceUrl": "https://ndlsearch.ndl.go.jp/books/R100000002-I024077257",
+      "status": "pending-human-acceptance",
+      "roleId": "AUTHORSHIP",
+      "person": "ONE",
+      "claimId": "a4d14533-1e4d-47c4-9494-67008811cf75",
+      "reusedClaim": false,
+      "subjectId": "afaa3ea0-f273-4481-95c5-5c31f9049cb2",
+      "objectId": "0c9eb1b7-2b2b-46b7-8110-9705138c3add"
+    }
+  ],
+  "holds": [
+    {
+      "reason": "unsupported-responsibility-role",
+      "work": "バクマン。",
+      "rawResponsibility": "小畑健 漫画",
+      "sourceUrl": "https://ndlsearch.ndl.go.jp/books/R100000002-I028322829"
+    },
+    {
+      "reason": "unsupported-responsibility-role",
+      "work": "【推しの子】",
+      "rawResponsibility": "赤坂アカ, 横槍メンゴ 著",
+      "sourceUrl": "https://ndlsearch.ndl.go.jp/books/R100000002-I030509435"
+    }
+  ],
+  "acquisitions": [
+    {
+      "kind": "wikidata",
+      "identifier": "Q348436",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q348436.json",
+      "sha256": "7f4ce9ec0ccc25fb52caec694621f5379f426a2065364a9413c9bc03a1cc5927",
+      "bytes": 117302,
+      "fetchedAt": "2026-10-17T05:52:20+00:00"
+    },
+    {
+      "kind": "wikidata",
+      "identifier": "Q3194504",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q3194504.json",
+      "sha256": "37056d1c7fe13d244ac29365cc84c05bad12a58dafb7770177635e916d4c7655",
+      "bytes": 16885,
+      "fetchedAt": "2026-10-17T05:52:21+00:00"
+    },
+    {
+      "kind": "wikidata",
+      "identifier": "Q1332841",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q1332841.json",
+      "sha256": "5b19c00602368b98d05eb556de32a63dc082dc60e3f6bf460c998f83f9221400",
+      "bytes": 51960,
+      "fetchedAt": "2026-10-17T05:52:24+00:00"
+    },
+    {
+      "kind": "wikidata",
+      "identifier": "Q1016880",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q1016880.json",
+      "sha256": "ccbabfe1e4c2acd5a0126d45f3fafa3679dbacd3821108c3ac43e1be61c543a5",
+      "bytes": 43833,
+      "fetchedAt": "2026-10-17T05:52:27+00:00"
+    },
+    {
+      "kind": "wikidata",
+      "identifier": "Q313703",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q313703.json",
+      "sha256": "3f01be590fb0840a601a3a2a4460dbe2e8e4f8b4612448826f571ce7e3f5f6f0",
+      "bytes": 84236,
+      "fetchedAt": "2026-10-17T05:52:31+00:00"
+    },
+    {
+      "kind": "wikidata",
+      "identifier": "Q558858",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q558858.json",
+      "sha256": "8111fb96ad2e236981b4baf04c7987d11a0c749eaa7f89d6c19d350e907fe754",
+      "bytes": 62410,
+      "fetchedAt": "2026-10-17T05:52:33+00:00"
+    },
+    {
+      "kind": "wikidata",
+      "identifier": "Q1993",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q1993.json",
+      "sha256": "1cd4e61bac5bf82cee69a57bee79b58c4989372c8d4b540a124add0f440d1f7f",
+      "bytes": 84248,
+      "fetchedAt": "2026-10-17T05:52:36+00:00"
+    },
+    {
+      "kind": "wikidata",
+      "identifier": "Q108109758",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q108109758.json",
+      "sha256": "56f024505f4b2cf7b5aa11ffcbb99077433c39a803c1b2b963ce1e3f94af4610",
+      "bytes": 10302,
+      "fetchedAt": "2026-10-17T05:52:39+00:00"
+    },
+    {
+      "kind": "wikidata",
+      "identifier": "Q23937543",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q23937543.json",
+      "sha256": "f468e267bc0072a224a3176669bf615ce16d8550641b406450ba4cdd603f6d40",
+      "bytes": 60699,
+      "fetchedAt": "2026-10-17T05:52:42+00:00"
+    },
+    {
+      "kind": "wikidata",
+      "identifier": "Q17220992",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q17220992.json",
+      "sha256": "f7d7aaa532877df7d7cba4ba0c0053fd6705ba66bd0c71c2d129e827440d9700",
+      "bytes": 45159,
+      "fetchedAt": "2026-10-17T05:52:45+00:00"
+    },
+    {
+      "kind": "wikidata",
+      "identifier": "Q38277627",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q38277627.json",
+      "sha256": "4736fe5b59494a4db4ba9f675f122f685dd703e1e944fed63d04aaa45f6eba6c",
+      "bytes": 30629,
+      "fetchedAt": "2026-10-17T05:52:48+00:00"
+    },
+    {
+      "kind": "wikidata",
+      "identifier": "Q105258125",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q105258125.json",
+      "sha256": "94cf54dc7f54ade515b3b6e884e1422a6b6f033682f0edc4de9d0edfa6442713",
+      "bytes": 31778,
+      "fetchedAt": "2026-10-17T05:52:51+00:00"
+    },
+    {
+      "kind": "wikidata",
+      "identifier": "Q265061",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q265061.json",
+      "sha256": "5952bbb15d462d4eb911eb4dbab059318b77ff88ea7c65f1c68653bf3206809d",
+      "bytes": 71934,
+      "fetchedAt": "2026-10-17T05:52:54+00:00"
+    },
+    {
+      "kind": "wikidata",
+      "identifier": "Q268789",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q268789.json",
+      "sha256": "6eb69a3a752f61581384bc29b8bdc1015b7781eaf6baedc408b524315cba9c28",
+      "bytes": 63270,
+      "fetchedAt": "2026-10-17T05:52:57+00:00"
+    },
+    {
+      "kind": "wikidata",
+      "identifier": "Q2235128",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q2235128.json",
+      "sha256": "07e9000eb30dcffa08a89334b87dcfa75c28ada782478f7201bfbb4533df8d15",
+      "bytes": 38049,
+      "fetchedAt": "2026-10-17T05:53:00+00:00"
+    },
+    {
+      "kind": "wikidata",
+      "identifier": "Q219948",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q219948.json",
+      "sha256": "c36328726e07abd7a203deac2dbdca78714f18cd10cd74e4f9fbf14f16bf16b8",
+      "bytes": 126758,
+      "fetchedAt": "2026-10-17T05:53:03+00:00"
+    },
+    {
+      "kind": "wikidata",
+      "identifier": "Q193300",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q193300.json",
+      "sha256": "9499ff4e9b9c574a55b3e4f428a852ded5edfd5e24f4c36b682d96dbc9472892",
+      "bytes": 209855,
+      "fetchedAt": "2026-10-17T05:53:07+00:00"
+    },
+    {
+      "kind": "wikidata",
+      "identifier": "Q958256",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q958256.json",
+      "sha256": "047acac4f4fb38e5ad6a2c790b3206d4e5294ff9425ad368a8ae4974538efa08",
+      "bytes": 66315,
+      "fetchedAt": "2026-10-17T05:53:09+00:00"
+    },
+    {
+      "kind": "wikidata",
+      "identifier": "Q378710",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q378710.json",
+      "sha256": "8993df002eb3877d94a58d326662a9de31fd6ef88c2877bc2e3744a7e6f8c78c",
+      "bytes": 120564,
+      "fetchedAt": "2026-10-17T05:53:12+00:00"
+    },
+    {
+      "kind": "wikidata",
+      "identifier": "Q624839",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q624839.json",
+      "sha256": "02dbe1815ac645f4bd479002ee059a96c69502271baba807ae2babe1e05a0127",
+      "bytes": 39072,
+      "fetchedAt": "2026-10-17T05:53:15+00:00"
+    },
+    {
+      "kind": "wikidata",
+      "identifier": "Q24864023",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q24864023.json",
+      "sha256": "ae2a0e76c1a8429e169fa407c13751772b22f9d6d0fcc15847ea77c6a4898e2c",
+      "bytes": 70316,
+      "fetchedAt": "2026-10-17T05:53:18+00:00"
+    },
+    {
+      "kind": "wikidata",
+      "identifier": "Q1319232",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q1319232.json",
+      "sha256": "0a8ac962d5881fcafaaaade5efef1d361e0677873fc0dfe221a7fd60585185f2",
+      "bytes": 51226,
+      "fetchedAt": "2026-10-17T05:53:21+00:00"
+    },
+    {
+      "kind": "wikidata",
+      "identifier": "Q11237288",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q11237288.json",
+      "sha256": "8c48213dd8733655d985b1cfc28b1c2d36f90032fca672570daddd01d5129459",
+      "bytes": 65341,
+      "fetchedAt": "2026-10-17T05:53:24+00:00"
+    },
+    {
+      "kind": "wikidata",
+      "identifier": "Q1096269",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q1096269.json",
+      "sha256": "bb55fc073b02c0b0ea1c957044c6255161ed0636018784dfa8a15dc2d2008772",
+      "bytes": 14772,
+      "fetchedAt": "2026-10-17T05:53:27+00:00"
+    },
+    {
+      "kind": "ndl",
+      "identifier": "9784091810816",
+      "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&maximumRecords=5&query=isbn%3D%229784091810816%22+AND+dpid%3Diss-ndl-opac",
+      "sha256": "57ad2dc631add27117cf8ba4027f6b9f353f4716c416bc13d6eff183d8b9b53d",
+      "bytes": 14060,
+      "fetchedAt": "2026-10-17T05:53:30+00:00"
+    },
+    {
+      "kind": "wikidata",
+      "identifier": "Q102231027",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q102231027.json",
+      "sha256": "b2fa8468df4d4c0d3746de9a9c05c99f573461204ef60706719940945db38abc",
+      "bytes": 15020,
+      "fetchedAt": "2026-10-17T05:53:33+00:00"
+    },
+    {
+      "kind": "ndl",
+      "identifier": "9784098602780",
+      "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&maximumRecords=5&query=isbn%3D%229784098602780%22+AND+dpid%3Diss-ndl-opac",
+      "sha256": "5827fa1319a761ad93be333b3df5a9f22332ef56cd4fa33048a7c7b283155a63",
+      "bytes": 9612,
+      "fetchedAt": "2026-10-17T05:53:37+00:00"
+    },
+    {
+      "kind": "wikidata",
+      "identifier": "Q669481",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q669481.json",
+      "sha256": "a5d252f8bae7ba24b23c8e27be1c77f98de7a844e45b8e4042ff5516ceec8212",
+      "bytes": 20836,
+      "fetchedAt": "2026-10-17T05:53:39+00:00"
+    },
+    {
+      "kind": "ndl",
+      "identifier": "9784091823618",
+      "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&maximumRecords=5&query=isbn%3D%229784091823618%22+AND+dpid%3Diss-ndl-opac",
+      "sha256": "98cf241933b367852b6abe52573f4d03156b7176e567cf70fec1cf680e960d02",
+      "bytes": 8387,
+      "fetchedAt": "2026-10-17T05:53:41+00:00"
+    },
+    {
+      "kind": "wikidata",
+      "identifier": "Q804555",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q804555.json",
+      "sha256": "a3da175299a831bbb1581d64e67ad21a0f7424b22902145a47b55f2a5ba3ae1c",
+      "bytes": 37529,
+      "fetchedAt": "2026-10-17T05:53:45+00:00"
+    },
+    {
+      "kind": "ndl",
+      "identifier": "9784086196901",
+      "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&maximumRecords=5&query=isbn%3D%229784086196901%22+AND+dpid%3Diss-ndl-opac",
+      "sha256": "2566bd037b2a74a8fcd0cfabf9596485883c03303a0d6467722cbf6c19111a2c",
+      "bytes": 10442,
+      "fetchedAt": "2026-10-17T05:55:24+00:00"
+    },
+    {
+      "kind": "wikidata",
+      "identifier": "Q63323229",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q63323229.json",
+      "sha256": "34e3c7cfb246070a69373cd3ea4a81fb9b14767c71ea714da270fa00876c0512",
+      "bytes": 21749,
+      "fetchedAt": "2026-10-17T05:55:26+00:00"
+    },
+    {
+      "kind": "ndl",
+      "identifier": "9784088820224",
+      "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&maximumRecords=5&query=isbn%3D%229784088820224%22+AND+dpid%3Diss-ndl-opac",
+      "sha256": "896f4a7e244989ee1edcd74b3241d3582ddc3e1d737fe11c470f7a2c699df938",
+      "bytes": 9538,
+      "fetchedAt": "2026-10-17T05:55:28+00:00"
+    },
+    {
+      "kind": "wikidata",
+      "identifier": "Q97310775",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q97310775.json",
+      "sha256": "b2e34328bdb6833f9a4e2ec8ad8d095c7e90a1fa5d0d583abf05b8e0e5301c75",
+      "bytes": 72560,
+      "fetchedAt": "2026-10-17T05:55:32+00:00"
+    },
+    {
+      "kind": "ndl",
+      "identifier": "9784088916507",
+      "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&maximumRecords=5&query=isbn%3D%229784088916507%22+AND+dpid%3Diss-ndl-opac",
+      "sha256": "2ded40689265bcf1ff93978ad35d1df9e5324e456af5b0e4da072901630cdcf8",
+      "bytes": 20923,
+      "fetchedAt": "2026-10-17T05:57:11+00:00"
+    },
+    {
+      "kind": "wikidata",
+      "identifier": "Q98642652",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q98642652.json",
+      "sha256": "fc291916fb7651161f2c4c7c2f2afc180735ebcf587bbb6c96f0cef3b8476f73",
+      "bytes": 208729,
+      "fetchedAt": "2026-10-17T05:57:13+00:00"
+    },
+    {
+      "kind": "ndl",
+      "identifier": "9784098501809",
+      "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&maximumRecords=5&query=isbn%3D%229784098501809%22+AND+dpid%3Diss-ndl-opac",
+      "sha256": "8826d00c9d87025e9b7ecb76e42e558a00a373a5bd83254a8634b3bbb5f611d7",
+      "bytes": 19352,
+      "fetchedAt": "2026-10-17T05:57:15+00:00"
+    },
+    {
+      "kind": "wikidata",
+      "identifier": "Q11298673",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q11298673.json",
+      "sha256": "f836cfcdf40f5b778be363e26ebb29cc6e3b569917820dcc7545ab982e2ae16e",
+      "bytes": 31800,
+      "fetchedAt": "2026-10-17T05:57:19+00:00"
+    },
+    {
+      "kind": "ndl",
+      "identifier": "9784757538870",
+      "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&maximumRecords=5&query=isbn%3D%229784757538870%22+AND+dpid%3Diss-ndl-opac",
+      "sha256": "eb74a333a7f949dfc30a0b654332513af4dda1d0be0f2e760cf283072577d516",
+      "bytes": 7415,
+      "fetchedAt": "2026-10-17T05:57:21+00:00"
+    },
+    {
+      "kind": "wikidata",
+      "identifier": "Q467854",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q467854.json",
+      "sha256": "84518b45444803a529ed7e36cd8663792a0855dca9ee737f5f99bc348552fd35",
+      "bytes": 23094,
+      "fetchedAt": "2026-10-17T05:57:25+00:00"
+    },
+    {
+      "kind": "ndl",
+      "identifier": "9784091912510",
+      "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&maximumRecords=5&query=isbn%3D%229784091912510%22+AND+dpid%3Diss-ndl-opac",
+      "sha256": "8a79134272e407b9a1c2e39d08f9f25187cce42dc947e1f052e8552af911b41d",
+      "bytes": 24944,
+      "fetchedAt": "2026-10-17T05:57:27+00:00"
+    },
+    {
+      "kind": "wikidata",
+      "identifier": "Q124312385",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q124312385.json",
+      "sha256": "c72c298972cef0c274cab1be46175eced61cbb998d994ed76fae7111cc90aedb",
+      "bytes": 16077,
+      "fetchedAt": "2026-10-17T05:57:31+00:00"
+    },
+    {
+      "kind": "ndl",
+      "identifier": "9784091910110",
+      "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&maximumRecords=5&query=isbn%3D%229784091910110%22+AND+dpid%3Diss-ndl-opac",
+      "sha256": "b4bdfd4fe9ab194c4bba70bf3dfedb7c5d099ddb5c71c7f7ef9517d355f55139",
+      "bytes": 27999,
+      "fetchedAt": "2026-10-17T05:57:33+00:00"
+    },
+    {
+      "kind": "wikidata",
+      "identifier": "Q1338432",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q1338432.json",
+      "sha256": "3c65fd7774a0d94a635077e4142935a3ed96ef5b7f447048c840f063e0a91819",
+      "bytes": 39601,
+      "fetchedAt": "2026-10-17T05:57:37+00:00"
+    },
+    {
+      "kind": "ndl",
+      "identifier": "9784592881513",
+      "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&maximumRecords=5&query=isbn%3D%229784592881513%22+AND+dpid%3Diss-ndl-opac",
+      "sha256": "9fa61de705b8e1513c49968848a2d8e67666f97d184d0235cb0650e063f4a78e",
+      "bytes": 23410,
+      "fetchedAt": "2026-10-17T05:57:39+00:00"
+    },
+    {
+      "kind": "wikidata",
+      "identifier": "Q2668005",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q2668005.json",
+      "sha256": "d7354f6d7b6652acfa6820eef5a05a461f5534be2eff499ed21e304abacc61a3",
+      "bytes": 29643,
+      "fetchedAt": "2026-10-17T05:57:43+00:00"
+    },
+    {
+      "kind": "ndl",
+      "identifier": "9784757520097",
+      "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&maximumRecords=5&query=isbn%3D%229784757520097%22+AND+dpid%3Diss-ndl-opac",
+      "sha256": "97e6d11d14cf83bb81db49ea65c1277de09c3057cd5dd1c0929c974217fd074c",
+      "bytes": 18198,
+      "fetchedAt": "2026-10-17T05:58:28+00:00"
+    },
+    {
+      "kind": "wikidata",
+      "identifier": "Q809789",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q809789.json",
+      "sha256": "f5865b17a6c19eaad689ed6cacebbc8ec485e4c04e14090522a95f0af76f364c",
+      "bytes": 13169,
+      "fetchedAt": "2026-10-17T05:58:29+00:00"
+    },
+    {
+      "kind": "ndl",
+      "identifier": "9784091914316",
+      "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&maximumRecords=5&query=isbn%3D%229784091914316%22+AND+dpid%3Diss-ndl-opac",
+      "sha256": "ff8eaa932dbc230ccdc7b23b2338105418a0989022daf5e888bc1359364eaac0",
+      "bytes": 9298,
+      "fetchedAt": "2026-10-17T05:58:31+00:00"
+    },
+    {
+      "kind": "wikidata",
+      "identifier": "Q2679175",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q2679175.json",
+      "sha256": "47ba4dff093c90cc4148699af8249abb87365c52a1de44a931e664227d73eabd",
+      "bytes": 33154,
+      "fetchedAt": "2026-10-17T05:58:35+00:00"
+    },
+    {
+      "kind": "ndl",
+      "identifier": "9784091380135",
+      "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&maximumRecords=5&query=isbn%3D%229784091380135%22+AND+dpid%3Diss-ndl-opac",
+      "sha256": "213918b24f7a47cc754ebc2f12a7b2842af617f3b79385c24e1a8ca100bb6dcf",
+      "bytes": 11687,
+      "fetchedAt": "2026-10-17T05:58:37+00:00"
+    },
+    {
+      "kind": "wikidata",
+      "identifier": "Q715723",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q715723.json",
+      "sha256": "3346b76be112d5c3aaed487c88a782f1b7b724bed46aa6301d11518fefb373db",
+      "bytes": 48098,
+      "fetchedAt": "2026-10-17T05:58:41+00:00"
+    },
+    {
+      "kind": "ndl",
+      "identifier": "9784091228017",
+      "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&maximumRecords=5&query=isbn%3D%229784091228017%22+AND+dpid%3Diss-ndl-opac",
+      "sha256": "0658872e136a4f503be2a1013d0ecb61c4b329e56682a973035cd06716ac6180",
+      "bytes": 13815,
+      "fetchedAt": "2026-10-17T05:58:45+00:00"
+    },
+    {
+      "kind": "wikidata",
+      "identifier": "Q272015",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q272015.json",
+      "sha256": "5ee04643022f4a6ec07355424e01cf58cacb1461b37979ff02fe60c26e7082f9",
+      "bytes": 177722,
+      "fetchedAt": "2026-10-17T05:58:47+00:00"
+    },
+    {
+      "kind": "ndl",
+      "identifier": "9784091220318",
+      "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&maximumRecords=5&query=isbn%3D%229784091220318%22+AND+dpid%3Diss-ndl-opac",
+      "sha256": "5eec867879dafce2cae422fb3bc111cc955835ac0409d14d2c711f01a8d525d2",
+      "bytes": 33012,
+      "fetchedAt": "2026-10-17T05:58:49+00:00"
+    },
+    {
+      "kind": "wikidata",
+      "identifier": "Q133691",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q133691.json",
+      "sha256": "fc65398d344f64ce40e270bd9fbd2451106e2308aff0e915449cd1c7e5278496",
+      "bytes": 20869,
+      "fetchedAt": "2026-10-17T05:58:53+00:00"
+    },
+    {
+      "kind": "ndl",
+      "identifier": "9784253169813",
+      "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&maximumRecords=5&query=isbn%3D%229784253169813%22+AND+dpid%3Diss-ndl-opac",
+      "sha256": "4802d4070e7de695b8ca166a6343536d8124795f42d1cc162489f918b2475576",
+      "bytes": 55204,
+      "fetchedAt": "2026-10-17T05:58:55+00:00"
+    },
+    {
+      "kind": "wikidata",
+      "identifier": "Q2551007",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q2551007.json",
+      "sha256": "b7d72f17a8b87aad0c5541d731128d8776f3dbac49ec2ad3bb2fa751bef4eb56",
+      "bytes": 14259,
+      "fetchedAt": "2026-10-17T05:58:59+00:00"
+    },
+    {
+      "kind": "ndl",
+      "identifier": "9784884752934",
+      "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&maximumRecords=5&query=isbn%3D%229784884752934%22+AND+dpid%3Diss-ndl-opac",
+      "sha256": "c42b6750337660bd2d0c1629bc5a291e90cf1aa04a3c9baf2ca091d533aa6989",
+      "bytes": 18120,
+      "fetchedAt": "2026-10-17T05:59:01+00:00"
+    },
+    {
+      "kind": "wikidata",
+      "identifier": "Q91486",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q91486.json",
+      "sha256": "560af979fee8d85b124c461ffdb73708f071a255bbb38acc3bc1ab07e49bebb7",
+      "bytes": 44211,
+      "fetchedAt": "2026-10-17T05:59:05+00:00"
+    },
+    {
+      "kind": "ndl",
+      "identifier": "9784061037113",
+      "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&maximumRecords=5&query=isbn%3D%229784061037113%22+AND+dpid%3Diss-ndl-opac",
+      "sha256": "50abcc0a625339b0ab6788f024cf7b7036d6c5b1afeaff8e2cc1619abed74eae",
+      "bytes": 36084,
+      "fetchedAt": "2026-10-17T05:59:07+00:00"
+    },
+    {
+      "kind": "wikidata",
+      "identifier": "Q1170375",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q1170375.json",
+      "sha256": "ed1ceca666eff20be84bf1df96337adc9976ed4a915331b7890cb7b36a14a935",
+      "bytes": 10518,
+      "fetchedAt": "2026-10-17T05:59:11+00:00"
+    },
+    {
+      "kind": "ndl",
+      "identifier": "9784065262634",
+      "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&maximumRecords=5&query=isbn%3D%229784065262634%22+AND+dpid%3Diss-ndl-opac",
+      "sha256": "eecccca238d2c7dcab713da1d731914cf757265210cb295ecf0f117290bb1a5d",
+      "bytes": 15143,
+      "fetchedAt": "2026-10-17T05:59:13+00:00"
+    },
+    {
+      "kind": "wikidata",
+      "identifier": "Q48837273",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q48837273.json",
+      "sha256": "cc5b30082ef7742ce7a07f3c3d1c74dda3cc991661773645183fd81538f54088",
+      "bytes": 24010,
+      "fetchedAt": "2026-10-17T05:59:17+00:00"
+    },
+    {
+      "kind": "ndl",
+      "identifier": "9784063829082",
+      "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&maximumRecords=5&query=isbn%3D%229784063829082%22+AND+dpid%3Diss-ndl-opac",
+      "sha256": "6b727efd7a349cc36eb403f892a0f4ccac207b50773c16326277c11819080237",
+      "bytes": 11104,
+      "fetchedAt": "2026-10-17T05:59:19+00:00"
+    },
+    {
+      "kind": "wikidata",
+      "identifier": "Q28682711",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q28682711.json",
+      "sha256": "b409d5078753919f1ba00deb72cc25696fc50f92c3bc3ba283ddf7dcea0700a5",
+      "bytes": 28713,
+      "fetchedAt": "2026-10-17T05:59:23+00:00"
+    },
+    {
+      "kind": "ndl",
+      "identifier": "9784088807317",
+      "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&maximumRecords=5&query=isbn%3D%229784088807317%22+AND+dpid%3Diss-ndl-opac",
+      "sha256": "a22d8c70985cf22e882058dc9fd4d78bb54746aa9c8b2161d39c9f8f06576051",
+      "bytes": 9603,
+      "fetchedAt": "2026-10-17T05:59:25+00:00"
+    },
+    {
+      "kind": "wikidata",
+      "identifier": "Q733498",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q733498.json",
+      "sha256": "578bb32239eed4fc6f8f95a8b118505bb7d8f5409b170c8647f1454eed86e8b3",
+      "bytes": 46138,
+      "fetchedAt": "2026-10-17T05:59:29+00:00"
+    },
+    {
+      "kind": "ndl",
+      "identifier": "9784086172837",
+      "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&maximumRecords=5&query=isbn%3D%229784086172837%22+AND+dpid%3Diss-ndl-opac",
+      "sha256": "2c010b94b02136c01027006605f47f3d634bb8b60445af08b3243949e10fb74c",
+      "bytes": 18490,
+      "fetchedAt": "2026-10-17T05:59:32+00:00"
+    },
+    {
+      "kind": "wikidata",
+      "identifier": "Q11344543",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q11344543.json",
+      "sha256": "d9a2282cd783189764acc261d78ddf979f2e0f0db90186fd6aae63b7216e0229",
+      "bytes": 29257,
+      "fetchedAt": "2026-10-17T05:59:35+00:00"
+    },
+    {
+      "kind": "ndl",
+      "identifier": "9784091241023",
+      "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&maximumRecords=5&query=isbn%3D%229784091241023%22+AND+dpid%3Diss-ndl-opac",
+      "sha256": "d07038da1d74587d83de3309b01e50f3db6fd2cf678abe3339da6dca255c8c3a",
+      "bytes": 10946,
+      "fetchedAt": "2026-10-17T05:59:37+00:00"
+    }
+  ]
+}

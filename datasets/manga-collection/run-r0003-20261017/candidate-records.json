@@ -1,0 +1,2332 @@
+{
+  "status": "pending-human-acceptance",
+  "records": {
+    "entities": [
+      {
+        "id": "0914c6bb-701d-4c5a-b8f9-2c63cbff1ef3",
+        "kind": "work",
+        "name": "童夢",
+        "description": null,
+        "aliases": [
+          "Domu: A Child's Dream"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q1170375"
+          }
+        ],
+        "createdAt": "2026-10-17T00:00:00Z",
+        "updatedAt": "2026-10-17T00:00:00Z",
+        "event": null
+      },
+      {
+        "id": "0c9eb1b7-2b2b-46b7-8110-9705138c3add",
+        "kind": "work",
+        "name": "モブサイコ100",
+        "description": null,
+        "aliases": [
+          "Mob Psycho 100"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q11344543"
+          }
+        ],
+        "createdAt": "2026-10-17T00:00:00Z",
+        "updatedAt": "2026-10-17T00:00:00Z",
+        "event": null
+      },
+      {
+        "id": "1866bbe5-7e00-4afc-965f-5e968481f065",
+        "kind": "person",
+        "name": "田村由美",
+        "description": null,
+        "aliases": [
+          "Yumi Tamura"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q2235128"
+          }
+        ],
+        "createdAt": "2026-10-17T00:00:00Z",
+        "updatedAt": "2026-10-17T00:00:00Z",
+        "event": null
+      },
+      {
+        "id": "1982f262-39f3-4bfa-93a4-af3a86ec3ec8",
+        "kind": "work",
+        "name": "ORIGIN",
+        "description": null,
+        "aliases": [
+          "Origin"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q48837273"
+          }
+        ],
+        "createdAt": "2026-10-17T00:00:00Z",
+        "updatedAt": "2026-10-17T00:00:00Z",
+        "event": null
+      },
+      {
+        "id": "1edca4c7-0e4e-4769-859c-dde40e7e973a",
+        "kind": "person",
+        "name": "岸本斉史",
+        "description": null,
+        "aliases": [
+          "Masashi Kishimoto"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q1993"
+          }
+        ],
+        "createdAt": "2026-10-17T00:00:00Z",
+        "updatedAt": "2026-10-17T00:00:00Z",
+        "event": null
+      },
+      {
+        "id": "20b7ba43-d12d-4d39-9a8e-f9e92e9d40d2",
+        "kind": "person",
+        "name": "山田鐘人",
+        "description": null,
+        "aliases": [
+          "Kanehito Yamada"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q38277627"
+          }
+        ],
+        "createdAt": "2026-10-17T00:00:00Z",
+        "updatedAt": "2026-10-17T00:00:00Z",
+        "event": null
+      },
+      {
+        "id": "3427040b-88fd-4db5-b546-dd237abad032",
+        "kind": "work",
+        "name": "バクマン。",
+        "description": null,
+        "aliases": [
+          "Bakuman"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q804555"
+          }
+        ],
+        "createdAt": "2026-10-17T00:00:00Z",
+        "updatedAt": "2026-10-17T00:00:00Z",
+        "event": null
+      },
+      {
+        "id": "398d712d-23d9-455f-8897-f9384dd94930",
+        "kind": "work",
+        "name": "天才バカボン",
+        "description": null,
+        "aliases": [
+          "Tensai Bakabon"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q2551007"
+          }
+        ],
+        "createdAt": "2026-10-17T00:00:00Z",
+        "updatedAt": "2026-10-17T00:00:00Z",
+        "event": null
+      },
+      {
+        "id": "3f22660f-01d7-4a4a-9ae6-f169c9a3dc4a",
+        "kind": "person",
+        "name": "武論尊",
+        "description": null,
+        "aliases": [
+          "Buronson",
+          "史村翔"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q1016880"
+          }
+        ],
+        "createdAt": "2026-10-17T00:00:00Z",
+        "updatedAt": "2026-10-17T00:00:00Z",
+        "event": null
+      },
+      {
+        "id": "40a8ddd3-f333-485c-a12a-ac3d0961111b",
+        "kind": "work",
+        "name": "11人いる！",
+        "description": null,
+        "aliases": [
+          "11人いる!",
+          "They Were Eleven"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q124312385"
+          }
+        ],
+        "createdAt": "2026-10-17T00:00:00Z",
+        "updatedAt": "2026-10-17T00:00:00Z",
+        "event": null
+      },
+      {
+        "id": "420d89ea-9780-4e01-ac64-9c5e8597d0c8",
+        "kind": "person",
+        "name": "横槍メンゴ",
+        "description": null,
+        "aliases": [
+          "Mengo Yokoyari"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q17220992"
+          }
+        ],
+        "createdAt": "2026-10-17T00:00:00Z",
+        "updatedAt": "2026-10-17T00:00:00Z",
+        "event": null
+      },
+      {
+        "id": "480df823-5da8-45e4-aa20-1fdabe7ea5a3",
+        "kind": "work",
+        "name": "ファイアパンチ",
+        "description": null,
+        "aliases": [
+          "Fire Punch"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q28682711"
+          }
+        ],
+        "createdAt": "2026-10-17T00:00:00Z",
+        "updatedAt": "2026-10-17T00:00:00Z",
+        "event": null
+      },
+      {
+        "id": "4b90e125-b331-4361-8681-93a12c662cb7",
+        "kind": "work",
+        "name": "BASARA",
+        "description": null,
+        "aliases": [
+          "Basara"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q809789"
+          }
+        ],
+        "createdAt": "2026-10-17T00:00:00Z",
+        "updatedAt": "2026-10-17T00:00:00Z",
+        "event": null
+      },
+      {
+        "id": "4e506b04-cc57-48e9-b502-0d89476bb5f4",
+        "kind": "work",
+        "name": "パイナップルARMY",
+        "description": null,
+        "aliases": [
+          "Pineapple Army"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q1096269"
+          }
+        ],
+        "createdAt": "2026-10-17T00:00:00Z",
+        "updatedAt": "2026-10-17T00:00:00Z",
+        "event": null
+      },
+      {
+        "id": "5c5f452c-1e74-4985-aaec-811a8e329f42",
+        "kind": "work",
+        "name": "7SEEDS",
+        "description": null,
+        "aliases": [
+          "7 Seeds"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q2679175"
+          }
+        ],
+        "createdAt": "2026-10-17T00:00:00Z",
+        "updatedAt": "2026-10-17T00:00:00Z",
+        "event": null
+      },
+      {
+        "id": "6bf4aeb4-ac2b-499f-bfaa-0588024ef93d",
+        "kind": "person",
+        "name": "竹宮惠子",
+        "description": null,
+        "aliases": [
+          "Keiko Takemiya",
+          "竹宮恵子"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q268789"
+          }
+        ],
+        "createdAt": "2026-10-17T00:00:00Z",
+        "updatedAt": "2026-10-17T00:00:00Z",
+        "event": null
+      },
+      {
+        "id": "6c9095bd-1969-4bcd-9282-2d1e9e411254",
+        "kind": "person",
+        "name": "萩尾望都",
+        "description": null,
+        "aliases": [
+          "Moto Hagio"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q265061"
+          }
+        ],
+        "createdAt": "2026-10-17T00:00:00Z",
+        "updatedAt": "2026-10-17T00:00:00Z",
+        "event": null
+      },
+      {
+        "id": "711dc415-45d5-4d35-8cca-068332180cc0",
+        "kind": "person",
+        "name": "赤坂アカ",
+        "description": null,
+        "aliases": [
+          "Aka Akasaka"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q23937543"
+          }
+        ],
+        "createdAt": "2026-10-17T00:00:00Z",
+        "updatedAt": "2026-10-17T00:00:00Z",
+        "event": null
+      },
+      {
+        "id": "743d7fc0-ddc6-446a-8aa1-d9a9b284a326",
+        "kind": "person",
+        "name": "高橋留美子",
+        "description": null,
+        "aliases": [
+          "Rumiko Takahashi"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q219948"
+          }
+        ],
+        "createdAt": "2026-10-17T00:00:00Z",
+        "updatedAt": "2026-10-17T00:00:00Z",
+        "event": null
+      },
+      {
+        "id": "76884305-ef0d-4cb0-ace2-90cfac57de3e",
+        "kind": "work",
+        "name": "ブラック・ジャック",
+        "description": null,
+        "aliases": [
+          "Black Jack"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q133691"
+          }
+        ],
+        "createdAt": "2026-10-17T00:00:00Z",
+        "updatedAt": "2026-10-17T00:00:00Z",
+        "event": null
+      },
+      {
+        "id": "8a0d3d5a-feb6-4ba3-8993-64b6ac79de12",
+        "kind": "work",
+        "name": "【推しの子】",
+        "description": null,
+        "aliases": [
+          "Oshi no Ko"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q97310775"
+          }
+        ],
+        "createdAt": "2026-10-17T00:00:00Z",
+        "updatedAt": "2026-10-17T00:00:00Z",
+        "event": null
+      },
+      {
+        "id": "929116a2-77ff-443f-94e6-871c8b78f451",
+        "kind": "work",
+        "name": "葬送のフリーレン",
+        "description": null,
+        "aliases": [
+          "Frieren"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q98642652"
+          }
+        ],
+        "createdAt": "2026-10-17T00:00:00Z",
+        "updatedAt": "2026-10-17T00:00:00Z",
+        "event": null
+      },
+      {
+        "id": "98b8ca7a-9638-4e5a-8fbd-62a353e4f159",
+        "kind": "work",
+        "name": "風と木の詩",
+        "description": null,
+        "aliases": [
+          "Kaze to Ki no Uta"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q1338432"
+          }
+        ],
+        "createdAt": "2026-10-17T00:00:00Z",
+        "updatedAt": "2026-10-17T00:00:00Z",
+        "event": null
+      },
+      {
+        "id": "9f43fefa-d878-4e5e-b1a2-0413432e9dbd",
+        "kind": "person",
+        "name": "藤本タツキ",
+        "description": null,
+        "aliases": [
+          "Tatsuki Fujimoto"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q24864023"
+          }
+        ],
+        "createdAt": "2026-10-17T00:00:00Z",
+        "updatedAt": "2026-10-17T00:00:00Z",
+        "event": null
+      },
+      {
+        "id": "a13205e2-220c-4b7d-8a1a-39dbefe52db8",
+        "kind": "person",
+        "name": "大場つぐみ",
+        "description": null,
+        "aliases": [
+          "Tsugumi Ohba"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q558858"
+          }
+        ],
+        "createdAt": "2026-10-17T00:00:00Z",
+        "updatedAt": "2026-10-17T00:00:00Z",
+        "event": null
+      },
+      {
+        "id": "a22fd2cd-aadc-4ca9-bf39-cb4bd7e0e953",
+        "kind": "person",
+        "name": "赤塚不二夫",
+        "description": null,
+        "aliases": [
+          "Fujio Akatsuka"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q958256"
+          }
+        ],
+        "createdAt": "2026-10-17T00:00:00Z",
+        "updatedAt": "2026-10-17T00:00:00Z",
+        "event": null
+      },
+      {
+        "id": "aafae4fe-6f56-47bb-af9f-dec69425f136",
+        "kind": "work",
+        "name": "らんま1/2",
+        "description": null,
+        "aliases": [
+          "Ranma ½"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q272015"
+          }
+        ],
+        "createdAt": "2026-10-17T00:00:00Z",
+        "updatedAt": "2026-10-17T00:00:00Z",
+        "event": null
+      },
+      {
+        "id": "afaa3ea0-f273-4481-95c5-5c31f9049cb2",
+        "kind": "person",
+        "name": "ONE",
+        "description": null,
+        "aliases": [
+          "One"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q11237288"
+          }
+        ],
+        "createdAt": "2026-10-17T00:00:00Z",
+        "updatedAt": "2026-10-17T00:00:00Z",
+        "event": null
+      },
+      {
+        "id": "b1e1232d-b038-4c11-b80c-ab1c2710d2bf",
+        "kind": "work",
+        "name": "うる星やつら",
+        "description": null,
+        "aliases": [
+          "Urusei Yatsura"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q715723"
+          }
+        ],
+        "createdAt": "2026-10-17T00:00:00Z",
+        "updatedAt": "2026-10-17T00:00:00Z",
+        "event": null
+      },
+      {
+        "id": "b4de3765-e8c4-49f1-a322-a021475ffd09",
+        "kind": "person",
+        "name": "Boichi",
+        "description": null,
+        "aliases": [],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q624839"
+          }
+        ],
+        "createdAt": "2026-10-17T00:00:00Z",
+        "updatedAt": "2026-10-17T00:00:00Z",
+        "event": null
+      },
+      {
+        "id": "ba77a4d0-cf0b-4cc9-bd98-9b153a92b3ba",
+        "kind": "work",
+        "name": "AKIRA",
+        "description": null,
+        "aliases": [
+          "Akira"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q91486"
+          }
+        ],
+        "createdAt": "2026-10-17T00:00:00Z",
+        "updatedAt": "2026-10-17T00:00:00Z",
+        "event": null
+      },
+      {
+        "id": "baf73bb9-dda4-474c-acaf-a7a8ce52caf2",
+        "kind": "work",
+        "name": "地球へ…",
+        "description": null,
+        "aliases": [
+          "Toward the Terra"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q2668005"
+          }
+        ],
+        "createdAt": "2026-10-17T00:00:00Z",
+        "updatedAt": "2026-10-17T00:00:00Z",
+        "event": null
+      },
+      {
+        "id": "c1e93fb7-3547-4b64-bd7c-bce073a1198a",
+        "kind": "work",
+        "name": "あさドラ！",
+        "description": null,
+        "aliases": [
+          "Asadora!",
+          "連続漫画小説 あさドラ!"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q102231027"
+          }
+        ],
+        "createdAt": "2026-10-17T00:00:00Z",
+        "updatedAt": "2026-10-17T00:00:00Z",
+        "event": null
+      },
+      {
+        "id": "c59a1b1d-7477-46a5-9669-644981d1d5d8",
+        "kind": "person",
+        "name": "大友克洋",
+        "description": null,
+        "aliases": [
+          "Katsuhiro Otomo"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q378710"
+          }
+        ],
+        "createdAt": "2026-10-17T00:00:00Z",
+        "updatedAt": "2026-10-17T00:00:00Z",
+        "event": null
+      },
+      {
+        "id": "c74e0874-eb89-4825-a824-3ff182fe8053",
+        "kind": "work",
+        "name": "ポーの一族",
+        "description": null,
+        "aliases": [
+          "The Poe Clan"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q467854"
+          }
+        ],
+        "createdAt": "2026-10-17T00:00:00Z",
+        "updatedAt": "2026-10-17T00:00:00Z",
+        "event": null
+      },
+      {
+        "id": "c9080259-3866-4c25-999f-4a5a22046ac1",
+        "kind": "work",
+        "name": "サンクチュアリ",
+        "description": null,
+        "aliases": [
+          "Sanctuary"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q669481"
+          }
+        ],
+        "createdAt": "2026-10-17T00:00:00Z",
+        "updatedAt": "2026-10-17T00:00:00Z",
+        "event": null
+      },
+      {
+        "id": "ccb5ddb2-fb7c-4dad-8178-1a170342d0c6",
+        "kind": "person",
+        "name": "原哲夫",
+        "description": null,
+        "aliases": [
+          "Tetsuo Hara"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q1319232"
+          }
+        ],
+        "createdAt": "2026-10-17T00:00:00Z",
+        "updatedAt": "2026-10-17T00:00:00Z",
+        "event": null
+      },
+      {
+        "id": "cd2e6949-6c1b-4818-990f-4d4dbc5c5d54",
+        "kind": "work",
+        "name": "北斗の拳",
+        "description": null,
+        "aliases": [
+          "Fist of the North Star"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q733498"
+          }
+        ],
+        "createdAt": "2026-10-17T00:00:00Z",
+        "updatedAt": "2026-10-17T00:00:00Z",
+        "event": null
+      },
+      {
+        "id": "d4a3f93f-bbcd-42df-9567-2ba4a485bef3",
+        "kind": "person",
+        "name": "大久保彰",
+        "description": null,
+        "aliases": [
+          "Akira Ōkubo"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q108109758"
+          }
+        ],
+        "createdAt": "2026-10-17T00:00:00Z",
+        "updatedAt": "2026-10-17T00:00:00Z",
+        "event": null
+      },
+      {
+        "id": "d5e39491-5a5f-423c-9222-2eb3c18db9a8",
+        "kind": "person",
+        "name": "小畑健",
+        "description": null,
+        "aliases": [
+          "Takeshi Obata"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q313703"
+          }
+        ],
+        "createdAt": "2026-10-17T00:00:00Z",
+        "updatedAt": "2026-10-17T00:00:00Z",
+        "event": null
+      },
+      {
+        "id": "dc188ef2-1a3d-4251-a445-90f49dd88cd0",
+        "kind": "work",
+        "name": "クズの本懐",
+        "description": null,
+        "aliases": [
+          "Scum's Wish"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q11298673"
+          }
+        ],
+        "createdAt": "2026-10-17T00:00:00Z",
+        "updatedAt": "2026-10-17T00:00:00Z",
+        "event": null
+      },
+      {
+        "id": "dfaf30df-2f9e-4c63-9fe1-cbbd0a083b36",
+        "kind": "person",
+        "name": "アベツカサ",
+        "description": null,
+        "aliases": [
+          "Tsukasa Abe"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q105258125"
+          }
+        ],
+        "createdAt": "2026-10-17T00:00:00Z",
+        "updatedAt": "2026-10-17T00:00:00Z",
+        "event": null
+      },
+      {
+        "id": "e7b913dd-7ad1-4288-861d-840cb4a3aeef",
+        "kind": "work",
+        "name": "サムライ8 八丸伝",
+        "description": null,
+        "aliases": [
+          "Samurai 8: The Tale of Hachimaru"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q63323229"
+          }
+        ],
+        "createdAt": "2026-10-17T00:00:00Z",
+        "updatedAt": "2026-10-17T00:00:00Z",
+        "event": null
+      }
+    ],
+    "claims": [
+      {
+        "id": "121709e5-ea90-4c6a-87d1-d67264e1590d",
+        "subjectId": "743d7fc0-ddc6-446a-8aa1-d9a9b284a326",
+        "objectId": "b1e1232d-b038-4c11-b80c-ab1c2710d2bf",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "hidden",
+        "createdAt": "2026-10-17T00:00:00Z",
+        "updatedAt": "2026-10-17T00:00:00Z",
+        "contribution": {
+          "roleId": "AUTHORSHIP",
+          "scope": {
+            "kind": "publication",
+            "isbn13": "9784091228017",
+            "volumeLabel": "第1巻",
+            "editionLabel": null,
+            "language": "ja"
+          }
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      },
+      {
+        "id": "14e377b1-6be2-446c-8c13-e0d5d425eafa",
+        "subjectId": "c59a1b1d-7477-46a5-9669-644981d1d5d8",
+        "objectId": "ba77a4d0-cf0b-4cc9-bd98-9b153a92b3ba",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "hidden",
+        "createdAt": "2026-10-17T00:00:00Z",
+        "updatedAt": "2026-10-17T00:00:00Z",
+        "contribution": {
+          "roleId": "AUTHORSHIP",
+          "scope": {
+            "kind": "publication",
+            "isbn13": "9784061037113",
+            "volumeLabel": "第1巻",
+            "editionLabel": null,
+            "language": "ja"
+          }
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      },
+      {
+        "id": "1eb1fe7c-0cbd-48f4-8379-cd7f6e4697e4",
+        "subjectId": "743d7fc0-ddc6-446a-8aa1-d9a9b284a326",
+        "objectId": "aafae4fe-6f56-47bb-af9f-dec69425f136",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "hidden",
+        "createdAt": "2026-10-17T00:00:00Z",
+        "updatedAt": "2026-10-17T00:00:00Z",
+        "contribution": {
+          "roleId": "AUTHORSHIP",
+          "scope": {
+            "kind": "publication",
+            "isbn13": "9784091220318",
+            "volumeLabel": "第1巻",
+            "editionLabel": null,
+            "language": "ja"
+          }
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      },
+      {
+        "id": "24dca7b4-00bf-4f70-92f6-a498a494c29a",
+        "subjectId": "b4de3765-e8c4-49f1-a322-a021475ffd09",
+        "objectId": "1982f262-39f3-4bfa-93a4-af3a86ec3ec8",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "hidden",
+        "createdAt": "2026-10-17T00:00:00Z",
+        "updatedAt": "2026-10-17T00:00:00Z",
+        "contribution": {
+          "roleId": "AUTHORSHIP",
+          "scope": {
+            "kind": "publication",
+            "isbn13": "9784063829082",
+            "volumeLabel": "第1巻",
+            "editionLabel": null,
+            "language": "ja"
+          }
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      },
+      {
+        "id": "36199f3c-f260-473c-a22e-a75911b5fb6d",
+        "subjectId": "dfaf30df-2f9e-4c63-9fe1-cbbd0a083b36",
+        "objectId": "929116a2-77ff-443f-94e6-871c8b78f451",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "hidden",
+        "createdAt": "2026-10-17T00:00:00Z",
+        "updatedAt": "2026-10-17T00:00:00Z",
+        "contribution": {
+          "roleId": "DRAWING",
+          "scope": {
+            "kind": "publication",
+            "isbn13": "9784098501809",
+            "volumeLabel": "第1巻",
+            "editionLabel": null,
+            "language": "ja"
+          }
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      },
+      {
+        "id": "431210df-d594-498c-bbd4-9ce93c9dc282",
+        "subjectId": "20b7ba43-d12d-4d39-9a8e-f9e92e9d40d2",
+        "objectId": "929116a2-77ff-443f-94e6-871c8b78f451",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "hidden",
+        "createdAt": "2026-10-17T00:00:00Z",
+        "updatedAt": "2026-10-17T00:00:00Z",
+        "contribution": {
+          "roleId": "ORIGINAL_STORY",
+          "scope": {
+            "kind": "publication",
+            "isbn13": "9784098501809",
+            "volumeLabel": "第1巻",
+            "editionLabel": null,
+            "language": "ja"
+          }
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      },
+      {
+        "id": "48a9f51e-beb1-4c3a-9c30-5923bc852925",
+        "subjectId": "a13205e2-220c-4b7d-8a1a-39dbefe52db8",
+        "objectId": "3427040b-88fd-4db5-b546-dd237abad032",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "hidden",
+        "createdAt": "2026-10-17T00:00:00Z",
+        "updatedAt": "2026-10-17T00:00:00Z",
+        "contribution": {
+          "roleId": "ORIGINAL_STORY",
+          "scope": {
+            "kind": "publication",
+            "isbn13": "9784086196901",
+            "volumeLabel": "第1巻",
+            "editionLabel": null,
+            "language": "ja"
+          }
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      },
+      {
+        "id": "498cbe28-4703-4ac1-9a99-5cd83831b0e3",
+        "subjectId": "420d89ea-9780-4e01-ac64-9c5e8597d0c8",
+        "objectId": "dc188ef2-1a3d-4251-a445-90f49dd88cd0",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "hidden",
+        "createdAt": "2026-10-17T00:00:00Z",
+        "updatedAt": "2026-10-17T00:00:00Z",
+        "contribution": {
+          "roleId": "AUTHORSHIP",
+          "scope": {
+            "kind": "publication",
+            "isbn13": "9784757538870",
+            "volumeLabel": "第1巻",
+            "editionLabel": null,
+            "language": "ja"
+          }
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      },
+      {
+        "id": "602bc3c1-8a98-49cc-9556-a4c23feb6b0e",
+        "subjectId": "6bf4aeb4-ac2b-499f-bfaa-0588024ef93d",
+        "objectId": "baf73bb9-dda4-474c-acaf-a7a8ce52caf2",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "hidden",
+        "createdAt": "2026-10-17T00:00:00Z",
+        "updatedAt": "2026-10-17T00:00:00Z",
+        "contribution": {
+          "roleId": "AUTHORSHIP",
+          "scope": {
+            "kind": "publication",
+            "isbn13": "9784757520097",
+            "volumeLabel": "第1巻",
+            "editionLabel": null,
+            "language": "ja"
+          }
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      },
+      {
+        "id": "69ed2335-344f-41a6-a17f-77708faa0398",
+        "subjectId": "c59a1b1d-7477-46a5-9669-644981d1d5d8",
+        "objectId": "0914c6bb-701d-4c5a-b8f9-2c63cbff1ef3",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "hidden",
+        "createdAt": "2026-10-17T00:00:00Z",
+        "updatedAt": "2026-10-17T00:00:00Z",
+        "contribution": {
+          "roleId": "AUTHORSHIP",
+          "scope": {
+            "kind": "publication",
+            "isbn13": "9784065262634",
+            "volumeLabel": "全集第8巻（童夢）",
+            "editionLabel": null,
+            "language": "ja"
+          }
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      },
+      {
+        "id": "6ad7f063-1fce-4163-8414-437526212c31",
+        "subjectId": "a22fd2cd-aadc-4ca9-bf39-cb4bd7e0e953",
+        "objectId": "398d712d-23d9-455f-8897-f9384dd94930",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "hidden",
+        "createdAt": "2026-10-17T00:00:00Z",
+        "updatedAt": "2026-10-17T00:00:00Z",
+        "contribution": {
+          "roleId": "AUTHORSHIP",
+          "scope": {
+            "kind": "publication",
+            "isbn13": "9784884752934",
+            "volumeLabel": "第1巻",
+            "editionLabel": null,
+            "language": "ja"
+          }
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      },
+      {
+        "id": "7c2bd016-d9b0-4de2-824e-276941b1a2b2",
+        "subjectId": "6bf4aeb4-ac2b-499f-bfaa-0588024ef93d",
+        "objectId": "98b8ca7a-9638-4e5a-8fbd-62a353e4f159",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "hidden",
+        "createdAt": "2026-10-17T00:00:00Z",
+        "updatedAt": "2026-10-17T00:00:00Z",
+        "contribution": {
+          "roleId": "AUTHORSHIP",
+          "scope": {
+            "kind": "publication",
+            "isbn13": "9784592881513",
+            "volumeLabel": "第1巻",
+            "editionLabel": null,
+            "language": "ja"
+          }
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      },
+      {
+        "id": "7e701c62-22f3-4882-844b-d69d2d818561",
+        "subjectId": "a012632c-6fd8-4559-8f38-cc60f9b28b05",
+        "objectId": "4e506b04-cc57-48e9-b502-0d89476bb5f4",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "hidden",
+        "createdAt": "2026-10-17T00:00:00Z",
+        "updatedAt": "2026-10-17T00:00:00Z",
+        "contribution": {
+          "roleId": "CREATION",
+          "scope": {
+            "kind": "publication",
+            "isbn13": "9784091810816",
+            "volumeLabel": "第1巻",
+            "editionLabel": null,
+            "language": "ja"
+          }
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      },
+      {
+        "id": "81684aff-84cf-4977-a3b5-7c2f5d746e5a",
+        "subjectId": "ccb5ddb2-fb7c-4dad-8178-1a170342d0c6",
+        "objectId": "cd2e6949-6c1b-4818-990f-4d4dbc5c5d54",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "hidden",
+        "createdAt": "2026-10-17T00:00:00Z",
+        "updatedAt": "2026-10-17T00:00:00Z",
+        "contribution": {
+          "roleId": "DRAWING",
+          "scope": {
+            "kind": "publication",
+            "isbn13": "9784086172837",
+            "volumeLabel": "第1巻",
+            "editionLabel": null,
+            "language": "ja"
+          }
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      },
+      {
+        "id": "a4d14533-1e4d-47c4-9494-67008811cf75",
+        "subjectId": "afaa3ea0-f273-4481-95c5-5c31f9049cb2",
+        "objectId": "0c9eb1b7-2b2b-46b7-8110-9705138c3add",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "hidden",
+        "createdAt": "2026-10-17T00:00:00Z",
+        "updatedAt": "2026-10-17T00:00:00Z",
+        "contribution": {
+          "roleId": "AUTHORSHIP",
+          "scope": {
+            "kind": "publication",
+            "isbn13": "9784091241023",
+            "volumeLabel": "第1巻",
+            "editionLabel": null,
+            "language": "ja"
+          }
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      },
+      {
+        "id": "a996412a-7cc9-49d5-8446-9b3cf6a338dd",
+        "subjectId": "1edca4c7-0e4e-4769-859c-dde40e7e973a",
+        "objectId": "e7b913dd-7ad1-4288-861d-840cb4a3aeef",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "hidden",
+        "createdAt": "2026-10-17T00:00:00Z",
+        "updatedAt": "2026-10-17T00:00:00Z",
+        "contribution": {
+          "roleId": "ORIGINAL_STORY",
+          "scope": {
+            "kind": "publication",
+            "isbn13": "9784088820224",
+            "volumeLabel": "第1巻",
+            "editionLabel": null,
+            "language": "ja"
+          }
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      },
+      {
+        "id": "c19e5b2f-01e2-4233-a7c9-326a1772d7de",
+        "subjectId": "3f22660f-01d7-4a4a-9ae6-f169c9a3dc4a",
+        "objectId": "c9080259-3866-4c25-999f-4a5a22046ac1",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "hidden",
+        "createdAt": "2026-10-17T00:00:00Z",
+        "updatedAt": "2026-10-17T00:00:00Z",
+        "contribution": {
+          "roleId": "ORIGINAL_STORY",
+          "scope": {
+            "kind": "publication",
+            "isbn13": "9784091823618",
+            "volumeLabel": "第1巻",
+            "editionLabel": null,
+            "language": "ja"
+          }
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      },
+      {
+        "id": "c3fcdaa7-1374-4c62-acab-368dc1ed1bee",
+        "subjectId": "710bc8a7-efed-4c2e-a4b4-6c65b0aff695",
+        "objectId": "c9080259-3866-4c25-999f-4a5a22046ac1",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "hidden",
+        "createdAt": "2026-10-17T00:00:00Z",
+        "updatedAt": "2026-10-17T00:00:00Z",
+        "contribution": {
+          "roleId": "DRAWING",
+          "scope": {
+            "kind": "publication",
+            "isbn13": "9784091823618",
+            "volumeLabel": "第1巻",
+            "editionLabel": null,
+            "language": "ja"
+          }
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      },
+      {
+        "id": "c9c1225b-63d2-4b99-9432-55bd009f8cf2",
+        "subjectId": "d900543a-9c11-48c1-be76-1822b756fcc4",
+        "objectId": "4e506b04-cc57-48e9-b502-0d89476bb5f4",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "hidden",
+        "createdAt": "2026-10-17T00:00:00Z",
+        "updatedAt": "2026-10-17T00:00:00Z",
+        "contribution": {
+          "roleId": "DRAWING",
+          "scope": {
+            "kind": "publication",
+            "isbn13": "9784091810816",
+            "volumeLabel": "第1巻",
+            "editionLabel": null,
+            "language": "ja"
+          }
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      },
+      {
+        "id": "d5d3fef1-fc64-4e61-b049-2f3c81994cb9",
+        "subjectId": "6c9095bd-1969-4bcd-9282-2d1e9e411254",
+        "objectId": "40a8ddd3-f333-485c-a12a-ac3d0961111b",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "hidden",
+        "createdAt": "2026-10-17T00:00:00Z",
+        "updatedAt": "2026-10-17T00:00:00Z",
+        "contribution": {
+          "roleId": "AUTHORSHIP",
+          "scope": {
+            "kind": "publication",
+            "isbn13": "9784091910110",
+            "volumeLabel": "単巻",
+            "editionLabel": null,
+            "language": "ja"
+          }
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      },
+      {
+        "id": "d92e9a4e-4f60-445d-807b-63764f69528b",
+        "subjectId": "9f43fefa-d878-4e5e-b1a2-0413432e9dbd",
+        "objectId": "480df823-5da8-45e4-aa20-1fdabe7ea5a3",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "hidden",
+        "createdAt": "2026-10-17T00:00:00Z",
+        "updatedAt": "2026-10-17T00:00:00Z",
+        "contribution": {
+          "roleId": "AUTHORSHIP",
+          "scope": {
+            "kind": "publication",
+            "isbn13": "9784088807317",
+            "volumeLabel": "第1巻",
+            "editionLabel": null,
+            "language": "ja"
+          }
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      },
+      {
+        "id": "e3b0de8a-f7cc-4188-baa2-b41e2298e2be",
+        "subjectId": "1866bbe5-7e00-4afc-965f-5e968481f065",
+        "objectId": "5c5f452c-1e74-4985-aaec-811a8e329f42",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "hidden",
+        "createdAt": "2026-10-17T00:00:00Z",
+        "updatedAt": "2026-10-17T00:00:00Z",
+        "contribution": {
+          "roleId": "AUTHORSHIP",
+          "scope": {
+            "kind": "publication",
+            "isbn13": "9784091380135",
+            "volumeLabel": "第1巻",
+            "editionLabel": null,
+            "language": "ja"
+          }
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      },
+      {
+        "id": "e3bf903c-5d0c-4f91-bf83-2826f5a23db7",
+        "subjectId": "3f22660f-01d7-4a4a-9ae6-f169c9a3dc4a",
+        "objectId": "cd2e6949-6c1b-4818-990f-4d4dbc5c5d54",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "hidden",
+        "createdAt": "2026-10-17T00:00:00Z",
+        "updatedAt": "2026-10-17T00:00:00Z",
+        "contribution": {
+          "roleId": "CREATION",
+          "scope": {
+            "kind": "publication",
+            "isbn13": "9784086172837",
+            "volumeLabel": "第1巻",
+            "editionLabel": null,
+            "language": "ja"
+          }
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      },
+      {
+        "id": "ed33df12-efd1-44bc-84bb-a9d83fa05f8f",
+        "subjectId": "d4a3f93f-bbcd-42df-9567-2ba4a485bef3",
+        "objectId": "e7b913dd-7ad1-4288-861d-840cb4a3aeef",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "hidden",
+        "createdAt": "2026-10-17T00:00:00Z",
+        "updatedAt": "2026-10-17T00:00:00Z",
+        "contribution": {
+          "roleId": "DRAWING",
+          "scope": {
+            "kind": "publication",
+            "isbn13": "9784088820224",
+            "volumeLabel": "第1巻",
+            "editionLabel": null,
+            "language": "ja"
+          }
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      },
+      {
+        "id": "f06a6e2c-59c6-4ff3-ad74-13aff65677d3",
+        "subjectId": "eb0af7e1-caa6-435f-86fb-0591421982b5",
+        "objectId": "76884305-ef0d-4cb0-ace2-90cfac57de3e",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "hidden",
+        "createdAt": "2026-10-17T00:00:00Z",
+        "updatedAt": "2026-10-17T00:00:00Z",
+        "contribution": {
+          "roleId": "AUTHORSHIP",
+          "scope": {
+            "kind": "publication",
+            "isbn13": "9784253169813",
+            "volumeLabel": "第1巻",
+            "editionLabel": null,
+            "language": "ja"
+          }
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      },
+      {
+        "id": "f4b64248-7b3e-4fae-8ff2-7122410b63f4",
+        "subjectId": "6c9095bd-1969-4bcd-9282-2d1e9e411254",
+        "objectId": "c74e0874-eb89-4825-a824-3ff182fe8053",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "hidden",
+        "createdAt": "2026-10-17T00:00:00Z",
+        "updatedAt": "2026-10-17T00:00:00Z",
+        "contribution": {
+          "roleId": "AUTHORSHIP",
+          "scope": {
+            "kind": "publication",
+            "isbn13": "9784091912510",
+            "volumeLabel": "第1巻",
+            "editionLabel": null,
+            "language": "ja"
+          }
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      },
+      {
+        "id": "fb933ff4-2061-4a0c-a72c-6e7dd2958737",
+        "subjectId": "d900543a-9c11-48c1-be76-1822b756fcc4",
+        "objectId": "c1e93fb7-3547-4b64-bd7c-bce073a1198a",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "hidden",
+        "createdAt": "2026-10-17T00:00:00Z",
+        "updatedAt": "2026-10-17T00:00:00Z",
+        "contribution": {
+          "roleId": "AUTHORSHIP",
+          "scope": {
+            "kind": "publication",
+            "isbn13": "9784098602780",
+            "volumeLabel": "第1巻",
+            "editionLabel": null,
+            "language": "ja"
+          }
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      },
+      {
+        "id": "fdfae8cd-b3f0-4c36-b6ed-659e98d24871",
+        "subjectId": "1866bbe5-7e00-4afc-965f-5e968481f065",
+        "objectId": "4b90e125-b331-4361-8681-93a12c662cb7",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "hidden",
+        "createdAt": "2026-10-17T00:00:00Z",
+        "updatedAt": "2026-10-17T00:00:00Z",
+        "contribution": {
+          "roleId": "AUTHORSHIP",
+          "scope": {
+            "kind": "publication",
+            "isbn13": "9784091914316",
+            "volumeLabel": "第1巻",
+            "editionLabel": null,
+            "language": "ja"
+          }
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      }
+    ],
+    "sources": [
+      {
+        "id": "0a6fe099-9375-4fa5-8e41-81cf6ede26d8",
+        "kind": "web",
+        "title": "NDLサーチ: ファイアパンチ = FIRE PUNCH. 1",
+        "authors": [],
+        "publisher": "国立国会図書館",
+        "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I027447634",
+        "publishedAt": null,
+        "edition": null,
+        "note": "国立国会図書館作成書誌（iss-ndl-opac）の責任表示。メタデータ CC BY 4.0: https://creativecommons.org/licenses/by/4.0/ ; 提供元条件 https://ndlsearch.ndl.go.jp/help/api/provider 。本文・画像・第三者所蔵情報は含まない。",
+        "isDemo": false
+      },
+      {
+        "id": "18dd841d-89a6-41ab-90ed-110307e6e268",
+        "kind": "web",
+        "title": "NDLサーチ: 葬送のフリーレン = FRIEREN. VOL.1",
+        "authors": [],
+        "publisher": "国立国会図書館",
+        "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I030560687",
+        "publishedAt": null,
+        "edition": null,
+        "note": "国立国会図書館作成書誌（iss-ndl-opac）の責任表示。メタデータ CC BY 4.0: https://creativecommons.org/licenses/by/4.0/ ; 提供元条件 https://ndlsearch.ndl.go.jp/help/api/provider 。本文・画像・第三者所蔵情報は含まない。",
+        "isDemo": false
+      },
+      {
+        "id": "28614027-38d3-4b20-b460-8b1b48b4eb07",
+        "kind": "web",
+        "title": "NDLサーチ: うる星やつら. 1",
+        "authors": [],
+        "publisher": "国立国会図書館",
+        "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I000002007879",
+        "publishedAt": null,
+        "edition": null,
+        "note": "国立国会図書館作成書誌（iss-ndl-opac）の責任表示。メタデータ CC BY 4.0: https://creativecommons.org/licenses/by/4.0/ ; 提供元条件 https://ndlsearch.ndl.go.jp/help/api/provider 。本文・画像・第三者所蔵情報は含まない。",
+        "isDemo": false
+      },
+      {
+        "id": "3e30dc4d-2c8a-40c0-95d8-258ef061b5ce",
+        "kind": "web",
+        "title": "NDLサーチ: 風と木の詩. 第1巻",
+        "authors": [],
+        "publisher": "国立国会図書館",
+        "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I000002388586",
+        "publishedAt": null,
+        "edition": null,
+        "note": "国立国会図書館作成書誌（iss-ndl-opac）の責任表示。メタデータ CC BY 4.0: https://creativecommons.org/licenses/by/4.0/ ; 提供元条件 https://ndlsearch.ndl.go.jp/help/api/provider 。本文・画像・第三者所蔵情報は含まない。",
+        "isDemo": false
+      },
+      {
+        "id": "5100fe49-d129-4e0b-9b5d-0d33892fd613",
+        "kind": "web",
+        "title": "NDLサーチ: 7 seeds. 1",
+        "authors": [],
+        "publisher": "国立国会図書館",
+        "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I000003074463",
+        "publishedAt": null,
+        "edition": null,
+        "note": "国立国会図書館作成書誌（iss-ndl-opac）の責任表示。メタデータ CC BY 4.0: https://creativecommons.org/licenses/by/4.0/ ; 提供元条件 https://ndlsearch.ndl.go.jp/help/api/provider 。本文・画像・第三者所蔵情報は含まない。",
+        "isDemo": false
+      },
+      {
+        "id": "624fc7f8-ec4a-4e6f-802e-ce1dcd6be994",
+        "kind": "web",
+        "title": "NDLサーチ: あさドラ! : 連続漫画小説. volume1",
+        "authors": [],
+        "publisher": "国立国会図書館",
+        "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I029585250",
+        "publishedAt": null,
+        "edition": null,
+        "note": "国立国会図書館作成書誌（iss-ndl-opac）の責任表示。メタデータ CC BY 4.0: https://creativecommons.org/licenses/by/4.0/ ; 提供元条件 https://ndlsearch.ndl.go.jp/help/api/provider 。本文・画像・第三者所蔵情報は含まない。",
+        "isDemo": false
+      },
+      {
+        "id": "6cf1f56c-1d88-431a-88a9-fde85a6fd2fa",
+        "kind": "web",
+        "title": "NDLサーチ: モブサイコ100. 1",
+        "authors": [],
+        "publisher": "国立国会図書館",
+        "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I024077257",
+        "publishedAt": null,
+        "edition": null,
+        "note": "国立国会図書館作成書誌（iss-ndl-opac）の責任表示。メタデータ CC BY 4.0: https://creativecommons.org/licenses/by/4.0/ ; 提供元条件 https://ndlsearch.ndl.go.jp/help/api/provider 。本文・画像・第三者所蔵情報は含まない。",
+        "isDemo": false
+      },
+      {
+        "id": "6e6882d7-7add-4510-92a2-00e1b469c117",
+        "kind": "web",
+        "title": "NDLサーチ: サンクチュアリ. 1",
+        "authors": [],
+        "publisher": "国立国会図書館",
+        "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I000002071177",
+        "publishedAt": null,
+        "edition": null,
+        "note": "国立国会図書館作成書誌（iss-ndl-opac）の責任表示。メタデータ CC BY 4.0: https://creativecommons.org/licenses/by/4.0/ ; 提供元条件 https://ndlsearch.ndl.go.jp/help/api/provider 。本文・画像・第三者所蔵情報は含まない。",
+        "isDemo": false
+      },
+      {
+        "id": "6eb7a205-4a1c-49c5-98b8-b7537689ab0b",
+        "kind": "web",
+        "title": "NDLサーチ: サムライ8八丸伝. 01",
+        "authors": [],
+        "publisher": "国立国会図書館",
+        "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I029974140",
+        "publishedAt": null,
+        "edition": null,
+        "note": "国立国会図書館作成書誌（iss-ndl-opac）の責任表示。メタデータ CC BY 4.0: https://creativecommons.org/licenses/by/4.0/ ; 提供元条件 https://ndlsearch.ndl.go.jp/help/api/provider 。本文・画像・第三者所蔵情報は含まない。",
+        "isDemo": false
+      },
+      {
+        "id": "7083e68a-d9c5-4ed5-b590-5131ee1b6fbe",
+        "kind": "web",
+        "title": "NDLサーチ: Black Jack. 1",
+        "authors": [],
+        "publisher": "国立国会図書館",
+        "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I000002271468",
+        "publishedAt": null,
+        "edition": null,
+        "note": "国立国会図書館作成書誌（iss-ndl-opac）の責任表示。メタデータ CC BY 4.0: https://creativecommons.org/licenses/by/4.0/ ; 提供元条件 https://ndlsearch.ndl.go.jp/help/api/provider 。本文・画像・第三者所蔵情報は含まない。",
+        "isDemo": false
+      },
+      {
+        "id": "81a9b025-308d-40ba-ba5b-7654f8bafc72",
+        "kind": "web",
+        "title": "NDLサーチ: パイナップルarmy. 1",
+        "authors": [],
+        "publisher": "国立国会図書館",
+        "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I000001794923",
+        "publishedAt": null,
+        "edition": null,
+        "note": "国立国会図書館作成書誌（iss-ndl-opac）の責任表示。メタデータ CC BY 4.0: https://creativecommons.org/licenses/by/4.0/ ; 提供元条件 https://ndlsearch.ndl.go.jp/help/api/provider 。本文・画像・第三者所蔵情報は含まない。",
+        "isDemo": false
+      },
+      {
+        "id": "a20efdfb-84be-4caa-a6b6-f3472a04c2b6",
+        "kind": "web",
+        "title": "NDLサーチ: クズの本懐. 1",
+        "authors": [],
+        "publisher": "国立国会図書館",
+        "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I024280614",
+        "publishedAt": null,
+        "edition": null,
+        "note": "国立国会図書館作成書誌（iss-ndl-opac）の責任表示。メタデータ CC BY 4.0: https://creativecommons.org/licenses/by/4.0/ ; 提供元条件 https://ndlsearch.ndl.go.jp/help/api/provider 。本文・画像・第三者所蔵情報は含まない。",
+        "isDemo": false
+      },
+      {
+        "id": "b1d80a26-19c8-4f5a-8a80-8917719ccbde",
+        "kind": "web",
+        "title": "NDLサーチ: Akira. part 1 (鉄雄)",
+        "authors": [],
+        "publisher": "国立国会図書館",
+        "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I000002247557",
+        "publishedAt": null,
+        "edition": null,
+        "note": "国立国会図書館作成書誌（iss-ndl-opac）の責任表示。メタデータ CC BY 4.0: https://creativecommons.org/licenses/by/4.0/ ; 提供元条件 https://ndlsearch.ndl.go.jp/help/api/provider 。本文・画像・第三者所蔵情報は含まない。",
+        "isDemo": false
+      },
+      {
+        "id": "c815b2db-f907-43d4-a8ae-e2ef99fe5f79",
+        "kind": "web",
+        "title": "NDLサーチ: 11人いる!",
+        "authors": [],
+        "publisher": "国立国会図書館",
+        "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I000002361592",
+        "publishedAt": null,
+        "edition": null,
+        "note": "国立国会図書館作成書誌（iss-ndl-opac）の責任表示。メタデータ CC BY 4.0: https://creativecommons.org/licenses/by/4.0/ ; 提供元条件 https://ndlsearch.ndl.go.jp/help/api/provider 。本文・画像・第三者所蔵情報は含まない。",
+        "isDemo": false
+      },
+      {
+        "id": "c91f7f99-6b76-4245-9564-70f8f62c2dc1",
+        "kind": "web",
+        "title": "NDLサーチ: ポーの一族. 第1巻",
+        "authors": [],
+        "publisher": "国立国会図書館",
+        "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I000002674181",
+        "publishedAt": null,
+        "edition": null,
+        "note": "国立国会図書館作成書誌（iss-ndl-opac）の責任表示。メタデータ CC BY 4.0: https://creativecommons.org/licenses/by/4.0/ ; 提供元条件 https://ndlsearch.ndl.go.jp/help/api/provider 。本文・画像・第三者所蔵情報は含まない。",
+        "isDemo": false
+      },
+      {
+        "id": "d20d02c9-552e-4621-b8b3-a7c25efb9ddb",
+        "kind": "web",
+        "title": "NDLサーチ: 天才バカボン. 1",
+        "authors": [],
+        "publisher": "国立国会図書館",
+        "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I000002541967",
+        "publishedAt": null,
+        "edition": null,
+        "note": "国立国会図書館作成書誌（iss-ndl-opac）の責任表示。メタデータ CC BY 4.0: https://creativecommons.org/licenses/by/4.0/ ; 提供元条件 https://ndlsearch.ndl.go.jp/help/api/provider 。本文・画像・第三者所蔵情報は含まない。",
+        "isDemo": false
+      },
+      {
+        "id": "d742ddc4-acb8-411a-a159-efd815afecd6",
+        "kind": "web",
+        "title": "NDLサーチ: 北斗の拳. 1",
+        "authors": [],
+        "publisher": "国立国会図書館",
+        "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I000002600976",
+        "publishedAt": null,
+        "edition": null,
+        "note": "国立国会図書館作成書誌（iss-ndl-opac）の責任表示。メタデータ CC BY 4.0: https://creativecommons.org/licenses/by/4.0/ ; 提供元条件 https://ndlsearch.ndl.go.jp/help/api/provider 。本文・画像・第三者所蔵情報は含まない。",
+        "isDemo": false
+      },
+      {
+        "id": "df1c52bd-8832-47a1-bc57-30c779f01ad5",
+        "kind": "web",
+        "title": "NDLサーチ: らんま1/2. 1",
+        "authors": [],
+        "publisher": "国立国会図書館",
+        "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I000001908766",
+        "publishedAt": null,
+        "edition": null,
+        "note": "国立国会図書館作成書誌（iss-ndl-opac）の責任表示。メタデータ CC BY 4.0: https://creativecommons.org/licenses/by/4.0/ ; 提供元条件 https://ndlsearch.ndl.go.jp/help/api/provider 。本文・画像・第三者所蔵情報は含まない。",
+        "isDemo": false
+      },
+      {
+        "id": "e059d4f3-9e5d-4c5f-84e1-959b3c932e30",
+        "kind": "web",
+        "title": "NDLサーチ: ORIGIN. 1",
+        "authors": [],
+        "publisher": "国立国会図書館",
+        "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I027811662",
+        "publishedAt": null,
+        "edition": null,
+        "note": "国立国会図書館作成書誌（iss-ndl-opac）の責任表示。メタデータ CC BY 4.0: https://creativecommons.org/licenses/by/4.0/ ; 提供元条件 https://ndlsearch.ndl.go.jp/help/api/provider 。本文・画像・第三者所蔵情報は含まない。",
+        "isDemo": false
+      },
+      {
+        "id": "ef3aa8c2-d2ba-48a0-a724-20b8eac18a31",
+        "kind": "web",
+        "title": "NDLサーチ: OTOMO THE COMPLETE WORKS. 8",
+        "authors": [],
+        "publisher": "国立国会図書館",
+        "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I031906385",
+        "publishedAt": null,
+        "edition": null,
+        "note": "国立国会図書館作成書誌（iss-ndl-opac）の責任表示。メタデータ CC BY 4.0: https://creativecommons.org/licenses/by/4.0/ ; 提供元条件 https://ndlsearch.ndl.go.jp/help/api/provider 。本文・画像・第三者所蔵情報は含まない。",
+        "isDemo": false
+      },
+      {
+        "id": "f9bc0f9b-f737-40eb-b451-8b0622bb1f29",
+        "kind": "web",
+        "title": "NDLサーチ: 地球へ…. 1",
+        "authors": [],
+        "publisher": "国立国会図書館",
+        "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I000008533176",
+        "publishedAt": null,
+        "edition": null,
+        "note": "国立国会図書館作成書誌（iss-ndl-opac）の責任表示。メタデータ CC BY 4.0: https://creativecommons.org/licenses/by/4.0/ ; 提供元条件 https://ndlsearch.ndl.go.jp/help/api/provider 。本文・画像・第三者所蔵情報は含まない。",
+        "isDemo": false
+      },
+      {
+        "id": "fa2da69a-8a61-4364-8dab-05b9678d77aa",
+        "kind": "web",
+        "title": "NDLサーチ: バクマン。. 1",
+        "authors": [],
+        "publisher": "国立国会図書館",
+        "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I028322829",
+        "publishedAt": null,
+        "edition": null,
+        "note": "国立国会図書館作成書誌（iss-ndl-opac）の責任表示。メタデータ CC BY 4.0: https://creativecommons.org/licenses/by/4.0/ ; 提供元条件 https://ndlsearch.ndl.go.jp/help/api/provider 。本文・画像・第三者所蔵情報は含まない。",
+        "isDemo": false
+      },
+      {
+        "id": "fb0bc6f2-6f0b-49d5-a9a7-acb3de0fc531",
+        "kind": "web",
+        "title": "NDLサーチ: Basara. 第1巻",
+        "authors": [],
+        "publisher": "国立国会図書館",
+        "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I000003065584",
+        "publishedAt": null,
+        "edition": null,
+        "note": "国立国会図書館作成書誌（iss-ndl-opac）の責任表示。メタデータ CC BY 4.0: https://creativecommons.org/licenses/by/4.0/ ; 提供元条件 https://ndlsearch.ndl.go.jp/help/api/provider 。本文・画像・第三者所蔵情報は含まない。",
+        "isDemo": false
+      }
+    ],
+    "citations": [
+      {
+        "id": "0f848185-1a22-42c6-a375-92860c4e3914",
+        "claimId": "fdfae8cd-b3f0-4c36-b6ed-659e98d24871",
+        "sourceId": "fb0bc6f2-6f0b-49d5-a9a7-acb3de0fc531",
+        "locator": "dc:creator（責任表示） / ISBN 9784091914316",
+        "note": "原表記（ja）: 田村由美 著。指定刊行物の責任表示で確認された担当。全巻・全版・全期間への外挿、原作から別Roleへの変換はしない。同一資料由来の記録を独立した根拠と数えない。",
+        "accessedAt": "2026-10-17",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "田村由美 著",
+          "language": "ja"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      },
+      {
+        "id": "189f3718-02a2-424f-86da-f3706eec22e3",
+        "claimId": "7e701c62-22f3-4882-844b-d69d2d818561",
+        "sourceId": "81a9b025-308d-40ba-ba5b-7654f8bafc72",
+        "locator": "dc:creator（責任表示） / ISBN 9784091810816",
+        "note": "原表記（ja）: 工藤かずや 作。指定刊行物の責任表示で確認された担当。全巻・全版・全期間への外挿、原作から別Roleへの変換はしない。同一資料由来の記録を独立した根拠と数えない。",
+        "accessedAt": "2026-10-17",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "工藤かずや 作",
+          "language": "ja"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      },
+      {
+        "id": "1d520b97-18c3-46ef-94ef-9e4e4c8ad15e",
+        "claimId": "e3bf903c-5d0c-4f91-bf83-2826f5a23db7",
+        "sourceId": "d742ddc4-acb8-411a-a159-efd815afecd6",
+        "locator": "dc:creator（責任表示） / ISBN 9784086172837",
+        "note": "原表記（ja）: 武論尊 作。指定刊行物の責任表示で確認された担当。全巻・全版・全期間への外挿、原作から別Roleへの変換はしない。同一資料由来の記録を独立した根拠と数えない。",
+        "accessedAt": "2026-10-17",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "武論尊 作",
+          "language": "ja"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      },
+      {
+        "id": "21c3954f-829e-4d13-a641-783d92af998d",
+        "claimId": "498cbe28-4703-4ac1-9a99-5cd83831b0e3",
+        "sourceId": "a20efdfb-84be-4caa-a6b6-f3472a04c2b6",
+        "locator": "dc:creator（責任表示） / ISBN 9784757538870",
+        "note": "原表記（ja）: 横槍メンゴ 著。指定刊行物の責任表示で確認された担当。全巻・全版・全期間への外挿、原作から別Roleへの変換はしない。同一資料由来の記録を独立した根拠と数えない。",
+        "accessedAt": "2026-10-17",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "横槍メンゴ 著",
+          "language": "ja"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      },
+      {
+        "id": "29669439-5d05-4eed-8c5a-15a895209227",
+        "claimId": "7c2bd016-d9b0-4de2-824e-276941b1a2b2",
+        "sourceId": "3e30dc4d-2c8a-40c0-95d8-258ef061b5ce",
+        "locator": "dc:creator（責任表示） / ISBN 9784592881513",
+        "note": "原表記（ja）: 竹宮恵子 著。指定刊行物の責任表示で確認された担当。全巻・全版・全期間への外挿、原作から別Roleへの変換はしない。同一資料由来の記録を独立した根拠と数えない。",
+        "accessedAt": "2026-10-17",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "竹宮恵子 著",
+          "language": "ja"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      },
+      {
+        "id": "2bafe200-3ef0-466c-8da0-f7541b901b19",
+        "claimId": "e3b0de8a-f7cc-4188-baa2-b41e2298e2be",
+        "sourceId": "5100fe49-d129-4e0b-9b5d-0d33892fd613",
+        "locator": "dc:creator（責任表示） / ISBN 9784091380135",
+        "note": "原表記（ja）: 田村由美 著。指定刊行物の責任表示で確認された担当。全巻・全版・全期間への外挿、原作から別Roleへの変換はしない。同一資料由来の記録を独立した根拠と数えない。",
+        "accessedAt": "2026-10-17",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "田村由美 著",
+          "language": "ja"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      },
+      {
+        "id": "4273cc03-5378-4615-b539-a6f0ba057a52",
+        "claimId": "c9c1225b-63d2-4b99-9432-55bd009f8cf2",
+        "sourceId": "81a9b025-308d-40ba-ba5b-7654f8bafc72",
+        "locator": "dc:creator（責任表示） / ISBN 9784091810816",
+        "note": "原表記（ja）: 浦沢直樹 画。指定刊行物の責任表示で確認された担当。全巻・全版・全期間への外挿、原作から別Roleへの変換はしない。同一資料由来の記録を独立した根拠と数えない。",
+        "accessedAt": "2026-10-17",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "浦沢直樹 画",
+          "language": "ja"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      },
+      {
+        "id": "43d7a974-48c0-42e1-a69a-0b196a42dd15",
+        "claimId": "1eb1fe7c-0cbd-48f4-8379-cd7f6e4697e4",
+        "sourceId": "df1c52bd-8832-47a1-bc57-30c779f01ad5",
+        "locator": "dc:creator（責任表示） / ISBN 9784091220318",
+        "note": "原表記（ja）: 高橋留美子 著。指定刊行物の責任表示で確認された担当。全巻・全版・全期間への外挿、原作から別Roleへの変換はしない。同一資料由来の記録を独立した根拠と数えない。",
+        "accessedAt": "2026-10-17",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "高橋留美子 著",
+          "language": "ja"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      },
+      {
+        "id": "465050a3-209b-4116-b7d9-d80ea9d685f1",
+        "claimId": "a4d14533-1e4d-47c4-9494-67008811cf75",
+        "sourceId": "6cf1f56c-1d88-431a-88a9-fde85a6fd2fa",
+        "locator": "dc:creator（責任表示） / ISBN 9784091241023",
+        "note": "原表記（ja）: ONE 著。指定刊行物の責任表示で確認された担当。全巻・全版・全期間への外挿、原作から別Roleへの変換はしない。同一資料由来の記録を独立した根拠と数えない。",
+        "accessedAt": "2026-10-17",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "ONE 著",
+          "language": "ja"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      },
+      {
+        "id": "503b85f7-ccdc-4723-b0e0-51d121f8ba3e",
+        "claimId": "c3fcdaa7-1374-4c62-acab-368dc1ed1bee",
+        "sourceId": "6e6882d7-7add-4510-92a2-00e1b469c117",
+        "locator": "dc:creator（責任表示） / ISBN 9784091823618",
+        "note": "原表記（ja）: 池上遼一 作画。指定刊行物の責任表示で確認された担当。全巻・全版・全期間への外挿、原作から別Roleへの変換はしない。同一資料由来の記録を独立した根拠と数えない。",
+        "accessedAt": "2026-10-17",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "池上遼一 作画",
+          "language": "ja"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      },
+      {
+        "id": "55f0c3f3-cc50-48a8-9242-b31b3e7155f8",
+        "claimId": "c19e5b2f-01e2-4233-a7c9-326a1772d7de",
+        "sourceId": "6e6882d7-7add-4510-92a2-00e1b469c117",
+        "locator": "dc:creator（責任表示） / ISBN 9784091823618",
+        "note": "原表記（ja）: 史村翔 原作。指定刊行物の責任表示で確認された担当。全巻・全版・全期間への外挿、原作から別Roleへの変換はしない。同一資料由来の記録を独立した根拠と数えない。",
+        "accessedAt": "2026-10-17",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "史村翔 原作",
+          "language": "ja"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      },
+      {
+        "id": "613676e3-d747-4f55-8c22-e15b290574d6",
+        "claimId": "a996412a-7cc9-49d5-8446-9b3cf6a338dd",
+        "sourceId": "6eb7a205-4a1c-49c5-98b8-b7537689ab0b",
+        "locator": "dc:creator（責任表示） / ISBN 9784088820224",
+        "note": "原表記（ja）: 岸本斉史 原作。指定刊行物の責任表示で確認された担当。全巻・全版・全期間への外挿、原作から別Roleへの変換はしない。同一資料由来の記録を独立した根拠と数えない。",
+        "accessedAt": "2026-10-17",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "岸本斉史 原作",
+          "language": "ja"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      },
+      {
+        "id": "6b09ad9a-d643-46bb-9e8d-fd600a9d5f90",
+        "claimId": "69ed2335-344f-41a6-a17f-77708faa0398",
+        "sourceId": "ef3aa8c2-d2ba-48a0-a724-20b8eac18a31",
+        "locator": "dc:creator（責任表示） / ISBN 9784065262634",
+        "note": "原表記（ja）: 大友克洋 著。指定刊行物の責任表示で確認された担当。全巻・全版・全期間への外挿、原作から別Roleへの変換はしない。同一資料由来の記録を独立した根拠と数えない。",
+        "accessedAt": "2026-10-17",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "大友克洋 著",
+          "language": "ja"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      },
+      {
+        "id": "77553c7a-9e85-4fc4-97fd-1fdc2ad68951",
+        "claimId": "36199f3c-f260-473c-a22e-a75911b5fb6d",
+        "sourceId": "18dd841d-89a6-41ab-90ed-110307e6e268",
+        "locator": "dc:creator（責任表示） / ISBN 9784098501809",
+        "note": "原表記（ja）: アベツカサ 作画。指定刊行物の責任表示で確認された担当。全巻・全版・全期間への外挿、原作から別Roleへの変換はしない。同一資料由来の記録を独立した根拠と数えない。",
+        "accessedAt": "2026-10-17",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "アベツカサ 作画",
+          "language": "ja"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      },
+      {
+        "id": "7e9d3731-b35a-4cea-b8a1-f60d005cb020",
+        "claimId": "ed33df12-efd1-44bc-84bb-a9d83fa05f8f",
+        "sourceId": "6eb7a205-4a1c-49c5-98b8-b7537689ab0b",
+        "locator": "dc:creator（責任表示） / ISBN 9784088820224",
+        "note": "原表記（ja）: 大久保彰 作画。指定刊行物の責任表示で確認された担当。全巻・全版・全期間への外挿、原作から別Roleへの変換はしない。同一資料由来の記録を独立した根拠と数えない。",
+        "accessedAt": "2026-10-17",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "大久保彰 作画",
+          "language": "ja"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      },
+      {
+        "id": "85b6215a-d659-4c08-850a-c9611e94bd43",
+        "claimId": "48a9f51e-beb1-4c3a-9c30-5923bc852925",
+        "sourceId": "fa2da69a-8a61-4364-8dab-05b9678d77aa",
+        "locator": "dc:creator（責任表示） / ISBN 9784086196901",
+        "note": "原表記（ja）: 大場つぐみ 原作。指定刊行物の責任表示で確認された担当。全巻・全版・全期間への外挿、原作から別Roleへの変換はしない。同一資料由来の記録を独立した根拠と数えない。",
+        "accessedAt": "2026-10-17",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "大場つぐみ 原作",
+          "language": "ja"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      },
+      {
+        "id": "a0185551-4cc2-44da-975b-81ed43b093c1",
+        "claimId": "f4b64248-7b3e-4fae-8ff2-7122410b63f4",
+        "sourceId": "c91f7f99-6b76-4245-9564-70f8f62c2dc1",
+        "locator": "dc:creator（責任表示） / ISBN 9784091912510",
+        "note": "原表記（ja）: 萩尾望都 著。指定刊行物の責任表示で確認された担当。全巻・全版・全期間への外挿、原作から別Roleへの変換はしない。同一資料由来の記録を独立した根拠と数えない。",
+        "accessedAt": "2026-10-17",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "萩尾望都 著",
+          "language": "ja"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      },
+      {
+        "id": "a2006985-9169-4009-a16a-688a7c47632c",
+        "claimId": "81684aff-84cf-4977-a3b5-7c2f5d746e5a",
+        "sourceId": "d742ddc4-acb8-411a-a159-efd815afecd6",
+        "locator": "dc:creator（責任表示） / ISBN 9784086172837",
+        "note": "原表記（ja）: 原哲夫 画。指定刊行物の責任表示で確認された担当。全巻・全版・全期間への外挿、原作から別Roleへの変換はしない。同一資料由来の記録を独立した根拠と数えない。",
+        "accessedAt": "2026-10-17",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "原哲夫 画",
+          "language": "ja"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      },
+      {
+        "id": "a2f2aa39-dfb4-4f81-8c11-13329851ad8a",
+        "claimId": "431210df-d594-498c-bbd4-9ce93c9dc282",
+        "sourceId": "18dd841d-89a6-41ab-90ed-110307e6e268",
+        "locator": "dc:creator（責任表示） / ISBN 9784098501809",
+        "note": "原表記（ja）: 山田鐘人 原作。指定刊行物の責任表示で確認された担当。全巻・全版・全期間への外挿、原作から別Roleへの変換はしない。同一資料由来の記録を独立した根拠と数えない。",
+        "accessedAt": "2026-10-17",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "山田鐘人 原作",
+          "language": "ja"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      },
+      {
+        "id": "aefd626b-6ae3-4bc4-b9ec-2fac6ed78bfa",
+        "claimId": "d92e9a4e-4f60-445d-807b-63764f69528b",
+        "sourceId": "0a6fe099-9375-4fa5-8e41-81cf6ede26d8",
+        "locator": "dc:creator（責任表示） / ISBN 9784088807317",
+        "note": "原表記（ja）: 藤本タツキ 著。指定刊行物の責任表示で確認された担当。全巻・全版・全期間への外挿、原作から別Roleへの変換はしない。同一資料由来の記録を独立した根拠と数えない。",
+        "accessedAt": "2026-10-17",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "藤本タツキ 著",
+          "language": "ja"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      },
+      {
+        "id": "bbac1018-2ca5-491f-8e91-5e797418f21d",
+        "claimId": "fb933ff4-2061-4a0c-a72c-6e7dd2958737",
+        "sourceId": "624fc7f8-ec4a-4e6f-802e-ce1dcd6be994",
+        "locator": "dc:creator（責任表示） / ISBN 9784098602780",
+        "note": "原表記（ja）: 浦沢直樹 著。指定刊行物の責任表示で確認された担当。全巻・全版・全期間への外挿、原作から別Roleへの変換はしない。同一資料由来の記録を独立した根拠と数えない。",
+        "accessedAt": "2026-10-17",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "浦沢直樹 著",
+          "language": "ja"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      },
+      {
+        "id": "bf9fe1e5-9655-4143-921f-ee0faae347e7",
+        "claimId": "6ad7f063-1fce-4163-8414-437526212c31",
+        "sourceId": "d20d02c9-552e-4621-b8b3-a7c25efb9ddb",
+        "locator": "dc:creator（責任表示） / ISBN 9784884752934",
+        "note": "原表記（ja）: 赤塚不二夫 著。指定刊行物の責任表示で確認された担当。全巻・全版・全期間への外挿、原作から別Roleへの変換はしない。同一資料由来の記録を独立した根拠と数えない。",
+        "accessedAt": "2026-10-17",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "赤塚不二夫 著",
+          "language": "ja"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      },
+      {
+        "id": "d81bd9a1-ed47-45e2-9ee5-ed45b2d8ddb5",
+        "claimId": "602bc3c1-8a98-49cc-9556-a4c23feb6b0e",
+        "sourceId": "f9bc0f9b-f737-40eb-b451-8b0622bb1f29",
+        "locator": "dc:creator（責任表示） / ISBN 9784757520097",
+        "note": "原表記（ja）: 竹宮惠子 著。指定刊行物の責任表示で確認された担当。全巻・全版・全期間への外挿、原作から別Roleへの変換はしない。同一資料由来の記録を独立した根拠と数えない。",
+        "accessedAt": "2026-10-17",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "竹宮惠子 著",
+          "language": "ja"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      },
+      {
+        "id": "de59f4e7-fef0-4546-81d2-3dbf1944a96e",
+        "claimId": "24dca7b4-00bf-4f70-92f6-a498a494c29a",
+        "sourceId": "e059d4f3-9e5d-4c5f-84e1-959b3c932e30",
+        "locator": "dc:creator（責任表示） / ISBN 9784063829082",
+        "note": "原表記（ja）: Boichi 著。指定刊行物の責任表示で確認された担当。全巻・全版・全期間への外挿、原作から別Roleへの変換はしない。同一資料由来の記録を独立した根拠と数えない。",
+        "accessedAt": "2026-10-17",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "Boichi 著",
+          "language": "ja"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      },
+      {
+        "id": "eee1e9cd-bcc8-4d3a-a094-92bb7f3e1c1e",
+        "claimId": "d5d3fef1-fc64-4e61-b049-2f3c81994cb9",
+        "sourceId": "c815b2db-f907-43d4-a8ae-e2ef99fe5f79",
+        "locator": "dc:creator（責任表示） / ISBN 9784091910110",
+        "note": "原表記（ja）: 萩尾望都 著。指定刊行物の責任表示で確認された担当。全巻・全版・全期間への外挿、原作から別Roleへの変換はしない。同一資料由来の記録を独立した根拠と数えない。",
+        "accessedAt": "2026-10-17",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "萩尾望都 著",
+          "language": "ja"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      },
+      {
+        "id": "f3d322c7-cad4-4525-ad55-8664d3e94b2a",
+        "claimId": "14e377b1-6be2-446c-8c13-e0d5d425eafa",
+        "sourceId": "b1d80a26-19c8-4f5a-8a80-8917719ccbde",
+        "locator": "dc:creator（責任表示） / ISBN 9784061037113",
+        "note": "原表記（ja）: 大友克洋 著。指定刊行物の責任表示で確認された担当。全巻・全版・全期間への外挿、原作から別Roleへの変換はしない。同一資料由来の記録を独立した根拠と数えない。",
+        "accessedAt": "2026-10-17",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "大友克洋 著",
+          "language": "ja"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      },
+      {
+        "id": "f666bca9-1713-4085-b58d-7548b3b528b7",
+        "claimId": "f06a6e2c-59c6-4ff3-ad74-13aff65677d3",
+        "sourceId": "7083e68a-d9c5-4ed5-b590-5131ee1b6fbe",
+        "locator": "dc:creator（責任表示） / ISBN 9784253169813",
+        "note": "原表記（ja）: 手塚治虫 著。指定刊行物の責任表示で確認された担当。全巻・全版・全期間への外挿、原作から別Roleへの変換はしない。同一資料由来の記録を独立した根拠と数えない。",
+        "accessedAt": "2026-10-17",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "手塚治虫 著",
+          "language": "ja"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      },
+      {
+        "id": "fa8985f2-6775-4348-a136-9a5dee986b1a",
+        "claimId": "121709e5-ea90-4c6a-87d1-d67264e1590d",
+        "sourceId": "28614027-38d3-4b20-b460-8b1b48b4eb07",
+        "locator": "dc:creator（責任表示） / ISBN 9784091228017",
+        "note": "原表記（ja）: 高橋留美子 著。指定刊行物の責任表示で確認された担当。全巻・全版・全期間への外挿、原作から別Roleへの変換はしない。同一資料由来の記録を独立した根拠と数えない。",
+        "accessedAt": "2026-10-17",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "高橋留美子 著",
+          "language": "ja"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      }
+    ]
+  },
+  "existingPublicEntityReferences": [
+    {
+      "id": "d900543a-9c11-48c1-be76-1822b756fcc4",
+      "kind": "person",
+      "name": "浦沢直樹",
+      "description": "漫画家。今回の収録作品：PLUTO、MASTERキートン、BILLY BAT。",
+      "aliases": [
+        "Naoki Urasawa"
+      ],
+      "externalIds": [
+        {
+          "namespace": "wikidata",
+          "value": "Q348436"
+        }
+      ],
+      "createdAt": "2026-10-03T05:13:37Z",
+      "updatedAt": "2026-10-03T05:13:37Z",
+      "event": null
+    },
+    {
+      "id": "a012632c-6fd8-4559-8f38-cc60f9b28b05",
+      "kind": "person",
+      "name": "工藤かずや",
+      "description": "パイナップルARMY・信長の出版社クレジットで確認される作者。",
+      "aliases": [],
+      "externalIds": [],
+      "createdAt": "2026-10-14T00:00:00Z",
+      "updatedAt": "2026-10-14T00:00:00Z",
+      "event": null
+    },
+    {
+      "id": "710bc8a7-efed-4c2e-a4b4-6c65b0aff695",
+      "kind": "person",
+      "name": "池上遼一",
+      "description": "信長の出版社クレジットで確認される作者。",
+      "aliases": [],
+      "externalIds": [],
+      "createdAt": "2026-10-14T00:00:00Z",
+      "updatedAt": "2026-10-14T00:00:00Z",
+      "event": null
+    },
+    {
+      "id": "eb0af7e1-caa6-435f-86fb-0591421982b5",
+      "kind": "person",
+      "name": "手塚治虫",
+      "description": "浦沢直樹がインタビューで影響を受けた漫画家として言及。",
+      "aliases": [
+        "Osamu Tezuka"
+      ],
+      "externalIds": [
+        {
+          "namespace": "wikidata",
+          "value": "Q193300"
+        }
+      ],
+      "createdAt": "2026-10-03T05:13:37Z",
+      "updatedAt": "2026-10-03T05:13:37Z",
+      "event": null
+    }
+  ],
+  "acceptedUnpublishedR0002References": {
+    "entities": [
+      {
+        "id": "9f43fefa-d878-4e5e-b1a2-0413432e9dbd",
+        "kind": "person",
+        "name": "藤本タツキ",
+        "description": null,
+        "aliases": [
+          "Tatsuki Fujimoto"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q24864023"
+          }
+        ],
+        "createdAt": "2026-10-16T00:00:00Z",
+        "updatedAt": "2026-10-16T00:00:00Z",
+        "event": null
+      },
+      {
+        "id": "a13205e2-220c-4b7d-8a1a-39dbefe52db8",
+        "kind": "person",
+        "name": "大場つぐみ",
+        "description": null,
+        "aliases": [
+          "Tsugumi Ohba"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q558858"
+          }
+        ],
+        "createdAt": "2026-10-16T00:00:00Z",
+        "updatedAt": "2026-10-16T00:00:00Z",
+        "event": null
+      },
+      {
+        "id": "b4de3765-e8c4-49f1-a322-a021475ffd09",
+        "kind": "person",
+        "name": "Boichi",
+        "description": null,
+        "aliases": [],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q624839"
+          }
+        ],
+        "createdAt": "2026-10-16T00:00:00Z",
+        "updatedAt": "2026-10-16T00:00:00Z",
+        "event": null
+      }
+    ],
+    "claims": [],
+    "sources": [],
+    "citations": []
+  }
+}

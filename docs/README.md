@@ -40,7 +40,8 @@
 
 | 現役の設計文書 | 状態・読む場面 |
 | --- | --- |
-| [漫画r0003・次期24作品の収集準備](design/MANGA_R0003_COLLECTION_PLAN.md) | 2026-10-17。24作品・23人物のQID／代表ISBN・予算を固定。ORIGINAL_STORY対応adapter v2、3作品の隔離実取得・中断再開を検証。r0003は未承認・正式ジョブ未実行、全環境applyは禁止 |
+| [漫画r0003の正式実行・個別受入への引継ぎ](design/MANGA_R0003_COLLECTION_RESULT.md) | 2026-10-17。24作品・23人物同定、43 Entity／28 Claim／23 Source／28 Citation候補。74試行・再開／再実行無変更。既存作品UUID対応・未対応表記を保留。個別受入・全環境applyは未実施 |
+| [漫画r0003・次期24作品の収集準備](design/MANGA_R0003_COLLECTION_PLAN.md) | 正式実行前の定義・対象・予算・隔離検証の凍結レビュー。後続の承認と正式実行は上記結果を参照 |
 | [漫画r0002の原作正式受入・9 Claim統合候補](design/MANGA_R0002_COMBINED_RELEASE.md) | 2026-10-17。原作5 Claim・6 Entity・3 Source・5 Citationを追加受入。13 Entity／9 Claim統合release -002をvalidate・無書込plan済み。旧-001は保持、全環境applyは禁止 |
 | [漫画r0002の正式受入・release準備](design/MANGA_R0002_ACCEPTED_RELEASE.md)／[ORIGINAL_STORY](design/ORIGINAL_STORY.md) | 2026-10-17。4 Claim・7 Entity・4 Source・4 Citationを人間が正式受入。原作Role実装、原作5件は個別受入待ち。release候補のvalidate・無書込plan、公開applyは未許可 |
 | [漫画r0002の個別受入・公開準備](design/MANGA_R0002_ACCEPTANCE_REVIEW.md)／[制作Role意味レビュー](design/MANGA_PRODUCTION_ROLE_REVIEW.md) | 2026-10-17の初回レビュー記録（hash保全）。4 Claim・15新規Entityの推奨、保留11件と既存2 Claim重複。後続の正式受入・Role採用・release候補は上記記録を参照 |

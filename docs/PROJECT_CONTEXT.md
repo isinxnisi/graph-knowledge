@@ -1,5 +1,7 @@
 # プロジェクトの構想と判断基準
 
+2026-10-17、プロジェクト運営者が漫画r0003の特定hash・24作品／23人物の収集実行だけを承認し、[正式収集](design/MANGA_R0003_COLLECTION_RESULT.md)を完了した。43 Entity・28 Claim・23 Source・28 Citation候補を生成。公開4人物とr0002受入済み3人物の再利用を整理し、既存パイナップルARMYのUUID対応、漫画／一括著者表記、童夢の全集scopeを次の個別レビューへ引き継ぐ。個別受入・全環境公開apply・VPS／会員DB変更は未実施。
+
 2026-10-17、[漫画r0003の次期バッチ準備](design/MANGA_R0003_COLLECTION_PLAN.md)として残り94作品から24作品・23人物を選定し、代表ISBN・QID・予算を凍結した。既存の収集ゲートとORIGINAL_STORY契約を拡張し、3作品だけを隔離検証する。正式r0003は未承認・未実行。r0002の受入済み未公開release -002を現行baseにせず、個別受入・全環境の公開apply・VPS／会員DB変更は行わない。
 
 2026-10-17、[対象未指定の関係・制作Role検索](design/DISCOVERY_RECORD_SEARCH.md)を追加する。暫定採用した入口・PLUTO／Princeton等のプリセット・3タブを維持し、一覧内でEntityと独立Claimを切り替える。名前・種別・Roleは同じ公開Claimに適用し、根拠とGraphへ接続する。収集側・公開apply・会員データは変更しない。
