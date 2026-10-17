@@ -71,7 +71,7 @@ PC／スマホ・日英で名前なしRole、名前＋種別、0件、Roleと不
 
 正式検索の一覧受渡しは正式ダイアログだけに置き、Lab比較の二入口へ混在させない補正を追加した。公開用build／TypeScript・対象lint、betaの正式受渡しとLab維持2件を再確認して成功。旧周辺cursorの英語エラーも補足した。
 
-## 正式VPSの配置準備（今回の能力は管理者適用待ち）
+## 正式VPSの配置準備記録（後述の管理者適用・確認を完了）
 
 実装commit `ddd98d2` のWeb-only image `beta-m3-records-20261017` をbuildした。linux/amd64、build ID `4XcOL0noVSUovhJgNNTHS`、[固定digest等のmanifest](../research/discovery-records/20261017/web-manifest.json)。正式用imageをローカル公開KGへread-only接続し、readiness、日英PC／スマホのRole検索・根拠・両端Graph・EntityからのRole引継ぎ・既存Graph復帰・エラー／revision／IME・Lab維持の代表9件を成功した。
 
@@ -79,10 +79,24 @@ Web imageだけのarchiveは106,829,861 bytes、SHA-256 `42dbb2ef3b953daa286d291
 
 既存activation scriptはmanifestの検証済みtagを使う形へ整理し、今回のmanifestでは正式APIの対象未指定作画検索とrevisionも事後確認する。backup用operatorは受入済み固定digestを再利用し、Webだけを更新する。正常／不正tag／checksum／operator／Web不一致／更新失敗／DB・revision変化／HTTPS・新API失敗の隔離10経路を検証した。
 
-VPSのsudoはパスワード必須で、既存配置契約に従って管理者実行を依頼した。正式サイトは前回の暫定採用UIが反映済みだが、**今回の検索能力はまだ適用・適用後ブラウザー確認を完了していない**。既存Docker／Caddy／通知サービスはactive。データ収集・公開KG・会員データ・Caddy・認証設定は変更しない。
+VPSのsudoはパスワード必須で、既存配置契約に従って管理者実行を依頼した。正式サイトは前回の暫定採用UIが反映済みだが、**この準備時点では今回の検索能力の適用・適用後ブラウザー確認は未完了だった**。既存Docker／Caddy／通知サービスはactive。データ収集・公開KG・会員データ・Caddy・認証設定は変更しない。
 
 ```bash
 sudo bash /home/develop/graph-m3-records-20261017/scripts/activate-discovery-search.sh
 ```
 
 管理者実行後は、正式HTTPSの同build、KG revision維持、名前なしRole→条件変更→根拠→Graph／Back、日英PC／スマホ、会員status・匿名profile401、広告origin隔離と旧preview401を確認する。適用確認までは、3200／betaの成功と区別して報告する。
+
+## 正式適用後の確認（2026-10-17、完了）
+
+管理者から上記activation scriptの実行完了を受け、正式origin `https://plunode.net` で検証した。準備記録の「管理者適用待ち」は解消済み。Web sourceは `ddd98d2`、正式Home・英語Home・会員ページがすべてbuild `4XcOL0noVSUovhJgNNTHS` を返す。追加のKG applyや候補受入は行っていない。
+
+- 正式HTTPSの代表E2E **9件すべて成功**。日英×PC1241px／スマホ390pxで、名前なし作画、名前・種別の変更、条件を保持する検索例、不整合条件の明示、根拠の実表示、記録とEntityのRole付きGraph、Back／履歴復元、横はみ出しなしを確認した。既存Graphの配置・枝への復帰、元の入口を保つ一覧受渡し、Labの二入口も成功。失敗・revision不一致・IMEはブラウザー内の応答差替えによる検証で、正式サーバーやDBの改変ではない。
+- 実APIで作画 **2 Claim／4 Entity**、脚本 **2 Claim**、影響 **1 Claim**。作画の根拠は手塚治虫→鉄腕アトム、浦沢直樹→パイナップルARMY。脚本は勝鹿北星／長崎尚志→MASTERキートン。影響は浦沢直樹が手塚治虫から影響を受けた記録。刊行物scope・期間不明・肯否・出典は独立したClaimの値を保持する。
+- PLUTO＋作画、PLUTO周辺＋作画、作品＋浦沢＋作画は0件。同じClaim／端点の条件を借り合わせない。所属の2ページ40件はUUID昇順・重複なし。異条件cursor400、旧revision409、未知world400、不整合Role400、POST405、個別根拠への到達を確認した。
+- 正式KG revisionは更新前後とも `5e2a94af-9061-4087-bb7a-045a3c0133f4`。3200／betaは従来の `82b01515-594c-48ca-b4b6-515eefac83ca` を維持し、相互のDB同期は行っていない。betaでも適用後にスマホの一連操作と実APIの代表 **2件すべて成功**。3200の本番モードserverは継続稼働している。
+- 会員statusはGoogle providerで200、匿名profile401、会員ページnoindexを維持。旧preview401、広告用originの検索API404。VPSのDocker・Caddy・既存通知サービスはread-only SSH確認で全てactive。実ログインや本人の保存データ操作は今回の再検証に含めない。
+
+[正式公開後の公開情報による確認記録](../research/discovery-records/20261017/production-verification.json)、[正式PCの根拠表示](../research/discovery-records/20261017/production-ja-1241-drawing-evidence.png)、[正式英語スマホ](../research/discovery-records/20261017/production-en-390-drawing-evidence.png)を保存した。画面を目視し、scope・資料原文・両端Graph導線を確認した。
+
+今回の反映は検索能力の小さい追加であり、入口の置換・M3全体の完成ではない。方向／肯否／期間／ISBN scopeの絞込、所属立場／Event Role、世界・受賞・研究分野等の分類検索は前述の通り未対応。実機の指操作と検索例の分かりやすさは継続して人間評価する。

@@ -1,0 +1,268 @@
+{
+  "checkedAt": "2026-10-17T04:37:23.557048+00:00",
+  "http": [
+    {
+      "name": "formal-home",
+      "url": "https://plunode.net/",
+      "status": 200,
+      "expectedBuildPresent": true,
+      "noindex": false
+    },
+    {
+      "name": "formal-en",
+      "url": "https://plunode.net/en",
+      "status": 200,
+      "expectedBuildPresent": true,
+      "noindex": false
+    },
+    {
+      "name": "formal-member",
+      "url": "https://plunode.net/member",
+      "status": 200,
+      "expectedBuildPresent": true,
+      "noindex": true
+    },
+    {
+      "name": "member-status",
+      "url": "https://plunode.net/api/member/status",
+      "status": 200,
+      "body": {
+        "provider": "google"
+      }
+    },
+    {
+      "name": "anonymous-profile",
+      "url": "https://plunode.net/api/member/profile",
+      "status": 401
+    },
+    {
+      "name": "preview",
+      "url": "https://graph.isinxnisi.net/api/dataset",
+      "status": 401
+    },
+    {
+      "name": "ads-api",
+      "url": "https://ads.plunode.net/api/discovery/entities",
+      "status": 404
+    }
+  ],
+  "services": {
+    "exitCode": 0,
+    "output": "active\nactive\nactive"
+  },
+  "web": {
+    "codeCommit": "ddd98d2d77bccc71121912ef2ac8ab18d39238a9",
+    "buildId": "4XcOL0noVSUovhJgNNTHS"
+  },
+  "publicResults": {
+    "formalDataset": {
+      "dataset": "public-kg",
+      "revision": "5e2a94af-9061-4087-bb7a-045a3c0133f4"
+    },
+    "formalDrawing": {
+      "revision": "5e2a94af-9061-4087-bb7a-045a3c0133f4",
+      "claimCount": 2,
+      "page": {
+        "hasMore": false,
+        "nextCursor": null
+      },
+      "records": [
+        {
+          "id": "0d45948d-7aa4-4cc9-821c-b283d99cd118",
+          "subject": "手塚治虫",
+          "object": "鉄腕アトム",
+          "predicate": "CONTRIBUTED_TO",
+          "polarity": "affirmed",
+          "contribution": {
+            "roleId": "DRAWING",
+            "scope": null
+          },
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "sourceCount": 1
+        },
+        {
+          "id": "7ff703da-d90e-413d-b02e-087f136faa21",
+          "subject": "浦沢直樹",
+          "object": "パイナップルARMY",
+          "predicate": "CONTRIBUTED_TO",
+          "polarity": "affirmed",
+          "contribution": {
+            "roleId": "DRAWING",
+            "scope": {
+              "kind": "publication",
+              "isbn13": "9784091921116",
+              "volumeLabel": "第1巻",
+              "editionLabel": "小学館文庫",
+              "language": "ja"
+            }
+          },
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "sourceCount": 1
+        }
+      ]
+    },
+    "formalScript": {
+      "revision": "5e2a94af-9061-4087-bb7a-045a3c0133f4",
+      "claimCount": 2,
+      "page": {
+        "hasMore": false,
+        "nextCursor": null
+      },
+      "records": [
+        {
+          "id": "52c9fa30-bac5-40f1-bbe5-75d7420081d8",
+          "subject": "勝鹿北星",
+          "object": "MASTERキートン",
+          "predicate": "CONTRIBUTED_TO",
+          "polarity": "affirmed",
+          "contribution": {
+            "roleId": "SCRIPT_WRITING",
+            "scope": {
+              "kind": "publication",
+              "isbn13": "9784091841612",
+              "volumeLabel": "第1巻",
+              "editionLabel": "完全版",
+              "language": "ja"
+            }
+          },
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "sourceCount": 1
+        },
+        {
+          "id": "7142e160-c0d5-4358-9b70-63c03bfd44ad",
+          "subject": "長崎尚志",
+          "object": "MASTERキートン",
+          "predicate": "CONTRIBUTED_TO",
+          "polarity": "affirmed",
+          "contribution": {
+            "roleId": "SCRIPT_WRITING",
+            "scope": {
+              "kind": "publication",
+              "isbn13": "9784091841612",
+              "volumeLabel": "第1巻",
+              "editionLabel": "完全版",
+              "language": "ja"
+            }
+          },
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "sourceCount": 1
+        }
+      ]
+    },
+    "formalInfluence": {
+      "revision": "5e2a94af-9061-4087-bb7a-045a3c0133f4",
+      "claimCount": 1,
+      "page": {
+        "hasMore": false,
+        "nextCursor": null
+      },
+      "records": [
+        {
+          "id": "b6ce3407-e3bb-44c9-867b-7b7434861af5",
+          "subject": "浦沢直樹",
+          "object": "手塚治虫",
+          "predicate": "INFLUENCED_BY",
+          "polarity": "affirmed",
+          "contribution": null,
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "sourceCount": 1
+        }
+      ]
+    },
+    "betaDataset": {
+      "dataset": "public-kg",
+      "revision": "82b01515-594c-48ca-b4b6-515eefac83ca"
+    },
+    "betaDrawing": {
+      "revision": "82b01515-594c-48ca-b4b6-515eefac83ca",
+      "claimCount": 2,
+      "page": {
+        "hasMore": false,
+        "nextCursor": null
+      },
+      "records": [
+        {
+          "id": "0d45948d-7aa4-4cc9-821c-b283d99cd118",
+          "subject": "手塚治虫",
+          "object": "鉄腕アトム",
+          "predicate": "CONTRIBUTED_TO",
+          "polarity": "affirmed",
+          "contribution": {
+            "roleId": "DRAWING",
+            "scope": null
+          },
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "sourceCount": 1
+        },
+        {
+          "id": "7ff703da-d90e-413d-b02e-087f136faa21",
+          "subject": "浦沢直樹",
+          "object": "パイナップルARMY",
+          "predicate": "CONTRIBUTED_TO",
+          "polarity": "affirmed",
+          "contribution": {
+            "roleId": "DRAWING",
+            "scope": {
+              "kind": "publication",
+              "isbn13": "9784091921116",
+              "volumeLabel": "第1巻",
+              "editionLabel": "小学館文庫",
+              "language": "ja"
+            }
+          },
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "sourceCount": 1
+        }
+      ]
+    }
+  },
+  "browserVerification": {
+    "formal": {
+      "passed": 9,
+      "failed": 0,
+      "widths": [
+        1241,
+        390
+      ],
+      "locales": [
+        "ja",
+        "en"
+      ]
+    },
+    "beta": {
+      "passed": 2,
+      "failed": 0,
+      "widths": [
+        390
+      ],
+      "locales": [
+        "ja"
+      ],
+      "coverage": [
+        "unanchored role / query / kind / evidence / Graph / Back",
+        "live API same-Claim / endpoint / around / paging / revision / evidence"
+      ]
+    }
+  }
+}
