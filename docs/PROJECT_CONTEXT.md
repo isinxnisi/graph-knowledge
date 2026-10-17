@@ -1,5 +1,7 @@
 # プロジェクトの構想と判断基準
 
+2026-10-17 20:06 JST、[データ収集とDiscovery Modelの報告連携](design/COLLECTION_THEMES.md#データ収集とdiscovery-modelの報告連携)を追加。今後は件数・判断記録に加え、根拠付きの代表Graph経路を収集候補／正式受入済み未適用／公開KG適用済みに分けて共有する。経路から直接関係を推測せず、探索側の不足要望は既存テーマ・候補・収録状況と照合する。r0003受入レビューと残り70作品の計画は継続し、個別受入・公開applyの追加承認ではない。
+
 2026-10-17、[漫画r0003の一括受入レビュー](design/MANGA_R0003_ACCEPTANCE_REVIEW.md)で通常25 Claim・36 Entityを個別に受入推奨へ整理。既存作品UUID対応・童夢の全集scopeと追加資料の別Role候補を含む最大31 Claim／39新規Entityをhiddenで準備し、既存公開base＋r0002既受入の隔離投影を検証する。正式受入・公開release作成・全環境applyは未実施。元収集・承認・r0002未適用releaseを保全し、API／UI／adapter・DBを変更しない。
 
 2026-10-17、プロジェクト運営者が漫画r0003の特定hash・24作品／23人物の収集実行だけを承認し、[正式収集](design/MANGA_R0003_COLLECTION_RESULT.md)を完了した。43 Entity・28 Claim・23 Source・28 Citation候補を生成。公開4人物とr0002受入済み3人物の再利用を整理し、既存パイナップルARMYのUUID対応、漫画／一括著者表記、童夢の全集scopeを次の個別レビューへ引き継ぐ。個別受入・全環境公開apply・VPS／会員DB変更は未実施。
