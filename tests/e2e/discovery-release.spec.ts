@@ -40,6 +40,30 @@ for (const locale of ["ja", "en"]) for (const width of [1241, 390, 320]) test(`$
   await dialog.getByRole("tab", { name: en ? "Existing connections" : "今ある接点から", exact: true }).click();
   const link = page.getByTestId("prototype-graph"), href = new URL((await link.getAttribute("href"))!, page.url());
   expect(decodeExploration(href.searchParams.get("s")!, pluto, "public-kg").conditions).toMatchObject({ predicates: ["CONTRIBUTED_TO"], contributionRoles: ["AUTHORSHIP"] });
+  // Visibility/accessible-name assertions miss foreground equal to the filled background.
+  await expect(link).toContainText(en ? "Open Graph" : "Graphで開く");
+  for (const theme of ["light", "dark-brown", "dark-blue"]) {
+    await page.evaluate(value => { document.documentElement.dataset.theme = value; }, theme);
+    for (const state of ["normal", "hover", "focus"]) {
+      await page.mouse.move(0, 0);
+      if (state === "hover") await link.hover();
+      if (state === "focus") await link.focus();
+      const contrast = await link.evaluate(el => {
+        const style = getComputedStyle(el);
+        const luminance = (color: string) => {
+          const channels = color.match(/[\d.]+/g)!.slice(0, 3).map(Number).map(v => { const c = v / 255; return c <= .04045 ? c / 12.92 : ((c + .055) / 1.055) ** 2.4; });
+          return channels[0] * .2126 + channels[1] * .7152 + channels[2] * .0722;
+        };
+        const foreground = luminance(style.color), background = luminance(style.backgroundColor);
+        return { ratio: (Math.max(foreground, background) + .05) / (Math.min(foreground, background) + .05), color: style.color, icons: Array.from(el.querySelectorAll("svg")).map(svg => getComputedStyle(svg).color), decoration: style.textDecorationLine };
+      });
+      expect(contrast.ratio, `${theme} ${state}: Graph link text contrast`).toBeGreaterThanOrEqual(4.5);
+      expect(contrast.icons).toEqual([contrast.color, contrast.color]);
+      expect(contrast.decoration).toBe("none");
+    }
+  }
+  await page.evaluate(() => { document.documentElement.dataset.theme = "light"; });
+  await page.screenshot({ path: info.outputPath("graph-button.png"), animations: "disabled" });
   await link.click(); await expect(page.getByTestId("exploration-root")).toContainText("PLUTO");
   await page.goBack(); await expect(dialog).toBeVisible();
   await expect(dialog.locator("#prototype-subject")).toContainText("PLUTO");

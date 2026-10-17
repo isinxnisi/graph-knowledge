@@ -1,0 +1,48 @@
+{
+  "checkedAt": "2026-10-17T11:28:08.254826+00:00",
+  "bug": "Graph launch foreground overridden by Explorer generic anchor rule; foreground and background identical",
+  "before": {
+    "origin": "https://plunode.net",
+    "test": "ja 1241px formal entrance",
+    "textContrast": 1,
+    "expectedFailure": true
+  },
+  "beta": {
+    "buildId": "-9mgUCsdKvTKVpcubiuwe",
+    "publicRevision": "82b01515-594c-48ca-b4b6-515eefac83ca",
+    "e2ePassed": 6,
+    "e2eFailed": 0,
+    "locales": [
+      "ja",
+      "en"
+    ],
+    "widths": [
+      1241,
+      390,
+      320
+    ],
+    "themes": [
+      "light",
+      "dark-brown",
+      "dark-blue"
+    ],
+    "states": [
+      "normal",
+      "hover",
+      "focus"
+    ],
+    "assertedMinimumContrast": 4.5,
+    "contrastChecks": 54,
+    "alsoVerified": [
+      "visible text and icon colors",
+      "no unwanted underline",
+      "Graph URL role conditions",
+      "Graph and Back",
+      "preserved filters",
+      "horizontal overflow"
+    ]
+  },
+  "buildAndTypeScript": "passed",
+  "targetedLint": "passed",
+  "formal": "Fix not yet activated; Web-only deployment preparation follows."
+}

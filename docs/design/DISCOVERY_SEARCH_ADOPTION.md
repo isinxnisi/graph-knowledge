@@ -114,3 +114,14 @@ sudo bash /home/develop/graph-discovery-entry-20261017/scripts/activate-discover
 会員status200（Google）、匿名profile401、会員ページnoindex、旧preview401、広告用originの検索API404を維持。VPSのDocker・Caddy・既存通知サービスもread-only SSH確認で全てactive。本人ログインや会員保存データの操作は今回の再検証に含めない。
 
 [公開後の確認記録](../research/discovery-entry/20261017/production-verification.json)、[正式PCの空欄入口](../research/discovery-entry/20261017/production-ja-1440-empty.png)、[正式英語スマホの名前検索](../research/discovery-entry/20261017/production-en-320-name.png)。ここまでで今回の検索ペイン入口改善の正式反映を完了とする。
+
+
+### Graphボタンの文字・アイコン色の修正（2026-10-17）
+
+運営者の実画面報告を受け、正式検索の結果見出しにある「Graphで開く／Open Graph」の文字とアイコンが背景と同色になる不具合を修正した。外側の `.explorer a` が、専用 `.graphLaunch` より詳細度が高く、文字色と下線を上書きしていた。専用ルールを `.dialog .graphLaunch` に限定して優先させ、hover・スマホのサイズ指定も同じ範囲へ揃える。検索条件・URL・レイアウト・API・KGは変更しない。
+
+本番の修正前画面で、文字と背景のコントラスト比 **1** を再現。従来のbox可視性・aria-labelだけの検証では見逃していたため、実際のcomputed colorを検証する回帰条件を既存の正式検索E2Eへ追加した。日英×1241/390/320pxの6経路で、3配色×通常／hover／focusの54条件すべてで文字コントラスト比4.5以上、アイコンの色継承、不要な下線なしを確認する。
+
+公開用build／TypeScript・対象lint成功。3200／betaへbuild `-9mgUCsdKvTKVpcubiuwe` を反映し、上記 **6件すべて成功**。GraphへのRole条件・一覧条件の保持・Graph移動／Back・横はみ出しも確認した。PC英語・スマホ日本語の実画面で文字とアイコンが読めることを目視した。公開revisionはローカル／beta `82b01515-594c-48ca-b4b6-515eefac83ca`、正式 `5e2a94af-9061-4087-bb7a-045a3c0133f4` を維持している。
+
+[検証記録](../research/discovery-graph-contrast/20261017/verification.json)、[PC英語の修正後](../research/discovery-graph-contrast/20261017/beta-en-pc.png)、[スマホ日本語](../research/discovery-graph-contrast/20261017/beta-ja-mobile.png)。本番にも同じ修正を届けるため、既存のWeb-only配置契約に従ってイメージの作成・検証・転送を続ける。正式適用前はbetaの成功と区別する。
