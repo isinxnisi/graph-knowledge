@@ -1,0 +1,23 @@
+{
+  "tag": "beta-m3-records-20261017",
+  "codeCommit": "ddd98d2d77bccc71121912ef2ac8ab18d39238a9",
+  "buildId": "4XcOL0noVSUovhJgNNTHS",
+  "allowedWebImageIds": [
+    "sha256:1817752391e4ef45863819238840864b09d28a2afdb9874b6f424068f814d063",
+    "sha256:9a00d554763b6a8645ff76acb1e1754e3ba3b43fe43182c4d18d13ed9184dc35"
+  ],
+  "platform": "linux/amd64",
+  "recordSearch": true,
+  "acceptedOperatorConfig": "sha256:b0e0bc42b156935ae6915b1dcb39bcc25338dcd25657a92ed41a8944fa569e9a",
+  "acceptedOperatorManifest": "sha256:edc660a29b7bb6d500021d4a187155414e8440361e0cbe3e742142fdbddb78ed",
+  "archiveContents": [
+    "graph-knowledge-web:beta-m3-records-20261017"
+  ],
+  "excluded": [
+    "KG apply",
+    "collection jobs",
+    "member data",
+    "DB restart",
+    "Caddy/auth changes"
+  ]
+}

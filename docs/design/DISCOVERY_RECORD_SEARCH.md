@@ -70,3 +70,19 @@ PC／スマホ・日英で名前なしRole、名前＋種別、0件、Roleと不
 正式サイトは着手時に暫定採用UIのbuild `Eieg0jcFJQ-MI5TvrJRft` を確認。KG revision `5e2a94af-9061-4087-bb7a-045a3c0133f4` を維持し、既存neighbors APIで手塚治虫／浦沢直樹の作画を各1 Claim確認した。今回のまとまった能力追加も[Web配置契約](PRODUCTION_DEPLOYMENT.md#確認環境の更新契約)に従い、Web-only imageを準備する。配置後に新APIと代表操作を確認するまで、今回の能力の正式反映済みとは数えない。
 
 正式検索の一覧受渡しは正式ダイアログだけに置き、Lab比較の二入口へ混在させない補正を追加した。公開用build／TypeScript・対象lint、betaの正式受渡しとLab維持2件を再確認して成功。旧周辺cursorの英語エラーも補足した。
+
+## 正式VPSの配置準備（今回の能力は管理者適用待ち）
+
+実装commit `ddd98d2` のWeb-only image `beta-m3-records-20261017` をbuildした。linux/amd64、build ID `4XcOL0noVSUovhJgNNTHS`、[固定digest等のmanifest](../research/discovery-records/20261017/web-manifest.json)。正式用imageをローカル公開KGへread-only接続し、readiness、日英PC／スマホのRole検索・根拠・両端Graph・EntityからのRole引継ぎ・既存Graph復帰・エラー／revision／IME・Lab維持の代表9件を成功した。
+
+Web imageだけのarchiveは106,829,861 bytes、SHA-256 `42dbb2ef3b953daa286d291e2f08fa960d4dc8979a4816d1cd56210f1264f361`。VPS `/home/develop/graph-m3-records-20261017/` へarchive・manifest・更新scriptを転送し、現地の全checksumとshell構文検証が成功した。private env・credential・新operatorは同梱しない。
+
+既存activation scriptはmanifestの検証済みtagを使う形へ整理し、今回のmanifestでは正式APIの対象未指定作画検索とrevisionも事後確認する。backup用operatorは受入済み固定digestを再利用し、Webだけを更新する。正常／不正tag／checksum／operator／Web不一致／更新失敗／DB・revision変化／HTTPS・新API失敗の隔離10経路を検証した。
+
+VPSのsudoはパスワード必須で、既存配置契約に従って管理者実行を依頼した。正式サイトは前回の暫定採用UIが反映済みだが、**今回の検索能力はまだ適用・適用後ブラウザー確認を完了していない**。既存Docker／Caddy／通知サービスはactive。データ収集・公開KG・会員データ・Caddy・認証設定は変更しない。
+
+```bash
+sudo bash /home/develop/graph-m3-records-20261017/scripts/activate-discovery-search.sh
+```
+
+管理者実行後は、正式HTTPSの同build、KG revision維持、名前なしRole→条件変更→根拠→Graph／Back、日英PC／スマホ、会員status・匿名profile401、広告origin隔離と旧preview401を確認する。適用確認までは、3200／betaの成功と区別して報告する。
