@@ -105,3 +105,11 @@ test("記録検索の失敗・版不一致・IME：旧結果を操作させず�
   await input.dispatchEvent("compositionstart"); await input.fill("no_such_record_789"); await page.waitForTimeout(350); expect(requests).toHaveLength(0);
   await input.dispatchEvent("compositionend"); await expect(page.getByTestId("prototype-claim")).toHaveCount(0);
 });
+
+test("Lab比較は既存の二入口を維持し、正式一覧への操作を混在させない", async ({ page }, info) => {
+  await page.goto(info.project.use.baseURL! + "/discovery-lab"); const dialog = page.getByRole("dialog");
+  await dialog.getByLabel("関係の条件", { exact: true }).getByRole("button", { name: "制作", exact: true }).click();
+  await dialog.locator('[data-role="DRAWING"]').click();
+  await expect(dialog.getByRole("tab")).toHaveCount(2);
+  await expect(dialog.getByRole("button", { name: "この関係・役割で一覧の記録を探す", exact: true })).toHaveCount(0);
+});

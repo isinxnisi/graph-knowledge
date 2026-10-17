@@ -119,6 +119,7 @@ const messages: Record<string, string> = {
   "以前の枝はキャッシュから外れたため、近傍を再取得します。": "The previous branch is no longer cached. Fetching adjacent relations again.",
   "取得済みの枝がないため近傍を取得します。": "No fetched branch is available. Fetching adjacent relations.",
   "名前または別名を入力してください。": "Enter a name or alias.",
+  "周辺と関係の検索方式が変わりました。先頭から再取得してください。": "This search has changed. Restart from the first page.",
 };
 export function explorerMessage(message: string, locale = "ja"): string {
   if (!locale.startsWith("en")) return message;

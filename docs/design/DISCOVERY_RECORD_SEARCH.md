@@ -68,3 +68,5 @@ PC／スマホ・日英で名前なしRole、名前＋種別、0件、Roleと不
 [実APIの条件と結果](../research/discovery-records/20261017/live-results.json)、[PCの作画・根拠](../research/discovery-records/20261017/beta-ja-1241-drawing-evidence.png)、[スマホの作画・根拠](../research/discovery-records/20261017/beta-ja-390-drawing-evidence.png)、[英語スマホ](../research/discovery-records/20261017/beta-en-390-drawing-evidence.png)を保存した。320pxの長い研究機関名でもbodyのclientWidth/scrollWidthは302/302。実機の指による誤タップと、検索例の分かりやすさは継続して人間評価する。
 
 正式サイトは着手時に暫定採用UIのbuild `Eieg0jcFJQ-MI5TvrJRft` を確認。KG revision `5e2a94af-9061-4087-bb7a-045a3c0133f4` を維持し、既存neighbors APIで手塚治虫／浦沢直樹の作画を各1 Claim確認した。今回のまとまった能力追加も[Web配置契約](PRODUCTION_DEPLOYMENT.md#確認環境の更新契約)に従い、Web-only imageを準備する。配置後に新APIと代表操作を確認するまで、今回の能力の正式反映済みとは数えない。
+
+正式検索の一覧受渡しは正式ダイアログだけに置き、Lab比較の二入口へ混在させない補正を追加した。公開用build／TypeScript・対象lint、betaの正式受渡しとLab維持2件を再確認して成功。旧周辺cursorの英語エラーも補足した。
