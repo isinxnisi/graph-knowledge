@@ -1,6 +1,8 @@
 import { deflateSync, Inflate, strFromU8, strToU8 } from "fflate";
 import { workspaceSchema, rebuildWorkspace, WorkspaceError, type SavedWorkspace } from "./saved-workspace";
 import type { GraphState } from "./graph-state";
+import { fetchDatasetRevision } from "./api";
+import type { PathWitness } from "../domain/discovery-paths";
 import type { GraphView } from "./graph-view";
 import type { DatasetMode } from "../domain/dataset";
 
@@ -51,11 +53,24 @@ export function decodeExploration(encoded: string, rootId: string, dataset: Data
     throw new ExplorationUrlError("invalid");
   }
 }
-export async function rebuildExplorationUrl(workspace: SavedWorkspace, signal: AbortSignal) {
+export async function rebuildExplorationUrl(workspace: SavedWorkspace, signal: AbortSignal, witness?: PathWitness) {
+  if (witness) {
+    const observed = await fetchDatasetRevision(signal);
+    if (observed.dataset !== workspace.dataset || observed.revision !== witness.revision) throw new ExplorationUrlError("changed");
+  }
   const result = await rebuildWorkspace(workspace, signal);
   if (result.skippedBranches || workspace.branches.some(b => result.graph.expansions[b.id]?.pages.length !== b.pages)
     || Object.keys(workspace.view?.positions ?? {}).some(id => !result.graph.cacheNodes[id])) throw new ExplorationUrlError("changed");
-  return { ...result, view: result.view ? { ...result.view, recenter: true } : null };
+  if (witness) {
+    const observed = await fetchDatasetRevision(signal);
+    if (result.graph.revision !== witness.revision || observed.revision !== witness.revision || observed.dataset !== workspace.dataset
+      || witness.nodeIds[0] !== workspace.rootId || witness.nodeIds.some(id => !result.graph.nodes[id])
+      || witness.claimIds.some((ids,i) => ids.some(id => {
+        const c = result.graph.claims[id];
+        return !c || ![c.subjectId,c.objectId].includes(witness.nodeIds[i]) || ![c.subjectId,c.objectId].includes(witness.nodeIds[i+1]);
+      }))) throw new ExplorationUrlError("changed");
+  }
+  return { ...result, ...(witness ? { selectedEntityId: witness.nodeIds.at(-1)!, discoveryPath: witness } : {}), view: result.view ? { ...result.view, recenter: true } : null };
 }
 // Cache eviction can leave dormant islands. Never create a URL that promises to
 // replay an island that the remaining accepted pages no longer connect to root.

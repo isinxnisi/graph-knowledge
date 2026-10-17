@@ -173,7 +173,7 @@ export function useGraphExplorer() {
     generation.current += 1;
     setViewRestoration(workspace.view ? { generation: generation.current, view: workspace.view } : null);
     commit({ ...workspace.graph, generation: generation.current, notice: workspaceLabels().restored(workspace.skippedBranches) });
-    setSelection(workspace.graph.centerId ? { kind: "entity", id: workspace.graph.centerId } : null);
+    setSelection(workspace.graph.centerId ? { kind: "entity", id: workspace.selectedEntityId ?? workspace.graph.centerId } : null);
   }, [commit, selection]);
   const changePredicates = useCallback((values: PredicateFilter, roleValues: ContributionRoleFilter = current.current.contributionRoles ?? null, positionValues: OrganizationPositionFilter = current.current.organizationPositions ?? null, eventRoleValues: EventRoleFilter = current.current.eventRoles ?? null, view: GraphView | null = null) => {
     const predicates = normalizePredicates(values);

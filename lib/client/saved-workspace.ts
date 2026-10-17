@@ -1,3 +1,4 @@
+import type { PathWitness } from "../domain/discovery-paths";
 import { dataReleaseLabels } from "../i18n/data-release";
 import { z } from "zod";
 import { workspaceLabels } from "../i18n/workspace";
@@ -26,7 +27,7 @@ export const workspaceSchema = z.strictObject({
 }).refine(value => new Set(value.branches.map(branch => branch.id)).size === value.branches.length
   && value.branches.reduce((sum, branch) => sum + branch.pages, 0) <= WORKSPACE_PAGE_LIMIT);
 export type SavedWorkspace = z.infer<typeof workspaceSchema>;
-export type RebuiltWorkspace = { graph: GraphState; view: GraphView | null; skippedBranches: number };
+export type RebuiltWorkspace = { graph: GraphState; view: GraphView | null; skippedBranches: number; selectedEntityId?: string; discoveryPath?: PathWitness };
 export const workspaceKey = (dataset: DatasetMode) => `graph-knowledge:workspace:${dataset}`;
 export class WorkspaceRootNotFound extends ClientApiError {
   constructor() { super("起点の対象が見つかりません。", 404); }

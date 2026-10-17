@@ -8,6 +8,8 @@ import { useUiLocale } from "../lib/client/ui-locale";
 import { explorationHref } from "../lib/client/exploration-url";
 import { contributionLabels } from "../lib/i18n/contribution";
 import { localizedPublicHref } from "../lib/domain/public-routes";
+import DiscoveryPaths from "./DiscoveryPaths";
+import { pathUiSchema, type PathUi } from "../lib/domain/discovery-paths";
 import DiscoveryClaimRow from "./DiscoveryClaimRow";
 import Icon from "./Icon";
 import DiscoveryWorldIcon from "./DiscoveryWorldIcon";
@@ -49,6 +51,7 @@ export default function DiscoveryExplorer({ lab = false, initial = { q: "", kind
   const { locale, setLocale } = useUiLocale(), en = locale === "en";
   const t = (ja: string, english: string) => en ? english : ja;
   const [context, setContext] = useState<DiscoveryContext>(initialContext);
+  const [pathUi,setPathUi] = useState<PathUi>({scope:"",open:false,depth:2,selected:null});
   const [lookupOpen, setLookupOpen] = useState(false), [lookupQ, setLookupQ] = useState("");
   const [undo, setUndo] = useState<{ context: DiscoveryContext; label: Label; lookupOpen: boolean; lookupQ: string } | null>(null);
   const [entry, setEntry] = useState<Entry>(!lab && initial.presentation !== "explore" ? "list" : "connections"), [variant, setVariant] = useState<Variant>("tabs");
@@ -74,6 +77,8 @@ export default function DiscoveryExplorer({ lab = false, initial = { q: "", kind
       let saved = lab ? window.history.state?.discoveryPrototype : resumed ? window.history.state?.discoveryWorkspace : null;
       if (lab && !saved) { try { saved = JSON.parse(sessionStorage.getItem("plunode.discovery-prototype.v1") ?? "null"); } catch { /* Optional storage. */ } }
       if (saved) {
+        const savedPath = pathUiSchema.safeParse(saved.pathUi);
+        if (savedPath.success) setPathUi(savedPath.data);
         const restored = readPrototypeContext(saved.context);
         setContext({ ...restored, names: false, q: restored.names ? "" : restored.q });
         setLookupOpen(saved.lookupOpen === true || restored.names);
@@ -96,14 +101,14 @@ export default function DiscoveryExplorer({ lab = false, initial = { q: "", kind
   }, [lab, onClose]);
   useEffect(() => {
     if (!ready) return;
-    const snapshot = { layoutVersion: 2, context, entry, variant, lookupOpen, lookupQ, listCriteria, listCursors };
+    const snapshot = { layoutVersion: 2, context, entry, variant, lookupOpen, lookupQ, listCriteria, listCursors, pathUi };
     if (lab) {
       window.history.replaceState({ ...window.history.state, discoveryPrototype: snapshot }, "", window.location.href);
       try { sessionStorage.setItem("plunode.discovery-prototype.v1", JSON.stringify(snapshot)); } catch { /* Optional storage. */ }
     } else {
       window.history.replaceState({ ...window.history.state, plunodeDiscovery: { ...listCriteria, presentation: entry === "list" ? "list" : "explore" }, discoveryWorkspace: snapshot, discoveryReturnFocus: returnFocus.current }, "", window.location.href);
     }
-  }, [ready, context, entry, variant, lookupOpen, lookupQ, listCriteria, listCursors, lab]);
+  }, [ready, context, entry, variant, lookupOpen, lookupQ, listCriteria, listCursors, pathUi, lab]);
   const change = (next: DiscoveryContext, label: Label) => {
     if (JSON.stringify(next) === JSON.stringify(context)) return;
     setUndo({ context, label, lookupOpen, lookupQ }); setContext(next);
@@ -219,6 +224,11 @@ export default function DiscoveryExplorer({ lab = false, initial = { q: "", kind
           </form>
           {names && hasConditions && <p className={styles.lookupNote}>{t("選択条件は保持中。名前候補には世界・関係・役割の条件を適用しません。", "Criteria retained. World, relation and role filters do not apply to these name matches.")}</p>}
           <div className={styles.resultHeading}><div><h3 id="prototype-results-title" tabIndex={-1} data-focus-destination>{names ? t("名前の候補", "Name matches") : t("関係の記録", "Relation records")}</h3><span role="status">{query.loading ? t("取得中…", "Loading…") : query.result ? names ? t(query.result.items.length + "件", query.result.items.length + " matches") : t("このページ " + claims.length + "件", claims.length + " on this page") : ""}</span></div>{context.anchor && appliedGraph && <a className={styles.graphLaunch} data-testid="prototype-graph" href={graphHref(context.anchor.id)} aria-label={t(context.anchor.name + "をGraphで開く", "Open " + context.anchor.name + " in Graph")}><Icon name="graph"/>{t("Graphで開く", "Open Graph")}<Icon name="external"/></a>}</div>
+          {query.result && !names && plan.state === "ready" && plan.operation === "neighbors" && (() => {
+            const scope = JSON.stringify([plan.anchorId,plan.predicate,plan.role]);
+            return <DiscoveryPaths anchorId={plan.anchorId} predicate={plan.predicate} role={plan.role} revision={query.result.revision}
+              ui={pathUi.scope===scope?pathUi:{scope,open:false,depth:2,selected:null}} onChange={setPathUi} onRefresh={query.retry} pageFilter={!!context.q}/>;
+          })()}
           {query.error && <div role="alert" className={styles.unavailable}><p>{query.conflict ? t("公開KGの版が変わりました。先頭から再取得してください。", "The public KG changed. Refresh from the first page.") : t("記録を取得できませんでした。再試行してください。", "Could not load records. Please retry.")}</p><button onClick={() => { setCursors([null]); query.retry(); }}>{t("再取得", "Retry")}</button></div>}
           {plan.state !== "ready" ? <div className={styles.empty} data-initial={plan.state === "needs-name" || undefined}>{plan.state === "needs-name" ? <><svg className={styles.emptyDrawing} viewBox="0 0 260 90" fill="none" aria-hidden="true"><path d="M35 58C70 58 65 25 117 25S173 65 225 50M117 25Q135 78 179 74"/><circle cx="35" cy="58" r="6"/><circle cx="117" cy="25" r="10"/><circle cx="225" cy="50" r="6"/><circle cx="179" cy="74" r="4"/></svg><h4>{t("ひとつの名前から、その先へ。", "One name. Many connections.")}</h4><p>{t("名前を入力するか、気になる接点を選ぶと、ここに記録が並びます。", "Search a name or choose a connection to see the published records here.")}</p></> : plan.state === "unsupported" ? t("問いは保持しています。関係を変更するか、条件を保って名前を探せます。", "Question retained. Change the relation or search names while keeping it.") : t("名前から対象を選ぶと、関係の記録を確認できます。", "Choose a subject by name to see its relation records.")}</div>
           : <div className={styles.resultStage} data-testid="prototype-results" data-updating={blocked || undefined}><div inert={blocked} aria-hidden={blocked || undefined}>

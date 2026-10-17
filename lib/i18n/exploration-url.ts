@@ -7,6 +7,7 @@ const ja = {
   detached: "起点から再取得できない休止枝があるため、URLを更新していません。URLは前の状態です。起点を選び直すか、探索途中の保存を利用してください。",
   rootMissing: "起点の対象が現在見つかりません。", dataset: "このURLは別のデータセットの探索です。",
   invalid: "探索URLの状態が無効です。復元していません。",
+  pathChanged: "探索経路または公開版が変わっています。検索へ戻って経路を再確認してください。",
   restoreFailed: "探索を完全には復元できませんでした。データ更新・通信状態を確認して再試行してください。",
   copied: "探索URLをコピーしました。", manualCopy: "アドレスバーのURLをコピーしてください。",
 };
@@ -19,6 +20,7 @@ const en: typeof ja = {
   detached: "Some dormant branches can no longer be replayed from the root. The URL is unchanged. Choose a new starting point or use workspace save/export.",
   rootMissing: "The starting entity is currently unavailable.", dataset: "This URL belongs to another dataset.",
   invalid: "Invalid exploration URL; nothing was restored.",
+  pathChanged: "The route or public revision changed. Return to search and check the route again.",
   restoreFailed: "The exploration could not be fully restored. Check data changes or connectivity and retry.",
   copied: "Exploration URL copied.", manualCopy: "Copy the URL from the address bar.",
 };

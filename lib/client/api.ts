@@ -55,3 +55,5 @@ export const fetchNeighbors = (id: string, after: string | null, signal: AbortSi
 export const errorMessage = (error: unknown) => error instanceof ClientApiError ? error.message : "情報を取得できませんでした。再試行してください。";
 
 export const fetchOverview = (id: string, signal: AbortSignal) => get<EntityOverviewResponse>(`/api/entities/${encodeURIComponent(id)}/overview`, signal);
+
+export const fetchDiscoveryPaths = (params: URLSearchParams, signal: AbortSignal) => get<unknown>(`/api/discovery/paths?${params}`, signal);

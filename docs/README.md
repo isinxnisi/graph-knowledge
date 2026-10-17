@@ -47,6 +47,7 @@
 | [漫画r0002の原作正式受入・9 Claim統合候補](design/MANGA_R0002_COMBINED_RELEASE.md) | 2026-10-17。原作5 Claim・6 Entity・3 Source・5 Citationを追加受入。13 Entity／9 Claim統合release -002をvalidate・無書込plan済み。旧-001は保持、全環境applyは禁止 |
 | [漫画r0002の正式受入・release準備](design/MANGA_R0002_ACCEPTED_RELEASE.md)／[ORIGINAL_STORY](design/ORIGINAL_STORY.md) | 2026-10-17。4 Claim・7 Entity・4 Source・4 Citationを人間が正式受入。原作Role実装、原作5件は個別受入待ち。release候補のvalidate・無書込plan、公開applyは未許可 |
 | [漫画r0002の個別受入・公開準備](design/MANGA_R0002_ACCEPTANCE_REVIEW.md)／[制作Role意味レビュー](design/MANGA_PRODUCTION_ROLE_REVIEW.md) | 2026-10-17の初回レビュー記録（hash保全）。4 Claim・15新規Entityの推奨、保留11件と既存2 Claim重複。後続の正式受入・Role採用・release候補は上記記録を参照 |
+| [公開KGの2〜3段探索](design/DISCOVERY_MULTI_STEP.md) | 2026-10-17。既存Discoveryから有界経路・各段の根拠・全段を検証するGraph復元。収集／公開applyなし |
 | [対象未指定の関係・制作Role検索](design/DISCOVERY_RECORD_SEARCH.md) | 2026-10-17。既存入口を維持し、同じClaimの条件検索・独立記録と根拠・Role付きGraph・安定したページングを追加 |
 | [Discovery UIの暫定採用・正式検索統合](design/DISCOVERY_SEARCH_ADOPTION.md) | 2026-10-17。正式入口・既存一覧機能・横はみ出し修正・日英PC／スマホ検証・Webだけの配置 |
 | [Discovery Labの画面全体・探索操作の改善](design/DISCOVERY_LAB_EDITORIAL_REVIEW.md) | 2026-10-17。PCの探索／記録の並置、スマホの結果優先、実接点が見えるプリセット、視覚階層と操作後の移動 |

@@ -1,6 +1,7 @@
 "use client";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { z } from "zod";
+import { parsePathWitness } from "../domain/discovery-paths";
 import { publicLocalePath } from "../domain/public-routes";
 import type { DatasetMode } from "../domain/dataset";
 import type { GraphState } from "./graph-state";
@@ -69,7 +70,7 @@ export function useExplorationUrl({ dataset, initialRoot, graph, capture, apply,
       setBusy(!!rootId);
       try {
         if (!rootId) {
-          if (new URLSearchParams(location.search).has("s")) throw new ExplorationUrlError("invalid");
+          if (["s", "via"].some(key => new URLSearchParams(location.search).has(key))) throw new ExplorationUrlError("invalid");
           return;
         }
         if (!z.uuidv4().safeParse(rootId).success) throw new ExplorationUrlError("invalid");
@@ -81,7 +82,12 @@ export function useExplorationUrl({ dataset, initialRoot, graph, capture, apply,
           conditions: { predicates: null, contributionRoles: null, organizationPositions: null, eventRoles: null },
           branches: [{ id: rootId, open: true, pages: 1 }], view: null,
         };
-        const rebuilt = await rebuildExplorationUrl(workspace, controller.signal);
+        let witness;
+        try {
+          if (params.getAll("via").length > 1 || params.has("via") && (dataset !== "public-kg" || location.pathname.length + location.search.length > URL_STATE_LIMIT)) throw Error();
+          witness = parsePathWitness(params.get("via"),rootId);
+        } catch { throw new ExplorationUrlError("invalid"); }
+        const rebuilt = await rebuildExplorationUrl(workspace, controller.signal,witness);
         controller.signal.throwIfAborted();
         latest.current.apply(rebuilt);
         setFailure(null); setReady(true);
@@ -91,7 +97,7 @@ export function useExplorationUrl({ dataset, initialRoot, graph, capture, apply,
         const labels = explorationUrlLabels(latest.current.locale);
         setFailure(error instanceof WorkspaceRootNotFound ? labels.rootMissing
           : error instanceof ExplorationUrlError && error.reason === "dataset" ? labels.dataset
-            : error instanceof ExplorationUrlError && error.reason === "invalid" ? labels.invalid : labels.restoreFailed);
+            : error instanceof ExplorationUrlError && error.reason === "invalid" ? labels.invalid : error instanceof ExplorationUrlError && error.reason === "changed" && new URLSearchParams(location.search).has("via") ? labels.pathChanged : labels.restoreFailed);
       } finally {
         clearTimeout(timeout);
         if (!disposed) { restoring.current = false; setBusy(false); schedule(); }
