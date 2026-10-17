@@ -1,0 +1,100 @@
+{
+  "checkedAt": "2026-10-17T06:33:32.893105+00:00",
+  "http": [
+    {
+      "name": "formal-en",
+      "status": 200,
+      "url": "https://plunode.net/en",
+      "expectedBuildPresent": true,
+      "noindex": false
+    },
+    {
+      "name": "formal-member",
+      "status": 200,
+      "url": "https://plunode.net/member",
+      "expectedBuildPresent": true,
+      "noindex": true
+    },
+    {
+      "name": "member-status",
+      "status": 200,
+      "url": "https://plunode.net/api/member/status",
+      "body": {
+        "provider": "google"
+      }
+    },
+    {
+      "name": "anonymous-profile",
+      "status": 401,
+      "url": "https://plunode.net/api/member/profile"
+    },
+    {
+      "name": "preview",
+      "status": 401,
+      "url": "https://graph.isinxnisi.net/api/dataset"
+    },
+    {
+      "name": "ads-api",
+      "status": 404,
+      "url": "https://ads.plunode.net/api/discovery/entities"
+    },
+    {
+      "name": "beta-dataset",
+      "status": 200,
+      "url": "https://graph-beta.isinxnisi.com/api/dataset",
+      "body": {
+        "dataset": "public-kg",
+        "revision": "82b01515-594c-48ca-b4b6-515eefac83ca"
+      }
+    },
+    {
+      "name": "formal-drawing",
+      "status": 200,
+      "url": "https://plunode.net/api/discovery/claims?predicates=CONTRIBUTED_TO&contributionRole=DRAWING",
+      "body": {
+        "revision": "5e2a94af-9061-4087-bb7a-045a3c0133f4",
+        "claimCount": 2,
+        "roles": [
+          "DRAWING",
+          "DRAWING"
+        ]
+      }
+    }
+  ],
+  "services": {
+    "exitCode": 0,
+    "output": "active\nactive\nactive"
+  },
+  "status": "production_verified",
+  "codeCommit": "6760a74f1b513ecd7ad72db2c5ce1e9f3229265c",
+  "uiCommit": "272b967",
+  "buildId": "gvTMUbFlbLnUtn3LcEg6v",
+  "publicRevisionBefore": "5e2a94af-9061-4087-bb7a-045a3c0133f4",
+  "publicRevisionAfter": "5e2a94af-9061-4087-bb7a-045a3c0133f4",
+  "browserVerification": {
+    "passed": 8,
+    "failed": 0,
+    "locales": [
+      "ja",
+      "en"
+    ],
+    "widths": [
+      1440,
+      390,
+      320
+    ],
+    "coverage": [
+      "empty connections entry / hidden disabled kind / keyboard focus",
+      "name / kind / suggestions / results / Graph",
+      "kind reset on clearing / whitespace",
+      "Back / Forward / Escape / layout and branch return",
+      "IME / cancelled delayed response / reduced-motion"
+    ]
+  },
+  "unchanged": [
+    "public KG revision",
+    "collection jobs",
+    "release apply",
+    "member data"
+  ]
+}

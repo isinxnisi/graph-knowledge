@@ -86,7 +86,7 @@ sudo bash /home/develop/graph-m3-discovery-20261017/scripts/activate-discovery-s
 [検証と反映状態](../research/discovery-entry/20261017/verification.json)、[PC空欄](../research/discovery-entry/20261017/beta-ja-1440-empty.png)／[名前入力](../research/discovery-entry/20261017/beta-ja-1440-name.png)、[英語スマホ空欄](../research/discovery-entry/20261017/beta-en-320-empty.png)／[名前入力](../research/discovery-entry/20261017/beta-en-320-name.png)。実機のソフトキーボード、指でのタップ、初めて訪れる人にとっての文言は引き続き人間評価する。
 
 
-### 検索ペイン入口の正式公開準備（2026-10-17、管理者操作待ち）
+### 検索ペイン入口の正式公開準備記録（後述の適用確認を完了）
 
 運営者の「公開お願いします」を受け、入口改善 `272b967` を含むmain `6760a74` からWeb-only image `beta-discovery-entry-20261017` を作成した。後続mainの差分は収集記録・文書だけで、入口の実装を変更していない。linux/amd64、build ID `gvTMUbFlbLnUtn3LcEg6v`、[固定digest等のmanifest](../research/discovery-entry/20261017/web-manifest.json)。新しいoperatorは作らず、受入済みcredits operatorを再利用する。収集候補の公開applyは含めない。
 
@@ -94,10 +94,23 @@ sudo bash /home/develop/graph-m3-discovery-20261017/scripts/activate-discovery-s
 
 Web imageだけのarchiveは106,192,698 bytes、SHA-256 `6623ef4f5bae0f270947c8cebce3b5b8c51e5037069736f40d6e962929c7cc39`。VPS `/home/develop/graph-discovery-entry-20261017/` へ転送し、archive・manifest・前回と同一の更新scriptの全checksumとshell構文検証が成功した。private env／credentialは同梱しない。[配置準備の確認記録](../research/discovery-entry/20261017/deployment-preparation.json)。
 
-準備時点の正式サイトは前回build `4XcOL0noVSUovhJgNNTHS`、公開revision `5e2a94af-9061-4087-bb7a-045a3c0133f4`、既存Docker／Caddy／通知サービスactive。SSHの `sudo -n` はパスワード必須だったため、既存Web配置契約に従い、次の一回の管理者実行を依頼した。公開の承認を再度求めるものではない。**入口改善の正式反映と適用後確認は、管理者実行後まで未完了**。
+準備時点の正式サイトは前回build `4XcOL0noVSUovhJgNNTHS`、公開revision `5e2a94af-9061-4087-bb7a-045a3c0133f4`、既存Docker／Caddy／通知サービスactive。SSHの `sudo -n` はパスワード必須だったため、既存Web配置契約に従い、次の一回の管理者実行を依頼した。公開の承認を再度求めるものではない。**この準備時点では入口改善の正式反映と適用後確認は未完了だった**。
 
 ```bash
 sudo bash /home/develop/graph-discovery-entry-20261017/scripts/activate-discovery-search.sh
 ```
 
 更新scriptは既存KGのread-only backup後にWebだけを差し替え、DB container／起動時刻・公開revision・会員statusを照合する。Caddy・認証・公開flag・会員データ・収集処理を変更しない。管理者実行後に担当Codexが正式HTTPSの新buildと検索ペインの代表操作、会員／preview／広告境界を確認し、結果を追記する。
+
+
+### 検索ペイン入口の正式反映確認（2026-10-17、完了）
+
+運営者から管理者コマンドの実行完了を受け、正式origin `https://plunode.net` の新build `gvTMUbFlbLnUtn3LcEg6v` を確認した。前記の管理者操作待ちは解消済み。Web sourceは `6760a74`、入口改善は `272b967`。正式Home・英語Home・会員ページで同じbuildを確認した。
+
+正式HTTPS上の代表E2E **8件すべて成功**。JA/EN×PC1440px／スマホ390/320pxで、空欄の「つながりを見つける」→「今ある接点から」、入力時だけの種別と名前検索、候補・名前／種別を保つ結果一覧・Graph、消去と空白による種別リセットを確認した。Back／Forward／Escape・フォーカス復帰、既存Graphの配置・枝への復帰、IME・遅い旧応答・reduced-motionも成功。実際のPC空欄・英語320px名前検索を目視し、既存デザインと折返しを維持している。
+
+正式公開KG revisionは更新前後とも `5e2a94af-9061-4087-bb7a-045a3c0133f4`。対象未指定の作画APIも同じrevisionで2 Claim・作画Roleを返す。betaは引き続き200・revision `82b01515-594c-48ca-b4b6-515eefac83ca`、前回検証済みの入口改善版を維持する。KG同期・release apply・収集処理・会員データの変更は行っていない。
+
+会員status200（Google）、匿名profile401、会員ページnoindex、旧preview401、広告用originの検索API404を維持。VPSのDocker・Caddy・既存通知サービスもread-only SSH確認で全てactive。本人ログインや会員保存データの操作は今回の再検証に含めない。
+
+[公開後の確認記録](../research/discovery-entry/20261017/production-verification.json)、[正式PCの空欄入口](../research/discovery-entry/20261017/production-ja-1440-empty.png)、[正式英語スマホの名前検索](../research/discovery-entry/20261017/production-en-320-name.png)。ここまでで今回の検索ペイン入口改善の正式反映を完了とする。
