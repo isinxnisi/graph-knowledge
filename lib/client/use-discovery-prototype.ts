@@ -24,6 +24,17 @@ export async function executeDiscoveryPlan(plan: Extract<DiscoveryPlan, { state:
     const response = await searchEntities(plan.q, signal);
     const items = z.array(entityDetailSchema).parse(response.items);
     result = { revision: before.revision, anchor: null, nodes: items, claims: [], items, nextCursor: null, hasMore: response.hasMore };
+  } else if (plan.operation === "claims") {
+    const c = plan.criteria;
+    const params = new URLSearchParams({ q: c.q, revision: before.revision,
+      ...(c.kind ? { kind: c.kind } : {}), ...(c.predicates?.length ? { predicates: c.predicates.join(",") } : {}),
+      ...(c.contributionRole ? { contributionRole: c.contributionRole } : {}), ...(c.theme ? { theme: c.theme } : {}),
+      ...(c.around ? { around: c.around } : {}), ...(after ? { after } : {}) });
+    const response = await fetch("/api/discovery/claims?" + params, { signal });
+    if (!response.ok) throw new ClientApiError("記録を取得できませんでした。", response.status);
+    const data = neighborsSchema.omit({ centerId: true }).parse(await response.json());
+    if (data.revision !== before.revision) throw new ClientApiError("公開KGの版が変わりました。", 409);
+    result = { revision: data.revision, anchor: null, nodes: data.nodes, claims: data.claims, items: [], nextCursor: data.page.nextCursor, hasMore: data.page.hasMore };
   } else {
     const [entity, raw] = await Promise.all([
       fetchEntity(plan.anchorId, signal),
@@ -54,7 +65,7 @@ export function usePrototypeQuery(plan: DiscoveryPlan, after: string | null, com
       } catch (error) {
         if (!controller.signal.aborted) setState(old => ({ key, result: old.result, error: errorMessage(error), conflict: error instanceof ClientApiError && error.status === 409 }));
       }
-    }, resolved.operation === "names" ? 250 : 0);
+    }, resolved.operation === "names" || resolved.operation === "claims" && resolved.criteria.q ? 250 : 0);
     return () => { clearTimeout(timer); controller.abort(); };
   }, [planKey, after, key, composing]);
   const active = plan.state === "ready", current = active && !composing && state.key === key;

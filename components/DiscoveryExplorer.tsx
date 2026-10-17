@@ -1,16 +1,14 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-import type { ClaimSummary, EntitySummary } from "../lib/domain/api";
+import type { EntitySummary } from "../lib/domain/api";
 import { CONTRIBUTION_ROLE_IDS } from "../lib/domain/contribution";
 import { initialContext, prototypeSeeds, questionsForWorld, questionNames, questionPredicates, readPrototypeContext, resolveDiscovery, WORLD_IDS, worldNames, type DiscoveryContext, type QuestionId } from "../lib/domain/discovery-prototype";
 import { usePrototypeQuery } from "../lib/client/use-discovery-prototype";
 import { useUiLocale } from "../lib/client/ui-locale";
 import { explorationHref } from "../lib/client/exploration-url";
-import { formatPeriod, polarityLabel, qualificationLabel } from "../lib/client/format";
-import { explorationLabels } from "../lib/i18n/exploration";
 import { contributionLabels } from "../lib/i18n/contribution";
 import { localizedPublicHref } from "../lib/domain/public-routes";
-import DiscoveryPrototypeEvidence from "./DiscoveryPrototypeEvidence";
+import DiscoveryClaimRow from "./DiscoveryClaimRow";
 import Icon from "./Icon";
 import DiscoveryWorldIcon from "./DiscoveryWorldIcon";
 import type { DiscoveryCriteria } from "../lib/client/use-discovery-search";
@@ -44,24 +42,9 @@ function Seed({ seed, preset = false, onChoose }: { seed: typeof prototypeSeeds[
     </button>{query.error && <button onClick={query.retry}>{en ? "Retry example" : "例を再確認"}</button>}
   </span>;
 }
-function ClaimRow({ claim, nodes, anchor, revision, onChoose, graphHref }: { claim: ClaimSummary; nodes: EntitySummary[]; anchor: EntitySummary; revision: string; onChoose: (entity: EntitySummary) => void; graphHref: GraphHref }) {
-  const { locale } = useUiLocale(), en = locale === "en";
-  const [evidence, setEvidence] = useState(false);
-  const subject = nodes.find(n => n.id === claim.subjectId) ?? (anchor.id === claim.subjectId ? anchor : null);
-  const object = nodes.find(n => n.id === claim.objectId) ?? (anchor.id === claim.objectId ? anchor : null);
-  const target = claim.subjectId === anchor.id ? object : subject, qualification = qualificationLabel(claim, locale), scope = claim.contribution?.scope;
-  return <article className={styles.claim} data-testid="prototype-claim" data-claim={claim.id}>
-    <div className={styles.claimIdentity}><span className={styles.entityIdentity}><span className={styles.entityMark} data-kind={target?.kind}><Icon name={target?.kind === "person" ? "person" : target?.kind === "organization" ? "organization" : target?.kind === "event" ? "event" : "book"}/></span><strong>{target?.name ?? (en ? "Unknown entity" : "対象未確認")}</strong></span><span className={styles.polarity} data-denied={claim.polarity === "denied"}>{polarityLabel(claim, locale)}</span></div>
-    <p className={styles.statement}>{subject?.name} → {explorationLabels(locale).predicates[claim.predicate]} → {object?.name}</p>
-    <div className={styles.facts}>{qualification && <strong>{qualification}</strong>}<span>{formatPeriod(claim.period, locale)}</span><span>{en ? claim.sourceCount + " source(s)" : "出典 " + claim.sourceCount + "件"}</span></div>
-    {claim.contribution && <p className={styles.scope}>{scope ? (scope.volumeLabel ?? (en ? "Volume unspecified" : "巻未確認")) + " · ISBN " + scope.isbn13 : en ? "Publication scope unstructured" : "刊行物の適用範囲は未構造化"}</p>}
-    <div className={styles.rowActions}>{target && <button onClick={() => onChoose(target)} aria-label={en ? "Change subject to " + target.name : "対象を" + target.name + "に変更"}><Icon name="arrow"/>{en ? "Explore" : "ここから探す"}</button>}<button className={styles.quiet} aria-expanded={evidence} onClick={() => setEvidence(v => !v)}>{evidence ? (en ? "Close evidence" : "根拠を閉じる") : (en ? "Read evidence" : "根拠を開く")} {evidence ? "−" : "＋"}</button>{target && <a className={styles.graphLink} href={graphHref(target.id)} aria-label={en ? "Open " + target.name + " in Graph" : target.name + "をGraphで開く"}><Icon name="graph"/>Graph<Icon name="external"/></a>}</div>
-    {evidence && <div className={styles.evidence}><DiscoveryPrototypeEvidence id={claim.id} revision={revision} nodes={[anchor, ...nodes]}/></div>}
-  </article>;
-}
 
 export default function DiscoveryExplorer({ lab = false, initial = { q: "", kind: null, presentation: "explore" }, onClose, onChoose }: {
-  lab?: boolean; initial?: DiscoveryCriteria; onClose?: (source?: string | null) => void; onChoose?: (entity: EntitySummary, predicates?: PredicateFilter) => void;
+  lab?: boolean; initial?: DiscoveryCriteria; onClose?: (source?: string | null) => void; onChoose?: (entity: EntitySummary, predicates?: PredicateFilter, roles?: import("../lib/domain/exploration").ContributionRoleFilter) => void;
 }) {
   const { locale, setLocale } = useUiLocale(), en = locale === "en";
   const t = (ja: string, english: string) => en ? english : ja;
@@ -84,7 +67,7 @@ export default function DiscoveryExplorer({ lab = false, initial = { q: "", kind
     const origin = resumed ? window.history.state?.discoveryReturnFocus : previousFocus?.dataset.discoveryLaunch;
     returnFocus.current = ["home", "list", "more"].includes(origin) ? origin : null;
     if (!lab && !resumed) window.history.pushState({ ...window.history.state, plunodeDiscovery: initialInput.current, discoveryReturnFocus: returnFocus.current }, "", window.location.href);
-    const pop = () => onClose?.(returnFocus.current);
+    const pop = () => { if (!window.history.state?.plunodeDiscovery) onClose?.(returnFocus.current); };
     if (!lab) window.addEventListener("popstate", pop);
     const element = dialog.current!;
     const timer = setTimeout(() => {
@@ -130,10 +113,14 @@ export default function DiscoveryExplorer({ lab = false, initial = { q: "", kind
     setUndo({ context, label: ["すべての条件の解除", "Clear all criteria"], lookupOpen, lookupQ });
     setContext(initialContext); setLookupOpen(false); setLookupQ(""); setCursors([null]);
   };
-  const focusSubject = () => requestAnimationFrame(() => {
+  const focusSubject = () => {
+    const origin = document.activeElement;
+    requestAnimationFrame(() => {
+    if (document.activeElement !== origin && document.activeElement !== document.body) return;
     if (body.current) body.current.scrollTop = 0;
     document.getElementById("prototype-subject")?.focus({ preventScroll: true });
-  });
+    });
+  };
   const chooseSubject = (anchor: EntitySummary) => {
     change({ ...context, anchor, names: false }, ["対象の変更", "Subject change"]); setLookupOpen(false);
     focusSubject();
@@ -148,10 +135,10 @@ export default function DiscoveryExplorer({ lab = false, initial = { q: "", kind
   const dismiss = useDialogDismiss(dialog, () => window.history.back());
   const close = () => { if (!lab) return dismiss(); dialog.current?.close(); launch.current?.focus({ preventScroll: true }); };
   const backdrop = useDialogBackdrop(close);
-  const chooseListResult = (entity: EntitySummary, predicates?: PredicateFilter) => {
+  const chooseListResult = (entity: EntitySummary, predicates?: PredicateFilter, roles?: import("../lib/domain/exploration").ContributionRoleFilter) => {
     if (!onChoose) return;
     selected.current = true;
-    window.addEventListener("popstate", () => { onChoose(entity, predicates); requestAnimationFrame(() => focusDestination(document.getElementById("explorer-graph"))); }, { once: true });
+    window.addEventListener("popstate", () => { onChoose(entity, predicates, roles); requestAnimationFrame(() => focusDestination(document.getElementById("explorer-graph"))); }, { once: true });
     window.history.back();
   };
   const displayed = query.result ?? query.previous, blocked = query.loading || !!query.error;
@@ -219,6 +206,10 @@ export default function DiscoveryExplorer({ lab = false, initial = { q: "", kind
           <div className={styles.conditionRow}><span className={styles.fieldLabel}>{t("見る関係", "Relations")}</span><div className={styles.relations} aria-label={t("関係の条件", "Relation criteria")}>{relationChoices.map(question => <button key={question} aria-pressed={context.question === question} onClick={() => pickQuestion(question)}>{textOf(relationNames[question], locale)}</button>)}</div>{!relationChoices.includes(context.question as typeof relationChoices[number]) && <span className={styles.pending}>{textOf(questionNames[context.question], locale)}<button className={styles.remove} aria-label={t("問いだけ外す", "Remove only question")} onClick={() => pickQuestion("connections")}>×</button></span>}</div>
           {(context.question === "credits" || context.role) && <div className={styles.conditionRow}><span className={styles.fieldLabel}>{t("制作役割", "Role")}</span><div className={styles.roleChoices} aria-label={t("制作役割の条件", "Production role criteria")}>{context.question === "credits" ? <><button data-role="" aria-pressed={!context.role} onClick={() => change({ ...context, role: null }, ["制作役割の解除", "Role removal"])}>{t("限定なし", "Any role")}</button>{CONTRIBUTION_ROLE_IDS.map(role => <button key={role} data-role={role} aria-pressed={context.role === role} onClick={() => change({ ...context, role }, ["制作役割の変更", "Role change"])}>{contributionLabels(locale).roles[role]}</button>)}</> : <span>{context.role ? contributionLabels(locale).roles[context.role] : t("制作を選ぶと役割も指定できます", "Choose production to specify a role")}</span>}{context.role && <button className={styles.remove} aria-label={t("制作役割だけ外す", "Remove only role")} onClick={() => change({ ...context, role: null }, ["制作役割の解除", "Role removal"])}>×</button>}</div></div>}
         </section>
+        {!context.anchor && questionPredicates[context.question] && basePlan.state !== "unsupported" && <button className={styles.recordHandoff} onClick={() => {
+          setListCriteria({ ...listCriteria, predicates: [questionPredicates[context.question]!], contributionRole: context.role, recordView: true, presentation: "list" });
+          setListCursors([null]); switchEntry("list");
+        }}>{t("この関係・役割で一覧の記録を探す", "Search this relation and role in the list")}<Icon name="arrow"/></button>}
         {basePlan.state === "unsupported" && <aside className={styles.unavailable} data-testid="prototype-unsupported"><strong>{t("この条件の検索は未対応です", "These search criteria are unsupported")}{names && t("（条件は保持中）", " (criteria retained)")}</strong><p>{textOf(basePlan.reason, locale)}</p><span>{t("収録状況は未確認。この問いを実行していないため、0件とは判定していません。", "Coverage unassessed. This question was not executed, so it is not a zero-result search.")}</span><div>{!names && <button onClick={startNames}>{t("条件を保って名前を探す", "Find names, keeping criteria")}</button>}{context.role && <><button onClick={() => change({ ...context, role: null }, ["制作役割の解除", "Role removal"])}>{t("制作役割だけ外す", "Remove only the role")}</button><button onClick={() => pickQuestion("credits")}>{t("関係を制作に変更", "Change relation to production")}</button></>}</div></aside>}
         </aside>
         <section className={styles.matches} aria-label={t("探索結果", "Discovery results")} aria-busy={query.loading}>
@@ -232,7 +223,7 @@ export default function DiscoveryExplorer({ lab = false, initial = { q: "", kind
           {plan.state !== "ready" ? <div className={styles.empty} data-initial={plan.state === "needs-name" || undefined}>{plan.state === "needs-name" ? <><svg className={styles.emptyDrawing} viewBox="0 0 260 90" fill="none" aria-hidden="true"><path d="M35 58C70 58 65 25 117 25S173 65 225 50M117 25Q135 78 179 74"/><circle cx="35" cy="58" r="6"/><circle cx="117" cy="25" r="10"/><circle cx="225" cy="50" r="6"/><circle cx="179" cy="74" r="4"/></svg><h4>{t("ひとつの名前から、その先へ。", "One name. Many connections.")}</h4><p>{t("名前を入力するか、気になる接点を選ぶと、ここに記録が並びます。", "Search a name or choose a connection to see the published records here.")}</p></> : plan.state === "unsupported" ? t("問いは保持しています。関係を変更するか、条件を保って名前を探せます。", "Question retained. Change the relation or search names while keeping it.") : t("名前から対象を選ぶと、関係の記録を確認できます。", "Choose a subject by name to see its relation records.")}</div>
           : <div className={styles.resultStage} data-testid="prototype-results" data-updating={blocked || undefined}><div inert={blocked} aria-hidden={blocked || undefined}>
             {displayed && names && displayed.items.map(entity => <div className={styles.nameRow} key={entity.id}><span className={styles.entityMark} data-kind={entity.kind}><Icon name={entity.kind === "person" ? "person" : entity.kind === "organization" ? "organization" : entity.kind === "event" ? "event" : "book"}/></span><div className={styles.nameIdentity}><strong>{entity.name}</strong>{entity.description && <p>{entity.description}</p>}</div><div className={styles.rowActions}><button onClick={() => chooseSubject(entity)} aria-label={t("対象を" + entity.name + "に変更", "Change subject to " + entity.name)}>{t("ここから探す", "Explore from here")}<Icon name="arrow"/></button><a className={styles.graphLink} href={graphHref(entity.id, true)} aria-label={t(entity.name + "を全関係のGraphで開く", "Open " + entity.name + " in Graph with all relations")}><Icon name="graph"/>Graph<small>{t("全関係", "all relations")}</small></a></div></div>)}
-            {displayed?.anchor && !names && <div className={styles.recordList}>{claims.map(claim => <ClaimRow key={displayed.revision + ":" + claim.id} claim={claim} nodes={displayed.nodes} anchor={displayed.anchor!} revision={displayed.revision} onChoose={chooseSubject} graphHref={graphHref}/>)}</div>}
+            {displayed?.anchor && !names && <div className={styles.recordList}>{claims.map(claim => <DiscoveryClaimRow key={displayed.revision + ":" + claim.id} claim={claim} nodes={displayed.nodes} anchor={displayed.anchor!} revision={displayed.revision} onChoose={chooseSubject} graphHref={graphHref}/>)}</div>}
             {query.result && (names ? !query.result.items.length : !claims.length) && <div className={styles.empty}><strong>{t("この条件・取得範囲では該当なし", "No match in this request's scope")}</strong><p>{t("世界全体のデータがないという意味ではありません。", "This does not mean this whole world has no data.")}</p>{!names && context.q && <button onClick={() => change({ ...context, q: "" }, ["名前の絞込の解除", "Name filter removal"])}>{t("名前の絞込だけ外す", "Remove only the name filter")}</button>}{!names && context.role && <button onClick={() => change({ ...context, role: null }, ["制作役割の解除", "Role removal"])}>{t("制作役割だけ外す", "Remove only the role")}</button>}</div>}
           </div>{query.loading && !displayed && <div className={styles.skeleton} aria-hidden="true"/>}</div>}
           {!names && plan.state === "ready" && <nav className={styles.pagination} aria-label={t("記録のページ", "Record pages")}><button disabled={blocked || cursors.length === 1} onClick={() => setCursors(v => v.slice(0, -1))}>{t("前へ", "Previous")}</button><span>{t(cursors.length + "ページ", "Page " + cursors.length)}</span><button disabled={blocked || !query.result?.nextCursor} onClick={() => setCursors(v => [...v, query.result!.nextCursor])}>{t("次へ", "Next")}</button></nav>}

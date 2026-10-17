@@ -74,5 +74,7 @@ test("Discovery APIは空欄・ページ条件・公開境界を守る", async (
   for (const params of invalid) expect((await request.get(url, { params })).status()).toBe(400);
   const works = await (await request.get(url, { params: { kind: "work" } })).json(); expect(works.items.every((e: { kind: string }) => e.kind === "work")).toBe(true);
   expect((await request.post(url)).status()).toBe(405);
-  expect((await request.get(url, { headers: { host: "ads.plunode.net" } })).status()).toBe(404);
+  // TLS routing rejects an ads Host on a beta SNI. Test the actual HTTPS origin instead.
+  expect((await request.get(new URL(url).protocol === "https:" ? "https://ads.plunode.net/api/discovery/entities" : url,
+    new URL(url).protocol === "https:" ? {} : { headers: { host: "ads.plunode.net" } })).status()).toBe(404);
 });

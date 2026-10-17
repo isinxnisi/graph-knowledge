@@ -3,8 +3,14 @@
 set -euo pipefail
 [[ ${EUID} -eq 0 && $# -eq 0 ]] || { echo 'Usage: sudo bash activate-discovery-search.sh' >&2; exit 1; }
 bundle=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)
-tag=beta-m3-discovery-20261017
 (cd -- "$bundle" && sha256sum --check SHA256SUMS)
+tag=$(python3 - "$bundle/manifest.json" <<'PYTAG'
+import json,re,sys
+value=json.load(open(sys.argv[1]))['tag']
+assert isinstance(value,str) and re.fullmatch(r'[a-zA-Z0-9][a-zA-Z0-9_.-]{0,79}',value), 'Invalid image tag'
+print(value)
+PYTAG
+)
 exec 9>/opt/graph-knowledge/.member-activation.lock
 flock -n 9 || { echo '別の本番構成操作が実行中です。未適用です。' >&2; exit 1; }
 operator=graph-knowledge-ops:beta-credits-20261014
@@ -60,6 +66,15 @@ for path in ['/', '/en', '/member']:
         assert 'data-testid="discovery-prototype-entry"' not in html
     else:
         assert 'name="robots" content="noindex' in html
+if meta.get('recordSearch'):
+    def read(path):
+        with urllib.request.urlopen('https://plunode.net'+path, timeout=30) as response:
+            return json.load(response)
+    state=read('/api/dataset')
+    records=read('/api/discovery/claims?predicates=CONTRIBUTED_TO&contributionRole=DRAWING&revision='+state['revision'])
+    assert records['revision']==state['revision'] and records['claims']
+    assert all(c['predicate']=='CONTRIBUTED_TO' and c['contribution']['roleId']=='DRAWING' for c in records['claims'])
+    print('正式APIの対象未指定・作画検索と公開revisionを確認しました。')
 print('正式HTTPSの日英検索入口・build一致・会員noindexを確認しました。')
 PY
 [[ $(curl -sS --max-time 30 -o /dev/null -w '%{http_code}' https://graph.isinxnisi.net/api/dataset) = 401 ]]

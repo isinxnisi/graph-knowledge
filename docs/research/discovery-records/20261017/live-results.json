@@ -1,0 +1,380 @@
+{
+  "checkedAt": "2026-10-17T12:09:27+09:00",
+  "source": "local public-kg, read-only API",
+  "kgApplied": false,
+  "examples": [
+    {
+      "example": "drawing",
+      "criteria": {
+        "predicates": "CONTRIBUTED_TO",
+        "contributionRole": "DRAWING"
+      },
+      "revision": "82b01515-594c-48ca-b4b6-515eefac83ca",
+      "claimCount": 2,
+      "claims": [
+        {
+          "id": "0d45948d-7aa4-4cc9-821c-b283d99cd118",
+          "subjectId": "eb0af7e1-caa6-435f-86fb-0591421982b5",
+          "objectId": "bfe1cb3f-a174-4e4f-b4df-a06590f66c4e",
+          "predicate": "CONTRIBUTED_TO",
+          "polarity": "affirmed",
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "contribution": {
+            "roleId": "DRAWING",
+            "scope": null
+          },
+          "organizationParticipation": null,
+          "eventParticipation": null,
+          "sourceCount": 1,
+          "subjectName": "手塚治虫",
+          "objectName": "鉄腕アトム"
+        },
+        {
+          "id": "7ff703da-d90e-413d-b02e-087f136faa21",
+          "subjectId": "d900543a-9c11-48c1-be76-1822b756fcc4",
+          "objectId": "290ab095-192d-4910-90f3-ae741f9d1f32",
+          "predicate": "CONTRIBUTED_TO",
+          "polarity": "affirmed",
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "contribution": {
+            "roleId": "DRAWING",
+            "scope": {
+              "kind": "publication",
+              "isbn13": "9784091921116",
+              "volumeLabel": "第1巻",
+              "editionLabel": "小学館文庫",
+              "language": "ja"
+            }
+          },
+          "organizationParticipation": null,
+          "eventParticipation": null,
+          "sourceCount": 1,
+          "subjectName": "浦沢直樹",
+          "objectName": "パイナップルARMY"
+        }
+      ]
+    },
+    {
+      "example": "script",
+      "criteria": {
+        "predicates": "CONTRIBUTED_TO",
+        "contributionRole": "SCRIPT_WRITING"
+      },
+      "revision": "82b01515-594c-48ca-b4b6-515eefac83ca",
+      "claimCount": 2,
+      "claims": [
+        {
+          "id": "52c9fa30-bac5-40f1-bbe5-75d7420081d8",
+          "subjectId": "93630265-9c44-4bc8-8e7e-4efc7deef14d",
+          "objectId": "e87a40f9-3139-47a1-a962-6610eb2b8878",
+          "predicate": "CONTRIBUTED_TO",
+          "polarity": "affirmed",
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "contribution": {
+            "roleId": "SCRIPT_WRITING",
+            "scope": {
+              "kind": "publication",
+              "isbn13": "9784091841612",
+              "volumeLabel": "第1巻",
+              "editionLabel": "完全版",
+              "language": "ja"
+            }
+          },
+          "organizationParticipation": null,
+          "eventParticipation": null,
+          "sourceCount": 1,
+          "subjectName": "勝鹿北星",
+          "objectName": "MASTERキートン"
+        },
+        {
+          "id": "7142e160-c0d5-4358-9b70-63c03bfd44ad",
+          "subjectId": "29e9caea-6c44-4c1f-9abc-f4350003ca3b",
+          "objectId": "e87a40f9-3139-47a1-a962-6610eb2b8878",
+          "predicate": "CONTRIBUTED_TO",
+          "polarity": "affirmed",
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "contribution": {
+            "roleId": "SCRIPT_WRITING",
+            "scope": {
+              "kind": "publication",
+              "isbn13": "9784091841612",
+              "volumeLabel": "第1巻",
+              "editionLabel": "完全版",
+              "language": "ja"
+            }
+          },
+          "organizationParticipation": null,
+          "eventParticipation": null,
+          "sourceCount": 1,
+          "subjectName": "長崎尚志",
+          "objectName": "MASTERキートン"
+        }
+      ]
+    },
+    {
+      "example": "author",
+      "criteria": {
+        "predicates": "CONTRIBUTED_TO",
+        "contributionRole": "AUTHORSHIP"
+      },
+      "revision": "82b01515-594c-48ca-b4b6-515eefac83ca",
+      "claimCount": 7,
+      "claims": [
+        {
+          "id": "4ad66ba5-a65d-4942-939e-c84a67e735d9",
+          "subjectId": "29e9caea-6c44-4c1f-9abc-f4350003ca3b",
+          "objectId": "87ce941c-6937-49f8-912d-4800d14a48c6",
+          "predicate": "CONTRIBUTED_TO",
+          "polarity": "affirmed",
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "contribution": {
+            "roleId": "AUTHORSHIP",
+            "scope": {
+              "kind": "publication",
+              "isbn13": "9784091867261",
+              "volumeLabel": null,
+              "editionLabel": null,
+              "language": "ja"
+            }
+          },
+          "organizationParticipation": null,
+          "eventParticipation": null,
+          "sourceCount": 1,
+          "subjectName": "長崎尚志",
+          "objectName": "MASTERキートン Reマスター"
+        },
+        {
+          "id": "4e212aa6-9e75-47a4-aacf-96432e7eb517",
+          "subjectId": "d900543a-9c11-48c1-be76-1822b756fcc4",
+          "objectId": "e87a40f9-3139-47a1-a962-6610eb2b8878",
+          "predicate": "CONTRIBUTED_TO",
+          "polarity": "affirmed",
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "contribution": {
+            "roleId": "AUTHORSHIP",
+            "scope": {
+              "kind": "publication",
+              "isbn13": "9784091841612",
+              "volumeLabel": "第1巻",
+              "editionLabel": "完全版",
+              "language": "ja"
+            }
+          },
+          "organizationParticipation": null,
+          "eventParticipation": null,
+          "sourceCount": 1,
+          "subjectName": "浦沢直樹",
+          "objectName": "MASTERキートン"
+        },
+        {
+          "id": "6d5ff5e4-5f59-4948-8248-cbdac3888a7c",
+          "subjectId": "d900543a-9c11-48c1-be76-1822b756fcc4",
+          "objectId": "a6521d80-b9d0-4477-a435-6fa02eb58c04",
+          "predicate": "CONTRIBUTED_TO",
+          "polarity": "affirmed",
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "contribution": {
+            "roleId": "AUTHORSHIP",
+            "scope": {
+              "kind": "publication",
+              "isbn13": "9784091817907",
+              "volumeLabel": "第1巻",
+              "editionLabel": "完全版",
+              "language": "ja"
+            }
+          },
+          "organizationParticipation": null,
+          "eventParticipation": null,
+          "sourceCount": 1,
+          "subjectName": "浦沢直樹",
+          "objectName": "MONSTER"
+        },
+        {
+          "id": "839b0bb8-1781-4a3e-8446-9a22d08d1658",
+          "subjectId": "d900543a-9c11-48c1-be76-1822b756fcc4",
+          "objectId": "2b7c6289-d050-4dc0-93e3-9307681253cc",
+          "predicate": "CONTRIBUTED_TO",
+          "polarity": "affirmed",
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "contribution": {
+            "roleId": "AUTHORSHIP",
+            "scope": {
+              "kind": "publication",
+              "isbn13": "9784091874313",
+              "volumeLabel": "第1巻",
+              "editionLabel": null,
+              "language": "ja"
+            }
+          },
+          "organizationParticipation": null,
+          "eventParticipation": null,
+          "sourceCount": 1,
+          "subjectName": "浦沢直樹",
+          "objectName": "PLUTO"
+        },
+        {
+          "id": "9dd13005-045e-4c8c-b9e2-76866d04f7d5",
+          "subjectId": "d900543a-9c11-48c1-be76-1822b756fcc4",
+          "objectId": "326dd821-2ca6-406a-a683-e424eb534998",
+          "predicate": "CONTRIBUTED_TO",
+          "polarity": "affirmed",
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "contribution": {
+            "roleId": "AUTHORSHIP",
+            "scope": {
+              "kind": "publication",
+              "isbn13": "9784063729221",
+              "volumeLabel": "第4巻",
+              "editionLabel": null,
+              "language": "ja"
+            }
+          },
+          "organizationParticipation": null,
+          "eventParticipation": null,
+          "sourceCount": 1,
+          "subjectName": "浦沢直樹",
+          "objectName": "BILLY BAT"
+        },
+        {
+          "id": "b6dde58c-a093-4ced-b9a6-87d51cec5faf",
+          "subjectId": "d900543a-9c11-48c1-be76-1822b756fcc4",
+          "objectId": "a87ce993-a862-4f18-b956-7fa24c9df8a2",
+          "predicate": "CONTRIBUTED_TO",
+          "polarity": "affirmed",
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "contribution": {
+            "roleId": "AUTHORSHIP",
+            "scope": {
+              "kind": "publication",
+              "isbn13": "9784091875365",
+              "volumeLabel": "第1巻",
+              "editionLabel": "完全版",
+              "language": "ja"
+            }
+          },
+          "organizationParticipation": null,
+          "eventParticipation": null,
+          "sourceCount": 1,
+          "subjectName": "浦沢直樹",
+          "objectName": "20世紀少年"
+        },
+        {
+          "id": "f7c734f6-5fdb-428f-b178-910988ba9bc8",
+          "subjectId": "d900543a-9c11-48c1-be76-1822b756fcc4",
+          "objectId": "87ce941c-6937-49f8-912d-4800d14a48c6",
+          "predicate": "CONTRIBUTED_TO",
+          "polarity": "affirmed",
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "contribution": {
+            "roleId": "AUTHORSHIP",
+            "scope": {
+              "kind": "publication",
+              "isbn13": "9784091867261",
+              "volumeLabel": null,
+              "editionLabel": null,
+              "language": "ja"
+            }
+          },
+          "organizationParticipation": null,
+          "eventParticipation": null,
+          "sourceCount": 1,
+          "subjectName": "浦沢直樹",
+          "objectName": "MASTERキートン Reマスター"
+        }
+      ]
+    },
+    {
+      "example": "influence",
+      "criteria": {
+        "predicates": "INFLUENCED_BY"
+      },
+      "revision": "82b01515-594c-48ca-b4b6-515eefac83ca",
+      "claimCount": 1,
+      "claims": [
+        {
+          "id": "b6ce3407-e3bb-44c9-867b-7b7434861af5",
+          "subjectId": "d900543a-9c11-48c1-be76-1822b756fcc4",
+          "objectId": "eb0af7e1-caa6-435f-86fb-0591421982b5",
+          "predicate": "INFLUENCED_BY",
+          "polarity": "affirmed",
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "contribution": null,
+          "organizationParticipation": null,
+          "eventParticipation": null,
+          "sourceCount": 1,
+          "subjectName": "浦沢直樹",
+          "objectName": "手塚治虫"
+        }
+      ]
+    },
+    {
+      "example": "cross_claim_must_not_match",
+      "criteria": {
+        "predicates": "CONTRIBUTED_TO",
+        "contributionRole": "DRAWING",
+        "q": "PLUTO"
+      },
+      "revision": "82b01515-594c-48ca-b4b6-515eefac83ca",
+      "claimCount": 0,
+      "claims": []
+    },
+    {
+      "example": "cross_endpoint_must_not_match",
+      "criteria": {
+        "predicates": "CONTRIBUTED_TO",
+        "contributionRole": "DRAWING",
+        "q": "浦沢",
+        "kind": "work"
+      },
+      "revision": "82b01515-594c-48ca-b4b6-515eefac83ca",
+      "claimCount": 0,
+      "claims": []
+    },
+    {
+      "example": "unpublished_original_story",
+      "criteria": {
+        "predicates": "CONTRIBUTED_TO",
+        "contributionRole": "ORIGINAL_STORY"
+      },
+      "revision": "82b01515-594c-48ca-b4b6-515eefac83ca",
+      "claimCount": 0,
+      "claims": []
+    }
+  ]
+}

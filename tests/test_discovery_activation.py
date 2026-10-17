@@ -20,7 +20,7 @@ class Activation(unittest.TestCase):
             (bundle/'scripts/activate-discovery-search.sh').write_text(source)
             (bundle/'scripts/update-production-web.sh').write_text('exit 1\n' if mode=='update-failed' else 'touch "$TEST_ROOT/updated"\n')
             (bundle/'images.tar.gz').write_bytes(b'fixture')
-            (bundle/'manifest.json').write_text(json.dumps({'tag':'beta-m3-discovery-20261017', 'allowedWebImageIds':['sha256:web'], 'buildId':'fixture-build'}))
+            (bundle/'manifest.json').write_text(json.dumps({'tag':('invalid tag' if mode=='bad-tag' else 'beta-m3-discovery-20261017'), 'allowedWebImageIds':['sha256:web'], 'buildId':'fixture-build', 'recordSearch':True}))
             (bundle/'SHA256SUMS').write_text(''.join(hashlib.sha256(p.read_bytes()).hexdigest()+'  '+str(p.relative_to(bundle))+'\n' for p in bundle.rglob('*') if p.is_file()))
             if mode=='bad-checksum': (bundle/'images.tar.gz').write_bytes(b'changed')
             stub = r'''#!/usr/bin/env python3
@@ -44,6 +44,10 @@ elif name=='curl':
 class Response(io.BytesIO):
  def __init__(self,body): super().__init__(body)
 def get(url,*args,**kwargs):
+ if '/api/dataset' in url: return Response(b'{"dataset":"public-kg","revision":"same"}')
+ if '/api/discovery/claims' in url:
+  if os.environ['TEST_MODE']=='api-failed': raise RuntimeError('fixture API failure')
+  return Response(b'{"revision":"same","claims":[{"predicate":"CONTRIBUTED_TO","contribution":{"roleId":"DRAWING"}}]}')
  if os.environ['TEST_MODE']=='https-failed': raise RuntimeError('fixture HTTPS failure')
  return Response(b'fixture-build <meta name="robots" content="noindex"> data-discovery-launch="home" data-testid="discovery-search-entry"')
 urllib.request.urlopen=get
@@ -56,14 +60,14 @@ urllib.request.urlopen=get
                 self.assertIn('KG revision維持: same',result.stdout)
             else:
                 self.assertNotEqual(result.returncode,0,result.stdout)
-            applied=mode in ['success','db-changed','revision-changed','https-failed']
+            applied=mode in ['success','db-changed','revision-changed','https-failed','api-failed']
             self.assertEqual((root/'updated').exists(),applied)
             if applied and mode!='success': self.assertIn('Webは更新済み',result.stderr)
             if mode in ['bad-checksum','bad-operator','bad-web']: self.assertNotIn('docker tag',events)
             for forbidden in ['apply','seed',' up ',' down ','restart']: self.assertNotIn(forbidden,events)
 
     def test_verified_web_only_activation(self):
-        for mode in ['success','bad-checksum','bad-operator','bad-web','update-failed','db-changed','revision-changed','https-failed']:
+        for mode in ['success','bad-tag','bad-checksum','bad-operator','bad-web','update-failed','db-changed','revision-changed','https-failed','api-failed']:
             with self.subTest(mode=mode): self.run_case(mode)
 
 

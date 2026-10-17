@@ -63,3 +63,7 @@ sudo bash /home/develop/graph-m3-discovery-20261017/scripts/activate-discovery-s
 ```
 
 管理者実行後は、正式HTTPS上の同build、KG revision維持、日英PC／スマホの正式入口→条件変更→結果→Graph→Back、研究機関・根拠・未対応表示、会員status／匿名profile401、旧preview401、既存serviceを確認して追記する。
+
+### 2026-10-17：前記管理者操作待ちの解消
+
+運営者から正式適用完了の連絡を受け、検索能力拡張の着手時に正式HTTPSでも `Eieg0jcFJQ-MI5TvrJRft` と正式検索入口を確認した。KG revisionは `5e2a94af-9061-4087-bb7a-045a3c0133f4` を維持している。前記の「未完了」は準備時点の記録であり、このWebの適用待ちは解消した。次の能力拡張は[対象未指定の記録検索](DISCOVERY_RECORD_SEARCH.md)を参照。

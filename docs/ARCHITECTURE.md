@@ -1,5 +1,7 @@
 # 現行技術設計
 
+2026-10-17、[関係・制作Roleの記録検索](design/DISCOVERY_RECORD_SEARCH.md)を追加。既存Entity検索のEXISTSへRoleを加え、read-only `/api/discovery/claims` は同じClaim／端点の条件をLIMIT前に評価する。20件・UUID順・全条件と公開revisionに束縛したcursor、既存根拠API、Graphのpredicate／Role引継ぎを再利用する。編集scopeと11世界は分離し、DB schema・収集処理・KGは変更しない。
+
 2026-10-17、[漫画r0002の9 Claim統合準備](design/MANGA_R0002_COMBINED_RELEASE.md)は既存のrelease機構とprepare-manga-release.pyの--combined経路を使用。追加の正式受入記録と凍結hashを検証し、旧候補-001を変更せず現行公開baseから-002を生成する。ORIGINAL_STORYは前回実装済みのschema／Role契約を再利用し、API・UI・adapter・KG／会員DBを変更しない。公開applyは全環境で未許可。
 
 2026-10-17、[Discovery UIの正式検索統合](design/DISCOVERY_SEARCH_ADOPTION.md)で `DiscoveryExplorer` をLabと正式ダイアログで共有し、既存APIを使う `DiscoveryListPanel` を追加。探索Contextと一覧条件は意味を混ぜず、各入口に保持する。historyによるGraph往復・起動元フォーカスを維持し、名前候補の100%幅＋外marginによる横はみ出しを修正。API・DB・収集schemaは変更しない。

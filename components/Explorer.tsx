@@ -223,11 +223,11 @@ export default function Explorer({ dataset = "demo", initialRoot, services, publ
         {selection?.kind === "claim" && <ClaimDetails onDataChanged={invalidateData} revision={graph.revision} dataset={dataset} key={key} id={selection.id} nodes={graph.nodes} claimSummary={selectedClaim ?? undefined} onInspectEntity={inspectFromClaim} eventRoles={graph.eventRoles ?? null} positions={graph.organizationPositions ?? null} roles={graph.contributionRoles ?? null} predicates={graph.predicates} />}
       </aside>
     </main>
-    {discoveryCriteria && <DiscoverySearch dataset={dataset} initial={discoveryCriteria} onClose={closeDiscovery} onChoose={(entity, predicates) => {
+    {discoveryCriteria && <DiscoverySearch dataset={dataset} initial={discoveryCriteria} onClose={closeDiscovery} onChoose={(entity, predicates, roles) => {
       if (predicates === undefined) { startFrom(entity); return; }
       trackPublicEvent("explore_start");
-      if (discoveryHome && !graph.centerId && !initialRoot) router.push(`${locale === "en" ? "/en" : ""}${discoveryExplorationHref(dataset, entity.id, predicates)}`);
-      else { openSavedView(entity, { predicates, contributionRoles: null, organizationPositions: null, eventRoles: null }, canvas.current?.capture() ?? null); moveToPane("graph"); }
+      if (discoveryHome && !graph.centerId && !initialRoot) router.push(`${locale === "en" ? "/en" : ""}${discoveryExplorationHref(dataset, entity.id, predicates, roles ?? null)}`);
+      else { openSavedView(entity, { predicates, contributionRoles: roles ?? null, organizationPositions: null, eventRoles: null }, canvas.current?.capture() ?? null); moveToPane("graph"); }
     }} />}
     {reading && <ReferenceReader key={searchParams.toString()} location={reading} dataset={dataset} onClose={closeReading} onExplore={entity => {
       switchFrom(entity, "broad"); closeReading();

@@ -56,6 +56,7 @@ export const questionPredicates: Partial<Record<QuestionId, Predicate>> = {
 export type DiscoveryPlan =
   | { state: "unsupported"; reason: Bilingual }
   | { state: "needs-anchor" | "needs-name" }
+  | { state: "ready"; operation: "claims"; criteria: import("./discovery-records").RecordSearchCriteria }
   | { state: "ready"; operation: "names"; q: string }
   | { state: "ready"; operation: "neighbors"; anchorId: string; predicate: Predicate | null; role: DiscoveryContext["role"] };
 
