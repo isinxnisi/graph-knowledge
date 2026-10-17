@@ -1,0 +1,64 @@
+{
+  "checkedAt": "2026-10-17T05:48:26.647616+00:00",
+  "baseCommit": "533cd28f790431e512a644733220b92f0210b0fc",
+  "beta": {
+    "origin": "https://graph-beta.isinxnisi.com",
+    "buildId": "zdpimiD6CfoDxZIsJkHN-",
+    "datasetChecks": {
+      "local": {
+        "status": 200,
+        "dataset": "public-kg",
+        "revision": "82b01515-594c-48ca-b4b6-515eefac83ca"
+      },
+      "beta": {
+        "status": 200,
+        "dataset": "public-kg",
+        "revision": "82b01515-594c-48ca-b4b6-515eefac83ca"
+      }
+    },
+    "e2e": {
+      "passed": 8,
+      "failed": 0,
+      "locales": [
+        "ja",
+        "en"
+      ],
+      "widths": [
+        1440,
+        390,
+        320
+      ],
+      "coverage": [
+        "empty connections entry / hidden disabled kind / keyboard focus",
+        "name search / kind / candidates / results / Graph",
+        "kind reset after clearing / whitespace",
+        "Back / Forward / Escape / Graph layout return",
+        "IME / delayed cancelled response / reduced-motion"
+      ]
+    }
+  },
+  "unit": {
+    "passed": 113,
+    "files": [
+      "tests/ui-state.test.tsx",
+      "tests/ui-locale.test.tsx"
+    ]
+  },
+  "build": "passed including TypeScript",
+  "lint": "passed for affected files; older E2E submit selectors adjusted to new label",
+  "formal": {
+    "origin": "https://plunode.net",
+    "updated": false,
+    "buildId": "4XcOL0noVSUovhJgNNTHS",
+    "httpStatus": 200,
+    "dataset": "public-kg",
+    "revision": "5e2a94af-9061-4087-bb7a-045a3c0133f4",
+    "reason": "Small entrance improvement; retain previous capability release until next deployment milestone."
+  },
+  "unchanged": [
+    "public KG",
+    "collection jobs",
+    "release apply",
+    "member data"
+  ]
+}

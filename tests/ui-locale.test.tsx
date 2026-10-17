@@ -67,7 +67,7 @@ describe("表示localeと探索の分離", () => {
     await waitFor(() => expect(document.documentElement.lang).toBe("ja"));
     fireEvent.change(screen.getByLabelText("名前・別名"), { target: { value: "青葉" } });
     fireEvent.change(screen.getByLabelText("検索対象"), { target: { value: "person" } });
-    fireEvent.click(screen.getByRole("button", { name: "検索" }));
+    fireEvent.click(screen.getByRole("button", { name: "名前で検索" }));
     fireEvent.click(screen.getByRole("button", { name: "English" }));
     expect(screen.getByRole("status").textContent).toContain("Loading search results");
     expect((screen.getByLabelText("Name or alias") as HTMLInputElement).value).toBe("青葉");

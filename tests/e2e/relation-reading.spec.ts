@@ -17,7 +17,7 @@ for (const [subject, object, wording, width = 1440] of paths) test(`${width}px�
   await page.goto("/");
   await expect.poll(() => page.getByTestId("graph-canvas").evaluate(el => !!(el as unknown as { _cyreg?: { cy: Core } })._cyreg?.cy)).toBe(true);
   await page.getByLabel("名前・別名").fill(subject);
-  await page.locator("#explorer-search").getByRole("button", { name: "検索", exact: true }).click();
+  await page.locator("#explorer-search").getByRole("button", { name: "名前で検索", exact: true }).click();
   await page.locator("#explorer-search").getByRole("button", { name: new RegExp(`^${subject} —`) }).click();
   const canvas = page.getByTestId("graph-canvas");
   await expect.poll(() => canvas.evaluate((el, pair) => {

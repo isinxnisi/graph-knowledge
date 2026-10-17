@@ -1,0 +1,7 @@
+.form { row-gap: 0; }
+.form > label, .form > input { margin-bottom: 6px; }
+.kindReveal { display: grid; grid-template-rows: 0fr; opacity: 0; visibility: hidden; transition: grid-template-rows 140ms ease-out, opacity 100ms ease-out, visibility 140ms; }
+.kindReveal[data-visible="true"] { grid-template-rows: 1fr; opacity: 1; visibility: visible; }
+.kindField { min-height: 0; overflow: hidden; display: flex; flex-direction: column; }
+.kindField > label, .kindField > select { margin-bottom: 6px; }
+@media (prefers-reduced-motion: reduce) { .kindReveal { transition: none; } }

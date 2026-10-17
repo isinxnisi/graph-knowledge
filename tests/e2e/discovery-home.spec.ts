@@ -72,7 +72,7 @@ test("Homeのテーマ・新着対象・資料リンク・検索が実データ�
   await expect(home).toBeVisible(); await expect(page.getByRole("dialog")).toHaveCount(0);
   await home.getByRole("button", { name: "名前・別名で検索する", exact: true }).click();
   await expect(page.getByLabel("名前・別名", { exact: true })).toBeFocused(); await page.getByLabel("名前・別名", { exact: true }).fill("PLUTO");
-  await page.locator("#explorer-search").getByRole("button", { name: "検索", exact: true }).click();
+  await page.locator("#explorer-search").getByRole("button", { name: "名前で検索", exact: true }).click();
   await page.locator("#explorer-search").getByRole("button", { name: /PLUTO/ }).first().click();
   await expect.poll(async () => Object.keys((await view(page)).points).length).toBe(4);
   await expect(page).toHaveURL(new RegExp(`/explore/${pluto}\\?s=`));

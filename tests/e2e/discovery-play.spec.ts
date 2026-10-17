@@ -99,7 +99,8 @@ test("既存Graphから切り口を引継いで移動し、直前の配置と枝
     const node = cy.nodes().first(); node.position({ x: node.position("x") + 73, y: node.position("y") - 29 }); cy.emit("dragfree");
   });
   const before = await snapshot();
-  await page.locator("#explorer-search").getByRole("button", { name: "一覧・条件から探す", exact: true }).click();
+  await page.locator("#explorer-search").getByRole("button", { name: "つながりを見つける", exact: true }).click();
+  await page.getByRole("tab", { name: "一覧・条件から", exact: true }).click();
   const dialog = page.getByRole("dialog");
   await dialog.getByTestId("discovery-cuts").getByRole("button", { name: "影響のつながり", exact: true }).click();
   await dialog.getByLabel("名前・別名", { exact: true }).fill("浦沢");

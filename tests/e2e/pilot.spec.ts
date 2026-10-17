@@ -22,7 +22,7 @@ async function tap(page: Page, name: string, edge = false, subject = "") {
 }
 async function root(page: Page) {
   await page.goto("/"); await expect(page.getByText("少数実データパイロット v1", { exact: true })).toBeVisible();
-  await page.getByLabel("名前・別名").fill("浦沢直樹"); await page.getByRole("button", { name: "検索", exact: true }).click();
+  await page.getByLabel("名前・別名").fill("浦沢直樹"); await page.getByRole("button", { name: "名前で検索", exact: true }).click();
   await page.getByRole("button", { name: /^浦沢直樹 —/ }).click();
   await expect(page.getByTestId("graph-counts")).toHaveText("Entity 5 / Claim 4");
 }
@@ -68,7 +68,7 @@ test("影響と制作の条件・英語名検索・実際の引用詳細", async
   await page.getByRole("button", { name: "適用", exact: true }).click();
   await expect(page.getByTestId("graph-counts")).toHaveText("Entity 1 / Claim 0");
   await expect(page.getByText("この条件に一致する関係はありません。")).toBeVisible();
-  await page.getByLabel("名前・別名").fill("Naoki Urasawa"); await page.getByRole("button", { name: "検索", exact: true }).click();
+  await page.getByLabel("名前・別名").fill("Naoki Urasawa"); await page.getByRole("button", { name: "名前で検索", exact: true }).click();
   await expect(page.getByRole("button", { name: /^浦沢直樹 —/ })).toBeVisible();
 });
 

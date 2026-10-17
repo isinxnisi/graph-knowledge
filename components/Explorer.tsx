@@ -89,7 +89,7 @@ export default function Explorer({ dataset = "demo", initialRoot, services, publ
   const [discoveryCriteria, setDiscoveryCriteria] = useState<DiscoveryCriteria | null>(null);
   const closeDiscovery = useCallback((source?: string | null) => {
     setDiscoveryCriteria(null);
-    if (source === "list" || source === "more") setActivePane("search");
+    if (source === "list" || source === "more" || source === "search") setActivePane("search");
     else if (source === "home") setActivePane("graph");
   }, []);
   useEffect(() => {

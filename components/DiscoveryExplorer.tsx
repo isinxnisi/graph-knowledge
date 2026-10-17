@@ -65,7 +65,7 @@ export default function DiscoveryExplorer({ lab = false, initial = { q: "", kind
     const previousFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null;
     const resumed = !!window.history.state?.plunodeDiscovery;
     const origin = resumed ? window.history.state?.discoveryReturnFocus : previousFocus?.dataset.discoveryLaunch;
-    returnFocus.current = ["home", "list", "more"].includes(origin) ? origin : null;
+    returnFocus.current = ["home", "list", "more", "search"].includes(origin) ? origin : null;
     if (!lab && !resumed) window.history.pushState({ ...window.history.state, plunodeDiscovery: initialInput.current, discoveryReturnFocus: returnFocus.current }, "", window.location.href);
     const pop = () => { if (!window.history.state?.plunodeDiscovery) onClose?.(returnFocus.current); };
     if (!lab) window.addEventListener("popstate", pop);

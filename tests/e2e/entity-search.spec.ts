@@ -2,7 +2,7 @@ import { test, expect, type Page } from "@playwright/test";
 async function search(page: Page, name: string, kind = "") {
   await page.getByLabel("名前・別名").fill(name);
   await page.getByLabel("検索対象", { exact: true }).selectOption(kind);
-  await page.getByRole("button", { name: "検索", exact: true }).click();
+  await page.getByRole("button", { name: "名前で検索", exact: true }).click();
   await expect(page.getByRole("button", { name: new RegExp(`^${name} —`) })).toBeVisible();
 }
 async function choose(page: Page, name: string) { await page.getByRole("button", { name: new RegExp(`^${name} —`) }).click(); }
@@ -40,15 +40,15 @@ test("人物・作品・組織の一つの入口と検索だけでは変わら�
 test("別名と同名候補を識別し、種別の空結果を示す", async ({ page }) => {
   await page.goto("/");
   await page.getByLabel("名前・別名").fill("あおば はる");
-  await page.getByRole("button", { name: "検索", exact: true }).click();
+  await page.getByRole("button", { name: "名前で検索", exact: true }).click();
   const result = page.getByRole("button", { name: /^青葉ハル —/ });
   await expect(result).toContainText("人物"); await expect(result).toContainText("別名：あおば はる");
   await page.getByLabel("名前・別名").fill("佐藤アキ");
-  await page.getByRole("button", { name: "検索", exact: true }).click();
+  await page.getByRole("button", { name: "名前で検索", exact: true }).click();
   await expect(page.getByRole("button", { name: /^佐藤アキ —/ })).toHaveCount(2);
   await expect(page.getByRole("button", { name: /^佐藤アキ —/ }).filter({ hasText: "編集者" })).toHaveCount(1);
   await page.getByLabel("検索対象", { exact: true }).selectOption("work");
-  await page.getByRole("button", { name: "検索", exact: true }).click();
+  await page.getByRole("button", { name: "名前で検索", exact: true }).click();
   await expect(page.getByText("検索結果はありません。名前や検索対象を変えて検索してください。")).toBeVisible();
 });
 

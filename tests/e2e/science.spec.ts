@@ -8,7 +8,7 @@ const canvas = (page: Page) => page.getByTestId("graph-canvas");
 async function start(page: Page, ref = "O1") {
   await page.goto("/"); await expect(page.getByText("科学・研究機関パイロット v1", { exact: true })).toBeVisible();
   await page.getByLabel("名前・別名").fill(name(ref));
-  await page.getByRole("button", { name: "検索", exact: true }).click();
+  await page.getByRole("button", { name: "名前で検索", exact: true }).click();
   await page.getByRole("button", { name: new RegExp(`^${name(ref)} —`) }).click();
   await expect(page.getByTestId("graph-counts")).not.toHaveText("Entity 1 / Claim 0");
 }
@@ -88,7 +88,7 @@ test("関係概要の組織視点・条件外集計・起点切替と座標／�
   await expect(page.getByTestId("graph-counts")).toHaveText("Entity 5 / Claim 4"); await expect(page.getByTestId("active-predicates")).toContainText("追加条件なし");
   await page.getByRole("button", { name: "直前の探索へ戻る", exact: true }).click();
   await expect(page.getByTestId("active-predicates")).toContainText("関わりがあった"); expect(await view(page)).toEqual(original);
-  await page.getByLabel("名前・別名").fill("University of Cambridge"); await page.getByRole("button", { name: "検索", exact: true }).click();
+  await page.getByLabel("名前・別名").fill("University of Cambridge"); await page.getByRole("button", { name: "名前で検索", exact: true }).click();
   await expect(page.getByRole("button", { name: /^ケンブリッジ大学 —/ })).toContainText("組織"); expect(await view(page)).toEqual(original);
 });
 
@@ -105,7 +105,7 @@ test("Role条件は科学の関与を絞らない・空条件下の概要・原�
   await page.getByRole("dialog").getByRole("button", { name: "この対象から広く見る", exact: true }).click();
   await expect(page.getByTestId("graph-counts")).toHaveText("Entity 3 / Claim 2");
   await page.getByRole("button", { name: "直前の探索へ戻る", exact: true }).click(); await expect(page.getByTestId("graph-counts")).toHaveText("Entity 1 / Claim 0");
-  await page.getByLabel("名前・別名").fill("University Institute of Theoretical Physics"); await page.getByRole("button", { name: "検索", exact: true }).click();
+  await page.getByLabel("名前・別名").fill("University Institute of Theoretical Physics"); await page.getByRole("button", { name: "名前で検索", exact: true }).click();
   await expect(page.getByRole("button", { name: /^ニールス・ボーア研究所 —/ })).toContainText("University Institute of Theoretical Physics");
 });
 

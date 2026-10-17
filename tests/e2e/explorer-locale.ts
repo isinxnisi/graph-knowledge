@@ -115,7 +115,7 @@ export function checkExplorerLocale() {
     await expect(page.getByTestId("graph-counts")).toHaveText("Entity 2 / Claim 1");
     await page.getByRole("button", { name: "Return to previous exploration", exact: true }).click();
     await expect(page.getByTestId("exploration-root")).toContainText("ソルヴェイ");
-    await page.getByLabel("Name or alias").fill("Heisenberg"); await page.locator("#explorer-search").getByRole("button", { name: "Search", exact: true }).click();
+    await page.getByLabel("Name or alias").fill("Heisenberg"); await page.locator("#explorer-search").getByRole("button", { name: "Search by name", exact: true }).click();
     await page.getByRole("button", { name: /^ヴェルナー・ハイゼンベルク —/ }).click();
     await expect(page.getByTestId("graph-counts")).toHaveText("Entity 2 / Claim 1");
     await expect(page.locator('[data-relation-id]').filter({ hasText: "Organization" })).toBeVisible();
@@ -150,9 +150,9 @@ export function checkExplorerLocale() {
     await expect(page.getByTestId("graph-counts")).toHaveText("Entity 4 / Claim 5");
     await page.getByRole("navigation", { name: "Explorer panels" }).getByRole("button", { name: "Search", exact: true }).click();
     await page.route("**/api/entities?**", route => route.fulfill({ status: 503, json: { error: { message: "データベースを利用できません。時間をおいて再試行してください。" } } }));
-    await page.getByLabel("Name or alias").fill("PLUTO"); await page.locator("#explorer-search").getByRole("button", { name: "Search", exact: true }).click();
+    await page.getByLabel("Name or alias").fill("PLUTO"); await page.locator("#explorer-search").getByRole("button", { name: "Search by name", exact: true }).click();
     await expect(page.locator("#explorer-search").getByRole("alert")).toContainText("database is unavailable");
-    await page.unroute("**/api/entities?**"); await page.locator("#explorer-search").getByRole("button", { name: "Search", exact: true }).click();
+    await page.unroute("**/api/entities?**"); await page.locator("#explorer-search").getByRole("button", { name: "Search by name", exact: true }).click();
     await expect(page.getByRole("button", { name: /^PLUTO —/ })).toBeVisible();
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
     await page.screenshot({ path: "test-results/public/locale-phone.png", fullPage: true });

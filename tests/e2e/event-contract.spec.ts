@@ -3,7 +3,7 @@ import { EVENT_TEST_IDS as ids } from "../fixtures/event-contract";
 import { editConditions } from "./conditions";
 const canvas = (page: Page) => page.getByTestId("graph-canvas");
 async function search(page: Page, name: string) {
-  await page.getByLabel("名前・別名").fill(name); await page.getByRole("button", { name: "検索", exact: true }).click();
+  await page.getByLabel("名前・別名").fill(name); await page.getByRole("button", { name: "名前で検索", exact: true }).click();
   await page.getByRole("button", { name: new RegExp(name) }).last().click();
 }
 async function start(page: Page) {

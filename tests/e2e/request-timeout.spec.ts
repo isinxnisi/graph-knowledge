@@ -17,22 +17,22 @@ test("検索の応答が止まっても再検索でき、入力変更による�
     const search = page.getByRole("region", { name: "対象を探す", exact: true });
     await search.getByLabel("名前・別名").fill("青葉");
     await page.clock.install();
-    await search.getByRole("button", { name: "検索", exact: true }).click();
+    await search.getByRole("button", { name: "名前で検索", exact: true }).click();
     await expect.poll(() => calls).toBe(1);
     await expect(search.getByRole("button", { name: "検索中…", exact: true })).toBeDisabled();
     await page.clock.fastForward(CLIENT_REQUEST_TIMEOUT_MS);
     await expect(search.getByRole("alert")).toContainText(timeoutText);
-    await search.getByRole("button", { name: "検索", exact: true }).click();
+    await search.getByRole("button", { name: "名前で検索", exact: true }).click();
     await expect(search.getByRole("status")).toHaveText("1件の候補");
     await expect(search.getByRole("alert")).toHaveCount(0);
-    await search.getByRole("button", { name: "検索", exact: true }).click();
+    await search.getByRole("button", { name: "名前で検索", exact: true }).click();
     await expect.poll(() => calls).toBe(3);
     await search.getByLabel("名前・別名").fill("変更後");
     await page.clock.fastForward(CLIENT_REQUEST_TIMEOUT_MS);
     release();
     await expect(search.getByRole("alert")).toHaveCount(0);
     await expect(search.getByRole("status")).toHaveCount(0);
-    await expect(search.getByRole("button", { name: "検索", exact: true })).toBeEnabled();
+    await expect(search.getByRole("button", { name: "名前で検索", exact: true })).toBeEnabled();
   } finally {
     release();
   }

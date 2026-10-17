@@ -200,7 +200,7 @@ test("GA4は同意後の公開探索だけ。URL更新・非公開画面へ本�
     const commands = () => frame.evaluate(() => (window as unknown as { __commands: unknown[][] }).__commands);
     await expect.poll(async () => (await commands()).filter(c => c[0] === "event" && c[1] === "page_view").length).toBe(1);
     await page.locator('#entity-search').fill("PLUTO");
-    await page.getByRole('button', { name: '検索', exact: true }).click();
+    await page.getByRole('button', { name: '名前で検索', exact: true }).click();
     await expect.poll(async () => (await commands()).filter(c => c[1] === "search").length).toBe(1);
     await page.getByRole("button", { name: "PLUTOから探索を開始", exact: true }).click();
     await expect(page.getByTestId("graph-counts")).toContainText("Entity 4");

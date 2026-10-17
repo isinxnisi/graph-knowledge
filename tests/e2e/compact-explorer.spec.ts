@@ -35,7 +35,7 @@ for (const width of [390, 320]) {
     await expect(graph).toBeHidden();
     await expect(detail).toBeHidden();
     await page.locator("#entity-search").fill("青葉");
-    await search.getByRole("button", { name: "検索", exact: true }).click();
+    await search.getByRole("button", { name: "名前で検索", exact: true }).click();
     await search.getByRole("button", { name: /青葉ハル —/ }).click();
     await expect(graph).toBeVisible();
     await expect(graph).toBeFocused();

@@ -19,7 +19,7 @@ test("同じ入口から漫画・科学・Eventを検索し、開始例・限定
   await expect(page.getByTestId("graph-counts")).toHaveText("Entity 4 / Claim 5");
   const graphBefore = await page.getByTestId("graph-canvas").evaluate(el => (el as unknown as { _cyreg: { cy: import("cytoscape").Core } })._cyreg.cy.nodes().map(node => node.id()).sort());
   await page.getByLabel("名前・別名").fill("Heisenberg");
-  await page.getByRole("button", { name: "検索", exact: true }).click();
+  await page.getByRole("button", { name: "名前で検索", exact: true }).click();
   await expect(page.getByRole("button", { name: /^ヴェルナー・ハイゼンベルク —/ })).toBeVisible();
   expect(await page.getByTestId("graph-canvas").evaluate(el => (el as unknown as { _cyreg: { cy: import("cytoscape").Core } })._cyreg.cy.nodes().map(node => node.id()).sort())).toEqual(graphBefore);
   await page.getByRole("button", { name: /^ヴェルナー・ハイゼンベルク —/ }).click();

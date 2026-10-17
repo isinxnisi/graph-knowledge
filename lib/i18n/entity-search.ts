@@ -1,6 +1,7 @@
 const ja = {
   title: "対象を探す", name: "名前・別名", kind: "検索対象", all: "すべて",
   kinds: { person: "人物", work: "作品", organization: "組織", event: "出来事" },
+  discoverConnections: "つながりを見つける", searchByName: "名前で検索",
   submit: "検索", submitting: "検索中…", loading: "検索結果を取得中…",
   emptyInput: "名前や別名を入力してください。", descriptionMissing: "説明なし",
   help: "人物・作品・組織・出来事を選んで、関係とその出典を辿ってください。",
@@ -15,6 +16,8 @@ const en: typeof ja = {
   kind: "Search for",
   all: "All kinds",
   kinds: { person: "Person", work: "Work", organization: "Organization", event: "Event" },
+  discoverConnections: "Discover connections",
+  searchByName: "Search by name",
   submit: "Search",
   submitting: "Searching…",
   loading: "Loading search results…",

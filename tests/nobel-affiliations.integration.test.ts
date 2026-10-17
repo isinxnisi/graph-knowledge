@@ -67,7 +67,7 @@ it("NobelとWikidataの実データを隔離DBへ追加し、冪等性・検索�
     page.setDefaultTimeout(15000);
     await page.goto("http://127.0.0.1:3216/"); mark("browser opened");
     await page.locator("#entity-search").fill("Harvard University");
-    await page.locator("#explorer-search").getByRole("button", { name: "検索", exact: true }).click();
+    await page.locator("#explorer-search").getByRole("button", { name: "名前で検索", exact: true }).click();
     await page.locator("#explorer-search").getByRole("button", { name: /^Harvard University —/ }).click();
     await vi.waitFor(async () => expect(Number((await page.getByTestId("graph-counts").textContent())?.match(/Claim (\d+)/)?.[1] ?? 0)).toBeGreaterThan(0), { timeout: 15000 });
     mark("Harvard Graph loaded");

@@ -907,11 +907,16 @@ describe("一般Entity検索の境界", () => {
       expect(searchEntities).toHaveBeenLastCalledWith("浦沢", expect.any(AbortSignal), null);
     } finally { vi.useRealTimers(); }
   });
-  it("空欄の検索は種別を保って一覧検索を開き、入力エラーやGraph開始にしない", () => {
+  it("入力を消すと種別を解除し、空欄は接点探索を開いて入力エラーやGraph開始にしない", () => {
     const open = vi.fn(), choose = vi.fn(); render(<SearchPanel onChoose={choose} onDiscover={open} />);
-    fireEvent.change(screen.getByLabelText("検索対象"), { target: { value: "work" } });
-    fireEvent.click(screen.getByRole("button", { name: "検索" }));
-    expect(open).toHaveBeenCalledWith({ q: "", kind: "work" });
+    const input = screen.getByLabelText("名前・別名"), kind = screen.getByLabelText("検索対象") as HTMLSelectElement;
+    expect(kind.disabled).toBe(true);
+    fireEvent.change(input, { target: { value: "PLUTO" } });
+    fireEvent.change(kind, { target: { value: "work" } });
+    fireEvent.change(input, { target: { value: " 　" } });
+    expect(kind.value).toBe(""); expect(kind.disabled).toBe(true);
+    fireEvent.click(screen.getByRole("button", { name: "つながりを見つける" }));
+    expect(open).toHaveBeenCalledWith({ q: "", kind: null, presentation: "explore" });
     expect(screen.queryByRole("alert")).toBeNull(); expect(searchEntities).not.toHaveBeenCalled(); expect(choose).not.toHaveBeenCalled();
   });
   it.each(["成功", "失敗"])("名前変更で旧検索を取消し、遅い%s応答が次の検索を妨げない", async (outcome) => {
@@ -925,13 +930,13 @@ describe("一般Entity検索の境界", () => {
     const choose = vi.fn();
     render(<SearchPanel onChoose={choose} />);
     fireEvent.change(screen.getByLabelText("名前・別名"), { target: { value: "変更前" } });
-    fireEvent.click(screen.getByRole("button", { name: "検索" }));
+    fireEvent.click(screen.getByRole("button", { name: "名前で検索" }));
     const signal = vi.mocked(searchEntities).mock.calls[0][1];
     fireEvent.change(screen.getByLabelText("名前・別名"), { target: { value: "変更後" } });
     expect(signal.aborted).toBe(true);
-    expect((screen.getByRole("button", { name: "検索" }) as HTMLButtonElement).disabled).toBe(false);
+    expect((screen.getByRole("button", { name: "名前で検索" }) as HTMLButtonElement).disabled).toBe(false);
     expect(searchEntities).toHaveBeenCalledTimes(1);
-    fireEvent.click(screen.getByRole("button", { name: "検索" }));
+    fireEvent.click(screen.getByRole("button", { name: "名前で検索" }));
     await act(async () => {
       if (outcome === "成功") resolveOld({ items: [{ ...root, aliases: [], event: null }], hasMore: false });
       else rejectOld(new Error("古い検索の失敗"));
@@ -951,11 +956,11 @@ describe("一般Entity検索の境界", () => {
     render(<SearchPanel onChoose={choose} />);
     const input = screen.getByLabelText("名前・別名");
     fireEvent.change(input, { target: { value: root.name } });
-    fireEvent.click(screen.getByRole("button", { name: "検索" }));
+    fireEvent.click(screen.getByRole("button", { name: "名前で検索" }));
     await screen.findByRole("button", { name: new RegExp(`^${root.name} —`) });
     fireEvent.change(input, { target: { value: "" } });
     expect(screen.queryByRole("button", { name: new RegExp(`^${root.name} —`) })).toBeNull();
-    fireEvent.click(screen.getByRole("button", { name: "検索" }));
+    fireEvent.click(screen.getByRole("button", { name: "名前で検索" }));
     expect(screen.getByRole("alert")).toBeDefined();
     fireEvent.change(input, { target: { value: "別の名前" } });
     expect(screen.queryByRole("alert")).toBeNull();
@@ -968,7 +973,7 @@ describe("一般Entity検索の境界", () => {
     render(<SearchPanel onChoose={choose} />);
     fireEvent.change(screen.getByLabelText("名前・別名"), { target: { value: "原語名" } });
     fireEvent.change(screen.getByLabelText("検索対象"), { target: { value: "work" } });
-    fireEvent.click(screen.getByRole("button", { name: "検索" }));
+    fireEvent.click(screen.getByRole("button", { name: "名前で検索" }));
     await screen.findByText("別名：原語名");
     expect(searchEntities).toHaveBeenCalledWith("原語名", expect.any(AbortSignal), "work");
     expect(choose).not.toHaveBeenCalled();
@@ -980,7 +985,7 @@ describe("一般Entity検索の境界", () => {
     vi.mocked(searchEntities).mockReturnValue(new Promise((done) => { resolve = done; }));
     render(<SearchPanel onChoose={vi.fn()} />);
     fireEvent.change(screen.getByLabelText("名前・別名"), { target: { value: "対象" } });
-    fireEvent.click(screen.getByRole("button", { name: "検索" }));
+    fireEvent.click(screen.getByRole("button", { name: "名前で検索" }));
     const signal = vi.mocked(searchEntities).mock.calls[0][1];
     fireEvent.change(screen.getByLabelText("検索対象"), { target: { value: "organization" } });
     expect(signal.aborted).toBe(true);

@@ -7,7 +7,7 @@ const id = (name: string) => fixture.entities.find(e => e.name === name)!.id;
 async function start(page: import("@playwright/test").Page, name: string) {
   await page.goto("/");
   await page.getByLabel("名前・別名").fill(name);
-  await page.locator("#explorer-search").getByRole("button", { name: "検索", exact: true }).click();
+  await page.locator("#explorer-search").getByRole("button", { name: "名前で検索", exact: true }).click();
   await page.locator("#explorer-search").getByRole("button", { name: new RegExp(`^${name} —`) }).click();
   await expect.poll(() => page.getByTestId("graph-canvas").evaluate((el, center) => {
     const cy = (el as unknown as { _cyreg?: { cy: Core } })._cyreg?.cy;

@@ -34,11 +34,27 @@ for (const locale of ["ja", "en"]) for (const width of [1440, 390, 320]) test(`$
   await page.goForward(); await expect(dialog).toBeVisible(); await expect(results).toHaveCount(20);
   await dialog.getByRole("button", { name: en ? "Close search" : "検索を閉じる", exact: true }).click(); await expect(dialog).toHaveCount(0); await expect(page).toHaveURL(base + root);
   if (width < 800) await page.getByRole("navigation", { name: en ? "Explorer panels" : "探索画面の切り替え" }).getByRole("button", { name: en ? "Search" : "検索", exact: true }).click();
-  const pane = page.locator("#explorer-search");
-  await pane.getByLabel(name, { exact: true }).fill("PLUTO");
+  const pane = page.locator("#explorer-search"), paneInput = pane.getByLabel(name, { exact: true }), kindSelect = pane.locator("#search-kind");
+  const discover = pane.getByRole("button", { name: en ? "Discover connections" : "つながりを見つける", exact: true });
+  await expect(kindSelect).toBeHidden(); await expect(kindSelect).toBeDisabled();
+  await expect(pane.locator('[data-discovery-launch="list"]')).toHaveCount(0);
+  await paneInput.focus(); await page.keyboard.press("Tab"); await expect(discover).toBeFocused();
+  await page.screenshot({ path: info.outputPath(`pane-empty-${locale}-${width}.png`) });
+  await discover.click();
+  await expect(dialog.getByRole("tab", { name: en ? "Existing connections" : "今ある接点から", exact: true })).toHaveAttribute("aria-selected", "true");
+  await expect(dialog.getByRole("tab", { name: en ? "Browse & refine" : "一覧・条件から", exact: true })).toBeVisible();
+  await page.goBack(); await expect(dialog).toHaveCount(0); await expect(discover).toBeFocused();
+  await page.goForward(); await expect(dialog).toBeVisible();
+  await expect(dialog.getByRole("tab", { name: en ? "Existing connections" : "今ある接点から", exact: true })).toHaveAttribute("aria-selected", "true");
+  await page.keyboard.press("Escape"); await expect(dialog).toHaveCount(0); await expect(discover).toBeFocused();
+  await paneInput.fill("PLUTO");
   await expect(pane.getByRole("button", { name: /^PLUTO —/ })).toBeVisible();
   // Carry the existing name and kind into the wider search without a new input step.
-  await pane.getByLabel(en ? "Search for" : "検索対象", { exact: true }).selectOption("work");
+  await expect(kindSelect).toBeVisible(); await kindSelect.selectOption("work");
+  await expect(pane.getByRole("button", { name: /^PLUTO —/ })).toBeVisible();
+  await pane.getByRole("button", { name: en ? "Search by name" : "名前で検索", exact: true }).click();
+  await expect(pane.getByRole("button", { name: /^PLUTO —/ })).toBeVisible();
+  await page.screenshot({ path: info.outputPath(`pane-name-${locale}-${width}.png`) });
   await pane.getByRole("button", { name: en ? "See all results" : "すべての結果を見る", exact: true }).click();
   await expect(dialog.getByLabel(name, { exact: true })).toHaveValue("PLUTO");
   await expect(dialog.getByRole("button", { name: en ? "Work" : "作品", exact: true })).toHaveAttribute("aria-pressed", "true");
@@ -50,10 +66,13 @@ for (const locale of ["ja", "en"]) for (const width of [1440, 390, 320]) test(`$
   await expect(page).toHaveURL(new RegExp(`/explore/${pluto}\\?s=`));
   const before = await view(page);
   if (width < 800) await page.getByRole("navigation", { name: en ? "Explorer panels" : "探索画面の切り替え" }).getByRole("button", { name: en ? "Search" : "検索", exact: true }).click();
-  await pane.getByRole("button", { name: en ? "Browse & refine" : "一覧・条件から探す", exact: true }).click();
+  await paneInput.fill(" 　");
+  await expect(kindSelect).toBeHidden(); await expect(kindSelect).toBeDisabled(); await expect(kindSelect).toHaveValue("");
+  await expect(pane.getByRole("alert")).toHaveCount(0); await expect(pane.locator("#entity-suggestions")).toHaveCount(0);
+  await discover.click();
+  await expect(dialog.getByRole("tab", { name: en ? "Existing connections" : "今ある接点から", exact: true })).toHaveAttribute("aria-selected", "true");
   await expect(dialog).toBeVisible(); await page.keyboard.press("Escape"); await expect(dialog).toHaveCount(0); expect(await view(page)).toEqual(before);
-  await pane.getByLabel(en ? "Search for" : "検索対象", { exact: true }).selectOption("");
-  await pane.getByLabel(name, { exact: true }).fill("浦沢");
+  await paneInput.fill("浦沢"); await expect(kindSelect).toHaveValue("");
   await expect(pane.getByRole("button", { name: /^浦沢直樹 —/ })).toBeVisible();
   await pane.getByRole("button", { name: /^浦沢直樹 —/ }).click();
   await expect(page.getByTestId("exploration-root")).toContainText("浦沢直樹");
@@ -77,4 +96,24 @@ test("Discovery APIは空欄・ページ条件・公開境界を守る", async (
   // TLS routing rejects an ads Host on a beta SNI. Test the actual HTTPS origin instead.
   expect((await request.get(new URL(url).protocol === "https:" ? "https://ads.plunode.net/api/discovery/entities" : url,
     new URL(url).protocol === "https:" ? {} : { headers: { host: "ads.plunode.net" } })).status()).toBe(404);
+});
+
+
+test("検索ペインのIME・消去中の遅い応答・動きを減らす設定", async ({ page }, info) => {
+  await page.setViewportSize({ width: 390, height: 844 }); await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.addInitScript(() => localStorage.setItem("plunode:privacy:v1", '{"analytics":false,"ads":false}'));
+  await page.goto(info.project.use.baseURL! + "/");
+  await page.getByRole("navigation", { name: "探索画面の切り替え" }).getByRole("button", { name: "検索", exact: true }).click();
+  const pane = page.locator("#explorer-search"), input = pane.locator("#entity-search"), discover = pane.getByRole("button", { name: "つながりを見つける", exact: true });
+  const requests: string[] = []; page.on("request", r => { if (new URL(r.url()).pathname === "/api/entities") requests.push(r.url()); });
+  await input.dispatchEvent("compositionstart"); await discover.click(); await expect(page.getByRole("dialog")).toHaveCount(0);
+  await input.fill("PLUTO"); await page.waitForTimeout(350); expect(requests).toHaveLength(0);
+  await expect(pane.locator('[data-visible="true"]')).toHaveCSS("transition-duration", "0s");
+  await page.route("**/api/entities?**", async route => { const response = await route.fetch(); await new Promise(r => setTimeout(r, 600)); await route.fulfill({ response }).catch(() => {}); });
+  const pending = page.waitForRequest(r => new URL(r.url()).pathname === "/api/entities");
+  await input.dispatchEvent("compositionend"); await pending;
+  await input.fill(""); await expect(discover).toBeEnabled(); await expect(pane.locator("#search-kind")).toBeHidden();
+  await page.waitForTimeout(700); await expect(pane.locator("#entity-suggestions")).toHaveCount(0); await expect(pane.getByRole("alert")).toHaveCount(0);
+  expect(requests).toHaveLength(1); await page.unroute("**/api/entities?**");
+  await discover.click(); await expect(page.getByRole("tab", { name: "今ある接点から", exact: true })).toHaveAttribute("aria-selected", "true");
 });
