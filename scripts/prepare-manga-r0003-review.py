@@ -32,8 +32,6 @@ def verify_inputs(root):
     frozen = read(root, OUT + '/frozen-inputs.json')
     for row in frozen['files']:
         m.require(m.sha((root / row['file']).read_bytes()) == row['sha256'], 'Frozen review input changed: ' + row['file'])
-    m.require(not (root / 'datasets/manga-collection/accepted-r0003-20261017/acceptance.json').exists(),
-              'This generator is review-only; handle later acceptance separately')
     return frozen
 
 
@@ -283,6 +281,8 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--check', action='store_true')
     args = parser.parse_args()
+    m.require(args.check or not (ROOT / 'datasets/manga-collection/accepted-r0003-20261017/acceptance.json').exists(),
+              'Accepted review artifacts are immutable; use --check to reproduce without writing')
     for path, value in build().items():
         if args.check:
             m.require(path.read_text() == value, 'Generated review differs: ' + str(path))

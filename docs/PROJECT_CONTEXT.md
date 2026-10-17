@@ -1,5 +1,7 @@
 # プロジェクトの構想と判断基準
 
+2026-10-17 20:25 JST指示で、運営者がr0003全推奨39 Entity・31 Claim・26 Source・32 Citationを正式受入した。[40 Claim統合release候補](design/MANGA_R0003_ACCEPTED_RELEASE.md)は20261017-manga-r0003-001、公開baseは20261014-credits-001のまま。受入記録・凍結hash・原語／scopeを維持し、既存release generatorに限定経路を追加。validate／無書込planと前後不変を確認し、全環境applyは未実施。[次の自動化タスク](design/COLLECTION_THEMES.md#次の実装タスク収集からレビュー受入からrelease準備)を、既存CLIによる収集→レビューと人間受入→release準備の2段階として切り出した。
+
 2026-10-17 20:06 JST、[データ収集とDiscovery Modelの報告連携](design/COLLECTION_THEMES.md#データ収集とdiscovery-modelの報告連携)を追加。今後は件数・判断記録に加え、根拠付きの代表Graph経路を収集候補／正式受入済み未適用／公開KG適用済みに分けて共有する。経路から直接関係を推測せず、探索側の不足要望は既存テーマ・候補・収録状況と照合する。r0003受入レビューと残り70作品の計画は継続し、個別受入・公開applyの追加承認ではない。
 
 2026-10-17、[漫画r0003の一括受入レビュー](design/MANGA_R0003_ACCEPTANCE_REVIEW.md)で通常25 Claim・36 Entityを個別に受入推奨へ整理。既存作品UUID対応・童夢の全集scopeと追加資料の別Role候補を含む最大31 Claim／39新規Entityをhiddenで準備し、既存公開base＋r0002既受入の隔離投影を検証する。正式受入・公開release作成・全環境applyは未実施。元収集・承認・r0002未適用releaseを保全し、API／UI／adapter・DBを変更しない。

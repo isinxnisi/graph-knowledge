@@ -1,0 +1,279 @@
+{
+  "verifiedAt": "2026-10-17T11:44:20.515515+00:00",
+  "status": "accepted-release-preparation-only",
+  "publicApply": false,
+  "baseRelease": "20261014-credits-001",
+  "revision": "82b01515-594c-48ca-b4b6-515eefac83ca",
+  "beforeChecksum": "e1ebfaa0e839743f7977e3045b6e8e8dae44045495993974465d5b5ecd7700b0",
+  "afterChecksum": "a519db7dce5991dae9f6ff781d9af0d25a7644f348413a248474ef0889183aff",
+  "publicUnchanged": true,
+  "differingBackupPayloadFields": [
+    "savedAt"
+  ],
+  "localPlanUpdated": 0,
+  "existingR0002ReleasesPreserved": true,
+  "frozenR0003ReviewPreserved": true,
+  "vpsPlan": "not-run; latest remote base/revision and operator compatibility must be verified before any future apply",
+  "representativePaths": [
+    {
+      "path": "池上遼一 → サンクチュアリ ← 武論尊 → 北斗の拳",
+      "state": "formally-accepted-not-applied",
+      "publicObserved": false,
+      "edges": [
+        {
+          "claimId": "c3fcdaa7-1374-4c62-acab-368dc1ed1bee",
+          "subjectId": "710bc8a7-efed-4c2e-a4b4-6c65b0aff695",
+          "objectId": "c9080259-3866-4c25-999f-4a5a22046ac1",
+          "roleId": "DRAWING",
+          "scope": {
+            "kind": "publication",
+            "isbn13": "9784091823618",
+            "volumeLabel": "第1巻",
+            "editionLabel": null,
+            "language": "ja"
+          },
+          "citationIds": [
+            "503b85f7-ccdc-4723-b0e0-51d121f8ba3e"
+          ],
+          "sourceIds": [
+            "6e6882d7-7add-4510-92a2-00e1b469c117"
+          ],
+          "acceptanceRevision": "r0003"
+        },
+        {
+          "claimId": "c19e5b2f-01e2-4233-a7c9-326a1772d7de",
+          "subjectId": "3f22660f-01d7-4a4a-9ae6-f169c9a3dc4a",
+          "objectId": "c9080259-3866-4c25-999f-4a5a22046ac1",
+          "roleId": "ORIGINAL_STORY",
+          "scope": {
+            "kind": "publication",
+            "isbn13": "9784091823618",
+            "volumeLabel": "第1巻",
+            "editionLabel": null,
+            "language": "ja"
+          },
+          "citationIds": [
+            "55f0c3f3-cc50-48a8-9242-b31b3e7155f8"
+          ],
+          "sourceIds": [
+            "6e6882d7-7add-4510-92a2-00e1b469c117"
+          ],
+          "acceptanceRevision": "r0003"
+        },
+        {
+          "claimId": "e3bf903c-5d0c-4f91-bf83-2826f5a23db7",
+          "subjectId": "3f22660f-01d7-4a4a-9ae6-f169c9a3dc4a",
+          "objectId": "cd2e6949-6c1b-4818-990f-4d4dbc5c5d54",
+          "roleId": "CREATION",
+          "scope": {
+            "kind": "publication",
+            "isbn13": "9784086172837",
+            "volumeLabel": "第1巻",
+            "editionLabel": null,
+            "language": "ja"
+          },
+          "citationIds": [
+            "1d520b97-18c3-46ef-94ef-9e4e4c8ad15e"
+          ],
+          "sourceIds": [
+            "d742ddc4-acb8-411a-a159-efd815afecd6"
+          ],
+          "acceptanceRevision": "r0003"
+        }
+      ]
+    },
+    {
+      "path": "赤坂アカ → 【推しの子】 ← 横槍メンゴ → クズの本懐",
+      "state": "formally-accepted-not-applied",
+      "publicObserved": false,
+      "edges": [
+        {
+          "claimId": "f4504ec8-173a-453f-83e8-a24e72dde9bc",
+          "subjectId": "711dc415-45d5-4d35-8cca-068332180cc0",
+          "objectId": "8a0d3d5a-feb6-4ba3-8993-64b6ac79de12",
+          "roleId": "ORIGINAL_STORY",
+          "scope": null,
+          "citationIds": [
+            "b227b748-ee95-4565-9c67-7834801ebafb"
+          ],
+          "sourceIds": [
+            "ab3cc1da-0880-4616-afbc-e853a7730929"
+          ],
+          "acceptanceRevision": "r0003"
+        },
+        {
+          "claimId": "b7d9d6ba-f2a0-492e-981d-408b22955215",
+          "subjectId": "420d89ea-9780-4e01-ac64-9c5e8597d0c8",
+          "objectId": "8a0d3d5a-feb6-4ba3-8993-64b6ac79de12",
+          "roleId": "DRAWING",
+          "scope": null,
+          "citationIds": [
+            "c4d63400-dc23-498d-b1bd-4c579adc2227"
+          ],
+          "sourceIds": [
+            "ab3cc1da-0880-4616-afbc-e853a7730929"
+          ],
+          "acceptanceRevision": "r0003"
+        },
+        {
+          "claimId": "498cbe28-4703-4ac1-9a99-5cd83831b0e3",
+          "subjectId": "420d89ea-9780-4e01-ac64-9c5e8597d0c8",
+          "objectId": "dc188ef2-1a3d-4251-a445-90f49dd88cd0",
+          "roleId": "AUTHORSHIP",
+          "scope": {
+            "kind": "publication",
+            "isbn13": "9784757538870",
+            "volumeLabel": "第1巻",
+            "editionLabel": null,
+            "language": "ja"
+          },
+          "citationIds": [
+            "21c3954f-829e-4d13-a641-783d92af998d"
+          ],
+          "sourceIds": [
+            "a20efdfb-84be-4caa-a6b6-f3472a04c2b6"
+          ],
+          "acceptanceRevision": "r0003"
+        }
+      ]
+    },
+    {
+      "path": "大場つぐみ → DEATH NOTE／バクマン。",
+      "state": "formally-accepted-not-applied",
+      "publicObserved": false,
+      "edges": [
+        {
+          "claimId": "6ed29ee4-2b62-4fe7-83a6-aafe300754d7",
+          "subjectId": "a13205e2-220c-4b7d-8a1a-39dbefe52db8",
+          "objectId": "7ca5fc7d-545a-4d39-a2dc-6cce86390112",
+          "roleId": "ORIGINAL_STORY",
+          "scope": {
+            "kind": "publication",
+            "isbn13": "9784088736211",
+            "volumeLabel": "第1巻",
+            "editionLabel": null,
+            "language": "ja"
+          },
+          "citationIds": [
+            "2912d1b2-54cf-425a-9428-d0c323f68a01"
+          ],
+          "sourceIds": [
+            "4859917b-c4ba-4e2d-b932-52224ff7ebec"
+          ],
+          "acceptanceRevision": "r0002"
+        },
+        {
+          "claimId": "48a9f51e-beb1-4c3a-9c30-5923bc852925",
+          "subjectId": "a13205e2-220c-4b7d-8a1a-39dbefe52db8",
+          "objectId": "3427040b-88fd-4db5-b546-dd237abad032",
+          "roleId": "ORIGINAL_STORY",
+          "scope": {
+            "kind": "publication",
+            "isbn13": "9784086196901",
+            "volumeLabel": "第1巻",
+            "editionLabel": null,
+            "language": "ja"
+          },
+          "citationIds": [
+            "85b6215a-d659-4c08-850a-c9611e94bd43"
+          ],
+          "sourceIds": [
+            "fa2da69a-8a61-4364-8dab-05b9678d77aa"
+          ],
+          "acceptanceRevision": "r0003"
+        }
+      ]
+    },
+    {
+      "path": "萩尾望都 → ポーの一族／11人いる！",
+      "state": "formally-accepted-not-applied",
+      "publicObserved": false,
+      "edges": [
+        {
+          "claimId": "f4b64248-7b3e-4fae-8ff2-7122410b63f4",
+          "subjectId": "6c9095bd-1969-4bcd-9282-2d1e9e411254",
+          "objectId": "c74e0874-eb89-4825-a824-3ff182fe8053",
+          "roleId": "AUTHORSHIP",
+          "scope": {
+            "kind": "publication",
+            "isbn13": "9784091912510",
+            "volumeLabel": "第1巻",
+            "editionLabel": null,
+            "language": "ja"
+          },
+          "citationIds": [
+            "a0185551-4cc2-44da-975b-81ed43b093c1"
+          ],
+          "sourceIds": [
+            "c91f7f99-6b76-4245-9564-70f8f62c2dc1"
+          ],
+          "acceptanceRevision": "r0003"
+        },
+        {
+          "claimId": "d5d3fef1-fc64-4e61-b049-2f3c81994cb9",
+          "subjectId": "6c9095bd-1969-4bcd-9282-2d1e9e411254",
+          "objectId": "40a8ddd3-f333-485c-a12a-ac3d0961111b",
+          "roleId": "AUTHORSHIP",
+          "scope": {
+            "kind": "publication",
+            "isbn13": "9784091910110",
+            "volumeLabel": "単巻",
+            "editionLabel": null,
+            "language": "ja"
+          },
+          "citationIds": [
+            "eee1e9cd-bcc8-4d3a-a094-92bb7f3e1c1e"
+          ],
+          "sourceIds": [
+            "c815b2db-f907-43d4-a8ae-e2ef99fe5f79"
+          ],
+          "acceptanceRevision": "r0003"
+        }
+      ]
+    }
+  ],
+  "tests": {
+    "pythonReviewAndAcceptance": 14,
+    "publicAndRoleCompatibility": 34,
+    "total": 48
+  },
+  "environmentChecks": {
+    "local3200": {
+      "datasetStatus": 200,
+      "revision": "82b01515-594c-48ca-b4b6-515eefac83ca"
+    },
+    "beta": {
+      "datasetStatus": 200,
+      "revision": "82b01515-594c-48ca-b4b6-515eefac83ca"
+    },
+    "vpsHttps": {
+      "datasetStatus": 200,
+      "revision": "5e2a94af-9061-4087-bb7a-045a3c0133f4"
+    },
+    "deploymentPerformed": false,
+    "vpsChanged": false,
+    "memberDbChanged": false
+  },
+  "referenceArtifacts": [
+    {
+      "file": "datasets/manga-collection/accepted-r0003-20261017/acceptance.json",
+      "sha256": "7d53abbd472fcbf0cba57fa5202d6fd4f8eb12c9ebda34bd1e7a8badca701831"
+    },
+    {
+      "file": "datasets/manga-collection/accepted-r0003-20261017/local-plan.json",
+      "sha256": "3e3726cb2fa9054160a41600d280cd5c7abf64a3d256f8d2167ae809de47f975"
+    },
+    {
+      "file": "datasets/manga-collection/accepted-r0003-20261017/release-validate.json",
+      "sha256": "b0b9c6ca54ea621fe6317bc8ff1e0e27d812751be3a49fea98adef99c5ad8d2d"
+    },
+    {
+      "file": "datasets/public-kg/releases/20261017-manga-r0003-001/data.json",
+      "sha256": "3bae93608cefa4ccf9ef8b026819575ff738c0133664e1473dca52d15dc60be1"
+    },
+    {
+      "file": "datasets/public-kg/releases/20261017-manga-r0003-001/manifest.json",
+      "sha256": "c5e8230be9bd0acb43041fd04d0a6b769c03c99dac9e38a051bca8a768e2e24d"
+    }
+  ]
+}

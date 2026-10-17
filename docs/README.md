@@ -40,6 +40,7 @@
 
 | 現役の設計文書 | 状態・読む場面 |
 | --- | --- |
+| [漫画r0003正式受入・40 Claim統合release](design/MANGA_R0003_ACCEPTED_RELEASE.md) | 全推奨39 Entity／31 Claim／26 Source／32 Citationを正式受入。r0002込み52／40／33／41追加をvalidate・無書込plan。全環境apply未実施。収集運用の次の自動化2タスクも参照 |
 | [漫画r0003の一括受入レビューと例外整理](design/MANGA_R0003_ACCEPTANCE_REVIEW.md) | 通常25 Claim・36 Entityを受入推奨。例外・別根拠を含む最大31 Claim／39新規Entityの判断ID・scope・依存差分を固定。正式受入・全環境applyは未実施 |
 | [漫画r0003の正式実行・個別受入への引継ぎ](design/MANGA_R0003_COLLECTION_RESULT.md) | 2026-10-17。24作品・23人物同定、43 Entity／28 Claim／23 Source／28 Citation候補。74試行・再開／再実行無変更。既存作品UUID対応・未対応表記を保留。個別受入・全環境applyは未実施 |
 | [漫画r0003・次期24作品の収集準備](design/MANGA_R0003_COLLECTION_PLAN.md) | 正式実行前の定義・対象・予算・隔離検証の凍結レビュー。後続の承認と正式実行は上記結果を参照 |

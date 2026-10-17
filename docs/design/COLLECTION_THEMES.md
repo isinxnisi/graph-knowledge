@@ -36,6 +36,45 @@
 
 [漫画r0003の代表経路と接続ごとの状態](MANGA_R0003_ACCEPTANCE_REVIEW.md#discovery-modelへの共有2026-10-17-2006-jst指示)を初回の共有例とする。r0003受入レビューと残り70作品の計画を継続する。
 
+## 次の実装タスク：収集からレビュー、受入からrelease準備
+
+2026-10-17 20:25 JST指示。今回の[r0003正式受入・40 Claim統合release](MANGA_R0003_ACCEPTED_RELEASE.md)を先に完了する。既存gate／job.json／台帳／fixture／受入記録／public CLIをつなぎ、次の2小タスクを順に実装する。以下のコマンド名は**未実装のインターフェース案**であり、現在実行できるものではない。通常処理を決定的なPythonで連結し、新規の管理画面・API・ジョブDB・scheduler・AI判定サービスを前提にしない。
+
+### タスク1：承認済み収集からレビュー資料を一回の操作で生成
+
+最小構成は `scripts/collection-workflow.py collect-review <theme> --revision N --definition-sha SHA`。既存collection-themes.pyのrun→inspectを固定引数で呼び、完了ジョブのartifact inventoryとhashを確認し、v2のrecipe・凍結同定資料・NDL原語・刊行物scope・台帳から、hidden候補、重複／既存再利用、根拠照合結果、保留、decision-request、簡潔なMarkdown一覧と代表経路を作る。対象adapterはまずmanga-discovery-v2だけ。他adapter・任意コマンドは拒否する。
+
+追加するのは薄いCLIラッパーと、r0003の固定パス・例外知識に依存しない通常レビュー生成関数／テスト。今回のprepare-manga-r0003-review.pyは凍結レビュー再現用として残し、書き換えて次版を流し込まない。候補・受入済み追加集合・現公開baseは別入力として扱い、比較する追加集合のartifact hashもレビューへ固定する。
+
+受入条件：
+
+- 実行前に既存の特定revision承認と定義／code／input hashを再確認し、承認を作成・拡大しない。実行失敗は既存ジョブを再開し、通信上限とchecksum付きキャッシュを既存機構に委ねる。
+- ISBN／巻／版／言語／作品・人物対応、明示されたRole／原語、Source／Citationの参照、完全一致Claim／外部ID衝突を決定的に照合する。照合成功は「確認項目を満たす候補」であり、人間の正式受入ではない。新規Claimはhidden。
+- 非対応責任表示、集合著者、scope不明、別UUIDの同一作品、Roleの追加・重要な同定判断は理由付き保留へ送る。r0003のPineapple対応や出版社追加根拠を、別作品へ自動一般化しない。通常分は保留分と分離してレビュー可能にする。
+- 収集完了後の資料生成だけ失敗しても収集をやり直さない。再実行時は同じjob ID・hashから同じ成果物を確認し、取得0・重複追加0。既存レビューと内容が違えば黙って上書きせず、別レビュー版として人間に示す。
+- 未承認／取消／hash変更／予算超過／中断再開／キャッシュ改変／候補同一性衝突／レビュー単独再開を、fixtureと偽providerの隔離試験で検証する。実取得は承認済み範囲だけ。adapterやgateを変更するならcode hashが変わるため、変更後の新revisionレビューを先に行う。
+
+### タスク2：人間の正式受入後、受入記録からplanまでを連続実行
+
+最小構成は同じラッパーの `accept-release --decision FILE --decision-sha SHA --group GROUP --reviewer NAME --release ID --confirm-human-acceptance`。実際の人間判断がある場合だけ利用する。入力は判断済みの対象ID・scope・根拠hash・除外／同一性対応・公開禁止条件であり、単なるgroup名やCLIフラグを承認の代わりにはしない。既存acceptance.jsonの形式で実時刻・対象・参照hashを一度記録し、受入済み集合だけを既存release生成→public:validate→最新base/revisionへのpublic:planへ接続する。
+
+今回追加したprepare-manga-release.py --r0003の厳密な対象／hash検査を実例とし、次はその共通部分だけを明示的な受入入力から使えるようにする。意味・同一性の例外判断はレビュー済み入力へ残し、汎用的な推論処理を追加しない。
+
+受入条件：
+
+- 参照hash不一致、存在しない対象ID、Claim意味／scope変更、未解決の同一性対応、受入外の混入を拒否する。受入記録には既存と同じ判断者・実記録日時・対象UUID・根拠を必須とする。別版の収集実行承認を知識受入に読み替えない。
+- 最新公開snapshot／baseRelease／revision／撤回・receiptを無書込で確認する。未適用releaseは追加集合として扱い、公開baseにはしない。UUID／Source／Citation／ExternalIdentifierの再利用と衝突を検査する。
+- 受入記録とrelease IDを不変にし、再試行では既存記録日時・同一artifactを確認する。validate／planが失敗しても人間判断や元候補を削除せず、その段階から再開する。異なる内容で同じrelease IDを使わない。
+- plan実行時には毎回最新revisionを読み、古いplanの成功だけで次へ進めない。baseが変われば停止し、新状態に対する統合差分を再確認する。対応済み入力だけを正式受入済み未適用と報告する。
+- 公開apply・restore・Web配置・SSH設定・会員DB操作をラッパーに含めない。実行可能な外部コマンドは既存CLIのrun／inspect／validate／plan等の固定許可リストとし、任意shell入力を渡さない。apply権限は常にfalse。
+- hash改変／対象拡張／部分受入／同一ID異内容／外部ID衝突／base競合／途中失敗・再試行／plan前後の公開KG不変を試験する。公開KGへテストapplyしない。
+
+### 引き続き人間が判断する点と手動で残る操作
+
+テーマの実行承認、意味モデル・重要な同一性判断、Entity／Claim・関連根拠の正式受入、公開apply承認の4境界を維持する。根拠の読解や原本／追加資料が必要な例外、未対応語・別名・分類、刊行物scopeの変更はレビューしてから判断する。自動生成の推奨を承認記録へ変換しない。
+
+最小実装後も、固定バッチの範囲と取得条件の人間承認、重要例外の解決、decision hash／対象groupの正式受入、公開前のVPS operator互換性・現地planと適用指示、適用後の実探索確認は残る。定型実行と資料生成は1コマンド、正式受入後のrelease準備は別の1コマンドにまとめる。残り70作品は20〜30作品単位の既存recipe方針で検討し、今回の承認から次版の収集実行権限を推定しない。
+
 ## 保存と承認
 
 - `datasets/collection-themes/themes/<id>/rNNNN.json`：連番の定義。登録後の上書きは禁止。修正は次版を登録する。分割・統合は新IDと `relatedThemes` によって履歴を残す。
