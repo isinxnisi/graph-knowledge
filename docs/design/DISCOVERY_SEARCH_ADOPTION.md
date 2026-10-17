@@ -84,3 +84,20 @@ sudo bash /home/develop/graph-m3-discovery-20261017/scripts/activate-discovery-s
 ローカル3200／betaの公開revisionは前後とも `82b01515-594c-48ca-b4b6-515eefac83ca`。3200は別process session＋file logで本番モードの起動を保持する。正式VPSは今回の小さい入口改善では更新せず、前回の検索能力拡張build `4XcOL0noVSUovhJgNNTHS`、正式HTTPS200、revision `5e2a94af-9061-4087-bb7a-045a3c0133f4` を確認した。今回の入口改善は正式VPSには未反映で、次の配置の区切りで取り込む。公開KG・収集処理・release apply・会員データは変更しない。
 
 [検証と反映状態](../research/discovery-entry/20261017/verification.json)、[PC空欄](../research/discovery-entry/20261017/beta-ja-1440-empty.png)／[名前入力](../research/discovery-entry/20261017/beta-ja-1440-name.png)、[英語スマホ空欄](../research/discovery-entry/20261017/beta-en-320-empty.png)／[名前入力](../research/discovery-entry/20261017/beta-en-320-name.png)。実機のソフトキーボード、指でのタップ、初めて訪れる人にとっての文言は引き続き人間評価する。
+
+
+### 検索ペイン入口の正式公開準備（2026-10-17、管理者操作待ち）
+
+運営者の「公開お願いします」を受け、入口改善 `272b967` を含むmain `6760a74` からWeb-only image `beta-discovery-entry-20261017` を作成した。後続mainの差分は収集記録・文書だけで、入口の実装を変更していない。linux/amd64、build ID `gvTMUbFlbLnUtn3LcEg6v`、[固定digest等のmanifest](../research/discovery-entry/20261017/web-manifest.json)。新しいoperatorは作らず、受入済みcredits operatorを再利用する。収集候補の公開applyは含めない。
+
+同じ正式用イメージをローカル公開KGへread-only接続し、readinessと代表 **8件すべて成功**。日英×1440/390/320pxの空欄／名前／種別／候補／一覧／Graph／Back・Forward・Escape、既存Graphの配置復帰、IME・遅い旧応答・reduced-motionを確認した。公開revisionは `82b01515-594c-48ca-b4b6-515eefac83ca` のまま。試験用Webコンテナだけを停止・除去し、3200／beta・既存DB・他サービスは維持する。
+
+Web imageだけのarchiveは106,192,698 bytes、SHA-256 `6623ef4f5bae0f270947c8cebce3b5b8c51e5037069736f40d6e962929c7cc39`。VPS `/home/develop/graph-discovery-entry-20261017/` へ転送し、archive・manifest・前回と同一の更新scriptの全checksumとshell構文検証が成功した。private env／credentialは同梱しない。[配置準備の確認記録](../research/discovery-entry/20261017/deployment-preparation.json)。
+
+準備時点の正式サイトは前回build `4XcOL0noVSUovhJgNNTHS`、公開revision `5e2a94af-9061-4087-bb7a-045a3c0133f4`、既存Docker／Caddy／通知サービスactive。SSHの `sudo -n` はパスワード必須だったため、既存Web配置契約に従い、次の一回の管理者実行を依頼した。公開の承認を再度求めるものではない。**入口改善の正式反映と適用後確認は、管理者実行後まで未完了**。
+
+```bash
+sudo bash /home/develop/graph-discovery-entry-20261017/scripts/activate-discovery-search.sh
+```
+
+更新scriptは既存KGのread-only backup後にWebだけを差し替え、DB container／起動時刻・公開revision・会員statusを照合する。Caddy・認証・公開flag・会員データ・収集処理を変更しない。管理者実行後に担当Codexが正式HTTPSの新buildと検索ペインの代表操作、会員／preview／広告境界を確認し、結果を追記する。
