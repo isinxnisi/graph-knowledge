@@ -319,3 +319,20 @@
 .pathStep > h4 { font-size: 12px; margin: 0; }
 .pathStep .claim { padding: 8px 0; }
 .pathDetail > .graphLaunch { margin-top: 7px; }
+
+/* Optional executable lenses sit beside free exploration, without replacing the initial entries. */
+.pathPresets { display: flex; align-items: center; flex-wrap: wrap; gap: 4px 6px; padding-block: 6px; }
+.pathPresets > span { font-size: 10px; color: var(--color-muted); margin-right: 3px; }
+.dialog .pathPresets > button { min-height: 31px; padding: 4px 7px; font-size: 11px; border-color: var(--color-border); text-align: left; flex-wrap: wrap; }
+.pathPresets > button > svg { width: 12px; height: 12px; }
+.pathPresets > button > small { flex-basis: 100%; font-size: 10px; color: var(--color-muted); }
+.dialog .pathPresets > button[aria-pressed="true"] { color: var(--color-accent-strong); border-color: var(--color-accent); background: var(--color-accent-soft); }
+.pathPurpose { padding-block: 4px 8px; font-size: 11px; }
+.pathPurpose > div { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 4px 10px; }
+.dialog .pathPurpose button { min-height: 28px; font-size: 10px; color: var(--color-muted); padding: 3px 5px; }
+.pathPurpose p { margin: 3px 0; line-height: 1.7; }
+.pathPurpose small { color: var(--color-accent-strong); }
+.pathCoverage { display: grid; gap: 3px; font-size: 11px; line-height: 1.6; padding: 8px 0 5px; border-top: 1px solid var(--color-border); }
+.pathCoverage strong { color: var(--color-accent-strong); font-weight: 600; }
+.pathCoverage > span, .pathCoverage > small { color: var(--color-muted); font-size: 10px; }
+.pathDetail > .pathToolbar > div { flex-wrap: wrap; }

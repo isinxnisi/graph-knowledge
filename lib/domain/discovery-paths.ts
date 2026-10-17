@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { pathPresetRefSchema, presetAcceptsStep, resolvePathPreset, type PathPresetRef } from "./discovery-path-presets";
 import { claimSummarySchema, entitySummarySchema, type ClaimSummary } from "./api";
 import { matchesClaim, type PredicateFilter, type ContributionRoleFilter } from "./exploration";
 
@@ -11,10 +12,10 @@ export const discoveryPathSchema = z.strictObject({
   && p.claimIds.every(ids => new Set(ids).size === ids.length));
 export type DiscoveryPath = z.infer<typeof discoveryPathSchema>;
 export const pathKey = (path: DiscoveryPath) => path.nodeIds.join(":");
-export const pathUiSchema = z.strictObject({ scope: z.string().max(300), open: z.boolean(), depth: z.union([z.literal(2), z.literal(3)]), selected: z.string().max(160).nullable() });
+export const pathUiSchema = z.strictObject({ scope: z.string().max(300), open: z.boolean(), depth: z.union([z.literal(2), z.literal(3)]), selected: z.string().max(160).nullable(), preset: pathPresetRefSchema.nullable().optional(), changed: z.boolean().optional() });
 export type PathUi = z.infer<typeof pathUiSchema>;
 export const pathResponseSchema = z.object({
-  revision: z.string().min(1).max(160), anchor: entitySummarySchema, depth: z.union([z.literal(2), z.literal(3)]),
+  preset: pathPresetRefSchema.nullable().optional(), revision: z.string().min(1).max(160), anchor: entitySummarySchema, depth: z.union([z.literal(2), z.literal(3)]),
   nodes: z.array(entitySummarySchema).max(49), claims: z.array(claimSummarySchema).max(720), paths: z.array(discoveryPathSchema).max(PATH_LIMITS.results),
   scan: z.object({ expanded: z.number().int().min(1).max(PATH_LIMITS.expansions), reasons: z.array(z.enum(["neighbors", "expansions", "prefixes", "results"])), limitedIds: z.array(z.uuidv4()).max(PATH_LIMITS.expansions) }),
 });
@@ -23,7 +24,7 @@ export type Adjacency = { id: string; claims: ClaimSummary[]; hasMore: boolean }
 
 // Bounded breadth-first traversal, grouping parallel Claims without merging their meanings.
 // The loader filters and orders each node's Claims BEFORE its bounded read.
-export async function enumeratePaths(root: string, depth: 2 | 3, read: (ids: string[]) => Promise<Adjacency[]>, limits: { neighbors: number; expansions: number; prefixes: number; results: number } = PATH_LIMITS) {
+export async function enumeratePaths(root: string, depth: 2 | 3, read: (ids: string[]) => Promise<Adjacency[]>, limits: { neighbors: number; expansions: number; prefixes: number; results: number } = PATH_LIMITS, acceptStep: (claim: ClaimSummary, from: string, to: string, step: number) => boolean = () => true) {
   const cache = new Map<string, Adjacency>();
   const reasons = new Set<DiscoveryPathsResponse["scan"]["reasons"][number]>(), limitedIds = new Set<string>();
   let prefixes = [{ nodeIds: [root], claimIds: [] as string[][] }];
@@ -46,7 +47,7 @@ export async function enumeratePaths(root: string, depth: 2 | 3, read: (ids: str
       const groups = new Map<string, string[]>();
       for (const c of [...page.claims].sort((a,b) => a.id.localeCompare(b.id)).slice(0, limits.neighbors)) {
         const to = c.subjectId === from ? c.objectId : c.objectId === from ? c.subjectId : null;
-        if (!to || prefix.nodeIds.includes(to)) continue;
+        if (!to || prefix.nodeIds.includes(to) || !acceptStep(c, from, to, step)) continue;
         const claims = groups.get(to) ?? [];
         if (!claims.includes(c.id)) claims.push(c.id);
         groups.set(to, claims);
@@ -66,13 +67,17 @@ export async function enumeratePaths(root: string, depth: 2 | 3, read: (ids: str
   return { paths: prefixes.filter(p => p.claimIds.length === depth), scan: { expanded: cache.size, reasons: [...reasons].sort(), limitedIds: [...limitedIds].sort() } };
 }
 
-export function validatePathResponse(value: unknown, root: string, depth: 2 | 3, revision: string, conditions: PathConditions): DiscoveryPathsResponse {
+export function validatePathResponse(value: unknown, root: string, depth: 2 | 3, revision: string, conditions: PathConditions, preset: PathPresetRef | null = null): DiscoveryPathsResponse {
   const result = pathResponseSchema.parse(value);
+  const entityMap = new Map(result.nodes.map(n => [n.id,n]));
   const nodes = new Set(result.nodes.map(n => n.id)), claims = new Map(result.claims.map(c => [c.id, c]));
-  if (result.revision !== revision || result.anchor.id !== root || result.depth !== depth || !nodes.has(root)
+  if ((result.preset?.id ?? null) !== (preset?.id ?? null) || (result.preset?.revision ?? null) !== (preset?.revision ?? null)
+    || preset && (resolvePathPreset(preset).depth !== depth || conditions.predicates?.length !== 1 || conditions.predicates[0] !== resolvePathPreset(preset).predicate)
+    || result.revision !== revision || result.anchor.id !== root || result.depth !== depth || !nodes.has(root)
     || nodes.size !== result.nodes.length || claims.size !== result.claims.length || new Set(result.paths.map(pathKey)).size !== result.paths.length
     || result.paths.some(path => path.nodeIds[0] !== root || path.claimIds.length !== depth || path.nodeIds.some(id => !nodes.has(id))
       || path.claimIds.some((ids, i) => ids.some(id => { const c = claims.get(id); return !c || !matchesClaim(c, conditions.predicates, conditions.contributionRoles)
+        || (preset !== null && !presetAcceptsStep(preset,c,entityMap.get(path.nodeIds[i])!,entityMap.get(path.nodeIds[i+1])!,i))
         || !([c.subjectId, c.objectId].includes(path.nodeIds[i]) && [c.subjectId, c.objectId].includes(path.nodeIds[i+1])); })))) throw new Error("Invalid path response");
   return result;
 }
@@ -87,3 +92,5 @@ export function parsePathWitness(raw: string | null, root: string): PathWitness 
   if (Object.keys(value).sort().join() !== "claimIds,nodeIds,revision" || path.nodeIds[0] !== root || !z.string().regex(/^[a-zA-Z0-9:._-]{1,160}$/).safeParse(value.revision).success) throw new Error("Invalid path witness");
   return { ...path, revision: value.revision };
 }
+
+export const pathScope = (anchor: string, predicate: string | null, role: string | null) => JSON.stringify([anchor,predicate,role]);

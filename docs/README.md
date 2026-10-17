@@ -47,6 +47,7 @@
 | [漫画r0002の原作正式受入・9 Claim統合候補](design/MANGA_R0002_COMBINED_RELEASE.md) | 2026-10-17。原作5 Claim・6 Entity・3 Source・5 Citationを追加受入。13 Entity／9 Claim統合release -002をvalidate・無書込plan済み。旧-001は保持、全環境applyは禁止 |
 | [漫画r0002の正式受入・release準備](design/MANGA_R0002_ACCEPTED_RELEASE.md)／[ORIGINAL_STORY](design/ORIGINAL_STORY.md) | 2026-10-17。4 Claim・7 Entity・4 Source・4 Citationを人間が正式受入。原作Role実装、原作5件は個別受入待ち。release候補のvalidate・無書込plan、公開applyは未許可 |
 | [漫画r0002の個別受入・公開準備](design/MANGA_R0002_ACCEPTANCE_REVIEW.md)／[制作Role意味レビュー](design/MANGA_PRODUCTION_ROLE_REVIEW.md) | 2026-10-17の初回レビュー記録（hash保全）。4 Claim・15新規Entityの推奨、保留11件と既存2 Claim重複。後続の正式受入・Role採用・release候補は上記記録を参照 |
+| [目的から選ぶ探索プリセット](design/DISCOVERY_PATH_PRESETS.md) | 2026-10-18。対象に再利用できる4つの経路の形、目的・根拠・Graph、条件変更・Undo、全候補／部分範囲の表示 |
 | [公開KGの2〜3段探索](design/DISCOVERY_MULTI_STEP.md) | 2026-10-17。既存Discoveryから有界経路・各段の根拠・全段を検証するGraph復元。収集／公開applyなし |
 | [対象未指定の関係・制作Role検索](design/DISCOVERY_RECORD_SEARCH.md) | 2026-10-17。既存入口を維持し、同じClaimの条件検索・独立記録と根拠・Role付きGraph・安定したページングを追加 |
 | [Discovery UIの暫定採用・正式検索統合](design/DISCOVERY_SEARCH_ADOPTION.md) | 2026-10-17。正式入口・既存一覧機能・横はみ出し修正・日英PC／スマホ検証・Webだけの配置 |
@@ -98,7 +99,7 @@
 | [条件付き探索の第一段階](design/CONDITIONAL_EXPLORATION_PHASE.md) | 既存predicate集合の選択・条件変更UX・API・cursor・変更直前の探索への一件復帰の採用契約 |
 | [探索モデル](design/EXPLORATION_MODEL_REVIEW.md) | 開閉・最小predicate条件は実装済み。kind・期間条件・複数起点・時系列の残りは提案。探索の拡張時に参照 |
 | [操作と設定](design/GRAPH_INTERACTION_AND_SETTINGS.md) | 再クリック・300ms判定・表示中対象への移動・起点からの表示中経路・狭い画面の領域切り替え・隣接一覧の追加取得と再試行は実装済み。設定モーダル・永続化・管理設定は検討中 |
-| [プリセット・分類・多言語・会員保存](design/EXPLORATION_PRESETS_REVIEW.md) | 多言語対応は設計前提として採用済み。具体方式・プリセット・保存は設計案。predicate条件APIは実装済み。taxonomy・presetは未実装。探索の日英切替と会員保存は上記の個別契約を参照 |
+| [プリセット・分類・多言語・会員保存](design/EXPLORATION_PRESETS_REVIEW.md) | 多言語対応は設計前提として採用済み。具体方式・プリセット・保存は設計案。predicate条件APIは実装済み。taxonomyは未実装。経路プリセットは上記2026-10-18実装を参照。探索の日英切替と会員保存は上記の個別契約を参照 |
 | [Predicate意味契約・チェック](design/PREDICATE_CONTRACTS.md) | 既存4語彙の契約・基準版・比較票・validatorを実装済み。Phase 15でPARTICIPATED_INを追加。追加と変更の手順。制作RoleはPhase 06で導入済み |
 | [関係語彙・役割・意味境界](design/RELATION_VOCABULARY_REVIEW.md) | 凍結パイロット後の設計レビュー。意味契約、役割限定、追加審査、分類・表示の分離。提案を採用し、既存4語彙の契約・チェックを実装。制作RoleはPhase 06を参照。複数predicateの表示束は未実装 |
 | [制作Roleの最小設計](design/CONTRIBUTION_ROLE_REVIEW.md) | CONTRIBUTED_TO限定の4 Role候補・刊行物scope・肯否／比較・条件／cursor・表示・v2方針。採用済み。現行契約と受入状態はPhase 06を参照 |

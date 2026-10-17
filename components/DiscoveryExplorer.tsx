@@ -9,7 +9,9 @@ import { explorationHref } from "../lib/client/exploration-url";
 import { contributionLabels } from "../lib/i18n/contribution";
 import { localizedPublicHref } from "../lib/domain/public-routes";
 import DiscoveryPaths from "./DiscoveryPaths";
-import { pathUiSchema, type PathUi } from "../lib/domain/discovery-paths";
+import { rebasePathUi } from "../lib/domain/discovery-path-state";
+import { resolvePathPreset, type PathPresetRef } from "../lib/domain/discovery-path-presets";
+import { pathScope, pathUiSchema, type PathUi } from "../lib/domain/discovery-paths";
 import DiscoveryClaimRow from "./DiscoveryClaimRow";
 import Icon from "./Icon";
 import DiscoveryWorldIcon from "./DiscoveryWorldIcon";
@@ -53,7 +55,7 @@ export default function DiscoveryExplorer({ lab = false, initial = { q: "", kind
   const [context, setContext] = useState<DiscoveryContext>(initialContext);
   const [pathUi,setPathUi] = useState<PathUi>({scope:"",open:false,depth:2,selected:null});
   const [lookupOpen, setLookupOpen] = useState(false), [lookupQ, setLookupQ] = useState("");
-  const [undo, setUndo] = useState<{ context: DiscoveryContext; label: Label; lookupOpen: boolean; lookupQ: string } | null>(null);
+  const [undo, setUndo] = useState<{ context: DiscoveryContext; label: Label; lookupOpen: boolean; lookupQ: string; pathUi: PathUi } | null>(null);
   const [entry, setEntry] = useState<Entry>(!lab && initial.presentation !== "explore" ? "list" : "connections"), [variant, setVariant] = useState<Variant>("tabs");
   const initialInput = useRef(initial), selected = useRef(false), returnFocus = useRef<string | null>(null);
   const [listCriteria, setListCriteria] = useState(initial), [listCursors, setListCursors] = useState<(string | null)[]>([null]);
@@ -111,11 +113,12 @@ export default function DiscoveryExplorer({ lab = false, initial = { q: "", kind
   }, [ready, context, entry, variant, lookupOpen, lookupQ, listCriteria, listCursors, pathUi, lab]);
   const change = (next: DiscoveryContext, label: Label) => {
     if (JSON.stringify(next) === JSON.stringify(context)) return;
-    setUndo({ context, label, lookupOpen, lookupQ }); setContext(next);
+    setUndo({ context, label, lookupOpen, lookupQ, pathUi }); setPathUi(rebasePathUi(pathUi,context,next)); setContext(next);
     if (JSON.stringify(resolveDiscovery(context)) !== JSON.stringify(resolveDiscovery(next))) setCursors([null]);
   };
   const clearAll = () => {
-    setUndo({ context, label: ["すべての条件の解除", "Clear all criteria"], lookupOpen, lookupQ });
+    setUndo({ context, label: ["すべての条件の解除", "Clear all criteria"], lookupOpen, lookupQ, pathUi });
+    setPathUi({scope:"",open:false,depth:2,selected:null});
     setContext(initialContext); setLookupOpen(false); setLookupQ(""); setCursors([null]);
   };
   const focusSubject = () => {
@@ -129,6 +132,23 @@ export default function DiscoveryExplorer({ lab = false, initial = { q: "", kind
   const chooseSubject = (anchor: EntitySummary) => {
     change({ ...context, anchor, names: false }, ["対象の変更", "Subject change"]); setLookupOpen(false);
     focusSubject();
+  };
+  const changePathUi = (next: PathUi) => {
+    const current: PathUi = pathUi.scope===next.scope ? pathUi : {scope:next.scope,open:false,depth:2,selected:null};
+    if (next.depth!==current.depth || next.preset?.id!==current.preset?.id) {
+      setUndo({context,label:next.depth!==current.depth?["経路の段数の変更","Path length change"]:["探し方の解除","Preset removal"],lookupOpen,lookupQ,pathUi:current});
+    }
+    setPathUi(next);
+  };
+  const applyPathPreset = (preset: PathPresetRef) => {
+    const template=resolvePathPreset(preset);
+    if (!context.anchor || context.anchor.kind!==template.kinds[0]) return;
+    const question=template.predicate==="CONTRIBUTED_TO" ? "credits" : "affiliations";
+    const role=question==="credits" ? context.role : null;
+    change({...context,question,role},["探し方の適用","Discovery preset application"]);
+    setUndo({context,label:["探し方の適用","Discovery preset application"],lookupOpen,lookupQ,pathUi});
+    setPathUi({scope:pathScope(context.anchor.id,template.predicate,role),open:true,depth:template.depth,selected:null,preset,changed:false});
+    setLookupOpen(false);
   };
   const pickQuestion = (question: QuestionId) => { change({ ...context, question }, ["関係・問いの変更", "Relation / question change"]); setLookupOpen(false); };
   const switchEntry = (next: Entry) => {
@@ -192,7 +212,7 @@ export default function DiscoveryExplorer({ lab = false, initial = { q: "", kind
             {context.role && <span className={styles.selectionChip}><span>{contributionLabels(locale).roles[context.role]}</span><button aria-label={t("制作役割だけ外す", "Remove only role")} onClick={() => change({ ...context, role: null }, ["制作役割の解除", "Role removal"])}>×</button></span>}
             {context.q && <span className={styles.selectionChip}><span>{t("名前：", "Name: ")}{context.q}</span><button aria-label={t("名前の絞込だけ外す", "Remove only name filter")} onClick={() => change({ ...context, q: "" }, ["名前の絞込の解除", "Name filter removal"])}>×</button></span>}
           </div>
-          <div className={styles.conditionActions} data-idle={!undo && !hasConditions && !lookupQ || undefined}><button className={styles.undo} disabled={!undo} onClick={() => { if (undo) { setContext(undo.context); setLookupOpen(undo.lookupOpen); setLookupQ(undo.lookupQ); setUndo(null); setCursors([null]); } }}>{undo ? t("取り消す：" + textOf(undo.label, locale), "Undo: " + textOf(undo.label, locale)) : t("取り消す", "Undo")}</button><button className={styles.clearAll} disabled={!hasConditions && !lookupQ} onClick={clearAll}>{t("すべての条件を解除", "Clear all criteria")}</button></div>
+          <div className={styles.conditionActions} data-idle={!undo && !hasConditions && !lookupQ || undefined}><button className={styles.undo} disabled={!undo} onClick={() => { if (undo) { setContext(undo.context); setPathUi(undo.pathUi); setLookupOpen(undo.lookupOpen); setLookupQ(undo.lookupQ); setUndo(null); setCursors([null]); } }}>{undo ? t("取り消す：" + textOf(undo.label, locale), "Undo: " + textOf(undo.label, locale)) : t("取り消す", "Undo")}</button><button className={styles.clearAll} disabled={!hasConditions && !lookupQ} onClick={clearAll}>{t("すべての条件を解除", "Clear all criteria")}</button></div>
         </section>
         <div className={styles.workspace} data-entry={entry} data-selected={!!context.anchor || undefined}>
         <aside className={styles.editor}>
@@ -225,9 +245,9 @@ export default function DiscoveryExplorer({ lab = false, initial = { q: "", kind
           {names && hasConditions && <p className={styles.lookupNote}>{t("選択条件は保持中。名前候補には世界・関係・役割の条件を適用しません。", "Criteria retained. World, relation and role filters do not apply to these name matches.")}</p>}
           <div className={styles.resultHeading}><div><h3 id="prototype-results-title" tabIndex={-1} data-focus-destination>{names ? t("名前の候補", "Name matches") : t("関係の記録", "Relation records")}</h3><span role="status">{query.loading ? t("取得中…", "Loading…") : query.result ? names ? t(query.result.items.length + "件", query.result.items.length + " matches") : t("このページ " + claims.length + "件", claims.length + " on this page") : ""}</span></div>{context.anchor && appliedGraph && <a className={styles.graphLaunch} data-testid="prototype-graph" href={graphHref(context.anchor.id)} aria-label={t(context.anchor.name + "をGraphで開く", "Open " + context.anchor.name + " in Graph")}><Icon name="graph"/>{t("Graphで開く", "Open Graph")}<Icon name="external"/></a>}</div>
           {query.result && !names && plan.state === "ready" && plan.operation === "neighbors" && (() => {
-            const scope = JSON.stringify([plan.anchorId,plan.predicate,plan.role]);
-            return <DiscoveryPaths anchorId={plan.anchorId} predicate={plan.predicate} role={plan.role} revision={query.result.revision}
-              ui={pathUi.scope===scope?pathUi:{scope,open:false,depth:2,selected:null}} onChange={setPathUi} onRefresh={query.retry} pageFilter={!!context.q}/>;
+            const scope = pathScope(plan.anchorId,plan.predicate,plan.role);
+            return <DiscoveryPaths anchor={context.anchor!} anchorId={plan.anchorId} predicate={plan.predicate} role={plan.role} revision={query.result.revision}
+              ui={pathUi.scope===scope?pathUi:{scope,open:false,depth:2,selected:null}} onChange={changePathUi} onPreset={applyPathPreset} onRefresh={query.retry} pageFilter={!!context.q}/>;
           })()}
           {query.error && <div role="alert" className={styles.unavailable}><p>{query.conflict ? t("公開KGの版が変わりました。先頭から再取得してください。", "The public KG changed. Refresh from the first page.") : t("記録を取得できませんでした。再試行してください。", "Could not load records. Please retry.")}</p><button onClick={() => { setCursors([null]); query.retry(); }}>{t("再取得", "Retry")}</button></div>}
           {plan.state !== "ready" ? <div className={styles.empty} data-initial={plan.state === "needs-name" || undefined}>{plan.state === "needs-name" ? <><svg className={styles.emptyDrawing} viewBox="0 0 260 90" fill="none" aria-hidden="true"><path d="M35 58C70 58 65 25 117 25S173 65 225 50M117 25Q135 78 179 74"/><circle cx="35" cy="58" r="6"/><circle cx="117" cy="25" r="10"/><circle cx="225" cy="50" r="6"/><circle cx="179" cy="74" r="4"/></svg><h4>{t("ひとつの名前から、その先へ。", "One name. Many connections.")}</h4><p>{t("名前を入力するか、気になる接点を選ぶと、ここに記録が並びます。", "Search a name or choose a connection to see the published records here.")}</p></> : plan.state === "unsupported" ? t("問いは保持しています。関係を変更するか、条件を保って名前を探せます。", "Question retained. Change the relation or search names while keeping it.") : t("名前から対象を選ぶと、関係の記録を確認できます。", "Choose a subject by name to see its relation records.")}</div>

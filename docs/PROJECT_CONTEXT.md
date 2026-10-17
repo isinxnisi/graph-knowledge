@@ -1,5 +1,7 @@
 # プロジェクトの構想と判断基準
 
+2026-10-18、[目的から選ぶ探索プリセット](design/DISCOVERY_PATH_PRESETS.md)を既存の複数段Discoveryへ追加。同じつくり手の別作品、別作品の担当者、人物から作品を介した別担当者、人物を介した別機関の4つの経路の形を公開KGから実行する。初期入口と3タブを維持し、対象・Roleの変更、自由探索、全候補／部分範囲の表示を整合。未公開r0003・収集・受入・公開applyは変更しない。
+
 2026-10-17、[公開KGの2〜3段探索](design/DISCOVERY_MULTI_STEP.md)を既存Discoveryへ追加。対象・関係・制作Roleを保ち、独立Claimと根拠を辿る経路を控えめに提案する。高次数の取得上限・未取得範囲・公開revisionを明示し、Graphへ全段を検証して引き継ぐ。r0003の受入済み未公開データを混在させず、収集・受入・公開applyは変更しない。
 
 2026-10-17 20:25 JST指示で、運営者がr0003全推奨39 Entity・31 Claim・26 Source・32 Citationを正式受入した。[40 Claim統合release候補](design/MANGA_R0003_ACCEPTED_RELEASE.md)は20261017-manga-r0003-001、公開baseは20261014-credits-001のまま。受入記録・凍結hash・原語／scopeを維持し、既存release generatorに限定経路を追加。validate／無書込planと前後不変を確認し、全環境applyは未実施。[次の自動化タスク](design/COLLECTION_THEMES.md#次の実装タスク収集からレビュー受入からrelease準備)を、既存CLIによる収集→レビューと人間受入→release準備の2段階として切り出した。
