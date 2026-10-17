@@ -1,0 +1,93 @@
+{
+  "checkedAt": "2026-10-17T11:36:47.518957+00:00",
+  "http": [
+    {
+      "name": "formal-en",
+      "status": 200,
+      "url": "https://plunode.net/en",
+      "expectedBuildPresent": true,
+      "noindex": false
+    },
+    {
+      "name": "formal-member",
+      "status": 200,
+      "url": "https://plunode.net/member",
+      "expectedBuildPresent": true,
+      "noindex": true
+    },
+    {
+      "name": "member-status",
+      "status": 200,
+      "url": "https://plunode.net/api/member/status",
+      "body": {
+        "provider": "google"
+      }
+    },
+    {
+      "name": "anonymous-profile",
+      "status": 401,
+      "url": "https://plunode.net/api/member/profile"
+    },
+    {
+      "name": "preview",
+      "status": 401,
+      "url": "https://graph.isinxnisi.net/api/dataset"
+    },
+    {
+      "name": "ads-api",
+      "status": 404,
+      "url": "https://ads.plunode.net/api/discovery/entities"
+    },
+    {
+      "name": "beta-dataset",
+      "status": 200,
+      "url": "https://graph-beta.isinxnisi.com/api/dataset",
+      "body": {
+        "dataset": "public-kg",
+        "revision": "82b01515-594c-48ca-b4b6-515eefac83ca"
+      }
+    }
+  ],
+  "services": {
+    "exitCode": 0,
+    "output": "active\nactive\nactive"
+  },
+  "status": "production_verified",
+  "codeCommit": "22b84282907fc3b086b847bbbebc0d47fac5457e",
+  "buildId": "jXr0x1y9CuGBjfcWjox9p",
+  "publicRevisionBefore": "5e2a94af-9061-4087-bb7a-045a3c0133f4",
+  "publicRevisionAfter": "5e2a94af-9061-4087-bb7a-045a3c0133f4",
+  "browserVerification": {
+    "passed": 6,
+    "failed": 0,
+    "contrastChecks": 54,
+    "minimumTextContrastAsserted": 4.5,
+    "locales": [
+      "ja",
+      "en"
+    ],
+    "widths": [
+      1241,
+      390,
+      320
+    ],
+    "themes": [
+      "light",
+      "dark-brown",
+      "dark-blue"
+    ],
+    "states": [
+      "normal",
+      "hover",
+      "focus"
+    ],
+    "alsoVerified": [
+      "visible text and icon colors",
+      "no unwanted underline",
+      "Graph URL role conditions",
+      "Graph and Back",
+      "preserved filters",
+      "horizontal overflow"
+    ]
+  }
+}

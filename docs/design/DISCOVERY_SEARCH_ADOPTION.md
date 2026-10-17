@@ -127,16 +127,27 @@ sudo bash /home/develop/graph-discovery-entry-20261017/scripts/activate-discover
 [検証記録](../research/discovery-graph-contrast/20261017/verification.json)、[PC英語の修正後](../research/discovery-graph-contrast/20261017/beta-en-pc.png)、[スマホ日本語](../research/discovery-graph-contrast/20261017/beta-ja-mobile.png)。本番にも同じ修正を届けるため、既存のWeb-only配置契約に従ってイメージの作成・検証・転送を続ける。正式適用前はbetaの成功と区別する。
 
 
-#### Graph文字色修正の正式配置準備（管理者操作待ち）
+#### Graph文字色修正の正式配置準備記録（下記の適用確認を完了）
 
 修正commit `22b8428` からWeb-only image `beta-discovery-graph-contrast-20261017` を作成。linux/amd64、build `jXr0x1y9CuGBjfcWjox9p`、[固定digestのmanifest](../research/discovery-graph-contrast/20261017/web-manifest.json)。同じ正式用イメージでreadinessと上記の配色コントラスト／Graph往復 **6件すべて成功**。既存公開KGへの接続はread-onlyで、試験用Webだけを終了・除去した。
 
 archiveは118,051,061 bytes、SHA-256 `87e2d40b709beb4ee248be1f54893ba377057ad67a687fb1bf981d972b3e7062`。VPS `/home/develop/graph-discovery-contrast-20261017/` へ転送し、全checksum・shell構文検証を通過した。前回と同じactivation／Web更新scriptと受入済みcredits operatorを再利用し、新operator・private env・credentialは同梱しない。[配置準備記録](../research/discovery-graph-contrast/20261017/deployment-preparation.json)。
 
-既存契約とsudoのパスワード要件により、管理者へ次の一回の実行を依頼した。betaの修正反映と正式反映を区別し、**正式の文字色修正は適用後確認まで未完了**とする。
+既存契約とsudoのパスワード要件により、管理者へ次の一回の実行を依頼した。betaの修正反映と正式反映を区別し、**この準備時点では正式の文字色修正は未完了だった**。
 
 ```bash
 sudo bash /home/develop/graph-discovery-contrast-20261017/scripts/activate-discovery-search.sh
 ```
 
 適用後は正式HTTPSの同build、3配色の文字・アイコン、Graph／Back、KG revision維持、会員／preview／広告境界を確認する。公開KG・収集処理・会員データの変更やrelease applyは行わない。
+
+
+#### Graph文字色修正の正式反映確認（2026-10-17、完了）
+
+運営者の管理者実行完了を受け、正式HTTPSで修正commit `22b8428` のbuild `jXr0x1y9CuGBjfcWjox9p` を確認。前記管理者操作待ちは解消した。
+
+正式サイトでも日英×1241/390/320pxの **6件すべて成功**。3配色×通常／hover／focusの **54条件** で文字コントラスト4.5以上、文字・アイコンの色、不要な下線なしを確認した。条件・Role付きGraph、Back、フォーカス復帰、横はみ出しも成功。実際のPC画面で「Graphで開く」が背景と区別できることを目視し、PC英語・スマホ日本語の画面も保存した。単に押せることの確認ではなく、文字の描画色を回帰条件に含めた。
+
+正式KG revisionは前後とも `5e2a94af-9061-4087-bb7a-045a3c0133f4`、betaは200・`82b01515-594c-48ca-b4b6-515eefac83ca` を維持。会員status200（Google）、匿名profile401、会員ページnoindex、旧preview401、広告originの検索API404、Docker／Caddy／既存通知サービスactiveを確認した。公開KG・収集処理・会員データ・認証設定の変更やrelease applyは行っていない。本人ログイン・保存データの操作は今回の再検証対象外。
+
+[公開後確認記録](../research/discovery-graph-contrast/20261017/production-verification.json)、[正式PC英語](../research/discovery-graph-contrast/20261017/production-en-pc.png)、[正式スマホ日本語](../research/discovery-graph-contrast/20261017/production-ja-mobile.png)。既に開いた画面は一度再読み込みすると新しいCSSを取得する。
