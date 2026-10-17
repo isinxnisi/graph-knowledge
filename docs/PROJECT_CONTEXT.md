@@ -1,5 +1,7 @@
 # プロジェクトの構想と判断基準
 
+2026-10-17、[漫画r0003の一括受入レビュー](design/MANGA_R0003_ACCEPTANCE_REVIEW.md)で通常25 Claim・36 Entityを個別に受入推奨へ整理。既存作品UUID対応・童夢の全集scopeと追加資料の別Role候補を含む最大31 Claim／39新規Entityをhiddenで準備し、既存公開base＋r0002既受入の隔離投影を検証する。正式受入・公開release作成・全環境applyは未実施。元収集・承認・r0002未適用releaseを保全し、API／UI／adapter・DBを変更しない。
+
 2026-10-17、プロジェクト運営者が漫画r0003の特定hash・24作品／23人物の収集実行だけを承認し、[正式収集](design/MANGA_R0003_COLLECTION_RESULT.md)を完了した。43 Entity・28 Claim・23 Source・28 Citation候補を生成。公開4人物とr0002受入済み3人物の再利用を整理し、既存パイナップルARMYのUUID対応、漫画／一括著者表記、童夢の全集scopeを次の個別レビューへ引き継ぐ。個別受入・全環境公開apply・VPS／会員DB変更は未実施。
 
 2026-10-17、[漫画r0003の次期バッチ準備](design/MANGA_R0003_COLLECTION_PLAN.md)として残り94作品から24作品・23人物を選定し、代表ISBN・QID・予算を凍結した。既存の収集ゲートとORIGINAL_STORY契約を拡張し、3作品だけを隔離検証する。正式r0003は未承認・未実行。r0002の受入済み未公開release -002を現行baseにせず、個別受入・全環境の公開apply・VPS／会員DB変更は行わない。

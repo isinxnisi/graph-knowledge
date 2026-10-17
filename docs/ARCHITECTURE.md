@@ -1,5 +1,7 @@
 # 現行技術設計
 
+2026-10-17、[漫画r0003の一括受入レビュー](design/MANGA_R0003_ACCEPTANCE_REVIEW.md)で通常25 Claim・36 Entityを個別に受入推奨へ整理。既存作品UUID対応・童夢の全集scopeと追加資料の別Role候補を含む最大31 Claim／39新規Entityをhiddenで準備し、既存公開base＋r0002既受入の隔離投影を検証する。正式受入・公開release作成・全環境applyは未実施。元収集・承認・r0002未適用releaseを保全し、API／UI／adapter・DBを変更しない。
+
 2026-10-17、[漫画r0003の正式実行](design/MANGA_R0003_COLLECTION_RESULT.md)は承認済みコード・6入力hashを変えず、既存ゲートで24作品を収集した。71応答／74試行、3 timeoutから同一ジョブで再開し、inspect・完了後runの無変更を確認。新規28 Claimはhidden。rawジョブを保持し、候補差分・NDL書誌・重複と同一性対応提案を凍結する。個別受入・公開適用・コード／API／UI／DB変更は行わない。
 
 2026-10-17、[漫画r0003の収集準備](design/MANGA_R0003_COLLECTION_PLAN.md)は既存CLIへmanga-discovery-v2を追加し、版別recipe・凍結レビュー・公開baseの入力hashと上限を検査する。v1の通信／キャッシュ・XML・UUID規則を再利用し、原作Role・名義・ISBN別の巻／版照合を追加。新規Claimはhidden、一時projectionだけpublic:validateする。24作品は未承認・正式ジョブ未実行。DB／API／UI／語彙・Web配置・公開applyは変更しない。

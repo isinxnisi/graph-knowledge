@@ -1,0 +1,68 @@
+{
+  "status": "preparation-only-not-a-release",
+  "groups": {
+    "normal": {
+      "r0003AdditionalCounts": {
+        "entities": 35,
+        "claims": 25,
+        "sources": 21,
+        "citations": 25
+      },
+      "r0003ExternalIdentifiers": 35,
+      "combinedWithAcceptedR0002Counts": {
+        "entities": 48,
+        "claims": 34,
+        "sources": 28,
+        "citations": 34
+      },
+      "dependsOnHumanAcceptance": true,
+      "baseRelease": "20261014-credits-001",
+      "r0002CandidateApplied": false
+    },
+    "core-with-resolved-exceptions": {
+      "r0003AdditionalCounts": {
+        "entities": 36,
+        "claims": 28,
+        "sources": 24,
+        "citations": 29
+      },
+      "r0003ExternalIdentifiers": 36,
+      "combinedWithAcceptedR0002Counts": {
+        "entities": 49,
+        "claims": 37,
+        "sources": 31,
+        "citations": 38
+      },
+      "dependsOnHumanAcceptance": true,
+      "baseRelease": "20261014-credits-001",
+      "r0002CandidateApplied": false
+    },
+    "all-recommended": {
+      "r0003AdditionalCounts": {
+        "entities": 39,
+        "claims": 31,
+        "sources": 26,
+        "citations": 32
+      },
+      "r0003ExternalIdentifiers": 39,
+      "combinedWithAcceptedR0002Counts": {
+        "entities": 52,
+        "claims": 40,
+        "sources": 33,
+        "citations": 41
+      },
+      "dependsOnHumanAcceptance": true,
+      "baseRelease": "20261014-credits-001",
+      "r0002CandidateApplied": false
+    }
+  },
+  "futureAcceptanceFields": [
+    "reviewer",
+    "recordedAt",
+    "referenceArtifacts",
+    "acceptedRecordIds",
+    "scopeByClaim",
+    "applyAuthorized"
+  ],
+  "notice": "Use the existing acceptance record and release workflow after an explicit human decision; no acceptance file created."
+}

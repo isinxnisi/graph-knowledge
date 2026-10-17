@@ -1,0 +1,2399 @@
+{
+  "status": "pending-human-decision",
+  "reviewer": null,
+  "recordedAt": null,
+  "applyAuthorized": {
+    "local": false,
+    "beta": false,
+    "vps": false
+  },
+  "groups": {
+    "normal": {
+      "recordIds": {
+        "entities": [
+          "0c9eb1b7-2b2b-46b7-8110-9705138c3add",
+          "1866bbe5-7e00-4afc-965f-5e968481f065",
+          "1982f262-39f3-4bfa-93a4-af3a86ec3ec8",
+          "1edca4c7-0e4e-4769-859c-dde40e7e973a",
+          "20b7ba43-d12d-4d39-9a8e-f9e92e9d40d2",
+          "3427040b-88fd-4db5-b546-dd237abad032",
+          "398d712d-23d9-455f-8897-f9384dd94930",
+          "3f22660f-01d7-4a4a-9ae6-f169c9a3dc4a",
+          "40a8ddd3-f333-485c-a12a-ac3d0961111b",
+          "420d89ea-9780-4e01-ac64-9c5e8597d0c8",
+          "480df823-5da8-45e4-aa20-1fdabe7ea5a3",
+          "4b90e125-b331-4361-8681-93a12c662cb7",
+          "5c5f452c-1e74-4985-aaec-811a8e329f42",
+          "6bf4aeb4-ac2b-499f-bfaa-0588024ef93d",
+          "6c9095bd-1969-4bcd-9282-2d1e9e411254",
+          "743d7fc0-ddc6-446a-8aa1-d9a9b284a326",
+          "76884305-ef0d-4cb0-ace2-90cfac57de3e",
+          "929116a2-77ff-443f-94e6-871c8b78f451",
+          "98b8ca7a-9638-4e5a-8fbd-62a353e4f159",
+          "a22fd2cd-aadc-4ca9-bf39-cb4bd7e0e953",
+          "aafae4fe-6f56-47bb-af9f-dec69425f136",
+          "afaa3ea0-f273-4481-95c5-5c31f9049cb2",
+          "b1e1232d-b038-4c11-b80c-ab1c2710d2bf",
+          "ba77a4d0-cf0b-4cc9-bd98-9b153a92b3ba",
+          "baf73bb9-dda4-474c-acaf-a7a8ce52caf2",
+          "c1e93fb7-3547-4b64-bd7c-bce073a1198a",
+          "c59a1b1d-7477-46a5-9669-644981d1d5d8",
+          "c74e0874-eb89-4825-a824-3ff182fe8053",
+          "c9080259-3866-4c25-999f-4a5a22046ac1",
+          "ccb5ddb2-fb7c-4dad-8178-1a170342d0c6",
+          "cd2e6949-6c1b-4818-990f-4d4dbc5c5d54",
+          "d4a3f93f-bbcd-42df-9567-2ba4a485bef3",
+          "dc188ef2-1a3d-4251-a445-90f49dd88cd0",
+          "dfaf30df-2f9e-4c63-9fe1-cbbd0a083b36",
+          "e7b913dd-7ad1-4288-861d-840cb4a3aeef"
+        ],
+        "claims": [
+          "121709e5-ea90-4c6a-87d1-d67264e1590d",
+          "14e377b1-6be2-446c-8c13-e0d5d425eafa",
+          "1eb1fe7c-0cbd-48f4-8379-cd7f6e4697e4",
+          "24dca7b4-00bf-4f70-92f6-a498a494c29a",
+          "36199f3c-f260-473c-a22e-a75911b5fb6d",
+          "431210df-d594-498c-bbd4-9ce93c9dc282",
+          "48a9f51e-beb1-4c3a-9c30-5923bc852925",
+          "498cbe28-4703-4ac1-9a99-5cd83831b0e3",
+          "602bc3c1-8a98-49cc-9556-a4c23feb6b0e",
+          "6ad7f063-1fce-4163-8414-437526212c31",
+          "7c2bd016-d9b0-4de2-824e-276941b1a2b2",
+          "81684aff-84cf-4977-a3b5-7c2f5d746e5a",
+          "a4d14533-1e4d-47c4-9494-67008811cf75",
+          "a996412a-7cc9-49d5-8446-9b3cf6a338dd",
+          "c19e5b2f-01e2-4233-a7c9-326a1772d7de",
+          "c3fcdaa7-1374-4c62-acab-368dc1ed1bee",
+          "d5d3fef1-fc64-4e61-b049-2f3c81994cb9",
+          "d92e9a4e-4f60-445d-807b-63764f69528b",
+          "e3b0de8a-f7cc-4188-baa2-b41e2298e2be",
+          "e3bf903c-5d0c-4f91-bf83-2826f5a23db7",
+          "ed33df12-efd1-44bc-84bb-a9d83fa05f8f",
+          "f06a6e2c-59c6-4ff3-ad74-13aff65677d3",
+          "f4b64248-7b3e-4fae-8ff2-7122410b63f4",
+          "fb933ff4-2061-4a0c-a72c-6e7dd2958737",
+          "fdfae8cd-b3f0-4c36-b6ed-659e98d24871"
+        ],
+        "sources": [
+          "0a6fe099-9375-4fa5-8e41-81cf6ede26d8",
+          "18dd841d-89a6-41ab-90ed-110307e6e268",
+          "28614027-38d3-4b20-b460-8b1b48b4eb07",
+          "3e30dc4d-2c8a-40c0-95d8-258ef061b5ce",
+          "5100fe49-d129-4e0b-9b5d-0d33892fd613",
+          "624fc7f8-ec4a-4e6f-802e-ce1dcd6be994",
+          "6cf1f56c-1d88-431a-88a9-fde85a6fd2fa",
+          "6e6882d7-7add-4510-92a2-00e1b469c117",
+          "6eb7a205-4a1c-49c5-98b8-b7537689ab0b",
+          "7083e68a-d9c5-4ed5-b590-5131ee1b6fbe",
+          "a20efdfb-84be-4caa-a6b6-f3472a04c2b6",
+          "b1d80a26-19c8-4f5a-8a80-8917719ccbde",
+          "c815b2db-f907-43d4-a8ae-e2ef99fe5f79",
+          "c91f7f99-6b76-4245-9564-70f8f62c2dc1",
+          "d20d02c9-552e-4621-b8b3-a7c25efb9ddb",
+          "d742ddc4-acb8-411a-a159-efd815afecd6",
+          "df1c52bd-8832-47a1-bc57-30c779f01ad5",
+          "e059d4f3-9e5d-4c5f-84e1-959b3c932e30",
+          "f9bc0f9b-f737-40eb-b451-8b0622bb1f29",
+          "fa2da69a-8a61-4364-8dab-05b9678d77aa",
+          "fb0bc6f2-6f0b-49d5-a9a7-acb3de0fc531"
+        ],
+        "citations": [
+          "0f848185-1a22-42c6-a375-92860c4e3914",
+          "1d520b97-18c3-46ef-94ef-9e4e4c8ad15e",
+          "21c3954f-829e-4d13-a641-783d92af998d",
+          "29669439-5d05-4eed-8c5a-15a895209227",
+          "2bafe200-3ef0-466c-8da0-f7541b901b19",
+          "43d7a974-48c0-42e1-a69a-0b196a42dd15",
+          "465050a3-209b-4116-b7d9-d80ea9d685f1",
+          "503b85f7-ccdc-4723-b0e0-51d121f8ba3e",
+          "55f0c3f3-cc50-48a8-9242-b31b3e7155f8",
+          "613676e3-d747-4f55-8c22-e15b290574d6",
+          "77553c7a-9e85-4fc4-97fd-1fdc2ad68951",
+          "7e9d3731-b35a-4cea-b8a1-f60d005cb020",
+          "85b6215a-d659-4c08-850a-c9611e94bd43",
+          "a0185551-4cc2-44da-975b-81ed43b093c1",
+          "a2006985-9169-4009-a16a-688a7c47632c",
+          "a2f2aa39-dfb4-4f81-8c11-13329851ad8a",
+          "aefd626b-6ae3-4bc4-b9ec-2fac6ed78bfa",
+          "bbac1018-2ca5-491f-8e91-5e797418f21d",
+          "bf9fe1e5-9655-4143-921f-ee0faae347e7",
+          "d81bd9a1-ed47-45e2-9ee5-ed45b2d8ddb5",
+          "de59f4e7-fef0-4546-81d2-3dbf1944a96e",
+          "eee1e9cd-bcc8-4d3a-a094-92bb7f3e1c1e",
+          "f3d322c7-cad4-4525-ad55-8664d3e94b2a",
+          "f666bca9-1713-4085-b58d-7548b3b528b7",
+          "fa8985f2-6775-4348-a136-9a5dee986b1a"
+        ]
+      },
+      "scopeByClaim": [
+        {
+          "id": "121709e5-ea90-4c6a-87d1-d67264e1590d",
+          "subjectId": "743d7fc0-ddc6-446a-8aa1-d9a9b284a326",
+          "objectId": "b1e1232d-b038-4c11-b80c-ab1c2710d2bf",
+          "predicate": "CONTRIBUTED_TO",
+          "polarity": "affirmed",
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "contribution": {
+            "roleId": "AUTHORSHIP",
+            "scope": {
+              "kind": "publication",
+              "isbn13": "9784091228017",
+              "volumeLabel": "第1巻",
+              "editionLabel": null,
+              "language": "ja"
+            }
+          },
+          "organizationParticipation": null,
+          "eventParticipation": null
+        },
+        {
+          "id": "14e377b1-6be2-446c-8c13-e0d5d425eafa",
+          "subjectId": "c59a1b1d-7477-46a5-9669-644981d1d5d8",
+          "objectId": "ba77a4d0-cf0b-4cc9-bd98-9b153a92b3ba",
+          "predicate": "CONTRIBUTED_TO",
+          "polarity": "affirmed",
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "contribution": {
+            "roleId": "AUTHORSHIP",
+            "scope": {
+              "kind": "publication",
+              "isbn13": "9784061037113",
+              "volumeLabel": "第1巻",
+              "editionLabel": null,
+              "language": "ja"
+            }
+          },
+          "organizationParticipation": null,
+          "eventParticipation": null
+        },
+        {
+          "id": "1eb1fe7c-0cbd-48f4-8379-cd7f6e4697e4",
+          "subjectId": "743d7fc0-ddc6-446a-8aa1-d9a9b284a326",
+          "objectId": "aafae4fe-6f56-47bb-af9f-dec69425f136",
+          "predicate": "CONTRIBUTED_TO",
+          "polarity": "affirmed",
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "contribution": {
+            "roleId": "AUTHORSHIP",
+            "scope": {
+              "kind": "publication",
+              "isbn13": "9784091220318",
+              "volumeLabel": "第1巻",
+              "editionLabel": null,
+              "language": "ja"
+            }
+          },
+          "organizationParticipation": null,
+          "eventParticipation": null
+        },
+        {
+          "id": "24dca7b4-00bf-4f70-92f6-a498a494c29a",
+          "subjectId": "b4de3765-e8c4-49f1-a322-a021475ffd09",
+          "objectId": "1982f262-39f3-4bfa-93a4-af3a86ec3ec8",
+          "predicate": "CONTRIBUTED_TO",
+          "polarity": "affirmed",
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "contribution": {
+            "roleId": "AUTHORSHIP",
+            "scope": {
+              "kind": "publication",
+              "isbn13": "9784063829082",
+              "volumeLabel": "第1巻",
+              "editionLabel": null,
+              "language": "ja"
+            }
+          },
+          "organizationParticipation": null,
+          "eventParticipation": null
+        },
+        {
+          "id": "36199f3c-f260-473c-a22e-a75911b5fb6d",
+          "subjectId": "dfaf30df-2f9e-4c63-9fe1-cbbd0a083b36",
+          "objectId": "929116a2-77ff-443f-94e6-871c8b78f451",
+          "predicate": "CONTRIBUTED_TO",
+          "polarity": "affirmed",
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "contribution": {
+            "roleId": "DRAWING",
+            "scope": {
+              "kind": "publication",
+              "isbn13": "9784098501809",
+              "volumeLabel": "第1巻",
+              "editionLabel": null,
+              "language": "ja"
+            }
+          },
+          "organizationParticipation": null,
+          "eventParticipation": null
+        },
+        {
+          "id": "431210df-d594-498c-bbd4-9ce93c9dc282",
+          "subjectId": "20b7ba43-d12d-4d39-9a8e-f9e92e9d40d2",
+          "objectId": "929116a2-77ff-443f-94e6-871c8b78f451",
+          "predicate": "CONTRIBUTED_TO",
+          "polarity": "affirmed",
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "contribution": {
+            "roleId": "ORIGINAL_STORY",
+            "scope": {
+              "kind": "publication",
+              "isbn13": "9784098501809",
+              "volumeLabel": "第1巻",
+              "editionLabel": null,
+              "language": "ja"
+            }
+          },
+          "organizationParticipation": null,
+          "eventParticipation": null
+        },
+        {
+          "id": "48a9f51e-beb1-4c3a-9c30-5923bc852925",
+          "subjectId": "a13205e2-220c-4b7d-8a1a-39dbefe52db8",
+          "objectId": "3427040b-88fd-4db5-b546-dd237abad032",
+          "predicate": "CONTRIBUTED_TO",
+          "polarity": "affirmed",
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "contribution": {
+            "roleId": "ORIGINAL_STORY",
+            "scope": {
+              "kind": "publication",
+              "isbn13": "9784086196901",
+              "volumeLabel": "第1巻",
+              "editionLabel": null,
+              "language": "ja"
+            }
+          },
+          "organizationParticipation": null,
+          "eventParticipation": null
+        },
+        {
+          "id": "498cbe28-4703-4ac1-9a99-5cd83831b0e3",
+          "subjectId": "420d89ea-9780-4e01-ac64-9c5e8597d0c8",
+          "objectId": "dc188ef2-1a3d-4251-a445-90f49dd88cd0",
+          "predicate": "CONTRIBUTED_TO",
+          "polarity": "affirmed",
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "contribution": {
+            "roleId": "AUTHORSHIP",
+            "scope": {
+              "kind": "publication",
+              "isbn13": "9784757538870",
+              "volumeLabel": "第1巻",
+              "editionLabel": null,
+              "language": "ja"
+            }
+          },
+          "organizationParticipation": null,
+          "eventParticipation": null
+        },
+        {
+          "id": "602bc3c1-8a98-49cc-9556-a4c23feb6b0e",
+          "subjectId": "6bf4aeb4-ac2b-499f-bfaa-0588024ef93d",
+          "objectId": "baf73bb9-dda4-474c-acaf-a7a8ce52caf2",
+          "predicate": "CONTRIBUTED_TO",
+          "polarity": "affirmed",
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "contribution": {
+            "roleId": "AUTHORSHIP",
+            "scope": {
+              "kind": "publication",
+              "isbn13": "9784757520097",
+              "volumeLabel": "第1巻",
+              "editionLabel": null,
+              "language": "ja"
+            }
+          },
+          "organizationParticipation": null,
+          "eventParticipation": null
+        },
+        {
+          "id": "6ad7f063-1fce-4163-8414-437526212c31",
+          "subjectId": "a22fd2cd-aadc-4ca9-bf39-cb4bd7e0e953",
+          "objectId": "398d712d-23d9-455f-8897-f9384dd94930",
+          "predicate": "CONTRIBUTED_TO",
+          "polarity": "affirmed",
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "contribution": {
+            "roleId": "AUTHORSHIP",
+            "scope": {
+              "kind": "publication",
+              "isbn13": "9784884752934",
+              "volumeLabel": "第1巻",
+              "editionLabel": null,
+              "language": "ja"
+            }
+          },
+          "organizationParticipation": null,
+          "eventParticipation": null
+        },
+        {
+          "id": "7c2bd016-d9b0-4de2-824e-276941b1a2b2",
+          "subjectId": "6bf4aeb4-ac2b-499f-bfaa-0588024ef93d",
+          "objectId": "98b8ca7a-9638-4e5a-8fbd-62a353e4f159",
+          "predicate": "CONTRIBUTED_TO",
+          "polarity": "affirmed",
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "contribution": {
+            "roleId": "AUTHORSHIP",
+            "scope": {
+              "kind": "publication",
+              "isbn13": "9784592881513",
+              "volumeLabel": "第1巻",
+              "editionLabel": null,
+              "language": "ja"
+            }
+          },
+          "organizationParticipation": null,
+          "eventParticipation": null
+        },
+        {
+          "id": "81684aff-84cf-4977-a3b5-7c2f5d746e5a",
+          "subjectId": "ccb5ddb2-fb7c-4dad-8178-1a170342d0c6",
+          "objectId": "cd2e6949-6c1b-4818-990f-4d4dbc5c5d54",
+          "predicate": "CONTRIBUTED_TO",
+          "polarity": "affirmed",
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "contribution": {
+            "roleId": "DRAWING",
+            "scope": {
+              "kind": "publication",
+              "isbn13": "9784086172837",
+              "volumeLabel": "第1巻",
+              "editionLabel": null,
+              "language": "ja"
+            }
+          },
+          "organizationParticipation": null,
+          "eventParticipation": null
+        },
+        {
+          "id": "a4d14533-1e4d-47c4-9494-67008811cf75",
+          "subjectId": "afaa3ea0-f273-4481-95c5-5c31f9049cb2",
+          "objectId": "0c9eb1b7-2b2b-46b7-8110-9705138c3add",
+          "predicate": "CONTRIBUTED_TO",
+          "polarity": "affirmed",
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "contribution": {
+            "roleId": "AUTHORSHIP",
+            "scope": {
+              "kind": "publication",
+              "isbn13": "9784091241023",
+              "volumeLabel": "第1巻",
+              "editionLabel": null,
+              "language": "ja"
+            }
+          },
+          "organizationParticipation": null,
+          "eventParticipation": null
+        },
+        {
+          "id": "a996412a-7cc9-49d5-8446-9b3cf6a338dd",
+          "subjectId": "1edca4c7-0e4e-4769-859c-dde40e7e973a",
+          "objectId": "e7b913dd-7ad1-4288-861d-840cb4a3aeef",
+          "predicate": "CONTRIBUTED_TO",
+          "polarity": "affirmed",
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "contribution": {
+            "roleId": "ORIGINAL_STORY",
+            "scope": {
+              "kind": "publication",
+              "isbn13": "9784088820224",
+              "volumeLabel": "第1巻",
+              "editionLabel": null,
+              "language": "ja"
+            }
+          },
+          "organizationParticipation": null,
+          "eventParticipation": null
+        },
+        {
+          "id": "c19e5b2f-01e2-4233-a7c9-326a1772d7de",
+          "subjectId": "3f22660f-01d7-4a4a-9ae6-f169c9a3dc4a",
+          "objectId": "c9080259-3866-4c25-999f-4a5a22046ac1",
+          "predicate": "CONTRIBUTED_TO",
+          "polarity": "affirmed",
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "contribution": {
+            "roleId": "ORIGINAL_STORY",
+            "scope": {
+              "kind": "publication",
+              "isbn13": "9784091823618",
+              "volumeLabel": "第1巻",
+              "editionLabel": null,
+              "language": "ja"
+            }
+          },
+          "organizationParticipation": null,
+          "eventParticipation": null
+        },
+        {
+          "id": "c3fcdaa7-1374-4c62-acab-368dc1ed1bee",
+          "subjectId": "710bc8a7-efed-4c2e-a4b4-6c65b0aff695",
+          "objectId": "c9080259-3866-4c25-999f-4a5a22046ac1",
+          "predicate": "CONTRIBUTED_TO",
+          "polarity": "affirmed",
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "contribution": {
+            "roleId": "DRAWING",
+            "scope": {
+              "kind": "publication",
+              "isbn13": "9784091823618",
+              "volumeLabel": "第1巻",
+              "editionLabel": null,
+              "language": "ja"
+            }
+          },
+          "organizationParticipation": null,
+          "eventParticipation": null
+        },
+        {
+          "id": "d5d3fef1-fc64-4e61-b049-2f3c81994cb9",
+          "subjectId": "6c9095bd-1969-4bcd-9282-2d1e9e411254",
+          "objectId": "40a8ddd3-f333-485c-a12a-ac3d0961111b",
+          "predicate": "CONTRIBUTED_TO",
+          "polarity": "affirmed",
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "contribution": {
+            "roleId": "AUTHORSHIP",
+            "scope": {
+              "kind": "publication",
+              "isbn13": "9784091910110",
+              "volumeLabel": "単巻",
+              "editionLabel": null,
+              "language": "ja"
+            }
+          },
+          "organizationParticipation": null,
+          "eventParticipation": null
+        },
+        {
+          "id": "d92e9a4e-4f60-445d-807b-63764f69528b",
+          "subjectId": "9f43fefa-d878-4e5e-b1a2-0413432e9dbd",
+          "objectId": "480df823-5da8-45e4-aa20-1fdabe7ea5a3",
+          "predicate": "CONTRIBUTED_TO",
+          "polarity": "affirmed",
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "contribution": {
+            "roleId": "AUTHORSHIP",
+            "scope": {
+              "kind": "publication",
+              "isbn13": "9784088807317",
+              "volumeLabel": "第1巻",
+              "editionLabel": null,
+              "language": "ja"
+            }
+          },
+          "organizationParticipation": null,
+          "eventParticipation": null
+        },
+        {
+          "id": "e3b0de8a-f7cc-4188-baa2-b41e2298e2be",
+          "subjectId": "1866bbe5-7e00-4afc-965f-5e968481f065",
+          "objectId": "5c5f452c-1e74-4985-aaec-811a8e329f42",
+          "predicate": "CONTRIBUTED_TO",
+          "polarity": "affirmed",
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "contribution": {
+            "roleId": "AUTHORSHIP",
+            "scope": {
+              "kind": "publication",
+              "isbn13": "9784091380135",
+              "volumeLabel": "第1巻",
+              "editionLabel": null,
+              "language": "ja"
+            }
+          },
+          "organizationParticipation": null,
+          "eventParticipation": null
+        },
+        {
+          "id": "e3bf903c-5d0c-4f91-bf83-2826f5a23db7",
+          "subjectId": "3f22660f-01d7-4a4a-9ae6-f169c9a3dc4a",
+          "objectId": "cd2e6949-6c1b-4818-990f-4d4dbc5c5d54",
+          "predicate": "CONTRIBUTED_TO",
+          "polarity": "affirmed",
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "contribution": {
+            "roleId": "CREATION",
+            "scope": {
+              "kind": "publication",
+              "isbn13": "9784086172837",
+              "volumeLabel": "第1巻",
+              "editionLabel": null,
+              "language": "ja"
+            }
+          },
+          "organizationParticipation": null,
+          "eventParticipation": null
+        },
+        {
+          "id": "ed33df12-efd1-44bc-84bb-a9d83fa05f8f",
+          "subjectId": "d4a3f93f-bbcd-42df-9567-2ba4a485bef3",
+          "objectId": "e7b913dd-7ad1-4288-861d-840cb4a3aeef",
+          "predicate": "CONTRIBUTED_TO",
+          "polarity": "affirmed",
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "contribution": {
+            "roleId": "DRAWING",
+            "scope": {
+              "kind": "publication",
+              "isbn13": "9784088820224",
+              "volumeLabel": "第1巻",
+              "editionLabel": null,
+              "language": "ja"
+            }
+          },
+          "organizationParticipation": null,
+          "eventParticipation": null
+        },
+        {
+          "id": "f06a6e2c-59c6-4ff3-ad74-13aff65677d3",
+          "subjectId": "eb0af7e1-caa6-435f-86fb-0591421982b5",
+          "objectId": "76884305-ef0d-4cb0-ace2-90cfac57de3e",
+          "predicate": "CONTRIBUTED_TO",
+          "polarity": "affirmed",
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "contribution": {
+            "roleId": "AUTHORSHIP",
+            "scope": {
+              "kind": "publication",
+              "isbn13": "9784253169813",
+              "volumeLabel": "第1巻",
+              "editionLabel": null,
+              "language": "ja"
+            }
+          },
+          "organizationParticipation": null,
+          "eventParticipation": null
+        },
+        {
+          "id": "f4b64248-7b3e-4fae-8ff2-7122410b63f4",
+          "subjectId": "6c9095bd-1969-4bcd-9282-2d1e9e411254",
+          "objectId": "c74e0874-eb89-4825-a824-3ff182fe8053",
+          "predicate": "CONTRIBUTED_TO",
+          "polarity": "affirmed",
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "contribution": {
+            "roleId": "AUTHORSHIP",
+            "scope": {
+              "kind": "publication",
+              "isbn13": "9784091912510",
+              "volumeLabel": "第1巻",
+              "editionLabel": null,
+              "language": "ja"
+            }
+          },
+          "organizationParticipation": null,
+          "eventParticipation": null
+        },
+        {
+          "id": "fb933ff4-2061-4a0c-a72c-6e7dd2958737",
+          "subjectId": "d900543a-9c11-48c1-be76-1822b756fcc4",
+          "objectId": "c1e93fb7-3547-4b64-bd7c-bce073a1198a",
+          "predicate": "CONTRIBUTED_TO",
+          "polarity": "affirmed",
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "contribution": {
+            "roleId": "AUTHORSHIP",
+            "scope": {
+              "kind": "publication",
+              "isbn13": "9784098602780",
+              "volumeLabel": "第1巻",
+              "editionLabel": null,
+              "language": "ja"
+            }
+          },
+          "organizationParticipation": null,
+          "eventParticipation": null
+        },
+        {
+          "id": "fdfae8cd-b3f0-4c36-b6ed-659e98d24871",
+          "subjectId": "1866bbe5-7e00-4afc-965f-5e968481f065",
+          "objectId": "4b90e125-b331-4361-8681-93a12c662cb7",
+          "predicate": "CONTRIBUTED_TO",
+          "polarity": "affirmed",
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "contribution": {
+            "roleId": "AUTHORSHIP",
+            "scope": {
+              "kind": "publication",
+              "isbn13": "9784091914316",
+              "volumeLabel": "第1巻",
+              "editionLabel": null,
+              "language": "ja"
+            }
+          },
+          "organizationParticipation": null,
+          "eventParticipation": null
+        }
+      ],
+      "existingEntityDependencies": [
+        "710bc8a7-efed-4c2e-a4b4-6c65b0aff695",
+        "9f43fefa-d878-4e5e-b1a2-0413432e9dbd",
+        "a13205e2-220c-4b7d-8a1a-39dbefe52db8",
+        "b4de3765-e8c4-49f1-a322-a021475ffd09",
+        "d900543a-9c11-48c1-be76-1822b756fcc4",
+        "eb0af7e1-caa6-435f-86fb-0591421982b5"
+      ],
+      "counts": {
+        "entities": 35,
+        "claims": 25,
+        "sources": 21,
+        "citations": 25
+      }
+    },
+    "core-with-resolved-exceptions": {
+      "recordIds": {
+        "entities": [
+          "0914c6bb-701d-4c5a-b8f9-2c63cbff1ef3",
+          "0c9eb1b7-2b2b-46b7-8110-9705138c3add",
+          "1866bbe5-7e00-4afc-965f-5e968481f065",
+          "1982f262-39f3-4bfa-93a4-af3a86ec3ec8",
+          "1edca4c7-0e4e-4769-859c-dde40e7e973a",
+          "20b7ba43-d12d-4d39-9a8e-f9e92e9d40d2",
+          "3427040b-88fd-4db5-b546-dd237abad032",
+          "398d712d-23d9-455f-8897-f9384dd94930",
+          "3f22660f-01d7-4a4a-9ae6-f169c9a3dc4a",
+          "40a8ddd3-f333-485c-a12a-ac3d0961111b",
+          "420d89ea-9780-4e01-ac64-9c5e8597d0c8",
+          "480df823-5da8-45e4-aa20-1fdabe7ea5a3",
+          "4b90e125-b331-4361-8681-93a12c662cb7",
+          "5c5f452c-1e74-4985-aaec-811a8e329f42",
+          "6bf4aeb4-ac2b-499f-bfaa-0588024ef93d",
+          "6c9095bd-1969-4bcd-9282-2d1e9e411254",
+          "743d7fc0-ddc6-446a-8aa1-d9a9b284a326",
+          "76884305-ef0d-4cb0-ace2-90cfac57de3e",
+          "929116a2-77ff-443f-94e6-871c8b78f451",
+          "98b8ca7a-9638-4e5a-8fbd-62a353e4f159",
+          "a22fd2cd-aadc-4ca9-bf39-cb4bd7e0e953",
+          "aafae4fe-6f56-47bb-af9f-dec69425f136",
+          "afaa3ea0-f273-4481-95c5-5c31f9049cb2",
+          "b1e1232d-b038-4c11-b80c-ab1c2710d2bf",
+          "ba77a4d0-cf0b-4cc9-bd98-9b153a92b3ba",
+          "baf73bb9-dda4-474c-acaf-a7a8ce52caf2",
+          "c1e93fb7-3547-4b64-bd7c-bce073a1198a",
+          "c59a1b1d-7477-46a5-9669-644981d1d5d8",
+          "c74e0874-eb89-4825-a824-3ff182fe8053",
+          "c9080259-3866-4c25-999f-4a5a22046ac1",
+          "ccb5ddb2-fb7c-4dad-8178-1a170342d0c6",
+          "cd2e6949-6c1b-4818-990f-4d4dbc5c5d54",
+          "d4a3f93f-bbcd-42df-9567-2ba4a485bef3",
+          "dc188ef2-1a3d-4251-a445-90f49dd88cd0",
+          "dfaf30df-2f9e-4c63-9fe1-cbbd0a083b36",
+          "e7b913dd-7ad1-4288-861d-840cb4a3aeef"
+        ],
+        "claims": [
+          "121709e5-ea90-4c6a-87d1-d67264e1590d",
+          "14e377b1-6be2-446c-8c13-e0d5d425eafa",
+          "18c75118-e284-4c85-accf-e3894a6da3f3",
+          "1eb1fe7c-0cbd-48f4-8379-cd7f6e4697e4",
+          "1f5ecc6d-509d-477e-8b05-7fa06c59d95c",
+          "24dca7b4-00bf-4f70-92f6-a498a494c29a",
+          "36199f3c-f260-473c-a22e-a75911b5fb6d",
+          "431210df-d594-498c-bbd4-9ce93c9dc282",
+          "48a9f51e-beb1-4c3a-9c30-5923bc852925",
+          "498cbe28-4703-4ac1-9a99-5cd83831b0e3",
+          "602bc3c1-8a98-49cc-9556-a4c23feb6b0e",
+          "69ed2335-344f-41a6-a17f-77708faa0398",
+          "6ad7f063-1fce-4163-8414-437526212c31",
+          "7c2bd016-d9b0-4de2-824e-276941b1a2b2",
+          "81684aff-84cf-4977-a3b5-7c2f5d746e5a",
+          "a4d14533-1e4d-47c4-9494-67008811cf75",
+          "a996412a-7cc9-49d5-8446-9b3cf6a338dd",
+          "c19e5b2f-01e2-4233-a7c9-326a1772d7de",
+          "c3fcdaa7-1374-4c62-acab-368dc1ed1bee",
+          "d5d3fef1-fc64-4e61-b049-2f3c81994cb9",
+          "d92e9a4e-4f60-445d-807b-63764f69528b",
+          "e3b0de8a-f7cc-4188-baa2-b41e2298e2be",
+          "e3bf903c-5d0c-4f91-bf83-2826f5a23db7",
+          "ed33df12-efd1-44bc-84bb-a9d83fa05f8f",
+          "f06a6e2c-59c6-4ff3-ad74-13aff65677d3",
+          "f4b64248-7b3e-4fae-8ff2-7122410b63f4",
+          "fb933ff4-2061-4a0c-a72c-6e7dd2958737",
+          "fdfae8cd-b3f0-4c36-b6ed-659e98d24871"
+        ],
+        "sources": [
+          "068ea87c-f422-4f69-b61f-5fc6da8836a2",
+          "0a6fe099-9375-4fa5-8e41-81cf6ede26d8",
+          "18dd841d-89a6-41ab-90ed-110307e6e268",
+          "28614027-38d3-4b20-b460-8b1b48b4eb07",
+          "3e30dc4d-2c8a-40c0-95d8-258ef061b5ce",
+          "5100fe49-d129-4e0b-9b5d-0d33892fd613",
+          "624fc7f8-ec4a-4e6f-802e-ce1dcd6be994",
+          "6cf1f56c-1d88-431a-88a9-fde85a6fd2fa",
+          "6e6882d7-7add-4510-92a2-00e1b469c117",
+          "6eb7a205-4a1c-49c5-98b8-b7537689ab0b",
+          "7083e68a-d9c5-4ed5-b590-5131ee1b6fbe",
+          "81a9b025-308d-40ba-ba5b-7654f8bafc72",
+          "a20efdfb-84be-4caa-a6b6-f3472a04c2b6",
+          "b1d80a26-19c8-4f5a-8a80-8917719ccbde",
+          "c815b2db-f907-43d4-a8ae-e2ef99fe5f79",
+          "c91f7f99-6b76-4245-9564-70f8f62c2dc1",
+          "d20d02c9-552e-4621-b8b3-a7c25efb9ddb",
+          "d742ddc4-acb8-411a-a159-efd815afecd6",
+          "df1c52bd-8832-47a1-bc57-30c779f01ad5",
+          "e059d4f3-9e5d-4c5f-84e1-959b3c932e30",
+          "ef3aa8c2-d2ba-48a0-a724-20b8eac18a31",
+          "f9bc0f9b-f737-40eb-b451-8b0622bb1f29",
+          "fa2da69a-8a61-4364-8dab-05b9678d77aa",
+          "fb0bc6f2-6f0b-49d5-a9a7-acb3de0fc531"
+        ],
+        "citations": [
+          "0f848185-1a22-42c6-a375-92860c4e3914",
+          "1d520b97-18c3-46ef-94ef-9e4e4c8ad15e",
+          "21c3954f-829e-4d13-a641-783d92af998d",
+          "29669439-5d05-4eed-8c5a-15a895209227",
+          "2bafe200-3ef0-466c-8da0-f7541b901b19",
+          "3ebff3fe-d0ea-4409-8b16-472b0071971e",
+          "43d7a974-48c0-42e1-a69a-0b196a42dd15",
+          "465050a3-209b-4116-b7d9-d80ea9d685f1",
+          "503b85f7-ccdc-4723-b0e0-51d121f8ba3e",
+          "55f0c3f3-cc50-48a8-9242-b31b3e7155f8",
+          "613676e3-d747-4f55-8c22-e15b290574d6",
+          "6b09ad9a-d643-46bb-9e8d-fd600a9d5f90",
+          "77553c7a-9e85-4fc4-97fd-1fdc2ad68951",
+          "7e9d3731-b35a-4cea-b8a1-f60d005cb020",
+          "85b6215a-d659-4c08-850a-c9611e94bd43",
+          "a0185551-4cc2-44da-975b-81ed43b093c1",
+          "a2006985-9169-4009-a16a-688a7c47632c",
+          "a2f2aa39-dfb4-4f81-8c11-13329851ad8a",
+          "aefd626b-6ae3-4bc4-b9ec-2fac6ed78bfa",
+          "bbac1018-2ca5-491f-8e91-5e797418f21d",
+          "bf9fe1e5-9655-4143-921f-ee0faae347e7",
+          "c9248d87-f3e6-4ce4-9140-12279fc83004",
+          "d81bd9a1-ed47-45e2-9ee5-ed45b2d8ddb5",
+          "de59f4e7-fef0-4546-81d2-3dbf1944a96e",
+          "eee1e9cd-bcc8-4d3a-a094-92bb7f3e1c1e",
+          "f3d322c7-cad4-4525-ad55-8664d3e94b2a",
+          "f50258bc-9bd0-47c5-9d2d-bb17b85e5e5e",
+          "f666bca9-1713-4085-b58d-7548b3b528b7",
+          "fa8985f2-6775-4348-a136-9a5dee986b1a"
+        ]
+      },
+      "scopeByClaim": [
+        {
+          "id": "121709e5-ea90-4c6a-87d1-d67264e1590d",
+          "subjectId": "743d7fc0-ddc6-446a-8aa1-d9a9b284a326",
+          "objectId": "b1e1232d-b038-4c11-b80c-ab1c2710d2bf",
+          "predicate": "CONTRIBUTED_TO",
+          "polarity": "affirmed",
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "contribution": {
+            "roleId": "AUTHORSHIP",
+            "scope": {
+              "kind": "publication",
+              "isbn13": "9784091228017",
+              "volumeLabel": "第1巻",
+              "editionLabel": null,
+              "language": "ja"
+            }
+          },
+          "organizationParticipation": null,
+          "eventParticipation": null
+        },
+        {
+          "id": "14e377b1-6be2-446c-8c13-e0d5d425eafa",
+          "subjectId": "c59a1b1d-7477-46a5-9669-644981d1d5d8",
+          "objectId": "ba77a4d0-cf0b-4cc9-bd98-9b153a92b3ba",
+          "predicate": "CONTRIBUTED_TO",
+          "polarity": "affirmed",
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "contribution": {
+            "roleId": "AUTHORSHIP",
+            "scope": {
+              "kind": "publication",
+              "isbn13": "9784061037113",
+              "volumeLabel": "第1巻",
+              "editionLabel": null,
+              "language": "ja"
+            }
+          },
+          "organizationParticipation": null,
+          "eventParticipation": null
+        },
+        {
+          "id": "18c75118-e284-4c85-accf-e3894a6da3f3",
+          "subjectId": "d900543a-9c11-48c1-be76-1822b756fcc4",
+          "objectId": "290ab095-192d-4910-90f3-ae741f9d1f32",
+          "predicate": "CONTRIBUTED_TO",
+          "polarity": "affirmed",
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "contribution": {
+            "roleId": "DRAWING",
+            "scope": {
+              "kind": "publication",
+              "isbn13": "9784091810816",
+              "volumeLabel": "第1巻",
+              "editionLabel": null,
+              "language": "ja"
+            }
+          },
+          "organizationParticipation": null,
+          "eventParticipation": null
+        },
+        {
+          "id": "1eb1fe7c-0cbd-48f4-8379-cd7f6e4697e4",
+          "subjectId": "743d7fc0-ddc6-446a-8aa1-d9a9b284a326",
+          "objectId": "aafae4fe-6f56-47bb-af9f-dec69425f136",
+          "predicate": "CONTRIBUTED_TO",
+          "polarity": "affirmed",
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "contribution": {
+            "roleId": "AUTHORSHIP",
+            "scope": {
+              "kind": "publication",
+              "isbn13": "9784091220318",
+              "volumeLabel": "第1巻",
+              "editionLabel": null,
+              "language": "ja"
+            }
+          },
+          "organizationParticipation": null,
+          "eventParticipation": null
+        },
+        {
+          "id": "1f5ecc6d-509d-477e-8b05-7fa06c59d95c",
+          "subjectId": "a012632c-6fd8-4559-8f38-cc60f9b28b05",
+          "objectId": "290ab095-192d-4910-90f3-ae741f9d1f32",
+          "predicate": "CONTRIBUTED_TO",
+          "polarity": "affirmed",
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "contribution": {
+            "roleId": "CREATION",
+            "scope": {
+              "kind": "publication",
+              "isbn13": "9784091810816",
+              "volumeLabel": "第1巻",
+              "editionLabel": null,
+              "language": "ja"
+            }
+          },
+          "organizationParticipation": null,
+          "eventParticipation": null
+        },
+        {
+          "id": "24dca7b4-00bf-4f70-92f6-a498a494c29a",
+          "subjectId": "b4de3765-e8c4-49f1-a322-a021475ffd09",
+          "objectId": "1982f262-39f3-4bfa-93a4-af3a86ec3ec8",
+          "predicate": "CONTRIBUTED_TO",
+          "polarity": "affirmed",
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "contribution": {
+            "roleId": "AUTHORSHIP",
+            "scope": {
+              "kind": "publication",
+              "isbn13": "9784063829082",
+              "volumeLabel": "第1巻",
+              "editionLabel": null,
+              "language": "ja"
+            }
+          },
+          "organizationParticipation": null,
+          "eventParticipation": null
+        },
+        {
+          "id": "36199f3c-f260-473c-a22e-a75911b5fb6d",
+          "subjectId": "dfaf30df-2f9e-4c63-9fe1-cbbd0a083b36",
+          "objectId": "929116a2-77ff-443f-94e6-871c8b78f451",
+          "predicate": "CONTRIBUTED_TO",
+          "polarity": "affirmed",
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "contribution": {
+            "roleId": "DRAWING",
+            "scope": {
+              "kind": "publication",
+              "isbn13": "9784098501809",
+              "volumeLabel": "第1巻",
+              "editionLabel": null,
+              "language": "ja"
+            }
+          },
+          "organizationParticipation": null,
+          "eventParticipation": null
+        },
+        {
+          "id": "431210df-d594-498c-bbd4-9ce93c9dc282",
+          "subjectId": "20b7ba43-d12d-4d39-9a8e-f9e92e9d40d2",
+          "objectId": "929116a2-77ff-443f-94e6-871c8b78f451",
+          "predicate": "CONTRIBUTED_TO",
+          "polarity": "affirmed",
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "contribution": {
+            "roleId": "ORIGINAL_STORY",
+            "scope": {
+              "kind": "publication",
+              "isbn13": "9784098501809",
+              "volumeLabel": "第1巻",
+              "editionLabel": null,
+              "language": "ja"
+            }
+          },
+          "organizationParticipation": null,
+          "eventParticipation": null
+        },
+        {
+          "id": "48a9f51e-beb1-4c3a-9c30-5923bc852925",
+          "subjectId": "a13205e2-220c-4b7d-8a1a-39dbefe52db8",
+          "objectId": "3427040b-88fd-4db5-b546-dd237abad032",
+          "predicate": "CONTRIBUTED_TO",
+          "polarity": "affirmed",
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "contribution": {
+            "roleId": "ORIGINAL_STORY",
+            "scope": {
+              "kind": "publication",
+              "isbn13": "9784086196901",
+              "volumeLabel": "第1巻",
+              "editionLabel": null,
+              "language": "ja"
+            }
+          },
+          "organizationParticipation": null,
+          "eventParticipation": null
+        },
+        {
+          "id": "498cbe28-4703-4ac1-9a99-5cd83831b0e3",
+          "subjectId": "420d89ea-9780-4e01-ac64-9c5e8597d0c8",
+          "objectId": "dc188ef2-1a3d-4251-a445-90f49dd88cd0",
+          "predicate": "CONTRIBUTED_TO",
+          "polarity": "affirmed",
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "contribution": {
+            "roleId": "AUTHORSHIP",
+            "scope": {
+              "kind": "publication",
+              "isbn13": "9784757538870",
+              "volumeLabel": "第1巻",
+              "editionLabel": null,
+              "language": "ja"
+            }
+          },
+          "organizationParticipation": null,
+          "eventParticipation": null
+        },
+        {
+          "id": "602bc3c1-8a98-49cc-9556-a4c23feb6b0e",
+          "subjectId": "6bf4aeb4-ac2b-499f-bfaa-0588024ef93d",
+          "objectId": "baf73bb9-dda4-474c-acaf-a7a8ce52caf2",
+          "predicate": "CONTRIBUTED_TO",
+          "polarity": "affirmed",
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "contribution": {
+            "roleId": "AUTHORSHIP",
+            "scope": {
+              "kind": "publication",
+              "isbn13": "9784757520097",
+              "volumeLabel": "第1巻",
+              "editionLabel": null,
+              "language": "ja"
+            }
+          },
+          "organizationParticipation": null,
+          "eventParticipation": null
+        },
+        {
+          "id": "69ed2335-344f-41a6-a17f-77708faa0398",
+          "subjectId": "c59a1b1d-7477-46a5-9669-644981d1d5d8",
+          "objectId": "0914c6bb-701d-4c5a-b8f9-2c63cbff1ef3",
+          "predicate": "CONTRIBUTED_TO",
+          "polarity": "affirmed",
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "contribution": {
+            "roleId": "AUTHORSHIP",
+            "scope": {
+              "kind": "publication",
+              "isbn13": "9784065262634",
+              "volumeLabel": "全集第8巻（童夢）",
+              "editionLabel": null,
+              "language": "ja"
+            }
+          },
+          "organizationParticipation": null,
+          "eventParticipation": null
+        },
+        {
+          "id": "6ad7f063-1fce-4163-8414-437526212c31",
+          "subjectId": "a22fd2cd-aadc-4ca9-bf39-cb4bd7e0e953",
+          "objectId": "398d712d-23d9-455f-8897-f9384dd94930",
+          "predicate": "CONTRIBUTED_TO",
+          "polarity": "affirmed",
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "contribution": {
+            "roleId": "AUTHORSHIP",
+            "scope": {
+              "kind": "publication",
+              "isbn13": "9784884752934",
+              "volumeLabel": "第1巻",
+              "editionLabel": null,
+              "language": "ja"
+            }
+          },
+          "organizationParticipation": null,
+          "eventParticipation": null
+        },
+        {
+          "id": "7c2bd016-d9b0-4de2-824e-276941b1a2b2",
+          "subjectId": "6bf4aeb4-ac2b-499f-bfaa-0588024ef93d",
+          "objectId": "98b8ca7a-9638-4e5a-8fbd-62a353e4f159",
+          "predicate": "CONTRIBUTED_TO",
+          "polarity": "affirmed",
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "contribution": {
+            "roleId": "AUTHORSHIP",
+            "scope": {
+              "kind": "publication",
+              "isbn13": "9784592881513",
+              "volumeLabel": "第1巻",
+              "editionLabel": null,
+              "language": "ja"
+            }
+          },
+          "organizationParticipation": null,
+          "eventParticipation": null
+        },
+        {
+          "id": "81684aff-84cf-4977-a3b5-7c2f5d746e5a",
+          "subjectId": "ccb5ddb2-fb7c-4dad-8178-1a170342d0c6",
+          "objectId": "cd2e6949-6c1b-4818-990f-4d4dbc5c5d54",
+          "predicate": "CONTRIBUTED_TO",
+          "polarity": "affirmed",
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "contribution": {
+            "roleId": "DRAWING",
+            "scope": {
+              "kind": "publication",
+              "isbn13": "9784086172837",
+              "volumeLabel": "第1巻",
+              "editionLabel": null,
+              "language": "ja"
+            }
+          },
+          "organizationParticipation": null,
+          "eventParticipation": null
+        },
+        {
+          "id": "a4d14533-1e4d-47c4-9494-67008811cf75",
+          "subjectId": "afaa3ea0-f273-4481-95c5-5c31f9049cb2",
+          "objectId": "0c9eb1b7-2b2b-46b7-8110-9705138c3add",
+          "predicate": "CONTRIBUTED_TO",
+          "polarity": "affirmed",
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "contribution": {
+            "roleId": "AUTHORSHIP",
+            "scope": {
+              "kind": "publication",
+              "isbn13": "9784091241023",
+              "volumeLabel": "第1巻",
+              "editionLabel": null,
+              "language": "ja"
+            }
+          },
+          "organizationParticipation": null,
+          "eventParticipation": null
+        },
+        {
+          "id": "a996412a-7cc9-49d5-8446-9b3cf6a338dd",
+          "subjectId": "1edca4c7-0e4e-4769-859c-dde40e7e973a",
+          "objectId": "e7b913dd-7ad1-4288-861d-840cb4a3aeef",
+          "predicate": "CONTRIBUTED_TO",
+          "polarity": "affirmed",
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "contribution": {
+            "roleId": "ORIGINAL_STORY",
+            "scope": {
+              "kind": "publication",
+              "isbn13": "9784088820224",
+              "volumeLabel": "第1巻",
+              "editionLabel": null,
+              "language": "ja"
+            }
+          },
+          "organizationParticipation": null,
+          "eventParticipation": null
+        },
+        {
+          "id": "c19e5b2f-01e2-4233-a7c9-326a1772d7de",
+          "subjectId": "3f22660f-01d7-4a4a-9ae6-f169c9a3dc4a",
+          "objectId": "c9080259-3866-4c25-999f-4a5a22046ac1",
+          "predicate": "CONTRIBUTED_TO",
+          "polarity": "affirmed",
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "contribution": {
+            "roleId": "ORIGINAL_STORY",
+            "scope": {
+              "kind": "publication",
+              "isbn13": "9784091823618",
+              "volumeLabel": "第1巻",
+              "editionLabel": null,
+              "language": "ja"
+            }
+          },
+          "organizationParticipation": null,
+          "eventParticipation": null
+        },
+        {
+          "id": "c3fcdaa7-1374-4c62-acab-368dc1ed1bee",
+          "subjectId": "710bc8a7-efed-4c2e-a4b4-6c65b0aff695",
+          "objectId": "c9080259-3866-4c25-999f-4a5a22046ac1",
+          "predicate": "CONTRIBUTED_TO",
+          "polarity": "affirmed",
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "contribution": {
+            "roleId": "DRAWING",
+            "scope": {
+              "kind": "publication",
+              "isbn13": "9784091823618",
+              "volumeLabel": "第1巻",
+              "editionLabel": null,
+              "language": "ja"
+            }
+          },
+          "organizationParticipation": null,
+          "eventParticipation": null
+        },
+        {
+          "id": "d5d3fef1-fc64-4e61-b049-2f3c81994cb9",
+          "subjectId": "6c9095bd-1969-4bcd-9282-2d1e9e411254",
+          "objectId": "40a8ddd3-f333-485c-a12a-ac3d0961111b",
+          "predicate": "CONTRIBUTED_TO",
+          "polarity": "affirmed",
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "contribution": {
+            "roleId": "AUTHORSHIP",
+            "scope": {
+              "kind": "publication",
+              "isbn13": "9784091910110",
+              "volumeLabel": "単巻",
+              "editionLabel": null,
+              "language": "ja"
+            }
+          },
+          "organizationParticipation": null,
+          "eventParticipation": null
+        },
+        {
+          "id": "d92e9a4e-4f60-445d-807b-63764f69528b",
+          "subjectId": "9f43fefa-d878-4e5e-b1a2-0413432e9dbd",
+          "objectId": "480df823-5da8-45e4-aa20-1fdabe7ea5a3",
+          "predicate": "CONTRIBUTED_TO",
+          "polarity": "affirmed",
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "contribution": {
+            "roleId": "AUTHORSHIP",
+            "scope": {
+              "kind": "publication",
+              "isbn13": "9784088807317",
+              "volumeLabel": "第1巻",
+              "editionLabel": null,
+              "language": "ja"
+            }
+          },
+          "organizationParticipation": null,
+          "eventParticipation": null
+        },
+        {
+          "id": "e3b0de8a-f7cc-4188-baa2-b41e2298e2be",
+          "subjectId": "1866bbe5-7e00-4afc-965f-5e968481f065",
+          "objectId": "5c5f452c-1e74-4985-aaec-811a8e329f42",
+          "predicate": "CONTRIBUTED_TO",
+          "polarity": "affirmed",
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "contribution": {
+            "roleId": "AUTHORSHIP",
+            "scope": {
+              "kind": "publication",
+              "isbn13": "9784091380135",
+              "volumeLabel": "第1巻",
+              "editionLabel": null,
+              "language": "ja"
+            }
+          },
+          "organizationParticipation": null,
+          "eventParticipation": null
+        },
+        {
+          "id": "e3bf903c-5d0c-4f91-bf83-2826f5a23db7",
+          "subjectId": "3f22660f-01d7-4a4a-9ae6-f169c9a3dc4a",
+          "objectId": "cd2e6949-6c1b-4818-990f-4d4dbc5c5d54",
+          "predicate": "CONTRIBUTED_TO",
+          "polarity": "affirmed",
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "contribution": {
+            "roleId": "CREATION",
+            "scope": {
+              "kind": "publication",
+              "isbn13": "9784086172837",
+              "volumeLabel": "第1巻",
+              "editionLabel": null,
+              "language": "ja"
+            }
+          },
+          "organizationParticipation": null,
+          "eventParticipation": null
+        },
+        {
+          "id": "ed33df12-efd1-44bc-84bb-a9d83fa05f8f",
+          "subjectId": "d4a3f93f-bbcd-42df-9567-2ba4a485bef3",
+          "objectId": "e7b913dd-7ad1-4288-861d-840cb4a3aeef",
+          "predicate": "CONTRIBUTED_TO",
+          "polarity": "affirmed",
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "contribution": {
+            "roleId": "DRAWING",
+            "scope": {
+              "kind": "publication",
+              "isbn13": "9784088820224",
+              "volumeLabel": "第1巻",
+              "editionLabel": null,
+              "language": "ja"
+            }
+          },
+          "organizationParticipation": null,
+          "eventParticipation": null
+        },
+        {
+          "id": "f06a6e2c-59c6-4ff3-ad74-13aff65677d3",
+          "subjectId": "eb0af7e1-caa6-435f-86fb-0591421982b5",
+          "objectId": "76884305-ef0d-4cb0-ace2-90cfac57de3e",
+          "predicate": "CONTRIBUTED_TO",
+          "polarity": "affirmed",
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "contribution": {
+            "roleId": "AUTHORSHIP",
+            "scope": {
+              "kind": "publication",
+              "isbn13": "9784253169813",
+              "volumeLabel": "第1巻",
+              "editionLabel": null,
+              "language": "ja"
+            }
+          },
+          "organizationParticipation": null,
+          "eventParticipation": null
+        },
+        {
+          "id": "f4b64248-7b3e-4fae-8ff2-7122410b63f4",
+          "subjectId": "6c9095bd-1969-4bcd-9282-2d1e9e411254",
+          "objectId": "c74e0874-eb89-4825-a824-3ff182fe8053",
+          "predicate": "CONTRIBUTED_TO",
+          "polarity": "affirmed",
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "contribution": {
+            "roleId": "AUTHORSHIP",
+            "scope": {
+              "kind": "publication",
+              "isbn13": "9784091912510",
+              "volumeLabel": "第1巻",
+              "editionLabel": null,
+              "language": "ja"
+            }
+          },
+          "organizationParticipation": null,
+          "eventParticipation": null
+        },
+        {
+          "id": "fb933ff4-2061-4a0c-a72c-6e7dd2958737",
+          "subjectId": "d900543a-9c11-48c1-be76-1822b756fcc4",
+          "objectId": "c1e93fb7-3547-4b64-bd7c-bce073a1198a",
+          "predicate": "CONTRIBUTED_TO",
+          "polarity": "affirmed",
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "contribution": {
+            "roleId": "AUTHORSHIP",
+            "scope": {
+              "kind": "publication",
+              "isbn13": "9784098602780",
+              "volumeLabel": "第1巻",
+              "editionLabel": null,
+              "language": "ja"
+            }
+          },
+          "organizationParticipation": null,
+          "eventParticipation": null
+        },
+        {
+          "id": "fdfae8cd-b3f0-4c36-b6ed-659e98d24871",
+          "subjectId": "1866bbe5-7e00-4afc-965f-5e968481f065",
+          "objectId": "4b90e125-b331-4361-8681-93a12c662cb7",
+          "predicate": "CONTRIBUTED_TO",
+          "polarity": "affirmed",
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "contribution": {
+            "roleId": "AUTHORSHIP",
+            "scope": {
+              "kind": "publication",
+              "isbn13": "9784091914316",
+              "volumeLabel": "第1巻",
+              "editionLabel": null,
+              "language": "ja"
+            }
+          },
+          "organizationParticipation": null,
+          "eventParticipation": null
+        }
+      ],
+      "existingEntityDependencies": [
+        "290ab095-192d-4910-90f3-ae741f9d1f32",
+        "710bc8a7-efed-4c2e-a4b4-6c65b0aff695",
+        "9f43fefa-d878-4e5e-b1a2-0413432e9dbd",
+        "a012632c-6fd8-4559-8f38-cc60f9b28b05",
+        "a13205e2-220c-4b7d-8a1a-39dbefe52db8",
+        "b4de3765-e8c4-49f1-a322-a021475ffd09",
+        "d900543a-9c11-48c1-be76-1822b756fcc4",
+        "eb0af7e1-caa6-435f-86fb-0591421982b5"
+      ],
+      "counts": {
+        "entities": 36,
+        "claims": 28,
+        "sources": 24,
+        "citations": 29
+      }
+    },
+    "all-recommended": {
+      "recordIds": {
+        "entities": [
+          "0914c6bb-701d-4c5a-b8f9-2c63cbff1ef3",
+          "0c9eb1b7-2b2b-46b7-8110-9705138c3add",
+          "1866bbe5-7e00-4afc-965f-5e968481f065",
+          "1982f262-39f3-4bfa-93a4-af3a86ec3ec8",
+          "1edca4c7-0e4e-4769-859c-dde40e7e973a",
+          "20b7ba43-d12d-4d39-9a8e-f9e92e9d40d2",
+          "3427040b-88fd-4db5-b546-dd237abad032",
+          "398d712d-23d9-455f-8897-f9384dd94930",
+          "3f22660f-01d7-4a4a-9ae6-f169c9a3dc4a",
+          "40a8ddd3-f333-485c-a12a-ac3d0961111b",
+          "420d89ea-9780-4e01-ac64-9c5e8597d0c8",
+          "480df823-5da8-45e4-aa20-1fdabe7ea5a3",
+          "4b90e125-b331-4361-8681-93a12c662cb7",
+          "5c5f452c-1e74-4985-aaec-811a8e329f42",
+          "6bf4aeb4-ac2b-499f-bfaa-0588024ef93d",
+          "6c9095bd-1969-4bcd-9282-2d1e9e411254",
+          "711dc415-45d5-4d35-8cca-068332180cc0",
+          "743d7fc0-ddc6-446a-8aa1-d9a9b284a326",
+          "76884305-ef0d-4cb0-ace2-90cfac57de3e",
+          "8a0d3d5a-feb6-4ba3-8993-64b6ac79de12",
+          "929116a2-77ff-443f-94e6-871c8b78f451",
+          "98b8ca7a-9638-4e5a-8fbd-62a353e4f159",
+          "a22fd2cd-aadc-4ca9-bf39-cb4bd7e0e953",
+          "aafae4fe-6f56-47bb-af9f-dec69425f136",
+          "afaa3ea0-f273-4481-95c5-5c31f9049cb2",
+          "b1e1232d-b038-4c11-b80c-ab1c2710d2bf",
+          "ba77a4d0-cf0b-4cc9-bd98-9b153a92b3ba",
+          "baf73bb9-dda4-474c-acaf-a7a8ce52caf2",
+          "c1e93fb7-3547-4b64-bd7c-bce073a1198a",
+          "c59a1b1d-7477-46a5-9669-644981d1d5d8",
+          "c74e0874-eb89-4825-a824-3ff182fe8053",
+          "c9080259-3866-4c25-999f-4a5a22046ac1",
+          "ccb5ddb2-fb7c-4dad-8178-1a170342d0c6",
+          "cd2e6949-6c1b-4818-990f-4d4dbc5c5d54",
+          "d4a3f93f-bbcd-42df-9567-2ba4a485bef3",
+          "d5e39491-5a5f-423c-9222-2eb3c18db9a8",
+          "dc188ef2-1a3d-4251-a445-90f49dd88cd0",
+          "dfaf30df-2f9e-4c63-9fe1-cbbd0a083b36",
+          "e7b913dd-7ad1-4288-861d-840cb4a3aeef"
+        ],
+        "claims": [
+          "121709e5-ea90-4c6a-87d1-d67264e1590d",
+          "14e377b1-6be2-446c-8c13-e0d5d425eafa",
+          "18c75118-e284-4c85-accf-e3894a6da3f3",
+          "1eb1fe7c-0cbd-48f4-8379-cd7f6e4697e4",
+          "1f5ecc6d-509d-477e-8b05-7fa06c59d95c",
+          "24dca7b4-00bf-4f70-92f6-a498a494c29a",
+          "36199f3c-f260-473c-a22e-a75911b5fb6d",
+          "431210df-d594-498c-bbd4-9ce93c9dc282",
+          "48a9f51e-beb1-4c3a-9c30-5923bc852925",
+          "498cbe28-4703-4ac1-9a99-5cd83831b0e3",
+          "602bc3c1-8a98-49cc-9556-a4c23feb6b0e",
+          "69ed2335-344f-41a6-a17f-77708faa0398",
+          "6ad7f063-1fce-4163-8414-437526212c31",
+          "7c2bd016-d9b0-4de2-824e-276941b1a2b2",
+          "81684aff-84cf-4977-a3b5-7c2f5d746e5a",
+          "a4d14533-1e4d-47c4-9494-67008811cf75",
+          "a996412a-7cc9-49d5-8446-9b3cf6a338dd",
+          "b7d9d6ba-f2a0-492e-981d-408b22955215",
+          "c19e5b2f-01e2-4233-a7c9-326a1772d7de",
+          "c3fcdaa7-1374-4c62-acab-368dc1ed1bee",
+          "cd294bb9-a7de-4f21-95c2-84b878c0e7cc",
+          "d5d3fef1-fc64-4e61-b049-2f3c81994cb9",
+          "d92e9a4e-4f60-445d-807b-63764f69528b",
+          "e3b0de8a-f7cc-4188-baa2-b41e2298e2be",
+          "e3bf903c-5d0c-4f91-bf83-2826f5a23db7",
+          "ed33df12-efd1-44bc-84bb-a9d83fa05f8f",
+          "f06a6e2c-59c6-4ff3-ad74-13aff65677d3",
+          "f4504ec8-173a-453f-83e8-a24e72dde9bc",
+          "f4b64248-7b3e-4fae-8ff2-7122410b63f4",
+          "fb933ff4-2061-4a0c-a72c-6e7dd2958737",
+          "fdfae8cd-b3f0-4c36-b6ed-659e98d24871"
+        ],
+        "sources": [
+          "068ea87c-f422-4f69-b61f-5fc6da8836a2",
+          "0a6fe099-9375-4fa5-8e41-81cf6ede26d8",
+          "18dd841d-89a6-41ab-90ed-110307e6e268",
+          "28614027-38d3-4b20-b460-8b1b48b4eb07",
+          "3e30dc4d-2c8a-40c0-95d8-258ef061b5ce",
+          "5100fe49-d129-4e0b-9b5d-0d33892fd613",
+          "624fc7f8-ec4a-4e6f-802e-ce1dcd6be994",
+          "6cf1f56c-1d88-431a-88a9-fde85a6fd2fa",
+          "6dfb8c00-412a-4bd6-88f8-58f85b98247e",
+          "6e6882d7-7add-4510-92a2-00e1b469c117",
+          "6eb7a205-4a1c-49c5-98b8-b7537689ab0b",
+          "7083e68a-d9c5-4ed5-b590-5131ee1b6fbe",
+          "81a9b025-308d-40ba-ba5b-7654f8bafc72",
+          "a20efdfb-84be-4caa-a6b6-f3472a04c2b6",
+          "ab3cc1da-0880-4616-afbc-e853a7730929",
+          "b1d80a26-19c8-4f5a-8a80-8917719ccbde",
+          "c815b2db-f907-43d4-a8ae-e2ef99fe5f79",
+          "c91f7f99-6b76-4245-9564-70f8f62c2dc1",
+          "d20d02c9-552e-4621-b8b3-a7c25efb9ddb",
+          "d742ddc4-acb8-411a-a159-efd815afecd6",
+          "df1c52bd-8832-47a1-bc57-30c779f01ad5",
+          "e059d4f3-9e5d-4c5f-84e1-959b3c932e30",
+          "ef3aa8c2-d2ba-48a0-a724-20b8eac18a31",
+          "f9bc0f9b-f737-40eb-b451-8b0622bb1f29",
+          "fa2da69a-8a61-4364-8dab-05b9678d77aa",
+          "fb0bc6f2-6f0b-49d5-a9a7-acb3de0fc531"
+        ],
+        "citations": [
+          "0f848185-1a22-42c6-a375-92860c4e3914",
+          "1d520b97-18c3-46ef-94ef-9e4e4c8ad15e",
+          "21c3954f-829e-4d13-a641-783d92af998d",
+          "29669439-5d05-4eed-8c5a-15a895209227",
+          "2bafe200-3ef0-466c-8da0-f7541b901b19",
+          "3ebff3fe-d0ea-4409-8b16-472b0071971e",
+          "43d7a974-48c0-42e1-a69a-0b196a42dd15",
+          "465050a3-209b-4116-b7d9-d80ea9d685f1",
+          "503b85f7-ccdc-4723-b0e0-51d121f8ba3e",
+          "55f0c3f3-cc50-48a8-9242-b31b3e7155f8",
+          "613676e3-d747-4f55-8c22-e15b290574d6",
+          "6b09ad9a-d643-46bb-9e8d-fd600a9d5f90",
+          "77553c7a-9e85-4fc4-97fd-1fdc2ad68951",
+          "7e9d3731-b35a-4cea-b8a1-f60d005cb020",
+          "85b6215a-d659-4c08-850a-c9611e94bd43",
+          "a0185551-4cc2-44da-975b-81ed43b093c1",
+          "a2006985-9169-4009-a16a-688a7c47632c",
+          "a2f2aa39-dfb4-4f81-8c11-13329851ad8a",
+          "aefd626b-6ae3-4bc4-b9ec-2fac6ed78bfa",
+          "b227b748-ee95-4565-9c67-7834801ebafb",
+          "bbac1018-2ca5-491f-8e91-5e797418f21d",
+          "bf9fe1e5-9655-4143-921f-ee0faae347e7",
+          "c2a11bab-9544-49af-a352-668f7cb08aff",
+          "c4d63400-dc23-498d-b1bd-4c579adc2227",
+          "c9248d87-f3e6-4ce4-9140-12279fc83004",
+          "d81bd9a1-ed47-45e2-9ee5-ed45b2d8ddb5",
+          "de59f4e7-fef0-4546-81d2-3dbf1944a96e",
+          "eee1e9cd-bcc8-4d3a-a094-92bb7f3e1c1e",
+          "f3d322c7-cad4-4525-ad55-8664d3e94b2a",
+          "f50258bc-9bd0-47c5-9d2d-bb17b85e5e5e",
+          "f666bca9-1713-4085-b58d-7548b3b528b7",
+          "fa8985f2-6775-4348-a136-9a5dee986b1a"
+        ]
+      },
+      "scopeByClaim": [
+        {
+          "id": "121709e5-ea90-4c6a-87d1-d67264e1590d",
+          "subjectId": "743d7fc0-ddc6-446a-8aa1-d9a9b284a326",
+          "objectId": "b1e1232d-b038-4c11-b80c-ab1c2710d2bf",
+          "predicate": "CONTRIBUTED_TO",
+          "polarity": "affirmed",
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "contribution": {
+            "roleId": "AUTHORSHIP",
+            "scope": {
+              "kind": "publication",
+              "isbn13": "9784091228017",
+              "volumeLabel": "第1巻",
+              "editionLabel": null,
+              "language": "ja"
+            }
+          },
+          "organizationParticipation": null,
+          "eventParticipation": null
+        },
+        {
+          "id": "14e377b1-6be2-446c-8c13-e0d5d425eafa",
+          "subjectId": "c59a1b1d-7477-46a5-9669-644981d1d5d8",
+          "objectId": "ba77a4d0-cf0b-4cc9-bd98-9b153a92b3ba",
+          "predicate": "CONTRIBUTED_TO",
+          "polarity": "affirmed",
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "contribution": {
+            "roleId": "AUTHORSHIP",
+            "scope": {
+              "kind": "publication",
+              "isbn13": "9784061037113",
+              "volumeLabel": "第1巻",
+              "editionLabel": null,
+              "language": "ja"
+            }
+          },
+          "organizationParticipation": null,
+          "eventParticipation": null
+        },
+        {
+          "id": "18c75118-e284-4c85-accf-e3894a6da3f3",
+          "subjectId": "d900543a-9c11-48c1-be76-1822b756fcc4",
+          "objectId": "290ab095-192d-4910-90f3-ae741f9d1f32",
+          "predicate": "CONTRIBUTED_TO",
+          "polarity": "affirmed",
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "contribution": {
+            "roleId": "DRAWING",
+            "scope": {
+              "kind": "publication",
+              "isbn13": "9784091810816",
+              "volumeLabel": "第1巻",
+              "editionLabel": null,
+              "language": "ja"
+            }
+          },
+          "organizationParticipation": null,
+          "eventParticipation": null
+        },
+        {
+          "id": "1eb1fe7c-0cbd-48f4-8379-cd7f6e4697e4",
+          "subjectId": "743d7fc0-ddc6-446a-8aa1-d9a9b284a326",
+          "objectId": "aafae4fe-6f56-47bb-af9f-dec69425f136",
+          "predicate": "CONTRIBUTED_TO",
+          "polarity": "affirmed",
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "contribution": {
+            "roleId": "AUTHORSHIP",
+            "scope": {
+              "kind": "publication",
+              "isbn13": "9784091220318",
+              "volumeLabel": "第1巻",
+              "editionLabel": null,
+              "language": "ja"
+            }
+          },
+          "organizationParticipation": null,
+          "eventParticipation": null
+        },
+        {
+          "id": "1f5ecc6d-509d-477e-8b05-7fa06c59d95c",
+          "subjectId": "a012632c-6fd8-4559-8f38-cc60f9b28b05",
+          "objectId": "290ab095-192d-4910-90f3-ae741f9d1f32",
+          "predicate": "CONTRIBUTED_TO",
+          "polarity": "affirmed",
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "contribution": {
+            "roleId": "CREATION",
+            "scope": {
+              "kind": "publication",
+              "isbn13": "9784091810816",
+              "volumeLabel": "第1巻",
+              "editionLabel": null,
+              "language": "ja"
+            }
+          },
+          "organizationParticipation": null,
+          "eventParticipation": null
+        },
+        {
+          "id": "24dca7b4-00bf-4f70-92f6-a498a494c29a",
+          "subjectId": "b4de3765-e8c4-49f1-a322-a021475ffd09",
+          "objectId": "1982f262-39f3-4bfa-93a4-af3a86ec3ec8",
+          "predicate": "CONTRIBUTED_TO",
+          "polarity": "affirmed",
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "contribution": {
+            "roleId": "AUTHORSHIP",
+            "scope": {
+              "kind": "publication",
+              "isbn13": "9784063829082",
+              "volumeLabel": "第1巻",
+              "editionLabel": null,
+              "language": "ja"
+            }
+          },
+          "organizationParticipation": null,
+          "eventParticipation": null
+        },
+        {
+          "id": "36199f3c-f260-473c-a22e-a75911b5fb6d",
+          "subjectId": "dfaf30df-2f9e-4c63-9fe1-cbbd0a083b36",
+          "objectId": "929116a2-77ff-443f-94e6-871c8b78f451",
+          "predicate": "CONTRIBUTED_TO",
+          "polarity": "affirmed",
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "contribution": {
+            "roleId": "DRAWING",
+            "scope": {
+              "kind": "publication",
+              "isbn13": "9784098501809",
+              "volumeLabel": "第1巻",
+              "editionLabel": null,
+              "language": "ja"
+            }
+          },
+          "organizationParticipation": null,
+          "eventParticipation": null
+        },
+        {
+          "id": "431210df-d594-498c-bbd4-9ce93c9dc282",
+          "subjectId": "20b7ba43-d12d-4d39-9a8e-f9e92e9d40d2",
+          "objectId": "929116a2-77ff-443f-94e6-871c8b78f451",
+          "predicate": "CONTRIBUTED_TO",
+          "polarity": "affirmed",
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "contribution": {
+            "roleId": "ORIGINAL_STORY",
+            "scope": {
+              "kind": "publication",
+              "isbn13": "9784098501809",
+              "volumeLabel": "第1巻",
+              "editionLabel": null,
+              "language": "ja"
+            }
+          },
+          "organizationParticipation": null,
+          "eventParticipation": null
+        },
+        {
+          "id": "48a9f51e-beb1-4c3a-9c30-5923bc852925",
+          "subjectId": "a13205e2-220c-4b7d-8a1a-39dbefe52db8",
+          "objectId": "3427040b-88fd-4db5-b546-dd237abad032",
+          "predicate": "CONTRIBUTED_TO",
+          "polarity": "affirmed",
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "contribution": {
+            "roleId": "ORIGINAL_STORY",
+            "scope": {
+              "kind": "publication",
+              "isbn13": "9784086196901",
+              "volumeLabel": "第1巻",
+              "editionLabel": null,
+              "language": "ja"
+            }
+          },
+          "organizationParticipation": null,
+          "eventParticipation": null
+        },
+        {
+          "id": "498cbe28-4703-4ac1-9a99-5cd83831b0e3",
+          "subjectId": "420d89ea-9780-4e01-ac64-9c5e8597d0c8",
+          "objectId": "dc188ef2-1a3d-4251-a445-90f49dd88cd0",
+          "predicate": "CONTRIBUTED_TO",
+          "polarity": "affirmed",
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "contribution": {
+            "roleId": "AUTHORSHIP",
+            "scope": {
+              "kind": "publication",
+              "isbn13": "9784757538870",
+              "volumeLabel": "第1巻",
+              "editionLabel": null,
+              "language": "ja"
+            }
+          },
+          "organizationParticipation": null,
+          "eventParticipation": null
+        },
+        {
+          "id": "602bc3c1-8a98-49cc-9556-a4c23feb6b0e",
+          "subjectId": "6bf4aeb4-ac2b-499f-bfaa-0588024ef93d",
+          "objectId": "baf73bb9-dda4-474c-acaf-a7a8ce52caf2",
+          "predicate": "CONTRIBUTED_TO",
+          "polarity": "affirmed",
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "contribution": {
+            "roleId": "AUTHORSHIP",
+            "scope": {
+              "kind": "publication",
+              "isbn13": "9784757520097",
+              "volumeLabel": "第1巻",
+              "editionLabel": null,
+              "language": "ja"
+            }
+          },
+          "organizationParticipation": null,
+          "eventParticipation": null
+        },
+        {
+          "id": "69ed2335-344f-41a6-a17f-77708faa0398",
+          "subjectId": "c59a1b1d-7477-46a5-9669-644981d1d5d8",
+          "objectId": "0914c6bb-701d-4c5a-b8f9-2c63cbff1ef3",
+          "predicate": "CONTRIBUTED_TO",
+          "polarity": "affirmed",
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "contribution": {
+            "roleId": "AUTHORSHIP",
+            "scope": {
+              "kind": "publication",
+              "isbn13": "9784065262634",
+              "volumeLabel": "全集第8巻（童夢）",
+              "editionLabel": null,
+              "language": "ja"
+            }
+          },
+          "organizationParticipation": null,
+          "eventParticipation": null
+        },
+        {
+          "id": "6ad7f063-1fce-4163-8414-437526212c31",
+          "subjectId": "a22fd2cd-aadc-4ca9-bf39-cb4bd7e0e953",
+          "objectId": "398d712d-23d9-455f-8897-f9384dd94930",
+          "predicate": "CONTRIBUTED_TO",
+          "polarity": "affirmed",
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "contribution": {
+            "roleId": "AUTHORSHIP",
+            "scope": {
+              "kind": "publication",
+              "isbn13": "9784884752934",
+              "volumeLabel": "第1巻",
+              "editionLabel": null,
+              "language": "ja"
+            }
+          },
+          "organizationParticipation": null,
+          "eventParticipation": null
+        },
+        {
+          "id": "7c2bd016-d9b0-4de2-824e-276941b1a2b2",
+          "subjectId": "6bf4aeb4-ac2b-499f-bfaa-0588024ef93d",
+          "objectId": "98b8ca7a-9638-4e5a-8fbd-62a353e4f159",
+          "predicate": "CONTRIBUTED_TO",
+          "polarity": "affirmed",
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "contribution": {
+            "roleId": "AUTHORSHIP",
+            "scope": {
+              "kind": "publication",
+              "isbn13": "9784592881513",
+              "volumeLabel": "第1巻",
+              "editionLabel": null,
+              "language": "ja"
+            }
+          },
+          "organizationParticipation": null,
+          "eventParticipation": null
+        },
+        {
+          "id": "81684aff-84cf-4977-a3b5-7c2f5d746e5a",
+          "subjectId": "ccb5ddb2-fb7c-4dad-8178-1a170342d0c6",
+          "objectId": "cd2e6949-6c1b-4818-990f-4d4dbc5c5d54",
+          "predicate": "CONTRIBUTED_TO",
+          "polarity": "affirmed",
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "contribution": {
+            "roleId": "DRAWING",
+            "scope": {
+              "kind": "publication",
+              "isbn13": "9784086172837",
+              "volumeLabel": "第1巻",
+              "editionLabel": null,
+              "language": "ja"
+            }
+          },
+          "organizationParticipation": null,
+          "eventParticipation": null
+        },
+        {
+          "id": "a4d14533-1e4d-47c4-9494-67008811cf75",
+          "subjectId": "afaa3ea0-f273-4481-95c5-5c31f9049cb2",
+          "objectId": "0c9eb1b7-2b2b-46b7-8110-9705138c3add",
+          "predicate": "CONTRIBUTED_TO",
+          "polarity": "affirmed",
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "contribution": {
+            "roleId": "AUTHORSHIP",
+            "scope": {
+              "kind": "publication",
+              "isbn13": "9784091241023",
+              "volumeLabel": "第1巻",
+              "editionLabel": null,
+              "language": "ja"
+            }
+          },
+          "organizationParticipation": null,
+          "eventParticipation": null
+        },
+        {
+          "id": "a996412a-7cc9-49d5-8446-9b3cf6a338dd",
+          "subjectId": "1edca4c7-0e4e-4769-859c-dde40e7e973a",
+          "objectId": "e7b913dd-7ad1-4288-861d-840cb4a3aeef",
+          "predicate": "CONTRIBUTED_TO",
+          "polarity": "affirmed",
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "contribution": {
+            "roleId": "ORIGINAL_STORY",
+            "scope": {
+              "kind": "publication",
+              "isbn13": "9784088820224",
+              "volumeLabel": "第1巻",
+              "editionLabel": null,
+              "language": "ja"
+            }
+          },
+          "organizationParticipation": null,
+          "eventParticipation": null
+        },
+        {
+          "id": "b7d9d6ba-f2a0-492e-981d-408b22955215",
+          "subjectId": "420d89ea-9780-4e01-ac64-9c5e8597d0c8",
+          "objectId": "8a0d3d5a-feb6-4ba3-8993-64b6ac79de12",
+          "predicate": "CONTRIBUTED_TO",
+          "polarity": "affirmed",
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "contribution": {
+            "roleId": "DRAWING",
+            "scope": null
+          },
+          "organizationParticipation": null,
+          "eventParticipation": null
+        },
+        {
+          "id": "c19e5b2f-01e2-4233-a7c9-326a1772d7de",
+          "subjectId": "3f22660f-01d7-4a4a-9ae6-f169c9a3dc4a",
+          "objectId": "c9080259-3866-4c25-999f-4a5a22046ac1",
+          "predicate": "CONTRIBUTED_TO",
+          "polarity": "affirmed",
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "contribution": {
+            "roleId": "ORIGINAL_STORY",
+            "scope": {
+              "kind": "publication",
+              "isbn13": "9784091823618",
+              "volumeLabel": "第1巻",
+              "editionLabel": null,
+              "language": "ja"
+            }
+          },
+          "organizationParticipation": null,
+          "eventParticipation": null
+        },
+        {
+          "id": "c3fcdaa7-1374-4c62-acab-368dc1ed1bee",
+          "subjectId": "710bc8a7-efed-4c2e-a4b4-6c65b0aff695",
+          "objectId": "c9080259-3866-4c25-999f-4a5a22046ac1",
+          "predicate": "CONTRIBUTED_TO",
+          "polarity": "affirmed",
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "contribution": {
+            "roleId": "DRAWING",
+            "scope": {
+              "kind": "publication",
+              "isbn13": "9784091823618",
+              "volumeLabel": "第1巻",
+              "editionLabel": null,
+              "language": "ja"
+            }
+          },
+          "organizationParticipation": null,
+          "eventParticipation": null
+        },
+        {
+          "id": "cd294bb9-a7de-4f21-95c2-84b878c0e7cc",
+          "subjectId": "d5e39491-5a5f-423c-9222-2eb3c18db9a8",
+          "objectId": "3427040b-88fd-4db5-b546-dd237abad032",
+          "predicate": "CONTRIBUTED_TO",
+          "polarity": "affirmed",
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "contribution": {
+            "roleId": "AUTHORSHIP",
+            "scope": {
+              "kind": "publication",
+              "isbn13": "9784086196901",
+              "volumeLabel": "第1巻",
+              "editionLabel": null,
+              "language": "ja"
+            }
+          },
+          "organizationParticipation": null,
+          "eventParticipation": null
+        },
+        {
+          "id": "d5d3fef1-fc64-4e61-b049-2f3c81994cb9",
+          "subjectId": "6c9095bd-1969-4bcd-9282-2d1e9e411254",
+          "objectId": "40a8ddd3-f333-485c-a12a-ac3d0961111b",
+          "predicate": "CONTRIBUTED_TO",
+          "polarity": "affirmed",
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "contribution": {
+            "roleId": "AUTHORSHIP",
+            "scope": {
+              "kind": "publication",
+              "isbn13": "9784091910110",
+              "volumeLabel": "単巻",
+              "editionLabel": null,
+              "language": "ja"
+            }
+          },
+          "organizationParticipation": null,
+          "eventParticipation": null
+        },
+        {
+          "id": "d92e9a4e-4f60-445d-807b-63764f69528b",
+          "subjectId": "9f43fefa-d878-4e5e-b1a2-0413432e9dbd",
+          "objectId": "480df823-5da8-45e4-aa20-1fdabe7ea5a3",
+          "predicate": "CONTRIBUTED_TO",
+          "polarity": "affirmed",
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "contribution": {
+            "roleId": "AUTHORSHIP",
+            "scope": {
+              "kind": "publication",
+              "isbn13": "9784088807317",
+              "volumeLabel": "第1巻",
+              "editionLabel": null,
+              "language": "ja"
+            }
+          },
+          "organizationParticipation": null,
+          "eventParticipation": null
+        },
+        {
+          "id": "e3b0de8a-f7cc-4188-baa2-b41e2298e2be",
+          "subjectId": "1866bbe5-7e00-4afc-965f-5e968481f065",
+          "objectId": "5c5f452c-1e74-4985-aaec-811a8e329f42",
+          "predicate": "CONTRIBUTED_TO",
+          "polarity": "affirmed",
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "contribution": {
+            "roleId": "AUTHORSHIP",
+            "scope": {
+              "kind": "publication",
+              "isbn13": "9784091380135",
+              "volumeLabel": "第1巻",
+              "editionLabel": null,
+              "language": "ja"
+            }
+          },
+          "organizationParticipation": null,
+          "eventParticipation": null
+        },
+        {
+          "id": "e3bf903c-5d0c-4f91-bf83-2826f5a23db7",
+          "subjectId": "3f22660f-01d7-4a4a-9ae6-f169c9a3dc4a",
+          "objectId": "cd2e6949-6c1b-4818-990f-4d4dbc5c5d54",
+          "predicate": "CONTRIBUTED_TO",
+          "polarity": "affirmed",
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "contribution": {
+            "roleId": "CREATION",
+            "scope": {
+              "kind": "publication",
+              "isbn13": "9784086172837",
+              "volumeLabel": "第1巻",
+              "editionLabel": null,
+              "language": "ja"
+            }
+          },
+          "organizationParticipation": null,
+          "eventParticipation": null
+        },
+        {
+          "id": "ed33df12-efd1-44bc-84bb-a9d83fa05f8f",
+          "subjectId": "d4a3f93f-bbcd-42df-9567-2ba4a485bef3",
+          "objectId": "e7b913dd-7ad1-4288-861d-840cb4a3aeef",
+          "predicate": "CONTRIBUTED_TO",
+          "polarity": "affirmed",
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "contribution": {
+            "roleId": "DRAWING",
+            "scope": {
+              "kind": "publication",
+              "isbn13": "9784088820224",
+              "volumeLabel": "第1巻",
+              "editionLabel": null,
+              "language": "ja"
+            }
+          },
+          "organizationParticipation": null,
+          "eventParticipation": null
+        },
+        {
+          "id": "f06a6e2c-59c6-4ff3-ad74-13aff65677d3",
+          "subjectId": "eb0af7e1-caa6-435f-86fb-0591421982b5",
+          "objectId": "76884305-ef0d-4cb0-ace2-90cfac57de3e",
+          "predicate": "CONTRIBUTED_TO",
+          "polarity": "affirmed",
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "contribution": {
+            "roleId": "AUTHORSHIP",
+            "scope": {
+              "kind": "publication",
+              "isbn13": "9784253169813",
+              "volumeLabel": "第1巻",
+              "editionLabel": null,
+              "language": "ja"
+            }
+          },
+          "organizationParticipation": null,
+          "eventParticipation": null
+        },
+        {
+          "id": "f4504ec8-173a-453f-83e8-a24e72dde9bc",
+          "subjectId": "711dc415-45d5-4d35-8cca-068332180cc0",
+          "objectId": "8a0d3d5a-feb6-4ba3-8993-64b6ac79de12",
+          "predicate": "CONTRIBUTED_TO",
+          "polarity": "affirmed",
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "contribution": {
+            "roleId": "ORIGINAL_STORY",
+            "scope": null
+          },
+          "organizationParticipation": null,
+          "eventParticipation": null
+        },
+        {
+          "id": "f4b64248-7b3e-4fae-8ff2-7122410b63f4",
+          "subjectId": "6c9095bd-1969-4bcd-9282-2d1e9e411254",
+          "objectId": "c74e0874-eb89-4825-a824-3ff182fe8053",
+          "predicate": "CONTRIBUTED_TO",
+          "polarity": "affirmed",
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "contribution": {
+            "roleId": "AUTHORSHIP",
+            "scope": {
+              "kind": "publication",
+              "isbn13": "9784091912510",
+              "volumeLabel": "第1巻",
+              "editionLabel": null,
+              "language": "ja"
+            }
+          },
+          "organizationParticipation": null,
+          "eventParticipation": null
+        },
+        {
+          "id": "fb933ff4-2061-4a0c-a72c-6e7dd2958737",
+          "subjectId": "d900543a-9c11-48c1-be76-1822b756fcc4",
+          "objectId": "c1e93fb7-3547-4b64-bd7c-bce073a1198a",
+          "predicate": "CONTRIBUTED_TO",
+          "polarity": "affirmed",
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "contribution": {
+            "roleId": "AUTHORSHIP",
+            "scope": {
+              "kind": "publication",
+              "isbn13": "9784098602780",
+              "volumeLabel": "第1巻",
+              "editionLabel": null,
+              "language": "ja"
+            }
+          },
+          "organizationParticipation": null,
+          "eventParticipation": null
+        },
+        {
+          "id": "fdfae8cd-b3f0-4c36-b6ed-659e98d24871",
+          "subjectId": "1866bbe5-7e00-4afc-965f-5e968481f065",
+          "objectId": "4b90e125-b331-4361-8681-93a12c662cb7",
+          "predicate": "CONTRIBUTED_TO",
+          "polarity": "affirmed",
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "contribution": {
+            "roleId": "AUTHORSHIP",
+            "scope": {
+              "kind": "publication",
+              "isbn13": "9784091914316",
+              "volumeLabel": "第1巻",
+              "editionLabel": null,
+              "language": "ja"
+            }
+          },
+          "organizationParticipation": null,
+          "eventParticipation": null
+        }
+      ],
+      "existingEntityDependencies": [
+        "290ab095-192d-4910-90f3-ae741f9d1f32",
+        "710bc8a7-efed-4c2e-a4b4-6c65b0aff695",
+        "9f43fefa-d878-4e5e-b1a2-0413432e9dbd",
+        "a012632c-6fd8-4559-8f38-cc60f9b28b05",
+        "a13205e2-220c-4b7d-8a1a-39dbefe52db8",
+        "b4de3765-e8c4-49f1-a322-a021475ffd09",
+        "d900543a-9c11-48c1-be76-1822b756fcc4",
+        "eb0af7e1-caa6-435f-86fb-0591421982b5"
+      ],
+      "counts": {
+        "entities": 39,
+        "claims": 31,
+        "sources": 26,
+        "citations": 32
+      }
+    }
+  },
+  "normalIdentityOnlyCandidate": "0914c6bb-701d-4c5a-b8f9-2c63cbff1ef3",
+  "referenceArtifacts": [
+    {
+      "file": "datasets/manga-collection/review-r0003-20261017/review.json",
+      "sha256": "03f0c1ad829a31173d8bc78d4f6f32fcbcf3ca4a5a6a245f14352592cfa25f19"
+    },
+    {
+      "file": "datasets/manga-collection/review-r0003-20261017/proposed-records.json",
+      "sha256": "b9db863d52318528237fb1f9aa06fb1bfef4bc4ce355dd47229d72e746cb3be4"
+    },
+    {
+      "file": "datasets/manga-collection/review-r0003-20261017/release-dependencies.json",
+      "sha256": "fdcb13d84cc9019084869c435d14346eb50c717130a6e4e4804ca94b5c5b5ed0"
+    },
+    {
+      "file": "datasets/manga-collection/review-r0003-20261017/frozen-inputs.json",
+      "sha256": "6d437879c330de1a1f885f8a8aace6058193e9e83b3f941d764592e6be0ad5ad"
+    },
+    {
+      "file": "datasets/manga-collection/review-r0003-20261017/additional-evidence.json",
+      "sha256": "1187f72352c46cd775df22b2de54f2bf52020860832fbfe676cf8c4255baf844"
+    },
+    {
+      "file": "datasets/manga-collection/review-r0003-20261017/identity-evidence.json",
+      "sha256": "fb3ed6e7b9df51da5b1171afa8047b6ae520630df88e5945aeec9b8f98f85505"
+    }
+  ],
+  "notice": "Grouped recommendations only; this is not a human approval or an acceptance receipt."
+}

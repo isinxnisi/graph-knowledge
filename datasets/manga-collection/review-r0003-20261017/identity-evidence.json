@@ -1,0 +1,1685 @@
+{
+  "status": "review-evidence-not-acceptance",
+  "sourceJobId": "famous-manga-creators-r0003-907fdec3b7f86662",
+  "structuredDataLicense": "CC0",
+  "entities": {
+    "Q1016880": {
+      "id": "Q1016880",
+      "lastrevid": 2535028720,
+      "labels": {
+        "en": {
+          "language": "en",
+          "value": "Buronson"
+        },
+        "ja": {
+          "language": "ja",
+          "value": "武論尊"
+        }
+      },
+      "aliases": {
+        "ja": [
+          {
+            "language": "ja",
+            "value": "史村翔"
+          },
+          {
+            "language": "ja",
+            "value": "岡村善行"
+          }
+        ],
+        "en": [
+          {
+            "language": "en",
+            "value": "Sho Fumimura"
+          },
+          {
+            "language": "en",
+            "value": "Shō Fumimura"
+          },
+          {
+            "language": "en",
+            "value": "Yoshiyuki Okamura"
+          }
+        ]
+      },
+      "instanceOf": [
+        "Q5"
+      ],
+      "authorQids": [],
+      "illustratorQids": [],
+      "jobSnapshot": "snapshots/Q1016880.json",
+      "jobSnapshotSha256": "8ff623d6ae7e481270476dee9b5c0bfe8b0c1e5212da01188dc91fd20bdb481e"
+    },
+    "Q102231027": {
+      "id": "Q102231027",
+      "lastrevid": 2552546421,
+      "labels": {
+        "en": {
+          "language": "en",
+          "value": "Asadora!"
+        },
+        "ja": {
+          "language": "ja",
+          "value": "連続漫画小説 あさドラ!"
+        }
+      },
+      "aliases": {
+        "en": [
+          {
+            "language": "en",
+            "value": "Renzoku Manga Shōsetsu Asadora!"
+          }
+        ]
+      },
+      "instanceOf": [
+        "Q21198342"
+      ],
+      "authorQids": [
+        "Q348436"
+      ],
+      "illustratorQids": [
+        "Q348436"
+      ],
+      "jobSnapshot": "snapshots/Q102231027.json",
+      "jobSnapshotSha256": "2f307f6aafdc7597acfb01c0b7f52b7c2d9233d06a6ccefb4bd5842c5329823b"
+    },
+    "Q105258125": {
+      "id": "Q105258125",
+      "lastrevid": 2541120902,
+      "labels": {
+        "ja": {
+          "language": "ja",
+          "value": "アベツカサ"
+        },
+        "en": {
+          "language": "en",
+          "value": "Tsukasa Abe"
+        }
+      },
+      "aliases": {},
+      "instanceOf": [
+        "Q5"
+      ],
+      "authorQids": [],
+      "illustratorQids": [],
+      "jobSnapshot": "snapshots/Q105258125.json",
+      "jobSnapshotSha256": "ec85747697c31302005530c2ed1e2379a3acc02bb11717527b13edf5ea848d2b"
+    },
+    "Q108109758": {
+      "id": "Q108109758",
+      "lastrevid": 2555422955,
+      "labels": {
+        "ja": {
+          "language": "ja",
+          "value": "大久保彰"
+        },
+        "en": {
+          "language": "en",
+          "value": "Akira Ōkubo"
+        }
+      },
+      "aliases": {},
+      "instanceOf": [
+        "Q5"
+      ],
+      "authorQids": [],
+      "illustratorQids": [],
+      "jobSnapshot": "snapshots/Q108109758.json",
+      "jobSnapshotSha256": "6a5e7086a19eb6438332b04b40056187fb3e23cd2b747bce8776c52c50d6e988"
+    },
+    "Q1096269": {
+      "id": "Q1096269",
+      "lastrevid": 2534484781,
+      "labels": {
+        "ja": {
+          "language": "ja",
+          "value": "パイナップルARMY"
+        },
+        "en": {
+          "language": "en",
+          "value": "Pineapple Army"
+        }
+      },
+      "aliases": {},
+      "instanceOf": [
+        "Q21198342"
+      ],
+      "authorQids": [
+        "Q3194504"
+      ],
+      "illustratorQids": [
+        "Q348436"
+      ],
+      "jobSnapshot": "snapshots/Q1096269.json",
+      "jobSnapshotSha256": "63075fa62c0c4171d8c7379d96862b0cb046cd98f80d058cc94015725c939078"
+    },
+    "Q11237288": {
+      "id": "Q11237288",
+      "lastrevid": 2530164213,
+      "labels": {
+        "ja": {
+          "language": "ja",
+          "value": "ONE"
+        },
+        "en": {
+          "language": "en",
+          "value": "One"
+        }
+      },
+      "aliases": {
+        "en": [
+          {
+            "language": "en",
+            "value": "ONE"
+          }
+        ]
+      },
+      "instanceOf": [
+        "Q5"
+      ],
+      "authorQids": [],
+      "illustratorQids": [],
+      "jobSnapshot": "snapshots/Q11237288.json",
+      "jobSnapshotSha256": "8584c69af4d9de7e8b01f209d4f4482ff442c4cea1a0347b3c9692dde7ca376f"
+    },
+    "Q11298673": {
+      "id": "Q11298673",
+      "lastrevid": 2386112565,
+      "labels": {
+        "ja": {
+          "language": "ja",
+          "value": "クズの本懐"
+        },
+        "en": {
+          "language": "en",
+          "value": "Scum's Wish"
+        }
+      },
+      "aliases": {
+        "en": [
+          {
+            "language": "en",
+            "value": "Kuzu no Honkai"
+          }
+        ]
+      },
+      "instanceOf": [
+        "Q21198342"
+      ],
+      "authorQids": [
+        "Q17220992"
+      ],
+      "illustratorQids": [],
+      "jobSnapshot": "snapshots/Q11298673.json",
+      "jobSnapshotSha256": "6cd1dd2469666a9a0ba99d8ed0b8d5f3341b8945096157dd8a8db285dc1e90bf"
+    },
+    "Q11344543": {
+      "id": "Q11344543",
+      "lastrevid": 2505713357,
+      "labels": {
+        "ja": {
+          "language": "ja",
+          "value": "モブサイコ100"
+        },
+        "en": {
+          "language": "en",
+          "value": "Mob Psycho 100"
+        }
+      },
+      "aliases": {
+        "en": [
+          {
+            "language": "en",
+            "value": "MP100"
+          }
+        ]
+      },
+      "instanceOf": [
+        "Q21198342"
+      ],
+      "authorQids": [
+        "Q11237288"
+      ],
+      "illustratorQids": [
+        "Q11237288"
+      ],
+      "jobSnapshot": "snapshots/Q11344543.json",
+      "jobSnapshotSha256": "bcc884b0afa4d43dd40339b66454389894053667301dc5b28600f18d331828b7"
+    },
+    "Q1170375": {
+      "id": "Q1170375",
+      "lastrevid": 2547719968,
+      "labels": {
+        "en": {
+          "language": "en",
+          "value": "Domu: A Child's Dream"
+        },
+        "ja": {
+          "language": "ja",
+          "value": "童夢"
+        }
+      },
+      "aliases": {},
+      "instanceOf": [
+        "Q21198342"
+      ],
+      "authorQids": [
+        "Q378710"
+      ],
+      "illustratorQids": [
+        "Q378710"
+      ],
+      "jobSnapshot": "snapshots/Q1170375.json",
+      "jobSnapshotSha256": "d9144898436d471ba4903b44c8fc7f4e3a5e48a491689db18936094a29afb17c"
+    },
+    "Q124312385": {
+      "id": "Q124312385",
+      "lastrevid": 2408953020,
+      "labels": {
+        "en": {
+          "language": "en",
+          "value": "They Were Eleven"
+        },
+        "ja": {
+          "language": "ja",
+          "value": "11人いる!"
+        }
+      },
+      "aliases": {
+        "en": [
+          {
+            "language": "en",
+            "value": "11-nin Iru!"
+          }
+        ]
+      },
+      "instanceOf": [
+        "Q21198342"
+      ],
+      "authorQids": [
+        "Q265061"
+      ],
+      "illustratorQids": [],
+      "jobSnapshot": "snapshots/Q124312385.json",
+      "jobSnapshotSha256": "14bb05b46698f6867a316675ca0fd0cfd213efa4ac7d6140be0b511436f5bfef"
+    },
+    "Q1319232": {
+      "id": "Q1319232",
+      "lastrevid": 2549535131,
+      "labels": {
+        "ja": {
+          "language": "ja",
+          "value": "原哲夫"
+        },
+        "en": {
+          "language": "en",
+          "value": "Tetsuo Hara"
+        }
+      },
+      "aliases": {
+        "en": [
+          {
+            "language": "en",
+            "value": "Hara Tetsuo"
+          }
+        ]
+      },
+      "instanceOf": [
+        "Q5"
+      ],
+      "authorQids": [],
+      "illustratorQids": [],
+      "jobSnapshot": "snapshots/Q1319232.json",
+      "jobSnapshotSha256": "f787a60683160863386624302f095d0a023dccd3b5183ebdcc1c8c12166caa63"
+    },
+    "Q1332841": {
+      "id": "Q1332841",
+      "lastrevid": 2553176122,
+      "labels": {
+        "ja": {
+          "language": "ja",
+          "value": "池上遼一"
+        },
+        "en": {
+          "language": "en",
+          "value": "Ryoichi Ikegami"
+        }
+      },
+      "aliases": {
+        "ja": [
+          {
+            "language": "ja",
+            "value": "肌の記憶"
+          },
+          {
+            "language": "ja",
+            "value": "陰獣トリステサ"
+          },
+          {
+            "language": "ja",
+            "value": "星雲児"
+          },
+          {
+            "language": "ja",
+            "value": "流月抄"
+          },
+          {
+            "language": "ja",
+            "value": "人面蝶"
+          },
+          {
+            "language": "ja",
+            "value": "王龍院雲丸の生涯"
+          },
+          {
+            "language": "ja",
+            "value": "OFFERED"
+          },
+          {
+            "language": "ja",
+            "value": "Strain"
+          },
+          {
+            "language": "ja",
+            "value": "アイウエオボーイ"
+          }
+        ],
+        "en": [
+          {
+            "language": "en",
+            "value": "kegami"
+          }
+        ]
+      },
+      "instanceOf": [
+        "Q5"
+      ],
+      "authorQids": [],
+      "illustratorQids": [],
+      "jobSnapshot": "snapshots/Q1332841.json",
+      "jobSnapshotSha256": "4f9ce2e7c22f1596447855e27ea94454ff3fcc62368218bc3a8ed8c58150a14b"
+    },
+    "Q133691": {
+      "id": "Q133691",
+      "lastrevid": 2557740969,
+      "labels": {
+        "ja": {
+          "language": "ja",
+          "value": "ブラック・ジャック"
+        },
+        "en": {
+          "language": "en",
+          "value": "Black Jack"
+        }
+      },
+      "aliases": {},
+      "instanceOf": [
+        "Q21198342"
+      ],
+      "authorQids": [
+        "Q193300"
+      ],
+      "illustratorQids": [
+        "Q193300"
+      ],
+      "jobSnapshot": "snapshots/Q133691.json",
+      "jobSnapshotSha256": "5b70378f750569fc08e0ab3b3ad559bb1cdd91b7202fcee74cd8bb8eb74aa5ce"
+    },
+    "Q1338432": {
+      "id": "Q1338432",
+      "lastrevid": 2386108339,
+      "labels": {
+        "ja": {
+          "language": "ja",
+          "value": "風と木の詩"
+        },
+        "en": {
+          "language": "en",
+          "value": "Kaze to Ki no Uta"
+        }
+      },
+      "aliases": {},
+      "instanceOf": [
+        "Q21198342"
+      ],
+      "authorQids": [
+        "Q268789"
+      ],
+      "illustratorQids": [
+        "Q268789"
+      ],
+      "jobSnapshot": "snapshots/Q1338432.json",
+      "jobSnapshotSha256": "e1dff246816a7de82c54d8d96a4f7990815c386efe9e7eb0070cba340c998458"
+    },
+    "Q17220992": {
+      "id": "Q17220992",
+      "lastrevid": 2541120315,
+      "labels": {
+        "ja": {
+          "language": "ja",
+          "value": "横槍メンゴ"
+        },
+        "en": {
+          "language": "en",
+          "value": "Mengo Yokoyari"
+        }
+      },
+      "aliases": {
+        "en": [
+          {
+            "language": "en",
+            "value": "Yokoyari Mengo"
+          }
+        ],
+        "ja": [
+          {
+            "language": "ja",
+            "value": "ヨリ"
+          }
+        ]
+      },
+      "instanceOf": [
+        "Q5"
+      ],
+      "authorQids": [],
+      "illustratorQids": [],
+      "jobSnapshot": "snapshots/Q17220992.json",
+      "jobSnapshotSha256": "54c8d7ee8d02a3f6bf7564e31bb1f3885bc6e6569aa7b3040e4b7f6283c1c2a0"
+    },
+    "Q193300": {
+      "id": "Q193300",
+      "lastrevid": 2557061986,
+      "labels": {
+        "ja": {
+          "language": "ja",
+          "value": "手塚治虫"
+        },
+        "en": {
+          "language": "en",
+          "value": "Osamu Tezuka"
+        }
+      },
+      "aliases": {
+        "ja": [
+          {
+            "language": "ja",
+            "value": "手塚治"
+          },
+          {
+            "language": "ja",
+            "value": "マンガの神様"
+          },
+          {
+            "language": "ja",
+            "value": "伯藝院殿覚圓蟲聖大居士"
+          },
+          {
+            "language": "ja",
+            "value": "てづか おさむ"
+          }
+        ],
+        "en": [
+          {
+            "language": "en",
+            "value": "Tezuka Osamu"
+          }
+        ]
+      },
+      "instanceOf": [
+        "Q5"
+      ],
+      "authorQids": [],
+      "illustratorQids": [],
+      "jobSnapshot": "snapshots/Q193300.json",
+      "jobSnapshotSha256": "325be4621bc75db0d580c3e6ebaaf250dc2f2856a4c404aaf98b6e183789e64c"
+    },
+    "Q1993": {
+      "id": "Q1993",
+      "lastrevid": 2557033668,
+      "labels": {
+        "en": {
+          "language": "en",
+          "value": "Masashi Kishimoto"
+        },
+        "ja": {
+          "language": "ja",
+          "value": "岸本斉史"
+        }
+      },
+      "aliases": {
+        "en": [
+          {
+            "language": "en",
+            "value": "Kishimoto Masashi"
+          }
+        ],
+        "ja": [
+          {
+            "language": "ja",
+            "value": "シモッさん"
+          },
+          {
+            "language": "ja",
+            "value": "キッシー"
+          }
+        ]
+      },
+      "instanceOf": [
+        "Q5"
+      ],
+      "authorQids": [],
+      "illustratorQids": [],
+      "jobSnapshot": "snapshots/Q1993.json",
+      "jobSnapshotSha256": "878fd1312a507e7a8005b06e7e9d0118e493c9c9c55fd7870c5e12e0df4247db"
+    },
+    "Q219948": {
+      "id": "Q219948",
+      "lastrevid": 2548348525,
+      "labels": {
+        "ja": {
+          "language": "ja",
+          "value": "高橋留美子"
+        },
+        "en": {
+          "language": "en",
+          "value": "Rumiko Takahashi"
+        }
+      },
+      "aliases": {
+        "en": [
+          {
+            "language": "en",
+            "value": "Takahashi Rumiko"
+          }
+        ]
+      },
+      "instanceOf": [
+        "Q5"
+      ],
+      "authorQids": [],
+      "illustratorQids": [],
+      "jobSnapshot": "snapshots/Q219948.json",
+      "jobSnapshotSha256": "945314a7cccaaddb85b2fa0aea37fa8455e6b607cf2d138b4fde2688596fb415"
+    },
+    "Q2235128": {
+      "id": "Q2235128",
+      "lastrevid": 2541689475,
+      "labels": {
+        "ja": {
+          "language": "ja",
+          "value": "田村由美"
+        },
+        "en": {
+          "language": "en",
+          "value": "Yumi Tamura"
+        }
+      },
+      "aliases": {
+        "en": [
+          {
+            "language": "en",
+            "value": "Tamura Yumi"
+          }
+        ]
+      },
+      "instanceOf": [
+        "Q5"
+      ],
+      "authorQids": [],
+      "illustratorQids": [],
+      "jobSnapshot": "snapshots/Q2235128.json",
+      "jobSnapshotSha256": "eed942fa530684048eceb3d97a1826008911b5e4e9e40fd6b06d1a5b95298f9d"
+    },
+    "Q23937543": {
+      "id": "Q23937543",
+      "lastrevid": 2529548765,
+      "labels": {
+        "ja": {
+          "language": "ja",
+          "value": "赤坂アカ"
+        },
+        "en": {
+          "language": "en",
+          "value": "Aka Akasaka"
+        }
+      },
+      "aliases": {
+        "en": [
+          {
+            "language": "en",
+            "value": "Akasaka Aka"
+          }
+        ]
+      },
+      "instanceOf": [
+        "Q5"
+      ],
+      "authorQids": [],
+      "illustratorQids": [],
+      "jobSnapshot": "snapshots/Q23937543.json",
+      "jobSnapshotSha256": "63aab39c5973886318b931f2e90b2c1c0dd37e323739311bceab645f5a8b1eb4"
+    },
+    "Q24864023": {
+      "id": "Q24864023",
+      "lastrevid": 2536411399,
+      "labels": {
+        "ja": {
+          "language": "ja",
+          "value": "藤本タツキ"
+        },
+        "en": {
+          "language": "en",
+          "value": "Tatsuki Fujimoto"
+        }
+      },
+      "aliases": {
+        "en": [
+          {
+            "language": "en",
+            "value": "Fujimoto Tatsuki"
+          },
+          {
+            "language": "en",
+            "value": "Nagayama Koharu"
+          }
+        ],
+        "ja": [
+          {
+            "language": "ja",
+            "value": "藤本 タツキ"
+          }
+        ]
+      },
+      "instanceOf": [
+        "Q5"
+      ],
+      "authorQids": [],
+      "illustratorQids": [],
+      "jobSnapshot": "snapshots/Q24864023.json",
+      "jobSnapshotSha256": "61e0ca1c95971ede65a3a8b8578286a7b0f2cb8f7e7a5df6284a32b67449b64c"
+    },
+    "Q2551007": {
+      "id": "Q2551007",
+      "lastrevid": 2408959189,
+      "labels": {
+        "ja": {
+          "language": "ja",
+          "value": "天才バカボン"
+        },
+        "en": {
+          "language": "en",
+          "value": "Tensai Bakabon"
+        }
+      },
+      "aliases": {
+        "ja": [
+          {
+            "language": "ja",
+            "value": "バカボン"
+          },
+          {
+            "language": "ja",
+            "value": "天才馬鹿凡"
+          }
+        ],
+        "en": [
+          {
+            "language": "en",
+            "value": "The Genius Bakabon"
+          },
+          {
+            "language": "en",
+            "value": "Meet the Boneheads"
+          }
+        ]
+      },
+      "instanceOf": [
+        "Q21198342"
+      ],
+      "authorQids": [
+        "Q958256"
+      ],
+      "illustratorQids": [
+        "Q958256"
+      ],
+      "jobSnapshot": "snapshots/Q2551007.json",
+      "jobSnapshotSha256": "d6dd92afa67f668e3df972a4885f6b86132e860b0ed075f1b28d816dee8c19a9"
+    },
+    "Q265061": {
+      "id": "Q265061",
+      "lastrevid": 2546527944,
+      "labels": {
+        "ja": {
+          "language": "ja",
+          "value": "萩尾望都"
+        },
+        "en": {
+          "language": "en",
+          "value": "Moto Hagio"
+        }
+      },
+      "aliases": {
+        "ja": [
+          {
+            "language": "ja",
+            "value": "木下司"
+          }
+        ]
+      },
+      "instanceOf": [
+        "Q5"
+      ],
+      "authorQids": [],
+      "illustratorQids": [],
+      "jobSnapshot": "snapshots/Q265061.json",
+      "jobSnapshotSha256": "7e2ccaebbd097426856e75019bf7e0ea1aa9df02d3cd5af8eee10f3fa7febb55"
+    },
+    "Q2668005": {
+      "id": "Q2668005",
+      "lastrevid": 2548041834,
+      "labels": {
+        "ja": {
+          "language": "ja",
+          "value": "地球へ…"
+        },
+        "en": {
+          "language": "en",
+          "value": "Toward the Terra"
+        }
+      },
+      "aliases": {
+        "ja": [
+          {
+            "language": "ja",
+            "value": "テラへ…"
+          },
+          {
+            "language": "ja",
+            "value": "地球へ・・・"
+          },
+          {
+            "language": "ja",
+            "value": "地球へ"
+          },
+          {
+            "language": "ja",
+            "value": "テラへ"
+          }
+        ],
+        "en": [
+          {
+            "language": "en",
+            "value": "To Terra"
+          },
+          {
+            "language": "en",
+            "value": "Terra e..."
+          }
+        ]
+      },
+      "instanceOf": [
+        "Q21198342"
+      ],
+      "authorQids": [
+        "Q268789"
+      ],
+      "illustratorQids": [
+        "Q268789"
+      ],
+      "jobSnapshot": "snapshots/Q2668005.json",
+      "jobSnapshotSha256": "a292539512341b8b1b0b1c5b60ce1c9bd81a9d94e2c59941ae39ddf401cdf37f"
+    },
+    "Q2679175": {
+      "id": "Q2679175",
+      "lastrevid": 2534511160,
+      "labels": {
+        "ja": {
+          "language": "ja",
+          "value": "7SEEDS"
+        },
+        "en": {
+          "language": "en",
+          "value": "7 Seeds"
+        }
+      },
+      "aliases": {
+        "ja": [
+          {
+            "language": "ja",
+            "value": "セブンシーズ"
+          }
+        ]
+      },
+      "instanceOf": [
+        "Q21198342"
+      ],
+      "authorQids": [
+        "Q2235128"
+      ],
+      "illustratorQids": [
+        "Q2235128"
+      ],
+      "jobSnapshot": "snapshots/Q2679175.json",
+      "jobSnapshotSha256": "b468aa42ad1d5a833a8692ca6b12c15bc32fad414ed26eeb51773963d06635f6"
+    },
+    "Q268789": {
+      "id": "Q268789",
+      "lastrevid": 2535291464,
+      "labels": {
+        "ja": {
+          "language": "ja",
+          "value": "竹宮惠子"
+        },
+        "en": {
+          "language": "en",
+          "value": "Keiko Takemiya"
+        }
+      },
+      "aliases": {
+        "ja": [
+          {
+            "language": "ja",
+            "value": "竹宮恵子"
+          }
+        ],
+        "en": [
+          {
+            "language": "en",
+            "value": "Takemiya Keiko"
+          },
+          {
+            "language": "en",
+            "value": "Takemiya, Keiko, 1950-"
+          }
+        ]
+      },
+      "instanceOf": [
+        "Q5"
+      ],
+      "authorQids": [],
+      "illustratorQids": [],
+      "jobSnapshot": "snapshots/Q268789.json",
+      "jobSnapshotSha256": "f3b94704767e3bd137e61ea1c66ff6881b95d9dd0e942abdd0346389b5e80627"
+    },
+    "Q272015": {
+      "id": "Q272015",
+      "lastrevid": 2551713839,
+      "labels": {
+        "en": {
+          "language": "en",
+          "value": "Ranma ½"
+        },
+        "ja": {
+          "language": "ja",
+          "value": "らんま1/2"
+        }
+      },
+      "aliases": {
+        "en": [
+          {
+            "language": "en",
+            "value": "Ranma 1/2"
+          },
+          {
+            "language": "en",
+            "value": "Ranma"
+          },
+          {
+            "language": "en",
+            "value": "Ranma ¹⁄₂"
+          },
+          {
+            "language": "en",
+            "value": "Ranma 1⁄2"
+          }
+        ],
+        "ja": [
+          {
+            "language": "ja",
+            "value": "らんま½ [Ranma ½]"
+          },
+          {
+            "language": "ja",
+            "value": "らんま½"
+          },
+          {
+            "language": "ja",
+            "value": "らんま 1/2"
+          }
+        ]
+      },
+      "instanceOf": [
+        "Q21198342"
+      ],
+      "authorQids": [
+        "Q219948"
+      ],
+      "illustratorQids": [
+        "Q219948"
+      ],
+      "jobSnapshot": "snapshots/Q272015.json",
+      "jobSnapshotSha256": "415016a0d8dbea8d80d43eb4fd6fed3e80627cdab48e6e4ac849a3b02bcb8352"
+    },
+    "Q28682711": {
+      "id": "Q28682711",
+      "lastrevid": 2539328993,
+      "labels": {
+        "ja": {
+          "language": "ja",
+          "value": "ファイアパンチ"
+        },
+        "en": {
+          "language": "en",
+          "value": "Fire Punch"
+        }
+      },
+      "aliases": {},
+      "instanceOf": [
+        "Q21198342"
+      ],
+      "authorQids": [
+        "Q24864023"
+      ],
+      "illustratorQids": [],
+      "jobSnapshot": "snapshots/Q28682711.json",
+      "jobSnapshotSha256": "0c29d2783c92ee3c5272b2a09e4ea888c229111247a03c37d1bd175cea7d4299"
+    },
+    "Q313703": {
+      "id": "Q313703",
+      "lastrevid": 2549534991,
+      "labels": {
+        "en": {
+          "language": "en",
+          "value": "Takeshi Obata"
+        },
+        "ja": {
+          "language": "ja",
+          "value": "小畑健"
+        }
+      },
+      "aliases": {
+        "ja": [
+          {
+            "language": "ja",
+            "value": "土方茂"
+          },
+          {
+            "language": "ja",
+            "value": "おばた たけし"
+          }
+        ],
+        "en": [
+          {
+            "language": "en",
+            "value": "Obata Takeshi"
+          }
+        ]
+      },
+      "instanceOf": [
+        "Q5"
+      ],
+      "authorQids": [],
+      "illustratorQids": [],
+      "jobSnapshot": "snapshots/Q313703.json",
+      "jobSnapshotSha256": "7bdfbd5e35eea5bfd0917efb6c2bd63de90f83a49b2bbf2930a55447ee0d9144"
+    },
+    "Q3194504": {
+      "id": "Q3194504",
+      "lastrevid": 2553180965,
+      "labels": {
+        "ja": {
+          "language": "ja",
+          "value": "工藤かずや"
+        },
+        "en": {
+          "language": "en",
+          "value": "Kazuya Kudō"
+        }
+      },
+      "aliases": {
+        "en": [
+          {
+            "language": "en",
+            "value": "Kazuya Kudo"
+          },
+          {
+            "language": "en",
+            "value": "Kazuya Kudou"
+          }
+        ]
+      },
+      "instanceOf": [
+        "Q5"
+      ],
+      "authorQids": [],
+      "illustratorQids": [],
+      "jobSnapshot": "snapshots/Q3194504.json",
+      "jobSnapshotSha256": "9dd4973bc3e9d97aab414d141837d6061799520a2a036c5a66e6e80630a07753"
+    },
+    "Q348436": {
+      "id": "Q348436",
+      "lastrevid": 2540453394,
+      "labels": {
+        "en": {
+          "language": "en",
+          "value": "Naoki Urasawa"
+        },
+        "ja": {
+          "language": "ja",
+          "value": "浦沢直樹"
+        }
+      },
+      "aliases": {
+        "ja": [
+          {
+            "language": "ja",
+            "value": "踊る警官"
+          }
+        ]
+      },
+      "instanceOf": [
+        "Q5"
+      ],
+      "authorQids": [],
+      "illustratorQids": [],
+      "jobSnapshot": "snapshots/Q348436.json",
+      "jobSnapshotSha256": "5d9b7f49c33ea339877e557c670270f361048ef279a39619f2569a2c4eddb6cb"
+    },
+    "Q378710": {
+      "id": "Q378710",
+      "lastrevid": 2550395496,
+      "labels": {
+        "en": {
+          "language": "en",
+          "value": "Katsuhiro Otomo"
+        },
+        "ja": {
+          "language": "ja",
+          "value": "大友克洋"
+        }
+      },
+      "aliases": {
+        "ja": [
+          {
+            "language": "ja",
+            "value": "さよならニッポン"
+          },
+          {
+            "language": "ja",
+            "value": "おおとも かつひろ"
+          }
+        ],
+        "en": [
+          {
+            "language": "en",
+            "value": "Katsuhiro Ōtomo"
+          }
+        ]
+      },
+      "instanceOf": [
+        "Q5"
+      ],
+      "authorQids": [],
+      "illustratorQids": [],
+      "jobSnapshot": "snapshots/Q378710.json",
+      "jobSnapshotSha256": "62f357f83d7042b728e0a33587150e0ddb8f07dd4766353f10299a202c878769"
+    },
+    "Q38277627": {
+      "id": "Q38277627",
+      "lastrevid": 2552355271,
+      "labels": {
+        "ja": {
+          "language": "ja",
+          "value": "山田鐘人"
+        },
+        "en": {
+          "language": "en",
+          "value": "Kanehito Yamada"
+        }
+      },
+      "aliases": {
+        "en": [
+          {
+            "language": "en",
+            "value": "Yamada Kanehito"
+          }
+        ]
+      },
+      "instanceOf": [
+        "Q5"
+      ],
+      "authorQids": [],
+      "illustratorQids": [],
+      "jobSnapshot": "snapshots/Q38277627.json",
+      "jobSnapshotSha256": "b6cbe2089ff56d7c40b149f38529fa65d1f48139f570420dc254ba5b95206f7e"
+    },
+    "Q467854": {
+      "id": "Q467854",
+      "lastrevid": 2461973730,
+      "labels": {
+        "ja": {
+          "language": "ja",
+          "value": "ポーの一族"
+        },
+        "en": {
+          "language": "en",
+          "value": "The Poe Clan"
+        }
+      },
+      "aliases": {
+        "en": [
+          {
+            "language": "en",
+            "value": "Pō no Ichizoku"
+          },
+          {
+            "language": "en",
+            "value": "Poe no Ichizoku"
+          }
+        ]
+      },
+      "instanceOf": [
+        "Q21198342"
+      ],
+      "authorQids": [
+        "Q265061"
+      ],
+      "illustratorQids": [
+        "Q265061"
+      ],
+      "jobSnapshot": "snapshots/Q467854.json",
+      "jobSnapshotSha256": "10bfc674e087cd22d408bc3b444636d36eaaaa86fddcee1a8b8370eededcd02a"
+    },
+    "Q48837273": {
+      "id": "Q48837273",
+      "lastrevid": 2395558411,
+      "labels": {
+        "ja": {
+          "language": "ja",
+          "value": "ORIGIN"
+        },
+        "en": {
+          "language": "en",
+          "value": "Origin"
+        }
+      },
+      "aliases": {},
+      "instanceOf": [
+        "Q21198342"
+      ],
+      "authorQids": [
+        "Q624839"
+      ],
+      "illustratorQids": [],
+      "jobSnapshot": "snapshots/Q48837273.json",
+      "jobSnapshotSha256": "dc77b87000397a76c7f6780a8c69c39d7f0175460cfc21cb806205ab1fb715b6"
+    },
+    "Q558858": {
+      "id": "Q558858",
+      "lastrevid": 2542906021,
+      "labels": {
+        "en": {
+          "language": "en",
+          "value": "Tsugumi Ohba"
+        },
+        "ja": {
+          "language": "ja",
+          "value": "大場つぐみ"
+        }
+      },
+      "aliases": {
+        "en": [
+          {
+            "language": "en",
+            "value": "Ōba Tsugumi"
+          }
+        ],
+        "ja": [
+          {
+            "language": "ja",
+            "value": "おおば つぐみ"
+          }
+        ]
+      },
+      "instanceOf": [
+        "Q5"
+      ],
+      "authorQids": [],
+      "illustratorQids": [],
+      "jobSnapshot": "snapshots/Q558858.json",
+      "jobSnapshotSha256": "87a88203b77d1e0d7b875204955a1a2ee7ce047b758229a84ec6d12303812224"
+    },
+    "Q624839": {
+      "id": "Q624839",
+      "lastrevid": 2554181244,
+      "labels": {
+        "ja": {
+          "language": "ja",
+          "value": "Boichi"
+        },
+        "en": {
+          "language": "en",
+          "value": "Boichi"
+        }
+      },
+      "aliases": {
+        "ja": [
+          {
+            "language": "ja",
+            "value": "朴武直"
+          },
+          {
+            "language": "ja",
+            "value": "ボウイチ"
+          },
+          {
+            "language": "ja",
+            "value": "パク・ムジク"
+          }
+        ],
+        "en": [
+          {
+            "language": "en",
+            "value": "Mujik Park"
+          },
+          {
+            "language": "en",
+            "value": "Mu-jik Park"
+          },
+          {
+            "language": "en",
+            "value": "박무직"
+          },
+          {
+            "language": "en",
+            "value": "Bak Mujik"
+          }
+        ]
+      },
+      "instanceOf": [
+        "Q5"
+      ],
+      "authorQids": [],
+      "illustratorQids": [],
+      "jobSnapshot": "snapshots/Q624839.json",
+      "jobSnapshotSha256": "a9a27da3ce1227992608cb150580fd6a42f550fe1788c44ca9f4ab9d629a367f"
+    },
+    "Q63323229": {
+      "id": "Q63323229",
+      "lastrevid": 2493726471,
+      "labels": {
+        "en": {
+          "language": "en",
+          "value": "Samurai 8: The Tale of Hachimaru"
+        },
+        "ja": {
+          "language": "ja",
+          "value": "サムライ8 八丸伝"
+        }
+      },
+      "aliases": {
+        "en": [
+          {
+            "language": "en",
+            "value": "Samurai 8: Hachimaru-den"
+          }
+        ]
+      },
+      "instanceOf": [
+        "Q21198342"
+      ],
+      "authorQids": [
+        "Q1993"
+      ],
+      "illustratorQids": [
+        "Q108109758"
+      ],
+      "jobSnapshot": "snapshots/Q63323229.json",
+      "jobSnapshotSha256": "3309e58e7012af49d64d3ea36f84d74459279da8591b0e4c16a655d0992dedbf"
+    },
+    "Q669481": {
+      "id": "Q669481",
+      "lastrevid": 2547722187,
+      "labels": {
+        "en": {
+          "language": "en",
+          "value": "Sanctuary"
+        },
+        "ja": {
+          "language": "ja",
+          "value": "サンクチュアリ"
+        }
+      },
+      "aliases": {},
+      "instanceOf": [
+        "Q21198342"
+      ],
+      "authorQids": [],
+      "illustratorQids": [
+        "Q1332841"
+      ],
+      "jobSnapshot": "snapshots/Q669481.json",
+      "jobSnapshotSha256": "613fc627a1caf37ba6917e8b1864c5f1b5068c988d38b6d0c6abba3b586d1bb4"
+    },
+    "Q715723": {
+      "id": "Q715723",
+      "lastrevid": 2422056377,
+      "labels": {
+        "en": {
+          "language": "en",
+          "value": "Urusei Yatsura"
+        },
+        "ja": {
+          "language": "ja",
+          "value": "うる星やつら"
+        }
+      },
+      "aliases": {
+        "ja": [
+          {
+            "language": "ja",
+            "value": "うる星"
+          }
+        ],
+        "en": [
+          {
+            "language": "en",
+            "value": "Lum"
+          }
+        ]
+      },
+      "instanceOf": [
+        "Q21198342"
+      ],
+      "authorQids": [
+        "Q219948"
+      ],
+      "illustratorQids": [
+        "Q219948"
+      ],
+      "jobSnapshot": "snapshots/Q715723.json",
+      "jobSnapshotSha256": "12461940a3fb752d20db8d9601986b3e33e5c25897a506f5574d9e4bfc502d29"
+    },
+    "Q733498": {
+      "id": "Q733498",
+      "lastrevid": 2556465966,
+      "labels": {
+        "en": {
+          "language": "en",
+          "value": "Fist of the North Star"
+        },
+        "ja": {
+          "language": "ja",
+          "value": "北斗の拳"
+        }
+      },
+      "aliases": {
+        "en": [
+          {
+            "language": "en",
+            "value": "Hokuto no Ken"
+          }
+        ]
+      },
+      "instanceOf": [
+        "Q21198342"
+      ],
+      "authorQids": [
+        "Q1016880"
+      ],
+      "illustratorQids": [
+        "Q1319232"
+      ],
+      "jobSnapshot": "snapshots/Q733498.json",
+      "jobSnapshotSha256": "c568ac0d48c2cb9db1690f50928a87189949334f3fcc7bdcbe2b965603207a38"
+    },
+    "Q804555": {
+      "id": "Q804555",
+      "lastrevid": 2556645661,
+      "labels": {
+        "en": {
+          "language": "en",
+          "value": "Bakuman"
+        },
+        "ja": {
+          "language": "ja",
+          "value": "バクマン。"
+        }
+      },
+      "aliases": {
+        "ja": [
+          {
+            "language": "ja",
+            "value": "バクマン"
+          },
+          {
+            "language": "ja",
+            "value": "ラッコ11号"
+          },
+          {
+            "language": "ja",
+            "value": "海獺11号"
+          }
+        ],
+        "en": [
+          {
+            "language": "en",
+            "value": "Bakuman."
+          }
+        ]
+      },
+      "instanceOf": [
+        "Q21198342"
+      ],
+      "authorQids": [
+        "Q558858"
+      ],
+      "illustratorQids": [
+        "Q313703"
+      ],
+      "jobSnapshot": "snapshots/Q804555.json",
+      "jobSnapshotSha256": "7ef80e34c6e1248bd311be90f41574cbe9c16ea03295ed64e75f698979e77035"
+    },
+    "Q809789": {
+      "id": "Q809789",
+      "lastrevid": 2534513888,
+      "labels": {
+        "en": {
+          "language": "en",
+          "value": "Basara"
+        },
+        "ja": {
+          "language": "ja",
+          "value": "BASARA"
+        }
+      },
+      "aliases": {
+        "ja": [
+          {
+            "language": "ja",
+            "value": "LEGEND OF BASARA"
+          }
+        ],
+        "en": [
+          {
+            "language": "en",
+            "value": "Legend of Basara"
+          }
+        ]
+      },
+      "instanceOf": [
+        "Q21198342"
+      ],
+      "authorQids": [
+        "Q2235128"
+      ],
+      "illustratorQids": [
+        "Q2235128"
+      ],
+      "jobSnapshot": "snapshots/Q809789.json",
+      "jobSnapshotSha256": "129deeb4230ec78a8ef2aea45ed005c493034b4c01552623d961b475cf459c92"
+    },
+    "Q91486": {
+      "id": "Q91486",
+      "lastrevid": 2517418965,
+      "labels": {
+        "en": {
+          "language": "en",
+          "value": "Akira"
+        },
+        "ja": {
+          "language": "ja",
+          "value": "AKIRA"
+        }
+      },
+      "aliases": {
+        "ja": [
+          {
+            "language": "ja",
+            "value": "アキラ"
+          }
+        ]
+      },
+      "instanceOf": [
+        "Q21198342"
+      ],
+      "authorQids": [
+        "Q378710"
+      ],
+      "illustratorQids": [
+        "Q378710"
+      ],
+      "jobSnapshot": "snapshots/Q91486.json",
+      "jobSnapshotSha256": "7184c67006fc4842ed27e741f0cab525c36302ee61910545ce2c8046be9da449"
+    },
+    "Q958256": {
+      "id": "Q958256",
+      "lastrevid": 2542242212,
+      "labels": {
+        "ja": {
+          "language": "ja",
+          "value": "赤塚不二夫"
+        },
+        "en": {
+          "language": "en",
+          "value": "Fujio Akatsuka"
+        }
+      },
+      "aliases": {
+        "ja": [
+          {
+            "language": "ja",
+            "value": "赤塚藤雄"
+          },
+          {
+            "language": "ja",
+            "value": "山田一郎"
+          }
+        ]
+      },
+      "instanceOf": [
+        "Q5"
+      ],
+      "authorQids": [],
+      "illustratorQids": [],
+      "jobSnapshot": "snapshots/Q958256.json",
+      "jobSnapshotSha256": "6369faf5ae811906c8cde6e185456deccd3d16c673e16ad8305106daa4ece270"
+    },
+    "Q97310775": {
+      "id": "Q97310775",
+      "lastrevid": 2537731685,
+      "labels": {
+        "ja": {
+          "language": "ja",
+          "value": "【推しの子】"
+        },
+        "en": {
+          "language": "en",
+          "value": "Oshi no Ko"
+        }
+      },
+      "aliases": {
+        "ja": [
+          {
+            "language": "ja",
+            "value": "推しの子"
+          }
+        ],
+        "en": [
+          {
+            "language": "en",
+            "value": "【Oshi no Ko】"
+          },
+          {
+            "language": "en",
+            "value": "My Star"
+          },
+          {
+            "language": "en",
+            "value": "[Oshi no Ko]"
+          }
+        ]
+      },
+      "instanceOf": [
+        "Q21198342"
+      ],
+      "authorQids": [
+        "Q23937543"
+      ],
+      "illustratorQids": [
+        "Q17220992"
+      ],
+      "jobSnapshot": "snapshots/Q97310775.json",
+      "jobSnapshotSha256": "c9e9e19ca413e41cf5b917fef8bfeb6f1a96b6e23ead1a2845fa0d070ca2eb18"
+    },
+    "Q98642652": {
+      "id": "Q98642652",
+      "lastrevid": 2550861507,
+      "labels": {
+        "en": {
+          "language": "en",
+          "value": "Frieren"
+        },
+        "ja": {
+          "language": "ja",
+          "value": "葬送のフリーレン"
+        }
+      },
+      "aliases": {
+        "en": [
+          {
+            "language": "en",
+            "value": "Sousou no Frieren"
+          },
+          {
+            "language": "en",
+            "value": "Soso no Frieren"
+          },
+          {
+            "language": "en",
+            "value": "Frieren at the Funeral"
+          },
+          {
+            "language": "en",
+            "value": "Sōsō no Frieren"
+          },
+          {
+            "language": "en",
+            "value": "Frieren: Beyond Journey's End"
+          }
+        ]
+      },
+      "instanceOf": [
+        "Q21198342"
+      ],
+      "authorQids": [
+        "Q38277627"
+      ],
+      "illustratorQids": [
+        "Q105258125"
+      ],
+      "jobSnapshot": "snapshots/Q98642652.json",
+      "jobSnapshotSha256": "bc843406d72c4aa961fd395734bb4285213ad875d08cb0a3fda7eca1d2f2b046"
+    }
+  }
+}

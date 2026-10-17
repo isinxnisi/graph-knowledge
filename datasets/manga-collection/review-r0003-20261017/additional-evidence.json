@@ -1,0 +1,113 @@
+{
+  "status": "editorial-source-review-not-human-acceptance",
+  "reviewedAt": "2026-10-17T07:19:28+00:00",
+  "sourcePolicy": "公式原資料の必要な書誌事実・短いクレジットのみ。全文・画像・あらすじを保存しない。NDLは作成元と所蔵／第三者情報を分離。",
+  "sources": [
+    {
+      "key": "pine-existing",
+      "url": "https://shogakukan-comic.jp/book?isbn=9784091921116",
+      "title": "パイナップルARMY〔小学館文庫〕 1 — 小学館コミック",
+      "publisher": "小学館",
+      "publishedAt": null,
+      "facts": {
+        "work": "パイナップルARMY",
+        "isbn13": "9784091921116",
+        "format": "文庫",
+        "names": [
+          "工藤かずや",
+          "浦沢直樹"
+        ]
+      },
+      "originalText": "画: 浦沢直樹",
+      "locator": "書名・題名直下の名前／紙のコミックスISBN欄",
+      "purpose": "公開済みEntityと文庫版の同定。r0003の別ISBNへRoleを転記しない。"
+    },
+    {
+      "key": "domu-publisher",
+      "url": "https://www.kodansha.co.jp/comic/products/0000359052",
+      "title": "童夢 — 講談社",
+      "publisher": "講談社",
+      "publishedAt": null,
+      "facts": {
+        "work": "童夢",
+        "isbn13": "9784065262634",
+        "author": "大友克洋",
+        "collectionVolume": 8
+      },
+      "originalText": "著： 大友 克洋",
+      "locator": "書名・著者欄／紙版ISBN／目次「童夢」",
+      "purpose": "当該ISBNの童夢と著者の対応。全全集・1983年版へ外挿しない。",
+      "accessNote": "公式検索取得では書誌・目次を確認、URLの直接再openは403。本文転載・回避取得なし。"
+    },
+    {
+      "key": "bakuman-publisher",
+      "url": "https://www.shueisha.co.jp/books/items/contents.html?isbn=978-4-08-619690-1",
+      "title": "バクマン。 1 — 集英社",
+      "publisher": "集英社",
+      "publishedAt": null,
+      "facts": {
+        "work": "バクマン。",
+        "isbn13": "9784086196901",
+        "volume": 1,
+        "format": "文庫",
+        "author": "小畑健",
+        "originalStory": "大場つぐみ"
+      },
+      "originalText": "著者：小畑 健",
+      "locator": "紙版ISBN／著者欄",
+      "purpose": "別原資料によるAUTHORSHIP・同じISBN scope。NDLの漫画をDRAWINGへ置換しない。"
+    },
+    {
+      "key": "oshi-interview",
+      "url": "https://shueisha.online/articles/-/21959",
+      "title": "【推しの子】アニメ化決定記念 赤坂アカ×横槍メンゴ対談（後編）— 集英社オンライン",
+      "publisher": "集英社",
+      "publishedAt": "2022-06-10",
+      "facts": {
+        "work": "【推しの子】",
+        "originalStory": "赤坂アカ",
+        "drawing": "横槍メンゴ",
+        "qualification": "主に",
+        "isbn13": null
+      },
+      "originalTexts": {
+        "ORIGINAL_STORY": "主に原作を担当する赤坂アカ",
+        "DRAWING": "主に作画を担当する横槍メンゴ"
+      },
+      "locator": "記事冒頭の漫画作品と対談者の担当説明",
+      "purpose": "漫画制作の役割を明示。アニメ原作クレジットではない。ISBN・全巻全期間・排他的担当は指定しない。"
+    },
+    {
+      "key": "obata-recollection",
+      "url": "https://jumpsq.shueisha.co.jp/contents/manganogokui_2nd3/interview4.html",
+      "title": "ジャンプSQ. マンガの極意 小畑健・群千キリ 第4頁",
+      "publisher": "集英社",
+      "publishedAt": null,
+      "facts": {
+        "work": "バクマン。",
+        "person": "小畑健",
+        "context": "本人が作画・構図・余白について述べ、バクマン。時の描画にも言及",
+        "isbn13": null
+      },
+      "originalText": "『バクマン。』の頃は開き直って勢いを出していましたが",
+      "locator": "見やすさ・派手さのせめぎ合い／小畑の描画回想段落",
+      "purpose": "作品単位のDRAWING検討資料。今回の一括推奨には、より明示的な同一ISBNのAUTHORSHIPだけを別候補として含め、回想からISBNを補わない。"
+    }
+  ],
+  "domuNdlAdditionalFields": {
+    "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I031906385",
+    "rawResponseSha256": "eecccca238d2c7dcab713da1d731914cf757265210cb295ecf0f117290bb1a5d",
+    "origin": "正式r0003ジョブのNDL作成BibResource（再取得なし）",
+    "fields": {
+      "alternative": [
+        "童夢"
+      ],
+      "partTitles": [
+        "童夢"
+      ]
+    },
+    "provider": "国立国会図書館",
+    "license": "https://creativecommons.org/licenses/by/4.0/",
+    "terms": "https://ndlsearch.ndl.go.jp/help/api/provider"
+  }
+}

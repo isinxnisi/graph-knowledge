@@ -1,0 +1,196 @@
+{
+  "sourceGitCommit": "09d0fd62556a4111eb55286d6fda749e17fd90c1",
+  "status": "review-only",
+  "sourceJobId": "famous-manga-creators-r0003-907fdec3b7f86662",
+  "definitionSha256": "371d297eb8cbf700d429711acc018bd46b5619a36ffb2c3ab1903e7f87a7c728",
+  "files": [
+    {
+      "file": "datasets/manga-collection/run-r0003-20261017/candidate-records.json",
+      "sha256": "cfb648f0be5f383534bf7c3165ad0d2071c5eb0e41109af1f713c36da2930e06"
+    },
+    {
+      "file": "datasets/manga-collection/run-r0003-20261017/review.json",
+      "sha256": "9b453d359954e0efd9e82698a69b89ba90bb4ba76d44f6d77515b39fd7e538c7"
+    },
+    {
+      "file": "datasets/manga-collection/run-r0003-20261017/ledger.json",
+      "sha256": "ac82939495778f1da465cb41e760a928bdb1540dabd74e60b318fd32e1e4fc35"
+    },
+    {
+      "file": "datasets/manga-collection/run-r0003-20261017/verification.json",
+      "sha256": "2a44ebdf77250a5233f8782236adf8cc493bf7b286ff771f3d546707dbc5672e"
+    },
+    {
+      "file": "datasets/manga-collection/run-r0003-20261017/work-order.json",
+      "sha256": "e284544d3451bd7c50afa8eb6f32cde61f09251a6150fcaa57e8f3658bf44a8f"
+    },
+    {
+      "file": "datasets/manga-collection/run-r0003-20261017/network-history.json",
+      "sha256": "9f046cfb4f6c7379437ff3c71ccfac41d7b20675e99b4e07260deb60f738f20d"
+    },
+    {
+      "file": "datasets/manga-collection/r0003/recipe.json",
+      "sha256": "eb431b6d6bd450eca85636f5617188f78cc4dc2e0bcdd076f94694ee153faad9"
+    },
+    {
+      "file": "datasets/manga-collection/r0003/anchor-review.json",
+      "sha256": "11300cff2b8a7b3234819d4b47a11f5e9016daf7af94f8cf4ca1838038000669"
+    },
+    {
+      "file": "datasets/manga-collection/r0003/publication-review.json",
+      "sha256": "bdf3ef6f60ea02ef07aedb3119b8cde6bdbefe0e8e7a002895637fdedf2ebb3a"
+    },
+    {
+      "file": "datasets/collection-themes/themes/famous-manga-creators/r0003.json",
+      "sha256": "0cc0b156e57621a35f207e0d4b7f90c6d2b13a3025f4a3d7df101449785cc3cf"
+    },
+    {
+      "file": "datasets/collection-themes/approvals/famous-manga-creators/r0003.json",
+      "sha256": "110b7066703efec6428d77037b819200c85ef68cf3f07656b4e1ef931eceda2f"
+    },
+    {
+      "file": "datasets/collection-themes/themes/famous-manga-creators/r0002.json",
+      "sha256": "0d02387433880ea563e83cf86707d35e5f6a6925a8663c09b29bcd94851c17ca"
+    },
+    {
+      "file": "datasets/collection-themes/approvals/famous-manga-creators/r0002.json",
+      "sha256": "ae247e12c078f5b03556e3f9fde5f0643598213db670da5280527657ce4f88b7"
+    },
+    {
+      "file": "datasets/public-kg/releases/20261014-credits-001/data.json",
+      "sha256": "ea91b16f52a211b5a8464382ad498b7b2bb2be69a6f33fe125a73a3c7b9da2b5"
+    },
+    {
+      "file": "datasets/public-kg/releases/20261014-credits-001/manifest.json",
+      "sha256": "e4aa3b58ed884f7d1f8fffee43b260261cc2b4d3a867fda942919f439d2bce17"
+    },
+    {
+      "file": "datasets/public-kg/releases/20261017-manga-r0002-001/data.json",
+      "sha256": "a52c93f78cbc6a7440dee640d1161d040d88effee494d02045c49637801975db"
+    },
+    {
+      "file": "datasets/public-kg/releases/20261017-manga-r0002-001/manifest.json",
+      "sha256": "5714648b348fff62605f99f3b25c25bc1f22a22e2e4acdaefae7196ddb5712a8"
+    },
+    {
+      "file": "datasets/public-kg/releases/20261017-manga-r0002-002/data.json",
+      "sha256": "6180481328c77abb40d16579d1f0cee34cbda6d8438769a95a23df71536f90aa"
+    },
+    {
+      "file": "datasets/public-kg/releases/20261017-manga-r0002-002/manifest.json",
+      "sha256": "5ae3f008be8c05f29cafa620a5cb0926792bc2984b0e0694a4bf1986032bd87c"
+    },
+    {
+      "file": "datasets/manga-collection/accepted-r0002-20261017/acceptance.json",
+      "sha256": "9b28562b9846970cd30b9261d4659d505e9df06e014d2809d6517aa39836f567"
+    },
+    {
+      "file": "datasets/manga-collection/accepted-original-story-r0002-20261017/acceptance.json",
+      "sha256": "9fdb9933c0d78795769bf27eebb7ecb4ec7cccc37f6ee6827e55dd119e727801"
+    },
+    {
+      "file": "datasets/manga-collection/run-r0003-20261017/ndl-snapshots/ndl-9784061037113.json",
+      "sha256": "f9b484a490ae8472570ba7f2510eeac98ed87cf36263b58a2de7c41d7955081d"
+    },
+    {
+      "file": "datasets/manga-collection/run-r0003-20261017/ndl-snapshots/ndl-9784063829082.json",
+      "sha256": "594befc0fca80cd34b932d6ddbf69741ca576018533cd6c52df7cb22a0c84a1d"
+    },
+    {
+      "file": "datasets/manga-collection/run-r0003-20261017/ndl-snapshots/ndl-9784065262634.json",
+      "sha256": "569f3a673d3fe5ee0e484e4f3aece89f1e744d44abd7bf311e9723930e4a85ce"
+    },
+    {
+      "file": "datasets/manga-collection/run-r0003-20261017/ndl-snapshots/ndl-9784086172837.json",
+      "sha256": "b68a5fde94cc7bf0a90c73ef718803a840177250d0507aace1ebe811d35b2272"
+    },
+    {
+      "file": "datasets/manga-collection/run-r0003-20261017/ndl-snapshots/ndl-9784086196901.json",
+      "sha256": "72e16d6116498829e763b12937b082161c06067869b6f357906b18bf938f291a"
+    },
+    {
+      "file": "datasets/manga-collection/run-r0003-20261017/ndl-snapshots/ndl-9784088807317.json",
+      "sha256": "db41817ee732ebd3488eeca38100f09e3677f03b1592713bf3a816e1c48b4b9a"
+    },
+    {
+      "file": "datasets/manga-collection/run-r0003-20261017/ndl-snapshots/ndl-9784088820224.json",
+      "sha256": "f7f9687b36bef75131215977cef14df775f2996e7075bbab381cfbba2d9d0099"
+    },
+    {
+      "file": "datasets/manga-collection/run-r0003-20261017/ndl-snapshots/ndl-9784088916507.json",
+      "sha256": "d6eb8c04f6a5cab22d4724b6f8ff85060f8d32c6600e05fe5495ddfc67b625d8"
+    },
+    {
+      "file": "datasets/manga-collection/run-r0003-20261017/ndl-snapshots/ndl-9784091220318.json",
+      "sha256": "124e74a7a69886d53f83eadf973ce8a6a5ba16a2869a44bbd934db57b2c71abd"
+    },
+    {
+      "file": "datasets/manga-collection/run-r0003-20261017/ndl-snapshots/ndl-9784091228017.json",
+      "sha256": "a1dbcf253aa5095502de646f02eaaaf66453609946fef384db70b959479bf5b8"
+    },
+    {
+      "file": "datasets/manga-collection/run-r0003-20261017/ndl-snapshots/ndl-9784091241023.json",
+      "sha256": "1ec9198096ba8f30b57f3406f90836a5342e77dd2d367b44f951df4b0917fb7b"
+    },
+    {
+      "file": "datasets/manga-collection/run-r0003-20261017/ndl-snapshots/ndl-9784091380135.json",
+      "sha256": "091fdff1fd03c679818385146dc6ee220d584503a2be5ed34e7632fa59358eb7"
+    },
+    {
+      "file": "datasets/manga-collection/run-r0003-20261017/ndl-snapshots/ndl-9784091810816.json",
+      "sha256": "7728190c001402388c36259e578e0217674865d0bfc40e349396c1d8a92acd0e"
+    },
+    {
+      "file": "datasets/manga-collection/run-r0003-20261017/ndl-snapshots/ndl-9784091823618.json",
+      "sha256": "79a965e3b91da67043edbab108167538313928e13ae718151e638c82979b8c2d"
+    },
+    {
+      "file": "datasets/manga-collection/run-r0003-20261017/ndl-snapshots/ndl-9784091910110.json",
+      "sha256": "56a783cd8effa1aad11c4f8deaff63dfc9c68553f15df5b1bf97d2eeb1a085fa"
+    },
+    {
+      "file": "datasets/manga-collection/run-r0003-20261017/ndl-snapshots/ndl-9784091912510.json",
+      "sha256": "5a897948605df7bd664a9529868ea8237c2d3909c99248b23d04b8109adbf661"
+    },
+    {
+      "file": "datasets/manga-collection/run-r0003-20261017/ndl-snapshots/ndl-9784091914316.json",
+      "sha256": "9ad8ed593c97003df506df4ab716e25fef83a93c6272d3ee05cd64517c96beb8"
+    },
+    {
+      "file": "datasets/manga-collection/run-r0003-20261017/ndl-snapshots/ndl-9784098501809.json",
+      "sha256": "14af08f81e6fe70ff128569ce2a6e9f8cc0421c33ed9414f140fb63179374a64"
+    },
+    {
+      "file": "datasets/manga-collection/run-r0003-20261017/ndl-snapshots/ndl-9784098602780.json",
+      "sha256": "76e869d7d01a7d95627dc7ce2d27d88068aefad453a78e6777d742939bb325cc"
+    },
+    {
+      "file": "datasets/manga-collection/run-r0003-20261017/ndl-snapshots/ndl-9784253169813.json",
+      "sha256": "a662ee3fc7245e86bef89e5c82978e2246b618e24c17feb0a7c1ffc22640808a"
+    },
+    {
+      "file": "datasets/manga-collection/run-r0003-20261017/ndl-snapshots/ndl-9784592881513.json",
+      "sha256": "d00a0a4b07e6a21179150e015b119c0502910f7060cd5272f738734cff4ea42d"
+    },
+    {
+      "file": "datasets/manga-collection/run-r0003-20261017/ndl-snapshots/ndl-9784757520097.json",
+      "sha256": "465be71fd30f7e51237999c842e30b39b5d53ba7cc907337cee786bfb3e879f1"
+    },
+    {
+      "file": "datasets/manga-collection/run-r0003-20261017/ndl-snapshots/ndl-9784757538870.json",
+      "sha256": "b8d4dc901a43089c14100b5514821141e08e2c93879ae494a912078d4792da65"
+    },
+    {
+      "file": "datasets/manga-collection/run-r0003-20261017/ndl-snapshots/ndl-9784884752934.json",
+      "sha256": "722ba539f542af33b14cb4b044e569d2779cacd9f292bac0d036b376cfd2ceca"
+    },
+    {
+      "file": "datasets/manga-collection/review-r0003-20261017/additional-evidence.json",
+      "sha256": "1187f72352c46cd775df22b2de54f2bf52020860832fbfe676cf8c4255baf844"
+    },
+    {
+      "file": "datasets/manga-collection/review-r0003-20261017/identity-evidence.json",
+      "sha256": "fb3ed6e7b9df51da5b1171afa8047b6ae520630df88e5945aeec9b8f98f85505"
+    }
+  ]
+}

@@ -1,0 +1,1828 @@
+{
+  "status": "recommendations-only",
+  "formalAcceptance": "pending",
+  "humanReviewer": null,
+  "normalClaimCount": 25,
+  "normalEntityCount": 36,
+  "claims": [
+    {
+      "claimId": "121709e5-ea90-4c6a-87d1-d67264e1590d",
+      "sourceClaimId": "121709e5-ea90-4c6a-87d1-d67264e1590d",
+      "person": "高橋留美子",
+      "work": "うる星やつら",
+      "roleId": "AUTHORSHIP",
+      "scope": {
+        "kind": "publication",
+        "isbn13": "9784091228017",
+        "volumeLabel": "第1巻",
+        "editionLabel": null,
+        "language": "ja"
+      },
+      "group": "normal",
+      "recommendation": "recommend-acceptance",
+      "formalAcceptance": "pending",
+      "checks": {
+        "personIdentity": true,
+        "workIdentity": true,
+        "roleEvidence": true,
+        "scopePreserved": true,
+        "sourceCitationReferences": true,
+        "noExactDuplicate": true,
+        "pendingHumanAcceptance": true
+      },
+      "citationIds": [
+        "fa8985f2-6775-4348-a136-9a5dee986b1a"
+      ],
+      "sourceIds": [
+        "28614027-38d3-4b20-b460-8b1b48b4eb07"
+      ],
+      "originalTexts": [
+        "高橋留美子 著"
+      ],
+      "scopeNote": "このISBNの明示された刊行物scopeだけ"
+    },
+    {
+      "claimId": "14e377b1-6be2-446c-8c13-e0d5d425eafa",
+      "sourceClaimId": "14e377b1-6be2-446c-8c13-e0d5d425eafa",
+      "person": "大友克洋",
+      "work": "AKIRA",
+      "roleId": "AUTHORSHIP",
+      "scope": {
+        "kind": "publication",
+        "isbn13": "9784061037113",
+        "volumeLabel": "第1巻",
+        "editionLabel": null,
+        "language": "ja"
+      },
+      "group": "normal",
+      "recommendation": "recommend-acceptance",
+      "formalAcceptance": "pending",
+      "checks": {
+        "personIdentity": true,
+        "workIdentity": true,
+        "roleEvidence": true,
+        "scopePreserved": true,
+        "sourceCitationReferences": true,
+        "noExactDuplicate": true,
+        "pendingHumanAcceptance": true
+      },
+      "citationIds": [
+        "f3d322c7-cad4-4525-ad55-8664d3e94b2a"
+      ],
+      "sourceIds": [
+        "b1d80a26-19c8-4f5a-8a80-8917719ccbde"
+      ],
+      "originalTexts": [
+        "大友克洋 著"
+      ],
+      "scopeNote": "このISBNの明示された刊行物scopeだけ"
+    },
+    {
+      "claimId": "18c75118-e284-4c85-accf-e3894a6da3f3",
+      "sourceClaimId": "c9c1225b-63d2-4b99-9432-55bd009f8cf2",
+      "person": "浦沢直樹",
+      "work": "パイナップルARMY",
+      "roleId": "DRAWING",
+      "scope": {
+        "kind": "publication",
+        "isbn13": "9784091810816",
+        "volumeLabel": "第1巻",
+        "editionLabel": null,
+        "language": "ja"
+      },
+      "group": "resolved-exceptions",
+      "recommendation": "recommend-acceptance",
+      "formalAcceptance": "pending",
+      "checks": {
+        "personIdentity": true,
+        "workIdentity": true,
+        "roleEvidence": true,
+        "scopePreserved": true,
+        "sourceCitationReferences": true,
+        "noExactDuplicate": true,
+        "pendingHumanAcceptance": true
+      },
+      "citationIds": [
+        "3ebff3fe-d0ea-4409-8b16-472b0071971e"
+      ],
+      "sourceIds": [
+        "81a9b025-308d-40ba-ba5b-7654f8bafc72"
+      ],
+      "originalTexts": [
+        "浦沢直樹 画"
+      ],
+      "scopeNote": "このISBNの明示された刊行物scopeだけ"
+    },
+    {
+      "claimId": "1eb1fe7c-0cbd-48f4-8379-cd7f6e4697e4",
+      "sourceClaimId": "1eb1fe7c-0cbd-48f4-8379-cd7f6e4697e4",
+      "person": "高橋留美子",
+      "work": "らんま1/2",
+      "roleId": "AUTHORSHIP",
+      "scope": {
+        "kind": "publication",
+        "isbn13": "9784091220318",
+        "volumeLabel": "第1巻",
+        "editionLabel": null,
+        "language": "ja"
+      },
+      "group": "normal",
+      "recommendation": "recommend-acceptance",
+      "formalAcceptance": "pending",
+      "checks": {
+        "personIdentity": true,
+        "workIdentity": true,
+        "roleEvidence": true,
+        "scopePreserved": true,
+        "sourceCitationReferences": true,
+        "noExactDuplicate": true,
+        "pendingHumanAcceptance": true
+      },
+      "citationIds": [
+        "43d7a974-48c0-42e1-a69a-0b196a42dd15"
+      ],
+      "sourceIds": [
+        "df1c52bd-8832-47a1-bc57-30c779f01ad5"
+      ],
+      "originalTexts": [
+        "高橋留美子 著"
+      ],
+      "scopeNote": "このISBNの明示された刊行物scopeだけ"
+    },
+    {
+      "claimId": "1f5ecc6d-509d-477e-8b05-7fa06c59d95c",
+      "sourceClaimId": "7e701c62-22f3-4882-844b-d69d2d818561",
+      "person": "工藤かずや",
+      "work": "パイナップルARMY",
+      "roleId": "CREATION",
+      "scope": {
+        "kind": "publication",
+        "isbn13": "9784091810816",
+        "volumeLabel": "第1巻",
+        "editionLabel": null,
+        "language": "ja"
+      },
+      "group": "resolved-exceptions",
+      "recommendation": "recommend-acceptance",
+      "formalAcceptance": "pending",
+      "checks": {
+        "personIdentity": true,
+        "workIdentity": true,
+        "roleEvidence": true,
+        "scopePreserved": true,
+        "sourceCitationReferences": true,
+        "noExactDuplicate": true,
+        "pendingHumanAcceptance": true
+      },
+      "citationIds": [
+        "f50258bc-9bd0-47c5-9d2d-bb17b85e5e5e"
+      ],
+      "sourceIds": [
+        "81a9b025-308d-40ba-ba5b-7654f8bafc72"
+      ],
+      "originalTexts": [
+        "工藤かずや 作"
+      ],
+      "scopeNote": "このISBNの明示された刊行物scopeだけ"
+    },
+    {
+      "claimId": "24dca7b4-00bf-4f70-92f6-a498a494c29a",
+      "sourceClaimId": "24dca7b4-00bf-4f70-92f6-a498a494c29a",
+      "person": "Boichi",
+      "work": "ORIGIN",
+      "roleId": "AUTHORSHIP",
+      "scope": {
+        "kind": "publication",
+        "isbn13": "9784063829082",
+        "volumeLabel": "第1巻",
+        "editionLabel": null,
+        "language": "ja"
+      },
+      "group": "normal",
+      "recommendation": "recommend-acceptance",
+      "formalAcceptance": "pending",
+      "checks": {
+        "personIdentity": true,
+        "workIdentity": true,
+        "roleEvidence": true,
+        "scopePreserved": true,
+        "sourceCitationReferences": true,
+        "noExactDuplicate": true,
+        "pendingHumanAcceptance": true
+      },
+      "citationIds": [
+        "de59f4e7-fef0-4546-81d2-3dbf1944a96e"
+      ],
+      "sourceIds": [
+        "e059d4f3-9e5d-4c5f-84e1-959b3c932e30"
+      ],
+      "originalTexts": [
+        "Boichi 著"
+      ],
+      "scopeNote": "このISBNの明示された刊行物scopeだけ"
+    },
+    {
+      "claimId": "36199f3c-f260-473c-a22e-a75911b5fb6d",
+      "sourceClaimId": "36199f3c-f260-473c-a22e-a75911b5fb6d",
+      "person": "アベツカサ",
+      "work": "葬送のフリーレン",
+      "roleId": "DRAWING",
+      "scope": {
+        "kind": "publication",
+        "isbn13": "9784098501809",
+        "volumeLabel": "第1巻",
+        "editionLabel": null,
+        "language": "ja"
+      },
+      "group": "normal",
+      "recommendation": "recommend-acceptance",
+      "formalAcceptance": "pending",
+      "checks": {
+        "personIdentity": true,
+        "workIdentity": true,
+        "roleEvidence": true,
+        "scopePreserved": true,
+        "sourceCitationReferences": true,
+        "noExactDuplicate": true,
+        "pendingHumanAcceptance": true
+      },
+      "citationIds": [
+        "77553c7a-9e85-4fc4-97fd-1fdc2ad68951"
+      ],
+      "sourceIds": [
+        "18dd841d-89a6-41ab-90ed-110307e6e268"
+      ],
+      "originalTexts": [
+        "アベツカサ 作画"
+      ],
+      "scopeNote": "このISBNの明示された刊行物scopeだけ"
+    },
+    {
+      "claimId": "431210df-d594-498c-bbd4-9ce93c9dc282",
+      "sourceClaimId": "431210df-d594-498c-bbd4-9ce93c9dc282",
+      "person": "山田鐘人",
+      "work": "葬送のフリーレン",
+      "roleId": "ORIGINAL_STORY",
+      "scope": {
+        "kind": "publication",
+        "isbn13": "9784098501809",
+        "volumeLabel": "第1巻",
+        "editionLabel": null,
+        "language": "ja"
+      },
+      "group": "normal",
+      "recommendation": "recommend-acceptance",
+      "formalAcceptance": "pending",
+      "checks": {
+        "personIdentity": true,
+        "workIdentity": true,
+        "roleEvidence": true,
+        "scopePreserved": true,
+        "sourceCitationReferences": true,
+        "noExactDuplicate": true,
+        "pendingHumanAcceptance": true
+      },
+      "citationIds": [
+        "a2f2aa39-dfb4-4f81-8c11-13329851ad8a"
+      ],
+      "sourceIds": [
+        "18dd841d-89a6-41ab-90ed-110307e6e268"
+      ],
+      "originalTexts": [
+        "山田鐘人 原作"
+      ],
+      "scopeNote": "このISBNの明示された刊行物scopeだけ"
+    },
+    {
+      "claimId": "48a9f51e-beb1-4c3a-9c30-5923bc852925",
+      "sourceClaimId": "48a9f51e-beb1-4c3a-9c30-5923bc852925",
+      "person": "大場つぐみ",
+      "work": "バクマン。",
+      "roleId": "ORIGINAL_STORY",
+      "scope": {
+        "kind": "publication",
+        "isbn13": "9784086196901",
+        "volumeLabel": "第1巻",
+        "editionLabel": null,
+        "language": "ja"
+      },
+      "group": "normal",
+      "recommendation": "recommend-acceptance",
+      "formalAcceptance": "pending",
+      "checks": {
+        "personIdentity": true,
+        "workIdentity": true,
+        "roleEvidence": true,
+        "scopePreserved": true,
+        "sourceCitationReferences": true,
+        "noExactDuplicate": true,
+        "pendingHumanAcceptance": true
+      },
+      "citationIds": [
+        "85b6215a-d659-4c08-850a-c9611e94bd43"
+      ],
+      "sourceIds": [
+        "fa2da69a-8a61-4364-8dab-05b9678d77aa"
+      ],
+      "originalTexts": [
+        "大場つぐみ 原作"
+      ],
+      "scopeNote": "このISBNの明示された刊行物scopeだけ"
+    },
+    {
+      "claimId": "498cbe28-4703-4ac1-9a99-5cd83831b0e3",
+      "sourceClaimId": "498cbe28-4703-4ac1-9a99-5cd83831b0e3",
+      "person": "横槍メンゴ",
+      "work": "クズの本懐",
+      "roleId": "AUTHORSHIP",
+      "scope": {
+        "kind": "publication",
+        "isbn13": "9784757538870",
+        "volumeLabel": "第1巻",
+        "editionLabel": null,
+        "language": "ja"
+      },
+      "group": "normal",
+      "recommendation": "recommend-acceptance",
+      "formalAcceptance": "pending",
+      "checks": {
+        "personIdentity": true,
+        "workIdentity": true,
+        "roleEvidence": true,
+        "scopePreserved": true,
+        "sourceCitationReferences": true,
+        "noExactDuplicate": true,
+        "pendingHumanAcceptance": true
+      },
+      "citationIds": [
+        "21c3954f-829e-4d13-a641-783d92af998d"
+      ],
+      "sourceIds": [
+        "a20efdfb-84be-4caa-a6b6-f3472a04c2b6"
+      ],
+      "originalTexts": [
+        "横槍メンゴ 著"
+      ],
+      "scopeNote": "このISBNの明示された刊行物scopeだけ"
+    },
+    {
+      "claimId": "602bc3c1-8a98-49cc-9556-a4c23feb6b0e",
+      "sourceClaimId": "602bc3c1-8a98-49cc-9556-a4c23feb6b0e",
+      "person": "竹宮惠子",
+      "work": "地球へ…",
+      "roleId": "AUTHORSHIP",
+      "scope": {
+        "kind": "publication",
+        "isbn13": "9784757520097",
+        "volumeLabel": "第1巻",
+        "editionLabel": null,
+        "language": "ja"
+      },
+      "group": "normal",
+      "recommendation": "recommend-acceptance",
+      "formalAcceptance": "pending",
+      "checks": {
+        "personIdentity": true,
+        "workIdentity": true,
+        "roleEvidence": true,
+        "scopePreserved": true,
+        "sourceCitationReferences": true,
+        "noExactDuplicate": true,
+        "pendingHumanAcceptance": true
+      },
+      "citationIds": [
+        "d81bd9a1-ed47-45e2-9ee5-ed45b2d8ddb5"
+      ],
+      "sourceIds": [
+        "f9bc0f9b-f737-40eb-b451-8b0622bb1f29"
+      ],
+      "originalTexts": [
+        "竹宮惠子 著"
+      ],
+      "scopeNote": "このISBNの明示された刊行物scopeだけ"
+    },
+    {
+      "claimId": "69ed2335-344f-41a6-a17f-77708faa0398",
+      "sourceClaimId": "69ed2335-344f-41a6-a17f-77708faa0398",
+      "person": "大友克洋",
+      "work": "童夢",
+      "roleId": "AUTHORSHIP",
+      "scope": {
+        "kind": "publication",
+        "isbn13": "9784065262634",
+        "volumeLabel": "全集第8巻（童夢）",
+        "editionLabel": null,
+        "language": "ja"
+      },
+      "group": "resolved-exceptions",
+      "recommendation": "recommend-acceptance",
+      "formalAcceptance": "pending",
+      "checks": {
+        "personIdentity": true,
+        "workIdentity": true,
+        "roleEvidence": true,
+        "scopePreserved": true,
+        "sourceCitationReferences": true,
+        "noExactDuplicate": true,
+        "pendingHumanAcceptance": true
+      },
+      "citationIds": [
+        "6b09ad9a-d643-46bb-9e8d-fd600a9d5f90",
+        "c9248d87-f3e6-4ce4-9140-12279fc83004"
+      ],
+      "sourceIds": [
+        "ef3aa8c2-d2ba-48a0-a724-20b8eac18a31",
+        "068ea87c-f422-4f69-b61f-5fc6da8836a2"
+      ],
+      "originalTexts": [
+        "大友克洋 著",
+        "著： 大友 克洋"
+      ],
+      "scopeNote": "このISBNの明示された刊行物scopeだけ"
+    },
+    {
+      "claimId": "6ad7f063-1fce-4163-8414-437526212c31",
+      "sourceClaimId": "6ad7f063-1fce-4163-8414-437526212c31",
+      "person": "赤塚不二夫",
+      "work": "天才バカボン",
+      "roleId": "AUTHORSHIP",
+      "scope": {
+        "kind": "publication",
+        "isbn13": "9784884752934",
+        "volumeLabel": "第1巻",
+        "editionLabel": null,
+        "language": "ja"
+      },
+      "group": "normal",
+      "recommendation": "recommend-acceptance",
+      "formalAcceptance": "pending",
+      "checks": {
+        "personIdentity": true,
+        "workIdentity": true,
+        "roleEvidence": true,
+        "scopePreserved": true,
+        "sourceCitationReferences": true,
+        "noExactDuplicate": true,
+        "pendingHumanAcceptance": true
+      },
+      "citationIds": [
+        "bf9fe1e5-9655-4143-921f-ee0faae347e7"
+      ],
+      "sourceIds": [
+        "d20d02c9-552e-4621-b8b3-a7c25efb9ddb"
+      ],
+      "originalTexts": [
+        "赤塚不二夫 著"
+      ],
+      "scopeNote": "このISBNの明示された刊行物scopeだけ"
+    },
+    {
+      "claimId": "7c2bd016-d9b0-4de2-824e-276941b1a2b2",
+      "sourceClaimId": "7c2bd016-d9b0-4de2-824e-276941b1a2b2",
+      "person": "竹宮惠子",
+      "work": "風と木の詩",
+      "roleId": "AUTHORSHIP",
+      "scope": {
+        "kind": "publication",
+        "isbn13": "9784592881513",
+        "volumeLabel": "第1巻",
+        "editionLabel": null,
+        "language": "ja"
+      },
+      "group": "normal",
+      "recommendation": "recommend-acceptance",
+      "formalAcceptance": "pending",
+      "checks": {
+        "personIdentity": true,
+        "workIdentity": true,
+        "roleEvidence": true,
+        "scopePreserved": true,
+        "sourceCitationReferences": true,
+        "noExactDuplicate": true,
+        "pendingHumanAcceptance": true
+      },
+      "citationIds": [
+        "29669439-5d05-4eed-8c5a-15a895209227"
+      ],
+      "sourceIds": [
+        "3e30dc4d-2c8a-40c0-95d8-258ef061b5ce"
+      ],
+      "originalTexts": [
+        "竹宮恵子 著"
+      ],
+      "scopeNote": "このISBNの明示された刊行物scopeだけ"
+    },
+    {
+      "claimId": "81684aff-84cf-4977-a3b5-7c2f5d746e5a",
+      "sourceClaimId": "81684aff-84cf-4977-a3b5-7c2f5d746e5a",
+      "person": "原哲夫",
+      "work": "北斗の拳",
+      "roleId": "DRAWING",
+      "scope": {
+        "kind": "publication",
+        "isbn13": "9784086172837",
+        "volumeLabel": "第1巻",
+        "editionLabel": null,
+        "language": "ja"
+      },
+      "group": "normal",
+      "recommendation": "recommend-acceptance",
+      "formalAcceptance": "pending",
+      "checks": {
+        "personIdentity": true,
+        "workIdentity": true,
+        "roleEvidence": true,
+        "scopePreserved": true,
+        "sourceCitationReferences": true,
+        "noExactDuplicate": true,
+        "pendingHumanAcceptance": true
+      },
+      "citationIds": [
+        "a2006985-9169-4009-a16a-688a7c47632c"
+      ],
+      "sourceIds": [
+        "d742ddc4-acb8-411a-a159-efd815afecd6"
+      ],
+      "originalTexts": [
+        "原哲夫 画"
+      ],
+      "scopeNote": "このISBNの明示された刊行物scopeだけ"
+    },
+    {
+      "claimId": "a4d14533-1e4d-47c4-9494-67008811cf75",
+      "sourceClaimId": "a4d14533-1e4d-47c4-9494-67008811cf75",
+      "person": "ONE",
+      "work": "モブサイコ100",
+      "roleId": "AUTHORSHIP",
+      "scope": {
+        "kind": "publication",
+        "isbn13": "9784091241023",
+        "volumeLabel": "第1巻",
+        "editionLabel": null,
+        "language": "ja"
+      },
+      "group": "normal",
+      "recommendation": "recommend-acceptance",
+      "formalAcceptance": "pending",
+      "checks": {
+        "personIdentity": true,
+        "workIdentity": true,
+        "roleEvidence": true,
+        "scopePreserved": true,
+        "sourceCitationReferences": true,
+        "noExactDuplicate": true,
+        "pendingHumanAcceptance": true
+      },
+      "citationIds": [
+        "465050a3-209b-4116-b7d9-d80ea9d685f1"
+      ],
+      "sourceIds": [
+        "6cf1f56c-1d88-431a-88a9-fde85a6fd2fa"
+      ],
+      "originalTexts": [
+        "ONE 著"
+      ],
+      "scopeNote": "このISBNの明示された刊行物scopeだけ"
+    },
+    {
+      "claimId": "a996412a-7cc9-49d5-8446-9b3cf6a338dd",
+      "sourceClaimId": "a996412a-7cc9-49d5-8446-9b3cf6a338dd",
+      "person": "岸本斉史",
+      "work": "サムライ8 八丸伝",
+      "roleId": "ORIGINAL_STORY",
+      "scope": {
+        "kind": "publication",
+        "isbn13": "9784088820224",
+        "volumeLabel": "第1巻",
+        "editionLabel": null,
+        "language": "ja"
+      },
+      "group": "normal",
+      "recommendation": "recommend-acceptance",
+      "formalAcceptance": "pending",
+      "checks": {
+        "personIdentity": true,
+        "workIdentity": true,
+        "roleEvidence": true,
+        "scopePreserved": true,
+        "sourceCitationReferences": true,
+        "noExactDuplicate": true,
+        "pendingHumanAcceptance": true
+      },
+      "citationIds": [
+        "613676e3-d747-4f55-8c22-e15b290574d6"
+      ],
+      "sourceIds": [
+        "6eb7a205-4a1c-49c5-98b8-b7537689ab0b"
+      ],
+      "originalTexts": [
+        "岸本斉史 原作"
+      ],
+      "scopeNote": "このISBNの明示された刊行物scopeだけ"
+    },
+    {
+      "claimId": "b7d9d6ba-f2a0-492e-981d-408b22955215",
+      "sourceClaimId": null,
+      "person": "横槍メンゴ",
+      "work": "【推しの子】",
+      "roleId": "DRAWING",
+      "scope": null,
+      "group": "additional-evidence",
+      "recommendation": "recommend-acceptance",
+      "formalAcceptance": "pending",
+      "checks": {
+        "personIdentity": true,
+        "workIdentity": true,
+        "roleEvidence": true,
+        "scopePreserved": true,
+        "sourceCitationReferences": true,
+        "noExactDuplicate": true,
+        "pendingHumanAcceptance": true
+      },
+      "citationIds": [
+        "c4d63400-dc23-498d-b1bd-4c579adc2227"
+      ],
+      "sourceIds": [
+        "ab3cc1da-0880-4616-afbc-e853a7730929"
+      ],
+      "originalTexts": [
+        "主に作画を担当する横槍メンゴ"
+      ],
+      "scopeNote": "未指定は全巻・全期間を意味しない"
+    },
+    {
+      "claimId": "c19e5b2f-01e2-4233-a7c9-326a1772d7de",
+      "sourceClaimId": "c19e5b2f-01e2-4233-a7c9-326a1772d7de",
+      "person": "武論尊",
+      "work": "サンクチュアリ",
+      "roleId": "ORIGINAL_STORY",
+      "scope": {
+        "kind": "publication",
+        "isbn13": "9784091823618",
+        "volumeLabel": "第1巻",
+        "editionLabel": null,
+        "language": "ja"
+      },
+      "group": "normal",
+      "recommendation": "recommend-acceptance",
+      "formalAcceptance": "pending",
+      "checks": {
+        "personIdentity": true,
+        "workIdentity": true,
+        "roleEvidence": true,
+        "scopePreserved": true,
+        "sourceCitationReferences": true,
+        "noExactDuplicate": true,
+        "pendingHumanAcceptance": true
+      },
+      "citationIds": [
+        "55f0c3f3-cc50-48a8-9242-b31b3e7155f8"
+      ],
+      "sourceIds": [
+        "6e6882d7-7add-4510-92a2-00e1b469c117"
+      ],
+      "originalTexts": [
+        "史村翔 原作"
+      ],
+      "scopeNote": "このISBNの明示された刊行物scopeだけ"
+    },
+    {
+      "claimId": "c3fcdaa7-1374-4c62-acab-368dc1ed1bee",
+      "sourceClaimId": "c3fcdaa7-1374-4c62-acab-368dc1ed1bee",
+      "person": "池上遼一",
+      "work": "サンクチュアリ",
+      "roleId": "DRAWING",
+      "scope": {
+        "kind": "publication",
+        "isbn13": "9784091823618",
+        "volumeLabel": "第1巻",
+        "editionLabel": null,
+        "language": "ja"
+      },
+      "group": "normal",
+      "recommendation": "recommend-acceptance",
+      "formalAcceptance": "pending",
+      "checks": {
+        "personIdentity": true,
+        "workIdentity": true,
+        "roleEvidence": true,
+        "scopePreserved": true,
+        "sourceCitationReferences": true,
+        "noExactDuplicate": true,
+        "pendingHumanAcceptance": true
+      },
+      "citationIds": [
+        "503b85f7-ccdc-4723-b0e0-51d121f8ba3e"
+      ],
+      "sourceIds": [
+        "6e6882d7-7add-4510-92a2-00e1b469c117"
+      ],
+      "originalTexts": [
+        "池上遼一 作画"
+      ],
+      "scopeNote": "このISBNの明示された刊行物scopeだけ"
+    },
+    {
+      "claimId": "cd294bb9-a7de-4f21-95c2-84b878c0e7cc",
+      "sourceClaimId": null,
+      "person": "小畑健",
+      "work": "バクマン。",
+      "roleId": "AUTHORSHIP",
+      "scope": {
+        "kind": "publication",
+        "isbn13": "9784086196901",
+        "volumeLabel": "第1巻",
+        "editionLabel": null,
+        "language": "ja"
+      },
+      "group": "additional-evidence",
+      "recommendation": "recommend-acceptance",
+      "formalAcceptance": "pending",
+      "checks": {
+        "personIdentity": true,
+        "workIdentity": true,
+        "roleEvidence": true,
+        "scopePreserved": true,
+        "sourceCitationReferences": true,
+        "noExactDuplicate": true,
+        "pendingHumanAcceptance": true
+      },
+      "citationIds": [
+        "c2a11bab-9544-49af-a352-668f7cb08aff"
+      ],
+      "sourceIds": [
+        "6dfb8c00-412a-4bd6-88f8-58f85b98247e"
+      ],
+      "originalTexts": [
+        "著者：小畑 健"
+      ],
+      "scopeNote": "このISBNの明示された刊行物scopeだけ"
+    },
+    {
+      "claimId": "d5d3fef1-fc64-4e61-b049-2f3c81994cb9",
+      "sourceClaimId": "d5d3fef1-fc64-4e61-b049-2f3c81994cb9",
+      "person": "萩尾望都",
+      "work": "11人いる！",
+      "roleId": "AUTHORSHIP",
+      "scope": {
+        "kind": "publication",
+        "isbn13": "9784091910110",
+        "volumeLabel": "単巻",
+        "editionLabel": null,
+        "language": "ja"
+      },
+      "group": "normal",
+      "recommendation": "recommend-acceptance",
+      "formalAcceptance": "pending",
+      "checks": {
+        "personIdentity": true,
+        "workIdentity": true,
+        "roleEvidence": true,
+        "scopePreserved": true,
+        "sourceCitationReferences": true,
+        "noExactDuplicate": true,
+        "pendingHumanAcceptance": true
+      },
+      "citationIds": [
+        "eee1e9cd-bcc8-4d3a-a094-92bb7f3e1c1e"
+      ],
+      "sourceIds": [
+        "c815b2db-f907-43d4-a8ae-e2ef99fe5f79"
+      ],
+      "originalTexts": [
+        "萩尾望都 著"
+      ],
+      "scopeNote": "このISBNの明示された刊行物scopeだけ"
+    },
+    {
+      "claimId": "d92e9a4e-4f60-445d-807b-63764f69528b",
+      "sourceClaimId": "d92e9a4e-4f60-445d-807b-63764f69528b",
+      "person": "藤本タツキ",
+      "work": "ファイアパンチ",
+      "roleId": "AUTHORSHIP",
+      "scope": {
+        "kind": "publication",
+        "isbn13": "9784088807317",
+        "volumeLabel": "第1巻",
+        "editionLabel": null,
+        "language": "ja"
+      },
+      "group": "normal",
+      "recommendation": "recommend-acceptance",
+      "formalAcceptance": "pending",
+      "checks": {
+        "personIdentity": true,
+        "workIdentity": true,
+        "roleEvidence": true,
+        "scopePreserved": true,
+        "sourceCitationReferences": true,
+        "noExactDuplicate": true,
+        "pendingHumanAcceptance": true
+      },
+      "citationIds": [
+        "aefd626b-6ae3-4bc4-b9ec-2fac6ed78bfa"
+      ],
+      "sourceIds": [
+        "0a6fe099-9375-4fa5-8e41-81cf6ede26d8"
+      ],
+      "originalTexts": [
+        "藤本タツキ 著"
+      ],
+      "scopeNote": "このISBNの明示された刊行物scopeだけ"
+    },
+    {
+      "claimId": "e3b0de8a-f7cc-4188-baa2-b41e2298e2be",
+      "sourceClaimId": "e3b0de8a-f7cc-4188-baa2-b41e2298e2be",
+      "person": "田村由美",
+      "work": "7SEEDS",
+      "roleId": "AUTHORSHIP",
+      "scope": {
+        "kind": "publication",
+        "isbn13": "9784091380135",
+        "volumeLabel": "第1巻",
+        "editionLabel": null,
+        "language": "ja"
+      },
+      "group": "normal",
+      "recommendation": "recommend-acceptance",
+      "formalAcceptance": "pending",
+      "checks": {
+        "personIdentity": true,
+        "workIdentity": true,
+        "roleEvidence": true,
+        "scopePreserved": true,
+        "sourceCitationReferences": true,
+        "noExactDuplicate": true,
+        "pendingHumanAcceptance": true
+      },
+      "citationIds": [
+        "2bafe200-3ef0-466c-8da0-f7541b901b19"
+      ],
+      "sourceIds": [
+        "5100fe49-d129-4e0b-9b5d-0d33892fd613"
+      ],
+      "originalTexts": [
+        "田村由美 著"
+      ],
+      "scopeNote": "このISBNの明示された刊行物scopeだけ"
+    },
+    {
+      "claimId": "e3bf903c-5d0c-4f91-bf83-2826f5a23db7",
+      "sourceClaimId": "e3bf903c-5d0c-4f91-bf83-2826f5a23db7",
+      "person": "武論尊",
+      "work": "北斗の拳",
+      "roleId": "CREATION",
+      "scope": {
+        "kind": "publication",
+        "isbn13": "9784086172837",
+        "volumeLabel": "第1巻",
+        "editionLabel": null,
+        "language": "ja"
+      },
+      "group": "normal",
+      "recommendation": "recommend-acceptance",
+      "formalAcceptance": "pending",
+      "checks": {
+        "personIdentity": true,
+        "workIdentity": true,
+        "roleEvidence": true,
+        "scopePreserved": true,
+        "sourceCitationReferences": true,
+        "noExactDuplicate": true,
+        "pendingHumanAcceptance": true
+      },
+      "citationIds": [
+        "1d520b97-18c3-46ef-94ef-9e4e4c8ad15e"
+      ],
+      "sourceIds": [
+        "d742ddc4-acb8-411a-a159-efd815afecd6"
+      ],
+      "originalTexts": [
+        "武論尊 作"
+      ],
+      "scopeNote": "このISBNの明示された刊行物scopeだけ"
+    },
+    {
+      "claimId": "ed33df12-efd1-44bc-84bb-a9d83fa05f8f",
+      "sourceClaimId": "ed33df12-efd1-44bc-84bb-a9d83fa05f8f",
+      "person": "大久保彰",
+      "work": "サムライ8 八丸伝",
+      "roleId": "DRAWING",
+      "scope": {
+        "kind": "publication",
+        "isbn13": "9784088820224",
+        "volumeLabel": "第1巻",
+        "editionLabel": null,
+        "language": "ja"
+      },
+      "group": "normal",
+      "recommendation": "recommend-acceptance",
+      "formalAcceptance": "pending",
+      "checks": {
+        "personIdentity": true,
+        "workIdentity": true,
+        "roleEvidence": true,
+        "scopePreserved": true,
+        "sourceCitationReferences": true,
+        "noExactDuplicate": true,
+        "pendingHumanAcceptance": true
+      },
+      "citationIds": [
+        "7e9d3731-b35a-4cea-b8a1-f60d005cb020"
+      ],
+      "sourceIds": [
+        "6eb7a205-4a1c-49c5-98b8-b7537689ab0b"
+      ],
+      "originalTexts": [
+        "大久保彰 作画"
+      ],
+      "scopeNote": "このISBNの明示された刊行物scopeだけ"
+    },
+    {
+      "claimId": "f06a6e2c-59c6-4ff3-ad74-13aff65677d3",
+      "sourceClaimId": "f06a6e2c-59c6-4ff3-ad74-13aff65677d3",
+      "person": "手塚治虫",
+      "work": "ブラック・ジャック",
+      "roleId": "AUTHORSHIP",
+      "scope": {
+        "kind": "publication",
+        "isbn13": "9784253169813",
+        "volumeLabel": "第1巻",
+        "editionLabel": null,
+        "language": "ja"
+      },
+      "group": "normal",
+      "recommendation": "recommend-acceptance",
+      "formalAcceptance": "pending",
+      "checks": {
+        "personIdentity": true,
+        "workIdentity": true,
+        "roleEvidence": true,
+        "scopePreserved": true,
+        "sourceCitationReferences": true,
+        "noExactDuplicate": true,
+        "pendingHumanAcceptance": true
+      },
+      "citationIds": [
+        "f666bca9-1713-4085-b58d-7548b3b528b7"
+      ],
+      "sourceIds": [
+        "7083e68a-d9c5-4ed5-b590-5131ee1b6fbe"
+      ],
+      "originalTexts": [
+        "手塚治虫 著"
+      ],
+      "scopeNote": "このISBNの明示された刊行物scopeだけ"
+    },
+    {
+      "claimId": "f4504ec8-173a-453f-83e8-a24e72dde9bc",
+      "sourceClaimId": null,
+      "person": "赤坂アカ",
+      "work": "【推しの子】",
+      "roleId": "ORIGINAL_STORY",
+      "scope": null,
+      "group": "additional-evidence",
+      "recommendation": "recommend-acceptance",
+      "formalAcceptance": "pending",
+      "checks": {
+        "personIdentity": true,
+        "workIdentity": true,
+        "roleEvidence": true,
+        "scopePreserved": true,
+        "sourceCitationReferences": true,
+        "noExactDuplicate": true,
+        "pendingHumanAcceptance": true
+      },
+      "citationIds": [
+        "b227b748-ee95-4565-9c67-7834801ebafb"
+      ],
+      "sourceIds": [
+        "ab3cc1da-0880-4616-afbc-e853a7730929"
+      ],
+      "originalTexts": [
+        "主に原作を担当する赤坂アカ"
+      ],
+      "scopeNote": "未指定は全巻・全期間を意味しない"
+    },
+    {
+      "claimId": "f4b64248-7b3e-4fae-8ff2-7122410b63f4",
+      "sourceClaimId": "f4b64248-7b3e-4fae-8ff2-7122410b63f4",
+      "person": "萩尾望都",
+      "work": "ポーの一族",
+      "roleId": "AUTHORSHIP",
+      "scope": {
+        "kind": "publication",
+        "isbn13": "9784091912510",
+        "volumeLabel": "第1巻",
+        "editionLabel": null,
+        "language": "ja"
+      },
+      "group": "normal",
+      "recommendation": "recommend-acceptance",
+      "formalAcceptance": "pending",
+      "checks": {
+        "personIdentity": true,
+        "workIdentity": true,
+        "roleEvidence": true,
+        "scopePreserved": true,
+        "sourceCitationReferences": true,
+        "noExactDuplicate": true,
+        "pendingHumanAcceptance": true
+      },
+      "citationIds": [
+        "a0185551-4cc2-44da-975b-81ed43b093c1"
+      ],
+      "sourceIds": [
+        "c91f7f99-6b76-4245-9564-70f8f62c2dc1"
+      ],
+      "originalTexts": [
+        "萩尾望都 著"
+      ],
+      "scopeNote": "このISBNの明示された刊行物scopeだけ"
+    },
+    {
+      "claimId": "fb933ff4-2061-4a0c-a72c-6e7dd2958737",
+      "sourceClaimId": "fb933ff4-2061-4a0c-a72c-6e7dd2958737",
+      "person": "浦沢直樹",
+      "work": "あさドラ！",
+      "roleId": "AUTHORSHIP",
+      "scope": {
+        "kind": "publication",
+        "isbn13": "9784098602780",
+        "volumeLabel": "第1巻",
+        "editionLabel": null,
+        "language": "ja"
+      },
+      "group": "normal",
+      "recommendation": "recommend-acceptance",
+      "formalAcceptance": "pending",
+      "checks": {
+        "personIdentity": true,
+        "workIdentity": true,
+        "roleEvidence": true,
+        "scopePreserved": true,
+        "sourceCitationReferences": true,
+        "noExactDuplicate": true,
+        "pendingHumanAcceptance": true
+      },
+      "citationIds": [
+        "bbac1018-2ca5-491f-8e91-5e797418f21d"
+      ],
+      "sourceIds": [
+        "624fc7f8-ec4a-4e6f-802e-ce1dcd6be994"
+      ],
+      "originalTexts": [
+        "浦沢直樹 著"
+      ],
+      "scopeNote": "このISBNの明示された刊行物scopeだけ"
+    },
+    {
+      "claimId": "fdfae8cd-b3f0-4c36-b6ed-659e98d24871",
+      "sourceClaimId": "fdfae8cd-b3f0-4c36-b6ed-659e98d24871",
+      "person": "田村由美",
+      "work": "BASARA",
+      "roleId": "AUTHORSHIP",
+      "scope": {
+        "kind": "publication",
+        "isbn13": "9784091914316",
+        "volumeLabel": "第1巻",
+        "editionLabel": null,
+        "language": "ja"
+      },
+      "group": "normal",
+      "recommendation": "recommend-acceptance",
+      "formalAcceptance": "pending",
+      "checks": {
+        "personIdentity": true,
+        "workIdentity": true,
+        "roleEvidence": true,
+        "scopePreserved": true,
+        "sourceCitationReferences": true,
+        "noExactDuplicate": true,
+        "pendingHumanAcceptance": true
+      },
+      "citationIds": [
+        "0f848185-1a22-42c6-a375-92860c4e3914"
+      ],
+      "sourceIds": [
+        "fb0bc6f2-6f0b-49d5-a9a7-acb3de0fc531"
+      ],
+      "originalTexts": [
+        "田村由美 著"
+      ],
+      "scopeNote": "このISBNの明示された刊行物scopeだけ"
+    }
+  ],
+  "entities": [
+    {
+      "entityId": "0914c6bb-701d-4c5a-b8f9-2c63cbff1ef3",
+      "name": "童夢",
+      "kind": "work",
+      "wikidata": "Q1170375",
+      "inputPopulation": "normal-36",
+      "recommendation": "recommend-acceptance",
+      "proposedEntityId": "0914c6bb-701d-4c5a-b8f9-2c63cbff1ef3",
+      "formalAcceptance": "pending",
+      "checks": {
+        "providerKind": true,
+        "reviewedName": true,
+        "immutableUuidOrExplicitMapping": true
+      },
+      "identityEvidence": "datasets/manga-collection/review-r0003-20261017/identity-evidence.json#/entities/Q1170375"
+    },
+    {
+      "entityId": "0c9eb1b7-2b2b-46b7-8110-9705138c3add",
+      "name": "モブサイコ100",
+      "kind": "work",
+      "wikidata": "Q11344543",
+      "inputPopulation": "normal-36",
+      "recommendation": "recommend-acceptance",
+      "proposedEntityId": "0c9eb1b7-2b2b-46b7-8110-9705138c3add",
+      "formalAcceptance": "pending",
+      "checks": {
+        "providerKind": true,
+        "reviewedName": true,
+        "immutableUuidOrExplicitMapping": true
+      },
+      "identityEvidence": "datasets/manga-collection/review-r0003-20261017/identity-evidence.json#/entities/Q11344543"
+    },
+    {
+      "entityId": "1866bbe5-7e00-4afc-965f-5e968481f065",
+      "name": "田村由美",
+      "kind": "person",
+      "wikidata": "Q2235128",
+      "inputPopulation": "normal-36",
+      "recommendation": "recommend-acceptance",
+      "proposedEntityId": "1866bbe5-7e00-4afc-965f-5e968481f065",
+      "formalAcceptance": "pending",
+      "checks": {
+        "providerKind": true,
+        "reviewedName": true,
+        "immutableUuidOrExplicitMapping": true
+      },
+      "identityEvidence": "datasets/manga-collection/review-r0003-20261017/identity-evidence.json#/entities/Q2235128"
+    },
+    {
+      "entityId": "1982f262-39f3-4bfa-93a4-af3a86ec3ec8",
+      "name": "ORIGIN",
+      "kind": "work",
+      "wikidata": "Q48837273",
+      "inputPopulation": "normal-36",
+      "recommendation": "recommend-acceptance",
+      "proposedEntityId": "1982f262-39f3-4bfa-93a4-af3a86ec3ec8",
+      "formalAcceptance": "pending",
+      "checks": {
+        "providerKind": true,
+        "reviewedName": true,
+        "immutableUuidOrExplicitMapping": true
+      },
+      "identityEvidence": "datasets/manga-collection/review-r0003-20261017/identity-evidence.json#/entities/Q48837273"
+    },
+    {
+      "entityId": "1edca4c7-0e4e-4769-859c-dde40e7e973a",
+      "name": "岸本斉史",
+      "kind": "person",
+      "wikidata": "Q1993",
+      "inputPopulation": "normal-36",
+      "recommendation": "recommend-acceptance",
+      "proposedEntityId": "1edca4c7-0e4e-4769-859c-dde40e7e973a",
+      "formalAcceptance": "pending",
+      "checks": {
+        "providerKind": true,
+        "reviewedName": true,
+        "immutableUuidOrExplicitMapping": true
+      },
+      "identityEvidence": "datasets/manga-collection/review-r0003-20261017/identity-evidence.json#/entities/Q1993"
+    },
+    {
+      "entityId": "20b7ba43-d12d-4d39-9a8e-f9e92e9d40d2",
+      "name": "山田鐘人",
+      "kind": "person",
+      "wikidata": "Q38277627",
+      "inputPopulation": "normal-36",
+      "recommendation": "recommend-acceptance",
+      "proposedEntityId": "20b7ba43-d12d-4d39-9a8e-f9e92e9d40d2",
+      "formalAcceptance": "pending",
+      "checks": {
+        "providerKind": true,
+        "reviewedName": true,
+        "immutableUuidOrExplicitMapping": true
+      },
+      "identityEvidence": "datasets/manga-collection/review-r0003-20261017/identity-evidence.json#/entities/Q38277627"
+    },
+    {
+      "entityId": "3427040b-88fd-4db5-b546-dd237abad032",
+      "name": "バクマン。",
+      "kind": "work",
+      "wikidata": "Q804555",
+      "inputPopulation": "normal-36",
+      "recommendation": "recommend-acceptance",
+      "proposedEntityId": "3427040b-88fd-4db5-b546-dd237abad032",
+      "formalAcceptance": "pending",
+      "checks": {
+        "providerKind": true,
+        "reviewedName": true,
+        "immutableUuidOrExplicitMapping": true
+      },
+      "identityEvidence": "datasets/manga-collection/review-r0003-20261017/identity-evidence.json#/entities/Q804555"
+    },
+    {
+      "entityId": "398d712d-23d9-455f-8897-f9384dd94930",
+      "name": "天才バカボン",
+      "kind": "work",
+      "wikidata": "Q2551007",
+      "inputPopulation": "normal-36",
+      "recommendation": "recommend-acceptance",
+      "proposedEntityId": "398d712d-23d9-455f-8897-f9384dd94930",
+      "formalAcceptance": "pending",
+      "checks": {
+        "providerKind": true,
+        "reviewedName": true,
+        "immutableUuidOrExplicitMapping": true
+      },
+      "identityEvidence": "datasets/manga-collection/review-r0003-20261017/identity-evidence.json#/entities/Q2551007"
+    },
+    {
+      "entityId": "3f22660f-01d7-4a4a-9ae6-f169c9a3dc4a",
+      "name": "武論尊",
+      "kind": "person",
+      "wikidata": "Q1016880",
+      "inputPopulation": "normal-36",
+      "recommendation": "recommend-acceptance",
+      "proposedEntityId": "3f22660f-01d7-4a4a-9ae6-f169c9a3dc4a",
+      "formalAcceptance": "pending",
+      "checks": {
+        "providerKind": true,
+        "reviewedName": true,
+        "immutableUuidOrExplicitMapping": true
+      },
+      "identityEvidence": "datasets/manga-collection/review-r0003-20261017/identity-evidence.json#/entities/Q1016880"
+    },
+    {
+      "entityId": "40a8ddd3-f333-485c-a12a-ac3d0961111b",
+      "name": "11人いる！",
+      "kind": "work",
+      "wikidata": "Q124312385",
+      "inputPopulation": "normal-36",
+      "recommendation": "recommend-acceptance",
+      "proposedEntityId": "40a8ddd3-f333-485c-a12a-ac3d0961111b",
+      "formalAcceptance": "pending",
+      "checks": {
+        "providerKind": true,
+        "reviewedName": true,
+        "immutableUuidOrExplicitMapping": true
+      },
+      "identityEvidence": "datasets/manga-collection/review-r0003-20261017/identity-evidence.json#/entities/Q124312385"
+    },
+    {
+      "entityId": "420d89ea-9780-4e01-ac64-9c5e8597d0c8",
+      "name": "横槍メンゴ",
+      "kind": "person",
+      "wikidata": "Q17220992",
+      "inputPopulation": "normal-36",
+      "recommendation": "recommend-acceptance",
+      "proposedEntityId": "420d89ea-9780-4e01-ac64-9c5e8597d0c8",
+      "formalAcceptance": "pending",
+      "checks": {
+        "providerKind": true,
+        "reviewedName": true,
+        "immutableUuidOrExplicitMapping": true
+      },
+      "identityEvidence": "datasets/manga-collection/review-r0003-20261017/identity-evidence.json#/entities/Q17220992"
+    },
+    {
+      "entityId": "480df823-5da8-45e4-aa20-1fdabe7ea5a3",
+      "name": "ファイアパンチ",
+      "kind": "work",
+      "wikidata": "Q28682711",
+      "inputPopulation": "normal-36",
+      "recommendation": "recommend-acceptance",
+      "proposedEntityId": "480df823-5da8-45e4-aa20-1fdabe7ea5a3",
+      "formalAcceptance": "pending",
+      "checks": {
+        "providerKind": true,
+        "reviewedName": true,
+        "immutableUuidOrExplicitMapping": true
+      },
+      "identityEvidence": "datasets/manga-collection/review-r0003-20261017/identity-evidence.json#/entities/Q28682711"
+    },
+    {
+      "entityId": "4b90e125-b331-4361-8681-93a12c662cb7",
+      "name": "BASARA",
+      "kind": "work",
+      "wikidata": "Q809789",
+      "inputPopulation": "normal-36",
+      "recommendation": "recommend-acceptance",
+      "proposedEntityId": "4b90e125-b331-4361-8681-93a12c662cb7",
+      "formalAcceptance": "pending",
+      "checks": {
+        "providerKind": true,
+        "reviewedName": true,
+        "immutableUuidOrExplicitMapping": true
+      },
+      "identityEvidence": "datasets/manga-collection/review-r0003-20261017/identity-evidence.json#/entities/Q809789"
+    },
+    {
+      "entityId": "4e506b04-cc57-48e9-b502-0d89476bb5f4",
+      "name": "パイナップルARMY",
+      "kind": "work",
+      "wikidata": "Q1096269",
+      "inputPopulation": "exception-or-reuse",
+      "recommendation": "reuse-existing-public-work",
+      "proposedEntityId": "290ab095-192d-4910-90f3-ae741f9d1f32",
+      "formalAcceptance": "pending",
+      "checks": {
+        "providerKind": true,
+        "reviewedName": true,
+        "immutableUuidOrExplicitMapping": true
+      },
+      "identityEvidence": "datasets/manga-collection/review-r0003-20261017/identity-evidence.json#/entities/Q1096269"
+    },
+    {
+      "entityId": "5c5f452c-1e74-4985-aaec-811a8e329f42",
+      "name": "7SEEDS",
+      "kind": "work",
+      "wikidata": "Q2679175",
+      "inputPopulation": "normal-36",
+      "recommendation": "recommend-acceptance",
+      "proposedEntityId": "5c5f452c-1e74-4985-aaec-811a8e329f42",
+      "formalAcceptance": "pending",
+      "checks": {
+        "providerKind": true,
+        "reviewedName": true,
+        "immutableUuidOrExplicitMapping": true
+      },
+      "identityEvidence": "datasets/manga-collection/review-r0003-20261017/identity-evidence.json#/entities/Q2679175"
+    },
+    {
+      "entityId": "6bf4aeb4-ac2b-499f-bfaa-0588024ef93d",
+      "name": "竹宮惠子",
+      "kind": "person",
+      "wikidata": "Q268789",
+      "inputPopulation": "normal-36",
+      "recommendation": "recommend-acceptance",
+      "proposedEntityId": "6bf4aeb4-ac2b-499f-bfaa-0588024ef93d",
+      "formalAcceptance": "pending",
+      "checks": {
+        "providerKind": true,
+        "reviewedName": true,
+        "immutableUuidOrExplicitMapping": true
+      },
+      "identityEvidence": "datasets/manga-collection/review-r0003-20261017/identity-evidence.json#/entities/Q268789"
+    },
+    {
+      "entityId": "6c9095bd-1969-4bcd-9282-2d1e9e411254",
+      "name": "萩尾望都",
+      "kind": "person",
+      "wikidata": "Q265061",
+      "inputPopulation": "normal-36",
+      "recommendation": "recommend-acceptance",
+      "proposedEntityId": "6c9095bd-1969-4bcd-9282-2d1e9e411254",
+      "formalAcceptance": "pending",
+      "checks": {
+        "providerKind": true,
+        "reviewedName": true,
+        "immutableUuidOrExplicitMapping": true
+      },
+      "identityEvidence": "datasets/manga-collection/review-r0003-20261017/identity-evidence.json#/entities/Q265061"
+    },
+    {
+      "entityId": "711dc415-45d5-4d35-8cca-068332180cc0",
+      "name": "赤坂アカ",
+      "kind": "person",
+      "wikidata": "Q23937543",
+      "inputPopulation": "exception-or-reuse",
+      "recommendation": "recommend-acceptance",
+      "proposedEntityId": "711dc415-45d5-4d35-8cca-068332180cc0",
+      "formalAcceptance": "pending",
+      "checks": {
+        "providerKind": true,
+        "reviewedName": true,
+        "immutableUuidOrExplicitMapping": true
+      },
+      "identityEvidence": "datasets/manga-collection/review-r0003-20261017/identity-evidence.json#/entities/Q23937543"
+    },
+    {
+      "entityId": "743d7fc0-ddc6-446a-8aa1-d9a9b284a326",
+      "name": "高橋留美子",
+      "kind": "person",
+      "wikidata": "Q219948",
+      "inputPopulation": "normal-36",
+      "recommendation": "recommend-acceptance",
+      "proposedEntityId": "743d7fc0-ddc6-446a-8aa1-d9a9b284a326",
+      "formalAcceptance": "pending",
+      "checks": {
+        "providerKind": true,
+        "reviewedName": true,
+        "immutableUuidOrExplicitMapping": true
+      },
+      "identityEvidence": "datasets/manga-collection/review-r0003-20261017/identity-evidence.json#/entities/Q219948"
+    },
+    {
+      "entityId": "76884305-ef0d-4cb0-ace2-90cfac57de3e",
+      "name": "ブラック・ジャック",
+      "kind": "work",
+      "wikidata": "Q133691",
+      "inputPopulation": "normal-36",
+      "recommendation": "recommend-acceptance",
+      "proposedEntityId": "76884305-ef0d-4cb0-ace2-90cfac57de3e",
+      "formalAcceptance": "pending",
+      "checks": {
+        "providerKind": true,
+        "reviewedName": true,
+        "immutableUuidOrExplicitMapping": true
+      },
+      "identityEvidence": "datasets/manga-collection/review-r0003-20261017/identity-evidence.json#/entities/Q133691"
+    },
+    {
+      "entityId": "8a0d3d5a-feb6-4ba3-8993-64b6ac79de12",
+      "name": "【推しの子】",
+      "kind": "work",
+      "wikidata": "Q97310775",
+      "inputPopulation": "exception-or-reuse",
+      "recommendation": "recommend-acceptance",
+      "proposedEntityId": "8a0d3d5a-feb6-4ba3-8993-64b6ac79de12",
+      "formalAcceptance": "pending",
+      "checks": {
+        "providerKind": true,
+        "reviewedName": true,
+        "immutableUuidOrExplicitMapping": true
+      },
+      "identityEvidence": "datasets/manga-collection/review-r0003-20261017/identity-evidence.json#/entities/Q97310775"
+    },
+    {
+      "entityId": "929116a2-77ff-443f-94e6-871c8b78f451",
+      "name": "葬送のフリーレン",
+      "kind": "work",
+      "wikidata": "Q98642652",
+      "inputPopulation": "normal-36",
+      "recommendation": "recommend-acceptance",
+      "proposedEntityId": "929116a2-77ff-443f-94e6-871c8b78f451",
+      "formalAcceptance": "pending",
+      "checks": {
+        "providerKind": true,
+        "reviewedName": true,
+        "immutableUuidOrExplicitMapping": true
+      },
+      "identityEvidence": "datasets/manga-collection/review-r0003-20261017/identity-evidence.json#/entities/Q98642652"
+    },
+    {
+      "entityId": "98b8ca7a-9638-4e5a-8fbd-62a353e4f159",
+      "name": "風と木の詩",
+      "kind": "work",
+      "wikidata": "Q1338432",
+      "inputPopulation": "normal-36",
+      "recommendation": "recommend-acceptance",
+      "proposedEntityId": "98b8ca7a-9638-4e5a-8fbd-62a353e4f159",
+      "formalAcceptance": "pending",
+      "checks": {
+        "providerKind": true,
+        "reviewedName": true,
+        "immutableUuidOrExplicitMapping": true
+      },
+      "identityEvidence": "datasets/manga-collection/review-r0003-20261017/identity-evidence.json#/entities/Q1338432"
+    },
+    {
+      "entityId": "9f43fefa-d878-4e5e-b1a2-0413432e9dbd",
+      "name": "藤本タツキ",
+      "kind": "person",
+      "wikidata": "Q24864023",
+      "inputPopulation": "exception-or-reuse",
+      "recommendation": "reuse-r0002-accepted",
+      "proposedEntityId": "9f43fefa-d878-4e5e-b1a2-0413432e9dbd",
+      "formalAcceptance": "already-accepted-in-r0002",
+      "checks": {
+        "providerKind": true,
+        "reviewedName": true,
+        "immutableUuidOrExplicitMapping": true
+      },
+      "identityEvidence": "datasets/manga-collection/review-r0003-20261017/identity-evidence.json#/entities/Q24864023"
+    },
+    {
+      "entityId": "a13205e2-220c-4b7d-8a1a-39dbefe52db8",
+      "name": "大場つぐみ",
+      "kind": "person",
+      "wikidata": "Q558858",
+      "inputPopulation": "exception-or-reuse",
+      "recommendation": "reuse-r0002-accepted",
+      "proposedEntityId": "a13205e2-220c-4b7d-8a1a-39dbefe52db8",
+      "formalAcceptance": "already-accepted-in-r0002",
+      "checks": {
+        "providerKind": true,
+        "reviewedName": true,
+        "immutableUuidOrExplicitMapping": true
+      },
+      "identityEvidence": "datasets/manga-collection/review-r0003-20261017/identity-evidence.json#/entities/Q558858"
+    },
+    {
+      "entityId": "a22fd2cd-aadc-4ca9-bf39-cb4bd7e0e953",
+      "name": "赤塚不二夫",
+      "kind": "person",
+      "wikidata": "Q958256",
+      "inputPopulation": "normal-36",
+      "recommendation": "recommend-acceptance",
+      "proposedEntityId": "a22fd2cd-aadc-4ca9-bf39-cb4bd7e0e953",
+      "formalAcceptance": "pending",
+      "checks": {
+        "providerKind": true,
+        "reviewedName": true,
+        "immutableUuidOrExplicitMapping": true
+      },
+      "identityEvidence": "datasets/manga-collection/review-r0003-20261017/identity-evidence.json#/entities/Q958256"
+    },
+    {
+      "entityId": "aafae4fe-6f56-47bb-af9f-dec69425f136",
+      "name": "らんま1/2",
+      "kind": "work",
+      "wikidata": "Q272015",
+      "inputPopulation": "normal-36",
+      "recommendation": "recommend-acceptance",
+      "proposedEntityId": "aafae4fe-6f56-47bb-af9f-dec69425f136",
+      "formalAcceptance": "pending",
+      "checks": {
+        "providerKind": true,
+        "reviewedName": true,
+        "immutableUuidOrExplicitMapping": true
+      },
+      "identityEvidence": "datasets/manga-collection/review-r0003-20261017/identity-evidence.json#/entities/Q272015"
+    },
+    {
+      "entityId": "afaa3ea0-f273-4481-95c5-5c31f9049cb2",
+      "name": "ONE",
+      "kind": "person",
+      "wikidata": "Q11237288",
+      "inputPopulation": "normal-36",
+      "recommendation": "recommend-acceptance",
+      "proposedEntityId": "afaa3ea0-f273-4481-95c5-5c31f9049cb2",
+      "formalAcceptance": "pending",
+      "checks": {
+        "providerKind": true,
+        "reviewedName": true,
+        "immutableUuidOrExplicitMapping": true
+      },
+      "identityEvidence": "datasets/manga-collection/review-r0003-20261017/identity-evidence.json#/entities/Q11237288"
+    },
+    {
+      "entityId": "b1e1232d-b038-4c11-b80c-ab1c2710d2bf",
+      "name": "うる星やつら",
+      "kind": "work",
+      "wikidata": "Q715723",
+      "inputPopulation": "normal-36",
+      "recommendation": "recommend-acceptance",
+      "proposedEntityId": "b1e1232d-b038-4c11-b80c-ab1c2710d2bf",
+      "formalAcceptance": "pending",
+      "checks": {
+        "providerKind": true,
+        "reviewedName": true,
+        "immutableUuidOrExplicitMapping": true
+      },
+      "identityEvidence": "datasets/manga-collection/review-r0003-20261017/identity-evidence.json#/entities/Q715723"
+    },
+    {
+      "entityId": "b4de3765-e8c4-49f1-a322-a021475ffd09",
+      "name": "Boichi",
+      "kind": "person",
+      "wikidata": "Q624839",
+      "inputPopulation": "exception-or-reuse",
+      "recommendation": "reuse-r0002-accepted",
+      "proposedEntityId": "b4de3765-e8c4-49f1-a322-a021475ffd09",
+      "formalAcceptance": "already-accepted-in-r0002",
+      "checks": {
+        "providerKind": true,
+        "reviewedName": true,
+        "immutableUuidOrExplicitMapping": true
+      },
+      "identityEvidence": "datasets/manga-collection/review-r0003-20261017/identity-evidence.json#/entities/Q624839"
+    },
+    {
+      "entityId": "ba77a4d0-cf0b-4cc9-bd98-9b153a92b3ba",
+      "name": "AKIRA",
+      "kind": "work",
+      "wikidata": "Q91486",
+      "inputPopulation": "normal-36",
+      "recommendation": "recommend-acceptance",
+      "proposedEntityId": "ba77a4d0-cf0b-4cc9-bd98-9b153a92b3ba",
+      "formalAcceptance": "pending",
+      "checks": {
+        "providerKind": true,
+        "reviewedName": true,
+        "immutableUuidOrExplicitMapping": true
+      },
+      "identityEvidence": "datasets/manga-collection/review-r0003-20261017/identity-evidence.json#/entities/Q91486"
+    },
+    {
+      "entityId": "baf73bb9-dda4-474c-acaf-a7a8ce52caf2",
+      "name": "地球へ…",
+      "kind": "work",
+      "wikidata": "Q2668005",
+      "inputPopulation": "normal-36",
+      "recommendation": "recommend-acceptance",
+      "proposedEntityId": "baf73bb9-dda4-474c-acaf-a7a8ce52caf2",
+      "formalAcceptance": "pending",
+      "checks": {
+        "providerKind": true,
+        "reviewedName": true,
+        "immutableUuidOrExplicitMapping": true
+      },
+      "identityEvidence": "datasets/manga-collection/review-r0003-20261017/identity-evidence.json#/entities/Q2668005"
+    },
+    {
+      "entityId": "c1e93fb7-3547-4b64-bd7c-bce073a1198a",
+      "name": "あさドラ！",
+      "kind": "work",
+      "wikidata": "Q102231027",
+      "inputPopulation": "normal-36",
+      "recommendation": "recommend-acceptance",
+      "proposedEntityId": "c1e93fb7-3547-4b64-bd7c-bce073a1198a",
+      "formalAcceptance": "pending",
+      "checks": {
+        "providerKind": true,
+        "reviewedName": true,
+        "immutableUuidOrExplicitMapping": true
+      },
+      "identityEvidence": "datasets/manga-collection/review-r0003-20261017/identity-evidence.json#/entities/Q102231027"
+    },
+    {
+      "entityId": "c59a1b1d-7477-46a5-9669-644981d1d5d8",
+      "name": "大友克洋",
+      "kind": "person",
+      "wikidata": "Q378710",
+      "inputPopulation": "normal-36",
+      "recommendation": "recommend-acceptance",
+      "proposedEntityId": "c59a1b1d-7477-46a5-9669-644981d1d5d8",
+      "formalAcceptance": "pending",
+      "checks": {
+        "providerKind": true,
+        "reviewedName": true,
+        "immutableUuidOrExplicitMapping": true
+      },
+      "identityEvidence": "datasets/manga-collection/review-r0003-20261017/identity-evidence.json#/entities/Q378710"
+    },
+    {
+      "entityId": "c74e0874-eb89-4825-a824-3ff182fe8053",
+      "name": "ポーの一族",
+      "kind": "work",
+      "wikidata": "Q467854",
+      "inputPopulation": "normal-36",
+      "recommendation": "recommend-acceptance",
+      "proposedEntityId": "c74e0874-eb89-4825-a824-3ff182fe8053",
+      "formalAcceptance": "pending",
+      "checks": {
+        "providerKind": true,
+        "reviewedName": true,
+        "immutableUuidOrExplicitMapping": true
+      },
+      "identityEvidence": "datasets/manga-collection/review-r0003-20261017/identity-evidence.json#/entities/Q467854"
+    },
+    {
+      "entityId": "c9080259-3866-4c25-999f-4a5a22046ac1",
+      "name": "サンクチュアリ",
+      "kind": "work",
+      "wikidata": "Q669481",
+      "inputPopulation": "normal-36",
+      "recommendation": "recommend-acceptance",
+      "proposedEntityId": "c9080259-3866-4c25-999f-4a5a22046ac1",
+      "formalAcceptance": "pending",
+      "checks": {
+        "providerKind": true,
+        "reviewedName": true,
+        "immutableUuidOrExplicitMapping": true
+      },
+      "identityEvidence": "datasets/manga-collection/review-r0003-20261017/identity-evidence.json#/entities/Q669481"
+    },
+    {
+      "entityId": "ccb5ddb2-fb7c-4dad-8178-1a170342d0c6",
+      "name": "原哲夫",
+      "kind": "person",
+      "wikidata": "Q1319232",
+      "inputPopulation": "normal-36",
+      "recommendation": "recommend-acceptance",
+      "proposedEntityId": "ccb5ddb2-fb7c-4dad-8178-1a170342d0c6",
+      "formalAcceptance": "pending",
+      "checks": {
+        "providerKind": true,
+        "reviewedName": true,
+        "immutableUuidOrExplicitMapping": true
+      },
+      "identityEvidence": "datasets/manga-collection/review-r0003-20261017/identity-evidence.json#/entities/Q1319232"
+    },
+    {
+      "entityId": "cd2e6949-6c1b-4818-990f-4d4dbc5c5d54",
+      "name": "北斗の拳",
+      "kind": "work",
+      "wikidata": "Q733498",
+      "inputPopulation": "normal-36",
+      "recommendation": "recommend-acceptance",
+      "proposedEntityId": "cd2e6949-6c1b-4818-990f-4d4dbc5c5d54",
+      "formalAcceptance": "pending",
+      "checks": {
+        "providerKind": true,
+        "reviewedName": true,
+        "immutableUuidOrExplicitMapping": true
+      },
+      "identityEvidence": "datasets/manga-collection/review-r0003-20261017/identity-evidence.json#/entities/Q733498"
+    },
+    {
+      "entityId": "d4a3f93f-bbcd-42df-9567-2ba4a485bef3",
+      "name": "大久保彰",
+      "kind": "person",
+      "wikidata": "Q108109758",
+      "inputPopulation": "normal-36",
+      "recommendation": "recommend-acceptance",
+      "proposedEntityId": "d4a3f93f-bbcd-42df-9567-2ba4a485bef3",
+      "formalAcceptance": "pending",
+      "checks": {
+        "providerKind": true,
+        "reviewedName": true,
+        "immutableUuidOrExplicitMapping": true
+      },
+      "identityEvidence": "datasets/manga-collection/review-r0003-20261017/identity-evidence.json#/entities/Q108109758"
+    },
+    {
+      "entityId": "d5e39491-5a5f-423c-9222-2eb3c18db9a8",
+      "name": "小畑健",
+      "kind": "person",
+      "wikidata": "Q313703",
+      "inputPopulation": "exception-or-reuse",
+      "recommendation": "recommend-acceptance",
+      "proposedEntityId": "d5e39491-5a5f-423c-9222-2eb3c18db9a8",
+      "formalAcceptance": "pending",
+      "checks": {
+        "providerKind": true,
+        "reviewedName": true,
+        "immutableUuidOrExplicitMapping": true
+      },
+      "identityEvidence": "datasets/manga-collection/review-r0003-20261017/identity-evidence.json#/entities/Q313703"
+    },
+    {
+      "entityId": "dc188ef2-1a3d-4251-a445-90f49dd88cd0",
+      "name": "クズの本懐",
+      "kind": "work",
+      "wikidata": "Q11298673",
+      "inputPopulation": "normal-36",
+      "recommendation": "recommend-acceptance",
+      "proposedEntityId": "dc188ef2-1a3d-4251-a445-90f49dd88cd0",
+      "formalAcceptance": "pending",
+      "checks": {
+        "providerKind": true,
+        "reviewedName": true,
+        "immutableUuidOrExplicitMapping": true
+      },
+      "identityEvidence": "datasets/manga-collection/review-r0003-20261017/identity-evidence.json#/entities/Q11298673"
+    },
+    {
+      "entityId": "dfaf30df-2f9e-4c63-9fe1-cbbd0a083b36",
+      "name": "アベツカサ",
+      "kind": "person",
+      "wikidata": "Q105258125",
+      "inputPopulation": "normal-36",
+      "recommendation": "recommend-acceptance",
+      "proposedEntityId": "dfaf30df-2f9e-4c63-9fe1-cbbd0a083b36",
+      "formalAcceptance": "pending",
+      "checks": {
+        "providerKind": true,
+        "reviewedName": true,
+        "immutableUuidOrExplicitMapping": true
+      },
+      "identityEvidence": "datasets/manga-collection/review-r0003-20261017/identity-evidence.json#/entities/Q105258125"
+    },
+    {
+      "entityId": "e7b913dd-7ad1-4288-861d-840cb4a3aeef",
+      "name": "サムライ8 八丸伝",
+      "kind": "work",
+      "wikidata": "Q63323229",
+      "inputPopulation": "normal-36",
+      "recommendation": "recommend-acceptance",
+      "proposedEntityId": "e7b913dd-7ad1-4288-861d-840cb4a3aeef",
+      "formalAcceptance": "pending",
+      "checks": {
+        "providerKind": true,
+        "reviewedName": true,
+        "immutableUuidOrExplicitMapping": true
+      },
+      "identityEvidence": "datasets/manga-collection/review-r0003-20261017/identity-evidence.json#/entities/Q63323229"
+    }
+  ],
+  "normalIdentityOnlyEntity": "0914c6bb-701d-4c5a-b8f9-2c63cbff1ef3",
+  "exceptions": {
+    "pineappleArmy": "resolved-as-reuse-recommendation; two newly identified Claim proposals keep original ISBN scope",
+    "domu": "resolved-by-original-NDL-alternative/part-title-and-publisher-support; original Claim UUID kept",
+    "bakumanManga": "NDL wording remains held; independent publisher AUTHORSHIP at same ISBN recommended; DRAWING recollection has no ISBN",
+    "oshiGroupedAuthorship": "NDL grouped wording remains held; separate publisher interview supports two scope-unspecified Role candidates"
+  },
+  "inheritedHolds": [
+    {
+      "reason": "unsupported-responsibility-role",
+      "work": "バクマン。",
+      "rawResponsibility": "小畑健 漫画",
+      "sourceUrl": "https://ndlsearch.ndl.go.jp/books/R100000002-I028322829"
+    },
+    {
+      "reason": "unsupported-responsibility-role",
+      "work": "【推しの子】",
+      "rawResponsibility": "赤坂アカ, 横槍メンゴ 著",
+      "sourceUrl": "https://ndlsearch.ndl.go.jp/books/R100000002-I030509435"
+    }
+  ],
+  "acceptedR0002MetadataPreserved": true
+}
