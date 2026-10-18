@@ -5,7 +5,9 @@ param(
 )
 $ErrorActionPreference = 'Stop'
 $taskName = 'Plunode-CollectionWorker'
-$taskFolder = Join-Path $env:LOCALAPPDATA 'PlunodeCollectionWorker'
+# Packaged desktop hosts can virtualize LocalAppData; Task Scheduler cannot see that
+# private view. Keep the launcher in the user's ordinary, non-virtualized home instead.
+$taskFolder = Join-Path $env:USERPROFILE 'plunode-collection-worker'
 if ($Config -notmatch '^/home/[A-Za-z0-9._/-]+/config\.json$' -or $Config.Contains('..')) {
     throw 'Expected an absolute WSL home config.json path'
 }
@@ -20,7 +22,8 @@ if ($Mode -eq 'Install') {
     $runner = Join-Path $taskFolder 'worker.ps1'
     Copy-Item -LiteralPath $PSCommandPath -Destination $runner -Force
     $arguments = '-NoProfile -NonInteractive -WindowStyle Hidden -ExecutionPolicy Bypass -File "' + $runner + '" -Mode Run -Config "' + $Config + '" -Distribution "' + $Distribution + '"'
-    $action = New-ScheduledTaskAction -Execute 'powershell.exe' -Argument $arguments
+    $powershell = Join-Path $env:SystemRoot 'System32\WindowsPowerShell\v1.0\powershell.exe'
+    $action = New-ScheduledTaskAction -Execute $powershell -Argument $arguments -WorkingDirectory $taskFolder
     $repeat = New-ScheduledTaskTrigger -Once -At (Get-Date).AddMinutes(1) -RepetitionInterval (New-TimeSpan -Minutes 1)
     $logon = New-ScheduledTaskTrigger -AtLogOn -User ([System.Security.Principal.WindowsIdentity]::GetCurrent().Name)
     $settings = New-ScheduledTaskSettingsSet -MultipleInstances IgnoreNew -StartWhenAvailable -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries -ExecutionTimeLimit (New-TimeSpan -Hours 1)
@@ -33,6 +36,8 @@ if ($Mode -eq 'Remove') {
     Disable-ScheduledTask -TaskName $taskName | Out-Null
     Write-Output 'New checks disabled. An active workflow may finish; WSL state and approvals retained.'
 } else {
-    Get-ScheduledTask -TaskName $taskName | Select-Object TaskName, State
-    Get-ScheduledTaskInfo -TaskName $taskName | Select-Object LastRunTime, LastTaskResult, NextRunTime
+    $task = Get-ScheduledTask -TaskName $taskName
+    $info = Get-ScheduledTaskInfo -TaskName $taskName
+    [pscustomobject]@{TaskName=$task.TaskName; State=[string]$task.State; LastRunTime=$info.LastRunTime;
+        LastTaskResult=$info.LastTaskResult; NextRunTime=$info.NextRunTime} | ConvertTo-Json -Compress
 }

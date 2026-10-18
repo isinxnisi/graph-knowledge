@@ -78,16 +78,16 @@ initは既存homeを上書きしない。既存完了ジョブを検証してコ
 この環境はuser systemdがofflineのため、Windowsの現在のユーザーに**独立した**`Plunode-CollectionWorker`タスクを設置する。毎分＋ログオン時、同時実行はIgnoreNew。既存自動開発タスクの有効／無効・設定は変更しない。
 
 ```powershell
-.\scripts\collection-worker-task.ps1 -Mode Install
-.\scripts\collection-worker-task.ps1 -Mode Status
-.\scripts\collection-worker-task.ps1 -Mode Remove
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\collection-worker-task.ps1 -Mode Install
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\collection-worker-task.ps1 -Mode Status
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\collection-worker-task.ps1 -Mode Remove
 ```
 
-Removeは新規定期確認を無効化するだけで、実行中のワークフローを強制終了せず、承認・再開状態も消さない。別homeの場合は`-Config /home/USER/.../config.json`を指定する。タスク本体をWindowsのLocalAppDataへコピーするのでWSL停止時にも起動入口が残る。Windowsがログイン済みでPC稼働中ならWSLを起動して確認する。PC停止・ログアウト中は実行せず、次回ログオン／確認時にGitHubの未処理依頼を読む。常時稼働サーバは今回不要。
+Removeは新規定期確認を無効化するだけで、実行中のワークフローを強制終了せず、承認・再開状態も消さない。別homeの場合は`-Config /home/USER/.../config.json`を指定する。タスク本体をWindowsの`%USERPROFILE%/plunode-collection-worker`へコピーするのでWSL停止時にも起動入口が残る。Windowsがログイン済みでPC稼働中ならWSLを起動して確認する。PC停止・ログアウト中は実行せず、次回ログオン／確認時にGitHubの未処理依頼を読む。常時稼働サーバは今回不要。
 
 前景で保守確認する場合だけ、installed runtimeの`collection-worker.py once|watch --config ...`を使う。onceは一巡、watchは60秒ごとの確認。二重起動はprivate flockで処理を開始しない。共通ロックは既存autopilotの同じinodeを使い、占有時は待ち状態として次回再確認する。1ワークフロー55分を上限とし、子へロックFDを継承する。自動開発や別Codexを終了せず、ロックファイルも削除しない。
 
-ローカルhealthはhomeのhealth.json／catalog-health.json、Windowsのタスク状態とLocalAppData/PlunodeCollectionWorker/last-run.log。onlineはpoll成功を示し、各依頼の成功はGitHub resultsのphaseで確認する。ログは資格情報を含めず、詳細の非公開ログをhome/logsへ保存する。GitHub資格情報の失効は再認証が必要。PC故障によるprivate state喪失、意味／同一性判断、コード更新は自動修復しない。
+ローカルhealthはhomeのhealth.json／catalog-health.json、Windowsのタスク状態と%USERPROFILE%/plunode-collection-worker/last-run.log。onlineはpoll成功を示し、各依頼の成功はGitHub resultsのphaseで確認する。ログは資格情報を含めず、詳細の非公開ログをhome/logsへ保存する。GitHub資格情報の失効は再認証が必要。PC故障によるprivate state喪失、意味／同一性判断、コード更新は自動修復しない。
 
 ## 検証
 
@@ -99,3 +99,5 @@ python3 tests/check_collection_worker.py --report /tmp/worker-check.json
 後者は一時runtime・隔離テーマ・r0003凍結provider fixture・既存validatorを使う。通信8回目中断→同じ承認／キャッシュ再開（72試行／71応答）→レビューのGit共有→萩尾望都2 Claimの模擬部分受入→release検証→plan中断→記録日時・release不変の再開→結果共有を通す。DB観測とplanは明示的な試験置換であり、実KG接続・実運営者承認ではない。`--remote URL --branch codex/collection-worker-test-...`で隔離GitHubへも同じ流れを送信できる。通常control branchを試験先に指定することは拒否する。
 
 既存タスク2の実ローカル無書込plan試験は[従来の検証記録](../../datasets/manga-collection/acceptance-workflow-validation-20261018/README.md)を参照。今回はそれを作り直さず、接続・状態・再開・拒否を検証する。過去の正式受入・release・実行承認は変更しない。
+
+初回設置ではLocalAppDataの起動ファイルをタスク側で参照できず、FFFD0000／8007010Bで停止した。通常のユーザーフォルダーへ移し、実行ファイル・作業フォルダーを絶対パスで指定して、タスク終了0とWorker onlineを確認した。署名制約がある環境では上記のprocess単位ExecutionPolicyを使い、システム全体のpolicyは変更しない。

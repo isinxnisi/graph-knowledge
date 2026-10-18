@@ -16,3 +16,5 @@ Worker単体12件で、未承認／AI提案／判断者欠落／未来日時／s
 最初の既存受入テストはPATH未指定で旧Nodeが選ばれ、`--import`非対応で開始前に停止した。Node24を明示した再実行16件は成功。WSLの標準urllibからbetaは403だったが、Windows側HTTPSでは200で公開revisionを確認した。ローカル3200／betaとも82b01515-594c-48ca-b4b6-515eefac83caを維持。Web変更・再build・VPS配置・全環境公開apply・会員DB変更は行わない。
 
 実KGに対する無書込plan自体は、変更していない[タスク2既存試験](../acceptance-workflow-validation-20261018/README.md)で成功済み。今回の試験を実KGへの新規正式受入や公開適用と混同しない。
+
+Windows実タスクは初回のLocalAppData内ファイルを参照できず起動失敗した。`%USERPROFILE%/plunode-collection-worker`へ移し、絶対パス・明示作業フォルダーの設定でTask Scheduler終了0とWSL Worker onlineを確認。独立タスクは毎分＋ログオン時、Interactive／Limited、IgnoreNew。既存GraphKnowledge-AutopilotのDisabled設定は変更していない。システム全体の実行policyを変えず、起動processだけBypassを使用した。
