@@ -1,5 +1,7 @@
 # プロジェクトの構想と判断基準
 
+2026-10-18、[Discovery共通関係条件のSTEP 1設計契約](design/DISCOVERY_RELATION_CONTRACT.md)を整理。プリセットの対象指定状態と共通関係条件を分離し、other-worksの全段肯定・完全経路を対象検索／Graphで共有する。旧保存・否定を含む探索を保全し、STEP 2は運営者の設計確認後。今回は文書のみで、UI・API・beta・公開KG・収集処理は変更しない。
+
 2026-10-18、[プリセット検索UIの比較試作](design/DISCOVERY_PRESET_BROWSER_PROTOTYPE.md)を明示URL `?discovery=presets` の「今ある接点から」だけに追加。右のカタログ／名前切替、11分野等の独立したカタログ条件、掲載優先・新着・人気未集計、固定対象と再利用可能な探し方、既存KG探索とカタログへの復帰を操作評価する。他2タブ・通常URLは維持し、3200／betaのみ。本番・公開KG・収集処理は変更しない。
 
 2026-10-18、[人間の正式受入から公開準備まで](design/COLLECTION_WORKFLOW.md#タスク2人間の判断ファイルから公開準備まで)をdecision-template／accept-releaseで実装。未承認雛形と人間判断ファイルを分離し、明示UUID・本文／根拠hash・意味／scopeを照合して、不変の受入記録→受入済みだけの新release→validate→最新base／revisionへの無書込planを連結する。部分受入・重複拒否・失敗再開・日時／release不変を隔離検証。旧承認・受入・releaseと公開KGは保全し、全環境apply・VPS配置・会員DB変更は実施しない。
