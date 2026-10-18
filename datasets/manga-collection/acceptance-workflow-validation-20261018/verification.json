@@ -1,0 +1,55 @@
+{
+  "checkedAt": "2026-10-18T04:55:49+00:00",
+  "scope": "isolated-task2-validation-only",
+  "publicApply": false,
+  "actualFormalAcceptanceCreated": false,
+  "codeReferences": [
+    {
+      "file": "scripts/collection-workflow.py",
+      "sha256": "b0bebd34d4aa5600919a834a533fa2e5da1c1ce95859308c57f73df7a5857e2d"
+    },
+    {
+      "file": "scripts/collection-acceptance.py",
+      "sha256": "99851fe8a8aca2abc6f57c97f22229a6943ac2983d670311b48c0fb0f947a49e"
+    }
+  ],
+  "tests": {
+    "task2Acceptance": 16,
+    "existingCollectionAndManga": 61,
+    "publicAndOriginalStory": 24
+  },
+  "readonlyCli": {
+    "file": "datasets/manga-collection/acceptance-workflow-validation-20261018/readonly-cli.json",
+    "sha256": "6284c2a1f8e176a5b7968d893bc4797160d568ea8ac64df74e80b5976aa4fbae"
+  },
+  "fullAcceptedOverlayUnchanged": {
+    "entities": 52,
+    "claims": 40,
+    "sources": 33,
+    "citations": 41
+  },
+  "publicUnchanged": true,
+  "historicalArtifactsUnchanged": true,
+  "webObservations": {
+    "local3200": {
+      "status": 200,
+      "revision": "82b01515-594c-48ca-b4b6-515eefac83ca"
+    },
+    "beta": {
+      "status": 200,
+      "revision": "82b01515-594c-48ca-b4b6-515eefac83ca",
+      "request": "browser-like User-Agent"
+    }
+  },
+  "limits": {
+    "vpsDeployment": false,
+    "restore": false,
+    "memberDbAccess": false,
+    "providerAcquisition": false
+  },
+  "testNotes": [
+    "旧release比較の並列試験1件が5秒timeout。既存条件のまま直列で24件成功。",
+    "通し試験の外側240秒上限を600秒へ調整し、独立した子process groupの終了処理を追加。最終通し試験は295.4秒で成功。collectorの通信予算・実行承認は変更なし。"
+  ],
+  "hypotheticalLaterPublicBaseReusedWithoutApply": true
+}

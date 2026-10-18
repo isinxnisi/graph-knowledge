@@ -1,6 +1,8 @@
 # プロジェクトの構想と判断基準
 
-2026-10-18、[承認済み収集から受入レビューまで](design/COLLECTION_WORKFLOW.md)をmanga-discovery-v2向けの薄いCLIとして実装。既存gate／collectorのhashと再開機構を維持し、公開snapshot・既受入追加集合との照合、根拠／Role／scope確認、通常／例外資料・decision-request・状態付き経路を一回の操作で生成する。新規Claimはhidden、承認済み対応だけ参照再利用し、重要な同定・意味は保留。61テスト・凍結再現・実コマンド再実行の追加通信0を確認。個別受入・公開apply・VPS／会員DB変更はなく、タスク2は未実装。
+2026-10-18、[人間の正式受入から公開準備まで](design/COLLECTION_WORKFLOW.md#タスク2人間の判断ファイルから公開準備まで)をdecision-template／accept-releaseで実装。未承認雛形と人間判断ファイルを分離し、明示UUID・本文／根拠hash・意味／scopeを照合して、不変の受入記録→受入済みだけの新release→validate→最新base／revisionへの無書込planを連結する。部分受入・重複拒否・失敗再開・日時／release不変を隔離検証。旧承認・受入・releaseと公開KGは保全し、全環境apply・VPS配置・会員DB変更は実施しない。
+
+2026-10-18、[承認済み収集から受入レビューまで](design/COLLECTION_WORKFLOW.md)をmanga-discovery-v2向けの薄いCLIとして実装。既存gate／collectorのhashと再開機構を維持し、公開snapshot・既受入追加集合との照合、根拠／Role／scope確認、通常／例外資料・decision-request・状態付き経路を一回の操作で生成する。新規Claimはhidden、承認済み対応だけ参照再利用し、重要な同定・意味は保留。61テスト・凍結再現・実コマンド再実行の追加通信0を確認。タスク1自体は個別受入・公開applyを行わない。タスク2は上記の別コマンドとして実装済み。
 
 2026-10-18、[目的から選ぶ探索プリセット](design/DISCOVERY_PATH_PRESETS.md)を既存の複数段Discoveryへ追加。同じつくり手の別作品、別作品の担当者、人物から作品を介した別担当者、人物を介した別機関の4つの経路の形を公開KGから実行する。初期入口と3タブを維持し、対象・Roleの変更、自由探索、全候補／部分範囲の表示を整合。未公開r0003・収集・受入・公開applyは変更しない。
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Approved manga collection -> immutable pending review. No approval, acceptance or apply."""
+"""Collection/review and explicit human acceptance/release preparation. Never public apply."""
 import argparse
 import copy
 import importlib.util
@@ -9,6 +9,7 @@ import re
 import subprocess
 import sys
 import tempfile
+from types import SimpleNamespace
 from collections import Counter, defaultdict
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -73,6 +74,7 @@ def public_snapshot(path=None):
     return payload['fixture'], {'release': payload['release'], 'revision': payload['revision'],
         'observation': 'supplied-backup-not-a-live-check' if path else 'live-readonly-backup',
         'fixtureSha256': digest(payload['fixture']), 'withdrawals': payload['withdrawals'],
+        'historySha256': digest({k: v for k, v in payload.items() if k != 'savedAt'}),
         'references': [reference(release / f) for f in ['data.json', 'manifest.json']]}
 
 
@@ -521,6 +523,9 @@ def write_review(reviews, outputs):
 
 
 def execute(args):
+    if args.command in ['decision-template', 'accept-release']:
+        acceptance = load('collection_acceptance', ROOT / 'scripts/collection-acceptance.py')
+        return acceptance.execute(args, SimpleNamespace(**globals()))
     registry, jobs, reviews = args.registry.resolve(), args.jobs.resolve(), args.reviews.resolve()
     require(not any(reviews == p or reviews.is_relative_to(p) for p in [registry, jobs, ROOT / 'datasets/public-kg/releases']),
             'Reviews must not overwrite registry, jobs or public releases')
@@ -573,6 +578,8 @@ def parser():
     cli.add_argument('--jobs', type=Path, default=gate.JOBS)
     cli.add_argument('--reviews', type=Path, default=ROOT / 'datasets/manga-collection/workflow-reviews')
     sub = cli.add_subparsers(dest='command', required=True)
+    acceptance = load('collection_acceptance_parser', ROOT / 'scripts/collection-acceptance.py')
+    acceptance.add_parsers(sub, ROOT)
     for command in ['collect-review', 'review-job']:
         item = sub.add_parser(command)
         if command == 'collect-review':
@@ -591,7 +598,7 @@ def main():
     try:
         print(dump(execute(parser().parse_args())), end='')
     except (ValueError, OSError, KeyError, TypeError, subprocess.SubprocessError) as error:
-        print(dump({'error': str(error), 'notice': 'No acceptance or public apply. Completed acquisition can be reused on retry.'}), file=sys.stderr, end='')
+        print(dump({'error': str(error), 'notice': 'No public apply. Immutable completed stages, including any saved human acceptance, remain available for retry.'}), file=sys.stderr, end='')
         return 1
     return 0
 

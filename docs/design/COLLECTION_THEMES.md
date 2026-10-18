@@ -38,11 +38,11 @@
 
 ## タスク1の実装済み操作
 
-2026-10-18、[収集→レビューのワークフロー](COLLECTION_WORKFLOW.md)を実装。`python3 scripts/collection-workflow.py collect-review THEME --revision N --definition-sha SHA` で既存run／inspectと公開・既受入照合、通常／同定のみ／保留の資料生成を連結する。承認済みcollector／gateを変更せず、再開・cache・予算を再利用する。既定は公開KGを無書込backupで確認し、正式受入記録で全件を裏付ける累積候補を自動検出。全生成物はhash付きの別レビュー版へ保存し、正式受入・applyは行わない。凍結r0003の旧通常資料との完全一致、隔離CLI、通信／資料生成失敗の再開、無変更再実行を含む61テスト成功。タスク2は下記設計を維持し、まだ実装しない。
+2026-10-18、[収集→レビューのワークフロー](COLLECTION_WORKFLOW.md)を実装。`python3 scripts/collection-workflow.py collect-review THEME --revision N --definition-sha SHA` で既存run／inspectと公開・既受入照合、通常／同定のみ／保留の資料生成を連結する。承認済みcollector／gateを変更せず、再開・cache・予算を再利用する。既定は公開KGを無書込backupで確認し、正式受入記録で全件を裏付ける累積候補を自動検出。全生成物はhash付きの別レビュー版へ保存し、正式受入・applyは行わない。凍結r0003の旧通常資料との完全一致、隔離CLI、通信／資料生成失敗の再開、無変更再実行を含む61テスト成功。タスク2も[人間判断ファイルから公開準備まで](COLLECTION_WORKFLOW.md#タスク2人間の判断ファイルから公開準備まで)として実装した。collect-review自体は受入しない。
 
 ## 次の実装タスク：収集からレビュー、受入からrelease準備
 
-2026-10-17 20:25 JST指示。今回の[r0003正式受入・40 Claim統合release](MANGA_R0003_ACCEPTED_RELEASE.md)を先に完了する。既存gate／job.json／台帳／fixture／受入記録／public CLIをつなぎ、次の2小タスクを順に実装する。タスク1のcollect-reviewは2026-10-18に[初期実装](COLLECTION_WORKFLOW.md)を完了した。以下は初期設計とタスク2の未実装範囲であり、accept-releaseはまだ実行できない。通常処理を決定的なPythonで連結し、新規の管理画面・API・ジョブDB・scheduler・AI判定サービスを前提にしない。
+2026-10-17 20:25 JST指示。今回の[r0003正式受入・40 Claim統合release](MANGA_R0003_ACCEPTED_RELEASE.md)を先に完了する。既存gate／job.json／台帳／fixture／受入記録／public CLIをつなぎ、次の2小タスクを順に実装する。タスク1のcollect-reviewは2026-10-18に[初期実装](COLLECTION_WORKFLOW.md)を完了した。タスク2は同日13:03 JST指示で実装し、decision-templateの未承認雛形から人間が判断ファイルを確定してaccept-releaseへ渡す。以下の初期設計の承認境界を維持し、具体的な実装・操作は[ワークフロー](COLLECTION_WORKFLOW.md)を正本とする。通常処理を決定的なPythonで連結し、新規の管理画面・API・ジョブDB・scheduler・AI判定サービスを前提にしない。
 
 ### タスク1：承認済み収集からレビュー資料を一回の操作で生成
 
@@ -60,7 +60,7 @@
 
 ### タスク2：人間の正式受入後、受入記録からplanまでを連続実行
 
-最小構成は同じラッパーの `accept-release --decision FILE --decision-sha SHA --group GROUP --reviewer NAME --release ID --confirm-human-acceptance`。実際の人間判断がある場合だけ利用する。入力は判断済みの対象ID・scope・根拠hash・除外／同一性対応・公開禁止条件であり、単なるgroup名やCLIフラグを承認の代わりにはしない。既存acceptance.jsonの形式で実時刻・対象・参照hashを一度記録し、受入済み集合だけを既存release生成→public:validate→最新base/revisionへのpublic:planへ接続する。
+実装した入口は同じラッパーの `accept-release --decision FILE --decision-sha SHA`。group・reviewer・release指定や確認フラグを実行時の承認には使わず、decision-templateで展開した明示UUID・本文hash・意味／scope・全根拠hash・判断者・実判断日時・判断文・承認範囲・公開禁止を人間がファイルへ確定する。実際の人間判断がある場合だけ利用する。入力は判断済みの対象ID・scope・根拠hash・除外／同一性対応・公開禁止条件であり、単なるgroup名やCLIフラグを承認の代わりにはしない。既存acceptance.jsonの形式で実時刻・対象・参照hashを一度記録し、受入済み集合だけを既存release生成→public:validate→最新base/revisionへのpublic:planへ接続する。
 
 今回追加したprepare-manga-release.py --r0003の厳密な対象／hash検査を実例とし、次はその共通部分だけを明示的な受入入力から使えるようにする。意味・同一性の例外判断はレビュー済み入力へ残し、汎用的な推論処理を追加しない。
 
@@ -77,7 +77,7 @@
 
 テーマの実行承認、意味モデル・重要な同一性判断、Entity／Claim・関連根拠の正式受入、公開apply承認の4境界を維持する。根拠の読解や原本／追加資料が必要な例外、未対応語・別名・分類、刊行物scopeの変更はレビューしてから判断する。自動生成の推奨を承認記録へ変換しない。
 
-最小実装後も、固定バッチの範囲と取得条件の人間承認、重要例外の解決、decision hash／対象groupの正式受入、公開前のVPS operator互換性・現地planと適用指示、適用後の実探索確認は残る。定型実行と資料生成は1コマンド、正式受入後のrelease準備は別の1コマンドにまとめる。残り70作品は20〜30作品単位の既存recipe方針で検討し、今回の承認から次版の収集実行権限を推定しない。
+最小実装後も、固定バッチの範囲と取得条件の人間承認、重要例外の解決、明示UUID・scope・根拠hashを含む判断ファイルの確定、公開前のVPS operator互換性・現地planと適用指示、適用後の実探索確認は残る。定型実行と資料生成は1コマンド、正式受入後のrelease準備は別の1コマンドにまとめる。残り70作品は20〜30作品単位の既存recipe方針で検討し、今回の承認から次版の収集実行権限を推定しない。
 
 ## 保存と承認
 

@@ -1,0 +1,225 @@
+{
+  "status": "passed",
+  "checkedAt": "2026-10-18T04:55:49+00:00",
+  "testOnly": true,
+  "publicBase": {
+    "release": "20261014-credits-001",
+    "revision": "82b01515-594c-48ca-b4b6-515eefac83ca",
+    "observation": "live-readonly-backup",
+    "fixtureSha256": "9dff418c05fad7c07546fa94142bb2d45daaff57a2996357c8311851d5a3cc47",
+    "withdrawals": [],
+    "historySha256": "8c4d0ca686a4ee6d588b5128cb191996f2bbeb015ed002fdb0edb1fdcb738e7b",
+    "references": [
+      {
+        "file": "datasets/public-kg/releases/20261014-credits-001/data.json",
+        "sha256": "ea91b16f52a211b5a8464382ad498b7b2bb2be69a6f33fe125a73a3c7b9da2b5"
+      },
+      {
+        "file": "datasets/public-kg/releases/20261014-credits-001/manifest.json",
+        "sha256": "e4aa3b58ed884f7d1f8fffee43b260261cc2b4d3a867fda942919f439d2bce17"
+      }
+    ]
+  },
+  "acceptedCounts": {
+    "entities": 3,
+    "claims": 2,
+    "sources": 2,
+    "citations": 2
+  },
+  "releaseAdditions": {
+    "entities": 16,
+    "claims": 11,
+    "sources": 9,
+    "citations": 11
+  },
+  "externalIdentifiersAdded": 16,
+  "validation": {
+    "valid": true,
+    "counts": {
+      "nodes": {
+        "Entity": 2125,
+        "Claim": 1855,
+        "Source": 1760,
+        "Citation": 1891,
+        "ExternalIdentifier": 2494
+      },
+      "relationships": {
+        "SUBJECT": 1855,
+        "OBJECT": 1855,
+        "HAS_CITATION": 1891,
+        "CITES": 1891,
+        "HAS_EXTERNAL_ID": 2494
+      }
+    }
+  },
+  "plan": {
+    "release": "isolated-task2-cli-test",
+    "unchanged": false,
+    "added": [
+      "Citation:13adf6b0-da63-4be0-abd7-b8aeb54d6bdf",
+      "Citation:2912d1b2-54cf-425a-9428-d0c323f68a01",
+      "Citation:61f50a3d-d113-4ab8-afae-28bba03401c5",
+      "Citation:a0185551-4cc2-44da-975b-81ed43b093c1",
+      "Citation:ad510a01-b4bc-4f29-b4b0-e415a13ae0b7",
+      "Citation:b7241220-539b-43d0-a849-2fd277781288",
+      "Citation:bb15e42b-438b-46f3-bfe2-2c0676424db4",
+      "Citation:c7058cc5-cc97-4191-a9cd-cd52bb958db7",
+      "Citation:c91fecfc-7389-491b-aca9-d181138ebe35",
+      "Citation:e5af19f9-a054-402e-bd48-c29af7b80ac9",
+      "Citation:eee1e9cd-bcc8-4d3a-a094-92bb7f3e1c1e",
+      "Claim:043e8592-5827-4167-9c93-f8201dd110bc",
+      "Claim:07da4e98-1047-46a4-b48a-30f3549c89f9",
+      "Claim:10f72eb0-3526-4d50-a552-e2239c01fc39",
+      "Claim:6ed29ee4-2b62-4fe7-83a6-aafe300754d7",
+      "Claim:84cb19dd-9e8e-496f-abf6-674885abf185",
+      "Claim:c3f1e013-68cc-42b7-b076-495178247899",
+      "Claim:cf18d898-41e5-486f-8dcf-8a666bef83fe",
+      "Claim:d5d3fef1-fc64-4e61-b049-2f3c81994cb9",
+      "Claim:f4b64248-7b3e-4fae-8ff2-7122410b63f4",
+      "Claim:f638cf0b-3750-49f6-b833-844d5465b99f",
+      "Claim:fe6d7c19-646b-474a-ad0a-3b20bc816866",
+      "Entity:0c29d0e2-685f-4c56-9805-6bf1baf40e7c",
+      "Entity:0e0ed535-f78e-4cb0-bd3d-7dffd6b7148e",
+      "Entity:31f3c278-7d49-4aed-9a36-c722cae25ed2",
+      "Entity:3f962dde-c1bc-4165-897b-e129b8e38983",
+      "Entity:40a8ddd3-f333-485c-a12a-ac3d0961111b",
+      "Entity:6c9095bd-1969-4bcd-9282-2d1e9e411254",
+      "Entity:7ca5fc7d-545a-4d39-a2dc-6cce86390112",
+      "Entity:8b0d27c2-1116-4731-a00a-b90c869524a2",
+      "Entity:9f43fefa-d878-4e5e-b1a2-0413432e9dbd",
+      "Entity:a13205e2-220c-4b7d-8a1a-39dbefe52db8",
+      "Entity:a7027ea6-d35d-407d-8e25-d98dc5b0cb92",
+      "Entity:b4de3765-e8c4-49f1-a322-a021475ffd09",
+      "Entity:c71ebc3e-ae93-43d6-a525-eb5b1abd609f",
+      "Entity:c74e0874-eb89-4825-a824-3ff182fe8053",
+      "Entity:e0183e9c-dc97-4d85-b46e-14a1b76707fd",
+      "Entity:e9639ece-9288-4098-973c-9dd95131b7ba",
+      "ExternalIdentifier:[\"wikidata\",\"Q106575051\"]",
+      "ExternalIdentifier:[\"wikidata\",\"Q124312385\"]",
+      "ExternalIdentifier:[\"wikidata\",\"Q1834\"]",
+      "ExternalIdentifier:[\"wikidata\",\"Q24864023\"]",
+      "ExternalIdentifier:[\"wikidata\",\"Q2602357\"]",
+      "ExternalIdentifier:[\"wikidata\",\"Q263303\"]",
+      "ExternalIdentifier:[\"wikidata\",\"Q265061\"]",
+      "ExternalIdentifier:[\"wikidata\",\"Q38275959\"]",
+      "ExternalIdentifier:[\"wikidata\",\"Q3981526\"]",
+      "ExternalIdentifier:[\"wikidata\",\"Q467854\"]",
+      "ExternalIdentifier:[\"wikidata\",\"Q558858\"]",
+      "ExternalIdentifier:[\"wikidata\",\"Q582763\"]",
+      "ExternalIdentifier:[\"wikidata\",\"Q624839\"]",
+      "ExternalIdentifier:[\"wikidata\",\"Q65231576\"]",
+      "ExternalIdentifier:[\"wikidata\",\"Q65240543\"]",
+      "ExternalIdentifier:[\"wikidata\",\"Q696941\"]",
+      "Source:1f388832-0cb6-4ccd-b7e6-80bb0ed0212a",
+      "Source:2bdfa31d-ad7a-4705-8bdf-2be58ae606f6",
+      "Source:4859917b-c4ba-4e2d-b932-52224ff7ebec",
+      "Source:7187047d-51fc-408b-a473-4f2e04c313c1",
+      "Source:751742b2-a8c7-40fe-96c1-8e91a116f789",
+      "Source:7def5563-ec0a-4709-99aa-22f8b07a5c10",
+      "Source:82665bcb-7da4-408c-91dd-befdc3181629",
+      "Source:c815b2db-f907-43d4-a8ae-e2ef99fe5f79",
+      "Source:c91f7f99-6b76-4245-9564-70f8f62c2dc1"
+    ],
+    "updated": [],
+    "relationshipsAdded": 60,
+    "counts": {
+      "nodes": {
+        "Entity": 2125,
+        "Claim": 1855,
+        "Source": 1760,
+        "Citation": 1891,
+        "ExternalIdentifier": 2494
+      },
+      "relationships": {
+        "SUBJECT": 1855,
+        "OBJECT": 1855,
+        "HAS_CITATION": 1891,
+        "CITES": 1891,
+        "HAS_EXTERNAL_ID": 2494
+      }
+    }
+  },
+  "repeat": {
+    "acceptanceReused": true,
+    "releaseUnchanged": true,
+    "validationReused": true,
+    "recordedAt": "2026-10-18T04:52:41.423749+00:00"
+  },
+  "explorationPaths": [
+    {
+      "state": "formally-accepted-not-applied",
+      "observation": "verified-records-only-not-a-live-exploration-test",
+      "edges": [
+        {
+          "claimId": "d5d3fef1-fc64-4e61-b049-2f3c81994cb9",
+          "subjectId": "6c9095bd-1969-4bcd-9282-2d1e9e411254",
+          "objectId": "40a8ddd3-f333-485c-a12a-ac3d0961111b",
+          "person": "萩尾望都",
+          "work": "11人いる！",
+          "roleId": "AUTHORSHIP",
+          "scope": {
+            "kind": "publication",
+            "isbn13": "9784091910110",
+            "volumeLabel": "単巻",
+            "editionLabel": null,
+            "language": "ja"
+          },
+          "state": "formally-accepted-not-applied",
+          "citationIds": [
+            "eee1e9cd-bcc8-4d3a-a094-92bb7f3e1c1e"
+          ],
+          "sourceIds": [
+            "c815b2db-f907-43d4-a8ae-e2ef99fe5f79"
+          ]
+        },
+        {
+          "claimId": "f4b64248-7b3e-4fae-8ff2-7122410b63f4",
+          "subjectId": "6c9095bd-1969-4bcd-9282-2d1e9e411254",
+          "objectId": "c74e0874-eb89-4825-a824-3ff182fe8053",
+          "person": "萩尾望都",
+          "work": "ポーの一族",
+          "roleId": "AUTHORSHIP",
+          "scope": {
+            "kind": "publication",
+            "isbn13": "9784091912510",
+            "volumeLabel": "第1巻",
+            "editionLabel": null,
+            "language": "ja"
+          },
+          "state": "formally-accepted-not-applied",
+          "citationIds": [
+            "a0185551-4cc2-44da-975b-81ed43b093c1"
+          ],
+          "sourceIds": [
+            "c91f7f99-6b76-4245-9564-70f8f62c2dc1"
+          ]
+        }
+      ]
+    }
+  ],
+  "unacceptedClaimCount": 23,
+  "heldClaimIds": [
+    "69ed2335-344f-41a6-a17f-77708faa0398",
+    "7e701c62-22f3-4882-844b-d69d2d818561",
+    "c9c1225b-63d2-4b99-9432-55bd009f8cf2"
+  ],
+  "heldEntityIds": [
+    "4e506b04-cc57-48e9-b502-0d89476bb5f4"
+  ],
+  "actualFormalAcceptanceCreated": false,
+  "publicApply": false,
+  "isolation": "All simulated decisions, receipts and releases removed with the temporary directory",
+  "publicUnchanged": true,
+  "historicalArtifactsUnchanged": true,
+  "preservedInventorySha256": "905b75e627460d119b4946952d26a487ac01767470101ce22fce2828e82c27e0",
+  "codeReferences": [
+    {
+      "file": "scripts/collection-workflow.py",
+      "sha256": "b0bebd34d4aa5600919a834a533fa2e5da1c1ce95859308c57f73df7a5857e2d"
+    },
+    {
+      "file": "scripts/collection-acceptance.py",
+      "sha256": "99851fe8a8aca2abc6f57c97f22229a6943ac2983d670311b48c0fb0f947a49e"
+    }
+  ]
+}
