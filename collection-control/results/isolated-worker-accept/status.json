@@ -1,0 +1,137 @@
+{
+  "requestId": "isolated-worker-accept",
+  "request": {
+    "schemaVersion": 1,
+    "id": "isolated-worker-accept",
+    "status": "approved",
+    "kind": "accept-release",
+    "sourceCommit": "4ce53731e04d34f1ee9bcbd4c3763248222e6d47",
+    "parentRequestId": "isolated-worker-collect",
+    "applyAuthorized": {
+      "local": false,
+      "beta": false,
+      "vps": false
+    },
+    "decision": {
+      "schemaVersion": 1,
+      "decisionId": "isolated-worker-accept",
+      "status": "approved",
+      "humanDecision": {
+        "actorType": "human",
+        "reviewer": "隔離試験・実運用の承認ではない",
+        "decidedAt": "2026-10-18T11:23:06.979421+00:00",
+        "statement": "隔離fixtureだけの模擬判断。実データ受入・公開applyを認めない。"
+      },
+      "approvalScope": "formal-record-acceptance-and-release-preparation-only",
+      "applyAuthorized": {
+        "local": false,
+        "beta": false,
+        "vps": false
+      },
+      "review": {
+        "file": "datasets/manga-collection/workflow-reviews/isolated-worker-roundtrip-r0001-785b14462913038a-review-287d66db8cbc7505/review-manifest.json",
+        "sha256": "3fda41c0edb8ab8c96de0c79c92006c744f40593a5efe4e3526ee5fefefb4235"
+      },
+      "referenceArtifacts": [
+        {
+          "file": "datasets/manga-collection/workflow-reviews/isolated-worker-roundtrip-r0001-785b14462913038a-review-287d66db8cbc7505/README.md",
+          "sha256": "93e9d6cb2c100de5a724ff8202e114d85583abfb96c99edcdf5bed7f0c6e2ab6"
+        },
+        {
+          "file": "datasets/manga-collection/workflow-reviews/isolated-worker-roundtrip-r0001-785b14462913038a-review-287d66db8cbc7505/context.json",
+          "sha256": "b4a6ac30ce783d97986db74fd161b9c6856937c544d0a69e985d6514ed233d5a"
+        },
+        {
+          "file": "datasets/manga-collection/workflow-reviews/isolated-worker-roundtrip-r0001-785b14462913038a-review-287d66db8cbc7505/decision-request.json",
+          "sha256": "62fe2c7c66fa07358cd7a2c57e5ea6a231c181ed33b6f3b4a5809e008ee10117"
+        },
+        {
+          "file": "datasets/manga-collection/workflow-reviews/isolated-worker-roundtrip-r0001-785b14462913038a-review-287d66db8cbc7505/exploration-paths.json",
+          "sha256": "7629b2d6d911031624169a0bd04fbaebf938e29ae6fe450b1a46a08ea2d4ac19"
+        },
+        {
+          "file": "datasets/manga-collection/workflow-reviews/isolated-worker-roundtrip-r0001-785b14462913038a-review-287d66db8cbc7505/identity-only-records.json",
+          "sha256": "1795d6884f68dcd07b7041a6b7b91fb76ae0f4d71db722b32e891765765f74e0"
+        },
+        {
+          "file": "datasets/manga-collection/workflow-reviews/isolated-worker-roundtrip-r0001-785b14462913038a-review-287d66db8cbc7505/proposed-records.json",
+          "sha256": "7a61289f55cad1f33934307024ba60f931ca27536d6b8dfdda99d20f05445867"
+        },
+        {
+          "file": "datasets/manga-collection/workflow-reviews/isolated-worker-roundtrip-r0001-785b14462913038a-review-287d66db8cbc7505/review-manifest.json",
+          "sha256": "3fda41c0edb8ab8c96de0c79c92006c744f40593a5efe4e3526ee5fefefb4235"
+        },
+        {
+          "file": "datasets/manga-collection/workflow-reviews/isolated-worker-roundtrip-r0001-785b14462913038a-review-287d66db8cbc7505/review.json",
+          "sha256": "957fdf6e5deb4a196ed67fe6abfee2e74f9ba16ac2a370f532ec2dae5491bb75"
+        }
+      ],
+      "acceptedRecordIds": {
+        "entities": [
+          "743d7fc0-ddc6-446a-8aa1-d9a9b284a326",
+          "b1e1232d-b038-4c11-b80c-ab1c2710d2bf"
+        ],
+        "claims": [
+          "121709e5-ea90-4c6a-87d1-d67264e1590d"
+        ],
+        "sources": [
+          "28614027-38d3-4b20-b460-8b1b48b4eb07"
+        ],
+        "citations": [
+          "fa8985f2-6775-4348-a136-9a5dee986b1a"
+        ]
+      },
+      "recordSha256": {
+        "entities": {
+          "743d7fc0-ddc6-446a-8aa1-d9a9b284a326": "457219c102891154699e7929466ac5e4877ce847894747cefe8a82c3e2a2ee02",
+          "b1e1232d-b038-4c11-b80c-ab1c2710d2bf": "e857460a992c8c3c2f5889c0720871ad893b1272472b4910ebe49a2ff6eae0c2"
+        },
+        "claims": {
+          "121709e5-ea90-4c6a-87d1-d67264e1590d": "af8747c2bbb15de5299738a6196c06ec2af5d1f903281731da4d754672eb066a"
+        },
+        "sources": {
+          "28614027-38d3-4b20-b460-8b1b48b4eb07": "3bf0f14e481d84bd1f9a8f4d7a4982ed89c8bcf5d1518c9fea7b0c7ab804d100"
+        },
+        "citations": {
+          "fa8985f2-6775-4348-a136-9a5dee986b1a": "93ffc6f4d3d81edd0ea25d721e280d235b4cf1977b27018130bd920cbaae3401"
+        }
+      },
+      "scopeByClaim": [
+        {
+          "id": "121709e5-ea90-4c6a-87d1-d67264e1590d",
+          "subjectId": "743d7fc0-ddc6-446a-8aa1-d9a9b284a326",
+          "objectId": "b1e1232d-b038-4c11-b80c-ab1c2710d2bf",
+          "predicate": "CONTRIBUTED_TO",
+          "polarity": "affirmed",
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "contribution": {
+            "roleId": "AUTHORSHIP",
+            "scope": {
+              "kind": "publication",
+              "isbn13": "9784091228017",
+              "volumeLabel": "第1巻",
+              "editionLabel": null,
+              "language": "ja"
+            }
+          },
+          "organizationParticipation": null,
+          "eventParticipation": null
+        }
+      ],
+      "baseRelease": "20261014-credits-001",
+      "baseRevision": "isolated-worker-no-database",
+      "releaseId": "isolated-worker-release"
+    }
+  },
+  "requestSha256": "131d3a47a74c8f100e3c0b57d97180870fe44bf8a44bc349ad739d0739137dec",
+  "kind": "accept-release",
+  "phase": "running",
+  "generation": 1,
+  "attempts": 1,
+  "workerId": "isolated-test-only",
+  "sourceCommit": "4ce53731e04d34f1ee9bcbd4c3763248222e6d47",
+  "updatedAt": "2026-10-18T11:25:55+00:00"
+}
