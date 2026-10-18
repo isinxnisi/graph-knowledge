@@ -15,6 +15,8 @@
 | collection-control/proposals/*.md／*.json | 登録済み最新テーマの人間向け説明と未承認の完全な判断雛形。既存承認があっても自動依頼しない |
 | collection-control/requests/ID.json | ChatGPTが運営者の明示判断を記録する不変の実行依頼 |
 | collection-control/revocations/ID.json | 依頼の取消。既存依頼を書き換えず追記する |
+| collection-control/controls/WORKER/ID.json | 実行時間帯・一時停止・再開の人間による操作記録。実行承認・取消とは別 |
+| collection-control/workers/WORKER/{README.md,status.json,control-template.json} | 現在の制御状態、次回開始候補、未承認の操作雛形 |
 | collection-control/results/ID/{README.md,status.json} | 実行中、ロック待ち、再試行待ち、完了、停止理由・件数・成果へのリンク |
 | collection-control/results/ID/events/*.json | 状態遷移の不変記録 |
 | collection-control/artifacts/ID/... | 元のruntime相対パスを保ったレビュー・根拠・承認・受入記録・release候補 |
@@ -53,6 +55,41 @@ sourceCommit、referenceの`file`はWorker runtime内の相対パス。GitHubで
 ChatGPTはresults/ID/status.jsonの`requestSha256`を取り、revocations/ID.jsonへ`requestSha256`、`approvalScope: request-cancellation-only`、明示したhumanDecisionを記録する。最初の検知前に依頼を取り消す場合も、変更・削除せず対象SHA-256を確認して取消を追加する。不正・不完全な取消も安全側へ停止する。実行中は約20秒ごとに再確認し、Worker自身の子プロセスだけを終了する。既に保存された正式受入記録は取消から自動撤回せず、人間が別途判断する。
 
 blockedは同じ依頼の再実行では解除しない。修正済み条件・参照・判断を確認した新しい依頼を使う。通信障害は60秒〜最大1時間の待ちを置いて同じ依頼を再試行する。ジョブとキャッシュは既存CLIが再開する。レビュー生成だけの失敗では不要な再収集をしない。実行完了後のGitHub送信失敗は保存済み結果の送信から再開する。
+
+## 実行時間帯・休憩・一時停止（2026-10-19）
+
+初期設定は**毎日03:00〜07:00、09:00〜12:00、15:00〜18:00、日本時間固定**。ホストOSのtimezoneに依存しない。各枠の終了15分前から新規開始を控える。終了時刻そのものでは切らず、実行中は10分までの超過を許容し、それを超える場合は従来の子プロセス中断・チェックポイント再開へ戻す。高度な所要時間予測はしない。時間枠の変更は次の開始から適用し、既に開始した処理の猶予を急に短縮しない。明示的な実行中断は下記pause-runningを使う。
+
+1回のonceにつき、収集・受入・検証・レビュー仕上げの重い試行は**最大1件**。終了・失敗・安全中断の後に、UTCの次回開始可能時刻をstate.jsonへ保存して**10分休憩**する。Workerを起動したまま休憩しない。再開操作でも休憩・通信再試行待ちを消さない。完了した収集はexecutionCompleteを再利用し、報告やレビュー仕上げの再開で再収集しない。試行ごとのstdout／stderrは別ファイルで保持する。
+
+時間外・休憩中・停止中も毎分のGitHub確認、承認／取消／操作の検知、軽量な結果・状態報告は続ける。入力の取込み・新しい判断雛形の生成も時間枠の内側へ延期する。既存のworker.lock、共通ロック、承認・定義・コード／入力hashの照合、1ワークフロー55分上限を維持する。1巡全体でも55分で処理を再開可能に戻し、Git通信を含む57分の予算と終了余裕を設ける。Windowsの毎分trigger・非表示起動・IgnoreNew・1時間制限は変更しない。
+
+state.jsonのexecutionControlに、時間枠、停止モード、操作履歴hash、次回開始可能時刻、開始中の試行を保存する。PC停止等でfinallyを通らなかった試行は、保存済みの上限時刻＋10分までは次を開始しない保守的な復旧とする。既存の共通ロックも生存中の子との衝突を防ぐ。PC／WSL停止中は実行できず、起動後の毎分確認から復帰する。状態ファイル喪失の自動復旧や強制的なロック解放は行わない。
+
+### このチャットからの操作
+
+運営者は次のように話しかける。CLI起動・JSON編集は運営者に求めない。
+
+| 会話での判断 | ChatGPTが記録するaction | 効果 |
+| --- | --- | --- |
+| 「CollectionWorkerの次の開始を一時停止」 | pause-new | 新規開始を止め、実行中は安全な完了を優先 |
+| 「実行中も安全に中断して一時停止」 | pause-running | Worker自身の子だけを中断。承認・進捗・受入済み記録・成果を保持 |
+| 「CollectionWorkerを再開」 | resume | 停止解除。時間枠・休憩・承認ゲートは維持 |
+| 「収集時間を毎日○時〜○時に変更」 | set-windows | 次回以降の毎日の時間枠を変更。停止モードは維持 |
+
+ChatGPTは`codex/collection-control`の[現在の状態](https://github.com/isinxnisi/graph-knowledge/blob/codex/collection-control/collection-control/workers/plunode-wsl/README.md)と`control-template.json`を読み、運営者が実際に明示した判断を`humanDecision`へ記録する。statusをapprovedにし、actionを選び、新規の`collection-control/controls/plunode-wsl/ID.json`へ既存GitHub連携のcreate_fileで登録する。main・Issues・既存requests／revocationsは書き換えない。set-windowsだけは`windows`を追加する。resumeは未承認ジョブやblockedの意味・同一性問題を解除する操作ではない。
+
+操作は`schemaVersion: 1`、`workerId`、新規`id`、連続する`revision`、直前の`previousControlId`、`approvalScope: worker-execution-control-only`を要求する。最初のpreviousControlIdはnull。雛形は**未承認**であり、判断者名・actorType・日時・実際の発言範囲を埋めるだけでは本人認証にはならない。既存の信頼されたGitHub権限・連携資格情報を前提とする。AIの提案を人間の操作へ昇格させない。
+
+適用済み操作のGit blobとSHA-256を保持し、削除・差替え・revisionの欠落・分岐・未知の操作・人間判断の不足は重い処理を停止する。操作登録は追記のみ。複数の未処理操作は直前のIDとrevisionを継いで登録でき、PC起動後に順番に反映される。判断の取消とは異なり、一時停止は同じ依頼・同じ承認hashから再開できる。収集実行・個別知識受入・公開applyの承認は引き続き別に必要。
+
+時間枠はstart／endをHH:MMで指定し、1〜12枠、時刻順・重複なし・1枠15分超とする。24:00はendだけに使える。日跨ぎは00:00〜07:00と23:00〜24:00のように分ける。timezone・休憩・実行上限・任意コマンド・DB設定を操作記録から変更する入口はない。
+
+状態のREADME／status.jsonには、反映済みcontrolRevision、最後の操作ID／hash、停止モード、次回開始候補、処理中の依頼、各phaseの件数、checkedAtを表示する。意味のある変化は直ちに、変化がない場合は約15分ごとにGitHubへ報告する。ローカルhealthは従来どおり毎巡更新。反映待ち・PC停止中の古いcheckedAtを成功と読み替えない。実行中の操作確認は従来の約20秒間隔を基本とし、通信不通や短い不可分な処理では即時中断を保証しない。
+
+収集計画のGitHub Issuesは計画台帳のまま。実行キューは人間判断を記録したrequestsだけで、Issueの状態や操作記録から収集対象・Entity／Claimを生成しない。個別成果と根拠付きGraph経路は従来のresults／artifactsに保ち、収集候補／正式受入済み未公開／公開済みを区別する。
+
+検証と実環境への反映は[2026-10-19の記録](../verification/COLLECTION_WORKER_CONTROL_20261019.md)を参照。
 
 ## 保証する範囲と信頼境界
 
@@ -95,6 +132,7 @@ Windowsの入口はGUI版`wscript.exe //B //NoLogo`と`worker.wsf`を使う。Po
 
 ```bash
 python3 -m unittest discover -s tests -p test_collection_worker.py -v
+python3 -m unittest discover -s tests -p test_collection_worker_control.py -v
 python3 tests/check_collection_worker.py --report /tmp/worker-check.json
 ```
 

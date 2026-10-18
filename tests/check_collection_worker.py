@@ -91,6 +91,12 @@ def main():
             store = b.GitHubStore(home, str(origin), 'control'); store.sync()
         config = {'home': str(home), 'workerId': 'isolated-test-only', 'codeCommit': commit}
         executor = IsolatedExecutor(config, store); w = executor.workflow
+        virtual_time = [datetime(2026, 10, 18, 18, 0, tzinfo=timezone.utc).timestamp() - 600]  # JST 03:00
+        def run_tick(advance=True):
+            if advance: virtual_time[0] += 600
+            current = b.Worker(config, store, executor, no_lock, clock=lambda: virtual_time[0])
+            current.tick()
+            return current
         executor.public = w.read(runtime / 'datasets/public-kg/releases/20261014-credits-001/data.json')
         executor.observed = {'release': '20261014-credits-001', 'revision': 'isolated-worker-no-database',
             'observation': 'live-readonly-backup', 'fixtureSha256': w.digest(executor.public), 'withdrawals': [],
@@ -106,12 +112,12 @@ def main():
         inbox = b.PREFIX + 'requests/' + collect['id'] + '.json'
         # The inbox is the exact equivalent of a connector-created GitHub file, not an actual operator decision.
         store.publish({inbox: b.dump(collect).encode()}, [inbox])
-        worker = b.Worker(config, store, executor, no_lock); worker.tick()
+        worker = run_tick()
         first = worker.state['requests'][collect['id']]
         b.insist(first['phase'] == 'retry-wait' and executor.opener.calls == 8, 'Communication failure was not preserved')
         first['retryAt'] = 0; worker.checkpoint()
         # New process-like controller instance recovers the existing gate, job and request cache.
-        worker = b.Worker(config, store, executor, no_lock); worker.tick()
+        worker = run_tick()
         completed = worker.state['requests'][collect['id']]
         b.insist(completed['phase'] == 'completed', 'Collection did not complete: ' + str(completed.get('message')))
         b.insist(executor.opener.calls == 72, 'Expected cached 71 responses + interrupted attempt')
@@ -127,20 +133,20 @@ def main():
             'sourceCommit': commit, 'parentRequestId': collect['id'], 'applyAuthorized': b.NO_APPLY, 'decision': decision}
         inbox2 = b.PREFIX + 'requests/' + accept['id'] + '.json'
         store.publish({inbox2: b.dump(accept).encode()}, [inbox2])
-        worker = b.Worker(config, store, executor, no_lock); worker.tick()
+        worker = run_tick()
         accepted = worker.state['requests'][accept['id']]
         # The first plan interruption must retain the immutable receipt and release.
         if accepted['phase'] == 'retry-wait':
             receipt = runtime / '.local/isolated-acceptances/accepted-isolated-worker-accept/acceptance.json'
             recorded = w.read(receipt)['recordedAt']; frozen = w.gate.inventory(runtime / '.local/isolated-releases')
             accepted['retryAt'] = 0; worker.checkpoint()
-            worker = b.Worker(config, store, executor, no_lock); worker.tick()
+            worker = run_tick()
             accepted = worker.state['requests'][accept['id']]
             b.insist(w.read(receipt)['recordedAt'] == recorded and w.gate.inventory(runtime / '.local/isolated-releases') == frozen,
                      'Saved acceptance or release changed on retry')
         b.insist(accepted['phase'] == 'completed', 'Acceptance did not complete: ' + str(accepted.get('message')))
         before = store.head
-        b.Worker(config, store, executor, no_lock).tick()
+        run_tick(advance=False)
         b.insist(executor.opener.calls == 72 and executor.plans == 2 and store.head == before, 'Duplicate processing/publication')
         report = {'testOnly': True, 'actualOperatorApproval': False, 'databaseConnection': False,
             'publicApply': False, 'sourceCommit': commit, 'elapsedSeconds': round(time.monotonic() - started, 1),

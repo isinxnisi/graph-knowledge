@@ -22,6 +22,7 @@ import time
 ROOT = Path(__file__).resolve().parents[1]
 PREFIX = 'collection-control/'
 NO_APPLY = {'local': False, 'beta': False, 'vps': False}
+CYCLE_DEADLINE = None
 
 
 def module(name, path):
@@ -31,6 +32,7 @@ def module(name, path):
 
 
 gate = module('worker_gate', ROOT / 'scripts/collection-themes.py')
+controls = module('worker_controls', ROOT / 'scripts/collection-worker-control.py')
 read, dump, require, digest, save = gate.read, gate.dump, gate.require, gate.content_hash, gate.save
 
 
@@ -63,6 +65,9 @@ def human(value):
 
 
 def command(args, cwd=None, data=None, env=None, timeout=90):
+    if CYCLE_DEADLINE is not None:
+        timeout = min(timeout, CYCLE_DEADLINE - time.monotonic())
+        if timeout <= 0: raise RuntimeError('Worker cycle budget exhausted; saved work can resume')
     process = subprocess.Popen(args, cwd=cwd, stdin=subprocess.PIPE if data is not None else subprocess.DEVNULL,
         stdout=subprocess.PIPE, stderr=subprocess.PIPE, start_new_session=True,
         env={**os.environ, 'GIT_TERMINAL_PROMPT': '0', 'GCM_INTERACTIVE': 'Never', **(env or {})})
@@ -139,6 +144,10 @@ class GitHubStore:
                     insist(all(previous.get(k) == following.get(k) for k in ['workerId', 'requestSha256']),
                            'Concurrent result ownership changed; no overwrite')
                     insist(following['generation'] >= previous['generation'], 'Stale result generation; no overwrite')
+                if old is not None and name.startswith(PREFIX + 'workers/') and name.endswith('/status.json'):
+                    previous, following = json.loads(old), json.loads(content)
+                    insist(previous['workerId'] == following['workerId'], 'Worker status ownership changed')
+                    insist(previous['controlRevision'] <= following['controlRevision'], 'Stale worker control revision')
                 changed[name] = content
             if not changed: return self.head
             with tempfile.TemporaryDirectory(prefix='worker-index-', dir=self.home) as temp:
@@ -256,7 +265,9 @@ class Executor:
             else: w.gate.create(path, decision)
             args = ['accept-release', '--decision', str(path), '--decision-sha', gate.file_hash(path)]
         logs = Path(self.config['home']) / 'logs'; logs.mkdir(exist_ok=True)
-        with (logs / (request['id'] + '.stdout')).open('w+') as out, (logs / (request['id'] + '.stderr')).open('w+') as err:
+        # Keep interrupted-attempt logs instead of overwriting them on resume.
+        attempt = request['id'] + '-' + str(time.time_ns())
+        with (logs / (attempt + '.stdout')).open('w+') as out, (logs / (attempt + '.stderr')).open('w+') as err:
             os.chmod(out.name, 0o600); os.chmod(err.name, 0o600)
             child = subprocess.Popen([sys.executable, str(self.root / 'scripts/collection-workflow.py'), *args], cwd=self.root,
                 stdin=subprocess.DEVNULL, stdout=out, stderr=err, start_new_session=True,
@@ -357,10 +368,16 @@ def common_lock():
 
 
 class Worker:
-    def __init__(self, config, store, executor, lock=common_lock):
+    slug, human, digest, dump = staticmethod(slug), staticmethod(human), staticmethod(digest), staticmethod(dump)
+
+    def __init__(self, config, store, executor, lock=common_lock, clock=None, work_deadline=None):
         self.config, self.home, self.store, self.executor, self.lock = config, Path(config['home']), store, executor, lock
+        self.now = clock or time.time
+        self.work_deadline = work_deadline if work_deadline is not None else time.monotonic() + controls.WORK_LIMIT
+        self.heavy_used = False
         self.state_file = self.home / 'state.json'
         self.state = read(self.state_file) if self.state_file.exists() else {'schemaVersion': 1, 'requests': {}, 'operations': {}}
+        self.control = controls.ExecutionControl(self)
 
     def checkpoint(self):
         save(self.state_file, self.state)
@@ -429,6 +446,7 @@ class Worker:
 
     def tick(self):
         self.store.sync()
+        self.control.refresh()
         paths = self.store.tree(self.store.head, PREFIX + 'requests/')
         # Invalid input is fail-closed and must not starve unrelated approvals.
         loaded = []
@@ -475,32 +493,70 @@ class Worker:
                 self.state['operations'][operation] = ident
                 if record['phase'] in ['completed', 'blocked', 'duplicate']:
                     self.checkpoint(); continue
-                if record.get('executionComplete'):
-                    with self.lock(): self.finish(request, record)
+                if record.get('retryAt', 0) > self.now(): continue
+                admission = self.control.gate()
+                if self.heavy_used or not admission['ready']:
+                    phase = 'waiting-control'
+                    message = 'Execution gate: ' + (admission['reason'] if not admission['ready'] else 'one-job-per-cycle')
+                    if record.get('message') != message or record['phase'] != phase:
+                        record.update(phase=phase, message=message)
+                        self.checkpoint(); self.publish(request, record)
                     continue
-                if record.get('retryAt', 0) > time.time(): continue
                 try:
                     with self.lock() as fd:
                         self.active(request, sha)
-                        try: self.executor.validate(request, self.state['requests'].get(request.get('parentRequestId')))
-                        except (ValueError, KeyError, TypeError) as error: raise Blocked(str(error)) from None
-                        record.update(phase='running', attempts=record['attempts'] + 1); self.checkpoint(); self.publish(request, record)
-                        last = [0]
-                        def monitor():
-                            if time.monotonic() - last[0] < 20: return
-                            self.active(request, sha); last[0] = time.monotonic()
-                        result = self.executor.run(request, monitor, fd)
-                        record.update(result=result, executionComplete=True, phase='publishing'); self.checkpoint()
-                        self.finish(request, record)
+                        self.control.refresh()
+                        self.control.begin_attempt(request)
+                        self.heavy_used = True
+                        try:
+                            last = [None]
+                            def monitor():
+                                if time.monotonic() >= self.work_deadline:
+                                    raise controls.Deferred('Worker cycle budget reached; checkpoints retained')
+                                self.control.check_running()
+                                if last[0] is not None and time.monotonic() - last[0] < 20: return
+                                self.active(request, sha)
+                                self.control.refresh(); self.control.publish()
+                                self.control.check_running()
+                                # The first in-work monitor must recheck, even when the
+                                # pre-handoff checks happened less than 20 seconds ago.
+                                last[0] = time.monotonic() if self.control.work_started else None
+                            monitor()
+                            if not record.get('executionComplete'):
+                                try: self.executor.validate(request, self.state['requests'].get(request.get('parentRequestId')))
+                                except (ValueError, KeyError, TypeError) as error: raise Blocked(str(error)) from None
+                                record.update(phase='running', attempts=record['attempts'] + 1)
+                                self.checkpoint(); self.publish(request, record)
+                                # pause-new before handoff prevents starting; after handoff it
+                                # lets this attempt finish. pause-running remains interruptible.
+                                last[0] = None; monitor()
+                                self.control.work_started = True
+                                result = self.executor.run(request, monitor, fd)
+                                record.update(result=result, executionComplete=True, phase='publishing'); self.checkpoint()
+                            else:
+                                self.control.work_started = True
+                            self.finish(request, record)
+                        finally:
+                            self.control.end_attempt(request)
+                except controls.Deferred:
+                    raise
                 except RuntimeError as error:
                     if '共通ロック' in str(error):
                         record.update(phase='waiting-lock', message='共通ロック使用中。次回に再確認する。'); self.checkpoint(); self.publish(request, record)
                     else: raise
+            except controls.Deferred as error:
+                record.update(phase='paused', message=str(error))
+                try:
+                    partial = self.executor.partial(request) if hasattr(self.executor, 'partial') else None
+                    if partial: record['savedAcceptance'] = partial
+                except (ValueError, KeyError, OSError) as partial_error:
+                    record.update(phase='blocked', message=str(partial_error))
+                self.checkpoint(); self.publish(request, record)
             except Blocked as error:
                 record.update(phase='blocked', message=str(error)); self.checkpoint(); self.publish(request, record)
             except (OSError, ValueError, KeyError, TypeError, RuntimeError, subprocess.SubprocessError) as error:
                 record.update(phase='retry-wait', message=re.sub(r'https?://[^\s/@]+:[^\s/@]+@', 'https://[redacted]@', str(error))[:1000],
-                    retryAt=time.time() + min(3600, 60 * 2 ** min(record['attempts'], 6)))
+                    retryAt=self.now() + min(3600, 60 * 2 ** min(record['attempts'], 6)))
                 try:
                     partial = self.executor.partial(request) if hasattr(self.executor, 'partial') else None
                     if partial: record['savedAcceptance'] = partial
@@ -513,6 +569,13 @@ class Worker:
         self.checkpoint()
         if self.state.get('invalidFiles'):
             self.store.publish({PREFIX + 'workers/' + slug(self.config['workerId']) + '/invalid-requests.json': dump(self.state['invalidFiles']).encode()})
+        try:
+            self.control.publish()
+            self.state.pop('controlReportError', None)
+        except (OSError, RuntimeError) as error:
+            self.state['controlReportError'] = re.sub(r'https?://[^\s/@]+:[^\s/@]+@',
+                'https://[redacted]@', str(error))[:1000]
+        self.checkpoint()
         return self.state
 
 
@@ -595,6 +658,7 @@ def refresh_catalog(config, store, executor, lock=common_lock):
 
 
 def main():
+    global CYCLE_DEADLINE
     cli = argparse.ArgumentParser(description=__doc__)
     sub = cli.add_subparsers(dest='command', required=True)
     setup = sub.add_parser('init'); setup.add_argument('--home', type=Path, required=True)
@@ -612,14 +676,18 @@ def main():
         store = GitHubStore(home, config['remote'], config['branch']); executor = Executor(config, store)
         if args.command == 'catalog': catalog(config, store, executor); return 0
         while True:
+            cycle_started = time.monotonic()
+            CYCLE_DEADLINE = cycle_started + controls.CYCLE_LIMIT
             try:
-                try:
-                    refresh_catalog(config, store, executor)
-                except (RuntimeError, Blocked) as error:
-                    # An occupied shared lock or a newer main requiring code review cannot prevent
-                    # already pinned requests from being checked/cancelled.
-                    save(home / 'catalog-health.json', {'checkedAt': gate.now(), 'message': str(error)[:1000]})
-                worker = Worker(config, store, executor); worker.tick()
+                worker = Worker(config, store, executor, work_deadline=cycle_started + controls.WORK_LIMIT)
+                worker.tick()
+                # Input import/proposal generation is deferred too. Lightweight approval/
+                # control checks and status publication above run at all hours.
+                if not worker.heavy_used and worker.control.gate()['ready']:
+                    try:
+                        refresh_catalog(config, store, executor)
+                    except (RuntimeError, Blocked) as error:
+                        save(home / 'catalog-health.json', {'checkedAt': gate.now(), 'message': str(error)[:1000]})
                 save(home / 'health.json', {'checkedAt': gate.now(), 'status': 'online', 'publicApply': False})
             except Exception as error:
                 save(home / 'health.json', {'checkedAt': gate.now(), 'status': 'error', 'error': str(error)[:1000], 'publicApply': False})

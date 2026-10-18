@@ -70,13 +70,18 @@ class WorkerControl(unittest.TestCase):
         self.home = Path(self.temp.name); self.store = MemoryStore(); self.executor = FakeExecutor(self.home)
         self.config = {'home': str(self.home), 'workerId': 'isolated-worker'}
         self.request = approval(); self.store.submit(self.request)
-    def worker(self, lock=no_lock): return b.Worker(self.config, self.store, self.executor, lock)
+        self.clock = datetime(2026, 10, 18, 18, 0, tzinfo=timezone.utc).timestamp() - 600  # JST 03:00
+    def worker(self, lock=no_lock):
+        self.clock += 600
+        return b.Worker(self.config, self.store, self.executor, lock, clock=lambda: self.clock)
     def record(self, ident=None): return b.read(self.home / 'state.json')['requests'][ident or self.request['id']]
     def test_complete_restart_and_duplicate_have_one_execution(self):
         self.worker().tick(); self.assertEqual(self.record()['phase'], 'completed')
         before = copy.deepcopy(self.store.files)
         self.worker().tick(); self.assertEqual(self.executor.calls, 1)
-        self.assertEqual(before, self.store.files)
+        # Worker operational status may change from interval to ready; knowledge results stay immutable.
+        self.assertEqual({k:v for k,v in before.items() if '/workers/' not in k},
+                         {k:v for k,v in self.store.files.items() if '/workers/' not in k})
         duplicate = copy.deepcopy(self.request); duplicate['id'] = 'second-collect'; self.store.submit(duplicate)
         self.worker().tick(); self.assertEqual(self.record('second-collect')['phase'], 'duplicate')
         self.assertEqual(self.executor.calls, 1)
@@ -140,7 +145,8 @@ class WorkerControl(unittest.TestCase):
         r = approval('semantic-conflict'); r['target']['themeId'] = 'other-test'; r['valid'] = False; self.store.submit(r)
         r = approval('accept-no-parent'); r.update(kind='accept-release', parentRequestId='absent',
             decision={'decisionId': 'missing-parent', 'humanDecision': r.pop('humanDecision')}); self.store.submit(r)
-        self.worker().tick(); self.assertEqual(self.record('semantic-conflict')['phase'], 'blocked')
+        for _ in range(3): self.worker().tick()  # One validation/execution attempt per invocation.
+        self.assertEqual(self.record('semantic-conflict')['phase'], 'blocked')
         self.assertEqual(self.record('accept-no-parent')['phase'], 'blocked'); self.assertEqual(self.executor.calls, 1)
 
 
