@@ -19,6 +19,21 @@
 
 ## 設置への反映
 
-設置済みWorkerの更新・自然な定期確認結果は、反映後に本節と機械可読記録へ追記する。旧承認や過去releaseを書き換えず、private lock保持中にバックアップと凍結成果物のhash照合を行う。Windowsの毎分・非表示・IgnoreNew・1時間制限は維持する。
+実装commitは`8dc3f69ceef375d06c8a821eb937e94ae639bdf2`。02:02:39 JSTに既存private lockを取得した状態で更新した。旧home全体を`/home/isinxnisi/.local/share/plunode-collection-worker-before-control-20261019`へ保持し、既存home・workerId・ロックファイルを引き継いだ。現行mainの固定commitへruntimeを更新し、実行コードとconfigのcodeCommitを揃えた。承認対象のadapterコードhashは従来の`80e05b67bc0129b963653b90df4cfbfa5bd6aff190acda99f54c08541e55801e`のまま。
+
+datasetsと既存ジョブ等451ファイルのhashが更新前後・自然な定期実行後ともに一致。実依頼0件・操作0件・正式な制御操作0件のまま。過去の実行承認・受入・未適用releaseは変更せず、模擬承認を実運用へ持ち込んでいない。旧コードを前提にする実依頼があれば別の互換性レビューで停止する更新条件とし、今回キューが空であることをローカル状態とcontrol branchの両方で確認した。
+
+| 自然な定期起動（JST） | 終了 | health／ログ | 表示イベント |
+| --- | --- | --- | --- |
+| 02:03:31 | 0 | online・更新あり | 0 |
+| 02:04:31 | 0 | online・更新あり | 0 |
+
+以前のWindows確認用コードを再利用し、手動起動ではなく既存triggerからの2回を実デスクトップで観測。観測全体でコンソール等の表示イベントは0件。WindowsタスクXMLは反映前後で完全一致し、毎分の時刻、ログオン起動、wscriptによる非表示、IgnoreNew、1時間制限を保持した。他タスクの変更は行っていない。
+
+GitHub連携のfetch_fileで、control branchのREADME.md・status.json・control-template.jsonを実際に読み取った。状態は`controlRevision: 0`、手動停止なし、`outside-window`、次回開始候補は**2026-10-19 03:00 JST**。これは承認済み依頼があれば開始できる時刻であり、収集自体の新しい承認ではない。雛形はdraft-not-approved。時刻判定・制御状態・次回候補はGitHubの[現在の状態](https://github.com/isinxnisi/graph-knowledge/blob/codex/collection-control/collection-control/workers/plunode-wsl/README.md)で確認できる。
+
+時間外なので、新しいmainのカタログ取込みは次の許可枠へ延期している。新しい収集依頼を出す場合も、最新proposalsのsourceCommit・定義／入力／コードhashを確認し、旧承認を更新コードへ読み替えない。公開KG・VPS・会員DBへの変更は行っていない。
+
+実PCの再起動・1時間の実待機は行わず、再生成したプロセスと保存状態、短縮した予算で隔離検証した。詳細な試験名・通信再開・実タスク・公開された状態・保全hashは[機械可読な検証記録](COLLECTION_WORKER_CONTROL_20261019.json)に保持する。
 
 操作方法・GitHubの登録先・信頼境界は[現行契約](../design/COLLECTION_WORKER.md#実行時間帯休憩一時停止2026-10-19)を参照。計画台帳のIssuesを実行キューへ変換しない。Web機能の変更はなく、3200・beta・VPSの再build／配置は行わない。

@@ -1,0 +1,217 @@
+{
+  "recordedAt": "2026-10-18T17:06:19.398458+00:00",
+  "implementationCommit": "8dc3f69ceef375d06c8a821eb937e94ae639bdf2",
+  "unitTests": {
+    "passed": 32,
+    "failed": 0,
+    "cases": [
+      "test_code_upgrade_block_is_not_retried_under_the_common_lock_each_minute (test_collection_worker.CatalogCoordination)",
+      "test_unchanged_main_does_not_acquire_common_lock_and_updates_wait_until_free (test_collection_worker.CatalogCoordination)",
+      "test_gate_receipt_resume_and_fixed_collect_command (test_collection_worker.ExistingCLIInvocation)",
+      "test_ff_publication_and_immutable_evidence_and_history_rewrite (test_collection_worker.GitTransport)",
+      "test_common_lock_waits_without_execution_and_resumes (test_collection_worker.WorkerControl)",
+      "test_communication_failure_resume_and_no_reexecution_after_report_failure (test_collection_worker.WorkerControl)",
+      "test_complete_restart_and_duplicate_have_one_execution (test_collection_worker.WorkerControl)",
+      "test_github_publication_failure_retries_only_saved_report (test_collection_worker.WorkerControl)",
+      "test_immutable_request_and_operation_target_changes_block (test_collection_worker.WorkerControl)",
+      "test_malformed_file_does_not_block_valid_request (test_collection_worker.WorkerControl)",
+      "test_new_explicit_review_cycle_can_refresh_an_existing_completed_job (test_collection_worker.WorkerControl)",
+      "test_no_approval_ai_flag_scope_future_and_apply_rejected (test_collection_worker.WorkerControl)",
+      "test_revocation_before_and_during_execution_and_removed_request (test_collection_worker.WorkerControl)",
+      "test_semantic_failure_and_missing_parent_do_not_execute (test_collection_worker.WorkerControl)",
+      "test_long_child_is_stopped_before_cycle_limit (test_collection_worker_control.BoundedCommands)",
+      "test_real_child_checkpoint_interrupt_and_resume_preserve_logs_and_decision (test_collection_worker_control.BoundedCommands)",
+      "test_connector_append_offline_replay_status_sharing_and_restart (test_collection_worker_control.GitControlTransport)",
+      "test_cycle_budget_interrupts_resumably_before_windows_one_hour_limit (test_collection_worker_control.OperationalControls)",
+      "test_invalid_fork_hash_tampering_deletion_and_ai_control_fail_closed (test_collection_worker_control.OperationalControls)",
+      "test_near_end_no_start_soft_overrun_then_checkpoint_stop (test_collection_worker_control.OperationalControls)",
+      "test_outside_window_detects_approval_and_reports_without_heavy_work (test_collection_worker_control.OperationalControls)",
+      "test_pause_new_allows_current_attempt_to_finish (test_collection_worker_control.OperationalControls)",
+      "test_pause_new_before_start_resume_preserves_original_approval (test_collection_worker_control.OperationalControls)",
+      "test_pause_running_retains_progress_and_acceptance_and_resumes_same_operation (test_collection_worker_control.OperationalControls)",
+      "test_pc_stop_mid_attempt_conservatively_restores_reservation (test_collection_worker_control.OperationalControls)",
+      "test_revocation_is_separate_from_pause_and_resume (test_collection_worker_control.OperationalControls)",
+      "test_schedule_change_and_pause_survive_process_restart (test_collection_worker_control.OperationalControls)",
+      "test_serial_one_job_per_invocation_and_durable_ten_minute_rest (test_collection_worker_control.OperationalControls)",
+      "test_status_heartbeat_and_control_template_not_an_approval (test_collection_worker_control.OperationalControls)",
+      "test_unknown_controls_do_not_authorize_jobs_or_apply (test_collection_worker_control.OperationalControls)",
+      "test_three_windows_and_host_timezone_independence (test_collection_worker_control.Windows)",
+      "test_window_validation_and_interval_crossing_window_end (test_collection_worker_control.Windows)"
+    ]
+  },
+  "isolatedWorkflow": {
+    "testOnly": true,
+    "actualOperatorApproval": false,
+    "databaseConnection": false,
+    "publicApply": false,
+    "elapsedSeconds": 60.6,
+    "providerAttempts": 72,
+    "successfulResponses": 71,
+    "checks": [
+      "explicit inbox approval",
+      "interrupted acquisition resumed",
+      "existing gate receipt reused",
+      "72 attempts/71 cached responses",
+      "Markdown + JSON published",
+      "partial human-simulation acceptance",
+      "actual public validator",
+      "read-only plan simulation",
+      "plan failure resumes immutable acceptance/release",
+      "restart: no duplicate execution/commits"
+    ]
+  },
+  "installation": {
+    "updatedAt": "2026-10-18T17:02:39.718868+00:00",
+    "oldCodeCommit": "4945f1bb68bf3946e7310f4dbd57b3cdc8f85131",
+    "codeCommit": "8dc3f69ceef375d06c8a821eb937e94ae639bdf2",
+    "backup": "/home/isinxnisi/.local/share/plunode-collection-worker-before-control-20261019",
+    "updatedTrackedFiles": 94,
+    "protectedFiles": 451,
+    "protectedInventorySha256": "85067446b13dca2258c54e95675858eb8a5db4be8990c2a429068d0d63a03d67",
+    "protectedFilesChanged": 0,
+    "workerIdUnchanged": true,
+    "workerLockInodeUnchanged": true,
+    "requests": 0,
+    "operations": 0,
+    "actualApprovalCreated": false,
+    "publicApply": false,
+    "adapterCodeSha256": "80e05b67bc0129b963653b90df4cfbfa5bd6aff190acda99f54c08541e55801e",
+    "runtimeWorkerSha256": "80d76deb51de235e66ed969d7dbd7df415bfd4f2097c44fcb4dde82d3bff8617",
+    "runtimeControlSha256": "3725a078621447bc1de61d4809bae54ce80683f47a74330e454611bb8c42ef47"
+  },
+  "sourceAndRuntimeSha256": {
+    "scripts/collection-worker.py": "80d76deb51de235e66ed969d7dbd7df415bfd4f2097c44fcb4dde82d3bff8617",
+    "scripts/collection-worker-control.py": "3725a078621447bc1de61d4809bae54ce80683f47a74330e454611bb8c42ef47"
+  },
+  "task": {
+    "taskXmlUnchanged": true,
+    "state": 3,
+    "lastTaskResult": 0,
+    "lastRun": "2026-10-19T02:04:31",
+    "nextRun": "2026-10-19T02:05:30"
+  },
+  "scheduled": {
+    "completedAt": "2026-10-18T17:04:39.4582695+00:00",
+    "error": null,
+    "fixtureDirectory": "C:\\Users\\nishr\\plunode-collection-worker\\hidden-test-48a7fa12d81447beaa82539e50b9d19d",
+    "observer": "WinEvent EVENT_OBJECT_SHOW plus 20ms visible-window polling",
+    "consoleObservations": [],
+    "windowTitlesRecorded": false,
+    "observedAt": "2026-10-18T17:03:13.9954927+00:00",
+    "isolatedChecks": [
+      {
+        "exitCode": 37,
+        "elapsedMilliseconds": 2880,
+        "name": "wait-and-exit-37-with-spaces"
+      },
+      {
+        "exitCode": 2,
+        "elapsedMilliseconds": 176,
+        "name": "missing-arguments-rejected"
+      }
+    ],
+    "launcherProcesses": [
+      {
+        "startedAt": "2026-10-18T17:03:31.9364224+00:00",
+        "observedAt": "2026-10-18T17:03:32.8267652+00:00",
+        "processId": 10384
+      },
+      {
+        "startedAt": "2026-10-18T17:04:31.9472710+00:00",
+        "observedAt": "2026-10-18T17:04:32.6474872+00:00",
+        "processId": 33224
+      }
+    ],
+    "passed": true,
+    "naturalScheduledRuns": [
+      {
+        "startedAt": "2026-10-18T17:03:31.9364224+00:00",
+        "processId": 10384,
+        "completedAt": "2026-10-18T17:03:53.8010245+00:00",
+        "healthCheckedAt": "2026-10-19T02:03:53+09:00",
+        "healthFresh": true,
+        "logFresh": true,
+        "logUpdatedAt": "2026-10-18T17:03:33.2387858Z",
+        "exitCode": 0,
+        "healthStatus": "online"
+      },
+      {
+        "startedAt": "2026-10-18T17:04:31.9472710+00:00",
+        "processId": 33224,
+        "completedAt": "2026-10-18T17:04:39.1022708+00:00",
+        "healthCheckedAt": "2026-10-19T02:04:38+09:00",
+        "healthFresh": true,
+        "logFresh": true,
+        "logUpdatedAt": "2026-10-18T17:04:32.9142386Z",
+        "exitCode": 0,
+        "healthStatus": "online"
+      }
+    ],
+    "baseline": false
+  },
+  "githubConnectorRead": {
+    "verified": true,
+    "branch": "codex/collection-control",
+    "files": [
+      "README.md",
+      "status.json",
+      "control-template.json"
+    ],
+    "gitBlobSha": [
+      "c0ac6589c5834d645a0054e85a30b2e5e62b3720",
+      "5edc6fd9af1097c1abe1fcfa3c3ea6f8e25044f3",
+      "ce64d01efc13fd6504628d735fcdefcea33946d6"
+    ]
+  },
+  "githubStatus": {
+    "schemaVersion": 1,
+    "workerId": "plunode-wsl",
+    "codeCommit": "8dc3f69ceef375d06c8a821eb937e94ae639bdf2",
+    "controlRevision": 0,
+    "lastControlSha256": null,
+    "lastControlId": null,
+    "timezone": "Asia/Tokyo",
+    "windows": [
+      {
+        "start": "03:00",
+        "end": "07:00"
+      },
+      {
+        "start": "09:00",
+        "end": "12:00"
+      },
+      {
+        "start": "15:00",
+        "end": "18:00"
+      }
+    ],
+    "pauseMode": null,
+    "intervalMinutes": 10,
+    "newStartMarginMinutes": 15,
+    "finishGraceMinutes": 10,
+    "workflowLimitMinutes": 55,
+    "cycleLimitMinutes": 57,
+    "nextStartAt": null,
+    "phase": "outside-window",
+    "recoveredAttempt": null,
+    "admission": {
+      "ready": false,
+      "reason": "outside-window",
+      "eligibleAt": "2026-10-18T18:00:00+00:00",
+      "windowEndAt": "2026-10-18T22:00:00+00:00"
+    },
+    "activeAttempt": null,
+    "lastAttempt": null,
+    "controlError": null,
+    "requestsByPhase": {},
+    "publicApply": false,
+    "checkedAt": "2026-10-18T17:03:39.619537+00:00"
+  },
+  "actualRequests": 0,
+  "actualOperations": 0,
+  "actualControlRecords": 0,
+  "protectedFilesUnchangedAfterScheduledRuns": 451,
+  "publicApply": false,
+  "vpsDeployment": false,
+  "memberDatabaseChanged": false
+}
