@@ -1,7 +1,8 @@
+import { adjacentWorkspace } from "./adjacent-workspace";
 // @vitest-environment jsdom
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { act, cleanup, fireEvent, render, renderHook, screen, waitFor } from "@testing-library/react";
-import { captureWorkspace, readWorkspaces, rebuildWorkspace, writeWorkspace, workspaceKey, workspaceSchema, WorkspaceError, exportWorkspace, importWorkspace, parseWorkspaceBackup, WORKSPACE_FILE_LIMIT, WORKSPACE_COUNT_LIMIT, type SavedWorkspace } from "../lib/client/saved-workspace";
+import { captureWorkspace, readWorkspaces, rebuildWorkspace, writeWorkspace, workspaceKey, legacyWorkspaceKey, workspaceSchema, WorkspaceError, exportWorkspace, importWorkspace, parseWorkspaceBackup, WORKSPACE_FILE_LIMIT, WORKSPACE_COUNT_LIMIT } from "../lib/client/saved-workspace";
 import { closeExpansion, emptyGraph, mergePage, reopenExpansion } from "../lib/client/graph-state";
 import { fetchEntity, fetchNeighbors, ClientApiError } from "../lib/client/api";
 import { useGraphExplorer } from "../lib/client/use-graph-explorer";
@@ -18,7 +19,8 @@ const extraClaim: ClaimSummary = { ...page.claims[0], id: "bd494b85-3225-42fb-a4
 const workPage: NeighborsResponse = { centerId: work.id, nodes: [root, work, extra], claims: [page.claims[0], extraClaim], page: { hasMore: false, nextCursor: null } };
 const view = { positions: { [root.id]: { x: 17, y: 31 }, [work.id]: { x: 400, y: 50 } }, pan: { x: -21, y: 81 }, zoom: 0.7, initialLayoutDone: true };
 const graph = () => mergePage(mergePage(emptyGraph(), page), workPage);
-const saved = (): SavedWorkspace => captureWorkspace("demo", "制作の途中", graph(), view);
+type SavedWorkspace = ReturnType<typeof adjacentWorkspace>;
+const saved = (): SavedWorkspace => adjacentWorkspace(captureWorkspace("demo", "制作の途中", graph(), view));
 const readWorkspace = (storage: Pick<Storage, "getItem" | "setItem" | "removeItem">, dataset: Parameters<typeof readWorkspaces>[1]) => readWorkspaces(storage, dataset)[0] ?? null;
 const signal = () => new AbortController().signal;
 const entityResponse = (entity = root): EntityResponse => ({ entity: { ...entity, aliases: [], event: null } });
@@ -34,12 +36,12 @@ afterEach(() => { cleanup(); vi.restoreAllMocks(); });
 describe("途中保存の参照と永続化", () => {
   it("知識本文・cursor・通信状態を保存せず、閉じた枝・条件・配置を保持する", () => {
     const state = closeExpansion(graph(), root.id);
-    const value = captureWorkspace("demo", "  また続ける  ", state, view);
+    const value = adjacentWorkspace(captureWorkspace("demo", "  また続ける  ", state, view));
     writeWorkspace(localStorage, "demo", null, value);
     expect(readWorkspace(localStorage, "demo")).toEqual(value);
     expect(readWorkspace(localStorage, "pilot-event-v1")).toBeNull();
     expect(value.title).toBe("また続ける");
-    expect(value.branches).toEqual([{ id: root.id, open: false, pages: 1 }, { id: work.id, open: true, pages: 1 }]);
+    expect(value.execution.branches).toEqual([{ id: root.id, open: false, pages: 1 }, { id: work.id, open: true, pages: 1 }]);
     expect(value.view).toEqual(view);
     expect(localStorage.getItem(workspaceKey("demo"))).not.toMatch(/claims|cacheNodes|cursor|sourceCount|loading|description/);
     writeWorkspace(localStorage, "demo", value.id, null);
@@ -55,10 +57,10 @@ describe("途中保存の参照と永続化", () => {
     expect(readWorkspace(localStorage, "demo")).toEqual(value);
   });
   it.each([
-    (value: SavedWorkspace) => ({ ...value, version: 2 }),
+    (value: SavedWorkspace) => ({ ...value, version: 99 }),
     (value: SavedWorkspace) => ({ ...value, dataset: "pilot-event-v1" }),
-    (value: SavedWorkspace) => ({ ...value, conditions: { ...value.conditions, predicates: ["UNKNOWN"] } }),
-    (value: SavedWorkspace) => ({ ...value, branches: [...value.branches, value.branches[0]] }),
+    (value: SavedWorkspace) => ({ ...value, conditions: { ...value.relation, predicates: ["UNKNOWN"] } }),
+    (value: SavedWorkspace) => ({ ...value, branches: [...value.execution.branches, value.execution.branches[0]] }),
     (value: SavedWorkspace) => ({ ...value, branches: [{ id: root.id, open: true, pages: 41 }] }),
     (value: SavedWorkspace) => ({ ...value, view: { ...view, zoom: -1 } }),
     (value: SavedWorkspace) => ({ ...value, cursor: "stale" }),
@@ -89,9 +91,9 @@ describe("現在のデータから探索途中を組み立てる", () => {
     expect(value.dataset).toBe("public-kg");
   });
   it("閉じた祖先と休止した子孫を復元し、再開後は追加通信なしで開ける", async () => {
-    const value = captureWorkspace("demo", "閉じた途中", closeExpansion(graph(), root.id), view);
+    const value = adjacentWorkspace(captureWorkspace("demo", "閉じた途中", closeExpansion(graph(), root.id), view));
     // Storage array order is not a traversal order.
-    value.branches.reverse();
+    value.execution.branches.reverse();
     const restored = await rebuildWorkspace(value, signal());
     expect(Object.keys(restored.graph.nodes)).toEqual([root.id]);
     expect(restored.graph.expansions[work.id]).toMatchObject({ open: true, active: false });
@@ -102,14 +104,14 @@ describe("現在のデータから探索途中を組み立てる", () => {
     expect(fetchNeighbors).toHaveBeenCalledTimes(2);
   });
   it("取得済みページのないopen意図は自動取得せず、明示再試行できる", async () => {
-    const value = saved(); value.branches = [{ id: root.id, open: true, pages: 0 }];
+    const value = saved(); value.execution.branches = [{ id: root.id, open: true, pages: 0 }];
     const restored = await rebuildWorkspace(value, signal());
     expect(fetchNeighbors).not.toHaveBeenCalled();
     expect(restored.graph.expansions[root.id]).toMatchObject({ open: true, active: true, expanded: false, pages: [] });
     expect(restored.graph.expansions[root.id].error).toContain("近傍を取得");
   });
   it("現在のcursorだけで保存ページ数まで読み、続きを後の明示取得に残す", async () => {
-    const value = saved(); value.branches = [{ id: root.id, open: true, pages: 2 }];
+    const value = saved(); value.execution.branches = [{ id: root.id, open: true, pages: 2 }];
     vi.mocked(fetchNeighbors).mockResolvedValueOnce({ ...page, page: { hasMore: true, nextCursor: "fresh-1" } })
       .mockResolvedValueOnce({ ...page, page: { hasMore: true, nextCursor: "fresh-2" } });
     const restored = await rebuildWorkspace(value, signal());
@@ -118,7 +120,7 @@ describe("現在のデータから探索途中を組み立てる", () => {
     expect(restored.graph.expansions[root.id].pages).toHaveLength(2);
   });
   it("現在のページが短ければ打ち切り、辿れなくなった枝を新しい起点にしない", async () => {
-    const value = saved(); value.branches[0].pages = 3;
+    const value = saved(); value.execution.branches[0].pages = 3;
     vi.mocked(fetchNeighbors).mockResolvedValue({ centerId: root.id, nodes: [root], claims: [], page: { hasMore: false, nextCursor: null } });
     const restored = await rebuildWorkspace(value, signal());
     expect(restored.skippedBranches).toBe(1);
@@ -129,26 +131,26 @@ describe("現在のデータから探索途中を組み立てる", () => {
   });
   it("全具体条件を維持し、空集合も全件へ広げない", async () => {
     const value = saved();
-    value.conditions = { predicates: ["CONTRIBUTED_TO", "AFFILIATED_WITH", "PARTICIPATED_IN"], contributionRoles: ["SCRIPT_WRITING"], organizationPositions: ["VISITOR"], eventRoles: ["CHAIR"] };
-    value.branches = [{ id: root.id, open: true, pages: 1 }];
+    value.relation = { version: 1, type: "adjacent", traversal: "either", polarity: "all-records", predicates: ["CONTRIBUTED_TO", "AFFILIATED_WITH", "PARTICIPATED_IN"], contributionRoles: ["SCRIPT_WRITING"], organizationPositions: ["VISITOR"], eventRoles: ["CHAIR"] };
+    value.execution.branches = [{ id: root.id, open: true, pages: 1 }];
     vi.mocked(fetchNeighbors).mockResolvedValue({ centerId: root.id, nodes: [root], claims: [], page: { hasMore: false, nextCursor: null } });
     const restored = await rebuildWorkspace(value, signal());
-    expect(vi.mocked(fetchNeighbors).mock.calls[0].slice(3)).toEqual([workspaceSchema.parse(value).conditions.predicates, ["SCRIPT_WRITING"], ["VISITOR"], ["CHAIR"]]);
-    expect(restored.graph).toMatchObject(workspaceSchema.parse(value).conditions);
-    value.conditions.predicates = [];
+    expect(vi.mocked(fetchNeighbors).mock.calls[0].slice(3)).toEqual([adjacentWorkspace(workspaceSchema.parse(value)).relation.predicates, ["SCRIPT_WRITING"], ["VISITOR"], ["CHAIR"]]);
+    expect(restored.graph.relation).toEqual(workspaceSchema.parse(value).relation);
+    value.relation = { ...value.relation, predicates: [], contributionRoles: null, organizationPositions: null, eventRoles: null };
     await rebuildWorkspace(value, signal());
     expect(vi.mocked(fetchNeighbors).mock.calls[1][3]).toEqual([]);
   });
   it.each(["wrong-center", "missing-endpoint", "wrong-condition", "repeated-cursor"])("不整合な応答を受理しない: %s", async mode => {
-    const value = saved(); value.branches = [{ id: root.id, open: true, pages: 2 }];
+    const value = saved(); value.execution.branches = [{ id: root.id, open: true, pages: 2 }];
     if (mode === "wrong-center") vi.mocked(fetchNeighbors).mockResolvedValue(workPage);
     if (mode === "missing-endpoint") vi.mocked(fetchNeighbors).mockResolvedValue({ ...page, nodes: [root] });
-    if (mode === "wrong-condition") value.conditions.predicates = [];
+    if (mode === "wrong-condition") value.relation.predicates = [];
     if (mode === "repeated-cursor") vi.mocked(fetchNeighbors).mockResolvedValue({ ...page, page: { hasMore: true, nextCursor: "same" } });
     await expect(rebuildWorkspace(value, signal())).rejects.toThrow(new WorkspaceError("response"));
   });
   it("データ増加で表示上限を超えれば部分復元を返さない", async () => {
-    const value = saved(); value.branches = [{ id: root.id, open: true, pages: 6 }];
+    const value = saved(); value.execution.branches = [{ id: root.id, open: true, pages: 6 }];
     vi.mocked(fetchNeighbors).mockImplementation(async (_id, after) => {
       const index = after ? Number(after) : 0;
       return { centerId: root.id, nodes: [root, work], claims: Array.from({ length: 40 }, () => ({ ...page.claims[0], id: crypto.randomUUID() })), page: { hasMore: true, nextCursor: String(index + 1) } };
@@ -241,7 +243,7 @@ describe("途中保存ダイアログと原子的な探索切替", () => {
 
 describe("途中保存ファイルの持ち運び", () => {
   it("閉鎖・休止枝と配置を控え、別保存領域へ新しい版として取り込む", () => {
-    const value = captureWorkspace("demo", "閉じた途中", closeExpansion(graph(), root.id), view);
+    const value = adjacentWorkspace(captureWorkspace("demo", "閉じた途中", closeExpansion(graph(), root.id), view));
     writeWorkspace(localStorage, "demo", null, value);
     const raw = exportWorkspace(localStorage, "demo", readWorkspace(localStorage, "demo")?.id ?? "");
     expect(JSON.parse(raw)).toEqual(value);
@@ -255,7 +257,7 @@ describe("途中保存ファイルの持ち運び", () => {
   it("最大400枝・座標の書出しも読込サイズ内に収める", () => {
     const value = saved();
     const ids = Array.from({ length: 400 }, () => crypto.randomUUID());
-    value.branches = ids.map(id => ({ id, open: true, pages: 0 }));
+    value.execution.branches = ids.map(id => ({ id, open: true, pages: 0 }));
     value.view!.positions = Object.fromEntries(ids.map(id => [id, { x: -1.2345678901234567e+308, y: Number.MIN_VALUE }]));
     writeWorkspace(localStorage, "demo", null, value);
     const raw = exportWorkspace(localStorage, "demo", readWorkspace(localStorage, "demo")?.id ?? "");
@@ -264,9 +266,9 @@ describe("途中保存ファイルの持ち運び", () => {
   });
   it.each([
     () => "not JSON",
-    (value: SavedWorkspace) => JSON.stringify({ ...value, version: 2 }),
+    (value: SavedWorkspace) => JSON.stringify({ ...value, version: 99 }),
     (value: SavedWorkspace) => JSON.stringify({ ...value, claims: [] }),
-    (value: SavedWorkspace) => JSON.stringify({ ...value, conditions: { ...value.conditions, eventRoles: ["INVITED"] } }),
+    (value: SavedWorkspace) => JSON.stringify({ ...value, conditions: { ...value.relation, eventRoles: ["INVITED"] } }),
     (value: SavedWorkspace) => JSON.stringify({ ...value, branches: [{ id: root.id, open: true, pages: 41 }] }),
     (value: SavedWorkspace) => JSON.stringify({ ...value, view: { ...view, zoom: 3 } }),
     () => JSON.stringify({ version: 1, dataset: "demo", views: [] }),
@@ -378,22 +380,22 @@ describe("途中保存ファイルの確認画面", () => {
 describe("複数の探索途中の保存・管理", () => {
   const props = () => ({ dataset: "demo" as const, graph: graph(), captureView: () => view, onOpen: vi.fn(), onClose: vi.fn() });
   it("旧1件は読むだけでは変更せず、最初の追加でそのまま引き継ぐ", () => {
-    const legacy = saved(); const raw = JSON.stringify(legacy);
-    localStorage.setItem(workspaceKey("demo"), raw);
+    const legacy = saved(); const { relation, execution, observedRevision, ...rest } = legacy; void observedRevision; const { predicates, contributionRoles, organizationPositions, eventRoles } = relation; const raw = JSON.stringify({ ...rest, version: 1, conditions: { predicates, contributionRoles, organizationPositions, eventRoles }, branches: execution.branches });
+    localStorage.setItem(legacyWorkspaceKey("demo"), raw);
     expect(readWorkspaces(localStorage, "demo")).toEqual([legacy]);
-    expect(localStorage.getItem(workspaceKey("demo"))).toBe(raw);
+    expect(localStorage.getItem(legacyWorkspaceKey("demo"))).toBe(raw);
     const next = saved(); next.title = "別の調査";
     writeWorkspace(localStorage, "demo", null, next);
     expect(readWorkspaces(localStorage, "demo")).toEqual([next, legacy]);
-    expect(JSON.parse(localStorage.getItem(workspaceKey("demo"))!)).toEqual({ version: 2, dataset: "demo", workspaces: [next, legacy] });
+    expect(JSON.parse(localStorage.getItem(workspaceKey("demo"))!)).toEqual({ version: 3, dataset: "demo", workspaces: [next, legacy] });
     expect(JSON.parse(exportWorkspace(localStorage, "demo", legacy.id))).toEqual(legacy);
   });
   it("移行時に保存拒否が起きても旧形式の元データを維持する", () => {
-    const legacy = saved(); const raw = JSON.stringify(legacy);
-    localStorage.setItem(workspaceKey("demo"), raw);
+    const legacy = saved(); const { relation, execution, observedRevision, ...rest } = legacy; void observedRevision; const { predicates, contributionRoles, organizationPositions, eventRoles } = relation; const raw = JSON.stringify({ ...rest, version: 1, conditions: { predicates, contributionRoles, organizationPositions, eventRoles }, branches: execution.branches });
+    localStorage.setItem(legacyWorkspaceKey("demo"), raw);
     const denied = { getItem: (key: string) => localStorage.getItem(key), setItem: () => { throw new Error("quota"); }, removeItem: vi.fn() };
     expect(() => writeWorkspace(denied, "demo", null, saved())).toThrow(new WorkspaceError("storage"));
-    expect(localStorage.getItem(workspaceKey("demo"))).toBe(raw);
+    expect(localStorage.getItem(legacyWorkspaceKey("demo"))).toBe(raw);
     expect(denied.removeItem).not.toHaveBeenCalled();
   });
   it("最新一覧へ追加し、選択した版だけを置換・削除する", () => {
@@ -420,10 +422,10 @@ describe("複数の探索途中の保存・管理", () => {
   });
   it.each(["duplicate", "dataset", "unknown", "count", "broken-item"])("不正collectionを一部だけ受理せず保持する: %s", mode => {
     const first = saved();
-    const collection = { version: 2, dataset: "demo", workspaces: [first] };
+    const collection = { version: 3, dataset: "demo", workspaces: [first] };
     if (mode === "duplicate") collection.workspaces.push(first);
     if (mode === "dataset") first.dataset = "pilot-event-v1";
-    if (mode === "unknown") collection.version = 3;
+    if (mode === "unknown") collection.version = 99;
     if (mode === "count") collection.workspaces = Array.from({ length: 11 }, saved);
     if (mode === "broken-item") first.title = "";
     const raw = JSON.stringify(collection); localStorage.setItem(workspaceKey("demo"), raw);

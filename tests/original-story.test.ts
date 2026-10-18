@@ -54,9 +54,9 @@ describe("原作担当の限定は旧Role・無限定と別命題", () => {
     expect(closed.claims).toEqual({});
     expect(reopenExpansion(closed, claim.subjectId).claims).toEqual(graph.claims);
     const saved = captureWorkspace("public-kg", "原作条件", graph, null);
-    expect(decodeExploration(encodeExploration(saved), claim.subjectId, "public-kg").conditions.contributionRoles).toEqual(["ORIGINAL_STORY"]);
+    expect(decodeExploration(encodeExploration(saved), claim.subjectId, "public-kg").relation.contributionRoles).toEqual(["ORIGINAL_STORY"]);
     const old = captureWorkspace("public-kg", "従来7Role", { ...graph, contributionRoles: [...oldRoles] }, null);
-    expect(decodeExploration(encodeExploration(old), claim.subjectId, "public-kg").conditions.contributionRoles).toEqual([...oldRoles].sort());
+    expect(decodeExploration(encodeExploration(old), claim.subjectId, "public-kg").relation.contributionRoles).toEqual([...oldRoles].sort());
   });
 });
 

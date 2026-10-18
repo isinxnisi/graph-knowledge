@@ -1,3 +1,5 @@
+import { savedViewSchema } from "../lib/client/saved-views";
+import { legacyRelation } from "../lib/client/relation-state";
 // @vitest-environment jsdom
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { act, cleanup, fireEvent, render, renderHook, screen, waitFor } from "@testing-library/react";
@@ -14,7 +16,12 @@ const root = page.nodes[0];
 const other = page.nodes[1];
 const all: ViewConditions = { predicates: null, contributionRoles: null, organizationPositions: null, eventRoles: null };
 const conditions: ViewConditions = { predicates: ["CONTRIBUTED_TO", "AFFILIATED_WITH", "PARTICIPATED_IN"], contributionRoles: ["SCRIPT_WRITING"], organizationPositions: ["VISITOR"], eventRoles: ["CHAIR"] };
-const view = (overrides: Partial<SavedView> = {}): SavedView => ({ id: crypto.randomUUID(), title: "また辿る関係", rootId: root.id, conditions: all, createdAt: "2026-10-08T12:00:00.000Z", ...overrides });
+const view = (overrides: Partial<SavedView> & { conditions?: ViewConditions } = {}): SavedView => {
+  const { conditions = all, ...rest } = overrides;
+  const raw = { version: 2 as const, id: crypto.randomUUID(), title: "また辿る関係", rootId: root.id,
+    relation: { ...legacyRelation(all), ...conditions }, createdAt: "2026-10-08T12:00:00.000Z", ...rest };
+  const parsed = savedViewSchema.safeParse(raw); return parsed.success ? parsed.data : raw;
+};
 beforeEach(() => {
   window.localStorage.clear();
   HTMLDialogElement.prototype.showModal = function () { this.setAttribute("open", ""); };
@@ -26,19 +33,19 @@ describe("保存ビューの永続化境界", () => {
   it("具体条件・空集合・nullを保持し、datasetを分離する", () => {
     const saved = view({ conditions });
     editSavedViews(localStorage, "demo", { add: saved });
-    expect(readSavedViews(localStorage, "demo")[0]).toEqual({ ...saved, conditions: viewConditionsSchema.parse(conditions) });
+    expect(readSavedViews(localStorage, "demo")[0]).toEqual(saved);
     expect(readSavedViews(localStorage, "pilot-event-v1")).toEqual([]);
     const empty = { ...all, predicates: [] };
     editSavedViews(localStorage, "demo", { add: view({ conditions: empty }) });
-    expect(readSavedViews(localStorage, "demo")[0].conditions.predicates).toEqual([]);
+    expect((readSavedViews(localStorage, "demo")[0].relation as ReturnType<typeof legacyRelation>).predicates).toEqual([]);
     expect(viewConditionsSchema.parse({ ...all, contributionRoles: [], organizationPositions: [], eventRoles: [] })).toEqual({ ...all, contributionRoles: [], organizationPositions: [], eventRoles: [] });
     const raw = localStorage.getItem(savedViewsKey("demo"))!;
     expect(raw).not.toMatch(/cursor|claims|nodes|description|facet|positions"/);
-    expect(Object.keys(JSON.parse(raw).views[0]).sort()).toEqual(["conditions", "createdAt", "id", "rootId", "title"]);
+    expect(Object.keys(JSON.parse(raw).views[0]).sort()).toEqual(["createdAt", "id", "relation", "rootId", "title", "version"]);
   });
   it.each([
     "not json",
-    JSON.stringify({ version: 2, dataset: "demo", views: [] }),
+    JSON.stringify({ version: 99, dataset: "demo", views: [] }),
     JSON.stringify({ version: 1, dataset: "pilot-event-v1", views: [] }),
     JSON.stringify({ version: 1, dataset: "demo", views: [view({ conditions: { ...all, predicates: ["UNKNOWN"] as never } })] }),
     JSON.stringify({ version: 1, dataset: "demo", views: [view({ conditions: { ...all, predicates: [], eventRoles: ["INVITED"] as never } })] }),
@@ -153,7 +160,7 @@ describe("保存ビューの操作と失敗", () => {
   });
 });
 
-const backup = (views: SavedView[], dataset = "demo") => JSON.stringify({ version: 1, dataset, views });
+const backup = (views: SavedView[], dataset = "demo") => JSON.stringify({ version: 2, dataset, views });
 
 describe("保存ビューのファイル往復と非破壊import", () => {
   it("三限定と空条件を書き出し、新しい保存領域へ同じ内容で追加できる", () => {
@@ -163,7 +170,7 @@ describe("保存ビューのファイル往復と非破壊import", () => {
     editSavedViews(localStorage, "demo", { add: second });
     const expected = readSavedViews(localStorage, "demo");
     const raw = exportSavedViews(localStorage, "demo");
-    expect(JSON.parse(raw)).toEqual({ version: 1, dataset: "demo", views: expected });
+    expect(JSON.parse(raw)).toEqual({ version: 2, dataset: "demo", views: expected });
     localStorage.clear();
     expect(importSavedViews(localStorage, "demo", raw)).toEqual({ views: expected, added: 2, skipped: 0 });
     expect(readSavedViews(localStorage, "demo")).toEqual(expected);
@@ -176,7 +183,7 @@ describe("保存ビューのファイル往復と非破壊import", () => {
     const first = view({ conditions });
     editSavedViews(localStorage, "demo", { add: first });
     const { id, title, rootId, createdAt } = first;
-    const reordered = { createdAt, conditions: { ...conditions, predicates: [...conditions.predicates!].reverse() }, rootId, title, id };
+    const reordered = { version: 2 as const, createdAt, relation: { ...legacyRelation(conditions), predicates: [...conditions.predicates!].reverse() }, rootId, title, id };
     const second = view({ title: first.title });
     const result = importSavedViews(localStorage, "demo", backup([reordered, second]));
     expect(result).toMatchObject({ added: 1, skipped: 1 });
@@ -191,7 +198,7 @@ describe("保存ビューのファイル往復と非破壊import", () => {
   });
   it.each([
     ["JSON破損", "{"],
-    ["未知version", JSON.stringify({ version: 2, dataset: "demo", views: [] })],
+    ["未知version", JSON.stringify({ version: 99, dataset: "demo", views: [] })],
     ["未知語彙", backup([view({ conditions: { ...all, predicates: ["UNKNOWN"] as never } })])],
     ["不要な知識データ", JSON.stringify({ version: 1, dataset: "demo", views: [], claims: [] })],
     ["長すぎる入力", " ".repeat(SAVED_VIEWS_FILE_LIMIT + 1)],

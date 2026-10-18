@@ -1,6 +1,7 @@
+import { adjacentWorkspace } from "./adjacent-workspace";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { deflateSync, strToU8 } from "fflate";
-import { assertUrlReplayable, decodeExploration, encodeExploration, explorationHref, rebuildExplorationUrl, ExplorationUrlError } from "../lib/client/exploration-url";
+import { assertUrlReplayable, decodeExploration as decodeRawExploration, encodeExploration, explorationHref, rebuildExplorationUrl, ExplorationUrlError } from "../lib/client/exploration-url";
 import { captureWorkspace, rebuildWorkspace } from "../lib/client/saved-workspace";
 import { emptyGraph, emptyExpansion } from "../lib/client/graph-state";
 import type { RebuiltWorkspace } from "../lib/client/saved-workspace";
@@ -16,15 +17,15 @@ function saved(count = 2) {
   }
   graph.predicates = ["CONTRIBUTED_TO", "AFFILIATED_WITH"];
   graph.contributionRoles = []; graph.organizationPositions = ["VISITOR"];
-  return captureWorkspace("demo", "private title", graph, { positions: Object.fromEntries(Object.keys(graph.cacheNodes).map((id, i) => [id, { x: i + 0.123456789123, y: -i * 123.456789123 || 0 }])), pan: { x: 15, y: 20 }, zoom: 0.78912345, initialLayoutDone: true });
+  return adjacentWorkspace(captureWorkspace("demo", "private title", graph, { positions: Object.fromEntries(Object.keys(graph.cacheNodes).map((id, i) => [id, { x: i + 0.123456789123, y: -i * 123.456789123 || 0 }])), pan: { x: 15, y: 20 }, zoom: 0.78912345, initialLayoutDone: true }));
 }
 beforeEach(() => vi.resetAllMocks());
 describe("portable compressed exploration URL", () => {
   it("round trips exact positions, zoom, confirmed null/empty conditions and closed/dormant intent", () => {
     const workspace = saved(); const encoded = encodeExploration(workspace);
     const decoded = decodeExploration(encoded, root, "demo");
-    expect(decoded.conditions).toEqual(workspace.conditions);
-    expect(decoded.branches).toEqual(workspace.branches);
+    expect(decoded.relation).toEqual(workspace.relation);
+    expect(decoded.execution.branches).toEqual(workspace.execution.branches);
     expect(decoded.view?.positions).toEqual(workspace.view?.positions);
     expect(decoded.view?.zoom).toEqual(workspace.view?.zoom);
     expect(decoded.view?.pan).toEqual({ x: 0, y: 0 });
@@ -56,13 +57,15 @@ describe("portable compressed exploration URL", () => {
     vi.mocked(rebuildWorkspace).mockResolvedValue(result);
     await expect(rebuildExplorationUrl(workspace, new AbortController().signal)).rejects.toThrow("changed");
     result.skippedBranches = 0;
-    for (const b of workspace.branches) { graph.expansions[b.id] = emptyExpansion(); graph.cacheNodes[b.id] = { id: b.id, kind: "person", name: "対象", description: null }; }
-    workspace.branches[0].pages = 2;
+    for (const b of workspace.execution.branches) { graph.expansions[b.id] = emptyExpansion(); graph.cacheNodes[b.id] = { id: b.id, kind: "person", name: "対象", description: null }; }
+    workspace.execution.branches[0].pages = 2;
     await expect(rebuildExplorationUrl(workspace, new AbortController().signal)).rejects.toThrow("changed");
-    workspace.branches[0].pages = 0; delete graph.cacheNodes[child];
+    workspace.execution.branches[0].pages = 0; delete graph.cacheNodes[child];
     await expect(rebuildExplorationUrl(workspace, new AbortController().signal)).rejects.toThrow("changed");
     graph.cacheNodes[child] = graph.cacheNodes[root];
     const rebuilt = await rebuildExplorationUrl(workspace, new AbortController().signal);
     expect(rebuilt.view?.recenter).toBe(true);
   });
 });
+
+function decodeExploration(...args: Parameters<typeof decodeRawExploration>) { return adjacentWorkspace(decodeRawExploration(...args)); }

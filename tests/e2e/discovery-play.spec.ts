@@ -1,5 +1,6 @@
+import { adjacentWorkspace } from "../adjacent-workspace";
 import { test, expect } from "@playwright/test";
-import { decodeExploration } from "../../lib/client/exploration-url";
+import { decodeExploration as decodeRawExploration } from "../../lib/client/exploration-url";
 const urasawa = "d900543a-9c11-48c1-be76-1822b756fcc4";
 for (const [locale, width, height] of [["ja", 1440, 900], ["ja", 390, 844], ["en", 320, 568]] as const) test(`${locale} ${width}px テーマを試す・複数切り口・解除・Graph引継ぎ`, async ({ browser }, info) => {
   const context = await browser.newContext({ viewport: { width, height }, isMobile: width < 800, hasTouch: width < 800 });
@@ -37,10 +38,10 @@ for (const [locale, width, height] of [["ja", 1440, 900], ["ja", 390, 844], ["en
   await expect(page).toHaveURL(new RegExp(`/explore/${urasawa}\\?s=`));
   await expect.poll(async () => new URL(page.url()).searchParams.has("s")).toBe(true);
   const saved = decodeExploration(new URL(page.url()).searchParams.get("s")!, urasawa, "public-kg");
-  expect(saved.conditions.predicates).toEqual(["INFLUENCED_BY"]);
+  expect(saved.relation.predicates).toEqual(["INFLUENCED_BY"]);
   await expect(page.getByTestId("exploration-root")).toContainText("浦沢直樹");
   await page.reload(); await expect(page.getByTestId("exploration-root")).toContainText("浦沢直樹");
-  expect(decodeExploration(new URL(page.url()).searchParams.get("s")!, urasawa, "public-kg").conditions.predicates).toEqual(["INFLUENCED_BY"]);
+  expect(decodeExploration(new URL(page.url()).searchParams.get("s")!, urasawa, "public-kg").relation.predicates).toEqual(["INFLUENCED_BY"]);
   expect(errors).toEqual([]); await context.close();
 });
 
@@ -108,10 +109,12 @@ test("既存Graphから切り口を引継いで移動し、直前の配置と枝
   await expect(page.getByTestId("exploration-root")).toContainText("浦沢直樹");
   await expect.poll(async () => Object.keys((await snapshot()).points).length).toBe(2);
   await expect(page).toHaveURL(new RegExp(`/explore/${urasawa}\\?s=`));
-  expect(decodeExploration(new URL(page.url()).searchParams.get("s")!, urasawa, "public-kg").conditions.predicates).toEqual(["INFLUENCED_BY"]);
+  expect(decodeExploration(new URL(page.url()).searchParams.get("s")!, urasawa, "public-kg").relation.predicates).toEqual(["INFLUENCED_BY"]);
   await page.getByRole("button", { name: "直前の探索へ戻る", exact: true }).click();
   await expect(page.getByTestId("exploration-root")).toContainText("PLUTO");
   await expect.poll(async () => Object.keys((await snapshot()).points).length).toBe(4);
   const after = await snapshot(); expect(after.edges).toEqual(before.edges); expect(after.zoom).toBeCloseTo(before.zoom, 2);
   for (const [id, p] of Object.entries(before.points)) { expect(after.points[id].x).toBeCloseTo(p.x, 0); expect(after.points[id].y).toBeCloseTo(p.y, 0); }
 });
+
+function decodeExploration(...args: Parameters<typeof decodeRawExploration>) { return adjacentWorkspace(decodeRawExploration(...args)); }

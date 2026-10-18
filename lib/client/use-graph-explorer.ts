@@ -15,6 +15,7 @@ import { displayRelations } from "./graph-presentation";
 import { ClientApiError, fetchDatasetRevision, fetchNeighbors, fetchAdjacentNeighbors, errorMessage } from "./api";
 import { fetchPatternGraph } from "./pattern-graph";
 import { normalizeRelationCondition, relationConditionKey, type RelationCondition } from "../domain/relation-conditions";
+import { relationText } from "../i18n/relation-condition";
 import type { MatchWitness } from "../domain/relation-patterns";
 import { closeExpansion, reopenExpansion, projectGraph, emptyExpansion, emptyGraph, mergePage, emptyPatternGraph, mergePatternPage, restorePatternGraph, setPatternRouteOpen, type GraphState, type Selection } from "./graph-state";
 
@@ -109,12 +110,14 @@ export function useGraphExplorer() {
     }
   }, [commit, checkRevision, invalidate]);
 
-  // Execution entry point only. STEP 3b/4 will provide the editing/Discovery UI.
-  const applyRelation = useCallback(async (entity: EntitySummary, input: RelationCondition, witness: MatchWitness | null = null) => {
+  const applyRelation = useCallback(async (entity: EntitySummary, input: RelationCondition, witness: MatchWitness | null = null, view: GraphView | null = null, signal?: AbortSignal) => {
+    if (signal?.aborted) return false;
     const relation = normalizeRelationCondition(input);
     if (relation.type === "pattern" && entity.kind !== "work" || relation.type === "adjacent" && witness) { commit({ ...current.current, notice: "この対象・証拠には適用できない関係条件です。" }); return false; }
     pending.current.forEach(c => c.abort()); pending.current.clear(); setRelationLoading(false); generation.current += 1;
     const epoch = generation.current, controller = new AbortController(), old = current.current;
+    const abort = () => controller.abort();
+    signal?.addEventListener("abort", abort, { once: true });
     pending.current.set("$transition", controller); setRelationLoading(true);
     commit({ ...old, expansions: Object.fromEntries(Object.entries(old.expansions).map(([id, meta]) => [id, { ...meta, loading: false, request: meta.request + 1 }])),
       ...(old.execution?.type === "pattern" ? { execution: { ...old.execution, loading: false, request: old.execution.request + 1 } } : {}) });
@@ -130,7 +133,7 @@ export function useGraphExplorer() {
       }
       if (controller.signal.aborted || generation.current !== epoch) return false;
       if (next.execution?.type === "pattern" && next.execution.blocked || Object.values(next.expansions).some(e => e.blocked)) throw new Error("Graph limit");
-      setPrevious(captureExploration(old, selection, null)); setViewRestoration(null); stale.current = false; setDataChanged(false);
+      setPrevious(captureExploration(old, selection, view)); setViewRestoration(null); stale.current = false; setDataChanged(false);
       commit(next); setSelection({ kind: "entity", id: entity.id }); return true;
     } catch (error) {
       if (!controller.signal.aborted && generation.current === epoch) {
@@ -138,7 +141,7 @@ export function useGraphExplorer() {
         else commit({ ...current.current, notice: errorMessage(error) });
       }
       return false;
-    } finally { if (pending.current.get("$transition") === controller) { pending.current.delete("$transition"); setRelationLoading(false); } }
+    } finally { signal?.removeEventListener("abort", abort); if (pending.current.get("$transition") === controller) { pending.current.delete("$transition"); setRelationLoading(false); } }
   }, [commit, invalidate, selection]);
   const cancelRelation = useCallback(() => { pending.current.get("$transition")?.abort(); pending.current.delete("$transition"); setRelationLoading(false); }, []);
   const loadPattern = useCallback(async (restore = false) => {
@@ -189,7 +192,7 @@ export function useGraphExplorer() {
     setSelection({ kind: "entity", id: entity.id }); void expand(entity.id);
   }, [commit, expand, applyRelation]);
   const switchRoot = useCallback((entity: EntitySummary, mode: "broad" | "same", view: GraphView | null) => {
-    if (mode === "same" && current.current.relation) { void applyRelation(entity, current.current.relation); return; }
+    if (mode === "same" && current.current.relation) { void applyRelation(entity, current.current.relation, null, view); return; }
     setRelationLoading(false);
     const old = current.current;
     const predicates = mode === "broad" ? null : old.predicates;
@@ -248,7 +251,7 @@ export function useGraphExplorer() {
     pending.current.forEach(controller => controller.abort()); pending.current.clear(); setRelationLoading(false);
     generation.current += 1;
     setViewRestoration(workspace.view ? { generation: generation.current, view: workspace.view } : null);
-    commit({ ...workspace.graph, generation: generation.current, notice: workspaceLabels().restored(workspace.skippedBranches) });
+    commit({ ...workspace.graph, generation: generation.current, notice: workspace.revisionChanged ? relationText("ja").changed : workspaceLabels().restored(workspace.skippedBranches) });
     setSelection(workspace.graph.centerId ? { kind: "entity", id: workspace.selectedEntityId ?? workspace.graph.centerId } : null);
   }, [commit, selection]);
   const changePredicates = useCallback((values: PredicateFilter, roleValues: ContributionRoleFilter = current.current.contributionRoles ?? null, positionValues: OrganizationPositionFilter = current.current.organizationPositions ?? null, eventRoleValues: EventRoleFilter = current.current.eventRoles ?? null, view: GraphView | null = null) => {

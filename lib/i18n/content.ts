@@ -9,13 +9,14 @@ import { readingLabels } from "./reading-reference";
 import { savedViewLabels } from "./saved-views";
 import { workspaceLabels } from "./workspace";
 import { explorerMessage } from "./explorer";
+import { relationText } from "./relation-condition";
 
 // UI通知専用。本文・題名・表示名・資料には使わない。
 // 非同期処理や既存stateへlocaleを持ち込まず、表示時に解決する。
 export function contentMessage(message: string | null, locale = "ja"): string {
   if (!message) return "";
   const dictionaries = [capsuleLabels, capsuleComparisonLabels, capsuleDiscussionLabels, capsuleHistoryLabels,
-    capsuleSharingLabels, memberLabels, memberPostsLabels, readingLabels, savedViewLabels, workspaceLabels];
+    capsuleSharingLabels, memberLabels, memberPostsLabels, readingLabels, savedViewLabels, workspaceLabels, relationText];
   for (const labels of dictionaries) {
     const japanese = labels("ja") as Record<string, unknown>, english = labels("en") as Record<string, unknown>;
     const key = Object.keys(japanese).find(key => typeof japanese[key] === "string" && (japanese[key] === message || english[key] === message));

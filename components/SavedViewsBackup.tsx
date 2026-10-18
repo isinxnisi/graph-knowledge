@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import type { DatasetMode } from "../lib/domain/dataset";
 import { exportSavedViews, importSavedViews, parseSavedViewsBackup, planSavedViewsImport, SavedViewsError, SAVED_VIEWS_FILE_LIMIT, type SavedView } from "../lib/client/saved-views";
 import { savedViewLabels } from "../lib/i18n/saved-views";
-import { conditionSummary } from "../lib/i18n/exploration-entry";
+import { relationSummary } from "../lib/i18n/relation-condition";
 import styles from "./Explorer.module.css";
 
 export default function SavedViewsBackup({ dataset, views, ready, disabled, onImported }: {
@@ -95,7 +95,7 @@ export default function SavedViewsBackup({ dataset, views, ready, disabled, onIm
       {preview.views.length === 0 && <p>{text.emptyBackup}</p>}
       <ul className={styles.backupPreview}>{preview.views.map(view => <li key={view.id}>
         <strong>{view.title}</strong>
-        <p className={styles.muted}>{conditionSummary(view.conditions.predicates, view.conditions.contributionRoles, locale, view.conditions.organizationPositions, view.conditions.eventRoles)}</p>
+        <p className={styles.muted}>{relationSummary(view.relation, locale)}</p>
         <p className={styles.muted}>{text.rootId}：{view.rootId}</p>
       </li>)}</ul>
       <p className={styles.muted}>{text.importHelp}</p>

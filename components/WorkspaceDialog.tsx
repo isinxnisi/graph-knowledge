@@ -7,11 +7,11 @@ import { useEffect, useRef, useState } from "react";
 import type { DatasetMode } from "../lib/domain/dataset";
 import type { GraphState } from "../lib/client/graph-state";
 import type { GraphView } from "../lib/client/graph-view";
-import { captureWorkspace, readWorkspaces, rebuildWorkspace, writeWorkspace, workspaceKey, WorkspaceError, WORKSPACE_PAGE_LIMIT, WORKSPACE_COUNT_LIMIT, type RebuiltWorkspace, type SavedWorkspace } from "../lib/client/saved-workspace";
+import { captureWorkspace, readWorkspaces, rebuildWorkspace, restartWorkspace, writeWorkspace, workspaceKey, WorkspaceError, WORKSPACE_PAGE_LIMIT, WORKSPACE_COUNT_LIMIT, type RebuiltWorkspace, type SavedWorkspace } from "../lib/client/saved-workspace";
 import { ClientApiError } from "../lib/client/api";
 import { useDialogBackdrop } from "../lib/client/use-dialog-backdrop";
 import { workspaceLabels } from "../lib/i18n/workspace";
-import { conditionSummary } from "../lib/i18n/exploration-entry";
+import { relationSummary } from "../lib/i18n/relation-condition";
 import styles from "./Explorer.module.css";
 import WorkspaceBackup from "./WorkspaceBackup";
 
@@ -56,7 +56,7 @@ export default function WorkspaceDialog({ dataset, graph, captureView, onOpen, o
       catch (error) { setReady(false); setError(error instanceof WorkspaceError ? textMessages[error.reason] : textMessages.storage); }
     };
     reload(true);
-    const changed = (event: StorageEvent) => { if (event.key === null || event.key === workspaceKey(dataset)) reload(); };
+    const changed = (event: StorageEvent) => { if (event.key === null || event.key === workspaceKey(dataset) || event.key === workspaceKey(dataset).replace(/:v3$/, "")) reload(); };
     window.addEventListener("storage", changed);
     return () => { pending.current?.abort(); window.removeEventListener("storage", changed); };
   }, [dataset]);
@@ -84,14 +84,14 @@ export default function WorkspaceDialog({ dataset, graph, captureView, onOpen, o
       setError(null); setMessage(text.removed);
     } catch (error) { setMessage(null); setError(error instanceof WorkspaceError ? text[error.reason] : text.storage); }
   };
-  const open = async () => {
+  const open = async (restart = false) => {
     if (!workspace || pending.current) return;
     const controller = new AbortController(); pending.current = controller;
-    setError(null); setMessage(null); setProgress({ done: 0, total: workspace.branches.reduce((sum, item) => sum + item.pages, 0) });
+    setError(null); setMessage(null); setProgress({ done: 0, total: (workspace.execution.type === "adjacent" ? workspace.execution.branches.reduce((sum, item) => sum + item.pages, 0) : workspace.execution.routes.length) });
     let timedOut = false;
     const timer = setTimeout(() => { timedOut = true; controller.abort(); }, 60_000);
     try {
-      const rebuilt = await rebuildWorkspace(workspace, controller.signal, (done, total) => {
+      const rebuilt = restart ? await restartWorkspace(workspace, controller.signal) : await rebuildWorkspace(workspace, controller.signal, (done, total) => {
         if (!controller.signal.aborted) setProgress({ done, total });
       });
       if (controller.signal.aborted) return;
@@ -105,11 +105,11 @@ export default function WorkspaceDialog({ dataset, graph, captureView, onOpen, o
       if (pending.current === controller) { pending.current = null; setProgress(null); }
     }
   };
-  const loading = Object.values(graph.expansions).some(meta => meta.loading);
+  const loading = Object.values(graph.expansions).some(meta => meta.loading) || graph.execution?.type === "pattern" && graph.execution.loading;
   const tooLarge = Object.values(graph.expansions).reduce((sum, meta) => sum + meta.pages.length, 0) > WORKSPACE_PAGE_LIMIT;
   return <dialog lang={locale} ref={dialog} className={`${styles.conditionDialog} ${styles.savedViews}`} aria-labelledby="workspace-title" onCancel={event => { event.preventDefault(); close(); }} {...backdrop}>
     <div className={styles.conditionTitle}><h2 id="workspace-title">{text.title}</h2><DialogCloseButton buttonRef={closeButton} label={text.close} onClick={close} /></div>
-    <p>{text.help}</p><p className={styles.muted}>{text.local}</p>
+    <p>{graph.execution?.type === "pattern" ? (locale === "en" ? "Save the complete path references, visibility and positions. Every saved path is verified against the current public KG when resumed." : "完全経路の参照・開閉・配置を保存します。再開時は保存した全経路を現在の公開KGで再検証します。") : text.help}</p><p className={styles.muted}>{text.local}</p>
     {graph.centerId ? <form className={styles.savedViewForm} onSubmit={event => { event.preventDefault(); save(); }}>
       <p>{text.root}：<strong>{graph.nodes[graph.centerId]?.name}</strong></p>
       <label htmlFor="workspace-name">{text.name}</label>
@@ -121,7 +121,7 @@ export default function WorkspaceDialog({ dataset, graph, captureView, onOpen, o
       {loading && <p role="status">{text.loading}</p>}{tooLarge && <p>{text.limit}</p>}
     </form> : <p className={styles.empty}>{text.noRoot}</p>}
     {message && <p role="status">{contentMessage(message, locale)}</p>}
-    {error && <div className={styles.error} role="alert"><p>{contentMessage(error, locale)}</p><button disabled={!!progress} onClick={refresh}>{text.retry}</button></div>}
+    {error && <div className={styles.error} role="alert"><p>{contentMessage(error, locale)}</p><button disabled={!!progress} onClick={refresh}>{text.retry}</button>{workspace?.relation.type === "pattern" && <button disabled={!!progress} onClick={() => void open(true)}>{locale === "en" ? "Restart with the same conditions" : "同じ条件で探索を再開"}</button>}</div>}
     <h3>{text.stored}</h3>
     <p className={styles.muted}>{text.count(workspaces.length, WORKSPACE_COUNT_LIMIT)}</p>
     {ready && workspaces.length === 0 && <p className={styles.empty}>{text.empty}</p>}
@@ -138,8 +138,8 @@ export default function WorkspaceDialog({ dataset, graph, captureView, onOpen, o
     {workspace && <div className={styles.savedViewForm}>
       <h4>{workspace.title}</h4>
       <p className={styles.muted}><time dateTime={workspace.savedAt}>{text.savedAt(workspace.savedAt)}</time></p>
-      <p>{conditionSummary(workspace.conditions.predicates, workspace.conditions.contributionRoles, locale, workspace.conditions.organizationPositions, workspace.conditions.eventRoles)}</p>
-      <p>{text.scope(workspace.branches.length, workspace.branches.reduce((sum, branch) => sum + branch.pages, 0))}</p>
+      <p>{relationSummary(workspace.relation, locale)}</p>
+      <p>{(workspace.execution.type === "adjacent" ? text.scope(workspace.execution.branches.length, workspace.execution.branches.reduce((sum, branch) => sum + branch.pages, 0)) : `${workspace.execution.routes.length} ${locale === "en" ? "complete paths" : "経路"}`)}</p>
       <div className={styles.actions}><button disabled={!ready || !!progress} onClick={() => void open()}>{text.open}</button><button disabled={!ready || !!progress} onClick={() => setRemoving(workspace)}>{text.remove}</button></div>
     </div>}
     {removing && <div className={styles.savedViewForm}>
@@ -148,7 +148,7 @@ export default function WorkspaceDialog({ dataset, graph, captureView, onOpen, o
         <button onClick={() => setRemoving(null)}>{text.keep}</button></div>
       {!workspaces.some(item => item.id === removing.id) && <p role="alert">{text.conflict}</p>}
     </div>}
-    {progress && <div><p role="status">{text.opening(progress.done, progress.total)}</p><button onClick={cancel}>{text.cancel}</button></div>}
+    {progress && <div><p role="status">{workspace?.execution.type === "pattern" ? `${locale === "en" ? "Verifying complete paths" : "完全経路を検証中"}… ${progress.done} / ${progress.total}` : text.opening(progress.done, progress.total)}</p><button onClick={cancel}>{text.cancel}</button></div>}
     <WorkspaceBackup dataset={dataset} workspace={workspace} full={workspaces.length >= WORKSPACE_COUNT_LIMIT} ready={ready} disabled={!!progress} onImported={value => {
       accept(value); setError(null); setMessage(null);
     }} />

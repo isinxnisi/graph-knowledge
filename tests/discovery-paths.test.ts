@@ -1,3 +1,4 @@
+import { adjacentWorkspace } from "./adjacent-workspace";
 import { beforeEach, expect, it, vi } from "vitest";
 vi.mock("server-only",()=>({}));
 vi.mock("../lib/server/read-db",()=>({readTransaction:vi.fn()}));
@@ -9,7 +10,7 @@ import { readTransaction } from "../lib/server/read-db";
 import { readPublicRevision } from "../lib/server/public-revision";
 import { executePathSearch } from "../lib/client/use-discovery-paths";
 import { discoveryPathHref } from "../lib/client/discovery-path-navigation";
-import { decodeExploration,rebuildExplorationUrl } from "../lib/client/exploration-url";
+import { decodeExploration as decodeRawExploration,rebuildExplorationUrl } from "../lib/client/exploration-url";
 import { rebuildWorkspace } from "../lib/client/saved-workspace";
 import { emptyGraph,emptyExpansion } from "../lib/client/graph-state";
 import type { ClaimSummary } from "../lib/domain/api";
@@ -72,12 +73,14 @@ it.each(["unchanged","before","after","response"])("adapterは条件とrevision�
 });
 it("Graph URLは全段を再取得する枝と版付き証人を持ち、破損や別起点を拒否する",async()=>{
  const r=await response(),url=new URL(discoveryPathHref(r.paths[0],conditions,"r1"),"http://local");
- const saved=decodeExploration(url.searchParams.get("s")!,id(0),"public-kg");expect(saved.branches.map(b=>b.id)).toEqual([id(0),id(1)]);
+ const saved=decodeExploration(url.searchParams.get("s")!,id(0),"public-kg");expect(saved.execution.branches.map(b=>b.id)).toEqual([id(0),id(1)]);
  const witness=parsePathWitness(url.searchParams.get("via"),id(0))!;expect(witness.revision).toBe("r1");expect(witness.claimIds).toEqual(r.paths[0].claimIds);
  expect(()=>parsePathWitness(url.searchParams.get("via"),id(2))).toThrow();expect(()=>parsePathWitness("a".repeat(4097),id(0))).toThrow();
- const graph={...emptyGraph(),revision:"r1",centerId:id(0),nodes:Object.fromEntries(r.nodes.map(n=>[n.id,n])),claims:Object.fromEntries(r.claims.map(c=>[c.id,c])),expansions:Object.fromEntries(saved.branches.map(b=>[b.id,{...emptyExpansion(),pages:[{after:null,claimIds:[],nextCursor:null}]}]))};
+ const graph={...emptyGraph(),revision:"r1",centerId:id(0),nodes:Object.fromEntries(r.nodes.map(n=>[n.id,n])),claims:Object.fromEntries(r.claims.map(c=>[c.id,c])),expansions:Object.fromEntries(saved.execution.branches.map(b=>[b.id,{...emptyExpansion(),pages:[{after:null,claimIds:[],nextCursor:null}]}]))};
  vi.mocked(rebuildWorkspace).mockResolvedValue({graph,view:null,skippedBranches:0});vi.stubGlobal("fetch",vi.fn(async()=>Response.json({dataset:"public-kg",revision:"r1"})));
  await expect(rebuildExplorationUrl(saved,new AbortController().signal,witness)).resolves.toMatchObject({selectedEntityId:id(2)});
  delete graph.claims[id(1002)];await expect(rebuildExplorationUrl(saved,new AbortController().signal,witness)).rejects.toThrow("changed");
  graph.revision="r2";await expect(rebuildExplorationUrl(saved,new AbortController().signal,witness)).rejects.toThrow("changed");
 });
+
+function decodeExploration(...args: Parameters<typeof decodeRawExploration>) { return adjacentWorkspace(decodeRawExploration(...args)); }

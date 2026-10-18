@@ -1,3 +1,4 @@
+import { adjacentWorkspace } from "../adjacent-workspace";
 import { checkEditorialDesign } from "./editorial-design";
 import { checkExplorerLocale } from "./explorer-locale";
 import { checkContentLocale } from "./content-locale";
@@ -446,14 +447,14 @@ test("探索URLは不正状態・起点404・枝欠損・通信失敗を正常�
 });
 
 test("探索URLの確定条件とOG metadataは再訪でも維持される", async ({ page }) => {
-  const { decodeExploration, explorationHref } = await import("../../lib/client/exploration-url");
+  const { decodeExploration: decodeRawExploration, explorationHref } = await import("../../lib/client/exploration-url");
   await page.goto("/"); await page.getByRole("button", { name: "PLUTOから探索を開始", exact: true }).click();
   await expect(page.getByTestId("graph-counts")).toHaveText("Entity 4 / Claim 5");
   await expect.poll(() => new URL(page.url()).searchParams.get("s")).toBeTruthy();
   const url = new URL(page.url()), root = url.pathname.split("/").at(-1)!;
-  const state = decodeExploration(url.searchParams.get("s")!, root, "public-kg");
-  state.conditions = { predicates: ["CONTRIBUTED_TO"], contributionRoles: ["PRODUCING"], organizationPositions: null, eventRoles: null };
-  state.branches = [{ id: root, open: true, pages: 1 }];
+  const state = adjacentWorkspace(decodeRawExploration(url.searchParams.get("s")!, root, "public-kg"));
+  state.relation = { version: 1, type: "adjacent", traversal: "either", polarity: "all-records", predicates: ["CONTRIBUTED_TO"], contributionRoles: ["PRODUCING"], organizationPositions: null, eventRoles: null };
+  state.execution.branches = [{ id: root, open: true, pages: 1 }];
   const data = await (await page.request.get(`/api/entities/${root}/neighbors?predicates=CONTRIBUTED_TO&contributionRoles=PRODUCING`)).json();
   const ids = new Set(data.nodes.map((node: { id: string }) => node.id));
   state.view!.positions = Object.fromEntries(Object.entries(state.view!.positions).filter(([id]) => ids.has(id)));
@@ -466,5 +467,5 @@ test("探索URLの確定条件とOG metadataは再訪でも維持される", asy
   await page.getByRole("dialog").getByRole("button", { name: "キャンセル", exact: true }).click();
   expect(page.url()).toBe(before);
   await page.reload(); await expect(page.getByTestId("graph-counts")).toHaveText("Entity 2 / Claim 1");
-  expect(decodeExploration(new URL(page.url()).searchParams.get("s")!, root, "public-kg").conditions).toEqual(state.conditions);
+  expect(decodeRawExploration(new URL(page.url()).searchParams.get("s")!, root, "public-kg").relation).toEqual(state.relation);
 });

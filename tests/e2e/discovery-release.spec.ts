@@ -1,5 +1,6 @@
+import { adjacentWorkspace } from "../adjacent-workspace";
 import { test, expect } from "@playwright/test";
-import { decodeExploration } from "../../lib/client/exploration-url";
+import { decodeExploration as decodeRawExploration } from "../../lib/client/exploration-url";
 const pluto = "2b7c6289-d050-4dc0-93e3-9307681253cc";
 for (const locale of ["ja", "en"]) for (const width of [1241, 390, 320]) test(`${locale} ${width}px 正式入口・はみ出し・一覧との往復・Role付きGraphとBack`, async ({ browser }, info) => {
   const en = locale === "en", root = en ? "/en" : "/";
@@ -39,7 +40,7 @@ for (const locale of ["ja", "en"]) for (const width of [1241, 390, 320]) test(`$
   await expect(dialog.getByRole("group", { name: en ? "Search for" : "検索対象", exact: true }).getByRole("button", { name: en ? "Work" : "作品", exact: true })).toHaveAttribute("aria-pressed", "true");
   await dialog.getByRole("tab", { name: en ? "Existing connections" : "今ある接点から", exact: true }).click();
   const link = page.getByTestId("prototype-graph"), href = new URL((await link.getAttribute("href"))!, page.url());
-  expect(decodeExploration(href.searchParams.get("s")!, pluto, "public-kg").conditions).toMatchObject({ predicates: ["CONTRIBUTED_TO"], contributionRoles: ["AUTHORSHIP"] });
+  expect(decodeExploration(href.searchParams.get("s")!, pluto, "public-kg").relation).toMatchObject({ predicates: ["CONTRIBUTED_TO"], contributionRoles: ["AUTHORSHIP"] });
   // Visibility/accessible-name assertions miss foreground equal to the filled background.
   await expect(link).toContainText(en ? "Open Graph" : "Graphで開く");
   for (const theme of ["light", "dark-brown", "dark-blue"]) {
@@ -72,3 +73,5 @@ for (const locale of ["ja", "en"]) for (const width of [1241, 390, 320]) test(`$
   await expect(page.getByTestId("discovery-search-entry")).toBeFocused();
   expect(errors).toEqual([]); await context.close();
 });
+
+function decodeExploration(...args: Parameters<typeof decodeRawExploration>) { return adjacentWorkspace(decodeRawExploration(...args)); }

@@ -206,9 +206,7 @@ export default function GraphCanvas({ compactGuide = false, footerAction, onView
       const hasMore = graph.execution?.type === "pattern" ? graph.execution.hasMore : graph.expansions[graph.centerId]?.hasMore;
       cy.zoom(compact ? Math.min(1.15, cy.zoom()) : Math.min(1.15, Math.max(hasMore ? 0.65 : 0.8, cy.zoom())));
       cy.center(); initialLayoutDone.current = true;
-    } else if (reset && newNodes.length) {
-      cy.fit(cy.nodes(), 60); if (cy.zoom() > 1.2) cy.zoom(1.2); cy.center();
-    } else if (initialLayoutDone.current && newNodes.length) {
+    } else if ((reset || initialLayoutDone.current) && newNodes.length) {
       const newIds = newNodes.map((node) => node.id);
       const existing = Object.fromEntries(cy.nodes().filter((node) => !newIds.includes(node.id())).map((node) => [node.id(), { ...(node as cytoscape.NodeSingular).position() }]));
       const remaining: string[] = [];
@@ -219,6 +217,9 @@ export default function GraphCanvas({ compactGuide = false, footerAction, onView
       }
       const positions = additionalPositions(existing, remaining, relations, graph.lastExpandedId);
       newIds.forEach((id) => cy.getElementById(id).position(positions[id]));
+      // A condition change can retain the center and add new nodes. Position
+      // those nodes before fitting; their initial (0,0) is not a layout.
+      if (reset) { cy.fit(cy.nodes(), 60); if (cy.zoom() > 1.2) cy.zoom(1.2); cy.center(); }
     }
     // 距離依存の曲率は配置後に計算し、手動ドラッグ後も更新する。
     const updateRoutes = () => {

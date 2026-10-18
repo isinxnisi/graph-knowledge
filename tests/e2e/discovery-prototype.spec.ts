@@ -1,6 +1,7 @@
+import { adjacentWorkspace } from "../adjacent-workspace";
 import { writeFile } from "node:fs/promises";
 import { test, expect, type Page } from "@playwright/test";
-import { decodeExploration } from "../../lib/client/exploration-url";
+import { decodeExploration as decodeRawExploration } from "../../lib/client/exploration-url";
 const pluto = "2b7c6289-d050-4dc0-93e3-9307681253cc";
 const princeton = "0820c3e8-7219-4e57-abb0-7d04e253fd4a";
 async function open(page: Page, baseURL: string) {
@@ -70,7 +71,7 @@ for (const [locale, width, height] of [["ja", 1440, 900], ["ja", 390, 844], ["en
     await expect(results.getByTestId("prototype-claim")).toHaveCount(1);
     const graph = page.getByTestId("prototype-graph");
     const target = new URL((await graph.getAttribute("href"))!, page.url());
-    expect(decodeExploration(target.searchParams.get("s")!, pluto, "public-kg").conditions).toMatchObject({ predicates: ["CONTRIBUTED_TO"], contributionRoles: ["AUTHORSHIP"] });
+    expect(decodeExploration(target.searchParams.get("s")!, pluto, "public-kg").relation).toMatchObject({ predicates: ["CONTRIBUTED_TO"], contributionRoles: ["AUTHORSHIP"] });
     expect(await dialog.evaluate(el => el.scrollWidth <= el.clientWidth + 1)).toBe(true);
     expect(await page.getByTestId("prototype-keyword").evaluate(el => el.nextElementSibling?.querySelector("h3") !== null)).toBe(true);
     await graph.click(); await expect(page.getByTestId("exploration-root")).toContainText("PLUTO");
@@ -239,3 +240,5 @@ test("mobile subject navigation reveals new context without changing other crite
   await expect(page.locator("#prototype-subject")).toContainText("長崎尚志");
   await context.close();
 });
+
+function decodeExploration(...args: Parameters<typeof decodeRawExploration>) { return adjacentWorkspace(decodeRawExploration(...args)); }

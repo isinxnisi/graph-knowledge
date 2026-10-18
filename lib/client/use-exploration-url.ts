@@ -6,7 +6,7 @@ import { publicLocalePath } from "../domain/public-routes";
 import type { DatasetMode } from "../domain/dataset";
 import type { GraphState } from "./graph-state";
 import type { GraphView } from "./graph-view";
-import { captureWorkspace, type RebuiltWorkspace } from "./saved-workspace";
+import { captureWorkspace, workspaceSchema, restartWorkspace, type SavedWorkspace, type RebuiltWorkspace } from "./saved-workspace";
 import { assertUrlReplayable, decodeExploration, explorationHref, ExplorationUrlError, rebuildExplorationUrl, URL_STATE_TARGET, URL_STATE_LIMIT, isWorkspaceLoading } from "./exploration-url";
 import { explorationUrlLabels } from "../i18n/exploration-url";
 import { WorkspaceError, WorkspaceRootNotFound } from "./saved-workspace";
@@ -19,6 +19,9 @@ export function useExplorationUrl({ dataset, initialRoot, graph, capture, apply,
   const [failure, setFailure] = useState<string | null>(null);
   const [notice, setNotice] = useState("");
   const [attempt, setAttempt] = useState(0);
+  const restartRequested = useRef<number | null>(null);
+  const [canRestart, setCanRestart] = useState(false);
+  const savedInput = useRef<SavedWorkspace | null>(null);
   const [ready, setReady] = useState(false);
   const latest = useRef({ graph, capture, apply, dataset, locale });
   const restoring = useRef(!!initialRoot);
@@ -59,6 +62,7 @@ export function useExplorationUrl({ dataset, initialRoot, graph, capture, apply,
     return () => { window.removeEventListener("pagehide", update); if (timer.current) clearTimeout(timer.current); };
   }, [update]);
   useEffect(() => {
+    const restartThisAttempt = restartRequested.current === attempt;
     const rootId = initialRoot ?? /^(?:\/en)?\/explore\/([^/]+)$/.exec(location.pathname)?.[1];
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 60_000);
@@ -77,17 +81,19 @@ export function useExplorationUrl({ dataset, initialRoot, graph, capture, apply,
         const params = new URLSearchParams(location.search);
         if (params.getAll("s").length > 1) throw new ExplorationUrlError("invalid");
         const encoded = params.get("s");
-        const workspace = encoded !== null ? decodeExploration(encoded, rootId, dataset) : {
+        const workspace = encoded !== null ? decodeExploration(encoded, rootId, dataset) : workspaceSchema.parse({
           version: 1 as const, dataset, id: rootId, rootId, title: "URL", savedAt: "2000-01-01T00:00:00.000Z",
           conditions: { predicates: null, contributionRoles: null, organizationPositions: null, eventRoles: null },
           branches: [{ id: rootId, open: true, pages: 1 }], view: null,
-        };
+        });
         let witness;
         try {
           if (params.getAll("via").length > 1 || params.has("via") && (dataset !== "public-kg" || location.pathname.length + location.search.length > URL_STATE_LIMIT)) throw Error();
           witness = parsePathWitness(params.get("via"),rootId);
         } catch { throw new ExplorationUrlError("invalid"); }
-        const rebuilt = await rebuildExplorationUrl(workspace, controller.signal,witness);
+        savedInput.current = workspace;
+        setCanRestart(workspace.relation.type === "pattern");
+        const rebuilt = restartThisAttempt ? await restartWorkspace(workspace, controller.signal) : await rebuildExplorationUrl(workspace, controller.signal,witness);
         controller.signal.throwIfAborted();
         latest.current.apply(rebuilt);
         setFailure(null); setReady(true);
@@ -106,7 +112,7 @@ export function useExplorationUrl({ dataset, initialRoot, graph, capture, apply,
     return () => { disposed = true; clearTimeout(timeout); controller.abort(); };
     // Restore only on entry/retry, never in response to our own replaceState.
   }, [initialRoot, dataset, attempt, schedule]);
-  return { busy, failure, notice, ready, schedule, flush: update, retry: () => { setBusy(true); setFailure(null); setAttempt(a => a + 1); },
+  return { busy, failure, notice, ready, schedule, flush: update, canRestart, restart: () => { if (savedInput.current?.relation.type === "pattern") { setBusy(true); setFailure(null); restartRequested.current = attempt + 1; setAttempt(a => a + 1); } }, retry: () => { restartRequested.current = null; setBusy(true); setFailure(null); setAttempt(a => a + 1); },
     abandon: () => { failed.current = false; setFailure(null); history.replaceState(history.state, "", location.pathname.startsWith("/en") ? "/en" : "/"); },
     copy: async () => { if (!update()) return; try { await navigator.clipboard.writeText(location.href); setNotice(explorationUrlLabels(locale).copied); } catch { setNotice(explorationUrlLabels(locale).manualCopy); } } };
 }

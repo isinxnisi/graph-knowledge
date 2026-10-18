@@ -131,7 +131,7 @@ export type PatternExecution = {
 export function emptyPatternGraph(root: EntitySummary, relation: RelationCondition, generation = 0): GraphState {
   const normalized = normalizeRelationCondition(relation);
   if (normalized.type !== "pattern" || root.kind !== "work") throw Error("Pattern requires a work");
-  return projectGraph({ ...emptyGraph(generation), relation: normalized, conditionKey: relationConditionKey(normalized), roots: [root.id], centerId: root.id,
+  return projectGraph({ ...emptyGraph(generation), relation: normalized, predicates: ["CONTRIBUTED_TO"], contributionRoles: normalized.contributionRoles, conditionKey: relationConditionKey(normalized), roots: [root.id], centerId: root.id,
     cacheNodes: { [root.id]: root }, execution: { type: "pattern", routes: {}, requiredRoute: null, candidateBoundary: null, nextCursor: null, hasMore: false, loading: false, request: 0, error: null, blocked: false } });
 }
 function pattern(graph: GraphState) {

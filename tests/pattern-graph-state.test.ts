@@ -57,6 +57,6 @@ it("restoreは参照と開閉意図を保ち、版変更後の継続は先頭か
   const restored = restorePatternGraph(graph, { version: 1, dataset: "public-kg", revision: "r2", relation, root: response.root, nodes: response.nodes, claims: response.claims, operation: "restore", verifiedRoutes: [a], continuation: { state: "restart" } });
   expect(restored.revision).toBe("r2"); expect(restored.nodes).toEqual({ [root.id]: root }); expect(restored.execution).toMatchObject({ hasMore: true, nextCursor: null });
   expect(() => restorePatternGraph(graph, { version: 1, dataset: "public-kg", revision: "r2", relation, root: response.root, nodes: [root], claims: [], operation: "restore", verifiedRoutes: [], continuation: { state: "restart" } })).toThrow();
-  expect(() => captureWorkspace("public-kg", "pattern", graph, null)).toThrow();
+  expect(captureWorkspace("public-kg", "pattern", graph, null)).toMatchObject({ version: 2, relation, execution: { type: "pattern", routes: [{ route: a, open: false }] } });
   expect(emptyGraph().execution).toEqual({ type: "adjacent" });
 });

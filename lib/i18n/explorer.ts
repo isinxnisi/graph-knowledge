@@ -102,6 +102,8 @@ export function explorerLabels(locale = "ja") { return locale.split("-")[0] === 
 
 // 既存state/snapshotに保存する通知文は変更しない。既知のUI通知だけ表示時に解決する。
 const messages: Record<string, string> = {
+  "この対象・証拠には適用できない関係条件です。": "These relation criteria do not apply to this subject or evidence. The current subject is unchanged.",
+  "経路の保持上限に達しました。別の探索として開始してください。": "The saved path limit has been reached. Start a separate exploration.",
   "qは1〜100文字で指定してください。": "Enter a name or alias of 1–100 characters.",
   "UUID v4を指定してください。": "Specify a UUID v4.",
   "制作Roleが不正です。": "Invalid production role.",

@@ -1,5 +1,6 @@
+import { adjacentWorkspace } from "../adjacent-workspace";
 import { test, expect } from "@playwright/test";
-import { decodeExploration } from "../../lib/client/exploration-url";
+import { decodeExploration as decodeRawExploration } from "../../lib/client/exploration-url";
 for (const locale of ["ja", "en"]) for (const width of [1241, 390]) test(`${locale} ${width}px 対象未指定Role・一致理由・条件保全・根拠・Graph`, async ({ browser }, info) => {
   const en = locale === "en", context = await browser.newContext({ viewport: { width, height: 890 }, isMobile: width < 800, hasTouch: width < 800 });
   await context.addInitScript(() => localStorage.setItem("plunode:privacy:v1", '{"analytics":false,"ads":false}'));
@@ -43,7 +44,7 @@ for (const locale of ["ja", "en"]) for (const width of [1241, 390]) test(`${loca
   await page.screenshot({ path: info.outputPath("drawing-records.png"), animations: "disabled" });
   const link = row.getByRole("link", { name: en ? "Open 浦沢直樹 in Graph" : "浦沢直樹をGraphで開く", exact: true }), href = new URL((await link.getAttribute("href"))!, page.url());
   const id = href.pathname.split("/").at(-1)!;
-  expect(decodeExploration(href.searchParams.get("s")!, id, "public-kg").conditions).toMatchObject({ predicates: ["CONTRIBUTED_TO"], contributionRoles: ["DRAWING"] });
+  expect(decodeExploration(href.searchParams.get("s")!, id, "public-kg").relation).toMatchObject({ predicates: ["CONTRIBUTED_TO"], contributionRoles: ["DRAWING"] });
   await link.click(); await expect(page.getByTestId("exploration-root")).toContainText("浦沢直樹");
   await page.goBack(); await expect(dialog).toBeVisible(); await expect(claims).toHaveCount(2);
   await expect(dialog.locator('[data-record-role="DRAWING"]')).toHaveAttribute("aria-pressed", "true");
@@ -54,7 +55,7 @@ for (const locale of ["ja", "en"]) for (const width of [1241, 390]) test(`${loca
   await page.getByTestId("discovery-results").getByRole("button", { name: /^浦沢直樹 —/ }).click();
   await expect(page.getByTestId("exploration-root")).toContainText("浦沢直樹");
   const entityHref = new URL(page.url()), rootId = entityHref.pathname.split("/").at(-1)!;
-  expect(decodeExploration(entityHref.searchParams.get("s")!, rootId, "public-kg").conditions.contributionRoles).toEqual(["DRAWING"]);
+  expect(decodeExploration(entityHref.searchParams.get("s")!, rootId, "public-kg").relation.contributionRoles).toEqual(["DRAWING"]);
   expect(errors).toEqual([]); await context.close();
 });
 
@@ -113,3 +114,5 @@ test("Lab比較は既存の二入口を維持し、正式一覧への操作を�
   await expect(dialog.getByRole("tab")).toHaveCount(2);
   await expect(dialog.getByRole("button", { name: "この関係・役割で一覧の記録を探す", exact: true })).toHaveCount(0);
 });
+
+function decodeExploration(...args: Parameters<typeof decodeRawExploration>) { return adjacentWorkspace(decodeRawExploration(...args)); }

@@ -1,3 +1,4 @@
+import { adjacentWorkspace } from "./adjacent-workspace";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { int } from "neo4j-driver";
 vi.mock("server-only", () => ({}));
@@ -82,14 +83,14 @@ describe("Discovery searchの入力・ページ境界", () => {
 });
 
 import { discoveryExplorationHref } from "../lib/client/discovery-navigation";
-import { decodeExploration } from "../lib/client/exploration-url";
+import { decodeExploration as decodeRawExploration } from "../lib/client/exploration-url";
 it("選んだ関係を既存のGraph URLへ引き継ぎ、種別やテーマをGraph条件と混同しない", () => {
   const id = entity(1).id;
   for (const predicates of [null, ["INFLUENCED_BY", "CONTRIBUTED_TO"]] as const) {
     const url = new URL(discoveryExplorationHref("public-kg", id, predicates ? [...predicates] : null), "http://localhost");
     const decoded = decodeExploration(url.searchParams.get("s")!, id, "public-kg");
-    expect(decoded.conditions).toEqual({ predicates: predicates ? [...predicates].sort() : null, contributionRoles: null, organizationPositions: null, eventRoles: null });
-    expect(decoded.branches).toEqual([{ id, open: true, pages: 1 }]); expect(decoded.view).toMatchObject({ positions: {}, initialLayoutDone: false });
+    expect(decoded.relation).toMatchObject({ predicates: predicates ? [...predicates].sort() : null, contributionRoles: null, organizationPositions: null, eventRoles: null });
+    expect(decoded.execution.branches).toEqual([{ id, open: true, pages: 1 }]); expect(decoded.view).toMatchObject({ positions: {}, initialLayoutDone: false });
   }
 });
 
@@ -104,10 +105,12 @@ it("Entity一覧でも同じClaimの制作役割を検索し、Role変更でcurs
 
 it("制作Roleを既存Graph条件・URLへ渡す", () => {
   const url = new URL(discoveryExplorationHref("public-kg", entity(1).id, ["CONTRIBUTED_TO"], ["DRAWING"]), "http://localhost");
-  expect(decodeExploration(url.searchParams.get("s")!, entity(1).id, "public-kg").conditions.contributionRoles).toEqual(["DRAWING"]);
+  expect(decodeExploration(url.searchParams.get("s")!, entity(1).id, "public-kg").relation.contributionRoles).toEqual(["DRAWING"]);
 });
 
 it("旧周辺＋関係cursorを、異なるClaimの照合へ流用させない", async () => {
   const after = Buffer.from(JSON.stringify({ v: 2, dataset: "public-kg", revision: "revision-a", q: "", kind: null, around: entity(3).id, theme: null, predicates: ["CONTRIBUTED_TO"], rank: 1, name: "a", id: entity(1).id })).toString("base64url");
   await expect(discoverEntities({ q: "", predicates: ["CONTRIBUTED_TO"], around: entity(3).id, after })).rejects.toMatchObject({ status: 400 });
 });
+
+function decodeExploration(...args: Parameters<typeof decodeRawExploration>) { return adjacentWorkspace(decodeRawExploration(...args)); }

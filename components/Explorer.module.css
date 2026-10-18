@@ -614,3 +614,11 @@
 .discoveryRoute li > p { margin-bottom: 3px; font-weight: 600; }
 .discoveryRoute li > button { width: 100%; text-align: left; padding: 5px 6px; margin-block: 2px; font-size: 11px; overflow-wrap: anywhere; }
 .discoveryRoute small { display: block; color: var(--color-muted); margin-top: 3px; }
+
+.patternRoutes { list-style: none; padding: 0; margin: 0; }
+.patternRoutes li { padding: .7rem 0; border-bottom: 1px solid var(--line, #dce3e8); }
+.patternRoutes strong { font-size: .88rem; overflow-wrap: anywhere; }
+.patternRoutes button { font-size: .75rem; }
+
+.patternModeAction { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; padding: 6px 0 10px; font-size: .75rem; }
+.patternModeAction button { padding: 5px 9px; font-size: .75rem; }

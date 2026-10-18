@@ -9,7 +9,9 @@ vi.mock("cytoscape", async original => {
   } };
 });
 import GraphCanvas from "../components/GraphCanvas";
-import { emptyPatternGraph, mergePatternPage, setPatternRouteOpen } from "../lib/client/graph-state";
+import { emptyPatternGraph, mergePatternPage, setPatternRouteOpen, emptyGraph, mergePage } from "../lib/client/graph-state";
+import { freeRelation } from "../lib/client/relation-state";
+import { relationConditionKey } from "../lib/domain/relation-conditions";
 import { routeKey } from "../lib/domain/pattern-graph";
 import { page, relation, root, route } from "./pattern-graph-fixture";
 beforeEach(() => {
@@ -30,4 +32,19 @@ it("既存Canvasへ完全経路の和集合を渡すと配置し、閉じると�
   expect(new Set(cy.nodes().map(n => JSON.stringify(n.position()))).size).toBe(4);
   rerender(<GraphCanvas {...props} graph={setPatternRouteOpen(graph, routeKey(a), false)} />);
   expect(cy.nodes()).toHaveLength(3); expect(cy.edges()).toHaveLength(2);
+});
+
+it("同じ作品で一段からpatternへ適用した時も、新しいNodeを原点へ重ねず配置する", () => {
+  const body = page([route(100, 2), route(100, 3)]), adjacent = freeRelation(relation);
+  const initial = mergePage({ ...emptyGraph(), relation: adjacent, conditionKey: relationConditionKey(adjacent), roots: [root.id], centerId: root.id, cacheNodes: { [root.id]: root } }, {
+    revision: "r1", relation: adjacent, centerId: root.id, nodes: body.nodes.filter(n => n.id === root.id || n.kind === "person"), claims: body.claims.filter(c => c.objectId === root.id), page: { hasMore: false, nextCursor: null },
+  });
+  const props = { selection: { kind: "entity" as const, id: root.id }, onEntity: vi.fn(), onRelation: vi.fn(), onToggleEntity: vi.fn() };
+  const { rerender } = render(<GraphCanvas {...props} graph={initial} />);
+  const cy = created.cores[0], rootPoint = { ...cy.getElementById(root.id).position() };
+  const graph = mergePatternPage(emptyPatternGraph(root, relation, 1), body, null);
+  rerender(<GraphCanvas {...props} graph={graph} />);
+  expect(cy.nodes()).toHaveLength(4);
+  expect(new Set(cy.nodes().map(n => JSON.stringify(n.position()))).size).toBe(4);
+  expect(cy.getElementById(root.id).position()).toEqual(rootPoint);
 });

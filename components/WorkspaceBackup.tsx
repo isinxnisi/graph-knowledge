@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import type { DatasetMode } from "../lib/domain/dataset";
 import { exportWorkspace, importWorkspace, parseWorkspaceBackup, WorkspaceError, WORKSPACE_FILE_LIMIT, type SavedWorkspace } from "../lib/client/saved-workspace";
 import { workspaceLabels } from "../lib/i18n/workspace";
-import { conditionSummary } from "../lib/i18n/exploration-entry";
+import { relationSummary } from "../lib/i18n/relation-condition";
 import styles from "./Explorer.module.css";
 
 export default function WorkspaceBackup({ dataset, workspace, full, ready, disabled, onImported }: {
@@ -87,9 +87,9 @@ export default function WorkspaceBackup({ dataset, workspace, full, ready, disab
       <div className={styles.backupPreview}>
         <strong>{preview.incoming.title}</strong>
         <p><time dateTime={preview.incoming.savedAt}>{text.savedAt(preview.incoming.savedAt)}</time></p>
-        <p>{conditionSummary(preview.incoming.conditions.predicates, preview.incoming.conditions.contributionRoles, locale, preview.incoming.conditions.organizationPositions, preview.incoming.conditions.eventRoles)}</p>
+        <p>{relationSummary(preview.incoming.relation, locale)}</p>
         <p>{text.rootId}：{preview.incoming.rootId}</p>
-        <p>{text.scope(preview.incoming.branches.length, preview.incoming.branches.reduce((sum, branch) => sum + branch.pages, 0))}</p>
+        <p>{(preview.incoming.execution.type === "adjacent" ? text.scope(preview.incoming.execution.branches.length, preview.incoming.execution.branches.reduce((sum, branch) => sum + branch.pages, 0)) : `${preview.incoming.execution.routes.length} ${locale === "en" ? "complete paths" : "経路"}`)}</p>
       </div>
       {preview.previous && <p>{text.replaceHelp(preview.previous.title)}</p>}
       {!preview.previous && full && <p role="alert">{text.countLimit}</p>}

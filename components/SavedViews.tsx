@@ -13,12 +13,16 @@ import { conditionSummary } from "../lib/i18n/exploration-entry";
 import { useDialogBackdrop } from "../lib/client/use-dialog-backdrop";
 import styles from "./Explorer.module.css";
 import SavedViewsBackup from "./SavedViewsBackup";
+import { legacyRelation } from "../lib/client/relation-state";
+import type { RelationCondition } from "../lib/domain/relation-conditions";
+import { relationSummary } from "../lib/i18n/relation-condition";
 
 const summary = (conditions: ViewConditions, locale: string) => conditionSummary(conditions.predicates, conditions.contributionRoles, locale, conditions.organizationPositions, conditions.eventRoles);
 
 const textMessages = savedViewLabels();
-export default function SavedViews({ dataset, root, conditions, onOpen, onClose }: {
+export default function SavedViews({ dataset, root, conditions, relation, onOpen, onOpenRelation, onClose }: {
   dataset: DatasetMode; root: EntitySummary | null; conditions: ViewConditions;
+  relation?: RelationCondition; onOpenRelation?: (entity: EntitySummary, relation: RelationCondition, signal: AbortSignal) => Promise<boolean>;
   onOpen: (entity: EntitySummary, conditions: ViewConditions) => void; onClose: () => void;
 }) {
   const { locale } = useUiLocale();
@@ -48,7 +52,7 @@ export default function SavedViews({ dataset, root, conditions, onOpen, onClose 
     };
     refresh();
     const changed = (event: StorageEvent) => {
-      if (event.key === null || event.key === savedViewsKey(dataset)) refresh();
+      if (event.key === null || event.key === savedViewsKey(dataset) || event.key === savedViewsKey(dataset).replace(/:v2$/, "")) refresh();
     };
     window.addEventListener("storage", changed);
     return () => { pending.current?.abort(); window.removeEventListener("storage", changed); };
@@ -59,7 +63,7 @@ export default function SavedViews({ dataset, root, conditions, onOpen, onClose 
     if (!root || !title.trim()) return;
     try {
       const views = editSavedViews(window.localStorage, dataset, { add: {
-        id: crypto.randomUUID(), title: title.trim(), rootId: root.id, conditions, createdAt: new Date().toISOString(),
+        version: 2, id: crypto.randomUUID(), title: title.trim(), rootId: root.id, relation: relation ?? legacyRelation(conditions), createdAt: new Date().toISOString(),
       } });
       setViews(views); setStorageError(null); setMessage(text.saved);
     } catch (error) { setMessage(null); reportStorageError(error); }
@@ -79,7 +83,15 @@ export default function SavedViews({ dataset, root, conditions, onOpen, onClose 
       if (controller.signal.aborted) return;
       const entity = entitySummarySchema.strip().parse(response.entity);
       if (entity.id !== view.rootId) throw new Error("Unexpected root");
-      onOpen(entity, view.conditions); close();
+      if (onOpenRelation) {
+        if (!await onOpenRelation(entity, view.relation, controller.signal)) throw new Error("Apply failed");
+        if (controller.signal.aborted) return;
+      } else if (view.relation.type === "adjacent" && view.relation.polarity === "all-records") {
+        const { predicates, contributionRoles, organizationPositions, eventRoles } = view.relation;
+        onOpen(entity, { predicates, contributionRoles, organizationPositions, eventRoles });
+      }
+      else throw new Error("Unsupported relation executor");
+      close();
     } catch (error) {
       if (controller.signal.aborted) return;
       setOpenError({ id: view.id, message: error instanceof ClientApiError && error.status === 404 ? text.missing : text.failed });
@@ -93,7 +105,7 @@ export default function SavedViews({ dataset, root, conditions, onOpen, onClose 
     <p>{text.help}</p><p className={styles.muted}>{text.local}</p>
     {root ? <form className={styles.savedViewForm} onSubmit={event => { event.preventDefault(); save(); }}>
       <p>{text.root}：<strong>{root.name}</strong><span className={styles.muted}> / {root.description}</span></p>
-      <p className={styles.muted}>{summary(conditions, locale)}</p>
+      <p className={styles.muted}>{relation ? relationSummary(relation, locale) : summary(conditions, locale)}</p>
       <label htmlFor="saved-view-name">{text.name}</label>
       <input id="saved-view-name" value={title} maxLength={SAVED_VIEW_TITLE_LIMIT} required onChange={event => setTitle(event.target.value)} />
       <button disabled={!ready || !!opening || !title.trim() || views.length >= SAVED_VIEW_LIMIT}>{text.save}</button>
@@ -104,7 +116,7 @@ export default function SavedViews({ dataset, root, conditions, onOpen, onClose 
     {views.length >= SAVED_VIEW_LIMIT && <p>{text.limit}</p>}
     {ready && views.length === 0 && <p className={styles.empty}>{text.empty}</p>}
     <ul className={styles.savedViewList}>{views.map(view => <li key={view.id}>
-      <h4>{view.title}</h4><p className={styles.muted}>{summary(view.conditions, locale)}</p>
+      <h4>{view.title}</h4><p className={styles.muted}>{relationSummary(view.relation, locale)}</p>
       <p className={styles.muted}><time dateTime={view.createdAt}>{text.savedAt(view.createdAt)}</time></p>
       <div className={styles.actions}>
         <button disabled={!ready || !!opening} aria-label={text.openNamed(view.title)} onClick={() => void open(view)}>{opening === view.id ? text.opening : text.open}</button>

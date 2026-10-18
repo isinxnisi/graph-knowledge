@@ -1,3 +1,4 @@
+import { relationText } from "../i18n/relation-condition";
 import { workspaceLabels } from "../i18n/workspace";
 import { overviewLabels } from "../i18n/entity-overview";
 import { explorationLabels } from "../i18n/exploration";
@@ -11,6 +12,7 @@ export function graphNoticePresentation(message: string | null, locale = "ja"): 
   for (const language of ["ja", "en"]) {
     const known = new Map([
       [workspaceLabels(language).restored(0), labels.restored],
+      [relationText(language).changed, relationText(locale).changed],
       [overviewLabels(language).restored, labels.previous],
       [explorationLabels(language).changed, labels.conditions],
     ]);
