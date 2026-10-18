@@ -33,8 +33,8 @@ export const graphRootReady = (graph: GraphState): boolean => graph.execution?.t
 
 // 表示は起点から有効な展開に属するClaimだけで導出する。切断循環は起点にならない。
 export function projectGraph(graph: GraphState): GraphState {
-  if (graph.execution?.type === "pattern") return projectPatternGraph(graph);
-  if (graph.relation?.type === "pattern") throw Error("Pattern execution state required");
+  const allowed = graph.execution?.type === "pattern" ? verifiedPatternClaims(graph) : null;
+  if (graph.relation?.type === "pattern" && !allowed) throw Error("Pattern execution state required");
   const ids = new Set(graph.roots);
   const claims: GraphState["claims"] = {};
   const active = new Set<string>();
@@ -46,7 +46,9 @@ export function projectGraph(graph: GraphState): GraphState {
       active.add(id); changed = true;
       for (const page of meta.pages) for (const claimId of page.claimIds) {
         const claim = graph.cacheClaims[claimId];
-        if (!claim || !(graph.relation ? relationAcceptsClaim(graph.relation, claim) : matchesClaim(claim, graph.predicates, graph.contributionRoles ?? null, graph.organizationPositions ?? null, graph.eventRoles ?? null)) || !graph.cacheNodes[claim.subjectId] || !graph.cacheNodes[claim.objectId]) continue;
+        if (!claim) { if (allowed) throw Error("Missing pattern Claim"); continue; }
+        if (allowed && (!allowed.has(claimId) || ![claim.subjectId, claim.objectId].includes(id))) throw Error("Unverified pattern branch");
+        if (!(graph.relation ? relationAcceptsClaim(graph.relation, claim) : matchesClaim(claim, graph.predicates, graph.contributionRoles ?? null, graph.organizationPositions ?? null, graph.eventRoles ?? null)) || !graph.cacheNodes[claim.subjectId] || !graph.cacheNodes[claim.objectId]) continue;
         claims[claim.id] = claim; ids.add(claim.subjectId); ids.add(claim.objectId);
       }
     }
@@ -54,8 +56,9 @@ export function projectGraph(graph: GraphState): GraphState {
   const nodes = Object.fromEntries([...ids].filter((id) => graph.cacheNodes[id]).map((id) => [id, graph.cacheNodes[id]]));
   const expansions = Object.fromEntries(Object.entries(graph.expansions).map(([id, meta]) => [id, {
     ...meta, active: active.has(id), expanded: active.has(id) && meta.pages.length > 0,
+    ...(allowed ? { hasMore: !!patternSourceForNode(graph, id, true) } : {}),
   }]));
-  return { ...graph, nodes, claims, expansions };
+  return { ...graph, nodes, claims, expansions, ...(graph.execution?.type === "pattern" ? { execution: { ...graph.execution, routes: Object.fromEntries(Object.entries(graph.execution.routes).map(([key, entry]) => [key, { ...entry, open: entry.route.claimIds.every(id => !!claims[id]) }])) } } : {}) };
 }
 export function withinLimits(graph: GraphState): boolean {
   return Object.keys(graph.nodes).length <= GRAPH_LIMITS.entities && Object.keys(graph.claims).length <= GRAPH_LIMITS.claims;
@@ -107,7 +110,6 @@ export function mergePage(graph: GraphState, page: NeighborsResponse, after: str
 }
 
 export function closeExpansion(graph: GraphState, id: string): GraphState {
-  if (graph.execution?.type === "pattern") return closePatternNode(graph, id);
   const meta = graph.expansions[id]; if (!meta?.open) return graph;
   const expansions = Object.fromEntries(Object.entries(graph.expansions).map(([key, entry]) => [key, {
     ...entry, blocked: false, error: entry.blocked ? null : entry.error,
@@ -116,117 +118,100 @@ export function closeExpansion(graph: GraphState, id: string): GraphState {
   return projectGraph({ ...graph, expansions, notice: "展開を閉じました。別の展開が支える関係は残ります。" });
 }
 export function reopenExpansion(graph: GraphState, id: string): GraphState {
-  if (graph.execution?.type === "pattern") throw new Error("Open a complete pattern route");
   const meta = graph.expansions[id]; if (!meta || !graph.nodes[id]) return graph;
   const candidate = projectGraph({ ...graph, clock: graph.clock + 1, lastExpandedId: id, notice: "取得済みの枝を復元しました。",
     expansions: { ...graph.expansions, [id]: { ...meta, open: true, error: null, blocked: false, used: graph.clock + 1 } } });
   return withinLimits(candidate) ? candidate : reject(graph, id);
 }
 
-export type PatternExecution = {
-  type: "pattern"; routes: Record<string, { route: RouteRef; open: boolean }>; requiredRoute: string | null;
-  // Isolated, verified Entity handles, never partial path edges. Values are the
-  // accepted routes to reopen together; absent on pre-fix snapshots.
-  collapsedNodes?: Record<string, string[]>;
-  candidateBoundary: RouteRef | null; nextCursor: string | null; hasMore: boolean;
+export type PatternSource = {
+  requiredRoute: string | null; candidateBoundary: RouteRef | null;
+  nextCursor: string | null; hasMore: boolean;
+};
+export type PatternExecution = PatternSource & {
+  type: "pattern"; routes: Record<string, { route: RouteRef; open: boolean }>;
+  // Root fields above remain the root source. Other work sources share the same
+  // condition and public revision; open is derived, never an interaction unit.
+  sources?: Record<string, PatternSource>;
   loading: boolean; request: number; error: string | null; blocked: boolean;
 };
+export const PATTERN_SOURCE_LIMIT = 40;
 export function emptyPatternGraph(root: EntitySummary, relation: RelationCondition, generation = 0): GraphState {
   const normalized = normalizeRelationCondition(relation);
   if (normalized.type !== "pattern" || root.kind !== "work") throw Error("Pattern requires a work");
   return projectGraph({ ...emptyGraph(generation), relation: normalized, predicates: ["CONTRIBUTED_TO"], contributionRoles: normalized.contributionRoles, conditionKey: relationConditionKey(normalized), roots: [root.id], centerId: root.id,
-    cacheNodes: { [root.id]: root }, execution: { type: "pattern", routes: {}, requiredRoute: null, candidateBoundary: null, nextCursor: null, hasMore: false, loading: false, request: 0, error: null, blocked: false } });
+    cacheNodes: { [root.id]: root }, execution: { type: "pattern", routes: {}, sources: {}, requiredRoute: null, candidateBoundary: null, nextCursor: null, hasMore: false, loading: false, request: 0, error: null, blocked: false } });
 }
 function pattern(graph: GraphState) {
   if (graph.execution?.type !== "pattern" || graph.relation?.type !== "pattern") throw Error("Not a pattern execution");
   return graph.execution;
 }
-function projectPatternGraph(graph: GraphState): GraphState {
-  const execution = pattern(graph), ids = new Set(graph.roots), claimIds = new Set<string>();
+function verifiedPatternClaims(graph: GraphState) {
+  const execution = pattern(graph), allowed = new Set<string>();
   const nodes = new Map(Object.entries(graph.cacheNodes)), claims = new Map(Object.entries(graph.cacheClaims));
   if (!graph.centerId || nodes.get(graph.centerId)?.kind !== "work") throw Error("Missing pattern root");
-  for (const { route, open } of Object.values(execution.routes)) {
-    if (!open) continue;
-    // Validate first, then include ALL steps. Missing data never yields a half route.
-    validateRelationRoute(graph.relation!, graph.centerId!, route, nodes, claims);
-    route.nodeIds.forEach(id => ids.add(id)); route.claimIds.forEach(id => claimIds.add(id));
+  for (const { route } of Object.values(execution.routes)) {
+    validateRelationRoute(graph.relation!, route.nodeIds[0], route, nodes, claims);
+    route.claimIds.forEach(id => allowed.add(id));
   }
-  for (const [id, keys] of Object.entries(execution.collapsedNodes ?? {})) {
-    if (!keys.length || new Set(keys).size !== keys.length) throw Error("Invalid collapsed Entity handle");
-    for (const key of keys) {
-      const entry = execution.routes[key];
-      if (!entry?.route.nodeIds.includes(id)) throw Error("Invalid collapsed Entity handle");
-      validateRelationRoute(graph.relation!, graph.centerId, entry.route, nodes, claims);
-    }
-    ids.add(id);
-  }
-  return { ...graph, nodes: Object.fromEntries([...ids].map(id => [id, graph.cacheNodes[id]])), claims: Object.fromEntries([...claimIds].map(id => [id, graph.cacheClaims[id]])), expansions: {} };
+  return allowed;
 }
-function rejectPattern(graph: GraphState, message = GRAPH_LIMIT_MESSAGE) {
-  return { ...graph, execution: { ...pattern(graph), loading: false, error: message, blocked: true } };
+export function patternSource(graph: GraphState, id: string): PatternSource | null {
+  const ex = pattern(graph);
+  return id === graph.centerId && graph.revision ? ex : ex.sources?.[id] ?? null;
 }
-export function mergePatternPage(graph: GraphState, raw: PatternGraphResponse, after: string | null): GraphState {
+export function patternSourceForNode(graph: GraphState, id: string, more = false): string | null {
+  const ex = pattern(graph);
+  if (graph.cacheNodes[id]?.kind === "work") return !more || patternSource(graph, id)?.hasMore ? id : null;
+  const anchors = [...new Set(Object.values(ex.routes).filter(e => e.route.nodeIds.includes(id)).map(e => e.route.nodeIds[0]))].sort();
+  return anchors.find(anchor => patternSource(graph, anchor)?.hasMore) ?? null;
+}
+export function openPatternNode(graph: GraphState, id: string): GraphState {
+  const ex = pattern(graph), meta = graph.expansions[id] ?? emptyExpansion();
+  const claimIds = [...verifiedPatternClaims(graph)].filter(cid => {
+    const c = graph.cacheClaims[cid]; return [c.subjectId, c.objectId].includes(id);
+  });
+  const candidate = projectGraph({ ...graph, lastExpandedId: id, clock: graph.clock + 1, notice: null,
+    execution: { ...ex, loading: false, error: null, blocked: false },
+    expansions: { ...graph.expansions, [id]: { ...meta, open: true, pages: [{ after: null, claimIds, nextCursor: null }],
+      hasMore: !!patternSourceForNode(graph, id, true), loading: false, error: null, blocked: false, used: graph.clock + 1 } } });
+  return withinLimits(candidate) ? candidate : reject(graph, id);
+}
+export function mergePatternPage(graph: GraphState, raw: PatternGraphResponse, after: string | null, ownerId?: string): GraphState {
   const response = patternGraphResponseSchema.parse(raw), execution = pattern(graph);
-  if (response.operation !== "page" || response.root.id !== graph.centerId || relationConditionKey(response.relation) !== graph.conditionKey) throw Error("Unexpected pattern response");
+  if (response.operation !== "page" || !graph.cacheNodes[response.root.id] || relationConditionKey(response.relation) !== graph.conditionKey) throw Error("Unexpected pattern response");
   if (graph.revision && graph.revision !== response.revision) throw new ClientApiError(dataReleaseLabels().changed, 409);
-  if (after !== execution.nextCursor) throw Error("Unexpected candidate boundary");
+  const source = patternSource(graph, response.root.id);
+  if (after !== (source?.nextCursor ?? null)) throw Error("Unexpected candidate boundary");
   const routes = { ...execution.routes };
-  const initial = !graph.revision && Object.keys(routes).length === 0;
-  const firstKey = response.requiredRoute ? routeKey(response.requiredRoute) : response.routes[0] ? routeKey(response.routes[0]) : null;
-  // A supplied proof takes precedence over a candidate with the same endpoints.
   const refs = [...(response.requiredRoute ? [response.requiredRoute] : []), ...response.routes];
-  for (const route of refs) if (!routes[routeKey(route)]) routes[routeKey(route)] = { route, open: initial && routeKey(route) === firstKey };
-  if (Object.keys(routes).length > 100) return rejectPattern(graph, "経路の保持上限に達しました。別の探索として開始してください。");
-  const candidate = projectGraph({ ...graph, revision: response.revision,
+  for (const route of refs) if (!routes[routeKey(route)]) routes[routeKey(route)] = { route, open: false };
+  const nextSource = { requiredRoute: response.requiredRoute ? routeKey(response.requiredRoute) : source?.requiredRoute ?? null,
+    candidateBoundary: response.routes.at(-1) ?? source?.candidateBoundary ?? null, nextCursor: response.page.nextCursor, hasMore: response.page.hasMore };
+  const sources = { ...execution.sources, ...(response.root.id !== graph.centerId ? { [response.root.id]: nextSource } : {}) };
+  if (Object.keys(routes).length > 100 || Object.keys(sources).length >= PATTERN_SOURCE_LIMIT) return reject(graph, ownerId ?? response.root.id, "経路の保持上限に達しました。別の探索として開始してください。");
+  const candidate = { ...graph, revision: response.revision,
     cacheNodes: { ...graph.cacheNodes, ...Object.fromEntries(response.nodes.map(n => [n.id, n])) },
     cacheClaims: { ...graph.cacheClaims, ...Object.fromEntries(response.claims.map(c => [c.id, c])) },
-    execution: { ...execution, routes, requiredRoute: response.requiredRoute ? routeKey(response.requiredRoute) : execution.requiredRoute,
-      candidateBoundary: response.routes.at(-1) ?? execution.candidateBoundary, nextCursor: response.page.nextCursor, hasMore: response.page.hasMore, loading: false, error: null, blocked: false } });
-  if (!withinLimits(candidate) || !cacheFits(candidate)) return rejectPattern(graph);
-  return candidate;
+    execution: { ...execution, ...(response.root.id === graph.centerId ? nextSource : {}), sources, routes, loading: false, error: null, blocked: false } };
+  if (!cacheFits(candidate)) return reject(graph, ownerId ?? response.root.id);
+  const opened = openPatternNode(candidate, ownerId ?? response.root.id);
+  return opened.expansions[ownerId ?? response.root.id]?.blocked ? reject(graph, ownerId ?? response.root.id) : opened;
 }
-export function setPatternRoutesOpen(graph: GraphState, keys: string[], open: boolean): GraphState {
-  const execution = pattern(graph);
-  if (!keys.length || keys.some(key => !execution.routes[key])) throw Error("Unknown pattern route");
-  if (keys.every(key => execution.routes[key].open === open)) return graph;
-  const routes = { ...execution.routes }, collapsedNodes = { ...execution.collapsedNodes };
-  for (const key of keys) {
-    const entry = routes[key]; routes[key] = { ...entry, open };
-    if (open) for (const id of entry.route.nodeIds) delete collapsedNodes[id];
-  }
-  if (!open && !Object.values(routes).some(r => r.open) && graph.centerId) collapsedNodes[graph.centerId] = keys;
-  const candidate = projectGraph({ ...graph, execution: { ...execution, routes, collapsedNodes, loading: false, request: execution.request + 1, error: null, blocked: false } });
-  return withinLimits(candidate) ? candidate : rejectPattern(graph);
-}
-export function setPatternRouteOpen(graph: GraphState, key: string, open: boolean): GraphState {
-  return setPatternRoutesOpen(graph, [key], open);
-}
-export function closePatternNode(graph: GraphState, id: string): GraphState {
-  const execution = pattern(graph);
-  const open = Object.entries(execution.routes).filter(([, e]) => e.open && e.route.nodeIds.includes(id));
-  if (!open.length) return graph;
-  const collapsedNodes = id === graph.centerId ? {} : { ...execution.collapsedNodes };
-  collapsedNodes[id] = open.map(([key]) => key);
-  return projectGraph({ ...graph, execution: { ...execution, collapsedNodes, routes: Object.fromEntries(Object.entries(execution.routes).map(([key, entry]) => [key, entry.route.nodeIds.includes(id) ? { ...entry, open: false } : entry])), loading: false, request: execution.request + 1, error: null, blocked: false } });
-}
-export function patternNodeOpen(graph: GraphState, id: string) {
-  return graph.execution?.type === "pattern" && Object.values(graph.execution.routes).some(e => e.open && e.route.nodeIds.includes(id));
-}
-export function nextPatternRoute(graph: GraphState, id: string): string | null {
-  if (graph.execution?.type !== "pattern") return null;
-  const ex = graph.execution, preferred = ex.collapsedNodes?.[id]?.find(key => ex.routes[key] && !ex.routes[key].open);
-  if (preferred) return preferred;
-  return Object.entries(ex.routes).find(([, e]) => !e.open && e.route.nodeIds.includes(id))?.[0] ?? null;
-}
+// Revalidation can be accumulated off screen across work sources. Callers must
+// commit only after EVERY source succeeds at one public revision.
 export function restorePatternGraph(graph: GraphState, raw: PatternGraphResponse): GraphState {
   const response = patternGraphResponseSchema.parse(raw), old = pattern(graph);
-  if (response.operation !== "restore" || response.root.id !== graph.centerId || relationConditionKey(response.relation) !== graph.conditionKey
-    || response.verifiedRoutes.length !== Object.keys(old.routes).length || response.verifiedRoutes.some(r => JSON.stringify(old.routes[routeKey(r)]?.route) !== JSON.stringify(r))) throw Error("Incomplete route restoration");
-  const candidate = projectGraph({ ...graph, revision: response.revision, cacheNodes: Object.fromEntries(response.nodes.map(n => [n.id, n])), cacheClaims: Object.fromEntries(response.claims.map(c => [c.id, c])),
-    execution: { ...old, loading: false, request: old.request + 1, error: null, blocked: false,
-      nextCursor: response.continuation.state === "resumable" ? response.continuation.nextCursor : null,
-      hasMore: response.continuation.state === "resumable" ? response.continuation.hasMore : true,
-      candidateBoundary: response.continuation.state === "resumable" ? old.candidateBoundary : null } });
-  if (!withinLimits(candidate) || !cacheFits(candidate)) return rejectPattern(graph);
-  return candidate;
+  const expected = Object.values(old.routes).filter(r => r.route.nodeIds[0] === response.root.id);
+  if (response.operation !== "restore" || relationConditionKey(response.relation) !== graph.conditionKey
+    || response.verifiedRoutes.length !== expected.length || response.verifiedRoutes.some(r => JSON.stringify(old.routes[routeKey(r)]?.route) !== JSON.stringify(r))) throw Error("Incomplete route restoration");
+  if (graph.revision && graph.revision !== response.revision) throw new ClientApiError(dataReleaseLabels().changed, 409);
+  const source = response.root.id === graph.centerId ? old : old.sources?.[response.root.id];
+  if (!source) throw Error("Unknown pattern source");
+  const nextSource = { ...source, nextCursor: response.continuation.state === "resumable" ? response.continuation.nextCursor : null,
+    hasMore: response.continuation.state === "resumable" ? response.continuation.hasMore : true,
+    candidateBoundary: response.continuation.state === "resumable" ? source.candidateBoundary : null };
+  return { ...graph, revision: response.revision,
+    cacheNodes: { ...graph.cacheNodes, ...Object.fromEntries(response.nodes.map(n => [n.id, n])) }, cacheClaims: { ...graph.cacheClaims, ...Object.fromEntries(response.claims.map(c => [c.id, c])) },
+    execution: { ...old, ...(response.root.id === graph.centerId ? nextSource : { sources: { ...old.sources, [response.root.id]: nextSource } }), loading: false, request: old.request + 1, error: null, blocked: false } };
 }

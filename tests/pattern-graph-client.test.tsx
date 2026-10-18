@@ -3,9 +3,8 @@ import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import { act, cleanup, renderHook } from "@testing-library/react";
 import { useGraphExplorer } from "../lib/client/use-graph-explorer";
 import { fetchPatternGraph } from "../lib/client/pattern-graph";
-import { routeKey } from "../lib/domain/pattern-graph";
 import { relationConditionKey, normalizeRelationCondition } from "../lib/domain/relation-conditions";
-import { id, root, node, relation, route, page } from "./pattern-graph-fixture";
+import { root, relation, route, page } from "./pattern-graph-fixture";
 const fetchMock = vi.fn<typeof fetch>(), response = (body: unknown, status = 200) => new Response(JSON.stringify(body), { status });
 const request = () => ({ version: 1, dataset: "public-kg", rootId: root.id, relation, revision: null, operation: { type: "page", after: null, requiredWitness: null } } as const);
 beforeEach(() => { vi.stubGlobal("fetch", fetchMock); });
@@ -48,60 +47,6 @@ it("後の適用・unmount後に古い要求が完了しても新しいGraphへ�
   let last!: Promise<boolean>;
   fetchMock.mockImplementationOnce(() => new Promise(r => { release = r; })); act(() => { last = result.current.applyRelation(root, relation); }); unmount();
   release(response(page([route(102, 4)]))); await expect(last).resolves.toBe(false);
-});
-it("追加取得中の閉じる操作は要求を中止し、共有経路を保ち、遅着ページを無視する", async () => {
-  const a = route(100, 2), b = route(100, 3), first = Array.from({ length: 12 }, (_, n) => route(100, n + 2));
-  fetchMock.mockResolvedValueOnce(response(page(first, a, "next")));
-  const { result } = renderHook(() => useGraphExplorer()); await act(async () => { await result.current.applyRelation(root, relation); });
-  fetchMock.mockResolvedValueOnce(response({ dataset: "public-kg", revision: "r1" }));
-  await act(async () => { await result.current.togglePatternRoute(routeKey(b)); });
-  let release!: (r: Response) => void, pending!: Promise<void>;
-  fetchMock.mockImplementationOnce(() => new Promise(r => { release = r; })); act(() => { pending = result.current.loadPattern(); });
-  await act(async () => { await result.current.togglePatternRoute(routeKey(a)); });
-  expect(result.current.graph.nodes[id(2)]).toBeUndefined(); expect(result.current.graph.nodes[id(100)]).toBeDefined();
-  await act(async () => { release(response(page([route(200, 30)], a))); await pending; });
-  expect(result.current.graph.nodes[id(200)]).toBeUndefined(); expect(result.current.graph.nodes[id(3)]).toBeDefined();
-  fetchMock.mockResolvedValueOnce(response({ dataset: "public-kg", revision: "r1" }));
-  await act(async () => { await result.current.togglePatternRoute(routeKey(a)); }); expect(result.current.graph.nodes[id(2)]).toBeDefined();
-  expect(result.current.graph.execution?.type === "pattern" && result.current.graph.execution.routes[routeKey(b)].open).toBe(true);
-});
-it("409では経路・cursorを保持して失効させ、再検証失敗でも部分更新しない", async () => {
-  const a = route(100, 2), first = Array.from({ length: 12 }, (_, n) => route(100, n + 2));
-  fetchMock.mockResolvedValueOnce(response(page(first, a, "next")));
-  const { result } = renderHook(() => useGraphExplorer()); await act(async () => { await result.current.applyRelation(root, relation); });
-  const old = result.current.graph;
-  fetchMock.mockResolvedValueOnce(response({ error: { message: "changed" } }, 409)); await act(async () => { await result.current.loadPattern(); });
-  expect(result.current.dataChanged).toBe(true); expect(result.current.graph.nodes).toBe(old.nodes); expect(result.current.graph.execution).toMatchObject({ nextCursor: "next", loading: false });
-  fetchMock.mockResolvedValueOnce(response({ error: { message: "invalid ref" } }, 400)); await act(async () => { await result.current.loadPattern(true); });
-  expect(result.current.graph.nodes).toBe(old.nodes); expect(result.current.dataChanged).toBe(true);
-  fetchMock.mockResolvedValueOnce(response({ error: { message: "changed again" } }, 409)); await act(async () => { await result.current.loadPattern(true); });
-  expect(result.current.graph.execution).toMatchObject({ loading: false }); expect(result.current.dataChanged).toBe(true);
-});
-it("追加取得を中止して閉じた経路を再開する際、版の確認が失敗しても取得中表示を残さない", async () => {
-  const a = route(100, 2), first = Array.from({ length: 12 }, (_, n) => route(100, n + 2));
-  fetchMock.mockResolvedValueOnce(response(page(first, a, "next"))); const { result } = renderHook(() => useGraphExplorer());
-  await act(async () => { await result.current.applyRelation(root, relation); await result.current.togglePatternRoute(routeKey(a)); });
-  let release!: (r: Response) => void, pending!: Promise<void>;
-  fetchMock.mockImplementationOnce(() => new Promise(r => { release = r; })); act(() => { pending = result.current.loadPattern(); });
-  fetchMock.mockResolvedValueOnce(response({ error: { message: "unavailable" } }, 503)); await act(async () => { await result.current.togglePatternRoute(routeKey(a)); });
-  expect(result.current.graph.execution).toMatchObject({ loading: false, nextCursor: "next" });
-  await act(async () => { release(response(page([], a))); await pending; }); expect(result.current.graph.nodes[id(2)]).toBeUndefined();
-});
-it("patternを通常の近傍へ展開せず、不適合な人物にも黙って適用しない", async () => {
-  fetchMock.mockResolvedValue(response(page([route(100, 2)]))); const { result } = renderHook(() => useGraphExplorer());
-  await act(async () => { await result.current.applyRelation(root, relation); }); const before = fetchMock.mock.calls.length;
-  await act(async () => { await result.current.expand(id(100)); expect(await result.current.applyRelation(node(100, "person"), relation)).toBe(false); });
-  expect(fetchMock).toHaveBeenCalledTimes(before); expect(result.current.graph.execution?.type).toBe("pattern");
-});
-it("再検証成功時だけ新版を適用し、開閉を保持したまま候補を先頭から再開する", async () => {
-  const a = route(100, 2), b = route(100, 3), body = page([a, b]); fetchMock.mockResolvedValueOnce(response(body));
-  const { result } = renderHook(() => useGraphExplorer()); await act(async () => { await result.current.applyRelation(root, relation); await result.current.togglePatternRoute(routeKey(a)); });
-  fetchMock.mockResolvedValueOnce(response({ dataset: "public-kg", revision: "r1" }));
-  await act(async () => { await result.current.togglePatternRoute(routeKey(b)); });
-  fetchMock.mockResolvedValueOnce(response({ version: 1, dataset: "public-kg", revision: "r2", relation, root: body.root, nodes: body.nodes, claims: body.claims, operation: "restore", verifiedRoutes: [a, b], continuation: { state: "restart" } }));
-  await act(async () => { await result.current.loadPattern(true); });
-  expect(result.current.graph.revision).toBe("r2"); expect(result.current.graph.nodes[id(2)]).toBeUndefined(); expect(result.current.graph.nodes[id(3)]).toBeDefined();
-  expect(result.current.graph.execution).toMatchObject({ hasMore: true, nextCursor: null });
 });
 it("自由探索へは明示したadjacentで切り替え、肯否も同じ条件として引き継ぐ", async () => {
   const body = page([route(100, 2)]); fetchMock.mockResolvedValueOnce(response(body)); const { result } = renderHook(() => useGraphExplorer());

@@ -1,5 +1,7 @@
 # Discovery共通関係条件：STEP 3a Graph実行基盤
 
+**操作契約の更新（2026-10-19）**：本書の経路単位open・初期経路表示・点線ハンドルに関する記録は以前の実装経緯。現行は[Graph操作統一](DISCOVERY_GRAPH_ENTITY_INTERACTION.md)と[共通契約§7・8](DISCOVERY_RELATION_CONTRACT.md#7-graph状態編集自由探索)を優先する。完全経路の検証と旧APIの意味は維持する。
+
 2026-10-18。[設計契約](DISCOVERY_RELATION_CONTRACT.md)と[STEP 2](DISCOVERY_TARGET_SEARCH.md)を再利用する。other-works revision 1のみ。Graph編集UI・保存形式／URLの移行・Discovery接続は未実装。3タブ・デザイン・公開KG・収集処理・正式VPSは変更しない。
 
 ## APIと実行

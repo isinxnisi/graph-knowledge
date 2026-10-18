@@ -1,5 +1,7 @@
 # Discovery共通関係条件：STEP 3b Graph編集・保存・復元
 
+**操作契約の更新（2026-10-19）**：本書の経路単位open・初期経路表示・点線ハンドルに関する記録は以前の実装経緯。現行は[Graph操作統一](DISCOVERY_GRAPH_ENTITY_INTERACTION.md)と[共通契約§7・8](DISCOVERY_RELATION_CONTRACT.md#7-graph状態編集自由探索)を優先する。完全経路の検証と旧APIの意味は維持する。
+
 2026-10-18〜19。[設計契約](DISCOVERY_RELATION_CONTRACT.md)と[STEP 3a実行基盤](DISCOVERY_PATTERN_GRAPH_EXECUTION.md)を再利用した実装記録。初回patternは `other-works` revision 1のみ。Discoveryのプリセット／対象検索接続はSTEP 4に残す。本番・公開KG・収集処理は変更しない。
 
 ## Graphでの操作

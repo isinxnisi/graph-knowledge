@@ -1,5 +1,7 @@
 # 現行技術設計
 
+2026-10-19、[GraphのEntity操作統一](design/DISCOVERY_GRAPH_ENTITY_INTERACTION.md)。patternの完全RouteRef集合と各作品の候補取得状態を、通常Graphと共通のexpansions／到達性投影から分離する。表示Claimは完全証拠への所属と所有Entityへの接続を検証。共有UI・開閉・配置を再利用し、Workspace／URL v2の任意entityState v1で複数作品の証拠・枝を保存し、同一公開版で全参照を再検証する。
+
 2026-10-19、[STEP 3bとGraph操作修正](design/DISCOVERY_PATTERN_GRAPH_PERSISTENCE.md)で共通関係編集・Undo・v2 View／Workspace／URL復元を接続。patternは完全経路1本だけ初回openとし、候補cacheと表示を分離。Entity閉鎖時の再開用ハンドルと経路キー集合を任意の`collapsedNodes`へ保存し、全Claim検証後に復元する。線はopenな完全経路の和集合のみ。Discovery接続はSTEP 4に残す。
 
 2026-10-18、[共通関係条件のSTEP 3a](design/DISCOVERY_PATTERN_GRAPH_EXECUTION.md)は既存pathsのPOSTを独立adapterに追加。完全経路の12＋1候補、候補外のrequiredWitness、最大100参照の再検証と継続境界を分け、Graphはadjacent／patternを区別して完全経路の和集合を投影する。neighborsの新v6は共通条件・肯否・公開版を束縛し、省略時の旧GETは維持。編集・永続化の版移行・Discovery接続は3b／4へ残す。

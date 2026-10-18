@@ -15,8 +15,8 @@ import { ClientApiError, fetchEntity, errorMessage } from "../lib/client/api";
 import { formatPeriod } from "../lib/client/format";
 import styles from "./Explorer.module.css";
 
-export default function EntityDetails({ entity, expansion, onExpand, onClose, onOverview, onSwitch, restricted, dataset, pattern = false }: {
-  dataset?: DatasetMode; pattern?: boolean;
+export default function EntityDetails({ entity, expansion, onExpand, onClose, onOverview, onSwitch, restricted, dataset }: {
+  dataset?: DatasetMode;
   onOverview: () => void; onSwitch: (mode: "broad" | "same") => void; restricted: boolean;
   entity: EntitySummary; expansion?: Expansion; onExpand: (more: boolean) => void; onClose: () => void;
 }) {
@@ -43,7 +43,7 @@ export default function EntityDetails({ entity, expansion, onExpand, onClose, on
     {dataset && <p><ReadingLink reference={{ kind: "entity", dataset, id: entity.id }} /></p>}
     <button onClick={onOverview}><Icon name="graph" />{overviewLabels(locale).open}</button>
     <RootActions restricted={restricted} disabled={missing} onSwitch={onSwitch} />
-    {!pattern && <><div className={styles.actions}>
+    {<><div className={styles.actions}>
       {expansion?.open ? <button onClick={onClose}>{ui.closeBranch}</button> : <button onClick={() => onExpand(false)}>{expansion?.pages.length ? ui.reopenBranch : ui.expand}</button>}
     </div>
     {!expansion?.open && !!expansion?.pages.length && <p className={styles.muted}>{ui.restoreHelp}</p>}

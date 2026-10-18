@@ -1,67 +1,39 @@
 import { expect, it } from "vitest";
-import { emptyGraph, emptyPatternGraph, mergePatternPage, setPatternRouteOpen, closePatternNode, restorePatternGraph, projectGraph, mergePage, graphRootReady } from "../lib/client/graph-state";
-import { routeKey } from "../lib/domain/pattern-graph";
-import { captureWorkspace } from "../lib/client/saved-workspace";
+import { emptyPatternGraph, mergePatternPage, openPatternNode, closeExpansion, reopenExpansion, projectGraph, graphRootReady } from "../lib/client/graph-state";
 import { root, id, relation, route, page } from "./pattern-graph-fixture";
-
-it("完全経路の和集合だけを投影し、一方を閉じても共有する人物とClaimは残る", () => {
-  const a = route(100, 2), b = route(100, 3);
-  let graph = setPatternRouteOpen(mergePatternPage(emptyPatternGraph(root, relation), page([a, b]), null), routeKey(b), true);
-  expect(Object.keys(graph.nodes)).toHaveLength(4); expect(Object.keys(graph.claims)).toHaveLength(3); expect(graph.expansions).toEqual({});
-  expect(graphRootReady(graph)).toBe(true); expect(graphRootReady(emptyPatternGraph(root, relation))).toBe(false);
-  graph = setPatternRouteOpen(graph, routeKey(a), false);
-  expect(Object.keys(graph.nodes).sort()).toEqual([id(1), id(100), id(3)].sort()); expect(Object.keys(graph.claims)).toHaveLength(2);
-  graph = setPatternRouteOpen(graph, routeKey(a), true); expect(Object.keys(graph.claims)).toHaveLength(3);
-  graph = closePatternNode(graph, id(100)); expect(Object.keys(graph.nodes).sort()).toEqual([root.id, id(100)].sort()); expect(graph.claims).toEqual({});
+const a = route(100, 2), b = route(100, 3), c = route(101, 3);
+const state = () => mergePatternPage(emptyPatternGraph(root, relation), page([a,b,c]), null);
+it("初期展開は起点に接続するClaimだけで、全線は完全経路の成立証拠を持つ", () => {
+  const g=state(); expect(Object.keys(g.nodes)).toHaveLength(3); expect(Object.keys(g.claims)).toHaveLength(2);
+  expect(g.nodes[id(2)]).toBeUndefined(); expect(g.cacheNodes[id(2)]).toBeDefined(); expect(g.expansions[root.id].expanded).toBe(true);
+  expect(graphRootReady(g)).toBe(true); expect(graphRootReady(emptyPatternGraph(root,relation))).toBe(false);
 });
-it("指定証拠が候補外でも表示し、候補境界は指定証拠へ飛ばさない・重複しても閉じた経路を開かない", () => {
-  const candidates = Array.from({ length: 12 }, (_, n) => route(100, n + 2)), required = route(900, 800);
-  let graph = mergePatternPage(emptyPatternGraph(root, relation), page(candidates, required, "next"), null);
-  expect(graph.execution).toMatchObject({ requiredRoute: routeKey(required), candidateBoundary: candidates[11], nextCursor: "next" });
-  graph = setPatternRouteOpen(graph, routeKey(required), false);
-  graph = mergePatternPage(graph, page([required, route(901, 801)], required), "next");
-  expect(graph.execution?.type === "pattern" && graph.execution.routes[routeKey(required)].open).toBe(false);
-  expect(graph.nodes[id(900)]).toBeUndefined(); expect(graph.nodes[id(901)]).toBeUndefined(); expect(graph.cacheNodes[id(901)]).toBeDefined();
+it("中継Entityの枝を閉じても親が支えるEntityと共有Claimは残り、再展開できる", () => {
+  let g=openPatternNode(openPatternNode(state(),id(100)),id(101));
+  g=closeExpansion(g,id(100)); expect(g.nodes[id(100)]).toBeDefined(); expect(g.nodes[id(3)]).toBeDefined(); expect(g.nodes[id(2)]).toBeUndefined();
+  expect(g.claims[c.claimIds[1]]).toBeDefined(); expect(g.expansions[id(100)].open).toBe(false);
+  g=reopenExpansion(g,id(100)); expect(g.nodes[id(2)]).toBeDefined();
 });
-it("完全なClaimが欠けた応答・キャッシュを片段表示へ変換しない", () => {
-  const a = route(100, 2), response = page([a]), base = emptyPatternGraph(root, relation);
-  expect(() => mergePatternPage(base, { ...response, claims: response.claims.slice(0, 1) }, null)).toThrow();
-  expect(base.nodes).toEqual({ [root.id]: root });
-  const graph = mergePatternPage(base, response, null), broken = { ...graph, cacheClaims: { [response.claims[0].id]: response.claims[0] } };
-  expect(() => projectGraph(broken)).toThrow();
-  expect(() => mergePage(graph, { centerId: root.id, nodes: response.nodes, claims: response.claims, page: { hasMore: false, nextCursor: null } })).toThrow();
+it("起点を閉じると切断した子の枝は休止し、起点再開で同じ枝が戻る", () => {
+  const g=openPatternNode(state(),id(100)), closed=closeExpansion(g,root.id);
+  expect(Object.keys(closed.nodes)).toEqual([root.id]); expect(closed.expansions[id(100)].active).toBe(false);
+  expect(reopenExpansion(closed,root.id).claims).toEqual(g.claims);
 });
-it("候補取得と表示を分け、開く操作が表示上限を超えたら完全経路ごと拒否する", () => {
-  let graph = emptyPatternGraph(root, relation);
-  for (let p = 0; p < 4; p++) {
-    const refs = Array.from({ length: 12 }, (_, n) => route(100 + p * 12 + n, 500 + p * 12 + n));
-    graph = mergePatternPage(graph, page(refs, route(100, 500), `page${p + 1}`), p === 0 ? null : `page${p}`);
-    for (const ref of refs) graph = setPatternRouteOpen(graph, routeKey(ref), true);
-  }
-  expect(Object.keys(graph.nodes)).toHaveLength(97);
-  const refs = [route(200, 600), route(201, 601)];
-  graph = mergePatternPage(graph, page(refs, route(100, 500)), "page4");
-  expect(Object.keys(graph.nodes)).toHaveLength(97);
-  graph = setPatternRouteOpen(graph, routeKey(refs[0]), true);
-  const rejected = setPatternRouteOpen(graph, routeKey(refs[1]), true);
-  expect(rejected.execution).toMatchObject({ blocked: true }); expect(rejected.cacheNodes).toBe(graph.cacheNodes);
-  expect(rejected.nodes).toEqual(graph.nodes); expect(Object.keys(rejected.nodes)).toHaveLength(99);
-  const closed = closePatternNode(rejected, id(100));
-  expect(Object.keys(closed.nodes)).toHaveLength(98);
+it("候補外の指定証拠も検証するが終点を自動展開せず、候補境界は保つ", () => {
+  const refs=Array.from({length:12},(_,n)=>route(100,n+2)), required=route(900,800);
+  const g=mergePatternPage(emptyPatternGraph(root,relation),page(refs,required,"next"),null);
+  expect(g.nodes[id(900)]).toBeDefined(); expect(g.nodes[id(800)]).toBeUndefined(); expect(g.execution).toMatchObject({candidateBoundary:refs[11],nextCursor:"next"});
 });
-it("保持100経路の上限・異なる版／条件／境界の応答を拒否する", () => {
-  const a = route(100, 2), response = page([a]); let graph = mergePatternPage(emptyPatternGraph(root, relation), response, null);
-  expect(() => mergePatternPage(graph, { ...response, revision: "r2" }, null)).toThrow();
-  expect(() => mergePatternPage(graph, response, "not-current")).toThrow();
-  const ex = graph.execution; if (ex?.type !== "pattern") throw Error();
-  graph = { ...graph, execution: { ...ex, routes: Object.fromEntries(Array.from({ length: 100 }, (_, n) => { const r = route(n + 300, n + 700); return [routeKey(r), { route: r, open: false }]; })) } };
-  expect(mergePatternPage(graph, response, null).execution).toMatchObject({ blocked: true });
+it("完全証拠の欠落・否定・役割違い・不正な枝のClaimを拒否する", () => {
+  const body=page([a]); expect(()=>mergePatternPage(emptyPatternGraph(root,relation),{...body,claims:body.claims.slice(0,1)},null)).toThrow();
+  const g=state(); delete g.cacheClaims[a.claimIds[1]]; expect(()=>projectGraph(g)).toThrow();
+  const other=state(); other.expansions[root.id].pages[0].claimIds.push(a.claimIds[1]); expect(()=>projectGraph(other)).toThrow();
 });
-it("restoreは参照と開閉意図を保ち、版変更後の継続は先頭から、旧保存への縮退は禁止", () => {
-  const a = route(100, 2), response = page([a]); const graph = setPatternRouteOpen(mergePatternPage(emptyPatternGraph(root, relation), response, null), routeKey(a), false);
-  const restored = restorePatternGraph(graph, { version: 1, dataset: "public-kg", revision: "r2", relation, root: response.root, nodes: response.nodes, claims: response.claims, operation: "restore", verifiedRoutes: [a], continuation: { state: "restart" } });
-  expect(restored.revision).toBe("r2"); expect(restored.nodes).toEqual({ [root.id]: root }); expect(restored.execution).toMatchObject({ hasMore: true, nextCursor: null });
-  expect(() => restorePatternGraph(graph, { version: 1, dataset: "public-kg", revision: "r2", relation, root: response.root, nodes: [root], claims: [], operation: "restore", verifiedRoutes: [], continuation: { state: "restart" } })).toThrow();
-  expect(captureWorkspace("public-kg", "pattern", graph, null)).toMatchObject({ version: 2, relation, execution: { type: "pattern", routes: [{ route: a, open: false }] } });
-  expect(emptyGraph().execution).toEqual({ type: "adjacent" });
+it("異なる公開版・候補境界を受理せず、表示上限ではcacheとcursorを進めない", () => {
+  let g=emptyPatternGraph(root,relation);
+  for(let p=0;p<8;p++){const refs=Array.from({length:12},(_,n)=>route(100+p*12+n,500+p*12+n)); g=mergePatternPage(g,page(refs,route(100,500),`p${p+1}`),p?`p${p}`:null);}
+  expect(Object.keys(g.nodes)).toHaveLength(97);
+  const rejected=mergePatternPage(g,page(Array.from({length:4},(_,n)=>route(300+n,800+n)),route(100,500)),"p8");
+  expect(rejected.cacheNodes).toBe(g.cacheNodes); expect(rejected.execution).toBe(g.execution); expect(rejected.expansions[root.id].blocked).toBe(true);
+  expect(()=>mergePatternPage(g,{...page([a]),revision:"r2"},"p8")).toThrow(); expect(()=>mergePatternPage(g,page([a]),"wrong")).toThrow();
 });

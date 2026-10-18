@@ -1,5 +1,7 @@
 # プロジェクトの構想と判断基準
 
+2026-10-19、[GraphのEntity操作統一](design/DISCOVERY_GRAPH_ENTITY_INTERACTION.md)でpattern専用のダブル操作・経路開閉・点線ハンドルを廃止。通常GraphのEntity枝・詳細・隣接一覧を共用し、完全経路の成立証拠を保持した段階表示と別作品からの継続を実装する。旧保存は根拠を再検証してEntity枝へ移行。STEP 4・本番・公開KG・収集処理は変更しない。
+
 2026-10-19、[STEP 3bのGraph編集・保存・復元と操作修正](design/DISCOVERY_PATTERN_GRAPH_PERSISTENCE.md)まで実装。patternの初回表示は完全経路1本に抑え、閉じたEntityから同じ経路集合を再開できる。新旧保存互換・元Claim再検証を維持。Discovery接続（STEP 4）・公開KG・収集・正式VPSは今回の範囲外。
 
 2026-10-18、[共通関係条件のSTEP 3a](design/DISCOVERY_PATTERN_GRAPH_EXECUTION.md)として、other-worksの完全経路POST・候補ページ・証拠／取得済み経路の直接再検証、Graphのpattern実行と和集合投影を追加。既存neighborsは肯否省略時の意味と旧cursorを維持する。新しい編集UI・保存形式移行・Discovery接続は未実装で、一般の操作入口へ対応済みと表示しない。公開KG・収集・正式VPSは変更しない。

@@ -13,7 +13,7 @@ import { restorationPositions } from "../lib/client/graph-view";
 import type { GraphView, ViewRestoration } from "../lib/client/graph-view";
 export type GraphCanvasHandle = { capture: () => GraphView | null; focusEntity: (id: string) => void };
 import type { GraphState, Selection } from "../lib/client/graph-state";
-import { graphRootReady, patternNodeOpen } from "../lib/client/graph-state";
+import { graphRootReady } from "../lib/client/graph-state";
 import { entityLabel, edgeRoutes, displayRelations, relationId } from "../lib/client/graph-presentation";
 import { initialPositions, additionalPositions, contentPositions } from "../lib/client/graph-layout";
 import { createNodeClickHandler, createRelationClickHandler } from "../lib/client/graph-interaction";
@@ -95,7 +95,7 @@ export default function GraphCanvas({ compactGuide = false, footerAction, onView
   useEffect(() => { handlers.current = { onEntity, onRelation, onRelationDoubleClick, onToggleEntity, onEntityDoubleClick, selection }; }, [onEntity, onRelation, onRelationDoubleClick, onToggleEntity, onEntityDoubleClick, selection]);
   useEffect(() => { gestures.current?.cancel(); relationGestures.current?.cancel(); }, [graph.generation]);
   useEffect(() => { gestures.current?.selectionChanged(selection?.kind === "entity" ? selection.id : null); }, [selection?.kind, selection?.id]);
-  const selectedOpen = selection?.kind === "entity" ? graph.execution?.type === "pattern" ? patternNodeOpen(graph, selection.id) : graph.expansions[selection.id]?.open : undefined;
+  const selectedOpen = selection?.kind === "entity" ? graph.expansions[selection.id]?.open : undefined;
   useEffect(() => { gestures.current?.cancelPending(); }, [selectedOpen]);
 
   useEffect(() => {
@@ -114,7 +114,6 @@ export default function GraphCanvas({ compactGuide = false, footerAction, onView
         { selector: 'edge[polarity="denied"]', style: { "line-style": "dashed", "line-color": color("denied"), "target-arrow-color": color("denied") } },
         { selector: 'edge[polarity="mixed"]', style: { "line-style": "dotted" } },
         { selector: "node[expanded = 1]", style: { "border-style": "double", "border-width": 4 } },
-        { selector: "node[collapsed = 1]", style: { "border-style": "dashed", "border-color": color("accent") } },
         { selector: "node.added", style: { "underlay-color": color("new-node"), "underlay-opacity": 0.25, "underlay-padding": 10 } },
         { selector: "node.chosen", style: { "border-width": 5, "border-color": color("accent-strong"), "underlay-color": color("accent-strong"), "underlay-opacity": 0.12, "underlay-padding": 8 } },
         { selector: "edge.chosen", style: { "line-color": color("accent-strong"), "target-arrow-color": color("accent-strong"), width: 4, "text-background-color": color("accent-soft"), "z-index": 10 } },
@@ -180,7 +179,7 @@ export default function GraphCanvas({ compactGuide = false, footerAction, onView
     });
     cy.batch(() => {
       cy.add(elements);
-      Object.values(graph.nodes).forEach((node) => cy.getElementById(node.id).data({ expanded: graph.execution?.type === "pattern" ? (patternNodeOpen(graph, node.id) ? 1 : 0) : graph.expansions[node.id]?.expanded ? 1 : 0, collapsed: graph.execution?.type === "pattern" && graph.execution.collapsedNodes?.[node.id] && !patternNodeOpen(graph, node.id) ? 1 : 0 }));
+      Object.values(graph.nodes).forEach((node) => cy.getElementById(node.id).data({ expanded: graph.expansions[node.id]?.expanded ? 1 : 0 }));
       Object.entries(relations).forEach(([id, relation]) => cy.getElementById(id).data({ polarity: relation.polarity, claimIds: relation.claimIds, badge: relation.badge, canvasLabel: relation.canvasLabel, ...routes[id] }));
       if (newNodes.length) { cy.nodes().removeClass("added"); if (!reset && initialLayoutDone.current) newNodes.forEach((node) => cy.getElementById(node.id).addClass("added")); }
       Object.values(graph.nodes).forEach((node) => { const element = cy.getElementById(node.id); element.data("label", entityLabel(node, graph.nodes, locale)); });

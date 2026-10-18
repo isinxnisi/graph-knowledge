@@ -1,6 +1,7 @@
 "use client";
 
 import type { RebuiltWorkspace } from "./saved-workspace";
+import { captureWorkspace, rebuildWorkspace } from "./saved-workspace";
 import { dataReleaseLabels } from "../i18n/data-release";
 import { workspaceLabels } from "../i18n/workspace";
 import { captureExploration, type ExplorationSnapshot } from "./exploration-snapshot";
@@ -17,7 +18,7 @@ import { fetchPatternGraph } from "./pattern-graph";
 import { normalizeRelationCondition, relationConditionKey, type RelationCondition } from "../domain/relation-conditions";
 import { relationText } from "../i18n/relation-condition";
 import type { MatchWitness } from "../domain/relation-patterns";
-import { patternNodeOpen, nextPatternRoute, closeExpansion, reopenExpansion, projectGraph, emptyExpansion, emptyGraph, mergePage, emptyPatternGraph, mergePatternPage, restorePatternGraph, setPatternRouteOpen, setPatternRoutesOpen, type GraphState, type Selection } from "./graph-state";
+import { patternSource, patternSourceForNode, openPatternNode, closeExpansion, reopenExpansion, projectGraph, emptyExpansion, emptyGraph, mergePage, emptyPatternGraph, mergePatternPage, type GraphState, type Selection } from "./graph-state";
 
 export function useGraphExplorer() {
   const [graph, setGraph] = useState<GraphState>(emptyGraph);
@@ -64,7 +65,7 @@ export function useGraphExplorer() {
     if ((await fetchDatasetRevision(signal)).revision !== revision) throw new ClientApiError(dataReleaseLabels().changed, 409);
   }, []);
   const expand = useCallback(async (id: string, more = false) => {
-    if (stale.current || pending.current.has("$transition") || current.current.execution?.type === "pattern") return;
+    if (stale.current || pending.current.has("$transition")) return;
     let state = current.current;
     const meta = state.expansions[id] ?? emptyExpansion();
     if (!state.nodes[id] || pending.current.has(id)) return;
@@ -93,6 +94,23 @@ export function useGraphExplorer() {
     pending.current.set(id, controller); commit(state);
     const valid = () => !controller.signal.aborted && generation.current === epoch && current.current.expansions[id]?.request === request && current.current.expansions[id]?.active;
     try {
+      if (state.execution?.type === "pattern" && state.relation?.type === "pattern") {
+        const sourceId = patternSourceForNode(state, id, more);
+        if (!more && (state.cacheNodes[id].kind !== "work" || patternSource(state, id)) || !sourceId) {
+          await checkRevision(state.revision!, controller.signal);
+          if (valid()) commit(openPatternNode(current.current, id));
+        } else {
+          const sourceKey = `$source:${sourceId}`;
+          if (pending.current.has(sourceKey)) throw Error("同じ範囲を取得中です。完了後に再試行してください。");
+          pending.current.set(sourceKey, controller);
+          const source = patternSource(state, sourceId), proof = source?.requiredRoute ? state.execution.routes[source.requiredRoute]?.route : null;
+          const response = await fetchPatternGraph({ version: 1, dataset: "public-kg", rootId: sourceId, relation: state.relation, revision: state.revision ?? null,
+            operation: { type: "page", after: more ? source?.nextCursor ?? null : null,
+              requiredWitness: proof ? { version: 1, dataset: "public-kg", revision: state.revision!, conditionKey: state.conditionKey, route: proof } : null } }, controller.signal);
+          if (valid()) commit(mergePatternPage(current.current, response, more ? source?.nextCursor ?? null : null, id));
+        }
+        return;
+      }
       const page = state.relation ? await fetchAdjacentNeighbors(id, after, controller.signal, state.relation, state.revision ?? null)
         : await fetchNeighbors(id, after, controller.signal, state.predicates, state.contributionRoles ?? null, state.organizationPositions ?? null, state.eventRoles ?? null, ...(state.revision ? [state.revision] as const : []));
       if (!valid()) return;
@@ -107,6 +125,7 @@ export function useGraphExplorer() {
       } } });
     } finally {
       if (pending.current.get(id) === controller) pending.current.delete(id);
+      for (const [key, value] of pending.current) if (key.startsWith("$source:") && value === controller) pending.current.delete(key);
     }
   }, [commit, checkRevision, invalidate]);
 
@@ -145,44 +164,27 @@ export function useGraphExplorer() {
   }, [commit, invalidate, selection]);
   const cancelRelation = useCallback(() => { pending.current.get("$transition")?.abort(); pending.current.delete("$transition"); setRelationLoading(false); }, []);
   const loadPattern = useCallback(async (restore = false) => {
-    const state = current.current, ex = state.execution;
-    if (state.relation?.type !== "pattern" || ex?.type !== "pattern" || !state.revision || pending.current.has("$transition") || pending.current.has("$pattern") || !restore && (stale.current || !ex.hasMore)) return;
-    const controller = new AbortController(), epoch = generation.current, request = ex.request + 1;
-    pending.current.set("$pattern", controller); commit({ ...state, execution: { ...ex, request, loading: true, error: null, blocked: false } });
-    const valid = () => !controller.signal.aborted && generation.current === epoch && current.current.execution?.type === "pattern" && current.current.execution.request === request;
+    if (!restore) return;
+    const state = current.current;
+    if (state.execution?.type !== "pattern" || pending.current.has("$transition")) return;
+    pending.current.forEach(c => c.abort()); pending.current.clear();
+    const controller = new AbortController(), epoch = generation.current;
+    pending.current.set("$pattern", controller);
+    const clean = { ...state, expansions: Object.fromEntries(Object.entries(state.expansions).map(([id, m]) => [id, { ...m, loading: false }])), execution: { ...state.execution, loading: false } };
     try {
-      const required = ex.requiredRoute ? ex.routes[ex.requiredRoute]?.route : null;
-      const response = await fetchPatternGraph({ version: 1, dataset: "public-kg", rootId: state.centerId!, relation: state.relation, revision: restore ? null : state.revision,
-        operation: restore ? { type: "restore", routes: Object.values(ex.routes).map(r => r.route), observedRevision: state.revision, candidateBoundary: ex.candidateBoundary }
-          : { type: "page", after: ex.nextCursor, requiredWitness: required ? { version: 1, dataset: "public-kg", revision: state.revision, conditionKey: state.conditionKey, route: required } : null } }, controller.signal);
-      if (!valid()) return;
-      const next = restore ? restorePatternGraph(current.current, response) : mergePatternPage(current.current, response, ex.nextCursor);
-      commit(next);
-      if (restore && next.execution?.type === "pattern" && !next.execution.blocked) { stale.current = false; setDataChanged(false); }
+      const saved = captureWorkspace("public-kg", "Revalidate", clean, null);
+      commit({ ...clean, execution: { ...clean.execution, loading: true, error: null } });
+      const rebuilt = await rebuildWorkspace(saved, controller.signal);
+      if (!controller.signal.aborted && generation.current === epoch) {
+        stale.current = false; setDataChanged(false); commit({ ...rebuilt.graph, generation: state.generation });
+      }
     } catch (error) {
-      if (!valid()) return;
-      if (error instanceof ClientApiError && error.status === 409) { invalidate(); return; }
-      const latest = current.current;
-      if (latest.execution?.type === "pattern") commit({ ...latest, execution: { ...latest.execution, loading: false, error: errorMessage(error) } });
+      if (!controller.signal.aborted && generation.current === epoch) {
+        if (error instanceof ClientApiError && error.status === 409) invalidate();
+        else commit({ ...clean, execution: { ...clean.execution, loading: false, error: errorMessage(error) } });
+      }
     } finally { if (pending.current.get("$pattern") === controller) pending.current.delete("$pattern"); }
   }, [commit, invalidate]);
-  const openPatternRoutes = useCallback(async (keys: string[]) => {
-    const state = current.current, ex = state.execution;
-    if (ex?.type !== "pattern" || keys.some(key => !ex.routes[key]) || stale.current || pending.current.has("$transition")) return;
-    for (const id of ["$pattern", "$route"]) { pending.current.get(id)?.abort(); pending.current.delete(id); }
-    commit({ ...state, execution: { ...ex, loading: false, request: ex.request + 1 } });
-    const epoch = generation.current, controller = new AbortController(); pending.current.set("$route", controller);
-    try { await checkRevision(state.revision!, controller.signal); if (!controller.signal.aborted && generation.current === epoch) commit(setPatternRoutesOpen(current.current, keys, true)); }
-    catch (error) { if (!controller.signal.aborted && generation.current === epoch) { if (error instanceof ClientApiError && error.status === 409) invalidate(); else commit({ ...current.current, notice: errorMessage(error) }); } }
-    finally { if (pending.current.get("$route") === controller) pending.current.delete("$route"); }
-  }, [checkRevision, commit, invalidate]);
-  const togglePatternRoute = useCallback(async (key: string) => {
-    const state = current.current, ex = state.execution;
-    if (ex?.type !== "pattern" || !ex.routes[key] || stale.current || pending.current.has("$transition")) return;
-    if (!ex.routes[key].open) { await openPatternRoutes([key]); return; }
-    for (const id of ["$pattern", "$route"]) { pending.current.get(id)?.abort(); pending.current.delete(id); }
-    commit(setPatternRouteOpen(state, key, false));
-  }, [commit, openPatternRoutes]);
 
   const chooseRoot = useCallback((entity: EntitySummary, resetConditions = false) => {
     if (!resetConditions && current.current.relation) { void applyRelation(entity, current.current.relation); return; }
@@ -294,24 +296,19 @@ export function useGraphExplorer() {
   }, []);
   const close = useCallback((id: string) => {
     if (pending.current.has("$transition")) return;
-    if (current.current.execution?.type === "pattern") for (const key of ["$pattern", "$route"]) { pending.current.get(key)?.abort(); pending.current.delete(key); }
-    commit(closeExpansion(current.current, id));
+    const state = current.current;
+    if (state.execution?.type === "pattern") { pending.current.get("$pattern")?.abort(); pending.current.delete("$pattern"); }
+    commit(closeExpansion(state.execution?.type === "pattern" ? { ...state, execution: { ...state.execution, loading: false } } : state, id));
   }, [commit]);
   const toggleEntity = useCallback((id: string) => {
     if (!current.current.nodes[id]) return;
-    if (current.current.execution?.type === "pattern") { if (patternNodeOpen(current.current, id)) close(id); else { const key = nextPatternRoute(current.current, id); if (key) void openPatternRoutes(current.current.execution.collapsedNodes?.[id] ?? [key]); } return; }
     if (current.current.expansions[id]?.open) close(id); else void expand(id);
-  }, [close, expand, openPatternRoutes]);
-  const openNextPatternRoute = useCallback((id: string) => {
-    if (!current.current.nodes[id]) return;
-    const key = nextPatternRoute(current.current, id);
-    if (key) void togglePatternRoute(key);
-  }, [togglePatternRoute]);
+  }, [close, expand]);
   const reloadData = useCallback(() => {
     const state = current.current;
     if (state.execution?.type === "pattern") { void loadPattern(true); return; }
     const root = state.centerId ? state.cacheNodes[state.centerId] : null;
     if (root) chooseRoot(root);
   }, [chooseRoot, loadPattern]);
-  return { openNextPatternRoute, applyRelation, cancelRelation, relationLoading, loadPattern, togglePatternRoute, invalidateData: invalidate, dataChanged, reloadData, graph, selection, previous, viewRestoration, switchRoot, restorePrevious, openSavedView, openWorkspace, changePredicates, chooseRoot, inspectEntity, selectEntity, selectClaim, selectRelation, expand, close, toggleEntity };
+  return { applyRelation, cancelRelation, relationLoading, loadPattern, invalidateData: invalidate, dataChanged, reloadData, graph, selection, previous, viewRestoration, switchRoot, restorePrevious, openSavedView, openWorkspace, changePredicates, chooseRoot, inspectEntity, selectEntity, selectClaim, selectRelation, expand, close, toggleEntity };
 }

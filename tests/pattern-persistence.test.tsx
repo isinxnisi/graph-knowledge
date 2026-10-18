@@ -8,7 +8,7 @@ import { deflateSync, strToU8 } from "fflate";
 import { captureWorkspace, readWorkspaces, writeWorkspace, rebuildWorkspace, restartWorkspace, parseWorkspaceBackup, legacyWorkspaceKey, workspaceKey } from "../lib/client/saved-workspace";
 import { editSavedViews, readSavedViews, exportSavedViews, importSavedViews, legacySavedViewsKey, savedViewsKey, type SavedView } from "../lib/client/saved-views";
 import { decodeExploration, encodeExploration, rebuildExplorationUrl, explorationHref } from "../lib/client/exploration-url";
-import { emptyPatternGraph, mergePatternPage, setPatternRouteOpen } from "../lib/client/graph-state";
+import { emptyPatternGraph, mergePatternPage, openPatternNode, projectGraph } from "../lib/client/graph-state";
 import { routeKey } from "../lib/domain/pattern-graph";
 import { PREDICATE_KEYS } from "../lib/domain/predicates";
 import { relationConditionKey } from "../lib/domain/relation-conditions";
@@ -19,7 +19,11 @@ import { root, id, relation, route, page } from "./pattern-graph-fixture";
 
 const a = route(100, 2), b = route(100, 3), body = page([a, b]);
 const view = { positions: { [root.id]: { x: 25, y: 51 }, [id(3)]: { x: 82, y: 11 } }, pan: { x: 5, y: 8 }, zoom: .7, initialLayoutDone: true };
-const state = () => setPatternRouteOpen(setPatternRouteOpen(mergePatternPage(emptyPatternGraph(root, relation), body, null), routeKey(b), true), routeKey(a), false);
+const state = () => {
+  const g = openPatternNode(mergePatternPage(emptyPatternGraph(root, relation), body, null), id(100));
+  // A migrated old route-open save owns only the retained endpoint Claim.
+  return projectGraph({ ...g, expansions: { ...g.expansions, [id(100)]: { ...g.expansions[id(100)], pages: [{ after: null, claimIds: [b.claimIds[1]], nextCursor: null }] } } });
+};
 const saved = () => captureWorkspace("public-kg", "経路を再訪", state(), view);
 const signal = () => new AbortController().signal;
 const response = (data: unknown, status = 200) => new Response(JSON.stringify(data), { status });
@@ -82,7 +86,7 @@ describe("patternの保存と原子的復元", () => {
     fetchMock.mockImplementation(async url => String(url).includes("paths") ? response(page([route(101, 4)])) : response({ entity: body.root }));
     const fresh = await restartWorkspace(saved(), signal());
     expect(fresh.graph.centerId).toBe(root.id); expect(fresh.graph.relation).toEqual(relation);
-    expect(fresh.graph.nodes[id(4)]).toBeDefined(); expect(fresh.graph.nodes[id(2)]).toBeUndefined();
+    expect(fresh.graph.cacheNodes[id(4)]).toBeDefined(); expect(fresh.graph.nodes[id(2)]).toBeUndefined();
     expect(JSON.parse(String(fetchMock.mock.calls[1][1]?.body)).operation).toEqual({ type: "page", after: null, requiredWitness: null });
   });
   it.each(["variant", "root", "duplicate", "required", "boundary", "pattern-revision", "dataset"])("保存の意味が不整合なら拒否する: %s", mode => {
@@ -218,7 +222,7 @@ it("共有URLの経路欠落を正常復元にせず、明示再開だけが同�
   act(() => result.current.restart());
   await waitFor(() => expect(apply).toHaveBeenCalledOnce());
   expect(apply.mock.calls[0][0].graph).toMatchObject({ centerId: root.id, relation });
-  expect(apply.mock.calls[0][0].graph.nodes[id(4)]).toBeDefined();
+  expect(apply.mock.calls[0][0].graph.cacheNodes[id(4)]).toBeDefined();
   expect(result.current.failure).toBeNull();
 });
 

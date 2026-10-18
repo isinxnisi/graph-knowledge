@@ -7,7 +7,7 @@
 1. プリセットは入口の編集カタログ、対象検索は開始Entityの検索、関係条件は対象非依存の意味定義。世界・掲載順・検索語・Graphの座標を関係条件に混ぜない。
 2. 共通条件は `adjacent | pattern`。対象検索では条件の存在判定、Graphでは一致記録／完全経路の取得・表示を行う。実行処理は分ける。
 3. 初回の新しいpattern対応は **other-works revision 1（同じつくり手の別作品）だけ**。全段affirmed。関係パターンをpredicate配列に縮退させない。
-4. pattern Graphは一致する完全経路の和集合を表示。通常の一段展開は自由探索へ明示的に切り替えて使う。従来の一段・否定を含む探索は維持。
+4. patternは完全経路で成立を検証し、Graphは通常探索と同じEntity単位の枝を段階的に展開する（2026-10-19操作統一）。表示する全Claimに完全経路の証拠を保持し、推論Edgeは作らない。従来の一段・否定を含む探索は維持。
 5. 対象未指定プリセットは名前空欄の成立対象一覧へ進む。代表対象を自動選択しない。対象指定済みは対象検索を省略できる。
 6. 完全な存在判定前に近傍20件等で打ち切って不一致としない。deadlineによる未確認を0件へ変換しない。検索で確認した証拠をGraphで表示できるところまでを段階的に完成させる。
 
@@ -248,11 +248,15 @@ Graphの正規条件は`relation: RelationConditionV1`の一箇所に持つ。�
 | execution variant | 状態／表示 |
 | --- | --- |
 | adjacent | 既存の受理済み近傍ページ・枝開閉・cursor・cacheから投影。全枝で共通の一段条件 |
-| pattern | 検証済みRouteRef、経路ごとのopen意図、requiredRouteキー、取得ページ・cursorを保持。openな完全経路のEntity／Claimの和集合を投影 |
+| pattern | 各作品を基準とする検証済みRouteRefと候補境界・cursorを保持。Entity単位のexpansionsで、接続する検証済みClaimを所有する。起点から到達できるopenな枝のClaimを投影 |
 
-patternの記録をcacheへ入れただけで通常の近傍ページ取得済みと偽装しない。経路を閉じれば全段を表示対象から外す。ノード単位で閉じる場合は「この対象を含む経路を閉じる」とし、影響する完全経路をまとめて閉じる。残りの経路が共有するノード・Claimは残す。上限によりページを受理できなければ状態・cursorを進めず、閉じる／再試行を案内する。
+**2026-10-19の操作統一で、従来の経路単位open・初回1本・点線ハンドルを置換する。** 完全経路は成立証拠の単位であり、画面の開閉単位ではない。初回は通常探索と同様に起点の枝を開き、成立証拠に含まれる直接接続だけを表示する。中継人物を展開すると、その人物に接続する検証済みClaimを表示する。別作品を展開すると同じ条件でその作品を基準に完全経路を取得する。起点の変更や自由探索への切替は行わない。
 
-2026-10-19の操作修正：初回はrequiredRoute（なければ最初の候補）1本だけを開き、残りと追加ページは検証済み・未表示として保持する。取得済みと表示中の件数を区別する。Entityで閉じた場合は、そのEntityを線のない再開用ハンドルとして残し、閉じたときのopen経路集合を記憶する。再開は同じ集合を一括で復帰し、表示上限に収まらなければ全体を拒否する。「経路をもう1本開く」と経路一覧では1本ずつ追加できる。起点を閉じた場合は他の孤立ハンドルを取り除く。ハンドルは元Claimを検証した参照に属するEntityだけで、部分経路・新しい関係を表さない。線は常にopenな完全経路の和集合とする。
+Entityの選択・選択後の開閉・ダブルクリック／ダブルタップの関係概要・展開済み表示・隣接一覧・詳細のボタン・配置／zoomは通常Graphと同じ処理を使う。閉じるのはそのEntityが所有する枝だけで、親や別のopenな枝が必要とするEntity／Claimは残る。切断した子の枝は休止し、親の再開で復帰する。孤立した再開Entityや経路追加専用ボタンは作らない。
+
+検証済みClaimの一部だけが表示される場合も、**完全経路全体を元Claim・方向・Role・肯否・非再訪・revisionで検証してから**cacheへ受理する。部分的な成立証拠を許す変更ではない。枝のClaimは、そのEntityに接続し、受理済み完全経路に属する必要がある。経路一覧は証拠の確認用であり、開閉操作を要求しない。未取得範囲は通常の隣接一覧／詳細の追加取得から取得する。
+
+作品ごとに既存POSTのpage／restoreを使い、最大40作品・合計100経路と既存の表示／cache上限を守る。中継人物の追加取得は、その人物を含む既知の証拠元作品の残ページを順に取得する。全KGや全人物の全作品を網羅したとは表示しない。表示予算で受理できないページでは証拠・cache・cursorを進めない。詳しい実装と旧保存の移行は[Graph操作統一](DISCOVERY_GRAPH_ENTITY_INTERACTION.md)を参照。
 
 ### 編集の操作契約
 
@@ -266,7 +270,7 @@ patternの記録をcacheへ入れただけで通常の近傍ページ取得済�
 
 other-worksから「制作の関係を自由に辿る」へ切り替えると、同じroot、adjacent、CONTRIBUTED_TO、同じRole集合、**affirmedを維持**し、2段の形だけを外す。否定も見る／他関係も見る操作はその後の明示編集。条件変更と同じUndoでpatternへ戻れる。
 
-pattern内のノード選択は詳細閲覧で、通常の近傍展開を自動実行しない。任意ノードから自由に進む操作はrootの変更も表示して切り替える。自由探索の既存展開・閉じる・追加取得・最短経路・根拠機能はadjacentで維持する。patternは新しい直接Edgeを生成しない。
+pattern内のEntity選択も通常探索と同じ選択・展開処理を使う。条件に一致する接続だけを展開し、通常neighborsへ暗黙変換しない。明示した自由探索への切替は、完全経路の成立条件を外して制作Claimを探索する別操作である。patternは新しい直接Edgeを生成しない。
 
 ## 8. 保存・URL・旧データの互換性
 
@@ -291,7 +295,12 @@ type SavedExecutionV2 =
   | { type: "adjacent"; branches: LegacyBranch[] }
   | { type: "pattern"; routes: { route: RouteRefV1; open: boolean }[];
       requiredRouteKey: string | null; candidateBoundary: RouteRefV1 | null;
-      collapsedNodes?: { id: UUID; routeKeys: string[] }[] };
+      // 旧入力互換のみ。新規保存では使わない。
+      collapsedNodes?: { id: UUID; routeKeys: string[] }[];
+      entityState?: { version: 1;
+        branches: { id: UUID; open: boolean; claimIds: UUID[] }[];
+        sources: { id: UUID; requiredRouteKey: string | null;
+          candidateBoundary: RouteRefV1 | null }[] } };
 type SavedWorkspaceV2 = {
   version: 2; dataset: DatasetMode; id: UUID; title: string; savedAt: string;
   rootId: UUID; relation: RelationConditionV1; execution: SavedExecutionV2;
@@ -299,9 +308,11 @@ type SavedWorkspaceV2 = {
 };
 ```
 
-executionとrelationのvariant不一致、patternの他root参照、経路重複、参照にないrequiredRouteKeyは拒否する。candidateBoundaryは実際に受理した候補に属する。ページ取得拒否時には更新しない。受理済み参照を保存できないcache上限で黙って捨てず、解除・再試行を案内する。
+executionとrelationのvariant不一致、経路重複、参照にないrequiredRouteKey／candidateBoundaryを拒否する。entityStateがない旧入力では全経路のrootを旧起点に限定。新入力ではsourcesに明示した各作品のRouteRefを許し、requiredRouteKey／境界が同じ作品の参照であることを照合する。Entity枝のClaimが受理済み経路に属し、そのEntityへ直接接続することを検証する。未知のentityState版・重複Entity／source・未検証Claimは拒否する。
 
-`collapsedNodes`は再開用Entityと受理済み経路キー集合の任意メタデータ（2026-10-19追加）。Entity重複、空／重複／未知キー、そのEntityを通らない経路を拒否し、全経路の元Claim再検証後にだけ復元する。旧v2の省略時はハンドルなしとし、旧保存のopen状態を維持する。保存版・storage keyは変えない。新しいメタデータを知らない旧strict readerでの読み取りは保証せず、未対応入力として拒否させる。旧形式への縮退書き戻しはしない。
+`entityState`は新しいEntity単位操作の実行メタデータ（version 1）。経路のopenは表示中の全Claimが揃うかの派生値で、開閉意図はbranchesに置く。本文・cursor・通信状態は保存しない。各sourceを既存POST restoreで逐次検証し、最初に得た現公開revisionを後続要求へ固定、複数作品では最後にも版を確認する。全件成功後だけ一括投影し、途中の不一致・欠落・版衝突を部分復元にしない。
+
+旧v2は無書込で読み、元Claimを全件再検証後、経路のopenを起点・中継Entityの枝へ移す。旧collapsedNodesは参照を持つ休止枝へ変換し、孤立した再開ハンドルを再生成しない。根拠参照と条件を保ちつつ通常Graphの到達性に従うため、旧ハンドルの見た目は再現しない。旧保存そのものは変更しない。Workspace／URLの外側の版・storage keyは維持し、新メタデータを知らない旧strict readerでの前方互換は保証しない。旧形式への縮退書き戻しはしない。
 
 URL payload v2は固定キー`{v:2,d:dataset,r:rootId,c:relation,x:execution,o:observedRevision,p:座標tuple配列,z:zoom,l:初回配置済み}`。旧v1の`b`は旧decoderだけが扱う。URLは保存名・日時・pan・選択・通信cursorを含めず、現版での再検証という従来の責務を維持する。保存View v2は従来のid／title／rootId／createdAtを維持し、conditionsをrelationへ置換する。executionは持たない。
 

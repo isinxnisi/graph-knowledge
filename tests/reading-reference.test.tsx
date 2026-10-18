@@ -25,6 +25,18 @@ beforeEach(() => {
 afterEach(() => { cleanup(); vi.clearAllMocks(); vi.restoreAllMocks(); });
 
 describe("閲覧URLはdataset・種別・IDだけを参照する", () => {
+  it("探索内の証拠リンクは言語・起点・保存状態を保ち、通常リンクは従来の単独URLを使う", () => {
+    const original = `/en/explore/${claim.subjectId}?s=saved-state`;
+    window.history.replaceState(null, "", original);
+    const { rerender } = render(<ReadingLink reference={reference} preserveExploration>証拠</ReadingLink>);
+    fireEvent.click(screen.getByRole("link", { name: "証拠" }));
+    expect(window.location.pathname).toBe(`/en/explore/${claim.subjectId}`);
+    expect(new URLSearchParams(window.location.search).get("s")).toBe("saved-state");
+    expect(withoutReadingReference(new URL(window.location.href))).toBe(original);
+    rerender(<ReadingLink reference={reference}>単独</ReadingLink>);fireEvent.click(screen.getByRole("link", { name: "単独" }));
+    expect(window.location.pathname + window.location.search).toBe(readingHref(reference));
+    window.history.replaceState(null, "", "/");
+  });
   it.each(DATASET_MODES)("%sのEntity／独立Claimを同じdatasetで解決する", dataset => {
     for (const kind of ["entity", "claim"] as const) {
       const ref = { kind, dataset, id: kind === "entity" ? claim.subjectId : claim.id };
