@@ -1,0 +1,95 @@
+{
+  "schemaVersion": 2,
+  "id": "manga-r0004",
+  "catalog": "docs/research/famous-manga-creators/20261016/candidates.json",
+  "baseRelease": "datasets/public-kg/releases/20261014-credits-001",
+  "stamp": "2026-10-18T18:54:58+00:00",
+  "requestPolicy": {
+    "maxAttempts": 142,
+    "attemptsPerRequest": 2,
+    "minIntervalSeconds": 3,
+    "timeoutSeconds": 20,
+    "maxBytes": 4194304
+  },
+  "outputPolicy": {
+    "maxNewEntities": 4,
+    "maxNewClaims": 9,
+    "newClaimVisibility": "hidden"
+  },
+  "people": [
+    {
+      "name": "浦沢直樹",
+      "catalogName": "浦沢直樹",
+      "wikidata": "Q348436",
+      "identityNames": [
+        "浦沢直樹"
+      ],
+      "creditNames": [
+        "浦沢直樹"
+      ]
+    }
+  ],
+  "works": [
+    {
+      "name": "MONSTER",
+      "wikidata": "Q858384",
+      "identityNames": [
+        "MONSTER"
+      ],
+      "isbn13": "9784091836519",
+      "ndlMainTitles": [
+        "Monster"
+      ],
+      "expectedVolume": [
+        "1 (ヘルDr.テンマ)"
+      ],
+      "expectedEdition": [],
+      "volumeLabel": "第1巻（NDL巻次 1 (ヘルDr.テンマ)）",
+      "editionLabel": null,
+      "identityNote": "Issueの名称とWikidataの完全一致・漫画型、NDL作成書誌の主書名・責任表示・巻次を照合。作品全体の担当へ外挿しない。",
+      "selectionReason": "承認済みIssue内の同作者経路の拡張。"
+    },
+    {
+      "name": "20世紀少年",
+      "wikidata": "Q91458",
+      "identityNames": [
+        "20世紀少年"
+      ],
+      "isbn13": "9784091855312",
+      "ndlMainTitles": [
+        "20世紀少年"
+      ],
+      "expectedVolume": [
+        "1"
+      ],
+      "expectedEdition": [],
+      "volumeLabel": "第1巻（NDL巻次 1）",
+      "editionLabel": null,
+      "identityNote": "Issueの名称とWikidataの完全一致・漫画型、NDL作成書誌の主書名・責任表示・巻次を照合。作品全体の担当へ外挿しない。",
+      "selectionReason": "承認済みIssue内の同作者経路の拡張。"
+    },
+    {
+      "name": "YAWARA!",
+      "wikidata": "Q528619",
+      "identityNames": [
+        "YAWARA!"
+      ],
+      "isbn13": "9784091813411",
+      "ndlMainTitles": [
+        "Yawara!"
+      ],
+      "expectedVolume": [
+        "1"
+      ],
+      "expectedEdition": [],
+      "volumeLabel": "第1巻（NDL巻次 1）",
+      "editionLabel": null,
+      "identityNote": "Issueの名称とWikidataの完全一致・漫画型、NDL作成書誌の主書名・責任表示・巻次を照合。作品全体の担当へ外挿しない。",
+      "selectionReason": "承認済みIssue内の同作者経路の拡張。"
+    }
+  ],
+  "reviewArtifacts": [
+    "datasets/manga-collection/r0004/anchor-review.json",
+    "datasets/manga-collection/r0004/publication-review.json"
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "scope": "specified-japanese-volume-1-isbn-only",
+  "publications": [
+    {
+      "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I000002609338",
+      "isbn13": [
+        "9784091941114"
+      ],
+      "title": [
+        "パーマン. 1"
+      ],
+      "mainTitles": [
+        "パーマン"
+      ],
+      "volume": [
+        "1"
+      ],
+      "edition": [],
+      "responsibilities": [
+        "藤子・F・不二雄 著"
+      ],
+      "publisher": [
+        "小学館"
+      ],
+      "language": [
+        "jpn"
+      ],
+      "genre": [
+        "児童図書",
+        "漫画"
+      ],
+      "issued": "1997.7",
+      "searchTruncated": false,
+      "selectionBoundary": "representative-first-volume-among-observed-records-not-original-edition"
+    }
+  ]
+}

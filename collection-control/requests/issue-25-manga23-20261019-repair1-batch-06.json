@@ -1,0 +1,80 @@
+{
+  "schemaVersion": 1,
+  "id": "issue-25-manga23-20261019-repair1-batch-06",
+  "kind": "collect-review",
+  "status": "approved",
+  "sourceCommit": "916cc77d3aeab22650e309b694661cac07a72a47",
+  "parentRequestId": "issue-25-manga23-20261019-repair1",
+  "applyAuthorized": {
+    "local": false,
+    "beta": false,
+    "vps": false
+  },
+  "approvalScope": "collection-candidates-and-review-only",
+  "humanDecision": {
+    "actorType": "human",
+    "reviewer": "プロジェクト運営者",
+    "decidedAt": "2026-10-19T02:52:00+09:00",
+    "statement": "Issue #25の2026-10-19 02:52 JST先行許可を転記。明示された23作品・人物の同定、QID・日本語代表ISBN探索、recipe生成、hidden候補収集と根拠・保留・レビュー資料生成を承認。Wikidata構造化データとNDL作成書誌だけを用い、準備・収集合計142試行、同一要求2試行、逐次3秒、20秒、4MiB以内。既設時間帯・10分休憩で途中開始・数日継続を許可。同一範囲の再承認は不要。不確かな同定・資料不足・範囲外は保留。個別正式受入・公開apply・VPS配置・会員DB変更は承認しない。"
+  },
+  "issueOrigin": {
+    "repository": "isinxnisi/graph-knowledge",
+    "issueNumber": 25,
+    "approvalId": "manga23-20261019",
+    "permissionSha256": "673d380b4fb61ab2cdef204140d63a47bbf25dbb288199f25d0e3ae740ef11b3",
+    "issueBodySha256": "5f302ff42139b5230da70d38734577da414a3b89a24a82f90302e0297afc3c69"
+  },
+  "target": {
+    "themeId": "issue-25-manga23-20261019-repair1",
+    "revision": 6,
+    "definitionSha256": "e1994692ad83d4f9e0d0fd0188ad8c6f9fcedc3713407b7609ceb45784c1271e",
+    "execution": {
+      "adapter": "manga-discovery-v2",
+      "codeSha256": "80e05b67bc0129b963653b90df4cfbfa5bd6aff190acda99f54c08541e55801e",
+      "inputs": [
+        {
+          "file": "datasets/manga-collection/r0012/recipe.json",
+          "sha256": "c5406e8709bf721a1d6ccd599d7d527e3306597eb3ab07ad48f0c55db2d2e9a3"
+        },
+        {
+          "file": "datasets/manga-collection/r0012/anchor-review.json",
+          "sha256": "e16cafd1f19b4abdf21944a65a9099d0103481b1633e765be100cc1d52cb89a5"
+        },
+        {
+          "file": "datasets/manga-collection/r0012/publication-review.json",
+          "sha256": "7c6f978c818a482c5a98e0b38fdeabd5346635b5397e12157786a9693ad4964a"
+        },
+        {
+          "file": "docs/research/famous-manga-creators/20261016/candidates.json",
+          "sha256": "8531fada01e5c635ba2ee278a7ef944a73f64676af14ed42ae0e690f5a1ff978"
+        },
+        {
+          "file": "datasets/public-kg/releases/20261014-credits-001/data.json",
+          "sha256": "ea91b16f52a211b5a8464382ad498b7b2bb2be69a6f33fe125a73a3c7b9da2b5"
+        },
+        {
+          "file": "datasets/public-kg/releases/20261014-credits-001/manifest.json",
+          "sha256": "e4aa3b58ed884f7d1f8fffee43b260261cc2b4d3a867fda942919f439d2bce17"
+        }
+      ],
+      "maxEntities": 2111,
+      "maxClaims": 1847
+    },
+    "targets": {
+      "people": [
+        {
+          "name": "荒川弘",
+          "qid": "Q230962"
+        }
+      ],
+      "works": [
+        {
+          "name": "黄泉のツガイ",
+          "qid": "Q111944796",
+          "isbn13": "9784757579620"
+        }
+      ]
+    },
+    "existingApprovalSha256": "cb5ea88aee39a8f772177f04d7e244079ad1d3b925babfd5c5a637ee67c0c322"
+  }
+}

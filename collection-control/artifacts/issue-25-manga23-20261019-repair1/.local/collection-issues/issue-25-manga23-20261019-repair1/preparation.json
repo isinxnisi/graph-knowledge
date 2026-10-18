@@ -1,0 +1,890 @@
+{
+  "schemaVersion": 1,
+  "status": "prepared-candidates-not-accepted",
+  "issueOrigin": {
+    "repository": "isinxnisi/graph-knowledge",
+    "issueNumber": 25,
+    "approvalId": "manga23-20261019",
+    "permissionSha256": "673d380b4fb61ab2cdef204140d63a47bbf25dbb288199f25d0e3ae740ef11b3",
+    "issueBodySha256": "5f302ff42139b5230da70d38734577da414a3b89a24a82f90302e0297afc3c69"
+  },
+  "counts": {
+    "approvedWorks": 23,
+    "preparedWorks": 17,
+    "preparedPeople": 10,
+    "batches": 10,
+    "holds": 6,
+    "networkAttempts": 89
+  },
+  "holds": [
+    {
+      "target": "NARUTO",
+      "person": "岸本斉史",
+      "reason": "No dated, exact first-volume Japanese manga publication"
+    },
+    {
+      "target": "かぐや様は告らせたい",
+      "person": "赤坂アカ",
+      "reason": "Exact name/type QID is not unique: かぐや様は告らせたい"
+    },
+    {
+      "target": "ジョジョの奇妙な冒険 第1部 ファントムブラッド",
+      "person": "荒木飛呂彦",
+      "reason": "Exact name/type QID is not unique: ジョジョの奇妙な冒険 第1部 ファントムブラッド"
+    },
+    {
+      "target": "鋼の錬金術師",
+      "person": "荒川弘",
+      "reason": "ISBN lookup does not uniquely preserve selected publication"
+    },
+    {
+      "target": "銀の匙 Silver Spoon",
+      "person": "荒川弘",
+      "reason": "No dated, exact first-volume Japanese manga publication"
+    },
+    {
+      "target": "キテレツ大百科",
+      "person": "藤子・F・不二雄",
+      "reason": "Exact name/type QID is not unique: キテレツ大百科"
+    }
+  ],
+  "batchRequests": [
+    {
+      "schemaVersion": 1,
+      "id": "issue-25-manga23-20261019-repair1-batch-01",
+      "kind": "collect-review",
+      "status": "approved",
+      "sourceCommit": "916cc77d3aeab22650e309b694661cac07a72a47",
+      "parentRequestId": "issue-25-manga23-20261019-repair1",
+      "applyAuthorized": {
+        "local": false,
+        "beta": false,
+        "vps": false
+      },
+      "approvalScope": "collection-candidates-and-review-only",
+      "humanDecision": {
+        "actorType": "human",
+        "reviewer": "プロジェクト運営者",
+        "decidedAt": "2026-10-19T02:52:00+09:00",
+        "statement": "Issue #25の2026-10-19 02:52 JST先行許可を転記。明示された23作品・人物の同定、QID・日本語代表ISBN探索、recipe生成、hidden候補収集と根拠・保留・レビュー資料生成を承認。Wikidata構造化データとNDL作成書誌だけを用い、準備・収集合計142試行、同一要求2試行、逐次3秒、20秒、4MiB以内。既設時間帯・10分休憩で途中開始・数日継続を許可。同一範囲の再承認は不要。不確かな同定・資料不足・範囲外は保留。個別正式受入・公開apply・VPS配置・会員DB変更は承認しない。"
+      },
+      "issueOrigin": {
+        "repository": "isinxnisi/graph-knowledge",
+        "issueNumber": 25,
+        "approvalId": "manga23-20261019",
+        "permissionSha256": "673d380b4fb61ab2cdef204140d63a47bbf25dbb288199f25d0e3ae740ef11b3",
+        "issueBodySha256": "5f302ff42139b5230da70d38734577da414a3b89a24a82f90302e0297afc3c69"
+      },
+      "target": {
+        "themeId": "issue-25-manga23-20261019-repair1",
+        "revision": 1,
+        "definitionSha256": "fb9a92eab29d0cb18be3b248f051b3fe75f9bed6b3ee742e344ed3eab0fe2bcf",
+        "execution": {
+          "adapter": "manga-discovery-v2",
+          "codeSha256": "80e05b67bc0129b963653b90df4cfbfa5bd6aff190acda99f54c08541e55801e",
+          "inputs": [
+            {
+              "file": "datasets/manga-collection/r0004/recipe.json",
+              "sha256": "1bd3f9f3b51c991942038cc27efd3633edaaaa2b07584618777ce1f46006ea0f"
+            },
+            {
+              "file": "datasets/manga-collection/r0004/anchor-review.json",
+              "sha256": "205f6fd7ca7459ca316268a324c899ab0763a1872a368d4df30214ee0abd6a61"
+            },
+            {
+              "file": "datasets/manga-collection/r0004/publication-review.json",
+              "sha256": "6e1eda0cac761c8be21cb8687e5c785042a08f5df3645f9840edcfcd38cfbcfd"
+            },
+            {
+              "file": "docs/research/famous-manga-creators/20261016/candidates.json",
+              "sha256": "8531fada01e5c635ba2ee278a7ef944a73f64676af14ed42ae0e690f5a1ff978"
+            },
+            {
+              "file": "datasets/public-kg/releases/20261014-credits-001/data.json",
+              "sha256": "ea91b16f52a211b5a8464382ad498b7b2bb2be69a6f33fe125a73a3c7b9da2b5"
+            },
+            {
+              "file": "datasets/public-kg/releases/20261014-credits-001/manifest.json",
+              "sha256": "e4aa3b58ed884f7d1f8fffee43b260261cc2b4d3a867fda942919f439d2bce17"
+            }
+          ],
+          "maxEntities": 2113,
+          "maxClaims": 1853
+        },
+        "targets": {
+          "people": [
+            {
+              "name": "浦沢直樹",
+              "qid": "Q348436"
+            }
+          ],
+          "works": [
+            {
+              "name": "MONSTER",
+              "qid": "Q858384",
+              "isbn13": "9784091836519"
+            },
+            {
+              "name": "20世紀少年",
+              "qid": "Q91458",
+              "isbn13": "9784091855312"
+            },
+            {
+              "name": "YAWARA!",
+              "qid": "Q528619",
+              "isbn13": "9784091813411"
+            }
+          ]
+        },
+        "existingApprovalSha256": "44507d28afe34f8581067fd8292f2438c746e8158b6093bc51fad7d7579eb8c0"
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "issue-25-manga23-20261019-repair1-batch-02",
+      "kind": "collect-review",
+      "status": "approved",
+      "sourceCommit": "916cc77d3aeab22650e309b694661cac07a72a47",
+      "parentRequestId": "issue-25-manga23-20261019-repair1",
+      "applyAuthorized": {
+        "local": false,
+        "beta": false,
+        "vps": false
+      },
+      "approvalScope": "collection-candidates-and-review-only",
+      "humanDecision": {
+        "actorType": "human",
+        "reviewer": "プロジェクト運営者",
+        "decidedAt": "2026-10-19T02:52:00+09:00",
+        "statement": "Issue #25の2026-10-19 02:52 JST先行許可を転記。明示された23作品・人物の同定、QID・日本語代表ISBN探索、recipe生成、hidden候補収集と根拠・保留・レビュー資料生成を承認。Wikidata構造化データとNDL作成書誌だけを用い、準備・収集合計142試行、同一要求2試行、逐次3秒、20秒、4MiB以内。既設時間帯・10分休憩で途中開始・数日継続を許可。同一範囲の再承認は不要。不確かな同定・資料不足・範囲外は保留。個別正式受入・公開apply・VPS配置・会員DB変更は承認しない。"
+      },
+      "issueOrigin": {
+        "repository": "isinxnisi/graph-knowledge",
+        "issueNumber": 25,
+        "approvalId": "manga23-20261019",
+        "permissionSha256": "673d380b4fb61ab2cdef204140d63a47bbf25dbb288199f25d0e3ae740ef11b3",
+        "issueBodySha256": "5f302ff42139b5230da70d38734577da414a3b89a24a82f90302e0297afc3c69"
+      },
+      "target": {
+        "themeId": "issue-25-manga23-20261019-repair1",
+        "revision": 2,
+        "definitionSha256": "fa7388c5c6d690ecaea9eb110b87ac2f7bff457bf72129937aa19df79d0b3012",
+        "execution": {
+          "adapter": "manga-discovery-v2",
+          "codeSha256": "80e05b67bc0129b963653b90df4cfbfa5bd6aff190acda99f54c08541e55801e",
+          "inputs": [
+            {
+              "file": "datasets/manga-collection/r0005/recipe.json",
+              "sha256": "7823a30fe43d788053e2d29a14beddf12fc447045eaac41bde4abb8672352800"
+            },
+            {
+              "file": "datasets/manga-collection/r0005/anchor-review.json",
+              "sha256": "69463646c3e3b6a2a69378ad383216523ea22461f66795e5f9417d9caf97047e"
+            },
+            {
+              "file": "datasets/manga-collection/r0005/publication-review.json",
+              "sha256": "c1200889428899155bff242dc6ff3c7423910202e3fcdad1a0e532ec2dae92af"
+            },
+            {
+              "file": "docs/research/famous-manga-creators/20261016/candidates.json",
+              "sha256": "8531fada01e5c635ba2ee278a7ef944a73f64676af14ed42ae0e690f5a1ff978"
+            },
+            {
+              "file": "datasets/public-kg/releases/20261014-credits-001/data.json",
+              "sha256": "ea91b16f52a211b5a8464382ad498b7b2bb2be69a6f33fe125a73a3c7b9da2b5"
+            },
+            {
+              "file": "datasets/public-kg/releases/20261014-credits-001/manifest.json",
+              "sha256": "e4aa3b58ed884f7d1f8fffee43b260261cc2b4d3a867fda942919f439d2bce17"
+            }
+          ],
+          "maxEntities": 2111,
+          "maxClaims": 1847
+        },
+        "targets": {
+          "people": [
+            {
+              "name": "手塚治虫",
+              "qid": "Q193300"
+            }
+          ],
+          "works": [
+            {
+              "name": "鉄腕アトム",
+              "qid": "Q673036",
+              "isbn13": "9784091480866"
+            }
+          ]
+        },
+        "existingApprovalSha256": "e4c3ddffcde48ac704c9b6314503175787789eef69c7bf427630f1ae946041af"
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "issue-25-manga23-20261019-repair1-batch-03",
+      "kind": "collect-review",
+      "status": "approved",
+      "sourceCommit": "916cc77d3aeab22650e309b694661cac07a72a47",
+      "parentRequestId": "issue-25-manga23-20261019-repair1",
+      "applyAuthorized": {
+        "local": false,
+        "beta": false,
+        "vps": false
+      },
+      "approvalScope": "collection-candidates-and-review-only",
+      "humanDecision": {
+        "actorType": "human",
+        "reviewer": "プロジェクト運営者",
+        "decidedAt": "2026-10-19T02:52:00+09:00",
+        "statement": "Issue #25の2026-10-19 02:52 JST先行許可を転記。明示された23作品・人物の同定、QID・日本語代表ISBN探索、recipe生成、hidden候補収集と根拠・保留・レビュー資料生成を承認。Wikidata構造化データとNDL作成書誌だけを用い、準備・収集合計142試行、同一要求2試行、逐次3秒、20秒、4MiB以内。既設時間帯・10分休憩で途中開始・数日継続を許可。同一範囲の再承認は不要。不確かな同定・資料不足・範囲外は保留。個別正式受入・公開apply・VPS配置・会員DB変更は承認しない。"
+      },
+      "issueOrigin": {
+        "repository": "isinxnisi/graph-knowledge",
+        "issueNumber": 25,
+        "approvalId": "manga23-20261019",
+        "permissionSha256": "673d380b4fb61ab2cdef204140d63a47bbf25dbb288199f25d0e3ae740ef11b3",
+        "issueBodySha256": "5f302ff42139b5230da70d38734577da414a3b89a24a82f90302e0297afc3c69"
+      },
+      "target": {
+        "themeId": "issue-25-manga23-20261019-repair1",
+        "revision": 3,
+        "definitionSha256": "c2b7ea90233d9127793811ece4b33d98426094f3e1c2ec7143cbd1932136a4b4",
+        "execution": {
+          "adapter": "manga-discovery-v2",
+          "codeSha256": "80e05b67bc0129b963653b90df4cfbfa5bd6aff190acda99f54c08541e55801e",
+          "inputs": [
+            {
+              "file": "datasets/manga-collection/r0006/recipe.json",
+              "sha256": "c7b5fd6acda7483539fbe5d2ad03ef715a2357ea0938fe27cb8a115772f715d6"
+            },
+            {
+              "file": "datasets/manga-collection/r0006/anchor-review.json",
+              "sha256": "c45484aa67dcaafcae952a6cfe751564c286763194a101cc31756c41b89ab140"
+            },
+            {
+              "file": "datasets/manga-collection/r0006/publication-review.json",
+              "sha256": "ca84a9482604dd500d6ae6ca3075fcf8708c0ee8aa24f5900213e7a2e24dcf38"
+            },
+            {
+              "file": "docs/research/famous-manga-creators/20261016/candidates.json",
+              "sha256": "8531fada01e5c635ba2ee278a7ef944a73f64676af14ed42ae0e690f5a1ff978"
+            },
+            {
+              "file": "datasets/public-kg/releases/20261014-credits-001/data.json",
+              "sha256": "ea91b16f52a211b5a8464382ad498b7b2bb2be69a6f33fe125a73a3c7b9da2b5"
+            },
+            {
+              "file": "datasets/public-kg/releases/20261014-credits-001/manifest.json",
+              "sha256": "e4aa3b58ed884f7d1f8fffee43b260261cc2b4d3a867fda942919f439d2bce17"
+            }
+          ],
+          "maxEntities": 2111,
+          "maxClaims": 1847
+        },
+        "targets": {
+          "people": [
+            {
+              "name": "高橋留美子",
+              "qid": "Q219948"
+            }
+          ],
+          "works": [
+            {
+              "name": "犬夜叉",
+              "qid": "Q182056",
+              "isbn13": "9784091252012"
+            }
+          ]
+        },
+        "existingApprovalSha256": "3af3ebe1d751bca1ef597a562d3cb9a2d0e5a0f3863caaa95fc3937d42bdd968"
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "issue-25-manga23-20261019-repair1-batch-04",
+      "kind": "collect-review",
+      "status": "approved",
+      "sourceCommit": "916cc77d3aeab22650e309b694661cac07a72a47",
+      "parentRequestId": "issue-25-manga23-20261019-repair1",
+      "applyAuthorized": {
+        "local": false,
+        "beta": false,
+        "vps": false
+      },
+      "approvalScope": "collection-candidates-and-review-only",
+      "humanDecision": {
+        "actorType": "human",
+        "reviewer": "プロジェクト運営者",
+        "decidedAt": "2026-10-19T02:52:00+09:00",
+        "statement": "Issue #25の2026-10-19 02:52 JST先行許可を転記。明示された23作品・人物の同定、QID・日本語代表ISBN探索、recipe生成、hidden候補収集と根拠・保留・レビュー資料生成を承認。Wikidata構造化データとNDL作成書誌だけを用い、準備・収集合計142試行、同一要求2試行、逐次3秒、20秒、4MiB以内。既設時間帯・10分休憩で途中開始・数日継続を許可。同一範囲の再承認は不要。不確かな同定・資料不足・範囲外は保留。個別正式受入・公開apply・VPS配置・会員DB変更は承認しない。"
+      },
+      "issueOrigin": {
+        "repository": "isinxnisi/graph-knowledge",
+        "issueNumber": 25,
+        "approvalId": "manga23-20261019",
+        "permissionSha256": "673d380b4fb61ab2cdef204140d63a47bbf25dbb288199f25d0e3ae740ef11b3",
+        "issueBodySha256": "5f302ff42139b5230da70d38734577da414a3b89a24a82f90302e0297afc3c69"
+      },
+      "target": {
+        "themeId": "issue-25-manga23-20261019-repair1",
+        "revision": 4,
+        "definitionSha256": "68b6450deaeacb8dd7ccf2ff519d8c44b947a92e4c66f80c8ad9584cdd307dae",
+        "execution": {
+          "adapter": "manga-discovery-v2",
+          "codeSha256": "80e05b67bc0129b963653b90df4cfbfa5bd6aff190acda99f54c08541e55801e",
+          "inputs": [
+            {
+              "file": "datasets/manga-collection/r0009/recipe.json",
+              "sha256": "68f83691e91d0de1d5f86230c4d3a216e8fb05b07bbc53cc92f55ee93c5215d0"
+            },
+            {
+              "file": "datasets/manga-collection/r0009/anchor-review.json",
+              "sha256": "ae4cf2d4ed55660222476f2aee2b52bd7cc244aea608146453344e2049bc59df"
+            },
+            {
+              "file": "datasets/manga-collection/r0009/publication-review.json",
+              "sha256": "42702c4ef6c30fbf74e7aa6f8ad7ecccc173581ccac71c7af8b561ed5b789999"
+            },
+            {
+              "file": "docs/research/famous-manga-creators/20261016/candidates.json",
+              "sha256": "8531fada01e5c635ba2ee278a7ef944a73f64676af14ed42ae0e690f5a1ff978"
+            },
+            {
+              "file": "datasets/public-kg/releases/20261014-credits-001/data.json",
+              "sha256": "ea91b16f52a211b5a8464382ad498b7b2bb2be69a6f33fe125a73a3c7b9da2b5"
+            },
+            {
+              "file": "datasets/public-kg/releases/20261014-credits-001/manifest.json",
+              "sha256": "e4aa3b58ed884f7d1f8fffee43b260261cc2b4d3a867fda942919f439d2bce17"
+            }
+          ],
+          "maxEntities": 2111,
+          "maxClaims": 1847
+        },
+        "targets": {
+          "people": [
+            {
+              "name": "田村由美",
+              "qid": "Q2235128"
+            }
+          ],
+          "works": [
+            {
+              "name": "ミステリと言う勿れ",
+              "qid": "Q85874073",
+              "isbn13": "9784098700295"
+            }
+          ]
+        },
+        "existingApprovalSha256": "6bdcf19ca2d1522dc817f8047f2d757723e8644e108583e7c04efbed938c3e44"
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "issue-25-manga23-20261019-repair1-batch-05",
+      "kind": "collect-review",
+      "status": "approved",
+      "sourceCommit": "916cc77d3aeab22650e309b694661cac07a72a47",
+      "parentRequestId": "issue-25-manga23-20261019-repair1",
+      "applyAuthorized": {
+        "local": false,
+        "beta": false,
+        "vps": false
+      },
+      "approvalScope": "collection-candidates-and-review-only",
+      "humanDecision": {
+        "actorType": "human",
+        "reviewer": "プロジェクト運営者",
+        "decidedAt": "2026-10-19T02:52:00+09:00",
+        "statement": "Issue #25の2026-10-19 02:52 JST先行許可を転記。明示された23作品・人物の同定、QID・日本語代表ISBN探索、recipe生成、hidden候補収集と根拠・保留・レビュー資料生成を承認。Wikidata構造化データとNDL作成書誌だけを用い、準備・収集合計142試行、同一要求2試行、逐次3秒、20秒、4MiB以内。既設時間帯・10分休憩で途中開始・数日継続を許可。同一範囲の再承認は不要。不確かな同定・資料不足・範囲外は保留。個別正式受入・公開apply・VPS配置・会員DB変更は承認しない。"
+      },
+      "issueOrigin": {
+        "repository": "isinxnisi/graph-knowledge",
+        "issueNumber": 25,
+        "approvalId": "manga23-20261019",
+        "permissionSha256": "673d380b4fb61ab2cdef204140d63a47bbf25dbb288199f25d0e3ae740ef11b3",
+        "issueBodySha256": "5f302ff42139b5230da70d38734577da414a3b89a24a82f90302e0297afc3c69"
+      },
+      "target": {
+        "themeId": "issue-25-manga23-20261019-repair1",
+        "revision": 5,
+        "definitionSha256": "5d32f9c5c9b3613d500d6a48185591b6d525fac1ab09c5cadae890c649295b8d",
+        "execution": {
+          "adapter": "manga-discovery-v2",
+          "codeSha256": "80e05b67bc0129b963653b90df4cfbfa5bd6aff190acda99f54c08541e55801e",
+          "inputs": [
+            {
+              "file": "datasets/manga-collection/r0010/recipe.json",
+              "sha256": "d0e0458158dd0eb33c75037bc98112064eb935882dad6f30e5882f299961dd45"
+            },
+            {
+              "file": "datasets/manga-collection/r0010/anchor-review.json",
+              "sha256": "4f20e0d407d996ee2e4f7c5950608d182f55de1acefccc6d5f22570475a3a03d"
+            },
+            {
+              "file": "datasets/manga-collection/r0010/publication-review.json",
+              "sha256": "8bd99f9f540d25121f8e2d0a3928b92b7f5255081205d9be01f7813acb8ae68e"
+            },
+            {
+              "file": "docs/research/famous-manga-creators/20261016/candidates.json",
+              "sha256": "8531fada01e5c635ba2ee278a7ef944a73f64676af14ed42ae0e690f5a1ff978"
+            },
+            {
+              "file": "datasets/public-kg/releases/20261014-credits-001/data.json",
+              "sha256": "ea91b16f52a211b5a8464382ad498b7b2bb2be69a6f33fe125a73a3c7b9da2b5"
+            },
+            {
+              "file": "datasets/public-kg/releases/20261014-credits-001/manifest.json",
+              "sha256": "e4aa3b58ed884f7d1f8fffee43b260261cc2b4d3a867fda942919f439d2bce17"
+            }
+          ],
+          "maxEntities": 2111,
+          "maxClaims": 1847
+        },
+        "targets": {
+          "people": [
+            {
+              "name": "九井諒子",
+              "qid": "Q11370008"
+            }
+          ],
+          "works": [
+            {
+              "name": "ダンジョン飯",
+              "qid": "Q20016948",
+              "isbn13": "9784047301535"
+            }
+          ]
+        },
+        "existingApprovalSha256": "ac62063d9897be119eef98eb3108bd263ae6373f0086ed3cde797f2f0761a99e"
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "issue-25-manga23-20261019-repair1-batch-06",
+      "kind": "collect-review",
+      "status": "approved",
+      "sourceCommit": "916cc77d3aeab22650e309b694661cac07a72a47",
+      "parentRequestId": "issue-25-manga23-20261019-repair1",
+      "applyAuthorized": {
+        "local": false,
+        "beta": false,
+        "vps": false
+      },
+      "approvalScope": "collection-candidates-and-review-only",
+      "humanDecision": {
+        "actorType": "human",
+        "reviewer": "プロジェクト運営者",
+        "decidedAt": "2026-10-19T02:52:00+09:00",
+        "statement": "Issue #25の2026-10-19 02:52 JST先行許可を転記。明示された23作品・人物の同定、QID・日本語代表ISBN探索、recipe生成、hidden候補収集と根拠・保留・レビュー資料生成を承認。Wikidata構造化データとNDL作成書誌だけを用い、準備・収集合計142試行、同一要求2試行、逐次3秒、20秒、4MiB以内。既設時間帯・10分休憩で途中開始・数日継続を許可。同一範囲の再承認は不要。不確かな同定・資料不足・範囲外は保留。個別正式受入・公開apply・VPS配置・会員DB変更は承認しない。"
+      },
+      "issueOrigin": {
+        "repository": "isinxnisi/graph-knowledge",
+        "issueNumber": 25,
+        "approvalId": "manga23-20261019",
+        "permissionSha256": "673d380b4fb61ab2cdef204140d63a47bbf25dbb288199f25d0e3ae740ef11b3",
+        "issueBodySha256": "5f302ff42139b5230da70d38734577da414a3b89a24a82f90302e0297afc3c69"
+      },
+      "target": {
+        "themeId": "issue-25-manga23-20261019-repair1",
+        "revision": 6,
+        "definitionSha256": "e1994692ad83d4f9e0d0fd0188ad8c6f9fcedc3713407b7609ceb45784c1271e",
+        "execution": {
+          "adapter": "manga-discovery-v2",
+          "codeSha256": "80e05b67bc0129b963653b90df4cfbfa5bd6aff190acda99f54c08541e55801e",
+          "inputs": [
+            {
+              "file": "datasets/manga-collection/r0012/recipe.json",
+              "sha256": "c5406e8709bf721a1d6ccd599d7d527e3306597eb3ab07ad48f0c55db2d2e9a3"
+            },
+            {
+              "file": "datasets/manga-collection/r0012/anchor-review.json",
+              "sha256": "e16cafd1f19b4abdf21944a65a9099d0103481b1633e765be100cc1d52cb89a5"
+            },
+            {
+              "file": "datasets/manga-collection/r0012/publication-review.json",
+              "sha256": "7c6f978c818a482c5a98e0b38fdeabd5346635b5397e12157786a9693ad4964a"
+            },
+            {
+              "file": "docs/research/famous-manga-creators/20261016/candidates.json",
+              "sha256": "8531fada01e5c635ba2ee278a7ef944a73f64676af14ed42ae0e690f5a1ff978"
+            },
+            {
+              "file": "datasets/public-kg/releases/20261014-credits-001/data.json",
+              "sha256": "ea91b16f52a211b5a8464382ad498b7b2bb2be69a6f33fe125a73a3c7b9da2b5"
+            },
+            {
+              "file": "datasets/public-kg/releases/20261014-credits-001/manifest.json",
+              "sha256": "e4aa3b58ed884f7d1f8fffee43b260261cc2b4d3a867fda942919f439d2bce17"
+            }
+          ],
+          "maxEntities": 2111,
+          "maxClaims": 1847
+        },
+        "targets": {
+          "people": [
+            {
+              "name": "荒川弘",
+              "qid": "Q230962"
+            }
+          ],
+          "works": [
+            {
+              "name": "黄泉のツガイ",
+              "qid": "Q111944796",
+              "isbn13": "9784757579620"
+            }
+          ]
+        },
+        "existingApprovalSha256": "cb5ea88aee39a8f772177f04d7e244079ad1d3b925babfd5c5a637ee67c0c322"
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "issue-25-manga23-20261019-repair1-batch-07",
+      "kind": "collect-review",
+      "status": "approved",
+      "sourceCommit": "916cc77d3aeab22650e309b694661cac07a72a47",
+      "parentRequestId": "issue-25-manga23-20261019-repair1",
+      "applyAuthorized": {
+        "local": false,
+        "beta": false,
+        "vps": false
+      },
+      "approvalScope": "collection-candidates-and-review-only",
+      "humanDecision": {
+        "actorType": "human",
+        "reviewer": "プロジェクト運営者",
+        "decidedAt": "2026-10-19T02:52:00+09:00",
+        "statement": "Issue #25の2026-10-19 02:52 JST先行許可を転記。明示された23作品・人物の同定、QID・日本語代表ISBN探索、recipe生成、hidden候補収集と根拠・保留・レビュー資料生成を承認。Wikidata構造化データとNDL作成書誌だけを用い、準備・収集合計142試行、同一要求2試行、逐次3秒、20秒、4MiB以内。既設時間帯・10分休憩で途中開始・数日継続を許可。同一範囲の再承認は不要。不確かな同定・資料不足・範囲外は保留。個別正式受入・公開apply・VPS配置・会員DB変更は承認しない。"
+      },
+      "issueOrigin": {
+        "repository": "isinxnisi/graph-knowledge",
+        "issueNumber": 25,
+        "approvalId": "manga23-20261019",
+        "permissionSha256": "673d380b4fb61ab2cdef204140d63a47bbf25dbb288199f25d0e3ae740ef11b3",
+        "issueBodySha256": "5f302ff42139b5230da70d38734577da414a3b89a24a82f90302e0297afc3c69"
+      },
+      "target": {
+        "themeId": "issue-25-manga23-20261019-repair1",
+        "revision": 7,
+        "definitionSha256": "0a8dbb55f93ab0fc9f24ec75f2bc2766b5c7dbc5a33d42865ddce37499d061f6",
+        "execution": {
+          "adapter": "manga-discovery-v2",
+          "codeSha256": "80e05b67bc0129b963653b90df4cfbfa5bd6aff190acda99f54c08541e55801e",
+          "inputs": [
+            {
+              "file": "datasets/manga-collection/r0013/recipe.json",
+              "sha256": "220668e9207c44b7bc36794f50107b68264fb86c9a78bf8784a3dfe2ae9d718b"
+            },
+            {
+              "file": "datasets/manga-collection/r0013/anchor-review.json",
+              "sha256": "d621145bca674855f7907d2666631afef39724d96ec7d92b6ba495e8a491891d"
+            },
+            {
+              "file": "datasets/manga-collection/r0013/publication-review.json",
+              "sha256": "b3c21c1d548e9b4bce20ddf3fc5136e058b534928b0ee7c78950d2a1152fc952"
+            },
+            {
+              "file": "docs/research/famous-manga-creators/20261016/candidates.json",
+              "sha256": "8531fada01e5c635ba2ee278a7ef944a73f64676af14ed42ae0e690f5a1ff978"
+            },
+            {
+              "file": "datasets/public-kg/releases/20261014-credits-001/data.json",
+              "sha256": "ea91b16f52a211b5a8464382ad498b7b2bb2be69a6f33fe125a73a3c7b9da2b5"
+            },
+            {
+              "file": "datasets/public-kg/releases/20261014-credits-001/manifest.json",
+              "sha256": "e4aa3b58ed884f7d1f8fffee43b260261cc2b4d3a867fda942919f439d2bce17"
+            }
+          ],
+          "maxEntities": 2113,
+          "maxClaims": 1853
+        },
+        "targets": {
+          "people": [
+            {
+              "name": "矢沢あい",
+              "qid": "Q234425"
+            }
+          ],
+          "works": [
+            {
+              "name": "天使なんかじゃない",
+              "qid": "Q1132540",
+              "isbn13": "9784086187657"
+            },
+            {
+              "name": "ご近所物語",
+              "qid": "Q787081",
+              "isbn13": "9784088538204"
+            },
+            {
+              "name": "NANA",
+              "qid": "Q423658",
+              "isbn13": "9784088562094"
+            }
+          ]
+        },
+        "existingApprovalSha256": "6f6f436fe4e2e506585a5b4eb75cb1d02ad64605a5f5e2f89247176ca1434af3"
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "issue-25-manga23-20261019-repair1-batch-08",
+      "kind": "collect-review",
+      "status": "approved",
+      "sourceCommit": "916cc77d3aeab22650e309b694661cac07a72a47",
+      "parentRequestId": "issue-25-manga23-20261019-repair1",
+      "applyAuthorized": {
+        "local": false,
+        "beta": false,
+        "vps": false
+      },
+      "approvalScope": "collection-candidates-and-review-only",
+      "humanDecision": {
+        "actorType": "human",
+        "reviewer": "プロジェクト運営者",
+        "decidedAt": "2026-10-19T02:52:00+09:00",
+        "statement": "Issue #25の2026-10-19 02:52 JST先行許可を転記。明示された23作品・人物の同定、QID・日本語代表ISBN探索、recipe生成、hidden候補収集と根拠・保留・レビュー資料生成を承認。Wikidata構造化データとNDL作成書誌だけを用い、準備・収集合計142試行、同一要求2試行、逐次3秒、20秒、4MiB以内。既設時間帯・10分休憩で途中開始・数日継続を許可。同一範囲の再承認は不要。不確かな同定・資料不足・範囲外は保留。個別正式受入・公開apply・VPS配置・会員DB変更は承認しない。"
+      },
+      "issueOrigin": {
+        "repository": "isinxnisi/graph-knowledge",
+        "issueNumber": 25,
+        "approvalId": "manga23-20261019",
+        "permissionSha256": "673d380b4fb61ab2cdef204140d63a47bbf25dbb288199f25d0e3ae740ef11b3",
+        "issueBodySha256": "5f302ff42139b5230da70d38734577da414a3b89a24a82f90302e0297afc3c69"
+      },
+      "target": {
+        "themeId": "issue-25-manga23-20261019-repair1",
+        "revision": 8,
+        "definitionSha256": "4fcbdcc90f6048fbe6ab9d75032fd7ddba5133223870b6d3ea18e2d9c8e2521a",
+        "execution": {
+          "adapter": "manga-discovery-v2",
+          "codeSha256": "80e05b67bc0129b963653b90df4cfbfa5bd6aff190acda99f54c08541e55801e",
+          "inputs": [
+            {
+              "file": "datasets/manga-collection/r0014/recipe.json",
+              "sha256": "131bbac279b32b94ecabd52c70238069b64a18ecb8d2323421887d72da5d0ee3"
+            },
+            {
+              "file": "datasets/manga-collection/r0014/anchor-review.json",
+              "sha256": "a7d5e730d21a5c19f580ccc949a11ae33a9dbb1346ad2813776e2e7492a43c8e"
+            },
+            {
+              "file": "datasets/manga-collection/r0014/publication-review.json",
+              "sha256": "95c17e0b07d2b0ff726c5be53716e258251670fd408531e0c6a502fd29bf579a"
+            },
+            {
+              "file": "docs/research/famous-manga-creators/20261016/candidates.json",
+              "sha256": "8531fada01e5c635ba2ee278a7ef944a73f64676af14ed42ae0e690f5a1ff978"
+            },
+            {
+              "file": "datasets/public-kg/releases/20261014-credits-001/data.json",
+              "sha256": "ea91b16f52a211b5a8464382ad498b7b2bb2be69a6f33fe125a73a3c7b9da2b5"
+            },
+            {
+              "file": "datasets/public-kg/releases/20261014-credits-001/manifest.json",
+              "sha256": "e4aa3b58ed884f7d1f8fffee43b260261cc2b4d3a867fda942919f439d2bce17"
+            }
+          ],
+          "maxEntities": 2112,
+          "maxClaims": 1850
+        },
+        "targets": {
+          "people": [
+            {
+              "name": "高屋奈月",
+              "qid": "Q241885"
+            }
+          ],
+          "works": [
+            {
+              "name": "フルーツバスケット",
+              "qid": "Q216204",
+              "isbn13": "9784592171614"
+            },
+            {
+              "name": "翼を持つ者",
+              "qid": "Q2947180",
+              "isbn13": "9784592128311"
+            }
+          ]
+        },
+        "existingApprovalSha256": "60f6ce38db32b831036160c2c84cf44d196b1f4c93e0720be7bfdf9bf40be75b"
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "issue-25-manga23-20261019-repair1-batch-09",
+      "kind": "collect-review",
+      "status": "approved",
+      "sourceCommit": "916cc77d3aeab22650e309b694661cac07a72a47",
+      "parentRequestId": "issue-25-manga23-20261019-repair1",
+      "applyAuthorized": {
+        "local": false,
+        "beta": false,
+        "vps": false
+      },
+      "approvalScope": "collection-candidates-and-review-only",
+      "humanDecision": {
+        "actorType": "human",
+        "reviewer": "プロジェクト運営者",
+        "decidedAt": "2026-10-19T02:52:00+09:00",
+        "statement": "Issue #25の2026-10-19 02:52 JST先行許可を転記。明示された23作品・人物の同定、QID・日本語代表ISBN探索、recipe生成、hidden候補収集と根拠・保留・レビュー資料生成を承認。Wikidata構造化データとNDL作成書誌だけを用い、準備・収集合計142試行、同一要求2試行、逐次3秒、20秒、4MiB以内。既設時間帯・10分休憩で途中開始・数日継続を許可。同一範囲の再承認は不要。不確かな同定・資料不足・範囲外は保留。個別正式受入・公開apply・VPS配置・会員DB変更は承認しない。"
+      },
+      "issueOrigin": {
+        "repository": "isinxnisi/graph-knowledge",
+        "issueNumber": 25,
+        "approvalId": "manga23-20261019",
+        "permissionSha256": "673d380b4fb61ab2cdef204140d63a47bbf25dbb288199f25d0e3ae740ef11b3",
+        "issueBodySha256": "5f302ff42139b5230da70d38734577da414a3b89a24a82f90302e0297afc3c69"
+      },
+      "target": {
+        "themeId": "issue-25-manga23-20261019-repair1",
+        "revision": 9,
+        "definitionSha256": "4c37447f24c239d31c29342645636e3ca38e5be11c822a879592a65ee03ee806",
+        "execution": {
+          "adapter": "manga-discovery-v2",
+          "codeSha256": "80e05b67bc0129b963653b90df4cfbfa5bd6aff190acda99f54c08541e55801e",
+          "inputs": [
+            {
+              "file": "datasets/manga-collection/r0015/recipe.json",
+              "sha256": "62f2113f334b8cafd4f1eb238cf33926a618984975243f43b7f980e5c8b3e0ba"
+            },
+            {
+              "file": "datasets/manga-collection/r0015/anchor-review.json",
+              "sha256": "e035ba3110b549dd5859e93fe11e46f99c9f84844cd30fb0b8cc814a4b39ae14"
+            },
+            {
+              "file": "datasets/manga-collection/r0015/publication-review.json",
+              "sha256": "c7bc29e6e6f8b1bff50ad9edf1a794c5d697716ac5a5e25d03bca73d4e02fa2a"
+            },
+            {
+              "file": "docs/research/famous-manga-creators/20261016/candidates.json",
+              "sha256": "8531fada01e5c635ba2ee278a7ef944a73f64676af14ed42ae0e690f5a1ff978"
+            },
+            {
+              "file": "datasets/public-kg/releases/20261014-credits-001/data.json",
+              "sha256": "ea91b16f52a211b5a8464382ad498b7b2bb2be69a6f33fe125a73a3c7b9da2b5"
+            },
+            {
+              "file": "datasets/public-kg/releases/20261014-credits-001/manifest.json",
+              "sha256": "e4aa3b58ed884f7d1f8fffee43b260261cc2b4d3a867fda942919f439d2bce17"
+            }
+          ],
+          "maxEntities": 2113,
+          "maxClaims": 1853
+        },
+        "targets": {
+          "people": [
+            {
+              "name": "あだち充",
+              "qid": "Q351742"
+            }
+          ],
+          "works": [
+            {
+              "name": "タッチ",
+              "qid": "Q619500",
+              "isbn13": "9784091218612"
+            },
+            {
+              "name": "H2",
+              "qid": "Q652892",
+              "isbn13": "9784091231512"
+            },
+            {
+              "name": "MIX",
+              "qid": "Q11231713",
+              "isbn13": "9784091238672"
+            }
+          ]
+        },
+        "existingApprovalSha256": "3b297f3179e7cdffeb3d5e530f755bffe11b0ca7e7209a486592ce60ee114294"
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "issue-25-manga23-20261019-repair1-batch-10",
+      "kind": "collect-review",
+      "status": "approved",
+      "sourceCommit": "916cc77d3aeab22650e309b694661cac07a72a47",
+      "parentRequestId": "issue-25-manga23-20261019-repair1",
+      "applyAuthorized": {
+        "local": false,
+        "beta": false,
+        "vps": false
+      },
+      "approvalScope": "collection-candidates-and-review-only",
+      "humanDecision": {
+        "actorType": "human",
+        "reviewer": "プロジェクト運営者",
+        "decidedAt": "2026-10-19T02:52:00+09:00",
+        "statement": "Issue #25の2026-10-19 02:52 JST先行許可を転記。明示された23作品・人物の同定、QID・日本語代表ISBN探索、recipe生成、hidden候補収集と根拠・保留・レビュー資料生成を承認。Wikidata構造化データとNDL作成書誌だけを用い、準備・収集合計142試行、同一要求2試行、逐次3秒、20秒、4MiB以内。既設時間帯・10分休憩で途中開始・数日継続を許可。同一範囲の再承認は不要。不確かな同定・資料不足・範囲外は保留。個別正式受入・公開apply・VPS配置・会員DB変更は承認しない。"
+      },
+      "issueOrigin": {
+        "repository": "isinxnisi/graph-knowledge",
+        "issueNumber": 25,
+        "approvalId": "manga23-20261019",
+        "permissionSha256": "673d380b4fb61ab2cdef204140d63a47bbf25dbb288199f25d0e3ae740ef11b3",
+        "issueBodySha256": "5f302ff42139b5230da70d38734577da414a3b89a24a82f90302e0297afc3c69"
+      },
+      "target": {
+        "themeId": "issue-25-manga23-20261019-repair1",
+        "revision": 10,
+        "definitionSha256": "44fc77372c8c3137075f3f844740931f1f56ee0cdb69ec70c033d18407391e0b",
+        "execution": {
+          "adapter": "manga-discovery-v2",
+          "codeSha256": "80e05b67bc0129b963653b90df4cfbfa5bd6aff190acda99f54c08541e55801e",
+          "inputs": [
+            {
+              "file": "datasets/manga-collection/r0016/recipe.json",
+              "sha256": "bedf687ab6fd6dff0331e0658d00d9c928fff83197d65cec0bab05f36420d606"
+            },
+            {
+              "file": "datasets/manga-collection/r0016/anchor-review.json",
+              "sha256": "d6ab0ed6627d04e8c997874fd414d1b2cbefe1f7712adb6ffe1ac72bba5928ea"
+            },
+            {
+              "file": "datasets/manga-collection/r0016/publication-review.json",
+              "sha256": "0e4141e15230d637545e5cc0a225cc3fb5ecf09696964e8de8c2c82c8147b497"
+            },
+            {
+              "file": "docs/research/famous-manga-creators/20261016/candidates.json",
+              "sha256": "8531fada01e5c635ba2ee278a7ef944a73f64676af14ed42ae0e690f5a1ff978"
+            },
+            {
+              "file": "datasets/public-kg/releases/20261014-credits-001/data.json",
+              "sha256": "ea91b16f52a211b5a8464382ad498b7b2bb2be69a6f33fe125a73a3c7b9da2b5"
+            },
+            {
+              "file": "datasets/public-kg/releases/20261014-credits-001/manifest.json",
+              "sha256": "e4aa3b58ed884f7d1f8fffee43b260261cc2b4d3a867fda942919f439d2bce17"
+            }
+          ],
+          "maxEntities": 2111,
+          "maxClaims": 1847
+        },
+        "targets": {
+          "people": [
+            {
+              "name": "藤子・F・不二雄",
+              "qid": "Q17572"
+            }
+          ],
+          "works": [
+            {
+              "name": "パーマン",
+              "qid": "Q700320",
+              "isbn13": "9784091941114"
+            }
+          ]
+        },
+        "existingApprovalSha256": "82d7ecfa8ead6450fd13b696f4afc9d903a1f9a8e1b89a3258c687b42049b33b"
+      }
+    }
+  ],
+  "publicApply": false,
+  "preparationDirectory": "/home/isinxnisi/.local/share/plunode-collection-worker/runtime/.local/collection-issues/issue-25-manga23-20261019-repair1"
+}
