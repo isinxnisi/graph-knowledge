@@ -49,7 +49,8 @@
 | [漫画r0002の原作正式受入・9 Claim統合候補](design/MANGA_R0002_COMBINED_RELEASE.md) | 2026-10-17。原作5 Claim・6 Entity・3 Source・5 Citationを追加受入。13 Entity／9 Claim統合release -002をvalidate・無書込plan済み。旧-001は保持、全環境applyは禁止 |
 | [漫画r0002の正式受入・release準備](design/MANGA_R0002_ACCEPTED_RELEASE.md)／[ORIGINAL_STORY](design/ORIGINAL_STORY.md) | 2026-10-17。4 Claim・7 Entity・4 Source・4 Citationを人間が正式受入。原作Role実装、原作5件は個別受入待ち。release候補のvalidate・無書込plan、公開applyは未許可 |
 | [漫画r0002の個別受入・公開準備](design/MANGA_R0002_ACCEPTANCE_REVIEW.md)／[制作Role意味レビュー](design/MANGA_PRODUCTION_ROLE_REVIEW.md) | 2026-10-17の初回レビュー記録（hash保全）。4 Claim・15新規Entityの推奨、保留11件と既存2 Claim重複。後続の正式受入・Role採用・release候補は上記記録を参照 |
-| [Discovery共通関係条件：STEP 1設計契約](design/DISCOVERY_RELATION_CONTRACT.md) | 2026-10-18。adjacent／pattern、bound／unbound、全段肯定・完全経路、対象検索とGraphのPOST契約、旧保存／URL移行、STEP 2〜4の受入条件。設計確認待ち、実装・再配置なし |
+| [共通関係条件：STEP 2 対象検索と成立証拠](design/DISCOVERY_TARGET_SEARCH.md) | 2026-10-18。読み取り専用POST、完全EXISTSとEntityページング、同版の完全経路証拠、公開KG・高次数・異常時の検証。UI／Graph状態・公開KG・正式VPS変更なし |
+| [Discovery共通関係条件：STEP 1設計契約](design/DISCOVERY_RELATION_CONTRACT.md) | 2026-10-18。adjacent／pattern、bound／unbound、全段肯定・完全経路、対象検索とGraphのPOST契約、旧保存／URL移行、STEP 2〜4の受入条件。運営者採用済み、STEP 3／4は未着手 |
 | [対象検索・Graphの共通関係パターン調査](design/DISCOVERY_SHARED_RELATION_PATTERNS_REVIEW.md) | 2026-10-18。共通定義と別adapterを推奨。実KGの成立対象・上限内0件と実在経路を照合。後続の実装契約は上記STEP 1を参照。調査・設計のみ、再配置なし |
 | [プリセットの探索開始・対象選択の調査](design/DISCOVERY_PRESET_LAUNCH_REVIEW.md) | 2026-10-18。b846cf7の選択分岐・任意対象・対象未指定APIを検証。代表入口から直接実行する最小案は後続指示で実装保留。UI／API修正は未実装、再配置なし |
 | [プリセット検索UIのbeta試作](design/DISCOVERY_PRESET_BROWSER_PROTOTYPE.md) | 2026-10-18。今ある接点からの右ペイン切替、独立したカタログ条件・並び順、おすすめと既存KG探索、Graphと検索への復帰。明示URLで比較、本番配置なし |

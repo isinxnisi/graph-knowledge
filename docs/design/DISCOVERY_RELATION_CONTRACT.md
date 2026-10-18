@@ -1,6 +1,6 @@
 # Discovery共通関係条件：STEP 1 設計契約 v1
 
-2026-10-18。出発点は `a1c4bbf` の[技術調査](DISCOVERY_SHARED_RELATION_PATTERNS_REVIEW.md)。本書はその後の運営者指示を反映した**実装前の設計契約**であり、調査の再実施記録ではない。以下をSTEP 2〜4の基準とするが、**STEP 2の着手は運営者の設計確認後**。本書のコミットは実装開始・配置の承認を意味しない。
+2026-10-18。出発点は `a1c4bbf` の[技術調査](DISCOVERY_SHARED_RELATION_PATTERNS_REVIEW.md)。本書はその後の運営者指示を反映した設計契約であり、調査の再実施記録ではない。`4ce5373` の設計は運営者がSTEP 2の実装基準として採用した。[STEP 2の実装・検証](DISCOVERY_TARGET_SEARCH.md)を追加するが、STEP 3／4は未着手であり、Graph・画面接続には別途確認が必要。
 
 ## 1. 確定事項と初回の境界
 

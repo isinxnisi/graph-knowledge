@@ -1,8 +1,10 @@
 # プロジェクトの構想と判断基準
 
+2026-10-18、[共通関係条件のSTEP 2](design/DISCOVERY_TARGET_SEARCH.md)として、名前なしでもother-worksの完全経路が成立する作品を返す読み取り専用POST対象検索と、各結果の証拠取得・直接再検証を追加。公開KGの読み取りと高次数の隔離試験で検証する。既存GET・Discovery UI・Graph状態／保存・公開KG・収集・正式VPSは維持し、STEP 3／4は未着手。
+
 2026-10-18、[ChatGPT承認連携と収集Worker](design/COLLECTION_WORKER.md)を既存2ワークフローへ追加。GitHub専用branchの明示判断をWSLの隔離runtimeが検知し、収集→レビュー、正式受入→release／validate／無書込planと結果共有を連続処理する。判断者名を本人認証とみなさず、既存GitHub権限と人間判断の記録を前提にする。重要な意味・同一性・収集実行・個別受入・公開applyの人間判断を維持し、新規の実運用承認・公開KG apply・VPS配置は行わない。
 
-2026-10-18、[Discovery共通関係条件のSTEP 1設計契約](design/DISCOVERY_RELATION_CONTRACT.md)を整理。プリセットの対象指定状態と共通関係条件を分離し、other-worksの全段肯定・完全経路を対象検索／Graphで共有する。旧保存・否定を含む探索を保全し、STEP 2は運営者の設計確認後。今回は文書のみで、UI・API・beta・公開KG・収集処理は変更しない。
+2026-10-18、[Discovery共通関係条件のSTEP 1設計契約](design/DISCOVERY_RELATION_CONTRACT.md)を整理。プリセットの対象指定状態と共通関係条件を分離し、other-worksの全段肯定・完全経路を対象検索／Graphで共有する。旧保存・否定を含む探索を保全する。後続指示でSTEP 2の基準として採用。STEP 3／4のGraph・UI移行は未実装。
 
 2026-10-18、[プリセット検索UIの比較試作](design/DISCOVERY_PRESET_BROWSER_PROTOTYPE.md)を明示URL `?discovery=presets` の「今ある接点から」だけに追加。右のカタログ／名前切替、11分野等の独立したカタログ条件、掲載優先・新着・人気未集計、固定対象と再利用可能な探し方、既存KG探索とカタログへの復帰を操作評価する。他2タブ・通常URLは維持し、3200／betaのみ。本番・公開KG・収集処理は変更しない。
 
