@@ -15,8 +15,8 @@ import DiscoveryClaimRow from "./DiscoveryClaimRow";
 import Icon from "./Icon";
 import styles from "./DiscoveryExplorer.module.css";
 
-export default function DiscoveryPaths({ anchor, anchorId, predicate, role, revision, ui, onChange, onPreset, onRefresh, pageFilter }: {
-  anchor: EntitySummary; anchorId: string; predicate: Predicate | null; role: ContributionRoleId | null; revision: string;
+export default function DiscoveryPaths({ compact = false, anchor, anchorId, predicate, role, revision, ui, onChange, onPreset, onRefresh, pageFilter }: {
+  compact?: boolean; anchor: EntitySummary; anchorId: string; predicate: Predicate | null; role: ContributionRoleId | null; revision: string;
   ui: PathUi; onChange: (value: PathUi) => void; onPreset: (value: PathPresetRef) => void; onRefresh: () => void; pageFilter: boolean;
 }) {
   const { locale }=useUiLocale(), en=locale==="en", t=(ja:string,eng:string)=>en?eng:ja;
@@ -32,7 +32,7 @@ export default function DiscoveryPaths({ anchor, anchorId, predicate, role, revi
     results:t("候補の表示は12経路までです。","The candidate list is capped at 12 routes."),
   })[reason]).join(" ");
   return <section className={styles.paths} data-testid="discovery-paths" aria-label={t("複数段の探索","Multi-step discovery")}>
-    {!!choices.length&&<div className={styles.pathPresets} role="group" aria-label={t("接点の見つけ方","Ways to discover")}>
+    {!compact && !!choices.length&&<div className={styles.pathPresets} role="group" aria-label={t("接点の見つけ方","Ways to discover")}>
       <span>{t("見つけ方", "Try a discovery")}</span>
       {choices.map(choice=><button key={choice.id} data-path-preset={choice.id} aria-pressed={preset?.id===choice.id}
         title={choice.purpose[en?1:0]} onClick={()=>onPreset({id:choice.id,revision:choice.revision})}>
@@ -41,9 +41,9 @@ export default function DiscoveryPaths({ anchor, anchorId, predicate, role, revi
       </button>)}
     </div>}
     <div className={styles.pathToolbar}>
-      <button className={styles.pathToggle} aria-expanded={ui.open} onClick={()=>onChange({...ui,open:!ui.open})}>
+      {!compact && <button className={styles.pathToggle} aria-expanded={ui.open} onClick={()=>onChange({...ui,open:!ui.open})}>
         <Icon name="graph"/>{t("2〜3段先の接点", "Connections 2–3 steps away")} <span>{ui.open?"−":"＋"}</span>
-      </button>
+      </button>}
       {ui.open&&<div role="group" aria-label={t("経路の段数","Path length")}>
         {([2,3] as const).map(depth=><button key={depth} aria-pressed={ui.depth===depth}
           onClick={()=>{if(depth!==ui.depth)onChange({...ui,depth,selected:null,preset:null,changed:!!preset||ui.changed});}}>{t(depth+"段",depth+" steps")}</button>)}
@@ -64,12 +64,12 @@ export default function DiscoveryPaths({ anchor, anchorId, predicate, role, revi
           <span>{result.scan.reasons.length?partialReasons:t("この対象・段数・条件の公開経路です（循環なし）。","All non-cyclic public routes for this subject and these criteria.")}</span>
           {!!result.scan.reasons.length&&<small>{t(`各対象${PATH_LIMITS.neighbors}記録・最大${PATH_LIMITS.expansions}対象・候補${PATH_LIMITS.results}経路まで。`,`Up to ${PATH_LIMITS.neighbors} records per entity, ${PATH_LIMITS.expansions} expanded entities and ${PATH_LIMITS.results} routes.`)}{t(`今回${result.scan.expanded}対象を確認。`,` Checked ${result.scan.expanded} entities.`)}</small>}
         </div>
-        <ol className={styles.pathOptions} aria-label={t("見つかった経路","Found routes")}>{result.paths.map(path=><li key={pathKey(path)}><button aria-pressed={ui.selected===pathKey(path)} onClick={()=>onChange({...ui,selected:ui.selected===pathKey(path)?null:pathKey(path)})}><span>{path.nodeIds.map(node).join(" — ")}</span><small>{t(path.claimIds.length+"段",path.claimIds.length+" steps")}</small></button></li>)}</ol>
+        {(!compact || !selected) && <ol className={styles.pathOptions} aria-label={t("見つかった経路","Found routes")}>{result.paths.map(path=><li key={pathKey(path)}><button aria-pressed={ui.selected===pathKey(path)} onClick={()=>onChange({...ui,selected:ui.selected===pathKey(path)?null:pathKey(path)})}><span>{path.nodeIds.map(node).join(" — ")}</span><small>{t(path.claimIds.length+"段",path.claimIds.length+" steps")}</small></button></li>)}</ol>}
         {!result.paths.length&&<p>{result.scan.reasons.length?t("取得範囲では見つかりませんでした。未取得の記録があるため、経路がないとは断定できません。","None found in the scanned range. Unread records remain; this is not proof that no route exists."):t("この条件の経路はありません。対象・関係・役割・段数を変更して探せます。","No routes match these criteria. Try another subject, relation, role or length.")}</p>}
         {ui.selected&&!selected&&<p role="status">{t("選択した経路は現在の取得範囲にありません。別の候補を選べます。","The selected route is not in this result. Choose another candidate.")}</p>}
         {selected&&<div className={styles.pathDetail} data-testid="discovery-path-detail">
           <div className={styles.pathToolbar}><strong>{selected.nodeIds.map(node).join(" — ")}</strong><div>
-            <button onClick={()=>onChange({...ui,selected:null})}>{t("経路の選択を解除","Clear route selection")}</button>
+            <button onClick={()=>onChange({...ui,selected:null})}>{compact?t("← 経路一覧へ戻る","← Back to routes"):t("経路の選択を解除","Clear route selection")}</button>
             <a className={styles.graphLaunch} data-testid="path-graph" href={(en?"/en":"")+discoveryPathHref(selected,conditions,revision)}><Icon name="graph"/>{t("この経路をGraphで開く","Open this route in Graph")}<Icon name="external"/></a>
           </div></div>
           <p className={styles.pathNote}>{t("経路を含む枝を開きます。各対象の最初20記録も表示します。公開版と各段の記録を再確認してから開きます。","Opens branches containing this route, including the first 20 records per entity. The public revision and each step are checked again.")}</p>
