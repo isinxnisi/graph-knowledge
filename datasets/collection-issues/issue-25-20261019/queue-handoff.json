@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "observedAt": "2026-10-18T18:35:58+00:00",
+  "installedCodeCommit": "c87051e0d15c903737d37f7c114bff0f17702ffa",
+  "actualQueueRegistered": true,
+  "requestId": "issue-25-manga23-20261019",
+  "requestFileSha256": "ac202bb18150f55b7da1103ce43f2d684aa101e4d5d5107a892223bce4590039",
+  "permissionSha256": "673d380b4fb61ab2cdef204140d63a47bbf25dbb288199f25d0e3ae740ef11b3",
+  "issueBodySha256": "5f302ff42139b5230da70d38734577da414a3b89a24a82f90302e0297afc3c69",
+  "queuePhase": "waiting-lock",
+  "attempts": 0,
+  "workerId": "plunode-wsl",
+  "recipeRange": {
+    "first": 4,
+    "count": 13
+  },
+  "sourceSubscriptionCommit": "72b7a763483f15ddfb36b4dfd38156eb7a70bd2d",
+  "githubReceipt": "https://github.com/isinxnisi/graph-knowledge/blob/codex/collection-control/collection-control/issue-receipts/issue-25-manga23-20261019.json",
+  "githubResult": "https://github.com/isinxnisi/graph-knowledge/blob/codex/collection-control/collection-control/results/issue-25-manga23-20261019/status.json",
+  "approvalReRequested": false,
+  "naturalWindowsTick": "2026-10-19T03:35:31+09:00",
+  "hiddenLauncher": "wscript.exe / worker.wsf / worker.ps1",
+  "interval": "1 minute, IgnoreNew, unchanged",
+  "lockReason": "implementation session common lock; release at completion, next ordinary scheduled tick starts approved preparation",
+  "collectionCompleted": false,
+  "formalAcceptance": false,
+  "publicApply": false
+}

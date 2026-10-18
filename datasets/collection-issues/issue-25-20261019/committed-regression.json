@@ -1,0 +1,23 @@
+{
+  "testOnly": true,
+  "actualOperatorApproval": false,
+  "databaseConnection": false,
+  "publicApply": false,
+  "sourceCommit": "c87051e0d15c903737d37f7c114bff0f17702ffa",
+  "elapsedSeconds": 29.2,
+  "transport": "local bare Git: GitHub equivalent",
+  "providerAttempts": 72,
+  "successfulResponses": 71,
+  "checks": [
+    "explicit inbox approval",
+    "interrupted acquisition resumed",
+    "existing gate receipt reused",
+    "72 attempts/71 cached responses",
+    "Markdown + JSON published",
+    "partial human-simulation acceptance",
+    "actual public validator",
+    "read-only plan simulation",
+    "plan failure resumes immutable acceptance/release",
+    "restart: no duplicate execution/commits"
+  ]
+}
