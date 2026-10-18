@@ -1,0 +1,33 @@
+{
+  "testOnly": true,
+  "actualOperatorApproval": false,
+  "databaseConnection": false,
+  "publicApply": false,
+  "sourceCommit": "916cc77d3aeab22650e309b694661cac07a72a47",
+  "elapsedSeconds": 25.5,
+  "transport": "local bare Git: GitHub equivalent",
+  "providerAttempts": 72,
+  "successfulResponses": 71,
+  "checks": [
+    "explicit inbox approval",
+    "interrupted acquisition resumed",
+    "existing gate receipt reused",
+    "72 attempts/71 cached responses",
+    "Markdown + JSON published",
+    "partial human-simulation acceptance",
+    "actual public validator",
+    "read-only plan simulation",
+    "plan failure resumes immutable acceptance/release",
+    "restart: no duplicate execution/commits"
+  ],
+  "checkedAt": "2026-10-18T18:49:25.439871+00:00",
+  "issueTestsPassed": 13,
+  "workerTestsPassed": 32,
+  "newRequestId": "issue-25-manga23-20261019-repair1",
+  "previousRequestId": "issue-25-manga23-20261019",
+  "originalPermissionReused": true,
+  "previousPreparationAttempts": 71,
+  "networkBudgetReset": false,
+  "originalPreparationAndResultsPreserved": true,
+  "actualCollectionStillScheduled": true
+}
