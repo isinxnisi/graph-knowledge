@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "workerId": "plunode-wsl",
+  "codeCommit": "8dc3f69ceef375d06c8a821eb937e94ae639bdf2",
+  "controlRevision": 0,
+  "lastControlSha256": null,
+  "lastControlId": null,
+  "timezone": "Asia/Tokyo",
+  "windows": [
+    {
+      "start": "03:00",
+      "end": "07:00"
+    },
+    {
+      "start": "09:00",
+      "end": "12:00"
+    },
+    {
+      "start": "15:00",
+      "end": "18:00"
+    }
+  ],
+  "pauseMode": null,
+  "intervalMinutes": 10,
+  "newStartMarginMinutes": 15,
+  "finishGraceMinutes": 10,
+  "workflowLimitMinutes": 55,
+  "cycleLimitMinutes": 57,
+  "nextStartAt": null,
+  "phase": "outside-window",
+  "recoveredAttempt": null,
+  "admission": {
+    "ready": false,
+    "reason": "outside-window",
+    "eligibleAt": "2026-10-18T18:00:00+00:00",
+    "windowEndAt": "2026-10-18T22:00:00+00:00"
+  },
+  "activeAttempt": null,
+  "lastAttempt": null,
+  "controlError": null,
+  "requestsByPhase": {},
+  "publicApply": false,
+  "checkedAt": "2026-10-18T17:03:39.619537+00:00"
+}

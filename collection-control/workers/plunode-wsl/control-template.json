@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "id": "control-0001",
+  "workerId": "plunode-wsl",
+  "revision": 1,
+  "previousControlId": null,
+  "status": "draft-not-approved",
+  "approvalScope": "worker-execution-control-only",
+  "action": "pause-new",
+  "humanDecision": {
+    "actorType": "human",
+    "reviewer": null,
+    "decidedAt": null,
+    "statement": null
+  }
+}
