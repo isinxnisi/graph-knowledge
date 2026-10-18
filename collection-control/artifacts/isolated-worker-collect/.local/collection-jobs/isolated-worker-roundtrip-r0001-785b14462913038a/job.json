@@ -1,0 +1,263 @@
+{
+  "schemaVersion": 1,
+  "jobId": "isolated-worker-roundtrip-r0001-785b14462913038a",
+  "jobKey": "785b14462913038a992ed96073fecc957184fb31c8b5adab91dbbdc1b30ffb0f",
+  "runnerSha256": "1f36d3010c7a7e471091620c6820b1401aa0a0b53a997da187f51f9fa68b2ae2",
+  "workOrder": {
+    "schemaVersion": 1,
+    "theme": {
+      "schemaVersion": 1,
+      "id": "isolated-worker-roundtrip",
+      "revision": 1,
+      "title": "有名漫画家と代表作品：次期24作品・23人物／ORIGINAL_STORY対応（実行承認待ち）",
+      "purpose": "既存44中心作家・9共同制作者・102作品からr0002取得8作品を除いた94作品の次期バッチ。24作品・23人物の取得条件を凍結する。今回は定義登録と隔離検証までで、正式実行・知識受入・公開適用は別途人間判断。",
+      "worlds": [
+        "漫画・アニメ",
+        "美術・文学"
+      ],
+      "relatedThemes": [],
+      "scope": {
+        "include": [
+          "企画範囲は docs/research/famous-manga-creators/20261016/candidates.json（SHA256 8531fada01e5c635ba2ee278a7ef944a73f64676af14ed42ae0e690f5a1ff978）。本版の対象は datasets/manga-collection/r0003/recipe.json に固定した24漫画作品・23人物のみ。各作品の選定理由・QID・日本語代表ISBN・主書名・巻・版・担当者名義を凍結資料でレビューする。",
+          "既存浦沢直樹・工藤かずや・池上遼一・手塚治虫との接続、原作と作画の分担、同作者の別作品、少女漫画・青年漫画・SF・ギャグの入口を組み合わせる。ジャンル説明は編集上の選定理由であり分類Claimを生成しない。",
+          "Wikidataは明示QIDの人物P31=human／作品P31=mangaを名前とともに照合し、P50／P110を根拠未確定の関係行として記録。propertyから具体的な制作Roleを推論しない。NDLはISBN、主書名、巻、版、jpn、漫画の一致が一意なNDL作成書誌だけを利用。",
+          "明示された単独人物の著／著者→AUTHORSHIP、作→CREATION、画／作画→DRAWING、原作→ORIGINAL_STORYを候補生成。監修は照合済み人物・既存企画内人物作品組・指定刊行物で明示される場合だけSUPERVISION候補。漫画・原著・原案・ほか著・集約著者表記は原語付きで保留する。",
+          "武論尊／史村翔と竹宮惠子／恵子はレシピのレビュー済み名義に限定し、providerの別名照合も必要。11人いる！は漫画専用QID・単巻。童夢は出版社が作品を明示する2022年全集第8巻ISBNだけをscopeにし、漫画の第8巻や全集全体へ外挿しない。",
+          "通信は逐次3秒以上、timeout20秒、1応答4MiB以下。正常時71 URL取得（人物23＋作品24＋NDL24）、失敗・再開を通算して最大142試行、同一要求2回以下。429／503のRetry-Afterを永続化し、連鎖取得や自動再送は行わない。",
+          "凍結baseは現行公開の20261014-credits-001。受入済み未適用の20261017-manga-r0002-002を現行baseとみなさない。既存全レコード・UUID・意味・公開状態・撤回履歴を保全。新規Entity47／Claim72、全体Entity2156／Claim1916を上限とする。新規Claimはhidden。",
+          "テーマrevision・定義／承認hash・コードhash・全入力hash、取得日時・応答hash・原語・同一性判断・保留を既存work-order／ledger／jobへ記録。r0002成果と新候補の公開統合は個別受入後に別途最新KGへplanする。"
+        ],
+        "exclude": [
+          "今回の準備依頼や隔離TEST-SIMULATIONをfamous-manga-creators r0003の正式承認とみなすこと。本版の正式収集ジョブ実行、個別Entity／Claimの自動受入。",
+          "ローカル・ベータ・本番の公開KG apply、本番VPS・会員DB変更、Web／operator配置、SSH復旧作業。",
+          "未適用release -002の全体を公開baseへ混入させること。r0002の定義・承認・実行履歴・過去release候補の上書き。",
+          "原作とAUTHORSHIP／CREATION／DRAWING／SCRIPT_WRITINGを同一視すること、原著作者だけを当該漫画の原作担当と認定すること、脚本・ネーム・構成・著作権保有・全巻担当を推論すること。",
+          "村田雄介・小畑健の未受入制作関係、漫画表記からの別Role変換、梅澤由香里の監修・同定をこの定義だけで受入すること。未知共同制作者や候補外人物作品組の自動追加。",
+          "レシピ外の残り作品の取得、参照先への連鎖取得、出版社HTMLの一括取得、本文・画像・あらすじ・第三者所蔵情報の転載、定期取得・外部連絡。",
+          "新規影響・師弟・助手経験・掲載誌・出版社所属・翻案・アニメ化・シリーズ関係の生成、新管理基盤や語彙の追加。",
+          "未受入hidden Claimを撤回に偽装すること、検証用一時公開projectionをreleaseへ流用すること。"
+        ]
+      },
+      "dataRequirements": [
+        {
+          "kind": "entity",
+          "description": "一覧内の人物と漫画作品、確認された日英別名・外部ID",
+          "granularity": "個人と共同筆名を区別し、漫画版・特定部・特定初出版を同定する。既存UUIDは再利用"
+        },
+        {
+          "kind": "claim",
+          "description": "明示された人物→漫画制作のRole候補。ORIGINAL_STORYを含む既存Role契約に従う",
+          "granularity": "代表ISBNごとのpublication scope。原語・巻・版を固定し、作品全体や別Roleへ自動拡張しない"
+        },
+        {
+          "kind": "citation",
+          "description": "資料URL、参照箇所、取得日、担当原語、刊行物と利用条件",
+          "granularity": "資料と取込由来を分け、同資料を共有する記録を独立根拠として数えない"
+        },
+        {
+          "kind": "identity",
+          "description": "作品単位と筆名・既存Entity対応の判断",
+          "granularity": "武論尊／史村翔、藤子共同名義、ワンパンマンの版、火の鳥の初出版等を個別に判断"
+        },
+        {
+          "kind": "model-gap",
+          "description": "漫画表記、原著、原案、集約著者などの未確定関係とシリーズ／巻／版の構造",
+          "granularity": "この企画の承認だけでは実装・語彙承認しない。必要なら個別レビューへ分ける"
+        }
+      ],
+      "sources": [
+        {
+          "name": "Wikidata（構造化取得の有力候補）",
+          "url": "https://www.wikidata.org/wiki/Help:Data_access",
+          "usage": "識別子・日英名・別名・作品関係候補と参照先。propertyから既存Roleを推測しない。",
+          "termsNote": "公式CC0構造化データ。明示QIDのSpecial:EntityData HTTPSのみ。逐次3秒以上・20秒・4MiB・同一2試行、ジョブ全体142試行以内。429／503のRetry-Afterを再開後も守る。"
+        },
+        {
+          "name": "NDLサーチ・NDL作成書誌",
+          "url": "https://ndlsearch.ndl.go.jp/help/api/provider",
+          "usage": "SRUのiss-ndl-opac限定、固定ISBN検索・maximumRecords=5。NDL作成書誌のISBN・主書名・巻・版・言語・漫画種別・責任表示を一意に照合。第三者所蔵情報はsnapshotへ出さない。",
+          "termsNote": "NDL作成メタデータのCC BY互換条件と広告収益を含むAPI利用説明を確認。Source／snapshotに国立国会図書館の帰属・CC BY4.0・提供元条件URLを保持する。全NDL提供元へ包括適用しない。継続利用の連絡協力依頼は次の定期運用判断で確認。今回は申請・連絡・定期取得なし。"
+        },
+        {
+          "name": "出版社・本人の公式資料（アンカーの個別レビューのみ）",
+          "url": "https://www.kodansha.co.jp/comic/products/0000359052",
+          "usage": "童夢の作品と全集第8巻ISBNの対応など、凍結アンカーを個別確認する。本版adapterの通信対象に出版社HTMLは含めない。",
+          "termsNote": "閲覧可能な資料が存在することと自動取得・再利用許可を区別。本文・あらすじ・画像転載は対象外。各サイトの取得方法・利用条件は実行版で確認する。"
+        }
+      ],
+      "exploration": {
+        "questions": [
+          "既存浦沢直樹からあさドラ！・パイナップルARMYと工藤かずやへ渡れるか？",
+          "サンクチュアリと北斗の拳を同じ人物の別名義・異なるRoleの根拠で辿れるか？",
+          "ポーの一族から萩尾望都を経て11人いる！、風と木の詩から竹宮惠子を経て地球へ…に渡れるか？",
+          "r0002公開後に大場つぐみ・Boichi・藤本タツキの別作品へ進めるか？ 未受入・原語未確定の枝を区別できるか？"
+        ],
+        "existingPredicates": [
+          "CONTRIBUTED_TO"
+        ],
+        "modelGaps": [
+          "漫画表記や集約著者表示は既存Roleへ自動変換できない。ORIGINAL_STORYは原作担当の明示に限定する。",
+          "掲載・翻案・シリーズ／巻／版の独立関係は対象外",
+          "ジャンルは編集上の入口説明であり分類Claimは生成しない"
+        ]
+      },
+      "coverageReferences": [
+        "docs/design/MANGA_R0003_COLLECTION_PLAN.md",
+        "docs/design/MANGA_COLLECTION_ADAPTER.md",
+        "docs/design/ORIGINAL_STORY.md",
+        "docs/design/MANGA_R0002_COMBINED_RELEASE.md",
+        "datasets/manga-collection/r0003/anchor-review.json",
+        "datasets/manga-collection/r0003/publication-review.json",
+        "datasets/manga-collection/r0003/trial/evidence.json（3作品だけのTEST-SIMULATION・正式承認ではない）"
+      ],
+      "execution": {
+        "adapter": "manga-discovery-v2",
+        "codeSha256": "80e05b67bc0129b963653b90df4cfbfa5bd6aff190acda99f54c08541e55801e",
+        "inputs": [
+          {
+            "file": "datasets/manga-collection/r0003/recipe.json",
+            "sha256": "eb431b6d6bd450eca85636f5617188f78cc4dc2e0bcdd076f94694ee153faad9"
+          },
+          {
+            "file": "datasets/manga-collection/r0003/anchor-review.json",
+            "sha256": "11300cff2b8a7b3234819d4b47a11f5e9016daf7af94f8cf4ca1838038000669"
+          },
+          {
+            "file": "datasets/manga-collection/r0003/publication-review.json",
+            "sha256": "bdf3ef6f60ea02ef07aedb3119b8cde6bdbefe0e8e7a002895637fdedf2ebb3a"
+          },
+          {
+            "file": "docs/research/famous-manga-creators/20261016/candidates.json",
+            "sha256": "8531fada01e5c635ba2ee278a7ef944a73f64676af14ed42ae0e690f5a1ff978"
+          },
+          {
+            "file": "datasets/public-kg/releases/20261014-credits-001/data.json",
+            "sha256": "ea91b16f52a211b5a8464382ad498b7b2bb2be69a6f33fe125a73a3c7b9da2b5"
+          },
+          {
+            "file": "datasets/public-kg/releases/20261014-credits-001/manifest.json",
+            "sha256": "e4aa3b58ed884f7d1f8fffee43b260261cc2b4d3a867fda942919f439d2bce17"
+          }
+        ],
+        "maxEntities": 2156,
+        "maxClaims": 1916
+      }
+    },
+    "definitionSha256": "ff727e1249ee667ef707175406c10fde9772716cb95d28cc3d67bc580b42130c",
+    "approval": {
+      "schemaVersion": 1,
+      "themeId": "isolated-worker-roundtrip",
+      "revision": 1,
+      "definitionSha256": "ff727e1249ee667ef707175406c10fde9772716cb95d28cc3d67bc580b42130c",
+      "reviewer": "隔離試験・実運用の承認ではない",
+      "reviewedAt": "2026-10-18T11:24:00+00:00",
+      "note": "隔離fixtureだけの模擬判断。実データ受入・公開applyを認めない。\nGitHub request isolated-worker-collect / 053a5c8297ae4d8f242209e815dc284d1d29ca910ba0486ef7c822559ec2b8ba",
+      "checks": [
+        "purpose",
+        "scope",
+        "data-granularity",
+        "sources-and-terms",
+        "exploration",
+        "execution-boundary"
+      ]
+    },
+    "approvalSha256": "26e262213e8dde48ad2ae327bf177c9a5f855c49161825b53a5cb0e2617701ba",
+    "executionStatus": "frozen-adapter",
+    "authority": "candidate-collection-only; not knowledge acceptance or public release approval"
+  },
+  "status": "candidate-ready",
+  "attempts": [
+    {
+      "number": 1,
+      "startedAt": "2026-10-18T11:24:01+00:00",
+      "status": "failed",
+      "stage": "generate",
+      "finishedAt": "2026-10-18T11:24:01+00:00",
+      "error": "ValueError: Transport failed; resume this job without discarding completed requests: wikidata-Q108109758: isolated simulated transport interruption"
+    },
+    {
+      "number": 2,
+      "startedAt": "2026-10-18T11:24:57+00:00",
+      "status": "succeeded",
+      "stage": "candidate-ready",
+      "finishedAt": "2026-10-18T11:25:03+00:00"
+    }
+  ],
+  "artifacts": {
+    "candidate/data.json": "1a07581db47546f1dd7904c654871fac747b2d121925d78b1e21d894f50d2ccd",
+    "candidate/manifest.json": "883bccf89b18156d278af3e2b0856b1ad230471b47b7f09cd54f30c0cd90eade",
+    "ledger.json": "ed4804594fffa9a91039ca325ae9fd88c4b4cd370d9c4097250b750c3d514233",
+    "snapshots/Q1016880.json": "f47e09c8ce4251cc060410ab9cc15d5b605ea67fda7e19d44e86aae52f450608",
+    "snapshots/Q102231027.json": "ddb8cfb5c96ba34dca9d3e677e48542b1368ef83585164a1188723db7ff730aa",
+    "snapshots/Q105258125.json": "9a7875eaf7098c4475cd88419216f8a1ee5637e5747eb1d76b0d039fd9b443cb",
+    "snapshots/Q108109758.json": "769d5e3ffa63e5dd8eab37e1e2e06797618fd4f30c148632616039418b25b57b",
+    "snapshots/Q1096269.json": "ba6192efeb35c5e90ed96b822c65e654a0f6a07e58af23bfeca8af7b241ab06a",
+    "snapshots/Q11237288.json": "c2ec8ed270c5d1087d318eb365d46c11fb6ad6d702a3821a828d3f96acdcb0dc",
+    "snapshots/Q11298673.json": "e9bf39dab2448eb9ae9ce8bb0a38945d12da1e1a313aa7144d4291c116e6c94b",
+    "snapshots/Q11344543.json": "dc7b940ebeb72c9efb74fb89f2ced0a0c570c42b0628275fe76cb0c2f026a4e2",
+    "snapshots/Q1170375.json": "9ebf060932a54197c074c033c1477fb2154bdb642760473ae9d0e8f2398db5c9",
+    "snapshots/Q124312385.json": "9ea6b988e622fa10318af20e8088bfb8876fcc92e929377d6023d60c4b21cbff",
+    "snapshots/Q1319232.json": "6ed45063ffaa57a259945b9bc89c6665be0427f8dc70168e24bd7a2b08003a3d",
+    "snapshots/Q1332841.json": "78fb5d1f3ce13d83d9beb4633bde520ef5745b72b0255546b836c6a359c52536",
+    "snapshots/Q133691.json": "0f03ecd9dbc63b313473266697cb5081b9283d897bac45951a26e9ae4d53844c",
+    "snapshots/Q1338432.json": "b6bb71dbf7e5c859331584e716ed6203fdca21a1b067c4206da522070184a048",
+    "snapshots/Q17220992.json": "fb94bc4a9ba61e05502fb481bd1fc88dd59c31820d8fd49a770f4b028b0ed604",
+    "snapshots/Q193300.json": "fbe94ee00b7ef45f054ca21f49f323afd56c88135264ddb4252068d6ca368621",
+    "snapshots/Q1993.json": "f5d01ef755bd0f0fe0fe4ad0cd4a3271ce864325cdc2df8d3ddfeb4f4c761bd4",
+    "snapshots/Q219948.json": "b453ad559d787103217632206d954e2f569b6924bcfc6234acdf2140d8659ed4",
+    "snapshots/Q2235128.json": "cd2d548f8ef16cb03c9447dff268aaaa43829d5a6aa313eda6109cbf3ab712c5",
+    "snapshots/Q23937543.json": "296a77bf96859d3b82df6213724fd57277c8441450d7f33162b5d3c0369a6e30",
+    "snapshots/Q24864023.json": "091edcadccea875106fdc1e658e76ed12e6bc2baec2a863382391bd88def97ee",
+    "snapshots/Q2551007.json": "913f6384c3ec9ff6e02c2ebbd244b7807afd8417840921ff5d298fe4d364625e",
+    "snapshots/Q265061.json": "8552f13dece2fcb343878a1b4cd8038b1f094544a03cca352791339e5b825416",
+    "snapshots/Q2668005.json": "2b3f3c10c0d8eefa79585897d8f757ca30072c9667301c4c20a53cc8ca066820",
+    "snapshots/Q2679175.json": "bdc8f1c7bcd32455872137fa2dfbb661c107b736e61eecbe12848cd41085ed11",
+    "snapshots/Q268789.json": "3b4c75d1d32347393877aea0a17090146e8e8d15eac843c6635fa617edeb99e5",
+    "snapshots/Q272015.json": "8ec94619bcade941147c4913babd7c109a9783c1648434a7873592755054c0d7",
+    "snapshots/Q28682711.json": "c8f2ad5dc66079f7341906259fcd20b21c1ce4f488f9c93d716966d2c0f481b5",
+    "snapshots/Q313703.json": "e16459f7da531895d631892487b4d05114e9f254b963df294e7d1eb1d1532b83",
+    "snapshots/Q3194504.json": "5e8ce00fb0dee82ac8a7c5fd145df7b9c7783fba06f1c34bbc09369608547746",
+    "snapshots/Q348436.json": "d0a9b900bd4e5c10708f7a03c04e873df26270ed24a9cb96482bd0d0b3466b52",
+    "snapshots/Q378710.json": "fc998cb3bf9c4b6304a5606cf7822a0bf352c07fc4c3ec552ea4740ad5f7ca29",
+    "snapshots/Q38277627.json": "e4b3dc167c64823fc87066098ba701a6483343e5918851bddd197d188b2b72bb",
+    "snapshots/Q467854.json": "bcb9a7ca8fc371372bc0eb7677f5d19bdfb536dcc08371781fabfe20e6d2fee2",
+    "snapshots/Q48837273.json": "7b4e2d86cab6b19c37fcd483a5399d415e88e7692f51c0fb716b60f3f33943ba",
+    "snapshots/Q558858.json": "b47f116ae97084d8b77620a326e0822816046479f14dd71318bbae85cc06d23b",
+    "snapshots/Q624839.json": "7c0ea64ac68fb01a771f2ce093bf7af9edaa069d21f86054a03b1c8e91c09eec",
+    "snapshots/Q63323229.json": "372809d98b1329b306c8f04aee54e8d90d9bdf6c062ef833f5b75120bc849601",
+    "snapshots/Q669481.json": "522c64602dc5c3ac9dd9eaa79c91b6bb14513cfb6be2d93e99e841a7ed4a53a8",
+    "snapshots/Q715723.json": "1b88a3e38a82fca4b30be8fc935c2579487d1623f6b5652f6b8893c3d6817c43",
+    "snapshots/Q733498.json": "2dc76e436a89c9824484d54be02bbeb3b997c77c4b56fc60d1ed7f1bf7315cb4",
+    "snapshots/Q804555.json": "c59e554271dc9b1414bb5149a8ae24588c91324a1e956825213f94eb2c3108e7",
+    "snapshots/Q809789.json": "e2ae7c6ce2990b81a6fdcffc703e18b5fcdf4a8cea880100321bac68dc06b268",
+    "snapshots/Q91486.json": "4367374f6a3dbfc19bbcefc65ece1e21803e9135737d7b60ed8d88b55f014f6b",
+    "snapshots/Q958256.json": "1c191a32c1730c835298c5fe46c328d321085fecdf5a788d9780153516ec27e2",
+    "snapshots/Q97310775.json": "26d04ccd17dc84cf8228f962cddf3fc9faf5eae0b6c849cc191133964ae0d6ed",
+    "snapshots/Q98642652.json": "85ccff1c73bc6d55242f4a704412b9e1b5916954f729420fa9c753e942b32c8f",
+    "snapshots/ndl-9784061037113.json": "3f15a02675cabf4ef810a522657a1495ed2174c7e0f9eca3758ecab601e88eae",
+    "snapshots/ndl-9784063829082.json": "24dbceb39fa9fe76e5e89b21c79d48079148dfb5d786a1e7dd783ecdf023cd9f",
+    "snapshots/ndl-9784065262634.json": "e1a80787f6b33d1d0dba6808e59366002c5ac56f10010186450b3050f2c9c249",
+    "snapshots/ndl-9784086172837.json": "d5e55effd061533483d3249e2563f98ca68d630d4c898f560241ed411b79fd86",
+    "snapshots/ndl-9784086196901.json": "036b94d8e90c6539f195a23b4ed5e8776dd229906db967c52a13c8453208fe58",
+    "snapshots/ndl-9784088807317.json": "b537249e321c01159339fbdfb7688ec0b840d1cf4cd568620d14c491b17bb789",
+    "snapshots/ndl-9784088820224.json": "da0eb9fdab73a2a455102be81a3cbf831c260dbd79b7d4b3c00c85210a8eec0f",
+    "snapshots/ndl-9784088916507.json": "51ec2b7649efd37098ca70d93ceee4d067e03a8a5e9c992e9a67bf287247458d",
+    "snapshots/ndl-9784091220318.json": "6a3556b755b908a982590b1077c8b570e1babd537b46e32507557a7efdf91b9d",
+    "snapshots/ndl-9784091228017.json": "978139bca8bd7bd57a159644a10bdec788ec158c41ae4a7f5f177873072052fb",
+    "snapshots/ndl-9784091241023.json": "4efcf51f71496d716b78f387787a6ad0c33976d52cbb06650eab34f0e9b7712a",
+    "snapshots/ndl-9784091380135.json": "99e67b551367e2dd64177782691327b58cb0f11913f77df625815070ec45b7ca",
+    "snapshots/ndl-9784091810816.json": "f630900e97d0d64f1dcf7857153a151e5ee6b63d25099029a15471ead98ea265",
+    "snapshots/ndl-9784091823618.json": "65217f720d46bde5dd161626c73a4c14fbe802853d445ad2b8672ad9ad6bf731",
+    "snapshots/ndl-9784091910110.json": "63e724662ebdf9f5f9302369e886a44ad467c9471171cca1c15cdd82fcfcf970",
+    "snapshots/ndl-9784091912510.json": "ff5768c2308c026de396b4fa321a52ff1769b7af8b88c459d5d68c6b3d222ee1",
+    "snapshots/ndl-9784091914316.json": "08fa8051ca12c630be5856646fcb52e35f82b1ba55c5472a61d5752192b86246",
+    "snapshots/ndl-9784098501809.json": "fb8c4aa5ffe35f068ac0979c2baf301da3b8b77c95a5bcb23486ca9d8ae39bbf",
+    "snapshots/ndl-9784098602780.json": "f2ecc7eb6efeff2a0577204e85f3d06096cab8c30014d83b629b6982f889f74f",
+    "snapshots/ndl-9784253169813.json": "a62ae013c7aaf5c2eb105e815b068d473d719131b17953f4691ddce169d83b5b",
+    "snapshots/ndl-9784592881513.json": "5b291739909da87efce298b4058caab800ef680c9099110f8f8ebd10163e1b00",
+    "snapshots/ndl-9784757520097.json": "1d114de1f4b2f2858e53c5c33e7dd6db3b98dec2613447d027a6c4767db52c0c",
+    "snapshots/ndl-9784757538870.json": "5978beada87dbeabddfa1181e0190bee69a423a819badbd61ac9e4a28623a1cd",
+    "snapshots/ndl-9784884752934.json": "d51f77b80a1c5517479a9613401d9cdda10be6687017d36bf67c71515ac08355",
+    "summary.json": "6497fb1ac3eea52fb9234a2c0a2d533a94d360a7db1922fd1e6932172189765d"
+  }
+}

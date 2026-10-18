@@ -1,0 +1,77 @@
+{
+  "id": "Q958256",
+  "lastrevid": null,
+  "labels": {
+    "ja": {
+      "language": "ja",
+      "value": "赤塚不二夫"
+    },
+    "en": {
+      "language": "en",
+      "value": "Fujio Akatsuka"
+    }
+  },
+  "aliases": {
+    "ja": [
+      {
+        "language": "ja",
+        "value": "赤塚藤雄"
+      },
+      {
+        "language": "ja",
+        "value": "山田一郎"
+      }
+    ]
+  },
+  "claims": {
+    "P31": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P31",
+          "hash": "ad7d38a03cdd40cdc373de0dc4e7b7fcbccb31d9",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 5,
+              "id": "Q5"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q958256$F7370B62-E94E-4611-97AB-8A232A7C41B1",
+        "rank": "normal",
+        "references": [
+          {
+            "hash": "fa278ebfc458360e5aed63d5058cca83c46134f1",
+            "snaks": {
+              "P143": [
+                {
+                  "snaktype": "value",
+                  "property": "P143",
+                  "hash": "e4f6d9441d0600513c4533c672b5ab472dc73694",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 328,
+                      "id": "Q328"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P143"
+            ]
+          }
+        ]
+      }
+    ],
+    "P50": [],
+    "P110": []
+  }
+}

@@ -1,0 +1,124 @@
+{
+  "id": "Q1016880",
+  "lastrevid": null,
+  "labels": {
+    "en": {
+      "language": "en",
+      "value": "Buronson"
+    },
+    "ja": {
+      "language": "ja",
+      "value": "武論尊"
+    }
+  },
+  "aliases": {
+    "ja": [
+      {
+        "language": "ja",
+        "value": "史村翔"
+      },
+      {
+        "language": "ja",
+        "value": "岡村善行"
+      }
+    ],
+    "en": [
+      {
+        "language": "en",
+        "value": "Sho Fumimura"
+      },
+      {
+        "language": "en",
+        "value": "Shō Fumimura"
+      },
+      {
+        "language": "en",
+        "value": "Yoshiyuki Okamura"
+      }
+    ]
+  },
+  "claims": {
+    "P31": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P31",
+          "hash": "ad7d38a03cdd40cdc373de0dc4e7b7fcbccb31d9",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 5,
+              "id": "Q5"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q1016880$CF36BF25-2967-4988-A830-EDB1D4F78EE5",
+        "rank": "normal",
+        "references": [
+          {
+            "hash": "3525b71e65c0ebb19dfacc3439ea335115ee6663",
+            "snaks": {
+              "P248": [
+                {
+                  "snaktype": "value",
+                  "property": "P248",
+                  "hash": "45037a2d1d89deebcdfc5840e9adbaa4b64cebc6",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 50358336,
+                      "id": "Q50358336"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ],
+              "P813": [
+                {
+                  "snaktype": "value",
+                  "property": "P813",
+                  "hash": "268002474ee587ff6ff8fc5e0a9c7390fcfb8de6",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2024-02-25T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ],
+              "P950": [
+                {
+                  "snaktype": "value",
+                  "property": "P950",
+                  "hash": "b6142aacb8a9b99ff7e5f233820598c0938ed52e",
+                  "datavalue": {
+                    "value": "XX934826",
+                    "type": "string"
+                  },
+                  "datatype": "external-id"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P248",
+              "P813",
+              "P950"
+            ]
+          }
+        ]
+      }
+    ],
+    "P50": [],
+    "P110": []
+  }
+}

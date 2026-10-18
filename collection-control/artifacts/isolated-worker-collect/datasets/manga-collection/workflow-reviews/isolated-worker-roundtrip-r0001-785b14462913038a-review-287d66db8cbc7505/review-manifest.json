@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "reviewId": "isolated-worker-roundtrip-r0001-785b14462913038a-review-287d66db8cbc7505",
+  "inputSha256": "287d66db8cbc7505ead81ca4a8f77d5142778e67f3b8fb140bb1f7f43cec4782",
+  "artifacts": {
+    "context.json": "b4a6ac30ce783d97986db74fd161b9c6856937c544d0a69e985d6514ed233d5a",
+    "review.json": "957fdf6e5deb4a196ed67fe6abfee2e74f9ba16ac2a370f532ec2dae5491bb75",
+    "proposed-records.json": "7a61289f55cad1f33934307024ba60f931ca27536d6b8dfdda99d20f05445867",
+    "identity-only-records.json": "1795d6884f68dcd07b7041a6b7b91fb76ae0f4d71db722b32e891765765f74e0",
+    "exploration-paths.json": "7629b2d6d911031624169a0bd04fbaebf938e29ae6fe450b1a46a08ea2d4ac19",
+    "decision-request.json": "62fe2c7c66fa07358cd7a2c57e5ea6a231c181ed33b6f3b4a5809e008ee10117",
+    "README.md": "93e9d6cb2c100de5a724ff8202e114d85583abfb96c99edcdf5bed7f0c6e2ab6"
+  },
+  "authority": "pending-human-review-only"
+}

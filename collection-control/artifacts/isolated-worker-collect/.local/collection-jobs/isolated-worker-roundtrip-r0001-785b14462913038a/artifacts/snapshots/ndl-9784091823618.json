@@ -1,0 +1,35 @@
+{
+  "provider": "iss-ndl-opac / 国立国会図書館",
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "terms": "https://ndlsearch.ndl.go.jp/help/api/provider",
+  "records": [
+    {
+      "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I000002071177",
+      "isbn13": [
+        "9784091823618"
+      ],
+      "title": [
+        "サンクチュアリ. 1"
+      ],
+      "mainTitles": [
+        "サンクチュアリ"
+      ],
+      "volume": [
+        "1"
+      ],
+      "edition": [],
+      "responsibilities": [
+        "池上遼一 作画",
+        "史村翔 原作"
+      ],
+      "publisher": [],
+      "language": [
+        "jpn"
+      ],
+      "genre": [
+        "漫画"
+      ]
+    }
+  ],
+  "error": null
+}

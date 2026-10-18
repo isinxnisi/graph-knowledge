@@ -1,0 +1,87 @@
+{
+  "id": "Q733498",
+  "lastrevid": null,
+  "labels": {
+    "en": {
+      "language": "en",
+      "value": "Fist of the North Star"
+    },
+    "ja": {
+      "language": "ja",
+      "value": "北斗の拳"
+    }
+  },
+  "aliases": {
+    "en": [
+      {
+        "language": "en",
+        "value": "Hokuto no Ken"
+      }
+    ]
+  },
+  "claims": {
+    "P31": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P31",
+          "hash": "549c072d6be8a6a43f999d1d0e82640b16c4260e",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 21198342,
+              "id": "Q21198342"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q733498$2096AB14-8F5A-4FC7-8B07-9DBC903A17F1",
+        "rank": "normal"
+      }
+    ],
+    "P50": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P50",
+          "hash": "4b1d5d5c311215e9fe507244c12a826e3ee09319",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 1016880,
+              "id": "Q1016880"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q733498$46C3DD80-DE1E-4603-BF7B-F10C0BC4B660",
+        "rank": "normal"
+      }
+    ],
+    "P110": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P110",
+          "hash": "dda338fb5581720dcf6fd91d38457b9645a2c41f",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 1319232,
+              "id": "Q1319232"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q733498$c39b84a9-4827-d58d-78bc-41e34cacdd19",
+        "rank": "normal"
+      }
+    ]
+  }
+}

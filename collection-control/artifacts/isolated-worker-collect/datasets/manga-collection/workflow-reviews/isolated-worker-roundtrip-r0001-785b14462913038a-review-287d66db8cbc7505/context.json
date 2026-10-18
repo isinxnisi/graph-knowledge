@@ -1,0 +1,192 @@
+{
+  "jobId": "isolated-worker-roundtrip-r0001-785b14462913038a",
+  "definitionSha256": "ff727e1249ee667ef707175406c10fde9772716cb95d28cc3d67bc580b42130c",
+  "approvalSha256": "26e262213e8dde48ad2ae327bf177c9a5f855c49161825b53a5cb0e2617701ba",
+  "jobDirectory": "/tmp/plunode-worker-isolated-tdae5qji/runtime/.local/collection-jobs/isolated-worker-roundtrip-r0001-785b14462913038a",
+  "collectorCodeSha256": "80e05b67bc0129b963653b90df4cfbfa5bd6aff190acda99f54c08541e55801e",
+  "workflowCodeSha256": "b0bebd34d4aa5600919a834a533fa2e5da1c1ce95859308c57f73df7a5857e2d",
+  "public": {
+    "release": "20261014-credits-001",
+    "revision": "isolated-worker-no-database",
+    "observation": "live-readonly-backup",
+    "fixtureSha256": "9dff418c05fad7c07546fa94142bb2d45daaff57a2996357c8311851d5a3cc47",
+    "withdrawals": [],
+    "historySha256": "ISOLATED-SIMULATION-NOT-LIVE",
+    "references": [
+      {
+        "file": "datasets/public-kg/releases/20261014-credits-001/data.json",
+        "sha256": "ea91b16f52a211b5a8464382ad498b7b2bb2be69a6f33fe125a73a3c7b9da2b5"
+      },
+      {
+        "file": "datasets/public-kg/releases/20261014-credits-001/manifest.json",
+        "sha256": "e4aa3b58ed884f7d1f8fffee43b260261cc2b4d3a867fda942919f439d2bce17"
+      }
+    ]
+  },
+  "acceptedReferences": [
+    [
+      "datasets/manga-collection/accepted-original-story-r0002-20261017/acceptance.json",
+      "9fdb9933c0d78795769bf27eebb7ecb4ec7cccc37f6ee6827e55dd119e727801"
+    ],
+    [
+      "datasets/manga-collection/accepted-r0002-20261017/acceptance.json",
+      "9b28562b9846970cd30b9261d4659d505e9df06e014d2809d6517aa39836f567"
+    ],
+    [
+      "datasets/manga-collection/original-story-r0002-20261017/candidates.json",
+      "d13136e8e383bce126e8521bfc1015529210f617da220ccd71a4ce1f9f409348"
+    ],
+    [
+      "datasets/manga-collection/original-story-r0002-20261017/ndl-9784088727172.json",
+      "9e302be016583de26a8907bef77390d34d1bc45db01a08f6e680076cbd5c975a"
+    ],
+    [
+      "datasets/manga-collection/original-story-r0002-20261017/ndl-9784088733708.json",
+      "035008f311bc5e2e4fdd56e6a216c20f93792583675a2fe5a036e9c99ce71319"
+    ],
+    [
+      "datasets/manga-collection/original-story-r0002-20261017/ndl-9784088736211.json",
+      "42957040ed44ffa3caa223d68d1cbd0ab733434c9c6af1cc3bdc03c59af9858d"
+    ],
+    [
+      "datasets/manga-collection/original-story-r0002-20261017/ndl-9784088811840.json",
+      "97ae7be91605bb1d81a54062716132bb0d727b845d811a5b232f487ae4501cb0"
+    ],
+    [
+      "datasets/manga-collection/original-story-r0002-20261017/ndl-9784098610105.json",
+      "a8992f7327ac45150fa7dba2e2ad1877ed7914c4642918442d2ce2c7e9fa2a4a"
+    ],
+    [
+      "datasets/manga-collection/review-r0002-20261017/proposed-records.json",
+      "8ef5b68ccda860c453078bef5a57615495320eb470e4230fe04ceda8f7262d81"
+    ],
+    [
+      "datasets/manga-collection/review-r0002-20261017/review.json",
+      "dec7cd6e012e82be409541418480e95565214c3457bb48ddbc4eca280c12ec76"
+    ],
+    [
+      "datasets/manga-collection/review-r0002-20261017/verification.json",
+      "2385eebc8bea8ba17b9ad05110785755102d6692c634ae94f0487827d97f6c09"
+    ],
+    [
+      "datasets/public-kg/releases/20261014-credits-001/data.json",
+      "ea91b16f52a211b5a8464382ad498b7b2bb2be69a6f33fe125a73a3c7b9da2b5"
+    ],
+    [
+      "datasets/public-kg/releases/20261014-credits-001/manifest.json",
+      "e4aa3b58ed884f7d1f8fffee43b260261cc2b4d3a867fda942919f439d2bce17"
+    ],
+    [
+      "datasets/public-kg/releases/20261017-manga-r0002-001/data.json",
+      "a52c93f78cbc6a7440dee640d1161d040d88effee494d02045c49637801975db"
+    ],
+    [
+      "datasets/public-kg/releases/20261017-manga-r0002-001/manifest.json",
+      "5714648b348fff62605f99f3b25c25bc1f22a22e2e4acdaefae7196ddb5712a8"
+    ],
+    [
+      "datasets/public-kg/releases/20261017-manga-r0002-002/data.json",
+      "6180481328c77abb40d16579d1f0cee34cbda6d8438769a95a23df71536f90aa"
+    ],
+    [
+      "datasets/public-kg/releases/20261017-manga-r0002-002/manifest.json",
+      "5ae3f008be8c05f29cafa620a5cb0926792bc2984b0e0694a4bf1986032bd87c"
+    ],
+    [
+      "docs/design/MANGA_R0002_ACCEPTANCE_REVIEW.md",
+      "7cdf6a84158f655465a26d7755f528668c23309a5f79ed8cd2d5e01905e00265"
+    ],
+    [
+      "docs/design/MANGA_R0002_ACCEPTED_RELEASE.md",
+      "4f29556605f1b10241e9275b546db5b43495230e60233eade630df59fcb48113"
+    ],
+    [
+      "docs/design/ORIGINAL_STORY.md",
+      "26cde0cff0d4d3128f6a3b52201f8649cd3f414294f3a81fcddea9f8d54c5a27"
+    ]
+  ],
+  "jobArtifacts": {
+    "candidate/data.json": "1a07581db47546f1dd7904c654871fac747b2d121925d78b1e21d894f50d2ccd",
+    "candidate/manifest.json": "883bccf89b18156d278af3e2b0856b1ad230471b47b7f09cd54f30c0cd90eade",
+    "ledger.json": "ed4804594fffa9a91039ca325ae9fd88c4b4cd370d9c4097250b750c3d514233",
+    "snapshots/Q1016880.json": "f47e09c8ce4251cc060410ab9cc15d5b605ea67fda7e19d44e86aae52f450608",
+    "snapshots/Q102231027.json": "ddb8cfb5c96ba34dca9d3e677e48542b1368ef83585164a1188723db7ff730aa",
+    "snapshots/Q105258125.json": "9a7875eaf7098c4475cd88419216f8a1ee5637e5747eb1d76b0d039fd9b443cb",
+    "snapshots/Q108109758.json": "769d5e3ffa63e5dd8eab37e1e2e06797618fd4f30c148632616039418b25b57b",
+    "snapshots/Q1096269.json": "ba6192efeb35c5e90ed96b822c65e654a0f6a07e58af23bfeca8af7b241ab06a",
+    "snapshots/Q11237288.json": "c2ec8ed270c5d1087d318eb365d46c11fb6ad6d702a3821a828d3f96acdcb0dc",
+    "snapshots/Q11298673.json": "e9bf39dab2448eb9ae9ce8bb0a38945d12da1e1a313aa7144d4291c116e6c94b",
+    "snapshots/Q11344543.json": "dc7b940ebeb72c9efb74fb89f2ced0a0c570c42b0628275fe76cb0c2f026a4e2",
+    "snapshots/Q1170375.json": "9ebf060932a54197c074c033c1477fb2154bdb642760473ae9d0e8f2398db5c9",
+    "snapshots/Q124312385.json": "9ea6b988e622fa10318af20e8088bfb8876fcc92e929377d6023d60c4b21cbff",
+    "snapshots/Q1319232.json": "6ed45063ffaa57a259945b9bc89c6665be0427f8dc70168e24bd7a2b08003a3d",
+    "snapshots/Q1332841.json": "78fb5d1f3ce13d83d9beb4633bde520ef5745b72b0255546b836c6a359c52536",
+    "snapshots/Q133691.json": "0f03ecd9dbc63b313473266697cb5081b9283d897bac45951a26e9ae4d53844c",
+    "snapshots/Q1338432.json": "b6bb71dbf7e5c859331584e716ed6203fdca21a1b067c4206da522070184a048",
+    "snapshots/Q17220992.json": "fb94bc4a9ba61e05502fb481bd1fc88dd59c31820d8fd49a770f4b028b0ed604",
+    "snapshots/Q193300.json": "fbe94ee00b7ef45f054ca21f49f323afd56c88135264ddb4252068d6ca368621",
+    "snapshots/Q1993.json": "f5d01ef755bd0f0fe0fe4ad0cd4a3271ce864325cdc2df8d3ddfeb4f4c761bd4",
+    "snapshots/Q219948.json": "b453ad559d787103217632206d954e2f569b6924bcfc6234acdf2140d8659ed4",
+    "snapshots/Q2235128.json": "cd2d548f8ef16cb03c9447dff268aaaa43829d5a6aa313eda6109cbf3ab712c5",
+    "snapshots/Q23937543.json": "296a77bf96859d3b82df6213724fd57277c8441450d7f33162b5d3c0369a6e30",
+    "snapshots/Q24864023.json": "091edcadccea875106fdc1e658e76ed12e6bc2baec2a863382391bd88def97ee",
+    "snapshots/Q2551007.json": "913f6384c3ec9ff6e02c2ebbd244b7807afd8417840921ff5d298fe4d364625e",
+    "snapshots/Q265061.json": "8552f13dece2fcb343878a1b4cd8038b1f094544a03cca352791339e5b825416",
+    "snapshots/Q2668005.json": "2b3f3c10c0d8eefa79585897d8f757ca30072c9667301c4c20a53cc8ca066820",
+    "snapshots/Q2679175.json": "bdc8f1c7bcd32455872137fa2dfbb661c107b736e61eecbe12848cd41085ed11",
+    "snapshots/Q268789.json": "3b4c75d1d32347393877aea0a17090146e8e8d15eac843c6635fa617edeb99e5",
+    "snapshots/Q272015.json": "8ec94619bcade941147c4913babd7c109a9783c1648434a7873592755054c0d7",
+    "snapshots/Q28682711.json": "c8f2ad5dc66079f7341906259fcd20b21c1ce4f488f9c93d716966d2c0f481b5",
+    "snapshots/Q313703.json": "e16459f7da531895d631892487b4d05114e9f254b963df294e7d1eb1d1532b83",
+    "snapshots/Q3194504.json": "5e8ce00fb0dee82ac8a7c5fd145df7b9c7783fba06f1c34bbc09369608547746",
+    "snapshots/Q348436.json": "d0a9b900bd4e5c10708f7a03c04e873df26270ed24a9cb96482bd0d0b3466b52",
+    "snapshots/Q378710.json": "fc998cb3bf9c4b6304a5606cf7822a0bf352c07fc4c3ec552ea4740ad5f7ca29",
+    "snapshots/Q38277627.json": "e4b3dc167c64823fc87066098ba701a6483343e5918851bddd197d188b2b72bb",
+    "snapshots/Q467854.json": "bcb9a7ca8fc371372bc0eb7677f5d19bdfb536dcc08371781fabfe20e6d2fee2",
+    "snapshots/Q48837273.json": "7b4e2d86cab6b19c37fcd483a5399d415e88e7692f51c0fb716b60f3f33943ba",
+    "snapshots/Q558858.json": "b47f116ae97084d8b77620a326e0822816046479f14dd71318bbae85cc06d23b",
+    "snapshots/Q624839.json": "7c0ea64ac68fb01a771f2ce093bf7af9edaa069d21f86054a03b1c8e91c09eec",
+    "snapshots/Q63323229.json": "372809d98b1329b306c8f04aee54e8d90d9bdf6c062ef833f5b75120bc849601",
+    "snapshots/Q669481.json": "522c64602dc5c3ac9dd9eaa79c91b6bb14513cfb6be2d93e99e841a7ed4a53a8",
+    "snapshots/Q715723.json": "1b88a3e38a82fca4b30be8fc935c2579487d1623f6b5652f6b8893c3d6817c43",
+    "snapshots/Q733498.json": "2dc76e436a89c9824484d54be02bbeb3b997c77c4b56fc60d1ed7f1bf7315cb4",
+    "snapshots/Q804555.json": "c59e554271dc9b1414bb5149a8ae24588c91324a1e956825213f94eb2c3108e7",
+    "snapshots/Q809789.json": "e2ae7c6ce2990b81a6fdcffc703e18b5fcdf4a8cea880100321bac68dc06b268",
+    "snapshots/Q91486.json": "4367374f6a3dbfc19bbcefc65ece1e21803e9135737d7b60ed8d88b55f014f6b",
+    "snapshots/Q958256.json": "1c191a32c1730c835298c5fe46c328d321085fecdf5a788d9780153516ec27e2",
+    "snapshots/Q97310775.json": "26d04ccd17dc84cf8228f962cddf3fc9faf5eae0b6c849cc191133964ae0d6ed",
+    "snapshots/Q98642652.json": "85ccff1c73bc6d55242f4a704412b9e1b5916954f729420fa9c753e942b32c8f",
+    "snapshots/ndl-9784061037113.json": "3f15a02675cabf4ef810a522657a1495ed2174c7e0f9eca3758ecab601e88eae",
+    "snapshots/ndl-9784063829082.json": "24dbceb39fa9fe76e5e89b21c79d48079148dfb5d786a1e7dd783ecdf023cd9f",
+    "snapshots/ndl-9784065262634.json": "e1a80787f6b33d1d0dba6808e59366002c5ac56f10010186450b3050f2c9c249",
+    "snapshots/ndl-9784086172837.json": "d5e55effd061533483d3249e2563f98ca68d630d4c898f560241ed411b79fd86",
+    "snapshots/ndl-9784086196901.json": "036b94d8e90c6539f195a23b4ed5e8776dd229906db967c52a13c8453208fe58",
+    "snapshots/ndl-9784088807317.json": "b537249e321c01159339fbdfb7688ec0b840d1cf4cd568620d14c491b17bb789",
+    "snapshots/ndl-9784088820224.json": "da0eb9fdab73a2a455102be81a3cbf831c260dbd79b7d4b3c00c85210a8eec0f",
+    "snapshots/ndl-9784088916507.json": "51ec2b7649efd37098ca70d93ceee4d067e03a8a5e9c992e9a67bf287247458d",
+    "snapshots/ndl-9784091220318.json": "6a3556b755b908a982590b1077c8b570e1babd537b46e32507557a7efdf91b9d",
+    "snapshots/ndl-9784091228017.json": "978139bca8bd7bd57a159644a10bdec788ec158c41ae4a7f5f177873072052fb",
+    "snapshots/ndl-9784091241023.json": "4efcf51f71496d716b78f387787a6ad0c33976d52cbb06650eab34f0e9b7712a",
+    "snapshots/ndl-9784091380135.json": "99e67b551367e2dd64177782691327b58cb0f11913f77df625815070ec45b7ca",
+    "snapshots/ndl-9784091810816.json": "f630900e97d0d64f1dcf7857153a151e5ee6b63d25099029a15471ead98ea265",
+    "snapshots/ndl-9784091823618.json": "65217f720d46bde5dd161626c73a4c14fbe802853d445ad2b8672ad9ad6bf731",
+    "snapshots/ndl-9784091910110.json": "63e724662ebdf9f5f9302369e886a44ad467c9471171cca1c15cdd82fcfcf970",
+    "snapshots/ndl-9784091912510.json": "ff5768c2308c026de396b4fa321a52ff1769b7af8b88c459d5d68c6b3d222ee1",
+    "snapshots/ndl-9784091914316.json": "08fa8051ca12c630be5856646fcb52e35f82b1ba55c5472a61d5752192b86246",
+    "snapshots/ndl-9784098501809.json": "fb8c4aa5ffe35f068ac0979c2baf301da3b8b77c95a5bcb23486ca9d8ae39bbf",
+    "snapshots/ndl-9784098602780.json": "f2ecc7eb6efeff2a0577204e85f3d06096cab8c30014d83b629b6982f889f74f",
+    "snapshots/ndl-9784253169813.json": "a62ae013c7aaf5c2eb105e815b068d473d719131b17953f4691ddce169d83b5b",
+    "snapshots/ndl-9784592881513.json": "5b291739909da87efce298b4058caab800ef680c9099110f8f8ebd10163e1b00",
+    "snapshots/ndl-9784757520097.json": "1d114de1f4b2f2858e53c5c33e7dd6db3b98dec2613447d027a6c4767db52c0c",
+    "snapshots/ndl-9784757538870.json": "5978beada87dbeabddfa1181e0190bee69a423a819badbd61ac9e4a28623a1cd",
+    "snapshots/ndl-9784884752934.json": "d51f77b80a1c5517479a9613401d9cdda10be6687017d36bf67c71515ac08355",
+    "summary.json": "6497fb1ac3eea52fb9234a2c0a2d533a94d360a7db1922fd1e6932172189765d"
+  },
+  "workOrderSha256": "25968429bba7035465183083cb127d6cc5a4585542231791ebe628f3f99d18d1",
+  "pathPolicy": {
+    "maxPaths": 6,
+    "adjacencyPerStep": 20,
+    "exhaustive": false
+  },
+  "authority": "review-only-not-formal-acceptance-not-public-apply"
+}

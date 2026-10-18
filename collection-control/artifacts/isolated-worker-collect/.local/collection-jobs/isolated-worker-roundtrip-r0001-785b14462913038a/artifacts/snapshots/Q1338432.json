@@ -1,0 +1,132 @@
+{
+  "id": "Q1338432",
+  "lastrevid": null,
+  "labels": {
+    "ja": {
+      "language": "ja",
+      "value": "風と木の詩"
+    },
+    "en": {
+      "language": "en",
+      "value": "Kaze to Ki no Uta"
+    }
+  },
+  "aliases": {},
+  "claims": {
+    "P31": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P31",
+          "hash": "549c072d6be8a6a43f999d1d0e82640b16c4260e",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 21198342,
+              "id": "Q21198342"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q1338432$63B9E7FA-56DE-4350-8079-F16CE4D45B44",
+        "rank": "normal"
+      }
+    ],
+    "P50": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P50",
+          "hash": "7c9964674196230f4a551d4c10a36b7adfdc4701",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 268789,
+              "id": "Q268789"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q1338432$A6FADD55-1B16-4ED5-8F23-5ABB31A12108",
+        "rank": "normal",
+        "references": [
+          {
+            "hash": "d4bd87b862b12d99d26e86472d44f26858dee639",
+            "snaks": {
+              "P143": [
+                {
+                  "snaktype": "value",
+                  "property": "P143",
+                  "hash": "f30cbd35620c4ea6d0633aaf0210a8916130469b",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 8447,
+                      "id": "Q8447"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P143"
+            ]
+          }
+        ]
+      }
+    ],
+    "P110": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P110",
+          "hash": "4200b71c51a2272ea3ef39def28880aa223c1f7f",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 268789,
+              "id": "Q268789"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q1338432$8C707FF3-86FF-4C21-850A-0941567F32D4",
+        "rank": "normal",
+        "references": [
+          {
+            "hash": "d4bd87b862b12d99d26e86472d44f26858dee639",
+            "snaks": {
+              "P143": [
+                {
+                  "snaktype": "value",
+                  "property": "P143",
+                  "hash": "f30cbd35620c4ea6d0633aaf0210a8916130469b",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 8447,
+                      "id": "Q8447"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P143"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

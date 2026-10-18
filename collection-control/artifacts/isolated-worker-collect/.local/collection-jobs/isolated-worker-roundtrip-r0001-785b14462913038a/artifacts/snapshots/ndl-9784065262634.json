@@ -1,0 +1,34 @@
+{
+  "provider": "iss-ndl-opac / 国立国会図書館",
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "terms": "https://ndlsearch.ndl.go.jp/help/api/provider",
+  "records": [
+    {
+      "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I031906385",
+      "isbn13": [
+        "9784065262634"
+      ],
+      "title": [
+        "OTOMO THE COMPLETE WORKS. 8"
+      ],
+      "mainTitles": [
+        "OTOMO THE COMPLETE WORKS"
+      ],
+      "volume": [
+        "8"
+      ],
+      "edition": [],
+      "responsibilities": [
+        "大友克洋 著"
+      ],
+      "publisher": [],
+      "language": [
+        "jpn"
+      ],
+      "genre": [
+        "漫画"
+      ]
+    }
+  ],
+  "error": null
+}

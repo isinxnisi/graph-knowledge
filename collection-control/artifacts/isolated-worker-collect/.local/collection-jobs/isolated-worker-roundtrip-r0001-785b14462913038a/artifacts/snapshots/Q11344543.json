@@ -1,0 +1,87 @@
+{
+  "id": "Q11344543",
+  "lastrevid": null,
+  "labels": {
+    "ja": {
+      "language": "ja",
+      "value": "モブサイコ100"
+    },
+    "en": {
+      "language": "en",
+      "value": "Mob Psycho 100"
+    }
+  },
+  "aliases": {
+    "en": [
+      {
+        "language": "en",
+        "value": "MP100"
+      }
+    ]
+  },
+  "claims": {
+    "P31": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P31",
+          "hash": "549c072d6be8a6a43f999d1d0e82640b16c4260e",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 21198342,
+              "id": "Q21198342"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q11344543$2FC4D3A3-F287-46F4-85FC-D71C4B64EB8B",
+        "rank": "normal"
+      }
+    ],
+    "P50": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P50",
+          "hash": "f252c0014d8149c4ef1e7e96021d229ad5b8a7b8",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 11237288,
+              "id": "Q11237288"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q11344543$353a272d-4a6c-0dab-ac26-d4e9de439bc1",
+        "rank": "normal"
+      }
+    ],
+    "P110": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P110",
+          "hash": "dba87a6cf75e1e9038ddf6b347d9c82a5dbfc076",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 11237288,
+              "id": "Q11237288"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q11344543$FF3A29FA-A88A-4628-AB81-952F60E34592",
+        "rank": "normal"
+      }
+    ]
+  }
+}

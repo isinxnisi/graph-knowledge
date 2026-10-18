@@ -1,0 +1,106 @@
+{
+  "id": "Q1170375",
+  "lastrevid": null,
+  "labels": {
+    "en": {
+      "language": "en",
+      "value": "Domu: A Child's Dream"
+    },
+    "ja": {
+      "language": "ja",
+      "value": "童夢"
+    }
+  },
+  "aliases": {},
+  "claims": {
+    "P31": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P31",
+          "hash": "549c072d6be8a6a43f999d1d0e82640b16c4260e",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 21198342,
+              "id": "Q21198342"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q1170375$31A04941-0286-4031-8211-3026122D250F",
+        "rank": "normal"
+      }
+    ],
+    "P50": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P50",
+          "hash": "e14e414710ee8c0887a6619471c55c74cdaf6f2d",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 378710,
+              "id": "Q378710"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q1170375$4CAD5808-F8BB-4A9E-B62D-B7D4032A2822",
+        "rank": "normal",
+        "references": [
+          {
+            "hash": "d4bd87b862b12d99d26e86472d44f26858dee639",
+            "snaks": {
+              "P143": [
+                {
+                  "snaktype": "value",
+                  "property": "P143",
+                  "hash": "f30cbd35620c4ea6d0633aaf0210a8916130469b",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 8447,
+                      "id": "Q8447"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P143"
+            ]
+          }
+        ]
+      }
+    ],
+    "P110": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P110",
+          "hash": "d03e7d8b73953ca9b0e28e809521af115b83fbbd",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 378710,
+              "id": "Q378710"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q1170375$93c21009-4bb9-5e94-1663-0ae2d3e06ae8",
+        "rank": "normal"
+      }
+    ]
+  }
+}

@@ -1,0 +1,346 @@
+[
+  {
+    "state": "collection-candidate",
+    "observation": "verified-records-only-not-a-live-exploration-test",
+    "edges": [
+      {
+        "claimId": "121709e5-ea90-4c6a-87d1-d67264e1590d",
+        "subjectId": "743d7fc0-ddc6-446a-8aa1-d9a9b284a326",
+        "objectId": "b1e1232d-b038-4c11-b80c-ab1c2710d2bf",
+        "person": "高橋留美子",
+        "work": "うる星やつら",
+        "roleId": "AUTHORSHIP",
+        "scope": {
+          "kind": "publication",
+          "isbn13": "9784091228017",
+          "volumeLabel": "第1巻",
+          "editionLabel": null,
+          "language": "ja"
+        },
+        "state": "collection-candidate",
+        "citationIds": [
+          "fa8985f2-6775-4348-a136-9a5dee986b1a"
+        ],
+        "sourceIds": [
+          "28614027-38d3-4b20-b460-8b1b48b4eb07"
+        ]
+      },
+      {
+        "claimId": "1eb1fe7c-0cbd-48f4-8379-cd7f6e4697e4",
+        "subjectId": "743d7fc0-ddc6-446a-8aa1-d9a9b284a326",
+        "objectId": "aafae4fe-6f56-47bb-af9f-dec69425f136",
+        "person": "高橋留美子",
+        "work": "らんま1/2",
+        "roleId": "AUTHORSHIP",
+        "scope": {
+          "kind": "publication",
+          "isbn13": "9784091220318",
+          "volumeLabel": "第1巻",
+          "editionLabel": null,
+          "language": "ja"
+        },
+        "state": "collection-candidate",
+        "citationIds": [
+          "43d7a974-48c0-42e1-a69a-0b196a42dd15"
+        ],
+        "sourceIds": [
+          "df1c52bd-8832-47a1-bc57-30c779f01ad5"
+        ]
+      }
+    ]
+  },
+  {
+    "state": "collection-candidate",
+    "observation": "verified-records-only-not-a-live-exploration-test",
+    "edges": [
+      {
+        "claimId": "24dca7b4-00bf-4f70-92f6-a498a494c29a",
+        "subjectId": "b4de3765-e8c4-49f1-a322-a021475ffd09",
+        "objectId": "1982f262-39f3-4bfa-93a4-af3a86ec3ec8",
+        "person": "Boichi",
+        "work": "ORIGIN",
+        "roleId": "AUTHORSHIP",
+        "scope": {
+          "kind": "publication",
+          "isbn13": "9784063829082",
+          "volumeLabel": "第1巻",
+          "editionLabel": null,
+          "language": "ja"
+        },
+        "state": "collection-candidate",
+        "citationIds": [
+          "de59f4e7-fef0-4546-81d2-3dbf1944a96e"
+        ],
+        "sourceIds": [
+          "e059d4f3-9e5d-4c5f-84e1-959b3c932e30"
+        ]
+      },
+      {
+        "claimId": "fe6d7c19-646b-474a-ad0a-3b20bc816866",
+        "subjectId": "b4de3765-e8c4-49f1-a322-a021475ffd09",
+        "objectId": "31f3c278-7d49-4aed-9a36-c722cae25ed2",
+        "person": "Boichi",
+        "work": "Dr.STONE",
+        "roleId": "DRAWING",
+        "scope": {
+          "kind": "publication",
+          "isbn13": "9784088811840",
+          "volumeLabel": "第1巻",
+          "editionLabel": null,
+          "language": "ja"
+        },
+        "state": "formally-accepted-not-applied",
+        "citationIds": [
+          "c91fecfc-7389-491b-aca9-d181138ebe35"
+        ],
+        "sourceIds": [
+          "7def5563-ec0a-4709-99aa-22f8b07a5c10"
+        ]
+      }
+    ]
+  },
+  {
+    "state": "collection-candidate",
+    "observation": "verified-records-only-not-a-live-exploration-test",
+    "edges": [
+      {
+        "claimId": "48a9f51e-beb1-4c3a-9c30-5923bc852925",
+        "subjectId": "a13205e2-220c-4b7d-8a1a-39dbefe52db8",
+        "objectId": "3427040b-88fd-4db5-b546-dd237abad032",
+        "person": "大場つぐみ",
+        "work": "バクマン。",
+        "roleId": "ORIGINAL_STORY",
+        "scope": {
+          "kind": "publication",
+          "isbn13": "9784086196901",
+          "volumeLabel": "第1巻",
+          "editionLabel": null,
+          "language": "ja"
+        },
+        "state": "collection-candidate",
+        "citationIds": [
+          "85b6215a-d659-4c08-850a-c9611e94bd43"
+        ],
+        "sourceIds": [
+          "fa2da69a-8a61-4364-8dab-05b9678d77aa"
+        ]
+      },
+      {
+        "claimId": "6ed29ee4-2b62-4fe7-83a6-aafe300754d7",
+        "subjectId": "a13205e2-220c-4b7d-8a1a-39dbefe52db8",
+        "objectId": "7ca5fc7d-545a-4d39-a2dc-6cce86390112",
+        "person": "大場つぐみ",
+        "work": "DEATH NOTE",
+        "roleId": "ORIGINAL_STORY",
+        "scope": {
+          "kind": "publication",
+          "isbn13": "9784088736211",
+          "volumeLabel": "第1巻",
+          "editionLabel": null,
+          "language": "ja"
+        },
+        "state": "formally-accepted-not-applied",
+        "citationIds": [
+          "2912d1b2-54cf-425a-9428-d0c323f68a01"
+        ],
+        "sourceIds": [
+          "4859917b-c4ba-4e2d-b932-52224ff7ebec"
+        ]
+      }
+    ]
+  },
+  {
+    "state": "collection-candidate",
+    "observation": "verified-records-only-not-a-live-exploration-test",
+    "edges": [
+      {
+        "claimId": "602bc3c1-8a98-49cc-9556-a4c23feb6b0e",
+        "subjectId": "6bf4aeb4-ac2b-499f-bfaa-0588024ef93d",
+        "objectId": "baf73bb9-dda4-474c-acaf-a7a8ce52caf2",
+        "person": "竹宮惠子",
+        "work": "地球へ…",
+        "roleId": "AUTHORSHIP",
+        "scope": {
+          "kind": "publication",
+          "isbn13": "9784757520097",
+          "volumeLabel": "第1巻",
+          "editionLabel": null,
+          "language": "ja"
+        },
+        "state": "collection-candidate",
+        "citationIds": [
+          "d81bd9a1-ed47-45e2-9ee5-ed45b2d8ddb5"
+        ],
+        "sourceIds": [
+          "f9bc0f9b-f737-40eb-b451-8b0622bb1f29"
+        ]
+      },
+      {
+        "claimId": "7c2bd016-d9b0-4de2-824e-276941b1a2b2",
+        "subjectId": "6bf4aeb4-ac2b-499f-bfaa-0588024ef93d",
+        "objectId": "98b8ca7a-9638-4e5a-8fbd-62a353e4f159",
+        "person": "竹宮惠子",
+        "work": "風と木の詩",
+        "roleId": "AUTHORSHIP",
+        "scope": {
+          "kind": "publication",
+          "isbn13": "9784592881513",
+          "volumeLabel": "第1巻",
+          "editionLabel": null,
+          "language": "ja"
+        },
+        "state": "collection-candidate",
+        "citationIds": [
+          "29669439-5d05-4eed-8c5a-15a895209227"
+        ],
+        "sourceIds": [
+          "3e30dc4d-2c8a-40c0-95d8-258ef061b5ce"
+        ]
+      }
+    ]
+  },
+  {
+    "state": "collection-candidate",
+    "observation": "verified-records-only-not-a-live-exploration-test",
+    "edges": [
+      {
+        "claimId": "81684aff-84cf-4977-a3b5-7c2f5d746e5a",
+        "subjectId": "ccb5ddb2-fb7c-4dad-8178-1a170342d0c6",
+        "objectId": "cd2e6949-6c1b-4818-990f-4d4dbc5c5d54",
+        "person": "原哲夫",
+        "work": "北斗の拳",
+        "roleId": "DRAWING",
+        "scope": {
+          "kind": "publication",
+          "isbn13": "9784086172837",
+          "volumeLabel": "第1巻",
+          "editionLabel": null,
+          "language": "ja"
+        },
+        "state": "collection-candidate",
+        "citationIds": [
+          "a2006985-9169-4009-a16a-688a7c47632c"
+        ],
+        "sourceIds": [
+          "d742ddc4-acb8-411a-a159-efd815afecd6"
+        ]
+      },
+      {
+        "claimId": "e3bf903c-5d0c-4f91-bf83-2826f5a23db7",
+        "subjectId": "3f22660f-01d7-4a4a-9ae6-f169c9a3dc4a",
+        "objectId": "cd2e6949-6c1b-4818-990f-4d4dbc5c5d54",
+        "person": "武論尊",
+        "work": "北斗の拳",
+        "roleId": "CREATION",
+        "scope": {
+          "kind": "publication",
+          "isbn13": "9784086172837",
+          "volumeLabel": "第1巻",
+          "editionLabel": null,
+          "language": "ja"
+        },
+        "state": "collection-candidate",
+        "citationIds": [
+          "1d520b97-18c3-46ef-94ef-9e4e4c8ad15e"
+        ],
+        "sourceIds": [
+          "d742ddc4-acb8-411a-a159-efd815afecd6"
+        ]
+      },
+      {
+        "claimId": "c19e5b2f-01e2-4233-a7c9-326a1772d7de",
+        "subjectId": "3f22660f-01d7-4a4a-9ae6-f169c9a3dc4a",
+        "objectId": "c9080259-3866-4c25-999f-4a5a22046ac1",
+        "person": "武論尊",
+        "work": "サンクチュアリ",
+        "roleId": "ORIGINAL_STORY",
+        "scope": {
+          "kind": "publication",
+          "isbn13": "9784091823618",
+          "volumeLabel": "第1巻",
+          "editionLabel": null,
+          "language": "ja"
+        },
+        "state": "collection-candidate",
+        "citationIds": [
+          "55f0c3f3-cc50-48a8-9242-b31b3e7155f8"
+        ],
+        "sourceIds": [
+          "6e6882d7-7add-4510-92a2-00e1b469c117"
+        ]
+      }
+    ]
+  },
+  {
+    "state": "collection-candidate",
+    "observation": "verified-records-only-not-a-live-exploration-test",
+    "edges": [
+      {
+        "claimId": "c19e5b2f-01e2-4233-a7c9-326a1772d7de",
+        "subjectId": "3f22660f-01d7-4a4a-9ae6-f169c9a3dc4a",
+        "objectId": "c9080259-3866-4c25-999f-4a5a22046ac1",
+        "person": "武論尊",
+        "work": "サンクチュアリ",
+        "roleId": "ORIGINAL_STORY",
+        "scope": {
+          "kind": "publication",
+          "isbn13": "9784091823618",
+          "volumeLabel": "第1巻",
+          "editionLabel": null,
+          "language": "ja"
+        },
+        "state": "collection-candidate",
+        "citationIds": [
+          "55f0c3f3-cc50-48a8-9242-b31b3e7155f8"
+        ],
+        "sourceIds": [
+          "6e6882d7-7add-4510-92a2-00e1b469c117"
+        ]
+      },
+      {
+        "claimId": "c3fcdaa7-1374-4c62-acab-368dc1ed1bee",
+        "subjectId": "710bc8a7-efed-4c2e-a4b4-6c65b0aff695",
+        "objectId": "c9080259-3866-4c25-999f-4a5a22046ac1",
+        "person": "池上遼一",
+        "work": "サンクチュアリ",
+        "roleId": "DRAWING",
+        "scope": {
+          "kind": "publication",
+          "isbn13": "9784091823618",
+          "volumeLabel": "第1巻",
+          "editionLabel": null,
+          "language": "ja"
+        },
+        "state": "collection-candidate",
+        "citationIds": [
+          "503b85f7-ccdc-4723-b0e0-51d121f8ba3e"
+        ],
+        "sourceIds": [
+          "6e6882d7-7add-4510-92a2-00e1b469c117"
+        ]
+      },
+      {
+        "claimId": "cf18d898-41e5-486f-8dcf-8a666bef83fe",
+        "subjectId": "710bc8a7-efed-4c2e-a4b4-6c65b0aff695",
+        "objectId": "c71ebc3e-ae93-43d6-a525-eb5b1abd609f",
+        "person": "池上遼一",
+        "work": "トリリオンゲーム",
+        "roleId": "DRAWING",
+        "scope": {
+          "kind": "publication",
+          "isbn13": "9784098610105",
+          "volumeLabel": "第1巻",
+          "editionLabel": null,
+          "language": "ja"
+        },
+        "state": "formally-accepted-not-applied",
+        "citationIds": [
+          "ad510a01-b4bc-4f29-b4b0-e415a13ae0b7"
+        ],
+        "sourceIds": [
+          "1f388832-0cb6-4ccd-b7e6-80bb0ed0212a"
+        ]
+      }
+    ]
+  }
+]

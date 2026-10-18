@@ -1,0 +1,153 @@
+{
+  "id": "Q2551007",
+  "lastrevid": null,
+  "labels": {
+    "ja": {
+      "language": "ja",
+      "value": "天才バカボン"
+    },
+    "en": {
+      "language": "en",
+      "value": "Tensai Bakabon"
+    }
+  },
+  "aliases": {
+    "ja": [
+      {
+        "language": "ja",
+        "value": "バカボン"
+      },
+      {
+        "language": "ja",
+        "value": "天才馬鹿凡"
+      }
+    ],
+    "en": [
+      {
+        "language": "en",
+        "value": "The Genius Bakabon"
+      },
+      {
+        "language": "en",
+        "value": "Meet the Boneheads"
+      }
+    ]
+  },
+  "claims": {
+    "P31": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P31",
+          "hash": "549c072d6be8a6a43f999d1d0e82640b16c4260e",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 21198342,
+              "id": "Q21198342"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q2551007$5EA14BF0-A541-4095-BFBB-727EBD68DC9A",
+        "rank": "normal"
+      }
+    ],
+    "P50": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P50",
+          "hash": "25e4d7377d418f8b6239fe088db793d14bc8a5d5",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 958256,
+              "id": "Q958256"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q2551007$F70783B8-9274-490F-9A92-6946D7F4A788",
+        "rank": "normal",
+        "references": [
+          {
+            "hash": "d4bd87b862b12d99d26e86472d44f26858dee639",
+            "snaks": {
+              "P143": [
+                {
+                  "snaktype": "value",
+                  "property": "P143",
+                  "hash": "f30cbd35620c4ea6d0633aaf0210a8916130469b",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 8447,
+                      "id": "Q8447"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P143"
+            ]
+          }
+        ]
+      }
+    ],
+    "P110": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P110",
+          "hash": "f21d43c467f5b3013c8733ee69c47da66f59d118",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 958256,
+              "id": "Q958256"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q2551007$40D2A232-5F6F-44A8-8643-BC2766D9E133",
+        "rank": "normal",
+        "references": [
+          {
+            "hash": "d4bd87b862b12d99d26e86472d44f26858dee639",
+            "snaks": {
+              "P143": [
+                {
+                  "snaktype": "value",
+                  "property": "P143",
+                  "hash": "f30cbd35620c4ea6d0633aaf0210a8916130469b",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 8447,
+                      "id": "Q8447"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P143"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

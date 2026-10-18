@@ -1,0 +1,53 @@
+{
+  "id": "Q17220992",
+  "lastrevid": null,
+  "labels": {
+    "ja": {
+      "language": "ja",
+      "value": "横槍メンゴ"
+    },
+    "en": {
+      "language": "en",
+      "value": "Mengo Yokoyari"
+    }
+  },
+  "aliases": {
+    "en": [
+      {
+        "language": "en",
+        "value": "Yokoyari Mengo"
+      }
+    ],
+    "ja": [
+      {
+        "language": "ja",
+        "value": "ヨリ"
+      }
+    ]
+  },
+  "claims": {
+    "P31": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P31",
+          "hash": "ad7d38a03cdd40cdc373de0dc4e7b7fcbccb31d9",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 5,
+              "id": "Q5"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q17220992$E7570B81-7063-455F-9FBB-6D87F51E9756",
+        "rank": "normal"
+      }
+    ],
+    "P50": [],
+    "P110": []
+  }
+}

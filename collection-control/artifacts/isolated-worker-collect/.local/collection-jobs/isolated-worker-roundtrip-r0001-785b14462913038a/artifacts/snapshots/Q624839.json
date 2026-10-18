@@ -1,0 +1,132 @@
+{
+  "id": "Q624839",
+  "lastrevid": null,
+  "labels": {
+    "ja": {
+      "language": "ja",
+      "value": "Boichi"
+    },
+    "en": {
+      "language": "en",
+      "value": "Boichi"
+    }
+  },
+  "aliases": {
+    "ja": [
+      {
+        "language": "ja",
+        "value": "朴武直"
+      },
+      {
+        "language": "ja",
+        "value": "ボウイチ"
+      },
+      {
+        "language": "ja",
+        "value": "パク・ムジク"
+      }
+    ],
+    "en": [
+      {
+        "language": "en",
+        "value": "Mujik Park"
+      },
+      {
+        "language": "en",
+        "value": "Mu-jik Park"
+      },
+      {
+        "language": "en",
+        "value": "박무직"
+      },
+      {
+        "language": "en",
+        "value": "Bak Mujik"
+      }
+    ]
+  },
+  "claims": {
+    "P31": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P31",
+          "hash": "ad7d38a03cdd40cdc373de0dc4e7b7fcbccb31d9",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 5,
+              "id": "Q5"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q624839$EBFE2016-5A2A-4D7C-B6A4-7B1DCAC9DAB5",
+        "rank": "normal",
+        "references": [
+          {
+            "hash": "fbba539e1cd0ad556c95cf20f291be1deafec51b",
+            "snaks": {
+              "P248": [
+                {
+                  "snaktype": "value",
+                  "property": "P248",
+                  "hash": "45037a2d1d89deebcdfc5840e9adbaa4b64cebc6",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 50358336,
+                      "id": "Q50358336"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ],
+              "P813": [
+                {
+                  "snaktype": "value",
+                  "property": "P813",
+                  "hash": "b63922912eb0e0801c8d41cc22d4a3c86c4fcf0b",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2024-03-17T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ],
+              "P950": [
+                {
+                  "snaktype": "value",
+                  "property": "P950",
+                  "hash": "d6d608126f7e4838563ee44425d5b4f99c7a3749",
+                  "datavalue": {
+                    "value": "XX5608050",
+                    "type": "string"
+                  },
+                  "datatype": "external-id"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P248",
+              "P813",
+              "P950"
+            ]
+          }
+        ]
+      }
+    ],
+    "P50": [],
+    "P110": []
+  }
+}

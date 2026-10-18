@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "themeId": "isolated-worker-roundtrip",
+  "revision": 1,
+  "definitionSha256": "ff727e1249ee667ef707175406c10fde9772716cb95d28cc3d67bc580b42130c",
+  "reviewer": "隔離試験・実運用の承認ではない",
+  "reviewedAt": "2026-10-18T11:24:00+00:00",
+  "note": "隔離fixtureだけの模擬判断。実データ受入・公開applyを認めない。\nGitHub request isolated-worker-collect / 053a5c8297ae4d8f242209e815dc284d1d29ca910ba0486ef7c822559ec2b8ba",
+  "checks": [
+    "purpose",
+    "scope",
+    "data-granularity",
+    "sources-and-terms",
+    "exploration",
+    "execution-boundary"
+  ]
+}

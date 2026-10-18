@@ -1,0 +1,34 @@
+{
+  "provider": "iss-ndl-opac / 国立国会図書館",
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "terms": "https://ndlsearch.ndl.go.jp/help/api/provider",
+  "records": [
+    {
+      "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I024280614",
+      "isbn13": [
+        "9784757538870"
+      ],
+      "title": [
+        "クズの本懐. 1"
+      ],
+      "mainTitles": [
+        "クズの本懐"
+      ],
+      "volume": [
+        "1"
+      ],
+      "edition": [],
+      "responsibilities": [
+        "横槍メンゴ 著"
+      ],
+      "publisher": [],
+      "language": [
+        "jpn"
+      ],
+      "genre": [
+        "漫画"
+      ]
+    }
+  ],
+  "error": null
+}

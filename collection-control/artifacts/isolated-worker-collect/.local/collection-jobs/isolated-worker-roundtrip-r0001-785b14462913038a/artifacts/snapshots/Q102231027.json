@@ -1,0 +1,87 @@
+{
+  "id": "Q102231027",
+  "lastrevid": null,
+  "labels": {
+    "en": {
+      "language": "en",
+      "value": "Asadora!"
+    },
+    "ja": {
+      "language": "ja",
+      "value": "連続漫画小説 あさドラ!"
+    }
+  },
+  "aliases": {
+    "en": [
+      {
+        "language": "en",
+        "value": "Renzoku Manga Shōsetsu Asadora!"
+      }
+    ]
+  },
+  "claims": {
+    "P31": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P31",
+          "hash": "549c072d6be8a6a43f999d1d0e82640b16c4260e",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 21198342,
+              "id": "Q21198342"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q102231027$de57d9ae-458b-39ac-a1e3-a5c596c25fcd",
+        "rank": "normal"
+      }
+    ],
+    "P50": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P50",
+          "hash": "6bb0f772e367defecb77ffddd0b9fdbd812a1bd6",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 348436,
+              "id": "Q348436"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q102231027$67e4b688-4682-f579-b8e7-7253ab417d5e",
+        "rank": "normal"
+      }
+    ],
+    "P110": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P110",
+          "hash": "60193f3ac7eb8e941067c98a1047cdf624bfa5ff",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 348436,
+              "id": "Q348436"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q102231027$74E600F9-4826-41FB-8B52-30AE5411E051",
+        "rank": "normal"
+      }
+    ]
+  }
+}

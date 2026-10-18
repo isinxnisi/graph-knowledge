@@ -1,0 +1,101 @@
+{
+  "id": "Q97310775",
+  "lastrevid": null,
+  "labels": {
+    "ja": {
+      "language": "ja",
+      "value": "【推しの子】"
+    },
+    "en": {
+      "language": "en",
+      "value": "Oshi no Ko"
+    }
+  },
+  "aliases": {
+    "ja": [
+      {
+        "language": "ja",
+        "value": "推しの子"
+      }
+    ],
+    "en": [
+      {
+        "language": "en",
+        "value": "【Oshi no Ko】"
+      },
+      {
+        "language": "en",
+        "value": "My Star"
+      },
+      {
+        "language": "en",
+        "value": "[Oshi no Ko]"
+      }
+    ]
+  },
+  "claims": {
+    "P31": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P31",
+          "hash": "549c072d6be8a6a43f999d1d0e82640b16c4260e",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 21198342,
+              "id": "Q21198342"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q97310775$fd00ea45-4801-4eaa-9224-9412ba89c0e2",
+        "rank": "normal"
+      }
+    ],
+    "P50": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P50",
+          "hash": "e56627c1fa6003fccfbf31e48e8eb3b2928f03fc",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 23937543,
+              "id": "Q23937543"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q97310775$f54de699-4b80-70c6-f927-623d9cd5de9b",
+        "rank": "normal"
+      }
+    ],
+    "P110": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P110",
+          "hash": "ac87ff582c2a74fc2bfdd494ec20ac634fad9877",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 17220992,
+              "id": "Q17220992"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q97310775$C2B40736-4564-4ABC-8A9E-E201F3C5C461",
+        "rank": "normal"
+      }
+    ]
+  }
+}

@@ -1,0 +1,82 @@
+{
+  "status": "pending-human-identity-only-decision",
+  "records": {
+    "entities": [
+      {
+        "id": "0914c6bb-701d-4c5a-b8f9-2c63cbff1ef3",
+        "kind": "work",
+        "name": "童夢",
+        "description": null,
+        "aliases": [
+          "Domu: A Child's Dream"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q1170375"
+          }
+        ],
+        "createdAt": "2026-10-17T00:00:00Z",
+        "updatedAt": "2026-10-17T00:00:00Z",
+        "event": null
+      },
+      {
+        "id": "711dc415-45d5-4d35-8cca-068332180cc0",
+        "kind": "person",
+        "name": "赤坂アカ",
+        "description": null,
+        "aliases": [
+          "Aka Akasaka"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q23937543"
+          }
+        ],
+        "createdAt": "2026-10-17T00:00:00Z",
+        "updatedAt": "2026-10-17T00:00:00Z",
+        "event": null
+      },
+      {
+        "id": "8a0d3d5a-feb6-4ba3-8993-64b6ac79de12",
+        "kind": "work",
+        "name": "【推しの子】",
+        "description": null,
+        "aliases": [
+          "Oshi no Ko"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q97310775"
+          }
+        ],
+        "createdAt": "2026-10-17T00:00:00Z",
+        "updatedAt": "2026-10-17T00:00:00Z",
+        "event": null
+      },
+      {
+        "id": "d5e39491-5a5f-423c-9222-2eb3c18db9a8",
+        "kind": "person",
+        "name": "小畑健",
+        "description": null,
+        "aliases": [
+          "Takeshi Obata"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q313703"
+          }
+        ],
+        "createdAt": "2026-10-17T00:00:00Z",
+        "updatedAt": "2026-10-17T00:00:00Z",
+        "event": null
+      }
+    ],
+    "claims": [],
+    "sources": [],
+    "citations": []
+  }
+}

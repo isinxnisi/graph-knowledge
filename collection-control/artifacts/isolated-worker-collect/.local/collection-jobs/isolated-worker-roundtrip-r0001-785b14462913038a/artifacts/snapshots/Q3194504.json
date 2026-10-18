@@ -1,0 +1,51 @@
+{
+  "id": "Q3194504",
+  "lastrevid": null,
+  "labels": {
+    "ja": {
+      "language": "ja",
+      "value": "工藤かずや"
+    },
+    "en": {
+      "language": "en",
+      "value": "Kazuya Kudō"
+    }
+  },
+  "aliases": {
+    "en": [
+      {
+        "language": "en",
+        "value": "Kazuya Kudo"
+      },
+      {
+        "language": "en",
+        "value": "Kazuya Kudou"
+      }
+    ]
+  },
+  "claims": {
+    "P31": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P31",
+          "hash": "ad7d38a03cdd40cdc373de0dc4e7b7fcbccb31d9",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 5,
+              "id": "Q5"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q3194504$B61A3D26-0F6F-4A71-B0FE-78CD9F198872",
+        "rank": "normal"
+      }
+    ],
+    "P50": [],
+    "P110": []
+  }
+}

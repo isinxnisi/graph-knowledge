@@ -1,0 +1,113 @@
+{
+  "id": "Q272015",
+  "lastrevid": null,
+  "labels": {
+    "en": {
+      "language": "en",
+      "value": "Ranma ½"
+    },
+    "ja": {
+      "language": "ja",
+      "value": "らんま1/2"
+    }
+  },
+  "aliases": {
+    "en": [
+      {
+        "language": "en",
+        "value": "Ranma 1/2"
+      },
+      {
+        "language": "en",
+        "value": "Ranma"
+      },
+      {
+        "language": "en",
+        "value": "Ranma ¹⁄₂"
+      },
+      {
+        "language": "en",
+        "value": "Ranma 1⁄2"
+      }
+    ],
+    "ja": [
+      {
+        "language": "ja",
+        "value": "らんま½ [Ranma ½]"
+      },
+      {
+        "language": "ja",
+        "value": "らんま½"
+      },
+      {
+        "language": "ja",
+        "value": "らんま 1/2"
+      }
+    ]
+  },
+  "claims": {
+    "P31": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P31",
+          "hash": "549c072d6be8a6a43f999d1d0e82640b16c4260e",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 21198342,
+              "id": "Q21198342"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q272015$5EC485DE-C7DD-45EB-9890-1E7688F91B1E",
+        "rank": "normal"
+      }
+    ],
+    "P50": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P50",
+          "hash": "228d99de4a6e28f821350b787d7263e2bd16d28e",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 219948,
+              "id": "Q219948"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "q272015$566D42CA-E1FD-474B-812C-5A6B354929CD",
+        "rank": "normal"
+      }
+    ],
+    "P110": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P110",
+          "hash": "ba06b516dbdc6b18da8e8247f5a79563c6ce9244",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 219948,
+              "id": "Q219948"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q272015$DE5D242C-0040-4247-A20A-65537CE25557",
+        "rank": "normal"
+      }
+    ]
+  }
+}

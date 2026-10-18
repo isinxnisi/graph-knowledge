@@ -1,0 +1,34 @@
+{
+  "provider": "iss-ndl-opac / 国立国会図書館",
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "terms": "https://ndlsearch.ndl.go.jp/help/api/provider",
+  "records": [
+    {
+      "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I000002674181",
+      "isbn13": [
+        "9784091912510"
+      ],
+      "title": [
+        "ポーの一族. 第1巻"
+      ],
+      "mainTitles": [
+        "ポーの一族"
+      ],
+      "volume": [
+        "第1巻"
+      ],
+      "edition": [],
+      "responsibilities": [
+        "萩尾望都 著"
+      ],
+      "publisher": [],
+      "language": [
+        "jpn"
+      ],
+      "genre": [
+        "漫画"
+      ]
+    }
+  ],
+  "error": null
+}

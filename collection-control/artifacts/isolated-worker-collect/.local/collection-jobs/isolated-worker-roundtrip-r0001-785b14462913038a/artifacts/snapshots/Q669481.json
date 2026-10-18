@@ -1,0 +1,60 @@
+{
+  "id": "Q669481",
+  "lastrevid": null,
+  "labels": {
+    "en": {
+      "language": "en",
+      "value": "Sanctuary"
+    },
+    "ja": {
+      "language": "ja",
+      "value": "サンクチュアリ"
+    }
+  },
+  "aliases": {},
+  "claims": {
+    "P31": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P31",
+          "hash": "549c072d6be8a6a43f999d1d0e82640b16c4260e",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 21198342,
+              "id": "Q21198342"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q669481$9611FEBC-890C-40CB-A6C2-6A63861B5437",
+        "rank": "normal"
+      }
+    ],
+    "P50": [],
+    "P110": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P110",
+          "hash": "b8aa5736b1178f61e0a8d86e131bfb8928657d92",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 1332841,
+              "id": "Q1332841"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q669481$951289b0-4e1b-e52e-6aac-6141422b3a15",
+        "rank": "normal"
+      }
+    ]
+  }
+}

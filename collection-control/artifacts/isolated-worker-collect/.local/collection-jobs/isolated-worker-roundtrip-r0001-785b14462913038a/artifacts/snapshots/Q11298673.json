@@ -1,0 +1,67 @@
+{
+  "id": "Q11298673",
+  "lastrevid": null,
+  "labels": {
+    "ja": {
+      "language": "ja",
+      "value": "クズの本懐"
+    },
+    "en": {
+      "language": "en",
+      "value": "Scum's Wish"
+    }
+  },
+  "aliases": {
+    "en": [
+      {
+        "language": "en",
+        "value": "Kuzu no Honkai"
+      }
+    ]
+  },
+  "claims": {
+    "P31": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P31",
+          "hash": "549c072d6be8a6a43f999d1d0e82640b16c4260e",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 21198342,
+              "id": "Q21198342"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q11298673$49BA0124-5B5F-4D97-B229-C1A92480D144",
+        "rank": "normal"
+      }
+    ],
+    "P50": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P50",
+          "hash": "de664e1cdd381cc7e70dae2702a01e1904b2ddde",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 17220992,
+              "id": "Q17220992"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q11298673$2bd7402d-4443-32f6-e798-5e3ed19a6f04",
+        "rank": "normal"
+      }
+    ],
+    "P110": []
+  }
+}

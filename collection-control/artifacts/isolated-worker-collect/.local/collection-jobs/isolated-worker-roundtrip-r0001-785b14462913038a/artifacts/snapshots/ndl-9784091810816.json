@@ -1,0 +1,35 @@
+{
+  "provider": "iss-ndl-opac / 国立国会図書館",
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "terms": "https://ndlsearch.ndl.go.jp/help/api/provider",
+  "records": [
+    {
+      "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I000001794923",
+      "isbn13": [
+        "9784091810816"
+      ],
+      "title": [
+        "パイナップルarmy. 1"
+      ],
+      "mainTitles": [
+        "パイナップルarmy"
+      ],
+      "volume": [
+        "1"
+      ],
+      "edition": [],
+      "responsibilities": [
+        "浦沢直樹 画",
+        "工藤かずや 作"
+      ],
+      "publisher": [],
+      "language": [
+        "jpn"
+      ],
+      "genre": [
+        "漫画"
+      ]
+    }
+  ],
+  "error": null
+}

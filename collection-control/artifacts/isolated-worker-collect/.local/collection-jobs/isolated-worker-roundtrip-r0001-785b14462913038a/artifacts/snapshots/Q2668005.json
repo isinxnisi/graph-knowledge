@@ -1,0 +1,109 @@
+{
+  "id": "Q2668005",
+  "lastrevid": null,
+  "labels": {
+    "ja": {
+      "language": "ja",
+      "value": "地球へ…"
+    },
+    "en": {
+      "language": "en",
+      "value": "Toward the Terra"
+    }
+  },
+  "aliases": {
+    "ja": [
+      {
+        "language": "ja",
+        "value": "テラへ…"
+      },
+      {
+        "language": "ja",
+        "value": "地球へ・・・"
+      },
+      {
+        "language": "ja",
+        "value": "地球へ"
+      },
+      {
+        "language": "ja",
+        "value": "テラへ"
+      }
+    ],
+    "en": [
+      {
+        "language": "en",
+        "value": "To Terra"
+      },
+      {
+        "language": "en",
+        "value": "Terra e..."
+      }
+    ]
+  },
+  "claims": {
+    "P31": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P31",
+          "hash": "549c072d6be8a6a43f999d1d0e82640b16c4260e",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 21198342,
+              "id": "Q21198342"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q2668005$C073FD05-FA77-4473-A9E4-20543916180A",
+        "rank": "normal"
+      }
+    ],
+    "P50": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P50",
+          "hash": "7c9964674196230f4a551d4c10a36b7adfdc4701",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 268789,
+              "id": "Q268789"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q2668005$673da30e-475e-8260-bf13-bd9dbdbddf9e",
+        "rank": "normal"
+      }
+    ],
+    "P110": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P110",
+          "hash": "4200b71c51a2272ea3ef39def28880aa223c1f7f",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 268789,
+              "id": "Q268789"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q2668005$5EF5AA1D-77ED-4270-8A56-55EFEDD9DF76",
+        "rank": "normal"
+      }
+    ]
+  }
+}

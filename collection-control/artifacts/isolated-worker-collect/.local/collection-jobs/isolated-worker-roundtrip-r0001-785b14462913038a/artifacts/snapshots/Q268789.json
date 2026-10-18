@@ -1,0 +1,116 @@
+{
+  "id": "Q268789",
+  "lastrevid": null,
+  "labels": {
+    "ja": {
+      "language": "ja",
+      "value": "竹宮惠子"
+    },
+    "en": {
+      "language": "en",
+      "value": "Keiko Takemiya"
+    }
+  },
+  "aliases": {
+    "ja": [
+      {
+        "language": "ja",
+        "value": "竹宮恵子"
+      }
+    ],
+    "en": [
+      {
+        "language": "en",
+        "value": "Takemiya Keiko"
+      },
+      {
+        "language": "en",
+        "value": "Takemiya, Keiko, 1950-"
+      }
+    ]
+  },
+  "claims": {
+    "P31": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P31",
+          "hash": "ad7d38a03cdd40cdc373de0dc4e7b7fcbccb31d9",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 5,
+              "id": "Q5"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q268789$6DA6B091-2245-4BA7-806B-2F569573EEB6",
+        "rank": "normal",
+        "references": [
+          {
+            "hash": "a2a4e0014357c35bf79aaaa7f09d29ac3869b251",
+            "snaks": {
+              "P248": [
+                {
+                  "snaktype": "value",
+                  "property": "P248",
+                  "hash": "45037a2d1d89deebcdfc5840e9adbaa4b64cebc6",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 50358336,
+                      "id": "Q50358336"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ],
+              "P813": [
+                {
+                  "snaktype": "value",
+                  "property": "P813",
+                  "hash": "268002474ee587ff6ff8fc5e0a9c7390fcfb8de6",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2024-02-25T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ],
+              "P950": [
+                {
+                  "snaktype": "value",
+                  "property": "P950",
+                  "hash": "2ecb410da8e22001e9141424af93420fff321026",
+                  "datavalue": {
+                    "value": "XX1602479",
+                    "type": "string"
+                  },
+                  "datatype": "external-id"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P248",
+              "P813",
+              "P950"
+            ]
+          }
+        ]
+      }
+    ],
+    "P50": [],
+    "P110": []
+  }
+}

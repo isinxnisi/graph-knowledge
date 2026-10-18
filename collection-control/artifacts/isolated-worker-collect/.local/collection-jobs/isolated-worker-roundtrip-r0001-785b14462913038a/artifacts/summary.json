@@ -1,0 +1,48 @@
+{
+  "kind": "isolated-manga-collection-candidates",
+  "notForCurrentPublicApply": true,
+  "personCandidates": 23,
+  "workCandidates": 24,
+  "reusedEntities": 4,
+  "wikidataRelationCandidates": 43,
+  "ndlCreditRows": 30,
+  "confirmedRoleRelations": 28,
+  "reusedClaims": 0,
+  "citationsAdded": 28,
+  "addedVsFrozenBase": {
+    "entities": 43,
+    "claims": 28,
+    "sources": 23,
+    "citations": 28
+  },
+  "heldByReason": {
+    "unsupported-responsibility-role": 2
+  },
+  "requests": 71,
+  "counts": {
+    "entities": 2152,
+    "claims": 1872,
+    "sources": 1774,
+    "citations": 1908
+  },
+  "validation": {
+    "valid": true,
+    "counts": {
+      "nodes": {
+        "Entity": 2152,
+        "Claim": 1872,
+        "Source": 1774,
+        "Citation": 1908,
+        "ExternalIdentifier": 2521
+      },
+      "relationships": {
+        "SUBJECT": 1872,
+        "OBJECT": 1872,
+        "HAS_CITATION": 1908,
+        "CITES": 1908,
+        "HAS_EXTERNAL_ID": 2521
+      }
+    }
+  },
+  "validationMode": "temporary-public-projection; retained-candidate-claims-stay-hidden"
+}

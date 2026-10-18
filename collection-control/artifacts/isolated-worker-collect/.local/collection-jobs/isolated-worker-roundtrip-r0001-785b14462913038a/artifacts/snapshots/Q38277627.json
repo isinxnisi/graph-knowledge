@@ -1,0 +1,47 @@
+{
+  "id": "Q38277627",
+  "lastrevid": null,
+  "labels": {
+    "ja": {
+      "language": "ja",
+      "value": "山田鐘人"
+    },
+    "en": {
+      "language": "en",
+      "value": "Kanehito Yamada"
+    }
+  },
+  "aliases": {
+    "en": [
+      {
+        "language": "en",
+        "value": "Yamada Kanehito"
+      }
+    ]
+  },
+  "claims": {
+    "P31": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P31",
+          "hash": "ad7d38a03cdd40cdc373de0dc4e7b7fcbccb31d9",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 5,
+              "id": "Q5"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q38277627$7DC05018-A9CC-454B-8AC3-BA0FE9C89E60",
+        "rank": "normal"
+      }
+    ],
+    "P50": [],
+    "P110": []
+  }
+}

@@ -1,0 +1,81 @@
+{
+  "schemaVersion": 1,
+  "decisionId": "isolated-worker-collect-identity",
+  "status": "draft-not-approved",
+  "humanDecision": {
+    "actorType": "human",
+    "reviewer": null,
+    "decidedAt": null,
+    "statement": null
+  },
+  "approvalScope": "formal-record-acceptance-and-release-preparation-only",
+  "applyAuthorized": {
+    "local": false,
+    "beta": false,
+    "vps": false
+  },
+  "review": {
+    "file": "datasets/manga-collection/workflow-reviews/isolated-worker-roundtrip-r0001-785b14462913038a-review-287d66db8cbc7505/review-manifest.json",
+    "sha256": "3fda41c0edb8ab8c96de0c79c92006c744f40593a5efe4e3526ee5fefefb4235"
+  },
+  "referenceArtifacts": [
+    {
+      "file": "datasets/manga-collection/workflow-reviews/isolated-worker-roundtrip-r0001-785b14462913038a-review-287d66db8cbc7505/README.md",
+      "sha256": "93e9d6cb2c100de5a724ff8202e114d85583abfb96c99edcdf5bed7f0c6e2ab6"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/isolated-worker-roundtrip-r0001-785b14462913038a-review-287d66db8cbc7505/context.json",
+      "sha256": "b4a6ac30ce783d97986db74fd161b9c6856937c544d0a69e985d6514ed233d5a"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/isolated-worker-roundtrip-r0001-785b14462913038a-review-287d66db8cbc7505/decision-request.json",
+      "sha256": "62fe2c7c66fa07358cd7a2c57e5ea6a231c181ed33b6f3b4a5809e008ee10117"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/isolated-worker-roundtrip-r0001-785b14462913038a-review-287d66db8cbc7505/exploration-paths.json",
+      "sha256": "7629b2d6d911031624169a0bd04fbaebf938e29ae6fe450b1a46a08ea2d4ac19"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/isolated-worker-roundtrip-r0001-785b14462913038a-review-287d66db8cbc7505/identity-only-records.json",
+      "sha256": "1795d6884f68dcd07b7041a6b7b91fb76ae0f4d71db722b32e891765765f74e0"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/isolated-worker-roundtrip-r0001-785b14462913038a-review-287d66db8cbc7505/proposed-records.json",
+      "sha256": "7a61289f55cad1f33934307024ba60f931ca27536d6b8dfdda99d20f05445867"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/isolated-worker-roundtrip-r0001-785b14462913038a-review-287d66db8cbc7505/review-manifest.json",
+      "sha256": "3fda41c0edb8ab8c96de0c79c92006c744f40593a5efe4e3526ee5fefefb4235"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/isolated-worker-roundtrip-r0001-785b14462913038a-review-287d66db8cbc7505/review.json",
+      "sha256": "957fdf6e5deb4a196ed67fe6abfee2e74f9ba16ac2a370f532ec2dae5491bb75"
+    }
+  ],
+  "acceptedRecordIds": {
+    "entities": [
+      "0914c6bb-701d-4c5a-b8f9-2c63cbff1ef3",
+      "711dc415-45d5-4d35-8cca-068332180cc0",
+      "8a0d3d5a-feb6-4ba3-8993-64b6ac79de12",
+      "d5e39491-5a5f-423c-9222-2eb3c18db9a8"
+    ],
+    "claims": [],
+    "sources": [],
+    "citations": []
+  },
+  "recordSha256": {
+    "entities": {
+      "0914c6bb-701d-4c5a-b8f9-2c63cbff1ef3": "b345fc30673f4fdc8614873010cff88f0dd1b637a53bf982ba8c841400bbba60",
+      "711dc415-45d5-4d35-8cca-068332180cc0": "961088e63c8a13a7c3895b148e36dc3cf7e8585c6ab44f8fc8150bce324521fb",
+      "8a0d3d5a-feb6-4ba3-8993-64b6ac79de12": "fd82a5d083bc53d58dd84511974b98281ec37860a422fd31ecab71668e32519a",
+      "d5e39491-5a5f-423c-9222-2eb3c18db9a8": "46ab209d3574d4a2333f93f795f52edbb8f5ddb7bfce94d31159700a43372963"
+    },
+    "claims": {},
+    "sources": {},
+    "citations": {}
+  },
+  "scopeByClaim": [],
+  "baseRelease": "20261014-credits-001",
+  "baseRevision": "isolated-worker-no-database",
+  "releaseId": "manga-isolated-worker-collect-identity"
+}

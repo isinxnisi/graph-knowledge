@@ -1,0 +1,173 @@
+{
+  "id": "Q1993",
+  "lastrevid": null,
+  "labels": {
+    "en": {
+      "language": "en",
+      "value": "Masashi Kishimoto"
+    },
+    "ja": {
+      "language": "ja",
+      "value": "岸本斉史"
+    }
+  },
+  "aliases": {
+    "en": [
+      {
+        "language": "en",
+        "value": "Kishimoto Masashi"
+      }
+    ],
+    "ja": [
+      {
+        "language": "ja",
+        "value": "シモッさん"
+      },
+      {
+        "language": "ja",
+        "value": "キッシー"
+      }
+    ]
+  },
+  "claims": {
+    "P31": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P31",
+          "hash": "ad7d38a03cdd40cdc373de0dc4e7b7fcbccb31d9",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 5,
+              "id": "Q5"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q1993$AB0124FF-996B-494A-B147-F287E91AD881",
+        "rank": "normal",
+        "references": [
+          {
+            "hash": "29520cabcef862b3ec69ee6cc4d4b650a1777e14",
+            "snaks": {
+              "P248": [
+                {
+                  "snaktype": "value",
+                  "property": "P248",
+                  "hash": "def9f19d84b65167a2a17ce38364d264c16127fc",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 19938912,
+                      "id": "Q19938912"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ],
+              "P268": [
+                {
+                  "snaktype": "value",
+                  "property": "P268",
+                  "hash": "8b8bc89205f5f0e5464a8910b85a736c06f3de31",
+                  "datavalue": {
+                    "value": "14436258b",
+                    "type": "string"
+                  },
+                  "datatype": "external-id"
+                }
+              ],
+              "P813": [
+                {
+                  "snaktype": "value",
+                  "property": "P813",
+                  "hash": "d6162a1716489623c6e595e448b17f8dca4fb2e8",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2015-10-10T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P248",
+              "P268",
+              "P813"
+            ]
+          },
+          {
+            "hash": "0212c63aae5a475126d45b782aa746ab240fa959",
+            "snaks": {
+              "P248": [
+                {
+                  "snaktype": "value",
+                  "property": "P248",
+                  "hash": "45037a2d1d89deebcdfc5840e9adbaa4b64cebc6",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 50358336,
+                      "id": "Q50358336"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ],
+              "P813": [
+                {
+                  "snaktype": "value",
+                  "property": "P813",
+                  "hash": "9e9614f71bad111e8c902de1f38fd2d4f889218a",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2024-02-23T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ],
+              "P950": [
+                {
+                  "snaktype": "value",
+                  "property": "P950",
+                  "hash": "304813deffb44ab7fc43ed5729875bfb352d3860",
+                  "datavalue": {
+                    "value": "XX4428042",
+                    "type": "string"
+                  },
+                  "datatype": "external-id"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P248",
+              "P813",
+              "P950"
+            ]
+          }
+        ]
+      }
+    ],
+    "P50": [],
+    "P110": []
+  }
+}

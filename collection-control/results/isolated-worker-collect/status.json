@@ -277,12 +277,37 @@
   },
   "requestSha256": "90d9429b26b29c2158cfd68e08ac9825387792f8dbc375276766cf416e753d8b",
   "kind": "collect-review",
-  "phase": "running",
+  "phase": "completed",
   "generation": 2,
   "attempts": 2,
   "workerId": "isolated-test-only",
   "sourceCommit": "4ce53731e04d34f1ee9bcbd4c3763248222e6d47",
   "updatedAt": "2026-10-18T11:24:23+00:00",
-  "message": "Transport failed; resume this job without discarding completed requests: wikidata-Q108109758: isolated simulated transport interruption",
-  "retryAt": 0
+  "retryAt": 0,
+  "result": {
+    "jobId": "isolated-worker-roundtrip-r0001-785b14462913038a",
+    "collectionUnchanged": false,
+    "reviewUnchanged": false,
+    "transportAttemptsAdded": 64,
+    "reviewDirectory": "/tmp/plunode-worker-isolated-tdae5qji/runtime/datasets/manga-collection/workflow-reviews/isolated-worker-roundtrip-r0001-785b14462913038a-review-287d66db8cbc7505",
+    "reviewOnly": true,
+    "formalAcceptance": false,
+    "publicApply": false,
+    "counts": {
+      "entities": 35,
+      "claims": 25,
+      "sources": 21,
+      "citations": 25
+    },
+    "heldClaims": 3
+  },
+  "executionComplete": true,
+  "reviewReference": {
+    "file": "datasets/manga-collection/workflow-reviews/isolated-worker-roundtrip-r0001-785b14462913038a-review-287d66db8cbc7505/review-manifest.json",
+    "sha256": "3fda41c0edb8ab8c96de0c79c92006c744f40593a5efe4e3526ee5fefefb4235"
+  },
+  "decisionDrafts": [
+    "datasets/manga-collection/decisions/isolated-worker-collect-normal-draft.json",
+    "datasets/manga-collection/decisions/isolated-worker-collect-identity-draft.json"
+  ]
 }

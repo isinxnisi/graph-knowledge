@@ -1,0 +1,60 @@
+{
+  "id": "Q28682711",
+  "lastrevid": null,
+  "labels": {
+    "ja": {
+      "language": "ja",
+      "value": "ファイアパンチ"
+    },
+    "en": {
+      "language": "en",
+      "value": "Fire Punch"
+    }
+  },
+  "aliases": {},
+  "claims": {
+    "P31": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P31",
+          "hash": "549c072d6be8a6a43f999d1d0e82640b16c4260e",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 21198342,
+              "id": "Q21198342"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q28682711$546D3A2F-2C21-4976-AA46-4075B46A2CE3",
+        "rank": "normal"
+      }
+    ],
+    "P50": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P50",
+          "hash": "ec399e243b8144e78eba0f136545ca6523ffb416",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 24864023,
+              "id": "Q24864023"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q28682711$2085855e-4441-0197-384a-4ff66921457b",
+        "rank": "normal"
+      }
+    ],
+    "P110": []
+  }
+}

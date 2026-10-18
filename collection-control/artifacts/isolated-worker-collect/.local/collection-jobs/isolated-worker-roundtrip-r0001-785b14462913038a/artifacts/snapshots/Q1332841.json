@@ -1,0 +1,144 @@
+{
+  "id": "Q1332841",
+  "lastrevid": null,
+  "labels": {
+    "ja": {
+      "language": "ja",
+      "value": "池上遼一"
+    },
+    "en": {
+      "language": "en",
+      "value": "Ryoichi Ikegami"
+    }
+  },
+  "aliases": {
+    "ja": [
+      {
+        "language": "ja",
+        "value": "肌の記憶"
+      },
+      {
+        "language": "ja",
+        "value": "陰獣トリステサ"
+      },
+      {
+        "language": "ja",
+        "value": "星雲児"
+      },
+      {
+        "language": "ja",
+        "value": "流月抄"
+      },
+      {
+        "language": "ja",
+        "value": "人面蝶"
+      },
+      {
+        "language": "ja",
+        "value": "王龍院雲丸の生涯"
+      },
+      {
+        "language": "ja",
+        "value": "OFFERED"
+      },
+      {
+        "language": "ja",
+        "value": "Strain"
+      },
+      {
+        "language": "ja",
+        "value": "アイウエオボーイ"
+      }
+    ],
+    "en": [
+      {
+        "language": "en",
+        "value": "kegami"
+      }
+    ]
+  },
+  "claims": {
+    "P31": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P31",
+          "hash": "ad7d38a03cdd40cdc373de0dc4e7b7fcbccb31d9",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 5,
+              "id": "Q5"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q1332841$B199734F-F31F-4DA1-AD97-13AEF9950540",
+        "rank": "normal",
+        "references": [
+          {
+            "hash": "ef669193642869be37900597df8bd8168e7c2c60",
+            "snaks": {
+              "P248": [
+                {
+                  "snaktype": "value",
+                  "property": "P248",
+                  "hash": "def9f19d84b65167a2a17ce38364d264c16127fc",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 19938912,
+                      "id": "Q19938912"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ],
+              "P268": [
+                {
+                  "snaktype": "value",
+                  "property": "P268",
+                  "hash": "7ba9a123354896f9e17f8d5fded95896e6015e45",
+                  "datavalue": {
+                    "value": "125542554",
+                    "type": "string"
+                  },
+                  "datatype": "external-id"
+                }
+              ],
+              "P813": [
+                {
+                  "snaktype": "value",
+                  "property": "P813",
+                  "hash": "d6162a1716489623c6e595e448b17f8dca4fb2e8",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2015-10-10T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P248",
+              "P268",
+              "P813"
+            ]
+          }
+        ]
+      }
+    ],
+    "P50": [],
+    "P110": []
+  }
+}

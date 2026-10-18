@@ -1,0 +1,35 @@
+{
+  "provider": "iss-ndl-opac / 国立国会図書館",
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "terms": "https://ndlsearch.ndl.go.jp/help/api/provider",
+  "records": [
+    {
+      "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I030560687",
+      "isbn13": [
+        "9784098501809"
+      ],
+      "title": [
+        "葬送のフリーレン = FRIEREN. VOL.1"
+      ],
+      "mainTitles": [
+        "葬送のフリーレン"
+      ],
+      "volume": [
+        "VOL.1"
+      ],
+      "edition": [],
+      "responsibilities": [
+        "山田鐘人 原作",
+        "アベツカサ 作画"
+      ],
+      "publisher": [],
+      "language": [
+        "jpn"
+      ],
+      "genre": [
+        "漫画"
+      ]
+    }
+  ],
+  "error": null
+}
