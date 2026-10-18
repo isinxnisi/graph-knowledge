@@ -149,11 +149,151 @@
   },
   "requestSha256": "ac202bb18150f55b7da1103ce43f2d684aa101e4d5d5107a892223bce4590039",
   "kind": "issue-prepare",
-  "phase": "running",
+  "phase": "completed",
   "generation": 2,
   "attempts": 1,
   "workerId": "plunode-wsl",
   "sourceCommit": "c87051e0d15c903737d37f7c114bff0f17702ffa",
   "updatedAt": "2026-10-18T18:37:45+00:00",
-  "message": "共通ロック使用中。次回に再確認する。"
+  "result": {
+    "schemaVersion": 1,
+    "status": "prepared-candidates-not-accepted",
+    "issueOrigin": {
+      "repository": "isinxnisi/graph-knowledge",
+      "issueNumber": 25,
+      "approvalId": "manga23-20261019",
+      "permissionSha256": "673d380b4fb61ab2cdef204140d63a47bbf25dbb288199f25d0e3ae740ef11b3",
+      "issueBodySha256": "5f302ff42139b5230da70d38734577da414a3b89a24a82f90302e0297afc3c69"
+    },
+    "counts": {
+      "approvedWorks": 23,
+      "preparedWorks": 0,
+      "preparedPeople": 0,
+      "batches": 0,
+      "holds": 23,
+      "networkAttempts": 71
+    },
+    "holds": [
+      {
+        "target": "MONSTER",
+        "person": "浦沢直樹",
+        "reason": "No dated, exact first-volume Japanese manga publication"
+      },
+      {
+        "target": "20世紀少年",
+        "person": "浦沢直樹",
+        "reason": "No dated, exact first-volume Japanese manga publication"
+      },
+      {
+        "target": "YAWARA!",
+        "person": "浦沢直樹",
+        "reason": "No dated, exact first-volume Japanese manga publication"
+      },
+      {
+        "target": "鉄腕アトム",
+        "person": "手塚治虫",
+        "reason": "No dated, exact first-volume Japanese manga publication"
+      },
+      {
+        "target": "犬夜叉",
+        "person": "高橋留美子",
+        "reason": "No dated, exact first-volume Japanese manga publication"
+      },
+      {
+        "target": "NARUTO",
+        "person": "岸本斉史",
+        "reason": "No dated, exact first-volume Japanese manga publication"
+      },
+      {
+        "target": "かぐや様は告らせたい",
+        "person": "赤坂アカ",
+        "reason": "Exact name/type QID is not unique: かぐや様は告らせたい"
+      },
+      {
+        "target": "ミステリと言う勿れ",
+        "person": "田村由美",
+        "reason": "No dated, exact first-volume Japanese manga publication"
+      },
+      {
+        "target": "ダンジョン飯",
+        "person": "九井諒子",
+        "reason": "No dated, exact first-volume Japanese manga publication"
+      },
+      {
+        "target": "ジョジョの奇妙な冒険 第1部 ファントムブラッド",
+        "person": "荒木飛呂彦",
+        "reason": "Exact name/type QID is not unique: ジョジョの奇妙な冒険 第1部 ファントムブラッド"
+      },
+      {
+        "target": "鋼の錬金術師",
+        "person": "荒川弘",
+        "reason": "No dated, exact first-volume Japanese manga publication"
+      },
+      {
+        "target": "銀の匙 Silver Spoon",
+        "person": "荒川弘",
+        "reason": "No dated, exact first-volume Japanese manga publication"
+      },
+      {
+        "target": "黄泉のツガイ",
+        "person": "荒川弘",
+        "reason": "No dated, exact first-volume Japanese manga publication"
+      },
+      {
+        "target": "天使なんかじゃない",
+        "person": "矢沢あい",
+        "reason": "No dated, exact first-volume Japanese manga publication"
+      },
+      {
+        "target": "ご近所物語",
+        "person": "矢沢あい",
+        "reason": "No dated, exact first-volume Japanese manga publication"
+      },
+      {
+        "target": "NANA",
+        "person": "矢沢あい",
+        "reason": "No dated, exact first-volume Japanese manga publication"
+      },
+      {
+        "target": "フルーツバスケット",
+        "person": "高屋奈月",
+        "reason": "No dated, exact first-volume Japanese manga publication"
+      },
+      {
+        "target": "翼を持つ者",
+        "person": "高屋奈月",
+        "reason": "No dated, exact first-volume Japanese manga publication"
+      },
+      {
+        "target": "タッチ",
+        "person": "あだち充",
+        "reason": "No dated, exact first-volume Japanese manga publication"
+      },
+      {
+        "target": "H2",
+        "person": "あだち充",
+        "reason": "No dated, exact first-volume Japanese manga publication"
+      },
+      {
+        "target": "MIX",
+        "person": "あだち充",
+        "reason": "No dated, exact first-volume Japanese manga publication"
+      },
+      {
+        "target": "パーマン",
+        "person": "藤子・F・不二雄",
+        "reason": "No dated, exact first-volume Japanese manga publication"
+      },
+      {
+        "target": "キテレツ大百科",
+        "person": "藤子・F・不二雄",
+        "reason": "Exact name/type QID is not unique: キテレツ大百科"
+      }
+    ],
+    "batchRequests": [],
+    "publicApply": false,
+    "preparationDirectory": "/home/isinxnisi/.local/share/plunode-collection-worker/runtime/.local/collection-issues/issue-25-manga23-20261019",
+    "generatedArtifacts": {}
+  },
+  "executionComplete": true
 }
