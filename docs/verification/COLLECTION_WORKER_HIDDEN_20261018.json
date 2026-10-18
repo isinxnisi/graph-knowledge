@@ -1,0 +1,262 @@
+{
+  "recordedAt": "2026-10-18T13:46:30.625814+00:00",
+  "task": "\\Plunode-CollectionWorker",
+  "launchMethod": "wscript.exe //B //NoLogo; WScript.Shell.Run(command, 0, true)",
+  "taskContractsUnchanged": {
+    "Triggers": true,
+    "Settings": true,
+    "Principals": true,
+    "RegistrationInfo": true
+  },
+  "sourceAndInstalledSha256": {
+    "scripts/collection-worker-task.ps1": "03951e1b5ab3f0dc11c86c36ed2782f46ad97230fa05f074549f572e5f4ff795",
+    "scripts/collection-worker-launcher.wsf": "dc6c9fe5281731da03c32fe5b668a0fb290b53f10140a37714062efb0129f084"
+  },
+  "otherTasks": {
+    "count": 230,
+    "immediatePostInstallDifferences": 0,
+    "finalDifferences": 1,
+    "externalChangedTask": "\\Microsoft\\Windows\\Flighting\\OneSettings\\RefreshCache",
+    "externalStartBoundary": "2026-10-18T22:44:22+09:00",
+    "otherTaskWritesByThisWork": 0
+  },
+  "protectedRuntimeFiles": 149,
+  "protectedRuntimeFilesChanged": [],
+  "requests": 0,
+  "operations": 0,
+  "workerUnitTests": {
+    "passed": 14,
+    "failed": 0
+  },
+  "publicApply": false,
+  "before": {
+    "launcherProcesses": [],
+    "isolatedChecks": [],
+    "baseline": true,
+    "error": null,
+    "observedAt": "2026-10-18T13:30:33.8844146+00:00",
+    "consoleObservations": [
+      {
+        "At": "2026-10-18T13:30:36.7652434+00:00",
+        "Kind": "show-event",
+        "ClassName": "Xaml_WindowedPopupClass",
+        "ProcessName": "WindowsTerminal",
+        "ProcessId": 35172,
+        "Handle": 136059776,
+        "VisibleAtCallback": true
+      },
+      {
+        "At": "2026-10-18T13:30:36.7724445+00:00",
+        "Kind": "visible-poll",
+        "ClassName": "Xaml_WindowedPopupClass",
+        "ProcessName": "WindowsTerminal",
+        "ProcessId": 35172,
+        "Handle": 136059776,
+        "VisibleAtCallback": true
+      },
+      {
+        "At": "2026-10-18T13:31:33.5469073+00:00",
+        "Kind": "visible-poll",
+        "ClassName": "CASCADIA_HOSTING_WINDOW_CLASS",
+        "ProcessName": "WindowsTerminal",
+        "ProcessId": 35172,
+        "Handle": 217715436,
+        "VisibleAtCallback": true
+      },
+      {
+        "At": "2026-10-18T13:31:33.5786303+00:00",
+        "Kind": "show-event",
+        "ClassName": "CASCADIA_HOSTING_WINDOW_CLASS",
+        "ProcessName": "WindowsTerminal",
+        "ProcessId": 35172,
+        "Handle": 217715436,
+        "VisibleAtCallback": true
+      },
+      {
+        "At": "2026-10-18T13:31:34.0982212+00:00",
+        "Kind": "visible-poll",
+        "ClassName": "PseudoConsoleWindow",
+        "ProcessName": "powershell",
+        "ProcessId": 51448,
+        "Handle": 67114142,
+        "VisibleAtCallback": true
+      },
+      {
+        "At": "2026-10-18T13:31:34.1376240+00:00",
+        "Kind": "show-event",
+        "ClassName": "PseudoConsoleWindow",
+        "ProcessName": "powershell",
+        "ProcessId": 51448,
+        "Handle": 67114142,
+        "VisibleAtCallback": true
+      }
+    ],
+    "naturalScheduledRuns": [
+      {
+        "startedAt": "2026-10-18T13:31:31.0000000+00:00",
+        "healthStatus": "online",
+        "logFresh": true,
+        "logUpdatedAt": "2026-10-18T13:31:51.4632128Z",
+        "healthCheckedAt": "2026-10-18T22:32:05+09:00",
+        "healthFresh": true,
+        "exitCode": 0
+      }
+    ],
+    "fixtureDirectory": null,
+    "passed": true,
+    "windowTitlesRecorded": false,
+    "completedAt": "2026-10-18T13:32:10.2308211+00:00",
+    "observer": "WinEvent EVENT_OBJECT_SHOW plus 20ms visible-window polling"
+  },
+  "initialPostInstallObservation": {
+    "observer": "WinEvent EVENT_OBJECT_SHOW plus 20ms visible-window polling",
+    "consoleObservations": [
+      {
+        "At": "2026-10-18T13:33:59.2856226+00:00",
+        "Kind": "show-event",
+        "ClassName": "CASCADIA_HOSTING_WINDOW_CLASS",
+        "ProcessName": "WindowsTerminal",
+        "ProcessId": 35172,
+        "Handle": 4331676,
+        "VisibleAtCallback": true
+      },
+      {
+        "At": "2026-10-18T13:33:59.2899635+00:00",
+        "Kind": "show-event",
+        "ClassName": "CASCADIA_HOSTING_WINDOW_CLASS",
+        "ProcessName": "WindowsTerminal",
+        "ProcessId": 35172,
+        "Handle": 727216,
+        "VisibleAtCallback": true
+      }
+    ],
+    "isolatedChecks": [
+      {
+        "elapsedMilliseconds": 8811,
+        "exitCode": 37,
+        "name": "wait-and-exit-37-with-spaces"
+      },
+      {
+        "elapsedMilliseconds": 918,
+        "exitCode": 2,
+        "name": "missing-arguments-rejected"
+      }
+    ],
+    "windowTitlesRecorded": false,
+    "baseline": false,
+    "naturalScheduledRuns": [
+      {
+        "logFresh": false,
+        "healthFresh": true,
+        "exitCode": 0,
+        "startedAt": "2026-10-18T13:34:31.0000000+00:00",
+        "logUpdatedAt": "2026-10-18T13:34:23.1851121Z",
+        "healthStatus": "online",
+        "healthCheckedAt": "2026-10-18T22:34:38+09:00"
+      },
+      {
+        "logFresh": true,
+        "healthFresh": true,
+        "exitCode": 0,
+        "startedAt": "2026-10-18T13:35:31.0000000+00:00",
+        "logUpdatedAt": "2026-10-18T13:35:43.3718343Z",
+        "healthStatus": "online",
+        "healthCheckedAt": "2026-10-18T22:35:57+09:00"
+      }
+    ],
+    "observedAt": "2026-10-18T13:33:23.8059966+00:00",
+    "fixtureDirectory": "C:\\Users\\nishr\\plunode-collection-worker\\hidden-test-e063aab7a50b4d1d8fa24115c075235e",
+    "launcherProcesses": [
+      {
+        "observedAt": "2026-10-18T13:33:38.8382246+00:00",
+        "processId": 35336
+      },
+      {
+        "observedAt": "2026-10-18T13:35:33.1511674+00:00",
+        "processId": 45504
+      },
+      {
+        "observedAt": "2026-10-18T13:36:34.8246285+00:00",
+        "processId": 21432
+      }
+    ],
+    "error": "Console show events observed; inspect recorded process IDs",
+    "completedAt": "2026-10-18T13:37:38.0972586+00:00",
+    "passed": false
+  },
+  "after": {
+    "observer": "WinEvent EVENT_OBJECT_SHOW plus 20ms visible-window polling",
+    "observedAt": "2026-10-18T13:40:30.3124787+00:00",
+    "launcherProcesses": [
+      {
+        "processId": 47644,
+        "observedAt": "2026-10-18T13:41:35.1615302+00:00",
+        "startedAt": "2026-10-18T13:41:31.3671813+00:00"
+      },
+      {
+        "processId": 53272,
+        "observedAt": "2026-10-18T13:42:32.4802238+00:00",
+        "startedAt": "2026-10-18T13:42:31.3516061+00:00"
+      },
+      {
+        "processId": 4444,
+        "observedAt": "2026-10-18T13:43:32.5527518+00:00",
+        "startedAt": "2026-10-18T13:43:31.3619561+00:00"
+      }
+    ],
+    "error": null,
+    "baseline": false,
+    "isolatedChecks": [
+      {
+        "name": "wait-and-exit-37-with-spaces",
+        "elapsedMilliseconds": 6834,
+        "exitCode": 37
+      },
+      {
+        "name": "missing-arguments-rejected",
+        "elapsedMilliseconds": 1051,
+        "exitCode": 2
+      }
+    ],
+    "fixtureDirectory": "C:\\Users\\nishr\\plunode-collection-worker\\hidden-test-4b43398be43e47828d59d4d01cff6884",
+    "completedAt": "2026-10-18T13:43:58.0195543+00:00",
+    "windowTitlesRecorded": false,
+    "consoleObservations": [],
+    "passed": true,
+    "naturalScheduledRuns": [
+      {
+        "logUpdatedAt": "2026-10-18T13:41:55.5947814Z",
+        "processId": 47644,
+        "healthStatus": "online",
+        "startedAt": "2026-10-18T13:41:31.3671813+00:00",
+        "healthFresh": true,
+        "completedAt": "2026-10-18T13:42:17.0793603+00:00",
+        "healthCheckedAt": "2026-10-18T22:42:13+09:00",
+        "logFresh": true,
+        "exitCode": 0
+      },
+      {
+        "logUpdatedAt": "2026-10-18T13:42:40.6462354Z",
+        "processId": 53272,
+        "healthStatus": "online",
+        "startedAt": "2026-10-18T13:42:31.3516061+00:00",
+        "healthFresh": true,
+        "completedAt": "2026-10-18T13:42:56.6228451+00:00",
+        "healthCheckedAt": "2026-10-18T22:42:54+09:00",
+        "logFresh": true,
+        "exitCode": 0
+      },
+      {
+        "logUpdatedAt": "2026-10-18T13:43:41.5348009Z",
+        "processId": 4444,
+        "healthStatus": "online",
+        "startedAt": "2026-10-18T13:43:31.3619561+00:00",
+        "healthFresh": true,
+        "completedAt": "2026-10-18T13:43:57.6141896+00:00",
+        "healthCheckedAt": "2026-10-18T22:43:56+09:00",
+        "logFresh": true,
+        "exitCode": 0
+      }
+    ]
+  }
+}

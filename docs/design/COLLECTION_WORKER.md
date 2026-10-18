@@ -85,6 +85,8 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\collection-wor
 
 Removeは新規定期確認を無効化するだけで、実行中のワークフローを強制終了せず、承認・再開状態も消さない。別homeの場合は`-Config /home/USER/.../config.json`を指定する。タスク本体をWindowsの`%USERPROFILE%/plunode-collection-worker`へコピーするのでWSL停止時にも起動入口が残る。Windowsがログイン済みでPC稼働中ならWSLを起動して確認する。PC停止・ログアウト中は実行せず、次回ログオン／確認時にGitHubの未処理依頼を読む。常時稼働サーバは今回不要。
 
+Windowsの入口はGUI版`wscript.exe //B //NoLogo`と`worker.wsf`を使う。PowerShell直接起動は`-WindowStyle Hidden`の処理前にコンソールが表示されるため、ランチャー側の`WScript.Shell.Run(..., 0, true)`で子の生成時から非表示にし、Workerの終了まで待って終了コードを返す。IgnoreNewは処理全体へ適用される。通常ログは従来の`last-run.log`、ランチャー自身の起動失敗は同じフォルダーの`launcher-error.log`へ追記する。既存タスクへのInstallはActionだけを更新し、元のtrigger時刻・毎分間隔・ログオン起動・実行ユーザー・有効状態・制限設定を保持する。更新直後の手動実行は行わず、次の定期実行から新しい入口を使う。WSL側runtimeの更新・実行承認・公開applyをこのInstallから行わない。
+
 前景で保守確認する場合だけ、installed runtimeの`collection-worker.py once|watch --config ...`を使う。onceは一巡、watchは60秒ごとの確認。二重起動はprivate flockで処理を開始しない。空キューでmainの入力更新がない場合は共通ロックを取得しない。新しいmainの資料取込・雛形作成、承認済み処理だけで既存autopilotの同じinodeを使い、占有時は次回再確認する。成功済み／コードレビュー待ちのsource commitを保持して不要な再取得を避ける。1ワークフロー55分を上限とし、子へロックFDを継承する。自動開発や別Codexを終了せず、ロックファイルも削除しない。
 
 ローカルhealthはhomeのhealth.json／catalog-health.json、Windowsのタスク状態と%USERPROFILE%/plunode-collection-worker/last-run.log。onlineはpoll成功を示し、各依頼の成功はGitHub resultsのphaseで確認する。ログは資格情報を含めず、詳細の非公開ログをhome/logsへ保存する。GitHub資格情報の失効は再認証が必要。PC故障によるprivate state喪失、意味／同一性判断、コード更新は自動修復しない。
@@ -96,7 +98,15 @@ python3 -m unittest discover -s tests -p test_collection_worker.py -v
 python3 tests/check_collection_worker.py --report /tmp/worker-check.json
 ```
 
-後者は一時runtime・隔離テーマ・r0003凍結provider fixture・既存validatorを使う。通信8回目中断→同じ承認／キャッシュ再開（72試行／71応答）→レビューのGit共有→萩尾望都2 Claimの模擬部分受入→release検証→plan中断→記録日時・release不変の再開→結果共有を通す。DB観測とplanは明示的な試験置換であり、実KG接続・実運営者承認ではない。`--remote URL --branch codex/collection-worker-test-...`で隔離GitHubへも同じ流れを送信できる。通常control branchを試験先に指定することは拒否する。
+Windowsタスクの非表示を実測する保守用確認は、通常のInstall後、静かなデスクトップで次を実行する。タスクを手動起動せず、自然な定期実行3回を待ち、WinEventの表示イベントと20msの可視ウィンドウ観測、終了0・health／ログ更新を照合する。隔離した短い子プロセスの終了37・完了待ち・空白を含むパス・引数不足の拒否も確認し、実収集や承認変更はしない。既に表示中のウィンドウは初期観測から除外するが、観測中にほかのコンソールを開いた場合も要確認として失敗する。`-Baseline -ScheduledRuns 1`は更新前の比較用で、表示検出を失敗にしない。
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\tests\check_collection_worker_task.ps1 -Output "$env:TEMP\collection-worker-hidden.json"
+```
+
+2026-10-18の設置済みタスクでの比較・定期実行の実測は[非表示起動の検証記録](../verification/COLLECTION_WORKER_HIDDEN_20261018.md)を参照。
+
+`check_collection_worker.py`は一時runtime・隔離テーマ・r0003凍結provider fixture・既存validatorを使う。通信8回目中断→同じ承認／キャッシュ再開（72試行／71応答）→レビューのGit共有→萩尾望都2 Claimの模擬部分受入→release検証→plan中断→記録日時・release不変の再開→結果共有を通す。DB観測とplanは明示的な試験置換であり、実KG接続・実運営者承認ではない。`--remote URL --branch codex/collection-worker-test-...`で隔離GitHubへも同じ流れを送信できる。通常control branchを試験先に指定することは拒否する。
 
 既存タスク2の実ローカル無書込plan試験は[従来の検証記録](../../datasets/manga-collection/acceptance-workflow-validation-20261018/README.md)を参照。今回はそれを作り直さず、接続・状態・再開・拒否を検証する。過去の正式受入・release・実行承認は変更しない。
 

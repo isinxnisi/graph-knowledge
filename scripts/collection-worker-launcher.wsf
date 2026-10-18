@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<job id="PlunodeCollectionWorker">
+  <script language="JScript"><![CDATA[
+// Run under wscript.exe //B: the scheduler's root process never creates a console.
+// JScript avoids a dependency on the optional VBScript engine.
+var shell = new ActiveXObject("WScript.Shell");
+var files = new ActiveXObject("Scripting.FileSystemObject");
+shell.CurrentDirectory = files.GetParentFolderName(WScript.ScriptFullName);
+function quoted(value) {
+    if (/["\r\n\x00]/.test(value)) { throw new Error("Invalid launcher argument"); }
+    return '"' + value + '"';
+}
+if (WScript.Arguments.length !== 3) { WScript.Quit(2); }
+try {
+    var executable = shell.ExpandEnvironmentStrings("%SystemRoot%\\System32\\WindowsPowerShell\\v1.0\\powershell.exe");
+    var command = quoted(executable) + " -NoProfile -NonInteractive -WindowStyle Hidden -ExecutionPolicy Bypass -File " +
+        quoted(WScript.Arguments.Item(0)) + " -Mode Run -Config " + quoted(WScript.Arguments.Item(1)) +
+        " -Distribution " + quoted(WScript.Arguments.Item(2));
+    // 0 = hidden at process creation; true = keep the task alive until Worker exits.
+    WScript.Quit(shell.Run(command, 0, true));
+} catch (error) {
+    try {
+        var log = files.OpenTextFile(files.BuildPath(shell.CurrentDirectory, "launcher-error.log"), 8, true);
+        log.WriteLine(new Date().toUTCString() + " launcher failure " + error.number + ": " + error.message);
+        log.Close();
+    } catch (ignored) {}
+    WScript.Quit(1);
+}
+  ]]></script>
+</job>
