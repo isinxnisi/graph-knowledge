@@ -1,0 +1,114 @@
+{
+  "schemaVersion": 1,
+  "approvalId": "manga23-20261019",
+  "status": "approved",
+  "approvalScope": "issue-manga-preparation-collection-review-only",
+  "adapter": "manga-discovery-v2",
+  "targets": [
+    {
+      "person": "浦沢直樹",
+      "work": "MONSTER"
+    },
+    {
+      "person": "浦沢直樹",
+      "work": "20世紀少年"
+    },
+    {
+      "person": "浦沢直樹",
+      "work": "YAWARA!"
+    },
+    {
+      "person": "手塚治虫",
+      "work": "鉄腕アトム"
+    },
+    {
+      "person": "高橋留美子",
+      "work": "犬夜叉"
+    },
+    {
+      "person": "岸本斉史",
+      "work": "NARUTO"
+    },
+    {
+      "person": "赤坂アカ",
+      "work": "かぐや様は告らせたい"
+    },
+    {
+      "person": "田村由美",
+      "work": "ミステリと言う勿れ"
+    },
+    {
+      "person": "九井諒子",
+      "work": "ダンジョン飯"
+    },
+    {
+      "person": "荒木飛呂彦",
+      "work": "ジョジョの奇妙な冒険 第1部 ファントムブラッド"
+    },
+    {
+      "person": "荒川弘",
+      "work": "鋼の錬金術師"
+    },
+    {
+      "person": "荒川弘",
+      "work": "銀の匙 Silver Spoon"
+    },
+    {
+      "person": "荒川弘",
+      "work": "黄泉のツガイ"
+    },
+    {
+      "person": "矢沢あい",
+      "work": "天使なんかじゃない"
+    },
+    {
+      "person": "矢沢あい",
+      "work": "ご近所物語"
+    },
+    {
+      "person": "矢沢あい",
+      "work": "NANA"
+    },
+    {
+      "person": "高屋奈月",
+      "work": "フルーツバスケット"
+    },
+    {
+      "person": "高屋奈月",
+      "work": "翼を持つ者"
+    },
+    {
+      "person": "あだち充",
+      "work": "タッチ"
+    },
+    {
+      "person": "あだち充",
+      "work": "H2"
+    },
+    {
+      "person": "あだち充",
+      "work": "MIX"
+    },
+    {
+      "person": "藤子・F・不二雄",
+      "work": "パーマン"
+    },
+    {
+      "person": "藤子・F・不二雄",
+      "work": "キテレツ大百科"
+    }
+  ],
+  "requestPolicy": {
+    "maxAttempts": 142,
+    "attemptsPerRequest": 2,
+    "minIntervalSeconds": 3,
+    "timeoutSeconds": 20,
+    "maxBytes": 4194304
+  },
+  "humanDecision": {
+    "actorType": "human",
+    "reviewer": "プロジェクト運営者",
+    "decidedAt": "2026-10-19T02:52:00+09:00",
+    "statement": "Issue #25の2026-10-19 02:52 JST先行許可を転記。明示された23作品・人物の同定、QID・日本語代表ISBN探索、recipe生成、hidden候補収集と根拠・保留・レビュー資料生成を承認。Wikidata構造化データとNDL作成書誌だけを用い、準備・収集合計142試行、同一要求2試行、逐次3秒、20秒、4MiB以内。既設時間帯・10分休憩で途中開始・数日継続を許可。同一範囲の再承認は不要。不確かな同定・資料不足・範囲外は保留。個別正式受入・公開apply・VPS配置・会員DB変更は承認しない。"
+  }
+}

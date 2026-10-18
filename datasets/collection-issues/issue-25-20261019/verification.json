@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-10-18T18:32:26.653336+00:00",
+  "issue": "https://github.com/isinxnisi/graph-knowledge/issues/25",
+  "permissionSha256": "673d380b4fb61ab2cdef204140d63a47bbf25dbb288199f25d0e3ae740ef11b3",
+  "originalIssueBodySha256": "be034b9002c8994505c632e0c6a2b4bba1065a80164299d5bdb61618fefa79c5",
+  "referenceArtifacts": {
+    "source-issue.json": "f175777e17d45c6981e52d768c76f905400bdbc04b406a21cb9986423423bb63",
+    "permission.json": "fc4fa7f7b646121415977ce4f30d2b69a08fa85134219141033a7cb4d54f8874"
+  },
+  "tests": {
+    "collectionSuite": {
+      "passed": 88,
+      "elapsedSeconds": 239.61,
+      "node": "24"
+    },
+    "latestIssueTests": {
+      "passed": 11,
+      "includesPreparationInterruptionAndCheckpointTamper": true
+    },
+    "workerRegression": {
+      "passed": true,
+      "transport": "isolated local bare Git",
+      "elapsedSeconds": 43.3,
+      "providerAttempts": 72,
+      "successfulResponses": 71,
+      "realPublicValidator": true,
+      "plan": "isolated-readonly-simulation"
+    }
+  },
+  "adapterCodeSha256": "80e05b67bc0129b963653b90df4cfbfa5bd6aff190acda99f54c08541e55801e",
+  "pastApprovalsOrReleasesModified": false,
+  "formalAcceptance": false,
+  "publicApply": false,
+  "installation": "separately verified after implementation commit; actual queue/status recorded on control branch and Issue"
+}

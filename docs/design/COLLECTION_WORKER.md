@@ -1,5 +1,7 @@
 # ChatGPT承認記録と収集Worker
 
+2026-10-19追記：[Issue起点の収集準備・スケジュール実行](COLLECTION_ISSUE_INTAKE.md)を追加。計画Issueの明示許可を範囲・hash付き依頼へ変換し、QID／ISBN準備から既存collect-reviewへ接続する。正式受入の契約は従来通り。
+
 2026-10-18。[既存2ワークフロー](COLLECTION_WORKFLOW.md)の接続部分。新しいAPI・画面・DB・AI判断器は追加しない。対象はmanga-discovery-v2。**公開apply・restore・VPS配置・会員DB操作を起動する入口はない。**
 
 ## 運営者の通常操作

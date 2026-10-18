@@ -33,6 +33,7 @@ def module(name, path):
 
 gate = module('worker_gate', ROOT / 'scripts/collection-themes.py')
 controls = module('worker_controls', ROOT / 'scripts/collection-worker-control.py')
+issues = module('worker_issues', ROOT / 'scripts/collection-issues.py')
 read, dump, require, digest, save = gate.read, gate.dump, gate.require, gate.content_hash, gate.save
 
 
@@ -215,7 +216,17 @@ class Executor:
     def validate(self, request, parent=None):
         w = self.workflow
         self.sync_inputs(request['sourceCommit'])
-        if request['kind'] == 'collect-review':
+        if request['kind'] == 'issue-prepare':
+            p = issues.permission({'body': issues.BEGIN + '\n```json\n' + dump(request['permission']) + '```\n' + issues.END})
+            insist(p['status'] == 'approved' and digest(p) == request['issueOrigin']['permissionSha256'], 'Issue permission hash differs')
+            insist(gate.digest(request['issueSnapshot']['body'].encode()) == request['issueOrigin']['issueBodySha256'], 'Issue snapshot hash differs')
+            insist(issues.permission(request['issueSnapshot']) == p and request['humanDecision'] == p['humanDecision'], 'Issue snapshot/decision differs')
+            insist(type(request['firstRecipeRevision']) is int and request['firstRecipeRevision'] >= 4 and
+                   request['recipeRevisionCount'] == len({t['person'] for t in p['targets']}), 'Invalid reserved recipe range')
+        elif request['kind'] == 'collect-review':
+            if request.get('issueOrigin'):
+                insist(parent and parent['phase'] == 'completed' and parent['kind'] == 'issue-prepare' and
+                       request in parent['result']['batchRequests'], 'Completed, exact Issue preparation parent required')
             target = request['target']; slug(target['themeId'])
             insist(type(target['revision']) is int and 1 <= target['revision'] <= 9999, 'Invalid revision')
             value = w.gate.definition(self.registry, target['themeId'], target['revision'])
@@ -243,7 +254,12 @@ class Executor:
     def run(self, request, monitor, lock_fd=None):
         w = self.workflow
         monitor()  # Recheck after publishing "running", before any new gate/decision write.
-        if request['kind'] == 'collect-review':
+        script = 'collection-workflow.py'
+        if request['kind'] == 'issue-prepare':
+            path = self.root / '.local/collection-issues' / request['id'] / 'request.json'
+            issues.frozen(path, request)
+            args = ['--request', str(path)]; script = 'collection-issues.py'
+        elif request['kind'] == 'collect-review':
             t = request['target']; value = w.gate.definition(self.registry, t['themeId'], t['revision'])
             path = w.gate.revision_path(self.registry, 'approvals', t['themeId'], t['revision'])
             if not path.exists():
@@ -269,7 +285,7 @@ class Executor:
         attempt = request['id'] + '-' + str(time.time_ns())
         with (logs / (attempt + '.stdout')).open('w+') as out, (logs / (attempt + '.stderr')).open('w+') as err:
             os.chmod(out.name, 0o600); os.chmod(err.name, 0o600)
-            child = subprocess.Popen([sys.executable, str(self.root / 'scripts/collection-workflow.py'), *args], cwd=self.root,
+            child = subprocess.Popen([sys.executable, str(self.root / 'scripts' / script), *args], cwd=self.root,
                 stdin=subprocess.DEVNULL, stdout=out, stderr=err, start_new_session=True,
                 pass_fds=(() if lock_fd is None else (lock_fd,)),
                 env={**os.environ, 'PATH': str(Path(self.config['home']) / 'bin') + ':' + os.environ['PATH']})
@@ -296,7 +312,14 @@ class Executor:
 
     def artifacts(self, request, result):
         roots, draft_names = [], []
-        if request['kind'] == 'collect-review':
+        if request['kind'] == 'issue-prepare':
+            work = Path(result['preparationDirectory'])
+            roots = [work / 'README.md', work / 'preparation.json', work / 'request.json', work / 'request-cache/requests.json']
+            for name, sha in result['generatedArtifacts'].items():
+                path = self.root / relative(name)
+                insist(gate.file_hash(path) == sha, 'Prepared input artifact changed')
+                roots.append(path)
+        elif request['kind'] == 'collect-review':
             review = Path(result['reviewDirectory']); roots.append(review)
             job = self.root / '.local/collection-jobs' / result['jobId']
             roots += [job / 'artifacts', job / 'job.json', job / 'work-order.json', job / 'request-cache/requests.json']
@@ -375,6 +398,7 @@ class Worker:
         self.now = clock or time.time
         self.work_deadline = work_deadline if work_deadline is not None else time.monotonic() + controls.WORK_LIMIT
         self.heavy_used = False
+        self.issue_api = issues.GitHubIssues(store)
         self.state_file = self.home / 'state.json'
         self.state = read(self.state_file) if self.state_file.exists() else {'schemaVersion': 1, 'requests': {}, 'operations': {}}
         self.control = controls.ExecutionControl(self)
@@ -384,10 +408,13 @@ class Worker:
 
     def approved(self, request):
         insist(request['schemaVersion'] == 1 and request['status'] == 'approved', 'Request is not explicitly approved')
-        slug(request['id']); insist(request['kind'] in ['collect-review', 'accept-release'], 'Unsupported operation; apply/restore/deployment forbidden')
+        slug(request['id']); insist(request['kind'] in ['issue-prepare', 'collect-review', 'accept-release'], 'Unsupported operation; apply/restore/deployment forbidden')
         insist(request['applyAuthorized'] == NO_APPLY, 'Public apply forbidden')
-        h = request['humanDecision'] if request['kind'] == 'collect-review' else request['decision']['humanDecision']
+        h = request['humanDecision'] if request['kind'] != 'accept-release' else request['decision']['humanDecision']
         human(h)
+        if request['kind'] == 'issue-prepare':
+            insist(request['approvalScope'] == issues.SCOPE and request.get('issueOrigin'), 'Explicit Issue permission scope required')
+            return 'issue-prepare:' + str(request['issueOrigin']['issueNumber']) + ':' + request['issueOrigin']['approvalId']
         if request['kind'] == 'collect-review':
             insist(request['approvalScope'] == 'collection-candidates-and-review-only', 'Collection approval scope differs')
             slug(request.get('reviewCycle', 'initial'))
@@ -401,6 +428,8 @@ class Worker:
         current, current_sha = self.store.json(path)
         insist(current_sha == sha and current == request, 'Approval record changed; it cannot be rebound')
         self.approved(current)
+        try: issues.assert_live(current, self.issue_api)
+        except (ValueError, KeyError, TypeError) as error: raise Blocked(str(error)) from None
         if PREFIX + 'revocations/' + request['id'] + '.json' in self.store.tree(self.store.head, PREFIX + 'revocations/'):
             revoke, _ = self.store.json(PREFIX + 'revocations/' + request['id'] + '.json')
             try: human(revoke['humanDecision'])
@@ -425,6 +454,10 @@ class Worker:
             human_text += '収集候補／正式受入済み未適用／公開snapshot収録は下記資料の接続ごとの状態を参照。公開画面の実探索確認ではない。\n\n'
         files = {base + 'status.json': dump(record).encode()}
         immutable = []
+        if request['kind'] == 'issue-prepare' and record['phase'] == 'completed':
+            for child in record['result']['batchRequests']:
+                dest = PREFIX + 'requests/' + slug(child['id']) + '.json'
+                files[dest] = dump(child).encode(); immutable.append(dest)
         for path, data in (artifacts or {}).items():
             dest = PREFIX + 'artifacts/' + ident + '/' + relative(path)
             files[dest] = data; immutable.append(dest)
@@ -446,6 +479,7 @@ class Worker:
 
     def tick(self):
         self.store.sync()
+        issues.poll(self)
         self.control.refresh()
         paths = self.store.tree(self.store.head, PREFIX + 'requests/')
         # Invalid input is fail-closed and must not starve unrelated approvals.
@@ -463,7 +497,7 @@ class Worker:
                 old.update(phase='blocked', message='Approval record removed; no further execution')
                 if old.get('request'): self.publish(old['request'], old)
         # Collection parents before acceptance children, independent of lexical request IDs.
-        loaded.sort(key=lambda pair: pair[0].get('kind') == 'accept-release')
+        loaded.sort(key=lambda pair: ['issue-prepare', 'collect-review', 'accept-release'].index(pair[0]['kind']) if pair[0].get('kind') in ['issue-prepare', 'collect-review', 'accept-release'] else 3)
         for request, sha in loaded:
             ident = request['id']
             record = self.state['requests'].get(ident)
