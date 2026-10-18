@@ -1,0 +1,167 @@
+{
+  "schemaVersion": 1,
+  "recordedAt": "2026-10-18T23:55:31.437264+00:00",
+  "codeCommit": "ed89e5a6ff0cf7d8b485330be790a234a064eacd",
+  "requests": [
+    {
+      "requestId": "issue-25-utc-recovery-01",
+      "predecessor": "issue-25-manga23-20261019-repair1-batch-03",
+      "requestSha256": "a8d4288b56a6c82bb0472be22152432c1f4167bdc3234420c83b586b6724b345",
+      "definitionSha256": "658961932f2ec1df33753e7ba38d8669ca3e20e1da91e03b23dd01e65f5b71b9",
+      "approvalSha256": "8b80a7db122e990ca817e428692ba22197abf2777e37c327adfc3f1c51f353f2",
+      "recipe": {
+        "file": "datasets/manga-collection/r0017/recipe.json",
+        "sha256": "b3b58514a20ecfdc79090bc397fa9db81841dfc397860d98ef1dde4cc80bc5a9"
+      },
+      "works": [
+        "犬夜叉"
+      ],
+      "originalStamp": "2026-10-18T18:54:58+00:00",
+      "newStamp": "2026-10-18T18:54:58Z"
+    },
+    {
+      "requestId": "issue-25-utc-recovery-02",
+      "predecessor": "issue-25-manga23-20261019-repair1-batch-01",
+      "requestSha256": "a25b93cfbe06d29201c862380f1208dfa929a0856e6f8ca7473a82b223769b34",
+      "definitionSha256": "3aa3524c9f64b62c086f2a10e771133640038400de24c71e579da555c1baf829",
+      "approvalSha256": "052920823ec30ff2fa137ef9c336e51cf88d1a8978e304cccf95a557b9e43dba",
+      "recipe": {
+        "file": "datasets/manga-collection/r0018/recipe.json",
+        "sha256": "aa7943be05294785dd119bc3290ba09f3870043ae595503737faf70e42850c12"
+      },
+      "works": [
+        "MONSTER",
+        "20世紀少年",
+        "YAWARA!"
+      ],
+      "originalStamp": "2026-10-18T18:54:58+00:00",
+      "newStamp": "2026-10-18T18:54:58Z"
+    },
+    {
+      "requestId": "issue-25-utc-recovery-03",
+      "predecessor": "issue-25-manga23-20261019-repair1-batch-04",
+      "requestSha256": "67aa46a50204029b93086cb11c41b6251061d0fa3fc2ed6f131aaadc0e078a56",
+      "definitionSha256": "809ca74bd10f724f84d4471cd7a10466f90ba0f19bc4a4e779e2fa67a471f51a",
+      "approvalSha256": "50bc213a82574ee5511ed6f3c1de6893804c03df83136c2756983e588c423ccd",
+      "recipe": {
+        "file": "datasets/manga-collection/r0019/recipe.json",
+        "sha256": "d58e652152ae9ec04a3e4bdca38b985763186fc9c9f1eb421124e44401eb87c3"
+      },
+      "works": [
+        "ミステリと言う勿れ"
+      ],
+      "originalStamp": "2026-10-18T18:54:58+00:00",
+      "newStamp": "2026-10-18T18:54:58Z"
+    },
+    {
+      "requestId": "issue-25-utc-recovery-04",
+      "predecessor": "issue-25-manga23-20261019-repair1-batch-05",
+      "requestSha256": "b9ed2e411f3f66641455c5a151b3855481e163f36332a59fb8e6559a447b1bc0",
+      "definitionSha256": "23bf7027d4581688f10347c30314866929f39c16544b1f5256027b20b6a6cccc",
+      "approvalSha256": "df85209fff27c441121cac3dac8aea4d29eba0ea76cead11feeb99266f5dec7b",
+      "recipe": {
+        "file": "datasets/manga-collection/r0020/recipe.json",
+        "sha256": "56d6be35fb3bdda4453561af677b103a553ba533c1ff183ca0fe1431fd1c2e8f"
+      },
+      "works": [
+        "ダンジョン飯"
+      ],
+      "originalStamp": "2026-10-18T18:54:58+00:00",
+      "newStamp": "2026-10-18T18:54:58Z"
+    },
+    {
+      "requestId": "issue-25-utc-recovery-05",
+      "predecessor": "issue-25-manga23-20261019-repair1-batch-06",
+      "requestSha256": "137298d028f21a48a58499dcc3e99b0b928944b2ca1df819a8470c57bc4cc619",
+      "definitionSha256": "ea12c6d924e5886a9a2a91c56055a4dc50a94a333a71192fa55c02a50b0fc7f3",
+      "approvalSha256": "a6b0f3a99964fa03aa2956df611617a51a77686ec44dff3b0e6a6a7002141026",
+      "recipe": {
+        "file": "datasets/manga-collection/r0021/recipe.json",
+        "sha256": "02e344e0cd018632be797b5b21a635514de80202b9887e74e3790efdfd15be65"
+      },
+      "works": [
+        "黄泉のツガイ"
+      ],
+      "originalStamp": "2026-10-18T18:54:58+00:00",
+      "newStamp": "2026-10-18T18:54:58Z"
+    },
+    {
+      "requestId": "issue-25-utc-recovery-06",
+      "predecessor": "issue-25-manga23-20261019-repair1-batch-07",
+      "requestSha256": "265e3aca49beaa1963c0cefcef4d65cad00104bbd90e8073b380047d38621650",
+      "definitionSha256": "d134d6a72aa03fa06cfbd842d34343b57033de1d6ecacb7daba11dc4dd6ca7ab",
+      "approvalSha256": "8ee541c367dfc0a3a31ea6dc6baa97f160549d06ea2a7956cc49b5e15e812d89",
+      "recipe": {
+        "file": "datasets/manga-collection/r0022/recipe.json",
+        "sha256": "d10d21b8206aa1980325ac7c81fb0f7eb5c2855a966e7c37773cafda1777d390"
+      },
+      "works": [
+        "天使なんかじゃない",
+        "ご近所物語",
+        "NANA"
+      ],
+      "originalStamp": "2026-10-18T18:54:58+00:00",
+      "newStamp": "2026-10-18T18:54:58Z"
+    },
+    {
+      "requestId": "issue-25-utc-recovery-07",
+      "predecessor": "issue-25-manga23-20261019-repair1-batch-08",
+      "requestSha256": "d46cb9ff59261ccd4dd4dbdc1680c4d95e07d8c71c86da9bb78cf58a3e4aac80",
+      "definitionSha256": "156afa134a227ae26ca0d32115b6c5af1a6c40e5be15388a2c9a6441f6f8616b",
+      "approvalSha256": "6fefb83a8af6a86a1322b6810690eea25dafa6c2d041e2fbbd32daea8a37be2c",
+      "recipe": {
+        "file": "datasets/manga-collection/r0023/recipe.json",
+        "sha256": "818cd0d60ecd2c55845217575ffd0c67d95801cb36becf8011e0070d6bb4624b"
+      },
+      "works": [
+        "フルーツバスケット",
+        "翼を持つ者"
+      ],
+      "originalStamp": "2026-10-18T18:54:58+00:00",
+      "newStamp": "2026-10-18T18:54:58Z"
+    },
+    {
+      "requestId": "issue-25-utc-recovery-08",
+      "predecessor": "issue-25-manga23-20261019-repair1-batch-09",
+      "requestSha256": "0814b8af0f80dc7f8cb28d448971a9da6a86cee02c9b6879d53a41b4a4621a76",
+      "definitionSha256": "cb3fee7f18c6dab34abb4aa0f116d2135756a7b1d2ddf343425cce100d11c621",
+      "approvalSha256": "4f1c86a956b88eb58db11a65fa9fcd43707441bd258463d470b51956084ad22c",
+      "recipe": {
+        "file": "datasets/manga-collection/r0024/recipe.json",
+        "sha256": "a472de07f66a745e963de375daaa5cbde62f67e8ff10c9024dd516ad11c5be21"
+      },
+      "works": [
+        "タッチ",
+        "H2",
+        "MIX"
+      ],
+      "originalStamp": "2026-10-18T18:54:58+00:00",
+      "newStamp": "2026-10-18T18:54:58Z"
+    },
+    {
+      "requestId": "issue-25-utc-recovery-09",
+      "predecessor": "issue-25-manga23-20261019-repair1-batch-10",
+      "requestSha256": "78ffd17af073fb5ff238579eca1957d2be68063bca8157b4cac2eba3f2f88eb3",
+      "definitionSha256": "c4ab1e1eba868884c21b67cb225da32f0c03148e5663c3c7d898d581f7a113e1",
+      "approvalSha256": "e8fd08a330791f786ffa605c055971702eacdea45dddc60a36632c97d1f53343",
+      "recipe": {
+        "file": "datasets/manga-collection/r0025/recipe.json",
+        "sha256": "ca039cc58330319a8e52c0f41f0803e9254b67f3b0081af6f8eaefb1f4f6b3a7"
+      },
+      "works": [
+        "パーマン"
+      ],
+      "originalStamp": "2026-10-18T18:54:58+00:00",
+      "newStamp": "2026-10-18T18:54:58Z"
+    }
+  ],
+  "recoveryRequests": 9,
+  "originalRequestsPreserved": true,
+  "originalInputIdsPreserved": true,
+  "communicationAttempts": 89,
+  "maximumAttempts": 142,
+  "cacheIndexSha256": "1d5a0cca13cea21eb6aefca4dc5a62dc48ffa90f337c26a0875f20fc0e2f7826",
+  "providerRequestsAdded": 0,
+  "newHumanApprovalRequired": false,
+  "publicApply": false
+}

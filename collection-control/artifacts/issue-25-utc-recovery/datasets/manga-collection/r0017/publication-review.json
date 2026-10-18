@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "scope": "specified-japanese-volume-1-isbn-only",
+  "publications": [
+    {
+      "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I000002576618",
+      "isbn13": [
+        "9784091252012"
+      ],
+      "title": [
+        "犬夜叉. 1"
+      ],
+      "mainTitles": [
+        "犬夜叉"
+      ],
+      "volume": [
+        "1"
+      ],
+      "edition": [],
+      "responsibilities": [
+        "高橋留美子 著"
+      ],
+      "publisher": [
+        "小学館"
+      ],
+      "language": [
+        "jpn"
+      ],
+      "genre": [
+        "漫画"
+      ],
+      "issued": "1997.5",
+      "searchTruncated": true,
+      "selectionBoundary": "representative-first-volume-among-observed-records-not-original-edition"
+    }
+  ]
+}

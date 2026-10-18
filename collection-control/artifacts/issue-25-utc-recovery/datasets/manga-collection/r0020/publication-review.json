@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "scope": "specified-japanese-volume-1-isbn-only",
+  "publications": [
+    {
+      "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I026002097",
+      "isbn13": [
+        "9784047301535"
+      ],
+      "title": [
+        "ダンジョン飯 = DELICIOUS IN DUNGEON. 1"
+      ],
+      "mainTitles": [
+        "ダンジョン飯"
+      ],
+      "volume": [
+        "1"
+      ],
+      "edition": [],
+      "responsibilities": [
+        "九井諒子 著"
+      ],
+      "publisher": [
+        "KADOKAWA"
+      ],
+      "language": [
+        "jpn"
+      ],
+      "genre": [
+        "漫画"
+      ],
+      "issued": "2015.1",
+      "searchTruncated": false,
+      "selectionBoundary": "representative-first-volume-among-observed-records-not-original-edition"
+    }
+  ]
+}

@@ -1,0 +1,95 @@
+{
+  "schemaVersion": 2,
+  "id": "manga-r0024",
+  "catalog": "docs/research/famous-manga-creators/20261016/candidates.json",
+  "baseRelease": "datasets/public-kg/releases/20261014-credits-001",
+  "stamp": "2026-10-18T18:54:58Z",
+  "requestPolicy": {
+    "maxAttempts": 142,
+    "attemptsPerRequest": 2,
+    "minIntervalSeconds": 3,
+    "timeoutSeconds": 20,
+    "maxBytes": 4194304
+  },
+  "outputPolicy": {
+    "maxNewEntities": 4,
+    "maxNewClaims": 9,
+    "newClaimVisibility": "hidden"
+  },
+  "people": [
+    {
+      "name": "あだち充",
+      "catalogName": "あだち充",
+      "wikidata": "Q351742",
+      "identityNames": [
+        "あだち充"
+      ],
+      "creditNames": [
+        "あだち充"
+      ]
+    }
+  ],
+  "works": [
+    {
+      "name": "タッチ",
+      "wikidata": "Q619500",
+      "identityNames": [
+        "タッチ"
+      ],
+      "isbn13": "9784091218612",
+      "ndlMainTitles": [
+        "タッチ"
+      ],
+      "expectedVolume": [
+        "vol.1"
+      ],
+      "expectedEdition": [],
+      "volumeLabel": "第1巻（NDL巻次 vol.1）",
+      "editionLabel": null,
+      "identityNote": "Issueの名称とWikidataの完全一致・漫画型、NDL作成書誌の主書名・責任表示・巻次を照合。作品全体の担当へ外挿しない。",
+      "selectionReason": "承認済みIssue内の同作者経路の拡張。"
+    },
+    {
+      "name": "H2",
+      "wikidata": "Q652892",
+      "identityNames": [
+        "H2"
+      ],
+      "isbn13": "9784091231512",
+      "ndlMainTitles": [
+        "H2"
+      ],
+      "expectedVolume": [
+        "1"
+      ],
+      "expectedEdition": [],
+      "volumeLabel": "第1巻（NDL巻次 1）",
+      "editionLabel": null,
+      "identityNote": "Issueの名称とWikidataの完全一致・漫画型、NDL作成書誌の主書名・責任表示・巻次を照合。作品全体の担当へ外挿しない。",
+      "selectionReason": "承認済みIssue内の同作者経路の拡張。"
+    },
+    {
+      "name": "MIX",
+      "wikidata": "Q11231713",
+      "identityNames": [
+        "MIX"
+      ],
+      "isbn13": "9784091238672",
+      "ndlMainTitles": [
+        "Mix"
+      ],
+      "expectedVolume": [
+        "1"
+      ],
+      "expectedEdition": [],
+      "volumeLabel": "第1巻（NDL巻次 1）",
+      "editionLabel": null,
+      "identityNote": "Issueの名称とWikidataの完全一致・漫画型、NDL作成書誌の主書名・責任表示・巻次を照合。作品全体の担当へ外挿しない。",
+      "selectionReason": "承認済みIssue内の同作者経路の拡張。"
+    }
+  ],
+  "reviewArtifacts": [
+    "datasets/manga-collection/r0024/anchor-review.json",
+    "datasets/manga-collection/r0024/publication-review.json"
+  ]
+}

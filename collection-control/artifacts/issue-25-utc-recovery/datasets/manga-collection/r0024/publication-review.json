@@ -1,0 +1,100 @@
+{
+  "schemaVersion": 1,
+  "scope": "specified-japanese-volume-1-isbn-only",
+  "publications": [
+    {
+      "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I000001790190",
+      "isbn13": [
+        "9784091218612"
+      ],
+      "title": [
+        "タッチ. vol.1"
+      ],
+      "mainTitles": [
+        "タッチ"
+      ],
+      "volume": [
+        "vol.1"
+      ],
+      "edition": [],
+      "responsibilities": [
+        "あだち充 原作"
+      ],
+      "publisher": [
+        "小学館"
+      ],
+      "language": [
+        "jpn"
+      ],
+      "genre": [
+        "児童図書",
+        "漫画"
+      ],
+      "issued": "1986.3",
+      "searchTruncated": true,
+      "selectionBoundary": "representative-first-volume-among-observed-records-not-original-edition"
+    },
+    {
+      "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I000002238601",
+      "isbn13": [
+        "9784091231512"
+      ],
+      "title": [
+        "H2. 1"
+      ],
+      "mainTitles": [
+        "H2"
+      ],
+      "volume": [
+        "1"
+      ],
+      "edition": [],
+      "responsibilities": [
+        "あだち充 著"
+      ],
+      "publisher": [
+        "小学館"
+      ],
+      "language": [
+        "jpn"
+      ],
+      "genre": [
+        "漫画"
+      ],
+      "issued": "1993.1",
+      "searchTruncated": true,
+      "selectionBoundary": "representative-first-volume-among-observed-records-not-original-edition"
+    },
+    {
+      "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I023983988",
+      "isbn13": [
+        "9784091238672"
+      ],
+      "title": [
+        "Mix. 1"
+      ],
+      "mainTitles": [
+        "Mix"
+      ],
+      "volume": [
+        "1"
+      ],
+      "edition": [],
+      "responsibilities": [
+        "あだち充 著"
+      ],
+      "publisher": [
+        "小学館"
+      ],
+      "language": [
+        "jpn"
+      ],
+      "genre": [
+        "漫画"
+      ],
+      "issued": "2012.10",
+      "searchTruncated": false,
+      "selectionBoundary": "representative-first-volume-among-observed-records-not-original-edition"
+    }
+  ]
+}

@@ -1,0 +1,99 @@
+{
+  "schemaVersion": 1,
+  "scope": "specified-japanese-volume-1-isbn-only",
+  "publications": [
+    {
+      "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I000009594314",
+      "isbn13": [
+        "9784086187657"
+      ],
+      "title": [
+        "天使なんかじゃない. 1"
+      ],
+      "mainTitles": [
+        "天使なんかじゃない"
+      ],
+      "volume": [
+        "1"
+      ],
+      "edition": [],
+      "responsibilities": [
+        "矢沢あい 著"
+      ],
+      "publisher": [
+        "集英社"
+      ],
+      "language": [
+        "jpn"
+      ],
+      "genre": [
+        "漫画"
+      ],
+      "issued": "2008.9",
+      "searchTruncated": false,
+      "selectionBoundary": "representative-first-volume-among-observed-records-not-original-edition"
+    },
+    {
+      "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I000002442460",
+      "isbn13": [
+        "9784088538204"
+      ],
+      "title": [
+        "ご近所物語. 1"
+      ],
+      "mainTitles": [
+        "ご近所物語"
+      ],
+      "volume": [
+        "1"
+      ],
+      "edition": [],
+      "responsibilities": [
+        "矢沢あい 著"
+      ],
+      "publisher": [
+        "集英社"
+      ],
+      "language": [
+        "jpn"
+      ],
+      "genre": [
+        "漫画"
+      ],
+      "issued": "1995.10",
+      "searchTruncated": false,
+      "selectionBoundary": "representative-first-volume-among-observed-records-not-original-edition"
+    },
+    {
+      "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I000002890352",
+      "isbn13": [
+        "9784088562094"
+      ],
+      "title": [
+        "Nana. 1"
+      ],
+      "mainTitles": [
+        "Nana"
+      ],
+      "volume": [
+        "1"
+      ],
+      "edition": [],
+      "responsibilities": [
+        "矢沢あい 著"
+      ],
+      "publisher": [
+        "集英社"
+      ],
+      "language": [
+        "jpn"
+      ],
+      "genre": [
+        "漫画"
+      ],
+      "issued": "2000.5",
+      "searchTruncated": false,
+      "selectionBoundary": "representative-first-volume-among-observed-records-not-original-edition"
+    }
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "status": "issue-authorized-candidates-only",
+  "issueOrigin": {
+    "repository": "isinxnisi/graph-knowledge",
+    "issueNumber": 25,
+    "approvalId": "manga23-20261019",
+    "permissionSha256": "673d380b4fb61ab2cdef204140d63a47bbf25dbb288199f25d0e3ae740ef11b3",
+    "issueBodySha256": "5f302ff42139b5230da70d38734577da414a3b89a24a82f90302e0297afc3c69"
+  },
+  "humanDecision": {
+    "actorType": "human",
+    "reviewer": "プロジェクト運営者",
+    "decidedAt": "2026-10-19T02:52:00+09:00",
+    "statement": "Issue #25の2026-10-19 02:52 JST先行許可を転記。明示された23作品・人物の同定、QID・日本語代表ISBN探索、recipe生成、hidden候補収集と根拠・保留・レビュー資料生成を承認。Wikidata構造化データとNDL作成書誌だけを用い、準備・収集合計142試行、同一要求2試行、逐次3秒、20秒、4MiB以内。既設時間帯・10分休憩で途中開始・数日継続を許可。同一範囲の再承認は不要。不確かな同定・資料不足・範囲外は保留。個別正式受入・公開apply・VPS配置・会員DB変更は承認しない。"
+  },
+  "people": [
+    {
+      "name": "九井諒子",
+      "catalogName": "九井諒子",
+      "wikidata": "Q11370008",
+      "identityNames": [
+        "九井諒子"
+      ],
+      "creditNames": [
+        "九井諒子"
+      ]
+    }
+  ],
+  "works": [
+    {
+      "name": "ダンジョン飯",
+      "wikidata": "Q20016948",
+      "identityNames": [
+        "ダンジョン飯"
+      ],
+      "isbn13": "9784047301535",
+      "ndlMainTitles": [
+        "ダンジョン飯"
+      ],
+      "expectedVolume": [
+        "1"
+      ],
+      "expectedEdition": [],
+      "volumeLabel": "第1巻（NDL巻次 1）",
+      "editionLabel": null,
+      "identityNote": "Issueの名称とWikidataの完全一致・漫画型、NDL作成書誌の主書名・責任表示・巻次を照合。作品全体の担当へ外挿しない。",
+      "selectionReason": "承認済みIssue内の同作者経路の拡張。"
+    }
+  ]
+}

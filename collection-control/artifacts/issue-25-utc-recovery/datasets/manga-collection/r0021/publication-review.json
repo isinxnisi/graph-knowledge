@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "scope": "specified-japanese-volume-1-isbn-only",
+  "publications": [
+    {
+      "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I032181220",
+      "isbn13": [
+        "9784757579620"
+      ],
+      "title": [
+        "黄泉のツガイ. 1"
+      ],
+      "mainTitles": [
+        "黄泉のツガイ"
+      ],
+      "volume": [
+        "1"
+      ],
+      "edition": [],
+      "responsibilities": [
+        "荒川弘"
+      ],
+      "publisher": [
+        "スクウェア・エニックス"
+      ],
+      "language": [
+        "jpn"
+      ],
+      "genre": [
+        "漫画"
+      ],
+      "issued": "2022.6",
+      "searchTruncated": false,
+      "selectionBoundary": "representative-first-volume-among-observed-records-not-original-edition"
+    }
+  ]
+}

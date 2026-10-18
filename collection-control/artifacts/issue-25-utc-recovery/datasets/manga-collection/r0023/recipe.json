@@ -1,0 +1,76 @@
+{
+  "schemaVersion": 2,
+  "id": "manga-r0023",
+  "catalog": "docs/research/famous-manga-creators/20261016/candidates.json",
+  "baseRelease": "datasets/public-kg/releases/20261014-credits-001",
+  "stamp": "2026-10-18T18:54:58Z",
+  "requestPolicy": {
+    "maxAttempts": 142,
+    "attemptsPerRequest": 2,
+    "minIntervalSeconds": 3,
+    "timeoutSeconds": 20,
+    "maxBytes": 4194304
+  },
+  "outputPolicy": {
+    "maxNewEntities": 3,
+    "maxNewClaims": 6,
+    "newClaimVisibility": "hidden"
+  },
+  "people": [
+    {
+      "name": "高屋奈月",
+      "catalogName": "高屋奈月",
+      "wikidata": "Q241885",
+      "identityNames": [
+        "高屋奈月"
+      ],
+      "creditNames": [
+        "高屋奈月"
+      ]
+    }
+  ],
+  "works": [
+    {
+      "name": "フルーツバスケット",
+      "wikidata": "Q216204",
+      "identityNames": [
+        "フルーツバスケット"
+      ],
+      "isbn13": "9784592171614",
+      "ndlMainTitles": [
+        "フルーツバスケット"
+      ],
+      "expectedVolume": [
+        "第1巻"
+      ],
+      "expectedEdition": [],
+      "volumeLabel": "第1巻（NDL巻次 第1巻）",
+      "editionLabel": null,
+      "identityNote": "Issueの名称とWikidataの完全一致・漫画型、NDL作成書誌の主書名・責任表示・巻次を照合。作品全体の担当へ外挿しない。",
+      "selectionReason": "承認済みIssue内の同作者経路の拡張。"
+    },
+    {
+      "name": "翼を持つ者",
+      "wikidata": "Q2947180",
+      "identityNames": [
+        "翼を持つ者"
+      ],
+      "isbn13": "9784592128311",
+      "ndlMainTitles": [
+        "翼を持つ者"
+      ],
+      "expectedVolume": [
+        "第1巻"
+      ],
+      "expectedEdition": [],
+      "volumeLabel": "第1巻（NDL巻次 第1巻）",
+      "editionLabel": null,
+      "identityNote": "Issueの名称とWikidataの完全一致・漫画型、NDL作成書誌の主書名・責任表示・巻次を照合。作品全体の担当へ外挿しない。",
+      "selectionReason": "承認済みIssue内の同作者経路の拡張。"
+    }
+  ],
+  "reviewArtifacts": [
+    "datasets/manga-collection/r0023/anchor-review.json",
+    "datasets/manga-collection/r0023/publication-review.json"
+  ]
+}

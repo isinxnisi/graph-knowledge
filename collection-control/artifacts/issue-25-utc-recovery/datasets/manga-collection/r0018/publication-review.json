@@ -1,0 +1,99 @@
+{
+  "schemaVersion": 1,
+  "scope": "specified-japanese-volume-1-isbn-only",
+  "publications": [
+    {
+      "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I000002418467",
+      "isbn13": [
+        "9784091836519"
+      ],
+      "title": [
+        "Monster. 1 (ヘルDr.テンマ)"
+      ],
+      "mainTitles": [
+        "Monster"
+      ],
+      "volume": [
+        "1 (ヘルDr.テンマ)"
+      ],
+      "edition": [],
+      "responsibilities": [
+        "浦沢直樹 著"
+      ],
+      "publisher": [
+        "小学館"
+      ],
+      "language": [
+        "jpn"
+      ],
+      "genre": [
+        "漫画"
+      ],
+      "issued": "1995.8",
+      "searchTruncated": false,
+      "selectionBoundary": "representative-first-volume-among-observed-records-not-original-edition"
+    },
+    {
+      "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I000002863103",
+      "isbn13": [
+        "9784091855312"
+      ],
+      "title": [
+        "20世紀少年. 1"
+      ],
+      "mainTitles": [
+        "20世紀少年"
+      ],
+      "volume": [
+        "1"
+      ],
+      "edition": [],
+      "responsibilities": [
+        "浦沢直樹 著"
+      ],
+      "publisher": [
+        "小学館"
+      ],
+      "language": [
+        "jpn"
+      ],
+      "genre": [
+        "漫画"
+      ],
+      "issued": "2000.3",
+      "searchTruncated": false,
+      "selectionBoundary": "representative-first-volume-among-observed-records-not-original-edition"
+    },
+    {
+      "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I000001854814",
+      "isbn13": [
+        "9784091813411"
+      ],
+      "title": [
+        "Yawara!. 1"
+      ],
+      "mainTitles": [
+        "Yawara!"
+      ],
+      "volume": [
+        "1"
+      ],
+      "edition": [],
+      "responsibilities": [
+        "浦沢直樹 著"
+      ],
+      "publisher": [
+        "小学館"
+      ],
+      "language": [
+        "jpn"
+      ],
+      "genre": [
+        "漫画"
+      ],
+      "issued": "1987.6",
+      "searchTruncated": false,
+      "selectionBoundary": "representative-first-volume-among-observed-records-not-original-edition"
+    }
+  ]
+}
