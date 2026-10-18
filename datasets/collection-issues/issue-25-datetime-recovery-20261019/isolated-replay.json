@@ -1,0 +1,279 @@
+{
+  "schemaVersion": 1,
+  "testOnly": true,
+  "providerHttp": false,
+  "databaseConnection": false,
+  "publicApply": false,
+  "elapsedSeconds": 120.2,
+  "recoveredInIsolation": 9,
+  "rows": [
+    {
+      "predecessor": "issue-25-manga23-20261019-repair1-batch-01",
+      "reproducedInvalidIso": true,
+      "validation": true,
+      "newCandidateCounts": {
+        "entities": 0,
+        "claims": 0,
+        "sources": 0,
+        "citations": 0
+      },
+      "heldClaims": 3,
+      "heldClaimReasons": [
+        {
+          "work": "MONSTER",
+          "reasons": [
+            "endpoint-identity-held"
+          ]
+        },
+        {
+          "work": "20世紀少年",
+          "reasons": [
+            "endpoint-identity-held"
+          ]
+        },
+        {
+          "work": "YAWARA!",
+          "reasons": [
+            "endpoint-identity-held"
+          ]
+        }
+      ],
+      "inheritedHolds": [],
+      "paths": 0,
+      "sameUuidsAndMeaning": true,
+      "resumeUnchanged": true,
+      "networkAttemptsAdded": 0
+    },
+    {
+      "predecessor": "issue-25-manga23-20261019-repair1-batch-03",
+      "reproducedInvalidIso": true,
+      "validation": true,
+      "newCandidateCounts": {
+        "entities": 1,
+        "claims": 1,
+        "sources": 1,
+        "citations": 1
+      },
+      "heldClaims": 0,
+      "heldClaimReasons": [],
+      "inheritedHolds": [],
+      "paths": 1,
+      "sameUuidsAndMeaning": true,
+      "resumeUnchanged": true,
+      "networkAttemptsAdded": 0
+    },
+    {
+      "predecessor": "issue-25-manga23-20261019-repair1-batch-04",
+      "reproducedInvalidIso": true,
+      "validation": true,
+      "newCandidateCounts": {
+        "entities": 1,
+        "claims": 1,
+        "sources": 1,
+        "citations": 1
+      },
+      "heldClaims": 0,
+      "heldClaimReasons": [],
+      "inheritedHolds": [],
+      "paths": 1,
+      "sameUuidsAndMeaning": true,
+      "resumeUnchanged": true,
+      "networkAttemptsAdded": 0
+    },
+    {
+      "predecessor": "issue-25-manga23-20261019-repair1-batch-05",
+      "reproducedInvalidIso": true,
+      "validation": true,
+      "newCandidateCounts": {
+        "entities": 2,
+        "claims": 1,
+        "sources": 1,
+        "citations": 1
+      },
+      "heldClaims": 0,
+      "heldClaimReasons": [],
+      "inheritedHolds": [],
+      "paths": 0,
+      "sameUuidsAndMeaning": true,
+      "resumeUnchanged": true,
+      "networkAttemptsAdded": 0
+    },
+    {
+      "predecessor": "issue-25-manga23-20261019-repair1-batch-06",
+      "reproducedInvalidIso": true,
+      "validation": true,
+      "newCandidateCounts": {
+        "entities": 0,
+        "claims": 0,
+        "sources": 0,
+        "citations": 0
+      },
+      "heldClaims": 0,
+      "heldClaimReasons": [],
+      "inheritedHolds": [
+        {
+          "reason": "unsupported-responsibility-role",
+          "work": "黄泉のツガイ",
+          "rawResponsibility": "荒川弘",
+          "sourceUrl": "https://ndlsearch.ndl.go.jp/books/R100000002-I032181220"
+        }
+      ],
+      "paths": 0,
+      "sameUuidsAndMeaning": true,
+      "resumeUnchanged": true,
+      "networkAttemptsAdded": 0
+    },
+    {
+      "predecessor": "issue-25-manga23-20261019-repair1-batch-07",
+      "reproducedInvalidIso": true,
+      "validation": true,
+      "newCandidateCounts": {
+        "entities": 4,
+        "claims": 3,
+        "sources": 3,
+        "citations": 3
+      },
+      "heldClaims": 0,
+      "heldClaimReasons": [],
+      "inheritedHolds": [],
+      "paths": 1,
+      "sameUuidsAndMeaning": true,
+      "resumeUnchanged": true,
+      "networkAttemptsAdded": 0
+    },
+    {
+      "predecessor": "issue-25-manga23-20261019-repair1-batch-08",
+      "reproducedInvalidIso": true,
+      "validation": true,
+      "newCandidateCounts": {
+        "entities": 3,
+        "claims": 2,
+        "sources": 2,
+        "citations": 2
+      },
+      "heldClaims": 0,
+      "heldClaimReasons": [],
+      "inheritedHolds": [],
+      "paths": 1,
+      "sameUuidsAndMeaning": true,
+      "resumeUnchanged": true,
+      "networkAttemptsAdded": 0
+    },
+    {
+      "predecessor": "issue-25-manga23-20261019-repair1-batch-09",
+      "reproducedInvalidIso": true,
+      "validation": true,
+      "newCandidateCounts": {
+        "entities": 3,
+        "claims": 2,
+        "sources": 2,
+        "citations": 2
+      },
+      "heldClaims": 0,
+      "heldClaimReasons": [],
+      "inheritedHolds": [
+        {
+          "reason": "publication-identity-unconfirmed",
+          "work": "タッチ",
+          "isbn13": "9784091218612",
+          "matchingRecords": 0,
+          "records": [
+            {
+              "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I000001790190",
+              "isbn13": [
+                "9784091218612"
+              ],
+              "title": [
+                "タッチ. vol.1"
+              ],
+              "mainTitles": [
+                "タッチ"
+              ],
+              "volume": [
+                "vol.1"
+              ],
+              "edition": [],
+              "responsibilities": [
+                "あだち充 原作"
+              ],
+              "publisher": [
+                "小学館"
+              ],
+              "language": [
+                "jpn"
+              ],
+              "genre": [
+                "児童図書",
+                "漫画"
+              ]
+            }
+          ]
+        }
+      ],
+      "paths": 1,
+      "sameUuidsAndMeaning": true,
+      "resumeUnchanged": true,
+      "networkAttemptsAdded": 0
+    },
+    {
+      "predecessor": "issue-25-manga23-20261019-repair1-batch-10",
+      "reproducedInvalidIso": true,
+      "validation": true,
+      "newCandidateCounts": {
+        "entities": 0,
+        "claims": 0,
+        "sources": 0,
+        "citations": 0
+      },
+      "heldClaims": 0,
+      "heldClaimReasons": [],
+      "inheritedHolds": [
+        {
+          "reason": "publication-identity-unconfirmed",
+          "work": "パーマン",
+          "isbn13": "9784091941114",
+          "matchingRecords": 0,
+          "records": [
+            {
+              "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I000002609338",
+              "isbn13": [
+                "9784091941114"
+              ],
+              "title": [
+                "パーマン. 1"
+              ],
+              "mainTitles": [
+                "パーマン"
+              ],
+              "volume": [
+                "1"
+              ],
+              "edition": [],
+              "responsibilities": [
+                "藤子・F・不二雄 著"
+              ],
+              "publisher": [
+                "小学館"
+              ],
+              "language": [
+                "jpn"
+              ],
+              "genre": [
+                "児童図書",
+                "漫画"
+              ]
+            }
+          ]
+        }
+      ],
+      "paths": 0,
+      "sameUuidsAndMeaning": true,
+      "resumeUnchanged": true,
+      "networkAttemptsAdded": 0
+    }
+  ],
+  "networkAttemptsBefore": 89,
+  "networkAttemptsAfter": 89,
+  "originalProtectedFiles": 744,
+  "originalFilesChanged": 0
+}

@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-10-18T23:51:34.430453+00:00",
+  "collectionSuitePassed": 96,
+  "latestRecoveryTestsPassed": 5,
+  "latestWorkerTestsPassed": 32,
+  "testCountsOverlap": true,
+  "isolatedBatchesPassed": 9,
+  "providerHttpRequestsAdded": 0,
+  "networkAttemptsBefore": 89,
+  "networkAttemptsAfter": 89,
+  "schemaOrValidatorRelaxed": false,
+  "oldInputsApprovalsJobsModified": false,
+  "publicApply": false,
+  "requiredRuntimeConfirmation": "Install fixed code and dispatch new immutable requests; ordinary scheduled execution must be observed separately."
+}

@@ -254,6 +254,13 @@ def frozen(path, value):
     else: save(path, value)
 
 
+def fixture_stamp(value):
+    """The existing fixture contract requires UTC Z, not an ISO offset string."""
+    when = datetime.fromisoformat(value.replace('Z', '+00:00'))
+    require(when.tzinfo is not None, 'Fixture timestamp requires timezone')
+    return when.astimezone(timezone.utc).isoformat().replace('+00:00', 'Z')
+
+
 def prepare(root, request, fetch_factory=Acquisition):
     """Runs only as a scheduled heavy Worker operation under the common lock."""
     p = permission({'body': BEGIN + '\n```json\n' + dump(request['permission']) + '```\n' + END})
@@ -279,7 +286,8 @@ def prepare(root, request, fetch_factory=Acquisition):
         saved = read(progress_path)
         require(saved['requestSha256'] == digest(request) and saved['sha256'] == digest(saved['payload']), 'Preparation checkpoint hash changed')
         progress = saved['payload']
-    else: progress = {'stamp': gate.now(), 'people': {}, 'works': {}, 'holds': []}
+    else: progress = {'stamp': fixture_stamp(gate.now()), 'people': {}, 'works': {}, 'holds': []}
+    require(progress['stamp'] == fixture_stamp(progress['stamp']), 'Legacy checkpoint timestamp requires a new preparation cycle; no frozen input overwrite')
     def checkpoint(): save(progress_path, {'requestSha256': digest(request), 'sha256': digest(progress), 'payload': progress})
     checkpoint()
     fetch = fetch_factory(work / 'request-cache', p['requestPolicy'])

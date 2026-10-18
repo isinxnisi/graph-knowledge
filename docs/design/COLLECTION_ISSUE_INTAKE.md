@@ -1,5 +1,7 @@
 # Issue起点の収集準備とスケジュール実行
 
+2026-10-19追記：[日時形式エラーの復旧](COLLECTION_DATETIME_RECOVERY.md)。新規recipe.stampはfixture契約のUTC Z形式で生成する。旧入力・承認・失敗結果を保持し、停止9バッチは同じ許可・cacheのまま新しい復旧依頼で再開する。
+
 2026-10-19。対象は既存 manga-discovery-v2。Issueの計画本文は実行キューと分離し、明示的な人間許可だけを不変依頼へ変換する。定期処理はPython・既存無料provider API・GitHubだけを使用し、Codex・有料AI・新しい常駐基盤を起動しない。
 
 ## ChatGPTからの操作

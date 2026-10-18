@@ -34,6 +34,7 @@ def module(name, path):
 gate = module('worker_gate', ROOT / 'scripts/collection-themes.py')
 controls = module('worker_controls', ROOT / 'scripts/collection-worker-control.py')
 issues = module('worker_issues', ROOT / 'scripts/collection-issues.py')
+recovery = module('worker_recovery', ROOT / 'scripts/collection-recovery.py')
 read, dump, require, digest, save = gate.read, gate.dump, gate.require, gate.content_hash, gate.save
 
 
@@ -230,7 +231,12 @@ class Executor:
             insist(type(request['firstRecipeRevision']) is int and request['firstRecipeRevision'] >= 4 and
                    request['recipeRevisionCount'] == len({t['person'] for t in p['targets']}), 'Invalid reserved recipe range')
         elif request['kind'] == 'collect-review':
-            if request.get('issueOrigin'):
+            if request.get('recovery'):
+                proof = request['recovery']; slug(proof['predecessorRequestId'])
+                old, old_sha = self.store.json(PREFIX + 'requests/' + proof['predecessorRequestId'] + '.json')
+                insist(parent and parent['request'] == old and parent['requestSha256'] == old_sha, 'Original GitHub request changed')
+                recovery.validate(self.root, request, parent, w.gate)
+            elif request.get('issueOrigin'):
                 insist(parent and parent['phase'] == 'completed' and parent['kind'] == 'issue-prepare' and
                        request in parent['result']['batchRequests'], 'Completed, exact Issue preparation parent required')
             target = request['target']; slug(target['themeId'])
@@ -436,6 +442,13 @@ class Worker:
         current, current_sha = self.store.json(path)
         insist(current_sha == sha and current == request, 'Approval record changed; it cannot be rebound')
         self.approved(current)
+        if current.get('recovery'):
+            proof = current['recovery']; predecessor = slug(proof['predecessorRequestId'])
+            original, original_sha = self.store.json(PREFIX + 'requests/' + predecessor + '.json')
+            insist(original_sha == proof['predecessorRequestSha256'], 'Predecessor approval record changed; recovery stopped')
+            self.approved(original)
+            insist(PREFIX + 'revocations/' + predecessor + '.json' not in self.store.tree(self.store.head, PREFIX + 'revocations/'),
+                   'Predecessor revoked; recovery stopped')
         try: issues.assert_live(current, self.issue_api)
         except (ValueError, KeyError, TypeError) as error: raise Blocked(str(error)) from None
         if PREFIX + 'revocations/' + request['id'] + '.json' in self.store.tree(self.store.head, PREFIX + 'revocations/'):
@@ -453,6 +466,8 @@ class Worker:
                    'Foreign result ownership/content; explicit operator review required')
         human_text = '# 収集Workerの処理結果\n\n' + ident + '：**' + record['phase'] + '**\n\n'
         human_text += '公開apply・restore・本番配置は行わない。承認者名は本人認証の証明ではない。\n\n'
+        if request.get('recovery'):
+            human_text += '復旧元: [' + request['parentRequestId'] + '](../' + request['parentRequestId'] + '/README.md)。旧依頼・承認・失敗履歴は保持し、日時の表記だけをUTC Zへ修正。同じ取得cache・通算予算を使用する。\n\n'
         if record.get('message'): human_text += record['message'] + '\n\n'
         if record.get('savedAcceptance'):
             human_text += '**正式受入記録は保存済み・公開準備は未完了・公開未適用。** 受入そのものを未受入へ戻さず、同じ依頼から再開する。\n\n'

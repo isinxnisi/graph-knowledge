@@ -219,6 +219,8 @@ class IssueTests(unittest.TestCase):
             before = i.read(job / 'request-cache/requests.json')
             staging = job / 'artifacts'; staging.mkdir(); i.save(job / 'work-order.json', packet)
             summary = manga.build(root, value['execution'], staging, job / 'request-cache')
+            # Exercise the real public fixture schema, not only the Python generator/reviewer.
+            self.assertTrue(i.gate.technical_validation(staging / 'validation-only')['valid'])
             self.assertEqual(i.read(job / 'request-cache/requests.json'), before)
             candidates = i.read(staging / 'candidate/data.json')
             original = {c['id'] for c in public['claims']}

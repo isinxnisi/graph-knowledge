@@ -170,6 +170,8 @@ class ExecutionControl:
                     'requestsByPhase': {}, 'issueIntake': w.state.get('issueIntake', {}), 'publicApply': False}
         for record in w.state['requests'].values():
             phase = record['phase']; snapshot['requestsByPhase'][phase] = snapshot['requestsByPhase'].get(phase, 0) + 1
+        snapshot['recoveryRequests'] = {k: {'predecessor': r['request']['recovery']['predecessorRequestId'], 'phase': r['phase']}
+            for k, r in w.state['requests'].items() if r.get('request', {}).get('recovery')}
         fingerprint = w.digest(snapshot)
         if fingerprint == value.get('reportedSha256') and w.now() - value.get('reportedAt', 0) < 900: return
         base = 'collection-control/workers/' + w.config['workerId'] + '/'
@@ -194,6 +196,10 @@ class ExecutionControl:
         text += '操作はworker-execution-control-only。収集・知識受入・公開applyの承認ではない。GitHub権限を信頼し、名前だけを本人認証とは扱わない。Issuesの計画本文と実行キューは分離し、購読先の明示的な収集許可だけをhash付き依頼へ変換する。\n\n'
         if w.state.get('issueIntake'): text += 'Issue確認結果:\n\n```json\n' + w.dump(w.state['issueIntake']) + '```\n\n'
         text += '個別処理・根拠・代表Graph経路は[結果一覧](../../results/)を参照。収集候補／正式受入済み未公開／公開済みを混同しない。\n'
+        if snapshot['recoveryRequests']:
+            text += '\n## 不具合復旧\n\n旧blockedは変更しない失敗履歴。下記の新規依頼の状態を現在の復旧進捗として確認する。\n\n'
+            for ident, row in snapshot['recoveryRequests'].items():
+                text += '- [' + ident + '](../../results/' + ident + '/README.md): ' + row['phase'] + '（旧 ' + row['predecessor'] + '）\n'
         snapshot['checkedAt'] = iso(w.now())
         w.store.publish({base + 'status.json': w.dump(snapshot).encode(), base + 'README.md': text.encode(),
                          base + 'control-template.json': w.dump(template).encode()})
