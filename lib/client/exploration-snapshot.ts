@@ -10,5 +10,5 @@ export function captureExploration(graph: GraphState, selection: Selection, view
     error: meta.loading ? overviewLabels().interrupted : meta.error,
   }]));
   const positions = view ? Object.fromEntries(Object.entries(view.positions).filter(([id]) => graph.cacheNodes[id])) : {};
-  return { graph: { ...graph, expansions }, selection, view: view ? { ...view, positions } : null };
+  return { graph: { ...graph, expansions, ...(graph.execution?.type === "pattern" ? { execution: { ...graph.execution, loading: false, request: graph.execution.request + 1 } } : {}) }, selection, view: view ? { ...view, positions } : null };
 }

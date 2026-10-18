@@ -13,6 +13,7 @@ import { restorationPositions } from "../lib/client/graph-view";
 import type { GraphView, ViewRestoration } from "../lib/client/graph-view";
 export type GraphCanvasHandle = { capture: () => GraphView | null; focusEntity: (id: string) => void };
 import type { GraphState, Selection } from "../lib/client/graph-state";
+import { graphRootReady } from "../lib/client/graph-state";
 import { entityLabel, edgeRoutes, displayRelations, relationId } from "../lib/client/graph-presentation";
 import { initialPositions, additionalPositions, contentPositions } from "../lib/client/graph-layout";
 import { createNodeClickHandler, createRelationClickHandler } from "../lib/client/graph-interaction";
@@ -154,6 +155,7 @@ export default function GraphCanvas({ compactGuide = false, footerAction, onView
     if (!cy) return;
     // 取得中メッセージの切替でCanvasの位置も変わるため、クリック座標のキャッシュを更新する。
     cy.resize();
+    const rootReady = graphRootReady(graph);
     const reset = generation.current !== graph.generation;
     const restored = reset && restoration?.generation === graph.generation ? restoration.view : null;
     if (reset) {
@@ -168,7 +170,7 @@ export default function GraphCanvas({ compactGuide = false, footerAction, onView
     const relations = displayRelations(graph.claims, locale);
     // 同じ世代でも表示対象は減る。端点を消す前に辺を削除する。
     cy.nodes().forEach((node) => { if (!graph.nodes[node.id()]) savedPositions.current[node.id()] = { ...node.position() }; });
-    Object.keys(savedPositions.current).forEach((id) => { if (!graph.cacheNodes[id] && (!initialLayoutDone.current || (graph.centerId && graph.expansions[graph.centerId]?.expanded))) delete savedPositions.current[id]; });
+    Object.keys(savedPositions.current).forEach((id) => { if (!graph.cacheNodes[id] && (!initialLayoutDone.current || rootReady)) delete savedPositions.current[id]; });
     cy.batch(() => { cy.edges().filter((edge) => !relations[edge.id()]).remove(); cy.nodes().filter((node) => !graph.nodes[node.id()]).remove(); });
     const routes = edgeRoutes(relations);
     const elements: ElementDefinition[] = newNodes.map((node) => ({ group: "nodes", data: { id: node.id, label: entityLabel(node, graph.nodes, locale), kind: node.kind }, position: { x: 0, y: 0 } }));
@@ -188,20 +190,21 @@ export default function GraphCanvas({ compactGuide = false, footerAction, onView
       Object.entries(restorationPositions(graph, restored)).forEach(([id, point]) => cy.getElementById(id).position(point));
       if (Object.keys(restored.positions).some((id) => graph.nodes[id])) { cy.zoom(restored.zoom); cy.pan(restored.pan); if (restored.recenter) cy.center(); }
       else cy.fit(undefined, 40);
-      if (graph.centerId && graph.expansions[graph.centerId]?.expanded) initialLayoutDone.current = true;
+      if (rootReady) initialLayoutDone.current = true;
     } else if (contentOnly && !initialLayoutDone.current && newNodes.length) {
       const ids = cy.nodes().map(node => node.id());
       const positions = contentPositions(ids, relations, cy.width() < cy.height());
       Object.entries(positions).forEach(([id, point]) => cy.getElementById(id).position(point));
       cy.fit(undefined, 40); cy.zoom(Math.min(1.15, cy.zoom())); cy.center();
       initialLayoutDone.current = true;
-    } else if (!initialLayoutDone.current && graph.centerId && graph.expansions[graph.centerId]?.expanded) {
+    } else if (!initialLayoutDone.current && graph.centerId && rootReady) {
       const compact = window.matchMedia("(max-width: 800px)").matches;
       const positions = initialPositions(graph.centerId, cy.nodes().filter((node) => node.id() !== graph.centerId).map((node) => node.id()), cy.height(), compact && cy.width() < cy.height());
       Object.entries(positions).forEach(([id, point]) => cy.getElementById(id).position(point));
       cy.fit(undefined, 40);
       // 狭い画面の初回だけは全Nodeを収める。追加展開・領域切替では倍率を変えない。
-      cy.zoom(compact ? Math.min(1.15, cy.zoom()) : Math.min(1.15, Math.max(graph.expansions[graph.centerId]?.hasMore ? 0.65 : 0.8, cy.zoom())));
+      const hasMore = graph.execution?.type === "pattern" ? graph.execution.hasMore : graph.expansions[graph.centerId]?.hasMore;
+      cy.zoom(compact ? Math.min(1.15, cy.zoom()) : Math.min(1.15, Math.max(hasMore ? 0.65 : 0.8, cy.zoom())));
       cy.center(); initialLayoutDone.current = true;
     } else if (reset && newNodes.length) {
       cy.fit(cy.nodes(), 60); if (cy.zoom() > 1.2) cy.zoom(1.2); cy.center();

@@ -38,6 +38,8 @@ export class WorkspaceError extends Error {
 type StorageAccess = Pick<Storage, "getItem" | "setItem" | "removeItem">;
 
 export function captureWorkspace(dataset: DatasetMode, title: string, graph: GraphState, view: GraphView | null): SavedWorkspace {
+  // The v1 persistence format cannot express shared relation conditions yet.
+  if (graph.relation || graph.execution?.type === "pattern") throw new WorkspaceError("response");
   if (Object.values(graph.expansions).some(meta => meta.loading)) throw new WorkspaceError("loading");
   const branches = Object.entries(graph.expansions).map(([id, meta]) => ({ id, open: meta.open, pages: meta.pages.length }));
   if (branches.reduce((sum, branch) => sum + branch.pages, 0) > WORKSPACE_PAGE_LIMIT) throw new WorkspaceError("limit");

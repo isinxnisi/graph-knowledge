@@ -2,10 +2,31 @@ import { datasetMode, type DatasetMode } from "../domain/dataset";
 import { explorationLabels } from "../i18n/exploration";
 import { z } from "zod";
 import { ApiError } from "./http";
+import { relationConditionKey, type RelationCondition } from "../domain/relation-conditions";
 import { dataReleaseLabels } from "../i18n/data-release";
 import { explorationKey, predicateKey, type EventRoleFilter, type ContributionRoleFilter, type OrganizationPositionFilter, type PredicateFilter } from "../domain/exploration";
 
 const v4Schema = z.strictObject({ v: z.literal(4), center: z.uuidv4(), condition: z.string(), dataset: z.string(), after: z.uuidv4() });
+const v6Schema = z.strictObject({ v: z.literal(6), operation: z.literal("relation-neighbors"), center: z.uuidv4(), condition: z.string().max(2048), dataset: z.string(), revision: z.string().nullable(), after: z.uuidv4() });
+export function encodeRelationNeighborCursor(center: string, relation: RelationCondition, after: string, dataset: DatasetMode, revision: string | null) {
+  return Buffer.from(JSON.stringify({ v: 6, operation: "relation-neighbors", center, condition: relationConditionKey(relation), dataset, revision, after })).toString("base64url");
+}
+export function decodeRelationNeighborCursor(cursor: string | null, center: string, relation: RelationCondition, dataset: DatasetMode, revision: string | null) {
+  if (!cursor) return null;
+  try {
+    if (relation.type !== "adjacent" || cursor.length > 4096 || !/^[A-Za-z0-9_-]+$/.test(cursor)) throw Error();
+    let raw: { v?: number };
+    try { raw = JSON.parse(Buffer.from(cursor, "base64url").toString("utf8")); } catch { raw = {}; }
+    if (raw.v !== 6) {
+      if (relation.polarity !== "all-records") throw Error();
+      return decodeNeighborCursor(cursor, center, relation.predicates, relation.contributionRoles, dataset, relation.organizationPositions, relation.eventRoles, revision ?? undefined);
+    }
+    const value = v6Schema.parse(raw);
+    if (value.center !== center || value.dataset !== dataset || value.condition !== relationConditionKey(relation)) throw Error();
+    if (value.revision !== revision) throw new ApiError(409, "DATASET_CHANGED", dataReleaseLabels().changed);
+    return value.after.toLowerCase();
+  } catch (e) { if (e instanceof ApiError) throw e; throw new ApiError(400, "INVALID_ARGUMENT", explorationLabels().invalidCursor); }
+}
 const v5Schema = v4Schema.extend({ v: z.literal(5), revision: z.string().min(1).max(160) });
 const v3Schema = z.strictObject({ v: z.literal(3), center: z.uuidv4(), condition: z.string(), dataset: z.string(), after: z.uuidv4() });
 const v2Schema = z.strictObject({ v: z.literal(2), center: z.uuidv4(), condition: z.string(), dataset: z.string(), after: z.uuidv4() });

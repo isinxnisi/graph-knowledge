@@ -28,6 +28,7 @@ export type DiscoverySearchResponse = EntitySearchResponse & { revision?: string
 export type EntityResponse = { entity: EntityDetail };
 export type NeighborsResponse = {
   revision?: string;
+  relation?: import("./relation-conditions").RelationCondition;
   centerId: string; nodes: EntitySummary[]; claims: ClaimSummary[];
   page: { nextCursor: string | null; hasMore: boolean };
 };

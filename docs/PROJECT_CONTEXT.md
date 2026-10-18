@@ -1,5 +1,7 @@
 # プロジェクトの構想と判断基準
 
+2026-10-18、[共通関係条件のSTEP 3a](design/DISCOVERY_PATTERN_GRAPH_EXECUTION.md)として、other-worksの完全経路POST・候補ページ・証拠／取得済み経路の直接再検証、Graphのpattern実行と和集合投影を追加。既存neighborsは肯否省略時の意味と旧cursorを維持する。新しい編集UI・保存形式移行・Discovery接続は未実装で、一般の操作入口へ対応済みと表示しない。公開KG・収集・正式VPSは変更しない。
+
 2026-10-18、[共通関係条件のSTEP 2](design/DISCOVERY_TARGET_SEARCH.md)として、名前なしでもother-worksの完全経路が成立する作品を返す読み取り専用POST対象検索と、各結果の証拠取得・直接再検証を追加。公開KGの読み取りと高次数の隔離試験で検証する。既存GET・Discovery UI・Graph状態／保存・公開KG・収集・正式VPSは維持し、STEP 3／4は未着手。
 
 2026-10-18、[ChatGPT承認連携と収集Worker](design/COLLECTION_WORKER.md)を既存2ワークフローへ追加。GitHub専用branchの明示判断をWSLの隔離runtimeが検知し、収集→レビュー、正式受入→release／validate／無書込planと結果共有を連続処理する。判断者名を本人認証とみなさず、既存GitHub権限と人間判断の記録を前提にする。重要な意味・同一性・収集実行・個別受入・公開applyの人間判断を維持し、新規の実運用承認・公開KG apply・VPS配置は行わない。

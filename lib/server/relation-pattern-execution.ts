@@ -2,7 +2,7 @@ import "server-only";
 import type { Transaction } from "neo4j-driver";
 import { PREDICATES } from "../domain/predicates";
 import { relationConditionKey, type RelationCondition } from "../domain/relation-conditions";
-import { matchWitnessSchema, validateRelationRoute, type MatchWitness, type RouteRef } from "../domain/relation-patterns";
+import { matchWitnessSchema, validateRelationRoute, RelationWitnessError, type MatchWitness, type RouteRef } from "../domain/relation-patterns";
 import type { ClaimSummary, EntitySummary } from "../domain/api";
 import { entitySummary, claimSummary } from "./mappers";
 import { readPublicRevision } from "./public-revision";
@@ -82,9 +82,19 @@ export async function materializeRelationRoutes(tx: RelationReadTx, condition: R
 // neighbor pages. A witness is a reference to verify, never trusted graph data.
 export async function verifyRelationWitness(tx: RelationReadTx, condition: RelationCondition, input: unknown) {
   const witness: MatchWitness = matchWitnessSchema.parse(input);
-  if (witness.conditionKey !== relationConditionKey(condition)) throw new Error("Witness condition mismatch");
+  if (witness.conditionKey !== relationConditionKey(condition)) throw new RelationWitnessError("Witness condition mismatch");
   await readPublicRevision(tx, witness.revision);
   const result = await materializeRelationRoutes(tx, condition, [witness.route], witness.revision);
   await readPublicRevision(tx, witness.revision);
   return { witness, ...result };
 }
+
+// Endpoint candidates, not combinations of parallel Claims. $take is server-owned.
+export const OTHER_WORKS_PAGE = `MATCH (e:Entity {id: $rootId}) ${FIRST}
+ WITH e, p, min(a.id) AS firstId
+ WHERE $afterPerson IS NULL OR p.id >= $afterPerson
+ CALL { WITH e, p ${SECOND}
+   AND ($afterPerson IS NULL OR p.id > $afterPerson OR (p.id = $afterPerson AND w.id > $afterWork))
+   RETURN w, min(b.id) AS secondId }
+ RETURN [e.id, p.id, w.id] AS nodeIds, [firstId, secondId] AS claimIds
+ ORDER BY p.id, w.id LIMIT $take`;

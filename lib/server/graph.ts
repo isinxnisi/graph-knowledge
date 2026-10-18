@@ -9,7 +9,8 @@ import { int } from "neo4j-driver";
 import { claimDetailSchema, type EntitySearchResponse, type EntityResponse, type NeighborsResponse, type ClaimResponse } from "../domain/api";
 import type { EventRoleFilter, ContributionRoleFilter, OrganizationPositionFilter, PredicateFilter } from "../domain/exploration";
 import { readPublicRevision } from "./public-revision";
-import { encodeNeighborCursor, decodeNeighborCursor } from "./neighbor-cursor";
+import { encodeNeighborCursor, decodeNeighborCursor, encodeRelationNeighborCursor, decodeRelationNeighborCursor } from "./neighbor-cursor";
+import { relationAcceptsClaim, type RelationCondition } from "../domain/relation-conditions";
 import { ApiError } from "./http";
 import { readTransaction } from "./read-db";
 import { entitySummary, entityDetail, claimSummary, citationDetail, relatedId } from "./mappers";
@@ -32,14 +33,20 @@ export function getEntity(id: string): Promise<EntityResponse> {
   });
 }
 
-export function getNeighbors(id: string, limit: number, after: string | null, predicates: PredicateFilter = null, contributionRoles: ContributionRoleFilter = null, organizationPositions: OrganizationPositionFilter = null, eventRoles: EventRoleFilter = null, expectedRevision: string | null = null): Promise<NeighborsResponse> {
+export function getNeighbors(id: string, limit: number, after: string | null, predicates: PredicateFilter = null, contributionRoles: ContributionRoleFilter = null, organizationPositions: OrganizationPositionFilter = null, eventRoles: EventRoleFilter = null, expectedRevision: string | null = null, relation?: RelationCondition): Promise<NeighborsResponse> {
+  if (relation) {
+    if (relation.type !== "adjacent") throw new ApiError(400, "INVALID_ARGUMENT", "一段の関係条件が必要です。");
+    predicates = relation.predicates; contributionRoles = relation.contributionRoles; organizationPositions = relation.organizationPositions; eventRoles = relation.eventRoles;
+  }
   return readTransaction(async (tx) => {
     const revision = process.env.GRAPH_DATASET === "public-kg" ? await readPublicRevision(tx, expectedRevision) : null;
-    const queryAfter = revision ? decodeNeighborCursor(after, id, predicates, contributionRoles, "public-kg", organizationPositions, eventRoles, revision) : after;
+    const queryAfter = relation ? decodeRelationNeighborCursor(after, id, relation, datasetMode(process.env.GRAPH_DATASET), revision) : revision ? decodeNeighborCursor(after, id, predicates, contributionRoles, "public-kg", organizationPositions, eventRoles, revision) : after;
     const centerResult = await tx.run(ENTITY_DETAIL, { id });
     if (!centerResult.records.length) throw notFound();
     const center = entitySummary(centerResult.records[0].get("entity"));
-    const result = await tx.run(eventRoles !== null ? NEIGHBORS_BY_EVENT : organizationPositions !== null ? NEIGHBORS_BY_QUALIFICATION : contributionRoles === null ? NEIGHBORS : NEIGHBORS_BY_ROLE, { id, after: queryAfter, predicates, contributionRoles, organizationPositions, eventRoles, take: int(limit + 1) });
+    let query = eventRoles !== null ? NEIGHBORS_BY_EVENT : organizationPositions !== null ? NEIGHBORS_BY_QUALIFICATION : contributionRoles === null ? NEIGHBORS : NEIGHBORS_BY_ROLE;
+    if (relation?.polarity === "affirmed") query = query.replace("WHERE c.visibility = 'published'", "WHERE c.visibility = 'published' AND c.polarity = 'affirmed'");
+    const result = await tx.run(query, { id, after: queryAfter, predicates, contributionRoles, organizationPositions, eventRoles, take: int(limit + 1) });
     const nodes = new Map([[center.id, center]]);
     const claims = result.records.slice(0, limit).map((record) => {
       const subject = entitySummary(record.get("subject"));
@@ -49,8 +56,9 @@ export function getNeighbors(id: string, limit: number, after: string | null, pr
     });
     const hasMore = result.records.length > limit;
     if (revision) await readPublicRevision(tx, revision);
-    return { ...(revision ? { revision } : {}), centerId: id, nodes: [...nodes.values()], claims,
-      page: { hasMore, nextCursor: hasMore ? encodeNeighborCursor(id, predicates, claims.at(-1)!.id, contributionRoles, undefined, organizationPositions, eventRoles, revision ?? undefined) : null } };
+    if (relation && claims.some(c => !relationAcceptsClaim(relation, c))) throw new Error("Unexpected relation claim");
+    return { ...(revision ? { revision } : {}), ...(relation ? { relation } : {}), centerId: id, nodes: [...nodes.values()], claims,
+      page: { hasMore, nextCursor: hasMore ? relation ? encodeRelationNeighborCursor(id, relation, claims.at(-1)!.id, datasetMode(process.env.GRAPH_DATASET), revision) : encodeNeighborCursor(id, predicates, claims.at(-1)!.id, contributionRoles, undefined, organizationPositions, eventRoles, revision ?? undefined) : null } };
   });
 }
 

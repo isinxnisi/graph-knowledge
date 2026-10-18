@@ -1,5 +1,7 @@
 import type { EventRoleFilter, OrganizationPositionFilter, ContributionRoleFilter, PredicateFilter } from "../domain/exploration";
 import type { EntityOverviewResponse, ClaimResponse, EntityResponse, EntitySearchResponse, NeighborsResponse } from "../domain/api";
+import { claimSummarySchema, entitySummarySchema } from "../domain/api";
+import { normalizeRelationCondition, relationAcceptsClaim, relationConditionKey, type RelationCondition } from "../domain/relation-conditions";
 
 export class ClientApiError extends Error {
   constructor(message: string, public status: number) { super(message); }
@@ -52,6 +54,20 @@ export const fetchNeighbors = (id: string, after: string | null, signal: AbortSi
   if (predicates !== null) params.set("predicates", predicates.join(","));
   return get<NeighborsResponse>(`/api/entities/${encodeURIComponent(id)}/neighbors${params.size ? `?${params}` : ""}`, signal);
 };
+export async function fetchAdjacentNeighbors(id: string, after: string | null, signal: AbortSignal, input: RelationCondition, revision: string | null = null) {
+  const relation = normalizeRelationCondition(input);
+  if (relation.type !== "adjacent") throw new ClientApiError("一段の関係条件が必要です。", 400);
+  const params = new URLSearchParams({ polarity: relation.polarity });
+  if (revision) params.set("revision", revision); if (after) params.set("after", after);
+  for (const [key, list] of [["predicates", relation.predicates], ["contributionRoles", relation.contributionRoles], ["organizationPositions", relation.organizationPositions], ["eventRoles", relation.eventRoles]] as const) if (list !== null) params.set(key, list.join(","));
+  const result = await get<NeighborsResponse>(`/api/entities/${encodeURIComponent(id)}/neighbors?${params}`, signal);
+  if (result.centerId !== id || !result.relation || relationConditionKey(result.relation) !== relationConditionKey(relation) || revision && result.revision !== revision
+    || result.page.hasMore !== (result.page.nextCursor !== null)) throw new ClientApiError("関係の応答が一致しません。", 0);
+  const nodes = result.nodes.map(n => entitySummarySchema.parse(n)), claims = result.claims.map(c => claimSummarySchema.parse(c));
+  const ids = new Set(nodes.map(n => n.id));
+  if (!ids.has(id) || ids.size !== nodes.length || new Set(claims.map(c => c.id)).size !== claims.length || claims.some(c => !relationAcceptsClaim(relation, c) || !ids.has(c.subjectId) || !ids.has(c.objectId) || c.subjectId !== id && c.objectId !== id)) throw new ClientApiError("関係の記録が一致しません。", 0);
+  return { ...result, nodes, claims };
+}
 export const errorMessage = (error: unknown) => error instanceof ClientApiError ? error.message : "情報を取得できませんでした。再試行してください。";
 
 export const fetchOverview = (id: string, signal: AbortSignal) => get<EntityOverviewResponse>(`/api/entities/${encodeURIComponent(id)}/overview`, signal);

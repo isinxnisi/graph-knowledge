@@ -4,6 +4,8 @@ import neo4j from "neo4j-driver";
 
 // The writeable test fixture lives only in this disposable container, never 7694.
 const name = `graph-discovery-targets-test-${process.pid}`, password = randomBytes(18).toString("hex");
+if (process.argv.length > 3 || process.argv[2] && process.argv[2] !== "--pattern-graph") throw Error("Unsupported test mode");
+const testFile = process.argv[2] === "--pattern-graph" ? "tests/pattern-graph.integration.test.ts" : "tests/discovery-targets.integration.test.ts";
 let started = false;
 try {
   const db = spawnSync("docker", ["run", "--rm", "-d", "--name", name, "-p", "127.0.0.1:7695:7687", "-e", `NEO4J_AUTH=neo4j/${password}`,
@@ -16,7 +18,7 @@ try {
     for (let n = 0; n < 180; n++) { try { await driver.verifyConnectivity(); ready = true; break; } catch { await new Promise(r => setTimeout(r, 1000)); } }
     if (!ready) throw Error("Isolated database did not become ready");
   } finally { await driver.close(); }
-  const child = spawn(process.execPath, ["node_modules/vitest/vitest.mjs", "run", "tests/discovery-targets.integration.test.ts", "--no-file-parallelism"], {
+  const child = spawn(process.execPath, ["node_modules/vitest/vitest.mjs", "run", testFile, "--no-file-parallelism"], {
     // Match the existing 3200 deployment contract (the library default remains 5s).
     stdio: "inherit", env: { ...process.env, NEO4J_READ_TIMEOUT_MS: "10000", TARGETS_ISOLATED_TEST: "1", GRAPH_DATASET: "public-kg", NEO4J_URI: "bolt://127.0.0.1:7695", NEO4J_USER: "neo4j", NEO4J_PASSWORD: password, NEO4J_DATABASE: "neo4j" },
   });

@@ -1,5 +1,7 @@
 # 現行技術設計
 
+2026-10-18、[共通関係条件のSTEP 3a](design/DISCOVERY_PATTERN_GRAPH_EXECUTION.md)は既存pathsのPOSTを独立adapterに追加。完全経路の12＋1候補、候補外のrequiredWitness、最大100参照の再検証と継続境界を分け、Graphはadjacent／patternを区別して完全経路の和集合を投影する。neighborsの新v6は共通条件・肯否・公開版を束縛し、省略時の旧GETは維持。編集・永続化の版移行・Discovery接続は3b／4へ残す。
+
 2026-10-18、[共通関係条件のSTEP 2](design/DISCOVERY_TARGET_SEARCH.md)は `/api/discovery/entities` のPOSTで完全EXISTS→Entity keyset LIMIT→同一READ transaction内の完全証拠確保を行う。adjacent／other-works v1をstrict検証し、元Claim UUIDから版・方向・限定・肯否を再検証する責務を分離。近傍取得上限を不一致判定に使わず、旧GET・Graph／保存形式は維持。STEP 3のGraph POST・投影・復元、STEP 4のUI接続は未実装。
 
 2026-10-18、[収集Worker](design/COLLECTION_WORKER.md)はGitHub専用branchの不変requestsをprivate bare Gitで取得し、設置時main固定コードの隔離runtimeで既存collect-review／accept-releaseだけを起動する。共通flock、固定hash・明示UUID／scope・humanDecision検証、再開可能な状態、FF結果送信を使用。Windowsの独立した毎分タスクからWSLを起動し、開発checkoutや既存自動開発設定を変更しない。公開apply／restore／配置の実行経路は持たず、AI推奨・GitHub上の名前だけを本人の承認とみなさない。
