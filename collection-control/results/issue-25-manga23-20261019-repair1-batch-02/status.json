@@ -82,11 +82,33 @@
   },
   "requestSha256": "f6dafe2918c68170c1ad046adfd7776290868ad25ad81aa3eecfa2fb2b3955f8",
   "kind": "collect-review",
-  "phase": "running",
+  "phase": "completed",
   "generation": 17,
   "attempts": 1,
   "workerId": "plunode-wsl",
   "sourceCommit": "916cc77d3aeab22650e309b694661cac07a72a47",
   "updatedAt": "2026-10-18T19:18:47+00:00",
-  "message": "Execution gate: interval"
+  "result": {
+    "jobId": "issue-25-manga23-20261019-repair1-r0002-df04edc80fbfff8d",
+    "collectionUnchanged": false,
+    "reviewUnchanged": false,
+    "transportAttemptsAdded": 0,
+    "reviewDirectory": "/home/isinxnisi/.local/share/plunode-collection-worker/runtime/datasets/manga-collection/workflow-reviews/issue-25-manga23-20261019-repair1-r0002-df04edc80fbfff8d-review-42eff9594609d2a5",
+    "reviewOnly": true,
+    "formalAcceptance": false,
+    "publicApply": false,
+    "counts": {
+      "entities": 0,
+      "claims": 0,
+      "sources": 0,
+      "citations": 0
+    },
+    "heldClaims": 0
+  },
+  "executionComplete": true,
+  "reviewReference": {
+    "file": "datasets/manga-collection/workflow-reviews/issue-25-manga23-20261019-repair1-r0002-df04edc80fbfff8d-review-42eff9594609d2a5/review-manifest.json",
+    "sha256": "b1efb2dab025163659e0a06a6df5a50f64dfd1441cd7ece43420b3659b3ae3e2"
+  },
+  "decisionDrafts": []
 }

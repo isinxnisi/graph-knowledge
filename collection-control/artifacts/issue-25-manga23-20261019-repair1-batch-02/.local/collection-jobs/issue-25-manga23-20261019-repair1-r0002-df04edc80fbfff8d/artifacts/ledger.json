@@ -1,0 +1,118 @@
+{
+  "schemaVersion": 2,
+  "status": "pending-human-acceptance",
+  "recipe": "manga-r0005",
+  "collectionContext": {
+    "themeId": "issue-25-manga23-20261019-repair1",
+    "themeRevision": 2,
+    "definitionSha256": "fa7388c5c6d690ecaea9eb110b87ac2f7bff457bf72129937aa19df79d0b3012",
+    "approvalSha256": "e4c3ddffcde48ac704c9b6314503175787789eef69c7bf427630f1ae946041af"
+  },
+  "execution": {
+    "adapter": "manga-discovery-v2",
+    "codeSha256": "80e05b67bc0129b963653b90df4cfbfa5bd6aff190acda99f54c08541e55801e",
+    "inputs": [
+      {
+        "file": "datasets/manga-collection/r0005/recipe.json",
+        "sha256": "7823a30fe43d788053e2d29a14beddf12fc447045eaac41bde4abb8672352800"
+      },
+      {
+        "file": "datasets/manga-collection/r0005/anchor-review.json",
+        "sha256": "69463646c3e3b6a2a69378ad383216523ea22461f66795e5f9417d9caf97047e"
+      },
+      {
+        "file": "datasets/manga-collection/r0005/publication-review.json",
+        "sha256": "c1200889428899155bff242dc6ff3c7423910202e3fcdad1a0e532ec2dae92af"
+      },
+      {
+        "file": "docs/research/famous-manga-creators/20261016/candidates.json",
+        "sha256": "8531fada01e5c635ba2ee278a7ef944a73f64676af14ed42ae0e690f5a1ff978"
+      },
+      {
+        "file": "datasets/public-kg/releases/20261014-credits-001/data.json",
+        "sha256": "ea91b16f52a211b5a8464382ad498b7b2bb2be69a6f33fe125a73a3c7b9da2b5"
+      },
+      {
+        "file": "datasets/public-kg/releases/20261014-credits-001/manifest.json",
+        "sha256": "e4aa3b58ed884f7d1f8fffee43b260261cc2b4d3a867fda942919f439d2bce17"
+      }
+    ],
+    "maxEntities": 2111,
+    "maxClaims": 1847
+  },
+  "identityMappings": [
+    {
+      "name": "手塚治虫",
+      "wikidata": "Q193300",
+      "entityId": "eb0af7e1-caa6-435f-86fb-0591421982b5",
+      "basis": "exact-external-id-or-explicit-catalog-uuid",
+      "reused": true
+    }
+  ],
+  "rows": [],
+  "holds": [
+    {
+      "reason": "publication-identity-unconfirmed",
+      "work": "鉄腕アトム",
+      "isbn13": "9784091480866",
+      "matchingRecords": 0,
+      "records": [
+        {
+          "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I000007780614",
+          "isbn13": [
+            "9784091480866"
+          ],
+          "title": [
+            "鉄腕アトム. 第1巻"
+          ],
+          "mainTitles": [
+            "鉄腕アトム"
+          ],
+          "volume": [
+            "第1巻"
+          ],
+          "edition": [],
+          "responsibilities": [
+            "手塚治虫 著"
+          ],
+          "publisher": [
+            "小学館"
+          ],
+          "language": [
+            "jpn"
+          ],
+          "genre": [
+            "児童図書",
+            "漫画"
+          ]
+        }
+      ]
+    }
+  ],
+  "acquisitions": [
+    {
+      "kind": "wikidata",
+      "identifier": "Q193300",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q193300.json",
+      "sha256": "9b54ad03be8a5948514d0efba7a5347ad14c2ea47644fc4c6634632d685fe09d",
+      "bytes": 212261,
+      "fetchedAt": "2026-10-18T18:39:10+00:00"
+    },
+    {
+      "kind": "wikidata",
+      "identifier": "Q673036",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q673036.json",
+      "sha256": "75c2ea7b7e877e0e2f0d1d6747d18034c1656d3a3ad8e7e9d65c918ee86412e9",
+      "bytes": 33435,
+      "fetchedAt": "2026-10-18T18:40:11+00:00"
+    },
+    {
+      "kind": "ndl",
+      "identifier": "9784091480866",
+      "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&maximumRecords=5&query=isbn%3D%229784091480866%22+AND+dpid%3Diss-ndl-opac",
+      "sha256": "9668e591d8a4ef57f3b79ee9e2ec90c847acc78d0fbae66510f27354bc237144",
+      "bytes": 9061,
+      "fetchedAt": "2026-10-18T18:55:12+00:00"
+    }
+  ]
+}

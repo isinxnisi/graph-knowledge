@@ -1,0 +1,513 @@
+{
+  "id": "Q673036",
+  "lastrevid": 2554703409,
+  "labels": {
+    "nan": {
+      "language": "nan",
+      "value": "Goân-chú Sió-kim-kong"
+    },
+    "zh-hans": {
+      "language": "zh-hans",
+      "value": "铁臂阿童木"
+    },
+    "zh-hant": {
+      "language": "zh-hant",
+      "value": "原子小金剛"
+    },
+    "zh-hk": {
+      "language": "zh-hk",
+      "value": "小飛俠阿童木"
+    },
+    "fr": {
+      "language": "fr",
+      "value": "Astro, le petit robot"
+    },
+    "ko": {
+      "language": "ko",
+      "value": "우주소년 아톰"
+    },
+    "he": {
+      "language": "he",
+      "value": "אסטרו-בוי"
+    },
+    "es": {
+      "language": "es",
+      "value": "Astroboy"
+    },
+    "ms": {
+      "language": "ms",
+      "value": "Astro Boy"
+    },
+    "it": {
+      "language": "it",
+      "value": "Astro Boy"
+    },
+    "de": {
+      "language": "de",
+      "value": "Astro Boy"
+    },
+    "id": {
+      "language": "id",
+      "value": "Astro Boy"
+    },
+    "ja": {
+      "language": "ja",
+      "value": "鉄腕アトム"
+    },
+    "vi": {
+      "language": "vi",
+      "value": "Astro Boy"
+    },
+    "en": {
+      "language": "en",
+      "value": "Astro Boy"
+    },
+    "nl": {
+      "language": "nl",
+      "value": "Astro Boy"
+    },
+    "ar": {
+      "language": "ar",
+      "value": "آسترو بوي"
+    },
+    "sv": {
+      "language": "sv",
+      "value": "Astro Boy"
+    },
+    "pt": {
+      "language": "pt",
+      "value": "Astro Boy"
+    },
+    "ru": {
+      "language": "ru",
+      "value": "Astro Boy"
+    },
+    "th": {
+      "language": "th",
+      "value": "เจ้าหนูปรมาณู"
+    },
+    "ca": {
+      "language": "ca",
+      "value": "Astroboy"
+    },
+    "fi": {
+      "language": "fi",
+      "value": "Astro Boy"
+    },
+    "cy": {
+      "language": "cy",
+      "value": "Astro Boy"
+    },
+    "tl": {
+      "language": "tl",
+      "value": "Astro Boy"
+    },
+    "zh": {
+      "language": "zh",
+      "value": "原子小金剛"
+    },
+    "nb": {
+      "language": "nb",
+      "value": "Astro Boy"
+    },
+    "jv": {
+      "language": "jv",
+      "value": "Astro Boy"
+    },
+    "bn": {
+      "language": "bn",
+      "value": "অ্যাস্ট্রো বয়"
+    },
+    "yue": {
+      "language": "yue",
+      "value": "小飛俠阿童木"
+    },
+    "sh": {
+      "language": "sh",
+      "value": "Astro Boy"
+    },
+    "ka": {
+      "language": "ka",
+      "value": "ასტრო ბიჭი"
+    },
+    "tr": {
+      "language": "tr",
+      "value": "Astro Boy"
+    },
+    "arz": {
+      "language": "arz",
+      "value": "استرو بوى"
+    },
+    "uk": {
+      "language": "uk",
+      "value": "Tetsuwan Atom"
+    },
+    "eo": {
+      "language": "eo",
+      "value": "Atomo la Ferbrakulo"
+    },
+    "fa": {
+      "language": "fa",
+      "value": "آسترو بوی"
+    },
+    "gl": {
+      "language": "gl",
+      "value": "Astro Boy"
+    },
+    "zh-sg": {
+      "language": "zh-sg",
+      "value": "小飞侠"
+    },
+    "pl": {
+      "language": "pl",
+      "value": "Tetsuwan Atom"
+    },
+    "eu": {
+      "language": "eu",
+      "value": "Astro Boy"
+    },
+    "ur": {
+      "language": "ur",
+      "value": "ایسٹرو بوائے"
+    },
+    "ro": {
+      "language": "ro",
+      "value": "Astro Boy"
+    }
+  },
+  "aliases": {
+    "zh": [
+      {
+        "language": "zh",
+        "value": "铁腕阿童木"
+      },
+      {
+        "language": "zh",
+        "value": "原子小飛俠"
+      },
+      {
+        "language": "zh",
+        "value": "小金刚"
+      },
+      {
+        "language": "zh",
+        "value": "小飛俠阿童木"
+      },
+      {
+        "language": "zh",
+        "value": "阿童木"
+      },
+      {
+        "language": "zh",
+        "value": "原子小金鋼"
+      },
+      {
+        "language": "zh",
+        "value": "鐵臂阿童木"
+      },
+      {
+        "language": "zh",
+        "value": "鉄腕アトム - 1963"
+      }
+    ],
+    "fr": [
+      {
+        "language": "fr",
+        "value": "Astroboy"
+      },
+      {
+        "language": "fr",
+        "value": "Tetsuwan Atomu"
+      },
+      {
+        "language": "fr",
+        "value": "Astro Boy"
+      },
+      {
+        "language": "fr",
+        "value": "Astro le petit robot"
+      }
+    ],
+    "ko": [
+      {
+        "language": "ko",
+        "value": "아스트로 보이"
+      },
+      {
+        "language": "ko",
+        "value": "아톰"
+      },
+      {
+        "language": "ko",
+        "value": "아톰대사"
+      },
+      {
+        "language": "ko",
+        "value": "철완 아톰"
+      }
+    ],
+    "he": [
+      {
+        "language": "he",
+        "value": "אסטרו בוי"
+      }
+    ],
+    "es": [
+      {
+        "language": "es",
+        "value": "Tetsuwan Atomu"
+      },
+      {
+        "language": "es",
+        "value": "Astro Boy"
+      },
+      {
+        "language": "es",
+        "value": "鉄腕アトム"
+      }
+    ],
+    "it": [
+      {
+        "language": "it",
+        "value": "Tetsuwan Atom"
+      }
+    ],
+    "de": [
+      {
+        "language": "de",
+        "value": "Tetsuwan Atom"
+      },
+      {
+        "language": "de",
+        "value": "Tetsuwan Atomu"
+      },
+      {
+        "language": "de",
+        "value": "Astroboy"
+      }
+    ],
+    "id": [
+      {
+        "language": "id",
+        "value": "Atom Boy"
+      },
+      {
+        "language": "id",
+        "value": "鉄腕アトム"
+      },
+      {
+        "language": "id",
+        "value": "Tetsuwan Atomu"
+      }
+    ],
+    "ja": [
+      {
+        "language": "ja",
+        "value": "アトム今昔物語"
+      }
+    ],
+    "pt": [
+      {
+        "language": "pt",
+        "value": "Tetsuwan Atom"
+      }
+    ],
+    "ru": [
+      {
+        "language": "ru",
+        "value": "Астро-бой"
+      },
+      {
+        "language": "ru",
+        "value": "Astroboy"
+      },
+      {
+        "language": "ru",
+        "value": "Tetsuwan Atom"
+      },
+      {
+        "language": "ru",
+        "value": "Астробой"
+      },
+      {
+        "language": "ru",
+        "value": "Astro Boy: Tetsuwan Atom"
+      },
+      {
+        "language": "ru",
+        "value": "Mighty Atom"
+      },
+      {
+        "language": "ru",
+        "value": "Могучий Атом"
+      }
+    ],
+    "th": [
+      {
+        "language": "th",
+        "value": "เจ้าหนูอะตอม"
+      },
+      {
+        "language": "th",
+        "value": "Astro Boy"
+      }
+    ],
+    "nb": [
+      {
+        "language": "nb",
+        "value": "Astroboy"
+      },
+      {
+        "language": "nb",
+        "value": "Tetsuwan Atom"
+      }
+    ],
+    "vi": [
+      {
+        "language": "vi",
+        "value": "Thiết Uyển Atom"
+      },
+      {
+        "language": "vi",
+        "value": "Atom Tay sắt"
+      }
+    ],
+    "nl": [
+      {
+        "language": "nl",
+        "value": "Astroboy"
+      }
+    ],
+    "en": [
+      {
+        "language": "en",
+        "value": "Atom Boy"
+      },
+      {
+        "language": "en",
+        "value": "Tetsuwan Atomu"
+      },
+      {
+        "language": "en",
+        "value": "Tetsuwan Atom"
+      }
+    ],
+    "fa": [
+      {
+        "language": "fa",
+        "value": "پسر فضایی"
+      }
+    ],
+    "sv": [
+      {
+        "language": "sv",
+        "value": "Tetsuwan Atom"
+      }
+    ],
+    "pl": [
+      {
+        "language": "pl",
+        "value": "Astro Boy"
+      },
+      {
+        "language": "pl",
+        "value": "Tetsuwan Atomu"
+      },
+      {
+        "language": "pl",
+        "value": "Astroboy"
+      }
+    ]
+  },
+  "claims": {
+    "P31": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P31",
+          "hash": "549c072d6be8a6a43f999d1d0e82640b16c4260e",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 21198342,
+              "id": "Q21198342"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q673036$18DECBD0-7F8F-4157-987E-387372A022BE",
+        "rank": "normal"
+      }
+    ],
+    "P50": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P50",
+          "hash": "8879e5e4c7e6c841f6eed350c57548e66f6be8f3",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 193300,
+              "id": "Q193300"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q673036$D657BDD9-E8C9-4127-9E19-132A47473028",
+        "rank": "normal",
+        "references": [
+          {
+            "hash": "d4bd87b862b12d99d26e86472d44f26858dee639",
+            "snaks": {
+              "P143": [
+                {
+                  "snaktype": "value",
+                  "property": "P143",
+                  "hash": "f30cbd35620c4ea6d0633aaf0210a8916130469b",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 8447,
+                      "id": "Q8447"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P143"
+            ]
+          }
+        ]
+      }
+    ],
+    "P110": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P110",
+          "hash": "c29dd74410f80c2008bdb87a7fbaf30dd44690c4",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 193300,
+              "id": "Q193300"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q673036$B87D86E0-9E7E-4855-8A31-AFDB80578459",
+        "rank": "normal"
+      }
+    ]
+  }
+}

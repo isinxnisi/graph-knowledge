@@ -1,0 +1,58 @@
+{
+  "status": "pending-human-acceptance",
+  "humanReviewer": null,
+  "entities": [],
+  "claims": [],
+  "inheritedHolds": [
+    {
+      "reason": "publication-identity-unconfirmed",
+      "work": "鉄腕アトム",
+      "isbn13": "9784091480866",
+      "matchingRecords": 0,
+      "records": [
+        {
+          "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I000007780614",
+          "isbn13": [
+            "9784091480866"
+          ],
+          "title": [
+            "鉄腕アトム. 第1巻"
+          ],
+          "mainTitles": [
+            "鉄腕アトム"
+          ],
+          "volume": [
+            "第1巻"
+          ],
+          "edition": [],
+          "responsibilities": [
+            "手塚治虫 著"
+          ],
+          "publisher": [
+            "小学館"
+          ],
+          "language": [
+            "jpn"
+          ],
+          "genre": [
+            "児童図書",
+            "漫画"
+          ]
+        }
+      ]
+    }
+  ],
+  "newCandidateCounts": {
+    "entities": 0,
+    "claims": 0,
+    "sources": 0,
+    "citations": 0
+  },
+  "recordConflicts": [],
+  "roleCounts": {},
+  "normalReviewedEntityCount": 0,
+  "reusedCitationIds": [],
+  "identityOnlyEntityIds": [],
+  "heldClaimCount": 0,
+  "heldEntityCount": 0
+}

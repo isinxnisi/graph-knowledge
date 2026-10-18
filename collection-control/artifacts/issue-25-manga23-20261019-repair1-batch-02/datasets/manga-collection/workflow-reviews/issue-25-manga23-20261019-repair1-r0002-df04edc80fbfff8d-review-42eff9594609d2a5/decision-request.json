@@ -1,0 +1,66 @@
+{
+  "status": "pending-human-decision",
+  "reviewer": null,
+  "recordedAt": null,
+  "applyAuthorized": {
+    "local": false,
+    "beta": false,
+    "vps": false
+  },
+  "groups": {
+    "normal": {
+      "recordIds": {
+        "entities": [],
+        "claims": [],
+        "sources": [],
+        "citations": []
+      },
+      "scopeByClaim": [],
+      "existingEntityDependencies": [],
+      "counts": {
+        "entities": 0,
+        "claims": 0,
+        "sources": 0,
+        "citations": 0
+      }
+    },
+    "identity-only": {
+      "recordIds": {
+        "entities": [],
+        "claims": [],
+        "sources": [],
+        "citations": []
+      },
+      "notice": "Identity only; do not accept held production relations by implication."
+    }
+  },
+  "heldClaimIds": [],
+  "heldEntityIds": [],
+  "existingDependencies": {
+    "claims": [],
+    "sources": []
+  },
+  "referenceArtifacts": [
+    {
+      "file": "context.json",
+      "sha256": "ab614a20d42aa0487065eba3ab0d3bf13d371147ce9b8161ce9cff63f5bf963b"
+    },
+    {
+      "file": "review.json",
+      "sha256": "4d23d28778ed1d6f89f72443ad3e24dd7504b00012c8d0ec5ac96bf317f18e21"
+    },
+    {
+      "file": "proposed-records.json",
+      "sha256": "ff3382e35738eba753a90c55086ebbdfb3ee4a3afb843bf4250d731969f0a91f"
+    },
+    {
+      "file": "identity-only-records.json",
+      "sha256": "1fc314e4a47717bce195b39fe7f1e66bd31f6af892fca4a9420a653eab927a37"
+    },
+    {
+      "file": "exploration-paths.json",
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    }
+  ],
+  "notice": "Automatic checks and grouped recommendations only. Important identity/meaning decisions remain human."
+}

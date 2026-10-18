@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "reviewId": "issue-25-manga23-20261019-repair1-r0002-df04edc80fbfff8d-review-42eff9594609d2a5",
+  "inputSha256": "42eff9594609d2a5007ebfc181c755d35215a67d288647852e14770d5d09f3a4",
+  "artifacts": {
+    "context.json": "ab614a20d42aa0487065eba3ab0d3bf13d371147ce9b8161ce9cff63f5bf963b",
+    "review.json": "4d23d28778ed1d6f89f72443ad3e24dd7504b00012c8d0ec5ac96bf317f18e21",
+    "proposed-records.json": "ff3382e35738eba753a90c55086ebbdfb3ee4a3afb843bf4250d731969f0a91f",
+    "identity-only-records.json": "1fc314e4a47717bce195b39fe7f1e66bd31f6af892fca4a9420a653eab927a37",
+    "exploration-paths.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+    "decision-request.json": "5d2aff12d25b13508e839eaeb318c009cb0481dd48f06befd42e81da98465275",
+    "README.md": "404acc7ef2d03f719cfea5d70f2dda8f0002875fca6133b606461fc4ff6da5a6"
+  },
+  "authority": "pending-human-review-only"
+}
