@@ -1,0 +1,212 @@
+{
+  "recordedAt": "2026-10-18T11:36:00.942394+00:00",
+  "notice": "隔離試験のみ。実運用の新規承認・正式受入・公開applyではない。Worker transport/stateを既存ワークフローへ接続。DB観測・planは明示的な試験置換。",
+  "reports": [
+    {
+      "testOnly": true,
+      "actualOperatorApproval": false,
+      "databaseConnection": false,
+      "publicApply": false,
+      "sourceCommit": "4ce53731e04d34f1ee9bcbd4c3763248222e6d47",
+      "transport": "local bare Git: GitHub equivalent",
+      "branch": null,
+      "elapsedSeconds": 64.3,
+      "providerAttempts": 72,
+      "successfulResponses": 71,
+      "checks": [
+        "explicit inbox approval",
+        "interrupted acquisition resumed",
+        "existing gate receipt reused",
+        "72 attempts/71 cached responses",
+        "Markdown + JSON published",
+        "partial human-simulation acceptance",
+        "actual public validator",
+        "read-only plan simulation",
+        "plan failure resumes immutable acceptance/release",
+        "restart: no duplicate execution/commits"
+      ],
+      "collectionCounts": {
+        "entities": 35,
+        "claims": 25,
+        "sources": 21,
+        "citations": 25
+      },
+      "heldClaims": 3,
+      "acceptedCounts": {
+        "entities": 3,
+        "claims": 2,
+        "sources": 2,
+        "citations": 2
+      },
+      "releaseAdditions": {
+        "entities": 16,
+        "claims": 11,
+        "sources": 9,
+        "citations": 11
+      },
+      "acceptanceReused": true,
+      "releaseUnchanged": true,
+      "validationReused": true,
+      "validationValid": true,
+      "publicObservation": {
+        "release": "20261014-credits-001",
+        "revision": "isolated-worker-no-database",
+        "observation": "live-readonly-backup",
+        "fixtureSha256": "9dff418c05fad7c07546fa94142bb2d45daaff57a2996357c8311851d5a3cc47",
+        "withdrawals": [],
+        "historySha256": "ISOLATED-SIMULATION-NOT-LIVE",
+        "references": [
+          {
+            "file": "datasets/public-kg/releases/20261014-credits-001/data.json",
+            "sha256": "ea91b16f52a211b5a8464382ad498b7b2bb2be69a6f33fe125a73a3c7b9da2b5"
+          },
+          {
+            "file": "datasets/public-kg/releases/20261014-credits-001/manifest.json",
+            "sha256": "e4aa3b58ed884f7d1f8fffee43b260261cc2b4d3a867fda942919f439d2bce17"
+          }
+        ]
+      },
+      "explorationPaths": [
+        {
+          "state": "formally-accepted-not-applied",
+          "observation": "verified-records-only-not-a-live-exploration-test",
+          "edges": [
+            {
+              "claimId": "d5d3fef1-fc64-4e61-b049-2f3c81994cb9",
+              "subjectId": "6c9095bd-1969-4bcd-9282-2d1e9e411254",
+              "objectId": "40a8ddd3-f333-485c-a12a-ac3d0961111b",
+              "person": "萩尾望都",
+              "work": "11人いる！",
+              "roleId": "AUTHORSHIP",
+              "scope": {
+                "kind": "publication",
+                "isbn13": "9784091910110",
+                "volumeLabel": "単巻",
+                "editionLabel": null,
+                "language": "ja"
+              },
+              "state": "formally-accepted-not-applied",
+              "citationIds": [
+                "eee1e9cd-bcc8-4d3a-a094-92bb7f3e1c1e"
+              ],
+              "sourceIds": [
+                "c815b2db-f907-43d4-a8ae-e2ef99fe5f79"
+              ]
+            },
+            {
+              "claimId": "f4b64248-7b3e-4fae-8ff2-7122410b63f4",
+              "subjectId": "6c9095bd-1969-4bcd-9282-2d1e9e411254",
+              "objectId": "c74e0874-eb89-4825-a824-3ff182fe8053",
+              "person": "萩尾望都",
+              "work": "ポーの一族",
+              "roleId": "AUTHORSHIP",
+              "scope": {
+                "kind": "publication",
+                "isbn13": "9784091912510",
+                "volumeLabel": "第1巻",
+                "editionLabel": null,
+                "language": "ja"
+              },
+              "state": "formally-accepted-not-applied",
+              "citationIds": [
+                "a0185551-4cc2-44da-975b-81ed43b093c1"
+              ],
+              "sourceIds": [
+                "c91f7f99-6b76-4245-9564-70f8f62c2dc1"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "testOnly": true,
+      "actualOperatorApproval": false,
+      "databaseConnection": false,
+      "publicApply": false,
+      "sourceCommit": "4ce53731e04d34f1ee9bcbd4c3763248222e6d47",
+      "transport": "isolated GitHub test branch",
+      "branch": "codex/collection-worker-test-20261018",
+      "elapsedSeconds": 357.7,
+      "providerAttempts": 72,
+      "successfulResponses": 71,
+      "checks": [
+        "explicit inbox approval",
+        "interrupted acquisition resumed",
+        "existing gate receipt reused",
+        "72 attempts/71 cached responses",
+        "Markdown + JSON published",
+        "partial human-simulation acceptance",
+        "actual public validator",
+        "read-only plan simulation",
+        "plan failure resumes immutable acceptance/release",
+        "restart: no duplicate execution/commits"
+      ],
+      "collectionCounts": {
+        "entities": 35,
+        "claims": 25,
+        "sources": 21,
+        "citations": 25
+      },
+      "heldClaims": 3,
+      "acceptedCounts": {
+        "entities": 2,
+        "claims": 1,
+        "sources": 1,
+        "citations": 1
+      },
+      "releaseAdditions": {
+        "entities": 15,
+        "claims": 10,
+        "sources": 8,
+        "citations": 10
+      },
+      "acceptanceReused": true,
+      "releaseUnchanged": true,
+      "validationReused": true,
+      "validationValid": true,
+      "publicObservation": {
+        "release": "20261014-credits-001",
+        "revision": "isolated-worker-no-database",
+        "observation": "live-readonly-backup",
+        "fixtureSha256": "9dff418c05fad7c07546fa94142bb2d45daaff57a2996357c8311851d5a3cc47",
+        "withdrawals": [],
+        "historySha256": "ISOLATED-SIMULATION-NOT-LIVE",
+        "references": [
+          {
+            "file": "datasets/public-kg/releases/20261014-credits-001/data.json",
+            "sha256": "ea91b16f52a211b5a8464382ad498b7b2bb2be69a6f33fe125a73a3c7b9da2b5"
+          },
+          {
+            "file": "datasets/public-kg/releases/20261014-credits-001/manifest.json",
+            "sha256": "e4aa3b58ed884f7d1f8fffee43b260261cc2b4d3a867fda942919f439d2bce17"
+          }
+        ]
+      },
+      "explorationPaths": []
+    }
+  ],
+  "connectorProbe": {
+    "branch": "codex/collection-worker-test-20261018",
+    "requestId": "connector-unapproved-proof",
+    "status": "blocked",
+    "executions": 0,
+    "createdUsing": "existing GitHub connector"
+  },
+  "environment": {
+    "localRevision": "82b01515-594c-48ca-b4b6-515eefac83ca",
+    "betaRevision": "82b01515-594c-48ca-b4b6-515eefac83ca",
+    "publicRelease": "20261014-credits-001",
+    "deployment": false,
+    "publicApply": false
+  },
+  "tests": {
+    "worker": 12,
+    "acceptance": 16,
+    "collectionGate": 15,
+    "collectionReview": 16,
+    "total": 59,
+    "result": "passed",
+    "powershellParser": "passed"
+  }
+}

@@ -40,6 +40,7 @@
 
 | 現役の設計文書 | 状態・読む場面 |
 | --- | --- |
+| [ChatGPT承認連携・収集Worker](design/COLLECTION_WORKER.md) | GitHubの明示承認から既存collect-review／accept-releaseを実行。専用branch、隔離runtime、共通ロック、状態・Markdown共有、再開・重複／改変拒否。公開applyは実装対象外 |
 | [収集レビュー・正式受入後の公開準備](design/COLLECTION_WORKFLOW.md) | 2026-10-18。collect-reviewに加え、未承認雛形decision-templateと人間判断入力accept-releaseを実装。対象／根拠hash照合、不変受入→release→validate→最新無書込planを連続処理。部分受入・失敗再開・改変拒否を隔離検証。公開applyは含めない |
 | [漫画r0003正式受入・40 Claim統合release](design/MANGA_R0003_ACCEPTED_RELEASE.md) | 全推奨39 Entity／31 Claim／26 Source／32 Citationを正式受入。r0002込み52／40／33／41追加をvalidate・無書込plan。全環境apply未実施。収集運用の次の自動化2タスクも参照 |
 | [漫画r0003の一括受入レビューと例外整理](design/MANGA_R0003_ACCEPTANCE_REVIEW.md) | 通常25 Claim・36 Entityを受入推奨。例外・別根拠を含む最大31 Claim／39新規Entityの判断ID・scope・依存差分を固定。正式受入・全環境applyは未実施 |

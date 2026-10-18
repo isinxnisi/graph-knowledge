@@ -1,5 +1,7 @@
 # 現行技術設計
 
+2026-10-18、[収集Worker](design/COLLECTION_WORKER.md)はGitHub専用branchの不変requestsをprivate bare Gitで取得し、設置時main固定コードの隔離runtimeで既存collect-review／accept-releaseだけを起動する。共通flock、固定hash・明示UUID／scope・humanDecision検証、再開可能な状態、FF結果送信を使用。Windowsの独立した毎分タスクからWSLを起動し、開発checkoutや既存自動開発設定を変更しない。公開apply／restore／配置の実行経路は持たず、AI推奨・GitHub上の名前だけを本人の承認とみなさない。
+
 2026-10-18、[Discovery共通関係条件のSTEP 1設計契約](design/DISCOVERY_RELATION_CONTRACT.md)を整理。adjacent／patternとbound／unbound、旧GET互換のPOST拡張、完全経路の証拠、Graphのモード・編集・版付き保存／URL移行を定義する。**実装前・設計確認待ち**であり、現行API／Graph／betaの契約は変更していない。STEP 2以降の着手・受入条件は同文書を参照。
 
 2026-10-18、[人間の正式受入から公開準備まで](design/COLLECTION_WORKFLOW.md#タスク2人間の判断ファイルから公開準備まで)をdecision-template／accept-releaseで実装。未承認雛形と人間判断ファイルを分離し、明示UUID・本文／根拠hash・意味／scopeを照合して、不変の受入記録→受入済みだけの新release→validate→最新base／revisionへの無書込planを連結する。部分受入・重複拒否・失敗再開・日時／release不変を隔離検証。旧承認・受入・releaseと公開KGは保全し、全環境apply・VPS配置・会員DB変更は実施しない。

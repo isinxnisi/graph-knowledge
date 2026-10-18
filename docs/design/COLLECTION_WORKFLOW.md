@@ -163,7 +163,7 @@ python3 scripts/collection-workflow.py accept-release \
 
 テーマの実行承認、重要な意味／同一性・追加資料の判断、正式受入ファイルの確定、公開apply承認は人間に残る。通常の承認済み収集→レビューと、正式受入→release／validate／planはそれぞれ既存CLI一回で進められ、Codexを毎回呼ぶ必要はない。Git commit／pushと作業ロックも既存手順を使う。
 
-対象はmanga-discovery-v2のTask1レビューschemaVersion=1。旧手動レビューの任意形式や未解決例外を自動変換しない。例外解決は別レビュー、公開base更新後の再統合は新状態に対する判断が必要。既受入だけの集合を別baseへ再構成する専用モード、GitHubの承認者認証連携・電子署名・他adapter・遠隔実行・schedulerは未実装。公開apply／restore／VPS配置／会員DB変更は実装に含めない。
+対象はmanga-discovery-v2のTask1レビューschemaVersion=1。旧手動レビューの任意形式や未解決例外を自動変換しない。例外解決は別レビュー、公開base更新後の再統合は新状態に対する判断が必要。既受入だけの集合を別baseへ再構成する専用モード、GitHubの承認者認証連携・電子署名・他adapterは未実装。GitHub承認記録からの自動起動と定期確認は、後続の[収集Worker](COLLECTION_WORKER.md)で追加した。公開apply／restore／VPS配置／会員DB変更は実装に含めない。
 
 ### タスク2の検証操作
 
