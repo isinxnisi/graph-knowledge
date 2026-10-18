@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "workerId": "plunode-wsl",
-  "codeCommit": "c87051e0d15c903737d37f7c114bff0f17702ffa",
+  "codeCommit": "916cc77d3aeab22650e309b694661cac07a72a47",
   "controlRevision": 0,
   "lastControlSha256": null,
   "lastControlId": null,
@@ -42,7 +42,8 @@
   },
   "controlError": null,
   "requestsByPhase": {
-    "completed": 1
+    "completed": 1,
+    "waiting-control": 1
   },
   "issueIntake": {
     "collection-control/issue-sources/25.json": {
@@ -51,5 +52,5 @@
     }
   },
   "publicApply": false,
-  "checkedAt": "2026-10-18T18:43:10.535191+00:00"
+  "checkedAt": "2026-10-18T18:49:02.005266+00:00"
 }
