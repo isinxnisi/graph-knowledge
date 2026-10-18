@@ -1,0 +1,101 @@
+{
+  "records": {
+    "entities": [
+      {
+        "id": "743d7fc0-ddc6-446a-8aa1-d9a9b284a326",
+        "kind": "person",
+        "name": "高橋留美子",
+        "description": null,
+        "aliases": [
+          "Rumiko Takahashi"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q219948"
+          }
+        ],
+        "createdAt": "2026-10-17T00:00:00Z",
+        "updatedAt": "2026-10-17T00:00:00Z",
+        "event": null
+      },
+      {
+        "id": "b1e1232d-b038-4c11-b80c-ab1c2710d2bf",
+        "kind": "work",
+        "name": "うる星やつら",
+        "description": null,
+        "aliases": [
+          "Urusei Yatsura"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q715723"
+          }
+        ],
+        "createdAt": "2026-10-17T00:00:00Z",
+        "updatedAt": "2026-10-17T00:00:00Z",
+        "event": null
+      }
+    ],
+    "claims": [
+      {
+        "id": "121709e5-ea90-4c6a-87d1-d67264e1590d",
+        "subjectId": "743d7fc0-ddc6-446a-8aa1-d9a9b284a326",
+        "objectId": "b1e1232d-b038-4c11-b80c-ab1c2710d2bf",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "hidden",
+        "createdAt": "2026-10-17T00:00:00Z",
+        "updatedAt": "2026-10-17T00:00:00Z",
+        "contribution": {
+          "roleId": "AUTHORSHIP",
+          "scope": {
+            "kind": "publication",
+            "isbn13": "9784091228017",
+            "volumeLabel": "第1巻",
+            "editionLabel": null,
+            "language": "ja"
+          }
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      }
+    ],
+    "sources": [
+      {
+        "id": "28614027-38d3-4b20-b460-8b1b48b4eb07",
+        "kind": "web",
+        "title": "NDLサーチ: うる星やつら. 1",
+        "authors": [],
+        "publisher": "国立国会図書館",
+        "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I000002007879",
+        "publishedAt": null,
+        "edition": null,
+        "note": "国立国会図書館作成書誌（iss-ndl-opac）の責任表示。メタデータ CC BY 4.0: https://creativecommons.org/licenses/by/4.0/ ; 提供元条件 https://ndlsearch.ndl.go.jp/help/api/provider 。本文・画像・第三者所蔵情報は含まない。",
+        "isDemo": false
+      }
+    ],
+    "citations": [
+      {
+        "id": "fa8985f2-6775-4348-a136-9a5dee986b1a",
+        "claimId": "121709e5-ea90-4c6a-87d1-d67264e1590d",
+        "sourceId": "28614027-38d3-4b20-b460-8b1b48b4eb07",
+        "locator": "dc:creator（責任表示） / ISBN 9784091228017",
+        "note": "原表記（ja）: 高橋留美子 著。指定刊行物の責任表示で確認された担当。全巻・全版・全期間への外挿、原作から別Roleへの変換はしない。同一資料由来の記録を独立した根拠と数えない。",
+        "accessedAt": "2026-10-18",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "高橋留美子 著",
+          "language": "ja"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      }
+    ]
+  }
+}
