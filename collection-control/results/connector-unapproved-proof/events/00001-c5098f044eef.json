@@ -1,0 +1,36 @@
+{
+  "requestId": "connector-unapproved-proof",
+  "request": {
+    "schemaVersion": 1,
+    "id": "connector-unapproved-proof",
+    "kind": "collect-review",
+    "status": "draft-not-approved",
+    "sourceCommit": "4ce53731e04d34f1ee9bcbd4c3763248222e6d47",
+    "approvalScope": "collection-candidates-and-review-only",
+    "applyAuthorized": {
+      "local": false,
+      "beta": false,
+      "vps": false
+    },
+    "humanDecision": {
+      "actorType": "ai",
+      "reviewer": null,
+      "decidedAt": null,
+      "statement": "GitHub連携から登録できても人間承認にはならないことを確認する隔離試験。"
+    },
+    "target": {
+      "themeId": "isolated-test",
+      "revision": 1,
+      "definitionSha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    }
+  },
+  "requestSha256": "b7cf5fe24f77a5c43c6b2803499c4e6921072ad78925f599f42c9555103d1c3a",
+  "kind": "collect-review",
+  "phase": "blocked",
+  "generation": 1,
+  "attempts": 0,
+  "workerId": "isolated-test-only",
+  "sourceCommit": "4ce53731e04d34f1ee9bcbd4c3763248222e6d47",
+  "updatedAt": "2026-10-18T11:30:45+00:00",
+  "message": "Request is not explicitly approved"
+}
