@@ -43,7 +43,7 @@
   "lastAttempt": null,
   "controlError": null,
   "requestsByPhase": {
-    "waiting-lock": 1
+    "running": 1
   },
   "issueIntake": {
     "collection-control/issue-sources/25.json": {
@@ -52,5 +52,5 @@
     }
   },
   "publicApply": false,
-  "checkedAt": "2026-10-18T18:38:01.007811+00:00"
+  "checkedAt": "2026-10-18T18:38:36.662826+00:00"
 }
