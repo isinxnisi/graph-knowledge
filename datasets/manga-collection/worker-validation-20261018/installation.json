@@ -1,0 +1,29 @@
+{
+  "recordedAt": "2026-10-18T11:52:46.285127+00:00",
+  "workerId": "plunode-wsl",
+  "installedCodeCommit": "14b38c0bd147dfb603631ca5ef3a6c438b488458",
+  "home": "/home/isinxnisi/.local/share/plunode-collection-worker",
+  "branch": "codex/collection-control",
+  "health": {
+    "checkedAt": "2026-10-18T11:52:29+00:00",
+    "status": "online",
+    "publicApply": false
+  },
+  "requestCount": 0,
+  "seededHistoricalJobs": 2,
+  "schedule": {
+    "taskName": "Plunode-CollectionWorker",
+    "intervalMinutes": 1,
+    "atLogon": true,
+    "multipleInstances": "IgnoreNew",
+    "principal": "current user / Interactive / Limited",
+    "launcherDirectory": "%USERPROFILE%/plunode-collection-worker",
+    "verifiedExitCode": 0
+  },
+  "sharedLock": "Existing manual hold is respected; no new work started",
+  "existingAutopilotTask": "Disabled, unchanged",
+  "publicApply": false,
+  "vpsDeployment": false,
+  "memberDatabaseChanges": false,
+  "setupBackupRetained": "/home/isinxnisi/.local/share/plunode-collection-worker-setup-20261018"
+}

@@ -101,3 +101,5 @@ python3 tests/check_collection_worker.py --report /tmp/worker-check.json
 既存タスク2の実ローカル無書込plan試験は[従来の検証記録](../../datasets/manga-collection/acceptance-workflow-validation-20261018/README.md)を参照。今回はそれを作り直さず、接続・状態・再開・拒否を検証する。過去の正式受入・release・実行承認は変更しない。
 
 初回設置ではLocalAppDataの起動ファイルをタスク側で参照できず、FFFD0000／8007010Bで停止した。通常のユーザーフォルダーへ移し、実行ファイル・作業フォルダーを絶対パスで指定して、タスク終了0とWorker onlineを確認した。署名制約がある環境では上記のprocess単位ExecutionPolicyを使い、システム全体のpolicyは変更しない。
+
+このPCへの設置・固定コードcommit・定期起動の確認は[installation.json](../../datasets/manga-collection/worker-validation-20261018/installation.json)。実運用の承認依頼は0件のまま稼働を確認した。初回setupは別privateフォルダーへ保持し、過去ジョブ・承認を破棄していない。ChatGPTへの自動push通知や会話の自動起動は実装せず、ChatGPTがGitHub資料を読み取って次の判断を提示する。
