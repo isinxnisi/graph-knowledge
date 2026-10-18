@@ -24,6 +24,8 @@ import { useDialogDismiss } from "../lib/client/use-dialog-dismiss";
 import { useDialogBackdrop } from "../lib/client/use-dialog-backdrop";
 import DiscoveryListPanel from "./DiscoveryListPanel";
 import styles from "./DiscoveryExplorer.module.css";
+import DiscoveryConnections from "./DiscoveryConnections";
+import { connectionsWorkspaceSchema, initialConnectionsWorkspace, type ConnectionsWorkspace } from "../lib/domain/discovery-connections";
 type Entry = "connections" | "worlds" | "list";
 type Variant = "staged" | "tabs";
 type Label = readonly [string, string];
@@ -55,6 +57,7 @@ export default function DiscoveryExplorer({ lab = false, presetBrowser = false, 
   const { locale, setLocale } = useUiLocale(), en = locale === "en";
   const t = (ja: string, english: string) => en ? english : ja;
   const [catalog, setCatalog] = useState<CatalogWorkspace>(initialCatalogWorkspace);
+  const [connectionFlow,setConnectionFlow]=useState<ConnectionsWorkspace>(initialConnectionsWorkspace),[legacyConnection,setLegacyConnection]=useState(false);
   const [catalogBusy, setCatalogBusy] = useState(false), [catalogError, setCatalogError] = useState<string | null>(null);
   const catalogRestore = useRef<number | null>(null);
   const catalogRequest = useRef<AbortController | null>(null);
@@ -74,7 +77,7 @@ export default function DiscoveryExplorer({ lab = false, presetBrowser = false, 
   // Name lookup changes the visible operation, while keeping all exploration criteria.
   const names = (preview && catalog.mode === "names") || lookupOpen || (!context.anchor && basePlan.state !== "unsupported");
   const plan = names ? lookupQ.trim() ? { state: "ready" as const, operation: "names" as const, q: lookupQ.trim() } : { state: "needs-name" as const } : basePlan;
-  const query = usePrototypeQuery(ready && entry !== "list" && !browsingPresets ? plan : { state: "needs-anchor" }, names ? null : cursors.at(-1)!, composing && names);
+  const query = usePrototypeQuery(ready && entry !== "list" && !browsingPresets && (!preview || legacyConnection) ? plan : { state: "needs-anchor" }, names ? null : cursors.at(-1)!, composing && names);
   useEffect(() => {
     const previousFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null;
     const resumed = !!window.history.state?.plunodeDiscovery;
@@ -88,6 +91,7 @@ export default function DiscoveryExplorer({ lab = false, presetBrowser = false, 
       let saved = lab ? window.history.state?.discoveryPrototype : resumed ? window.history.state?.discoveryWorkspace : null;
       if (lab && !saved) { try { saved = JSON.parse(sessionStorage.getItem("plunode.discovery-prototype.v1") ?? "null"); } catch { /* Optional storage. */ } }
       if (saved) {
+        if(presetBrowser){const flow=connectionsWorkspaceSchema.safeParse(saved.connectionFlow);if(flow.success)setConnectionFlow(flow.data);else if(saved.catalog?.mode&&saved.catalog.mode!=="presets")setLegacyConnection(true);if(saved.legacyConnection===true)setLegacyConnection(true);}
         if (presetBrowser) { const restoredCatalog = catalogWorkspaceSchema.safeParse(saved.catalog); if (restoredCatalog.success) {setCatalog(restoredCatalog.data);if(restoredCatalog.data.mode === "presets")catalogRestore.current=restoredCatalog.data.scroll;} }
         const savedPath = pathUiSchema.safeParse(saved.pathUi);
         if (savedPath.success) setPathUi(savedPath.data);
@@ -114,14 +118,14 @@ export default function DiscoveryExplorer({ lab = false, presetBrowser = false, 
   }, [lab, onClose, presetBrowser]);
   useEffect(() => {
     if (!ready) return;
-    const snapshot = { layoutVersion: 2, context, entry, variant, lookupOpen, lookupQ, listCriteria, listCursors, pathUi, ...(presetBrowser ? { catalog } : {}) };
+    const snapshot = { layoutVersion: 2, context, entry, variant, lookupOpen, lookupQ, listCriteria, listCursors, pathUi, ...(presetBrowser ? { catalog,connectionFlow,legacyConnection } : {}) };
     if (lab) {
       window.history.replaceState({ ...window.history.state, discoveryPrototype: snapshot }, "", window.location.href);
       try { sessionStorage.setItem("plunode.discovery-prototype.v1", JSON.stringify(snapshot)); } catch { /* Optional storage. */ }
     } else {
       window.history.replaceState({ ...window.history.state, plunodeDiscovery: { ...listCriteria, presentation: entry === "list" ? "list" : "explore" }, discoveryWorkspace: snapshot, discoveryReturnFocus: returnFocus.current }, "", window.location.href);
     }
-  }, [ready, context, entry, variant, lookupOpen, lookupQ, listCriteria, listCursors, pathUi, lab, presetBrowser, catalog]);
+  }, [ready, context, entry, variant, lookupOpen, lookupQ, listCriteria, listCursors, pathUi, lab, presetBrowser, catalog,connectionFlow,legacyConnection]);
   useLayoutEffect(() => {
     if (!ready || !browsingPresets || catalogRestore.current === null || !body.current) return;
     body.current.scrollTop = catalogRestore.current;
@@ -146,6 +150,7 @@ export default function DiscoveryExplorer({ lab = false, presetBrowser = false, 
     });
   };
   const showCatalog = () => {
+    if(preview){setLegacyConnection(false);setConnectionFlow(old=>({...old,step:"presets"}));}
     catalogRequest.current?.abort(); setCatalogBusy(false); setCatalogError(null);
     catalogRestore.current = catalog.scroll;
     setCatalog(old => ({ ...old, mode: "presets", pending: null }));
@@ -263,7 +268,10 @@ export default function DiscoveryExplorer({ lab = false, presetBrowser = false, 
             : <button className={styles.stagedSwitch} onClick={() => switchEntry(entry === "connections" ? "worlds" : "connections")}>{entry === "connections" ? t("知識世界から探す →", "Explore knowledge worlds →") : t("接点から探す →", "Explore connections →")}</button>}
 
           </nav>
-        {entry === "list" ? <DiscoveryListPanel criteria={listCriteria} cursors={listCursors} onChange={value => { setListCriteria(value); setListCursors([null]); }} onPage={setListCursors} onChoose={chooseListResult}/> : browsingPresets ? <DiscoveryPresetBrowser filters={catalog.filters} onChange={filters=>setCatalog(old=>({...old,filters}))} onSelect={selectCatalog} onNames={showCatalogNames} busy={catalogBusy} error={catalogError}/> : <>
+        {preview&&!legacyConnection ? ready&&<DiscoveryConnections value={connectionFlow} onChange={setConnectionFlow} body={body} onLegacy={(preset,example)=>{setLegacyConnection(true);void selectCatalog(preset,example);}} onGraph={snapshot=>{
+          selected.current=true;setConnectionFlow(snapshot);
+          window.history.replaceState({...window.history.state,discoveryWorkspace:{...window.history.state?.discoveryWorkspace,connectionFlow:snapshot,legacyConnection:false}},"",window.location.href);
+        }}/>:entry === "list" ? <DiscoveryListPanel criteria={listCriteria} cursors={listCursors} onChange={value => { setListCriteria(value); setListCursors([null]); }} onPage={setListCursors} onChoose={chooseListResult}/> : browsingPresets ? <DiscoveryPresetBrowser filters={catalog.filters} onChange={filters=>setCatalog(old=>({...old,filters}))} onSelect={selectCatalog} onNames={showCatalogNames} busy={catalogBusy} error={catalogError}/> : <>
         {!(preview && catalog.mode === "names" && !context.anchor) && <section className={styles.selectionSummary} data-empty={!hasConditions || undefined} aria-label={t("選択要約", "Selection summary")}>
           <div className={styles.summaryChips}>
             <span className={styles.subjectChip}><button id="prototype-subject" onClick={startNames} title={context.anchor?.name}><span className={styles.subjectLabel}>{t("対象：", "Subject: ")}</span>{context.anchor?.name ?? t("名前から指定", "choose by name")}<Icon name="search"/></button>{context.anchor && <button aria-label={t("対象だけ外す", "Remove only subject")} onClick={() => change({ ...context, anchor: null }, ["対象の解除", "Subject removal"])}>×</button>}</span>

@@ -1,5 +1,7 @@
 # 現行技術設計
 
+2026-10-19、[Discovery STEP 4a](design/DISCOVERY_CONNECTIONS_UI.md)。既存POST対象検索とGraph URL v2を接続し、一時match v1で検索時revision／成立証拠を厳密に再検証する。GraphのEntity操作・保存形式は維持。独立したconnectionsWorkspace v1を既存historyへ持ち、Graphの条件編集で検索条件を上書きしない。明示プリセット試作URLだけに適用する。
+
 2026-10-19、[GraphのEntity操作統一](design/DISCOVERY_GRAPH_ENTITY_INTERACTION.md)。patternの完全RouteRef集合と各作品の候補取得状態を、通常Graphと共通のexpansions／到達性投影から分離する。表示Claimは完全証拠への所属と所有Entityへの接続を検証。共有UI・開閉・配置を再利用し、Workspace／URL v2の任意entityState v1で複数作品の証拠・枝を保存し、同一公開版で全参照を再検証する。
 
 2026-10-19、[STEP 3bとGraph操作修正](design/DISCOVERY_PATTERN_GRAPH_PERSISTENCE.md)で共通関係編集・Undo・v2 View／Workspace／URL復元を接続。patternは完全経路1本だけ初回openとし、候補cacheと表示を分離。Entity閉鎖時の再開用ハンドルと経路キー集合を任意の`collapsedNodes`へ保存し、全Claim検証後に復元する。線はopenな完全経路の和集合のみ。Discovery接続はSTEP 4に残す。

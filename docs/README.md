@@ -49,7 +49,8 @@
 | [漫画r0002の原作正式受入・9 Claim統合候補](design/MANGA_R0002_COMBINED_RELEASE.md) | 2026-10-17。原作5 Claim・6 Entity・3 Source・5 Citationを追加受入。13 Entity／9 Claim統合release -002をvalidate・無書込plan済み。旧-001は保持、全環境applyは禁止 |
 | [漫画r0002の正式受入・release準備](design/MANGA_R0002_ACCEPTED_RELEASE.md)／[ORIGINAL_STORY](design/ORIGINAL_STORY.md) | 2026-10-17。4 Claim・7 Entity・4 Source・4 Citationを人間が正式受入。原作Role実装、原作5件は個別受入待ち。release候補のvalidate・無書込plan、公開applyは未許可 |
 | [漫画r0002の個別受入・公開準備](design/MANGA_R0002_ACCEPTANCE_REVIEW.md)／[制作Role意味レビュー](design/MANGA_PRODUCTION_ROLE_REVIEW.md) | 2026-10-17の初回レビュー記録（hash保全）。4 Claim・15新規Entityの推奨、保留11件と既存2 Claim重複。後続の正式受入・Role採用・release候補は上記記録を参照 |
-| [GraphのEntity操作統一](design/DISCOVERY_GRAPH_ENTITY_INTERACTION.md) | 2026-10-19。通常探索とpatternのクリック／タッチ・枝の開閉を統一。完全証拠と段階表示を分離、別作品からの継続・旧保存移行。STEP 4・本番更新なし |
+| [Discovery共通関係条件：STEP 4a UI操作試作](design/DISCOVERY_CONNECTIONS_UI.md) | 2026-10-19。既存プリセット試作に対象検索・選択後・共通条件Graphを接続。名前なしの成立対象、厳密な証拠／版引継ぎ、検索工程への復帰。STEP 4bは人間評価後。本番更新なし |
+| [GraphのEntity操作統一](design/DISCOVERY_GRAPH_ENTITY_INTERACTION.md) | 2026-10-19。通常探索とpatternのクリック／タッチ・枝の開閉を統一。完全証拠と段階表示を分離、別作品からの継続・旧保存移行。STEP 4aでも同じ操作を利用 |
 | [共通関係条件：STEP 3b Graph編集・保存・復元](design/DISCOVERY_PATTERN_GRAPH_PERSISTENCE.md) | 2026-10-19。draft編集・自由探索切替・Undo、View v2／Workspace v3／URL v2と旧形式の非破壊移行・経路再検証。現行操作は上記のEntity単位へ更新 |
 | [共通関係条件：STEP 3a Graph実行基盤](design/DISCOVERY_PATTERN_GRAPH_EXECUTION.md) | 2026-10-18。完全経路POST・証拠／取得済み参照の検証、候補ページ、pattern和集合投影と開閉・上限・中止、neighbors肯否。編集UI・保存版移行・Discovery接続・本番更新なし |
 | [共通関係条件：STEP 2 対象検索と成立証拠](design/DISCOVERY_TARGET_SEARCH.md) | 2026-10-18。読み取り専用POST、完全EXISTSとEntityページング、同版の完全経路証拠、公開KG・高次数・異常時の検証。UI／Graph状態・公開KG・正式VPS変更なし |

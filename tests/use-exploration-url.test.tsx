@@ -5,12 +5,26 @@ import { useExplorationUrl } from "../lib/client/use-exploration-url";
 import { emptyGraph, emptyExpansion, type GraphState } from "../lib/client/graph-state";
 import { decodeExploration, rebuildExplorationUrl } from "../lib/client/exploration-url";
 import { WorkspaceRootNotFound } from "../lib/client/saved-workspace";
+import { discoveryRelationHref, verifyDiscoveryHandoff } from "../lib/client/discovery-relation-navigation";
+import { fetchDatasetRevision } from "../lib/client/api";
+import { allRelations } from "../lib/domain/discovery-connections";
 vi.mock("../lib/client/exploration-url", async original => ({ ...await original<typeof import("../lib/client/exploration-url")>(), rebuildExplorationUrl: vi.fn() }));
+vi.mock("../lib/client/discovery-relation-navigation", async original => ({ ...await original<typeof import("../lib/client/discovery-relation-navigation")>(), verifyDiscoveryHandoff: vi.fn() }));
+vi.mock("../lib/client/api", async original => ({ ...await original<typeof import("../lib/client/api")>(), fetchDatasetRevision: vi.fn() }));
 const id = "11111111-1111-4111-8111-111111111111";
 const graph = (): GraphState => ({ ...emptyGraph(), centerId: id, cacheNodes: { [id]: { id, kind: "person" as const, name: "name", description: null } }, expansions: { [id]: emptyExpansion() } });
 const view = { positions: { [id]: { x: 112.123, y: -45.678 } }, pan: { x: 15, y: 15 }, zoom: 0.71, initialLayoutDone: true };
 afterEach(() => { cleanup(); vi.useRealTimers(); vi.resetAllMocks(); history.replaceState(null, "", "/"); });
 describe("exploration URL synchronization", () => {
+  it("rejects a revision change after Discovery verification without applying or replacing the old Graph", async () => {
+    const selection={entity:{id,kind:"person" as const,name:"name",description:null,aliases:[],event:null},relation:allRelations(),revision:"r1",witness:null};
+    history.replaceState(null,"",discoveryRelationHref(selection));const before=location.href,apply=vi.fn();
+    vi.mocked(verifyDiscoveryHandoff).mockResolvedValue({nodes:[],claims:[]});
+    vi.mocked(rebuildExplorationUrl).mockResolvedValue({graph:{...graph(),revision:"r1"},view:null,skippedBranches:0});
+    vi.mocked(fetchDatasetRevision).mockResolvedValue({dataset:"public-kg",revision:"r2"});
+    const {result}=renderHook(()=>useExplorationUrl({dataset:"public-kg",initialRoot:id,graph:emptyGraph(),capture:()=>null,apply,locale:"ja"}));
+    await act(async()=>{});expect(result.current.failure).toContain("対象を再検索");expect(apply).not.toHaveBeenCalled();expect(location.href).toBe(before);expect(result.current.canRestart).toBe(false);
+  });
   it("debounces history replacement and synchronously flushes pagehide without local persistence", async () => {
     vi.useFakeTimers(); history.replaceState(null, "", "/"); const length = history.length;
     const capture = vi.fn(() => view);

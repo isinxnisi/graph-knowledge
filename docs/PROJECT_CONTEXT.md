@@ -1,5 +1,7 @@
 # プロジェクトの構想と判断基準
 
+2026-10-19、[Discovery STEP 4a](design/DISCOVERY_CONNECTIONS_UI.md)を既存プリセット試作へ接続。対象指定済みは直接Graph、other-worksは名前なしで成立作品を検索して任意選択する。共通関係条件・元Claimの証拠・検索時公開版をGraphへ渡し、検索工程への復帰を保持する。3200／betaだけに反映し、人間評価後にSTEP 4bを判断する。
+
 2026-10-19、[GraphのEntity操作統一](design/DISCOVERY_GRAPH_ENTITY_INTERACTION.md)でpattern専用のダブル操作・経路開閉・点線ハンドルを廃止。通常GraphのEntity枝・詳細・隣接一覧を共用し、完全経路の成立証拠を保持した段階表示と別作品からの継続を実装する。旧保存は根拠を再検証してEntity枝へ移行。STEP 4・本番・公開KG・収集処理は変更しない。
 
 2026-10-19、[STEP 3bのGraph編集・保存・復元と操作修正](design/DISCOVERY_PATTERN_GRAPH_PERSISTENCE.md)まで実装。patternの初回表示は完全経路1本に抑え、閉じたEntityから同じ経路集合を再開できる。新旧保存互換・元Claim再検証を維持。Discovery接続（STEP 4）・公開KG・収集・正式VPSは今回の範囲外。

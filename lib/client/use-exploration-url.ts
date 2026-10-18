@@ -10,6 +10,8 @@ import { captureWorkspace, workspaceSchema, restartWorkspace, type SavedWorkspac
 import { assertUrlReplayable, decodeExploration, explorationHref, ExplorationUrlError, rebuildExplorationUrl, URL_STATE_TARGET, URL_STATE_LIMIT, isWorkspaceLoading } from "./exploration-url";
 import { explorationUrlLabels } from "../i18n/exploration-url";
 import { WorkspaceError, WorkspaceRootNotFound } from "./saved-workspace";
+import { fetchDatasetRevision } from "./api";
+import { parseDiscoveryHandoff, verifyDiscoveryHandoff } from "./discovery-relation-navigation";
 
 export function useExplorationUrl({ dataset, initialRoot, graph, capture, apply, locale }: {
   dataset: DatasetMode; initialRoot?: string; graph: GraphState; capture: () => GraphView | null;
@@ -74,7 +76,7 @@ export function useExplorationUrl({ dataset, initialRoot, graph, capture, apply,
       setBusy(!!rootId);
       try {
         if (!rootId) {
-          if (["s", "via"].some(key => new URLSearchParams(location.search).has(key))) throw new ExplorationUrlError("invalid");
+          if (["s", "via", "match"].some(key => new URLSearchParams(location.search).has(key))) throw new ExplorationUrlError("invalid");
           return;
         }
         if (!z.uuidv4().safeParse(rootId).success) throw new ExplorationUrlError("invalid");
@@ -92,8 +94,12 @@ export function useExplorationUrl({ dataset, initialRoot, graph, capture, apply,
           witness = parsePathWitness(params.get("via"),rootId);
         } catch { throw new ExplorationUrlError("invalid"); }
         savedInput.current = workspace;
-        setCanRestart(workspace.relation.type === "pattern");
+        if(params.getAll("match").length>1)throw new ExplorationUrlError("invalid");
+        const handoff=parseDiscoveryHandoff(params.get("match"),workspace);
+        if(handoff)await verifyDiscoveryHandoff(handoff,workspace,controller.signal);
+        setCanRestart(workspace.relation.type === "pattern" && !handoff);
         const rebuilt = restartThisAttempt ? await restartWorkspace(workspace, controller.signal) : await rebuildExplorationUrl(workspace, controller.signal,witness);
+        if(handoff){const observed=await fetchDatasetRevision(controller.signal);if(observed.dataset!=="public-kg"||observed.revision!==handoff.revision||rebuilt.graph.revision!==handoff.revision)throw new ExplorationUrlError("changed");}
         controller.signal.throwIfAborted();
         latest.current.apply(rebuilt);
         setFailure(null); setReady(true);
@@ -101,7 +107,7 @@ export function useExplorationUrl({ dataset, initialRoot, graph, capture, apply,
         if (disposed) return;
         failed.current = true;
         const labels = explorationUrlLabels(latest.current.locale);
-        setFailure(error instanceof WorkspaceRootNotFound ? labels.rootMissing
+        setFailure(new URLSearchParams(location.search).has("match") ? latest.current.locale==="en"?"The search revision or evidence could not be verified. Go back to subject search and retry.":"検索時の公開版・成立証拠を確認できませんでした。戻って対象を再検索してください。" : error instanceof WorkspaceRootNotFound ? labels.rootMissing
           : error instanceof ExplorationUrlError && error.reason === "dataset" ? labels.dataset
             : error instanceof ExplorationUrlError && error.reason === "invalid" ? labels.invalid : error instanceof ExplorationUrlError && error.reason === "changed" && new URLSearchParams(location.search).has("via") ? labels.pathChanged : labels.restoreFailed);
       } finally {

@@ -1,0 +1,44 @@
+.flow {padding-top:20px;}
+.name {display:grid;gap:6px;font-size:10px;color:var(--color-muted);}
+.name input {min-width:0;width:100%;box-sizing:border-box;font:inherit;font-size:12px;color:var(--color-text);background:transparent;border:1px solid var(--color-border);border-radius:6px;padding:9px;}
+.name input:focus {outline:1px solid var(--color-accent);}
+.relationHeading {border-top:1px solid var(--color-border);padding-top:18px;margin-top:5px;}
+.condition {font:400 17px/1.7 var(--font-editorial);margin:0;overflow-wrap:anywhere;}
+.flow .back,.flow .changeSubject {justify-content:flex-start;color:var(--color-accent-strong);font-size:11px;padding-inline:0;}
+.back {margin-top:14px;}
+.targetRow {display:flex;align-items:flex-start;gap:10px;padding:16px 0;border-bottom:1px solid var(--color-border);animation:arrive 130ms ease-out;}
+.targetRows[data-stale] {opacity:.45;pointer-events:none;}
+.entityIcon {color:var(--color-accent-strong);background:var(--color-accent-soft);border-radius:50%;padding:6px;display:flex;flex:none;}
+.targetRow h4 {font:400 18px/1.5 var(--font-editorial);margin:0;}
+.targetRow p {font-size:11px;line-height:1.8;color:var(--color-muted);margin:4px 0;}
+.targetRow small {font-size:10px;color:var(--color-muted);}
+.rowActions {display:flex;gap:16px;align-items:center;margin-top:5px;}
+.flow .rowActions button,.rowActions a {font-size:11px;color:var(--color-accent-strong);padding-left:0;}
+.rowActions a {display:flex;align-items:center;gap:4px;text-decoration:none;}
+.rowActions a svg {width:12px;}
+.notice {font-size:12px;line-height:1.8;color:var(--color-accent-strong);padding:10px 0;}
+.pages {display:flex;align-items:center;justify-content:space-between;padding-top:12px;font-size:11px;}
+.selectedIntro h3 {font-size:30px;}
+.selectedActions {display:flex;gap:20px;align-items:center;flex-wrap:wrap;margin:22px 0 12px;}
+.graph {display:inline-flex;align-items:center;gap:8px;background:var(--color-accent-strong);color:var(--color-on-accent,#fff);padding:10px 15px;border-radius:6px;text-decoration:none;font-size:13px;}
+.flow .selectedActions a.graph,.flow .selectedActions a.graph:visited,.flow .selectedActions a.graph:hover {color:var(--color-on-accent,#fff);}
+.flow .evidenceToggle {padding-left:0;color:var(--color-accent-strong);margin:26px 0 4px;}
+.preset {font-size:11px;color:var(--color-accent-strong);}
+@keyframes arrive {from{opacity:.5;transform:translateY(3px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:850px){
+ .flow {gap:12px;}
+ .flow > aside {display:block;order:1;border:0;padding:0;}
+ .flow > section {display:contents;}
+ .flow > section > :first-child {order:0;}
+ .flow > section > * {order:2;}
+ .flow aside .targetFilters fieldset {display:block;}
+ .flow aside .targetFilters legend {display:block;margin-bottom:6px;}
+ .flow aside .targetFilters fieldset > p {margin:4px 0 0;}
+ .relationHeading {padding-top:12px;}
+ .targetRow {padding:12px 0;}
+ .targetRow h4 {font-size:17px;}
+ .selectedIntro h3 {font-size:26px;}
+ .selectedActions {margin:8px 0;gap:12px;}
+ .flow .back {margin-top:0;min-height:30px;padding:5px 0;background:transparent;}
+}
+@media(prefers-reduced-motion:reduce){.targetRow{animation:none;}}
