@@ -27,12 +27,12 @@
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
   "nextStartAt": null,
-  "phase": "outside-window",
+  "phase": "ready",
   "recoveredAttempt": null,
   "admission": {
-    "ready": false,
-    "reason": "outside-window",
-    "eligibleAt": "2026-10-18T18:00:00+00:00",
+    "ready": true,
+    "reason": "ready",
+    "eligibleAt": null,
     "windowEndAt": "2026-10-18T22:00:00+00:00"
   },
   "activeAttempt": null,
@@ -40,5 +40,5 @@
   "controlError": null,
   "requestsByPhase": {},
   "publicApply": false,
-  "checkedAt": "2026-10-18T17:51:38.020138+00:00"
+  "checkedAt": "2026-10-18T18:00:38.161006+00:00"
 }
