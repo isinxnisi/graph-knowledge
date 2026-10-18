@@ -85,7 +85,7 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\collection-wor
 
 Removeは新規定期確認を無効化するだけで、実行中のワークフローを強制終了せず、承認・再開状態も消さない。別homeの場合は`-Config /home/USER/.../config.json`を指定する。タスク本体をWindowsの`%USERPROFILE%/plunode-collection-worker`へコピーするのでWSL停止時にも起動入口が残る。Windowsがログイン済みでPC稼働中ならWSLを起動して確認する。PC停止・ログアウト中は実行せず、次回ログオン／確認時にGitHubの未処理依頼を読む。常時稼働サーバは今回不要。
 
-前景で保守確認する場合だけ、installed runtimeの`collection-worker.py once|watch --config ...`を使う。onceは一巡、watchは60秒ごとの確認。二重起動はprivate flockで処理を開始しない。共通ロックは既存autopilotの同じinodeを使い、占有時は待ち状態として次回再確認する。1ワークフロー55分を上限とし、子へロックFDを継承する。自動開発や別Codexを終了せず、ロックファイルも削除しない。
+前景で保守確認する場合だけ、installed runtimeの`collection-worker.py once|watch --config ...`を使う。onceは一巡、watchは60秒ごとの確認。二重起動はprivate flockで処理を開始しない。空キューでmainの入力更新がない場合は共通ロックを取得しない。新しいmainの資料取込・雛形作成、承認済み処理だけで既存autopilotの同じinodeを使い、占有時は次回再確認する。成功済み／コードレビュー待ちのsource commitを保持して不要な再取得を避ける。1ワークフロー55分を上限とし、子へロックFDを継承する。自動開発や別Codexを終了せず、ロックファイルも削除しない。
 
 ローカルhealthはhomeのhealth.json／catalog-health.json、Windowsのタスク状態と%USERPROFILE%/plunode-collection-worker/last-run.log。onlineはpoll成功を示し、各依頼の成功はGitHub resultsのphaseで確認する。ログは資格情報を含めず、詳細の非公開ログをhome/logsへ保存する。GitHub資格情報の失効は再認証が必要。PC故障によるprivate state喪失、意味／同一性判断、コード更新は自動修復しない。
 

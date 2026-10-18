@@ -204,4 +204,34 @@ class ExistingCLIInvocation(unittest.TestCase):
             with self.assertRaisesRegex(b.Blocked, 'different request|hash changed'): executor.validate(changed)
 
 
+class CatalogCoordination(unittest.TestCase):
+    def test_unchanged_main_does_not_acquire_common_lock_and_updates_wait_until_free(self):
+        with tempfile.TemporaryDirectory() as temp:
+            home = Path(temp); config = {'home': temp}; store = MemoryStore(); commit = ['a' * 40]
+            store.git = lambda *args: commit[0].encode()
+            calls = []
+            @contextmanager
+            def lock(): calls.append('lock'); yield
+            def published(*args): b.save(home / 'catalog-source.json', {'commit': commit[0], 'status': 'completed'})
+            with patch.object(b, 'catalog', side_effect=published) as publish:
+                b.refresh_catalog(config, store, None, lock)
+                b.refresh_catalog(config, store, None, lock)
+                self.assertEqual(calls, ['lock']); self.assertEqual(publish.call_count, 1)
+                commit[0] = 'b' * 40
+                @contextmanager
+                def busy(): raise RuntimeError('共通ロックは使用中'); yield
+                with self.assertRaisesRegex(RuntimeError, '共通ロック'): b.refresh_catalog(config, store, None, busy)
+                self.assertEqual(b.read(home / 'catalog-source.json')['commit'], 'a' * 40)
+                b.refresh_catalog(config, store, None, lock)
+                self.assertEqual(publish.call_count, 2)
+
+    def test_code_upgrade_block_is_not_retried_under_the_common_lock_each_minute(self):
+        with tempfile.TemporaryDirectory() as temp:
+            config = {'home': temp}; store = MemoryStore(); store.git = lambda *args: ('a' * 40).encode()
+            with patch.object(b, 'catalog', side_effect=b.Blocked('Code upgrade needs review')) as publish:
+                with self.assertRaises(b.Blocked): b.refresh_catalog(config, store, None, no_lock)
+                b.refresh_catalog(config, store, None, no_lock)
+                self.assertEqual(publish.call_count, 1)
+
+
 if __name__ == '__main__': unittest.main()

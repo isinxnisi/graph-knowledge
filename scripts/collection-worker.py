@@ -576,6 +576,22 @@ def catalog(config, store, executor):
         text += 'code／input hash・定義hash・上限・完全な対象は[判断雛形](' + name + '.json)。承認時は雛形をコピーし、requests/ID.jsonとして判断範囲と人間の明示判断を記録する。\n'
         files[PREFIX + 'proposals/' + name + '.md'] = text.encode()
     if files: store.publish(files, files)
+    save(Path(config['home']) / 'catalog-source.json', {'commit': commit, 'status': 'completed'})
+    save(Path(config['home']) / 'catalog-health.json', {'checkedAt': gate.now(), 'status': 'online'})
+
+
+def refresh_catalog(config, store, executor, lock=common_lock):
+    # Git synchronization touches only our private bare repo. An idle queue must not
+    # acquire the development lock each minute just to reproduce unchanged proposals.
+    store.sync()
+    commit = store.git('rev-parse', 'refs/remotes/source').decode().strip()
+    marker = Path(config['home']) / 'catalog-source.json'
+    if marker.exists() and read(marker)['commit'] == commit: return
+    try:
+        with lock(): catalog(config, store, executor)
+    except Blocked:
+        save(marker, {'commit': commit, 'status': 'blocked-review-required'})
+        raise
 
 
 def main():
@@ -598,7 +614,7 @@ def main():
         while True:
             try:
                 try:
-                    with common_lock(): catalog(config, store, executor)
+                    refresh_catalog(config, store, executor)
                 except (RuntimeError, Blocked) as error:
                     # An occupied shared lock or a newer main requiring code review cannot prevent
                     # already pinned requests from being checked/cancelled.

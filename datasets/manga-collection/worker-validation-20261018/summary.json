@@ -201,12 +201,17 @@
     "publicApply": false
   },
   "tests": {
-    "worker": 12,
+    "worker": 14,
     "acceptance": 16,
     "collectionGate": 15,
     "collectionReview": 16,
-    "total": 59,
+    "total": 61,
     "result": "passed",
     "powershellParser": "passed"
-  }
+  },
+  "idlePollingChecks": [
+    "unchanged main never acquires common lock",
+    "new source waits until common lock is free",
+    "blocked code upgrade is not retried under the lock every minute"
+  ]
 }

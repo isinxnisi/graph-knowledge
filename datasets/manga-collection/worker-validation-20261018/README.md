@@ -11,10 +11,12 @@
 - 既存GitHub連携で隔離ブランチと試験説明を登録し、Workerの[収集結果](https://github.com/isinxnisi/graph-knowledge/blob/codex/collection-worker-test-20261018/collection-control/results/isolated-worker-collect/README.md)／[受入準備結果](https://github.com/isinxnisi/graph-knowledge/blob/codex/collection-worker-test-20261018/collection-control/results/isolated-worker-accept/README.md)を同じ連携から読めることを確認した。さらに連携から[未承認依頼](https://github.com/isinxnisi/graph-knowledge/blob/codex/collection-worker-test-20261018/collection-control/requests/connector-unapproved-proof.json)を作成し、実行0・blockedで拒否した。ChatGPTがファイルを作成できることを人間承認の代用にしない。
 - 再起動・再同期・重複依頼は処理を再実行せず、Git commitも増えない。GitHub送信だけの失敗では保存済み結果から再開する。元ジョブ・過去receipt・releaseの破壊や置換はない。
 
-Worker単体12件で、未承認／AI提案／判断者欠落／未来日時／scope拡大／apply要求、取消前・実行中取消、削除、hash／対象差替え、既存ゲート受領記録の再利用、親レビュー不足、共通ロック待ち、報告失敗、FF競合・不変根拠・他Workerの所有権・古い世代の上書き拒否を確認する。既存accept-releaseの16件でも、意味・scope・根拠・UUID衝突・base／revision競合と部分受入・失敗再開を確認した。
+Worker単体14件で、未承認／AI提案／判断者欠落／未来日時／scope拡大／apply要求、取消前・実行中取消、削除、hash／対象差替え、既存ゲート受領記録の再利用、親レビュー不足、共通ロック待ち、報告失敗、FF競合・不変根拠・他Workerの所有権・古い世代の上書き拒否を確認する。既存accept-releaseの16件でも、意味・scope・根拠・UUID衝突・base／revision競合と部分受入・失敗再開を確認した。
 
 最初の既存受入テストはPATH未指定で旧Nodeが選ばれ、`--import`非対応で開始前に停止した。Node24を明示した再実行16件は成功。WSLの標準urllibからbetaは403だったが、Windows側HTTPSでは200で公開revisionを確認した。ローカル3200／betaとも82b01515-594c-48ca-b4b6-515eefac83caを維持。Web変更・再build・VPS配置・全環境公開apply・会員DB変更は行わない。
 
 実KGに対する無書込plan自体は、変更していない[タスク2既存試験](../acceptance-workflow-validation-20261018/README.md)で成功済み。今回の試験を実KGへの新規正式受入や公開適用と混同しない。
 
 Windows実タスクは初回のLocalAppData内ファイルを参照できず起動失敗した。`%USERPROFILE%/plunode-collection-worker`へ移し、絶対パス・明示作業フォルダーの設定でTask Scheduler終了0とWSL Worker onlineを確認。独立タスクは毎分＋ログオン時、Interactive／Limited、IgnoreNew。既存GraphKnowledge-AutopilotのDisabled設定は変更していない。システム全体の実行policyを変えず、起動processだけBypassを使用した。
+
+稼働確認後、入力更新のない空キューでもcatalog確認が共通ロックを毎分取得する余分な処理を削減した。mainの成功済みcommitをprivate markerへ保持し、更新がなければGitHubの承認確認だけを行う。コード更新で停止した同一commitもロック内で繰り返さない。入力更新時のロック待ち・解放後の再開を2件追加し、関連合計61テスト成功。
