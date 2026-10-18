@@ -1,0 +1,275 @@
+{
+  "schemaVersion": 1,
+  "id": "isolated-worker-collect",
+  "status": "approved",
+  "kind": "collect-review",
+  "sourceCommit": "4ce53731e04d34f1ee9bcbd4c3763248222e6d47",
+  "approvalScope": "collection-candidates-and-review-only",
+  "applyAuthorized": {
+    "local": false,
+    "beta": false,
+    "vps": false
+  },
+  "humanDecision": {
+    "actorType": "human",
+    "reviewer": "隔離試験・実運用の承認ではない",
+    "decidedAt": "2026-10-18T11:23:06.979421+00:00",
+    "statement": "隔離fixtureだけの模擬判断。実データ受入・公開applyを認めない。"
+  },
+  "target": {
+    "themeId": "isolated-worker-roundtrip",
+    "revision": 1,
+    "definitionSha256": "ff727e1249ee667ef707175406c10fde9772716cb95d28cc3d67bc580b42130c",
+    "execution": {
+      "adapter": "manga-discovery-v2",
+      "codeSha256": "80e05b67bc0129b963653b90df4cfbfa5bd6aff190acda99f54c08541e55801e",
+      "inputs": [
+        {
+          "file": "datasets/manga-collection/r0003/recipe.json",
+          "sha256": "eb431b6d6bd450eca85636f5617188f78cc4dc2e0bcdd076f94694ee153faad9"
+        },
+        {
+          "file": "datasets/manga-collection/r0003/anchor-review.json",
+          "sha256": "11300cff2b8a7b3234819d4b47a11f5e9016daf7af94f8cf4ca1838038000669"
+        },
+        {
+          "file": "datasets/manga-collection/r0003/publication-review.json",
+          "sha256": "bdf3ef6f60ea02ef07aedb3119b8cde6bdbefe0e8e7a002895637fdedf2ebb3a"
+        },
+        {
+          "file": "docs/research/famous-manga-creators/20261016/candidates.json",
+          "sha256": "8531fada01e5c635ba2ee278a7ef944a73f64676af14ed42ae0e690f5a1ff978"
+        },
+        {
+          "file": "datasets/public-kg/releases/20261014-credits-001/data.json",
+          "sha256": "ea91b16f52a211b5a8464382ad498b7b2bb2be69a6f33fe125a73a3c7b9da2b5"
+        },
+        {
+          "file": "datasets/public-kg/releases/20261014-credits-001/manifest.json",
+          "sha256": "e4aa3b58ed884f7d1f8fffee43b260261cc2b4d3a867fda942919f439d2bce17"
+        }
+      ],
+      "maxEntities": 2156,
+      "maxClaims": 1916
+    },
+    "targets": {
+      "people": [
+        {
+          "name": "浦沢直樹",
+          "qid": "Q348436"
+        },
+        {
+          "name": "工藤かずや",
+          "qid": "Q3194504"
+        },
+        {
+          "name": "池上遼一",
+          "qid": "Q1332841"
+        },
+        {
+          "name": "武論尊",
+          "qid": "Q1016880"
+        },
+        {
+          "name": "小畑健",
+          "qid": "Q313703"
+        },
+        {
+          "name": "大場つぐみ",
+          "qid": "Q558858"
+        },
+        {
+          "name": "岸本斉史",
+          "qid": "Q1993"
+        },
+        {
+          "name": "大久保彰",
+          "qid": "Q108109758"
+        },
+        {
+          "name": "赤坂アカ",
+          "qid": "Q23937543"
+        },
+        {
+          "name": "横槍メンゴ",
+          "qid": "Q17220992"
+        },
+        {
+          "name": "山田鐘人",
+          "qid": "Q38277627"
+        },
+        {
+          "name": "アベツカサ",
+          "qid": "Q105258125"
+        },
+        {
+          "name": "萩尾望都",
+          "qid": "Q265061"
+        },
+        {
+          "name": "竹宮惠子",
+          "qid": "Q268789"
+        },
+        {
+          "name": "田村由美",
+          "qid": "Q2235128"
+        },
+        {
+          "name": "高橋留美子",
+          "qid": "Q219948"
+        },
+        {
+          "name": "手塚治虫",
+          "qid": "Q193300"
+        },
+        {
+          "name": "赤塚不二夫",
+          "qid": "Q958256"
+        },
+        {
+          "name": "大友克洋",
+          "qid": "Q378710"
+        },
+        {
+          "name": "Boichi",
+          "qid": "Q624839"
+        },
+        {
+          "name": "藤本タツキ",
+          "qid": "Q24864023"
+        },
+        {
+          "name": "原哲夫",
+          "qid": "Q1319232"
+        },
+        {
+          "name": "ONE",
+          "qid": "Q11237288"
+        }
+      ],
+      "works": [
+        {
+          "name": "パイナップルARMY",
+          "qid": "Q1096269",
+          "isbn13": "9784091810816"
+        },
+        {
+          "name": "あさドラ！",
+          "qid": "Q102231027",
+          "isbn13": "9784098602780"
+        },
+        {
+          "name": "サンクチュアリ",
+          "qid": "Q669481",
+          "isbn13": "9784091823618"
+        },
+        {
+          "name": "バクマン。",
+          "qid": "Q804555",
+          "isbn13": "9784086196901"
+        },
+        {
+          "name": "サムライ8 八丸伝",
+          "qid": "Q63323229",
+          "isbn13": "9784088820224"
+        },
+        {
+          "name": "【推しの子】",
+          "qid": "Q97310775",
+          "isbn13": "9784088916507"
+        },
+        {
+          "name": "葬送のフリーレン",
+          "qid": "Q98642652",
+          "isbn13": "9784098501809"
+        },
+        {
+          "name": "クズの本懐",
+          "qid": "Q11298673",
+          "isbn13": "9784757538870"
+        },
+        {
+          "name": "ポーの一族",
+          "qid": "Q467854",
+          "isbn13": "9784091912510"
+        },
+        {
+          "name": "11人いる！",
+          "qid": "Q124312385",
+          "isbn13": "9784091910110"
+        },
+        {
+          "name": "風と木の詩",
+          "qid": "Q1338432",
+          "isbn13": "9784592881513"
+        },
+        {
+          "name": "地球へ…",
+          "qid": "Q2668005",
+          "isbn13": "9784757520097"
+        },
+        {
+          "name": "BASARA",
+          "qid": "Q809789",
+          "isbn13": "9784091914316"
+        },
+        {
+          "name": "7SEEDS",
+          "qid": "Q2679175",
+          "isbn13": "9784091380135"
+        },
+        {
+          "name": "うる星やつら",
+          "qid": "Q715723",
+          "isbn13": "9784091228017"
+        },
+        {
+          "name": "らんま1/2",
+          "qid": "Q272015",
+          "isbn13": "9784091220318"
+        },
+        {
+          "name": "ブラック・ジャック",
+          "qid": "Q133691",
+          "isbn13": "9784253169813"
+        },
+        {
+          "name": "天才バカボン",
+          "qid": "Q2551007",
+          "isbn13": "9784884752934"
+        },
+        {
+          "name": "AKIRA",
+          "qid": "Q91486",
+          "isbn13": "9784061037113"
+        },
+        {
+          "name": "童夢",
+          "qid": "Q1170375",
+          "isbn13": "9784065262634"
+        },
+        {
+          "name": "ORIGIN",
+          "qid": "Q48837273",
+          "isbn13": "9784063829082"
+        },
+        {
+          "name": "ファイアパンチ",
+          "qid": "Q28682711",
+          "isbn13": "9784088807317"
+        },
+        {
+          "name": "北斗の拳",
+          "qid": "Q733498",
+          "isbn13": "9784086172837"
+        },
+        {
+          "name": "モブサイコ100",
+          "qid": "Q11344543",
+          "isbn13": "9784091241023"
+        }
+      ]
+    },
+    "existingApprovalSha256": null
+  }
+}
