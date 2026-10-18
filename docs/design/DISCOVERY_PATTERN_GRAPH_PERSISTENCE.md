@@ -61,3 +61,36 @@ Workspace／URLのpattern復元は `POST /api/discovery/paths` のrestoreへ全R
 | 差分確認・引継ぎ記録 | 約6分。版の境界・失敗時の保全・実画面を確認 |
 
 一部は待ち時間と重複する概算。長いCPU／メモリ／ディスク競合、Neo4j・Docker待ち、クエリtimeoutは観測していない。APIの大規模な性能再調査は行っていない。STEP 3bで停止し、STEP 4の実装は別途確認する。
+
+## patternの初期展開・再展開修正（2026-10-19）
+
+### 原因と表示・操作契約
+
+`mergePatternPage`が取得した全経路をopenにし、`toggleEntity`のpattern分岐は閉じる処理だけを呼んでいた。さらに`closePatternNode`が操作したEntity自身を投影から除くため、Graphから再開する対象も失われた。初期展開と再展開不能は、ともに取得済み経路と表示・開閉意図を十分に分けていなかった問題である。修正前3200ではPLUTOが10 Entityで始まり、起点を閉じた後は1 Entityのまま再開できなかった。
+
+- 初回はrequiredRoute（なければ先頭候補）の**完全経路1本**だけを開く。PLUTOは3 Entity／2 Claim。残りの候補も検証してcacheへ保持し、追加ページ取得で勝手に開かない。「表示中／取得済み」を分け、選択Entityの「経路をもう1本開く」と既存経路一覧で広げられる。
+- Entityの開閉は、そのEntityを通るopen経路集合を一括で閉じ、同じ集合を再開する。起点以外も**線のない点線枠のEntity**を再開用に残す。起点を閉じたときは他の孤立ハンドルを除く。共有Entity・Claimはほかのopen経路が必要なら保持する。
+- PCのダブルクリック／タッチの二度押しをpatternのtoggleへ接続。通常探索の概要表示・選択後の開閉契約は維持する。既存の選択・配置cacheを使い、開閉だけでは再配置・fitしない。
+- 経路線は常に検証済み完全経路の和集合。孤立Entityは経路成立を示す線ではない。再開前のrevision照合、Abort、遅着応答の排除、表示上限超過時の集合全体拒否を維持する。ページ受理はcache上限、実際に開く操作は表示上限を評価する。
+
+閉鎖後の再開を一覧だけに任せる案はGraphからの探索を途切れさせる。初回を起点だけにする案よりも、成立例1本を見せて経路の意味を理解できる方を採用した。検索条件・関係パターン・根拠の意味、APIは変更しない。
+
+### 保存と互換
+
+runtimeの`collapsedNodes: Record<EntityId, RouteKey[]>`を、Workspace／共有URLの既存v2 executionへ任意の`collapsedNodes: {id, routeKeys}[]`として保存する。Entity・キーの重複、未受理キー、Entityを通らない参照は拒否。全保存経路を元Claimから再検証してから、open状態と孤立ハンドルを復元する。本文や未検証の線を保存しない。
+
+旧v2でこの項目がなければハンドルなしとして読む。旧保存のopen状態を新しい初回1本の規則で上書きしない。Viewは従来どおり意図の再実行なので新しい初回表示になる。collection版・storage keyは不変、新メタデータを知らない旧strict readerの前方互換は保証しない（単純条件へ縮退させない）。Undoは実行状態に含めてそのまま復元する。
+
+### 重点試験
+
+`tests/pattern-node-expansion.test.tsx`の18件で初回・追加候補・3位置の反復開閉、共有Claim、集合の一括再開／上限拒否、revision衝突・Abort後の遅着、保存／URL、旧v2、不正ハンドルと欠落Claimを確認。関連Graph状態・client・Canvas・保存形式・旧URL・Workspace・UI状態・motionを合わせ、分割実行で重複を除き253件成功。型検査・変更ファイルlint・public buildも成功した。
+
+実画面の`tests/e2e/pattern-node-expansion.spec.ts`ではPLUTOの実データを使い、PC日本語1280px／タッチ英語390pxで次を確認する：初回1本、起点・中継・終点を各2往復、実際のマウス／タッチ操作、座標・pan・zoom不変、共有経路と一覧の一致、閉じた共有Entityを含むURL／Workspace再読込、自由探索の反復開閉とUndo。`pattern-persistence.spec.ts`で根拠・View再実行を含む旧3b操作も維持する。
+
+3200で両試験のPC／タッチ計4件、betaでEntity開閉試験のPC／タッチ計2件が成功。代表経路は `PLUTO ← 長崎尚志 → BILLY BAT`、共有経路は同人物から `MASTERキートン Reマスター`。保存後も各Claim・経路の開閉と孤立Entityからの再開を確認した。ページエラー・横のはみ出しはなかった。旧E2Eの件数だけを待つassertが新しい初期状態と同数になったため、URL更新を経路ごとのopen状態で待つよう修正した。Undo後もURL更新を待って評価する。アプリの期待値を緩める変更ではない。
+
+3200／betaはbuild `K5vv33TkC2eRlKupX8HWt`で一致。公開revisionは前後とも`82b01515-594c-48ca-b4b6-515eefac83ca`。通常のHTTP取得はbetaの保護機構で403だったため、実ブラウザでHTMLのbuildとdataset APIを確認した。正式VPS・公開KG・収集処理は変更していない。STEP 4へは進まない。
+
+概算所要時間：約30分（既存確認・原因切分け4分、実装と試験作成13分、単体／ブラウザ確認と再試行7分、build・型・lint・反映2分、差分確認・記録4分。一部待ち時間と重複）。public buildは1回45秒、PC／タッチの旧3b操作で経路POSTは初回111／88ms・以後52〜185ms。API／クエリ変更はなく、大規模な負荷測定はしていない。重いDB試験・Docker操作を並走させず、環境の長い停止やクエリtimeoutは観測していない。
+
+残る操作評価：点線ハンドルが「未表示の経路を再開できる対象」と直感的に伝わるか、選択Entityに対する1本追加と閉鎖／再開の使い分け。未取得ページへ自動展開せず、追加取得と経路選択は既存の明示操作を維持する。少数経路に抑えた初期表示を今回の評価基準とし、全面的なレイアウト調整は行わない。

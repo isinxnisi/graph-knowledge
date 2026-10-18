@@ -38,7 +38,8 @@ const branchesSchema = z.array(z.strictObject({ id: z.uuidv4(), open: z.boolean(
 export const savedExecutionSchema = z.discriminatedUnion("type", [
   z.strictObject({ type: z.literal("adjacent"), branches: branchesSchema }),
   z.strictObject({ type: z.literal("pattern"), routes: z.array(z.strictObject({ route: routeRefSchema, open: z.boolean() })).max(100),
-    requiredRouteKey: z.string().nullable(), candidateBoundary: routeRefSchema.nullable() }),
+    requiredRouteKey: z.string().nullable(), candidateBoundary: routeRefSchema.nullable(),
+    collapsedNodes: z.array(z.strictObject({ id: z.uuidv4(), routeKeys: z.array(z.string().min(1).max(128)).min(1).max(100).refine(keys => new Set(keys).size === keys.length) })).max(CACHE_LIMITS.entities).optional() }),
 ]);
 export const workspaceV2Schema = z.strictObject({
   version: z.literal(2), dataset: z.enum(DATASET_MODES), id: z.uuidv4(), title: z.string().trim().min(1).max(80), savedAt: z.iso.datetime(), rootId: z.uuidv4(),
@@ -53,6 +54,8 @@ export const workspaceV2Schema = z.strictObject({
     valid &&= v.dataset === "public-kg" && new Set(keys).size === keys.length
       && ex.routes.every(r => r.route.nodeIds[0] === v.rootId && r.route.claimIds.length === 2)
       && (ex.requiredRouteKey === null || keys.includes(ex.requiredRouteKey))
+      && new Set(ex.collapsedNodes?.map(n => n.id)).size === (ex.collapsedNodes?.length ?? 0)
+      && (ex.collapsedNodes ?? []).every(n => n.routeKeys.every(key => ex.routes.some(r => routeKey(r.route) === key && r.route.nodeIds.includes(n.id))))
       && (ex.candidateBoundary === null || ex.routes.some(r => JSON.stringify(r.route) === JSON.stringify(ex.candidateBoundary)));
   }
   if (!valid) ctx.addIssue({ code: "custom", message: "Inconsistent saved relation execution" });
@@ -89,7 +92,8 @@ export function captureWorkspace(dataset: DatasetMode, title: string, graph: Gra
   return workspaceV2Schema.parse({
     version: 2, dataset, id: crypto.randomUUID(), title, savedAt: new Date().toISOString(), rootId: graph.centerId,
     relation: graphRelation(graph), observedRevision: graph.revision ?? null,
-    execution: graph.execution?.type === "pattern" ? { type: "pattern", routes: Object.values(graph.execution.routes), requiredRouteKey: graph.execution.requiredRoute, candidateBoundary: graph.execution.candidateBoundary } : { type: "adjacent", branches },
+    execution: graph.execution?.type === "pattern" ? { type: "pattern", routes: Object.values(graph.execution.routes), requiredRouteKey: graph.execution.requiredRoute, candidateBoundary: graph.execution.candidateBoundary,
+      ...(Object.keys(graph.execution.collapsedNodes ?? {}).length ? { collapsedNodes: Object.entries(graph.execution.collapsedNodes!).sort(([a], [b]) => a.localeCompare(b)).map(([id, routeKeys]) => ({ id, routeKeys })) } : {}) } : { type: "adjacent", branches },
     view: view ? { pan: view.pan, zoom: view.zoom, initialLayoutDone: view.initialLayoutDone, positions: Object.fromEntries(Object.entries(view.positions).filter(([id]) => graph.cacheNodes[id])) } : null,
   });
 }
@@ -198,7 +202,8 @@ export async function rebuildWorkspace(value: WorkspaceInput, signal: AbortSigna
     signal.throwIfAborted();
     const initial = emptyPatternGraph(root, conditions);
     if (initial.execution?.type !== "pattern") throw new WorkspaceError("response");
-    const graph = restorePatternGraph({ ...initial, execution: { ...initial.execution, routes: Object.fromEntries(ex.routes.map(r => [routeKey(r.route), r])), requiredRoute: ex.requiredRouteKey, candidateBoundary: ex.candidateBoundary } }, response);
+    const graph = restorePatternGraph({ ...initial, execution: { ...initial.execution, routes: Object.fromEntries(ex.routes.map(r => [routeKey(r.route), r])), requiredRoute: ex.requiredRouteKey, candidateBoundary: ex.candidateBoundary,
+      ...(ex.collapsedNodes ? { collapsedNodes: Object.fromEntries(ex.collapsedNodes.map(n => [n.id, n.routeKeys])) } : {}) } }, response);
     if (graph.execution?.type !== "pattern" || graph.execution.blocked) throw new WorkspaceError("limit");
     progress(ex.routes.length, ex.routes.length);
     return { graph, view: workspace.view, skippedBranches: 0, revisionChanged: workspace.observedRevision !== null && workspace.observedRevision !== graph.revision };

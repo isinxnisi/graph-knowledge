@@ -25,7 +25,7 @@ beforeEach(() => {
 });
 afterEach(() => { cleanup(); created.cores = []; vi.restoreAllMocks(); vi.unstubAllGlobals(); });
 it("既存Canvasへ完全経路の和集合を渡すと配置し、閉じると共有分だけ残す", () => {
-  const a = route(100, 2), b = route(100, 3), graph = mergePatternPage(emptyPatternGraph(root, relation), page([a, b]), null);
+  const a = route(100, 2), b = route(100, 3), graph = setPatternRouteOpen(mergePatternPage(emptyPatternGraph(root, relation), page([a, b]), null), routeKey(b), true);
   const props = { selection: null, onEntity: vi.fn(), onRelation: vi.fn(), onToggleEntity: vi.fn() };
   const { rerender } = render(<GraphCanvas {...props} graph={graph} />);
   const cy = created.cores[0]; expect(cy.nodes()).toHaveLength(4); expect(cy.edges()).toHaveLength(3);
@@ -42,7 +42,7 @@ it("同じ作品で一段からpatternへ適用した時も、新しいNodeを�
   const props = { selection: { kind: "entity" as const, id: root.id }, onEntity: vi.fn(), onRelation: vi.fn(), onToggleEntity: vi.fn() };
   const { rerender } = render(<GraphCanvas {...props} graph={initial} />);
   const cy = created.cores[0], rootPoint = { ...cy.getElementById(root.id).position() };
-  const graph = mergePatternPage(emptyPatternGraph(root, relation, 1), body, null);
+  const graph = setPatternRouteOpen(mergePatternPage(emptyPatternGraph(root, relation, 1), body, null), routeKey(body.routes[1]), true);
   rerender(<GraphCanvas {...props} graph={graph} />);
   expect(cy.nodes()).toHaveLength(4);
   expect(new Set(cy.nodes().map(n => JSON.stringify(n.position()))).size).toBe(4);

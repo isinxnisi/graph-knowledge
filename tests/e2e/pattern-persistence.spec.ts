@@ -35,11 +35,14 @@ for (const [locale, width] of [["ja", 1280], ["en", 390]] as const) test(`patter
     const cy = (el as unknown as { _cyreg: { cy: import("cytoscape").Core } })._cyreg.cy;
     return { nodes: cy.nodes().length, positions: new Set(cy.nodes().map(n => JSON.stringify(n.position()))).size };
   });
-  expect(layout.positions).toBe(layout.nodes); expect(layout.nodes).toBe(10);
+  expect(layout.positions).toBe(layout.nodes); expect(layout.nodes).toBe(3);
   await page.screenshot({ path: info.outputPath("applied.png"), animations: "disabled" });
   await expect.poll(() => state().relation.type).toBe("pattern");
+  await graph.getByRole("button", { name: text.openNext, exact: true }).click();
+  await expect(paths.getByRole("button", { name: text.close, exact: true })).toHaveCount(2);
+  await expect.poll(() => { const ex = state().execution; return ex.type === "pattern" && ex.routes.filter(r => r.open).length; }).toBe(2);
   await paths.getByRole("button", { name: text.close, exact: true }).first().click();
-  await expect.poll(() => { const ex = state().execution; return ex.type === "pattern" && ex.routes.filter(r => !r.open).length; }).toBe(1);
+  await expect.poll(() => { const ex = state().execution; return ex.type === "pattern" && ex.routes.slice(0, 2).map(r => r.open); }).toEqual([false, true]);
   const closed = state().execution;
   await paths.getByRole("button", { name: new RegExp(text.evidence) }).filter({ visible: true }).nth(2).click();
   if (width < 800) await expect(page.locator("#explorer-detail")).toBeVisible();
@@ -68,7 +71,7 @@ for (const [locale, width] of [["ja", 1280], ["en", 390]] as const) test(`patter
   await openTool(views.launch); dialog = page.getByRole("dialog");
   await dialog.getByRole("button", { name: views.openNamed("pattern view"), exact: true }).click();
   await expect(page.getByRole("dialog")).toHaveCount(0); await expect(paths.locator("li")).toHaveCount(10);
-  await expect(paths.getByRole("button", { name: text.close, exact: true })).toHaveCount(10);
+  await expect(paths.getByRole("button", { name: text.close, exact: true })).toHaveCount(1);
   expect(await page.evaluate(() => document.documentElement.scrollWidth - innerWidth)).toBeLessThanOrEqual(1);
   await page.screenshot({ path: info.outputPath("pattern.png"), fullPage: true, animations: "disabled" });
   console.log(JSON.stringify({ locale, pathResponseMilliseconds: reads }));

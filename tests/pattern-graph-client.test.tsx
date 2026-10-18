@@ -53,6 +53,8 @@ it("追加取得中の閉じる操作は要求を中止し、共有経路を保�
   const a = route(100, 2), b = route(100, 3), first = Array.from({ length: 12 }, (_, n) => route(100, n + 2));
   fetchMock.mockResolvedValueOnce(response(page(first, a, "next")));
   const { result } = renderHook(() => useGraphExplorer()); await act(async () => { await result.current.applyRelation(root, relation); });
+  fetchMock.mockResolvedValueOnce(response({ dataset: "public-kg", revision: "r1" }));
+  await act(async () => { await result.current.togglePatternRoute(routeKey(b)); });
   let release!: (r: Response) => void, pending!: Promise<void>;
   fetchMock.mockImplementationOnce(() => new Promise(r => { release = r; })); act(() => { pending = result.current.loadPattern(); });
   await act(async () => { await result.current.togglePatternRoute(routeKey(a)); });
@@ -94,6 +96,8 @@ it("patternを通常の近傍へ展開せず、不適合な人物にも黙って
 it("再検証成功時だけ新版を適用し、開閉を保持したまま候補を先頭から再開する", async () => {
   const a = route(100, 2), b = route(100, 3), body = page([a, b]); fetchMock.mockResolvedValueOnce(response(body));
   const { result } = renderHook(() => useGraphExplorer()); await act(async () => { await result.current.applyRelation(root, relation); await result.current.togglePatternRoute(routeKey(a)); });
+  fetchMock.mockResolvedValueOnce(response({ dataset: "public-kg", revision: "r1" }));
+  await act(async () => { await result.current.togglePatternRoute(routeKey(b)); });
   fetchMock.mockResolvedValueOnce(response({ version: 1, dataset: "public-kg", revision: "r2", relation, root: body.root, nodes: body.nodes, claims: body.claims, operation: "restore", verifiedRoutes: [a, b], continuation: { state: "restart" } }));
   await act(async () => { await result.current.loadPattern(true); });
   expect(result.current.graph.revision).toBe("r2"); expect(result.current.graph.nodes[id(2)]).toBeUndefined(); expect(result.current.graph.nodes[id(3)]).toBeDefined();

@@ -1,5 +1,7 @@
 # プロジェクトの構想と判断基準
 
+2026-10-19、[STEP 3bのGraph編集・保存・復元と操作修正](design/DISCOVERY_PATTERN_GRAPH_PERSISTENCE.md)まで実装。patternの初回表示は完全経路1本に抑え、閉じたEntityから同じ経路集合を再開できる。新旧保存互換・元Claim再検証を維持。Discovery接続（STEP 4）・公開KG・収集・正式VPSは今回の範囲外。
+
 2026-10-18、[共通関係条件のSTEP 3a](design/DISCOVERY_PATTERN_GRAPH_EXECUTION.md)として、other-worksの完全経路POST・候補ページ・証拠／取得済み経路の直接再検証、Graphのpattern実行と和集合投影を追加。既存neighborsは肯否省略時の意味と旧cursorを維持する。新しい編集UI・保存形式移行・Discovery接続は未実装で、一般の操作入口へ対応済みと表示しない。公開KG・収集・正式VPSは変更しない。
 
 2026-10-18、[共通関係条件のSTEP 2](design/DISCOVERY_TARGET_SEARCH.md)として、名前なしでもother-worksの完全経路が成立する作品を返す読み取り専用POST対象検索と、各結果の証拠取得・直接再検証を追加。公開KGの読み取りと高次数の隔離試験で検証する。既存GET・Discovery UI・Graph状態／保存・公開KG・収集・正式VPSは維持し、STEP 3／4は未着手。

@@ -6,13 +6,13 @@ import { root, id, relation, route, page } from "./pattern-graph-fixture";
 
 it("完全経路の和集合だけを投影し、一方を閉じても共有する人物とClaimは残る", () => {
   const a = route(100, 2), b = route(100, 3);
-  let graph = mergePatternPage(emptyPatternGraph(root, relation), page([a, b]), null);
+  let graph = setPatternRouteOpen(mergePatternPage(emptyPatternGraph(root, relation), page([a, b]), null), routeKey(b), true);
   expect(Object.keys(graph.nodes)).toHaveLength(4); expect(Object.keys(graph.claims)).toHaveLength(3); expect(graph.expansions).toEqual({});
   expect(graphRootReady(graph)).toBe(true); expect(graphRootReady(emptyPatternGraph(root, relation))).toBe(false);
   graph = setPatternRouteOpen(graph, routeKey(a), false);
   expect(Object.keys(graph.nodes).sort()).toEqual([id(1), id(100), id(3)].sort()); expect(Object.keys(graph.claims)).toHaveLength(2);
   graph = setPatternRouteOpen(graph, routeKey(a), true); expect(Object.keys(graph.claims)).toHaveLength(3);
-  graph = closePatternNode(graph, id(100)); expect(Object.keys(graph.nodes)).toEqual([root.id]); expect(graph.claims).toEqual({});
+  graph = closePatternNode(graph, id(100)); expect(Object.keys(graph.nodes).sort()).toEqual([root.id, id(100)].sort()); expect(graph.claims).toEqual({});
 });
 it("指定証拠が候補外でも表示し、候補境界は指定証拠へ飛ばさない・重複しても閉じた経路を開かない", () => {
   const candidates = Array.from({ length: 12 }, (_, n) => route(100, n + 2)), required = route(900, 800);
@@ -21,7 +21,7 @@ it("指定証拠が候補外でも表示し、候補境界は指定証拠へ飛�
   graph = setPatternRouteOpen(graph, routeKey(required), false);
   graph = mergePatternPage(graph, page([required, route(901, 801)], required), "next");
   expect(graph.execution?.type === "pattern" && graph.execution.routes[routeKey(required)].open).toBe(false);
-  expect(graph.nodes[id(900)]).toBeUndefined(); expect(graph.nodes[id(901)]).toBeDefined();
+  expect(graph.nodes[id(900)]).toBeUndefined(); expect(graph.nodes[id(901)]).toBeUndefined(); expect(graph.cacheNodes[id(901)]).toBeDefined();
 });
 it("完全なClaimが欠けた応答・キャッシュを片段表示へ変換しない", () => {
   const a = route(100, 2), response = page([a]), base = emptyPatternGraph(root, relation);
@@ -31,18 +31,23 @@ it("完全なClaimが欠けた応答・キャッシュを片段表示へ変換�
   expect(() => projectGraph(broken)).toThrow();
   expect(() => mergePage(graph, { centerId: root.id, nodes: response.nodes, claims: response.claims, page: { hasMore: false, nextCursor: null } })).toThrow();
 });
-it("表示上限ではページ全体を拒否し、cursor・取得済み経路・キャッシュを進めない", () => {
+it("候補取得と表示を分け、開く操作が表示上限を超えたら完全経路ごと拒否する", () => {
   let graph = emptyPatternGraph(root, relation);
   for (let p = 0; p < 4; p++) {
-    const routes = Array.from({ length: 12 }, (_, n) => route(100 + p * 12 + n, 500 + p * 12 + n));
-    graph = mergePatternPage(graph, page(routes, route(100, 500), `page${p + 1}`), p === 0 ? null : `page${p}`);
+    const refs = Array.from({ length: 12 }, (_, n) => route(100 + p * 12 + n, 500 + p * 12 + n));
+    graph = mergePatternPage(graph, page(refs, route(100, 500), `page${p + 1}`), p === 0 ? null : `page${p}`);
+    for (const ref of refs) graph = setPatternRouteOpen(graph, routeKey(ref), true);
   }
   expect(Object.keys(graph.nodes)).toHaveLength(97);
-  const rejected = mergePatternPage(graph, page([route(200, 600), route(201, 601)], route(100, 500)), "page4");
-  expect(rejected.execution).toMatchObject({ blocked: true, nextCursor: "page4" }); expect(rejected.cacheNodes).toBe(graph.cacheNodes);
-  expect(Object.keys(rejected.nodes)).toHaveLength(97);
+  const refs = [route(200, 600), route(201, 601)];
+  graph = mergePatternPage(graph, page(refs, route(100, 500)), "page4");
+  expect(Object.keys(graph.nodes)).toHaveLength(97);
+  graph = setPatternRouteOpen(graph, routeKey(refs[0]), true);
+  const rejected = setPatternRouteOpen(graph, routeKey(refs[1]), true);
+  expect(rejected.execution).toMatchObject({ blocked: true }); expect(rejected.cacheNodes).toBe(graph.cacheNodes);
+  expect(rejected.nodes).toEqual(graph.nodes); expect(Object.keys(rejected.nodes)).toHaveLength(99);
   const closed = closePatternNode(rejected, id(100));
-  expect(Object.keys(closed.nodes)).toHaveLength(95);
+  expect(Object.keys(closed.nodes)).toHaveLength(98);
 });
 it("保持100経路の上限・異なる版／条件／境界の応答を拒否する", () => {
   const a = route(100, 2), response = page([a]); let graph = mergePatternPage(emptyPatternGraph(root, relation), response, null);

@@ -17,7 +17,7 @@ import { fetchPatternGraph } from "./pattern-graph";
 import { normalizeRelationCondition, relationConditionKey, type RelationCondition } from "../domain/relation-conditions";
 import { relationText } from "../i18n/relation-condition";
 import type { MatchWitness } from "../domain/relation-patterns";
-import { closeExpansion, reopenExpansion, projectGraph, emptyExpansion, emptyGraph, mergePage, emptyPatternGraph, mergePatternPage, restorePatternGraph, setPatternRouteOpen, type GraphState, type Selection } from "./graph-state";
+import { patternNodeOpen, nextPatternRoute, closeExpansion, reopenExpansion, projectGraph, emptyExpansion, emptyGraph, mergePage, emptyPatternGraph, mergePatternPage, restorePatternGraph, setPatternRouteOpen, setPatternRoutesOpen, type GraphState, type Selection } from "./graph-state";
 
 export function useGraphExplorer() {
   const [graph, setGraph] = useState<GraphState>(emptyGraph);
@@ -166,17 +166,23 @@ export function useGraphExplorer() {
       if (latest.execution?.type === "pattern") commit({ ...latest, execution: { ...latest.execution, loading: false, error: errorMessage(error) } });
     } finally { if (pending.current.get("$pattern") === controller) pending.current.delete("$pattern"); }
   }, [commit, invalidate]);
-  const togglePatternRoute = useCallback(async (key: string) => {
+  const openPatternRoutes = useCallback(async (keys: string[]) => {
     const state = current.current, ex = state.execution;
-    if (ex?.type !== "pattern" || !ex.routes[key] || stale.current || pending.current.has("$transition")) return;
+    if (ex?.type !== "pattern" || keys.some(key => !ex.routes[key]) || stale.current || pending.current.has("$transition")) return;
     for (const id of ["$pattern", "$route"]) { pending.current.get(id)?.abort(); pending.current.delete(id); }
-    if (ex.routes[key].open) { commit(setPatternRouteOpen(state, key, false)); return; }
     commit({ ...state, execution: { ...ex, loading: false, request: ex.request + 1 } });
     const epoch = generation.current, controller = new AbortController(); pending.current.set("$route", controller);
-    try { await checkRevision(state.revision!, controller.signal); if (!controller.signal.aborted && generation.current === epoch) commit(setPatternRouteOpen(current.current, key, true)); }
+    try { await checkRevision(state.revision!, controller.signal); if (!controller.signal.aborted && generation.current === epoch) commit(setPatternRoutesOpen(current.current, keys, true)); }
     catch (error) { if (!controller.signal.aborted && generation.current === epoch) { if (error instanceof ClientApiError && error.status === 409) invalidate(); else commit({ ...current.current, notice: errorMessage(error) }); } }
     finally { if (pending.current.get("$route") === controller) pending.current.delete("$route"); }
   }, [checkRevision, commit, invalidate]);
+  const togglePatternRoute = useCallback(async (key: string) => {
+    const state = current.current, ex = state.execution;
+    if (ex?.type !== "pattern" || !ex.routes[key] || stale.current || pending.current.has("$transition")) return;
+    if (!ex.routes[key].open) { await openPatternRoutes([key]); return; }
+    for (const id of ["$pattern", "$route"]) { pending.current.get(id)?.abort(); pending.current.delete(id); }
+    commit(setPatternRouteOpen(state, key, false));
+  }, [commit, openPatternRoutes]);
 
   const chooseRoot = useCallback((entity: EntitySummary, resetConditions = false) => {
     if (!resetConditions && current.current.relation) { void applyRelation(entity, current.current.relation); return; }
@@ -293,14 +299,19 @@ export function useGraphExplorer() {
   }, [commit]);
   const toggleEntity = useCallback((id: string) => {
     if (!current.current.nodes[id]) return;
-    if (current.current.execution?.type === "pattern") { close(id); return; }
+    if (current.current.execution?.type === "pattern") { if (patternNodeOpen(current.current, id)) close(id); else { const key = nextPatternRoute(current.current, id); if (key) void openPatternRoutes(current.current.execution.collapsedNodes?.[id] ?? [key]); } return; }
     if (current.current.expansions[id]?.open) close(id); else void expand(id);
-  }, [close, expand]);
+  }, [close, expand, openPatternRoutes]);
+  const openNextPatternRoute = useCallback((id: string) => {
+    if (!current.current.nodes[id]) return;
+    const key = nextPatternRoute(current.current, id);
+    if (key) void togglePatternRoute(key);
+  }, [togglePatternRoute]);
   const reloadData = useCallback(() => {
     const state = current.current;
     if (state.execution?.type === "pattern") { void loadPattern(true); return; }
     const root = state.centerId ? state.cacheNodes[state.centerId] : null;
     if (root) chooseRoot(root);
   }, [chooseRoot, loadPattern]);
-  return { applyRelation, cancelRelation, relationLoading, loadPattern, togglePatternRoute, invalidateData: invalidate, dataChanged, reloadData, graph, selection, previous, viewRestoration, switchRoot, restorePrevious, openSavedView, openWorkspace, changePredicates, chooseRoot, inspectEntity, selectEntity, selectClaim, selectRelation, expand, close, toggleEntity };
+  return { openNextPatternRoute, applyRelation, cancelRelation, relationLoading, loadPattern, togglePatternRoute, invalidateData: invalidate, dataChanged, reloadData, graph, selection, previous, viewRestoration, switchRoot, restorePrevious, openSavedView, openWorkspace, changePredicates, chooseRoot, inspectEntity, selectEntity, selectClaim, selectRelation, expand, close, toggleEntity };
 }

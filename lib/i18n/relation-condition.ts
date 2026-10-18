@@ -4,6 +4,7 @@ import { contributionLabels } from "./contribution";
 
 export function relationText(locale: string) {
   return locale === "en" ? {
+    visiblePaths: (open: number, total: number) => `Showing ${open} / ${total} fetched paths`, openNext: "Open one more path", nodeHelp: "Double-click or double-tap to close or reopen. Dashed entities are kept for reopening, with no partial connection.",
     adjacent: "Single relations", pattern: "Same creator, other works", mode: "Explore relations", affirmed: "Affirmed claims only", all: "Include negative claims",
     help: "Work ← creator → another work. Both claims must be affirmed and match the selected roles. Each connection retains its original direction and evidence.",
     incompatible: "This pattern requires a work in the public KG. The current subject will not change.", free: "Switch to free exploration", freeHelp: "Keep this work, production roles and affirmed claims; remove only the two-step pattern.",
@@ -11,6 +12,7 @@ export function relationText(locale: string) {
     routes: "Complete paths", more: "Load more paths", empty: "No complete paths match these conditions.", evidence: "Evidence", close: "Hide path", open: "Show path",
     coverage: "One verified pair of claims per creator and work. This is not a list of every claim.", retry: "Revalidate saved paths", restart: "Restart with the same conditions", changed: "All saved paths were revalidated against the current public revision.",
   } : {
+    visiblePaths: (open: number, total: number) => `表示中 ${open} / 取得済み ${total} 経路`, openNext: "経路をもう1本開く", nodeHelp: "ダブルクリック／ダブルタップで開閉。閉じた対象は再開用に点線の枠で残します（経路の線はありません）。",
     adjacent: "一段の関係", pattern: "同じつくり手の別作品", mode: "追いたい関係性", affirmed: "肯定された記録のみ", all: "否定を含む記録",
     help: "作品 ← つくり手 → 別作品。両段で肯定・制作Roleの条件を満たす経路を表示します。各接続の方向と根拠は元の記録に従います。",
     incompatible: "公開KGの作品に適用できるパターンです。現在の対象は変更しません。", free: "自由探索に切り替える", freeHelp: "同じ作品・制作Role・肯定条件を保ち、2段の形だけを解除します。",

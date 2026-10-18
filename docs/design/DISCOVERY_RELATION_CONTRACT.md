@@ -252,6 +252,8 @@ Graphの正規条件は`relation: RelationConditionV1`の一箇所に持つ。�
 
 patternの記録をcacheへ入れただけで通常の近傍ページ取得済みと偽装しない。経路を閉じれば全段を表示対象から外す。ノード単位で閉じる場合は「この対象を含む経路を閉じる」とし、影響する完全経路をまとめて閉じる。残りの経路が共有するノード・Claimは残す。上限によりページを受理できなければ状態・cursorを進めず、閉じる／再試行を案内する。
 
+2026-10-19の操作修正：初回はrequiredRoute（なければ最初の候補）1本だけを開き、残りと追加ページは検証済み・未表示として保持する。取得済みと表示中の件数を区別する。Entityで閉じた場合は、そのEntityを線のない再開用ハンドルとして残し、閉じたときのopen経路集合を記憶する。再開は同じ集合を一括で復帰し、表示上限に収まらなければ全体を拒否する。「経路をもう1本開く」と経路一覧では1本ずつ追加できる。起点を閉じた場合は他の孤立ハンドルを取り除く。ハンドルは元Claimを検証した参照に属するEntityだけで、部分経路・新しい関係を表さない。線は常にopenな完全経路の和集合とする。
+
 ### 編集の操作契約
 
 1. 同じ「見る関係を編集」内で、**一段の関係／関係パターン**を選ぶ。初回pattern選択肢はother-worksのみ。facetは一段の選び方として残し、3タブ・サイト全体を再設計しない。
@@ -288,7 +290,8 @@ type SavedGraphView = Omit<GraphView, "recenter">;
 type SavedExecutionV2 =
   | { type: "adjacent"; branches: LegacyBranch[] }
   | { type: "pattern"; routes: { route: RouteRefV1; open: boolean }[];
-      requiredRouteKey: string | null; candidateBoundary: RouteRefV1 | null };
+      requiredRouteKey: string | null; candidateBoundary: RouteRefV1 | null;
+      collapsedNodes?: { id: UUID; routeKeys: string[] }[] };
 type SavedWorkspaceV2 = {
   version: 2; dataset: DatasetMode; id: UUID; title: string; savedAt: string;
   rootId: UUID; relation: RelationConditionV1; execution: SavedExecutionV2;
@@ -297,6 +300,8 @@ type SavedWorkspaceV2 = {
 ```
 
 executionとrelationのvariant不一致、patternの他root参照、経路重複、参照にないrequiredRouteKeyは拒否する。candidateBoundaryは実際に受理した候補に属する。ページ取得拒否時には更新しない。受理済み参照を保存できないcache上限で黙って捨てず、解除・再試行を案内する。
+
+`collapsedNodes`は再開用Entityと受理済み経路キー集合の任意メタデータ（2026-10-19追加）。Entity重複、空／重複／未知キー、そのEntityを通らない経路を拒否し、全経路の元Claim再検証後にだけ復元する。旧v2の省略時はハンドルなしとし、旧保存のopen状態を維持する。保存版・storage keyは変えない。新しいメタデータを知らない旧strict readerでの読み取りは保証せず、未対応入力として拒否させる。旧形式への縮退書き戻しはしない。
 
 URL payload v2は固定キー`{v:2,d:dataset,r:rootId,c:relation,x:execution,o:observedRevision,p:座標tuple配列,z:zoom,l:初回配置済み}`。旧v1の`b`は旧decoderだけが扱う。URLは保存名・日時・pan・選択・通信cursorを含めず、現版での再検証という従来の責務を維持する。保存View v2は従来のid／title／rootId／createdAtを維持し、conditionsをrelationへ置換する。executionは持たない。
 

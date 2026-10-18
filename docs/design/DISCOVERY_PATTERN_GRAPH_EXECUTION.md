@@ -29,6 +29,8 @@ restoreではoperationを `{type:"restore", routes, observedRevision, candidateB
 
 patternはRouteRefごとのopen意図、requiredRouteキー、candidateBoundary、cursor、request番号を保持する。`mergePatternPage`／`restorePatternGraph` は検証済み完全経路の和集合を投影する。閉じた経路の共有ノード・Claimは、ほかの開いた経路が必要とする間だけ残る。指定証拠と候補が同じ端点列なら一度だけ表示し、先に受理した証拠を保持する。候補に再登場しても閉じた経路を勝手に開かない。
 
+2026-10-19のGraph操作修正で、初回は証拠1本のみopen、追加候補はclosedとした。Entity閉鎖時の経路集合と孤立した再開用ハンドルを任意の`collapsedNodes`へ保持する。再開は記憶した集合を一括適用し、線は常に完全経路だけを投影する。候補ページの受理はcache上限、経路を開く操作は表示上限でそれぞれ拒否する。詳しい保存互換・実画面検証は[3bの操作修正記録](DISCOVERY_PATTERN_GRAPH_PERSISTENCE.md#patternの初期展開再展開修正2026-10-19)を参照。
+
 表示100 Entity／200 Claim、cache400／800、保持100経路。ページ全体が収まらなければcursor・cache・経路を進めず拒否する。個別経路も全段をまとめて受理／開閉し、欠けたClaimを無視して片段だけ表示しない。patternのcacheを通常の近傍取得済みページとして登録しない。
 
 `useGraphExplorer` の内部入口は以下。既存画面へボタン・タブは追加していない。

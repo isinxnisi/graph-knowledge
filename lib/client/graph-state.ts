@@ -125,6 +125,9 @@ export function reopenExpansion(graph: GraphState, id: string): GraphState {
 
 export type PatternExecution = {
   type: "pattern"; routes: Record<string, { route: RouteRef; open: boolean }>; requiredRoute: string | null;
+  // Isolated, verified Entity handles, never partial path edges. Values are the
+  // accepted routes to reopen together; absent on pre-fix snapshots.
+  collapsedNodes?: Record<string, string[]>;
   candidateBoundary: RouteRef | null; nextCursor: string | null; hasMore: boolean;
   loading: boolean; request: number; error: string | null; blocked: boolean;
 };
@@ -148,6 +151,15 @@ function projectPatternGraph(graph: GraphState): GraphState {
     validateRelationRoute(graph.relation!, graph.centerId!, route, nodes, claims);
     route.nodeIds.forEach(id => ids.add(id)); route.claimIds.forEach(id => claimIds.add(id));
   }
+  for (const [id, keys] of Object.entries(execution.collapsedNodes ?? {})) {
+    if (!keys.length || new Set(keys).size !== keys.length) throw Error("Invalid collapsed Entity handle");
+    for (const key of keys) {
+      const entry = execution.routes[key];
+      if (!entry?.route.nodeIds.includes(id)) throw Error("Invalid collapsed Entity handle");
+      validateRelationRoute(graph.relation!, graph.centerId, entry.route, nodes, claims);
+    }
+    ids.add(id);
+  }
   return { ...graph, nodes: Object.fromEntries([...ids].map(id => [id, graph.cacheNodes[id]])), claims: Object.fromEntries([...claimIds].map(id => [id, graph.cacheClaims[id]])), expansions: {} };
 }
 function rejectPattern(graph: GraphState, message = GRAPH_LIMIT_MESSAGE) {
@@ -159,9 +171,11 @@ export function mergePatternPage(graph: GraphState, raw: PatternGraphResponse, a
   if (graph.revision && graph.revision !== response.revision) throw new ClientApiError(dataReleaseLabels().changed, 409);
   if (after !== execution.nextCursor) throw Error("Unexpected candidate boundary");
   const routes = { ...execution.routes };
+  const initial = !graph.revision && Object.keys(routes).length === 0;
+  const firstKey = response.requiredRoute ? routeKey(response.requiredRoute) : response.routes[0] ? routeKey(response.routes[0]) : null;
   // A supplied proof takes precedence over a candidate with the same endpoints.
   const refs = [...(response.requiredRoute ? [response.requiredRoute] : []), ...response.routes];
-  for (const route of refs) if (!routes[routeKey(route)]) routes[routeKey(route)] = { route, open: true };
+  for (const route of refs) if (!routes[routeKey(route)]) routes[routeKey(route)] = { route, open: initial && routeKey(route) === firstKey };
   if (Object.keys(routes).length > 100) return rejectPattern(graph, "経路の保持上限に達しました。別の探索として開始してください。");
   const candidate = projectGraph({ ...graph, revision: response.revision,
     cacheNodes: { ...graph.cacheNodes, ...Object.fromEntries(response.nodes.map(n => [n.id, n])) },
@@ -171,14 +185,38 @@ export function mergePatternPage(graph: GraphState, raw: PatternGraphResponse, a
   if (!withinLimits(candidate) || !cacheFits(candidate)) return rejectPattern(graph);
   return candidate;
 }
-export function setPatternRouteOpen(graph: GraphState, key: string, open: boolean): GraphState {
-  const execution = pattern(graph), entry = execution.routes[key]; if (!entry || entry.open === open) return graph;
-  const candidate = projectGraph({ ...graph, execution: { ...execution, routes: { ...execution.routes, [key]: { ...entry, open } }, loading: false, request: execution.request + 1, error: null, blocked: false } });
+export function setPatternRoutesOpen(graph: GraphState, keys: string[], open: boolean): GraphState {
+  const execution = pattern(graph);
+  if (!keys.length || keys.some(key => !execution.routes[key])) throw Error("Unknown pattern route");
+  if (keys.every(key => execution.routes[key].open === open)) return graph;
+  const routes = { ...execution.routes }, collapsedNodes = { ...execution.collapsedNodes };
+  for (const key of keys) {
+    const entry = routes[key]; routes[key] = { ...entry, open };
+    if (open) for (const id of entry.route.nodeIds) delete collapsedNodes[id];
+  }
+  if (!open && !Object.values(routes).some(r => r.open) && graph.centerId) collapsedNodes[graph.centerId] = keys;
+  const candidate = projectGraph({ ...graph, execution: { ...execution, routes, collapsedNodes, loading: false, request: execution.request + 1, error: null, blocked: false } });
   return withinLimits(candidate) ? candidate : rejectPattern(graph);
+}
+export function setPatternRouteOpen(graph: GraphState, key: string, open: boolean): GraphState {
+  return setPatternRoutesOpen(graph, [key], open);
 }
 export function closePatternNode(graph: GraphState, id: string): GraphState {
   const execution = pattern(graph);
-  return projectGraph({ ...graph, execution: { ...execution, routes: Object.fromEntries(Object.entries(execution.routes).map(([key, entry]) => [key, entry.route.nodeIds.includes(id) ? { ...entry, open: false } : entry])), loading: false, request: execution.request + 1, error: null, blocked: false } });
+  const open = Object.entries(execution.routes).filter(([, e]) => e.open && e.route.nodeIds.includes(id));
+  if (!open.length) return graph;
+  const collapsedNodes = id === graph.centerId ? {} : { ...execution.collapsedNodes };
+  collapsedNodes[id] = open.map(([key]) => key);
+  return projectGraph({ ...graph, execution: { ...execution, collapsedNodes, routes: Object.fromEntries(Object.entries(execution.routes).map(([key, entry]) => [key, entry.route.nodeIds.includes(id) ? { ...entry, open: false } : entry])), loading: false, request: execution.request + 1, error: null, blocked: false } });
+}
+export function patternNodeOpen(graph: GraphState, id: string) {
+  return graph.execution?.type === "pattern" && Object.values(graph.execution.routes).some(e => e.open && e.route.nodeIds.includes(id));
+}
+export function nextPatternRoute(graph: GraphState, id: string): string | null {
+  if (graph.execution?.type !== "pattern") return null;
+  const ex = graph.execution, preferred = ex.collapsedNodes?.[id]?.find(key => ex.routes[key] && !ex.routes[key].open);
+  if (preferred) return preferred;
+  return Object.entries(ex.routes).find(([, e]) => !e.open && e.route.nodeIds.includes(id))?.[0] ?? null;
 }
 export function restorePatternGraph(graph: GraphState, raw: PatternGraphResponse): GraphState {
   const response = patternGraphResponseSchema.parse(raw), old = pattern(graph);

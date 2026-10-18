@@ -19,7 +19,7 @@ import { root, id, relation, route, page } from "./pattern-graph-fixture";
 
 const a = route(100, 2), b = route(100, 3), body = page([a, b]);
 const view = { positions: { [root.id]: { x: 25, y: 51 }, [id(3)]: { x: 82, y: 11 } }, pan: { x: 5, y: 8 }, zoom: .7, initialLayoutDone: true };
-const state = () => setPatternRouteOpen(mergePatternPage(emptyPatternGraph(root, relation), body, null), routeKey(a), false);
+const state = () => setPatternRouteOpen(setPatternRouteOpen(mergePatternPage(emptyPatternGraph(root, relation), body, null), routeKey(b), true), routeKey(a), false);
 const saved = () => captureWorkspace("public-kg", "経路を再訪", state(), view);
 const signal = () => new AbortController().signal;
 const response = (data: unknown, status = 200) => new Response(JSON.stringify(data), { status });
