@@ -1,0 +1,39 @@
+{
+  "recordedAt": "2026-10-18T12:02:23.688515+00:00",
+  "installedCodeCommit": "4945f1bb68bf3946e7310f4dbd57b3cdc8f85131",
+  "workerId": "plunode-wsl",
+  "home": "/home/isinxnisi/.local/share/plunode-collection-worker",
+  "controlBranch": "codex/collection-control",
+  "health": {
+    "checkedAt": "2026-10-18T12:01:47+00:00",
+    "status": "online",
+    "publicApply": false
+  },
+  "catalogHealth": {
+    "checkedAt": "2026-10-18T12:00:40+00:00",
+    "status": "online"
+  },
+  "requestCount": 0,
+  "schedule": {
+    "taskName": "Plunode-CollectionWorker",
+    "intervalMinutes": 1,
+    "atLogon": true,
+    "enabled": true,
+    "verifiedExitCode": 0,
+    "multipleInstances": "IgnoreNew",
+    "launcherDirectory": "%USERPROFILE%/plunode-collection-worker"
+  },
+  "idlePolling": {
+    "verifiedWhileManualLockHeld": true,
+    "unchangedSourceDoesNotAcquireCommonLock": true,
+    "newInputsAndApprovedJobsUseExistingSharedLock": true
+  },
+  "publicRevision": "82b01515-594c-48ca-b4b6-515eefac83ca",
+  "publicApply": false,
+  "vpsDeployment": false,
+  "memberDatabaseChanges": false,
+  "previousSetupsRetained": [
+    "plunode-collection-worker-setup-20261018",
+    "plunode-collection-worker-before-idle-fix-20261018"
+  ]
+}
