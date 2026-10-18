@@ -47,7 +47,7 @@
   "controlError": null,
   "requestsByPhase": {
     "completed": 1,
-    "waiting-control": 1
+    "running": 1
   },
   "issueIntake": {
     "collection-control/issue-sources/25.json": {
@@ -56,5 +56,5 @@
     }
   },
   "publicApply": false,
-  "checkedAt": "2026-10-18T18:54:00.187485+00:00"
+  "checkedAt": "2026-10-18T18:54:37.285524+00:00"
 }
