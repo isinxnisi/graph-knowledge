@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "workerId": "plunode-wsl",
-  "codeCommit": "916cc77d3aeab22650e309b694661cac07a72a47",
+  "codeCommit": "ed89e5a6ff0cf7d8b485330be790a234a064eacd",
   "controlRevision": 0,
   "lastControlSha256": null,
   "lastControlId": null,
@@ -52,5 +52,6 @@
     }
   },
   "publicApply": false,
-  "checkedAt": "2026-10-18T23:52:03.520395+00:00"
+  "recoveryRequests": {},
+  "checkedAt": "2026-10-18T23:54:03.591145+00:00"
 }
