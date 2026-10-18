@@ -277,10 +277,12 @@
   },
   "requestSha256": "90d9429b26b29c2158cfd68e08ac9825387792f8dbc375276766cf416e753d8b",
   "kind": "collect-review",
-  "phase": "running",
+  "phase": "retry-wait",
   "generation": 1,
   "attempts": 1,
   "workerId": "isolated-test-only",
   "sourceCommit": "4ce53731e04d34f1ee9bcbd4c3763248222e6d47",
-  "updatedAt": "2026-10-18T11:23:28+00:00"
+  "updatedAt": "2026-10-18T11:23:28+00:00",
+  "message": "Transport failed; resume this job without discarding completed requests: wikidata-Q108109758: isolated simulated transport interruption",
+  "retryAt": 1792322761.7799294
 }
