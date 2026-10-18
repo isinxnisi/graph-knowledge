@@ -217,6 +217,12 @@ class Executor:
         w = self.workflow
         self.sync_inputs(request['sourceCommit'])
         if request['kind'] == 'issue-prepare':
+            if request.get('resumePreparationId'):
+                slug(request['resumePreparationId']); slug(request['preparationCycle'])
+                insist(parent and parent['requestId'] == request['resumePreparationId'] and parent['phase'] == 'completed' and
+                       parent['kind'] == 'issue-prepare' and parent['result']['batchRequests'] == [] and
+                       parent['request']['permission'] == request['permission'] and parent['request']['issueOrigin'] == request['issueOrigin'],
+                       'Same-scope completed preparation without dispatched children required')
             p = issues.permission({'body': issues.BEGIN + '\n```json\n' + dump(request['permission']) + '```\n' + issues.END})
             insist(p['status'] == 'approved' and digest(p) == request['issueOrigin']['permissionSha256'], 'Issue permission hash differs')
             insist(gate.digest(request['issueSnapshot']['body'].encode()) == request['issueOrigin']['issueBodySha256'], 'Issue snapshot hash differs')
@@ -414,7 +420,9 @@ class Worker:
         human(h)
         if request['kind'] == 'issue-prepare':
             insist(request['approvalScope'] == issues.SCOPE and request.get('issueOrigin'), 'Explicit Issue permission scope required')
-            return 'issue-prepare:' + str(request['issueOrigin']['issueNumber']) + ':' + request['issueOrigin']['approvalId']
+            cycle = slug(request.get('preparationCycle', 'initial'))
+            insist(cycle == 'initial' or request.get('resumePreparationId') == request.get('parentRequestId'), 'Preparation cycle requires predecessor')
+            return 'issue-prepare:' + str(request['issueOrigin']['issueNumber']) + ':' + request['issueOrigin']['approvalId'] + ':' + cycle
         if request['kind'] == 'collect-review':
             insist(request['approvalScope'] == 'collection-candidates-and-review-only', 'Collection approval scope differs')
             slug(request.get('reviewCycle', 'initial'))

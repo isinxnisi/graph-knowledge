@@ -140,6 +140,27 @@ class IssueTests(unittest.TestCase):
         self.assertGreaterEqual(i.date_range('1995')[1], i.date_range('1995.6')[0])
         for value in ['1995-13', '1995-02-31', '不明', None]: self.assertIsNone(i.date_range(value))
 
+    def test_nested_bibliography_reference_cannot_erase_publication_date(self):
+        provider = fixtures.ReviewedProvider(); record = next(iter(provider.records.values()))
+        tree = i.ET.fromstring(fixtures.record_xml(record)); data = tree.find('.//srw:recordData', i.legacy.NS)
+        inner = i.ET.fromstring(data.text); bib = inner.find('.//ndl:BibResource', i.legacy.NS)
+        i.ET.SubElement(bib, '{' + i.legacy.NS['dct'] + '}issued').text = '2000'
+        i.ET.SubElement(bib, '{' + i.legacy.NS['dct'] + '}date').text = '2000.6'
+        i.ET.SubElement(i.ET.SubElement(bib, '{test}holding'), '{' + i.legacy.NS['ndl'] + '}BibResource', {i.legacy.RDF + 'about': record['url'] + '#material'})
+        data.text = i.ET.tostring(inner, encoding='unicode')
+        records, _ = i.publication_records(i.ET.tostring(tree))
+        self.assertTrue(records); self.assertEqual(records[0]['issued'], '2000.6')
+
+    def test_technical_preparation_retry_requires_same_scope_and_no_dispatched_children(self):
+        previous = self.register(); request = copy.deepcopy(previous)
+        request.update(id=previous['id'] + '-repair1', preparationCycle='repair1', resumePreparationId=previous['id'], parentRequestId=previous['id'])
+        executor = object.__new__(b.Executor); executor.workflow = object(); executor.root = self.home
+        executor.sync_inputs = lambda commit: None
+        parent = {'requestId': previous['id'], 'kind': 'issue-prepare', 'phase': 'completed', 'request': previous, 'result': {'batchRequests': []}}
+        executor.validate(request, parent); self.worker.approved(request)
+        parent['result']['batchRequests'] = [base.approval()]
+        with self.assertRaisesRegex(b.Blocked, 'without dispatched children'): executor.validate(request, parent)
+
     def test_offline_prepare_resume_gate_adapter_and_review(self):
         request = self.register(); root = self.home / 'runtime'; root.mkdir()
         shutil.copytree(ROOT / 'scripts', root / 'scripts', ignore=shutil.ignore_patterns('__pycache__'))
@@ -151,6 +172,7 @@ class IssueTests(unittest.TestCase):
         entities = {**provider.entities}
         # Synthetic exact-name alias: real shortened titles without one must remain held.
         entities[works['あさドラ！']['wikidata']].setdefault('aliases', {}).setdefault('ja', []).append({'language': 'ja', 'value': 'あさドラ！'})
+        entities[works['あさドラ！']['wikidata']]['aliases']['ja'].append({'language': 'ja', 'value': 'あさドラ! : 連続漫画小説'})
         class Offline(i.Acquisition):
             interrupted = False
             def api(self, **params): return {'entities': entities}

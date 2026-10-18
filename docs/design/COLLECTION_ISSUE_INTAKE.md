@@ -17,7 +17,7 @@
 軽量なIssue確認は時間外・共通ロック使用中も続ける。QID・ISBN準備は新しいheavy operation `issue-prepare` として既存排他・時間枠に入れる。03–07／09–12／15–18 JSTの途中から開始可能。終盤15分の新規開始回避、55分上限・終了後10分休憩・チェックポイント再開を変更しない。PC停止中は処理せず、再起動後に同じ依頼・cache・進捗から継続する。
 
 - Wikidataの構造化APIで日本語ページタイトルをまとめて照合し、不一致だけ有界検索（最大5候補）を使う。日本語名／aliasの完全一致（NFKC・空白だけの正規化）、人物Q5／漫画Q21198342・Q8274、canonical EntityDataを照合する。同名別作品・anime・共同名義等を推測で結ばない。
-- NDL作成書誌 `iss-ndl-opac` を題名・著者、刊行日昇順、100件以内、onlyBibで検索する。日本語・漫画・明示第1巻・版表示なし・単独ISBN・当該人物の明示責任表示・QIDの書名との一致を条件とする。書誌の ` : ` による副書名を分離して主書名照合できるが、凍結scopeには元の全書名を保持する。最古の一致書誌が一意な場合だけ、canonical ISBN検索で同一書誌・全抽出フィールドを再確認する。複数版・年代不明・全集・名義不明などは保留。最古のNDL一致書誌は初版の断定ではない。
+- NDL作成書誌 `iss-ndl-opac` を題名・著者、100件以内、onlyBibで検索する。日本語・漫画・明示第1巻・版表示なし・単独ISBN・当該人物の明示責任表示・QIDの書名との完全一致を条件とする。副書名を勝手に切り捨てず、完全版・アニメ版等を元作品の通常版と同定しない。巻次1の括弧内副題は元の巻次文字列をscopeへ保持する。取得結果内の刊行日を比較して代表ISBNを選び、canonical ISBN検索で同一書誌・全抽出フィールドを一意に再確認する。全書誌最古・初版の断定はしない。検索の打切り有無と選択範囲を根拠へ記録する。候補の日付が重なり選択が一意でない、全集・名義不明等は保留する。
 - 準備から全子バッチまで単一の永続requests.json／body cacheを共有する。Issue #25は合計142試行・同一要求2回、逐次3秒以上・20秒timeout・4MiBを固定。開始前に計上し、429／503 Retry-Afterも永続化する。GitHub状態確認はこの書誌provider予算と分ける。予算をバッチごとにリセットしない。
 - 同定済み作品を作者別の小バッチへ分け、予約済みの新しいrNNNN recipe・review artifact・テーマrevision・既存gate承認hashを生成する。Issue #25は最大13作者バッチ、23作品・13人物、最大36 Entity／69 Claim（既存再利用で減少）。個別Claimは既存adapterで原語・Role・ISBN scopeを検証してhidden候補に限定する。AUTHORSHIP／CREATION／DRAWING／ORIGINAL_STORY等を自動的に同一視しない。「漫画」「ほか著」は既存通り保留。
 - 導出ゲート承認は新しいAI判断ではなく、元のIssue人間許可・日時・hashへ技術的に束縛する。凍結r0002／r0003、既存承認、collectorコード3本は変更しない。新しいIssue用テーマIDの連続revisionを使用し、既存famous-manga-creatorsの版を改変しない。
@@ -37,5 +37,13 @@ control branchの `collection-control/workers/plunode-wsl/README.md`／`status.j
 ## 検証と設置
 
 `python3 -m unittest discover -s tests -p test_collection_issues.py -v`：明示許可なし／AI判断の拒否、既存許可の一回取込、変更・取消、編集本文との分離、親子の同時公開、共有142予算・restart・Retry-After、同定保留、隔離した実recipe→gate→既存adapter→レビュー・経路生成、改変拒否。
+
+### 2026-10-19 実データ確認からの修正
+
+最初の実準備は71試行を使い、人物13件を同定したが全作品が保留になった。NDLの入れ子BibResource参照が同じURIを持ち、日付なしの参照で実書誌の刊行日を上書きする不具合を確認した。日付を持つ実書誌だけを抽出し、dct:dateの精度を優先、dct:issuedへフォールバックする。書名の副題除去も止め、観測済みの正確な代表刊行物を選ぶ（全体最古の初版という不要な前提を置かない）。入れ子参照・日付精度・準備中断／改変・技術的再開を隔離試験へ追加した。
+
+完了済みの準備が子依頼を一つも発行していない場合に限り、同一permission／issueOrigin・完了親を指定する新しい不変依頼（preparationCycle、resumePreparationId、parentRequestId）で修正版を実行できる。旧依頼・コードcommit・承認・結果は上書きせず、新しいコードcommitを固定する。新依頼のcacheは旧cacheへ接続し、元の71試行を通算予算に残す。派生済み子がある準備の差替え、対象や許可hashが違う再開は拒否する。同じ範囲の再承認や予算リセットの入口ではない。保守時の修正用であり、毎回の通常収集には不要。
+
+issue-receiptのrequestSha256は正規化JSONの内容hash、実行statusのrequestSha256は受信ファイルのバイトhash。permissionSha256は共通の正規化内容hashで範囲を比較する。
 
 既存Worker32試験と、`tests/check_collection_worker.py` のlocal bare Gitを使う一巡試験（実validator・無書込plan模擬・再開・非重複）も実施する。実試験の模擬判断は本番承認へ流用しない。設置はprivate runtimeのみ更新し、既存dataset／.local／承認／cache／lock inodeとWindows毎分非表示タスクを保全する。Web変更はなく3200／beta／VPS再配置はしない。

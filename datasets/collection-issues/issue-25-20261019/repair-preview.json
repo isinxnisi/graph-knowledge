@@ -1,0 +1,124 @@
+{
+  "cacheOnly": true,
+  "networkAttemptsAdded": 0,
+  "eligible": [
+    {
+      "person": "浦沢直樹",
+      "work": "20世紀少年",
+      "isbn": "9784091855312"
+    },
+    {
+      "person": "浦沢直樹",
+      "work": "YAWARA!",
+      "isbn": "9784091813411"
+    },
+    {
+      "person": "田村由美",
+      "work": "ミステリと言う勿れ",
+      "isbn": "9784098700295"
+    },
+    {
+      "person": "九井諒子",
+      "work": "ダンジョン飯",
+      "isbn": "9784047301535"
+    },
+    {
+      "person": "荒川弘",
+      "work": "黄泉のツガイ",
+      "isbn": "9784757579620"
+    },
+    {
+      "person": "矢沢あい",
+      "work": "天使なんかじゃない",
+      "isbn": "9784086187657"
+    },
+    {
+      "person": "矢沢あい",
+      "work": "ご近所物語",
+      "isbn": "9784088538204"
+    },
+    {
+      "person": "矢沢あい",
+      "work": "NANA",
+      "isbn": "9784088562094"
+    },
+    {
+      "person": "高屋奈月",
+      "work": "フルーツバスケット",
+      "isbn": "9784592171614"
+    },
+    {
+      "person": "高屋奈月",
+      "work": "翼を持つ者",
+      "isbn": "9784592128311"
+    },
+    {
+      "person": "あだち充",
+      "work": "MIX",
+      "isbn": "9784091238672"
+    },
+    {
+      "person": "藤子・F・不二雄",
+      "work": "パーマン",
+      "isbn": "9784091941114"
+    }
+  ],
+  "held": [
+    {
+      "person": "浦沢直樹",
+      "work": "MONSTER",
+      "reason": "No dated, exact first-volume Japanese manga publication"
+    },
+    {
+      "person": "手塚治虫",
+      "work": "鉄腕アトム",
+      "reason": "Truncated publication search requires a narrower bibliography query"
+    },
+    {
+      "person": "高橋留美子",
+      "work": "犬夜叉",
+      "reason": "Truncated publication search requires a narrower bibliography query"
+    },
+    {
+      "person": "岸本斉史",
+      "work": "NARUTO",
+      "reason": "No dated, exact first-volume Japanese manga publication"
+    },
+    {
+      "person": "赤坂アカ",
+      "work": "かぐや様は告らせたい",
+      "reason": "exact QID/name/type unresolved"
+    },
+    {
+      "person": "荒木飛呂彦",
+      "work": "ジョジョの奇妙な冒険 第1部 ファントムブラッド",
+      "reason": "exact QID/name/type unresolved"
+    },
+    {
+      "person": "荒川弘",
+      "work": "鋼の錬金術師",
+      "reason": "Truncated publication search requires a narrower bibliography query"
+    },
+    {
+      "person": "荒川弘",
+      "work": "銀の匙 Silver Spoon",
+      "reason": "No dated, exact first-volume Japanese manga publication"
+    },
+    {
+      "person": "あだち充",
+      "work": "タッチ",
+      "reason": "Truncated publication search requires a narrower bibliography query"
+    },
+    {
+      "person": "あだち充",
+      "work": "H2",
+      "reason": "Truncated publication search requires a narrower bibliography query"
+    },
+    {
+      "person": "藤子・F・不二雄",
+      "work": "キテレツ大百科",
+      "reason": "exact QID/name/type unresolved"
+    }
+  ],
+  "historicalAttempts": 71
+}

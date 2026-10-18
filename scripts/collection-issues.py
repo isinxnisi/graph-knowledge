@@ -204,8 +204,12 @@ def publication_records(body):
         envelope.append(copy.deepcopy(data))
         parsed, _ = legacy.ndl_records(ET.tostring(envelope))
         inner = ET.fromstring(data.text) if data.text and data.text.strip().startswith('<') else data
-        dates = {b.get(legacy.RDF + 'about', '').split('#')[0]: b.findtext('dct:issued', namespaces=legacy.NS)
-                 for b in inner.findall('.//ndl:BibResource', legacy.NS)}
+        dates = {}
+        for bib in inner.findall('.//ndl:BibResource', legacy.NS):
+            # Nested holding references repeat the URI but have no bibliography date.
+            precise = bib.findtext('dct:date', namespaces=legacy.NS)
+            value = precise if date_range(precise) else bib.findtext('dct:issued', namespaces=legacy.NS)
+            if value: dates[bib.get(legacy.RDF + 'about', '').split('#')[0]] = value
         for record in parsed: record['issued'] = dates.get(record['url'])
         records += parsed
     return records, int(total) > len(tree.findall('.//srw:recordData', legacy.NS))
@@ -217,16 +221,17 @@ def choose_publication(records, truncated, person, entity):
     for r in records:
         explicit_person = any(legacy.norm(re.sub(r'\s*(著者|原作|作画|監修|漫画|著|作|画)$', '', c)) == legacy.norm(person) for c in r['responsibilities'])
         if (r['language'] == ['jpn'] and '漫画' in r['genre'] and not r['edition'] and len(r['isbn13']) == 1
-                and any(legacy.norm(n) in names or legacy.norm(n.split(' : ')[0]) in names for n in r['mainTitles'])
-                and len(r['volume']) == 1 and legacy.norm(r['volume'][0]) in ['1', '第1巻', '1巻', 'vol.1', 'volume1'] and explicit_person):
+                and any(legacy.norm(n) in names for n in r['mainTitles'])
+                and len(r['volume']) == 1 and re.fullmatch(r'(?:1|第1巻|1巻|vol\.?1|volume1)(?:\(.+\))?', legacy.norm(r['volume'][0])) and explicit_person):
             candidates.append(r)
-    require(candidates and all(date_range(r['issued']) for r in candidates), 'No dated, exact first-volume Japanese manga publication')
+    # A representative first volume, never a claim that this is the work's first edition.
+    candidates = [r for r in candidates if date_range(r['issued'])]
+    require(candidates, 'No dated, exact first-volume Japanese manga publication')
     candidates = list({r['url']: r for r in candidates}.values())
     chosen = min(candidates, key=lambda r: date_range(r['issued'])[0])
     last = date_range(chosen['issued'])[1]
     require(all(r['url'] == chosen['url'] or last < date_range(r['issued'])[0] for r in candidates), 'First publication identity ambiguous')
-    require(not truncated or any(date_range(r['issued']) and date_range(r['issued'])[0] > last for r in records), 'Truncated publication search cannot establish earliest match')
-    return chosen
+    return {**chosen, 'searchTruncated': truncated, 'selectionBoundary': 'representative-first-volume-among-observed-records-not-original-edition'}
 
 
 def date_range(value):
@@ -254,6 +259,16 @@ def prepare(root, request, fetch_factory=Acquisition):
     p = permission({'body': BEGIN + '\n```json\n' + dump(request['permission']) + '```\n' + END})
     require(p['status'] == 'approved' and digest(p) == request['issueOrigin']['permissionSha256'], 'Preparation permission hash differs')
     work = root / '.local/collection-issues' / request['id']; work.mkdir(parents=True, exist_ok=True)
+    if request.get('resumePreparationId'):
+        predecessor = root / '.local/collection-issues' / request['resumePreparationId']
+        previous = read(predecessor / 'request.json')
+        require(previous['permission'] == p and previous['issueOrigin'] == request['issueOrigin'], 'Preparation resume permission differs')
+        require(read(predecessor / 'result.json')['batchRequests'] == [], 'Preparation with dispatched children cannot be replaced')
+        cache = work / 'request-cache'
+        if cache.is_symlink(): require(cache.resolve() == (predecessor / 'request-cache').resolve(), 'Preparation resume cache differs')
+        else:
+            require(not cache.exists(), 'Existing preparation budget cannot be replaced')
+            cache.symlink_to((predecessor / 'request-cache').resolve(), target_is_directory=True)
     result_path = work / 'result.json'
     if result_path.exists():
         result = read(result_path)
