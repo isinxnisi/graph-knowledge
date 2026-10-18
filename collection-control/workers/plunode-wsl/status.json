@@ -26,29 +26,24 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-10-18T20:35:57.908452+00:00",
-  "phase": "running",
+  "nextStartAt": "2026-10-18T19:42:05.346438+00:00",
+  "phase": "interval",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
     "reason": "interval",
-    "eligibleAt": "2026-10-18T20:35:57.908452+00:00",
+    "eligibleAt": "2026-10-18T19:42:05.346438+00:00",
     "windowEndAt": "2026-10-18T22:00:00+00:00"
   },
-  "activeAttempt": {
-    "requestId": "issue-25-manga23-20261019-repair1-batch-03",
-    "startedAt": "2026-10-18T19:30:57.908455+00:00",
-    "limitAt": "2026-10-18T20:25:57.908452+00:00"
-  },
+  "activeAttempt": null,
   "lastAttempt": {
-    "requestId": "issue-25-manga23-20261019-repair1-batch-02",
-    "endedAt": "2026-10-18T19:20:35.866062+00:00"
+    "requestId": "issue-25-manga23-20261019-repair1-batch-03",
+    "endedAt": "2026-10-18T19:32:05.346441+00:00"
   },
   "controlError": null,
   "requestsByPhase": {
     "completed": 3,
-    "blocked": 1,
-    "running": 1,
+    "blocked": 2,
     "waiting-control": 7
   },
   "issueIntake": {
@@ -58,5 +53,5 @@
     }
   },
   "publicApply": false,
-  "checkedAt": "2026-10-18T19:31:39.802898+00:00"
+  "checkedAt": "2026-10-18T19:32:28.489882+00:00"
 }
