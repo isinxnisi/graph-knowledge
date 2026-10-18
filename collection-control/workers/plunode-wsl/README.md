@@ -1,6 +1,6 @@
 # CollectionWorkerの実行制御
 
-確認: 2026-10-19 08:54:03 JST。
+確認: 2026-10-19 08:59:21 JST。
 
 反映済みcontrolRevision: 0／最後の操作: なし。
 
@@ -28,3 +28,17 @@ Issue確認結果:
 ```
 
 個別処理・根拠・代表Graph経路は[結果一覧](../../results/)を参照。収集候補／正式受入済み未公開／公開済みを混同しない。
+
+## 不具合復旧
+
+旧blockedは変更しない失敗履歴。下記の新規依頼の状態を現在の復旧進捗として確認する。
+
+- [issue-25-utc-recovery-01](../../results/issue-25-utc-recovery-01/README.md): waiting-control（旧 issue-25-manga23-20261019-repair1-batch-03）
+- [issue-25-utc-recovery-02](../../results/issue-25-utc-recovery-02/README.md): waiting-control（旧 issue-25-manga23-20261019-repair1-batch-01）
+- [issue-25-utc-recovery-03](../../results/issue-25-utc-recovery-03/README.md): waiting-control（旧 issue-25-manga23-20261019-repair1-batch-04）
+- [issue-25-utc-recovery-04](../../results/issue-25-utc-recovery-04/README.md): waiting-control（旧 issue-25-manga23-20261019-repair1-batch-05）
+- [issue-25-utc-recovery-05](../../results/issue-25-utc-recovery-05/README.md): waiting-control（旧 issue-25-manga23-20261019-repair1-batch-06）
+- [issue-25-utc-recovery-06](../../results/issue-25-utc-recovery-06/README.md): waiting-control（旧 issue-25-manga23-20261019-repair1-batch-07）
+- [issue-25-utc-recovery-07](../../results/issue-25-utc-recovery-07/README.md): waiting-control（旧 issue-25-manga23-20261019-repair1-batch-08）
+- [issue-25-utc-recovery-08](../../results/issue-25-utc-recovery-08/README.md): waiting-control（旧 issue-25-manga23-20261019-repair1-batch-09）
+- [issue-25-utc-recovery-09](../../results/issue-25-utc-recovery-09/README.md): waiting-control（旧 issue-25-manga23-20261019-repair1-batch-10）
