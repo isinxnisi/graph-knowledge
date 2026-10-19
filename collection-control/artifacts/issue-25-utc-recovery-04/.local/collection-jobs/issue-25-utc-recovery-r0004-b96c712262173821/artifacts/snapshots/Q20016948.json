@@ -1,0 +1,300 @@
+{
+  "id": "Q20016948",
+  "lastrevid": 2526224677,
+  "labels": {
+    "zh": {
+      "language": "zh",
+      "value": "迷宮飯"
+    },
+    "ja": {
+      "language": "ja",
+      "value": "ダンジョン飯"
+    },
+    "ko": {
+      "language": "ko",
+      "value": "던전밥"
+    },
+    "en": {
+      "language": "en",
+      "value": "Delicious in Dungeon"
+    },
+    "it": {
+      "language": "it",
+      "value": "Dungeon Food"
+    },
+    "tl": {
+      "language": "tl",
+      "value": "Delicious in Dungeon"
+    },
+    "de": {
+      "language": "de",
+      "value": "Dungeon Meshi"
+    },
+    "pt": {
+      "language": "pt",
+      "value": "Dungeon Meshi"
+    },
+    "ms": {
+      "language": "ms",
+      "value": "Dungeon Meshi"
+    },
+    "fr": {
+      "language": "fr",
+      "value": "Gloutons et Dragons"
+    },
+    "ar": {
+      "language": "ar",
+      "value": "طعام الدهليز اللذيذ"
+    },
+    "ru": {
+      "language": "ru",
+      "value": "Delicious in Dungeon"
+    },
+    "es": {
+      "language": "es",
+      "value": "Dungeon Meshi"
+    },
+    "pl": {
+      "language": "pl",
+      "value": "Dungeon Meshi – Lochy i smakołyki"
+    },
+    "th": {
+      "language": "th",
+      "value": "สูตรลับตำรับดันเจียน"
+    },
+    "vi": {
+      "language": "vi",
+      "value": "Mỹ vị hầm ngục"
+    },
+    "zh-tw": {
+      "language": "zh-tw",
+      "value": "迷宮飯"
+    },
+    "zh-hant": {
+      "language": "zh-hant",
+      "value": "迷宮飯"
+    },
+    "mk": {
+      "language": "mk",
+      "value": "Delicious in Dungeon"
+    },
+    "he": {
+      "language": "he",
+      "value": "מבוכים ומטעמים"
+    },
+    "uk": {
+      "language": "uk",
+      "value": "Delicious in Dungeon"
+    },
+    "id": {
+      "language": "id",
+      "value": "Delicious di Dungeon"
+    },
+    "wuu": {
+      "language": "wuu",
+      "value": "迷宮飯"
+    },
+    "tr": {
+      "language": "tr",
+      "value": "Dungeon Meshi"
+    },
+    "fa": {
+      "language": "fa",
+      "value": "خوشمزه در دانجن"
+    },
+    "fi": {
+      "language": "fi",
+      "value": "Dungeon Meshi"
+    },
+    "eo": {
+      "language": "eo",
+      "value": "Delikata manĝado en karcero"
+    },
+    "az": {
+      "language": "az",
+      "value": "Delicious in Dungeon"
+    }
+  },
+  "aliases": {
+    "en": [
+      {
+        "language": "en",
+        "value": "Dungeon Meshi"
+      }
+    ],
+    "es": [
+      {
+        "language": "es",
+        "value": "Delicious in Dungeon"
+      },
+      {
+        "language": "es",
+        "value": "Tragones y Mazmorras"
+      }
+    ],
+    "pl": [
+      {
+        "language": "pl",
+        "value": "Dungeon meshi"
+      },
+      {
+        "language": "pl",
+        "value": "Delicious in Dungeon"
+      }
+    ],
+    "zh": [
+      {
+        "language": "zh",
+        "value": "舌尖上的地下城"
+      },
+      {
+        "language": "zh",
+        "value": "迷宫饭"
+      }
+    ],
+    "uk": [
+      {
+        "language": "uk",
+        "value": "Підземелля смакоти"
+      },
+      {
+        "language": "uk",
+        "value": "Dungeon Meshi"
+      }
+    ],
+    "ar": [
+      {
+        "language": "ar",
+        "value": "طعام الدهليز"
+      },
+      {
+        "language": "ar",
+        "value": "دانجن ميشي"
+      }
+    ]
+  },
+  "claims": {
+    "P31": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P31",
+          "hash": "549c072d6be8a6a43f999d1d0e82640b16c4260e",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 21198342,
+              "id": "Q21198342"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q20016948$57084970-AFB7-412F-89C5-488CCB4722EA",
+        "rank": "normal"
+      }
+    ],
+    "P50": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P50",
+          "hash": "21c1a6c3dacb5de4dc1d0b618743f89c8f0307c3",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 11370008,
+              "id": "Q11370008"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q20016948$0DE0F30D-71B0-487C-97B5-746C8ED43632",
+        "rank": "normal",
+        "references": [
+          {
+            "hash": "7240f454195f743fb2c9734402a6fa5316bd131a",
+            "snaks": {
+              "P143": [
+                {
+                  "snaktype": "value",
+                  "property": "P143",
+                  "hash": "c6f1777471211df31724ac60175786f3872c83e9",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 177837,
+                      "id": "Q177837"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ],
+              "P813": [
+                {
+                  "snaktype": "value",
+                  "property": "P813",
+                  "hash": "933ad62150a32ca0e9449cef21f75a79d5634988",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2023-05-25T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ],
+              "P4656": [
+                {
+                  "snaktype": "value",
+                  "property": "P4656",
+                  "hash": "6d7bf03a1f026962ceaa61e68ca5899103433f96",
+                  "datavalue": {
+                    "value": "https://ja.wikipedia.org/w/index.php?title=%E3%83%80%E3%83%B3%E3%82%B8%E3%83%A7%E3%83%B3%E9%A3%AF&oldid=95354394",
+                    "type": "string"
+                  },
+                  "datatype": "url"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P143",
+              "P813",
+              "P4656"
+            ]
+          }
+        ]
+      }
+    ],
+    "P110": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P110",
+          "hash": "4d261adbb46d3242e474273f88aea03abc878fad",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 11370008,
+              "id": "Q11370008"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q20016948$11672888-4d81-7136-f414-ba9b0cee5038",
+        "rank": "normal"
+      }
+    ]
+  }
+}

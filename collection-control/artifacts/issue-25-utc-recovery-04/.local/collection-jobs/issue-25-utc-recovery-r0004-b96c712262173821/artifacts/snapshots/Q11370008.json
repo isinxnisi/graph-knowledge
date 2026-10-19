@@ -1,0 +1,187 @@
+{
+  "id": "Q11370008",
+  "lastrevid": 2558439728,
+  "labels": {
+    "ja": {
+      "language": "ja",
+      "value": "九井諒子"
+    },
+    "en": {
+      "language": "en",
+      "value": "Ryōko Kui"
+    },
+    "zh": {
+      "language": "zh",
+      "value": "九井諒子"
+    },
+    "nl": {
+      "language": "nl",
+      "value": "Ryōko Kui"
+    },
+    "ru": {
+      "language": "ru",
+      "value": "Рёко Куи"
+    },
+    "ko": {
+      "language": "ko",
+      "value": "쿠이 료코"
+    },
+    "zh-hans": {
+      "language": "zh-hans",
+      "value": "九井谅子"
+    },
+    "zh-hant": {
+      "language": "zh-hant",
+      "value": "九井諒子"
+    },
+    "ast": {
+      "language": "ast",
+      "value": "Ryōko Kui"
+    },
+    "es": {
+      "language": "es",
+      "value": "Ryōko Kui"
+    },
+    "it": {
+      "language": "it",
+      "value": "Ryōko Kui"
+    },
+    "fr": {
+      "language": "fr",
+      "value": "Ryōko Kui"
+    },
+    "tr": {
+      "language": "tr",
+      "value": "Ryōko Kui"
+    },
+    "ar": {
+      "language": "ar",
+      "value": "ريوكو كوي"
+    },
+    "uk": {
+      "language": "uk",
+      "value": "Рьоко Куї"
+    },
+    "de": {
+      "language": "de",
+      "value": "Ryōko Kui"
+    },
+    "cs": {
+      "language": "cs",
+      "value": "Ryoko Kui"
+    },
+    "az": {
+      "language": "az",
+      "value": "Ryoko Kui"
+    }
+  },
+  "aliases": {
+    "ru": [
+      {
+        "language": "ru",
+        "value": "Куи, Рёко"
+      }
+    ],
+    "ko": [
+      {
+        "language": "ko",
+        "value": "구이 료코"
+      }
+    ],
+    "en": [
+      {
+        "language": "en",
+        "value": "Ryoko Kui"
+      },
+      {
+        "language": "en",
+        "value": "Ryouko Kui"
+      }
+    ],
+    "ast": [
+      {
+        "language": "ast",
+        "value": "Ryoko Kui"
+      },
+      {
+        "language": "ast",
+        "value": "Ryouko Kui"
+      }
+    ],
+    "nl": [
+      {
+        "language": "nl",
+        "value": "Ryoko Kui"
+      },
+      {
+        "language": "nl",
+        "value": "Ryouko Kui"
+      }
+    ],
+    "cs": [
+      {
+        "language": "cs",
+        "value": "諒子 九井"
+      },
+      {
+        "language": "cs",
+        "value": "リョウコ クイ"
+      },
+      {
+        "language": "cs",
+        "value": "Ryōko Kui"
+      }
+    ]
+  },
+  "claims": {
+    "P31": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P31",
+          "hash": "ad7d38a03cdd40cdc373de0dc4e7b7fcbccb31d9",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 5,
+              "id": "Q5"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q11370008$1AF62474-2DCC-426B-924F-F6FA605909A1",
+        "rank": "normal",
+        "references": [
+          {
+            "hash": "a29a646602abf65105ed0f39a44231c962ece9ee",
+            "snaks": {
+              "P143": [
+                {
+                  "snaktype": "value",
+                  "property": "P143",
+                  "hash": "c6f1777471211df31724ac60175786f3872c83e9",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 177837,
+                      "id": "Q177837"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P143"
+            ]
+          }
+        ]
+      }
+    ],
+    "P50": [],
+    "P110": []
+  }
+}

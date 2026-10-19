@@ -1,0 +1,182 @@
+{
+  "schemaVersion": 2,
+  "status": "pending-human-acceptance",
+  "recipe": "manga-r0020",
+  "collectionContext": {
+    "themeId": "issue-25-utc-recovery",
+    "themeRevision": 4,
+    "definitionSha256": "23bf7027d4581688f10347c30314866929f39c16544b1f5256027b20b6a6cccc",
+    "approvalSha256": "df85209fff27c441121cac3dac8aea4d29eba0ea76cead11feeb99266f5dec7b"
+  },
+  "execution": {
+    "adapter": "manga-discovery-v2",
+    "codeSha256": "80e05b67bc0129b963653b90df4cfbfa5bd6aff190acda99f54c08541e55801e",
+    "inputs": [
+      {
+        "file": "datasets/manga-collection/r0020/recipe.json",
+        "sha256": "56d6be35fb3bdda4453561af677b103a553ba533c1ff183ca0fe1431fd1c2e8f"
+      },
+      {
+        "file": "datasets/manga-collection/r0020/anchor-review.json",
+        "sha256": "4f20e0d407d996ee2e4f7c5950608d182f55de1acefccc6d5f22570475a3a03d"
+      },
+      {
+        "file": "datasets/manga-collection/r0020/publication-review.json",
+        "sha256": "8bd99f9f540d25121f8e2d0a3928b92b7f5255081205d9be01f7813acb8ae68e"
+      },
+      {
+        "file": "docs/research/famous-manga-creators/20261016/candidates.json",
+        "sha256": "8531fada01e5c635ba2ee278a7ef944a73f64676af14ed42ae0e690f5a1ff978"
+      },
+      {
+        "file": "datasets/public-kg/releases/20261014-credits-001/data.json",
+        "sha256": "ea91b16f52a211b5a8464382ad498b7b2bb2be69a6f33fe125a73a3c7b9da2b5"
+      },
+      {
+        "file": "datasets/public-kg/releases/20261014-credits-001/manifest.json",
+        "sha256": "e4aa3b58ed884f7d1f8fffee43b260261cc2b4d3a867fda942919f439d2bce17"
+      }
+    ],
+    "maxEntities": 2111,
+    "maxClaims": 1847
+  },
+  "identityMappings": [
+    {
+      "name": "九井諒子",
+      "wikidata": "Q11370008",
+      "entityId": "08b751e8-37fa-4abb-a0a6-5f64bf177ac8",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "ダンジョン飯",
+      "wikidata": "Q20016948",
+      "entityId": "7d78e92c-1845-4a9a-8bfd-99d49d047976",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    }
+  ],
+  "rows": [
+    {
+      "kind": "wikidata-relation",
+      "work": "ダンジョン飯",
+      "property": "P50",
+      "personQid": "Q11370008",
+      "statementId": "Q20016948$0DE0F30D-71B0-487C-97B5-746C8ED43632",
+      "qualifiers": {},
+      "references": [
+        {
+          "hash": "7240f454195f743fb2c9734402a6fa5316bd131a",
+          "snaks": {
+            "P143": [
+              {
+                "snaktype": "value",
+                "property": "P143",
+                "hash": "c6f1777471211df31724ac60175786f3872c83e9",
+                "datavalue": {
+                  "value": {
+                    "entity-type": "item",
+                    "numeric-id": 177837,
+                    "id": "Q177837"
+                  },
+                  "type": "wikibase-entityid"
+                },
+                "datatype": "wikibase-item"
+              }
+            ],
+            "P813": [
+              {
+                "snaktype": "value",
+                "property": "P813",
+                "hash": "933ad62150a32ca0e9449cef21f75a79d5634988",
+                "datavalue": {
+                  "value": {
+                    "time": "+2023-05-25T00:00:00Z",
+                    "timezone": 0,
+                    "before": 0,
+                    "after": 0,
+                    "precision": 11,
+                    "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                  },
+                  "type": "time"
+                },
+                "datatype": "time"
+              }
+            ],
+            "P4656": [
+              {
+                "snaktype": "value",
+                "property": "P4656",
+                "hash": "6d7bf03a1f026962ceaa61e68ca5899103433f96",
+                "datavalue": {
+                  "value": "https://ja.wikipedia.org/w/index.php?title=%E3%83%80%E3%83%B3%E3%82%B8%E3%83%A7%E3%83%B3%E9%A3%AF&oldid=95354394",
+                  "type": "string"
+                },
+                "datatype": "url"
+              }
+            ]
+          },
+          "snaks-order": [
+            "P143",
+            "P813",
+            "P4656"
+          ]
+        }
+      ],
+      "status": "candidate-only-no-role-inference",
+      "reason": "Wikidata propertyだけで具体Roleや直接制作の意味を確定しない"
+    },
+    {
+      "kind": "wikidata-relation",
+      "work": "ダンジョン飯",
+      "property": "P110",
+      "personQid": "Q11370008",
+      "statementId": "Q20016948$11672888-4d81-7136-f414-ba9b0cee5038",
+      "qualifiers": {},
+      "references": [],
+      "status": "candidate-only-no-role-inference",
+      "reason": "Wikidata propertyだけで具体Roleや直接制作の意味を確定しない"
+    },
+    {
+      "kind": "ndl-credit",
+      "work": "ダンジョン飯",
+      "isbn13": "9784047301535",
+      "rawResponsibility": "九井諒子 著",
+      "sourceUrl": "https://ndlsearch.ndl.go.jp/books/R100000002-I026002097",
+      "status": "pending-human-acceptance",
+      "roleId": "AUTHORSHIP",
+      "person": "九井諒子",
+      "claimId": "b89d1d69-cfa6-40ba-98ac-7b7571544d9e",
+      "reusedClaim": false,
+      "subjectId": "08b751e8-37fa-4abb-a0a6-5f64bf177ac8",
+      "objectId": "7d78e92c-1845-4a9a-8bfd-99d49d047976"
+    }
+  ],
+  "holds": [],
+  "acquisitions": [
+    {
+      "kind": "wikidata",
+      "identifier": "Q11370008",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q11370008.json",
+      "sha256": "16b9989b3c8af744b72bf9f012422f4d8d8cc66ec935ea69ff8b9316707b0b5e",
+      "bytes": 40058,
+      "fetchedAt": "2026-10-18T18:39:24+00:00"
+    },
+    {
+      "kind": "wikidata",
+      "identifier": "Q20016948",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q20016948.json",
+      "sha256": "bad4c08e162e39d0c2021cc65608ad2318ac3fde783253164506c7ef40109b98",
+      "bytes": 66027,
+      "fetchedAt": "2026-10-18T18:40:48+00:00"
+    },
+    {
+      "kind": "ndl",
+      "identifier": "9784047301535",
+      "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&maximumRecords=5&query=isbn%3D%229784047301535%22+AND+dpid%3Diss-ndl-opac",
+      "sha256": "284569b8fac393fb81a7176e96f62ca6e1f4a5b5fda3ad30533fb5ffb320ddbf",
+      "bytes": 13973,
+      "fetchedAt": "2026-10-18T18:55:20+00:00"
+    }
+  ]
+}
