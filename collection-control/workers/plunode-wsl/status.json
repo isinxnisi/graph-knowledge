@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "workerId": "plunode-wsl",
-  "codeCommit": "ed89e5a6ff0cf7d8b485330be790a234a064eacd",
+  "codeCommit": "973c7b0c599f79905a029b28b524f4924e169376",
   "controlRevision": 1,
   "lastControlSha256": "9a95b517716b27f8694376923c0c3424ea76846db2bf3e77f8277218255a04e9",
   "lastControlId": "issue-32-phase-b-migration-pause-new-20261020",
@@ -89,5 +89,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-10-19T18:26:28.237661+00:00"
+  "checkedAt": "2026-10-19T18:31:23.162137+00:00"
 }
