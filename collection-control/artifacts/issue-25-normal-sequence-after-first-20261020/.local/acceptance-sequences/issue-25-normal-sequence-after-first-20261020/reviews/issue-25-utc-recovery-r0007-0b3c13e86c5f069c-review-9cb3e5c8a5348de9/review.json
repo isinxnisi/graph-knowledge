@@ -1,0 +1,131 @@
+{
+  "status": "pending-human-acceptance",
+  "humanReviewer": null,
+  "entities": [
+    {
+      "entityId": "451e8e8a-0d17-4dfd-99d8-14b57780e055",
+      "name": "翼を持つ者",
+      "kind": "work",
+      "wikidata": "Q2947180",
+      "existingEntityId": null,
+      "status": "candidate",
+      "reasons": [],
+      "checks": {
+        "providerIdentity": true
+      },
+      "inputPopulation": "relation-endpoint"
+    },
+    {
+      "entityId": "7a7678a2-f7a8-4381-aaf0-ecddb866fca0",
+      "name": "フルーツバスケット",
+      "kind": "work",
+      "wikidata": "Q216204",
+      "existingEntityId": null,
+      "status": "candidate",
+      "reasons": [],
+      "checks": {
+        "providerIdentity": true
+      },
+      "inputPopulation": "relation-endpoint"
+    },
+    {
+      "entityId": "89958cbe-1822-4814-9861-fec01c94378a",
+      "name": "高屋奈月",
+      "kind": "person",
+      "wikidata": "Q241885",
+      "existingEntityId": null,
+      "status": "candidate",
+      "reasons": [],
+      "checks": {
+        "providerIdentity": true
+      },
+      "inputPopulation": "relation-endpoint"
+    }
+  ],
+  "claims": [
+    {
+      "claimId": "2fbb4bf1-5180-456b-9681-e3ec75a54cd8",
+      "person": "高屋奈月",
+      "work": "翼を持つ者",
+      "subjectId": "89958cbe-1822-4814-9861-fec01c94378a",
+      "objectId": "451e8e8a-0d17-4dfd-99d8-14b57780e055",
+      "roleId": "AUTHORSHIP",
+      "scope": {
+        "kind": "publication",
+        "isbn13": "9784592128311",
+        "volumeLabel": "第1巻（NDL巻次 第1巻）",
+        "editionLabel": null,
+        "language": "ja"
+      },
+      "status": "candidate",
+      "reasons": [],
+      "supportingCitationIds": [
+        "14dd2924-b263-4531-975a-7b9a52b23a3d"
+      ],
+      "existingState": null,
+      "existingClaimId": null,
+      "originalTexts": [
+        "高屋奈月 著"
+      ],
+      "citationIds": [
+        "14dd2924-b263-4531-975a-7b9a52b23a3d"
+      ],
+      "sourceUrls": [
+        "https://ndlsearch.ndl.go.jp/books/R100000002-I000002526551"
+      ],
+      "sourceIds": [
+        "59b086b3-3e2b-4e6c-8532-ee9c7bb79b28"
+      ]
+    },
+    {
+      "claimId": "87432807-ba90-400c-8a3f-e5dcfa847572",
+      "person": "高屋奈月",
+      "work": "フルーツバスケット",
+      "subjectId": "89958cbe-1822-4814-9861-fec01c94378a",
+      "objectId": "7a7678a2-f7a8-4381-aaf0-ecddb866fca0",
+      "roleId": "AUTHORSHIP",
+      "scope": {
+        "kind": "publication",
+        "isbn13": "9784592171614",
+        "volumeLabel": "第1巻（NDL巻次 第1巻）",
+        "editionLabel": null,
+        "language": "ja"
+      },
+      "status": "candidate",
+      "reasons": [],
+      "supportingCitationIds": [
+        "1912d6bf-b638-4e14-902b-9979bf64062a"
+      ],
+      "existingState": null,
+      "existingClaimId": null,
+      "originalTexts": [
+        "高屋奈月 著"
+      ],
+      "citationIds": [
+        "1912d6bf-b638-4e14-902b-9979bf64062a"
+      ],
+      "sourceUrls": [
+        "https://ndlsearch.ndl.go.jp/books/R100000002-I000002761106"
+      ],
+      "sourceIds": [
+        "f205b6dc-c3ed-4348-aa5e-cfe055a2fd55"
+      ]
+    }
+  ],
+  "inheritedHolds": [],
+  "newCandidateCounts": {
+    "entities": 3,
+    "claims": 2,
+    "sources": 2,
+    "citations": 2
+  },
+  "recordConflicts": [],
+  "roleCounts": {
+    "AUTHORSHIP": 2
+  },
+  "normalReviewedEntityCount": 3,
+  "reusedCitationIds": [],
+  "identityOnlyEntityIds": [],
+  "heldClaimCount": 0,
+  "heldEntityCount": 0
+}

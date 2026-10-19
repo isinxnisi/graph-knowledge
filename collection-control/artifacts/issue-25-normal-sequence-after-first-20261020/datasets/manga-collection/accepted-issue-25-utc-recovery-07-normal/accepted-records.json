@@ -1,0 +1,172 @@
+{
+  "records": {
+    "entities": [
+      {
+        "id": "451e8e8a-0d17-4dfd-99d8-14b57780e055",
+        "kind": "work",
+        "name": "翼を持つ者",
+        "description": null,
+        "aliases": [
+          "Tsubasa: Those with Wings"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q2947180"
+          }
+        ],
+        "createdAt": "2026-10-18T18:54:58Z",
+        "updatedAt": "2026-10-18T18:54:58Z",
+        "event": null
+      },
+      {
+        "id": "7a7678a2-f7a8-4381-aaf0-ecddb866fca0",
+        "kind": "work",
+        "name": "フルーツバスケット",
+        "description": null,
+        "aliases": [
+          "Fruits Basket"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q216204"
+          }
+        ],
+        "createdAt": "2026-10-18T18:54:58Z",
+        "updatedAt": "2026-10-18T18:54:58Z",
+        "event": null
+      },
+      {
+        "id": "89958cbe-1822-4814-9861-fec01c94378a",
+        "kind": "person",
+        "name": "高屋奈月",
+        "description": null,
+        "aliases": [
+          "Natsuki Takaya"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q241885"
+          }
+        ],
+        "createdAt": "2026-10-18T18:54:58Z",
+        "updatedAt": "2026-10-18T18:54:58Z",
+        "event": null
+      }
+    ],
+    "claims": [
+      {
+        "id": "2fbb4bf1-5180-456b-9681-e3ec75a54cd8",
+        "subjectId": "89958cbe-1822-4814-9861-fec01c94378a",
+        "objectId": "451e8e8a-0d17-4dfd-99d8-14b57780e055",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "hidden",
+        "createdAt": "2026-10-18T18:54:58Z",
+        "updatedAt": "2026-10-18T18:54:58Z",
+        "contribution": {
+          "roleId": "AUTHORSHIP",
+          "scope": {
+            "kind": "publication",
+            "isbn13": "9784592128311",
+            "volumeLabel": "第1巻（NDL巻次 第1巻）",
+            "editionLabel": null,
+            "language": "ja"
+          }
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      },
+      {
+        "id": "87432807-ba90-400c-8a3f-e5dcfa847572",
+        "subjectId": "89958cbe-1822-4814-9861-fec01c94378a",
+        "objectId": "7a7678a2-f7a8-4381-aaf0-ecddb866fca0",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "hidden",
+        "createdAt": "2026-10-18T18:54:58Z",
+        "updatedAt": "2026-10-18T18:54:58Z",
+        "contribution": {
+          "roleId": "AUTHORSHIP",
+          "scope": {
+            "kind": "publication",
+            "isbn13": "9784592171614",
+            "volumeLabel": "第1巻（NDL巻次 第1巻）",
+            "editionLabel": null,
+            "language": "ja"
+          }
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      }
+    ],
+    "sources": [
+      {
+        "id": "59b086b3-3e2b-4e6c-8532-ee9c7bb79b28",
+        "kind": "web",
+        "title": "NDLサーチ: 翼を持つ者. 第1巻",
+        "authors": [],
+        "publisher": "国立国会図書館",
+        "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I000002526551",
+        "publishedAt": null,
+        "edition": null,
+        "note": "国立国会図書館作成書誌（iss-ndl-opac）の責任表示。メタデータ CC BY 4.0: https://creativecommons.org/licenses/by/4.0/ ; 提供元条件 https://ndlsearch.ndl.go.jp/help/api/provider 。本文・画像・第三者所蔵情報は含まない。",
+        "isDemo": false
+      },
+      {
+        "id": "f205b6dc-c3ed-4348-aa5e-cfe055a2fd55",
+        "kind": "web",
+        "title": "NDLサーチ: フルーツバスケット. 第1巻",
+        "authors": [],
+        "publisher": "国立国会図書館",
+        "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I000002761106",
+        "publishedAt": null,
+        "edition": null,
+        "note": "国立国会図書館作成書誌（iss-ndl-opac）の責任表示。メタデータ CC BY 4.0: https://creativecommons.org/licenses/by/4.0/ ; 提供元条件 https://ndlsearch.ndl.go.jp/help/api/provider 。本文・画像・第三者所蔵情報は含まない。",
+        "isDemo": false
+      }
+    ],
+    "citations": [
+      {
+        "id": "14dd2924-b263-4531-975a-7b9a52b23a3d",
+        "claimId": "2fbb4bf1-5180-456b-9681-e3ec75a54cd8",
+        "sourceId": "59b086b3-3e2b-4e6c-8532-ee9c7bb79b28",
+        "locator": "dc:creator（責任表示） / ISBN 9784592128311",
+        "note": "原表記（ja）: 高屋奈月 著。指定刊行物の責任表示で確認された担当。全巻・全版・全期間への外挿、原作から別Roleへの変換はしない。同一資料由来の記録を独立した根拠と数えない。",
+        "accessedAt": "2026-10-18",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "高屋奈月 著",
+          "language": "ja"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      },
+      {
+        "id": "1912d6bf-b638-4e14-902b-9979bf64062a",
+        "claimId": "87432807-ba90-400c-8a3f-e5dcfa847572",
+        "sourceId": "f205b6dc-c3ed-4348-aa5e-cfe055a2fd55",
+        "locator": "dc:creator（責任表示） / ISBN 9784592171614",
+        "note": "原表記（ja）: 高屋奈月 著。指定刊行物の責任表示で確認された担当。全巻・全版・全期間への外挿、原作から別Roleへの変換はしない。同一資料由来の記録を独立した根拠と数えない。",
+        "accessedAt": "2026-10-18",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "高屋奈月 著",
+          "language": "ja"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      }
+    ]
+  }
+}
