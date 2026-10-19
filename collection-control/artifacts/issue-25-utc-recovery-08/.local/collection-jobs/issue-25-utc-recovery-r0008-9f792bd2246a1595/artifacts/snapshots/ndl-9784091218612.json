@@ -1,0 +1,37 @@
+{
+  "provider": "iss-ndl-opac / 国立国会図書館",
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "terms": "https://ndlsearch.ndl.go.jp/help/api/provider",
+  "records": [
+    {
+      "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I000001790190",
+      "isbn13": [
+        "9784091218612"
+      ],
+      "title": [
+        "タッチ. vol.1"
+      ],
+      "mainTitles": [
+        "タッチ"
+      ],
+      "volume": [
+        "vol.1"
+      ],
+      "edition": [],
+      "responsibilities": [
+        "あだち充 原作"
+      ],
+      "publisher": [
+        "小学館"
+      ],
+      "language": [
+        "jpn"
+      ],
+      "genre": [
+        "児童図書",
+        "漫画"
+      ]
+    }
+  ],
+  "error": null
+}

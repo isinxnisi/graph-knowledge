@@ -1,0 +1,253 @@
+{
+  "id": "Q619500",
+  "lastrevid": 2487165451,
+  "labels": {
+    "zh-hans": {
+      "language": "zh-hans",
+      "value": "棒球英豪"
+    },
+    "zh-hant": {
+      "language": "zh-hant",
+      "value": "鄰家女孩"
+    },
+    "zh-hk": {
+      "language": "zh-hk",
+      "value": "鄰家女孩"
+    },
+    "ja": {
+      "language": "ja",
+      "value": "タッチ"
+    },
+    "vi": {
+      "language": "vi",
+      "value": "Touch"
+    },
+    "fr": {
+      "language": "fr",
+      "value": "Touch"
+    },
+    "ko": {
+      "language": "ko",
+      "value": "터치"
+    },
+    "sh": {
+      "language": "sh",
+      "value": "Touch"
+    },
+    "en": {
+      "language": "en",
+      "value": "Touch"
+    },
+    "es": {
+      "language": "es",
+      "value": "Touch"
+    },
+    "th": {
+      "language": "th",
+      "value": "ทัช"
+    },
+    "ca": {
+      "language": "ca",
+      "value": "Touch"
+    },
+    "it": {
+      "language": "it",
+      "value": "Touch - Prendi il mondo e vai"
+    },
+    "de": {
+      "language": "de",
+      "value": "Touch"
+    },
+    "ru": {
+      "language": "ru",
+      "value": "Touch"
+    },
+    "zh": {
+      "language": "zh",
+      "value": "棒球英豪"
+    },
+    "pt": {
+      "language": "pt",
+      "value": "Touch"
+    },
+    "nl": {
+      "language": "nl",
+      "value": "Touch"
+    },
+    "nan": {
+      "language": "nan",
+      "value": "Touch"
+    },
+    "wuu": {
+      "language": "wuu",
+      "value": "棒球英豪"
+    },
+    "tl": {
+      "language": "tl",
+      "value": "Touch"
+    },
+    "id": {
+      "language": "id",
+      "value": "Touch"
+    },
+    "ar": {
+      "language": "ar",
+      "value": "لمسة (مانغا)"
+    },
+    "tr": {
+      "language": "tr",
+      "value": "Touch"
+    },
+    "fa": {
+      "language": "fa",
+      "value": "تاچ (مانگا)"
+    },
+    "uk": {
+      "language": "uk",
+      "value": "Touch"
+    },
+    "pl": {
+      "language": "pl",
+      "value": "Touch"
+    },
+    "sr": {
+      "language": "sr",
+      "value": "Додир (манга)"
+    }
+  },
+  "aliases": {
+    "zh": [
+      {
+        "language": "zh",
+        "value": "TOUCH"
+      },
+      {
+        "language": "zh",
+        "value": "タッチ 背番号のないエース"
+      }
+    ],
+    "ja": [
+      {
+        "language": "ja",
+        "value": "タッチ CROSS ROAD～風のゆくえ～"
+      }
+    ],
+    "vi": [
+      {
+        "language": "vi",
+        "value": "Anh em sinh đôi"
+      },
+      {
+        "language": "vi",
+        "value": "Tầm với"
+      }
+    ],
+    "es": [
+      {
+        "language": "es",
+        "value": "Bateadores"
+      }
+    ],
+    "th": [
+      {
+        "language": "th",
+        "value": "Touch"
+      }
+    ],
+    "it": [
+      {
+        "language": "it",
+        "value": "Touch"
+      }
+    ],
+    "zh-hant": [
+      {
+        "language": "zh-hant",
+        "value": "タッチ 背番號のないエース"
+      }
+    ],
+    "zh-hans": [
+      {
+        "language": "zh-hans",
+        "value": "タッチ 背番号のないエース"
+      }
+    ],
+    "uk": [
+      {
+        "language": "uk",
+        "value": "Дотик"
+      }
+    ],
+    "ca": [
+      {
+        "language": "ca",
+        "value": "Campions del beisbol"
+      }
+    ]
+  },
+  "claims": {
+    "P31": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P31",
+          "hash": "549c072d6be8a6a43f999d1d0e82640b16c4260e",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 21198342,
+              "id": "Q21198342"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "q619500$22c1cc16-43f9-3696-1cd0-83efc607e592",
+        "rank": "normal"
+      }
+    ],
+    "P50": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P50",
+          "hash": "f50a15d39dc18e88bec4971a4a01f98aa3bd6e47",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 351742,
+              "id": "Q351742"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "q619500$46b92e38-4ec8-58a7-d081-648d4a227f51",
+        "rank": "normal"
+      }
+    ],
+    "P110": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P110",
+          "hash": "e8e4eb438c89b69daf50097c8552e25b9a535525",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 351742,
+              "id": "Q351742"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q619500$10BF4774-C373-488A-8A2B-F2BB2FFD65FC",
+        "rank": "normal"
+      }
+    ]
+  }
+}

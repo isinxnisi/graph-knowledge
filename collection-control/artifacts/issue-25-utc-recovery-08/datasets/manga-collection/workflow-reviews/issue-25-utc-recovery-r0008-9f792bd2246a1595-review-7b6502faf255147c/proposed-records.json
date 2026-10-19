@@ -1,0 +1,173 @@
+{
+  "status": "pending-human-acceptance",
+  "formalAcceptance": "pending",
+  "notForPublicApply": true,
+  "records": {
+    "entities": [
+      {
+        "id": "1abd838a-b22d-45a4-913f-0ef09205e1e8",
+        "kind": "person",
+        "name": "あだち充",
+        "description": null,
+        "aliases": [
+          "Mitsuru Adachi"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q351742"
+          }
+        ],
+        "createdAt": "2026-10-18T18:54:58Z",
+        "updatedAt": "2026-10-18T18:54:58Z",
+        "event": null
+      },
+      {
+        "id": "48ca311c-c403-4a24-a1e3-cb6392764397",
+        "kind": "work",
+        "name": "MIX",
+        "description": null,
+        "aliases": [
+          "Mix"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q11231713"
+          }
+        ],
+        "createdAt": "2026-10-18T18:54:58Z",
+        "updatedAt": "2026-10-18T18:54:58Z",
+        "event": null
+      },
+      {
+        "id": "bb47fc9c-87b1-4df5-a7d6-ecf175d93eb0",
+        "kind": "work",
+        "name": "H2",
+        "description": null,
+        "aliases": [],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q652892"
+          }
+        ],
+        "createdAt": "2026-10-18T18:54:58Z",
+        "updatedAt": "2026-10-18T18:54:58Z",
+        "event": null
+      }
+    ],
+    "claims": [
+      {
+        "id": "c72262df-ce7b-4514-9341-55d242f94bca",
+        "subjectId": "1abd838a-b22d-45a4-913f-0ef09205e1e8",
+        "objectId": "48ca311c-c403-4a24-a1e3-cb6392764397",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "hidden",
+        "createdAt": "2026-10-18T18:54:58Z",
+        "updatedAt": "2026-10-18T18:54:58Z",
+        "contribution": {
+          "roleId": "AUTHORSHIP",
+          "scope": {
+            "kind": "publication",
+            "isbn13": "9784091238672",
+            "volumeLabel": "第1巻（NDL巻次 1）",
+            "editionLabel": null,
+            "language": "ja"
+          }
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      },
+      {
+        "id": "f1260c3f-2637-416f-b407-2052a7c36717",
+        "subjectId": "1abd838a-b22d-45a4-913f-0ef09205e1e8",
+        "objectId": "bb47fc9c-87b1-4df5-a7d6-ecf175d93eb0",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "hidden",
+        "createdAt": "2026-10-18T18:54:58Z",
+        "updatedAt": "2026-10-18T18:54:58Z",
+        "contribution": {
+          "roleId": "AUTHORSHIP",
+          "scope": {
+            "kind": "publication",
+            "isbn13": "9784091231512",
+            "volumeLabel": "第1巻（NDL巻次 1）",
+            "editionLabel": null,
+            "language": "ja"
+          }
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      }
+    ],
+    "sources": [
+      {
+        "id": "4ede2d3e-9899-4d1b-bf8a-e08fd3f36080",
+        "kind": "web",
+        "title": "NDLサーチ: H2. 1",
+        "authors": [],
+        "publisher": "国立国会図書館",
+        "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I000002238601",
+        "publishedAt": null,
+        "edition": null,
+        "note": "国立国会図書館作成書誌（iss-ndl-opac）の責任表示。メタデータ CC BY 4.0: https://creativecommons.org/licenses/by/4.0/ ; 提供元条件 https://ndlsearch.ndl.go.jp/help/api/provider 。本文・画像・第三者所蔵情報は含まない。",
+        "isDemo": false
+      },
+      {
+        "id": "d5e2fedb-35fc-4544-9fbd-c0d81ccb9080",
+        "kind": "web",
+        "title": "NDLサーチ: Mix. 1",
+        "authors": [],
+        "publisher": "国立国会図書館",
+        "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I023983988",
+        "publishedAt": null,
+        "edition": null,
+        "note": "国立国会図書館作成書誌（iss-ndl-opac）の責任表示。メタデータ CC BY 4.0: https://creativecommons.org/licenses/by/4.0/ ; 提供元条件 https://ndlsearch.ndl.go.jp/help/api/provider 。本文・画像・第三者所蔵情報は含まない。",
+        "isDemo": false
+      }
+    ],
+    "citations": [
+      {
+        "id": "07906647-1603-470d-a950-a663290bbd75",
+        "claimId": "f1260c3f-2637-416f-b407-2052a7c36717",
+        "sourceId": "4ede2d3e-9899-4d1b-bf8a-e08fd3f36080",
+        "locator": "dc:creator（責任表示） / ISBN 9784091231512",
+        "note": "原表記（ja）: あだち充 著。指定刊行物の責任表示で確認された担当。全巻・全版・全期間への外挿、原作から別Roleへの変換はしない。同一資料由来の記録を独立した根拠と数えない。",
+        "accessedAt": "2026-10-18",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "あだち充 著",
+          "language": "ja"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      },
+      {
+        "id": "1cd43ec8-2630-4fbc-8267-1ce03a9ee04c",
+        "claimId": "c72262df-ce7b-4514-9341-55d242f94bca",
+        "sourceId": "d5e2fedb-35fc-4544-9fbd-c0d81ccb9080",
+        "locator": "dc:creator（責任表示） / ISBN 9784091238672",
+        "note": "原表記（ja）: あだち充 著。指定刊行物の責任表示で確認された担当。全巻・全版・全期間への外挿、原作から別Roleへの変換はしない。同一資料由来の記録を独立した根拠と数えない。",
+        "accessedAt": "2026-10-18",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "あだち充 著",
+          "language": "ja"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      }
+    ]
+  }
+}

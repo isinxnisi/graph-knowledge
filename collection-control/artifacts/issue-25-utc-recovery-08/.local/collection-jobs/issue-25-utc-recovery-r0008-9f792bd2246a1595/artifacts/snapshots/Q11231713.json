@@ -1,0 +1,137 @@
+{
+  "id": "Q11231713",
+  "lastrevid": 2547718906,
+  "labels": {
+    "ja": {
+      "language": "ja",
+      "value": "MIX"
+    },
+    "en": {
+      "language": "en",
+      "value": "Mix"
+    },
+    "zh": {
+      "language": "zh",
+      "value": "MIX"
+    },
+    "id": {
+      "language": "id",
+      "value": "Mix"
+    },
+    "ko": {
+      "language": "ko",
+      "value": "MIX"
+    },
+    "it": {
+      "language": "it",
+      "value": "MIX"
+    },
+    "ru": {
+      "language": "ru",
+      "value": "Mix"
+    },
+    "ar": {
+      "language": "ar",
+      "value": "ميكس (مانغا)"
+    },
+    "th": {
+      "language": "th",
+      "value": "มิกซ์"
+    },
+    "es": {
+      "language": "es",
+      "value": "Mix"
+    },
+    "de": {
+      "language": "de",
+      "value": "Mix"
+    },
+    "uk": {
+      "language": "uk",
+      "value": "Mix"
+    }
+  },
+  "aliases": {
+    "it": [
+      {
+        "language": "it",
+        "value": "Mix (manga)"
+      },
+      {
+        "language": "it",
+        "value": "MIX"
+      }
+    ],
+    "ru": [
+      {
+        "language": "ru",
+        "value": "Mix (манга)"
+      }
+    ]
+  },
+  "claims": {
+    "P31": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P31",
+          "hash": "549c072d6be8a6a43f999d1d0e82640b16c4260e",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 21198342,
+              "id": "Q21198342"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q11231713$812D27BA-504E-4490-A4B3-B828AF216A2A",
+        "rank": "normal"
+      }
+    ],
+    "P50": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P50",
+          "hash": "f50a15d39dc18e88bec4971a4a01f98aa3bd6e47",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 351742,
+              "id": "Q351742"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q11231713$966ce83f-450b-c39b-189a-31c13c6d03bd",
+        "rank": "normal"
+      }
+    ],
+    "P110": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P110",
+          "hash": "e8e4eb438c89b69daf50097c8552e25b9a535525",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 351742,
+              "id": "Q351742"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q11231713$3A9726C1-45FB-4FB1-AFE1-D12A4FB458BB",
+        "rank": "normal"
+      }
+    ]
+  }
+}

@@ -1,0 +1,169 @@
+{
+  "status": "pending-human-acceptance",
+  "humanReviewer": null,
+  "entities": [
+    {
+      "entityId": "1abd838a-b22d-45a4-913f-0ef09205e1e8",
+      "name": "あだち充",
+      "kind": "person",
+      "wikidata": "Q351742",
+      "existingEntityId": null,
+      "status": "candidate",
+      "reasons": [],
+      "checks": {
+        "providerIdentity": true
+      },
+      "inputPopulation": "relation-endpoint"
+    },
+    {
+      "entityId": "48ca311c-c403-4a24-a1e3-cb6392764397",
+      "name": "MIX",
+      "kind": "work",
+      "wikidata": "Q11231713",
+      "existingEntityId": null,
+      "status": "candidate",
+      "reasons": [],
+      "checks": {
+        "providerIdentity": true
+      },
+      "inputPopulation": "relation-endpoint"
+    },
+    {
+      "entityId": "bb47fc9c-87b1-4df5-a7d6-ecf175d93eb0",
+      "name": "H2",
+      "kind": "work",
+      "wikidata": "Q652892",
+      "existingEntityId": null,
+      "status": "candidate",
+      "reasons": [],
+      "checks": {
+        "providerIdentity": true
+      },
+      "inputPopulation": "relation-endpoint"
+    }
+  ],
+  "claims": [
+    {
+      "claimId": "c72262df-ce7b-4514-9341-55d242f94bca",
+      "person": "あだち充",
+      "work": "MIX",
+      "subjectId": "1abd838a-b22d-45a4-913f-0ef09205e1e8",
+      "objectId": "48ca311c-c403-4a24-a1e3-cb6392764397",
+      "roleId": "AUTHORSHIP",
+      "scope": {
+        "kind": "publication",
+        "isbn13": "9784091238672",
+        "volumeLabel": "第1巻（NDL巻次 1）",
+        "editionLabel": null,
+        "language": "ja"
+      },
+      "status": "candidate",
+      "reasons": [],
+      "supportingCitationIds": [
+        "1cd43ec8-2630-4fbc-8267-1ce03a9ee04c"
+      ],
+      "existingState": null,
+      "existingClaimId": null,
+      "originalTexts": [
+        "あだち充 著"
+      ],
+      "citationIds": [
+        "1cd43ec8-2630-4fbc-8267-1ce03a9ee04c"
+      ],
+      "sourceUrls": [
+        "https://ndlsearch.ndl.go.jp/books/R100000002-I023983988"
+      ],
+      "sourceIds": [
+        "d5e2fedb-35fc-4544-9fbd-c0d81ccb9080"
+      ]
+    },
+    {
+      "claimId": "f1260c3f-2637-416f-b407-2052a7c36717",
+      "person": "あだち充",
+      "work": "H2",
+      "subjectId": "1abd838a-b22d-45a4-913f-0ef09205e1e8",
+      "objectId": "bb47fc9c-87b1-4df5-a7d6-ecf175d93eb0",
+      "roleId": "AUTHORSHIP",
+      "scope": {
+        "kind": "publication",
+        "isbn13": "9784091231512",
+        "volumeLabel": "第1巻（NDL巻次 1）",
+        "editionLabel": null,
+        "language": "ja"
+      },
+      "status": "candidate",
+      "reasons": [],
+      "supportingCitationIds": [
+        "07906647-1603-470d-a950-a663290bbd75"
+      ],
+      "existingState": null,
+      "existingClaimId": null,
+      "originalTexts": [
+        "あだち充 著"
+      ],
+      "citationIds": [
+        "07906647-1603-470d-a950-a663290bbd75"
+      ],
+      "sourceUrls": [
+        "https://ndlsearch.ndl.go.jp/books/R100000002-I000002238601"
+      ],
+      "sourceIds": [
+        "4ede2d3e-9899-4d1b-bf8a-e08fd3f36080"
+      ]
+    }
+  ],
+  "inheritedHolds": [
+    {
+      "reason": "publication-identity-unconfirmed",
+      "work": "タッチ",
+      "isbn13": "9784091218612",
+      "matchingRecords": 0,
+      "records": [
+        {
+          "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I000001790190",
+          "isbn13": [
+            "9784091218612"
+          ],
+          "title": [
+            "タッチ. vol.1"
+          ],
+          "mainTitles": [
+            "タッチ"
+          ],
+          "volume": [
+            "vol.1"
+          ],
+          "edition": [],
+          "responsibilities": [
+            "あだち充 原作"
+          ],
+          "publisher": [
+            "小学館"
+          ],
+          "language": [
+            "jpn"
+          ],
+          "genre": [
+            "児童図書",
+            "漫画"
+          ]
+        }
+      ]
+    }
+  ],
+  "newCandidateCounts": {
+    "entities": 3,
+    "claims": 2,
+    "sources": 2,
+    "citations": 2
+  },
+  "recordConflicts": [],
+  "roleCounts": {
+    "AUTHORSHIP": 2
+  },
+  "normalReviewedEntityCount": 3,
+  "reusedCitationIds": [],
+  "identityOnlyEntityIds": [],
+  "heldClaimCount": 0,
+  "heldEntityCount": 0
+}

@@ -1,0 +1,52 @@
+[
+  {
+    "state": "collection-candidate",
+    "observation": "verified-records-only-not-a-live-exploration-test",
+    "edges": [
+      {
+        "claimId": "c72262df-ce7b-4514-9341-55d242f94bca",
+        "subjectId": "1abd838a-b22d-45a4-913f-0ef09205e1e8",
+        "objectId": "48ca311c-c403-4a24-a1e3-cb6392764397",
+        "person": "あだち充",
+        "work": "MIX",
+        "roleId": "AUTHORSHIP",
+        "scope": {
+          "kind": "publication",
+          "isbn13": "9784091238672",
+          "volumeLabel": "第1巻（NDL巻次 1）",
+          "editionLabel": null,
+          "language": "ja"
+        },
+        "state": "collection-candidate",
+        "citationIds": [
+          "1cd43ec8-2630-4fbc-8267-1ce03a9ee04c"
+        ],
+        "sourceIds": [
+          "d5e2fedb-35fc-4544-9fbd-c0d81ccb9080"
+        ]
+      },
+      {
+        "claimId": "f1260c3f-2637-416f-b407-2052a7c36717",
+        "subjectId": "1abd838a-b22d-45a4-913f-0ef09205e1e8",
+        "objectId": "bb47fc9c-87b1-4df5-a7d6-ecf175d93eb0",
+        "person": "あだち充",
+        "work": "H2",
+        "roleId": "AUTHORSHIP",
+        "scope": {
+          "kind": "publication",
+          "isbn13": "9784091231512",
+          "volumeLabel": "第1巻（NDL巻次 1）",
+          "editionLabel": null,
+          "language": "ja"
+        },
+        "state": "collection-candidate",
+        "citationIds": [
+          "07906647-1603-470d-a950-a663290bbd75"
+        ],
+        "sourceIds": [
+          "4ede2d3e-9899-4d1b-bf8a-e08fd3f36080"
+        ]
+      }
+    ]
+  }
+]

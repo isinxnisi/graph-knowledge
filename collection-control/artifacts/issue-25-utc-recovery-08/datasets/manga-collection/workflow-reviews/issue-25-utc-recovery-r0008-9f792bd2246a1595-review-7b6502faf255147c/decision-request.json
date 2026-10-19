@@ -1,0 +1,126 @@
+{
+  "status": "pending-human-decision",
+  "reviewer": null,
+  "recordedAt": null,
+  "applyAuthorized": {
+    "local": false,
+    "beta": false,
+    "vps": false
+  },
+  "groups": {
+    "normal": {
+      "recordIds": {
+        "entities": [
+          "1abd838a-b22d-45a4-913f-0ef09205e1e8",
+          "48ca311c-c403-4a24-a1e3-cb6392764397",
+          "bb47fc9c-87b1-4df5-a7d6-ecf175d93eb0"
+        ],
+        "claims": [
+          "c72262df-ce7b-4514-9341-55d242f94bca",
+          "f1260c3f-2637-416f-b407-2052a7c36717"
+        ],
+        "sources": [
+          "4ede2d3e-9899-4d1b-bf8a-e08fd3f36080",
+          "d5e2fedb-35fc-4544-9fbd-c0d81ccb9080"
+        ],
+        "citations": [
+          "07906647-1603-470d-a950-a663290bbd75",
+          "1cd43ec8-2630-4fbc-8267-1ce03a9ee04c"
+        ]
+      },
+      "scopeByClaim": [
+        {
+          "id": "c72262df-ce7b-4514-9341-55d242f94bca",
+          "subjectId": "1abd838a-b22d-45a4-913f-0ef09205e1e8",
+          "objectId": "48ca311c-c403-4a24-a1e3-cb6392764397",
+          "predicate": "CONTRIBUTED_TO",
+          "polarity": "affirmed",
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "contribution": {
+            "roleId": "AUTHORSHIP",
+            "scope": {
+              "kind": "publication",
+              "isbn13": "9784091238672",
+              "volumeLabel": "第1巻（NDL巻次 1）",
+              "editionLabel": null,
+              "language": "ja"
+            }
+          },
+          "organizationParticipation": null,
+          "eventParticipation": null
+        },
+        {
+          "id": "f1260c3f-2637-416f-b407-2052a7c36717",
+          "subjectId": "1abd838a-b22d-45a4-913f-0ef09205e1e8",
+          "objectId": "bb47fc9c-87b1-4df5-a7d6-ecf175d93eb0",
+          "predicate": "CONTRIBUTED_TO",
+          "polarity": "affirmed",
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "contribution": {
+            "roleId": "AUTHORSHIP",
+            "scope": {
+              "kind": "publication",
+              "isbn13": "9784091231512",
+              "volumeLabel": "第1巻（NDL巻次 1）",
+              "editionLabel": null,
+              "language": "ja"
+            }
+          },
+          "organizationParticipation": null,
+          "eventParticipation": null
+        }
+      ],
+      "existingEntityDependencies": [],
+      "counts": {
+        "entities": 3,
+        "claims": 2,
+        "sources": 2,
+        "citations": 2
+      }
+    },
+    "identity-only": {
+      "recordIds": {
+        "entities": [],
+        "claims": [],
+        "sources": [],
+        "citations": []
+      },
+      "notice": "Identity only; do not accept held production relations by implication."
+    }
+  },
+  "heldClaimIds": [],
+  "heldEntityIds": [],
+  "existingDependencies": {
+    "claims": [],
+    "sources": []
+  },
+  "referenceArtifacts": [
+    {
+      "file": "context.json",
+      "sha256": "a1544db5e8e0c65d065d56e4c7447332fafdb35d5c2fe2f3723cda4e26e94b4a"
+    },
+    {
+      "file": "review.json",
+      "sha256": "e377727d77498bbc03b86a86b9997ce3bab23d3cef0a9dbca02191549e0aa032"
+    },
+    {
+      "file": "proposed-records.json",
+      "sha256": "172ef5758067fbaabb6594fc02f900b21b8dfe276e4d7c86feebae2e364466c7"
+    },
+    {
+      "file": "identity-only-records.json",
+      "sha256": "1fc314e4a47717bce195b39fe7f1e66bd31f6af892fca4a9420a653eab927a37"
+    },
+    {
+      "file": "exploration-paths.json",
+      "sha256": "d2aaf0388fff0e2100fbe1e0e0bbcf5d9a7b6ec0e4ab84dd439a9e123bfdde4b"
+    }
+  ],
+  "notice": "Automatic checks and grouped recommendations only. Important identity/meaning decisions remain human."
+}

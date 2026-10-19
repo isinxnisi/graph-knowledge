@@ -1,0 +1,287 @@
+{
+  "schemaVersion": 2,
+  "status": "pending-human-acceptance",
+  "recipe": "manga-r0024",
+  "collectionContext": {
+    "themeId": "issue-25-utc-recovery",
+    "themeRevision": 8,
+    "definitionSha256": "cb3fee7f18c6dab34abb4aa0f116d2135756a7b1d2ddf343425cce100d11c621",
+    "approvalSha256": "4f1c86a956b88eb58db11a65fa9fcd43707441bd258463d470b51956084ad22c"
+  },
+  "execution": {
+    "adapter": "manga-discovery-v2",
+    "codeSha256": "80e05b67bc0129b963653b90df4cfbfa5bd6aff190acda99f54c08541e55801e",
+    "inputs": [
+      {
+        "file": "datasets/manga-collection/r0024/recipe.json",
+        "sha256": "a472de07f66a745e963de375daaa5cbde62f67e8ff10c9024dd516ad11c5be21"
+      },
+      {
+        "file": "datasets/manga-collection/r0024/anchor-review.json",
+        "sha256": "e035ba3110b549dd5859e93fe11e46f99c9f84844cd30fb0b8cc814a4b39ae14"
+      },
+      {
+        "file": "datasets/manga-collection/r0024/publication-review.json",
+        "sha256": "c7bc29e6e6f8b1bff50ad9edf1a794c5d697716ac5a5e25d03bca73d4e02fa2a"
+      },
+      {
+        "file": "docs/research/famous-manga-creators/20261016/candidates.json",
+        "sha256": "8531fada01e5c635ba2ee278a7ef944a73f64676af14ed42ae0e690f5a1ff978"
+      },
+      {
+        "file": "datasets/public-kg/releases/20261014-credits-001/data.json",
+        "sha256": "ea91b16f52a211b5a8464382ad498b7b2bb2be69a6f33fe125a73a3c7b9da2b5"
+      },
+      {
+        "file": "datasets/public-kg/releases/20261014-credits-001/manifest.json",
+        "sha256": "e4aa3b58ed884f7d1f8fffee43b260261cc2b4d3a867fda942919f439d2bce17"
+      }
+    ],
+    "maxEntities": 2113,
+    "maxClaims": 1853
+  },
+  "identityMappings": [
+    {
+      "name": "あだち充",
+      "wikidata": "Q351742",
+      "entityId": "1abd838a-b22d-45a4-913f-0ef09205e1e8",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "H2",
+      "wikidata": "Q652892",
+      "entityId": "bb47fc9c-87b1-4df5-a7d6-ecf175d93eb0",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "MIX",
+      "wikidata": "Q11231713",
+      "entityId": "48ca311c-c403-4a24-a1e3-cb6392764397",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    }
+  ],
+  "rows": [
+    {
+      "kind": "wikidata-relation",
+      "work": "H2",
+      "property": "P50",
+      "personQid": "Q351742",
+      "statementId": "Q652892$6CC20109-59B6-483C-8466-C0AC47005FD8",
+      "qualifiers": {},
+      "references": [
+        {
+          "hash": "d4bd87b862b12d99d26e86472d44f26858dee639",
+          "snaks": {
+            "P143": [
+              {
+                "snaktype": "value",
+                "property": "P143",
+                "hash": "f30cbd35620c4ea6d0633aaf0210a8916130469b",
+                "datavalue": {
+                  "value": {
+                    "entity-type": "item",
+                    "numeric-id": 8447,
+                    "id": "Q8447"
+                  },
+                  "type": "wikibase-entityid"
+                },
+                "datatype": "wikibase-item"
+              }
+            ]
+          },
+          "snaks-order": [
+            "P143"
+          ]
+        }
+      ],
+      "status": "candidate-only-no-role-inference",
+      "reason": "Wikidata propertyだけで具体Roleや直接制作の意味を確定しない"
+    },
+    {
+      "kind": "wikidata-relation",
+      "work": "H2",
+      "property": "P110",
+      "personQid": "Q351742",
+      "statementId": "Q652892$3C11C288-B2FF-4296-8239-5EF2CB438128",
+      "qualifiers": {},
+      "references": [
+        {
+          "hash": "d4bd87b862b12d99d26e86472d44f26858dee639",
+          "snaks": {
+            "P143": [
+              {
+                "snaktype": "value",
+                "property": "P143",
+                "hash": "f30cbd35620c4ea6d0633aaf0210a8916130469b",
+                "datavalue": {
+                  "value": {
+                    "entity-type": "item",
+                    "numeric-id": 8447,
+                    "id": "Q8447"
+                  },
+                  "type": "wikibase-entityid"
+                },
+                "datatype": "wikibase-item"
+              }
+            ]
+          },
+          "snaks-order": [
+            "P143"
+          ]
+        }
+      ],
+      "status": "candidate-only-no-role-inference",
+      "reason": "Wikidata propertyだけで具体Roleや直接制作の意味を確定しない"
+    },
+    {
+      "kind": "ndl-credit",
+      "work": "H2",
+      "isbn13": "9784091231512",
+      "rawResponsibility": "あだち充 著",
+      "sourceUrl": "https://ndlsearch.ndl.go.jp/books/R100000002-I000002238601",
+      "status": "pending-human-acceptance",
+      "roleId": "AUTHORSHIP",
+      "person": "あだち充",
+      "claimId": "f1260c3f-2637-416f-b407-2052a7c36717",
+      "reusedClaim": false,
+      "subjectId": "1abd838a-b22d-45a4-913f-0ef09205e1e8",
+      "objectId": "bb47fc9c-87b1-4df5-a7d6-ecf175d93eb0"
+    },
+    {
+      "kind": "wikidata-relation",
+      "work": "MIX",
+      "property": "P50",
+      "personQid": "Q351742",
+      "statementId": "Q11231713$966ce83f-450b-c39b-189a-31c13c6d03bd",
+      "qualifiers": {},
+      "references": [],
+      "status": "candidate-only-no-role-inference",
+      "reason": "Wikidata propertyだけで具体Roleや直接制作の意味を確定しない"
+    },
+    {
+      "kind": "wikidata-relation",
+      "work": "MIX",
+      "property": "P110",
+      "personQid": "Q351742",
+      "statementId": "Q11231713$3A9726C1-45FB-4FB1-AFE1-D12A4FB458BB",
+      "qualifiers": {},
+      "references": [],
+      "status": "candidate-only-no-role-inference",
+      "reason": "Wikidata propertyだけで具体Roleや直接制作の意味を確定しない"
+    },
+    {
+      "kind": "ndl-credit",
+      "work": "MIX",
+      "isbn13": "9784091238672",
+      "rawResponsibility": "あだち充 著",
+      "sourceUrl": "https://ndlsearch.ndl.go.jp/books/R100000002-I023983988",
+      "status": "pending-human-acceptance",
+      "roleId": "AUTHORSHIP",
+      "person": "あだち充",
+      "claimId": "c72262df-ce7b-4514-9341-55d242f94bca",
+      "reusedClaim": false,
+      "subjectId": "1abd838a-b22d-45a4-913f-0ef09205e1e8",
+      "objectId": "48ca311c-c403-4a24-a1e3-cb6392764397"
+    }
+  ],
+  "holds": [
+    {
+      "reason": "publication-identity-unconfirmed",
+      "work": "タッチ",
+      "isbn13": "9784091218612",
+      "matchingRecords": 0,
+      "records": [
+        {
+          "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I000001790190",
+          "isbn13": [
+            "9784091218612"
+          ],
+          "title": [
+            "タッチ. vol.1"
+          ],
+          "mainTitles": [
+            "タッチ"
+          ],
+          "volume": [
+            "vol.1"
+          ],
+          "edition": [],
+          "responsibilities": [
+            "あだち充 原作"
+          ],
+          "publisher": [
+            "小学館"
+          ],
+          "language": [
+            "jpn"
+          ],
+          "genre": [
+            "児童図書",
+            "漫画"
+          ]
+        }
+      ]
+    }
+  ],
+  "acquisitions": [
+    {
+      "kind": "wikidata",
+      "identifier": "Q351742",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q351742.json",
+      "sha256": "14efdc36b2a7dd49135a9275e5aa09c25f7fca2cceceacc848540e9a5e059432",
+      "bytes": 63318,
+      "fetchedAt": "2026-10-18T18:39:39+00:00"
+    },
+    {
+      "kind": "wikidata",
+      "identifier": "Q619500",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q619500.json",
+      "sha256": "a65cd5332f31f1f55f20dce7ff2f8caab613f19124c99eb42fd884edfe0a7bf4",
+      "bytes": 38348,
+      "fetchedAt": "2026-10-18T18:42:06+00:00"
+    },
+    {
+      "kind": "ndl",
+      "identifier": "9784091218612",
+      "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&maximumRecords=5&query=isbn%3D%229784091218612%22+AND+dpid%3Diss-ndl-opac",
+      "sha256": "b25cad851331cbfa67ced0bef168d01f4e6976293b4bc0c17639c36db0ef7854",
+      "bytes": 9168,
+      "fetchedAt": "2026-10-18T18:55:45+00:00"
+    },
+    {
+      "kind": "wikidata",
+      "identifier": "Q652892",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q652892.json",
+      "sha256": "bc7393508664918e11053bdd0d016b399ce427a978b2fe0026928d253419f85b",
+      "bytes": 13373,
+      "fetchedAt": "2026-10-18T18:42:18+00:00"
+    },
+    {
+      "kind": "ndl",
+      "identifier": "9784091231512",
+      "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&maximumRecords=5&query=isbn%3D%229784091231512%22+AND+dpid%3Diss-ndl-opac",
+      "sha256": "9f989573101f724f8967c277701ca6ebf70df184bfe64c1e82c7d614eff38fb5",
+      "bytes": 20137,
+      "fetchedAt": "2026-10-18T18:55:48+00:00"
+    },
+    {
+      "kind": "wikidata",
+      "identifier": "Q11231713",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q11231713.json",
+      "sha256": "428b94a173c98d9112004cb23f7b5189d9bb8039d0794eb6fdf56d31d229b0cb",
+      "bytes": 20755,
+      "fetchedAt": "2026-10-18T18:42:30+00:00"
+    },
+    {
+      "kind": "ndl",
+      "identifier": "9784091238672",
+      "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&maximumRecords=5&query=isbn%3D%229784091238672%22+AND+dpid%3Diss-ndl-opac",
+      "sha256": "e26b03e8d9bc84b3c1dde0262b663cf87baa6d01deeccc7d994a9173c42870dc",
+      "bytes": 11610,
+      "fetchedAt": "2026-10-18T18:55:50+00:00"
+    }
+  ]
+}

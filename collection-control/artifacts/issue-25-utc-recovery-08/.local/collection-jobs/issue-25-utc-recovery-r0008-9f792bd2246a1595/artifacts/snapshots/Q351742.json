@@ -1,0 +1,395 @@
+{
+  "id": "Q351742",
+  "lastrevid": 2541120120,
+  "labels": {
+    "pt": {
+      "language": "pt",
+      "value": "Mitsuru Adachi"
+    },
+    "zh-hans": {
+      "language": "zh-hans",
+      "value": "安达充"
+    },
+    "zh-hant": {
+      "language": "zh-hant",
+      "value": "安達充"
+    },
+    "zh-hk": {
+      "language": "zh-hk",
+      "value": "安達充"
+    },
+    "zh-cn": {
+      "language": "zh-cn",
+      "value": "安达充"
+    },
+    "zh-sg": {
+      "language": "zh-sg",
+      "value": "安达充"
+    },
+    "zh-tw": {
+      "language": "zh-tw",
+      "value": "安達充"
+    },
+    "pl": {
+      "language": "pl",
+      "value": "Mitsuru Adachi"
+    },
+    "ko": {
+      "language": "ko",
+      "value": "아다치 미쓰루"
+    },
+    "fr": {
+      "language": "fr",
+      "value": "Mitsuru Adachi"
+    },
+    "en": {
+      "language": "en",
+      "value": "Mitsuru Adachi"
+    },
+    "ast": {
+      "language": "ast",
+      "value": "Mitsuru Adachi"
+    },
+    "es": {
+      "language": "es",
+      "value": "Mitsuru Adachi"
+    },
+    "th": {
+      "language": "th",
+      "value": "มิตสึรุ อาดาจิ"
+    },
+    "ca": {
+      "language": "ca",
+      "value": "Mitsuru Adachi"
+    },
+    "fi": {
+      "language": "fi",
+      "value": "Mitsuru Adachi"
+    },
+    "ms": {
+      "language": "ms",
+      "value": "Mitsuru Adachi"
+    },
+    "it": {
+      "language": "it",
+      "value": "Mitsuru Adachi"
+    },
+    "id": {
+      "language": "id",
+      "value": "Mitsuru Adachi"
+    },
+    "de": {
+      "language": "de",
+      "value": "Mitsuru Adachi"
+    },
+    "ja": {
+      "language": "ja",
+      "value": "あだち充"
+    },
+    "vi": {
+      "language": "vi",
+      "value": "Adachi Mitsuru"
+    },
+    "sv": {
+      "language": "sv",
+      "value": "Mitsuru Adachi"
+    },
+    "nl": {
+      "language": "nl",
+      "value": "Mitsuru Adachi"
+    },
+    "zh": {
+      "language": "zh",
+      "value": "安達充"
+    },
+    "fa": {
+      "language": "fa",
+      "value": "میتسورو آداچی"
+    },
+    "ar": {
+      "language": "ar",
+      "value": "ميتسورو أداتشي"
+    },
+    "cs": {
+      "language": "cs",
+      "value": "Micuru Adači"
+    },
+    "sk": {
+      "language": "sk",
+      "value": "Mitsuru Adachi"
+    },
+    "nan": {
+      "language": "nan",
+      "value": "Adati Mituru"
+    },
+    "tr": {
+      "language": "tr",
+      "value": "Mitsuru Adachi"
+    },
+    "wuu": {
+      "language": "wuu",
+      "value": "安达充"
+    },
+    "pt-br": {
+      "language": "pt-br",
+      "value": "Mitsuru Adachi"
+    },
+    "ru": {
+      "language": "ru",
+      "value": "Мицуру Адати"
+    },
+    "he": {
+      "language": "he",
+      "value": "מיצורו אדאצ'י"
+    },
+    "sq": {
+      "language": "sq",
+      "value": "Mitsuru Adachi"
+    },
+    "eo": {
+      "language": "eo",
+      "value": "Adaĉi Mitsuru"
+    },
+    "ur": {
+      "language": "ur",
+      "value": "متسورو اداچی"
+    },
+    "uk": {
+      "language": "uk",
+      "value": "Адачі Міцуру"
+    },
+    "hy": {
+      "language": "hy",
+      "value": "Միցուրու Ադաչի"
+    },
+    "az": {
+      "language": "az",
+      "value": "Mitsuru Adaçi"
+    }
+  },
+  "aliases": {
+    "zh": [
+      {
+        "language": "zh",
+        "value": "安达充"
+      }
+    ],
+    "ko": [
+      {
+        "language": "ko",
+        "value": "아다치 미츠루"
+      }
+    ],
+    "th": [
+      {
+        "language": "th",
+        "value": "อาดาจิ มิซึรุ"
+      },
+      {
+        "language": "th",
+        "value": "มิซึรุ อะดะจิ"
+      },
+      {
+        "language": "th",
+        "value": "มิซึรุ อาดาจิ"
+      },
+      {
+        "language": "th",
+        "value": "อะดะจิ มิซุรุ"
+      }
+    ],
+    "de": [
+      {
+        "language": "de",
+        "value": "Adachi Mitsuru"
+      }
+    ],
+    "vi": [
+      {
+        "language": "vi",
+        "value": "Mitsuru Adachi"
+      }
+    ],
+    "nl": [
+      {
+        "language": "nl",
+        "value": "Adachi Mitsuru"
+      }
+    ],
+    "ja": [
+      {
+        "language": "ja",
+        "value": "あだち充,"
+      }
+    ],
+    "cs": [
+      {
+        "language": "cs",
+        "value": "Mitsuru Adachi"
+      }
+    ],
+    "en": [
+      {
+        "language": "en",
+        "value": "Adachi Mitsuru"
+      }
+    ],
+    "ru": [
+      {
+        "language": "ru",
+        "value": "Адати, Мицуру"
+      }
+    ],
+    "eo": [
+      {
+        "language": "eo",
+        "value": "Adachi Mitsuru"
+      },
+      {
+        "language": "eo",
+        "value": "Mitsuru Adachi"
+      }
+    ]
+  },
+  "claims": {
+    "P31": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P31",
+          "hash": "ad7d38a03cdd40cdc373de0dc4e7b7fcbccb31d9",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 5,
+              "id": "Q5"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q351742$18A153CC-9E63-47BB-9893-B612EF7D993B",
+        "rank": "normal",
+        "references": [
+          {
+            "hash": "756bdb60c882dc354f1766ff8c7c5ece448e7701",
+            "snaks": {
+              "P248": [
+                {
+                  "snaktype": "value",
+                  "property": "P248",
+                  "hash": "def9f19d84b65167a2a17ce38364d264c16127fc",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 19938912,
+                      "id": "Q19938912"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ],
+              "P268": [
+                {
+                  "snaktype": "value",
+                  "property": "P268",
+                  "hash": "e27dac83481efe621b62243b885193dc4cbc8aa2",
+                  "datavalue": {
+                    "value": "13530186w",
+                    "type": "string"
+                  },
+                  "datatype": "external-id"
+                }
+              ],
+              "P813": [
+                {
+                  "snaktype": "value",
+                  "property": "P813",
+                  "hash": "d6162a1716489623c6e595e448b17f8dca4fb2e8",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2015-10-10T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P248",
+              "P268",
+              "P813"
+            ]
+          },
+          {
+            "hash": "35715c8aae5cfa2461608046d581a5abe5c0313f",
+            "snaks": {
+              "P248": [
+                {
+                  "snaktype": "value",
+                  "property": "P248",
+                  "hash": "45037a2d1d89deebcdfc5840e9adbaa4b64cebc6",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 50358336,
+                      "id": "Q50358336"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ],
+              "P813": [
+                {
+                  "snaktype": "value",
+                  "property": "P813",
+                  "hash": "09712fd4037b21b6b0845d4c52d3759e73824f69",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2024-02-24T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ],
+              "P950": [
+                {
+                  "snaktype": "value",
+                  "property": "P950",
+                  "hash": "2d27b3e4c3cb31fead5d26e851fb36ae87d196f4",
+                  "datavalue": {
+                    "value": "XX1044802",
+                    "type": "string"
+                  },
+                  "datatype": "external-id"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P248",
+              "P813",
+              "P950"
+            ]
+          }
+        ]
+      }
+    ],
+    "P50": [],
+    "P110": []
+  }
+}
