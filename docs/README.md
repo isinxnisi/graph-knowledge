@@ -51,6 +51,7 @@
 | [漫画r0002の原作正式受入・9 Claim統合候補](design/MANGA_R0002_COMBINED_RELEASE.md) | 2026-10-17。原作5 Claim・6 Entity・3 Source・5 Citationを追加受入。13 Entity／9 Claim統合release -002をvalidate・無書込plan済み。旧-001は保持、全環境applyは禁止 |
 | [漫画r0002の正式受入・release準備](design/MANGA_R0002_ACCEPTED_RELEASE.md)／[ORIGINAL_STORY](design/ORIGINAL_STORY.md) | 2026-10-17。4 Claim・7 Entity・4 Source・4 Citationを人間が正式受入。原作Role実装、原作5件は個別受入待ち。release候補のvalidate・無書込plan、公開applyは未許可 |
 | [漫画r0002の個別受入・公開準備](design/MANGA_R0002_ACCEPTANCE_REVIEW.md)／[制作Role意味レビュー](design/MANGA_PRODUCTION_ROLE_REVIEW.md) | 2026-10-17の初回レビュー記録（hash保全）。4 Claim・15新規Entityの推奨、保留11件と既存2 Claim重複。後続の正式受入・Role採用・release候補は上記記録を参照 |
+| [対象の位置と関係パターンの意味レビュー](design/DISCOVERY_SUBJECT_POSITION_REVIEW.md) | 2026-10-19。作品／中央人物の位置と対象名／関係先名を分離する提案。公開Claimで浦沢・PLUTO・MONSTERとRoleの負例を照合。API・Graph・保存の版追加、未移行3パターンへの影響を整理。未採用・実装／再配置なし |
 | [STEP 4aの時間差エラー調査・旧導線整理](design/DISCOVERY_STABILITY_REVIEW.md) | 2026-10-19。scroll→React→履歴の過剰更新を計測・修正し、履歴頻度制限の注入で比較。単一／複数タブと復帰、401の切り分け。iPhone実機解消は未確認。旧3入口を除外、本番更新なし |
 | [Discovery共通関係条件：STEP 4a UI操作試作](design/DISCOVERY_CONNECTIONS_UI.md) | 2026-10-19。既存プリセット試作に対象検索・選択後・共通条件Graphを接続。名前なしの成立対象、厳密な証拠／版引継ぎ、検索工程への復帰。後続の安定性修正は上記を参照。STEP 4bは人間評価後 |
 | [GraphのEntity操作統一](design/DISCOVERY_GRAPH_ENTITY_INTERACTION.md) | 2026-10-19。通常探索とpatternのクリック／タッチ・枝の開閉を統一。完全証拠と段階表示を分離、別作品からの継続・旧保存移行。STEP 4aでも同じ操作を利用 |
