@@ -35,11 +35,24 @@ gate = module('worker_gate', ROOT / 'scripts/collection-themes.py')
 controls = module('worker_controls', ROOT / 'scripts/collection-worker-control.py')
 issues = module('worker_issues', ROOT / 'scripts/collection-issues.py')
 recovery = module('worker_recovery', ROOT / 'scripts/collection-recovery.py')
+SEQUENCE_SCOPE = 'approved-register-sequential-acceptance-only'
 read, dump, require, digest, save = gate.read, gate.dump, gate.require, gate.content_hash, gate.save
 
 
 class Blocked(ValueError):
     pass
+
+
+def workflow_failure(raw):
+    try:
+        failure = json.loads(raw)
+        message = str(failure['error'])
+    except (ValueError, KeyError, TypeError):
+        failure = {}; message = 'Workflow failed; private local log retained'
+    if failure.get('humanReviewRequired') is True or re.search(
+            r'hash|changed|differs|scope|identity|duplicate|collision|conflict|meaning|required|unapproved|revoked|unsupported|overlap|budget exhausted', message, re.I):
+        return Blocked(message)
+    return RuntimeError(message)
 
 
 def insist(test, message):
@@ -217,7 +230,23 @@ class Executor:
     def validate(self, request, parent=None):
         w = self.workflow
         self.sync_inputs(request['sourceCommit'])
-        if request['kind'] == 'issue-prepare':
+        if request['kind'] == 'accept-sequence':
+            reference = request['register']
+            insist(set(reference) == {'file', 'sha256'} and relative(reference['file']).startswith(PREFIX + 'approval-registers/'),
+                   'Pinned approval register reference required')
+            value, sha = self.store.json(reference['file'])
+            insist(sha == reference['sha256'], 'Approval register hash changed')
+            for batch in value['batchDecisions']:
+                envelope = batch['envelope']
+                result, _ = self.store.json(PREFIX + 'results/' + slug(envelope['parentRequestId']) + '/status.json')
+                insist(result['phase'] == 'completed' and result['kind'] == 'collect-review'
+                       and result['reviewReference'] == envelope['decision']['review'], 'Completed exact original review parent required')
+            first = value['batchDecisions'][0]['envelope']
+            record, _ = self.store.json(PREFIX + 'results/' + slug(first['id']) + '/status.json')
+            original, original_sha = self.store.json(PREFIX + 'requests/' + first['id'] + '.json')
+            insist(original == first and record['requestSha256'] == original_sha, 'Existing first request differs from registered approval')
+            insist(record['phase'] == 'completed', 'Complete the original first request before deploying its successor sequence')
+        elif request['kind'] == 'issue-prepare':
             if request.get('resumePreparationId'):
                 slug(request['resumePreparationId']); slug(request['preparationCycle'])
                 insist(parent and parent['requestId'] == request['resumePreparationId'] and parent['phase'] == 'completed' and
@@ -267,7 +296,16 @@ class Executor:
         w = self.workflow
         monitor()  # Recheck after publishing "running", before any new gate/decision write.
         script = 'collection-workflow.py'
-        if request['kind'] == 'issue-prepare':
+        if request['kind'] == 'accept-sequence':
+            raw = self.store.blob(request['register']['file'])
+            insist(gate.digest(raw) == request['register']['sha256'], 'Approval register hash changed')
+            workspace = self.root / '.local/acceptance-sequences' / slug(request['id'])
+            path = workspace / 'register-source.json'
+            if path.exists(): insist(path.read_bytes() == raw, 'Frozen register source changed')
+            else: path.parent.mkdir(parents=True, exist_ok=True); path.write_bytes(raw)
+            args = ['accept-sequence', '--register', str(path), '--register-sha', request['register']['sha256'],
+                    '--state-dir', str(workspace)]
+        elif request['kind'] == 'issue-prepare':
             path = self.root / '.local/collection-issues' / request['id'] / 'request.json'
             issues.frozen(path, request)
             args = ['--request', str(path)]; script = 'collection-issues.py'
@@ -314,17 +352,16 @@ class Executor:
                 raise
             out.seek(0); err.seek(0)
             if child.returncode:
-                raw = err.read()[-4000:]
-                try: message = json.loads(raw)['error']
-                except (ValueError, KeyError): message = 'Workflow failed; private local log retained'
-                if re.search(r'hash|changed|differs|scope|identity|duplicate|collision|conflict|meaning|required|unapproved|revoked|unsupported|overlap|budget exhausted', message, re.I):
-                    raise Blocked(message)
-                raise RuntimeError(message)
+                raise workflow_failure(err.read()[-4000:])
             return json.load(out)
 
     def artifacts(self, request, result):
         roots, draft_names = [], []
-        if request['kind'] == 'issue-prepare':
+        if request['kind'] == 'accept-sequence':
+            roots = [Path(result['stateDirectory'])]
+            if result.get('lastResult'):
+                roots += [Path(result['lastResult']['acceptance']).parent, Path(result['lastResult']['releaseDirectory'])]
+        elif request['kind'] == 'issue-prepare':
             work = Path(result['preparationDirectory'])
             roots = [work / 'README.md', work / 'preparation.json', work / 'request.json', work / 'request-cache/requests.json']
             for name, sha in result['generatedArtifacts'].items():
@@ -378,13 +415,25 @@ class Executor:
                 if path.is_file():
                     insist(path.resolve().is_relative_to(self.root), 'Artifact escapes runtime')
                     insist(path.stat().st_size <= 25_000_000, 'Artifact too large for control repository')
-                    files[path.relative_to(self.root).as_posix()] = path.read_bytes()
+                    name = path.relative_to(self.root).as_posix()
+                    # Keep hash-bound receipts/reviews/releases at their original relative paths
+                    # so Phase A can reconcile GitHub-only artifacts. Mutable operational reports
+                    # use append-only snapshots instead of replacing an earlier frozen artifact.
+                    if request['kind'] == 'accept-sequence' and path.name in ['state.json', 'validation.json', 'preparation.json', 'preparation.md']:
+                        name = 'datasets/collection-sequences/reports/' + request['id'] + '/' + digest(result)[:20] + '/' + name
+                    files[name] = path.read_bytes()
         insist(sum(map(len, files.values())) <= 100_000_000, 'Artifact bundle too large for control repository')
         return files, draft_names
 
     def partial(self, request):
-        if request.get('kind') != 'accept-release': return None
-        ident = slug(request['decision']['decisionId'])
+        if request.get('kind') == 'accept-sequence':
+            state = self.root / '.local/acceptance-sequences' / slug(request['id']) / 'state.json'
+            if not state.exists() or not read(state).get('currentDecisionId'): return None
+            ident = slug(read(state)['currentDecisionId'])
+        elif request.get('kind') == 'accept-release':
+            ident = slug(request['decision']['decisionId'])
+        else:
+            return None
         target = self.root / 'datasets/manga-collection' / ('accepted-' + ident)
         if not (target / 'acceptance.json').exists(): return None
         receipt = read(target / 'acceptance.json')
@@ -420,10 +469,14 @@ class Worker:
 
     def approved(self, request):
         insist(request['schemaVersion'] == 1 and request['status'] == 'approved', 'Request is not explicitly approved')
-        slug(request['id']); insist(request['kind'] in ['issue-prepare', 'collect-review', 'accept-release'], 'Unsupported operation; apply/restore/deployment forbidden')
+        slug(request['id']); insist(request['kind'] in ['issue-prepare', 'collect-review', 'accept-release', 'accept-sequence'], 'Unsupported operation; apply/restore/deployment forbidden')
         insist(request['applyAuthorized'] == NO_APPLY, 'Public apply forbidden')
         h = request['humanDecision'] if request['kind'] != 'accept-release' else request['decision']['humanDecision']
         human(h)
+        if request['kind'] == 'accept-sequence':
+            insist(request['approvalScope'] == SEQUENCE_SCOPE, 'Explicit sequence execution approval required')
+            insist(re.fullmatch(r'[0-9a-f]{64}', request['register']['sha256']), 'Pinned register hash required')
+            return 'accept-sequence:' + request['register']['sha256']
         if request['kind'] == 'issue-prepare':
             insist(request['approvalScope'] == issues.SCOPE and request.get('issueOrigin'), 'Explicit Issue permission scope required')
             cycle = slug(request.get('preparationCycle', 'initial'))
@@ -442,6 +495,19 @@ class Worker:
         current, current_sha = self.store.json(path)
         insist(current_sha == sha and current == request, 'Approval record changed; it cannot be rebound')
         self.approved(current)
+        if current['kind'] == 'accept-sequence':
+            reference = current['register']; register_value, register_sha = self.store.json(relative(reference['file']))
+            insist(register_sha == reference['sha256'], 'Approval register changed; sequence stopped')
+            for batch in register_value['batchDecisions']:
+                envelope = batch['envelope']
+                for ident in [envelope['id'], envelope['parentRequestId']]:
+                    insist(PREFIX + 'revocations/' + slug(ident) + '.json' not in self.store.tree(self.store.head, PREFIX + 'revocations/'),
+                           'Original acceptance or collection approval revoked; sequence stopped')
+            first = register_value['batchDecisions'][0]['envelope']
+            first_request, first_sha = self.store.json(PREFIX + 'requests/' + slug(first['id']) + '.json')
+            first_result, _ = self.store.json(PREFIX + 'results/' + first['id'] + '/status.json')
+            insist(first_request == first and first_result['requestSha256'] == first_sha and first_result['phase'] == 'completed',
+                   'Original first request changed or is incomplete; sequence stopped')
         if current.get('recovery'):
             proof = current['recovery']; predecessor = slug(proof['predecessorRequestId'])
             original, original_sha = self.store.json(PREFIX + 'requests/' + predecessor + '.json')
@@ -473,7 +539,12 @@ class Worker:
             human_text += '**正式受入記録は保存済み・公開準備は未完了・公開未適用。** 受入そのものを未受入へ戻さず、同じ依頼から再開する。\n\n'
         if 'result' in record:
             result = record['result']
-            human_text += '```json\n' + dump({k: result[k] for k in ['counts', 'acceptedCounts', 'releaseAdditions', 'heldClaims'] if k in result}) + '```\n\n'
+            summary = {k: result[k] for k in ['counts', 'acceptedCounts', 'releaseAdditions', 'heldClaims',
+                'status', 'completedGroups', 'completedDecisionId', 'sequenceComplete'] if k in result}
+            if request['kind'] == 'accept-sequence' and result.get('lastResult'):
+                summary['lastGroup'] = {k: result['lastResult'][k] for k in ['decisionId', 'recordedAt', 'acceptedCounts',
+                    'releaseAdditions', 'acceptanceReused', 'publicApply'] if k in result['lastResult']}
+            human_text += '```json\n' + dump(summary) + '```\n\n'
             human_text += '収集候補／正式受入済み未適用／公開snapshot収録は下記資料の接続ごとの状態を参照。公開画面の実探索確認ではない。\n\n'
         files = {base + 'status.json': dump(record).encode()}
         immutable = []
@@ -500,6 +571,15 @@ class Worker:
         record['phase'] = 'completed'; record.pop('message', None)
         self.checkpoint(); self.publish(request, record, artifacts)
 
+    def publish_sequence_progress(self, request, record):
+        artifacts, _ = self.executor.artifacts(request, record['result'])
+        self.active(request, record['requestSha256'])
+        record['phase'] = 'sequence-progress'
+        record.pop('savedAcceptance', None)
+        self.publish(request, record, artifacts)
+        record.pop('sequencePublicationPending', None)
+        self.checkpoint()
+
     def tick(self):
         self.store.sync()
         issues.poll(self)
@@ -520,7 +600,8 @@ class Worker:
                 old.update(phase='blocked', message='Approval record removed; no further execution')
                 if old.get('request'): self.publish(old['request'], old)
         # Collection parents before acceptance children, independent of lexical request IDs.
-        loaded.sort(key=lambda pair: ['issue-prepare', 'collect-review', 'accept-release'].index(pair[0]['kind']) if pair[0].get('kind') in ['issue-prepare', 'collect-review', 'accept-release'] else 3)
+        kinds = ['issue-prepare', 'collect-review', 'accept-release', 'accept-sequence']
+        loaded.sort(key=lambda pair: kinds.index(pair[0]['kind']) if pair[0].get('kind') in kinds else len(kinds))
         for request, sha in loaded:
             ident = request['id']
             record = self.state['requests'].get(ident)
@@ -579,6 +660,9 @@ class Worker:
                                 # pre-handoff checks happened less than 20 seconds ago.
                                 last[0] = time.monotonic() if self.control.work_started else None
                             monitor()
+                            if request['kind'] == 'accept-sequence' and record.get('sequencePublicationPending'):
+                                self.publish_sequence_progress(request, record)
+                                continue  # Resume saved publication before starting another group.
                             if not record.get('executionComplete'):
                                 try: self.executor.validate(request, self.state['requests'].get(request.get('parentRequestId')))
                                 except (ValueError, KeyError, TypeError) as error: raise Blocked(str(error)) from None
@@ -589,6 +673,11 @@ class Worker:
                                 last[0] = None; monitor()
                                 self.control.work_started = True
                                 result = self.executor.run(request, monitor, fd)
+                                if request['kind'] == 'accept-sequence' and not result['sequenceComplete']:
+                                    record.update(result=result, executionComplete=False, phase='sequence-progress', sequencePublicationPending=True)
+                                    self.checkpoint()
+                                    self.publish_sequence_progress(request, record)
+                                    continue
                                 record.update(result=result, executionComplete=True, phase='publishing'); self.checkpoint()
                             else:
                                 self.control.work_started = True

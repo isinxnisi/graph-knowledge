@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "id": "issue-25-normal-sequence-after-first",
+  "kind": "accept-sequence",
+  "status": "draft-not-approved",
+  "sourceCommit": null,
+  "approvalScope": "approved-register-sequential-acceptance-only",
+  "applyAuthorized": { "local": false, "beta": false, "vps": false },
+  "register": {
+    "file": "collection-control/approval-registers/issue-25-20261019-normal-10.json",
+    "sha256": "82b53f2bb1e0c1e5402af117a22de2a809ecf0588a56743e6aaef3258b42e8d6"
+  },
+  "humanDecision": {
+    "actorType": "human",
+    "reviewer": null,
+    "decidedAt": null,
+    "statement": null
+  }
+}

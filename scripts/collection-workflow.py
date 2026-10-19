@@ -92,6 +92,7 @@ def accepted_additions(release, receipts):
     base, current = index(read(base_path / 'data.json')), index(fixture)
     refs = [reference(release / f) for f in ['data.json', 'manifest.json']] + [reference(base_path / 'data.json')]
     permitted = {f: {} for f in FIELDS}
+    checked_json = {}
     for path in receipts:
         receipt = read(path)
         require(receipt['status'] == 'accepted-for-release-preparation-only' and receipt['reviewer']
@@ -103,7 +104,12 @@ def accepted_additions(release, receipts):
             require(gate.file_hash(source) == row['sha256'], 'Accepted reference changed: ' + row['file'])
             refs.append(reference(source))
             if source.suffix == '.json':
-                value = read(source)
+                # Each reference is still hashed above. Reuse only the parse of the exact
+                # same file/hash within this validation; never cache an acceptance decision.
+                key = (str(source), row['sha256'])
+                if key not in checked_json:
+                    checked_json[key] = read(source)
+                value = checked_json[key]
                 if isinstance(value, dict) and isinstance(value.get('records'), dict):
                     proposals.append(value['records'])
         for field in FIELDS:
@@ -150,6 +156,13 @@ def discover_accepted():
         if ident:
             require(re.fullmatch(r'[a-z0-9-]+', ident), 'Invalid accepted release ID')
             candidates.add(ROOT / 'datasets/public-kg/releases' / ident)
+    # A saved receipt can outlive a failed preparation. A later cumulative preparation
+    # may cover it without rewriting that immutable receipt's original release pointer.
+    required = {(reference(p)['file'], gate.file_hash(p)) for p in receipts}
+    for path in (ROOT / 'datasets/public-kg/releases').glob('*/manifest.json'):
+        manifest = read(path)
+        if required <= {(r['file'], r['sha256']) for r in manifest.get('inputs', [])}:
+            candidates.add(path.parent)
     valid = []
     for directory in sorted(candidates):
         if not (directory / 'manifest.json').is_file():
@@ -523,6 +536,9 @@ def write_review(reviews, outputs):
 
 
 def execute(args):
+    if args.command == 'accept-sequence':
+        sequence = load('collection_sequence', ROOT / 'scripts/collection-sequence.py')
+        return sequence.execute(args, SimpleNamespace(**globals()))
     if args.command == 'inventory':
         inventory = load('collection_inventory', ROOT / 'scripts/collection-inventory.py')
         return inventory.execute(args, SimpleNamespace(**globals()))
@@ -585,6 +601,8 @@ def parser():
     acceptance.add_parsers(sub, ROOT)
     inventory = load('collection_inventory_parser', ROOT / 'scripts/collection-inventory.py')
     inventory.add_parser(sub)
+    sequence = load('collection_sequence_parser', ROOT / 'scripts/collection-sequence.py')
+    sequence.add_parser(sub)
     for command in ['collect-review', 'review-job']:
         item = sub.add_parser(command)
         if command == 'collect-review':
@@ -600,10 +618,18 @@ def parser():
 
 
 def main():
+    args = None
     try:
-        print(dump(execute(parser().parse_args())), end='')
+        args = parser().parse_args()
+        print(dump(execute(args)), end='')
     except (ValueError, OSError, KeyError, TypeError, subprocess.SubprocessError) as error:
-        print(dump({'error': str(error), 'notice': 'No public apply. Immutable completed stages, including any saved human acceptance, remain available for retry.'}), file=sys.stderr, end='')
+        failure = {'error': str(error), 'notice': 'No public apply. Immutable completed stages, including any saved human acceptance, remain available for retry.'}
+        if args and args.command == 'accept-sequence' and isinstance(error, (ValueError, KeyError, TypeError)):
+            # Integrity/equivalence failures require a human even if their text is
+            # unfamiliar. I/O and subprocess interruption can still resume safely.
+            failure['humanReviewRequired'] = True
+            failure['error'] = str(error)[:1000]  # Keep the structured flag inside Worker's bounded error tail.
+        print(dump(failure), file=sys.stderr, end='')
         return 1
     return 0
 

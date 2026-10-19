@@ -42,3 +42,4 @@ playwright-report/
 /datasets/manga-collection/.lock
 /.local/collection-jobs/
 /.local/collection-trials/
+/.local/acceptance-sequences/

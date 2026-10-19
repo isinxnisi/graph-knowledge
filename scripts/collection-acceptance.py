@@ -22,6 +22,8 @@ def add_parsers(sub, root):
     accept.add_argument('--decision-sha', required=True, help='SHA-256 of the completed human decision file')
     accept.add_argument('--acceptances', type=Path, default=root / 'datasets/manga-collection')
     accept.add_argument('--releases', type=Path, default=root / 'datasets/public-kg/releases')
+    accept.add_argument('--continuation', type=Path, help='Hash-bound mechanical comparison refresh; original human decision stays immutable')
+    accept.add_argument('--continuation-sha', help='SHA-256 of the separate continuation proof')
 
 
 def slug(value, w):
@@ -259,6 +261,14 @@ def accept(args, w):
     w.require(decision['scopeByClaim'] == scope_rows(selected, w), 'Approved Claim meaning/Role/scope differs')
     w.require(decision['baseRelease'] == context['public']['release'] and decision['baseRevision'] == context['public']['revision'],
               'Decision public base/revision differs from reviewed observation')
+    continuation = None
+    if getattr(args, 'continuation', None):
+        sequence = w.load('acceptance_continuation', w.ROOT / 'scripts/collection-sequence.py')
+        context, added_refs = sequence.verify_continuation(args, decision, w)
+        review_refs = list({(r['file'], r['sha256']): r for r in review_refs + added_refs}.values())
+        continuation = w.reference(args.continuation)
+    else:
+        w.require(not getattr(args, 'continuation_sha', None), 'Continuation proof file required')
     ident, release_id = slug(decision['decisionId'], w), slug(decision['releaseId'], w)
     w.require(release_id != decision['baseRelease'], 'A new immutable release ID is required')
     target = args.acceptances.resolve() / ('accepted-' + ident)
@@ -290,6 +300,8 @@ def accept(args, w):
         'acceptedRecordIds': decision['acceptedRecordIds'], 'scopeByClaim': decision['scopeByClaim'],
         'counts': {f: len(selected[f]) for f in w.FIELDS}, 'baseRelease': observed['release'], 'baseRevision': observed['revision'],
         'combinedReleaseCandidate': release_id, 'sourceJobId': context['jobId'], 'applyAuthorized': NO_APPLY}
+    if continuation:
+        receipt['comparisonContinuation'] = continuation
     immutable = {'decision.json': decision_text, 'accepted-records.json': selected_text}
     receipt_exists = (target / 'acceptance.json').exists()
     if target.exists():
@@ -336,6 +348,10 @@ def accept(args, w):
     _, latest = w.public_snapshot()
     same_public(expected, latest, w)
     w.require(latest == observed, 'Public snapshot changed during preparation')
+    w.require(set(args.acceptances.resolve().glob('accepted-*/acceptance.json')) - {target / 'acceptance.json'}
+              <= {p.resolve() for p in receipts}, 'Additional formal acceptances exist outside the reviewed comparison set')
+    if continuation:
+        sequence.verify_continuation(args, decision, w)
     if not receipt_exists:
         immutable_directory(target, immutable, w)
     try:
@@ -362,6 +378,8 @@ def accept(args, w):
             w.require((target / name).read_text(encoding='utf-8') == content, 'Acceptance changed during plan')
         w.require(w.gate.file_hash(args.decision) == args.decision_sha, 'Decision changed during plan')
         bundle(review, w)
+        if continuation:
+            sequence.verify_continuation(args, decision, w)
         for row in prior_refs + observed['references']:
             checked_reference(row, w)
         indexed, public_ids = w.index(fixture), w.index(public)
