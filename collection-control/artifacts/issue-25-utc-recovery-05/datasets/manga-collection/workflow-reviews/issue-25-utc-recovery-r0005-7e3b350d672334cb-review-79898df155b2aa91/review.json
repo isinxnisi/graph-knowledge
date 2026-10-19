@@ -1,0 +1,57 @@
+{
+  "status": "pending-human-acceptance",
+  "humanReviewer": null,
+  "entities": [
+    {
+      "entityId": "45401343-bba1-4070-b4b0-ddd9cc7047fb",
+      "name": "黄泉のツガイ",
+      "kind": "work",
+      "wikidata": "Q111944796",
+      "existingEntityId": null,
+      "status": "candidate",
+      "reasons": [],
+      "checks": {
+        "providerIdentity": true
+      },
+      "inputPopulation": "identity-only"
+    },
+    {
+      "entityId": "a8b8fe75-b4fe-492e-b044-593f92ac5cd4",
+      "name": "荒川弘",
+      "kind": "person",
+      "wikidata": "Q230962",
+      "existingEntityId": null,
+      "status": "candidate",
+      "reasons": [],
+      "checks": {
+        "providerIdentity": true
+      },
+      "inputPopulation": "identity-only"
+    }
+  ],
+  "claims": [],
+  "inheritedHolds": [
+    {
+      "reason": "unsupported-responsibility-role",
+      "work": "黄泉のツガイ",
+      "rawResponsibility": "荒川弘",
+      "sourceUrl": "https://ndlsearch.ndl.go.jp/books/R100000002-I032181220"
+    }
+  ],
+  "newCandidateCounts": {
+    "entities": 0,
+    "claims": 0,
+    "sources": 0,
+    "citations": 0
+  },
+  "recordConflicts": [],
+  "roleCounts": {},
+  "normalReviewedEntityCount": 0,
+  "reusedCitationIds": [],
+  "identityOnlyEntityIds": [
+    "45401343-bba1-4070-b4b0-ddd9cc7047fb",
+    "a8b8fe75-b4fe-492e-b044-593f92ac5cd4"
+  ],
+  "heldClaimCount": 0,
+  "heldEntityCount": 0
+}

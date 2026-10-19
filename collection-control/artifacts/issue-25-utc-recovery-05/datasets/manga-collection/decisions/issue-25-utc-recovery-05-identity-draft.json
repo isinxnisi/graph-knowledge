@@ -1,0 +1,77 @@
+{
+  "schemaVersion": 1,
+  "decisionId": "issue-25-utc-recovery-05-identity",
+  "status": "draft-not-approved",
+  "humanDecision": {
+    "actorType": "human",
+    "reviewer": null,
+    "decidedAt": null,
+    "statement": null
+  },
+  "approvalScope": "formal-record-acceptance-and-release-preparation-only",
+  "applyAuthorized": {
+    "local": false,
+    "beta": false,
+    "vps": false
+  },
+  "review": {
+    "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0005-7e3b350d672334cb-review-79898df155b2aa91/review-manifest.json",
+    "sha256": "5ad67f522f33fe68bb563bcc04298a0410c0845e5508c7f54d0482f243bac04a"
+  },
+  "referenceArtifacts": [
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0005-7e3b350d672334cb-review-79898df155b2aa91/README.md",
+      "sha256": "33111a2059e17acd4d7db85d311d26e95c88941b296ab87231a2582804bf9b31"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0005-7e3b350d672334cb-review-79898df155b2aa91/context.json",
+      "sha256": "a46ed9d0fddabaf0ed385b340c08aae0178b9f6eaa2b6801ffc3df055e88c8bc"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0005-7e3b350d672334cb-review-79898df155b2aa91/decision-request.json",
+      "sha256": "63a8ee1305151d80c9c0ebcabb3e0a37966ce82075fd085e877bc3f5df46bc07"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0005-7e3b350d672334cb-review-79898df155b2aa91/exploration-paths.json",
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0005-7e3b350d672334cb-review-79898df155b2aa91/identity-only-records.json",
+      "sha256": "50a477a5018cc1b205ea13235f362dd8aeb378bdbdd950f14f5fddc8d87d2405"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0005-7e3b350d672334cb-review-79898df155b2aa91/proposed-records.json",
+      "sha256": "ff3382e35738eba753a90c55086ebbdfb3ee4a3afb843bf4250d731969f0a91f"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0005-7e3b350d672334cb-review-79898df155b2aa91/review-manifest.json",
+      "sha256": "5ad67f522f33fe68bb563bcc04298a0410c0845e5508c7f54d0482f243bac04a"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0005-7e3b350d672334cb-review-79898df155b2aa91/review.json",
+      "sha256": "6a61e3724e7f99a4e60c00784f6b0a9e073f10cd0c160a6d1ad60ad1298a020a"
+    }
+  ],
+  "acceptedRecordIds": {
+    "entities": [
+      "45401343-bba1-4070-b4b0-ddd9cc7047fb",
+      "a8b8fe75-b4fe-492e-b044-593f92ac5cd4"
+    ],
+    "claims": [],
+    "sources": [],
+    "citations": []
+  },
+  "recordSha256": {
+    "entities": {
+      "45401343-bba1-4070-b4b0-ddd9cc7047fb": "00ea3fe6a9f6bf28eec3bc897a0742b5c71394216e3efabffe5243eb29e2d7a9",
+      "a8b8fe75-b4fe-492e-b044-593f92ac5cd4": "bd49e306621dd6e76602b1cb58cf5b4f0e2b2699ec760512a8a59d3886374d03"
+    },
+    "claims": {},
+    "sources": {},
+    "citations": {}
+  },
+  "scopeByClaim": [],
+  "baseRelease": "20261014-credits-001",
+  "baseRevision": "82b01515-594c-48ca-b4b6-515eefac83ca",
+  "releaseId": "manga-issue-25-utc-recovery-05-identity"
+}

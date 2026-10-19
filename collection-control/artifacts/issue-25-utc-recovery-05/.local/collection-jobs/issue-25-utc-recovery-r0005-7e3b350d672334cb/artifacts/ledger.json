@@ -1,0 +1,125 @@
+{
+  "schemaVersion": 2,
+  "status": "pending-human-acceptance",
+  "recipe": "manga-r0021",
+  "collectionContext": {
+    "themeId": "issue-25-utc-recovery",
+    "themeRevision": 5,
+    "definitionSha256": "ea12c6d924e5886a9a2a91c56055a4dc50a94a333a71192fa55c02a50b0fc7f3",
+    "approvalSha256": "a6b0f3a99964fa03aa2956df611617a51a77686ec44dff3b0e6a6a7002141026"
+  },
+  "execution": {
+    "adapter": "manga-discovery-v2",
+    "codeSha256": "80e05b67bc0129b963653b90df4cfbfa5bd6aff190acda99f54c08541e55801e",
+    "inputs": [
+      {
+        "file": "datasets/manga-collection/r0021/recipe.json",
+        "sha256": "02e344e0cd018632be797b5b21a635514de80202b9887e74e3790efdfd15be65"
+      },
+      {
+        "file": "datasets/manga-collection/r0021/anchor-review.json",
+        "sha256": "e16cafd1f19b4abdf21944a65a9099d0103481b1633e765be100cc1d52cb89a5"
+      },
+      {
+        "file": "datasets/manga-collection/r0021/publication-review.json",
+        "sha256": "7c6f978c818a482c5a98e0b38fdeabd5346635b5397e12157786a9693ad4964a"
+      },
+      {
+        "file": "docs/research/famous-manga-creators/20261016/candidates.json",
+        "sha256": "8531fada01e5c635ba2ee278a7ef944a73f64676af14ed42ae0e690f5a1ff978"
+      },
+      {
+        "file": "datasets/public-kg/releases/20261014-credits-001/data.json",
+        "sha256": "ea91b16f52a211b5a8464382ad498b7b2bb2be69a6f33fe125a73a3c7b9da2b5"
+      },
+      {
+        "file": "datasets/public-kg/releases/20261014-credits-001/manifest.json",
+        "sha256": "e4aa3b58ed884f7d1f8fffee43b260261cc2b4d3a867fda942919f439d2bce17"
+      }
+    ],
+    "maxEntities": 2111,
+    "maxClaims": 1847
+  },
+  "identityMappings": [
+    {
+      "name": "荒川弘",
+      "wikidata": "Q230962",
+      "entityId": "a8b8fe75-b4fe-492e-b044-593f92ac5cd4",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "黄泉のツガイ",
+      "wikidata": "Q111944796",
+      "entityId": "45401343-bba1-4070-b4b0-ddd9cc7047fb",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    }
+  ],
+  "rows": [
+    {
+      "kind": "wikidata-relation",
+      "work": "黄泉のツガイ",
+      "property": "P50",
+      "personQid": "Q230962",
+      "statementId": "Q111944796$3fad0194-4455-bf3b-6b7a-4a6366348fba",
+      "qualifiers": {},
+      "references": [],
+      "status": "candidate-only-no-role-inference",
+      "reason": "Wikidata propertyだけで具体Roleや直接制作の意味を確定しない"
+    },
+    {
+      "kind": "wikidata-relation",
+      "work": "黄泉のツガイ",
+      "property": "P110",
+      "personQid": "Q230962",
+      "statementId": "Q111944796$a3fa8962-4a52-5971-96ad-b75ae30fd20d",
+      "qualifiers": {},
+      "references": [],
+      "status": "candidate-only-no-role-inference",
+      "reason": "Wikidata propertyだけで具体Roleや直接制作の意味を確定しない"
+    },
+    {
+      "kind": "ndl-credit",
+      "work": "黄泉のツガイ",
+      "isbn13": "9784757579620",
+      "rawResponsibility": "荒川弘",
+      "sourceUrl": "https://ndlsearch.ndl.go.jp/books/R100000002-I032181220",
+      "status": "held"
+    }
+  ],
+  "holds": [
+    {
+      "reason": "unsupported-responsibility-role",
+      "work": "黄泉のツガイ",
+      "rawResponsibility": "荒川弘",
+      "sourceUrl": "https://ndlsearch.ndl.go.jp/books/R100000002-I032181220"
+    }
+  ],
+  "acquisitions": [
+    {
+      "kind": "wikidata",
+      "identifier": "Q230962",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q230962.json",
+      "sha256": "51d093f8fd38bcc0879e60c5b9acfcfd8a04f6e056995919cf8933c5927c6e7f",
+      "bytes": 86767,
+      "fetchedAt": "2026-10-18T18:39:31+00:00"
+    },
+    {
+      "kind": "wikidata",
+      "identifier": "Q111944796",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q111944796.json",
+      "sha256": "97671928b89c4e0e7bd3ada05d80628dde3d758ec4f796e1b0533d19322ff64b",
+      "bytes": 18609,
+      "fetchedAt": "2026-10-18T18:41:08+00:00"
+    },
+    {
+      "kind": "ndl",
+      "identifier": "9784757579620",
+      "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&maximumRecords=5&query=isbn%3D%229784757579620%22+AND+dpid%3Diss-ndl-opac",
+      "sha256": "277ec235171aa946f1ec194d56301ccc6e80085940c134693b5eb60079f9af4d",
+      "bytes": 7770,
+      "fetchedAt": "2026-10-18T18:55:27+00:00"
+    }
+  ]
+}

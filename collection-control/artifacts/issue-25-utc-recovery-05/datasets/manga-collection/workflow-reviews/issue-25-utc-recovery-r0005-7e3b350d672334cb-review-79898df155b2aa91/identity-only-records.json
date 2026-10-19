@@ -1,0 +1,46 @@
+{
+  "status": "pending-human-identity-only-decision",
+  "records": {
+    "entities": [
+      {
+        "id": "45401343-bba1-4070-b4b0-ddd9cc7047fb",
+        "kind": "work",
+        "name": "黄泉のツガイ",
+        "description": null,
+        "aliases": [
+          "Daemons of the Shadow Realm"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q111944796"
+          }
+        ],
+        "createdAt": "2026-10-18T18:54:58Z",
+        "updatedAt": "2026-10-18T18:54:58Z",
+        "event": null
+      },
+      {
+        "id": "a8b8fe75-b4fe-492e-b044-593f92ac5cd4",
+        "kind": "person",
+        "name": "荒川弘",
+        "description": null,
+        "aliases": [
+          "Hiromu Arakawa"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q230962"
+          }
+        ],
+        "createdAt": "2026-10-18T18:54:58Z",
+        "updatedAt": "2026-10-18T18:54:58Z",
+        "event": null
+      }
+    ],
+    "claims": [],
+    "sources": [],
+    "citations": []
+  }
+}

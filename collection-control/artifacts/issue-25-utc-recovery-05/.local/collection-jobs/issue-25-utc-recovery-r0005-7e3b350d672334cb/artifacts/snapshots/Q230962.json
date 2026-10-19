@@ -1,0 +1,511 @@
+{
+  "id": "Q230962",
+  "lastrevid": 2553674217,
+  "labels": {
+    "pt": {
+      "language": "pt",
+      "value": "Hiromu Arakawa"
+    },
+    "zh-hans": {
+      "language": "zh-hans",
+      "value": "荒川弘"
+    },
+    "zh-hant": {
+      "language": "zh-hant",
+      "value": "荒川弘"
+    },
+    "zh-hk": {
+      "language": "zh-hk",
+      "value": "荒川弘"
+    },
+    "zh-cn": {
+      "language": "zh-cn",
+      "value": "荒川弘"
+    },
+    "zh-sg": {
+      "language": "zh-sg",
+      "value": "荒川弘"
+    },
+    "zh-tw": {
+      "language": "zh-tw",
+      "value": "荒川弘"
+    },
+    "eo": {
+      "language": "eo",
+      "value": "Arakawa Hiromu"
+    },
+    "pl": {
+      "language": "pl",
+      "value": "Hiromu Arakawa"
+    },
+    "fr": {
+      "language": "fr",
+      "value": "Hiromu Arakawa"
+    },
+    "ko": {
+      "language": "ko",
+      "value": "아라카와 히로무"
+    },
+    "ru": {
+      "language": "ru",
+      "value": "Хирому Аракава"
+    },
+    "en": {
+      "language": "en",
+      "value": "Hiromu Arakawa"
+    },
+    "es": {
+      "language": "es",
+      "value": "Hiromu Arakawa"
+    },
+    "tr": {
+      "language": "tr",
+      "value": "Hiromu Arakawa"
+    },
+    "th": {
+      "language": "th",
+      "value": "ฮิโระมุ อะระกะวะ"
+    },
+    "ca": {
+      "language": "ca",
+      "value": "Hiromu Arakawa"
+    },
+    "hu": {
+      "language": "hu",
+      "value": "Arakava Hiromu"
+    },
+    "fi": {
+      "language": "fi",
+      "value": "Hiromu Arakawa"
+    },
+    "it": {
+      "language": "it",
+      "value": "Hiromu Arakawa"
+    },
+    "de": {
+      "language": "de",
+      "value": "Hiromu Arakawa"
+    },
+    "ja": {
+      "language": "ja",
+      "value": "荒川弘"
+    },
+    "sv": {
+      "language": "sv",
+      "value": "Hiromu Arakawa"
+    },
+    "nl": {
+      "language": "nl",
+      "value": "Hiromu Arakawa"
+    },
+    "nb": {
+      "language": "nb",
+      "value": "Hiromu Arakawa"
+    },
+    "zh": {
+      "language": "zh",
+      "value": "荒川弘"
+    },
+    "ro": {
+      "language": "ro",
+      "value": "Hiromu Arakawa"
+    },
+    "vi": {
+      "language": "vi",
+      "value": "Arakawa Hiromu"
+    },
+    "he": {
+      "language": "he",
+      "value": "הירומו אראקווה"
+    },
+    "az": {
+      "language": "az",
+      "value": "Hiromu Arakava"
+    },
+    "ar": {
+      "language": "ar",
+      "value": "هيرومو أراكاوا"
+    },
+    "sq": {
+      "language": "sq",
+      "value": "Hiromu Arakawa"
+    },
+    "hi": {
+      "language": "hi",
+      "value": "हिरोमु ाराकावा"
+    },
+    "nan": {
+      "language": "nan",
+      "value": "Arakawa Hiromu"
+    },
+    "ast": {
+      "language": "ast",
+      "value": "Hiromu Arakawa"
+    },
+    "ug": {
+      "language": "ug",
+      "value": "ئاراكاۋا خىرومۇ"
+    },
+    "ug-arab": {
+      "language": "ug-arab",
+      "value": "ئاراكاۋا خىرومۇ"
+    },
+    "arz": {
+      "language": "arz",
+      "value": "هيرومو اراكاوا"
+    },
+    "ary": {
+      "language": "ary",
+      "value": "هيرومو أراكاوا"
+    },
+    "uk": {
+      "language": "uk",
+      "value": "Аракава Хірому"
+    },
+    "pt-br": {
+      "language": "pt-br",
+      "value": "Hiromu Arakawa"
+    },
+    "ig": {
+      "language": "ig",
+      "value": "Hiromu Arakawa"
+    },
+    "sr": {
+      "language": "sr",
+      "value": "Хирому Аракава"
+    },
+    "kw": {
+      "language": "kw",
+      "value": "Hiromu Arakawa"
+    },
+    "el": {
+      "language": "el",
+      "value": "Χιρόμου Αρακάουα"
+    },
+    "en-ca": {
+      "language": "en-ca",
+      "value": "Hiromu Arakawa"
+    },
+    "en-gb": {
+      "language": "en-gb",
+      "value": "Hiromu Arakawa"
+    },
+    "bn": {
+      "language": "bn",
+      "value": "হিরোমু আরাকাওয়া"
+    },
+    "ga": {
+      "language": "ga",
+      "value": "Hiromu Arakawa"
+    },
+    "sl": {
+      "language": "sl",
+      "value": "Hiromu Arakawa"
+    },
+    "eu": {
+      "language": "eu",
+      "value": "Hiromu Arakawa"
+    },
+    "cs": {
+      "language": "cs",
+      "value": "Hiromu Arakawa"
+    },
+    "be-tarask": {
+      "language": "be-tarask",
+      "value": "Хірому Аракава"
+    },
+    "fa": {
+      "language": "fa",
+      "value": "هیرومو آراکاوا"
+    },
+    "bcl": {
+      "language": "bcl",
+      "value": "Hiromu Arakawa"
+    },
+    "mul": {
+      "language": "mul",
+      "value": "Hiromu Arakawa"
+    }
+  },
+  "aliases": {
+    "pt": [
+      {
+        "language": "pt",
+        "value": "Arakawa Hiromu"
+      }
+    ],
+    "zh": [
+      {
+        "language": "zh",
+        "value": "荒川弘美"
+      }
+    ],
+    "eo": [
+      {
+        "language": "eo",
+        "value": "Hiromu Arakawa"
+      }
+    ],
+    "fr": [
+      {
+        "language": "fr",
+        "value": "Arakawa Hiromu"
+      }
+    ],
+    "ru": [
+      {
+        "language": "ru",
+        "value": "Аракава Хирому"
+      },
+      {
+        "language": "ru",
+        "value": "Аракава Х."
+      }
+    ],
+    "th": [
+      {
+        "language": "th",
+        "value": "ฮิโรมุ อาราคาวะ"
+      }
+    ],
+    "de": [
+      {
+        "language": "de",
+        "value": "Hiromi Arakawa"
+      },
+      {
+        "language": "de",
+        "value": "Arakawa Hiromu"
+      },
+      {
+        "language": "de",
+        "value": "Arakawa Hiromi"
+      }
+    ],
+    "ja": [
+      {
+        "language": "ja",
+        "value": "エドモンド荒川"
+      },
+      {
+        "language": "ja",
+        "value": "ちきんぢょーぢ"
+      }
+    ],
+    "nl": [
+      {
+        "language": "nl",
+        "value": "Arakawa Hiromu"
+      },
+      {
+        "language": "nl",
+        "value": "H. Arakawa"
+      }
+    ],
+    "nb": [
+      {
+        "language": "nb",
+        "value": "Arakawa Hiromu"
+      }
+    ],
+    "hu": [
+      {
+        "language": "hu",
+        "value": "Hiromu Arakawa"
+      },
+      {
+        "language": "hu",
+        "value": "Arakawa Hiromu"
+      },
+      {
+        "language": "hu",
+        "value": "Arakawa Hiromi"
+      }
+    ],
+    "en": [
+      {
+        "language": "en",
+        "value": "Hiromi Arakawa"
+      }
+    ],
+    "hi": [
+      {
+        "language": "hi",
+        "value": "हिरोमि ाराकावा"
+      }
+    ],
+    "uk": [
+      {
+        "language": "uk",
+        "value": "Хірому Аракава"
+      },
+      {
+        "language": "uk",
+        "value": "Хіромі Аракава"
+      }
+    ],
+    "it": [
+      {
+        "language": "it",
+        "value": "Hiromi Arakawa"
+      }
+    ],
+    "eu": [
+      {
+        "language": "eu",
+        "value": "Hiromi Arakawa"
+      }
+    ],
+    "es": [
+      {
+        "language": "es",
+        "value": "Hiromi Arakawa"
+      },
+      {
+        "language": "es",
+        "value": "Arakawa Hiromi"
+      }
+    ]
+  },
+  "claims": {
+    "P31": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P31",
+          "hash": "ad7d38a03cdd40cdc373de0dc4e7b7fcbccb31d9",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 5,
+              "id": "Q5"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q230962$511620E7-77AC-4176-B733-B1457DAA56A9",
+        "rank": "normal",
+        "references": [
+          {
+            "hash": "fcb72ddd8afbaf6175f1be0eb7f4282b68dcbc2a",
+            "snaks": {
+              "P248": [
+                {
+                  "snaktype": "value",
+                  "property": "P248",
+                  "hash": "def9f19d84b65167a2a17ce38364d264c16127fc",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 19938912,
+                      "id": "Q19938912"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ],
+              "P268": [
+                {
+                  "snaktype": "value",
+                  "property": "P268",
+                  "hash": "693a9715d74b083c7d5ea018f840e32a7857ed52",
+                  "datavalue": {
+                    "value": "15019633v",
+                    "type": "string"
+                  },
+                  "datatype": "external-id"
+                }
+              ],
+              "P813": [
+                {
+                  "snaktype": "value",
+                  "property": "P813",
+                  "hash": "d6162a1716489623c6e595e448b17f8dca4fb2e8",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2015-10-10T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P248",
+              "P268",
+              "P813"
+            ]
+          },
+          {
+            "hash": "d6ca6f3bd38d166e9d170d2c9a27f58a59d410b0",
+            "snaks": {
+              "P248": [
+                {
+                  "snaktype": "value",
+                  "property": "P248",
+                  "hash": "45037a2d1d89deebcdfc5840e9adbaa4b64cebc6",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 50358336,
+                      "id": "Q50358336"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ],
+              "P813": [
+                {
+                  "snaktype": "value",
+                  "property": "P813",
+                  "hash": "404f02782f51ba80150645303a002606bc314ad2",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2024-06-10T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ],
+              "P950": [
+                {
+                  "snaktype": "value",
+                  "property": "P950",
+                  "hash": "34ded34c906b87f02a04a002f94cde12ee4b888d",
+                  "datavalue": {
+                    "value": "XX4617367",
+                    "type": "string"
+                  },
+                  "datatype": "external-id"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P248",
+              "P813",
+              "P950"
+            ]
+          }
+        ]
+      }
+    ],
+    "P50": [],
+    "P110": []
+  }
+}

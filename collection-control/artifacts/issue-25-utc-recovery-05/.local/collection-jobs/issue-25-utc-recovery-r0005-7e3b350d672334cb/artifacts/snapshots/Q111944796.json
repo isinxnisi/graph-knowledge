@@ -1,0 +1,233 @@
+{
+  "id": "Q111944796",
+  "lastrevid": 2547205402,
+  "labels": {
+    "en": {
+      "language": "en",
+      "value": "Daemons of the Shadow Realm"
+    },
+    "it": {
+      "language": "it",
+      "value": "Yomi no tsugai"
+    },
+    "es": {
+      "language": "es",
+      "value": "Yomi no Tsugai"
+    },
+    "zh": {
+      "language": "zh",
+      "value": "黃泉使者"
+    },
+    "fr": {
+      "language": "fr",
+      "value": "Tsugai - Daemons of the Shadow Realm"
+    },
+    "th": {
+      "language": "th",
+      "value": "ยมลแห่งยมโลก"
+    },
+    "pl": {
+      "language": "pl",
+      "value": "Kontraduety z zaświatów"
+    },
+    "ja": {
+      "language": "ja",
+      "value": "黄泉のツガイ"
+    },
+    "ru": {
+      "language": "ru",
+      "value": "Daemons of the Shadow Realm"
+    },
+    "uk": {
+      "language": "uk",
+      "value": "Цуґаї потойбіччя"
+    },
+    "sr": {
+      "language": "sr",
+      "value": "Демони из подземља"
+    },
+    "zh-hk": {
+      "language": "zh-hk",
+      "value": "黃泉雙使"
+    },
+    "yue": {
+      "language": "yue",
+      "value": "黃泉雙使"
+    },
+    "ko": {
+      "language": "ko",
+      "value": "황천의 츠가이"
+    },
+    "pt": {
+      "language": "pt",
+      "value": "Yomi no Tsugai"
+    },
+    "pt-br": {
+      "language": "pt-br",
+      "value": "Yomi no Tsugai"
+    },
+    "de": {
+      "language": "de",
+      "value": "Das Band der Unterwelt"
+    },
+    "da": {
+      "language": "da",
+      "value": "Daemons of the Shadow Realm"
+    },
+    "fa": {
+      "language": "fa",
+      "value": "شیاطین قلمروی سایه ها"
+    },
+    "zh-tw": {
+      "language": "zh-tw",
+      "value": "黃泉使者"
+    },
+    "zh-hant": {
+      "language": "zh-hant",
+      "value": "黃泉使者"
+    }
+  },
+  "aliases": {
+    "es": [
+      {
+        "language": "es",
+        "value": "Daemons of the Shadow Realm"
+      },
+      {
+        "language": "es",
+        "value": "Espíritus del inframundo"
+      },
+      {
+        "language": "es",
+        "value": "Dúo del inframundo"
+      }
+    ],
+    "en": [
+      {
+        "language": "en",
+        "value": "Yomi no Tsugai"
+      }
+    ],
+    "fr": [
+      {
+        "language": "fr",
+        "value": "Daemons of the Shadow Realm"
+      },
+      {
+        "language": "fr",
+        "value": "Yomi no Tsugai"
+      }
+    ],
+    "pl": [
+      {
+        "language": "pl",
+        "value": "Yomi no tsugai"
+      },
+      {
+        "language": "pl",
+        "value": "Duet z zaświatów"
+      }
+    ],
+    "uk": [
+      {
+        "language": "uk",
+        "value": "Yomi no Tsugai"
+      },
+      {
+        "language": "uk",
+        "value": "Daemons of the Shadow Realm"
+      }
+    ],
+    "pt": [
+      {
+        "language": "pt",
+        "value": "Daemons of the Shadow Realm"
+      },
+      {
+        "language": "pt",
+        "value": "Daemons do Reino das Sombras"
+      }
+    ],
+    "pt-br": [
+      {
+        "language": "pt-br",
+        "value": "Daemons of the Shadow Realm"
+      },
+      {
+        "language": "pt-br",
+        "value": "Daemons do Reino das Sombras"
+      }
+    ],
+    "zh": [
+      {
+        "language": "zh",
+        "value": "黄泉的使者"
+      }
+    ]
+  },
+  "claims": {
+    "P31": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P31",
+          "hash": "549c072d6be8a6a43f999d1d0e82640b16c4260e",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 21198342,
+              "id": "Q21198342"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q111944796$6414a7fc-4ae1-e3c7-3e51-642e1395ca68",
+        "rank": "normal"
+      }
+    ],
+    "P50": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P50",
+          "hash": "a0b4d8efa5e392f9979529562e394fa672a69ef9",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 230962,
+              "id": "Q230962"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q111944796$3fad0194-4455-bf3b-6b7a-4a6366348fba",
+        "rank": "normal"
+      }
+    ],
+    "P110": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P110",
+          "hash": "7546688245ea21382bce01db090eae4a76726c37",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 230962,
+              "id": "Q230962"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q111944796$a3fa8962-4a52-5971-96ad-b75ae30fd20d",
+        "rank": "normal"
+      }
+    ]
+  }
+}
