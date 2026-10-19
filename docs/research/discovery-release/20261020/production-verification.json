@@ -1,0 +1,142 @@
+{
+  "verifiedAt": "2026-10-19T16:21:37.890588+00:00",
+  "status": "published_and_verified",
+  "origin": "https://plunode.net",
+  "approvedCommit": "83137b76c42a701221bb711c1efa96a8881eccb0",
+  "webSourceCommit": "657f1cf03b74de2136885f7d355bcd9d4414cb27",
+  "buildId": "N7WjNWiM65EwItM1tux_Y",
+  "administratorActivation": "user reported execution completed; expected live build independently confirmed",
+  "production": {
+    "/": {
+      "status": 200,
+      "expectedBuild": true
+    },
+    "/en": {
+      "status": 200,
+      "expectedBuild": true
+    },
+    "/api/dataset": {
+      "status": 200,
+      "data": {
+        "dataset": "public-kg",
+        "revision": "5e2a94af-9061-4087-bb7a-045a3c0133f4"
+      }
+    },
+    "/api/member/status": {
+      "status": 200,
+      "data": {
+        "provider": "google"
+      }
+    }
+  },
+  "postchecks": {
+    "/member": {
+      "status": 200,
+      "build": true,
+      "noindex": true
+    },
+    "/api/member/profile": {
+      "status": 401
+    },
+    "previewApi": {
+      "status": 401
+    },
+    "beta": {
+      "browserUserAgent": {
+        "/": {
+          "status": 200,
+          "expectedBuild": true
+        },
+        "/api/dataset": {
+          "status": 200,
+          "data": {
+            "dataset": "public-kg",
+            "revision": "82b01515-594c-48ca-b4b6-515eefac83ca"
+          }
+        }
+      },
+      "pythonDefaultUserAgent": "Cloudflare 1010 denied (403); browser E2E already passed"
+    },
+    "patternSearch": {
+      "revision": "5e2a94af-9061-4087-bb7a-045a3c0133f4",
+      "count": 9,
+      "completeWitnesses": true
+    }
+  },
+  "browserTests": [
+    {
+      "title": "Discovery connected stages ja 1280",
+      "status": "expected",
+      "durationMs": 21208
+    },
+    {
+      "title": "Discovery connected stages ja 390",
+      "status": "expected",
+      "durationMs": 13160
+    },
+    {
+      "title": "Discovery connected stages en 1280",
+      "status": "expected",
+      "durationMs": 19511
+    },
+    {
+      "title": "Discovery connected stages en 390",
+      "status": "expected",
+      "durationMs": 13954
+    },
+    {
+      "title": "subject positions, candidate selection and Graph ja 1280",
+      "status": "expected",
+      "durationMs": 28375
+    },
+    {
+      "title": "subject positions, candidate selection and Graph ja 390",
+      "status": "expected",
+      "durationMs": 21980
+    },
+    {
+      "title": "subject positions, candidate selection and Graph en 1280",
+      "status": "expected",
+      "durationMs": 25633
+    },
+    {
+      "title": "subject positions, candidate selection and Graph en 390",
+      "status": "expected",
+      "durationMs": 23162
+    }
+  ],
+  "stats": {
+    "startTime": "2026-10-19T16:18:11.459Z",
+    "duration": 169510.838,
+    "expected": 8,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "services": [
+    "docker:active",
+    "caddy:active",
+    "resale-ebay-notifications:active"
+  ],
+  "dataBoundary": {
+    "publicRevisionUnchanged": true,
+    "kgApply": false,
+    "collectionChanges": false,
+    "memberDataChanges": false,
+    "authenticationConfigurationChanges": false,
+    "dbMigration": false,
+    "containerContinuity": "activation script checks unchanged Neo4j/member PG container IDs and StartedAt; no independent privileged inspect by Codex"
+  },
+  "persistenceTests": "anonymous browser-local Workspace and shared URL, Undo/Back; no account login or existing member records modified",
+  "screenshots": [
+    "production-ja-connections.png",
+    "production-en-mobile.png"
+  ],
+  "remaining": [
+    "physical iPhone/iOS WebKit not tested",
+    "cold first-search latency assessment",
+    "3 unported presets",
+    "Entity genres/tags",
+    "preset theme vs actual criteria visibility"
+  ]
+}

@@ -75,6 +75,22 @@ if meta.get('recordSearch'):
     assert records['revision']==state['revision'] and records['claims']
     assert all(c['predicate']=='CONTRIBUTED_TO' and c['contribution']['roleId']=='DRAWING' for c in records['claims'])
     print('正式APIの対象未指定・作画検索と公開revisionを確認しました。')
+    if meta.get('sharedDiscovery'):
+        relation={'version':1,'type':'pattern','pattern':{'id':'other-works','revision':2},'polarity':'affirmed','contributionRoles':None}
+        criteria={'q':'','kind':'work','relation':relation,'nameTarget':'subject'}
+        payload={'version':2,'dataset':'public-kg','criteria':criteria,'revision':state['revision'],'after':None}
+        request=urllib.request.Request('https://plunode.net/api/discovery/entities',data=json.dumps(payload).encode(),headers={'Content-Type':'application/json'},method='POST')
+        with urllib.request.urlopen(request,timeout=30) as response:
+            subjects=json.load(response)
+        assert subjects['version']==2 and subjects['revision']==state['revision']
+        assert subjects['criteria']==criteria and subjects['items']
+        assert len({item['entity']['id'] for item in subjects['items']})==len(subjects['items'])
+        for item in subjects['items']:
+            witness=item['match']['witness']
+            assert item['entity']['kind']=='work' and item['match']['status']=='matched'
+            assert witness['version']==2 and witness['revision']==state['revision']
+            assert witness['subjectId']==item['entity']['id'] and len(witness['route']['claimIds'])==2
+        print('正式APIの名前なし関係パターン検索と、同版の完全経路証拠を確認しました。')
 print('正式HTTPSの日英検索入口・build一致・会員noindexを確認しました。')
 PY
 [[ $(curl -sS --max-time 30 -o /dev/null -w '%{http_code}' https://graph.isinxnisi.net/api/dataset) = 401 ]]

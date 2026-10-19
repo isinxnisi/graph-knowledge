@@ -1,0 +1,80 @@
+{
+  "preparedAt": "2026-10-19T16:16:05.352995+00:00",
+  "status": "administrator_execution_completed_and_production_verified",
+  "web": {
+    "tag": "discovery-release-20261020",
+    "codeCommit": "657f1cf03b74de2136885f7d355bcd9d4414cb27",
+    "buildId": "N7WjNWiM65EwItM1tux_Y",
+    "allowedWebImageIds": [
+      "sha256:23d098b61878773ff32742fcd5317d97aed0e8abfede75f9d561f72364512e2e",
+      "sha256:d774ea9b2570ff054199459aee465e3b2f4948c97eff7a3cc9e6d80d6f3490a5"
+    ],
+    "platform": "linux/amd64",
+    "recordSearch": true,
+    "sharedDiscovery": true,
+    "approvedBaseCommit": "83137b76c42a701221bb711c1efa96a8881eccb0",
+    "rollbackActivation": "sudo bash /home/develop/graph-discovery-contrast-20261017/scripts/activate-discovery-search.sh",
+    "acceptedOperatorConfig": "sha256:b0e0bc42b156935ae6915b1dcb39bcc25338dcd25657a92ed41a8944fa569e9a",
+    "acceptedOperatorManifest": "sha256:edc660a29b7bb6d500021d4a187155414e8440361e0cbe3e742142fdbddb78ed",
+    "archiveContents": [
+      "graph-knowledge-web:discovery-release-20261020"
+    ],
+    "excluded": [
+      "KG apply",
+      "collection jobs",
+      "member data",
+      "DB restart",
+      "Caddy/auth changes"
+    ]
+  },
+  "betaBuildId": "eusXcY7MiIipnZvBtkKVt",
+  "archive": {
+    "bytes": 118262516,
+    "sha256": "0dd9a7dc6d1345c2cb90572869202aa0f16297548044cf115aab18debc94ff33"
+  },
+  "verification": {
+    "unitTestsPassed": 51,
+    "betaBareUrlTestsPassed": 2,
+    "productionImageTestsPassed": 4,
+    "imageNode": "v24.21.0",
+    "imageUid": 1000,
+    "readiness": "passed",
+    "activationHttpChecksAgainstTrialImage": "passed",
+    "excludedFilesPresent": []
+  },
+  "productionBefore": {
+    "status": 200,
+    "previousBuildPresent": true,
+    "previousBuild": "jXr0x1y9CuGBjfcWjox9p",
+    "dataset": {
+      "dataset": "public-kg",
+      "revision": "5e2a94af-9061-4087-bb7a-045a3c0133f4"
+    },
+    "memberStatus": {
+      "provider": "google"
+    }
+  },
+  "remoteChecks": {
+    "sha256": "passed",
+    "shellSyntax": "passed",
+    "servicesBefore": [
+      "docker:active",
+      "caddy:active",
+      "resale-ebay-notifications:active"
+    ]
+  },
+  "vpsBundle": "/home/develop/graph-discovery-release-20261020",
+  "activation": "sudo bash /home/develop/graph-discovery-release-20261020/scripts/activate-discovery-search.sh",
+  "rollback": {
+    "artifactChecksums": "passed",
+    "command": "sudo bash /home/develop/graph-discovery-contrast-20261017/scripts/activate-discovery-search.sh"
+  },
+  "unchanged": [
+    "KG apply",
+    "collection jobs",
+    "member data",
+    "DB restart",
+    "Caddy/auth configuration"
+  ],
+  "completionRecord": "production-verification.json"
+}

@@ -151,3 +151,43 @@ sudo bash /home/develop/graph-discovery-contrast-20261017/scripts/activate-disco
 正式KG revisionは前後とも `5e2a94af-9061-4087-bb7a-045a3c0133f4`、betaは200・`82b01515-594c-48ca-b4b6-515eefac83ca` を維持。会員status200（Google）、匿名profile401、会員ページnoindex、旧preview401、広告originの検索API404、Docker／Caddy／既存通知サービスactiveを確認した。公開KG・収集処理・会員データ・認証設定の変更やrelease applyは行っていない。本人ログイン・保存データの操作は今回の再検証対象外。
 
 [公開後確認記録](../research/discovery-graph-contrast/20261017/production-verification.json)、[正式PC英語](../research/discovery-graph-contrast/20261017/production-en-pc.png)、[正式スマホ日本語](../research/discovery-graph-contrast/20261017/production-ja-mobile.png)。既に開いた画面は一度再読み込みすると新しいCSSを取得する。
+
+
+### 2026-10-20：承認済みDiscovery改善の正式公開準備（下記の反映確認を完了）
+
+運営者が `83137b7` を含むbeta検証済みの改善の本番公開を明示承認した。`657f1cf` で、試作URL限定だった接続をpublic-kgの通常の正式検索入口へ昇格する。`/?discovery=presets` の指定は不要で、既存リンクも利用できる。デザイン・検索条件・Graph操作・保存形式・他datasetの従来検索には新仕様を追加しない。通常URLからのE2Eへ切り替えて検証した。
+
+関連単体51件・対象lint・公開用build／型検査が成功。3200／betaの通常URLで日本語PC・英語スマホの代表2件が成功。同じソースからlinux/amd64・Node24.21.0のWeb-only image `discovery-release-20261020` を作成し、本番イメージでも代表4件を確認した。名前なし対象検索・人物／制作担当者名・Role・プリセット／直接Graph、接点候補・B切替・Back／位置と段数、GraphのEntity開閉・根拠・Undo・Workspace／共有復元を含む。KGは読み取りだけで、試験用Webコンテナだけを終了・削除した。
+
+正式用buildは `N7WjNWiM65EwItM1tux_Y`。image config ID `23d098b61878773ff32742fcd5317d97aed0e8abfede75f9d561f72364512e2e`。個人memo・私有env・Git・KG運用CLIはWeb imageにない。依存lock・会員／認証runtime・DB定義・Composeは直前本番ソース `22b8428` から変更なし。新operatorや会員migrationは配置しない。受入済みcredits operatorを更新せず再利用する。
+
+VPS `/home/develop/graph-discovery-release-20261020/` へWeb archive・manifest・既存更新script・activationを転送し、現地checksumとshell構文検証が成功。archive 118,262,516 bytes、SHA-256 `0dd9a7dc6d1345c2cb90572869202aa0f16297548044cf115aab18debc94ff33`。[配置準備記録](../research/discovery-release/20261020/preparation.json)と[image manifest](../research/discovery-release/20261020/web-manifest.json)を参照。
+
+**この記録時点では管理者実行待ちで、本番反映と正式URLの公開後確認は未完了。** SSHユーザーのsudoはパスワード必須であり、既存配置契約に従って、検証・転送済みの次の一回の実行を依頼した。
+
+```bash
+sudo bash /home/develop/graph-discovery-release-20261020/scripts/activate-discovery-search.sh
+```
+
+activationは受入済みoperator照合→read-only KG backup→Webだけの更新→readiness／HTMLのbuild→名前なしpattern POSTと完全証拠→KG revision・Neo4j／会員PGのcontainerと起動時刻・既存会員status・preview境界／service継続を確認する。新しいPOSTチェックも、本番イメージの試験接続先へ向けて通過した。本番KGの再投入・release apply・DB再起動・会員データやCaddy／認証の変更は含まない。
+
+更新前の正式buildは `jXr0x1y9CuGBjfcWjox9p`、KG revisionは `5e2a94af-9061-4087-bb7a-045a3c0133f4`。会員statusは200／Google、Docker・Caddy・既存通知サービスはactive。旧配置物 `/home/develop/graph-discovery-contrast-20261017/` のarchive・script・manifestのchecksumも確認済み。readiness失敗時は既存更新scriptが旧Web設定へ戻す。公開後の重大な不具合で旧Webへ復旧する際は、管理者が次を実行できる。KGを巻き戻す操作ではない。
+
+```bash
+sudo bash /home/develop/graph-discovery-contrast-20261017/scripts/activate-discovery-search.sh
+```
+
+管理者実行後に、正式URLの通常入口から日英・PC／スマホの検索／接点探索・直接Graph・条件切替・戻る・開閉／Undo／ブラウザ保存共有を確認し、この記録へ結果を追記する。iPhone実機、初回検索遅延、未移行3プリセット、対象のジャンル／タグとテーマ分類・条件の可視性は既存の残件として維持する。
+
+
+#### Discovery改善の正式反映確認（2026-10-20、完了）
+
+管理者から実行完了の連絡を受け、正式URLの日本語・英語Homeと会員ページでbuild `N7WjNWiM65EwItM1tux_Y` を確認した。承認対象 `83137b7` を含むWeb sourceは `657f1cf`。通常URLの検索から新しいDiscoveryへ入れ、試作用query指定は不要。前記の管理者実行待ちは解消した。
+
+正式HTTPS上で日英×1280／390pxの代表E2E **8件すべて成功（2.8分）**。プリセット／対象検索、名前なし9作品と完全経路証拠、人物名と制作担当者名、Role、直接Graph、2〜3段先の接点、実際の探索条件切替、候補からGraph／継続探索、Backと段数・スクロール復帰、Entity開閉・根拠／Citation・Undo・ブラウザローカルWorkspace／共有URL復元、他2タブを確認した。ページ例外・横はみ出しなし。正式PCの接点一覧と英語390幅のプリセット初期表示も目視確認した。本人ログインや会員保存レコードの更新は試験していない。
+
+公開KG revisionは更新前後とも `5e2a94af-9061-4087-bb7a-045a3c0133f4`。会員status200／Google、匿名profile401、会員ページnoindex、旧preview API401、Docker・Caddy・既存通知サービスactiveを維持。配置scriptはNeo4j／会員PGのcontainer・起動時刻維持も検査する。今回の作業でKG apply・収集・会員データ・認証構成・DB migrationは行っていない。
+
+3200／betaは同じsource `657f1cf` のbuild `eusXcY7MiIipnZvBtkKVt`、HTTPS200、既存KG revision `82b01515-594c-48ca-b4b6-515eefac83ca` を維持する。正式imageとbetaは別buildのためIDは異なる。betaのPython既定User-AgentはCloudflare 1010で403となるが、ブラウザ相当User-Agentで200／同buildを再確認し、配置前の通常URLブラウザ試験2件も成功している。
+
+[公開後確認記録](../research/discovery-release/20261020/production-verification.json)、[正式PCの接点探索](../research/discovery-release/20261020/production-ja-connections.png)、[正式英語スマホ幅](../research/discovery-release/20261020/production-en-mobile.png)。iPhone実機／iOS WebKit、初回検索遅延の評価、未移行3プリセット、対象ジャンル／タグ、テーマと実条件の可視性は残課題。これらを解消したとは扱わず、承認されたWeb公開を完了する。
