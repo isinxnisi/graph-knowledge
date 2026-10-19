@@ -25,7 +25,7 @@
   },
   "requestSha256": "bfed193b23c19b24e7f0f5b5f5ffb812861f4730840f0b23a0024b927f5d6ab5",
   "kind": "accept-sequence",
-  "phase": "running",
+  "phase": "sequence-progress",
   "generation": 38,
   "attempts": 5,
   "workerId": "plunode-wsl",
@@ -36,15 +36,15 @@
     "status": "sequence-progress",
     "sequenceComplete": false,
     "stateDirectory": "/home/isinxnisi/.local/share/plunode-collection-worker-phase-b-20261020/runtime/.local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020",
-    "completedDecisionId": "issue-25-utc-recovery-07-normal",
-    "completedGroups": 5,
+    "completedDecisionId": "issue-25-utc-recovery-08-normal",
+    "completedGroups": 6,
     "lastResult": {
       "status": "release-prepared-not-applied",
-      "decisionId": "issue-25-utc-recovery-07-normal",
-      "acceptance": "/home/isinxnisi/.local/share/plunode-collection-worker-phase-b-20261020/runtime/datasets/manga-collection/accepted-issue-25-utc-recovery-07-normal/acceptance.json",
-      "recordedAt": "2026-10-19T19:23:52.882654+00:00",
-      "checkedAt": "2026-10-19T19:25:19+00:00",
-      "releaseDirectory": "/home/isinxnisi/.local/share/plunode-collection-worker-phase-b-20261020/runtime/datasets/public-kg/releases/manga-issue-25-utc-recovery-07-normal",
+      "decisionId": "issue-25-utc-recovery-08-normal",
+      "acceptance": "/home/isinxnisi/.local/share/plunode-collection-worker-phase-b-20261020/runtime/datasets/manga-collection/accepted-issue-25-utc-recovery-08-normal/acceptance.json",
+      "recordedAt": "2026-10-19T19:38:57.087154+00:00",
+      "checkedAt": "2026-10-19T19:40:20+00:00",
+      "releaseDirectory": "/home/isinxnisi/.local/share/plunode-collection-worker-phase-b-20261020/runtime/datasets/public-kg/releases/manga-issue-25-utc-recovery-08-normal",
       "acceptanceReused": false,
       "releaseUnchanged": false,
       "validationReused": false,
@@ -61,12 +61,12 @@
         "citations": []
       },
       "releaseAdditions": {
-        "entities": 63,
-        "claims": 48,
-        "sources": 41,
-        "citations": 49
+        "entities": 66,
+        "claims": 50,
+        "sources": 43,
+        "citations": 51
       },
-      "externalIdentifiersAdded": 63,
+      "externalIdentifiersAdded": 66,
       "notAcceptedRecordIds": {
         "entities": [],
         "claims": [],
@@ -79,35 +79,75 @@
         "claims": [],
         "entities": []
       },
-      "inheritedHolds": [],
+      "inheritedHolds": [
+        {
+          "reason": "publication-identity-unconfirmed",
+          "work": "タッチ",
+          "isbn13": "9784091218612",
+          "matchingRecords": 0,
+          "records": [
+            {
+              "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I000001790190",
+              "isbn13": [
+                "9784091218612"
+              ],
+              "title": [
+                "タッチ. vol.1"
+              ],
+              "mainTitles": [
+                "タッチ"
+              ],
+              "volume": [
+                "vol.1"
+              ],
+              "edition": [],
+              "responsibilities": [
+                "あだち充 原作"
+              ],
+              "publisher": [
+                "小学館"
+              ],
+              "language": [
+                "jpn"
+              ],
+              "genre": [
+                "児童図書",
+                "漫画"
+              ]
+            }
+          ]
+        }
+      ],
       "validation": {
         "valid": true,
         "counts": {
           "nodes": {
-            "Entity": 2172,
-            "Claim": 1892,
-            "Source": 1792,
-            "Citation": 1929,
-            "ExternalIdentifier": 2541
+            "Entity": 2175,
+            "Claim": 1894,
+            "Source": 1794,
+            "Citation": 1931,
+            "ExternalIdentifier": 2544
           },
           "relationships": {
-            "SUBJECT": 1892,
-            "OBJECT": 1892,
-            "HAS_CITATION": 1929,
-            "CITES": 1929,
-            "HAS_EXTERNAL_ID": 2541
+            "SUBJECT": 1894,
+            "OBJECT": 1894,
+            "HAS_CITATION": 1931,
+            "CITES": 1931,
+            "HAS_EXTERNAL_ID": 2544
           }
         }
       },
       "plan": {
-        "release": "manga-issue-25-utc-recovery-07-normal",
+        "release": "manga-issue-25-utc-recovery-08-normal",
         "unchanged": false,
         "added": [
           "Citation:0696f0a4-1721-4484-8d87-cc5b41089f7e",
+          "Citation:07906647-1603-470d-a950-a663290bbd75",
           "Citation:0f848185-1a22-42c6-a375-92860c4e3914",
           "Citation:13adf6b0-da63-4be0-abd7-b8aeb54d6bdf",
           "Citation:14dd2924-b263-4531-975a-7b9a52b23a3d",
           "Citation:1912d6bf-b638-4e14-902b-9979bf64062a",
+          "Citation:1cd43ec8-2630-4fbc-8267-1ce03a9ee04c",
           "Citation:1d520b97-18c3-46ef-94ef-9e4e4c8ad15e",
           "Citation:21c3954f-829e-4d13-a641-783d92af998d",
           "Citation:2912d1b2-54cf-425a-9428-d0c323f68a01",
@@ -184,6 +224,7 @@
           "Claim:c19e5b2f-01e2-4233-a7c9-326a1772d7de",
           "Claim:c3f1e013-68cc-42b7-b076-495178247899",
           "Claim:c3fcdaa7-1374-4c62-acab-368dc1ed1bee",
+          "Claim:c72262df-ce7b-4514-9341-55d242f94bca",
           "Claim:ca6a2957-2ba2-4149-9550-61a0610a4730",
           "Claim:cd294bb9-a7de-4f21-95c2-84b878c0e7cc",
           "Claim:cf18d898-41e5-486f-8dcf-8a666bef83fe",
@@ -193,6 +234,7 @@
           "Claim:e3bf903c-5d0c-4f91-bf83-2826f5a23db7",
           "Claim:ed33df12-efd1-44bc-84bb-a9d83fa05f8f",
           "Claim:f06a6e2c-59c6-4ff3-ad74-13aff65677d3",
+          "Claim:f1260c3f-2637-416f-b407-2052a7c36717",
           "Claim:f4504ec8-173a-453f-83e8-a24e72dde9bc",
           "Claim:f4b64248-7b3e-4fae-8ff2-7122410b63f4",
           "Claim:f638cf0b-3750-49f6-b833-844d5465b99f",
@@ -207,6 +249,7 @@
           "Entity:0e0ed535-f78e-4cb0-bd3d-7dffd6b7148e",
           "Entity:1866bbe5-7e00-4afc-965f-5e968481f065",
           "Entity:1982f262-39f3-4bfa-93a4-af3a86ec3ec8",
+          "Entity:1abd838a-b22d-45a4-913f-0ef09205e1e8",
           "Entity:1edca4c7-0e4e-4769-859c-dde40e7e973a",
           "Entity:20b7ba43-d12d-4d39-9a8e-f9e92e9d40d2",
           "Entity:31f3c278-7d49-4aed-9a36-c722cae25ed2",
@@ -218,6 +261,7 @@
           "Entity:420d89ea-9780-4e01-ac64-9c5e8597d0c8",
           "Entity:451e8e8a-0d17-4dfd-99d8-14b57780e055",
           "Entity:480df823-5da8-45e4-aa20-1fdabe7ea5a3",
+          "Entity:48ca311c-c403-4a24-a1e3-cb6392764397",
           "Entity:4b90e125-b331-4361-8681-93a12c662cb7",
           "Entity:5c5f452c-1e74-4985-aaec-811a8e329f42",
           "Entity:648a399e-70c0-4042-b969-e914a4410544",
@@ -248,6 +292,7 @@
           "Entity:b4de3765-e8c4-49f1-a322-a021475ffd09",
           "Entity:ba77a4d0-cf0b-4cc9-bd98-9b153a92b3ba",
           "Entity:baf73bb9-dda4-474c-acaf-a7a8ce52caf2",
+          "Entity:bb47fc9c-87b1-4df5-a7d6-ecf175d93eb0",
           "Entity:c1e93fb7-3547-4b64-bd7c-bce073a1198a",
           "Entity:c59a1b1d-7477-46a5-9669-644981d1d5d8",
           "Entity:c71ebc3e-ae93-43d6-a525-eb5b1abd609f",
@@ -268,6 +313,7 @@
           "ExternalIdentifier:[\"wikidata\",\"Q105258125\"]",
           "ExternalIdentifier:[\"wikidata\",\"Q106575051\"]",
           "ExternalIdentifier:[\"wikidata\",\"Q108109758\"]",
+          "ExternalIdentifier:[\"wikidata\",\"Q11231713\"]",
           "ExternalIdentifier:[\"wikidata\",\"Q11237288\"]",
           "ExternalIdentifier:[\"wikidata\",\"Q11298673\"]",
           "ExternalIdentifier:[\"wikidata\",\"Q1132540\"]",
@@ -301,6 +347,7 @@
           "ExternalIdentifier:[\"wikidata\",\"Q28682711\"]",
           "ExternalIdentifier:[\"wikidata\",\"Q2947180\"]",
           "ExternalIdentifier:[\"wikidata\",\"Q313703\"]",
+          "ExternalIdentifier:[\"wikidata\",\"Q351742\"]",
           "ExternalIdentifier:[\"wikidata\",\"Q378710\"]",
           "ExternalIdentifier:[\"wikidata\",\"Q38275959\"]",
           "ExternalIdentifier:[\"wikidata\",\"Q38277627\"]",
@@ -314,6 +361,7 @@
           "ExternalIdentifier:[\"wikidata\",\"Q63323229\"]",
           "ExternalIdentifier:[\"wikidata\",\"Q65231576\"]",
           "ExternalIdentifier:[\"wikidata\",\"Q65240543\"]",
+          "ExternalIdentifier:[\"wikidata\",\"Q652892\"]",
           "ExternalIdentifier:[\"wikidata\",\"Q669481\"]",
           "ExternalIdentifier:[\"wikidata\",\"Q696941\"]",
           "ExternalIdentifier:[\"wikidata\",\"Q715723\"]",
@@ -334,6 +382,7 @@
           "Source:2bdfa31d-ad7a-4705-8bdf-2be58ae606f6",
           "Source:3e30dc4d-2c8a-40c0-95d8-258ef061b5ce",
           "Source:4859917b-c4ba-4e2d-b932-52224ff7ebec",
+          "Source:4ede2d3e-9899-4d1b-bf8a-e08fd3f36080",
           "Source:5100fe49-d129-4e0b-9b5d-0d33892fd613",
           "Source:59b086b3-3e2b-4e6c-8532-ee9c7bb79b28",
           "Source:624fc7f8-ec4a-4e6f-802e-ce1dcd6be994",
@@ -359,6 +408,7 @@
           "Source:c815b2db-f907-43d4-a8ae-e2ef99fe5f79",
           "Source:c91f7f99-6b76-4245-9564-70f8f62c2dc1",
           "Source:d20d02c9-552e-4621-b8b3-a7c25efb9ddb",
+          "Source:d5e2fedb-35fc-4544-9fbd-c0d81ccb9080",
           "Source:d742ddc4-acb8-411a-a159-efd815afecd6",
           "Source:df1c52bd-8832-47a1-bc57-30c779f01ad5",
           "Source:e059d4f3-9e5d-4c5f-84e1-959b3c932e30",
@@ -369,21 +419,21 @@
           "Source:fb0bc6f2-6f0b-49d5-a9a7-acb3de0fc531"
         ],
         "updated": [],
-        "relationshipsAdded": 257,
+        "relationshipsAdded": 268,
         "counts": {
           "nodes": {
-            "Entity": 2172,
-            "Claim": 1892,
-            "Source": 1792,
-            "Citation": 1929,
-            "ExternalIdentifier": 2541
+            "Entity": 2175,
+            "Claim": 1894,
+            "Source": 1794,
+            "Citation": 1931,
+            "ExternalIdentifier": 2544
           },
           "relationships": {
-            "SUBJECT": 1892,
-            "OBJECT": 1892,
-            "HAS_CITATION": 1929,
-            "CITES": 1929,
-            "HAS_EXTERNAL_ID": 2541
+            "SUBJECT": 1894,
+            "OBJECT": 1894,
+            "HAS_CITATION": 1931,
+            "CITES": 1931,
+            "HAS_EXTERNAL_ID": 2544
           }
         }
       },
@@ -429,47 +479,47 @@
           "observation": "verified-records-only-not-a-live-exploration-test",
           "edges": [
             {
-              "claimId": "2fbb4bf1-5180-456b-9681-e3ec75a54cd8",
-              "subjectId": "89958cbe-1822-4814-9861-fec01c94378a",
-              "objectId": "451e8e8a-0d17-4dfd-99d8-14b57780e055",
-              "person": "高屋奈月",
-              "work": "翼を持つ者",
+              "claimId": "c72262df-ce7b-4514-9341-55d242f94bca",
+              "subjectId": "1abd838a-b22d-45a4-913f-0ef09205e1e8",
+              "objectId": "48ca311c-c403-4a24-a1e3-cb6392764397",
+              "person": "あだち充",
+              "work": "MIX",
               "roleId": "AUTHORSHIP",
               "scope": {
                 "kind": "publication",
-                "isbn13": "9784592128311",
-                "volumeLabel": "第1巻（NDL巻次 第1巻）",
+                "isbn13": "9784091238672",
+                "volumeLabel": "第1巻（NDL巻次 1）",
                 "editionLabel": null,
                 "language": "ja"
               },
               "state": "formally-accepted-not-applied",
               "citationIds": [
-                "14dd2924-b263-4531-975a-7b9a52b23a3d"
+                "1cd43ec8-2630-4fbc-8267-1ce03a9ee04c"
               ],
               "sourceIds": [
-                "59b086b3-3e2b-4e6c-8532-ee9c7bb79b28"
+                "d5e2fedb-35fc-4544-9fbd-c0d81ccb9080"
               ]
             },
             {
-              "claimId": "87432807-ba90-400c-8a3f-e5dcfa847572",
-              "subjectId": "89958cbe-1822-4814-9861-fec01c94378a",
-              "objectId": "7a7678a2-f7a8-4381-aaf0-ecddb866fca0",
-              "person": "高屋奈月",
-              "work": "フルーツバスケット",
+              "claimId": "f1260c3f-2637-416f-b407-2052a7c36717",
+              "subjectId": "1abd838a-b22d-45a4-913f-0ef09205e1e8",
+              "objectId": "bb47fc9c-87b1-4df5-a7d6-ecf175d93eb0",
+              "person": "あだち充",
+              "work": "H2",
               "roleId": "AUTHORSHIP",
               "scope": {
                 "kind": "publication",
-                "isbn13": "9784592171614",
-                "volumeLabel": "第1巻（NDL巻次 第1巻）",
+                "isbn13": "9784091231512",
+                "volumeLabel": "第1巻（NDL巻次 1）",
                 "editionLabel": null,
                 "language": "ja"
               },
               "state": "formally-accepted-not-applied",
               "citationIds": [
-                "1912d6bf-b638-4e14-902b-9979bf64062a"
+                "07906647-1603-470d-a950-a663290bbd75"
               ],
               "sourceIds": [
-                "f205b6dc-c3ed-4348-aa5e-cfe055a2fd55"
+                "4ede2d3e-9899-4d1b-bf8a-e08fd3f36080"
               ]
             }
           ]
@@ -484,5 +534,6 @@
     },
     "publicApply": false
   },
-  "executionComplete": false
+  "executionComplete": false,
+  "sequencePublicationPending": true
 }

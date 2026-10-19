@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "authority": "mechanical-comparison-refresh-not-a-new-human-decision",
+  "originalDecision": {
+    "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/decisions/issue-25-utc-recovery-08-normal.json",
+    "sha256": "3075be3d7f612ff381f5b527d8a984010bcc172ff0de725f9f34612179543382"
+  },
+  "register": {
+    "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/register-source.json",
+    "sha256": "82b53f2bb1e0c1e5402af117a22de2a809ecf0588a56743e6aaef3258b42e8d6"
+  },
+  "refreshedReview": {
+    "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0008-9f792bd2246a1595-review-da16fa40ca3dcbf9/review-manifest.json",
+    "sha256": "39cc046c6d0ec10cfec1c2c5468a2497cf5ec9645433418d74fe10bc94e50cc5"
+  },
+  "dependencySignature": {
+    "entities": {
+      "1abd838a-b22d-45a4-913f-0ef09205e1e8": "467ccf22d84bdb610de74268ba207010c977d77d10222f450b471ab138734cf0",
+      "48ca311c-c403-4a24-a1e3-cb6392764397": "111f58d4aed3097e1ed1010758baaa391d12230695e6d385aba1cc775d6de8e5",
+      "bb47fc9c-87b1-4df5-a7d6-ecf175d93eb0": "23c74c965791698d39500dbc8fc7694d26f68fafe900c7ccbf20efc51a7dfd77"
+    },
+    "claims": {
+      "c72262df-ce7b-4514-9341-55d242f94bca": "d20b2dcfe0bd431f8e241de8f7f369cb9f857d08efa0eb03db440270d6356093",
+      "f1260c3f-2637-416f-b407-2052a7c36717": "da946335e6e30c70d172808e41b190862d36ebbe46f5ee30e86db250f9a8255f"
+    },
+    "sources": {
+      "4ede2d3e-9899-4d1b-bf8a-e08fd3f36080": "27faceb207e19658e554bec1a61c39fc358fff4d61c0f120c0c8aa54e074e6f3",
+      "d5e2fedb-35fc-4544-9fbd-c0d81ccb9080": "683ba49d407279d45be32ad93f45614176902e68b927a1e53f6dd7e47be027ef"
+    },
+    "citations": {
+      "07906647-1603-470d-a950-a663290bbd75": "480c7edeb0d073dcf15245efaaa89b4bd4820637ccce201644e71858a34a8a41",
+      "1cd43ec8-2630-4fbc-8267-1ce03a9ee04c": "2f862b1b5543732593883e06cc6e7de1aa2a3770e997ccb9d96e4262e8e160d6"
+    }
+  },
+  "publicApply": false
+}
