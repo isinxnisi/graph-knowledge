@@ -1,6 +1,6 @@
 # CollectionWorkerの実行制御
 
-確認: 2026-10-19 20:49:18 JST。
+確認: 2026-10-19 21:05:52 JST。
 
 反映済みcontrolRevision: 0／最後の操作: なし。
 
