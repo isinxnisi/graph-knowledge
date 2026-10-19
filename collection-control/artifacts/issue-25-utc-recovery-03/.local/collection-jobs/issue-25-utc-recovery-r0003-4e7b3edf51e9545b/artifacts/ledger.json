@@ -1,0 +1,113 @@
+{
+  "schemaVersion": 2,
+  "status": "pending-human-acceptance",
+  "recipe": "manga-r0019",
+  "collectionContext": {
+    "themeId": "issue-25-utc-recovery",
+    "themeRevision": 3,
+    "definitionSha256": "809ca74bd10f724f84d4471cd7a10466f90ba0f19bc4a4e779e2fa67a471f51a",
+    "approvalSha256": "50bc213a82574ee5511ed6f3c1de6893804c03df83136c2756983e588c423ccd"
+  },
+  "execution": {
+    "adapter": "manga-discovery-v2",
+    "codeSha256": "80e05b67bc0129b963653b90df4cfbfa5bd6aff190acda99f54c08541e55801e",
+    "inputs": [
+      {
+        "file": "datasets/manga-collection/r0019/recipe.json",
+        "sha256": "d58e652152ae9ec04a3e4bdca38b985763186fc9c9f1eb421124e44401eb87c3"
+      },
+      {
+        "file": "datasets/manga-collection/r0019/anchor-review.json",
+        "sha256": "ae4cf2d4ed55660222476f2aee2b52bd7cc244aea608146453344e2049bc59df"
+      },
+      {
+        "file": "datasets/manga-collection/r0019/publication-review.json",
+        "sha256": "42702c4ef6c30fbf74e7aa6f8ad7ecccc173581ccac71c7af8b561ed5b789999"
+      },
+      {
+        "file": "docs/research/famous-manga-creators/20261016/candidates.json",
+        "sha256": "8531fada01e5c635ba2ee278a7ef944a73f64676af14ed42ae0e690f5a1ff978"
+      },
+      {
+        "file": "datasets/public-kg/releases/20261014-credits-001/data.json",
+        "sha256": "ea91b16f52a211b5a8464382ad498b7b2bb2be69a6f33fe125a73a3c7b9da2b5"
+      },
+      {
+        "file": "datasets/public-kg/releases/20261014-credits-001/manifest.json",
+        "sha256": "e4aa3b58ed884f7d1f8fffee43b260261cc2b4d3a867fda942919f439d2bce17"
+      }
+    ],
+    "maxEntities": 2111,
+    "maxClaims": 1847
+  },
+  "identityMappings": [
+    {
+      "name": "田村由美",
+      "wikidata": "Q2235128",
+      "entityId": "1866bbe5-7e00-4afc-965f-5e968481f065",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "ミステリと言う勿れ",
+      "wikidata": "Q85874073",
+      "entityId": "abfbf55a-0b15-4c63-b87f-f7e4ed874ee0",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    }
+  ],
+  "rows": [
+    {
+      "kind": "wikidata-relation",
+      "work": "ミステリと言う勿れ",
+      "property": "P50",
+      "personQid": "Q2235128",
+      "statementId": "Q85874073$f0235084-47f8-3737-5f95-ac604dab21ff",
+      "qualifiers": {},
+      "references": [],
+      "status": "candidate-only-no-role-inference",
+      "reason": "Wikidata propertyだけで具体Roleや直接制作の意味を確定しない"
+    },
+    {
+      "kind": "ndl-credit",
+      "work": "ミステリと言う勿れ",
+      "isbn13": "9784098700295",
+      "rawResponsibility": "田村由美 著",
+      "sourceUrl": "https://ndlsearch.ndl.go.jp/books/R100000002-I028733684",
+      "status": "pending-human-acceptance",
+      "roleId": "AUTHORSHIP",
+      "person": "田村由美",
+      "claimId": "fe16a058-d465-4362-9198-df71789644a1",
+      "reusedClaim": false,
+      "subjectId": "1866bbe5-7e00-4afc-965f-5e968481f065",
+      "objectId": "abfbf55a-0b15-4c63-b87f-f7e4ed874ee0"
+    }
+  ],
+  "holds": [],
+  "acquisitions": [
+    {
+      "kind": "wikidata",
+      "identifier": "Q2235128",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q2235128.json",
+      "sha256": "07e9000eb30dcffa08a89334b87dcfa75c28ada782478f7201bfbb4533df8d15",
+      "bytes": 38049,
+      "fetchedAt": "2026-10-18T18:39:22+00:00"
+    },
+    {
+      "kind": "wikidata",
+      "identifier": "Q85874073",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q85874073.json",
+      "sha256": "56c1f0e339467bacbd522153c839c68b0f243ea1f928b3153409d73c074992fd",
+      "bytes": 10614,
+      "fetchedAt": "2026-10-18T18:40:41+00:00"
+    },
+    {
+      "kind": "ndl",
+      "identifier": "9784098700295",
+      "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&maximumRecords=5&query=isbn%3D%229784098700295%22+AND+dpid%3Diss-ndl-opac",
+      "sha256": "77646d0c1976890f0a15967aa00a4fc237905838182a0158458447ad426b5638",
+      "bytes": 14970,
+      "fetchedAt": "2026-10-18T18:55:17+00:00"
+    }
+  ]
+}

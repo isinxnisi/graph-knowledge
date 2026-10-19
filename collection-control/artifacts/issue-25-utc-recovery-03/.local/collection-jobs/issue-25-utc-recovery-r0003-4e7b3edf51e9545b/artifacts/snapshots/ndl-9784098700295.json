@@ -1,0 +1,36 @@
+{
+  "provider": "iss-ndl-opac / 国立国会図書館",
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "terms": "https://ndlsearch.ndl.go.jp/help/api/provider",
+  "records": [
+    {
+      "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I028733684",
+      "isbn13": [
+        "9784098700295"
+      ],
+      "title": [
+        "ミステリと言う勿れ = Do not say mystery. 1"
+      ],
+      "mainTitles": [
+        "ミステリと言う勿れ"
+      ],
+      "volume": [
+        "1"
+      ],
+      "edition": [],
+      "responsibilities": [
+        "田村由美 著"
+      ],
+      "publisher": [
+        "小学館"
+      ],
+      "language": [
+        "jpn"
+      ],
+      "genre": [
+        "漫画"
+      ]
+    }
+  ],
+  "error": null
+}

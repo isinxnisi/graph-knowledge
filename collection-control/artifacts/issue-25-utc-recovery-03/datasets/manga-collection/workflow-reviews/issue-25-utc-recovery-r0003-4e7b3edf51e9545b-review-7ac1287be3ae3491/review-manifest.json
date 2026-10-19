@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "reviewId": "issue-25-utc-recovery-r0003-4e7b3edf51e9545b-review-7ac1287be3ae3491",
+  "inputSha256": "7ac1287be3ae34912b6f3a20f136f167090b0d6f7013174f6f5aba2ac4e1d940",
+  "artifacts": {
+    "context.json": "8c7730681fc0f8afe769f87064f1a3fa3fed392c457eaa037b68563a17f15fa8",
+    "review.json": "ad9bdf1fd2112fdf7a1663195abc1e4ae418d2dd819cae2b35fbac41c121487d",
+    "proposed-records.json": "da8f0d581f1c86cd6a369e05723f391f96f0f7170bd83e40d99af87e80d58cf5",
+    "identity-only-records.json": "1fc314e4a47717bce195b39fe7f1e66bd31f6af892fca4a9420a653eab927a37",
+    "exploration-paths.json": "0d20374cc148071e0757648ce676db82cd42ce54fb873340098dc3b9b18bce7f",
+    "decision-request.json": "14d517b49951376663c6e578228c582955f338bcc3812c3daa01932384f391f7",
+    "README.md": "723b6041becbc7e0310f3506bc2c132408799b9f8b9a046768b97e9d0eb975ff"
+  },
+  "authority": "pending-human-review-only"
+}

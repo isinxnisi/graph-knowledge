@@ -1,0 +1,117 @@
+{
+  "id": "Q85874073",
+  "lastrevid": 2551721086,
+  "labels": {
+    "ja": {
+      "language": "ja",
+      "value": "ミステリと言う勿れ"
+    },
+    "zh": {
+      "language": "zh",
+      "value": "勿說是推理"
+    },
+    "it": {
+      "language": "it",
+      "value": "Don't Call it Mystery"
+    },
+    "en": {
+      "language": "en",
+      "value": "Do Not Say Mystery"
+    },
+    "ko": {
+      "language": "ko",
+      "value": "미스터리라 하지 말지어다"
+    },
+    "zh-cn": {
+      "language": "zh-cn",
+      "value": "勿言推理"
+    },
+    "zh-hant": {
+      "language": "zh-hant",
+      "value": "勿說是推理"
+    },
+    "fr": {
+      "language": "fr",
+      "value": "Don't Call It Mystery"
+    },
+    "de": {
+      "language": "de",
+      "value": "Nenn es nicht Mystery"
+    },
+    "pl": {
+      "language": "pl",
+      "value": "To żadna tajemnica"
+    }
+  },
+  "aliases": {
+    "zh": [
+      {
+        "language": "zh",
+        "value": "勿言推理"
+      }
+    ],
+    "en": [
+      {
+        "language": "en",
+        "value": "Mystery to Iu Nakare"
+      }
+    ],
+    "it": [
+      {
+        "language": "it",
+        "value": "Mystery to iu nakare"
+      }
+    ],
+    "pl": [
+      {
+        "language": "pl",
+        "value": "Mystery to iu nakare"
+      }
+    ]
+  },
+  "claims": {
+    "P31": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P31",
+          "hash": "549c072d6be8a6a43f999d1d0e82640b16c4260e",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 21198342,
+              "id": "Q21198342"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q85874073$ad1ea272-49c1-d0e3-9275-d140f9910ced",
+        "rank": "normal"
+      }
+    ],
+    "P50": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P50",
+          "hash": "f790af68bf78c3051afa2518a3f0aa852c64055a",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 2235128,
+              "id": "Q2235128"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q85874073$f0235084-47f8-3737-5f95-ac604dab21ff",
+        "rank": "normal"
+      }
+    ],
+    "P110": []
+  }
+}

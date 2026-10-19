@@ -1,0 +1,200 @@
+{
+  "id": "Q2235128",
+  "lastrevid": 2541689475,
+  "labels": {
+    "zh-hans": {
+      "language": "zh-hans",
+      "value": "田村由美"
+    },
+    "zh-hant": {
+      "language": "zh-hant",
+      "value": "田村由美"
+    },
+    "zh-hk": {
+      "language": "zh-hk",
+      "value": "田村由美"
+    },
+    "ja": {
+      "language": "ja",
+      "value": "田村由美"
+    },
+    "vi": {
+      "language": "vi",
+      "value": "Tamura Yumi"
+    },
+    "fr": {
+      "language": "fr",
+      "value": "Yumi Tamura"
+    },
+    "en": {
+      "language": "en",
+      "value": "Yumi Tamura"
+    },
+    "sv": {
+      "language": "sv",
+      "value": "Yumi Tamura"
+    },
+    "es": {
+      "language": "es",
+      "value": "Yumi Tamura"
+    },
+    "zh": {
+      "language": "zh",
+      "value": "田村由美"
+    },
+    "nl": {
+      "language": "nl",
+      "value": "Yumi Tamura"
+    },
+    "de": {
+      "language": "de",
+      "value": "Yumi Tamura"
+    },
+    "ru": {
+      "language": "ru",
+      "value": "Юми Тамура"
+    },
+    "ast": {
+      "language": "ast",
+      "value": "Yumi Tamura"
+    },
+    "ar": {
+      "language": "ar",
+      "value": "يومي تامورا"
+    },
+    "id": {
+      "language": "id",
+      "value": "Yumi Tamura"
+    },
+    "uk": {
+      "language": "uk",
+      "value": "Тамура Юмі"
+    },
+    "sq": {
+      "language": "sq",
+      "value": "Yumi Tamura"
+    },
+    "tr": {
+      "language": "tr",
+      "value": "Yūmi Tamura"
+    },
+    "fi": {
+      "language": "fi",
+      "value": "Yumi Tamura"
+    },
+    "ko": {
+      "language": "ko",
+      "value": "다무라 유미"
+    }
+  },
+  "aliases": {
+    "sv": [
+      {
+        "language": "sv",
+        "value": "Tamura"
+      }
+    ],
+    "ru": [
+      {
+        "language": "ru",
+        "value": "Тамура, Юми"
+      }
+    ],
+    "en": [
+      {
+        "language": "en",
+        "value": "Tamura Yumi"
+      }
+    ],
+    "uk": [
+      {
+        "language": "uk",
+        "value": "Тамура Юмі"
+      }
+    ]
+  },
+  "claims": {
+    "P31": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P31",
+          "hash": "ad7d38a03cdd40cdc373de0dc4e7b7fcbccb31d9",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 5,
+              "id": "Q5"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q2235128$BE12CC4F-FD6A-47ED-AD8B-C68D2DB3E939",
+        "rank": "normal",
+        "references": [
+          {
+            "hash": "8eda1bb7ecb35103f45ae706b68acc525d5f1e92",
+            "snaks": {
+              "P248": [
+                {
+                  "snaktype": "value",
+                  "property": "P248",
+                  "hash": "def9f19d84b65167a2a17ce38364d264c16127fc",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 19938912,
+                      "id": "Q19938912"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ],
+              "P268": [
+                {
+                  "snaktype": "value",
+                  "property": "P268",
+                  "hash": "4a381beb3740bccaac20156eb5bd6a1cbbf9eb13",
+                  "datavalue": {
+                    "value": "137746167",
+                    "type": "string"
+                  },
+                  "datatype": "external-id"
+                }
+              ],
+              "P813": [
+                {
+                  "snaktype": "value",
+                  "property": "P813",
+                  "hash": "d6162a1716489623c6e595e448b17f8dca4fb2e8",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2015-10-10T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P248",
+              "P268",
+              "P813"
+            ]
+          }
+        ]
+      }
+    ],
+    "P50": [],
+    "P110": []
+  }
+}
