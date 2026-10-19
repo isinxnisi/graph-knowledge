@@ -106,11 +106,11 @@
   },
   "requestSha256": "0814b8af0f80dc7f8cb28d448971a9da6a86cee02c9b6879d53a41b4a4621a76",
   "kind": "collect-review",
-  "phase": "waiting-control",
-  "generation": 2,
-  "attempts": 0,
+  "phase": "running",
+  "generation": 70,
+  "attempts": 1,
   "workerId": "plunode-wsl",
   "sourceCommit": "ed89e5a6ff0cf7d8b485330be790a234a064eacd",
-  "updatedAt": "2026-10-19T00:04:28+00:00",
+  "updatedAt": "2026-10-19T01:25:13+00:00",
   "message": "Execution gate: interval"
 }
