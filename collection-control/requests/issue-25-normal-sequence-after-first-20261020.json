@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "id": "issue-25-normal-sequence-after-first-20261020",
+  "kind": "accept-sequence",
+  "status": "approved",
+  "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
+  "approvalScope": "approved-register-sequential-acceptance-only",
+  "applyAuthorized": {
+    "local": false,
+    "beta": false,
+    "vps": false
+  },
+  "register": {
+    "file": "collection-control/approval-registers/issue-25-20261019-normal-10.json",
+    "sha256": "82b53f2bb1e0c1e5402af117a22de2a809ecf0588a56743e6aaef3258b42e8d6"
+  },
+  "humanDecision": {
+    "actorType": "human",
+    "reviewer": "プロジェクト運営者",
+    "decidedAt": "2026-10-20T03:31:48.206519+09:00",
+    "statement": "2026-10-20のこのチャットで、Issue #32 Phase Bの実運用切替と、Issue #25で既承認10 Claimのうち残り5グループ（03-normal、04-normal、06-normal、07-normal、08-normal）の既存CollectionWorkerによる逐次実行を明示指示。先行01-normalのcompleted・receipt・release・validate・実無書込planを確認して二重実行しない。固定コード973c7b0と元registerの全UUID・本文hash・Role・ISBN scope・Source・Citation・依存を保持し、新規意味判断・収集対象追加を行わない。既存ロック・時間帯・10分休憩・55分上限を維持し、同一性不明は停止。承認済み受入記録とrelease準備までを実行し、公開apply・VPS・会員DB・検索UI変更は行わない。"
+  }
+}
