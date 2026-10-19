@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "id": "issue-32-phase-b-migration-resume-20261020",
+  "workerId": "plunode-wsl",
+  "revision": 2,
+  "previousControlId": "issue-32-phase-b-migration-pause-new-20261020",
+  "status": "approved",
+  "approvalScope": "worker-execution-control-only",
+  "action": "resume",
+  "humanDecision": {
+    "actorType": "human",
+    "reviewer": "プロジェクト運営者",
+    "decidedAt": "2026-10-19T18:32:56+00:00",
+    "statement": "2026-10-20のこのチャットの指示に基づき、973c7b0の新Workerへの正常引継ぎ、旧成果・承認・receipt・job・cache・stateのhash一致、先行01-normalのcompletedを確認し、切替のためのpause-newを解除して通常の時間帯・10分休憩・共通ロック・55分上限へ復旧する。元registerに束縛した残り5グループの承認済み受入・release準備のみを逐次処理し、新規意味判断・対象追加・公開apply・VPS・会員DB・検索UI変更は行わない。"
+  }
+}
