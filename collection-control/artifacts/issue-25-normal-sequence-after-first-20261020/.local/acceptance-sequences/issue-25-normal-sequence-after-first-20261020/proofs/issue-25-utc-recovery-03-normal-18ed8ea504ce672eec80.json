@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "authority": "mechanical-comparison-refresh-not-a-new-human-decision",
+  "originalDecision": {
+    "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/decisions/issue-25-utc-recovery-03-normal.json",
+    "sha256": "1226b6c2488d01ccaca02831b1ddb4ed5bba0e4e8999ae905722352a9c75cb72"
+  },
+  "register": {
+    "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/register-source.json",
+    "sha256": "82b53f2bb1e0c1e5402af117a22de2a809ecf0588a56743e6aaef3258b42e8d6"
+  },
+  "refreshedReview": {
+    "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0003-4e7b3edf51e9545b-review-c1ab7772b1b72fea/review-manifest.json",
+    "sha256": "6dd9f224ffa41a4875a971bd2ad39b709c8cbd093146a4d40c9715df5b9bec49"
+  },
+  "dependencySignature": {
+    "entities": {
+      "1866bbe5-7e00-4afc-965f-5e968481f065": "bf3e7ee62dc9f52c0d1c2e310b5e109d4c1dba5f8992f1461f02cd21de5d4691",
+      "abfbf55a-0b15-4c63-b87f-f7e4ed874ee0": "2c716d7385b70476f332cfa87cbd3c722c4ade44f09c84d6560627519ddc512f"
+    },
+    "claims": {
+      "fe16a058-d465-4362-9198-df71789644a1": "7428193004cde86c60ca74cbfa12fad932d73a7b5a0849998a077dee41f3385e"
+    },
+    "sources": {
+      "b7d0b5c3-4062-4904-8631-335244197631": "5e2058cde685beaaecb2e58ade25c9ae6205e4fbbd9b77fef67f8b111a17c1a6"
+    },
+    "citations": {
+      "75ddef86-1e49-4c24-84a4-d29cdda75fdf": "2b7943f392ec86eb06617fea53daff832b8a855946720a57d69ff0ca196ff24d"
+    }
+  },
+  "publicApply": false
+}

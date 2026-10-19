@@ -1,0 +1,84 @@
+{
+  "status": "pending-human-acceptance",
+  "humanReviewer": null,
+  "entities": [
+    {
+      "entityId": "1866bbe5-7e00-4afc-965f-5e968481f065",
+      "name": "田村由美",
+      "kind": "person",
+      "wikidata": "Q2235128",
+      "existingEntityId": "1866bbe5-7e00-4afc-965f-5e968481f065",
+      "status": "reuse-formally-accepted-not-applied",
+      "reasons": [],
+      "checks": {
+        "providerIdentity": true
+      },
+      "inputPopulation": "relation-endpoint"
+    },
+    {
+      "entityId": "abfbf55a-0b15-4c63-b87f-f7e4ed874ee0",
+      "name": "ミステリと言う勿れ",
+      "kind": "work",
+      "wikidata": "Q85874073",
+      "existingEntityId": null,
+      "status": "candidate",
+      "reasons": [],
+      "checks": {
+        "providerIdentity": true
+      },
+      "inputPopulation": "relation-endpoint"
+    }
+  ],
+  "claims": [
+    {
+      "claimId": "fe16a058-d465-4362-9198-df71789644a1",
+      "person": "田村由美",
+      "work": "ミステリと言う勿れ",
+      "subjectId": "1866bbe5-7e00-4afc-965f-5e968481f065",
+      "objectId": "abfbf55a-0b15-4c63-b87f-f7e4ed874ee0",
+      "roleId": "AUTHORSHIP",
+      "scope": {
+        "kind": "publication",
+        "isbn13": "9784098700295",
+        "volumeLabel": "第1巻（NDL巻次 1）",
+        "editionLabel": null,
+        "language": "ja"
+      },
+      "status": "candidate",
+      "reasons": [],
+      "supportingCitationIds": [
+        "75ddef86-1e49-4c24-84a4-d29cdda75fdf"
+      ],
+      "existingState": null,
+      "existingClaimId": null,
+      "originalTexts": [
+        "田村由美 著"
+      ],
+      "citationIds": [
+        "75ddef86-1e49-4c24-84a4-d29cdda75fdf"
+      ],
+      "sourceUrls": [
+        "https://ndlsearch.ndl.go.jp/books/R100000002-I028733684"
+      ],
+      "sourceIds": [
+        "b7d0b5c3-4062-4904-8631-335244197631"
+      ]
+    }
+  ],
+  "inheritedHolds": [],
+  "newCandidateCounts": {
+    "entities": 1,
+    "claims": 1,
+    "sources": 1,
+    "citations": 1
+  },
+  "recordConflicts": [],
+  "roleCounts": {
+    "AUTHORSHIP": 1
+  },
+  "normalReviewedEntityCount": 1,
+  "reusedCitationIds": [],
+  "identityOnlyEntityIds": [],
+  "heldClaimCount": 0,
+  "heldEntityCount": 0
+}

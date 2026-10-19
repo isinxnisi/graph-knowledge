@@ -1,0 +1,111 @@
+{
+  "schemaVersion": 1,
+  "decisionId": "issue-25-utc-recovery-03-normal",
+  "status": "approved",
+  "humanDecision": {
+    "actorType": "human",
+    "reviewer": "プロジェクト運営者",
+    "decidedAt": "2026-10-19T21:01:44+09:00",
+    "statement": "2026年10月19日、このチャットでIssue #25の通常候補10 Claimと必要な14 Entity・10 Source・10 Citationの正式受入を明示承認。各Claimはレビュー済みの本人→作品、AUTHORSHIP、日本語第1巻ISBN scopeと凍結根拠・UUIDを維持する。既存作品UUIDの同一性、書誌、Role、追加の保留はすべて対象外。公開KGへのapply・restore・VPS配置・会員DB変更は承認しない。受入記録・release生成・validate・最新の無書込planまでを許可する。"
+  },
+  "approvalScope": "formal-record-acceptance-and-release-preparation-only",
+  "applyAuthorized": {
+    "local": false,
+    "beta": false,
+    "vps": false
+  },
+  "review": {
+    "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0003-4e7b3edf51e9545b-review-7ac1287be3ae3491/review-manifest.json",
+    "sha256": "ccb73e2f413433913cd3338750b53428ed346165db8363a62dba44f004f0a9f0"
+  },
+  "referenceArtifacts": [
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0003-4e7b3edf51e9545b-review-7ac1287be3ae3491/README.md",
+      "sha256": "723b6041becbc7e0310f3506bc2c132408799b9f8b9a046768b97e9d0eb975ff"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0003-4e7b3edf51e9545b-review-7ac1287be3ae3491/context.json",
+      "sha256": "8c7730681fc0f8afe769f87064f1a3fa3fed392c457eaa037b68563a17f15fa8"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0003-4e7b3edf51e9545b-review-7ac1287be3ae3491/decision-request.json",
+      "sha256": "14d517b49951376663c6e578228c582955f338bcc3812c3daa01932384f391f7"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0003-4e7b3edf51e9545b-review-7ac1287be3ae3491/exploration-paths.json",
+      "sha256": "0d20374cc148071e0757648ce676db82cd42ce54fb873340098dc3b9b18bce7f"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0003-4e7b3edf51e9545b-review-7ac1287be3ae3491/identity-only-records.json",
+      "sha256": "1fc314e4a47717bce195b39fe7f1e66bd31f6af892fca4a9420a653eab927a37"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0003-4e7b3edf51e9545b-review-7ac1287be3ae3491/proposed-records.json",
+      "sha256": "da8f0d581f1c86cd6a369e05723f391f96f0f7170bd83e40d99af87e80d58cf5"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0003-4e7b3edf51e9545b-review-7ac1287be3ae3491/review-manifest.json",
+      "sha256": "ccb73e2f413433913cd3338750b53428ed346165db8363a62dba44f004f0a9f0"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0003-4e7b3edf51e9545b-review-7ac1287be3ae3491/review.json",
+      "sha256": "ad9bdf1fd2112fdf7a1663195abc1e4ae418d2dd819cae2b35fbac41c121487d"
+    }
+  ],
+  "acceptedRecordIds": {
+    "entities": [
+      "abfbf55a-0b15-4c63-b87f-f7e4ed874ee0"
+    ],
+    "claims": [
+      "fe16a058-d465-4362-9198-df71789644a1"
+    ],
+    "sources": [
+      "b7d0b5c3-4062-4904-8631-335244197631"
+    ],
+    "citations": [
+      "75ddef86-1e49-4c24-84a4-d29cdda75fdf"
+    ]
+  },
+  "recordSha256": {
+    "entities": {
+      "abfbf55a-0b15-4c63-b87f-f7e4ed874ee0": "2c716d7385b70476f332cfa87cbd3c722c4ade44f09c84d6560627519ddc512f"
+    },
+    "claims": {
+      "fe16a058-d465-4362-9198-df71789644a1": "7428193004cde86c60ca74cbfa12fad932d73a7b5a0849998a077dee41f3385e"
+    },
+    "sources": {
+      "b7d0b5c3-4062-4904-8631-335244197631": "5e2058cde685beaaecb2e58ade25c9ae6205e4fbbd9b77fef67f8b111a17c1a6"
+    },
+    "citations": {
+      "75ddef86-1e49-4c24-84a4-d29cdda75fdf": "2b7943f392ec86eb06617fea53daff832b8a855946720a57d69ff0ca196ff24d"
+    }
+  },
+  "scopeByClaim": [
+    {
+      "id": "fe16a058-d465-4362-9198-df71789644a1",
+      "subjectId": "1866bbe5-7e00-4afc-965f-5e968481f065",
+      "objectId": "abfbf55a-0b15-4c63-b87f-f7e4ed874ee0",
+      "predicate": "CONTRIBUTED_TO",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "contribution": {
+        "roleId": "AUTHORSHIP",
+        "scope": {
+          "kind": "publication",
+          "isbn13": "9784098700295",
+          "volumeLabel": "第1巻（NDL巻次 1）",
+          "editionLabel": null,
+          "language": "ja"
+        }
+      },
+      "organizationParticipation": null,
+      "eventParticipation": null
+    }
+  ],
+  "baseRelease": "20261014-credits-001",
+  "baseRevision": "82b01515-594c-48ca-b4b6-515eefac83ca",
+  "releaseId": "manga-issue-25-utc-recovery-03-normal"
+}

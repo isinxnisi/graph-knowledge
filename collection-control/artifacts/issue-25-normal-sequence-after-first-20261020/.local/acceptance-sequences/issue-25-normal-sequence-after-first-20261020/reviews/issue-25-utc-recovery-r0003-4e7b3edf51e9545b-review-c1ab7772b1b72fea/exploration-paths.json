@@ -1,0 +1,52 @@
+[
+  {
+    "state": "collection-candidate",
+    "observation": "verified-records-only-not-a-live-exploration-test",
+    "edges": [
+      {
+        "claimId": "fe16a058-d465-4362-9198-df71789644a1",
+        "subjectId": "1866bbe5-7e00-4afc-965f-5e968481f065",
+        "objectId": "abfbf55a-0b15-4c63-b87f-f7e4ed874ee0",
+        "person": "田村由美",
+        "work": "ミステリと言う勿れ",
+        "roleId": "AUTHORSHIP",
+        "scope": {
+          "kind": "publication",
+          "isbn13": "9784098700295",
+          "volumeLabel": "第1巻（NDL巻次 1）",
+          "editionLabel": null,
+          "language": "ja"
+        },
+        "state": "collection-candidate",
+        "citationIds": [
+          "75ddef86-1e49-4c24-84a4-d29cdda75fdf"
+        ],
+        "sourceIds": [
+          "b7d0b5c3-4062-4904-8631-335244197631"
+        ]
+      },
+      {
+        "claimId": "e3b0de8a-f7cc-4188-baa2-b41e2298e2be",
+        "subjectId": "1866bbe5-7e00-4afc-965f-5e968481f065",
+        "objectId": "5c5f452c-1e74-4985-aaec-811a8e329f42",
+        "person": "田村由美",
+        "work": "7SEEDS",
+        "roleId": "AUTHORSHIP",
+        "scope": {
+          "kind": "publication",
+          "isbn13": "9784091380135",
+          "volumeLabel": "第1巻",
+          "editionLabel": null,
+          "language": "ja"
+        },
+        "state": "formally-accepted-not-applied",
+        "citationIds": [
+          "2bafe200-3ef0-466c-8da0-f7541b901b19"
+        ],
+        "sourceIds": [
+          "5100fe49-d129-4e0b-9b5d-0d33892fd613"
+        ]
+      }
+    ]
+  }
+]

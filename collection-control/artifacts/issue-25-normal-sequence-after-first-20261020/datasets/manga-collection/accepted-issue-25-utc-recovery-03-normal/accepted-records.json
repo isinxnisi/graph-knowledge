@@ -1,0 +1,83 @@
+{
+  "records": {
+    "entities": [
+      {
+        "id": "abfbf55a-0b15-4c63-b87f-f7e4ed874ee0",
+        "kind": "work",
+        "name": "ミステリと言う勿れ",
+        "description": null,
+        "aliases": [
+          "Do Not Say Mystery"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q85874073"
+          }
+        ],
+        "createdAt": "2026-10-18T18:54:58Z",
+        "updatedAt": "2026-10-18T18:54:58Z",
+        "event": null
+      }
+    ],
+    "claims": [
+      {
+        "id": "fe16a058-d465-4362-9198-df71789644a1",
+        "subjectId": "1866bbe5-7e00-4afc-965f-5e968481f065",
+        "objectId": "abfbf55a-0b15-4c63-b87f-f7e4ed874ee0",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "hidden",
+        "createdAt": "2026-10-18T18:54:58Z",
+        "updatedAt": "2026-10-18T18:54:58Z",
+        "contribution": {
+          "roleId": "AUTHORSHIP",
+          "scope": {
+            "kind": "publication",
+            "isbn13": "9784098700295",
+            "volumeLabel": "第1巻（NDL巻次 1）",
+            "editionLabel": null,
+            "language": "ja"
+          }
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      }
+    ],
+    "sources": [
+      {
+        "id": "b7d0b5c3-4062-4904-8631-335244197631",
+        "kind": "web",
+        "title": "NDLサーチ: ミステリと言う勿れ = Do not say mystery. 1",
+        "authors": [],
+        "publisher": "国立国会図書館",
+        "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I028733684",
+        "publishedAt": null,
+        "edition": null,
+        "note": "国立国会図書館作成書誌（iss-ndl-opac）の責任表示。メタデータ CC BY 4.0: https://creativecommons.org/licenses/by/4.0/ ; 提供元条件 https://ndlsearch.ndl.go.jp/help/api/provider 。本文・画像・第三者所蔵情報は含まない。",
+        "isDemo": false
+      }
+    ],
+    "citations": [
+      {
+        "id": "75ddef86-1e49-4c24-84a4-d29cdda75fdf",
+        "claimId": "fe16a058-d465-4362-9198-df71789644a1",
+        "sourceId": "b7d0b5c3-4062-4904-8631-335244197631",
+        "locator": "dc:creator（責任表示） / ISBN 9784098700295",
+        "note": "原表記（ja）: 田村由美 著。指定刊行物の責任表示で確認された担当。全巻・全版・全期間への外挿、原作から別Roleへの変換はしない。同一資料由来の記録を独立した根拠と数えない。",
+        "accessedAt": "2026-10-18",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "田村由美 著",
+          "language": "ja"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      }
+    ]
+  }
+}
