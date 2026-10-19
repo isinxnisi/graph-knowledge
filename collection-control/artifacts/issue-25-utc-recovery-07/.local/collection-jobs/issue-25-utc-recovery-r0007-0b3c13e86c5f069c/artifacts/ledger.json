@@ -1,0 +1,258 @@
+{
+  "schemaVersion": 2,
+  "status": "pending-human-acceptance",
+  "recipe": "manga-r0023",
+  "collectionContext": {
+    "themeId": "issue-25-utc-recovery",
+    "themeRevision": 7,
+    "definitionSha256": "156afa134a227ae26ca0d32115b6c5af1a6c40e5be15388a2c9a6441f6f8616b",
+    "approvalSha256": "6fefb83a8af6a86a1322b6810690eea25dafa6c2d041e2fbbd32daea8a37be2c"
+  },
+  "execution": {
+    "adapter": "manga-discovery-v2",
+    "codeSha256": "80e05b67bc0129b963653b90df4cfbfa5bd6aff190acda99f54c08541e55801e",
+    "inputs": [
+      {
+        "file": "datasets/manga-collection/r0023/recipe.json",
+        "sha256": "818cd0d60ecd2c55845217575ffd0c67d95801cb36becf8011e0070d6bb4624b"
+      },
+      {
+        "file": "datasets/manga-collection/r0023/anchor-review.json",
+        "sha256": "a7d5e730d21a5c19f580ccc949a11ae33a9dbb1346ad2813776e2e7492a43c8e"
+      },
+      {
+        "file": "datasets/manga-collection/r0023/publication-review.json",
+        "sha256": "95c17e0b07d2b0ff726c5be53716e258251670fd408531e0c6a502fd29bf579a"
+      },
+      {
+        "file": "docs/research/famous-manga-creators/20261016/candidates.json",
+        "sha256": "8531fada01e5c635ba2ee278a7ef944a73f64676af14ed42ae0e690f5a1ff978"
+      },
+      {
+        "file": "datasets/public-kg/releases/20261014-credits-001/data.json",
+        "sha256": "ea91b16f52a211b5a8464382ad498b7b2bb2be69a6f33fe125a73a3c7b9da2b5"
+      },
+      {
+        "file": "datasets/public-kg/releases/20261014-credits-001/manifest.json",
+        "sha256": "e4aa3b58ed884f7d1f8fffee43b260261cc2b4d3a867fda942919f439d2bce17"
+      }
+    ],
+    "maxEntities": 2112,
+    "maxClaims": 1850
+  },
+  "identityMappings": [
+    {
+      "name": "高屋奈月",
+      "wikidata": "Q241885",
+      "entityId": "89958cbe-1822-4814-9861-fec01c94378a",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "フルーツバスケット",
+      "wikidata": "Q216204",
+      "entityId": "7a7678a2-f7a8-4381-aaf0-ecddb866fca0",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "翼を持つ者",
+      "wikidata": "Q2947180",
+      "entityId": "451e8e8a-0d17-4dfd-99d8-14b57780e055",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    }
+  ],
+  "rows": [
+    {
+      "kind": "wikidata-relation",
+      "work": "フルーツバスケット",
+      "property": "P50",
+      "personQid": "Q241885",
+      "statementId": "Q216204$28C1F7F5-36E6-46F4-909E-DFAFB27C4EEC",
+      "qualifiers": {},
+      "references": [
+        {
+          "hash": "d4bd87b862b12d99d26e86472d44f26858dee639",
+          "snaks": {
+            "P143": [
+              {
+                "snaktype": "value",
+                "property": "P143",
+                "hash": "f30cbd35620c4ea6d0633aaf0210a8916130469b",
+                "datavalue": {
+                  "value": {
+                    "entity-type": "item",
+                    "numeric-id": 8447,
+                    "id": "Q8447"
+                  },
+                  "type": "wikibase-entityid"
+                },
+                "datatype": "wikibase-item"
+              }
+            ]
+          },
+          "snaks-order": [
+            "P143"
+          ]
+        }
+      ],
+      "status": "candidate-only-no-role-inference",
+      "reason": "Wikidata propertyだけで具体Roleや直接制作の意味を確定しない"
+    },
+    {
+      "kind": "wikidata-relation",
+      "work": "フルーツバスケット",
+      "property": "P110",
+      "personQid": "Q241885",
+      "statementId": "Q216204$c74c56d7-4896-e242-3483-2d4bc0094ed4",
+      "qualifiers": {},
+      "references": [],
+      "status": "candidate-only-no-role-inference",
+      "reason": "Wikidata propertyだけで具体Roleや直接制作の意味を確定しない"
+    },
+    {
+      "kind": "ndl-credit",
+      "work": "フルーツバスケット",
+      "isbn13": "9784592171614",
+      "rawResponsibility": "高屋奈月 著",
+      "sourceUrl": "https://ndlsearch.ndl.go.jp/books/R100000002-I000002761106",
+      "status": "pending-human-acceptance",
+      "roleId": "AUTHORSHIP",
+      "person": "高屋奈月",
+      "claimId": "87432807-ba90-400c-8a3f-e5dcfa847572",
+      "reusedClaim": false,
+      "subjectId": "89958cbe-1822-4814-9861-fec01c94378a",
+      "objectId": "7a7678a2-f7a8-4381-aaf0-ecddb866fca0"
+    },
+    {
+      "kind": "wikidata-relation",
+      "work": "翼を持つ者",
+      "property": "P50",
+      "personQid": "Q241885",
+      "statementId": "Q2947180$937845CF-0056-4211-B037-C2C413C1D8ED",
+      "qualifiers": {},
+      "references": [
+        {
+          "hash": "d4bd87b862b12d99d26e86472d44f26858dee639",
+          "snaks": {
+            "P143": [
+              {
+                "snaktype": "value",
+                "property": "P143",
+                "hash": "f30cbd35620c4ea6d0633aaf0210a8916130469b",
+                "datavalue": {
+                  "value": {
+                    "entity-type": "item",
+                    "numeric-id": 8447,
+                    "id": "Q8447"
+                  },
+                  "type": "wikibase-entityid"
+                },
+                "datatype": "wikibase-item"
+              }
+            ]
+          },
+          "snaks-order": [
+            "P143"
+          ]
+        }
+      ],
+      "status": "candidate-only-no-role-inference",
+      "reason": "Wikidata propertyだけで具体Roleや直接制作の意味を確定しない"
+    },
+    {
+      "kind": "wikidata-relation",
+      "work": "翼を持つ者",
+      "property": "P110",
+      "personQid": "Q241885",
+      "statementId": "Q2947180$E00544E6-0A7A-41F5-A2BD-C83C43C0764B",
+      "qualifiers": {},
+      "references": [
+        {
+          "hash": "d4bd87b862b12d99d26e86472d44f26858dee639",
+          "snaks": {
+            "P143": [
+              {
+                "snaktype": "value",
+                "property": "P143",
+                "hash": "f30cbd35620c4ea6d0633aaf0210a8916130469b",
+                "datavalue": {
+                  "value": {
+                    "entity-type": "item",
+                    "numeric-id": 8447,
+                    "id": "Q8447"
+                  },
+                  "type": "wikibase-entityid"
+                },
+                "datatype": "wikibase-item"
+              }
+            ]
+          },
+          "snaks-order": [
+            "P143"
+          ]
+        }
+      ],
+      "status": "candidate-only-no-role-inference",
+      "reason": "Wikidata propertyだけで具体Roleや直接制作の意味を確定しない"
+    },
+    {
+      "kind": "ndl-credit",
+      "work": "翼を持つ者",
+      "isbn13": "9784592128311",
+      "rawResponsibility": "高屋奈月 著",
+      "sourceUrl": "https://ndlsearch.ndl.go.jp/books/R100000002-I000002526551",
+      "status": "pending-human-acceptance",
+      "roleId": "AUTHORSHIP",
+      "person": "高屋奈月",
+      "claimId": "2fbb4bf1-5180-456b-9681-e3ec75a54cd8",
+      "reusedClaim": false,
+      "subjectId": "89958cbe-1822-4814-9861-fec01c94378a",
+      "objectId": "451e8e8a-0d17-4dfd-99d8-14b57780e055"
+    }
+  ],
+  "holds": [],
+  "acquisitions": [
+    {
+      "kind": "wikidata",
+      "identifier": "Q241885",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q241885.json",
+      "sha256": "ff096e6cffd94ac59480ea59eb56f5c885cb5b4f30c683273ab0b084fd43aa19",
+      "bytes": 70792,
+      "fetchedAt": "2026-10-18T18:39:37+00:00"
+    },
+    {
+      "kind": "wikidata",
+      "identifier": "Q216204",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q216204.json",
+      "sha256": "8655f5932b2375be85e5ffeae6ee9fd9d044b5946b5593a37174537593f429ed",
+      "bytes": 62536,
+      "fetchedAt": "2026-10-18T18:41:43+00:00"
+    },
+    {
+      "kind": "ndl",
+      "identifier": "9784592171614",
+      "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&maximumRecords=5&query=isbn%3D%229784592171614%22+AND+dpid%3Diss-ndl-opac",
+      "sha256": "369b924feea6d1384fbc04cdbc828e2bed011c1395ce4cc3a2ee8f0bc750287f",
+      "bytes": 21998,
+      "fetchedAt": "2026-10-18T18:55:39+00:00"
+    },
+    {
+      "kind": "wikidata",
+      "identifier": "Q2947180",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q2947180.json",
+      "sha256": "a2b8c2544645531578dec5cfa699b9bed4e33d51a15fb2b34df116c1dd2b1fca",
+      "bytes": 8546,
+      "fetchedAt": "2026-10-18T18:41:53+00:00"
+    },
+    {
+      "kind": "ndl",
+      "identifier": "9784592128311",
+      "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&maximumRecords=5&query=isbn%3D%229784592128311%22+AND+dpid%3Diss-ndl-opac",
+      "sha256": "aaa58b2b6256bca8dc38d7968b9a7c8176a2a084c05fa4ef033151a96103ad54",
+      "bytes": 10715,
+      "fetchedAt": "2026-10-18T18:55:42+00:00"
+    }
+  ]
+}

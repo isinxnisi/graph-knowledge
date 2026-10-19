@@ -1,0 +1,477 @@
+{
+  "id": "Q216204",
+  "lastrevid": 2540061716,
+  "labels": {
+    "zh-hans": {
+      "language": "zh-hans",
+      "value": "水果篮子"
+    },
+    "zh-hant": {
+      "language": "zh-hant",
+      "value": "幻影天使"
+    },
+    "zh-hk": {
+      "language": "zh-hk",
+      "value": "生肖奇緣"
+    },
+    "zh-cn": {
+      "language": "zh-cn",
+      "value": "水果篮子"
+    },
+    "zh-sg": {
+      "language": "zh-sg",
+      "value": "水果篮"
+    },
+    "zh-tw": {
+      "language": "zh-tw",
+      "value": "幻影天使"
+    },
+    "pl": {
+      "language": "pl",
+      "value": "Fruits Basket"
+    },
+    "ko": {
+      "language": "ko",
+      "value": "후르츠 바스켓"
+    },
+    "fr": {
+      "language": "fr",
+      "value": "Fruits Basket"
+    },
+    "he": {
+      "language": "he",
+      "value": "פרוטס באסקט"
+    },
+    "es": {
+      "language": "es",
+      "value": "Fruits Basket"
+    },
+    "ms": {
+      "language": "ms",
+      "value": "Fruits Basket"
+    },
+    "hu": {
+      "language": "hu",
+      "value": "Fruits Basket"
+    },
+    "it": {
+      "language": "it",
+      "value": "Fruits Basket"
+    },
+    "de": {
+      "language": "de",
+      "value": "Fruits Basket"
+    },
+    "id": {
+      "language": "id",
+      "value": "Fruits Basket"
+    },
+    "ja": {
+      "language": "ja",
+      "value": "フルーツバスケット"
+    },
+    "sq": {
+      "language": "sq",
+      "value": "Fruits Basket"
+    },
+    "vi": {
+      "language": "vi",
+      "value": "Giỏ trái cây"
+    },
+    "en": {
+      "language": "en",
+      "value": "Fruits Basket"
+    },
+    "sv": {
+      "language": "sv",
+      "value": "Fruits Basket"
+    },
+    "ar": {
+      "language": "ar",
+      "value": "سلة الفواكه"
+    },
+    "nl": {
+      "language": "nl",
+      "value": "Fruits Basket"
+    },
+    "pt": {
+      "language": "pt",
+      "value": "Fruits Basket"
+    },
+    "sk": {
+      "language": "sk",
+      "value": "Fruits Basket"
+    },
+    "ru": {
+      "language": "ru",
+      "value": "Корзинка фруктов"
+    },
+    "tr": {
+      "language": "tr",
+      "value": "Fruits Basket"
+    },
+    "ro": {
+      "language": "ro",
+      "value": "Fruits Basket"
+    },
+    "th": {
+      "language": "th",
+      "value": "เสน่ห์สาวข้าวปั้น"
+    },
+    "ca": {
+      "language": "ca",
+      "value": "Fruits Basket"
+    },
+    "fi": {
+      "language": "fi",
+      "value": "Fruits Basket"
+    },
+    "uk": {
+      "language": "uk",
+      "value": "Кошик фруктів"
+    },
+    "fa": {
+      "language": "fa",
+      "value": "فروتس بسکت"
+    },
+    "hr": {
+      "language": "hr",
+      "value": "Fruits Basket"
+    },
+    "lt": {
+      "language": "lt",
+      "value": "Fruits Basket"
+    },
+    "tl": {
+      "language": "tl",
+      "value": "Fruits Basket"
+    },
+    "da": {
+      "language": "da",
+      "value": "Fruits Basket"
+    },
+    "zh": {
+      "language": "zh",
+      "value": "幻影天使"
+    },
+    "cy": {
+      "language": "cy",
+      "value": "Fruits Basket"
+    },
+    "nb": {
+      "language": "nb",
+      "value": "Fruits Basket"
+    },
+    "pt-br": {
+      "language": "pt-br",
+      "value": "Fruits Basket"
+    },
+    "el": {
+      "language": "el",
+      "value": "Fruits Basket"
+    },
+    "en-ca": {
+      "language": "en-ca",
+      "value": "Fruits Basket"
+    },
+    "en-gb": {
+      "language": "en-gb",
+      "value": "Fruits Basket"
+    },
+    "ts": {
+      "language": "ts",
+      "value": "MIHANDZU NI MATSAVU"
+    },
+    "acm": {
+      "language": "acm",
+      "value": "فروت باسكت"
+    },
+    "mk": {
+      "language": "mk",
+      "value": "Кошница со овошје"
+    }
+  },
+  "aliases": {
+    "zh": [
+      {
+        "language": "zh",
+        "value": "水果篮子"
+      },
+      {
+        "language": "zh",
+        "value": "生肖奇缘"
+      },
+      {
+        "language": "zh",
+        "value": "魔法水果籃"
+      }
+    ],
+    "pl": [
+      {
+        "language": "pl",
+        "value": "Furuba"
+      }
+    ],
+    "ko": [
+      {
+        "language": "ko",
+        "value": "후르츠바스켓"
+      },
+      {
+        "language": "ko",
+        "value": "후르바"
+      }
+    ],
+    "fr": [
+      {
+        "language": "fr",
+        "value": "Fruit Basket"
+      },
+      {
+        "language": "fr",
+        "value": "Fruits Baskets"
+      }
+    ],
+    "es": [
+      {
+        "language": "es",
+        "value": "Furuba"
+      }
+    ],
+    "ms": [
+      {
+        "language": "ms",
+        "value": "Fruit Basket"
+      }
+    ],
+    "it": [
+      {
+        "language": "it",
+        "value": "Furuba"
+      }
+    ],
+    "ja": [
+      {
+        "language": "ja",
+        "value": "草摩由希"
+      },
+      {
+        "language": "ja",
+        "value": "フルバ"
+      },
+      {
+        "language": "ja",
+        "value": "草摩夾"
+      }
+    ],
+    "vi": [
+      {
+        "language": "vi",
+        "value": "Fruits Basket"
+      },
+      {
+        "language": "vi",
+        "value": "Furūtsu Basuketto"
+      },
+      {
+        "language": "vi",
+        "value": "Hoá giải lời nguyền"
+      },
+      {
+        "language": "vi",
+        "value": "Hóa giải lời nguyền"
+      }
+    ],
+    "pt": [
+      {
+        "language": "pt",
+        "value": "Furuutsu basuketto"
+      },
+      {
+        "language": "pt",
+        "value": "Fruit Basket"
+      }
+    ],
+    "ru": [
+      {
+        "language": "ru",
+        "value": "Fruits Basket"
+      },
+      {
+        "language": "ru",
+        "value": "Фруктовая корзинка"
+      }
+    ],
+    "tr": [
+      {
+        "language": "tr",
+        "value": "Meyve Sepeti"
+      },
+      {
+        "language": "tr",
+        "value": "Furuba"
+      }
+    ],
+    "th": [
+      {
+        "language": "th",
+        "value": "Fruits basket"
+      },
+      {
+        "language": "th",
+        "value": "โทรุ ฮอนดะ"
+      }
+    ],
+    "fi": [
+      {
+        "language": "fi",
+        "value": "Kagura Sooma"
+      },
+      {
+        "language": "fi",
+        "value": "Furuba"
+      }
+    ],
+    "uk": [
+      {
+        "language": "uk",
+        "value": "Fruits Basket"
+      }
+    ],
+    "fa": [
+      {
+        "language": "fa",
+        "value": "فروت بسکت"
+      },
+      {
+        "language": "fa",
+        "value": "سبد میوه‌ها"
+      },
+      {
+        "language": "fa",
+        "value": "سبد میوه ها"
+      }
+    ],
+    "nb": [
+      {
+        "language": "nb",
+        "value": "Furūtsu Basuketto"
+      }
+    ],
+    "de": [
+      {
+        "language": "de",
+        "value": "Furuba"
+      }
+    ],
+    "pt-br": [
+      {
+        "language": "pt-br",
+        "value": "Furuba"
+      }
+    ],
+    "en": [
+      {
+        "language": "en",
+        "value": "Furuba"
+      }
+    ],
+    "mk": [
+      {
+        "language": "mk",
+        "value": "Fruits Basket"
+      }
+    ]
+  },
+  "claims": {
+    "P31": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P31",
+          "hash": "549c072d6be8a6a43f999d1d0e82640b16c4260e",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 21198342,
+              "id": "Q21198342"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q216204$66DF6945-B852-491E-AC9E-B75E7F6263F3",
+        "rank": "normal"
+      }
+    ],
+    "P50": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P50",
+          "hash": "302e424345ed21e162110c2f88ee50e374c88fba",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 241885,
+              "id": "Q241885"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q216204$28C1F7F5-36E6-46F4-909E-DFAFB27C4EEC",
+        "rank": "normal",
+        "references": [
+          {
+            "hash": "d4bd87b862b12d99d26e86472d44f26858dee639",
+            "snaks": {
+              "P143": [
+                {
+                  "snaktype": "value",
+                  "property": "P143",
+                  "hash": "f30cbd35620c4ea6d0633aaf0210a8916130469b",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 8447,
+                      "id": "Q8447"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P143"
+            ]
+          }
+        ]
+      }
+    ],
+    "P110": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P110",
+          "hash": "d5b969ad2546d1bf0a2409e3380e991c46a3bd73",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 241885,
+              "id": "Q241885"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q216204$c74c56d7-4896-e242-3483-2d4bc0094ed4",
+        "rank": "normal"
+      }
+    ]
+  }
+}

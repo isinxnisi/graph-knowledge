@@ -1,0 +1,335 @@
+{
+  "id": "Q241885",
+  "lastrevid": 2555750464,
+  "labels": {
+    "pt": {
+      "language": "pt",
+      "value": "Natsuki Takaya"
+    },
+    "zh-hans": {
+      "language": "zh-hans",
+      "value": "高屋奈月"
+    },
+    "zh-hant": {
+      "language": "zh-hant",
+      "value": "高屋奈月"
+    },
+    "zh-hk": {
+      "language": "zh-hk",
+      "value": "高屋奈月"
+    },
+    "zh-cn": {
+      "language": "zh-cn",
+      "value": "高屋奈月"
+    },
+    "zh-sg": {
+      "language": "zh-sg",
+      "value": "高屋奈月"
+    },
+    "zh-tw": {
+      "language": "zh-tw",
+      "value": "高屋奈月"
+    },
+    "ru": {
+      "language": "ru",
+      "value": "Нацуки Такая"
+    },
+    "ko": {
+      "language": "ko",
+      "value": "타카야 나츠키"
+    },
+    "fr": {
+      "language": "fr",
+      "value": "Natsuki Takaya"
+    },
+    "es": {
+      "language": "es",
+      "value": "Natsuki Takaya"
+    },
+    "en": {
+      "language": "en",
+      "value": "Natsuki Takaya"
+    },
+    "tr": {
+      "language": "tr",
+      "value": "Natsuki Takaya"
+    },
+    "fi": {
+      "language": "fi",
+      "value": "Natsuki Takaya"
+    },
+    "de": {
+      "language": "de",
+      "value": "Natsuki Takaya"
+    },
+    "ja": {
+      "language": "ja",
+      "value": "高屋奈月"
+    },
+    "sv": {
+      "language": "sv",
+      "value": "Natsuki Takaya"
+    },
+    "nl": {
+      "language": "nl",
+      "value": "Natsuki Takaya"
+    },
+    "it": {
+      "language": "it",
+      "value": "Natsuki Takaya"
+    },
+    "zh": {
+      "language": "zh",
+      "value": "高屋奈月"
+    },
+    "vi": {
+      "language": "vi",
+      "value": "Takaya Natsuki"
+    },
+    "nan": {
+      "language": "nan",
+      "value": "Takaya Natuki"
+    },
+    "pt-br": {
+      "language": "pt-br",
+      "value": "Natsuki Takaya"
+    },
+    "ast": {
+      "language": "ast",
+      "value": "Natsuki Takaya"
+    },
+    "id": {
+      "language": "id",
+      "value": "Natsuki Takaya"
+    },
+    "ar": {
+      "language": "ar",
+      "value": "ناتسوكي تاكايا"
+    },
+    "de-ch": {
+      "language": "de-ch",
+      "value": "Natsuki Takaya"
+    },
+    "en-ca": {
+      "language": "en-ca",
+      "value": "Natsuki Takaya"
+    },
+    "en-gb": {
+      "language": "en-gb",
+      "value": "Natsuki Takaya"
+    },
+    "hu": {
+      "language": "hu",
+      "value": "Takaja Nacuki"
+    },
+    "arz": {
+      "language": "arz",
+      "value": "ناتسوكى تاكايا"
+    },
+    "sq": {
+      "language": "sq",
+      "value": "Natsuki Takaya"
+    },
+    "pl": {
+      "language": "pl",
+      "value": "Natsuki Takaya"
+    }
+  },
+  "aliases": {
+    "ru": [
+      {
+        "language": "ru",
+        "value": "Такая"
+      },
+      {
+        "language": "ru",
+        "value": "Такая, Нацуки"
+      },
+      {
+        "language": "ru",
+        "value": "Такая Нацуки"
+      },
+      {
+        "language": "ru",
+        "value": "Нацуки, Такая"
+      },
+      {
+        "language": "ru",
+        "value": "Natsuki Takaya"
+      },
+      {
+        "language": "ru",
+        "value": "Такая Н."
+      }
+    ],
+    "fr": [
+      {
+        "language": "fr",
+        "value": "Takaya Natsuki"
+      }
+    ],
+    "de": [
+      {
+        "language": "de",
+        "value": "Takaya Natsuki"
+      },
+      {
+        "language": "de",
+        "value": "Takaya"
+      }
+    ],
+    "sv": [
+      {
+        "language": "sv",
+        "value": "Takaya"
+      }
+    ],
+    "nl": [
+      {
+        "language": "nl",
+        "value": "Takaya Natsuki"
+      }
+    ]
+  },
+  "claims": {
+    "P31": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P31",
+          "hash": "ad7d38a03cdd40cdc373de0dc4e7b7fcbccb31d9",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 5,
+              "id": "Q5"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q241885$783A4B3B-1E69-46A9-91CE-7B95C507833A",
+        "rank": "normal",
+        "references": [
+          {
+            "hash": "cd3c4674efcceee6bc541825b376a2c4116b2170",
+            "snaks": {
+              "P248": [
+                {
+                  "snaktype": "value",
+                  "property": "P248",
+                  "hash": "def9f19d84b65167a2a17ce38364d264c16127fc",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 19938912,
+                      "id": "Q19938912"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ],
+              "P268": [
+                {
+                  "snaktype": "value",
+                  "property": "P268",
+                  "hash": "85d9b82be4033b7f456b5b07921bbd9f2d77babc",
+                  "datavalue": {
+                    "value": "14436177b",
+                    "type": "string"
+                  },
+                  "datatype": "external-id"
+                }
+              ],
+              "P813": [
+                {
+                  "snaktype": "value",
+                  "property": "P813",
+                  "hash": "d6162a1716489623c6e595e448b17f8dca4fb2e8",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2015-10-10T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P248",
+              "P268",
+              "P813"
+            ]
+          },
+          {
+            "hash": "708d953e050f38f3e7778fa57f927b8de91c5d73",
+            "snaks": {
+              "P248": [
+                {
+                  "snaktype": "value",
+                  "property": "P248",
+                  "hash": "45037a2d1d89deebcdfc5840e9adbaa4b64cebc6",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 50358336,
+                      "id": "Q50358336"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ],
+              "P813": [
+                {
+                  "snaktype": "value",
+                  "property": "P813",
+                  "hash": "43a7708c7df91eb6332c27ac333cd381773b1c79",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2024-02-17T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ],
+              "P950": [
+                {
+                  "snaktype": "value",
+                  "property": "P950",
+                  "hash": "e23a21e4bf3dc481adc92ff5d71f801e80b0e055",
+                  "datavalue": {
+                    "value": "XX1718012",
+                    "type": "string"
+                  },
+                  "datatype": "external-id"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P248",
+              "P813",
+              "P950"
+            ]
+          }
+        ]
+      }
+    ],
+    "P50": [],
+    "P110": []
+  }
+}

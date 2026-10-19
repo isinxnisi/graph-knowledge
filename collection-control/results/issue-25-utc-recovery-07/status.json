@@ -101,11 +101,35 @@
   },
   "requestSha256": "d46cb9ff59261ccd4dd4dbdc1680c4d95e07d8c71c86da9bb78cf58a3e4aac80",
   "kind": "collect-review",
-  "phase": "running",
+  "phase": "completed",
   "generation": 60,
   "attempts": 1,
   "workerId": "plunode-wsl",
   "sourceCommit": "ed89e5a6ff0cf7d8b485330be790a234a064eacd",
   "updatedAt": "2026-10-19T01:13:10+00:00",
-  "message": "Execution gate: interval"
+  "result": {
+    "jobId": "issue-25-utc-recovery-r0007-0b3c13e86c5f069c",
+    "collectionUnchanged": false,
+    "reviewUnchanged": false,
+    "transportAttemptsAdded": 0,
+    "reviewDirectory": "/home/isinxnisi/.local/share/plunode-collection-worker/runtime/datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0007-0b3c13e86c5f069c-review-434525971928f744",
+    "reviewOnly": true,
+    "formalAcceptance": false,
+    "publicApply": false,
+    "counts": {
+      "entities": 3,
+      "claims": 2,
+      "sources": 2,
+      "citations": 2
+    },
+    "heldClaims": 0
+  },
+  "executionComplete": true,
+  "reviewReference": {
+    "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0007-0b3c13e86c5f069c-review-434525971928f744/review-manifest.json",
+    "sha256": "6899290eb5daf4af86ba6b899dfdf8a24f1daf4cbc3b3d93f2f37e9bbcbc456d"
+  },
+  "decisionDrafts": [
+    "datasets/manga-collection/decisions/issue-25-utc-recovery-07-normal-draft.json"
+  ]
 }

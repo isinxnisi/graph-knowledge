@@ -1,0 +1,171 @@
+{
+  "id": "Q2947180",
+  "lastrevid": 2547915808,
+  "labels": {
+    "fr": {
+      "language": "fr",
+      "value": "Ceux qui ont des ailes"
+    },
+    "en": {
+      "language": "en",
+      "value": "Tsubasa: Those with Wings"
+    },
+    "ja": {
+      "language": "ja",
+      "value": "翼を持つ者"
+    },
+    "es": {
+      "language": "es",
+      "value": "Tsubasa o Motsu Mono"
+    },
+    "sv": {
+      "language": "sv",
+      "value": "Tsubasa o Motsu Mono"
+    },
+    "zh": {
+      "language": "zh",
+      "value": "羽翼天使"
+    }
+  },
+  "aliases": {
+    "fr": [
+      {
+        "language": "fr",
+        "value": "Ceux Qui Ont Des Ailes"
+      }
+    ],
+    "es": [
+      {
+        "language": "es",
+        "value": "Tsubasa o motsu mono"
+      }
+    ],
+    "en": [
+      {
+        "language": "en",
+        "value": "Tsubasa o Motsu Mono"
+      },
+      {
+        "language": "en",
+        "value": "Tsubasa wo Motsu Mono"
+      }
+    ]
+  },
+  "claims": {
+    "P31": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P31",
+          "hash": "549c072d6be8a6a43f999d1d0e82640b16c4260e",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 21198342,
+              "id": "Q21198342"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q2947180$33CADB03-118D-49F3-AD0C-591383EDDC4A",
+        "rank": "normal"
+      }
+    ],
+    "P50": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P50",
+          "hash": "302e424345ed21e162110c2f88ee50e374c88fba",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 241885,
+              "id": "Q241885"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q2947180$937845CF-0056-4211-B037-C2C413C1D8ED",
+        "rank": "normal",
+        "references": [
+          {
+            "hash": "d4bd87b862b12d99d26e86472d44f26858dee639",
+            "snaks": {
+              "P143": [
+                {
+                  "snaktype": "value",
+                  "property": "P143",
+                  "hash": "f30cbd35620c4ea6d0633aaf0210a8916130469b",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 8447,
+                      "id": "Q8447"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P143"
+            ]
+          }
+        ]
+      }
+    ],
+    "P110": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P110",
+          "hash": "d5b969ad2546d1bf0a2409e3380e991c46a3bd73",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 241885,
+              "id": "Q241885"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q2947180$E00544E6-0A7A-41F5-A2BD-C83C43C0764B",
+        "rank": "normal",
+        "references": [
+          {
+            "hash": "d4bd87b862b12d99d26e86472d44f26858dee639",
+            "snaks": {
+              "P143": [
+                {
+                  "snaktype": "value",
+                  "property": "P143",
+                  "hash": "f30cbd35620c4ea6d0633aaf0210a8916130469b",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 8447,
+                      "id": "Q8447"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P143"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

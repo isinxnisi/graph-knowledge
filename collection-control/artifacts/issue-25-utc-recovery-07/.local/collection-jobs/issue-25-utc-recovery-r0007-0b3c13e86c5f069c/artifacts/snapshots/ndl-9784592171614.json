@@ -1,0 +1,36 @@
+{
+  "provider": "iss-ndl-opac / 国立国会図書館",
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "terms": "https://ndlsearch.ndl.go.jp/help/api/provider",
+  "records": [
+    {
+      "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I000002761106",
+      "isbn13": [
+        "9784592171614"
+      ],
+      "title": [
+        "フルーツバスケット. 第1巻"
+      ],
+      "mainTitles": [
+        "フルーツバスケット"
+      ],
+      "volume": [
+        "第1巻"
+      ],
+      "edition": [],
+      "responsibilities": [
+        "高屋奈月 著"
+      ],
+      "publisher": [
+        "白泉社"
+      ],
+      "language": [
+        "jpn"
+      ],
+      "genre": [
+        "漫画"
+      ]
+    }
+  ],
+  "error": null
+}
