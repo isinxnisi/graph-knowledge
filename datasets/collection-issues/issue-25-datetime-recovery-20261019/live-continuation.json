@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "observedAt": "2026-10-19T00:21:05.492478+00:00",
+  "naturalScheduledRuns": true,
+  "firstCompletedAt": "2026-10-19T00:02:58.237556+00:00",
+  "secondStartedAt": "2026-10-19T00:13:11.115676+00:00",
+  "observedIntervalSeconds": 612.87812,
+  "minimumIntervalSeconds": 600,
+  "secondEndedAt": "2026-10-19T00:14:50.867432+00:00",
+  "nextStartAt": "2026-10-19T00:24:50.867428+00:00",
+  "recoveryStates": {
+    "issue-25-utc-recovery-01": "completed",
+    "issue-25-utc-recovery-02": "completed",
+    "issue-25-utc-recovery-03": "waiting-control",
+    "issue-25-utc-recovery-04": "waiting-control",
+    "issue-25-utc-recovery-05": "waiting-control",
+    "issue-25-utc-recovery-06": "waiting-control",
+    "issue-25-utc-recovery-07": "waiting-control",
+    "issue-25-utc-recovery-08": "waiting-control",
+    "issue-25-utc-recovery-09": "waiting-control"
+  },
+  "secondResult": {
+    "jobId": "issue-25-utc-recovery-r0002-195d12ba8ceee0b8",
+    "collectionUnchanged": false,
+    "reviewUnchanged": false,
+    "transportAttemptsAdded": 0,
+    "reviewDirectory": "/home/isinxnisi/.local/share/plunode-collection-worker/runtime/datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0002-195d12ba8ceee0b8-review-5c31a884f4894165",
+    "reviewOnly": true,
+    "formalAcceptance": false,
+    "publicApply": false,
+    "counts": {
+      "entities": 0,
+      "claims": 0,
+      "sources": 0,
+      "citations": 0
+    },
+    "heldClaims": 3
+  },
+  "githubCompletedStatusVerified": true,
+  "networkAttempts": 89,
+  "maximumAttempts": 142,
+  "providerRequestsAdded": 0,
+  "secondHolds": "3 existing work UUID identity mappings require review; no datetime failure",
+  "formalAcceptance": false,
+  "publicApply": false,
+  "githubResult": "https://github.com/isinxnisi/graph-knowledge/blob/codex/collection-control/collection-control/results/issue-25-utc-recovery-02/README.md"
+}
