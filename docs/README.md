@@ -40,6 +40,7 @@
 
 | 現役の設計文書 | 状態・読む場面 |
 | --- | --- |
+| [正式受入済みKGの公開準備](design/PUBLICATION_PREPARATION.md) | Issue #32 Phase C。receiptに被覆された既存releaseを固定し、既存operator互換性と差分を検証。[運営者のsudo preflight・公開判断手順](runbooks/PUBLISH_ACCEPTED_KG.md)。公開apply・restore・サービス切替は別判断 |
 | [承認済み受入の逐次継続](design/COLLECTION_ACCEPTANCE_SEQUENCE.md) | Issue #32 Phase B。元承認を不変に保って比較・同一性を再検証し、既存Workerで1グループずつ継続。2026-10-20の別途指示で[実運用切替・残り5グループ登録](verification/COLLECTION_SEQUENCE_ROLLOUT_20261020.md)。全件完了はGitHub結果で確認 |
 | [未公開データの統合棚卸し](design/COLLECTION_INVENTORY.md) | Issue #32 Phase A。公開snapshot・正式receipt・累積release・承認register・Worker履歴を読み取り専用で突合。型＋UUIDの一意集計、Markdown／JSON、保留・復旧・欠落。受入・公開apply・VPS／会員DB変更なし |
 | [ChatGPT承認連携・収集Worker](design/COLLECTION_WORKER.md) | GitHubの明示承認から既存collect-review／accept-releaseを実行。専用branch、隔離runtime、共通ロック、状態・Markdown共有、再開・重複／改変拒否。公開applyは実装対象外 |

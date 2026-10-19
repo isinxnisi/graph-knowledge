@@ -1,0 +1,291 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-10-20T04:43:18.810091+09:00",
+  "authority": "publication-preparation-only; human sudo preflight and publication approval remain",
+  "workerSourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
+  "baselineCommit": "4b83cbe82c77fbfeba6888d4d926a63745cc1376",
+  "candidate": {
+    "release": "manga-issue-25-utc-recovery-08-normal",
+    "baseRelease": "20261014-credits-001",
+    "adoptedReceipts": [
+      {
+        "file": "datasets/manga-collection/accepted-issue-25-utc-recovery-01-normal/acceptance.json",
+        "sha256": "d271f32767dab030bd26ddcef669f48237cc303a8c605c58df047df8aea71fb6"
+      },
+      {
+        "file": "datasets/manga-collection/accepted-issue-25-utc-recovery-03-normal/acceptance.json",
+        "sha256": "2cd8cb76b64be0d9d19fb3da8ceb4d3e185ca086bba0e90917a7b24a1da0bedf"
+      },
+      {
+        "file": "datasets/manga-collection/accepted-issue-25-utc-recovery-04-normal/acceptance.json",
+        "sha256": "052a7d1ef334074ce2b94837a7d0dfc803bde9526abc9d8e8e7f058b36acdf62"
+      },
+      {
+        "file": "datasets/manga-collection/accepted-issue-25-utc-recovery-06-normal/acceptance.json",
+        "sha256": "4e94de08943725549f4e01be9e6b1b09f2f9d88c5ca2dfaa9aa5b7c2395930f4"
+      },
+      {
+        "file": "datasets/manga-collection/accepted-issue-25-utc-recovery-07-normal/acceptance.json",
+        "sha256": "b6a521d5fffdd6cafc3a3df9f8f963c571520812053aad4f259eea3e22ebee0b"
+      },
+      {
+        "file": "datasets/manga-collection/accepted-issue-25-utc-recovery-08-normal/acceptance.json",
+        "sha256": "5b3fdc3aa705c5e73f5ba11b40052be700d71069b0a25a12943cb189a2ee1109"
+      },
+      {
+        "file": "datasets/manga-collection/accepted-original-story-r0002-20261017/acceptance.json",
+        "sha256": "9fdb9933c0d78795769bf27eebb7ecb4ec7cccc37f6ee6827e55dd119e727801"
+      },
+      {
+        "file": "datasets/manga-collection/accepted-r0002-20261017/acceptance.json",
+        "sha256": "9b28562b9846970cd30b9261d4659d505e9df06e014d2809d6517aa39836f567"
+      },
+      {
+        "file": "datasets/manga-collection/accepted-r0003-20261017/acceptance.json",
+        "sha256": "7d53abbd472fcbf0cba57fa5202d6fd4f8eb12c9ebda34bd1e7a8badca701831"
+      }
+    ],
+    "receiptSetSha256": "b9718eb62c705b360852fab0b6adbbac932cbff094656ad96879ff2018a101f1",
+    "registerSha256": "82b53f2bb1e0c1e5402af117a22de2a809ecf0588a56743e6aaef3258b42e8d6",
+    "publicBackupSha256": "bccb2d52fb0d02bb99bc147ed58dfefb1bed0822d538ff48b653ea75aea3aeb6",
+    "issue25Complete": true,
+    "acceptedIssue25Decisions": [
+      "issue-25-utc-recovery-01-normal",
+      "issue-25-utc-recovery-03-normal",
+      "issue-25-utc-recovery-04-normal",
+      "issue-25-utc-recovery-06-normal",
+      "issue-25-utc-recovery-07-normal",
+      "issue-25-utc-recovery-08-normal"
+    ],
+    "additions": {
+      "entities": 66,
+      "claims": 50,
+      "sources": 43,
+      "citations": 51
+    },
+    "externalIdentifiersAdded": 66,
+    "expectedAddedNodes": 276,
+    "expectedRelationshipsAdded": 268,
+    "dataSha256": "44cb7d65c4ece8ac04ffcca988c0b37f35a5bf61cc934ef482cbefda39ec09e7",
+    "manifestSha256": "325522f3efa7ddc0ff67f278456fc81956420ab0d00999d5823988dfc33cd9a3"
+  },
+  "validationAndPlans": {
+    "claims": 50,
+    "validation": {
+      "valid": true,
+      "counts": {
+        "nodes": {
+          "Entity": 2175,
+          "Claim": 1894,
+          "Source": 1794,
+          "Citation": 1931,
+          "ExternalIdentifier": 2544
+        },
+        "relationships": {
+          "SUBJECT": 1894,
+          "OBJECT": 1894,
+          "HAS_CITATION": 1931,
+          "CITES": 1931,
+          "HAS_EXTERNAL_ID": 2544
+        }
+      }
+    },
+    "oldOperatorUnmodifiedRejected": true,
+    "offlineVpsBackupPlan": {
+      "revision": "5e2a94af-9061-4087-bb7a-045a3c0133f4",
+      "addedNodes": 276,
+      "updated": [],
+      "relationshipsAdded": 268
+    },
+    "localRealReadOnlyPlan": {
+      "revision": "82b01515-594c-48ca-b4b6-515eefac83ca",
+      "addedNodes": 276,
+      "updated": [],
+      "relationshipsAdded": 268
+    },
+    "vpsApiUnchanged": {
+      "dataset": "public-kg",
+      "revision": "5e2a94af-9061-4087-bb7a-045a3c0133f4"
+    },
+    "liveVpsPlanPerformed": false
+  },
+  "archive": {
+    "archiveSha256": "e3c514e6649352cacc57b3055104d290c64bf07332da2987d48ad65cfbd5d7f2",
+    "archiveBytes": 6855384,
+    "files": 178,
+    "remoteDirectory": "/home/develop/graph-publication-20261020-50",
+    "release": "manga-issue-25-utc-recovery-08-normal",
+    "receiptSetSha256": "b9718eb62c705b360852fab0b6adbbac932cbff094656ad96879ff2018a101f1"
+  },
+  "inventory": {
+    "controlCommit": "b445e0c3d92be69781f3985e69d62e04863dba12",
+    "inventorySha256": "d1e2ab4a91ba13edb97427f43f5b1791bef1fe723080a489dd1b44b72d034846",
+    "fileSha256": "ec00bb8b2075269f8f5dddaf0206fedf2a7e2fcd19e33e3669456be171f53bee",
+    "counts": {
+      "published": {
+        "entities": 2109,
+        "claims": 1844,
+        "sources": 1751,
+        "citations": 1880
+      },
+      "formally-accepted-unapplied": {
+        "entities": 66,
+        "claims": 50,
+        "sources": 43,
+        "citations": 51
+      },
+      "human-approved-pending-execution": {
+        "entities": 0,
+        "claims": 0,
+        "sources": 0,
+        "citations": 0
+      },
+      "candidate": {
+        "entities": 3,
+        "claims": 0,
+        "sources": 0,
+        "citations": 0
+      },
+      "held": {
+        "entities": 4,
+        "claims": 3,
+        "sources": 3,
+        "citations": 3
+      },
+      "blocked": {
+        "entities": 0,
+        "claims": 0,
+        "sources": 0,
+        "citations": 0
+      }
+    },
+    "releasePreparedCounts": {
+      "entities": 66,
+      "claims": 50,
+      "sources": 43,
+      "citations": 51
+    },
+    "issues": [],
+    "heldExcluded": [
+      {
+        "id": "406aebfe-a6eb-48c1-9d93-b377bbd39d8f",
+        "subject": "浦沢直樹",
+        "object": "MONSTER",
+        "reasons": [
+          "endpoint-identity-held"
+        ]
+      },
+      {
+        "id": "e3356616-466b-4ad1-9a56-079f0e118aa8",
+        "subject": "浦沢直樹",
+        "object": "20世紀少年",
+        "reasons": [
+          "endpoint-identity-held"
+        ]
+      },
+      {
+        "id": "fb541a79-5cf1-470b-9509-65cb8ede41f3",
+        "subject": "浦沢直樹",
+        "object": "YAWARA!",
+        "reasons": [
+          "endpoint-identity-held"
+        ]
+      }
+    ]
+  },
+  "preservedRoles": {
+    "ORIGINAL_STORY": 10,
+    "AUTHORSHIP": 30,
+    "DRAWING": 8,
+    "CREATION": 2
+  },
+  "preservedScopeKinds": {
+    "publication": 48,
+    "unspecified": 2
+  },
+  "immutableChecks": {
+    "oldRuntimeEntries": 2001,
+    "oldRuntimeChanged": [],
+    "transferredFiles": 999,
+    "transferredChanged": [],
+    "workerCodeFiles": 248,
+    "workerCodeChanged": [],
+    "oldStateUnchanged": true,
+    "firstReceiptSha256": "d271f32767dab030bd26ddcef669f48237cc303a8c605c58df047df8aea71fb6"
+  },
+  "worker": {
+    "requestId": "issue-25-normal-sequence-after-first-20261020",
+    "phase": "waiting-control",
+    "executionComplete": false,
+    "completedGroups": 6,
+    "activeAttempt": null,
+    "pauseMode": null,
+    "controlRevision": 2,
+    "nextStartAt": "2026-10-20T04:50:53.629147+09:00",
+    "scheduledTaskUnchanged": true
+  },
+  "tests": {
+    "publicationUnitAndSandbox": 25,
+    "operatorOfflineNegativeCases": [
+      {
+        "case": "checksum",
+        "rejected": true,
+        "reason": "Backup checksum mismatch"
+      },
+      {
+        "case": "revision",
+        "rejected": true,
+        "reason": "Backup revision/base differs"
+      },
+      {
+        "case": "used-release",
+        "rejected": true,
+        "reason": "Candidate release ID already used"
+      },
+      {
+        "case": "identity",
+        "rejected": true,
+        "reason": "Previously used identity has different meaning"
+      },
+      {
+        "case": "existing-update",
+        "rejected": true,
+        "reason": "Publication must not update existing records"
+      }
+    ],
+    "legacy40ReproducibilityCheck": true,
+    "liveBaselineRolesVerified": [
+      "AUTHORSHIP",
+      "CREATION",
+      "DRAWING",
+      "PRODUCING",
+      "SCRIPT_WRITING",
+      "STORY_CO_CREATION",
+      "SUPERVISION"
+    ],
+    "newClaimsPostPublicationUiVerified": false
+  },
+  "operator": {
+    "configDigest": "sha256:b0e0bc42b156935ae6915b1dcb39bcc25338dcd25657a92ed41a8944fa569e9a",
+    "manifestDigest": "sha256:edc660a29b7bb6d500021d4a187155414e8440361e0cbe3e742142fdbddb78ed",
+    "platform": "linux/amd64",
+    "oneOffContributionSchemaSha256": "0864214a74e18fa1bfa73db717f708ff0025d9147fb567050e69c9e9aa958130",
+    "productionComposeImageVerifiedByRoot": false
+  },
+  "operationBoundaries": {
+    "workerStoppedOrReconfigured": false,
+    "productionApply": false,
+    "restore": false,
+    "serviceSwitch": false,
+    "memberDatabaseChange": false,
+    "searchUiChange": false,
+    "newResidentServiceOrPaidAi": false,
+    "vpsWrite": "develop-owned publication staging only"
+  },
+  "remaining": [
+    "Operator rechecks latest Worker status and confirms the frozen receipt set",
+    "Human sudo preflight: verify actual Compose image, save current KG backup and fresh live VPS plan with zero existing updates",
+    "Separate human publication approval, then optional human apply procedure",
+    "After publication verify API/name/Graph/evidence and manual UI representative cases"
+  ]
+}
