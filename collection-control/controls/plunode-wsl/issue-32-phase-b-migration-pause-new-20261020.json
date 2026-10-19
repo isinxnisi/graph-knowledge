@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "id": "issue-32-phase-b-migration-pause-new-20261020",
+  "workerId": "plunode-wsl",
+  "revision": 1,
+  "previousControlId": null,
+  "status": "approved",
+  "approvalScope": "worker-execution-control-only",
+  "action": "pause-new",
+  "humanDecision": {
+    "actorType": "human",
+    "reviewer": "プロジェクト運営者",
+    "decidedAt": "2026-10-20T03:24:39+09:00",
+    "statement": "2026-10-20のこのチャットで、Issue #32 Phase Bの実運用移行を再開し、レビュー済み973c7b0への安全な切替と既承認の残り5グループの実行を指示。切替地点確保のため既存pause-newで新規開始だけを抑え、実行中は尊重し、正常引継ぎ確認後に制御を復旧する。強制解除・強制終了・新規意味判断・公開apply・VPS・会員DB・検索UI変更は行わない。"
+  }
+}
