@@ -2,6 +2,8 @@
 
 このbundleは公開準備資料であり、公開applyの承認ではない。CollectionWorkerやCodexはこのsudo手順を実行しない。検索UI、Web image、Compose、Caddy、会員DBを変更する必要はない。
 
+2026-10-20のpreflight修正：Composeの`ops`は`profiles: [ops]`内にあるため、設定照合とoperator実行の共通コマンドで`--profile ops`を明示する。`run --no-deps --pull never ops`を維持し、会員serviceや依存serviceを起動しない。旧bundleは保存し、修正版は末尾`-r2`の別directoryへ配置する。データ・receipt集合・公開release IDは同一。
+
 ## 公開判断前
 
 1. `publication.json`のrelease ID、baseRelease、adoptedReceipts、receiptSetSha256、additions、issue25Completeを確認する。`verification-cases.json`に全追加ClaimのUUID・名前・Role・ISBN scope・支持Citation／Sourceがある。未承認・未受入・保留は含めない。
@@ -14,7 +16,7 @@
 検証記録に示すarchive SHA-256と照合してから、develop所有の専用directoryに展開する。bundleはrootで展開せず、元の/opt設定へコピーしない。
 
 ```bash
-cd /home/develop/graph-publication-20261020-50
+cd /home/develop/graph-publication-20261020-50-r2
 sha256sum --check publication.tar.gz.sha256
 cd bundle
 sha256sum --check SHA256SUMS
@@ -30,7 +32,7 @@ VPSのdevelopはDocker socketと/opt/graph-knowledgeのprivate設定を読めな
 ```bash
 curl --fail --silent --show-error https://plunode.net/api/dataset
 sudo env PUBLICATION_EXPECTED_REVISION='実際に再確認したrevision' \
-  bash /home/develop/graph-publication-20261020-50/bundle/scripts/publication-operator.sh preflight
+  bash /home/develop/graph-publication-20261020-50-r2/bundle/scripts/publication-operator.sh preflight
 ```
 
 preflightは既存の本番共通flockを非ブロッキングで取得し、現行operator imageが検証済みconfig／manifest digestと一致することを確認する。`ORIGINAL_STORY`未対応の既存operatorへ、**今回の一時containerだけ**`compat/contribution.ts`を読み取りマウントする。元file／image／Composeを更新しない。補完はRole列挙の1項目だけで、既存の意味・serializer・API・UIを変えない。同じimageとmountでvalidate、現在KGのbackup、最新の実無書込planを行う。
@@ -45,7 +47,7 @@ preflightのplan、backup、件数・経路を確認し、この固定receipt集
 sudo env PUBLICATION_EXPECTED_REVISION='再確認した現在revision' \
   PUBLICATION_RECEIPTS_CONFIRMED='承認したpublication.jsonのreceiptSetSha256' \
   PUBLICATION_WORKER_SETTLED=1 \
-  bash /home/develop/graph-publication-20261020-50/bundle/scripts/publication-operator.sh apply --operator-approved
+  bash /home/develop/graph-publication-20261020-50-r2/bundle/scripts/publication-operator.sh apply --operator-approved
 ```
 
 部分公開を別途承認した時だけ`PUBLICATION_ALLOW_PARTIAL=1`も指定する。適用後はreadinessを確認して`api-after.json`を保存する。apply失敗時は記録を保持し、現在のrelease・revision・保存済みbackup／planを調べる。再apply・restore・service切替を自動実行しない。volume削除・会員PG操作・初回deploy scriptの再実行は禁止する。

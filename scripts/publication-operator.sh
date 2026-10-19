@@ -21,7 +21,7 @@ fi
 app=/opt/graph-knowledge
 exec 9>>"$app/.member-activation.lock"
 flock -n 9 || { echo 'Another production operation holds the common lock' >&2; exit 1; }
-dc=(docker compose --env-file "$app/app.env" -f "$app/compose.yaml")
+dc=(docker compose --profile ops --env-file "$app/app.env" -f "$app/compose.yaml")
 image=$("${dc[@]}" config --format json | python3 -c 'import json,sys;print(json.load(sys.stdin)["services"]["ops"]["image"])')
 # Both IDs were verified in the accepted credits archive; Docker stores expose config or manifest.
 actual=$(docker image inspect --format '{{.Id}} {{.Os}}/{{.Architecture}}' "$image")

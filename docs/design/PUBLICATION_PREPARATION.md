@@ -36,3 +36,5 @@ python3 scripts/prepare-publication-bundle.py \
 ```
 
 元40 Claimの正式receipt集合とIssue #25の元registerだけを許可する。未承認・保留・無関係な追加receiptは混ぜず、採用receiptの欠落、過去本文の変更、固定途中のreceipt／観測backup変化を拒否する。既存のscope未指定もそのまま保持し、ISBN等を補完する意味判断をしない。最終bundleには元release、明示decision・receipt・根拠hash、全追加Claimの検証ケース、運営者script、Role互換fileを含め、SHA256SUMSで固定する。
+
+2026-10-20の実VPS preflightで、profile未指定の`compose config`が`ops`を返さず停止した。共通コマンドで`--profile ops`を明示し、実Compose／既存production定義を使うdaemon不要の回帰試験を追加した。[修正・再配置記録](../verification/PUBLICATION_PREFLIGHT_PROFILE_FIX_20261020.md)を参照。旧資材を保持し、データが同一の`-r2`へ再配置する。

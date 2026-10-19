@@ -23,7 +23,8 @@ if name=='curl':
 if args[:2]==['image','inspect']:
  print(('sha256:other' if fault=='image' else os.environ['PUBLICATION_TEST_IMAGE'])+(' linux/arm64' if fault=='platform' else ' linux/amd64'));sys.exit()
 if 'config' in args:
- print(json.dumps({'services':{'ops':{'image':'verified-existing-operator'}}}));sys.exit()
+ active=any(args[i:i+2]==['--profile','ops'] for i in range(len(args)-1))
+ print(json.dumps({'services':{'ops':{'image':'verified-existing-operator'}} if active and fault!='missing-ops' else {}}));sys.exit()
 for command in ['validate','backup','plan','apply']:
  if command not in args:continue
  if fault==command:sys.exit(23)
@@ -86,7 +87,7 @@ class OperatorProcessTests(unittest.TestCase):
         self.assertTrue(all('--no-deps' in c['args'] and '--pull' in c['args'] and 'never' in c['args'] for c in calls if 'run' in c['args']))
 
     def test_failures_before_apply_never_write(self):
-        for fault in ['validate','backup','plan','revision','backup-revision','image','platform']:
+        for fault in ['validate','backup','plan','revision','backup-revision','image','platform','missing-ops']:
             with self.subTest(fault=fault):
                 r,calls=self.run_procedure('apply','--operator-approved',fault=fault)
                 self.assertNotEqual(r.returncode,0)
