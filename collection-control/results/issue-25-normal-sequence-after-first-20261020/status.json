@@ -25,12 +25,12 @@
   },
   "requestSha256": "bfed193b23c19b24e7f0f5b5f5ffb812861f4730840f0b23a0024b927f5d6ab5",
   "kind": "accept-sequence",
-  "phase": "sequence-progress",
-  "generation": 38,
+  "phase": "waiting-control",
+  "generation": 39,
   "attempts": 5,
   "workerId": "plunode-wsl",
   "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
-  "updatedAt": "2026-10-19T19:36:18+00:00",
+  "updatedAt": "2026-10-19T19:42:22+00:00",
   "message": "Execution gate: interval",
   "result": {
     "status": "sequence-progress",
@@ -534,6 +534,5 @@
     },
     "publicApply": false
   },
-  "executionComplete": false,
-  "sequencePublicationPending": true
+  "executionComplete": false
 }
