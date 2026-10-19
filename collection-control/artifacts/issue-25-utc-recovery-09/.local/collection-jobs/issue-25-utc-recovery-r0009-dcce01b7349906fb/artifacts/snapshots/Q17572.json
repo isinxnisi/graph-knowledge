@@ -1,0 +1,395 @@
+{
+  "id": "Q17572",
+  "lastrevid": 2553004735,
+  "labels": {
+    "ko": {
+      "language": "ko",
+      "value": "후지코 F. 후지오"
+    },
+    "fr": {
+      "language": "fr",
+      "value": "Fujiko F. Fujio"
+    },
+    "ja": {
+      "language": "ja",
+      "value": "藤子・F・不二雄"
+    },
+    "vi": {
+      "language": "vi",
+      "value": "Fujiko Fujio"
+    },
+    "zh": {
+      "language": "zh",
+      "value": "藤子·F·不二雄"
+    },
+    "en": {
+      "language": "en",
+      "value": "Fujiko F. Fujio"
+    },
+    "zh-hant": {
+      "language": "zh-hant",
+      "value": "藤子·F·不二雄"
+    },
+    "zh-hans": {
+      "language": "zh-hans",
+      "value": "藤子·F·不二雄"
+    },
+    "zh-tw": {
+      "language": "zh-tw",
+      "value": "藤子·F·不二雄"
+    },
+    "es": {
+      "language": "es",
+      "value": "Fujiko F. Fujio"
+    },
+    "ca": {
+      "language": "ca",
+      "value": "Fujimoto Hiroshi"
+    },
+    "oc": {
+      "language": "oc",
+      "value": "Fujiko F. Fujio"
+    },
+    "de": {
+      "language": "de",
+      "value": "Fujiko F. Fujio"
+    },
+    "zh-cn": {
+      "language": "zh-cn",
+      "value": "藤子·F·不二雄"
+    },
+    "yue": {
+      "language": "yue",
+      "value": "藤子·F·不二雄"
+    },
+    "zh-hk": {
+      "language": "zh-hk",
+      "value": "藤子·F·不二雄"
+    },
+    "it": {
+      "language": "it",
+      "value": "Fujiko F. Fujio"
+    },
+    "nl": {
+      "language": "nl",
+      "value": "Fujiko F. Fujio"
+    },
+    "de-ch": {
+      "language": "de-ch",
+      "value": "Fujiko F. Fujio"
+    },
+    "an": {
+      "language": "an",
+      "value": "Fujiko F. Fujio"
+    },
+    "ast": {
+      "language": "ast",
+      "value": "Fujiko F. Fujio"
+    },
+    "ext": {
+      "language": "ext",
+      "value": "Fujiko F. Fujio"
+    },
+    "gl": {
+      "language": "gl",
+      "value": "Fujiko F. Fujio"
+    },
+    "wuu": {
+      "language": "wuu",
+      "value": "藤子·F·不二雄"
+    },
+    "lzh": {
+      "language": "lzh",
+      "value": "藤本弘"
+    },
+    "sq": {
+      "language": "sq",
+      "value": "Fujiko F. Fujio"
+    },
+    "ar": {
+      "language": "ar",
+      "value": "فوجيكو ف. فوجيو"
+    },
+    "arz": {
+      "language": "arz",
+      "value": "فوجيكو ف. فوجيو"
+    },
+    "af": {
+      "language": "af",
+      "value": "Fujiko F. Fujio"
+    },
+    "sv": {
+      "language": "sv",
+      "value": "Fujiko F. Fujio"
+    },
+    "mul": {
+      "language": "mul",
+      "value": "Fujiko F. Fujio"
+    }
+  },
+  "aliases": {
+    "de": [
+      {
+        "language": "de",
+        "value": "Fujimoto Hiroshi"
+      },
+      {
+        "language": "de",
+        "value": "Fujiko Fujio (F)"
+      },
+      {
+        "language": "de",
+        "value": "Hiroshi Fujimoto"
+      }
+    ],
+    "ja": [
+      {
+        "language": "ja",
+        "value": "藤子F不二雄"
+      },
+      {
+        "language": "ja",
+        "value": "藤子不二雄F"
+      },
+      {
+        "language": "ja",
+        "value": "藤子F"
+      },
+      {
+        "language": "ja",
+        "value": "藤本弘"
+      },
+      {
+        "language": "ja",
+        "value": "藤子不二雄Ⓕ"
+      },
+      {
+        "language": "ja",
+        "value": "ふじこ えふ ふじお"
+      },
+      {
+        "language": "ja",
+        "value": "やまもとよしお"
+      }
+    ],
+    "fr": [
+      {
+        "language": "fr",
+        "value": "Hiroshi Fujimoto"
+      },
+      {
+        "language": "fr",
+        "value": "Fujimoto Hiroshi"
+      }
+    ],
+    "en": [
+      {
+        "language": "en",
+        "value": "Fujiko Fujio (F)"
+      },
+      {
+        "language": "en",
+        "value": "Hiroshi Fujimoto"
+      },
+      {
+        "language": "en",
+        "value": "Yoshio Yamamoto"
+      },
+      {
+        "language": "en",
+        "value": "Fujiko, Fujio F"
+      },
+      {
+        "language": "en",
+        "value": "Fujiko, Fujio F."
+      }
+    ],
+    "zh": [
+      {
+        "language": "zh",
+        "value": "藤子不二雄F"
+      },
+      {
+        "language": "zh",
+        "value": "藤本弘"
+      },
+      {
+        "language": "zh",
+        "value": "藤子不二雄Ⓕ"
+      }
+    ],
+    "ko": [
+      {
+        "language": "ko",
+        "value": "후지코 후지오 F"
+      },
+      {
+        "language": "ko",
+        "value": "후지코 F"
+      },
+      {
+        "language": "ko",
+        "value": "후지모토 히로시"
+      },
+      {
+        "language": "ko",
+        "value": "후지코 후지오 Ⓕ"
+      },
+      {
+        "language": "ko",
+        "value": "야마모토 요시오"
+      }
+    ],
+    "af": [
+      {
+        "language": "af",
+        "value": "Fujiko Fujio (F)"
+      },
+      {
+        "language": "af",
+        "value": "Hiroshi Fujimoto"
+      }
+    ]
+  },
+  "claims": {
+    "P31": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P31",
+          "hash": "ad7d38a03cdd40cdc373de0dc4e7b7fcbccb31d9",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 5,
+              "id": "Q5"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q17572$8F4F8CDF-C87A-4B9C-9567-1E469287102C",
+        "rank": "normal",
+        "references": [
+          {
+            "hash": "cf6d5ea11a14d2ea26c4fba9a6eefd96064faf39",
+            "snaks": {
+              "P248": [
+                {
+                  "snaktype": "value",
+                  "property": "P248",
+                  "hash": "def9f19d84b65167a2a17ce38364d264c16127fc",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 19938912,
+                      "id": "Q19938912"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ],
+              "P813": [
+                {
+                  "snaktype": "value",
+                  "property": "P813",
+                  "hash": "4a373cabc4b4279a667330fa274cd542a80770f0",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2018-12-21T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ],
+              "P268": [
+                {
+                  "snaktype": "value",
+                  "property": "P268",
+                  "hash": "7fbad7d16b81d6580c9dc5285b748984b4ea79ac",
+                  "datavalue": {
+                    "value": "16604960b",
+                    "type": "string"
+                  },
+                  "datatype": "external-id"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P248",
+              "P813",
+              "P268"
+            ]
+          },
+          {
+            "hash": "532ec7df693a21bbcfcbb8276e40f95d68898918",
+            "snaks": {
+              "P248": [
+                {
+                  "snaktype": "value",
+                  "property": "P248",
+                  "hash": "45037a2d1d89deebcdfc5840e9adbaa4b64cebc6",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 50358336,
+                      "id": "Q50358336"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ],
+              "P813": [
+                {
+                  "snaktype": "value",
+                  "property": "P813",
+                  "hash": "09712fd4037b21b6b0845d4c52d3759e73824f69",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2024-02-24T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ],
+              "P950": [
+                {
+                  "snaktype": "value",
+                  "property": "P950",
+                  "hash": "5fb19250709e535b7adf746e94bd2746b3afdaee",
+                  "datavalue": {
+                    "value": "XX1597116",
+                    "type": "string"
+                  },
+                  "datatype": "external-id"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P248",
+              "P813",
+              "P950"
+            ]
+          }
+        ]
+      }
+    ],
+    "P50": [],
+    "P110": []
+  }
+}

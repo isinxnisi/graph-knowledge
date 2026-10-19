@@ -1,0 +1,74 @@
+{
+  "status": "pending-human-acceptance",
+  "humanReviewer": null,
+  "entities": [
+    {
+      "entityId": "a81be119-25d0-4759-9c93-ee6335ef8885",
+      "name": "藤子・F・不二雄",
+      "kind": "person",
+      "wikidata": "Q17572",
+      "existingEntityId": null,
+      "status": "candidate",
+      "reasons": [],
+      "checks": {
+        "providerIdentity": true
+      },
+      "inputPopulation": "identity-only"
+    }
+  ],
+  "claims": [],
+  "inheritedHolds": [
+    {
+      "reason": "publication-identity-unconfirmed",
+      "work": "パーマン",
+      "isbn13": "9784091941114",
+      "matchingRecords": 0,
+      "records": [
+        {
+          "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I000002609338",
+          "isbn13": [
+            "9784091941114"
+          ],
+          "title": [
+            "パーマン. 1"
+          ],
+          "mainTitles": [
+            "パーマン"
+          ],
+          "volume": [
+            "1"
+          ],
+          "edition": [],
+          "responsibilities": [
+            "藤子・F・不二雄 著"
+          ],
+          "publisher": [
+            "小学館"
+          ],
+          "language": [
+            "jpn"
+          ],
+          "genre": [
+            "児童図書",
+            "漫画"
+          ]
+        }
+      ]
+    }
+  ],
+  "newCandidateCounts": {
+    "entities": 0,
+    "claims": 0,
+    "sources": 0,
+    "citations": 0
+  },
+  "recordConflicts": [],
+  "roleCounts": {},
+  "normalReviewedEntityCount": 0,
+  "reusedCitationIds": [],
+  "identityOnlyEntityIds": [
+    "a81be119-25d0-4759-9c93-ee6335ef8885"
+  ],
+  "heldClaimCount": 0,
+  "heldEntityCount": 0
+}

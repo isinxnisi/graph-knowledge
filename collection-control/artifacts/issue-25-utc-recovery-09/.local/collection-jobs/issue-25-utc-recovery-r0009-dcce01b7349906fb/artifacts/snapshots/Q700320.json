@@ -1,0 +1,269 @@
+{
+  "id": "Q700320",
+  "lastrevid": 2547722243,
+  "labels": {
+    "pt": {
+      "language": "pt",
+      "value": "Super Dínamo"
+    },
+    "zh-hans": {
+      "language": "zh-hans",
+      "value": "飞人"
+    },
+    "zh-hant": {
+      "language": "zh-hant",
+      "value": "小超人帕門"
+    },
+    "zh-hk": {
+      "language": "zh-hk",
+      "value": "神奇小子"
+    },
+    "id": {
+      "language": "id",
+      "value": "P-Man"
+    },
+    "ja": {
+      "language": "ja",
+      "value": "パーマン"
+    },
+    "vi": {
+      "language": "vi",
+      "value": "Perman - Cậu bé siêu nhân"
+    },
+    "yue": {
+      "language": "yue",
+      "value": "神奇小子"
+    },
+    "en": {
+      "language": "en",
+      "value": "Perman"
+    },
+    "es": {
+      "language": "es",
+      "value": "Hombre par"
+    },
+    "th": {
+      "language": "th",
+      "value": "ปาร์แมน"
+    },
+    "it": {
+      "language": "it",
+      "value": "Superkid"
+    },
+    "ko": {
+      "language": "ko",
+      "value": "수퍼꼬마 퍼맨"
+    },
+    "ru": {
+      "language": "ru",
+      "value": "Perman"
+    },
+    "zh": {
+      "language": "zh",
+      "value": "小超人"
+    },
+    "jv": {
+      "language": "jv",
+      "value": "P-Man"
+    },
+    "nl": {
+      "language": "nl",
+      "value": "Perman"
+    },
+    "ur": {
+      "language": "ur",
+      "value": "پرمین"
+    },
+    "tl": {
+      "language": "tl",
+      "value": "Perman"
+    },
+    "ast": {
+      "language": "ast",
+      "value": "Perman"
+    },
+    "hi": {
+      "language": "hi",
+      "value": "परमैन"
+    },
+    "de": {
+      "language": "de",
+      "value": "Perman"
+    },
+    "bn": {
+      "language": "bn",
+      "value": "পারম্যান"
+    },
+    "ks": {
+      "language": "ks",
+      "value": "پرمین"
+    }
+  },
+  "aliases": {
+    "pt": [
+      {
+        "language": "pt",
+        "value": "Pāman"
+      },
+      {
+        "language": "pt",
+        "value": "Paaman"
+      },
+      {
+        "language": "pt",
+        "value": "Pâ-Man"
+      },
+      {
+        "language": "pt",
+        "value": "Heroe Bambino"
+      }
+    ],
+    "zh": [
+      {
+        "language": "zh",
+        "value": "超人小天使"
+      },
+      {
+        "language": "zh",
+        "value": "小超人帕門"
+      },
+      {
+        "language": "zh",
+        "value": "飞人"
+      },
+      {
+        "language": "zh",
+        "value": "Pa-Pa-Pa The☆Movie 小超人帕門"
+      }
+    ],
+    "vi": [
+      {
+        "language": "vi",
+        "value": "Pāman"
+      },
+      {
+        "language": "vi",
+        "value": "Paaman"
+      },
+      {
+        "language": "vi",
+        "value": "Perman"
+      },
+      {
+        "language": "vi",
+        "value": "Siêu nhân Pacman"
+      },
+      {
+        "language": "vi",
+        "value": "Parman"
+      },
+      {
+        "language": "vi",
+        "value": "Pa-man"
+      }
+    ],
+    "es": [
+      {
+        "language": "es",
+        "value": "Pāman"
+      },
+      {
+        "language": "es",
+        "value": "Paman"
+      }
+    ],
+    "th": [
+      {
+        "language": "th",
+        "value": "Parman"
+      }
+    ],
+    "it": [
+      {
+        "language": "it",
+        "value": "Superkid eroe bambino"
+      },
+      {
+        "language": "it",
+        "value": "Super Kid, piccolo grande eroe"
+      }
+    ],
+    "en": [
+      {
+        "language": "en",
+        "value": "P-Man"
+      }
+    ],
+    "id": [
+      {
+        "language": "id",
+        "value": "Perman"
+      }
+    ]
+  },
+  "claims": {
+    "P31": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P31",
+          "hash": "549c072d6be8a6a43f999d1d0e82640b16c4260e",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 21198342,
+              "id": "Q21198342"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q700320$b3f18abd-4b23-1475-948f-b8e6afc02db0",
+        "rank": "normal"
+      }
+    ],
+    "P50": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P50",
+          "hash": "3ce36b4bd80bc5df8b0b822a49cdf934d4cdb1ec",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 3376801,
+              "id": "Q3376801"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q700320$f6255329-4dd9-694e-c104-bcd709c6d295",
+        "rank": "normal"
+      }
+    ],
+    "P110": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P110",
+          "hash": "fd98651bdba208caac4dfb28f9826de8a161081d",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 3376801,
+              "id": "Q3376801"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q700320$B4C1CD60-9F0B-42B0-9F56-37562BB1A7BC",
+        "rank": "normal"
+      }
+    ]
+  }
+}

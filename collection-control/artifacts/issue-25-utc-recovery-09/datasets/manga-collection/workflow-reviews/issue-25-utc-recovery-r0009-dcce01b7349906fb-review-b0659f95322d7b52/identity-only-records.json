@@ -1,0 +1,28 @@
+{
+  "status": "pending-human-identity-only-decision",
+  "records": {
+    "entities": [
+      {
+        "id": "a81be119-25d0-4759-9c93-ee6335ef8885",
+        "kind": "person",
+        "name": "藤子・F・不二雄",
+        "description": null,
+        "aliases": [
+          "Fujiko F. Fujio"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q17572"
+          }
+        ],
+        "createdAt": "2026-10-18T18:54:58Z",
+        "updatedAt": "2026-10-18T18:54:58Z",
+        "event": null
+      }
+    ],
+    "claims": [],
+    "sources": [],
+    "citations": []
+  }
+}

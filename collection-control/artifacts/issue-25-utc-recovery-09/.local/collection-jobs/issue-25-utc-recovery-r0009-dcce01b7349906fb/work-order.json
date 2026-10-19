@@ -1,0 +1,141 @@
+{
+  "schemaVersion": 1,
+  "theme": {
+    "schemaVersion": 1,
+    "id": "issue-25-utc-recovery",
+    "revision": 9,
+    "title": "Issue 25：藤子・F・不二雄／候補収集（日時形式復旧）",
+    "purpose": "既存の明示的人間許可を範囲内の導出recipeへ束縛。知識の正式受入・公開適用を許可しない。",
+    "worlds": [
+      "漫画・アニメ",
+      "美術・文学"
+    ],
+    "relatedThemes": [
+      "famous-manga-creators"
+    ],
+    "scope": {
+      "include": [
+        "Issue permission SHA256 673d380b4fb61ab2cdef204140d63a47bbf25dbb288199f25d0e3ae740ef11b3",
+        "[\n  {\n    \"person\": \"浦沢直樹\",\n    \"work\": \"MONSTER\"\n  },\n  {\n    \"person\": \"浦沢直樹\",\n    \"work\": \"20世紀少年\"\n  },\n  {\n    \"person\": \"浦沢直樹\",\n    \"work\": \"YAWARA!\"\n  },\n  {\n    \"person\": \"手塚治虫\",\n    \"work\": \"鉄腕アトム\"\n  },\n  {\n    \"person\": \"高橋留美子\",\n    \"work\": \"犬夜叉\"\n  },\n  {\n    \"person\": \"岸本斉史\",\n    \"work\": \"NARUTO\"\n  },\n  {\n    \"person\": \"赤坂アカ\",\n    \"work\": \"かぐや様は告らせたい\"\n  },\n  {\n    \"person\": \"田村由美\",\n    \"work\": \"ミステリと言う勿れ\"\n  },\n  {\n    \"person\": \"九井諒子\",\n    \"work\": \"ダンジョン飯\"\n  },\n  {\n    \"person\": \"荒木飛呂彦\",\n    \"work\": \"ジョジョの奇妙な冒険 第1部 ファントムブラッド\"\n  },\n  {\n    \"person\": \"荒川弘\",\n    \"work\": \"鋼の錬金術師\"\n  },\n  {\n    \"person\": \"荒川弘\",\n    \"work\": \"銀の匙 Silver Spoon\"\n  },\n  {\n    \"person\": \"荒川弘\",\n    \"work\": \"黄泉のツガイ\"\n  },\n  {\n    \"person\": \"矢沢あい\",\n    \"work\": \"天使なんかじゃない\"\n  },\n  {\n    \"person\": \"矢沢あい\",\n    \"work\": \"ご近所物語\"\n  },\n  {\n    \"person\": \"矢沢あい\",\n    \"work\": \"NANA\"\n  },\n  {\n    \"person\": \"高屋奈月\",\n    \"work\": \"フルーツバスケット\"\n  },\n  {\n    \"person\": \"高屋奈月\",\n    \"work\": \"翼を持つ者\"\n  },\n  {\n    \"person\": \"あだち充\",\n    \"work\": \"タッチ\"\n  },\n  {\n    \"person\": \"あだち充\",\n    \"work\": \"H2\"\n  },\n  {\n    \"person\": \"あだち充\",\n    \"work\": \"MIX\"\n  },\n  {\n    \"person\": \"藤子・F・不二雄\",\n    \"work\": \"パーマン\"\n  },\n  {\n    \"person\": \"藤子・F・不二雄\",\n    \"work\": \"キテレツ大百科\"\n  }\n]\n",
+        "Wikidata完全一致・NDL作成書誌の日本語第1巻ISBN。原語・既存制作Role契約を維持。"
+      ],
+      "exclude": [
+        "許可外人物作品・不確かな同定・意味変換・正式受入・公開apply・VPS配置・会員DB変更"
+      ]
+    },
+    "dataRequirements": [
+      {
+        "kind": "entity",
+        "description": "一覧内の人物と漫画作品、確認された日英別名・外部ID",
+        "granularity": "個人と共同筆名を区別し、漫画版・特定部・特定初出版を同定する。既存UUIDは再利用"
+      },
+      {
+        "kind": "claim",
+        "description": "明示された人物→漫画制作のRole候補。ORIGINAL_STORYを含む既存Role契約に従う",
+        "granularity": "代表ISBNごとのpublication scope。原語・巻・版を固定し、作品全体や別Roleへ自動拡張しない"
+      },
+      {
+        "kind": "citation",
+        "description": "資料URL、参照箇所、取得日、担当原語、刊行物と利用条件",
+        "granularity": "資料と取込由来を分け、同資料を共有する記録を独立根拠として数えない"
+      },
+      {
+        "kind": "identity",
+        "description": "作品単位と筆名・既存Entity対応の判断",
+        "granularity": "武論尊／史村翔、藤子共同名義、ワンパンマンの版、火の鳥の初出版等を個別に判断"
+      },
+      {
+        "kind": "model-gap",
+        "description": "漫画表記、原著、原案、集約著者などの未確定関係とシリーズ／巻／版の構造",
+        "granularity": "この企画の承認だけでは実装・語彙承認しない。必要なら個別レビューへ分ける"
+      }
+    ],
+    "sources": [
+      {
+        "name": "Wikidata（構造化取得の有力候補）",
+        "url": "https://www.wikidata.org/wiki/Help:Data_access",
+        "usage": "識別子・日英名・別名・作品関係候補と参照先。propertyから既存Roleを推測しない。",
+        "termsNote": "Wikidata構造化APIとcanonical EntityData。Issue全体で準備・収集合計142試行。"
+      },
+      {
+        "name": "NDLサーチ・NDL作成書誌",
+        "url": "https://ndlsearch.ndl.go.jp/help/api/provider",
+        "usage": "SRUのiss-ndl-opac限定、固定ISBN検索・maximumRecords=5。NDL作成書誌のISBN・主書名・巻・版・言語・漫画種別・責任表示を一意に照合。第三者所蔵情報はsnapshotへ出さない。",
+        "termsNote": "NDL作成書誌のCC BY4.0。題名・著者検索で代表ISBNを選びcanonical ISBN検索で一意性を再確認。所蔵・本文を転載しない。"
+      }
+    ],
+    "exploration": {
+      "questions": [
+        "既存浦沢直樹からあさドラ！・パイナップルARMYと工藤かずやへ渡れるか？",
+        "サンクチュアリと北斗の拳を同じ人物の別名義・異なるRoleの根拠で辿れるか？",
+        "ポーの一族から萩尾望都を経て11人いる！、風と木の詩から竹宮惠子を経て地球へ…に渡れるか？",
+        "r0002公開後に大場つぐみ・Boichi・藤本タツキの別作品へ進めるか？ 未受入・原語未確定の枝を区別できるか？"
+      ],
+      "existingPredicates": [
+        "CONTRIBUTED_TO"
+      ],
+      "modelGaps": [
+        "漫画表記や集約著者表示は既存Roleへ自動変換できない。ORIGINAL_STORYは原作担当の明示に限定する。",
+        "掲載・翻案・シリーズ／巻／版の独立関係は対象外",
+        "ジャンルは編集上の入口説明であり分類Claimは生成しない"
+      ]
+    },
+    "coverageReferences": [
+      "datasets/manga-collection/r0025/anchor-review.json",
+      "datasets/manga-collection/r0025/publication-review.json"
+    ],
+    "execution": {
+      "adapter": "manga-discovery-v2",
+      "codeSha256": "80e05b67bc0129b963653b90df4cfbfa5bd6aff190acda99f54c08541e55801e",
+      "inputs": [
+        {
+          "file": "datasets/manga-collection/r0025/recipe.json",
+          "sha256": "ca039cc58330319a8e52c0f41f0803e9254b67f3b0081af6f8eaefb1f4f6b3a7"
+        },
+        {
+          "file": "datasets/manga-collection/r0025/anchor-review.json",
+          "sha256": "d6ab0ed6627d04e8c997874fd414d1b2cbefe1f7712adb6ffe1ac72bba5928ea"
+        },
+        {
+          "file": "datasets/manga-collection/r0025/publication-review.json",
+          "sha256": "0e4141e15230d637545e5cc0a225cc3fb5ecf09696964e8de8c2c82c8147b497"
+        },
+        {
+          "file": "docs/research/famous-manga-creators/20261016/candidates.json",
+          "sha256": "8531fada01e5c635ba2ee278a7ef944a73f64676af14ed42ae0e690f5a1ff978"
+        },
+        {
+          "file": "datasets/public-kg/releases/20261014-credits-001/data.json",
+          "sha256": "ea91b16f52a211b5a8464382ad498b7b2bb2be69a6f33fe125a73a3c7b9da2b5"
+        },
+        {
+          "file": "datasets/public-kg/releases/20261014-credits-001/manifest.json",
+          "sha256": "e4aa3b58ed884f7d1f8fffee43b260261cc2b4d3a867fda942919f439d2bce17"
+        }
+      ],
+      "maxEntities": 2111,
+      "maxClaims": 1847
+    }
+  },
+  "definitionSha256": "c4ab1e1eba868884c21b67cb225da32f0c03148e5663c3c7d898d581f7a113e1",
+  "approval": {
+    "schemaVersion": 1,
+    "themeId": "issue-25-utc-recovery",
+    "revision": 9,
+    "definitionSha256": "c4ab1e1eba868884c21b67cb225da32f0c03148e5663c3c7d898d581f7a113e1",
+    "reviewer": "プロジェクト運営者",
+    "reviewedAt": "2026-10-18T23:55:30+00:00",
+    "note": "既存Issue承認範囲内の日時形式不具合復旧。新たな人間判断・正式受入ではない。\n{\n  \"recovery\": {\n    \"schemaVersion\": 1,\n    \"kind\": \"fixture-utc-z-only\",\n    \"predecessorRequestId\": \"issue-25-manga23-20261019-repair1-batch-10\",\n    \"predecessorRequestSha256\": \"ed885e08b9e56344ecbc4f622edae4438fd5dd4f8336ffa4606190ad19fb9ff3\",\n    \"predecessorTargetSha256\": \"947225fd94989a4405e0e1e0f4f93c401b62b55f9d86dd01df086f2634038e5a\",\n    \"predecessorRecipe\": {\n      \"file\": \"datasets/manga-collection/r0016/recipe.json\",\n      \"sha256\": \"bedf687ab6fd6dff0331e0658d00d9c928fff83197d65cec0bab05f36420d606\"\n    },\n    \"originalApprovalSha256\": \"82d7ecfa8ead6450fd13b696f4afc9d903a1f9a8e1b89a3258c687b42049b33b\",\n    \"originalStamp\": \"2026-10-18T18:54:58+00:00\",\n    \"normalizedStamp\": \"2026-10-18T18:54:58Z\"\n  },\n  \"humanDecision\": {\n    \"actorType\": \"human\",\n    \"reviewer\": \"プロジェクト運営者\",\n    \"decidedAt\": \"2026-10-19T02:52:00+09:00\",\n    \"statement\": \"Issue #25の2026-10-19 02:52 JST先行許可を転記。明示された23作品・人物の同定、QID・日本語代表ISBN探索、recipe生成、hidden候補収集と根拠・保留・レビュー資料生成を承認。Wikidata構造化データとNDL作成書誌だけを用い、準備・収集合計142試行、同一要求2試行、逐次3秒、20秒、4MiB以内。既設時間帯・10分休憩で途中開始・数日継続を許可。同一範囲の再承認は不要。不確かな同定・資料不足・範囲外は保留。個別正式受入・公開apply・VPS配置・会員DB変更は承認しない。\"\n  },\n  \"issueOrigin\": {\n    \"repository\": \"isinxnisi/graph-knowledge\",\n    \"issueNumber\": 25,\n    \"approvalId\": \"manga23-20261019\",\n    \"permissionSha256\": \"673d380b4fb61ab2cdef204140d63a47bbf25dbb288199f25d0e3ae740ef11b3\",\n    \"issueBodySha256\": \"5f302ff42139b5230da70d38734577da414a3b89a24a82f90302e0297afc3c69\"\n  }\n}\n",
+    "checks": [
+      "purpose",
+      "scope",
+      "data-granularity",
+      "sources-and-terms",
+      "exploration",
+      "execution-boundary"
+    ]
+  },
+  "approvalSha256": "e8fd08a330791f786ffa605c055971702eacdea45dddc60a36632c97d1f53343",
+  "executionStatus": "frozen-adapter",
+  "authority": "candidate-collection-only; not knowledge acceptance or public release approval"
+}
