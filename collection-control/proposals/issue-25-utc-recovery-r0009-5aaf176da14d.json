@@ -1,0 +1,72 @@
+{
+  "schemaVersion": 1,
+  "id": "issue-25-utc-recovery-r0009-5aaf176da14d",
+  "kind": "collect-review",
+  "status": "draft-not-approved",
+  "sourceCommit": "4b83cbe82c77fbfeba6888d4d926a63745cc1376",
+  "approvalScope": "collection-candidates-and-review-only",
+  "humanDecision": {
+    "actorType": "human",
+    "reviewer": null,
+    "decidedAt": null,
+    "statement": null
+  },
+  "applyAuthorized": {
+    "local": false,
+    "beta": false,
+    "vps": false
+  },
+  "target": {
+    "themeId": "issue-25-utc-recovery",
+    "revision": 9,
+    "definitionSha256": "c4ab1e1eba868884c21b67cb225da32f0c03148e5663c3c7d898d581f7a113e1",
+    "execution": {
+      "adapter": "manga-discovery-v2",
+      "codeSha256": "80e05b67bc0129b963653b90df4cfbfa5bd6aff190acda99f54c08541e55801e",
+      "inputs": [
+        {
+          "file": "datasets/manga-collection/r0025/recipe.json",
+          "sha256": "ca039cc58330319a8e52c0f41f0803e9254b67f3b0081af6f8eaefb1f4f6b3a7"
+        },
+        {
+          "file": "datasets/manga-collection/r0025/anchor-review.json",
+          "sha256": "d6ab0ed6627d04e8c997874fd414d1b2cbefe1f7712adb6ffe1ac72bba5928ea"
+        },
+        {
+          "file": "datasets/manga-collection/r0025/publication-review.json",
+          "sha256": "0e4141e15230d637545e5cc0a225cc3fb5ecf09696964e8de8c2c82c8147b497"
+        },
+        {
+          "file": "docs/research/famous-manga-creators/20261016/candidates.json",
+          "sha256": "8531fada01e5c635ba2ee278a7ef944a73f64676af14ed42ae0e690f5a1ff978"
+        },
+        {
+          "file": "datasets/public-kg/releases/20261014-credits-001/data.json",
+          "sha256": "ea91b16f52a211b5a8464382ad498b7b2bb2be69a6f33fe125a73a3c7b9da2b5"
+        },
+        {
+          "file": "datasets/public-kg/releases/20261014-credits-001/manifest.json",
+          "sha256": "e4aa3b58ed884f7d1f8fffee43b260261cc2b4d3a867fda942919f439d2bce17"
+        }
+      ],
+      "maxEntities": 2111,
+      "maxClaims": 1847
+    },
+    "targets": {
+      "people": [
+        {
+          "name": "藤子・F・不二雄",
+          "qid": "Q17572"
+        }
+      ],
+      "works": [
+        {
+          "name": "パーマン",
+          "qid": "Q700320",
+          "isbn13": "9784091941114"
+        }
+      ]
+    },
+    "existingApprovalSha256": "e8fd08a330791f786ffa605c055971702eacdea45dddc60a36632c97d1f53343"
+  }
+}
