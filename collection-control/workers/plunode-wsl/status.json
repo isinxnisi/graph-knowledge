@@ -48,7 +48,8 @@
   "requestsByPhase": {
     "completed": 9,
     "blocked": 9,
-    "waiting-control": 3
+    "running": 1,
+    "waiting-control": 2
   },
   "issueIntake": {
     "collection-control/issue-sources/25.json": {
@@ -84,7 +85,7 @@
     },
     "issue-25-utc-recovery-07": {
       "predecessor": "issue-25-manga23-20261019-repair1-batch-08",
-      "phase": "waiting-control"
+      "phase": "running"
     },
     "issue-25-utc-recovery-08": {
       "predecessor": "issue-25-manga23-20261019-repair1-batch-09",
@@ -95,5 +96,5 @@
       "phase": "waiting-control"
     }
   },
-  "checkedAt": "2026-10-19T01:13:25.572560+00:00"
+  "checkedAt": "2026-10-19T01:14:01.158674+00:00"
 }
