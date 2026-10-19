@@ -1,0 +1,52 @@
+[
+  {
+    "state": "collection-candidate",
+    "observation": "verified-records-only-not-a-live-exploration-test",
+    "edges": [
+      {
+        "claimId": "45a9d1b7-9f6f-4879-807a-ac4b175e4243",
+        "subjectId": "9888fc07-92c4-414b-b449-d33f7b9b07bc",
+        "objectId": "648a399e-70c0-4042-b969-e914a4410544",
+        "person": "矢沢あい",
+        "work": "天使なんかじゃない",
+        "roleId": "AUTHORSHIP",
+        "scope": {
+          "kind": "publication",
+          "isbn13": "9784086187657",
+          "volumeLabel": "第1巻（NDL巻次 1）",
+          "editionLabel": null,
+          "language": "ja"
+        },
+        "state": "collection-candidate",
+        "citationIds": [
+          "0696f0a4-1721-4484-8d87-cc5b41089f7e"
+        ],
+        "sourceIds": [
+          "8034f99b-fddb-4e9e-a577-87807158a1cb"
+        ]
+      },
+      {
+        "claimId": "682fc119-9ac2-4061-b8a1-5d0de889f9ef",
+        "subjectId": "9888fc07-92c4-414b-b449-d33f7b9b07bc",
+        "objectId": "fe378e87-1945-4e1d-869e-c8ec88e998d4",
+        "person": "矢沢あい",
+        "work": "ご近所物語",
+        "roleId": "AUTHORSHIP",
+        "scope": {
+          "kind": "publication",
+          "isbn13": "9784088538204",
+          "volumeLabel": "第1巻（NDL巻次 1）",
+          "editionLabel": null,
+          "language": "ja"
+        },
+        "state": "collection-candidate",
+        "citationIds": [
+          "2bda879a-bb80-44c7-ac62-60d47248a8a2"
+        ],
+        "sourceIds": [
+          "b9e867ab-b22d-4505-8253-59b3cd5c4e00"
+        ]
+      }
+    ]
+  }
+]
