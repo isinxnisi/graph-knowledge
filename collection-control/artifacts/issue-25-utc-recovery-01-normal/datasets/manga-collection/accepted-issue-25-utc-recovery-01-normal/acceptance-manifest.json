@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "decisionSha256": "5fd68796f374c8ffd38eff50da7c316617ff4fceec8ba16b64c6ddfa096b0217",
+  "artifacts": {
+    "decision.json": "5fd68796f374c8ffd38eff50da7c316617ff4fceec8ba16b64c6ddfa096b0217",
+    "accepted-records.json": "2741fc2872c73b9c0f83a416097db1cfe0775f61c31ea668a2eb8bf790e74e88",
+    "acceptance.json": "d271f32767dab030bd26ddcef669f48237cc303a8c605c58df047df8aea71fb6"
+  }
+}

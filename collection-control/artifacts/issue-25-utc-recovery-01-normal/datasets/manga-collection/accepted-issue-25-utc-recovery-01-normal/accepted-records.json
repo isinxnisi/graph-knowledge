@@ -1,0 +1,83 @@
+{
+  "records": {
+    "entities": [
+      {
+        "id": "83d4c0b2-1160-4e2a-90fe-b06cdd4a26cb",
+        "kind": "work",
+        "name": "犬夜叉",
+        "description": null,
+        "aliases": [
+          "Inuyasha"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q182056"
+          }
+        ],
+        "createdAt": "2026-10-18T18:54:58Z",
+        "updatedAt": "2026-10-18T18:54:58Z",
+        "event": null
+      }
+    ],
+    "claims": [
+      {
+        "id": "ca6a2957-2ba2-4149-9550-61a0610a4730",
+        "subjectId": "743d7fc0-ddc6-446a-8aa1-d9a9b284a326",
+        "objectId": "83d4c0b2-1160-4e2a-90fe-b06cdd4a26cb",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "hidden",
+        "createdAt": "2026-10-18T18:54:58Z",
+        "updatedAt": "2026-10-18T18:54:58Z",
+        "contribution": {
+          "roleId": "AUTHORSHIP",
+          "scope": {
+            "kind": "publication",
+            "isbn13": "9784091252012",
+            "volumeLabel": "第1巻（NDL巻次 1）",
+            "editionLabel": null,
+            "language": "ja"
+          }
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      }
+    ],
+    "sources": [
+      {
+        "id": "7240e668-45fd-4125-b330-454e10cc5a0a",
+        "kind": "web",
+        "title": "NDLサーチ: 犬夜叉. 1",
+        "authors": [],
+        "publisher": "国立国会図書館",
+        "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I000002576618",
+        "publishedAt": null,
+        "edition": null,
+        "note": "国立国会図書館作成書誌（iss-ndl-opac）の責任表示。メタデータ CC BY 4.0: https://creativecommons.org/licenses/by/4.0/ ; 提供元条件 https://ndlsearch.ndl.go.jp/help/api/provider 。本文・画像・第三者所蔵情報は含まない。",
+        "isDemo": false
+      }
+    ],
+    "citations": [
+      {
+        "id": "2eca3dac-fbd1-4283-8d3e-cd284074ff80",
+        "claimId": "ca6a2957-2ba2-4149-9550-61a0610a4730",
+        "sourceId": "7240e668-45fd-4125-b330-454e10cc5a0a",
+        "locator": "dc:creator（責任表示） / ISBN 9784091252012",
+        "note": "原表記（ja）: 高橋留美子 著。指定刊行物の責任表示で確認された担当。全巻・全版・全期間への外挿、原作から別Roleへの変換はしない。同一資料由来の記録を独立した根拠と数えない。",
+        "accessedAt": "2026-10-18",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "高橋留美子 著",
+          "language": "ja"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      }
+    ]
+  }
+}
