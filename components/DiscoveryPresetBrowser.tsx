@@ -1,7 +1,6 @@
 "use client";
 import type { ReactNode } from "react";
-import { presetApplication } from "../lib/domain/discovery-connections";
-import { presetCatalog, findCatalogPresets, hasCatalogFilters, initialCatalogFilters, type CatalogFilters, type CatalogPreset } from "../lib/domain/discovery-preset-catalog";
+import { availableCatalogPresets, findCatalogPresets, hasCatalogFilters, initialCatalogFilters, type CatalogFilters, type CatalogPreset } from "../lib/domain/discovery-preset-catalog";
 import { WORLD_IDS, worldNames } from "../lib/domain/discovery-prototype";
 import { CONTRIBUTION_ROLE_IDS } from "../lib/domain/contribution";
 import { contributionLabels } from "../lib/i18n/contribution";
@@ -16,8 +15,8 @@ export function PresetModeSwitch({mode,onChange}:{mode:"presets"|"names";onChang
 }
 export default function DiscoveryPresetBrowser({filters,onChange,onSelect,onNames,busy,error,onChangeSubject,switcher}:{filters:CatalogFilters;onChange:(value:CatalogFilters)=>void;onSelect:(preset:CatalogPreset,example?:boolean)=>void;onNames:()=>void;busy:boolean;error:string|null;onChangeSubject?:(preset:CatalogPreset)=>void;switcher?:ReactNode}){
  const {locale}=useUiLocale(),en=locale==="en",t=(ja:string,eng:string)=>en?eng:ja;
- const found=findCatalogPresets(filters),featured=!hasCatalogFilters(filters),recommendations=presetCatalog.filter(p=>p.recommended),items=found.items.filter(p=>!featured||!p.recommended);
- const roles=CONTRIBUTION_ROLE_IDS.filter(role=>filters.role === role || presetCatalog.some(p=>p.role === role));
+ const found=findCatalogPresets(filters),featured=!hasCatalogFilters(filters),recommendations=availableCatalogPresets.filter(p=>p.recommended),items=found.items.filter(p=>!featured||!p.recommended);
+ const roles=CONTRIBUTION_ROLE_IDS.filter(role=>filters.role === role || availableCatalogPresets.some(p=>p.role === role));
  const update=(patch:Partial<CatalogFilters>)=>onChange({...filters,...patch});
  const kinds=[["person","人物","People"],["work","作品","Works"],["organization","組織","Organizations"],["event","出来事","Events"]] as const;
  return <div className={styles.catalog} data-testid="preset-browser" aria-busy={busy}>
@@ -39,7 +38,7 @@ export default function DiscoveryPresetBrowser({filters,onChange,onSelect,onName
    {filters.sort==="popular"&&!found.popularityMeasured&&<p className={styles.notice} role="status">{t("人気はまだ未集計です。掲載優先順で表示しています。","Popularity has not been measured yet. Showing editorial priority order.")}</p>}
    <div className={styles.count} role="status">{featured?t(`ほかの探し方 ${items.length}件 · おすすめ3件は別枠に`,`${items.length} more ways · 3 featured separately`):t(`${items.length}件の探し方`,`${items.length} presets`)}</div>
    {error&&<p className={styles.notice} role="alert">{error}</p>}
-   <div className={styles.rows}>{items.map(p=><article key={p.id} className={styles.row} data-catalog-result={p.id}><div className={styles.rowTop}><DiscoveryWorldIcon world={p.worlds[0]}/><h4>{p.title[en?1:0]}</h4><span>{p.execution.type==="fixed"?t("対象つき","Ready to explore"):presetApplication(p).binding==="legacy"?t("従来の経路探索","Legacy path exploration"):t("対象を選ぶ探し方","Choose a starting subject")}</span></div><p>{p.description[en?1:0]}</p><div className={styles.rowBottom}><small>{p.worlds.map(w=>worldNames[w][en?1:0]).join(" · ")}{p.role?" · "+contributionLabels(locale).roles[p.role]:""}</small><div>{p.execution.type==="fixed"&&onChangeSubject&&<button disabled={busy} onClick={()=>onChangeSubject(p)}>{t("対象を変更","Change subject")}</button>}{p.execution.type==="template"&&presetApplication(p).binding==="legacy"&&<button disabled={busy} onClick={()=>onSelect(p,true)}>{t(p.execution.exampleName[0]+"で試す","Try "+p.execution.exampleName[1])}<Icon name="arrow"/></button>}<button disabled={busy} onClick={()=>onSelect(p)}>{p.execution.type==="fixed"?t("Graphで探索","Explore in Graph"):presetApplication(p).binding==="legacy"?t("従来方式で対象を選ぶ","Choose subject (legacy)"):t("条件に合う対象を探す","Find matching subjects")}<Icon name="arrow"/></button></div></div></article>)}</div>
+   <div className={styles.rows}>{items.map(p=><article key={p.id} className={styles.row} data-catalog-result={p.id}><div className={styles.rowTop}><DiscoveryWorldIcon world={p.worlds[0]}/><h4>{p.title[en?1:0]}</h4><span>{p.execution.type==="fixed"?t("対象つき","Ready to explore"):t("対象を選ぶ探し方","Choose a starting subject")}</span></div><p>{p.description[en?1:0]}</p><div className={styles.rowBottom}><small>{p.worlds.map(w=>worldNames[w][en?1:0]).join(" · ")}{p.role?" · "+contributionLabels(locale).roles[p.role]:""}</small><div>{p.execution.type==="fixed"&&onChangeSubject&&<button disabled={busy} onClick={()=>onChangeSubject(p)}>{t("対象を変更","Change subject")}</button>}<button disabled={busy} onClick={()=>onSelect(p)}>{p.execution.type==="fixed"?t("Graphで探索","Explore in Graph"):t("条件に合う対象を探す","Find matching subjects")}<Icon name="arrow"/></button></div></div></article>)}</div>
    {!items.length&&<div className={styles.empty}><h4>{t("この条件のプリセットは、まだありません。","No presets match these filters yet.")}</h4><p>{t("公開KGのデータが0件という意味ではありません。条件を外すか、名前から自由に探せます。","This is not a count of KG data. Remove a filter, or explore freely by name.")}</p><button onClick={()=>onChange(initialCatalogFilters)}>{t("絞り込みをリセット","Reset filters")}</button><button onClick={onNames}>{t("名前から探す","Find by name")}</button></div>}
    <p className={styles.note}>{t("公開KGを読み取り、選んだ条件でその都度探索します。未公開の経路や架空の検索結果は含みません。","Each preset runs against the public KG. Unpublished routes and invented results are not included.")}</p>
   </section>

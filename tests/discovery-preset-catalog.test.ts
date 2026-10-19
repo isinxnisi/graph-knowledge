@@ -3,6 +3,10 @@ import { presetCatalog,initialCatalogFilters,initialCatalogWorkspace,catalogWork
 import { resolvePathPreset } from "../lib/domain/discovery-path-presets";
 
 describe("公開KGで実行するプリセットカタログ",()=>{
+ it("公開入口は対応済み5件だけとし、旧3定義と実行能力は内部に保持する",()=>{
+  expect(findCatalogPresets(initialCatalogFilters).items.map(p=>p.id)).toEqual(["pluto","princeton","nbi","other-works","authored-works"]);
+  for(const id of ["work-creators","co-creators","institution-bridge"]){expect(presetCatalog.some(p=>p.id===id)).toBe(true);expect(findCatalogPresets({...initialCatalogFilters,q:id}).items).toEqual([]);}
+ });
  it("固定対象と再利用可能な形を分け、実行条件のkind・関係を既存モデルと一致させる",()=>{
   expect(new Set(presetCatalog.map(p=>p.id)).size).toBe(presetCatalog.length);
   expect(presetCatalog.filter(p=>p.recommended)).toHaveLength(3);

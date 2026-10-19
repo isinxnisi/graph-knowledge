@@ -19,6 +19,9 @@ export const presetCatalog: readonly CatalogPreset[] = [
   ...pathPresets.map((preset,i):CatalogPreset=>({id:preset.id,title:preset.title,description:preset.purpose,worlds:preset.predicate==="CONTRIBUTED_TO"?["manga"]:["science","history"],kind:preset.kinds[0],question:preset.predicate==="CONTRIBUTED_TO"?"credits":"affiliations",role:null,priority:70-i,introducedAt:"2026-10-18",recommended:false,execution:{type:"template",path:{id:preset.id,revision:1},exampleId:preset.id==="co-creators"?"d900543a-9c11-48c1-be76-1822b756fcc4":preset.id==="institution-bridge"?prototypeSeeds[2].id:prototypeSeeds[0].id,exampleName:preset.id==="co-creators"?["浦沢直樹","Naoki Urasawa"]:preset.id==="institution-bridge"?["研究所","NBI"]:["PLUTO","PLUTO"]}})),
   {id:"authored-works",title:["著者の記録から別作品へ","Other works through authorship"],description:["各段に著者Roleがある記録だけで、同じ著者の別作品を辿ります。","Follow only Claims carrying the authorship Role at every step to another work."],worlds:["manga"],kind:"work",question:"credits",role:"AUTHORSHIP",priority:60,introducedAt:"2026-10-18",recommended:false,execution:{type:"template",path:{id:"other-works",revision:1},exampleId:prototypeSeeds[0].id,exampleName:["PLUTO","PLUTO"]}},
 ];
+// Keep legacy definitions for existing execution / saved contexts, but do not
+// offer a name-template detour in the shared-condition preset catalogue.
+export const availableCatalogPresets = presetCatalog.filter(p => p.execution.type === "fixed" || p.execution.path.id === "other-works");
 export const catalogFiltersSchema=z.object({q:z.string().max(100),worlds:z.array(z.enum(WORLD_IDS)).max(11),kind:z.enum(["person","work","organization","event"]).nullable(),question:z.enum(["credits","affiliations","influences"]).nullable(),role:roleIdSchema.nullable(),sort:z.enum(["recommended","newest","popular"])});
 export type CatalogFilters=z.infer<typeof catalogFiltersSchema>;
 export const initialCatalogFilters:CatalogFilters={q:"",worlds:[],kind:null,question:null,role:null,sort:"recommended"};
@@ -31,8 +34,8 @@ export type PresetPopularity={metric:"preset-starts";windowStart:string;windowEn
 export function findCatalogPresets(filters:CatalogFilters,popularity:PresetPopularity|null=null) {
   const normalize=(s:string)=>s.normalize("NFKC").toLowerCase();
   const words=normalize(filters.q.trim()).split(/\s+/).filter(Boolean);
-  const items=presetCatalog.filter(p=>(!filters.worlds.length||filters.worlds.some(w=>p.worlds.includes(w)))&&(!filters.kind||p.kind===filters.kind)&&(!filters.question||p.question===filters.question)&&(!filters.role||p.role===filters.role)&&words.every(w=>normalize([...p.title,...p.description].join(" ")).includes(w)));
-  const measured=!!popularity&&presetCatalog.every(p=>Number.isFinite(popularity.counts[p.id])&&popularity.counts[p.id]>=0);
+  const items=availableCatalogPresets.filter(p=>(!filters.worlds.length||filters.worlds.some(w=>p.worlds.includes(w)))&&(!filters.kind||p.kind===filters.kind)&&(!filters.question||p.question===filters.question)&&(!filters.role||p.role===filters.role)&&words.every(w=>normalize([...p.title,...p.description].join(" ")).includes(w)));
+  const measured=!!popularity&&availableCatalogPresets.every(p=>Number.isFinite(popularity.counts[p.id])&&popularity.counts[p.id]>=0);
   items.sort((a,b)=>(filters.sort==="newest"?b.introducedAt.localeCompare(a.introducedAt):filters.sort==="popular"&&measured?popularity!.counts[b.id]-popularity!.counts[a.id]:0)||b.priority-a.priority||a.id.localeCompare(b.id));
   return {items,popularityMeasured:measured};
 }

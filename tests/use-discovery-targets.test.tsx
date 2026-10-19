@@ -14,6 +14,11 @@ const initial={criteria,cursors:[null] as (string|null)[],cached:null as TargetS
 beforeEach(()=>{vi.useFakeTimers();vi.mocked(fetchDiscoveryTargets).mockResolvedValue(response());vi.mocked(fetchDatasetRevision).mockResolvedValue({dataset:"public-kg",revision:"r1"});});
 afterEach(()=>{cleanup();vi.useRealTimers();vi.resetAllMocks();});
 const tick=()=>act(()=>vi.advanceTimersByTimeAsync(250));
+it("条件を変えずに画面へ戻ると版だけを確認して結果を再利用し、版変更は409にする",async()=>{
+ const {result,rerender}=renderHook(p=>useDiscoveryTargets(p.criteria,p.cursors,p.cached,p.enabled,p.composing),{initialProps:initial});await tick();expect(fetchDiscoveryTargets).toHaveBeenCalledTimes(1);
+ rerender({...initial,enabled:false});rerender(initial);await tick();expect(fetchDiscoveryTargets).toHaveBeenCalledTimes(1);expect(fetchDatasetRevision).toHaveBeenCalledTimes(1);expect(result.current.result?.revision).toBe("r1");
+ vi.mocked(fetchDatasetRevision).mockResolvedValue({dataset:"public-kg",revision:"r2"});rerender({...initial,enabled:false});rerender(initial);await tick();expect(result.current.conflict).toBe(true);expect(result.current.result).toBeUndefined();expect(fetchDiscoveryTargets).toHaveBeenCalledTimes(1);
+});
 it("名前なしPOST・条件変更の即時更新とAbort・遅着応答排除",async()=>{
  let finish!:(r:TargetSearchResponse)=>void;vi.mocked(fetchDiscoveryTargets).mockReturnValueOnce(new Promise(resolve=>finish=resolve));
  const {result,rerender}=renderHook(p=>useDiscoveryTargets(p.criteria,p.cursors,p.cached,p.enabled,p.composing),{initialProps:initial});await tick();
