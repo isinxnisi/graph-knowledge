@@ -1,0 +1,16 @@
+/* Shared hierarchy for preset and Entity results, without changing their actions. */
+.row {display:grid;grid-template-columns:minmax(0,1fr) 190px;gap:18px;align-items:center;}
+.information {display:flex;align-items:flex-start;gap:10px;min-width:0;}
+.copy {min-width:0;overflow-wrap:anywhere;}
+.actions {display:flex;flex-direction:column;align-items:flex-end;gap:4px;min-width:0;}
+.row .actions > .primary {display:inline-flex;align-items:center;justify-content:center;gap:5px;min-height:33px;box-sizing:border-box;padding:7px 10px;border:0;border-radius:5px;background:var(--color-accent-soft);color:var(--color-accent-strong);font-size:11.5px;font-weight:500;line-height:1.5;text-decoration:none;text-align:center;}
+.row .actions > .primary:visited,.row .actions > .primary:hover {color:var(--color-accent-strong);}
+.row .actions > .primary:hover {outline:1px solid var(--color-accent);}
+.row .actions > .secondary {display:inline-flex;align-items:center;justify-content:flex-end;gap:5px;min-height:30px;padding:3px 0;border:0;background:transparent;color:var(--color-accent-strong);font-size:11.5px;font-weight:400;line-height:1.5;text-align:right;}
+.actions svg {width:12px;height:12px;flex:none;}
+@media(max-width:850px){
+ .row {grid-template-columns:minmax(0,1fr);gap:6px;}
+ .actions {flex-direction:row;flex-wrap:wrap;align-items:center;justify-content:flex-start;gap:4px 12px;}
+ .row .actions > .primary,.row .actions > .secondary {min-height:34px;}
+ .row .actions > .secondary {text-align:left;justify-content:flex-start;}
+}
