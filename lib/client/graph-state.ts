@@ -4,7 +4,7 @@ import { ClientApiError } from "./api";
 import { dataReleaseLabels } from "../i18n/data-release";
 import { normalizeRelationCondition, relationAcceptsClaim, relationConditionKey, type RelationCondition } from "../domain/relation-conditions";
 import { patternGraphResponseSchema, routeKey, type PatternGraphResponse } from "../domain/pattern-graph";
-import { validateRelationRoute, type RouteRef } from "../domain/relation-patterns";
+import { validateRelationRoute, patternAcceptsRoot, routeOwnedBy, type RouteRef } from "../domain/relation-patterns";
 
 export const GRAPH_LIMITS = { entities: 100, claims: 200 } as const;
 export const CACHE_LIMITS = { entities: 400, claims: 800 } as const;
@@ -138,7 +138,7 @@ export type PatternExecution = PatternSource & {
 export const PATTERN_SOURCE_LIMIT = 40;
 export function emptyPatternGraph(root: EntitySummary, relation: RelationCondition, generation = 0): GraphState {
   const normalized = normalizeRelationCondition(relation);
-  if (normalized.type !== "pattern" || root.kind !== "work") throw Error("Pattern requires a work");
+  if (!patternAcceptsRoot(normalized,root.kind)) throw Error("Invalid pattern subject position");
   return projectGraph({ ...emptyGraph(generation), relation: normalized, predicates: ["CONTRIBUTED_TO"], contributionRoles: normalized.contributionRoles, conditionKey: relationConditionKey(normalized), roots: [root.id], centerId: root.id,
     cacheNodes: { [root.id]: root }, execution: { type: "pattern", routes: {}, sources: {}, requiredRoute: null, candidateBoundary: null, nextCursor: null, hasMore: false, loading: false, request: 0, error: null, blocked: false } });
 }
@@ -149,7 +149,7 @@ function pattern(graph: GraphState) {
 function verifiedPatternClaims(graph: GraphState) {
   const execution = pattern(graph), allowed = new Set<string>();
   const nodes = new Map(Object.entries(graph.cacheNodes)), claims = new Map(Object.entries(graph.cacheClaims));
-  if (!graph.centerId || nodes.get(graph.centerId)?.kind !== "work") throw Error("Missing pattern root");
+  if (!graph.centerId || !patternAcceptsRoot(graph.relation!,nodes.get(graph.centerId)?.kind??"")) throw Error("Missing pattern root");
   for (const { route } of Object.values(execution.routes)) {
     validateRelationRoute(graph.relation!, route.nodeIds[0], route, nodes, claims);
     route.claimIds.forEach(id => allowed.add(id));
@@ -162,7 +162,7 @@ export function patternSource(graph: GraphState, id: string): PatternSource | nu
 }
 export function patternSourceForNode(graph: GraphState, id: string, more = false): string | null {
   const ex = pattern(graph);
-  if (graph.cacheNodes[id]?.kind === "work") return !more || patternSource(graph, id)?.hasMore ? id : null;
+  if (graph.cacheNodes[id]?.kind === "work"||graph.relation?.type==="pattern"&&graph.relation.pattern.revision===2&&graph.cacheNodes[id]?.kind==="person") return !more || patternSource(graph, id)?.hasMore ? id : null;
   const anchors = [...new Set(Object.values(ex.routes).filter(e => e.route.nodeIds.includes(id)).map(e => e.route.nodeIds[0]))].sort();
   return anchors.find(anchor => patternSource(graph, anchor)?.hasMore) ?? null;
 }
@@ -202,7 +202,7 @@ export function mergePatternPage(graph: GraphState, raw: PatternGraphResponse, a
 // commit only after EVERY source succeeds at one public revision.
 export function restorePatternGraph(graph: GraphState, raw: PatternGraphResponse): GraphState {
   const response = patternGraphResponseSchema.parse(raw), old = pattern(graph);
-  const expected = Object.values(old.routes).filter(r => r.route.nodeIds[0] === response.root.id);
+  const expected = Object.values(old.routes).filter(r => routeOwnedBy(graph.relation!,r.route,response.root.id));
   if (response.operation !== "restore" || relationConditionKey(response.relation) !== graph.conditionKey
     || response.verifiedRoutes.length !== expected.length || response.verifiedRoutes.some(r => JSON.stringify(old.routes[routeKey(r)]?.route) !== JSON.stringify(r))) throw Error("Incomplete route restoration");
   if (graph.revision && graph.revision !== response.revision) throw new ClientApiError(dataReleaseLabels().changed, 409);

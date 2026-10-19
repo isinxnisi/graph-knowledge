@@ -18,7 +18,7 @@ export const adjacentRelationSchema = z.strictObject({
   }
 });
 export const otherWorksRelationSchema = z.strictObject({
-  version: z.literal(1), type: z.literal("pattern"), pattern: z.strictObject({ id: z.literal("other-works"), revision: z.literal(1) }),
+  version: z.literal(1), type: z.literal("pattern"), pattern: z.strictObject({ id: z.literal("other-works"), revision: z.union([z.literal(1), z.literal(2)]) }),
   polarity: z.literal("affirmed"), contributionRoles: values(roleIdSchema),
 });
 export const relationConditionSchema = z.discriminatedUnion("type", [adjacentRelationSchema, otherWorksRelationSchema]);

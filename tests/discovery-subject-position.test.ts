@@ -1,0 +1,51 @@
+import { afterEach, expect, it, vi } from "vitest";
+import { targetSearchRequestSchema } from "../lib/domain/discovery-targets";
+import { matchWitnessSchema } from "../lib/domain/relation-patterns";
+import { emptyPatternGraph, mergePatternPage, closeExpansion, reopenExpansion, openPatternNode } from "../lib/client/graph-state";
+import { captureWorkspace, rebuildWorkspace, workspaceSchema } from "../lib/client/saved-workspace";
+import { discoveryRelationHref, parseDiscoveryHandoff } from "../lib/client/discovery-relation-navigation";
+import { decodeExploration } from "../lib/client/exploration-url";
+import { relationConditionKey } from "../lib/domain/relation-conditions";
+import { id, page, route, relation as oldRelation } from "./pattern-graph-fixture";
+import { fetchEntity } from "../lib/client/api";
+import { fetchPatternGraph } from "../lib/client/pattern-graph";
+vi.mock("../lib/client/api",async original=>({...await original<typeof import("../lib/client/api")>(),fetchEntity:vi.fn()}));
+vi.mock("../lib/client/pattern-graph",()=>({fetchPatternGraph:vi.fn()}));
+afterEach(()=>vi.resetAllMocks());
+const relation={...oldRelation,pattern:{id:"other-works" as const,revision:2 as const}};
+const r=route(100,2),base=page([r]),person={...base.nodes.find(n=>n.id===id(100))!,aliases:[],event:null};
+const body={...base,version:2 as const,relation,root:person};
+it("新旧検索の名前照合先・kindを明示し、旧POSTで人物や新条件を許可しない",()=>{
+ const req={version:2,dataset:"public-kg",criteria:{q:"　浦沢　",kind:"person",relation,nameTarget:"subject"},revision:null,after:null};
+ expect(targetSearchRequestSchema.parse(req).criteria.q).toBe("浦沢");
+ expect(targetSearchRequestSchema.safeParse({...req,criteria:{...req.criteria,nameTarget:"contributor"}}).success).toBe(false);
+ expect(targetSearchRequestSchema.safeParse({...req,version:1}).success).toBe(false);
+ expect(targetSearchRequestSchema.safeParse({...req,criteria:{...req.criteria,kind:"work",nameTarget:"contributor"}}).success).toBe(true);
+});
+it("人物rootでも完全証拠のClaimだけを通常の枝として開閉・再開できる",()=>{
+ const graph=mergePatternPage(emptyPatternGraph(person,relation),body,null);
+ expect(graph.centerId).toBe(person.id);expect(Object.keys(graph.claims).sort()).toEqual([...r.claimIds].sort());
+ const closed=closeExpansion(graph,person.id);expect(Object.keys(closed.nodes)).toEqual([person.id]);
+ expect(reopenExpansion(closed,person.id).claims).toEqual(graph.claims);
+ expect(openPatternNode(graph,id(1)).centerId).toBe(person.id);
+});
+it("日本語の名前一致文脈と中央人物の証拠をURLで失わず、旧形式へ縮退しない",()=>{
+ const witness=matchWitnessSchema.parse({version:2,dataset:"public-kg",revision:"r1",conditionKey:relationConditionKey(relation),route:r,subjectId:person.id,subjectPosition:"contributor",matchContext:{q:"浦沢",kind:"person",nameTarget:"subject"}});
+ const href=discoveryRelationHref({entity:person,relation,revision:"r1",witness}),params=new URL(href,"https://example.invalid").searchParams;
+ const workspace=decodeExploration(params.get("s")!,person.id,"public-kg");
+ expect(workspace.version).toBe(3);expect(parseDiscoveryHandoff(params.get("match"),workspace)?.witness).toEqual(witness);
+ expect(workspaceSchema.safeParse({...workspace,version:2}).success).toBe(false);
+ expect(()=>discoveryRelationHref({entity:person,relation,revision:"r1",witness:null,unmatched:true})).toThrow();
+});
+it("人物rootの開閉状態をWorkspaceへ保存し、同じ完全証拠の再検証後だけ復元する",async()=>{
+ const graph=closeExpansion(mergePatternPage(emptyPatternGraph(person,relation),body,null),person.id);
+ const saved=captureWorkspace("public-kg","Creator",graph,null);
+ vi.mocked(fetchEntity).mockResolvedValue({entity:person});
+ const restoredBody={version:body.version,dataset:body.dataset,revision:body.revision,relation:body.relation,root:body.root,nodes:body.nodes,claims:body.claims,operation:"restore",verifiedRoutes:[r],continuation:{state:"restart"}};
+ vi.mocked(fetchPatternGraph).mockResolvedValue(restoredBody as never);
+ const restored=await rebuildWorkspace(saved,new AbortController().signal);
+ expect(restored.graph.centerId).toBe(person.id);expect(restored.graph.expansions[person.id].open).toBe(false);
+ expect(reopenExpansion(restored.graph,person.id).claims).toEqual(graph.cacheClaims);
+ vi.mocked(fetchPatternGraph).mockResolvedValue({...restoredBody,verifiedRoutes:[],nodes:[person],claims:[]} as never);
+ await expect(rebuildWorkspace(saved,new AbortController().signal)).rejects.toThrow();
+});

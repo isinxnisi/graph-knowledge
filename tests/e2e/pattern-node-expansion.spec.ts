@@ -40,7 +40,7 @@ for(const [locale,width] of [["ja",1280],["en",390]] as const)test(`unified grap
   const expanded=await snap();expect(expanded.ids.length).toBeGreaterThan(creators.length+1);await doubleOverview(creator);await focus(creator);
   for(let n=0;n<2;n++){await tap(creator);await expect.poll(()=>pattern().entityState?.branches.find(b=>b.id===creator)?.open).toBe(false);expect((await snap()).ids).toContain(creator);await tap(creator);await expect.poll(()=>pattern().entityState?.branches.find(b=>b.id===creator)?.open).toBe(true);await expect.poll(async()=>(await snap()).edges).toEqual(expanded.edges);expect((await snap()).points).toEqual(expanded.points);}
   const endpoint=first.routes.find(r=>r.route.nodeIds[1]===creator)!.route.nodeIds[2];await focus(endpoint);await tap(endpoint);
-  await expect.poll(()=>pattern().entityState?.sources.length).toBe(2);await doubleOverview(endpoint);
+  await expect.poll(()=>pattern().entityState?.sources.some(s=>s.id===endpoint)).toBe(true);await doubleOverview(endpoint);
   await focus(endpoint);await tap(endpoint);await expect.poll(()=>pattern().entityState?.branches.find(b=>b.id===endpoint)?.open).toBe(false);await tap(endpoint);await expect.poll(()=>pattern().entityState?.branches.find(b=>b.id===endpoint)?.open).toBe(true);
   // The same endpoint remains supported when another creator owns its Claim.
   for(const id of creators){await focus(id);if(!pattern().entityState?.branches.find(b=>b.id===id)?.open){await tap(id);await expect.poll(()=>pattern().entityState?.branches.find(b=>b.id===id)?.open).toBe(true);}}

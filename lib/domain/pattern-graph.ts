@@ -2,12 +2,12 @@ import { z } from "zod";
 import { entityDetailSchema, entitySummarySchema, claimSummarySchema } from "./api";
 import { publicRevisionSchema } from "./discovery-targets";
 import { otherWorksRelationSchema } from "./relation-conditions";
-import { routeRefSchema, matchWitnessSchema, validateRelationRoute, type RouteRef } from "./relation-patterns";
+import { routeRefSchema, matchWitnessSchema, validateRelationRoute, witnessSubjectId, patternAcceptsRoot, type RouteRef } from "./relation-patterns";
 
 export const routeKey = (route: RouteRef) => route.nodeIds.join(":");
 const cursor = z.string().min(1).max(4096).regex(/^[A-Za-z0-9_-]+$/).nullable();
 export const patternGraphRequestSchema = z.strictObject({
-  version: z.literal(1), dataset: z.literal("public-kg"), rootId: z.uuidv4().transform(v => v.toLowerCase()),
+  version: z.union([z.literal(1),z.literal(2)]), dataset: z.literal("public-kg"), rootId: z.uuidv4().transform(v => v.toLowerCase()),
   relation: otherWorksRelationSchema, revision: publicRevisionSchema.nullable(),
   operation: z.discriminatedUnion("type", [
     z.strictObject({ type: z.literal("page"), after: cursor, requiredWitness: matchWitnessSchema.nullable() }),
@@ -16,12 +16,12 @@ export const patternGraphRequestSchema = z.strictObject({
 }).superRefine((r, ctx) => {
   const op = r.operation;
   const refs = op.type === "page" ? (op.requiredWitness ? [op.requiredWitness.route] : []) : [...op.routes, ...(op.candidateBoundary ? [op.candidateBoundary] : [])];
-  if (refs.some(p => p.nodeIds[0] !== r.rootId || p.claimIds.length !== 2)
+  if (r.version===1&&r.relation.pattern.revision!==1||refs.some(p => !(p.nodeIds[0]===r.rootId||r.version===2&&r.relation.pattern.revision===2&&p.nodeIds[1]===r.rootId) || p.claimIds.length !== 2)
     || op.type === "restore" && new Set(op.routes.map(routeKey)).size !== op.routes.length
-    || op.type === "page" && (op.after !== null && r.revision === null || op.requiredWitness && (r.revision === null || r.revision !== op.requiredWitness.revision))) ctx.addIssue({ code: "custom", message: "Invalid route request" });
+    || op.type === "page" && (op.after !== null && r.revision === null || op.requiredWitness && (witnessSubjectId(op.requiredWitness)!==r.rootId||r.revision === null || r.revision !== op.requiredWitness.revision))) ctx.addIssue({ code: "custom", message: "Invalid route request" });
 });
 export type PatternGraphRequest = z.infer<typeof patternGraphRequestSchema>;
-const base = z.strictObject({ version: z.literal(1), dataset: z.literal("public-kg"), revision: publicRevisionSchema,
+const base = z.strictObject({ version: z.union([z.literal(1),z.literal(2)]), dataset: z.literal("public-kg"), revision: publicRevisionSchema,
   relation: otherWorksRelationSchema, root: entityDetailSchema, nodes: z.array(entitySummarySchema).max(203), claims: z.array(claimSummarySchema).max(202) });
 export const patternGraphResponseSchema = z.discriminatedUnion("operation", [
   base.extend({ operation: z.literal("page"), match: z.enum(["matched", "not-matched"]), requiredRoute: routeRefSchema.nullable(), routes: z.array(routeRefSchema).max(12),
@@ -31,7 +31,7 @@ export const patternGraphResponseSchema = z.discriminatedUnion("operation", [
   ]) }),
 ]).superRefine((r, ctx) => {
   try {
-    if (r.root.kind !== "work") throw Error();
+    if (!patternAcceptsRoot(r.relation,r.root.kind)||r.version===1&&r.relation.pattern.revision!==1) throw Error();
     const nodes = new Map(r.nodes.map(n => [n.id, n])), claims = new Map(r.claims.map(c => [c.id, c]));
     if (nodes.size !== r.nodes.length || claims.size !== r.claims.length || !nodes.has(r.root.id)) throw Error();
     const routes = r.operation === "page" ? [...r.routes, ...(r.requiredRoute ? [r.requiredRoute] : [])] : r.verifiedRoutes;

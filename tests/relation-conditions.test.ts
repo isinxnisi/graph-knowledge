@@ -16,7 +16,7 @@ describe("共通関係条件v1", () => {
     expect(relationConditionKey(a)).toBe(relationConditionKey({ ...a, contributionRoles: ["DRAWING", "AUTHORSHIP"] }));
     expect(relationConditionKey(a)).not.toBe(relationConditionKey(normalizeRelationCondition(adjacent)));
   });
-  it.each([{}, { ...pattern, polarity: "all-records" }, { ...pattern, pattern: { id: "institution-bridge", revision: 1 } }, { ...pattern, pattern: { id: "other-works", revision: 2 } }, { ...pattern, stepRoles: [] }, { ...adjacent, traversal: "outgoing" }, { ...adjacent, predicates: ["AFFILIATED_WITH"], contributionRoles: [] }, { ...pattern, contributionRoles: ["WRITER"] }])("未知／未対応／不適合条件を拒否する: %j", input => { expect(() => normalizeRelationCondition(input)).toThrow(); });
+  it.each([{}, { ...pattern, polarity: "all-records" }, { ...pattern, pattern: { id: "institution-bridge", revision: 1 } }, { ...pattern, pattern: { id: "other-works", revision: 99 } }, { ...pattern, stepRoles: [] }, { ...adjacent, traversal: "outgoing" }, { ...adjacent, predicates: ["AFFILIATED_WITH"], contributionRoles: [] }, { ...pattern, contributionRoles: ["WRITER"] }])("未知／未対応／不適合条件を拒否する: %j", input => { expect(() => normalizeRelationCondition(input)).toThrow(); });
   it("null・空集合・全Roleを区別し、他predicateの限定へ転用しない", () => {
     const unqualified = claim(100, 0), drawing = claim(101, 0, { contribution: { roleId: "DRAWING", scope: null } });
     expect(relationAcceptsClaim(normalizeRelationCondition(pattern), unqualified)).toBe(true);

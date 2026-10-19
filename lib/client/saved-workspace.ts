@@ -9,7 +9,7 @@ import { CACHE_LIMITS, emptyExpansion, emptyGraph, projectGraph, withinLimits, t
 import type { GraphView } from "./graph-view";
 import { viewConditionsSchema } from "./saved-views";
 import { relationConditionSchema, relationAcceptsClaim, relationConditionKey } from "../domain/relation-conditions";
-import { routeRefSchema, validateRelationRoute } from "../domain/relation-patterns";
+import { routeRefSchema, validateRelationRoute, patternAcceptsRoot, routeOwnedBy } from "../domain/relation-patterns";
 import { publicRevisionSchema } from "../domain/discovery-targets";
 import { routeKey } from "../domain/pattern-graph";
 import { graphRelation, legacyRelation } from "./relation-state";
@@ -46,13 +46,13 @@ export const savedExecutionSchema = z.discriminatedUnion("type", [
     collapsedNodes: z.array(z.strictObject({ id: z.uuidv4(), routeKeys: z.array(z.string().min(1).max(128)).min(1).max(100).refine(keys => new Set(keys).size === keys.length) })).max(CACHE_LIMITS.entities).optional() }),
 ]);
 export const workspaceV2Schema = z.strictObject({
-  version: z.literal(2), dataset: z.enum(DATASET_MODES), id: z.uuidv4(), title: z.string().trim().min(1).max(80), savedAt: z.iso.datetime(), rootId: z.uuidv4(),
+  version: z.union([z.literal(2),z.literal(3)]), dataset: z.enum(DATASET_MODES), id: z.uuidv4(), title: z.string().trim().min(1).max(80), savedAt: z.iso.datetime(), rootId: z.uuidv4(),
   relation: relationConditionSchema, execution: savedExecutionSchema, observedRevision: publicRevisionSchema.nullable(),
   view: z.strictObject({ positions: z.record(z.uuidv4(), point).refine(v => Object.keys(v).length <= CACHE_LIMITS.entities),
     pan: point, zoom: z.number().min(0.15).max(2), initialLayoutDone: z.boolean() }).nullable(),
 }).superRefine((v, ctx) => {
   const ex = v.execution;
-  let valid = ex.type === v.relation.type;
+  let valid = ex.type === v.relation.type && (v.version===3)===(v.relation.type==="pattern"&&v.relation.pattern.revision===2);
   if (ex.type === "pattern") {
     const keys = ex.routes.map(r => routeKey(r.route));
     valid &&= v.dataset === "public-kg" && new Set(keys).size === keys.length
@@ -65,9 +65,9 @@ export const workspaceV2Schema = z.strictObject({
       const { branches, sources } = ex.entityState;
       valid &&= !ex.collapsedNodes && new Set(branches.map(b => b.id)).size === branches.length && new Set(sources.map(s => s.id)).size === sources.length
         && sources.some(s => s.id === v.rootId && s.requiredRouteKey === ex.requiredRouteKey && JSON.stringify(s.candidateBoundary) === JSON.stringify(ex.candidateBoundary))
-        && ex.routes.every(r => sources.some(s => s.id === r.route.nodeIds[0]))
-        && sources.every(s => (s.requiredRouteKey === null || ex.routes.some(r => routeKey(r.route) === s.requiredRouteKey && r.route.nodeIds[0] === s.id))
-          && (s.candidateBoundary === null || ex.routes.some(r => r.route.nodeIds[0] === s.id && JSON.stringify(r.route) === JSON.stringify(s.candidateBoundary))))
+        && ex.routes.every(r => sources.some(s => routeOwnedBy(v.relation,r.route,s.id)))
+        && sources.every(s => (s.requiredRouteKey === null || ex.routes.some(r => routeKey(r.route) === s.requiredRouteKey && routeOwnedBy(v.relation,r.route,s.id)))
+          && (s.candidateBoundary === null || ex.routes.some(r => routeOwnedBy(v.relation,r.route,s.id) && JSON.stringify(r.route) === JSON.stringify(s.candidateBoundary))))
         && branches.every(b => (b.id === v.rootId || ex.routes.some(r => r.route.nodeIds.includes(b.id)))
           && b.claimIds.every(id => ex.routes.some(r => r.route.claimIds.some((cid, i) => cid === id && [r.route.nodeIds[i], r.route.nodeIds[i + 1]].includes(b.id)))));
     }
@@ -104,7 +104,7 @@ export function captureWorkspace(dataset: DatasetMode, title: string, graph: Gra
   const branches = Object.entries(graph.expansions).map(([id, meta]) => ({ id, open: meta.open, pages: meta.pages.length }));
   if (branches.reduce((sum, branch) => sum + branch.pages, 0) > WORKSPACE_PAGE_LIMIT) throw new WorkspaceError("limit");
   return workspaceV2Schema.parse({
-    version: 2, dataset, id: crypto.randomUUID(), title, savedAt: new Date().toISOString(), rootId: graph.centerId,
+    version: graph.relation?.type==="pattern"&&graph.relation.pattern.revision===2?3:2, dataset, id: crypto.randomUUID(), title, savedAt: new Date().toISOString(), rootId: graph.centerId,
     relation: graphRelation(graph), observedRevision: graph.revision ?? null,
     execution: graph.execution?.type === "pattern" ? { type: "pattern", routes: Object.values(graph.execution.routes), requiredRouteKey: graph.execution.requiredRoute, candidateBoundary: graph.execution.candidateBoundary,
       entityState: { version: 1, branches: Object.entries(graph.expansions).map(([id, m]) => ({ id, open: m.open, claimIds: [...new Set(m.pages.flatMap(p => p.claimIds))] })),
@@ -210,7 +210,7 @@ export async function rebuildWorkspace(value: WorkspaceInput, signal: AbortSigna
   signal.throwIfAborted();
   if (root.id !== workspace.rootId) throw new WorkspaceError("response");
   if (conditions.type === "pattern") {
-    if (workspace.execution.type !== "pattern" || root.kind !== "work") throw new WorkspaceError("response");
+    if (workspace.execution.type !== "pattern" || !patternAcceptsRoot(conditions,root.kind)) throw new WorkspaceError("response");
     const ex = workspace.execution;
     const sources = ex.entityState?.sources ?? [{ id: root.id, requiredRouteKey: ex.requiredRouteKey, candidateBoundary: ex.candidateBoundary }];
     let graph = emptyPatternGraph(root, conditions);
@@ -221,7 +221,7 @@ export async function rebuildWorkspace(value: WorkspaceInput, signal: AbortSigna
     progress(0, ex.routes.length); let done = 0;
     for (const source of sources) {
       signal.throwIfAborted();
-      const refs = ex.routes.filter(r => r.route.nodeIds[0] === source.id).map(r => r.route);
+      const refs = ex.routes.filter(r => routeOwnedBy(conditions,r.route,source.id)).map(r => r.route);
       const response = await fetchPatternGraph({ version: 1, dataset: "public-kg", rootId: source.id, relation: conditions, revision: graph.revision ?? null,
         operation: { type: "restore", routes: refs, observedRevision: workspace.observedRevision, candidateBoundary: source.candidateBoundary } }, signal);
       signal.throwIfAborted(); graph = restorePatternGraph(graph, response); done += refs.length; progress(done, ex.routes.length);
@@ -323,7 +323,7 @@ export async function restartWorkspace(value: WorkspaceInput, signal: AbortSigna
   if (workspace.relation.type === "adjacent") return rebuildWorkspace({ ...workspace, execution: { type: "adjacent", branches: [{ id: workspace.rootId, open: true, pages: 1 }] }, view: null }, signal);
   const root = (await fetchEntity(workspace.rootId, signal)).entity;
   signal.throwIfAborted();
-  if (root.id !== workspace.rootId || root.kind !== "work") throw new WorkspaceError("response");
+  if (root.id !== workspace.rootId || !patternAcceptsRoot(workspace.relation,root.kind)) throw new WorkspaceError("response");
   const response = await fetchPatternGraph({ version: 1, dataset: "public-kg", rootId: workspace.rootId, relation: workspace.relation, revision: null,
     operation: { type: "page", after: null, requiredWitness: null } }, signal);
   signal.throwIfAborted();

@@ -9,6 +9,8 @@ import * as readDb from "../lib/server/read-db";
 import { discoverEntities } from "../lib/server/discovery-search";
 import { PATH_NEIGHBORS } from "../lib/server/discovery-paths";
 import { readPublicRevision } from "../lib/server/public-revision";
+import { executePatternGraph } from "../lib/server/pattern-graph";
+import { handleSubjectMatches } from "../lib/server/discovery-subject-matches";
 import type { TargetSearchRequest } from "../lib/domain/discovery-targets";
 
 if (process.env.TARGETS_ISOLATED_TEST !== "1" || process.env.NEO4J_URI !== "bolt://127.0.0.1:7695" || process.env.GRAPH_DATASET !== "public-kg") throw Error("Use discovery:targets:integration, with its disposable DB only");
@@ -22,6 +24,7 @@ const adjacent = { version: 1, type: "adjacent", predicates: ["CONTRIBUTED_TO"],
 const input = (q = "", relation: unknown = pattern) => parseTargetSearch({ version: 1, dataset: "public-kg", criteria: { q, kind: "work", relation }, revision: null, after: null });
 const run = async (query: string, params: Record<string, unknown> = {}) => { const s = driver.session(); try { return await s.run(query, params); } finally { await s.close(); } };
 const metrics: unknown[] = [];
+const v2=(q:string,kind:"person"|"work",nameTarget:"subject"|"contributor"="subject",roles:string[]|null=null)=>({version:2,dataset:"public-kg",criteria:{q,kind,nameTarget,relation:{...pattern,pattern:{id:"other-works",revision:2},contributionRoles:roles}},revision:"r1",after:null});
 beforeAll(async () => {
   // All write operations are behind the explicit disposable-DB guard above.
   await run("CREATE CONSTRAINT entity_id IF NOT EXISTS FOR (e:Entity) REQUIRE e.id IS UNIQUE");
@@ -139,4 +142,36 @@ it("証拠の改ざん・非公開化・公開版の変更を再検証で拒否�
   await expect(readRelationTransaction(tx => verifyRelationWitness(tx, result.criteria.relation!, match.witness), signal())).rejects.toMatchObject({ status: 409 });
   await run("MATCH(s:DatasetState {id:'public-kg'}) SET s.revision='r1'");
   await readRelationTransaction(tx => readPublicRevision(tx, "r1"), signal());
+});
+it("v2は中央人物・関連人物名の作品を完全判定し、同じ人物の証拠を直接再検証する",async()=>{
+ const start=performance.now();
+ const people=await searchDiscoveryTargets(v2("Bulk contributor","person"),signal());
+ expect(people.items.map(i=>i.entity.id)).toEqual([id(500)]);
+ const match=people.items[0].match;if(match.status!=="matched")throw Error();
+ expect(match.witness).toMatchObject({version:2,subjectId:id(500),subjectPosition:"contributor",route:{nodeIds:[id(0),id(500),id(1)]}});
+ await readRelationTransaction(tx=>verifyRelationWitness(tx,people.criteria.relation!,match.witness),signal());
+ const works=await searchDiscoveryTargets(v2("Degree 1000","work","contributor",["DRAWING"]),signal());
+ expect(new Set(works.items.map(i=>i.entity.id))).toEqual(new Set([id(100),id(101)]));
+ for(const item of works.items){if(item.match.status!=="matched")throw Error();expect(item.match.witness.route.nodeIds[1]).toBe(id(11000));}
+ expect((await searchDiscoveryTargets(v2("Role 170 person","work","contributor",["AUTHORSHIP"]),signal())).items).toEqual([]);
+ expect((await searchDiscoveryTargets(v2("Dead end person","person"),signal())).items).toEqual([]);
+ await expect(readRelationTransaction(tx=>verifyRelationWitness(tx,people.criteria.relation!,{...match.witness,matchContext:{q:"Other person",kind:"person",nameTarget:"subject"}}),signal())).rejects.toThrow();
+ metrics.push({scenario:"v2-person-and-related-name",milliseconds:Math.round(performance.now()-start)});
+});
+it("人物Graphは作品対を二乗生成せずページング・証拠保持・復元できる",async()=>{
+ const result=await searchDiscoveryTargets(v2("Bulk contributor","person"),signal()),item=result.items[0];if(item.match.status!=="matched")throw Error();
+ const req={version:2,dataset:"public-kg",rootId:id(500),relation:result.criteria.relation,revision:"r1"};
+ let after:string|null=null;const ends:string[]=[];let first;const times=[];
+ do{const start=performance.now();const page=await executePatternGraph({...req,operation:{type:"page",after,requiredWitness:item.match.witness}},signal());times.push(Math.round(performance.now()-start));if(page.operation!=="page")throw Error();first??=page;
+ ends.push(...page.routes.map(r=>r.nodeIds[2]));after=page.page.nextCursor;}while(after);
+ expect(ends.length).toBe(50);expect(new Set(ends).size).toBe(50);
+ const restored=await executePatternGraph({...req,operation:{type:"restore",routes:first!.routes,observedRevision:"r1",candidateBoundary:first!.routes.at(-1)}},signal());
+ expect(restored.operation).toBe("restore");metrics.push({scenario:"v2-contributor-pages",milliseconds:times});
+});
+it("B方式は到達経路と独立した候補自身の完全条件を一括照合する",async()=>{
+ const response=await handleSubjectMatches(new Request("http://localhost/api/discovery/subject-matches",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({version:1,ids:[id(500),id(100),id(120),id(900)],relation:v2("","work").criteria.relation,revision:"r1"})}));
+ expect(response.status).toBe(200);const body=await response.json();
+ expect(body.items.find((i:{entity:{id:string}})=>i.entity.id===id(500)).status).toBe("matched");
+ expect(body.items.find((i:{entity:{id:string}})=>i.entity.id===id(120)).status).toBe("not-matched");
+ expect(body.items.find((i:{entity:{id:string}})=>i.entity.id===id(900)).status).toBe("incompatible");
 });

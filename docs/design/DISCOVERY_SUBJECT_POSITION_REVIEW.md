@@ -1,5 +1,7 @@
 # Discovery：対象の位置と関係パターンの意味レビュー
 
+後続指示で基本方針を採用。名前UIは1入力＋照合先バッジ、選択対象はB方式とする。[採用契約・実装記録](DISCOVERY_SUBJECT_CONNECTIONS.md)を現行の追補とする。以下は採用前の比較・観測記録。
+
 2026-10-19。調査対象 `c174a12`（STEP 4aと安定性修正）。**次の実装方針の提案であり、採用済み契約・UI・API・保存形式を変更するものではない。** [共通関係契約](DISCOVERY_RELATION_CONTRACT.md)、[対象検索](DISCOVERY_TARGET_SEARCH.md)、[Entity操作統一](DISCOVERY_GRAPH_ENTITY_INTERACTION.md)を再利用する。今回は文書と公開KGの読み取りだけ。
 
 ## 1. 結論と現行の不一致

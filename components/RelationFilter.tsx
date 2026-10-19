@@ -50,7 +50,7 @@ function ConditionEditor({ value, roles, positions, eventRoles, onApply, onCance
   const normalizedRoles = normalizeContributionRoles(draftRoles, normalized);
   const normalizedPositions = normalizeOrganizationPositions(draftPositions, normalized);
   const normalizedEventRoles = normalizeEventRoles(draftEventRoles, normalized);
-  const nextRelation = normalizeRelationCondition(mode === "pattern" ? { version: 1, type: "pattern", pattern: { id: "other-works", revision: 1 }, polarity: "affirmed", contributionRoles: draftRoles } : { version: 1, type: "adjacent", traversal: "either", polarity, predicates: normalized, contributionRoles: normalizedRoles, organizationPositions: normalizedPositions, eventRoles: normalizedEventRoles });
+  const nextRelation = normalizeRelationCondition(mode === "pattern" ? { version: 1, type: "pattern", pattern: { id: "other-works", revision: initial.type==="pattern"?initial.pattern.revision:2 }, polarity: "affirmed", contributionRoles: draftRoles } : { version: 1, type: "adjacent", traversal: "either", polarity, predicates: normalized, contributionRoles: normalizedRoles, organizationPositions: normalizedPositions, eventRoles: normalizedEventRoles });
   const dirty = relationConditionKey(nextRelation) !== relationConditionKey(initial);
   useEffect(() => { dialog.current?.showModal(); }, []);
   const cancel = useDialogDismiss(dialog, () => { onCancelRelation?.(); dialog.current?.close(); onCancel(); });

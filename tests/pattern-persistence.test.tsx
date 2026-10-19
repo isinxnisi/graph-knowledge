@@ -160,7 +160,7 @@ describe("Graph編集・自由探索・Undo", () => {
     expect(apply).not.toHaveBeenCalled(); expect(screen.getByTestId("active-predicates").textContent).not.toContain("同じつくり手");
     fireEvent.click(screen.getByRole("button", { name: "適用" }));
     await waitFor(() => expect(screen.getByRole("alert").textContent).toContain("元の探索は保持"));
-    expect(apply).toHaveBeenCalledWith(relation);
+    expect(apply).toHaveBeenCalledWith({...relation,pattern:{id:"other-works",revision:2}});
     fireEvent.click(screen.getByRole("button", { name: "キャンセル" }));
     expect(cancel).toHaveBeenCalledOnce(); expect(screen.queryByRole("dialog")).toBeNull();
   });

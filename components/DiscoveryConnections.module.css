@@ -42,3 +42,9 @@
  .flow .back {margin-top:0;min-height:30px;padding:5px 0;background:transparent;}
 }
 @media(prefers-reduced-motion:reduce){.targetRow{animation:none;}}
+
+.candidates { border-top:1px solid var(--line, #d9e1e4); margin-top:1rem; padding-top:.55rem; }
+.candidates > div { margin-top:.45rem; }
+.candidateRow { border-bottom:1px solid var(--line, #d9e1e4); padding:.7rem 0; }
+.candidateRow h4 { margin:0 0 .25rem; font-size:.92rem; }
+.candidateRow small { display:block; font-size:.72rem; color:var(--muted, #5c7184); }

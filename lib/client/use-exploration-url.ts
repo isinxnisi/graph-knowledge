@@ -20,6 +20,7 @@ export function useExplorationUrl({ dataset, initialRoot, graph, capture, apply,
   const [busy, setBusy] = useState(!!initialRoot);
   const [failure, setFailure] = useState<string | null>(null);
   const [notice, setNotice] = useState("");
+  const [searchOrigin,setSearchOrigin]=useState<{root:string;q:string;target:string}|null>(null);
   const [attempt, setAttempt] = useState(0);
   const restartRequested = useRef<number | null>(null);
   const [canRestart, setCanRestart] = useState(false);
@@ -102,6 +103,7 @@ export function useExplorationUrl({ dataset, initialRoot, graph, capture, apply,
         if(handoff){const observed=await fetchDatasetRevision(controller.signal);if(observed.dataset!=="public-kg"||observed.revision!==handoff.revision||rebuilt.graph.revision!==handoff.revision)throw new ExplorationUrlError("changed");}
         controller.signal.throwIfAborted();
         latest.current.apply(rebuilt);
+        if(handoff?.witness?.version===2&&handoff.witness.matchContext.q)setSearchOrigin({root:workspace.rootId,q:handoff.witness.matchContext.q,target:handoff.witness.matchContext.nameTarget});
         setFailure(null); setReady(true);
       } catch (error) {
         if (disposed) return;
@@ -118,7 +120,7 @@ export function useExplorationUrl({ dataset, initialRoot, graph, capture, apply,
     return () => { disposed = true; clearTimeout(timeout); controller.abort(); };
     // Restore only on entry/retry, never in response to our own replaceState.
   }, [initialRoot, dataset, attempt, schedule]);
-  return { busy, failure, notice, ready, schedule, flush: update, canRestart, restart: () => { if (savedInput.current?.relation.type === "pattern") { setBusy(true); setFailure(null); restartRequested.current = attempt + 1; setAttempt(a => a + 1); } }, retry: () => { restartRequested.current = null; setBusy(true); setFailure(null); setAttempt(a => a + 1); },
+  return { busy, failure, notice, searchOrigin:searchOrigin?.root===graph.centerId?searchOrigin:null, ready, schedule, flush: update, canRestart, restart: () => { if (savedInput.current?.relation.type === "pattern") { setBusy(true); setFailure(null); restartRequested.current = attempt + 1; setAttempt(a => a + 1); } }, retry: () => { restartRequested.current = null; setBusy(true); setFailure(null); setAttempt(a => a + 1); },
     abandon: () => { failed.current = false; setFailure(null); history.replaceState(history.state, "", location.pathname.startsWith("/en") ? "/en" : "/"); },
     copy: async () => { if (!update()) return; try { await navigator.clipboard.writeText(location.href); setNotice(explorationUrlLabels(locale).copied); } catch { setNotice(explorationUrlLabels(locale).manualCopy); } } };
 }

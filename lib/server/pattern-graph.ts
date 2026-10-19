@@ -3,11 +3,11 @@ import { z } from "zod";
 import { int } from "neo4j-driver";
 import { patternGraphRequestSchema, patternGraphResponseSchema, type PatternGraphRequest } from "../domain/pattern-graph";
 import { relationConditionKey } from "../domain/relation-conditions";
-import { RelationWitnessError, routeRefSchema, type RouteRef } from "../domain/relation-patterns";
+import { RelationWitnessError, routeRefSchema, patternAcceptsRoot, type RouteRef } from "../domain/relation-patterns";
 import { entityDetail, entitySummary } from "./mappers";
 import { readRelationTransaction } from "./read-db";
 import { readPublicRevision } from "./public-revision";
-import { OTHER_WORKS_PAGE, relationQueryParameters, materializeRelationRoutes, verifyRelationWitness, findFirstRelationRoutes, type RelationReadTx } from "./relation-pattern-execution";
+import { OTHER_WORKS_PAGE, CONTRIBUTOR_WORKS_PAGE, relationQueryParameters, materializeRelationRoutes, verifyRelationWitness, findFirstRelationRoutes, type RelationReadTx } from "./relation-pattern-execution";
 import { RelationRequestError, handleRelationPost } from "./relation-http";
 
 const invalid = (reason: "INVALID_REQUEST" | "UNSUPPORTED_CONDITION" | "INVALID_CONDITION" | "INVALID_CURSOR" | "INVALID_WITNESS" | "RESTORE_INCOMPLETE") => new RelationRequestError(400, "INVALID_ARGUMENT", reason, "経路の条件または参照を確認してください。");
@@ -25,7 +25,8 @@ function encode(input: PatternGraphRequest, revision: string, route: RouteRef) {
   return Buffer.from(JSON.stringify({ v: 1, operation: "pattern-page", dataset: "public-kg", rootId: input.rootId, conditionKey: relationConditionKey(input.relation), revision, person: route.nodeIds[1], work: route.nodeIds[2] })).toString("base64url");
 }
 async function candidates(tx: RelationReadTx, input: PatternGraphRequest, boundary: { person: string; work: string } | null, take: number) {
-  const result = await tx.run(OTHER_WORKS_PAGE, { ...relationQueryParameters(input.relation), rootId: input.rootId, afterPerson: boundary?.person ?? null, afterWork: boundary?.work ?? null, take: int(take) });
+  const query=input.version===2?`CALL { ${OTHER_WORKS_PAGE} UNION ${CONTRIBUTOR_WORKS_PAGE} } RETURN nodeIds,claimIds ORDER BY nodeIds[1],nodeIds[2] LIMIT $take`:OTHER_WORKS_PAGE;
+  const result = await tx.run(query, { ...relationQueryParameters(input.relation), rootId: input.rootId, afterPerson: boundary?.person ?? null, afterWork: boundary?.work ?? null, take: int(take) });
   return result.records.map(row => routeRefSchema.parse({ nodeIds: row.get("nodeIds"), claimIds: row.get("claimIds") }));
 }
 async function validateReferences<T>(action: () => Promise<T>, reason: "INVALID_WITNESS" | "RESTORE_INCOMPLETE"): Promise<T> {
@@ -39,8 +40,8 @@ export async function executePatternGraph(raw: unknown, signal: AbortSignal) {
     const roots = await tx.run("MATCH(e:Entity {id:$id}) RETURN properties(e) AS entity", { id: input.rootId });
     if (!roots.records.length) throw new RelationRequestError(404, "NOT_FOUND", "ROOT_NOT_FOUND", "対象が見つかりません。");
     const properties = roots.records[0].get("entity"), root = entityDetail(properties);
-    if (root.kind !== "work") throw invalid("INVALID_CONDITION");
-    const base = { version: 1, dataset: "public-kg", revision, relation: input.relation, root };
+    if (!patternAcceptsRoot(input.relation,root.kind)) throw invalid("INVALID_CONDITION");
+    const base = { version: input.version, dataset: "public-kg", revision, relation: input.relation, root };
     const op = input.operation;
     if (op.type === "page") {
       let boundary: z.infer<typeof cursorSchema> | null = null;
@@ -53,7 +54,7 @@ export async function executePatternGraph(raw: unknown, signal: AbortSignal) {
       if (op.requiredWitness) {
         const verified = await validateReferences(() => verifyRelationWitness(tx, input.relation, op.requiredWitness), "INVALID_WITNESS");
         required = verified.witness.route;
-      } else required = (await findFirstRelationRoutes(tx, input.relation, [input.rootId])).get(input.rootId) ?? null;
+      } else required = (await findFirstRelationRoutes(tx, input.relation, [input.rootId],{kind:root.kind,q:"",nameTarget:"subject"})).get(input.rootId) ?? null;
       const rows = required ? await candidates(tx, input, boundary, 13) : [];
       const routes = rows.slice(0, 12), hasMore = rows.length > 12;
       const material = await materializeRelationRoutes(tx, input.relation, [...routes, ...(required ? [required] : [])], revision);

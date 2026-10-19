@@ -1,5 +1,7 @@
 # Discovery共通関係条件：STEP 1 設計契約 v1
 
+2026-10-19追補：[対象位置・名前照合・B方式の契約](DISCOVERY_SUBJECT_CONNECTIONS.md)を追加採用。以下のrev1の意味と旧保存互換は保持し、新規操作はother-works rev2の作品／中央人物位置を利用する。名前入力は一つで、照合先をバッジ指定する。名前は対象選択条件でありGraphの永続限定ではない。
+
 2026-10-18。出発点は `a1c4bbf` の[技術調査](DISCOVERY_SHARED_RELATION_PATTERNS_REVIEW.md)。本書はその後の運営者指示を反映した設計契約であり、調査の再実施記録ではない。運営者採用の `4ce5373` を基準に[STEP 2](DISCOVERY_TARGET_SEARCH.md)を実装・受入後、[STEP 3aのGraph実行基盤](DISCOVERY_PATTERN_GRAPH_EXECUTION.md)を追加した。[STEP 3bの編集・保存版移行](DISCOVERY_PATTERN_GRAPH_PERSISTENCE.md)まで実装した。STEP 4のDiscovery画面接続は未着手であり、別途確認が必要。
 
 ## 1. 確定事項と初回の境界

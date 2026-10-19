@@ -1,0 +1,42 @@
+// @vitest-environment jsdom
+import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { afterEach, expect, it, vi } from "vitest";
+import DiscoverySubjectCandidates from "../components/DiscoverySubjectCandidates";
+import { executePathSearch } from "../lib/client/use-discovery-paths";
+import { id, page, route, relation } from "./pattern-graph-fixture";
+import { relationConditionKey } from "../lib/domain/relation-conditions";
+vi.mock("../lib/client/use-discovery-paths",()=>({executePathSearch:vi.fn()}));
+vi.mock("../lib/client/ui-locale",()=>({useUiLocale:()=>({locale:"ja"})}));
+vi.mock("../components/DiscoveryClaimRow",()=>({default:()=>null}));
+afterEach(()=>{cleanup();vi.unstubAllGlobals();vi.resetAllMocks();});
+const body=page([route(100,2),route(100,3)]);
+body.nodes.forEach(n=>{n.name=`${n.kind} ${Number(n.id.slice(-12))}`;});
+const selection={entity:body.root,relation,revision:"r1",witness:null};
+it("Bの経路と適合証拠を区別し、候補フィルタ変更でGraph条件や再取得を変えない",async()=>{
+ const paths={revision:"r1",anchor:body.root,depth:2,nodes:body.nodes,claims:body.claims,paths:body.routes.map(r=>({nodeIds:r.nodeIds,claimIds:r.claimIds.map(c=>[c])})),scan:{expanded:2,reasons:["results"],limitedIds:[]}};
+ vi.mocked(executePathSearch).mockResolvedValue(paths as never);
+ const item=(n:number)=>({...body.nodes.find(e=>e.id===id(n))!,aliases:[],event:null});
+ const proof=body.routes[0];
+ const response={version:1,revision:"r1",items:[{entity:item(2),status:"matched",witness:{version:1,dataset:"public-kg",revision:"r1",conditionKey:relationConditionKey(relation),route:{nodeIds:[id(2),id(100),id(1)],claimIds:[proof.claimIds[1],proof.claimIds[0]]}}},{entity:item(3),status:"not-matched",witness:null}]};
+ const fetcher=vi.fn().mockResolvedValue({ok:true,json:async()=>response});vi.stubGlobal("fetch",fetcher);
+ const choose=vi.fn();render(<DiscoverySubjectCandidates selection={selection} onChoose={choose}/>);
+ expect(fetcher).not.toHaveBeenCalled();fireEvent.click(screen.getByRole("button",{name:"接点から別の対象を探す"}));
+ await waitFor(()=>expect(screen.getByRole("heading",{name:item(2).name})).toBeTruthy());
+ expect(screen.queryByRole("heading",{name:item(3).name})).toBeNull();
+ fireEvent.click(screen.getByRole("button",{name:"関係を絞らない"}));
+ expect(screen.getByRole("heading",{name:item(3).name})).toBeTruthy();expect(fetcher).toHaveBeenCalledTimes(1);
+ fireEvent.click(screen.getByRole("button",{name:"接点から別の対象を探す"}));
+ fireEvent.click(screen.getByRole("button",{name:"接点から別の対象を探す"}));
+ expect(screen.queryByRole("heading",{name:item(3).name})).toBeNull();
+ await waitFor(()=>expect(screen.getByRole("heading",{name:item(3).name})).toBeTruthy());
+ expect(fetcher).toHaveBeenCalledTimes(2);
+ fireEvent.click(screen.getAllByRole("button",{name:/この対象に変更/})[1]);
+ expect(choose).toHaveBeenCalledWith(expect.objectContaining({entity:item(3),relation,unmatched:true,witness:null}));
+ expect(screen.getByText(/Graphの関係条件は変わりません/)).toBeTruthy();
+});
+it("候補の取得失敗を正常0件へ変換しない",async()=>{
+ vi.mocked(executePathSearch).mockRejectedValue(Error("timeout"));
+ render(<DiscoverySubjectCandidates selection={selection} onChoose={vi.fn()}/>);
+ fireEvent.click(screen.getByRole("button",{name:"接点から別の対象を探す"}));
+ await waitFor(()=>expect(screen.getByRole("alert").textContent).toContain("0件とは判定していません"));
+});

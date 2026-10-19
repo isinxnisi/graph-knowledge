@@ -17,7 +17,7 @@ for(const locale of ["ja","en"] as const)for(const width of [1280,390])test(`Dis
  const item=catalog.locator('[data-catalog-result="other-works"]');await item.scrollIntoViewIfNeeded();const catalogScroll=await body.evaluate(el=>el.scrollTop);
  await item.getByRole("button",{name:en?"Find matching subjects":"条件に合う対象を探す",exact:true}).click();
  const flow=page.getByTestId("discovery-connections"),rows=flow.locator("[data-target-id]"),name=flow.getByRole("textbox",{name:en?"Subject name or alias":"対象の名前・別名",exact:true});
- await expect(name).toHaveValue("");await expect.poll(()=>rows.count()).toBeGreaterThan(1);expect(targets.at(-1)).toMatchObject({criteria:{q:"",kind:"work",relation:{type:"pattern",pattern:{id:"other-works",revision:1},polarity:"affirmed"}}});
+ await expect(name).toHaveValue("");await expect.poll(()=>rows.count()).toBeGreaterThan(1);expect(targets.at(-1)).toMatchObject({criteria:{q:"",kind:"work",relation:{type:"pattern",pattern:{id:"other-works",revision:2},polarity:"affirmed"}}});
  await expect(flow.getByTestId("prototype-claim")).toHaveCount(0);await page.screenshot({path:info.outputPath("subjects.png"),animations:"disabled"});
  const root=await rows.first().getAttribute("data-target-id");await rows.first().getByRole("button",{name:en?"Explore this subject":"この対象から探す",exact:true}).click();
  await expect(flow).toHaveAttribute("data-stage","selected");await flow.getByRole("button",{name:en?"Review matching evidence ＋":"成立証拠と根拠を確認 ＋",exact:true}).click();
@@ -31,7 +31,7 @@ for(const locale of ["ja","en"] as const)for(const width of [1280,390])test(`Dis
  await page.locator("#explorer-graph").getByRole("button",{name:relationText(locale).free,exact:true}).click();await expect.poll(()=>decodeExploration(new URL(page.url()).searchParams.get("s")!,root!,"public-kg").relation.type).toBe("adjacent");
  await page.goBack();await expect(flow).toHaveAttribute("data-stage","selected");await flow.getByRole("button",{name:en?"← Back to subject search":"← 対象検索へ戻る",exact:true}).first().click();
  await expect(name).toHaveValue("");await expect(flow.getByRole("button",{name:en?"Same creator, other works":"同じつくり手の別作品",exact:true})).toHaveAttribute("aria-pressed","true");
- await flow.getByRole("button",{name:en?"People":"人物",exact:true}).click();await expect(flow.getByRole("alert")).toContainText(en?"requires works":"作品を対象");await expect(rows).toHaveCount(0);
+ await flow.getByRole("button",{name:en?"Organizations":"組織",exact:true}).click();await expect(flow.getByRole("alert")).toContainText(en?"Check the combination":"組合せを確認");await expect(rows).toHaveCount(0);
  await flow.getByRole("button",{name:en?"Works":"作品",exact:true}).click();await expect.poll(()=>rows.count()).toBeGreaterThan(1);
  await flow.locator('[data-target-role="AUTHORSHIP"]').click();await expect.poll(()=>targets.at(-1)).toMatchObject({criteria:{relation:{contributionRoles:["AUTHORSHIP"]}}});
  await flow.locator('[data-target-role="AUTHORSHIP"]').click();await expect(flow).toContainText(en?"No subjects match":"この条件に合う対象はありません");

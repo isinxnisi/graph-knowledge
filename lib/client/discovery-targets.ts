@@ -12,7 +12,7 @@ export async function fetchDiscoveryTargets(input: TargetSearchRequest, signal: 
     const body = await response.json(); controller.signal.throwIfAborted();
     if (!response.ok) throw new ClientApiError(typeof body?.error?.message === "string" ? body.error.message : "対象検索を確認できませんでした。", response.status);
     const result = targetSearchResponseSchema.parse(body);
-    if (targetCriteriaKey(result.criteria) !== targetCriteriaKey(request.criteria)) throw new ClientApiError("検索条件が一致しません。", 0);
+    if (result.version!==request.version||targetCriteriaKey(result.criteria) !== targetCriteriaKey(request.criteria)) throw new ClientApiError("検索条件が一致しません。", 0);
     if (request.revision !== null && result.revision !== request.revision) throw new ClientApiError("公開版が変わりました。再検索してください。", 409);
     return result;
   } catch (error) {

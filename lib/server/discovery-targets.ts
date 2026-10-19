@@ -25,8 +25,8 @@ const cursorSchema = z.strictObject({ v: z.literal(4), operation: z.literal("tar
   rank: z.number().int().min(0).max(1), name: z.string().max(2000), id: z.uuidv4() });
 export function targetEntitiesQuery(input: TargetSearchRequest) {
   return `MATCH (e:Entity)
- WHERE ${input.criteria.relation?.type === "pattern" ? "e.kind = 'work'" : "($kind IS NULL OR e.kind = $kind)"} AND ($q = '' OR any(name IN e.searchNames WHERE name CONTAINS $q))
- ${input.criteria.relation ? `AND ${relationExists(input.criteria.relation)}` : ""}
+ WHERE ${input.criteria.relation?.type==="pattern"?(input.criteria.kind==="person"?"e.kind = 'person'":"e.kind = 'work'"):"($kind IS NULL OR e.kind = $kind)"} AND ($q = '' OR any(name IN e.searchNames WHERE name CONTAINS $q))
+ ${input.criteria.relation ? `AND ${relationExists(input.criteria.relation,input.criteria.kind,input.version===2&&input.criteria.nameTarget==="contributor")}` : ""}
  WITH e, CASE WHEN $q <> '' AND $q IN e.searchNames THEN 0 ELSE 1 END AS rank
  WHERE $afterId IS NULL OR rank > $afterRank OR (rank = $afterRank AND (e.name > $afterName OR (e.name = $afterName AND e.id > $afterId)))
  RETURN properties(e) AS entity, rank ORDER BY rank, e.name, e.id LIMIT 21`;
@@ -44,10 +44,12 @@ export async function searchDiscoveryTargets(raw: unknown, signal: AbortSignal):
     const revision = await readPublicRevision(tx, input.revision);
     if (after && after.revision !== revision) throw new ApiError(409, "DATASET_CHANGED", "公開版が変わりました。先頭から検索してください。");
     const relation = input.criteria.relation;
-    const rows = await tx.run(targetEntitiesQuery(input), { ...(relation ? relationQueryParameters(relation) : {}), q: input.criteria.q, kind: input.criteria.kind,
+    const related=input.version===2&&input.criteria.nameTarget==="contributor";
+    const rows = await tx.run(targetEntitiesQuery(input), { ...(relation ? relationQueryParameters(relation) : {}), q: related?"":input.criteria.q, relatedQ:related?input.criteria.q:"", kind: input.criteria.kind,
       afterId: after?.id ?? null, afterName: after?.name ?? null, afterRank: after ? int(after.rank) : null });
     const entities = rows.records.slice(0, 20).map(r => entityDetail(r.get("entity")));
-    const routes = relation ? await findFirstRelationRoutes(tx, relation, entities.map(e => e.id)) : new Map();
+    const context={q:input.criteria.q,kind:input.criteria.kind,nameTarget:input.version===2?input.criteria.nameTarget:"subject"};
+    const routes = relation ? await findFirstRelationRoutes(tx, relation, entities.map(e => e.id),context) : new Map();
     await readPublicRevision(tx, revision);
     if (relation && entities.some(e => !routes.has(e.id))) throw new Error("Matching target has no witness");
     if (relation) {
@@ -58,8 +60,8 @@ export async function searchDiscoveryTargets(raw: unknown, signal: AbortSignal):
     const last = entities.at(-1), hasMore = rows.records.length > 20;
     const nextCursor = hasMore && last ? Buffer.from(JSON.stringify({ v: 4, operation: "target-match", dataset: "public-kg", revision, criteriaKey,
       rank: rows.records[19].get("rank").toNumber(), name: last.name, id: last.id })).toString("base64url") : null;
-    return targetSearchResponseSchema.parse({ version: 1, dataset: "public-kg", revision, criteria: input.criteria,
-      items: entities.map(entity => ({ entity, match: relation ? { status: "matched", witness: { version: 1, dataset: "public-kg", revision, conditionKey: relationConditionKey(relation), route: routes.get(entity.id) } } : { status: "unconstrained" } })),
+    return targetSearchResponseSchema.parse({ version: input.version, dataset: "public-kg", revision, criteria: input.criteria,
+      items: entities.map(entity => ({ entity, match: relation ? { status: "matched", witness: { version: input.version, dataset: "public-kg", revision, conditionKey: relationConditionKey(relation), route: routes.get(entity.id),...(input.version===2?{subjectId:entity.id,subjectPosition:relation.type==="pattern"?(entity.kind==="person"?"contributor":"work"):"endpoint",matchContext:context}:{}) } } : { status: "unconstrained" } })),
       page: { limit: 20, hasMore, nextCursor, total: { status: "not-counted" } } });
   }, signal);
 }

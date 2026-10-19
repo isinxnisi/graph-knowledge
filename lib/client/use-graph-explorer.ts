@@ -17,6 +17,7 @@ import { ClientApiError, fetchDatasetRevision, fetchNeighbors, fetchAdjacentNeig
 import { fetchPatternGraph } from "./pattern-graph";
 import { normalizeRelationCondition, relationConditionKey, type RelationCondition } from "../domain/relation-conditions";
 import { relationText } from "../i18n/relation-condition";
+import { patternAcceptsRoot, matchWitnessSchema } from "../domain/relation-patterns";
 import type { MatchWitness } from "../domain/relation-patterns";
 import { patternSource, patternSourceForNode, openPatternNode, closeExpansion, reopenExpansion, projectGraph, emptyExpansion, emptyGraph, mergePage, emptyPatternGraph, mergePatternPage, type GraphState, type Selection } from "./graph-state";
 
@@ -96,7 +97,7 @@ export function useGraphExplorer() {
     try {
       if (state.execution?.type === "pattern" && state.relation?.type === "pattern") {
         const sourceId = patternSourceForNode(state, id, more);
-        if (!more && (state.cacheNodes[id].kind !== "work" || patternSource(state, id)) || !sourceId) {
+        if (!more && ((state.cacheNodes[id].kind !== "work" && state.relation.pattern.revision!==2) || patternSource(state, id)) || !sourceId) {
           await checkRevision(state.revision!, controller.signal);
           if (valid()) commit(openPatternNode(current.current, id));
         } else {
@@ -106,7 +107,8 @@ export function useGraphExplorer() {
           const source = patternSource(state, sourceId), proof = source?.requiredRoute ? state.execution.routes[source.requiredRoute]?.route : null;
           const response = await fetchPatternGraph({ version: 1, dataset: "public-kg", rootId: sourceId, relation: state.relation, revision: state.revision ?? null,
             operation: { type: "page", after: more ? source?.nextCursor ?? null : null,
-              requiredWitness: proof ? { version: 1, dataset: "public-kg", revision: state.revision!, conditionKey: state.conditionKey, route: proof } : null } }, controller.signal);
+              requiredWitness: proof ? matchWitnessSchema.parse({ version: state.relation.pattern.revision===2?2:1, dataset: "public-kg", revision: state.revision!, conditionKey: state.conditionKey, route: proof,
+                ...(state.relation.pattern.revision===2?{subjectId:sourceId,subjectPosition:state.cacheNodes[sourceId].kind==="person"?"contributor":"work",matchContext:{q:"",kind:state.cacheNodes[sourceId].kind,nameTarget:"subject"}}:{}) }) : null } }, controller.signal);
           if (valid()) commit(mergePatternPage(current.current, response, more ? source?.nextCursor ?? null : null, id));
         }
         return;
@@ -132,7 +134,7 @@ export function useGraphExplorer() {
   const applyRelation = useCallback(async (entity: EntitySummary, input: RelationCondition, witness: MatchWitness | null = null, view: GraphView | null = null, signal?: AbortSignal) => {
     if (signal?.aborted) return false;
     const relation = normalizeRelationCondition(input);
-    if (relation.type === "pattern" && entity.kind !== "work" || relation.type === "adjacent" && witness) { commit({ ...current.current, notice: "この対象・証拠には適用できない関係条件です。" }); return false; }
+    if (relation.type === "pattern" && !patternAcceptsRoot(relation,entity.kind) || relation.type === "adjacent" && witness) { commit({ ...current.current, notice: "この対象・証拠には適用できない関係条件です。" }); return false; }
     pending.current.forEach(c => c.abort()); pending.current.clear(); setRelationLoading(false); generation.current += 1;
     const epoch = generation.current, controller = new AbortController(), old = current.current;
     const abort = () => controller.abort();

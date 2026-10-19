@@ -1,5 +1,7 @@
 # 現行技術設計
 
+2026-10-19、[対象位置・B方式の接続](design/DISCOVERY_SUBJECT_CONNECTIONS.md)。other-works rev2、対象POST v2／証拠v2／paths POST v2、候補24件の正確な適合判定、Workspace item／URL v3を追加。旧条件は旧位置のまま読み、GraphのEntity枝は共用。名前条件は対象検索・一致理由に限定する。
+
 2026-10-19、[STEP 4aの安定性修正](design/DISCOVERY_STABILITY_REVIEW.md)。scroll位置をrefへ分離し、停止・遷移時のcheckpointと頻度を抑えた例外保護付き履歴保存にする。snapshot形式と公開版・証拠契約は維持。カタログは共通条件対応の5件だけを表示し、旧3定義・APIは保全する。
 
 2026-10-19、[Discovery STEP 4a](design/DISCOVERY_CONNECTIONS_UI.md)。既存POST対象検索とGraph URL v2を接続し、一時match v1で検索時revision／成立証拠を厳密に再検証する。GraphのEntity操作・保存形式は維持。独立したconnectionsWorkspace v1を既存historyへ持ち、Graphの条件編集で検索条件を上書きしない。明示プリセット試作URLだけに適用する。

@@ -15,7 +15,7 @@ export class ExplorationUrlError extends Error {
 // Versioned portable state, deliberately excluding local save metadata, API bodies and cursors.
 export function encodeExploration(workspace: WorkspaceInput): string {
   const value = workspaceSchema.parse(workspace);
-  const raw = JSON.stringify({ v: 2, d: value.dataset, r: value.rootId, c: value.relation, x: value.execution, o: value.observedRevision,
+  const raw = JSON.stringify({ v: value.version, d: value.dataset, r: value.rootId, c: value.relation, x: value.execution, o: value.observedRevision,
     p: value.view ? Object.entries(value.view.positions).map(([id, p]) => [id, p.x, p.y]) : [],
     z: value.view?.zoom ?? 1, l: value.view?.initialLayoutDone ?? false });
   if (strToU8(raw).length > RAW_LIMIT) throw new ExplorationUrlError("limit");
@@ -40,7 +40,7 @@ export function decodeExploration(encoded: string, rootId: string, dataset: Data
     const bytes = new Uint8Array(size); let offset = 0;
     for (const chunk of chunks) { bytes.set(chunk, offset); offset += chunk.length; }
     const value = JSON.parse(strFromU8(bytes));
-    if ((value.v === 1 ? Object.keys(value).sort().join() !== "b,c,d,l,p,r,v,z" : value.v === 2 ? Object.keys(value).sort().join() !== "c,d,l,o,p,r,v,x,z" : true) || value.r !== rootId || !Array.isArray(value.p)) throw Error();
+    if ((value.v === 1 ? Object.keys(value).sort().join() !== "b,c,d,l,p,r,v,z" : value.v === 2||value.v===3 ? Object.keys(value).sort().join() !== "c,d,l,o,p,r,v,x,z" : true) || value.r !== rootId || !Array.isArray(value.p)) throw Error();
     if (value.d !== dataset) throw new ExplorationUrlError("dataset");
     if (value.p.some((p: unknown) => !Array.isArray(p) || p.length !== 3) || new Set(value.p.map((p: unknown[]) => p[0])).size !== value.p.length) throw Error();
     if (value.v === 1 && (!Array.isArray(value.b) || value.b.some((b: unknown) => !Array.isArray(b) || b.length !== 3 || (b[1] !== 0 && b[1] !== 1)))) throw Error();
