@@ -26,29 +26,24 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-10-19T20:56:23.618180+00:00",
-  "phase": "running",
+  "nextStartAt": "2026-10-19T20:02:48.797990+00:00",
+  "phase": "interval",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
     "reason": "interval",
-    "eligibleAt": "2026-10-19T20:56:23.618180+00:00",
+    "eligibleAt": "2026-10-19T20:02:48.797990+00:00",
     "windowEndAt": "2026-10-19T22:00:00+00:00"
   },
-  "activeAttempt": {
-    "requestId": "issue-25-normal-sequence-after-first-20261020",
-    "startedAt": "2026-10-19T19:51:23.618182+00:00",
-    "limitAt": "2026-10-19T20:46:23.618180+00:00"
-  },
+  "activeAttempt": null,
   "lastAttempt": {
     "requestId": "issue-25-normal-sequence-after-first-20261020",
-    "endedAt": "2026-10-19T19:40:53.629151+00:00"
+    "endedAt": "2026-10-19T19:52:48.797992+00:00"
   },
   "controlError": null,
   "requestsByPhase": {
-    "completed": 13,
-    "blocked": 9,
-    "running": 1
+    "completed": 14,
+    "blocked": 9
   },
   "issueIntake": {
     "collection-control/issue-sources/25.json": {
@@ -95,5 +90,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-10-19T19:52:04.230712+00:00"
+  "checkedAt": "2026-10-19T19:52:48.831288+00:00"
 }
