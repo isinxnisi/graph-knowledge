@@ -7,7 +7,7 @@ for(const locale of ["ja","en"] as const)for(const width of [1280,390])test(`Dis
  await ctx.addInitScript(()=>localStorage.setItem("plunode:privacy:v1",'{"analytics":false,"ads":false}'));
  const page=await ctx.newPage(),errors:string[]=[];page.on("pageerror",e=>errors.push(e.message));
  const targets:unknown[]=[];page.on("request",r=>{if(r.method()==="POST"&&r.url().endsWith("/api/discovery/entities"))targets.push(r.postDataJSON());});
- await page.goto(info.project.use.baseURL!+(en?"/en":"/")+"?discovery=presets");await page.getByTestId("discovery-search-entry").click();
+ await page.goto(info.project.use.baseURL!+(en?"/en":"/"));await page.getByTestId("discovery-search-entry").click();
  const catalog=page.getByTestId("preset-browser"),body=page.getByTestId("prototype-body");await expect(catalog).toBeVisible();await expect(page.getByRole("tab")).toHaveCount(3);
  await expect(catalog.locator("[data-catalog-preset]")).toHaveCount(3);await expect(catalog.locator("[data-catalog-result]")).toHaveCount(5);await expect(catalog.getByRole("button",{name:/従来方式|で試す|legacy|Try PLUTO|Try NBI/})).toHaveCount(0);
  const featured=catalog.getByRole("region",{name:en?"Recommended presets":"おすすめプリセット",exact:true});await expect(featured.getByRole("button")).toHaveCount(3);
@@ -54,7 +54,7 @@ for(const locale of ["ja","en"] as const)for(const width of [1280,390])test(`Dis
 });
 test("bound preset skips subject search, optional subject change, and unsupported entries stay hidden",async({page},info)=>{
  await page.setViewportSize({width:320,height:950});await page.addInitScript(()=>localStorage.setItem("plunode:privacy:v1",'{"analytics":false,"ads":false}'));
- await page.goto(info.project.use.baseURL!+"/?discovery=presets");await page.getByTestId("discovery-search-entry").click();const catalog=page.getByTestId("preset-browser"),pluto=catalog.locator('[data-catalog-preset="pluto"]');
+ await page.goto(info.project.use.baseURL!+"/");await page.getByTestId("discovery-search-entry").click();const catalog=page.getByTestId("preset-browser"),pluto=catalog.locator('[data-catalog-preset="pluto"]');
  await pluto.click();await expect(page.getByTestId("exploration-root")).toContainText("PLUTO");await page.goBack();await expect(page.getByTestId("discovery-connections")).toHaveAttribute("data-stage","selected");
  await page.getByRole("button",{name:"← プリセット検索へ戻る",exact:true}).click();
  await catalog.locator('[data-catalog-result="pluto"]').getByRole("button",{name:"Graphで探索",exact:true}).click();await expect(page.getByTestId("exploration-root")).toContainText("PLUTO");await page.goBack();await expect(page.getByTestId("discovery-connections")).toHaveAttribute("data-stage","selected");
@@ -65,14 +65,14 @@ test("bound preset skips subject search, optional subject change, and unsupporte
 });
 test("failed fixed launch and changed target revision remain unconfirmed",async({page},info)=>{
  await page.addInitScript(()=>localStorage.setItem("plunode:privacy:v1",'{"analytics":false,"ads":false}'));
- await page.goto(info.project.use.baseURL!+"/?discovery=presets");await page.getByTestId("discovery-search-entry").click();const catalog=page.getByTestId("preset-browser"),endpoint="**/api/entities/2b7c6289-d050-4dc0-93e3-9307681253cc";
+ await page.goto(info.project.use.baseURL!+"/");await page.getByTestId("discovery-search-entry").click();const catalog=page.getByTestId("preset-browser"),endpoint="**/api/entities/2b7c6289-d050-4dc0-93e3-9307681253cc";
  await page.route(endpoint,route=>route.fulfill({status:503,json:{error:"unavailable"}}));await catalog.locator('[data-catalog-preset="pluto"]').click();await expect(catalog.getByRole("alert")).toContainText("公開記録を確認できませんでした");await page.unroute(endpoint);
  await page.route("**/api/discovery/entities",route=>route.request().method()==="POST"?route.fulfill({status:409,json:{error:{code:"CONFLICT",message:"changed"}}}):route.continue());
  await catalog.locator('[data-catalog-result="other-works"]').getByRole("button",{name:"条件に合う対象を探す",exact:true}).click();await expect(page.getByTestId("discovery-connections").getByRole("alert")).toContainText("公開版が変わりました");await expect(page.locator("[data-target-id]")).toHaveCount(0);
 });
 test("preset-free Entity paging and adjacent Role criteria reach Graph unchanged",async({page},info)=>{
  await page.addInitScript(()=>localStorage.setItem("plunode:privacy:v1",'{"analytics":false,"ads":false}'));
- await page.goto(info.project.use.baseURL!+"/?discovery=presets");await page.getByTestId("discovery-search-entry").click();await page.getByRole("button",{name:"対象を探す",exact:true}).click();
+ await page.goto(info.project.use.baseURL!+"/");await page.getByTestId("discovery-search-entry").click();await page.getByRole("button",{name:"対象を探す",exact:true}).click();
  const flow=page.getByTestId("discovery-connections"),rows=flow.locator("[data-target-id]");await expect(rows).toHaveCount(20);const first=await rows.evaluateAll(elements=>elements.map(el=>el.getAttribute("data-target-id")));
  await flow.getByRole("button",{name:"次へ",exact:true}).click();await expect(rows).toHaveCount(20);await expect.poll(()=>rows.first().getAttribute("data-target-id")).not.toBe(first[0]);const second=await rows.evaluateAll(elements=>elements.map(el=>el.getAttribute("data-target-id")));expect(first.filter(id=>second.includes(id))).toHaveLength(0);
  await flow.getByRole("button",{name:"前へ",exact:true}).click();await expect.poll(()=>rows.evaluateAll(elements=>elements.map(el=>el.getAttribute("data-target-id")))).toEqual(first);

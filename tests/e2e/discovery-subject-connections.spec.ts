@@ -8,7 +8,7 @@ for(const locale of ["ja","en"] as const)for(const width of [1280,390])test(`sub
  const en=locale==="en",mobile=width<800,ctx=await browser.newContext({viewport:{width,height:950},isMobile:mobile,hasTouch:mobile});
  await ctx.addInitScript(()=>localStorage.setItem("plunode:privacy:v1",'{"analytics":false,"ads":false}'));
  const page=await ctx.newPage(),errors:string[]=[],timings:{path:string;ms:number}[]=[];page.on("requestfinished",r=>{const path=new URL(r.url()).pathname;if(path.startsWith("/api/discovery/"))timings.push({path,ms:Math.round(r.timing().responseEnd)});});page.on("pageerror",e=>errors.push(e.message));
- await page.goto(info.project.use.baseURL!+(en?"/en":"/")+"?discovery=presets");await page.getByTestId("discovery-search-entry").click();
+ await page.goto(info.project.use.baseURL!+(en?"/en":"/"));await page.getByTestId("discovery-search-entry").click();
  const catalog=page.getByTestId("preset-browser");await catalog.locator('[data-catalog-result="other-works"]').getByRole("button",{name:en?"Find matching subjects":"条件に合う対象を探す",exact:true}).click();
  const flow=page.getByTestId("discovery-connections"),rows=flow.locator("[data-target-id]");
  await flow.getByRole("button",{name:en?"People":"人物",exact:true}).click();
