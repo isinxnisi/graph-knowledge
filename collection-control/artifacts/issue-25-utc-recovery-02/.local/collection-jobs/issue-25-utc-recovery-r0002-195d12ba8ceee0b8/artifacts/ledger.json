@@ -1,0 +1,367 @@
+{
+  "schemaVersion": 2,
+  "status": "pending-human-acceptance",
+  "recipe": "manga-r0018",
+  "collectionContext": {
+    "themeId": "issue-25-utc-recovery",
+    "themeRevision": 2,
+    "definitionSha256": "3aa3524c9f64b62c086f2a10e771133640038400de24c71e579da555c1baf829",
+    "approvalSha256": "052920823ec30ff2fa137ef9c336e51cf88d1a8978e304cccf95a557b9e43dba"
+  },
+  "execution": {
+    "adapter": "manga-discovery-v2",
+    "codeSha256": "80e05b67bc0129b963653b90df4cfbfa5bd6aff190acda99f54c08541e55801e",
+    "inputs": [
+      {
+        "file": "datasets/manga-collection/r0018/recipe.json",
+        "sha256": "aa7943be05294785dd119bc3290ba09f3870043ae595503737faf70e42850c12"
+      },
+      {
+        "file": "datasets/manga-collection/r0018/anchor-review.json",
+        "sha256": "205f6fd7ca7459ca316268a324c899ab0763a1872a368d4df30214ee0abd6a61"
+      },
+      {
+        "file": "datasets/manga-collection/r0018/publication-review.json",
+        "sha256": "6e1eda0cac761c8be21cb8687e5c785042a08f5df3645f9840edcfcd38cfbcfd"
+      },
+      {
+        "file": "docs/research/famous-manga-creators/20261016/candidates.json",
+        "sha256": "8531fada01e5c635ba2ee278a7ef944a73f64676af14ed42ae0e690f5a1ff978"
+      },
+      {
+        "file": "datasets/public-kg/releases/20261014-credits-001/data.json",
+        "sha256": "ea91b16f52a211b5a8464382ad498b7b2bb2be69a6f33fe125a73a3c7b9da2b5"
+      },
+      {
+        "file": "datasets/public-kg/releases/20261014-credits-001/manifest.json",
+        "sha256": "e4aa3b58ed884f7d1f8fffee43b260261cc2b4d3a867fda942919f439d2bce17"
+      }
+    ],
+    "maxEntities": 2113,
+    "maxClaims": 1853
+  },
+  "identityMappings": [
+    {
+      "name": "浦沢直樹",
+      "wikidata": "Q348436",
+      "entityId": "d900543a-9c11-48c1-be76-1822b756fcc4",
+      "basis": "exact-external-id-or-explicit-catalog-uuid",
+      "reused": true
+    },
+    {
+      "name": "MONSTER",
+      "wikidata": "Q858384",
+      "entityId": "5939642c-8fe8-459b-98c8-1aef555ba212",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "20世紀少年",
+      "wikidata": "Q91458",
+      "entityId": "64859a28-f815-4982-9123-594ffa0cf4f8",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "YAWARA!",
+      "wikidata": "Q528619",
+      "entityId": "4d0910a7-e548-4ba7-9ef0-f03377c7e1fe",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    }
+  ],
+  "rows": [
+    {
+      "kind": "wikidata-relation",
+      "work": "MONSTER",
+      "property": "P50",
+      "personQid": "Q348436",
+      "statementId": "Q858384$1DFE3173-A159-4AAE-AB2B-E50E870020CF",
+      "qualifiers": {},
+      "references": [
+        {
+          "hash": "d4bd87b862b12d99d26e86472d44f26858dee639",
+          "snaks": {
+            "P143": [
+              {
+                "snaktype": "value",
+                "property": "P143",
+                "hash": "f30cbd35620c4ea6d0633aaf0210a8916130469b",
+                "datavalue": {
+                  "value": {
+                    "entity-type": "item",
+                    "numeric-id": 8447,
+                    "id": "Q8447"
+                  },
+                  "type": "wikibase-entityid"
+                },
+                "datatype": "wikibase-item"
+              }
+            ]
+          },
+          "snaks-order": [
+            "P143"
+          ]
+        }
+      ],
+      "status": "candidate-only-no-role-inference",
+      "reason": "Wikidata propertyだけで具体Roleや直接制作の意味を確定しない"
+    },
+    {
+      "kind": "wikidata-relation",
+      "work": "MONSTER",
+      "property": "P110",
+      "personQid": "Q348436",
+      "statementId": "Q858384$DDDBBE7D-CAD0-4D36-8112-D1BDDAF18F06",
+      "qualifiers": {},
+      "references": [],
+      "status": "candidate-only-no-role-inference",
+      "reason": "Wikidata propertyだけで具体Roleや直接制作の意味を確定しない"
+    },
+    {
+      "kind": "ndl-credit",
+      "work": "MONSTER",
+      "isbn13": "9784091836519",
+      "rawResponsibility": "浦沢直樹 著",
+      "sourceUrl": "https://ndlsearch.ndl.go.jp/books/R100000002-I000002418467",
+      "status": "pending-human-acceptance",
+      "roleId": "AUTHORSHIP",
+      "person": "浦沢直樹",
+      "claimId": "406aebfe-a6eb-48c1-9d93-b377bbd39d8f",
+      "reusedClaim": false,
+      "subjectId": "d900543a-9c11-48c1-be76-1822b756fcc4",
+      "objectId": "5939642c-8fe8-459b-98c8-1aef555ba212"
+    },
+    {
+      "kind": "wikidata-relation",
+      "work": "20世紀少年",
+      "property": "P50",
+      "personQid": "Q348436",
+      "statementId": "Q91458$DAA48FB2-B0B4-44CD-A9A7-EA225AA920D0",
+      "qualifiers": {},
+      "references": [
+        {
+          "hash": "d4bd87b862b12d99d26e86472d44f26858dee639",
+          "snaks": {
+            "P143": [
+              {
+                "snaktype": "value",
+                "property": "P143",
+                "hash": "f30cbd35620c4ea6d0633aaf0210a8916130469b",
+                "datavalue": {
+                  "value": {
+                    "entity-type": "item",
+                    "numeric-id": 8447,
+                    "id": "Q8447"
+                  },
+                  "type": "wikibase-entityid"
+                },
+                "datatype": "wikibase-item"
+              }
+            ]
+          },
+          "snaks-order": [
+            "P143"
+          ]
+        }
+      ],
+      "status": "candidate-only-no-role-inference",
+      "reason": "Wikidata propertyだけで具体Roleや直接制作の意味を確定しない"
+    },
+    {
+      "kind": "wikidata-relation",
+      "work": "20世紀少年",
+      "property": "P110",
+      "personQid": "Q348436",
+      "statementId": "Q91458$DE952846-0B80-41CA-84FC-B14CD3420292",
+      "qualifiers": {},
+      "references": [
+        {
+          "hash": "d4bd87b862b12d99d26e86472d44f26858dee639",
+          "snaks": {
+            "P143": [
+              {
+                "snaktype": "value",
+                "property": "P143",
+                "hash": "f30cbd35620c4ea6d0633aaf0210a8916130469b",
+                "datavalue": {
+                  "value": {
+                    "entity-type": "item",
+                    "numeric-id": 8447,
+                    "id": "Q8447"
+                  },
+                  "type": "wikibase-entityid"
+                },
+                "datatype": "wikibase-item"
+              }
+            ]
+          },
+          "snaks-order": [
+            "P143"
+          ]
+        }
+      ],
+      "status": "candidate-only-no-role-inference",
+      "reason": "Wikidata propertyだけで具体Roleや直接制作の意味を確定しない"
+    },
+    {
+      "kind": "ndl-credit",
+      "work": "20世紀少年",
+      "isbn13": "9784091855312",
+      "rawResponsibility": "浦沢直樹 著",
+      "sourceUrl": "https://ndlsearch.ndl.go.jp/books/R100000002-I000002863103",
+      "status": "pending-human-acceptance",
+      "roleId": "AUTHORSHIP",
+      "person": "浦沢直樹",
+      "claimId": "e3356616-466b-4ad1-9a56-079f0e118aa8",
+      "reusedClaim": false,
+      "subjectId": "d900543a-9c11-48c1-be76-1822b756fcc4",
+      "objectId": "64859a28-f815-4982-9123-594ffa0cf4f8"
+    },
+    {
+      "kind": "wikidata-relation",
+      "work": "YAWARA!",
+      "property": "P50",
+      "personQid": "Q348436",
+      "statementId": "Q528619$006D221A-A737-4CE7-9A2E-FF5773A704B5",
+      "qualifiers": {},
+      "references": [
+        {
+          "hash": "d4bd87b862b12d99d26e86472d44f26858dee639",
+          "snaks": {
+            "P143": [
+              {
+                "snaktype": "value",
+                "property": "P143",
+                "hash": "f30cbd35620c4ea6d0633aaf0210a8916130469b",
+                "datavalue": {
+                  "value": {
+                    "entity-type": "item",
+                    "numeric-id": 8447,
+                    "id": "Q8447"
+                  },
+                  "type": "wikibase-entityid"
+                },
+                "datatype": "wikibase-item"
+              }
+            ]
+          },
+          "snaks-order": [
+            "P143"
+          ]
+        }
+      ],
+      "status": "candidate-only-no-role-inference",
+      "reason": "Wikidata propertyだけで具体Roleや直接制作の意味を確定しない"
+    },
+    {
+      "kind": "wikidata-relation",
+      "work": "YAWARA!",
+      "property": "P110",
+      "personQid": "Q348436",
+      "statementId": "Q528619$8AB22375-CA5E-4551-A567-6290888C0533",
+      "qualifiers": {},
+      "references": [
+        {
+          "hash": "d4bd87b862b12d99d26e86472d44f26858dee639",
+          "snaks": {
+            "P143": [
+              {
+                "snaktype": "value",
+                "property": "P143",
+                "hash": "f30cbd35620c4ea6d0633aaf0210a8916130469b",
+                "datavalue": {
+                  "value": {
+                    "entity-type": "item",
+                    "numeric-id": 8447,
+                    "id": "Q8447"
+                  },
+                  "type": "wikibase-entityid"
+                },
+                "datatype": "wikibase-item"
+              }
+            ]
+          },
+          "snaks-order": [
+            "P143"
+          ]
+        }
+      ],
+      "status": "candidate-only-no-role-inference",
+      "reason": "Wikidata propertyだけで具体Roleや直接制作の意味を確定しない"
+    },
+    {
+      "kind": "ndl-credit",
+      "work": "YAWARA!",
+      "isbn13": "9784091813411",
+      "rawResponsibility": "浦沢直樹 著",
+      "sourceUrl": "https://ndlsearch.ndl.go.jp/books/R100000002-I000001854814",
+      "status": "pending-human-acceptance",
+      "roleId": "AUTHORSHIP",
+      "person": "浦沢直樹",
+      "claimId": "fb541a79-5cf1-470b-9509-65cb8ede41f3",
+      "reusedClaim": false,
+      "subjectId": "d900543a-9c11-48c1-be76-1822b756fcc4",
+      "objectId": "4d0910a7-e548-4ba7-9ef0-f03377c7e1fe"
+    }
+  ],
+  "holds": [],
+  "acquisitions": [
+    {
+      "kind": "wikidata",
+      "identifier": "Q348436",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q348436.json",
+      "sha256": "7f4ce9ec0ccc25fb52caec694621f5379f426a2065364a9413c9bc03a1cc5927",
+      "bytes": 117302,
+      "fetchedAt": "2026-10-18T18:39:07+00:00"
+    },
+    {
+      "kind": "wikidata",
+      "identifier": "Q858384",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q858384.json",
+      "sha256": "565dbbd876ea5b402ee3a3e6df6449d92255fe8a4166fdfd298132b09df8d891",
+      "bytes": 69081,
+      "fetchedAt": "2026-10-18T18:39:51+00:00"
+    },
+    {
+      "kind": "ndl",
+      "identifier": "9784091836519",
+      "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&maximumRecords=5&query=isbn%3D%229784091836519%22+AND+dpid%3Diss-ndl-opac",
+      "sha256": "6c293fd32cfa2f7184bde9ba526c5900dfa71f491519420563c6354e29e2157a",
+      "bytes": 35247,
+      "fetchedAt": "2026-10-18T18:55:05+00:00"
+    },
+    {
+      "kind": "wikidata",
+      "identifier": "Q91458",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q91458.json",
+      "sha256": "1377cc2e2b958e0d5b45fa8bdfdc0b98f4109189c3d53a7fe88f21c6b5eedf25",
+      "bytes": 60040,
+      "fetchedAt": "2026-10-18T18:39:57+00:00"
+    },
+    {
+      "kind": "ndl",
+      "identifier": "9784091855312",
+      "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&maximumRecords=5&query=isbn%3D%229784091855312%22+AND+dpid%3Diss-ndl-opac",
+      "sha256": "59c92b453d60a32217f3887d49dc36e51cab8cd15be14b9d9e234a327daee2f7",
+      "bytes": 33927,
+      "fetchedAt": "2026-10-18T18:55:05+00:00"
+    },
+    {
+      "kind": "wikidata",
+      "identifier": "Q528619",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q528619.json",
+      "sha256": "10c8f7464c0098d4bb14b2de075a51c3404f5d515819ef8f7083275dffd5fbf6",
+      "bytes": 32092,
+      "fetchedAt": "2026-10-18T18:40:03+00:00"
+    },
+    {
+      "kind": "ndl",
+      "identifier": "9784091813411",
+      "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&maximumRecords=5&query=isbn%3D%229784091813411%22+AND+dpid%3Diss-ndl-opac",
+      "sha256": "fde0dfa880193c7a5950d375094439cb92389f3ba786a7161577f9e72b4e64b4",
+      "bytes": 21081,
+      "fetchedAt": "2026-10-18T18:55:10+00:00"
+    }
+  ]
+}

@@ -1,0 +1,377 @@
+{
+  "id": "Q858384",
+  "lastrevid": 2543040064,
+  "labels": {
+    "pt": {
+      "language": "pt",
+      "value": "Monster"
+    },
+    "zh-hans": {
+      "language": "zh-hans",
+      "value": "MONSTER"
+    },
+    "zh-hant": {
+      "language": "zh-hant",
+      "value": "MONSTER"
+    },
+    "zh-hk": {
+      "language": "zh-hk",
+      "value": "MONSTER"
+    },
+    "eo": {
+      "language": "eo",
+      "value": "Monstro"
+    },
+    "ko": {
+      "language": "ko",
+      "value": "몬스터"
+    },
+    "ru": {
+      "language": "ru",
+      "value": "Monster"
+    },
+    "fr": {
+      "language": "fr",
+      "value": "Monster"
+    },
+    "es": {
+      "language": "es",
+      "value": "Monster"
+    },
+    "en": {
+      "language": "en",
+      "value": "Monster"
+    },
+    "th": {
+      "language": "th",
+      "value": "คนปีศาจ"
+    },
+    "ca": {
+      "language": "ca",
+      "value": "Monster"
+    },
+    "fi": {
+      "language": "fi",
+      "value": "Monster"
+    },
+    "it": {
+      "language": "it",
+      "value": "Monster"
+    },
+    "gl": {
+      "language": "gl",
+      "value": "Monster"
+    },
+    "de": {
+      "language": "de",
+      "value": "Monster"
+    },
+    "id": {
+      "language": "id",
+      "value": "Monster"
+    },
+    "ja": {
+      "language": "ja",
+      "value": "MONSTER"
+    },
+    "fa": {
+      "language": "fa",
+      "value": "هیولا"
+    },
+    "tl": {
+      "language": "tl",
+      "value": "Monster"
+    },
+    "nl": {
+      "language": "nl",
+      "value": "Monster"
+    },
+    "ar": {
+      "language": "ar",
+      "value": "مونستر"
+    },
+    "zh": {
+      "language": "zh",
+      "value": "MONSTER"
+    },
+    "nb": {
+      "language": "nb",
+      "value": "Monster"
+    },
+    "lt": {
+      "language": "lt",
+      "value": "Monster"
+    },
+    "hr": {
+      "language": "hr",
+      "value": "Monster"
+    },
+    "cs": {
+      "language": "cs",
+      "value": "Monster"
+    },
+    "hy": {
+      "language": "hy",
+      "value": "Monster"
+    },
+    "ckb": {
+      "language": "ckb",
+      "value": "مۆنستەر"
+    },
+    "tr": {
+      "language": "tr",
+      "value": "Monster"
+    },
+    "az": {
+      "language": "az",
+      "value": "Monster"
+    },
+    "ast": {
+      "language": "ast",
+      "value": "Monster"
+    },
+    "pl": {
+      "language": "pl",
+      "value": "Monster"
+    },
+    "sv": {
+      "language": "sv",
+      "value": "Monster"
+    },
+    "vi": {
+      "language": "vi",
+      "value": "Monster"
+    },
+    "mn": {
+      "language": "mn",
+      "value": "Мангас"
+    },
+    "kab": {
+      "language": "kab",
+      "value": "Munster ( lmanga )"
+    },
+    "ary": {
+      "language": "ary",
+      "value": "مونستر"
+    },
+    "lzh": {
+      "language": "lzh",
+      "value": "怪物"
+    },
+    "uk": {
+      "language": "uk",
+      "value": "Monster"
+    },
+    "mk": {
+      "language": "mk",
+      "value": "Monster"
+    },
+    "sr": {
+      "language": "sr",
+      "value": "Monster (манга)"
+    },
+    "he": {
+      "language": "he",
+      "value": "מונסטר (מאנגה)"
+    },
+    "ro": {
+      "language": "ro",
+      "value": "Monster"
+    },
+    "acm": {
+      "language": "acm",
+      "value": "مونستر"
+    }
+  },
+  "aliases": {
+    "zh": [
+      {
+        "language": "zh",
+        "value": "魔剎"
+      }
+    ],
+    "eo": [
+      {
+        "language": "eo",
+        "value": "Monster"
+      }
+    ],
+    "ru": [
+      {
+        "language": "ru",
+        "value": "Монстр: Ужасная история"
+      },
+      {
+        "language": "ru",
+        "value": "Monster: A History of Suspense"
+      },
+      {
+        "language": "ru",
+        "value": "Monster: Horrible Story"
+      },
+      {
+        "language": "ru",
+        "value": "Монстр"
+      }
+    ],
+    "th": [
+      {
+        "language": "th",
+        "value": "มอนสเตอร์ คนปีศาจ"
+      }
+    ],
+    "gl": [
+      {
+        "language": "gl",
+        "value": "Naoki Urasawa's Monster"
+      }
+    ],
+    "nl": [
+      {
+        "language": "nl",
+        "value": "Monster (manga)"
+      }
+    ],
+    "mk": [
+      {
+        "language": "mk",
+        "value": "Чудовиште"
+      },
+      {
+        "language": "mk",
+        "value": "Naoki Urasawa's Monster"
+      }
+    ],
+    "uk": [
+      {
+        "language": "uk",
+        "value": "Монстр"
+      }
+    ],
+    "es": [
+      {
+        "language": "es",
+        "value": "Mounstruo"
+      }
+    ],
+    "it": [
+      {
+        "language": "it",
+        "value": "Monster (Urasawa)"
+      }
+    ],
+    "zh-hant": [
+      {
+        "language": "zh-hant",
+        "value": "魔剎"
+      }
+    ],
+    "en": [
+      {
+        "language": "en",
+        "value": "Monster manga"
+      },
+      {
+        "language": "en",
+        "value": "Monsutā"
+      }
+    ],
+    "ar": [
+      {
+        "language": "ar",
+        "value": "الوحش"
+      }
+    ]
+  },
+  "claims": {
+    "P31": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P31",
+          "hash": "549c072d6be8a6a43f999d1d0e82640b16c4260e",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 21198342,
+              "id": "Q21198342"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q858384$85FC1F21-0BBC-4DDB-8633-5EF723D96744",
+        "rank": "normal"
+      }
+    ],
+    "P50": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P50",
+          "hash": "6bb0f772e367defecb77ffddd0b9fdbd812a1bd6",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 348436,
+              "id": "Q348436"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q858384$1DFE3173-A159-4AAE-AB2B-E50E870020CF",
+        "rank": "normal",
+        "references": [
+          {
+            "hash": "d4bd87b862b12d99d26e86472d44f26858dee639",
+            "snaks": {
+              "P143": [
+                {
+                  "snaktype": "value",
+                  "property": "P143",
+                  "hash": "f30cbd35620c4ea6d0633aaf0210a8916130469b",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 8447,
+                      "id": "Q8447"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P143"
+            ]
+          }
+        ]
+      }
+    ],
+    "P110": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P110",
+          "hash": "60193f3ac7eb8e941067c98a1047cdf624bfa5ff",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 348436,
+              "id": "Q348436"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q858384$DDDBBE7D-CAD0-4D36-8112-D1BDDAF18F06",
+        "rank": "normal"
+      }
+    ]
+  }
+}

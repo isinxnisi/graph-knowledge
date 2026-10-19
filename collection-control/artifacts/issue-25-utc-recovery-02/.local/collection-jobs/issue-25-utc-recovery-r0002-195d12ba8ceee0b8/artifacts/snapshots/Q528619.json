@@ -1,0 +1,207 @@
+{
+  "id": "Q528619",
+  "lastrevid": 2540211143,
+  "labels": {
+    "es": {
+      "language": "es",
+      "value": "Yawara!"
+    },
+    "ca": {
+      "language": "ca",
+      "value": "Cinturó Negre"
+    },
+    "en": {
+      "language": "en",
+      "value": "Yawara!"
+    },
+    "fr": {
+      "language": "fr",
+      "value": "Yawara!"
+    },
+    "gl": {
+      "language": "gl",
+      "value": "Ginger, a princesa do judo"
+    },
+    "it": {
+      "language": "it",
+      "value": "Yawara! - Jenny la ragazza del judo"
+    },
+    "ja": {
+      "language": "ja",
+      "value": "YAWARA!"
+    },
+    "ko": {
+      "language": "ko",
+      "value": "야와라!"
+    },
+    "ru": {
+      "language": "ru",
+      "value": "Yawara!"
+    },
+    "tl": {
+      "language": "tl",
+      "value": "Yawara!"
+    },
+    "zh": {
+      "language": "zh",
+      "value": "以柔克剛"
+    },
+    "nl": {
+      "language": "nl",
+      "value": "Yawara! A Fashionable Judo Girl"
+    },
+    "ast": {
+      "language": "ast",
+      "value": "Yawara! A Fashionable Judo Girl"
+    },
+    "ar": {
+      "language": "ar",
+      "value": "ياوارا!"
+    },
+    "uk": {
+      "language": "uk",
+      "value": "Yawara!"
+    },
+    "fa": {
+      "language": "fa",
+      "value": "یاوارا!"
+    }
+  },
+  "aliases": {
+    "zh": [
+      {
+        "language": "zh",
+        "value": "YAWARA!"
+      }
+    ],
+    "ca": [
+      {
+        "language": "ca",
+        "value": "Yawara!"
+      }
+    ],
+    "uk": [
+      {
+        "language": "uk",
+        "value": "Явара!"
+      }
+    ]
+  },
+  "claims": {
+    "P31": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P31",
+          "hash": "549c072d6be8a6a43f999d1d0e82640b16c4260e",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 21198342,
+              "id": "Q21198342"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q528619$EAADE31B-0705-4EC4-82EF-7376570010FF",
+        "rank": "normal"
+      }
+    ],
+    "P50": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P50",
+          "hash": "6bb0f772e367defecb77ffddd0b9fdbd812a1bd6",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 348436,
+              "id": "Q348436"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q528619$006D221A-A737-4CE7-9A2E-FF5773A704B5",
+        "rank": "normal",
+        "references": [
+          {
+            "hash": "d4bd87b862b12d99d26e86472d44f26858dee639",
+            "snaks": {
+              "P143": [
+                {
+                  "snaktype": "value",
+                  "property": "P143",
+                  "hash": "f30cbd35620c4ea6d0633aaf0210a8916130469b",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 8447,
+                      "id": "Q8447"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P143"
+            ]
+          }
+        ]
+      }
+    ],
+    "P110": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P110",
+          "hash": "60193f3ac7eb8e941067c98a1047cdf624bfa5ff",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 348436,
+              "id": "Q348436"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q528619$8AB22375-CA5E-4551-A567-6290888C0533",
+        "rank": "normal",
+        "references": [
+          {
+            "hash": "d4bd87b862b12d99d26e86472d44f26858dee639",
+            "snaks": {
+              "P143": [
+                {
+                  "snaktype": "value",
+                  "property": "P143",
+                  "hash": "f30cbd35620c4ea6d0633aaf0210a8916130469b",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 8447,
+                      "id": "Q8447"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P143"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

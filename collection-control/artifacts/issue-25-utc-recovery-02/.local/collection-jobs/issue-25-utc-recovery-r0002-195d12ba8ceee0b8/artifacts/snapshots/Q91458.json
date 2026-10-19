@@ -1,0 +1,319 @@
+{
+  "id": "Q91458",
+  "lastrevid": 2525743267,
+  "labels": {
+    "it": {
+      "language": "it",
+      "value": "20th Century Boys"
+    },
+    "ast": {
+      "language": "ast",
+      "value": "20th Century Boys"
+    },
+    "be": {
+      "language": "be",
+      "value": "20th Century Boys"
+    },
+    "ca": {
+      "language": "ca",
+      "value": "20th Century Boys"
+    },
+    "de": {
+      "language": "de",
+      "value": "20th Century Boys"
+    },
+    "de-ch": {
+      "language": "de-ch",
+      "value": "20th Century Boys"
+    },
+    "en": {
+      "language": "en",
+      "value": "20th Century Boys"
+    },
+    "en-ca": {
+      "language": "en-ca",
+      "value": "20th Century Boys"
+    },
+    "en-gb": {
+      "language": "en-gb",
+      "value": "20th Century Boys"
+    },
+    "es": {
+      "language": "es",
+      "value": "20th Century Boys"
+    },
+    "fa": {
+      "language": "fa",
+      "value": "پسران قرن بیستم"
+    },
+    "fi": {
+      "language": "fi",
+      "value": "20 seiki shōnen"
+    },
+    "fr": {
+      "language": "fr",
+      "value": "20th Century Boys"
+    },
+    "gl": {
+      "language": "gl",
+      "value": "20th Century Boys"
+    },
+    "id": {
+      "language": "id",
+      "value": "20th Century Boys"
+    },
+    "ja": {
+      "language": "ja",
+      "value": "20世紀少年"
+    },
+    "ko": {
+      "language": "ko",
+      "value": "20세기 소년"
+    },
+    "pl": {
+      "language": "pl",
+      "value": "20th Century Boys"
+    },
+    "pt": {
+      "language": "pt",
+      "value": "20th Century Boys"
+    },
+    "pt-br": {
+      "language": "pt-br",
+      "value": "20th Century Boys"
+    },
+    "ru": {
+      "language": "ru",
+      "value": "20th Century Boys"
+    },
+    "sv": {
+      "language": "sv",
+      "value": "20th Century Boys"
+    },
+    "th": {
+      "language": "th",
+      "value": "ทเวนตี้เซนจูรี่บอย"
+    },
+    "tl": {
+      "language": "tl",
+      "value": "20th Century Boys"
+    },
+    "vi": {
+      "language": "vi",
+      "value": "20th Century Boys"
+    },
+    "zh": {
+      "language": "zh",
+      "value": "20世紀少年"
+    },
+    "nl": {
+      "language": "nl",
+      "value": "20th Century Boys"
+    },
+    "oc": {
+      "language": "oc",
+      "value": "20th Century Boys"
+    },
+    "ar": {
+      "language": "ar",
+      "value": "فتيان القرن 20"
+    },
+    "ms": {
+      "language": "ms",
+      "value": "Filem 20th Century Boys 1: Beginning of the End"
+    },
+    "uz": {
+      "language": "uz",
+      "value": "20-Asr yigitlari"
+    },
+    "be-tarask": {
+      "language": "be-tarask",
+      "value": "Хлапчукі 20-га стагодзьдзя"
+    },
+    "mk": {
+      "language": "mk",
+      "value": "20th Century Boys"
+    },
+    "uk": {
+      "language": "uk",
+      "value": "20th Century Boys"
+    }
+  },
+  "aliases": {
+    "it": [
+      {
+        "language": "it",
+        "value": "21st Century Boys"
+      }
+    ],
+    "de": [
+      {
+        "language": "de",
+        "value": "nijusseiki shōnen"
+      }
+    ],
+    "ar": [
+      {
+        "language": "ar",
+        "value": "فتيان القرن ٢٠"
+      }
+    ],
+    "en": [
+      {
+        "language": "en",
+        "value": "21st Century Boys"
+      },
+      {
+        "language": "en",
+        "value": "Nijū Seiki Shōnen"
+      },
+      {
+        "language": "en",
+        "value": "Naoki Urasawa's 20th Century Boys"
+      },
+      {
+        "language": "en",
+        "value": "Nijuu Seiki Shounen"
+      }
+    ],
+    "ja": [
+      {
+        "language": "ja",
+        "value": "21世紀少年"
+      },
+      {
+        "language": "ja",
+        "value": "本格科学冒険漫画 20世紀少年"
+      }
+    ],
+    "pl": [
+      {
+        "language": "pl",
+        "value": "Chłopaki z dwudziestego wieku"
+      }
+    ],
+    "uk": [
+      {
+        "language": "uk",
+        "value": "Хлопці 20-го століття"
+      }
+    ]
+  },
+  "claims": {
+    "P31": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P31",
+          "hash": "549c072d6be8a6a43f999d1d0e82640b16c4260e",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 21198342,
+              "id": "Q21198342"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q91458$2D6011E3-F6B1-4B82-AAB6-944AB98D0A0D",
+        "rank": "normal"
+      }
+    ],
+    "P50": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P50",
+          "hash": "6bb0f772e367defecb77ffddd0b9fdbd812a1bd6",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 348436,
+              "id": "Q348436"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q91458$DAA48FB2-B0B4-44CD-A9A7-EA225AA920D0",
+        "rank": "normal",
+        "references": [
+          {
+            "hash": "d4bd87b862b12d99d26e86472d44f26858dee639",
+            "snaks": {
+              "P143": [
+                {
+                  "snaktype": "value",
+                  "property": "P143",
+                  "hash": "f30cbd35620c4ea6d0633aaf0210a8916130469b",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 8447,
+                      "id": "Q8447"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P143"
+            ]
+          }
+        ]
+      }
+    ],
+    "P110": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P110",
+          "hash": "60193f3ac7eb8e941067c98a1047cdf624bfa5ff",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 348436,
+              "id": "Q348436"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q91458$DE952846-0B80-41CA-84FC-B14CD3420292",
+        "rank": "normal",
+        "references": [
+          {
+            "hash": "d4bd87b862b12d99d26e86472d44f26858dee639",
+            "snaks": {
+              "P143": [
+                {
+                  "snaktype": "value",
+                  "property": "P143",
+                  "hash": "f30cbd35620c4ea6d0633aaf0210a8916130469b",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 8447,
+                      "id": "Q8447"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P143"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

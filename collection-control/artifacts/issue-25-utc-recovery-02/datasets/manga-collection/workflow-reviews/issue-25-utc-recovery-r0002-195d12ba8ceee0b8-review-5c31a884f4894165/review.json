@@ -1,0 +1,175 @@
+{
+  "status": "pending-human-acceptance",
+  "humanReviewer": null,
+  "entities": [
+    {
+      "entityId": "4d0910a7-e548-4ba7-9ef0-f03377c7e1fe",
+      "name": "YAWARA!",
+      "kind": "work",
+      "wikidata": "Q528619",
+      "existingEntityId": null,
+      "status": "held",
+      "reasons": [
+        "existing-identity-needs-explicit-uuid-mapping"
+      ],
+      "checks": {
+        "providerIdentity": true
+      },
+      "inputPopulation": "relation-endpoint"
+    },
+    {
+      "entityId": "5939642c-8fe8-459b-98c8-1aef555ba212",
+      "name": "MONSTER",
+      "kind": "work",
+      "wikidata": "Q858384",
+      "existingEntityId": null,
+      "status": "held",
+      "reasons": [
+        "existing-identity-needs-explicit-uuid-mapping"
+      ],
+      "checks": {
+        "providerIdentity": true
+      },
+      "inputPopulation": "relation-endpoint"
+    },
+    {
+      "entityId": "64859a28-f815-4982-9123-594ffa0cf4f8",
+      "name": "20世紀少年",
+      "kind": "work",
+      "wikidata": "Q91458",
+      "existingEntityId": null,
+      "status": "held",
+      "reasons": [
+        "existing-identity-needs-explicit-uuid-mapping"
+      ],
+      "checks": {
+        "providerIdentity": true
+      },
+      "inputPopulation": "relation-endpoint"
+    }
+  ],
+  "claims": [
+    {
+      "claimId": "406aebfe-a6eb-48c1-9d93-b377bbd39d8f",
+      "person": "浦沢直樹",
+      "work": "MONSTER",
+      "subjectId": "d900543a-9c11-48c1-be76-1822b756fcc4",
+      "objectId": "5939642c-8fe8-459b-98c8-1aef555ba212",
+      "roleId": "AUTHORSHIP",
+      "scope": {
+        "kind": "publication",
+        "isbn13": "9784091836519",
+        "volumeLabel": "第1巻（NDL巻次 1 (ヘルDr.テンマ)）",
+        "editionLabel": null,
+        "language": "ja"
+      },
+      "status": "held",
+      "reasons": [
+        "endpoint-identity-held"
+      ],
+      "supportingCitationIds": [
+        "a90932b0-25dc-4ab1-9670-c49fecb805cf"
+      ],
+      "existingState": null,
+      "existingClaimId": null,
+      "originalTexts": [
+        "浦沢直樹 著"
+      ],
+      "citationIds": [
+        "a90932b0-25dc-4ab1-9670-c49fecb805cf"
+      ],
+      "sourceUrls": [
+        "https://ndlsearch.ndl.go.jp/books/R100000002-I000002418467"
+      ],
+      "sourceIds": [
+        "d9b3e501-ab02-4001-9254-de6df2af90ac"
+      ]
+    },
+    {
+      "claimId": "e3356616-466b-4ad1-9a56-079f0e118aa8",
+      "person": "浦沢直樹",
+      "work": "20世紀少年",
+      "subjectId": "d900543a-9c11-48c1-be76-1822b756fcc4",
+      "objectId": "64859a28-f815-4982-9123-594ffa0cf4f8",
+      "roleId": "AUTHORSHIP",
+      "scope": {
+        "kind": "publication",
+        "isbn13": "9784091855312",
+        "volumeLabel": "第1巻（NDL巻次 1）",
+        "editionLabel": null,
+        "language": "ja"
+      },
+      "status": "held",
+      "reasons": [
+        "endpoint-identity-held"
+      ],
+      "supportingCitationIds": [
+        "a7b3db1c-b6eb-4088-afa6-7f954ee0c4ad"
+      ],
+      "existingState": null,
+      "existingClaimId": null,
+      "originalTexts": [
+        "浦沢直樹 著"
+      ],
+      "citationIds": [
+        "a7b3db1c-b6eb-4088-afa6-7f954ee0c4ad"
+      ],
+      "sourceUrls": [
+        "https://ndlsearch.ndl.go.jp/books/R100000002-I000002863103"
+      ],
+      "sourceIds": [
+        "0121512a-8598-4aae-b6d3-51015bd27249"
+      ]
+    },
+    {
+      "claimId": "fb541a79-5cf1-470b-9509-65cb8ede41f3",
+      "person": "浦沢直樹",
+      "work": "YAWARA!",
+      "subjectId": "d900543a-9c11-48c1-be76-1822b756fcc4",
+      "objectId": "4d0910a7-e548-4ba7-9ef0-f03377c7e1fe",
+      "roleId": "AUTHORSHIP",
+      "scope": {
+        "kind": "publication",
+        "isbn13": "9784091813411",
+        "volumeLabel": "第1巻（NDL巻次 1）",
+        "editionLabel": null,
+        "language": "ja"
+      },
+      "status": "held",
+      "reasons": [
+        "endpoint-identity-held"
+      ],
+      "supportingCitationIds": [
+        "37c7fedf-a002-4ef3-9bc9-32bd655c6509"
+      ],
+      "existingState": null,
+      "existingClaimId": null,
+      "originalTexts": [
+        "浦沢直樹 著"
+      ],
+      "citationIds": [
+        "37c7fedf-a002-4ef3-9bc9-32bd655c6509"
+      ],
+      "sourceUrls": [
+        "https://ndlsearch.ndl.go.jp/books/R100000002-I000001854814"
+      ],
+      "sourceIds": [
+        "b199fe5f-f5ce-4bca-b375-bafccaf18bbe"
+      ]
+    }
+  ],
+  "inheritedHolds": [],
+  "newCandidateCounts": {
+    "entities": 0,
+    "claims": 0,
+    "sources": 0,
+    "citations": 0
+  },
+  "recordConflicts": [],
+  "roleCounts": {},
+  "normalReviewedEntityCount": 0,
+  "reusedCitationIds": [],
+  "identityOnlyEntityIds": [],
+  "heldClaimCount": 3,
+  "heldEntityCount": 3
+}

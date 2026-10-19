@@ -1,0 +1,36 @@
+{
+  "provider": "iss-ndl-opac / 国立国会図書館",
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "terms": "https://ndlsearch.ndl.go.jp/help/api/provider",
+  "records": [
+    {
+      "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I000002418467",
+      "isbn13": [
+        "9784091836519"
+      ],
+      "title": [
+        "Monster. 1 (ヘルDr.テンマ)"
+      ],
+      "mainTitles": [
+        "Monster"
+      ],
+      "volume": [
+        "1 (ヘルDr.テンマ)"
+      ],
+      "edition": [],
+      "responsibilities": [
+        "浦沢直樹 著"
+      ],
+      "publisher": [
+        "小学館"
+      ],
+      "language": [
+        "jpn"
+      ],
+      "genre": [
+        "漫画"
+      ]
+    }
+  ],
+  "error": null
+}

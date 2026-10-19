@@ -1,0 +1,433 @@
+{
+  "id": "Q348436",
+  "lastrevid": 2540453394,
+  "labels": {
+    "pt": {
+      "language": "pt",
+      "value": "Naoki Urasawa"
+    },
+    "zh-hans": {
+      "language": "zh-hans",
+      "value": "浦泽直树"
+    },
+    "zh-hant": {
+      "language": "zh-hant",
+      "value": "浦澤直樹"
+    },
+    "zh-hk": {
+      "language": "zh-hk",
+      "value": "浦澤直樹"
+    },
+    "zh-cn": {
+      "language": "zh-cn",
+      "value": "浦泽直树"
+    },
+    "zh-sg": {
+      "language": "zh-sg",
+      "value": "浦泽直树"
+    },
+    "zh-tw": {
+      "language": "zh-tw",
+      "value": "浦澤直樹"
+    },
+    "eo": {
+      "language": "eo",
+      "value": "Urasaŭa Naoki"
+    },
+    "ru": {
+      "language": "ru",
+      "value": "Наоки Урасава"
+    },
+    "ko": {
+      "language": "ko",
+      "value": "우라사와 나오키"
+    },
+    "fr": {
+      "language": "fr",
+      "value": "Naoki Urasawa"
+    },
+    "es": {
+      "language": "es",
+      "value": "Naoki Urasawa"
+    },
+    "en": {
+      "language": "en",
+      "value": "Naoki Urasawa"
+    },
+    "th": {
+      "language": "th",
+      "value": "นะโอะกิ อุระซะวะ"
+    },
+    "ca": {
+      "language": "ca",
+      "value": "Naoki Urasawa"
+    },
+    "fi": {
+      "language": "fi",
+      "value": "Naoki Urasawa"
+    },
+    "it": {
+      "language": "it",
+      "value": "Naoki Urasawa"
+    },
+    "gl": {
+      "language": "gl",
+      "value": "Naoki Urasawa"
+    },
+    "id": {
+      "language": "id",
+      "value": "Naoki Urasawa"
+    },
+    "de": {
+      "language": "de",
+      "value": "Naoki Urasawa"
+    },
+    "ja": {
+      "language": "ja",
+      "value": "浦沢直樹"
+    },
+    "vi": {
+      "language": "vi",
+      "value": "Urasawa Naoki"
+    },
+    "fa": {
+      "language": "fa",
+      "value": "نائوکی اوراساوا"
+    },
+    "nl": {
+      "language": "nl",
+      "value": "Naoki Urasawa"
+    },
+    "zh": {
+      "language": "zh",
+      "value": "浦澤直樹"
+    },
+    "lt": {
+      "language": "lt",
+      "value": "Naoki Urasawa"
+    },
+    "ar": {
+      "language": "ar",
+      "value": "ناوكي أوراساوا"
+    },
+    "azb": {
+      "language": "azb",
+      "value": "نائوکی اوراساوا"
+    },
+    "nan": {
+      "language": "nan",
+      "value": "Urasawa Naoki"
+    },
+    "sv": {
+      "language": "sv",
+      "value": "Naoki Urasawa"
+    },
+    "pt-br": {
+      "language": "pt-br",
+      "value": "Naoki Urasawa"
+    },
+    "ast": {
+      "language": "ast",
+      "value": "Naoki Urasawa"
+    },
+    "arz": {
+      "language": "arz",
+      "value": "ناوكى اوراساوا"
+    },
+    "sq": {
+      "language": "sq",
+      "value": "Naoki Urasawa"
+    },
+    "sr": {
+      "language": "sr",
+      "value": "Наоки Урасава"
+    },
+    "tr": {
+      "language": "tr",
+      "value": "Naoki Urasawa"
+    },
+    "sl": {
+      "language": "sl",
+      "value": "Naoki Urasava"
+    },
+    "uk": {
+      "language": "uk",
+      "value": "Урасава Наокі"
+    },
+    "pl": {
+      "language": "pl",
+      "value": "Naoki Urasawa"
+    },
+    "mk": {
+      "language": "mk",
+      "value": "Наоки Урасава"
+    },
+    "cs": {
+      "language": "cs",
+      "value": "Naoki Urusawa"
+    },
+    "ga": {
+      "language": "ga",
+      "value": "Naoki Urasawa"
+    },
+    "ur": {
+      "language": "ur",
+      "value": "ناؤکی ارساوا"
+    },
+    "mul": {
+      "language": "mul",
+      "value": "Naoki Urasawa"
+    }
+  },
+  "aliases": {
+    "zh": [
+      {
+        "language": "zh",
+        "value": "浦沢直樹"
+      }
+    ],
+    "eo": [
+      {
+        "language": "eo",
+        "value": "Naoki Urasaŭa"
+      },
+      {
+        "language": "eo",
+        "value": "Naoki Urasawa"
+      },
+      {
+        "language": "eo",
+        "value": "Urasawa Naoki"
+      }
+    ],
+    "ru": [
+      {
+        "language": "ru",
+        "value": "Урасава Наоки"
+      },
+      {
+        "language": "ru",
+        "value": "Урасава"
+      },
+      {
+        "language": "ru",
+        "value": "Урасава, Наоки"
+      }
+    ],
+    "fr": [
+      {
+        "language": "fr",
+        "value": "Urasawa Naoki"
+      },
+      {
+        "language": "fr",
+        "value": "Urasawa"
+      }
+    ],
+    "th": [
+      {
+        "language": "th",
+        "value": "นาโอกิ อุราซาว่า"
+      }
+    ],
+    "ca": [
+      {
+        "language": "ca",
+        "value": "Urasawa Naoki"
+      }
+    ],
+    "it": [
+      {
+        "language": "it",
+        "value": "Urasawa Naoki"
+      }
+    ],
+    "id": [
+      {
+        "language": "id",
+        "value": "Urasawa Naoki"
+      }
+    ],
+    "de": [
+      {
+        "language": "de",
+        "value": "Urasawa Naoki"
+      },
+      {
+        "language": "de",
+        "value": "Urasawa"
+      }
+    ],
+    "ja": [
+      {
+        "language": "ja",
+        "value": "踊る警官"
+      }
+    ],
+    "vi": [
+      {
+        "language": "vi",
+        "value": "Naoki Urasawa"
+      }
+    ],
+    "fa": [
+      {
+        "language": "fa",
+        "value": "نااوکی اوراساوا"
+      }
+    ],
+    "pl": [
+      {
+        "language": "pl",
+        "value": "Urasawa Naoki"
+      }
+    ],
+    "cs": [
+      {
+        "language": "cs",
+        "value": "浦沢直樹"
+      }
+    ]
+  },
+  "claims": {
+    "P31": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P31",
+          "hash": "ad7d38a03cdd40cdc373de0dc4e7b7fcbccb31d9",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 5,
+              "id": "Q5"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q348436$AEABAEB8-1019-459A-AF71-821D053FF515",
+        "rank": "normal",
+        "references": [
+          {
+            "hash": "72dcac46e136c7f715f66e663255d96409b59493",
+            "snaks": {
+              "P248": [
+                {
+                  "snaktype": "value",
+                  "property": "P248",
+                  "hash": "def9f19d84b65167a2a17ce38364d264c16127fc",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 19938912,
+                      "id": "Q19938912"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ],
+              "P268": [
+                {
+                  "snaktype": "value",
+                  "property": "P268",
+                  "hash": "dc07c10c6609dac47a403d35a998bbaf246fb426",
+                  "datavalue": {
+                    "value": "136080387",
+                    "type": "string"
+                  },
+                  "datatype": "external-id"
+                }
+              ],
+              "P813": [
+                {
+                  "snaktype": "value",
+                  "property": "P813",
+                  "hash": "d6162a1716489623c6e595e448b17f8dca4fb2e8",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2015-10-10T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P248",
+              "P268",
+              "P813"
+            ]
+          },
+          {
+            "hash": "410dbb28a8979004d4677caf464aa677353b76c4",
+            "snaks": {
+              "P248": [
+                {
+                  "snaktype": "value",
+                  "property": "P248",
+                  "hash": "45037a2d1d89deebcdfc5840e9adbaa4b64cebc6",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 50358336,
+                      "id": "Q50358336"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ],
+              "P813": [
+                {
+                  "snaktype": "value",
+                  "property": "P813",
+                  "hash": "430ab1840d9338bda538d67b8bcdb8d37318e0c6",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2024-03-30T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ],
+              "P950": [
+                {
+                  "snaktype": "value",
+                  "property": "P950",
+                  "hash": "85ba6141ba060cf9540a32bc4ec251d498a880fa",
+                  "datavalue": {
+                    "value": "XX1580667",
+                    "type": "string"
+                  },
+                  "datatype": "external-id"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P248",
+              "P813",
+              "P950"
+            ]
+          }
+        ]
+      }
+    ],
+    "P50": [],
+    "P110": []
+  }
+}
