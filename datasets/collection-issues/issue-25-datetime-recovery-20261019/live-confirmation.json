@@ -1,0 +1,107 @@
+{
+  "schemaVersion": 1,
+  "observedAt": "2026-10-19T00:05:48.006801+00:00",
+  "naturalScheduledRun": true,
+  "requestId": "issue-25-utc-recovery-01",
+  "workerCodeCommit": "ed89e5a6ff0cf7d8b485330be790a234a064eacd",
+  "phase": "completed",
+  "jobId": "issue-25-utc-recovery-r0001-2aae694af25bda6e",
+  "newCandidateCounts": {
+    "entities": 1,
+    "claims": 1,
+    "sources": 1,
+    "citations": 1
+  },
+  "publicValidation": true,
+  "temporaryApplyableProjectionRetained": false,
+  "networkAttempts": 89,
+  "maximumAttempts": 142,
+  "providerRequestsAdded": 0,
+  "originalProtectedFilesUnchanged": 744,
+  "originalFileChanges": 0,
+  "publicObservation": {
+    "release": "20261014-credits-001",
+    "revision": "82b01515-594c-48ca-b4b6-515eefac83ca",
+    "observation": "live-readonly-backup",
+    "fixtureSha256": "9dff418c05fad7c07546fa94142bb2d45daaff57a2996357c8311851d5a3cc47",
+    "withdrawals": [],
+    "historySha256": "8c4d0ca686a4ee6d588b5128cb191996f2bbeb015ed002fdb0edb1fdcb738e7b",
+    "references": [
+      {
+        "file": "datasets/public-kg/releases/20261014-credits-001/data.json",
+        "sha256": "ea91b16f52a211b5a8464382ad498b7b2bb2be69a6f33fe125a73a3c7b9da2b5"
+      },
+      {
+        "file": "datasets/public-kg/releases/20261014-credits-001/manifest.json",
+        "sha256": "e4aa3b58ed884f7d1f8fffee43b260261cc2b4d3a867fda942919f439d2bce17"
+      }
+    ]
+  },
+  "explorationPaths": [
+    {
+      "state": "collection-candidate",
+      "observation": "verified-records-only-not-a-live-exploration-test",
+      "edges": [
+        {
+          "claimId": "ca6a2957-2ba2-4149-9550-61a0610a4730",
+          "subjectId": "743d7fc0-ddc6-446a-8aa1-d9a9b284a326",
+          "objectId": "83d4c0b2-1160-4e2a-90fe-b06cdd4a26cb",
+          "person": "高橋留美子",
+          "work": "犬夜叉",
+          "roleId": "AUTHORSHIP",
+          "scope": {
+            "kind": "publication",
+            "isbn13": "9784091252012",
+            "volumeLabel": "第1巻（NDL巻次 1）",
+            "editionLabel": null,
+            "language": "ja"
+          },
+          "state": "collection-candidate",
+          "citationIds": [
+            "2eca3dac-fbd1-4283-8d3e-cd284074ff80"
+          ],
+          "sourceIds": [
+            "7240e668-45fd-4125-b330-454e10cc5a0a"
+          ]
+        },
+        {
+          "claimId": "121709e5-ea90-4c6a-87d1-d67264e1590d",
+          "subjectId": "743d7fc0-ddc6-446a-8aa1-d9a9b284a326",
+          "objectId": "b1e1232d-b038-4c11-b80c-ab1c2710d2bf",
+          "person": "高橋留美子",
+          "work": "うる星やつら",
+          "roleId": "AUTHORSHIP",
+          "scope": {
+            "kind": "publication",
+            "isbn13": "9784091228017",
+            "volumeLabel": "第1巻",
+            "editionLabel": null,
+            "language": "ja"
+          },
+          "state": "formally-accepted-not-applied",
+          "citationIds": [
+            "fa8985f2-6775-4348-a136-9a5dee986b1a"
+          ],
+          "sourceIds": [
+            "28614027-38d3-4b20-b460-8b1b48b4eb07"
+          ]
+        }
+      ]
+    }
+  ],
+  "recoveryStates": {
+    "issue-25-utc-recovery-01": "completed",
+    "issue-25-utc-recovery-02": "waiting-control",
+    "issue-25-utc-recovery-03": "waiting-control",
+    "issue-25-utc-recovery-04": "waiting-control",
+    "issue-25-utc-recovery-05": "waiting-control",
+    "issue-25-utc-recovery-06": "waiting-control",
+    "issue-25-utc-recovery-07": "waiting-control",
+    "issue-25-utc-recovery-08": "waiting-control",
+    "issue-25-utc-recovery-09": "waiting-control"
+  },
+  "nextStartAt": "2026-10-19T00:12:58.237554+00:00",
+  "formalAcceptance": false,
+  "publicApply": false,
+  "githubResult": "https://github.com/isinxnisi/graph-knowledge/blob/codex/collection-control/collection-control/results/issue-25-utc-recovery-01/README.md"
+}
