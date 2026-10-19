@@ -20,7 +20,7 @@ export const TARGET_HISTORY_PAGES=256;
 export const connectionsWorkspaceSchema=z.strictObject({version:z.literal(1),step:z.enum(["presets","targets","selected"]),filters:catalogFiltersSchema,
   criteria:z.strictObject({q:z.string().max(100),kind:z.enum(["person","work","organization","event"]).nullable(),relation:relationConditionSchema.nullable(),nameTarget:z.enum(["subject","contributor"]).optional()}),
   cursors:z.array(z.string().max(4096).nullable()).min(1).max(TARGET_HISTORY_PAGES),cache:targetSearchResponseSchema.nullable(),selected:connectionSelectionSchema.nullable(),
-  activePreset:z.string().nullable(),subjectTrail:z.array(connectionSelectionSchema).max(10).optional(),scrolls:z.strictObject({presets:scroll,targets:scroll,selected:scroll})});
+  activePreset:z.string().nullable(),subjectTrail:z.array(connectionSelectionSchema).max(10).optional(),selectedDepth:z.union([z.literal(2),z.literal(3)]).optional(),scrolls:z.strictObject({presets:scroll,targets:scroll,selected:scroll})});
 export type ConnectionsWorkspace=z.infer<typeof connectionsWorkspaceSchema>;
 export const initialConnectionsWorkspace:ConnectionsWorkspace={version:1,step:"presets",filters:initialCatalogFilters,criteria:{q:"",kind:null,relation:null},cursors:[null],cache:null,selected:null,activePreset:null,scrolls:{presets:0,targets:0,selected:0}};
 export const canonicalTargetCriteria=(input:ConnectionsWorkspace["criteria"])=>input.nameTarget!==undefined||input.relation?.type==="pattern"&&input.relation.pattern.revision===2?targetCriteriaV2Schema.safeParse({...input,nameTarget:input.nameTarget??"subject"}):targetCriteriaSchema.safeParse(input);

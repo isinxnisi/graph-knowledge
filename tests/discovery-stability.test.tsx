@@ -29,6 +29,11 @@ it("結果が復帰してから保存位置を適用し、ステップごとの�
  expect(el.current.scrollTo).not.toHaveBeenCalled();rerender({ready:true});expect(el.current.scrollTo).toHaveBeenLastCalledWith({top:320});
  act(()=>result.current.prepare("presets"));const s=result.current.capture({...value,step:"presets"});expect(s.scrolls).toEqual(value.scrolls);
 });
+it("新しい接点探索の先頭位置は取得待ちにせず表示し、非ゼロの復帰位置は待つ",()=>{
+ const el=body(),checkpoint=vi.fn();el.current.scrollTop=500;
+ renderHook(()=>useDiscoveryScroll({...target(),step:"selected"},el,checkpoint,false));
+ expect(el.current.scrollTo).toHaveBeenLastCalledWith({top:0});
+});
 it("連続編集の履歴保存を毎フレーム行わず、Graph前に最新状態を同期flushする",async()=>{
  const replace=vi.spyOn(history,"replaceState"),source={current:"home"},start=snapshot();
  const {result,rerender}=renderHook(({value})=>useDiscoveryHistory(value,true,false,source),{initialProps:{value:start}});

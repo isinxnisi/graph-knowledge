@@ -23,6 +23,8 @@ it("対象指定有無は独立プロパティとして判定し、新方式2件
  expect(presetCatalog.filter(p=>presetApplication(p).binding==="legacy")).toHaveLength(3);
  expect(presetApplication(presetCatalog.find(p=>p.id==="pluto")!)).toMatchObject({binding:"bound",relation:{type:"adjacent",predicates:["CONTRIBUTED_TO"],polarity:"all-records"}});
  expect(connectionsWorkspaceSchema.parse(initialConnectionsWorkspace)).toEqual(initialConnectionsWorkspace);
+ expect(connectionsWorkspaceSchema.parse({...initialConnectionsWorkspace,selectedDepth:3}).selectedDepth).toBe(3);
+ expect(connectionsWorkspaceSchema.safeParse({...initialConnectionsWorkspace,selectedDepth:4}).success).toBe(false);
 });
 it("検索と同じ条件・完全証拠・公開版を渡し、初期表示は通常Graphと同じ最初の展開にする",()=>{
  const {workspace,handoff}=parse();expect(workspace.relation).toEqual(relation);expect(handoff.witness).toEqual(witness);

@@ -12,7 +12,9 @@ export function useDiscoveryScroll(value: ConnectionsWorkspace, body: RefObject<
   const prepare = useCallback((step: ConnectionsWorkspace["step"], top = positions.current[step]) => { restore.current = top; }, []);
   useLayoutEffect(() => {
     const el = body.current;
-    if (restore.current === null || !el || !canRestore) return;
+    // New explorations can start at the top immediately. A saved nonzero
+    // position needs the asynchronous result content to exist first.
+    if (restore.current === null || !el || !canRestore && restore.current !== 0) return;
     positions.current[value.step] = restore.current; el.scrollTo({ top: restore.current }); restore.current = null;
   }, [value.step, body, canRestore]);
   useEffect(() => {
