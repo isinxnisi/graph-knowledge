@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
-  "id": "control-0001",
+  "id": "control-0002",
   "workerId": "plunode-wsl",
-  "revision": 1,
-  "previousControlId": null,
+  "revision": 2,
+  "previousControlId": "issue-32-phase-b-migration-pause-new-20261020",
   "status": "draft-not-approved",
   "approvalScope": "worker-execution-control-only",
   "action": "pause-new",

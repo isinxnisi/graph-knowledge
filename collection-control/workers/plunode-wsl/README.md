@@ -1,14 +1,16 @@
 # CollectionWorkerの実行制御
 
-確認: 2026-10-20 03:18:12 JST。
+確認: 2026-10-20 03:26:28 JST。
 
-反映済みcontrolRevision: 0／最後の操作: なし。
+反映済みcontrolRevision: 1／最後の操作: issue-32-phase-b-migration-pause-new-20261020。
 
-**interval**／停止モード: なし
+**pause-new**／停止モード: pause-new
 
 日本時間: 03:00〜07:00、09:00〜12:00、15:00〜18:00。ジョブ間10分休憩。
 
-次の開始候補: 2026-10-20 03:28:12 JST
+次の開始候補: 再開操作／制御修正待ち
+
+最後の操作SHA-256: 9a95b517716b27f8694376923c0c3424ea76846db2bf3e77f8277218255a04e9
 
 ChatGPTは[未承認の操作雛形](control-template.json)を読み、運営者が明示した操作だけを controls/plunode-wsl/ID.json に新規登録する。
 

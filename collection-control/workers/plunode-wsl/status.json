@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "workerId": "plunode-wsl",
   "codeCommit": "ed89e5a6ff0cf7d8b485330be790a234a064eacd",
-  "controlRevision": 0,
-  "lastControlSha256": null,
-  "lastControlId": null,
+  "controlRevision": 1,
+  "lastControlSha256": "9a95b517716b27f8694376923c0c3424ea76846db2bf3e77f8277218255a04e9",
+  "lastControlId": "issue-32-phase-b-migration-pause-new-20261020",
   "timezone": "Asia/Tokyo",
   "windows": [
     {
@@ -20,20 +20,19 @@
       "end": "18:00"
     }
   ],
-  "pauseMode": null,
+  "pauseMode": "pause-new",
   "intervalMinutes": 10,
   "newStartMarginMinutes": 15,
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
   "nextStartAt": "2026-10-19T18:28:12.662578+00:00",
-  "phase": "interval",
+  "phase": "pause-new",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
-    "reason": "interval",
-    "eligibleAt": "2026-10-19T18:28:12.662578+00:00",
-    "windowEndAt": "2026-10-19T22:00:00+00:00"
+    "reason": "pause-new",
+    "eligibleAt": null
   },
   "activeAttempt": null,
   "lastAttempt": {
@@ -90,5 +89,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-10-19T18:18:12.713172+00:00"
+  "checkedAt": "2026-10-19T18:26:28.237661+00:00"
 }
