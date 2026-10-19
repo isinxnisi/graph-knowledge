@@ -1,0 +1,52 @@
+[
+  {
+    "state": "collection-candidate",
+    "observation": "verified-records-only-not-a-live-exploration-test",
+    "edges": [
+      {
+        "claimId": "ca6a2957-2ba2-4149-9550-61a0610a4730",
+        "subjectId": "743d7fc0-ddc6-446a-8aa1-d9a9b284a326",
+        "objectId": "83d4c0b2-1160-4e2a-90fe-b06cdd4a26cb",
+        "person": "高橋留美子",
+        "work": "犬夜叉",
+        "roleId": "AUTHORSHIP",
+        "scope": {
+          "kind": "publication",
+          "isbn13": "9784091252012",
+          "volumeLabel": "第1巻（NDL巻次 1）",
+          "editionLabel": null,
+          "language": "ja"
+        },
+        "state": "collection-candidate",
+        "citationIds": [
+          "2eca3dac-fbd1-4283-8d3e-cd284074ff80"
+        ],
+        "sourceIds": [
+          "7240e668-45fd-4125-b330-454e10cc5a0a"
+        ]
+      },
+      {
+        "claimId": "121709e5-ea90-4c6a-87d1-d67264e1590d",
+        "subjectId": "743d7fc0-ddc6-446a-8aa1-d9a9b284a326",
+        "objectId": "b1e1232d-b038-4c11-b80c-ab1c2710d2bf",
+        "person": "高橋留美子",
+        "work": "うる星やつら",
+        "roleId": "AUTHORSHIP",
+        "scope": {
+          "kind": "publication",
+          "isbn13": "9784091228017",
+          "volumeLabel": "第1巻",
+          "editionLabel": null,
+          "language": "ja"
+        },
+        "state": "formally-accepted-not-applied",
+        "citationIds": [
+          "fa8985f2-6775-4348-a136-9a5dee986b1a"
+        ],
+        "sourceIds": [
+          "28614027-38d3-4b20-b460-8b1b48b4eb07"
+        ]
+      }
+    ]
+  }
+]

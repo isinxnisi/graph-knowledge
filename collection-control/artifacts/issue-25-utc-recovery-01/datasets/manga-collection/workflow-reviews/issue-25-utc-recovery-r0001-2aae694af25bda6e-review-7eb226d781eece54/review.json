@@ -1,0 +1,84 @@
+{
+  "status": "pending-human-acceptance",
+  "humanReviewer": null,
+  "entities": [
+    {
+      "entityId": "743d7fc0-ddc6-446a-8aa1-d9a9b284a326",
+      "name": "高橋留美子",
+      "kind": "person",
+      "wikidata": "Q219948",
+      "existingEntityId": "743d7fc0-ddc6-446a-8aa1-d9a9b284a326",
+      "status": "reuse-formally-accepted-not-applied",
+      "reasons": [],
+      "checks": {
+        "providerIdentity": true
+      },
+      "inputPopulation": "relation-endpoint"
+    },
+    {
+      "entityId": "83d4c0b2-1160-4e2a-90fe-b06cdd4a26cb",
+      "name": "犬夜叉",
+      "kind": "work",
+      "wikidata": "Q182056",
+      "existingEntityId": null,
+      "status": "candidate",
+      "reasons": [],
+      "checks": {
+        "providerIdentity": true
+      },
+      "inputPopulation": "relation-endpoint"
+    }
+  ],
+  "claims": [
+    {
+      "claimId": "ca6a2957-2ba2-4149-9550-61a0610a4730",
+      "person": "高橋留美子",
+      "work": "犬夜叉",
+      "subjectId": "743d7fc0-ddc6-446a-8aa1-d9a9b284a326",
+      "objectId": "83d4c0b2-1160-4e2a-90fe-b06cdd4a26cb",
+      "roleId": "AUTHORSHIP",
+      "scope": {
+        "kind": "publication",
+        "isbn13": "9784091252012",
+        "volumeLabel": "第1巻（NDL巻次 1）",
+        "editionLabel": null,
+        "language": "ja"
+      },
+      "status": "candidate",
+      "reasons": [],
+      "supportingCitationIds": [
+        "2eca3dac-fbd1-4283-8d3e-cd284074ff80"
+      ],
+      "existingState": null,
+      "existingClaimId": null,
+      "originalTexts": [
+        "高橋留美子 著"
+      ],
+      "citationIds": [
+        "2eca3dac-fbd1-4283-8d3e-cd284074ff80"
+      ],
+      "sourceUrls": [
+        "https://ndlsearch.ndl.go.jp/books/R100000002-I000002576618"
+      ],
+      "sourceIds": [
+        "7240e668-45fd-4125-b330-454e10cc5a0a"
+      ]
+    }
+  ],
+  "inheritedHolds": [],
+  "newCandidateCounts": {
+    "entities": 1,
+    "claims": 1,
+    "sources": 1,
+    "citations": 1
+  },
+  "recordConflicts": [],
+  "roleCounts": {
+    "AUTHORSHIP": 1
+  },
+  "normalReviewedEntityCount": 1,
+  "reusedCitationIds": [],
+  "identityOnlyEntityIds": [],
+  "heldClaimCount": 0,
+  "heldEntityCount": 0
+}

@@ -1,0 +1,174 @@
+{
+  "schemaVersion": 2,
+  "status": "pending-human-acceptance",
+  "recipe": "manga-r0017",
+  "collectionContext": {
+    "themeId": "issue-25-utc-recovery",
+    "themeRevision": 1,
+    "definitionSha256": "658961932f2ec1df33753e7ba38d8669ca3e20e1da91e03b23dd01e65f5b71b9",
+    "approvalSha256": "8b80a7db122e990ca817e428692ba22197abf2777e37c327adfc3f1c51f353f2"
+  },
+  "execution": {
+    "adapter": "manga-discovery-v2",
+    "codeSha256": "80e05b67bc0129b963653b90df4cfbfa5bd6aff190acda99f54c08541e55801e",
+    "inputs": [
+      {
+        "file": "datasets/manga-collection/r0017/recipe.json",
+        "sha256": "b3b58514a20ecfdc79090bc397fa9db81841dfc397860d98ef1dde4cc80bc5a9"
+      },
+      {
+        "file": "datasets/manga-collection/r0017/anchor-review.json",
+        "sha256": "c45484aa67dcaafcae952a6cfe751564c286763194a101cc31756c41b89ab140"
+      },
+      {
+        "file": "datasets/manga-collection/r0017/publication-review.json",
+        "sha256": "ca84a9482604dd500d6ae6ca3075fcf8708c0ee8aa24f5900213e7a2e24dcf38"
+      },
+      {
+        "file": "docs/research/famous-manga-creators/20261016/candidates.json",
+        "sha256": "8531fada01e5c635ba2ee278a7ef944a73f64676af14ed42ae0e690f5a1ff978"
+      },
+      {
+        "file": "datasets/public-kg/releases/20261014-credits-001/data.json",
+        "sha256": "ea91b16f52a211b5a8464382ad498b7b2bb2be69a6f33fe125a73a3c7b9da2b5"
+      },
+      {
+        "file": "datasets/public-kg/releases/20261014-credits-001/manifest.json",
+        "sha256": "e4aa3b58ed884f7d1f8fffee43b260261cc2b4d3a867fda942919f439d2bce17"
+      }
+    ],
+    "maxEntities": 2111,
+    "maxClaims": 1847
+  },
+  "identityMappings": [
+    {
+      "name": "高橋留美子",
+      "wikidata": "Q219948",
+      "entityId": "743d7fc0-ddc6-446a-8aa1-d9a9b284a326",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "犬夜叉",
+      "wikidata": "Q182056",
+      "entityId": "83d4c0b2-1160-4e2a-90fe-b06cdd4a26cb",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    }
+  ],
+  "rows": [
+    {
+      "kind": "wikidata-relation",
+      "work": "犬夜叉",
+      "property": "P50",
+      "personQid": "Q219948",
+      "statementId": "Q182056$B3A6B042-9B0E-4109-B871-49C6F9A2FD95",
+      "qualifiers": {},
+      "references": [
+        {
+          "hash": "d4bd87b862b12d99d26e86472d44f26858dee639",
+          "snaks": {
+            "P143": [
+              {
+                "snaktype": "value",
+                "property": "P143",
+                "hash": "f30cbd35620c4ea6d0633aaf0210a8916130469b",
+                "datavalue": {
+                  "value": {
+                    "entity-type": "item",
+                    "numeric-id": 8447,
+                    "id": "Q8447"
+                  },
+                  "type": "wikibase-entityid"
+                },
+                "datatype": "wikibase-item"
+              }
+            ]
+          },
+          "snaks-order": [
+            "P143"
+          ]
+        }
+      ],
+      "status": "candidate-only-no-role-inference",
+      "reason": "Wikidata propertyだけで具体Roleや直接制作の意味を確定しない"
+    },
+    {
+      "kind": "wikidata-relation",
+      "work": "犬夜叉",
+      "property": "P110",
+      "personQid": "Q219948",
+      "statementId": "Q182056$883D16AF-6C17-4E87-94A5-87D277095E29",
+      "qualifiers": {},
+      "references": [
+        {
+          "hash": "d4bd87b862b12d99d26e86472d44f26858dee639",
+          "snaks": {
+            "P143": [
+              {
+                "snaktype": "value",
+                "property": "P143",
+                "hash": "f30cbd35620c4ea6d0633aaf0210a8916130469b",
+                "datavalue": {
+                  "value": {
+                    "entity-type": "item",
+                    "numeric-id": 8447,
+                    "id": "Q8447"
+                  },
+                  "type": "wikibase-entityid"
+                },
+                "datatype": "wikibase-item"
+              }
+            ]
+          },
+          "snaks-order": [
+            "P143"
+          ]
+        }
+      ],
+      "status": "candidate-only-no-role-inference",
+      "reason": "Wikidata propertyだけで具体Roleや直接制作の意味を確定しない"
+    },
+    {
+      "kind": "ndl-credit",
+      "work": "犬夜叉",
+      "isbn13": "9784091252012",
+      "rawResponsibility": "高橋留美子 著",
+      "sourceUrl": "https://ndlsearch.ndl.go.jp/books/R100000002-I000002576618",
+      "status": "pending-human-acceptance",
+      "roleId": "AUTHORSHIP",
+      "person": "高橋留美子",
+      "claimId": "ca6a2957-2ba2-4149-9550-61a0610a4730",
+      "reusedClaim": false,
+      "subjectId": "743d7fc0-ddc6-446a-8aa1-d9a9b284a326",
+      "objectId": "83d4c0b2-1160-4e2a-90fe-b06cdd4a26cb"
+    }
+  ],
+  "holds": [],
+  "acquisitions": [
+    {
+      "kind": "wikidata",
+      "identifier": "Q219948",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q219948.json",
+      "sha256": "9448e7e6316ee3b1b330b297df5c9e4613dac517c2bb4f859e7b9ede792f4d7c",
+      "bytes": 128370,
+      "fetchedAt": "2026-10-18T18:39:13+00:00"
+    },
+    {
+      "kind": "wikidata",
+      "identifier": "Q182056",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q182056.json",
+      "sha256": "e8519737242b799a124c8e504715dc4e5e9e5aeeabf3a9660454eee3c8182a5e",
+      "bytes": 61037,
+      "fetchedAt": "2026-10-18T18:40:17+00:00"
+    },
+    {
+      "kind": "ndl",
+      "identifier": "9784091252012",
+      "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&maximumRecords=5&query=isbn%3D%229784091252012%22+AND+dpid%3Diss-ndl-opac",
+      "sha256": "1a201984cfc39ae3d6c065bbc4f6424907afa8268a71d82bda960929b006c0c7",
+      "bytes": 35621,
+      "fetchedAt": "2026-10-18T18:55:15+00:00"
+    }
+  ]
+}

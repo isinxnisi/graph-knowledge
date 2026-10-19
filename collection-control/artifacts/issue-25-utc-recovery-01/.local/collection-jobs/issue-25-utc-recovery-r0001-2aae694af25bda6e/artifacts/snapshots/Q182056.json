@@ -1,0 +1,659 @@
+{
+  "id": "Q182056",
+  "lastrevid": 2548126957,
+  "labels": {
+    "zh-hans": {
+      "language": "zh-hans",
+      "value": "犬夜叉"
+    },
+    "zh-hant": {
+      "language": "zh-hant",
+      "value": "犬夜叉"
+    },
+    "zh-hk": {
+      "language": "zh-hk",
+      "value": "犬夜叉"
+    },
+    "zh-cn": {
+      "language": "zh-cn",
+      "value": "犬夜叉"
+    },
+    "zh-sg": {
+      "language": "zh-sg",
+      "value": "犬夜叉"
+    },
+    "zh-tw": {
+      "language": "zh-tw",
+      "value": "犬夜叉"
+    },
+    "gsw": {
+      "language": "gsw",
+      "value": "Inu Yasha"
+    },
+    "pl": {
+      "language": "pl",
+      "value": "InuYasha"
+    },
+    "ko": {
+      "language": "ko",
+      "value": "이누야샤"
+    },
+    "fr": {
+      "language": "fr",
+      "value": "Inu-Yasha"
+    },
+    "he": {
+      "language": "he",
+      "value": "אינויאשה"
+    },
+    "es": {
+      "language": "es",
+      "value": "InuYasha"
+    },
+    "ms": {
+      "language": "ms",
+      "value": "InuYasha"
+    },
+    "hu": {
+      "language": "hu",
+      "value": "InuYasha"
+    },
+    "it": {
+      "language": "it",
+      "value": "Inuyasha"
+    },
+    "gl": {
+      "language": "gl",
+      "value": "Inuyasha"
+    },
+    "et": {
+      "language": "et",
+      "value": "Inuyasha"
+    },
+    "de": {
+      "language": "de",
+      "value": "Inu Yasha"
+    },
+    "id": {
+      "language": "id",
+      "value": "Inuyasha"
+    },
+    "ml": {
+      "language": "ml",
+      "value": "ഇനുയാഷാ"
+    },
+    "ja": {
+      "language": "ja",
+      "value": "犬夜叉"
+    },
+    "sq": {
+      "language": "sq",
+      "value": "Inuyasha"
+    },
+    "vi": {
+      "language": "vi",
+      "value": "InuYasha"
+    },
+    "en": {
+      "language": "en",
+      "value": "Inuyasha"
+    },
+    "yue": {
+      "language": "yue",
+      "value": "犬夜叉"
+    },
+    "my": {
+      "language": "my",
+      "value": "အိနုယာရှ"
+    },
+    "nl": {
+      "language": "nl",
+      "value": "InuYasha"
+    },
+    "ar": {
+      "language": "ar",
+      "value": "إينوياشا"
+    },
+    "sv": {
+      "language": "sv",
+      "value": "Inu Yasha"
+    },
+    "pt": {
+      "language": "pt",
+      "value": "InuYasha"
+    },
+    "eo": {
+      "language": "eo",
+      "value": "Inuyasha"
+    },
+    "su": {
+      "language": "su",
+      "value": "Inuyasha"
+    },
+    "ru": {
+      "language": "ru",
+      "value": "InuYasha"
+    },
+    "sr-el": {
+      "language": "sr-el",
+      "value": "InuYasha"
+    },
+    "sr-ec": {
+      "language": "sr-ec",
+      "value": "InuYasha"
+    },
+    "ro": {
+      "language": "ro",
+      "value": "InuYasha"
+    },
+    "th": {
+      "language": "th",
+      "value": "อินุยาฉะ เทพอสูรจิ้งจอกเงิน"
+    },
+    "ca": {
+      "language": "ca",
+      "value": "Inuyasha"
+    },
+    "fi": {
+      "language": "fi",
+      "value": "Inuyasha"
+    },
+    "uk": {
+      "language": "uk",
+      "value": "Inuyasha"
+    },
+    "cs": {
+      "language": "cs",
+      "value": "Inuyasha"
+    },
+    "fa": {
+      "language": "fa",
+      "value": "اینویاشا"
+    },
+    "hr": {
+      "language": "hr",
+      "value": "InuYasha"
+    },
+    "tl": {
+      "language": "tl",
+      "value": "InuYasha"
+    },
+    "kk-arab": {
+      "language": "kk-arab",
+      "value": "ىنۇياسيا"
+    },
+    "kk-cn": {
+      "language": "kk-cn",
+      "value": "ىنۇياسيا"
+    },
+    "kk-tr": {
+      "language": "kk-tr",
+      "value": "Inuyasya"
+    },
+    "kk-kz": {
+      "language": "kk-kz",
+      "value": "Ынұяся"
+    },
+    "kk-cyrl": {
+      "language": "kk-cyrl",
+      "value": "Ынұяся"
+    },
+    "kk-latn": {
+      "language": "kk-latn",
+      "value": "Inuyasya"
+    },
+    "zh": {
+      "language": "zh",
+      "value": "犬夜叉"
+    },
+    "sr": {
+      "language": "sr",
+      "value": "InuYasha"
+    },
+    "sh": {
+      "language": "sh",
+      "value": "InuYasha"
+    },
+    "nb": {
+      "language": "nb",
+      "value": "InuYasha"
+    },
+    "jv": {
+      "language": "jv",
+      "value": "Inuyasha"
+    },
+    "mo": {
+      "language": "mo",
+      "value": "InuYasha"
+    },
+    "sco": {
+      "language": "sco",
+      "value": "Inuyasha"
+    },
+    "eu": {
+      "language": "eu",
+      "value": "Inuyasha"
+    },
+    "lzh": {
+      "language": "lzh",
+      "value": "犬夜叉"
+    },
+    "nan": {
+      "language": "nan",
+      "value": "Inuyasha"
+    },
+    "ceb": {
+      "language": "ceb",
+      "value": "InuYasha"
+    },
+    "bn": {
+      "language": "bn",
+      "value": "ইনুইয়াশা"
+    },
+    "wuu": {
+      "language": "wuu",
+      "value": "犬夜叉"
+    },
+    "da": {
+      "language": "da",
+      "value": "Inu Yasha"
+    },
+    "tr": {
+      "language": "tr",
+      "value": "InuYasha"
+    },
+    "oc": {
+      "language": "oc",
+      "value": "Inuyasha"
+    },
+    "bew": {
+      "language": "bew",
+      "value": "Inuyasha"
+    },
+    "ku": {
+      "language": "ku",
+      "value": "ئینویاشا"
+    },
+    "acm": {
+      "language": "acm",
+      "value": "اينوياشا"
+    }
+  },
+  "aliases": {
+    "ko": [
+      {
+        "language": "ko",
+        "value": "이누야샤 완결편"
+      },
+      {
+        "language": "ko",
+        "value": "견야차"
+      }
+    ],
+    "fr": [
+      {
+        "language": "fr",
+        "value": "InuYasha"
+      },
+      {
+        "language": "fr",
+        "value": "Inu Yasha"
+      },
+      {
+        "language": "fr",
+        "value": "Kagome"
+      }
+    ],
+    "he": [
+      {
+        "language": "he",
+        "value": "קיקיו"
+      },
+      {
+        "language": "he",
+        "value": "חבורת השבעה"
+      },
+      {
+        "language": "he",
+        "value": "מירוקו"
+      },
+      {
+        "language": "he",
+        "value": "שיפו"
+      },
+      {
+        "language": "he",
+        "value": "קגומה היגוראשי"
+      }
+    ],
+    "es": [
+      {
+        "language": "es",
+        "value": "Inu-Yasha"
+      },
+      {
+        "language": "es",
+        "value": "Inu Yasha"
+      },
+      {
+        "language": "es",
+        "value": "Gallina Inuyasha Kanketsu"
+      }
+    ],
+    "it": [
+      {
+        "language": "it",
+        "value": "Inu-Yasha"
+      },
+      {
+        "language": "it",
+        "value": "Inuyasha The Final Act"
+      },
+      {
+        "language": "it",
+        "value": "Inu Yasha"
+      },
+      {
+        "language": "it",
+        "value": "InuYasha Kanketsu-hen"
+      }
+    ],
+    "et": [
+      {
+        "language": "et",
+        "value": "Inuyasha(Manga)"
+      },
+      {
+        "language": "et",
+        "value": "Inu-Yasha"
+      },
+      {
+        "language": "et",
+        "value": "Inu Yasha"
+      },
+      {
+        "language": "et",
+        "value": "Sengoku Otogizōshi InuYasha"
+      }
+    ],
+    "de": [
+      {
+        "language": "de",
+        "value": "InuYasha"
+      },
+      {
+        "language": "de",
+        "value": "Inu-Yasha"
+      },
+      {
+        "language": "de",
+        "value": "Inuyasha"
+      }
+    ],
+    "ml": [
+      {
+        "language": "ml",
+        "value": "InuYasha"
+      }
+    ],
+    "ja": [
+      {
+        "language": "ja",
+        "value": "犬夜叉 完結編"
+      }
+    ],
+    "my": [
+      {
+        "language": "my",
+        "value": "Inuyasha"
+      }
+    ],
+    "ar": [
+      {
+        "language": "ar",
+        "value": "اينيوشا"
+      },
+      {
+        "language": "ar",
+        "value": "إنيوشا"
+      },
+      {
+        "language": "ar",
+        "value": "إينيوشا"
+      },
+      {
+        "language": "ar",
+        "value": "إنوياشا"
+      }
+    ],
+    "sv": [
+      {
+        "language": "sv",
+        "value": "Inu-Yasha"
+      },
+      {
+        "language": "sv",
+        "value": "InuYasha"
+      }
+    ],
+    "pt": [
+      {
+        "language": "pt",
+        "value": "Inu Yasha"
+      }
+    ],
+    "ru": [
+      {
+        "language": "ru",
+        "value": "Инуяша"
+      },
+      {
+        "language": "ru",
+        "value": "Инуяся"
+      }
+    ],
+    "sr": [
+      {
+        "language": "sr",
+        "value": "Inu Yasha"
+      },
+      {
+        "language": "sr",
+        "value": "犬夜叉"
+      }
+    ],
+    "ro": [
+      {
+        "language": "ro",
+        "value": "Inuyasha(character)"
+      }
+    ],
+    "th": [
+      {
+        "language": "th",
+        "value": "อินุยาฉะ"
+      },
+      {
+        "language": "th",
+        "value": "เทพอสูรจิ้งจอกเงิน"
+      }
+    ],
+    "ca": [
+      {
+        "language": "ca",
+        "value": "Inu-Yasha"
+      },
+      {
+        "language": "ca",
+        "value": "Inu Yasha"
+      }
+    ],
+    "fi": [
+      {
+        "language": "fi",
+        "value": "Inu-Yasha"
+      },
+      {
+        "language": "fi",
+        "value": "Inu Yasha"
+      }
+    ],
+    "uk": [
+      {
+        "language": "uk",
+        "value": "InuYasha"
+      },
+      {
+        "language": "uk",
+        "value": "Інуяся"
+      }
+    ],
+    "cs": [
+      {
+        "language": "cs",
+        "value": "InuJaša"
+      }
+    ],
+    "fa": [
+      {
+        "language": "fa",
+        "value": "اینو یاشا"
+      }
+    ],
+    "tl": [
+      {
+        "language": "tl",
+        "value": "Inu-Yasha"
+      }
+    ],
+    "nb": [
+      {
+        "language": "nb",
+        "value": "Inu-Yasha"
+      }
+    ],
+    "bn": [
+      {
+        "language": "bn",
+        "value": "ইনুইয়াশা: এ ফিউড্যাল ফেয়ারি টেল"
+      }
+    ]
+  },
+  "claims": {
+    "P31": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P31",
+          "hash": "549c072d6be8a6a43f999d1d0e82640b16c4260e",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 21198342,
+              "id": "Q21198342"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q182056$77353370-8723-40D4-AC02-B2FC9195F83C",
+        "rank": "normal"
+      }
+    ],
+    "P50": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P50",
+          "hash": "228d99de4a6e28f821350b787d7263e2bd16d28e",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 219948,
+              "id": "Q219948"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q182056$B3A6B042-9B0E-4109-B871-49C6F9A2FD95",
+        "rank": "normal",
+        "references": [
+          {
+            "hash": "d4bd87b862b12d99d26e86472d44f26858dee639",
+            "snaks": {
+              "P143": [
+                {
+                  "snaktype": "value",
+                  "property": "P143",
+                  "hash": "f30cbd35620c4ea6d0633aaf0210a8916130469b",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 8447,
+                      "id": "Q8447"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P143"
+            ]
+          }
+        ]
+      }
+    ],
+    "P110": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P110",
+          "hash": "ba06b516dbdc6b18da8e8247f5a79563c6ce9244",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 219948,
+              "id": "Q219948"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q182056$883D16AF-6C17-4E87-94A5-87D277095E29",
+        "rank": "normal",
+        "references": [
+          {
+            "hash": "d4bd87b862b12d99d26e86472d44f26858dee639",
+            "snaks": {
+              "P143": [
+                {
+                  "snaktype": "value",
+                  "property": "P143",
+                  "hash": "f30cbd35620c4ea6d0633aaf0210a8916130469b",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 8447,
+                      "id": "Q8447"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P143"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

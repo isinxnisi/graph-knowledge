@@ -1,0 +1,713 @@
+{
+  "id": "Q219948",
+  "lastrevid": 2558231352,
+  "labels": {
+    "zh-hans": {
+      "language": "zh-hans",
+      "value": "高桥留美子"
+    },
+    "zh-hant": {
+      "language": "zh-hant",
+      "value": "高橋留美子"
+    },
+    "zh-hk": {
+      "language": "zh-hk",
+      "value": "高橋留美子"
+    },
+    "zh-cn": {
+      "language": "zh-cn",
+      "value": "高桥留美子"
+    },
+    "zh-sg": {
+      "language": "zh-sg",
+      "value": "高桥留美子"
+    },
+    "zh-tw": {
+      "language": "zh-tw",
+      "value": "高橋留美子"
+    },
+    "wa": {
+      "language": "wa",
+      "value": "Rumiko Takahashi"
+    },
+    "pl": {
+      "language": "pl",
+      "value": "Rumiko Takahashi"
+    },
+    "ko": {
+      "language": "ko",
+      "value": "타카하시 루미코"
+    },
+    "fr": {
+      "language": "fr",
+      "value": "Rumiko Takahashi"
+    },
+    "he": {
+      "language": "he",
+      "value": "רומיקו טקהאשי"
+    },
+    "es": {
+      "language": "es",
+      "value": "Rumiko Takahashi"
+    },
+    "hu": {
+      "language": "hu",
+      "value": "Takahasi Rumiko"
+    },
+    "it": {
+      "language": "it",
+      "value": "Rumiko Takahashi"
+    },
+    "de": {
+      "language": "de",
+      "value": "Rumiko Takahashi"
+    },
+    "id": {
+      "language": "id",
+      "value": "Rumiko Takahashi"
+    },
+    "ja": {
+      "language": "ja",
+      "value": "高橋留美子"
+    },
+    "sq": {
+      "language": "sq",
+      "value": "Rumiko Takahashi"
+    },
+    "vi": {
+      "language": "vi",
+      "value": "Takahashi Rumiko"
+    },
+    "en": {
+      "language": "en",
+      "value": "Rumiko Takahashi"
+    },
+    "yue": {
+      "language": "yue",
+      "value": "高橋留美子"
+    },
+    "nl": {
+      "language": "nl",
+      "value": "Rumiko Takahashi"
+    },
+    "ar": {
+      "language": "ar",
+      "value": "روميكو تاكاهاشي"
+    },
+    "sv": {
+      "language": "sv",
+      "value": "Rumiko Takahashi"
+    },
+    "pt": {
+      "language": "pt",
+      "value": "Rumiko Takahashi"
+    },
+    "eo": {
+      "language": "eo",
+      "value": "Takahashi Rumiko"
+    },
+    "is": {
+      "language": "is",
+      "value": "Rumiko Takahashi"
+    },
+    "ru": {
+      "language": "ru",
+      "value": "Румико Такахаси"
+    },
+    "th": {
+      "language": "th",
+      "value": "รุมิโกะ ทะกะฮะชิ"
+    },
+    "ro": {
+      "language": "ro",
+      "value": "Rumiko Takahashi"
+    },
+    "ca": {
+      "language": "ca",
+      "value": "Rumiko Takahashi"
+    },
+    "fi": {
+      "language": "fi",
+      "value": "Rumiko Takahashi"
+    },
+    "fa": {
+      "language": "fa",
+      "value": "رومیکو تاکاهاشی"
+    },
+    "tl": {
+      "language": "tl",
+      "value": "Rumiko Takahashi"
+    },
+    "da": {
+      "language": "da",
+      "value": "Rumiko Takahashi"
+    },
+    "zh": {
+      "language": "zh",
+      "value": "高橋留美子"
+    },
+    "oc": {
+      "language": "oc",
+      "value": "Rumiko Takahashi"
+    },
+    "sh": {
+      "language": "sh",
+      "value": "Rumiko Takahashi"
+    },
+    "nb": {
+      "language": "nb",
+      "value": "Rumiko Takahashi"
+    },
+    "eu": {
+      "language": "eu",
+      "value": "Rumiko Takahashi"
+    },
+    "tr": {
+      "language": "tr",
+      "value": "Rumiko Takahashi"
+    },
+    "nan": {
+      "language": "nan",
+      "value": "Takahasi Rumiko"
+    },
+    "cs": {
+      "language": "cs",
+      "value": "Rumiko Takahašiová"
+    },
+    "hy": {
+      "language": "hy",
+      "value": "Րումիկո Տակահասի"
+    },
+    "bn": {
+      "language": "bn",
+      "value": "রুমিকো তাকাহাশি"
+    },
+    "uk": {
+      "language": "uk",
+      "value": "Такахаші Руміко"
+    },
+    "af": {
+      "language": "af",
+      "value": "Rumiko Takahashi"
+    },
+    "an": {
+      "language": "an",
+      "value": "Rumiko Takahashi"
+    },
+    "ast": {
+      "language": "ast",
+      "value": "Rumiko Takahashi"
+    },
+    "bar": {
+      "language": "bar",
+      "value": "Rumiko Takahashi"
+    },
+    "bm": {
+      "language": "bm",
+      "value": "Rumiko Takahashi"
+    },
+    "br": {
+      "language": "br",
+      "value": "Rumiko Takahashi"
+    },
+    "co": {
+      "language": "co",
+      "value": "Rumiko Takahashi"
+    },
+    "cy": {
+      "language": "cy",
+      "value": "Rumiko Takahashi"
+    },
+    "de-at": {
+      "language": "de-at",
+      "value": "Rumiko Takahashi"
+    },
+    "de-ch": {
+      "language": "de-ch",
+      "value": "Rumiko Takahashi"
+    },
+    "en-ca": {
+      "language": "en-ca",
+      "value": "Rumiko Takahashi"
+    },
+    "en-gb": {
+      "language": "en-gb",
+      "value": "Rumiko Takahashi"
+    },
+    "et": {
+      "language": "et",
+      "value": "Rumiko Takahashi"
+    },
+    "frc": {
+      "language": "frc",
+      "value": "Rumiko Takahashi"
+    },
+    "frp": {
+      "language": "frp",
+      "value": "Rumiko Takahashi"
+    },
+    "fur": {
+      "language": "fur",
+      "value": "Rumiko Takahashi"
+    },
+    "ga": {
+      "language": "ga",
+      "value": "Rumiko Takahashi"
+    },
+    "gd": {
+      "language": "gd",
+      "value": "Rumiko Takahashi"
+    },
+    "gl": {
+      "language": "gl",
+      "value": "Rumiko Takahashi"
+    },
+    "gsw": {
+      "language": "gsw",
+      "value": "Rumiko Takahashi"
+    },
+    "hr": {
+      "language": "hr",
+      "value": "Rumiko Takahashi"
+    },
+    "ia": {
+      "language": "ia",
+      "value": "Rumiko Takahashi"
+    },
+    "ie": {
+      "language": "ie",
+      "value": "Rumiko Takahashi"
+    },
+    "io": {
+      "language": "io",
+      "value": "Rumiko Takahashi"
+    },
+    "jam": {
+      "language": "jam",
+      "value": "Rumiko Takahashi"
+    },
+    "kab": {
+      "language": "kab",
+      "value": "Rumiko Takahashi"
+    },
+    "kg": {
+      "language": "kg",
+      "value": "Rumiko Takahashi"
+    },
+    "lb": {
+      "language": "lb",
+      "value": "Rumiko Takahashi"
+    },
+    "li": {
+      "language": "li",
+      "value": "Rumiko Takahashi"
+    },
+    "lij": {
+      "language": "lij",
+      "value": "Rumiko Takahashi"
+    },
+    "lt": {
+      "language": "lt",
+      "value": "Rumiko Takahashi"
+    },
+    "mg": {
+      "language": "mg",
+      "value": "Rumiko Takahashi"
+    },
+    "min": {
+      "language": "min",
+      "value": "Rumiko Takahashi"
+    },
+    "ms": {
+      "language": "ms",
+      "value": "Rumiko Takahashi"
+    },
+    "nap": {
+      "language": "nap",
+      "value": "Rumiko Takahashi"
+    },
+    "nds": {
+      "language": "nds",
+      "value": "Rumiko Takahashi"
+    },
+    "nds-nl": {
+      "language": "nds-nl",
+      "value": "Rumiko Takahashi"
+    },
+    "nn": {
+      "language": "nn",
+      "value": "Rumiko Takahashi"
+    },
+    "nrm": {
+      "language": "nrm",
+      "value": "Rumiko Takahashi"
+    },
+    "pap": {
+      "language": "pap",
+      "value": "Rumiko Takahashi"
+    },
+    "pcd": {
+      "language": "pcd",
+      "value": "Rumiko Takahashi"
+    },
+    "pms": {
+      "language": "pms",
+      "value": "Rumiko Takahashi"
+    },
+    "prg": {
+      "language": "prg",
+      "value": "Rumiko Takahashi"
+    },
+    "pt-br": {
+      "language": "pt-br",
+      "value": "Rumiko Takahashi"
+    },
+    "rgn": {
+      "language": "rgn",
+      "value": "Rumiko Takahashi"
+    },
+    "rm": {
+      "language": "rm",
+      "value": "Rumiko Takahashi"
+    },
+    "sc": {
+      "language": "sc",
+      "value": "Rumiko Takahashi"
+    },
+    "scn": {
+      "language": "scn",
+      "value": "Rumiko Takahashi"
+    },
+    "sco": {
+      "language": "sco",
+      "value": "Rumiko Takahashi"
+    },
+    "sk": {
+      "language": "sk",
+      "value": "Rumiko Takahashi"
+    },
+    "sw": {
+      "language": "sw",
+      "value": "Rumiko Takahashi"
+    },
+    "vec": {
+      "language": "vec",
+      "value": "Rumiko Takahashi"
+    },
+    "vls": {
+      "language": "vls",
+      "value": "Rumiko Takahashi"
+    },
+    "vmf": {
+      "language": "vmf",
+      "value": "Rumiko Takahashi"
+    },
+    "vo": {
+      "language": "vo",
+      "value": "Rumiko Takahashi"
+    },
+    "wo": {
+      "language": "wo",
+      "value": "Rumiko Takahashi"
+    },
+    "zu": {
+      "language": "zu",
+      "value": "Rumiko Takahashi"
+    },
+    "wuu": {
+      "language": "wuu",
+      "value": "高桥留美子"
+    },
+    "arz": {
+      "language": "arz",
+      "value": "رميكو تاكاهاشى"
+    },
+    "el": {
+      "language": "el",
+      "value": "Ρούμικο Τακαχάσι"
+    },
+    "haw": {
+      "language": "haw",
+      "value": "Rumiko Takahashi"
+    },
+    "ur": {
+      "language": "ur",
+      "value": "رومیکو تاکاہاشی"
+    },
+    "az": {
+      "language": "az",
+      "value": "Rumiko Takaxasi"
+    },
+    "mul": {
+      "language": "mul",
+      "value": "Rumiko Takahashi"
+    }
+  },
+  "aliases": {
+    "zh": [
+      {
+        "language": "zh",
+        "value": "高桥留美子"
+      }
+    ],
+    "wa": [
+      {
+        "language": "wa",
+        "value": "Takahashi Rumiko"
+      }
+    ],
+    "he": [
+      {
+        "language": "he",
+        "value": "רומיקו טאקאהשי"
+      }
+    ],
+    "de": [
+      {
+        "language": "de",
+        "value": "Takahashi Rumiko"
+      }
+    ],
+    "vi": [
+      {
+        "language": "vi",
+        "value": "Rumiko Takahashi"
+      },
+      {
+        "language": "vi",
+        "value": "Cao Kiều Lưu Mỹ Tử"
+      }
+    ],
+    "ar": [
+      {
+        "language": "ar",
+        "value": "تاكاهاشي روميكو"
+      }
+    ],
+    "sv": [
+      {
+        "language": "sv",
+        "value": "Takahashi"
+      }
+    ],
+    "pt": [
+      {
+        "language": "pt",
+        "value": "Takahashi Rumiko"
+      }
+    ],
+    "eo": [
+      {
+        "language": "eo",
+        "value": "TAKAHAŜI Rumiko"
+      }
+    ],
+    "ru": [
+      {
+        "language": "ru",
+        "value": "Такахаси Румико"
+      },
+      {
+        "language": "ru",
+        "value": "Такахаси, Румико"
+      }
+    ],
+    "th": [
+      {
+        "language": "th",
+        "value": "ทากาฮาชิ รูมิโกะ"
+      },
+      {
+        "language": "th",
+        "value": "Rumiko Takahashi"
+      },
+      {
+        "language": "th",
+        "value": "รูมิโกะ ทากาฮาชิ"
+      },
+      {
+        "language": "th",
+        "value": "รุมิโกะ ทากาฮาชิ"
+      },
+      {
+        "language": "th",
+        "value": "รูมิโกะ ทาคาฮาชิ"
+      },
+      {
+        "language": "th",
+        "value": "ทาคาฮาชิ รุมิโกะ"
+      }
+    ],
+    "fi": [
+      {
+        "language": "fi",
+        "value": "Takahashi Rumiko"
+      }
+    ],
+    "da": [
+      {
+        "language": "da",
+        "value": "留美子 高橋"
+      }
+    ],
+    "cs": [
+      {
+        "language": "cs",
+        "value": "Rumiko Takahaši"
+      }
+    ],
+    "en": [
+      {
+        "language": "en",
+        "value": "Takahashi Rumiko"
+      }
+    ],
+    "uk": [
+      {
+        "language": "uk",
+        "value": "Такахасі Руміко"
+      }
+    ]
+  },
+  "claims": {
+    "P31": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P31",
+          "hash": "ad7d38a03cdd40cdc373de0dc4e7b7fcbccb31d9",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 5,
+              "id": "Q5"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q219948$BC497DB0-7579-436B-935D-F086A0A3D1EA",
+        "rank": "normal",
+        "references": [
+          {
+            "hash": "7ad71f15f5943da5ecf19fe4a83766a76d584149",
+            "snaks": {
+              "P248": [
+                {
+                  "snaktype": "value",
+                  "property": "P248",
+                  "hash": "def9f19d84b65167a2a17ce38364d264c16127fc",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 19938912,
+                      "id": "Q19938912"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ],
+              "P268": [
+                {
+                  "snaktype": "value",
+                  "property": "P268",
+                  "hash": "8960aca9c0a4391c4824cb4e334f95bbc43e7ac5",
+                  "datavalue": {
+                    "value": "12991183w",
+                    "type": "string"
+                  },
+                  "datatype": "external-id"
+                }
+              ],
+              "P813": [
+                {
+                  "snaktype": "value",
+                  "property": "P813",
+                  "hash": "d6162a1716489623c6e595e448b17f8dca4fb2e8",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2015-10-10T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P248",
+              "P268",
+              "P813"
+            ]
+          },
+          {
+            "hash": "fe3094381bac8c724229809fd88ec01358e08554",
+            "snaks": {
+              "P248": [
+                {
+                  "snaktype": "value",
+                  "property": "P248",
+                  "hash": "45037a2d1d89deebcdfc5840e9adbaa4b64cebc6",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 50358336,
+                      "id": "Q50358336"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ],
+              "P813": [
+                {
+                  "snaktype": "value",
+                  "property": "P813",
+                  "hash": "43a7708c7df91eb6332c27ac333cd381773b1c79",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2024-02-17T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ],
+              "P950": [
+                {
+                  "snaktype": "value",
+                  "property": "P950",
+                  "hash": "146456cad5f3f3f88fddb9925e502ba8e962cb56",
+                  "datavalue": {
+                    "value": "XX1132763",
+                    "type": "string"
+                  },
+                  "datatype": "external-id"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P248",
+              "P813",
+              "P950"
+            ]
+          }
+        ]
+      }
+    ],
+    "P50": [],
+    "P110": []
+  }
+}

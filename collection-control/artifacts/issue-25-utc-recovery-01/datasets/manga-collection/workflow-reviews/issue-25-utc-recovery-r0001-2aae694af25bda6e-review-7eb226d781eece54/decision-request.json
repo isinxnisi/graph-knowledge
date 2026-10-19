@@ -1,0 +1,100 @@
+{
+  "status": "pending-human-decision",
+  "reviewer": null,
+  "recordedAt": null,
+  "applyAuthorized": {
+    "local": false,
+    "beta": false,
+    "vps": false
+  },
+  "groups": {
+    "normal": {
+      "recordIds": {
+        "entities": [
+          "83d4c0b2-1160-4e2a-90fe-b06cdd4a26cb"
+        ],
+        "claims": [
+          "ca6a2957-2ba2-4149-9550-61a0610a4730"
+        ],
+        "sources": [
+          "7240e668-45fd-4125-b330-454e10cc5a0a"
+        ],
+        "citations": [
+          "2eca3dac-fbd1-4283-8d3e-cd284074ff80"
+        ]
+      },
+      "scopeByClaim": [
+        {
+          "id": "ca6a2957-2ba2-4149-9550-61a0610a4730",
+          "subjectId": "743d7fc0-ddc6-446a-8aa1-d9a9b284a326",
+          "objectId": "83d4c0b2-1160-4e2a-90fe-b06cdd4a26cb",
+          "predicate": "CONTRIBUTED_TO",
+          "polarity": "affirmed",
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "contribution": {
+            "roleId": "AUTHORSHIP",
+            "scope": {
+              "kind": "publication",
+              "isbn13": "9784091252012",
+              "volumeLabel": "第1巻（NDL巻次 1）",
+              "editionLabel": null,
+              "language": "ja"
+            }
+          },
+          "organizationParticipation": null,
+          "eventParticipation": null
+        }
+      ],
+      "existingEntityDependencies": [
+        "743d7fc0-ddc6-446a-8aa1-d9a9b284a326"
+      ],
+      "counts": {
+        "entities": 1,
+        "claims": 1,
+        "sources": 1,
+        "citations": 1
+      }
+    },
+    "identity-only": {
+      "recordIds": {
+        "entities": [],
+        "claims": [],
+        "sources": [],
+        "citations": []
+      },
+      "notice": "Identity only; do not accept held production relations by implication."
+    }
+  },
+  "heldClaimIds": [],
+  "heldEntityIds": [],
+  "existingDependencies": {
+    "claims": [],
+    "sources": []
+  },
+  "referenceArtifacts": [
+    {
+      "file": "context.json",
+      "sha256": "040db63cf5b715bf998ce38e7bc999dc4fe98e024f97db9cc93fe5944297c016"
+    },
+    {
+      "file": "review.json",
+      "sha256": "eaea0b676aeb13cee448fff619716e7dcb5be9e5a2df28a65fdd9c14b3b2e936"
+    },
+    {
+      "file": "proposed-records.json",
+      "sha256": "6251199c917f6e2e19debfc4fe2bf6df3b8de9e8fc74a0896782b7d470c7a3d6"
+    },
+    {
+      "file": "identity-only-records.json",
+      "sha256": "1fc314e4a47717bce195b39fe7f1e66bd31f6af892fca4a9420a653eab927a37"
+    },
+    {
+      "file": "exploration-paths.json",
+      "sha256": "68213add9ed9ce5d89ccec4aeeb8d461911ce52271837a042ab3c14cc49795e8"
+    }
+  ],
+  "notice": "Automatic checks and grouped recommendations only. Important identity/meaning decisions remain human."
+}

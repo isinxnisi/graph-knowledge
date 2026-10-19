@@ -1,0 +1,168 @@
+{
+  "jobId": "issue-25-utc-recovery-r0001-2aae694af25bda6e",
+  "definitionSha256": "658961932f2ec1df33753e7ba38d8669ca3e20e1da91e03b23dd01e65f5b71b9",
+  "approvalSha256": "8b80a7db122e990ca817e428692ba22197abf2777e37c327adfc3f1c51f353f2",
+  "jobDirectory": "/home/isinxnisi/.local/share/plunode-collection-worker/runtime/.local/collection-jobs/issue-25-utc-recovery-r0001-2aae694af25bda6e",
+  "collectorCodeSha256": "80e05b67bc0129b963653b90df4cfbfa5bd6aff190acda99f54c08541e55801e",
+  "workflowCodeSha256": "b0bebd34d4aa5600919a834a533fa2e5da1c1ce95859308c57f73df7a5857e2d",
+  "public": {
+    "release": "20261014-credits-001",
+    "revision": "82b01515-594c-48ca-b4b6-515eefac83ca",
+    "observation": "live-readonly-backup",
+    "fixtureSha256": "9dff418c05fad7c07546fa94142bb2d45daaff57a2996357c8311851d5a3cc47",
+    "withdrawals": [],
+    "historySha256": "8c4d0ca686a4ee6d588b5128cb191996f2bbeb015ed002fdb0edb1fdcb738e7b",
+    "references": [
+      {
+        "file": "datasets/public-kg/releases/20261014-credits-001/data.json",
+        "sha256": "ea91b16f52a211b5a8464382ad498b7b2bb2be69a6f33fe125a73a3c7b9da2b5"
+      },
+      {
+        "file": "datasets/public-kg/releases/20261014-credits-001/manifest.json",
+        "sha256": "e4aa3b58ed884f7d1f8fffee43b260261cc2b4d3a867fda942919f439d2bce17"
+      }
+    ]
+  },
+  "acceptedReferences": [
+    [
+      "datasets/manga-collection/accepted-original-story-r0002-20261017/acceptance.json",
+      "9fdb9933c0d78795769bf27eebb7ecb4ec7cccc37f6ee6827e55dd119e727801"
+    ],
+    [
+      "datasets/manga-collection/accepted-r0002-20261017/acceptance.json",
+      "9b28562b9846970cd30b9261d4659d505e9df06e014d2809d6517aa39836f567"
+    ],
+    [
+      "datasets/manga-collection/accepted-r0003-20261017/acceptance.json",
+      "7d53abbd472fcbf0cba57fa5202d6fd4f8eb12c9ebda34bd1e7a8badca701831"
+    ],
+    [
+      "datasets/manga-collection/original-story-r0002-20261017/candidates.json",
+      "d13136e8e383bce126e8521bfc1015529210f617da220ccd71a4ce1f9f409348"
+    ],
+    [
+      "datasets/manga-collection/original-story-r0002-20261017/ndl-9784088727172.json",
+      "9e302be016583de26a8907bef77390d34d1bc45db01a08f6e680076cbd5c975a"
+    ],
+    [
+      "datasets/manga-collection/original-story-r0002-20261017/ndl-9784088733708.json",
+      "035008f311bc5e2e4fdd56e6a216c20f93792583675a2fe5a036e9c99ce71319"
+    ],
+    [
+      "datasets/manga-collection/original-story-r0002-20261017/ndl-9784088736211.json",
+      "42957040ed44ffa3caa223d68d1cbd0ab733434c9c6af1cc3bdc03c59af9858d"
+    ],
+    [
+      "datasets/manga-collection/original-story-r0002-20261017/ndl-9784088811840.json",
+      "97ae7be91605bb1d81a54062716132bb0d727b845d811a5b232f487ae4501cb0"
+    ],
+    [
+      "datasets/manga-collection/original-story-r0002-20261017/ndl-9784098610105.json",
+      "a8992f7327ac45150fa7dba2e2ad1877ed7914c4642918442d2ce2c7e9fa2a4a"
+    ],
+    [
+      "datasets/manga-collection/review-r0002-20261017/proposed-records.json",
+      "8ef5b68ccda860c453078bef5a57615495320eb470e4230fe04ceda8f7262d81"
+    ],
+    [
+      "datasets/manga-collection/review-r0002-20261017/review.json",
+      "dec7cd6e012e82be409541418480e95565214c3457bb48ddbc4eca280c12ec76"
+    ],
+    [
+      "datasets/manga-collection/review-r0002-20261017/verification.json",
+      "2385eebc8bea8ba17b9ad05110785755102d6692c634ae94f0487827d97f6c09"
+    ],
+    [
+      "datasets/manga-collection/review-r0003-20261017/additional-evidence.json",
+      "1187f72352c46cd775df22b2de54f2bf52020860832fbfe676cf8c4255baf844"
+    ],
+    [
+      "datasets/manga-collection/review-r0003-20261017/decision-request.json",
+      "bf76be5ab0320e0844a0b3fc2f25fc1602a3922dd534c3fa9f7fb7b4706dd09e"
+    ],
+    [
+      "datasets/manga-collection/review-r0003-20261017/frozen-inputs.json",
+      "6d437879c330de1a1f885f8a8aace6058193e9e83b3f941d764592e6be0ad5ad"
+    ],
+    [
+      "datasets/manga-collection/review-r0003-20261017/identity-evidence.json",
+      "fb3ed6e7b9df51da5b1171afa8047b6ae520630df88e5945aeec9b8f98f85505"
+    ],
+    [
+      "datasets/manga-collection/review-r0003-20261017/proposed-records.json",
+      "b9db863d52318528237fb1f9aa06fb1bfef4bc4ce355dd47229d72e746cb3be4"
+    ],
+    [
+      "datasets/manga-collection/review-r0003-20261017/review.json",
+      "03f0c1ad829a31173d8bc78d4f6f32fcbcf3ca4a5a6a245f14352592cfa25f19"
+    ],
+    [
+      "datasets/manga-collection/review-r0003-20261017/technical-verification.json",
+      "09b3be4c48f93c1327f593e801d71061f847cd1a3a940253095cc6548ae289ac"
+    ],
+    [
+      "datasets/public-kg/releases/20261014-credits-001/data.json",
+      "ea91b16f52a211b5a8464382ad498b7b2bb2be69a6f33fe125a73a3c7b9da2b5"
+    ],
+    [
+      "datasets/public-kg/releases/20261014-credits-001/manifest.json",
+      "e4aa3b58ed884f7d1f8fffee43b260261cc2b4d3a867fda942919f439d2bce17"
+    ],
+    [
+      "datasets/public-kg/releases/20261017-manga-r0002-001/data.json",
+      "a52c93f78cbc6a7440dee640d1161d040d88effee494d02045c49637801975db"
+    ],
+    [
+      "datasets/public-kg/releases/20261017-manga-r0002-001/manifest.json",
+      "5714648b348fff62605f99f3b25c25bc1f22a22e2e4acdaefae7196ddb5712a8"
+    ],
+    [
+      "datasets/public-kg/releases/20261017-manga-r0002-002/data.json",
+      "6180481328c77abb40d16579d1f0cee34cbda6d8438769a95a23df71536f90aa"
+    ],
+    [
+      "datasets/public-kg/releases/20261017-manga-r0002-002/manifest.json",
+      "5ae3f008be8c05f29cafa620a5cb0926792bc2984b0e0694a4bf1986032bd87c"
+    ],
+    [
+      "datasets/public-kg/releases/20261017-manga-r0003-001/data.json",
+      "3bae93608cefa4ccf9ef8b026819575ff738c0133664e1473dca52d15dc60be1"
+    ],
+    [
+      "datasets/public-kg/releases/20261017-manga-r0003-001/manifest.json",
+      "c5e8230be9bd0acb43041fd04d0a6b769c03c99dac9e38a051bca8a768e2e24d"
+    ],
+    [
+      "docs/design/MANGA_R0002_ACCEPTANCE_REVIEW.md",
+      "7cdf6a84158f655465a26d7755f528668c23309a5f79ed8cd2d5e01905e00265"
+    ],
+    [
+      "docs/design/MANGA_R0002_ACCEPTED_RELEASE.md",
+      "4f29556605f1b10241e9275b546db5b43495230e60233eade630df59fcb48113"
+    ],
+    [
+      "docs/design/MANGA_R0003_ACCEPTANCE_REVIEW.md",
+      "af2114355cf8b2a6c6813a1fde71a3683daccb80fbcdabe6a14442342a21cb3f"
+    ],
+    [
+      "docs/design/ORIGINAL_STORY.md",
+      "26cde0cff0d4d3128f6a3b52201f8649cd3f414294f3a81fcddea9f8d54c5a27"
+    ]
+  ],
+  "jobArtifacts": {
+    "candidate/data.json": "bf4cf15b03064364d06f9cb1ea55085cef29aded3f74a2660271dd683dc3b584",
+    "candidate/manifest.json": "995d68f783308ec50cdd3157316bf2aa5ff8645a821a31a30c4095c12a21408c",
+    "ledger.json": "aafb648edc7a9d18c04aba76b3822a0d0c69d9c711ed99fcc7d5d0b37563956f",
+    "snapshots/Q182056.json": "b958d78502e6a19043844e192fb75a7cb5b54613aeadd3ac25fe24cf312286fe",
+    "snapshots/Q219948.json": "7a76d0fe8fcac3e084c0031a667fd858e8700a2e353e6e9d1d757fd6921602bb",
+    "snapshots/ndl-9784091252012.json": "d242a8282ba93d66e36e103534d48f68ebbe290ac6aa7217baef46dc46830474",
+    "summary.json": "0c9b86bbf1d3276114bdee5b33008b50f949fe7967323d67edc68bdc104c51b8"
+  },
+  "workOrderSha256": "a092f697c28327f5678fedc99ad1df927a89ecee5f37275c6ca3f67a324ab768",
+  "pathPolicy": {
+    "maxPaths": 6,
+    "adjacencyPerStep": 20,
+    "exhaustive": false
+  },
+  "authority": "review-only-not-formal-acceptance-not-public-apply"
+}
