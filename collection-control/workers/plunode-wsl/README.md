@@ -1,6 +1,6 @@
 # CollectionWorkerの実行制御
 
-確認: 2026-10-19 09:01:18 JST。
+確認: 2026-10-19 09:01:54 JST。
 
 反映済みcontrolRevision: 0／最後の操作: なし。
 
@@ -35,7 +35,7 @@ Issue確認結果:
 
 旧blockedは変更しない失敗履歴。下記の新規依頼の状態を現在の復旧進捗として確認する。
 
-- [issue-25-utc-recovery-01](../../results/issue-25-utc-recovery-01/README.md): waiting-control（旧 issue-25-manga23-20261019-repair1-batch-03）
+- [issue-25-utc-recovery-01](../../results/issue-25-utc-recovery-01/README.md): running（旧 issue-25-manga23-20261019-repair1-batch-03）
 - [issue-25-utc-recovery-02](../../results/issue-25-utc-recovery-02/README.md): waiting-control（旧 issue-25-manga23-20261019-repair1-batch-01）
 - [issue-25-utc-recovery-03](../../results/issue-25-utc-recovery-03/README.md): waiting-control（旧 issue-25-manga23-20261019-repair1-batch-04）
 - [issue-25-utc-recovery-04](../../results/issue-25-utc-recovery-04/README.md): waiting-control（旧 issue-25-manga23-20261019-repair1-batch-05）
