@@ -1,0 +1,120 @@
+{
+  "schemaVersion": 1,
+  "issue": 32,
+  "phase": "A",
+  "inventorySha256": "fcc647e3d08b6fe7dd985190b41dcca5f545af3abbd5913632f89fc60781b29b",
+  "reportFiles": {
+    "inventory.json": "12097a53c04b580fe511818258c70cfa2c949962eb427bebd6cea4d2815c27e3",
+    "README.md": "68a4d02db08f002d756a60e0680ee2a74d7234a677e425273c8d18918e14f522"
+  },
+  "publicObservation": {
+    "release": "20261014-credits-001",
+    "revision": "82b01515-594c-48ca-b4b6-515eefac83ca",
+    "observation": "supplied-backup-not-a-live-check",
+    "fixtureSha256": "9dff418c05fad7c07546fa94142bb2d45daaff57a2996357c8311851d5a3cc47",
+    "withdrawals": [],
+    "historySha256": "8c4d0ca686a4ee6d588b5128cb191996f2bbeb015ed002fdb0edb1fdcb738e7b",
+    "references": [
+      {
+        "file": "datasets/public-kg/releases/20261014-credits-001/data.json",
+        "sha256": "ea91b16f52a211b5a8464382ad498b7b2bb2be69a6f33fe125a73a3c7b9da2b5"
+      },
+      {
+        "file": "datasets/public-kg/releases/20261014-credits-001/manifest.json",
+        "sha256": "e4aa3b58ed884f7d1f8fffee43b260261cc2b4d3a867fda942919f439d2bce17"
+      }
+    ],
+    "observedAt": "2026-10-19T16:37:24.554Z",
+    "backupChecksum": "f32196381893c3636f37a61845e80d319346b09382fd7df0d16be664db9a5d42",
+    "backupFileSha256": "37630d09375a42d1c89e5317c2ba5623ab31623515f1006bfeedcc0a6d625959",
+    "controlCommit": "f696797617d111d5fa8166ea7648eb5621c82c0d"
+  },
+  "stateCounts": {
+    "published": {
+      "entities": 2109,
+      "claims": 1844,
+      "sources": 1751,
+      "citations": 1880
+    },
+    "formally-accepted-unapplied": {
+      "entities": 52,
+      "claims": 40,
+      "sources": 33,
+      "citations": 41
+    },
+    "human-approved-pending-execution": {
+      "entities": 14,
+      "claims": 10,
+      "sources": 10,
+      "citations": 10
+    },
+    "candidate": {
+      "entities": 3,
+      "claims": 0,
+      "sources": 0,
+      "citations": 0
+    },
+    "held": {
+      "entities": 4,
+      "claims": 3,
+      "sources": 3,
+      "citations": 3
+    },
+    "blocked": {
+      "entities": 0,
+      "claims": 0,
+      "sources": 0,
+      "citations": 0
+    }
+  },
+  "releasePreparedCounts": {
+    "entities": 52,
+    "claims": 40,
+    "sources": 33,
+    "citations": 41
+  },
+  "issues": [],
+  "tests": {
+    "inventoryFinalCases": 16,
+    "existingRegressionCases": 97,
+    "distinctCases": 113,
+    "initialCombinedRun": {
+      "cases": 108,
+      "seconds": 551.717,
+      "result": "passed"
+    },
+    "finalInventoryRun": "passed",
+    "commands": [
+      "python3 -m unittest discover -s tests -p \"test_collection_*.py\" -v",
+      "python3 -m unittest discover -s tests -p test_collection_inventory.py -v"
+    ]
+  },
+  "publicBeforeAfter": {
+    "savedAtBefore": "2026-10-19T16:37:24.554Z",
+    "savedAtAfter": "2026-10-19T16:49:31.438Z",
+    "allPayloadExceptSavedAtEqual": true
+  },
+  "health": [
+    {
+      "url": "http://127.0.0.1:3200/api/dataset",
+      "httpStatus": 200,
+      "revision": "82b01515-594c-48ca-b4b6-515eefac83ca"
+    },
+    {
+      "url": "https://graph-beta.isinxnisi.com/api/dataset",
+      "httpStatus": 200,
+      "transport": "Windows curl.exe",
+      "revision": "82b01515-594c-48ca-b4b6-515eefac83ca"
+    }
+  ],
+  "existingReceiptApprovalReleaseFilesUnchanged": true,
+  "sideEffects": {
+    "collection": false,
+    "formalAcceptance": false,
+    "publicApply": false,
+    "publicPlan": false,
+    "vps": false,
+    "memberDb": false,
+    "aiCalls": 0
+  }
+}

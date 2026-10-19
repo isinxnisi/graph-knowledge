@@ -1,5 +1,7 @@
 # プロジェクトの構想と判断基準
 
+2026-10-20、[未公開データの統合棚卸し](design/COLLECTION_INVENTORY.md)をIssue #32 Phase Aとして追加。検証済み公開snapshot、正式receipt、未適用release、GitHubの承認registerとWorker結果を型＋UUIDで一意集計し、由来・根拠hash・Role／ISBN scope・依存・保留・旧停止／復旧をJSONとMarkdownへ保存する。受入・収集・plan／公開apply・VPS／会員DB変更は行わず、Phase Bの逐次受入は別指示を待つ。
+
 2026-10-19、[対象検索と接点からの対象変更](design/DISCOVERY_SUBJECT_CONNECTIONS.md)を実装。other-worksの作品／中央人物、名前照合先バッジ、独立した到達経路と候補自身の完全条件を接続する。既存Graph操作・旧保存を維持し、3200／betaで評価。本番・公開KG・収集処理は変更しない。
 
 2026-10-19、[Discovery STEP 4a](design/DISCOVERY_CONNECTIONS_UI.md)を既存プリセット試作へ接続。対象指定済みは直接Graph、other-worksは名前なしで成立作品を検索して任意選択する。共通関係条件・元Claimの証拠・検索時公開版をGraphへ渡し、検索工程への復帰を保持する。3200／betaだけに反映し、人間評価後にSTEP 4bを判断する。

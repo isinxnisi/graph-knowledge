@@ -40,6 +40,7 @@
 
 | 現役の設計文書 | 状態・読む場面 |
 | --- | --- |
+| [未公開データの統合棚卸し](design/COLLECTION_INVENTORY.md) | Issue #32 Phase A。公開snapshot・正式receipt・累積release・承認register・Worker履歴を読み取り専用で突合。型＋UUIDの一意集計、Markdown／JSON、保留・復旧・欠落。受入・公開apply・VPS／会員DB変更なし |
 | [ChatGPT承認連携・収集Worker](design/COLLECTION_WORKER.md) | GitHubの明示承認から既存collect-review／accept-releaseを実行。専用branch、隔離runtime、共通ロック、状態・Markdown共有、再開・重複／改変拒否。公開applyは実装対象外 |
 | [Issue起点の収集準備](design/COLLECTION_ISSUE_INTAKE.md) | 計画Issueの明示許可からQID・ISBN・recipeを生成し、既存Workerの時間帯・10分休憩付きキューへ接続。範囲外・不確かな同定は保留 |
 | [収集Workerの日時形式復旧](design/COLLECTION_DATETIME_RECOVERY.md) | UTC Z形式のproducer修正、旧承認・UUID・cacheを保持した新規依頼による停止9バッチの復旧。validator・公開KGは変更しない |

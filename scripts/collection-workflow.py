@@ -523,6 +523,9 @@ def write_review(reviews, outputs):
 
 
 def execute(args):
+    if args.command == 'inventory':
+        inventory = load('collection_inventory', ROOT / 'scripts/collection-inventory.py')
+        return inventory.execute(args, SimpleNamespace(**globals()))
     if args.command in ['decision-template', 'accept-release']:
         acceptance = load('collection_acceptance', ROOT / 'scripts/collection-acceptance.py')
         return acceptance.execute(args, SimpleNamespace(**globals()))
@@ -580,6 +583,8 @@ def parser():
     sub = cli.add_subparsers(dest='command', required=True)
     acceptance = load('collection_acceptance_parser', ROOT / 'scripts/collection-acceptance.py')
     acceptance.add_parsers(sub, ROOT)
+    inventory = load('collection_inventory_parser', ROOT / 'scripts/collection-inventory.py')
+    inventory.add_parser(sub)
     for command in ['collect-review', 'review-job']:
         item = sub.add_parser(command)
         if command == 'collect-review':
