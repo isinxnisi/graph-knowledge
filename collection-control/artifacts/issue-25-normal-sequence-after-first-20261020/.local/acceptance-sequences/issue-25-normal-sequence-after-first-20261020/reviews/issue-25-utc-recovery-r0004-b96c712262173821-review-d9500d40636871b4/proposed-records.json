@@ -1,0 +1,104 @@
+{
+  "status": "pending-human-acceptance",
+  "formalAcceptance": "pending",
+  "notForPublicApply": true,
+  "records": {
+    "entities": [
+      {
+        "id": "08b751e8-37fa-4abb-a0a6-5f64bf177ac8",
+        "kind": "person",
+        "name": "九井諒子",
+        "description": null,
+        "aliases": [
+          "Ryōko Kui"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q11370008"
+          }
+        ],
+        "createdAt": "2026-10-18T18:54:58Z",
+        "updatedAt": "2026-10-18T18:54:58Z",
+        "event": null
+      },
+      {
+        "id": "7d78e92c-1845-4a9a-8bfd-99d49d047976",
+        "kind": "work",
+        "name": "ダンジョン飯",
+        "description": null,
+        "aliases": [
+          "Delicious in Dungeon"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q20016948"
+          }
+        ],
+        "createdAt": "2026-10-18T18:54:58Z",
+        "updatedAt": "2026-10-18T18:54:58Z",
+        "event": null
+      }
+    ],
+    "claims": [
+      {
+        "id": "b89d1d69-cfa6-40ba-98ac-7b7571544d9e",
+        "subjectId": "08b751e8-37fa-4abb-a0a6-5f64bf177ac8",
+        "objectId": "7d78e92c-1845-4a9a-8bfd-99d49d047976",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "hidden",
+        "createdAt": "2026-10-18T18:54:58Z",
+        "updatedAt": "2026-10-18T18:54:58Z",
+        "contribution": {
+          "roleId": "AUTHORSHIP",
+          "scope": {
+            "kind": "publication",
+            "isbn13": "9784047301535",
+            "volumeLabel": "第1巻（NDL巻次 1）",
+            "editionLabel": null,
+            "language": "ja"
+          }
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      }
+    ],
+    "sources": [
+      {
+        "id": "73652dbb-400a-426e-9a93-f8aee3190a02",
+        "kind": "web",
+        "title": "NDLサーチ: ダンジョン飯 = DELICIOUS IN DUNGEON. 1",
+        "authors": [],
+        "publisher": "国立国会図書館",
+        "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I026002097",
+        "publishedAt": null,
+        "edition": null,
+        "note": "国立国会図書館作成書誌（iss-ndl-opac）の責任表示。メタデータ CC BY 4.0: https://creativecommons.org/licenses/by/4.0/ ; 提供元条件 https://ndlsearch.ndl.go.jp/help/api/provider 。本文・画像・第三者所蔵情報は含まない。",
+        "isDemo": false
+      }
+    ],
+    "citations": [
+      {
+        "id": "98dfcdbd-e149-49f9-a0e5-6d2e68da1390",
+        "claimId": "b89d1d69-cfa6-40ba-98ac-7b7571544d9e",
+        "sourceId": "73652dbb-400a-426e-9a93-f8aee3190a02",
+        "locator": "dc:creator（責任表示） / ISBN 9784047301535",
+        "note": "原表記（ja）: 九井諒子 著。指定刊行物の責任表示で確認された担当。全巻・全版・全期間への外挿、原作から別Roleへの変換はしない。同一資料由来の記録を独立した根拠と数えない。",
+        "accessedAt": "2026-10-18",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "九井諒子 著",
+          "language": "ja"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      }
+    ]
+  }
+}

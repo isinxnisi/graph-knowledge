@@ -1,0 +1,23 @@
+{
+  "inputSha256": "a45bff8b92b8a86343e4c60044574f868477ef39ba92a587608fbdb2f3204873",
+  "result": {
+    "valid": true,
+    "counts": {
+      "nodes": {
+        "Entity": 2165,
+        "Claim": 1887,
+        "Source": 1787,
+        "Citation": 1924,
+        "ExternalIdentifier": 2534
+      },
+      "relationships": {
+        "SUBJECT": 1887,
+        "OBJECT": 1887,
+        "HAS_CITATION": 1924,
+        "CITES": 1924,
+        "HAS_EXTERNAL_ID": 2534
+      }
+    }
+  },
+  "checkedAt": "2026-10-19T18:55:16+00:00"
+}
