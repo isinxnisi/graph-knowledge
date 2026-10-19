@@ -1,0 +1,246 @@
+{
+  "status": "pending-human-acceptance",
+  "formalAcceptance": "pending",
+  "notForPublicApply": true,
+  "records": {
+    "entities": [
+      {
+        "id": "648a399e-70c0-4042-b969-e914a4410544",
+        "kind": "work",
+        "name": "天使なんかじゃない",
+        "description": null,
+        "aliases": [
+          "I'm No Angel"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q1132540"
+          }
+        ],
+        "createdAt": "2026-10-18T18:54:58Z",
+        "updatedAt": "2026-10-18T18:54:58Z",
+        "event": null
+      },
+      {
+        "id": "9888fc07-92c4-414b-b449-d33f7b9b07bc",
+        "kind": "person",
+        "name": "矢沢あい",
+        "description": null,
+        "aliases": [
+          "Ai Yazawa"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q234425"
+          }
+        ],
+        "createdAt": "2026-10-18T18:54:58Z",
+        "updatedAt": "2026-10-18T18:54:58Z",
+        "event": null
+      },
+      {
+        "id": "a546e8f9-0e9e-4e39-a591-21e3e1ffd9dc",
+        "kind": "work",
+        "name": "NANA",
+        "description": null,
+        "aliases": [
+          "Nana"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q423658"
+          }
+        ],
+        "createdAt": "2026-10-18T18:54:58Z",
+        "updatedAt": "2026-10-18T18:54:58Z",
+        "event": null
+      },
+      {
+        "id": "fe378e87-1945-4e1d-869e-c8ec88e998d4",
+        "kind": "work",
+        "name": "ご近所物語",
+        "description": null,
+        "aliases": [
+          "Neighborhood Story"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q787081"
+          }
+        ],
+        "createdAt": "2026-10-18T18:54:58Z",
+        "updatedAt": "2026-10-18T18:54:58Z",
+        "event": null
+      }
+    ],
+    "claims": [
+      {
+        "id": "45a9d1b7-9f6f-4879-807a-ac4b175e4243",
+        "subjectId": "9888fc07-92c4-414b-b449-d33f7b9b07bc",
+        "objectId": "648a399e-70c0-4042-b969-e914a4410544",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "hidden",
+        "createdAt": "2026-10-18T18:54:58Z",
+        "updatedAt": "2026-10-18T18:54:58Z",
+        "contribution": {
+          "roleId": "AUTHORSHIP",
+          "scope": {
+            "kind": "publication",
+            "isbn13": "9784086187657",
+            "volumeLabel": "第1巻（NDL巻次 1）",
+            "editionLabel": null,
+            "language": "ja"
+          }
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      },
+      {
+        "id": "682fc119-9ac2-4061-b8a1-5d0de889f9ef",
+        "subjectId": "9888fc07-92c4-414b-b449-d33f7b9b07bc",
+        "objectId": "fe378e87-1945-4e1d-869e-c8ec88e998d4",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "hidden",
+        "createdAt": "2026-10-18T18:54:58Z",
+        "updatedAt": "2026-10-18T18:54:58Z",
+        "contribution": {
+          "roleId": "AUTHORSHIP",
+          "scope": {
+            "kind": "publication",
+            "isbn13": "9784088538204",
+            "volumeLabel": "第1巻（NDL巻次 1）",
+            "editionLabel": null,
+            "language": "ja"
+          }
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      },
+      {
+        "id": "bdbb1592-4e6a-47c7-80ca-b120f9780e97",
+        "subjectId": "9888fc07-92c4-414b-b449-d33f7b9b07bc",
+        "objectId": "a546e8f9-0e9e-4e39-a591-21e3e1ffd9dc",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "hidden",
+        "createdAt": "2026-10-18T18:54:58Z",
+        "updatedAt": "2026-10-18T18:54:58Z",
+        "contribution": {
+          "roleId": "AUTHORSHIP",
+          "scope": {
+            "kind": "publication",
+            "isbn13": "9784088562094",
+            "volumeLabel": "第1巻（NDL巻次 1）",
+            "editionLabel": null,
+            "language": "ja"
+          }
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      }
+    ],
+    "sources": [
+      {
+        "id": "8034f99b-fddb-4e9e-a577-87807158a1cb",
+        "kind": "web",
+        "title": "NDLサーチ: 天使なんかじゃない. 1",
+        "authors": [],
+        "publisher": "国立国会図書館",
+        "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I000009594314",
+        "publishedAt": null,
+        "edition": null,
+        "note": "国立国会図書館作成書誌（iss-ndl-opac）の責任表示。メタデータ CC BY 4.0: https://creativecommons.org/licenses/by/4.0/ ; 提供元条件 https://ndlsearch.ndl.go.jp/help/api/provider 。本文・画像・第三者所蔵情報は含まない。",
+        "isDemo": false
+      },
+      {
+        "id": "910ae880-e134-4f9e-8dfa-48837982bc76",
+        "kind": "web",
+        "title": "NDLサーチ: Nana. 1",
+        "authors": [],
+        "publisher": "国立国会図書館",
+        "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I000002890352",
+        "publishedAt": null,
+        "edition": null,
+        "note": "国立国会図書館作成書誌（iss-ndl-opac）の責任表示。メタデータ CC BY 4.0: https://creativecommons.org/licenses/by/4.0/ ; 提供元条件 https://ndlsearch.ndl.go.jp/help/api/provider 。本文・画像・第三者所蔵情報は含まない。",
+        "isDemo": false
+      },
+      {
+        "id": "b9e867ab-b22d-4505-8253-59b3cd5c4e00",
+        "kind": "web",
+        "title": "NDLサーチ: ご近所物語. 1",
+        "authors": [],
+        "publisher": "国立国会図書館",
+        "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I000002442460",
+        "publishedAt": null,
+        "edition": null,
+        "note": "国立国会図書館作成書誌（iss-ndl-opac）の責任表示。メタデータ CC BY 4.0: https://creativecommons.org/licenses/by/4.0/ ; 提供元条件 https://ndlsearch.ndl.go.jp/help/api/provider 。本文・画像・第三者所蔵情報は含まない。",
+        "isDemo": false
+      }
+    ],
+    "citations": [
+      {
+        "id": "0696f0a4-1721-4484-8d87-cc5b41089f7e",
+        "claimId": "45a9d1b7-9f6f-4879-807a-ac4b175e4243",
+        "sourceId": "8034f99b-fddb-4e9e-a577-87807158a1cb",
+        "locator": "dc:creator（責任表示） / ISBN 9784086187657",
+        "note": "原表記（ja）: 矢沢あい 著。指定刊行物の責任表示で確認された担当。全巻・全版・全期間への外挿、原作から別Roleへの変換はしない。同一資料由来の記録を独立した根拠と数えない。",
+        "accessedAt": "2026-10-18",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "矢沢あい 著",
+          "language": "ja"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      },
+      {
+        "id": "2bda879a-bb80-44c7-ac62-60d47248a8a2",
+        "claimId": "682fc119-9ac2-4061-b8a1-5d0de889f9ef",
+        "sourceId": "b9e867ab-b22d-4505-8253-59b3cd5c4e00",
+        "locator": "dc:creator（責任表示） / ISBN 9784088538204",
+        "note": "原表記（ja）: 矢沢あい 著。指定刊行物の責任表示で確認された担当。全巻・全版・全期間への外挿、原作から別Roleへの変換はしない。同一資料由来の記録を独立した根拠と数えない。",
+        "accessedAt": "2026-10-18",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "矢沢あい 著",
+          "language": "ja"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      },
+      {
+        "id": "37c5b39c-732d-4476-8ece-08a79e8c54de",
+        "claimId": "bdbb1592-4e6a-47c7-80ca-b120f9780e97",
+        "sourceId": "910ae880-e134-4f9e-8dfa-48837982bc76",
+        "locator": "dc:creator（責任表示） / ISBN 9784088562094",
+        "note": "原表記（ja）: 矢沢あい 著。指定刊行物の責任表示で確認された担当。全巻・全版・全期間への外挿、原作から別Roleへの変換はしない。同一資料由来の記録を独立した根拠と数えない。",
+        "accessedAt": "2026-10-18",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "矢沢あい 著",
+          "language": "ja"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      }
+    ]
+  }
+}

@@ -1,0 +1,399 @@
+{
+  "id": "Q234425",
+  "lastrevid": 2555323560,
+  "labels": {
+    "pt": {
+      "language": "pt",
+      "value": "Ai Yazawa"
+    },
+    "zh-hans": {
+      "language": "zh-hans",
+      "value": "矢泽爱"
+    },
+    "zh-hant": {
+      "language": "zh-hant",
+      "value": "矢澤愛"
+    },
+    "zh-hk": {
+      "language": "zh-hk",
+      "value": "矢澤愛"
+    },
+    "zh-cn": {
+      "language": "zh-cn",
+      "value": "矢泽爱"
+    },
+    "zh-sg": {
+      "language": "zh-sg",
+      "value": "矢泽爱"
+    },
+    "zh-tw": {
+      "language": "zh-tw",
+      "value": "矢澤愛"
+    },
+    "pl": {
+      "language": "pl",
+      "value": "Ai Yazawa"
+    },
+    "fr": {
+      "language": "fr",
+      "value": "Ai Yazawa"
+    },
+    "ko": {
+      "language": "ko",
+      "value": "야자와 아이"
+    },
+    "ru": {
+      "language": "ru",
+      "value": "Ай Ядзава"
+    },
+    "en": {
+      "language": "en",
+      "value": "Ai Yazawa"
+    },
+    "es": {
+      "language": "es",
+      "value": "Ai Yazawa"
+    },
+    "ca": {
+      "language": "ca",
+      "value": "Ai Yazawa"
+    },
+    "hu": {
+      "language": "hu",
+      "value": "Jazava Ai"
+    },
+    "it": {
+      "language": "it",
+      "value": "Ai Yazawa"
+    },
+    "de": {
+      "language": "de",
+      "value": "Ai Yazawa"
+    },
+    "ja": {
+      "language": "ja",
+      "value": "矢沢あい"
+    },
+    "fa": {
+      "language": "fa",
+      "value": "آی یازاوا"
+    },
+    "vi": {
+      "language": "vi",
+      "value": "Yazawa Ai"
+    },
+    "sv": {
+      "language": "sv",
+      "value": "Ai Yazawa"
+    },
+    "nl": {
+      "language": "nl",
+      "value": "Ai Yazawa"
+    },
+    "zh": {
+      "language": "zh",
+      "value": "矢澤愛"
+    },
+    "kk": {
+      "language": "kk",
+      "value": "Ай Ядзава"
+    },
+    "ar": {
+      "language": "ar",
+      "value": "أي يازاوا"
+    },
+    "azb": {
+      "language": "azb",
+      "value": "آی یازاوا"
+    },
+    "kn": {
+      "language": "kn",
+      "value": "ಐ ಯಜವಾ"
+    },
+    "ast": {
+      "language": "ast",
+      "value": "Ai Yazawa"
+    },
+    "sq": {
+      "language": "sq",
+      "value": "Ai Yazawa"
+    },
+    "he": {
+      "language": "he",
+      "value": "איי יזואה"
+    },
+    "uk": {
+      "language": "uk",
+      "value": "Ядзава Ай"
+    },
+    "pt-br": {
+      "language": "pt-br",
+      "value": "Ai Yazawa"
+    },
+    "hy": {
+      "language": "hy",
+      "value": "Այ Յազավա"
+    },
+    "arz": {
+      "language": "arz",
+      "value": "اى يازاوا"
+    },
+    "ro": {
+      "language": "ro",
+      "value": "Ai Yazawa"
+    },
+    "eu": {
+      "language": "eu",
+      "value": "Ai Yazawa"
+    },
+    "fi": {
+      "language": "fi",
+      "value": "Ai Yazawa"
+    },
+    "tr": {
+      "language": "tr",
+      "value": "Ai Yazawa"
+    },
+    "sr": {
+      "language": "sr",
+      "value": "Аи Јазава"
+    },
+    "cs": {
+      "language": "cs",
+      "value": "Ai Yazawa"
+    }
+  },
+  "aliases": {
+    "zh": [
+      {
+        "language": "zh",
+        "value": "矢泽爱"
+      },
+      {
+        "language": "zh",
+        "value": "矢沢あい"
+      }
+    ],
+    "pl": [
+      {
+        "language": "pl",
+        "value": "Yazawa Ai"
+      }
+    ],
+    "ru": [
+      {
+        "language": "ru",
+        "value": "Ай, Ядзава"
+      },
+      {
+        "language": "ru",
+        "value": "Ядзава, Ай"
+      },
+      {
+        "language": "ru",
+        "value": "Ядзава"
+      },
+      {
+        "language": "ru",
+        "value": "Ядзава Ай"
+      }
+    ],
+    "de": [
+      {
+        "language": "de",
+        "value": "Yazawa Ai"
+      }
+    ],
+    "ja": [
+      {
+        "language": "ja",
+        "value": "矢沢漫画製作所"
+      }
+    ],
+    "fa": [
+      {
+        "language": "fa",
+        "value": "ای یازاوا"
+      },
+      {
+        "language": "fa",
+        "value": "آئی یازاوا"
+      },
+      {
+        "language": "fa",
+        "value": "ائی یازاوا"
+      }
+    ],
+    "vi": [
+      {
+        "language": "vi",
+        "value": "Ai Yazawa"
+      }
+    ],
+    "sv": [
+      {
+        "language": "sv",
+        "value": "Yazawa"
+      }
+    ],
+    "en": [
+      {
+        "language": "en",
+        "value": "Yazawa Ai"
+      }
+    ],
+    "es": [
+      {
+        "language": "es",
+        "value": "Yazawa Ai"
+      }
+    ],
+    "fr": [
+      {
+        "language": "fr",
+        "value": "Yazawa Ai"
+      }
+    ]
+  },
+  "claims": {
+    "P31": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P31",
+          "hash": "ad7d38a03cdd40cdc373de0dc4e7b7fcbccb31d9",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 5,
+              "id": "Q5"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q234425$AAF2F649-0E24-4667-9123-A807A5857A9A",
+        "rank": "normal",
+        "references": [
+          {
+            "hash": "758974d316c07e019da893fd0391406e8acc1c9d",
+            "snaks": {
+              "P248": [
+                {
+                  "snaktype": "value",
+                  "property": "P248",
+                  "hash": "def9f19d84b65167a2a17ce38364d264c16127fc",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 19938912,
+                      "id": "Q19938912"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ],
+              "P268": [
+                {
+                  "snaktype": "value",
+                  "property": "P268",
+                  "hash": "119b791d3392d007bce281581f864e43c74f4be6",
+                  "datavalue": {
+                    "value": "14458114b",
+                    "type": "string"
+                  },
+                  "datatype": "external-id"
+                }
+              ],
+              "P813": [
+                {
+                  "snaktype": "value",
+                  "property": "P813",
+                  "hash": "d6162a1716489623c6e595e448b17f8dca4fb2e8",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2015-10-10T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P248",
+              "P268",
+              "P813"
+            ]
+          },
+          {
+            "hash": "397f6ff3e6b809bd72ec5098aa945852db192214",
+            "snaks": {
+              "P248": [
+                {
+                  "snaktype": "value",
+                  "property": "P248",
+                  "hash": "45037a2d1d89deebcdfc5840e9adbaa4b64cebc6",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 50358336,
+                      "id": "Q50358336"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ],
+              "P813": [
+                {
+                  "snaktype": "value",
+                  "property": "P813",
+                  "hash": "37012f06242d935d14d753b9830aa88ca7fc1b51",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2024-06-05T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ],
+              "P950": [
+                {
+                  "snaktype": "value",
+                  "property": "P950",
+                  "hash": "37c9c82df1f7f608a99d25b742690e9091dfcb3e",
+                  "datavalue": {
+                    "value": "XX926530",
+                    "type": "string"
+                  },
+                  "datatype": "external-id"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P248",
+              "P813",
+              "P950"
+            ]
+          }
+        ]
+      }
+    ],
+    "P50": [],
+    "P110": []
+  }
+}

@@ -1,0 +1,213 @@
+{
+  "id": "Q787081",
+  "lastrevid": 2471537846,
+  "labels": {
+    "hu": {
+      "language": "hu",
+      "value": "Gokindzso Monogatari"
+    },
+    "ca": {
+      "language": "ca",
+      "value": "Gokinjo Monogatari"
+    },
+    "de": {
+      "language": "de",
+      "value": "Gokinjo Monogatari"
+    },
+    "en": {
+      "language": "en",
+      "value": "Neighborhood Story"
+    },
+    "es": {
+      "language": "es",
+      "value": "Gokinjo Monogatari"
+    },
+    "fr": {
+      "language": "fr",
+      "value": "Gokinjo, une vie de quartier"
+    },
+    "it": {
+      "language": "it",
+      "value": "Cortili del cuore"
+    },
+    "ja": {
+      "language": "ja",
+      "value": "ご近所物語"
+    },
+    "ru": {
+      "language": "ru",
+      "value": "Gokinjo Monogatari"
+    },
+    "zh": {
+      "language": "zh",
+      "value": "近所物語"
+    },
+    "vi": {
+      "language": "vi",
+      "value": "Anh chàng hàng xóm"
+    },
+    "nl": {
+      "language": "nl",
+      "value": "Gokinjo Monogatari"
+    },
+    "tl": {
+      "language": "tl",
+      "value": "Neighborhood Story"
+    },
+    "ko": {
+      "language": "ko",
+      "value": "사랑은 정말"
+    },
+    "pl": {
+      "language": "pl",
+      "value": "Sąsiedzka opowieść"
+    },
+    "pt": {
+      "language": "pt",
+      "value": "Gokinjo Monogotari"
+    }
+  },
+  "aliases": {
+    "it": [
+      {
+        "language": "it",
+        "value": "Gokinjo Monogatari"
+      }
+    ],
+    "en": [
+      {
+        "language": "en",
+        "value": "Gokinjo Monogatari"
+      }
+    ],
+    "ko": [
+      {
+        "language": "ko",
+        "value": "내 남자친구 이야기"
+      }
+    ],
+    "pl": [
+      {
+        "language": "pl",
+        "value": "Gokinjo monogatari"
+      }
+    ]
+  },
+  "claims": {
+    "P31": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P31",
+          "hash": "549c072d6be8a6a43f999d1d0e82640b16c4260e",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 21198342,
+              "id": "Q21198342"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q787081$AF8EF56A-A98B-4562-90CC-E38831EAA045",
+        "rank": "normal"
+      }
+    ],
+    "P50": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P50",
+          "hash": "ade010ced0281e841bcf7657a1536ff411576aef",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 234425,
+              "id": "Q234425"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q787081$7B073E2E-27AC-42FD-9B5C-54D4DC4BBABE",
+        "rank": "normal",
+        "references": [
+          {
+            "hash": "d4bd87b862b12d99d26e86472d44f26858dee639",
+            "snaks": {
+              "P143": [
+                {
+                  "snaktype": "value",
+                  "property": "P143",
+                  "hash": "f30cbd35620c4ea6d0633aaf0210a8916130469b",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 8447,
+                      "id": "Q8447"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P143"
+            ]
+          }
+        ]
+      }
+    ],
+    "P110": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P110",
+          "hash": "17ad542022e378708607fc21fee2c3e6a3492f76",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 234425,
+              "id": "Q234425"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q787081$8B8F5E5C-62D5-4F79-8289-479388DE3BEE",
+        "rank": "normal",
+        "references": [
+          {
+            "hash": "d4bd87b862b12d99d26e86472d44f26858dee639",
+            "snaks": {
+              "P143": [
+                {
+                  "snaktype": "value",
+                  "property": "P143",
+                  "hash": "f30cbd35620c4ea6d0633aaf0210a8916130469b",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 8447,
+                      "id": "Q8447"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P143"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

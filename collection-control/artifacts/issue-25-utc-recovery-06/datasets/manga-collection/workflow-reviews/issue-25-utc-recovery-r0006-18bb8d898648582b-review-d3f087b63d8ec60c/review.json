@@ -1,0 +1,178 @@
+{
+  "status": "pending-human-acceptance",
+  "humanReviewer": null,
+  "entities": [
+    {
+      "entityId": "648a399e-70c0-4042-b969-e914a4410544",
+      "name": "天使なんかじゃない",
+      "kind": "work",
+      "wikidata": "Q1132540",
+      "existingEntityId": null,
+      "status": "candidate",
+      "reasons": [],
+      "checks": {
+        "providerIdentity": true
+      },
+      "inputPopulation": "relation-endpoint"
+    },
+    {
+      "entityId": "9888fc07-92c4-414b-b449-d33f7b9b07bc",
+      "name": "矢沢あい",
+      "kind": "person",
+      "wikidata": "Q234425",
+      "existingEntityId": null,
+      "status": "candidate",
+      "reasons": [],
+      "checks": {
+        "providerIdentity": true
+      },
+      "inputPopulation": "relation-endpoint"
+    },
+    {
+      "entityId": "a546e8f9-0e9e-4e39-a591-21e3e1ffd9dc",
+      "name": "NANA",
+      "kind": "work",
+      "wikidata": "Q423658",
+      "existingEntityId": null,
+      "status": "candidate",
+      "reasons": [],
+      "checks": {
+        "providerIdentity": true
+      },
+      "inputPopulation": "relation-endpoint"
+    },
+    {
+      "entityId": "fe378e87-1945-4e1d-869e-c8ec88e998d4",
+      "name": "ご近所物語",
+      "kind": "work",
+      "wikidata": "Q787081",
+      "existingEntityId": null,
+      "status": "candidate",
+      "reasons": [],
+      "checks": {
+        "providerIdentity": true
+      },
+      "inputPopulation": "relation-endpoint"
+    }
+  ],
+  "claims": [
+    {
+      "claimId": "45a9d1b7-9f6f-4879-807a-ac4b175e4243",
+      "person": "矢沢あい",
+      "work": "天使なんかじゃない",
+      "subjectId": "9888fc07-92c4-414b-b449-d33f7b9b07bc",
+      "objectId": "648a399e-70c0-4042-b969-e914a4410544",
+      "roleId": "AUTHORSHIP",
+      "scope": {
+        "kind": "publication",
+        "isbn13": "9784086187657",
+        "volumeLabel": "第1巻（NDL巻次 1）",
+        "editionLabel": null,
+        "language": "ja"
+      },
+      "status": "candidate",
+      "reasons": [],
+      "supportingCitationIds": [
+        "0696f0a4-1721-4484-8d87-cc5b41089f7e"
+      ],
+      "existingState": null,
+      "existingClaimId": null,
+      "originalTexts": [
+        "矢沢あい 著"
+      ],
+      "citationIds": [
+        "0696f0a4-1721-4484-8d87-cc5b41089f7e"
+      ],
+      "sourceUrls": [
+        "https://ndlsearch.ndl.go.jp/books/R100000002-I000009594314"
+      ],
+      "sourceIds": [
+        "8034f99b-fddb-4e9e-a577-87807158a1cb"
+      ]
+    },
+    {
+      "claimId": "682fc119-9ac2-4061-b8a1-5d0de889f9ef",
+      "person": "矢沢あい",
+      "work": "ご近所物語",
+      "subjectId": "9888fc07-92c4-414b-b449-d33f7b9b07bc",
+      "objectId": "fe378e87-1945-4e1d-869e-c8ec88e998d4",
+      "roleId": "AUTHORSHIP",
+      "scope": {
+        "kind": "publication",
+        "isbn13": "9784088538204",
+        "volumeLabel": "第1巻（NDL巻次 1）",
+        "editionLabel": null,
+        "language": "ja"
+      },
+      "status": "candidate",
+      "reasons": [],
+      "supportingCitationIds": [
+        "2bda879a-bb80-44c7-ac62-60d47248a8a2"
+      ],
+      "existingState": null,
+      "existingClaimId": null,
+      "originalTexts": [
+        "矢沢あい 著"
+      ],
+      "citationIds": [
+        "2bda879a-bb80-44c7-ac62-60d47248a8a2"
+      ],
+      "sourceUrls": [
+        "https://ndlsearch.ndl.go.jp/books/R100000002-I000002442460"
+      ],
+      "sourceIds": [
+        "b9e867ab-b22d-4505-8253-59b3cd5c4e00"
+      ]
+    },
+    {
+      "claimId": "bdbb1592-4e6a-47c7-80ca-b120f9780e97",
+      "person": "矢沢あい",
+      "work": "NANA",
+      "subjectId": "9888fc07-92c4-414b-b449-d33f7b9b07bc",
+      "objectId": "a546e8f9-0e9e-4e39-a591-21e3e1ffd9dc",
+      "roleId": "AUTHORSHIP",
+      "scope": {
+        "kind": "publication",
+        "isbn13": "9784088562094",
+        "volumeLabel": "第1巻（NDL巻次 1）",
+        "editionLabel": null,
+        "language": "ja"
+      },
+      "status": "candidate",
+      "reasons": [],
+      "supportingCitationIds": [
+        "37c5b39c-732d-4476-8ece-08a79e8c54de"
+      ],
+      "existingState": null,
+      "existingClaimId": null,
+      "originalTexts": [
+        "矢沢あい 著"
+      ],
+      "citationIds": [
+        "37c5b39c-732d-4476-8ece-08a79e8c54de"
+      ],
+      "sourceUrls": [
+        "https://ndlsearch.ndl.go.jp/books/R100000002-I000002890352"
+      ],
+      "sourceIds": [
+        "910ae880-e134-4f9e-8dfa-48837982bc76"
+      ]
+    }
+  ],
+  "inheritedHolds": [],
+  "newCandidateCounts": {
+    "entities": 4,
+    "claims": 3,
+    "sources": 3,
+    "citations": 3
+  },
+  "recordConflicts": [],
+  "roleCounts": {
+    "AUTHORSHIP": 3
+  },
+  "normalReviewedEntityCount": 4,
+  "reusedCitationIds": [],
+  "identityOnlyEntityIds": [],
+  "heldClaimCount": 0,
+  "heldEntityCount": 0
+}

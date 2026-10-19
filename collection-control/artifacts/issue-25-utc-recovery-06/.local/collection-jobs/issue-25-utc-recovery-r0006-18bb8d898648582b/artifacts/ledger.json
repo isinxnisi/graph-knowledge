@@ -1,0 +1,392 @@
+{
+  "schemaVersion": 2,
+  "status": "pending-human-acceptance",
+  "recipe": "manga-r0022",
+  "collectionContext": {
+    "themeId": "issue-25-utc-recovery",
+    "themeRevision": 6,
+    "definitionSha256": "d134d6a72aa03fa06cfbd842d34343b57033de1d6ecacb7daba11dc4dd6ca7ab",
+    "approvalSha256": "8ee541c367dfc0a3a31ea6dc6baa97f160549d06ea2a7956cc49b5e15e812d89"
+  },
+  "execution": {
+    "adapter": "manga-discovery-v2",
+    "codeSha256": "80e05b67bc0129b963653b90df4cfbfa5bd6aff190acda99f54c08541e55801e",
+    "inputs": [
+      {
+        "file": "datasets/manga-collection/r0022/recipe.json",
+        "sha256": "d10d21b8206aa1980325ac7c81fb0f7eb5c2855a966e7c37773cafda1777d390"
+      },
+      {
+        "file": "datasets/manga-collection/r0022/anchor-review.json",
+        "sha256": "d621145bca674855f7907d2666631afef39724d96ec7d92b6ba495e8a491891d"
+      },
+      {
+        "file": "datasets/manga-collection/r0022/publication-review.json",
+        "sha256": "b3c21c1d548e9b4bce20ddf3fc5136e058b534928b0ee7c78950d2a1152fc952"
+      },
+      {
+        "file": "docs/research/famous-manga-creators/20261016/candidates.json",
+        "sha256": "8531fada01e5c635ba2ee278a7ef944a73f64676af14ed42ae0e690f5a1ff978"
+      },
+      {
+        "file": "datasets/public-kg/releases/20261014-credits-001/data.json",
+        "sha256": "ea91b16f52a211b5a8464382ad498b7b2bb2be69a6f33fe125a73a3c7b9da2b5"
+      },
+      {
+        "file": "datasets/public-kg/releases/20261014-credits-001/manifest.json",
+        "sha256": "e4aa3b58ed884f7d1f8fffee43b260261cc2b4d3a867fda942919f439d2bce17"
+      }
+    ],
+    "maxEntities": 2113,
+    "maxClaims": 1853
+  },
+  "identityMappings": [
+    {
+      "name": "矢沢あい",
+      "wikidata": "Q234425",
+      "entityId": "9888fc07-92c4-414b-b449-d33f7b9b07bc",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "天使なんかじゃない",
+      "wikidata": "Q1132540",
+      "entityId": "648a399e-70c0-4042-b969-e914a4410544",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "ご近所物語",
+      "wikidata": "Q787081",
+      "entityId": "fe378e87-1945-4e1d-869e-c8ec88e998d4",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "NANA",
+      "wikidata": "Q423658",
+      "entityId": "a546e8f9-0e9e-4e39-a591-21e3e1ffd9dc",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    }
+  ],
+  "rows": [
+    {
+      "kind": "wikidata-relation",
+      "work": "天使なんかじゃない",
+      "property": "P50",
+      "personQid": "Q234425",
+      "statementId": "Q1132540$971BCBA2-5565-4F16-982D-2DB7DAD90A26",
+      "qualifiers": {},
+      "references": [
+        {
+          "hash": "d4bd87b862b12d99d26e86472d44f26858dee639",
+          "snaks": {
+            "P143": [
+              {
+                "snaktype": "value",
+                "property": "P143",
+                "hash": "f30cbd35620c4ea6d0633aaf0210a8916130469b",
+                "datavalue": {
+                  "value": {
+                    "entity-type": "item",
+                    "numeric-id": 8447,
+                    "id": "Q8447"
+                  },
+                  "type": "wikibase-entityid"
+                },
+                "datatype": "wikibase-item"
+              }
+            ]
+          },
+          "snaks-order": [
+            "P143"
+          ]
+        }
+      ],
+      "status": "candidate-only-no-role-inference",
+      "reason": "Wikidata propertyだけで具体Roleや直接制作の意味を確定しない"
+    },
+    {
+      "kind": "wikidata-relation",
+      "work": "天使なんかじゃない",
+      "property": "P110",
+      "personQid": "Q234425",
+      "statementId": "Q1132540$81712615-D2C5-4F47-AE45-22C2115D01E3",
+      "qualifiers": {},
+      "references": [
+        {
+          "hash": "d4bd87b862b12d99d26e86472d44f26858dee639",
+          "snaks": {
+            "P143": [
+              {
+                "snaktype": "value",
+                "property": "P143",
+                "hash": "f30cbd35620c4ea6d0633aaf0210a8916130469b",
+                "datavalue": {
+                  "value": {
+                    "entity-type": "item",
+                    "numeric-id": 8447,
+                    "id": "Q8447"
+                  },
+                  "type": "wikibase-entityid"
+                },
+                "datatype": "wikibase-item"
+              }
+            ]
+          },
+          "snaks-order": [
+            "P143"
+          ]
+        }
+      ],
+      "status": "candidate-only-no-role-inference",
+      "reason": "Wikidata propertyだけで具体Roleや直接制作の意味を確定しない"
+    },
+    {
+      "kind": "ndl-credit",
+      "work": "天使なんかじゃない",
+      "isbn13": "9784086187657",
+      "rawResponsibility": "矢沢あい 著",
+      "sourceUrl": "https://ndlsearch.ndl.go.jp/books/R100000002-I000009594314",
+      "status": "pending-human-acceptance",
+      "roleId": "AUTHORSHIP",
+      "person": "矢沢あい",
+      "claimId": "45a9d1b7-9f6f-4879-807a-ac4b175e4243",
+      "reusedClaim": false,
+      "subjectId": "9888fc07-92c4-414b-b449-d33f7b9b07bc",
+      "objectId": "648a399e-70c0-4042-b969-e914a4410544"
+    },
+    {
+      "kind": "wikidata-relation",
+      "work": "ご近所物語",
+      "property": "P50",
+      "personQid": "Q234425",
+      "statementId": "Q787081$7B073E2E-27AC-42FD-9B5C-54D4DC4BBABE",
+      "qualifiers": {},
+      "references": [
+        {
+          "hash": "d4bd87b862b12d99d26e86472d44f26858dee639",
+          "snaks": {
+            "P143": [
+              {
+                "snaktype": "value",
+                "property": "P143",
+                "hash": "f30cbd35620c4ea6d0633aaf0210a8916130469b",
+                "datavalue": {
+                  "value": {
+                    "entity-type": "item",
+                    "numeric-id": 8447,
+                    "id": "Q8447"
+                  },
+                  "type": "wikibase-entityid"
+                },
+                "datatype": "wikibase-item"
+              }
+            ]
+          },
+          "snaks-order": [
+            "P143"
+          ]
+        }
+      ],
+      "status": "candidate-only-no-role-inference",
+      "reason": "Wikidata propertyだけで具体Roleや直接制作の意味を確定しない"
+    },
+    {
+      "kind": "wikidata-relation",
+      "work": "ご近所物語",
+      "property": "P110",
+      "personQid": "Q234425",
+      "statementId": "Q787081$8B8F5E5C-62D5-4F79-8289-479388DE3BEE",
+      "qualifiers": {},
+      "references": [
+        {
+          "hash": "d4bd87b862b12d99d26e86472d44f26858dee639",
+          "snaks": {
+            "P143": [
+              {
+                "snaktype": "value",
+                "property": "P143",
+                "hash": "f30cbd35620c4ea6d0633aaf0210a8916130469b",
+                "datavalue": {
+                  "value": {
+                    "entity-type": "item",
+                    "numeric-id": 8447,
+                    "id": "Q8447"
+                  },
+                  "type": "wikibase-entityid"
+                },
+                "datatype": "wikibase-item"
+              }
+            ]
+          },
+          "snaks-order": [
+            "P143"
+          ]
+        }
+      ],
+      "status": "candidate-only-no-role-inference",
+      "reason": "Wikidata propertyだけで具体Roleや直接制作の意味を確定しない"
+    },
+    {
+      "kind": "ndl-credit",
+      "work": "ご近所物語",
+      "isbn13": "9784088538204",
+      "rawResponsibility": "矢沢あい 著",
+      "sourceUrl": "https://ndlsearch.ndl.go.jp/books/R100000002-I000002442460",
+      "status": "pending-human-acceptance",
+      "roleId": "AUTHORSHIP",
+      "person": "矢沢あい",
+      "claimId": "682fc119-9ac2-4061-b8a1-5d0de889f9ef",
+      "reusedClaim": false,
+      "subjectId": "9888fc07-92c4-414b-b449-d33f7b9b07bc",
+      "objectId": "fe378e87-1945-4e1d-869e-c8ec88e998d4"
+    },
+    {
+      "kind": "wikidata-relation",
+      "work": "NANA",
+      "property": "P50",
+      "personQid": "Q234425",
+      "statementId": "Q423658$E1A11686-2161-49BC-AE4F-C9EA5D672ADA",
+      "qualifiers": {},
+      "references": [
+        {
+          "hash": "d4bd87b862b12d99d26e86472d44f26858dee639",
+          "snaks": {
+            "P143": [
+              {
+                "snaktype": "value",
+                "property": "P143",
+                "hash": "f30cbd35620c4ea6d0633aaf0210a8916130469b",
+                "datavalue": {
+                  "value": {
+                    "entity-type": "item",
+                    "numeric-id": 8447,
+                    "id": "Q8447"
+                  },
+                  "type": "wikibase-entityid"
+                },
+                "datatype": "wikibase-item"
+              }
+            ]
+          },
+          "snaks-order": [
+            "P143"
+          ]
+        }
+      ],
+      "status": "candidate-only-no-role-inference",
+      "reason": "Wikidata propertyだけで具体Roleや直接制作の意味を確定しない"
+    },
+    {
+      "kind": "wikidata-relation",
+      "work": "NANA",
+      "property": "P110",
+      "personQid": "Q234425",
+      "statementId": "Q423658$969C3F6C-1B82-4B0A-BC92-3244353669C8",
+      "qualifiers": {},
+      "references": [
+        {
+          "hash": "d4bd87b862b12d99d26e86472d44f26858dee639",
+          "snaks": {
+            "P143": [
+              {
+                "snaktype": "value",
+                "property": "P143",
+                "hash": "f30cbd35620c4ea6d0633aaf0210a8916130469b",
+                "datavalue": {
+                  "value": {
+                    "entity-type": "item",
+                    "numeric-id": 8447,
+                    "id": "Q8447"
+                  },
+                  "type": "wikibase-entityid"
+                },
+                "datatype": "wikibase-item"
+              }
+            ]
+          },
+          "snaks-order": [
+            "P143"
+          ]
+        }
+      ],
+      "status": "candidate-only-no-role-inference",
+      "reason": "Wikidata propertyだけで具体Roleや直接制作の意味を確定しない"
+    },
+    {
+      "kind": "ndl-credit",
+      "work": "NANA",
+      "isbn13": "9784088562094",
+      "rawResponsibility": "矢沢あい 著",
+      "sourceUrl": "https://ndlsearch.ndl.go.jp/books/R100000002-I000002890352",
+      "status": "pending-human-acceptance",
+      "roleId": "AUTHORSHIP",
+      "person": "矢沢あい",
+      "claimId": "bdbb1592-4e6a-47c7-80ca-b120f9780e97",
+      "reusedClaim": false,
+      "subjectId": "9888fc07-92c4-414b-b449-d33f7b9b07bc",
+      "objectId": "a546e8f9-0e9e-4e39-a591-21e3e1ffd9dc"
+    }
+  ],
+  "holds": [],
+  "acquisitions": [
+    {
+      "kind": "wikidata",
+      "identifier": "Q234425",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q234425.json",
+      "sha256": "8d8730adb8931a82ecb40829418ae5ddd6453a9958e3c2e87e738694fb8a92a0",
+      "bytes": 81513,
+      "fetchedAt": "2026-10-18T18:39:34+00:00"
+    },
+    {
+      "kind": "wikidata",
+      "identifier": "Q1132540",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q1132540.json",
+      "sha256": "5168cc1434c3d786662ea00186b6b2609e93c2259ddf985f008d089c7b2ead36",
+      "bytes": 12030,
+      "fetchedAt": "2026-10-18T18:41:15+00:00"
+    },
+    {
+      "kind": "ndl",
+      "identifier": "9784086187657",
+      "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&maximumRecords=5&query=isbn%3D%229784086187657%22+AND+dpid%3Diss-ndl-opac",
+      "sha256": "ce91bab8172eae79e8c4dd89f0a97c9c77b1b231e7c785f919630dbb319f9a23",
+      "bytes": 7365,
+      "fetchedAt": "2026-10-18T18:55:31+00:00"
+    },
+    {
+      "kind": "wikidata",
+      "identifier": "Q787081",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q787081.json",
+      "sha256": "da14994c99f234835bd8adb5196864461ff263f3624054e7d1df75dcc58188a6",
+      "bytes": 30221,
+      "fetchedAt": "2026-10-18T18:41:21+00:00"
+    },
+    {
+      "kind": "ndl",
+      "identifier": "9784088538204",
+      "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&maximumRecords=5&query=isbn%3D%229784088538204%22+AND+dpid%3Diss-ndl-opac",
+      "sha256": "6e61b4c1e66a50c9c9789e8a9d088c571a88eff880a064f14f40d368b7e1643d",
+      "bytes": 25784,
+      "fetchedAt": "2026-10-18T18:55:33+00:00"
+    },
+    {
+      "kind": "wikidata",
+      "identifier": "Q423658",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q423658.json",
+      "sha256": "7de3d89485bff28f732c77245d35d41ba1bea81e4db8d307ef63d48a487aa1af",
+      "bytes": 60619,
+      "fetchedAt": "2026-10-18T18:41:27+00:00"
+    },
+    {
+      "kind": "ndl",
+      "identifier": "9784088562094",
+      "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&maximumRecords=5&query=isbn%3D%229784088562094%22+AND+dpid%3Diss-ndl-opac",
+      "sha256": "b8e923a2c3be76d4ec69bfe0276493f37b75633be33a0ac8490395c7a48022e9",
+      "bytes": 47291,
+      "fetchedAt": "2026-10-18T18:55:36+00:00"
+    }
+  ]
+}

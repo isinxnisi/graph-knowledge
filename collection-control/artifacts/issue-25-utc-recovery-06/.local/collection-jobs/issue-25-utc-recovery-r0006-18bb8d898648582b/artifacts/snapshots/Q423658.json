@@ -1,0 +1,357 @@
+{
+  "id": "Q423658",
+  "lastrevid": 2525740867,
+  "labels": {
+    "zh-hans": {
+      "language": "zh-hans",
+      "value": "NANA"
+    },
+    "zh-hant": {
+      "language": "zh-hant",
+      "value": "NANA"
+    },
+    "zh-hk": {
+      "language": "zh-hk",
+      "value": "NANA"
+    },
+    "zh-cn": {
+      "language": "zh-cn",
+      "value": "NANA"
+    },
+    "zh-sg": {
+      "language": "zh-sg",
+      "value": "NANA"
+    },
+    "zh-tw": {
+      "language": "zh-tw",
+      "value": "NANA"
+    },
+    "pl": {
+      "language": "pl",
+      "value": "Nana"
+    },
+    "he": {
+      "language": "he",
+      "value": "NANA"
+    },
+    "ko": {
+      "language": "ko",
+      "value": "나나"
+    },
+    "fr": {
+      "language": "fr",
+      "value": "Nana"
+    },
+    "es": {
+      "language": "es",
+      "value": "Nana"
+    },
+    "hu": {
+      "language": "hu",
+      "value": "Nana"
+    },
+    "it": {
+      "language": "it",
+      "value": "Nana"
+    },
+    "de": {
+      "language": "de",
+      "value": "Nana"
+    },
+    "ja": {
+      "language": "ja",
+      "value": "NANA"
+    },
+    "vi": {
+      "language": "vi",
+      "value": "Nana"
+    },
+    "yue": {
+      "language": "yue",
+      "value": "NANA"
+    },
+    "sv": {
+      "language": "sv",
+      "value": "Nana"
+    },
+    "nl": {
+      "language": "nl",
+      "value": "Nana"
+    },
+    "pt": {
+      "language": "pt",
+      "value": "Nana"
+    },
+    "mn": {
+      "language": "mn",
+      "value": "Нана"
+    },
+    "ru": {
+      "language": "ru",
+      "value": "Nana"
+    },
+    "en": {
+      "language": "en",
+      "value": "Nana"
+    },
+    "th": {
+      "language": "th",
+      "value": "นานะ"
+    },
+    "ro": {
+      "language": "ro",
+      "value": "Nana"
+    },
+    "ca": {
+      "language": "ca",
+      "value": "Nana"
+    },
+    "fi": {
+      "language": "fi",
+      "value": "Nana"
+    },
+    "uk": {
+      "language": "uk",
+      "value": "NANA"
+    },
+    "cs": {
+      "language": "cs",
+      "value": "Nana"
+    },
+    "fa": {
+      "language": "fa",
+      "value": "نانا"
+    },
+    "tl": {
+      "language": "tl",
+      "value": "Nana"
+    },
+    "sh": {
+      "language": "sh",
+      "value": "Nana"
+    },
+    "zh": {
+      "language": "zh",
+      "value": "NANA"
+    },
+    "nb": {
+      "language": "nb",
+      "value": "Nana"
+    },
+    "kk": {
+      "language": "kk",
+      "value": "Nana"
+    },
+    "sc": {
+      "language": "sc",
+      "value": "Nana"
+    },
+    "sr": {
+      "language": "sr",
+      "value": "Nana"
+    },
+    "el": {
+      "language": "el",
+      "value": "Nana (manga)"
+    },
+    "tr": {
+      "language": "tr",
+      "value": "Nana"
+    },
+    "ar": {
+      "language": "ar",
+      "value": "نانا (مانغا)"
+    },
+    "id": {
+      "language": "id",
+      "value": "Nana"
+    },
+    "mad": {
+      "language": "mad",
+      "value": "Nana (manga)"
+    },
+    "mk": {
+      "language": "mk",
+      "value": "Нана"
+    },
+    "hy": {
+      "language": "hy",
+      "value": "Nana"
+    }
+  },
+  "aliases": {
+    "zh": [
+      {
+        "language": "zh",
+        "value": "世界上另一個我"
+      }
+    ],
+    "ko": [
+      {
+        "language": "ko",
+        "value": "NANA"
+      },
+      {
+        "language": "ko",
+        "value": "NANA-나나-"
+      }
+    ],
+    "es": [
+      {
+        "language": "es",
+        "value": "Nana Osaki"
+      }
+    ],
+    "ja": [
+      {
+        "language": "ja",
+        "value": "NANA-ナナ-"
+      },
+      {
+        "language": "ja",
+        "value": "NANAの部屋"
+      },
+      {
+        "language": "ja",
+        "value": "NANA －ナナ－"
+      },
+      {
+        "language": "ja",
+        "value": "Nana = ナナ"
+      }
+    ],
+    "th": [
+      {
+        "language": "th",
+        "value": "Nana"
+      },
+      {
+        "language": "th",
+        "value": "NANA"
+      }
+    ],
+    "nl": [
+      {
+        "language": "nl",
+        "value": "Nana (manga)"
+      }
+    ]
+  },
+  "claims": {
+    "P31": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P31",
+          "hash": "549c072d6be8a6a43f999d1d0e82640b16c4260e",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 21198342,
+              "id": "Q21198342"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q423658$EE81FCAE-5375-4D63-B138-4FFE295BE5AE",
+        "rank": "normal"
+      }
+    ],
+    "P50": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P50",
+          "hash": "ade010ced0281e841bcf7657a1536ff411576aef",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 234425,
+              "id": "Q234425"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q423658$E1A11686-2161-49BC-AE4F-C9EA5D672ADA",
+        "rank": "normal",
+        "references": [
+          {
+            "hash": "d4bd87b862b12d99d26e86472d44f26858dee639",
+            "snaks": {
+              "P143": [
+                {
+                  "snaktype": "value",
+                  "property": "P143",
+                  "hash": "f30cbd35620c4ea6d0633aaf0210a8916130469b",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 8447,
+                      "id": "Q8447"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P143"
+            ]
+          }
+        ]
+      }
+    ],
+    "P110": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P110",
+          "hash": "17ad542022e378708607fc21fee2c3e6a3492f76",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 234425,
+              "id": "Q234425"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q423658$969C3F6C-1B82-4B0A-BC92-3244353669C8",
+        "rank": "normal",
+        "references": [
+          {
+            "hash": "d4bd87b862b12d99d26e86472d44f26858dee639",
+            "snaks": {
+              "P143": [
+                {
+                  "snaktype": "value",
+                  "property": "P143",
+                  "hash": "f30cbd35620c4ea6d0633aaf0210a8916130469b",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 8447,
+                      "id": "Q8447"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P143"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
