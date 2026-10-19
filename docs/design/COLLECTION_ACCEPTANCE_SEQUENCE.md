@@ -2,6 +2,8 @@
 
 2026-10-20。Phase Aの[棚卸し](COLLECTION_INVENTORY.md)と既存[accept-release](COLLECTION_WORKFLOW.md)を利用する。対象は明示承認済みregisterに列挙された元判断そのもの。比較集合を更新しても、元判断のJSON・UUID・本文hash・Role・ISBN scope・Source／Citation・依存・人間判断日時を変更しない。新しい意味判断・収集・公開apply・VPS／会員DB変更は含まない。
 
+2026-10-20追加：下記の初回実装・隔離検証後、運営者は別途実運用への切替と既承認の残り5グループの実行を明示指示した。[切替・引継ぎ検証と実行依頼](../verification/COLLECTION_SEQUENCE_ROLLOUT_20261020.md)に記録する。元の未承認雛形・承認register・先行依頼は変更せず、新しい実行判断を別依頼に束縛した。最新進捗はGitHub Worker結果で確認する。
+
 ## 今回の実装と実運用の境界
 
 コードと隔離検証までを実装する。新しいWorkerの設置、Windows予定の更新、control branchへの新規実行依頼、実正式受入は別判断。mainに保存する[実行雛形](../../datasets/collection-sequences/issue-25-phase-b-request-draft.json)は`draft-not-approved`、判断者・日時・判断文・実行コードcommitが未指定であり、そのままではWorkerが拒否する。

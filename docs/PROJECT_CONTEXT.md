@@ -1,5 +1,7 @@
 # プロジェクトの構想と判断基準
 
+2026-10-20、運営者の明示指示に基づき[Phase Bの実運用切替](verification/COLLECTION_SEQUENCE_ROLLOUT_20261020.md)を実施。先行1 Claimのreceipt／実plan完了を検証し、旧成果・stateを保った新homeへ固定コード973c7b0を設置。既承認の残り5グループを1件の逐次依頼として登録し、切替用pause-newから通常制御へ戻す。全件完了の最新状態はGitHub Worker結果で確認する。公開apply・VPS・会員DB・検索UIは変更しない。
+
 2026-10-20、[承認済み受入の逐次継続](design/COLLECTION_ACCEPTANCE_SEQUENCE.md)をIssue #32 Phase Bとして実装。元の人間判断・UUID／本文hash・Role・ISBN scope・根拠・依存を不変に保つ追加proofを作り、全正式receiptを反映した比較で既存accept-releaseを継続する。最初の既登録依頼は元Workerの完了を待ち、後続を1回1グループ・既存休憩で進める。receipt保存後の公開準備失敗は再受入せず復旧する。実装・隔離検証までで、新Worker設置・実依頼投入・実正式受入・公開apply・VPS／会員DB変更は行わない。
 
 2026-10-20、[未公開データの統合棚卸し](design/COLLECTION_INVENTORY.md)をIssue #32 Phase Aとして追加。検証済み公開snapshot、正式receipt、未適用release、GitHubの承認registerとWorker結果を型＋UUIDで一意集計し、由来・根拠hash・Role／ISBN scope・依存・保留・旧停止／復旧をJSONとMarkdownへ保存する。受入・収集・plan／公開apply・VPS／会員DB変更は行わず、Phase Bの逐次受入は別指示を待つ。
