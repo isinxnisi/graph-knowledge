@@ -82,11 +82,12 @@
   },
   "requestSha256": "f15de743a9554e8b64dbfaef3221a3d96b2e163c69c190ac51e3577a6e05e27f",
   "kind": "collect-review",
-  "phase": "blocked",
-  "generation": 57,
+  "phase": "retry-wait",
+  "generation": 866,
   "attempts": 1,
   "workerId": "plunode-wsl",
   "sourceCommit": "916cc77d3aeab22650e309b694661cac07a72a47",
-  "updatedAt": "2026-10-18T20:06:53+00:00",
-  "message": "Existing public:validate failed (Node 24 + dependencies required): /home/isinxnisi/.local/share/plunode-collection-worker/runtime/lib/server/public-dataset.ts:92\n  const fixture = fixtureV4Schema.parse(JSON.parse(data));\n                                  ^\n\nZodError: [\n  {\n    \"origin\": \"string\",\n    \"code\": \"invalid_format\",\n    \"format\": \"datetime\",\n    \"pattern\": \"/^(?:(?:\\\\d\\\\d[2468][048]|\\\\d\\\\d[13579][26]|\\\\d\\\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\\\d|30)|(?:02)-(?:0[1-9]|1\\\\d|2[0-8])))T(?:(?:[01]\\\\d|2[0-3]):[0-5]\\\\d:[0-5]\\\\d(?:\\\\.\\\\d+)?(?:Z))$/\",\n    \"path\": [\n      \"entities\",\n      581,\n      \"createdAt\"\n    ],\n    \"message\": \"Invalid ISO datetime\"\n  },\n  {\n    \"origin\": \"string\",\n    \"code\": \"invalid_format\",\n    \"format\": \"datetime\",\n    \"pattern\": \"/^(?:(?:\\\\d\\\\d[2468][048]|\\\\d\\\\d[13579][26]|\\\\d\\\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\\\d|30)|(?:02)-(?:0[1-9]|1\\\\d|2[0-8])))T(?:(?:[01]\\\\d|2[0-3]):[0-5]\\\\d:[0-5]\\\\d(?:\\\\.\\\\d+)?(?:Z))$/\",\n    \"path\": [\n      \"entities\",\n      581,\n      \"updatedAt\"\n    ],\n    \"message\": \"Invalid ISO datetime\"\n  },\n  {\n    \"origin\": \"string\",\n    \"code\": \"invalid_format\",\n    \"format\": \"datetime\",\n    \"pattern\": \"/^(?:(?:\\\\d\\\\d[2468][048]|\\\\d\\\\d[13579][26]|\\\\d\\\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\\\d|30)|(?:02)-(?:0[1-9]|1\\\\d|2[0-8])))T(?:(?:[01]\\\\d|2[0-3]):[0-5]\\\\d:[0-5]\\\\d(?:\\\\.\\\\d+)?(?:Z))$/\",\n    \"path\": [\n      \"entities\",\n      1368,\n      \"createdAt\"\n    ],\n    \"message\": \"Invalid ISO datetime\"\n  },\n  {\n    \"origin\": \"string\",\n    \"code\": \"invalid_format\",\n    \"format\": \"datetime\",\n    \"pattern\": \"/^(?:(?:\\\\d\\\\d[2468][048]|\\\\d\\\\d[13579][26]|\\\\d\\\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\\\d|30)|(?:02)-(?:0[1-9]|1\\\\d|2[0-8])))T(?:(?:[01]\\\\d|2[0-3]):[0-5]\\\\d:[0-5]\\\\d(?:\\\\.\\\\d+)?(?:Z))$/\",\n    \"path\": [\n      \"entities\",\n      1368,\n      \"updatedAt\"\n    ],\n    \"message\": \"Invalid ISO datetime\"\n  }\n]\n    at loadPublicRelease (/home/isinxnisi/.local/share/plunode-collection-worker/runtime/lib/server/public-dataset.ts:92:35)\n    at async <anonymous> (/home/isinxnisi/.local/share/plunode-collection-worker/runtime/scripts/public-kg.ts:21:45)\n\nNode.js v24.21.0\n"
+  "updatedAt": "2026-10-19T10:41:56+00:00",
+  "message": "Remote end closed connection without response",
+  "retryAt": 1792406637.2905257
 }
