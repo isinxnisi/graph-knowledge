@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "workerId": "plunode-wsl",
   "codeCommit": "973c7b0c599f79905a029b28b524f4924e169376",
-  "controlRevision": 1,
-  "lastControlSha256": "9a95b517716b27f8694376923c0c3424ea76846db2bf3e77f8277218255a04e9",
-  "lastControlId": "issue-32-phase-b-migration-pause-new-20261020",
+  "controlRevision": 2,
+  "lastControlSha256": "e406ca43e51fc34db0b2537b432e86d1149768f2b1c18e0e3e9395cd169ddd9a",
+  "lastControlId": "issue-32-phase-b-migration-resume-20261020",
   "timezone": "Asia/Tokyo",
   "windows": [
     {
@@ -20,19 +20,20 @@
       "end": "18:00"
     }
   ],
-  "pauseMode": "pause-new",
+  "pauseMode": null,
   "intervalMinutes": 10,
   "newStartMarginMinutes": 15,
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
   "nextStartAt": "2026-10-19T18:28:12.662578+00:00",
-  "phase": "pause-new",
+  "phase": "ready",
   "recoveredAttempt": null,
   "admission": {
-    "ready": false,
-    "reason": "pause-new",
-    "eligibleAt": null
+    "ready": true,
+    "reason": "ready",
+    "eligibleAt": null,
+    "windowEndAt": "2026-10-19T22:00:00+00:00"
   },
   "activeAttempt": null,
   "lastAttempt": {
@@ -43,7 +44,7 @@
   "requestsByPhase": {
     "completed": 13,
     "blocked": 9,
-    "waiting-control": 1
+    "waiting-lock": 1
   },
   "issueIntake": {
     "collection-control/issue-sources/25.json": {
@@ -90,5 +91,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-10-19T18:33:39.197698+00:00"
+  "checkedAt": "2026-10-19T18:35:46.724957+00:00"
 }
