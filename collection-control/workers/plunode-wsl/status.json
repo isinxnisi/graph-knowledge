@@ -48,7 +48,7 @@
   "requestsByPhase": {
     "completed": 11,
     "blocked": 9,
-    "waiting-control": 1
+    "running": 1
   },
   "issueIntake": {
     "collection-control/issue-sources/25.json": {
@@ -92,8 +92,8 @@
     },
     "issue-25-utc-recovery-09": {
       "predecessor": "issue-25-manga23-20261019-repair1-batch-10",
-      "phase": "waiting-control"
+      "phase": "running"
     }
   },
-  "checkedAt": "2026-10-19T01:37:27.989667+00:00"
+  "checkedAt": "2026-10-19T01:38:03.620361+00:00"
 }
