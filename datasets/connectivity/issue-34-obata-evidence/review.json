@@ -1,0 +1,409 @@
+{
+  "schemaVersion": 1,
+  "reportType": "single-authorized-get-evidence-review-not-acceptance",
+  "reviewDate": "2026-10-20",
+  "sourceGitCommit": "72338b7054b3f2eb2e9762b20859044f9b9e28ce",
+  "issue": "https://github.com/isinxnisi/graph-knowledge/issues/34",
+  "authorization": {
+    "url": "https://github.com/isinxnisi/graph-knowledge/issues/34#issuecomment-6291894753",
+    "scope": "PC/WSLから固定日本棋院URLへの新しい独立試行1回。正式受入・新規Claim UUID・receipt/release・Worker登録・公開applyは対象外。",
+    "maxAttempts": 1,
+    "retryCount": 0,
+    "followRedirects": false,
+    "maxTimeSeconds": 20,
+    "maxBodyBytes": 2097152,
+    "previousChatAttempts": "6291745937/6291827863のDNS失敗とは別の明示許可。以前の本文表示や失敗を今回のHTTP証跡へ転用しない。"
+  },
+  "acquisition": {
+    "executionEnvironment": "Windows-10-10.0.26200-SP0",
+    "client": "curl 8.21.0 Windows / libcurl 8.21.0 / Schannel",
+    "method": "GET",
+    "requestedUrl": "https://archive.nihonkiin.or.jp/kishihp/umezawa/journal.htm",
+    "effectiveUrl": "https://archive.nihonkiin.or.jp/kishihp/umezawa/journal.htm",
+    "startedAtUtc": "2026-10-20T13:26:59.873Z",
+    "finishedAtUtc": "2026-10-20T13:27:00.414Z",
+    "curlExitCode": 0,
+    "error": null,
+    "httpStatus": 200,
+    "redirectCount": 0,
+    "redirectUrl": null,
+    "contentType": "text/html",
+    "curlDownloadedBytes": 1487,
+    "elapsedSeconds": 0.421864,
+    "savedBodyBytes": 1487,
+    "bodyComplete": true,
+    "bodySha256": "86cfb31314e9e3fe2bf26e04425580c2dc3d5660cbd3b522e32e8be1d533af1b",
+    "headersSha256": "4ce27246808ca6df03e8570906e541cf84999a08511095d899af5c997050ad57"
+  },
+  "transferChecks": {
+    "method": "GET",
+    "numConnections": 1,
+    "contentLengthHeader": 1487,
+    "responseHeaderDate": "Tue, 20 Oct 2026 13:27:04 GMT",
+    "timestampBasis": "取得開始/終了はPCのUTC時計。HTTP Date・ページ日付・Last-Modifiedとは区別する。",
+    "bodyBytesHashMode": "HTTP transfer framing除去後のcurl保存body元byte。Accept-Encoding: identity、文字変換・改行変換・再圧縮なし。",
+    "encodingDeclared": "Shift_JIS",
+    "decoding": "Python shift_jis strict; no replacement characters",
+    "htmlTitle": "ジャーナリスト賞",
+    "heading": "ジャーナリストクラブ賞受賞",
+    "pageDateDisplay": "2001年12月13日",
+    "pageDateUse": "ページ表示日。制作関与の開始/終了期間・特定ISBNの刊行日へ転用しない。"
+  },
+  "localEvidenceStorage": {
+    "path": ".local/collection-trials/issue-34-nihonkiin-pc-20261020",
+    "mainRepositoryCopy": "main統合時に原byteで保存し、directory 0700/files 0600。worktree側の元記録も保持。",
+    "gitTracked": false,
+    "rawHtmlPubliclyCommitted": false,
+    "files": [
+      {
+        "name": "attempt.json",
+        "sha256": "a64f448585572880736f1e9a4dc664b5c3a083464bac6984b97053e6ea866a19",
+        "bytes": 1998
+      },
+      {
+        "name": "curl-transfer.json",
+        "sha256": "c75f874d62c20aeeef848577f81121c20fb367e670c84de4c482f9020e4e1e5c",
+        "bytes": 11612
+      },
+      {
+        "name": "response-headers.txt",
+        "sha256": "4ce27246808ca6df03e8570906e541cf84999a08511095d899af5c997050ad57",
+        "bytes": 238
+      },
+      {
+        "name": "response.html",
+        "sha256": "86cfb31314e9e3fe2bf26e04425580c2dc3d5660cbd3b522e32e8be1d533af1b",
+        "bytes": 1487
+      }
+    ],
+    "retentionReason": "公開レポートは必要な短い引用と証跡のみ。原HTML・生ヘッダ・転送情報はGit外の運用領域に保管する。"
+  },
+  "evidence": {
+    "language": "ja",
+    "originalRoleText": "作画の小畑健氏",
+    "contextExcerpt": "「ヒカルの碁」の原作者ほったゆみ氏、作画の小畑健氏",
+    "locator": {
+      "heading": "ジャーナリストクラブ賞受賞",
+      "sectionDescription": "囲碁記者で構成するクラブとヒカルの碁の影響を述べる受賞説明のセル。原作者・作画・監修を列挙する文。",
+      "sourceHtmlLine": 25,
+      "lineNumbering": "元byteをLFで数える1始まり。CRLFを変更しない。",
+      "sourceElementPath": "html > body > center > table > tbody > tr:nth-of-type(2) > td:nth-of-type(2)",
+      "excerptByteStart": 1024,
+      "excerptByteEndExclusive": 1074,
+      "excerptByteEncoding": "shift_jis",
+      "offsetBasis": "元HTML body先頭0始まり"
+    },
+    "supports": "同一の文でヒカルの碁、ほったゆみの原作者、小畑健の作画を直接区別。作画という原語を現行DRAWINGのレビュー根拠にできる。",
+    "limits": [
+      "媒体語「漫画」自体はこのHTMLにない。既存漫画Entityとの対応は保存NDL・既存同定・原作担当の一致を併せて審査する。",
+      "ISBN・巻・版・言語版の作画クレジットを直接示さない。",
+      "全巻・全版・全期間、脚本・ネーム・著作権は認定しない。",
+      "監修者の表記から新しい人物同一性や受賞Claimを生成しない。"
+    ]
+  },
+  "reviewRecommendation": {
+    "status": "direct-support-found-awaiting-human-acceptance",
+    "readyForHumanDecision": true,
+    "humanReviewer": null,
+    "formalAcceptance": "not-performed",
+    "subjectEntityId": "d5e39491-5a5f-423c-9222-2eb3c18db9a8",
+    "subjectName": "小畑健",
+    "existingSubjectExternalId": "Q313703",
+    "targetEntityId": "0c29d0e2-685f-4c56-9805-6bf1baf40e7c",
+    "targetName": "ヒカルの碁",
+    "existingTargetExternalId": "Q582763",
+    "targetMedium": "既存の漫画Entity",
+    "predicateUnderReview": "CONTRIBUTED_TO",
+    "polarityUnderReview": "affirmed",
+    "roleIdUnderReview": "DRAWING",
+    "scopeUnderReview": null,
+    "scopeMeaning": "作品単位資料による支持。nullは適用範囲が未構造化であり、全巻・全版を意味しない。",
+    "periodUnderReview": {
+      "from": null,
+      "to": null
+    },
+    "claimId": null,
+    "sourceId": null,
+    "citationId": null,
+    "identityRationale": [
+      "新資料の小畑健は保存NDLのヒカルの碁.1責任表示「小畑健 漫画」と一致する。",
+      "新資料の作品名と原作者ほったゆみの組は、既存漫画Entityと公開済みORIGINAL_STORY Claimの対象に対応する。",
+      "既存UUID/QIDと過去の受入記録を再利用し、別作品・別人物を新しく同定しない。名前一致だけで作品媒体を決めない。"
+    ],
+    "semanticRationale": "日本棋院本文の明示「作画」が現行DRAWINGの支持条件を満たすという編集上の推奨。NDLの「漫画」やWikidata P110をRoleへ変換した判断ではない。",
+    "remainingHumanDecisions": [
+      "原文と既存人物/漫画UUIDとの対応を確認する。",
+      "作品単位DRAWING、scope=null、期間不明という限定で受入対象とするか決める。",
+      "下記資料別Citation案の支持範囲・原語・locatorを確認する。"
+    ],
+    "holdIf": [
+      "原文の人物または対象漫画への対応を人間が確認できない場合。",
+      "特定ISBN・全版・期間等の追加限定が必要だが、その直接根拠がない場合。"
+    ],
+    "citationReviewDraft": {
+      "reviewOnly": true,
+      "sourceId": null,
+      "citationId": null,
+      "title": "ジャーナリスト賞",
+      "pageHeading": "ジャーナリストクラブ賞受賞",
+      "publisher": "日本棋院",
+      "url": "https://archive.nihonkiin.or.jp/kishihp/umezawa/journal.htm",
+      "accessedAt": "2026-10-20",
+      "stance": "support",
+      "roleEvidence": {
+        "originalText": "作画の小畑健氏",
+        "language": "ja"
+      },
+      "locator": "見出し「ジャーナリストクラブ賞受賞」下の受賞説明、原作者・作画・監修を列挙する文。元HTML 25行、body byte[1024:1074]に短い文脈。",
+      "note": "作品単位の作画明示。刊行物scope・全巻/全版・制作期間は支持しない。HTML本文には漫画という媒体語がなく、保存NDLと既存原作担当の対応を併せて審査する。"
+    }
+  },
+  "priorReviewResolution": {
+    "reference": "datasets/connectivity/issue-34-obata-review/review.json",
+    "drawingEvidence": "原文と役割明示を今回取得して確認。",
+    "citationProvenance": "HTTP200・元body hash・UTC取得時刻・短い原語・locatorを今回補完。",
+    "publicationScope": "未支持のまま。ISBN9784088727172へのscope移植をしない。",
+    "sourceTargetIdentity": "既存漫画への対応を上記理由で受入レビューへ推奨。最終同一性判断は人間へ戻す。",
+    "secondUrlFetched": false,
+    "additionalFetchAuthorizationRemaining": 0
+  },
+  "unchangedPublicContext": {
+    "kind": "saved-observation-not-live-query",
+    "release": "manga-issue-25-utc-recovery-08-normal",
+    "revision": "88437056-b74f-42ab-88c0-33ed435bdccc",
+    "workerOldBaseRelease": "20261014-credits-001",
+    "workerOldLocalRevision": "82b01515-594c-48ca-b4b6-515eefac83ca",
+    "targetPairClaimCount": 0,
+    "unchangedPublicRecords": {
+      "entities": [
+        {
+          "id": "0c29d0e2-685f-4c56-9805-6bf1baf40e7c",
+          "kind": "work",
+          "name": "ヒカルの碁",
+          "description": null,
+          "aliases": [
+            "Hikaru no Go"
+          ],
+          "externalIds": [
+            {
+              "namespace": "wikidata",
+              "value": "Q582763"
+            }
+          ],
+          "createdAt": "2026-10-16T00:00:00Z",
+          "updatedAt": "2026-10-16T00:00:00Z",
+          "event": null
+        },
+        {
+          "id": "3427040b-88fd-4db5-b546-dd237abad032",
+          "kind": "work",
+          "name": "バクマン。",
+          "description": null,
+          "aliases": [
+            "Bakuman"
+          ],
+          "externalIds": [
+            {
+              "namespace": "wikidata",
+              "value": "Q804555"
+            }
+          ],
+          "createdAt": "2026-10-17T00:00:00Z",
+          "updatedAt": "2026-10-17T00:00:00Z",
+          "event": null
+        },
+        {
+          "id": "d5e39491-5a5f-423c-9222-2eb3c18db9a8",
+          "kind": "person",
+          "name": "小畑健",
+          "description": null,
+          "aliases": [
+            "Takeshi Obata"
+          ],
+          "externalIds": [
+            {
+              "namespace": "wikidata",
+              "value": "Q313703"
+            }
+          ],
+          "createdAt": "2026-10-17T00:00:00Z",
+          "updatedAt": "2026-10-17T00:00:00Z",
+          "event": null
+        },
+        {
+          "id": "e0183e9c-dc97-4d85-b46e-14a1b76707fd",
+          "kind": "person",
+          "name": "ほったゆみ",
+          "description": null,
+          "aliases": [
+            "Yumi Hotta"
+          ],
+          "externalIds": [
+            {
+              "namespace": "wikidata",
+              "value": "Q263303"
+            }
+          ],
+          "createdAt": "2026-10-16T00:00:00Z",
+          "updatedAt": "2026-10-16T00:00:00Z",
+          "event": null
+        }
+      ],
+      "claims": [
+        {
+          "id": "10f72eb0-3526-4d50-a552-e2239c01fc39",
+          "subjectId": "e0183e9c-dc97-4d85-b46e-14a1b76707fd",
+          "objectId": "0c29d0e2-685f-4c56-9805-6bf1baf40e7c",
+          "predicate": "CONTRIBUTED_TO",
+          "polarity": "affirmed",
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "visibility": "published",
+          "createdAt": "2026-10-16T16:34:09Z",
+          "updatedAt": "2026-10-16T16:34:09Z",
+          "contribution": {
+            "roleId": "ORIGINAL_STORY",
+            "scope": {
+              "kind": "publication",
+              "isbn13": "9784088727172",
+              "volumeLabel": "第1巻",
+              "editionLabel": null,
+              "language": "ja"
+            }
+          },
+          "organizationParticipation": null,
+          "eventParticipation": null
+        },
+        {
+          "id": "cd294bb9-a7de-4f21-95c2-84b878c0e7cc",
+          "subjectId": "d5e39491-5a5f-423c-9222-2eb3c18db9a8",
+          "objectId": "3427040b-88fd-4db5-b546-dd237abad032",
+          "predicate": "CONTRIBUTED_TO",
+          "polarity": "affirmed",
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "visibility": "published",
+          "createdAt": "2026-10-17T07:19:28Z",
+          "updatedAt": "2026-10-17T07:19:28Z",
+          "contribution": {
+            "roleId": "AUTHORSHIP",
+            "scope": {
+              "kind": "publication",
+              "isbn13": "9784086196901",
+              "volumeLabel": "第1巻",
+              "editionLabel": null,
+              "language": "ja"
+            }
+          },
+          "organizationParticipation": null,
+          "eventParticipation": null
+        }
+      ],
+      "sources": [
+        {
+          "id": "6dfb8c00-412a-4bd6-88f8-58f85b98247e",
+          "kind": "web",
+          "title": "バクマン。 1 — 集英社",
+          "authors": [],
+          "publisher": "集英社",
+          "url": "https://www.shueisha.co.jp/books/items/contents.html?isbn=978-4-08-619690-1",
+          "publishedAt": null,
+          "edition": null,
+          "note": "公式資料の必要な書誌・担当表記のみ。本文・画像・あらすじを転載しない。正式受入済みの追加根拠。",
+          "isDemo": false
+        },
+        {
+          "id": "751742b2-a8c7-40fe-96c1-8e91a116f789",
+          "kind": "web",
+          "title": "NDLサーチ: ヒカルの碁. 1",
+          "authors": [],
+          "publisher": "国立国会図書館",
+          "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I000002788748",
+          "publishedAt": null,
+          "edition": null,
+          "note": "国立国会図書館作成書誌（iss-ndl-opac）の責任表示。メタデータ CC BY 4.0: https://creativecommons.org/licenses/by/4.0/ ; 提供元条件 https://ndlsearch.ndl.go.jp/help/api/provider 。本文・画像・第三者所蔵情報は含まない。",
+          "isDemo": false
+        }
+      ],
+      "citations": [
+        {
+          "id": "13adf6b0-da63-4be0-abd7-b8aeb54d6bdf",
+          "claimId": "10f72eb0-3526-4d50-a552-e2239c01fc39",
+          "sourceId": "751742b2-a8c7-40fe-96c1-8e91a116f789",
+          "locator": "dc:creator（責任表示） / ISBN 9784088727172",
+          "note": "日本語第1巻のNDL書誌のみ。原本実見ではない。全巻・全版、脚本・ネーム・著作権を推論しない。",
+          "accessedAt": "2026-10-16",
+          "stance": "support",
+          "roleEvidence": {
+            "originalText": "ほったゆみ 原作",
+            "language": "ja"
+          },
+          "positionEvidence": null,
+          "eventParticipationEvidence": null
+        },
+        {
+          "id": "c2a11bab-9544-49af-a352-668f7cb08aff",
+          "claimId": "cd294bb9-a7de-4f21-95c2-84b878c0e7cc",
+          "sourceId": "6dfb8c00-412a-4bd6-88f8-58f85b98247e",
+          "locator": "紙版ISBN／著者欄",
+          "note": "同一ISBNを明示する出版社の著者欄による別候補。NDLの漫画をDRAWING／AUTHORSHIPへ置換したものではない。原資料間の異なる呼称を保持する。",
+          "accessedAt": "2026-10-17",
+          "stance": "support",
+          "roleEvidence": {
+            "originalText": "著者：小畑 健",
+            "language": "ja"
+          },
+          "positionEvidence": null,
+          "eventParticipationEvidence": null
+        }
+      ]
+    }
+  },
+  "inputArtifacts": [
+    {
+      "path": "datasets/connectivity/issue-34-obata-review/review.json",
+      "hashMode": "utf8-lf",
+      "sha256": "29b120962389e2c1b7376e873127f845a2115a7e0e9913f49cc5f9d615bffc39"
+    },
+    {
+      "path": "datasets/connectivity/issue-34/after-data.json.gz",
+      "hashMode": "raw-bytes",
+      "sha256": "ea3137d7ab46920ee482e2854efc859ab0a7c288c959d3185ea8245837c0c6ae"
+    },
+    {
+      "path": "datasets/connectivity/issue-34/public-observation.json",
+      "hashMode": "utf8-lf",
+      "sha256": "d97defe3a594db19423bbfed67ceae92098f7ba7d0313cd4cd74e8fb89b98c74"
+    },
+    {
+      "path": "datasets/manga-collection/original-story-r0002-20261017/ndl-9784088727172.json",
+      "hashMode": "utf8-lf",
+      "sha256": "9e302be016583de26a8907bef77390d34d1bc45db01a08f6e680076cbd5c975a"
+    },
+    {
+      "path": "docs/design/CONTRIBUTION_CREDITS.md",
+      "hashMode": "utf8-lf",
+      "sha256": "533af67827dc94a8a6b0683677569c0c6ac92db5c5a2fedbd0d91f0058037c8b"
+    },
+    {
+      "path": "docs/design/CONTRIBUTION_ROLE_CONTRACTS.md",
+      "hashMode": "utf8-lf",
+      "sha256": "732c7c2697f43d9859885b26f36ab535c56b84c60ee80d1625cd93e013ecbd7d"
+    }
+  ],
+  "notPerformed": [
+    "正式受入",
+    "新規Claim/Source/Citation UUIDの確定",
+    "受入receipt/release生成",
+    "CollectionWorker登録",
+    "公開apply",
+    "既存Claim/Role/scope変更",
+    "VPS/会員DB/UI変更",
+    "集英社取得・再試行・迂回"
+  ],
+  "nextApprovalTarget": "この1関係の作品単位DRAWING／scope=null／期間不明と資料別Citation案の人間レビュー。正式受入実行は別の明示指示が必要。"
+}

@@ -1,5 +1,7 @@
 # 小畑健→ヒカルの碁：保存資料による再審査
 
+後続の明示許可により、[日本棋院への単回GETと作画原文の確認](OBATA_HIKARU_EVIDENCE_20261020.md)を完了した。原文不足を補った正式受入の人間判断用資料はそちらを参照。以下と既存JSONは、追加取得前の読み取り結果・未承認提案の履歴として保持する。
+
 2026-10-20、[Issue #34の依頼](https://github.com/isinxnisi/graph-knowledge/issues/34#issuecomment-6289577954)。**結論は原文照合待ちの保留。作品単位のDRAWINGを再審査する意味上の方向は妥当だが、保存された意味レビューの要約だけで正式受入できる資料は揃っていない。** [JSON記録](../../datasets/connectivity/issue-34-obata-review/review.json)に入力hash、保存原語、既存レコード、保留条件、未承認の通信予算を固定した。
 
 資料元への追加通信は0回。既存保存資料とローカル収集キャッシュを読んだ。GitHubの依頼確認・本結果の報告とGitのpushは作業管理に限る。収集実行、候補受入、正式受入、公開apply、既存KG・UI・Worker変更は行っていない。既存テーマ[#5](https://github.com/isinxnisi/graph-knowledge/issues/5)・[#7](https://github.com/isinxnisi/graph-knowledge/issues/7)を再利用し、別テーマや新Issueを作らない。
