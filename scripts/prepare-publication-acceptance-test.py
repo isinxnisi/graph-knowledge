@@ -48,6 +48,7 @@ def prepare(output):
     previous=tempfile.tempdir;tempfile.tempdir=str(output)
     try:
         f=Synthetic();f.setUp();f.tmp._finalizer.detach()
+        shutil.copytree(f.root/'datasets/public-kg/releases/base',output/'base')
         f.first();f.step()
         base=f.root/'datasets/public-kg/releases/release-group-2'
         base_copy=output/'seed';shutil.copytree(base,base_copy)

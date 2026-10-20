@@ -1,5 +1,7 @@
 """Local guards for temporary real-machine resources. Does not claim VPS integration success."""
 import importlib.util
+import json
+import tempfile
 import os
 from pathlib import Path
 import subprocess
@@ -33,5 +35,19 @@ class MachineEntryGuards(unittest.TestCase):
             result=subprocess.run([sys.executable,'-I',str(ROOT/'ops/publication-acceptance-ssh.py')],env={'SSH_ORIGINAL_COMMAND':command},capture_output=True,text=True,timeout=10)
             self.assertEqual(result.returncode,1)
             self.assertIn('fixed-acceptance-command-required',result.stdout)
+
+    def test_seed_chain_requires_empty_base_before_the_two_claim_fixture(self):
+        module=load('provision-publication-acceptance.py')
+        with tempfile.TemporaryDirectory() as tmp:
+            base=Path(tmp)/'base';seed=Path(tmp)/'seed';base.mkdir();seed.mkdir()
+            (base/'manifest.json').write_text(json.dumps({'release':'base','baseRelease':None}))
+            (base/'data.json').write_text(json.dumps({'schemaVersion':4,'entities':[],'claims':[],'sources':[],'citations':[]}))
+            (seed/'manifest.json').write_text(json.dumps({'release':'release-group-2','baseRelease':'base'}))
+            module.validate_seed_chain(base,seed)
+            (base/'manifest.json').write_text(json.dumps({'release':'base','baseRelease':'older'}))
+            with self.assertRaises(ValueError):module.validate_seed_chain(base,seed)
+            (base/'manifest.json').write_text(json.dumps({'release':'base','baseRelease':None}))
+            (base/'data.json').write_text(json.dumps({'schemaVersion':4,'entities':[{'id':'not-empty'}],'claims':[],'sources':[],'citations':[]}))
+            with self.assertRaises(ValueError):module.validate_seed_chain(base,seed)
 
 if __name__=='__main__':unittest.main()

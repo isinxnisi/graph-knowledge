@@ -63,7 +63,7 @@ WSL固定repo 72338b7をroot所有で配置し、実行/upload/attester鍵を専
 
 ## 実機試験資材の境界
 
-`ops/provision-publication-acceptance.py` と `ops/publication-acceptance-entry.py` は承認済みの一時試験だけに用いる。本番ゲートがdisabledであることを毎回確認し、試験root `/var/lib/plunode-publication/test`、network `plunode-publication-acceptance-20261021`、URI `bolt://plunode-acceptance-neo4j:7687`、loopback API 32740、shadow Worker `isolated-worker` に固定する。既存Neo4j/Webの実image IDを読み取り、それぞれ新しい一時containerへ用いる。会員envは渡さず、試験WebはMEMBER_STORAGE_ENABLED=0とする。初期2 Claim、候補3 Claimは別UUIDの合成データであり、本番50 Claimを再applyしない。
+`ops/provision-publication-acceptance.py` と `ops/publication-acceptance-entry.py` は承認済みの一時試験だけに用いる。本番ゲートがdisabledであることを毎回確認し、試験root `/var/lib/plunode-publication/test`、network `plunode-publication-acceptance-20261021`、URI `bolt://graph-neo4j:7687`、loopback API 32740、shadow Worker `isolated-worker` に固定する。既存Neo4j/Webの実image IDを読み取り、それぞれ新しい一時containerへ用いる。会員envは渡さず、試験WebはMEMBER_STORAGE_ENABLED=0とする。初期2 Claim、候補3 Claimは別UUIDの合成データであり、本番50 Claimを再applyしない。
 
 元72338b7のGate、署名・nonce・durable pause・DockerBackend・公開後検証を再利用し、試験入口だけで共通lock/APIを専用先へ割り当てる。試験用の別SSH/approver/attester/closure鍵を用いる。実commit後のgate process終了は専用のcrash-after-commit操作で試験し、再試行時のapply呼出し数をroot-owned journalで数える。fixtureのGitHub通知は行わない。
 
@@ -77,3 +77,10 @@ VPSは `driver-type=io.containerd.snapshotter.v1`。同じ承認済みarchiveの
 同じarchiveのSHAを維持し、installerでOCI manifest→config→全11 layerの対応を確認した後、VPSではe48a5409…を固定operatorDigestとする。未知のstore、別config、別layer、別platform、tag代替を拒否する。72338b7の公開コードは変更せず、今後の公開承認にも実際の固定operatorDigestを結び付ける。Docker daemon設定/既存tag/serviceは変更しない。capabilitiesと完全KG observeは、新account/入口を作成する前のroot-private probeでも検証する。
 
 旧2回のops欠落と、3回目のimage inspect停止のroot-private失敗記録は保全した。3回目はimage load済みだが、account/公開root/SSH/sudoers配置へ進んでいない。再試行で既存nonce/journalを初期化する処理は追加しない。
+
+
+## 試験用初期化の事前確認
+
+合成fixtureの受入時baseは空release `base` なので、新規専用DBには空base→`release-group-2`（2 Claim）の順に適用する。最初の試験資材で空baseの段階が不足していたため、運営者へ旧P33_STORE_FIXEDの保留を通知した。試験用資材を修正し、root用operator argv生成を再利用したローカルprivate Neo4jで、両releaseのvalidate/apply、2 receiptの完全observeを確認した。作成したcontainer/networkは除去した。
+
+最初のローカルDB試験では独自URIが既存assertDatasetTargetに拒否された。guardは変更せず、専用internal network内でalias `graph-neo4j` と既存URIを使用する。分離境界は新network ID/label・新DB・新資格情報・rootの固定test targetであり、本番networkへ試験containerを接続しない。Neo4jはHTTP応答だけでreadyとせず、Cypher RETURN 1を確認してから適用する。これらはVPS上の通信断/復旧試験完了を示すものではない。
