@@ -59,3 +59,12 @@ WSL固定repo 72338b7をroot所有で配置し、実行/upload/attester鍵を専
 
 導入archive（秘密鍵なし）は255,176,639 bytes、SHA256 `8492008b198b026be1822a79fba12fc94998db45bec0df1b8277c5b97119ee23`でVPS転送後も一致。
 最終照合でinstallerにもCompose `--profile ops`が必要と判明したため、旧installerを実行しないよう通知した。修正版は別途SHA固定で転送し、root-private stagingでarchive検証後にinstallerだけを差し替えて実行する。実Compose CLIを用いた回帰試験を追加し、opsを取得・member profileを除外することを確認した。VPS導入成功や実機DB試験を示す記録ではない。
+
+
+## 実機試験資材の境界
+
+`ops/provision-publication-acceptance.py` と `ops/publication-acceptance-entry.py` は承認済みの一時試験だけに用いる。本番ゲートがdisabledであることを毎回確認し、試験root `/var/lib/plunode-publication/test`、network `plunode-publication-acceptance-20261021`、URI `bolt://plunode-acceptance-neo4j:7687`、loopback API 32740、shadow Worker `isolated-worker` に固定する。既存Neo4j/Webの実image IDを読み取り、それぞれ新しい一時containerへ用いる。会員envは渡さず、試験WebはMEMBER_STORAGE_ENABLED=0とする。初期2 Claim、候補3 Claimは別UUIDの合成データであり、本番50 Claimを再applyしない。
+
+元72338b7のGate、署名・nonce・durable pause・DockerBackend・公開後検証を再利用し、試験入口だけで共通lock/APIを専用先へ割り当てる。試験用の別SSH/approver/attester/closure鍵を用いる。実commit後のgate process終了は専用のcrash-after-commit操作で試験し、再試行時のapply呼出し数をroot-owned journalで数える。fixtureのGitHub通知は行わない。
+
+cleanupは試験network ID/label、接続containerのimage/label/所属networkを照合してから、その試験資材だけを除去する。専用SSH鍵行と試験sudoersだけを撤去し、root journal・backupは残す。未知の接続/変更があれば自動削除しない。これらのコード/合成データvalidate・拒否試験の成功は、実VPSでの導入・通信断・DB試験成功とは区別して記録する。
