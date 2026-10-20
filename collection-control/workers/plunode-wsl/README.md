@@ -1,10 +1,10 @@
 # CollectionWorkerの実行制御
 
-確認: 2026-10-20 17:45:01 JST。
+確認: 2026-10-20 18:00:04 JST。
 
 反映済みcontrolRevision: 2／最後の操作: issue-32-phase-b-migration-resume-20261020。
 
-**closing-window**／停止モード: なし
+**outside-window**／停止モード: なし
 
 日本時間: 03:00〜07:00、09:00〜12:00、15:00〜18:00。ジョブ間10分休憩。
 
