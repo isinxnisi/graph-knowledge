@@ -1,5 +1,9 @@
 """Nonprivileged checks of the one-time rollout installer. Never runs root installation."""
 import importlib.util
+import contextlib
+import hashlib
+import io
+import json
 import os
 import shutil
 from pathlib import Path
@@ -60,6 +64,28 @@ class InstallerBoundaryTests(unittest.TestCase):
                 current=p.compose_configuration(env,compose)
             self.assertEqual(current['services']['ops']['image'],'graph-knowledge-ops:profile-test')
             self.assertNotIn('graph-member-postgres',current['services'])
+
+    def test_image_store_selects_only_exact_reviewed_identity(self):
+        for status,expected in [([],p.IMAGE),([['driver-type','io.containerd.snapshotter.v1']],p.IMAGE_MANIFEST)]:
+            with patch.object(p,'run',return_value=json.dumps(status).encode()):self.assertEqual(p.runtime_image_id(),expected)
+        with patch.object(p,'run',return_value=b'[["driver-type","unknown"]]'):
+            with self.assertRaises(ValueError):p.runtime_image_id()
+
+    def test_config_manifest_layer_chain_and_platform_binding_are_verified(self):
+        for drift in [None,'platform','layer','export']:
+            config={'os':'windows' if drift=='platform' else 'linux','architecture':'amd64','rootfs':{'diff_ids':['sha256:'+'a'*64]}}
+            config_bytes=json.dumps(config).encode();config_id='sha256:'+hashlib.sha256(config_bytes).hexdigest()
+            manifest={'config':{'digest':config_id},'layers':[{'digest':'sha256:'+('b' if drift=='layer' else 'a')*64}]}
+            manifest_bytes=json.dumps(manifest).encode();manifest_id='sha256:'+hashlib.sha256(manifest_bytes).hexdigest()
+            blobs={'config':config_bytes,'blobs/sha256/'+manifest_id.split(':')[1]:manifest_bytes,
+                'manifest.json':json.dumps([{'Config':'config','RepoTags':None,'Layers':['blobs/sha256/'+('c' if drift=='export' else 'a')*64]}]).encode()}
+            class Archive:
+                def extractfile(self,name):return io.BytesIO(blobs[name])
+            with patch.object(p,'IMAGE',config_id),patch.object(p,'IMAGE_MANIFEST',manifest_id),patch('tarfile.open',return_value=contextlib.nullcontext(Archive())):
+                if drift:
+                    with self.assertRaises(ValueError):p.image_identity(Path('synthetic-archive'))
+                else:self.assertEqual(p.image_identity(Path('synthetic-archive')),config['rootfs']['diff_ids'])
+
 
 
 if __name__=='__main__':unittest.main()
