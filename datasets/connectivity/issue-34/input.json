@@ -1,0 +1,146 @@
+{
+  "schemaVersion": 1,
+  "mode": "published-regression",
+  "baseline": {
+    "backup": {
+      "file": "before-backup.json.gz",
+      "sha256": "b23f41a4102fa4df5289d80fa860ffeda184400d236bd8d7879030e786b2cf0c"
+    },
+    "release": "20261014-credits-001",
+    "revision": "5e2a94af-9061-4087-bb7a-045a3c0133f4"
+  },
+  "comparison": {
+    "fixture": {
+      "file": "after-data.json.gz",
+      "sha256": "ea3137d7ab46920ee482e2854efc859ab0a7c288c959d3185ea8245837c0c6ae"
+    },
+    "manifest": {
+      "file": "after-manifest.json.gz",
+      "sha256": "4a19b835142e23fbe19e183489b1164c5ae312e98b38e53dbbf4698a2cbecf4d"
+    },
+    "release": "manga-issue-25-utc-recovery-08-normal"
+  },
+  "publicObservation": {
+    "file": "public-observation.json",
+    "sha256": "d97defe3a594db19423bbfed67ceae92098f7ba7d0313cd4cd74e8fb89b98c74"
+  },
+  "options": {
+    "roots": [
+      "2b7c6289-d050-4dc0-93e3-9307681253cc"
+    ],
+    "groups": [
+      {
+        "id": "accepted-issue-25-utc-recovery-01-normal",
+        "title": "accepted-issue-25-utc-recovery-01-normal",
+        "claimIds": [
+          "ca6a2957-2ba2-4149-9550-61a0610a4730"
+        ]
+      },
+      {
+        "id": "accepted-issue-25-utc-recovery-03-normal",
+        "title": "accepted-issue-25-utc-recovery-03-normal",
+        "claimIds": [
+          "fe16a058-d465-4362-9198-df71789644a1"
+        ]
+      },
+      {
+        "id": "accepted-issue-25-utc-recovery-04-normal",
+        "title": "accepted-issue-25-utc-recovery-04-normal",
+        "claimIds": [
+          "b89d1d69-cfa6-40ba-98ac-7b7571544d9e"
+        ]
+      },
+      {
+        "id": "accepted-issue-25-utc-recovery-06-normal",
+        "title": "accepted-issue-25-utc-recovery-06-normal",
+        "claimIds": [
+          "45a9d1b7-9f6f-4879-807a-ac4b175e4243",
+          "682fc119-9ac2-4061-b8a1-5d0de889f9ef",
+          "bdbb1592-4e6a-47c7-80ca-b120f9780e97"
+        ]
+      },
+      {
+        "id": "accepted-issue-25-utc-recovery-07-normal",
+        "title": "accepted-issue-25-utc-recovery-07-normal",
+        "claimIds": [
+          "2fbb4bf1-5180-456b-9681-e3ec75a54cd8",
+          "87432807-ba90-400c-8a3f-e5dcfa847572"
+        ]
+      },
+      {
+        "id": "accepted-issue-25-utc-recovery-08-normal",
+        "title": "accepted-issue-25-utc-recovery-08-normal",
+        "claimIds": [
+          "c72262df-ce7b-4514-9341-55d242f94bca",
+          "f1260c3f-2637-416f-b407-2052a7c36717"
+        ]
+      },
+      {
+        "id": "accepted-original-story-r0002-20261017",
+        "title": "accepted-original-story-r0002-20261017",
+        "claimIds": [
+          "043e8592-5827-4167-9c93-f8201dd110bc",
+          "10f72eb0-3526-4d50-a552-e2239c01fc39",
+          "6ed29ee4-2b62-4fe7-83a6-aafe300754d7",
+          "c3f1e013-68cc-42b7-b076-495178247899",
+          "f638cf0b-3750-49f6-b833-844d5465b99f"
+        ]
+      },
+      {
+        "id": "accepted-r0002-20261017",
+        "title": "accepted-r0002-20261017",
+        "claimIds": [
+          "07da4e98-1047-46a4-b48a-30f3549c89f9",
+          "84cb19dd-9e8e-496f-abf6-674885abf185",
+          "cf18d898-41e5-486f-8dcf-8a666bef83fe",
+          "fe6d7c19-646b-474a-ad0a-3b20bc816866"
+        ]
+      },
+      {
+        "id": "accepted-r0003-20261017",
+        "title": "accepted-r0003-20261017",
+        "claimIds": [
+          "121709e5-ea90-4c6a-87d1-d67264e1590d",
+          "14e377b1-6be2-446c-8c13-e0d5d425eafa",
+          "18c75118-e284-4c85-accf-e3894a6da3f3",
+          "1eb1fe7c-0cbd-48f4-8379-cd7f6e4697e4",
+          "1f5ecc6d-509d-477e-8b05-7fa06c59d95c",
+          "24dca7b4-00bf-4f70-92f6-a498a494c29a",
+          "36199f3c-f260-473c-a22e-a75911b5fb6d",
+          "431210df-d594-498c-bbd4-9ce93c9dc282",
+          "48a9f51e-beb1-4c3a-9c30-5923bc852925",
+          "498cbe28-4703-4ac1-9a99-5cd83831b0e3",
+          "602bc3c1-8a98-49cc-9556-a4c23feb6b0e",
+          "69ed2335-344f-41a6-a17f-77708faa0398",
+          "6ad7f063-1fce-4163-8414-437526212c31",
+          "7c2bd016-d9b0-4de2-824e-276941b1a2b2",
+          "81684aff-84cf-4977-a3b5-7c2f5d746e5a",
+          "a4d14533-1e4d-47c4-9494-67008811cf75",
+          "a996412a-7cc9-49d5-8446-9b3cf6a338dd",
+          "b7d9d6ba-f2a0-492e-981d-408b22955215",
+          "c19e5b2f-01e2-4233-a7c9-326a1772d7de",
+          "c3fcdaa7-1374-4c62-acab-368dc1ed1bee",
+          "cd294bb9-a7de-4f21-95c2-84b878c0e7cc",
+          "d5d3fef1-fc64-4e61-b049-2f3c81994cb9",
+          "d92e9a4e-4f60-445d-807b-63764f69528b",
+          "e3b0de8a-f7cc-4188-baa2-b41e2298e2be",
+          "e3bf903c-5d0c-4f91-bf83-2826f5a23db7",
+          "ed33df12-efd1-44bc-84bb-a9d83fa05f8f",
+          "f06a6e2c-59c6-4ff3-ad74-13aff65677d3",
+          "f4504ec8-173a-453f-83e8-a24e72dde9bc",
+          "f4b64248-7b3e-4fae-8ff2-7122410b63f4",
+          "fb933ff4-2061-4a0c-a72c-6e7dd2958737",
+          "fdfae8cd-b3f0-4c36-b6ed-659e98d24871"
+        ]
+      }
+    ],
+    "maxPathsPerRoot": 64,
+    "maxExpansionsPerRoot": 2000
+  },
+  "expected": {
+    "newClaims": 50,
+    "beforeClaims": 1844,
+    "afterClaims": 1894,
+    "additionComponents": 21
+  }
+}

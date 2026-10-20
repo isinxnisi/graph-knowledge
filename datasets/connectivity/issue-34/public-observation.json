@@ -1,0 +1,9 @@
+{
+  "dataset": "public-kg",
+  "revision": "88437056-b74f-42ab-88c0-33ed435bdccc",
+  "observedAt": "2026-10-20T04:11:08.611944Z",
+  "origin": "https://plunode.net",
+  "release": "manga-issue-25-utc-recovery-08-normal",
+  "evidence": "https://github.com/isinxnisi/graph-knowledge/issues/32#issuecomment-6280815285; docs/verification/REBOOT_RECOVERY_20261020.md; saved reboot HTTP observation",
+  "note": "Offline revision observation from the existing reboot check. Release association comes from the operator publication record. Comparison data is the validated published bundle, not a new full post-publication DB backup. No API refetch in this evaluation."
+}
