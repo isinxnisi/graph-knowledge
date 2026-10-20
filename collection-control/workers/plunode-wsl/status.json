@@ -26,16 +26,20 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-10-19T20:02:48.797990+00:00",
-  "phase": "ready",
+  "nextStartAt": "2026-10-20T07:05:39.073884+00:00",
+  "phase": "running",
   "recoveredAttempt": null,
   "admission": {
-    "ready": true,
-    "reason": "ready",
-    "eligibleAt": null,
+    "ready": false,
+    "reason": "interval",
+    "eligibleAt": "2026-10-20T07:05:39.073884+00:00",
     "windowEndAt": "2026-10-20T09:00:00+00:00"
   },
-  "activeAttempt": null,
+  "activeAttempt": {
+    "requestId": "issue-25-manga23-20261019",
+    "startedAt": "2026-10-20T06:00:39.073888+00:00",
+    "limitAt": "2026-10-20T06:55:39.073884+00:00"
+  },
   "lastAttempt": {
     "requestId": "issue-25-normal-sequence-after-first-20261020",
     "endedAt": "2026-10-19T19:52:48.797992+00:00"
@@ -91,5 +95,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-10-20T06:00:02.831707+00:00"
+  "checkedAt": "2026-10-20T06:00:40.969290+00:00"
 }
