@@ -28,6 +28,8 @@ WRAPPER = Path('/usr/local/sbin/plunode-publication')
 SSHD_FRAGMENT = Path('/etc/ssh/plunode-publication.conf')
 SUDOERS = Path('/etc/sudoers.d/plunode-publication')
 ACCOUNTS = ['plunode-publish', 'plunode-upload', 'plunode-audit']
+STAGE = None
+LAST_OPERATION = 'validate-root-staging'
 
 
 def require(value, message):
@@ -35,6 +37,8 @@ def require(value, message):
 
 
 def run(argv, *, data=None):
+    global LAST_OPERATION
+    LAST_OPERATION = ' '.join(argv[:2])  # No stdin, env, credentials, or subprocess output in diagnostics.
     result = subprocess.run(argv, input=data, capture_output=True, timeout=240,
         env={'PATH':'/usr/sbin:/usr/bin:/sbin:/bin','LANG':'C.UTF-8','HOME':'/root'})
     require(result.returncode == 0, 'Operator command failed: ' + argv[0])
@@ -49,6 +53,11 @@ def write(path, data, mode=0o600):
     os.chmod(path,mode)
 
 
+def directory(path, mode):
+    path.mkdir(mode=mode)
+    os.chmod(path,mode)  # The installer's restrictive umask must not hide public entry/chroot paths.
+
+
 def secure_tree(path):
     for item in [path,*path.parents]:
         st=item.lstat();require(st.st_uid==0 and not st.st_mode&0o022 and not item.is_symlink(),'Untrusted staging parent')
@@ -56,7 +65,8 @@ def secure_tree(path):
 
 def main():
     require(os.geteuid()==0 and len(sys.argv)==1,'Fixed root installer only')
-    os.umask(0o077); stage=Path(__file__).resolve().parent;secure_tree(stage)
+    global STAGE
+    os.umask(0o077); stage=Path(__file__).resolve().parent;secure_tree(stage);STAGE=stage
     manifest=json.loads((stage/'program-manifest.json').read_bytes());require(manifest['sourceCommit']==SOURCE,'Source differs')
     expected={'ops/plunode-publication','ops/publication-ssh.py','scripts/publication-executor.py',
         'scripts/publication-exclusion.py','scripts/publication-policy.py','scripts/publication-cycle.py',
@@ -92,6 +102,8 @@ def main():
     require(inspect['Labels'].get('com.docker.compose.project')==cfg['name'],'Wrong network owner')
     with urlopen('http://127.0.0.1:3200/api/dataset',timeout=15) as response: observed=json.load(response)
     require(observed.get('dataset')=='public-kg' and observed.get('revision')==REVISION,'Published revision changed; stop for review')
+    base_ssh=run(['/usr/sbin/sshd','-T','-C','user=plunode-publish,host=localhost,addr=127.0.0.1']).decode().splitlines()
+    require('permituserenvironment no' in base_ssh,'Unexpected global SSH environment policy; stop for review')
     inputs=json.loads((stage/'input-keys.json').read_text())
     require(set(inputs)=={'approverPublicPem','attesterPublicPem','executionSshPublicKey','uploadSshPublicKey'},'Wrong key input fields')
     for name in ['executionSshPublicKey','uploadSshPublicKey']:
@@ -120,19 +132,19 @@ def main():
     audit={'scope':'P33-INSTALL-20261021','sourceCommit':SOURCE,'operatorDigest':IMAGE,
         'at':dt.datetime.now(dt.timezone.utc).isoformat(),'deploymentEnabled':False,'applyCalls':0,
         'oldSshConfigSha256':hashlib.sha256(Path('/etc/ssh/sshd_config').read_bytes()).hexdigest()}
-    ROOT.mkdir(mode=0o751);(ROOT/'trusted').mkdir(mode=0o700)
-    for name in ['frozen','jobs']: (ROOT/name).mkdir(mode=0o700)
-    (ROOT/'outbox').mkdir(mode=0o755)
+    directory(ROOT,0o751);directory(ROOT/'trusted',0o700)
+    for name in ['frozen','jobs']: directory(ROOT/name,0o700)
+    directory(ROOT/'outbox',0o755)
     # New users only; no existing group membership or passwords are changed.
     for account in ACCOUNTS:
         home=Path('/var/lib/'+account+'-home')
         require(not home.exists(),'Existing account home')
         shell='/usr/sbin/nologin' if account=='plunode-audit' else '/bin/sh'
         run(['/usr/sbin/useradd','--system','--user-group','--no-create-home','--password','!','--home-dir',str(home),'--shell',shell,account])
-        home.mkdir(mode=0o755)
-        if account!='plunode-audit':(home/'.ssh').mkdir(mode=0o755)
-    inbox=ROOT/'inbox';inbox.mkdir(mode=0o2770);os.chown(inbox,0,pwd.getpwnam('plunode-upload').pw_gid);os.chmod(inbox,0o2770)
-    PROGRAMS.mkdir(mode=0o755)
+        directory(home,0o755)
+        if account!='plunode-audit':directory(home/'.ssh',0o755)
+    inbox=ROOT/'inbox';directory(inbox,0o2770);os.chown(inbox,0,pwd.getpwnam('plunode-upload').pw_gid);os.chmod(inbox,0o2770)
+    directory(PROGRAMS,0o755)
     for name in expected-{'ops/plunode-publication','scripts/publication-attest.py','scripts/publication-coordination.py'}:
         write(PROGRAMS/Path(name).name,(stage/'reviewed-programs'/name).read_bytes(),0o644)
     write(WRAPPER,(stage/'reviewed-programs/ops/plunode-publication').read_bytes(),0o755)
@@ -161,7 +173,7 @@ def main():
         require(backup['payload']['revision']==REVISION and backup['payload']['release']=='manga-issue-25-utc-recovery-08-normal','Backup base differs')
         backup_data=json.dumps(backup,sort_keys=True,separators=(',',':'),ensure_ascii=False).encode()
         write(ROOT/'jobs/install-readonly-backup.json',backup_data)
-    export=ROOT/'export';export.mkdir(mode=0o751)
+    export=ROOT/'export';directory(export,0o751)
     transfer=export/'install-readonly-backup.json';write(transfer,backup_data)
     upload=pwd.getpwnam('plunode-upload');os.chown(transfer,upload.pw_uid,upload.pw_gid)
     audit['readOnlyBackup']={'sha256':hashlib.sha256(backup_data).hexdigest(),
@@ -172,7 +184,7 @@ def main():
     sudo='plunode-publish ALL=(root) NOPASSWD: NOSETENV: /usr/local/sbin/plunode-publication\n'
     candidate=ROOT/'trusted/sudoers-candidate';write(candidate,sudo,0o440)
     run(['/usr/sbin/visudo','-cf',str(candidate)]);write(SUDOERS,sudo,0o440)
-    fragment='Match User plunode-publish,plunode-upload\n    AuthenticationMethods publickey\n    PasswordAuthentication no\n    KbdInteractiveAuthentication no\n    PermitTTY no\n    AllowTcpForwarding no\n    AllowAgentForwarding no\n    X11Forwarding no\n    PermitTunnel no\n    PermitUserEnvironment no\nMatch User plunode-upload\n    ChrootDirectory /var/lib/plunode-publication\n    ForceCommand internal-sftp -d /inbox\nMatch all\n'
+    fragment='Match User plunode-publish,plunode-upload\n    AuthenticationMethods publickey\n    PasswordAuthentication no\n    KbdInteractiveAuthentication no\n    PermitTTY no\n    AllowTcpForwarding no\n    AllowAgentForwarding no\n    X11Forwarding no\n    PermitTunnel no\n    PermitUserRC no\nMatch User plunode-upload\n    ChrootDirectory /var/lib/plunode-publication\n    ForceCommand internal-sftp -d /inbox\nMatch all\n'
     write(SSHD_FRAGMENT,fragment,0o644)
     sshconfig=Path('/etc/ssh/sshd_config');old=sshconfig.read_bytes()
     write(ROOT/'trusted/sshd_config.before',old)
@@ -199,6 +211,13 @@ def main():
 
 if __name__=='__main__':
     try:main()
-    except Exception:
+    except Exception as error:
+        if STAGE is not None:
+            try:
+                suffix=dt.datetime.now(dt.timezone.utc).strftime('%Y%m%dT%H%M%S%fZ')
+                write(STAGE/('installation-failure-'+suffix+'.json'),json.dumps({
+                    'operation':LAST_OPERATION,'errorType':type(error).__name__,
+                    'reason':str(error)[:300],'deploymentEnabled':False,'applyCalls':0})+'\n')
+            except Exception: pass
         print('{"error":"publication-installation-stopped","deploymentEnabled":false,"applyCalls":0,"operatorInspectionRequired":true}')
         sys.exit(1)

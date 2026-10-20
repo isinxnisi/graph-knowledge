@@ -14,7 +14,7 @@
 | 限定sudo | `/etc/sudoers.d/plunode-publication` root0440。`plunode-publish ALL=(root) NOPASSWD: NOSETENV: /usr/local/sbin/plunode-publication`。visudo検証後配置 | 固定wrapperがmode+UUID以外を拒否。一般shell/任意Python/Dockerをsudo許可しない。復旧時は新sudoersのみ無効化 |
 | SSH実行鍵 | WSLで専用Ed25519鍵を新規生成、VPSの `/var/lib/plunode-publish-home/.ssh/authorized_keys` root0644へ公開鍵だけ配置。restrict＋固定publication-ssh.py強制 | 既存develop鍵/known_hostsは維持。秘密鍵はWSL0600の専用0700ディレクトリ。新鍵を外せばアクセス停止 |
 | SSH upload鍵 | 別Ed25519鍵。`/var/lib/plunode-upload-home/.ssh/authorized_keys` root0644。restrict＋internal-sftp固定 | uploadは `/var/lib/plunode-publication` へのchroot、開始位置/inbox。trusted等は0700で読めない。shell/TTY/forwardingなし |
-| SSH account設定 | 新規 `/etc/ssh/plunode-publication.conf`、既存sshd_config末尾にInclude 1行を追加。上記2 accountだけpublickey認証、TTY/agent/TCP/X11/tunnel/user-env禁止。sshd -t、既存developのeffective設定同一を確認して**sshを一回reload** | 稼働SSH接続は保持し、別接続で確認。構文/reload失敗なら元sshd_configへ戻して再検証/reload。既存全体の認証方針は変更しない |
+| SSH account設定 | 新規 `/etc/ssh/plunode-publication.conf`、既存sshd_config末尾にInclude 1行を追加。上記2 accountだけpublickey認証、TTY/agent/TCP/X11/tunnel/user-rc禁止。環境取り込みは既存globalのnoを確認し、Match未対応項目を配置しない。sshd -t、既存developのeffective設定同一を確認して**sshを一回reload** | 稼働SSH接続は保持し、別接続で確認。構文/reload失敗なら元sshd_configへ戻して再検証/reload。既存全体の認証方針は変更しない |
 | 署名鍵 | WSLに別々のapprover/attester Ed25519鍵（0600）。approverは運営者の手動署名専用、自動peerへ渡さない。公開PEMだけVPS trustedへ。閉鎖証明専用鍵はVPS root0600で新規生成 | 各公開鍵SHA256を双方でpin。既存鍵を変更/転送しない。秘密鍵はGit/Issue/ログ/転送archiveへ入れない。暗号化保管とrotationを運営者が確認するまで本番有効化しない |
 | 読取backup | 固定ops imageのcapabilities/observeだけを実行し、現revision/releaseを照合した完全公開KG backupを新jobs/install-readonly-backup.json root0600へ保存。転送コピーだけexport/にupload主体0600で配置し、WSLのGit外0600へSHA検証して受領 | 本番KGへの書込なし。原backupはrootで保全し、転送コピーは受領後除去可能。新正式receiptが別工程でできた場合の受入比較にも再利用できる |
 | 公開KG資格情報 | rootが既存Composeのops環境からNEO4J_URI/USER/PASSWORD/DATABASE **4項目だけ**を新trusted/public-kg.env root0600へ複写 | app.env/PG資格情報は不変更。PG項目は複写せず、ログにも出さない。新ファイルは入口無効化後に監査/保全判断 |
@@ -44,7 +44,7 @@ rootからの確認と画像配置を先に済ませ、正常なWorker定期ロ�
 - SSHを戻す場合はrootに保存した `trusted/sshd_config.before` と現config/candidateのhashを照合する。導入後に他のSSH変更があれば自動上書きせず差分を人間が確認する。一致時だけ元configへ戻し、`sshd -t`→`systemctl reload ssh`→既存developで別接続を確認する。user/rootの既存鍵や他サービスの設定を消さない。
 - 新しいpublication directories/journals/keysはrootで保全し、証跡確認後に扱いを判断する。新規accountを削除するときもhome一括再帰削除や既存volume削除はしない。nonce/reservations/receiptは削除しない。
 - 試験container/networkは作成時ID/labelを照合したものだけ停止・削除。全container停止、docker prune、実KG/PGのstop/restoreはしない。
-- インストーラー途中失敗後は同名存在検査で止まる。完了と扱わず、作成済み差分を確認して再開点を運営者と確定する。
+- インストーラー途中失敗後は同名存在検査で止まる。完了と扱わず、作成済み差分とroot-private stagingのinstallation-failure-*.json（operation/error type/reasonだけ、stdin/env/subprocess出力なし、0600）を確認して再開点を運営者と確定する。
 
 ## 資材と現時点の状態
 

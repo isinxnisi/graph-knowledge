@@ -30,6 +30,15 @@ class InstallerBoundaryTests(unittest.TestCase):
             self.assertEqual(new.read_bytes(),b'public-only');self.assertEqual(new.stat().st_mode&0o777,0o644)
             private=root/'private';p.write(private,b'private');self.assertEqual(private.stat().st_mode&0o777,0o600)
 
+    def test_public_directories_have_exact_mode_under_private_install_umask(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            previous=os.umask(0o077)
+            try:
+                for name,mode in [('entry',0o755),('chroot',0o751),('trusted',0o700)]:
+                    path=Path(tmp)/name;p.directory(path,mode)
+                    self.assertEqual(path.stat().st_mode&0o777,mode)
+            finally:os.umask(previous)
+
     def test_user_writable_staging_cannot_be_a_root_install_source(self):
         with tempfile.TemporaryDirectory() as tmp:
             folder=Path(tmp)
