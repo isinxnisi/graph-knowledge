@@ -1,0 +1,10 @@
+{
+  "profile": "production",
+  "deploymentEnabled": false,
+  "operatorDigest": "REPLACE_WITH_VERIFIED_LINUX_AMD64_CONFIG_ID",
+  "approverKeySha256": "REPLACE_WITH_PINNED_APPROVER_PUBLIC_PEM_SHA256",
+  "attesterKeySha256": "REPLACE_WITH_SEPARATE_PINNED_ATTESTER_PUBLIC_PEM_SHA256",
+  "network": "REPLACE_WITH_REVIEWED_PUBLIC_KG_DOCKER_NETWORK",
+  "neo4jUri": "bolt://graph-neo4j:7687",
+  "neo4jDatabase": "neo4j"
+}
