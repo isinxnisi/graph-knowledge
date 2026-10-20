@@ -1,5 +1,7 @@
 # プロジェクトの構想と判断基準
 
+2026-10-20、Issue #33の[公開状態同期と定型公開](design/PUBLICATION_AUTOMATION.md)を第1段階として実装。運営者が公開した50 Claimとrevision 88437056-b74f-42ab-88c0-33ed435bdcccを基準に、正式receiptを変更せず公開済み／未公開を再照合する。新しいbaseによる候補草稿・署名binding・失敗後の再開policyを隔離検証。本番adapter・権限設定・Worker切替は別判断。[実測](verification/PUBLICATION_AUTOMATION_20261020.md)。
+
 2026-10-20、Issue #34の[収集接続性評価](design/COLLECTION_CONNECTIVITY.md)を読み取り専用CLIとして実装。今回公開された50 Claimと追加前の1,844 Claimを固定artifactで比較し、既存への接続・2〜3段の根拠付き経路・独立島を次のテーマ検討へ返す。既存のUUID・Role・scope・Source／Citationを保持し、関係の推論補完・収集実行・検索UI／Worker／公開KG変更はしない。[初回結果](verification/COLLECTION_CONNECTIVITY_20261020.md)。
 
 2026-10-20、Issue #32 Phase Cの[正式受入済みKGの公開準備](design/PUBLICATION_PREPARATION.md)を開始。Workerの定期受入を維持し、正式receiptに被覆された累積release、根拠・Role・scope、既存更新0、既存operatorの一時的なRole互換、運営者専用のsudo preflight／公開手順と公開後の読み取り確認を用意する。採用件数と最終検証は[実測記録](verification/PUBLICATION_PREPARATION_20261020.md)を参照。公開apply・restore・サービス切替・会員DB・検索UI変更は行わない。

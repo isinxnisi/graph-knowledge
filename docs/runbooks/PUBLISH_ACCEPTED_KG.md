@@ -1,5 +1,7 @@
 # 正式受入済みKGの公開判断・運営者手順
 
+> 2026-10-20の50 Claimは運営者が公開済みです。現在release `manga-issue-25-utc-recovery-08-normal`、revision `88437056-b74f-42ab-88c0-33ed435bdccc`。以下の固定50件のpreflight／apply例は当時の手順記録であり、次回公開へ再利用しません。[現在状態の同期・次回候補準備](../design/PUBLICATION_AUTOMATION.md)を先に実行してください。旧凍結bundle内の手順・receiptは変更しません。
+
 このbundleは公開準備資料であり、公開applyの承認ではない。CollectionWorkerやCodexはこのsudo手順を実行しない。検索UI、Web image、Compose、Caddy、会員DBを変更する必要はない。
 
 2026-10-20のpreflight修正：Composeの`ops`は`profiles: [ops]`内にあるため、設定照合とoperator実行の共通コマンドで`--profile ops`を明示する。`run --no-deps --pull never ops`を維持し、会員serviceや依存serviceを起動しない。旧bundleは保存し、修正版は末尾`-r2`の別directoryへ配置する。データ・receipt集合・公開release IDは同一。

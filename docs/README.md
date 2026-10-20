@@ -40,6 +40,7 @@
 
 | 現役の設計文書 | 状態・読む場面 |
 | --- | --- |
+| [公開状態同期と定型公開](design/PUBLICATION_AUTOMATION.md) | Issue #33第1段階。公開50 Claimの読み取り照合、未公開差分だけの候補草稿、署名binding／復旧policyを隔離検証。[実測](verification/PUBLICATION_AUTOMATION_20261020.md)。本番実行・権限設定は別承認 |
 | [収集データの接続性評価](design/COLLECTION_CONNECTIVITY.md) | Issue #34。オフラインCLIで既存KG／追加後／追加単独、1〜3段到達と根拠付き経路、橋渡し・孤立島・単独／テーマ効果を比較。[公開50 Claimの初回検証](verification/COLLECTION_CONNECTIVITY_20261020.md)。UI・Worker・KG書込みなし |
 | [正式受入済みKGの公開準備](design/PUBLICATION_PREPARATION.md) | Issue #32 Phase C。receiptに被覆された既存releaseを固定し、既存operator互換性と差分を検証。[運営者のsudo preflight・公開判断手順](runbooks/PUBLISH_ACCEPTED_KG.md)。公開apply・restore・サービス切替は別判断 |
 | [承認済み受入の逐次継続](design/COLLECTION_ACCEPTANCE_SEQUENCE.md) | Issue #32 Phase B。元承認を不変に保って比較・同一性を再検証し、既存Workerで1グループずつ継続。2026-10-20の別途指示で[実運用切替・残り5グループ登録](verification/COLLECTION_SEQUENCE_ROLLOUT_20261020.md)。全件完了はGitHub結果で確認 |

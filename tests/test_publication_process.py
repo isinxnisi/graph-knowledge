@@ -18,6 +18,7 @@ old=log.read_text().splitlines() if log.exists() else []
 with log.open('a') as f:f.write(json.dumps({'name':name,'args':args})+'\n')
 fault=os.environ.get('PUBLICATION_TEST_FAULT','')
 if name=='curl':
+ if fault=='connection':sys.exit(7)
  count=sum(json.loads(x)['name']=='curl' for x in old)
  print(json.dumps({'dataset':'public-kg','revision':'changed' if fault=='revision' and count else 'before'}));sys.exit()
 if args[:2]==['image','inspect']:
@@ -87,7 +88,7 @@ class OperatorProcessTests(unittest.TestCase):
         self.assertTrue(all('--no-deps' in c['args'] and '--pull' in c['args'] and 'never' in c['args'] for c in calls if 'run' in c['args']))
 
     def test_failures_before_apply_never_write(self):
-        for fault in ['validate','backup','plan','revision','backup-revision','image','platform','missing-ops']:
+        for fault in ['connection','validate','backup','plan','revision','backup-revision','image','platform','missing-ops']:
             with self.subTest(fault=fault):
                 r,calls=self.run_procedure('apply','--operator-approved',fault=fault)
                 self.assertNotEqual(r.returncode,0)

@@ -57,3 +57,15 @@ class PublicationSmokeTests(unittest.TestCase):
     def test_publication_change_during_checks_fails(self):
         self.mode = 'changed-revision'
         with self.assertRaisesRegex(AssertionError, 'changed during'): v.verify([self.row], 'revision', self.get)
+
+    def test_all_claims_checks_nonrepresentative_claims(self):
+        second = copy.deepcopy(self.row); second['claimId'] = 'second'
+        def get(path):
+            if path.startswith('/api/claims/second'):
+                result = self.get('/api/claims/claim'); result['claim']['id'] = 'second'
+                result['claim']['contribution']['scope']['isbn13'] = 'changed'
+                return result
+            return self.get(path)
+        self.assertEqual(len(v.verify([self.row, second], 'revision', get)['verified']), 1)
+        with self.assertRaisesRegex(AssertionError, 'Role/ISBN'):
+            v.verify([self.row, second], 'revision', get, all_claims=True)

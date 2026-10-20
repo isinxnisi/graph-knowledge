@@ -16,11 +16,11 @@ def representatives(cases):
     return list(selected.values())
 
 
-def verify(cases, revision, get):
+def verify(cases, revision, get, *, all_claims=False):
     dataset = get('/api/dataset')
     assert dataset == {'dataset': 'public-kg', 'revision': revision}, 'Unexpected publication revision'
     verified = []
-    for row in representatives(cases):
+    for row in (cases if all_claims else representatives(cases)):
         for name, ident in [(row['subject'], row['subjectId']), (row['object'], row['objectId'])]:
             result = get('/api/entities?' + urlencode({'q': name, 'limit': 20}))
             assert ident in {r['id'] for r in result['items']}, 'Accepted entity missing from name search'
@@ -62,10 +62,11 @@ def main():
     cli.add_argument('--bundle', type=Path, required=True)
     cli.add_argument('--base-url', required=True)
     cli.add_argument('--revision', required=True)
+    cli.add_argument('--all-claims', action='store_true', help='Verify every added Claim, not only representative roles')
     args = cli.parse_args()
     def get(path):
         with urlopen(args.base_url.rstrip('/') + path, timeout=20) as response: return json.load(response)
-    print(json.dumps(verify(json.loads((args.bundle / 'verification-cases.json').read_text()), args.revision, get), ensure_ascii=False, indent=2))
+    print(json.dumps(verify(json.loads((args.bundle / 'verification-cases.json').read_text()), args.revision, get, all_claims=args.all_claims), ensure_ascii=False, indent=2))
 
 
 if __name__ == '__main__':
