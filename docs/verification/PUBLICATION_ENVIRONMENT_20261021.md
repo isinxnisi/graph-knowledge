@@ -36,3 +36,16 @@ VPS/WSLのユーザー、権限、SSH、鍵、サービス、DB、公開applyは
 修正候補を再度VPS実パーサーへ渡した結果、Match directiveのエラーは解消し、非rootでは読めないhost key不足で停止した。rootによる最終構文/権限検証は引き続き承認後のゲートとする。installer失敗時の診断はroot-private stagingへoperation/error type/reasonのみ0600で残し、env/stdin/子process出力を保存しない。
 
 導入時umask077の下でも公開入口・home/chroot・privateディレクトリのmodeを明示適用する検査を追加し、非特権境界試験は計4件成功。これは実rootとしてのユーザー作成・SSH reloadの完了を意味しない。
+
+
+## 一括承認後の実行経過と現在の再開点
+
+運営者は「導入・実機試験を一括承認（本番は無効を維持）」を選択済み。WSLへroot-ownedの固定repo 72338b7と固定SSH clientを配置し、専用SSH/attester鍵を作成した。approver秘密鍵はWSL root0600へ分離し、自動実行UIDから読めないことを確認した。固定repo 1,543項目の所有/非group-write/非symlink、不正client要求3件の拒否を確認。秘密鍵は転送資材に含めない。
+
+VPSのroot実行は、旧installerが2回ops profile欠落で停止し、修正版がimage inspectで停止した。前2件はaccount/dir/image load前、3件目は専用image load後・account/公開root/SSH配置前であった。原失敗記録とroot-private stageは保全している。VPSのimage storeはcontainerd、同じarchiveのmanifest ID e48a5409…が参照可能で、config ID af1216c9…は参照不可と実確認した。対応は[一括runbook](../runbooks/PUBLICATION_ROLLOUT_20261021.md)に記載。
+
+実行結果待ちの最新再開入口は `resume-store-and-realtest-v2.py`、SHA256 `97a7610cb88f9dc5ba93ed0dea8189080976fbee3b9bf8c1234a96c6828b7574`。public-only試験資材archive SHAは `c32a88e102e55a5bde7edea45e85704263c275604a310ba087dcd06c4b677bf2`。VPS転送後のSHAを照合し、root-privateで検証して実行するコマンドを運営者へ提示している。旧P33_STORE_FIXEDを既に実行した場合は新入口を重ねず、結果を保全して個別の再開点を確認する。
+
+対象Python15件と、ローカルprivate Neo4jの空base→2 Claim適用/2 receiptの完全observeは成功し、試験container/networkは除去した。**VPSの導入成功、実sshd/sudoによる拒否試験、VPS専用DBでの公開/通信断/復旧試験、本番有効化は未確認・未完了**。現在の再開に追加の導入承認は不要であり、必要なのは運営者端末でのsudo実行結果である。本番有効化は今回の承認範囲に含まれない。
+
+最終WSL読取時の既存9 receipt集合SHAは b9718eb62c705b360852fab0b6adbbac932cbff094656ad96879ff2018a101f1、Worker config SHAは d3411e24937f2f422495bf347bac9361b5a6364375443d104c266f96de4763e9、control revision 2/pauseMode null/activeAttemptなしを維持。本番KG revision 88437056-b74f-42ab-88c0-33ed435bdcccも維持。稼働Worker/Git制御/時間帯/休憩/Windows task/会員DB/Webへ変更していない。共有反映のholdは短時間だけ取得し、待機中は解放する。

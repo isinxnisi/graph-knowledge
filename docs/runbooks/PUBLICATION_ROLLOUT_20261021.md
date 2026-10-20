@@ -84,3 +84,21 @@ VPSは `driver-type=io.containerd.snapshotter.v1`。同じ承認済みarchiveの
 合成fixtureの受入時baseは空release `base` なので、新規専用DBには空base→`release-group-2`（2 Claim）の順に適用する。最初の試験資材で空baseの段階が不足していたため、運営者へ旧P33_STORE_FIXEDの保留を通知した。試験用資材を修正し、root用operator argv生成を再利用したローカルprivate Neo4jで、両releaseのvalidate/apply、2 receiptの完全observeを確認した。作成したcontainer/networkは除去した。
 
 最初のローカルDB試験では独自URIが既存assertDatasetTargetに拒否された。guardは変更せず、専用internal network内でalias `graph-neo4j` と既存URIを使用する。分離境界は新network ID/label・新DB・新資格情報・rootの固定test targetであり、本番networkへ試験containerを接続しない。Neo4jはHTTP応答だけでreadyとせず、Cypher RETURN 1を確認してから適用する。これらはVPS上の通信断/復旧試験完了を示すものではない。
+
+
+## 現在の運営者実行コマンド（v2）
+
+旧 `P33_STORE_FIXED` が未実行の場合だけ、既存VPS端末で以下を実行する。実行済み/実行中なら重ねず、表示された結果/保全先を先に確認する。導入一括承認は受領済みで、本番有効化は含まれない。失敗時は再実行せず原記録を保持する。
+
+```bash
+sudo /bin/bash <<'P33_READY_V2'
+set -euo pipefail
+umask 077
+d=$(mktemp -d /root/plunode-publication-bootstrap.XXXXXXXX)
+install -m 600 /home/develop/plunode-publication-install-20261021/resume-store-and-realtest-v2.py "$d/resume.py"
+printf '%s  %s\n' '97a7610cb88f9dc5ba93ed0dea8189080976fbee3b9bf8c1234a96c6828b7574' "$d/resume.py" | sha256sum -c -
+exec /usr/bin/python3 -I "$d/resume.py"
+P33_READY_V2
+```
+
+bootstrapは既存3件の失敗記録を照合し、導入先が未作成の場合だけ新root-private stageでarchive/installer SHAを検証する。成功するとinstalled-disabledのJSONを出力する。続いてpublic-only試験archive SHAを照合し、新規専用DB/SSH入口を準備してprivate-real-machine-fixtures-readyのJSONを出力する。どちらかが止まった場合は完了と扱わない。後半の失敗でも導入済みjournalや鍵を初期化しない。表示結果にパスワード/秘密鍵/環境内容を追加して送信する必要はない。
