@@ -1,0 +1,141 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-10-20T11:01:22.917465+00:00",
+  "phase": "issue-33-isolated-execution-adapter",
+  "baseCommit": "03e8ef6d8d5f11b2d0966944aebf917ab66797f8",
+  "worktree": "C:/Users/nishr/.codex/worktrees/issue-33-publication-adapter/7.graph-knowledge",
+  "sourceSha256": {
+    "scripts/publication-executor.py": "ed2b8c44da126333e718962781a6b3b5146b4e7501c633dc1e37413fbb9e4869",
+    "scripts/publication-sign.py": "9c800b9df20d29ce0e9868947642eabd6f9f54135e4d464299892ff358becfc9",
+    "scripts/publication-attest.py": "5cb311e8fa86ef9c0d35ce05c4f0eaf59314561ee59dae629f376ed9c5c776ec",
+    "scripts/publication-notify.py": "c9ce16dd8dbb019656b9d52841912d4caa8f9c4e2109604fc8430450c8a51eeb",
+    "scripts/publication-runtime.ts": "00a8200f2b2890adca729f5f2c0476ba117cf0ce8e86226167da5abe3b58a736",
+    "scripts/test-publication-image.py": "b012a65804287dac95b925f00369a53eba26efd79b3e67b5a9767513b7970fae",
+    "ops/plunode-publication": "b8ecdd55af110e105238c311053e2ebb62469fcb5742e782857c6032d7cb7fe8",
+    "ops/publication-ssh.py": "f395aa15c0150c0cd56faa2be291cb1e0627598a1dea463b700c8bbfddeb930c",
+    "ops/Dockerfile.publication": "71e3f1a9d7216a71329811704755a10eb51bb8411266e46ca9f4d57e485d36b7",
+    "ops/Dockerfile.publication.dockerignore": "d4f033dd820a5de043653dbe676eec5b642526272ac6755d2abb24ba5abae8f5",
+    "ops/publication-config.example.json": "831c1228ec57cd90101146dd5a5f6303a2cb76e45830df6f19a2a77e482bfd34",
+    "lib/server/public-graph.ts": "382da37abb6acd1461010b3d6a49ea293c4d219f4a17598aec25b4d4417e62d9"
+  },
+  "tests": {
+    "publicationPython": 83,
+    "acceptanceSequencePython": 19,
+    "publicModelVitest": 13,
+    "total": 115,
+    "typescriptNoEmit": true
+  },
+  "isolatedImage": {
+    "imageId": "sha256:af1216c98ef75ad0fdba1424d854fc26802af066f684c77af79f9bf6f6cf880f",
+    "platform": "linux/amd64",
+    "capabilities": {
+      "schemaVersion": 1,
+      "originalStory": true,
+      "guardedApply": true
+    },
+    "validate": true,
+    "plan": {
+      "release": "isolated-publication-next",
+      "unchanged": false,
+      "added": [
+        "Citation:bb15e42b-438b-46f3-bfe2-2c0676424db4",
+        "Claim:043e8592-5827-4167-9c93-f8201dd110bc",
+        "Entity:0e0ed535-f78e-4cb0-bd3d-7dffd6b7148e",
+        "Entity:8b0d27c2-1116-4731-a00a-b90c869524a2",
+        "ExternalIdentifier:[\"wikidata\",\"Q2602357\"]",
+        "ExternalIdentifier:[\"wikidata\",\"Q696941\"]",
+        "Source:2bdfa31d-ad7a-4705-8bdf-2be58ae606f6"
+      ],
+      "updated": [],
+      "relationshipsAdded": 6,
+      "counts": {
+        "nodes": {
+          "Entity": 4,
+          "Claim": 2,
+          "Source": 2,
+          "Citation": 2,
+          "ExternalIdentifier": 4
+        },
+        "relationships": {
+          "SUBJECT": 2,
+          "OBJECT": 2,
+          "HAS_CITATION": 2,
+          "CITES": 2,
+          "HAS_EXTERNAL_ID": 4
+        }
+      }
+    },
+    "guardedIsolatedApply": true,
+    "staleRevisionRejected": true,
+    "repeatedApplyRejected": true,
+    "verifiedCounts": {
+      "nodes": {
+        "Entity": 4,
+        "Claim": 2,
+        "Source": 2,
+        "Citation": 2,
+        "ExternalIdentifier": 4
+      },
+      "relationships": {
+        "SUBJECT": 2,
+        "OBJECT": 2,
+        "HAS_CITATION": 2,
+        "CITES": 2,
+        "HAS_EXTERNAL_ID": 4
+      }
+    },
+    "receiptCount": 2,
+    "compatibilityMountUsed": false,
+    "productionTouched": false,
+    "privateNetwork": true,
+    "resourcesRemovedOnExit": true
+  },
+  "currentPublication": {
+    "release": "manga-issue-25-utc-recovery-08-normal",
+    "revision": "88437056-b74f-42ab-88c0-33ed435bdccc",
+    "counts": {
+      "publishedAccepted": {
+        "entities": 66,
+        "claims": 50,
+        "sources": 43,
+        "citations": 51
+      },
+      "acceptedUnpublished": {
+        "entities": 0,
+        "claims": 0,
+        "sources": 0,
+        "citations": 0
+      }
+    },
+    "receiptSetSha256": "b9718eb62c705b360852fab0b6adbbac932cbff094656ad96879ff2018a101f1",
+    "candidateCreated": false,
+    "observationFilesSha256": {
+      "api-verification.json": "a64096d06799232c8e4611589295a1f18a0cf88cc64c46b00b5a8916ce8ef40d",
+      "ledger.json": "b3914e1bdb8d07891d8dcf06045a7d0fce145ff00cf5fe9b36287e61f04cbee6",
+      "result.json": "adefa5b03f8f5e6e94c9f4f9efbc84ac89439f6c4cfb0b894da4bd0075e39009",
+      "source-hashes.json": "7894fa0b641033e2f8fe86d7213968a0d563632f05a6089e9bd185bb636adfa6"
+    }
+  },
+  "workerPreservation": {
+    "copiedFilesChecked": 999,
+    "codeFilesChecked": 248,
+    "mismatches": [],
+    "activeAttempt": null,
+    "pauseMode": null,
+    "configurationChanged": false
+  },
+  "production": {
+    "deployed": false,
+    "applyCalls": 0,
+    "restoreCalls": 0,
+    "sshOrSudoOrUsersOrSecretChanges": false,
+    "serviceOrMemberDbOrUiChanges": false
+  },
+  "remainingTrustBoundaries": [
+    "Real root ownership, sudoers/SSH installation and adversarial root process tests",
+    "Protected signing/attestation keys, trust pins and rotation; production runtime/source principal verification",
+    "WSL crash/network-partition fencing across acceptance restart and uncertain remote apply",
+    "Verified image distribution, public-only credentials/network/DB/API connection and fresh live preflight",
+    "Unprivileged audit account authentication and external GitHub delivery"
+  ]
+}

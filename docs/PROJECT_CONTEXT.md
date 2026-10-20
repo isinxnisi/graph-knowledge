@@ -1,5 +1,7 @@
 # プロジェクトの構想と判断基準
 
+2026-10-20、Issue #33の[固定公開実行ゲート候補](runbooks/PUBLICATION_GATE_INSTALLATION.md)を独立worktreeで隔離実装。既存公開CLI・承認policyを再利用し、固定imageとargv、署名、durable nonce／release予約、一度だけのapply呼出し、DB receipt／graphによる復旧、監査再送とWSL receipt challenge peerを検証する。ORIGINAL_STORY対応ops image候補をprivate Neo4jで試験。本番のroot／SSH／sudo／秘密情報・分散fencingは未導入で、実VPS apply・Worker・UI変更はない。[検証](verification/PUBLICATION_GATE_20261020.md)。
+
 2026-10-20、Issue #33の[公開状態同期と定型公開](design/PUBLICATION_AUTOMATION.md)を第1段階として実装。運営者が公開した50 Claimとrevision 88437056-b74f-42ab-88c0-33ed435bdcccを基準に、正式receiptを変更せず公開済み／未公開を再照合する。新しいbaseによる候補草稿・署名binding・失敗後の再開policyを隔離検証。本番adapter・権限設定・Worker切替は別判断。[実測](verification/PUBLICATION_AUTOMATION_20261020.md)。
 
 2026-10-20、Issue #34の[収集接続性評価](design/COLLECTION_CONNECTIVITY.md)を読み取り専用CLIとして実装。今回公開された50 Claimと追加前の1,844 Claimを固定artifactで比較し、既存への接続・2〜3段の根拠付き経路・独立島を次のテーマ検討へ返す。既存のUUID・Role・scope・Source／Citationを保持し、関係の推論補完・収集実行・検索UI／Worker／公開KG変更はしない。[初回結果](verification/COLLECTION_CONNECTIVITY_20261020.md)。

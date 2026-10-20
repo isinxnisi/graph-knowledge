@@ -1,0 +1,13 @@
+# Independent ops allowlist; no env, memo, backup, member DB or web assets.
+**
+!package.json
+!package-lock.json
+!tsconfig.json
+!lib/
+!lib/**
+!neo4j/
+!neo4j/**
+!scripts/
+!scripts/public-kg.ts
+!scripts/publication-runtime.ts
+!scripts/publication-backup-plan.ts

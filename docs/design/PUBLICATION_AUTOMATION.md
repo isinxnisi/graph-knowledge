@@ -1,5 +1,7 @@
 # 公開状態の同期と定型公開処理（Issue #33）
 
+第2段階（同日）：固定公開アダプター／wrapper、署名CLI、durable nonce／release予約、WSL challenge peer、通知outboxを隔離実装した。[実装と本番導入の境界](../runbooks/PUBLICATION_GATE_INSTALLATION.md)、[検証結果](../verification/PUBLICATION_GATE_20261020.md)を現在の続きとして参照する。以下の「未実装／将来」は第1段階時点の記録であり、第2段階で実装した機構と、未導入・未検証の本番信頼境界を混同しない。第1段階のread-only CLI／offline policy自体は維持する。
+
 2026-10-20。第1段階は読み取り専用の照合・候補準備、署名承認／失敗復旧の隔離検証まで。本番実行アダプター、root信頼設定、常駐service、定期AI呼出しは追加していない。[実測結果](../verification/PUBLICATION_AUTOMATION_20261020.md)。
 
 ## 現在の公開基準と既存Worker

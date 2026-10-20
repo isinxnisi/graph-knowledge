@@ -140,10 +140,18 @@ export async function planPublicRelease(driver: Driver, database: string, releas
   }, { timeout: 60000 }); } finally { await session.close(); }
 }
 
-export async function applyPublicRelease(driver: Driver, database: string, release: PublicRelease) {
+export async function applyPublicRelease(driver: Driver, database: string, release: PublicRelease, guard?: { expectedRevision: string; additionsOnly: true }) {
   release = validatePublicRelease(release);
   // 非空の別datasetへschemaを書き込む前にも確認する。
-  await planPublicRelease(driver, database, release);
+  const initialPlan = await planPublicRelease(driver, database, release);
+  if (guard) {
+    if (initialPlan.unchanged || initialPlan.updated.length || !initialPlan.added.length) throw new Error("Publication requires additions only");
+    const preflight = driver.session({ database });
+    try {
+      const state = await preflight.executeRead(tx => tx.run("MATCH (s:DatasetState {id:$id}) RETURN s.revision AS revision", { id: PUBLIC_DATASET }));
+      if (state.records.length !== 1 || state.records[0].get("revision") !== guard.expectedRevision) throw new Error("Publication expected revision changed");
+    } finally { await preflight.close(); }
+  }
   await applyConstraints(driver, database);
   const session = driver.session({ database });
   try {
@@ -152,7 +160,12 @@ export async function applyPublicRelease(driver: Driver, database: string, relea
     return await session.executeWrite(async tx => {
       // 同じdatasetのrelease適用をDB側で直列化。失敗時はこの変更もrollback。
       await tx.run("MERGE (s:DatasetState {id:$id}) SET s.lockVersion = coalesce(s.lockVersion, 0)", { id: PUBLIC_DATASET });
+      if (guard) {
+        const state = (await tx.run("MATCH (s:DatasetState {id:$id}) RETURN s.revision AS revision", { id: PUBLIC_DATASET })).records;
+        if (state.length !== 1 || state[0].get("revision") !== guard.expectedRevision) throw new Error("Publication expected revision changed");
+      }
       const checked = await checkRelease(tx, release);
+      if (guard && (checked.unchanged || checked.plan.updated.length || !checked.plan.added.length)) throw new Error("Publication requires new additions and no existing updates");
       if (checked.unchanged) return { release: release.manifest.release, unchanged: true, ...checked.plan };
       for (const label of labels) {
         const rows = [...checked.plan.added, ...checked.plan.updated].map(id => checked.after.nodes[id]).filter(node => node.label === label).map(node => ({ ...node.properties, ...(label === "ExternalIdentifier" ? { id: randomUUID() } : {}) }));
