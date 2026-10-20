@@ -63,6 +63,10 @@ def secure_tree(path):
         st=item.lstat();require(st.st_uid==0 and not st.st_mode&0o022 and not item.is_symlink(),'Untrusted staging parent')
 
 
+def compose_configuration(app,compose):
+    return json.loads(run(['/usr/bin/docker','compose','--profile','ops','--env-file',str(app),'-f',str(compose),'config','--format','json']))
+
+
 def main():
     require(os.geteuid()==0 and len(sys.argv)==1,'Fixed root installer only')
     global STAGE
@@ -93,7 +97,7 @@ def main():
     finally:os.close(fd)  # No lock across authentication/installation/image load.
     app=Path('/opt/graph-knowledge/app.env');compose=Path('/opt/graph-knowledge/compose.yaml')
     require(app.stat().st_uid==0 and stat.S_IMODE(app.stat().st_mode)==0o600,'Wrong private environment ownership')
-    cfg=json.loads(run(['/usr/bin/docker','compose','--env-file',str(app),'-f',str(compose),'config','--format','json']))
+    cfg=compose_configuration(app,compose)
     require(cfg['name']=='graph-knowledge-production','Wrong Compose project')
     env=cfg['services']['ops']['environment']; network=cfg['networks']['default']['name']
     require(env['NEO4J_URI']=='bolt://graph-neo4j:7687' and env['NEO4J_DATABASE']=='neo4j','Wrong public DB target')

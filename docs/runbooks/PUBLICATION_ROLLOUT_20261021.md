@@ -1,6 +1,6 @@
 # Issue #33 本番導入の一括承認対象 P33-INSTALL-20261021
 
-2026-10-21 JST。**未承認・未実行の確定導入案**。[既存導入手順](PUBLICATION_GATE_INSTALLATION.md)と[PC停止時の協調手順](PUBLICATION_COORDINATION.md)を用いる。読み取り結果は[実環境確認](../verification/PUBLICATION_ENVIRONMENT_20261021.md)。本番KG apply/restore、既公開50 Claimの再公開、会員DB、Web/Caddy/Composeの切替、稼働Worker停止を含まない。
+2026-10-21 JST。**一括承認受領済み・VPS root実行待ちの導入案**。[既存導入手順](PUBLICATION_GATE_INSTALLATION.md)と[PC停止時の協調手順](PUBLICATION_COORDINATION.md)を用いる。読み取り結果は[実環境確認](../verification/PUBLICATION_ENVIRONMENT_20261021.md)。本番KG apply/restore、既公開50 Claimの再公開、会員DB、Web/Caddy/Composeの切替、稼働Worker停止を含まない。
 
 ## 承認する変更の集合
 
@@ -51,3 +51,11 @@ rootからの確認と画像配置を先に済ませ、正常なWorker定期ロ�
 `ops/install-publication-disabled.py`はこの一回の導入専用。公開処理本体の再実装ではない。実行引数なし・root-private SHA検証済みstaging専用であり、現段階ではrootで実行していない。鍵入力と転送archiveの最終SHAは承認後の生成時に確定し、承認前に架空の鍵pinや運営者署名を作らない。
 
 ローカルexportは801,273,856 bytes、SHA256 `1712fec50b1467a45e7ba1f01abb5ff6eb12d4fb6e6d75e43dfa0247efd2dbdd`。1 image、RepoTags=null。公開用imageの本番loadは未実行。新installerを構文/非root拒否/書込境界で確認したことを、実root導入済み・実機検証済みとは数えない。
+
+## 一括承認後の進捗
+
+運営者はチャットで「導入・実機試験を一括承認（本番は無効を維持）」を選択した。追加の本番有効化承認はない。
+WSL固定repo 72338b7をroot所有で配置し、実行/upload/attester鍵を専用0700領域へ作成した。approver秘密鍵は `/root/plunode-publication-operator/approver.pem` root0600とし、常設自動実行UIDから分離した。公開PEMだけを転送する。固定SSH clientはroot所有・固定host key・専用identity・ユーザーSSH config無視で導入した。暗号化保管/rotationの最終確認は本番有効化前に残る。
+
+導入archive（秘密鍵なし）は255,176,639 bytes、SHA256 `8492008b198b026be1822a79fba12fc94998db45bec0df1b8277c5b97119ee23`でVPS転送後も一致。
+最終照合でinstallerにもCompose `--profile ops`が必要と判明したため、旧installerを実行しないよう通知した。修正版は別途SHA固定で転送し、root-private stagingでarchive検証後にinstallerだけを差し替えて実行する。実Compose CLIを用いた回帰試験を追加し、opsを取得・member profileを除外することを確認した。VPS導入成功や実機DB試験を示す記録ではない。

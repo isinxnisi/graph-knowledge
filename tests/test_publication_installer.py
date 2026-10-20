@@ -1,6 +1,7 @@
 """Nonprivileged checks of the one-time rollout installer. Never runs root installation."""
 import importlib.util
 import os
+import shutil
 from pathlib import Path
 import subprocess
 import tempfile
@@ -45,6 +46,20 @@ class InstallerBoundaryTests(unittest.TestCase):
             with self.assertRaises(ValueError):p.secure_tree(folder)
             link=folder/'linked';link.symlink_to(folder,target_is_directory=True)
             with self.assertRaises(ValueError):p.secure_tree(link)
+
+    @unittest.skipUnless(Path('/usr/bin/docker').exists(),'Actual Docker Compose CLI required')
+    def test_actual_compose_profile_resolves_ops_without_member_or_daemon(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp);compose=root/'compose.yaml';shutil.copyfile(ROOT/'compose.production.yaml',compose)
+            env=root/'app.env';env.write_text('NEO4J_PASSWORD=isolated-profile-test-only\nGRAPH_IMAGE_TAG=profile-test\nGRAPH_BACKUP_DIRECTORY=/tmp/unused-profile-test\n')
+            old=subprocess.run(['/usr/bin/docker','compose','--env-file',str(env),'-f',str(compose),'config','--format','json'],capture_output=True,check=True)
+            import json
+            self.assertNotIn('ops',json.loads(old.stdout)['services'])
+            # Production run() deliberately sets HOME=/root; this test executes the same argv as the nonroot test owner.
+            with patch.object(p,'run',side_effect=lambda argv:subprocess.run(argv,capture_output=True,check=True).stdout):
+                current=p.compose_configuration(env,compose)
+            self.assertEqual(current['services']['ops']['image'],'graph-knowledge-ops:profile-test')
+            self.assertNotIn('graph-member-postgres',current['services'])
 
 
 if __name__=='__main__':unittest.main()
