@@ -93,11 +93,11 @@
   "requestSha256": "9cfb278787a39e9fcfdc49e4bee7a5c2a4c946f94236037bdc199e70699dc9cf",
   "kind": "collect-review",
   "phase": "waiting-control",
-  "generation": 1605,
+  "generation": 1708,
   "attempts": 1,
   "workerId": "plunode-wsl",
   "sourceCommit": "916cc77d3aeab22650e309b694661cac07a72a47",
-  "updatedAt": "2026-10-20T04:13:37+00:00",
-  "message": "Execution gate: outside-window",
+  "updatedAt": "2026-10-20T06:00:58+00:00",
+  "message": "Execution gate: interval",
   "retryAt": 1792468857.7568264
 }
