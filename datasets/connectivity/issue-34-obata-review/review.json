@@ -1,0 +1,802 @@
+{
+  "schemaVersion": 1,
+  "reportType": "saved-evidence-reassessment-only",
+  "reviewDate": "2026-10-20",
+  "issue": "https://github.com/isinxnisi/graph-knowledge/issues/34",
+  "requestComment": "https://github.com/isinxnisi/graph-knowledge/issues/34#issuecomment-6289577954",
+  "sourceGitCommit": "a2e08d3e5f05378e40c5f21935554e77e36801a2",
+  "relatedIssues": [
+    {
+      "number": 5,
+      "url": "https://github.com/isinxnisi/graph-knowledge/issues/5"
+    },
+    {
+      "number": 7,
+      "url": "https://github.com/isinxnisi/graph-knowledge/issues/7"
+    }
+  ],
+  "decision": {
+    "status": "held-for-primary-source-excerpt",
+    "formalAcceptanceReady": false,
+    "reason": "保存NDL原文は漫画。作画の明示は意味レビューの要約であり、対応する原文抜粋・locator・取得記録を保存範囲で確認できない。",
+    "humanAcceptance": null,
+    "providerRequestsPerformed": 0,
+    "collectionPerformed": false,
+    "acceptancePerformed": false,
+    "publicationApplyPerformed": false,
+    "newKnowledgeRecordsCreated": 0
+  },
+  "propositionUnderReview": {
+    "subjectEntityId": "d5e39491-5a5f-423c-9222-2eb3c18db9a8",
+    "subjectName": "小畑健",
+    "targetEntityId": "0c29d0e2-685f-4c56-9805-6bf1baf40e7c",
+    "targetName": "ヒカルの碁",
+    "targetMedium": "manga",
+    "proposedRoleId": "DRAWING",
+    "roleAssessment": "現行定義に合う資料の参照はあるが原文照合待ち。漫画/P110からは確定しない。",
+    "scopeProposal": null,
+    "scopeMeaning": "適用範囲は未構造化。全巻・全版という意味ではない。ISBN scopeをNDLや別Claimから転記しない。",
+    "periodProposal": {
+      "from": null,
+      "to": null
+    },
+    "claimId": null,
+    "sourceId": null,
+    "citationId": null,
+    "originalDrawingCredit": null,
+    "citationLocator": null,
+    "identityAssessment": "既存受入済み・公開snapshotのUUID/QIDを再利用する案。新しい同一性の認定は行わない。追加原文が同じ漫画・人物を指すことは次回照合。"
+  },
+  "publicContext": {
+    "kind": "saved-observation-not-live-query",
+    "release": "manga-issue-25-utc-recovery-08-normal",
+    "revision": "88437056-b74f-42ab-88c0-33ed435bdccc",
+    "workerOldBaseRelease": "20261014-credits-001",
+    "workerOldLocalRevision": "82b01515-594c-48ca-b4b6-515eefac83ca",
+    "targetPairClaimCount": 0,
+    "unchangedPublicRecords": {
+      "entities": [
+        {
+          "id": "0c29d0e2-685f-4c56-9805-6bf1baf40e7c",
+          "kind": "work",
+          "name": "ヒカルの碁",
+          "description": null,
+          "aliases": [
+            "Hikaru no Go"
+          ],
+          "externalIds": [
+            {
+              "namespace": "wikidata",
+              "value": "Q582763"
+            }
+          ],
+          "createdAt": "2026-10-16T00:00:00Z",
+          "updatedAt": "2026-10-16T00:00:00Z",
+          "event": null
+        },
+        {
+          "id": "3427040b-88fd-4db5-b546-dd237abad032",
+          "kind": "work",
+          "name": "バクマン。",
+          "description": null,
+          "aliases": [
+            "Bakuman"
+          ],
+          "externalIds": [
+            {
+              "namespace": "wikidata",
+              "value": "Q804555"
+            }
+          ],
+          "createdAt": "2026-10-17T00:00:00Z",
+          "updatedAt": "2026-10-17T00:00:00Z",
+          "event": null
+        },
+        {
+          "id": "d5e39491-5a5f-423c-9222-2eb3c18db9a8",
+          "kind": "person",
+          "name": "小畑健",
+          "description": null,
+          "aliases": [
+            "Takeshi Obata"
+          ],
+          "externalIds": [
+            {
+              "namespace": "wikidata",
+              "value": "Q313703"
+            }
+          ],
+          "createdAt": "2026-10-17T00:00:00Z",
+          "updatedAt": "2026-10-17T00:00:00Z",
+          "event": null
+        },
+        {
+          "id": "e0183e9c-dc97-4d85-b46e-14a1b76707fd",
+          "kind": "person",
+          "name": "ほったゆみ",
+          "description": null,
+          "aliases": [
+            "Yumi Hotta"
+          ],
+          "externalIds": [
+            {
+              "namespace": "wikidata",
+              "value": "Q263303"
+            }
+          ],
+          "createdAt": "2026-10-16T00:00:00Z",
+          "updatedAt": "2026-10-16T00:00:00Z",
+          "event": null
+        }
+      ],
+      "claims": [
+        {
+          "id": "10f72eb0-3526-4d50-a552-e2239c01fc39",
+          "subjectId": "e0183e9c-dc97-4d85-b46e-14a1b76707fd",
+          "objectId": "0c29d0e2-685f-4c56-9805-6bf1baf40e7c",
+          "predicate": "CONTRIBUTED_TO",
+          "polarity": "affirmed",
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "visibility": "published",
+          "createdAt": "2026-10-16T16:34:09Z",
+          "updatedAt": "2026-10-16T16:34:09Z",
+          "contribution": {
+            "roleId": "ORIGINAL_STORY",
+            "scope": {
+              "kind": "publication",
+              "isbn13": "9784088727172",
+              "volumeLabel": "第1巻",
+              "editionLabel": null,
+              "language": "ja"
+            }
+          },
+          "organizationParticipation": null,
+          "eventParticipation": null
+        },
+        {
+          "id": "cd294bb9-a7de-4f21-95c2-84b878c0e7cc",
+          "subjectId": "d5e39491-5a5f-423c-9222-2eb3c18db9a8",
+          "objectId": "3427040b-88fd-4db5-b546-dd237abad032",
+          "predicate": "CONTRIBUTED_TO",
+          "polarity": "affirmed",
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "visibility": "published",
+          "createdAt": "2026-10-17T07:19:28Z",
+          "updatedAt": "2026-10-17T07:19:28Z",
+          "contribution": {
+            "roleId": "AUTHORSHIP",
+            "scope": {
+              "kind": "publication",
+              "isbn13": "9784086196901",
+              "volumeLabel": "第1巻",
+              "editionLabel": null,
+              "language": "ja"
+            }
+          },
+          "organizationParticipation": null,
+          "eventParticipation": null
+        }
+      ],
+      "sources": [
+        {
+          "id": "6dfb8c00-412a-4bd6-88f8-58f85b98247e",
+          "kind": "web",
+          "title": "バクマン。 1 — 集英社",
+          "authors": [],
+          "publisher": "集英社",
+          "url": "https://www.shueisha.co.jp/books/items/contents.html?isbn=978-4-08-619690-1",
+          "publishedAt": null,
+          "edition": null,
+          "note": "公式資料の必要な書誌・担当表記のみ。本文・画像・あらすじを転載しない。正式受入済みの追加根拠。",
+          "isDemo": false
+        },
+        {
+          "id": "751742b2-a8c7-40fe-96c1-8e91a116f789",
+          "kind": "web",
+          "title": "NDLサーチ: ヒカルの碁. 1",
+          "authors": [],
+          "publisher": "国立国会図書館",
+          "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I000002788748",
+          "publishedAt": null,
+          "edition": null,
+          "note": "国立国会図書館作成書誌（iss-ndl-opac）の責任表示。メタデータ CC BY 4.0: https://creativecommons.org/licenses/by/4.0/ ; 提供元条件 https://ndlsearch.ndl.go.jp/help/api/provider 。本文・画像・第三者所蔵情報は含まない。",
+          "isDemo": false
+        }
+      ],
+      "citations": [
+        {
+          "id": "13adf6b0-da63-4be0-abd7-b8aeb54d6bdf",
+          "claimId": "10f72eb0-3526-4d50-a552-e2239c01fc39",
+          "sourceId": "751742b2-a8c7-40fe-96c1-8e91a116f789",
+          "locator": "dc:creator（責任表示） / ISBN 9784088727172",
+          "note": "日本語第1巻のNDL書誌のみ。原本実見ではない。全巻・全版、脚本・ネーム・著作権を推論しない。",
+          "accessedAt": "2026-10-16",
+          "stance": "support",
+          "roleEvidence": {
+            "originalText": "ほったゆみ 原作",
+            "language": "ja"
+          },
+          "positionEvidence": null,
+          "eventParticipationEvidence": null
+        },
+        {
+          "id": "c2a11bab-9544-49af-a352-668f7cb08aff",
+          "claimId": "cd294bb9-a7de-4f21-95c2-84b878c0e7cc",
+          "sourceId": "6dfb8c00-412a-4bd6-88f8-58f85b98247e",
+          "locator": "紙版ISBN／著者欄",
+          "note": "同一ISBNを明示する出版社の著者欄による別候補。NDLの漫画をDRAWING／AUTHORSHIPへ置換したものではない。原資料間の異なる呼称を保持する。",
+          "accessedAt": "2026-10-17",
+          "stance": "support",
+          "roleEvidence": {
+            "originalText": "著者：小畑 健",
+            "language": "ja"
+          },
+          "positionEvidence": null,
+          "eventParticipationEvidence": null
+        }
+      ]
+    }
+  },
+  "inputArtifacts": [
+    {
+      "path": "datasets/connectivity/issue-34/after-data.json.gz",
+      "sha256": "ea3137d7ab46920ee482e2854efc859ab0a7c288c959d3185ea8245837c0c6ae",
+      "hashMode": "raw-bytes"
+    },
+    {
+      "path": "datasets/connectivity/issue-34/after-manifest.json.gz",
+      "sha256": "4a19b835142e23fbe19e183489b1164c5ae312e98b38e53dbbf4698a2cbecf4d",
+      "hashMode": "raw-bytes"
+    },
+    {
+      "path": "datasets/connectivity/issue-34/public-observation.json",
+      "sha256": "d97defe3a594db19423bbfed67ceae92098f7ba7d0313cd4cd74e8fb89b98c74",
+      "hashMode": "utf8-lf"
+    },
+    {
+      "path": "datasets/manga-collection/original-story-r0002-20261017/ndl-9784088727172.json",
+      "sha256": "9e302be016583de26a8907bef77390d34d1bc45db01a08f6e680076cbd5c975a",
+      "hashMode": "utf8-lf"
+    },
+    {
+      "path": "datasets/manga-collection/review-r0002-20261017/review.json",
+      "sha256": "dec7cd6e012e82be409541418480e95565214c3457bb48ddbc4eca280c12ec76",
+      "hashMode": "utf8-lf"
+    },
+    {
+      "path": "datasets/manga-collection/review-r0003-20261017/additional-evidence.json",
+      "sha256": "1187f72352c46cd775df22b2de54f2bf52020860832fbfe676cf8c4255baf844",
+      "hashMode": "utf8-lf"
+    },
+    {
+      "path": "datasets/manga-collection/accepted-r0003-20261017/acceptance.json",
+      "sha256": "7d53abbd472fcbf0cba57fa5202d6fd4f8eb12c9ebda34bd1e7a8badca701831",
+      "hashMode": "utf8-lf"
+    },
+    {
+      "path": "datasets/manga-collection/accepted-original-story-r0002-20261017/acceptance.json",
+      "sha256": "9fdb9933c0d78795769bf27eebb7ecb4ec7cccc37f6ee6827e55dd119e727801",
+      "hashMode": "utf8-lf"
+    },
+    {
+      "path": "docs/design/MANGA_PRODUCTION_ROLE_REVIEW.md",
+      "sha256": "1805ca9fbb49f8d5982945385b9722ce682944a035ff0e35f55322c36db1d049",
+      "hashMode": "utf8-lf"
+    },
+    {
+      "path": "docs/design/CONTRIBUTION_CREDITS.md",
+      "sha256": "533af67827dc94a8a6b0683677569c0c6ac92db5c5a2fedbd0d91f0058037c8b",
+      "hashMode": "utf8-lf"
+    },
+    {
+      "path": "docs/design/CONTRIBUTION_ROLE_CONTRACTS.md",
+      "sha256": "732c7c2697f43d9859885b26f36ab535c56b84c60ee80d1625cd93e013ecbd7d",
+      "hashMode": "utf8-lf"
+    },
+    {
+      "path": "datasets/connectivity/issue-34-candidates/issue-context.json",
+      "sha256": "0fd1b5bc2293afd42599192327df14ab976e1c35d9457fb8d7547c878edb4a33",
+      "hashMode": "utf8-lf"
+    }
+  ],
+  "localEvidence": [
+    {
+      "path": ".local/collection-jobs/famous-manga-creators-r0002-97c171eb654963e4/artifacts/snapshots/Q313703.json",
+      "sha256": "7bdfbd5e35eea5bfd0917efb6c2bd63de90f83a49b2bbf2930a55447ee0d9144",
+      "hashMode": "raw-bytes",
+      "availableIn": "original-local-job-only",
+      "extracted": {
+        "id": "Q313703",
+        "lastrevid": 2549534991,
+        "labels": {
+          "ja": {
+            "language": "ja",
+            "value": "小畑健"
+          },
+          "en": {
+            "language": "en",
+            "value": "Takeshi Obata"
+          }
+        },
+        "claims": {
+          "P31": [
+            {
+              "mainsnak": {
+                "snaktype": "value",
+                "property": "P31",
+                "hash": "ad7d38a03cdd40cdc373de0dc4e7b7fcbccb31d9",
+                "datavalue": {
+                  "value": {
+                    "entity-type": "item",
+                    "numeric-id": 5,
+                    "id": "Q5"
+                  },
+                  "type": "wikibase-entityid"
+                },
+                "datatype": "wikibase-item"
+              },
+              "type": "statement",
+              "id": "Q313703$039F6178-E014-454C-975C-1282D47D5C57",
+              "rank": "normal",
+              "references": [
+                {
+                  "hash": "688c0de435ecbc5fd0cf27a0a3d26767101d7c40",
+                  "snaks": {
+                    "P248": [
+                      {
+                        "snaktype": "value",
+                        "property": "P248",
+                        "hash": "def9f19d84b65167a2a17ce38364d264c16127fc",
+                        "datavalue": {
+                          "value": {
+                            "entity-type": "item",
+                            "numeric-id": 19938912,
+                            "id": "Q19938912"
+                          },
+                          "type": "wikibase-entityid"
+                        },
+                        "datatype": "wikibase-item"
+                      }
+                    ],
+                    "P268": [
+                      {
+                        "snaktype": "value",
+                        "property": "P268",
+                        "hash": "5518653a5983d6b623ecc024c85cf182fa8b0dcb",
+                        "datavalue": {
+                          "value": "133248418",
+                          "type": "string"
+                        },
+                        "datatype": "external-id"
+                      }
+                    ],
+                    "P813": [
+                      {
+                        "snaktype": "value",
+                        "property": "P813",
+                        "hash": "d6162a1716489623c6e595e448b17f8dca4fb2e8",
+                        "datavalue": {
+                          "value": {
+                            "time": "+2015-10-10T00:00:00Z",
+                            "timezone": 0,
+                            "before": 0,
+                            "after": 0,
+                            "precision": 11,
+                            "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                          },
+                          "type": "time"
+                        },
+                        "datatype": "time"
+                      }
+                    ]
+                  },
+                  "snaks-order": [
+                    "P248",
+                    "P268",
+                    "P813"
+                  ]
+                },
+                {
+                  "hash": "5212693ec02df28f88185ac53757794d1c4a4577",
+                  "snaks": {
+                    "P248": [
+                      {
+                        "snaktype": "value",
+                        "property": "P248",
+                        "hash": "45037a2d1d89deebcdfc5840e9adbaa4b64cebc6",
+                        "datavalue": {
+                          "value": {
+                            "entity-type": "item",
+                            "numeric-id": 50358336,
+                            "id": "Q50358336"
+                          },
+                          "type": "wikibase-entityid"
+                        },
+                        "datatype": "wikibase-item"
+                      }
+                    ],
+                    "P813": [
+                      {
+                        "snaktype": "value",
+                        "property": "P813",
+                        "hash": "e8dfbedb95cdb42fdca02aa9fd2fdb859040899e",
+                        "datavalue": {
+                          "value": {
+                            "time": "+2024-05-23T00:00:00Z",
+                            "timezone": 0,
+                            "before": 0,
+                            "after": 0,
+                            "precision": 11,
+                            "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                          },
+                          "type": "time"
+                        },
+                        "datatype": "time"
+                      }
+                    ],
+                    "P950": [
+                      {
+                        "snaktype": "value",
+                        "property": "P950",
+                        "hash": "39019f500b326d6bd29e08e4dfff70d3db34230d",
+                        "datavalue": {
+                          "value": "XX4614904",
+                          "type": "string"
+                        },
+                        "datatype": "external-id"
+                      }
+                    ]
+                  },
+                  "snaks-order": [
+                    "P248",
+                    "P813",
+                    "P950"
+                  ]
+                }
+              ]
+            }
+          ],
+          "P110": []
+        }
+      }
+    },
+    {
+      "path": ".local/collection-jobs/famous-manga-creators-r0002-97c171eb654963e4/artifacts/snapshots/Q582763.json",
+      "sha256": "9cd9a4a34326fe610378cda0dfa5057540f8d75d05cec60e6c9a838841c56c27",
+      "hashMode": "raw-bytes",
+      "availableIn": "original-local-job-only",
+      "extracted": {
+        "id": "Q582763",
+        "lastrevid": 2555667528,
+        "labels": {
+          "ja": {
+            "language": "ja",
+            "value": "ヒカルの碁"
+          },
+          "en": {
+            "language": "en",
+            "value": "Hikaru no Go"
+          }
+        },
+        "claims": {
+          "P31": [
+            {
+              "mainsnak": {
+                "snaktype": "value",
+                "property": "P31",
+                "hash": "549c072d6be8a6a43f999d1d0e82640b16c4260e",
+                "datavalue": {
+                  "value": {
+                    "entity-type": "item",
+                    "numeric-id": 21198342,
+                    "id": "Q21198342"
+                  },
+                  "type": "wikibase-entityid"
+                },
+                "datatype": "wikibase-item"
+              },
+              "type": "statement",
+              "id": "Q582763$133DB1D4-139E-4740-90DB-F77EDDD85ADD",
+              "rank": "normal"
+            }
+          ],
+          "P110": [
+            {
+              "mainsnak": {
+                "snaktype": "value",
+                "property": "P110",
+                "hash": "e358be57d74bb11adad4110f08cd1804b714787d",
+                "datavalue": {
+                  "value": {
+                    "entity-type": "item",
+                    "numeric-id": 313703,
+                    "id": "Q313703"
+                  },
+                  "type": "wikibase-entityid"
+                },
+                "datatype": "wikibase-item"
+              },
+              "type": "statement",
+              "id": "Q582763$82c297e4-42a4-29ed-4ccb-fc806f38bbae",
+              "rank": "normal"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "path": ".local/collection-jobs/famous-manga-creators-r0002-97c171eb654963e4/request-cache/ndl-9784088727172.body",
+      "sha256": "a8cc2070c3e0d61fcffe31bc4b014559b57da7df2b0f3d3905eeca58b29d557a",
+      "hashMode": "raw-bytes",
+      "bytes": 34591,
+      "availableIn": "original-local-job-only",
+      "extracted": {
+        "acquisition": {
+          "kind": "ndl",
+          "identifier": "9784088727172",
+          "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&maximumRecords=5&query=isbn%3D%229784088727172%22+AND+dpid%3Diss-ndl-opac",
+          "sha256": "a8cc2070c3e0d61fcffe31bc4b014559b57da7df2b0f3d3905eeca58b29d557a",
+          "bytes": 34591,
+          "fetchedAt": "2026-10-16T14:43:47+00:00"
+        },
+        "recordUrl": "https://ndlsearch.ndl.go.jp/books/R100000002-I000002788748",
+        "locator": "SRU recordData → dcndl:BibResource ending I000002788748#material → dc:creator",
+        "originalText": "小畑健 漫画",
+        "language": "ja",
+        "rawIsbn10": "4-08-872717-7",
+        "normalizedIsbn13": "9784088727172"
+      }
+    },
+    {
+      "path": ".local/collection-jobs/famous-manga-creators-r0002-97c171eb654963e4/artifacts/ledger.json",
+      "sha256": "cca48350e2193113de5e444886230ac5b5b97a93f0b22013bfd55d17da8d9f2a",
+      "hashMode": "raw-bytes",
+      "availableIn": "original-local-job-only",
+      "extracted": {
+        "identityMappings": [
+          {
+            "name": "小畑健",
+            "wikidata": "Q313703",
+            "entityId": "d5e39491-5a5f-423c-9222-2eb3c18db9a8",
+            "basis": "reviewed-anchor-and-provider-type-and-name",
+            "reused": false
+          },
+          {
+            "name": "ヒカルの碁",
+            "wikidata": "Q582763",
+            "entityId": "0c29d0e2-685f-4c56-9805-6bf1baf40e7c",
+            "basis": "reviewed-anchor-and-provider-type-and-name",
+            "reused": false
+          }
+        ],
+        "rows": [
+          {
+            "kind": "wikidata-relation",
+            "work": "ヒカルの碁",
+            "property": "P110",
+            "personQid": "Q313703",
+            "statementId": "Q582763$82c297e4-42a4-29ed-4ccb-fc806f38bbae",
+            "qualifiers": {},
+            "references": [],
+            "status": "candidate-only-no-role-inference",
+            "reason": "Wikidata propertyだけで具体Roleや直接制作の意味を確定しない"
+          },
+          {
+            "kind": "ndl-credit",
+            "work": "ヒカルの碁",
+            "isbn13": "9784088727172",
+            "rawResponsibility": "小畑健 漫画",
+            "sourceUrl": "https://ndlsearch.ndl.go.jp/books/R100000002-I000002788748",
+            "status": "held"
+          }
+        ]
+      }
+    }
+  ],
+  "savedNdlRecord": {
+    "provider": "iss-ndl-opac / 国立国会図書館",
+    "license": "https://creativecommons.org/licenses/by/4.0/",
+    "terms": "https://ndlsearch.ndl.go.jp/help/api/provider",
+    "records": [
+      {
+        "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I000002788748",
+        "isbn13": [
+          "9784088727172"
+        ],
+        "title": [
+          "ヒカルの碁. 1"
+        ],
+        "mainTitles": [
+          "ヒカルの碁"
+        ],
+        "volume": [
+          "1"
+        ],
+        "edition": [],
+        "responsibilities": [
+          "ほったゆみ 原作",
+          "小畑健 漫画",
+          "梅澤由香里 監修"
+        ],
+        "publisher": [
+          "集英社"
+        ],
+        "language": [
+          "jpn"
+        ],
+        "genre": [
+          "漫画"
+        ]
+      }
+    ],
+    "error": null
+  },
+  "sourceAssessments": [
+    {
+      "key": "ndl-volume-1",
+      "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I000002788748",
+      "availability": "saved-structured-record-and-local-xml-cache",
+      "originalText": "小畑健 漫画",
+      "language": "ja",
+      "support": "日本語第1巻の責任表示と小畑名。原本実見ではない。",
+      "doesNotEstablish": [
+        "DRAWING",
+        "全巻・全版の担当",
+        "脚本・ネーム・権利"
+      ],
+      "existingSourceId": "751742b2-a8c7-40fe-96c1-8e91a116f789",
+      "existingOtherPersonCitationId": "13adf6b0-da63-4be0-abd7-b8aeb54d6bdf",
+      "citationReuse": "既存CitationはほったゆみORIGINAL_STORY用。小畑作画へ付け替えない。"
+    },
+    {
+      "key": "nihonkiin-award-record",
+      "url": "https://archive.nihonkiin.or.jp/kishihp/umezawa/journal.htm",
+      "availability": "saved-semantic-review-summary-only",
+      "reviewLocator": "MANGA_PRODUCTION_ROLE_REVIEW.md / 漫画3件 / 小畑健→ヒカルの碁",
+      "summary": "保存レビューは小畑の作画を明示すると記述。",
+      "originalText": null,
+      "originalLocator": null,
+      "retrievedAt": null,
+      "supportStatus": "原資料照合待ち",
+      "publicationScopeSupported": false
+    },
+    {
+      "key": "obata-interview-section-8",
+      "url": "https://jumpsq.shueisha.co.jp/contents/manganogokui_2nd3/interview8.html",
+      "availability": "saved-semantic-review-summary-only",
+      "reviewLocator": "MANGA_PRODUCTION_ROLE_REVIEW.md / 実資料・包含・除外・境界例 / 境界の補強",
+      "summary": "保存レビューはヒカルの碁でネーム原作を受け絵に集中した経緯と記述。本人の描いたという明示の範囲は原文確認待ち。",
+      "originalText": null,
+      "originalLocator": null,
+      "retrievedAt": null,
+      "supportStatus": "補強資料候補、原資料照合待ち",
+      "publicationScopeSupported": false
+    },
+    {
+      "key": "wikidata-p110",
+      "availability": "saved-local-snapshot-and-ledger",
+      "statementId": "Q582763$82c297e4-42a4-29ed-4ccb-fc806f38bbae",
+      "references": [],
+      "supportStatus": "候補発見と同定補助のみ。P110をDRAWINGへ正規化しない。"
+    },
+    {
+      "key": "other-publisher-credits",
+      "availability": "saved-review-and-public-records",
+      "supportStatus": "ヒカルの碁の著者というレビュー要約もDRAWINGを支持しない。additional-evidence.jsonのバクマン著者とinterview4は別作品で対象外。"
+    }
+  ],
+  "searchAudit": {
+    "scope": [
+      "tracked docs/",
+      "tracked datasets/",
+      ".local/collection-jobs/",
+      ".local/collection-trials/"
+    ],
+    "localFilesObserved": 566,
+    "localFileExtensionCounts": {
+      "no-extension": 8,
+      ".body": 220,
+      ".json": 325,
+      ".md": 5,
+      ".py": 7,
+      ".pyc": 1
+    },
+    "method": "参照先2 URLをdocs/datasetsとlocal UTF-8 JSON/Markdown/textから検索。全220 bodyをUTF-8/CP932で読み、URLと人物・作品名を照合。該当NDLキャッシュは保存snapshot/hashと照合。",
+    "foundPrimaryDrawingExcerpt": false,
+    "limitation": "確認した保存範囲の結果。別PC・ブラウザ履歴・未探索領域や現在のWebに原文がないという主張ではない。"
+  },
+  "holds": [
+    {
+      "code": "drawing-evidence",
+      "condition": "資料原文で小畑健・漫画ヒカルの碁・作画または本人の当該漫画を描いたという明示を同時に確認する。",
+      "resolved": false
+    },
+    {
+      "code": "citation-provenance",
+      "condition": "短い原語、言語、見出し/段落locator、取得日時、支持範囲を固定する。レビュー要約を原文としてCitationにしない。",
+      "resolved": false
+    },
+    {
+      "code": "publication-scope",
+      "condition": "特定ISBNのDRAWINGは未支持。作品単位資料が得られてもscope=null案を人間が審査し、ISBN9784088727172へ拡張しない。",
+      "resolved": false
+    },
+    {
+      "code": "source-target-identity",
+      "condition": "既存UUID/QIDは保持。追加原文の人物・漫画との対応が曖昧/アニメ等なら保留し、同名統合しない。",
+      "resolved": false
+    }
+  ],
+  "nextApprovalTargets": [
+    {
+      "order": 1,
+      "kind": "bounded-source-verification-only",
+      "status": "proposed-not-authorized",
+      "purpose": "不足する原文の対象・作画明示・支持範囲だけを確認する。",
+      "requestBudget": {
+        "method": "GET",
+        "maxAttemptsTotal": 2,
+        "maxAttemptsPerUrl": 1,
+        "retries": 0,
+        "followRedirects": false,
+        "sequential": true,
+        "minimumIntervalSeconds": 3,
+        "timeoutSecondsPerAttempt": 20,
+        "maxResponseBytesPerAttempt": 2097152,
+        "maxTotalResponseBytes": 4194304,
+        "targets": [
+          {
+            "order": 1,
+            "url": "https://archive.nihonkiin.or.jp/kishihp/umezawa/journal.htm",
+            "purpose": "受賞記録の小畑/ヒカルの碁/作画を同じ文脈で照合。",
+            "requiredIfAuthorized": true
+          },
+          {
+            "order": 2,
+            "url": "https://jumpsq.shueisha.co.jp/contents/manganogokui_2nd3/interview8.html",
+            "purpose": "1件目で命題が不足する場合に限り、本人の当該漫画を描いたという明示を照合。",
+            "requiredIfAuthorized": false
+          }
+        ],
+        "stopConditions": [
+          "1件目で十分なら2件目を省略",
+          "リダイレクト・認証・403・429・サイズ超過・対象不明ならその時点で停止し報告",
+          "失敗時の再試行・URL変更・別ページ・検索・画像・Wikidata・NDL再取得は予算外"
+        ],
+        "retention": "必要な短い原文、locator、資料名・提供元、取得日時、レスポンスhashと支持/不支持の記録のみ。本文全体の新規転載はしない。"
+      }
+    },
+    {
+      "order": 2,
+      "kind": "future-human-semantic-review",
+      "status": "not-ready-not-authorized",
+      "prerequisite": "原文照合の完了と上記保留の解消/明示的な限定。",
+      "decisions": [
+        "既存2 UUIDを端点にした作品単位DRAWINGの支持可否",
+        "scope=nullが未構造化であり全巻/全版を意味しないこと",
+        "期間不明をnullのまま保つこと",
+        "原語とlocatorを持つ資料別Citationの支持範囲。NDL漫画・他ClaimのCitationを転用しない"
+      ],
+      "notIncluded": [
+        "正式受入の実行",
+        "受入receipt生成",
+        "release生成",
+        "Worker登録",
+        "公開apply"
+      ]
+    }
+  ],
+  "excludedFollowups": [
+    "DEATH NOTE追加調査",
+    "ONE・村田雄介への移行",
+    "梅澤/梅沢/吉原由香里の同一性確定",
+    "既存公開Claimの再受入・変更",
+    "UI・Worker・本番環境の変更"
+  ]
+}

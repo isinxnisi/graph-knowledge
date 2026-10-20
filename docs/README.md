@@ -42,7 +42,7 @@
 | --- | --- |
 | [固定公開ゲートの隔離実装と導入計画](runbooks/PUBLICATION_GATE_INSTALLATION.md) | Issue #33第2段階。固定wrapper／署名／単回nonce・release予約／復旧／WSL peer・通知、ORIGINAL_STORY対応の独立ops image候補。[検証](verification/PUBLICATION_GATE_20261020.md)。本番導入・分散fencing・鍵／権限は別ゲート |
 | [公開状態同期と定型公開](design/PUBLICATION_AUTOMATION.md) | Issue #33第1段階。公開50 Claimの読み取り照合、未公開差分だけの候補草稿、署名binding／復旧policyを隔離検証。[実測](verification/PUBLICATION_AUTOMATION_20261020.md)。本番実行・権限設定は別承認 |
-| [収集データの接続性評価](design/COLLECTION_CONNECTIVITY.md) | Issue #34。オフラインCLIで既存KG／追加後／追加単独を比較。[公開50 Claimの初回検証](verification/COLLECTION_CONNECTIVITY_20261020.md)と[18群から選ぶ次の4収集候補](verification/COLLECTION_CANDIDATES_20261020.md)。未確認関係と公開Claim、橋渡しと分岐を分離。UI・Worker・KG書込みなし |
+| [収集データの接続性評価](design/COLLECTION_CONNECTIVITY.md) | Issue #34。オフラインCLIで既存KG／追加後／追加単独を比較。[公開50 Claimの初回検証](verification/COLLECTION_CONNECTIVITY_20261020.md)、[18群から選ぶ次の4収集候補](verification/COLLECTION_CANDIDATES_20261020.md)、[小畑健→ヒカルの碁の保存資料再審査](verification/OBATA_HIKARU_REVIEW_20261020.md)。作画原文の照合待ち、最大2 GETは未承認案。UI・Worker・KG書込みなし |
 | [正式受入済みKGの公開準備](design/PUBLICATION_PREPARATION.md) | Issue #32 Phase C。receiptに被覆された既存releaseを固定し、既存operator互換性と差分を検証。[運営者のsudo preflight・公開判断手順](runbooks/PUBLISH_ACCEPTED_KG.md)。公開apply・restore・サービス切替は別判断 |
 | [承認済み受入の逐次継続](design/COLLECTION_ACCEPTANCE_SEQUENCE.md) | Issue #32 Phase B。元承認を不変に保って比較・同一性を再検証し、既存Workerで1グループずつ継続。2026-10-20の別途指示で[実運用切替・残り5グループ登録](verification/COLLECTION_SEQUENCE_ROLLOUT_20261020.md)。全件完了はGitHub結果で確認 |
 | [未公開データの統合棚卸し](design/COLLECTION_INVENTORY.md) | Issue #32 Phase A。公開snapshot・正式receipt・累積release・承認register・Worker履歴を読み取り専用で突合。型＋UUIDの一意集計、Markdown／JSON、保留・復旧・欠落。受入・公開apply・VPS／会員DB変更なし |
