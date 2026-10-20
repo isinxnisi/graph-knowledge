@@ -1,6 +1,6 @@
 # Issue #33 本番導入前の実環境確認（2026-10-21 JST）
 
-現在：**本番導入済み・公開無効を維持／専用DBの実機故障試験は準備途中**。以降の導入前記録は当時の観測として残す。[確定差分・影響・復旧・一括承認対象](../runbooks/PUBLICATION_ROLLOUT_20261021.md)。既存PUBLICATION_GATE_INSTALLATION/PUBLICATION_COORDINATIONを使用し、公開済み50 Claimを再公開しない。
+現在：**本番導入済み・公開無効を維持／専用DB故障試験中、試験ledger補修待ち**。以降の導入前記録は当時の観測として残す。[確定差分・影響・復旧・一括承認対象](../runbooks/PUBLICATION_ROLLOUT_20261021.md)。既存PUBLICATION_GATE_INSTALLATION/PUBLICATION_COORDINATIONを使用し、公開済み50 Claimを再公開しない。
 
 | 項目 | 実測 |
 | --- | --- |
@@ -99,3 +99,32 @@ VPSのroot実行は、旧installerが2回ops profile欠落で停止し、修正�
 一回用 `ops/resume-publication-acceptance.py` は、disabled本番config・固定core・既知の旧試験program SHA・元合成backup SHA・試験公開鍵・空のjob/frozen/inbox・予約/協調状態なし・試験sudo/SSH鍵未有効・旧container/networkなしを確認する。適合時だけ旧test treeと旧試験programをroot0700のtest-attempts/UUIDへrenameして保全し、新規試験を準備する。既存の予約や未知の資材があれば停止し、削除・再利用しない。本番installerは含まない。専用setup lockだけを使い、WSL/Worker/本番共通lockを待機中に保持しない。
 
 public-only v3 archiveは15,045 bytes、SHA256 b60dbcf9a1ce63d8c569dc6bdbc2f6a8d9c4144ac66a9f44fb90707b8e11af08。bootstrap `resume-private-test-v3.py` のSHA256は65906a4c71304f23ad1614a07cdc6c1238c02d3190c61a45bcb7d17063d5a449。全11 fileのmanifest照合・Python構文・秘密鍵block不在を確認し、VPS develop stagingへ新規転送した後のSHAも一致した。root bootstrapはarchive SHAを検証し、root-privateへ通常fileだけを展開して実行する。**v3のVPS root実行結果はまだ未確認**。本番無効・未公開1 Claim、全故障試験未完了という状態を維持して報告する。
+
+
+## v3実機結果：取消し・通信断・commit後停止、未完了の復旧
+
+運営者のv3実行はprivate-real-machine-fixtures-ready。root stagingは`/root/plunode-publication-test-recovery.7uvw_nsd`、旧試験は`/var/lib/plunode-publication/test-attempts/49dce10f-7ba6-4c0a-8cda-d94f96d02b8c`へ保全。新backup SHA fe12eb2ae24b7c841844afef9cbf248b10aba92c83ee889fb3847cd61570553e、新closure公開鍵SHA 1f59a71bf964453bb375f3dc6e06e51c5945515a4dfc3ed9cbf062a247670239を専用SFTPで再取得して照合し、専用SSH inventoryは予約/apply履歴とも空だった。専用network IDはe13d3093cc9ada2d6701039d4767bdb4795edf3bacb8766caa9e96b1f580eeb0。
+
+新しい合成候補は既存cycle.candidateと実Node24/TS validator/backup-planで作った。private baseはrelease-group-2/revision cd1ee4d6-b9e8-494b-8a49-47707c3a09e7、次はisolated-publication-next。候補3 Claimのうち追加1 ClaimはORIGINAL_STORY、追加はEntity/Claim/Source/Citation各1。合成3 receipt集合SHA 95e1b7a1bb999daef722896ba8aa7352d8aa6f67b4173d6df70e911e1dfb8aed、artifact SHA 956baabdff9db46e4d609d0009162047306c019548bf78a77e1de79490b9ad4c。元の正式10 receiptや本番50 Claimとは別で、正式受入・本番公開へ流用しない。
+
+| 実機ケース | 結果 |
+| --- | --- |
+| 実preflight/固定承認 | rootの実validate/observe/plan成功、既存更新0。live plan SHA c3109b6582de7d66b4df03e0f5da075ebc65d091e939f5cd5abd19986c3ea1d9を専用approver署名へ結合 |
+| cancel後の旧process | nonce208cf631-95c8-4e19-800e-af57a44eecc8を取消し、約5.33秒遅延させた未失効の旧署名応答を拒否。apply0。署名閉鎖証明→shadow Gitの条件付きresume→finish、実Worker parser/tickでpause解除 |
+| PC側process終了 | 次nonce590c3111-d65a-43f8-989e-44d901702e46のpause push直後に専用WSL processをexit86。再生成したcoordinatorが同じintent/control revision3を回収し、二重pauseなし |
+| ACK前/制御remote断 | ACK前preflight拒否。実Worker tickでpause ACK後、専用local Git remoteを一時的に到達不能へしてfetch失敗を再現。新規開始せずpauseを維持し、元pathへ戻して再起動を確認。実GitHub障害を起こしたものではない |
+| 不正承認鍵 | 同じ固定requestをattester鍵で署名したものを拒否。nonce未消費、apply0のまま |
+| commit後VPS gate終了 | 実専用DBのguard付きapplyが戻った直後に試験gateだけexit86。apply回数1、journal applying、nonce/release予約あり。cancel/close拒否、shadow Workerはpause-new維持 |
+| verify-only再接続 | apply回数1を維持。後述の試験ledger不備によりAPI検証完了まで進めず、適用結果・凍結資材・予約を保全。復旧完了とは扱わない |
+
+実機SSHでVPSがWSLより約4.66秒先行し、固定72338b7のpeerは既存のissuedAt<=now検査で停止した。VPSはNTPSynchronized=yes、Windows/WSL側の時計も読み取った。時計・NTP設定・期限検査を変更していない。専用試験driverだけが最大8秒以内で発行時刻到達を待ち、**その後に同じ未変更の時刻/署名/receipt/実ACK検査を実行**した。専用VPSプロトコルの結果と、固定WSL peerそのままでの完全結合成功を混同しない。本番有効化前には時計同期と実peerによる往復再検証が必要。
+
+試験driverが作ったledgerにpending（API確認対象UUID集合）が欠落していた。これは今回の試験資材作成の不備であり、元の通常cycle.auditはこの項目を出力する。凍結後の補記やARTIFACT/署名/nonceの再発行、再applyはしない。試験だけのadapterに、**上記nonceとartifact SHAに固定**し、rootに保存された適用前backupと署名済みdataの完全差分からpendingをメモリ内で再構築して既存TS/API verifierへ渡す処理を用意した。既存行の変更/削除、counts不一致、別nonce/別artifactは拒否する。元の凍結bytes・承認・journal・予約は保全する。この試験用修正は本番coreへ入れない。
+
+合わせて通常公開CLI/core候補には、ledgerの対象UUID/件数をasset検証時に必須化し、実preflightで実backupとの差分全体に一致することをapply前に確認する修正を追加した。候補18・executor24・試験adapter11、計53試験成功。新しい本番向け検査は**コード候補であり、VPS/WSLの固定72338b7へ未導入**。本番有効化前に固定code/trust manifest更新のレビューと運営者承認が別途必要。
+
+専用fixture verifierだけを原子的に更新する一回用資材を転送・SHA照合済み。archive 6,811 bytes、SHA12254ee6b943d339bbb344485825f6e96ccea7b3d225bd99356c9a6bace1d464。bootstrap repair-private-verifier-v1.py SHA187df2e4f7023fc820da7e22518a3aaf0115c2d2b71a68b54fa28bb7757692e4。root修正は未実行。test operation.lockを短時間取得し、旧wrapper SHA/固定core/対象job/単回apply/元承認と凍結全fileを確認して旧wrapperをfsync保全→新試験wrapperへatomic replaceする。変更前後で本番trust・凍結全file・承認・journal・予約の全SHAを照合する。本番installer、正式KG、Worker制御、SSH reload、鍵変更を含まない。
+
+現在：**本番導入済み＝はい（disabled）／専用DB試験＝commit後停止まで実機確認、verify-only完了とcleanupは未完了／本番有効化済み＝いいえ／再開操作＝試験verifier更新のsudo結果待ち**。正式未公開1 Claimは未公開のままであり、試験の1 applyと混同しない。
+
+機械可読の今回の実機結果（未完了を含む）は[PUBLICATION_REAL_MACHINE_20261021.json](PUBLICATION_REAL_MACHINE_20261021.json)に保存する。

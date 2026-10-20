@@ -113,6 +113,31 @@ class ExecutorTests(unittest.TestCase):
         child.stdin.close();child.wait(timeout=10);error=child.stderr.read();child.stdout.close();child.stderr.close()
         return child.returncode,result,error
 
+    def rebind_uploaded_ledger(self, change):
+        directory=self.root/'inbox'/self.nonce/'candidate'
+        ledger=e.read(directory/'ledger.json');change(ledger)
+        (directory/'ledger.json').write_text(json.dumps(ledger))
+        assets=e.read(directory/'ARTIFACT.json');assets['ledger.json']=e.sha(directory/'ledger.json')
+        (directory/'ARTIFACT.json').write_text(json.dumps(assets))
+        request=e.read(directory/'approval-request.json');request['artifactSha256']=e.sha(directory/'ARTIFACT.json')
+        (directory/'approval-request.json').write_text(json.dumps(request))
+
+    def test_missing_api_coverage_stops_before_preflight_or_reservation(self):
+        self.rebind_uploaded_ledger(lambda ledger:ledger.pop('pending'))
+        with self.assertRaisesRegex(ValueError,'Pending verification ledger'):
+            self.preflight()
+        self.assertEqual(self.calls('apply'),0)
+        self.assertFalse(self.gate().reservations()['nonces'])
+
+    def test_api_coverage_must_equal_live_graph_additions_before_apply(self):
+        def omit(ledger):
+            ledger['pending']['claims']=[];ledger['counts']['acceptedUnpublished']['claims']=0
+        self.rebind_uploaded_ledger(omit)
+        with self.assertRaisesRegex(ValueError,'actual unpublished delta'):
+            self.preflight()
+        self.assertEqual(self.calls('apply'),0)
+        self.assertFalse(self.gate().reservations()['nonces'])
+
     def test_real_process_approval_single_apply_and_nonce_replay(self):
         self.ready();code,result,error=self.finish(self.start())
         self.assertEqual(code,0,error);self.assertEqual(result['result']['phase'],'completed')

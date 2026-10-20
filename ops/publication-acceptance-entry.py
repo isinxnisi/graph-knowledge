@@ -39,6 +39,27 @@ def private_web_url(network,container,resources):
     return 'http://'+str(address)+':3000/'
 
 
+LEGACY_TEST_NONCE='590c3111-d65a-43f8-989e-44d901702e46'
+LEGACY_TEST_ARTIFACT='956baabdff9db46e4d609d0009162047306c019548bf78a77e1de79490b9ad4c'
+
+def legacy_fixture_ledger(ledger,data,before,request,nonce):
+    """One malformed synthetic fixture only: derive redundant API coverage, never edit frozen bytes."""
+    def require(value):
+        if not value:raise ValueError('Legacy synthetic verification fixture differs')
+    require(nonce==LEGACY_TEST_NONCE and request['artifactSha256']==LEGACY_TEST_ARTIFACT
+        and ledger.get('authority')=='ISOLATED TEST ONLY actual-private-backup-and-synthetic-receipts'
+        and 'pending' not in ledger and before['release']==request['baseRelease']=='release-group-2'
+        and before['revision']==request['baseRevision'])
+    pending={}
+    for field in ['entities','claims','sources','citations']:
+        old={row['id']:row for row in before['fixture'][field]}
+        new={row['id']:row for row in data[field]}
+        require(all(new.get(i)==row for i,row in old.items()))
+        pending[field]=sorted(set(new)-set(old))
+        require(ledger['counts']['acceptedUnpublished'][field]==len(pending[field]))
+    return {**ledger,'pending':pending}
+
+
 def main():
     if os.geteuid()!=0 or len(sys.argv)!=3:raise ValueError('Fixed temporary root entry required')
     command,nonce=sys.argv[1:]
@@ -79,6 +100,19 @@ def main():
     e.urlopen=isolated_api
     class Backend(e.DockerBackend):
         def call(self,stage,payload):
+            if stage=='verify':
+                candidate=Path(payload['candidate']);original_read=e.read
+                def fixture_read(path):
+                    value=original_read(path)
+                    if Path(path)==candidate/'ledger.json' and 'pending' not in value:
+                        request=original_read(candidate/'approval-request.json')
+                        e.require(e.sha(candidate/'ARTIFACT.json')==LEGACY_TEST_ARTIFACT,'Frozen fixture artifact differs')
+                        return legacy_fixture_ledger(value,original_read(candidate/'release/data.json'),
+                            original_read(ROOT/'jobs'/(payload['nonce']+'-backup.json'))['payload'],request,payload['nonce'])
+                    return value
+                e.read=fixture_read
+                try:return super().call(stage,payload)
+                finally:e.read=original_read
             if stage=='notify':return {'sent':False}  # Test never posts fixture claims to GitHub.
             if stage=='apply':
                 path=ROOT/'jobs/apply-calls.json'

@@ -307,6 +307,7 @@ class Gate:
         before = backup['payload']
         require((before['release'], before['revision']) == (request['baseRelease'], request['baseRevision']), 'Live base/revision changed')
         require(request['release'] not in {r['id'] for r in before['receipts']}, 'Release already applied')
+        cycle.validate_pending_ledger(read(candidate / 'ledger.json'), read(candidate / 'release/data.json'), before['fixture'])
         # Existing runtime validates backup fingerprint/schema/history. Pin the exact bytes durably before applying.
         durable(self.root / 'jobs' / (self.nonce + '-backup.json'), backup)
         plan = plan_projection(self.backend.call('plan', payload))

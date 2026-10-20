@@ -106,4 +106,29 @@ class MachineEntryGuards(unittest.TestCase):
             with self.assertRaises(ValueError):module.main()
             docker.assert_not_called()
 
+    def test_legacy_fixture_coverage_is_derived_without_mutating_frozen_metadata(self):
+        module=load('publication-acceptance-entry.py')
+        fields=['entities','claims','sources','citations']
+        before={'release':'release-group-2','revision':'private-base','fixture':{f:[{'id':f+'-old','value':'same'}] for f in fields}}
+        data={f:before['fixture'][f]+[{'id':f+'-new'}] for f in fields}
+        ledger={'authority':'ISOLATED TEST ONLY actual-private-backup-and-synthetic-receipts',
+            'counts':{'acceptedUnpublished':{f:1 for f in fields}}}
+        request={'artifactSha256':module.LEGACY_TEST_ARTIFACT,'baseRelease':'release-group-2','baseRevision':'private-base'}
+        result=module.legacy_fixture_ledger(ledger,data,before,request,module.LEGACY_TEST_NONCE)
+        self.assertNotIn('pending',ledger)
+        self.assertEqual(result['pending'],{f:[f+'-new'] for f in fields})
+        with self.assertRaises(ValueError):module.legacy_fixture_ledger(ledger,data,before,request,'other-nonce')
+        bad=copy.deepcopy(data);bad['claims'][0]['value']='changed'
+        with self.assertRaises(ValueError):module.legacy_fixture_ledger(ledger,bad,before,request,module.LEGACY_TEST_NONCE)
+        bad=copy.deepcopy(ledger);bad['counts']['acceptedUnpublished']['claims']=0
+        with self.assertRaises(ValueError):module.legacy_fixture_ledger(bad,data,before,request,module.LEGACY_TEST_NONCE)
+        bad=copy.deepcopy(request);bad['artifactSha256']='0'*64
+        with self.assertRaises(ValueError):module.legacy_fixture_ledger(ledger,data,before,bad,module.LEGACY_TEST_NONCE)
+
+    def test_nonroot_fixture_verifier_update_never_loads_system_code(self):
+        module=load('update-publication-acceptance-verifier.py')
+        with patch.object(module.os,'geteuid',return_value=1000),patch.object(module,'load') as load_code:
+            with self.assertRaises(ValueError):module.main()
+            load_code.assert_not_called()
+
 if __name__=='__main__':unittest.main()

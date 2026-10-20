@@ -189,6 +189,25 @@ def candidate(args, ledger, context, staging):
         'blocking': ['Fresh root-owned live preflight receipt and supported pinned operator image', 'Trusted signed single-use publication approval; execution gate not deployed']}
 
 
+def validate_pending_ledger(ledger, fixture, before=None):
+    """API coverage is execution input; reject omissions before any publication reservation/apply."""
+    pending = ledger.get('pending')
+    counts = ledger.get('counts', {}).get('acceptedUnpublished')
+    require(isinstance(pending, dict) and set(pending) == set(FIELDS)
+            and isinstance(counts, dict) and set(counts) == set(FIELDS), 'Pending verification ledger is missing/incomplete')
+    for field in FIELDS:
+        ids = pending[field]
+        require(isinstance(ids, list) and all(isinstance(i, str) for i in ids)
+                and len(ids) == len(set(ids)) and type(counts[field]) is int and counts[field] == len(ids),
+                'Pending verification IDs/counts differ')
+        records = {row['id']: row for row in fixture[field]}
+        require(set(ids) <= set(records), 'Pending verification record is missing from the release')
+        if before is not None:
+            old = {row['id']: row for row in before[field]}
+            require(all(records.get(i) == row for i, row in old.items()), 'Pending verification base has existing changes/removals')
+            require(set(ids) == set(records) - set(old), 'Pending verification differs from actual unpublished delta')
+
+
 def verify_prepared_artifact(directory):
     request = read(directory / 'approval-request.json')
     require(sha(directory / 'ARTIFACT.json') == request['artifactSha256'], 'Prepared artifact manifest differs')
@@ -205,6 +224,7 @@ def verify_prepared_artifact(directory):
     require(not any(p.is_symlink() for p in directory.rglob('*')), 'Prepared symlink')
     require(actual - metadata == set(assets), 'Unexpected prepared asset')
     require(digest(read(directory / 'offline-plan.json')) == request['planSha256'], 'Prepared plan differs')
+    validate_pending_ledger(read(directory / 'ledger.json'), read(directory / 'release/data.json'))
     return request
 
 

@@ -95,16 +95,18 @@ P33_READY_V2（bootstrap SHA256 97a7610cb88f9dc5ba93ed0dea8189080976fbee3b9bf8c1
 次の操作は停止地点を読む診断のみとする。Web containerのOOM/exitやimage defaultsを確認し、旧test root・資材ID/label・journal/nonce/reservationを保全した後、承認済みの試験範囲だけを復旧する。本番installerの再実行、nonce初期化、公開KG applyによる疎通確認は行わない。診断や再開時のsudo認証は運営者端末で行い、パスワードをチャットへ渡さない。
 
 
-## 現在の運営者実行入口：試験準備のみを再開するv3
+## v3実行済み：再実行しない
 
-読み取り診断で本番false・試験job/予約/協調状態/sudo/resourcesなしを確認済み。追加の導入承認は不要で、以下のVPS sudo認証だけを運営者端末で行う。**旧P33_READY_V2や本番installerは再実行しない**。
+v3は正常に専用DB/実Web/専用SSHを準備した。新backup/closure pinを再取得し、実機の取消し・署名・実ACK・commit後process終了を確認した。現在は専用DBで1回のapply済み、予約とapplying journalを保持している。旧v3や本番installerを再実行して初期化しない。[実機記録と停止点](../verification/PUBLICATION_ENVIRONMENT_20261021.md#v3実機結果取消し通信断commit後停止未完了の復旧)。
+
+## 現在の運営者実行入口：試験verifierだけを修正
+
+今回の合成試験ledgerのAPI対象一覧欠落を修復する。元の凍結資材/署名/nonce/DBを変更せず、固定nonceとartifactに対してだけ、適用前backupとdataから検証対象を機械的に導いて既存verifierへ渡す。一回用root処理は旧試験wrapperを保全してから専用試験wrapperだけを原子的に置換する。本番固定9ファイルやtrust/configを変更しない。試験scopeの既存一括承認内であり、sudo認証だけ運営者端末で行う。
 
 ```bash
-sudo /usr/bin/python3 -I -c 'import hashlib;from pathlib import Path;p=Path("/home/develop/plunode-publication-install-20261021/resume-private-test-v3.py");b=p.read_bytes();assert hashlib.sha256(b).hexdigest()=="65906a4c71304f23ad1614a07cdc6c1238c02d3190c61a45bcb7d17063d5a449";exec(compile(b,str(p),"exec"))'
+sudo /usr/bin/python3 -I -c 'import hashlib;from pathlib import Path;p=Path("/home/develop/plunode-publication-install-20261021/repair-private-verifier-v1.py");b=p.read_bytes();assert hashlib.sha256(b).hexdigest()=="187df2e4f7023fc820da7e22518a3aaf0115c2d2b71a68b54fa28bb7757692e4";exec(compile(b,str(p),"exec"))'
 ```
 
-表示される「再開資材保全先」「旧試験保全先」と最後のJSONを確認する。正常ならprivate-real-machine-fixtures-readyとなり、専用SSH/DB経路を使った実機故障試験へ進む。失敗なら再実行せず、JSONと保全先から再開位置を確認する。秘密鍵・パスワード・環境file内容は送らない。
+表示された保全先と最後のJSONを確認する。成功時はprivate-fixture-verifier-updated、privateApplyCalls=1、frozenAndJournalBytesUnchanged=true、本番false/本番apply0。失敗時は再実行せず保全する。成功後に専用SSHでverify-only、close/resume/finish、再適用拒否、cleanupを継続する。予約やjobを消して作り直さない。
 
-v3は既知の旧合成backup・試験code・空状態を照合し、旧tree/旧programをroot0700の`/var/lib/plunode-publication/test-attempts/UUID/`へ保全する。未知のjob/nonce/reservation、旧test container/network、変更されたprogramがあれば移動前に停止する。新試験rootだけで別closure鍵を生成するため、成功後は新しい試験公開鍵/backupを再取得し、旧試験pin/revisionは流用しない。本番trust/config/鍵/本番コードを更新する操作、SSH reload、Worker制御は含まない。
-
-実機試験Webは内部IPのID/label/image/network/subnetを照合した経路だけを使い、Dockerのhost publishに依存しない。元のWeb/API検証は維持し、新serviceやexternal networkは作らない。試験後のcleanupはこれまでどおり固定資材だけを除去し、全journal/backup/旧試験保全先を残す。現在の正式未公開はIssue #34の1 Claimであり、v3はその本番公開承認ではない。
+本番有効化前の追加条件として、今回コード候補へ追加したAPI対象集合の事前検査を固定VPS/WSL codeへレビュー済み版として導入することと、Windows/WSL/VPS時計同期・固定peer往復の確認が必要。現固定72338b7は変更していない。鍵保管/rotation・audit認証・branch保護・最新receipt同期・試験入口撤去・本番有効化/個別公開の承認も引き続き別条件である。
