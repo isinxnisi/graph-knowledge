@@ -36,6 +36,9 @@ def main():
     production=e.read(ROOT.parent/'trusted/config.json')
     e.require(production['deploymentEnabled'] is False,'Production must remain disabled')
     config=e.read(ROOT/'trusted/config.json')
+    e.require(config['operatorDigest']==production['operatorDigest'] and config['operatorDigest'] in [
+        'sha256:af1216c98ef75ad0fdba1424d854fc26802af066f684c77af79f9bf6f6cf880f',
+        'sha256:e48a540914d708a88a70b66ad399eb6a7769e98c76ff4ace50cdb7febdf04cf1'],'Test operator identity differs')
     e.require(config['network']==NETWORK and config['neo4jUri']==URI and config['neo4jDatabase']=='neo4j','Disposable target differs')
     e.require(config['workerId']=='isolated-worker' and config['workerCodeCommit']=='a'*40,'Shadow Worker required')
     # Keep the reviewed verification implementation; remap only its fixed API to the test loopback.

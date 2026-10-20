@@ -18,6 +18,7 @@ ROOT=Path('/var/lib/plunode-publication/test')
 NETWORK='plunode-publication-acceptance-20261021'
 LABEL='plunode.publication-test=P33-20261021'
 IMAGE='sha256:af1216c98ef75ad0fdba1424d854fc26802af066f684c77af79f9bf6f6cf880f'
+MANIFEST_IMAGE='sha256:e48a540914d708a88a70b66ad399eb6a7769e98c76ff4ace50cdb7febdf04cf1'
 CODE=Path('/usr/local/lib/plunode-publication')
 
 
@@ -47,7 +48,8 @@ def main():
     require(not ROOT.exists(),'Existing temporary test root; preserve it')
     production=ROOT.parent
     config=json.loads((production/'trusted/config.json').read_bytes())
-    require(config['deploymentEnabled'] is False and config['operatorDigest']==IMAGE,'Production must remain disabled')
+    require(config['deploymentEnabled'] is False and config['operatorDigest'] in [IMAGE,MANIFEST_IMAGE],'Production must remain disabled')
+    operator=config['operatorDigest']
     audit=json.loads((production/'trusted/installation.json').read_bytes())
     require(audit['phase']=='installed-disabled','Disabled installation required')
     for target in ['/usr/local/sbin/plunode-publication-acceptance','/etc/sudoers.d/plunode-publication-acceptance',str(CODE/'publication-acceptance-ssh.py')]:
@@ -64,7 +66,7 @@ def main():
         require(len(identifiers)==1,'Current service identity unclear')
         info=json.loads(run(['/usr/bin/docker','inspect',identifiers[0]]))[0]
         images[role]=info['Image']
-    for image in [*images.values(),IMAGE]:
+    for image in [*images.values(),operator]:
         inspected=json.loads(run(['/usr/bin/docker','image','inspect',image]))[0]
         require(inspected['Id']==image and inspected['Os']=='linux' and inspected['Architecture']=='amd64','Image platform differs')
     keys=json.loads((stage/'test-public-keys.json').read_bytes())
@@ -83,7 +85,7 @@ def main():
     closure=ROOT/'trusted/exclusion-private.pem';run(['/usr/bin/openssl','genpkey','-algorithm','ED25519','-out',str(closure)]);closure.chmod(0o600)
     run(['/usr/bin/openssl','pkey','-in',str(closure),'-pubout','-out',str(ROOT/'trusted/exclusion.pem')]);(ROOT/'trusted/exclusion.pem').chmod(0o644)
     pins={role+'KeySha256':hashlib.sha256((ROOT/'trusted'/(role+'.pem')).read_bytes()).hexdigest() for role in ['approver','attester','exclusion']}
-    test_config={'profile':'production','deploymentEnabled':True,'freezePolicy':'durable-pause-new-v1','operatorDigest':IMAGE,
+    test_config={'profile':'production','deploymentEnabled':True,'freezePolicy':'durable-pause-new-v1','operatorDigest':operator,
         'network':NETWORK,'neo4jUri':'bolt://plunode-acceptance-neo4j:7687','neo4jDatabase':'neo4j','workerId':'isolated-worker','workerCodeCommit':'a'*40,**pins}
     write(ROOT/'trusted/config.json',json.dumps(test_config,indent=2)+'\n')
     import secrets
@@ -111,7 +113,7 @@ def main():
         for item in seed.iterdir():require(item.is_file() and not item.is_symlink(),'Unsafe synthetic fixture');item.chmod(0o644)
         def ops(args):return run(['/usr/bin/docker','run','--rm','--pull=never','--read-only','--cap-drop=ALL','--security-opt=no-new-privileges','--label',LABEL,
             '--user=1000:1000','--memory=1g','--pids-limit=128','--network',NETWORK,'--env-file',str(ROOT/'trusted/public-kg.env'),
-            '--mount','type=bind,src='+str(seed)+',dst=/incoming,readonly',IMAGE,*args])
+            '--mount','type=bind,src='+str(seed)+',dst=/incoming,readonly',operator,*args])
         require(json.loads(ops(['scripts/public-kg.ts','validate','/incoming']))['valid'],'Synthetic fixture validation failed')
         ops(['scripts/public-kg.ts','apply','/incoming'])  # Bootstrap ONLY the brand-new private DB.
         backup=ops(['scripts/publication-runtime.ts','observe'])
@@ -135,7 +137,7 @@ def main():
         sudo='plunode-publish ALL=(root) NOPASSWD: NOSETENV: /usr/local/sbin/plunode-publication-acceptance\n'
         sudo_candidate=ROOT/'trusted/sudoers-candidate';write(sudo_candidate,sudo,0o440);run(['/usr/sbin/visudo','-cf',str(sudo_candidate)])
         write(Path('/etc/sudoers.d/plunode-publication-acceptance'),sudo,0o440)
-        resources={'networkId':network,'containerIds':containers,'allowedImageIds':[IMAGE,*images.values()],
+        resources={'networkId':network,'containerIds':containers,'allowedImageIds':[operator,*images.values()],
             'temporaryAuthorizedKey':key_line,'sudoersSha256':hashlib.sha256(sudo.encode()).hexdigest(),'productionEnabled':False}
         write(ROOT/'trusted/resources.json',json.dumps(resources,indent=2)+'\n')
         result={'testOnly':True,'phase':'private-real-machine-fixtures-ready','productionEnabled':False,'productionRevision':before['revision'],

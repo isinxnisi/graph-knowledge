@@ -20,6 +20,7 @@ from urllib.request import urlopen
 
 SOURCE = '72338b7054b3f2eb2e9762b20859044f9b9e28ce'
 IMAGE = 'sha256:af1216c98ef75ad0fdba1424d854fc26802af066f684c77af79f9bf6f6cf880f'
+IMAGE_MANIFEST = 'sha256:e48a540914d708a88a70b66ad399eb6a7769e98c76ff4ace50cdb7febdf04cf1'
 IMAGE_ARCHIVE_SHA256 = '1712fec50b1467a45e7ba1f01abb5ff6eb12d4fb6e6d75e43dfa0247efd2dbdd'
 REVISION = '88437056-b74f-42ab-88c0-33ed435bdccc'
 ROOT = Path('/var/lib/plunode-publication')
@@ -65,6 +66,32 @@ def secure_tree(path):
 
 def compose_configuration(app,compose):
     return json.loads(run(['/usr/bin/docker','compose','--profile','ops','--env-file',str(app),'-f',str(compose),'config','--format','json']))
+
+
+def image_identity(archive):
+    """Bind both Docker store identifiers to the same reviewed config and layer chain."""
+    import tarfile
+    with tarfile.open(archive) as tar:
+        entries=json.load(tar.extractfile('manifest.json'))
+        require(len(entries)==1 and entries[0].get('RepoTags') in [None,[]],'Untagged single-image export required')
+        config_data=tar.extractfile(entries[0]['Config']).read()
+        require('sha256:'+hashlib.sha256(config_data).hexdigest()==IMAGE,'Reviewed config image ID differs')
+        config=json.loads(config_data)
+        manifest_data=tar.extractfile('blobs/sha256/'+IMAGE_MANIFEST.split(':')[1]).read()
+        require('sha256:'+hashlib.sha256(manifest_data).hexdigest()==IMAGE_MANIFEST,'Reviewed OCI manifest differs')
+        manifest=json.loads(manifest_data)
+        require(manifest['config']['digest']==IMAGE and config['os']=='linux' and config['architecture']=='amd64','Config/manifest platform binding differs')
+        layers=config['rootfs']['diff_ids']
+        require(layers==[row['digest'] for row in manifest['layers']],'Unexpected compressed/changed layer chain')
+        require(entries[0]['Layers']==['blobs/sha256/'+value.split(':')[1] for value in layers],'Export layer chain differs')
+        return layers
+
+
+def runtime_image_id():
+    status=json.loads(run(['/usr/bin/docker','info','--format','{{json .DriverStatus}}']))
+    drivers=[row[1] for row in status if row[0]=='driver-type']
+    require(drivers in [[],['io.containerd.snapshotter.v1']],'Unknown Docker image store')
+    return IMAGE_MANIFEST if drivers else IMAGE
 
 
 def main():
@@ -125,15 +152,33 @@ def main():
     with archive.open('rb') as stream:
         for block in iter(lambda:stream.read(1024*1024),b''):hasher.update(block)
     require(hasher.hexdigest()==checksum,'Image transfer checksum differs')
-    # Export must contain only the reviewed operator image, not a replacement Web/DB image.
-    import tarfile
-    with tarfile.open(archive) as tar:
-        entries=json.load(tar.extractfile('manifest.json'))
-        require(len(entries)==1 and entries[0].get('RepoTags') in [None,[]],'Untagged single-image export required')
+    # No tag fallback: bind the store-specific immutable ID to this exact archive/config/layers.
+    layers=image_identity(archive);operator=runtime_image_id()
     run(['/usr/bin/docker','load','--input',str(archive)])
-    image=json.loads(run(['/usr/bin/docker','image','inspect',IMAGE]))[0]
-    require(image['Id']==IMAGE and image['Os']=='linux' and image['Architecture']=='amd64','Image identity differs')
-    audit={'scope':'P33-INSTALL-20261021','sourceCommit':SOURCE,'operatorDigest':IMAGE,
+    image=json.loads(run(['/usr/bin/docker','image','inspect',operator]))[0]
+    require(image['Id']==operator and image['Os']=='linux' and image['Architecture']=='amd64'
+        and image['RootFS']['Layers']==layers,'Image identity/layers differ')
+    # Prove the live read-only path before creating accounts/entry points. Private probe stays root-only.
+    public_env=''.join(k+'='+str(env[k])+'\n' for k in ['NEO4J_URI','NEO4J_USER','NEO4J_PASSWORD','NEO4J_DATABASE'])
+    require(all('\n' not in str(env[k]) and '\r' not in str(env[k]) for k in ['NEO4J_URI','NEO4J_USER','NEO4J_PASSWORD','NEO4J_DATABASE']),'Unsafe public-only credential encoding')
+    probe=stage/'readonly-probe';directory(probe,0o700);directory(probe/'trusted',0o700)
+    write(probe/'trusted/public-kg.env',public_env)
+    spec=importlib.util.spec_from_file_location('staged_publication_readonly',stage/'reviewed-programs/scripts/publication-executor.py')
+    module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
+    probe_config={'operatorDigest':operator,'network':network,'neo4jUri':env['NEO4J_URI'],'neo4jDatabase':env['NEO4J_DATABASE']}
+    backend=module.DockerBackend(probe,probe_config)
+    global LAST_OPERATION
+    LAST_OPERATION='read-only-operator-capabilities'
+    capabilities=backend.command(['scripts/publication-runtime.ts','capabilities'])
+    require(capabilities=={'schemaVersion':1,'originalStory':True,'guardedApply':True},'Operator capabilities differ')
+    LAST_OPERATION='read-only-public-backup'
+    with module.locked(active):
+        preflight_backup=backend.command(['scripts/publication-runtime.ts','observe'])
+        require(preflight_backup['payload']['revision']==REVISION and preflight_backup['payload']['release']=='manga-issue-25-utc-recovery-08-normal','Backup base differs')
+    backup_data=json.dumps(preflight_backup,sort_keys=True,separators=(',',':'),ensure_ascii=False).encode()
+    write(probe/'public-backup.json',backup_data)
+    audit={'scope':'P33-INSTALL-20261021','sourceCommit':SOURCE,'operatorDigest':operator,
+        'operatorContentId':IMAGE,'operatorManifestId':IMAGE_MANIFEST,
         'at':dt.datetime.now(dt.timezone.utc).isoformat(),'deploymentEnabled':False,'applyCalls':0,
         'oldSshConfigSha256':hashlib.sha256(Path('/etc/ssh/sshd_config').read_bytes()).hexdigest()}
     directory(ROOT,0o751);directory(ROOT/'trusted',0o700)
@@ -160,11 +205,9 @@ def main():
     (ROOT/'trusted/exclusion.pem').chmod(0o644)
     pins={role+'KeySha256':hashlib.sha256((ROOT/'trusted'/(role+'.pem')).read_bytes()).hexdigest() for role in ['approver','attester','exclusion']}
     configuration={'profile':'production','deploymentEnabled':False,'freezePolicy':'durable-pause-new-v1',
-        'operatorDigest':IMAGE,'network':network,'neo4jUri':env['NEO4J_URI'],'neo4jDatabase':env['NEO4J_DATABASE'],
+        'operatorDigest':operator,'network':network,'neo4jUri':env['NEO4J_URI'],'neo4jDatabase':env['NEO4J_DATABASE'],
         'workerId':'plunode-wsl','workerCodeCommit':'973c7b0c599f79905a029b28b524f4924e169376',**pins}
     write(ROOT/'trusted/config.json',json.dumps(configuration,indent=2)+'\n')
-    public_env=''.join(k+'='+str(env[k])+'\n' for k in ['NEO4J_URI','NEO4J_USER','NEO4J_PASSWORD','NEO4J_DATABASE'])
-    require(all('\n' not in str(env[k]) and '\r' not in str(env[k]) for k in ['NEO4J_URI','NEO4J_USER','NEO4J_PASSWORD','NEO4J_DATABASE']),'Unsafe public-only credential encoding')
     write(ROOT/'trusted/public-kg.env',public_env)
     # Explicit read-only Docker calls, even while the publication gate is disabled.
     spec=importlib.util.spec_from_file_location('installed_publication_readonly',PROGRAMS/'publication-executor.py')
@@ -172,11 +215,7 @@ def main():
     backend=module.DockerBackend(ROOT,configuration)
     capabilities=backend.command(['scripts/publication-runtime.ts','capabilities'])
     require(capabilities=={'schemaVersion':1,'originalStory':True,'guardedApply':True},'Operator capabilities differ')
-    with module.locked(active):
-        backup=backend.command(['scripts/publication-runtime.ts','observe'])
-        require(backup['payload']['revision']==REVISION and backup['payload']['release']=='manga-issue-25-utc-recovery-08-normal','Backup base differs')
-        backup_data=json.dumps(backup,sort_keys=True,separators=(',',':'),ensure_ascii=False).encode()
-        write(ROOT/'jobs/install-readonly-backup.json',backup_data)
+    write(ROOT/'jobs/install-readonly-backup.json',backup_data)
     export=ROOT/'export';directory(export,0o751)
     transfer=export/'install-readonly-backup.json';write(transfer,backup_data)
     upload=pwd.getpwnam('plunode-upload');os.chown(transfer,upload.pw_uid,upload.pw_gid)

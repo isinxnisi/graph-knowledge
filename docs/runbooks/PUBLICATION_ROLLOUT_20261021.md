@@ -68,3 +68,12 @@ WSL固定repo 72338b7をroot所有で配置し、実行/upload/attester鍵を専
 元72338b7のGate、署名・nonce・durable pause・DockerBackend・公開後検証を再利用し、試験入口だけで共通lock/APIを専用先へ割り当てる。試験用の別SSH/approver/attester/closure鍵を用いる。実commit後のgate process終了は専用のcrash-after-commit操作で試験し、再試行時のapply呼出し数をroot-owned journalで数える。fixtureのGitHub通知は行わない。
 
 cleanupは試験network ID/label、接続containerのimage/label/所属networkを照合してから、その試験資材だけを除去する。専用SSH鍵行と試験sudoersだけを撤去し、root journal・backupは残す。未知の接続/変更があれば自動削除しない。これらのコード/合成データvalidate・拒否試験の成功は、実VPSでの導入・通信断・DB試験成功とは区別して記録する。
+
+
+## VPSのDocker image store差の確定
+
+VPSは `driver-type=io.containerd.snapshotter.v1`。同じ承認済みarchiveのconfig digest `sha256:af1216c98ef75ad0fdba1424d854fc26802af066f684c77af79f9bf6f6cf880f` はimage inspectで見つからず、OCI manifest digest `sha256:e48a540914d708a88a70b66ad399eb6a7769e98c76ff4ace50cdb7febdf04cf1` がlinux/amd64として参照できた。旧WSLはclassic storeでconfig digestをIDにする。[Docker開発元の説明](https://github.com/moby/moby/issues/51934)と整合する。
+
+同じarchiveのSHAを維持し、installerでOCI manifest→config→全11 layerの対応を確認した後、VPSではe48a5409…を固定operatorDigestとする。未知のstore、別config、別layer、別platform、tag代替を拒否する。72338b7の公開コードは変更せず、今後の公開承認にも実際の固定operatorDigestを結び付ける。Docker daemon設定/既存tag/serviceは変更しない。capabilitiesと完全KG observeは、新account/入口を作成する前のroot-private probeでも検証する。
+
+旧2回のops欠落と、3回目のimage inspect停止のroot-private失敗記録は保全した。3回目はimage load済みだが、account/公開root/SSH/sudoers配置へ進んでいない。再試行で既存nonce/journalを初期化する処理は追加しない。
