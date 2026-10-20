@@ -33,6 +33,12 @@ bindingのbyte hashは`9e4e9cd91059d81060e75658c33f576befe416ffdc8eca09839bc4c60
 
 Windows checkoutのCRLFで凍結入力hashが変わる問題を、Gitの元LF byteを持つWSLローカルの検証コピーで回避した。hashの期待値やvalidatorは緩和していない。実装・試験4ファイルのbyte一致を検証JSONへ記録した。
 
+## main統合とruntime準備
+
+独立worktreeの固定実装`cc591c41632b290d3e69b9ed5e53dd129e0650d3`を、#33の更新を含むmain `02b79bb1d7262ae42a9bc2fb111cd10898cd9034`へ直列統合し、通常pushした。統合後の実装・試験byte hashは検証コピーと一致し、e64a2deの固定JSON 5ファイルも全byte一致。ユーザーの既存memo.txtは保持した。
+
+共通holdとworker.lockの下で、既存runtimeへ固定JSON 5ファイル・ad79a57レビューJSON・Git外HTMLの計7ファイルを同じ相対path／同一byteで配置した。異なる既存ファイルがある場合は上書きしない手順で、全件新規配置だった。新規filesは0600、原文directoryは0700。配置前後でconfig・state・元9 receiptはhash一致、正式受入は増えていない。
+
 ## 実受入の状態と不足する操作
 
 現時点では**正式受入0件、receipt未作成、次回release未作成、最新VPS実plan未実施**。現行本番release `manga-issue-25-utc-recovery-08-normal`／revision `88437056-b74f-42ab-88c0-33ed435bdccc`の検証済み完全backupが未受領のため、accept-evidenceはまだ実行していない。

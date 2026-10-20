@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "status": "implementation-tested-awaiting-verified-production-backup",
-  "checkedAt": "2026-10-20T15:57:25.983941+00:00",
+  "checkedAt": "2026-10-20T16:08:15.994958+00:00",
   "authority": "implementation-and-frozen-input-verification-not-formal-acceptance",
   "fixedInputCommit": "e64a2de6a0f2c155024f8ccd4fb9e9cff2409241",
   "bindingSha256": "9e4e9cd91059d81060e75658c33f576befe416ffdc8eca09839bc4c605c2159f",
@@ -51,7 +51,14 @@
     "programUpdated": false,
     "stateOrScheduleChanged": false,
     "formalReceiptCount": 9,
-    "allPriorReceiptHashesUnchanged": true
+    "allPriorReceiptHashesUnchanged": true,
+    "stagedInputs": {
+      "copiedFiles": 7,
+      "sameBytesAsMain": true,
+      "rawHtmlStoredOutsideGit": true,
+      "workerLockAndManualHoldVerified": true,
+      "existingConfigStateAndNineReceiptsUnchanged": true
+    }
   },
   "formalAcceptanceCounts": {
     "entities": 0,
@@ -65,5 +72,7 @@
   "latestLiveVpsPlanPerformed": false,
   "remainingOperation": "Operator authenticates sudo for the existing-ops read-only backup-only procedure, then provide path/SHA for verified WSL receipt.",
   "backupOnlyProcedure": "https://github.com/isinxnisi/graph-knowledge/issues/33#issuecomment-6294978106",
-  "publicApply": false
+  "publicApply": false,
+  "implementationCommit": "cc591c41632b290d3e69b9ed5e53dd129e0650d3",
+  "testedMainIntegrationCommit": "02b79bb1d7262ae42a9bc2fb111cd10898cd9034"
 }
