@@ -1,6 +1,6 @@
 # Issue #33 本番導入の一括承認対象 P33-INSTALL-20261021
 
-2026-10-21 JST。**未承認・未実行の確定導入案**。[既存導入手順](PUBLICATION_GATE_INSTALLATION.md)と[PC停止時の協調手順](PUBLICATION_COORDINATION.md)を用いる。読み取り結果は[実環境確認](../verification/PUBLICATION_ENVIRONMENT_20261021.md)。本番KG apply/restore、既公開50 Claimの再公開、会員DB、Web/Caddy/Composeの切替、稼働Worker停止を含まない。
+2026-10-21 JST。**一括承認受領済み・VPS root実行待ちの導入案**。[既存導入手順](PUBLICATION_GATE_INSTALLATION.md)と[PC停止時の協調手順](PUBLICATION_COORDINATION.md)を用いる。読み取り結果は[実環境確認](../verification/PUBLICATION_ENVIRONMENT_20261021.md)。本番KG apply/restore、既公開50 Claimの再公開、会員DB、Web/Caddy/Composeの切替、稼働Worker停止を含まない。
 
 ## 承認する変更の集合
 
@@ -51,3 +51,20 @@ rootからの確認と画像配置を先に済ませ、正常なWorker定期ロ�
 `ops/install-publication-disabled.py`はこの一回の導入専用。公開処理本体の再実装ではない。実行引数なし・root-private SHA検証済みstaging専用であり、現段階ではrootで実行していない。鍵入力と転送archiveの最終SHAは承認後の生成時に確定し、承認前に架空の鍵pinや運営者署名を作らない。
 
 ローカルexportは801,273,856 bytes、SHA256 `1712fec50b1467a45e7ba1f01abb5ff6eb12d4fb6e6d75e43dfa0247efd2dbdd`。1 image、RepoTags=null。公開用imageの本番loadは未実行。新installerを構文/非root拒否/書込境界で確認したことを、実root導入済み・実機検証済みとは数えない。
+
+## 一括承認後の進捗
+
+運営者はチャットで「導入・実機試験を一括承認（本番は無効を維持）」を選択した。追加の本番有効化承認はない。
+WSL固定repo 72338b7をroot所有で配置し、実行/upload/attester鍵を専用0700領域へ作成した。approver秘密鍵は `/root/plunode-publication-operator/approver.pem` root0600とし、常設自動実行UIDから分離した。公開PEMだけを転送する。固定SSH clientはroot所有・固定host key・専用identity・ユーザーSSH config無視で導入した。暗号化保管/rotationの最終確認は本番有効化前に残る。
+
+導入archive（秘密鍵なし）は255,176,639 bytes、SHA256 `8492008b198b026be1822a79fba12fc94998db45bec0df1b8277c5b97119ee23`でVPS転送後も一致。
+最終照合でinstallerにもCompose `--profile ops`が必要と判明したため、旧installerを実行しないよう通知した。修正版は別途SHA固定で転送し、root-private stagingでarchive検証後にinstallerだけを差し替えて実行する。実Compose CLIを用いた回帰試験を追加し、opsを取得・member profileを除外することを確認した。VPS導入成功や実機DB試験を示す記録ではない。
+
+
+## 実機試験資材の境界
+
+`ops/provision-publication-acceptance.py` と `ops/publication-acceptance-entry.py` は承認済みの一時試験だけに用いる。本番ゲートがdisabledであることを毎回確認し、試験root `/var/lib/plunode-publication/test`、network `plunode-publication-acceptance-20261021`、URI `bolt://plunode-acceptance-neo4j:7687`、loopback API 32740、shadow Worker `isolated-worker` に固定する。既存Neo4j/Webの実image IDを読み取り、それぞれ新しい一時containerへ用いる。会員envは渡さず、試験WebはMEMBER_STORAGE_ENABLED=0とする。初期2 Claim、候補3 Claimは別UUIDの合成データであり、本番50 Claimを再applyしない。
+
+元72338b7のGate、署名・nonce・durable pause・DockerBackend・公開後検証を再利用し、試験入口だけで共通lock/APIを専用先へ割り当てる。試験用の別SSH/approver/attester/closure鍵を用いる。実commit後のgate process終了は専用のcrash-after-commit操作で試験し、再試行時のapply呼出し数をroot-owned journalで数える。fixtureのGitHub通知は行わない。
+
+cleanupは試験network ID/label、接続containerのimage/label/所属networkを照合してから、その試験資材だけを除去する。専用SSH鍵行と試験sudoersだけを撤去し、root journal・backupは残す。未知の接続/変更があれば自動削除しない。これらのコード/合成データvalidate・拒否試験の成功は、実VPSでの導入・通信断・DB試験成功とは区別して記録する。
