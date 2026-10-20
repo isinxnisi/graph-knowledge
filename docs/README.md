@@ -199,3 +199,7 @@ Phase 02後のNode再クリックの採用・検証は、現役の[操作と設�
 Phase 06の現行契約：[限定制作Role](design/CONTRIBUTION_ROLE_CONTRACTS.md)。[実施記録・検証結果](archive/phase-06-contribution-role/IMPLEMENTATION_CONTRIBUTION_ROLE.md)に実装検証と実データ受入を記録する。
 
 Phase 08：任意のEntity関係俯瞰、明示起点切替、直前一件復帰。[実施記録](archive/phase-08-entity-overview/IMPLEMENTATION_ENTITY_OVERVIEW.md)／[現行契約](ARCHITECTURE.md#phase-08関係概要起点切替直前探索への復帰)。一般Entity検索はPhase 09で人物・作品・組織に対応。
+
+- 公開・受入のPC停止対策（Issue #33）：[協調設計](design/PUBLICATION_COORDINATION.md) / [運営者の導入・復旧手順](runbooks/PUBLICATION_COORDINATION.md)。既存Worker変更なし、隔離検証段階。
+
+- 公開・受入協調の[隔離検証結果](verification/PUBLICATION_COORDINATION_20261020.md)。本番導入は別承認。

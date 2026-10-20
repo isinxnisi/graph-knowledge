@@ -72,3 +72,7 @@ wrapper・trusted public key・spool・nonce journalはroot管理とし、所有
 現行の実post-publication backup取得と本番plan、対応済み正式ops image、root-owned wrapperと鍵trust／nonce journal、WSL attestation、専用ユーザー／限定sudo、署名承認の操作入口を別ゲートで判断する。日常操作は `prepare → 状態確認 → 固定候補への署名承認 → 信頼済み実行入口 → 検証・GitHub記録` とし、新サービス／有料AI定期起動を必要としない。
 
 今回の試験は既存operatorをfake Docker／curlで動かすprocess試験、新同期CLIを実受入coreの隔離fixtureで検証、実Ed25519署名と状態復旧policyを検証する。全stage名を走査するsimulateは状態機械モデルであり本番adapterの障害注入試験ではない。今後のadapter導入時に、nonce競合／journal保存失敗／attestation期限切れ／apply応答喪失を含む実process結合試験が必要。
+
+## PC停止・受入との協調（Issue #33 後続）
+
+現行の停止/再開契約は [PUBLICATION_COORDINATION.md](PUBLICATION_COORDINATION.md)。既存Workerの無期限pause-newと実ACKを用い、公開側の不可逆閉鎖証明後だけresumeする。flock/短期challenge単独を本番運用しない。導入は [運営者手順](../runbooks/PUBLICATION_COORDINATION.md) の別承認に従う。

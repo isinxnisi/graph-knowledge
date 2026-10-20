@@ -29,6 +29,7 @@ def load(name, path):
 
 policy = load('executor_policy', HERE / 'publication-policy.py')
 cycle = load('executor_cycle', HERE / 'publication-cycle.py')
+exclusion = load('executor_exclusion', HERE / 'publication-exclusion.py')
 require = policy.require
 canonical = policy.canonical
 sha = lambda p: hashlib.sha256(p.read_bytes()).hexdigest()
@@ -210,6 +211,12 @@ def plan_projection(plan):
 
 
 class Gate:
+    read = staticmethod(read)
+    durable = staticmethod(durable)
+    require = staticmethod(require)
+    now = staticmethod(now)
+    digest = staticmethod(digest)
+    policy = policy
     def __init__(self, root, sandbox=False):
         require(__debug__, 'Optimized Python is forbidden')
         self.root, self.sandbox = root, sandbox
@@ -219,6 +226,11 @@ class Gate:
         trusted(root / 'trusted/config.json', os.geteuid()); self.config = read(root / 'trusted/config.json')
         require(self.config['profile'] == ('sandbox' if sandbox else 'production'), 'Profile differs')
         require(sandbox or self.config['deploymentEnabled'] is True, 'Production deployment is not enabled')
+        require(sandbox or self.config.get('freezePolicy') == exclusion.POLICY, 'Durable Worker exclusion required')
+        self.exclusion = exclusion.Exclusion(self) if self.config.get('freezePolicy') == exclusion.POLICY else None
+        if self.exclusion:
+            require(re.fullmatch('[a-z0-9]+(?:-[a-z0-9]+)*', self.config['workerId'])
+                and len(self.config['workerId']) <= 65 and re.fullmatch('[a-f0-9]{40}', self.config['workerCodeCommit']), 'Fixed reviewed Worker required')
         self.backend = ProcessBackend(root, self.config) if sandbox else DockerBackend(root, self.config)
         for name in ['jobs', 'frozen', 'outbox']:
             (root / name).mkdir(mode=0o700, exist_ok=True); trusted(root / name, os.geteuid(), True)
@@ -266,14 +278,25 @@ class Gate:
         path = self.root / 'reservations.json'
         return read(path) if path.exists() else {'nonces': {}, 'releases': {}}
 
-    def attest(self, nonce, request, exchange):
-        issued = now(); challenge = {'schemaVersion': 1, 'purpose': 'receipt-freshness', 'nonce': nonce,
+    def challenge(self, nonce, request, purpose='receipt-freshness'):
+        issued = now()
+        return {'schemaVersion': 1, 'purpose': purpose, 'nonce': nonce,
             'challenge': str(uuid.uuid4()), 'artifactSha256': request['artifactSha256'],
             'receiptSetSha256': request['receiptSetSha256'], 'issuedAt': issued.isoformat(),
             'expiresAt': (issued + dt.timedelta(seconds=60)).isoformat()}
+
+    def attest(self, nonce, request, exchange, persist=False, purpose='receipt-freshness'):
+        challenge = self.challenge(nonce, request, purpose)
+        if self.exclusion: challenge['exclusion'] = self.exclusion.identity(self.exclusion.open(nonce))
         signed = exchange(challenge)
         key, pin = self.key('attester'); payload = policy.verify_signature(signed, key, pin)
-        require(payload == challenge and issued <= now() < policy.timestamp(payload['expiresAt']), 'Freshness challenge differs or expired')
+        proof = payload.pop('workerPause', None) if self.exclusion else None
+        require(payload == challenge and now() < policy.timestamp(payload['expiresAt']), 'Freshness challenge differs or expired')
+        if self.exclusion:
+            require(proof is not None, 'Durable pause proof required')
+            # Recheck phase under VPS lock; a suspended pre-cancel process cannot resume apply.
+            if persist: self.exclusion.accept_pause(nonce, challenge, proof)
+        return challenge, proof
 
     def preflight(self, candidate, request):
         payload = {'candidate': str(candidate), 'nonce': self.nonce}
@@ -314,14 +337,20 @@ class Gate:
     def _operate(self, command, nonce, exchange):
         nonce_id(nonce); self.nonce = nonce
         require(command in ['preflight', 'execute', 'status', 'notify'], 'Fixed command required')
-        if command == 'status': return read(self.job_path(nonce))
+        if command == 'status':
+            if not self.exclusion: return read(self.job_path(nonce))
+            ticket = self.exclusion.read()['tickets'].get(nonce)
+            require(ticket is not None, 'Unknown exclusion ticket')
+            state = read(self.job_path(nonce)) if self.job_path(nonce).exists() else {'nonce': nonce, 'phase': 'awaiting-worker-pause'}
+            return {**state, 'exclusion': ticket}
         candidate = self.freeze(nonce); draft = cycle.verify_prepared_artifact(candidate)
         require(set(draft) == set(policy.BINDINGS), 'Unexpected request fields')
         stamp = now()
         shape = {**draft, 'nonce':nonce, 'issuedAt':stamp.isoformat(), 'expiresAt':(stamp+dt.timedelta(seconds=60)).isoformat()}
         policy.check_approval(shape, draft, {**draft, 'release':draft['baseRelease'], 'revision':draft['baseRevision'], 'usedReleases':[]}, [], stamp)
-        self.attest(nonce, draft, exchange)  # No production lock while waiting for the initial peer.
+        challenge, proof = self.attest(nonce, draft, exchange)  # No lock while waiting for the initial peer.
         with locked(self.common):
+            if self.exclusion: self.exclusion.accept_pause(nonce, challenge, proof)
             state = read(self.job_path(nonce)) if self.job_path(nonce).exists() else None
             reservations = self.reservations()
             if nonce in reservations['nonces']:
@@ -344,7 +373,7 @@ class Gate:
                 'usedReleases': list(reservations['releases']), **{k:live[k] for k in ['receiptSetSha256','artifactSha256','planSha256','operatorDigest']}}
             require(approved['nonce'] == nonce, 'Approval nonce differs from fixed job')
             policy.check_approval(approved, live, current, reservations['nonces'], now())
-            self.attest(nonce, live, exchange)  # Second round-trip while WSL holds the acceptance lock.
+            self.attest(nonce, live, exchange, persist=True)  # Second round-trip while WSL holds the acceptance lock.
             policy.check_approval(approved, live, current, reservations['nonces'], now())
             reservation = {k: live[k] for k in ['release','baseRelease','baseRevision','artifactSha256']}
             if exchange is exchange_stdio:
@@ -364,6 +393,15 @@ class Gate:
 
     def run(self, command, nonce, exchange):
         nonce_id(nonce)
+        if command in ['arm', 'close', 'cancel', 'finish']:
+            require(self.exclusion is not None, 'Durable exclusion not configured')
+            with locked(self.common):
+                if command == 'arm':
+                    return self.exclusion.arm(nonce, cycle.verify_prepared_artifact(self.freeze(nonce)))
+                if command == 'finish': return self.exclusion.finish(nonce, exchange)
+                if command == 'cancel' and self.exclusion.read()['tickets'].get(nonce, {}).get('phase') == 'open' and self.exclusion.open(nonce)['pause'] is None:
+                    self.attest(nonce, self.exclusion.open(nonce), exchange, persist=True, purpose='worker-pause')
+                return self.exclusion.terminal(nonce, command)
         if command == 'notify':
             # No receipt/approval/DB preflight on retry; it can only send the already completed outbox.
             require(nonce in self.reservations()['nonces'], 'No consumed publication nonce')
@@ -387,7 +425,7 @@ def exchange_stdio(challenge):
 def entry(root, sandbox):
     parser = argparse.ArgumentParser(description=__doc__)
     if sandbox: parser.add_argument('--sandbox-root', type=Path, required=True)
-    parser.add_argument('command', choices=['preflight','execute','status','notify']); parser.add_argument('nonce')
+    parser.add_argument('command', choices=['preflight','execute','status','notify','arm','close','cancel','finish']); parser.add_argument('nonce')
     args = parser.parse_args()
     gate = Gate(args.sandbox_root if sandbox else root, sandbox)
     try: print(json.dumps({'result': gate.run(args.command, args.nonce, exchange_stdio)}), flush=True)
