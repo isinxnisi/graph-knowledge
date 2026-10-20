@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "authority": "offline-schema-and-binding-check-not-acceptance-or-plan",
+  "bindingSha256": "9e4e9cd91059d81060e75658c33f576befe416ffdc8eca09839bc4c605c2159f",
+  "recordsFileSha256": "79ba556db26f0c48ce79c3ed1dda2e65dae1d0b72fd560a2a861131a496b72c0",
+  "bodySha256": "86cfb31314e9e3fe2bf26e04425580c2dc3d5660cbd3b522e32e8be1d533af1b",
+  "exactApprovedPropositionVerified": true,
+  "existingRecordsUnchanged": true,
+  "tamperCasesRejected": [
+    "endpoint",
+    "role",
+    "scope",
+    "period",
+    "role-evidence",
+    "uuid",
+    "raw-evidence-bytes"
+  ],
+  "schemaValidation": {
+    "valid": true,
+    "schemaVersion": 4,
+    "counts": {
+      "nodes": {
+        "Entity": 2175,
+        "Claim": 1895,
+        "Source": 1795,
+        "Citation": 1932,
+        "ExternalIdentifier": 2544
+      },
+      "relationships": {
+        "SUBJECT": 1895,
+        "OBJECT": 1895,
+        "HAS_CITATION": 1932,
+        "CITES": 1932,
+        "HAS_EXTERNAL_ID": 2544
+      }
+    }
+  },
+  "reviewBundleCompatibility": {
+    "compatible": false,
+    "reason": "[Errno 2] No such file or directory: '/home/isinxnisi/1.projects/7.graph-knowledge/datasets/connectivity/issue-34-obata-evidence/review-manifest.json'",
+    "acceptanceInvoked": false
+  },
+  "releaseValidated": false,
+  "formalAcceptance": false,
+  "liveVpsPlan": false
+}

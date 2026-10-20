@@ -1,5 +1,7 @@
 # 収集データの接続性評価 v1
 
+2026-10-21、[正式受入前の整合性検証](../verification/OBATA_HIKARU_ACCEPTANCE_PREFLIGHT_20261021.md)。人間が承認した小畑健→ヒカルの碁の1命題を新UUID・本文／根拠hashへ固定した。既存9 receipt・公開済み50 Claim・本番revisionを照合したが、単回HTMLのTask1形式未対応、Worker固定コードの更新レビュー待ち、既定ローカルbaseの不一致により実受入前に停止。正式受入0件／receipt・次回release・本番実plan未作成。既存の意味承認・候補は保全し、稼働Workerや公開KGを変更しない。
+
 2026-10-20、後続の明示許可で[日本棋院1 URLへの単回GET](../verification/OBATA_HIKARU_EVIDENCE_20261020.md)を実施。HTTP 200、原HTML hash・UTC取得時刻・「作画」の原語とlocatorを保存し、小畑健→ヒカルの碁を作品単位DRAWING／scope=null／期間不明の人間判断対象へ整理した。正式受入・Worker登録・公開applyは未実施。以下の保存資料レビュー・2 GET提案は取得前の履歴。
 
 2026-10-20の次段として、[小畑健→ヒカルの碁を保存資料だけで再審査](../verification/OBATA_HIKARU_REVIEW_20261020.md)。既存2 UUIDとNDLの原語「漫画」は確認できるが、作画を述べる日本棋院／本人インタビューの原文は保存範囲で未確認のため正式受入を保留。次の承認対象を固定HTML最大2 GETの確認通信案へ限定し、作品単位DRAWINGとISBN scopeを区別した。通信・受入・公開applyは実行していない。
