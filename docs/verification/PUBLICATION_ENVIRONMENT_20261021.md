@@ -30,3 +30,9 @@ VPS/WSLのユーザー、権限、SSH、鍵、サービス、DB、公開applyは
 既存publication-cycle syncを、Worker既設Node24をPATH先頭へ指定して本番APIに対しread-only再実行した。up-to-date、正式受入済み公開50 Claim（66 Entity/43 Source/51 Citation）、未公開全型0、productionExecutionEnabled=false。出力はGit外private cache。mainの正式receipt3件はruntime9件内の同一hashと一致し、観測時点で追加のmain-only正式receiptなし。初回は通常PATHの旧Nodeが--importを受け付けず停止し、環境選択だけ修正して再確認した。
 
 別工程で新しい正式receiptが保存された場合には、この0件という観測を有効化判断へ流用しない。mainとruntime双方の記録を読み直し、公開候補・receipt集合・最新base/revisionとattesterの参照元を再確認する。今回の導入承認は新Claimの本番applyを許可しない。
+
+導入前にVPS既設sshdのパーサーへ設定候補をstdinで渡すread-only確認を追加。PermitUserEnvironmentはMatch内で使えないため、候補をPermitUserRC noへ修正し、環境変数取り込みは既存globalのpermituserenvironment noをroot preflightで確認する。既存globalを変更して補うことはしない。秘密host keyを読めない非root構文検査と、承認後のroot sshd -t/実効設定検査を区別する。
+
+修正候補を再度VPS実パーサーへ渡した結果、Match directiveのエラーは解消し、非rootでは読めないhost key不足で停止した。rootによる最終構文/権限検証は引き続き承認後のゲートとする。installer失敗時の診断はroot-private stagingへoperation/error type/reasonのみ0600で残し、env/stdin/子process出力を保存しない。
+
+導入時umask077の下でも公開入口・home/chroot・privateディレクトリのmodeを明示適用する検査を追加し、非特権境界試験は計4件成功。これは実rootとしてのユーザー作成・SSH reloadの完了を意味しない。
