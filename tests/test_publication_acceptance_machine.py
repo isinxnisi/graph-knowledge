@@ -1,5 +1,6 @@
 """Local guards for temporary real-machine resources. Does not claim VPS integration success."""
 import importlib.util
+import copy
 import json
 import tempfile
 import os
@@ -64,5 +65,45 @@ class MachineEntryGuards(unittest.TestCase):
         self.assertNotIn('private-error',json.dumps(report))
         self.assertNotIn('must-not-export',json.dumps(report))
         self.assertNotIn('Config',report)
+
+    def test_private_web_target_is_id_checked_and_never_published(self):
+        module=load('publication-acceptance-entry.py');net=module.NETWORK
+        resources={'networkId':'b'*64,'webContainerId':'c'*64,'webImageId':'sha256:reviewed-web'}
+        network={'Id':'b'*64,'Name':net,'Driver':'bridge','Internal':True,
+            'Labels':{'plunode.publication-test':'P33-20261021'},'IPAM':{'Config':[{'Subnet':'172.29.99.0/24'}]},
+            'Containers':{'c'*64:{'IPv4Address':'172.29.99.3/24'}}}
+        container={'Id':'c'*64,'Image':'sha256:reviewed-web','Config':{'Labels':{'plunode.publication-test':'P33-20261021'}},
+            'HostConfig':{'PortBindings':{}},'NetworkSettings':{'Networks':{net:{'NetworkID':'b'*64,'IPAddress':'172.29.99.3'}}}}
+        self.assertEqual(module.private_web_url(network,container,resources),'http://172.29.99.3:3000/')
+        for mutation in ['network-id','external-network','other-container','other-image','published-port','extra-network','loopback','outside-subnet']:
+            with self.subTest(mutation=mutation):
+                n=copy.deepcopy(network);c=copy.deepcopy(container)
+                if mutation=='network-id':n['Id']='d'*64
+                elif mutation=='external-network':n['Internal']=False
+                elif mutation=='other-container':c['Id']='d'*64
+                elif mutation=='other-image':c['Image']='sha256:production-other'
+                elif mutation=='published-port':c['HostConfig']['PortBindings']={'3000/tcp':[{'HostIp':'0.0.0.0','HostPort':'3000'}]}
+                elif mutation=='extra-network':c['NetworkSettings']['Networks']['production']={}
+                elif mutation=='loopback':c['NetworkSettings']['Networks'][net]['IPAddress']='127.0.0.1'
+                else:c['NetworkSettings']['Networks'][net]['IPAddress']='172.29.98.3'
+                with self.assertRaises(ValueError):module.private_web_url(n,c,resources)
+
+    def test_recovery_never_resets_existing_jobs_or_coordination(self):
+        module=load('resume-publication-acceptance.py')
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp)
+            for name in ['trusted','outbox','jobs','frozen','inbox']:(root/name).mkdir()
+            module.empty_attempt(root)
+            for name in ['reservations.json','exclusion.json','trusted/resources.json','outbox/setup.json','jobs/attempt.json','frozen/candidate','inbox/upload']:
+                with self.subTest(name=name):
+                    path=root/name;path.write_text('preserve-original')
+                    with self.assertRaises(ValueError):module.empty_attempt(root)
+                    self.assertEqual(path.read_text(),'preserve-original');path.unlink()
+
+    def test_nonroot_recovery_does_not_inspect_or_change_system(self):
+        module=load('resume-publication-acceptance.py')
+        with patch.object(module.os,'geteuid',return_value=1000),patch.object(module,'docker') as docker:
+            with self.assertRaises(ValueError):module.main()
+            docker.assert_not_called()
 
 if __name__=='__main__':unittest.main()

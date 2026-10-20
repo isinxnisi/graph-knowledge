@@ -86,3 +86,16 @@ VPSのroot実行は、旧installerが2回ops profile欠落で停止し、修正�
 配置済みroot-owned固定72338b7のworkflow/inventory/partitionを全runtime10 receiptへ読み取り専用で実行した。現集合SHA256は8a55413ee9fedf32fd64ce6fddebd28d1d636ff7de0fcc1fd063a5b15524d56dで、並行する正式受入側の独立検証結果とも一致。issuesは空、全readsetは検証前後で不変、公開済み受入分66 Entity / 50 Claim / 43 Source / 51 Citation、**正式受入済み未公開は0 Entity / 1 Claim / 1 Source / 1 Citation**。現公開backupのrelease/revisionをbaseとし、未公開Claim UUIDは7ae1c51b-9ba0-46fb-a070-41ac310e8c94。旧0件という観測は現在の公開判断へ利用しない。
 
 この確認は既存hash-backed棚卸しの互換性検査であり、新candidateの完全attester経路・root live plan・固定署名承認・本番公開の完了ではない。本番gateはdisabledのままとし、新receiptを含む最新集合を公開時に改めて固定する。
+
+
+## 読み取り診断後の専用試験準備v3
+
+運営者の固定SHA付き診断結果は productionEnabled=false、testJobs=[]、testReservationsExist=false、testExclusionExists=false、testResourcesExist=false、testSudoersExist=false。Web imageの非秘密defaultはNODE_ENV=production / HOSTNAME=0.0.0.0 / PORT=3000。過去のDockerイベントは返らなかったため、旧停止のOOM/exit/port原因は確定できていない。空の状態を理由にnonceやjournalを初期化する処理は追加しない。
+
+一時試験のAPI経路を、host publishの32740から、**internal bridge上の実WebのIPv4:3000へホストから接続する方式**へ改めた。本番の72338b7・API verifier・public-kg CLI・DB guardは不変更。偽APIや本番APIへ差し替えず、同じ実Web/専用DBに対して既存の全Claim検証を行う。Docker networkのID/名前/driver/internal/label、Web containerのID/image/label/唯一の所属network、IPv4/subnet/実endpointを照合し、公開portや追加networkを拒否する。新常駐service・external network・host networkのVPS試験containerは追加しない。
+
+ローカル9試験が成功し、別network・container・image、公開port、loopback/範囲外IP、予約/協調状態・job/凍結資材/入荷が存在する場合の再開拒否を確認した。ローカルはDocker Desktopのため、WSLからbridge IPへの直接接続はtimeoutした。daemonのhost namespaceに置いた固定・無資格情報の一時probeから、internal network上のHTTP応答を実確認した。port公開は空、作成したlocal container/networkだけを除去した。これはVPSでの経路確認完了とは区別する。
+
+一回用 `ops/resume-publication-acceptance.py` は、disabled本番config・固定core・既知の旧試験program SHA・元合成backup SHA・試験公開鍵・空のjob/frozen/inbox・予約/協調状態なし・試験sudo/SSH鍵未有効・旧container/networkなしを確認する。適合時だけ旧test treeと旧試験programをroot0700のtest-attempts/UUIDへrenameして保全し、新規試験を準備する。既存の予約や未知の資材があれば停止し、削除・再利用しない。本番installerは含まない。専用setup lockだけを使い、WSL/Worker/本番共通lockを待機中に保持しない。
+
+public-only v3 archiveは15,045 bytes、SHA256 b60dbcf9a1ce63d8c569dc6bdbc2f6a8d9c4144ac66a9f44fb90707b8e11af08。bootstrap `resume-private-test-v3.py` のSHA256は65906a4c71304f23ad1614a07cdc6c1238c02d3190c61a45bcb7d17063d5a449。全11 fileのmanifest照合・Python構文・秘密鍵block不在を確認し、VPS develop stagingへ新規転送した後のSHAも一致した。root bootstrapはarchive SHAを検証し、root-privateへ通常fileだけを展開して実行する。**v3のVPS root実行結果はまだ未確認**。本番無効・未公開1 Claim、全故障試験未完了という状態を維持して報告する。

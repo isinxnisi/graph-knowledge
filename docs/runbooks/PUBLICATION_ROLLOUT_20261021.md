@@ -20,7 +20,7 @@
 | 公開KG資格情報 | rootが既存Composeのops環境からNEO4J_URI/USER/PASSWORD/DATABASE **4項目だけ**を新trusted/public-kg.env root0600へ複写 | app.env/PG資格情報は不変更。PG項目は複写せず、ログにも出さない。新ファイルは入口無効化後に監査/保全判断 |
 | ops image | 検証済みID `sha256:af1216c98ef75ad0fdba1424d854fc26802af066f684c77af79f9bf6f6cf880f` linux/amd64を、SHA検証済み単一・untagged archiveからdocker load | Web/既存opsのtag/Composeは変更しない。未使用imageを残しても動かない。docker prune/共有layer削除はしない |
 | WSL trust/client | `/usr/local/lib/plunode-receipts/72338b7054b3f2eb2e9762b20859044f9b9e28ce/`に元repo layoutの固定版をroot所有で配置。`/etc/plunode-publication/`にhost key/閉鎖公開鍵/固定client設定。鍵・journalは既存UID isinxnisiの専用private領域 | 稼働Workerのhome/runtime/config/cache/state・タスクは不変更。共通lock/worker.lockの所有UIDに合わせ、新WSL userや広域sudoを追加しない |
-| 実機試験専用資材 | VPSの新規private Docker network `plunode-publication-acceptance-20261021`、公開portなしの一時Neo4j、tmpfs data/log、試験Webのloopback `127.0.0.1:32740`。WSLに別home/別Git制御remote/別鍵の試験Worker。rootの固定試験入口とSSH試験用公開鍵も一時追加 | 本番network/volume/KG/会員PGへ接続しない。Neo4j最大768MiB＋試験Web最大384MiB、同時1組。メモリ余裕/port/名前競合は開始前に再確認。終了時は作成した資材だけ除去し、試験journal/証跡を保全 |
+| 実機試験専用資材 | VPSの新規private Docker network `plunode-publication-acceptance-20261021`、公開portなしの一時Neo4j、tmpfs data/log、試験Webはhost publishせずID照合済みinternal bridge IPv4へホストから接続（v3）。WSLに別home/別Git制御remote/別鍵の試験Worker。rootの固定試験入口とSSH試験用公開鍵も一時追加 | 本番network/volume/KG/会員PGへ接続しない。Neo4j最大768MiB＋試験Web最大384MiB、同時1組。メモリ余裕/名前競合は開始前に再確認。終了時は作成した資材だけ除去し、試験journal/証跡を保全 |
 
 実機試験のroot入口は専用DB/network/loopback/state pathに固定し、本番wrapper/configは無効のままにする。試験用sudo・SSH鍵は本番用と別で、試験後に除去する。この追加も上記一括承認に含める。テスト入口を残したまま本番有効化しない。
 
@@ -63,7 +63,7 @@ WSL固定repo 72338b7をroot所有で配置し、実行/upload/attester鍵を専
 
 ## 実機試験資材の境界
 
-`ops/provision-publication-acceptance.py` と `ops/publication-acceptance-entry.py` は承認済みの一時試験だけに用いる。本番ゲートがdisabledであることを毎回確認し、試験root `/var/lib/plunode-publication/test`、network `plunode-publication-acceptance-20261021`、URI `bolt://graph-neo4j:7687`、loopback API 32740、shadow Worker `isolated-worker` に固定する。既存Neo4j/Webの実image IDを読み取り、それぞれ新しい一時containerへ用いる。会員envは渡さず、試験WebはMEMBER_STORAGE_ENABLED=0とする。初期2 Claim、候補3 Claimは別UUIDの合成データであり、本番50 Claimを再applyしない。
+`ops/provision-publication-acceptance.py` と `ops/publication-acceptance-entry.py` は承認済みの一時試験だけに用いる。本番ゲートがdisabledであることを毎回確認し、試験root `/var/lib/plunode-publication/test`、network `plunode-publication-acceptance-20261021`、URI `bolt://graph-neo4j:7687`、ID照合済みinternal bridgeの実Web API（host publishなし、v3）、shadow Worker `isolated-worker` に固定する。既存Neo4j/Webの実image IDを読み取り、それぞれ新しい一時containerへ用いる。会員envは渡さず、試験WebはMEMBER_STORAGE_ENABLED=0とする。初期2 Claim、候補3 Claimは別UUIDの合成データであり、本番50 Claimを再applyしない。
 
 元72338b7のGate、署名・nonce・durable pause・DockerBackend・公開後検証を再利用し、試験入口だけで共通lock/APIを専用先へ割り当てる。試験用の別SSH/approver/attester/closure鍵を用いる。実commit後のgate process終了は専用のcrash-after-commit操作で試験し、再試行時のapply呼出し数をroot-owned journalで数える。fixtureのGitHub通知は行わない。
 
@@ -93,3 +93,18 @@ P33_READY_V2（bootstrap SHA256 97a7610cb88f9dc5ba93ed0dea8189080976fbee3b9bf8c1
 本番専用user/rootプログラム/限定sudo/SSH/鍵/imageは配置済みで公開無効を維持する。実SSH制限、SFTP chroot、固定9ファイル、旧SSH bytes、完全公開KG backupを検証済み。専用DBの空base→合成2 Claim初期化はbackupから確認できたが、試験Web/API準備と公開・通信断・復旧試験は未完了。[現在の結果と再開点](../verification/PUBLICATION_ENVIRONMENT_20261021.md#v2実行後本番導入完了と専用db試験の停止位置)を参照する。
 
 次の操作は停止地点を読む診断のみとする。Web containerのOOM/exitやimage defaultsを確認し、旧test root・資材ID/label・journal/nonce/reservationを保全した後、承認済みの試験範囲だけを復旧する。本番installerの再実行、nonce初期化、公開KG applyによる疎通確認は行わない。診断や再開時のsudo認証は運営者端末で行い、パスワードをチャットへ渡さない。
+
+
+## 現在の運営者実行入口：試験準備のみを再開するv3
+
+読み取り診断で本番false・試験job/予約/協調状態/sudo/resourcesなしを確認済み。追加の導入承認は不要で、以下のVPS sudo認証だけを運営者端末で行う。**旧P33_READY_V2や本番installerは再実行しない**。
+
+```bash
+sudo /usr/bin/python3 -I -c 'import hashlib;from pathlib import Path;p=Path("/home/develop/plunode-publication-install-20261021/resume-private-test-v3.py");b=p.read_bytes();assert hashlib.sha256(b).hexdigest()=="65906a4c71304f23ad1614a07cdc6c1238c02d3190c61a45bcb7d17063d5a449";exec(compile(b,str(p),"exec"))'
+```
+
+表示される「再開資材保全先」「旧試験保全先」と最後のJSONを確認する。正常ならprivate-real-machine-fixtures-readyとなり、専用SSH/DB経路を使った実機故障試験へ進む。失敗なら再実行せず、JSONと保全先から再開位置を確認する。秘密鍵・パスワード・環境file内容は送らない。
+
+v3は既知の旧合成backup・試験code・空状態を照合し、旧tree/旧programをroot0700の`/var/lib/plunode-publication/test-attempts/UUID/`へ保全する。未知のjob/nonce/reservation、旧test container/network、変更されたprogramがあれば移動前に停止する。新試験rootだけで別closure鍵を生成するため、成功後は新しい試験公開鍵/backupを再取得し、旧試験pin/revisionは流用しない。本番trust/config/鍵/本番コードを更新する操作、SSH reload、Worker制御は含まない。
+
+実機試験Webは内部IPのID/label/image/network/subnetを照合した経路だけを使い、Dockerのhost publishに依存しない。元のWeb/API検証は維持し、新serviceやexternal networkは作らない。試験後のcleanupはこれまでどおり固定資材だけを除去し、全journal/backup/旧試験保全先を残す。現在の正式未公開はIssue #34の1 Claimであり、v3はその本番公開承認ではない。

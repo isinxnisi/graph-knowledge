@@ -9,7 +9,6 @@ from pathlib import Path
 import pwd
 import re
 import shutil
-import socket
 import subprocess
 import sys
 import time
@@ -108,7 +107,6 @@ def main():
         require(not Path(target).exists(),'Existing temporary entry; preserve it')
     mem={line.split(':')[0]:int(line.split()[1]) for line in Path('/proc/meminfo').read_text().splitlines() if line.startswith('MemAvailable:')}
     require(mem['MemAvailable']>=1400*1024,'Insufficient current memory margin')
-    with socket.socket() as sock:sock.bind(('127.0.0.1',32740))
     # Exact name must be absent; no removal/reuse of an existing network.
     names=run(['/usr/bin/docker','network','ls','--format','{{.Name}}']).decode().splitlines()
     require(NETWORK not in names,'Test network exists')
@@ -183,13 +181,19 @@ def main():
         write(ROOT/'outbox/exclusion.pem',(ROOT/'trusted/exclusion.pem').read_bytes(),0o644)
         PHASE='start-private-web'
         web=run(['/usr/bin/docker','run','-d','--pull=never','--name',NETWORK+'-web','--network',NETWORK,'--label',LABEL,'--memory=384m','--pids-limit=128',
-            '--cap-drop=ALL','--security-opt=no-new-privileges','--env-file',str(ROOT/'trusted/web.env'),'-p','127.0.0.1:32740:3000',images['web']]).decode().strip();containers.append(web)
+            '--cap-drop=ALL','--security-opt=no-new-privileges','--env-file',str(ROOT/'trusted/web.env'),images['web']]).decode().strip();containers.append(web)
         PHASE='verify-private-web-api'
+        spec=importlib.util.spec_from_file_location('fixed_test_endpoint',stage/'publication-acceptance-entry.py')
+        checker=importlib.util.module_from_spec(spec);spec.loader.exec_module(checker)
+        endpoint_resources={'networkId':network,'webContainerId':web,'webImageId':images['web']}
+        network_info=json.loads(run(['/usr/bin/docker','network','inspect',NETWORK]))[0]
+        web_info=json.loads(run(['/usr/bin/docker','inspect',web]))[0]
+        api=checker.private_web_url(network_info,web_info,endpoint_resources)
         expected=json.loads(backup)['payload']['revision']
         deadline=time.monotonic()+90
         while time.monotonic()<deadline:
             try:
-                with urlopen('http://127.0.0.1:32740/api/dataset',timeout=3) as response:current=json.load(response)
+                with urlopen(api+'api/dataset',timeout=3) as response:current=json.load(response)
                 if current=={'dataset':'public-kg','revision':expected}:break
             except Exception:pass
             time.sleep(1)
@@ -203,11 +207,12 @@ def main():
         sudo_candidate=ROOT/'trusted/sudoers-candidate';write(sudo_candidate,sudo,0o440);run(['/usr/sbin/visudo','-cf',str(sudo_candidate)])
         write(Path('/etc/sudoers.d/plunode-publication-acceptance'),sudo,0o440)
         PHASE='write-ready-receipt'
-        resources={'networkId':network,'containerIds':containers,'allowedImageIds':[operator,*images.values()],
+        resources={**endpoint_resources,'containerIds':containers,'allowedImageIds':[operator,*images.values()],
             'temporaryAuthorizedKey':key_line,'sudoersSha256':hashlib.sha256(sudo.encode()).hexdigest(),'productionEnabled':False}
         write(ROOT/'trusted/resources.json',json.dumps(resources,indent=2)+'\n')
         result={'testOnly':True,'phase':'private-real-machine-fixtures-ready','productionEnabled':False,'productionRevision':before['revision'],
-            'backupSha256':hashlib.sha256(backup).hexdigest(),'images':images,'pins':pins,'networkId':network}
+            'backupSha256':hashlib.sha256(backup).hexdigest(),'images':images,'pins':pins,'networkId':network,
+            'apiTransport':'host-to-private-bridge-no-published-port'}
         write(ROOT/'outbox/setup.json',json.dumps(result,indent=2)+'\n',0o644)
         with urlopen('http://127.0.0.1:3200/api/dataset',timeout=15) as response:require(json.load(response)==before,'Production revision changed')
         print(json.dumps(result))

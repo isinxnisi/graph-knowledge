@@ -1,6 +1,7 @@
 #!/usr/bin/python3 -I
 """Temporary real-machine acceptance entry. Fixed disposable targets only; never production apply."""
 import importlib.util
+import ipaddress
 import json
 import os
 from pathlib import Path
@@ -14,6 +15,28 @@ ROOT=Path('/var/lib/plunode-publication/test')
 CODE=Path('/usr/local/lib/plunode-publication')
 NETWORK='plunode-publication-acceptance-20261021'
 URI='bolt://graph-neo4j:7687'
+
+
+def private_web_url(network,container,resources):
+    """Host access to the exact test Web on its internal bridge; no published port or extra network."""
+    def require(value):
+        if not value:raise ValueError('Private Web endpoint identity differs')
+    require(network['Id']==resources['networkId'] and network['Name']==NETWORK
+        and network['Driver']=='bridge' and network['Internal'] is True
+        and network.get('Labels',{}).get('plunode.publication-test')=='P33-20261021')
+    require(container['Id']==resources['webContainerId'] and container['Image']==resources['webImageId']
+        and container['Config'].get('Labels',{}).get('plunode.publication-test')=='P33-20261021'
+        and container['HostConfig'].get('PortBindings') in [None,{}]
+        and set(container['NetworkSettings']['Networks'])=={NETWORK})
+    endpoint=container['NetworkSettings']['Networks'][NETWORK]
+    require(endpoint['NetworkID']==network['Id'])
+    address=ipaddress.ip_address(endpoint['IPAddress'])
+    subnets=[ipaddress.ip_network(row['Subnet']) for row in network['IPAM']['Config'] if row.get('Subnet')]
+    require(address.version==4 and address.is_private and not address.is_loopback and not address.is_unspecified
+        and any(address in subnet and address not in [subnet.network_address,subnet.broadcast_address] for subnet in subnets if subnet.version==4))
+    peer=network.get('Containers',{}).get(container['Id'],{})
+    require(peer.get('IPv4Address','').split('/')[0]==str(address))
+    return 'http://'+str(address)+':3000/'
 
 
 def main():
@@ -41,10 +64,18 @@ def main():
         'sha256:e48a540914d708a88a70b66ad399eb6a7769e98c76ff4ace50cdb7febdf04cf1'],'Test operator identity differs')
     e.require(config['network']==NETWORK and config['neo4jUri']==URI and config['neo4jDatabase']=='neo4j','Disposable target differs')
     e.require(config['workerId']=='isolated-worker' and config['workerCodeCommit']=='a'*40,'Shadow Worker required')
-    # Keep the reviewed verification implementation; remap only its fixed API to the test loopback.
+    # Keep the reviewed API verifier. Only this fixture maps its fixed URL to an ID-checked private Web.
+    original_run=e.subprocess.run
     def isolated_api(url,*args,**kwargs):
         e.require(url.startswith('http://127.0.0.1:3200/'),'Unexpected test API target')
-        return real_urlopen(url.replace('http://127.0.0.1:3200/','http://127.0.0.1:32740/',1),*args,**kwargs)
+        resources=e.read(ROOT/'trusted/resources.json')
+        e.require(re.fullmatch('[a-f0-9]{64}',resources['webContainerId']),'Invalid private Web ID')
+        values=[]
+        for argv in [['/usr/bin/docker','network','inspect',NETWORK],['/usr/bin/docker','inspect',resources['webContainerId']]]:
+            result=original_run(argv,capture_output=True,env=e.CLEAN_ENV,timeout=15)
+            e.require(result.returncode==0,'Private API inspection failed');values.append(json.loads(result.stdout)[0])
+        target=private_web_url(*values,resources)
+        return real_urlopen(target+url[len('http://127.0.0.1:3200/'):],*args,**kwargs)
     e.urlopen=isolated_api
     class Backend(e.DockerBackend):
         def call(self,stage,payload):
@@ -61,7 +92,6 @@ def main():
                     os._exit(86)  # Only this temporary gate process, after the real test DB commit.
                 return result
             return super().call(stage,payload)
-    original_run=e.subprocess.run
     def labelled_run(argv,*args,**kwargs):
         if argv[:2]==['/usr/bin/docker','run']:
             e.require('--network' in argv and argv[argv.index('--network')+1]==NETWORK,'Test container network differs')
