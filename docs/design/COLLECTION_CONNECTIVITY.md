@@ -1,5 +1,7 @@
 # 収集データの接続性評価 v1
 
+2026-10-20、後続の明示許可で[日本棋院1 URLへの単回GET](../verification/OBATA_HIKARU_EVIDENCE_20261020.md)を実施。HTTP 200、原HTML hash・UTC取得時刻・「作画」の原語とlocatorを保存し、小畑健→ヒカルの碁を作品単位DRAWING／scope=null／期間不明の人間判断対象へ整理した。正式受入・Worker登録・公開applyは未実施。以下の保存資料レビュー・2 GET提案は取得前の履歴。
+
 2026-10-20の次段として、[小畑健→ヒカルの碁を保存資料だけで再審査](../verification/OBATA_HIKARU_REVIEW_20261020.md)。既存2 UUIDとNDLの原語「漫画」は確認できるが、作画を述べる日本棋院／本人インタビューの原文は保存範囲で未確認のため正式受入を保留。次の承認対象を固定HTML最大2 GETの確認通信案へ限定し、作品単位DRAWINGとISBN scopeを区別した。通信・受入・公開applyは実行していない。
 
 2026-10-20の後続作業で、[18群から選ぶ次の4収集候補](../verification/COLLECTION_CANDIDATES_20261020.md)を整理。固定v1入力だけを使う`collection-bridge-candidates.py`で、未確認関係をClaim形式へ変換せず条件付きの構造効果を再現する。元v1 CLI・収集・受入・公開は変更しない。
