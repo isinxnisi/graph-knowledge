@@ -1,5 +1,7 @@
 # 収集・受入レビューから公開release準備までのワークフロー
 
+2026-10-21追記：[保存原文からの正式受入](SAVED_EVIDENCE_ACCEPTANCE.md)を別review種別として追加。manga-discovery-v2 jobを偽装せず、固定原文・人間承認・UUID/hashを既存acceptance coreへ接続する。新入口だけが検証済み本番backup＋live revision照合とoffline planを使い、従来accept-releaseのlive DB要件は維持する。稼働Workerのコード・state・scheduleを変更しない手動CLI。
+
 2026-10-20追記：[承認済み受入の逐次継続](COLLECTION_ACCEPTANCE_SEQUENCE.md)は、元の判断ファイルを変更せず、別proofで比較更新と対象・依存の同一性を証明する。古い比較を拒否する通常検査は維持する。Phase Bの実装・隔離検証であり、新Worker投入・実正式受入の追加実行は別判断。
 
 2026-10-19追記：[Issue起点の自動準備](COLLECTION_ISSUE_INTAKE.md)は既存の明示的人間許可を入力にrecipeと実行依頼を生成し、本書のcollect-reviewを変更せず利用する。個別正式受入・公開applyを収集許可へ含めない。

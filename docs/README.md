@@ -40,6 +40,7 @@
 
 | 現役の設計文書 | 状態・読む場面 |
 | --- | --- |
+| [保存原文からの正式受入](design/SAVED_EVIDENCE_ACCEPTANCE.md) | Issue #34。取得済み原文・人間の意味承認・固定1 Claim＋Source/Citationを既存receipt基盤へ接続。検証済み本番backupの明示モード、旧baseと最新VPS実planを区別。Workerコード・state・scheduleは維持 |
 | [固定公開ゲートの隔離実装と導入計画](runbooks/PUBLICATION_GATE_INSTALLATION.md) | Issue #33第2段階。固定wrapper／署名／単回nonce・release予約／復旧／WSL peer・通知、ORIGINAL_STORY対応の独立ops image候補。[検証](verification/PUBLICATION_GATE_20261020.md)。本番導入・分散fencing・鍵／権限は別ゲート |
 | [公開状態同期と定型公開](design/PUBLICATION_AUTOMATION.md) | Issue #33第1段階。公開50 Claimの読み取り照合、未公開差分だけの候補草稿、署名binding／復旧policyを隔離検証。[実測](verification/PUBLICATION_AUTOMATION_20261020.md)。本番実行・権限設定は別承認 |
 | [収集データの接続性評価](design/COLLECTION_CONNECTIVITY.md) | Issue #34。[公開50 Claimの比較](verification/COLLECTION_CONNECTIVITY_20261020.md)、[次の4候補](verification/COLLECTION_CANDIDATES_20261020.md)、[保存資料再審査](verification/OBATA_HIKARU_REVIEW_20261020.md)、[作画原文確認](verification/OBATA_HIKARU_EVIDENCE_20261020.md)。[正式受入前検証](verification/OBATA_HIKARU_ACCEPTANCE_PREFLIGHT_20261021.md)で1 Claim＋根拠のUUID/hashを固定、入力形式・固定コード・旧baseの不整合により実受入0件で停止。UI・Worker・KG変更なし |

@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "status": "implementation-tested-awaiting-verified-production-backup",
+  "checkedAt": "2026-10-20T15:57:25.983941+00:00",
+  "authority": "implementation-and-frozen-input-verification-not-formal-acceptance",
+  "fixedInputCommit": "e64a2de6a0f2c155024f8ccd4fb9e9cff2409241",
+  "bindingSha256": "9e4e9cd91059d81060e75658c33f576befe416ffdc8eca09839bc4c605c2159f",
+  "candidateIds": {
+    "entities": [],
+    "claims": [
+      "7ae1c51b-9ba0-46fb-a070-41ac310e8c94"
+    ],
+    "sources": [
+      "932fb74b-9292-4fb9-9f8a-29ce35d83823"
+    ],
+    "citations": [
+      "995e3891-aa9c-4af6-a2ba-3114dfb61fec"
+    ]
+  },
+  "recordSha256": {
+    "entities": {},
+    "claims": {
+      "7ae1c51b-9ba0-46fb-a070-41ac310e8c94": "56bfc8a80c5c5feb22568d6699b327f4e0a9589430bfb067a914fedb56a9f6a5"
+    },
+    "sources": {
+      "932fb74b-9292-4fb9-9f8a-29ce35d83823": "0c118862f33fb5c754cc26597aa3afed6ee29ea6bfbddd2afa6da78d194a1018"
+    },
+    "citations": {
+      "995e3891-aa9c-4af6-a2ba-3114dfb61fec": "172212acdde04d1a5691873f02f6e497124337de4e119a1a36b667a686061ebe"
+    }
+  },
+  "bodySha256": "86cfb31314e9e3fe2bf26e04425580c2dc3d5660cbd3b522e32e8be1d533af1b",
+  "realFrozenEvidenceAndRecordsVerified": true,
+  "newProviderRequests": 0,
+  "testedProgramFilesSha256": {
+    "scripts/collection-workflow.py": "59b3b672a05eb42252b5ad14325aac974c7b7aba366f321667226a03d03f1ea1",
+    "scripts/collection-acceptance.py": "d44f10252ac57242061bb582be19db850d35db28595f980e5405f81b2005d32f",
+    "scripts/collection-evidence.py": "ddf70be127c9325c7f79b6d0ca52a0e89360b9f91bf27885130fee8c36813eac",
+    "tests/test_collection_evidence.py": "1454340f541e6b5d981accb1dc1aa3051acad0a1feb355677e44c96f776482f9"
+  },
+  "tests": {
+    "savedEvidence": 10,
+    "legacyAcceptance": 16,
+    "legacyWorkflow": 16,
+    "acceptanceSequence": 19,
+    "total": 61,
+    "isolation": "Private roots; real existing TypeScript validators and offline backup plan; fake live metadata/common-token check only; no real DB writes"
+  },
+  "existingWorker": {
+    "codeCommit": "973c7b0c599f79905a029b28b524f4924e169376",
+    "programUpdated": false,
+    "stateOrScheduleChanged": false,
+    "formalReceiptCount": 9,
+    "allPriorReceiptHashesUnchanged": true
+  },
+  "formalAcceptanceCounts": {
+    "entities": 0,
+    "claims": 0,
+    "sources": 0,
+    "citations": 0
+  },
+  "receipt": null,
+  "releaseCandidate": null,
+  "verifiedCurrentProductionBackupAvailable": false,
+  "latestLiveVpsPlanPerformed": false,
+  "remainingOperation": "Operator authenticates sudo for the existing-ops read-only backup-only procedure, then provide path/SHA for verified WSL receipt.",
+  "backupOnlyProcedure": "https://github.com/isinxnisi/graph-knowledge/issues/33#issuecomment-6294978106",
+  "publicApply": false
+}
