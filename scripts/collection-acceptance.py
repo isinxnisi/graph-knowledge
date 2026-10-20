@@ -318,7 +318,8 @@ def accept(args, w):
     if context.get('sourceKind') == 'saved-evidence-v1':
         w.require(context['public'] == observed, 'Saved-evidence production comparison changed')
     fixture, reused = merge(public, prior, selected, w)
-    data = w.dump(fixture)
+    data = (evidence_module(w).release_data(fixture, w)
+            if context.get('sourceKind') == 'saved-evidence-v1' else w.dump(fixture))
     base_path = w.ROOT / 'datasets/public-kg/releases' / observed['release']
     manifest = copy.deepcopy(w.read(base_path / 'manifest.json'))
     accepted_path = target / 'accepted-records.json'

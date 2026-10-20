@@ -167,6 +167,23 @@ class SavedEvidence(unittest.TestCase):
             w.ROOT = old
         self.assertEqual(len(additions['claims']), 1)
 
+    def test_sorted_backup_keys_preserve_all_record_values(self):
+        public = w.read(self.root / 'datasets/public-kg/releases' / self.binding['baseRelease'] / 'data.json')
+        # This is a byte-order change to an existing valid isolated backup, not a new base.
+        value = w.read(self.backup)
+        self.backup.write_text(json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2) + '\n')
+        self.prepare(); self.approve()
+        report = self.accept()
+        self.assertTrue(report['validation']['valid'])
+        self.assertFalse(report['plan']['updated'])
+        release = w.read(Path(report['releaseDirectory']) / 'data.json')
+        for field in w.FIELDS:
+            actual = {row['id']: row for row in release[field]}
+            for row in public[field]:
+                self.assertEqual(actual[row['id']], row)
+        accepted = w.read(Path(report['acceptance']).with_name('accepted-records.json'))['records']
+        self.assertEqual(accepted, self.proposal['records'])
+
     def test_draft_does_not_accept(self):
         self.prepare()
         with self.assertRaisesRegex(ValueError, 'Explicit human approval'):

@@ -22,7 +22,7 @@
 
 ## 本番backupモード
 
-`--production-backup`は実際に本番から取得・安全に受領した完全backup、`--backup-sha`はその固定byte hash。既存validatePublicBackupでchecksum・schema・graphDigest・receipt／identity／withdrawal履歴を検証し、既存data-rootの対応release artifactとも一致させる。fixtureやAPI表示からbackupを合成しない。
+`--production-backup`は実際に本番から取得・安全に受領した完全backup、`--backup-sha`はその固定byte hash。既存validatePublicBackupでchecksum・schema・graphDigest・receipt／identity／withdrawal履歴を検証し、既存data-rootの対応release artifactとも一致させる。fixtureやAPI表示からbackupを合成しない。 backup内のobject key順がrelease schemaの順と異なる場合は、既存fixtureV4Schemaでreleaseの出力順だけを揃える。再parseした全field・値が元fixtureと一致することを必須とし、UUID・本文・意味の変更やvalidatorのhash検査の省略は行わない。
 
 HTTPSの本番`/api/dataset`を読み取り、backupのrevisionと一致することを受入前・保存直前・plan前後で確認する。redirectは追わない。backupの全byte hash、release／revision、元データ／参照集合の変化も停止条件とする。
 

@@ -6,6 +6,7 @@ import json
 from pathlib import Path
 import subprocess
 import sys
+import tempfile
 from types import SimpleNamespace
 from urllib.parse import urlsplit
 from urllib.request import HTTPRedirectHandler, Request, build_opener
@@ -88,6 +89,20 @@ def observe(args, w):
     context.update(productionBackupSha256=args.backup_sha, liveMetadata=metadata)
     # Keep the existing supplied-backup label. This is never called a live DB backup/plan.
     return public, context
+
+
+
+def release_data(fixture, w):
+    # A valid backup may sort object keys. Public release hashing uses schema order.
+    # Use the existing schema without changing any record values or optional fields.
+    with tempfile.TemporaryDirectory(prefix='saved-evidence-serialize-') as directory:
+        source = Path(directory) / 'fixture.json'
+        source.write_text(w.dump(fixture), encoding='utf-8')
+        result = w.node(['-e', "const fs=require('node:fs');const {fixtureV4Schema}=require('./lib/domain/fixture.ts');"
+            "const input=JSON.parse(fs.readFileSync(process.argv[1],'utf8'));const parsed=fixtureV4Schema.parse(input);"
+            "console.log(JSON.stringify({data:JSON.stringify(parsed,null,2)+'\\n'}));", str(source)])
+    w.require(json.loads(result['data']) == fixture, 'Release serialization changed record values or fields')
+    return result['data']
 
 
 def frozen(binding_ref, raw_ref, encoding, public, w):
