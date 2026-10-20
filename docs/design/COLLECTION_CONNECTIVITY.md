@@ -1,5 +1,7 @@
 # 収集データの接続性評価 v1
 
+2026-10-20の後続作業で、[18群から選ぶ次の4収集候補](../verification/COLLECTION_CANDIDATES_20261020.md)を整理。固定v1入力だけを使う`collection-bridge-candidates.py`で、未確認関係をClaim形式へ変換せず条件付きの構造効果を再現する。元v1 CLI・収集・受入・公開は変更しない。
+
 2026-10-20、Issue #34。実装範囲はオフラインの読み取り専用CLIとMarkdown／JSONレポート。検索UI・プリセット・Worker・公開KG・会員DBは変更しない。評価は収集実行・同一性承認・正式受入・公開判断を代行しない。
 
 ## 入力と実行

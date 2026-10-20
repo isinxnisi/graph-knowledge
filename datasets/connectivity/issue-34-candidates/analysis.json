@@ -1,0 +1,4279 @@
+{
+  "schemaVersion": 1,
+  "readOnly": true,
+  "authority": "planning-only-awaiting-human-scope-and-budget",
+  "revision": "88437056-b74f-42ab-88c0-33ed435bdccc",
+  "fixedAnalysisCommit": "c162f3c449755995ca38323a50fa515cd639f98f",
+  "freshness": "saved V1 published bundle/observation; no provider or live KG re-fetch",
+  "inputHashPolicy": "gzip: raw bytes; tracked text: UTF-8 with CRLF normalized to LF for Windows/WSL reproducibility",
+  "inputSha256": "7a86589f6bea6e2605f1f4fdf7d26070b295417696907de415abd6f1e34cd1e2",
+  "verifiedInputs": {
+    "datasets/connectivity/issue-34-candidates/candidates.json": "7a86589f6bea6e2605f1f4fdf7d26070b295417696907de415abd6f1e34cd1e2",
+    "datasets/connectivity/issue-34/after-data.json.gz": "ea3137d7ab46920ee482e2854efc859ab0a7c288c959d3185ea8245837c0c6ae",
+    "datasets/connectivity/issue-34/after-manifest.json.gz": "4a19b835142e23fbe19e183489b1164c5ae312e98b38e53dbbf4698a2cbecf4d",
+    "datasets/connectivity/issue-34/report/report.json": "35f98b7bda573e3727dbc35363606086f7531069d9e76cb420ab0f96d48964ff",
+    "datasets/connectivity/issue-34/public-observation.json": "d97defe3a594db19423bbfed67ceae92098f7ba7d0313cd4cd74e8fb89b98c74",
+    "datasets/connectivity/issue-34-candidates/issue-context.json": "0fd1b5bc2293afd42599192327df14ab976e1c35d9457fb8d7547c878edb4a33",
+    "docs/research/famous-manga-creators/20261016/candidates.json": "8531fada01e5c635ba2ee278a7ef944a73f64676af14ed42ae0e690f5a1ff978",
+    "docs/design/MANGA_PRODUCTION_ROLE_REVIEW.md": "1805ca9fbb49f8d5982945385b9722ce682944a035ff0e35f55322c36db1d049",
+    "docs/design/MANGA_R0003_ACCEPTED_RELEASE.md": "6efe2f0dca9bc94a15870d33a2fef11e7cc3ab7ba184a42bf2ac352966676b8e",
+    "datasets/manga-collection/review-r0002-20261017/review.json": "dec7cd6e012e82be409541418480e95565214c3457bb48ddbc4eca280c12ec76",
+    "datasets/manga-collection/original-story-r0002-20261017/ndl-9784088727172.json": "9e302be016583de26a8907bef77390d34d1bc45db01a08f6e680076cbd5c975a",
+    "datasets/manga-collection/original-story-r0002-20261017/ndl-9784088736211.json": "42957040ed44ffa3caa223d68d1cbd0ab733434c9c6af1cc3bdc03c59af9858d",
+    "datasets/manga-collection/original-story-r0002-20261017/ndl-9784088733708.json": "035008f311bc5e2e4fdd56e6a216c20f93792583675a2fe5a036e9c99ce71319",
+    "datasets/collection-issues/issue-25-datetime-recovery-20261019/isolated-replay.json": "0e42bf46c1472637846a5d494ce7511af7109ddbe03f6ff9b74d98b653d22dd7",
+    "datasets/collection-issues/issue-25-20261019/repair-preview.json": "d78c1de2e83086e44032a9dc4aa941fa4abacfe6ed9de3102ce91317b64186a1"
+  },
+  "currentGraph": {
+    "entityCount": 2175,
+    "eligibleClaimCount": 1894,
+    "componentCount": 312
+  },
+  "original18": [
+    {
+      "id": "08b751e8-37fa-4abb-a0a6-5f64bf177ac8",
+      "entityIds": [
+        "08b751e8-37fa-4abb-a0a6-5f64bf177ac8",
+        "7d78e92c-1845-4a9a-8bfd-99d49d047976"
+      ],
+      "claimIds": [
+        "b89d1d69-cfa6-40ba-98ac-7b7571544d9e"
+      ],
+      "entityCount": 2,
+      "claimCount": 1,
+      "baselineComponentIds": [],
+      "newEntityIds": [
+        "08b751e8-37fa-4abb-a0a6-5f64bf177ac8",
+        "7d78e92c-1845-4a9a-8bfd-99d49d047976"
+      ],
+      "newClaimIds": [
+        "b89d1d69-cfa6-40ba-98ac-7b7571544d9e"
+      ],
+      "names": [
+        "九井諒子",
+        "ダンジョン飯"
+      ],
+      "selectedThemes": [],
+      "disposition": "deferred-no-new-verified-bridge-source"
+    },
+    {
+      "id": "0914c6bb-701d-4c5a-b8f9-2c63cbff1ef3",
+      "entityIds": [
+        "0914c6bb-701d-4c5a-b8f9-2c63cbff1ef3",
+        "ba77a4d0-cf0b-4cc9-bd98-9b153a92b3ba",
+        "c59a1b1d-7477-46a5-9669-644981d1d5d8"
+      ],
+      "claimIds": [
+        "14e377b1-6be2-446c-8c13-e0d5d425eafa",
+        "69ed2335-344f-41a6-a17f-77708faa0398"
+      ],
+      "entityCount": 3,
+      "claimCount": 2,
+      "baselineComponentIds": [],
+      "newEntityIds": [
+        "0914c6bb-701d-4c5a-b8f9-2c63cbff1ef3",
+        "ba77a4d0-cf0b-4cc9-bd98-9b153a92b3ba",
+        "c59a1b1d-7477-46a5-9669-644981d1d5d8"
+      ],
+      "newClaimIds": [
+        "14e377b1-6be2-446c-8c13-e0d5d425eafa",
+        "69ed2335-344f-41a6-a17f-77708faa0398"
+      ],
+      "names": [
+        "童夢",
+        "AKIRA",
+        "大友克洋"
+      ],
+      "selectedThemes": [],
+      "disposition": "deferred-no-new-verified-bridge-source"
+    },
+    {
+      "id": "0c29d0e2-685f-4c56-9805-6bf1baf40e7c",
+      "entityIds": [
+        "0c29d0e2-685f-4c56-9805-6bf1baf40e7c",
+        "e0183e9c-dc97-4d85-b46e-14a1b76707fd"
+      ],
+      "claimIds": [
+        "10f72eb0-3526-4d50-a552-e2239c01fc39"
+      ],
+      "entityCount": 2,
+      "claimCount": 1,
+      "baselineComponentIds": [],
+      "newEntityIds": [
+        "0c29d0e2-685f-4c56-9805-6bf1baf40e7c",
+        "e0183e9c-dc97-4d85-b46e-14a1b76707fd"
+      ],
+      "newClaimIds": [
+        "10f72eb0-3526-4d50-a552-e2239c01fc39"
+      ],
+      "names": [
+        "ヒカルの碁",
+        "ほったゆみ"
+      ],
+      "selectedThemes": [
+        "obata-credit-recovery"
+      ],
+      "disposition": "selected-for-planning"
+    },
+    {
+      "id": "0c9eb1b7-2b2b-46b7-8110-9705138c3add",
+      "entityIds": [
+        "0c9eb1b7-2b2b-46b7-8110-9705138c3add",
+        "afaa3ea0-f273-4481-95c5-5c31f9049cb2"
+      ],
+      "claimIds": [
+        "a4d14533-1e4d-47c4-9494-67008811cf75"
+      ],
+      "entityCount": 2,
+      "claimCount": 1,
+      "baselineComponentIds": [],
+      "newEntityIds": [
+        "0c9eb1b7-2b2b-46b7-8110-9705138c3add",
+        "afaa3ea0-f273-4481-95c5-5c31f9049cb2"
+      ],
+      "newClaimIds": [
+        "a4d14533-1e4d-47c4-9494-67008811cf75"
+      ],
+      "names": [
+        "モブサイコ100",
+        "ONE"
+      ],
+      "selectedThemes": [
+        "one-murata-bridge"
+      ],
+      "disposition": "selected-for-planning"
+    },
+    {
+      "id": "1866bbe5-7e00-4afc-965f-5e968481f065",
+      "entityIds": [
+        "1866bbe5-7e00-4afc-965f-5e968481f065",
+        "4b90e125-b331-4361-8681-93a12c662cb7",
+        "5c5f452c-1e74-4985-aaec-811a8e329f42",
+        "abfbf55a-0b15-4c63-b87f-f7e4ed874ee0"
+      ],
+      "claimIds": [
+        "e3b0de8a-f7cc-4188-baa2-b41e2298e2be",
+        "fdfae8cd-b3f0-4c36-b6ed-659e98d24871",
+        "fe16a058-d465-4362-9198-df71789644a1"
+      ],
+      "entityCount": 4,
+      "claimCount": 3,
+      "baselineComponentIds": [],
+      "newEntityIds": [
+        "1866bbe5-7e00-4afc-965f-5e968481f065",
+        "4b90e125-b331-4361-8681-93a12c662cb7",
+        "5c5f452c-1e74-4985-aaec-811a8e329f42",
+        "abfbf55a-0b15-4c63-b87f-f7e4ed874ee0"
+      ],
+      "newClaimIds": [
+        "e3b0de8a-f7cc-4188-baa2-b41e2298e2be",
+        "fdfae8cd-b3f0-4c36-b6ed-659e98d24871",
+        "fe16a058-d465-4362-9198-df71789644a1"
+      ],
+      "names": [
+        "田村由美",
+        "BASARA",
+        "7SEEDS",
+        "ミステリと言う勿れ"
+      ],
+      "selectedThemes": [],
+      "disposition": "deferred-no-new-verified-bridge-source"
+    },
+    {
+      "id": "1abd838a-b22d-45a4-913f-0ef09205e1e8",
+      "entityIds": [
+        "1abd838a-b22d-45a4-913f-0ef09205e1e8",
+        "48ca311c-c403-4a24-a1e3-cb6392764397",
+        "bb47fc9c-87b1-4df5-a7d6-ecf175d93eb0"
+      ],
+      "claimIds": [
+        "c72262df-ce7b-4514-9341-55d242f94bca",
+        "f1260c3f-2637-416f-b407-2052a7c36717"
+      ],
+      "entityCount": 3,
+      "claimCount": 2,
+      "baselineComponentIds": [],
+      "newEntityIds": [
+        "1abd838a-b22d-45a4-913f-0ef09205e1e8",
+        "48ca311c-c403-4a24-a1e3-cb6392764397",
+        "bb47fc9c-87b1-4df5-a7d6-ecf175d93eb0"
+      ],
+      "newClaimIds": [
+        "c72262df-ce7b-4514-9341-55d242f94bca",
+        "f1260c3f-2637-416f-b407-2052a7c36717"
+      ],
+      "names": [
+        "あだち充",
+        "MIX",
+        "H2"
+      ],
+      "selectedThemes": [
+        "adachi-touch-hold"
+      ],
+      "disposition": "selected-for-planning"
+    },
+    {
+      "id": "1edca4c7-0e4e-4769-859c-dde40e7e973a",
+      "entityIds": [
+        "1edca4c7-0e4e-4769-859c-dde40e7e973a",
+        "d4a3f93f-bbcd-42df-9567-2ba4a485bef3",
+        "e7b913dd-7ad1-4288-861d-840cb4a3aeef"
+      ],
+      "claimIds": [
+        "a996412a-7cc9-49d5-8446-9b3cf6a338dd",
+        "ed33df12-efd1-44bc-84bb-a9d83fa05f8f"
+      ],
+      "entityCount": 3,
+      "claimCount": 2,
+      "baselineComponentIds": [],
+      "newEntityIds": [
+        "1edca4c7-0e4e-4769-859c-dde40e7e973a",
+        "d4a3f93f-bbcd-42df-9567-2ba4a485bef3",
+        "e7b913dd-7ad1-4288-861d-840cb4a3aeef"
+      ],
+      "newClaimIds": [
+        "a996412a-7cc9-49d5-8446-9b3cf6a338dd",
+        "ed33df12-efd1-44bc-84bb-a9d83fa05f8f"
+      ],
+      "names": [
+        "岸本斉史",
+        "大久保彰",
+        "サムライ8 八丸伝"
+      ],
+      "selectedThemes": [],
+      "disposition": "deferred-no-new-verified-bridge-source"
+    },
+    {
+      "id": "20b7ba43-d12d-4d39-9a8e-f9e92e9d40d2",
+      "entityIds": [
+        "20b7ba43-d12d-4d39-9a8e-f9e92e9d40d2",
+        "929116a2-77ff-443f-94e6-871c8b78f451",
+        "dfaf30df-2f9e-4c63-9fe1-cbbd0a083b36"
+      ],
+      "claimIds": [
+        "36199f3c-f260-473c-a22e-a75911b5fb6d",
+        "431210df-d594-498c-bbd4-9ce93c9dc282"
+      ],
+      "entityCount": 3,
+      "claimCount": 2,
+      "baselineComponentIds": [],
+      "newEntityIds": [
+        "20b7ba43-d12d-4d39-9a8e-f9e92e9d40d2",
+        "929116a2-77ff-443f-94e6-871c8b78f451",
+        "dfaf30df-2f9e-4c63-9fe1-cbbd0a083b36"
+      ],
+      "newClaimIds": [
+        "36199f3c-f260-473c-a22e-a75911b5fb6d",
+        "431210df-d594-498c-bbd4-9ce93c9dc282"
+      ],
+      "names": [
+        "山田鐘人",
+        "葬送のフリーレン",
+        "アベツカサ"
+      ],
+      "selectedThemes": [],
+      "disposition": "deferred-no-new-verified-bridge-source"
+    },
+    {
+      "id": "3427040b-88fd-4db5-b546-dd237abad032",
+      "entityIds": [
+        "3427040b-88fd-4db5-b546-dd237abad032",
+        "7ca5fc7d-545a-4d39-a2dc-6cce86390112",
+        "a13205e2-220c-4b7d-8a1a-39dbefe52db8",
+        "d5e39491-5a5f-423c-9222-2eb3c18db9a8"
+      ],
+      "claimIds": [
+        "48a9f51e-beb1-4c3a-9c30-5923bc852925",
+        "6ed29ee4-2b62-4fe7-83a6-aafe300754d7",
+        "cd294bb9-a7de-4f21-95c2-84b878c0e7cc"
+      ],
+      "entityCount": 4,
+      "claimCount": 3,
+      "baselineComponentIds": [],
+      "newEntityIds": [
+        "3427040b-88fd-4db5-b546-dd237abad032",
+        "7ca5fc7d-545a-4d39-a2dc-6cce86390112",
+        "a13205e2-220c-4b7d-8a1a-39dbefe52db8",
+        "d5e39491-5a5f-423c-9222-2eb3c18db9a8"
+      ],
+      "newClaimIds": [
+        "48a9f51e-beb1-4c3a-9c30-5923bc852925",
+        "6ed29ee4-2b62-4fe7-83a6-aafe300754d7",
+        "cd294bb9-a7de-4f21-95c2-84b878c0e7cc"
+      ],
+      "names": [
+        "バクマン。",
+        "DEATH NOTE",
+        "大場つぐみ",
+        "小畑健"
+      ],
+      "selectedThemes": [
+        "obata-credit-recovery"
+      ],
+      "disposition": "selected-for-planning"
+    },
+    {
+      "id": "398d712d-23d9-455f-8897-f9384dd94930",
+      "entityIds": [
+        "398d712d-23d9-455f-8897-f9384dd94930",
+        "a22fd2cd-aadc-4ca9-bf39-cb4bd7e0e953"
+      ],
+      "claimIds": [
+        "6ad7f063-1fce-4163-8414-437526212c31"
+      ],
+      "entityCount": 2,
+      "claimCount": 1,
+      "baselineComponentIds": [],
+      "newEntityIds": [
+        "398d712d-23d9-455f-8897-f9384dd94930",
+        "a22fd2cd-aadc-4ca9-bf39-cb4bd7e0e953"
+      ],
+      "newClaimIds": [
+        "6ad7f063-1fce-4163-8414-437526212c31"
+      ],
+      "names": [
+        "天才バカボン",
+        "赤塚不二夫"
+      ],
+      "selectedThemes": [],
+      "disposition": "deferred-no-new-verified-bridge-source"
+    },
+    {
+      "id": "3f962dde-c1bc-4165-897b-e129b8e38983",
+      "entityIds": [
+        "3f962dde-c1bc-4165-897b-e129b8e38983",
+        "e9639ece-9288-4098-973c-9dd95131b7ba"
+      ],
+      "claimIds": [
+        "07da4e98-1047-46a4-b48a-30f3549c89f9"
+      ],
+      "entityCount": 2,
+      "claimCount": 1,
+      "baselineComponentIds": [],
+      "newEntityIds": [
+        "3f962dde-c1bc-4165-897b-e129b8e38983",
+        "e9639ece-9288-4098-973c-9dd95131b7ba"
+      ],
+      "newClaimIds": [
+        "07da4e98-1047-46a4-b48a-30f3549c89f9"
+      ],
+      "names": [
+        "SPY×FAMILY",
+        "遠藤達哉"
+      ],
+      "selectedThemes": [],
+      "disposition": "deferred-no-new-verified-bridge-source"
+    },
+    {
+      "id": "40a8ddd3-f333-485c-a12a-ac3d0961111b",
+      "entityIds": [
+        "40a8ddd3-f333-485c-a12a-ac3d0961111b",
+        "6c9095bd-1969-4bcd-9282-2d1e9e411254",
+        "c74e0874-eb89-4825-a824-3ff182fe8053"
+      ],
+      "claimIds": [
+        "d5d3fef1-fc64-4e61-b049-2f3c81994cb9",
+        "f4b64248-7b3e-4fae-8ff2-7122410b63f4"
+      ],
+      "entityCount": 3,
+      "claimCount": 2,
+      "baselineComponentIds": [],
+      "newEntityIds": [
+        "40a8ddd3-f333-485c-a12a-ac3d0961111b",
+        "6c9095bd-1969-4bcd-9282-2d1e9e411254",
+        "c74e0874-eb89-4825-a824-3ff182fe8053"
+      ],
+      "newClaimIds": [
+        "d5d3fef1-fc64-4e61-b049-2f3c81994cb9",
+        "f4b64248-7b3e-4fae-8ff2-7122410b63f4"
+      ],
+      "names": [
+        "11人いる！",
+        "萩尾望都",
+        "ポーの一族"
+      ],
+      "selectedThemes": [],
+      "disposition": "deferred-no-new-verified-bridge-source"
+    },
+    {
+      "id": "420d89ea-9780-4e01-ac64-9c5e8597d0c8",
+      "entityIds": [
+        "420d89ea-9780-4e01-ac64-9c5e8597d0c8",
+        "711dc415-45d5-4d35-8cca-068332180cc0",
+        "8a0d3d5a-feb6-4ba3-8993-64b6ac79de12",
+        "dc188ef2-1a3d-4251-a445-90f49dd88cd0"
+      ],
+      "claimIds": [
+        "498cbe28-4703-4ac1-9a99-5cd83831b0e3",
+        "b7d9d6ba-f2a0-492e-981d-408b22955215",
+        "f4504ec8-173a-453f-83e8-a24e72dde9bc"
+      ],
+      "entityCount": 4,
+      "claimCount": 3,
+      "baselineComponentIds": [],
+      "newEntityIds": [
+        "420d89ea-9780-4e01-ac64-9c5e8597d0c8",
+        "711dc415-45d5-4d35-8cca-068332180cc0",
+        "8a0d3d5a-feb6-4ba3-8993-64b6ac79de12",
+        "dc188ef2-1a3d-4251-a445-90f49dd88cd0"
+      ],
+      "newClaimIds": [
+        "498cbe28-4703-4ac1-9a99-5cd83831b0e3",
+        "b7d9d6ba-f2a0-492e-981d-408b22955215",
+        "f4504ec8-173a-453f-83e8-a24e72dde9bc"
+      ],
+      "names": [
+        "横槍メンゴ",
+        "赤坂アカ",
+        "【推しの子】",
+        "クズの本懐"
+      ],
+      "selectedThemes": [
+        "akasaka-kaguya-branch"
+      ],
+      "disposition": "selected-for-planning"
+    },
+    {
+      "id": "451e8e8a-0d17-4dfd-99d8-14b57780e055",
+      "entityIds": [
+        "451e8e8a-0d17-4dfd-99d8-14b57780e055",
+        "7a7678a2-f7a8-4381-aaf0-ecddb866fca0",
+        "89958cbe-1822-4814-9861-fec01c94378a"
+      ],
+      "claimIds": [
+        "2fbb4bf1-5180-456b-9681-e3ec75a54cd8",
+        "87432807-ba90-400c-8a3f-e5dcfa847572"
+      ],
+      "entityCount": 3,
+      "claimCount": 2,
+      "baselineComponentIds": [],
+      "newEntityIds": [
+        "451e8e8a-0d17-4dfd-99d8-14b57780e055",
+        "7a7678a2-f7a8-4381-aaf0-ecddb866fca0",
+        "89958cbe-1822-4814-9861-fec01c94378a"
+      ],
+      "newClaimIds": [
+        "2fbb4bf1-5180-456b-9681-e3ec75a54cd8",
+        "87432807-ba90-400c-8a3f-e5dcfa847572"
+      ],
+      "names": [
+        "翼を持つ者",
+        "フルーツバスケット",
+        "高屋奈月"
+      ],
+      "selectedThemes": [],
+      "disposition": "deferred-no-new-verified-bridge-source"
+    },
+    {
+      "id": "480df823-5da8-45e4-aa20-1fdabe7ea5a3",
+      "entityIds": [
+        "480df823-5da8-45e4-aa20-1fdabe7ea5a3",
+        "9f43fefa-d878-4e5e-b1a2-0413432e9dbd",
+        "a7027ea6-d35d-407d-8e25-d98dc5b0cb92"
+      ],
+      "claimIds": [
+        "84cb19dd-9e8e-496f-abf6-674885abf185",
+        "d92e9a4e-4f60-445d-807b-63764f69528b"
+      ],
+      "entityCount": 3,
+      "claimCount": 2,
+      "baselineComponentIds": [],
+      "newEntityIds": [
+        "480df823-5da8-45e4-aa20-1fdabe7ea5a3",
+        "9f43fefa-d878-4e5e-b1a2-0413432e9dbd",
+        "a7027ea6-d35d-407d-8e25-d98dc5b0cb92"
+      ],
+      "newClaimIds": [
+        "84cb19dd-9e8e-496f-abf6-674885abf185",
+        "d92e9a4e-4f60-445d-807b-63764f69528b"
+      ],
+      "names": [
+        "ファイアパンチ",
+        "藤本タツキ",
+        "チェンソーマン"
+      ],
+      "selectedThemes": [],
+      "disposition": "deferred-no-new-verified-bridge-source"
+    },
+    {
+      "id": "648a399e-70c0-4042-b969-e914a4410544",
+      "entityIds": [
+        "648a399e-70c0-4042-b969-e914a4410544",
+        "9888fc07-92c4-414b-b449-d33f7b9b07bc",
+        "a546e8f9-0e9e-4e39-a591-21e3e1ffd9dc",
+        "fe378e87-1945-4e1d-869e-c8ec88e998d4"
+      ],
+      "claimIds": [
+        "45a9d1b7-9f6f-4879-807a-ac4b175e4243",
+        "682fc119-9ac2-4061-b8a1-5d0de889f9ef",
+        "bdbb1592-4e6a-47c7-80ca-b120f9780e97"
+      ],
+      "entityCount": 4,
+      "claimCount": 3,
+      "baselineComponentIds": [],
+      "newEntityIds": [
+        "648a399e-70c0-4042-b969-e914a4410544",
+        "9888fc07-92c4-414b-b449-d33f7b9b07bc",
+        "a546e8f9-0e9e-4e39-a591-21e3e1ffd9dc",
+        "fe378e87-1945-4e1d-869e-c8ec88e998d4"
+      ],
+      "newClaimIds": [
+        "45a9d1b7-9f6f-4879-807a-ac4b175e4243",
+        "682fc119-9ac2-4061-b8a1-5d0de889f9ef",
+        "bdbb1592-4e6a-47c7-80ca-b120f9780e97"
+      ],
+      "names": [
+        "天使なんかじゃない",
+        "矢沢あい",
+        "NANA",
+        "ご近所物語"
+      ],
+      "selectedThemes": [],
+      "disposition": "deferred-no-new-verified-bridge-source"
+    },
+    {
+      "id": "6bf4aeb4-ac2b-499f-bfaa-0588024ef93d",
+      "entityIds": [
+        "6bf4aeb4-ac2b-499f-bfaa-0588024ef93d",
+        "98b8ca7a-9638-4e5a-8fbd-62a353e4f159",
+        "baf73bb9-dda4-474c-acaf-a7a8ce52caf2"
+      ],
+      "claimIds": [
+        "602bc3c1-8a98-49cc-9556-a4c23feb6b0e",
+        "7c2bd016-d9b0-4de2-824e-276941b1a2b2"
+      ],
+      "entityCount": 3,
+      "claimCount": 2,
+      "baselineComponentIds": [],
+      "newEntityIds": [
+        "6bf4aeb4-ac2b-499f-bfaa-0588024ef93d",
+        "98b8ca7a-9638-4e5a-8fbd-62a353e4f159",
+        "baf73bb9-dda4-474c-acaf-a7a8ce52caf2"
+      ],
+      "newClaimIds": [
+        "602bc3c1-8a98-49cc-9556-a4c23feb6b0e",
+        "7c2bd016-d9b0-4de2-824e-276941b1a2b2"
+      ],
+      "names": [
+        "竹宮惠子",
+        "風と木の詩",
+        "地球へ…"
+      ],
+      "selectedThemes": [],
+      "disposition": "deferred-no-new-verified-bridge-source"
+    },
+    {
+      "id": "743d7fc0-ddc6-446a-8aa1-d9a9b284a326",
+      "entityIds": [
+        "743d7fc0-ddc6-446a-8aa1-d9a9b284a326",
+        "83d4c0b2-1160-4e2a-90fe-b06cdd4a26cb",
+        "aafae4fe-6f56-47bb-af9f-dec69425f136",
+        "b1e1232d-b038-4c11-b80c-ab1c2710d2bf"
+      ],
+      "claimIds": [
+        "121709e5-ea90-4c6a-87d1-d67264e1590d",
+        "1eb1fe7c-0cbd-48f4-8379-cd7f6e4697e4",
+        "ca6a2957-2ba2-4149-9550-61a0610a4730"
+      ],
+      "entityCount": 4,
+      "claimCount": 3,
+      "baselineComponentIds": [],
+      "newEntityIds": [
+        "743d7fc0-ddc6-446a-8aa1-d9a9b284a326",
+        "83d4c0b2-1160-4e2a-90fe-b06cdd4a26cb",
+        "aafae4fe-6f56-47bb-af9f-dec69425f136",
+        "b1e1232d-b038-4c11-b80c-ab1c2710d2bf"
+      ],
+      "newClaimIds": [
+        "121709e5-ea90-4c6a-87d1-d67264e1590d",
+        "1eb1fe7c-0cbd-48f4-8379-cd7f6e4697e4",
+        "ca6a2957-2ba2-4149-9550-61a0610a4730"
+      ],
+      "names": [
+        "高橋留美子",
+        "犬夜叉",
+        "らんま1/2",
+        "うる星やつら"
+      ],
+      "selectedThemes": [],
+      "disposition": "deferred-no-new-verified-bridge-source"
+    }
+  ],
+  "representativeCurrentGroups": [
+    {
+      "anchor": "アイシールド21",
+      "componentId": "080b2138-c57a-4d0e-8168-09807dda3bc3",
+      "entityCount": 30
+    },
+    {
+      "anchor": "あだち充",
+      "componentId": "1abd838a-b22d-45a4-913f-0ef09205e1e8",
+      "entityCount": 3
+    },
+    {
+      "anchor": "赤坂アカ",
+      "componentId": "420d89ea-9780-4e01-ac64-9c5e8597d0c8",
+      "entityCount": 4
+    },
+    {
+      "anchor": "ONE",
+      "componentId": "0c9eb1b7-2b2b-46b7-8110-9705138c3add",
+      "entityCount": 2
+    },
+    {
+      "anchor": "小畑健",
+      "componentId": "3427040b-88fd-4db5-b546-dd237abad032",
+      "entityCount": 4
+    }
+  ],
+  "themes": [
+    {
+      "key": "obata-credit-recovery",
+      "priority": 1,
+      "title": "小畑健のヒカルの碁・DEATH NOTE制作クレジットを再レビュー",
+      "classification": "異なる現行公開群同士（双方とも今回の18群）",
+      "reuseIssueNumbers": [
+        5,
+        7
+      ],
+      "purpose": "ヒカルの碁／ほったゆみの2 Entity群と、バクマン。／DEATH NOTEの4 Entity群をつなぐ。",
+      "islandAnchors": [
+        "0c29d0e2-685f-4c56-9805-6bf1baf40e7c",
+        "3427040b-88fd-4db5-b546-dd237abad032"
+      ],
+      "rootKeys": [
+        "0c29d0e2-685f-4c56-9805-6bf1baf40e7c",
+        "e0183e9c-dc97-4d85-b46e-14a1b76707fd",
+        "d5e39491-5a5f-423c-9222-2eb3c18db9a8",
+        "7ca5fc7d-545a-4d39-a2dc-6cce86390112",
+        "3427040b-88fd-4db5-b546-dd237abad032"
+      ],
+      "establishedClaimIds": [
+        "10f72eb0-3526-4d50-a552-e2239c01fc39",
+        "6ed29ee4-2b62-4fe7-83a6-aafe300754d7",
+        "48a9f51e-beb1-4c3a-9c30-5923bc852925",
+        "cd294bb9-a7de-4f21-95c2-84b878c0e7cc"
+      ],
+      "proposedNodes": [],
+      "hypotheses": [
+        {
+          "key": "obata-hikaru",
+          "subjectKey": "d5e39491-5a5f-423c-9222-2eb3c18db9a8",
+          "objectKey": "0c29d0e2-685f-4c56-9805-6bf1baf40e7c",
+          "predicateCandidate": "CONTRIBUTED_TO",
+          "roleCandidates": [
+            "DRAWING"
+          ],
+          "scope": null,
+          "status": "unconfirmed-not-a-Claim",
+          "basis": [
+            "保存NDL第1巻の『小畑健 漫画』は役割変換の根拠にはしない。",
+            "MANGA_PRODUCTION_ROLE_REVIEWの日本棋院『作画』・本人インタビューの保存レビュー記述。"
+          ],
+          "requiredChecks": [
+            "日本棋院／本人発言の原箇所・対象漫画・小畑健本人を確認。",
+            "別資料の作品単位DRAWINGへNDLのISBN scopeを移植しない。"
+          ]
+        },
+        {
+          "key": "obata-deathnote",
+          "subjectKey": "d5e39491-5a5f-423c-9222-2eb3c18db9a8",
+          "objectKey": "7ca5fc7d-545a-4d39-a2dc-6cce86390112",
+          "predicateCandidate": "CONTRIBUTED_TO",
+          "roleCandidates": [
+            "AUTHORSHIP"
+          ],
+          "scope": null,
+          "status": "unconfirmed-not-a-Claim",
+          "basis": [
+            "保存意味レビューに集英社紙版の著者表記候補あり。"
+          ],
+          "requiredChecks": [
+            "紙版9784088736211の著者欄と人物を再確認。",
+            "漫画という原語からDRAWINGを生成しない。"
+          ]
+        }
+      ],
+      "paths": [
+        {
+          "label": "既存2段",
+          "names": [
+            "小畑健",
+            "バクマン。",
+            "大場つぐみ"
+          ],
+          "nodeKeys": [
+            "d5e39491-5a5f-423c-9222-2eb3c18db9a8",
+            "3427040b-88fd-4db5-b546-dd237abad032",
+            "a13205e2-220c-4b7d-8a1a-39dbefe52db8"
+          ],
+          "hops": 2,
+          "status": "published",
+          "steps": [
+            {
+              "status": "published",
+              "claimId": "cd294bb9-a7de-4f21-95c2-84b878c0e7cc",
+              "traversal": "forward"
+            },
+            {
+              "status": "published",
+              "claimId": "48a9f51e-beb1-4c3a-9c30-5923bc852925",
+              "traversal": "reverse"
+            }
+          ]
+        },
+        {
+          "label": "条件付き3段",
+          "names": [
+            "ヒカルの碁",
+            "小畑健",
+            "バクマン。",
+            "大場つぐみ"
+          ],
+          "nodeKeys": [
+            "0c29d0e2-685f-4c56-9805-6bf1baf40e7c",
+            "d5e39491-5a5f-423c-9222-2eb3c18db9a8",
+            "3427040b-88fd-4db5-b546-dd237abad032",
+            "a13205e2-220c-4b7d-8a1a-39dbefe52db8"
+          ],
+          "hops": 3,
+          "status": "conditional",
+          "steps": [
+            {
+              "status": "unconfirmed",
+              "hypothesisKey": "obata-hikaru",
+              "roleCandidates": [
+                "DRAWING"
+              ],
+              "traversal": "reverse"
+            },
+            {
+              "status": "published",
+              "claimId": "cd294bb9-a7de-4f21-95c2-84b878c0e7cc",
+              "traversal": "forward"
+            },
+            {
+              "status": "published",
+              "claimId": "48a9f51e-beb1-4c3a-9c30-5923bc852925",
+              "traversal": "reverse"
+            }
+          ]
+        },
+        {
+          "label": "条件付き別ルート3段",
+          "names": [
+            "ヒカルの碁",
+            "小畑健",
+            "DEATH NOTE",
+            "大場つぐみ"
+          ],
+          "nodeKeys": [
+            "0c29d0e2-685f-4c56-9805-6bf1baf40e7c",
+            "d5e39491-5a5f-423c-9222-2eb3c18db9a8",
+            "7ca5fc7d-545a-4d39-a2dc-6cce86390112",
+            "a13205e2-220c-4b7d-8a1a-39dbefe52db8"
+          ],
+          "hops": 3,
+          "status": "conditional",
+          "steps": [
+            {
+              "status": "unconfirmed",
+              "hypothesisKey": "obata-hikaru",
+              "roleCandidates": [
+                "DRAWING"
+              ],
+              "traversal": "reverse"
+            },
+            {
+              "status": "unconfirmed",
+              "hypothesisKey": "obata-deathnote",
+              "roleCandidates": [
+                "AUTHORSHIP"
+              ],
+              "traversal": "forward"
+            },
+            {
+              "status": "published",
+              "claimId": "6ed29ee4-2b62-4fe7-83a6-aafe300754d7",
+              "traversal": "reverse"
+            }
+          ]
+        }
+      ],
+      "furtherMaterials": [
+        {
+          "url": "https://archive.nihonkiin.or.jp/kishihp/umezawa/journal.htm",
+          "status": "保存レビューに候補箇所の記載あり・今回再閲覧なし",
+          "check": "受賞記録中の小畑の作画明示。監修者の表記と混ぜない。"
+        },
+        {
+          "url": "https://jumpsq.shueisha.co.jp/contents/manganogokui_2nd3/interview8.html",
+          "status": "保存レビューに候補箇所の記載あり・今回再閲覧なし",
+          "check": "本人の当該漫画の絵の担当説明。全巻・全期間へ外挿しない。"
+        },
+        {
+          "url": "https://www.shueisha.co.jp/books/items/contents.html?isbn=978-4-08-873621-1",
+          "status": "保存レビューのURL・当該頁本文は今回未取得",
+          "check": "当該紙版の著者欄。"
+        }
+      ],
+      "holds": [
+        "ほったゆみ・小畑健の現行UUIDを再利用。大場つぐみの本名同定はしない。",
+        "既存バクマン。AUTHORSHIPは再収集しない。",
+        "梅澤／梅沢／吉原由香里の同定・監修を便乗追加しない。"
+      ],
+      "reviewBudget": {
+        "minimumRelations": 1,
+        "optionalRelations": 1,
+        "newIdentityTargets": 0,
+        "futureMaterialChecks": "日本棋院／本人発言1〜2件と紙版著者欄1件。保存NDL2件は再利用。",
+        "networkCallsNow": 0
+      },
+      "conditionalEffect": {
+        "assumption": "all listed hypotheses become valid, supported, affirmative public Claims after separate review",
+        "notObservedKG": true,
+        "hypothesisKeys": [
+          "obata-hikaru",
+          "obata-deathnote"
+        ],
+        "newUnconfirmedNodeKeys": [],
+        "componentCountBefore": 312,
+        "conditionalComponentCount": 311,
+        "conditionalComponentDelta": -1,
+        "conditionalTotalEntityCount": 2175,
+        "mergedCurrentGroups": [
+          {
+            "existingComponentIds": [
+              "0c29d0e2-685f-4c56-9805-6bf1baf40e7c",
+              "3427040b-88fd-4db5-b546-dd237abad032"
+            ],
+            "conditionalEntityCount": 6,
+            "includesOriginalNewIslandIds": [
+              "0c29d0e2-685f-4c56-9805-6bf1baf40e7c",
+              "3427040b-88fd-4db5-b546-dd237abad032"
+            ]
+          }
+        ],
+        "remainingIndependentComponentsFromOriginal18": 17,
+        "conditionalBranchingEntityDelta": 3,
+        "rootReachability": [
+          {
+            "rootKey": "0c29d0e2-685f-4c56-9805-6bf1baf40e7c",
+            "name": "ヒカルの碁",
+            "beforeWithinHops": [
+              1,
+              1,
+              1
+            ],
+            "conditionalWithinHops": [
+              2,
+              4,
+              5
+            ],
+            "newEndpointKeysWithinHops": [
+              [
+                "d5e39491-5a5f-423c-9222-2eb3c18db9a8"
+              ],
+              [
+                "3427040b-88fd-4db5-b546-dd237abad032",
+                "7ca5fc7d-545a-4d39-a2dc-6cce86390112",
+                "d5e39491-5a5f-423c-9222-2eb3c18db9a8"
+              ],
+              [
+                "3427040b-88fd-4db5-b546-dd237abad032",
+                "7ca5fc7d-545a-4d39-a2dc-6cce86390112",
+                "a13205e2-220c-4b7d-8a1a-39dbefe52db8",
+                "d5e39491-5a5f-423c-9222-2eb3c18db9a8"
+              ]
+            ],
+            "beforeNeighborCount": 1,
+            "conditionalNeighborCount": 2
+          },
+          {
+            "rootKey": "e0183e9c-dc97-4d85-b46e-14a1b76707fd",
+            "name": "ほったゆみ",
+            "beforeWithinHops": [
+              1,
+              1,
+              1
+            ],
+            "conditionalWithinHops": [
+              1,
+              2,
+              4
+            ],
+            "newEndpointKeysWithinHops": [
+              [],
+              [
+                "d5e39491-5a5f-423c-9222-2eb3c18db9a8"
+              ],
+              [
+                "3427040b-88fd-4db5-b546-dd237abad032",
+                "7ca5fc7d-545a-4d39-a2dc-6cce86390112",
+                "d5e39491-5a5f-423c-9222-2eb3c18db9a8"
+              ]
+            ],
+            "beforeNeighborCount": 1,
+            "conditionalNeighborCount": 1
+          },
+          {
+            "rootKey": "d5e39491-5a5f-423c-9222-2eb3c18db9a8",
+            "name": "小畑健",
+            "beforeWithinHops": [
+              1,
+              2,
+              3
+            ],
+            "conditionalWithinHops": [
+              3,
+              5,
+              5
+            ],
+            "newEndpointKeysWithinHops": [
+              [
+                "0c29d0e2-685f-4c56-9805-6bf1baf40e7c",
+                "7ca5fc7d-545a-4d39-a2dc-6cce86390112"
+              ],
+              [
+                "0c29d0e2-685f-4c56-9805-6bf1baf40e7c",
+                "7ca5fc7d-545a-4d39-a2dc-6cce86390112",
+                "e0183e9c-dc97-4d85-b46e-14a1b76707fd"
+              ],
+              [
+                "0c29d0e2-685f-4c56-9805-6bf1baf40e7c",
+                "e0183e9c-dc97-4d85-b46e-14a1b76707fd"
+              ]
+            ],
+            "beforeNeighborCount": 1,
+            "conditionalNeighborCount": 3
+          },
+          {
+            "rootKey": "7ca5fc7d-545a-4d39-a2dc-6cce86390112",
+            "name": "DEATH NOTE",
+            "beforeWithinHops": [
+              1,
+              2,
+              3
+            ],
+            "conditionalWithinHops": [
+              2,
+              4,
+              5
+            ],
+            "newEndpointKeysWithinHops": [
+              [
+                "d5e39491-5a5f-423c-9222-2eb3c18db9a8"
+              ],
+              [
+                "0c29d0e2-685f-4c56-9805-6bf1baf40e7c",
+                "d5e39491-5a5f-423c-9222-2eb3c18db9a8"
+              ],
+              [
+                "0c29d0e2-685f-4c56-9805-6bf1baf40e7c",
+                "e0183e9c-dc97-4d85-b46e-14a1b76707fd"
+              ]
+            ],
+            "beforeNeighborCount": 1,
+            "conditionalNeighborCount": 2
+          },
+          {
+            "rootKey": "3427040b-88fd-4db5-b546-dd237abad032",
+            "name": "バクマン。",
+            "beforeWithinHops": [
+              2,
+              3,
+              3
+            ],
+            "conditionalWithinHops": [
+              2,
+              4,
+              5
+            ],
+            "newEndpointKeysWithinHops": [
+              [],
+              [
+                "0c29d0e2-685f-4c56-9805-6bf1baf40e7c"
+              ],
+              [
+                "0c29d0e2-685f-4c56-9805-6bf1baf40e7c",
+                "e0183e9c-dc97-4d85-b46e-14a1b76707fd"
+              ]
+            ],
+            "beforeNeighborCount": 2,
+            "conditionalNeighborCount": 2
+          }
+        ],
+        "reachabilityScope": "exact cumulative <=1/2/3 distinct endpoints for these roots only; structural, not UI/API capability"
+      },
+      "singleHypothesisEffects": [
+        {
+          "assumption": "all listed hypotheses become valid, supported, affirmative public Claims after separate review",
+          "notObservedKG": true,
+          "hypothesisKeys": [
+            "obata-hikaru"
+          ],
+          "newUnconfirmedNodeKeys": [],
+          "componentCountBefore": 312,
+          "conditionalComponentCount": 311,
+          "conditionalComponentDelta": -1,
+          "conditionalTotalEntityCount": 2175,
+          "mergedCurrentGroups": [
+            {
+              "existingComponentIds": [
+                "0c29d0e2-685f-4c56-9805-6bf1baf40e7c",
+                "3427040b-88fd-4db5-b546-dd237abad032"
+              ],
+              "conditionalEntityCount": 6,
+              "includesOriginalNewIslandIds": [
+                "0c29d0e2-685f-4c56-9805-6bf1baf40e7c",
+                "3427040b-88fd-4db5-b546-dd237abad032"
+              ]
+            }
+          ],
+          "remainingIndependentComponentsFromOriginal18": 17,
+          "conditionalBranchingEntityDelta": 2,
+          "rootReachability": [
+            {
+              "rootKey": "0c29d0e2-685f-4c56-9805-6bf1baf40e7c",
+              "name": "ヒカルの碁",
+              "beforeWithinHops": [
+                1,
+                1,
+                1
+              ],
+              "conditionalWithinHops": [
+                2,
+                3,
+                4
+              ],
+              "newEndpointKeysWithinHops": [
+                [
+                  "d5e39491-5a5f-423c-9222-2eb3c18db9a8"
+                ],
+                [
+                  "3427040b-88fd-4db5-b546-dd237abad032",
+                  "d5e39491-5a5f-423c-9222-2eb3c18db9a8"
+                ],
+                [
+                  "3427040b-88fd-4db5-b546-dd237abad032",
+                  "a13205e2-220c-4b7d-8a1a-39dbefe52db8",
+                  "d5e39491-5a5f-423c-9222-2eb3c18db9a8"
+                ]
+              ],
+              "beforeNeighborCount": 1,
+              "conditionalNeighborCount": 2
+            },
+            {
+              "rootKey": "e0183e9c-dc97-4d85-b46e-14a1b76707fd",
+              "name": "ほったゆみ",
+              "beforeWithinHops": [
+                1,
+                1,
+                1
+              ],
+              "conditionalWithinHops": [
+                1,
+                2,
+                3
+              ],
+              "newEndpointKeysWithinHops": [
+                [],
+                [
+                  "d5e39491-5a5f-423c-9222-2eb3c18db9a8"
+                ],
+                [
+                  "3427040b-88fd-4db5-b546-dd237abad032",
+                  "d5e39491-5a5f-423c-9222-2eb3c18db9a8"
+                ]
+              ],
+              "beforeNeighborCount": 1,
+              "conditionalNeighborCount": 1
+            },
+            {
+              "rootKey": "d5e39491-5a5f-423c-9222-2eb3c18db9a8",
+              "name": "小畑健",
+              "beforeWithinHops": [
+                1,
+                2,
+                3
+              ],
+              "conditionalWithinHops": [
+                2,
+                4,
+                5
+              ],
+              "newEndpointKeysWithinHops": [
+                [
+                  "0c29d0e2-685f-4c56-9805-6bf1baf40e7c"
+                ],
+                [
+                  "0c29d0e2-685f-4c56-9805-6bf1baf40e7c",
+                  "e0183e9c-dc97-4d85-b46e-14a1b76707fd"
+                ],
+                [
+                  "0c29d0e2-685f-4c56-9805-6bf1baf40e7c",
+                  "e0183e9c-dc97-4d85-b46e-14a1b76707fd"
+                ]
+              ],
+              "beforeNeighborCount": 1,
+              "conditionalNeighborCount": 2
+            },
+            {
+              "rootKey": "7ca5fc7d-545a-4d39-a2dc-6cce86390112",
+              "name": "DEATH NOTE",
+              "beforeWithinHops": [
+                1,
+                2,
+                3
+              ],
+              "conditionalWithinHops": [
+                1,
+                2,
+                3
+              ],
+              "newEndpointKeysWithinHops": [
+                [],
+                [],
+                []
+              ],
+              "beforeNeighborCount": 1,
+              "conditionalNeighborCount": 1
+            },
+            {
+              "rootKey": "3427040b-88fd-4db5-b546-dd237abad032",
+              "name": "バクマン。",
+              "beforeWithinHops": [
+                2,
+                3,
+                3
+              ],
+              "conditionalWithinHops": [
+                2,
+                4,
+                5
+              ],
+              "newEndpointKeysWithinHops": [
+                [],
+                [
+                  "0c29d0e2-685f-4c56-9805-6bf1baf40e7c"
+                ],
+                [
+                  "0c29d0e2-685f-4c56-9805-6bf1baf40e7c",
+                  "e0183e9c-dc97-4d85-b46e-14a1b76707fd"
+                ]
+              ],
+              "beforeNeighborCount": 2,
+              "conditionalNeighborCount": 2
+            }
+          ],
+          "reachabilityScope": "exact cumulative <=1/2/3 distinct endpoints for these roots only; structural, not UI/API capability"
+        },
+        {
+          "assumption": "all listed hypotheses become valid, supported, affirmative public Claims after separate review",
+          "notObservedKG": true,
+          "hypothesisKeys": [
+            "obata-deathnote"
+          ],
+          "newUnconfirmedNodeKeys": [],
+          "componentCountBefore": 312,
+          "conditionalComponentCount": 312,
+          "conditionalComponentDelta": 0,
+          "conditionalTotalEntityCount": 2175,
+          "mergedCurrentGroups": [],
+          "remainingIndependentComponentsFromOriginal18": 18,
+          "conditionalBranchingEntityDelta": 2,
+          "rootReachability": [
+            {
+              "rootKey": "0c29d0e2-685f-4c56-9805-6bf1baf40e7c",
+              "name": "ヒカルの碁",
+              "beforeWithinHops": [
+                1,
+                1,
+                1
+              ],
+              "conditionalWithinHops": [
+                1,
+                1,
+                1
+              ],
+              "newEndpointKeysWithinHops": [
+                [],
+                [],
+                []
+              ],
+              "beforeNeighborCount": 1,
+              "conditionalNeighborCount": 1
+            },
+            {
+              "rootKey": "e0183e9c-dc97-4d85-b46e-14a1b76707fd",
+              "name": "ほったゆみ",
+              "beforeWithinHops": [
+                1,
+                1,
+                1
+              ],
+              "conditionalWithinHops": [
+                1,
+                1,
+                1
+              ],
+              "newEndpointKeysWithinHops": [
+                [],
+                [],
+                []
+              ],
+              "beforeNeighborCount": 1,
+              "conditionalNeighborCount": 1
+            },
+            {
+              "rootKey": "d5e39491-5a5f-423c-9222-2eb3c18db9a8",
+              "name": "小畑健",
+              "beforeWithinHops": [
+                1,
+                2,
+                3
+              ],
+              "conditionalWithinHops": [
+                2,
+                3,
+                3
+              ],
+              "newEndpointKeysWithinHops": [
+                [
+                  "7ca5fc7d-545a-4d39-a2dc-6cce86390112"
+                ],
+                [
+                  "7ca5fc7d-545a-4d39-a2dc-6cce86390112"
+                ],
+                []
+              ],
+              "beforeNeighborCount": 1,
+              "conditionalNeighborCount": 2
+            },
+            {
+              "rootKey": "7ca5fc7d-545a-4d39-a2dc-6cce86390112",
+              "name": "DEATH NOTE",
+              "beforeWithinHops": [
+                1,
+                2,
+                3
+              ],
+              "conditionalWithinHops": [
+                2,
+                3,
+                3
+              ],
+              "newEndpointKeysWithinHops": [
+                [
+                  "d5e39491-5a5f-423c-9222-2eb3c18db9a8"
+                ],
+                [
+                  "d5e39491-5a5f-423c-9222-2eb3c18db9a8"
+                ],
+                []
+              ],
+              "beforeNeighborCount": 1,
+              "conditionalNeighborCount": 2
+            },
+            {
+              "rootKey": "3427040b-88fd-4db5-b546-dd237abad032",
+              "name": "バクマン。",
+              "beforeWithinHops": [
+                2,
+                3,
+                3
+              ],
+              "conditionalWithinHops": [
+                2,
+                3,
+                3
+              ],
+              "newEndpointKeysWithinHops": [
+                [],
+                [],
+                []
+              ],
+              "beforeNeighborCount": 2,
+              "conditionalNeighborCount": 2
+            }
+          ],
+          "reachabilityScope": "exact cumulative <=1/2/3 distinct endpoints for these roots only; structural, not UI/API capability"
+        }
+      ]
+    },
+    {
+      "key": "one-murata-bridge",
+      "priority": 2,
+      "title": "ONE・村田雄介・ワンパンマン村田版からアイシールド21へ",
+      "classification": "新孤立群→50 Claim追加前から続く既存漫画群",
+      "reuseIssueNumbers": [
+        5,
+        7
+      ],
+      "purpose": "モブサイコ100／ONEの2 Entity群を、稲垣理一郎・Dr.STONE・PLUTOにつながる30 Entity群へ接続する仮説。",
+      "islandAnchors": [
+        "0c9eb1b7-2b2b-46b7-8110-9705138c3add"
+      ],
+      "rootKeys": [
+        "afaa3ea0-f273-4481-95c5-5c31f9049cb2",
+        "0c9eb1b7-2b2b-46b7-8110-9705138c3add",
+        "0e0ed535-f78e-4cb0-bd3d-7dffd6b7148e",
+        "8b0d27c2-1116-4731-a00a-b90c869524a2"
+      ],
+      "establishedClaimIds": [
+        "a4d14533-1e4d-47c4-9494-67008811cf75",
+        "043e8592-5827-4167-9c93-f8201dd110bc",
+        "f638cf0b-3750-49f6-b833-844d5465b99f",
+        "fe6d7c19-646b-474a-ad0a-3b20bc816866"
+      ],
+      "proposedNodes": [
+        {
+          "key": "proposal:murata",
+          "name": "村田雄介",
+          "kind": "person",
+          "identityStatus": "旧同定推奨・正式受入なし",
+          "priorCandidateEntityId": "3d279a30-0131-4b37-9429-9a39e8027e05",
+          "priorCandidateQid": "Q2602377",
+          "identityEvidenceFile": "datasets/manga-collection/review-r0002-20261017/review.json"
+        },
+        {
+          "key": "proposal:onepunch-murata",
+          "name": "ワンパンマン（村田雄介版・漫画）",
+          "kind": "work",
+          "identityStatus": "未確認。ONE自身のWeb漫画版・アニメ版と区別",
+          "priorCandidateEntityId": null,
+          "priorCandidateQid": null
+        }
+      ],
+      "hypotheses": [
+        {
+          "key": "murata-eyeshield",
+          "subjectKey": "proposal:murata",
+          "objectKey": "0e0ed535-f78e-4cb0-bd3d-7dffd6b7148e",
+          "predicateCandidate": "CONTRIBUTED_TO",
+          "roleCandidates": [
+            "DRAWING"
+          ],
+          "scope": null,
+          "status": "unconfirmed-not-a-Claim",
+          "basis": [
+            "保存意味レビューに小学館漫画賞発表p.5の作画明示の記述。",
+            "保存NDLには村田雄介 漫画。これはDRAWINGの自動根拠ではない。"
+          ],
+          "requiredChecks": [
+            "候補人物の既存同定推奨UUIDを保ち、正式な再利用／受入範囲を判断。",
+            "作品単位の作画根拠へ第1巻ISBN scopeを流用しない。"
+          ]
+        },
+        {
+          "key": "murata-onepunch",
+          "subjectKey": "proposal:murata",
+          "objectKey": "proposal:onepunch-murata",
+          "predicateCandidate": "CONTRIBUTED_TO",
+          "roleCandidates": [
+            "DRAWING"
+          ],
+          "scope": null,
+          "status": "unconfirmed-not-a-Claim",
+          "basis": [
+            "20261016編集台帳M23/M24に集英社書籍URLと接続企画あり。役割本文は資料未確認。"
+          ],
+          "requiredChecks": [
+            "村田版の作品粒度と同定、紙版／デジタル版の区別。",
+            "当該版での作画クレジット明示を確認。"
+          ]
+        },
+        {
+          "key": "one-onepunch",
+          "subjectKey": "afaa3ea0-f273-4481-95c5-5c31f9049cb2",
+          "objectKey": "proposal:onepunch-murata",
+          "predicateCandidate": "CONTRIBUTED_TO",
+          "roleCandidates": [
+            "ORIGINAL_STORY"
+          ],
+          "scope": null,
+          "status": "unconfirmed-not-a-Claim",
+          "basis": [
+            "保存台帳にONEと村田版の関与候補。役割本文は資料未確認。"
+          ],
+          "requiredChecks": [
+            "『原作』が当該漫画の制作担当か、Web原作の翻案元表記だけかを確認。後者なら現行ORIGINAL_STORYを適用しない。",
+            "直接制作の関与・Roleを支持できない場合は橋全体を未成立のまま保留。"
+          ]
+        }
+      ],
+      "paths": [
+        {
+          "label": "既存3段",
+          "names": [
+            "アイシールド21",
+            "稲垣理一郎",
+            "Dr.STONE",
+            "Boichi"
+          ],
+          "nodeKeys": [
+            "0e0ed535-f78e-4cb0-bd3d-7dffd6b7148e",
+            "8b0d27c2-1116-4731-a00a-b90c869524a2",
+            "31f3c278-7d49-4aed-9a36-c722cae25ed2",
+            "b4de3765-e8c4-49f1-a322-a021475ffd09"
+          ],
+          "hops": 3,
+          "status": "published",
+          "steps": [
+            {
+              "status": "published",
+              "claimId": "043e8592-5827-4167-9c93-f8201dd110bc",
+              "traversal": "reverse"
+            },
+            {
+              "status": "published",
+              "claimId": "f638cf0b-3750-49f6-b833-844d5465b99f",
+              "traversal": "forward"
+            },
+            {
+              "status": "published",
+              "claimId": "fe6d7c19-646b-474a-ad0a-3b20bc816866",
+              "traversal": "reverse"
+            }
+          ]
+        },
+        {
+          "label": "条件付き3段・島の人物から既存作品へ",
+          "names": [
+            "ONE",
+            "ワンパンマン（村田雄介版・漫画）",
+            "村田雄介",
+            "アイシールド21"
+          ],
+          "nodeKeys": [
+            "afaa3ea0-f273-4481-95c5-5c31f9049cb2",
+            "proposal:onepunch-murata",
+            "proposal:murata",
+            "0e0ed535-f78e-4cb0-bd3d-7dffd6b7148e"
+          ],
+          "hops": 3,
+          "status": "conditional",
+          "steps": [
+            {
+              "status": "unconfirmed",
+              "hypothesisKey": "one-onepunch",
+              "roleCandidates": [
+                "ORIGINAL_STORY"
+              ],
+              "traversal": "forward"
+            },
+            {
+              "status": "unconfirmed",
+              "hypothesisKey": "murata-onepunch",
+              "roleCandidates": [
+                "DRAWING"
+              ],
+              "traversal": "reverse"
+            },
+            {
+              "status": "unconfirmed",
+              "hypothesisKey": "murata-eyeshield",
+              "roleCandidates": [
+                "DRAWING"
+              ],
+              "traversal": "forward"
+            }
+          ]
+        },
+        {
+          "label": "条件付き3段・既存作品から担当者へ",
+          "names": [
+            "アイシールド21",
+            "村田雄介",
+            "ワンパンマン（村田雄介版・漫画）",
+            "ONE"
+          ],
+          "nodeKeys": [
+            "0e0ed535-f78e-4cb0-bd3d-7dffd6b7148e",
+            "proposal:murata",
+            "proposal:onepunch-murata",
+            "afaa3ea0-f273-4481-95c5-5c31f9049cb2"
+          ],
+          "hops": 3,
+          "status": "conditional",
+          "steps": [
+            {
+              "status": "unconfirmed",
+              "hypothesisKey": "murata-eyeshield",
+              "roleCandidates": [
+                "DRAWING"
+              ],
+              "traversal": "reverse"
+            },
+            {
+              "status": "unconfirmed",
+              "hypothesisKey": "murata-onepunch",
+              "roleCandidates": [
+                "DRAWING"
+              ],
+              "traversal": "forward"
+            },
+            {
+              "status": "unconfirmed",
+              "hypothesisKey": "one-onepunch",
+              "roleCandidates": [
+                "ORIGINAL_STORY"
+              ],
+              "traversal": "reverse"
+            }
+          ]
+        }
+      ],
+      "furtherMaterials": [
+        {
+          "url": "https://www.shogakukan.co.jp/storage/files/article/2024/20240118.pdf",
+          "status": "保存意味レビューにp.5の観測あり・今回再閲覧なし",
+          "check": "村田→アイシールド21の作品単位作画。"
+        },
+        {
+          "url": "https://www.shueisha.co.jp/books/items/contents.html?jdcn=08870701870701315501",
+          "status": "保存台帳の候補URLのみ。役割本文は資料未確認",
+          "check": "村田版／デジタル版・人物・制作分担。ISBNは未確認。"
+        },
+        {
+          "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I000004050151",
+          "status": "保存NDL書誌あり",
+          "check": "第1巻原責任表示の原語保持。別の作品単位資料へscopeを移植しない。"
+        }
+      ],
+      "holds": [
+        "村田の候補UUIDとQIDは旧推奨であり、公開Entityではない。名前だけで同定を承認しない。",
+        "新作品にQIDやUUIDを割り当てない。proposalキーは計算上の仮ノード。",
+        "モブサイコ100からアイシールド21への作品間経路は4段。2〜3段で島の全作品が相互に届くとは言わない。",
+        "ONE本人Web版由来の表記しかなければ意味契約の検討が必要で、今回の3辺仮説を採用しない。"
+      ],
+      "reviewBudget": {
+        "minimumRelations": 3,
+        "optionalRelations": 0,
+        "newIdentityTargets": 2,
+        "futureMaterialChecks": "既存人物同定推奨、漫画賞PDF1件、村田版公式クレジットと書誌、人物／作品の版同定。3辺の支持が揃うまで統合効果なし。",
+        "networkCallsNow": 0
+      },
+      "conditionalEffect": {
+        "assumption": "all listed hypotheses become valid, supported, affirmative public Claims after separate review",
+        "notObservedKG": true,
+        "hypothesisKeys": [
+          "murata-eyeshield",
+          "murata-onepunch",
+          "one-onepunch"
+        ],
+        "newUnconfirmedNodeKeys": [
+          "proposal:murata",
+          "proposal:onepunch-murata"
+        ],
+        "componentCountBefore": 312,
+        "conditionalComponentCount": 311,
+        "conditionalComponentDelta": -1,
+        "conditionalTotalEntityCount": 2177,
+        "mergedCurrentGroups": [
+          {
+            "existingComponentIds": [
+              "080b2138-c57a-4d0e-8168-09807dda3bc3",
+              "0c9eb1b7-2b2b-46b7-8110-9705138c3add"
+            ],
+            "conditionalEntityCount": 34,
+            "includesOriginalNewIslandIds": [
+              "0c9eb1b7-2b2b-46b7-8110-9705138c3add"
+            ]
+          }
+        ],
+        "remainingIndependentComponentsFromOriginal18": 17,
+        "conditionalBranchingEntityDelta": 4,
+        "rootReachability": [
+          {
+            "rootKey": "afaa3ea0-f273-4481-95c5-5c31f9049cb2",
+            "name": "ONE",
+            "beforeWithinHops": [
+              1,
+              1,
+              1
+            ],
+            "conditionalWithinHops": [
+              2,
+              3,
+              4
+            ],
+            "newEndpointKeysWithinHops": [
+              [
+                "proposal:onepunch-murata"
+              ],
+              [
+                "proposal:murata",
+                "proposal:onepunch-murata"
+              ],
+              [
+                "0e0ed535-f78e-4cb0-bd3d-7dffd6b7148e",
+                "proposal:murata",
+                "proposal:onepunch-murata"
+              ]
+            ],
+            "beforeNeighborCount": 1,
+            "conditionalNeighborCount": 2
+          },
+          {
+            "rootKey": "0c9eb1b7-2b2b-46b7-8110-9705138c3add",
+            "name": "モブサイコ100",
+            "beforeWithinHops": [
+              1,
+              1,
+              1
+            ],
+            "conditionalWithinHops": [
+              1,
+              2,
+              3
+            ],
+            "newEndpointKeysWithinHops": [
+              [],
+              [
+                "proposal:onepunch-murata"
+              ],
+              [
+                "proposal:murata",
+                "proposal:onepunch-murata"
+              ]
+            ],
+            "beforeNeighborCount": 1,
+            "conditionalNeighborCount": 1
+          },
+          {
+            "rootKey": "0e0ed535-f78e-4cb0-bd3d-7dffd6b7148e",
+            "name": "アイシールド21",
+            "beforeWithinHops": [
+              1,
+              3,
+              5
+            ],
+            "conditionalWithinHops": [
+              2,
+              5,
+              8
+            ],
+            "newEndpointKeysWithinHops": [
+              [
+                "proposal:murata"
+              ],
+              [
+                "proposal:murata",
+                "proposal:onepunch-murata"
+              ],
+              [
+                "afaa3ea0-f273-4481-95c5-5c31f9049cb2",
+                "proposal:murata",
+                "proposal:onepunch-murata"
+              ]
+            ],
+            "beforeNeighborCount": 1,
+            "conditionalNeighborCount": 2
+          },
+          {
+            "rootKey": "8b0d27c2-1116-4731-a00a-b90c869524a2",
+            "name": "稲垣理一郎",
+            "beforeWithinHops": [
+              3,
+              5,
+              8
+            ],
+            "conditionalWithinHops": [
+              3,
+              6,
+              10
+            ],
+            "newEndpointKeysWithinHops": [
+              [],
+              [
+                "proposal:murata"
+              ],
+              [
+                "proposal:murata",
+                "proposal:onepunch-murata"
+              ]
+            ],
+            "beforeNeighborCount": 3,
+            "conditionalNeighborCount": 3
+          }
+        ],
+        "reachabilityScope": "exact cumulative <=1/2/3 distinct endpoints for these roots only; structural, not UI/API capability"
+      },
+      "singleHypothesisEffects": [
+        {
+          "assumption": "all listed hypotheses become valid, supported, affirmative public Claims after separate review",
+          "notObservedKG": true,
+          "hypothesisKeys": [
+            "murata-eyeshield"
+          ],
+          "newUnconfirmedNodeKeys": [
+            "proposal:murata"
+          ],
+          "componentCountBefore": 312,
+          "conditionalComponentCount": 312,
+          "conditionalComponentDelta": 0,
+          "conditionalTotalEntityCount": 2176,
+          "mergedCurrentGroups": [],
+          "remainingIndependentComponentsFromOriginal18": 18,
+          "conditionalBranchingEntityDelta": 1,
+          "rootReachability": [
+            {
+              "rootKey": "afaa3ea0-f273-4481-95c5-5c31f9049cb2",
+              "name": "ONE",
+              "beforeWithinHops": [
+                1,
+                1,
+                1
+              ],
+              "conditionalWithinHops": [
+                1,
+                1,
+                1
+              ],
+              "newEndpointKeysWithinHops": [
+                [],
+                [],
+                []
+              ],
+              "beforeNeighborCount": 1,
+              "conditionalNeighborCount": 1
+            },
+            {
+              "rootKey": "0c9eb1b7-2b2b-46b7-8110-9705138c3add",
+              "name": "モブサイコ100",
+              "beforeWithinHops": [
+                1,
+                1,
+                1
+              ],
+              "conditionalWithinHops": [
+                1,
+                1,
+                1
+              ],
+              "newEndpointKeysWithinHops": [
+                [],
+                [],
+                []
+              ],
+              "beforeNeighborCount": 1,
+              "conditionalNeighborCount": 1
+            },
+            {
+              "rootKey": "0e0ed535-f78e-4cb0-bd3d-7dffd6b7148e",
+              "name": "アイシールド21",
+              "beforeWithinHops": [
+                1,
+                3,
+                5
+              ],
+              "conditionalWithinHops": [
+                2,
+                4,
+                6
+              ],
+              "newEndpointKeysWithinHops": [
+                [
+                  "proposal:murata"
+                ],
+                [
+                  "proposal:murata"
+                ],
+                [
+                  "proposal:murata"
+                ]
+              ],
+              "beforeNeighborCount": 1,
+              "conditionalNeighborCount": 2
+            },
+            {
+              "rootKey": "8b0d27c2-1116-4731-a00a-b90c869524a2",
+              "name": "稲垣理一郎",
+              "beforeWithinHops": [
+                3,
+                5,
+                8
+              ],
+              "conditionalWithinHops": [
+                3,
+                6,
+                9
+              ],
+              "newEndpointKeysWithinHops": [
+                [],
+                [
+                  "proposal:murata"
+                ],
+                [
+                  "proposal:murata"
+                ]
+              ],
+              "beforeNeighborCount": 3,
+              "conditionalNeighborCount": 3
+            }
+          ],
+          "reachabilityScope": "exact cumulative <=1/2/3 distinct endpoints for these roots only; structural, not UI/API capability"
+        },
+        {
+          "assumption": "all listed hypotheses become valid, supported, affirmative public Claims after separate review",
+          "notObservedKG": true,
+          "hypothesisKeys": [
+            "murata-onepunch"
+          ],
+          "newUnconfirmedNodeKeys": [
+            "proposal:murata",
+            "proposal:onepunch-murata"
+          ],
+          "componentCountBefore": 312,
+          "conditionalComponentCount": 313,
+          "conditionalComponentDelta": 1,
+          "conditionalTotalEntityCount": 2177,
+          "mergedCurrentGroups": [],
+          "remainingIndependentComponentsFromOriginal18": 18,
+          "conditionalBranchingEntityDelta": 0,
+          "rootReachability": [
+            {
+              "rootKey": "afaa3ea0-f273-4481-95c5-5c31f9049cb2",
+              "name": "ONE",
+              "beforeWithinHops": [
+                1,
+                1,
+                1
+              ],
+              "conditionalWithinHops": [
+                1,
+                1,
+                1
+              ],
+              "newEndpointKeysWithinHops": [
+                [],
+                [],
+                []
+              ],
+              "beforeNeighborCount": 1,
+              "conditionalNeighborCount": 1
+            },
+            {
+              "rootKey": "0c9eb1b7-2b2b-46b7-8110-9705138c3add",
+              "name": "モブサイコ100",
+              "beforeWithinHops": [
+                1,
+                1,
+                1
+              ],
+              "conditionalWithinHops": [
+                1,
+                1,
+                1
+              ],
+              "newEndpointKeysWithinHops": [
+                [],
+                [],
+                []
+              ],
+              "beforeNeighborCount": 1,
+              "conditionalNeighborCount": 1
+            },
+            {
+              "rootKey": "0e0ed535-f78e-4cb0-bd3d-7dffd6b7148e",
+              "name": "アイシールド21",
+              "beforeWithinHops": [
+                1,
+                3,
+                5
+              ],
+              "conditionalWithinHops": [
+                1,
+                3,
+                5
+              ],
+              "newEndpointKeysWithinHops": [
+                [],
+                [],
+                []
+              ],
+              "beforeNeighborCount": 1,
+              "conditionalNeighborCount": 1
+            },
+            {
+              "rootKey": "8b0d27c2-1116-4731-a00a-b90c869524a2",
+              "name": "稲垣理一郎",
+              "beforeWithinHops": [
+                3,
+                5,
+                8
+              ],
+              "conditionalWithinHops": [
+                3,
+                5,
+                8
+              ],
+              "newEndpointKeysWithinHops": [
+                [],
+                [],
+                []
+              ],
+              "beforeNeighborCount": 3,
+              "conditionalNeighborCount": 3
+            }
+          ],
+          "reachabilityScope": "exact cumulative <=1/2/3 distinct endpoints for these roots only; structural, not UI/API capability"
+        },
+        {
+          "assumption": "all listed hypotheses become valid, supported, affirmative public Claims after separate review",
+          "notObservedKG": true,
+          "hypothesisKeys": [
+            "one-onepunch"
+          ],
+          "newUnconfirmedNodeKeys": [
+            "proposal:onepunch-murata"
+          ],
+          "componentCountBefore": 312,
+          "conditionalComponentCount": 312,
+          "conditionalComponentDelta": 0,
+          "conditionalTotalEntityCount": 2176,
+          "mergedCurrentGroups": [],
+          "remainingIndependentComponentsFromOriginal18": 18,
+          "conditionalBranchingEntityDelta": 1,
+          "rootReachability": [
+            {
+              "rootKey": "afaa3ea0-f273-4481-95c5-5c31f9049cb2",
+              "name": "ONE",
+              "beforeWithinHops": [
+                1,
+                1,
+                1
+              ],
+              "conditionalWithinHops": [
+                2,
+                2,
+                2
+              ],
+              "newEndpointKeysWithinHops": [
+                [
+                  "proposal:onepunch-murata"
+                ],
+                [
+                  "proposal:onepunch-murata"
+                ],
+                [
+                  "proposal:onepunch-murata"
+                ]
+              ],
+              "beforeNeighborCount": 1,
+              "conditionalNeighborCount": 2
+            },
+            {
+              "rootKey": "0c9eb1b7-2b2b-46b7-8110-9705138c3add",
+              "name": "モブサイコ100",
+              "beforeWithinHops": [
+                1,
+                1,
+                1
+              ],
+              "conditionalWithinHops": [
+                1,
+                2,
+                2
+              ],
+              "newEndpointKeysWithinHops": [
+                [],
+                [
+                  "proposal:onepunch-murata"
+                ],
+                [
+                  "proposal:onepunch-murata"
+                ]
+              ],
+              "beforeNeighborCount": 1,
+              "conditionalNeighborCount": 1
+            },
+            {
+              "rootKey": "0e0ed535-f78e-4cb0-bd3d-7dffd6b7148e",
+              "name": "アイシールド21",
+              "beforeWithinHops": [
+                1,
+                3,
+                5
+              ],
+              "conditionalWithinHops": [
+                1,
+                3,
+                5
+              ],
+              "newEndpointKeysWithinHops": [
+                [],
+                [],
+                []
+              ],
+              "beforeNeighborCount": 1,
+              "conditionalNeighborCount": 1
+            },
+            {
+              "rootKey": "8b0d27c2-1116-4731-a00a-b90c869524a2",
+              "name": "稲垣理一郎",
+              "beforeWithinHops": [
+                3,
+                5,
+                8
+              ],
+              "conditionalWithinHops": [
+                3,
+                5,
+                8
+              ],
+              "newEndpointKeysWithinHops": [
+                [],
+                [],
+                []
+              ],
+              "beforeNeighborCount": 3,
+              "conditionalNeighborCount": 3
+            }
+          ],
+          "reachabilityScope": "exact cumulative <=1/2/3 distinct endpoints for these roots only; structural, not UI/API capability"
+        }
+      ]
+    },
+    {
+      "key": "akasaka-kaguya-branch",
+      "priority": 3,
+      "title": "赤坂アカのかぐや様は告らせたいの同定保留を解消する",
+      "classification": "島内部の分岐追加",
+      "reuseIssueNumbers": [
+        5,
+        25
+      ],
+      "purpose": "【推しの子】／赤坂アカ／横槍メンゴ／クズの本懐の4 Entity群に別作品の枝を加える。",
+      "islandAnchors": [
+        "8a0d3d5a-feb6-4ba3-8993-64b6ac79de12"
+      ],
+      "rootKeys": [
+        "711dc415-45d5-4d35-8cca-068332180cc0",
+        "8a0d3d5a-feb6-4ba3-8993-64b6ac79de12",
+        "420d89ea-9780-4e01-ac64-9c5e8597d0c8",
+        "dc188ef2-1a3d-4251-a445-90f49dd88cd0"
+      ],
+      "establishedClaimIds": [
+        "f4504ec8-173a-453f-83e8-a24e72dde9bc",
+        "b7d9d6ba-f2a0-492e-981d-408b22955215",
+        "498cbe28-4703-4ac1-9a99-5cd83831b0e3"
+      ],
+      "proposedNodes": [
+        {
+          "key": "proposal:kaguya-manga",
+          "name": "かぐや様は告らせたい（漫画）",
+          "kind": "work",
+          "identityStatus": "#25 exact QID/name/type unresolved",
+          "priorCandidateEntityId": null,
+          "priorCandidateQid": null
+        }
+      ],
+      "hypotheses": [
+        {
+          "key": "akasaka-kaguya",
+          "subjectKey": "711dc415-45d5-4d35-8cca-068332180cc0",
+          "objectKey": "proposal:kaguya-manga",
+          "predicateCandidate": "CONTRIBUTED_TO",
+          "roleCandidates": [
+            "AUTHORSHIP"
+          ],
+          "scope": null,
+          "status": "unconfirmed-not-a-Claim",
+          "basis": [
+            "既存企画・#25対象。固定fixtureに当該作品／Claimなし。",
+            "#25保存準備結果では完全一致QID・型が未解決。著者欄本文は資料未確認。"
+          ],
+          "requiredChecks": [
+            "漫画本体・正式な副題・アニメ／実写／スピンオフを区別。",
+            "人物は既存UUIDを再利用し、作品QID・日本語代表ISBN・著者欄を一意に確認。",
+            "【推しの子】のORIGINAL_STORYを別作品のAUTHORSHIPへ自動コピーしない。"
+          ]
+        }
+      ],
+      "paths": [
+        {
+          "label": "既存3段",
+          "names": [
+            "クズの本懐",
+            "横槍メンゴ",
+            "【推しの子】",
+            "赤坂アカ"
+          ],
+          "nodeKeys": [
+            "dc188ef2-1a3d-4251-a445-90f49dd88cd0",
+            "420d89ea-9780-4e01-ac64-9c5e8597d0c8",
+            "8a0d3d5a-feb6-4ba3-8993-64b6ac79de12",
+            "711dc415-45d5-4d35-8cca-068332180cc0"
+          ],
+          "hops": 3,
+          "status": "published",
+          "steps": [
+            {
+              "status": "published",
+              "claimId": "498cbe28-4703-4ac1-9a99-5cd83831b0e3",
+              "traversal": "reverse"
+            },
+            {
+              "status": "published",
+              "claimId": "b7d9d6ba-f2a0-492e-981d-408b22955215",
+              "traversal": "forward"
+            },
+            {
+              "status": "published",
+              "claimId": "f4504ec8-173a-453f-83e8-a24e72dde9bc",
+              "traversal": "reverse"
+            }
+          ]
+        },
+        {
+          "label": "条件付き3段",
+          "names": [
+            "横槍メンゴ",
+            "【推しの子】",
+            "赤坂アカ",
+            "かぐや様は告らせたい（漫画）"
+          ],
+          "nodeKeys": [
+            "420d89ea-9780-4e01-ac64-9c5e8597d0c8",
+            "8a0d3d5a-feb6-4ba3-8993-64b6ac79de12",
+            "711dc415-45d5-4d35-8cca-068332180cc0",
+            "proposal:kaguya-manga"
+          ],
+          "hops": 3,
+          "status": "conditional",
+          "steps": [
+            {
+              "status": "published",
+              "claimId": "b7d9d6ba-f2a0-492e-981d-408b22955215",
+              "traversal": "forward"
+            },
+            {
+              "status": "published",
+              "claimId": "f4504ec8-173a-453f-83e8-a24e72dde9bc",
+              "traversal": "reverse"
+            },
+            {
+              "status": "unconfirmed",
+              "hypothesisKey": "akasaka-kaguya",
+              "roleCandidates": [
+                "AUTHORSHIP"
+              ],
+              "traversal": "forward"
+            }
+          ]
+        }
+      ],
+      "furtherMaterials": [
+        {
+          "url": "https://github.com/isinxnisi/graph-knowledge/issues/25#issuecomment-6253756948",
+          "status": "今回読んだ保留記録",
+          "check": "既存の同定保留を引き継ぐ。旧収集上限をリセットしない。"
+        },
+        {
+          "url": null,
+          "status": "資料未確認",
+          "check": "集英社の漫画本体の紙版第1巻著者欄・NDL書誌と作品型。URL／ISBN／QIDは今回推測記入しない。"
+        }
+      ],
+      "holds": [
+        "公開Claimの【推しの子】2件のscope=nullを保持。新作品へISBNを転記しない。",
+        "同名映像作品への自動統合・保留解除はしない。",
+        "1本の葉を加えるだけなので成分統合は0。"
+      ],
+      "reviewBudget": {
+        "minimumRelations": 1,
+        "optionalRelations": 0,
+        "newIdentityTargets": 1,
+        "futureMaterialChecks": "漫画本体の作品同定・代表刊行物・責任表示の3点。保存保留から再開する。",
+        "networkCallsNow": 0
+      },
+      "conditionalEffect": {
+        "assumption": "all listed hypotheses become valid, supported, affirmative public Claims after separate review",
+        "notObservedKG": true,
+        "hypothesisKeys": [
+          "akasaka-kaguya"
+        ],
+        "newUnconfirmedNodeKeys": [
+          "proposal:kaguya-manga"
+        ],
+        "componentCountBefore": 312,
+        "conditionalComponentCount": 312,
+        "conditionalComponentDelta": 0,
+        "conditionalTotalEntityCount": 2176,
+        "mergedCurrentGroups": [],
+        "remainingIndependentComponentsFromOriginal18": 18,
+        "conditionalBranchingEntityDelta": 1,
+        "rootReachability": [
+          {
+            "rootKey": "711dc415-45d5-4d35-8cca-068332180cc0",
+            "name": "赤坂アカ",
+            "beforeWithinHops": [
+              1,
+              2,
+              3
+            ],
+            "conditionalWithinHops": [
+              2,
+              3,
+              4
+            ],
+            "newEndpointKeysWithinHops": [
+              [
+                "proposal:kaguya-manga"
+              ],
+              [
+                "proposal:kaguya-manga"
+              ],
+              [
+                "proposal:kaguya-manga"
+              ]
+            ],
+            "beforeNeighborCount": 1,
+            "conditionalNeighborCount": 2
+          },
+          {
+            "rootKey": "8a0d3d5a-feb6-4ba3-8993-64b6ac79de12",
+            "name": "【推しの子】",
+            "beforeWithinHops": [
+              2,
+              3,
+              3
+            ],
+            "conditionalWithinHops": [
+              2,
+              4,
+              4
+            ],
+            "newEndpointKeysWithinHops": [
+              [],
+              [
+                "proposal:kaguya-manga"
+              ],
+              [
+                "proposal:kaguya-manga"
+              ]
+            ],
+            "beforeNeighborCount": 2,
+            "conditionalNeighborCount": 2
+          },
+          {
+            "rootKey": "420d89ea-9780-4e01-ac64-9c5e8597d0c8",
+            "name": "横槍メンゴ",
+            "beforeWithinHops": [
+              2,
+              3,
+              3
+            ],
+            "conditionalWithinHops": [
+              2,
+              3,
+              4
+            ],
+            "newEndpointKeysWithinHops": [
+              [],
+              [],
+              [
+                "proposal:kaguya-manga"
+              ]
+            ],
+            "beforeNeighborCount": 2,
+            "conditionalNeighborCount": 2
+          },
+          {
+            "rootKey": "dc188ef2-1a3d-4251-a445-90f49dd88cd0",
+            "name": "クズの本懐",
+            "beforeWithinHops": [
+              1,
+              2,
+              3
+            ],
+            "conditionalWithinHops": [
+              1,
+              2,
+              3
+            ],
+            "newEndpointKeysWithinHops": [
+              [],
+              [],
+              []
+            ],
+            "beforeNeighborCount": 1,
+            "conditionalNeighborCount": 1
+          }
+        ],
+        "reachabilityScope": "exact cumulative <=1/2/3 distinct endpoints for these roots only; structural, not UI/API capability"
+      },
+      "singleHypothesisEffects": [
+        {
+          "assumption": "all listed hypotheses become valid, supported, affirmative public Claims after separate review",
+          "notObservedKG": true,
+          "hypothesisKeys": [
+            "akasaka-kaguya"
+          ],
+          "newUnconfirmedNodeKeys": [
+            "proposal:kaguya-manga"
+          ],
+          "componentCountBefore": 312,
+          "conditionalComponentCount": 312,
+          "conditionalComponentDelta": 0,
+          "conditionalTotalEntityCount": 2176,
+          "mergedCurrentGroups": [],
+          "remainingIndependentComponentsFromOriginal18": 18,
+          "conditionalBranchingEntityDelta": 1,
+          "rootReachability": [
+            {
+              "rootKey": "711dc415-45d5-4d35-8cca-068332180cc0",
+              "name": "赤坂アカ",
+              "beforeWithinHops": [
+                1,
+                2,
+                3
+              ],
+              "conditionalWithinHops": [
+                2,
+                3,
+                4
+              ],
+              "newEndpointKeysWithinHops": [
+                [
+                  "proposal:kaguya-manga"
+                ],
+                [
+                  "proposal:kaguya-manga"
+                ],
+                [
+                  "proposal:kaguya-manga"
+                ]
+              ],
+              "beforeNeighborCount": 1,
+              "conditionalNeighborCount": 2
+            },
+            {
+              "rootKey": "8a0d3d5a-feb6-4ba3-8993-64b6ac79de12",
+              "name": "【推しの子】",
+              "beforeWithinHops": [
+                2,
+                3,
+                3
+              ],
+              "conditionalWithinHops": [
+                2,
+                4,
+                4
+              ],
+              "newEndpointKeysWithinHops": [
+                [],
+                [
+                  "proposal:kaguya-manga"
+                ],
+                [
+                  "proposal:kaguya-manga"
+                ]
+              ],
+              "beforeNeighborCount": 2,
+              "conditionalNeighborCount": 2
+            },
+            {
+              "rootKey": "420d89ea-9780-4e01-ac64-9c5e8597d0c8",
+              "name": "横槍メンゴ",
+              "beforeWithinHops": [
+                2,
+                3,
+                3
+              ],
+              "conditionalWithinHops": [
+                2,
+                3,
+                4
+              ],
+              "newEndpointKeysWithinHops": [
+                [],
+                [],
+                [
+                  "proposal:kaguya-manga"
+                ]
+              ],
+              "beforeNeighborCount": 2,
+              "conditionalNeighborCount": 2
+            },
+            {
+              "rootKey": "dc188ef2-1a3d-4251-a445-90f49dd88cd0",
+              "name": "クズの本懐",
+              "beforeWithinHops": [
+                1,
+                2,
+                3
+              ],
+              "conditionalWithinHops": [
+                1,
+                2,
+                3
+              ],
+              "newEndpointKeysWithinHops": [
+                [],
+                [],
+                []
+              ],
+              "beforeNeighborCount": 1,
+              "conditionalNeighborCount": 1
+            }
+          ],
+          "reachabilityScope": "exact cumulative <=1/2/3 distinct endpoints for these roots only; structural, not UI/API capability"
+        }
+      ]
+    },
+    {
+      "key": "adachi-touch-hold",
+      "priority": 4,
+      "title": "あだち充のタッチをH2・MIXへつなぐ書誌保留の再審査",
+      "classification": "島内部の分岐追加",
+      "reuseIssueNumbers": [
+        16,
+        25,
+        5
+      ],
+      "purpose": "既存のあだち充／H2／MIXの3 Entity群に、漫画本体として確認できたタッチを追加する。",
+      "islandAnchors": [
+        "1abd838a-b22d-45a4-913f-0ef09205e1e8"
+      ],
+      "rootKeys": [
+        "1abd838a-b22d-45a4-913f-0ef09205e1e8",
+        "bb47fc9c-87b1-4df5-a7d6-ecf175d93eb0",
+        "48ca311c-c403-4a24-a1e3-cb6392764397"
+      ],
+      "establishedClaimIds": [
+        "f1260c3f-2637-416f-b407-2052a7c36717",
+        "c72262df-ce7b-4514-9341-55d242f94bca"
+      ],
+      "proposedNodes": [
+        {
+          "key": "proposal:touch-manga",
+          "name": "タッチ（漫画本体）",
+          "kind": "work",
+          "identityStatus": "既存#25の刊行物同定保留。アニメコミック等との区別が必要",
+          "priorCandidateEntityId": null,
+          "priorCandidateQid": null
+        }
+      ],
+      "hypotheses": [
+        {
+          "key": "adachi-touch",
+          "subjectKey": "1abd838a-b22d-45a4-913f-0ef09205e1e8",
+          "objectKey": "proposal:touch-manga",
+          "predicateCandidate": "CONTRIBUTED_TO",
+          "roleCandidates": [],
+          "scope": null,
+          "status": "unconfirmed-not-a-Claim",
+          "basis": [
+            "保存レコードISBN9784091218612、NDL I000001790190、タッチ. vol.1、あだち充 原作、genre児童図書／漫画。",
+            "保存再現記録ではpublication-identity-unconfirmed。第1巻本体と判断済みではない。"
+          ],
+          "requiredChecks": [
+            "その書誌が漫画本体か、アニメ等の翻案刊行物かを先に確認。",
+            "『原作』をAUTHORSHIPやORIGINAL_STORYに自動変換しない。当該漫画制作の意味が支持されるまでRole未決。",
+            "必要なら漫画本体の別ISBNを確認。genre条件を一律に緩めず元保留を保持。"
+          ]
+        }
+      ],
+      "paths": [
+        {
+          "label": "既存2段",
+          "names": [
+            "H2",
+            "あだち充",
+            "MIX"
+          ],
+          "nodeKeys": [
+            "bb47fc9c-87b1-4df5-a7d6-ecf175d93eb0",
+            "1abd838a-b22d-45a4-913f-0ef09205e1e8",
+            "48ca311c-c403-4a24-a1e3-cb6392764397"
+          ],
+          "hops": 2,
+          "status": "published",
+          "steps": [
+            {
+              "status": "published",
+              "claimId": "f1260c3f-2637-416f-b407-2052a7c36717",
+              "traversal": "reverse"
+            },
+            {
+              "status": "published",
+              "claimId": "c72262df-ce7b-4514-9341-55d242f94bca",
+              "traversal": "forward"
+            }
+          ]
+        },
+        {
+          "label": "条件付き2段",
+          "names": [
+            "タッチ（漫画本体）",
+            "あだち充",
+            "H2"
+          ],
+          "nodeKeys": [
+            "proposal:touch-manga",
+            "1abd838a-b22d-45a4-913f-0ef09205e1e8",
+            "bb47fc9c-87b1-4df5-a7d6-ecf175d93eb0"
+          ],
+          "hops": 2,
+          "status": "conditional",
+          "steps": [
+            {
+              "status": "unconfirmed",
+              "hypothesisKey": "adachi-touch",
+              "roleCandidates": [],
+              "traversal": "reverse"
+            },
+            {
+              "status": "published",
+              "claimId": "f1260c3f-2637-416f-b407-2052a7c36717",
+              "traversal": "forward"
+            }
+          ]
+        },
+        {
+          "label": "条件付き別作品2段",
+          "names": [
+            "タッチ（漫画本体）",
+            "あだち充",
+            "MIX"
+          ],
+          "nodeKeys": [
+            "proposal:touch-manga",
+            "1abd838a-b22d-45a4-913f-0ef09205e1e8",
+            "48ca311c-c403-4a24-a1e3-cb6392764397"
+          ],
+          "hops": 2,
+          "status": "conditional",
+          "steps": [
+            {
+              "status": "unconfirmed",
+              "hypothesisKey": "adachi-touch",
+              "roleCandidates": [],
+              "traversal": "reverse"
+            },
+            {
+              "status": "published",
+              "claimId": "c72262df-ce7b-4514-9341-55d242f94bca",
+              "traversal": "forward"
+            }
+          ]
+        }
+      ],
+      "furtherMaterials": [
+        {
+          "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I000001790190",
+          "status": "保存書誌の内容を今回確認。サイト再閲覧なし",
+          "check": "volume表記・原作表記・媒体から刊行物の正体を再審査。"
+        },
+        {
+          "url": null,
+          "status": "資料未確認",
+          "check": "小学館の漫画本体の第1巻・著作者クレジット。既存保留ISBNと同一視しない。"
+        }
+      ],
+      "holds": [
+        "既存H2／MIXの2 Claimは公開済みなので再収集対象から外す。",
+        "シリーズ／続編という作品間関係を追加しない。",
+        "この星型の1枝追加だけでは3段の単純経路や別人物への経路は生まれない。"
+      ],
+      "reviewBudget": {
+        "minimumRelations": 1,
+        "optionalRelations": 0,
+        "newIdentityTargets": 1,
+        "futureMaterialChecks": "保存NDL1件の媒体再審査と、小学館の漫画本体書誌・著者欄。",
+        "networkCallsNow": 0
+      },
+      "conditionalEffect": {
+        "assumption": "all listed hypotheses become valid, supported, affirmative public Claims after separate review",
+        "notObservedKG": true,
+        "hypothesisKeys": [
+          "adachi-touch"
+        ],
+        "newUnconfirmedNodeKeys": [
+          "proposal:touch-manga"
+        ],
+        "componentCountBefore": 312,
+        "conditionalComponentCount": 312,
+        "conditionalComponentDelta": 0,
+        "conditionalTotalEntityCount": 2176,
+        "mergedCurrentGroups": [],
+        "remainingIndependentComponentsFromOriginal18": 18,
+        "conditionalBranchingEntityDelta": 0,
+        "rootReachability": [
+          {
+            "rootKey": "1abd838a-b22d-45a4-913f-0ef09205e1e8",
+            "name": "あだち充",
+            "beforeWithinHops": [
+              2,
+              2,
+              2
+            ],
+            "conditionalWithinHops": [
+              3,
+              3,
+              3
+            ],
+            "newEndpointKeysWithinHops": [
+              [
+                "proposal:touch-manga"
+              ],
+              [
+                "proposal:touch-manga"
+              ],
+              [
+                "proposal:touch-manga"
+              ]
+            ],
+            "beforeNeighborCount": 2,
+            "conditionalNeighborCount": 3
+          },
+          {
+            "rootKey": "bb47fc9c-87b1-4df5-a7d6-ecf175d93eb0",
+            "name": "H2",
+            "beforeWithinHops": [
+              1,
+              2,
+              2
+            ],
+            "conditionalWithinHops": [
+              1,
+              3,
+              3
+            ],
+            "newEndpointKeysWithinHops": [
+              [],
+              [
+                "proposal:touch-manga"
+              ],
+              [
+                "proposal:touch-manga"
+              ]
+            ],
+            "beforeNeighborCount": 1,
+            "conditionalNeighborCount": 1
+          },
+          {
+            "rootKey": "48ca311c-c403-4a24-a1e3-cb6392764397",
+            "name": "MIX",
+            "beforeWithinHops": [
+              1,
+              2,
+              2
+            ],
+            "conditionalWithinHops": [
+              1,
+              3,
+              3
+            ],
+            "newEndpointKeysWithinHops": [
+              [],
+              [
+                "proposal:touch-manga"
+              ],
+              [
+                "proposal:touch-manga"
+              ]
+            ],
+            "beforeNeighborCount": 1,
+            "conditionalNeighborCount": 1
+          }
+        ],
+        "reachabilityScope": "exact cumulative <=1/2/3 distinct endpoints for these roots only; structural, not UI/API capability"
+      },
+      "singleHypothesisEffects": [
+        {
+          "assumption": "all listed hypotheses become valid, supported, affirmative public Claims after separate review",
+          "notObservedKG": true,
+          "hypothesisKeys": [
+            "adachi-touch"
+          ],
+          "newUnconfirmedNodeKeys": [
+            "proposal:touch-manga"
+          ],
+          "componentCountBefore": 312,
+          "conditionalComponentCount": 312,
+          "conditionalComponentDelta": 0,
+          "conditionalTotalEntityCount": 2176,
+          "mergedCurrentGroups": [],
+          "remainingIndependentComponentsFromOriginal18": 18,
+          "conditionalBranchingEntityDelta": 0,
+          "rootReachability": [
+            {
+              "rootKey": "1abd838a-b22d-45a4-913f-0ef09205e1e8",
+              "name": "あだち充",
+              "beforeWithinHops": [
+                2,
+                2,
+                2
+              ],
+              "conditionalWithinHops": [
+                3,
+                3,
+                3
+              ],
+              "newEndpointKeysWithinHops": [
+                [
+                  "proposal:touch-manga"
+                ],
+                [
+                  "proposal:touch-manga"
+                ],
+                [
+                  "proposal:touch-manga"
+                ]
+              ],
+              "beforeNeighborCount": 2,
+              "conditionalNeighborCount": 3
+            },
+            {
+              "rootKey": "bb47fc9c-87b1-4df5-a7d6-ecf175d93eb0",
+              "name": "H2",
+              "beforeWithinHops": [
+                1,
+                2,
+                2
+              ],
+              "conditionalWithinHops": [
+                1,
+                3,
+                3
+              ],
+              "newEndpointKeysWithinHops": [
+                [],
+                [
+                  "proposal:touch-manga"
+                ],
+                [
+                  "proposal:touch-manga"
+                ]
+              ],
+              "beforeNeighborCount": 1,
+              "conditionalNeighborCount": 1
+            },
+            {
+              "rootKey": "48ca311c-c403-4a24-a1e3-cb6392764397",
+              "name": "MIX",
+              "beforeWithinHops": [
+                1,
+                2,
+                2
+              ],
+              "conditionalWithinHops": [
+                1,
+                3,
+                3
+              ],
+              "newEndpointKeysWithinHops": [
+                [],
+                [
+                  "proposal:touch-manga"
+                ],
+                [
+                  "proposal:touch-manga"
+                ]
+              ],
+              "beforeNeighborCount": 1,
+              "conditionalNeighborCount": 1
+            }
+          ],
+          "reachabilityScope": "exact cumulative <=1/2/3 distinct endpoints for these roots only; structural, not UI/API capability"
+        }
+      ]
+    }
+  ],
+  "combinedConditionalEffect": {
+    "assumption": "all listed hypotheses become valid, supported, affirmative public Claims after separate review",
+    "notObservedKG": true,
+    "hypothesisKeys": [
+      "obata-hikaru",
+      "obata-deathnote",
+      "murata-eyeshield",
+      "murata-onepunch",
+      "one-onepunch",
+      "akasaka-kaguya",
+      "adachi-touch"
+    ],
+    "newUnconfirmedNodeKeys": [
+      "proposal:kaguya-manga",
+      "proposal:murata",
+      "proposal:onepunch-murata",
+      "proposal:touch-manga"
+    ],
+    "componentCountBefore": 312,
+    "conditionalComponentCount": 310,
+    "conditionalComponentDelta": -2,
+    "conditionalTotalEntityCount": 2179,
+    "mergedCurrentGroups": [
+      {
+        "existingComponentIds": [
+          "080b2138-c57a-4d0e-8168-09807dda3bc3",
+          "0c9eb1b7-2b2b-46b7-8110-9705138c3add"
+        ],
+        "conditionalEntityCount": 34,
+        "includesOriginalNewIslandIds": [
+          "0c9eb1b7-2b2b-46b7-8110-9705138c3add"
+        ]
+      },
+      {
+        "existingComponentIds": [
+          "0c29d0e2-685f-4c56-9805-6bf1baf40e7c",
+          "3427040b-88fd-4db5-b546-dd237abad032"
+        ],
+        "conditionalEntityCount": 6,
+        "includesOriginalNewIslandIds": [
+          "0c29d0e2-685f-4c56-9805-6bf1baf40e7c",
+          "3427040b-88fd-4db5-b546-dd237abad032"
+        ]
+      }
+    ],
+    "remainingIndependentComponentsFromOriginal18": 16,
+    "conditionalBranchingEntityDelta": 8,
+    "rootReachability": [
+      {
+        "rootKey": "0c29d0e2-685f-4c56-9805-6bf1baf40e7c",
+        "name": "ヒカルの碁",
+        "beforeWithinHops": [
+          1,
+          1,
+          1
+        ],
+        "conditionalWithinHops": [
+          2,
+          4,
+          5
+        ],
+        "newEndpointKeysWithinHops": [
+          [
+            "d5e39491-5a5f-423c-9222-2eb3c18db9a8"
+          ],
+          [
+            "3427040b-88fd-4db5-b546-dd237abad032",
+            "7ca5fc7d-545a-4d39-a2dc-6cce86390112",
+            "d5e39491-5a5f-423c-9222-2eb3c18db9a8"
+          ],
+          [
+            "3427040b-88fd-4db5-b546-dd237abad032",
+            "7ca5fc7d-545a-4d39-a2dc-6cce86390112",
+            "a13205e2-220c-4b7d-8a1a-39dbefe52db8",
+            "d5e39491-5a5f-423c-9222-2eb3c18db9a8"
+          ]
+        ],
+        "beforeNeighborCount": 1,
+        "conditionalNeighborCount": 2
+      },
+      {
+        "rootKey": "0c9eb1b7-2b2b-46b7-8110-9705138c3add",
+        "name": "モブサイコ100",
+        "beforeWithinHops": [
+          1,
+          1,
+          1
+        ],
+        "conditionalWithinHops": [
+          1,
+          2,
+          3
+        ],
+        "newEndpointKeysWithinHops": [
+          [],
+          [
+            "proposal:onepunch-murata"
+          ],
+          [
+            "proposal:murata",
+            "proposal:onepunch-murata"
+          ]
+        ],
+        "beforeNeighborCount": 1,
+        "conditionalNeighborCount": 1
+      },
+      {
+        "rootKey": "0e0ed535-f78e-4cb0-bd3d-7dffd6b7148e",
+        "name": "アイシールド21",
+        "beforeWithinHops": [
+          1,
+          3,
+          5
+        ],
+        "conditionalWithinHops": [
+          2,
+          5,
+          8
+        ],
+        "newEndpointKeysWithinHops": [
+          [
+            "proposal:murata"
+          ],
+          [
+            "proposal:murata",
+            "proposal:onepunch-murata"
+          ],
+          [
+            "afaa3ea0-f273-4481-95c5-5c31f9049cb2",
+            "proposal:murata",
+            "proposal:onepunch-murata"
+          ]
+        ],
+        "beforeNeighborCount": 1,
+        "conditionalNeighborCount": 2
+      },
+      {
+        "rootKey": "1abd838a-b22d-45a4-913f-0ef09205e1e8",
+        "name": "あだち充",
+        "beforeWithinHops": [
+          2,
+          2,
+          2
+        ],
+        "conditionalWithinHops": [
+          3,
+          3,
+          3
+        ],
+        "newEndpointKeysWithinHops": [
+          [
+            "proposal:touch-manga"
+          ],
+          [
+            "proposal:touch-manga"
+          ],
+          [
+            "proposal:touch-manga"
+          ]
+        ],
+        "beforeNeighborCount": 2,
+        "conditionalNeighborCount": 3
+      },
+      {
+        "rootKey": "3427040b-88fd-4db5-b546-dd237abad032",
+        "name": "バクマン。",
+        "beforeWithinHops": [
+          2,
+          3,
+          3
+        ],
+        "conditionalWithinHops": [
+          2,
+          4,
+          5
+        ],
+        "newEndpointKeysWithinHops": [
+          [],
+          [
+            "0c29d0e2-685f-4c56-9805-6bf1baf40e7c"
+          ],
+          [
+            "0c29d0e2-685f-4c56-9805-6bf1baf40e7c",
+            "e0183e9c-dc97-4d85-b46e-14a1b76707fd"
+          ]
+        ],
+        "beforeNeighborCount": 2,
+        "conditionalNeighborCount": 2
+      },
+      {
+        "rootKey": "420d89ea-9780-4e01-ac64-9c5e8597d0c8",
+        "name": "横槍メンゴ",
+        "beforeWithinHops": [
+          2,
+          3,
+          3
+        ],
+        "conditionalWithinHops": [
+          2,
+          3,
+          4
+        ],
+        "newEndpointKeysWithinHops": [
+          [],
+          [],
+          [
+            "proposal:kaguya-manga"
+          ]
+        ],
+        "beforeNeighborCount": 2,
+        "conditionalNeighborCount": 2
+      },
+      {
+        "rootKey": "48ca311c-c403-4a24-a1e3-cb6392764397",
+        "name": "MIX",
+        "beforeWithinHops": [
+          1,
+          2,
+          2
+        ],
+        "conditionalWithinHops": [
+          1,
+          3,
+          3
+        ],
+        "newEndpointKeysWithinHops": [
+          [],
+          [
+            "proposal:touch-manga"
+          ],
+          [
+            "proposal:touch-manga"
+          ]
+        ],
+        "beforeNeighborCount": 1,
+        "conditionalNeighborCount": 1
+      },
+      {
+        "rootKey": "711dc415-45d5-4d35-8cca-068332180cc0",
+        "name": "赤坂アカ",
+        "beforeWithinHops": [
+          1,
+          2,
+          3
+        ],
+        "conditionalWithinHops": [
+          2,
+          3,
+          4
+        ],
+        "newEndpointKeysWithinHops": [
+          [
+            "proposal:kaguya-manga"
+          ],
+          [
+            "proposal:kaguya-manga"
+          ],
+          [
+            "proposal:kaguya-manga"
+          ]
+        ],
+        "beforeNeighborCount": 1,
+        "conditionalNeighborCount": 2
+      },
+      {
+        "rootKey": "7ca5fc7d-545a-4d39-a2dc-6cce86390112",
+        "name": "DEATH NOTE",
+        "beforeWithinHops": [
+          1,
+          2,
+          3
+        ],
+        "conditionalWithinHops": [
+          2,
+          4,
+          5
+        ],
+        "newEndpointKeysWithinHops": [
+          [
+            "d5e39491-5a5f-423c-9222-2eb3c18db9a8"
+          ],
+          [
+            "0c29d0e2-685f-4c56-9805-6bf1baf40e7c",
+            "d5e39491-5a5f-423c-9222-2eb3c18db9a8"
+          ],
+          [
+            "0c29d0e2-685f-4c56-9805-6bf1baf40e7c",
+            "e0183e9c-dc97-4d85-b46e-14a1b76707fd"
+          ]
+        ],
+        "beforeNeighborCount": 1,
+        "conditionalNeighborCount": 2
+      },
+      {
+        "rootKey": "8a0d3d5a-feb6-4ba3-8993-64b6ac79de12",
+        "name": "【推しの子】",
+        "beforeWithinHops": [
+          2,
+          3,
+          3
+        ],
+        "conditionalWithinHops": [
+          2,
+          4,
+          4
+        ],
+        "newEndpointKeysWithinHops": [
+          [],
+          [
+            "proposal:kaguya-manga"
+          ],
+          [
+            "proposal:kaguya-manga"
+          ]
+        ],
+        "beforeNeighborCount": 2,
+        "conditionalNeighborCount": 2
+      },
+      {
+        "rootKey": "8b0d27c2-1116-4731-a00a-b90c869524a2",
+        "name": "稲垣理一郎",
+        "beforeWithinHops": [
+          3,
+          5,
+          8
+        ],
+        "conditionalWithinHops": [
+          3,
+          6,
+          10
+        ],
+        "newEndpointKeysWithinHops": [
+          [],
+          [
+            "proposal:murata"
+          ],
+          [
+            "proposal:murata",
+            "proposal:onepunch-murata"
+          ]
+        ],
+        "beforeNeighborCount": 3,
+        "conditionalNeighborCount": 3
+      },
+      {
+        "rootKey": "afaa3ea0-f273-4481-95c5-5c31f9049cb2",
+        "name": "ONE",
+        "beforeWithinHops": [
+          1,
+          1,
+          1
+        ],
+        "conditionalWithinHops": [
+          2,
+          3,
+          4
+        ],
+        "newEndpointKeysWithinHops": [
+          [
+            "proposal:onepunch-murata"
+          ],
+          [
+            "proposal:murata",
+            "proposal:onepunch-murata"
+          ],
+          [
+            "0e0ed535-f78e-4cb0-bd3d-7dffd6b7148e",
+            "proposal:murata",
+            "proposal:onepunch-murata"
+          ]
+        ],
+        "beforeNeighborCount": 1,
+        "conditionalNeighborCount": 2
+      },
+      {
+        "rootKey": "bb47fc9c-87b1-4df5-a7d6-ecf175d93eb0",
+        "name": "H2",
+        "beforeWithinHops": [
+          1,
+          2,
+          2
+        ],
+        "conditionalWithinHops": [
+          1,
+          3,
+          3
+        ],
+        "newEndpointKeysWithinHops": [
+          [],
+          [
+            "proposal:touch-manga"
+          ],
+          [
+            "proposal:touch-manga"
+          ]
+        ],
+        "beforeNeighborCount": 1,
+        "conditionalNeighborCount": 1
+      },
+      {
+        "rootKey": "d5e39491-5a5f-423c-9222-2eb3c18db9a8",
+        "name": "小畑健",
+        "beforeWithinHops": [
+          1,
+          2,
+          3
+        ],
+        "conditionalWithinHops": [
+          3,
+          5,
+          5
+        ],
+        "newEndpointKeysWithinHops": [
+          [
+            "0c29d0e2-685f-4c56-9805-6bf1baf40e7c",
+            "7ca5fc7d-545a-4d39-a2dc-6cce86390112"
+          ],
+          [
+            "0c29d0e2-685f-4c56-9805-6bf1baf40e7c",
+            "7ca5fc7d-545a-4d39-a2dc-6cce86390112",
+            "e0183e9c-dc97-4d85-b46e-14a1b76707fd"
+          ],
+          [
+            "0c29d0e2-685f-4c56-9805-6bf1baf40e7c",
+            "e0183e9c-dc97-4d85-b46e-14a1b76707fd"
+          ]
+        ],
+        "beforeNeighborCount": 1,
+        "conditionalNeighborCount": 3
+      },
+      {
+        "rootKey": "dc188ef2-1a3d-4251-a445-90f49dd88cd0",
+        "name": "クズの本懐",
+        "beforeWithinHops": [
+          1,
+          2,
+          3
+        ],
+        "conditionalWithinHops": [
+          1,
+          2,
+          3
+        ],
+        "newEndpointKeysWithinHops": [
+          [],
+          [],
+          []
+        ],
+        "beforeNeighborCount": 1,
+        "conditionalNeighborCount": 1
+      },
+      {
+        "rootKey": "e0183e9c-dc97-4d85-b46e-14a1b76707fd",
+        "name": "ほったゆみ",
+        "beforeWithinHops": [
+          1,
+          1,
+          1
+        ],
+        "conditionalWithinHops": [
+          1,
+          2,
+          4
+        ],
+        "newEndpointKeysWithinHops": [
+          [],
+          [
+            "d5e39491-5a5f-423c-9222-2eb3c18db9a8"
+          ],
+          [
+            "3427040b-88fd-4db5-b546-dd237abad032",
+            "7ca5fc7d-545a-4d39-a2dc-6cce86390112",
+            "d5e39491-5a5f-423c-9222-2eb3c18db9a8"
+          ]
+        ],
+        "beforeNeighborCount": 1,
+        "conditionalNeighborCount": 1
+      }
+    ],
+    "reachabilityScope": "exact cumulative <=1/2/3 distinct endpoints for these roots only; structural, not UI/API capability"
+  },
+  "publishedEvidence": {
+    "entities": [
+      {
+        "id": "0c29d0e2-685f-4c56-9805-6bf1baf40e7c",
+        "kind": "work",
+        "name": "ヒカルの碁",
+        "description": null,
+        "aliases": [
+          "Hikaru no Go"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q582763"
+          }
+        ],
+        "createdAt": "2026-10-16T00:00:00Z",
+        "updatedAt": "2026-10-16T00:00:00Z",
+        "event": null
+      },
+      {
+        "id": "0c9eb1b7-2b2b-46b7-8110-9705138c3add",
+        "kind": "work",
+        "name": "モブサイコ100",
+        "description": null,
+        "aliases": [
+          "Mob Psycho 100"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q11344543"
+          }
+        ],
+        "createdAt": "2026-10-17T00:00:00Z",
+        "updatedAt": "2026-10-17T00:00:00Z",
+        "event": null
+      },
+      {
+        "id": "0e0ed535-f78e-4cb0-bd3d-7dffd6b7148e",
+        "kind": "work",
+        "name": "アイシールド21",
+        "description": null,
+        "aliases": [
+          "Eyeshield 21"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q696941"
+          }
+        ],
+        "createdAt": "2026-10-16T00:00:00Z",
+        "updatedAt": "2026-10-16T00:00:00Z",
+        "event": null
+      },
+      {
+        "id": "1abd838a-b22d-45a4-913f-0ef09205e1e8",
+        "kind": "person",
+        "name": "あだち充",
+        "description": null,
+        "aliases": [
+          "Mitsuru Adachi"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q351742"
+          }
+        ],
+        "createdAt": "2026-10-18T18:54:58Z",
+        "updatedAt": "2026-10-18T18:54:58Z",
+        "event": null
+      },
+      {
+        "id": "31f3c278-7d49-4aed-9a36-c722cae25ed2",
+        "kind": "work",
+        "name": "Dr.STONE",
+        "description": null,
+        "aliases": [
+          "Dr. Stone"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q38275959"
+          }
+        ],
+        "createdAt": "2026-10-16T00:00:00Z",
+        "updatedAt": "2026-10-16T00:00:00Z",
+        "event": null
+      },
+      {
+        "id": "3427040b-88fd-4db5-b546-dd237abad032",
+        "kind": "work",
+        "name": "バクマン。",
+        "description": null,
+        "aliases": [
+          "Bakuman"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q804555"
+          }
+        ],
+        "createdAt": "2026-10-17T00:00:00Z",
+        "updatedAt": "2026-10-17T00:00:00Z",
+        "event": null
+      },
+      {
+        "id": "420d89ea-9780-4e01-ac64-9c5e8597d0c8",
+        "kind": "person",
+        "name": "横槍メンゴ",
+        "description": null,
+        "aliases": [
+          "Mengo Yokoyari"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q17220992"
+          }
+        ],
+        "createdAt": "2026-10-17T00:00:00Z",
+        "updatedAt": "2026-10-17T00:00:00Z",
+        "event": null
+      },
+      {
+        "id": "48ca311c-c403-4a24-a1e3-cb6392764397",
+        "kind": "work",
+        "name": "MIX",
+        "description": null,
+        "aliases": [
+          "Mix"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q11231713"
+          }
+        ],
+        "createdAt": "2026-10-18T18:54:58Z",
+        "updatedAt": "2026-10-18T18:54:58Z",
+        "event": null
+      },
+      {
+        "id": "711dc415-45d5-4d35-8cca-068332180cc0",
+        "kind": "person",
+        "name": "赤坂アカ",
+        "description": null,
+        "aliases": [
+          "Aka Akasaka"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q23937543"
+          }
+        ],
+        "createdAt": "2026-10-17T00:00:00Z",
+        "updatedAt": "2026-10-17T00:00:00Z",
+        "event": null
+      },
+      {
+        "id": "7ca5fc7d-545a-4d39-a2dc-6cce86390112",
+        "kind": "work",
+        "name": "DEATH NOTE",
+        "description": null,
+        "aliases": [
+          "Death Note"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q1834"
+          }
+        ],
+        "createdAt": "2026-10-16T00:00:00Z",
+        "updatedAt": "2026-10-16T00:00:00Z",
+        "event": null
+      },
+      {
+        "id": "8a0d3d5a-feb6-4ba3-8993-64b6ac79de12",
+        "kind": "work",
+        "name": "【推しの子】",
+        "description": null,
+        "aliases": [
+          "Oshi no Ko"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q97310775"
+          }
+        ],
+        "createdAt": "2026-10-17T00:00:00Z",
+        "updatedAt": "2026-10-17T00:00:00Z",
+        "event": null
+      },
+      {
+        "id": "8b0d27c2-1116-4731-a00a-b90c869524a2",
+        "kind": "person",
+        "name": "稲垣理一郎",
+        "description": null,
+        "aliases": [
+          "Riichiro Inagaki"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q2602357"
+          }
+        ],
+        "createdAt": "2026-10-16T00:00:00Z",
+        "updatedAt": "2026-10-16T00:00:00Z",
+        "event": null
+      },
+      {
+        "id": "a13205e2-220c-4b7d-8a1a-39dbefe52db8",
+        "kind": "person",
+        "name": "大場つぐみ",
+        "description": null,
+        "aliases": [
+          "Tsugumi Ohba"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q558858"
+          }
+        ],
+        "createdAt": "2026-10-16T00:00:00Z",
+        "updatedAt": "2026-10-16T00:00:00Z",
+        "event": null
+      },
+      {
+        "id": "afaa3ea0-f273-4481-95c5-5c31f9049cb2",
+        "kind": "person",
+        "name": "ONE",
+        "description": null,
+        "aliases": [
+          "One"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q11237288"
+          }
+        ],
+        "createdAt": "2026-10-17T00:00:00Z",
+        "updatedAt": "2026-10-17T00:00:00Z",
+        "event": null
+      },
+      {
+        "id": "b4de3765-e8c4-49f1-a322-a021475ffd09",
+        "kind": "person",
+        "name": "Boichi",
+        "description": null,
+        "aliases": [],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q624839"
+          }
+        ],
+        "createdAt": "2026-10-16T00:00:00Z",
+        "updatedAt": "2026-10-16T00:00:00Z",
+        "event": null
+      },
+      {
+        "id": "bb47fc9c-87b1-4df5-a7d6-ecf175d93eb0",
+        "kind": "work",
+        "name": "H2",
+        "description": null,
+        "aliases": [],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q652892"
+          }
+        ],
+        "createdAt": "2026-10-18T18:54:58Z",
+        "updatedAt": "2026-10-18T18:54:58Z",
+        "event": null
+      },
+      {
+        "id": "d5e39491-5a5f-423c-9222-2eb3c18db9a8",
+        "kind": "person",
+        "name": "小畑健",
+        "description": null,
+        "aliases": [
+          "Takeshi Obata"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q313703"
+          }
+        ],
+        "createdAt": "2026-10-17T00:00:00Z",
+        "updatedAt": "2026-10-17T00:00:00Z",
+        "event": null
+      },
+      {
+        "id": "dc188ef2-1a3d-4251-a445-90f49dd88cd0",
+        "kind": "work",
+        "name": "クズの本懐",
+        "description": null,
+        "aliases": [
+          "Scum's Wish"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q11298673"
+          }
+        ],
+        "createdAt": "2026-10-17T00:00:00Z",
+        "updatedAt": "2026-10-17T00:00:00Z",
+        "event": null
+      },
+      {
+        "id": "e0183e9c-dc97-4d85-b46e-14a1b76707fd",
+        "kind": "person",
+        "name": "ほったゆみ",
+        "description": null,
+        "aliases": [
+          "Yumi Hotta"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q263303"
+          }
+        ],
+        "createdAt": "2026-10-16T00:00:00Z",
+        "updatedAt": "2026-10-16T00:00:00Z",
+        "event": null
+      }
+    ],
+    "claims": [
+      {
+        "id": "043e8592-5827-4167-9c93-f8201dd110bc",
+        "subjectId": "8b0d27c2-1116-4731-a00a-b90c869524a2",
+        "objectId": "0e0ed535-f78e-4cb0-bd3d-7dffd6b7148e",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "published",
+        "createdAt": "2026-10-16T16:34:09Z",
+        "updatedAt": "2026-10-16T16:34:09Z",
+        "contribution": {
+          "roleId": "ORIGINAL_STORY",
+          "scope": {
+            "kind": "publication",
+            "isbn13": "9784088733708",
+            "volumeLabel": "第1巻",
+            "editionLabel": null,
+            "language": "ja"
+          }
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      },
+      {
+        "id": "10f72eb0-3526-4d50-a552-e2239c01fc39",
+        "subjectId": "e0183e9c-dc97-4d85-b46e-14a1b76707fd",
+        "objectId": "0c29d0e2-685f-4c56-9805-6bf1baf40e7c",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "published",
+        "createdAt": "2026-10-16T16:34:09Z",
+        "updatedAt": "2026-10-16T16:34:09Z",
+        "contribution": {
+          "roleId": "ORIGINAL_STORY",
+          "scope": {
+            "kind": "publication",
+            "isbn13": "9784088727172",
+            "volumeLabel": "第1巻",
+            "editionLabel": null,
+            "language": "ja"
+          }
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      },
+      {
+        "id": "48a9f51e-beb1-4c3a-9c30-5923bc852925",
+        "subjectId": "a13205e2-220c-4b7d-8a1a-39dbefe52db8",
+        "objectId": "3427040b-88fd-4db5-b546-dd237abad032",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "published",
+        "createdAt": "2026-10-17T00:00:00Z",
+        "updatedAt": "2026-10-17T00:00:00Z",
+        "contribution": {
+          "roleId": "ORIGINAL_STORY",
+          "scope": {
+            "kind": "publication",
+            "isbn13": "9784086196901",
+            "volumeLabel": "第1巻",
+            "editionLabel": null,
+            "language": "ja"
+          }
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      },
+      {
+        "id": "498cbe28-4703-4ac1-9a99-5cd83831b0e3",
+        "subjectId": "420d89ea-9780-4e01-ac64-9c5e8597d0c8",
+        "objectId": "dc188ef2-1a3d-4251-a445-90f49dd88cd0",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "published",
+        "createdAt": "2026-10-17T00:00:00Z",
+        "updatedAt": "2026-10-17T00:00:00Z",
+        "contribution": {
+          "roleId": "AUTHORSHIP",
+          "scope": {
+            "kind": "publication",
+            "isbn13": "9784757538870",
+            "volumeLabel": "第1巻",
+            "editionLabel": null,
+            "language": "ja"
+          }
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      },
+      {
+        "id": "6ed29ee4-2b62-4fe7-83a6-aafe300754d7",
+        "subjectId": "a13205e2-220c-4b7d-8a1a-39dbefe52db8",
+        "objectId": "7ca5fc7d-545a-4d39-a2dc-6cce86390112",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "published",
+        "createdAt": "2026-10-16T16:34:09Z",
+        "updatedAt": "2026-10-16T16:34:09Z",
+        "contribution": {
+          "roleId": "ORIGINAL_STORY",
+          "scope": {
+            "kind": "publication",
+            "isbn13": "9784088736211",
+            "volumeLabel": "第1巻",
+            "editionLabel": null,
+            "language": "ja"
+          }
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      },
+      {
+        "id": "a4d14533-1e4d-47c4-9494-67008811cf75",
+        "subjectId": "afaa3ea0-f273-4481-95c5-5c31f9049cb2",
+        "objectId": "0c9eb1b7-2b2b-46b7-8110-9705138c3add",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "published",
+        "createdAt": "2026-10-17T00:00:00Z",
+        "updatedAt": "2026-10-17T00:00:00Z",
+        "contribution": {
+          "roleId": "AUTHORSHIP",
+          "scope": {
+            "kind": "publication",
+            "isbn13": "9784091241023",
+            "volumeLabel": "第1巻",
+            "editionLabel": null,
+            "language": "ja"
+          }
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      },
+      {
+        "id": "b7d9d6ba-f2a0-492e-981d-408b22955215",
+        "subjectId": "420d89ea-9780-4e01-ac64-9c5e8597d0c8",
+        "objectId": "8a0d3d5a-feb6-4ba3-8993-64b6ac79de12",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "published",
+        "createdAt": "2026-10-17T07:19:28Z",
+        "updatedAt": "2026-10-17T07:19:28Z",
+        "contribution": {
+          "roleId": "DRAWING",
+          "scope": null
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      },
+      {
+        "id": "c72262df-ce7b-4514-9341-55d242f94bca",
+        "subjectId": "1abd838a-b22d-45a4-913f-0ef09205e1e8",
+        "objectId": "48ca311c-c403-4a24-a1e3-cb6392764397",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "published",
+        "createdAt": "2026-10-18T18:54:58Z",
+        "updatedAt": "2026-10-18T18:54:58Z",
+        "contribution": {
+          "roleId": "AUTHORSHIP",
+          "scope": {
+            "kind": "publication",
+            "isbn13": "9784091238672",
+            "volumeLabel": "第1巻（NDL巻次 1）",
+            "editionLabel": null,
+            "language": "ja"
+          }
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      },
+      {
+        "id": "cd294bb9-a7de-4f21-95c2-84b878c0e7cc",
+        "subjectId": "d5e39491-5a5f-423c-9222-2eb3c18db9a8",
+        "objectId": "3427040b-88fd-4db5-b546-dd237abad032",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "published",
+        "createdAt": "2026-10-17T07:19:28Z",
+        "updatedAt": "2026-10-17T07:19:28Z",
+        "contribution": {
+          "roleId": "AUTHORSHIP",
+          "scope": {
+            "kind": "publication",
+            "isbn13": "9784086196901",
+            "volumeLabel": "第1巻",
+            "editionLabel": null,
+            "language": "ja"
+          }
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      },
+      {
+        "id": "f1260c3f-2637-416f-b407-2052a7c36717",
+        "subjectId": "1abd838a-b22d-45a4-913f-0ef09205e1e8",
+        "objectId": "bb47fc9c-87b1-4df5-a7d6-ecf175d93eb0",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "published",
+        "createdAt": "2026-10-18T18:54:58Z",
+        "updatedAt": "2026-10-18T18:54:58Z",
+        "contribution": {
+          "roleId": "AUTHORSHIP",
+          "scope": {
+            "kind": "publication",
+            "isbn13": "9784091231512",
+            "volumeLabel": "第1巻（NDL巻次 1）",
+            "editionLabel": null,
+            "language": "ja"
+          }
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      },
+      {
+        "id": "f4504ec8-173a-453f-83e8-a24e72dde9bc",
+        "subjectId": "711dc415-45d5-4d35-8cca-068332180cc0",
+        "objectId": "8a0d3d5a-feb6-4ba3-8993-64b6ac79de12",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "published",
+        "createdAt": "2026-10-17T07:19:28Z",
+        "updatedAt": "2026-10-17T07:19:28Z",
+        "contribution": {
+          "roleId": "ORIGINAL_STORY",
+          "scope": null
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      },
+      {
+        "id": "f638cf0b-3750-49f6-b833-844d5465b99f",
+        "subjectId": "8b0d27c2-1116-4731-a00a-b90c869524a2",
+        "objectId": "31f3c278-7d49-4aed-9a36-c722cae25ed2",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "published",
+        "createdAt": "2026-10-16T16:34:09Z",
+        "updatedAt": "2026-10-16T16:34:09Z",
+        "contribution": {
+          "roleId": "ORIGINAL_STORY",
+          "scope": {
+            "kind": "publication",
+            "isbn13": "9784088811840",
+            "volumeLabel": "第1巻",
+            "editionLabel": null,
+            "language": "ja"
+          }
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      },
+      {
+        "id": "fe6d7c19-646b-474a-ad0a-3b20bc816866",
+        "subjectId": "b4de3765-e8c4-49f1-a322-a021475ffd09",
+        "objectId": "31f3c278-7d49-4aed-9a36-c722cae25ed2",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "published",
+        "createdAt": "2026-10-16T00:00:00Z",
+        "updatedAt": "2026-10-16T00:00:00Z",
+        "contribution": {
+          "roleId": "DRAWING",
+          "scope": {
+            "kind": "publication",
+            "isbn13": "9784088811840",
+            "volumeLabel": "第1巻",
+            "editionLabel": null,
+            "language": "ja"
+          }
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      }
+    ],
+    "citations": [
+      {
+        "id": "07906647-1603-470d-a950-a663290bbd75",
+        "claimId": "f1260c3f-2637-416f-b407-2052a7c36717",
+        "sourceId": "4ede2d3e-9899-4d1b-bf8a-e08fd3f36080",
+        "locator": "dc:creator（責任表示） / ISBN 9784091231512",
+        "note": "原表記（ja）: あだち充 著。指定刊行物の責任表示で確認された担当。全巻・全版・全期間への外挿、原作から別Roleへの変換はしない。同一資料由来の記録を独立した根拠と数えない。",
+        "accessedAt": "2026-10-18",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "あだち充 著",
+          "language": "ja"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      },
+      {
+        "id": "13adf6b0-da63-4be0-abd7-b8aeb54d6bdf",
+        "claimId": "10f72eb0-3526-4d50-a552-e2239c01fc39",
+        "sourceId": "751742b2-a8c7-40fe-96c1-8e91a116f789",
+        "locator": "dc:creator（責任表示） / ISBN 9784088727172",
+        "note": "日本語第1巻のNDL書誌のみ。原本実見ではない。全巻・全版、脚本・ネーム・著作権を推論しない。",
+        "accessedAt": "2026-10-16",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "ほったゆみ 原作",
+          "language": "ja"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      },
+      {
+        "id": "1cd43ec8-2630-4fbc-8267-1ce03a9ee04c",
+        "claimId": "c72262df-ce7b-4514-9341-55d242f94bca",
+        "sourceId": "d5e2fedb-35fc-4544-9fbd-c0d81ccb9080",
+        "locator": "dc:creator（責任表示） / ISBN 9784091238672",
+        "note": "原表記（ja）: あだち充 著。指定刊行物の責任表示で確認された担当。全巻・全版・全期間への外挿、原作から別Roleへの変換はしない。同一資料由来の記録を独立した根拠と数えない。",
+        "accessedAt": "2026-10-18",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "あだち充 著",
+          "language": "ja"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      },
+      {
+        "id": "21c3954f-829e-4d13-a641-783d92af998d",
+        "claimId": "498cbe28-4703-4ac1-9a99-5cd83831b0e3",
+        "sourceId": "a20efdfb-84be-4caa-a6b6-f3472a04c2b6",
+        "locator": "dc:creator（責任表示） / ISBN 9784757538870",
+        "note": "原表記（ja）: 横槍メンゴ 著。指定刊行物の責任表示で確認された担当。全巻・全版・全期間への外挿、原作から別Roleへの変換はしない。同一資料由来の記録を独立した根拠と数えない。",
+        "accessedAt": "2026-10-17",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "横槍メンゴ 著",
+          "language": "ja"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      },
+      {
+        "id": "2912d1b2-54cf-425a-9428-d0c323f68a01",
+        "claimId": "6ed29ee4-2b62-4fe7-83a6-aafe300754d7",
+        "sourceId": "4859917b-c4ba-4e2d-b932-52224ff7ebec",
+        "locator": "dc:creator（責任表示） / ISBN 9784088736211",
+        "note": "日本語第1巻のNDL書誌のみ。原本実見ではない。全巻・全版、脚本・ネーム・著作権を推論しない。",
+        "accessedAt": "2026-10-16",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "大場つぐみ 原作",
+          "language": "ja"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      },
+      {
+        "id": "465050a3-209b-4116-b7d9-d80ea9d685f1",
+        "claimId": "a4d14533-1e4d-47c4-9494-67008811cf75",
+        "sourceId": "6cf1f56c-1d88-431a-88a9-fde85a6fd2fa",
+        "locator": "dc:creator（責任表示） / ISBN 9784091241023",
+        "note": "原表記（ja）: ONE 著。指定刊行物の責任表示で確認された担当。全巻・全版・全期間への外挿、原作から別Roleへの変換はしない。同一資料由来の記録を独立した根拠と数えない。",
+        "accessedAt": "2026-10-17",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "ONE 著",
+          "language": "ja"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      },
+      {
+        "id": "61f50a3d-d113-4ab8-afae-28bba03401c5",
+        "claimId": "f638cf0b-3750-49f6-b833-844d5465b99f",
+        "sourceId": "7def5563-ec0a-4709-99aa-22f8b07a5c10",
+        "locator": "dc:creator（責任表示） / ISBN 9784088811840",
+        "note": "日本語第1巻のNDL書誌のみ。原本実見ではない。全巻・全版、脚本・ネーム・著作権を推論しない。",
+        "accessedAt": "2026-10-16",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "稲垣理一郎 原作",
+          "language": "ja"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      },
+      {
+        "id": "85b6215a-d659-4c08-850a-c9611e94bd43",
+        "claimId": "48a9f51e-beb1-4c3a-9c30-5923bc852925",
+        "sourceId": "fa2da69a-8a61-4364-8dab-05b9678d77aa",
+        "locator": "dc:creator（責任表示） / ISBN 9784086196901",
+        "note": "原表記（ja）: 大場つぐみ 原作。指定刊行物の責任表示で確認された担当。全巻・全版・全期間への外挿、原作から別Roleへの変換はしない。同一資料由来の記録を独立した根拠と数えない。",
+        "accessedAt": "2026-10-17",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "大場つぐみ 原作",
+          "language": "ja"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      },
+      {
+        "id": "b227b748-ee95-4565-9c67-7834801ebafb",
+        "claimId": "f4504ec8-173a-453f-83e8-a24e72dde9bc",
+        "sourceId": "ab3cc1da-0880-4616-afbc-e853a7730929",
+        "locator": "記事冒頭の漫画作品と対談者の担当説明",
+        "note": "漫画制作の担当を明示する出版社の対談。原語の主にを保持し排他的担当を認定しない。ISBN・全巻全版・全期間は不明のためscope未指定、記事日付をClaim.periodへ転記しない。",
+        "accessedAt": "2026-10-17",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "主に原作を担当する赤坂アカ",
+          "language": "ja"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      },
+      {
+        "id": "bb15e42b-438b-46f3-bfe2-2c0676424db4",
+        "claimId": "043e8592-5827-4167-9c93-f8201dd110bc",
+        "sourceId": "2bdfa31d-ad7a-4705-8bdf-2be58ae606f6",
+        "locator": "dc:creator（責任表示） / ISBN 9784088733708",
+        "note": "日本語第1巻のNDL書誌のみ。原本実見ではない。全巻・全版、脚本・ネーム・著作権を推論しない。",
+        "accessedAt": "2026-10-16",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "稲垣理一郎 原作",
+          "language": "ja"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      },
+      {
+        "id": "c2a11bab-9544-49af-a352-668f7cb08aff",
+        "claimId": "cd294bb9-a7de-4f21-95c2-84b878c0e7cc",
+        "sourceId": "6dfb8c00-412a-4bd6-88f8-58f85b98247e",
+        "locator": "紙版ISBN／著者欄",
+        "note": "同一ISBNを明示する出版社の著者欄による別候補。NDLの漫画をDRAWING／AUTHORSHIPへ置換したものではない。原資料間の異なる呼称を保持する。",
+        "accessedAt": "2026-10-17",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "著者：小畑 健",
+          "language": "ja"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      },
+      {
+        "id": "c4d63400-dc23-498d-b1bd-4c579adc2227",
+        "claimId": "b7d9d6ba-f2a0-492e-981d-408b22955215",
+        "sourceId": "ab3cc1da-0880-4616-afbc-e853a7730929",
+        "locator": "記事冒頭の漫画作品と対談者の担当説明",
+        "note": "漫画制作の担当を明示する出版社の対談。原語の主にを保持し排他的担当を認定しない。ISBN・全巻全版・全期間は不明のためscope未指定、記事日付をClaim.periodへ転記しない。",
+        "accessedAt": "2026-10-17",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "主に作画を担当する横槍メンゴ",
+          "language": "ja"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      },
+      {
+        "id": "c91fecfc-7389-491b-aca9-d181138ebe35",
+        "claimId": "fe6d7c19-646b-474a-ad0a-3b20bc816866",
+        "sourceId": "7def5563-ec0a-4709-99aa-22f8b07a5c10",
+        "locator": "dc:creator（責任表示） / ISBN 9784088811840",
+        "note": "原表記（ja）: Boichi 作画。指定刊行物の責任表示で確認された担当。全巻・全版・全期間への外挿、原作から別Roleへの変換はしない。同一資料由来の記録を独立した根拠と数えない。",
+        "accessedAt": "2026-10-16",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "Boichi 作画",
+          "language": "ja"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      }
+    ],
+    "sources": [
+      {
+        "id": "2bdfa31d-ad7a-4705-8bdf-2be58ae606f6",
+        "kind": "web",
+        "title": "NDLサーチ: アイシールド21. 1",
+        "authors": [],
+        "publisher": "国立国会図書館",
+        "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I000004050151",
+        "publishedAt": null,
+        "edition": null,
+        "note": "国立国会図書館作成書誌（iss-ndl-opac）の責任表示。メタデータ CC BY 4.0: https://creativecommons.org/licenses/by/4.0/ ; 提供元条件 https://ndlsearch.ndl.go.jp/help/api/provider 。本文・画像・第三者所蔵情報は含まない。",
+        "isDemo": false
+      },
+      {
+        "id": "4859917b-c4ba-4e2d-b932-52224ff7ebec",
+        "kind": "web",
+        "title": "NDLサーチ: Death note. 1",
+        "authors": [],
+        "publisher": "国立国会図書館",
+        "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I000007330339",
+        "publishedAt": null,
+        "edition": null,
+        "note": "国立国会図書館作成書誌（iss-ndl-opac）の責任表示。メタデータ CC BY 4.0: https://creativecommons.org/licenses/by/4.0/ ; 提供元条件 https://ndlsearch.ndl.go.jp/help/api/provider 。本文・画像・第三者所蔵情報は含まない。",
+        "isDemo": false
+      },
+      {
+        "id": "4ede2d3e-9899-4d1b-bf8a-e08fd3f36080",
+        "kind": "web",
+        "title": "NDLサーチ: H2. 1",
+        "authors": [],
+        "publisher": "国立国会図書館",
+        "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I000002238601",
+        "publishedAt": null,
+        "edition": null,
+        "note": "国立国会図書館作成書誌（iss-ndl-opac）の責任表示。メタデータ CC BY 4.0: https://creativecommons.org/licenses/by/4.0/ ; 提供元条件 https://ndlsearch.ndl.go.jp/help/api/provider 。本文・画像・第三者所蔵情報は含まない。",
+        "isDemo": false
+      },
+      {
+        "id": "6cf1f56c-1d88-431a-88a9-fde85a6fd2fa",
+        "kind": "web",
+        "title": "NDLサーチ: モブサイコ100. 1",
+        "authors": [],
+        "publisher": "国立国会図書館",
+        "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I024077257",
+        "publishedAt": null,
+        "edition": null,
+        "note": "国立国会図書館作成書誌（iss-ndl-opac）の責任表示。メタデータ CC BY 4.0: https://creativecommons.org/licenses/by/4.0/ ; 提供元条件 https://ndlsearch.ndl.go.jp/help/api/provider 。本文・画像・第三者所蔵情報は含まない。",
+        "isDemo": false
+      },
+      {
+        "id": "6dfb8c00-412a-4bd6-88f8-58f85b98247e",
+        "kind": "web",
+        "title": "バクマン。 1 — 集英社",
+        "authors": [],
+        "publisher": "集英社",
+        "url": "https://www.shueisha.co.jp/books/items/contents.html?isbn=978-4-08-619690-1",
+        "publishedAt": null,
+        "edition": null,
+        "note": "公式資料の必要な書誌・担当表記のみ。本文・画像・あらすじを転載しない。正式受入済みの追加根拠。",
+        "isDemo": false
+      },
+      {
+        "id": "751742b2-a8c7-40fe-96c1-8e91a116f789",
+        "kind": "web",
+        "title": "NDLサーチ: ヒカルの碁. 1",
+        "authors": [],
+        "publisher": "国立国会図書館",
+        "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I000002788748",
+        "publishedAt": null,
+        "edition": null,
+        "note": "国立国会図書館作成書誌（iss-ndl-opac）の責任表示。メタデータ CC BY 4.0: https://creativecommons.org/licenses/by/4.0/ ; 提供元条件 https://ndlsearch.ndl.go.jp/help/api/provider 。本文・画像・第三者所蔵情報は含まない。",
+        "isDemo": false
+      },
+      {
+        "id": "7def5563-ec0a-4709-99aa-22f8b07a5c10",
+        "kind": "web",
+        "title": "NDLサーチ: Dr.STONE. 1",
+        "authors": [],
+        "publisher": "国立国会図書館",
+        "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I028309496",
+        "publishedAt": null,
+        "edition": null,
+        "note": "国立国会図書館作成書誌（iss-ndl-opac）の責任表示。メタデータ CC BY 4.0: https://creativecommons.org/licenses/by/4.0/ ; 提供元条件 https://ndlsearch.ndl.go.jp/help/api/provider 。本文・画像・第三者所蔵情報は含まない。",
+        "isDemo": false
+      },
+      {
+        "id": "a20efdfb-84be-4caa-a6b6-f3472a04c2b6",
+        "kind": "web",
+        "title": "NDLサーチ: クズの本懐. 1",
+        "authors": [],
+        "publisher": "国立国会図書館",
+        "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I024280614",
+        "publishedAt": null,
+        "edition": null,
+        "note": "国立国会図書館作成書誌（iss-ndl-opac）の責任表示。メタデータ CC BY 4.0: https://creativecommons.org/licenses/by/4.0/ ; 提供元条件 https://ndlsearch.ndl.go.jp/help/api/provider 。本文・画像・第三者所蔵情報は含まない。",
+        "isDemo": false
+      },
+      {
+        "id": "ab3cc1da-0880-4616-afbc-e853a7730929",
+        "kind": "web",
+        "title": "【推しの子】アニメ化決定記念 赤坂アカ×横槍メンゴ対談（後編）— 集英社オンライン",
+        "authors": [],
+        "publisher": "集英社",
+        "url": "https://shueisha.online/articles/-/21959",
+        "publishedAt": {
+          "value": "2022-06-10",
+          "precision": "day"
+        },
+        "edition": null,
+        "note": "公式資料の必要な書誌・担当表記のみ。本文・画像・あらすじを転載しない。正式受入済みの追加根拠。",
+        "isDemo": false
+      },
+      {
+        "id": "d5e2fedb-35fc-4544-9fbd-c0d81ccb9080",
+        "kind": "web",
+        "title": "NDLサーチ: Mix. 1",
+        "authors": [],
+        "publisher": "国立国会図書館",
+        "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I023983988",
+        "publishedAt": null,
+        "edition": null,
+        "note": "国立国会図書館作成書誌（iss-ndl-opac）の責任表示。メタデータ CC BY 4.0: https://creativecommons.org/licenses/by/4.0/ ; 提供元条件 https://ndlsearch.ndl.go.jp/help/api/provider 。本文・画像・第三者所蔵情報は含まない。",
+        "isDemo": false
+      },
+      {
+        "id": "fa2da69a-8a61-4364-8dab-05b9678d77aa",
+        "kind": "web",
+        "title": "NDLサーチ: バクマン。. 1",
+        "authors": [],
+        "publisher": "国立国会図書館",
+        "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I028322829",
+        "publishedAt": null,
+        "edition": null,
+        "note": "国立国会図書館作成書誌（iss-ndl-opac）の責任表示。メタデータ CC BY 4.0: https://creativecommons.org/licenses/by/4.0/ ; 提供元条件 https://ndlsearch.ndl.go.jp/help/api/provider 。本文・画像・第三者所蔵情報は含まない。",
+        "isDemo": false
+      }
+    ]
+  },
+  "sideEffects": {
+    "collectorRequests": false,
+    "providerNetworkCalls": 0,
+    "acceptance": false,
+    "publicApply": false,
+    "workerChanges": false
+  }
+}

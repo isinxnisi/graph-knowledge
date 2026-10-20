@@ -1,0 +1,65 @@
+{
+  "schemaVersion": 1,
+  "purpose": "planning-context-only-not-execution-permission",
+  "issue34Comment": {
+    "url": "https://github.com/isinxnisi/graph-knowledge/issues/34#issuecomment-6288824723",
+    "restrictions": [
+      "fixed-input independent worktree",
+      "no collection/provider API requests",
+      "no Worker requests, acceptance, publish or UI changes",
+      "serialize main integration"
+    ]
+  },
+  "relatedIssues": [
+    {
+      "number": 25,
+      "title": "【収集台帳・r0004候補】漫画23作品：既存経路の拡張と同作者の別作品",
+      "url": "https://github.com/isinxnisi/graph-knowledge/issues/25",
+      "reuse": "かぐや・タッチの保留を再利用。旧収集許可を今回の実行権限に使わない",
+      "scopeNote": "Full bodies were read through GitHub; this is a planning summary, not approval."
+    },
+    {
+      "number": 17,
+      "title": "【収集候補・具体案】PLUTO周辺の作品クレジットから長崎尚志の関与を検証",
+      "url": "https://github.com/isinxnisi/graph-knowledge/issues/17",
+      "reuse": "既存公開Claimと照合し、18群との橋がないため優先4案から除外",
+      "scopeNote": "Full bodies were read through GitHub; this is a planning summary, not approval."
+    },
+    {
+      "number": 16,
+      "title": "【収集候補・具体案】あだち充のタッチ・H2・MIXを別作品探索につなぐ",
+      "url": "https://github.com/isinxnisi/graph-knowledge/issues/16",
+      "reuse": "タッチ・H2・MIXを再利用",
+      "scopeNote": "Full bodies were read through GitHub; this is a planning summary, not approval."
+    },
+    {
+      "number": 7,
+      "title": "【収集台帳・親企画】作品の制作背景と関係者",
+      "url": "https://github.com/isinxnisi/graph-knowledge/issues/7",
+      "reuse": "既存の制作／作者企画を再利用",
+      "scopeNote": "Full bodies were read through GitHub; this is a planning summary, not approval."
+    },
+    {
+      "number": 6,
+      "title": "【収集台帳・親企画】漫画家の影響・師弟・助手関係",
+      "url": "https://github.com/isinxnisi/graph-knowledge/issues/6",
+      "reuse": "影響・助手関係の別調査窓口。今回は根拠未確認で選定しない",
+      "scopeNote": "Full bodies were read through GitHub; this is a planning summary, not approval."
+    },
+    {
+      "number": 5,
+      "title": "【収集台帳・既存テーマ】有名漫画家と代表作品",
+      "url": "https://github.com/isinxnisi/graph-knowledge/issues/5",
+      "reuse": "既存の制作／作者企画を再利用",
+      "scopeNote": "Full bodies were read through GitHub; this is a planning summary, not approval."
+    }
+  ],
+  "issue25Holds": {
+    "reference": "https://github.com/isinxnisi/graph-knowledge/issues/25#issuecomment-6253756948",
+    "items": [
+      "かぐや様は告らせたい: exact QID/name/type unresolved",
+      "NARUTO: first-volume bibliography unresolved"
+    ],
+    "laterStatus": "The 50 published Claims in #32 supersede older counts in issue bodies. Re-evaluate actual presence from pinned fixture."
+  }
+}
