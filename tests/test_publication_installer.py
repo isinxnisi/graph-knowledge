@@ -1,0 +1,41 @@
+"""Nonprivileged checks of the one-time rollout installer. Never runs root installation."""
+import importlib.util
+import os
+from pathlib import Path
+import subprocess
+import tempfile
+import unittest
+from unittest.mock import patch
+
+ROOT=Path(__file__).resolve().parents[1]
+spec=importlib.util.spec_from_file_location('publication_installer',ROOT/'ops/install-publication-disabled.py')
+p=importlib.util.module_from_spec(spec);spec.loader.exec_module(p)
+
+
+class InstallerBoundaryTests(unittest.TestCase):
+    def test_unprivileged_or_extra_arguments_never_run_system_commands(self):
+        for uid,argv in [(1000,['installer']),(0,['installer','--enable'])]:
+            with patch.object(p.os,'geteuid',return_value=uid),patch.object(p.sys,'argv',argv),patch.object(p,'run') as command:
+                with self.assertRaises(ValueError):p.main()
+                command.assert_not_called()
+
+    def test_writes_preserve_existing_and_symlink_targets_and_set_exact_mode(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp);existing=root/'existing';existing.write_bytes(b'old')
+            link=root/'link';link.symlink_to(existing)
+            for path in [existing,link]:
+                with self.assertRaises(ValueError):p.write(path,b'new')
+            self.assertEqual(existing.read_bytes(),b'old')
+            new=root/'new';p.write(new,b'public-only',0o644)
+            self.assertEqual(new.read_bytes(),b'public-only');self.assertEqual(new.stat().st_mode&0o777,0o644)
+            private=root/'private';p.write(private,b'private');self.assertEqual(private.stat().st_mode&0o777,0o600)
+
+    def test_user_writable_staging_cannot_be_a_root_install_source(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            folder=Path(tmp)
+            with self.assertRaises(ValueError):p.secure_tree(folder)
+            link=folder/'linked';link.symlink_to(folder,target_is_directory=True)
+            with self.assertRaises(ValueError):p.secure_tree(link)
+
+
+if __name__=='__main__':unittest.main()
