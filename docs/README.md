@@ -203,3 +203,5 @@ Phase 08：任意のEntity関係俯瞰、明示起点切替、直前一件復帰
 - 公開・受入のPC停止対策（Issue #33）：[協調設計](design/PUBLICATION_COORDINATION.md) / [運営者の導入・復旧手順](runbooks/PUBLICATION_COORDINATION.md)。既存Worker変更なし、隔離検証段階。
 
 - 公開・受入協調の[隔離検証結果](verification/PUBLICATION_COORDINATION_20261020.md)。本番導入は別承認。
+
+- Issue #33 本番導入工程：[2026-10-21の実環境確認](verification/PUBLICATION_ENVIRONMENT_20261021.md) / [一括承認対象・確定差分・復旧手順](runbooks/PUBLICATION_ROLLOUT_20261021.md)。本番導入・実機試験・有効化は未承認。
