@@ -1,0 +1,177 @@
+{
+  "schemaVersion": 1,
+  "status": "release-prepared-not-applied",
+  "verifiedAt": "2026-10-20T17:54:43.325394+00:00",
+  "executionCommit": "448ad397ed20a9f03c929bd5957569df32ebeed5",
+  "formalAcceptanceCounts": {
+    "entities": 0,
+    "claims": 1,
+    "sources": 1,
+    "citations": 1
+  },
+  "receipt": {
+    "file": "datasets/manga-collection/accepted-issue-34-obata-drawing-20261021/acceptance.json",
+    "sha256": "7f62ec0f27d4fedfbb09066893d4ac94d88eaf016c2fff3959a001ea9f228efe",
+    "recordedAt": "2026-10-20T17:52:45.754800+00:00"
+  },
+  "decision": {
+    "file": "datasets/manga-collection/evidence-decisions/issue-34-obata-drawing-20261021-r2.json",
+    "sha256": "72fd7dc968cdc2bd2f265382e270cb300f6188c51d180f5c6c3daaae5775b99d"
+  },
+  "runtimeRoot": "/home/isinxnisi/.local/share/plunode-collection-worker-phase-b-20261020/runtime",
+  "receiptCount": 10,
+  "receiptSetSha256": "8a55413ee9fedf32fd64ce6fddebd28d1d636ff7de0fcc1fd063a5b15524d56d",
+  "publishedAcceptedCounts": {
+    "entities": 66,
+    "claims": 50,
+    "sources": 43,
+    "citations": 51
+  },
+  "pendingAcceptedCounts": {
+    "entities": 0,
+    "claims": 1,
+    "sources": 1,
+    "citations": 1
+  },
+  "recordSha256": {
+    "entities": {},
+    "claims": {
+      "7ae1c51b-9ba0-46fb-a070-41ac310e8c94": "56bfc8a80c5c5feb22568d6699b327f4e0a9589430bfb067a914fedb56a9f6a5"
+    },
+    "sources": {
+      "932fb74b-9292-4fb9-9f8a-29ce35d83823": "0c118862f33fb5c754cc26597aa3afed6ee29ea6bfbddd2afa6da78d194a1018"
+    },
+    "citations": {
+      "995e3891-aa9c-4af6-a2ba-3114dfb61fec": "172212acdde04d1a5691873f02f6e497124337de4e119a1a36b667a686061ebe"
+    }
+  },
+  "scopeByClaim": [
+    {
+      "id": "7ae1c51b-9ba0-46fb-a070-41ac310e8c94",
+      "subjectId": "d5e39491-5a5f-423c-9222-2eb3c18db9a8",
+      "objectId": "0c29d0e2-685f-4c56-9805-6bf1baf40e7c",
+      "predicate": "CONTRIBUTED_TO",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "contribution": {
+        "roleId": "DRAWING",
+        "scope": null
+      },
+      "organizationParticipation": null,
+      "eventParticipation": null
+    }
+  ],
+  "allFrozenAcceptedRecordsUnchanged": true,
+  "allExistingPublicRecordFieldsUnchanged": true,
+  "priorNineReceiptsAndWorkerConfigUnchanged": true,
+  "workerProgramAndScheduleChanged": false,
+  "executionControlSemanticsUnchanged": true,
+  "scheduledStateReportingChanged": true,
+  "release": {
+    "id": "manga-issue-34-obata-drawing-001",
+    "dataSha256": "bab5fd783adf0cdb622cc6c11441bce35bb7213074d489bc7f3e2989a5ca435b",
+    "manifestSha256": "cb0df37a0f1c7669c5d21c4c51d65fabbc0c1eb811cf136e98de1f86533cdc60",
+    "counts": {
+      "entities": 2175,
+      "claims": 1895,
+      "sources": 1795,
+      "citations": 1932
+    }
+  },
+  "validation": {
+    "valid": true,
+    "counts": {
+      "nodes": {
+        "Entity": 2175,
+        "Claim": 1895,
+        "Source": 1795,
+        "Citation": 1932,
+        "ExternalIdentifier": 2544
+      },
+      "relationships": {
+        "SUBJECT": 1895,
+        "OBJECT": 1895,
+        "HAS_CITATION": 1932,
+        "CITES": 1932,
+        "HAS_EXTERNAL_ID": 2544
+      }
+    }
+  },
+  "plan": {
+    "release": "manga-issue-34-obata-drawing-001",
+    "observation": "validated-backup-offline-not-a-live-vps-plan",
+    "backupRevision": "88437056-b74f-42ab-88c0-33ed435bdccc",
+    "added": [
+      "Citation:995e3891-aa9c-4af6-a2ba-3114dfb61fec",
+      "Claim:7ae1c51b-9ba0-46fb-a070-41ac310e8c94",
+      "Source:932fb74b-9292-4fb9-9f8a-29ce35d83823"
+    ],
+    "updated": [],
+    "relationshipsAdded": 4
+  },
+  "planObservation": "validated-production-backup-offline",
+  "latestLiveVpsPlanPerformed": false,
+  "publicBeforePlan": {
+    "release": "manga-issue-25-utc-recovery-08-normal",
+    "revision": "88437056-b74f-42ab-88c0-33ed435bdccc",
+    "observation": "supplied-backup-not-a-live-check",
+    "fixtureSha256": "2059149b7cc6a75982761d36a6961408f294f53915885454bd3611b65af4c3a0",
+    "withdrawals": [],
+    "historySha256": "e4dc244450514ed8ed7ef22d53776c9505b976745670deeb8de8c372042638e9",
+    "references": [
+      {
+        "file": "datasets/public-kg/releases/manga-issue-25-utc-recovery-08-normal/data.json",
+        "sha256": "44cb7d65c4ece8ac04ffcca988c0b37f35a5bf61cc934ef482cbefda39ec09e7"
+      },
+      {
+        "file": "datasets/public-kg/releases/manga-issue-25-utc-recovery-08-normal/manifest.json",
+        "sha256": "325522f3efa7ddc0ff67f278456fc81956420ab0d00999d5823988dfc33cd9a3"
+      }
+    ],
+    "productionBackupSha256": "750850776e2824b7e1eb20a3fc73db56e41dc188f71cfba214290741dd7071ab",
+    "liveMetadata": {
+      "url": "https://plunode.net/api/dataset",
+      "httpStatus": 200,
+      "dataset": "public-kg",
+      "revision": "88437056-b74f-42ab-88c0-33ed435bdccc"
+    }
+  },
+  "publicAfterPlan": {
+    "release": "manga-issue-25-utc-recovery-08-normal",
+    "revision": "88437056-b74f-42ab-88c0-33ed435bdccc",
+    "observation": "supplied-backup-not-a-live-check",
+    "fixtureSha256": "2059149b7cc6a75982761d36a6961408f294f53915885454bd3611b65af4c3a0",
+    "withdrawals": [],
+    "historySha256": "e4dc244450514ed8ed7ef22d53776c9505b976745670deeb8de8c372042638e9",
+    "references": [
+      {
+        "file": "datasets/public-kg/releases/manga-issue-25-utc-recovery-08-normal/data.json",
+        "sha256": "44cb7d65c4ece8ac04ffcca988c0b37f35a5bf61cc934ef482cbefda39ec09e7"
+      },
+      {
+        "file": "datasets/public-kg/releases/manga-issue-25-utc-recovery-08-normal/manifest.json",
+        "sha256": "325522f3efa7ddc0ff67f278456fc81956420ab0d00999d5823988dfc33cd9a3"
+      }
+    ],
+    "productionBackupSha256": "750850776e2824b7e1eb20a3fc73db56e41dc188f71cfba214290741dd7071ab",
+    "liveMetadata": {
+      "url": "https://plunode.net/api/dataset",
+      "httpStatus": 200,
+      "dataset": "public-kg",
+      "revision": "88437056-b74f-42ab-88c0-33ed435bdccc"
+    }
+  },
+  "inventoryIssues": [],
+  "backup": {
+    "fileSha256": "750850776e2824b7e1eb20a3fc73db56e41dc188f71cfba214290741dd7071ab",
+    "savedAt": "2026-10-20T17:28:02.379Z",
+    "privateLocalPath": "/home/isinxnisi/1.projects/7.graph-knowledge/backups/issue34-production-20261021/public-backup.json",
+    "originRootPath": "/var/lib/plunode-publication/jobs/install-readonly-backup.json"
+  },
+  "publicApply": false,
+  "restore": false,
+  "newProviderRequests": 0
+}

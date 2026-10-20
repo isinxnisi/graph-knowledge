@@ -1,0 +1,111 @@
+{
+  "acceptedRecordIds": {
+    "citations": [
+      "995e3891-aa9c-4af6-a2ba-3114dfb61fec"
+    ],
+    "claims": [
+      "7ae1c51b-9ba0-46fb-a070-41ac310e8c94"
+    ],
+    "entities": [],
+    "sources": [
+      "932fb74b-9292-4fb9-9f8a-29ce35d83823"
+    ]
+  },
+  "applyAuthorized": {
+    "beta": false,
+    "local": false,
+    "vps": false
+  },
+  "approvalScope": "formal-record-acceptance-and-release-preparation-only",
+  "baseRelease": "manga-issue-25-utc-recovery-08-normal",
+  "baseRevision": "88437056-b74f-42ab-88c0-33ed435bdccc",
+  "decisionId": "issue-34-obata-drawing-20261021",
+  "humanDecision": {
+    "actorType": "human",
+    "authorizationReference": {
+      "file": "datasets/manga-collection/evidence-acceptance-authorization/issue-34-obata-drawing-20261021.json",
+      "sha256": "eb7c4123ee2aec4fd1ec9a63bffeebbb3ee62f17a0986ae36cf9965fb8a0f668"
+    },
+    "decidedAt": "2026-10-20T15:20:24.000+00:00",
+    "recordedAt": "2026-10-20T17:51:54.013665+00:00",
+    "reviewer": "プロジェクト運営者（本タスクのユーザー）",
+    "statement": "本タスクの人間による明示指示（turn 01a159e6-415b-7883-a57a-e8e8ff43e5b7、受信 2026-10-20T15:20:24.000Z）を記録する。e64a2deの1 Claim/1 Source/1 CitationのUUIDと全内容hashを維持し、既存意味承認と完全一致させ、現行本番backupを検証後に正式受入・receipt保存・次回release準備まで実行する指示。小畑健→既存漫画ヒカルの碁、CONTRIBUTED_TO/affirmed/DRAWING/scope=null/period from,to=nullのみ。新しい意味判断・収集・本番apply/restoreは承認しない。既存意味承認: https://github.com/isinxnisi/graph-knowledge/issues/34#issuecomment-6292911753"
+  },
+  "recordSha256": {
+    "citations": {
+      "995e3891-aa9c-4af6-a2ba-3114dfb61fec": "172212acdde04d1a5691873f02f6e497124337de4e119a1a36b667a686061ebe"
+    },
+    "claims": {
+      "7ae1c51b-9ba0-46fb-a070-41ac310e8c94": "56bfc8a80c5c5feb22568d6699b327f4e0a9589430bfb067a914fedb56a9f6a5"
+    },
+    "entities": {},
+    "sources": {
+      "932fb74b-9292-4fb9-9f8a-29ce35d83823": "0c118862f33fb5c754cc26597aa3afed6ee29ea6bfbddd2afa6da78d194a1018"
+    }
+  },
+  "referenceArtifacts": [
+    {
+      "file": "datasets/manga-collection/evidence-reviews/issue-34-obata-drawing-20261021-r2/context.json",
+      "sha256": "3f10dae6a259169b6390885a67d99b806a675bfdd6a4ea9d3621bb1a5a259619"
+    },
+    {
+      "file": "datasets/manga-collection/evidence-reviews/issue-34-obata-drawing-20261021-r2/decision-request.json",
+      "sha256": "2012c8f945c6f3f40a4d78f56baba858d04f7f8c3cdb2d55bdc4d800f2156fa4"
+    },
+    {
+      "file": "datasets/manga-collection/evidence-reviews/issue-34-obata-drawing-20261021-r2/proposed-records.json",
+      "sha256": "15ec2b9d9013a7b5af64f0539b1fe2a07302c92d60abb7bb58daf7e9215140d6"
+    },
+    {
+      "file": "datasets/manga-collection/evidence-reviews/issue-34-obata-drawing-20261021-r2/review-manifest.json",
+      "sha256": "1f8c0fa0c236cbc25d6a8e591252f535ce356882e8ce9cf8d6ce70a6078d0449"
+    },
+    {
+      "file": "datasets/manga-collection/evidence-reviews/issue-34-obata-drawing-20261021-r2/review.json",
+      "sha256": "f1f6107ec4c172435b02c475b9c2c9a781b8e4656915f2c00b2b2bd326eeb3b6"
+    },
+    {
+      "file": "datasets/manga-collection/issue-34-obata-drawing-20261021/authorization-binding.json",
+      "sha256": "9e4e9cd91059d81060e75658c33f576befe416ffdc8eca09839bc4c605c2159f"
+    },
+    {
+      "file": "datasets/manga-collection/issue-34-obata-drawing-20261021/proposed-records.json",
+      "sha256": "79ba556db26f0c48ce79c3ed1dda2e65dae1d0b72fd560a2a861131a496b72c0"
+    },
+    {
+      "file": "datasets/manga-collection/issue-34-obata-drawing-20261021/approval-record.json",
+      "sha256": "e0bec27c3c1d2546aaa5dfccb02263af5e73ed96d01f70b8c2b48998ad1c55a6"
+    },
+    {
+      "file": "datasets/connectivity/issue-34-obata-evidence/review.json",
+      "sha256": "6c591904aeeb7fa5a26a085ea628450d05f24a8adbb6fcfac1f99b4f777c989c"
+    }
+  ],
+  "releaseId": "manga-issue-34-obata-drawing-001",
+  "review": {
+    "file": "datasets/manga-collection/evidence-reviews/issue-34-obata-drawing-20261021-r2/review-manifest.json",
+    "sha256": "1f8c0fa0c236cbc25d6a8e591252f535ce356882e8ce9cf8d6ce70a6078d0449"
+  },
+  "schemaVersion": 1,
+  "scopeByClaim": [
+    {
+      "contribution": {
+        "roleId": "DRAWING",
+        "scope": null
+      },
+      "eventParticipation": null,
+      "id": "7ae1c51b-9ba0-46fb-a070-41ac310e8c94",
+      "objectId": "0c29d0e2-685f-4c56-9805-6bf1baf40e7c",
+      "organizationParticipation": null,
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "polarity": "affirmed",
+      "predicate": "CONTRIBUTED_TO",
+      "subjectId": "d5e39491-5a5f-423c-9222-2eb3c18db9a8"
+    }
+  ],
+  "sourceKind": "saved-evidence-v1",
+  "status": "approved"
+}

@@ -1,0 +1,149 @@
+{
+  "schemaVersion": 1,
+  "status": "release-prepared-not-applied",
+  "checkedAt": "2026-10-20T17:54:43.325394+00:00",
+  "authority": "formal-acceptance-and-release-preparation-executed-by-existing-acceptance-core",
+  "fixedInputCommit": "e64a2de6a0f2c155024f8ccd4fb9e9cff2409241",
+  "bindingSha256": "9e4e9cd91059d81060e75658c33f576befe416ffdc8eca09839bc4c605c2159f",
+  "candidateIds": {
+    "entities": [],
+    "claims": [
+      "7ae1c51b-9ba0-46fb-a070-41ac310e8c94"
+    ],
+    "sources": [
+      "932fb74b-9292-4fb9-9f8a-29ce35d83823"
+    ],
+    "citations": [
+      "995e3891-aa9c-4af6-a2ba-3114dfb61fec"
+    ]
+  },
+  "recordSha256": {
+    "entities": {},
+    "claims": {
+      "7ae1c51b-9ba0-46fb-a070-41ac310e8c94": "56bfc8a80c5c5feb22568d6699b327f4e0a9589430bfb067a914fedb56a9f6a5"
+    },
+    "sources": {
+      "932fb74b-9292-4fb9-9f8a-29ce35d83823": "0c118862f33fb5c754cc26597aa3afed6ee29ea6bfbddd2afa6da78d194a1018"
+    },
+    "citations": {
+      "995e3891-aa9c-4af6-a2ba-3114dfb61fec": "172212acdde04d1a5691873f02f6e497124337de4e119a1a36b667a686061ebe"
+    }
+  },
+  "bodySha256": "86cfb31314e9e3fe2bf26e04425580c2dc3d5660cbd3b522e32e8be1d533af1b",
+  "realFrozenEvidenceAndRecordsVerified": true,
+  "newProviderRequests": 0,
+  "testedProgramFilesSha256": {
+    "scripts/collection-workflow.py": "59b3b672a05eb42252b5ad14325aac974c7b7aba366f321667226a03d03f1ea1",
+    "scripts/collection-acceptance.py": "ddd9f2e7f4f83f3ebfd411158198abbfbc2038a4c9814eb11170b1cd60ca72f3",
+    "scripts/collection-evidence.py": "a3b50fc78ec8efb8c7daa3315a2e06c5c8f4d761acb7ef23c09d38658ddee76a",
+    "tests/test_collection_evidence.py": "c45f04d4c28d3e007efe8741ed2de33328e5bf9382a5277cd53281325fb9ddfd"
+  },
+  "tests": {
+    "savedEvidence": 11,
+    "legacyAcceptance": 16,
+    "legacyWorkflow": 16,
+    "acceptanceSequence": 19,
+    "total": 62,
+    "isolation": "Private roots; real existing TypeScript validators and offline backup plan; fake live metadata/common-token check only; no real DB writes",
+    "serializationRegression": "Sorted-key valid backup; full field/value equality retained; actual full production fixture verified as well."
+  },
+  "existingWorker": {
+    "codeCommit": "973c7b0c599f79905a029b28b524f4924e169376",
+    "programUpdated": false,
+    "formalReceiptCount": 10,
+    "allPriorReceiptHashesUnchanged": true,
+    "stagedInputs": {
+      "copiedFiles": 7,
+      "sameBytesAsMain": true,
+      "rawHtmlStoredOutsideGit": true,
+      "workerLockAndManualHoldVerified": true,
+      "existingConfigStateAndNineReceiptsUnchanged": true
+    },
+    "configUnchanged": true,
+    "stateOrScheduleChangedByThisWork": false,
+    "normalScheduledStateReportingObserved": true,
+    "executionControlSemanticsUnchanged": true
+  },
+  "formalAcceptanceCounts": {
+    "entities": 0,
+    "claims": 1,
+    "sources": 1,
+    "citations": 1
+  },
+  "receipt": {
+    "file": "datasets/manga-collection/accepted-issue-34-obata-drawing-20261021/acceptance.json",
+    "sha256": "7f62ec0f27d4fedfbb09066893d4ac94d88eaf016c2fff3959a001ea9f228efe",
+    "recordedAt": "2026-10-20T17:52:45.754800+00:00"
+  },
+  "releaseCandidate": {
+    "id": "manga-issue-34-obata-drawing-001",
+    "dataSha256": "bab5fd783adf0cdb622cc6c11441bce35bb7213074d489bc7f3e2989a5ca435b",
+    "manifestSha256": "cb0df37a0f1c7669c5d21c4c51d65fabbc0c1eb811cf136e98de1f86533cdc60",
+    "counts": {
+      "entities": 2175,
+      "claims": 1895,
+      "sources": 1795,
+      "citations": 1932
+    }
+  },
+  "verifiedCurrentProductionBackupAvailable": true,
+  "latestLiveVpsPlanPerformed": false,
+  "remainingOperation": "Before publication: explicit publication authorization and a fresh live VPS preflight/plan against the current production state. No further acceptance is needed for this receipt.",
+  "backupOnlyProcedure": "https://github.com/isinxnisi/graph-knowledge/issues/33#issuecomment-6294978106",
+  "publicApply": false,
+  "implementationCommit": "cc591c41632b290d3e69b9ed5e53dd129e0650d3",
+  "testedMainIntegrationCommit": "02b79bb1d7262ae42a9bc2fb111cd10898cd9034",
+  "executionCommit": "448ad397ed20a9f03c929bd5957569df32ebeed5",
+  "receiptSetSha256": "8a55413ee9fedf32fd64ce6fddebd28d1d636ff7de0fcc1fd063a5b15524d56d",
+  "publishedAcceptedCounts": {
+    "entities": 66,
+    "claims": 50,
+    "sources": 43,
+    "citations": 51
+  },
+  "pendingAcceptedCounts": {
+    "entities": 0,
+    "claims": 1,
+    "sources": 1,
+    "citations": 1
+  },
+  "productionBackup": {
+    "fileSha256": "750850776e2824b7e1eb20a3fc73db56e41dc188f71cfba214290741dd7071ab",
+    "savedAt": "2026-10-20T17:28:02.379Z",
+    "privateLocalPath": "/home/isinxnisi/1.projects/7.graph-knowledge/backups/issue34-production-20261021/public-backup.json",
+    "originRootPath": "/var/lib/plunode-publication/jobs/install-readonly-backup.json"
+  },
+  "plan": {
+    "release": "manga-issue-34-obata-drawing-001",
+    "observation": "validated-backup-offline-not-a-live-vps-plan",
+    "backupRevision": "88437056-b74f-42ab-88c0-33ed435bdccc",
+    "added": [
+      "Citation:995e3891-aa9c-4af6-a2ba-3114dfb61fec",
+      "Claim:7ae1c51b-9ba0-46fb-a070-41ac310e8c94",
+      "Source:932fb74b-9292-4fb9-9f8a-29ce35d83823"
+    ],
+    "updated": [],
+    "relationshipsAdded": 4
+  },
+  "validation": {
+    "valid": true,
+    "counts": {
+      "nodes": {
+        "Entity": 2175,
+        "Claim": 1895,
+        "Source": 1795,
+        "Citation": 1932,
+        "ExternalIdentifier": 2544
+      },
+      "relationships": {
+        "SUBJECT": 1895,
+        "OBJECT": 1895,
+        "HAS_CITATION": 1932,
+        "CITES": 1932,
+        "HAS_EXTERNAL_ID": 2544
+      }
+    }
+  },
+  "actualExecutionFile": "actual-execution.json",
+  "restore": false
+}

@@ -5,6 +5,31 @@ from pathlib import Path
 import re
 import tempfile
 
+
+def evidence_module(w):
+    return w.load('saved_evidence_acceptance', Path(__file__).with_name('collection-evidence.py'))
+
+
+def source_directory(context):
+    return Path(context['evidenceDirectory'] if context.get('sourceKind') == 'saved-evidence-v1' else context['jobDirectory'])
+
+
+def observe(args, w):
+    if getattr(args, 'production_backup', None):
+        return evidence_module(w).observe(args, w)
+    return w.public_snapshot()
+
+
+def check_public(expected, observed, args, w):
+    if getattr(args, 'production_backup', None):
+        w.require(getattr(args, 'command', None) == 'accept-evidence', 'Backup mode is restricted to saved-evidence acceptance')
+        w.require(observed['observation'] == 'supplied-backup-not-a-live-check'
+                  and observed.get('productionBackupSha256') == args.backup_sha
+                  and observed.get('liveMetadata', {}).get('revision') == expected['revision'], 'Verified production backup and live revision required')
+        w.require(all(observed[k] == expected[k] for k in ['release', 'revision']), 'Public base/revision conflict; review the new state')
+    else:
+        same_public(expected, observed, w)
+
 SCOPE = 'formal-record-acceptance-and-release-preparation-only'
 NO_APPLY = {'local': False, 'beta': False, 'vps': False}
 
@@ -45,6 +70,8 @@ def bundle(directory, w):
     """Only the immutable Task1 format; recommendations remain non-authoritative."""
     directory = directory.resolve()
     manifest = w.read(directory / 'review-manifest.json')
+    if manifest.get('sourceKind') == 'saved-evidence-v1':
+        return evidence_module(w).bundle(directory, w)
     w.require(manifest['schemaVersion'] == 1 and manifest['authority'] == 'pending-human-review-only', 'Unsupported review format')
     actual = w.gate.inventory(directory)
     w.require(actual == {**manifest['artifacts'], 'review-manifest.json': w.gate.file_hash(directory / 'review-manifest.json')},
@@ -94,7 +121,7 @@ def scope_rows(records, w):
 
 
 def protect_inputs(outputs, review, context, w):
-    protected = {review.resolve(), Path(context['jobDirectory']).resolve(), w.gate.REGISTRY.resolve()}
+    protected = {review.resolve(), source_directory(context).resolve(), w.gate.REGISTRY.resolve()}
     refs = context['public']['references'] + [{'file': p, 'sha256': sha} for p, sha in context['acceptedReferences']]
     protected.update((w.ROOT / row['file']).resolve().parent for row in refs)
     for output in outputs:
@@ -124,6 +151,8 @@ def template(args, w):
               'recordSha256': {f: {r['id']: w.digest(r) for r in selected[f]} for f in w.FIELDS},
               'scopeByClaim': scope_rows(selected, w), 'baseRelease': context['public']['release'],
               'baseRevision': context['public']['revision'], 'releaseId': slug(args.release, w)}
+    if context.get('sourceKind'):
+        result['sourceKind'] = context['sourceKind']
     w.require(args.output.resolve() not in [Path(r['file']).resolve() for r in refs], 'Decision must not replace review artifacts')
     w.gate.create(args.output.resolve(), result)
     return {'decisionFile': str(args.output.resolve()), 'status': result['status'], 'formalAcceptance': False, 'publicApply': False}
@@ -224,7 +253,9 @@ def report_markdown(report):
     text += '| 対象 | 今回の承認対象 | 現公開baseからの統合追加 |\n| --- | ---: | ---: |\n'
     for field in report['acceptedCounts']:
         text += '| ' + field + ' | ' + str(report['acceptedCounts'][field]) + ' | ' + str(report['releaseAdditions'][field]) + ' |\n'
-    text += '\nrelease: `' + report['releaseDirectory'] + '`。validate成功、最新の無書込plan成功、既存更新0。\n\n'
+    plan_note = ('検証済み本番backupに対するoffline plan成功（最新VPS実planは未実施）'
+                 if report.get('planObservation') == 'validated-production-backup-offline' else '最新の無書込plan成功')
+    text += '\nrelease: `' + report['releaseDirectory'] + '`。validate成功、' + plan_note + '、既存更新0。\n\n'
     text += '未受入対象・既存再利用・保留UUID・plan全件はpreparation.json。保留や未選択レコードを自動受入しない。\n\n'
     text += '## 保留\n\n'
     for row in report['heldRecords']['claims']:
@@ -255,6 +286,7 @@ def accept(args, w):
     w.require(review_manifest.name == 'review-manifest.json', 'A hashed Task1 review manifest is required')
     review = review_manifest.parent
     context, request, records, review_refs = bundle(review, w)
+    w.require(decision.get('sourceKind') == context.get('sourceKind'), 'Decision source kind differs from review')
     w.require(decision['referenceArtifacts'] == review_refs, 'Human-approved evidence inventory differs')
     selected = selection(decision['acceptedRecordIds'], records, w)
     w.require(decision['recordSha256'] == {f: {r['id']: w.digest(r) for r in selected[f]} for f in w.FIELDS}, 'Approved record body/hash differs')
@@ -274,17 +306,20 @@ def accept(args, w):
     target = args.acceptances.resolve() / ('accepted-' + ident)
     release = args.releases.resolve() / release_id
     protect_inputs([target, release], review, context, w)
-    protected = [review, Path(context['jobDirectory']).resolve(), args.decision]
+    protected = [review, source_directory(context).resolve(), args.decision]
     w.require(not any(p == target or p.is_relative_to(target) or p == release or p.is_relative_to(release) for p in protected), 'Output overlaps frozen inputs')
     prior, receipts, prior_refs, prior_manifest = prior_accepted(context, w)
     # A newly accepted set outside this decision's comparison snapshot requires a new review.
     present = set(args.acceptances.resolve().glob('accepted-*/acceptance.json')) - {target / 'acceptance.json'}
     w.require(present <= {p.resolve() for p in receipts}, 'Additional formal acceptances exist outside the reviewed comparison set')
-    public, observed = w.public_snapshot()
+    public, observed = observe(args, w)
     expected = {'release': decision['baseRelease'], 'revision': decision['baseRevision']}
-    same_public(expected, observed, w)
+    check_public(expected, observed, args, w)
+    if context.get('sourceKind') == 'saved-evidence-v1':
+        w.require(context['public'] == observed, 'Saved-evidence production comparison changed')
     fixture, reused = merge(public, prior, selected, w)
-    data = w.dump(fixture)
+    data = (evidence_module(w).release_data(fixture, w)
+            if context.get('sourceKind') == 'saved-evidence-v1' else w.dump(fixture))
     base_path = w.ROOT / 'datasets/public-kg/releases' / observed['release']
     manifest = copy.deepcopy(w.read(base_path / 'manifest.json'))
     accepted_path = target / 'accepted-records.json'
@@ -299,7 +334,11 @@ def accept(args, w):
              'sha256': w.gate.digest(selected_text.encode())}],
         'acceptedRecordIds': decision['acceptedRecordIds'], 'scopeByClaim': decision['scopeByClaim'],
         'counts': {f: len(selected[f]) for f in w.FIELDS}, 'baseRelease': observed['release'], 'baseRevision': observed['revision'],
-        'combinedReleaseCandidate': release_id, 'sourceJobId': context['jobId'], 'applyAuthorized': NO_APPLY}
+        'combinedReleaseCandidate': release_id, 'sourceJobId': context.get('jobId'), 'applyAuthorized': NO_APPLY}
+    if context.get('sourceKind') == 'saved-evidence-v1':
+        receipt['sourceReviewKind'] = context['sourceKind']
+        receipt['productionObservation'] = observed
+        receipt['acceptanceProgramSha256'] = context['programSha256']
     if continuation:
         receipt['comparisonContinuation'] = continuation
     immutable = {'decision.json': decision_text, 'accepted-records.json': selected_text}
@@ -345,8 +384,8 @@ def accept(args, w):
     bundle(review, w)
     for row in prior_refs + observed['references']:
         checked_reference(row, w)
-    _, latest = w.public_snapshot()
-    same_public(expected, latest, w)
+    _, latest = observe(args, w)
+    check_public(expected, latest, args, w)
     w.require(latest == observed, 'Public snapshot changed during preparation')
     w.require(set(args.acceptances.resolve().glob('accepted-*/acceptance.json')) - {target / 'acceptance.json'}
               <= {p.resolve() for p in receipts}, 'Additional formal acceptances exist outside the reviewed comparison set')
@@ -356,20 +395,25 @@ def accept(args, w):
         immutable_directory(target, immutable, w)
     try:
         release_unchanged = immutable_directory(release, files, w)
-        validation_key = w.digest({'files': files, 'validator': w.gate.file_hash(w.ROOT / 'lib/server/public-dataset.ts'),
-                                  'schema': w.gate.file_hash(w.ROOT / 'lib/domain/fixture.ts')})
+        code_root = Path(__file__).resolve().parents[1]
+        validation_key = w.digest({'files': files, 'validator': w.gate.file_hash(code_root / 'lib/server/public-dataset.ts'),
+                                  'schema': w.gate.file_hash(code_root / 'lib/domain/fixture.ts')})
         cached = target / 'validation.json'
         validation_reused = cached.exists() and w.read(cached)['inputSha256'] == validation_key
         validation = w.read(cached)['result'] if validation_reused else w.node(['scripts/public-kg.ts', 'validate', str(release)])
         w.require(validation['valid'] is True, 'Public validation failed')
         if not validation_reused:
             w.gate.save(cached, {'inputSha256': validation_key, 'result': validation, 'checkedAt': w.gate.now()})
-        _, before_plan = w.public_snapshot()
-        same_public(expected, before_plan, w)
+        _, before_plan = observe(args, w)
+        check_public(expected, before_plan, args, w)
         w.require(before_plan == observed, 'Public state changed before plan')
-        plan = w.node(['scripts/public-kg.ts', 'plan', str(release)])  # Always rerun. Never apply/restore.
-        _, after_plan = w.public_snapshot()
-        same_public(expected, after_plan, w)
+        if getattr(args, 'production_backup', None):
+            plan = w.node([str(Path(__file__).with_name('publication-backup-plan.ts')),
+                           str(args.production_backup.resolve()), str(release), expected['revision']])
+        else:
+            plan = w.node(['scripts/public-kg.ts', 'plan', str(release)])  # Always rerun. Never apply/restore.
+        _, after_plan = observe(args, w)
+        check_public(expected, after_plan, args, w)
         w.require(before_plan == after_plan, 'Public state changed during plan; discard plan and review the new state')
         w.require(not plan.get('updated'), 'Unexpected updates to existing KG records')
         for name, content in files.items():
@@ -399,6 +443,9 @@ def accept(args, w):
                   'validation': validation, 'plan': plan, 'publicBeforePlan': before_plan, 'publicAfterPlan': after_plan,
                   'explorationPaths': w.exploration_paths(indexed, states, set(decision['acceptedRecordIds']['claims']), set()),
                   'publicApply': False, 'applyAuthorized': NO_APPLY}
+        if getattr(args, 'production_backup', None):
+            report['planObservation'] = 'validated-production-backup-offline'
+            report['liveVpsPlanPerformed'] = False
         w.gate.save(target / 'preparation.json', report)
         (target / 'preparation.md').write_text(report_markdown(report), encoding='utf-8')
         return report

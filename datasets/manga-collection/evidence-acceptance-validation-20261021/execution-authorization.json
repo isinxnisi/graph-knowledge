@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "type": "record-of-existing-human-execution-authorization",
+  "threadId": "01a157cc-8a9b-7b32-84e7-a00a434f3e91",
+  "turnId": "01a159e6-415b-7883-a57a-e8e8ff43e5b7",
+  "receivedAt": "2026-10-20T15:20:24.000Z",
+  "sourceMessage": "Issue #34の停止報告 e64a2de を受け、正式受入を完了できるように既存ワークフローの不整合を解消してください。\n\n目的は追加の事前調査ではなく、承認済みの小畑健→『ヒカルの碁』1 Claimを既存の正式受入基盤で受け入れることです。\n\n1. 既存manga-discovery-v2の収集ジョブを偽装せず、今回のような「取得済み原文＋人間による意味承認＋固定レコード」を取り込める最小限の受入経路を追加してください。既存のacceptance/receipt/重複検証を再利用します。\n2. e64a2de の1 Claim・1 Source・1 CitationのUUIDとhashは変更せず、既存の承認と完全一致させてください。\n3. #33と連携し、現在の正式な本番KGを基準に比較してください。古いローカルDBを本番として扱わず、検証済みの本番backupを利用する方法を優先してください。\n4. Workerの固定コード更新が必要なら、既存state・receipt・スケジュールを保全してレビュー済みの更新手順で移行してください。#33の本番導入作業との重複や競合を避けてください。\n5. 必要条件が整えば、既存正式受入処理を実行し、receiptを保存して次回releaseを準備してください。\n\n必要なコード修正・隔離試験は実施してください。ただし、隔離試験だけで作業完了とはせず、実際の受入完了を目標にしてください。\n\n現在の本番backupや権限が不足する場合は、具体的に不足する操作を示してください。検証を省略した代替処理や本番baseの偽装は行わないでください。\n\n本番公開apply・restoreは行いません。\n\nIssue #34へ正式受入件数、receipt、release準備結果、残条件を記録し、commit・pushしてください。",
+  "meaningApproval": "https://github.com/isinxnisi/graph-knowledge/issues/34#issuecomment-6292911753",
+  "fixedBinding": {
+    "file": "datasets/manga-collection/issue-34-obata-drawing-20261021/authorization-binding.json",
+    "sha256": "9e4e9cd91059d81060e75658c33f576befe416ffdc8eca09839bc4c605c2159f"
+  },
+  "purpose": "Record the existing direct human instruction. No new human judgment or wider authorization.",
+  "sourceMessageSha256": "4f7d205451893a1f7d1908a3a02a6d8248ccf081756b7f13401a89deda617b29"
+}
