@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """WSL receipt freshness peer prototype. Hold the common lock through the fixed gate client's exit."""
 import argparse
+import contextlib
 import fcntl
 import importlib.util
 import json
@@ -22,6 +23,7 @@ signer=load('attest_sign',HERE/'publication-sign.py')
 
 
 def freshness(runtime,candidate,challenge):
+    challenge={k:v for k,v in challenge.items() if k!='exclusion'}
     cycle.require(set(challenge)=={'schemaVersion','purpose','nonce','challenge','artifactSha256','receiptSetSha256','issuedAt','expiresAt'},'Unexpected challenge fields')
     for name in ['nonce','challenge']:
         value=uuid.UUID(challenge[name]);cycle.require(value.version==4 and str(value)==challenge[name],'Invalid challenge UUID')
@@ -50,15 +52,41 @@ def freshness(runtime,candidate,challenge):
     return challenge
 
 
+def check_challenge(value):
+    base={'schemaVersion','purpose','nonce','challenge','artifactSha256','receiptSetSha256','issuedAt','expiresAt','exclusion'}
+    cycle.require(value['purpose'] in ['receipt-freshness','worker-pause','worker-resume'], 'Wrong coordination purpose')
+    cycle.require(set(value)==base|({'closure'} if value['purpose']=='worker-resume' else set()) and value['schemaVersion']==1,'Unexpected challenge')
+    for name in ['nonce','challenge']:
+        ident=uuid.UUID(value[name]);cycle.require(ident.version==4 and str(ident)==value[name],'Wrong challenge UUID')
+    issued=signer.p.timestamp(value['issuedAt']);expires=signer.p.timestamp(value['expiresAt'])
+    cycle.require(issued<=signer.dt.datetime.now(signer.dt.timezone.utc)<expires and expires-issued<=signer.dt.timedelta(seconds=60),'Expired challenge')
+    cycle.require(all(value[k]==value['exclusion'][k] for k in ['nonce','artifactSha256','receiptSetSha256']),'Ticket binding differs')
+
+
+@contextlib.contextmanager
+def legacy_lock(path):
+    fd=os.open(path,os.O_RDWR|os.O_NOFOLLOW)
+    try:
+        fcntl.flock(fd,fcntl.LOCK_EX|fcntl.LOCK_NB);yield
+    finally:os.close(fd)
+
+
 def main():
     cli=argparse.ArgumentParser(description=__doc__)
     cli.add_argument('--runtime',type=Path,required=True);cli.add_argument('--candidate',type=Path,required=True)
     cli.add_argument('--key',type=Path,required=True);cli.add_argument('--client',type=Path,required=True)
+    cli.add_argument('--coordination-config',type=Path,help='Required for installed durable-pause gate')
     cli.add_argument('--common-lock',type=Path,default=Path.home()/'.local/share/graph-autopilot/autopilot.lock')
-    cli.add_argument('command',choices=['preflight','execute','notify']);cli.add_argument('nonce')
-    a=cli.parse_args();fd=os.open(a.common_lock,os.O_RDWR|os.O_NOFOLLOW)
-    try:
-        fcntl.flock(fd,fcntl.LOCK_EX|fcntl.LOCK_NB)
+    cli.add_argument('command',choices=['preflight','execute','notify','cancel','finish']);cli.add_argument('nonce')
+    a=cli.parse_args()
+    coordinator=None
+    if a.coordination_config:
+        coordination=load('attest_coordination',HERE/'publication-coordination.py')
+        coordination.e.trusted(a.coordination_config,os.geteuid())
+        coordinator=coordination.Coordinator(coordination.e.read(a.coordination_config))
+        cycle.require((Path(coordinator.config['workerHome'])/'runtime').resolve()==a.runtime.resolve(), 'Wrong fixed Worker runtime')
+    barrier=coordinator.barrier() if coordinator else legacy_lock(a.common_lock)
+    with barrier:
         # The installed client embeds its host/key/fixed wrapper. No shell command comes from a candidate.
         child=subprocess.Popen([str(a.client.resolve()),a.command,a.nonce],stdin=subprocess.PIPE,stdout=subprocess.PIPE,stderr=subprocess.DEVNULL,
             env={'PATH':'/usr/bin:/bin','LANG':'C.UTF-8'},bufsize=0)
@@ -76,7 +104,21 @@ def main():
                     line,buffer=buffer.split(b'\n',1);message=json.loads(line)
                     if 'challenge' in message:
                         cycle.require(message['challenge']['nonce']==a.nonce,'Challenge belongs to another job')
-                        response=signer.sign(freshness(a.runtime,a.candidate,message['challenge']),a.key)
+                        challenge=message['challenge']
+                        if 'exclusion' in challenge:
+                            cycle.require(coordinator is not None,'Durable pause coordinator required')
+                            check_challenge(challenge)
+                            payload=dict(challenge)
+                            if challenge['purpose']=='receipt-freshness':
+                                freshness(a.runtime,a.candidate,challenge)
+                            if challenge['purpose'] in ['receipt-freshness','worker-pause']:
+                                payload['workerPause']=coordinator.pause_proof(challenge)
+                            else:
+                                payload['workerResume']=coordinator.resume_proof(challenge)
+                        else:
+                            cycle.require(coordinator is None,'Legacy gate cannot bypass durable exclusion')
+                            payload=freshness(a.runtime,a.candidate,challenge)
+                        response=signer.sign(payload,a.key)
                         child.stdin.write(json.dumps(response).encode()+b'\n');child.stdin.flush()
                     else: print(json.dumps(message),flush=True)
             cycle.require(child.wait(timeout=5)==0,'Fixed gate client failed')
@@ -84,7 +126,6 @@ def main():
             selector.close();child.stdin.close()
             if child.poll() is None:child.terminate();child.wait(timeout=5)
         return 0
-    finally:os.close(fd)
 
 if __name__=='__main__':
     try:sys.exit(main())

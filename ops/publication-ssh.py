@@ -7,7 +7,7 @@ import uuid
 
 
 def arguments(command):
-    match=re.fullmatch(r'(preflight|execute|status|notify) ([0-9a-f-]{36})',command)
+    match=re.fullmatch(r'(preflight|execute|status|notify|arm|close|cancel|finish) ([0-9a-f-]{36})',command)
     if not match or str(uuid.UUID(match[2]))!=match[2] or uuid.UUID(match[2]).version!=4:raise ValueError('Fixed command and UUID required')
     return [match[1],match[2]]
 

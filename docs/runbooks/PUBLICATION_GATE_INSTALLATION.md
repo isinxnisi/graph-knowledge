@@ -2,12 +2,14 @@
 
 2026-10-20。**隔離実装・試験用の導入候補**。この文書は本番のsudo／SSH／鍵／image／DB変更や公開承認ではない。現行VPSへ配置していない。`ops/publication-config.example.json` は `deploymentEnabled:false`。実root／sshd／sudoersの有効性は未検証であり、以下を運営者がレビューして別途承認する。
 
+本書の共通flock単独peerと公開手順は、後続の [公開・受入協調手順](PUBLICATION_COORDINATION.md) で補強する。方式選定とPC停止時の契約は [協調設計](../design/PUBLICATION_COORDINATION.md) を現行仕様とする。
+
 ## 実装された境界
 
 | 部分 | 実装・検証 |
 | --- | --- |
 | root入口候補 | `ops/plunode-publication`。固定配置先、root所有／非group-write／no-symlinkを検査し、Python -I・環境初期化。caller指定program／cwd／PYTHONPATHを利用しない |
-| gate本体 | `scripts/publication-executor.py`。`preflight / execute / status / notify` とUUID v4だけ。root用は固定root、sandbox用は非rootの別入口 |
+| gate本体 | `scripts/publication-executor.py`。`arm / preflight / execute / status / notify / close / cancel / finish` とUUID v4だけ。root用は固定root、sandbox用は非rootの別入口 |
 | 収容・freeze | uploadをdirectory FD＋O_NOFOLLOWでコピー。通常file・単一link・1 file 64MiB／全256MiB／4096 file以内。固定artifact hash／各asset／planを確認。uploaded scriptを実行しない |
 | 承認 | 前段のpolicyを再利用したEd25519・鍵pin・全binding・nonce・期限。`publication-sign.py` は明示operator-approvedと固定requestから署名。秘密鍵を送信しない |
 | nonce／release予約 | OS flockの下でfile fsync→rename→directory fsync。nonceとreleaseを予約してからapplying journalを保存し、一度だけapply。保存結果不明も保守的に予約済みとして扱う |
@@ -26,7 +28,7 @@ sandboxは自己所有UIDを擬似rootとして実processを起動する。root�
 | path | 所有／mode・目的 |
 | --- | --- |
 | `/usr/local/sbin/plunode-publication` | root:root 0755、ops/plunode-publicationの固定入口 |
-| `/usr/local/lib/plunode-publication/` | root:root 0755。executor／policy／cycle／verify-publication.py／publication-notify.py／publication-ssh.pyを固定版で配置。各0644、外部から更新不可 |
+| `/usr/local/lib/plunode-publication/` | root:root 0755。executor／policy／cycle／exclusion／sign／verify-publication.py／publication-notify.py／publication-ssh.pyを固定版で配置。各0644、外部から更新不可 |
 | `/var/lib/plunode-publication/` | root:root 0751。一覧不可でも既知outboxへのtraverseを許可 |
 | `trusted/` | root:root 0700 |
 | `trusted/config.json` | root:root 0600。既定disabled。operator config ID、network、DB target、別々のapprover／attester public PEM SHAを固定 |
@@ -74,7 +76,7 @@ plunode-publish ALL=(root) NOPASSWD: NOSETENV: /usr/local/sbin/plunode-publicati
 ## 未実装・未検証の本番信頼境界
 
 - 実rootの所有権・sudoers・sshd・鍵pin／保管、root-owned bundleの安全な導入、実network／DB／loopback API／audit account接続。実VPSでの故障注入はしていない。
-- WSL peerは**接続中に共通flockを保持する試作**。短期challenge二回とEOF確認はあるが、PC／WSL突然停止・network partition後の厳密な分散fencingを証明していない。現Workerは変更していないため、再起動後の新受入をVPS側の未確定applyと照合して禁止する連動は未実装。この境界を解消・検証するまではproductionをenabledにしない。長期holdや新常駐serviceで代用しない。
+- PC停止時の論理境界は後続のdurable pause・実ACK・不可逆閉鎖・条件付きresumeで隔離実装した。共通flockだけの運用は不可。実root/SSH/鍵/ディスク/OS再起動をまたぐ導入検証は未実施であり、それまではproductionをenabledにしない。詳細と残条件は協調手順を参照。
 - Docker client timeout後にcontainer／DB transactionが継続する可能性がある。nonceとrelease予約を維持し、DB receipt／digestを確認する。再apply・自動restoreで解消しない。実機でのcontainer識別・停止判断と同時実行手順は運営者が別検証する。
 - ghのdedupeは外部APIのatomic exactly-once保証ではない。接続断時の送信成功不明は同nonce markerを検索してから再送する。重複コメントが発生しても公開を再実行しない。
 - 本番用キー管理・実preflight／post-publication backup・正式ops image配布とdigest確認・root gateの独立security reviewを別ゲートとする。

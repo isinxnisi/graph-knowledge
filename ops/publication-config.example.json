@@ -6,5 +6,9 @@
   "attesterKeySha256": "REPLACE_WITH_SEPARATE_PINNED_ATTESTER_PUBLIC_PEM_SHA256",
   "network": "REPLACE_WITH_REVIEWED_PUBLIC_KG_DOCKER_NETWORK",
   "neo4jUri": "bolt://graph-neo4j:7687",
-  "neo4jDatabase": "neo4j"
+  "neo4jDatabase": "neo4j",
+  "freezePolicy": "durable-pause-new-v1",
+  "workerId": "REPLACE_WITH_FIXED_WORKER_ID",
+  "workerCodeCommit": "REPLACE_WITH_REVIEWED_40_HEX_SHA",
+  "exclusionKeySha256": "REPLACE_WITH_PINNED_PUBLIC_KEY_SHA256"
 }
