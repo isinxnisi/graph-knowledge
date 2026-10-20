@@ -40,6 +40,20 @@ def write(path,value,mode=0o600):
 def directory(path,mode):path.mkdir(mode=mode);path.chmod(mode)
 
 
+def operator_argv(root,operator,directory,args):
+    return ['/usr/bin/docker','run','--rm','--pull=never','--read-only','--cap-drop=ALL','--security-opt=no-new-privileges','--label',LABEL,
+        '--user=1000:1000','--memory=1g','--pids-limit=128','--network',NETWORK,'--env-file',str(root/'trusted/public-kg.env'),
+        '--mount','type=bind,src='+str(directory)+',dst=/incoming,readonly',operator,*args]
+
+
+def validate_seed_chain(base,seed):
+    first=json.loads((base/'manifest.json').read_bytes());next_manifest=json.loads((seed/'manifest.json').read_bytes())
+    data=json.loads((base/'data.json').read_bytes())
+    require(first['release']=='base' and first['baseRelease'] is None and next_manifest['baseRelease']==first['release']
+        and next_manifest['release']=='release-group-2','Synthetic seed chain differs')
+    require(data=={'schemaVersion':4,'entities':[],'claims':[],'sources':[],'citations':[]},'Bootstrap must be the empty synthetic fixture')
+
+
 def main():
     require(os.geteuid()==0 and len(sys.argv)==1,'Root fixed staging only');os.umask(0o077)
     stage=Path(__file__).resolve().parent
@@ -76,6 +90,7 @@ def main():
         result=subprocess.run(['/usr/bin/openssl','pkey','-pubin','-text','-noout'],input=keys[role].encode(),capture_output=True,timeout=10)
         require(result.returncode==0 and b'ED25519' in result.stdout,'Test Ed25519 key required')
     require(keys['approver']!=keys['attester'],'Separate test signing roles required')
+    validate_seed_chain(stage/'base',stage/'seed')
     with urlopen('http://127.0.0.1:3200/api/dataset',timeout=15) as response:before=json.load(response)
     require(before['revision']==audit['observedRevision'],'Production revision changed')
     directory(ROOT,0o751)
@@ -86,11 +101,11 @@ def main():
     run(['/usr/bin/openssl','pkey','-in',str(closure),'-pubout','-out',str(ROOT/'trusted/exclusion.pem')]);(ROOT/'trusted/exclusion.pem').chmod(0o644)
     pins={role+'KeySha256':hashlib.sha256((ROOT/'trusted'/(role+'.pem')).read_bytes()).hexdigest() for role in ['approver','attester','exclusion']}
     test_config={'profile':'production','deploymentEnabled':True,'freezePolicy':'durable-pause-new-v1','operatorDigest':operator,
-        'network':NETWORK,'neo4jUri':'bolt://plunode-acceptance-neo4j:7687','neo4jDatabase':'neo4j','workerId':'isolated-worker','workerCodeCommit':'a'*40,**pins}
+        'network':NETWORK,'neo4jUri':'bolt://graph-neo4j:7687','neo4jDatabase':'neo4j','workerId':'isolated-worker','workerCodeCommit':'a'*40,**pins}
     write(ROOT/'trusted/config.json',json.dumps(test_config,indent=2)+'\n')
     import secrets
     password=secrets.token_hex(24)
-    public_env='NEO4J_URI=bolt://plunode-acceptance-neo4j:7687\nNEO4J_USER=neo4j\nNEO4J_PASSWORD='+password+'\nNEO4J_DATABASE=neo4j\n'
+    public_env='NEO4J_URI=bolt://graph-neo4j:7687\nNEO4J_USER=neo4j\nNEO4J_PASSWORD='+password+'\nNEO4J_DATABASE=neo4j\n'
     write(ROOT/'trusted/public-kg.env',public_env)
     write(ROOT/'trusted/neo4j.env','NEO4J_AUTH=neo4j/'+password+'\nNEO4J_server_memory_heap_initial__size=128m\nNEO4J_server_memory_heap_max__size=256m\nNEO4J_server_memory_pagecache_size=64m\n')
     write(ROOT/'trusted/web.env',public_env+'GRAPH_DATASET=public-kg\nGRAPH_DEPLOYMENT=production\nMEMBER_STORAGE_ENABLED=0\nPLUNODE_PUBLIC_ENABLED=1\n')
@@ -100,20 +115,24 @@ def main():
     network=run(['/usr/bin/docker','network','create','--internal','--label',LABEL,NETWORK]).decode().strip()
     containers=[]
     try:
-        db=run(['/usr/bin/docker','run','-d','--pull=never','--name',NETWORK+'-db','--network',NETWORK,'--network-alias','plunode-acceptance-neo4j','--label',LABEL,
+        db=run(['/usr/bin/docker','run','-d','--pull=never','--name',NETWORK+'-db','--network',NETWORK,'--network-alias','graph-neo4j','--label',LABEL,
             '--memory=768m','--pids-limit=256','--env-file',str(ROOT/'trusted/neo4j.env'),'--tmpfs','/data:rw,uid=7474,gid=7474','--tmpfs','/logs:rw,uid=7474,gid=7474',images['db']]).decode().strip();containers.append(db)
         # Wait without holding either production or WSL common locks.
         deadline=time.monotonic()+150
         while time.monotonic()<deadline:
-            ready=subprocess.run(['/usr/bin/docker','exec',db,'wget','-q','-T','2','-O','/dev/null','http://127.0.0.1:7474/'],capture_output=True,timeout=5)
-            if ready.returncode==0:break
+            try:
+                ready=subprocess.run(['/usr/bin/docker','exec',db,'/bin/sh','-c','NEO4J_PASSWORD="${NEO4J_AUTH#*/}"; export NEO4J_PASSWORD; exec cypher-shell -u neo4j "RETURN 1"'],capture_output=True,timeout=20)
+                if ready.returncode==0:break
+            except subprocess.TimeoutExpired:pass
             time.sleep(1)
         else:raise ValueError('Private Neo4j startup timed out')
-        seed=stage/'seed';seed.chmod(0o755)
-        for item in seed.iterdir():require(item.is_file() and not item.is_symlink(),'Unsafe synthetic fixture');item.chmod(0o644)
-        def ops(args):return run(['/usr/bin/docker','run','--rm','--pull=never','--read-only','--cap-drop=ALL','--security-opt=no-new-privileges','--label',LABEL,
-            '--user=1000:1000','--memory=1g','--pids-limit=128','--network',NETWORK,'--env-file',str(ROOT/'trusted/public-kg.env'),
-            '--mount','type=bind,src='+str(seed)+',dst=/incoming,readonly',operator,*args])
+        seed=stage/'seed';base=stage/'base'
+        for folder in [base,seed]:
+            folder.chmod(0o755)
+            for item in folder.iterdir():require(item.is_file() and not item.is_symlink(),'Unsafe synthetic fixture');item.chmod(0o644)
+        def ops(args,directory=seed):return run(operator_argv(ROOT,operator,directory,args))
+        require(json.loads(ops(['scripts/public-kg.ts','validate','/incoming'],base))['valid'],'Empty bootstrap validation failed')
+        ops(['scripts/public-kg.ts','apply','/incoming'],base)
         require(json.loads(ops(['scripts/public-kg.ts','validate','/incoming']))['valid'],'Synthetic fixture validation failed')
         ops(['scripts/public-kg.ts','apply','/incoming'])  # Bootstrap ONLY the brand-new private DB.
         backup=ops(['scripts/publication-runtime.ts','observe'])

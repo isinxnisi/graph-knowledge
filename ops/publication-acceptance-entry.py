@@ -13,7 +13,7 @@ from urllib.request import urlopen as real_urlopen
 ROOT=Path('/var/lib/plunode-publication/test')
 CODE=Path('/usr/local/lib/plunode-publication')
 NETWORK='plunode-publication-acceptance-20261021'
-URI='bolt://plunode-acceptance-neo4j:7687'
+URI='bolt://graph-neo4j:7687'
 
 
 def main():
