@@ -13,6 +13,7 @@ from types import SimpleNamespace
 from collections import Counter, defaultdict
 
 ROOT = Path(__file__).resolve().parents[1]
+CODE_ROOT = ROOT
 FIELDS = ['entities', 'claims', 'sources', 'citations']
 SEMANTIC = ['subjectId', 'objectId', 'predicate', 'polarity', 'period', 'contribution',
             'organizationParticipation', 'eventParticipation']
@@ -49,7 +50,7 @@ def reference(path):
 
 
 def node(args):
-    result = subprocess.run(['node', '--import', 'tsx', *args], cwd=ROOT, capture_output=True, text=True, timeout=150)
+    result = subprocess.run(['node', '--import', 'tsx', *args], cwd=CODE_ROOT, capture_output=True, text=True, timeout=150)
     require(result.returncode == 0, 'Existing public CLI validation/read failed: ' + (result.stderr or result.stdout)[-2500:])
     return json.loads(result.stdout)
 
@@ -536,6 +537,16 @@ def write_review(reviews, outputs):
 
 
 def execute(args):
+    global ROOT
+    if args.command in ['evidence-review', 'accept-evidence']:
+        # Only data paths change. Never import or execute programs from the Worker data root.
+        previous = ROOT
+        try:
+            ROOT = args.data_root.resolve()
+            evidence = load('collection_evidence', CODE_ROOT / 'scripts/collection-evidence.py')
+            return evidence.execute(args, SimpleNamespace(**globals()))
+        finally:
+            ROOT = previous
     if args.command == 'accept-sequence':
         sequence = load('collection_sequence', ROOT / 'scripts/collection-sequence.py')
         return sequence.execute(args, SimpleNamespace(**globals()))
@@ -599,6 +610,8 @@ def parser():
     sub = cli.add_subparsers(dest='command', required=True)
     acceptance = load('collection_acceptance_parser', ROOT / 'scripts/collection-acceptance.py')
     acceptance.add_parsers(sub, ROOT)
+    evidence = load('collection_evidence_parser', CODE_ROOT / 'scripts/collection-evidence.py')
+    evidence.add_parsers(sub, ROOT)
     inventory = load('collection_inventory_parser', ROOT / 'scripts/collection-inventory.py')
     inventory.add_parser(sub)
     sequence = load('collection_sequence_parser', ROOT / 'scripts/collection-sequence.py')
