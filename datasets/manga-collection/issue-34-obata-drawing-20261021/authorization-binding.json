@@ -1,0 +1,94 @@
+{
+  "schemaVersion": 1,
+  "authority": "existing-human-meaning-approval-bound-to-frozen-records-not-executable-worker-request",
+  "approvalScope": "formal-record-acceptance-and-release-preparation-only",
+  "formalAcceptanceExecuted": false,
+  "recordedAt": "2026-10-20T15:09:57Z",
+  "approvalRecord": {
+    "file": "approval-record.json",
+    "sha256": "e0bec27c3c1d2546aaa5dfccb02263af5e73ed96d01f70b8c2b48998ad1c55a6"
+  },
+  "proposal": {
+    "file": "proposed-records.json",
+    "sha256": "79ba556db26f0c48ce79c3ed1dda2e65dae1d0b72fd560a2a861131a496b72c0"
+  },
+  "acceptedRecordIds": null,
+  "proposedRecordIds": {
+    "entities": [],
+    "claims": [
+      "7ae1c51b-9ba0-46fb-a070-41ac310e8c94"
+    ],
+    "sources": [
+      "932fb74b-9292-4fb9-9f8a-29ce35d83823"
+    ],
+    "citations": [
+      "995e3891-aa9c-4af6-a2ba-3114dfb61fec"
+    ]
+  },
+  "recordSha256": {
+    "entities": {},
+    "claims": {
+      "7ae1c51b-9ba0-46fb-a070-41ac310e8c94": "56bfc8a80c5c5feb22568d6699b327f4e0a9589430bfb067a914fedb56a9f6a5"
+    },
+    "sources": {
+      "932fb74b-9292-4fb9-9f8a-29ce35d83823": "0c118862f33fb5c754cc26597aa3afed6ee29ea6bfbddd2afa6da78d194a1018"
+    },
+    "citations": {
+      "995e3891-aa9c-4af6-a2ba-3114dfb61fec": "172212acdde04d1a5691873f02f6e497124337de4e119a1a36b667a686061ebe"
+    }
+  },
+  "scopeByClaim": [
+    {
+      "id": "7ae1c51b-9ba0-46fb-a070-41ac310e8c94",
+      "subjectId": "d5e39491-5a5f-423c-9222-2eb3c18db9a8",
+      "objectId": "0c29d0e2-685f-4c56-9805-6bf1baf40e7c",
+      "predicate": "CONTRIBUTED_TO",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "contribution": {
+        "roleId": "DRAWING",
+        "scope": null
+      },
+      "organizationParticipation": null,
+      "eventParticipation": null
+    }
+  ],
+  "evidence": {
+    "sourceGitCommit": "ad79a572cc846613f0cde07cb9c196a5205178d2",
+    "reviewFile": "datasets/connectivity/issue-34-obata-evidence/review.json",
+    "reviewSha256": "6c591904aeeb7fa5a26a085ea628450d05f24a8adbb6fcfac1f99b4f777c989c",
+    "bodySha256": "86cfb31314e9e3fe2bf26e04425580c2dc3d5660cbd3b522e32e8be1d533af1b",
+    "httpStatus": 200,
+    "retrievedAt": "2026-10-20T13:27:00.414Z",
+    "language": "ja",
+    "originalText": "作画の小畑健氏",
+    "contextExcerpt": "「ヒカルの碁」の原作者ほったゆみ氏、作画の小畑健氏",
+    "sourceHtmlLine": 25,
+    "bodyByteRange": [
+      1024,
+      1074
+    ]
+  },
+  "existingEntityDependencies": [
+    {
+      "entityId": "d5e39491-5a5f-423c-9222-2eb3c18db9a8",
+      "recordSha256": "46ab209d3574d4a2333f93f795f52edbb8f5ddb7bfce94d31159700a43372963"
+    },
+    {
+      "entityId": "0c29d0e2-685f-4c56-9805-6bf1baf40e7c",
+      "recordSha256": "8e3cadb0d3f5a078a59ec287dd680ffa22bec0e04a312895b3a54130ec713dd3"
+    }
+  ],
+  "baseRelease": "manga-issue-25-utc-recovery-08-normal",
+  "baseRevision": "88437056-b74f-42ab-88c0-33ed435bdccc",
+  "applyAuthorized": {
+    "local": false,
+    "beta": false,
+    "vps": false
+  },
+  "notWorkerDecisionFile": true,
+  "frozenMeaningMatchesHumanApproval": true
+}
