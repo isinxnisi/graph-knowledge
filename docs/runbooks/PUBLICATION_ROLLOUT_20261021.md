@@ -1,6 +1,6 @@
 # Issue #33 本番導入の一括承認対象 P33-INSTALL-20261021
 
-2026-10-21 JST。**一括承認受領済み・VPS root実行待ちの導入案**。[既存導入手順](PUBLICATION_GATE_INSTALLATION.md)と[PC停止時の協調手順](PUBLICATION_COORDINATION.md)を用いる。読み取り結果は[実環境確認](../verification/PUBLICATION_ENVIRONMENT_20261021.md)。本番KG apply/restore、既公開50 Claimの再公開、会員DB、Web/Caddy/Composeの切替、稼働Worker停止を含まない。
+2026-10-21 JST。**一括承認受領済み・本番導入済み（disabled）、専用DB実機試験は準備途中**。下表は承認した差分であり、現在の実測は検証記録の追記を参照する。[既存導入手順](PUBLICATION_GATE_INSTALLATION.md)と[PC停止時の協調手順](PUBLICATION_COORDINATION.md)を用いる。読み取り結果は[実環境確認](../verification/PUBLICATION_ENVIRONMENT_20261021.md)。本番KG apply/restore、既公開50 Claimの再公開、会員DB、Web/Caddy/Composeの切替、稼働Worker停止を含まない。
 
 ## 承認する変更の集合
 
@@ -86,19 +86,10 @@ VPSは `driver-type=io.containerd.snapshotter.v1`。同じ承認済みarchiveの
 最初のローカルDB試験では独自URIが既存assertDatasetTargetに拒否された。guardは変更せず、専用internal network内でalias `graph-neo4j` と既存URIを使用する。分離境界は新network ID/label・新DB・新資格情報・rootの固定test targetであり、本番networkへ試験containerを接続しない。Neo4jはHTTP応答だけでreadyとせず、Cypher RETURN 1を確認してから適用する。これらはVPS上の通信断/復旧試験完了を示すものではない。
 
 
-## 現在の運営者実行コマンド（v2）
+## v2実行済み：再実行しない
 
-旧 `P33_STORE_FIXED` が未実行の場合だけ、既存VPS端末で以下を実行する。実行済み/実行中なら重ねず、表示された結果/保全先を先に確認する。導入一括承認は受領済みで、本番有効化は含まれない。失敗時は再実行せず原記録を保持する。
+P33_READY_V2（bootstrap SHA256 97a7610cb88f9dc5ba93ed0dea8189080976fbee3b9bf8c1234a96c6828b7574）は運営者が実行した。`/root/plunode-publication-install.o7810vn8` にinstalled-disabledが保存され、後続の専用DB準備だけが停止した。旧bootstrapは本番未導入を前提にするため、再実行しない。
 
-```bash
-sudo /bin/bash <<'P33_READY_V2'
-set -euo pipefail
-umask 077
-d=$(mktemp -d /root/plunode-publication-bootstrap.XXXXXXXX)
-install -m 600 /home/develop/plunode-publication-install-20261021/resume-store-and-realtest-v2.py "$d/resume.py"
-printf '%s  %s\n' '97a7610cb88f9dc5ba93ed0dea8189080976fbee3b9bf8c1234a96c6828b7574' "$d/resume.py" | sha256sum -c -
-exec /usr/bin/python3 -I "$d/resume.py"
-P33_READY_V2
-```
+本番専用user/rootプログラム/限定sudo/SSH/鍵/imageは配置済みで公開無効を維持する。実SSH制限、SFTP chroot、固定9ファイル、旧SSH bytes、完全公開KG backupを検証済み。専用DBの空base→合成2 Claim初期化はbackupから確認できたが、試験Web/API準備と公開・通信断・復旧試験は未完了。[現在の結果と再開点](../verification/PUBLICATION_ENVIRONMENT_20261021.md#v2実行後本番導入完了と専用db試験の停止位置)を参照する。
 
-bootstrapは既存3件の失敗記録を照合し、導入先が未作成の場合だけ新root-private stageでarchive/installer SHAを検証する。成功するとinstalled-disabledのJSONを出力する。続いてpublic-only試験archive SHAを照合し、新規専用DB/SSH入口を準備してprivate-real-machine-fixtures-readyのJSONを出力する。どちらかが止まった場合は完了と扱わない。後半の失敗でも導入済みjournalや鍵を初期化しない。表示結果にパスワード/秘密鍵/環境内容を追加して送信する必要はない。
+次の操作は停止地点を読む診断のみとする。Web containerのOOM/exitやimage defaultsを確認し、旧test root・資材ID/label・journal/nonce/reservationを保全した後、承認済みの試験範囲だけを復旧する。本番installerの再実行、nonce初期化、公開KG applyによる疎通確認は行わない。診断や再開時のsudo認証は運営者端末で行い、パスワードをチャットへ渡さない。

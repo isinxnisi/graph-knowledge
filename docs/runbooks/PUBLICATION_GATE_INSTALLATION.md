@@ -1,5 +1,7 @@
 # 公開実行ゲート候補の導入・運営者操作（Issue #33 第2段階）
 
+現在の導入結果は[2026-10-21の実機検証記録](../verification/PUBLICATION_ENVIRONMENT_20261021.md)と[一括導入手順](PUBLICATION_ROLLOUT_20261021.md)を参照する。本番にはdisabledで配置済み、故障試験は未完了であり、本書の以下は第2段階実装時点の記録である。
+
 2026-10-20。**隔離実装・試験用の導入候補**。この文書は本番のsudo／SSH／鍵／image／DB変更や公開承認ではない。現行VPSへ配置していない。`ops/publication-config.example.json` は `deploymentEnabled:false`。実root／sshd／sudoersの有効性は未検証であり、以下を運営者がレビューして別途承認する。
 
 本書の共通flock単独peerと公開手順は、後続の [公開・受入協調手順](PUBLICATION_COORDINATION.md) で補強する。方式選定とPC停止時の契約は [協調設計](../design/PUBLICATION_COORDINATION.md) を現行仕様とする。

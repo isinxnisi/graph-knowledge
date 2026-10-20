@@ -50,4 +50,19 @@ class MachineEntryGuards(unittest.TestCase):
             (base/'data.json').write_text(json.dumps({'schemaVersion':4,'entities':[{'id':'not-empty'}],'claims':[],'sources':[],'citations':[]}))
             with self.assertRaises(ValueError):module.validate_seed_chain(base,seed)
 
+    def test_container_failure_export_omits_env_and_raw_errors(self):
+        module=load('provision-publication-acceptance.py')
+        value={'Name':'/isolated','State':{'Status':'exited','OOMKilled':True,'ExitCode':137,'Error':'private-error'},
+            'Config':{'Env':['NEO4J_PASSWORD=must-not-export']},
+            'HostConfig':{'Memory':123,'PidsLimit':128,'PortBindings':{'3000/tcp':[{'HostIp':'127.0.0.1','HostPort':'32740'}]}},
+            'NetworkSettings':{'Networks':{'private-network':{}},'Ports':{'3000/tcp':None}}}
+        with patch.object(module.subprocess,'run',return_value=subprocess.CompletedProcess([],0,stdout=json.dumps([value]).encode())):
+            report=module.container_failure_details('test-only')
+        self.assertTrue(report['state']['OOMKilled'])
+        self.assertEqual(report['requestedPorts']['3000/tcp'][0]['HostIp'],'127.0.0.1')
+        self.assertIsNone(report['publishedPorts']['3000/tcp'])
+        self.assertNotIn('private-error',json.dumps(report))
+        self.assertNotIn('must-not-export',json.dumps(report))
+        self.assertNotIn('Config',report)
+
 if __name__=='__main__':unittest.main()

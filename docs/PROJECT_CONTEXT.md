@@ -1,5 +1,7 @@
 # プロジェクトの構想と判断基準
 
+2026-10-21、Issue #33の承認済み公開ゲートをVPSへ**公開無効のまま導入**。固定rootコード・限定sudo・SSH制限・SFTP chrootと、現revisionの完全公開KG backupを実機確認した。専用DBの合成2 Claim初期化は確認できたが、試験Web/APIの準備で停止し、通信断・適用結果不明からの復旧試験は未完了。本番apply・有効化・既存Worker制御・会員DB/UI変更は行わない。[実測と再開位置](verification/PUBLICATION_ENVIRONMENT_20261021.md)。
+
 2026-10-20、Issue #33の[固定公開実行ゲート候補](runbooks/PUBLICATION_GATE_INSTALLATION.md)を独立worktreeで隔離実装。既存公開CLI・承認policyを再利用し、固定imageとargv、署名、durable nonce／release予約、一度だけのapply呼出し、DB receipt／graphによる復旧、監査再送とWSL receipt challenge peerを検証する。ORIGINAL_STORY対応ops image候補をprivate Neo4jで試験。本番のroot／SSH／sudo／秘密情報・分散fencingは未導入で、実VPS apply・Worker・UI変更はない。[検証](verification/PUBLICATION_GATE_20261020.md)。
 
 2026-10-20、Issue #33の[公開状態同期と定型公開](design/PUBLICATION_AUTOMATION.md)を第1段階として実装。運営者が公開した50 Claimとrevision 88437056-b74f-42ab-88c0-33ed435bdcccを基準に、正式receiptを変更せず公開済み／未公開を再照合する。新しいbaseによる候補草稿・署名binding・失敗後の再開policyを隔離検証。本番adapter・権限設定・Worker切替は別判断。[実測](verification/PUBLICATION_AUTOMATION_20261020.md)。

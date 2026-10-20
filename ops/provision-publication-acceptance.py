@@ -1,6 +1,7 @@
 #!/usr/bin/python3 -I
 """Approved P33 temporary real-machine fixtures. New private DB/network only; production disabled."""
 import hashlib
+import datetime as dt
 import importlib.util
 import json
 import os
@@ -20,6 +21,10 @@ LABEL='plunode.publication-test=P33-20261021'
 IMAGE='sha256:af1216c98ef75ad0fdba1424d854fc26802af066f684c77af79f9bf6f6cf880f'
 MANIFEST_IMAGE='sha256:e48a540914d708a88a70b66ad399eb6a7769e98c76ff4ace50cdb7febdf04cf1'
 CODE=Path('/usr/local/lib/plunode-publication')
+STAGE=None
+PHASE='preflight'
+LAST_OPERATION='root-staging-check'
+FAILURE_DETAILS=[]
 
 
 def require(value,message):
@@ -27,6 +32,8 @@ def require(value,message):
 
 
 def run(argv):
+    global LAST_OPERATION
+    LAST_OPERATION=' '.join(argv[:2])
     value=subprocess.run(argv,capture_output=True,timeout=240,env={'PATH':'/usr/sbin:/usr/bin:/sbin:/bin','LANG':'C.UTF-8','HOME':'/root'})
     require(value.returncode==0,'Temporary fixture command failed: '+argv[0]);return value.stdout
 
@@ -54,11 +61,42 @@ def validate_seed_chain(base,seed):
     require(data=={'schemaVersion':4,'entities':[],'claims':[],'sources':[],'citations':[]},'Bootstrap must be the empty synthetic fixture')
 
 
+def container_failure_details(identifier):
+    """Only structural state leaves Docker; never env, passwords, raw logs or credentials."""
+    try:
+        result=subprocess.run(['/usr/bin/docker','inspect',identifier],capture_output=True,timeout=15)
+        if result.returncode:return {'inspectionFailed':True}
+        value=json.loads(result.stdout)[0]
+        state=value['State']
+        return {'name':value['Name'],'state':{k:state.get(k) for k in ['Status','OOMKilled','ExitCode']},
+            'memory':value['HostConfig']['Memory'],'pidsLimit':value['HostConfig']['PidsLimit'],
+            'networks':sorted(value['NetworkSettings']['Networks']),
+            'requestedPorts':value['HostConfig'].get('PortBindings',{}),
+            'publishedPorts':value['NetworkSettings'].get('Ports',{}),
+            'health':state.get('Health',{}).get('Status')}
+    except Exception:return {'inspectionFailed':True}
+
+
+def record_failure(error):
+    if STAGE is None:return None
+    name='private-machine-failure-'+dt.datetime.now(dt.timezone.utc).strftime('%Y%m%dT%H%M%S%fZ')+'.json'
+    report={'phase':PHASE,'operation':LAST_OPERATION,'errorType':type(error).__name__,
+        'reason':str(error)[:300],'containers':FAILURE_DETAILS,'productionApplyCalls':0,'productionEnabled':False}
+    write(STAGE/name,json.dumps(report,indent=2)+'\n')
+    # outbox is root-owned, public metadata only; allow diagnostics without another sudo round trip.
+    outbox=ROOT/'outbox'
+    if outbox.is_dir() and not outbox.is_symlink() and outbox.stat().st_uid==0 and not outbox.stat().st_mode&0o022:
+        write(outbox/name,json.dumps(report,indent=2)+'\n',0o644)
+    return name
+
+
 def main():
     require(os.geteuid()==0 and len(sys.argv)==1,'Root fixed staging only');os.umask(0o077)
     stage=Path(__file__).resolve().parent
+    global STAGE,PHASE,FAILURE_DETAILS
     for item in [stage,*stage.parents]:
         st=item.lstat();require(not item.is_symlink() and st.st_uid==0 and not st.st_mode&0o022,'Untrusted root staging')
+    STAGE=stage
     require(not ROOT.exists(),'Existing temporary test root; preserve it')
     production=ROOT.parent
     config=json.loads((production/'trusted/config.json').read_bytes())
@@ -115,6 +153,7 @@ def main():
     network=run(['/usr/bin/docker','network','create','--internal','--label',LABEL,NETWORK]).decode().strip()
     containers=[]
     try:
+        PHASE='start-private-db'
         db=run(['/usr/bin/docker','run','-d','--pull=never','--name',NETWORK+'-db','--network',NETWORK,'--network-alias','graph-neo4j','--label',LABEL,
             '--memory=768m','--pids-limit=256','--env-file',str(ROOT/'trusted/neo4j.env'),'--tmpfs','/data:rw,uid=7474,gid=7474','--tmpfs','/logs:rw,uid=7474,gid=7474',images['db']]).decode().strip();containers.append(db)
         # Wait without holding either production or WSL common locks.
@@ -126,20 +165,26 @@ def main():
             except subprocess.TimeoutExpired:pass
             time.sleep(1)
         else:raise ValueError('Private Neo4j startup timed out')
+        PHASE='seed-fixtures'
         seed=stage/'seed';base=stage/'base'
         for folder in [base,seed]:
             folder.chmod(0o755)
             for item in folder.iterdir():require(item.is_file() and not item.is_symlink(),'Unsafe synthetic fixture');item.chmod(0o644)
         def ops(args,directory=seed):return run(operator_argv(ROOT,operator,directory,args))
         require(json.loads(ops(['scripts/public-kg.ts','validate','/incoming'],base))['valid'],'Empty bootstrap validation failed')
+        PHASE='apply-empty-base'
         ops(['scripts/public-kg.ts','apply','/incoming'],base)
         require(json.loads(ops(['scripts/public-kg.ts','validate','/incoming']))['valid'],'Synthetic fixture validation failed')
+        PHASE='apply-two-claim-seed'
         ops(['scripts/public-kg.ts','apply','/incoming'])  # Bootstrap ONLY the brand-new private DB.
+        PHASE='observe-private-db'
         backup=ops(['scripts/publication-runtime.ts','observe'])
         write(ROOT/'export/base-backup.json',backup);os.chown(ROOT/'export/base-backup.json',upload.pw_uid,upload.pw_gid)
         write(ROOT/'outbox/exclusion.pem',(ROOT/'trusted/exclusion.pem').read_bytes(),0o644)
+        PHASE='start-private-web'
         web=run(['/usr/bin/docker','run','-d','--pull=never','--name',NETWORK+'-web','--network',NETWORK,'--label',LABEL,'--memory=384m','--pids-limit=128',
             '--cap-drop=ALL','--security-opt=no-new-privileges','--env-file',str(ROOT/'trusted/web.env'),'-p','127.0.0.1:32740:3000',images['web']]).decode().strip();containers.append(web)
+        PHASE='verify-private-web-api'
         expected=json.loads(backup)['payload']['revision']
         deadline=time.monotonic()+90
         while time.monotonic()<deadline:
@@ -149,6 +194,7 @@ def main():
             except Exception:pass
             time.sleep(1)
         else:raise ValueError('Private Web/API startup timed out')
+        PHASE='install-temporary-ssh'
         key_line='restrict,command="/usr/bin/python3 -I /usr/local/lib/plunode-publication/publication-acceptance-ssh.py" '+keys['ssh'].strip()
         auth=Path('/var/lib/plunode-publish-home/.ssh/authorized_keys');old=auth.read_bytes()
         write(ROOT/'trusted/authorized_keys.before',old)
@@ -156,6 +202,7 @@ def main():
         sudo='plunode-publish ALL=(root) NOPASSWD: NOSETENV: /usr/local/sbin/plunode-publication-acceptance\n'
         sudo_candidate=ROOT/'trusted/sudoers-candidate';write(sudo_candidate,sudo,0o440);run(['/usr/sbin/visudo','-cf',str(sudo_candidate)])
         write(Path('/etc/sudoers.d/plunode-publication-acceptance'),sudo,0o440)
+        PHASE='write-ready-receipt'
         resources={'networkId':network,'containerIds':containers,'allowedImageIds':[operator,*images.values()],
             'temporaryAuthorizedKey':key_line,'sudoersSha256':hashlib.sha256(sudo.encode()).hexdigest(),'productionEnabled':False}
         write(ROOT/'trusted/resources.json',json.dumps(resources,indent=2)+'\n')
@@ -165,6 +212,7 @@ def main():
         with urlopen('http://127.0.0.1:3200/api/dataset',timeout=15) as response:require(json.load(response)==before,'Production revision changed')
         print(json.dumps(result))
     except BaseException:
+        FAILURE_DETAILS=[container_failure_details(c) for c in containers]
         # Only IDs just created by this installer; never existing services or volumes.
         for container in reversed(containers):subprocess.run(['/usr/bin/docker','rm','-f',container],capture_output=True,timeout=60)
         subprocess.run(['/usr/bin/docker','network','rm',network],capture_output=True,timeout=60)
@@ -172,5 +220,7 @@ def main():
 
 if __name__=='__main__':
     try:main()
-    except Exception:
-        print('{"error":"private-real-machine-setup-stopped","productionApplyCalls":0}');sys.exit(1)
+    except Exception as error:
+        try:report=record_failure(error)
+        except Exception:report=None
+        print(json.dumps({'error':'private-real-machine-setup-stopped','productionApplyCalls':0,'failureReport':report}));sys.exit(1)
