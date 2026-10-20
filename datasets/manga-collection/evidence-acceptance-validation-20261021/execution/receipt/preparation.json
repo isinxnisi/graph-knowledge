@@ -1,0 +1,178 @@
+{
+  "status": "release-prepared-not-applied",
+  "decisionId": "issue-34-obata-drawing-20261021",
+  "acceptance": "/home/isinxnisi/.local/share/plunode-collection-worker-phase-b-20261020/runtime/datasets/manga-collection/accepted-issue-34-obata-drawing-20261021/acceptance.json",
+  "recordedAt": "2026-10-20T17:52:45.754800+00:00",
+  "checkedAt": "2026-10-20T17:53:38+00:00",
+  "releaseDirectory": "/home/isinxnisi/.local/share/plunode-collection-worker-phase-b-20261020/runtime/datasets/public-kg/releases/manga-issue-34-obata-drawing-001",
+  "acceptanceReused": false,
+  "releaseUnchanged": false,
+  "validationReused": false,
+  "acceptedCounts": {
+    "entities": 0,
+    "claims": 1,
+    "sources": 1,
+    "citations": 1
+  },
+  "reusedRecordIds": {
+    "entities": [],
+    "claims": [],
+    "sources": [],
+    "citations": []
+  },
+  "releaseAdditions": {
+    "entities": 0,
+    "claims": 1,
+    "sources": 1,
+    "citations": 1
+  },
+  "externalIdentifiersAdded": 0,
+  "notAcceptedRecordIds": {
+    "entities": [],
+    "claims": [],
+    "sources": [],
+    "citations": []
+  },
+  "heldClaimIds": [],
+  "heldEntityIds": [],
+  "heldRecords": {
+    "claims": [],
+    "entities": []
+  },
+  "inheritedHolds": [],
+  "validation": {
+    "valid": true,
+    "counts": {
+      "nodes": {
+        "Entity": 2175,
+        "Claim": 1895,
+        "Source": 1795,
+        "Citation": 1932,
+        "ExternalIdentifier": 2544
+      },
+      "relationships": {
+        "SUBJECT": 1895,
+        "OBJECT": 1895,
+        "HAS_CITATION": 1932,
+        "CITES": 1932,
+        "HAS_EXTERNAL_ID": 2544
+      }
+    }
+  },
+  "plan": {
+    "release": "manga-issue-34-obata-drawing-001",
+    "observation": "validated-backup-offline-not-a-live-vps-plan",
+    "backupRevision": "88437056-b74f-42ab-88c0-33ed435bdccc",
+    "added": [
+      "Citation:995e3891-aa9c-4af6-a2ba-3114dfb61fec",
+      "Claim:7ae1c51b-9ba0-46fb-a070-41ac310e8c94",
+      "Source:932fb74b-9292-4fb9-9f8a-29ce35d83823"
+    ],
+    "updated": [],
+    "relationshipsAdded": 4
+  },
+  "publicBeforePlan": {
+    "release": "manga-issue-25-utc-recovery-08-normal",
+    "revision": "88437056-b74f-42ab-88c0-33ed435bdccc",
+    "observation": "supplied-backup-not-a-live-check",
+    "fixtureSha256": "2059149b7cc6a75982761d36a6961408f294f53915885454bd3611b65af4c3a0",
+    "withdrawals": [],
+    "historySha256": "e4dc244450514ed8ed7ef22d53776c9505b976745670deeb8de8c372042638e9",
+    "references": [
+      {
+        "file": "datasets/public-kg/releases/manga-issue-25-utc-recovery-08-normal/data.json",
+        "sha256": "44cb7d65c4ece8ac04ffcca988c0b37f35a5bf61cc934ef482cbefda39ec09e7"
+      },
+      {
+        "file": "datasets/public-kg/releases/manga-issue-25-utc-recovery-08-normal/manifest.json",
+        "sha256": "325522f3efa7ddc0ff67f278456fc81956420ab0d00999d5823988dfc33cd9a3"
+      }
+    ],
+    "productionBackupSha256": "750850776e2824b7e1eb20a3fc73db56e41dc188f71cfba214290741dd7071ab",
+    "liveMetadata": {
+      "url": "https://plunode.net/api/dataset",
+      "httpStatus": 200,
+      "dataset": "public-kg",
+      "revision": "88437056-b74f-42ab-88c0-33ed435bdccc"
+    }
+  },
+  "publicAfterPlan": {
+    "release": "manga-issue-25-utc-recovery-08-normal",
+    "revision": "88437056-b74f-42ab-88c0-33ed435bdccc",
+    "observation": "supplied-backup-not-a-live-check",
+    "fixtureSha256": "2059149b7cc6a75982761d36a6961408f294f53915885454bd3611b65af4c3a0",
+    "withdrawals": [],
+    "historySha256": "e4dc244450514ed8ed7ef22d53776c9505b976745670deeb8de8c372042638e9",
+    "references": [
+      {
+        "file": "datasets/public-kg/releases/manga-issue-25-utc-recovery-08-normal/data.json",
+        "sha256": "44cb7d65c4ece8ac04ffcca988c0b37f35a5bf61cc934ef482cbefda39ec09e7"
+      },
+      {
+        "file": "datasets/public-kg/releases/manga-issue-25-utc-recovery-08-normal/manifest.json",
+        "sha256": "325522f3efa7ddc0ff67f278456fc81956420ab0d00999d5823988dfc33cd9a3"
+      }
+    ],
+    "productionBackupSha256": "750850776e2824b7e1eb20a3fc73db56e41dc188f71cfba214290741dd7071ab",
+    "liveMetadata": {
+      "url": "https://plunode.net/api/dataset",
+      "httpStatus": 200,
+      "dataset": "public-kg",
+      "revision": "88437056-b74f-42ab-88c0-33ed435bdccc"
+    }
+  },
+  "explorationPaths": [
+    {
+      "state": "formally-accepted-not-applied",
+      "observation": "verified-records-only-not-a-live-exploration-test",
+      "edges": [
+        {
+          "claimId": "7ae1c51b-9ba0-46fb-a070-41ac310e8c94",
+          "subjectId": "d5e39491-5a5f-423c-9222-2eb3c18db9a8",
+          "objectId": "0c29d0e2-685f-4c56-9805-6bf1baf40e7c",
+          "person": "小畑健",
+          "work": "ヒカルの碁",
+          "roleId": "DRAWING",
+          "scope": null,
+          "state": "formally-accepted-not-applied",
+          "citationIds": [
+            "995e3891-aa9c-4af6-a2ba-3114dfb61fec"
+          ],
+          "sourceIds": [
+            "932fb74b-9292-4fb9-9f8a-29ce35d83823"
+          ]
+        },
+        {
+          "claimId": "cd294bb9-a7de-4f21-95c2-84b878c0e7cc",
+          "subjectId": "d5e39491-5a5f-423c-9222-2eb3c18db9a8",
+          "objectId": "3427040b-88fd-4db5-b546-dd237abad032",
+          "person": "小畑健",
+          "work": "バクマン。",
+          "roleId": "AUTHORSHIP",
+          "scope": {
+            "editionLabel": null,
+            "isbn13": "9784086196901",
+            "kind": "publication",
+            "language": "ja",
+            "volumeLabel": "第1巻"
+          },
+          "state": "published-in-public-snapshot",
+          "citationIds": [
+            "c2a11bab-9544-49af-a352-668f7cb08aff"
+          ],
+          "sourceIds": [
+            "6dfb8c00-412a-4bd6-88f8-58f85b98247e"
+          ]
+        }
+      ]
+    }
+  ],
+  "publicApply": false,
+  "applyAuthorized": {
+    "local": false,
+    "beta": false,
+    "vps": false
+  },
+  "planObservation": "validated-production-backup-offline",
+  "liveVpsPlanPerformed": false
+}

@@ -1,0 +1,765 @@
+{
+  "version": 1,
+  "status": "accepted-for-release-preparation-only",
+  "reviewer": "プロジェクト運営者（本タスクのユーザー）",
+  "recordedAt": "2026-10-20T17:52:45.754800+00:00",
+  "instructionAt": "2026-10-20T15:20:24.000+00:00",
+  "humanInstruction": "本タスクの人間による明示指示（turn 01a159e6-415b-7883-a57a-e8e8ff43e5b7、受信 2026-10-20T15:20:24.000Z）を記録する。e64a2deの1 Claim/1 Source/1 CitationのUUIDと全内容hashを維持し、既存意味承認と完全一致させ、現行本番backupを検証後に正式受入・receipt保存・次回release準備まで実行する指示。小畑健→既存漫画ヒカルの碁、CONTRIBUTED_TO/affirmed/DRAWING/scope=null/period from,to=nullのみ。新しい意味判断・収集・本番apply/restoreは承認しない。既存意味承認: https://github.com/isinxnisi/graph-knowledge/issues/34#issuecomment-6292911753",
+  "decisionId": "issue-34-obata-drawing-20261021",
+  "humanDecisionSha256": "72fd7dc968cdc2bd2f265382e270cb300f6188c51d180f5c6c3daaae5775b99d",
+  "referenceArtifacts": [
+    {
+      "file": "datasets/manga-collection/evidence-reviews/issue-34-obata-drawing-20261021-r2/context.json",
+      "sha256": "3f10dae6a259169b6390885a67d99b806a675bfdd6a4ea9d3621bb1a5a259619"
+    },
+    {
+      "file": "datasets/manga-collection/evidence-reviews/issue-34-obata-drawing-20261021-r2/decision-request.json",
+      "sha256": "2012c8f945c6f3f40a4d78f56baba858d04f7f8c3cdb2d55bdc4d800f2156fa4"
+    },
+    {
+      "file": "datasets/manga-collection/evidence-reviews/issue-34-obata-drawing-20261021-r2/proposed-records.json",
+      "sha256": "15ec2b9d9013a7b5af64f0539b1fe2a07302c92d60abb7bb58daf7e9215140d6"
+    },
+    {
+      "file": "datasets/manga-collection/evidence-reviews/issue-34-obata-drawing-20261021-r2/review-manifest.json",
+      "sha256": "1f8c0fa0c236cbc25d6a8e591252f535ce356882e8ce9cf8d6ce70a6078d0449"
+    },
+    {
+      "file": "datasets/manga-collection/evidence-reviews/issue-34-obata-drawing-20261021-r2/review.json",
+      "sha256": "f1f6107ec4c172435b02c475b9c2c9a781b8e4656915f2c00b2b2bd326eeb3b6"
+    },
+    {
+      "file": "datasets/manga-collection/issue-34-obata-drawing-20261021/authorization-binding.json",
+      "sha256": "9e4e9cd91059d81060e75658c33f576befe416ffdc8eca09839bc4c605c2159f"
+    },
+    {
+      "file": "datasets/manga-collection/issue-34-obata-drawing-20261021/proposed-records.json",
+      "sha256": "79ba556db26f0c48ce79c3ed1dda2e65dae1d0b72fd560a2a861131a496b72c0"
+    },
+    {
+      "file": "datasets/manga-collection/issue-34-obata-drawing-20261021/approval-record.json",
+      "sha256": "e0bec27c3c1d2546aaa5dfccb02263af5e73ed96d01f70b8c2b48998ad1c55a6"
+    },
+    {
+      "file": "datasets/connectivity/issue-34-obata-evidence/review.json",
+      "sha256": "6c591904aeeb7fa5a26a085ea628450d05f24a8adbb6fcfac1f99b4f777c989c"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/comparisons/80f5cb52152905adbf07d60a814e43a39f9ea95e92b5ca71a8289c1ec273ffad/data.json",
+      "sha256": "5803b8b9b1038b5735f698f057b2d73d0f0a52afd524061ca52ca9bfbc883d5e"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/comparisons/80f5cb52152905adbf07d60a814e43a39f9ea95e92b5ca71a8289c1ec273ffad/manifest.json",
+      "sha256": "6f1802d95c31f2c0c485dd8e463980859c68e6100e55e1435ea3f373d637623a"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/comparisons/8dabd4404ff604a24e58643be0f7f2262b4e45f1d50c69c645d699f300d907f5/data.json",
+      "sha256": "4ffb72c38fb9066ab365ceb35f52884149f4135ba1add5b898cd11045da347dd"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/comparisons/8dabd4404ff604a24e58643be0f7f2262b4e45f1d50c69c645d699f300d907f5/manifest.json",
+      "sha256": "3bea6db06a281094f859763ef2619a30b976841a241c754ffff23302ee67e687"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/comparisons/bc22326e03e9b1eabed4e326186c86de53fd08fc419d6586de10d8db1d7cb1ee/data.json",
+      "sha256": "ca9b299f8867abb1d75a07ee67861bceb8f7a16e9750c10ea783f9b8ee65d9d6"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/comparisons/bc22326e03e9b1eabed4e326186c86de53fd08fc419d6586de10d8db1d7cb1ee/manifest.json",
+      "sha256": "14dbe248500b7f3b7573c54cb4f33301bcf86cd17e15325aff058dcd26bd9163"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/comparisons/cc623ededeffcd8f3f957d5743b6a3f3ba45e3ca8a513a3e5dfc009b07a88736/data.json",
+      "sha256": "811e36bf7d91b160451afd9cd1d12ee0f40e90f96096479ae9bb6b44e36b9739"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/comparisons/cc623ededeffcd8f3f957d5743b6a3f3ba45e3ca8a513a3e5dfc009b07a88736/manifest.json",
+      "sha256": "5fdeebf0e40108ce3a5e8c00991edadd5eefb87e1e792ce433c491d6ad170163"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/comparisons/f4d3926cb576b6c53594da70215f63711c9afe348abefc602f6a89e78eea2947/data.json",
+      "sha256": "e6e0927f43249d1f8d5a3e223956d431dea91d762bd2f82fa0482042632c2521"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/comparisons/f4d3926cb576b6c53594da70215f63711c9afe348abefc602f6a89e78eea2947/manifest.json",
+      "sha256": "2fcfd75e78f444d10d6f634ed432e3f43164730df65e537068fde06667f19655"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/decisions/issue-25-utc-recovery-03-normal.json",
+      "sha256": "1226b6c2488d01ccaca02831b1ddb4ed5bba0e4e8999ae905722352a9c75cb72"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/decisions/issue-25-utc-recovery-04-normal.json",
+      "sha256": "5d933e22561e19f3248500b5f29b3aafa668e69735a66c2a4a96f9a1233c5cd4"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/decisions/issue-25-utc-recovery-06-normal.json",
+      "sha256": "b7dfa07c233b6eda6aab4bc5f3582038fd66de07cf6d43dd7b062a5c4d36cf2b"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/decisions/issue-25-utc-recovery-07-normal.json",
+      "sha256": "e181b3ae516b7b08d204871567f2312dc9ad8705e2ce24209946b0559eafaa0e"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/decisions/issue-25-utc-recovery-08-normal.json",
+      "sha256": "3075be3d7f612ff381f5b527d8a984010bcc172ff0de725f9f34612179543382"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/proofs/issue-25-utc-recovery-03-normal-18ed8ea504ce672eec80.json",
+      "sha256": "30b1a2d8680aa9091c422e7e6297c8eed078a3665d63357dfa5ad5217ceced8c"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/proofs/issue-25-utc-recovery-04-normal-25e5997824ddd8657a9f.json",
+      "sha256": "164de980dea70ffb8d51f9804de073223de36df8455e7afb1f7256a362c0c3e1"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/proofs/issue-25-utc-recovery-06-normal-c7c5e01d33077285dfb2.json",
+      "sha256": "ccc229a3019c595546bdc099c48111738017d744312864c37affa14038213c8a"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/proofs/issue-25-utc-recovery-07-normal-7c4ffb5ab9449ea3db1c.json",
+      "sha256": "90ac5e202fca8e7d68571c1d02c4171579e47999b14bfea0b5acd3db91646252"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/proofs/issue-25-utc-recovery-08-normal-0b9fd42c36343904ce80.json",
+      "sha256": "6629254deaba0a412199384645b1017e810961247e2d64132b18e83bfde0807d"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/register-source.json",
+      "sha256": "82b53f2bb1e0c1e5402af117a22de2a809ecf0588a56743e6aaef3258b42e8d6"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0003-4e7b3edf51e9545b-review-c1ab7772b1b72fea/README.md",
+      "sha256": "723b6041becbc7e0310f3506bc2c132408799b9f8b9a046768b97e9d0eb975ff"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0003-4e7b3edf51e9545b-review-c1ab7772b1b72fea/context.json",
+      "sha256": "0f485f7429b54f44ea96e8641e83991f9657863a687f8206221411972fa72b5f"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0003-4e7b3edf51e9545b-review-c1ab7772b1b72fea/decision-request.json",
+      "sha256": "a70e8c6b2232c6a51ec0a438939c0cdf25b0029328f9b32080b8d09abbfb07f7"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0003-4e7b3edf51e9545b-review-c1ab7772b1b72fea/exploration-paths.json",
+      "sha256": "0d20374cc148071e0757648ce676db82cd42ce54fb873340098dc3b9b18bce7f"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0003-4e7b3edf51e9545b-review-c1ab7772b1b72fea/identity-only-records.json",
+      "sha256": "1fc314e4a47717bce195b39fe7f1e66bd31f6af892fca4a9420a653eab927a37"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0003-4e7b3edf51e9545b-review-c1ab7772b1b72fea/proposed-records.json",
+      "sha256": "da8f0d581f1c86cd6a369e05723f391f96f0f7170bd83e40d99af87e80d58cf5"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0003-4e7b3edf51e9545b-review-c1ab7772b1b72fea/review-manifest.json",
+      "sha256": "6dd9f224ffa41a4875a971bd2ad39b709c8cbd093146a4d40c9715df5b9bec49"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0003-4e7b3edf51e9545b-review-c1ab7772b1b72fea/review.json",
+      "sha256": "ad9bdf1fd2112fdf7a1663195abc1e4ae418d2dd819cae2b35fbac41c121487d"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0004-b96c712262173821-review-d9500d40636871b4/README.md",
+      "sha256": "7e26b7dc06b2b63fddba9275c118d7cda20ed9a44e95b7b3d6c55527bf73af09"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0004-b96c712262173821-review-d9500d40636871b4/context.json",
+      "sha256": "552c404723dab2df7def87b79d4d8d8f9c365621977325328214417dfdc241c1"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0004-b96c712262173821-review-d9500d40636871b4/decision-request.json",
+      "sha256": "e26da787a024a59b6cc6bbde04b5a4134e87c49ecd8b14484e24720142ceee70"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0004-b96c712262173821-review-d9500d40636871b4/exploration-paths.json",
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0004-b96c712262173821-review-d9500d40636871b4/identity-only-records.json",
+      "sha256": "1fc314e4a47717bce195b39fe7f1e66bd31f6af892fca4a9420a653eab927a37"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0004-b96c712262173821-review-d9500d40636871b4/proposed-records.json",
+      "sha256": "780f04908867993e485244ad2e939fd11ff6fa408a35ff59bdd82b06e7f853bf"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0004-b96c712262173821-review-d9500d40636871b4/review-manifest.json",
+      "sha256": "1fd25da2ba0bb78036b790da539f72e510c0e860061ce26c62c08892be0e739f"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0004-b96c712262173821-review-d9500d40636871b4/review.json",
+      "sha256": "aa1d4d3087818559d5bd38ecf786e2b121621ce6a2f131665f73ef6736db65bd"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0006-18bb8d898648582b-review-d38b26ea39279e93/README.md",
+      "sha256": "401ee93d4f4665626b306ed6e24638aee64ef3dc383b0d3ab612de70b24e5b25"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0006-18bb8d898648582b-review-d38b26ea39279e93/context.json",
+      "sha256": "08b7e3816fd65b83a7746256dd4e78a9d79b04b55f98a36bd0dd69c2295cf8e7"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0006-18bb8d898648582b-review-d38b26ea39279e93/decision-request.json",
+      "sha256": "180efa7c7f5547e20904a2966e2559ce43f701ada05ff139d5ea98c2e828676d"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0006-18bb8d898648582b-review-d38b26ea39279e93/exploration-paths.json",
+      "sha256": "3f08afdda78f6ddf3bfeb1242a7a77a3c127d2e87c0ca52ecbd6825906b3981d"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0006-18bb8d898648582b-review-d38b26ea39279e93/identity-only-records.json",
+      "sha256": "1fc314e4a47717bce195b39fe7f1e66bd31f6af892fca4a9420a653eab927a37"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0006-18bb8d898648582b-review-d38b26ea39279e93/proposed-records.json",
+      "sha256": "58b7666ca44a79ab4c9b5081e0a70bc0b5b9934cabdc3c6c8ea0e62ece256b67"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0006-18bb8d898648582b-review-d38b26ea39279e93/review-manifest.json",
+      "sha256": "6517dbb8c279234aa7256ce1a3dfe70e63a38989ff4b0559e83390603389a7e8"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0006-18bb8d898648582b-review-d38b26ea39279e93/review.json",
+      "sha256": "584edf8d337a7c17d4d08aec16fdc807903bad688c2f81a77619431f31c8dee5"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0007-0b3c13e86c5f069c-review-9cb3e5c8a5348de9/README.md",
+      "sha256": "056800f017506ed213ed31c65b373c284b5f9a57d9b95e54980960d0b73a49f0"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0007-0b3c13e86c5f069c-review-9cb3e5c8a5348de9/context.json",
+      "sha256": "ab95c7cbf825ad89dc611ce24e0c10c93adab1022419f167c1846ba2861d3885"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0007-0b3c13e86c5f069c-review-9cb3e5c8a5348de9/decision-request.json",
+      "sha256": "af8f169986a61757c10d6ba567085e3e43c42e2b6506da4a0ef19061b29bbaf9"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0007-0b3c13e86c5f069c-review-9cb3e5c8a5348de9/exploration-paths.json",
+      "sha256": "14c62e53896f0776d658794aa9f5e8d20ef37c8f53645af1ea7e3db59f68e99f"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0007-0b3c13e86c5f069c-review-9cb3e5c8a5348de9/identity-only-records.json",
+      "sha256": "1fc314e4a47717bce195b39fe7f1e66bd31f6af892fca4a9420a653eab927a37"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0007-0b3c13e86c5f069c-review-9cb3e5c8a5348de9/proposed-records.json",
+      "sha256": "20e255e4b4755121dee032b8cf90f28cab043844f4a8367382188c9909d495db"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0007-0b3c13e86c5f069c-review-9cb3e5c8a5348de9/review-manifest.json",
+      "sha256": "965d902f925d6a1b038152e95e616096901481ac9fb4d689bff222b079331f76"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0007-0b3c13e86c5f069c-review-9cb3e5c8a5348de9/review.json",
+      "sha256": "267aae7ad44fee6bec2bcca0386d60ca42dca34f08bd1dd3a9970b56eac45fed"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0008-9f792bd2246a1595-review-da16fa40ca3dcbf9/README.md",
+      "sha256": "aae590ea54f45343ec442477858f96103fa3f0e22237a51a95f4ffa828af5ab9"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0008-9f792bd2246a1595-review-da16fa40ca3dcbf9/context.json",
+      "sha256": "0e3a7f69c9e20e097a31a9e0bf8ba57867a96e6f82f3eb983536f068e45e5855"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0008-9f792bd2246a1595-review-da16fa40ca3dcbf9/decision-request.json",
+      "sha256": "ff156c4cd58b6b9356d44161a97942f31d1de42bec6bb690cf4df298c42db33c"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0008-9f792bd2246a1595-review-da16fa40ca3dcbf9/exploration-paths.json",
+      "sha256": "d2aaf0388fff0e2100fbe1e0e0bbcf5d9a7b6ec0e4ab84dd439a9e123bfdde4b"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0008-9f792bd2246a1595-review-da16fa40ca3dcbf9/identity-only-records.json",
+      "sha256": "1fc314e4a47717bce195b39fe7f1e66bd31f6af892fca4a9420a653eab927a37"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0008-9f792bd2246a1595-review-da16fa40ca3dcbf9/proposed-records.json",
+      "sha256": "172ef5758067fbaabb6594fc02f900b21b8dfe276e4d7c86feebae2e364466c7"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0008-9f792bd2246a1595-review-da16fa40ca3dcbf9/review-manifest.json",
+      "sha256": "39cc046c6d0ec10cfec1c2c5468a2497cf5ec9645433418d74fe10bc94e50cc5"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0008-9f792bd2246a1595-review-da16fa40ca3dcbf9/review.json",
+      "sha256": "e377727d77498bbc03b86a86b9997ce3bab23d3cef0a9dbca02191549e0aa032"
+    },
+    {
+      "file": "datasets/manga-collection/accepted-issue-25-utc-recovery-01-normal/acceptance.json",
+      "sha256": "d271f32767dab030bd26ddcef669f48237cc303a8c605c58df047df8aea71fb6"
+    },
+    {
+      "file": "datasets/manga-collection/accepted-issue-25-utc-recovery-01-normal/accepted-records.json",
+      "sha256": "2741fc2872c73b9c0f83a416097db1cfe0775f61c31ea668a2eb8bf790e74e88"
+    },
+    {
+      "file": "datasets/manga-collection/accepted-issue-25-utc-recovery-03-normal/acceptance.json",
+      "sha256": "2cd8cb76b64be0d9d19fb3da8ceb4d3e185ca086bba0e90917a7b24a1da0bedf"
+    },
+    {
+      "file": "datasets/manga-collection/accepted-issue-25-utc-recovery-03-normal/accepted-records.json",
+      "sha256": "620deab693c47e6aca568aae93c870cf347c5d7d192c5206b20dde9cb664bf84"
+    },
+    {
+      "file": "datasets/manga-collection/accepted-issue-25-utc-recovery-04-normal/acceptance.json",
+      "sha256": "052a7d1ef334074ce2b94837a7d0dfc803bde9526abc9d8e8e7f058b36acdf62"
+    },
+    {
+      "file": "datasets/manga-collection/accepted-issue-25-utc-recovery-04-normal/accepted-records.json",
+      "sha256": "789a055dfececcac1ef1f5bd156ce196a98b30eb477ed0d17a4ba92a42ea09ad"
+    },
+    {
+      "file": "datasets/manga-collection/accepted-issue-25-utc-recovery-06-normal/acceptance.json",
+      "sha256": "4e94de08943725549f4e01be9e6b1b09f2f9d88c5ca2dfaa9aa5b7c2395930f4"
+    },
+    {
+      "file": "datasets/manga-collection/accepted-issue-25-utc-recovery-06-normal/accepted-records.json",
+      "sha256": "81887ebdb7194fde96ffd0afdf560f3f536b3a0e419b68566d74e1baaa67caae"
+    },
+    {
+      "file": "datasets/manga-collection/accepted-issue-25-utc-recovery-07-normal/acceptance.json",
+      "sha256": "b6a521d5fffdd6cafc3a3df9f8f963c571520812053aad4f259eea3e22ebee0b"
+    },
+    {
+      "file": "datasets/manga-collection/accepted-issue-25-utc-recovery-07-normal/accepted-records.json",
+      "sha256": "513a03c10b3fcbcd1448cb9e7a649f01d7b5d72586ff56d785f40df105a25d3f"
+    },
+    {
+      "file": "datasets/manga-collection/accepted-issue-25-utc-recovery-08-normal/acceptance.json",
+      "sha256": "5b3fdc3aa705c5e73f5ba11b40052be700d71069b0a25a12943cb189a2ee1109"
+    },
+    {
+      "file": "datasets/manga-collection/accepted-issue-25-utc-recovery-08-normal/accepted-records.json",
+      "sha256": "0909499fdb3d2080a4ee123bbe4e49e52ecaff443509414df1e60a787910c7b5"
+    },
+    {
+      "file": "datasets/manga-collection/accepted-original-story-r0002-20261017/acceptance.json",
+      "sha256": "9fdb9933c0d78795769bf27eebb7ecb4ec7cccc37f6ee6827e55dd119e727801"
+    },
+    {
+      "file": "datasets/manga-collection/accepted-r0002-20261017/acceptance.json",
+      "sha256": "9b28562b9846970cd30b9261d4659d505e9df06e014d2809d6517aa39836f567"
+    },
+    {
+      "file": "datasets/manga-collection/accepted-r0003-20261017/acceptance.json",
+      "sha256": "7d53abbd472fcbf0cba57fa5202d6fd4f8eb12c9ebda34bd1e7a8badca701831"
+    },
+    {
+      "file": "datasets/manga-collection/decisions/issue-25-utc-recovery-01-normal.json",
+      "sha256": "5fd68796f374c8ffd38eff50da7c316617ff4fceec8ba16b64c6ddfa096b0217"
+    },
+    {
+      "file": "datasets/manga-collection/original-story-r0002-20261017/candidates.json",
+      "sha256": "d13136e8e383bce126e8521bfc1015529210f617da220ccd71a4ce1f9f409348"
+    },
+    {
+      "file": "datasets/manga-collection/original-story-r0002-20261017/ndl-9784088727172.json",
+      "sha256": "9e302be016583de26a8907bef77390d34d1bc45db01a08f6e680076cbd5c975a"
+    },
+    {
+      "file": "datasets/manga-collection/original-story-r0002-20261017/ndl-9784088733708.json",
+      "sha256": "035008f311bc5e2e4fdd56e6a216c20f93792583675a2fe5a036e9c99ce71319"
+    },
+    {
+      "file": "datasets/manga-collection/original-story-r0002-20261017/ndl-9784088736211.json",
+      "sha256": "42957040ed44ffa3caa223d68d1cbd0ab733434c9c6af1cc3bdc03c59af9858d"
+    },
+    {
+      "file": "datasets/manga-collection/original-story-r0002-20261017/ndl-9784088811840.json",
+      "sha256": "97ae7be91605bb1d81a54062716132bb0d727b845d811a5b232f487ae4501cb0"
+    },
+    {
+      "file": "datasets/manga-collection/original-story-r0002-20261017/ndl-9784098610105.json",
+      "sha256": "a8992f7327ac45150fa7dba2e2ad1877ed7914c4642918442d2ce2c7e9fa2a4a"
+    },
+    {
+      "file": "datasets/manga-collection/review-r0002-20261017/proposed-records.json",
+      "sha256": "8ef5b68ccda860c453078bef5a57615495320eb470e4230fe04ceda8f7262d81"
+    },
+    {
+      "file": "datasets/manga-collection/review-r0002-20261017/review.json",
+      "sha256": "dec7cd6e012e82be409541418480e95565214c3457bb48ddbc4eca280c12ec76"
+    },
+    {
+      "file": "datasets/manga-collection/review-r0002-20261017/verification.json",
+      "sha256": "2385eebc8bea8ba17b9ad05110785755102d6692c634ae94f0487827d97f6c09"
+    },
+    {
+      "file": "datasets/manga-collection/review-r0003-20261017/additional-evidence.json",
+      "sha256": "1187f72352c46cd775df22b2de54f2bf52020860832fbfe676cf8c4255baf844"
+    },
+    {
+      "file": "datasets/manga-collection/review-r0003-20261017/decision-request.json",
+      "sha256": "bf76be5ab0320e0844a0b3fc2f25fc1602a3922dd534c3fa9f7fb7b4706dd09e"
+    },
+    {
+      "file": "datasets/manga-collection/review-r0003-20261017/frozen-inputs.json",
+      "sha256": "6d437879c330de1a1f885f8a8aace6058193e9e83b3f941d764592e6be0ad5ad"
+    },
+    {
+      "file": "datasets/manga-collection/review-r0003-20261017/identity-evidence.json",
+      "sha256": "fb3ed6e7b9df51da5b1171afa8047b6ae520630df88e5945aeec9b8f98f85505"
+    },
+    {
+      "file": "datasets/manga-collection/review-r0003-20261017/proposed-records.json",
+      "sha256": "b9db863d52318528237fb1f9aa06fb1bfef4bc4ce355dd47229d72e746cb3be4"
+    },
+    {
+      "file": "datasets/manga-collection/review-r0003-20261017/review.json",
+      "sha256": "03f0c1ad829a31173d8bc78d4f6f32fcbcf3ca4a5a6a245f14352592cfa25f19"
+    },
+    {
+      "file": "datasets/manga-collection/review-r0003-20261017/technical-verification.json",
+      "sha256": "09b3be4c48f93c1327f593e801d71061f847cd1a3a940253095cc6548ae289ac"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0001-2aae694af25bda6e-review-7eb226d781eece54/README.md",
+      "sha256": "fddf51670c1430d785106e61101f40708f0f0067cd55fd058f00e0d4b9365c8e"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0001-2aae694af25bda6e-review-7eb226d781eece54/context.json",
+      "sha256": "040db63cf5b715bf998ce38e7bc999dc4fe98e024f97db9cc93fe5944297c016"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0001-2aae694af25bda6e-review-7eb226d781eece54/decision-request.json",
+      "sha256": "301c332bafab3d0d7e25201bcca64179e283b2ca1a4345b89131895590a72bcd"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0001-2aae694af25bda6e-review-7eb226d781eece54/exploration-paths.json",
+      "sha256": "68213add9ed9ce5d89ccec4aeeb8d461911ce52271837a042ab3c14cc49795e8"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0001-2aae694af25bda6e-review-7eb226d781eece54/identity-only-records.json",
+      "sha256": "1fc314e4a47717bce195b39fe7f1e66bd31f6af892fca4a9420a653eab927a37"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0001-2aae694af25bda6e-review-7eb226d781eece54/proposed-records.json",
+      "sha256": "6251199c917f6e2e19debfc4fe2bf6df3b8de9e8fc74a0896782b7d470c7a3d6"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0001-2aae694af25bda6e-review-7eb226d781eece54/review-manifest.json",
+      "sha256": "71e08c7a3ef28a9ad30d39669e7784abc8eaa99dfff2f172bed042186d752895"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0001-2aae694af25bda6e-review-7eb226d781eece54/review.json",
+      "sha256": "eaea0b676aeb13cee448fff619716e7dcb5be9e5a2df28a65fdd9c14b3b2e936"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0003-4e7b3edf51e9545b-review-7ac1287be3ae3491/README.md",
+      "sha256": "723b6041becbc7e0310f3506bc2c132408799b9f8b9a046768b97e9d0eb975ff"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0003-4e7b3edf51e9545b-review-7ac1287be3ae3491/context.json",
+      "sha256": "8c7730681fc0f8afe769f87064f1a3fa3fed392c457eaa037b68563a17f15fa8"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0003-4e7b3edf51e9545b-review-7ac1287be3ae3491/decision-request.json",
+      "sha256": "14d517b49951376663c6e578228c582955f338bcc3812c3daa01932384f391f7"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0003-4e7b3edf51e9545b-review-7ac1287be3ae3491/exploration-paths.json",
+      "sha256": "0d20374cc148071e0757648ce676db82cd42ce54fb873340098dc3b9b18bce7f"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0003-4e7b3edf51e9545b-review-7ac1287be3ae3491/identity-only-records.json",
+      "sha256": "1fc314e4a47717bce195b39fe7f1e66bd31f6af892fca4a9420a653eab927a37"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0003-4e7b3edf51e9545b-review-7ac1287be3ae3491/proposed-records.json",
+      "sha256": "da8f0d581f1c86cd6a369e05723f391f96f0f7170bd83e40d99af87e80d58cf5"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0003-4e7b3edf51e9545b-review-7ac1287be3ae3491/review-manifest.json",
+      "sha256": "ccb73e2f413433913cd3338750b53428ed346165db8363a62dba44f004f0a9f0"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0003-4e7b3edf51e9545b-review-7ac1287be3ae3491/review.json",
+      "sha256": "ad9bdf1fd2112fdf7a1663195abc1e4ae418d2dd819cae2b35fbac41c121487d"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0004-b96c712262173821-review-ed4c6573c40b9103/README.md",
+      "sha256": "7e26b7dc06b2b63fddba9275c118d7cda20ed9a44e95b7b3d6c55527bf73af09"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0004-b96c712262173821-review-ed4c6573c40b9103/context.json",
+      "sha256": "7c86d336339442638f6bbb9d93c00f47a5fbec2d9f6fe19ea504924690dcefe7"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0004-b96c712262173821-review-ed4c6573c40b9103/decision-request.json",
+      "sha256": "858770b9cc718bde519d33617d06247f2865c2d5ca96341d0d49dd983a98d308"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0004-b96c712262173821-review-ed4c6573c40b9103/exploration-paths.json",
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0004-b96c712262173821-review-ed4c6573c40b9103/identity-only-records.json",
+      "sha256": "1fc314e4a47717bce195b39fe7f1e66bd31f6af892fca4a9420a653eab927a37"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0004-b96c712262173821-review-ed4c6573c40b9103/proposed-records.json",
+      "sha256": "780f04908867993e485244ad2e939fd11ff6fa408a35ff59bdd82b06e7f853bf"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0004-b96c712262173821-review-ed4c6573c40b9103/review-manifest.json",
+      "sha256": "dbe609a826e90940a08952c5f6a3c9a59dc1422c3f96f8beaaf4d385dbc5b80b"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0004-b96c712262173821-review-ed4c6573c40b9103/review.json",
+      "sha256": "aa1d4d3087818559d5bd38ecf786e2b121621ce6a2f131665f73ef6736db65bd"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0006-18bb8d898648582b-review-d3f087b63d8ec60c/README.md",
+      "sha256": "401ee93d4f4665626b306ed6e24638aee64ef3dc383b0d3ab612de70b24e5b25"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0006-18bb8d898648582b-review-d3f087b63d8ec60c/context.json",
+      "sha256": "1b88538e679f168c2ebe9f6e17ef83dc1b49d9eca169fa2b157619af15f2ffbd"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0006-18bb8d898648582b-review-d3f087b63d8ec60c/decision-request.json",
+      "sha256": "447790da947f795377d084cfdc225827c4c7862844ba4ab9caae70747c8969fe"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0006-18bb8d898648582b-review-d3f087b63d8ec60c/exploration-paths.json",
+      "sha256": "3f08afdda78f6ddf3bfeb1242a7a77a3c127d2e87c0ca52ecbd6825906b3981d"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0006-18bb8d898648582b-review-d3f087b63d8ec60c/identity-only-records.json",
+      "sha256": "1fc314e4a47717bce195b39fe7f1e66bd31f6af892fca4a9420a653eab927a37"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0006-18bb8d898648582b-review-d3f087b63d8ec60c/proposed-records.json",
+      "sha256": "58b7666ca44a79ab4c9b5081e0a70bc0b5b9934cabdc3c6c8ea0e62ece256b67"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0006-18bb8d898648582b-review-d3f087b63d8ec60c/review-manifest.json",
+      "sha256": "77a7af521ada5498b3ea46e7c93ef1c9bc33fbc5ceba706a3aa781e03387a959"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0006-18bb8d898648582b-review-d3f087b63d8ec60c/review.json",
+      "sha256": "584edf8d337a7c17d4d08aec16fdc807903bad688c2f81a77619431f31c8dee5"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0007-0b3c13e86c5f069c-review-434525971928f744/README.md",
+      "sha256": "056800f017506ed213ed31c65b373c284b5f9a57d9b95e54980960d0b73a49f0"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0007-0b3c13e86c5f069c-review-434525971928f744/context.json",
+      "sha256": "3ce40b7b373df3d7835b0a97f9ce2ebdff4605c5ef6252bce4c3e7e558236905"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0007-0b3c13e86c5f069c-review-434525971928f744/decision-request.json",
+      "sha256": "0a36bbd0201f392830bc0539cf7ba89a5c452297ba6be0030734ce09986263c0"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0007-0b3c13e86c5f069c-review-434525971928f744/exploration-paths.json",
+      "sha256": "14c62e53896f0776d658794aa9f5e8d20ef37c8f53645af1ea7e3db59f68e99f"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0007-0b3c13e86c5f069c-review-434525971928f744/identity-only-records.json",
+      "sha256": "1fc314e4a47717bce195b39fe7f1e66bd31f6af892fca4a9420a653eab927a37"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0007-0b3c13e86c5f069c-review-434525971928f744/proposed-records.json",
+      "sha256": "20e255e4b4755121dee032b8cf90f28cab043844f4a8367382188c9909d495db"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0007-0b3c13e86c5f069c-review-434525971928f744/review-manifest.json",
+      "sha256": "6899290eb5daf4af86ba6b899dfdf8a24f1daf4cbc3b3d93f2f37e9bbcbc456d"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0007-0b3c13e86c5f069c-review-434525971928f744/review.json",
+      "sha256": "267aae7ad44fee6bec2bcca0386d60ca42dca34f08bd1dd3a9970b56eac45fed"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0008-9f792bd2246a1595-review-7b6502faf255147c/README.md",
+      "sha256": "aae590ea54f45343ec442477858f96103fa3f0e22237a51a95f4ffa828af5ab9"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0008-9f792bd2246a1595-review-7b6502faf255147c/context.json",
+      "sha256": "a1544db5e8e0c65d065d56e4c7447332fafdb35d5c2fe2f3723cda4e26e94b4a"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0008-9f792bd2246a1595-review-7b6502faf255147c/decision-request.json",
+      "sha256": "6aad3613743de6564ab999a966bb4d67c8e00d5afeb98c24256145fed8e62f34"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0008-9f792bd2246a1595-review-7b6502faf255147c/exploration-paths.json",
+      "sha256": "d2aaf0388fff0e2100fbe1e0e0bbcf5d9a7b6ec0e4ab84dd439a9e123bfdde4b"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0008-9f792bd2246a1595-review-7b6502faf255147c/identity-only-records.json",
+      "sha256": "1fc314e4a47717bce195b39fe7f1e66bd31f6af892fca4a9420a653eab927a37"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0008-9f792bd2246a1595-review-7b6502faf255147c/proposed-records.json",
+      "sha256": "172ef5758067fbaabb6594fc02f900b21b8dfe276e4d7c86feebae2e364466c7"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0008-9f792bd2246a1595-review-7b6502faf255147c/review-manifest.json",
+      "sha256": "97ae2100ec16c5c871f7445d1426e6d7a22da6cb9b98dff9c7f90739bff8d2bc"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0008-9f792bd2246a1595-review-7b6502faf255147c/review.json",
+      "sha256": "e377727d77498bbc03b86a86b9997ce3bab23d3cef0a9dbca02191549e0aa032"
+    },
+    {
+      "file": "datasets/public-kg/releases/20261014-credits-001/data.json",
+      "sha256": "ea91b16f52a211b5a8464382ad498b7b2bb2be69a6f33fe125a73a3c7b9da2b5"
+    },
+    {
+      "file": "datasets/public-kg/releases/20261014-credits-001/manifest.json",
+      "sha256": "e4aa3b58ed884f7d1f8fffee43b260261cc2b4d3a867fda942919f439d2bce17"
+    },
+    {
+      "file": "datasets/public-kg/releases/20261017-manga-r0002-001/data.json",
+      "sha256": "a52c93f78cbc6a7440dee640d1161d040d88effee494d02045c49637801975db"
+    },
+    {
+      "file": "datasets/public-kg/releases/20261017-manga-r0002-001/manifest.json",
+      "sha256": "5714648b348fff62605f99f3b25c25bc1f22a22e2e4acdaefae7196ddb5712a8"
+    },
+    {
+      "file": "datasets/public-kg/releases/20261017-manga-r0002-002/data.json",
+      "sha256": "6180481328c77abb40d16579d1f0cee34cbda6d8438769a95a23df71536f90aa"
+    },
+    {
+      "file": "datasets/public-kg/releases/20261017-manga-r0002-002/manifest.json",
+      "sha256": "5ae3f008be8c05f29cafa620a5cb0926792bc2984b0e0694a4bf1986032bd87c"
+    },
+    {
+      "file": "datasets/public-kg/releases/20261017-manga-r0003-001/data.json",
+      "sha256": "3bae93608cefa4ccf9ef8b026819575ff738c0133664e1473dca52d15dc60be1"
+    },
+    {
+      "file": "datasets/public-kg/releases/20261017-manga-r0003-001/manifest.json",
+      "sha256": "c5e8230be9bd0acb43041fd04d0a6b769c03c99dac9e38a051bca8a768e2e24d"
+    },
+    {
+      "file": "datasets/public-kg/releases/manga-issue-25-utc-recovery-08-normal/data.json",
+      "sha256": "44cb7d65c4ece8ac04ffcca988c0b37f35a5bf61cc934ef482cbefda39ec09e7"
+    },
+    {
+      "file": "datasets/public-kg/releases/manga-issue-25-utc-recovery-08-normal/manifest.json",
+      "sha256": "325522f3efa7ddc0ff67f278456fc81956420ab0d00999d5823988dfc33cd9a3"
+    },
+    {
+      "file": "docs/design/MANGA_R0002_ACCEPTANCE_REVIEW.md",
+      "sha256": "7cdf6a84158f655465a26d7755f528668c23309a5f79ed8cd2d5e01905e00265"
+    },
+    {
+      "file": "docs/design/MANGA_R0002_ACCEPTED_RELEASE.md",
+      "sha256": "4f29556605f1b10241e9275b546db5b43495230e60233eade630df59fcb48113"
+    },
+    {
+      "file": "docs/design/MANGA_R0003_ACCEPTANCE_REVIEW.md",
+      "sha256": "af2114355cf8b2a6c6813a1fde71a3683daccb80fbcdabe6a14442342a21cb3f"
+    },
+    {
+      "file": "docs/design/ORIGINAL_STORY.md",
+      "sha256": "26cde0cff0d4d3128f6a3b52201f8649cd3f414294f3a81fcddea9f8d54c5a27"
+    },
+    {
+      "file": "datasets/public-kg/releases/manga-issue-25-utc-recovery-08-normal/data.json",
+      "sha256": "44cb7d65c4ece8ac04ffcca988c0b37f35a5bf61cc934ef482cbefda39ec09e7"
+    },
+    {
+      "file": "datasets/public-kg/releases/manga-issue-25-utc-recovery-08-normal/manifest.json",
+      "sha256": "325522f3efa7ddc0ff67f278456fc81956420ab0d00999d5823988dfc33cd9a3"
+    },
+    {
+      "file": "datasets/manga-collection/evidence-decisions/issue-34-obata-drawing-20261021-r2.json",
+      "sha256": "72fd7dc968cdc2bd2f265382e270cb300f6188c51d180f5c6c3daaae5775b99d"
+    },
+    {
+      "file": "datasets/manga-collection/accepted-issue-34-obata-drawing-20261021/accepted-records.json",
+      "sha256": "15ec2b9d9013a7b5af64f0539b1fe2a07302c92d60abb7bb58daf7e9215140d6"
+    }
+  ],
+  "acceptedRecordIds": {
+    "citations": [
+      "995e3891-aa9c-4af6-a2ba-3114dfb61fec"
+    ],
+    "claims": [
+      "7ae1c51b-9ba0-46fb-a070-41ac310e8c94"
+    ],
+    "entities": [],
+    "sources": [
+      "932fb74b-9292-4fb9-9f8a-29ce35d83823"
+    ]
+  },
+  "scopeByClaim": [
+    {
+      "contribution": {
+        "roleId": "DRAWING",
+        "scope": null
+      },
+      "eventParticipation": null,
+      "id": "7ae1c51b-9ba0-46fb-a070-41ac310e8c94",
+      "objectId": "0c29d0e2-685f-4c56-9805-6bf1baf40e7c",
+      "organizationParticipation": null,
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "polarity": "affirmed",
+      "predicate": "CONTRIBUTED_TO",
+      "subjectId": "d5e39491-5a5f-423c-9222-2eb3c18db9a8"
+    }
+  ],
+  "counts": {
+    "entities": 0,
+    "claims": 1,
+    "sources": 1,
+    "citations": 1
+  },
+  "baseRelease": "manga-issue-25-utc-recovery-08-normal",
+  "baseRevision": "88437056-b74f-42ab-88c0-33ed435bdccc",
+  "combinedReleaseCandidate": "manga-issue-34-obata-drawing-001",
+  "sourceJobId": null,
+  "applyAuthorized": {
+    "local": false,
+    "beta": false,
+    "vps": false
+  },
+  "sourceReviewKind": "saved-evidence-v1",
+  "productionObservation": {
+    "release": "manga-issue-25-utc-recovery-08-normal",
+    "revision": "88437056-b74f-42ab-88c0-33ed435bdccc",
+    "observation": "supplied-backup-not-a-live-check",
+    "fixtureSha256": "2059149b7cc6a75982761d36a6961408f294f53915885454bd3611b65af4c3a0",
+    "withdrawals": [],
+    "historySha256": "e4dc244450514ed8ed7ef22d53776c9505b976745670deeb8de8c372042638e9",
+    "references": [
+      {
+        "file": "datasets/public-kg/releases/manga-issue-25-utc-recovery-08-normal/data.json",
+        "sha256": "44cb7d65c4ece8ac04ffcca988c0b37f35a5bf61cc934ef482cbefda39ec09e7"
+      },
+      {
+        "file": "datasets/public-kg/releases/manga-issue-25-utc-recovery-08-normal/manifest.json",
+        "sha256": "325522f3efa7ddc0ff67f278456fc81956420ab0d00999d5823988dfc33cd9a3"
+      }
+    ],
+    "productionBackupSha256": "750850776e2824b7e1eb20a3fc73db56e41dc188f71cfba214290741dd7071ab",
+    "liveMetadata": {
+      "url": "https://plunode.net/api/dataset",
+      "httpStatus": 200,
+      "dataset": "public-kg",
+      "revision": "88437056-b74f-42ab-88c0-33ed435bdccc"
+    }
+  },
+  "acceptanceProgramSha256": {
+    "scripts/collection-workflow.py": "59b3b672a05eb42252b5ad14325aac974c7b7aba366f321667226a03d03f1ea1",
+    "scripts/collection-acceptance.py": "ddd9f2e7f4f83f3ebfd411158198abbfbc2038a4c9814eb11170b1cd60ca72f3",
+    "scripts/collection-evidence.py": "a3b50fc78ec8efb8c7daa3315a2e06c5c8f4d761acb7ef23c09d38658ddee76a",
+    "scripts/publication-backup-plan.ts": "cb5c1b698b920f55946838fb04caabdc1c5796f65e4061d50b41a9b7088ee333",
+    "lib/server/public-backup.ts": "a89d448f73812c9b7586149695a3af9fa64e6345ed0bca895725a65c20bf1474",
+    "lib/server/public-dataset.ts": "c30eb5edbc5b2425e8800e80449825913c7b6e16726afd2d62837625105a4cfd",
+    "lib/domain/fixture.ts": "f278e09c84502f7d7832f9607567e08aa339bb66a3232df822fe4b00a4f73184"
+  }
+}

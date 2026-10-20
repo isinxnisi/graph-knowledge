@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "status": "implementation-tested-awaiting-verified-production-backup",
-  "checkedAt": "2026-10-20T16:08:15.994958+00:00",
-  "authority": "implementation-and-frozen-input-verification-not-formal-acceptance",
+  "status": "release-prepared-not-applied",
+  "checkedAt": "2026-10-20T17:54:43.325394+00:00",
+  "authority": "formal-acceptance-and-release-preparation-executed-by-existing-acceptance-core",
   "fixedInputCommit": "e64a2de6a0f2c155024f8ccd4fb9e9cff2409241",
   "bindingSha256": "9e4e9cd91059d81060e75658c33f576befe416ffdc8eca09839bc4c605c2159f",
   "candidateIds": {
@@ -34,23 +34,23 @@
   "newProviderRequests": 0,
   "testedProgramFilesSha256": {
     "scripts/collection-workflow.py": "59b3b672a05eb42252b5ad14325aac974c7b7aba366f321667226a03d03f1ea1",
-    "scripts/collection-acceptance.py": "d44f10252ac57242061bb582be19db850d35db28595f980e5405f81b2005d32f",
-    "scripts/collection-evidence.py": "ddf70be127c9325c7f79b6d0ca52a0e89360b9f91bf27885130fee8c36813eac",
-    "tests/test_collection_evidence.py": "1454340f541e6b5d981accb1dc1aa3051acad0a1feb355677e44c96f776482f9"
+    "scripts/collection-acceptance.py": "ddd9f2e7f4f83f3ebfd411158198abbfbc2038a4c9814eb11170b1cd60ca72f3",
+    "scripts/collection-evidence.py": "a3b50fc78ec8efb8c7daa3315a2e06c5c8f4d761acb7ef23c09d38658ddee76a",
+    "tests/test_collection_evidence.py": "c45f04d4c28d3e007efe8741ed2de33328e5bf9382a5277cd53281325fb9ddfd"
   },
   "tests": {
-    "savedEvidence": 10,
+    "savedEvidence": 11,
     "legacyAcceptance": 16,
     "legacyWorkflow": 16,
     "acceptanceSequence": 19,
-    "total": 61,
-    "isolation": "Private roots; real existing TypeScript validators and offline backup plan; fake live metadata/common-token check only; no real DB writes"
+    "total": 62,
+    "isolation": "Private roots; real existing TypeScript validators and offline backup plan; fake live metadata/common-token check only; no real DB writes",
+    "serializationRegression": "Sorted-key valid backup; full field/value equality retained; actual full production fixture verified as well."
   },
   "existingWorker": {
     "codeCommit": "973c7b0c599f79905a029b28b524f4924e169376",
     "programUpdated": false,
-    "stateOrScheduleChanged": false,
-    "formalReceiptCount": 9,
+    "formalReceiptCount": 10,
     "allPriorReceiptHashesUnchanged": true,
     "stagedInputs": {
       "copiedFiles": 7,
@@ -58,21 +58,92 @@
       "rawHtmlStoredOutsideGit": true,
       "workerLockAndManualHoldVerified": true,
       "existingConfigStateAndNineReceiptsUnchanged": true
-    }
+    },
+    "configUnchanged": true,
+    "stateOrScheduleChangedByThisWork": false,
+    "normalScheduledStateReportingObserved": true,
+    "executionControlSemanticsUnchanged": true
   },
   "formalAcceptanceCounts": {
     "entities": 0,
-    "claims": 0,
-    "sources": 0,
-    "citations": 0
+    "claims": 1,
+    "sources": 1,
+    "citations": 1
   },
-  "receipt": null,
-  "releaseCandidate": null,
-  "verifiedCurrentProductionBackupAvailable": false,
+  "receipt": {
+    "file": "datasets/manga-collection/accepted-issue-34-obata-drawing-20261021/acceptance.json",
+    "sha256": "7f62ec0f27d4fedfbb09066893d4ac94d88eaf016c2fff3959a001ea9f228efe",
+    "recordedAt": "2026-10-20T17:52:45.754800+00:00"
+  },
+  "releaseCandidate": {
+    "id": "manga-issue-34-obata-drawing-001",
+    "dataSha256": "bab5fd783adf0cdb622cc6c11441bce35bb7213074d489bc7f3e2989a5ca435b",
+    "manifestSha256": "cb0df37a0f1c7669c5d21c4c51d65fabbc0c1eb811cf136e98de1f86533cdc60",
+    "counts": {
+      "entities": 2175,
+      "claims": 1895,
+      "sources": 1795,
+      "citations": 1932
+    }
+  },
+  "verifiedCurrentProductionBackupAvailable": true,
   "latestLiveVpsPlanPerformed": false,
-  "remainingOperation": "Operator authenticates sudo for the existing-ops read-only backup-only procedure, then provide path/SHA for verified WSL receipt.",
+  "remainingOperation": "Before publication: explicit publication authorization and a fresh live VPS preflight/plan against the current production state. No further acceptance is needed for this receipt.",
   "backupOnlyProcedure": "https://github.com/isinxnisi/graph-knowledge/issues/33#issuecomment-6294978106",
   "publicApply": false,
   "implementationCommit": "cc591c41632b290d3e69b9ed5e53dd129e0650d3",
-  "testedMainIntegrationCommit": "02b79bb1d7262ae42a9bc2fb111cd10898cd9034"
+  "testedMainIntegrationCommit": "02b79bb1d7262ae42a9bc2fb111cd10898cd9034",
+  "executionCommit": "448ad397ed20a9f03c929bd5957569df32ebeed5",
+  "receiptSetSha256": "8a55413ee9fedf32fd64ce6fddebd28d1d636ff7de0fcc1fd063a5b15524d56d",
+  "publishedAcceptedCounts": {
+    "entities": 66,
+    "claims": 50,
+    "sources": 43,
+    "citations": 51
+  },
+  "pendingAcceptedCounts": {
+    "entities": 0,
+    "claims": 1,
+    "sources": 1,
+    "citations": 1
+  },
+  "productionBackup": {
+    "fileSha256": "750850776e2824b7e1eb20a3fc73db56e41dc188f71cfba214290741dd7071ab",
+    "savedAt": "2026-10-20T17:28:02.379Z",
+    "privateLocalPath": "/home/isinxnisi/1.projects/7.graph-knowledge/backups/issue34-production-20261021/public-backup.json",
+    "originRootPath": "/var/lib/plunode-publication/jobs/install-readonly-backup.json"
+  },
+  "plan": {
+    "release": "manga-issue-34-obata-drawing-001",
+    "observation": "validated-backup-offline-not-a-live-vps-plan",
+    "backupRevision": "88437056-b74f-42ab-88c0-33ed435bdccc",
+    "added": [
+      "Citation:995e3891-aa9c-4af6-a2ba-3114dfb61fec",
+      "Claim:7ae1c51b-9ba0-46fb-a070-41ac310e8c94",
+      "Source:932fb74b-9292-4fb9-9f8a-29ce35d83823"
+    ],
+    "updated": [],
+    "relationshipsAdded": 4
+  },
+  "validation": {
+    "valid": true,
+    "counts": {
+      "nodes": {
+        "Entity": 2175,
+        "Claim": 1895,
+        "Source": 1795,
+        "Citation": 1932,
+        "ExternalIdentifier": 2544
+      },
+      "relationships": {
+        "SUBJECT": 1895,
+        "OBJECT": 1895,
+        "HAS_CITATION": 1932,
+        "CITES": 1932,
+        "HAS_EXTERNAL_ID": 2544
+      }
+    }
+  },
+  "actualExecutionFile": "actual-execution.json",
+  "restore": false
 }

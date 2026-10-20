@@ -1,50 +1,67 @@
-# 保存原文からの受入経路：実装・実行記録
+# 保存原文からの正式受入：1 Claim受入完了
 
-2026-10-21、Issue #34。[e64a2deの停止記録](OBATA_HIKARU_ACCEPTANCE_PREFLIGHT_20261021.md)に対する、受入経路の修正と実行準備。[仕様と操作](../design/SAVED_EVIDENCE_ACCEPTANCE.md)、[検証JSON](../../datasets/manga-collection/evidence-acceptance-validation-20261021/verification.json)。
+2026-10-21、Issue #34。**小畑健→漫画『ヒカルの碁』の承認済み1 Claimを既存acceptance coreで実受入し、次回releaseのvalidateと実本番backupに対するoffline planまで成功した。公開apply／restoreは未実施。** [仕様](../design/SAVED_EVIDENCE_ACCEPTANCE.md)、[検証JSON](../../datasets/manga-collection/evidence-acceptance-validation-20261021/verification.json)、[実行検証JSON](../../datasets/manga-collection/evidence-acceptance-validation-20261021/actual-execution.json)。[e64a2deの停止記録](OBATA_HIKARU_ACCEPTANCE_PREFLIGHT_20261021.md)の未実施状態を今回更新した。
 
-## 解消した不整合
+## 実受入とreceipt
 
-`evidence-review`／`accept-evidence`を追加し、保存原文と人間が承認した固定レコードを既存acceptance coreへ接続した。manga-discovery-v2のjobやwork-orderを作らず、saved-evidence-v1として原文／引用・意味・UUID・本文hashを検証する。既存のselection・merge・重複・事前validate・不変receipt／release・失敗再開を再利用し、従来accept-releaseのlive DB検査は維持する。
+追加は0 Entity／1 Claim／1 Source／1 Citation。既存runtimeの正式receiptは9→10件。保存日時は2026-10-21 02:52:45 JST（原記録`2026-10-20T17:52:45.754800+00:00`）。
 
-本番backupモードは既存validatePublicBackupと対応release artifactで完全backupを検証し、HTTPSの現行revisionを保存前とplan前後で照合する。backupの観測ラベルをliveへ変更しない。planは既存publication-backup-plan.tsによるoffline比較で、最新VPS実planとは区別する。
+- 正式保存先：`/home/isinxnisi/.local/share/plunode-collection-worker-phase-b-20261020/runtime/datasets/manga-collection/accepted-issue-34-obata-drawing-20261021/acceptance.json`。
+- receipt SHA-256：`7f62ec0f27d4fedfbb09066893d4ac94d88eaf016c2fff3959a001ea9f228efe`。
+- [receiptの同一byte監査コピー](../../datasets/manga-collection/evidence-acceptance-validation-20261021/execution/receipt/acceptance.json)。
+- 全10 receipt集合SHA-256：`8a55413ee9fedf32fd64ce6fddebd28d1d636ff7de0fcc1fd063a5b15524d56d`。
+- [今回の固定decision](../../datasets/manga-collection/evidence-acceptance-validation-20261021/execution/decision.json) SHA-256：`72fd7dc968cdc2bd2f265382e270cb300f6188c51d180f5c6c3daaae5775b99d`。
 
-実行プログラム／validatorとデータrootを分離し、検証済みcheckoutのコードで既存Worker runtimeの同じreceipt保存先を使用する。worker.lock・受入root lock・手動共通hold・pause／activeAttemptを確認する。稼働Workerの固定コード973c7b0、config・state・schedule・既存receiptの移行は不要で、今回は変更していない。
+人間判断は、[既存意味承認](https://github.com/isinxnisi/graph-knowledge/issues/34#issuecomment-6292911753)と、本タスクの直接指示（turn `01a159e6-415b-7883-a57a-e8e8ff43e5b7`、2026-10-20T15:20:24Z受信）に基づく。[元指示の記録](../../datasets/manga-collection/evidence-acceptance-validation-20261021/execution-authorization.json)に本文・hash・受信時刻を残した。AIが新たな意味判断を追加したものではない。Python 3.10で解釈できる同一瞬間の`+00:00`表記をdecisionに使用し、元の承認本文／時刻は変更していない。
 
-## 固定入力の再照合
+## 固定UUID・意味・根拠
 
-実際のe64a2de候補・ad79a57レビュー・Git外原HTMLを新入口の原文検証関数へ渡し、全field・hash・引用位置・既存Entity依存が一致した。これは入力照合であり、供給fixtureを本番backupへ偽装した実受入ではない。
+既存小畑健`d5e39491-5a5f-423c-9222-2eb3c18db9a8`→既存漫画ヒカルの碁`0c29d0e2-685f-4c56-9805-6bf1baf40e7c`。CONTRIBUTED_TO／affirmed／DRAWING／scope=null／期間from,to=nullを保持した。
 
-| 種類 | 維持するUUID | 維持するrecordSha256 |
+| 種類 | 維持したUUID | 維持したrecordSha256 |
 | --- | --- | --- |
 | Claim | `7ae1c51b-9ba0-46fb-a070-41ac310e8c94` | `56bfc8a80c5c5feb22568d6699b327f4e0a9589430bfb067a914fedb56a9f6a5` |
 | Source | `932fb74b-9292-4fb9-9f8a-29ce35d83823` | `0c118862f33fb5c754cc26597aa3afed6ee29ea6bfbddd2afa6da78d194a1018` |
 | Citation | `995e3891-aa9c-4af6-a2ba-3114dfb61fec` | `172212acdde04d1a5691873f02f6e497124337de4e119a1a36b667a686061ebe` |
 
-bindingのbyte hashは`9e4e9cd91059d81060e75658c33f576befe416ffdc8eca09839bc4c605c2159f`、元HTMLは`86cfb31314e9e3fe2bf26e04425580c2dc3d5660cbd3b522e32e8be1d533af1b`。DRAWING／scope=null／期間不明を保持する。原語は「作画の小畑健氏」／ja、25行・byte[1024,1074)。Source／Citationを含む凍結JSONは変更していない。稼働runtimeの元9 receiptも全hash一致を再確認した。
+受入本文`accepted-records.json`はe64a2deの固定レコードと全field一致し、上記canonical hashを保持する。元候補のhiddenは受入本文で保持し、release候補内だけ既存workflowの規約に従ってpublishedとして準備する。本番DBには適用していない。既存Entity・Claim・Source・Citationの全fieldは不変。
 
-## 隔離検証
+bindingのbyte hashは`9e4e9cd91059d81060e75658c33f576befe416ffdc8eca09839bc4c605c2159f`。保存HTMLは1,487 byte、SHA-256 `86cfb31314e9e3fe2bf26e04425580c2dc3d5660cbd3b522e32e8be1d533af1b`。「作画の小畑健氏」／ja、原HTML25行・byte[1024,1074)とad79a57レビューを新入口で照合。新しい外部資料取得は0回。原HTMLはGit外の0600領域、原文directoryは0700に保全する。
 
-合計**61テスト成功**：新入口10、既存acceptance16、既存workflow16、既存sequence19。新入口はprivateなdata-rootを使用し、TypeScriptの実validator・backup validator・offline plan・既存receipt保存を実行した。live metadataと共通hold tokenの検査だけを隔離試験用に置換し、実DB・本番KGへは書いていない。
+## 現行本番との比較とrelease
 
-- 人間判断のないdraft、原文・UUID・Role・scope・period・原語の改変、再hashした別Source／刊行物scope、review後のプログラム変更を拒否。
-- 本番revision変更、改変backup、Worker pause、実flock競合、別receiptのUUID所有、比較外の追加receiptを拒否。
-- 既存coreで1 Claim／1 Source／1 Citationを隔離受入し、validate・既存更新0のoffline plan、既存Inventory互換の元レコード検証を確認。
-- receipt保存後のrevision変化では受入を保持し、同一decisionで元receipt／recordedAt／releaseを変えず再開。正常再実行でもplanを新しく実行。
+#33が実VPSから取得した完全backupを独立コピーしてSHA検証した。保存日時は2026-10-20T17:28:02.379Z、SHA-256 `750850776e2824b7e1eb20a3fc73db56e41dc188f71cfba214290741dd7071ab`。Git外pathは`/home/isinxnisi/1.projects/7.graph-knowledge/backups/issue34-production-20261021/public-backup.json`。既存validatePublicBackupでchecksum・schema・graph・identity／receipt／撤回履歴を検証し、対応する公開release artifactと全レコードが一致した。
 
-Windows checkoutのCRLFで凍結入力hashが変わる問題を、Gitの元LF byteを持つWSLローカルの検証コピーで回避した。hashの期待値やvalidatorは緩和していない。実装・試験4ファイルのbyte一致を検証JSONへ記録した。
+本番baseは`manga-issue-25-utc-recovery-08-normal`、revision `88437056-b74f-42ab-88c0-33ed435bdccc`。受入前・保存前・plan前後のHTTPS `/api/dataset`でも同revisionを照合した。旧ローカル3200や公開前backupを本番として使用していない。
 
-## main統合とruntime準備
+| 状態 | Entity | Claim | Source | Citation |
+| --- | ---: | ---: | ---: | ---: |
+| 現行本番backup | 2175 | 1894 | 1794 | 1931 |
+| 既公開の正式受入集合 | 66 | 50 | 43 | 51 |
+| 正式受入済み未公開 | 0 | 1 | 1 | 1 |
+| 次回release候補 | 2175 | 1895 | 1795 | 1932 |
 
-独立worktreeの固定実装`cc591c41632b290d3e69b9ed5e53dd129e0650d3`を、#33の更新を含むmain `02b79bb1d7262ae42a9bc2fb111cd10898cd9034`へ直列統合し、通常pushした。統合後の実装・試験byte hashは検証コピーと一致し、e64a2deの固定JSON 5ファイルも全byte一致。ユーザーの既存memo.txtは保持した。
+次回releaseは**`manga-issue-34-obata-drawing-001`**、既存runtimeの`datasets/public-kg/releases/manga-issue-34-obata-drawing-001`に保存した。
 
-共通holdとworker.lockの下で、既存runtimeへ固定JSON 5ファイル・ad79a57レビューJSON・Git外HTMLの計7ファイルを同じ相対path／同一byteで配置した。異なる既存ファイルがある場合は上書きしない手順で、全件新規配置だった。新規filesは0600、原文directoryは0700。配置前後でconfig・state・元9 receiptはhash一致、正式受入は増えていない。
+- data SHA-256：`bab5fd783adf0cdb622cc6c11441bce35bb7213074d489bc7f3e2989a5ca435b`。
+- manifest SHA-256：`cb0df37a0f1c7669c5d21c4c51d65fabbc0c1eb811cf136e98de1f86533cdc60`。
+- validate成功。実backupに対するoffline planはClaim／Source／Citationの3 node、関係4件を追加、既存更新0。
+- **最新VPS実DBのplanは未実施**。観測ラベルはsupplied-backup-not-a-live-check、planはvalidated-production-backup-offlineのまま区別した。
 
-## 実受入の状態と不足する操作
+[release manifest](../../datasets/manga-collection/evidence-acceptance-validation-20261021/execution/release/manifest.json)、[data.jsonの同一byte gzip](../../datasets/manga-collection/evidence-acceptance-validation-20261021/execution/release/data.json.gz)、[全監査コピーとhashのindex](../../datasets/manga-collection/evidence-acceptance-validation-20261021/execution/artifact-index.json)。正本は既存runtimeに保持し、監査コピーでは元path／参照hashを書き換えていない。原HTML・完全backupはGitへ含めない。gzipは展開後の元byte hashも照合した。
 
-現時点では**正式受入0件、receipt未作成、次回release未作成、最新VPS実plan未実施**。現行本番release `manga-issue-25-utc-recovery-08-normal`／revision `88437056-b74f-42ab-88c0-33ed435bdccc`の検証済み完全backupが未受領のため、accept-evidenceはまだ実行していない。
+## 不整合の解消と検証
 
-既存SSHユーザーdevelopにはDocker操作権限がなく、sudoには運営者の端末での認証が必要。#33と連携し、導入全体とは切り離した[既存opsによるbackup単体の手順](https://github.com/isinxnisi/graph-knowledge/issues/33#issuecomment-6294978106)を用意した。新ユーザー・鍵・sudoers・image導入は不要で、公開KGのread-only backupと0600の受領用コピーだけを生成する。表示されたpath／SHA-256を使い、WSLへ受領・検証してから本件の固定decisionと既存受入処理を実行する。
+保存原文＋人間判断＋固定レコードをsaved-evidence-v1として受け入れる最小入口を追加した。manga-discovery-v2 job／work-orderを偽装せず、既存selection・merge・重複／依存・事前validate・不変receipt／release・失敗再開を再利用する。従来accept-releaseのlive DB要件は維持した。
 
-本番backupが整うまで、旧ローカルDB、API表示、追加後fixtureからの合成backupで代用しない。受領後は同じ固定レコードからreceipt→次回release→validate→offline planへ進み、#33へreceipt集合と未公開1件の状態を共有する。最新VPS実planと公開applyは別工程で、今回はapply／restoreを行わない。
+実本番backupではobject key順がrelease schema順と異なり、初回の事前validateがhash不一致で停止した。この時点でreceiptは未作成。validatorや期待hashは緩和せず、既存fixtureV4Schemaで出力順だけを揃え、再parseした全field／値が元fixtureと一致することを必須にした。修正を`448ad397ed20a9f03c929bd5957569df32ebeed5`へ固定・pushし、新しいr2 review／decisionで再照合して上記実受入を完了した。初回review／decisionもruntimeに保全した。出力先の既存資料との重複、UTC表記、scheduled Workerの一時ロック競合も、受入前に停止・修正／終了待ちしており、ロック削除や強制終了は行っていない。
 
-Python CLIだけの変更で、Web／検索UI・会員DB・公開KG・稼働Worker設定は不変。3200／beta／VPSのWeb再build・再配置は不要。
+**関連62テスト成功**：新入口11（修正後に全件再実行）、既存acceptance16（修正後に全件再実行）、既存workflow16・sequence19。draft、原文／UUID／意味／Source／scopeの改変、program drift、revision変更、pause、実flock競合、別receipt所有、比較外receiptを拒否し、receipt保存後の再開でも同じ受入を保持する。隔離試験は実TypeScript validator／offline planを使用し、live metadataと共通hold検査のみを試験用に置換した。実行codeとnative検証コピーの全byte一致も確認した。
+
+実受入後、既存Inventoryの全10 receiptの根拠・hash・不変manifest検証はissues=0。全receiptを使うaccepted_additionsでも、現行本番からの追加が0／1／1／1のみであることを確認。全既存公開レコードの全fieldと元9 receiptのhashが不変だった。#33の固定済み既存棚卸しでも既公開50 Claim・未公開1 Claimを独立確認済み。
+
+## Worker保全と残条件
+
+検証済みmainのcode／validatorと、既存Worker runtimeのデータ／receipt保存先を分離して実行した。共通hold・実worker.lock・受入root lock・pause／activeAttemptを検査した。Worker固定code `973c7b0c599f79905a029b28b524f4924e169376`、config、時間帯、10分休憩、既存requestは変更していない。stateの通常scheduled tickによるreportedAt更新は観測したが、手動CLIからstateは書き込まず、control revision=2・windows・pause・lastAttempt・次回開始値を維持した。
+
+今回の正式受入と次回release準備に残条件はない。公開する場合は、#33側で10 receipt／未公開1 Claimとして最新状態を再同期し、別の公開承認と最新VPS実preflight／planが必要。旧9 receipt／未公開0の観測や過去のplanは再利用しない。公開apply／restore、本番設定・会員DB・検索UIの変更は本件で行っていない。Webの変更はなく、3200／beta／VPSのWeb再build・再配置は行っていない。

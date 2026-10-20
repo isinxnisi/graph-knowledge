@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "sourceKind": "saved-evidence-v1",
+  "authority": "pending-human-review-only",
+  "inputSha256": "8fc1007bb1caa401341577803cc8d125891f494312b4130fc9f38528b49a6244",
+  "artifacts": {
+    "context.json": "3f10dae6a259169b6390885a67d99b806a675bfdd6a4ea9d3621bb1a5a259619",
+    "decision-request.json": "2012c8f945c6f3f40a4d78f56baba858d04f7f8c3cdb2d55bdc4d800f2156fa4",
+    "proposed-records.json": "15ec2b9d9013a7b5af64f0539b1fe2a07302c92d60abb7bb58daf7e9215140d6",
+    "review.json": "f1f6107ec4c172435b02c475b9c2c9a781b8e4656915f2c00b2b2bd326eeb3b6"
+  }
+}

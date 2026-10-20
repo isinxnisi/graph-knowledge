@@ -1,0 +1,21 @@
+{
+  "status": "pending-human-decision",
+  "groups": {
+    "normal": {
+      "recordIds": {
+        "entities": [],
+        "claims": [
+          "7ae1c51b-9ba0-46fb-a070-41ac310e8c94"
+        ],
+        "sources": [
+          "932fb74b-9292-4fb9-9f8a-29ce35d83823"
+        ],
+        "citations": [
+          "995e3891-aa9c-4af6-a2ba-3114dfb61fec"
+        ]
+      }
+    }
+  },
+  "heldClaimIds": [],
+  "heldEntityIds": []
+}

@@ -1,0 +1,134 @@
+{
+  "schemaVersion": 1,
+  "purpose": "Byte-identical audit copies of actual runtime acceptance, review, decision and release artifacts. Canonical operational records remain in the existing Worker runtime. Paths and hashes in the original records are unchanged.",
+  "runtimeRoot": "/home/isinxnisi/.local/share/plunode-collection-worker-phase-b-20261020/runtime",
+  "rawHtmlAndProductionBackupIncluded": false,
+  "artifacts": [
+    {
+      "runtimeFile": "datasets/manga-collection/accepted-issue-34-obata-drawing-20261021/acceptance-manifest.json",
+      "archiveFile": "receipt/acceptance-manifest.json",
+      "originalSha256": "de2e237bfcadcb502891202b3699ced9021d78de87c5b7df8a265959ae6f5955",
+      "archiveSha256": "de2e237bfcadcb502891202b3699ced9021d78de87c5b7df8a265959ae6f5955",
+      "compression": null
+    },
+    {
+      "runtimeFile": "datasets/manga-collection/accepted-issue-34-obata-drawing-20261021/acceptance.json",
+      "archiveFile": "receipt/acceptance.json",
+      "originalSha256": "7f62ec0f27d4fedfbb09066893d4ac94d88eaf016c2fff3959a001ea9f228efe",
+      "archiveSha256": "7f62ec0f27d4fedfbb09066893d4ac94d88eaf016c2fff3959a001ea9f228efe",
+      "compression": null
+    },
+    {
+      "runtimeFile": "datasets/manga-collection/accepted-issue-34-obata-drawing-20261021/accepted-records.json",
+      "archiveFile": "receipt/accepted-records.json",
+      "originalSha256": "15ec2b9d9013a7b5af64f0539b1fe2a07302c92d60abb7bb58daf7e9215140d6",
+      "archiveSha256": "15ec2b9d9013a7b5af64f0539b1fe2a07302c92d60abb7bb58daf7e9215140d6",
+      "compression": null
+    },
+    {
+      "runtimeFile": "datasets/manga-collection/accepted-issue-34-obata-drawing-20261021/decision.json",
+      "archiveFile": "receipt/decision.json",
+      "originalSha256": "72fd7dc968cdc2bd2f265382e270cb300f6188c51d180f5c6c3daaae5775b99d",
+      "archiveSha256": "72fd7dc968cdc2bd2f265382e270cb300f6188c51d180f5c6c3daaae5775b99d",
+      "compression": null
+    },
+    {
+      "runtimeFile": "datasets/manga-collection/accepted-issue-34-obata-drawing-20261021/preparation.json",
+      "archiveFile": "receipt/preparation.json",
+      "originalSha256": "d851d5a55279f4e574c530991b94f48199ee200d808356c4a09834b3cb6c35bd",
+      "archiveSha256": "d851d5a55279f4e574c530991b94f48199ee200d808356c4a09834b3cb6c35bd",
+      "compression": null
+    },
+    {
+      "runtimeFile": "datasets/manga-collection/accepted-issue-34-obata-drawing-20261021/preparation.md",
+      "archiveFile": "receipt/preparation.md",
+      "originalSha256": "c495d26a5101166bfb9fa0d1d99eaa0da51d76b0865517092e48208ce9302898",
+      "archiveSha256": "c495d26a5101166bfb9fa0d1d99eaa0da51d76b0865517092e48208ce9302898",
+      "compression": null
+    },
+    {
+      "runtimeFile": "datasets/manga-collection/accepted-issue-34-obata-drawing-20261021/validation.json",
+      "archiveFile": "receipt/validation.json",
+      "originalSha256": "e50d2df78ed620308cdea3a74386cbcc242729a5b28d1608b89e53244ffaca3f",
+      "archiveSha256": "e50d2df78ed620308cdea3a74386cbcc242729a5b28d1608b89e53244ffaca3f",
+      "compression": null
+    },
+    {
+      "runtimeFile": "datasets/manga-collection/evidence-reviews/issue-34-obata-drawing-20261021-r2/context.json",
+      "archiveFile": "review/context.json",
+      "originalSha256": "3f10dae6a259169b6390885a67d99b806a675bfdd6a4ea9d3621bb1a5a259619",
+      "archiveSha256": "3f10dae6a259169b6390885a67d99b806a675bfdd6a4ea9d3621bb1a5a259619",
+      "compression": null
+    },
+    {
+      "runtimeFile": "datasets/manga-collection/evidence-reviews/issue-34-obata-drawing-20261021-r2/decision-request.json",
+      "archiveFile": "review/decision-request.json",
+      "originalSha256": "2012c8f945c6f3f40a4d78f56baba858d04f7f8c3cdb2d55bdc4d800f2156fa4",
+      "archiveSha256": "2012c8f945c6f3f40a4d78f56baba858d04f7f8c3cdb2d55bdc4d800f2156fa4",
+      "compression": null
+    },
+    {
+      "runtimeFile": "datasets/manga-collection/evidence-reviews/issue-34-obata-drawing-20261021-r2/proposed-records.json",
+      "archiveFile": "review/proposed-records.json",
+      "originalSha256": "15ec2b9d9013a7b5af64f0539b1fe2a07302c92d60abb7bb58daf7e9215140d6",
+      "archiveSha256": "15ec2b9d9013a7b5af64f0539b1fe2a07302c92d60abb7bb58daf7e9215140d6",
+      "compression": null
+    },
+    {
+      "runtimeFile": "datasets/manga-collection/evidence-reviews/issue-34-obata-drawing-20261021-r2/review-manifest.json",
+      "archiveFile": "review/review-manifest.json",
+      "originalSha256": "1f8c0fa0c236cbc25d6a8e591252f535ce356882e8ce9cf8d6ce70a6078d0449",
+      "archiveSha256": "1f8c0fa0c236cbc25d6a8e591252f535ce356882e8ce9cf8d6ce70a6078d0449",
+      "compression": null
+    },
+    {
+      "runtimeFile": "datasets/manga-collection/evidence-reviews/issue-34-obata-drawing-20261021-r2/review.json",
+      "archiveFile": "review/review.json",
+      "originalSha256": "f1f6107ec4c172435b02c475b9c2c9a781b8e4656915f2c00b2b2bd326eeb3b6",
+      "archiveSha256": "f1f6107ec4c172435b02c475b9c2c9a781b8e4656915f2c00b2b2bd326eeb3b6",
+      "compression": null
+    },
+    {
+      "runtimeFile": "datasets/public-kg/releases/manga-issue-34-obata-drawing-001/data.json",
+      "archiveFile": "release/data.json.gz",
+      "originalSha256": "bab5fd783adf0cdb622cc6c11441bce35bb7213074d489bc7f3e2989a5ca435b",
+      "archiveSha256": "193e4168d80e39651096b72bd0c7183d416a9b15f58c73472f3f2048c37cdd89",
+      "compression": "gzip"
+    },
+    {
+      "runtimeFile": "datasets/public-kg/releases/manga-issue-34-obata-drawing-001/manifest.json",
+      "archiveFile": "release/manifest.json",
+      "originalSha256": "cb0df37a0f1c7669c5d21c4c51d65fabbc0c1eb811cf136e98de1f86533cdc60",
+      "archiveSha256": "cb0df37a0f1c7669c5d21c4c51d65fabbc0c1eb811cf136e98de1f86533cdc60",
+      "compression": null
+    },
+    {
+      "runtimeFile": "datasets/manga-collection/evidence-decisions/issue-34-obata-drawing-20261021-r2.json",
+      "archiveFile": "decision.json",
+      "originalSha256": "72fd7dc968cdc2bd2f265382e270cb300f6188c51d180f5c6c3daaae5775b99d",
+      "archiveSha256": "72fd7dc968cdc2bd2f265382e270cb300f6188c51d180f5c6c3daaae5775b99d",
+      "compression": null
+    },
+    {
+      "runtimeFile": "datasets/manga-collection/evidence-acceptance-authorization/issue-34-obata-drawing-20261021.json",
+      "archiveFile": "authorization.json",
+      "originalSha256": "eb7c4123ee2aec4fd1ec9a63bffeebbb3ee62f17a0986ae36cf9965fb8a0f668",
+      "archiveSha256": "eb7c4123ee2aec4fd1ec9a63bffeebbb3ee62f17a0986ae36cf9965fb8a0f668",
+      "compression": null
+    }
+  ],
+  "existingBaseReleaseReferences": [
+    {
+      "runtimeFile": "datasets/public-kg/releases/manga-issue-25-utc-recovery-08-normal/data.json",
+      "repositoryGzipFile": "datasets/connectivity/issue-34/after-data.json.gz",
+      "originalSha256": "44cb7d65c4ece8ac04ffcca988c0b37f35a5bf61cc934ef482cbefda39ec09e7",
+      "archiveSha256": "ea3137d7ab46920ee482e2854efc859ab0a7c288c959d3185ea8245837c0c6ae"
+    },
+    {
+      "runtimeFile": "datasets/public-kg/releases/manga-issue-25-utc-recovery-08-normal/manifest.json",
+      "repositoryGzipFile": "datasets/connectivity/issue-34/after-manifest.json.gz",
+      "originalSha256": "325522f3efa7ddc0ff67f278456fc81956420ab0d00999d5823988dfc33cd9a3",
+      "archiveSha256": "4a19b835142e23fbe19e183489b1164c5ae312e98b38e53dbbf4698a2cbecf4d"
+    }
+  ]
+}
