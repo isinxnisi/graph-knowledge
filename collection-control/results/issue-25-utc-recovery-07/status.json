@@ -101,12 +101,12 @@
   },
   "requestSha256": "d46cb9ff59261ccd4dd4dbdc1680c4d95e07d8c71c86da9bb78cf58a3e4aac80",
   "kind": "collect-review",
-  "phase": "blocked",
-  "generation": 2118,
+  "phase": "retry-wait",
+  "generation": 3589,
   "attempts": 1,
   "workerId": "plunode-wsl",
   "sourceCommit": "ed89e5a6ff0cf7d8b485330be790a234a064eacd",
-  "updatedAt": "2026-10-20T18:04:17+00:00",
+  "updatedAt": "2026-10-21T18:47:05+00:00",
   "result": {
     "jobId": "issue-25-utc-recovery-r0007-0b3c13e86c5f069c",
     "collectionUnchanged": false,
@@ -132,6 +132,6 @@
   "decisionDrafts": [
     "datasets/manga-collection/decisions/issue-25-utc-recovery-07-normal-draft.json"
   ],
-  "message": "Artifact escapes runtime",
-  "retryAt": 1792506694.2358975
+  "message": "GitHub Issue read failed: HTTP 502",
+  "retryAt": 1792608556.7035336
 }
