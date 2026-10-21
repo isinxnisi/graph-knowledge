@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "version": "development-v1",
+  "split": "development",
+  "tasks": {
+    "pluto-supervisor": {
+      "taskSha256": "231f2c7a822ed5a176ae0c6cb443a58298f887944d5f5308ac7ae808d02b8d6d",
+      "acceptable": [
+        "path-400881205d404a66cd397e09"
+      ],
+      "origin": "Codex-authored from published structured Role and task constraints",
+      "reviewStatus": "pending-human"
+    },
+    "pluto-no-outgoing": {
+      "taskSha256": "2c77a8c69d491a67aa599410095908c44effbc65aea2b4c30d1df287bf3af78a",
+      "acceptable": [
+        "STOP"
+      ],
+      "origin": "Codex-authored from published structured Role and task constraints",
+      "reviewStatus": "pending-human"
+    },
+    "pluto-limited": {
+      "taskSha256": "a10bf5ddf041c83eb2af1b6cba2d10b3b424f3b7230e32d948f3bbea2359a9fe",
+      "acceptable": [
+        "HOLD"
+      ],
+      "origin": "Codex-authored from published structured Role and task constraints",
+      "reviewStatus": "pending-human"
+    },
+    "pluto-other-work": {
+      "taskSha256": "c1d4863e915b305d33bdb10f15d6f97033cc7a110f6bfce5701ec95d70c637fd",
+      "acceptable": [
+        "path-cd9adceabe10d7b3860e8725",
+        "path-3e480d9522276e0e1cd331d0"
+      ],
+      "origin": "Codex-authored from published structured Role and task constraints",
+      "reviewStatus": "pending-human"
+    }
+  }
+}
