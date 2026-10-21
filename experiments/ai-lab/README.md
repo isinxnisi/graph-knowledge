@@ -1,5 +1,7 @@
 # Plunode 関係探索AI育成ラボ（隔離初版）
 
+2026-10-22の次工程：[観察画面の起動・確認](../../prototypes/ai-lab/README.md) / [4課題一括レビュー](../../docs/verification/ai-lab-20261022/REVIEW.md) / [独立環境の検証と画面設計](../../docs/design/AI_LAB_OBSERVER.md)。採点案は引き続き人間未承認。
+
 契約は [設計](../../docs/design/AI_LAB_FOUNDATION.md)、今回の実測は [検証](../../docs/verification/AI_LAB_20261021.md)。Web・DB・共有Kevを起動/停止しない。実行はWSLの独立worktreeで行う。Python 3標準ライブラリ、snapshot再検証だけ既設Node24/tsxを使用する。
 
 ```sh

@@ -1,0 +1,13 @@
+export type Observation = {executionKind:string;status:string;trained:boolean;trainingDataVersion:string|null;adapterRevision:string|null;selection:unknown};
+// Transport, decision and lab training are independent axes. Never infer training from a better choice.
+export function classify(run:Observation){
+ const realAttempt=run.executionKind==='kev-api';
+ return {
+  baseline:run.executionKind==='rule'&&run.status==='completed',
+  realAttempt,
+  completedInference:realAttempt&&run.status==='completed'&&run.selection!==null,
+  heldBeforeSend:run.status==='held'&&run.executionKind==='not-connected',
+  unknown:run.status==='unknown'||run.executionKind==='interrupted',
+  training:run.trained&&!!run.adapterRevision&&!!run.trainingDataVersion?'trained':run.trained?'unverified':'untrained',
+ };
+}

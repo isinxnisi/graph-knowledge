@@ -1,6 +1,6 @@
 # ドキュメントの入口
 
-- AI育成ラボの独立初版：[実装境界と後続設計](design/AI_LAB_FOUNDATION.md) / [環境診断・検証](verification/AI_LAB_20261021.md)。第11章の隔離基盤のみ。main統合・画面公開・学習実行は含めない。
+- AI育成ラボ：[初稼働準備・観察画面](design/AI_LAB_OBSERVER.md) / [4課題の未承認レビュー](verification/ai-lab-20261022/REVIEW.md) / [隔離確認の検証](verification/AI_LAB_OBSERVER_20261022.md)。3286で実Home/Graph/アカウント導線を確認。main統合・公開配置・実学習なし。[初版の契約](design/AI_LAB_FOUNDATION.md) / [初版検証](verification/AI_LAB_20261021.md)。
 
 2026-10-15。現行仕様・継続検討・完了履歴を分ける。フェーズ番号は記録の整理用であり、未実装機能の着手順や承認を意味しない。
 

@@ -1,0 +1,794 @@
+{
+  "schemaVersion": 1,
+  "reviewStatus": "pending-human",
+  "approvalRecorded": false,
+  "kgRevision": "88437056-b74f-42ab-88c0-33ed435bdccc",
+  "kgSha256": "3a342621f5236b701c37abbd0ce047892901e664fe39dfe1b49b2d7a29da8237",
+  "labelsSha256": "6691049edde74723f2eaa35ed76bc0167ff6383062c57826bbaf8996748774f7",
+  "evaluationVersion": "development-v1",
+  "rows": [
+    {
+      "task": {
+        "id": "pluto-supervisor",
+        "split": "development",
+        "originId": "2b7c6289-d050-4dc0-93e3-9307681253cc",
+        "objective": "PLUTO第1巻で監修を担当した人物へ進む。著者やプロデュースと区別し、指定の刊行物と明示Roleを保つ。",
+        "desiredRole": "SUPERVISION",
+        "visited": [],
+        "filters": {
+          "direction": "incoming",
+          "roles": null,
+          "isbn13": null
+        },
+        "limits": {
+          "depth": 1,
+          "candidates": 6,
+          "edgeChecks": 100
+        }
+      },
+      "taskSha256": "231f2c7a822ed5a176ae0c6cb443a58298f887944d5f5308ac7ae808d02b8d6d",
+      "candidates": {
+        "items": [
+          {
+            "id": "path-dad153895e3d786647e2c86b",
+            "targetId": "bdb742c2-2973-4c1c-a523-c828374111fc",
+            "targetName": "手塚眞",
+            "path": [
+              {
+                "claimId": "75f911ca-a247-42bd-8bf0-c166649ce145",
+                "fromId": "2b7c6289-d050-4dc0-93e3-9307681253cc",
+                "toId": "bdb742c2-2973-4c1c-a523-c828374111fc",
+                "direction": "incoming",
+                "subjectId": "bdb742c2-2973-4c1c-a523-c828374111fc",
+                "objectId": "2b7c6289-d050-4dc0-93e3-9307681253cc",
+                "predicate": "CONTRIBUTED_TO",
+                "polarity": "affirmed",
+                "period": {
+                  "from": null,
+                  "to": null
+                },
+                "contribution": {
+                  "roleId": null,
+                  "scope": null
+                },
+                "citationIds": [
+                  "a00075dd-726c-4f12-8494-7cb8e85705bd"
+                ],
+                "sourceIds": [
+                  "b7266fbf-a778-407e-8a4b-374b97523a26"
+                ]
+              }
+            ]
+          },
+          {
+            "id": "path-16eeb71a147a1eff44d095b3",
+            "targetId": "d900543a-9c11-48c1-be76-1822b756fcc4",
+            "targetName": "浦沢直樹",
+            "path": [
+              {
+                "claimId": "839b0bb8-1781-4a3e-8446-9a22d08d1658",
+                "fromId": "2b7c6289-d050-4dc0-93e3-9307681253cc",
+                "toId": "d900543a-9c11-48c1-be76-1822b756fcc4",
+                "direction": "incoming",
+                "subjectId": "d900543a-9c11-48c1-be76-1822b756fcc4",
+                "objectId": "2b7c6289-d050-4dc0-93e3-9307681253cc",
+                "predicate": "CONTRIBUTED_TO",
+                "polarity": "affirmed",
+                "period": {
+                  "from": null,
+                  "to": null
+                },
+                "contribution": {
+                  "roleId": "AUTHORSHIP",
+                  "scope": {
+                    "kind": "publication",
+                    "isbn13": "9784091874313",
+                    "volumeLabel": "第1巻",
+                    "editionLabel": null,
+                    "language": "ja"
+                  }
+                },
+                "citationIds": [
+                  "ef16246b-7930-4cfb-8f44-770162f7fc60"
+                ],
+                "sourceIds": [
+                  "a091ec69-8902-4956-b181-eab5176c38be"
+                ]
+              }
+            ]
+          },
+          {
+            "id": "path-06df4736ed19233d7065de6e",
+            "targetId": "d900543a-9c11-48c1-be76-1822b756fcc4",
+            "targetName": "浦沢直樹",
+            "path": [
+              {
+                "claimId": "aacddf82-87ae-4981-8542-0470e981a94f",
+                "fromId": "2b7c6289-d050-4dc0-93e3-9307681253cc",
+                "toId": "d900543a-9c11-48c1-be76-1822b756fcc4",
+                "direction": "incoming",
+                "subjectId": "d900543a-9c11-48c1-be76-1822b756fcc4",
+                "objectId": "2b7c6289-d050-4dc0-93e3-9307681253cc",
+                "predicate": "CONTRIBUTED_TO",
+                "polarity": "affirmed",
+                "period": {
+                  "from": null,
+                  "to": null
+                },
+                "contribution": {
+                  "roleId": null,
+                  "scope": null
+                },
+                "citationIds": [
+                  "0872be3c-16bf-4bb9-bc64-ddb9b408f9ad"
+                ],
+                "sourceIds": [
+                  "b7266fbf-a778-407e-8a4b-374b97523a26"
+                ]
+              }
+            ]
+          },
+          {
+            "id": "path-400881205d404a66cd397e09",
+            "targetId": "bdb742c2-2973-4c1c-a523-c828374111fc",
+            "targetName": "手塚眞",
+            "path": [
+              {
+                "claimId": "cc2bc0c3-d8e7-47fe-8aaf-1b219bff0137",
+                "fromId": "2b7c6289-d050-4dc0-93e3-9307681253cc",
+                "toId": "bdb742c2-2973-4c1c-a523-c828374111fc",
+                "direction": "incoming",
+                "subjectId": "bdb742c2-2973-4c1c-a523-c828374111fc",
+                "objectId": "2b7c6289-d050-4dc0-93e3-9307681253cc",
+                "predicate": "CONTRIBUTED_TO",
+                "polarity": "affirmed",
+                "period": {
+                  "from": null,
+                  "to": null
+                },
+                "contribution": {
+                  "roleId": "SUPERVISION",
+                  "scope": {
+                    "kind": "publication",
+                    "isbn13": "9784091874313",
+                    "volumeLabel": "第1巻",
+                    "editionLabel": null,
+                    "language": "ja"
+                  }
+                },
+                "citationIds": [
+                  "b775cbf3-4cff-41ea-986d-1f067e14f073"
+                ],
+                "sourceIds": [
+                  "b7266fbf-a778-407e-8a4b-374b97523a26"
+                ]
+              }
+            ]
+          },
+          {
+            "id": "path-fe5eff69fcb63c784f48dd76",
+            "targetId": "29e9caea-6c44-4c1f-9abc-f4350003ca3b",
+            "targetName": "長崎尚志",
+            "path": [
+              {
+                "claimId": "dbc08a85-9165-4cc8-a3af-d133c83d8f67",
+                "fromId": "2b7c6289-d050-4dc0-93e3-9307681253cc",
+                "toId": "29e9caea-6c44-4c1f-9abc-f4350003ca3b",
+                "direction": "incoming",
+                "subjectId": "29e9caea-6c44-4c1f-9abc-f4350003ca3b",
+                "objectId": "2b7c6289-d050-4dc0-93e3-9307681253cc",
+                "predicate": "CONTRIBUTED_TO",
+                "polarity": "affirmed",
+                "period": {
+                  "from": null,
+                  "to": null
+                },
+                "contribution": {
+                  "roleId": "PRODUCING",
+                  "scope": {
+                    "kind": "publication",
+                    "isbn13": "9784091874313",
+                    "volumeLabel": "第1巻",
+                    "editionLabel": null,
+                    "language": "ja"
+                  }
+                },
+                "citationIds": [
+                  "48922d83-9686-4bc9-b5b4-5f4bf1ffd8b4"
+                ],
+                "sourceIds": [
+                  "b7266fbf-a778-407e-8a4b-374b97523a26"
+                ]
+              }
+            ]
+          },
+          {
+            "id": "path-162040aecef0c5771f8057c5",
+            "targetId": "29e9caea-6c44-4c1f-9abc-f4350003ca3b",
+            "targetName": "長崎尚志",
+            "path": [
+              {
+                "claimId": "e3b37447-87f5-40ed-b738-6ba37578c8c3",
+                "fromId": "2b7c6289-d050-4dc0-93e3-9307681253cc",
+                "toId": "29e9caea-6c44-4c1f-9abc-f4350003ca3b",
+                "direction": "incoming",
+                "subjectId": "29e9caea-6c44-4c1f-9abc-f4350003ca3b",
+                "objectId": "2b7c6289-d050-4dc0-93e3-9307681253cc",
+                "predicate": "CONTRIBUTED_TO",
+                "polarity": "affirmed",
+                "period": {
+                  "from": null,
+                  "to": null
+                },
+                "contribution": {
+                  "roleId": null,
+                  "scope": null
+                },
+                "citationIds": [
+                  "d72a9d71-c06e-4ec7-84c6-926cb90aeb14"
+                ],
+                "sourceIds": [
+                  "b7266fbf-a778-407e-8a4b-374b97523a26"
+                ]
+              }
+            ]
+          }
+        ],
+        "completeWithinSnapshot": true,
+        "edgeChecks": 8,
+        "excluded": {},
+        "scope": "fixed-subset-only"
+      },
+      "expectedDraft": [
+        "path-400881205d404a66cd397e09"
+      ],
+      "reviewStatus": "pending-human",
+      "rationale": "第1巻の明示SUPERVISIONだけを監修の根拠とする。同じ人物へのRole未指定Claimを正解へ読み替えない。",
+      "labelOrigin": "Codex-authored from published structured Role and task constraints"
+    },
+    {
+      "task": {
+        "id": "pluto-no-outgoing",
+        "split": "development",
+        "originId": "2b7c6289-d050-4dc0-93e3-9307681253cc",
+        "objective": "PLUTOから主語側の制作関与を辿る。提示snapshotに対象経路がなければ範囲内で停止する。",
+        "desiredRole": null,
+        "visited": [],
+        "filters": {
+          "direction": "outgoing",
+          "roles": null,
+          "isbn13": null
+        },
+        "limits": {
+          "depth": 1,
+          "candidates": 6,
+          "edgeChecks": 100
+        }
+      },
+      "taskSha256": "2c77a8c69d491a67aa599410095908c44effbc65aea2b4c30d1df287bf3af78a",
+      "candidates": {
+        "items": [],
+        "completeWithinSnapshot": true,
+        "edgeChecks": 8,
+        "excluded": {},
+        "scope": "fixed-subset-only"
+      },
+      "expectedDraft": [
+        "STOP"
+      ],
+      "reviewStatus": "pending-human",
+      "rationale": "固定部分集合ではPLUTOを主語とする該当Claimがなく、指定方向の候補を完走した。世界全体の不存在ではない。",
+      "labelOrigin": "Codex-authored from published structured Role and task constraints"
+    },
+    {
+      "task": {
+        "id": "pluto-limited",
+        "split": "development",
+        "originId": "2b7c6289-d050-4dc0-93e3-9307681253cc",
+        "objective": "PLUTO第1巻の監修者を探す。取得が未完了なら保留する。",
+        "desiredRole": "SUPERVISION",
+        "visited": [],
+        "filters": {
+          "direction": "incoming",
+          "roles": null,
+          "isbn13": null
+        },
+        "limits": {
+          "depth": 1,
+          "candidates": 1,
+          "edgeChecks": 100
+        }
+      },
+      "taskSha256": "a10bf5ddf041c83eb2af1b6cba2d10b3b424f3b7230e32d948f3bbea2359a9fe",
+      "candidates": {
+        "items": [
+          {
+            "id": "path-dad153895e3d786647e2c86b",
+            "targetId": "bdb742c2-2973-4c1c-a523-c828374111fc",
+            "targetName": "手塚眞",
+            "path": [
+              {
+                "claimId": "75f911ca-a247-42bd-8bf0-c166649ce145",
+                "fromId": "2b7c6289-d050-4dc0-93e3-9307681253cc",
+                "toId": "bdb742c2-2973-4c1c-a523-c828374111fc",
+                "direction": "incoming",
+                "subjectId": "bdb742c2-2973-4c1c-a523-c828374111fc",
+                "objectId": "2b7c6289-d050-4dc0-93e3-9307681253cc",
+                "predicate": "CONTRIBUTED_TO",
+                "polarity": "affirmed",
+                "period": {
+                  "from": null,
+                  "to": null
+                },
+                "contribution": {
+                  "roleId": null,
+                  "scope": null
+                },
+                "citationIds": [
+                  "a00075dd-726c-4f12-8494-7cb8e85705bd"
+                ],
+                "sourceIds": [
+                  "b7266fbf-a778-407e-8a4b-374b97523a26"
+                ]
+              }
+            ]
+          }
+        ],
+        "completeWithinSnapshot": false,
+        "edgeChecks": 4,
+        "excluded": {},
+        "scope": "fixed-subset-only"
+      },
+      "expectedDraft": [
+        "HOLD"
+      ],
+      "reviewStatus": "pending-human",
+      "rationale": "候補上限1件で探索が未完了。監修者が存在しないとは言えず、STOPではなくHOLDとする案。",
+      "labelOrigin": "Codex-authored from published structured Role and task constraints"
+    },
+    {
+      "task": {
+        "id": "pluto-other-work",
+        "split": "development",
+        "originId": "2b7c6289-d050-4dc0-93e3-9307681253cc",
+        "objective": "PLUTOの著者から、著者として関わる別の作品へ進む。各刊行物scopeを保持し、人物同士の直接関係は推論しない。",
+        "desiredRole": "AUTHORSHIP",
+        "visited": [],
+        "filters": {
+          "direction": "both",
+          "roles": [
+            "AUTHORSHIP"
+          ],
+          "isbn13": null
+        },
+        "limits": {
+          "depth": 2,
+          "candidates": 6,
+          "edgeChecks": 100
+        }
+      },
+      "taskSha256": "c1d4863e915b305d33bdb10f15d6f97033cc7a110f6bfce5701ec95d70c637fd",
+      "candidates": {
+        "items": [
+          {
+            "id": "path-cd9adceabe10d7b3860e8725",
+            "targetId": "e87a40f9-3139-47a1-a962-6610eb2b8878",
+            "targetName": "MASTERキートン",
+            "path": [
+              {
+                "claimId": "839b0bb8-1781-4a3e-8446-9a22d08d1658",
+                "fromId": "2b7c6289-d050-4dc0-93e3-9307681253cc",
+                "toId": "d900543a-9c11-48c1-be76-1822b756fcc4",
+                "direction": "incoming",
+                "subjectId": "d900543a-9c11-48c1-be76-1822b756fcc4",
+                "objectId": "2b7c6289-d050-4dc0-93e3-9307681253cc",
+                "predicate": "CONTRIBUTED_TO",
+                "polarity": "affirmed",
+                "period": {
+                  "from": null,
+                  "to": null
+                },
+                "contribution": {
+                  "roleId": "AUTHORSHIP",
+                  "scope": {
+                    "kind": "publication",
+                    "isbn13": "9784091874313",
+                    "volumeLabel": "第1巻",
+                    "editionLabel": null,
+                    "language": "ja"
+                  }
+                },
+                "citationIds": [
+                  "ef16246b-7930-4cfb-8f44-770162f7fc60"
+                ],
+                "sourceIds": [
+                  "a091ec69-8902-4956-b181-eab5176c38be"
+                ]
+              },
+              {
+                "claimId": "4e212aa6-9e75-47a4-aacf-96432e7eb517",
+                "fromId": "d900543a-9c11-48c1-be76-1822b756fcc4",
+                "toId": "e87a40f9-3139-47a1-a962-6610eb2b8878",
+                "direction": "outgoing",
+                "subjectId": "d900543a-9c11-48c1-be76-1822b756fcc4",
+                "objectId": "e87a40f9-3139-47a1-a962-6610eb2b8878",
+                "predicate": "CONTRIBUTED_TO",
+                "polarity": "affirmed",
+                "period": {
+                  "from": null,
+                  "to": null
+                },
+                "contribution": {
+                  "roleId": "AUTHORSHIP",
+                  "scope": {
+                    "kind": "publication",
+                    "isbn13": "9784091841612",
+                    "volumeLabel": "第1巻",
+                    "editionLabel": "完全版",
+                    "language": "ja"
+                  }
+                },
+                "citationIds": [
+                  "bc50fe5e-6c80-48ca-881d-a8a3576a6f75"
+                ],
+                "sourceIds": [
+                  "decc8f7d-73c9-4e9b-8480-6a289db06231"
+                ]
+              }
+            ]
+          },
+          {
+            "id": "path-3e480d9522276e0e1cd331d0",
+            "targetId": "a6521d80-b9d0-4477-a435-6fa02eb58c04",
+            "targetName": "MONSTER",
+            "path": [
+              {
+                "claimId": "839b0bb8-1781-4a3e-8446-9a22d08d1658",
+                "fromId": "2b7c6289-d050-4dc0-93e3-9307681253cc",
+                "toId": "d900543a-9c11-48c1-be76-1822b756fcc4",
+                "direction": "incoming",
+                "subjectId": "d900543a-9c11-48c1-be76-1822b756fcc4",
+                "objectId": "2b7c6289-d050-4dc0-93e3-9307681253cc",
+                "predicate": "CONTRIBUTED_TO",
+                "polarity": "affirmed",
+                "period": {
+                  "from": null,
+                  "to": null
+                },
+                "contribution": {
+                  "roleId": "AUTHORSHIP",
+                  "scope": {
+                    "kind": "publication",
+                    "isbn13": "9784091874313",
+                    "volumeLabel": "第1巻",
+                    "editionLabel": null,
+                    "language": "ja"
+                  }
+                },
+                "citationIds": [
+                  "ef16246b-7930-4cfb-8f44-770162f7fc60"
+                ],
+                "sourceIds": [
+                  "a091ec69-8902-4956-b181-eab5176c38be"
+                ]
+              },
+              {
+                "claimId": "6d5ff5e4-5f59-4948-8248-cbdac3888a7c",
+                "fromId": "d900543a-9c11-48c1-be76-1822b756fcc4",
+                "toId": "a6521d80-b9d0-4477-a435-6fa02eb58c04",
+                "direction": "outgoing",
+                "subjectId": "d900543a-9c11-48c1-be76-1822b756fcc4",
+                "objectId": "a6521d80-b9d0-4477-a435-6fa02eb58c04",
+                "predicate": "CONTRIBUTED_TO",
+                "polarity": "affirmed",
+                "period": {
+                  "from": null,
+                  "to": null
+                },
+                "contribution": {
+                  "roleId": "AUTHORSHIP",
+                  "scope": {
+                    "kind": "publication",
+                    "isbn13": "9784091817907",
+                    "volumeLabel": "第1巻",
+                    "editionLabel": "完全版",
+                    "language": "ja"
+                  }
+                },
+                "citationIds": [
+                  "cc151355-4390-4196-a5ef-5b4d4a38109d"
+                ],
+                "sourceIds": [
+                  "02db206a-0f27-4abe-a60e-5eb0075c73c7"
+                ]
+              }
+            ]
+          }
+        ],
+        "completeWithinSnapshot": true,
+        "edgeChecks": 6,
+        "excluded": {
+          "75f911ca-a247-42bd-8bf0-c166649ce145": "role_filter",
+          "aacddf82-87ae-4981-8542-0470e981a94f": "role_filter",
+          "cc2bc0c3-d8e7-47fe-8aaf-1b219bff0137": "role_filter",
+          "dbc08a85-9165-4cc8-a3af-d133c83d8f67": "role_filter",
+          "e3b37447-87f5-40ed-b738-6ba37578c8c3": "role_filter"
+        },
+        "scope": "fixed-subset-only"
+      },
+      "expectedDraft": [
+        "path-cd9adceabe10d7b3860e8725",
+        "path-3e480d9522276e0e1cd331d0"
+      ],
+      "reviewStatus": "pending-human",
+      "rationale": "浦沢直樹を介し、両段にAUTHORSHIPが明示された別作品へ進む。各巻のISBNを保持し、作品間の直接関係を作らない。",
+      "labelOrigin": "Codex-authored from published structured Role and task constraints"
+    }
+  ],
+  "entities": {
+    "29e9caea-6c44-4c1f-9abc-f4350003ca3b": {
+      "id": "29e9caea-6c44-4c1f-9abc-f4350003ca3b",
+      "kind": "person",
+      "name": "長崎尚志",
+      "description": "PLUTOのプロデュース、MASTERキートンの脚本、BILLY BATのストーリー共同制作。",
+      "aliases": [
+        "Takashi Nagasaki"
+      ],
+      "externalIds": [
+        {
+          "namespace": "wikidata",
+          "value": "Q3514203"
+        }
+      ],
+      "createdAt": "2026-10-03T05:13:37Z",
+      "updatedAt": "2026-10-03T05:13:37Z",
+      "event": null
+    },
+    "2b7c6289-d050-4dc0-93e3-9307681253cc": {
+      "id": "2b7c6289-d050-4dc0-93e3-9307681253cc",
+      "kind": "work",
+      "name": "PLUTO",
+      "description": "漫画作品。根拠は小学館の第1巻商品情報。アニメ版とは別。",
+      "aliases": [
+        "Pluto"
+      ],
+      "externalIds": [
+        {
+          "namespace": "wikidata",
+          "value": "Q1197216"
+        }
+      ],
+      "createdAt": "2026-10-03T05:13:37Z",
+      "updatedAt": "2026-10-03T05:13:37Z",
+      "event": null
+    },
+    "a6521d80-b9d0-4477-a435-6fa02eb58c04": {
+      "id": "a6521d80-b9d0-4477-a435-6fa02eb58c04",
+      "kind": "work",
+      "name": "MONSTER",
+      "description": "浦沢直樹の漫画。アニメ版とは別。今回のクレジット確認は完全版第1巻。",
+      "aliases": [],
+      "externalIds": [],
+      "createdAt": "2026-10-14T00:00:00Z",
+      "updatedAt": "2026-10-14T00:00:00Z",
+      "event": null
+    },
+    "bdb742c2-2973-4c1c-a523-c828374111fc": {
+      "id": "bdb742c2-2973-4c1c-a523-c828374111fc",
+      "kind": "person",
+      "name": "手塚眞",
+      "description": "PLUTO第1巻の出版社情報に監修として記載。",
+      "aliases": [
+        "Makoto Tezuka"
+      ],
+      "externalIds": [
+        {
+          "namespace": "wikidata",
+          "value": "Q6724933"
+        }
+      ],
+      "createdAt": "2026-10-03T05:13:37Z",
+      "updatedAt": "2026-10-03T05:13:37Z",
+      "event": null
+    },
+    "d900543a-9c11-48c1-be76-1822b756fcc4": {
+      "id": "d900543a-9c11-48c1-be76-1822b756fcc4",
+      "kind": "person",
+      "name": "浦沢直樹",
+      "description": "漫画家。今回の収録作品：PLUTO、MASTERキートン、BILLY BAT。",
+      "aliases": [
+        "Naoki Urasawa"
+      ],
+      "externalIds": [
+        {
+          "namespace": "wikidata",
+          "value": "Q348436"
+        }
+      ],
+      "createdAt": "2026-10-03T05:13:37Z",
+      "updatedAt": "2026-10-03T05:13:37Z",
+      "event": null
+    },
+    "e87a40f9-3139-47a1-a962-6610eb2b8878": {
+      "id": "e87a40f9-3139-47a1-a962-6610eb2b8878",
+      "kind": "work",
+      "name": "MASTERキートン",
+      "description": "漫画作品。根拠は完全版第1巻のクレジット。続編・アニメとは別。",
+      "aliases": [
+        "Master Keaton"
+      ],
+      "externalIds": [
+        {
+          "namespace": "wikidata",
+          "value": "Q1185624"
+        }
+      ],
+      "createdAt": "2026-10-03T05:13:37Z",
+      "updatedAt": "2026-10-03T05:13:37Z",
+      "event": null
+    }
+  },
+  "citations": {
+    "0872be3c-16bf-4bb9-bc64-ddb9b408f9ad": {
+      "id": "0872be3c-16bf-4bb9-bc64-ddb9b408f9ad",
+      "claimId": "aacddf82-87ae-4981-8542-0470e981a94f",
+      "sourceId": "b7266fbf-a778-407e-8a4b-374b97523a26",
+      "locator": "タイトル直下のクレジット",
+      "note": "役割・内容：制作クレジット。資料の原表記：浦沢直樹×手塚治虫。確認範囲：PLUTO 第1巻の商品情報。漫画作品への関与を示し、全巻・全期間の役割を断定しません。 原作由来の手塚治虫のクレジットと、浦沢直樹の制作関与を区別する。",
+      "accessedAt": "2026-10-03",
+      "stance": "support",
+      "roleEvidence": null,
+      "positionEvidence": null,
+      "eventParticipationEvidence": null
+    },
+    "48922d83-9686-4bc9-b5b4-5f4bf1ffd8b4": {
+      "id": "48922d83-9686-4bc9-b5b4-5f4bf1ffd8b4",
+      "claimId": "dbc08a85-9165-4cc8-a3af-d133c83d8f67",
+      "sourceId": "b7266fbf-a778-407e-8a4b-374b97523a26",
+      "locator": "タイトル直下のクレジット",
+      "note": "v1の広いClaim e3b37447-87f5-40ed-b738-6ba37578c8c3 と同じ資料に由来する限定Claim。ユーザーが公式の商品情報上のRole表記と対象刊行物を確認して受入。指定された刊行物の商品情報において、その人物が当該Roleでクレジットされている範囲。当該巻だけの担当、全巻・全版での担当、全期間の担当を意味しない。受入日は記録日、時刻は未確認のため日付境界を用いる。",
+      "accessedAt": "2026-10-03",
+      "stance": "support",
+      "roleEvidence": {
+        "originalText": "長崎尚志プロデュース",
+        "language": "ja"
+      },
+      "positionEvidence": null,
+      "eventParticipationEvidence": null
+    },
+    "a00075dd-726c-4f12-8494-7cb8e85705bd": {
+      "id": "a00075dd-726c-4f12-8494-7cb8e85705bd",
+      "claimId": "75f911ca-a247-42bd-8bf0-c166649ce145",
+      "sourceId": "b7266fbf-a778-407e-8a4b-374b97523a26",
+      "locator": "タイトル直下のクレジット",
+      "note": "役割・内容：監修。資料の原表記：監修。確認範囲：PLUTO 第1巻の商品情報。漫画作品への関与を示し、全巻・全期間の役割を断定しません。 手塚眞の監修クレジット。作者であるとは断定しない。",
+      "accessedAt": "2026-10-03",
+      "stance": "support",
+      "roleEvidence": null,
+      "positionEvidence": null,
+      "eventParticipationEvidence": null
+    },
+    "b775cbf3-4cff-41ea-986d-1f067e14f073": {
+      "id": "b775cbf3-4cff-41ea-986d-1f067e14f073",
+      "claimId": "cc2bc0c3-d8e7-47fe-8aaf-1b219bff0137",
+      "sourceId": "b7266fbf-a778-407e-8a4b-374b97523a26",
+      "locator": "タイトル直下のクレジット",
+      "note": "v1の広いClaim 75f911ca-a247-42bd-8bf0-c166649ce145 と同じ資料に由来する限定Claim。ユーザーが公式の商品情報上のRole表記と対象刊行物を確認して受入。指定された刊行物の商品情報において、その人物が当該Roleでクレジットされている範囲。当該巻だけの担当、全巻・全版での担当、全期間の担当を意味しない。受入日は記録日、時刻は未確認のため日付境界を用いる。",
+      "accessedAt": "2026-10-03",
+      "stance": "support",
+      "roleEvidence": {
+        "originalText": "監修",
+        "language": "ja"
+      },
+      "positionEvidence": null,
+      "eventParticipationEvidence": null
+    },
+    "bc50fe5e-6c80-48ca-881d-a8a3576a6f75": {
+      "id": "bc50fe5e-6c80-48ca-881d-a8a3576a6f75",
+      "claimId": "4e212aa6-9e75-47a4-aacf-96432e7eb517",
+      "sourceId": "decc8f7d-73c9-4e9b-8480-6a289db06231",
+      "locator": "書誌の責任表示（ISBN一致をOpenSearchでも照合）",
+      "note": "本人名に掛かる著だけを認定し、併記された他の人・組織の役割は生成しない。書誌確認であり原本実見ではない。 既存の広い制作関与Claimと独立した限定Claimです。同一資料由来は独立根拠の増加を意味しません。期間は未確認のまま保持します。 この指定刊行物について確認されたクレジットの適用範囲で、その巻だけ・全巻全版・全期間の担当ではありません。",
+      "accessedAt": "2026-10-14",
+      "stance": "support",
+      "roleEvidence": {
+        "originalText": "浦沢直樹, スタジオ・ナッツ 著,勝鹿北星, 長崎尚志 脚本",
+        "language": "ja"
+      },
+      "positionEvidence": null,
+      "eventParticipationEvidence": null
+    },
+    "cc151355-4390-4196-a5ef-5b4d4a38109d": {
+      "id": "cc151355-4390-4196-a5ef-5b4d4a38109d",
+      "claimId": "6d5ff5e4-5f59-4948-8248-cbdac3888a7c",
+      "sourceId": "02db206a-0f27-4abe-a60e-5eb0075c73c7",
+      "locator": "書誌の責任表示（ISBN一致をOpenSearchでも照合）",
+      "note": "本人名に掛かる著だけを認定し、併記された他の人・組織の役割は生成しない。書誌確認であり原本実見ではない。 既存の広い制作関与Claimと独立した限定Claimです。同一資料由来は独立根拠の増加を意味しません。期間は未確認のまま保持します。 この指定刊行物について確認されたクレジットの適用範囲で、その巻だけ・全巻全版・全期間の担当ではありません。",
+      "accessedAt": "2026-10-14",
+      "stance": "support",
+      "roleEvidence": {
+        "originalText": "浦沢直樹, スタジオ・ナッツ 著",
+        "language": "ja"
+      },
+      "positionEvidence": null,
+      "eventParticipationEvidence": null
+    },
+    "d72a9d71-c06e-4ec7-84c6-926cb90aeb14": {
+      "id": "d72a9d71-c06e-4ec7-84c6-926cb90aeb14",
+      "claimId": "e3b37447-87f5-40ed-b738-6ba37578c8c3",
+      "sourceId": "b7266fbf-a778-407e-8a4b-374b97523a26",
+      "locator": "タイトル直下のクレジット",
+      "note": "役割・内容：プロデュース。資料の原表記：長崎尚志プロデュース。確認範囲：PLUTO 第1巻の商品情報。漫画作品への関与を示し、全巻・全期間の役割を断定しません。 監修・作画・原作とは役割を区別する。",
+      "accessedAt": "2026-10-03",
+      "stance": "support",
+      "roleEvidence": null,
+      "positionEvidence": null,
+      "eventParticipationEvidence": null
+    },
+    "ef16246b-7930-4cfb-8f44-770162f7fc60": {
+      "id": "ef16246b-7930-4cfb-8f44-770162f7fc60",
+      "claimId": "839b0bb8-1781-4a3e-8446-9a22d08d1658",
+      "sourceId": "a091ec69-8902-4956-b181-eab5176c38be",
+      "locator": "書誌の責任表示（ISBN一致をOpenSearchでも照合）",
+      "note": "本人名に掛かる著だけを認定し、併記された他の人・組織の役割は生成しない。書誌確認であり原本実見ではない。 既存の広い制作関与Claimと独立した限定Claimです。同一資料由来は独立根拠の増加を意味しません。期間は未確認のまま保持します。 この指定刊行物について確認されたクレジットの適用範囲で、その巻だけ・全巻全版・全期間の担当ではありません。",
+      "accessedAt": "2026-10-14",
+      "stance": "support",
+      "roleEvidence": {
+        "originalText": "手塚眞 監修,浦沢直樹 [ほか]著",
+        "language": "ja"
+      },
+      "positionEvidence": null,
+      "eventParticipationEvidence": null
+    }
+  },
+  "sources": {
+    "02db206a-0f27-4abe-a60e-5eb0075c73c7": {
+      "id": "02db206a-0f27-4abe-a60e-5eb0075c73c7",
+      "kind": "web",
+      "title": "国立国会図書館サーチ：MONSTER 第1巻 書誌",
+      "authors": [],
+      "publisher": "国立国会図書館",
+      "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I000009251143",
+      "publishedAt": null,
+      "edition": null,
+      "note": "ISBNを照合した書誌の責任表示。原本実見や全巻全版の担当認定ではありません。",
+      "isDemo": false
+    },
+    "a091ec69-8902-4956-b181-eab5176c38be": {
+      "id": "a091ec69-8902-4956-b181-eab5176c38be",
+      "kind": "web",
+      "title": "国立国会図書館サーチ：PLUTO 第1巻 書誌",
+      "authors": [],
+      "publisher": "国立国会図書館",
+      "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I000007510854",
+      "publishedAt": null,
+      "edition": null,
+      "note": "ISBNを照合した書誌の責任表示。原本実見や全巻全版の担当認定ではありません。",
+      "isDemo": false
+    },
+    "b7266fbf-a778-407e-8a4b-374b97523a26": {
+      "id": "b7266fbf-a778-407e-8a4b-374b97523a26",
+      "kind": "web",
+      "title": "小学館：PLUTO 第1巻 商品情報",
+      "authors": [],
+      "publisher": "小学館",
+      "url": "https://shogakukan-comic.jp/book?isbn=9784091874313",
+      "publishedAt": null,
+      "edition": "PLUTO 第1巻",
+      "note": "出版社のWeb商品情報を確認。書籍本文は未確認。発売日はWeb公開日や制作関与期間ではありません。",
+      "isDemo": false
+    },
+    "decc8f7d-73c9-4e9b-8480-6a289db06231": {
+      "id": "decc8f7d-73c9-4e9b-8480-6a289db06231",
+      "kind": "web",
+      "title": "国立国会図書館サーチ：MASTERキートン 第1巻 書誌",
+      "authors": [],
+      "publisher": "国立国会図書館",
+      "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I000011268012",
+      "publishedAt": null,
+      "edition": null,
+      "note": "ISBNを照合した書誌の責任表示。原本実見や全巻全版の担当認定ではありません。",
+      "isDemo": false
+    }
+  }
+}

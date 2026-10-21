@@ -1,0 +1,74 @@
+import {createRequire} from 'node:module';
+import {mkdir} from 'node:fs/promises';
+import assert from 'node:assert/strict';
+const require=createRequire(new URL('../../experiments/ai-lab/.runtime/observer/package.json',import.meta.url));
+const {chromium}=require('@playwright/test');
+const base='http://127.0.0.1:3286',out='/tmp/plunode-ai-lab-20261022';
+await mkdir(out,{recursive:true});
+const browser=await chromium.launch({headless:true});
+const originId='2b7c6289-d050-4dc0-93e3-9307681253cc';
+try{
+ for(const [lang,width] of [['ja',1440],['en',1440],['ja',390],['en',390]]){
+  const context=await browser.newContext({viewport:{width,height:960},hasTouch:width<500});
+  const page=await context.newPage(),errors=[],requests=[];
+  page.on('pageerror',e=>errors.push(e.message));page.on('request',r=>requests.push(r.url()));
+  const graphReady=async()=>{await page.getByTestId('graph-canvas').waitFor();await page.waitForFunction(()=>document.querySelector('[data-testid="graph-canvas"]')?._cyreg?.cy.nodes().length>0);await page.waitForTimeout(700);};
+  const graphState=()=>page.getByTestId('graph-canvas').evaluate(el=>{const c=el._cyreg.cy;return {ids:c.nodes().map(n=>n.id()).sort(),positions:Object.fromEntries(c.nodes().map(n=>[n.id(),n.position()])),pan:c.pan(),zoom:c.zoom()};});
+  const shot=async name=>{assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false,name+' overflow');await page.screenshot({path:`${out}/${lang}-${width}-${name}.png`,fullPage:true});};
+  await page.goto(base+(lang==='en'?'/en':'/'));
+  await page.getByTestId('lab-entry').click();
+  await page.locator('.lab-metrics').waitFor();
+  assert.deepEqual(await page.locator('.lab-metrics strong').allTextContents(),['5','0','2','0']);
+  await shot('overview');
+  await page.getByTestId('entry-return').click();
+  assert.equal(new URL(page.url()).pathname,lang==='en'?'/en':'/');
+  await page.getByTestId('lab-entry').click();
+  await page.getByRole('button',{name:lang==='en'?'Run history':'実行履歴',exact:true}).click();
+  await page.locator('.lab-section-heading select').selectOption('kev');
+  await page.getByText(lang==='en'?'No real AI inference records yet.':'AIの実推論記録はまだありません。',{exact:true}).waitFor();
+  await page.locator('.lab-section-heading select').selectOption('held');
+  assert.equal(await page.locator('.lab-run').count(),2);
+  await page.locator('.lab-run').first().click();
+  await page.getByText(lang==='en'?'Held before sending a request. This record contains no AI choice or model probability.':'送信前に保留した記録です。AIの選択結果・モデル確率はありません。',{exact:true}).waitFor();
+  await shot('held');
+  await page.getByRole('button',{name:lang==='en'?'Review 4 tasks':'4課題のレビュー',exact:true}).click();
+  assert.equal(await page.locator('.lab-review').count(),4);
+  await page.locator('.lab-review>details>summary').first().click();
+  const reviewUrl=page.url();
+  await shot('review');
+  await page.locator('.lab-candidate>a').first().scrollIntoViewIfNeeded();const reviewScroll=await page.evaluate(()=>scrollY);
+  await page.locator('.lab-candidate>a').first().click();await graphReady();
+  await page.getByTestId('lab-return').click();assert.equal(page.url(),reviewUrl);
+  // Return restores the same task disclosure as well as the selected tab.
+  await page.waitForFunction(()=>document.querySelector('.lab-review>details')?.open);
+  await page.waitForTimeout(250);assert.ok(Math.abs(await page.evaluate(()=>scrollY)-reviewScroll)<3,'review scroll restored');
+  await page.locator('.lab-path a[href*="read=claim"]').first().click();
+  await page.getByTestId('lab-modal-return').waitFor();
+  await page.getByTestId('lab-modal-return').click();assert.equal(page.url(),reviewUrl);
+  await page.goBack();await page.getByTestId('lab-return').waitFor();await page.goForward();
+  await page.locator('.lab-review').first().waitFor();
+  await page.getByRole('button',{name:lang==='en'?'Readiness':'初稼働の準備',exact:true}).click();await shot('readiness');
+  assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);
+  // Preserve actual Explorer node layout, zoom and pan through the lab entry and explicit return.
+  await page.goto(base+(lang==='en'?'/en':'')+'/explore/'+originId);await graphReady();
+  await page.getByTestId('graph-canvas').evaluate(el=>{const c=el._cyreg.cy;c.nodes().first().shift({x:30,y:-20});c.zoom(.8);c.pan({x:45,y:60});c.emit('dragfree');});
+  await page.waitForTimeout(700);const before=await graphState();
+  await page.getByTestId('lab-entry').click();await page.getByTestId('entry-return').click();await graphReady();const after=await graphState();
+  assert.deepEqual(after.ids,before.ids);assert.deepEqual(after.positions,before.positions);assert.ok(Math.abs(after.zoom-before.zoom)<.01);assert.ok(Math.abs(after.pan.x-before.pan.x)<2&&Math.abs(after.pan.y-before.pan.y)<2);
+  await page.locator('a[data-signed-in="false"]').click();await page.waitForURL(/\/member/);
+  await page.getByTestId('lab-entry').click();await page.getByTestId('entry-return').click();assert.equal(new URL(page.url()).pathname,'/member');
+  assert.deepEqual(errors,[]);
+  assert.equal(requests.some(u=>u.includes(':8009')||u.includes('/v1/systemone')),false);
+  console.log('PASS',lang,width,'Home / Graph / Claim / account return, history, states, no overflow');
+  await context.close();
+ }
+ const context=await browser.newContext(),page=await context.newPage();
+ await page.goto(base+'/ai-lab');assert.equal(await page.getByTestId('entry-return').count(),0);
+ for(const path of ['/.env.public','/.runtime/runs','/api/ai/run','/api/training','/server.mjs'])assert.equal((await page.request.get(base+path)).status(),404,path);
+ for(const path of ['/api/member/profile','/api/auth/sign-in'])assert.equal((await page.request.post(base+path,{data:{}})).status(),503,path);
+ assert.equal((await page.request.post(base+'/api/entities',{data:{}})).status(),404);
+ assert.equal((await page.request.get(base+'/ai-lab',{headers:{Host:'untrusted.example'}})).status(),404);
+ const document=await page.request.get(base+'/lab-review.md');assert.equal(document.status(),200);assert.ok((await document.text()).includes('人間未承認'));
+ assert.ok((await page.request.get(base+'/ai-lab')).headers()['content-security-policy'].includes("connect-src 'self'"));
+ console.log('PASS direct URL, read-only API boundary, private paths, Host/CSP and review download');
+}finally{await browser.close();}

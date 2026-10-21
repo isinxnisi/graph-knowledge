@@ -1,0 +1,12 @@
+{
+  "observedAt": "2026-10-21T15:29:05.777360+00:00",
+  "gpuTemperatureC": 80,
+  "gpuUtilizationRange": [
+    2,
+    11
+  ],
+  "freeVramMiB": 4111,
+  "availableRamMiB": 14469,
+  "trainingExecuted": false,
+  "inferencePostSent": false
+}

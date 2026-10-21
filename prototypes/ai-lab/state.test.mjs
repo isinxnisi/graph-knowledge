@@ -1,0 +1,10 @@
+import {test} from 'node:test';
+import assert from 'node:assert/strict';
+import {classify} from '../../experiments/ai-lab/.runtime/observer/preview/state.ts';
+const base={executionKind:'rule',status:'completed',trained:false,trainingDataVersion:null,adapterRevision:null,selection:{choice:'HOLD'}};
+test('a completed rule HOLD is neither AI inference nor a request held before sending',()=>{const s=classify(base);assert.equal(s.baseline,true);assert.equal(s.realAttempt,false);assert.equal(s.heldBeforeSend,false);assert.equal(s.training,'untrained');});
+test('resource-held request has no inference result',()=>{const s=classify({...base,executionKind:'not-connected',status:'held',selection:null});assert.equal(s.heldBeforeSend,true);assert.equal(s.completedInference,false);});
+test('real API success is inference but does not imply additional training',()=>{const s=classify({...base,executionKind:'kev-api'});assert.equal(s.completedInference,true);assert.equal(s.training,'untrained');});
+test('timeout after dispatch is an attempt with unknown outcome',()=>{const s=classify({...base,executionKind:'kev-api',status:'unknown',selection:null});assert.equal(s.realAttempt,true);assert.equal(s.completedInference,false);assert.equal(s.unknown,true);});
+test('only explicit training and checkpoint/data versions display trained',()=>{assert.equal(classify({...base,trained:true}).training,'unverified');assert.equal(classify({...base,trained:true,trainingDataVersion:'test-data',adapterRevision:'test-checkpoint'}).training,'trained');assert.equal(classify({...base,trainingDataVersion:'test-data',adapterRevision:'test-checkpoint'}).training,'untrained');});
+test('test doubles cannot count as real inference',()=>{assert.equal(classify({...base,executionKind:'test-double'}).completedInference,false);});

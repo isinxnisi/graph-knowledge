@@ -1,0 +1,36 @@
+"use client";
+import {useEffect,useState} from 'react';
+import {useUiLocale} from '../lib/client/ui-locale';
+
+function path(){return location.pathname+location.search+location.hash;}
+export function safePath(value:unknown):value is string {
+ return typeof value==='string'&&value.length<=10000&&!/[\\\r\n]/.test(value)&&/^\/(?:ai-lab(?:[?#]|$)|member(?:[?#]|$)|(?:en\/)?explore\/[0-9a-f-]{36}(?:[?#]|$)|en(?:[?#]|$)|[?#]|$)/.test(value);
+}
+export function rememberEntry(){
+ if(location.pathname==='/ai-lab')return;
+ try{if(safePath(path()))sessionStorage.setItem('ai-lab-entry',JSON.stringify({href:path(),scroll:scrollY}));}catch{/* Browser history remains available. */}
+}
+export function rememberDeparture(target:string){
+ try{if(safePath(target)){sessionStorage.setItem('ai-lab-departure',JSON.stringify({href:path(),target:new URL(target,location.origin).pathname,scroll:scrollY}));sessionStorage.setItem('ai-lab-scroll',JSON.stringify({href:path(),scroll:scrollY,details:[...document.querySelectorAll<HTMLDetailsElement>('.lab-main details')].map(d=>d.open)}));}}catch{/* Navigation itself remains available. */}
+}
+export function restoreLabView(){try{const saved=JSON.parse(sessionStorage.getItem('ai-lab-scroll')||'null');if(saved?.href!==path())return;if(Array.isArray(saved.details))document.querySelectorAll<HTMLDetailsElement>('.lab-main details').forEach((d,i)=>{d.open=saved.details[i]===true;});if(Number.isFinite(saved.scroll))requestAnimationFrame(()=>scrollTo(0,saved.scroll));}catch{/* Browser history still works. */}}
+export function LabReturn(){
+ const {locale}=useUiLocale();const [href,setHref]=useState<string|null>(null);
+ useEffect(()=>{try{const entry=JSON.parse(sessionStorage.getItem('ai-lab-entry')||'null');if(entry&&safePath(entry.href))setHref(entry.href);}catch{/* No fabricated origin. */}},[]);
+ return href?<a className="lab-back" data-testid="entry-return" href={href}>{locale==='en'?'← Return to your exploration / account':'← 元の探索・アカウントへ戻る'}</a>:null;
+}
+export function LabBoundary(){
+ const {locale}=useUiLocale();const [back,setBack]=useState<string|null>(null);
+ useEffect(()=>{try{
+  const d=JSON.parse(sessionStorage.getItem('ai-lab-departure')||'null');
+  if(d&&safePath(d.href)&&d.href.startsWith('/ai-lab')&&d.target===location.pathname&&document.referrer.startsWith(location.origin+'/ai-lab'))setBack(d.href);
+  const e=JSON.parse(sessionStorage.getItem('ai-lab-entry')||'null');
+  if(e?.href===path()&&Number.isFinite(e.scroll))requestAnimationFrame(()=>scrollTo(0,e.scroll));
+ }catch{/* No arbitrary return destination. */}},[]);
+ return <div className="lab-boundary"><span>{locale==='en'?'Isolated AI Lab · saved observations · account not connected':'AI育成ラボ 隔離確認版 · 保存済み記録の観察 · アカウント未接続'}</span>{back&&<a href={back} data-testid="lab-return">{locale==='en'?'← Back to the lab record':'← ラボの記録へ戻る'}</a>}</div>;
+}
+export function LabRecordReturn(){
+ const {locale}=useUiLocale();const [back,setBack]=useState<string|null>(null);
+ useEffect(()=>{try{const d=JSON.parse(sessionStorage.getItem('ai-lab-departure')||'null');if(d&&safePath(d.href)&&d.href.startsWith('/ai-lab')&&d.target===location.pathname&&document.referrer.startsWith(location.origin+'/ai-lab'))setBack(d.href);}catch{/* Direct readers have no lab origin. */}},[]);
+ return back?<a className="lab-back" href={back} data-testid="lab-modal-return">{locale==='en'?'← Back to the lab record':'← ラボの記録へ戻る'}</a>:null;
+}
