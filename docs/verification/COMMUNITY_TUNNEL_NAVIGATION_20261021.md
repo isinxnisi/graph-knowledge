@@ -41,3 +41,13 @@
 - 配信4ファイル・GET限定・no-store・CSP connect-src noneを維持。実API／AI／会員DB・本番・公開KGへの変更なし。
 
 残り：実アプリへのメニュー組込み・認証連携・実Graph状態引継ぎは次工程。今回は試作のまま確認できる状態。
+
+## 追記：作業終了後の再停止と起動方法の訂正
+
+同日、運営者の再指摘時には両アプリの待受が再び消失していた。cloudflared-resale-researchは24時間稼働しており、3200／3275へのconnection refusedを記録。前回の保持ツールセッションは作業後の継続稼働を保証できておらず、疎通成功だけで復旧完了とした報告を訂正する。Cloudflare障害ではなくoriginのプロセス停止。
+
+`python3 scripts/start-local-previews.py all --node /tmp/graph-knowledge-node/bin/node` で、起動terminalから分離したプロセスを作る方式へ変更。WSLにはsystemdがないため、double fork／setsidと標準入出力の切離しを使用。既存buildとloopback／Host制限は維持し、ログは `~/.local/state/plunode-previews/` に保存する。
+
+起動コマンド終了後、別コマンドからPID・TTYなし・WSL initへの親付替え、cloudflaredと同network namespaceからのHTTP、Windows loopback、外部HTTPSを再確認し全て200。再実行では占有ポートを検出して停止し、既存プロセスをkillしないことも確認した。起動元に依存しない手動復旧であり、自動再起動監視・PC再起動時の自動起動は追加しない。OS／WSL終了後は同じ起動手順が必要。
+
+本番・Cloudflare/DNS/Access・resale・KG・会員DB・Workerは変更なし。

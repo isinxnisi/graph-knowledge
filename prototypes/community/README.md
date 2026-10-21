@@ -65,3 +65,16 @@ COMMUNITY_TEST_ORIGINS=http://127.0.0.1:3275,https://graph-com.isinxnisi.com nod
 
 配信は4ファイルのGETだけ、CSPのconnect-src noneを維持。Host検査は認証ではなく、
 架空fixture全体を配信する試作です。実情報を置かず、既存のAccess保護も解除しません。
+
+### 作業terminal終了後も継続する起動
+
+保持ツールセッションで起動したサーバーが作業後に再停止したため、次を推奨します（WSL／Linux）：
+
+```sh
+python3 scripts/start-local-previews.py all --node /tmp/graph-knowledge-node/bin/node
+# 片方だけなら all の代わりに beta または community
+```
+
+端末から切り離して起動し、ログと起動PIDを `~/.local/state/plunode-previews/` に残します。
+使用中のポートは無断で止めず、エラーにします。build・DB操作・再配置は行いません。
+PC／WSL停止後の自動起動やプロセス監視ではありません。停止後は同じコマンドで復旧します。
