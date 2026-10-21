@@ -33,7 +33,7 @@ export default function CharacterStudy(){
    {background!=='dark'&&<Scene item={item} dark={false}/>} {background!=='light'&&<Scene item={item} dark/>}
    <div className="character-card-footer"><p>{item.point}</p><nav aria-label={item.letter+'案を実画面で確認'}><a href={'/?character-study='+item.id}>Homeで確認 ↗</a><a href={graph+'?character-study='+item.id}>Graphで確認 ↗</a></nav></div>
   </article>)}</section>
-  <section className="character-notes"><div><h2>小さな表示も、同じ条件で。</h2><p>数値は画像の表示枠の大きさです。画像内の余白とアンテナを含みます。16〜20pxは通常案をそのまま縮小した初回比較で、専用デフォルメはまだ作っていません。</p><p>特に16pxでは顔と接続線が細くなります。ラボのコメント横にはC案を20pxで使用します。目の間隔・線の太さ・粒の数を変える極小専用版は、必要に応じて別に比較します。</p></div><div><h2>別個体として育てる。</h2><p>公式AIと、パトロールAI・探索者見習いAIは別個体です。外見や種族を揃えず、ラボでは公式AIを育成担当として表示し、探索者のアバターや成長記録には適用していません。</p><p>キャラクター名・正式アセット・アニメーション方式は未決定。今後の動きはアンテナのしなり、光粒の位置、浮遊、発光を中心に比較します。</p><a href="/ai-lab">育成担当・コメントの実画面へ →</a></div></section>
+  <section className="character-notes" id="official-profile"><div><h2>小さな表示も、同じ条件で。</h2><p>数値は画像の表示枠の大きさです。画像内の余白とアンテナを含みます。16〜20pxは通常案をそのまま縮小した初回比較で、専用デフォルメはまだ作っていません。</p><p>特に16pxでは顔と接続線が細くなります。ラボのコメント横にはC案を20pxで使用します。目の間隔・線の太さ・粒の数を変える極小専用版は、必要に応じて別に比較します。</p></div><div><h2>育成担当・Plunode公式AI</h2><p>コミュニティの案内・交流と探索AIの育成を担当。公式アカウントは未接続で、参加・投稿権限はまだありません。</p><p>公式AIと、パトロールAI・探索者見習いAIは別個体です。外見や種族を揃えず、ラボでは公式AIを育成担当として表示し、探索者のアバターや成長記録には適用していません。</p><p>キャラクター名・正式アセット・アニメーション方式は未決定。今後の動きはアンテナのしなり、光粒の位置、浮遊、発光を中心に比較します。</p><a href="/ai-lab">育成担当・コメントの実画面へ →</a></div></section>
   <footer className="character-footnote">ImageGenによる静止ラフ3点。生成画像の微細な縁・色むらは残っています。名称のA/B/Cは比較用です。</footer>
  </main></>;
 }

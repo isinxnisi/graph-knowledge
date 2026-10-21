@@ -12,12 +12,15 @@ try{
   page.on('pageerror',e=>errors.push(e.message));page.on('request',r=>{if(!['GET','HEAD'].includes(r.method()))writes.push(r.url());});
   // Enter through the real localized Home to preserve the established locale contract.
   await page.goto(base+(lang==='en'?'/en':'/'));await page.getByTestId('lab-entry').click();
-  await page.getByTestId('official-ai-profile').waitFor();
+  await page.getByTestId('explorer-apprentice').waitFor();
   await page.waitForFunction(()=>[...document.querySelectorAll('.official-ai-avatar')].every(i=>i.complete&&i.naturalWidth>0));
   assert.deepEqual(await page.locator('.lab-metrics strong').allTextContents(),['5','0','2','0']);
   assert.equal(await page.locator('.lab-history-row').count(),7);
   const avatars=await page.locator('.official-ai-avatar').evaluateAll(els=>els.map(el=>({size:el.getBoundingClientRect().width,variant:el.dataset.avatarVariant,key:el.dataset.identityRef,animation:getComputedStyle(el).animationName})));
-  assert.deepEqual(avatars.map(a=>[a.size,a.variant]),[[128,'translucent'],[48,'soft-flat'],[20,'symbolic-flat'],[20,'symbolic-flat'],[20,'symbolic-flat']]);
+  assert.equal(await page.getByTestId('official-ai-profile').count(),0);
+  assert.ok(await page.locator('.lab-history').evaluate(el=>el.getBoundingClientRect().top<document.querySelector('#mentorship').getBoundingClientRect().top));
+  assert.equal(await page.locator('.lab-apprentice-focus h1').textContent(),lang==='en'?'Apprentice exploration AI':'探索者見習いAI');
+  assert.deepEqual(avatars.map(a=>[a.size,a.variant]),[[48,'soft-flat'],[20,'symbolic-flat'],[20,'symbolic-flat'],[20,'symbolic-flat']]);
   assert.equal(new Set(avatars.map(a=>a.key)).size,1);assert.ok(avatars.every(a=>a.animation==='none'));
   assert.equal(await page.locator('.lab-mentor-comment[data-comment-kind="display-demo"]').count(),3);
   assert.equal(await page.locator('.lab-mentor-comment .lab-demo-label').count(),3);
@@ -31,23 +34,30 @@ try{
    return {offset:Math.abs(icon.y+icon.height/2-(byline.y+byline.height/2)),gap:byline.x-icon.right,lineHeight:parseFloat(getComputedStyle(copy).lineHeight)};
   }));
   assert.ok(alignment.every(a=>a.offset<2&&a.gap>=9&&a.lineHeight>=24));
-  await page.locator('#mentorship').screenshot({path:`${out}/${lang}-${width}-${theme}-mentorship.png`});
+  await page.locator('.lab-main').screenshot({path:`${out}/${lang}-${width}-${theme}-mentorship.png`});
   await page.getByRole('button',{name:lang==='en'?'Run history':'実行履歴',exact:true}).click();assert.equal(await page.locator('.lab-mentor-comment').count(),0);
   assert.equal(await page.locator('.lab-run').count(),7);
   await page.getByRole('button',{name:lang==='en'?'Overview':'観察ノート',exact:true}).click();
-  await page.locator('.lab-mentor-profile a').click();await page.locator('.character-card').last().waitFor();assert.equal(await page.locator('.character-card').count(),3);
-  await page.goBack();await page.getByTestId('official-ai-profile').waitFor();
-  await page.locator('.lab-apprentice a').click();
+  await page.locator('.lab-mentor-about').click();await page.locator('.character-card').last().waitFor();assert.equal(await page.locator('.character-card').count(),3);
+  await page.goBack();await page.getByTestId('explorer-apprentice').waitFor();
+  await page.locator('.lab-apprentice-intro a').click();
   await page.locator('.apprentice-scenes').waitFor();
   await page.waitForFunction(()=>[...document.querySelectorAll('.apprentice-avatar')].every(i=>i.complete&&i.naturalWidth>0));
-  assert.equal(await page.locator('.apprentice-avatar').count(),15);
+  assert.equal(await page.locator('.apprentice-avatar').count(),18);
   assert.equal(await page.locator('.apprentice-pair .official-ai-avatar').count(),1);
   const apprentice=await page.locator('.apprentice-avatar').evaluateAll(els=>els.map(el=>({id:el.dataset.aiId,size:el.width,animation:getComputedStyle(el).animationName})));
   assert.ok(apprentice.every(a=>a.id==='fe93a431-85cf-4fae-8b84-127e8bf866a7'&&a.animation==='none'));
   assert.deepEqual([...new Set(apprentice.map(a=>a.size))].sort((a,b)=>a-b),[16,20,24,48,64,96,128]);
   assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);
+  assert.equal(await page.locator('.apprentice-renditions img').evaluateAll(els=>new Set(els.map(e=>e.src)).size),3);
+  for(const [i,v] of ['profile','regular','tiny'].entries()){
+   await page.locator('.apprentice-variant-controls button').nth(i+1).click();
+   assert.ok(await page.locator('.apprentice-scenes img').evaluateAll((els,v)=>els.every(el=>el.dataset.artwork===v),v));
+  }
+  await page.locator('.apprentice-variant-controls button').first().click();
+  await page.waitForFunction(()=>[...document.querySelectorAll('.apprentice-avatar')].every(i=>i.complete&&i.naturalWidth>0));
   await page.screenshot({path:out+'/'+lang+'-'+width+'-'+theme+'-apprentice.png',fullPage:true});
-  await page.locator('a[href="/ai-lab#mentorship"]').click();
+  await page.locator('a[href="/ai-lab#apprentice"]').click();
   await page.getByTestId('explorer-apprentice').waitFor();
   assert.deepEqual(errors,[]);assert.deepEqual(writes,[]);
   console.log('PASS',lang,width,theme,'same official identity, A/B/C, demo separation, apprentice, 20px alignment, comparison return');

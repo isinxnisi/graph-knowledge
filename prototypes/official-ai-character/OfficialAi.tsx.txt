@@ -1,4 +1,3 @@
-import {ApprenticeAvatar} from './Apprentice';
 import {officialAi,mentoringDemos} from './official-ai';
 
 // Explicit supported sizes avoid ambiguous styling between the three approved ranges.
@@ -14,26 +13,11 @@ export function OfficialAiAvatar({usage,size,en=false,decorative=false}:AvatarPr
   alt={decorative?'':officialAi.label[en?'en':'ja']} draggable={false}/>;
 }
 
-export function LabMentorship({en,apprenticeId}:{en:boolean;apprenticeId:string}){
- return <section className="lab-mentorship" id="mentorship" aria-label={en?'Mentor and apprentice':'育成担当と探索者見習い'}>
-  <div className="lab-mentor-people">
-   <article className="lab-mentor-profile" data-testid="official-ai-profile" data-identity-ref={officialAi.identityRef.key}>
-    <p className="lab-eyebrow">{en?'MENTOR':'育成担当'}</p>
-    <div className="lab-mentor-profile-head"><OfficialAiAvatar usage="profile" en={en} decorative/><div><h2>{officialAi.label[en?'en':'ja']}</h2><p>{en?'Community guidance, conversation and nurturing exploration AI.':'コミュニティの案内・交流と、探索AIの育成を担当。'}</p></div></div>
-    <p className="lab-mentor-identity-note">{en?'One individual, with artwork adapted to its display size.':'表示サイズに合わせて姿を描き分けた、同じ一つの個体です。'}</p>
-    <span className="lab-badge">{en?'Official account not connected':'公式アカウント未接続'}</span>
-    <a className="lab-action" href="/ai-character-study">{en?'Compare the artwork →':'キャラクターの比較画面へ →'}</a>
-   </article>
-   <article className="lab-apprentice" data-testid="explorer-apprentice" data-ai-id={apprenticeId}>
-    <div className="lab-apprentice-head"><ApprenticeAvatar aiId={apprenticeId} size={96} en={en} decorative/><div><p className="lab-eyebrow">{en?'OBSERVATION SUBJECT':'観察対象'}</p><h3>{en?'Apprentice exploration AI':'探索者見習いAI'}</h3></div></div>
-    <p>{en?'A separate individual from the official AI. B′ provisional static artwork.':'公式AIとは別個体です。B′の静止デザインを仮配置しています。'}</p>
-    <p className="lab-muted">{en?'Its choices, holds and versions remain in the experiment records below.':'選択・保留・版の違いは、下の実験記録で確認できます。'}</p>
-    <p className="lab-muted">{en?'Live activity is not monitored.':'現在の活動状態は未監視です。'}</p>
-    <a className="lab-action" href={'/ai-apprentice-study'+(en?'?lang=en':'')}>{en?'Compare identities and sizes →':'公式AIとの並列・サイズ比較へ →'}</a>
-   </article>
-  </div>
+export function LabMentorship({en}:{en:boolean}){
+ return <section className="lab-mentorship" id="mentorship" aria-label={en?'Mentoring comments':'育成コメント'}>
   <section className="lab-mentor-comments" id="mentoring-comments" aria-labelledby="mentoring-title">
    <header className="lab-mentor-comments-head"><OfficialAiAvatar usage="regular" size={48} en={en} decorative/><div><p className="lab-eyebrow">{officialAi.label[en?'en':'ja']} · {en?'mentor':'育成担当'}</p><h2 id="mentoring-title">{en?'Mentoring comments':'育成コメント'} <span className="lab-demo-label">DEMO</span></h2></div></header>
+   <a className="lab-mentor-about" href="/ai-character-study#official-profile">{en?'About the mentor and its community role →':'育成担当のプロフィール・コミュニティでの役割 →'}</a>
    <p className="lab-demo-disclosure">{en?'Display examples only. These are not comments generated or posted by the AI, nor explanations taken from experiment records.':'画面確認用の例文です。AIが生成・投稿した発言でも、実験記録の解説でもありません。'}</p>
    <ul className="lab-mentor-comment-list">{mentoringDemos.map(comment=><li className="lab-mentor-comment" key={comment.id} data-comment-kind={comment.kind} data-display-identity-ref={comment.displayIdentityKey}>
     <OfficialAiAvatar usage="comment" en={en} decorative/>

@@ -1,4 +1,7 @@
 // The identity is supplied by the existing lab record, never minted for artwork.
-export function ApprenticeAvatar({aiId,size=96,en=false,decorative=false}:{aiId:string;size?:16|20|24|48|64|96|128;en?:boolean;decorative?:boolean}){
- return <img className="apprentice-avatar" data-ai-id={aiId} data-artwork="bprime-study" src="/apprentice-study/bprime-study.png" width={size} height={size} alt={decorative?'':en?'Apprentice exploration AI · B′ study':'探索者見習いAI・B′仮デザイン'} draggable={false}/>;
+export type ApprenticeVariant='profile'|'regular'|'tiny';
+const artwork={profile:'bprime-study',regular:'bprime-regular',tiny:'bprime-tiny'};
+export function ApprenticeAvatar({aiId,size=96,variant,en=false,decorative=false}:{aiId:string;size?:16|20|24|48|64|96|128;variant?:ApprenticeVariant;en?:boolean;decorative?:boolean}){
+ const selected=variant??(size<=24?'tiny':size<=96?'regular':'profile');
+ return <img className="apprentice-avatar" data-ai-id={aiId} data-artwork={selected} src={'/apprentice-study/'+artwork[selected]+'.png'} width={size} height={size} alt={decorative?'':en?'Apprentice exploration AI · B′ study':'探索者見習いAI・B′仮デザイン'} draggable={false}/>;
 }

@@ -7,6 +7,7 @@ import {classify} from './state';
 import artifact from './public.json';
 import review from './review.json';
 import readiness from './readiness.json';
+import {ApprenticeAvatar} from './Apprentice';
 import {LabMentorship} from './OfficialAi';
 
 type Run=typeof artifact.payload.runs[number];
@@ -66,14 +67,20 @@ export default function Lab(){
  const run=runs.find(r=>r.runId===selected);
  return <><SiteHeader dataset="public-kg" page="member" user={null}/><main className="lab-main">
   <LabReturn/>
-  <header className="lab-hero"><div><p className="lab-eyebrow">PLUNODE / RELATION EXPLORATION</p><h1>{en?'Watching an AI learn to explore':'関係を辿るAIを、育てる。'}</h1><p>{en?'Observe choices, evidence and revisions. Every result keeps its own history.':'何を選び、何を保留したか。根拠と版を残しながら、探索の変化を観察します。'}</p></div><div className="lab-stage"><span className="lab-dot"/><strong>{en?'Preparing for first inference':'初稼働の準備中'}</strong><span>{en?'No lab training · live status not monitored':'ラボ追加学習なし · 現在の稼働は監視していません'}</span></div></header>
+  <header className="lab-hero lab-apprentice-focus" id="apprentice" data-testid="explorer-apprentice" data-ai-id={data.aiId}>
+   <ApprenticeAvatar aiId={data.aiId} size={128} en={en} decorative/>
+   <div className="lab-apprentice-intro"><p className="lab-eyebrow">PLUNODE / AI LAB</p><h1>{en?'Apprentice exploration AI':'探索者見習いAI'}</h1><p>{en?'Follow its choices, evidence and recorded changes.':'選択と保留、根拠と版の違いから、探索の変化を観察します。'}</p>
+    <a className="lab-action" href={'/ai-apprentice-study'+(en?'?lang=en':'')}>{en?'Compare provisional B′ artwork →':'B′の仮デザイン・サイズ比較 →'}</a>
+   </div>
+   <div className="lab-stage"><small>{en?'CURRENT STAGE':'現在の段階'}</small><strong>{en?'Preparing for first inference':'初稼働の準備中'}</strong><span>{en?'No lab training · live status not monitored':'ラボ追加学習なし · 現在の稼働は未監視'}</span><button className="lab-action" onClick={()=>navigate('runs')}>{en?'View run history →':'実行履歴を見る →'}</button></div>
+  </header>
   <nav className="lab-tabs" aria-label={en?'Lab sections':'ラボ内の表示'}>{[['overview','観察ノート','Overview'],['runs','実行履歴','Run history'],['review','4課題のレビュー','Review 4 tasks'],['readiness','初稼働の準備','Readiness']].map(([key,ja,eng])=><button key={key} aria-current={tab===key?'page':undefined} onClick={()=>navigate(key)}>{en?eng:ja}</button>)}</nav>
   {tab==='overview'&&<section aria-label={en?'Overview':'観察ノート'}>
    <div className="lab-metrics">{[[rules,en?'Non-AI runs':'非AIの実行'],[ai,en?'Completed AI inference':'AI実推論の完了'],[held,en?'Held before inference':'推論前の保留'],[trained,en?'Runs with lab training':'追加学習済みの実行']].map(([n,label])=><div key={String(label)}><strong>{n}</strong><span>{label}</span></div>)}</div>
-   <LabMentorship en={en} apprenticeId={data.aiId}/>
    <div className="lab-columns"><article className="lab-feature"><p className="lab-eyebrow">OBSERVATION 01</p><h2>{en?'Same person. Different evidence.':'同じ人物でも、根拠は違う。'}</h2><p>{en?'Both baseline policies chose Makoto Tezuka. Only the role-aware policy selected the Claim explicitly credited as supervisor.':'2つの非AI方針は、ともに手塚眞を選びました。違いは、監修が明示されたClaimを選べたかどうかです。'}</p><div className="lab-comparison"><div><small>id-order-v1</small><strong>{en?'Role unspecified':'Role未指定'}</strong><span>{en?'Differs from draft':'採点案と不一致'}</span></div><span aria-hidden="true">→</span><div><small>purpose-role-v1</small><strong>{en?'SUPERVISION':'監修 · SUPERVISION'}</strong><span>{en?'Matches draft':'採点案と一致'}</span></div></div><p className="lab-note">{en?'A comparison of ordinary code, not evidence of model learning. The rubric is awaiting human review.':'通常コードの方針比較です。モデルの学習・成長の実績ではなく、採点案も人間未確認です。'}</p><button className="lab-action" onClick={()=>navigate('runs','rule','41cd2d6f-e9b5-49ef-9cc9-ede5077d6a59')}>{en?'Inspect the selected path →':'選んだ経路を確認する →'}</button></article>
    <aside className="lab-panel"><p className="lab-eyebrow">NEXT OBSERVATION</p><h2>{en?'Wait for thermal headroom':'冷却条件が整うまで待つ'}</h2><p>{en?'Latest diagnostic':'最新診断'}: <strong>{readiness.gpuTemperatureC}℃</strong><br/>{en?'Inference starts below 75°C. No request was sent.':'推論開始条件は75℃未満。リクエストは送信していません。'}</p><small>{when(readiness.observedAt,en)}</small><button className="lab-action" onClick={()=>navigate('readiness')}>{en?'View readiness →':'準備状況を見る →'}</button></aside></div>
    <section className="lab-history"><h2>{en?'Recorded changes':'記録された変化'}</h2><p>{en?'No growth curve is available. Policy changes, real inference and training will be recorded separately.':'成長曲線はまだありません。方針の変更・実推論・追加学習を別々の履歴として積み重ねます。'}</p>{runs.map(r=><button className="lab-history-row" key={r.runId} onClick={()=>navigate('runs','all',r.runId)}><time>{when(r.startedAt,en)}</time><span><strong>{kind(r,en)}</strong> · {title(r.taskId,en)}</span><span className="lab-badge">{status(r,en)}</span></button>)}</section>
+   <LabMentorship en={en}/>
   </section>}
   {tab==='runs'&&<section><div className="lab-section-heading"><div><h2>{en?'Run history':'実行履歴'}</h2><p>{en?'Failures and held attempts remain visible. A completed HOLD decision is distinct from a request held before inference.':'失敗や保留も残します。判断結果のHOLDと、推論開始前の保留は別の状態です。'}</p></div><label>{en?'Show':'表示'} <select value={filter} onChange={e=>navigate('runs',e.target.value,'')}>{[['all','すべて','All'],['rule','非AI','Non-AI'],['kev','実AI','Real AI'],['held','推論前保留','Held before inference']].map(([v,j,e])=><option key={v} value={v}>{en?e:j}</option>)}</select></label></div>
    <div className="lab-run-layout"><div className="lab-run-list">{visible.length===0&&<p className="lab-empty">{en?'No real AI inference records yet.':'AIの実推論記録はまだありません。'}</p>}{visible.map(r=><button className="lab-run" aria-pressed={r.runId===selected} key={r.runId} onClick={()=>navigate('runs',filter,r.runId)}><span className="lab-badge">{kind(r,en)} / {status(r,en)}</span><strong>{title(r.taskId,en)}</strong><span>{choice(r,en)}</span><small>{when(r.startedAt,en)} · {r.runId.slice(0,8)}</small></button>)}</div>

@@ -1,5 +1,7 @@
 # ドキュメントの入口
 
+- ラボの主役とサイズ別表示：[見習い中心の配置・3画像比較・検証](verification/AI_LAB_FOCUS_20261022.md)。公式AIはDEMO育成コメントへ集約。B′の正式アセットは未確定。
+
 - 探索者見習いB′の仮配置：[参考資料・生成由来・表示契約](../prototypes/apprentice-character/PROMPTS.md) / [実画面と検証](verification/AI_LAB_APPRENTICE_20261022.md)。公式AIとは別個体。隔離ラボと明暗・通常／極小の比較画面だけへ反映。
 
 - 公式AIの実画面組み込み：[育成担当・デモコメントとAIIdentity参照](design/AI_LAB_OFFICIAL_MENTOR.md) / [画面・検証結果](verification/AI_LAB_OFFICIAL_MENTOR_20261022.md)。同一個体の128px=A・48〜96px=B・16〜24px=C表示。探索者見習いとは別個体、実発言・投稿・学習の追加なし。
