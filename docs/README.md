@@ -1,6 +1,6 @@
 # ドキュメントの入口
 
-- 見習いB′の動き：[手動DEMO・素材構造・停止契約](design/AI_LAB_MOTION_STUDY.md) / [隔離画面の検証](verification/AI_LAB_MOTION_20261022.md)。現行PNGと独立アンテナの簡易構造を比較。正式アセット・実活動連動なし。
+- 見習いB′の動き：[手動DEMO・素材構造・停止契約](design/AI_LAB_MOTION_STUDY.md) / [初回検証](verification/AI_LAB_MOTION_20261022.md) / [強度3段階・状態差の強調](verification/AI_LAB_MOTION_STRENGTH_20261022.md)。現行PNGと独立アンテナの簡易構造を比較。正式アセット・実活動連動なし。
 
 - ラボの主役とサイズ別表示：[見習い中心の配置・3画像比較・検証](verification/AI_LAB_FOCUS_20261022.md)。公式AIはDEMO育成コメントへ集約。B′の正式アセットは未確定。
 
