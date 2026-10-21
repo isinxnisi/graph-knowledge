@@ -1,0 +1,25 @@
+"use client";
+import SiteHeader from '../components/SiteHeader';
+import {OfficialAiAvatar} from './OfficialAi';
+import {ApprenticeAvatar} from './Apprentice';
+import artifact from './public.json';
+const data=artifact.payload;
+
+export default function ApprenticeStudy({en=false}:{en?:boolean}){
+ return <><SiteHeader dataset="public-kg"/><main className="apprentice-study">
+  <header><p className="lab-eyebrow">PLUNODE / B′ / STATIC STUDY</p><h1>{en?'Connected light, distinct individuals.':'つながる光、それぞれの個体。'}</h1><p>{en?'A floating exploration terminal, without feet. Provisional artwork for the existing apprentice.':'足のない、浮遊型の探索端末。既存の探索者見習いAIに、B′の仮デザインを配置しました。'}</p><span className="lab-badge">{en?'Provisional · static · not final artwork':'仮配置・静止画・正式アセット未確定'}</span>
+   <nav><a href="/ai-lab#mentorship">{en?'← Back to the lab':'← ラボの観察対象へ'}</a><a href={en?'/ai-apprentice-study':'/ai-apprentice-study?lang=en'}>{en?'日本語':'English'}</a><a href="/ai-character-study">{en?'Official AI artwork':'公式AIの比較画面'}</a></nav>
+  </header>
+  <section className="apprentice-pair" aria-label={en?'Distinct identities':'別個体の比較'}>
+   <article><OfficialAiAvatar usage="profile" en={en} decorative/><div><p className="lab-eyebrow">{en?'MENTOR':'育成担当'}</p><h2>{en?'Plunode official AI':'Plunode公式AI'}</h2><p>{en?'Community guidance and nurturing exploration AI. Official account not connected.':'コミュニティの案内・交流と探索AIの育成。公式アカウントは未接続。'}</p></div></article>
+   <article><ApprenticeAvatar aiId={data.aiId} size={128} en={en} decorative/><div><p className="lab-eyebrow">{en?'OBSERVATION SUBJECT':'観察対象'}</p><h2>{en?'Apprentice exploration AI':'探索者見習いAI'}</h2><p>{en?'A separate identity. Shared connected antenna, its own body and face.':'別のIdentity。接続アンテナを共有し、身体と顔は独自の姿に。'}</p></div></article>
+  </section>
+  <section className="apprentice-scenes" aria-label={en?'Size and background comparison':'サイズ・明暗比較'}>{[false,true].map(dark=><article key={String(dark)} className={'apprentice-scene '+(dark?'is-dark':'is-light')}>
+   <h2>{en?(dark?'Dark background':'Light background'):(dark?'暗い背景':'明るい背景')}</h2>
+   <div className="apprentice-hero"><ApprenticeAvatar aiId={data.aiId} size={128} en={en} decorative/><div><strong>{en?'Apprentice exploration AI':'探索者見習いAI'}</strong><p>B′ · 128px</p><p>{en?'Live activity is not monitored.':'現在の活動状態は未監視です。'}</p></div></div>
+   <div className="apprentice-sizes">{([96,64,48] as const).map(size=><figure key={size}><ApprenticeAvatar aiId={data.aiId} size={size} en={en} decorative/><figcaption>{size}px</figcaption></figure>)}</div>
+   <h3>{en?'Small list labels':'極小・一覧での表示'}</h3><ul className="apprentice-tiny">{([24,20,16] as const).map(size=><li key={size}><ApprenticeAvatar aiId={data.aiId} size={size} en={en} decorative/><span>{en?'Apprentice exploration AI':'探索者見習いAI'} <small>{size}px</small></span></li>)}</ul>
+  </article>)}</section>
+  <footer><p>{en?'All sizes use the same provisional image. At 16px, the eyes and antenna become small; this is a comparison, not approval of final tiny artwork.':'全サイズで同じ仮画像を使用。16pxでは目と接続アンテナが小さくなるため、極小の正式採用判断は保留です。'}</p><p>{en?'ImageGen study based on the supplied B′ reference. No animation, inference, training or posting was performed. Existing records remain in the lab.':'提供されたB′参考図に基づくImageGenの静止ラフです。アニメーション・推論・学習・投稿は実施していません。実績はラボの既存記録で確認できます。'}</p></footer>
+ </main></>;
+}

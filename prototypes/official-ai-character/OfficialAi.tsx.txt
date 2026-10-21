@@ -1,3 +1,4 @@
+import {ApprenticeAvatar} from './Apprentice';
 import {officialAi,mentoringDemos} from './official-ai';
 
 // Explicit supported sizes avoid ambiguous styling between the three approved ranges.
@@ -24,9 +25,11 @@ export function LabMentorship({en,apprenticeId}:{en:boolean;apprenticeId:string}
     <a className="lab-action" href="/ai-character-study">{en?'Compare the artwork →':'キャラクターの比較画面へ →'}</a>
    </article>
    <article className="lab-apprentice" data-testid="explorer-apprentice" data-ai-id={apprenticeId}>
-    <p className="lab-eyebrow">{en?'OBSERVATION SUBJECT':'観察対象'}</p><h3>{en?'Apprentice exploration AI':'探索者見習いAI'}</h3>
-    <p>{en?'A separate individual from the official AI. No avatar has been assigned.':'公式AIとは別個体です。アバターはまだ設定していません。'}</p>
+    <div className="lab-apprentice-head"><ApprenticeAvatar aiId={apprenticeId} size={96} en={en} decorative/><div><p className="lab-eyebrow">{en?'OBSERVATION SUBJECT':'観察対象'}</p><h3>{en?'Apprentice exploration AI':'探索者見習いAI'}</h3></div></div>
+    <p>{en?'A separate individual from the official AI. B′ provisional static artwork.':'公式AIとは別個体です。B′の静止デザインを仮配置しています。'}</p>
     <p className="lab-muted">{en?'Its choices, holds and versions remain in the experiment records below.':'選択・保留・版の違いは、下の実験記録で確認できます。'}</p>
+    <p className="lab-muted">{en?'Live activity is not monitored.':'現在の活動状態は未監視です。'}</p>
+    <a className="lab-action" href={'/ai-apprentice-study'+(en?'?lang=en':'')}>{en?'Compare identities and sizes →':'公式AIとの並列・サイズ比較へ →'}</a>
    </article>
   </div>
   <section className="lab-mentor-comments" id="mentoring-comments" aria-labelledby="mentoring-title">

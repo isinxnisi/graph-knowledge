@@ -9,6 +9,7 @@ const browser=await chromium.launch({headless:true});
 const originId='2b7c6289-d050-4dc0-93e3-9307681253cc';
 try{
  for(const [lang,width] of [['ja',1440],['en',1440],['ja',390],['en',390]]){
+  if(process.env.AI_LAB_CASE&&process.env.AI_LAB_CASE!==lang+'-'+width)continue;
   const context=await browser.newContext({viewport:{width,height:960},hasTouch:width<500});
   const page=await context.newPage(),errors=[],requests=[];
   page.on('pageerror',e=>errors.push(e.message));page.on('request',r=>requests.push(r.url()));
@@ -23,6 +24,8 @@ try{
   await page.getByTestId('entry-return').click();
   assert.equal(new URL(page.url()).pathname,lang==='en'?'/en':'/');
   await page.getByTestId('lab-entry').click();
+  // This link appears after hydration; do not click a server-rendered tab before handlers attach.
+  await page.getByTestId('entry-return').waitFor();
   await page.getByRole('button',{name:lang==='en'?'Run history':'実行履歴',exact:true}).click();
   await page.locator('.lab-section-heading select').selectOption('kev');
   await page.getByText(lang==='en'?'No real AI inference records yet.':'AIの実推論記録はまだありません。',{exact:true}).waitFor();
@@ -41,7 +44,7 @@ try{
   await page.getByTestId('lab-return').click();assert.equal(page.url(),reviewUrl);
   // Return restores the same task disclosure as well as the selected tab.
   await page.waitForFunction(()=>document.querySelector('.lab-review>details')?.open);
-  await page.waitForTimeout(250);assert.ok(Math.abs(await page.evaluate(()=>scrollY)-reviewScroll)<3,'review scroll restored');
+  await page.waitForFunction(expected=>Math.abs(scrollY-expected)<3,reviewScroll,{timeout:5000});
   await page.locator('.lab-path a[href*="read=claim"]').first().click();
   await page.getByTestId('lab-modal-return').waitFor();
   await page.getByTestId('lab-modal-return').click();assert.equal(page.url(),reviewUrl);

@@ -21,7 +21,9 @@ try{
   assert.equal(new Set(avatars.map(a=>a.key)).size,1);assert.ok(avatars.every(a=>a.animation==='none'));
   assert.equal(await page.locator('.lab-mentor-comment[data-comment-kind="display-demo"]').count(),3);
   assert.equal(await page.locator('.lab-mentor-comment .lab-demo-label').count(),3);
-  assert.equal(await page.getByTestId('explorer-apprentice').locator('img').count(),0);
+  assert.equal(await page.getByTestId('explorer-apprentice').locator('.official-ai-avatar').count(),0);
+  assert.equal(await page.getByTestId('explorer-apprentice').locator('.apprentice-avatar').count(),1);
+  await page.waitForFunction(()=>document.querySelector('.apprentice-avatar')?.naturalWidth>0);
   assert.equal(await page.getByTestId('explorer-apprentice').getAttribute('data-ai-id'),'fe93a431-85cf-4fae-8b84-127e8bf866a7');
   assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);
   const alignment=await page.locator('.lab-mentor-comment').evaluateAll(rows=>rows.map(row=>{
@@ -35,6 +37,18 @@ try{
   await page.getByRole('button',{name:lang==='en'?'Overview':'観察ノート',exact:true}).click();
   await page.locator('.lab-mentor-profile a').click();await page.locator('.character-card').last().waitFor();assert.equal(await page.locator('.character-card').count(),3);
   await page.goBack();await page.getByTestId('official-ai-profile').waitFor();
+  await page.locator('.lab-apprentice a').click();
+  await page.locator('.apprentice-scenes').waitFor();
+  await page.waitForFunction(()=>[...document.querySelectorAll('.apprentice-avatar')].every(i=>i.complete&&i.naturalWidth>0));
+  assert.equal(await page.locator('.apprentice-avatar').count(),15);
+  assert.equal(await page.locator('.apprentice-pair .official-ai-avatar').count(),1);
+  const apprentice=await page.locator('.apprentice-avatar').evaluateAll(els=>els.map(el=>({id:el.dataset.aiId,size:el.width,animation:getComputedStyle(el).animationName})));
+  assert.ok(apprentice.every(a=>a.id==='fe93a431-85cf-4fae-8b84-127e8bf866a7'&&a.animation==='none'));
+  assert.deepEqual([...new Set(apprentice.map(a=>a.size))].sort((a,b)=>a-b),[16,20,24,48,64,96,128]);
+  assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);
+  await page.screenshot({path:out+'/'+lang+'-'+width+'-'+theme+'-apprentice.png',fullPage:true});
+  await page.locator('a[href="/ai-lab#mentorship"]').click();
+  await page.getByTestId('explorer-apprentice').waitFor();
   assert.deepEqual(errors,[]);assert.deepEqual(writes,[]);
   console.log('PASS',lang,width,theme,'same official identity, A/B/C, demo separation, apprentice, 20px alignment, comparison return');
   await ctx.close();

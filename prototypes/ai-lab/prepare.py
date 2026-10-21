@@ -76,13 +76,21 @@ def main():
     copy(character / 'official-ai.ts.txt', 'preview/official-ai.ts')
     copy(character / 'official-ai.css', 'preview/official-ai.css')
     shutil.copytree(character / 'assets', OUT / 'public/character-study')
+    apprentice = ROOT / 'prototypes/apprentice-character'
+    copy(apprentice / 'Apprentice.tsx.txt', 'preview/Apprentice.tsx')
+    copy(apprentice / 'ApprenticeStudy.tsx.txt', 'preview/ApprenticeStudy.tsx')
+    copy(apprentice / 'apprentice.css', 'preview/apprentice.css')
+    shutil.copytree(apprentice / 'assets', OUT / 'public/apprentice-study')
+    write('app/ai-apprentice-study/page.tsx', """import ApprenticeStudy from '../../preview/ApprenticeStudy';
+export default async function Page({searchParams}:{searchParams:Promise<{lang?:string}>}){const params=await searchParams;return <ApprenticeStudy en={params.lang==='en'}/>;}
+""")
     write('app/ai-character-study/page.tsx', "import CharacterStudy from '../../preview/CharacterStudy';\nexport default function Page(){return <CharacterStudy/>;}\n")
     write('app/ai-lab/page.tsx', "import Lab from '../../preview/Lab';\nexport default function Page(){return <Lab/>;}\n")
     patch('app/layout.tsx', 'import FocusModality', "import {LabBoundary} from '../preview/navigation';\nimport '../preview/lab.css';\nimport FocusModality")
     patch('app/layout.tsx', '<FocusModality />', '<FocusModality /><LabBoundary />')
     patch('app/layout.tsx', 'import FocusModality', "import {CharacterContext} from '../preview/CharacterStudy';\nimport '../preview/character.css';\nimport FocusModality")
     patch('app/layout.tsx', '<LabBoundary />', '<LabBoundary /><CharacterContext />')
-    patch('app/layout.tsx', "import '../preview/character.css';", "import '../preview/character.css';\nimport '../preview/official-ai.css';")
+    patch('app/layout.tsx', "import '../preview/character.css';", "import '../preview/character.css';\nimport '../preview/official-ai.css';\nimport '../preview/apprentice.css';")
     patch('components/SiteHeader.tsx', 'import Icon', "import {rememberEntry} from '../preview/navigation';\nimport Icon")
     patch('components/SiteHeader.tsx', '<div className={styles.tools}>', '''<div className={styles.tools}><a className="lab-entry" data-testid="lab-entry" href="/ai-lab" onClick={event=>{closeAccount(event);if(!event.defaultPrevented)rememberEntry();}}>{locale==='en'?'AI Lab':'AI育成ラボ'}</a>''')
     # Real account component, intentionally disconnected identity; no fictional member records.
@@ -111,6 +119,7 @@ def main():
     write('proxy.ts', proxy)
     overlay={p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted(HERE.iterdir()) if p.is_file() and (p.suffix in {'.txt','.css','.py','.mjs'})}
     overlay.update({str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted(character.rglob('*')) if p.is_file()})
+    overlay.update({str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted(apprentice.rglob('*')) if p.is_file()})
     write('preview-source.json', json.dumps({'baseCommit':subprocess.check_output(['git','rev-parse','HEAD'], cwd=ROOT,text=True).strip(),'overlayFilesSha256':overlay,'publicSha256':read_json(source/'public.json')['sha256'],'productionRoutesChanged':False}))
     print(OUT)
 
