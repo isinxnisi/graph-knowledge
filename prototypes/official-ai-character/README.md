@@ -2,11 +2,11 @@
 
 正式アセットではない。`assets/` は組込ImageGenによる透過PNGの比較ラフ。方針は [OFFICIAL_AI_CHARACTER.md](../../docs/design/OFFICIAL_AI_CHARACTER.md)、使用プロンプトと原本は [PROMPTS.md](PROMPTS.md)。
 
-実PlunodeのHome・Graph・SiteHeaderをコピーする既存AIラボ確認環境だけへ追加する。本体のapp/components、コミュニティ側、3200、beta、VPSは変更しない。生成後の確認先は `http://127.0.0.1:3286/ai-character-study`。比較リンクは既存3286のHome／Graphへ戻る。
+実PlunodeのHome・Graph・SiteHeaderをコピーする既存AIラボ確認環境だけへ追加する。本体のapp/components、コミュニティ側、3200、beta、VPSは変更しない。生成後の確認先は `http://127.0.0.1:3268/ai-character-study`。比較リンクは既存3268のHome／Graphへ戻る。
 
 ## 再生成
 
-共通Autopilot holdを取得してtokenで確認する。既存の3286が起動中なら、`experiments/ai-lab/.runtime/observer.pid` と `/proc/PID/cmdline` で**このworktreeの `prototypes/ai-lab/run.mjs`**であることを確認してから終了し、ポートが空くまで待つ。他のサーバーを停止しない。
+共通Autopilot holdを取得してtokenで確認する。既存の3268が起動中なら、`experiments/ai-lab/.runtime/observer.pid` と `/proc/PID/cmdline` で**このworktreeの `prototypes/ai-lab/run.mjs`**であることを確認してから終了し、ポートが空くまで待つ。他のサーバーを停止しない。
 
 ```sh
 python3 prototypes/ai-lab/prepare.py --token TOKEN

@@ -3,7 +3,7 @@ import {mkdir} from 'node:fs/promises';
 import assert from 'node:assert/strict';
 const require=createRequire(new URL('../../experiments/ai-lab/.runtime/observer/package.json',import.meta.url));
 const {chromium}=require('@playwright/test');
-const base='http://127.0.0.1:3286',out='/tmp/plunode-ai-lab-20261022';
+const base=process.env.AI_LAB_ORIGIN||'http://127.0.0.1:3268',out='/tmp/plunode-ai-lab-20261022';
 await mkdir(out,{recursive:true});
 const browser=await chromium.launch({headless:true});
 const originId='2b7c6289-d050-4dc0-93e3-9307681253cc';
@@ -67,7 +67,8 @@ try{
  for(const path of ['/.env.public','/.runtime/runs','/api/ai/run','/api/training','/server.mjs'])assert.equal((await page.request.get(base+path)).status(),404,path);
  for(const path of ['/api/member/profile','/api/auth/sign-in'])assert.equal((await page.request.post(base+path,{data:{}})).status(),503,path);
  assert.equal((await page.request.post(base+'/api/entities',{data:{}})).status(),404);
- assert.equal((await page.request.get(base+'/ai-lab',{headers:{Host:'untrusted.example'}})).status(),404);
+ // Host validation belongs to the local app, not Cloudflare's unrelated-host routing.
+ for(const host of ['untrusted.example','graph-ailab.isinxnisi.com.invalid'])assert.equal((await page.request.get('http://127.0.0.1:3268/ai-lab',{headers:{Host:host,'X-Forwarded-Host':'graph-ailab.isinxnisi.com'}})).status(),404);
  const document=await page.request.get(base+'/lab-review.md');assert.equal(document.status(),200);assert.ok((await document.text()).includes('人間未承認'));
  assert.ok((await page.request.get(base+'/ai-lab')).headers()['content-security-policy'].includes("connect-src 'self'"));
  console.log('PASS direct URL, read-only API boundary, private paths, Host/CSP and review download');

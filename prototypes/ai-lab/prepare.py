@@ -100,7 +100,7 @@ def main():
     if not (OUT / 'node_modules').exists():
         (OUT / 'node_modules').symlink_to(dependencies, target_is_directory=True)
     proxy = (ROOT / 'proxy.ts').read_text()
-    proxy = proxy.replace('  const host =', "  if(!['127.0.0.1:3286','localhost:3286'].includes(request.headers.get('host')||''))return new NextResponse(null,{status:404});\n  const host =")
+    proxy = proxy.replace('  const host =', "  if(!['127.0.0.1:3268','localhost:3268','graph-ailab.isinxnisi.com'].includes(request.headers.get('host')||''))return new NextResponse(null,{status:404});\n  const host =")
     proxy = proxy.replace('return NextResponse.next({ request: { headers: requestHeaders } });', '''const response=NextResponse.next({request:{headers:requestHeaders}});
   response.headers.set('X-Robots-Tag','noindex, nofollow, noarchive');response.headers.set('Cache-Control','no-store');response.headers.set('Referrer-Policy','same-origin');
   response.headers.set('Content-Security-Policy',"default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; frame-src 'none'; frame-ancestors 'none'; form-action 'none'; base-uri 'self'");return response;''')

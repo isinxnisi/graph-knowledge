@@ -3,7 +3,7 @@ import {mkdir} from 'node:fs/promises';
 import assert from 'node:assert/strict';
 const require=createRequire(new URL('../../experiments/ai-lab/.runtime/observer/package.json',import.meta.url));
 const {chromium}=require('@playwright/test');
-const base='http://127.0.0.1:3286',out='/tmp/plunode-character-v02-20261022';
+const base=process.env.AI_LAB_ORIGIN||'http://127.0.0.1:3268',out='/tmp/plunode-character-v02-20261022';
 await mkdir(out,{recursive:true});
 const browser=await chromium.launch({headless:true});
 try{
