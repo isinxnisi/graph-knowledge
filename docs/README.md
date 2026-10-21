@@ -208,3 +208,5 @@ Phase 08：任意のEntity関係俯瞰、明示起点切替、直前一件復帰
 - 公開・受入協調の[隔離検証結果](verification/PUBLICATION_COORDINATION_20261020.md)。本番導入は別承認。
 
 - Issue #33 本番導入工程：[2026-10-21の実環境確認](verification/PUBLICATION_ENVIRONMENT_20261021.md) / [一括承認対象・確定差分・復旧手順](runbooks/PUBLICATION_ROLLOUT_20261021.md)。本番導入・実機試験・有効化は未承認。
+
+- コミュニティ第1弾：人間のC1a実基盤と隔離検証。[リリース計画](design/COMMUNITY_IMPLEMENTATION_PLAN.md)／[実装・検証記録](verification/COMMUNITY_C1A_20261022.md)。招待・実掲載・最低限の通報対応は公開前の残作業。

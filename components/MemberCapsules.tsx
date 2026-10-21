@@ -1,4 +1,5 @@
 "use client";
+import {useCommunitiesEnabled} from "./CommunityAvailability";
 import { focusDestination } from "../lib/client/focus-destination";
 import { useUiLocale } from "../lib/client/ui-locale";
 import { contentMessage } from "../lib/i18n/content";
@@ -33,6 +34,7 @@ import capsuleCss from "./CapsuleDialog.module.css";
 const authEventKey = "graph-knowledge:member-session-changed";
 const textMessages = memberLabels();
 export default function MemberCapsules({ dataset, initialImport = "" }: { dataset: DatasetMode; initialImport?: string }) {
+  const communitiesEnabled=useCommunitiesEnabled();
   const { locale } = useUiLocale();
   const text = memberLabels(locale), captions = capsuleLabels(locale), historyText = capsuleHistoryLabels(locale);
   const [section, setSection] = useState<"saved" | "settings" | "posts">("saved");
@@ -224,6 +226,7 @@ export default function MemberCapsules({ dataset, initialImport = "" }: { datase
       <a href="#my-capsules" aria-current={section === "saved" ? "page" : undefined}><Icon name="capsule" />{text.savedTitle}</a>
       <a href="#account-settings" aria-current={section === "settings" ? "page" : undefined}><Icon name="person" />{text.settings}</a>
       <a href="#my-posts" aria-current={section === "posts" ? "page" : undefined}><Icon name="book" />{text.postsTitle}</a>
+      {communitiesEnabled&&<a href="/communities#%3Fmine%3D1">{locale==="en"?"Joined & managed":"参加・運営"}</a>}
     </nav>}
     <div className={css.memberContent}>
     <header className={css.pageHeader}><h1 ref={heading} tabIndex={-1} data-focus-destination>{title}</h1><p>{user ? section === "settings" ? text.settingsHelp : section === "posts" ? text.postsHelp : text.savedHelp : text.loggedOut}</p></header>
@@ -262,7 +265,8 @@ export default function MemberCapsules({ dataset, initialImport = "" }: { datase
         {!historical && <nav className={css.readingTabs} aria-label={selected.content.title}>
           <button aria-pressed={readingTab === "content"} onClick={() => { setReadingTab("content"); navigate(selected.id); }}>{text.contentTab}</button>
           <button aria-pressed={readingTab === "sharing"} onClick={() => { setReadingTab("sharing"); navigate(selected.id, undefined, true); }}>{text.sharingTab}</button>
-        </nav>}
+          {communitiesEnabled&&<a href="/communities#%3Fmine%3D1">{locale==="en"?"Joined & managed":"参加・運営"}</a>}
+    </nav>}
         <div hidden={readingTab !== "content"}>
         {historical && <div role="status"><h2>{historyText.reading(selected.revision)}</h2><p>{historyText.snapshotHelp}</p><button disabled={busy} onClick={() => read(selected.id)}>{historyText.current}</button></div>}
         <CapsuleRevisionList key={`revisions:${selected.id}:${selected.revision}:${user.id}`} capsuleId={selected.id} userId={user.id} disabled={busy} onRead={revision => read(selected.id, revision)} onUnauthorized={() => fail(new MemberClientError(401, "UNAUTHENTICATED"))} />

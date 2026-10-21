@@ -3,6 +3,7 @@ import { randomBytes, randomUUID } from "node:crypto";
 
 // Disposable dedicated PostgreSQL. Never targets a configured product DB, and
 // cleanup only removes the uniquely named container created by this invocation.
+const communityTests = process.argv.includes("--community");
 const browserTests = process.argv.includes("--e2e");
 const container = `gk-member-test-${randomUUID()}`;
 const password = randomBytes(24).toString("hex");
@@ -11,6 +12,7 @@ const env: NodeJS.ProcessEnv = { ...process.env, NODE_ENV: "test", GRAPH_DATASET
   MEMBER_AUTH_SECRET: randomBytes(32).toString("hex"),
   MEMBER_DATABASE_URL: `postgresql://gk_member:${password}@127.0.0.1:55432/graph_member_test`,
   POSTGRES_USER: "gk_member", POSTGRES_PASSWORD: password, POSTGRES_DB: "graph_member_test" };
+if (communityTests) env.COMMUNITY_ENABLED = "1";
 const docker = (args: string[]) => spawnSync("docker", args, { env, encoding: "utf8", timeout: 30_000 });
 let child: ReturnType<typeof spawn> | undefined;
 let created = false;
@@ -30,8 +32,8 @@ try {
   }
   if (!ready) throw new Error("Dedicated member PostgreSQL did not become ready");
   child = spawn("node", browserTests
-    ? ["--import", "tsx", "scripts/test-member-browser.ts", ...process.argv.slice(2).filter(arg => arg !== "--e2e")]
-    : ["node_modules/vitest/vitest.mjs", "run", "tests/member.integration.test.ts", "tests/member-cold.integration.test.ts", "--maxWorkers=1", "--no-file-parallelism"], { env, stdio: "inherit" });
+    ? ["--import", "tsx", "scripts/test-member-browser.ts", ...process.argv.slice(2).filter(arg => arg !== "--e2e" && arg !== "--community")]
+    : ["node_modules/vitest/vitest.mjs", "run", ...(communityTests ? ["tests/community.integration.test.ts"] : ["tests/member.integration.test.ts", "tests/member-cold.integration.test.ts"]), "--maxWorkers=1", "--no-file-parallelism"], { env, stdio: "inherit" });
   const timer = setTimeout(() => child?.kill("SIGTERM"), browserTests ? 960_000 : 180_000);
   const code = await new Promise<number>((resolve, reject) => { child!.once("error", reject); child!.once("exit", code => resolve(code ?? 1)); });
   clearTimeout(timer);

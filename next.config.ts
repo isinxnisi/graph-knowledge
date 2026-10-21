@@ -8,7 +8,7 @@ const config: NextConfig = { reactStrictMode: true,
     onDemandEntries: { maxInactiveAge: 15 * 60_000, pagesBufferLength: 32 },
   } : {}),
   async headers() {
-    return [{ source: "/:path(api|member|shared|integrations)/:rest*", headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow, noarchive" }] }, { source: "/shared", headers: [
+    return [{ source: "/:path(api|member|shared|integrations|communities)/:rest*", headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow, noarchive" }] }, { source: "/shared", headers: [
       { key: "Referrer-Policy", value: "no-referrer" },
       { key: "X-Robots-Tag", value: "noindex, nofollow, noarchive" },
       { key: "Cache-Control", value: "private, no-store" },

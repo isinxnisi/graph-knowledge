@@ -1,5 +1,6 @@
 "use client";
 import { localizedPublicHref } from "../lib/domain/public-routes";
+import {useCommunitiesEnabled} from "./CommunityAvailability";
 import Icon from "./Icon";
 import { useMemberIdentity } from "../lib/client/use-member-identity";
 import { memberRequest, type MemberUser } from "../lib/client/member-api";
@@ -16,6 +17,7 @@ import { supportLabels } from "../lib/i18n/support";
 import { appearanceKey, defaultAppearance, readAppearance, type Appearance } from "../lib/client/appearance";
 
 export default function SiteHeader({ dataset, page = "explore", user, onBeforeAccountNavigation, onPrivacySettings, onLogout, accountBusy = false }: { onBeforeAccountNavigation?: () => boolean; onPrivacySettings?: () => void; onLogout?: () => void; accountBusy?: boolean; user?: MemberUser | null; dataset: DatasetMode; page?: "explore" | "member" | "shared" | "support" }) {
+  const communitiesEnabled=useCommunitiesEnabled();
   const { locale, setLocale, storageError: languageError } = useUiLocale();
   const ui = explorerLabels(locale), text = siteLabels(locale), data = datasetLabels(dataset, locale);
   const identity = useMemberIdentity(page !== "member");
@@ -72,7 +74,7 @@ export default function SiteHeader({ dataset, page = "explore", user, onBeforeAc
       <p className={styles.dataset}>{data.badge}</p>
     </div>
     <p className={styles.description}>{data.description}</p>
-    <div className={styles.tools}>
+    <div className={styles.tools}>{communitiesEnabled&&<a href="/communities" onClick={closeAccount}>{locale==="en"?"Communities":"コミュニティ"}</a>}
       <a className={styles.supportLink} href={localizedPublicHref("/support", locale)} onClick={closeAccount} aria-current={page === "support" ? "page" : undefined}><Icon name="heart" /><span>{supportLabels(locale).link}</span></a>
       <nav aria-label={text.navigation} className={styles.navigation}>
         {page !== "explore" && <a className={styles.exploreReturn} href={returnHref} aria-label={text.exploreLink} title={text.exploreLink}><Icon name="back" /><span>{text.explore}</span></a>}

@@ -1,100 +1,56 @@
-# コミュニティ：試作の確認方法と段階導入
+# コミュニティ：リリース単位と実装計画
 
-2026-10-21。[体験](COMMUNITY_EXPERIENCE.md)／[基礎設計](COMMUNITY_FOUNDATION.md)。今回の完成範囲は**設計＋隔離した操作試作**。コミュニティが本番で使える状態になったという報告ではない。
+2026-10-22更新。[体験](COMMUNITY_EXPERIENCE.md)／[基礎設計](COMMUNITY_FOUNDATION.md)。第1弾は人間によるコミュニティ。AIは第2弾へ分離する。
 
-## 確認先
+## 確認環境と現在地
 
-`http://127.0.0.1:3275/`
+- **3275／graph-com**：[接続確認版](../../prototypes/community-connected/README.md)。既存Home・Explorer・アカウントを再利用する隔離Nextアプリ。コミュニティ・会員操作は架空データ。静的トップや架空SVG Graphで代用しない。実会員API・AI・書込は接続しない。
+- **C1a実基盤**：通常Reactコンポーネント、Better Auth、PostgreSQLの追加schema/API。`COMMUNITY_ENABLED=1` の明示有効化が必要。通常環境は無効。3275のiframeやロール切替を認証として流用しない。
+- **3200／graph-beta**：既存アプリの検証先。コミュニティ実基盤は未有効化、既存会員DBへの005適用なし。
+- **plunode.net**：今回は変更しない。将来ここで提供する「サービスのβフェーズ」とgraph-betaという検証環境を区別する。
 
-WSLから起動：
+## 第1弾：人間のコミュニティβ
 
-```sh
-cd /home/isinxnisi/1.projects/7.graph-knowledge
-node prototypes/community/server.mjs
-```
+### C1a：実装・隔離検証済みの縦方向スライス
 
-Node 24を使用。必要なら既存runtime `/tmp/graph-knowledge-node/bin/node` を指定する。3275はloopback専用。Next.js／3200／betaを使わず、production bundleにも組み込まない。実会員・本番KG・Worker・Kev・DBへの接続はない。
+公開／限定の場の作成、公開一覧、自由参加、退出、独立スレッド・投稿、自己投稿撤回、管理者による設定・除外・アーカイブ、本人承諾付き管理者追加。参加・運営一覧と自分の投稿をアカウントから利用する。停止・退会時の失効を既存サービスへ統合する。
 
-初期ロールはAya（管理者）。上部の試作帯でRen（参加者）、Mio（Capsule所有者）、閲覧者、日英を切り替える。ロールは各場所のmembershipに従うため、Mioも自分のCapsule以外を編集・削除できない。リセット／reloadで架空データへ戻る。変更の永続保存や実ログインは提供しない。
+限定スレッドは作成時のメンバーと参加世代を固定する。後から参加・再参加しても昔の限定会話へ自動入場しない。公開から限定へ変更すると既存公開スレッドも固定audience化し、再公開で復活させない。名簿は初回は管理者だけ。最終管理者の退出はアーカイブで終え、所有移転・強制公開しない。
 
-| 一巡したい体験 | 操作 |
-| --- | --- |
-| 作成→掲載→Graph→戻る | 場所をつくる→公開範囲を選ぶ→Capsuleを掲載→公開版を選択→Graph→元の一覧へ戻る |
-| 非公開検討→成果だけ公開 | 自分の場所→物語の下書き室→最近の会話→自分の場所→非公開ノートの「成果の公開版を作る」→公開本文を入力→公開の読書室へ掲載 |
-| 所有と掲載の分離 | Ayaで管理→掲載を外す。Mioへ切替→アカウントで元Capsuleが残る。AyaにはMioの削除操作なし |
-| 版更新 | Mioで公開用の新版を作る→Ayaで読書室の管理／掲載→新しい公開版へ。過去の会話は旧版を参照 |
-| privateな参照を公開投稿へ | Renで読書室の話題へ投稿し、非公開参照の試験欄を選ぶ→閲覧者へ切替。参照の題名・本文は出ない |
-| メンバー除外 | Ayaで下書き室の管理／メンバーからRenを除外→Renに切替。会話・共有版を表示しない |
-| 場所の公開化 | Ayaで下書き室の管理→公開へ変更→閲覧者へ切替。以前の限定会話・ノート・名簿は表示しない |
-| AI取消 | 管理／AI→招待を試す→模擬応答を待機→参加させないを適用→遅い応答を受け取る。取消済みとなり投稿しない |
-| 最後の管理者が離れる | Ayaで場所を離れる→アーカイブ。Renは既存の許可範囲で閲覧できるが新規投稿できない |
-| Capsule削除と会話の寿命 | Ayaで自分の非公開ノートを削除→下書き室の話題は残り、参照だけ表示不可になる |
+ユーザー向けAI管理・分析は表示しない。実装の検証方法・制限は[C1a記録](../verification/COMMUNITY_C1A_20261022.md)。これはC1全体や公開準備の完了ではない。
 
-private版を他の限定の場所へ渡す操作は、所有者のアカウントから「限定の場所へ共有」。その時点の参加者へ閲覧だけを許可する。招待・管理者追加は、試作では本人承諾済みの状態への遷移を模擬する。実メールや承諾リンクの配送ではない。
+### C1b：参加・継続運営を完成させる
 
-## 試作の隔離と限界
+限定コミュニティへの招待と本人承諾、除外後の明示的再受入、管理者不在時の安全な回復、一覧ページングを追加する。現在の限定作成は作成者だけで利用でき、未実装の招待を有効ボタンで示さない。
 
-- Nodeのstatic serverは4ファイルのGETだけを明示許可。loopback＋Host検査、CSP `connect-src 'none'`／`form-action 'none'`、no-store／no-referrer。環境変数、ソースツリー、APIを配信しない。
-- fixtureと状態遷移はブラウザ内。すべて架空で、ソースには閲覧ロールで隠すデータも含まれる。**本物の秘密情報を入れてはいけない。サーバー認可の完成を証明する試作ではない。**
-- 実DB競合、失効通知配送、AI通信の取消は未実装。世代比較の純粋モデルで負例を検証する。実接続前には実DB・複数processの試験が別途必要。
-- Graphは架空SVGと開閉・戻るの試作。実Explorerの状態管理を改変・複製しない。根拠の実読取、保存View／Workspace／共有URLの機能試作ではない。
-- 設定と操作内容はタブのメモリだけ。履歴にはroute IDだけ。スクロールではhistory/state snapshotを書かない。reload後は初期データ。
-- 未接続：承認制参加、実招待・通知、投稿審査、サイト運営の通報case UI、共同編集、実AI送信・自動投稿・課金、実分析・貢献台帳。未集計の人気は数値を作らない。
+受入：招待期限・失効・アカウント違い、同時参加／除外／退出、旧cohortを再共有しないこと、停止中操作、LIMIT前認可、部分範囲と次ページ、最終管理者を失う競合。停止解除だけで参加権を自動復元しない。
 
-## 次の実装を切る単位
+### C2：Capsule公開版・掲載・ギャラリー・実Graph
 
-### C1：場と会話、参加・管理の実認可
+既存の固定snapshotと所有者認可を再利用し、公開版／community-cohort grant、gallery listing、版付き投稿参照を追加する。公開プレビュー→明示公開、掲載→明示新版更新、公開停止、Graph往復を実装する。掲載は所有移転・編集許可ではない。共有tokenを参加権へ変換しない。
 
-Community、membership/invitation、限定audience、独立thread/post、監査、アーカイブを会員PGへ追加する。既存会員のsession／active／期待User／Originを再利用。基本管理とアカウントの参加・運営一覧を一緒に実装し、管理を後付けにしない。
+依存：C1の実認可。受入：非公開検討から成果版だけ公開、私的参照を公開投稿へ貼っても本文・題名・件数を漏らさない、取消と同時のread/Graph、Capsule削除でも独立会話を保持、版・根拠・Graph条件・Undo・保存・戻りを維持。3275の模擬掲載をC2完了と扱わない。
 
-依存：schemaレビュー、既存退会／停止へのcleanup統合。最初は個人所有Capsule無変更、AIは設定と未稼働表示のみ。AIIdentityのログインUser代用はしない。
+### C3-min：公開に必要な運営対応
 
-完了条件：2人＋匿名でpublic/private作成、参加・招待承諾、投稿、除外、再参加、最後admin離脱、退会を実DBで確認。privateの名称・数・cursor・通知・遅着応答が漏れない。既存member API、token、旧Capsuleコメントの削除契約が保たれる。移行は追加のみ、既存tableの再解釈なし。
+通報窓口、投稿非表示、コミュニティ停止／復帰、最小監査、運営者の限定caseアクセスを実装する。公開・投稿濫用への制限、backup/restoreと削除再適用、privacy説明も公開前条件とする。C1aのarchiveや既存会員停止をコミュニティ通報対応の代用品にしない。
 
-### C2：Capsule版の共有先とギャラリー、Graph往復
+第1弾の公開条件は **C1a＋C1b＋C2＋C3-min**。高度な審査queueや細かな名簿公開設定で公開を際限なく延ばさない。一方、認可と失効は後回しにしない。
 
-既存固定snapshot処理をserviceとして再利用し、public/community-cohort grantとgallery listing/post referenceを追加。公開版のプレビュー→明示公開、固定版掲載→明示更新、公開停止、独立会話の寿命を実装する。実Graphへの参照引継ぎと戻り位置もこの単位。
+## 第2弾：AIアカウント・活動基盤（旧C4）
 
-依存：C1、Capsule所有者サービスのauthorizer抽出。private編集APIをcommunity member全員へ開かない。旧限定linkの同時1件・失効・過去版契約は不変。
+AIIdentity、運営主体、参加許可、scope、処理先同意、実行job、利用枠を必要な範囲で導入する。初回は明示呼びかけと人間確認。AI参加と外部モデルへのprivate送信許可は別。サイト安全対応に無制限のprivate閲覧を与えない。
 
-完了条件：private検討→成果版のみ公開、公開Capsuleをprivateで会話、private参照をpublicへ貼る負例、共有停止・Capsule削除・退会と同時のread/list/post/Graphを試験。同じ版の取得・掲載・投稿参照を照合。Graph条件・根拠・Undo・保存形式・戻るに回帰なし。C1＋C2が最初の利用価値のある公開候補。
+C1/C2/C3の認可・取消を前提とし、Kev公開API、処理先・費用の別承認を必要とする。取消・停止・遅着応答・課金予約を独立検証する。第1弾の公開条件へ戻さない。
 
-### C3：管理の厚みと運営対応
+## 後続（C3拡張／C5）
 
-承認制／申請・招待一覧、対象別投稿審査、限定audienceへの追加共有、通報・限定case access・異議、停止・復帰、管理者不在の回復を導入。本文のない最小auditを整備。必要な期間の保管／削除・復旧時の削除再適用を運用に接続する。
+高度な分析、ファクトチェック、自主活動、共同編集、貢献台帳。人気・真偽・受入・モデレーションは分離する。同一Capsuleの多重掲載で貢献を重複計上しない。人間／AI、版、公開範囲、介入の頻度を区別する。
 
-依存：C1/C2。公開運用で必要な基本通報窓口・安全停止は公開前gateであり、C3を丸ごと後回しにして無対応公開しない。高度なqueue画面や異議管理の拡張は段階化できる。
+## 導入と既存機能への影響
 
-完了条件：community admin／site担当者／本人の操作権が区別できる。停止・削除・異議が監査可能で、private内容を過剰収集しない。アーカイブを永久提供の約束として表示しない。
+005は追加migration。起動時自動適用はしない。`migrateMemberDatabase(pool, true)` を隔離テストだけで実行し、通常の既存migration呼出は従来どおり。旧001〜004のchecksumや保存形式を変更しない。
 
-### C4：AIの招待身元と呼びかけ活動
+実認証は既存Better Auth。会員UserとKG人物は別。member_capsule_thread/post/tokenを転用せず、独立community_thread/postを追加する。会員停止・退会は同じトランザクションでmembership世代を失効させる。005のない旧DBでは既存処理を維持する。機能停止時はflagを外し、tableと既存データを保持する。
 
-AIIdentity、operator、participation、scope、processing consent、job、quota reservationを必要な範囲だけ追加する。最初は招待したAIへの明示呼びかけ→確認待ちの結果。実投稿は人間確認後。自主巡回は無効。
-
-依存：C1/C2/C3の認可・取消・case、Kev公開API仕様確認、ユーザーによる実処理先・非公開送信・費用上限の承認。Kev本体の改修が必要なら別途影響・代替案を提示する。
-
-完了条件：権限の減少、owner停止、membership変更、投稿先変更、scope拡大、予算不足、timeout、遅い結果に対して安全に停止／結果不明を区別。送信前・公開直前の再認可と課金予約の冪等性を実provider非課金fixtureで先に確認。未承認private内容を送らない。
-
-### C5：共同管理・貢献・分析・限定的自主活動
-
-共同編集／publish権、community所有Capsule、提出・受入・訂正の由来台帳、human/AI別・scope別分析、介入の選定理由とクールダウンを順次追加する。score一つへ統合しない。共同所有は独立schema版と明示移転承諾が必要。同時共同編集は後段。
-
-完了条件：多重掲載による実績重複なし。private関与を公開件数から推測できない。原版と受入receiptを辿れる。AIの人気偏重・同一対象への反復を検査・調整できる。KGの人間受入経路に迂回なし。
-
-## migrationと既存環境への影響
-
-今回はmigrationファイルも適用もなし。将来のC1/C2は追加migration＋feature flagで導入し、起動時自動migrationはしない。まず専用一時PGで現行001〜004を含むmigration、後方互換、rollbackは機能停止＋table保全を確認する。既存共有tokenやコメントを新コミュニティへbackfillしない。
-
-同一会員Userを使用。新認証基盤・KGのEntity／Claim schema・収集Worker・Global受入・既存Graph保存形式を変更しない。退会・停止のトランザクション拡張だけはC1有効化の前提。DB書込やscope拡張を伴う実導入は今回の承認に含めない。
-
-## 受入試験の分類
-
-| 層 | 初回必須 |
-| --- | --- |
-| 純粋なpolicy・state | 参照非漏洩、ownership、last admin、archive、版固定、permission generation、重複貢献 |
-| API／実PG | 認証・Origin・期待User、LIMIT前認可、idempotency、競合lock、timeout、失効、削除CASCADE境界 |
-| UI | JA/EN、PC/狭幅、各role、create/list/Graph/back、private成果公開、管理・AI取消、scroll/history、multi-tab |
-| 既存回帰 | 会員保存・共有・コメント、退会・停止、Graph／URL／View／Workspace。既存KG読取はfixtureと代表実データを分ける |
-| 公開前 | iPhone実機、実Google/session、失効通知・cache、運営窓口、privacy説明、backup/restore・削除再適用 |
-
-今回の結果と実機未確認は[検証記録](../verification/COMMUNITY_PROTOTYPE_20261021.md)へ記載する。試作policyテストを本番securityテストと読み替えない。
+本番・既存会員DBへのmigration、KG／収集／Kev変更、AI送信・課金は未実施かつ今回対象外。公開前にはschema運用レビュー、実Googleログイン、iPhone実機、失効・キャッシュ、運営窓口を確認する。

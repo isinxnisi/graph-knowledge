@@ -185,3 +185,9 @@ KG貢献の一意キーは既存受入の `submission/decision receipt + Claim I
 | `GET /api/member/communities` | joined／managed／invited／archived、cursor | 本人の関連だけ。運営一覧はcommunity管理と同じ正本 |
 
 cursorは安定時刻＋UUIDのkeysetを使い、viewer・filter・policy世代に束縛。原文のprivateタイトルやtokenをcursorへ平文複製しない。各responseにschemaVersionと編集用revisionを持たせるが、旧会員DTOの既存版を黙って変更しない。Graph既存APIへcommunity権限を混在させず、許可済みCapsuleの参照解決境界で引き継ぐ。
+
+## 2026-10-22：第1弾への実装境界
+
+人間のC1aを実認証・隔離PGで実装した。現行の実装範囲は[リリース計画](COMMUNITY_IMPLEMENTATION_PLAN.md)と[C1a検証](../verification/COMMUNITY_C1A_20261022.md)を参照する。本文のAIIdentity・活動・分析は第2弾以後の設計であり、第1弾の有効な設定や公開条件ではない。
+
+初回の保守的な初期値：参加名簿は管理者だけ、限定会話は投稿時のmembership世代を固定、後参加・再参加では過去の会話を共有しない。公開→限定→公開でも旧会話を自動公開しない。限定作成者だけのC1aから、招待・本人承諾はC1bで追加する。参加している事実のより細かな公開設定は後続評価とする。

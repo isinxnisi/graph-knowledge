@@ -18,7 +18,7 @@ async function stop() {
 process.once("SIGTERM", () => { void stop(); });
 process.once("SIGINT", () => { void stop(); });
 try {
-  await migrateMemberDatabase(pool);
+  await migrateMemberDatabase(pool, process.env.COMMUNITY_ENABLED === "1");
   child = spawn("node", ["node_modules/@playwright/test/cli.js", "test", "--config=playwright.member.config.ts", ...process.argv.slice(2)], { env: process.env, stdio: "inherit" });
   process.exitCode = await new Promise<number>((resolve, reject) => { child!.once("error", reject); child!.once("exit", code => resolve(code ?? 1)); });
   // Normal completion must not signal the already-exited Playwright process.

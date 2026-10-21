@@ -1,3 +1,4 @@
+import { revokeCommunityMember } from "./community";
 import type { Pool, PoolClient } from "pg";
 import { z } from "zod";
 import { MemberError } from "./http";
@@ -33,6 +34,7 @@ export async function operateMember(pool: Pool, raw: MemberOperation, apply = fa
       if (apply) {
         await client.query('UPDATE "user" SET active=$2, "updatedAt"=clock_timestamp() WHERE id=$1', [input.target, input.action === "resume-user"]);
         if (input.action === "suspend-user") {
+          await revokeCommunityMember(client, input.target);
           await client.query('DELETE FROM "session" WHERE "userId"=$1', [input.target]);
           // 再開しても旧tokenと受付を復活させない。
           await client.query("SELECT id FROM member_capsule WHERE owner_user_id=$1 ORDER BY id FOR UPDATE", [input.target]);
@@ -72,6 +74,7 @@ export async function deleteMember(pool: Pool, userId: string, sessionId: string
     const recent = await client.query(`SELECT id FROM "session" WHERE id=$1 AND "userId"=$2
       AND "expiresAt">clock_timestamp() AND "createdAt">clock_timestamp()-interval '30 minutes'`, [sessionId, userId]);
     if (!recent.rowCount) throw new MemberError(403, "RECENT_LOGIN_REQUIRED");
+    await revokeCommunityMember(client, userId, true);
     // 相互投稿のある二人が同時退会しても、投稿先を含む同じ順でlockする。
     await client.query(`SELECT c.id FROM member_capsule c WHERE c.owner_user_id=$1
       OR EXISTS (SELECT 1 FROM member_capsule_post p WHERE p.capsule_id=c.id AND p.author_user_id=$1)
