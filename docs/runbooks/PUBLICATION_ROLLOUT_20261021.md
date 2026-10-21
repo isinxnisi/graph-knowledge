@@ -1,5 +1,7 @@
 # Issue #33 本番導入の一括承認対象 P33-INSTALL-20261021
 
+2026-10-22の現在：**本番72338b7は導入済み・disabled／専用DBのcommit後復旧・閉鎖/再開・再適用拒否・cleanup完了／本番有効化は未実施**。既存の一括導入・専用試験承認は実施済み。以下の導入経過・旧コマンドは履歴であり再実行しない。次に運営者が判断する対象は[本番有効化前の残操作](#2026-10-22本番有効化前の残操作別承認)を参照する。
+
 2026-10-21 JST。**一括承認受領済み・本番導入済み（disabled）、専用DB実機試験は準備途中**。下表は承認した差分であり、現在の実測は検証記録の追記を参照する。[既存導入手順](PUBLICATION_GATE_INSTALLATION.md)と[PC停止時の協調手順](PUBLICATION_COORDINATION.md)を用いる。読み取り結果は[実環境確認](../verification/PUBLICATION_ENVIRONMENT_20261021.md)。本番KG apply/restore、既公開50 Claimの再公開、会員DB、Web/Caddy/Composeの切替、稼働Worker停止を含まない。
 
 ## 承認する変更の集合
@@ -111,14 +113,29 @@ v3は正常に専用DB/実Web/専用SSHを準備した。新backup/closure pin�
 
 診断は成功し、専用DB/receipt/全graph/APIは一致した。通常executeの後続Gate.verifyだけがPythonとTSのmanifest hashのキー順差で停止すると確定。旧診断は現wrapper SHAに固定されるため、修正後に再実行しない。
 
-## 現在の運営者実行入口：固定合成manifestの互換修正
+## 実行済み：固定合成manifestの互換修正（再実行しない）
 
 元nonce590c3111…・artifact956baabd…・manifestファイルSHA11d6ab56…にだけ、既知のTS digest1ca6c5f0…を用いる試験wrapperへ更新する。本番coreやhash/署名仕様は変更せず、凍結資材・承認・journal・予約は不変。旧wrapperを保全し、raw SHA/元TS digestが違えば停止する。
 
-```bash
-sudo /usr/bin/python3 -I -c 'import hashlib;from pathlib import Path;p=Path("/home/develop/plunode-publication-install-20261021/repair-private-manifest-v1.py");b=p.read_bytes();assert hashlib.sha256(b).hexdigest()=="a7562af9725a047c8463b2276b845808bed730f89597d9fec6ad5c8c01f41a7d";exec(compile(b,str(p),"exec"))'
-```
-
-成功時はprivate-fixture-manifest-adapter-updated、試験apply1、本番無効/apply0、凍結/journal不変。その後は専用SSHから元nonceでverify-onlyを行い、completedを確認してclose→条件付きshadow resume→finish→実ACK、再適用拒否、cleanupへ進む。失敗時は再実行せず保全先とJSONを確認する。
+2026-10-22、運営者がbootstrap SHA a7562af9…を実行して更新成功。資材/root/plunode-publication-manifest-fix.jp7gzd21と旧wrapper verifier-before-37030d0c9164.pyを保全した。専用SSHのverify-only→completed→close→shadow resume→finish→ACK、同nonce再送・別nonce同release拒否、cleanupまで完了した。apply合計1回のまま。旧修正コマンドは再実行しない。
 
 本番有効化前の追加条件として、今回コード候補へ追加したAPI対象集合の事前検査・manifest raw SHA照合・対応ops imageを固定VPS/WSL codeへ一組のレビュー済み版として導入することと、Windows/WSL/VPS時計同期・固定peer往復の確認が必要。現固定72338b7は変更していない。鍵保管/rotation・audit認証・branch保護・最新receipt同期・試験入口撤去・本番有効化/個別公開の承認も引き続き別条件である。
+
+
+## 2026-10-22：本番有効化前の残操作（別承認）
+
+承認済みP33-INSTALL-20261021の導入・専用DB試験は終了した。新規sudo・user・SSH設定・常駐serviceの追加を自動で進めず、次の対象をまとめて運営者判断へ戻す。**現在の本番configはfalseのまま**であり、ここに手順を記載したことは実行承認ではない。
+
+| 対象 | 必要な操作と確認 | 影響・戻し方 |
+| --- | --- | --- |
+| VPS固定code/image/trust | 候補ソースf81295562e8b540c503cf4727cdac790e431cf48のcoverage事前検査とmanifest raw SHA検査をレビュー。/usr/local/lib/plunode-publicationの固定版と対応ops image/trust記録を一組で更新する。local image候補はsha256:3bcfe13d0c238710db212f4641f43f4d81d2dff72e58726b374bba9a41b26cbf。転送archiveのSHA・VPSのmanifest/config/全layer/platform同一性を照合し、実際のruntime digestを確定してからconfigへpinする。新capability不足はapply前に拒否する | 本番disabled・active jobなしで実施し、旧code/config/trustをrootで保全。検証失敗ならfalseのまま保全した版へ戻す。DatasetRelease/予約/receiptは巻き戻さない。Web/既存ops tag/Compose変更なし |
+| WSL固定版とpeer | 同じ固定SHAの元repo layoutを/usr/local/lib/plunode-receipts/配下へ新規root所有で配置し、採用する固定peer/CLIを確認。Worker home/runtime/configや制御履歴は変更しない。実際の固定peerによるSSH往復・receipt/ACK/静止確認を実施する | 既存72338b7を保存。新固定版が失敗したら公開を無効のまま止める。今回の合成manifest/ledger互換adapterを本番へ移植しない |
+| 時計とPC停止後の復旧 | Windows/WSL/VPSの時刻状態と固定peerのissuedAt/期限検査を確認する。今回は時計変更なし。ホスト全体の再起動/時計/NTP変更が必要な場合は稼働Workerと他サービスへの影響を別途確定してから承認する | 期限検査を緩めたり自動resumeしたりしない。今回の専用process終了/Git断/再接続の成功をホスト全体電源断試験と呼ばない |
+| 秘密鍵と監査 | 運営者がapprover/attester/SSH/closure鍵の暗号化backup・復旧・rotation手順を確認。plunode-auditの専用HOMEと/usr/bin/ghの利用可否を確認し、最小権限の認証を設定する。固定#33への送信とnonce markerの重複抑制を確認 | 秘密値をチャット/Git/Issueに出さない。通知失敗はnotifyだけを再試行し、DBへ再applyしない。fixtureは意図的にpendingAuditを残しており監査実機成功とは数えない |
+| Git制御と最新棚卸し | codex/collection-controlの履歴/承認保護・force push/削除対策・実行主体の権限を運営者が確認。main/runtimeの全正式receiptと現在の公開base/revisionを再照合し、新しい集合/planだけを採用する | 現Workerのcode973c7b0・時間帯・10分休憩・既存Git制御は今回変更なし。未公開1 Claimを旧「未公開0」に戻して判断しない |
+| 本番有効化 | 上記固定版・peer・鍵/監査・branch・棚卸し・試験入口撤去が確認された後、運営者が/var/lib/plunode-publication/trusted/config.jsonのdeploymentEnabled=trueを明示承認する | 今回は変更しない。問題時はfalseへ戻して新規起動を止め、稼働中applyは強制終了しない。公開判断・必要なsudoは運営者に残す |
+| 個別公開 | 有効化後も固定release・receipt集合・artifact・最新plan・image・base revision・単回nonceに結び付けた署名承認を別途行う。正式未公開#34の1 Claimにも承認はまだない | 既公開50 Claimの再公開や、本番KGの疎通用applyは行わない。古いbase/意味・根拠の差分/証明不能は停止する |
+
+専用DB/Web/network/試験SSH鍵/試験sudoersは撤去済み。root journal・backup・凍結成果・旧wrapper・修正stageは保全した。試験program/parserが残っていても非root実行条件・SSH鍵撤去・sudo撤去で通常入口は使用不可。専用bridgeの消失と旧試験鍵exit255も確認済み。既存developのSSHと本番用制限鍵/SFTPは維持する。
+
+次の信頼境界更新は、採用するbundle/転送SHA/VPS実digestと復旧差分を確定した後に一括で承認対象を提示する。元の導入承認をcode/image更新や本番有効化の承認へ読み替えない。現時点で追加の試験再実行コマンドや本番applyコマンドはない。

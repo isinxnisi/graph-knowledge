@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "scope": "approved-private-VPS-test-only",
-  "status": "partial-manifest-serialization-mismatch-fixture-update-pending",
+  "status": "dedicated-machine-recovery-and-cleanup-completed-production-disabled",
   "productionEnabled": false,
   "productionApplyCalls": 0,
   "productionRevision": "88437056-b74f-42ab-88c0-33ed435bdccc",
@@ -150,7 +150,7 @@
       },
       "testOnly": true
     },
-    "cleanupCompleted": false,
+    "cleanupCompleted": true,
     "operatorReadOnlyDiagnosis": {
       "result": {
         "frozenAndJournalBytesUnchanged": true,
@@ -210,9 +210,174 @@
           "schemaVersion": 1
         }
       }
-    }
+    },
+    "completion": {
+      "exit": 0,
+      "result": {
+        "artifactSha256": "956baabdff9db46e4d609d0009162047306c019548bf78a77e1de79490b9ad4c",
+        "baseRelease": "release-group-2",
+        "baseRevision": "cd1ee4d6-b9e8-494b-8a49-47707c3a09e7",
+        "nonce": "590c3111-d65a-43f8-989e-44d901702e46",
+        "pendingAudit": true,
+        "phase": "completed",
+        "publishedRevision": "2fb283f6-b1e6-46ce-a9aa-44d5985c81d1",
+        "release": "isolated-publication-next",
+        "request": {
+          "artifactSha256": "956baabdff9db46e4d609d0009162047306c019548bf78a77e1de79490b9ad4c",
+          "baseRelease": "release-group-2",
+          "baseRevision": "cd1ee4d6-b9e8-494b-8a49-47707c3a09e7",
+          "environment": "production",
+          "operatorDigest": "sha256:e48a540914d708a88a70b66ad399eb6a7769e98c76ff4ace50cdb7febdf04cf1",
+          "planSha256": "c3109b6582de7d66b4df03e0f5da075ebc65d091e939f5cd5abd19986c3ea1d9",
+          "purpose": "public-kg-publication",
+          "receiptSetSha256": "95e1b7a1bb999daef722896ba8aa7352d8aa6f67b4173d6df70e911e1dfb8aed",
+          "release": "isolated-publication-next",
+          "schemaVersion": 1
+        },
+        "verification": {
+          "apiClaimsVerified": 1,
+          "counts": {
+            "nodes": {
+              "Citation": 3,
+              "Claim": 3,
+              "Entity": 4,
+              "ExternalIdentifier": 0,
+              "Source": 3
+            },
+            "relationships": {
+              "CITES": 3,
+              "HAS_CITATION": 3,
+              "HAS_EXTERNAL_ID": 0,
+              "OBJECT": 3,
+              "SUBJECT": 3
+            }
+          },
+          "dataSha256": "2f8c3dd707e879fe4b8f34fc780169df7599ba591c87db46c995dba886e4f5d1",
+          "manifestDigest": "1ca6c5f03293ac71ac6fa4e64f4c2a0eb57643768d3fcdf3d1357dd5c38645eb",
+          "release": "isolated-publication-next",
+          "revision": "2fb283f6-b1e6-46ce-a9aa-44d5985c81d1",
+          "verified": true
+        }
+      }
+    },
+    "repeatCompletedVerifyOnly": {
+      "exit": 0,
+      "result": {
+        "artifactSha256": "956baabdff9db46e4d609d0009162047306c019548bf78a77e1de79490b9ad4c",
+        "baseRelease": "release-group-2",
+        "baseRevision": "cd1ee4d6-b9e8-494b-8a49-47707c3a09e7",
+        "nonce": "590c3111-d65a-43f8-989e-44d901702e46",
+        "pendingAudit": true,
+        "phase": "completed",
+        "publishedRevision": "2fb283f6-b1e6-46ce-a9aa-44d5985c81d1",
+        "release": "isolated-publication-next",
+        "request": {
+          "artifactSha256": "956baabdff9db46e4d609d0009162047306c019548bf78a77e1de79490b9ad4c",
+          "baseRelease": "release-group-2",
+          "baseRevision": "cd1ee4d6-b9e8-494b-8a49-47707c3a09e7",
+          "environment": "production",
+          "operatorDigest": "sha256:e48a540914d708a88a70b66ad399eb6a7769e98c76ff4ace50cdb7febdf04cf1",
+          "planSha256": "c3109b6582de7d66b4df03e0f5da075ebc65d091e939f5cd5abd19986c3ea1d9",
+          "purpose": "public-kg-publication",
+          "receiptSetSha256": "95e1b7a1bb999daef722896ba8aa7352d8aa6f67b4173d6df70e911e1dfb8aed",
+          "release": "isolated-publication-next",
+          "schemaVersion": 1
+        },
+        "verification": {
+          "apiClaimsVerified": 1,
+          "counts": {
+            "nodes": {
+              "Citation": 3,
+              "Claim": 3,
+              "Entity": 4,
+              "ExternalIdentifier": 0,
+              "Source": 3
+            },
+            "relationships": {
+              "CITES": 3,
+              "HAS_CITATION": 3,
+              "HAS_EXTERNAL_ID": 0,
+              "OBJECT": 3,
+              "SUBJECT": 3
+            }
+          },
+          "dataSha256": "2f8c3dd707e879fe4b8f34fc780169df7599ba591c87db46c995dba886e4f5d1",
+          "manifestDigest": "1ca6c5f03293ac71ac6fa4e64f4c2a0eb57643768d3fcdf3d1357dd5c38645eb",
+          "release": "isolated-publication-next",
+          "revision": "2fb283f6-b1e6-46ce-a9aa-44d5985c81d1",
+          "verified": true
+        }
+      }
+    },
+    "finalInventory": {
+      "applyCalls": [
+        {
+          "nonce": "590c3111-d65a-43f8-989e-44d901702e46",
+          "revision": "cd1ee4d6-b9e8-494b-8a49-47707c3a09e7"
+        }
+      ],
+      "network": "plunode-publication-acceptance-20261021",
+      "productionEnabled": false,
+      "reservations": {
+        "nonces": {
+          "590c3111-d65a-43f8-989e-44d901702e46": {
+            "artifactSha256": "956baabdff9db46e4d609d0009162047306c019548bf78a77e1de79490b9ad4c",
+            "baseRelease": "release-group-2",
+            "baseRevision": "cd1ee4d6-b9e8-494b-8a49-47707c3a09e7",
+            "release": "isolated-publication-next"
+          }
+        },
+        "releases": {
+          "isolated-publication-next": "590c3111-d65a-43f8-989e-44d901702e46"
+        }
+      },
+      "testOnly": true
+    },
+    "completionSequence": {
+      "closeCertificateSha256": "1a38813cbe48af73e37fb83a79cb12878954912e9ff130f1378ecc7f72efcf5a",
+      "signedClose": true,
+      "conditionalShadowResume": {
+        "controlId": "pub-590c3111-d65a-43f8-989e-44d901702e46-resume",
+        "revision": 4
+      },
+      "finished": true,
+      "shadowPauseMode": null,
+      "sameNonceArmRejected": true,
+      "sameNonceExecuteRejected": true,
+      "releaseReplay": {
+        "cancelResumeFinish": true,
+        "differentNonceSameReleaseRejected": true,
+        "noNewReservation": true,
+        "privateApplyCalls": 1,
+        "productionApplyCalls": 0,
+        "shadowPauseMode": null
+      },
+      "allTicketExclusionPhases": {
+        "cancel": "finished",
+        "commit": "finished",
+        "replay": "finished"
+      }
+    },
+    "cleanup": {
+      "allTicketsFinishedBeforeCleanup": true,
+      "completedAuditSha256": "37f04af08e91c6985de180fed5df02d5aaa14f4fa0e0aeba99a0eb3c463dd4bb",
+      "exit": 0,
+      "result": {
+        "journalsPreserved": true,
+        "productionEnabled": false,
+        "temporaryResourcesRemoved": true,
+        "testOnly": true
+      }
+    },
+    "temporarySshKeyRevoked": {
+      "exit": 255,
+      "oldTemporaryKeyRejected": true,
+      "result": null
+    },
+    "automaticGitHubNotificationTested": false,
+    "pendingAuditExplanation": "Fixture backend intentionally never posts synthetic claims; production audit identity/authentication remains unconfigured."
   },
-  "testDriverClockPolicy": "Wait at most 8 seconds until issuedAt, then run unchanged validator. Installed peer still fails with observed clock offset.",
+  "testDriverClockPolicy": "Test-only driver waits at most 8 seconds until issuedAt, then runs unchanged validator. Stock peer failed during 2026-10-21 clock offset; full stock CLI round-trip remains unverified. Separate 2026-10-22 clock estimates include zero.",
   "installedProductionCore": "72338b7054b3f2eb2e9762b20859044f9b9e28ce",
   "newProductionCoverageGuardDeployed": false,
   "tests": {
@@ -301,6 +466,82 @@
     "oldWrapperSha256": "37030d0c91640f1841f6b618f0cafef4ab731dbb0a0da73a91efaffe407603d4",
     "newWrapperSha256": "75276eb1c0117965c96ef9af2f2a07ae26d05cd2be51919e05724d892d46d1eb",
     "productionCoreUpdated": false,
-    "executed": false
-  }
+    "executed": true,
+    "rootStage": "/root/plunode-publication-manifest-fix.jp7gzd21",
+    "preservedOldWrapper": "/var/lib/plunode-publication/test/trusted/verifier-before-37030d0c9164.py",
+    "frozenAndJournalBytesUnchanged": true
+  },
+  "completedOnJst": "2026-10-22",
+  "fixtureManifestRepairResult": {
+    "artifactSha256": "956baabdff9db46e4d609d0009162047306c019548bf78a77e1de79490b9ad4c",
+    "frozenAndJournalBytesUnchanged": true,
+    "newWrapperSha256": "75276eb1c0117965c96ef9af2f2a07ae26d05cd2be51919e05724d892d46d1eb",
+    "nonce": "590c3111-d65a-43f8-989e-44d901702e46",
+    "oldWrapperSha256": "37030d0c91640f1841f6b618f0cafef4ab731dbb0a0da73a91efaffe407603d4",
+    "phase": "private-fixture-manifest-adapter-updated",
+    "privateApplyCalls": 1,
+    "productionApplyCalls": 0,
+    "productionEnabled": false,
+    "testOnly": true
+  },
+  "finalProductionInvariance": {
+    "liveWorker": {
+      "activeAttempt": null,
+      "controlRevision": 2,
+      "formalReceiptCount": 10,
+      "formalReceiptSetSha256": "8a55413ee9fedf32fd64ce6fddebd28d1d636ff7de0fcc1fd063a5b15524d56d",
+      "pauseMode": null,
+      "workerConfigSha256": "d3411e24937f2f422495bf347bac9361b5a6364375443d104c266f96de4763e9"
+    },
+    "privateTestBridgeAbsent": true,
+    "productionApplyCalls": 0,
+    "productionDataset": {
+      "dataset": "public-kg",
+      "revision": "88437056-b74f-42ab-88c0-33ed435bdccc"
+    },
+    "productionGateDisabledVerifiedByCleanupGuard": true,
+    "productionGateRejection": "publication-installation-or-request-rejected",
+    "productionGateStatusRejected": true,
+    "services": {
+      "caddy": "active",
+      "containerd": "active",
+      "docker": "active",
+      "resale-ebay-notifications": "active",
+      "ssh": "active"
+    },
+    "testSudoersRemovalEvidence": "fixed root cleanup validated SHA and removed exact test sudoers; unprivileged direct stat unavailable"
+  },
+  "clockObservation20261022": {
+    "clockSettingsChanged": false,
+    "samples": [
+      {
+        "midpointSeconds": 0.2751271724700928,
+        "roundTripSeconds": 0.644728422164917,
+        "vpsMinusWslLowerSeconds": -0.04723715782165527,
+        "vpsMinusWslUpperSeconds": 0.5974912643432617
+      },
+      {
+        "midpointSeconds": 0.18125653266906738,
+        "roundTripSeconds": 0.451082706451416,
+        "vpsMinusWslLowerSeconds": -0.044284820556640625,
+        "vpsMinusWslUpperSeconds": 0.4067978858947754
+      },
+      {
+        "midpointSeconds": 0.18571257591247559,
+        "roundTripSeconds": 0.4584767818450928,
+        "vpsMinusWslLowerSeconds": -0.04352593421936035,
+        "vpsMinusWslUpperSeconds": 0.4149508476257324
+      }
+    ],
+    "unmodifiedPeerFullRoundTripVerified": false
+  },
+  "stockPeerFullMachineRoundTripVerified": false,
+  "newProductionManifestGuardDeployed": false,
+  "remainingProductionConditions": [
+    "Review and authorize fixed VPS/WSL code plus matching ops image/trust update (coverage and raw manifest SHA guards).",
+    "Verify clock behavior and full unchanged installed WSL peer round-trip with the adopted fixed release; no host reboot/power-loss test performed.",
+    "Operator confirms encrypted key backup/rotation, audit GitHub authentication and protected control branch.",
+    "Re-sync latest main/runtime receipts and live base/revision, then obtain explicit enable approval.",
+    "Each future production apply requires separate signature bound to release, receipts, artifact, plan, image, base revision and single-use nonce."
+  ]
 }
