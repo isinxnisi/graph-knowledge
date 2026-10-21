@@ -106,4 +106,92 @@ class MachineEntryGuards(unittest.TestCase):
             with self.assertRaises(ValueError):module.main()
             docker.assert_not_called()
 
+    def test_legacy_fixture_coverage_is_derived_without_mutating_frozen_metadata(self):
+        module=load('publication-acceptance-entry.py')
+        fields=['entities','claims','sources','citations']
+        before={'release':'release-group-2','revision':'private-base','fixture':{f:[{'id':f+'-old','value':'same'}] for f in fields}}
+        data={f:before['fixture'][f]+[{'id':f+'-new'}] for f in fields}
+        ledger={'authority':'ISOLATED TEST ONLY actual-private-backup-and-synthetic-receipts',
+            'counts':{'acceptedUnpublished':{f:1 for f in fields}}}
+        request={'artifactSha256':module.LEGACY_TEST_ARTIFACT,'baseRelease':'release-group-2','baseRevision':'private-base'}
+        result=module.legacy_fixture_ledger(ledger,data,before,request,module.LEGACY_TEST_NONCE)
+        self.assertNotIn('pending',ledger)
+        self.assertEqual(result['pending'],{f:[f+'-new'] for f in fields})
+        with self.assertRaises(ValueError):module.legacy_fixture_ledger(ledger,data,before,request,'other-nonce')
+        bad=copy.deepcopy(data);bad['claims'][0]['value']='changed'
+        with self.assertRaises(ValueError):module.legacy_fixture_ledger(ledger,bad,before,request,module.LEGACY_TEST_NONCE)
+        bad=copy.deepcopy(ledger);bad['counts']['acceptedUnpublished']['claims']=0
+        with self.assertRaises(ValueError):module.legacy_fixture_ledger(bad,data,before,request,module.LEGACY_TEST_NONCE)
+        bad=copy.deepcopy(request);bad['artifactSha256']='0'*64
+        with self.assertRaises(ValueError):module.legacy_fixture_ledger(ledger,data,before,bad,module.LEGACY_TEST_NONCE)
+
+    def test_nonroot_fixture_verifier_update_never_loads_system_code(self):
+        module=load('update-publication-acceptance-verifier.py')
+        with patch.object(module.os,'geteuid',return_value=1000),patch.object(module,'load') as load_code:
+            with self.assertRaises(ValueError):module.main()
+            load_code.assert_not_called()
+
+    def test_nonroot_verifier_diagnosis_never_reads_root_files(self):
+        module=load('diagnose-publication-acceptance-verifier.py')
+        with patch.object(module.os,'geteuid',return_value=1000),patch.object(module,'trusted') as trusted:
+            with self.assertRaises(ValueError):module.main()
+            trusted.assert_not_called()
+
+    def test_verifier_diagnosis_has_no_apply_and_preserves_consumed_journal(self):
+        module=load('diagnose-publication-acceptance-verifier.py')
+        import contextlib
+        from types import SimpleNamespace
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp)/'test';candidate=root/'frozen'/module.NONCE
+            candidate.mkdir(parents=True);(root/'jobs').mkdir();(root.parent/'trusted').mkdir()
+            reservation={'nonces':{module.NONCE:{'artifactSha256':module.ARTIFACT}},'releases':{'isolated-publication-next':module.NONCE}}
+            for path,value in [(root/'reservations.json',reservation),(root/'jobs/apply-calls.json',[{'nonce':module.NONCE}]),
+                (root/'jobs'/(module.NONCE+'.json'),{'phase':'operator-inspection-required-no-reapply'}),
+                (root.parent/'trusted/config.json',{'deploymentEnabled':False}),(candidate/'ledger.json',{'frozen':True})]:
+                path.write_text(json.dumps(value))
+            commands=[]
+            class Backend:
+                executor_module=SimpleNamespace(locked=lambda p:contextlib.nullcontext())
+                def command(self,args,directory=None):
+                    commands.append(args);return {'verified':True,'release':'isolated-publication-next','revision':'private'}
+                def call(self,stage,payload):
+                    self.assert_stage=stage
+                    if stage!='verify':raise AssertionError('Never apply')
+                    return self.command(['scripts/publication-runtime.ts','verify'],Path(payload['candidate']))
+            backend=Backend();gate=SimpleNamespace(root=root,backend=backend,reservations=lambda:reservation)
+            before={str(p):p.read_bytes() for p in root.parent.rglob('*') if p.is_file()}
+            with patch.object(module,'ROOT',root):report=module.diagnose(gate,module.NONCE)
+            self.assertTrue(report['readOnly']);self.assertEqual(report['privateApplyCalls'],1)
+            self.assertEqual(commands,[['scripts/publication-runtime.ts','verify']])
+            self.assertEqual(before,{str(p):p.read_bytes() for p in root.parent.rglob('*') if p.is_file()})
+            reservation['nonces']={}
+            with patch.object(module,'ROOT',root),self.assertRaises(ValueError):module.diagnose(gate,module.NONCE)
+            self.assertEqual(len(commands),1)
+
+    def test_verifier_diagnosis_does_not_export_http_body_or_exception_secrets(self):
+        module=load('diagnose-publication-acceptance-verifier.py')
+        from urllib.error import HTTPError
+        import io
+        value=module.safe_error(HTTPError('http://private',500,'secret-message',{},io.BytesIO(b'secret-body')))
+        self.assertEqual(value['httpStatus'],500)
+        self.assertNotIn('secret',json.dumps(value))
+        self.assertNotIn('reason',module.safe_error(OSError('password-secret')))
+
+    def test_legacy_manifest_bridge_requires_exact_consumed_fixture(self):
+        module=load('publication-acceptance-entry.py')
+        original=lambda value:module.LEGACY_TEST_MANIFEST_PY if value=={'pinned':'manifest'} else 'unrelated-digest'
+        args=[{'pinned':'manifest'},original,module.LEGACY_TEST_NONCE,module.LEGACY_TEST_ARTIFACT,module.LEGACY_TEST_MANIFEST_FILE]
+        self.assertEqual(module.legacy_fixture_digest(*args),module.LEGACY_TEST_MANIFEST_TS)
+        for position in [2,3,4]:
+            changed=args.copy();changed[position]='mismatch'
+            with self.assertRaises(ValueError):module.legacy_fixture_digest(*changed)
+        changed=args.copy();changed[0]={'another':'payload'}
+        self.assertEqual(module.legacy_fixture_digest(*changed),'unrelated-digest')
+
+    def test_nonroot_manifest_update_never_reads_or_changes_root_programs(self):
+        module=load('update-publication-acceptance-manifest.py')
+        with patch.object(module.os,'geteuid',return_value=1000),patch.object(module,'load') as load_code:
+            with self.assertRaises(ValueError):module.main()
+            load_code.assert_not_called()
+
 if __name__=='__main__':unittest.main()

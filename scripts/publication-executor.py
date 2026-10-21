@@ -177,7 +177,7 @@ class DockerBackend:
             image = parse(inspected.stdout)[0]
             require(image['Id'] == self.config['operatorDigest'] and image['Os'] == 'linux' and image['Architecture'] == 'amd64', 'Wrong operator digest/platform')
             caps = self.command(['scripts/publication-runtime.ts', 'capabilities'])
-            require(caps == {'schemaVersion': 1, 'originalStory': True, 'guardedApply': True}, 'Operator capabilities differ')
+            require(caps == {'schemaVersion': 1, 'originalStory': True, 'guardedApply': True, 'manifestFileSha256': True}, 'Operator capabilities differ')
             return {'operatorDigest': image['Id']}
         if stage in ['validate', 'plan']: return self.command(['scripts/public-kg.ts', stage, '/incoming'], candidate)
         if stage == 'apply': return self.command(['scripts/publication-runtime.ts', 'apply', payload['revision']], candidate)
@@ -307,6 +307,7 @@ class Gate:
         before = backup['payload']
         require((before['release'], before['revision']) == (request['baseRelease'], request['baseRevision']), 'Live base/revision changed')
         require(request['release'] not in {r['id'] for r in before['receipts']}, 'Release already applied')
+        cycle.validate_pending_ledger(read(candidate / 'ledger.json'), read(candidate / 'release/data.json'), before['fixture'])
         # Existing runtime validates backup fingerprint/schema/history. Pin the exact bytes durably before applying.
         durable(self.root / 'jobs' / (self.nonce + '-backup.json'), backup)
         plan = plan_projection(self.backend.call('plan', payload))
@@ -317,8 +318,8 @@ class Gate:
     def verify(self, nonce, state, candidate):
         result = self.backend.call('verify', {'candidate': str(candidate), 'nonce': nonce})
         manifest = read(candidate / 'release/manifest.json')
-        require(result['verified'] and result['release'] == state['release'] and result['dataSha256'] == manifest['dataSha256'] and result['manifestDigest'] == digest(manifest), 'Published verification differs')
-        # TS runtime checks DatasetRelease manifest digest and the complete graph, not API revision alone.
+        require(result['verified'] and result['release'] == state['release'] and result['dataSha256'] == manifest['dataSha256'] and result.get('manifestFileSha256') == sha(candidate / 'release/manifest.json') and re.fullmatch('[a-f0-9]{64}', result.get('manifestDigest', '')) is not None, 'Published verification differs')
+        # TS checks its locale-ordered DatasetRelease digest and complete graph. Compare raw UTF-8 file SHA here; Python signature canonicalization differs from TS stableJson.
         state.update(phase='completed', publishedRevision=result['revision'], verification=result, pendingAudit=True)
         self.save(nonce, state)
         public = {k: state[k] for k in ['nonce', 'release', 'artifactSha256', 'publishedRevision', 'phase']}

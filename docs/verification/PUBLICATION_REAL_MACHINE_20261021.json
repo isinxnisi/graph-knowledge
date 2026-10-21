@@ -1,0 +1,306 @@
+{
+  "schemaVersion": 1,
+  "scope": "approved-private-VPS-test-only",
+  "status": "partial-manifest-serialization-mismatch-fixture-update-pending",
+  "productionEnabled": false,
+  "productionApplyCalls": 0,
+  "productionRevision": "88437056-b74f-42ab-88c0-33ed435bdccc",
+  "formalProductionAcceptedUnpublished": {
+    "entities": 0,
+    "claims": 1,
+    "sources": 1,
+    "citations": 1
+  },
+  "dedicatedTest": {
+    "setup": {
+      "testOnly": true,
+      "phase": "private-real-machine-fixtures-ready",
+      "productionEnabled": false,
+      "productionRevision": "88437056-b74f-42ab-88c0-33ed435bdccc",
+      "backupSha256": "fe12eb2ae24b7c841844afef9cbf248b10aba92c83ee889fb3847cd61570553e",
+      "images": {
+        "db": "sha256:c6d9ad6422e17ce826c93455e53944328d4d2a9e6fba3454d8f2d58053773636",
+        "web": "sha256:d774ea9b2570ff054199459aee465e3b2f4948c97eff7a3cc9e6d80d6f3490a5"
+      },
+      "pins": {
+        "approverKeySha256": "ee7de1f39487a345a3ecb54fdb59dbf5e99ab7765b31bc1178722a31977d25d3",
+        "attesterKeySha256": "3959487ee3f07650bbc0138f4bb1937c289b8da55bb59236450a97175bb453d9",
+        "exclusionKeySha256": "1f59a71bf964453bb375f3dc6e06e51c5945515a4dfc3ed9cbf062a247670239"
+      },
+      "networkId": "e13d3093cc9ada2d6701039d4767bdb4795edf3bacb8766caa9e96b1f580eeb0",
+      "apiTransport": "host-to-private-bridge-no-published-port"
+    },
+    "request": {
+      "artifactSha256": "956baabdff9db46e4d609d0009162047306c019548bf78a77e1de79490b9ad4c",
+      "baseRelease": "release-group-2",
+      "baseRevision": "cd1ee4d6-b9e8-494b-8a49-47707c3a09e7",
+      "environment": "production",
+      "operatorDigest": "sha256:e48a540914d708a88a70b66ad399eb6a7769e98c76ff4ace50cdb7febdf04cf1",
+      "planSha256": "b8455257555352f88b00ca0c24bd2c76bc8314172e3e8fb4797e2f1efcf2fcf6",
+      "purpose": "public-kg-publication",
+      "receiptSetSha256": "95e1b7a1bb999daef722896ba8aa7352d8aa6f67b4173d6df70e911e1dfb8aed",
+      "release": "isolated-publication-next",
+      "schemaVersion": 1
+    },
+    "fixtureIdsDisjointFromPublicKg": true,
+    "countsAfterPrivateCommit": {
+      "entities": 4,
+      "claims": 3,
+      "sources": 3,
+      "citations": 3
+    },
+    "roles": [
+      "AUTHORSHIP",
+      "ORIGINAL_STORY"
+    ],
+    "cancellation": {
+      "applyCalls": 0,
+      "cancelCloseResumeFinish": true,
+      "delayedOldSignedReplyRejected": true,
+      "installedPeerClockOffsetRemainsBlocker": true,
+      "oldReplyDelaySeconds": 5.333794327998476,
+      "oldReplyWithinSignatureExpiry": true,
+      "productionApplyCalls": 0,
+      "realPreflightPassed": true,
+      "shadowWorkerPauseMode": null,
+      "signedApprovalBound": true,
+      "testDriverWaitsUntilIssuedAt": true
+    },
+    "crash": {
+      "actualShadowGitDisconnectFailClosed": true,
+      "applyCallsAfterCrash": 1,
+      "consumedUnverifiedCannotCancelOrClose": true,
+      "pausePushProcessExit86RecoveredSameControl": true,
+      "productionApplyCalls": 0,
+      "shadowWorkerPauseMode": "pause-new",
+      "stateAfterCrash": "applying",
+      "unacknowledgedPauseRejected": true,
+      "vpsGateExitAfterRealCommit": true,
+      "wrongApprovalKeyRejectedBeforeReservation": true
+    },
+    "verificationBlocked": {
+      "applyCalls": 1,
+      "cause": "Test driver omitted ledger.pending; frozen input and reservations preserved",
+      "productionApplyCalls": 0,
+      "productionEnabled": false,
+      "shadowWorkerPauseMode": "pause-new",
+      "verifyOnlyRetryDidNotReapply": true
+    },
+    "closureCertificateSha256": "6d878fb1ad13296c4c6eb1dc840e5de7ea96f9ab710c261e53f84952e5e5ea0b",
+    "candidateDataSha256": "2f8c3dd707e879fe4b8f34fc780169df7599ba591c87db46c995dba886e4f5d1",
+    "candidateManifestSha256": "11d6ab5639ac751b426f0a148044bda6f5de8d9734cf913a8962ce0f0c3f220d",
+    "verifyOnlyAfterRepair": {
+      "exit": 0,
+      "result": {
+        "artifactSha256": "956baabdff9db46e4d609d0009162047306c019548bf78a77e1de79490b9ad4c",
+        "baseRelease": "release-group-2",
+        "baseRevision": "cd1ee4d6-b9e8-494b-8a49-47707c3a09e7",
+        "nonce": "590c3111-d65a-43f8-989e-44d901702e46",
+        "pendingAudit": false,
+        "phase": "operator-inspection-required-no-reapply",
+        "release": "isolated-publication-next",
+        "request": {
+          "artifactSha256": "956baabdff9db46e4d609d0009162047306c019548bf78a77e1de79490b9ad4c",
+          "baseRelease": "release-group-2",
+          "baseRevision": "cd1ee4d6-b9e8-494b-8a49-47707c3a09e7",
+          "environment": "production",
+          "operatorDigest": "sha256:e48a540914d708a88a70b66ad399eb6a7769e98c76ff4ace50cdb7febdf04cf1",
+          "planSha256": "c3109b6582de7d66b4df03e0f5da075ebc65d091e939f5cd5abd19986c3ea1d9",
+          "purpose": "public-kg-publication",
+          "receiptSetSha256": "95e1b7a1bb999daef722896ba8aa7352d8aa6f67b4173d6df70e911e1dfb8aed",
+          "release": "isolated-publication-next",
+          "schemaVersion": 1
+        }
+      }
+    },
+    "independentPrivateApiSmoke": {
+      "manualUiCheckStillRequired": true,
+      "readOnly": true,
+      "revision": "2fb283f6-b1e6-46ce-a9aa-44d5985c81d1",
+      "verified": [
+        {
+          "claimId": "00000000-0017-4000-8000-000000000017",
+          "graphPages": 1,
+          "object": "ISOLATED TEST Work 3",
+          "subject": "ISOLATED TEST Shared creator"
+        }
+      ]
+    },
+    "inventoryAfterRepair": {
+      "applyCalls": [
+        {
+          "nonce": "590c3111-d65a-43f8-989e-44d901702e46",
+          "revision": "cd1ee4d6-b9e8-494b-8a49-47707c3a09e7"
+        }
+      ],
+      "network": "plunode-publication-acceptance-20261021",
+      "productionEnabled": false,
+      "reservations": {
+        "nonces": {
+          "590c3111-d65a-43f8-989e-44d901702e46": {
+            "artifactSha256": "956baabdff9db46e4d609d0009162047306c019548bf78a77e1de79490b9ad4c",
+            "baseRelease": "release-group-2",
+            "baseRevision": "cd1ee4d6-b9e8-494b-8a49-47707c3a09e7",
+            "release": "isolated-publication-next"
+          }
+        },
+        "releases": {
+          "isolated-publication-next": "590c3111-d65a-43f8-989e-44d901702e46"
+        }
+      },
+      "testOnly": true
+    },
+    "cleanupCompleted": false,
+    "operatorReadOnlyDiagnosis": {
+      "result": {
+        "frozenAndJournalBytesUnchanged": true,
+        "phase": "private-verifier-diagnosed",
+        "privateApplyCalls": 1,
+        "productionApplyCalls": 0,
+        "productionEnabled": false,
+        "readOnly": true,
+        "testOnly": true,
+        "verification": {
+          "apiClaimsVerified": 1,
+          "counts": {
+            "nodes": {
+              "Citation": 3,
+              "Claim": 3,
+              "Entity": 4,
+              "ExternalIdentifier": 0,
+              "Source": 3
+            },
+            "relationships": {
+              "CITES": 3,
+              "HAS_CITATION": 3,
+              "HAS_EXTERNAL_ID": 0,
+              "OBJECT": 3,
+              "SUBJECT": 3
+            }
+          },
+          "dataSha256": "2f8c3dd707e879fe4b8f34fc780169df7599ba591c87db46c995dba886e4f5d1",
+          "manifestDigest": "1ca6c5f03293ac71ac6fa4e64f4c2a0eb57643768d3fcdf3d1357dd5c38645eb",
+          "release": "isolated-publication-next",
+          "revision": "2fb283f6-b1e6-46ce-a9aa-44d5985c81d1",
+          "verified": true
+        }
+      },
+      "source": "operator-terminal-reply"
+    },
+    "verifyOnlyAfterDiagnosis": {
+      "exit": 0,
+      "result": {
+        "artifactSha256": "956baabdff9db46e4d609d0009162047306c019548bf78a77e1de79490b9ad4c",
+        "baseRelease": "release-group-2",
+        "baseRevision": "cd1ee4d6-b9e8-494b-8a49-47707c3a09e7",
+        "nonce": "590c3111-d65a-43f8-989e-44d901702e46",
+        "pendingAudit": false,
+        "phase": "operator-inspection-required-no-reapply",
+        "release": "isolated-publication-next",
+        "request": {
+          "artifactSha256": "956baabdff9db46e4d609d0009162047306c019548bf78a77e1de79490b9ad4c",
+          "baseRelease": "release-group-2",
+          "baseRevision": "cd1ee4d6-b9e8-494b-8a49-47707c3a09e7",
+          "environment": "production",
+          "operatorDigest": "sha256:e48a540914d708a88a70b66ad399eb6a7769e98c76ff4ace50cdb7febdf04cf1",
+          "planSha256": "c3109b6582de7d66b4df03e0f5da075ebc65d091e939f5cd5abd19986c3ea1d9",
+          "purpose": "public-kg-publication",
+          "receiptSetSha256": "95e1b7a1bb999daef722896ba8aa7352d8aa6f67b4173d6df70e911e1dfb8aed",
+          "release": "isolated-publication-next",
+          "schemaVersion": 1
+        }
+      }
+    }
+  },
+  "testDriverClockPolicy": "Wait at most 8 seconds until issuedAt, then run unchanged validator. Installed peer still fails with observed clock offset.",
+  "installedProductionCore": "72338b7054b3f2eb2e9762b20859044f9b9e28ce",
+  "newProductionCoverageGuardDeployed": false,
+  "tests": {
+    "publicationCycle": 18,
+    "publicationExecutor": 27,
+    "temporaryMachineGuards": 16,
+    "total": 83,
+    "publicationCoordination": 22
+  },
+  "fixtureVerifierRepair": {
+    "archive": "p33-private-verifier-repair-v1.tar.gz",
+    "archiveSha256": "12254ee6b943d339bbb344485825f6e96ccea7b3d225bd99356c9a6bace1d464",
+    "archiveBytes": 6811,
+    "bootstrap": "repair-private-verifier-v1.py",
+    "bootstrapSha256": "187df2e4f7023fc820da7e22518a3aaf0115c2d2b71a68b54fa28bb7757692e4",
+    "productionCoreUpdated": false,
+    "executed": true,
+    "rootStage": "/root/plunode-publication-verifier-fix.c1fktb71",
+    "preservedOldWrapper": "/var/lib/plunode-publication/test/trusted/verifier-before-7cf9a5f0d53a.py",
+    "frozenAndJournalBytesUnchanged": true,
+    "privateApplyCalls": 1,
+    "productionApplyCalls": 0
+  },
+  "readonlyRecheckAfterRepair": {
+    "diagnosticSha256": "6b69a01697cc6398eb33fcdc961e0fb332dfa2dde9ead2e57cfbc476387e9fba",
+    "productionDataset": {
+      "dataset": "public-kg",
+      "revision": "88437056-b74f-42ab-88c0-33ed435bdccc"
+    },
+    "services": {
+      "caddy": "active",
+      "containerd": "active",
+      "docker": "active",
+      "resale-ebay-notifications": "active",
+      "ssh": "active"
+    }
+  },
+  "readOnlyDiagnosis": {
+    "file": "diagnose-private-verifier-v2.py",
+    "sha256": "6b69a01697cc6398eb33fcdc961e0fb332dfa2dde9ead2e57cfbc476387e9fba",
+    "executed": true,
+    "resetsNonce": false,
+    "callsApply": false,
+    "changesRootPrograms": false
+  },
+  "manifestSerializationMismatch": {
+    "cause": "Gate.verify used Python canonical manifest hash but DB receipt uses TS stableJson with localeCompare key order",
+    "manifestFileSha256": "11d6ab5639ac751b426f0a148044bda6f5de8d9734cf913a8962ce0f0c3f220d",
+    "pythonManifestDigest": "54e5444063fbda6fcd6ffe530c0d809cd4f39f65e41622b4cf74e5d3f16f6128",
+    "typescriptManifestDigest": "1ca6c5f03293ac71ac6fa4e64f4c2a0eb57643768d3fcdf3d1357dd5c38645eb",
+    "frozenCandidateChanged": false,
+    "replay": {
+      "applyCalls": 0,
+      "canonicalDigestRestored": true,
+      "fixtureAdapterCompleted": true,
+      "frozenCandidateUnchanged": true,
+      "manifestFileSha256": "11d6ab5639ac751b426f0a148044bda6f5de8d9734cf913a8962ce0f0c3f220d",
+      "pythonCanonicalManifestDigest": "54e5444063fbda6fcd6ffe530c0d809cd4f39f65e41622b4cf74e5d3f16f6128",
+      "readOnlyReplayOfActualVpsResult": true,
+      "typescriptManifestDigest": "1ca6c5f03293ac71ac6fa4e64f4c2a0eb57643768d3fcdf3d1357dd5c38645eb",
+      "unmodified723MismatchReproduced": true,
+      "wrongManifestDigestRejected": true
+    },
+    "productionCandidateImage": {
+      "candidateImage": "sha256:3bcfe13d0c238710db212f4641f43f4d81d2dff72e58726b374bba9a41b26cbf",
+      "capabilities": {
+        "schemaVersion": 1,
+        "originalStory": true,
+        "guardedApply": true,
+        "manifestFileSha256": true
+      },
+      "actualTypeScriptManifestProof": {
+        "manifestDigest": "1ca6c5f03293ac71ac6fa4e64f4c2a0eb57643768d3fcdf3d1357dd5c38645eb",
+        "manifestFileSha256": "11d6ab5639ac751b426f0a148044bda6f5de8d9734cf913a8962ce0f0c3f220d"
+      },
+      "deployedToVps": false
+    },
+    "productionCodeOrImageUpdated": false
+  },
+  "fixtureManifestRepairPrepared": {
+    "archive": "p33-private-manifest-repair-v1.tar.gz",
+    "archiveSha256": "34e7e9cac71e2ad3885a97f26d5964e3239bb11653915bce7d1be2cd84c5f147",
+    "archiveBytes": 7317,
+    "bootstrap": "repair-private-manifest-v1.py",
+    "bootstrapSha256": "a7562af9725a047c8463b2276b845808bed730f89597d9fec6ad5c8c01f41a7d",
+    "oldWrapperSha256": "37030d0c91640f1841f6b618f0cafef4ab731dbb0a0da73a91efaffe407603d4",
+    "newWrapperSha256": "75276eb1c0117965c96ef9af2f2a07ae26d05cd2be51919e05724d892d46d1eb",
+    "productionCoreUpdated": false,
+    "executed": false
+  }
+}

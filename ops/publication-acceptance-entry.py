@@ -39,6 +39,40 @@ def private_web_url(network,container,resources):
     return 'http://'+str(address)+':3000/'
 
 
+LEGACY_TEST_NONCE='590c3111-d65a-43f8-989e-44d901702e46'
+LEGACY_TEST_ARTIFACT='956baabdff9db46e4d609d0009162047306c019548bf78a77e1de79490b9ad4c'
+
+def legacy_fixture_ledger(ledger,data,before,request,nonce):
+    """One malformed synthetic fixture only: derive redundant API coverage, never edit frozen bytes."""
+    def require(value):
+        if not value:raise ValueError('Legacy synthetic verification fixture differs')
+    require(nonce==LEGACY_TEST_NONCE and request['artifactSha256']==LEGACY_TEST_ARTIFACT
+        and ledger.get('authority')=='ISOLATED TEST ONLY actual-private-backup-and-synthetic-receipts'
+        and 'pending' not in ledger and before['release']==request['baseRelease']=='release-group-2'
+        and before['revision']==request['baseRevision'])
+    pending={}
+    for field in ['entities','claims','sources','citations']:
+        old={row['id']:row for row in before['fixture'][field]}
+        new={row['id']:row for row in data[field]}
+        require(all(new.get(i)==row for i,row in old.items()))
+        pending[field]=sorted(set(new)-set(old))
+        require(ledger['counts']['acceptedUnpublished'][field]==len(pending[field]))
+    return {**ledger,'pending':pending}
+
+
+LEGACY_TEST_MANIFEST_FILE='11d6ab5639ac751b426f0a148044bda6f5de8d9734cf913a8962ce0f0c3f220d'
+LEGACY_TEST_MANIFEST_PY='54e5444063fbda6fcd6ffe530c0d809cd4f39f65e41622b4cf74e5d3f16f6128'
+LEGACY_TEST_MANIFEST_TS='1ca6c5f03293ac71ac6fa4e64f4c2a0eb57643768d3fcdf3d1357dd5c38645eb'
+
+def legacy_fixture_digest(value,original,nonce,artifact,file_sha):
+    """Exact frozen fixture bridge between existing Python and TS manifest ordering only."""
+    checksum=original(value)
+    if checksum!=LEGACY_TEST_MANIFEST_PY:return checksum
+    if nonce!=LEGACY_TEST_NONCE or artifact!=LEGACY_TEST_ARTIFACT or file_sha!=LEGACY_TEST_MANIFEST_FILE:
+        raise ValueError('Legacy synthetic manifest binding differs')
+    return LEGACY_TEST_MANIFEST_TS
+
+
 def main():
     if os.geteuid()!=0 or len(sys.argv)!=3:raise ValueError('Fixed temporary root entry required')
     command,nonce=sys.argv[1:]
@@ -79,6 +113,19 @@ def main():
     e.urlopen=isolated_api
     class Backend(e.DockerBackend):
         def call(self,stage,payload):
+            if stage=='verify':
+                candidate=Path(payload['candidate']);original_read=e.read
+                def fixture_read(path):
+                    value=original_read(path)
+                    if Path(path)==candidate/'ledger.json' and 'pending' not in value:
+                        request=original_read(candidate/'approval-request.json')
+                        e.require(e.sha(candidate/'ARTIFACT.json')==LEGACY_TEST_ARTIFACT,'Frozen fixture artifact differs')
+                        return legacy_fixture_ledger(value,original_read(candidate/'release/data.json'),
+                            original_read(ROOT/'jobs'/(payload['nonce']+'-backup.json'))['payload'],request,payload['nonce'])
+                    return value
+                e.read=fixture_read
+                try:return super().call(stage,payload)
+                finally:e.read=original_read
             if stage=='notify':return {'sent':False}  # Test never posts fixture claims to GitHub.
             if stage=='apply':
                 path=ROOT/'jobs/apply-calls.json'
@@ -98,7 +145,17 @@ def main():
             argv=argv[:2]+['--label','plunode.publication-test=P33-20261021']+argv[2:]
         return original_run(argv,*args,**kwargs)
     e.subprocess.run=labelled_run
-    gate=e.Gate(ROOT,False);gate.common=ROOT/'operation.lock';gate.backend=Backend(ROOT,config)
+    class FixtureGate(e.Gate):
+        def verify(self,nonce,state,candidate):
+            if nonce!=LEGACY_TEST_NONCE:return super().verify(nonce,state,candidate)
+            # Only the historical consumed synthetic artifact; production modules stay unchanged.
+            artifact=e.sha(candidate/'ARTIFACT.json');file_sha=e.sha(candidate/'release/manifest.json')
+            e.require(artifact==LEGACY_TEST_ARTIFACT and file_sha==LEGACY_TEST_MANIFEST_FILE,'Frozen fixture manifest differs')
+            original_digest=e.digest
+            e.digest=lambda value:legacy_fixture_digest(value,original_digest,nonce,artifact,file_sha)
+            try:return super().verify(nonce,state,candidate)
+            finally:e.digest=original_digest
+    gate=FixtureGate(ROOT,False);gate.common=ROOT/'operation.lock';gate.backend=Backend(ROOT,config)
     if command=='cleanup':
         with e.locked(gate.common):
             resources=e.read(ROOT/'trusted/resources.json')

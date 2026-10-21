@@ -52,7 +52,10 @@ elif stage=='verify':
  if state['release']!=request['release'] or state['fixture']!=read(c/'release/data.json'):raise SystemExit(8)
  receipt=next(r for r in state['receipts'] if r['id']==request['release'])
  if receipt['digest']!=hashlib.sha256(canonical(manifest)).hexdigest():raise SystemExit(9)
- result={'verified':True,'release':state['release'],'revision':state['revision'],'dataSha256':manifest['dataSha256'],'manifestDigest':receipt['digest']}
+ result={'verified':True,'release':state['release'],'revision':state['revision'],'dataSha256':manifest['dataSha256'],'manifestDigest':receipt['digest'],'manifestFileSha256':hashlib.sha256((c/'release/manifest.json').read_bytes()).hexdigest()}
+ if control.get('manifestFileMismatch'):result['manifestFileSha256']='f'*64
+ if control.get('missingManifestFile'):result.pop('manifestFileSha256')
+ if control.get('typescriptManifestDigest'):result['manifestDigest']='a'*64
 elif stage=='notify':
  path=root/'sent.json';sent=read(path) if path.exists() else []
  if p['nonce'] not in sent:sent.append(p['nonce']);save(path,sent)
@@ -113,12 +116,63 @@ class ExecutorTests(unittest.TestCase):
         child.stdin.close();child.wait(timeout=10);error=child.stderr.read();child.stdout.close();child.stderr.close()
         return child.returncode,result,error
 
+    def rebind_uploaded_ledger(self, change):
+        directory=self.root/'inbox'/self.nonce/'candidate'
+        ledger=e.read(directory/'ledger.json');change(ledger)
+        (directory/'ledger.json').write_text(json.dumps(ledger))
+        assets=e.read(directory/'ARTIFACT.json');assets['ledger.json']=e.sha(directory/'ledger.json')
+        (directory/'ARTIFACT.json').write_text(json.dumps(assets))
+        request=e.read(directory/'approval-request.json');request['artifactSha256']=e.sha(directory/'ARTIFACT.json')
+        (directory/'approval-request.json').write_text(json.dumps(request))
+
+    def test_missing_api_coverage_stops_before_preflight_or_reservation(self):
+        self.rebind_uploaded_ledger(lambda ledger:ledger.pop('pending'))
+        with self.assertRaisesRegex(ValueError,'Pending verification ledger'):
+            self.preflight()
+        self.assertEqual(self.calls('apply'),0)
+        self.assertFalse(self.gate().reservations()['nonces'])
+
+    def test_api_coverage_must_equal_live_graph_additions_before_apply(self):
+        def omit(ledger):
+            ledger['pending']['claims']=[];ledger['counts']['acceptedUnpublished']['claims']=0
+        self.rebind_uploaded_ledger(omit)
+        with self.assertRaisesRegex(ValueError,'actual unpublished delta'):
+            self.preflight()
+        self.assertEqual(self.calls('apply'),0)
+        self.assertFalse(self.gate().reservations()['nonces'])
+
     def test_real_process_approval_single_apply_and_nonce_replay(self):
         self.ready();code,result,error=self.finish(self.start())
         self.assertEqual(code,0,error);self.assertEqual(result['result']['phase'],'completed')
         self.assertFalse(result['result']['pendingAudit']);self.assertEqual(self.calls('apply'),1)
         code,result,_=self.finish(self.start());self.assertEqual(code,0)
         self.assertEqual(self.calls('apply'),1);self.assertEqual(e.read(self.root/'sent.json'),[self.nonce])
+
+    def test_legacy_operator_without_raw_manifest_capability_is_rejected(self):
+        from unittest.mock import patch
+        backend=e.DockerBackend(self.root,{'operatorDigest':'sha256:'+'d'*64})
+        inspected=subprocess.CompletedProcess([],0,stdout=json.dumps([{'Id':'sha256:'+'d'*64,'Os':'linux','Architecture':'amd64'}]).encode())
+        with patch.object(e.subprocess,'run',return_value=inspected),patch.object(backend,'command',return_value={'schemaVersion':1,'originalStory':True,'guardedApply':True}):
+            with self.assertRaisesRegex(ValueError,'Operator capabilities differ'):backend.call('image',{'candidate':str(self.fixture.args.output)})
+        self.assertEqual(self.calls('apply'),0)
+
+    def test_cross_language_manifest_digest_uses_frozen_file_sha(self):
+        self.ready();self.control({'typescriptManifestDigest':True})
+        result=self.gate().run('execute',self.nonce,self.exchange)
+        self.assertEqual(result['phase'],'completed')
+        self.assertEqual(result['verification']['manifestDigest'],'a'*64)
+        self.assertEqual(result['verification']['manifestFileSha256'],e.sha(self.root/'frozen'/self.nonce/'release/manifest.json'))
+        self.assertEqual(self.calls('apply'),1)
+
+    def test_missing_or_wrong_manifest_file_sha_stays_consumed_without_reapply(self):
+        self.ready();self.control({'missingManifestFile':True})
+        result=self.gate().run('execute',self.nonce,self.exchange)
+        self.assertEqual(result['phase'],'operator-inspection-required-no-reapply')
+        self.control({'manifestFileMismatch':True})
+        result=self.gate().run('execute',self.nonce,self.exchange)
+        self.assertEqual(result['phase'],'operator-inspection-required-no-reapply')
+        self.control({});result=self.gate().run('execute',self.nonce,self.exchange)
+        self.assertEqual(result['phase'],'completed');self.assertEqual(self.calls('apply'),1)
 
     def test_two_concurrent_processes_cannot_apply_twice(self):
         self.ready();self.control({'applyDelay':True});first=self.start()

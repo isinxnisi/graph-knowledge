@@ -1,6 +1,6 @@
 # プロジェクトの構想と判断基準
 
-2026-10-21、Issue #33の承認済み公開ゲートをVPSへ**公開無効のまま導入**。固定rootコード・限定sudo・SSH制限・SFTP chrootと、現revisionの完全公開KG backupを実機確認した。専用DBの合成2 Claim初期化は確認できたが、試験Web/APIの準備で停止し、通信断・適用結果不明からの復旧試験は未完了。本番apply・有効化・既存Worker制御・会員DB/UI変更は行わない。[実測と再開位置](verification/PUBLICATION_ENVIRONMENT_20261021.md)。
+2026-10-21、Issue #33の承認済み公開ゲートをVPSへ**公開無効のまま導入**。固定rootコード・限定sudo・SSH制限・SFTP chrootと、現revisionの完全公開KG backupを実機確認した。専用DB/実Webを準備し、取消し・旧応答拒否・単回commit後process終了を実機確認。試験ledger補修後、DB/receipt/全graph/APIの読取診断は成功。verify-onlyの完了処理はPython/TSのmanifestキー順の差で停止し、固定合成資材だけの互換修正を準備した。予約とapply1回を保全し、本番用にはraw manifest SHA照合と旧image拒否を追加（未配置）。時計差による固定peer停止と追加事前検査の導入も有効化前に残る。本番apply・有効化・既存Worker制御・会員DB/UI変更は行わない。[実測と再開位置](verification/PUBLICATION_ENVIRONMENT_20261021.md)。
 
 2026-10-20、Issue #33の[固定公開実行ゲート候補](runbooks/PUBLICATION_GATE_INSTALLATION.md)を独立worktreeで隔離実装。既存公開CLI・承認policyを再利用し、固定imageとargv、署名、durable nonce／release予約、一度だけのapply呼出し、DB receipt／graphによる復旧、監査再送とWSL receipt challenge peerを検証する。ORIGINAL_STORY対応ops image候補をprivate Neo4jで試験。本番のroot／SSH／sudo／秘密情報・分散fencingは未導入で、実VPS apply・Worker・UI変更はない。[検証](verification/PUBLICATION_GATE_20261020.md)。
 
