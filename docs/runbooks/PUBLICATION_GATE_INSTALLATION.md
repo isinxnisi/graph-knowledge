@@ -2,6 +2,8 @@
 
 現在の導入結果は[2026-10-21の実機検証記録](../verification/PUBLICATION_ENVIRONMENT_20261021.md)と[一括導入手順](PUBLICATION_ROLLOUT_20261021.md)を参照する。本番にはdisabledで配置済み、故障試験は未完了であり、本書の以下は第2段階実装時点の記録である。
 
+2026-10-21の実機でPython署名canonicalとTS stableJsonのmanifestキー順差を確認した。次の本番固定版候補はTS runtimeのmanifestFileSha256返却を必須capabilityとし、Pythonは凍結manifestのraw SHAを照合する。TSのDB receipt/全graph検査は維持し、署名canonicalは変更しない。旧imageを適用前に拒否するため、code/image/trust manifestを一組で更新する必要がある。現在の72338b7導入物はdisabledのまま変更していない。
+
 2026-10-20。**隔離実装・試験用の導入候補**。この文書は本番のsudo／SSH／鍵／image／DB変更や公開承認ではない。現行VPSへ配置していない。`ops/publication-config.example.json` は `deploymentEnabled:false`。実root／sshd／sudoersの有効性は未検証であり、以下を運営者がレビューして別途承認する。
 
 本書の共通flock単独peerと公開手順は、後続の [公開・受入協調手順](PUBLICATION_COORDINATION.md) で補強する。方式選定とPC停止時の契約は [協調設計](../design/PUBLICATION_COORDINATION.md) を現行仕様とする。

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "scope": "approved-private-VPS-test-only",
-  "status": "partial-verifier-updated-readonly-diagnosis-pending",
+  "status": "partial-manifest-serialization-mismatch-fixture-update-pending",
   "productionEnabled": false,
   "productionApplyCalls": 0,
   "productionRevision": "88437056-b74f-42ab-88c0-33ed435bdccc",
@@ -150,16 +150,77 @@
       },
       "testOnly": true
     },
-    "cleanupCompleted": false
+    "cleanupCompleted": false,
+    "operatorReadOnlyDiagnosis": {
+      "result": {
+        "frozenAndJournalBytesUnchanged": true,
+        "phase": "private-verifier-diagnosed",
+        "privateApplyCalls": 1,
+        "productionApplyCalls": 0,
+        "productionEnabled": false,
+        "readOnly": true,
+        "testOnly": true,
+        "verification": {
+          "apiClaimsVerified": 1,
+          "counts": {
+            "nodes": {
+              "Citation": 3,
+              "Claim": 3,
+              "Entity": 4,
+              "ExternalIdentifier": 0,
+              "Source": 3
+            },
+            "relationships": {
+              "CITES": 3,
+              "HAS_CITATION": 3,
+              "HAS_EXTERNAL_ID": 0,
+              "OBJECT": 3,
+              "SUBJECT": 3
+            }
+          },
+          "dataSha256": "2f8c3dd707e879fe4b8f34fc780169df7599ba591c87db46c995dba886e4f5d1",
+          "manifestDigest": "1ca6c5f03293ac71ac6fa4e64f4c2a0eb57643768d3fcdf3d1357dd5c38645eb",
+          "release": "isolated-publication-next",
+          "revision": "2fb283f6-b1e6-46ce-a9aa-44d5985c81d1",
+          "verified": true
+        }
+      },
+      "source": "operator-terminal-reply"
+    },
+    "verifyOnlyAfterDiagnosis": {
+      "exit": 0,
+      "result": {
+        "artifactSha256": "956baabdff9db46e4d609d0009162047306c019548bf78a77e1de79490b9ad4c",
+        "baseRelease": "release-group-2",
+        "baseRevision": "cd1ee4d6-b9e8-494b-8a49-47707c3a09e7",
+        "nonce": "590c3111-d65a-43f8-989e-44d901702e46",
+        "pendingAudit": false,
+        "phase": "operator-inspection-required-no-reapply",
+        "release": "isolated-publication-next",
+        "request": {
+          "artifactSha256": "956baabdff9db46e4d609d0009162047306c019548bf78a77e1de79490b9ad4c",
+          "baseRelease": "release-group-2",
+          "baseRevision": "cd1ee4d6-b9e8-494b-8a49-47707c3a09e7",
+          "environment": "production",
+          "operatorDigest": "sha256:e48a540914d708a88a70b66ad399eb6a7769e98c76ff4ace50cdb7febdf04cf1",
+          "planSha256": "c3109b6582de7d66b4df03e0f5da075ebc65d091e939f5cd5abd19986c3ea1d9",
+          "purpose": "public-kg-publication",
+          "receiptSetSha256": "95e1b7a1bb999daef722896ba8aa7352d8aa6f67b4173d6df70e911e1dfb8aed",
+          "release": "isolated-publication-next",
+          "schemaVersion": 1
+        }
+      }
+    }
   },
   "testDriverClockPolicy": "Wait at most 8 seconds until issuedAt, then run unchanged validator. Installed peer still fails with observed clock offset.",
   "installedProductionCore": "72338b7054b3f2eb2e9762b20859044f9b9e28ce",
   "newProductionCoverageGuardDeployed": false,
   "tests": {
     "publicationCycle": 18,
-    "publicationExecutor": 24,
-    "temporaryMachineGuards": 14,
-    "total": 56
+    "publicationExecutor": 27,
+    "temporaryMachineGuards": 16,
+    "total": 83,
+    "publicationCoordination": 22
   },
   "fixtureVerifierRepair": {
     "archive": "p33-private-verifier-repair-v1.tar.gz",
@@ -192,9 +253,54 @@
   "readOnlyDiagnosis": {
     "file": "diagnose-private-verifier-v2.py",
     "sha256": "6b69a01697cc6398eb33fcdc961e0fb332dfa2dde9ead2e57cfbc476387e9fba",
-    "executed": false,
+    "executed": true,
     "resetsNonce": false,
     "callsApply": false,
     "changesRootPrograms": false
+  },
+  "manifestSerializationMismatch": {
+    "cause": "Gate.verify used Python canonical manifest hash but DB receipt uses TS stableJson with localeCompare key order",
+    "manifestFileSha256": "11d6ab5639ac751b426f0a148044bda6f5de8d9734cf913a8962ce0f0c3f220d",
+    "pythonManifestDigest": "54e5444063fbda6fcd6ffe530c0d809cd4f39f65e41622b4cf74e5d3f16f6128",
+    "typescriptManifestDigest": "1ca6c5f03293ac71ac6fa4e64f4c2a0eb57643768d3fcdf3d1357dd5c38645eb",
+    "frozenCandidateChanged": false,
+    "replay": {
+      "applyCalls": 0,
+      "canonicalDigestRestored": true,
+      "fixtureAdapterCompleted": true,
+      "frozenCandidateUnchanged": true,
+      "manifestFileSha256": "11d6ab5639ac751b426f0a148044bda6f5de8d9734cf913a8962ce0f0c3f220d",
+      "pythonCanonicalManifestDigest": "54e5444063fbda6fcd6ffe530c0d809cd4f39f65e41622b4cf74e5d3f16f6128",
+      "readOnlyReplayOfActualVpsResult": true,
+      "typescriptManifestDigest": "1ca6c5f03293ac71ac6fa4e64f4c2a0eb57643768d3fcdf3d1357dd5c38645eb",
+      "unmodified723MismatchReproduced": true,
+      "wrongManifestDigestRejected": true
+    },
+    "productionCandidateImage": {
+      "candidateImage": "sha256:3bcfe13d0c238710db212f4641f43f4d81d2dff72e58726b374bba9a41b26cbf",
+      "capabilities": {
+        "schemaVersion": 1,
+        "originalStory": true,
+        "guardedApply": true,
+        "manifestFileSha256": true
+      },
+      "actualTypeScriptManifestProof": {
+        "manifestDigest": "1ca6c5f03293ac71ac6fa4e64f4c2a0eb57643768d3fcdf3d1357dd5c38645eb",
+        "manifestFileSha256": "11d6ab5639ac751b426f0a148044bda6f5de8d9734cf913a8962ce0f0c3f220d"
+      },
+      "deployedToVps": false
+    },
+    "productionCodeOrImageUpdated": false
+  },
+  "fixtureManifestRepairPrepared": {
+    "archive": "p33-private-manifest-repair-v1.tar.gz",
+    "archiveSha256": "34e7e9cac71e2ad3885a97f26d5964e3239bb11653915bce7d1be2cd84c5f147",
+    "archiveBytes": 7317,
+    "bootstrap": "repair-private-manifest-v1.py",
+    "bootstrapSha256": "a7562af9725a047c8463b2276b845808bed730f89597d9fec6ad5c8c01f41a7d",
+    "oldWrapperSha256": "37030d0c91640f1841f6b618f0cafef4ab731dbb0a0da73a91efaffe407603d4",
+    "newWrapperSha256": "75276eb1c0117965c96ef9af2f2a07ae26d05cd2be51919e05724d892d46d1eb",
+    "productionCoreUpdated": false,
+    "executed": false
   }
 }

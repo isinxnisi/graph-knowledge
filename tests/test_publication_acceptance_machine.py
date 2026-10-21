@@ -177,4 +177,21 @@ class MachineEntryGuards(unittest.TestCase):
         self.assertNotIn('secret',json.dumps(value))
         self.assertNotIn('reason',module.safe_error(OSError('password-secret')))
 
+    def test_legacy_manifest_bridge_requires_exact_consumed_fixture(self):
+        module=load('publication-acceptance-entry.py')
+        original=lambda value:module.LEGACY_TEST_MANIFEST_PY if value=={'pinned':'manifest'} else 'unrelated-digest'
+        args=[{'pinned':'manifest'},original,module.LEGACY_TEST_NONCE,module.LEGACY_TEST_ARTIFACT,module.LEGACY_TEST_MANIFEST_FILE]
+        self.assertEqual(module.legacy_fixture_digest(*args),module.LEGACY_TEST_MANIFEST_TS)
+        for position in [2,3,4]:
+            changed=args.copy();changed[position]='mismatch'
+            with self.assertRaises(ValueError):module.legacy_fixture_digest(*changed)
+        changed=args.copy();changed[0]={'another':'payload'}
+        self.assertEqual(module.legacy_fixture_digest(*changed),'unrelated-digest')
+
+    def test_nonroot_manifest_update_never_reads_or_changes_root_programs(self):
+        module=load('update-publication-acceptance-manifest.py')
+        with patch.object(module.os,'geteuid',return_value=1000),patch.object(module,'load') as load_code:
+            with self.assertRaises(ValueError):module.main()
+            load_code.assert_not_called()
+
 if __name__=='__main__':unittest.main()

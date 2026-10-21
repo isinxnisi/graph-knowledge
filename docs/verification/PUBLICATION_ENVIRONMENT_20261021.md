@@ -1,6 +1,6 @@
 # Issue #33 本番導入前の実環境確認（2026-10-21 JST）
 
-現在：**本番導入済み・公開無効を維持／専用DB故障試験は部分完了、verifier更新後の内部エラーを診断待ち**。以降の導入前記録は当時の観測として残す。[確定差分・影響・復旧・一括承認対象](../runbooks/PUBLICATION_ROLLOUT_20261021.md)。既存PUBLICATION_GATE_INSTALLATION/PUBLICATION_COORDINATIONを使用し、公開済み50 Claimを再公開しない。
+現在：**本番導入済み・公開無効を維持／専用DB故障試験は部分完了、manifest hashの言語間差を特定、固定試験wrapper更新待ち**。以降の導入前記録は当時の観測として残す。[確定差分・影響・復旧・一括承認対象](../runbooks/PUBLICATION_ROLLOUT_20261021.md)。既存PUBLICATION_GATE_INSTALLATION/PUBLICATION_COORDINATIONを使用し、公開済み50 Claimを再公開しない。
 
 | 項目 | 実測 |
 | --- | --- |
@@ -141,3 +141,18 @@ public-only v3 archiveは15,045 bytes、SHA256 b60dbcf9a1ce63d8c569dc6bdbc2f6a8d
 次の `ops/diagnose-publication-acceptance-verifier.py` は同じwrapper SHA・nonce・artifact・予約・apply1回を確認し、**既存Backend.verifyだけ**を呼ぶ読み取り診断。dispatchだけをメモリ上で診断へ置換し、rootプログラムやjobを変更しない。Docker argvはruntime verifyだけに制限し、凍結資材・予約・job・本番configの前後SHAを照合する。HTTP本文/env/子process出力/stack localsは出さず、HTTP statusまたは固定理由・file/lineを報告する。実VPS転送後のSHA一致、非root拒否・書込なし/予約維持・秘密を含む例外の非出力を含む14試験成功。
 
 再確認時も本番API revisionは88437056…、docker/containerd/caddy/ssh/resale-ebay-notificationsはactive。実Worker config SHA d3411e24…と正式receipt10件を維持。root gate内の保護情報は既存develop/専用SSHから読めないため、運営者端末のsudoによる**読み取り診断結果だけ**を待つ。追加の導入承認待ちではない。診断後も同一nonceのverify-onlyから再開し、予約消去・再apply・旧installer再実行はしない。
+
+
+## 読み取り診断成功：manifest照合の言語間差を確定
+
+運営者の診断結果では、固定ops runtimeの完全graph/DB receipt/manifest検証、実APIの追加1 Claim検証がすべて成功した。試験revision2fb283f6…、countsはEntity4/Claim3/Source3/Citation3。凍結/journal不変、試験apply1、本番false/apply0を維持。専用SSHの通常executeでも再applyせず停止したため、Backend検証の後にあるGate.verifyの照合を調査した。
+
+原因は、DB receiptが既存TypeScript stableJson（localeCompareでキー整列）のhashを使う一方、Pythonゲートが署名用canonical JSON（Python文字順）のhashでmanifestを再比較していたこと。`dataset` と `dataSha256` の順などが異なる。同一manifestファイルSHA11d6ab56…に対して、実TS digestは1ca6c5f0…、Python digestは54e54440…。専用DBや凍結データの不整合ではない。
+
+現在の本番コード候補は、TS runtimeが既存receipt/全graph検査を完了した上で固定mountのmanifestFileSha256を返し、Pythonが凍結ファイルのraw SHAと比較する。署名canonicalとDB manifestのhash仕様は変更しない。新capability manifestFileSha256=trueを適用前に必須とし、旧ops imageとの混用は拒否する。新image候補3bcfe13d…をlocalでbuildし、ネットワークなしの実TSでcapability、実manifestのTS digest/raw SHAを確認した。**VPS/WSLの本番固定72338b7と旧ops imageは更新していない**。有効化前にcode/image/trust manifestの一括更新レビューと承認が必要。
+
+既に消費した合成試験は、元のnonce/artifact/manifestファイルSHA/Python digest/TS digestすべてに固定した互換関数を試験wrapperだけへ用いる。TSの返却digestを書き換えず、当該manifestを照合するときだけ既知の正しいTS digestへ橋渡しする。他の署名/plan/closure hashは従来どおりで、データ・承認・journal・予約は変更しない。実VPS返却値を未変更72338b7 Gate.verifyへ入れて元の停止を再現し、このwrapperでcompletedになること、不正TS digestは拒否、元digest関数が復元、凍結bytes不変、apply呼出し0をlocalで確認した。
+
+新しい一回用root updaterは旧試験wrapper37030d…を保全後、75276eb1…へ原子的に置換するだけ。本番core9ファイル、trust、凍結/承認/journal/予約の前後SHAを確認し、DBやWorker、SSH、鍵は操作しない。転送済みbootstrapはrepair-private-manifest-v1.py、SHA a7562af9725a047c8463b2276b845808bed730f89597d9fec6ad5c8c01f41a7d。運営者のsudo結果待ちで、試験完了や撤去はまだ報告しない。
+
+executor26件＋追加capability拒否1件、試験guard16件、協調22件が成功。前回のcandidate18件は変更しておらず、4 suiteの登録合計83件。新imageはVPS未配置、実機復旧完了は未確認であり、local replayやimage検査を実機成功へ数えない。

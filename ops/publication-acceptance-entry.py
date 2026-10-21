@@ -60,6 +60,19 @@ def legacy_fixture_ledger(ledger,data,before,request,nonce):
     return {**ledger,'pending':pending}
 
 
+LEGACY_TEST_MANIFEST_FILE='11d6ab5639ac751b426f0a148044bda6f5de8d9734cf913a8962ce0f0c3f220d'
+LEGACY_TEST_MANIFEST_PY='54e5444063fbda6fcd6ffe530c0d809cd4f39f65e41622b4cf74e5d3f16f6128'
+LEGACY_TEST_MANIFEST_TS='1ca6c5f03293ac71ac6fa4e64f4c2a0eb57643768d3fcdf3d1357dd5c38645eb'
+
+def legacy_fixture_digest(value,original,nonce,artifact,file_sha):
+    """Exact frozen fixture bridge between existing Python and TS manifest ordering only."""
+    checksum=original(value)
+    if checksum!=LEGACY_TEST_MANIFEST_PY:return checksum
+    if nonce!=LEGACY_TEST_NONCE or artifact!=LEGACY_TEST_ARTIFACT or file_sha!=LEGACY_TEST_MANIFEST_FILE:
+        raise ValueError('Legacy synthetic manifest binding differs')
+    return LEGACY_TEST_MANIFEST_TS
+
+
 def main():
     if os.geteuid()!=0 or len(sys.argv)!=3:raise ValueError('Fixed temporary root entry required')
     command,nonce=sys.argv[1:]
@@ -132,7 +145,17 @@ def main():
             argv=argv[:2]+['--label','plunode.publication-test=P33-20261021']+argv[2:]
         return original_run(argv,*args,**kwargs)
     e.subprocess.run=labelled_run
-    gate=e.Gate(ROOT,False);gate.common=ROOT/'operation.lock';gate.backend=Backend(ROOT,config)
+    class FixtureGate(e.Gate):
+        def verify(self,nonce,state,candidate):
+            if nonce!=LEGACY_TEST_NONCE:return super().verify(nonce,state,candidate)
+            # Only the historical consumed synthetic artifact; production modules stay unchanged.
+            artifact=e.sha(candidate/'ARTIFACT.json');file_sha=e.sha(candidate/'release/manifest.json')
+            e.require(artifact==LEGACY_TEST_ARTIFACT and file_sha==LEGACY_TEST_MANIFEST_FILE,'Frozen fixture manifest differs')
+            original_digest=e.digest
+            e.digest=lambda value:legacy_fixture_digest(value,original_digest,nonce,artifact,file_sha)
+            try:return super().verify(nonce,state,candidate)
+            finally:e.digest=original_digest
+    gate=FixtureGate(ROOT,False);gate.common=ROOT/'operation.lock';gate.backend=Backend(ROOT,config)
     if command=='cleanup':
         with e.locked(gate.common):
             resources=e.read(ROOT/'trusted/resources.json')
