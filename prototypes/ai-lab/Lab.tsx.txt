@@ -71,6 +71,7 @@ export default function Lab(){
    <ApprenticeAvatar aiId={data.aiId} size={128} en={en} decorative/>
    <div className="lab-apprentice-intro"><p className="lab-eyebrow">PLUNODE / AI LAB</p><h1>{en?'Apprentice exploration AI':'探索者見習いAI'}</h1><p>{en?'Follow its choices, evidence and recorded changes.':'選択と保留、根拠と版の違いから、探索の変化を観察します。'}</p>
     <a className="lab-action" href={'/ai-apprentice-study'+(en?'?lang=en':'')}>{en?'Compare provisional B′ artwork →':'B′の仮デザイン・サイズ比較 →'}</a>
+    <a className="lab-action" data-testid="motion-entry" href={'/ai-apprentice-motion-study'+(en?'?lang=en':'')}>{en?'Motion comparison · DEMO →':'動きの比較・DEMO →'}</a>
    </div>
    <div className="lab-stage"><small>{en?'CURRENT STAGE':'現在の段階'}</small><strong>{en?'Preparing for first inference':'初稼働の準備中'}</strong><span>{en?'No lab training · live status not monitored':'ラボ追加学習なし · 現在の稼働は未監視'}</span><button className="lab-action" onClick={()=>navigate('runs')}>{en?'View run history →':'実行履歴を見る →'}</button></div>
   </header>

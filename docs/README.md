@@ -1,5 +1,7 @@
 # ドキュメントの入口
 
+- 見習いB′の動き：[手動DEMO・素材構造・停止契約](design/AI_LAB_MOTION_STUDY.md) / [隔離画面の検証](verification/AI_LAB_MOTION_20261022.md)。現行PNGと独立アンテナの簡易構造を比較。正式アセット・実活動連動なし。
+
 - ラボの主役とサイズ別表示：[見習い中心の配置・3画像比較・検証](verification/AI_LAB_FOCUS_20261022.md)。公式AIはDEMO育成コメントへ集約。B′の正式アセットは未確定。
 
 - 探索者見習いB′の仮配置：[参考資料・生成由来・表示契約](../prototypes/apprentice-character/PROMPTS.md) / [実画面と検証](verification/AI_LAB_APPRENTICE_20261022.md)。公式AIとは別個体。隔離ラボと明暗・通常／極小の比較画面だけへ反映。

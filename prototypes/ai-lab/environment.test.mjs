@@ -13,7 +13,7 @@ function localHost(port,host){return new Promise((resolve,reject)=>{
 try{
  const images=[];
  for(const base of ['http://127.0.0.1:3268','http://127.0.0.1:3286',publicOrigin]){
-  for(const path of ['/','/ai-lab','/ai-character-study','/ai-apprentice-study','/api/dataset']){
+  for(const path of ['/','/ai-lab','/ai-character-study','/ai-apprentice-study','/ai-apprentice-motion-study','/api/dataset']){
    const r=await client.get(base+path);assert.equal(r.status(),200,base+path);
    assert.ok(r.headers()['cache-control'].includes('no-store'));
    assert.ok(r.headers()['x-robots-tag'].includes('noindex'));

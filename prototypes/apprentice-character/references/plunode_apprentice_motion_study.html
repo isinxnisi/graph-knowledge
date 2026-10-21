@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Plunode | 探索者見習いB′ アニメーション試作</title>
+<style>
+:root{font-family:ui-sans-serif,-apple-system,BlinkMacSystemFont,"Noto Sans JP",sans-serif;color:#243249;background:#f6f6f3;font-synthesis:none}
+*{box-sizing:border-box}button{font:inherit;cursor:pointer}body{margin:0}.frame{max-width:1130px;margin:0 auto;padding:30px 25px 54px}
+.top{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;padding-bottom:23px;border-bottom:1px solid #d9dfe6}.eyebrow{font-size:11px;letter-spacing:.18em;color:#6f86a8;font-weight:700;margin:0 0 12px}.top h1{font-family:Georgia,"Noto Serif JP",serif;font-size:clamp(25px,3.4vw,37px);font-weight:550;line-height:1.25;margin:0 0 10px}.top p{max-width:630px;font-size:14px;line-height:1.75;color:#6e7989;margin:0}.pill{padding:7px 11px;border:1px solid #c7cedb;border-radius:999px;font-size:11px;color:#516585;white-space:nowrap}
+.content{display:grid;grid-template-columns:minmax(0,1.32fr) minmax(275px,.82fr);gap:18px;margin-top:20px}.panel{background:#fff;border:1px solid #dae1ea;border-radius:16px;overflow:hidden}.panel header{padding:18px 20px;border-bottom:1px solid #e4e7ed}.panel header h2{font-size:16px;font-weight:650;margin:0 0 5px}.panel header p{font-size:12px;line-height:1.6;color:#788497;margin:0}.panel-body{padding:15px 19px}
+.preview{min-height:390px;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden;background:linear-gradient(145deg,#f6f9fd,#eef3fa)}
+.preview.dark{background:linear-gradient(140deg,#1f2c42,#151d30)}.preview::after{content:"";position:absolute;inset:15px;border:1px dashed rgba(116,143,177,.15);border-radius:12px;pointer-events:none}
+.preview .info{position:absolute;top:24px;left:26px;z-index:1;font-size:11px;line-height:1.5;color:#6d829c}.preview.dark .info{color:#c1d1e4}.preview .sample{width:min(310px,78%);overflow:visible;filter:drop-shadow(0 12px 13px rgba(84,96,135,.14));transform:translateZ(0)}
+.sample .body-motion{transform-origin:145px 174px;animation:floatIdle 4s ease-in-out infinite}.sample .antenna{transform-origin:177px 114px;animation:antennaIdle 4s ease-in-out infinite}.sample .light-tip{animation:glowIdle 4s ease-in-out infinite;transform-origin:238px 30px}.sample .signal{opacity:0;transform-origin:238px 30px}.sample .ambient{opacity:0}
+.preview[data-state="search"] .body-motion{animation:floatExplore 1.8s ease-in-out infinite}.preview[data-state="search"] .antenna{animation:antennaExplore 1.25s ease-in-out infinite}.preview[data-state="search"] .light-tip{animation:glowSearch 1.3s ease-in-out infinite}.preview[data-state="search"] .signal{animation:signalExplore 1.8s ease-out infinite}
+.preview[data-state="found"] .body-motion{animation:floatFound 1.25s ease-in-out infinite}.preview[data-state="found"] .antenna{animation:antennaFound 1.1s ease-in-out infinite}.preview[data-state="found"] .light-tip{animation:glowFound 1.1s ease-in-out infinite}.preview[data-state="found"] .signal{animation:signalExplore 1.6s ease-out infinite}
+.preview[data-state="hold"] .body-motion{animation:floatHold 3.5s ease-in-out infinite}.preview[data-state="hold"] .antenna{animation:antennaHold 2.6s ease-in-out infinite}.preview[data-state="hold"] .light-tip{animation:glowHold 3s ease-in-out infinite}
+.preview[data-state="rest"] .body-motion{animation:floatRest 5.5s ease-in-out infinite}.preview[data-state="rest"] .antenna{animation:antennaRest 5.5s ease-in-out infinite}.preview[data-state="rest"] .light-tip{animation:glowRest 5.5s ease-in-out infinite}
+.preview.quiet .sample *{animation-duration:calc(var(--duration,1s) * 1.7)}.preview.quiet .body-motion,.preview.quiet .antenna{animation-duration:6s}.preview.paused *, .preview.paused *::before,.preview.paused *::after{animation-play-state:paused!important;animation:none!important}
+@keyframes floatIdle{0%,100%{transform:translateY(2px)}50%{transform:translateY(-7px)}}
+@keyframes floatExplore{0%,100%{transform:translate(-4px,1px) rotate(-2deg)}50%{transform:translate(5px,-9px) rotate(3deg)}}
+@keyframes floatFound{0%,100%{transform:translateY(2px) scale(1)}35%{transform:translateY(-13px) scale(1.035)}66%{transform:translateY(-6px) scale(1.015)}}
+@keyframes floatHold{0%,100%{transform:translateY(1px) rotate(-1deg)}55%{transform:translateY(-3px) rotate(1deg)}}
+@keyframes floatRest{0%,100%{transform:translateY(5px)}50%{transform:translateY(2px)}}
+@keyframes antennaIdle{0%,100%{transform:rotate(1deg)}50%{transform:rotate(-4deg)}}
+@keyframes antennaExplore{0%,100%{transform:rotate(-10deg)}50%{transform:rotate(10deg)}}
+@keyframes antennaFound{0%,100%{transform:rotate(-3deg)}25%{transform:rotate(14deg)}55%{transform:rotate(-8deg)}}
+@keyframes antennaHold{0%,100%{transform:rotate(9deg)}35%{transform:rotate(-5deg)}65%{transform:rotate(12deg)}}
+@keyframes antennaRest{0%,100%{transform:rotate(21deg)}50%{transform:rotate(15deg)}}
+@keyframes glowIdle{0%,100%{opacity:.9}50%{opacity:.78}}
+@keyframes glowSearch{0%,100%{opacity:.78}50%{opacity:1}}
+@keyframes glowFound{0%,100%{opacity:.83;transform:scale(1)}40%{opacity:1;transform:scale(1.2)}}
+@keyframes glowHold{0%,100%{opacity:.65}40%{opacity:.95}}
+@keyframes glowRest{0%,100%{opacity:.7}50%{opacity:.45}}
+@keyframes signalExplore{0%{opacity:.42;transform:scale(.35)}85%,100%{opacity:0;transform:scale(1.9)}}
+.control-title{font-size:12px;letter-spacing:.02em;font-weight:700;margin:20px 0 11px;color:#52647e}.state-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}.state-btn{border:1px solid #d7dfeb;background:#fff;border-radius:8px;padding:10px 4px 8px;color:#52647b;display:flex;align-items:center;flex-direction:column;gap:6px;font-size:12px;min-height:58px}.state-btn:focus-visible,.button-soft:focus-visible{outline:3px solid #79aaff;outline-offset:2px}.state-btn[aria-pressed="true"]{border-color:#577bba;background:#eaf2ff;color:#244d8b;box-shadow:inset 0 0 0 1px #6c90d0}.state-btn span:first-child{font-size:17px}
+.row-controls{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap;margin-top:16px}.row-controls label{display:flex;gap:7px;align-items:center;font-size:12px;color:#607086;cursor:pointer}.button-soft{border:1px solid #cdd7e5;background:#f8fafd;border-radius:8px;color:#526a8c;padding:8px 11px;font-size:12px}.status-desc{padding:13px 15px;background:#f6f8fc;border-radius:9px;margin-top:16px;color:#4c607b;font-size:13px;line-height:1.65;min-height:72px}.status-desc b{color:#344d72}
+.side-body{padding:19px 20px 22px}.side-body h3{font-size:13px;margin:2px 0 12px}.small-card{display:flex;align-items:center;gap:14px;padding:12px 13px;border:1px solid #e0e7f1;border-radius:10px;margin-bottom:10px;background:#f9fbfe}.small-card svg{flex:none;width:68px;height:68px}.small-card.micro svg{width:24px;height:24px}.small-card span{display:block;color:#6e8199;font-size:11px;margin-top:5px}.small-card strong{font-size:13px}.side-body .note{font-size:12px;line-height:1.8;color:#697a91}.side-body hr{border:0;border-top:1px solid #e1e7ef;margin:21px 0}.side-body ul{padding:0 0 0 18px;font-size:12px;line-height:1.9;color:#536783}.disclaimer{margin-top:22px;border-top:1px solid #dbe1e9;padding-top:18px;color:#788595;font-size:12px;line-height:1.8}
+@media(max-width:760px){.frame{padding:24px 15px 40px}.top{display:block}.pill{display:inline-block;margin-top:12px}.content{grid-template-columns:1fr}.preview{min-height:330px}.preview .sample{width:270px}.state-grid{gap:4px}.state-btn{font-size:11px}.state-btn span:first-child{font-size:16px}}
+@media(prefers-reduced-motion:reduce){.preview *{animation:none!important}}
+</style>
+</head>
+<body>
+<!-- Self-contained, hand-controlled motion mock. Does not call Plunode or simulate server telemetry. -->
+<main class="frame">
+ <div class="top"><div><div class="eyebrow">PLUNODE / APPRENTICE / MOTION STUDY</div><h1>探索者見習い B′ — 動きの比較</h1><p>見た目の参考として簡略化したSVGモデル。目を動かさず、本体の浮遊と接続アンテナのしなり・発光を試す。既存のPNGを分解した正式アセットではありません。</p></div><div class="pill">手動切替 · 実稼働状態ではありません</div></div>
+ <div class="content">
+  <section class="panel" aria-label="動きのプレビュー"><header><h2>動きのプレビュー</h2><p>状態を選ぶとアニメーションが切り替わります。AIの実処理・推論は行いません。</p></header>
+   <div class="preview" id="preview" data-state="idle" role="img" aria-label="足のない浮遊型探索AI。水色の目を持つ丸い探査端末と、2つの光粒をつなぐアンテナが動くプレビュー"><div class="info">PREVIEW ONLY<br>48–128px向けの動作試験</div>
+    <svg class="sample" viewBox="0 0 300 310" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <defs><radialGradient id="bodyFill" cx="38%" cy="23%" r="85%"><stop offset="0" stop-color="#fffefd"/><stop offset=".55" stop-color="#eaf0f8"/><stop offset="1" stop-color="#b0cbe8"/></radialGradient><linearGradient id="mask" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#354a70"/><stop offset="1" stop-color="#526990"/></linearGradient><linearGradient id="sensor" x1="0" y1="0" x2=".9" y2="1"><stop offset="0" stop-color="#c0f3ff"/><stop offset=".6" stop-color="#74a7dc"/><stop offset="1" stop-color="#7790cb"/></linearGradient><radialGradient id="orb" cx="33%" cy="20%" r="90%"><stop offset="0" stop-color="#f2e9ff"/><stop offset=".55" stop-color="#b8b3ff"/><stop offset="1" stop-color="#f5a9e1"/></radialGradient></defs>
+      <ellipse cx="148" cy="272" rx="82" ry="10" fill="#7a99bf" opacity=".14"/>
+      <g class="body-motion">
+       <g class="antenna">
+        <path d="M172 114 C187 97 190 88 202 80 C220 68 220 58 235 41" stroke="#8c9de0" stroke-width="10" stroke-linecap="round" fill="none" opacity=".8"/>
+        <path d="M173 113 C190 98 195 86 204 78 C222 65 221 55 236 40" stroke="#d1bbed" stroke-width="5" stroke-linecap="round" fill="none" />
+        <circle cx="204" cy="78" r="10" fill="#b5a9ed"/><circle cx="201" cy="75" r="4" fill="#eee8ff" opacity=".75"/>
+        <g class="light-tip"><circle cx="238" cy="31" r="27" fill="url(#orb)"/><circle cx="230" cy="22" r="10" fill="#fff" opacity=".28"/></g>
+        <circle class="signal" cx="238" cy="31" r="27" fill="none" stroke="#b5a0f2" stroke-width="3"/>
+       </g>
+       <ellipse cx="152" cy="180" rx="99" ry="91" fill="url(#bodyFill)" stroke="#bccde6" stroke-width="2"/>
+       <ellipse cx="49" cy="186" rx="21" ry="37" fill="url(#sensor)" stroke="#a4bee2" stroke-width="3"/>
+       <ellipse cx="255" cy="187" rx="18" ry="32" fill="url(#sensor)" stroke="#adc3e5" stroke-width="3"/>
+       <rect x="74" y="149" rx="43" ry="43" width="157" height="80" fill="url(#mask)" />
+       <ellipse cx="119" cy="188" rx="10" ry="18" fill="#80e0ff" /><ellipse cx="184" cy="188" rx="10" ry="18" fill="#80e0ff" />
+       <ellipse cx="116" cy="182" rx="4" ry="8" fill="#d9faff" opacity=".95"/><ellipse cx="181" cy="182" rx="4" ry="8" fill="#d9faff" opacity=".95"/>
+       <path d="M92 126Q147 99 196 129" fill="none" stroke="#fff" stroke-width="10" stroke-linecap="round" opacity=".32"/>
+      </g>
+    </svg>
+   </div>
+   <div class="panel-body"><div class="control-title">アニメーション状態（すべてデモ）</div>
+     <div class="state-grid" role="group" aria-label="アニメーション状態を選ぶ">
+      <button class="state-btn" data-pick="idle" aria-pressed="true"><span>◦</span>待機</button><button class="state-btn" data-pick="search" aria-pressed="false"><span>⌁</span>探索中</button><button class="state-btn" data-pick="found" aria-pressed="false"><span>✧</span>発見</button><button class="state-btn" data-pick="hold" aria-pressed="false"><span>?</span>保留</button><button class="state-btn" data-pick="rest" aria-pressed="false"><span>☾</span>休憩</button>
+     </div>
+     <div id="statusDesc" class="status-desc" role="status"><b>待機：</b>浮遊をゆっくり繰り返し、アンテナは控えめに揺れる。</div>
+     <div class="row-controls"><div><button class="button-soft" id="bgToggle" aria-pressed="false">暗い背景へ</button> <button class="button-soft" id="motionToggle" aria-pressed="false">動きを止める</button></div><label><input type="checkbox" id="quiet" /> 控えめな動き</label></div>
+   </div>
+  </section>
+  <aside class="panel"><header><h2>実画面で使う場合</h2><p>今のキャラクター設計を壊さず、表示場所に合わせて使い分ける。</p></header><div class="side-body">
+    <h3>通常UI · 64px</h3><div class="small-card"><svg viewBox="0 0 120 125" aria-hidden="true"><g transform="translate(3 12)"><path d="M68 31 Q82 15 93 8" stroke="#ab9bdc" stroke-width="4" fill="none"/><circle cx="93" cy="8" r="11" fill="#b6adfa"/><ellipse cx="56" cy="61" rx="44" ry="39" fill="#e9f0f9" stroke="#b4c9e3" stroke-width="1.5"/><ellipse cx="9" cy="67" rx="7" ry="13" fill="#82b2e0"/><ellipse cx="104" cy="67" rx="7" ry="13" fill="#82b2e0"/><rect x="23" y="48" width="67" height="35" rx="18" fill="#4e6386"/><ellipse cx="44" cy="65" rx="5" ry="9" fill="#8ce5fb"/><ellipse cx="70" cy="65" rx="5" ry="9" fill="#8ce5fb"/></g></svg><div><strong>探索者見習いAI</strong><span>ラボ主役・活動アイコン</span><span>状態は未監視（実データ）</span></div></div>
+    <h3>極小 · 20px</h3><div class="small-card micro"><svg viewBox="0 0 120 125" aria-hidden="true"><g transform="translate(3 12)"><path d="M68 31 Q82 15 93 8" stroke="#ab9bdc" stroke-width="7" fill="none"/><circle cx="93" cy="8" r="13" fill="#b6adfa"/><ellipse cx="56" cy="61" rx="45" ry="40" fill="#e8f0fa"/><rect x="20" y="46" width="74" height="38" rx="19" fill="#4e6386"/><ellipse cx="43" cy="65" rx="7" ry="11" fill="#8ce5fb"/><ellipse cx="72" cy="65" rx="7" ry="11" fill="#8ce5fb"/></g></svg><div><strong>探索ログの横</strong><span>極小アイコンは静止を基本に</span></div></div>
+    <hr><h3>今回の技術比較</h3><ul><li><b>本体：</b>CSSのtransformで浮遊・傾きを表現</li><li><b>アンテナ：</b>独立したSVGパーツを回転</li><li><b>先端：</b>透明度と控えめな発光で反応</li><li><b>目：</b>形や位置は変えない</li><li><b>実行状態：</b>プレビューの選択はDB・活動履歴に保存しない</li></ul><p class="note">実際のB′は現在PNGなので、採用時には原デザインを維持したまま身体・アンテナを分割するか、編集可能なベクターとして再制作する必要があります。</p>
+  </div></aside>
+ </div>
+ <p class="disclaimer">このファイルはChatGPTで作成した独立した動きの試作です。Plunodeの隔離サイトへ反映したものではありません。実際のB′の正式アセットや状態判定ではなく、アニメーションの方向性を比較する目的です。GPU推論・AI学習・サーバー通信は行いません。</p>
+</main>
+<script>
+(() => {
+ const preview=document.getElementById('preview');const choices=[...document.querySelectorAll('[data-pick]')];const desc=document.getElementById('statusDesc');
+ const copy={idle:'<b>待機：</b>浮遊をゆっくり繰り返し、アンテナは控えめに揺れる。',search:'<b>探索中：</b>アンテナが左右を探り、本体は少しだけ向きを変える。',found:'<b>発見：</b>一度だけ跳ねるような動きと、光粒の明滅を繰り返す。',hold:'<b>保留：</b>光が少し弱くなり、アンテナが迷うように傾く。',rest:'<b>休憩：</b>アンテナがやや垂れ、呼吸程度にしか動かない。'};
+ choices.forEach(btn=>btn.addEventListener('click',()=>{preview.dataset.state=btn.dataset.pick;choices.forEach(b=>b.setAttribute('aria-pressed',String(b===btn)));desc.innerHTML=copy[btn.dataset.pick]}));
+ const bg=document.getElementById('bgToggle');bg.addEventListener('click',()=>{const x=preview.classList.toggle('dark');bg.textContent=x?'明るい背景へ':'暗い背景へ';bg.setAttribute('aria-pressed',String(x))});
+ const toggle=document.getElementById('motionToggle');toggle.addEventListener('click',()=>{const x=preview.classList.toggle('paused');toggle.textContent=x?'動きを再開':'動きを止める';toggle.setAttribute('aria-pressed',String(x))});
+ document.getElementById('quiet').addEventListener('change',e=>preview.classList.toggle('quiet',e.target.checked));
+ const mq=window.matchMedia('(prefers-reduced-motion: reduce)');function syncReduce(){if(mq.matches){preview.classList.add('paused');toggle.textContent='動きを再開';toggle.setAttribute('aria-pressed','true')}}syncReduce();
+ })();
+</script>
+</body></html>

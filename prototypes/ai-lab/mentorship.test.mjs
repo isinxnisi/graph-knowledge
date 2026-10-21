@@ -40,7 +40,7 @@ try{
   await page.getByRole('button',{name:lang==='en'?'Overview':'観察ノート',exact:true}).click();
   await page.locator('.lab-mentor-about').click();await page.locator('.character-card').last().waitFor();assert.equal(await page.locator('.character-card').count(),3);
   await page.goBack();await page.getByTestId('explorer-apprentice').waitFor();
-  await page.locator('.lab-apprentice-intro a').click();
+  await page.locator('.lab-apprentice-intro a').first().click();
   await page.locator('.apprentice-scenes').waitFor();
   await page.waitForFunction(()=>[...document.querySelectorAll('.apprentice-avatar')].every(i=>i.complete&&i.naturalWidth>0));
   assert.equal(await page.locator('.apprentice-avatar').count(),18);

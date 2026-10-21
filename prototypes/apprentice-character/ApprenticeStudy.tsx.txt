@@ -10,7 +10,7 @@ export default function ApprenticeStudy({en=false}:{en?:boolean}){
  const [variant,setVariant]=useState<ApprenticeVariant|undefined>();
  return <><SiteHeader dataset="public-kg"/><main className="apprentice-study">
   <header><p className="lab-eyebrow">PLUNODE / B′ / STATIC STUDY</p><h1>{en?'Connected light, distinct individuals.':'つながる光、それぞれの個体。'}</h1><p>{en?'A floating exploration terminal, without feet. Provisional artwork for the existing apprentice.':'足のない、浮遊型の探索端末。既存の探索者見習いAIに、B′の仮デザインを配置しました。'}</p><span className="lab-badge">{en?'Provisional · static · not final artwork':'仮配置・静止画・正式アセット未確定'}</span>
-   <nav><a href="/ai-lab#apprentice">{en?'← Back to the lab':'← ラボの観察対象へ'}</a><a href={en?'/ai-apprentice-study':'/ai-apprentice-study?lang=en'}>{en?'日本語':'English'}</a><a href="/ai-character-study">{en?'Official AI artwork':'公式AIの比較画面'}</a></nav>
+   <nav><a href={'/ai-apprentice-motion-study'+(en?'?lang=en':'')}>{en?'Motion comparison · DEMO':'動きの比較・DEMO'}</a><a href="/ai-lab#apprentice">{en?'← Back to the lab':'← ラボの観察対象へ'}</a><a href={en?'/ai-apprentice-study':'/ai-apprentice-study?lang=en'}>{en?'日本語':'English'}</a><a href="/ai-character-study">{en?'Official AI artwork':'公式AIの比較画面'}</a></nav>
   </header>
   <section className="apprentice-pair" aria-label={en?'Distinct identities':'別個体の比較'}>
    <article><OfficialAiAvatar usage="profile" en={en} decorative/><div><p className="lab-eyebrow">{en?'MENTOR':'育成担当'}</p><h2>{en?'Plunode official AI':'Plunode公式AI'}</h2><p>{en?'Community guidance and nurturing exploration AI. Official account not connected.':'コミュニティの案内・交流と探索AIの育成。公式アカウントは未接続。'}</p></div></article>

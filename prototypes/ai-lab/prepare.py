@@ -80,6 +80,11 @@ def main():
     copy(apprentice / 'Apprentice.tsx.txt', 'preview/Apprentice.tsx')
     copy(apprentice / 'ApprenticeStudy.tsx.txt', 'preview/ApprenticeStudy.tsx')
     copy(apprentice / 'apprentice.css', 'preview/apprentice.css')
+    copy(apprentice / 'MotionStudy.tsx.txt', 'preview/MotionStudy.tsx')
+    copy(apprentice / 'motion.css', 'preview/motion.css')
+    write('app/ai-apprentice-motion-study/page.tsx', """import MotionStudy from '../../preview/MotionStudy';
+export default async function Page({searchParams}:{searchParams:Promise<{lang?:string}>}){const params=await searchParams;return <MotionStudy en={params.lang==='en'}/>;}
+""")
     shutil.copytree(apprentice / 'assets', OUT / 'public/apprentice-study')
     write('app/ai-apprentice-study/page.tsx', """import ApprenticeStudy from '../../preview/ApprenticeStudy';
 export default async function Page({searchParams}:{searchParams:Promise<{lang?:string}>}){const params=await searchParams;return <ApprenticeStudy en={params.lang==='en'}/>;}
@@ -90,7 +95,7 @@ export default async function Page({searchParams}:{searchParams:Promise<{lang?:s
     patch('app/layout.tsx', '<FocusModality />', '<FocusModality /><LabBoundary />')
     patch('app/layout.tsx', 'import FocusModality', "import {CharacterContext} from '../preview/CharacterStudy';\nimport '../preview/character.css';\nimport FocusModality")
     patch('app/layout.tsx', '<LabBoundary />', '<LabBoundary /><CharacterContext />')
-    patch('app/layout.tsx', "import '../preview/character.css';", "import '../preview/character.css';\nimport '../preview/official-ai.css';\nimport '../preview/apprentice.css';")
+    patch('app/layout.tsx', "import '../preview/character.css';", "import '../preview/character.css';\nimport '../preview/official-ai.css';\nimport '../preview/apprentice.css';\nimport '../preview/motion.css';")
     patch('components/SiteHeader.tsx', 'import Icon', "import {rememberEntry} from '../preview/navigation';\nimport Icon")
     patch('components/SiteHeader.tsx', '<div className={styles.tools}>', '''<div className={styles.tools}><a className="lab-entry" data-testid="lab-entry" href="/ai-lab" onClick={event=>{closeAccount(event);if(!event.defaultPrevented)rememberEntry();}}>{locale==='en'?'AI Lab':'AI育成ラボ'}</a>''')
     # Real account component, intentionally disconnected identity; no fictional member records.

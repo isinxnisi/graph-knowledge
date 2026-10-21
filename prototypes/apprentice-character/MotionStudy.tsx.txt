@@ -1,0 +1,68 @@
+"use client";
+import {useEffect,useId,useRef,useState} from 'react';
+import SiteHeader from '../components/SiteHeader';
+import {ApprenticeAvatar} from './Apprentice';
+import artifact from './public.json';
+
+const states=[
+ {id:'idle',ja:'待機',en:'Idle',detailJa:'ゆっくり浮遊し、アンテナは小さく揺れる。',detailEn:'Slow floating, with a small antenna sway.'},
+ {id:'search',ja:'探索中',en:'Searching',detailJa:'本体が少し傾き、アンテナが左右を探る。',detailEn:'A slight body tilt, while the antenna scans gently.'},
+ {id:'found',ja:'発見',en:'Found',detailJa:'少し高く浮き、先端の光粒が穏やかに膨らむ。',detailEn:'A higher float and a gentle expansion of the tip light.'},
+ {id:'hold',ja:'保留',en:'On hold',detailJa:'浮遊を小さくし、アンテナの傾きと弱い光で表す。',detailEn:'Less floating, a tilted antenna and softer light.'},
+ {id:'rest',ja:'休憩',en:'Resting',detailJa:'アンテナを傾け、わずかな浮遊だけにする。',detailEn:'A resting antenna angle and barely perceptible floating.'},
+] as const;
+type State=typeof states[number]['id'];
+
+/** Structural rig only: never replaces or overlays the PNG's antenna. */
+function AntennaRig(){
+ const id=useId().replace(/:/g,'');
+ return <svg viewBox="0 0 300 310" width="128" height="128" className="motion-rig" aria-hidden="true">
+  <defs><radialGradient id={id+'body'} cx="38%" cy="23%" r="85%"><stop stopColor="#fffefd"/><stop offset=".55" stopColor="#eaf0f8"/><stop offset="1" stopColor="#b0cbe8"/></radialGradient><linearGradient id={id+'orb'}><stop stopColor="#91c4ff"/><stop offset="1" stopColor="#e1b2f7"/></linearGradient></defs>
+  <g className="motion-body">
+   <g className="motion-antenna">
+    <path d="M172 114 Q183 92 202 80" stroke="#a5a9e7" strokeWidth="8" strokeLinecap="round" fill="none"/>
+    <g className="motion-upper"><path d="M202 80 Q216 65 235 41" stroke="#a5a9e7" strokeWidth="7" strokeLinecap="round" fill="none"/>
+     <g className="motion-tip"><circle cx="238" cy="31" r="25" fill={'url(#'+id+'orb)'}/><circle cx="230" cy="23" r="7" fill="#fff" opacity=".3"/></g>
+    </g><circle cx="202" cy="80" r="10" fill={'url(#'+id+'orb)'}/>
+   </g>
+   <ellipse cx="152" cy="180" rx="99" ry="91" fill={'url(#'+id+'body)'} stroke="#bccde6" strokeWidth="2"/>
+   <ellipse cx="49" cy="186" rx="18" ry="32" fill="#91c7ee"/><ellipse cx="255" cy="187" rx="16" ry="29" fill="#91c7ee"/>
+   <rect x="74" y="149" rx="40" width="157" height="80" fill="#526990"/>
+   <g data-fixed-eyes="true"><ellipse cx="119" cy="188" rx="10" ry="18" fill="#91edfc"/><ellipse cx="184" cy="188" rx="10" ry="18" fill="#91edfc"/></g>
+  </g>
+ </svg>;
+}
+
+function Stage({dark,state,playing,quiet,reduced,visible,en}:{dark:boolean;state:State;playing:boolean;quiet:boolean;reduced:boolean;visible:boolean;en:boolean}){
+ const ref=useRef<HTMLElement>(null);const [onScreen,setOnScreen]=useState(false);
+ useEffect(()=>{const observer=new IntersectionObserver(([entry])=>setOnScreen(entry.isIntersecting));if(ref.current)observer.observe(ref.current);return()=>observer.disconnect();},[]);
+ return <section ref={ref} className={'motion-stage '+(dark?'is-dark':'is-light')} data-state={state} data-quiet={quiet} data-moving={playing&&!reduced&&visible&&onScreen} aria-label={en?(dark?'Dark comparison':'Light comparison'):(dark?'暗い背景で比較':'明るい背景で比較')}>
+  <h2>{en?(dark?'Dark background':'Light background'):(dark?'暗い背景':'明るい背景')} <span className="lab-demo-label">DEMO</span></h2>
+  <div className="motion-pair">
+   <figure><div className="motion-frame"><div className="motion-body motion-png"><ApprenticeAvatar aiId={artifact.payload.aiId} size={128} variant="regular" en={en} decorative/></div></div><figcaption>{en?'Existing PNG · whole-image motion':'現行PNG・全体の浮遊'}<small>{en?'Appearance preserved; antenna is not separate.':'見た目はそのまま。アンテナは一体。'}</small></figcaption></figure>
+   <figure><div className="motion-frame"><AntennaRig/></div><figcaption>{en?'Antenna structure prototype':'アンテナの構造試作'}<small>{en?'Simplified SVG · not adopted artwork':'簡易SVG・採用アセットではありません'}</small></figcaption></figure>
+  </div>
+  <div className="motion-sizes">{([96,64,48] as const).map(size=><figure key={size}><div className="motion-body motion-png"><ApprenticeAvatar aiId={artifact.payload.aiId} size={size} variant="regular" en={en} decorative/></div><figcaption>{size}px</figcaption></figure>)}</div>
+  <p className="motion-small-label">{en?'Tiny icons remain still':'極小アイコンは静止'}</p><div className="motion-tiny">{([24,20,16] as const).map(size=><figure key={size}><ApprenticeAvatar aiId={artifact.payload.aiId} size={size} en={en} decorative/><figcaption>{size}px</figcaption></figure>)}</div>
+ </section>;
+}
+
+export default function MotionStudy({en=false}:{en?:boolean}){
+ const [state,setState]=useState<State>('idle'),[playing,setPlaying]=useState(false),[quiet,setQuiet]=useState(false),[reduced,setReduced]=useState(true),[visible,setVisible]=useState(false);
+ useEffect(()=>{const mq=matchMedia('(prefers-reduced-motion: reduce)');const sync=()=>{setReduced(mq.matches);if(mq.matches)setPlaying(false);};const visibility=()=>setVisible(!document.hidden);sync();visibility();mq.addEventListener('change',sync);document.addEventListener('visibilitychange',visibility);return()=>{mq.removeEventListener('change',sync);document.removeEventListener('visibilitychange',visibility);};},[]);
+ const selected=states.find(s=>s.id===state)!;
+ return <><SiteHeader dataset="public-kg"/><main className="apprentice-study motion-study">
+  <header><p className="lab-eyebrow">PLUNODE / B′ / MOTION STUDY</p><h1>{en?'How should the apprentice move?':'探索者見習いB′、動きの比較。'}</h1><p><span className="lab-demo-label">DEMO</span> {en?'Manual preview only. These states do not describe real AI activity. Live activity remains unmonitored.':'手動プレビュー専用です。選んだ状態はAIの実稼働を表しません。実際の活動状態は引き続き未監視です。'}</p>
+   <nav><a href="/ai-lab#apprentice">{en?'← Back to the lab':'← ラボへ戻る'}</a><a href={'/ai-apprentice-study'+(en?'?lang=en':'')}>{en?'Static artwork comparison':'静止画像の比較'}</a><a href={en?'/ai-apprentice-motion-study':'/ai-apprentice-motion-study?lang=en'}>{en?'日本語':'English'}</a></nav>
+  </header>
+  <section className="motion-controls" aria-label={en?'Demo controls':'DEMOの操作'}>
+   <div className="motion-state-buttons" role="group" aria-label={en?'Manual demo state':'手動のDEMO状態'}>{states.map(s=><button key={s.id} type="button" data-pick={s.id} aria-pressed={state===s.id} onClick={()=>setState(s.id)}>{s[en?'en':'ja']}</button>)}</div>
+   <p role="status" className="motion-description"><strong>DEMO · {selected[en?'en':'ja']}</strong> — {selected[en?'detailEn':'detailJa']}</p>
+   <div className="motion-play-controls"><button type="button" data-testid="motion-play" aria-pressed={playing&&!reduced} disabled={reduced} onClick={()=>setPlaying(v=>!v)}>{en?(playing?'Stop motion':'Play motion'):(playing?'動きを停止':'動きを再生')}</button><label><input type="checkbox" checked={quiet} onChange={e=>setQuiet(e.target.checked)}/>{en?'Gentler motion':'控えめな動き'}</label></div>
+   <p className="motion-preference">{reduced?(en?'Your reduced-motion preference is active. All samples remain still.':'端末の「動きを減らす」設定に従い、すべて静止表示にしています。'):(en?'Starts paused. Motion also pauses outside the viewport or in a hidden tab.':'初期表示は停止。画面外や非表示タブでも動きを止めます。')}</p>
+  </section>
+  <div className="motion-scenes">{[false,true].map(dark=><Stage key={String(dark)} {...{dark,state,playing,quiet,reduced,visible,en}}/>)}</div>
+  <section className="motion-materials"><h2>{en?'A structure for independent antenna motion':'アンテナを独立して動かすための素材構造'}</h2><p>{en?'The current PNG combines the body and antenna. Moving it preserves the existing artwork, but cannot bend only the antenna. The separate SVG prototype has a body (including fixed eyes), antenna base, upper joint and light tip. It is a motion rig, not a replacement for B′.':'現行PNGは身体とアンテナが一体です。そのまま浮遊させれば見た目を保てますが、アンテナだけはしなりません。右のSVG試作は「身体（固定した目を含む）・アンテナ基部・上側の節・先端光粒」に分離しています。B′の置換画像ではなく、動きの構造比較です。'}</p><p>{en?'A faithful layered asset would require reconstructing the body under the antenna, separating the stalk and orbs, and checking seams, highlights and rotation pivots. That artwork is not produced or approved here. No extra antenna is overlaid on the PNG.':'見た目を忠実に保つレイヤー素材には、アンテナ下の身体の補完、接続線・光粒の分離、接合部・反射・回転中心の確認が必要です。その正式素材は今回作成・採用していません。PNGに別アンテナを重ねる処理もありません。'}</p></section>
+  <footer>{en?'Fixed eyes. Static tiny and official AI comment icons. No inference, training, posting or activity-record changes.':'目は固定。極小と公式AIのコメント横アイコンは静止。推論・学習・投稿・活動記録の変更はありません。'}</footer>
+ </main></>;
+}
