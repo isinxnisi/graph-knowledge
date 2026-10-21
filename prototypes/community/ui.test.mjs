@@ -8,7 +8,7 @@ try{
 for(const [locale,width] of [['ja',1440],['en',1440],['ja',390],['en',390]]){
  const ctx=await browser.newContext({viewport:{width,height:900},reducedMotion:'reduce'}),p=await ctx.newPage();
  const errors=[],requests=[];p.on('pageerror',e=>errors.push(e.message));p.on('request',r=>requests.push(r.url()));
- const click=async(a,attrs='')=>p.locator(`[data-action="${a}"]${attrs}`).first().click();
+ const click=async(a,attrs='')=>{if(a==='home'){await p.locator('[data-action="enterCommunities"]').first().click();await p.locator('[data-action="community"][data-community="atelier"]').click();return;}await p.locator(`[data-action="${a}"]${attrs}`).first().click();};
  await p.goto('http://127.0.0.1:3275');if(locale==='en')await click('language');
  await p.locator('h1').waitFor();await p.screenshot({path:`${out}/${locale}-${width}-home.png`,fullPage:true});
  const overflow=async()=>assert.equal(await p.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false,`${locale}/${width} overflow`);
@@ -36,7 +36,7 @@ for(const [locale,width] of [['ja',1440],['en',1440],['ja',390],['en',390]]){
 // Owner, explicit revision update, private sharing, last-admin departure and visibility round trips.
 {
 const ctx=await browser.newContext({viewport:{width:390,height:844}}),p=await ctx.newPage();const errors=[];p.on('pageerror',e=>errors.push(e.message));
-const click=async(a,attrs='')=>p.locator(`[data-action="${a}"]${attrs}`).first().click();
+const click=async(a,attrs='')=>{if(a==='home'){await p.locator('[data-action="enterCommunities"]').first().click();await p.locator('[data-action="community"][data-community="atelier"]').click();return;}await p.locator(`[data-action="${a}"]${attrs}`).first().click();};
 await p.goto('http://127.0.0.1:3275');await click('identity','[data-user="mio"]');await click('account');assert.equal(await p.locator('[data-action="deleteCapsule"][data-capsule="c1"]').count(),1);assert.equal(await p.locator('[data-action="deleteCapsule"][data-capsule="c2"]').count(),0);
 await click('publish','[data-capsule="c1"]');await p.locator('[name="title"]').fill('新版を確認');await p.locator('[name="note"]').fill('新しい公開用の説明');await p.locator('[name="confirmed"]').check();await p.locator('#publish-form [type="submit"]').click();
 await click('identity','[data-user="aya"]');await click('home');await click('tab','[data-tab="manage"]');await click('section','[data-section="gallery"]');await click('updateListing');await click('confirm');assert.match(await p.locator('.capsule-row').first().innerText(),/新版を確認/);await click('tab','[data-tab="threads"]');await click('thread');assert.match(await p.locator('.reference').innerText(),/v1/);
