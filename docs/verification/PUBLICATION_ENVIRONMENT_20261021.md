@@ -1,6 +1,6 @@
 # Issue #33 本番導入前の実環境確認（2026-10-21 JST）
 
-現在：**本番導入済み・公開無効を維持／専用DB故障試験は部分完了、manifest hashの言語間差を特定、固定試験wrapper更新待ち**。以降の導入前記録は当時の観測として残す。[確定差分・影響・復旧・一括承認対象](../runbooks/PUBLICATION_ROLLOUT_20261021.md)。既存PUBLICATION_GATE_INSTALLATION/PUBLICATION_COORDINATIONを使用し、公開済み50 Claimを再公開しない。
+現在（2026-10-22 JST）：**本番導入済み・公開無効／専用実機試験の復旧・再適用拒否・撤去完了／本番有効化前のcode/image更新等は未完了**。先頭表と途中経過は各観測時点の記録であり、最新状態は[2026-10-22の完了記録](#2026-10-22専用実機試験の完了と撤去)を参照する。[確定差分・運営者の残操作](../runbooks/PUBLICATION_ROLLOUT_20261021.md)。既公開50 Claimの再公開は行わない。
 
 | 項目 | 実測 |
 | --- | --- |
@@ -156,3 +156,39 @@ public-only v3 archiveは15,045 bytes、SHA256 b60dbcf9a1ce63d8c569dc6bdbc2f6a8d
 新しい一回用root updaterは旧試験wrapper37030d…を保全後、75276eb1…へ原子的に置換するだけ。本番core9ファイル、trust、凍結/承認/journal/予約の前後SHAを確認し、DBやWorker、SSH、鍵は操作しない。転送済みbootstrapはrepair-private-manifest-v1.py、SHA a7562af9725a047c8463b2276b845808bed730f89597d9fec6ad5c8c01f41a7d。運営者のsudo結果待ちで、試験完了や撤去はまだ報告しない。
 
 executor26件＋追加capability拒否1件、試験guard16件、協調22件が成功。前回のcandidate18件は変更しておらず、4 suiteの登録合計83件。新imageはVPS未配置、実機復旧完了は未確認であり、local replayやimage検査を実機成功へ数えない。
+
+
+## 2026-10-22：専用実機試験の完了と撤去
+
+運営者のmanifest adapter更新は成功。root資材は `/root/plunode-publication-manifest-fix.jp7gzd21`、旧wrapperは `/var/lib/plunode-publication/test/trusted/verifier-before-37030d0c9164.py` に保全。専用SFTPの更新証跡もSHA照合した。凍結全file・元署名・予約・journal不変、本番false/apply0を維持した。旧installer/v3/診断/修正コマンドは再実行しない。
+
+専用SSHから元nonce `590c3111-d65a-43f8-989e-44d901702e46` をexecuteし、**verify-onlyでcompleted**になった。実DB receipt/全graph/data/manifestと実APIの追加1 Claimを検証し、publishedRevisionは2fb283f6-b1e6-46ce-a9aa-44d5985c81d1。同じ操作を再送してもapplyは増えない。初期合成2 Claimの後の追加1 Claim、計3 Claimの専用DBであり、正式データの新規公開ではない。
+
+| 実機確認 | 最終結果 |
+| --- | --- |
+| commit直後gate終了→再接続→verify-only | completed、試験apply合計1回を維持 |
+| close→署名閉鎖証明→条件付きshadow resume→finish→実ACK | 完了、shadow pauseMode=null、resume revision4 |
+| 完了nonceのarm/execute再送 | どちらも拒否、再applyなし |
+| 別nonce cd5e329c…で同release | preflight拒否、新しい予約なし、apply1回のまま |
+| 拒否した別nonceのcancel→resume→finish→ACK | 完了。3 ticket全てexclusion.phase=finished、shadow pauseMode=null |
+| cleanup | rootがnetwork ID/label、全peerのimage/label/所属を照合し、専用DB/Web/network・試験SSH鍵1行・試験sudoersだけを撤去 |
+| 撤去後の旧試験鍵 | SSH exit255、inventory不可。develop読取でも専用bridgeなし |
+| 証跡 | 本番/試験の元backup、root frozen/jobs/予約/旧wrapper/修正stageを保全。状態リセット・nonce削除なし |
+
+fixtureのGitHub通知は意図的に無効なので、completedのpendingAudit=trueを維持した。これはDB検証失敗ではなく、本番audit accountでのGitHub認証・通知の実機成功を証明しない。今回の結果はCodexからIssue #33へ記録する。
+
+本番固定root/SSH/WSL導入は72338b7のままdisabled。固定本番clientのstatusもpublication-installation-or-request-rejectedで拒否された。cleanup入口自体も本番config=falseを確認している。sudoers撤去は固定root cleanupのSHA照合/削除成功に基づき、非rootのdevelopによる/etc/sudoers.d直接statは権限上できないことを区別する。試験wrapper/parserはroot-only実行条件の不活性なファイルとして証跡と共に残り、試験SSH/sudo経路と一時container/networkは撤去済み。
+
+最終読取で本番API revision88437056-b74f-42ab-88c0-33ed435bdccc、docker/containerd/caddy/ssh/resale-ebay-notifications全てactive。実Worker config SHA d3411e24937f2f422495bf347bac9361b5a6364375443d104c266f96de4763e9、control revision2/pauseMode=null/activeAttemptなし。正式receipt10件の集合SHAは8a55413ee9fedf32fd64ce6fddebd28d1d636ff7de0fcc1fd063a5b15524d56dで不変。正式未公開は#34の1 Claim/1 Source/1 Citation（Entity追加0）。本番apply0、既公開50 Claimは再公開していない。
+
+時計の3回のSSH読取では往復0.45〜0.65秒、VPS−WSLの可能範囲は各回おおむね−0.05〜+0.60秒で0を含み、前回の約4.66秒差は今回の観測では確認しなかった。時計/NTP/ホスト設定は変更していない。試験driverは従来の最大8秒待機後に未変更validatorを用いたままで、**固定publication-attest CLIそのものの全往復成功とは数えない**。ホスト全体の電源断・再起動も行わず、専用process終了・Git通信失敗・SSH再接続による検証範囲である。
+
+### 本番有効化前に残す条件
+
+1. coverage事前検査とmanifest raw SHA照合を含む固定ソースf81295562e8b540c503cf4727cdac790e431cf48・新ops image候補3bcfe13d…を一組としてレビューし、VPS/WSLのcode/image/trust更新を承認する。配置/切替/旧版保全と新manifest照合は未実施。本番データ・nonce/receiptは変更しない。
+2. 採用する固定WSL peerとVPSの実往復を、時計が進む/遅れる場合も含め確認する。新コード候補は今回VPSへ配置していない。今回の合成manifest/ledgerの互換adapterを本番機能として流用しない。
+3. 運営者がapprover/attester/SSH/closure秘密鍵の暗号化保管・復旧・rotationを確認し、audit accountの固定Issue限定認証、制御branchの履歴保護を整える。秘密値はGit/Issue/チャットへ出さない。
+4. main/runtime双方の最新正式receipt・公開base/revisionを再棚卸しし、本番有効化の明示承認を得る。今回の導入/専用DB試験承認では有効化しない。
+5. 有効化後も各公開は固定release/receipt集合/artifact/plan/image/base revision/単回nonceに対する別の署名承認を必要とする。#34の1 Claimにも公開承認は発行していない。
+
+**本番導入済み：はい（disabled）／実機検証済み：上記の専用DB復旧・再適用拒否・撤去は完了／本番有効化済み：いいえ／運営者判断待ち：固定版更新・鍵/監査/branch運用・有効化/個別公開の承認。**

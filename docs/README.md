@@ -43,7 +43,7 @@
 | [コミュニティ体験設計](design/COMMUNITY_EXPERIENCE.md)／[基礎設計](design/COMMUNITY_FOUNDATION.md)／[導入計画](design/COMMUNITY_IMPLEMENTATION_PLAN.md) | 2026-10-21。コミュニティを中心に会員・独立会話・版付き掲載・公開範囲・管理・AIを整理。隔離ローカル3275の操作試作。[検証](verification/COMMUNITY_PROTOTYPE_20261021.md)。実API・migration・beta／本番・AI接続なし |
 | [コミュニティ本線UI接続確認版](design/COMMUNITY_CONNECTION_PREVIEW.md) | 実Home・Explorer・会員画面を再利用する隔離3275／graph-com。架空会員/コミュニティと公開KG読み取りを分離。A〜Cの往復・状態復元・密度比較。[検証](verification/COMMUNITY_CONNECTION_20261021.md) |
 | [保存原文からの正式受入](design/SAVED_EVIDENCE_ACCEPTANCE.md) | Issue #34。取得済み原文・人間の意味承認・固定1 Claim＋Source/Citationを既存receipt基盤へ接続。検証済み本番backupの明示モード、旧baseと最新VPS実planを区別。Workerコード・state・scheduleは維持。[実受入1 Claim・release準備完了](verification/SAVED_EVIDENCE_ACCEPTANCE_20261021.md) |
-| [固定公開ゲートの隔離実装と導入計画](runbooks/PUBLICATION_GATE_INSTALLATION.md) | Issue #33第2段階。固定wrapper／署名／単回nonce・release予約／復旧／WSL peer・通知、ORIGINAL_STORY対応の独立ops image候補。[検証](verification/PUBLICATION_GATE_20261020.md)。本番導入・分散fencing・鍵／権限は別ゲート |
+| [固定公開ゲートの導入・運用計画](runbooks/PUBLICATION_GATE_INSTALLATION.md) | Issue #33第2段階。固定wrapper／署名／単回nonce・release予約／復旧／WSL peer・通知、ORIGINAL_STORY対応の独立ops image候補。[検証](verification/PUBLICATION_GATE_20261020.md)。本番はdisabledで導入済み。専用実機の復旧・再適用拒否・撤去を確認。[最新実測](verification/PUBLICATION_ENVIRONMENT_20261021.md)。固定版更新・有効化は別ゲート |
 | [公開状態同期と定型公開](design/PUBLICATION_AUTOMATION.md) | Issue #33第1段階。公開50 Claimの読み取り照合、未公開差分だけの候補草稿、署名binding／復旧policyを隔離検証。[実測](verification/PUBLICATION_AUTOMATION_20261020.md)。本番実行・権限設定は別承認 |
 | [収集データの接続性評価](design/COLLECTION_CONNECTIVITY.md) | Issue #34。[公開50 Claimの比較](verification/COLLECTION_CONNECTIVITY_20261020.md)、[次の4候補](verification/COLLECTION_CANDIDATES_20261020.md)、[保存資料再審査](verification/OBATA_HIKARU_REVIEW_20261020.md)、[作画原文確認](verification/OBATA_HIKARU_EVIDENCE_20261020.md)。[正式受入前検証](verification/OBATA_HIKARU_ACCEPTANCE_PREFLIGHT_20261021.md)で1 Claim＋根拠のUUID/hashを固定、入力形式・固定コード・旧baseの不整合により実受入0件で停止。UI・Worker・KG変更なし |
 | [正式受入済みKGの公開準備](design/PUBLICATION_PREPARATION.md) | Issue #32 Phase C。receiptに被覆された既存releaseを固定し、既存operator互換性と差分を検証。[運営者のsudo preflight・公開判断手順](runbooks/PUBLISH_ACCEPTED_KG.md)。公開apply・restore・サービス切替は別判断 |
@@ -203,10 +203,10 @@ Phase 06の現行契約：[限定制作Role](design/CONTRIBUTION_ROLE_CONTRACTS.
 
 Phase 08：任意のEntity関係俯瞰、明示起点切替、直前一件復帰。[実施記録](archive/phase-08-entity-overview/IMPLEMENTATION_ENTITY_OVERVIEW.md)／[現行契約](ARCHITECTURE.md#phase-08関係概要起点切替直前探索への復帰)。一般Entity検索はPhase 09で人物・作品・組織に対応。
 
-- 公開・受入のPC停止対策（Issue #33）：[協調設計](design/PUBLICATION_COORDINATION.md) / [運営者の導入・復旧手順](runbooks/PUBLICATION_COORDINATION.md)。既存Worker変更なし、隔離検証段階。
+- 公開・受入のPC停止対策（Issue #33）：[協調設計](design/PUBLICATION_COORDINATION.md) / [運営者の導入・復旧手順](runbooks/PUBLICATION_COORDINATION.md)。既存Worker変更なし。専用DBで実機故障試験を完了し、本番は無効を維持。
 
 - 公開・受入協調の[隔離検証結果](verification/PUBLICATION_COORDINATION_20261020.md)。本番導入は別承認。
 
-- Issue #33 本番導入工程：[2026-10-21の実環境確認](verification/PUBLICATION_ENVIRONMENT_20261021.md) / [一括承認対象・確定差分・復旧手順](runbooks/PUBLICATION_ROLLOUT_20261021.md)。本番導入・実機試験・有効化は未承認。
+- Issue #33 本番導入工程：[2026-10-21の実環境確認](verification/PUBLICATION_ENVIRONMENT_20261021.md) / [一括承認対象・確定差分・復旧手順](runbooks/PUBLICATION_ROLLOUT_20261021.md)。導入・専用実機試験は承認済みで完了。本番はdisabled。有効化と固定code/image更新・運用条件は未承認。
 
 - コミュニティ第1弾：人間のC1a実基盤と隔離検証。[リリース計画](design/COMMUNITY_IMPLEMENTATION_PLAN.md)／[実装・検証記録](verification/COMMUNITY_C1A_20261022.md)。招待・実掲載・最低限の通報対応は公開前の残作業。
