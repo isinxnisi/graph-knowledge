@@ -1,6 +1,6 @@
 # Issue #33 本番導入前の実環境確認（2026-10-21 JST）
 
-現在：**本番導入済み・公開無効を維持／専用DB故障試験中、試験ledger補修待ち**。以降の導入前記録は当時の観測として残す。[確定差分・影響・復旧・一括承認対象](../runbooks/PUBLICATION_ROLLOUT_20261021.md)。既存PUBLICATION_GATE_INSTALLATION/PUBLICATION_COORDINATIONを使用し、公開済み50 Claimを再公開しない。
+現在：**本番導入済み・公開無効を維持／専用DB故障試験は部分完了、verifier更新後の内部エラーを診断待ち**。以降の導入前記録は当時の観測として残す。[確定差分・影響・復旧・一括承認対象](../runbooks/PUBLICATION_ROLLOUT_20261021.md)。既存PUBLICATION_GATE_INSTALLATION/PUBLICATION_COORDINATIONを使用し、公開済み50 Claimを再公開しない。
 
 | 項目 | 実測 |
 | --- | --- |
@@ -128,3 +128,16 @@ public-only v3 archiveは15,045 bytes、SHA256 b60dbcf9a1ce63d8c569dc6bdbc2f6a8d
 現在：**本番導入済み＝はい（disabled）／専用DB試験＝commit後停止まで実機確認、verify-only完了とcleanupは未完了／本番有効化済み＝いいえ／再開操作＝試験verifier更新のsudo結果待ち**。正式未公開1 Claimは未公開のままであり、試験の1 applyと混同しない。
 
 機械可読の今回の実機結果（未完了を含む）は[PUBLICATION_REAL_MACHINE_20261021.json](PUBLICATION_REAL_MACHINE_20261021.json)に保存する。
+
+
+## 試験verifier更新後：再applyせず内部診断へ
+
+運営者がSHA固定のrepair-private-verifier-v1を実行し、private-fixture-verifier-updatedを確認した。保全先は `/root/plunode-publication-verifier-fix.c1fktb71`、旧wrapperは `/var/lib/plunode-publication/test/trusted/verifier-before-7cf9a5f0d53a.py`。旧SHA7cf9a5f0…から新SHA37030d0c…へ試験wrapperだけを更新し、凍結資材・承認・journal・予約のbytes不変、試験apply1、本番apply0、本番無効を確認した。修正installerは再実行しない。
+
+同じnonce590c3111…のexecuteを専用SSHで一度再開したところ、phaseは `operator-inspection-required-no-reapply`。予約を認識してverify-onlyへ進み、apply回数は**1回のまま**である。別の内部ValueError/OSError等が隠蔽されているため、原因は未確定とする。completed、close/resume/finish、再適用拒否、cleanupはまだ成功扱いにしない。専用DB/Webとroot journalを保全し、shadow Workerはpause-newのまま。実Workerは別であり制御しない。
+
+非rootの既存develop SSHから専用bridge上の実APIを読み、未変更72338b7のverify-publication.verifyをall_claims=Trueで実行した。試験revision `2fb283f6-b1e6-46ce-a9aa-44d5985c81d1` で、新規合成Claimの名前検索・Claim本文・ORIGINAL_STORY/ISBN scope・Source/Citation・Graph 1ページ・最終revision一致は成功。これはroot gateの完全graph/receipt/API複合検証の完了や、固定WSL peerの時計差問題の解消を意味しない。
+
+次の `ops/diagnose-publication-acceptance-verifier.py` は同じwrapper SHA・nonce・artifact・予約・apply1回を確認し、**既存Backend.verifyだけ**を呼ぶ読み取り診断。dispatchだけをメモリ上で診断へ置換し、rootプログラムやjobを変更しない。Docker argvはruntime verifyだけに制限し、凍結資材・予約・job・本番configの前後SHAを照合する。HTTP本文/env/子process出力/stack localsは出さず、HTTP statusまたは固定理由・file/lineを報告する。実VPS転送後のSHA一致、非root拒否・書込なし/予約維持・秘密を含む例外の非出力を含む14試験成功。
+
+再確認時も本番API revisionは88437056…、docker/containerd/caddy/ssh/resale-ebay-notificationsはactive。実Worker config SHA d3411e24…と正式receipt10件を維持。root gate内の保護情報は既存develop/専用SSHから読めないため、運営者端末のsudoによる**読み取り診断結果だけ**を待つ。追加の導入承認待ちではない。診断後も同一nonceのverify-onlyから再開し、予約消去・再apply・旧installer再実行はしない。

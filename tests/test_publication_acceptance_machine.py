@@ -131,4 +131,50 @@ class MachineEntryGuards(unittest.TestCase):
             with self.assertRaises(ValueError):module.main()
             load_code.assert_not_called()
 
+    def test_nonroot_verifier_diagnosis_never_reads_root_files(self):
+        module=load('diagnose-publication-acceptance-verifier.py')
+        with patch.object(module.os,'geteuid',return_value=1000),patch.object(module,'trusted') as trusted:
+            with self.assertRaises(ValueError):module.main()
+            trusted.assert_not_called()
+
+    def test_verifier_diagnosis_has_no_apply_and_preserves_consumed_journal(self):
+        module=load('diagnose-publication-acceptance-verifier.py')
+        import contextlib
+        from types import SimpleNamespace
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp)/'test';candidate=root/'frozen'/module.NONCE
+            candidate.mkdir(parents=True);(root/'jobs').mkdir();(root.parent/'trusted').mkdir()
+            reservation={'nonces':{module.NONCE:{'artifactSha256':module.ARTIFACT}},'releases':{'isolated-publication-next':module.NONCE}}
+            for path,value in [(root/'reservations.json',reservation),(root/'jobs/apply-calls.json',[{'nonce':module.NONCE}]),
+                (root/'jobs'/(module.NONCE+'.json'),{'phase':'operator-inspection-required-no-reapply'}),
+                (root.parent/'trusted/config.json',{'deploymentEnabled':False}),(candidate/'ledger.json',{'frozen':True})]:
+                path.write_text(json.dumps(value))
+            commands=[]
+            class Backend:
+                executor_module=SimpleNamespace(locked=lambda p:contextlib.nullcontext())
+                def command(self,args,directory=None):
+                    commands.append(args);return {'verified':True,'release':'isolated-publication-next','revision':'private'}
+                def call(self,stage,payload):
+                    self.assert_stage=stage
+                    if stage!='verify':raise AssertionError('Never apply')
+                    return self.command(['scripts/publication-runtime.ts','verify'],Path(payload['candidate']))
+            backend=Backend();gate=SimpleNamespace(root=root,backend=backend,reservations=lambda:reservation)
+            before={str(p):p.read_bytes() for p in root.parent.rglob('*') if p.is_file()}
+            with patch.object(module,'ROOT',root):report=module.diagnose(gate,module.NONCE)
+            self.assertTrue(report['readOnly']);self.assertEqual(report['privateApplyCalls'],1)
+            self.assertEqual(commands,[['scripts/publication-runtime.ts','verify']])
+            self.assertEqual(before,{str(p):p.read_bytes() for p in root.parent.rglob('*') if p.is_file()})
+            reservation['nonces']={}
+            with patch.object(module,'ROOT',root),self.assertRaises(ValueError):module.diagnose(gate,module.NONCE)
+            self.assertEqual(len(commands),1)
+
+    def test_verifier_diagnosis_does_not_export_http_body_or_exception_secrets(self):
+        module=load('diagnose-publication-acceptance-verifier.py')
+        from urllib.error import HTTPError
+        import io
+        value=module.safe_error(HTTPError('http://private',500,'secret-message',{},io.BytesIO(b'secret-body')))
+        self.assertEqual(value['httpStatus'],500)
+        self.assertNotIn('secret',json.dumps(value))
+        self.assertNotIn('reason',module.safe_error(OSError('password-secret')))
+
 if __name__=='__main__':unittest.main()

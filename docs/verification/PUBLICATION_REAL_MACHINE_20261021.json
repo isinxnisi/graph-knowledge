@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "scope": "approved-private-VPS-test-only",
-  "status": "partial-test-fixture-verifier-repair-pending",
+  "status": "partial-verifier-updated-readonly-diagnosis-pending",
   "productionEnabled": false,
   "productionApplyCalls": 0,
   "productionRevision": "88437056-b74f-42ab-88c0-33ed435bdccc",
@@ -88,7 +88,69 @@
     },
     "closureCertificateSha256": "6d878fb1ad13296c4c6eb1dc840e5de7ea96f9ab710c261e53f84952e5e5ea0b",
     "candidateDataSha256": "2f8c3dd707e879fe4b8f34fc780169df7599ba591c87db46c995dba886e4f5d1",
-    "candidateManifestSha256": "11d6ab5639ac751b426f0a148044bda6f5de8d9734cf913a8962ce0f0c3f220d"
+    "candidateManifestSha256": "11d6ab5639ac751b426f0a148044bda6f5de8d9734cf913a8962ce0f0c3f220d",
+    "verifyOnlyAfterRepair": {
+      "exit": 0,
+      "result": {
+        "artifactSha256": "956baabdff9db46e4d609d0009162047306c019548bf78a77e1de79490b9ad4c",
+        "baseRelease": "release-group-2",
+        "baseRevision": "cd1ee4d6-b9e8-494b-8a49-47707c3a09e7",
+        "nonce": "590c3111-d65a-43f8-989e-44d901702e46",
+        "pendingAudit": false,
+        "phase": "operator-inspection-required-no-reapply",
+        "release": "isolated-publication-next",
+        "request": {
+          "artifactSha256": "956baabdff9db46e4d609d0009162047306c019548bf78a77e1de79490b9ad4c",
+          "baseRelease": "release-group-2",
+          "baseRevision": "cd1ee4d6-b9e8-494b-8a49-47707c3a09e7",
+          "environment": "production",
+          "operatorDigest": "sha256:e48a540914d708a88a70b66ad399eb6a7769e98c76ff4ace50cdb7febdf04cf1",
+          "planSha256": "c3109b6582de7d66b4df03e0f5da075ebc65d091e939f5cd5abd19986c3ea1d9",
+          "purpose": "public-kg-publication",
+          "receiptSetSha256": "95e1b7a1bb999daef722896ba8aa7352d8aa6f67b4173d6df70e911e1dfb8aed",
+          "release": "isolated-publication-next",
+          "schemaVersion": 1
+        }
+      }
+    },
+    "independentPrivateApiSmoke": {
+      "manualUiCheckStillRequired": true,
+      "readOnly": true,
+      "revision": "2fb283f6-b1e6-46ce-a9aa-44d5985c81d1",
+      "verified": [
+        {
+          "claimId": "00000000-0017-4000-8000-000000000017",
+          "graphPages": 1,
+          "object": "ISOLATED TEST Work 3",
+          "subject": "ISOLATED TEST Shared creator"
+        }
+      ]
+    },
+    "inventoryAfterRepair": {
+      "applyCalls": [
+        {
+          "nonce": "590c3111-d65a-43f8-989e-44d901702e46",
+          "revision": "cd1ee4d6-b9e8-494b-8a49-47707c3a09e7"
+        }
+      ],
+      "network": "plunode-publication-acceptance-20261021",
+      "productionEnabled": false,
+      "reservations": {
+        "nonces": {
+          "590c3111-d65a-43f8-989e-44d901702e46": {
+            "artifactSha256": "956baabdff9db46e4d609d0009162047306c019548bf78a77e1de79490b9ad4c",
+            "baseRelease": "release-group-2",
+            "baseRevision": "cd1ee4d6-b9e8-494b-8a49-47707c3a09e7",
+            "release": "isolated-publication-next"
+          }
+        },
+        "releases": {
+          "isolated-publication-next": "590c3111-d65a-43f8-989e-44d901702e46"
+        }
+      },
+      "testOnly": true
+    },
+    "cleanupCompleted": false
   },
   "testDriverClockPolicy": "Wait at most 8 seconds until issuedAt, then run unchanged validator. Installed peer still fails with observed clock offset.",
   "installedProductionCore": "72338b7054b3f2eb2e9762b20859044f9b9e28ce",
@@ -96,15 +158,43 @@
   "tests": {
     "publicationCycle": 18,
     "publicationExecutor": 24,
-    "temporaryMachineGuards": 11,
-    "total": 53
+    "temporaryMachineGuards": 14,
+    "total": 56
   },
-  "repairPreparedNotExecuted": {
+  "fixtureVerifierRepair": {
     "archive": "p33-private-verifier-repair-v1.tar.gz",
     "archiveSha256": "12254ee6b943d339bbb344485825f6e96ccea7b3d225bd99356c9a6bace1d464",
     "archiveBytes": 6811,
     "bootstrap": "repair-private-verifier-v1.py",
     "bootstrapSha256": "187df2e4f7023fc820da7e22518a3aaf0115c2d2b71a68b54fa28bb7757692e4",
-    "productionCoreUpdated": false
+    "productionCoreUpdated": false,
+    "executed": true,
+    "rootStage": "/root/plunode-publication-verifier-fix.c1fktb71",
+    "preservedOldWrapper": "/var/lib/plunode-publication/test/trusted/verifier-before-7cf9a5f0d53a.py",
+    "frozenAndJournalBytesUnchanged": true,
+    "privateApplyCalls": 1,
+    "productionApplyCalls": 0
+  },
+  "readonlyRecheckAfterRepair": {
+    "diagnosticSha256": "6b69a01697cc6398eb33fcdc961e0fb332dfa2dde9ead2e57cfbc476387e9fba",
+    "productionDataset": {
+      "dataset": "public-kg",
+      "revision": "88437056-b74f-42ab-88c0-33ed435bdccc"
+    },
+    "services": {
+      "caddy": "active",
+      "containerd": "active",
+      "docker": "active",
+      "resale-ebay-notifications": "active",
+      "ssh": "active"
+    }
+  },
+  "readOnlyDiagnosis": {
+    "file": "diagnose-private-verifier-v2.py",
+    "sha256": "6b69a01697cc6398eb33fcdc961e0fb332dfa2dde9ead2e57cfbc476387e9fba",
+    "executed": false,
+    "resetsNonce": false,
+    "callsApply": false,
+    "changesRootPrograms": false
   }
 }

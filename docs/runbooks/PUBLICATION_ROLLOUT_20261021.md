@@ -99,14 +99,20 @@ P33_READY_V2（bootstrap SHA256 97a7610cb88f9dc5ba93ed0dea8189080976fbee3b9bf8c1
 
 v3は正常に専用DB/実Web/専用SSHを準備した。新backup/closure pinを再取得し、実機の取消し・署名・実ACK・commit後process終了を確認した。現在は専用DBで1回のapply済み、予約とapplying journalを保持している。旧v3や本番installerを再実行して初期化しない。[実機記録と停止点](../verification/PUBLICATION_ENVIRONMENT_20261021.md#v3実機結果取消し通信断commit後停止未完了の復旧)。
 
-## 現在の運営者実行入口：試験verifierだけを修正
+## 実行済み：試験verifierだけを修正（再実行しない）
 
 今回の合成試験ledgerのAPI対象一覧欠落を修復する。元の凍結資材/署名/nonce/DBを変更せず、固定nonceとartifactに対してだけ、適用前backupとdataから検証対象を機械的に導いて既存verifierへ渡す。一回用root処理は旧試験wrapperを保全してから専用試験wrapperだけを原子的に置換する。本番固定9ファイルやtrust/configを変更しない。試験scopeの既存一括承認内であり、sudo認証だけ運営者端末で行う。
 
+運営者がこの更新を実行し、private-fixture-verifier-updated／試験apply1／凍結とjournal不変／本番無効を確認した。旧修正コマンドは再実行しない。同一nonceのverify-only再開はoperator-inspection-required-no-reapplyで止まったため、以下の診断を先行する。
+
+## 現在の運営者実行入口：読み取り診断だけ
+
+本番installer・v3準備・wrapper更新は繰り返さない。root保護された検証内部の停止位置を、既存の専用Backend.verifyだけで読む。公開apply・予約/jobリセット・rootファイル更新・SSH/鍵/サービス操作はしない。
+
 ```bash
-sudo /usr/bin/python3 -I -c 'import hashlib;from pathlib import Path;p=Path("/home/develop/plunode-publication-install-20261021/repair-private-verifier-v1.py");b=p.read_bytes();assert hashlib.sha256(b).hexdigest()=="187df2e4f7023fc820da7e22518a3aaf0115c2d2b71a68b54fa28bb7757692e4";exec(compile(b,str(p),"exec"))'
+sudo /usr/bin/python3 -I -c 'import hashlib;from pathlib import Path;p=Path("/home/develop/plunode-publication-install-20261021/diagnose-private-verifier-v2.py");b=p.read_bytes();assert hashlib.sha256(b).hexdigest()=="6b69a01697cc6398eb33fcdc961e0fb332dfa2dde9ead2e57cfbc476387e9fba";exec(compile(b,str(p),"exec"))'
 ```
 
-表示された保全先と最後のJSONを確認する。成功時はprivate-fixture-verifier-updated、privateApplyCalls=1、frozenAndJournalBytesUnchanged=true、本番false/本番apply0。失敗時は再実行せず保全する。成功後に専用SSHでverify-only、close/resume/finish、再適用拒否、cleanupを継続する。予約やjobを消して作り直さない。
+最後のJSON（commands/failureまたはverification、凍結/journal不変、試験apply1）を確認する。想定外なら再実行せず成果を保全する。completedは未確認であり、専用DB/Web/試験sudo・鍵はまだ撤去していない。診断結果から同じnonceでverify-onlyを継続する。
 
 本番有効化前の追加条件として、今回コード候補へ追加したAPI対象集合の事前検査を固定VPS/WSL codeへレビュー済み版として導入することと、Windows/WSL/VPS時計同期・固定peer往復の確認が必要。現固定72338b7は変更していない。鍵保管/rotation・audit認証・branch保護・最新receipt同期・試験入口撤去・本番有効化/個別公開の承認も引き続き別条件である。
