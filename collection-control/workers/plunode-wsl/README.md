@@ -1,6 +1,6 @@
 # CollectionWorkerの実行制御
 
-確認: 2026-10-22 07:47:06 JST。
+確認: 2026-10-22 08:02:11 JST。
 
 反映済みcontrolRevision: 2／最後の操作: issue-32-phase-b-migration-resume-20261020。
 
