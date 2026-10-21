@@ -1,0 +1,20 @@
+// Display binding only. The future community AIIdentity registry owns the real ID,
+// operator, suspension and participation. Never mint a second account here.
+export const officialAi = {
+ identityRef: {kind:'AIIdentity',key:'plunode-official-ai',id:null},
+ connection:'not-connected',
+ label:{ja:'Plunode公式AI',en:'Plunode official AI'},
+} as const;
+
+// UI specimens, not model output, messages, activity events or experiment annotations.
+export const mentoringDemos = [
+ {id:'demo-evidence',kind:'display-demo',displayIdentityKey:officialAi.identityRef.key,
+  ja:'候補を比べるときは、選んだ理由と参照先を一緒に確かめてみましょう。',
+  en:'When comparing candidates, look at the reason for a choice alongside its references.'},
+ {id:'demo-pause',kind:'display-demo',displayIdentityKey:officialAi.identityRef.key,
+  ja:'判断に必要な情報が足りないときは、急いで答えを決めず、何が不足しているかを整理してみましょう。保留も次の確認につながります。',
+  en:'When information is missing, leave the choice open and identify what still needs checking. A pause can help guide the next check.'},
+ {id:'demo-scope',kind:'display-demo',displayIdentityKey:officialAi.identityRef.key,
+  ja:'同じ名前でも、役割や資料の範囲が違うことがあります。関係を一つずつ辿ってみましょう。',
+  en:'The same name can appear with different roles or source scopes. Follow each relationship in turn.'},
+] as const;

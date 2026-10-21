@@ -1,5 +1,7 @@
 # ドキュメントの入口
 
+- 公式AIの実画面組み込み：[育成担当・デモコメントとAIIdentity参照](design/AI_LAB_OFFICIAL_MENTOR.md) / [画面・検証結果](verification/AI_LAB_OFFICIAL_MENTOR_20261022.md)。同一個体の128px=A・48〜96px=B・16〜24px=C表示。探索者見習いとは別個体、実発言・投稿・学習の追加なし。
+
 - AI育成ラボの確認URL：[Cloudflare接続と検証](verification/AI_LAB_TUNNEL_20261022.md)。本体3268・旧3286互換中継で `graph-ailab.isinxnisi.com` に接続。
 
 - 公式AIキャラクター：[デザイン方針 v0.2](design/OFFICIAL_AI_CHARACTER.md) / [3方向の静止比較と検証](verification/OFFICIAL_AI_CHARACTER_20261022.md)。隔離3268の `/ai-character-study` で明暗・実寸・実Home/Graphを比較。正式アセット・名前・動きは未決定。

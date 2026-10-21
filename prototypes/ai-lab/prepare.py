@@ -72,6 +72,9 @@ def main():
     character = ROOT / 'prototypes/official-ai-character'
     copy(character / 'CharacterStudy.tsx.txt', 'preview/CharacterStudy.tsx')
     copy(character / 'character.css', 'preview/character.css')
+    copy(character / 'OfficialAi.tsx.txt', 'preview/OfficialAi.tsx')
+    copy(character / 'official-ai.ts.txt', 'preview/official-ai.ts')
+    copy(character / 'official-ai.css', 'preview/official-ai.css')
     shutil.copytree(character / 'assets', OUT / 'public/character-study')
     write('app/ai-character-study/page.tsx', "import CharacterStudy from '../../preview/CharacterStudy';\nexport default function Page(){return <CharacterStudy/>;}\n")
     write('app/ai-lab/page.tsx', "import Lab from '../../preview/Lab';\nexport default function Page(){return <Lab/>;}\n")
@@ -79,6 +82,7 @@ def main():
     patch('app/layout.tsx', '<FocusModality />', '<FocusModality /><LabBoundary />')
     patch('app/layout.tsx', 'import FocusModality', "import {CharacterContext} from '../preview/CharacterStudy';\nimport '../preview/character.css';\nimport FocusModality")
     patch('app/layout.tsx', '<LabBoundary />', '<LabBoundary /><CharacterContext />')
+    patch('app/layout.tsx', "import '../preview/character.css';", "import '../preview/character.css';\nimport '../preview/official-ai.css';")
     patch('components/SiteHeader.tsx', 'import Icon', "import {rememberEntry} from '../preview/navigation';\nimport Icon")
     patch('components/SiteHeader.tsx', '<div className={styles.tools}>', '''<div className={styles.tools}><a className="lab-entry" data-testid="lab-entry" href="/ai-lab" onClick={event=>{closeAccount(event);if(!event.defaultPrevented)rememberEntry();}}>{locale==='en'?'AI Lab':'AI育成ラボ'}</a>''')
     # Real account component, intentionally disconnected identity; no fictional member records.
