@@ -12,7 +12,7 @@ ROOT = Path(__file__).resolve().parents[1]
 STATE = Path.home() / '.local/state/plunode-previews'
 SERVICES = {
     'beta': (3200, ['--import', 'tsx', 'scripts/public-kg.ts', 'start']),
-    'community': (3275, ['prototypes/community/server.mjs', '--tunnel']),
+    'community': (3275, ['prototypes/community-connected/run.mjs']),
 }
 
 
@@ -30,6 +30,8 @@ def start(name, node):
         raise SystemExit(f'{port} is already occupied; inspect its owner. Nothing stopped.')
     if name == 'beta' and not (ROOT / '.next-public/BUILD_ID').is_file():
         raise SystemExit('Verified .next-public build required; no automatic build or DB action.')
+    if name == 'community' and not (Path.home() / '.local/share/plunode-community-connected/.next/BUILD_ID').is_file():
+        raise SystemExit('Build the isolated community-connected preview first; see its README.')
     log = STATE / f'{name}.log'
     pidfile = STATE / f'{name}.pid'
     pid = os.fork()

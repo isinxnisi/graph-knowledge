@@ -1,0 +1,7 @@
+import {NextRequest,NextResponse} from 'next/server';
+const read=/^\/api\/(?:dataset|entities(?:\/[0-9a-f-]{36}(?:\/(?:overview|neighbors))?)?|claims\/[0-9a-f-]{36}|discovery\/(?:entities|subject-matches|paths|witness|claims))$/;
+const post=/^\/api\/discovery\/(?:entities|subject-matches|paths|witness)$/;
+async function handle(req:NextRequest){const path=req.nextUrl.pathname;if(!read.test(path)||(req.method!=='GET'&&!(req.method==='POST'&&post.test(path))))return NextResponse.json({error:{code:'PREVIEW_NOT_CONNECTED'}},{status:404});
+ const body=req.method==='POST'?await req.text():undefined;if(body&&body.length>100000)return new NextResponse(null,{status:413});
+ try{const r=await fetch('http://127.0.0.1:3200'+path+req.nextUrl.search,{method:req.method,body,headers:{'Content-Type':'application/json'},cache:'no-store',redirect:'error',signal:AbortSignal.timeout(20000)});return new NextResponse(await r.text(),{status:r.status,headers:{'Content-Type':'application/json','Cache-Control':'no-store'}});}catch{return NextResponse.json({error:{code:'PREVIEW_UPSTREAM_UNAVAILABLE'}},{status:503});}}
+export const GET=handle;export const POST=handle;

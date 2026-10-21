@@ -1,0 +1,22 @@
+import {MemberClientError} from '../lib/client/member-api';
+const ids:Record<string,string>={aya:'11111111-1111-4111-8111-111111111111',ren:'22222222-2222-4222-8222-222222222222',mio:'33333333-3333-4333-8333-333333333333'};
+const pluto='2b7c6289-d050-4dc0-93e3-9307681253cc';
+export async function previewMember(path:string,options:{method?:string;user?:string;signal?:AbortSignal}={}) {
+ options.signal?.throwIfAborted();
+ const role=sessionStorage.getItem('preview-role')||'aya',id=ids[role];
+ if(path==='/api/member/status')return {provider:'fixture'};
+ if(!id)throw new MemberClientError(401,'UNAUTHENTICATED');
+ if(options.user&&options.user!==id)throw new MemberClientError(401,'UNAUTHENTICATED');
+ if(options.method&&options.method!=='GET')throw new MemberClientError(501,'PREVIEW_NOT_CONNECTED');
+ const user={id,name:role[0].toUpperCase()+role.slice(1)+' · DEMO',locale:'ja'};
+ if(path==='/api/member/profile')return {user};
+ if(path.startsWith('/api/member/posts'))return {posts:[],nextCursor:null};
+ const nums=role==='mio'?[1]:role==='aya'?[2,3]:[];
+ const capsules=nums.map(n=>({id:`aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaa${n}`,schemaVersion:1,revision:n===2?2:1,createdAt:'2026-10-21T00:00:00.000Z',updatedAt:'2026-10-21T00:00:00.000Z',content:{dataset:'public-kg',title:['','物語をつなぐ、つくり手の線 · DEMO','研究所をめぐる小さな旅 · DEMO','非公開の検討ノート · DEMO'][n],note:'架空の会員Capsule。参照先は公開KGです。 / Fictional member Capsule referencing public KG.',language:'ja',entityIds:[n===2?'0820c3e8-7219-4e57-abb0-7d04e253fd4a':pluto],claimIds:[]}}));
+ if(path==='/api/member/capsules')return {capsules};
+ const cap=capsules.find(c=>path.includes(c.id));if(!cap)throw new MemberClientError(404,'NOT_FOUND');
+ if(path.includes('/revisions'))return {revisions:[]};
+ if(path.includes('/share'))return {share:null,blocked:false};
+ if(path.includes('/discussion'))return {capsuleId:cap.id,revision:cap.revision,closed:true,viewer:{id,name:user.name},canManage:true,posts:[]};
+ return {capsule:cap};
+}
