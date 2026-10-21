@@ -1,6 +1,6 @@
 # CollectionWorkerの実行制御
 
-確認: 2026-10-22 03:31:13 JST。
+確認: 2026-10-22 03:47:25 JST。
 
 反映済みcontrolRevision: 2／最後の操作: issue-32-phase-b-migration-resume-20261020。
 
@@ -41,6 +41,6 @@ Issue確認結果:
 - [issue-25-utc-recovery-04](../../results/issue-25-utc-recovery-04/README.md): completed（旧 issue-25-manga23-20261019-repair1-batch-05）
 - [issue-25-utc-recovery-05](../../results/issue-25-utc-recovery-05/README.md): completed（旧 issue-25-manga23-20261019-repair1-batch-06）
 - [issue-25-utc-recovery-06](../../results/issue-25-utc-recovery-06/README.md): completed（旧 issue-25-manga23-20261019-repair1-batch-07）
-- [issue-25-utc-recovery-07](../../results/issue-25-utc-recovery-07/README.md): blocked（旧 issue-25-manga23-20261019-repair1-batch-08）
+- [issue-25-utc-recovery-07](../../results/issue-25-utc-recovery-07/README.md): retry-wait（旧 issue-25-manga23-20261019-repair1-batch-08）
 - [issue-25-utc-recovery-08](../../results/issue-25-utc-recovery-08/README.md): completed（旧 issue-25-manga23-20261019-repair1-batch-09）
 - [issue-25-utc-recovery-09](../../results/issue-25-utc-recovery-09/README.md): completed（旧 issue-25-manga23-20261019-repair1-batch-10）
