@@ -69,9 +69,16 @@ def main():
     for name in ('public.json', 'review.json', 'readiness.json'):
         copy(source / name, 'preview/' + name)
     copy(source / 'REVIEW.md', 'public/lab-review.md')
+    character = ROOT / 'prototypes/official-ai-character'
+    copy(character / 'CharacterStudy.tsx.txt', 'preview/CharacterStudy.tsx')
+    copy(character / 'character.css', 'preview/character.css')
+    shutil.copytree(character / 'assets', OUT / 'public/character-study')
+    write('app/ai-character-study/page.tsx', "import CharacterStudy from '../../preview/CharacterStudy';\nexport default function Page(){return <CharacterStudy/>;}\n")
     write('app/ai-lab/page.tsx', "import Lab from '../../preview/Lab';\nexport default function Page(){return <Lab/>;}\n")
     patch('app/layout.tsx', 'import FocusModality', "import {LabBoundary} from '../preview/navigation';\nimport '../preview/lab.css';\nimport FocusModality")
     patch('app/layout.tsx', '<FocusModality />', '<FocusModality /><LabBoundary />')
+    patch('app/layout.tsx', 'import FocusModality', "import {CharacterContext} from '../preview/CharacterStudy';\nimport '../preview/character.css';\nimport FocusModality")
+    patch('app/layout.tsx', '<LabBoundary />', '<LabBoundary /><CharacterContext />')
     patch('components/SiteHeader.tsx', 'import Icon', "import {rememberEntry} from '../preview/navigation';\nimport Icon")
     patch('components/SiteHeader.tsx', '<div className={styles.tools}>', '''<div className={styles.tools}><a className="lab-entry" data-testid="lab-entry" href="/ai-lab" onClick={event=>{closeAccount(event);if(!event.defaultPrevented)rememberEntry();}}>{locale==='en'?'AI Lab':'AI育成ラボ'}</a>''')
     # Real account component, intentionally disconnected identity; no fictional member records.
@@ -99,6 +106,7 @@ def main():
   response.headers.set('Content-Security-Policy',"default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; frame-src 'none'; frame-ancestors 'none'; form-action 'none'; base-uri 'self'");return response;''')
     write('proxy.ts', proxy)
     overlay={p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted(HERE.iterdir()) if p.is_file() and (p.suffix in {'.txt','.css','.py','.mjs'})}
+    overlay.update({str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted(character.rglob('*')) if p.is_file()})
     write('preview-source.json', json.dumps({'baseCommit':subprocess.check_output(['git','rev-parse','HEAD'], cwd=ROOT,text=True).strip(),'overlayFilesSha256':overlay,'publicSha256':read_json(source/'public.json')['sha256'],'productionRoutesChanged':False}))
     print(OUT)
 

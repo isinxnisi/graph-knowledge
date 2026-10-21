@@ -1,0 +1,57 @@
+"use client";
+import {useEffect,useState} from 'react';
+import {usePathname} from 'next/navigation';
+import SiteHeader from '../components/SiteHeader';
+
+const candidates=[
+ {id:'translucent',letter:'A',name:'透明感を残した 2.5D',detail:'淡い内光と重なり。ガラスの反射を抑えた、奥行きのある案。',point:'明るい背景で輪郭が薄くならないか。'},
+ {id:'soft-flat',letter:'B',name:'柔らかいフラット',detail:'青から紫、ピンクへ。穏やかな面の変化で球体らしさを残す案。',point:'小さくしても、色と顔がまとまって見えるか。'},
+ {id:'symbolic-flat',letter:'C',name:'記号的なフラット',detail:'面と接続線を単純化。球体・顔・アンテナを記号として見せる案。',point:'明暗どちらでも、接続アンテナが読み取れるか。'},
+] as const;
+type Candidate=typeof candidates[number];
+const storageKey='plunode:official-ai-character-study:v02';
+const graph='/explore/2b7c6289-d050-4dc0-93e3-9307681253cc';
+function candidate(id:string|null){return candidates.find(item=>item.id===id);}
+function remember(id:string){try{sessionStorage.setItem(storageKey,id);}catch{/* URL still enables this page's preview. */}}
+function Avatar({item,size}:{item:Candidate;size:number}){
+ return <img className="character-avatar" src={'/character-study/v02-'+item.id+'.png'} width={size} height={size} alt={item.letter+'案：黒い目の球体と接続アンテナ'} draggable={false}/>;
+}
+function Scene({item,dark}:{item:Candidate;dark:boolean}){
+ return <div className={'character-scene '+(dark?'is-dark':'is-light')}>
+  <span className="character-scene-label">{dark?'暗い背景':'明るい背景'}</span>
+  <div className="character-scale-row">{[128,64,48].map(size=><figure key={size}><Avatar item={item} size={size}/><figcaption>{size}px</figcaption></figure>)}</div>
+  <div className="character-micro"><span>コメント横</span>{[20,18,16].map(size=><figure key={size}><Avatar item={item} size={size}/><figcaption>{size}px</figcaption></figure>)}</div>
+ </div>;
+}
+export default function CharacterStudy(){
+ const [background,setBackground]=useState('both');
+ return <><SiteHeader dataset="public-kg"/><main className="character-study">
+  <header className="character-intro"><p className="character-eyebrow">PLUNODE / CHARACTER STUDY / v0.2</p><h1>同じ目、三つの質感。</h1><p>コミュニティの案内・交流と、探索AIの育成を担う公式AI。<br/>球体とつながる光を、三つの静止デザインで比較します。</p><span className="character-badge">比較試作 · 正式アセット未決定</span></header>
+  <div className="character-controls"><p>目は固定。動きの比較は静止デザインを選んだあとに。</p><fieldset><legend>比較する背景</legend>{[['both','明暗を並べる'],['light','明るい背景'],['dark','暗い背景']].map(([id,label])=><button key={id} type="button" aria-pressed={background===id} onClick={()=>setBackground(id)}>{label}</button>)}</fieldset></div>
+  <section className="character-grid" aria-label="3方向の比較">{candidates.map(item=><article className="character-card" key={item.id}>
+   <div className="character-card-heading"><span>{item.letter}</span><div><h2>{item.name}</h2><p>{item.detail}</p></div></div>
+   {background!=='dark'&&<Scene item={item} dark={false}/>} {background!=='light'&&<Scene item={item} dark/>}
+   <div className="character-card-footer"><p>{item.point}</p><nav aria-label={item.letter+'案を実画面で確認'}><a href={'/?character-study='+item.id}>Homeで確認 ↗</a><a href={graph+'?character-study='+item.id}>Graphで確認 ↗</a></nav></div>
+  </article>)}</section>
+  <section className="character-notes"><div><h2>小さな表示も、同じ条件で。</h2><p>数値は画像の表示枠の大きさです。画像内の余白とアンテナを含みます。16〜20pxは通常案をそのまま縮小した初回比較で、専用デフォルメはまだ作っていません。</p><p>特に16pxでは顔と接続線が細くなります。通常表示の候補を選んでから、目の間隔・線の太さ・粒の数を極小表示向けに比較します。</p></div><div><h2>別個体として育てる。</h2><p>公式AIと、パトロールAI・探索者見習いAIは別個体です。外見や種族を揃えず、この案を探索者のアバターや成長記録には適用していません。</p><p>キャラクター名・正式アセット・アニメーション方式は未決定。今後の動きはアンテナのしなり、光粒の位置、浮遊、発光を中心に比較します。</p><a href="/ai-lab">AI育成ラボの観察へ →</a></div></section>
+  <footer className="character-footnote">ImageGenによる静止ラフ3点。生成画像の微細な縁・色むらは残っています。名称のA/B/Cは比較用です。</footer>
+ </main></>;
+}
+
+/** Opt-in preview on the copied real pages; never a posted community message or an AI run. */
+export function CharacterContext(){
+ const pathname=usePathname();const [selected,setSelected]=useState<Candidate|null>(null);const [expanded,setExpanded]=useState(true);
+ useEffect(()=>{
+  if(!pathname||!/^\/(?:en\/?|(?:en\/)?explore\/[0-9a-f-]{36}|member)?$/.test(pathname)){setSelected(null);return;}
+  const query=candidate(new URLSearchParams(location.search).get('character-study'));
+  if(query){remember(query.id);setSelected(query);return;}
+  try{setSelected(candidate(sessionStorage.getItem(storageKey))||null);}catch{setSelected(null);}
+ },[pathname]);
+ if(!selected)return null;
+ function stop(){try{sessionStorage.removeItem(storageKey);}catch{/* Clear current view regardless. */}const url=new URL(location.href);url.searchParams.delete('character-study');history.replaceState(null,'',url);setSelected(null);}
+ function choose(id:string){const next=candidate(id);if(!next)return;remember(id);const url=new URL(location.href);url.searchParams.set('character-study',id);history.replaceState(null,'',url);setSelected(next);}
+ return <aside className="character-context" data-testid="character-context" aria-label="公式AIの配置比較">
+  <div className="character-context-bar"><strong>公式AI · 配置比較</strong><label>案 <select aria-label="比較する案" value={selected.id} onChange={e=>choose(e.target.value)}>{candidates.map(item=><option value={item.id} key={item.id}>{item.letter} · {item.name}</option>)}</select></label><a href="/ai-character-study">比較一覧へ</a><button type="button" onClick={()=>setExpanded(!expanded)} aria-expanded={expanded}>{expanded?'サンプルを畳む':'サンプルを表示'}</button><button type="button" onClick={stop}>比較を終了</button></div>
+  {expanded&&<div className="character-context-sample" data-testid="character-sample"><p className="character-sample-label">配置サンプル · 投稿・応答ではありません</p><div className="character-guide"><Avatar item={selected} size={64}/><div><strong>Plunode公式AI</strong><p>案内と交流、探索AIの育成を担当。</p></div></div><div className="character-comment"><Avatar item={selected} size={20}/><span><b>Plunode公式AI</b><small>20px · コメント横の表示例</small></span></div><p className="character-context-note">探索者見習いAIとは別個体。<br/>正式採用・アニメーションは未決定です。</p></div>}
+ </aside>;
+}

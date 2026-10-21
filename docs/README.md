@@ -1,5 +1,7 @@
 # ドキュメントの入口
 
+- 公式AIキャラクター：[デザイン方針 v0.2](design/OFFICIAL_AI_CHARACTER.md) / [3方向の静止比較と検証](verification/OFFICIAL_AI_CHARACTER_20261022.md)。隔離3286の `/ai-character-study` で明暗・実寸・実Home/Graphを比較。正式アセット・名前・動きは未決定。
+
 - AI育成ラボ：[初稼働準備・観察画面](design/AI_LAB_OBSERVER.md) / [4課題の未承認レビュー](verification/ai-lab-20261022/REVIEW.md) / [隔離確認の検証](verification/AI_LAB_OBSERVER_20261022.md)。3286で実Home/Graph/アカウント導線を確認。main統合・公開配置・実学習なし。[初版の契約](design/AI_LAB_FOUNDATION.md) / [初版検証](verification/AI_LAB_20261021.md)。
 
 2026-10-15。現行仕様・継続検討・完了履歴を分ける。フェーズ番号は記録の整理用であり、未実装機能の着手順や承認を意味しない。
