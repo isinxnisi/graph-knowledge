@@ -12,6 +12,7 @@ COPY lib ./lib
 COPY neo4j ./neo4j
 COPY datasets ./datasets
 COPY data/advertising ./data/advertising
+COPY data/ai-lab/initial.json ./data/ai-lab/initial.json
 COPY docs/research/phase-13-relation-model/v2/ledger.json ./docs/research/phase-13-relation-model/v2/ledger.json
 COPY scripts/public-kg.ts scripts/production-readiness.mjs ./scripts/
 ENV GRAPH_DATASET=public-kg GRAPH_DEPLOYMENT=production
@@ -27,6 +28,16 @@ USER node
 ENTRYPOINT ["node", "--import", "tsx", "scripts/public-kg.ts"]
 CMD ["validate"]
 
+# One-shot public-artifact validator/publisher. No KG/member env or model runtime.
+FROM dependencies AS lab-artifact-ops
+COPY lib/domain ./lib/domain
+COPY lib/server/ai-lab-artifact.ts ./lib/server/ai-lab-artifact.ts
+COPY scripts/ai-lab-artifact.ts ./scripts/ai-lab-artifact.ts
+COPY data/ai-lab/initial.json ./data/ai-lab/initial.json
+ENV NODE_ENV=production
+USER node
+ENTRYPOINT ["node", "--import", "tsx", "scripts/ai-lab-artifact.ts"]
+
 FROM node:24.21.0-bookworm-slim AS web
 WORKDIR /app
 ENV NODE_ENV=production NEXT_TELEMETRY_DISABLED=1 HOSTNAME=0.0.0.0 PORT=3000
@@ -34,6 +45,10 @@ COPY --from=builder --chown=node:node /app/.next-public/standalone ./
 COPY --from=builder --chown=node:node /app/.next-public/static ./.next-public/static
 COPY --from=builder --chown=node:node /app/app/fonts/BIZUDPMincho-OG.woff ./app/fonts/BIZUDPMincho-OG.woff
 COPY --from=builder --chown=node:node /app/app/fonts/OFL.txt ./font-licenses/BIZUDPMincho-OFL.txt
+COPY --from=builder /app/data/ai-lab/initial.json ./data/ai-lab/initial.json
+COPY --chown=node:node public/ai-lab/apprentice-profile.png ./public/ai-lab/apprentice-profile.png
+RUN chown root:root /app /app/data /app/data/ai-lab /app/data/ai-lab/initial.json \
+    && chmod 0555 /app/data /app/data/ai-lab && chmod 0444 /app/data/ai-lab/initial.json
 COPY --chown=node:node scripts/production-readiness.mjs ./scripts/production-readiness.mjs
 USER node
 EXPOSE 3000

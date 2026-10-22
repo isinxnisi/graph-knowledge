@@ -1,4 +1,5 @@
 "use client";
+import {labEntryEvent,labExplorationPan,saveLabExplorationView} from "./ai-lab-navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { z } from "zod";
 import { parsePathWitness } from "../domain/discovery-paths";
@@ -65,6 +66,11 @@ export function useExplorationUrl({ dataset, initialRoot, graph, capture, apply,
     return () => { window.removeEventListener("pagehide", update); if (timer.current) clearTimeout(timer.current); };
   }, [update]);
   useEffect(() => {
+    const leaving = () => { const current = latest.current, view = current.capture(); if (view && current.dataset === "public-kg") saveLabExplorationView(location.pathname+location.search, current.graph.revision ?? null, view); };
+    window.addEventListener(labEntryEvent,leaving);
+    return () => window.removeEventListener(labEntryEvent,leaving);
+  }, []);
+  useEffect(() => {
     const restartThisAttempt = restartRequested.current === attempt;
     const rootId = initialRoot ?? /^(?:\/en)?\/explore\/([^/]+)$/.exec(location.pathname)?.[1];
     const controller = new AbortController();
@@ -102,6 +108,8 @@ export function useExplorationUrl({ dataset, initialRoot, graph, capture, apply,
         const rebuilt = restartThisAttempt ? await restartWorkspace(workspace, controller.signal) : await rebuildExplorationUrl(workspace, controller.signal,witness);
         if(handoff){const observed=await fetchDatasetRevision(controller.signal);if(observed.dataset!=="public-kg"||observed.revision!==handoff.revision||rebuilt.graph.revision!==handoff.revision)throw new ExplorationUrlError("changed");}
         controller.signal.throwIfAborted();
+        const labPan = dataset === "public-kg" ? labExplorationPan(location.pathname+location.search,rebuilt.graph.revision ?? null) : null;
+        if (labPan && rebuilt.view) rebuilt.view = {...rebuilt.view,pan:labPan,recenter:false};
         latest.current.apply(rebuilt);
         if(handoff?.witness?.version===2&&handoff.witness.matchContext.q)setSearchOrigin({root:workspace.rootId,q:handoff.witness.matchContext.q,target:handoff.witness.matchContext.nameTarget});
         setFailure(null); setReady(true);

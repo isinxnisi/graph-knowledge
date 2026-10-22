@@ -1,5 +1,7 @@
 # 現行技術設計
 
+2026-10-22、Issue #36の[AIラボ公開候補](design/AI_LAB_PUBLICATION.md)。通常App Routerの `/ai-lab`／`/en/ai-lab` と読み取り専用JSON APIを、既定無効の `AI_LAB_ENABLED`＋public-kgで制御する。保存済み公開artifactのstrict schema・checksum・公開KG参照検査と原子的な版切替／rollbackを分離。Webに推論・学習・投稿・KG／会員書込を追加せず、既存SiteHeader・認証・Graph／Claimと復帰を再利用する。主表示の浮遊は演出で、実活動は未監視。[検証と未反映範囲](verification/AI_LAB_PUBLICATION_20261022.md)。
+
 2026-10-20、[収集接続性評価v1](design/COLLECTION_CONNECTIVITY.md)。保存backup／fixture v4／公開manifest／公開観測をhashとrevisionで照合し、オフラインCLIで既存KG・追加後・追加単独の成分、1〜3段到達、元Claimの根拠付き経路を比較する。単独／テーマ効果と経路列挙上限を分離。Web API・UI・Worker・DBへ変更なし。[実測](verification/COLLECTION_CONNECTIVITY_20261020.md)。
 
 2026-10-19、[対象位置・B方式の接続](design/DISCOVERY_SUBJECT_CONNECTIONS.md)。other-works rev2、対象POST v2／証拠v2／paths POST v2、候補24件の正確な適合判定、Workspace item／URL v3を追加。旧条件は旧位置のまま読み、GraphのEntity枝は共用。名前条件は対象検索・一致理由に限定する。
