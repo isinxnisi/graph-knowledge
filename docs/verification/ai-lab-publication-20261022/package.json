@@ -1,0 +1,71 @@
+{
+  "webImage": "sha256:f8ea21e6be5d5789e82c581e92572700cb031d080ff70901f39c09501857c075",
+  "opsImage": "sha256:a58674a14acb4503c3a81efd6411efc3a79d6f141dde2d5b1b0a1b68a1072384",
+  "initialSha256": "750398d6806967f44ba2200db32df8c54d92449b3668cacaa0ac6763e65ab255",
+  "trialSha256": "bfa0bac2780612a800fad03f7812b1a27c26966bc55b150cdab99d36f0be0694",
+  "results": [
+    {
+      "route": "/ai-lab",
+      "status": 200,
+      "bytes": 50229
+    },
+    {
+      "route": "/en/ai-lab",
+      "status": 200,
+      "bytes": 50297
+    },
+    {
+      "staticAsset": "css",
+      "status": 200,
+      "bytes": 6898
+    },
+    {
+      "staticAsset": "js",
+      "status": 200,
+      "bytes": 5364
+    },
+    {
+      "staticAsset": "woff2",
+      "status": 200,
+      "bytes": 3112280
+    },
+    {
+      "offlineBirthPage": true,
+      "noModelOrKgConnection": true,
+      "readOnlyWeb": true,
+      "liveSwitch": true,
+      "invalidUpdateRetainsOld": true,
+      "rollback": true,
+      "restart": true,
+      "coldBrokenPointerUsesBundled": true,
+      "validatedKgRevision": "88437056-b74f-42ab-88c0-33ed435bdccc"
+    }
+  ],
+  "disabled": {
+    "BlockIO": "0B / 0B",
+    "CPUPerc": "0.00%",
+    "Container": "gk-ai-lab-trial-6e3888ea-ced7-4d8a-a601-b1fb47e60f4d",
+    "ID": "b2640a7e5b5d",
+    "MemPerc": "11.06%",
+    "MemUsage": "84.98MiB / 768MiB",
+    "Name": "gk-ai-lab-trial-6e3888ea-ced7-4d8a-a601-b1fb47e60f4d",
+    "NetIO": "0B / 0B",
+    "PIDs": "11"
+  },
+  "permissions": {
+    "uid": 1000,
+    "private": [],
+    "writable": []
+  },
+  "enabled": {
+    "BlockIO": "0B / 0B",
+    "CPUPerc": "0.00%",
+    "Container": "gk-ai-lab-trial-7fb57999-4afc-4089-b9cf-02e6a511aa2a",
+    "ID": "79b1c276fd22",
+    "MemPerc": "10.52%",
+    "MemUsage": "80.83MiB / 768MiB",
+    "Name": "gk-ai-lab-trial-7fb57999-4afc-4089-b9cf-02e6a511aa2a",
+    "NetIO": "0B / 0B",
+    "PIDs": "11"
+  }
+}

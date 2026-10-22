@@ -1,5 +1,7 @@
 # ドキュメントの入口
 
+- AI育成ラボ初段公開：[0回からの本線統合候補・公開条件](design/AI_LAB_PUBLICATION.md)／[artifact更新と復旧](runbooks/AI_LAB_ARTIFACT_DELIVERY.md)／[検証・反映境界](verification/AI_LAB_PUBLICATION_20261022.md)。実推論0・追加学習0で始める。main取り込み・beta更新・VPS公開は別判断。
+
 2026-10-15。現行仕様・継続検討・完了履歴を分ける。フェーズ番号は記録の整理用であり、未実装機能の着手順や承認を意味しない。
 
 公開β以降の到達目標は [ROADMAP.md](../ROADMAP.md) を正本とする。現在のM1開発支援受付は [実装・適用記録](design/DEVELOPMENT_SUPPORT.md) を参照。既存24工程の未完は別に維持する。

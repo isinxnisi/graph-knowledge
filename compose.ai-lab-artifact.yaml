@@ -1,0 +1,8 @@
+# Optional deployment change; apply only after the separate VPS approval.
+# The publisher owns this directory. The Web UID can only read it.
+services:
+  web:
+    environment:
+      AI_LAB_ARTIFACT_DIRECTORY: /var/lib/ai-lab
+    volumes:
+      - "${GRAPH_AI_LAB_DIRECTORY:?Set the approved artifact directory}:/var/lib/ai-lab:ro"

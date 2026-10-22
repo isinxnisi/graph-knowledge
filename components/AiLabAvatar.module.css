@@ -1,0 +1,6 @@
+.stage{width:152px;height:192px;display:grid;place-items:center;--strength:1}
+.stage[data-strength=strong]{--strength:1.6}
+.body{width:128px;height:128px;object-fit:contain;animation:float 3.6s ease-in-out infinite;animation-play-state:paused;will-change:transform}
+.stage[data-moving=true] .body{animation-play-state:running}
+@keyframes float{0%,100%{transform:translateY(calc(4px * var(--strength)))}50%{transform:translateY(calc(-12px * var(--strength)))}}
+@media(prefers-reduced-motion:reduce){.body{animation:none;will-change:auto}}

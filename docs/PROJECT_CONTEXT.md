@@ -1,5 +1,7 @@
 # プロジェクトの構想と判断基準
 
+2026-10-22、Issue #36の[AI育成ラボ初段公開候補](design/AI_LAB_PUBLICATION.md)。見習いを実推論0・追加学習0の誕生直後から観察する。非AI比較と保留をAIの成長にせず、一般画面から架空の育成コメント・開発操作を除く。本線UIと公開artifactの読取を独立branchで統合検証し、main／beta／VPSの反映は別判断。GPU問題解消・実推論成功・採点承認を初段公開の必須条件にしない。
+
 2026-10-22、Issue #33の専用VPS DBで、単回commit後のverify-only復旧、閉鎖→条件付きshadow resume→finish、同nonce/別nonce同releaseの再適用拒否を完了。試験applyは1回のまま、追加合成1 Claim（試験DB累計3 Claim）を検証した。専用DB/Web/network/試験SSH鍵/sudoを撤去し、予約・凍結成果・journalは保全。本番導入済み72338b7はdisabled、本番apply0、revision不変。coverage/manifest修正候補f812955と対応imageの本番配置、固定peer往復、鍵/監査/branch保護、最新receipt同期と有効化承認は未完了。[完了範囲と残条件](verification/PUBLICATION_ENVIRONMENT_20261021.md#2026-10-22専用実機試験の完了と撤去)。
 
 2026-10-21、Issue #33の承認済み公開ゲートをVPSへ**公開無効のまま導入**。固定rootコード・限定sudo・SSH制限・SFTP chrootと、現revisionの完全公開KG backupを実機確認した。専用DB/実Webを準備し、取消し・旧応答拒否・単回commit後process終了を実機確認。試験ledger補修後、DB/receipt/全graph/APIの読取診断は成功。verify-onlyの完了処理はPython/TSのmanifestキー順の差で停止し、固定合成資材だけの互換修正を準備した。予約とapply1回を保全し、本番用にはraw manifest SHA照合と旧image拒否を追加（未配置）。時計差による固定peer停止と追加事前検査の導入も有効化前に残る。本番apply・有効化・既存Worker制御・会員DB/UI変更は行わない。[実測と再開位置](verification/PUBLICATION_ENVIRONMENT_20261021.md)。

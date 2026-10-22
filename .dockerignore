@@ -19,6 +19,14 @@
 data/*
 !data/advertising/
 !data/advertising/japan-ranges.json
+!data/ai-lab/
+data/ai-lab/*
+!data/ai-lab/initial.json
+!public/
+public/*
+!public/ai-lab/
+public/ai-lab/*
+!public/ai-lab/apprentice-profile.png
 !fixtures/
 fixtures/*
 !fixtures/demo.json
@@ -35,6 +43,7 @@ docs/research/phase-13-relation-model/v2/*
 scripts/*
 !scripts/public-kg.ts
 !scripts/production-readiness.mjs
+!scripts/ai-lab-artifact.ts
 !scripts/member-migrate.ts
 !scripts/member-ops.ts
 !db/
