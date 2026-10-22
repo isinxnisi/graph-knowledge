@@ -10,9 +10,15 @@ export const motionStates=[
 export type MotionState=typeof motionStates[number]['id'];
 export type MotionStrength='standard'|'strong';
 
+export function useMotionEnvironment(){
+ const [reduced,setReduced]=useState(true),[visible,setVisible]=useState(false);
+ useEffect(()=>{const mq=matchMedia('(prefers-reduced-motion: reduce)');const sync=()=>setReduced(mq.matches);const visibility=()=>setVisible(!document.hidden);sync();visibility();mq.addEventListener('change',sync);document.addEventListener('visibilitychange',visibility);return()=>{mq.removeEventListener('change',sync);document.removeEventListener('visibilitychange',visibility);};},[]);
+ return {reduced,visible};
+}
 export function useDemoMotion(defaultStrength:MotionStrength){
- const [state,setState]=useState<MotionState>('idle'),[strength,setStrength]=useState<MotionStrength>(defaultStrength),[playing,setPlaying]=useState(false),[quiet,setQuiet]=useState(false),[reduced,setReduced]=useState(true),[visible,setVisible]=useState(false);
- useEffect(()=>{const mq=matchMedia('(prefers-reduced-motion: reduce)');const sync=()=>{setReduced(mq.matches);if(mq.matches)setPlaying(false);};const visibility=()=>setVisible(!document.hidden);sync();visibility();mq.addEventListener('change',sync);document.addEventListener('visibilitychange',visibility);return()=>{mq.removeEventListener('change',sync);document.removeEventListener('visibilitychange',visibility);};},[]);
+ const [state,setState]=useState<MotionState>('idle'),[strength,setStrength]=useState<MotionStrength>(defaultStrength),[playing,setPlaying]=useState(false),[quiet,setQuiet]=useState(false);
+ const {reduced,visible}=useMotionEnvironment();
+ useEffect(()=>{if(reduced)setPlaying(false);},[reduced]);
  return {state,setState,strength,setStrength,playing,setPlaying,quiet,setQuiet,reduced,visible};
 }
 export function useMotionOnScreen(ref:RefObject<HTMLElement|null>){

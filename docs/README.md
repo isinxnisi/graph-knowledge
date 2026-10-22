@@ -1,5 +1,7 @@
 # ドキュメントの入口
 
+- ラボの自然な表示：[操作欄撤去・標準の自動浮遊・停止条件の検証](verification/AI_LAB_AMBIENT_MOTION_20261022.md)。本体は中立な表示演出、比較画面は手動操作を維持。実活動は未監視。
+
 - ラボ主表示の動き：[標準／強の仮組み込みと検証](verification/AI_LAB_HERO_MOTION_20261022.md)。見習いの主表示だけに適用。比較画面も2段階へ整理し、公式AIと極小は静止。
 
 - 見習いB′の動き：[手動DEMO・素材構造・停止契約](design/AI_LAB_MOTION_STUDY.md) / [初回検証](verification/AI_LAB_MOTION_20261022.md) / [強度3段階・状態差の強調](verification/AI_LAB_MOTION_STRENGTH_20261022.md)。現行PNGと独立アンテナの簡易構造を比較。正式アセット・実活動連動なし。

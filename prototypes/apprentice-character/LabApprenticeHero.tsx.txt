@@ -1,27 +1,19 @@
 "use client";
 import {useRef,type ReactNode} from 'react';
 import {ApprenticeAvatar} from './Apprentice';
-import {motionStates,useDemoMotion,useMotionOnScreen} from './motion';
+import {useMotionEnvironment,useMotionOnScreen,type MotionStrength} from './motion';
+
+// Presentation only. Change this internal parameter to compare strong motion;
+// it is never derived from activity records, URL parameters or model state.
+const LAB_AVATAR_STRENGTH:MotionStrength='standard';
 
 export default function LabApprenticeHero({aiId,en,children}:{aiId:string;en:boolean;children:ReactNode}){
- const motion=useDemoMotion('standard'),ref=useRef<HTMLDivElement>(null),onScreen=useMotionOnScreen(ref);
- const selected=motionStates.find(s=>s.id===motion.state)!;
+ const {reduced,visible}=useMotionEnvironment(),ref=useRef<HTMLDivElement>(null),onScreen=useMotionOnScreen(ref);
  return <header className="lab-hero lab-apprentice-focus" id="apprentice" data-testid="explorer-apprentice" data-ai-id={aiId}>
-  <div ref={ref} className="motion-stage lab-apprentice-motion" data-testid="lab-motion-avatar" data-state={motion.state} data-strength={motion.strength} data-quiet={motion.quiet} data-moving={motion.playing&&!motion.reduced&&motion.visible&&onScreen}>
+  <div ref={ref} className="motion-stage lab-apprentice-motion" data-testid="lab-motion-avatar" data-state="idle" data-strength={LAB_AVATAR_STRENGTH} data-quiet={false} data-moving={!reduced&&visible&&onScreen}>
    <div className="motion-body motion-png"><ApprenticeAvatar aiId={aiId} size={128} en={en} decorative/></div>
-   <span className="lab-demo-label lab-motion-avatar-label">DEMO</span>
+   <span className="lab-avatar-motion-note">{en?'Floating artwork':'表示上の浮遊演出'}</span>
   </div>
   {children}
-  <div className="lab-motion-controls motion-controls" aria-label={en?'Apprentice demo motion':'見習いのDEMOアニメーション'}>
-   <div className="lab-motion-toolbar"><span className="lab-demo-label">DEMO</span><span className="lab-motion-label">{en?'Motion preview · separate from real activity':'動きの仮表示・実活動とは無関係'}</span>
-    <div className="motion-strength" role="group" aria-label={en?'Motion intensity':'動作強度'}>{(['standard','strong'] as const).map((value,i)=><button type="button" key={value} data-strength-pick={value} aria-pressed={motion.strength===value} onClick={()=>motion.setStrength(value)}>{(en?['Standard','Strong']:['標準','強'])[i]}</button>)}</div>
-    <button type="button" data-testid="motion-play" disabled={motion.reduced} aria-pressed={motion.playing&&!motion.reduced} onClick={()=>motion.setPlaying(v=>!v)}>{en?(motion.playing?'Stop motion':'Play motion'):(motion.playing?'動きを停止':'動きを再生')}</button>
-   </div>
-   <details className="lab-motion-details" data-motion-demo><summary>{en?'DEMO state':'DEMO状態'}: {selected[en?'en':'ja']}</summary>
-    <div className="motion-state-buttons" role="group" aria-label={en?'Manual demo state':'手動のDEMO状態'}>{motionStates.map(s=><button type="button" key={s.id} data-pick={s.id} aria-pressed={motion.state===s.id} onClick={()=>motion.setState(s.id)}>{s[en?'en':'ja']}</button>)}</div>
-    <p role="status">DEMO · {selected[en?'en':'ja']} — {en?'Whole-image floating and tilt preview.':'一枚絵の浮遊・傾きの仮表示です。'}</p><label><input type="checkbox" checked={motion.quiet} onChange={e=>motion.setQuiet(e.target.checked)}/>{en?'Gentler motion':'控えめな動き'}</label>
-   </details>
-   {motion.reduced&&<p className="motion-preference">{en?'Your reduced-motion preference is active. The avatar remains still.':'端末の「動きを減らす」設定に従い、静止表示にしています。'}</p>}
-  </div>
  </header>;
 }
