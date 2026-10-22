@@ -1,0 +1,19 @@
+{
+  "sourceCommit": "0732af9ebd87f2cd73a033246e88d25493d4ba2a",
+  "newManifestSha256": "68881f68812f22fbf8d99d242dc150680c4099d692a86ec38ffe1876ee1d8ad6",
+  "newExecutorSha256": "237feb3e8b92415184e7a1651598422d9b1824b3f92d08835e155f55a6b9c20c",
+  "productionEnabled": false,
+  "applyAuthorized": false,
+  "operatorImageChanged": false,
+  "archiveFile": "channel-deadline-update-v1.tar.gz",
+  "archiveSha256": "c5f295e21dfc12391595dde03e99c1615995806c28d18be3973e281581901791",
+  "archiveBytes": 11936,
+  "bootstrapFile": "bootstrap-channel-deadline-v1.py",
+  "bootstrapSha256": "99cec26f9ff0582a70004e71c835768c5b2261aead60fd46bf64d40ded866aa6",
+  "files": {
+    "update.json": "3add84c92fdcf2c1a6d893c140cf2372df45194a57a6a7d68ae5f78c92ca8a76",
+    "new-program-manifest.json": "68881f68812f22fbf8d99d242dc150680c4099d692a86ec38ffe1876ee1d8ad6",
+    "update-publication-channel-deadline.py": "516ae090a599ae23e4d9dfdc5c7cc3d70b43de3fc1e4ad19f93922daf323920e",
+    "publication-executor.py": "237feb3e8b92415184e7a1651598422d9b1824b3f92d08835e155f55a6b9c20c"
+  }
+}

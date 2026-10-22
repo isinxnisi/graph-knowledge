@@ -1,0 +1,113 @@
+{
+  "vpsInstallation": {
+    "sourceCommit": "9b59669f282f811a22c7f276ecae61ca16ec499e",
+    "readOnly": true,
+    "productionEnabled": false,
+    "productionApplyCalls": 0,
+    "workerId": "publication-readiness",
+    "codeCommit": "973c7b0c599f79905a029b28b524f4924e169376",
+    "operatorDigest": "sha256:367e9c36401f4f3c7f3a50e829c4c82bcaf83a9e0df72aba91ea03e4b856e528",
+    "receiptSetSha256": "8a55413ee9fedf32fd64ce6fddebd28d1d636ff7de0fcc1fd063a5b15524d56d",
+    "baseRelease": "manga-issue-25-utc-recovery-08-normal",
+    "baseRevision": "88437056-b74f-42ab-88c0-33ed435bdccc",
+    "exclusionKeySha256": "8698baaedd0e4bad1498839183836239368a5c810a1b5e50271acc8a86fa8f00",
+    "attesterKeySha256": "2a3d9a2532782d318bc9dc7725edbb242904964f25e3ab1eb2a8e600a1064e3a",
+    "phase": "readiness-installed-disabled",
+    "ghVersion": "gh version 2.45.0 (2025-07-18 Ubuntu 2.45.0-1ubuntu0.3)",
+    "keyBackup": {
+      "encryptedBackupSha256": "9fc192a19ba4935a2474b748b11becdcdb058b3f88c6ca2793c17698754c24fe",
+      "decryptRoundTripVerified": true,
+      "entryNames": [
+        "approver.pem",
+        "attester.pem",
+        "audit-token",
+        "config.json",
+        "exclusion-private.pem",
+        "exclusion.pem"
+      ],
+      "plaintextArchiveWritten": false,
+      "persistentAgentAdded": false
+    },
+    "custodyOffMachineConfirmed": false,
+    "rollbackManifest": "/root/plunode-publication-readiness.5ih89_06/rollback.json"
+  },
+  "vpsPrograms": {
+    "allProgramHashesMatch": true,
+    "sourceCommit": "9b59669f282f811a22c7f276ecae61ca16ec499e",
+    "programCount": 11,
+    "rootOwnership": true,
+    "modesAndLinks": [
+      "0:0:755:1:通常ファイル",
+      "0:0:644:1:通常ファイル",
+      "0:0:644:1:通常ファイル",
+      "0:0:644:1:通常ファイル",
+      "0:0:644:1:通常ファイル",
+      "0:0:644:1:通常ファイル",
+      "0:0:644:1:通常ファイル",
+      "0:0:644:1:通常ファイル",
+      "0:0:644:1:通常ファイル",
+      "0:0:755:1:通常ファイル",
+      "0:0:755:1:通常ファイル"
+    ]
+  },
+  "wslFixedSourceCommit": "9b59669f282f811a22c7f276ecae61ca16ec499e",
+  "wslSnapshotFileHashesVerifiedBeforeModeRepair": 1450,
+  "wslSnapshotPublicFileModeRepairedTo": "0644",
+  "wslEncryptedBackupSha256": "aafd901c184b9e4bd5d4437b1fcd5453dd48dd0bf55df7e8e78a318bf60b2239",
+  "wslEncryptedBackupHashIndependentlyVerified": true,
+  "wslBackupOriginalRootPath": "/root/plunode-publication-readiness.cscw0z40/custody-wsl.gpg",
+  "offMachineCustodyConfirmed": false,
+  "freshPublicBackupSha256": "593082d1bd62c30b28d801e6eef77177024299d17e2f0b9858c58ce0f9aeb5f9",
+  "candidateRequest": {
+    "schemaVersion": 1,
+    "purpose": "public-kg-publication",
+    "environment": "production",
+    "release": "manga-issue-34-obata-drawing-20261023",
+    "baseRelease": "manga-issue-25-utc-recovery-08-normal",
+    "baseRevision": "88437056-b74f-42ab-88c0-33ed435bdccc",
+    "receiptSetSha256": "8a55413ee9fedf32fd64ce6fddebd28d1d636ff7de0fcc1fd063a5b15524d56d",
+    "planSha256": "242100c907c462475b647aa8a8530f43b359357ce7ae7b2281e86872066c6065",
+    "operatorDigest": "sha256:367e9c36401f4f3c7f3a50e829c4c82bcaf83a9e0df72aba91ea03e4b856e528",
+    "artifactSha256": "d83660e0b4ff54981424f217150ff40e075aaf35a8474d5b684dda51e4da39a8"
+  },
+  "candidateOfflinePlan": {
+    "release": "manga-issue-34-obata-drawing-20261023",
+    "observation": "validated-backup-offline-not-a-live-vps-plan",
+    "backupRevision": "88437056-b74f-42ab-88c0-33ed435bdccc",
+    "added": [
+      "Citation:995e3891-aa9c-4af6-a2ba-3114dfb61fec",
+      "Claim:7ae1c51b-9ba0-46fb-a070-41ac310e8c94",
+      "Source:932fb74b-9292-4fb9-9f8a-29ce35d83823"
+    ],
+    "updated": [],
+    "relationshipsAdded": 4
+  },
+  "readOnlyTicket": {
+    "artifactSha256": "d83660e0b4ff54981424f217150ff40e075aaf35a8474d5b684dda51e4da39a8",
+    "codeCommit": "973c7b0c599f79905a029b28b524f4924e169376",
+    "generation": 1,
+    "nonce": "82da68d6-c3a1-4ff7-85d3-24ab2df1b16d",
+    "pause": null,
+    "phase": "open",
+    "receiptSetSha256": "8a55413ee9fedf32fd64ce6fddebd28d1d636ff7de0fcc1fd063a5b15524d56d",
+    "ticketId": "f2bd0f98-ef1d-40be-923f-381c9accf399",
+    "workerId": "publication-readiness"
+  },
+  "shadowPauseAcknowledged": true,
+  "liveWorkerPausedOrChanged": false,
+  "fixedLocalFreshness": {
+    "fixedLocalFreshnessPassed": true,
+    "elapsedSeconds": 24.77340220400947
+  },
+  "fixedPeerRemotePreflightCompleted": false,
+  "preflightFailure": "Proof generation exceeds old fixed 15 second read wait; existing 60 second expiry is retained by prepared fix",
+  "channelUpdateSourceCommit": "0732af9ebd87f2cd73a033246e88d25493d4ba2a",
+  "channelUpdateRootInstalled": false,
+  "rootUpdateOperatorExecutionPending": true,
+  "auditReadinessNotificationVerified": false,
+  "temporaryReadinessSudoRemoved": false,
+  "productionEnablementApproved": false,
+  "productionEnabled": false,
+  "productionApplyCalls": 0,
+  "issue33Completed": false
+}

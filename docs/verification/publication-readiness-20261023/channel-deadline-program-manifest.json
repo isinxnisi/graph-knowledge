@@ -1,0 +1,32 @@
+{
+  "sourceCommit": "0732af9ebd87f2cd73a033246e88d25493d4ba2a",
+  "operatorSourceCommit": "f81295562e8b540c503cf4727cdac790e431cf48",
+  "operatorConfigId": "sha256:3bcfe13d0c238710db212f4641f43f4d81d2dff72e58726b374bba9a41b26cbf",
+  "operatorManifestId": "sha256:367e9c36401f4f3c7f3a50e829c4c82bcaf83a9e0df72aba91ea03e4b856e528",
+  "files": {
+    "ops/plunode-publication": "9d003d6e3b48a9dcc898ac1d97e2eb8240634ef7cd7b73dbd4dbf04fb2950a9a",
+    "ops/publication-ssh.py": "2eb4de930d96d6414e05448de306db449d57d6157e0bb036c5aca1e6cc13eb31",
+    "scripts/publication-executor.py": "237feb3e8b92415184e7a1651598422d9b1824b3f92d08835e155f55a6b9c20c",
+    "scripts/publication-exclusion.py": "c4c9b9d4332acfb0e80f2a6a82d23f733fb0f9b1e82487bdf17944ccca801677",
+    "scripts/publication-policy.py": "48fc9ab5d82d6c17eb3dbdb4b430ddaf4fa636978d329b22080e5c93713591c2",
+    "scripts/publication-cycle.py": "56a45498d2fff16ef5090012ece9a7e28b3071baf80227563ee818654f23e0a3",
+    "scripts/publication-sign.py": "9c800b9df20d29ce0e9868947642eabd6f9f54135e4d464299892ff358becfc9",
+    "scripts/verify-publication.py": "9c9a289b6535fd1cbcdb86f91082b35f6d941c7e80642d5b70e1522dfe16ca43",
+    "scripts/publication-notify.py": "fd74dfb515713090852e99405704cae8b53748cdc398b6016900ca45aef18204",
+    "ops/plunode-publication-readiness": "829561e9ff570002af8f0a131e751af77ba34ba64b4de912b2d92a79f8345d14",
+    "vendor/gh": "2fd925d68889746976958342fb749bf102bc7dc8bcba3abfa533a80ad7791673"
+  },
+  "configBindings": {
+    "profile": "production",
+    "workerId": "plunode-wsl",
+    "workerCodeCommit": "973c7b0c599f79905a029b28b524f4924e169376",
+    "network": "graph-knowledge-production_default",
+    "neo4jUri": "bolt://graph-neo4j:7687",
+    "neo4jDatabase": "neo4j",
+    "freezePolicy": "durable-pause-new-v1",
+    "approverKeySha256": "f1a99f0ba5a10938809a0747433043122d96a9f2a519a528a09a12992ab79e75",
+    "attesterKeySha256": "2a3d9a2532782d318bc9dc7725edbb242904964f25e3ab1eb2a8e600a1064e3a",
+    "exclusionKeySha256": "2bc1efe6bcb1dc1b15850b7430043e47e8caec7ba557aecd644e3d473faeb06d"
+  },
+  "peerSourceCommit": "9b59669f282f811a22c7f276ecae61ca16ec499e"
+}
