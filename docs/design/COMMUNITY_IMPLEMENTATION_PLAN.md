@@ -5,7 +5,7 @@
 ## 確認環境と現在地
 
 - **3275／graph-com**：[接続確認版](../../prototypes/community-connected/README.md)。既存Home・Explorer・アカウントを再利用する隔離Nextアプリ。コミュニティ・会員操作は架空データ。静的トップや架空SVG Graphで代用しない。実会員API・AI・書込は接続しない。
-- **C1a実基盤**：通常Reactコンポーネント、Better Auth、PostgreSQLの追加schema/API。`COMMUNITY_ENABLED=1` の明示有効化が必要。通常環境は無効。3275のiframeやロール切替を認証として流用しない。
+- **C1a／C1b実基盤**：通常Reactコンポーネント、Better Auth、PostgreSQLの追加schema/API。`COMMUNITY_ENABLED=1` の明示有効化が必要。通常環境は無効。3275のiframeやロール切替を認証として流用しない。
 - **3200／graph-beta**：既存アプリの検証先。コミュニティ実基盤は未有効化、既存会員DBへの005適用なし。
 - **plunode.net**：今回は変更しない。将来ここで提供する「サービスのβフェーズ」とgraph-betaという検証環境を区別する。
 
@@ -19,11 +19,13 @@
 
 ユーザー向けAI管理・分析は表示しない。実装の検証方法・制限は[C1a記録](../verification/COMMUNITY_C1A_20261022.md)。これはC1全体や公開準備の完了ではない。
 
-### C1b：参加・継続運営を完成させる
+### C1b：招待・再参加・継続運営
 
-限定コミュニティへの招待と本人承諾、除外後の明示的再受入、管理者不在時の安全な回復、一覧ページングを追加する。現在の限定作成は作成者だけで利用でき、未実装の招待を有効ボタンで示さない。
+C1aを再利用し、アカウント宛て招待と本人承諾／辞退、期限・取消・再発行、明示的再受入、管理者の追加・降格・辞任、管理者不在の申請→運営判断→本人承諾、全一覧の認可付きcursorを実装・隔離検証済み。
 
-受入：招待期限・失効・アカウント違い、同時参加／除外／退出、旧cohortを再共有しないこと、停止中操作、LIMIT前認可、部分範囲と次ページ、最終管理者を失う競合。停止解除だけで参加権を自動復元しない。
+[採用契約・API／運営手順](COMMUNITY_CONTINUITY.md)を正本とする。限定会話の世代を引き継がず、停止解除だけで参加権を自動復活させない。復帰の運営判断はCLIとcase監査。実運用への有効化や実会員への招待はこの実装・隔離検証とは別。
+
+受入確認済み：実認証／隔離PGによる期限・取消・別User・同時操作、旧cohort非復活、停止中操作、LIMIT前認可、cursorの重複／欠落と変更拒否、管理者不在、日英・PC／狭幅。[検証記録](../verification/COMMUNITY_C1B_20261023.md)。第1弾公開には引き続きC2とC3-minが必要。
 
 ### C2：Capsule公開版・掲載・ギャラリー・実Graph
 
@@ -49,7 +51,7 @@ C1/C2/C3の認可・取消を前提とし、Kev公開API、処理先・費用の
 
 ## 導入と既存機能への影響
 
-005は追加migration。起動時自動適用はしない。`migrateMemberDatabase(pool, true)` を隔離テストだけで実行し、通常の既存migration呼出は従来どおり。旧001〜004のchecksumや保存形式を変更しない。
+005と006は追加migration。起動時自動適用はしない。`migrateMemberDatabase(pool, true)` を隔離テストだけで実行し、通常の既存migration呼出は従来どおり。旧001〜004のchecksumや保存形式を変更しない。
 
 実認証は既存Better Auth。会員UserとKG人物は別。member_capsule_thread/post/tokenを転用せず、独立community_thread/postを追加する。会員停止・退会は同じトランザクションでmembership世代を失効させる。005のない旧DBでは既存処理を維持する。機能停止時はflagを外し、tableと既存データを保持する。
 

@@ -1,5 +1,7 @@
 # 現行技術設計
 
+2026-10-23、人間向けコミュニティC1bをfeature flag内に実装。アカウント宛て招待・本人承諾、明示的再受入、運営判断と本人同意を分けた管理者不在復帰、認可付きcursorを既存Better Auth／PGへ接続する。[契約](design/COMMUNITY_CONTINUITY.md)／[隔離検証](verification/COMMUNITY_C1B_20261023.md)。通常3200／betaは無効、3275／graph-comは架空データのまま。本番・既存会員DBへのmigration、C2掲載・AI・KG変更は行わない。
+
 2026-10-20、[収集接続性評価v1](design/COLLECTION_CONNECTIVITY.md)。保存backup／fixture v4／公開manifest／公開観測をhashとrevisionで照合し、オフラインCLIで既存KG・追加後・追加単独の成分、1〜3段到達、元Claimの根拠付き経路を比較する。単独／テーマ効果と経路列挙上限を分離。Web API・UI・Worker・DBへ変更なし。[実測](verification/COLLECTION_CONNECTIVITY_20261020.md)。
 
 2026-10-19、[対象位置・B方式の接続](design/DISCOVERY_SUBJECT_CONNECTIONS.md)。other-works rev2、対象POST v2／証拠v2／paths POST v2、候補24件の正確な適合判定、Workspace item／URL v3を追加。旧条件は旧位置のまま読み、GraphのEntity枝は共用。名前条件は対象検索・一致理由に限定する。

@@ -7,5 +7,9 @@ export const communityResponse=z.object({
  thread:z.object({id:z.uuid(),title:z.string(),audience:z.string(),closed:z.boolean(),revision:z.number()}).optional(),
  posts:z.array(z.object({id:z.uuid(),body:z.string(),status:z.string(),author_id:z.string().nullable().optional(),name:z.string().nullable().optional()})).optional(),
  members:z.array(z.object({id:z.uuid(),name:z.string(),role:z.string(),admin_offered:z.boolean()})).optional(),
+ nextCursor:z.string().nullable().optional(),membersCursor:z.string().nullable().optional(),
+ invitations:z.array(z.object({id:z.uuid(),communityId:z.uuid(),title:z.string().nullable(),targetId:z.uuid(),revision:z.number(),status:z.string(),expiresAt:z.string(),readmission:z.boolean()})).optional(),
+ participation:z.array(z.object({communityId:z.uuid(),title:z.string().nullable(),status:z.string(),role:z.string(),canRequestRecovery:z.boolean()})).optional(),
+ recoveries:z.array(z.object({id:z.uuid(),communityId:z.uuid(),status:z.string(),revision:z.number(),readmissionRequired:z.boolean().optional()})).optional(),
  partial:z.boolean().optional(),membersPartial:z.boolean().optional()
 });

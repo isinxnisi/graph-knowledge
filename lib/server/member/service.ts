@@ -39,7 +39,7 @@ export function createMemberService(config: MemberConfig, pool: Pool, auth: Memb
     if (content.dataset !== dataset) throw new MemberError(400, "DATASET_MISMATCH");
   }
   return {
-    community: createCommunityService(pool, config.origin, owner),
+    community: createCommunityService(pool, config.origin, owner, config.secret),
     ...createCapsuleSharing(pool, dataset, config.origin, owner),
     ...createCapsuleDiscussion(pool, dataset, config.origin, owner),
     async profile(request: Request) {

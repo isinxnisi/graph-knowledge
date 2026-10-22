@@ -40,7 +40,7 @@
 
 | 現役の設計文書 | 状態・読む場面 |
 | --- | --- |
-| [コミュニティ体験設計](design/COMMUNITY_EXPERIENCE.md)／[基礎設計](design/COMMUNITY_FOUNDATION.md)／[導入計画](design/COMMUNITY_IMPLEMENTATION_PLAN.md) | 2026-10-21。コミュニティを中心に会員・独立会話・版付き掲載・公開範囲・管理・AIを整理。隔離ローカル3275の操作試作。[検証](verification/COMMUNITY_PROTOTYPE_20261021.md)。実API・migration・beta／本番・AI接続なし |
+| [コミュニティ体験設計](design/COMMUNITY_EXPERIENCE.md)／[基礎設計](design/COMMUNITY_FOUNDATION.md)／[導入計画](design/COMMUNITY_IMPLEMENTATION_PLAN.md) | コミュニティを中心に会員・独立会話・版付き掲載・公開範囲・管理・AIを整理。人間向けC1a／C1bはfeature flag内で実装・隔離検証。[現行C1b](design/COMMUNITY_CONTINUITY.md)／[初期試作](verification/COMMUNITY_PROTOTYPE_20261021.md)。本番・既存会員DB適用・AI接続なし |
 | [コミュニティ本線UI接続確認版](design/COMMUNITY_CONNECTION_PREVIEW.md) | 実Home・Explorer・会員画面を再利用する隔離3275／graph-com。架空会員/コミュニティと公開KG読み取りを分離。A〜Cの往復・状態復元・密度比較。[検証](verification/COMMUNITY_CONNECTION_20261021.md) |
 | [保存原文からの正式受入](design/SAVED_EVIDENCE_ACCEPTANCE.md) | Issue #34。取得済み原文・人間の意味承認・固定1 Claim＋Source/Citationを既存receipt基盤へ接続。検証済み本番backupの明示モード、旧baseと最新VPS実planを区別。Workerコード・state・scheduleは維持。[実受入1 Claim・release準備完了](verification/SAVED_EVIDENCE_ACCEPTANCE_20261021.md) |
 | [本番有効化前の固定版更新・接続確認](runbooks/PUBLICATION_ENABLEMENT_READINESS.md) | Issue #33。修正版code/image/trustの一括更新、実peer・監査認証・branch保護・鍵保管の承認対象。本番はdisabled、未公開1 Claimを保持 |
@@ -210,4 +210,6 @@ Phase 08：任意のEntity関係俯瞰、明示起点切替、直前一件復帰
 
 - Issue #33 本番導入工程：[2026-10-21の実環境確認](verification/PUBLICATION_ENVIRONMENT_20261021.md) / [一括承認対象・確定差分・復旧手順](runbooks/PUBLICATION_ROLLOUT_20261021.md)。導入・専用実機試験は承認済みで完了。本番はdisabled。有効化と固定code/image更新・運用条件は未承認。
 
-- コミュニティ第1弾：人間のC1a実基盤と隔離検証。[リリース計画](design/COMMUNITY_IMPLEMENTATION_PLAN.md)／[実装・検証記録](verification/COMMUNITY_C1A_20261022.md)。招待・実掲載・最低限の通報対応は公開前の残作業。
+- コミュニティ第1弾：人間のC1a／C1b実基盤と隔離検証。[リリース計画](design/COMMUNITY_IMPLEMENTATION_PLAN.md)／[実装・検証記録](verification/COMMUNITY_C1A_20261022.md)。実掲載・最低限の通報対応は公開前の残作業。
+
+- コミュニティC1b：[招待・再参加・運営復帰・ページングの契約](design/COMMUNITY_CONTINUITY.md)／[検証結果](verification/COMMUNITY_C1B_20261023.md)。C2の実掲載は別工程。
