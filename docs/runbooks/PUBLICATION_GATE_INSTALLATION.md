@@ -1,5 +1,7 @@
 # 公開実行ゲート候補の導入・運営者操作（Issue #33 第2段階）
 
+2026-10-22の現状と次の承認対象は[本番有効化前の固定版更新・接続確認](PUBLICATION_ENABLEMENT_READINESS.md)を参照。以下の初期設計・隔離段階の未完表記は後続実測で更新されている。
+
 現在の導入結果は[2026-10-21の実機検証記録](../verification/PUBLICATION_ENVIRONMENT_20261021.md)と[一括導入手順](PUBLICATION_ROLLOUT_20261021.md)を参照する。本番にはdisabledで配置済み、故障試験は未完了であり、本書の以下は第2段階実装時点の記録である。
 
 2026-10-21の実機でPython署名canonicalとTS stableJsonのmanifestキー順差を確認した。次の本番固定版候補はTS runtimeのmanifestFileSha256返却を必須capabilityとし、Pythonは凍結manifestのraw SHAを照合する。TSのDB receipt/全graph検査は維持し、署名canonicalは変更しない。旧imageを適用前に拒否するため、code/image/trust manifestを一組で更新する必要がある。現在の72338b7導入物はdisabledのまま変更していない。

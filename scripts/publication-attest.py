@@ -52,6 +52,23 @@ def freshness(runtime,candidate,challenge):
     return challenge
 
 
+MAX_FUTURE_WAIT_SECONDS=8
+
+def wait_until_issued(issued,expires,*,now=None,monotonic=time.monotonic,sleep=time.sleep):
+    """Wait for small clock lead; never sign before issuedAt or extend expiresAt."""
+    now=now or (lambda:signer.dt.datetime.now(signer.dt.timezone.utc))
+    cycle.require(signer.dt.timedelta(0)<expires-issued<=signer.dt.timedelta(seconds=60),'Invalid challenge lifetime')
+    current=now()
+    cycle.require(current<expires and (issued-current).total_seconds()<=MAX_FUTURE_WAIT_SECONDS,'Expired or far-future challenge')
+    deadline=monotonic()+MAX_FUTURE_WAIT_SECONDS
+    while current<issued:
+        remaining=deadline-monotonic()
+        cycle.require(remaining>0,'Clock did not reach issuedAt within bounded wait')
+        sleep(min(.05,remaining,max(.001,(issued-current).total_seconds())))
+        current=now()
+    cycle.require(issued<=current<expires,'Expired challenge after clock wait')
+
+
 def check_challenge(value):
     base={'schemaVersion','purpose','nonce','challenge','artifactSha256','receiptSetSha256','issuedAt','expiresAt','exclusion'}
     cycle.require(value['purpose'] in ['receipt-freshness','worker-pause','worker-resume'], 'Wrong coordination purpose')
@@ -59,8 +76,8 @@ def check_challenge(value):
     for name in ['nonce','challenge']:
         ident=uuid.UUID(value[name]);cycle.require(ident.version==4 and str(ident)==value[name],'Wrong challenge UUID')
     issued=signer.p.timestamp(value['issuedAt']);expires=signer.p.timestamp(value['expiresAt'])
-    cycle.require(issued<=signer.dt.datetime.now(signer.dt.timezone.utc)<expires and expires-issued<=signer.dt.timedelta(seconds=60),'Expired challenge')
     cycle.require(all(value[k]==value['exclusion'][k] for k in ['nonce','artifactSha256','receiptSetSha256']),'Ticket binding differs')
+    wait_until_issued(issued,expires)
 
 
 @contextlib.contextmanager
@@ -118,6 +135,7 @@ def main():
                         else:
                             cycle.require(coordinator is None,'Legacy gate cannot bypass durable exclusion')
                             payload=freshness(a.runtime,a.candidate,challenge)
+                        cycle.require(signer.p.timestamp(challenge['issuedAt'])<=signer.dt.datetime.now(signer.dt.timezone.utc)<signer.p.timestamp(challenge['expiresAt']),'Challenge expired/future before signing')
                         response=signer.sign(payload,a.key)
                         child.stdin.write(json.dumps(response).encode()+b'\n');child.stdin.flush()
                     else: print(json.dumps(message),flush=True)

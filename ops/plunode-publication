@@ -1,24 +1,49 @@
 #!/usr/bin/python3 -I
-# Installation candidate only. No configuration overrides, shell, env preservation or upload execution.
+"""Fixed root gate: source, config and ops image are one root-owned reviewed trust set."""
+import hashlib
 import importlib.util
+import json
 import os
 from pathlib import Path
+import re
 import stat
 import sys
 
-try:
-    if os.geteuid() != 0 or len(sys.argv) != 3: raise ValueError('Fixed root entry required')
-    root = Path('/usr/local/lib/plunode-publication')
-    for path in [root, *root.parents]:
-        st = path.lstat()
-        if path.is_symlink() or st.st_uid != 0 or st.st_mode & 0o022: raise ValueError('Untrusted installation')
-    for name in ['publication-executor.py','publication-policy.py','publication-cycle.py','verify-publication.py','publication-exclusion.py','publication-sign.py']:
-        path=root/name; st=path.lstat()
-        if path.is_symlink() or not stat.S_ISREG(st.st_mode) or st.st_uid != 0 or st.st_mode & 0o022: raise ValueError('Untrusted program')
-    os.environ.clear(); os.environ.update(PATH='/usr/bin:/bin',LANG='C.UTF-8',HOME='/nonexistent')
-    os.umask(0o077)
-    spec=importlib.util.spec_from_file_location('installed_publication',root/'publication-executor.py')
-    module=importlib.util.module_from_spec(spec); spec.loader.exec_module(module)
-    sys.exit(module.root_entry())
-except Exception:
-    print('{"error":"publication-installation-or-request-rejected"}'); sys.exit(1)
+CODE=Path('/usr/local/lib/plunode-publication')
+ROOT=Path('/var/lib/plunode-publication')
+FILES={'ops/plunode-publication','ops/publication-ssh.py','scripts/publication-executor.py','scripts/publication-exclusion.py',
+    'scripts/publication-policy.py','scripts/publication-cycle.py','scripts/publication-sign.py','scripts/verify-publication.py',
+    'scripts/publication-notify.py','ops/plunode-publication-readiness','vendor/gh'}
+
+def require(value):
+    if not value:raise ValueError('Reviewed publication trust set differs')
+def trusted(path,directory=False):
+    st=path.lstat();require(not path.is_symlink() and st.st_uid==0 and not st.st_mode&0o022
+        and (stat.S_ISDIR(st.st_mode) if directory else stat.S_ISREG(st.st_mode) and st.st_nlink==1))
+def target(relative):
+    return Path('/usr/local/sbin')/Path(relative).name if relative.startswith('ops/plunode-') else CODE/Path(relative).name
+
+def verify_installation():
+    for p in [CODE,*CODE.parents,ROOT,ROOT/'trusted']:trusted(p,True)
+    path=ROOT/'trusted/program-manifest.json';trusted(path);manifest=json.loads(path.read_bytes())
+    require(re.fullmatch('[a-f0-9]{40}',manifest['sourceCommit']) and set(manifest['files'])==FILES)
+    for relative,checksum in manifest['files'].items():
+        path=target(relative);trusted(path)
+        require(hashlib.sha256(path.read_bytes()).hexdigest()==checksum)
+    path=ROOT/'trusted/config.json';trusted(path);config=json.loads(path.read_bytes())
+    require(config['operatorDigest'] in [manifest['operatorConfigId'],manifest['operatorManifestId']])
+    require(all(config[k]==v for k,v in manifest['configBindings'].items()))
+    return manifest
+
+def main():
+    require(os.geteuid()==0 and len(sys.argv)==3)
+    verify_installation()
+    os.environ.clear();os.environ.update(PATH='/usr/bin:/bin',LANG='C.UTF-8',HOME='/nonexistent');os.umask(0o077)
+    spec=importlib.util.spec_from_file_location('installed_publication',CODE/'publication-executor.py')
+    module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
+    return module.root_entry()
+
+if __name__=='__main__':
+    try:sys.exit(main())
+    except Exception:
+        print('{"error":"publication-installation-or-request-rejected"}');sys.exit(1)

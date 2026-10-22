@@ -74,10 +74,24 @@ def partition(accepted, public, w):
     return published, pending
 
 
+def reviewed_workflow(runtime):
+    """Code beside this CLI is trusted; runtime supplies immutable data only."""
+    scripts=Path(__file__).resolve().parent
+    w=load('cycle_reviewed_workflow',scripts/'collection-workflow.py')
+    def reviewed_load(name,path):
+        original=Path(path)
+        require(original.suffix=='.py' and re.fullmatch(r'[a-z0-9_-]+\.py',original.name), 'Reviewed Python dependency required')
+        target=scripts/original.name
+        require(target.is_file() and not target.is_symlink(),'Reviewed dependency missing')
+        return load(name,target)
+    w.ROOT=runtime.resolve();w.load=reviewed_load
+    return w
+
+
 def audit(args, get=None, w=None):
     require(__debug__, 'Optimized Python disables existing API assertions; run without -O/PYTHONOPTIMIZE')
     runtime, bundle = args.runtime.resolve(), args.published_bundle.resolve()
-    w = w or load('cycle_workflow', runtime / 'scripts/collection-workflow.py')
+    w = w or reviewed_workflow(runtime)
     report, pins = sealed_bundle(bundle, args.bundle_sha)
     fixture, manifest = read(bundle / 'release/data.json'), read(bundle / 'release/manifest.json')
     require(manifest['release'] == report['release'] and sha(bundle / 'release/data.json') == report['dataSha256']

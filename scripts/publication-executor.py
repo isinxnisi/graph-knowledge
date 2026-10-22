@@ -181,7 +181,7 @@ class DockerBackend:
             return {'operatorDigest': image['Id']}
         if stage in ['validate', 'plan']: return self.command(['scripts/public-kg.ts', stage, '/incoming'], candidate)
         if stage == 'apply': return self.command(['scripts/publication-runtime.ts', 'apply', payload['revision']], candidate)
-        if stage == 'observe': return self.command(['scripts/publication-runtime.ts', stage], candidate)
+        if stage == 'observe': return self.command(['scripts/publication-runtime.ts', stage])  # Backup reads no candidate files.
         if stage == 'verify':
             result = self.command(['scripts/publication-runtime.ts', 'verify'], candidate)
             smoke = load('executor_smoke', HERE / 'verify-publication.py')
