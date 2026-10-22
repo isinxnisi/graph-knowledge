@@ -1,0 +1,22 @@
+"use client";
+import {useEffect,useState,type RefObject} from 'react';
+export const motionStates=[
+ {id:'idle',ja:'待機',en:'Idle',detailJa:'大きくゆっくり浮き沈みし、アンテナが往復する。',detailEn:'A clear, slow bob with a back-and-forth antenna sway.'},
+ {id:'search',ja:'探索中',en:'Searching',detailJa:'左右へ傾いて探り、アンテナが広くスキャンする。',detailEn:'Leans and moves side to side, with a wide antenna scan.'},
+ {id:'found',ja:'発見',en:'Found',detailJa:'高く跳ねて二度弾み、アンテナと光粒が大きく反応する。',detailEn:'A high hop with a double bounce and a pronounced antenna and light response.'},
+ {id:'hold',ja:'保留',en:'On hold',detailJa:'片側に傾いてためらい、短い首振りとアンテナの揺り戻しを繰り返す。',detailEn:'Hesitates at an angle, with a short head shake and antenna recoil.'},
+ {id:'rest',ja:'休憩',en:'Resting',detailJa:'本体とアンテナを深く傾け、ゆっくり呼吸するように浮く。',detailEn:'A deep resting lean of the body and antenna, with a slow breathing float.'},
+] as const;
+export type MotionState=typeof motionStates[number]['id'];
+export type MotionStrength='standard'|'strong';
+
+export function useDemoMotion(defaultStrength:MotionStrength){
+ const [state,setState]=useState<MotionState>('idle'),[strength,setStrength]=useState<MotionStrength>(defaultStrength),[playing,setPlaying]=useState(false),[quiet,setQuiet]=useState(false),[reduced,setReduced]=useState(true),[visible,setVisible]=useState(false);
+ useEffect(()=>{const mq=matchMedia('(prefers-reduced-motion: reduce)');const sync=()=>{setReduced(mq.matches);if(mq.matches)setPlaying(false);};const visibility=()=>setVisible(!document.hidden);sync();visibility();mq.addEventListener('change',sync);document.addEventListener('visibilitychange',visibility);return()=>{mq.removeEventListener('change',sync);document.removeEventListener('visibilitychange',visibility);};},[]);
+ return {state,setState,strength,setStrength,playing,setPlaying,quiet,setQuiet,reduced,visible};
+}
+export function useMotionOnScreen(ref:RefObject<HTMLElement|null>){
+ const [onScreen,setOnScreen]=useState(false);
+ useEffect(()=>{const observer=new IntersectionObserver(([entry])=>setOnScreen(entry.isIntersecting));if(ref.current)observer.observe(ref.current);return()=>observer.disconnect();},[ref]);
+ return onScreen;
+}

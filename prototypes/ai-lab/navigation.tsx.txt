@@ -11,9 +11,9 @@ export function rememberEntry(){
  try{if(safePath(path()))sessionStorage.setItem('ai-lab-entry',JSON.stringify({href:path(),scroll:scrollY}));}catch{/* Browser history remains available. */}
 }
 export function rememberDeparture(target:string){
- try{if(safePath(target)){sessionStorage.setItem('ai-lab-departure',JSON.stringify({href:path(),target:new URL(target,location.origin).pathname,scroll:scrollY}));sessionStorage.setItem('ai-lab-scroll',JSON.stringify({href:path(),scroll:scrollY,details:[...document.querySelectorAll<HTMLDetailsElement>('.lab-main details')].map(d=>d.open)}));}}catch{/* Navigation itself remains available. */}
+ try{if(safePath(target)){sessionStorage.setItem('ai-lab-departure',JSON.stringify({href:path(),target:new URL(target,location.origin).pathname,scroll:scrollY}));sessionStorage.setItem('ai-lab-scroll',JSON.stringify({href:path(),scroll:scrollY,details:[...document.querySelectorAll<HTMLDetailsElement>('.lab-main details:not([data-motion-demo])')].map(d=>d.open)}));}}catch{/* Navigation itself remains available. */}
 }
-export function restoreLabView(){try{const saved=JSON.parse(sessionStorage.getItem('ai-lab-scroll')||'null');if(saved?.href!==path())return;if(Array.isArray(saved.details))document.querySelectorAll<HTMLDetailsElement>('.lab-main details').forEach((d,i)=>{d.open=saved.details[i]===true;});if(Number.isFinite(saved.scroll))requestAnimationFrame(()=>scrollTo(0,saved.scroll));}catch{/* Browser history still works. */}}
+export function restoreLabView(){try{const saved=JSON.parse(sessionStorage.getItem('ai-lab-scroll')||'null');if(saved?.href!==path())return;if(Array.isArray(saved.details))document.querySelectorAll<HTMLDetailsElement>('.lab-main details:not([data-motion-demo])').forEach((d,i)=>{d.open=saved.details[i]===true;});if(Number.isFinite(saved.scroll))requestAnimationFrame(()=>scrollTo(0,saved.scroll));}catch{/* Browser history still works. */}}
 export function LabReturn(){
  const {locale}=useUiLocale();const [href,setHref]=useState<string|null>(null);
  useEffect(()=>{try{const entry=JSON.parse(sessionStorage.getItem('ai-lab-entry')||'null');if(entry&&safePath(entry.href))setHref(entry.href);}catch{/* No fabricated origin. */}},[]);

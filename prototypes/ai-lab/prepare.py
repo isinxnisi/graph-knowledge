@@ -81,6 +81,8 @@ def main():
     copy(apprentice / 'ApprenticeStudy.tsx.txt', 'preview/ApprenticeStudy.tsx')
     copy(apprentice / 'apprentice.css', 'preview/apprentice.css')
     copy(apprentice / 'MotionStudy.tsx.txt', 'preview/MotionStudy.tsx')
+    copy(apprentice / 'motion.tsx.txt', 'preview/motion.tsx')
+    copy(apprentice / 'LabApprenticeHero.tsx.txt', 'preview/LabApprenticeHero.tsx')
     copy(apprentice / 'motion.css', 'preview/motion.css')
     write('app/ai-apprentice-motion-study/page.tsx', """import MotionStudy from '../../preview/MotionStudy';
 export default async function Page({searchParams}:{searchParams:Promise<{lang?:string}>}){const params=await searchParams;return <MotionStudy en={params.lang==='en'}/>;}

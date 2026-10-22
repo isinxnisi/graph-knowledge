@@ -1,18 +1,9 @@
 "use client";
-import {useEffect,useId,useRef,useState} from 'react';
+import {useId,useRef} from 'react';
+import {motionStates as states,useDemoMotion,useMotionOnScreen,type MotionState as State,type MotionStrength as Strength} from './motion';
 import SiteHeader from '../components/SiteHeader';
 import {ApprenticeAvatar} from './Apprentice';
 import artifact from './public.json';
-
-const states=[
- {id:'idle',ja:'待機',en:'Idle',detailJa:'大きくゆっくり浮き沈みし、アンテナが往復する。',detailEn:'A clear, slow bob with a back-and-forth antenna sway.'},
- {id:'search',ja:'探索中',en:'Searching',detailJa:'左右へ傾いて探り、アンテナが広くスキャンする。',detailEn:'Leans and moves side to side, with a wide antenna scan.'},
- {id:'found',ja:'発見',en:'Found',detailJa:'高く跳ねて二度弾み、アンテナと光粒が大きく反応する。',detailEn:'A high hop with a double bounce and a pronounced antenna and light response.'},
- {id:'hold',ja:'保留',en:'On hold',detailJa:'片側に傾いてためらい、短い首振りとアンテナの揺り戻しを繰り返す。',detailEn:'Hesitates at an angle, with a short head shake and antenna recoil.'},
- {id:'rest',ja:'休憩',en:'Resting',detailJa:'本体とアンテナを深く傾け、ゆっくり呼吸するように浮く。',detailEn:'A deep resting lean of the body and antenna, with a slow breathing float.'},
-] as const;
-type State=typeof states[number]['id'];
-type Strength='weak'|'standard'|'strong';
 
 /** Structural rig only: never replaces or overlays the PNG's antenna. */
 function AntennaRig(){
@@ -35,8 +26,7 @@ function AntennaRig(){
 }
 
 function Stage({dark,state,strength,playing,quiet,reduced,visible,en}:{dark:boolean;state:State;strength:Strength;playing:boolean;quiet:boolean;reduced:boolean;visible:boolean;en:boolean}){
- const ref=useRef<HTMLElement>(null);const [onScreen,setOnScreen]=useState(false);
- useEffect(()=>{const observer=new IntersectionObserver(([entry])=>setOnScreen(entry.isIntersecting));if(ref.current)observer.observe(ref.current);return()=>observer.disconnect();},[]);
+ const ref=useRef<HTMLElement>(null),onScreen=useMotionOnScreen(ref);
  return <section ref={ref} className={'motion-stage '+(dark?'is-dark':'is-light')} data-state={state} data-strength={strength} data-quiet={quiet} data-moving={playing&&!reduced&&visible&&onScreen} aria-label={en?(dark?'Dark comparison':'Light comparison'):(dark?'暗い背景で比較':'明るい背景で比較')}>
   <h2>{en?(dark?'Dark background':'Light background'):(dark?'暗い背景':'明るい背景')} <span className="lab-demo-label">DEMO</span></h2>
   <div className="motion-pair">
@@ -49,8 +39,7 @@ function Stage({dark,state,strength,playing,quiet,reduced,visible,en}:{dark:bool
 }
 
 export default function MotionStudy({en=false}:{en?:boolean}){
- const [state,setState]=useState<State>('idle'),[strength,setStrength]=useState<Strength>('strong'),[playing,setPlaying]=useState(false),[quiet,setQuiet]=useState(false),[reduced,setReduced]=useState(true),[visible,setVisible]=useState(false);
- useEffect(()=>{const mq=matchMedia('(prefers-reduced-motion: reduce)');const sync=()=>{setReduced(mq.matches);if(mq.matches)setPlaying(false);};const visibility=()=>setVisible(!document.hidden);sync();visibility();mq.addEventListener('change',sync);document.addEventListener('visibilitychange',visibility);return()=>{mq.removeEventListener('change',sync);document.removeEventListener('visibilitychange',visibility);};},[]);
+ const {state,setState,strength,setStrength,playing,setPlaying,quiet,setQuiet,reduced,visible}=useDemoMotion('strong');
  const selected=states.find(s=>s.id===state)!;
  return <><SiteHeader dataset="public-kg"/><main className="apprentice-study motion-study">
   <header><p className="lab-eyebrow">PLUNODE / B′ / MOTION STUDY</p><h1>{en?'How should the apprentice move?':'探索者見習いB′、動きの比較。'}</h1><p><span className="lab-demo-label">DEMO</span> {en?'Manual preview only. These states do not describe real AI activity. Live activity remains unmonitored.':'手動プレビュー専用です。選んだ状態はAIの実稼働を表しません。実際の活動状態は引き続き未監視です。'}</p>
@@ -59,7 +48,7 @@ export default function MotionStudy({en=false}:{en?:boolean}){
   <section className="motion-controls" aria-label={en?'Demo controls':'DEMOの操作'}>
    <div className="motion-state-buttons" role="group" aria-label={en?'Manual demo state':'手動のDEMO状態'}>{states.map(s=><button key={s.id} type="button" data-pick={s.id} aria-pressed={state===s.id} onClick={()=>setState(s.id)}>{s[en?'en':'ja']}</button>)}</div>
    <p role="status" className="motion-description"><strong>DEMO · {selected[en?'en':'ja']}</strong> — {selected[en?'detailEn':'detailJa']}</p>
-   <div className="motion-strength"><span>{en?'Motion intensity':'動作強度'}</span><div role="group" aria-label={en?'Motion intensity':'動作強度'}>{(['weak','standard','strong'] as const).map((value,i)=><button type="button" key={value} data-strength-pick={value} aria-pressed={strength===value} onClick={()=>setStrength(value)}>{(en?['Weak','Standard','Strong']:['弱','標準','強'])[i]}</button>)}</div></div>
+   <div className="motion-strength"><span>{en?'Motion intensity':'動作強度'}</span><div role="group" aria-label={en?'Motion intensity':'動作強度'}>{(['standard','strong'] as const).map((value,i)=><button type="button" key={value} data-strength-pick={value} aria-pressed={strength===value} onClick={()=>setStrength(value)}>{(en?['Standard','Strong']:['標準','強'])[i]}</button>)}</div></div>
    <div className="motion-play-controls"><button type="button" data-testid="motion-play" aria-pressed={playing&&!reduced} disabled={reduced} onClick={()=>setPlaying(v=>!v)}>{en?(playing?'Stop motion':'Play motion'):(playing?'動きを停止':'動きを再生')}</button><label><input type="checkbox" checked={quiet} onChange={e=>setQuiet(e.target.checked)}/>{en?'Gentler motion':'控えめな動き'}</label></div>
    <p className="motion-preference">{reduced?(en?'Your reduced-motion preference is active. All samples remain still.':'端末の「動きを減らす」設定に従い、すべて静止表示にしています。'):(en?'Starts paused. Motion also pauses outside the viewport or in a hidden tab.':'初期表示は停止。画面外や非表示タブでも動きを止めます。')}</p>
   </section>

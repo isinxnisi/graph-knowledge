@@ -7,7 +7,7 @@ import {classify} from './state';
 import artifact from './public.json';
 import review from './review.json';
 import readiness from './readiness.json';
-import {ApprenticeAvatar} from './Apprentice';
+import LabApprenticeHero from './LabApprenticeHero';
 import {LabMentorship} from './OfficialAi';
 
 type Run=typeof artifact.payload.runs[number];
@@ -67,14 +67,13 @@ export default function Lab(){
  const run=runs.find(r=>r.runId===selected);
  return <><SiteHeader dataset="public-kg" page="member" user={null}/><main className="lab-main">
   <LabReturn/>
-  <header className="lab-hero lab-apprentice-focus" id="apprentice" data-testid="explorer-apprentice" data-ai-id={data.aiId}>
-   <ApprenticeAvatar aiId={data.aiId} size={128} en={en} decorative/>
+  <LabApprenticeHero aiId={data.aiId} en={en}>
    <div className="lab-apprentice-intro"><p className="lab-eyebrow">PLUNODE / AI LAB</p><h1>{en?'Apprentice exploration AI':'探索者見習いAI'}</h1><p>{en?'Follow its choices, evidence and recorded changes.':'選択と保留、根拠と版の違いから、探索の変化を観察します。'}</p>
     <a className="lab-action" href={'/ai-apprentice-study'+(en?'?lang=en':'')}>{en?'Compare provisional B′ artwork →':'B′の仮デザイン・サイズ比較 →'}</a>
     <a className="lab-action" data-testid="motion-entry" href={'/ai-apprentice-motion-study'+(en?'?lang=en':'')}>{en?'Motion comparison · DEMO →':'動きの比較・DEMO →'}</a>
    </div>
    <div className="lab-stage"><small>{en?'CURRENT STAGE':'現在の段階'}</small><strong>{en?'Preparing for first inference':'初稼働の準備中'}</strong><span>{en?'No lab training · live status not monitored':'ラボ追加学習なし · 現在の稼働は未監視'}</span><button className="lab-action" onClick={()=>navigate('runs')}>{en?'View run history →':'実行履歴を見る →'}</button></div>
-  </header>
+  </LabApprenticeHero>
   <nav className="lab-tabs" aria-label={en?'Lab sections':'ラボ内の表示'}>{[['overview','観察ノート','Overview'],['runs','実行履歴','Run history'],['review','4課題のレビュー','Review 4 tasks'],['readiness','初稼働の準備','Readiness']].map(([key,ja,eng])=><button key={key} aria-current={tab===key?'page':undefined} onClick={()=>navigate(key)}>{en?eng:ja}</button>)}</nav>
   {tab==='overview'&&<section aria-label={en?'Overview':'観察ノート'}>
    <div className="lab-metrics">{[[rules,en?'Non-AI runs':'非AIの実行'],[ai,en?'Completed AI inference':'AI実推論の完了'],[held,en?'Held before inference':'推論前の保留'],[trained,en?'Runs with lab training':'追加学習済みの実行']].map(([n,label])=><div key={String(label)}><strong>{n}</strong><span>{label}</span></div>)}</div>

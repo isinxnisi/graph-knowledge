@@ -7,6 +7,7 @@ const base=process.env.AI_LAB_ORIGIN||'http://127.0.0.1:3268',out='/tmp/plunode-
 await mkdir(out,{recursive:true});const browser=await chromium.launch({headless:true});
 try{
  for(const lang of ['ja','en'])for(const width of [1440,390])for(const theme of ['light','dark-blue']){
+  if(process.env.AI_MOTION_CASE&&process.env.AI_MOTION_CASE!==lang+'-'+width+'-'+theme)continue;
   const ctx=await browser.newContext({viewport:{width,height:900},reducedMotion:'no-preference'}),page=await ctx.newPage(),errors=[],writes=[],kev=[];
   await ctx.addInitScript(theme=>localStorage.setItem('graph-knowledge:appearance:v1',JSON.stringify({theme,palette:theme==='dark-blue'?'blue':'brown'})),theme);
   page.on('pageerror',e=>errors.push(e.message));page.on('request',r=>{if(!['GET','HEAD'].includes(r.method()))writes.push(r.url());if(/8009|kev/i.test(r.url()))kev.push(r.url());});
@@ -35,10 +36,11 @@ try{
   const patterns={};for(const state of ['idle','search','found','hold','rest']){await page.locator('[data-pick="'+state+'"]').click();patterns[state]=await trajectory();}
   assert.ok(range(patterns.idle,'y')>24);assert.ok(range(patterns.search,'x')>20);assert.ok(range(patterns.found,'y')>40);assert.ok(range(patterns.hold,'angle')>15);assert.ok(patterns.rest.every(r=>r.angle>10));
   await page.locator('[data-pick="idle"]').click();const amplitudes=[];
-  for(const strength of ['weak','standard','strong']){await page.locator('[data-strength-pick="'+strength+'"]').click();assert.equal(await stage.getAttribute('data-strength'),strength);amplitudes.push(range(await trajectory(),'y'));}
-  assert.ok(amplitudes[0]<amplitudes[1]&&amplitudes[1]<amplitudes[2],'intensity increases rendered displacement');
+  assert.equal(await page.locator('[data-strength-pick="weak"]').count(),0);
+  for(const strength of ['standard','strong']){await page.locator('[data-strength-pick="'+strength+'"]').click();assert.equal(await stage.getAttribute('data-strength'),strength);amplitudes.push(range(await trajectory(),'y'));}
+  assert.ok(amplitudes[0]<amplitudes[1],'intensity increases rendered displacement');
   await page.locator('input[type="checkbox"]').check();assert.equal(await stage.getAttribute('data-quiet'),'true');
-  assert.ok(range(await trajectory(),'y')<amplitudes[2]*.5,'quiet mode further reduces strong motion');
+  assert.ok(range(await trajectory(),'y')<amplitudes[1]*.5,'quiet mode further reduces strong motion');
   // WAAPI play()/pause() used for sampling override CSS play-state. Reload to test
   // native UI stopping with untouched animations, as a user actually sees them.
   await page.reload();await page.waitForFunction(()=>!document.querySelector('[data-testid="motion-play"]').disabled);
