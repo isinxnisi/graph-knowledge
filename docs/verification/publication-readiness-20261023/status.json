@@ -1,0 +1,63 @@
+{
+  "at": "2026-10-22T15:55:47.789498+00:00",
+  "scope": "P33-READY-20261022",
+  "authorization": "Explicit operator authorization reiterated in current chat and Issue 33 comment 6344746868",
+  "fixedSourceCommit": "9b59669f282f811a22c7f276ecae61ca16ec499e",
+  "controlBranch": "codex/collection-control",
+  "priorProtectionStatus": 404,
+  "protectionRequest": {
+    "required_status_checks": null,
+    "enforce_admins": true,
+    "required_pull_request_reviews": null,
+    "restrictions": null,
+    "required_linear_history": true,
+    "allow_force_pushes": false,
+    "allow_deletions": false
+  },
+  "protectionReadBack": {
+    "url": "https://api.github.com/repos/isinxnisi/graph-knowledge/branches/codex/collection-control/protection",
+    "required_signatures": {
+      "url": "https://api.github.com/repos/isinxnisi/graph-knowledge/branches/codex/collection-control/protection/required_signatures",
+      "enabled": false
+    },
+    "enforce_admins": {
+      "url": "https://api.github.com/repos/isinxnisi/graph-knowledge/branches/codex/collection-control/protection/enforce_admins",
+      "enabled": true
+    },
+    "required_linear_history": {
+      "enabled": true
+    },
+    "allow_force_pushes": {
+      "enabled": false
+    },
+    "allow_deletions": {
+      "enabled": false
+    },
+    "block_creations": {
+      "enabled": false
+    },
+    "required_conversation_resolution": {
+      "enabled": false
+    },
+    "lock_branch": {
+      "enabled": false
+    },
+    "allow_fork_syncing": {
+      "enabled": false
+    }
+  },
+  "productionEnabled": false,
+  "productionApplyCalls": 0,
+  "vpsReadinessDirectoryPresent": false,
+  "vpsUnattendedSudoAvailable": false,
+  "wslNewFixedCodePresent": false,
+  "liveWorkerModified": false,
+  "liveWorkerConfigSha256": "d3411e24937f2f422495bf347bac9361b5a6364375443d104c266f96de4763e9",
+  "formalReceiptCount": 10,
+  "formalReceiptSetSha256": "8a55413ee9fedf32fd64ce6fddebd28d1d636ff7de0fcc1fd063a5b15524d56d",
+  "productionRevision": "88437056-b74f-42ab-88c0-33ed435bdccc",
+  "sudoAndHiddenInputRequestedAsOneOperatorWorkUnit": true,
+  "freshMachineRoundTripCompleted": false,
+  "goalCompleted": false,
+  "existingDedicatedApplyRecoveryTestsRepeated": false
+}
