@@ -73,3 +73,26 @@ rotationは**実施していない**。実施時は、active ticketがないこ�
 今回の一括承認は**固定版更新＋read-only実接続確認まで**。config=falseは維持し、本番有効化・署名承認・execute/apply・restoreは含まない。
 
 上記完了後に、運営者が鍵の保管/復旧責任と運用主体、branch運用、live Workerの公開時pause/resume契約、通知障害対応を確認したうえで、固定source/image/trustを指定した有効化の明示承認を行う。各releaseの公開は、最新receipt集合・artifact・live plan・base revision・image・短期期限・単回nonceに固定した別の署名承認を必要とする。未公開1 Claimは候補準備だけで公開済みへ移さない。
+
+## 固定資材と未実行入口（P33-READY-20261022）
+
+承認対象Python/peer sourceは **9b59669f282f811a22c7f276ecae61ca16ec499e**。[program manifest](../verification/publication-readiness-20261022/program-manifest.json)、[配布一覧](../verification/publication-readiness-20261022/fixed-assets.json)、[今回の検証結果](../verification/publication-readiness-20261022/report.json)を一組としてレビューする。manifest SHAは a7b5a171a76a2fc9beb162cc021e5c9a5435da14e32f25736b99f09aff03434d。
+
+| 資材 | bytes | SHA256 |
+| --- | ---: | --- |
+| VPS bundle | 251666469 | 70dd6f7d57a0dd72bbb62f428ecf4ec1b7723e73749a9b98e3905cfdf649ff57 |
+| WSL bundle | 48882522 | 741ed20f110af813842208419aabbbfb9122570a4cb420ed44e231ac6ad6ad7e |
+| VPS bootstrap | 3674 | 229597e9b05c7502f9b81fcee1faf22ecaffcfbb3188df717c9c26ef7c9f7b2c |
+| WSL bootstrap | 2282 | bd45e36703f3bb878e303a1ff00b27071a37dfe35627e5e53bd0b6f6c72405e2 |
+
+[VPS loader](../verification/publication-readiness-20261022/bootstrap-readiness-vps.py)と[WSL loader](../verification/publication-readiness-20261022/bootstrap-readiness-wsl.py)は、whole bundleをroot-private stageへコピーしてSHA照合し、固定file集合・個別SHA・size・通常file・重複/絶対/親path禁止を検査してからinstallerへ渡す。installerをhomeから未検証でsudo実行しない。bundleに秘密鍵・token・DB envは含まない。VPS bundle/bootstrapはdevelop所有stagingへ転送し、受信SHAを照合済み。root導入は未実行。
+
+VPSの場所は /home/develop/plunode-publication-readiness-20261022/、WSLは ~/.cache/plunode-publication-readiness-20261022/。承認後、各端末でhash付きloaderをsudo実行する。VPSでは監査PATとVPS暗号化phrase、WSLではWSL暗号化phraseを運営者が入力する。新PATは選択repoのIssues読書き・有効期限を確認し、既存開発者credentialをVPSへコピーしない。入力値を返信しない。結果JSONと保全先だけを共有する。
+
+VPS rollbackは同じroot stageの rollback-publication-readiness.py にそのstageを唯一の引数として渡す。active ticketがあれば先に既存cancel/署名閉鎖/条件付きresume/finishで閉じ、強制解除しない。root installerは自動で再実行しない。WSLの新clientは上記source内のSHAと一致する場合だけrootで撤去できる。旧固定snapshotと旧本番clientは変更していないため切戻し対象ではない。暗号化backup・履歴を消して復旧しない。
+
+今回、runtime全10 receiptは一致し、mainにある旧3 receiptも同じSHAだった。後続7 receiptはruntimeに存在し、mainの同pathには存在しない。mainへ複製・再受入せず、正式runtimeを受入正本として候補とfreshnessを検証する。360個の読取対象が不変。棚卸しCLIで既公開50 ClaimのAPI・意味・Role・scope・根拠を確認し、未公開はEntity0/Claim1/Source1/Citation1。新しいroot全graph backupと実planは承認後の未完項目である。
+
+今回の検証は14（時刻/trust/監査/鍵）＋3（使捨てroot FS・暗号化・部分rollback）＋27（executor）＋18（棚卸し/candidate）＋16（試験guard）＝78件成功。root FS試験のDocker/HTTPはmockであり、新固定版の実VPS結合成功とは数えない。既存の専用DB単回apply/復旧試験を再実施していない。
+
+ops/文書だけの変更なのでWeb再buildは行っていない。local3200 /api/datasetは200（revision82b01515…）、正式VPSは200（88437056…）、日常betaは403で確認不可。検索UI・会員DB・サービス設定は変更していない。

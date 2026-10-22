@@ -1,0 +1,121 @@
+{
+  "scope": "P33-READY-20261022",
+  "sourceCommit": "9b59669f282f811a22c7f276ecae61ca16ec499e",
+  "productionEnabled": false,
+  "productionApplyAuthorized": false,
+  "programManifestSha256": "a7b5a171a76a2fc9beb162cc021e5c9a5435da14e32f25736b99f09aff03434d",
+  "image": {
+    "configId": "sha256:3bcfe13d0c238710db212f4641f43f4d81d2dff72e58726b374bba9a41b26cbf",
+    "manifestId": "sha256:367e9c36401f4f3c7f3a50e829c4c82bcaf83a9e0df72aba91ea03e4b856e528",
+    "layers": [
+      {
+        "mediaType": "application/vnd.oci.image.layer.v1.tar",
+        "digest": "sha256:e58989146fcec76699871403b9897b5c014af1ccd85f5a9300a215e7975525d7",
+        "size": 77936640
+      },
+      {
+        "mediaType": "application/vnd.oci.image.layer.v1.tar",
+        "digest": "sha256:a52fce3e2e53c15bee62149c2a83480bfc3000e19b253dba304220e3d487582f",
+        "size": 21504
+      },
+      {
+        "mediaType": "application/vnd.oci.image.layer.v1.tar",
+        "digest": "sha256:65d71716d250882cedd073ea8e6ab52eb8ce7372fb9eed886775d91dbf9b0f74",
+        "size": 150128640
+      },
+      {
+        "mediaType": "application/vnd.oci.image.layer.v1.tar",
+        "digest": "sha256:bdfbfbb03dafc1b269c0668c632ae06c04bff6bc9ae624c8a9cbb3ecb4ad1d3c",
+        "size": 7217664
+      },
+      {
+        "mediaType": "application/vnd.oci.image.layer.v1.tar",
+        "digest": "sha256:b6a146dc1aed9a3193cadd3aa94373029d72d93c212e59a42c5d0194b2157ab5",
+        "size": 3584
+      },
+      {
+        "mediaType": "application/vnd.oci.image.layer.v1.tar",
+        "digest": "sha256:a799672926d27f733f894fc8a4ffd45a54424fb7b3accd02deddce5626d57d88",
+        "size": 1536
+      },
+      {
+        "mediaType": "application/vnd.oci.image.layer.v1.tar",
+        "digest": "sha256:569b1c4fc1f0f2510785cd65a33cbbf865b5a96697820f4acb05ac5db5c41867",
+        "size": 565015552
+      },
+      {
+        "mediaType": "application/vnd.oci.image.layer.v1.tar",
+        "digest": "sha256:6600bd039d03004a53625937ada015a2e520ce9f570cc66ed0aa0bfea6528712",
+        "size": 11776
+      },
+      {
+        "mediaType": "application/vnd.oci.image.layer.v1.tar",
+        "digest": "sha256:2c02c01d008bebc62da9f4d28565b831a194af17b6cc068c2ca04db9f15c298d",
+        "size": 882176
+      },
+      {
+        "mediaType": "application/vnd.oci.image.layer.v1.tar",
+        "digest": "sha256:94b0e80ea4126067b993e86e287ecbc282f11d012af9994b61119228729cbd3b",
+        "size": 3584
+      },
+      {
+        "mediaType": "application/vnd.oci.image.layer.v1.tar",
+        "digest": "sha256:e3d88146e2228cf924d4bc72ec5f4a7052ba3598048e27254c9da06df6916276",
+        "size": 12800
+      }
+    ],
+    "archiveSha256": "853c3ceade766b116ac3e04a304ba93158f5b87af5a4485fb445caefca58a8d5"
+  },
+  "configBindings": {
+    "profile": "production",
+    "workerId": "plunode-wsl",
+    "workerCodeCommit": "973c7b0c599f79905a029b28b524f4924e169376",
+    "network": "graph-knowledge-production_default",
+    "neo4jUri": "bolt://graph-neo4j:7687",
+    "neo4jDatabase": "neo4j",
+    "freezePolicy": "durable-pause-new-v1",
+    "approverKeySha256": "f1a99f0ba5a10938809a0747433043122d96a9f2a519a528a09a12992ab79e75",
+    "attesterKeySha256": "2a3d9a2532782d318bc9dc7725edbb242904964f25e3ab1eb2a8e600a1064e3a",
+    "exclusionKeySha256": "2bc1efe6bcb1dc1b15850b7430043e47e8caec7ba557aecd644e3d473faeb06d"
+  },
+  "wslArchiveSha256": "a59f997114ac685674a6443c154eb48162a8536055f8d77a4cb3747aa07b74d4",
+  "readinessClientSha256": "ef8a630362d181c8afd8d329766a0048a7ce101ddbc4e3b43c94b19ebe79c684",
+  "assets": {
+    "program-manifest.json": "a7b5a171a76a2fc9beb162cc021e5c9a5435da14e32f25736b99f09aff03434d",
+    "prior-program-manifest.json": "5632b54494916a70745f12e44d77512a052e1bfeef0d324bfc3a660d66e714f7",
+    "rollback-publication-readiness.py": "de9afd1a35b5babb1b0af1476d63f96b542161eacb8cb40197a26959a0759d2f",
+    "publication-key-backup.py": "c7f4e212a6109f91208d5234e8403b77557e7b427c72e9a373cf0a413f029b8d",
+    "install-publication-readiness.py": "eae44ec53119a35ac6984e01544b58a8f24bba4bf5465880f92b2d1f5c1be58a",
+    "programs/publication-policy.py": "48fc9ab5d82d6c17eb3dbdb4b430ddaf4fa636978d329b22080e5c93713591c2",
+    "programs/gh": "2fd925d68889746976958342fb749bf102bc7dc8bcba3abfa533a80ad7791673",
+    "programs/publication-sign.py": "9c800b9df20d29ce0e9868947642eabd6f9f54135e4d464299892ff358becfc9",
+    "programs/publication-notify.py": "fd74dfb515713090852e99405704cae8b53748cdc398b6016900ca45aef18204",
+    "programs/publication-exclusion.py": "c4c9b9d4332acfb0e80f2a6a82d23f733fb0f9b1e82487bdf17944ccca801677",
+    "programs/verify-publication.py": "9c9a289b6535fd1cbcdb86f91082b35f6d941c7e80642d5b70e1522dfe16ca43",
+    "programs/publication-ssh.py": "2eb4de930d96d6414e05448de306db449d57d6157e0bb036c5aca1e6cc13eb31",
+    "programs/publication-cycle.py": "56a45498d2fff16ef5090012ece9a7e28b3071baf80227563ee818654f23e0a3",
+    "programs/plunode-publication-readiness": "829561e9ff570002af8f0a131e751af77ba34ba64b4de912b2d92a79f8345d14",
+    "programs/plunode-publication": "9d003d6e3b48a9dcc898ac1d97e2eb8240634ef7cd7b73dbd4dbf04fb2950a9a",
+    "programs/publication-executor.py": "412ad3f3b296646aa28c13b6b44e022368ca87b4f6f901f316660beb68a21f1f"
+  },
+  "bundles": {
+    "vps": {
+      "file": "p33-readiness-vps.tar.gz",
+      "sha256": "70dd6f7d57a0dd72bbb62f428ecf4ec1b7723e73749a9b98e3905cfdf649ff57",
+      "bytes": 251666469,
+      "bootstrap": "bootstrap-readiness-vps.py",
+      "bootstrapSha256": "229597e9b05c7502f9b81fcee1faf22ecaffcfbb3188df717c9c26ef7c9f7b2c",
+      "bootstrapBytes": 3674,
+      "operatorInstallExecuted": false
+    },
+    "wsl": {
+      "file": "p33-readiness-wsl.tar.gz",
+      "sha256": "741ed20f110af813842208419aabbbfb9122570a4cb420ed44e231ac6ad6ad7e",
+      "bytes": 48882522,
+      "bootstrap": "bootstrap-readiness-wsl.py",
+      "bootstrapSha256": "bd45e36703f3bb878e303a1ff00b27071a37dfe35627e5e53bd0b6f6c72405e2",
+      "bootstrapBytes": 2282,
+      "operatorInstallExecuted": false
+    }
+  }
+}
