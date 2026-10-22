@@ -1,0 +1,87 @@
+{
+  "observedAt": "2026-10-22T18:45:22.444151+00:00",
+  "rootUpdate": {
+    "phase": "publication-channel-updated-disabled",
+    "sourceCommit": "0732af9ebd87f2cd73a033246e88d25493d4ba2a",
+    "peerSourceCommit": "9b59669f282f811a22c7f276ecae61ca16ec499e",
+    "operatorDigest": "sha256:367e9c36401f4f3c7f3a50e829c4c82bcaf83a9e0df72aba91ea03e4b856e528",
+    "programManifestSha256": "68881f68812f22fbf8d99d242dc150680c4099d692a86ec38ffe1876ee1d8ad6",
+    "ticketNonce": "82da68d6-c3a1-4ff7-85d3-24ab2df1b16d",
+    "frozenJobsConfigAndReservationsUnchanged": true,
+    "challengeLifetimeSeconds": 60,
+    "productionEnabled": false,
+    "applyCalls": 0,
+    "keyOrImageOrWorkerChanged": false,
+    "preserveStage": "/root/plunode-publication-channel-update.giu2wg07"
+  },
+  "liveReadOnlyPreflight": {
+    "nonce": "82da68d6-c3a1-4ff7-85d3-24ab2df1b16d",
+    "phase": "awaiting-publication-approval",
+    "request": {
+      "schemaVersion": 1,
+      "purpose": "public-kg-publication",
+      "environment": "production",
+      "release": "manga-issue-34-obata-drawing-20261023",
+      "baseRelease": "manga-issue-25-utc-recovery-08-normal",
+      "baseRevision": "88437056-b74f-42ab-88c0-33ed435bdccc",
+      "receiptSetSha256": "8a55413ee9fedf32fd64ce6fddebd28d1d636ff7de0fcc1fd063a5b15524d56d",
+      "planSha256": "9985a539b6281f99a2f7c7d422b2aac214d143d5fc56411fbdfd51605697a392",
+      "operatorDigest": "sha256:367e9c36401f4f3c7f3a50e829c4c82bcaf83a9e0df72aba91ea03e4b856e528",
+      "artifactSha256": "d83660e0b4ff54981424f217150ff40e075aaf35a8474d5b684dda51e4da39a8"
+    }
+  },
+  "readOnlyTicketFinished": {
+    "nonce": "82da68d6-c3a1-4ff7-85d3-24ab2df1b16d",
+    "ticketId": "f2bd0f98-ef1d-40be-923f-381c9accf399",
+    "generation": 1,
+    "phase": "finished",
+    "workerId": "publication-readiness",
+    "codeCommit": "973c7b0c599f79905a029b28b524f4924e169376",
+    "artifactSha256": "d83660e0b4ff54981424f217150ff40e075aaf35a8474d5b684dda51e4da39a8",
+    "receiptSetSha256": "8a55413ee9fedf32fd64ce6fddebd28d1d636ff7de0fcc1fd063a5b15524d56d",
+    "resume": {
+      "controlId": "pub-82da68d6-c3a1-4ff7-85d3-24ab2df1b16d-resume",
+      "revision": 2,
+      "previousControlId": "pub-82da68d6-c3a1-4ff7-85d3-24ab2df1b16d-pause",
+      "closureSha256": "837addae7d0811e398d9d50666bbdd406919951ccda5bed23075d7d0437ea726"
+    }
+  },
+  "shadowWorkerResumeAcknowledged": {
+    "revision": 2,
+    "pauseMode": null
+  },
+  "rootAuditEvent": {
+    "baseRelease": "manga-issue-25-utc-recovery-08-normal",
+    "baseRevision": "88437056-b74f-42ab-88c0-33ed435bdccc",
+    "nonce": "82da68d6-c3a1-4ff7-85d3-24ab2df1b16d",
+    "operatorDigest": "sha256:367e9c36401f4f3c7f3a50e829c4c82bcaf83a9e0df72aba91ea03e4b856e528",
+    "phase": "read-only-readiness-verified",
+    "planSha256": "9985a539b6281f99a2f7c7d422b2aac214d143d5fc56411fbdfd51605697a392",
+    "productionApplyCalls": 0,
+    "productionEnabled": false,
+    "readOnly": true,
+    "receiptSetSha256": "8a55413ee9fedf32fd64ce6fddebd28d1d636ff7de0fcc1fd063a5b15524d56d",
+    "sourceCommit": "0732af9ebd87f2cd73a033246e88d25493d4ba2a"
+  },
+  "auditDelivery": {
+    "phase": "stopped-awaiting-diagnostic",
+    "dedicatedIdentityAuthenticationVerified": false,
+    "sendVerified": false,
+    "deduplicationVerified": false
+  },
+  "temporaryReadinessSudoRemoved": false,
+  "productionEnabled": false,
+  "productionApplyCalls": 0,
+  "formalUnpublishedClaims": 1,
+  "alreadyPublishedClaimsReapplied": 0,
+  "liveWorkerModified": false,
+  "offMachineCustodyConfirmed": false,
+  "deliveryConnector": {
+    "implemented": true,
+    "isolatedTestsPassed": 7,
+    "installed": false,
+    "endToEndOperatorApprovalTriggerInstalled": false
+  },
+  "issue33Complete": false,
+  "independentVpsProgramHashesVerified": 11
+}

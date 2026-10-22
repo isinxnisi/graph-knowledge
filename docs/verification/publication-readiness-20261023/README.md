@@ -25,3 +25,7 @@
 既存runbookはCLIを段階ごとに操作する手順であり、現在のsourceには、それだけで「承認後に転送から記録まで自動完結」を実証した一連の呼出し入口はない。固定版連携の成功後に、この必須の連結を既存CLIで確認し、手動転送・execute・close/resume/finish・通知が残るなら最小限で接続する。新しい意味判断・検索機能・有料AI・常駐serviceを追加することを目的にしない。現時点で#33完成とは扱わない。
 
 停止理由は、必須の運営者端末入力結果が未受領であること。本番有効化・実データapplyは未承認かつ未実行で、入力待ちをその承認へ読み替えない。
+
+## 固定peerの実機結果（後続）
+
+source0732af9のVPS更新後、実preflight・無書込plan・署名閉鎖・shadow resume/finishが成功。監査通知は診断待ち。本番false/apply0、#33未完了。[実測と接続コードの残範囲](live-peer-results.md) / [状態JSON](live-peer-results.json)。
