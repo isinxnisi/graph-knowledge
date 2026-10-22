@@ -59,7 +59,7 @@ def main():
                 else:
                     require(member.isfile());path.parent.mkdir(mode=0o755,parents=True,exist_ok=True)
                     fd=os.open(path,os.O_WRONLY|os.O_CREAT|os.O_EXCL|os.O_NOFOLLOW,0o644)
-                    with os.fdopen(fd,'wb') as stream:stream.write(source.extractfile(member).read());stream.flush();os.fsync(stream.fileno())
+                    with os.fdopen(fd,'wb') as stream:stream.write(source.extractfile(member).read());os.fchmod(stream.fileno(),0o644);stream.flush();os.fsync(stream.fileno())
             root.chmod(0o755)
         require(sha(root/'ops/publication-readiness-client')==metadata['readinessClientSha256'])
         for p in [*reversed([p for p in root.rglob('*') if p.is_dir()]),root]:

@@ -53,6 +53,8 @@ class FixedWslInstallationTests(unittest.TestCase):
     def test_fixed_code_and_encrypted_backup_use_real_root_permissions_without_worker_changes(self):
         before=self.sentinel.read_bytes();self.invoke();target=self.base/self.commit
         self.assertEqual((target/'ops/publication-readiness-client').stat().st_uid,0)
+        self.assertEqual(stat.S_IMODE((target/'ops/publication-readiness-client').stat().st_mode),0o644)
+        self.assertEqual(stat.S_IMODE((target/'scripts/publication-attest.py').stat().st_mode),0o644)
         self.assertEqual(stat.S_IMODE((target/'ops').stat().st_mode),0o755)
         self.assertEqual(stat.S_IMODE((target/'scripts').stat().st_mode),0o755)
         self.assertEqual(stat.S_IMODE(self.client.stat().st_mode),0o755)

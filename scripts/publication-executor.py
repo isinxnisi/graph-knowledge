@@ -16,6 +16,7 @@ import stat
 import subprocess
 import sys
 import tempfile
+import time
 import uuid
 from urllib.request import urlopen
 
@@ -415,12 +416,29 @@ class Gate:
         return state
 
 
+def read_attestation(fd, expires_at, *, utc_now=now, monotonic=time.monotonic, wait=select.select, read_bytes=os.read):
+    # Bound the entire streamed response by the existing challenge expiry. A partial line
+    # must not turn select()+readline() into an unbounded wait or renew the deadline.
+    expires = policy.timestamp(expires_at)
+    budget = min(60.0, (expires - utc_now()).total_seconds())
+    require(budget > 0, 'Attestation channel expired')
+    deadline = monotonic() + budget
+    line = b''
+    while b'\n' not in line:
+        remaining = deadline - monotonic()
+        require(remaining > 0 and wait([fd], [], [], remaining)[0], 'Attestation channel timed out')
+        chunk = read_bytes(fd, min(4096, 16385 - len(line)))
+        require(chunk, 'Attestation channel closed')
+        line += chunk
+        require(len(line) <= 16384, 'Attestation channel oversized')
+    require(line.endswith(b'\n') and line.count(b'\n') == 1, 'Unexpected attestation channel data')
+    require(monotonic() < deadline and utc_now() < expires, 'Attestation channel expired')
+    return parse(line)
+
+
 def exchange_stdio(challenge):
     print(json.dumps({'challenge': challenge}), flush=True)
-    require(select.select([sys.stdin], [], [], 15)[0], 'Attestation channel timed out')
-    line = sys.stdin.buffer.readline(16385)
-    require(line.endswith(b'\n') and len(line) <= 16384, 'Attestation channel closed/oversized')
-    return parse(line)
+    return read_attestation(sys.stdin.fileno(), challenge['expiresAt'])
 
 
 def entry(root, sandbox):
