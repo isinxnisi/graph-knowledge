@@ -26,29 +26,25 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-10-23T20:36:29.024363+00:00",
-  "phase": "running",
+  "nextStartAt": "2026-10-23T19:41:53.506054+00:00",
+  "phase": "interval",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
     "reason": "interval",
-    "eligibleAt": "2026-10-23T20:36:29.024363+00:00",
+    "eligibleAt": "2026-10-23T19:41:53.506054+00:00",
     "windowEndAt": "2026-10-23T22:00:00+00:00"
   },
-  "activeAttempt": {
-    "requestId": "issue-25-utc-recovery-04",
-    "startedAt": "2026-10-23T19:31:29.024366+00:00",
-    "limitAt": "2026-10-23T20:26:29.024363+00:00"
-  },
+  "activeAttempt": null,
   "lastAttempt": {
-    "requestId": "issue-25-utc-recovery-05",
-    "endedAt": "2026-10-23T19:19:58.949250+00:00"
+    "requestId": "issue-25-utc-recovery-04",
+    "endedAt": "2026-10-23T19:31:53.506056+00:00"
   },
   "controlError": null,
   "requestsByPhase": {
-    "blocked": 15,
+    "blocked": 16,
     "completed": 4,
-    "waiting-control": 4
+    "waiting-control": 3
   },
   "issueIntake": {
     "collection-control/issue-sources/25.json": {
@@ -72,7 +68,7 @@
     },
     "issue-25-utc-recovery-04": {
       "predecessor": "issue-25-manga23-20261019-repair1-batch-05",
-      "phase": "waiting-control"
+      "phase": "blocked"
     },
     "issue-25-utc-recovery-05": {
       "predecessor": "issue-25-manga23-20261019-repair1-batch-06",
@@ -95,5 +91,5 @@
       "phase": "waiting-control"
     }
   },
-  "checkedAt": "2026-10-23T19:31:37.417585+00:00"
+  "checkedAt": "2026-10-23T19:32:19.919200+00:00"
 }
