@@ -1,0 +1,196 @@
+{
+  "observedAt": "2026-10-23T16:04:48.011559+00:00",
+  "scope": "P33-PUBLISH-20261023-01",
+  "operationalGoalCompleted": true,
+  "firstRunRequiredRemediation": true,
+  "deploymentEnabled": true,
+  "deliveryEnabled": true,
+  "nonce": "b36af1ba-d283-412e-aa29-465d360928b7",
+  "release": "manga-issue-34-obata-drawing-20261023",
+  "publishedRevision": "b74a4b00-9454-412f-af5d-1317713a543c",
+  "rootStatus": {
+    "artifactSha256": "d83660e0b4ff54981424f217150ff40e075aaf35a8474d5b684dda51e4da39a8",
+    "baseRelease": "manga-issue-25-utc-recovery-08-normal",
+    "baseRevision": "88437056-b74f-42ab-88c0-33ed435bdccc",
+    "nonce": "b36af1ba-d283-412e-aa29-465d360928b7",
+    "pendingAudit": false,
+    "phase": "completed",
+    "publishedRevision": "b74a4b00-9454-412f-af5d-1317713a543c",
+    "release": "manga-issue-34-obata-drawing-20261023",
+    "request": {
+      "artifactSha256": "d83660e0b4ff54981424f217150ff40e075aaf35a8474d5b684dda51e4da39a8",
+      "baseRelease": "manga-issue-25-utc-recovery-08-normal",
+      "baseRevision": "88437056-b74f-42ab-88c0-33ed435bdccc",
+      "environment": "production",
+      "operatorDigest": "sha256:367e9c36401f4f3c7f3a50e829c4c82bcaf83a9e0df72aba91ea03e4b856e528",
+      "planSha256": "9985a539b6281f99a2f7c7d422b2aac214d143d5fc56411fbdfd51605697a392",
+      "purpose": "public-kg-publication",
+      "receiptSetSha256": "8a55413ee9fedf32fd64ce6fddebd28d1d636ff7de0fcc1fd063a5b15524d56d",
+      "release": "manga-issue-34-obata-drawing-20261023",
+      "schemaVersion": 1
+    },
+    "verification": {
+      "apiClaimsVerified": 1,
+      "counts": {
+        "nodes": {
+          "Citation": 1932,
+          "Claim": 1895,
+          "Entity": 2175,
+          "ExternalIdentifier": 2544,
+          "Source": 1795
+        },
+        "relationships": {
+          "CITES": 1932,
+          "HAS_CITATION": 1932,
+          "HAS_EXTERNAL_ID": 2544,
+          "OBJECT": 1895,
+          "SUBJECT": 1895
+        }
+      },
+      "dataSha256": "bab5fd783adf0cdb622cc6c11441bce35bb7213074d489bc7f3e2989a5ca435b",
+      "manifestDigest": "679645d218a97ded07d70b3d142f28e50e896c8535df13016e9d9bb7516d0e85",
+      "manifestFileSha256": "7aab70b429c8a825e4a7e59b00a389055beb2a812117cac0c4ce686ef24e2a50",
+      "release": "manga-issue-34-obata-drawing-20261023",
+      "revision": "b74a4b00-9454-412f-af5d-1317713a543c",
+      "verified": true
+    },
+    "exclusion": {
+      "artifactSha256": "d83660e0b4ff54981424f217150ff40e075aaf35a8474d5b684dda51e4da39a8",
+      "closure": {
+        "payload": {
+          "artifactSha256": "d83660e0b4ff54981424f217150ff40e075aaf35a8474d5b684dda51e4da39a8",
+          "closedAt": "2026-10-23T15:46:28.444488+00:00",
+          "codeCommit": "973c7b0c599f79905a029b28b524f4924e169376",
+          "generation": 1,
+          "nonce": "b36af1ba-d283-412e-aa29-465d360928b7",
+          "pause": {
+            "controlId": "pub-b36af1ba-d283-412e-aa29-465d360928b7-pause",
+            "controlSha256": "5fe2c1aec849dfff57954219671b695cc476c77e4a7f779d73bdbc3eb17ad90a",
+            "revision": 3
+          },
+          "phase": "closed",
+          "purpose": "publication-exclusion-closed",
+          "receiptSetSha256": "8a55413ee9fedf32fd64ce6fddebd28d1d636ff7de0fcc1fd063a5b15524d56d",
+          "schemaVersion": 1,
+          "ticketId": "4991ab01-cf43-4db5-829d-fe691788c9f9",
+          "workerId": "plunode-wsl"
+        },
+        "signature": "2w/HXYK8SYVXWhi3iJ1AvwgxC4nBLScIoVWYbbq1BjURSadh/qhm7SR23CH3KZYeeKCM5x8ijdIpUJYo2PcYCg=="
+      },
+      "codeCommit": "973c7b0c599f79905a029b28b524f4924e169376",
+      "generation": 1,
+      "nonce": "b36af1ba-d283-412e-aa29-465d360928b7",
+      "pause": {
+        "controlId": "pub-b36af1ba-d283-412e-aa29-465d360928b7-pause",
+        "controlSha256": "5fe2c1aec849dfff57954219671b695cc476c77e4a7f779d73bdbc3eb17ad90a",
+        "revision": 3
+      },
+      "phase": "finished",
+      "receiptSetSha256": "8a55413ee9fedf32fd64ce6fddebd28d1d636ff7de0fcc1fd063a5b15524d56d",
+      "resume": {
+        "closureSha256": "101b04eb660d758327dbbe7731774fa4cd70d4f7ceacf4b828913f55a0ec2492",
+        "controlId": "pub-b36af1ba-d283-412e-aa29-465d360928b7-resume",
+        "previousControlId": "pub-b36af1ba-d283-412e-aa29-465d360928b7-pause",
+        "revision": 4
+      },
+      "ticketId": "4991ab01-cf43-4db5-829d-fe691788c9f9",
+      "workerId": "plunode-wsl"
+    }
+  },
+  "localDeliveryStage": "completed",
+  "approvalPayload": {
+    "artifactSha256": "d83660e0b4ff54981424f217150ff40e075aaf35a8474d5b684dda51e4da39a8",
+    "baseRelease": "manga-issue-25-utc-recovery-08-normal",
+    "baseRevision": "88437056-b74f-42ab-88c0-33ed435bdccc",
+    "environment": "production",
+    "expiresAt": "2026-10-23T16:15:40.729803+00:00",
+    "issuedAt": "2026-10-23T15:45:40.729803+00:00",
+    "nonce": "b36af1ba-d283-412e-aa29-465d360928b7",
+    "operatorDigest": "sha256:367e9c36401f4f3c7f3a50e829c4c82bcaf83a9e0df72aba91ea03e4b856e528",
+    "planSha256": "9985a539b6281f99a2f7c7d422b2aac214d143d5fc56411fbdfd51605697a392",
+    "purpose": "public-kg-publication",
+    "receiptSetSha256": "8a55413ee9fedf32fd64ce6fddebd28d1d636ff7de0fcc1fd063a5b15524d56d",
+    "release": "manga-issue-34-obata-drawing-20261023",
+    "schemaVersion": 1
+  },
+  "approvalFileSha256": "9fb5904550625bbc27302c773272c9abef5acff35db23d322cea7b3300ddce9b",
+  "workerControl": {
+    "revision": 4,
+    "pauseMode": null,
+    "lastControlId": "pub-b36af1ba-d283-412e-aa29-465d360928b7-resume",
+    "lastControlSha256": "58c6e70ebf2ccd9b4d23bb15fc60e419f08d3df5df107ad26f6ff533e47681f6"
+  },
+  "activeAttempt": null,
+  "postPublicationInventory": {
+    "readOnly": true,
+    "publishedRelease": "manga-issue-34-obata-drawing-20261023",
+    "publishedRevision": "b74a4b00-9454-412f-af5d-1317713a543c",
+    "publishedDataSha256": "bab5fd783adf0cdb622cc6c11441bce35bb7213074d489bc7f3e2989a5ca435b",
+    "formalReceiptCount": 10,
+    "receiptSetSha256": "8a55413ee9fedf32fd64ce6fddebd28d1d636ff7de0fcc1fd063a5b15524d56d",
+    "formallyAcceptedPublished": {
+      "entities": 66,
+      "claims": 51,
+      "sources": 44,
+      "citations": 52
+    },
+    "formallyAcceptedUnpublished": {
+      "entities": 0,
+      "claims": 0,
+      "sources": 0,
+      "citations": 0
+    },
+    "issues": [],
+    "runtimeReceiptAndFrozenFilesChanged": false
+  },
+  "independentApiVerification": {
+    "readOnly": true,
+    "revision": "b74a4b00-9454-412f-af5d-1317713a543c",
+    "verified": [
+      {
+        "claimId": "7ae1c51b-9ba0-46fb-a070-41ac310e8c94",
+        "subject": "小畑健",
+        "object": "ヒカルの碁",
+        "graphPages": 1
+      }
+    ],
+    "manualUiCheckStillRequired": true
+  },
+  "audit": {
+    "commentId": 6368816394,
+    "markerCount": 1,
+    "pendingAudit": false
+  },
+  "deliveryDeployment": {
+    "sourceCommit": "676284fb7144bd523df21576be15afd15a874cfa",
+    "previousSourceCommit": "8ee37026dc0db77cb4bdf294a569f877baeda16c",
+    "archiveSha256": "a120a1a2e870b93896f41b7792b122f77fc4064daacb31f33d65acf54fb19461",
+    "archiveEntries": 1727,
+    "regularFiles": 1492,
+    "configSha256": "6bf2f4e6817424022912f66a76dd4267fab886caa33da045ad700579fabd24c7",
+    "preserveStage": "/root/plunode-publication-lock-wait.i_z5weu6",
+    "operatorEntrySourceCommit": "908c8e498b7163432472ea5873a8e122be8d8df0",
+    "operatorEntrySha256": "536ff5659cedc6b724c452b38fb44861716d35fee7983135490181565a18924f",
+    "operatorProgramAndJobAndApprovalPreservedAtUpdate": true
+  },
+  "tests": {
+    "barrierWait": 5,
+    "priorNonblockingBarrierAndDelivery": 14,
+    "installedBarrierWait": 5
+  },
+  "windowsTask": {
+    "name": "Plunode-Publication-Delivery",
+    "sourceCommit": "676284fb7144bd523df21576be15afd15a874cfa",
+    "enabled": true,
+    "state": "Ready",
+    "lastTaskResult": 0,
+    "lastRunTime": "2026-10-24T01:00:23+09:00",
+    "observedNextRunTime": "2026-10-24T01:05:22+09:00",
+    "existingTasksUnchanged": true,
+    "settingsPrincipalTriggersUnchanged": true
+  },
+  "additionalPublicationApplyDuringRecovery": false,
+  "formalReceiptsOrFrozenArtifactsModified": false,
+  "manualVpsPublicationPerformed": false,
+  "operatorActionRequiredNow": false
+}

@@ -37,3 +37,5 @@ WSLだけの有効化を全体完了と扱わず、VPS結果受領前はWindows 
 [最新の有効化結果・固定公開候補・署名承認手順](enabled-and-prepared.md) / [状態JSON](enabled-and-prepared.json)。本番ゲート/WSL/taskは有効化済み、署名とapplyは別承認待ち。上記のsudo結果待ちは途中記録。
 
 2026-10-24：承認端末のr+失敗を修正し、root入口のみ実配置。[原因・実配置・再開位置](approval-terminal-fix-20261024.md)／[実測JSON](approval-terminal-installed-20261024.json)。固定nonce維持、署名・本番apply0。
+
+2026-10-24：正式1 Claimの公開と定期配送による同nonce終了・監査記録を完了。[最終結果](../publication-completion-20261024/README.md)。正式公開51 Claim、未公開0、Worker再開済み。
