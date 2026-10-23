@@ -1,0 +1,76 @@
+{
+  "scope": "P33-ACTIVATE-20261023",
+  "recordedAt": "2026-10-23T07:02:35.370665+00:00",
+  "operatorDecision": {
+    "scope": "P33-ACTIVATE-20261023",
+    "proposal": "https://github.com/isinxnisi/graph-knowledge/issues/33#issuecomment-6357863177",
+    "humanReply": {
+      "custody": "2ファイルの外部保管・SHA一致・パスフレーズ別保管を確認済み",
+      "activation": "確定差分を確認し、有効化を承認（実データapplyは除外）"
+    },
+    "dataApplyAuthorized": false,
+    "keysOrPassphrasesReceived": false
+  },
+  "custodyOffMachineConfirmedByOperator": true,
+  "wsl": {
+    "phase": "wsl-delivery-enabled-no-apply",
+    "scope": "P33-ACTIVATE-20261023",
+    "sourceCommit": "35688b46d7e19a082b5572a57c6d7c2496a653d4",
+    "deliveryEnabled": true,
+    "previousConfigSha256": "d7cf3aec110b5778d5129e795b1638259f7cd04dd68a475baf326ff6e314f483",
+    "configSha256": "0a5f290e85d0055bdff6afcf3f1f86e992be6c579f0292f6c0ff5c2b8454665c",
+    "preserveStage": "/root/plunode-publication-delivery-activation.kt38m8_j",
+    "selfCheck": {
+      "phase": "operator-handoff-installation-checked",
+      "deliveryEnabled": true,
+      "sourceCommit": "35688b46d7e19a082b5572a57c6d7c2496a653d4",
+      "approverKeyPinMatched": true,
+      "unprivilegedChildVerified": true,
+      "signed": false,
+      "applyCalls": 0
+    },
+    "signedPendingJobs": 0,
+    "productionApplyCalls": 0,
+    "workerModified": false,
+    "custodyOffMachineConfirmedByOperator": true
+  },
+  "windowsTask": {
+    "phase": "delivery-task-registered-disabled",
+    "name": "Plunode-Publication-Delivery",
+    "enabled": false,
+    "principal": "nishr",
+    "runLevel": 0,
+    "logonType": 3,
+    "arguments": "-d Ubuntu -u isinxnisi -- /usr/bin/python3 -B /usr/local/lib/plunode-receipts/35688b46d7e19a082b5572a57c6d7c2496a653d4/scripts/publication-delivery.py --config /etc/plunode-publication/delivery.json --queue",
+    "executable": "C:\\WINDOWS\\System32\\wsl.exe",
+    "multipleInstances": 2,
+    "timeLimit": "PT30M",
+    "relatedTasksUnchanged": [
+      {
+        "name": "GraphKnowledge-Autopilot",
+        "path": "\\",
+        "sha256": "3774aaef4d46c54d046d2d8beed46f4aec9e615d1dd946a914b2432dc45d4be4"
+      },
+      {
+        "name": "Plunode-CollectionWorker",
+        "path": "\\",
+        "sha256": "ae508068e4e498fe27d7a44872e9659fcfd1c8b6eb960a3b15c0e58c90d53589"
+      }
+    ],
+    "executionPolicy": "RemoteSigned",
+    "unsignedUncScriptExecuted": false,
+    "registeredThrough": "ScheduledTasks cmdlets with fixed arguments"
+  },
+  "vps": {
+    "activationHelperSha256": "3619a0dd3416e4f93f0a4cff4fd4fc978bbe31c04a44b9606dcb24b5af42efa8",
+    "activationReceiptReceived": false,
+    "phase": "awaiting-operator-sudo-result",
+    "programManifestSha256": "68881f68812f22fbf8d99d242dc150680c4099d692a86ec38ffe1876ee1d8ad6",
+    "operatorDigest": "sha256:367e9c36401f4f3c7f3a50e829c4c82bcaf83a9e0df72aba91ea03e4b856e528"
+  },
+  "dataApplyAuthorized": false,
+  "productionApplyCalls": 0,
+  "unpublishedClaims": 1,
+  "publishedClaimsReapplied": 0,
+  "issue33Complete": false
+}
