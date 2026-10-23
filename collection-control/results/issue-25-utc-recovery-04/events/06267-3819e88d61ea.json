@@ -1,0 +1,132 @@
+{
+  "requestId": "issue-25-utc-recovery-04",
+  "request": {
+    "schemaVersion": 1,
+    "kind": "collect-review",
+    "status": "approved",
+    "humanDecision": {
+      "actorType": "human",
+      "reviewer": "プロジェクト運営者",
+      "decidedAt": "2026-10-19T02:52:00+09:00",
+      "statement": "Issue #25の2026-10-19 02:52 JST先行許可を転記。明示された23作品・人物の同定、QID・日本語代表ISBN探索、recipe生成、hidden候補収集と根拠・保留・レビュー資料生成を承認。Wikidata構造化データとNDL作成書誌だけを用い、準備・収集合計142試行、同一要求2試行、逐次3秒、20秒、4MiB以内。既設時間帯・10分休憩で途中開始・数日継続を許可。同一範囲の再承認は不要。不確かな同定・資料不足・範囲外は保留。個別正式受入・公開apply・VPS配置・会員DB変更は承認しない。"
+    },
+    "issueOrigin": {
+      "repository": "isinxnisi/graph-knowledge",
+      "issueNumber": 25,
+      "approvalId": "manga23-20261019",
+      "permissionSha256": "673d380b4fb61ab2cdef204140d63a47bbf25dbb288199f25d0e3ae740ef11b3",
+      "issueBodySha256": "5f302ff42139b5230da70d38734577da414a3b89a24a82f90302e0297afc3c69"
+    },
+    "approvalScope": "collection-candidates-and-review-only",
+    "applyAuthorized": {
+      "local": false,
+      "beta": false,
+      "vps": false
+    },
+    "id": "issue-25-utc-recovery-04",
+    "sourceCommit": "ed89e5a6ff0cf7d8b485330be790a234a064eacd",
+    "parentRequestId": "issue-25-manga23-20261019-repair1-batch-05",
+    "target": {
+      "themeId": "issue-25-utc-recovery",
+      "revision": 4,
+      "definitionSha256": "23bf7027d4581688f10347c30314866929f39c16544b1f5256027b20b6a6cccc",
+      "execution": {
+        "adapter": "manga-discovery-v2",
+        "codeSha256": "80e05b67bc0129b963653b90df4cfbfa5bd6aff190acda99f54c08541e55801e",
+        "inputs": [
+          {
+            "file": "datasets/manga-collection/r0020/recipe.json",
+            "sha256": "56d6be35fb3bdda4453561af677b103a553ba533c1ff183ca0fe1431fd1c2e8f"
+          },
+          {
+            "file": "datasets/manga-collection/r0020/anchor-review.json",
+            "sha256": "4f20e0d407d996ee2e4f7c5950608d182f55de1acefccc6d5f22570475a3a03d"
+          },
+          {
+            "file": "datasets/manga-collection/r0020/publication-review.json",
+            "sha256": "8bd99f9f540d25121f8e2d0a3928b92b7f5255081205d9be01f7813acb8ae68e"
+          },
+          {
+            "file": "docs/research/famous-manga-creators/20261016/candidates.json",
+            "sha256": "8531fada01e5c635ba2ee278a7ef944a73f64676af14ed42ae0e690f5a1ff978"
+          },
+          {
+            "file": "datasets/public-kg/releases/20261014-credits-001/data.json",
+            "sha256": "ea91b16f52a211b5a8464382ad498b7b2bb2be69a6f33fe125a73a3c7b9da2b5"
+          },
+          {
+            "file": "datasets/public-kg/releases/20261014-credits-001/manifest.json",
+            "sha256": "e4aa3b58ed884f7d1f8fffee43b260261cc2b4d3a867fda942919f439d2bce17"
+          }
+        ],
+        "maxEntities": 2111,
+        "maxClaims": 1847
+      },
+      "targets": {
+        "people": [
+          {
+            "name": "九井諒子",
+            "qid": "Q11370008"
+          }
+        ],
+        "works": [
+          {
+            "name": "ダンジョン飯",
+            "qid": "Q20016948",
+            "isbn13": "9784047301535"
+          }
+        ]
+      },
+      "existingApprovalSha256": "df85209fff27c441121cac3dac8aea4d29eba0ea76cead11feeb99266f5dec7b"
+    },
+    "recovery": {
+      "schemaVersion": 1,
+      "kind": "fixture-utc-z-only",
+      "predecessorRequestId": "issue-25-manga23-20261019-repair1-batch-05",
+      "predecessorRequestSha256": "790ef37cbbd0b9ee0701581921d7eaf16fc4df8b8c59d3f0e02a0a7961cd9666",
+      "predecessorTargetSha256": "3527668e8299a1030dfb8bf5c7d519554c0ee65b1d97f1d9b3c285f02d98da18",
+      "predecessorRecipe": {
+        "file": "datasets/manga-collection/r0010/recipe.json",
+        "sha256": "d0e0458158dd0eb33c75037bc98112064eb935882dad6f30e5882f299961dd45"
+      },
+      "originalApprovalSha256": "ac62063d9897be119eef98eb3108bd263ae6373f0086ed3cde797f2f0761a99e",
+      "originalStamp": "2026-10-18T18:54:58+00:00",
+      "normalizedStamp": "2026-10-18T18:54:58Z"
+    }
+  },
+  "requestSha256": "b9ed2e411f3f66641455c5a151b3855481e163f36332a59fb8e6559a447b1bc0",
+  "kind": "collect-review",
+  "phase": "waiting-control",
+  "generation": 6267,
+  "attempts": 1,
+  "workerId": "plunode-wsl",
+  "sourceCommit": "ed89e5a6ff0cf7d8b485330be790a234a064eacd",
+  "updatedAt": "2026-10-23T18:47:26+00:00",
+  "result": {
+    "jobId": "issue-25-utc-recovery-r0004-b96c712262173821",
+    "collectionUnchanged": false,
+    "reviewUnchanged": false,
+    "transportAttemptsAdded": 0,
+    "reviewDirectory": "/home/isinxnisi/.local/share/plunode-collection-worker/runtime/datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0004-b96c712262173821-review-ed4c6573c40b9103",
+    "reviewOnly": true,
+    "formalAcceptance": false,
+    "publicApply": false,
+    "counts": {
+      "entities": 2,
+      "claims": 1,
+      "sources": 1,
+      "citations": 1
+    },
+    "heldClaims": 0
+  },
+  "executionComplete": true,
+  "reviewReference": {
+    "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0004-b96c712262173821-review-ed4c6573c40b9103/review-manifest.json",
+    "sha256": "dbe609a826e90940a08952c5f6a3c9a59dc1422c3f96f8beaaf4d385dbc5b80b"
+  },
+  "decisionDrafts": [
+    "datasets/manga-collection/decisions/issue-25-utc-recovery-04-normal-draft.json"
+  ],
+  "message": "Execution gate: interval",
+  "retryAt": 1792768487.3700716
+}
