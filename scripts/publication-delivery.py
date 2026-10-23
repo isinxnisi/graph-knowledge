@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-"""One-shot, restartable delivery of an ALREADY signed publication approval.
-No signing key, new nonce, Worker execution, automatic cancel, restore or activation.
+"""Scheduled receipt-only preparation and restartable signed publication delivery.
+Preparation never signs or applies. Signed delivery retains the existing root gate.
 """
 import argparse
 import importlib.util
@@ -98,8 +98,8 @@ class Gateway:
         return str(path)
 
     def call(self,mode,nonce):
-        e.require(mode in ['status','execute','close','finish','notify'],'Fixed delivery operation required')
-        if mode in ['execute','finish']:
+        e.require(mode in ['status','execute','close','finish','notify','arm','preflight','cancel'],'Fixed delivery operation required')
+        if mode in ['execute','finish','preflight','cancel']:
             argv=['/usr/bin/python3','-B',str(HERE/'publication-attest.py'),'--runtime',self.config['runtime'],
                 '--candidate',self.candidate,'--key',self.config['attesterKey'],'--client',self.config['client'],
                 '--coordination-config',self.peer_configuration(),mode,nonce]
@@ -110,21 +110,27 @@ class Gateway:
         e.require(len(messages)==1 and set(messages[0])=={'result'},'Unexpected fixed channel result')
         return messages[0]['result']
 
-    def upload_approval(self,nonce,path):
-        cfg=self.client_config
-        key=Path(cfg['identity']).with_name('upload-ed25519')
-        # Restrict batch grammar rather than interpolating shell commands. No shell is used.
-        for value in [str(path),str(key),cfg['knownHosts']]:
+    def sftp(self,batch,paths=()):
+        cfg=self.client_config;key=Path(cfg['identity']).with_name('upload-ed25519')
+        for value in [str(key),cfg['knownHosts'],*map(str,paths)]:
             e.require(re.fullmatch(r'/[A-Za-z0-9_./-]+',value),'Unsupported fixed upload path')
         e.require(re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9.-]*',cfg['host']),'Fixed upload host required')
         argv=['/usr/bin/sftp','-F','/dev/null','-q','-b','-','-i',str(key),'-o','BatchMode=yes','-o','IdentitiesOnly=yes',
             '-o','StrictHostKeyChecking=yes','-o','GlobalKnownHostsFile=/dev/null','-o','UserKnownHostsFile='+cfg['knownHosts'],
             '-o','ClearAllForwardings=yes','-o','ConnectTimeout=15','plunode-upload@'+cfg['host']]
-        # Re-upload identical signed bytes after interrupted transfer. Root verifies its
-        # own separately opened bounded regular file; partial upload never authorizes apply.
-        batch='put '+str(path)+' /inbox/'+e.nonce_id(nonce)+'/approval.json\n'
-        result=subprocess.run(argv,input=batch.encode(),capture_output=True,timeout=60)
-        e.require(result.returncode==0,'Approval transfer incomplete; preserve same nonce')
+        result=subprocess.run(argv,input=batch.encode(),capture_output=True,timeout=180)
+        e.require(result.returncode==0,'Publication transfer incomplete; preserve same nonce')
+    def upload_approval(self,nonce,path):
+        self.sftp('put '+str(path)+' /inbox/'+e.nonce_id(nonce)+'/approval.json\n',[path])
+    def upload_candidate(self,nonce,path):
+        e.cycle.verify_prepared_artifact(path);remote='/inbox/'+e.nonce_id(nonce)+'/candidate'
+        batch=['-mkdir /inbox/'+nonce,'-mkdir '+remote];paths=[]
+        for item in sorted(path.rglob('*')):
+            relative=item.relative_to(path).as_posix()
+            e.require(re.fullmatch(r'[A-Za-z0-9_./-]+',relative),'Unsupported candidate upload name')
+            if item.is_dir():batch.append('-mkdir '+remote+'/'+relative)
+            else:paths.append(item);batch.append('put '+str(item)+' '+remote+'/'+relative)
+        self.sftp('\n'.join(batch)+'\n',paths)
 
 
 def installation(config_path):
@@ -219,7 +225,13 @@ def main():
         print(json.dumps(register(path,args.candidate,args.nonce,e.read(args.human_decision),gateway,coordinator)));return
     path=pending(Path(config['queueDir'])) if args.queue else args.job
     if path is None:
-        e.require(args.queue,'Job required');print('{"phase":"no-signed-pending-job"}');return
+        e.require(args.queue,'Job required')
+        if config.get('preparation',{}).get('enabled') is True:
+            spec=importlib.util.spec_from_file_location('scheduled_preparation',HERE/'publication-preparation.py')
+            preparation=importlib.util.module_from_spec(spec);spec.loader.exec_module(preparation)
+            coordinator=c.Coordinator(e.read(Path(config['coordinationConfig'])))
+            print(json.dumps(preparation.Preparation(config,gateway,coordinator).tick()));return
+        print('{"phase":"no-signed-pending-job"}');return
     e.require(path==Path(config['queueDir'])/e.nonce_id(path.parent.name)/'job.json','Job outside fixed queue')
     coordinator=c.Coordinator(e.read(Path(config['coordinationConfig'])))
     if args.describe:print(json.dumps(describe(path,gateway,coordinator)));return

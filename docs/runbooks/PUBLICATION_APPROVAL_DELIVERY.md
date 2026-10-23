@@ -2,6 +2,32 @@
 
 Issue #33。既存のPUBLICATION_ENABLEMENT_READINESS / PUBLICATION_COORDINATION / PUBLICATION_GATE_INSTALLATIONを利用する。公開機構の**有効化承認**と、各固定releaseの**データ公開承認**は別である。正式未公開1 Claimはまだ公開承認していない。
 
+## 2026-10-24：正式受入後の候補自動準備（現行）
+
+以下の節に残るdisabled／未公開1件／手動候補準備は導入時の履歴。現行は51 Claim公開済み・正式未公開0件。公開承認後の定期配送は676284f、GUI起動は47196c8で実配置・確認済み。今回の候補準備を同じ定期入口へ接続する。VPSゲート・鍵・ops image・Worker・そのtaskは更新しない。
+
+`publication-delivery.py --queue` は署名済み未完了jobを最優先する。なければroot-owned delivery.jsonのpreparation.enabledに従い `publication-preparation.py` を1 step実行する。Windowsの既存5分周期＋ログオン時、GUIから非表示起動、IgnoreNew、30分上限を維持し、新しいtask／常駐service／有料AIは追加しない。
+
+1. 公開API revisionに一致するcompleted deliveryを一意に選ぶ。VPS固定statusのcompleted／finished／全graph検証data SHA・raw manifest SHAと、固定applied artifact・requestを照合する。API部分射影だけを完全backupと呼ばない。未知のrevision／欠落・改変した旧成果は停止する。
+2. 対応する公開releaseをWorker runtimeへ**存在しなければ同一bytesで追加**。既存同名は完全一致だけを許容。既存receipt・旧release・state・cache・コードを変更しない。Worker/common barrierはこの短い追加・確認時だけ取得する。
+3. Inventory.formal_receipts、publication-cycle.partition、receipt_projectionの既存hash／依存関係検証を使う。公開済みIDは除外し、元receiptの削除・差替え、本文／Role／scope／Source／Citation競合を拒否。未承認・未受入データは混入させない。
+4. 新nonce／base／receipt集合をintentへfsync保存してから候補を凍結する。既存publication-cycleのbuilderと、固定ローカルops imageによるvalidate／オフライン差分planを再利用。imageはnetwork=none、read-only、非root、公開データ専用mount。稼働中runtimeのPythonをimportせずroot所有の固定snapshotを実行する。従来CLIの「最新backup必須」検査は維持し、自動経路のapplied-artifact観測と区別する。
+5. SFTP転送→既存arm→承認済み運用判断のpause-new→**通常WorkerのACK待ち**→固定peerによるVPS最新backup／revision／実plan→未署名job登録。受入を直接起動せず時間帯・休憩・通常tickを尊重する。人間承認待ちはlockを保持しないが、固定receipt集合を守るpause-newは残す。
+6. 既存制御branch `codex/collection-control` の [publication-ready](https://github.com/isinxnisi/graph-knowledge/tree/codex/collection-control/collection-control/publication-ready) にcurrent.jsonと不変のnonce別README.md／request.json／review.jsonを記録する。reviewには追加本文・Role/scope・Source/Citation・依存Entityを機械的に転記。人間は差分・根拠と固定requestを確認し、READMEのWSL承認コマンドを実行してrelease IDを入力する。この署名だけが本番applyを許可する。
+7. 署名後の転送→単回apply／verify-only→close→自分のpauseだけCAS resume→finish→監査は既存配送処理が行う。次回は新しいcompleted artifact／revisionをbaseに再棚卸しする。
+
+### 停止・再開と復旧
+
+- PC停止／ログアウト／通信障害は次の通常起動でintentの**同nonce・同candidate**を再開する。転送、arm応答喪失、実plan、登録後のGit記録失敗は同じ位置から再試行。自動で署名・有効期限更新・apply承認しない。
+- Worker/common lockがbusyなら変更せず次回へ。自分のpreparation.lockは一起動だけ保持し、Worker/common lockは通信・承認待ち・次回待ち中に持たない。実peerの既存30秒取得待ちは部分取得を全解放して待つ。
+- arm前に新receiptが増えたら旧未登録intentを退役し、次回に新集合で準備する。arm後・未登録で増えた場合は同nonceを署名cancel→自分のCAS resume→finishできた後だけ退役する。取消し／resume／finish応答喪失後も同nonceを再確認し、再pauseしない。
+- 登録済み承認待ちのreceipt集合変更、旧receipt／根拠改変、未知の公開revision、別control割込みは安全停止し、固定jobとpauseを保全する。これらの実不整合は人間判断へ戻す。無条件resume、別nonceによる結果不明apply、ロック削除はしない。
+- ローカル `~/.local/share/plunode-publication/preparation/health.json` にup-to-date／waiting-local-lock／waiting-worker-acknowledgement／awaiting-human-publication-approval／preparation-stoppedを記録。Windows last-run.jsonとSchedulerのexitで定期入口も確認できる。Git記録だけ失敗した場合も次の予定で同じ不変ready記録を送る。
+- prepared候補を止める場合は**新規準備だけ**preparation.enabled=false。署名済み既存jobの配送は維持。全面停止・未知applyは既存の復旧節を使う。既にarmしたticket／pauseをconfig変更だけで解除しない。
+- 固定コードの切戻しはroot stageのdelivery.before.jsonと専用taskの旧SourceCommit ActionをReady地点で戻す。候補・receipt・jobs・nonce・journalを削除しない。旧版には候補自動準備がないが、既存署名済み配送は維持される。
+
+公開候補準備・協調の自動実行は運営者の今回の指示に基づく運用承認であり、個別データの公開承認ではない。無入力の定期処理にapprover秘密鍵を渡さない。正式未公開0件ならarm／pause／新job／applyを作らず、最新baseとの棚卸しのみで終了する。
+
 ## 今回の配置範囲
 
 固定WSL snapshotへ既存CLIとpublication-delivery.pyを配置し、root所有の `/etc/plunode-publication/delivery.json`（deliveryEnabled=false）、同delivery-coordinator.json（既存coordinatorの固定copy）、approver-public.pem、rootの `/usr/local/sbin/plunode-publication-approve` を追加する。既存秘密鍵・client・Worker config/state/cache/control/scheduleは変更しない。root署名鍵は `/root/plunode-publication-operator/approver.pem` のまま。

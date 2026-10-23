@@ -1,5 +1,7 @@
 # 公開状態の同期と定型公開処理（Issue #33）
 
+2026-10-24：正式受入後から人間の公開承認待ちまでの自動接続は [現行配送runbook](../runbooks/PUBLICATION_APPROVAL_DELIVERY.md#2026-10-24正式受入後の候補自動準備現行) を正本とする。completedのroot検証済みapplied artifact＋現行API revisionから候補を作り、承認待ち登録前に既存rootゲートで最新backup／実planを必ず取得する。従来のbackup必須CLIを弱めない。署名済み配送優先、同nonce再開、運用pauseと人間のデータ公開承認の分離を維持する。
+
 第2段階（同日）：固定公開アダプター／wrapper、署名CLI、durable nonce／release予約、WSL challenge peer、通知outboxを隔離実装した。[実装と本番導入の境界](../runbooks/PUBLICATION_GATE_INSTALLATION.md)、[検証結果](../verification/PUBLICATION_GATE_20261020.md)を現在の続きとして参照する。以下の「未実装／将来」は第1段階時点の記録であり、第2段階で実装した機構と、未導入・未検証の本番信頼境界を混同しない。第1段階のread-only CLI／offline policy自体は維持する。
 
 2026-10-20。第1段階は読み取り専用の照合・候補準備、署名承認／失敗復旧の隔離検証まで。本番実行アダプター、root信頼設定、常駐service、定期AI呼出しは追加していない。[実測結果](../verification/PUBLICATION_AUTOMATION_20261020.md)。
