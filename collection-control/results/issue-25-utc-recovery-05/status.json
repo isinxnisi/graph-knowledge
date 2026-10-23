@@ -96,12 +96,12 @@
   },
   "requestSha256": "137298d028f21a48a58499dcc3e99b0b928944b2ca1df819a8470c57bc4cc619",
   "kind": "collect-review",
-  "phase": "completed",
-  "generation": 40,
+  "phase": "waiting-control",
+  "generation": 6119,
   "attempts": 1,
   "workerId": "plunode-wsl",
   "sourceCommit": "ed89e5a6ff0cf7d8b485330be790a234a064eacd",
-  "updatedAt": "2026-10-19T00:49:06+00:00",
+  "updatedAt": "2026-10-23T15:30:18+00:00",
   "result": {
     "jobId": "issue-25-utc-recovery-r0005-7e3b350d672334cb",
     "collectionUnchanged": false,
@@ -126,5 +126,7 @@
   },
   "decisionDrafts": [
     "datasets/manga-collection/decisions/issue-25-utc-recovery-05-identity-draft.json"
-  ]
+  ],
+  "message": "Execution gate: pause-new",
+  "retryAt": 1792768494.2633035
 }
