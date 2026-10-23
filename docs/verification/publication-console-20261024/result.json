@@ -1,0 +1,120 @@
+{
+  "observedAt": "2026-10-23T16:43:02.725289+00:00",
+  "installed": {
+    "Phase": "publication-console-hidden-action-installed",
+    "LauncherSourceCommit": "47196c892a8fd10339cfd06956795c3daad4f74f",
+    "DeliverySourceCommit": "676284fb7144bd523df21576be15afd15a874cfa",
+    "Launcher": "C:\\Users\\nishr\\plunode-publication-delivery\\delivery.wsf",
+    "LauncherSha256": "c6ea0caa9649a8e99e652aac9264dcf003309ba9c9c698d9f8d6efa794a9a2b8",
+    "Enabled": true,
+    "OnlyActionChanged": true,
+    "ExistingTasksUnchanged": true,
+    "NextRunTime": "2026-10-24T01:35:22.0000000+09:00",
+    "Backup": "C:\\Users\\nishr\\.codex\\tmp\\publication-console-20261024"
+  },
+  "manualTaskRun": {
+    "State": "Ready",
+    "LastTaskResult": 0,
+    "WindowObservation": {
+      "StartedAt": "2026-10-23T16:32:59.680Z",
+      "NewWindows": [],
+      "Samples": 135,
+      "CompletedAt": "2026-10-23T16:33:13.899Z"
+    },
+    "LastRunTime": "2026-10-24T01:33:04.0000000+09:00",
+    "Phase": "hidden-manual-task-verified",
+    "LauncherResult": {
+      "sourceCommit": "676284fb7144bd523df21576be15afd15a874cfa",
+      "startedAt": "Fri, 23 Oct 2026 16:33:04 UTC",
+      "completedAt": "Fri, 23 Oct 2026 16:33:05 UTC",
+      "exitCode": 0,
+      "launchError": false
+    }
+  },
+  "naturalScheduledRuns": [
+    {
+      "LauncherResult": {
+        "sourceCommit": "676284fb7144bd523df21576be15afd15a874cfa",
+        "startedAt": "Fri, 23 Oct 2026 16:35:23 UTC",
+        "completedAt": "Fri, 23 Oct 2026 16:35:23 UTC",
+        "exitCode": 0,
+        "launchError": false
+      },
+      "LastRunTime": "2026-10-24T01:35:23.0000000+09:00",
+      "NextRunTime": "2026-10-24T01:40:22.0000000+09:00",
+      "LastTaskResult": 0,
+      "Phase": "hidden-natural-task-verified",
+      "State": "Ready"
+    },
+    {
+      "NextRunTime": "2026-10-24T01:45:22.0000000+09:00",
+      "LauncherResult": {
+        "sourceCommit": "676284fb7144bd523df21576be15afd15a874cfa",
+        "startedAt": "Fri, 23 Oct 2026 16:40:23 UTC",
+        "completedAt": "Fri, 23 Oct 2026 16:40:23 UTC",
+        "exitCode": 0,
+        "launchError": false
+      },
+      "State": "Ready",
+      "Enabled": true,
+      "Phase": "hidden-natural-task-verified",
+      "LastRunTime": "2026-10-24T01:40:23.0000000+09:00",
+      "LastTaskResult": 0
+    },
+    {
+      "LastTaskResult": 0,
+      "NextRunTime": "2026-10-24T01:50:22.0000000+09:00",
+      "Enabled": true,
+      "LauncherResult": {
+        "sourceCommit": "676284fb7144bd523df21576be15afd15a874cfa",
+        "startedAt": "Fri, 23 Oct 2026 16:45:23 UTC",
+        "completedAt": "Fri, 23 Oct 2026 16:45:24 UTC",
+        "exitCode": 0,
+        "launchError": false
+      },
+      "Phase": "hidden-natural-task-verified",
+      "State": "Ready",
+      "LastRunTime": "2026-10-24T01:45:23.0000000+09:00"
+    }
+  ],
+  "processSubsystems": [
+    {
+      "Executable": "wsl.exe",
+      "PeSubsystem": 3,
+      "Kind": "Windows console"
+    },
+    {
+      "Executable": "wscript.exe",
+      "PeSubsystem": 2,
+      "Kind": "Windows GUI"
+    }
+  ],
+  "focusedUnitTests": 5,
+  "actualWindowsJScriptInvalidSourceExitCode": 2,
+  "deliveryConfigSha256": "6bf2f4e6817424022912f66a76dd4267fab886caa33da045ad700579fabd24c7",
+  "deliveryRecoverySourceUnchanged": "676284fb7144bd523df21576be15afd15a874cfa",
+  "productionRevisionUnchanged": "b74a4b00-9454-412f-af5d-1317713a543c",
+  "otherTasks": [
+    {
+      "name": "Plunode-CollectionWorker",
+      "xmlSha256": "ae508068e4e498fe27d7a44872e9659fcfd1c8b6eb960a3b15c0e58c90d53589",
+      "unchanged": true
+    },
+    {
+      "name": "GraphKnowledge-Autopilot",
+      "xmlSha256": "3774aaef4d46c54d046d2d8beed46f4aec9e615d1dd946a914b2432dc45d4be4",
+      "unchanged": true
+    }
+  ],
+  "naturalWindowObservationPending": false,
+  "naturalWindowObservation": {
+    "samples": 340,
+    "completedAt": "2026-10-23T16:45:40.054Z",
+    "startedAt": "2026-10-23T16:45:07.476Z",
+    "newWindows": [],
+    "targetRun": "2026-10-23T16:45:22Z"
+  },
+  "completedAt": "2026-10-23T16:46:47.035965+00:00",
+  "verified": true,
+  "taskXmlActionOnlyIndependentlyChecked": true
+}
