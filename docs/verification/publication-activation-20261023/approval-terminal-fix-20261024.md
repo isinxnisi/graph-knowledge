@@ -11,3 +11,13 @@
 配置はレビュー・commit・pushしたroot承認入口だけを、旧SHAと固定新SHAの照合、root-private保全、atomic replace/fsyncで更新する。WSL配送snapshot8ee3702・設定・専用task、VPS tuple、元jobはそのまま。新入口の自己診断と、同じ隔離PTY試験を配置先でも行う。配置結果は別記録へ保存する。
 
 承認済みの配置・修正範囲で進める。実データ公開承認は端末のrelease ID確認が未完了なので、モデルは署名しない。修正後、運営者が同じコマンド・同じnonceで確認入力を行う。公開内容・影響はIssue #33 comment6365661819と不変。Worker新規開始のpauseは署名閉鎖まで維持する。
+
+## 実配置結果
+
+修正commit908c8e498b7163432472ea5873a8e122be8d8df0を通常push後、承認済み配置範囲でWSLのroot承認入口だけを更新した。保全先 `/root/plunode-publication-tty-fix.mhffo8ob`。旧program SHA93d74ed3cb62d57c22e26c7e4a0d68a307eb48fdc6a3aec5486d46f00048f443 → new **536ff5659cedc6b724c452b38fb44861716d35fee7983135490181565a18924f**。旧bytes、新bytes、installation.jsonをroot-private保全し、原子的置換・directory fsync後に配置SHAを照合した。自己診断に失敗した場合は旧bytesへ戻す条件付き手順を使用したが、今回は成功し切戻し不要だった。
+
+root自己診断は鍵pin一致、実UID1000子成功、deliveryEnabled=true、signed=false/apply0。さらに配置済み入口をimportし、その端末確認関数だけを隔離PTYで5件検証して全成功。本番mainや鍵・署名を使わず、運営者確認を自動代行していない。
+
+配送の固定snapshotは8ee3702のまま。既存configとjobは前後SHA一致、approval.jsonなし。Windows専用taskはenabled/Ready、2026-10-24 00:40:23 JSTの正常定期起動exit0、観測時次回00:45:22 JST。task設定変更なし。VPS・Worker・旧snapshot変更なし。根拠・Claim・receipt・固定request・nonceを保持した。
+
+公開を進める運営者操作は従来と同じローカルWSLの承認コマンドとrelease ID入力だけ。VPS手動apply・追加の権限承認・PAT・暗号化phraseは不要。#33は実データの承認・本番一巡待ちで未完了。

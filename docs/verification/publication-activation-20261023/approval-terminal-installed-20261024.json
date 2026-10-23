@@ -1,0 +1,34 @@
+{
+  "observedAt": "2026-10-23T15:43:57.812314+00:00",
+  "phase": "operator-tty-confirmation-fixed-no-apply",
+  "sourceCommit": "908c8e498b7163432472ea5873a8e122be8d8df0",
+  "deliverySourceCommit": "8ee37026dc0db77cb4bdf294a569f877baeda16c",
+  "oldProgramSha256": "93d74ed3cb62d57c22e26c7e4a0d68a307eb48fdc6a3aec5486d46f00048f443",
+  "programSha256": "536ff5659cedc6b724c452b38fb44861716d35fee7983135490181565a18924f",
+  "preserveStage": "/root/plunode-publication-tty-fix.mhffo8ob",
+  "configAndJobUnchanged": true,
+  "selfCheck": {
+    "approverKeyPinMatched": true,
+    "unprivilegedChildVerified": true,
+    "deliveryEnabled": true,
+    "signed": false,
+    "applyCalls": 0
+  },
+  "regressionTests": {
+    "repository": 5,
+    "installedEntry": 5,
+    "realKeysOrSigningUsed": false
+  },
+  "nonce": "b36af1ba-d283-412e-aa29-465d360928b7",
+  "rootPhase": "awaiting-publication-approval",
+  "productionRevision": "88437056-b74f-42ab-88c0-33ed435bdccc",
+  "publicationSignatureCreated": false,
+  "productionApplyCalls": 0,
+  "workerPauseRevision": 3,
+  "dedicatedTask": {
+    "enabled": true,
+    "lastTaskResult": 0,
+    "lastRunTime": "2026-10-24T00:40:23+09:00",
+    "observedNextRunTime": "2026-10-24T00:45:22+09:00"
+  }
+}
