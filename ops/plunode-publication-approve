@@ -32,6 +32,14 @@ def child(config,extra,*,document=None):
     require(result.returncode==0 and len(result.stdout)<=65536)
     return json.loads(result.stdout)
 
+def confirm_release(release):
+    # TextIOWrapper update mode (r+) requires seeking, which a terminal cannot do.
+    # Separate handles keep the confirmation on the controlling TTY, never stdin.
+    with open('/dev/tty','r',encoding='utf-8') as reader, open('/dev/tty','w',encoding='utf-8') as writer:
+        require(reader.isatty() and writer.isatty())
+        writer.write('本番公開を承認するrelease IDを入力してください: ');writer.flush()
+        require(reader.readline().strip()==release)
+
 def main():
     require(os.geteuid()==0);trusted(CONFIG);config=json.loads(CONFIG.read_bytes())
     require(re.fullmatch('[a-f0-9]{40}',config['sourceCommit']) and type(config['deliveryEnabled']) is bool)
@@ -49,9 +57,7 @@ def main():
     job=Path(config['queueDir'])/args.nonce/'job.json'
     fixed=child(config,['--job',str(job),'--describe']);require(fixed['nonce']==args.nonce)
     print(json.dumps(fixed,ensure_ascii=False,indent=2),flush=True)
-    with open('/dev/tty','r+') as tty:
-        require(tty.isatty());tty.write('本番公開を承認するrelease IDを入力してください: ');tty.flush()
-        require(tty.readline().strip()==fixed['request']['release'])
+    confirm_release(fixed['request']['release'])
     path=Path('/usr/local/lib/plunode-receipts')/config['sourceCommit']/'scripts/publication-sign.py';trusted(path)
     spec=importlib.util.spec_from_file_location('fixed_operator_signer',path);signer=importlib.util.module_from_spec(spec);spec.loader.exec_module(signer)
     # No approval/private key is written by root under a caller-owned path.
