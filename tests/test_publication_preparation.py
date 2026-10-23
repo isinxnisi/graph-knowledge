@@ -139,6 +139,12 @@ class PreparationTests(unittest.TestCase):
         self.assertTrue((self.queue/nonce/'job.json').exists());self.assertFalse(self.state().get('announced'))
         self.assertEqual(self.tick()['phase'],'awaiting-human-publication-approval')
         self.assertEqual(self.state()['nonce'],nonce);self.assertEqual(self.f.f.calls('apply'),0)
+    def test_idle_base_sync_does_not_start_docker_validation_between_barriers(self):
+        prepared=self.prep()
+        with patch.object(prepared.co,'barrier',wraps=prepared.co.barrier) as barrier:
+            prepared.w.node=lambda argv:self.fail('Zero-pending base sync must reuse root whole-graph proof')
+            prepared.sync_base(self.base,self.proof);self.assertEqual(barrier.call_count,1)
+        self.assertEqual(e.sha(self.runtime/'datasets/public-kg/releases/release-group-2/data.json'),self.proof['verification']['dataSha256'])
     def test_default_preparation_barrier_reuses_bounded_lock_acquisition(self):
         self.config['preparation'].pop('barrierWaitSeconds');prepared=self.prep()
         with patch.object(prepared.co,'barrier',wraps=prepared.co.barrier) as barrier:

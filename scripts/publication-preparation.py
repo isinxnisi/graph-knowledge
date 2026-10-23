@@ -135,16 +135,19 @@ class Preparation:
         """Add a verified published artifact; never edit a receipt, old artifact, code or state."""
         release=root['release'];e.require(re.fullmatch('[a-z0-9][a-z0-9-]*',release),'Invalid published release')
         target=self.runtime/'datasets/public-kg/releases'/release
-        # Validation happens outside acceptance locks.
-        self.w.node(['scripts/public-kg.ts','validate',str(base/'release')])
+        # The completed root whole-graph verification already covers these exact bytes.
+        # Do not repeat a slow Docker base validation between two lock acquisitions.
+        expected={'data.json':root['verification']['dataSha256'],'manifest.json':root['verification']['manifestFileSha256']}
         with self.co.barrier(wait_seconds=self.wait_seconds):
+            e.require(all(cycle.sha(base/'release'/name)==pin for name,pin in expected.items()),'Applied artifact changed before base synchronization')
             if target.exists():
-                e.require(all(cycle.sha(target/n)==cycle.sha(base/'release'/n) for n in ['data.json','manifest.json']),'Runtime published artifact differs')
+                e.require(all(cycle.sha(target/name)==pin for name,pin in expected.items()),'Runtime published artifact differs')
                 fsync_directory(target.parent)
             else:
                 with tempfile.TemporaryDirectory(prefix='.publication-base-',dir=target.parent) as tmp:
                     stage=Path(tmp)/'release';stage.mkdir()
                     for n in ['data.json','manifest.json']:shutil.copyfile(base/'release'/n,stage/n)
+                    e.require(all(cycle.sha(stage/name)==pin for name,pin in expected.items()),'Applied artifact changed during base synchronization')
                     commit_directory(stage,target)
     def inventory(self,base,root):
         public=e.read(base/'release/data.json');refs=receipt_refs(self.runtime,self.w)
@@ -235,8 +238,7 @@ class Preparation:
         base,root=self.published_base()
         self.w.node=self.node or DockerNode(self.policy['nodeImage'],self.runtime,self.home,base)
         if not state.get('nonce'):
-            # A busy manual/Worker lock defers preparation, without any operational pause.
-            with self.co.barrier(wait_seconds=self.wait_seconds):refs=receipt_refs(self.runtime,self.w)
+            # One brief barrier only; all network/inventory/Node work is outside it.
             self.sync_base(base,root)
             ledger,context=self.inventory(base,root)
             if not any(context[3][f] for f in cycle.FIELDS):
