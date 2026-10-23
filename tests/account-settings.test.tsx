@@ -10,6 +10,17 @@ import { memberProfileUpdateSchema } from "../lib/domain/member-profile";
 beforeEach(() => { localStorage.clear(); delete document.documentElement.dataset.theme; Object.defineProperty(document, "visibilityState", { configurable: true, value: "visible" }); });
 afterEach(() => { cleanup(); vi.unstubAllGlobals(); vi.restoreAllMocks(); });
 describe("最小アカウント設定", () => {
+  it("コミュニティのヘッダーは画面内アンカーでなく実アカウントへ移動する", () => {
+    const fetch = vi.fn(); vi.stubGlobal("fetch", fetch);
+    const view=render(<SiteHeader dataset="demo" page="community" user={null}/>);
+    expect(screen.getByRole("link",{name:"ログイン"}).getAttribute("href")).toBe("/member");
+    view.rerender(<SiteHeader dataset="demo" page="community" user={{id:"test",name:"Beta",locale:"ja"}}/>);
+    const links=screen.getAllByRole("link",{hidden:true}).map(x=>x.getAttribute("href"));
+    expect(links).toContain("/member#my-capsules");
+    expect(links).toContain("/member#account-settings");
+    expect(links).toContain("/member#my-posts");
+    expect(fetch).not.toHaveBeenCalled();
+  });
   it("表示名だけ許し、空・制御文字・過長・権限fieldを拒否する", () => {
     expect(memberProfileUpdateSchema.parse({ name: "  名 前  " })).toEqual({ name: "名 前" });
     for (const value of [{ name: " " }, { name: "n\na" }, { name: "x".repeat(81) }, { name: "名前", active: true }, { name: "名前", userId: "other" }]) expect(memberProfileUpdateSchema.safeParse(value).success).toBe(false);

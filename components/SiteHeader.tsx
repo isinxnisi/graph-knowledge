@@ -16,12 +16,13 @@ import styles from "./SiteHeader.module.css";
 import { supportLabels } from "../lib/i18n/support";
 import { appearanceKey, defaultAppearance, readAppearance, type Appearance } from "../lib/client/appearance";
 
-export default function SiteHeader({ dataset, page = "explore", user, onBeforeAccountNavigation, onPrivacySettings, onLogout, accountBusy = false }: { onBeforeAccountNavigation?: () => boolean; onPrivacySettings?: () => void; onLogout?: () => void; accountBusy?: boolean; user?: MemberUser | null; dataset: DatasetMode; page?: "explore" | "member" | "shared" | "support" }) {
+export default function SiteHeader({ dataset, page = "explore", user, onBeforeAccountNavigation, onPrivacySettings, onLogout, accountBusy = false }: { onBeforeAccountNavigation?: () => boolean; onPrivacySettings?: () => void; onLogout?: () => void; accountBusy?: boolean; user?: MemberUser | null; dataset: DatasetMode; page?: "explore" | "member" | "community" | "shared" | "support" }) {
   const communitiesEnabled=useCommunitiesEnabled();
   const { locale, setLocale, storageError: languageError } = useUiLocale();
   const ui = explorerLabels(locale), text = siteLabels(locale), data = datasetLabels(dataset, locale);
-  const identity = useMemberIdentity(page !== "member");
-  const currentUser = page === "member" ? user ?? null : identity;
+  const suppliedIdentity = page === "member" || page === "community";
+  const identity = useMemberIdentity(!suppliedIdentity);
+  const currentUser = suppliedIdentity ? user ?? null : identity;
   const displayName = currentUser?.name.trim() || text.account;
   const mark = currentUser ? <span className={styles.memberMark} aria-hidden="true">{Array.from(displayName)[0]}</span> : <Icon name="person" />;
   const [appearance, setAppearance] = useState(defaultAppearance);

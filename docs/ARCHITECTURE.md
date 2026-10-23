@@ -1,5 +1,7 @@
 # 現行技術設計
 
+2026-10-23、ユーザー承認によりローカル3200／graph-betaの実コミュニティを有効化。独立したbeta会員DBをbackup・一時DBへrestore検証し、005〜007を適用、既存会員・Capsuleを保持。Google認証を継続使用し、fixtureへの置換はしない。3275／graph-comは架空試作、本番は未変更。[反映・検証状況](verification/COMMUNITY_BETA_ACTIVATION_20261023.md)。
+
 2026-10-23、コミュニティC3-minをfeature flag内に実装。通報、管理者非表示、通報対象に限定した監査付き運営確認、サイト停止・アーカイブ復帰、原子的な濫用制限を追加。初回公開条件はC1a／C1b／C3-minと公開前検証へ変更し、C2掲載・Graph連携は独立した後続、AIは第2弾とする。[契約](design/COMMUNITY_SAFETY_MIN.md)／[隔離検証](verification/COMMUNITY_C3_MIN_20261023.md)。通常3200／betaは無効、3275／graph-comは架空試作を維持。本番・既存会員DBへの適用は未実施。
 
 2026-10-23、人間向けコミュニティC1bをfeature flag内に実装。アカウント宛て招待・本人承諾、明示的再受入、運営判断と本人同意を分けた管理者不在復帰、認可付きcursorを既存Better Auth／PGへ接続する。[契約](design/COMMUNITY_CONTINUITY.md)／[隔離検証](verification/COMMUNITY_C1B_20261023.md)。通常3200／betaは無効、3275／graph-comは架空データのまま。本番・既存会員DBへのmigration、C2掲載・AI・KG変更は行わない。
