@@ -43,7 +43,7 @@ root入口は固定UID1000の子でVPSの未消費live requestを再読取し、
 - 消費済みだが応答不明なら同nonce executeの既存**verify-only**へ戻る。別nonce/自動restore/再applyを作らない。検証不能ならpauseを維持する。
 - completed確認後だけclose→署名閉鎖検証→自分のpauseに対するCAS resume→finish。別運用controlが続いた場合は勝手に解除しない。
 - rootがfinishedならexecute/close/resumeを繰り返さずnotifyだけ。通知失敗時は次の予定でstatus/notifyだけを再試行する。
-- 署名受渡し前のPC停止は公開承認を保存できていないため自動実行しない。署名をdurable保存した後の停止はqueueから再開する。共有Worker/common lockを転送・通知・次回待ち中に保持しない。
+- 署名受渡し前のPC停止は公開承認を保存できていないため自動実行しない。署名をdurable保存した後の停止はqueueから再開する。共有Worker/common lockを転送・通知・次回待ち中に保持しない。 固定peerの取得時だけ通常Worker tickの競合を最大30秒待つ。取得はすべてnonblockingで、失敗した部分取得を全解放してから0.25秒以下の間隔で再試行する。challengeは取得後に受信するため、有効期限を延長しない。30秒を超える競合や取得以外の不整合は停止し、次回予定で同nonceを再確認する。
 
 ## 復旧・無効化
 
