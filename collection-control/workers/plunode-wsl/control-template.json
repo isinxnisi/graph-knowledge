@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
-  "id": "control-0004",
+  "id": "control-0005",
   "workerId": "plunode-wsl",
-  "revision": 4,
-  "previousControlId": "pub-b36af1ba-d283-412e-aa29-465d360928b7-pause",
+  "revision": 5,
+  "previousControlId": "pub-b36af1ba-d283-412e-aa29-465d360928b7-resume",
   "status": "draft-not-approved",
   "approvalScope": "worker-execution-control-only",
   "action": "pause-new",
