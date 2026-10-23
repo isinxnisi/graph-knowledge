@@ -106,12 +106,12 @@
   },
   "requestSha256": "265e3aca49beaa1963c0cefcef4d65cad00104bbd90e8073b380047d38621650",
   "kind": "collect-review",
-  "phase": "waiting-lock",
-  "generation": 6297,
+  "phase": "blocked",
+  "generation": 6298,
   "attempts": 1,
   "workerId": "plunode-wsl",
   "sourceCommit": "ed89e5a6ff0cf7d8b485330be790a234a064eacd",
-  "updatedAt": "2026-10-23T19:50:14+00:00",
+  "updatedAt": "2026-10-23T19:52:12+00:00",
   "result": {
     "jobId": "issue-25-utc-recovery-r0006-18bb8d898648582b",
     "collectionUnchanged": false,
@@ -137,6 +137,6 @@
   "decisionDrafts": [
     "datasets/manga-collection/decisions/issue-25-utc-recovery-06-normal-draft.json"
   ],
-  "message": "共通ロック使用中。次回に再確認する。",
+  "message": "Artifact escapes runtime",
   "retryAt": 1792768500.8845694
 }
