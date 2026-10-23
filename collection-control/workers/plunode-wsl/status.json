@@ -26,16 +26,20 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-10-23T19:41:53.506054+00:00",
-  "phase": "ready",
+  "nextStartAt": "2026-10-23T20:57:20.992661+00:00",
+  "phase": "running",
   "recoveredAttempt": null,
   "admission": {
-    "ready": true,
-    "reason": "ready",
-    "eligibleAt": null,
+    "ready": false,
+    "reason": "interval",
+    "eligibleAt": "2026-10-23T20:57:20.992661+00:00",
     "windowEndAt": "2026-10-23T22:00:00+00:00"
   },
-  "activeAttempt": null,
+  "activeAttempt": {
+    "requestId": "issue-25-utc-recovery-06",
+    "startedAt": "2026-10-23T19:52:20.992664+00:00",
+    "limitAt": "2026-10-23T20:47:20.992661+00:00"
+  },
   "lastAttempt": {
     "requestId": "issue-25-utc-recovery-04",
     "endedAt": "2026-10-23T19:31:53.506056+00:00"
@@ -91,5 +95,5 @@
       "phase": "waiting-lock"
     }
   },
-  "checkedAt": "2026-10-23T19:44:18.736580+00:00"
+  "checkedAt": "2026-10-23T19:52:28.218624+00:00"
 }
