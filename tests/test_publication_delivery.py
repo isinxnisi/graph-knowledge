@@ -117,4 +117,25 @@ class QueueTests(unittest.TestCase):
             (one/'approval.json').unlink();(one/'approval.json').symlink_to(one/'job.json')
             with self.assertRaises(ValueError):d.pending(queue)
 
+class PeerConfigurationTests(unittest.TestCase):
+    def test_existing_private_config_must_equal_fixed_root_policy(self):
+        import tempfile
+        with tempfile.TemporaryDirectory() as tmp:
+            home=Path(tmp);(home/'keys').mkdir();fixed=home/'fixed.json';private=home/'coordinator.json'
+            e.durable(fixed,{'workerId':'fixed','branch':'protected'});e.durable(private,e.read(fixed))
+            gateway=d.Gateway.__new__(d.Gateway);gateway.config={'attesterKey':str(home/'keys/attester.pem'),'coordinationConfig':str(fixed)}
+            self.assertEqual(gateway.peer_configuration(),str(private))
+            e.durable(private,{'workerId':'changed','branch':'protected'})
+            with self.assertRaises(ValueError):gateway.peer_configuration()
+    def test_world_readable_or_symlink_peer_config_is_refused(self):
+        import tempfile
+        with tempfile.TemporaryDirectory() as tmp:
+            home=Path(tmp);(home/'keys').mkdir();fixed=home/'fixed.json';private=home/'coordinator.json'
+            e.durable(fixed,{});e.durable(private,{})
+            gateway=d.Gateway.__new__(d.Gateway);gateway.config={'attesterKey':str(home/'keys/attester.pem'),'coordinationConfig':str(fixed)}
+            private.chmod(0o644)
+            with self.assertRaises(ValueError):gateway.peer_configuration()
+            private.unlink();private.symlink_to(fixed)
+            with self.assertRaises(ValueError):gateway.peer_configuration()
+
 if __name__=='__main__':unittest.main()

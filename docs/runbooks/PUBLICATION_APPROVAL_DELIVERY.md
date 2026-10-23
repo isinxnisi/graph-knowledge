@@ -24,6 +24,8 @@ PC停止/ログアウト中は配送を実行できない。次のログオン/�
 
 候補は従来の棚卸し/公開CLIで、正式receipt・最新公開backup/revisionから用意する。SFTP転送→arm→運用判断に結び付くpause-new→通常Worker ACK→固定peer preflightまでは既存手順を使う。候補準備は公開承認と区別する。無承認のpause、承認待ち中の共通lock保持、旧offline plan hashへの差替えをしない。
 
+peer CLIには既存の利用者所有0600 coordinator.jsonを渡す。配送adapterは、それがroot-owned delivery-coordinator.jsonと完全一致することを毎回検証し、不一致・symlink・mode違反なら停止する。peerのowner検査を弱めたり、旧設定の所有者を変更したりしない。
+
 root preflightのlive requestが確定したら、UID1000の固定delivery CLIに `--register --candidate ABSOLUTE_PATH --nonce UUID --human-decision PATH` を渡す。登録先は固定queue/UUID/job.json。root request/ticket、ローカルcandidate/正式receipt、既存pause journalが一致しなければ拒否。同じjob IDを別内容で上書きしない。登録だけでは署名・applyしない。
 
 運営者は差分・根拠・Role/scope/依存関係・既存更新0・base/revision・receipt集合・image/artifact/live plan SHA・nonceを確認してから、ローカルWSLで一度だけ実行する：

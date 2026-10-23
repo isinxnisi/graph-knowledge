@@ -88,12 +88,21 @@ class Gateway:
     def verify_approval(self,approval):
         return e.policy.verify_signature(approval,Path(self.config['approverPublicKey']),self.config['approverKeySha256'])
 
+    def peer_configuration(self):
+        # The unchanged peer CLI deliberately requires a user-owned configuration.
+        # Reuse its existing 0600 file only when it equals the root-owned fixed copy.
+        path=Path(self.config['attesterKey']).parent.parent/'coordinator.json'
+        e.trusted(path,os.geteuid())
+        e.require(path.stat().st_mode&0o777==0o600 and path.stat().st_nlink==1,'Private peer configuration required')
+        e.require(e.read(path)==e.read(Path(self.config['coordinationConfig'])),'Peer configuration drifted from fixed policy')
+        return str(path)
+
     def call(self,mode,nonce):
         e.require(mode in ['status','execute','close','finish','notify'],'Fixed delivery operation required')
         if mode in ['execute','finish']:
             argv=['/usr/bin/python3','-B',str(HERE/'publication-attest.py'),'--runtime',self.config['runtime'],
                 '--candidate',self.candidate,'--key',self.config['attesterKey'],'--client',self.config['client'],
-                '--coordination-config',self.config['coordinationConfig'],mode,nonce]
+                '--coordination-config',self.peer_configuration(),mode,nonce]
         else:argv=[self.config['client'],mode,nonce]
         result=subprocess.run(argv,capture_output=True,timeout=660,env={'PATH':'/usr/bin:/bin','LANG':'C.UTF-8','HOME':str(Path.home())})
         e.require(result.returncode==0 and len(result.stdout)<=1024*1024,'Fixed publication channel failed; preserve nonce')
@@ -199,7 +208,7 @@ def main():
     config,gateway=installation(args.config)
     if args.installation_check:
         print(json.dumps({'uid':os.geteuid(),'sourceCommit':config['sourceCommit'],'deliveryEnabled':config['deliveryEnabled'],
-            'queuePending':pending(Path(config['queueDir'])) is not None,'installationChecked':True}));return
+            'queuePending':pending(Path(config['queueDir'])) is not None,'peerConfigurationMatched':bool(gateway.peer_configuration()),'installationChecked':True}));return
     # An inactive installation never opens a remote channel, signs or touches Worker.
     if not config['deliveryEnabled']:
         print('{"phase":"delivery-disabled","applyCalls":0}');return
