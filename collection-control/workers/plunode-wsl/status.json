@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "workerId": "plunode-wsl",
   "codeCommit": "973c7b0c599f79905a029b28b524f4924e169376",
-  "controlRevision": 2,
-  "lastControlSha256": "e406ca43e51fc34db0b2537b432e86d1149768f2b1c18e0e3e9395cd169ddd9a",
-  "lastControlId": "issue-32-phase-b-migration-resume-20261020",
+  "controlRevision": 3,
+  "lastControlSha256": "5fe2c1aec849dfff57954219671b695cc476c77e4a7f779d73bdbc3eb17ad90a",
+  "lastControlId": "pub-b36af1ba-d283-412e-aa29-465d360928b7-pause",
   "timezone": "Asia/Tokyo",
   "windows": [
     {
@@ -20,20 +20,19 @@
       "end": "18:00"
     }
   ],
-  "pauseMode": null,
+  "pauseMode": "pause-new",
   "intervalMinutes": 10,
   "newStartMarginMinutes": 15,
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
   "nextStartAt": "2026-10-23T00:10:58.950837+00:00",
-  "phase": "outside-window",
+  "phase": "pause-new",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
-    "reason": "outside-window",
-    "eligibleAt": "2026-10-23T18:00:00+00:00",
-    "windowEndAt": "2026-10-23T22:00:00+00:00"
+    "reason": "pause-new",
+    "eligibleAt": null
   },
   "activeAttempt": null,
   "lastAttempt": {
@@ -90,5 +89,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-10-23T12:42:38.493232+00:00"
+  "checkedAt": "2026-10-23T12:44:34.333910+00:00"
 }
