@@ -1,0 +1,182 @@
+{
+  "schemaVersion": 1,
+  "scope": "issue-33-formal-acceptance-to-human-publication-wait",
+  "implementationCommits": [
+    "49698ee96f3aeb51edfa4ac9025753c4b66d63e3",
+    "93f6a0b0b9549da3438c6442eab2b9d8883b728c",
+    "3baea1e931c963265accc918f0e467ce0fa22b01",
+    "7392d8e343a11644b1047364c71653779ad0c93c"
+  ],
+  "tests": {
+    "preparation": {
+      "passed": 18,
+      "seconds": 143.982,
+      "pinnedImageOfflineTestIncluded": true,
+      "targetedBeforeFinalDeployment": {
+        "passed": 3,
+        "seconds": 19.965
+      }
+    },
+    "existingCycle": {
+      "passed": 18,
+      "seconds": 44.032
+    },
+    "existingDelivery": {
+      "passed": 13,
+      "seconds": 91.201
+    },
+    "existingBarrierWait": {
+      "passed": 5,
+      "seconds": 0.065
+    }
+  },
+  "readOnlyProductionObservation": {
+    "readOnly": true,
+    "baseRelease": "manga-issue-34-obata-drawing-20261023",
+    "baseRevision": "b74a4b00-9454-412f-af5d-1317713a543c",
+    "publishedArtifactValidation": {
+      "valid": true,
+      "counts": {
+        "nodes": {
+          "Entity": 2175,
+          "Claim": 1895,
+          "Source": 1795,
+          "Citation": 1932,
+          "ExternalIdentifier": 2544
+        },
+        "relationships": {
+          "SUBJECT": 1895,
+          "OBJECT": 1895,
+          "HAS_CITATION": 1932,
+          "CITES": 1932,
+          "HAS_EXTERNAL_ID": 2544
+        }
+      }
+    },
+    "receiptCount": 10,
+    "receiptSetSha256": "8a55413ee9fedf32fd64ce6fddebd28d1d636ff7de0fcc1fd063a5b15524d56d",
+    "counts": {
+      "publishedAccepted": {
+        "entities": 66,
+        "claims": 51,
+        "sources": 44,
+        "citations": 52
+      },
+      "acceptedUnpublished": {
+        "entities": 0,
+        "claims": 0,
+        "sources": 0,
+        "citations": 0
+      }
+    },
+    "issues": [],
+    "newNonceCreated": false,
+    "productionApplyCalls": 0,
+    "runtimeBaseSynchronized": true
+  },
+  "deployment": {
+    "sourceCommit": "7392d8e343a11644b1047364c71653779ad0c93c",
+    "sourceArchiveSha256": "bd38c4c7ee0229c565c0c601acc6ada25a2f9c091ceb11ccb4099ceabdd016c0",
+    "configSha256": "8b03ee69d4d9eaf090bc6f68910ac1eb34d7f631d3123c0770e06745c56134d4",
+    "preparationEnabled": true,
+    "deliveryEnabled": true,
+    "rollbackStages": [
+      "/root/plunode-publication-preparation._gk72okv",
+      "/root/plunode-publication-preparation.4w862l6x",
+      "/root/plunode-publication-preparation.d7e6cq0t",
+      "/root/plunode-publication-preparation.icm14n3t"
+    ],
+    "operatorUnchanged": true,
+    "vpsChanged": false,
+    "workerChanged": false,
+    "windowsTask": "Plunode-Publication-Delivery",
+    "actionOnlyUpdated": true,
+    "otherTwoTasksAndNonActionXmlUnchanged": true,
+    "guiWrapperSha256": "c6ea0caa9649a8e99e652aac9264dcf003309ba9c9c698d9f8d6efa794a9a2b8",
+    "scheduledRun": {
+      "startedAt": "2026-10-24T03:25:23+09:00",
+      "completedAt": "2026-10-24T03:26:07+09:00",
+      "exitCode": 0,
+      "phase": "up-to-date",
+      "sourceCommit": "7392d8e343a11644b1047364c71653779ad0c93c",
+      "nextRunAt": "2026-10-24T03:30:22+09:00",
+      "schedule": "Every 5 minutes and at logon; unchanged"
+    },
+    "runtimeBaseSynchronized": {
+      "release": "manga-issue-34-obata-drawing-20261023",
+      "dataSha256": "bab5fd783adf0cdb622cc6c11441bce35bb7213074d489bc7f3e2989a5ca435b",
+      "manifestFileSha256": "7aab70b429c8a825e4a7e59b00a389055beb2a812117cac0c4ce686ef24e2a50",
+      "oldArtifactsEdited": false
+    },
+    "manualQueueResult": {
+      "baseRelease": "manga-issue-34-obata-drawing-20261023",
+      "baseRevision": "b74a4b00-9454-412f-af5d-1317713a543c",
+      "counts": {
+        "acceptedUnpublished": {
+          "citations": 0,
+          "claims": 0,
+          "entities": 0,
+          "sources": 0
+        },
+        "publishedAccepted": {
+          "citations": 52,
+          "claims": 51,
+          "entities": 66,
+          "sources": 44
+        }
+      },
+      "phase": "up-to-date",
+      "publicationApproval": "human-only",
+      "receiptSetSha256": "8a55413ee9fedf32fd64ce6fddebd28d1d636ff7de0fcc1fd063a5b15524d56d",
+      "schemaVersion": 1
+    },
+    "diagnosticOverlap": {
+      "scheduledAt": "2026-10-24T03:20:23+09:00",
+      "exitCode": 1,
+      "reason": "Concurrent diagnostic manual preparation held preparation.lock; no duplicate side effect; manual invocation completed up-to-date."
+    },
+    "taskRecoveryRun": {
+      "startedAt": "2026-10-24T03:21:41+09:00",
+      "completedAt": "2026-10-24T03:23:02+09:00",
+      "exitCode": 0,
+      "guiLauncher": true,
+      "sourceCommit": "7392d8e343a11644b1047364c71653779ad0c93c"
+    },
+    "finalHealth": {
+      "baseRelease": "manga-issue-34-obata-drawing-20261023",
+      "baseRevision": "b74a4b00-9454-412f-af5d-1317713a543c",
+      "counts": {
+        "acceptedUnpublished": {
+          "citations": 0,
+          "claims": 0,
+          "entities": 0,
+          "sources": 0
+        },
+        "publishedAccepted": {
+          "citations": 52,
+          "claims": 51,
+          "entities": 66,
+          "sources": 44
+        }
+      },
+      "phase": "up-to-date",
+      "publicationApproval": "human-only",
+      "receiptSetSha256": "8a55413ee9fedf32fd64ce6fddebd28d1d636ff7de0fcc1fd063a5b15524d56d",
+      "schemaVersion": 1
+    },
+    "installedSourceBytesMatch": true
+  },
+  "productionApplyCallsDuringThisWork": 0,
+  "humanDataApprovalRequired": true,
+  "scheduledSignerAvailable": false,
+  "normalNextAcceptedRecordNeedsCodex": false,
+  "immutability": {
+    "existingFilesChecked": 431,
+    "changedFiles": []
+  },
+  "workerFinalExecutionControl": {
+    "revision": 4,
+    "pauseMode": null,
+    "activeAttempt": null
+  }
+}

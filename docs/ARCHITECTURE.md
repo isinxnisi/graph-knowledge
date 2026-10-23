@@ -1,5 +1,7 @@
 # 現行技術設計
 
+2026-10-24、Issue #33の候補準備は固定WSLコードの `publication-preparation.py` を既存 `publication-delivery.py --queue` から起動する。署名済み配送を優先し、正式receipt差分→固定candidate→既存arm／pause-new／通常Worker ACK→rootの最新backup／実plan→未署名承認待ちをdurableな同nonceで接続。applied artifactのオフライン観測とroot実planを区別し、公開承認の署名鍵は定期主体へ渡さない。Windowsの非表示GUI起動・5分周期を維持し、新service・有料AI・Worker変更はない。[現行runbook](runbooks/PUBLICATION_APPROVAL_DELIVERY.md)。
+
 2026-10-20、[収集接続性評価v1](design/COLLECTION_CONNECTIVITY.md)。保存backup／fixture v4／公開manifest／公開観測をhashとrevisionで照合し、オフラインCLIで既存KG・追加後・追加単独の成分、1〜3段到達、元Claimの根拠付き経路を比較する。単独／テーマ効果と経路列挙上限を分離。Web API・UI・Worker・DBへ変更なし。[実測](verification/COLLECTION_CONNECTIVITY_20261020.md)。
 
 2026-10-19、[対象位置・B方式の接続](design/DISCOVERY_SUBJECT_CONNECTIONS.md)。other-works rev2、対象POST v2／証拠v2／paths POST v2、候補24件の正確な適合判定、Workspace item／URL v3を追加。旧条件は旧位置のまま読み、GraphのEntity枝は共用。名前条件は対象検索・一致理由に限定する。
