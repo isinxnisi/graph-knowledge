@@ -1,14 +1,14 @@
 # CollectionWorkerの実行制御
 
-確認: 2026-10-24 04:32:19 JST。
+確認: 2026-10-24 04:44:18 JST。
 
 反映済みcontrolRevision: 4／最後の操作: pub-b36af1ba-d283-412e-aa29-465d360928b7-resume。
 
-**interval**／停止モード: なし
+**ready**／停止モード: なし
 
 日本時間: 03:00〜07:00、09:00〜12:00、15:00〜18:00。ジョブ間10分休憩。
 
-次の開始候補: 2026-10-24 04:41:53 JST
+次の開始候補: 開始可能
 
 最後の操作SHA-256: 58c6e70ebf2ccd9b4d23bb15fc60e419f08d3df5df107ad26f6ff533e47681f6
 
@@ -40,7 +40,7 @@ Issue確認結果:
 - [issue-25-utc-recovery-03](../../results/issue-25-utc-recovery-03/README.md): blocked（旧 issue-25-manga23-20261019-repair1-batch-04）
 - [issue-25-utc-recovery-04](../../results/issue-25-utc-recovery-04/README.md): blocked（旧 issue-25-manga23-20261019-repair1-batch-05）
 - [issue-25-utc-recovery-05](../../results/issue-25-utc-recovery-05/README.md): blocked（旧 issue-25-manga23-20261019-repair1-batch-06）
-- [issue-25-utc-recovery-06](../../results/issue-25-utc-recovery-06/README.md): waiting-control（旧 issue-25-manga23-20261019-repair1-batch-07）
+- [issue-25-utc-recovery-06](../../results/issue-25-utc-recovery-06/README.md): waiting-lock（旧 issue-25-manga23-20261019-repair1-batch-07）
 - [issue-25-utc-recovery-07](../../results/issue-25-utc-recovery-07/README.md): blocked（旧 issue-25-manga23-20261019-repair1-batch-08）
-- [issue-25-utc-recovery-08](../../results/issue-25-utc-recovery-08/README.md): waiting-control（旧 issue-25-manga23-20261019-repair1-batch-09）
-- [issue-25-utc-recovery-09](../../results/issue-25-utc-recovery-09/README.md): waiting-control（旧 issue-25-manga23-20261019-repair1-batch-10）
+- [issue-25-utc-recovery-08](../../results/issue-25-utc-recovery-08/README.md): waiting-lock（旧 issue-25-manga23-20261019-repair1-batch-09）
+- [issue-25-utc-recovery-09](../../results/issue-25-utc-recovery-09/README.md): waiting-lock（旧 issue-25-manga23-20261019-repair1-batch-10）
