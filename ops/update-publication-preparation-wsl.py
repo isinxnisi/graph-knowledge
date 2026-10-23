@@ -37,12 +37,14 @@ def main():
     meta=json.loads((stage/'deployment.json').read_bytes());source=meta['sourceCommit'];archive=stage/'source.tar.gz'
     require(re.fullmatch('[a-f0-9]{40}',source) and re.fullmatch('sha256:[a-f0-9]{64}',meta['nodeImage']))
     require(sha(archive)==meta['sourceArchiveSha256'] and sha(CONFIG)==meta['previousConfigSha256'])
-    old=json.loads(CONFIG.read_bytes());require(old['uid']==1000 and old['deliveryEnabled'] is True and not old.get('preparation'))
+    old=json.loads(CONFIG.read_bytes());require(old['uid']==1000 and old['deliveryEnabled'] is True)
     operator=Path('/usr/local/sbin/plunode-publication-approve');trusted(operator);operator_sha=sha(operator)
     co=json.loads(Path(old['coordinationConfig']).read_bytes());home=Path(old['attesterKey']).parent.parent
     require(home==Path('/home/isinxnisi/.local/share/plunode-publication'))
     require(old['runtime']==str(Path(co['workerHome'])/'runtime') and co['workerId']=='plunode-wsl')
     preparation=home/'preparation';target=BASE/source;require(not target.exists() and not target.is_symlink())
+    expected_policy={'enabled':True,'home':str(preparation),'nodeImage':meta['nodeImage'],'humanDecision':meta['humanDecision']}
+    require(not old.get('preparation') or old['preparation']==expected_policy)
     # Copy only source-controlled ordinary entries, never archive links/devices/owners.
     with tempfile.TemporaryDirectory(prefix='.preparation-',dir=BASE) as temp:
         dest=Path(temp);seen=set();total=0
@@ -62,12 +64,12 @@ def main():
             require((dest/name).is_file())
         os.rename(dest,target);sync(BASE)
     decision=meta['humanDecision'];require(decision['actorType']=='human' and all(isinstance(decision[k],str) and decision[k] for k in ['reviewer','decidedAt','statement']))
-    setup="from pathlib import Path;import os,stat;p=Path("+repr(str(preparation))+");p.mkdir(mode=0o700,exist_ok=True);s=p.lstat();assert not p.is_symlink() and s.st_uid==1000 and stat.S_IMODE(s.st_mode)==0o700;assert not list(p.iterdir())"
+    setup="from pathlib import Path;import os,stat;p=Path("+repr(str(preparation))+");p.mkdir(mode=0o700,exist_ok=True);s=p.lstat();assert not p.is_symlink() and s.st_uid==1000 and stat.S_IMODE(s.st_mode)==0o700"+('' if old.get('preparation') else ';assert not list(p.iterdir())')
     subprocess.run(['/usr/sbin/runuser','-u',USER,'--','/usr/bin/python3','-I','-c',setup],check=True,timeout=20)
     # No signature may be waiting for delivery during the fixed code switch.
     check="import runpy;from pathlib import Path;m=runpy.run_path("+repr(str(target/'scripts/publication-delivery.py'))+");assert m['pending'](Path("+repr(old['queueDir'])+")) is None"
     subprocess.run(['/usr/sbin/runuser','-u',USER,'--','/usr/bin/python3','-I','-c',check],check=True,timeout=20)
-    new={**old,'sourceCommit':source,'preparation':{'enabled':True,'home':str(preparation),'nodeImage':meta['nodeImage'],'humanDecision':decision}}
+    new={**old,'sourceCommit':source,'preparation':expected_policy}
     write(stage/'delivery.before.json',CONFIG.read_bytes(),0o600)
     temporary=CONFIG.with_name('.delivery-preparation-'+source+'.json')
     write(temporary,(json.dumps(new,sort_keys=True,ensure_ascii=False)+'\n').encode(),0o644)

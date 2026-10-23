@@ -74,6 +74,8 @@ class Preparation:
         self.state_path=self.home/'state.json';self.get=get or cycle.getter()
         self.w=workflow or cycle.reviewed_workflow(self.runtime);self.node=node
         c.w.human(self.policy['humanDecision'])
+        self.wait_seconds=self.policy.get('barrierWaitSeconds',30)
+        e.require(type(self.wait_seconds) is int and 0<=self.wait_seconds<=30,'Bounded preparation barrier required')
         for name in ['candidates','history']: (self.home/name).mkdir(mode=0o700,exist_ok=True)
     def save(self,state):e.durable(self.state_path,state)
     def health(self,phase,**fields):
@@ -135,7 +137,7 @@ class Preparation:
         target=self.runtime/'datasets/public-kg/releases'/release
         # Validation happens outside acceptance locks.
         self.w.node(['scripts/public-kg.ts','validate',str(base/'release')])
-        with self.co.barrier():
+        with self.co.barrier(wait_seconds=self.wait_seconds):
             if target.exists():
                 e.require(all(cycle.sha(target/n)==cycle.sha(base/'release'/n) for n in ['data.json','manifest.json']),'Runtime published artifact differs')
                 fsync_directory(target.parent)
@@ -234,7 +236,7 @@ class Preparation:
         self.w.node=self.node or DockerNode(self.policy['nodeImage'],self.runtime,self.home,base)
         if not state.get('nonce'):
             # A busy manual/Worker lock defers preparation, without any operational pause.
-            with self.co.barrier():refs=receipt_refs(self.runtime,self.w)
+            with self.co.barrier(wait_seconds=self.wait_seconds):refs=receipt_refs(self.runtime,self.w)
             self.sync_base(base,root)
             ledger,context=self.inventory(base,root)
             if not any(context[3][f] for f in cycle.FIELDS):

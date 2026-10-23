@@ -44,7 +44,7 @@ class PreparationTests(unittest.TestCase):
                 'verified':True,'release':req['release'],'revision':'after-publication','dataSha256':e.sha(self.base/'release/data.json'),
                 'manifestFileSha256':e.sha(self.base/'release/manifest.json')}}
         self.config={'runtime':str(self.runtime),'queueDir':str(self.queue),'preparation':{'enabled':True,
-            'home':str(self.home),'nodeImage':'sha256:'+'d'*64,'humanDecision':f.decision}}
+            'home':str(self.home),'barrierWaitSeconds':0,'nodeImage':'sha256:'+'d'*64,'humanDecision':f.decision}}
         case=self
         class Gateway:
             candidate=None
@@ -139,6 +139,12 @@ class PreparationTests(unittest.TestCase):
         self.assertTrue((self.queue/nonce/'job.json').exists());self.assertFalse(self.state().get('announced'))
         self.assertEqual(self.tick()['phase'],'awaiting-human-publication-approval')
         self.assertEqual(self.state()['nonce'],nonce);self.assertEqual(self.f.f.calls('apply'),0)
+    def test_default_preparation_barrier_reuses_bounded_lock_acquisition(self):
+        self.config['preparation'].pop('barrierWaitSeconds');prepared=self.prep()
+        with patch.object(prepared.co,'barrier',wraps=prepared.co.barrier) as barrier:
+            self.assertEqual(prepared.tick()['phase'],'waiting-worker-acknowledgement')
+            self.assertTrue(barrier.call_args_list)
+            self.assertTrue(all(call.kwargs=={'wait_seconds':30} for call in barrier.call_args_list))
     def test_changed_receipt_is_hard_failure_not_new_nonce(self):
         self.ready();nonce=self.state()['nonce'];r=next((self.runtime/'datasets/manga-collection').glob('accepted-*/acceptance.json'));r.write_text('{}')
         with self.assertRaisesRegex(ValueError,'removed or changed'):self.tick()

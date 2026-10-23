@@ -19,7 +19,7 @@ Issue #33。既存のPUBLICATION_ENABLEMENT_READINESS / PUBLICATION_COORDINATION
 ### 停止・再開と復旧
 
 - PC停止／ログアウト／通信障害は次の通常起動でintentの**同nonce・同candidate**を再開する。転送、arm応答喪失、実plan、登録後のGit記録失敗は同じ位置から再試行。自動で署名・有効期限更新・apply承認しない。
-- Worker/common lockがbusyなら変更せず次回へ。自分のpreparation.lockは一起動だけ保持し、Worker/common lockは通信・承認待ち・次回待ち中に持たない。実peerの既存30秒取得待ちは部分取得を全解放して待つ。
+- Worker/common lockがbusyなら既存barrierで最大30秒だけ取得を再試行し、それでもbusyなら変更せず次回へ。取得失敗時はcoordinator／Worker／commonの部分取得をすべて解放して待つ。自分のpreparation.lockは一起動だけ保持し、Worker/common lockは通信・承認待ち・次回待ち中に持たない。実peerの既存30秒取得待ちは部分取得を全解放して待つ。
 - arm前に新receiptが増えたら旧未登録intentを退役し、次回に新集合で準備する。arm後・未登録で増えた場合は同nonceを署名cancel→自分のCAS resume→finishできた後だけ退役する。取消し／resume／finish応答喪失後も同nonceを再確認し、再pauseしない。
 - 登録済み承認待ちのreceipt集合変更、旧receipt／根拠改変、未知の公開revision、別control割込みは安全停止し、固定jobとpauseを保全する。これらの実不整合は人間判断へ戻す。無条件resume、別nonceによる結果不明apply、ロック削除はしない。
 - ローカル `~/.local/share/plunode-publication/preparation/health.json` にup-to-date／waiting-local-lock／waiting-worker-acknowledgement／awaiting-human-publication-approval／preparation-stoppedを記録。Windows last-run.jsonとSchedulerのexitで定期入口も確認できる。Git記録だけ失敗した場合も次の予定で同じ不変ready記録を送る。
