@@ -9,6 +9,8 @@ async function handle(req:Request,ctx:Context){
  return memberHandle(async()=>{const s=memberRuntime().service.community;
  if(req.method==='GET'){
   if(!p.length)return s.list(req);
+  if(p.length===1&&p[0]==='reports')return s.reports(req);
+  if(p.length===2&&p[1]==='safety-log')return s.safetyLog(req,p[0]);
   if(p.length===1&&p[0]==='invitations')return s.invitations(req);
   if(p.length===1&&p[0]==='participation')return s.participation(req);
   if(p.length===1&&p[0]==='recoveries')return s.recoveries(req);
@@ -18,6 +20,8 @@ async function handle(req:Request,ctx:Context){
   if(p.length===2&&p[0]==='threads')return s.thread(req,p[1]);
  }else{
   if(!p.length)return s.create(req);
+  if(p.length===1&&p[0]==='reports')return s.report(req);
+  if(p.length===3&&p[0]==='posts'&&p[2]==='moderate')return s.moderatePost(req,p[1]);
   if(p.length===2&&p[1]==='invitations')return s.invite(req,p[0]);
   if(p.length===3&&p[0]==='invitations'&&['accept','decline','revoke'].includes(p[2]))return s.decideInvitation(req,p[1],p[2] as 'accept'|'decline'|'revoke');
   if(p.length===2&&p[1]==='recovery')return s.requestRecovery(req,p[0]);

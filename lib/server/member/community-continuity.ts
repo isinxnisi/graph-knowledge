@@ -1,3 +1,4 @@
+import {communityAllowance} from './community-rate';
 import {randomUUID} from 'node:crypto';
 import type {Pool,PoolClient,QueryResultRow} from 'pg';
 import {z} from 'zod';
@@ -41,7 +42,7 @@ export function createCommunityContinuity(pool:Pool,h:Helpers,secret:string){
     const prior=(await c.query('SELECT * FROM community_member WHERE community_id=$1 AND user_id=$2',[cid,input.userId])).rows[0];
     if(prior?.status==='active')throw new MemberError(409,'ALREADY_MEMBER');
     if(['removed','suspended'].includes(prior?.status)&&!input.readmission)throw new MemberError(409,'READMISSION_REQUIRED');
-    const recent=await c.query("SELECT count(*) FROM community_invitation WHERE issuer_id=$1 AND created_at>clock_timestamp()-interval '1 hour'",[u.id]);if(Number(recent.rows[0].count)>=60)throw new MemberError(429,'INVITATION_RATE_LIMIT');
+    await communityAllowance(c,u.id,'invitation');
     await c.query("UPDATE community_invitation SET status='revoked',revision=revision+1 WHERE community_id=$1 AND target_id=$2 AND status='pending'",[cid,input.userId]);
     const issuer=(await c.query('SELECT generation FROM community_member WHERE community_id=$1 AND user_id=$2',[cid,u.id])).rows[0];
     const id=randomUUID();await c.query("INSERT INTO community_invitation(id,community_id,target_id,issuer_id,issuer_generation,target_generation,expires_at,readmission) VALUES($1,$2,$3,$4,$5,$6,clock_timestamp()+$7*interval '1 day',$8)",[id,cid,input.userId,u.id,issuer.generation,prior?.generation??0,input.days,input.readmission]);

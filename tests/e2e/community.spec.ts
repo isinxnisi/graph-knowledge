@@ -1,4 +1,6 @@
 import {test,expect} from '@playwright/test';
+import {resetCommunityTestAllowance} from '../support/community-quota';
+test.beforeEach(resetCommunityTestAllowance);
 for(const [language,width] of [['ja',1440],['en',390]] as const)test(`human community C1 ${language} ${width}`,async({page,browser},info)=>{
  await page.setViewportSize({width,height:900});await page.goto('/member');await page.getByRole('button',{name:'検証用OIDCでログイン',exact:true}).click();await page.getByRole('link',{name:'検証ユーザーA',exact:true}).click();await page.waitForURL(u=>u.pathname==='/member');await expect(page.getByText('アカウントと一覧を再確認',{exact:true})).toBeEnabled();
  if(language==='en'){await page.evaluate(()=>localStorage.setItem('graph-knowledge.ui-locale.v1','en'));}

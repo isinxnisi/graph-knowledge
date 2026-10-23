@@ -199,3 +199,10 @@ cursorは安定時刻＋UUIDのkeysetを使い、viewer・filter・policy世代�
 招待・再参加・運営復帰・ページングの現行契約は[COMMUNITY_CONTINUITY](COMMUNITY_CONTINUITY.md)。初回の招待は相手から共有されたUser UUID宛てのアプリ内招待とし、上の論理モデルのnonce hashはbearer link導入まで作らない。Invitation IDを知っても本人性の代わりにはならない。
 
 元のaudience・所有権の分離は維持。運営復帰はサイト運営者のcase判断と本人承諾を分け、アーカイブの再開や過去の限定会話の復活を伴わない。サイト担当者に会話本文の包括的な閲覧権を与えない。
+
+
+## 2026-10-23：初回公開と安全管理の確定
+
+第1弾はC1a＋C1b＋C3-minと公開前検証。C2公開版・掲載・ギャラリー・Graph連携は独立後続へ変更し、コミュニティのCapsule項目は準備中で非活性にする。既存の個人Capsuleは維持する。AIは第2弾のまま。
+
+現在の通報・管理非表示・サイト停止、期限付きの報告対象だけの運営確認は[COMMUNITY_SAFETY_MIN](COMMUNITY_SAFETY_MIN.md)を正本とする。本文の将来モデルや過去のAPI案を、実装済み権限や公開条件と読み替えない。

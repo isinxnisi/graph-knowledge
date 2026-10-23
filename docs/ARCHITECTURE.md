@@ -1,5 +1,7 @@
 # 現行技術設計
 
+2026-10-23、コミュニティC3-minをfeature flag内に実装。通報、管理者非表示、通報対象に限定した監査付き運営確認、サイト停止・アーカイブ復帰、原子的な濫用制限を追加。初回公開条件はC1a／C1b／C3-minと公開前検証へ変更し、C2掲載・Graph連携は独立した後続、AIは第2弾とする。[契約](design/COMMUNITY_SAFETY_MIN.md)／[隔離検証](verification/COMMUNITY_C3_MIN_20261023.md)。通常3200／betaは無効、3275／graph-comは架空試作を維持。本番・既存会員DBへの適用は未実施。
+
 2026-10-23、人間向けコミュニティC1bをfeature flag内に実装。アカウント宛て招待・本人承諾、明示的再受入、運営判断と本人同意を分けた管理者不在復帰、認可付きcursorを既存Better Auth／PGへ接続する。[契約](design/COMMUNITY_CONTINUITY.md)／[隔離検証](verification/COMMUNITY_C1B_20261023.md)。通常3200／betaは無効、3275／graph-comは架空データのまま。本番・既存会員DBへのmigration、C2掲載・AI・KG変更は行わない。
 
 2026-10-20、[収集接続性評価v1](design/COLLECTION_CONNECTIVITY.md)。保存backup／fixture v4／公開manifest／公開観測をhashとrevisionで照合し、オフラインCLIで既存KG・追加後・追加単独の成分、1〜3段到達、元Claimの根拠付き経路を比較する。単独／テーマ効果と経路列挙上限を分離。Web API・UI・Worker・DBへ変更なし。[実測](verification/COLLECTION_CONNECTIVITY_20261020.md)。
