@@ -27,12 +27,12 @@
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
   "nextStartAt": "2026-10-22T20:00:45.581501+00:00",
-  "phase": "outside-window",
+  "phase": "ready",
   "recoveredAttempt": null,
   "admission": {
-    "ready": false,
-    "reason": "outside-window",
-    "eligibleAt": "2026-10-23T00:00:00+00:00",
+    "ready": true,
+    "reason": "ready",
+    "eligibleAt": null,
     "windowEndAt": "2026-10-23T03:00:00+00:00"
   },
   "activeAttempt": null,
@@ -91,5 +91,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-10-22T23:52:03.986172+00:00"
+  "checkedAt": "2026-10-23T00:00:02.981433+00:00"
 }
