@@ -97,11 +97,11 @@
   "requestSha256": "137298d028f21a48a58499dcc3e99b0b928944b2ca1df819a8470c57bc4cc619",
   "kind": "collect-review",
   "phase": "waiting-lock",
-  "generation": 6278,
+  "generation": 6279,
   "attempts": 1,
   "workerId": "plunode-wsl",
   "sourceCommit": "ed89e5a6ff0cf7d8b485330be790a234a064eacd",
-  "updatedAt": "2026-10-23T19:09:29+00:00",
+  "updatedAt": "2026-10-23T19:12:33+00:00",
   "result": {
     "jobId": "issue-25-utc-recovery-r0005-7e3b350d672334cb",
     "collectionUnchanged": false,
