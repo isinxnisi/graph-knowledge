@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<job id="PlunodePublicationDelivery">
+  <script language="JScript"><![CDATA[
+// GUI task entry: hide WSL at creation, wait, and propagate its actual exit code.
+// No PowerShell/cmd shell, credentials, signing or publication argument expansion.
+if (WScript.Arguments.length !== 1 || !/^[a-f0-9]{40}$/.test(WScript.Arguments.Item(0))) {
+    WScript.Quit(2);
+}
+var source = WScript.Arguments.Item(0);
+var started = new Date().toUTCString();
+var shell, files, folder;
+function record(exitCode, launchError) {
+    try {
+        var log = files.OpenTextFile(files.BuildPath(folder, "last-run.json"), 2, true);
+        log.WriteLine('{"sourceCommit":"' + source + '","startedAt":"' + started +
+            '","completedAt":"' + new Date().toUTCString() + '","exitCode":' + exitCode +
+            ',"launchError":' + launchError + '}');
+        log.Close();
+    } catch (ignored) {} // Task Scheduler still receives the child exit code.
+}
+var result = 1;
+try {
+    shell = new ActiveXObject("WScript.Shell");
+    files = new ActiveXObject("Scripting.FileSystemObject");
+    folder = files.GetParentFolderName(WScript.ScriptFullName);
+    shell.CurrentDirectory = folder;
+    var executable = shell.ExpandEnvironmentStrings("%SystemRoot%\\System32\\wsl.exe");
+    var command = '"' + executable + '" -d Ubuntu -u isinxnisi -- /usr/bin/python3 -B ' +
+        '/usr/local/lib/plunode-receipts/' + source +
+        '/scripts/publication-delivery.py --config /etc/plunode-publication/delivery.json --queue';
+    // style=0 hides BEFORE the console child is created; wait=true preserves
+    // IgnoreNew, the task's 30-minute limit and same-nonce recovery scheduling.
+    result = shell.Run(command, 0, true);
+    record(result, false);
+} catch (error) {
+    record(1, true);
+}
+WScript.Quit(result);
+  ]]></script>
+</job>

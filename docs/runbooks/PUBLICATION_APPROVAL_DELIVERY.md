@@ -14,7 +14,7 @@ installerは固定archive SHA・rootの親・既存client/coordinator SHA・Work
 
 1. VPS：固定root program manifest68881f… / source0732af9、image367e9c…、鍵pin・公開base/revision88437056…・予約空・全readiness ticket finished・一時sudo撤去を再確認。共通lockをnonblockingで取得し、旧trusted/config.jsonをroot-privateに保全して **deploymentEnabledだけfalse→true**。code/image/DB/サービス/ユーザー/SSHの変更は含めない。
 2. WSL：固定source・自己診断・queueに署名済み未完了jobなしを確認し、root-owned delivery.jsonの **deliveryEnabledだけfalse→true**。Workerは変更しない。
-3. Windows：`Plunode-Publication-Delivery` という新規専用taskだけを登録し有効化する。登録scriptは必ず**disabledで作成**し、同名taskがあれば上書き拒否。current Windows user / Interactive / Limited、WSLのUID1000、root-owned固定Pythonだけを実行。5分おきとログオン時、IgnoreNew、30分上限、Hidden。Codex/AIを呼ばず、常駐processを追加しない。既存Worker/自動開発taskを変更しない。これは従来の一時readiness範囲にないため、本番有効化と一緒に明示して承認対象とする。
+3. Windows：`Plunode-Publication-Delivery` という新規専用taskだけを登録し有効化する。登録scriptは必ず**disabledで作成**し、同名taskがあれば上書き拒否。current Windows user / Interactive / Limited、WSLのUID1000、root-owned固定Pythonだけを実行。5分おきとログオン時、IgnoreNew、30分上限、Hidden。 WindowsのHiddenはtask一覧用でありconsole非表示ではない。専用GUIホストwscript.exe //B //NoLogoからpublication-delivery-launcher.wsfを起動し、固定WSL queueをwindow style=0で生成・同期waitする。子の終了codeをtaskへ返す。ラッパーは非仮想化の%USERPROFILE%\plunode-publication-deliveryへ配置し、直近のsource/開始・終了/exitをlast-run.jsonへ記録する。Codex/AIを呼ばず、常駐processを追加しない。既存Worker/自動開発taskを変更しない。これは従来の一時readiness範囲にないため、本番有効化と一緒に明示して承認対象とする。
 
 PC停止/ログアウト中は配送を実行できない。次のログオン/予定起動で同nonceを再開する。VPSの永続ticketとGitのpause-newはtimeoutで解除しないため、PC不在中も受入と公開が競合しない。実行中Workerの強制終了・lock強制解除は行わない。
 
@@ -56,3 +56,5 @@ root入口は固定UID1000の子でVPSの未消費live requestを再読取し、
 ## 確認範囲
 
 監査専用UIDによる実POSTとdeduplicationは2026-10-23に成功し、GitHub markerは1件。一時readiness sudo撤去とその後の拒否も確認した。新配送接続はファイル仮想KG・実署名/Git/CAS/gateの11件を検証。専用実DBのapply/復旧は完了済みで繰り返さない。Windows taskは実CIM定義まで検証したが、登録・有効化はまだ行っていない。正式データの署名→本番apply一巡は個別承認前なので未実施である。
+
+既存の公開配送taskを直接wsl起動から直す場合は、登録scriptの`-UpdateExisting -SourceCommit FIXED_SHA`を使う。自身の固定actionだけを受理し、Running時は止めず待つ。Actionだけを更新し、enabled状態・trigger時刻・Principal・IgnoreNew・30分上限を維持する。CollectionWorker/Autopilotには操作しない。旧XMLを保全し、必要なら公開配送の旧Actionだけへ戻す。GUIラッパーは署名・公開処理に介入せず、WSLの同nonce復旧経路をそのまま使う。
