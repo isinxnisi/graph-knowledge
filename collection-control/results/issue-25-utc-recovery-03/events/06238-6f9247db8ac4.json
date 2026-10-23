@@ -1,0 +1,132 @@
+{
+  "requestId": "issue-25-utc-recovery-03",
+  "request": {
+    "schemaVersion": 1,
+    "kind": "collect-review",
+    "status": "approved",
+    "humanDecision": {
+      "actorType": "human",
+      "reviewer": "プロジェクト運営者",
+      "decidedAt": "2026-10-19T02:52:00+09:00",
+      "statement": "Issue #25の2026-10-19 02:52 JST先行許可を転記。明示された23作品・人物の同定、QID・日本語代表ISBN探索、recipe生成、hidden候補収集と根拠・保留・レビュー資料生成を承認。Wikidata構造化データとNDL作成書誌だけを用い、準備・収集合計142試行、同一要求2試行、逐次3秒、20秒、4MiB以内。既設時間帯・10分休憩で途中開始・数日継続を許可。同一範囲の再承認は不要。不確かな同定・資料不足・範囲外は保留。個別正式受入・公開apply・VPS配置・会員DB変更は承認しない。"
+    },
+    "issueOrigin": {
+      "repository": "isinxnisi/graph-knowledge",
+      "issueNumber": 25,
+      "approvalId": "manga23-20261019",
+      "permissionSha256": "673d380b4fb61ab2cdef204140d63a47bbf25dbb288199f25d0e3ae740ef11b3",
+      "issueBodySha256": "5f302ff42139b5230da70d38734577da414a3b89a24a82f90302e0297afc3c69"
+    },
+    "approvalScope": "collection-candidates-and-review-only",
+    "applyAuthorized": {
+      "local": false,
+      "beta": false,
+      "vps": false
+    },
+    "id": "issue-25-utc-recovery-03",
+    "sourceCommit": "ed89e5a6ff0cf7d8b485330be790a234a064eacd",
+    "parentRequestId": "issue-25-manga23-20261019-repair1-batch-04",
+    "target": {
+      "themeId": "issue-25-utc-recovery",
+      "revision": 3,
+      "definitionSha256": "809ca74bd10f724f84d4471cd7a10466f90ba0f19bc4a4e779e2fa67a471f51a",
+      "execution": {
+        "adapter": "manga-discovery-v2",
+        "codeSha256": "80e05b67bc0129b963653b90df4cfbfa5bd6aff190acda99f54c08541e55801e",
+        "inputs": [
+          {
+            "file": "datasets/manga-collection/r0019/recipe.json",
+            "sha256": "d58e652152ae9ec04a3e4bdca38b985763186fc9c9f1eb421124e44401eb87c3"
+          },
+          {
+            "file": "datasets/manga-collection/r0019/anchor-review.json",
+            "sha256": "ae4cf2d4ed55660222476f2aee2b52bd7cc244aea608146453344e2049bc59df"
+          },
+          {
+            "file": "datasets/manga-collection/r0019/publication-review.json",
+            "sha256": "42702c4ef6c30fbf74e7aa6f8ad7ecccc173581ccac71c7af8b561ed5b789999"
+          },
+          {
+            "file": "docs/research/famous-manga-creators/20261016/candidates.json",
+            "sha256": "8531fada01e5c635ba2ee278a7ef944a73f64676af14ed42ae0e690f5a1ff978"
+          },
+          {
+            "file": "datasets/public-kg/releases/20261014-credits-001/data.json",
+            "sha256": "ea91b16f52a211b5a8464382ad498b7b2bb2be69a6f33fe125a73a3c7b9da2b5"
+          },
+          {
+            "file": "datasets/public-kg/releases/20261014-credits-001/manifest.json",
+            "sha256": "e4aa3b58ed884f7d1f8fffee43b260261cc2b4d3a867fda942919f439d2bce17"
+          }
+        ],
+        "maxEntities": 2111,
+        "maxClaims": 1847
+      },
+      "targets": {
+        "people": [
+          {
+            "name": "田村由美",
+            "qid": "Q2235128"
+          }
+        ],
+        "works": [
+          {
+            "name": "ミステリと言う勿れ",
+            "qid": "Q85874073",
+            "isbn13": "9784098700295"
+          }
+        ]
+      },
+      "existingApprovalSha256": "50bc213a82574ee5511ed6f3c1de6893804c03df83136c2756983e588c423ccd"
+    },
+    "recovery": {
+      "schemaVersion": 1,
+      "kind": "fixture-utc-z-only",
+      "predecessorRequestId": "issue-25-manga23-20261019-repair1-batch-04",
+      "predecessorRequestSha256": "7ff25d34dee666ffbc02ef6a6c85d3c240577bacaf6711d2a3ae88570b9ddffd",
+      "predecessorTargetSha256": "23717818c002f8bca682a22e3ef31cb3e4827d2acc7f3ae6e873900637221dc0",
+      "predecessorRecipe": {
+        "file": "datasets/manga-collection/r0009/recipe.json",
+        "sha256": "68f83691e91d0de1d5f86230c4d3a216e8fb05b07bbc53cc92f55ee93c5215d0"
+      },
+      "originalApprovalSha256": "6bdcf19ca2d1522dc817f8047f2d757723e8644e108583e7c04efbed938c3e44",
+      "originalStamp": "2026-10-18T18:54:58+00:00",
+      "normalizedStamp": "2026-10-18T18:54:58Z"
+    }
+  },
+  "requestSha256": "67aa46a50204029b93086cb11c41b6251061d0fa3fc2ed6f131aaadc0e078a56",
+  "kind": "collect-review",
+  "phase": "waiting-control",
+  "generation": 6238,
+  "attempts": 1,
+  "workerId": "plunode-wsl",
+  "sourceCommit": "ed89e5a6ff0cf7d8b485330be790a234a064eacd",
+  "updatedAt": "2026-10-23T18:01:41+00:00",
+  "result": {
+    "jobId": "issue-25-utc-recovery-r0003-4e7b3edf51e9545b",
+    "collectionUnchanged": false,
+    "reviewUnchanged": false,
+    "transportAttemptsAdded": 0,
+    "reviewDirectory": "/home/isinxnisi/.local/share/plunode-collection-worker/runtime/datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0003-4e7b3edf51e9545b-review-7ac1287be3ae3491",
+    "reviewOnly": true,
+    "formalAcceptance": false,
+    "publicApply": false,
+    "counts": {
+      "entities": 1,
+      "claims": 1,
+      "sources": 1,
+      "citations": 1
+    },
+    "heldClaims": 0
+  },
+  "executionComplete": true,
+  "reviewReference": {
+    "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0003-4e7b3edf51e9545b-review-7ac1287be3ae3491/review-manifest.json",
+    "sha256": "ccb73e2f413433913cd3338750b53428ed346165db8363a62dba44f004f0a9f0"
+  },
+  "decisionDrafts": [
+    "datasets/manga-collection/decisions/issue-25-utc-recovery-03-normal-draft.json"
+  ],
+  "message": "Execution gate: interval",
+  "retryAt": 1792768481.564776
+}
