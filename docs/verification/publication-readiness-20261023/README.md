@@ -29,3 +29,7 @@
 ## 固定peerの実機結果（後続）
 
 source0732af9のVPS更新後、実preflight・無書込plan・署名閉鎖・shadow resume/finishが成功。監査通知は診断待ち。本番false/apply0、#33未完了。[実測と接続コードの残範囲](live-peer-results.md) / [状態JSON](live-peer-results.json)。
+
+## 監査送信と無効配置（最新）
+
+[監査実送信・重複抑制・一時sudo撤去・WSL配送配置](audit-and-delivery-installed.md)。WSL配送flagと本番flagはfalse、Windows taskは未登録。有効化と各データ公開は別承認。

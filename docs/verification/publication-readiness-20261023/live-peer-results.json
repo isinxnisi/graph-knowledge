@@ -80,9 +80,14 @@
   "offMachineCustodyConfirmed": false,
   "deliveryConnector": {
     "implemented": true,
-    "isolatedTestsPassed": 7,
-    "installed": false,
-    "endToEndOperatorApprovalTriggerInstalled": false
+    "isolatedTestsPassed": 11,
+    "installed": true,
+    "sourceCommit": "35688b46d7e19a082b5572a57c6d7c2496a653d4",
+    "deliveryEnabled": false,
+    "rootHandoffInstallationChecked": true,
+    "signed": false,
+    "scheduledTaskRegistered": false,
+    "endToEndOperatorApprovalTriggerEnabled": false
   },
   "issue33Complete": false,
   "independentVpsProgramHashesVerified": 11,

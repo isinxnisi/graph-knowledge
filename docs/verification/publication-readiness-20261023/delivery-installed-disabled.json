@@ -1,0 +1,38 @@
+{
+  "phase": "delivery-installed-disabled",
+  "sourceCommit": "35688b46d7e19a082b5572a57c6d7c2496a653d4",
+  "sourceArchiveSha256": "42c3cfaef80ab7f6c54ba108f78713bff6b1a31853ab61d98820882a169c3539",
+  "rootOperatorHandoff": {
+    "phase": "operator-handoff-installation-checked",
+    "deliveryEnabled": false,
+    "sourceCommit": "35688b46d7e19a082b5572a57c6d7c2496a653d4",
+    "approverKeyPinMatched": true,
+    "unprivilegedChildVerified": true,
+    "signed": false,
+    "applyCalls": 0
+  },
+  "files": [
+    {
+      "path": "/etc/plunode-publication/delivery-coordinator.json",
+      "sha256": "497365a7b53c443bd4b2c67ac0c779c896cfb5e6a9a7552feedc30b323f213ba"
+    },
+    {
+      "path": "/etc/plunode-publication/approver-public.pem",
+      "sha256": "f1a99f0ba5a10938809a0747433043122d96a9f2a519a528a09a12992ab79e75"
+    },
+    {
+      "path": "/etc/plunode-publication/delivery.json",
+      "sha256": "d7cf3aec110b5778d5129e795b1638259f7cd04dd68a475baf326ff6e314f483"
+    },
+    {
+      "path": "/usr/local/sbin/plunode-publication-approve",
+      "sha256": "93d74ed3cb62d57c22e26c7e4a0d68a307eb48fdc6a3aec5486d46f00048f443"
+    }
+  ],
+  "queueDir": "/home/isinxnisi/.local/share/plunode-publication/deliveries",
+  "scheduledTaskRegistered": false,
+  "privateKeysChanged": false,
+  "liveWorkerModified": false,
+  "productionApplyCalls": 0,
+  "preserveStage": "/root/plunode-publication-delivery.0j6x3w6x"
+}
