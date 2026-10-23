@@ -26,29 +26,26 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-10-23T20:24:34.365090+00:00",
-  "phase": "running",
+  "nextStartAt": "2026-10-23T19:29:58.949248+00:00",
+  "phase": "interval",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
     "reason": "interval",
-    "eligibleAt": "2026-10-23T20:24:34.365090+00:00",
+    "eligibleAt": "2026-10-23T19:29:58.949248+00:00",
     "windowEndAt": "2026-10-23T22:00:00+00:00"
   },
-  "activeAttempt": {
-    "requestId": "issue-25-utc-recovery-05",
-    "startedAt": "2026-10-23T19:19:34.365098+00:00",
-    "limitAt": "2026-10-23T20:14:34.365090+00:00"
-  },
+  "activeAttempt": null,
   "lastAttempt": {
-    "requestId": "issue-25-utc-recovery-03",
-    "endedAt": "2026-10-23T18:58:51.592093+00:00"
+    "requestId": "issue-25-utc-recovery-05",
+    "endedAt": "2026-10-23T19:19:58.949250+00:00"
   },
   "controlError": null,
   "requestsByPhase": {
-    "blocked": 14,
+    "blocked": 15,
     "completed": 4,
-    "waiting-lock": 5
+    "waiting-lock": 1,
+    "waiting-control": 3
   },
   "issueIntake": {
     "collection-control/issue-sources/25.json": {
@@ -76,11 +73,11 @@
     },
     "issue-25-utc-recovery-05": {
       "predecessor": "issue-25-manga23-20261019-repair1-batch-06",
-      "phase": "waiting-lock"
+      "phase": "blocked"
     },
     "issue-25-utc-recovery-06": {
       "predecessor": "issue-25-manga23-20261019-repair1-batch-07",
-      "phase": "waiting-lock"
+      "phase": "waiting-control"
     },
     "issue-25-utc-recovery-07": {
       "predecessor": "issue-25-manga23-20261019-repair1-batch-08",
@@ -88,12 +85,12 @@
     },
     "issue-25-utc-recovery-08": {
       "predecessor": "issue-25-manga23-20261019-repair1-batch-09",
-      "phase": "waiting-lock"
+      "phase": "waiting-control"
     },
     "issue-25-utc-recovery-09": {
       "predecessor": "issue-25-manga23-20261019-repair1-batch-10",
-      "phase": "waiting-lock"
+      "phase": "waiting-control"
     }
   },
-  "checkedAt": "2026-10-23T19:19:43.558738+00:00"
+  "checkedAt": "2026-10-23T19:21:10.130690+00:00"
 }
