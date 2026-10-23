@@ -1,6 +1,6 @@
 # 公開承認からの配送・同nonce再開
 
-Issue #33。既存のPUBLICATION_ENABLEMENT_READINESS / PUBLICATION_COORDINATION / PUBLICATION_GATE_INSTALLATIONを利用する。公開機構の**有効化承認**と、各固定releaseの**データ公開承認**は別である。正式未公開1 Claimはまだ公開承認していない。
+Issue #33。既存のPUBLICATION_ENABLEMENT_READINESS / PUBLICATION_COORDINATION / PUBLICATION_GATE_INSTALLATIONを利用する。公開機構の**有効化承認**と、各固定releaseの**データ公開承認**は別である。現行は51 Claim公開済み・正式未公開0件。以下の現行節を優先し、導入時の承認前記録とは区別する。
 
 ## 2026-10-24：正式受入後の候補自動準備（現行）
 
@@ -19,7 +19,7 @@ Issue #33。既存のPUBLICATION_ENABLEMENT_READINESS / PUBLICATION_COORDINATION
 ### 停止・再開と復旧
 
 - PC停止／ログアウト／通信障害は次の通常起動でintentの**同nonce・同candidate**を再開する。転送、arm応答喪失、実plan、登録後のGit記録失敗は同じ位置から再試行。自動で署名・有効期限更新・apply承認しない。
-- Worker/common lockがbusyなら既存barrierで最大30秒だけ取得を再試行し、それでもbusyなら変更せず次回へ。取得失敗時はcoordinator／Worker／commonの部分取得をすべて解放して待つ。自分のpreparation.lockは一起動だけ保持し、Worker/common lockは通信・承認待ち・次回待ち中に持たない。実peerの既存30秒取得待ちは部分取得を全解放して待つ。
+- Worker/common lockがbusyなら既存barrierの最大30秒の取得窓を2回まで使い、通常の毎分tickを跨いでもbusyなら変更せず次回へ。取得失敗時はcoordinator／Worker／commonの部分取得をすべて解放して待つ。自分のpreparation.lockは一起動だけ保持し、Worker/common lockは通信・承認待ち・次回待ち中に持たない。実peerの既存30秒取得待ちは部分取得を全解放して待つ。
 - arm前に新receiptが増えたら旧未登録intentを退役し、次回に新集合で準備する。arm後・未登録で増えた場合は同nonceを署名cancel→自分のCAS resume→finishできた後だけ退役する。取消し／resume／finish応答喪失後も同nonceを再確認し、再pauseしない。
 - 登録済み承認待ちのreceipt集合変更、旧receipt／根拠改変、未知の公開revision、別control割込みは安全停止し、固定jobとpauseを保全する。これらの実不整合は人間判断へ戻す。無条件resume、別nonceによる結果不明apply、ロック削除はしない。
 - ローカル `~/.local/share/plunode-publication/preparation/health.json` にup-to-date／waiting-local-lock／waiting-worker-acknowledgement／awaiting-human-publication-approval／preparation-stoppedを記録。Windows last-run.jsonとSchedulerのexitで定期入口も確認できる。Git記録だけ失敗した場合も次の予定で同じ不変ready記録を送る。
@@ -36,7 +36,7 @@ Issue #33。既存のPUBLICATION_ENABLEMENT_READINESS / PUBLICATION_COORDINATION
 
 installerは固定archive SHA・rootの親・既存client/coordinator SHA・Worker973c7b0/ID/remote/branch/runtime/common lock/closure pin・既存approver鍵pairを検査し、公開コードを明示644で抽出する。既存target/configがあれば上書きせず停止する。root self-checkは**署名せず**鍵pairと実UID1000の子・inactive config・queueを確認する。失敗時はroot stageを保全し、旧installerを繰り返さない。
 
-## 有効化の承認対象（まだ実行しない）
+## 導入時の有効化承認対象（履歴）
 
 1. VPS：固定root program manifest68881f… / source0732af9、image367e9c…、鍵pin・公開base/revision88437056…・予約空・全readiness ticket finished・一時sudo撤去を再確認。共通lockをnonblockingで取得し、旧trusted/config.jsonをroot-privateに保全して **deploymentEnabledだけfalse→true**。code/image/DB/サービス/ユーザー/SSHの変更は含めない。
 2. WSL：固定source・自己診断・queueに署名済み未完了jobなしを確認し、root-owned delivery.jsonの **deliveryEnabledだけfalse→true**。Workerは変更しない。

@@ -3,6 +3,7 @@
 Never signs, accepts, collects, executes an apply, restores, or changes a Worker setting.
 """
 import importlib.util
+import contextlib
 import json
 import os
 from pathlib import Path
@@ -131,6 +132,19 @@ class Preparation:
             'Published artifact is not covered by the completed root verification')
         self.gateway.candidate=str(base)
         return base,root
+    @contextlib.contextmanager
+    def barrier(self):
+        # At most two existing 30s acquisition windows cover a normal one-minute
+        # Worker tick. Each failed entry releases every partial lock. Never retry body errors.
+        for attempt in range(2 if self.wait_seconds else 1):
+            stack=contextlib.ExitStack()
+            try:stack.enter_context(self.co.barrier(wait_seconds=self.wait_seconds))
+            except BlockingIOError:
+                stack.close()
+                if attempt==1 or not self.wait_seconds:raise
+            else:break
+        try:yield
+        finally:stack.close()
     def sync_base(self,base,root):
         """Add a verified published artifact; never edit a receipt, old artifact, code or state."""
         release=root['release'];e.require(re.fullmatch('[a-z0-9][a-z0-9-]*',release),'Invalid published release')
@@ -138,7 +152,7 @@ class Preparation:
         # The completed root whole-graph verification already covers these exact bytes.
         # Do not repeat a slow Docker base validation between two lock acquisitions.
         expected={'data.json':root['verification']['dataSha256'],'manifest.json':root['verification']['manifestFileSha256']}
-        with self.co.barrier(wait_seconds=self.wait_seconds):
+        with self.barrier():
             e.require(all(cycle.sha(base/'release'/name)==pin for name,pin in expected.items()),'Applied artifact changed before base synchronization')
             if target.exists():
                 e.require(all(cycle.sha(target/name)==pin for name,pin in expected.items()),'Runtime published artifact differs')
@@ -238,10 +252,11 @@ class Preparation:
         base,root=self.published_base()
         self.w.node=self.node or DockerNode(self.policy['nodeImage'],self.runtime,self.home,base)
         if not state.get('nonce'):
-            # One brief barrier only; all network/inventory/Node work is outside it.
-            self.sync_base(base,root)
+            # Read immutable receipts first, independently of a running Worker.
+            # Synchronize its current base only inside a brief quiescent barrier.
             ledger,context=self.inventory(base,root)
             if not any(context[3][f] for f in cycle.FIELDS):
+                self.sync_base(base,root)
                 e.require(receipt_refs(self.runtime,self.w)==ledger['receipts'] and self.get('/api/dataset')=={'dataset':'public-kg','revision':root['publishedRevision']},'Inputs advanced during inventory; retry next schedule')
                 for path,checksum in context[1].readset.items():e.require(cycle.sha(path)==checksum,'Formal evidence changed during inventory')
                 return self.health('up-to-date',baseRelease=root['release'],baseRevision=root['publishedRevision'],counts=ledger['counts'],receiptSetSha256=ledger['receiptSetSha256'])

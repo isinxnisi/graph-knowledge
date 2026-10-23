@@ -139,6 +139,22 @@ class PreparationTests(unittest.TestCase):
         self.assertTrue((self.queue/nonce/'job.json').exists());self.assertFalse(self.state().get('announced'))
         self.assertEqual(self.tick()['phase'],'awaiting-human-publication-approval')
         self.assertEqual(self.state()['nonce'],nonce);self.assertEqual(self.f.f.calls('apply'),0)
+    def test_second_acquisition_window_releases_failed_entry_and_never_retries_body(self):
+        prepared=self.prep();prepared.wait_seconds=30;original=prepared.co.barrier;calls=[]
+        import contextlib
+        @contextlib.contextmanager
+        def once(**kwargs):
+            calls.append(kwargs)
+            if len(calls)==1:raise BlockingIOError('isolated long normal Worker tick')
+            with original():yield
+        with patch.object(prepared.co,'barrier',side_effect=once):
+            with prepared.barrier():pass
+        self.assertEqual(calls,[{'wait_seconds':30},{'wait_seconds':30}])
+        calls.clear()
+        with patch.object(prepared.co,'barrier',wraps=original) as barrier:
+            with self.assertRaises(BlockingIOError):
+                with prepared.barrier():raise BlockingIOError('isolated body failure')
+            self.assertEqual(barrier.call_count,1)
     def test_idle_base_sync_does_not_start_docker_validation_between_barriers(self):
         prepared=self.prep()
         with patch.object(prepared.co,'barrier',wraps=prepared.co.barrier) as barrier:
