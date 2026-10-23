@@ -64,12 +64,14 @@
     "sourceCommit": "0732af9ebd87f2cd73a033246e88d25493d4ba2a"
   },
   "auditDelivery": {
-    "phase": "stopped-awaiting-diagnostic",
-    "dedicatedIdentityAuthenticationVerified": false,
-    "sendVerified": false,
-    "deduplicationVerified": false
+    "phase": "verified",
+    "dedicatedIdentityAuthenticationVerified": true,
+    "sendVerified": true,
+    "deduplicationVerified": true,
+    "githubCommentId": 6357557746,
+    "githubMarkerMatches": 1
   },
-  "temporaryReadinessSudoRemoved": false,
+  "temporaryReadinessSudoRemoved": true,
   "productionEnabled": false,
   "productionApplyCalls": 0,
   "formalUnpublishedClaims": 1,
@@ -83,5 +85,6 @@
     "endToEndOperatorApprovalTriggerInstalled": false
   },
   "issue33Complete": false,
-  "independentVpsProgramHashesVerified": 11
+  "independentVpsProgramHashesVerified": 11,
+  "readinessEntryDeniedAfterCleanup": true
 }

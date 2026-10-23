@@ -1,0 +1,65 @@
+#!/usr/bin/python3 -I
+"""Human operator approval boundary. Key stays root-only; delivery runs with uid1000.
+Installation/config activation and each actual release approval remain separate.
+"""
+import argparse
+import hashlib
+import importlib.util
+import json
+import os
+from pathlib import Path
+import pwd
+import re
+import subprocess
+import sys
+import uuid
+
+CONFIG=Path('/etc/plunode-publication/delivery.json')
+KEY=Path('/root/plunode-publication-operator/approver.pem')
+
+def require(value):
+    if not value:raise ValueError('Fixed operator approval boundary differs')
+def trusted(path):
+    for item in [path,*path.parents]:
+        st=item.lstat();require(not item.is_symlink() and st.st_uid==0 and not st.st_mode&0o022)
+
+def child(config,extra,*,document=None):
+    account=pwd.getpwuid(config['uid']);require(account.pw_name=='isinxnisi' and config['uid']==1000)
+    script=Path('/usr/local/lib/plunode-receipts')/config['sourceCommit']/'scripts/publication-delivery.py';trusted(script)
+    argv=['/usr/sbin/runuser','-u',account.pw_name,'--','/usr/bin/python3','-I',str(script),'--config',str(CONFIG),*extra]
+    result=subprocess.run(argv,input=document,capture_output=True,timeout=1800,
+        env={'PATH':'/usr/bin:/bin','LANG':'C.UTF-8','HOME':account.pw_dir})
+    require(result.returncode==0 and len(result.stdout)<=65536)
+    return json.loads(result.stdout)
+
+def main():
+    require(os.geteuid()==0);trusted(CONFIG);config=json.loads(CONFIG.read_bytes())
+    require(re.fullmatch('[a-f0-9]{40}',config['sourceCommit']) and type(config['deliveryEnabled']) is bool)
+    cli=argparse.ArgumentParser(description=__doc__);cli.add_argument('--nonce');cli.add_argument('--minutes',type=int,default=30)
+    cli.add_argument('--operator-approved',action='store_true');cli.add_argument('--self-check',action='store_true')
+    args=cli.parse_args();trusted(KEY);st=KEY.lstat();require(st.st_mode&0o777==0o600 and st.st_nlink==1)
+    pub=subprocess.run(['/usr/bin/openssl','pkey','-in',str(KEY),'-pubout'],capture_output=True,timeout=15)
+    require(pub.returncode==0 and hashlib.sha256(pub.stdout).hexdigest()==config['approverKeySha256'])
+    if args.self_check:
+        result=child(config,['--installation-check']);require(result['uid']==1000)
+        print(json.dumps({'phase':'operator-handoff-installation-checked','deliveryEnabled':config['deliveryEnabled'],
+            'sourceCommit':config['sourceCommit'],'approverKeyPinMatched':True,'unprivilegedChildVerified':True,'signed':False,'applyCalls':0}));return
+    require(config['deliveryEnabled'] is True and args.operator_approved and args.nonce)
+    nonce=uuid.UUID(args.nonce);require(nonce.version==4 and str(nonce)==args.nonce)
+    job=Path(config['queueDir'])/args.nonce/'job.json'
+    fixed=child(config,['--job',str(job),'--describe']);require(fixed['nonce']==args.nonce)
+    print(json.dumps(fixed,ensure_ascii=False,indent=2),flush=True)
+    with open('/dev/tty','r+') as tty:
+        require(tty.isatty());tty.write('本番公開を承認するrelease IDを入力してください: ');tty.flush()
+        require(tty.readline().strip()==fixed['request']['release'])
+    path=Path('/usr/local/lib/plunode-receipts')/config['sourceCommit']/'scripts/publication-sign.py';trusted(path)
+    spec=importlib.util.spec_from_file_location('fixed_operator_signer',path);signer=importlib.util.module_from_spec(spec);spec.loader.exec_module(signer)
+    # No approval/private key is written by root under a caller-owned path.
+    signed=signer.sign(signer.approve(fixed['request'],args.nonce,args.minutes),KEY)
+    result=child(config,['--job',str(job),'--accept-approval'],document=json.dumps(signed).encode())
+    print(json.dumps(result))
+
+if __name__=='__main__':
+    try:main()
+    except Exception:
+        print('{"error":"operator-approval-or-delivery-stopped","newNonceAuthorized":false}');raise SystemExit(1)

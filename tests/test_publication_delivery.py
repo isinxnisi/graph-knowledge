@@ -82,4 +82,39 @@ class DeliveryTests(unittest.TestCase):
         with self.assertRaises(ValueError):self.run_delivery()
         self.assertEqual(self.co.latest()['lastControlId'],command['id']);self.assertEqual(self.f.calls('apply'),1)
 
+    def test_signature_handoff_is_immutable_and_immediately_resumable(self):
+        path=self.jobdir/'approval.json';document=e.read(path);path.unlink()
+        d.accept_approval(self.job,document,self.gateway)
+        d.accept_approval(self.job,document,self.gateway)
+        changed=copy.deepcopy(document);changed['payload']['nonce']='00000000-0000-4000-8000-000000000001'
+        with self.assertRaises(ValueError):d.accept_approval(self.job,changed,self.gateway)
+        self.assertEqual(e.read(path),document);self.run_delivery();self.assertEqual(self.f.calls('apply'),1)
+    def test_registration_uses_root_live_plan_and_cannot_rebind(self):
+        queue=self.root/'registration';queue.mkdir();path=queue/self.nonce/'job.json'
+        candidate=self.f.fixture.args.output
+        result=d.register(path,candidate,self.nonce,self.decision,self.gateway,self.co)
+        self.assertEqual(result['phase'],'awaiting-operator-signature')
+        self.assertEqual(e.read(path)['request'],e.read(self.job)['request'])
+        changed=copy.deepcopy(self.decision);changed['statement']+=' changed'
+        with self.assertRaises(ValueError):d.register(path,candidate,self.nonce,changed,self.gateway,self.co)
+        self.assertEqual(self.f.calls('apply'),0)
+
+
+class QueueTests(unittest.TestCase):
+    def test_unsigned_and_completed_jobs_are_not_run(self):
+        import tempfile
+        with tempfile.TemporaryDirectory() as tmp:
+            queue=Path(tmp);one=queue/'00000000-0000-4000-8000-000000000001';one.mkdir()
+            e.durable(one/'job.json',{'nonce':one.name});self.assertIsNone(d.pending(queue))
+            e.durable(one/'approval.json',{});self.assertEqual(d.pending(queue),one/'job.json')
+            e.durable(one/'job.json',{'nonce':one.name,'deliveryStage':'completed'});self.assertIsNone(d.pending(queue))
+    def test_queue_symlinks_and_wrong_nonce_are_rejected(self):
+        import tempfile
+        with tempfile.TemporaryDirectory() as tmp:
+            queue=Path(tmp);one=queue/'00000000-0000-4000-8000-000000000001';one.mkdir()
+            e.durable(one/'job.json',{'nonce':'00000000-0000-4000-8000-000000000002'});e.durable(one/'approval.json',{})
+            with self.assertRaises(ValueError):d.pending(queue)
+            (one/'approval.json').unlink();(one/'approval.json').symlink_to(one/'job.json')
+            with self.assertRaises(ValueError):d.pending(queue)
+
 if __name__=='__main__':unittest.main()
