@@ -31,3 +31,7 @@ WindowsはUNCの未署名.ps1を既存RemoteSignedが拒否した。script未実
 WSLだけの有効化を全体完了と扱わず、VPS結果受領前はWindows taskをdisabledのまま維持する。切戻しは専用task disable/WSL false/VPS既知SHAのflag falseで、KG・receipt・nonce・ticket・署名・pauseを保全する。実行中処理の強制停止や自動restoreをしない。
 
 画面・Webサービスは変更せず再buildしない。共有mainの他作業とmemo.txtへ介入せず、今回の記録は独立branchでcommit・通常pushする。
+
+## 後続：有効化と公開候補準備が完了
+
+[最新の有効化結果・固定公開候補・署名承認手順](enabled-and-prepared.md) / [状態JSON](enabled-and-prepared.json)。本番ゲート/WSL/taskは有効化済み、署名とapplyは別承認待ち。上記のsudo結果待ちは途中記録。

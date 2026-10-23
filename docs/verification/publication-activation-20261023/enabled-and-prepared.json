@@ -1,0 +1,184 @@
+{
+  "scope": "P33-ACTIVATE-20261023",
+  "observedAt": "2026-10-23T13:04:23.088891+00:00",
+  "vps": {
+    "configSha256": "b7d6bcd814aa09a0d2e72f00bf85a84f66075bae0f36f4f3f5c5b406beda3a29",
+    "deploymentEnabled": true,
+    "operatorDigest": "sha256:367e9c36401f4f3c7f3a50e829c4c82bcaf83a9e0df72aba91ea03e4b856e528",
+    "phase": "publication-enabled-no-apply",
+    "preserveStage": "/root/plunode-publication-activation.0rcgc6ib",
+    "previousConfigSha256": "884abbe7439ae56d0f90d09c2241e7a363cd42c88b3e93e1ccd0483e1afeb030",
+    "productionApplyCalls": 0,
+    "programManifestSha256": "68881f68812f22fbf8d99d242dc150680c4099d692a86ec38ffe1876ee1d8ad6",
+    "workerOrKeysOrServicesChanged": false
+  },
+  "wslDelivery": {
+    "phase": "peer-configuration-route-updated-no-apply",
+    "sourceCommit": "8ee37026dc0db77cb4bdf294a569f877baeda16c",
+    "previousSourceCommit": "35688b46d7e19a082b5572a57c6d7c2496a653d4",
+    "snapshotFiles": 1486,
+    "archiveSha256": "8436fed32b57238ef4e9365444b089bdd688fe71d9c22bd56abeb32a7b589508",
+    "configSha256": "72dfa0f0efc59caa85ba63b3cc7088a08980ca363f5220c82dec93d6fd8d0ddb",
+    "previousConfigSha256": "0a5f290e85d0055bdff6afcf3f1f86e992be6c579f0292f6c0ff5c2b8454665c",
+    "preserveStage": "/root/plunode-publication-peer-route.n3_bk66u",
+    "fixedPeerUnchanged": true,
+    "existingUserConfigurationUnchanged": true,
+    "rootOperatorProgramUnchanged": true,
+    "selfCheck": {
+      "phase": "operator-handoff-installation-checked",
+      "deliveryEnabled": true,
+      "sourceCommit": "8ee37026dc0db77cb4bdf294a569f877baeda16c",
+      "approverKeyPinMatched": true,
+      "unprivilegedChildVerified": true,
+      "signed": false,
+      "applyCalls": 0
+    },
+    "peerCheck": {
+      "uid": 1000,
+      "sourceCommit": "8ee37026dc0db77cb4bdf294a569f877baeda16c",
+      "deliveryEnabled": true,
+      "queuePending": false,
+      "peerConfigurationMatched": true,
+      "installationChecked": true
+    },
+    "productionApplyCalls": 0
+  },
+  "windowsTask": {
+    "phase": "delivery-task-enabled-empty-run-verified",
+    "enabled": true,
+    "state": "Ready",
+    "sourceCommit": "8ee37026dc0db77cb4bdf294a569f877baeda16c",
+    "lastTaskResult": 0,
+    "lastRunTime": "2026-10-23T22:00:23.0000000+09:00",
+    "nextRunTime": "2026-10-23T22:05:22.0000000+09:00",
+    "existingTasksUnchanged": [
+      "GraphKnowledge-Autopilot",
+      "Plunode-CollectionWorker"
+    ],
+    "runLevel": 0,
+    "logonType": 3,
+    "multipleInstances": 2,
+    "timeLimit": "PT30M"
+  },
+  "publicationPreparation": {
+    "artifactSha256": "d83660e0b4ff54981424f217150ff40e075aaf35a8474d5b684dda51e4da39a8",
+    "candidate": "/home/isinxnisi/.cache/plunode-publication-readiness-20261023/candidate-production-20261023-01",
+    "dataApplyAuthorized": false,
+    "nonce": "b36af1ba-d283-412e-aa29-465d360928b7",
+    "phase": "registered-awaiting-operator-publication-signature",
+    "scope": "P33-ACTIVATE-20261023",
+    "ticket": {
+      "artifactSha256": "d83660e0b4ff54981424f217150ff40e075aaf35a8474d5b684dda51e4da39a8",
+      "codeCommit": "973c7b0c599f79905a029b28b524f4924e169376",
+      "generation": 1,
+      "nonce": "b36af1ba-d283-412e-aa29-465d360928b7",
+      "pause": null,
+      "phase": "open",
+      "receiptSetSha256": "8a55413ee9fedf32fd64ce6fddebd28d1d636ff7de0fcc1fd063a5b15524d56d",
+      "ticketId": "4991ab01-cf43-4db5-829d-fe691788c9f9",
+      "workerId": "plunode-wsl"
+    },
+    "request": {
+      "schemaVersion": 1,
+      "purpose": "public-kg-publication",
+      "environment": "production",
+      "release": "manga-issue-34-obata-drawing-20261023",
+      "baseRelease": "manga-issue-25-utc-recovery-08-normal",
+      "baseRevision": "88437056-b74f-42ab-88c0-33ed435bdccc",
+      "receiptSetSha256": "8a55413ee9fedf32fd64ce6fddebd28d1d636ff7de0fcc1fd063a5b15524d56d",
+      "planSha256": "9985a539b6281f99a2f7c7d422b2aac214d143d5fc56411fbdfd51605697a392",
+      "operatorDigest": "sha256:367e9c36401f4f3c7f3a50e829c4c82bcaf83a9e0df72aba91ea03e4b856e528",
+      "artifactSha256": "d83660e0b4ff54981424f217150ff40e075aaf35a8474d5b684dda51e4da39a8"
+    }
+  },
+  "livePlanProjection": {
+    "release": "manga-issue-34-obata-drawing-20261023",
+    "added": [
+      "Citation:995e3891-aa9c-4af6-a2ba-3114dfb61fec",
+      "Claim:7ae1c51b-9ba0-46fb-a070-41ac310e8c94",
+      "Source:932fb74b-9292-4fb9-9f8a-29ce35d83823"
+    ],
+    "updated": [],
+    "relationshipsAdded": 4
+  },
+  "pendingRecords": {
+    "claims": [
+      {
+        "id": "7ae1c51b-9ba0-46fb-a070-41ac310e8c94",
+        "subjectId": "d5e39491-5a5f-423c-9222-2eb3c18db9a8",
+        "objectId": "0c29d0e2-685f-4c56-9805-6bf1baf40e7c",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "published",
+        "createdAt": "2026-10-20T15:09:57Z",
+        "updatedAt": "2026-10-20T15:09:57Z",
+        "contribution": {
+          "roleId": "DRAWING",
+          "scope": null
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      }
+    ],
+    "sources": [
+      {
+        "id": "932fb74b-9292-4fb9-9f8a-29ce35d83823",
+        "kind": "web",
+        "title": "ジャーナリスト賞",
+        "authors": [],
+        "publisher": "日本棋院",
+        "url": "https://archive.nihonkiin.or.jp/kishihp/umezawa/journal.htm",
+        "publishedAt": null,
+        "edition": null,
+        "note": "見出し「ジャーナリストクラブ賞受賞」。ページ表示日2001年12月13日。作品単位の作画明示のみ。取得2026-10-20T13:27:00.414Z、元HTML SHA-256 86cfb31314e9e3fe2bf26e04425580c2dc3d5660cbd3b522e32e8be1d533af1b。巻・版・ISBN・制作期間の証明に拡張しない。",
+        "isDemo": false
+      }
+    ],
+    "citations": [
+      {
+        "id": "995e3891-aa9c-4af6-a2ba-3114dfb61fec",
+        "claimId": "7ae1c51b-9ba0-46fb-a070-41ac310e8c94",
+        "sourceId": "932fb74b-9292-4fb9-9f8a-29ce35d83823",
+        "locator": "見出し「ジャーナリストクラブ賞受賞」下の受賞説明、原作者・作画・監修を列挙する文。元HTML 25行、Shift_JIS元body byte [1024,1074) に作品名と担当者の短い文脈。",
+        "note": "「ヒカルの碁」の原作者ほったゆみ氏、作画の小畑健氏。作品単位の作画を支持する。scope=nullは適用巻・版の未構造化であり全巻・全版の証明ではない。期間不明。保存NDLの「漫画」は対象漫画の照合補助でありRoleへ自動変換しない。",
+        "accessedAt": "2026-10-20",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "作画の小畑健氏",
+          "language": "ja"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      }
+    ]
+  },
+  "pendingCounts": {
+    "entities": 0,
+    "claims": 1,
+    "sources": 1,
+    "citations": 1
+  },
+  "candidateCounts": {
+    "entities": 2175,
+    "claims": 1895,
+    "sources": 1795,
+    "citations": 1932
+  },
+  "acceptedReceiptCount": 10,
+  "workerPause": {
+    "revision": 3,
+    "controlId": "pub-b36af1ba-d283-412e-aa29-465d360928b7-pause",
+    "controlSha256": "5fe2c1aec849dfff57954219671b695cc476c77e4a7f779d73bdbc3eb17ad90a",
+    "phase": "acknowledged-by-normal-worker-tick",
+    "settingsCodeOrScheduledTaskChanged": false
+  },
+  "dataPublicationApproved": false,
+  "publicationSignatureCreated": false,
+  "productionApplyCalls": 0,
+  "livePublicationCycleVerified": false,
+  "issue33Complete": false
+}
