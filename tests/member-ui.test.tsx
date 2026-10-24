@@ -78,13 +78,13 @@ describe("会員編集中のprivate表示と入力保持", () => {
     const update = fetchMock.mock.calls.find(call => call[1]?.method === "PUT");
     expect(update?.[1]?.headers).toMatchObject({ "X-Member-User": owner });
     expect(screen.queryByLabelText("自分の説明", { exact: true })).toBeNull();
-    fireEvent.click(screen.getByRole("button", { name: "アカウントと一覧を再確認" }));
-    await screen.findByLabelText("別人のアカウントメニュー");
-    await waitFor(() => expect(screen.getByRole("button", { name: "アカウントと一覧を再確認" }).hasAttribute("disabled")).toBe(false));
+    fireEvent.click(screen.getByRole("button", { name: "最新の状態に更新" }));
+    await waitFor(() => expect(screen.getByLabelText("アカウントメニュー").textContent).toContain("別人"));
+    await waitFor(() => expect(screen.getByRole("button", { name: "最新の状態に更新" }).hasAttribute("disabled")).toBe(false));
     expect(screen.queryByLabelText("自分の説明", { exact: true })).toBeNull();
     expect(document.body.textContent).not.toContain("本人だけの題名");
     identity = owner;
-    fireEvent.click(screen.getByRole("button", { name: "アカウントと一覧を再確認" }));
+    fireEvent.click(screen.getByRole("button", { name: "最新の状態に更新" }));
     await waitFor(() => expect((screen.getByLabelText("自分の説明", { exact: true }) as HTMLTextAreaElement).value).toBe("残したい未保存の入力"));
   });
   it("非表示で取消した更新の遅い成功応答は編集を閉じず、復帰時に再確認する", async () => {
@@ -117,7 +117,7 @@ describe("本人投稿一覧からの失効通知", () => {
     expect(screen.queryByLabelText("自分の説明", { exact: true })).toBeNull();
     expect(screen.queryByTestId("member-reader")).toBeNull();
     expect(document.body.textContent).not.toContain(capsule.content.title);
-    expect(screen.getByRole("button", { name: "アカウントと一覧を再確認" }).hasAttribute("disabled")).toBe(false);
+    expect(screen.getByRole("button", { name: "最新の状態に更新" }).hasAttribute("disabled")).toBe(false);
   });
 });
 
@@ -169,10 +169,10 @@ describe("共有済み版の所有者再閲覧", () => {
     expect(document.body.textContent).not.toContain(capsule.content.title);
     expect(document.body.textContent).not.toContain("遅れて届く旧版の題名");
     await visibility("visible");
-    await screen.findByLabelText("別人のアカウントメニュー");
+    await waitFor(() => expect(screen.getByLabelText("アカウントメニュー").textContent).toContain("別人"));
     await screen.findByText(/このCapsuleを閲覧できません/);
     expect(document.body.textContent).not.toContain(capsule.content.title);
-    identity = owner; fireEvent.click(screen.getByRole("button", { name: "アカウントと一覧を再確認" }));
+    identity = owner; fireEvent.click(screen.getByRole("button", { name: "最新の状態に更新" }));
     await screen.findByRole("heading", { name: "共有時の内容版 1 を閲覧中" });
   });
   it("旧版の取得失敗は現在版へ黙って切替えず、明示再確認で再試行する", async () => {
@@ -183,7 +183,7 @@ describe("共有済み版の所有者再閲覧", () => {
     render(<MemberCapsules dataset="demo" />);
     await screen.findByText(/会員保存を現在利用できません/);
     expect(screen.queryByTestId("member-reader")).toBeNull();
-    failed = false; fireEvent.click(screen.getByRole("button", { name: "アカウントと一覧を再確認" }));
+    failed = false; fireEvent.click(screen.getByRole("button", { name: "最新の状態に更新" }));
     await screen.findByRole("heading", { name: "共有時の内容版 1 を閲覧中" });
   });
   it("版の一覧取得でsessionが失効したら親のprivate本文も閉じる", async () => {
@@ -209,9 +209,9 @@ describe("共有済み版の所有者再閲覧", () => {
     await act(async () => { finish(Response.json({ capsule: { ...capsule, revision: 4, content: { ...capsule.content, title: "遅い比較の題名" } } })); });
     expect(document.body.textContent).not.toContain("現在の保存題名");
     expect(document.body.textContent).not.toContain("遅い比較の題名");
-    await visibility("visible"); await screen.findByLabelText("別人のアカウントメニュー");
+    await visibility("visible"); await waitFor(() => expect(screen.getByLabelText("アカウントメニュー").textContent).toContain("別人"));
     expect(screen.queryByRole("region", { name: "共有時からの変更" })).toBeNull();
-    identity = owner; fireEvent.click(screen.getByRole("button", { name: "アカウントと一覧を再確認" }));
+    identity = owner; fireEvent.click(screen.getByRole("button", { name: "最新の状態に更新" }));
     await screen.findByRole("button", { name: "現在の保存内容と比較" });
     expect(document.body.textContent).not.toContain("現在の保存題名");
     expect(localStorage.length + sessionStorage.length).toBe(0);
@@ -250,11 +250,11 @@ describe("追加した参照の所有者付き草稿", () => {
     fireEvent.click(await screen.findByRole("button", { name: "確認した参照を編集中の構成へ追加" }));
     expect((screen.getByRole("checkbox", { name: /黒川レン · 人物/ }) as HTMLInputElement).checked).toBe(true);
     await visibility("hidden"); identity = other; await visibility("visible");
-    await screen.findByLabelText("別人のアカウントメニュー");
+    await waitFor(() => expect(screen.getByLabelText("アカウントメニュー").textContent).toContain("別人"));
     expect(screen.queryByLabelText("対象・主張の閲覧リンク")).toBeNull();
     expect(document.body.textContent).not.toContain("黒川レン");
-    await waitFor(() => expect(screen.getByRole("button", { name: "アカウントと一覧を再確認" }).hasAttribute("disabled")).toBe(false));
-    identity = owner; fireEvent.click(screen.getByRole("button", { name: "アカウントと一覧を再確認" }));
+    await waitFor(() => expect(screen.getByRole("button", { name: "最新の状態に更新" }).hasAttribute("disabled")).toBe(false));
+    identity = owner; fireEvent.click(screen.getByRole("button", { name: "最新の状態に更新" }));
     const restored = await screen.findByRole("checkbox", { name: /黒川レン · 人物/ }) as HTMLInputElement;
     expect(restored.checked).toBe(true); expect(restored.disabled).toBe(true);
     fireEvent.click(screen.getByRole("button", { name: "アカウントの変更を保存" }));

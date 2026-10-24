@@ -1,8 +1,9 @@
 "use client";
-import {navigatePersonalHash} from "../lib/client/personal-location";
+import {usePersonalHash,navigatePersonalHash} from "../lib/client/personal-location";
 import { localizedPublicHref } from "../lib/domain/public-routes";
 import {useCommunitiesEnabled} from "./CommunityAvailability";
 import Link from "next/link";
+import {personalNavigation,personalSection} from "../lib/client/personal-navigation";
 import InvitationBadge from "./InvitationBadge";
 import Icon from "./Icon";
 import { useMemberSession, refreshMemberIdentity } from "../lib/client/use-member-identity";
@@ -31,6 +32,9 @@ export default function SiteHeader({ dataset, page = "explore", onBeforeAccountN
   const [storageError, setStorageError] = useState(false);
   const menu = useRef<HTMLDetailsElement>(null);
   const accountMenu = useRef<HTMLDetailsElement>(null);
+  const siteMenu = useRef<HTMLDetailsElement>(null);
+  const hash=usePersonalHash();const selected=page==="member"||page==="community"?personalSection(page==="member",hash):undefined;
+  const groups=personalNavigation(locale,identity.status!=="guest",communitiesEnabled);
   const [returnHref, setReturnHref] = useState("/");
   const [signingOut, setSigningOut] = useState(false), [logoutError, setLogoutError] = useState(false);
   const dark = appearance.theme !== "light", palette = appearance.palette;
@@ -42,8 +46,8 @@ export default function SiteHeader({ dataset, page = "explore", onBeforeAccountN
       catch { setStorageError(true); }
     }, 0);
     const sync = (event: StorageEvent) => { if (event.key === appearanceKey || event.key === null) apply(readAppearance(event.newValue)); };
-    const outside = (event: PointerEvent) => { for (const ref of [menu, accountMenu]) if (ref.current && !ref.current.contains(event.target as Node)) ref.current.open = false; };
-    const escape = (event: KeyboardEvent) => { if (event.key === "Escape") for (const ref of [menu, accountMenu]) if (ref.current?.open) { ref.current.open = false; ref.current.querySelector("summary")?.focus(); } };
+    const outside = (event: PointerEvent) => { for (const ref of [menu, accountMenu, siteMenu]) if (ref.current && !ref.current.contains(event.target as Node)) ref.current.open = false; };
+    const escape = (event: KeyboardEvent) => { if (event.key === "Escape") for (const ref of [menu, accountMenu, siteMenu]) if (ref.current?.open) { ref.current.open = false; ref.current.querySelector("summary")?.focus(); } };
     window.addEventListener("storage", sync); document.addEventListener("pointerdown", outside); document.addEventListener("keydown", escape);
     return () => { window.clearTimeout(timer); window.removeEventListener("storage", sync); document.removeEventListener("pointerdown", outside); document.removeEventListener("keydown", escape); };
   }, [locale]);
@@ -56,6 +60,7 @@ export default function SiteHeader({ dataset, page = "explore", onBeforeAccountN
     if (onBeforeAccountNavigation && !onBeforeAccountNavigation()) { event.preventDefault(); return; }
     const target=new URL(event.currentTarget.href,location.origin);if(target.pathname===location.pathname&&target.search===location.search&&(target.hash||location.hash)){event.preventDefault();navigatePersonalHash(target.hash);}
     if (accountMenu.current) accountMenu.current.open = false;
+    if (siteMenu.current) siteMenu.current.open = false;
   }
   async function signOut() {
     if (onLogout) { if (accountMenu.current) accountMenu.current.open = false; onLogout(); return; }
@@ -78,36 +83,29 @@ export default function SiteHeader({ dataset, page = "explore", onBeforeAccountN
       <p className={styles.dataset}>{data.badge}</p>
     </div>
     <p className={styles.description}>{data.description}</p>
-    <div className={styles.tools}>{communitiesEnabled&&<Link className={styles.communityLink} href="/communities" onClick={closeAccount}>{locale==="en"?"Communities":"コミュニティ"}</Link>}
-      <Link className={styles.supportLink} href={localizedPublicHref("/support", locale)} onClick={closeAccount} aria-current={page === "support" ? "page" : undefined}><Icon name="heart" /><span>{supportLabels(locale).link}</span></Link>
-      <nav aria-label={text.navigation} className={styles.navigation}>
-        {page !== "explore" && <Link className={styles.exploreReturn} href={returnHref} aria-label={text.exploreLink} title={text.exploreLink}><Icon name="back" /><span>{text.explore}</span></Link>}
-        {currentUser ? <details className={`${styles.settings} ${styles.accountMenu}`} data-floating-menu ref={accountMenu} onToggle={event => { if (event.currentTarget.open && menu.current) menu.current.open = false; }}>
-          <summary aria-label={locale==="en"?"Site menu":"サイトメニュー"} title={text.signedInAs(displayName)} data-signed-in="true"><span className={styles.desktopMark}>{mark}</span><span className={styles.mobileMenuLabel}><Icon name="list"/>{locale==="en"?"Menu":"メニュー"}</span><span className={styles.accountLabel}>{displayName}</span>{communitiesEnabled&&<InvitationBadge/>}<Icon name="chevron" /></summary>
-          <div className={styles.settingsPanel}>
-            <div className={styles.mobileDestinations}><Link href={returnHref} onClick={closeAccount}><Icon name="back"/>{text.exploreLink}</Link>{communitiesEnabled&&<Link href="/communities" onClick={closeAccount}><Icon name="search"/>{locale==="en"?"Discover communities":"コミュニティを見つける"}</Link>}</div>
-            {communitiesEnabled&&<Link href="/communities#%2Finvitations" onClick={closeAccount}>{locale==="en"?"Received invitations":"届いた招待"}<InvitationBadge/></Link>}
-            <p className={styles.accountIdentity}><strong>{displayName}</strong><span>{text.signedIn}</span></p>
-            <nav aria-label={text.accountNavigation} className={styles.settingsLinks}>
-              {communitiesEnabled&&<Link href="/communities#%3Fmine%3D1" onClick={closeAccount}>{locale==="en"?"Joined & managed":"参加・運営"}</Link>}
-              <Link href={page === "member" ? "#my-capsules" : "/member#my-capsules"} onClick={closeAccount}><Icon name="capsule" />{text.library}</Link>
-              <Link href={page === "member" ? "#account-settings" : "/member#account-settings"} onClick={closeAccount}><Icon name="person" />{text.accountSettings}</Link>
-              <Link href={page === "member" ? "#my-posts" : "/member#my-posts"} onClick={closeAccount}><Icon name="book" />{locale==="en"?"Capsule comments":"Capsuleのコメント"}</Link>
-            </nav>
-            <button className={styles.logout} disabled={accountBusy || signingOut} onClick={() => void signOut()}>{text.logout}</button>
-            {logoutError && <p role="alert">{text.logoutFailed}</p>}
-          </div>
-        </details> : identity.status!=="guest" ? <span className={styles.accountPending} role="status">{locale==="en"?(identity.error?"Account unavailable":"Checking account…"):(identity.error?"認証確認に失敗":"認証を確認中…")}{identity.error&&<button onClick={()=>void refreshMemberIdentity(true).catch(()=>{})}>{locale==="en"?"Retry":"再試行"}</button>}</span> : <Link href={page === "member" ? "#member-login" : "/member"} onClick={closeAccount} aria-label={text.accountLink} data-signed-in="false"><Icon name="person" /><span>{text.accountLink}</span></Link>}
-      </nav>
-      {!currentUser&&<details className={styles.mobileGuestMenu} ref={accountMenu} data-floating-menu onToggle={event=>{if(event.currentTarget.open&&menu.current)menu.current.open=false;}}>
-        <summary aria-label={locale==="en"?"Site menu":"サイトメニュー"}><Icon name="list"/>{locale==="en"?"Menu":"メニュー"}{identity.status!=="guest"&&<span className={styles.mobileAccountStatus} role="status">{identity.error?(locale==="en"?"Account unavailable":"認証確認に失敗"):(locale==="en"?"Checking account…":"認証を確認中…")}</span>}</summary>
-        <div className={styles.settingsPanel}><nav className={styles.settingsLinks}>
-          <Link href={returnHref} onClick={closeAccount}><Icon name="back"/>{text.exploreLink}</Link>
-          {communitiesEnabled&&<Link href="/communities" onClick={closeAccount}><Icon name="search"/>{locale==="en"?"Discover communities":"コミュニティを見つける"}</Link>}
-          {identity.status==="guest"?<Link href="/member" onClick={closeAccount}><Icon name="person"/>{text.accountLink}</Link>:<p>{identity.error?(locale==="en"?"Account unavailable":"認証確認に失敗"):(locale==="en"?"Checking account…":"認証を確認中…")}{identity.error&&<button onClick={()=>void refreshMemberIdentity(true).catch(()=>{})}>{locale==="en"?"Retry":"再試行"}</button>}</p>}
+    <div className={styles.tools}>
+      <details className={`${styles.settings} ${styles.siteMenu}`} data-floating-menu ref={siteMenu} onToggle={event=>{if(event.currentTarget.open){if(accountMenu.current)accountMenu.current.open=false;if(menu.current)menu.current.open=false;}}}>
+        <summary aria-label={locale==='en'?'Site menu':'サイトメニュー'} title={locale==='en'?'Explore & communities':'探索とコミュニティ'}><Icon name="list"/><span className={styles.toolLabel}>{locale==='en'?'Explore & connect':'探索・コミュニティ'}</span><Icon name="chevron"/></summary>
+        <div className={styles.settingsPanel}><nav className={styles.settingsLinks} aria-label={text.navigation}>
+          <Link href={page==='explore'?localizedPublicHref('/',locale):returnHref} onClick={closeAccount}><Icon name="back"/>{page!=='explore'&&(/\/explore\//.test(returnHref)||returnHref.includes('?s='))?(locale==='en'?'Back to your exploration':'元の探索へ戻る'):(locale==='en'?'Start exploring':'探索を始める')}</Link>
+          {communitiesEnabled&&<Link href="/communities" onClick={closeAccount}><Icon name="search"/>{locale==='en'?'Discover communities':'コミュニティを見つける'}</Link>}
+          <Link href={localizedPublicHref('/support',locale)} onClick={closeAccount}><Icon name="heart"/>{supportLabels(locale).link}</Link>
         </nav></div>
-      </details>}
-      <details data-floating-menu className={styles.settings} ref={menu} onToggle={event => { if (event.currentTarget.open && accountMenu.current) accountMenu.current.open = false; }}>
+      </details>
+      <details className={`${styles.settings} ${styles.accountMenu}`} data-floating-menu ref={accountMenu} onToggle={event=>{if(event.currentTarget.open){if(menu.current)menu.current.open=false;if(siteMenu.current)siteMenu.current.open=false;}}}>
+        <summary aria-label={locale==='en'?'Account menu':'アカウントメニュー'} title={currentUser?text.signedInAs(displayName):text.accountLink} data-signed-in={currentUser?'true':identity.status==='guest'?'false':undefined}>
+          {currentUser?mark:<Icon name="person"/>}<span className={styles.accountLabel}>{currentUser?displayName:identity.status==='guest'?(locale==='en'?'Account':'アカウント'):identity.error?(locale==='en'?'Unavailable':'確認失敗'):(locale==='en'?'Checking…':'確認中…')}</span>
+          {currentUser&&communitiesEnabled&&<InvitationBadge/>}<Icon name="chevron"/>
+          {!currentUser&&identity.status!=='guest'&&<span className={styles.srOnly} role="status">{identity.error?(locale==='en'?'Account unavailable':'認証確認に失敗'):(locale==='en'?'Checking account…':'認証を確認中…')}</span>}
+        </summary>
+        <div className={styles.settingsPanel}>
+          {currentUser?<><p className={styles.accountIdentity}><strong>{displayName}</strong><span>{text.signedIn}</span></p>
+          <nav aria-label={text.accountNavigation} className={styles.accountLinks}>{groups.map(g=><section key={g.label}><h2>{g.label}</h2>{g.items.map(i=><Link key={i.id} href={i.href} aria-label={i.label} aria-current={selected===i.id?'page':undefined} onClick={closeAccount}><Icon name={i.icon}/>{i.label}{i.id==='invitations'&&<InvitationBadge/>}</Link>)}</section>)}</nav>
+          <button className={styles.logout} disabled={accountBusy||signingOut} onClick={()=>void signOut()}>{text.logout}</button>{logoutError&&<p role="alert">{text.logoutFailed}</p>}
+          </>:identity.status==='guest'?<Link href="/member" onClick={closeAccount}><Icon name="person"/>{locale==='en'?'Sign in / Account':'ログイン・アカウント'}</Link>:<p role="status">{identity.error?(locale==='en'?'Account verification failed.':'認証を確認できませんでした。'):(locale==='en'?'Checking your account…':'アカウントを確認しています…')}{identity.error&&<button onClick={()=>void refreshMemberIdentity(true).catch(()=>{})}>{locale==='en'?'Retry':'再試行'}</button>}</p>}
+        </div>
+      </details>
+      <details data-floating-menu className={styles.settings} ref={menu} onToggle={event => { if (event.currentTarget.open) {if(accountMenu.current) accountMenu.current.open = false;if(siteMenu.current)siteMenu.current.open=false;} }}>
         <summary aria-label={text.settings} title={text.settings}><Icon name="settings" /><span className={styles.toolLabel}>{text.settings}</span></summary>
         <div className={styles.settingsPanel}>
           <div className={styles.appearance} role="group" aria-label={text.appearance}>

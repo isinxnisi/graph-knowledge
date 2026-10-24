@@ -6,7 +6,7 @@ for(const [language,width] of [['ja',1440],['en',390],['ja',390],['en',1440]] as
  test.setTimeout(180000);const t=(ja:string,en:string)=>language==='en'?en:ja;
  await page.setViewportSize({width,height:900});
  const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));
- await page.goto('/member');await page.getByRole('button',{name:'検証用OIDCでログイン',exact:true}).click();await page.getByRole('link',{name:'検証ユーザーA',exact:true}).click();await page.waitForURL(u=>u.pathname==='/member');await expect(page.getByText('アカウントと一覧を再確認',{exact:true})).toBeEnabled();
+ await page.goto('/member');await page.getByRole('button',{name:'検証用OIDCでログイン',exact:true}).click();await page.getByRole('link',{name:'検証ユーザーA',exact:true}).click();await page.waitForURL(u=>u.pathname==='/member');await expect(page.getByText('最新の状態に更新',{exact:true})).toBeEnabled();
  await page.evaluate(locale=>localStorage.setItem('graph-knowledge.ui-locale.v1',locale),language);
  const user=(await(await page.request.get('/api/member/profile')).json()).user;
  const headers={origin:'http://127.0.0.1:3221','x-member-user':user.id};

@@ -15,6 +15,7 @@ const paths = {
   organization: <><path d="M3 21h18M5 21V8l7-5 7 5v13M9 10h1m4 0h1m-6 4h1m4 0h1m-4 7v-4h2v4" /></>,
   event: <><rect x="3" y="5" width="18" height="16" rx="2" /><path d="M7 3v4m10-4v4M3 11h18" /></>,
   bookmark: <path d="M6 3h12v18l-6-4-6 4Z" />,
+  refresh: <><path d="M20 7V3m0 4h-4M4 17v4m0-4h4M20 7a9 9 0 0 0-16 2m0 8a9 9 0 0 0 16-2" /></>,
   history: <><path d="M3 8V3m0 5h5M3 8a9 9 0 1 1 0 8M12 7v5l3 2" /></>,
   capsule: <><path d="m12 3 9 5v9l-9 5-9-5V8Zm0 0v19M3 8l9 5 9-5" /></>,
   settings: <><path d="M4 7h16M4 17h16" /><circle cx="8" cy="7" r="3" /><circle cx="16" cy="17" r="3" /></>,

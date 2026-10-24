@@ -1,4 +1,5 @@
 "use client";
+import PageIdentity from "./PageIdentity";
 import {useMemberSession,refreshMemberIdentity} from "../lib/client/use-member-identity";
 import {usePersonalHash} from "../lib/client/personal-location";
 import {PersonalMemberControls} from "./PersonalFrame";
@@ -238,10 +239,10 @@ export default function MemberCapsules({ dataset, initialImport = "" }: { datase
       {communitiesEnabled&&<a href="/communities#%3Fmine%3D1">{locale==="en"?"Joined & managed":"参加・運営"}</a>}
     </nav>}
     <div className={css.memberContent}>
-    <header className={css.pageHeader}><h1 ref={heading} tabIndex={-1} data-focus-destination>{title}</h1><p>{user ? section === "settings" ? text.settingsHelp : section === "posts" ? text.postsHelp : text.savedHelp : identity.status==='guest'?text.loggedOut:identity.error?(locale==='en'?'Account verification failed. Retry below.':'認証を確認できませんでした。再試行してください。'):text.checking}</p></header>
+    <header className={css.pageHeader}><PageIdentity area={section==="posts"?"activity":"account"}/><h1 ref={heading} tabIndex={-1} data-focus-destination>{title}</h1><p>{user ? section === "settings" ? text.settingsHelp : section === "posts" ? text.postsHelp : text.savedHelp : identity.status==='guest'?text.loggedOut:identity.error?(locale==='en'?'Account verification failed. Retry below.':'認証を確認できませんでした。再試行してください。'):text.checking}</p></header>
     <section id="member-login" className={user ? css.feedback : css.account} aria-label={text.title}>
       {identity.status==='guest' && !busy && provider && <button data-variant="primary" disabled={!!draft} onClick={login}>{provider === "fixture" ? text.fixtureLogin : text.login}</button>}
-      <button className={css.refresh} disabled={busy} onClick={()=>refresh()}><Icon name="history" />{text.refresh}</button>
+      <button className={css.refresh} title={locale==="en"?"Recheck your account and saved data without discarding your draft":"入力を保持したまま、アカウントと保存データを再取得します"} disabled={busy} onClick={()=>refresh()}><Icon name="refresh" />{text.refresh}</button>
       {draft && <p>{text.editingAccountHelp}</p>}
       {busy && <p role="status">{user ? text.busy : text.checking}</p>}
       {error && <p role="alert">{contentMessage(error, locale)}</p>}{message && <p role="status">{contentMessage(message, locale)}</p>}

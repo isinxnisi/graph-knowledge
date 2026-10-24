@@ -21,3 +21,6 @@
  .placeHeading{gap:8px}.placeTitle{gap:9px}.placeHeading .menu summary{min-width:22px;min-height:26px}
  .shell .communityHeading>.placeStatus{margin-top:8px}
 }
+
+/* Local tabs stay readable as complete labels; no automatic clipping on small screens. */
+@media(max-width:800px){.tabs{flex-wrap:wrap;overflow:visible;gap:0 16px}.tabs button{min-height:42px}}

@@ -15,8 +15,8 @@ async function login(page: Page) {
   await page.getByRole("button", { name: "検証用OIDCでログイン", exact: true }).click();
   await page.getByRole("link", { name: "検証ユーザーA", exact: true }).click();
   await page.waitForURL(url => url.pathname === "/member");
-  await expect(page.getByTestId("site-header").getByLabel("検証ユーザーAのアカウントメニュー", { exact: true })).toBeVisible();
-  await expect(page.getByRole("button", { name: "アカウントと一覧を再確認", exact: true })).toBeEnabled();
+  await expect(page.getByTestId("site-header").getByLabel("アカウントメニュー", { exact: true })).toContainText("検証ユーザーA");
+  await expect(page.getByRole("button", { name: "最新の状態に更新", exact: true })).toBeEnabled();
 }
 
 // Precompile only the routes this journey uses; no data or login is created here.
@@ -40,7 +40,7 @@ for (const width of [1440, 375]) test(`会員UX: 本人表示・保存一覧・�
   await page.reload();
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('保存したCapsule');
   await expect(page.getByRole('region', { name: 'アカウント設定', exact: true })).toBeHidden();
-  const identity = header.getByLabel(`${profile.name}のアカウントメニュー`, { exact: true });
+  const identity = header.getByLabel("アカウントメニュー", { exact: true });
   await expect(identity).toBeVisible();
   const name = identity.locator('span').last();
   expect((await name.boundingBox())!.width).toBeGreaterThan(20);
@@ -67,7 +67,7 @@ for (const width of [1440, 375]) test(`会員UX: 本人表示・保存一覧・�
   const settings = page.getByRole('region', { name: 'アカウント設定', exact: true });
   await settings.getByLabel('表示名', { exact: true }).fill('探索する人');
   await settings.getByRole('button', { name: '表示名を保存', exact: true }).click();
-  await expect(header.getByLabel('探索する人のアカウントメニュー', { exact: true })).toBeVisible();
+  await expect(header.getByLabel('アカウントメニュー', { exact: true })).toContainText('探索する人');
   await page.screenshot({ path: testInfo.outputPath(`account-settings-${width}.png`) });
   await settings.getByLabel('表示名', { exact: true }).fill(profile.name);
   await settings.getByRole('button', { name: '表示名を保存', exact: true }).click();
@@ -78,7 +78,7 @@ for (const width of [1440, 375]) test(`会員UX: 本人表示・保存一覧・�
   await page.screenshot({ path: testInfo.outputPath(`account-library-${width}.png`) });
   await identity.click();
   await header.getByRole('button', { name: 'ログアウト', exact: true }).click();
-  await expect(header.getByRole('link', { name: 'ログイン', exact: true })).toBeVisible();
+  await expect(identity).toHaveAttribute('data-signed-in','false');
   await expect(page.getByRole('heading', { name: savedTitle, exact: true })).toHaveCount(0);
   await login(page);
   await expect(row).toBeVisible();

@@ -222,4 +222,5 @@ Phase 08：任意のEntity関係俯瞰、明示起点切替、直前一件復帰
 
 - 実コミュニティの[UIデザイン体系](design/COMMUNITY_UI_DESIGN.md)：場所・話題・会話・活動・招待・管理の共通規則、投稿位置への認可付き読取、作成と補助操作。
 
-- 実コミュニティの[スマホナビゲーション](design/COMMUNITY_MOBILE_NAVIGATION.md)：カテゴリ・サイトメニュー・個別コミュニティの現在地とライトの視認性。[検証・変更前後画像](verification/COMMUNITY_MOBILE_20261024.md)。
+- 最新の[共通ヘッダー・本人ナビ・見出し](design/PERSONAL_SHELL.md)：スマホの重複ナビを整理し、本人名・探索復帰・PC追随を統一。[検証・比較画像](verification/PERSONAL_SHELL_20261024.md)。
+- 直前の実コミュニティの[スマホナビゲーション](design/COMMUNITY_MOBILE_NAVIGATION.md)：カテゴリ・サイトメニュー・個別コミュニティの現在地とライトの視認性。[検証・変更前後画像](verification/COMMUNITY_MOBILE_20261024.md)。

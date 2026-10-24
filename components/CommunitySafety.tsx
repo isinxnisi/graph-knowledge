@@ -1,4 +1,5 @@
 "use client";
+import PageIdentity from "./PageIdentity";
 import {useId,useRef,useState} from 'react';
 import type {CommunityMutation,CommunityMutationResult} from '../lib/client/use-community-session';
 import {CommunityDialog} from './CommunityDialog';
@@ -32,5 +33,5 @@ export function CommunitySafetyActions({kind,id,revision,t,mutate,busy,reportabl
  </form></CommunityDialog>}</div>;
 }
 export function CommunityReportReceipts({reports,t}:{reports:{id:string;kind:string;status:string}[];t:Translate}){
- return <section><header className={css.heading}><div><h1>{t('自分の通報','My reports')}</h1><p>{t('受付状況を確認できます。通報は真偽の認定とは別です。','Track your reports. Reporting is separate from judging truth.')}</p></div></header>{!reports.length&&<p className={css.empty}>{t('通報はありません。','No reports.')}</p>}{reports.map(r=><article className={css.row} key={r.id}><div><strong>{r.kind==='post'?t('投稿への通報','Post report'):r.kind==='thread'?t('スレッドへの通報','Thread report'):t('コミュニティへの通報','Community report')}</strong><small>{t('受付ID','Report ID')}: <code>{r.id}</code></small></div><span>{r.status==='open'?t('確認待ち','Open'):r.status==='resolved'?t('対応を終了','Resolved'):r.status==='expired'?t('確認期限終了・必要なら再通報','Review expired · report again if needed'):t('対応不要として終了','Dismissed')}</span></article>)}</section>;
+ return <section><header className={css.heading}><div><PageIdentity area="activity"/><h1>{t('自分の通報','My reports')}</h1><p>{t('受付状況を確認できます。通報は真偽の認定とは別です。','Track your reports. Reporting is separate from judging truth.')}</p></div></header>{!reports.length&&<p className={css.empty}>{t('通報はありません。','No reports.')}</p>}{reports.map(r=><article className={css.row} key={r.id}><div><strong>{r.kind==='post'?t('投稿への通報','Post report'):r.kind==='thread'?t('スレッドへの通報','Thread report'):t('コミュニティへの通報','Community report')}</strong><small>{t('受付ID','Report ID')}: <code>{r.id}</code></small></div><span>{r.status==='open'?t('確認待ち','Open'):r.status==='resolved'?t('対応を終了','Resolved'):r.status==='expired'?t('確認期限終了・必要なら再通報','Review expired · report again if needed'):t('対応不要として終了','Dismissed')}</span></article>)}</section>;
 }

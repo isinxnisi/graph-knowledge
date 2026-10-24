@@ -5,7 +5,7 @@ import {resetCommunityTestAllowance} from '../support/community-quota';
 test.beforeEach(resetCommunityTestAllowance);
 for(const [lang,width] of [['ja',1440],['ja',390],['en',320]] as const)test(`community design ${lang} ${width}`,async({page},info)=>{
  test.setTimeout(180000);const t=(ja:string,en:string)=>lang==='en'?en:ja;
- await page.setViewportSize({width,height:900});await page.goto('/member');await page.getByRole('button',{name:'検証用OIDCでログイン',exact:true}).click();await page.getByRole('link',{name:'検証ユーザーA',exact:true}).click();await page.waitForURL(u=>u.pathname==='/member');await expect(page.getByText('アカウントと一覧を再確認',{exact:true})).toBeEnabled();
+ await page.setViewportSize({width,height:900});await page.goto('/member');await page.getByRole('button',{name:'検証用OIDCでログイン',exact:true}).click();await page.getByRole('link',{name:'検証ユーザーA',exact:true}).click();await page.waitForURL(u=>u.pathname==='/member');await expect(page.getByText('最新の状態に更新',{exact:true})).toBeEnabled();
  const uid=(await(await page.request.get('/api/member/profile')).json()).user.id,headers={origin:'http://127.0.0.1:3221','x-member-user':uid};
  const c=(await(await page.request.post('/api/communities',{headers,data:{requestId:crypto.randomUUID(),title:'物語と科学の読書室 / Reading connections '+width,description:'好きな作品から、まだ知らない問いへ。読んで気づいたことを、気軽に持ち寄る場所です。',visibility:'public'}})).json()).community;
  const th=(await(await page.request.post('/api/communities/'+c.id+'/threads',{headers,data:{requestId:crypto.randomUUID(),expectedRevision:c.revision,title:'作品を読み返して見つけた、つくり手と科学の小さな接点',body:'読み終わった後も気になる場面はありますか？ 出典を確かめながら、それぞれの読み方を話してみたいです。',audience:'public'}})).json()).id;
