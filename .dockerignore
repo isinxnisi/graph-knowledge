@@ -41,3 +41,6 @@ scripts/*
 db/*
 !db/member/
 !db/member/**
+
+!scripts/community-safety.ts
+!scripts/community-recovery.ts

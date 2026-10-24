@@ -21,7 +21,7 @@ RUN npm run build
 FROM builder AS ops
 COPY fixtures/demo.json ./fixtures/demo.json
 COPY db/member ./db/member
-COPY scripts/member-migrate.ts scripts/member-ops.ts ./scripts/
+COPY scripts/member-migrate.ts scripts/member-ops.ts scripts/community-safety.ts scripts/community-recovery.ts ./scripts/
 ENV NODE_ENV=production
 USER node
 ENTRYPOINT ["node", "--import", "tsx", "scripts/public-kg.ts"]
