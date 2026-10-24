@@ -1,3 +1,47 @@
+> **2026-10-25 公開実行版（以下の古い準備用image・manifest・コマンドより優先）**
+>
+> 利用者は今回の本番公開を明示承認済み。固定Webソース57ab605、本番build `nLR2kDd65nabsE7jj4-EW`、beta `GuSW3Aav5eHMX3hqiNZuT`。[最終記録](../verification/COMMUNITY_PRODUCTION_20261025.md)／[manifest](../releases/community-20261025-manifest.json)を使う。旧20261024成果物は使用しない。005〜008とWeb運営を含む。未承認の保持期間・SLAは公開条件へ自動追加しない。
+
+## 今回の具体的な本番操作
+
+配置先 `/home/develop/graph-community-release-20261025/` には、最終Webとmember-opsだけのarchive、manifest、SHA256SUMS、本人セッションで確認した運営者IDファイル、復旧用公開鍵、限定反映scriptを配置する。秘密鍵はVPSへ送らない。SSHのdevelopにはsudoパスワードが必要なため、管理者本人が次を実行する。
+
+```sh
+sudo python3 /home/develop/graph-community-release-20261025/release-community-production.py --directory /home/develop/graph-community-release-20261025 --apply
+```
+
+追加承認を要求するための操作ではなく、既存OS権限境界に従う実行。パスワードをチャットへ送らない。scriptは排他と次の確認を行い、不一致ならWeb停止前に中止する。
+
+1. 旧Web build/image、会員DB接続先・volume・000〜004 checksum、正式Google origin/cookie、fixture無効、本人Googleアカウントのactive状態。
+2. 正式URLとloopbackのlive KG revision／2,175対象・1,895関係、PG／Neo4jのIDとStartedAt、実行中member-opsの不在。
+3. archive SHA、linux/amd64、source label、許可したconfig／OCI manifest ID。旧tagや同名最新mainへ置換しない。
+4. 同じディレクトリの一時Composeで意味比較し、Webとmember-ops image／Webの3flag受渡し以外の設定をすべて保持。KG ops image、Caddy、PG、Neo4j、Worker、Kevは更新しない。
+
+Webだけ停止して時刻をJSON出力し、root0700の `/opt/graph-knowledge/backups/community-release-<UTC>/` へ設定とcustom dumpを0600保存。dump内容一覧と容量・SHAを確認し、公開鍵で保護した復旧bundleを作る。root内で暗号化の往復一致を確認し、暗号化済みファイルだけdevelopへ転送可能にする。
+
+次に005〜008を `member-migrate.ts --site-operations --confirm-origin https://plunode.net` で適用。ledger9件と全既存会員／Capsule関連tableの行digest一致を確認する。新Webは両flag無効で起動し、個人会員機能・build・health・live KGと新API404を確認。その後だけ本人UUID／両flagを有効化してWebを再作成する。新API・匿名保護・既存設定・KG・PG／Neo4jの非再起動を確認し、実測時刻と結果を出力する。
+
+### 公開後・本人確認
+
+正式URLのGoogle本人ログイン、既存Capsule、Graph、communities、operationsを確認する。書込みは今回の確認用コミュニティと合意済み本人だけ。既存会員への招待・停止・非表示は行わない。新Google callback・iPhone実機は実施した範囲だけを記録する。
+
+暗号化backupは配置先の `backup-export/` から管理端末の非公開保管先へSSHで複写し、hashを照合する。復旧秘密鍵は管理端末の `~/.local/share/plunode-recovery/community-release-20261025/recovery-private.pem`（0600、親0700）。RSA-OAEP-SHA256で復旧鍵を復号し、AES-256-CBC/PBKDF2/200000回のbundleを復号する。復元先は別の非公開DBで、稼働DBへのrestoreは別判断。私的データを公開検証DBへ複製しない。
+
+### 切り戻し（今回の新buildのみ）
+
+```sh
+# 運営画面だけを無効にする
+sudo python3 /home/develop/graph-community-release-20261025/release-community-production.py --directory /home/develop/graph-community-release-20261025 --disable operations
+# コミュニティと運営を止める。個人会員・Graphは維持
+sudo python3 /home/develop/graph-community-release-20261025/release-community-production.py --directory /home/develop/graph-community-release-20261025 --disable all
+```
+
+scriptは同じ検証済み新Web imageの場合だけflagを変更し、Webだけ再作成する。追加table・投稿・監査を削除しない。移行前の失敗は設定を元へ戻して旧Webを再開するが、移行成功後は新buildの両flag無効で復旧する。古いdumpによる上書き、DROP、コミュニティ失効を持たない旧buildへの標準復帰は行わない。
+
+---
+
+以下は2026-10-24〜25の準備経緯。上記の固定値・実行手順で置き換え済みであり、古いimage・005〜007だけのコマンドは実行しない。
+
 # コミュニティ第1弾：本番導入・停止・最小運営
 
 > **2026-10-25追加**：[密度・対応待ち通知・限定投稿者確認](../verification/OPERATIONS_DENSITY_20261025.md)のWeb候補4c43b17 / beta build QYCiGHONsgFhzp5KqgFEpが最新。e974cb7から新migrationはない。本番imageの固定・正式origin確認は別承認のまま。
