@@ -1,8 +1,10 @@
 "use client";
 import { localizedPublicHref } from "../lib/domain/public-routes";
 import {useCommunitiesEnabled} from "./CommunityAvailability";
+import Link from "next/link";
+import InvitationBadge from "./InvitationBadge";
 import Icon from "./Icon";
-import { useMemberIdentity } from "../lib/client/use-member-identity";
+import { useMemberSession, refreshMemberIdentity } from "../lib/client/use-member-identity";
 import { memberRequest, type MemberUser } from "../lib/client/member-api";
 import { z } from "zod";
 import { explorationReturnHref, notifyMemberSessionChange } from "../lib/client/account-navigation";
@@ -16,13 +18,12 @@ import styles from "./SiteHeader.module.css";
 import { supportLabels } from "../lib/i18n/support";
 import { appearanceKey, defaultAppearance, readAppearance, type Appearance } from "../lib/client/appearance";
 
-export default function SiteHeader({ dataset, page = "explore", user, onBeforeAccountNavigation, onPrivacySettings, onLogout, accountBusy = false }: { onBeforeAccountNavigation?: () => boolean; onPrivacySettings?: () => void; onLogout?: () => void; accountBusy?: boolean; user?: MemberUser | null; dataset: DatasetMode; page?: "explore" | "member" | "community" | "shared" | "support" }) {
+export default function SiteHeader({ dataset, page = "explore", onBeforeAccountNavigation, onPrivacySettings, onLogout, accountBusy = false }: { onBeforeAccountNavigation?: () => boolean; onPrivacySettings?: () => void; onLogout?: () => void; accountBusy?: boolean; user?: MemberUser | null; dataset: DatasetMode; page?: "explore" | "member" | "community" | "shared" | "support" }) {
   const communitiesEnabled=useCommunitiesEnabled();
   const { locale, setLocale, storageError: languageError } = useUiLocale();
   const ui = explorerLabels(locale), text = siteLabels(locale), data = datasetLabels(dataset, locale);
-  const suppliedIdentity = page === "member" || page === "community";
-  const identity = useMemberIdentity(!suppliedIdentity);
-  const currentUser = suppliedIdentity ? user ?? null : identity;
+  const identity = useMemberSession();
+  const currentUser = identity.user;
   const displayName = currentUser?.name.trim() || text.account;
   const mark = currentUser ? <span className={styles.memberMark} aria-hidden="true">{Array.from(displayName)[0]}</span> : <Icon name="person" />;
   const [appearance, setAppearance] = useState(defaultAppearance);
@@ -52,6 +53,7 @@ export default function SiteHeader({ dataset, page = "explore", user, onBeforeAc
   }
   function closeAccount(event: React.MouseEvent<HTMLAnchorElement>) {
     if (onBeforeAccountNavigation && !onBeforeAccountNavigation()) { event.preventDefault(); return; }
+    const target=new URL(event.currentTarget.href,location.origin);if(target.pathname===location.pathname&&target.search===location.search&&target.hash){event.preventDefault();location.hash=target.hash;}
     if (accountMenu.current) accountMenu.current.open = false;
   }
   async function signOut() {
@@ -68,31 +70,32 @@ export default function SiteHeader({ dataset, page = "explore", user, onBeforeAc
   }
   return <header className={styles.header} data-testid="site-header">
     <div className={styles.identity}>
-      <a className={styles.brandLink} href={localizedPublicHref("/", locale)} aria-label={locale === "en" ? "Plunode Home" : "Plunode ホーム"} onClick={closeAccount}>
+      <Link className={styles.brandLink} href={localizedPublicHref("/", locale)} aria-label={locale === "en" ? "Plunode Home" : "Plunode ホーム"} onClick={closeAccount}>
       <span className={styles.brandMark}><Icon name="graph" /></span>
       {page === "explore" ? <h1 className={styles.brand}>{text.name}</h1> : <span className={styles.brand}>{text.name}</span>}
-      </a>
+      </Link>
       <p className={styles.dataset}>{data.badge}</p>
     </div>
     <p className={styles.description}>{data.description}</p>
-    <div className={styles.tools}>{communitiesEnabled&&<a href="/communities" onClick={closeAccount}>{locale==="en"?"Communities":"コミュニティ"}</a>}
-      <a className={styles.supportLink} href={localizedPublicHref("/support", locale)} onClick={closeAccount} aria-current={page === "support" ? "page" : undefined}><Icon name="heart" /><span>{supportLabels(locale).link}</span></a>
+    <div className={styles.tools}>{communitiesEnabled&&<Link href="/communities" onClick={closeAccount}>{locale==="en"?"Communities":"コミュニティ"}</Link>}
+      <Link className={styles.supportLink} href={localizedPublicHref("/support", locale)} onClick={closeAccount} aria-current={page === "support" ? "page" : undefined}><Icon name="heart" /><span>{supportLabels(locale).link}</span></Link>
       <nav aria-label={text.navigation} className={styles.navigation}>
-        {page !== "explore" && <a className={styles.exploreReturn} href={returnHref} aria-label={text.exploreLink} title={text.exploreLink}><Icon name="back" /><span>{text.explore}</span></a>}
+        {page !== "explore" && <Link className={styles.exploreReturn} href={returnHref} aria-label={text.exploreLink} title={text.exploreLink}><Icon name="back" /><span>{text.explore}</span></Link>}
         {currentUser ? <details className={`${styles.settings} ${styles.accountMenu}`} data-floating-menu ref={accountMenu} onToggle={event => { if (event.currentTarget.open && menu.current) menu.current.open = false; }}>
-          <summary aria-label={text.memberLink(displayName)} title={text.signedInAs(displayName)} data-signed-in="true">{mark}<span className={styles.accountLabel}>{displayName}</span><Icon name="chevron" /></summary>
+          <summary aria-label={text.memberLink(displayName)} title={text.signedInAs(displayName)} data-signed-in="true">{mark}<span className={styles.accountLabel}>{displayName}</span>{communitiesEnabled&&<InvitationBadge/>}<Icon name="chevron" /></summary>
           <div className={styles.settingsPanel}>
+            {communitiesEnabled&&<Link href="/communities#%2Finvitations" onClick={closeAccount}>{locale==="en"?"Received invitations":"届いた招待"}<InvitationBadge/></Link>}
             <p className={styles.accountIdentity}><strong>{displayName}</strong><span>{text.signedIn}</span></p>
             <nav aria-label={text.accountNavigation} className={styles.settingsLinks}>
-              {communitiesEnabled&&<a href="/communities#%3Fmine%3D1" onClick={closeAccount}>{locale==="en"?"Joined & managed":"参加・運営"}</a>}
-              <a href={page === "member" ? "#my-capsules" : "/member#my-capsules"} onClick={closeAccount}><Icon name="capsule" />{text.library}</a>
-              <a href={page === "member" ? "#account-settings" : "/member#account-settings"} onClick={closeAccount}><Icon name="person" />{text.accountSettings}</a>
-              <a href={page === "member" ? "#my-posts" : "/member#my-posts"} onClick={closeAccount}><Icon name="book" />{text.posts}</a>
+              {communitiesEnabled&&<Link href="/communities#%3Fmine%3D1" onClick={closeAccount}>{locale==="en"?"Joined & managed":"参加・運営"}</Link>}
+              <Link href={page === "member" ? "#my-capsules" : "/member#my-capsules"} onClick={closeAccount}><Icon name="capsule" />{text.library}</Link>
+              <Link href={page === "member" ? "#account-settings" : "/member#account-settings"} onClick={closeAccount}><Icon name="person" />{text.accountSettings}</Link>
+              <Link href={page === "member" ? "#my-posts" : "/member#my-posts"} onClick={closeAccount}><Icon name="book" />{text.posts}</Link>
             </nav>
             <button className={styles.logout} disabled={accountBusy || signingOut} onClick={() => void signOut()}>{text.logout}</button>
             {logoutError && <p role="alert">{text.logoutFailed}</p>}
           </div>
-        </details> : <a href={page === "member" ? "#member-login" : "/member"} onClick={closeAccount} aria-label={text.accountLink} data-signed-in="false"><Icon name="person" /><span>{text.accountLink}</span></a>}
+        </details> : identity.status!=="guest" ? <span className={styles.accountPending} role="status">{locale==="en"?(identity.error?"Account unavailable":"Checking account…"):(identity.error?"認証確認に失敗":"認証を確認中…")}{identity.error&&<button onClick={()=>void refreshMemberIdentity(true).catch(()=>{})}>{locale==="en"?"Retry":"再試行"}</button>}</span> : <Link href={page === "member" ? "#member-login" : "/member"} onClick={closeAccount} aria-label={text.accountLink} data-signed-in="false"><Icon name="person" /><span>{text.accountLink}</span></Link>}
       </nav>
       <details data-floating-menu className={styles.settings} ref={menu} onToggle={event => { if (event.currentTarget.open && accountMenu.current) accountMenu.current.open = false; }}>
         <summary aria-label={text.settings} title={text.settings}><Icon name="settings" /><span className={styles.toolLabel}>{text.settings}</span></summary>
@@ -118,9 +121,9 @@ export default function SiteHeader({ dataset, page = "explore", user, onBeforeAc
           <p className={styles.dataHelp}>{text.datasetAbout}：{data.badge}<br />{data.description}</p>
           <div className={styles.privacyLinks}>
             {onPrivacySettings && <button onClick={() => { if (menu.current) { menu.current.open = false; menu.current.querySelector("summary")?.focus(); } onPrivacySettings(); }}>{locale === "en" ? "Analytics & ads settings" : "計測・広告の設定"}</button>}
-            <a href={localizedPublicHref("/privacy", locale)} onClick={closeAccount}>{locale === "en" ? "Privacy & external data transmission" : "プライバシー・外部送信について"}</a>
+            <Link href={localizedPublicHref("/privacy", locale)} onClick={closeAccount}>{locale === "en" ? "Privacy & external data transmission" : "プライバシー・外部送信について"}</Link>
           </div>
-          <a className={styles.supportMenuLink} href={localizedPublicHref("/support", locale)} onClick={closeAccount} aria-current={page === "support" ? "page" : undefined}><Icon name="heart" /><span>{supportLabels(locale).link}</span></a>
+          <Link className={styles.supportMenuLink} href={localizedPublicHref("/support", locale)} onClick={closeAccount} aria-current={page === "support" ? "page" : undefined}><Icon name="heart" /><span>{supportLabels(locale).link}</span></Link>
           {languageError && <p role="status">{ui.languageFailed}</p>}
           {storageError && <p role="status">{text.appearanceFailed}</p>}
         </div>

@@ -25,6 +25,13 @@ const inviteValid=`i.status='pending' AND i.expires_at>clock_timestamp() AND c.s
 const invitationDto=(r:QueryResultRow)=>({id:r.id,communityId:r.community_id,title:r.title_allowed?r.title:null,targetId:r.target_id,revision:r.revision,status:r.status==='pending'?(r.valid?'pending':r.expired?'expired':'unavailable'):r.status,expiresAt:new Date(r.expires_at).toISOString(),readmission:r.readmission});
 export function createCommunityContinuity(pool:Pool,h:Helpers,secret:string){
  return {
+  async invitationSummary(req:Request){
+   const u=(await h.identity(req,true))!;return memberTransaction(pool,async c=>{
+    await activeMember(c,u.id);
+    const result=await c.query(`SELECT count(*)::int AS count FROM community_invitation i JOIN community c ON c.id=i.community_id WHERE i.target_id=$1 AND ${inviteValid} AND NOT EXISTS(SELECT 1 FROM community_member m WHERE m.community_id=i.community_id AND m.user_id=i.target_id AND m.status='active') AND (i.readmission OR NOT EXISTS(SELECT 1 FROM community_member m WHERE m.community_id=i.community_id AND m.user_id=i.target_id AND m.status IN ('removed','suspended')))`,[u.id]);
+    return memberJson({pendingCount:result.rows[0].count});
+   });
+  },
   async invitations(req:Request,rawCid?:string){
    const u=(await h.identity(req,true))!;return memberTransaction(pool,async c=>{
     await activeMember(c,u.id);let policy='',cid:string|undefined,community:unknown;

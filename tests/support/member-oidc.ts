@@ -15,7 +15,7 @@ export async function startMemberOidc() {
     bob: { email: "bob@example.invalid", name: "検証ユーザーB" },
     impostor: { email: "alice@example.invalid", name: "同じメールの別identity" },
   };
-  for(const name of ['community-a','community-b','community-d','suspend','delete'])identities[name]={email:name+'@example.invalid',name};
+  for(const name of ['community-a','community-b','community-d','notification-owner','notification-recipient','notification-other','suspend','delete'])identities[name]={email:name+'@example.invalid',name};
   const server = createServer(async (request, response) => {
     const url = new URL(request.url ?? "/", issuer);
     const json = (body: unknown, status = 200) => { response.writeHead(status, { "Content-Type": "application/json", "Cache-Control": "no-store" }); response.end(JSON.stringify(body)); };

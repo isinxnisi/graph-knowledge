@@ -1,11 +1,16 @@
 // @vitest-environment jsdom
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { cleanup, fireEvent, render, screen, waitFor, act, configure } from "@testing-library/react";
+import { cleanup, fireEvent, render as rtlRender, screen, waitFor, act, configure } from "@testing-library/react";
 import examples from "../docs/API_RESPONSE_EXAMPLES.json";
+import {invalidateMemberIdentity} from "../lib/client/use-member-identity";
+import PersonalFrame from "../components/PersonalFrame";
+import type {ReactElement} from "react";
 import MemberCapsules from "../components/MemberCapsules";
 import type { MemberCapsule } from "../lib/domain/member-capsule";
 import type { LocalCapsule, ResolvedCapsule } from "../lib/client/local-capsules";
 
+vi.mock("next/navigation",()=>({usePathname:()=>"/member"}));
+const render=(node:ReactElement)=>rtlRender(<PersonalFrame dataset="demo">{node}</PersonalFrame>);
 vi.mock("../components/CapsuleDialog", () => ({
   CapsuleReader: ({ capsule, onEdit }: { capsule: LocalCapsule; onEdit?: (resolved: ResolvedCapsule) => void }) => <section data-testid="member-reader"><h3>{capsule.title}</h3>{onEdit && <button onClick={() => onEdit({ entities: {}, claims: {}, issues: [] })}>このCapsuleを編集</button>}</section>,
   ClaimCaption: () => null,
@@ -18,6 +23,7 @@ configure({ asyncUtilTimeout: 5000 });
 let identity: string | null;
 let fetchMock: ReturnType<typeof vi.fn>;
 beforeEach(() => {
+  invalidateMemberIdentity();
   vi.spyOn(window, "scrollTo").mockImplementation(() => {});
   identity = owner; localStorage.clear(); sessionStorage.clear();
   history.replaceState(null, "", `/member?capsule=${capsule.id}`);

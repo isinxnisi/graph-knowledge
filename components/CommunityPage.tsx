@@ -1,27 +1,29 @@
 "use client";
+import {usePersonalHash} from '../lib/client/personal-location';
 import {useCallback,useEffect,useRef,useState} from 'react';
 import {type Community} from '../lib/domain/community';
 import {useCommunitySession,type CommunityMutation} from '../lib/client/use-community-session';
-import PersonalNavigation,{type PersonalSection} from './PersonalNavigation';
-import personalCss from './PersonalNavigation.module.css';
+
+
 import {CommunityDialog,CommunityRevalidation} from './CommunityDialog';
 import {useUiLocale} from '../lib/client/ui-locale';
-import SiteHeader from './SiteHeader';
-import SiteFooter from './SiteFooter';
-import type {DatasetMode} from '../lib/domain/dataset';
+
+
+
 import css from './CommunityPage.module.css';
 import {CommunitySafetyActions,CommunityReportReceipts} from './CommunitySafety';
 import CommunityContinuity from './CommunityContinuity';
-export default function CommunityPage({dataset}:{dataset:DatasetMode}){
+function readRoute(hash:string){let next='';try{const raw=decodeURIComponent(hash);const u=new URL(raw||'/',location.origin);if(u.origin===location.origin&&/^\/(?:[a-f0-9-]{36}(?:\/(?:invitations|safety-log))?|threads\/[a-f0-9-]{36}|my-posts|invitations|participation|recoveries|reports)?$/.test(u.pathname)&&[...u.searchParams.keys()].every(k=>['mine','limit','cursor','membersCursor','tab'].includes(k)))next=(u.pathname==='/'?'':u.pathname)+u.search;}catch{/* Invalid fragments never become API paths. */}return next;}
+export default function CommunityPage(){
  const {locale}=useUiLocale();const t=(ja:string,en:string)=>locale==='en'?en:ja;
- const [route,setRoute]=useState(''),[creating,setCreating]=useState(false),[tab,setTab]=useState('threads');
+ const hash=usePersonalHash();const [route,setRoute]=useState(''),[creating,setCreating]=useState(false),[tab,setTab]=useState('threads');
  const [pageTrail,setPageTrail]=useState<Record<string,string>>({});
  const [title,setTitle]=useState(''),[body,setBody]=useState(''),[visibility,setVisibility]=useState<'public'|'members'>('public'),[audience,setAudience]=useState<'public'|'cohort'>('cohort');
  const [leaveOpen,setLeaveOpen]=useState(false);
  const scrolls=useRef(new Map<string,number>()),lastRoute=useRef(''),restoreScroll=useRef(true);
  const reset=useCallback(()=>{setTitle('');setBody('');setCreating(false);setLeaveOpen(false);setVisibility('public');setAudience('cohort');},[]);
- const {data,user,busy,blocked,error,notice,epoch,load,mutate:send}=useCommunitySession(route,reset);
- useEffect(()=>{const change=()=>{scrolls.current.set(lastRoute.current,window.scrollY);let next='';try{const raw=decodeURIComponent(location.hash.slice(1));const u=new URL(raw||'/',location.origin);if(u.origin===location.origin&&/^\/(?:[a-f0-9-]{36}(?:\/(?:invitations|safety-log))?|threads\/[a-f0-9-]{36}|my-posts|invitations|participation|recoveries|reports)?$/.test(u.pathname)&&[...u.searchParams.keys()].every(k=>['mine','limit','cursor','membersCursor','tab'].includes(k)))next=(u.pathname==='/'?'':u.pathname)+u.search;}catch{/* Invalid fragments never become API paths. */}lastRoute.current=next;restoreScroll.current=true;setRoute(next);reset();setTab(next.includes('/safety-log')?'safety':next.includes('/invitations')?'invitations':new URL(next||'/',location.origin).searchParams.get('tab')==='manage'?'manage':'threads');};change();addEventListener('hashchange',change);return()=>removeEventListener('hashchange',change);},[reset]);
+ const {data,user,authStatus,busy,blocked,error,notice,epoch,load,mutate:send}=useCommunitySession(route,reset,hash!==null&&route===readRoute(hash));
+ useEffect(()=>{const change=()=>{scrolls.current.set(lastRoute.current,window.scrollY);const next=readRoute(location.hash.slice(1)||location.search);lastRoute.current=next;restoreScroll.current=true;setRoute(next);reset();setTab(next.includes('/safety-log')?'safety':next.includes('/invitations')?'invitations':new URL(next||'/',location.origin).searchParams.get('tab')==='manage'?'manage':'threads');};change();addEventListener('hashchange',change);addEventListener('popstate',change);return()=>{removeEventListener('hashchange',change);removeEventListener('popstate',change);};},[reset]);
  useEffect(()=>{if(data&&!blocked&&restoreScroll.current){restoreScroll.current=false;requestAnimationFrame(()=>scrollTo(0,scrolls.current.get(lastRoute.current)||0));}},[data,blocked]);
  const mutate:CommunityMutation=async(path,input,idempotent=false)=>{const result=await send(path,input,idempotent);if(result.ok){if(path===''||path.endsWith('/threads')||path.endsWith('/posts')){setTitle('');setBody('');setCreating(false);}if(path.endsWith('/leave'))location.hash='?mine=1';}return result;};
  const c=data?.community,thread=data?.thread,active=c?.status==='active',member=!!c?.role;
@@ -33,14 +35,12 @@ export default function CommunityPage({dataset}:{dataset:DatasetMode}){
  const paging=(cursor:string|null|undefined,members=false)=><nav className={css.paging} aria-label={members?t('メンバーのページ','Member pages'):t('一覧のページ','List pages')}>{isPaged&&<a href={link(pageTrail[route]??(route.split('?')[0]+(route.includes('mine=1')?'?mine=1':route.includes('tab=manage')?'?tab=manage':'')))}>← {Object.hasOwn(pageTrail,route)?t('前のページ','Previous page'):t('最初のページ','First page')}</a>}{cursor&&<button disabled={busy} onClick={()=>nextPage(cursor,members)}>{t('次のページ','Next page')} →</button>}</nav>;
 
  const row=(x:Community)=><article className={css.row} key={x.id}><div><strong>{x.title}</strong><p>{x.description}</p><small>{x.visibility==='public'?t('公開','Public'):t('メンバー限定','Members only')} · {x.status==='active'?t('活動中','Active'):t('アーカイブ','Archived')}</small></div><a className={css.primary} href={link('/'+x.id)}>{t('この場所へ','Visit')} →</a></article>;
- const selected:PersonalSection=route.startsWith('/my-posts')?'community-posts':route.startsWith('/reports')?'reports':route.startsWith('/participation')||route.startsWith('/recoveries')?'participation':route.startsWith('/invitations')?'invitations':route.includes('mine=1')||!!c?.role?'joined':'discover';
- return <><SiteHeader dataset={dataset} page="community" user={user}/><main className={css.shell}><div className={personalCss.frame}>
- <PersonalNavigation selected={selected} signedIn={!!user}/><div className={personalCss.content}>
+ return <main className={css.shell}>
  {error&&<p role="alert">{/_RATE_LIMIT$/.test(error)?t('短時間の操作上限に達しました。しばらく待ってから再試行してください。','Too many requests in a short period. Please wait before retrying.'):t('取得・操作を完了できませんでした。権限や状態が変わった可能性があります。再読み込みしてください。','The request could not be completed. Permissions or state may have changed. Refresh and retry.')} <button onClick={()=>void load(true)}>{t('再読み込み','Refresh')}</button>{['INVALID_CURSOR','PAGE_CHANGED'].includes(error)&&<a href={link(route.split('?')[0]+(route.includes('mine=1')?'?mine=1':route.includes('tab=manage')?'?tab=manage':''))}>{t('最初のページから確認','Restart from the first page')}</a>}</p>}
  {busy&&!data&&<p role="status">{t('確認中…','Loading…')}</p>}
  {blocked&&data&&<p role="status">{t('閲覧権限を再確認しています。入力はこの画面内に保持しています。','Checking access. Your draft is kept in memory on this page.')}</p>}
  {notice&&!blocked&&<p className={css.notice} role="status">{notice==='REPORT_RECEIVED'?t('通報を受け付けました。自分の活動・履歴から受付状況を確認できます。','Report received. Track it under Your activity.'):t('変更を保存しました。','Changes saved.')}</p>}
- {!user&&!busy&&!error&&<div className={css.loginPrompt}><p>{t('参加や投稿にはログインが必要です。公開の会話はそのまま閲覧できます。','Sign in to join or post. Public conversations are open to everyone.')}</p><a className={css.primary} href={'/member?returnTo='+encodeURIComponent('/communities'+(route?'#'+encodeURIComponent(route):''))}>{t('ログインして続ける','Sign in to continue')} →</a></div>}
+ {authStatus==='guest'&&!busy&&!error&&<div className={css.loginPrompt}><p>{t('参加や投稿にはログインが必要です。公開の会話はそのまま閲覧できます。','Sign in to join or post. Public conversations are open to everyone.')}</p><a className={css.primary} href={'/member?returnTo='+encodeURIComponent('/communities'+(route?'#'+encodeURIComponent(route):''))}>{t('ログインして続ける','Sign in to continue')} →</a></div>}
  <CommunityRevalidation.Provider value={blocked}><div className={css.protected} style={blocked?{visibility:'hidden'}:undefined} inert={blocked} key={route+':'+epoch}>
  {data?.communities&&<><header className={css.heading}><div><small>COMMUNITY</small><h1>{route.includes('mine=1')?t('自分のコミュニティ','Your communities'):t('関心を持ち寄る場所','A place for shared curiosity')}</h1></div>{user&&<button className={css.primary} onClick={()=>setCreating(!creating)}>{t('＋ 作成','＋ Create')}</button>}</header>{creating&&<form className={css.form} onSubmit={e=>{e.preventDefault();void mutate('',{title,description:body,visibility},true);}}><label>{t('名前','Name')}<input required maxLength={100} value={title} onChange={e=>setTitle(e.target.value)}/></label><label>{t('紹介','Description')}<textarea aria-label={t('紹介','Description')} maxLength={1000} value={body} onChange={e=>setBody(e.target.value)}/></label><fieldset><legend>{t('公開範囲','Visibility')}</legend>{(['public','members'] as const).map(v=><label key={v}><input type="radio" checked={visibility===v} onChange={()=>setVisibility(v)}/>{v==='public'?t('公開・自由参加','Public · open joining'):t('メンバー限定','Members only')}</label>)}</fieldset>{visibility==='members'&&<p>{t('作成後、アカウント宛ての招待から参加してもらえます。','After creation, invite members using their account IDs.')}</p>}<button disabled={busy} className={css.primary}>{t('作成する','Create')}</button></form>}{!data.communities.length&&<p className={css.empty}>{route.includes('mine=1')?t('参加中のコミュニティはありません。気になる場所を見つけるか、新しく作成できます。','You have not joined a community yet. Discover a place or create your own.'):t('まだコミュニティはありません。','No communities yet.')}</p>}{data.communities.map(row)}</>}
  {c&&<><div className={`${css.heading} ${css.communityHeading}`}><div><a className={css.backLink} href="#">← {t('コミュニティ一覧','Communities')}</a><h1>{c.title}</h1>{!thread&&<p>{c.description}</p>}<small>{c.visibility==='public'?t('公開','Public'):t('メンバー限定','Members only')} · {c.status==='active'?t('活動中','Active'):t('アーカイブ','Archived')}</small></div><div>{!member&&active&&user&&<button className={css.primary} onClick={()=>void change('join')}>{t('参加する','Join')}</button>}{member&&<details className={css.membership}><summary>{t('参加中','Joined')} · {t('参加設定','Membership settings')}</summary><button disabled={busy} onClick={()=>setLeaveOpen(true)}>{t('退出する','Leave community')}</button></details>}{user&&<CommunitySafetyActions kind="community" id={c.id} revision={c.revision} t={t} mutate={mutate} busy={busy} reportable targetLabel={c.title}/>}</div></div>
@@ -59,5 +59,5 @@ export default function CommunityPage({dataset}:{dataset:DatasetMode}){
  {c&&!thread&&tab==='invitations'&&paging(data?.nextCursor)}
  {!c&&paging(data?.nextCursor)}
 
- </div></CommunityRevalidation.Provider></div></div></main><SiteFooter/></>;
+ </div></CommunityRevalidation.Provider></main>;
 }

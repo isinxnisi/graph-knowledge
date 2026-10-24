@@ -108,3 +108,5 @@
   .header .accountMenu > summary { max-width: 100%; min-width: 0; }
   .tools > .settings { flex: 0 0 44px; }
 }
+
+.accountPending{display:inline-flex;align-items:center;min-width:96px;min-height:36px;font-size:12px;color:var(--color-muted)}

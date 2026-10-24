@@ -1,3 +1,4 @@
+import {MemberIdentityProvider} from "../lib/client/use-member-identity";
 import {CommunityAvailability} from "../components/CommunityAvailability";
 import FocusModality from "../components/FocusModality";
 import { headers } from "next/headers";
@@ -16,5 +17,5 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
   const requestHeaders = await headers();
   const locale = requestHeaders.get("x-plunode-locale") === "en" ? "en" : "ja";
   const publicLocale = requestHeaders.get("x-plunode-public-locale");
-  return <html lang={locale} data-input-modality="initial" className={editorial.variable}><body className={styles.body}><UiLocaleProvider initialLocale={publicLocale === "en" ? "en" : publicLocale === "ja" ? "ja" : undefined}><CommunityAvailability enabled={process.env.COMMUNITY_ENABLED === "1"}><FocusModality />{children}</CommunityAvailability></UiLocaleProvider></body></html>;
+  return <html lang={locale} data-input-modality="initial" className={editorial.variable}><body className={styles.body}><UiLocaleProvider initialLocale={publicLocale === "en" ? "en" : publicLocale === "ja" ? "ja" : undefined}><CommunityAvailability enabled={process.env.COMMUNITY_ENABLED === "1"}><MemberIdentityProvider communityEnabled={process.env.COMMUNITY_ENABLED === "1"}><FocusModality />{children}</MemberIdentityProvider></CommunityAvailability></UiLocaleProvider></body></html>;
 }

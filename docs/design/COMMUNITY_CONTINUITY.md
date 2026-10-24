@@ -60,3 +60,7 @@ node --import tsx scripts/member-migrate.ts --communities --confirm-origin ORIGI
 ```
 
 既存の会員migration呼出は従来どおり。005／006がないDBでも既存会員の停止・退会を維持する。通常の3200／betaではCOMMUNITY_ENABLEDを無効に保つ。3275／graph-comは架空データの接続試作のまま。C2、AI、KG、会員DB本番適用は別工程。
+
+## 対応待ち招待への気付き（2026-10-24）
+
+初回のサイト内通知は未読ではなく、本人が現在対応可能な招待の総数とする。`/api/communities/invitations/summary`でsession／active・発行者／招待先の世代・期限・状態・再受入要件を評価し、一覧のページングから独立して数える。共通アカウント入口と個人メニューに表示し、30秒／復帰・操作後の再取得を共有する。未取得・失敗を0と表示しない。本人変更時は旧件数と旧応答を拒否する。メール、既読、汎用通知基盤は対象外。[認証表示・検証記録](../verification/COMMUNITY_AUTH_NAV_20261024.md)。

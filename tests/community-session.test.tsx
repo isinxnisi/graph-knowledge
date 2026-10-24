@@ -1,6 +1,7 @@
 // @vitest-environment jsdom
 import {act,cleanup,renderHook} from '@testing-library/react';
 import {afterEach,beforeEach,expect,it,vi} from 'vitest';
+import {invalidateMemberIdentity} from '../lib/client/use-member-identity';
 import {useCommunitySession} from '../lib/client/use-community-session';
 import {memberSessionEvent} from '../lib/client/account-navigation';
 const api=vi.hoisted(()=>({request:vi.fn()}));
@@ -8,7 +9,7 @@ vi.mock('../lib/client/member-api',async original=>({...await original(),memberR
 import {MemberClientError} from '../lib/client/member-api';
 const reset=vi.fn(),user={id:'a',name:'A',locale:'ja'};
 let identity:typeof user|null,permission:boolean;
-beforeEach(()=>{vi.useFakeTimers();reset.mockReset();identity=user;permission=true;Object.defineProperty(document,'hidden',{configurable:true,value:false});api.request.mockReset().mockImplementation(async(path:string)=>{if(path==='/api/member/profile'){if(!identity)throw new MemberClientError(401,'UNAUTHENTICATED');return {user:identity};}if(!permission)throw new MemberClientError(403,'FORBIDDEN');return {communities:[]};});});
+beforeEach(()=>{invalidateMemberIdentity();vi.useFakeTimers();reset.mockReset();identity=user;permission=true;Object.defineProperty(document,'hidden',{configurable:true,value:false});api.request.mockReset().mockImplementation(async(path:string)=>{if(path==='/api/member/profile'){if(!identity)throw new MemberClientError(401,'UNAUTHENTICATED');return {user:identity};}if(!permission)throw new MemberClientError(403,'FORBIDDEN');return {communities:[]};});});
 afterEach(()=>{cleanup();vi.useRealTimers();});
 const tick=()=>act(()=>vi.advanceTimersByTimeAsync(600));
 it('同一ユーザーのfocus、pageshow、定期再取得でフォーム世代を変えない',async()=>{
@@ -27,10 +28,15 @@ it('権限失効は内容と入力を破棄する',async()=>{
 });
 it('遅着した旧認証応答を採用しない',async()=>{
  const {result}=renderHook(()=>useCommunitySession('',reset));await tick();let resolve!:(v:unknown)=>void;
- api.request.mockImplementationOnce(()=>new Promise(r=>{resolve=r;}));act(()=>window.dispatchEvent(new Event('focus')));await tick();identity=null;act(()=>window.dispatchEvent(new Event(memberSessionEvent)));await tick();await act(async()=>resolve({user}));expect(result.current.user).toBeNull();
+ api.request.mockImplementationOnce(()=>new Promise(r=>{resolve=r;}));act(()=>document.dispatchEvent(new Event('visibilitychange')));await tick();identity=null;act(()=>invalidateMemberIdentity());act(()=>window.dispatchEvent(new Event(memberSessionEvent)));await tick();await act(async()=>resolve({user}));await tick();expect(result.current.user).toBeNull();
 });
 it('送信中のfocusはPOSTを中断せず、不明結果の再送IDを保持する',async()=>{
  const {result}=renderHook(()=>useCommunitySession('',reset));await tick();let reject!:(e:Error)=>void;api.request.mockImplementationOnce(()=>new Promise((_,r)=>{reject=r;}));let sending!:ReturnType<typeof result.current.mutate>;
  act(()=>{sending=result.current.mutate('/reports',{detail:'draft',expectedRevision:1},true);});const first=api.request.mock.calls.at(-1)![2];act(()=>window.dispatchEvent(new Event('focus')));expect(first.signal).toBeUndefined();await act(async()=>{reject(new Error('network'));await sending;});await tick();
  await act(async()=>{await result.current.mutate('/reports',{detail:'draft',expectedRevision:2},true);});const writes=api.request.mock.calls.filter(c=>c[2]?.method==='POST');expect(writes[1][2].body).toEqual(writes[0][2].body);
+});
+
+it('初回認証を待つ間も匿名専用で取得した公開一覧は表示できる',async()=>{
+ let resolve!:(value:unknown)=>void;api.request.mockImplementation(async(path:string,_schema:unknown,options:{publicOnly?:boolean}={})=>{if(path==='/api/member/profile')return new Promise(r=>{resolve=r;});expect(options.publicOnly).toBe(true);return {communities:[]};});
+ const {result,unmount}=renderHook(()=>useCommunitySession('',reset));await tick();expect(result.current.authStatus).toBe('checking');expect(result.current.data?.communities).toEqual([]);expect(result.current.user).toBeNull();expect(result.current.blocked).toBe(false);unmount();await act(async()=>resolve({user}));
 });

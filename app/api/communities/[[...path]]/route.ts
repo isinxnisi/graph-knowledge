@@ -9,6 +9,7 @@ async function handle(req:Request,ctx:Context){
  return memberHandle(async()=>{const s=memberRuntime().service.community;
  if(req.method==='GET'){
   if(!p.length)return s.list(req);
+  if(p.length===2&&p[0]==='invitations'&&p[1]==='summary')return s.invitationSummary(req);
   if(p.length===1&&p[0]==='reports')return s.reports(req);
   if(p.length===2&&p[1]==='safety-log')return s.safetyLog(req,p[0]);
   if(p.length===1&&p[0]==='invitations')return s.invitations(req);

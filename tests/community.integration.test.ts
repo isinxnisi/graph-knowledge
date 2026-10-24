@@ -166,3 +166,19 @@ it('threads and posts remain usable beyond the old 200-item ceiling with complet
  for(const [path,field,total] of [['/'+c.id,'threads',206],['/threads/'+tid,'posts',207]] as const){let cursor:string|null=null;const ids:string[]=[];do{const page=await(await call(path+'?limit=50'+(cursor?'&cursor='+encodeURIComponent(cursor):''),d)).json();ids.push(...page[field].map((r:{id:string})=>r.id));cursor=page.nextCursor;}while(cursor);expect(ids.length).toBe(total);expect(new Set(ids).size).toBe(total);}
  const inviteId=(await (await call('/'+c.id+'/invitations',d,{expectedRevision:(await get(c.id,d)).revision,userId:a.id,days:7})).json()).id;expect((await decide(inviteId,'revoke',b)).status).toBe(404);expect((await decide(randomUUID(),'revoke',b)).status).toBe(404);
 });
+
+it('招待総数は本人の有効な対応待ちだけで、ページング・閲覧に依存しない',async()=>{
+ const owner=await person('notification-owner'),recipient=await person('notification-recipient'),other=await person('notification-other');
+ const c=await make(owner,'members');const invite=await call('/'+c.id+'/invitations',owner,{expectedRevision:(await get(c.id,owner)).revision,userId:recipient.id,days:7});expect(invite.status).toBe(201);const id=(await invite.json()).id;
+ const count=async(who:Person)=>(await(await call('/invitations/summary',who)).json()).pendingCount;
+ expect((await call('/invitations/summary')).status).toBe(401);expect(await count(recipient)).toBe(1);expect(await count(other)).toBe(0);
+ const extra=await make(owner,'members');const extraId=(await(await call('/'+extra.id+'/invitations',owner,{expectedRevision:extra.revision,userId:recipient.id})).json()).id;const page=await(await call('/invitations?limit=1',recipient)).json();expect(page.invitations).toHaveLength(1);expect(await count(recipient)).toBe(2);await call('/invitations/'+extraId+'/revoke',owner,{expectedRevision:1});expect(await count(recipient)).toBe(1);
+ await memberRuntime().pool.query("UPDATE community_invitation SET expires_at=clock_timestamp()-interval '1 second' WHERE id=$1",[id]);expect(await count(recipient)).toBe(0);
+ const reissue=await call('/'+c.id+'/invitations',owner,{expectedRevision:(await get(c.id,owner)).revision,userId:recipient.id});const next=(await reissue.json()).id;expect(await count(recipient)).toBe(1);
+ await call('/invitations/'+next+'/decline',recipient,{expectedRevision:1});expect(await count(recipient)).toBe(0);
+ const third=(await(await call('/'+c.id+'/invitations',owner,{expectedRevision:(await get(c.id,owner)).revision,userId:recipient.id})).json()).id;
+ await call('/invitations/'+third+'/revoke',owner,{expectedRevision:1});expect(await count(recipient)).toBe(0);
+ const fourth=(await(await call('/'+c.id+'/invitations',owner,{expectedRevision:(await get(c.id,owner)).revision,userId:recipient.id})).json()).id;
+ await call('/invitations/'+fourth+'/accept',recipient,{expectedRevision:1});expect(await count(recipient)).toBe(0);
+ const c2=await make(owner,'members');await call('/'+c2.id+'/invitations',owner,{expectedRevision:(await get(c2.id,owner)).revision,userId:other.id});expect(await count(other)).toBe(1);await change(c2.id,'leave',owner);expect(await count(other)).toBe(0);
+});
