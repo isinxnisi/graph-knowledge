@@ -1,5 +1,11 @@
 # コミュニティ第1弾：本番導入・停止・最小運営
 
+> **2026-10-25更新**：運営Web初版の追加により、以下の1aab77e image／旧manifestを新しい公開候補としてそのまま使わない。[追加契約](../design/SITE_OPERATIONS.md)・[運営手順](SITE_OPERATIONS.md)・[新検証記録](../verification/SITE_OPERATIONS_20261025.md)を照合し、新候補の本番形式build/imageを固定し直す。本番の構成・認証・DBは今回未変更。
+>
+> 新候補を本番へ適用する際は、下記の順序を維持して `member-migrate.ts --site-operations --confirm-origin https://plunode.net` を使い、未適用005〜008（ledger計9件）を単一transactionで追加する。既存000〜004と005〜007のchecksumは変更しない。Webの `SITE_OPERATIONS_ENABLED`、`SITE_OPERATOR_USER_IDS` 受渡しを必要最小限だけ追加し、当初は0／空。本番で確認した本人UUIDと別承認後だけ有効化する。betaの許可IDをコピーしない。機能停止は運営flag=0＋Webのみ再起動、008と記録は保持する。旧コミュニティ対応buildへの切替は可能だが、コミュニティ失効処理を持たない本番旧buildへ安易に戻さない。
+>
+> 公式窓口は plunode@gmail.com と運営者が指定済み。メール自動連携はなく、確認担当・頻度・対応保証・保持期間の未承認提案を自動確定しない。
+
 2026-10-24。**準備用。実行・migration・有効化は別承認。** [確認結果](../verification/COMMUNITY_RELEASE_READINESS_20261024.md)と一緒に承認する。架空データ・beta DB・beta設定は本番へ移さない。
 
 ## 対象と構成

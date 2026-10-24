@@ -1,5 +1,7 @@
 # 現行技術設計
 
+2026-10-25、[小さなサイト運営Web初版](design/SITE_OPERATIONS.md)を追加。CLIと同じ処置を共有し、既存Better Auth＋サーバーの本人UUID許可リストで各APIを認可する。008は最小監査・再送receiptのみ。実beta限定、本番は別承認。一般会員／コミュニティ管理者の権限は広げず、C2・AIは含めない。
+
 2026-10-23、ユーザー承認によりローカル3200／graph-betaの実コミュニティを有効化。独立したbeta会員DBをbackup・一時DBへrestore検証し、005〜007を適用、既存会員・Capsuleを保持。Google認証を継続使用し、fixtureへの置換はしない。3275／graph-comは架空試作、本番は未変更。[反映・検証状況](verification/COMMUNITY_BETA_ACTIVATION_20261023.md)。
 
 2026-10-23、コミュニティC3-minをfeature flag内に実装。通報、管理者非表示、通報対象に限定した監査付き運営確認、サイト停止・アーカイブ復帰、原子的な濫用制限を追加。初回公開条件はC1a／C1b／C3-minと公開前検証へ変更し、C2掲載・Graph連携は独立した後続、AIは第2弾とする。[契約](design/COMMUNITY_SAFETY_MIN.md)／[隔離検証](verification/COMMUNITY_C3_MIN_20261023.md)。通常3200／betaは無効、3275／graph-comは架空試作を維持。本番・既存会員DBへの適用は未実施。

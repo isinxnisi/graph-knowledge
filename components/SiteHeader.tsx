@@ -101,6 +101,7 @@ export default function SiteHeader({ dataset, page = "explore", onBeforeAccountN
         <div className={styles.settingsPanel}>
           {currentUser?<><p className={styles.accountIdentity}><strong>{displayName}</strong><span>{text.signedIn}</span></p>
           <nav aria-label={text.accountNavigation} className={styles.accountLinks}>{groups.map(g=><section key={g.label}><h2>{g.label}</h2>{g.items.map(i=><Link key={i.id} href={i.href} aria-label={i.label} aria-current={selected===i.id?'page':undefined} onClick={closeAccount}><Icon name={i.icon}/>{i.label}{i.id==='invitations'&&<InvitationBadge/>}</Link>)}</section>)}</nav>
+          {currentUser.siteOperator&&!identity.error&&<Link href="/operations" onClick={closeAccount}>{locale==='en'?'Site operations':'サイト運営'}</Link>}
           <button className={styles.logout} disabled={accountBusy||signingOut} onClick={()=>void signOut()}>{text.logout}</button>{logoutError&&<p role="alert">{text.logoutFailed}</p>}
           </>:identity.status==='guest'?<Link href="/member" onClick={closeAccount}><Icon name="person"/>{locale==='en'?'Sign in / Account':'ログイン・アカウント'}</Link>:<p role="status">{identity.error?(locale==='en'?'Account verification failed.':'認証を確認できませんでした。'):(locale==='en'?'Checking your account…':'アカウントを確認しています…')}{identity.error&&<button onClick={()=>void refreshMemberIdentity(true).catch(()=>{})}>{locale==='en'?'Retry':'再試行'}</button>}</p>}
         </div>

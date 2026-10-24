@@ -1,5 +1,7 @@
 # コミュニティ：リリース単位と実装計画
 
+2026-10-25追記：本番公開前の追加単位として[サイト運営Web初版](SITE_OPERATIONS.md)を実装する。C1a/C1b/C3-minの処置を共有し、008は再送receipt・最小監査だけを追加。betaのみ明示有効化し、本番候補は従来1aab77eのimageから更新・再検証が必要。[操作・解除手順](../runbooks/SITE_OPERATIONS.md)。C2・AI・高度分析の順序は変更しない。公式連絡先は運営者指定の plunode@gmail.com。担当・頻度・保存期間等の未承認事項は別承認のまま。
+
 2026-10-24更新。[体験](COMMUNITY_EXPERIENCE.md)／[基礎設計](COMMUNITY_FOUNDATION.md)。第1弾は人間によるコミュニティ。AIは第2弾へ分離する。
 
 ## 確認環境と現在地

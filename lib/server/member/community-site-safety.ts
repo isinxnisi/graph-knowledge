@@ -27,11 +27,11 @@ async function mayInspect(c:PoolClient,r:QueryResultRow,community:QueryResultRow
  return true;
 }
 
-// Intentionally no HTTP route or member-role bypass. Same trusted CLI boundary
-// as member-ops/recovery; DB credentials are an operator capability, not a User role.
-export async function operateCommunitySafety(pool:Pool,raw:CommunitySafetyOperation,apply=false) {
+// Shared by CLI and the explicitly authenticated site-operations service.
+// A community role alone never authorizes these operations.
+export async function operateCommunitySafety(pool:Pool,raw:CommunitySafetyOperation,apply=false,client?:PoolClient,auditInspection=true) {
  const input=operatorInput.parse(raw);
- return memberTransaction(pool,async c=>{
+ const run=async(c:PoolClient)=>{
   const seed=(await c.query('SELECT community_id,reporter_id FROM community_report WHERE id=$1',[input.reportId])).rows[0];
   if(!seed)throw new MemberError(404,'NOT_FOUND');
   // Match User -> Community -> Report/Post lifecycle lock order. The read lock
@@ -48,7 +48,7 @@ export async function operateCommunitySafety(pool:Pool,raw:CommunitySafetyOperat
    const target=permitted?await exactSafetyContent(c,r.target_kind,r.target_id):null;
    const intact=target&&target.status!=='withdrawn'&&safetyHash(target)===r.content_hash;
    if(intact&&target.revision!==input.expectedRevision)throw new MemberError(409,'COMMUNITY_CHANGED');
-   await audit(intact?'report-inspect':'report-inspect-withheld',r.target_id,r.target_kind);
+   if(auditInspection)await audit(intact?'report-inspect':'report-inspect-withheld',r.target_id,r.target_kind);
    // Never include parent private titles, siblings, roster or reporter identity.
    return {applied:true,reportId:r.id,kind:r.target_kind,reportRevision:r.revision,targetRevision:target?.revision??null,
     content:intact?{title:target.title,description:target.description,body:target.body}:null,
@@ -94,7 +94,8 @@ export async function operateCommunitySafety(pool:Pool,raw:CommunitySafetyOperat
    await audit('site-'+input.action,p.id,'post');
   }
   return {applied:apply,action:input.action,targetId:p.id,revision:p.revision};
- });
+ };
+ return client?run(client):memberTransaction(pool,run);
 }
 
 // Queue exposes case routing metadata, never private titles/bodies or member

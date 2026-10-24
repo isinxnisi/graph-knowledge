@@ -1,5 +1,7 @@
 # コミュニティ第1弾：本番公開準備
 
+> 2026-10-25：利用者の追加依頼によりサイト運営Web初版を追加した。[追加差分・検証](SITE_OPERATIONS_20261025.md)。以下の旧image/manifestは当時の固定記録として保持し、新候補のデプロイに流用しない。新候補には008・サーバー明示許可・管理UI/APIが加わる。正式公開前に新候補の本番形式imageと設定の再検証が必要。本番は未変更、公開判断は引き続き別承認。
+
 2026-10-24。[導入・停止・運営手順](../runbooks/COMMUNITY_FIRST_RELEASE.md)。本番反映・DB migration・有効化は実施していない。判定は**条件付き・承認待ち**。UI評価は77364c5で一区切りとし、外観調整は追加しない。
 
 ## 固定した範囲と実際の現在地
@@ -52,7 +54,7 @@ Web/opsの依存packageとlockfile、旧000〜004、Graph保存形式は変更�
 
 |時点|必須事項|推奨/扱い|
 |---|---|---|
-|承認前|通報担当/確認頻度/非公開相談窓口|isinxnisiを一次担当、毎日queue全ページ確認。実際に受信できる既存窓口を本人指定。就任/SLAは未承認|
+|承認前|通報担当/確認頻度/非公開相談窓口|isinxnisiを一次担当、毎日queue全ページ確認。連絡先は2026-10-25に plunode@gmail.com と本人指定済み。担当就任/頻度/SLAは未承認|
 |承認前|保持期間とバックアップ案|case終了90日で自由記述マスク、監査metadataは1年で再審査、継続制限のcase参照は保全。日次/週次と外部暗号化退避を承認。実行は月次台帳付き手動から可能|
 |公開前|利用者向けprivacy説明|現行は会員/Capsule中心。公開/限定、通報対象だけの7日期限付き確認、担当窓口、承認した保存期間を日英で追記。未承認の約束は公開しない|
 |公開前|iPhoneの短い実機試験|キーボード中の返信/通報、アプリ復帰の入力/再認可、下端メニュー、Back。入力不能/消失/漏洩なら阻害。狭幅ブラウザ試験は実機と別|
@@ -72,4 +74,4 @@ Web/opsの依存packageとlockfile、旧000〜004、Graph保存形式は変更�
 - betaを候補コードへ更新。build `v2PCWyFKwYZ_uWZZuE5um`、3200と外部HTTPS200/Google会員statusを確認。ログイン済み実betaで初回確認→本人表示、保存済みPLUTO Graph（4 Entity/6 Claim・91%）、コミュニティ一覧→個別の読取を確認。新しい投稿/招待/処置は行っていない。更新前後のcommunity/membership/thread/post/member_capsuleの件数・全行hash一致。
 - 旧beta build QNMnJbnTc8UZJnqJgAmV-は `backups/community-release-beta-prebuild-20261024/.next-public` に保持。通常betaの維持用で、本番の公開後rollbackを保証するものではない。
 
-**判定：条件付き・本番反映は承認待ち。** 移行/実行基盤は検証済み。担当・受信可能な窓口・保持/backup案の承認、privacy文案の反映と最終image再固定、短い実iPhone確認を公開前に満たす。直前backup/適用先再照合・新buildの正式Google callbackは実行時のgateとして残す。今回、本番configuration/DB/機能flag・認証/DNS/Tunnel・KG/Worker/Kevは変更していない。
+**判定：条件付き・本番反映は承認待ち。** 移行/実行基盤は検証済み。担当・確認頻度・保持/backup案の承認、privacy文案の反映と最終image再固定、短い実iPhone確認を公開前に満たす。直前backup/適用先再照合・新buildの正式Google callbackは実行時のgateとして残す。今回、本番configuration/DB/機能flag・認証/DNS/Tunnel・KG/Worker/Kevは変更していない。
