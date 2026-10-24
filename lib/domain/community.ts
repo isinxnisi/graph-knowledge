@@ -1,5 +1,5 @@
 import {z} from 'zod';
-export const communitySchema=z.object({id:z.uuid(),title:z.string(),description:z.string(),visibility:z.enum(['public','members']),status:z.enum(['active','archived','suspended']),revision:z.number(),role:z.enum(['admin','member']).nullable(),adminOffered:z.boolean()});
+export const communitySchema=z.object({id:z.uuid(),title:z.string(),description:z.string(),visibility:z.enum(['public','members']),status:z.enum(['active','archived','suspended']),revision:z.number(),role:z.enum(['admin','member']).nullable(),adminOffered:z.boolean(),membershipGeneration:z.number().nullable().optional(),lastAdmin:z.boolean().optional()});
 export type Community=z.infer<typeof communitySchema>;
 export const communityResponse=z.object({
  community:communitySchema.optional(),communities:z.array(communitySchema).optional(),

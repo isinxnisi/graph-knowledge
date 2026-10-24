@@ -18,7 +18,7 @@ type Owner = (request:Request)=>Promise<{id:string}>;
 async function writeMember(c:PoolClient,id:string){if((await c.query('SELECT active FROM "user" WHERE id=$1 FOR UPDATE',[id])).rows[0]?.active!==true)throw new MemberError(401,'UNAUTHENTICATED');}
 const denied=()=>new MemberError(404,"NOT_FOUND");
 const stale=()=>new MemberError(409,"COMMUNITY_CHANGED");
-const communityDto=(r:QueryResultRow)=>({id:r.id,title:r.title,description:r.description,visibility:r.visibility,status:r.status,revision:r.revision,role:r.role??null,adminOffered:r.admin_offered??false});
+const communityDto=(r:QueryResultRow)=>({id:r.id,title:r.title,description:r.description,visibility:r.visibility,status:r.status,revision:r.revision,role:r.role??null,adminOffered:r.admin_offered??false,membershipGeneration:r.generation??null,lastAdmin:r.last_admin??false});
 const visibleThread=readableCommunityThread;
 
 export function createCommunityService(pool:Pool, origin:string, owner:Owner, secret:string) {
@@ -34,9 +34,10 @@ export function createCommunityService(pool:Pool, origin:string, owner:Owner, se
   async function context(c:PoolClient,id:string,userId:string|null,write=false) {
     const row=(await c.query(`SELECT * FROM community WHERE id=$1 FOR ${write?'UPDATE':'SHARE'}`,[id])).rows[0];
     if(!row || row.status==='suspended')throw denied();
-    const m=userId?(await c.query("SELECT role,admin_offered FROM community_member WHERE community_id=$1 AND user_id=$2 AND status='active'",[id,userId])).rows[0]:null;
+    const m=userId?(await c.query("SELECT role,admin_offered,generation FROM community_member WHERE community_id=$1 AND user_id=$2 AND status='active'",[id,userId])).rows[0]:null;
     if(row.visibility!=='public'&&!m)throw denied();
-    return {...row,...m};
+    const last_admin=m?.role==='admin'&&Number((await c.query("SELECT count(*) FROM community_member WHERE community_id=$1 AND status='active' AND role='admin'",[id])).rows[0].count)===1;
+    return {...row,...m,last_admin};
   }
   function writable(c:QueryResultRow){if(c.status!=='active')throw new MemberError(409,'COMMUNITY_ARCHIVED');}
   function member(c:QueryResultRow){if(!c.role)throw new MemberError(403,'MEMBERSHIP_REQUIRED');}

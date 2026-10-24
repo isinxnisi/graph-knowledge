@@ -215,3 +215,5 @@ Phase 08：任意のEntity関係俯瞰、明示起点切替、直前一件復帰
 - コミュニティC1b：[招待・再参加・運営復帰・ページングの契約](design/COMMUNITY_CONTINUITY.md)／[検証結果](verification/COMMUNITY_C1B_20261023.md)。C2の実掲載は別工程。
 
 - コミュニティC3-min：[通報・非表示・サイト停止と限定確認](design/COMMUNITY_SAFETY_MIN.md)。C2・AIは有効化せず、隔離DBで認可・競合を検証する。
+
+- 実betaコミュニティ：[有効化記録](verification/COMMUNITY_BETA_ACTIVATION_20261023.md)／[入力保持・共通ナビゲーション・通報UIの修正](verification/COMMUNITY_BETA_UX_20261024.md)。3275の架空データ試作とは別。本番公開は未承認。

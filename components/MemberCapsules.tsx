@@ -1,4 +1,6 @@
 "use client";
+import PersonalNavigation from "./PersonalNavigation";
+import personalCss from "./PersonalNavigation.module.css";
 import {useCommunitiesEnabled} from "./CommunityAvailability";
 import { focusDestination } from "../lib/client/focus-destination";
 import { useUiLocale } from "../lib/client/ui-locale";
@@ -153,6 +155,12 @@ export default function MemberCapsules({ dataset, initialImport = "" }: { datase
     history.replaceState(history.state, "", url);
     requestAnimationFrame(() => focusDestination(heading.current, {}));
   }
+  useEffect(() => {
+    if (!user || busy || error) return;
+    const value = new URLSearchParams(location.search).get('returnTo');
+    if (!value) return;
+    try { const target = new URL(value, location.origin); if (target.origin === location.origin && target.pathname === '/communities' && !target.search && !target.username && !target.password) location.replace(target.pathname + target.hash); } catch { /* Invalid return targets never navigate. */ }
+  }, [user, busy, error]);
   function signalAuthChange() { notifyMemberSessionChange(); }
   function logout(all: boolean) {
     void run(async signal => {
@@ -221,8 +229,9 @@ export default function MemberCapsules({ dataset, initialImport = "" }: { datase
   }
   const title = !user ? text.loginTitle : section === "settings" ? text.settings : section === "posts" ? text.postsTitle : text.savedTitle;
   return <><SiteHeader dataset={dataset} page="member" user={user} onLogout={() => logout(false)} accountBusy={busy || !!draft || !!profileDraft} /><main lang={locale} className={css.page}>
-    <div className={css.memberLayout}>
-    {user && <nav className={css.memberNavigation} aria-label={text.navigation}>
+    <div className={communitiesEnabled?personalCss.frame:css.memberLayout}>
+    {communitiesEnabled&&<PersonalNavigation selected={section==='saved'?'capsules':section==='settings'?'settings':'capsule-posts'} signedIn={!!user}/>}
+    {user && !communitiesEnabled && <nav className={css.memberNavigation} aria-label={text.navigation}>
       <a href="#my-capsules" aria-current={section === "saved" ? "page" : undefined}><Icon name="capsule" />{text.savedTitle}</a>
       <a href="#account-settings" aria-current={section === "settings" ? "page" : undefined}><Icon name="person" />{text.settings}</a>
       <a href="#my-posts" aria-current={section === "posts" ? "page" : undefined}><Icon name="book" />{text.postsTitle}</a>

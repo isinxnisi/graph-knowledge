@@ -84,6 +84,7 @@ export default function SiteHeader({ dataset, page = "explore", user, onBeforeAc
           <div className={styles.settingsPanel}>
             <p className={styles.accountIdentity}><strong>{displayName}</strong><span>{text.signedIn}</span></p>
             <nav aria-label={text.accountNavigation} className={styles.settingsLinks}>
+              {communitiesEnabled&&<a href="/communities#%3Fmine%3D1" onClick={closeAccount}>{locale==="en"?"Joined & managed":"参加・運営"}</a>}
               <a href={page === "member" ? "#my-capsules" : "/member#my-capsules"} onClick={closeAccount}><Icon name="capsule" />{text.library}</a>
               <a href={page === "member" ? "#account-settings" : "/member#account-settings"} onClick={closeAccount}><Icon name="person" />{text.accountSettings}</a>
               <a href={page === "member" ? "#my-posts" : "/member#my-posts"} onClick={closeAccount}><Icon name="book" />{text.posts}</a>
