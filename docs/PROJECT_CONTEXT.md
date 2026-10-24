@@ -1,5 +1,7 @@
 # プロジェクトの構想と判断基準
 
+2026-10-25、[サイト運営Web初版](design/SITE_OPERATIONS.md)を実betaへ反映。コード候補e974cb7（2e7cd22を含む）、build n03NltyZRtAmF5flU2X8G。既存Better Auth＋サーバー明示UUID許可、008の再送receipt・監査を追加。通報・アカウント停止/再開・復帰申請を既存サービスと共有。元のbetaデータはbackup比較で保持を確認、本番は未変更。旧1aab77e imageを新公開候補として流用せず、[検証・残件](verification/SITE_OPERATIONS_20261025.md)を参照。
+
 2026-10-24、コミュニティ第1弾の公開準備を実施。UI候補77364c5と実beta build QNMnJbnTc8UZJnqJgAmV-は利用者了承済み。正式サイトは657f1cf／build N7WjNWiM65EwItM1tux_Y、会員DB000〜004、コミュニティ無効を管理者の読取結果で確認。C1a/C1b/C3-minは実beta利用まで成立。C2は独立後続、AIは第2弾。本番反映・005〜007適用は未承認。[公開準備](verification/COMMUNITY_RELEASE_READINESS_20261024.md)／[導入手順](runbooks/COMMUNITY_FIRST_RELEASE.md)。
 
 2026-10-23、ユーザー承認によりローカル3200／graph-betaの実コミュニティを有効化。独立したbeta会員DBをbackup・一時DBへrestore検証し、005〜007を適用、既存会員・Capsuleを保持。Google認証を継続使用し、fixtureへの置換はしない。3275／graph-comは架空試作、本番は未変更。[反映・検証状況](verification/COMMUNITY_BETA_ACTIVATION_20261023.md)。

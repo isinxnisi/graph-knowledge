@@ -2,7 +2,7 @@
 
 2026-10-25。開始時main/upstream `4c52f77`、旧コード候補 `1aab77e`、利用者了承UI `77364c5`。作業holdを保持し、他の未追跡 `memo.txt` は対象外。自動側の未反映commitなし。新しい管理画面を実装し、旧CLI限定境界を明示認証・明示許可付きのWebへ拡張する依頼に対応した。
 
-[設計](../design/SITE_OPERATIONS.md)／[使い方・許可解除・切り戻し](../runbooks/SITE_OPERATIONS.md)。本番は変更していない。新候補commit/buildと実betaの最終確認は、反映後に本記録へ追記する。
+[設計](../design/SITE_OPERATIONS.md)／[使い方・許可解除・切り戻し](../runbooks/SITE_OPERATIONS.md)。本番は変更していない。実装 `2e7cd22` と対象不在・案件復帰の修正 `e974cb7` を含む最終版を実betaへ反映済み。
 
 ## 実装
 
@@ -36,7 +36,7 @@
 - beta接続先は既存 `127.0.0.1:55433/graph_member`、container `graph-knowledge-member-beta-postgres-1`、volume `graph-knowledge-member-beta_member-data`。本番の内部host／volumeとは別。
 - `~/.local/share/plunode-backups/site-operations-beta-2026-10-24T15-59-27-087Z/` に0700 directory、custom dump／envバックアップ／検証記録0600。
 - 一意な非公開の一時DBへdumpを復元し、既存件数が一致。そのDBに008を適用・再実行し、ledger9件を確認。一時DBだけを終了後削除した。本番個人データの持出しはない。
-- betaへ `--site-operations --confirm-origin https://graph-beta.isinxnisi.com` で008を適用。000〜007のchecksum検査は既存migration runnerで維持。既存 **会員3・Capsule2・コミュニティ2・投稿3** は不変、ledgerは8→9。
+- betaへ `--site-operations --confirm-origin https://graph-beta.isinxnisi.com` で008を適用。000〜007のchecksum検査は既存migration runnerで維持。008適用直後は **会員3・Capsule2・コミュニティ2・投稿3** を保持、ledgerは8→9。
 - 許可対象は、現在ログイン済み本人の「届いた招待」に表示された本人UUIDと、DBのactiveを照合して `.env.public` に設定。UUID許可リストや秘密値をGitへコピーしない。本番の設定には適用しない。
 
 ## 画像
@@ -55,3 +55,20 @@
 旧1aab77eの固定imageにこの機能は含まれない。新候補はWeb/API・008・明示運営者設定を追加するため、本番形式build/imageの固定・運営者本人IDとflagの設定・正式originの認証確認・直前バックアップ等を別承認後の公開工程で行う。旧artifactの記録を書き換えて同じ検証済みimageとして扱わない。
 
 本番のデプロイ／DB migration／flag変更、既存実利用者への処置、KG・Worker・Kevは実施しない。iPhoneの実機・ソフトウェアキーボード・OSによる復帰は未確認であり、狭幅Chromium試験と区別する。再読込を跨ぐ処置草稿の復元、メール取込み、担当割当、保持期間jobは初版の対象外。結果不明のまま離れた場合は履歴・現在状態の再確認が必要。運用の担当・頻度・対応保証・保持期間の未承認事項は従来どおり別判断。
+## 最終反映と実betaの確認
+
+- **Webコード候補** `e974cb714395c06bf8676935208f7f24c7fe4dfc`（`2e7cd22`を含む）。**beta build** `n03NltyZRtAmF5flU2X8G`。記録のみの後続commitを、別の未検証Webとして混同しない。
+- `public-kg.ts build` の最適化build・型検査成功、関連eslint成功。関連Graphの経路／保存Workspaceも72件合格。DB試験は合計89件、重点ブラウザは運営5＋既存認証3シナリオ（最終変更した経路は再実行）。
+- 3200と外部 `https://graph-beta.isinxnisi.com/operations`、Home・member・communities・PLUTO GraphはHTTP200、同じbuildを確認。運営HTML/APIはprivate/no-store。匿名の運営受信箱APIは401 UNAUTHENTICATED。
+- Googleプロバイダーを継続し、fixtureへ置換していない。許可本人のUUIDが公開static JSへ埋め込まれていないことを検査した。
+- ログイン済み本人 **isinxnisi** の実betaで、確認中→本人表示、受信箱、本人アカウントの最小状態参照（本人停止は非活性）、復帰申請のメタデータ、操作履歴、Backによる現在地復帰を確認。運営入口はアカウントメニュー／直接 `/operations`。実betaの既存通報・復帰申請・会員には処置を実行していない。
+- 最終照合は会員4／Capsule2／コミュニティ2／スレッド1／投稿3。会員が1件増えたため、バックアップを保護された一時DBへ再復元してID集合・行hashをメモリ内比較。**元の会員3・Capsule2・場所2・スレッド1・投稿3は欠落0・変更0**。追加会員の認証種別はGoogle、作成時刻2026-10-25 01:31 JST。誰の操作かは推定せず、今回のbeta試験で会員作成・停止をしたものとは扱わない。比較出力は件数だけで本文・メール・hash自体を記録へ出していない。
+- 本番はHTTP200、旧build `N7WjNWiM65EwItM1tux_Y` のまま。VPS／本番DB／KG／Worker／Kevに変更なし。3275／graph-comも今回変更なし。
+
+### 停止・切り戻し
+
+保護設定の `SITE_OPERATIONS_ENABLED=0` でWebだけ再起動するのが第一選択。許可解除は `SITE_OPERATOR_USER_IDS` から対象を除き、全Webに反映する。008・監査・利用者データは削除しない。
+
+直前の検証済みbeta buildは `v2PCWyFKwYZ_uWZZuE5um`（コミュニティ失効処理を含む1aab77e）。退避先 `backups/site-operations-beta-prebuild-20261025/.next-public`。必要ならWebを停止し、新buildを別名で保持した上で退避版を戻し、既存 `start-local-previews.py beta` でWebのみ起動する。本番旧版N7へ切り戻す指示ではない。DB復元で公開後／検証後の新規利用者や投稿を失わせない。
+
+本番用の新image・固定manifest・正式originの確認、運用の未承認事項、実iPhone確認は公開工程へ残す。betaでの本人評価を待ち、本番有効化は別承認。
