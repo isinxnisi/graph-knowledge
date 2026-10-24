@@ -45,6 +45,8 @@
 
 ## 反映と残件
 
+実装 commit `61c88ff` を main／origin/main へ通常 push 済み。Graph→コミュニティ→「探索へ戻る」では、PLUTO・4 Entity／6 Claim・91%・展開済みの状態への復帰を実 beta で確認した。表示条件や Graph 保存形式は変更していない。
+
 反映済み build: `YRaA0GOCLG13vk5z77VgL`。3200 と `https://graph-beta.isinxnisi.com/communities` は HTTP 200、双方の HTML に同じ build と chunk を確認。ログイン済み実 beta で参加一覧→話題一覧→作成面→取消→既存会話、投稿メニューと Escape、個人 Capsule へ移動→ブラウザ Back、Home の探索入口を確認。本人の投稿一覧は実 beta では空であり、該当投稿移動は隔離データで検証した。会員・Capsule・コミュニティ・スレッド・投稿の件数と内容 fingerprint は反映前後で一致した。
 
 Web のみを 3200／実 beta へ反映する。反映前 build `ay5gQ39fSwm8ihSoG6M0f` を `backups/community-design-prebuild-20261024/.next-public` に退避。切り戻しは対象 beta プロセスを確認して停止し、この build を `.next-public` に戻して既存の `scripts/start-local-previews.py beta` で起動する。DB migration はない。
