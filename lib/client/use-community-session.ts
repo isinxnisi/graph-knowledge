@@ -1,5 +1,5 @@
 "use client";
-import {useCallback,useEffect,useRef,useState} from 'react';
+import {useCallback,useEffect,useLayoutEffect,useRef,useState} from 'react';
 import {z} from 'zod';
 import {communityResponse} from '../domain/community';
 import {memberRequest,MemberClientError,type MemberUser} from './member-api';
@@ -16,12 +16,13 @@ export function useCommunitySession(route:string,onReset:()=>void,ready=true){
  const [loadedRoute,setLoadedRoute]=useState<string|null>(null);
  const intents=useRef(new Map<string,{id:string;input:Record<string,unknown>}>());
  const reset=useCallback(()=>{intents.current.clear();previous.current=null;setData(null);setOperationError('');setEpoch(n=>n+1);onReset();},[onReset]);
- const load=useCallback(async(hard=false)=>{
+ const latestLoad=useRef<((hard?:boolean)=>Promise<void>)|null>(null);
+ const load=useCallback(async(hard=false,fresh=false)=>{
   if(!ready)return;
   if(hard)setBlocked(true);
-  if(document.hidden){generation.current++;read.current?.abort();setBlocked(true);return;}
+  if(document.hidden){generation.current++;read.current?.abort();pendingLoad.current=false;setBlocked(true);return;}
   if(writing.current){queued.current=true;return;}
-  if(pendingLoad.current&&!hard)return;
+  if(pendingLoad.current&&!hard&&!fresh)return;
   const g=++generation.current;read.current?.abort();const controller=new AbortController();read.current=controller;pendingLoad.current=true;setBusy(true);
   // While first authentication is pending, the public directory can render
   // independently. Omit credentials: this response can never contain membership data.
@@ -42,7 +43,8 @@ export function useCommunitySession(route:string,onReset:()=>void,ready=true){
    // draft or content is persisted to storage/history, nor shown to a new user.
   }finally{if(g===generation.current){pendingLoad.current=false;setBusy(false);}}
  },[route,reset,ready]);
- useEffect(()=>{mounted.current=true;const initial=setTimeout(()=>{setNotice('');void load(false);},0);
+ useLayoutEffect(()=>{latestLoad.current=load;},[load]);
+ useEffect(()=>{mounted.current=true;const initial=setTimeout(()=>{setNotice('');void load(false,true);},0);
   const focus=()=>{if(Date.now()-lastRead.current>500)void load(false);};
   const visibility=()=>void load(true);
   const page=(e:PageTransitionEvent)=>void load(e.persisted);
@@ -69,7 +71,7 @@ export function useCommunitySession(route:string,onReset:()=>void,ready=true){
    if(mounted.current&&owner.current===uid){setOperationError(code);if(e instanceof MemberClientError&&[401,403,404].includes(e.status)){reset();setBlocked(true);if(e.status===401){owner.current=null;setUser(null);void refreshMemberIdentity(true).catch(()=>{});}}}
    if(!unknown)intents.current.delete(key);
    return {ok:false,code,unknown};
-  }finally{writing.current=false;if(mounted.current){setBusy(false);const hard=queued.current;queued.current=false;void load(hard);}}
+  }finally{writing.current=false;if(mounted.current){setBusy(false);const hard=queued.current;queued.current=false;void latestLoad.current?.(hard);}}
  };
  const publicFallback=route===''&&!data&&!!publicDirectory&&['checking','error'].includes(identityState.status);
  return {data:publicFallback?publicDirectory:data,user:identityState.user?.id===user?.id?user:null,authStatus:identityState.status,busy,blocked:!ready||(!publicFallback&&(blocked||loadedRoute!==route||identityState.status==='checking'||(!!user&&identityState.user?.id!==user.id))),error:operationError||error,notice,epoch,load,mutate};

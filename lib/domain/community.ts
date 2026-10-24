@@ -3,9 +3,9 @@ export const communitySchema=z.object({id:z.uuid(),title:z.string(),description:
 export type Community=z.infer<typeof communitySchema>;
 export const communityResponse=z.object({
  community:communitySchema.optional(),communities:z.array(communitySchema).optional(),
- threads:z.array(z.object({id:z.uuid(),title:z.string(),audience:z.string(),closed:z.boolean(),revision:z.number()})).optional(),
+ threads:z.array(z.object({id:z.uuid(),title:z.string(),audience:z.string(),closed:z.boolean(),revision:z.number(),postCount:z.number().optional(),updatedAt:z.string().nullable().optional()})).optional(),
  thread:z.object({id:z.uuid(),title:z.string(),audience:z.string(),closed:z.boolean(),revision:z.number()}).optional(),
- posts:z.array(z.object({id:z.uuid(),body:z.string(),status:z.string(),revision:z.number().optional(),hiddenBy:z.enum(['community','site']).nullable().optional(),canWithdraw:z.boolean().optional(),author_id:z.string().nullable().optional(),name:z.string().nullable().optional()})).optional(),
+ posts:z.array(z.object({id:z.uuid(),body:z.string(),status:z.string(),createdAt:z.string().optional(),readable:z.boolean().optional(),threadId:z.uuid().optional(),threadTitle:z.string().optional(),communityTitle:z.string().optional(),revision:z.number().optional(),hiddenBy:z.enum(['community','site']).nullable().optional(),canWithdraw:z.boolean().optional(),author_id:z.string().nullable().optional(),name:z.string().nullable().optional()})).optional(),
  members:z.array(z.object({id:z.uuid(),name:z.string(),role:z.string(),admin_offered:z.boolean()})).optional(),
  nextCursor:z.string().nullable().optional(),membersCursor:z.string().nullable().optional(),
  invitations:z.array(z.object({id:z.uuid(),communityId:z.uuid(),title:z.string().nullable(),targetId:z.uuid(),revision:z.number(),status:z.string(),expiresAt:z.string(),readmission:z.boolean()})).optional(),

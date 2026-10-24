@@ -40,3 +40,12 @@ it('初回認証を待つ間も匿名専用で取得した公開一覧は表示�
  let resolve!:(value:unknown)=>void;api.request.mockImplementation(async(path:string,_schema:unknown,options:{publicOnly?:boolean}={})=>{if(path==='/api/member/profile')return new Promise(r=>{resolve=r;});expect(options.publicOnly).toBe(true);return {communities:[]};});
  const {result,unmount}=renderHook(()=>useCommunitySession('',reset));await tick();expect(result.current.authStatus).toBe('checking');expect(result.current.data?.communities).toEqual([]);expect(result.current.user).toBeNull();expect(result.current.blocked).toBe(false);unmount();await act(async()=>resolve({user}));
 });
+
+it('送信中の画面移動は遅着した送信元を再取得せず、現在の画面を認可し直す',async()=>{
+ const {result,rerender}=renderHook(({route})=>useCommunitySession(route,reset),{initialProps:{route:'/invitations'}});await tick();
+ let resolve!:(v:unknown)=>void;api.request.mockImplementationOnce(()=>new Promise(r=>{resolve=r;}));let sending!:ReturnType<typeof result.current.mutate>;
+ act(()=>{sending=result.current.mutate('/invitations/example/accept',{expectedRevision:1});});
+ rerender({route:'/my-posts'});await tick();expect(result.current.blocked).toBe(true);
+ await act(async()=>{resolve({id:'accepted'});await sending;});await tick();
+ expect(result.current.blocked).toBe(false);expect(api.request.mock.calls.at(-1)![0]).toBe('/api/communities/my-posts');
+});

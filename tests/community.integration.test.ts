@@ -182,3 +182,16 @@ it('招待総数は本人の有効な対応待ちだけで、ページング・�
  await call('/invitations/'+fourth+'/accept',recipient,{expectedRevision:1});expect(await count(recipient)).toBe(0);
  const c2=await make(owner,'members');await call('/'+c2.id+'/invitations',owner,{expectedRevision:(await get(c2.id,owner)).revision,userId:other.id});expect(await count(other)).toBe(1);await change(c2.id,'leave',owner);expect(await count(other)).toBe(0);
 });
+it('投稿位置を認可後に解決し、取得上限の先・前後のページ・別スレッドを区別する',async()=>{
+ const c=await make();await change(c.id,'join',b);
+ const tid=(await(await call('/'+c.id+'/threads',a,{requestId:randomUUID(),expectedRevision:(await get(c.id)).revision,title:'History conversation',body:'Start',audience:'cohort'})).json()).id;
+ let target='';for(let n=0;n<65;n++){const p=await memberRuntime().pool.query("INSERT INTO community_post(thread_id,author_id,body,created_at) VALUES($1,$2,$3,clock_timestamp()+($4||' seconds')::interval) RETURNING id",[tid,b.id,'message-'+n,String(n-100)]);if(n===44)target=p.rows[0].id;}
+ const first=await(await call('/threads/'+tid,b)).json();expect(first.posts).toHaveLength(20);expect(first.posts.some((p:{id:string})=>p.id===target)).toBe(false);
+ const focused=await(await call('/threads/'+tid+'?post='+target,b)).json();expect(focused.posts).toHaveLength(20);expect(focused.posts[10].id).toBe(target);expect(focused.posts[9].body).toBe('message-43');expect(focused.posts[11].body).toBe('message-45');
+ const next=await(await call('/threads/'+tid+'?cursor='+encodeURIComponent(focused.nextCursor),b)).json();expect(next.posts[0].body).toBe('message-54');
+ expect((await call('/threads/'+tid+'?post='+randomUUID(),b)).status).toBe(404);
+ const history=await(await call('/my-posts?limit=50',b)).json();const recent=history.posts.find((p:{body:string})=>p.body==='message-64');expect(recent.threadTitle).toBe('History conversation');expect(recent.readable).toBe(true);
+ await change(c.id,'leave',b);await change(c.id,'join',b);
+ expect((await call('/threads/'+tid+'?post='+target,b)).status).toBe(404);
+ const lost=await(await call('/my-posts?limit=50',b)).json();const inaccessible=lost.posts.find((p:{id:string})=>p.id===recent.id);expect(inaccessible.readable).toBe(false);expect(inaccessible).not.toHaveProperty('threadTitle');expect(inaccessible).not.toHaveProperty('threadId');expect(inaccessible).not.toHaveProperty('communityTitle');expect(inaccessible.body).toBeTruthy();expect((await call('/posts/'+target+'/withdraw',b,{})).status).toBe(200);
+});

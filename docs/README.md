@@ -219,3 +219,5 @@ Phase 08：任意のEntity関係俯瞰、明示起点切替、直前一件復帰
 - 実betaコミュニティ：[有効化記録](verification/COMMUNITY_BETA_ACTIVATION_20261023.md)／[入力保持・共通ナビゲーション・通報UIの修正](verification/COMMUNITY_BETA_UX_20261024.md)。3275の架空データ試作とは別。本番公開は未承認。
 
 - 実betaの[認証状態・共通レイアウト・対応待ち招待](verification/COMMUNITY_AUTH_NAV_20261024.md)。初回確認と未ログインを分離し、本文遷移と招待通知を検証。
+
+- 実コミュニティの[UIデザイン体系](design/COMMUNITY_UI_DESIGN.md)：場所・話題・会話・活動・招待・管理の共通規則、投稿位置への認可付き読取、作成と補助操作。
