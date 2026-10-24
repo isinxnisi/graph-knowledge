@@ -32,7 +32,7 @@ export function createSiteOperationsService(pool:Pool,origin:string,owner:(req:R
    if(section==='session')return {operator:true,userId:u.id};
    if(section==='account'){
     const id=memberId(q.get('id')??'');
-    const r=(await c.query('SELECT id,active,"createdAt" AS created_at,"updatedAt" AS updated_at,"updatedAt"::text AS stamp FROM "user" WHERE id=$1',[id])).rows[0];if(!r)throw new MemberError(404,'NOT_FOUND');
+    const r=(await c.query('SELECT id,active,"createdAt" AS created_at,"updatedAt" AS updated_at,"updatedAt"::text AS stamp FROM "user" WHERE id=$1',[id])).rows[0];if(!r)throw new MemberError(404,'ACCOUNT_NOT_FOUND');
     return {account:{id:r.id,active:r.active,createdAt:r.created_at,updatedAt:r.updated_at,expectedState:accountState(r)}};
    }
    let sql='',values:unknown[]=[],policy='';const time='x.created_at',id='x.id';
@@ -72,7 +72,7 @@ export function createSiteOperationsService(pool:Pool,origin:string,owner:(req:R
     // Self suspension would invalidate the executing session midway through
     // its own response. Keep the emergency CLI for that exceptional action.
     if(input.id===u.id)throw new MemberError(409,'SELF_OPERATION_UNAVAILABLE');
-    const r=(await c.query('SELECT active,"updatedAt"::text AS stamp FROM "user" WHERE id=$1 FOR UPDATE',[input.id])).rows[0];if(!r)throw new MemberError(404,'NOT_FOUND');
+    const r=(await c.query('SELECT active,"updatedAt"::text AS stamp FROM "user" WHERE id=$1 FOR UPDATE',[input.id])).rows[0];if(!r)throw new MemberError(404,'ACCOUNT_NOT_FOUND');
     if(accountState(r)!==input.expectedState||r.active!==(input.action==='suspend-user'))throw new MemberError(409,'ACCOUNT_CHANGED');
     result=await operateMember(pool,{target:input.id,action:input.action,actor,reason:input.category},true,c);
    }
