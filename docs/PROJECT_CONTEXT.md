@@ -1,3 +1,5 @@
+2026-10-25、利用者の公開承認に基づき、コミュニティ第1弾・サイト運営・対応待ち通知を正式origin plunode.netで有効化。Webソース57ab605／build nLR2kDd65nabsE7jj4-EW。005〜008を適用しledger9件、既存会員・Capsule・本番KG revision／2,175対象・1,895関係を保持。本人Google・限定会話・通報から運営確認と履歴まで実操作。C2は準備中、AIは後続。詳細は[本番公開記録](verification/COMMUNITY_PRODUCTION_20261025.md)。
+
 # プロジェクトの構想と判断基準
 
 2026-10-25、[運営画面の情報密度・サイト内対応待ち通知](verification/OPERATIONS_DENSITY_20261025.md)を実betaへ反映。Web候補4c43b17 / build QYCiGHONsgFhzp5KqgFEp。認可付き集計・共有更新、IDの任意展開/コピー、明示確認時だけの投稿者ID→アカウント確認を追加。新migrationなし、本番・既存beta案件への処置なし。スレッドaudience初期値/順番は撤回指示により変更しない。

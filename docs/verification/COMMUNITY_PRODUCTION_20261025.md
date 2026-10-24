@@ -49,6 +49,45 @@ betaは9 migrations／4会員／2Capsule／3コミュニティ／7投稿を維�
 
 ## 本番反映の現在状態
 
-成果物の転送・hash一致まで完了。本番Web停止・migration・flag変更はまだ実行していない。管理者sudoがパスワード必須のため、固定済みscriptを本人が実行する部分だけが必要。手順は[導入手順](../runbooks/COMMUNITY_FIRST_RELEASE.md)冒頭を参照。実施後の時刻・結果・本人操作を追記する。
+管理者本人が固定済みscriptをsudo実行し、公開・migration・両flag有効化を完了。以下の実測と正式URL確認を実施。手順は[導入手順](../runbooks/COMMUNITY_FIRST_RELEASE.md)冒頭を参照。
 
 保持期間・対応時間・毎日監視等の未承認案は確定していない。privacyへは現行仕様・限定確認・監査・公式窓口のみを反映。戻り導線の細部、iPhone実機、C2、AIは後続。認証迂回や本番の合成session投入は行わない。
+## 本番反映完了（実測）
+
+|項目|日本時間 2026-10-25|結果|
+|---|---|---|
+|preflight|04:12:22.265|旧build・接続先・既存checksum・本人UUID・KG一致|
+|Web停止完了|04:12:35.559|Webだけ停止|
+|直前backup確認|04:12:36.616|custom dump 27,815 bytes、内容一覧確認|
+|migration確認|04:12:38.191|000〜008 ledger9件、既存table行digest不変|
+|新Web両flag無効確認|04:12:44.839|health・既存機能・KG・新API404|
+|両機能の有効化完了|04:12:52.128|COMMUNITY_ENABLED=1／SITE_OPERATIONS_ENABLED=1、本人許可1件|
+
+停止完了から新Webの無効状態検査完了までは約9.3秒、有効化完了までは約16.6秒。これはscriptの実測区間であり、外部HTTPの完全な停止時間を連続計測した値ではない。最後の有効化時にもWebだけ再作成した。
+
+本番WebのImage IDはOCI manifest表現 `sha256:9ce61a97918975e9193b67143f165bb14d22fedef4d393ebc73d284a2fba7fa2`、固定archive内の同じconfigを指す許可値。build `nLR2kDd65nabsE7jj4-EW`。member-opsも固定済みimageを使用し、KG opsのtag／imageは更新しない。PG／Neo4jのID・StartedAt・mount、既存Composeの他の設定、広告・認証環境が不変であることをscriptが検査した。
+
+### バックアップと復旧鍵
+
+- VPS root0700：`/opt/graph-knowledge/backups/community-release-20261024T191235Z`。UTC日付なのでディレクトリは20261024、実施日本日は20261025。
+- dump SHA256：`b51074cff4f74d2d9b8c2fbaab5112d2d3f0a3b2dfc24ede1da20b74ae4d0d34`。
+- 設定・dump・manifest・runtime metadataを暗号化し、暗号化済みbundleと包まれた鍵だけを管理端末の `~/.local/share/plunode-recovery/community-release-20261025/` へSSH退避。VPS／端末双方のSHA一致。秘密鍵は端末だけの0600、親0700。
+- 端末の秘密鍵で実backupをメモリ内復号し、tarの5項目、dump SHAと容量、`pg_restore --list`の既存Capsule／migrationを確認。DBへのrestoreは行っていない。本番個人データをbeta DBへ投入していない。別DBへの実restoreは前述の合成データrehearsalと区別する。
+- 標準切り戻しは同一新buildの両flag停止（運営のみの停止も可能）＋Web再作成。追加table・投稿・監査を保持する。DBの復元や旧build復帰は自動実行しない。
+
+## 正式URLでの公開後確認
+
+- `/`、`/en`、`/member`、`/communities`、`/operations`、日英privacy、PLUTO `/explore/...`：200と固定本番build一致。Homeは2,175／1,895、dataset API revision不変、PLUTO名前検索200。
+- 本人の通常Googleログインが成立していることを確認。新buildで明示ログアウト→Googleでログイン→本人名／運営入口／既存PLUTO Capsule1件へ復帰。アカウント選択画面を経由せず既存Googleセッションで戻った。Googleアカウント選択UIやiPhone実機の成功とは主張しない。
+- 本人の合意済み本番確認用として、メンバー限定「本番公開確認用（運営者本人）」だけを作成し、限定スレッド「正式公開・通報導線の確認」と投稿を保存。Capsule準備中の非活性表示も確認。他の利用者への招待・処置は実行していない。
+- 同じ本人の確認専用投稿への「実際の違反申告ではない」通報を送信→運営受信箱へ表示→監査理由付きの明示inspect→対象本文／通報理由／投稿者ID一致→理由付き対応不要→履歴2件（inspect／dismiss）まで実操作。未対応通知は0→1→0。内容を開く前の一覧には私的本文・理由を表示しない。
+- 匿名の運営summary／reports／本人profileは401。確認用の限定community／thread APIは404、本文・名称なし。匿名の発見一覧にも確認用限定コミュニティは出ない。一般会員403と失効の網羅試験は隔離本番形式imageで確認し、本番へ別会員を勝手に追加しない。
+- PLUTO Graph復元（4Entity／6Claim）→浦沢直樹を展開（13／23）→閉じる（4／6）、アカウントの既存個人Capsuleへ移動し、サイトメニューの元の探索URLから復帰を確認。公開revisionの違うbetaの内容へ置き換わっていない。
+- 実画面の保存先：管理端末のCodex visualizations配下 `production-home-20261025.png`／`production-community-operations-20261025.png`。ヘッダー日英・狭幅／PC・ライト／ダークの9画像は非Git `backups/community-release-20261025/header/`。
+
+## 残件・後続
+
+公開は完了。iPhone実機のキーボード・アプリ復帰・下端メニュー、別Googleアカウント選択、別の合意済み会員による本番参加／招待承諾は未実施。これらを隔離検証や本人1名の実操作と混同しない。初回検索遅延の継続評価、戻り導線の細部、未移行Discovery3プリセット、C2、AIは後続。未承認の保存日数・対応保証を新たに公表していない。
+
+本番の既存1会員／1Capsuleは移行前後のdigestと画面で保持。公開確認のため追加したコミュニティ／スレッド／投稿／通報／監査は消さず保存。実際の利用者の内容の改変・削除、公開KG更新、Worker／Kev操作はない。
+補足：Graph往復では起点・表示件数・閉じた枝・倍率99%を確認した。選択Entityは復帰時に起点へ戻ったため、選択位置まで完全維持したとは扱わず、細かな復帰体験の後続確認に残す。公開後のDocker private log全文は権限上未取得であり、health・正式HTTP・実画面を検証根拠とする。

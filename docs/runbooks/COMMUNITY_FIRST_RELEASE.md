@@ -1,3 +1,5 @@
+> **公開済み：2026-10-25 04:12:52 JST。** 下記固定成果物で本番005〜008・両flag・本人運営者設定を反映し、正式URLでGoogle再ログイン・限定会話・通報・運営処理・既存Capsule／Graphを確認。[実測・未確認事項](../verification/COMMUNITY_PRODUCTION_20261025.md)。再実行ではなく、切り戻しが必要なら専用disable手順を使う。
+
 > **2026-10-25 公開実行版（以下の古い準備用image・manifest・コマンドより優先）**
 >
 > 利用者は今回の本番公開を明示承認済み。固定Webソース57ab605、本番build `nLR2kDd65nabsE7jj4-EW`、beta `GuSW3Aav5eHMX3hqiNZuT`。[最終記録](../verification/COMMUNITY_PRODUCTION_20261025.md)／[manifest](../releases/community-20261025-manifest.json)を使う。旧20261024成果物は使用しない。005〜008とWeb運営を含む。未承認の保持期間・SLAは公開条件へ自動追加しない。
