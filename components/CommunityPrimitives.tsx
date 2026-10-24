@@ -8,9 +8,28 @@ export function CommunityMark({name,person=false}:{name:string;person?:boolean})
  return <span aria-hidden="true" className={`${css.mark} ${person?css.avatar:''}`} data-tone={tone}>{person?Array.from(name.trim())[0]?.toUpperCase()||'·':<Icon name="graph"/>}</span>;
 }
 export function CommunityMenu({label,children,compact=false}:{label:string;children:ReactNode;compact?:boolean}){
- const ref=useRef<HTMLDetailsElement>(null),[above,setAbove]=useState(false);
- useEffect(()=>{const outside=(e:PointerEvent)=>{if(ref.current&&!ref.current.contains(e.target as Node)&&!(e.target as Element).closest('dialog'))ref.current.open=false;};const key=(e:KeyboardEvent)=>{if(e.key==='Escape'&&ref.current?.open&&!(e.target as Element).closest('dialog')){ref.current.open=false;ref.current.querySelector('summary')?.focus();}};document.addEventListener('pointerdown',outside);document.addEventListener('keydown',key);return()=>{document.removeEventListener('pointerdown',outside);document.removeEventListener('keydown',key);};},[]);
- return <details ref={ref} className={css.menu} data-above={above||undefined} onToggle={event=>{const node=event.currentTarget;if(node.open){const box=node.getBoundingClientRect(),height=node.querySelector('div')?.getBoundingClientRect().height??0;setAbove(innerHeight-box.bottom<height+12&&box.top>height+12);}}}><summary aria-label={label}>{compact?'⋯':<>{label}<Icon name="chevron"/></>}</summary><div className={css.menuPanel}>{children}</div></details>;
+ const ref=useRef<HTMLDetailsElement>(null);
+ useEffect(()=>{
+  const node=ref.current;if(!node)return;const panel=node.querySelector<HTMLElement>('[data-menu-panel]')!;
+  const position=()=>{
+   if(!node.open)return;
+   const anchor=node.querySelector('summary')!.getBoundingClientRect(),view=window.visualViewport;
+   const left=view?.offsetLeft??0,top=view?.offsetTop??0,width=view?.width??innerWidth,height=view?.height??innerHeight;
+   panel.style.maxHeight=Math.max(44,height-16)+'px';panel.style.maxWidth=Math.max(120,width-16)+'px';
+   const box=panel.getBoundingClientRect(),below=top+height-anchor.bottom-6,above=anchor.top-top-6;
+   const y=below>=box.height||below>=above?anchor.bottom+6:anchor.top-box.height-6;
+   panel.style.left=Math.max(left+8,Math.min(anchor.right-box.width,left+width-box.width-8))+'px';
+   panel.style.top=Math.max(top+8,Math.min(y,top+height-box.height-8))+'px';panel.dataset.positioned='true';
+  };
+  const toggle=()=>{if(node.open)position();else delete panel.dataset.positioned;};
+  const outside=(e:PointerEvent)=>{if(!node.contains(e.target as Node)&&!(e.target as Element).closest('dialog'))node.open=false;};
+  const key=(e:KeyboardEvent)=>{if(e.key==='Escape'&&node.open&&!(e.target as Element).closest('dialog')){node.open=false;node.querySelector('summary')?.focus({preventScroll:true});}};
+  node.addEventListener('toggle',toggle);document.addEventListener('pointerdown',outside);document.addEventListener('keydown',key);
+  window.addEventListener('scroll',position,true);window.addEventListener('resize',position);window.visualViewport?.addEventListener('resize',position);window.visualViewport?.addEventListener('scroll',position);
+  const observer=new ResizeObserver(position);observer.observe(panel);
+  return()=>{node.removeEventListener('toggle',toggle);document.removeEventListener('pointerdown',outside);document.removeEventListener('keydown',key);window.removeEventListener('scroll',position,true);window.removeEventListener('resize',position);window.visualViewport?.removeEventListener('resize',position);window.visualViewport?.removeEventListener('scroll',position);observer.disconnect();};
+ },[]);
+ return <details ref={ref} className={css.menu} data-floating-menu data-compact={compact||undefined}><summary aria-label={label}>{compact?<svg aria-hidden="true" viewBox="0 0 24 24" width="20" height="20"><circle cx="5" cy="12" r="1.6" fill="currentColor"/><circle cx="12" cy="12" r="1.6" fill="currentColor"/><circle cx="19" cy="12" r="1.6" fill="currentColor"/></svg>:<>{label}<Icon name="chevron"/></>}</summary><div data-menu-panel className={css.menuPanel}>{children}</div></details>;
 }
 export function WithdrawPost({onConfirm,busy,t}:{onConfirm:()=>Promise<{ok:boolean}>;busy:boolean;t:(ja:string,en:string)=>string}){
  const [open,setOpen]=useState(false),[failure,setFailure]=useState(false);

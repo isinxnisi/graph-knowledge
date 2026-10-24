@@ -13,5 +13,16 @@ export function CommunityDialog({title,children,onCancel,busy=false}:{title:stri
   return()=>{queueMicrotask(()=>{if(!dialog?.isConnected&&trigger.current?.isConnected)trigger.current.focus({preventScroll:true});});};
  },[]);
  useEffect(()=>{const d=ref.current;if(!d)return;if(blocked){if(d.contains(document.activeElement))focus.current=document.activeElement as HTMLElement;d.close();}else if(!d.open){d.showModal();if(focus.current?.isConnected)focus.current.focus({preventScroll:true});}},[blocked]);
+ useEffect(()=>{
+  const d=ref.current;if(!d||blocked)return;
+  // The visible viewport can shrink or move independently of the layout
+  // viewport when mobile browser chrome or the software keyboard changes.
+  const place=()=>{const v=window.visualViewport;const width=v?.width??innerWidth,height=v?.height??innerHeight;d.style.setProperty('--dialog-width',width+'px');d.style.setProperty('--dialog-height',height+'px');d.style.left=((v?.offsetLeft??0)+width/2)+'px';d.style.top=((v?.offsetTop??0)+height/2)+'px';};
+  place();window.addEventListener('resize',place);window.visualViewport?.addEventListener('resize',place);window.visualViewport?.addEventListener('scroll',place);
+  const body=document.body,overflow=body.style.overflow,padding=body.style.paddingRight;
+  const gap=innerWidth-document.documentElement.clientWidth;
+  body.style.overflow='hidden';if(gap>0)body.style.paddingRight=((parseFloat(getComputedStyle(body).paddingRight)||0)+gap)+'px';
+  return()=>{body.style.overflow=overflow;body.style.paddingRight=padding;window.removeEventListener('resize',place);window.visualViewport?.removeEventListener('resize',place);window.visualViewport?.removeEventListener('scroll',place);};
+ },[blocked]);
  return typeof document==='undefined'?null:createPortal(<dialog ref={ref} className={css.dialog} aria-modal="true" aria-labelledby={label} onCancel={e=>{e.preventDefault();if(!busy)onCancel();}}><h2 id={label}>{title}</h2>{children}</dialog>,document.body);
 }
