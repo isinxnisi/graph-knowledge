@@ -1,13 +1,13 @@
 # コミュニティ：リリース単位と実装計画
 
-2026-10-23更新。[体験](COMMUNITY_EXPERIENCE.md)／[基礎設計](COMMUNITY_FOUNDATION.md)。第1弾は人間によるコミュニティ。AIは第2弾へ分離する。
+2026-10-24更新。[体験](COMMUNITY_EXPERIENCE.md)／[基礎設計](COMMUNITY_FOUNDATION.md)。第1弾は人間によるコミュニティ。AIは第2弾へ分離する。
 
 ## 確認環境と現在地
 
 - **3275／graph-com**：[接続確認版](../../prototypes/community-connected/README.md)。既存Home・Explorer・アカウントを再利用する隔離Nextアプリ。コミュニティ・会員操作は架空データ。静的トップや架空SVG Graphで代用しない。実会員API・AI・書込は接続しない。
-- **C1a／C1b実基盤**：通常Reactコンポーネント、Better Auth、PostgreSQLの追加schema/API。`COMMUNITY_ENABLED=1` の明示有効化が必要。通常環境は無効。3275のiframeやロール切替を認証として流用しない。
-- **3200／graph-beta**：既存アプリの検証先。コミュニティ実基盤は未有効化、既存会員DBへの005〜007適用なし。
-- **plunode.net**：今回は変更しない。将来ここで提供する「サービスのβフェーズ」とgraph-betaという検証環境を区別する。
+- **C1a／C1b実基盤**：通常Reactコンポーネント、Better Auth、PostgreSQLの追加schema/API。`COMMUNITY_ENABLED=1` の明示有効化が必要。本番は無効、実betaは有効。3275のiframeやロール切替を認証として流用しない。
+- **3200／graph-beta**：既存アプリの検証先。2026-10-23に本番から独立したbeta用DBへ005〜007を適用し有効化済み。実Googleログイン・実会員の作成/投稿・UI評価を実施済み。最新UIの利用者了承は77364c5。初回のGoogleアカウント選択待ちは解消している。
+- **plunode.net**：Discovery版657f1cf／build N7WjNWiM65EwItM1tux_Y、000〜004適用済み、コミュニティflag未設定を2026-10-24に管理者の読取結果で確認。本番反映は別承認。ここで提供する「サービスのβフェーズ」とgraph-betaという検証環境を区別する。
 
 ## 第1弾：人間のコミュニティβ
 
@@ -29,7 +29,7 @@ C1aを再利用し、アカウント宛て招待と本人承諾／辞退、期�
 
 ### C3-min：公開に必要な運営対応
 
-[通報・最小安全管理契約](COMMUNITY_SAFETY_MIN.md)に従い、通報窓口、投稿非表示、コミュニティ停止／復帰、最小監査、運営者の限定caseアクセスを実装する。公開・投稿濫用への制限、backup/restoreと削除再適用、privacy説明も公開前条件とする。C1aのarchiveや既存会員停止をコミュニティ通報対応の代用品にしない。
+[通報・最小安全管理契約](COMMUNITY_SAFETY_MIN.md)に従い、通報窓口、投稿非表示、コミュニティ停止／復帰、最小監査、運営者の限定caseアクセスを実装・隔離検証済み、実beta有効化済み。公開・投稿濫用への制限、backup/restoreと削除再適用、privacy説明も公開前条件とする。C1aのarchiveや既存会員停止をコミュニティ通報対応の代用品にしない。
 
 第1弾の必須範囲は **C1a＋C1b＋C3-min＋本番公開前の認証・DB移行・実機・復旧等の検証**。C2は初回公開条件から除外する。コミュニティのCapsule項目は「準備中」として非活性にし、既存の会員個人Capsuleと区別する。高度な審査queueや細かな名簿公開設定で公開を際限なく延ばさない。一方、認可と失効は後回しにしない。
 
@@ -55,8 +55,15 @@ C1/C3の認可・取消を前提とし、Capsuleを扱う範囲にはC2のgrant�
 
 ## 導入と既存機能への影響
 
-005〜007は追加migration。起動時自動適用はしない。`migrateMemberDatabase(pool, true)` を隔離テストだけで実行し、通常の既存migration呼出は従来どおり。旧001〜004のchecksumや保存形式を変更しない。
+005〜007は追加migration。起動時自動適用はしない。`migrateMemberDatabase(pool, true)` を隔離環境で検証済み。本番では承認後に `member-migrate.ts --communities --confirm-origin https://plunode.net` から明示実行する。通常の既存migration呼出は従来どおり。旧001〜004のchecksumや保存形式を変更しない。
 
 実認証は既存Better Auth。会員UserとKG人物は別。member_capsule_thread/post/tokenを転用せず、独立community_thread/postを追加する。会員停止・退会は同じトランザクションでmembership世代を失効させる。005のない旧DBでは既存処理を維持する。機能停止時はflagを外し、tableと既存データを保持する。
 
 本番・既存会員DBへのmigration、KG／収集／Kev変更、AI送信・課金は未実施かつ今回対象外。公開前にはschema運用レビュー、実Googleログイン、iPhone実機、失効・キャッシュ、運営窓口を確認する。
+
+
+## 第1弾の公開準備（2026-10-24）
+
+公開候補77364c5のUIは利用者了承済み。今回の追加は本番Composeのflag受渡しとoperatorへの既存CLI同梱、移行/復旧リハーサルと導入手順。C1a/C1b/C3-minは実装・隔離試験・実beta利用が成立。本番の実コミュニティは未有効化で、本番Google callbackは今回の新buildでは未確認。iPhoneのキーボード/復帰確認・通報窓口/担当/保持期間の承認と、反映直前backupは残る。
+
+現在地と承認事項は[公開準備記録](../verification/COMMUNITY_RELEASE_READINESS_20261024.md)、実行は[本番導入手順](../runbooks/COMMUNITY_FIRST_RELEASE.md)を参照。古いC1記録の『通常環境無効』『実Google未確認』は当時の状態であり、現在の実betaの未実施事項へ戻さない。

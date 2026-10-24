@@ -1,0 +1,39 @@
+{
+  "version": 1,
+  "uiBaseCommit": "77364c529755a593808e2d3964c7988c8a3c3069",
+  "codeCommit": "1aab77e85503a93d4e197021c6ac5cfe849be7ce",
+  "buildId": "onK8GS0bJY9QSo_YevpBS",
+  "betaBuildId": "v2PCWyFKwYZ_uWZZuE5um",
+  "images": {
+    "web": {
+      "tag": "graph-knowledge-web:community-release-20261024",
+      "id": "sha256:4b0f47a48d259db471f774b4315ba8073647d1fb61b5508c6d6f8d208d99fcb4",
+      "platform": "linux/amd64",
+      "manifestId": "sha256:e71b550dafa05bd30faf401d2c9d72056def5c2150243202e0147fc7b8834850",
+      "allowedImageIds": [
+        "sha256:4b0f47a48d259db471f774b4315ba8073647d1fb61b5508c6d6f8d208d99fcb4",
+        "sha256:e71b550dafa05bd30faf401d2c9d72056def5c2150243202e0147fc7b8834850"
+      ]
+    },
+    "ops": {
+      "tag": "graph-knowledge-ops:community-release-20261024",
+      "id": "sha256:c197da9f9d77465cd1d0ecd41ec5da92f9599fccd9db3a86b28d65cf2633f9a1",
+      "platform": "linux/amd64",
+      "manifestId": "sha256:dbe97dd7e9af929ff2336cfe075d3376f7500976e177604718a30a420de47523",
+      "allowedImageIds": [
+        "sha256:c197da9f9d77465cd1d0ecd41ec5da92f9599fccd9db3a86b28d65cf2633f9a1",
+        "sha256:dbe97dd7e9af929ff2336cfe075d3376f7500976e177604718a30a420de47523"
+      ]
+    }
+  },
+  "archive": {
+    "name": "images.tar.gz",
+    "sha256": "25b3abe0d20d9b2cff828654a569b309a4408345d06eb5ac8171c0eacfb20b3d"
+  },
+  "productionApplied": false,
+  "migrations": [
+    "005-communities.sql",
+    "006-community-continuity.sql",
+    "007-community-safety.sql"
+  ]
+}

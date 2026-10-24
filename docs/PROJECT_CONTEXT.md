@@ -1,5 +1,7 @@
 # プロジェクトの構想と判断基準
 
+2026-10-24、コミュニティ第1弾の公開準備を実施。UI候補77364c5と実beta build QNMnJbnTc8UZJnqJgAmV-は利用者了承済み。正式サイトは657f1cf／build N7WjNWiM65EwItM1tux_Y、会員DB000〜004、コミュニティ無効を管理者の読取結果で確認。C1a/C1b/C3-minは実beta利用まで成立。C2は独立後続、AIは第2弾。本番反映・005〜007適用は未承認。[公開準備](verification/COMMUNITY_RELEASE_READINESS_20261024.md)／[導入手順](runbooks/COMMUNITY_FIRST_RELEASE.md)。
+
 2026-10-23、ユーザー承認によりローカル3200／graph-betaの実コミュニティを有効化。独立したbeta会員DBをbackup・一時DBへrestore検証し、005〜007を適用、既存会員・Capsuleを保持。Google認証を継続使用し、fixtureへの置換はしない。3275／graph-comは架空試作、本番は未変更。[反映・検証状況](verification/COMMUNITY_BETA_ACTIVATION_20261023.md)。
 
 2026-10-23、コミュニティC3-minをfeature flag内に実装。通報、管理者非表示、通報対象に限定した監査付き運営確認、サイト停止・アーカイブ復帰、原子的な濫用制限を追加。初回公開条件はC1a／C1b／C3-minと公開前検証へ変更し、C2掲載・Graph連携は独立した後続、AIは第2弾とする。[契約](design/COMMUNITY_SAFETY_MIN.md)／[隔離検証](verification/COMMUNITY_C3_MIN_20261023.md)。通常3200／betaは無効、3275／graph-comは架空試作を維持。本番・既存会員DBへの適用は未実施。

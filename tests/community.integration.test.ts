@@ -195,3 +195,12 @@ it('投稿位置を認可後に解決し、取得上限の先・前後のペー�
  expect((await call('/threads/'+tid+'?post='+target,b)).status).toBe(404);
  const lost=await(await call('/my-posts?limit=50',b)).json();const inaccessible=lost.posts.find((p:{id:string})=>p.id===recent.id);expect(inaccessible.readable).toBe(false);expect(inaccessible).not.toHaveProperty('threadTitle');expect(inaccessible).not.toHaveProperty('threadId');expect(inaccessible).not.toHaveProperty('communityTitle');expect(inaccessible.body).toBeTruthy();expect((await call('/posts/'+target+'/withdraw',b,{})).status).toBe(200);
 });
+
+it('追加schemaの後も実認証で個人Capsuleを保存・更新・再閲覧し、非所有者へ漏らさない',async()=>{
+ const collection=await import('../app/api/member/capsules/route');const item=await import('../app/api/member/capsules/[id]/route');
+ const content={dataset:'demo',title:'Existing personal Capsule',note:'Synthetic migration regression',language:'ja',entityIds:[randomUUID()],claimIds:[]};
+ const saved=await collection.POST(request('/api/member/capsules',a.cookie,'POST',{requestId:randomUUID(),content}));expect(saved.status).toBe(201);const capsule=(await saved.json()).capsule;const ctx={params:Promise.resolve({id:capsule.id})};
+ expect((await item.GET(request('/api/member/capsules/'+capsule.id,a.cookie),ctx)).status).toBe(200);expect((await item.GET(request('/api/member/capsules/'+capsule.id,b.cookie),ctx)).status).toBe(404);
+ const updated=await item.PUT(request('/api/member/capsules/'+capsule.id,a.cookie,'PUT',{expectedRevision:1,content:{...content,title:'Updated own Capsule'}}),ctx);expect(updated.status).toBe(200);expect((await(await item.GET(request('/api/member/capsules/'+capsule.id,a.cookie),ctx)).json()).capsule.revision).toBe(2);
+ const count=(await memberRuntime().pool.query('SELECT count(*) FROM community')).rows[0].count;expect((await item.DELETE(request('/api/member/capsules/'+capsule.id,a.cookie,'DELETE',{expectedRevision:2}),ctx)).status).toBe(200);expect((await memberRuntime().pool.query('SELECT count(*) FROM community')).rows[0].count).toBe(count);
+});
