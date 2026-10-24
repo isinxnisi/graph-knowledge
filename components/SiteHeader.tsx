@@ -54,7 +54,7 @@ export default function SiteHeader({ dataset, page = "explore", onBeforeAccountN
   }
   function closeAccount(event: React.MouseEvent<HTMLAnchorElement>) {
     if (onBeforeAccountNavigation && !onBeforeAccountNavigation()) { event.preventDefault(); return; }
-    const target=new URL(event.currentTarget.href,location.origin);if(target.pathname===location.pathname&&target.search===location.search&&target.hash){event.preventDefault();navigatePersonalHash(target.hash);}
+    const target=new URL(event.currentTarget.href,location.origin);if(target.pathname===location.pathname&&target.search===location.search&&(target.hash||location.hash)){event.preventDefault();navigatePersonalHash(target.hash);}
     if (accountMenu.current) accountMenu.current.open = false;
   }
   async function signOut() {

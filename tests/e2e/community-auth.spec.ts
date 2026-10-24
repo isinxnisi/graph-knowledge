@@ -34,3 +34,20 @@ test('pending invitation arrives without document reload and survives viewing',a
  await page.route('**/api/communities/invitations/summary',r=>r.fulfill({status:503,json:{error:{code:'UNAVAILABLE'}}}));await page.evaluate(()=>window.dispatchEvent(new Event('focus')));await expect(page.getByTestId('site-header').locator('summary [role="status"]')).toHaveAttribute('aria-label','招待件数を確認できません');await expect(page.getByTestId('site-header').locator('summary [role="status"]')).toHaveText('!');
  }finally{await other.close();}
 });
+
+for(const width of [1440,390])test(`fragment removal returns to directory without stuck revalidation ${width}`,async({page})=>{
+ await page.setViewportSize({width,height:900});
+ await login(page);
+ await page.goto('/communities#%2Finvitations');
+ await expect(page.getByRole('heading',{name:'届いた招待',exact:true})).toBeVisible();
+ if(width<800){await page.getByTestId('site-header').getByLabel('サイトメニュー',{exact:true}).click();await page.getByTestId('site-header').getByRole('link',{name:'コミュニティを見つける',exact:true}).click();}else await page.getByTestId('site-header').getByRole('link',{name:'コミュニティ',exact:true}).click();
+ await expect(page).toHaveURL(/\/communities$/);
+ await expect(page.locator('main [inert]')).toHaveCount(0);
+ await expect(page.getByRole('heading',{name:'関心を持ち寄る場所',exact:true})).toBeVisible();
+ await page.goBack();await expect(page.getByRole('heading',{name:'届いた招待',exact:true})).toBeVisible();
+ await page.goForward();await expect(page.getByRole('heading',{name:'関心を持ち寄る場所',exact:true})).toBeVisible();
+ await followPersonal(page,'コミュニティの投稿');
+ await followPersonal(page,'コミュニティを見つける');
+ await expect(page.locator('main [inert]')).toHaveCount(0);
+ await expect(page.getByRole('heading',{name:'関心を持ち寄る場所',exact:true})).toBeVisible();
+});
