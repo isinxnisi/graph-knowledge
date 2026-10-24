@@ -228,3 +228,5 @@ Phase 08：任意のEntity関係俯瞰、明示起点切替、直前一件復帰
 - コミュニティ第1弾の[本番公開準備](verification/COMMUNITY_RELEASE_READINESS_20261024.md)／[導入・停止・運営手順](runbooks/COMMUNITY_FIRST_RELEASE.md)：77364c5のUI了承を基準に、本番の読取確認・005〜007の隔離移行/別DB復元・運営CLI試験を整理。本番反映は別承認。
 
 - サイト運営Web初版：[契約](design/SITE_OPERATIONS.md)／[操作・指定・解除](runbooks/SITE_OPERATIONS.md)／[隔離・beta検証](verification/SITE_OPERATIONS_20261025.md)。一般会員・コミュニティ管理者とは別のサーバー明示許可。追加008、本番反映は別承認。
+
+- サイト運営の[密度・対応待ち通知・限定投稿者確認](verification/OPERATIONS_DENSITY_20261025.md)：4c43b17 / 実beta反映、同幅の比較画像と認可・更新・保存の重点検証。本番は別承認。

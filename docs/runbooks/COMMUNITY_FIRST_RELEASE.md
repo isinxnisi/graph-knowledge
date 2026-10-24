@@ -1,5 +1,7 @@
 # コミュニティ第1弾：本番導入・停止・最小運営
 
+> **2026-10-25追加**：[密度・対応待ち通知・限定投稿者確認](../verification/OPERATIONS_DENSITY_20261025.md)のWeb候補4c43b17 / beta build QYCiGHONsgFhzp5KqgFEpが最新。e974cb7から新migrationはない。本番imageの固定・正式origin確認は別承認のまま。
+
 > **2026-10-25更新**：運営Web初版の追加により、以下の1aab77e image／旧manifestを新しい公開候補としてそのまま使わない。[追加契約](../design/SITE_OPERATIONS.md)・[運営手順](SITE_OPERATIONS.md)・[新検証記録](../verification/SITE_OPERATIONS_20261025.md)を照合し、新候補の本番形式build/imageを固定し直す。本番の構成・認証・DBは今回未変更。
 >
 > 新候補を本番へ適用する際は、下記の順序を維持して `member-migrate.ts --site-operations --confirm-origin https://plunode.net` を使い、未適用005〜008（ledger計9件）を単一transactionで追加する。既存000〜004と005〜007のchecksumは変更しない。Webの `SITE_OPERATIONS_ENABLED`、`SITE_OPERATOR_USER_IDS` 受渡しを必要最小限だけ追加し、当初は0／空。本番で確認した本人UUIDと別承認後だけ有効化する。betaの許可IDをコピーしない。機能停止は運営flag=0＋Webのみ再起動、008と記録は保持する。旧コミュニティ対応buildへの切替は可能だが、コミュニティ失効処理を持たない本番旧buildへ安易に戻さない。
