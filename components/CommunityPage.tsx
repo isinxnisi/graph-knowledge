@@ -1,5 +1,5 @@
 "use client";
-import {usePersonalHash} from '../lib/client/personal-location';
+import {usePersonalHash,navigatePersonalHash} from '../lib/client/personal-location';
 import {useCallback,useEffect,useRef,useState} from 'react';
 import {type Community} from '../lib/domain/community';
 import {useCommunitySession,type CommunityMutation} from '../lib/client/use-community-session';
@@ -25,7 +25,7 @@ export default function CommunityPage(){
  const {data,user,authStatus,busy,blocked,error,notice,epoch,load,mutate:send}=useCommunitySession(route,reset,hash!==null&&route===readRoute(hash));
  useEffect(()=>{const change=()=>{scrolls.current.set(lastRoute.current,window.scrollY);const next=readRoute(location.hash.slice(1)||location.search);lastRoute.current=next;restoreScroll.current=true;setRoute(next);reset();setTab(next.includes('/safety-log')?'safety':next.includes('/invitations')?'invitations':new URL(next||'/',location.origin).searchParams.get('tab')==='manage'?'manage':'threads');};change();addEventListener('hashchange',change);addEventListener('popstate',change);return()=>{removeEventListener('hashchange',change);removeEventListener('popstate',change);};},[reset]);
  useEffect(()=>{if(data&&!blocked&&restoreScroll.current){restoreScroll.current=false;requestAnimationFrame(()=>scrollTo(0,scrolls.current.get(lastRoute.current)||0));}},[data,blocked]);
- const mutate:CommunityMutation=async(path,input,idempotent=false)=>{const result=await send(path,input,idempotent);if(result.ok){if(path===''||path.endsWith('/threads')||path.endsWith('/posts')){setTitle('');setBody('');setCreating(false);}if(path.endsWith('/leave'))location.hash='?mine=1';}return result;};
+ const mutate:CommunityMutation=async(path,input,idempotent=false)=>{const result=await send(path,input,idempotent);if(result.ok){if(path===''||path.endsWith('/threads')||path.endsWith('/posts')){setTitle('');setBody('');setCreating(false);}if(path.endsWith('/leave'))navigatePersonalHash('?mine=1');}return result;};
  const c=data?.community,thread=data?.thread,active=c?.status==='active',member=!!c?.role;
  const change=(action:string,extra:Record<string,unknown>={})=>c&&mutate('/'+c.id+'/'+action,{expectedRevision:c.revision,...extra});
  const link=(path:string)=>'#'+encodeURIComponent(path);
@@ -35,7 +35,7 @@ export default function CommunityPage(){
  const paging=(cursor:string|null|undefined,members=false)=><nav className={css.paging} aria-label={members?t('メンバーのページ','Member pages'):t('一覧のページ','List pages')}>{isPaged&&<a href={link(pageTrail[route]??(route.split('?')[0]+(route.includes('mine=1')?'?mine=1':route.includes('tab=manage')?'?tab=manage':'')))}>← {Object.hasOwn(pageTrail,route)?t('前のページ','Previous page'):t('最初のページ','First page')}</a>}{cursor&&<button disabled={busy} onClick={()=>nextPage(cursor,members)}>{t('次のページ','Next page')} →</button>}</nav>;
 
  const row=(x:Community)=><article className={css.row} key={x.id}><div><strong>{x.title}</strong><p>{x.description}</p><small>{x.visibility==='public'?t('公開','Public'):t('メンバー限定','Members only')} · {x.status==='active'?t('活動中','Active'):t('アーカイブ','Archived')}</small></div><a className={css.primary} href={link('/'+x.id)}>{t('この場所へ','Visit')} →</a></article>;
- return <main className={css.shell}>
+ return <main className={css.shell} onClick={event=>{if(event.defaultPrevented||event.button!==0||event.metaKey||event.ctrlKey||event.shiftKey||event.altKey)return;const anchor=(event.target as Element).closest('a');if(anchor?.getAttribute('href')?.startsWith('#')){event.preventDefault();navigatePersonalHash(anchor.hash);}}}>
  {error&&<p role="alert">{/_RATE_LIMIT$/.test(error)?t('短時間の操作上限に達しました。しばらく待ってから再試行してください。','Too many requests in a short period. Please wait before retrying.'):t('取得・操作を完了できませんでした。権限や状態が変わった可能性があります。再読み込みしてください。','The request could not be completed. Permissions or state may have changed. Refresh and retry.')} <button onClick={()=>void load(true)}>{t('再読み込み','Refresh')}</button>{['INVALID_CURSOR','PAGE_CHANGED'].includes(error)&&<a href={link(route.split('?')[0]+(route.includes('mine=1')?'?mine=1':route.includes('tab=manage')?'?tab=manage':''))}>{t('最初のページから確認','Restart from the first page')}</a>}</p>}
  {busy&&!data&&<p role="status">{t('確認中…','Loading…')}</p>}
  {blocked&&data&&<p role="status">{t('閲覧権限を再確認しています。入力はこの画面内に保持しています。','Checking access. Your draft is kept in memory on this page.')}</p>}
