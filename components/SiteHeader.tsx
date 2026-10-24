@@ -78,26 +78,35 @@ export default function SiteHeader({ dataset, page = "explore", onBeforeAccountN
       <p className={styles.dataset}>{data.badge}</p>
     </div>
     <p className={styles.description}>{data.description}</p>
-    <div className={styles.tools}>{communitiesEnabled&&<Link href="/communities" onClick={closeAccount}>{locale==="en"?"Communities":"コミュニティ"}</Link>}
+    <div className={styles.tools}>{communitiesEnabled&&<Link className={styles.communityLink} href="/communities" onClick={closeAccount}>{locale==="en"?"Communities":"コミュニティ"}</Link>}
       <Link className={styles.supportLink} href={localizedPublicHref("/support", locale)} onClick={closeAccount} aria-current={page === "support" ? "page" : undefined}><Icon name="heart" /><span>{supportLabels(locale).link}</span></Link>
       <nav aria-label={text.navigation} className={styles.navigation}>
         {page !== "explore" && <Link className={styles.exploreReturn} href={returnHref} aria-label={text.exploreLink} title={text.exploreLink}><Icon name="back" /><span>{text.explore}</span></Link>}
         {currentUser ? <details className={`${styles.settings} ${styles.accountMenu}`} data-floating-menu ref={accountMenu} onToggle={event => { if (event.currentTarget.open && menu.current) menu.current.open = false; }}>
-          <summary aria-label={text.memberLink(displayName)} title={text.signedInAs(displayName)} data-signed-in="true">{mark}<span className={styles.accountLabel}>{displayName}</span>{communitiesEnabled&&<InvitationBadge/>}<Icon name="chevron" /></summary>
+          <summary aria-label={locale==="en"?"Site menu":"サイトメニュー"} title={text.signedInAs(displayName)} data-signed-in="true"><span className={styles.desktopMark}>{mark}</span><span className={styles.mobileMenuLabel}><Icon name="list"/>{locale==="en"?"Menu":"メニュー"}</span><span className={styles.accountLabel}>{displayName}</span>{communitiesEnabled&&<InvitationBadge/>}<Icon name="chevron" /></summary>
           <div className={styles.settingsPanel}>
+            <div className={styles.mobileDestinations}><Link href={returnHref} onClick={closeAccount}><Icon name="back"/>{text.exploreLink}</Link>{communitiesEnabled&&<Link href="/communities" onClick={closeAccount}><Icon name="search"/>{locale==="en"?"Discover communities":"コミュニティを見つける"}</Link>}</div>
             {communitiesEnabled&&<Link href="/communities#%2Finvitations" onClick={closeAccount}>{locale==="en"?"Received invitations":"届いた招待"}<InvitationBadge/></Link>}
             <p className={styles.accountIdentity}><strong>{displayName}</strong><span>{text.signedIn}</span></p>
             <nav aria-label={text.accountNavigation} className={styles.settingsLinks}>
               {communitiesEnabled&&<Link href="/communities#%3Fmine%3D1" onClick={closeAccount}>{locale==="en"?"Joined & managed":"参加・運営"}</Link>}
               <Link href={page === "member" ? "#my-capsules" : "/member#my-capsules"} onClick={closeAccount}><Icon name="capsule" />{text.library}</Link>
               <Link href={page === "member" ? "#account-settings" : "/member#account-settings"} onClick={closeAccount}><Icon name="person" />{text.accountSettings}</Link>
-              <Link href={page === "member" ? "#my-posts" : "/member#my-posts"} onClick={closeAccount}><Icon name="book" />{text.posts}</Link>
+              <Link href={page === "member" ? "#my-posts" : "/member#my-posts"} onClick={closeAccount}><Icon name="book" />{locale==="en"?"Capsule comments":"Capsuleのコメント"}</Link>
             </nav>
             <button className={styles.logout} disabled={accountBusy || signingOut} onClick={() => void signOut()}>{text.logout}</button>
             {logoutError && <p role="alert">{text.logoutFailed}</p>}
           </div>
         </details> : identity.status!=="guest" ? <span className={styles.accountPending} role="status">{locale==="en"?(identity.error?"Account unavailable":"Checking account…"):(identity.error?"認証確認に失敗":"認証を確認中…")}{identity.error&&<button onClick={()=>void refreshMemberIdentity(true).catch(()=>{})}>{locale==="en"?"Retry":"再試行"}</button>}</span> : <Link href={page === "member" ? "#member-login" : "/member"} onClick={closeAccount} aria-label={text.accountLink} data-signed-in="false"><Icon name="person" /><span>{text.accountLink}</span></Link>}
       </nav>
+      {!currentUser&&<details className={styles.mobileGuestMenu} ref={accountMenu} data-floating-menu onToggle={event=>{if(event.currentTarget.open&&menu.current)menu.current.open=false;}}>
+        <summary aria-label={locale==="en"?"Site menu":"サイトメニュー"}><Icon name="list"/>{locale==="en"?"Menu":"メニュー"}{identity.status!=="guest"&&<span className={styles.mobileAccountStatus} role="status">{identity.error?(locale==="en"?"Account unavailable":"認証確認に失敗"):(locale==="en"?"Checking account…":"認証を確認中…")}</span>}</summary>
+        <div className={styles.settingsPanel}><nav className={styles.settingsLinks}>
+          <Link href={returnHref} onClick={closeAccount}><Icon name="back"/>{text.exploreLink}</Link>
+          {communitiesEnabled&&<Link href="/communities" onClick={closeAccount}><Icon name="search"/>{locale==="en"?"Discover communities":"コミュニティを見つける"}</Link>}
+          {identity.status==="guest"?<Link href="/member" onClick={closeAccount}><Icon name="person"/>{text.accountLink}</Link>:<p>{identity.error?(locale==="en"?"Account unavailable":"認証確認に失敗"):(locale==="en"?"Checking account…":"認証を確認中…")}{identity.error&&<button onClick={()=>void refreshMemberIdentity(true).catch(()=>{})}>{locale==="en"?"Retry":"再試行"}</button>}</p>}
+        </nav></div>
+      </details>}
       <details data-floating-menu className={styles.settings} ref={menu} onToggle={event => { if (event.currentTarget.open && accountMenu.current) accountMenu.current.open = false; }}>
         <summary aria-label={text.settings} title={text.settings}><Icon name="settings" /><span className={styles.toolLabel}>{text.settings}</span></summary>
         <div className={styles.settingsPanel}>

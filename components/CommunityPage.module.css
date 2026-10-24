@@ -4,3 +4,20 @@
 @media(max-width:760px){.shell{padding:18px 16px 32px}.heading{gap:12px;margin-bottom:20px}.heading h1,.shell section>h1{font-size:23px}.heading p{font-size:13px}.communityHeading{display:block;padding-bottom:14px;margin-bottom:0}.communityHeading>div:last-child{margin-top:12px;justify-content:flex-end}.placeTitle{align-items:flex-start}.mark{width:36px;height:36px;flex-basis:36px;border-radius:11px}.tabs{gap:18px;margin-bottom:18px}.row{gap:12px;flex-wrap:wrap;padding:16px 0;align-items:flex-start}.row>div:first-child{flex-basis:100%}.row>.actions,.row>.readAction,.row>.primary{margin-left:auto}.row small{font-size:11.5px}.titleLink{font-size:15px!important}.sectionHeading{align-items:flex-start;margin-top:20px}.sectionHeading h2{font-size:17px}.sectionHeading p{display:none}.sectionHeading .primary{padding:7px 10px;font-size:12px}.conversation{margin-top:16px}.conversation h1{font-size:23px}.post{gap:10px;padding:20px 0}.post p{font-size:14px;line-height:1.85}.avatar{width:29px;height:29px;flex-basis:29px;font-size:12px}.postMeta time{font-size:10.5px}.post[data-focused=true]{padding:18px 10px}.reply{padding:15px;margin-top:20px}.replyFooter{align-items:flex-end}.replyFooter small{max-width:55%;font-size:11px}.composer{padding:2px 14px 12px;margin-top:18px}.form{max-width:100%;gap:14px}.form .row>div:first-child{flex-basis:auto}.form .row{flex-wrap:wrap}.dialog{padding:20px}.dialog h2{font-size:18px}.loginPrompt{align-items:flex-start;flex-direction:column;padding:14px;gap:10px}.menuPanel{width:210px}.identity{padding:12px}.actions{gap:8px}}
 @media(prefers-reduced-motion:no-preference){.row a,.menu summary,.shell button{transition:background-color .15s,color .15s}.post[data-focused=true]{animation:focusArrive .3s ease-out}@keyframes focusArrive{from{background:#dbecee}to{background:var(--community-soft)}}}
 .menu[data-above=true]>.menuPanel{top:auto;bottom:calc(100% + 6px)}
+
+/* The place title and its actions stay together at every width. */
+.shell .communityHeading{display:block}
+.shell .placeHeading{display:flex;align-items:flex-start;gap:12px;min-width:0}
+.placeHeading h1,.placeHeading>.belonging{flex:1;min-width:0;margin-top:4px}
+.placeHeading>.menu{margin-top:5px}
+.shell .communityHeading>.placeStatus{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:10px;flex-wrap:nowrap}
+.placeStatus small{min-width:0}
+:global(:root:not([data-theme^="dark"])) .shell{--color-muted:#506478;--color-border:#cdd6da;--community-soft:#e8f1f3}
+:global(:root[data-theme^="dark"]) .shell{--community-blue:var(--color-accent);--community-soft:var(--color-hover)}
+:global(:root[data-theme^="dark"]) .shell .primary{color:var(--color-on-accent)}
+:global(:root[data-theme^="dark"]) .shell [role=alert]{background:var(--color-denied-soft)}
+.shell .tabs button:disabled{opacity:1;color:var(--color-muted);border-bottom-style:dashed;cursor:not-allowed}
+@media(max-width:760px){
+ .placeHeading{gap:8px}.placeTitle{gap:9px}.placeHeading .menu summary{min-width:22px;min-height:26px}
+ .shell .communityHeading>.placeStatus{margin-top:8px}
+}

@@ -111,3 +111,27 @@
 
 .accountPending{display:inline-flex;align-items:center;min-width:96px;min-height:36px;font-size:12px;color:var(--color-muted)}
 @media(max-width:800px){.header .navigation > .accountPending{display:block;width:88px;min-width:0;max-width:88px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;line-height:44px;padding:0 5px;font-weight:400;background:transparent;border-color:transparent}.header .navigation > .accountPending:has(button){height:auto;line-height:1.5;white-space:normal}.header .accountPending button{min-height:28px}}
+
+/* Mobile: one explicit site menu, with identity inside rather than an unexplained initial. */
+.mobileMenuLabel,.mobileDestinations,.mobileGuestMenu{display:none}.desktopMark{display:inline-flex}
+:global(:root:not([data-theme^="dark"])) .header{--color-border:#cdd6da;--color-muted:#506478}
+@media(max-width:800px){
+ .header .communityLink,.header .exploreReturn{display:none}
+ .header .identity{flex:1;max-width:none}.tools{flex:0 0 auto;gap:4px}
+ .header .accountMenu .desktopMark,.header .accountMenu .accountLabel,.header .accountMenu>summary>:global(.ui-icon:last-child){display:none}
+ .header .accountMenu>summary{max-width:none;width:auto;padding:0 8px;gap:4px}
+ .mobileMenuLabel{display:inline-flex;align-items:center;gap:7px;font-size:13px;color:var(--color-text)}
+ .mobileMenuLabel svg,.mobileGuestMenu summary svg{width:17px;height:17px}
+ .mobileDestinations{display:grid;gap:2px;padding-bottom:10px;margin-bottom:10px;border-bottom:1px solid var(--color-border)}
+ .header .mobileDestinations a{width:100%;justify-content:flex-start;white-space:normal;gap:8px}
+ .header .accountMenu .settingsPanel{right:-48px;width:min(280px,calc(100vw - 24px));padding:12px}
+ .header .accountMenu .settingsPanel a,.header .accountMenu .logout{min-height:36px;font-size:13px}
+ .header .accountIdentity{margin-top:10px;margin-bottom:6px;padding-bottom:8px}
+ .header .navigation:has(>a[data-signed-in=false]),.header .navigation:has(>.accountPending){display:none}
+ .header .mobileGuestMenu{display:block;position:relative;flex:0 0 auto}
+ .mobileGuestMenu summary{display:flex;align-items:center;gap:7px;min-height:44px;padding:0 8px;list-style:none;cursor:pointer;font-size:13px}
+ .mobileGuestMenu summary::-webkit-details-marker{display:none}
+ .mobileGuestMenu .settingsPanel{right:-48px;width:min(280px,calc(100vw - 24px))}
+}
+@media(max-width:800px){.header .navigation>.exploreReturn{display:none}.header .accountMenu .settingsPanel>a{display:flex;width:100%;justify-content:flex-start;white-space:normal;gap:8px}.header .accountMenu .settingsPanel a{height:auto;min-height:36px}.header .accountMenu .settingsPanel .accountIdentity{margin-top:8px}}
+.mobileAccountStatus{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
