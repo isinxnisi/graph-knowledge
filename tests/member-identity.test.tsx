@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 import {act,cleanup,renderHook} from '@testing-library/react';
 import {afterEach,beforeEach,expect,it,vi} from 'vitest';
-import {useMemberSession,usePendingInvitations,refreshMemberIdentity,refreshPendingInvitations,invalidateMemberIdentity} from '../lib/client/use-member-identity';
+import {useMemberSession,usePendingInvitations,refreshMemberIdentity,refreshPendingInvitations,invalidateMemberIdentity,useOperationsSummary,refreshOperationsSummary,updateOperationsSummaryAfterAction} from '../lib/client/use-member-identity';
 const fetcher=vi.fn(),user={id:'00000000-0000-4000-8000-000000000001',name:'A',locale:'ja'};
 beforeEach(()=>{vi.stubGlobal('fetch',fetcher);fetcher.mockReset();invalidateMemberIdentity();});
 afterEach(()=>{cleanup();vi.unstubAllGlobals();});
@@ -20,4 +20,19 @@ it('別User・ログアウト通知後の旧応答を共有表示へ採用しな
 });
 it('招待は未取得・失敗を0とせず、一覧を見ても消費せず、別Userへ漏らさない',async()=>{
  fetcher.mockResolvedValueOnce(Response.json({user}));await refreshMemberIdentity();const {result}=renderHook(()=>usePendingInvitations());expect(result.current.count).toBeNull();fetcher.mockResolvedValueOnce(Response.json({pendingCount:12}));await act(async()=>{await refreshPendingInvitations();});expect(result.current.count).toBe(12);fetcher.mockRejectedValueOnce(new Error('offline'));await act(async()=>{await refreshPendingInvitations();});expect(result.current.status).toBe('error');expect(result.current.count).toBeNull();act(()=>invalidateMemberIdentity());expect(result.current.owner).toBeNull();
+});
+
+const counts={pendingCount:4,reports:3,recoveries:1,dueSoon:1,expiredReports:0,nextDeadline:null};
+it('運営件数は共有・低頻度で、未取得/失敗を0とせず、一般会員は要求しない',async()=>{
+ fetcher.mockResolvedValueOnce(Response.json({user}));await refreshMemberIdentity();await refreshOperationsSummary();expect(fetcher).toHaveBeenCalledTimes(1);
+ fetcher.mockResolvedValueOnce(Response.json({user:{...user,siteOperator:true}}));await refreshMemberIdentity(true);
+ const {result}=renderHook(()=>useOperationsSummary());expect(result.current.data).toBeNull();fetcher.mockResolvedValueOnce(Response.json(counts));await act(async()=>{await Promise.all([refreshOperationsSummary(),refreshOperationsSummary()]);});expect(result.current.data?.pendingCount).toBe(4);const calls=fetcher.mock.calls.length;await refreshOperationsSummary();expect(fetcher).toHaveBeenCalledTimes(calls);
+ fetcher.mockRejectedValueOnce(new Error('offline'));await act(async()=>{await refreshOperationsSummary(true);});expect(result.current.status).toBe('error');expect(result.current.data).toBeNull();
+ act(()=>invalidateMemberIdentity());expect(result.current.owner).toBeNull();
+});
+it('処置前の遅い件数と別Userへの応答を採用しない',async()=>{
+ fetcher.mockResolvedValueOnce(Response.json({user:{...user,siteOperator:true}}));await refreshMemberIdentity();const {result}=renderHook(()=>useOperationsSummary());
+ let oldResolve!:(r:Response)=>void;fetcher.mockImplementationOnce(()=>new Promise(r=>{oldResolve=r;}));let old!:Promise<void>;act(()=>{old=refreshOperationsSummary();});
+ fetcher.mockResolvedValueOnce(Response.json({...counts,pendingCount:3,reports:2}));await act(async()=>{await updateOperationsSummaryAfterAction();oldResolve(Response.json(counts));await old;});expect(result.current.data?.pendingCount).toBe(3);
+ fetcher.mockImplementationOnce(()=>new Promise(r=>{oldResolve=r;}));act(()=>{old=refreshOperationsSummary(true);invalidateMemberIdentity();});fetcher.mockResolvedValueOnce(Response.json({user:{...user,id:'00000000-0000-4000-8000-000000000002'}}));await act(async()=>{await refreshMemberIdentity();oldResolve(Response.json(counts));await old;});expect(result.current.data).toBeNull();
 });

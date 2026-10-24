@@ -19,13 +19,14 @@ export function refreshMemberIdentity(force=false):Promise<MemberUser|null>{
  pending=(async()=>{try{
   const {user}=await memberRequest('/api/member/profile',memberProfileSchema);
   if(seq!==sequence)throw new Error('IDENTITY_CHANGED');
+  if(state.user?.id!==user.id||!user.siteOperator)clearOperationsSummary();
   checkedAt=Date.now();publish({status:'authenticated',user,rechecking:false,error:false,version:state.version+(state.user?.id!==user.id?1:0)});return user;
  }catch(e){if(seq!==sequence)throw e;
-  if(e instanceof MemberClientError&&e.status===401){checkedAt=Date.now();publish({status:'guest',user:null,rechecking:false,error:false,version:state.version+(state.user?1:0)});return null;}
+  if(e instanceof MemberClientError&&e.status===401){clearOperationsSummary();checkedAt=Date.now();publish({status:'guest',user:null,rechecking:false,error:false,version:state.version+(state.user?1:0)});return null;}
   publish({...state,status:state.user?'authenticated':'error',rechecking:false,error:true});throw e;
  }finally{if(seq===sequence)pending=null;}})();return pending;
 }
-export function invalidateMemberIdentity(){sequence++;pending=null;checkedAt=0;publish({...initial,version:state.version+1});clearInvitations();}
+export function invalidateMemberIdentity(){sequence++;pending=null;checkedAt=0;publish({...initial,version:state.version+1});clearInvitations();clearOperationsSummary();}
 export function useMemberIdentity(enabled=true){const value=useMemberSession();return enabled?value.user:null;}
 type Invitations={owner:string|null;status:'checking'|'ready'|'error';count:number|null};
 const initialInvites:Invitations={owner:null,status:'checking',count:null};
@@ -45,10 +46,33 @@ export function refreshPendingInvitations(){
  }catch{if(generation===inviteGeneration&&state.user?.id===user.id)publishInvitations({owner:user.id,status:'error',count:null});}
  finally{if(generation===inviteGeneration)invitePending=null;}})();return invitePending;
 }
+export const operationsSummarySchema=z.object({pendingCount:z.number().int().nonnegative(),reports:z.number().int().nonnegative(),recoveries:z.number().int().nonnegative(),dueSoon:z.number().int().nonnegative(),expiredReports:z.number().int().nonnegative(),nextDeadline:z.string().nullable()});
+type OperationsSummary={owner:string|null;status:'checking'|'ready'|'error';data:z.infer<typeof operationsSummarySchema>|null};
+const initialOperations:OperationsSummary={owner:null,status:'checking',data:null};
+let operations=initialOperations,operationsPending:Promise<void>|null=null,operationsGeneration=0,operationsCheckedAt=0;
+const operationsListeners=new Set<()=>void>();
+function publishOperations(value:OperationsSummary){operations=value;operationsListeners.forEach(fn=>fn());}
+function clearOperationsSummary(){operationsGeneration++;operationsPending=null;operationsCheckedAt=0;publishOperations(initialOperations);}
+export function useOperationsSummary(){const identity=useMemberSession();const value=useSyncExternalStore(fn=>{operationsListeners.add(fn);return()=>{operationsListeners.delete(fn);};},()=>operations,()=>initialOperations);return identity.error?{...initialOperations,status:'error' as const}:identity.user?.siteOperator&&identity.user.id===value.owner?value:initialOperations;}
+// A completed mutation invalidates an older in-flight summary without hiding
+// a known count during the fresh request. Old responses cannot overwrite it.
+export function updateOperationsSummaryAfterAction(){operationsGeneration++;operationsPending=null;operationsCheckedAt=0;return refreshOperationsSummary(true);}
+export function refreshOperationsSummary(force=false){
+ const user=state.user;if(!user?.siteOperator||state.status!=='authenticated'||state.error){clearOperationsSummary();return Promise.resolve();}
+ if(operations.owner!==user.id){clearOperationsSummary();publishOperations({owner:user.id,status:'checking',data:null});}
+ if(operationsPending)return operationsPending;
+ if(!force&&operations.status==='ready'&&Date.now()-operationsCheckedAt<25000)return Promise.resolve();
+ const generation=operationsGeneration,version=state.version;
+ operationsPending=(async()=>{try{
+  const data=await memberRequest('/api/site-operations/summary',operationsSummarySchema,{user:user.id});
+  if(generation===operationsGeneration&&state.version===version&&state.user?.id===user.id&&state.user.siteOperator){operationsCheckedAt=Date.now();publishOperations({owner:user.id,status:'ready',data});}
+ }catch{if(generation===operationsGeneration&&state.version===version&&state.user?.id===user.id)publishOperations({owner:user.id,status:'error',data:null});}
+ finally{if(generation===operationsGeneration)operationsPending=null;}})();return operationsPending;
+}
 export function MemberIdentityProvider({children,communityEnabled}:{children:ReactNode;communityEnabled:boolean}){
  useEffect(()=>{
   let lastFocus=0;
-  const update=()=>{if(document.hidden)return;void refreshMemberIdentity(true).then(()=>{if(communityEnabled)void refreshPendingInvitations();}).catch(()=>{});};
+  const update=()=>{if(document.hidden)return;void refreshMemberIdentity(true).then(()=>{if(communityEnabled)void refreshPendingInvitations();void refreshOperationsSummary();}).catch(()=>{});};
   const focus=()=>{if(Date.now()-lastFocus<1000)return;lastFocus=Date.now();update();};
   const auth=()=>{invalidateMemberIdentity();update();};
   const storage=(e:StorageEvent)=>{if(e.key===null||e.key==='graph-knowledge:member-session-changed')auth();};

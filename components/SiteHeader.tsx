@@ -6,7 +6,7 @@ import Link from "next/link";
 import {personalNavigation,personalSection} from "../lib/client/personal-navigation";
 import InvitationBadge from "./InvitationBadge";
 import Icon from "./Icon";
-import { useMemberSession, refreshMemberIdentity } from "../lib/client/use-member-identity";
+import { useMemberSession, refreshMemberIdentity, useOperationsSummary } from "../lib/client/use-member-identity";
 import { memberRequest, type MemberUser } from "../lib/client/member-api";
 import { z } from "zod";
 import { explorationReturnHref, notifyMemberSessionChange } from "../lib/client/account-navigation";
@@ -26,6 +26,10 @@ export default function SiteHeader({ dataset, page = "explore", onBeforeAccountN
   const ui = explorerLabels(locale), text = siteLabels(locale), data = datasetLabels(dataset, locale);
   const identity = useMemberSession();
   const currentUser = identity.user;
+  const operations=useOperationsSummary();
+  const operationsLabel=locale==='en'?'Site operations':'サイト運営';
+  const pendingLabel=operations.status==='ready'?`${locale==='en'?'Pending':'未対応'} ${operations.data?.pendingCount}`:operations.status==='error'?(locale==='en'?'Pending count unavailable':'未対応件数を確認できません'):(locale==='en'?'Checking pending cases':'未対応件数を確認中');
+  const operationsBadge=<span className={styles.operationsBadge} role="status" data-pending={operations.status==='ready'&&!!operations.data?.pendingCount} aria-label={pendingLabel} title={pendingLabel}>{operations.status==='ready'?(operations.data!.pendingCount>99?'99+':operations.data!.pendingCount):operations.status==='error'?'!':'…'}</span>;
   const displayName = currentUser?.name.trim() || text.account;
   const mark = currentUser ? <span className={styles.memberMark} aria-hidden="true">{Array.from(displayName)[0]}</span> : <Icon name="person" />;
   const [appearance, setAppearance] = useState(defaultAppearance);
@@ -84,6 +88,7 @@ export default function SiteHeader({ dataset, page = "explore", onBeforeAccountN
     </div>
     <p className={styles.description}>{data.description}</p>
     <div className={styles.tools}>
+      {currentUser?.siteOperator&&<Link className={styles.operationsEntry} href="/operations" onClick={closeAccount} aria-label={operationsLabel} title={operationsLabel+" · "+pendingLabel}><Icon name="shield"/><span className={styles.toolLabel}>{locale==='en'?'Operations':'運営'}</span>{operationsBadge}</Link>}
       <details className={`${styles.settings} ${styles.siteMenu}`} data-floating-menu ref={siteMenu} onToggle={event=>{if(event.currentTarget.open){if(accountMenu.current)accountMenu.current.open=false;if(menu.current)menu.current.open=false;}}}>
         <summary aria-label={locale==='en'?'Site menu':'サイトメニュー'} title={locale==='en'?'Explore & communities':'探索とコミュニティ'}><Icon name="list"/><span className={styles.toolLabel}>{locale==='en'?'Explore & connect':'探索・コミュニティ'}</span><Icon name="chevron"/></summary>
         <div className={styles.settingsPanel}><nav className={styles.settingsLinks} aria-label={text.navigation}>
@@ -101,7 +106,7 @@ export default function SiteHeader({ dataset, page = "explore", onBeforeAccountN
         <div className={styles.settingsPanel}>
           {currentUser?<><p className={styles.accountIdentity}><strong>{displayName}</strong><span>{text.signedIn}</span></p>
           <nav aria-label={text.accountNavigation} className={styles.accountLinks}>{groups.map(g=><section key={g.label}><h2>{g.label}</h2>{g.items.map(i=><Link key={i.id} href={i.href} aria-label={i.label} aria-current={selected===i.id?'page':undefined} onClick={closeAccount}><Icon name={i.icon}/>{i.label}{i.id==='invitations'&&<InvitationBadge/>}</Link>)}</section>)}</nav>
-          {currentUser.siteOperator&&!identity.error&&<Link href="/operations" onClick={closeAccount}>{locale==='en'?'Site operations':'サイト運営'}</Link>}
+          {currentUser.siteOperator&&<Link href="/operations" onClick={closeAccount}>{operationsLabel}{operationsBadge}</Link>}
           <button className={styles.logout} disabled={accountBusy||signingOut} onClick={()=>void signOut()}>{text.logout}</button>{logoutError&&<p role="alert">{text.logoutFailed}</p>}
           </>:identity.status==='guest'?<Link href="/member" onClick={closeAccount}><Icon name="person"/>{locale==='en'?'Sign in / Account':'ログイン・アカウント'}</Link>:<p role="status">{identity.error?(locale==='en'?'Account verification failed.':'認証を確認できませんでした。'):(locale==='en'?'Checking your account…':'アカウントを確認しています…')}{identity.error&&<button onClick={()=>void refreshMemberIdentity(true).catch(()=>{})}>{locale==='en'?'Retry':'再試行'}</button>}</p>}
         </div>

@@ -3,7 +3,7 @@ import {createContext,useContext,useEffect,useId,useRef,type ReactNode} from 're
 import {createPortal} from 'react-dom';
 import css from './CommunityPage.module.css';
 export const CommunityRevalidation=createContext(false);
-export function CommunityDialog({title,children,onCancel,busy=false}:{title:string;children:ReactNode;onCancel:()=>void;busy?:boolean}){
+export function CommunityDialog({title,children,onCancel,busy=false,className}:{className?:string;title:string;children:ReactNode;onCancel:()=>void;busy?:boolean}){
  const ref=useRef<HTMLDialogElement>(null),trigger=useRef<HTMLElement|null>(null),focus=useRef<HTMLElement|null>(null),label=useId();const blocked=useContext(CommunityRevalidation);
  useEffect(()=>{
   // Strict Mode replays effects while keeping the dialog DOM. Do not replace
@@ -24,5 +24,5 @@ export function CommunityDialog({title,children,onCancel,busy=false}:{title:stri
   body.style.overflow='hidden';if(gap>0)body.style.paddingRight=((parseFloat(getComputedStyle(body).paddingRight)||0)+gap)+'px';
   return()=>{body.style.overflow=overflow;body.style.paddingRight=padding;window.removeEventListener('resize',place);window.visualViewport?.removeEventListener('resize',place);window.visualViewport?.removeEventListener('scroll',place);};
  },[blocked]);
- return typeof document==='undefined'?null:createPortal(<dialog ref={ref} className={css.dialog} aria-modal="true" aria-labelledby={label} onCancel={e=>{e.preventDefault();if(!busy)onCancel();}}><h2 id={label}>{title}</h2>{children}</dialog>,document.body);
+ return typeof document==='undefined'?null:createPortal(<dialog ref={ref} className={`${css.dialog} ${className??''}`} aria-modal="true" aria-labelledby={label} onCancel={e=>{e.preventDefault();if(!busy)onCancel();}}><h2 id={label}>{title}</h2>{children}</dialog>,document.body);
 }

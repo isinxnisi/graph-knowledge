@@ -99,7 +99,7 @@ it('operator inspection returns only the reported item, with purpose, expiry and
  await call('/threads/'+tid+'/posts',b,{requestId:randomUUID(),expectedRevision:1,body:'Unreported sibling'});
  const rid=await report('post',pid);
  expect((await site(rid,'inspect',1,false)).content).toBeNull();
- const view=await site(rid,'inspect');expect(view.content).toEqual({title:undefined,description:undefined,body:'private exact item'});expect(JSON.stringify(view)).not.toContain('Unreported sibling');expect(JSON.stringify(view)).not.toContain(a.id);
+ const view=await site(rid,'inspect');expect(view.content).toEqual({title:undefined,description:undefined,body:'private exact item'});expect(JSON.stringify(view)).not.toContain('Unreported sibling');expect(view.authorAccountId).toBe(a.id);expect(JSON.stringify(view)).not.toContain(b.id);
  const audit=(await pool().query("SELECT * FROM community_operation WHERE report_id=$1 AND action='report-inspect'",[rid])).rows[0];expect(audit).toMatchObject({operator_id:'safety-test',case_reference:'case/C3',target_id:pid,reason:'Requested scoped review'});
  const tr=await report('thread',tid);expect(JSON.stringify(await site(tr,'inspect'))).not.toContain('private exact item');
  const cr=await report('community',c.id,(await get(c.id)).revision);expect(JSON.stringify(await site(cr,'inspect',(await get(c.id)).revision))).not.toContain('Reported thread');

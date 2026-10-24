@@ -30,6 +30,22 @@ export function createSiteOperationsService(pool:Pool,origin:string,owner:(req:R
   read(req:Request,section:string){return access(req,async(c,u)=>{
    const q=new URL(req.url).searchParams;
    if(section==='session')return {operator:true,userId:u.id};
+   if(section==='summary'){
+    // Open reports remain actionable (resolve/dismiss) after inspection expires.
+    // Recovery decisions require the same current eligibility as the service.
+    const reports=(await c.query(`SELECT count(*)::int AS reports,
+     count(*) FILTER(WHERE expires_at>clock_timestamp() AND expires_at<=clock_timestamp()+interval '24 hours')::int AS due_soon,
+     count(*) FILTER(WHERE expires_at<=clock_timestamp())::int AS expired_reports,
+     min(expires_at) FILTER(WHERE expires_at>clock_timestamp()) AS next_deadline
+     FROM community_report WHERE status='open'`)).rows[0];
+    const recoveries=(await c.query(`SELECT count(*)::int AS n FROM community_recovery r
+     JOIN community c ON c.id=r.community_id JOIN "user" u ON u.id=r.user_id
+     JOIN community_member m ON m.community_id=r.community_id AND m.user_id=r.user_id
+     WHERE r.status='pending' AND r.expires_at>clock_timestamp() AND u.active=true AND c.status='archived'
+     AND m.generation=r.member_generation AND (m.status='active' OR m.role='admin' AND m.status IN ('left','removed','suspended'))
+     AND NOT EXISTS(SELECT 1 FROM community_member a WHERE a.community_id=r.community_id AND a.status='active' AND a.role='admin')`)).rows[0].n;
+    return {pendingCount:reports.reports+recoveries,reports:reports.reports,recoveries,dueSoon:reports.due_soon,expiredReports:reports.expired_reports,nextDeadline:reports.next_deadline};
+   }
    if(section==='account'){
     const id=memberId(q.get('id')??'');
     const r=(await c.query('SELECT id,active,"createdAt" AS created_at,"updatedAt" AS updated_at,"updatedAt"::text AS stamp FROM "user" WHERE id=$1',[id])).rows[0];if(!r)throw new MemberError(404,'ACCOUNT_NOT_FOUND');

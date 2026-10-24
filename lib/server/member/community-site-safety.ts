@@ -49,10 +49,13 @@ export async function operateCommunitySafety(pool:Pool,raw:CommunitySafetyOperat
    const intact=target&&target.status!=='withdrawn'&&safetyHash(target)===r.content_hash;
    if(intact&&target.revision!==input.expectedRevision)throw new MemberError(409,'COMMUNITY_CHANGED');
    if(auditInspection)await audit(intact?'report-inspect':'report-inspect-withheld',r.target_id,r.target_kind);
+   // Author identity belongs only to this explicitly inspected post, never to
+   // the notification, queue, receipt or a withheld/expired inspection.
+   const authorAccountId=intact&&r.target_kind==='post'?(await c.query('SELECT author_id FROM community_post WHERE id=$1',[r.target_id])).rows[0]?.author_id??null:null;
    // Never include parent private titles, siblings, roster or reporter identity.
    return {applied:true,reportId:r.id,kind:r.target_kind,reportRevision:r.revision,targetRevision:target?.revision??null,
     content:intact?{title:target.title,description:target.description,body:target.body}:null,
-    category:r.category,detail:intact?r.detail:null,withheld:!intact};
+    authorAccountId,category:r.category,detail:intact?r.detail:null,withheld:!intact};
   }
   if(['resolve','dismiss'].includes(input.action)) {
    if(r.status!=='open')throw new MemberError(409,'REPORT_CLOSED');
