@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import SiteHeader from "./SiteHeader";
 import SiteFooter from "./SiteFooter";
 import AiLabAvatar from "./AiLabAvatar";
-import { AiLabEntryReturn } from "./AiLabLinks";
+import PageIdentity from "./PageIdentity";
 import { useUiLocale } from "../lib/client/ui-locale";
 import { localizedPublicHref } from "../lib/domain/public-routes";
 import { labCounts, type LabArtifact, type LabRun } from "../lib/domain/ai-lab";
@@ -41,10 +41,10 @@ export default function AiLab({ artifact }: { artifact: LabArtifact | null }) {
   const kind = (r: LabRun) => r.executionKind === "rule" ? en?"Non-AI comparison":"非AIの比較" : en?"Held before inference":"推論前の保留";
   const choice = (r: LabRun) => r.choice === null ? en?"No AI inference was sent":"AIへの推論要求は未送信" : r.choice === "STOP" ? en?"Stopped within the fixed subset":"固定範囲で停止" : r.choice === "HOLD" ? en?"Held because retrieval was incomplete":"取得未完了のため判断を保留" : names.get(r.paths.find(p => p.id === r.choice)?.targetId || "") || "—";
   return <><SiteHeader dataset="public-kg" page="ai-lab"/><main className={styles.main} data-ai-lab>
-    <AiLabEntryReturn/>
-    <header className={styles.hero} id="apprentice" data-testid="explorer-apprentice" data-ai-id={data.aiId}>
+    <header className={styles.pageHeading} id="apprentice"><PageIdentity area="ai-lab"/><h1>{en?"AI Lab":"AI育成ラボ"}</h1></header>
+    <header className={styles.hero} data-testid="explorer-apprentice" data-ai-id={data.aiId}>
       <AiLabAvatar/>
-      <div><p className={styles.eyebrow}>PLUNODE / AI LAB</p><h1>{en?"Apprentice exploration AI":"探索者見習いAI"}</h1><p className={styles.introduction}>{en?"A new explorer, at the very beginning. Follow its choices and evidence as its story grows.":"生まれたばかりの、小さな探索者。選択と根拠を辿りながら、これからの変化を見守ります。"}</p></div>
+      <div><h2>{en?"Apprentice exploration AI":"探索者見習いAI"}</h2><p className={styles.introduction}>{en?"A new explorer, at the very beginning. Follow its choices and evidence as its story grows.":"生まれたばかりの、小さな探索者。選択と根拠を辿りながら、これからの変化を見守ります。"}</p></div>
       <div className={styles.stage}><small>{en?"CURRENT STAGE":"現在の段階"}</small><strong>{en?"Before its first outing":"まだ、最初の出動前"}</strong><span>{en?"No additional training":"追加学習なし"}</span><span>{en?"Live activity is not monitored":"実際の活動状態は未監視"}</span></div>
     </header>
     <section className={styles.metrics} aria-label={en?"Recorded AI activity":"記録されたAIの活動"}>{[[counts.inference,en?"AI inference runs":"AI実推論"],[counts.training,en?"Additional training runs":"追加学習"]].map(([n,label])=><div key={label}><strong data-testid={n===counts.inference&&label===(en?"AI inference runs":"AI実推論")?"inference-count":"training-count"}>{n}</strong><span>{label}</span></div>)}</section>

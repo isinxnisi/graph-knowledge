@@ -41,6 +41,9 @@ export default function SiteHeader({ dataset, page = "explore", onBeforeAccountN
   const hash=usePersonalHash();const selected=page==="member"||page==="community"?personalSection(page==="member",hash):undefined;
   const groups=personalNavigation(locale,identity.status!=="guest",communitiesEnabled);
   const [returnHref, setReturnHref] = useState("/");
+  // Lab returns use a document navigation so URL/revision-bound Graph pan can
+  // verify the lab referrer, just as the former dedicated return link did.
+  const ExplorationLink = page === "ai-lab" ? "a" : Link;
   const [signingOut, setSigningOut] = useState(false), [logoutError, setLogoutError] = useState(false);
   const dark = appearance.theme !== "light", palette = appearance.palette;
   useEffect(() => {
@@ -93,7 +96,7 @@ export default function SiteHeader({ dataset, page = "explore", onBeforeAccountN
       <details className={`${styles.settings} ${styles.siteMenu}`} data-floating-menu ref={siteMenu} onToggle={event=>{if(event.currentTarget.open){if(accountMenu.current)accountMenu.current.open=false;if(menu.current)menu.current.open=false;}}}>
         <summary aria-label={locale==='en'?'Site menu':'サイトメニュー'} title={locale==='en'?'Explore & communities':'探索とコミュニティ'}><Icon name="list"/><span className={styles.toolLabel}>{locale==='en'?'Explore & connect':'探索・コミュニティ'}</span><Icon name="chevron"/></summary>
         <div className={styles.settingsPanel}><nav className={styles.settingsLinks} aria-label={text.navigation}>
-          <Link href={page==='explore'?localizedPublicHref('/',locale):returnHref} onClick={closeAccount}><Icon name="back"/>{page!=='explore'&&(/\/explore\//.test(returnHref)||returnHref.includes('?s='))?(locale==='en'?'Back to your exploration':'元の探索へ戻る'):(locale==='en'?'Start exploring':'探索を始める')}</Link>
+          <ExplorationLink href={page==='explore'?localizedPublicHref('/',locale):returnHref} onClick={closeAccount}><Icon name="back"/>{page!=='explore'&&(/\/explore\//.test(returnHref)||returnHref.includes('?s='))?(locale==='en'?'Back to your exploration':'元の探索へ戻る'):(locale==='en'?'Start exploring':'探索を始める')}</ExplorationLink>
           {communitiesEnabled&&<Link href="/communities" onClick={closeAccount}><Icon name="search"/>{locale==='en'?'Discover communities':'コミュニティを見つける'}</Link>}
           <AiLabEntry onClick={closeAccount}/><AiLabRecordReturn/>
           <Link href={localizedPublicHref('/support',locale)} onClick={closeAccount}><Icon name="heart"/>{supportLabels(locale).link}</Link>

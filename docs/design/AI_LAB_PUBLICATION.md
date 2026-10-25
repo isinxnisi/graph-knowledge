@@ -20,6 +20,8 @@
 
 既存Home/Graph/アカウントから入った同タブの公開URL・scroll位置だけを復帰用に保存する。Graphの既存checkpointとURL復元を使い、labへ出る時だけ同URL・同KG版に拘束したpanを補足する。Graph保存schema・取得・配置は変更しない。記録からGraph/Claimへ出る際は同じrun/filter/開閉・scroll位置へ戻る。同originの実装済み経路以外を復帰先にしない。本人情報・会員本文を保存しない。
 
+2026-10-25の表示調整では、上部の独自な「元の探索・アカウントへ戻る」を撤去する。ページは共通PageIdentityのPLUNODE / AI LAB＋h1「AI育成ラボ / AI Lab」、見習いの紹介はh2とする。ラボ入口に共通書式のフラスコ、記録復帰に戻るアイコンを付け、元のGraphとアカウントには既存の共通メニューから移動する。ラボから元のGraphへは文書遷移でreferrerを保持し、固定URL・KG版に拘束したpan復元を維持する。公式AIの実コメント生成・投稿・公開artifactへのコメント記録は引き続き未実装で、探索記録の開始だけで自動的にコメントが出る契約ではない。
+
 ## 公開artifact
 
 固定lab SHA `af31afd5523655da45d2ceab87e0bca37cecd7dc` の検証済み公開出力から、専用schemaへ投影した `data/ai-lab/initial.json` を同梱する。元の実験環境・run/wire/raw・GPU診断・採点labels・サンプルコメントは配布しない。原記録と比較画面は既存lab branchに保全する。

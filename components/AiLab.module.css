@@ -1,6 +1,7 @@
 .main{max-width:1120px;margin:0 auto;padding:28px 24px 56px;color:var(--color-text)}
 .main h1,.main h2,.main h3{font-family:var(--font-editorial-face),serif;font-weight:400;line-height:1.5}
 .main h1{font-size:32px;margin:10px 0 14px}.main h2{font-size:25px;margin:8px 0 14px}.main h3{font-size:21px;margin:8px 0 16px}
+.pageHeading{margin:0 0 20px;scroll-margin-top:80px}.pageHeading h1{margin:8px 0 0}
 .main p{line-height:1.9}.main a,.main button,.main summary{touch-action:manipulation}.main a{color:var(--color-accent);text-underline-offset:4px}
 .main code,.main dd{overflow-wrap:anywhere}.main button,.main select{font:inherit;color:inherit}.main button:focus-visible,.main a:focus-visible,.main summary:focus-visible{outline:2px solid var(--color-accent);outline-offset:4px}
 .hero{display:grid;grid-template-columns:152px minmax(0,1fr) 220px;align-items:center;gap:24px;padding:20px 0 32px}
