@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "themeId": "issue-5-dot-tezuka-adolf-20261025",
+  "revision": 1,
+  "definitionSha256": "5ba336d044c00b9c2663f0286ec7d31f312945b03fa14ca31d5404bc11097b06",
+  "reviewer": "プロジェクト運営者（範囲を限定した委任）",
+  "reviewedAt": "2026-10-25T07:10:42+00:00",
+  "note": "既存Issue承認の技術的束縛。追加のAI判断ではない。\n{\n  \"issueOrigin\": {\n    \"repository\": \"isinxnisi/graph-knowledge\",\n    \"issueNumber\": 5,\n    \"approvalId\": \"dot-tezuka-adolf-20261025\",\n    \"permissionSha256\": \"3c4bd377fe1f940519f2e82509de1c5543da2f7267c591f0c36a085f19705ab2\",\n    \"issueBodySha256\": \"62f76734a536c8f0d1cba529b6e4f867e73e1722eef2068f8f2b3ce8d379bb8b\"\n  },\n  \"humanDecision\": {\n    \"actorType\": \"human\",\n    \"reviewer\": \"プロジェクト運営者（範囲を限定した委任）\",\n    \"decidedAt\": \"2026-10-25T13:07:49+09:00\",\n    \"statement\": \"2026-10-25 13:07:49 JST、運営者は既存Worker対応の現在の漫画テーマ候補からdotが対象を選び、毎回の個別提示なしでGitHubの収集許可と購読を登録し、候補収集・レビューまで進める限定委任を明示承認した。確認は1日3回、新規投入は1日最大1バッチ、先行親子処理完了後、Wikidata構造化情報とNDL作成書誌のみ、準備と子収集合計30試行以内、取得済み成果優先。運営者がこの人物作品組を個別審査したとの記録ではない。dotは固定catalog d3e377d5255f4c487d608e73954dc40aeb0b3cba と既存runtimeの共通候補から手塚治虫→アドルフに告ぐの1組を選定した。根拠不足・同定・Roleは保留し、既公開・既受入は再処理しない。正式受入・公開apply・新取得元・コード変更は含まない。\"\n  }\n}\n",
+  "checks": [
+    "purpose",
+    "scope",
+    "data-granularity",
+    "sources-and-terms",
+    "exploration",
+    "execution-boundary"
+  ]
+}
