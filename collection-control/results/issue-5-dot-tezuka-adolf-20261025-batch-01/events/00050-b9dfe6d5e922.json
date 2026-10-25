@@ -1,0 +1,93 @@
+{
+  "requestId": "issue-5-dot-tezuka-adolf-20261025-batch-01",
+  "request": {
+    "schemaVersion": 1,
+    "id": "issue-5-dot-tezuka-adolf-20261025-batch-01",
+    "kind": "collect-review",
+    "status": "approved",
+    "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
+    "parentRequestId": "issue-5-dot-tezuka-adolf-20261025",
+    "applyAuthorized": {
+      "local": false,
+      "beta": false,
+      "vps": false
+    },
+    "approvalScope": "collection-candidates-and-review-only",
+    "humanDecision": {
+      "actorType": "human",
+      "reviewer": "プロジェクト運営者（範囲を限定した委任）",
+      "decidedAt": "2026-10-25T13:07:49+09:00",
+      "statement": "2026-10-25 13:07:49 JST、運営者は既存Worker対応の現在の漫画テーマ候補からdotが対象を選び、毎回の個別提示なしでGitHubの収集許可と購読を登録し、候補収集・レビューまで進める限定委任を明示承認した。確認は1日3回、新規投入は1日最大1バッチ、先行親子処理完了後、Wikidata構造化情報とNDL作成書誌のみ、準備と子収集合計30試行以内、取得済み成果優先。運営者がこの人物作品組を個別審査したとの記録ではない。dotは固定catalog d3e377d5255f4c487d608e73954dc40aeb0b3cba と既存runtimeの共通候補から手塚治虫→アドルフに告ぐの1組を選定した。根拠不足・同定・Roleは保留し、既公開・既受入は再処理しない。正式受入・公開apply・新取得元・コード変更は含まない。"
+    },
+    "issueOrigin": {
+      "repository": "isinxnisi/graph-knowledge",
+      "issueNumber": 5,
+      "approvalId": "dot-tezuka-adolf-20261025",
+      "permissionSha256": "3c4bd377fe1f940519f2e82509de1c5543da2f7267c591f0c36a085f19705ab2",
+      "issueBodySha256": "62f76734a536c8f0d1cba529b6e4f867e73e1722eef2068f8f2b3ce8d379bb8b"
+    },
+    "target": {
+      "themeId": "issue-5-dot-tezuka-adolf-20261025",
+      "revision": 1,
+      "definitionSha256": "5ba336d044c00b9c2663f0286ec7d31f312945b03fa14ca31d5404bc11097b06",
+      "execution": {
+        "adapter": "manga-discovery-v2",
+        "codeSha256": "80e05b67bc0129b963653b90df4cfbfa5bd6aff190acda99f54c08541e55801e",
+        "inputs": [
+          {
+            "file": "datasets/manga-collection/r0027/recipe.json",
+            "sha256": "d6e0414784f5d7da93231f30ee4fa5248f4eceb38fe0c36daa1cbe521051fe3b"
+          },
+          {
+            "file": "datasets/manga-collection/r0027/anchor-review.json",
+            "sha256": "871d4c2a56c77ce812eaade479e0cfe9d57f9ed6b7e5c88075140cf6c371a0f6"
+          },
+          {
+            "file": "datasets/manga-collection/r0027/publication-review.json",
+            "sha256": "93f832aaa5a814af259f359631a395a6c02f1104d716547a6a8dd408dbe79396"
+          },
+          {
+            "file": "docs/research/famous-manga-creators/20261016/candidates.json",
+            "sha256": "8531fada01e5c635ba2ee278a7ef944a73f64676af14ed42ae0e690f5a1ff978"
+          },
+          {
+            "file": "datasets/public-kg/releases/20261014-credits-001/data.json",
+            "sha256": "ea91b16f52a211b5a8464382ad498b7b2bb2be69a6f33fe125a73a3c7b9da2b5"
+          },
+          {
+            "file": "datasets/public-kg/releases/20261014-credits-001/manifest.json",
+            "sha256": "e4aa3b58ed884f7d1f8fffee43b260261cc2b4d3a867fda942919f439d2bce17"
+          }
+        ],
+        "maxEntities": 2111,
+        "maxClaims": 1847
+      },
+      "targets": {
+        "people": [
+          {
+            "name": "手塚治虫",
+            "qid": "Q193300"
+          }
+        ],
+        "works": [
+          {
+            "name": "アドルフに告ぐ",
+            "qid": "Q360684",
+            "isbn13": "9784168110139"
+          }
+        ]
+      },
+      "existingApprovalSha256": "1fb613c9993e4eb3057c68f1b40a4cb9cf84ec098bd89afc8c7e84a44c426c60"
+    }
+  },
+  "requestSha256": "9b3f98315bb28650d44225f8b197ba408b2d39b00c24771052dcbfbca976ea00",
+  "kind": "collect-review",
+  "phase": "running",
+  "generation": 50,
+  "attempts": 5,
+  "workerId": "plunode-wsl",
+  "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
+  "updatedAt": "2026-10-25T08:15:17+00:00",
+  "message": "'d5e39491-5a5f-423c-9222-2eb3c18db9a8'",
+  "retryAt": 1792916100.8420107
+}
