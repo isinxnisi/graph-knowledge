@@ -106,18 +106,18 @@
   },
   "requestSha256": "0814b8af0f80dc7f8cb28d448971a9da6a86cee02c9b6879d53a41b4a4621a76",
   "kind": "collect-review",
-  "phase": "blocked",
-  "generation": 6456,
+  "phase": "waiting-control",
+  "generation": 7875,
   "attempts": 1,
   "workerId": "plunode-wsl",
   "sourceCommit": "ed89e5a6ff0cf7d8b485330be790a234a064eacd",
-  "updatedAt": "2026-10-24T00:00:11+00:00",
+  "updatedAt": "2026-10-25T01:27:26+00:00",
   "result": {
     "jobId": "issue-25-utc-recovery-r0008-9f792bd2246a1595",
     "collectionUnchanged": false,
     "reviewUnchanged": false,
     "transportAttemptsAdded": 0,
-    "reviewDirectory": "/home/isinxnisi/.local/share/plunode-collection-worker/runtime/datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0008-9f792bd2246a1595-review-7b6502faf255147c",
+    "reviewDirectory": "/home/isinxnisi/.local/share/plunode-collection-worker-phase-b-20261020/runtime/datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0008-9f792bd2246a1595-review-7b6502faf255147c",
     "reviewOnly": true,
     "formalAcceptance": false,
     "publicApply": false,
@@ -137,6 +137,6 @@
   "decisionDrafts": [
     "datasets/manga-collection/decisions/issue-25-utc-recovery-08-normal-draft.json"
   ],
-  "message": "Artifact escapes runtime",
+  "message": "Execution gate: interval",
   "retryAt": 1792792161.001102
 }
