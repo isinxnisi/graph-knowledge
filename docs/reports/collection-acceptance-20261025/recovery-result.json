@@ -1,0 +1,217 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-10-25T01:28:27.420720+00:00",
+  "recoveryCodeCommit": "143b75c",
+  "recoveryControlCommit": "7bd63ffcd6e7849f35488d04d1cc9a5d27c83538",
+  "phase": "scheduled-worker-publication-continuation-verified",
+  "requestIds": [
+    "issue-25-utc-recovery-01",
+    "issue-25-utc-recovery-02",
+    "issue-25-utc-recovery-03",
+    "issue-25-utc-recovery-04",
+    "issue-25-utc-recovery-05",
+    "issue-25-utc-recovery-06",
+    "issue-25-utc-recovery-07",
+    "issue-25-utc-recovery-08",
+    "issue-25-utc-recovery-09"
+  ],
+  "requests": [
+    {
+      "requestId": "issue-25-utc-recovery-01",
+      "phase": "waiting-lock",
+      "attempts": 1,
+      "executionComplete": true,
+      "message": "共通ロック使用中。次回に再確認する。",
+      "reviewReference": {
+        "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0001-2aae694af25bda6e-review-7eb226d781eece54/review-manifest.json",
+        "sha256": "71e08c7a3ef28a9ad30d39669e7784abc8eaa99dfff2f172bed042186d752895"
+      }
+    },
+    {
+      "requestId": "issue-25-utc-recovery-02",
+      "phase": "waiting-lock",
+      "attempts": 1,
+      "executionComplete": true,
+      "message": "共通ロック使用中。次回に再確認する。",
+      "reviewReference": {
+        "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0002-195d12ba8ceee0b8-review-5c31a884f4894165/review-manifest.json",
+        "sha256": "451fb079e97c22e4fbc5a4db062053733334a9f27ddc3665db2d3796f3e09837"
+      }
+    },
+    {
+      "requestId": "issue-25-utc-recovery-03",
+      "phase": "completed",
+      "attempts": 1,
+      "executionComplete": true,
+      "message": null,
+      "reviewReference": {
+        "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0003-4e7b3edf51e9545b-review-7ac1287be3ae3491/review-manifest.json",
+        "sha256": "ccb73e2f413433913cd3338750b53428ed346165db8363a62dba44f004f0a9f0"
+      }
+    },
+    {
+      "requestId": "issue-25-utc-recovery-04",
+      "phase": "waiting-control",
+      "attempts": 1,
+      "executionComplete": true,
+      "message": "Execution gate: interval",
+      "reviewReference": {
+        "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0004-b96c712262173821-review-ed4c6573c40b9103/review-manifest.json",
+        "sha256": "dbe609a826e90940a08952c5f6a3c9a59dc1422c3f96f8beaaf4d385dbc5b80b"
+      }
+    },
+    {
+      "requestId": "issue-25-utc-recovery-05",
+      "phase": "waiting-control",
+      "attempts": 1,
+      "executionComplete": true,
+      "message": "Execution gate: interval",
+      "reviewReference": {
+        "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0005-7e3b350d672334cb-review-79898df155b2aa91/review-manifest.json",
+        "sha256": "5ad67f522f33fe68bb563bcc04298a0410c0845e5508c7f54d0482f243bac04a"
+      }
+    },
+    {
+      "requestId": "issue-25-utc-recovery-06",
+      "phase": "waiting-control",
+      "attempts": 1,
+      "executionComplete": true,
+      "message": "Execution gate: interval",
+      "reviewReference": {
+        "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0006-18bb8d898648582b-review-d3f087b63d8ec60c/review-manifest.json",
+        "sha256": "77a7af521ada5498b3ea46e7c93ef1c9bc33fbc5ceba706a3aa781e03387a959"
+      }
+    },
+    {
+      "requestId": "issue-25-utc-recovery-07",
+      "phase": "waiting-control",
+      "attempts": 1,
+      "executionComplete": true,
+      "message": "Execution gate: interval",
+      "reviewReference": {
+        "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0007-0b3c13e86c5f069c-review-434525971928f744/review-manifest.json",
+        "sha256": "6899290eb5daf4af86ba6b899dfdf8a24f1daf4cbc3b3d93f2f37e9bbcbc456d"
+      }
+    },
+    {
+      "requestId": "issue-25-utc-recovery-08",
+      "phase": "waiting-control",
+      "attempts": 1,
+      "executionComplete": true,
+      "message": "Execution gate: interval",
+      "reviewReference": {
+        "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0008-9f792bd2246a1595-review-7b6502faf255147c/review-manifest.json",
+        "sha256": "97ae2100ec16c5c871f7445d1426e6d7a22da6cb9b98dff9c7f90739bff8d2bc"
+      }
+    },
+    {
+      "requestId": "issue-25-utc-recovery-09",
+      "phase": "waiting-control",
+      "attempts": 1,
+      "executionComplete": true,
+      "message": "Execution gate: interval",
+      "reviewReference": {
+        "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0009-dcce01b7349906fb-review-b0659f95322d7b52/review-manifest.json",
+        "sha256": "5d45f047df77beefd96e8ce7a3b134a4f6d869ea994f71141953a87424a5e4a7"
+      }
+    }
+  ],
+  "cacheLinks": [
+    {
+      "file": ".local/collection-jobs/issue-25-utc-recovery-r0001-2aae694af25bda6e/request-cache",
+      "oldTarget": "/home/isinxnisi/.local/share/plunode-collection-worker/runtime/.local/collection-issues/issue-25-manga23-20261019/request-cache",
+      "target": "/home/isinxnisi/.local/share/plunode-collection-worker-phase-b-20261020/runtime/.local/collection-issues/issue-25-manga23-20261019/request-cache"
+    },
+    {
+      "file": ".local/collection-jobs/issue-25-utc-recovery-r0002-195d12ba8ceee0b8/request-cache",
+      "oldTarget": "/home/isinxnisi/.local/share/plunode-collection-worker/runtime/.local/collection-issues/issue-25-manga23-20261019/request-cache",
+      "target": "/home/isinxnisi/.local/share/plunode-collection-worker-phase-b-20261020/runtime/.local/collection-issues/issue-25-manga23-20261019/request-cache"
+    },
+    {
+      "file": ".local/collection-jobs/issue-25-utc-recovery-r0003-4e7b3edf51e9545b/request-cache",
+      "oldTarget": "/home/isinxnisi/.local/share/plunode-collection-worker/runtime/.local/collection-issues/issue-25-manga23-20261019/request-cache",
+      "target": "/home/isinxnisi/.local/share/plunode-collection-worker-phase-b-20261020/runtime/.local/collection-issues/issue-25-manga23-20261019/request-cache"
+    },
+    {
+      "file": ".local/collection-jobs/issue-25-utc-recovery-r0004-b96c712262173821/request-cache",
+      "oldTarget": "/home/isinxnisi/.local/share/plunode-collection-worker/runtime/.local/collection-issues/issue-25-manga23-20261019/request-cache",
+      "target": "/home/isinxnisi/.local/share/plunode-collection-worker-phase-b-20261020/runtime/.local/collection-issues/issue-25-manga23-20261019/request-cache"
+    },
+    {
+      "file": ".local/collection-jobs/issue-25-utc-recovery-r0005-7e3b350d672334cb/request-cache",
+      "oldTarget": "/home/isinxnisi/.local/share/plunode-collection-worker/runtime/.local/collection-issues/issue-25-manga23-20261019/request-cache",
+      "target": "/home/isinxnisi/.local/share/plunode-collection-worker-phase-b-20261020/runtime/.local/collection-issues/issue-25-manga23-20261019/request-cache"
+    },
+    {
+      "file": ".local/collection-jobs/issue-25-utc-recovery-r0006-18bb8d898648582b/request-cache",
+      "oldTarget": "/home/isinxnisi/.local/share/plunode-collection-worker/runtime/.local/collection-issues/issue-25-manga23-20261019/request-cache",
+      "target": "/home/isinxnisi/.local/share/plunode-collection-worker-phase-b-20261020/runtime/.local/collection-issues/issue-25-manga23-20261019/request-cache"
+    },
+    {
+      "file": ".local/collection-jobs/issue-25-utc-recovery-r0007-0b3c13e86c5f069c/request-cache",
+      "oldTarget": "/home/isinxnisi/.local/share/plunode-collection-worker/runtime/.local/collection-issues/issue-25-manga23-20261019/request-cache",
+      "target": "/home/isinxnisi/.local/share/plunode-collection-worker-phase-b-20261020/runtime/.local/collection-issues/issue-25-manga23-20261019/request-cache"
+    },
+    {
+      "file": ".local/collection-jobs/issue-25-utc-recovery-r0008-9f792bd2246a1595/request-cache",
+      "oldTarget": "/home/isinxnisi/.local/share/plunode-collection-worker/runtime/.local/collection-issues/issue-25-manga23-20261019/request-cache",
+      "target": "/home/isinxnisi/.local/share/plunode-collection-worker-phase-b-20261020/runtime/.local/collection-issues/issue-25-manga23-20261019/request-cache"
+    },
+    {
+      "file": ".local/collection-jobs/issue-25-utc-recovery-r0009-dcce01b7349906fb/request-cache",
+      "oldTarget": "/home/isinxnisi/.local/share/plunode-collection-worker/runtime/.local/collection-issues/issue-25-manga23-20261019/request-cache",
+      "target": "/home/isinxnisi/.local/share/plunode-collection-worker-phase-b-20261020/runtime/.local/collection-issues/issue-25-manga23-20261019/request-cache"
+    }
+  ],
+  "preserveDirectory": "/home/isinxnisi/.local/share/plunode-collection-worker-phase-b-20261020/migration/result-relocation-v3s0qk3d",
+  "recoveryProofSha256": "db0f9b737b25cc422593017ea1f106d1d7f871921e2d230e5ffa2b89a4c9ba08",
+  "stateBeforeSha256": "e35aec134c43ba85d22c8f045a59659c59afe4b0fc9eee9c343140d42ba0b45d",
+  "baselineSha256": "abffac919933b2f841a1b516791e86adfb466b4c74d29866d531df684dc9ed9c",
+  "immutableFilesVerified": 1001,
+  "immutableFileChanges": [],
+  "attemptsUnchanged": true,
+  "workerConfigAndCodeUnchanged": true,
+  "controlWindowsPauseAndApprovalRecordsUnchanged": true,
+  "sharedCacheBytesUnchanged": true,
+  "oldRuntimeLinksUnchanged": true,
+  "newClaimAcceptances": 0,
+  "collectorRuns": 0,
+  "acceptanceRuns": 0,
+  "publicApply": false,
+  "workerTaskChanged": false,
+  "publicationTaskChanged": false,
+  "nextExecution": "Existing minute Worker schedule; remaining saved publications only. Earliest start 2026-10-25T10:36:25.281254+09:00 subject to windows/common lock/rest. No collection or formal acceptance is rerun.",
+  "receiptCount": 10,
+  "receiptSetUnchangedFromCompletedPublication": true,
+  "publicDatasetRevisionAfterRecovery": "b74a4b00-9454-412f-af5d-1317713a543c",
+  "publicApiCheckedAt": "2026-10-25T01:28:27.420741+00:00",
+  "controlCommitAfterRecovery": "9b2b99e80633922e05879d8137a12d0707ce9158",
+  "completedSavedResultPublications": [
+    {
+      "requestId": "issue-25-utc-recovery-03",
+      "artifactFilesVerified": 21,
+      "attempts": 1
+    }
+  ],
+  "remainingSavedResultPublications": 8,
+  "nextStartAt": "2026-10-25T10:36:25.281254+09:00",
+  "pauseMode": null,
+  "lastAttempt": {
+    "requestId": "issue-25-utc-recovery-03",
+    "endedAt": "2026-10-25T01:26:25.281257+00:00"
+  },
+  "restSecondsVerified": 600,
+  "oldRuntimeImmutableFilesVerified": 999,
+  "formalPublishedExactBodiesVerified": {
+    "entities": 66,
+    "claims": 51,
+    "sources": 44,
+    "citations": 52
+  },
+  "formalUnpublishedExactBodiesVerified": {
+    "entities": 0,
+    "claims": 0,
+    "sources": 0,
+    "citations": 0
+  }
+}

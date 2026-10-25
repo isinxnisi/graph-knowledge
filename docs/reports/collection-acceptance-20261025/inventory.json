@@ -1,0 +1,2401 @@
+{
+  "schemaVersion": 1,
+  "observedAt": "2026-10-25T01:19:25.442589+00:00",
+  "authority": "acceptance-inspection-not-a-new-human-approval",
+  "public": {
+    "release": "manga-issue-34-obata-drawing-20261023",
+    "revision": "b74a4b00-9454-412f-af5d-1317713a543c",
+    "observation": "root-completed-artifact-plus-current-live-api-revision",
+    "controlCommit": "1390431eba8ecd7d4c983638a72d26e4a06429f1"
+  },
+  "publicArtifact": {
+    "dataSha256": "bab5fd783adf0cdb622cc6c11441bce35bb7213074d489bc7f3e2989a5ca435b",
+    "manifestSha256": "7aab70b429c8a825e4a7e59b00a389055beb2a812117cac0c4ce686ef24e2a50"
+  },
+  "counts": {
+    "published": {
+      "entities": 2175,
+      "claims": 1895,
+      "sources": 1795,
+      "citations": 1932
+    },
+    "formally-accepted-unapplied": {
+      "entities": 0,
+      "claims": 0,
+      "sources": 0,
+      "citations": 0
+    },
+    "human-approved-pending-execution": {
+      "entities": 0,
+      "claims": 0,
+      "sources": 0,
+      "citations": 0
+    },
+    "candidate": {
+      "entities": 3,
+      "claims": 0,
+      "sources": 0,
+      "citations": 0
+    },
+    "held": {
+      "entities": 4,
+      "claims": 3,
+      "sources": 3,
+      "citations": 3
+    },
+    "blocked": {
+      "entities": 0,
+      "claims": 0,
+      "sources": 0,
+      "citations": 0
+    }
+  },
+  "newlyAcceptedClaims": 0,
+  "acceptedPublishedUniqueCounts": {
+    "citations": 52,
+    "claims": 51,
+    "entities": 66,
+    "sources": 44
+  },
+  "receipts": [
+    {
+      "reference": "b80c6b4e0112c8a61914",
+      "decisionId": "issue-25-utc-recovery-01-normal",
+      "recordedAt": "2026-10-19T18:16:26.254350+00:00",
+      "sourceJobId": "issue-25-utc-recovery-r0001-2aae694af25bda6e",
+      "counts": {
+        "entities": 1,
+        "claims": 1,
+        "sources": 1,
+        "citations": 1
+      },
+      "remainingHolds": []
+    },
+    {
+      "reference": "d131224753b09422f689",
+      "decisionId": "issue-25-utc-recovery-03-normal",
+      "recordedAt": "2026-10-19T18:39:45.450652+00:00",
+      "sourceJobId": "issue-25-utc-recovery-r0003-4e7b3edf51e9545b",
+      "counts": {
+        "entities": 1,
+        "claims": 1,
+        "sources": 1,
+        "citations": 1
+      },
+      "remainingHolds": []
+    },
+    {
+      "reference": "36c37b383a6f7548d443",
+      "decisionId": "issue-25-utc-recovery-04-normal",
+      "recordedAt": "2026-10-19T18:54:43.932711+00:00",
+      "sourceJobId": "issue-25-utc-recovery-r0004-b96c712262173821",
+      "counts": {
+        "entities": 2,
+        "claims": 1,
+        "sources": 1,
+        "citations": 1
+      },
+      "remainingHolds": []
+    },
+    {
+      "reference": "985531d78187c46ff61a",
+      "decisionId": "issue-25-utc-recovery-06-normal",
+      "recordedAt": "2026-10-19T19:09:31.481880+00:00",
+      "sourceJobId": "issue-25-utc-recovery-r0006-18bb8d898648582b",
+      "counts": {
+        "entities": 4,
+        "claims": 3,
+        "sources": 3,
+        "citations": 3
+      },
+      "remainingHolds": []
+    },
+    {
+      "reference": "e6ae8936d87a87dc0fe7",
+      "decisionId": "issue-25-utc-recovery-07-normal",
+      "recordedAt": "2026-10-19T19:23:52.882654+00:00",
+      "sourceJobId": "issue-25-utc-recovery-r0007-0b3c13e86c5f069c",
+      "counts": {
+        "entities": 3,
+        "claims": 2,
+        "sources": 2,
+        "citations": 2
+      },
+      "remainingHolds": []
+    },
+    {
+      "reference": "f41bbae97487bafe7713",
+      "decisionId": "issue-25-utc-recovery-08-normal",
+      "recordedAt": "2026-10-19T19:38:57.087154+00:00",
+      "sourceJobId": "issue-25-utc-recovery-r0008-9f792bd2246a1595",
+      "counts": {
+        "entities": 3,
+        "claims": 2,
+        "sources": 2,
+        "citations": 2
+      },
+      "remainingHolds": []
+    },
+    {
+      "reference": "a4bec6c5e6a10cb50cab",
+      "decisionId": "issue-34-obata-drawing-20261021",
+      "recordedAt": "2026-10-20T17:52:45.754800+00:00",
+      "sourceJobId": null,
+      "counts": {
+        "entities": 0,
+        "claims": 1,
+        "sources": 1,
+        "citations": 1
+      },
+      "remainingHolds": []
+    },
+    {
+      "reference": "af0b58cdadfad0e8be6e",
+      "decisionId": "accepted-original-story-r0002-20261017",
+      "recordedAt": "2026-10-17T10:34:25+09:00",
+      "sourceJobId": "famous-manga-creators-r0002-97c171eb654963e4",
+      "counts": {
+        "entities": 6,
+        "claims": 5,
+        "sources": 3,
+        "citations": 5
+      },
+      "remainingHolds": [
+        "村田雄介・小畑健のEntityと未受入制作関係",
+        "漫画表記に基づく個別関係の追加判断",
+        "梅澤由香里の監修と人物同定",
+        "残り94作品の収集実行承認"
+      ]
+    },
+    {
+      "reference": "3642f16769755c36942a",
+      "decisionId": "accepted-r0002-20261017",
+      "recordedAt": "2026-10-16T16:21:29+00:00",
+      "sourceJobId": "famous-manga-creators-r0002-97c171eb654963e4",
+      "counts": {
+        "entities": 7,
+        "claims": 4,
+        "sources": 4,
+        "citations": 4
+      },
+      "remainingHolds": []
+    },
+    {
+      "reference": "f2368b524c18fb27f9d7",
+      "decisionId": "accepted-r0003-20261017",
+      "recordedAt": "2026-10-17T20:41:30+09:00",
+      "sourceJobId": "famous-manga-creators-r0003-907fdec3b7f86662",
+      "counts": {
+        "entities": 39,
+        "claims": 31,
+        "sources": 26,
+        "citations": 32
+      },
+      "remainingHolds": [
+        "小畑健のDRAWING（今回は同一ISBNの別根拠AUTHORSHIPのみ受入）",
+        "元の小畑健「漫画」と推しの子「集約著者」責任表示",
+        "パイナップルARMYの既存EntityへのQID付与",
+        "村田雄介の未受入制作関係",
+        "梅澤由香里の人物同定と監修関係",
+        "残り70作品の次版定義・収集実行承認"
+      ]
+    }
+  ],
+  "approvalRegisters": [
+    {
+      "approvalId": "issue-25-20261019-normal-10",
+      "reference": "101d7d2d9a24925370de",
+      "counts": {
+        "entities": 14,
+        "claims": 10,
+        "sources": 10,
+        "citations": 10
+      },
+      "batches": [
+        {
+          "decisionId": "issue-25-utc-recovery-01-normal",
+          "phase": "completed"
+        },
+        {
+          "decisionId": "issue-25-utc-recovery-03-normal",
+          "phase": "not-submitted-to-worker"
+        },
+        {
+          "decisionId": "issue-25-utc-recovery-04-normal",
+          "phase": "not-submitted-to-worker"
+        },
+        {
+          "decisionId": "issue-25-utc-recovery-06-normal",
+          "phase": "not-submitted-to-worker"
+        },
+        {
+          "decisionId": "issue-25-utc-recovery-07-normal",
+          "phase": "not-submitted-to-worker"
+        },
+        {
+          "decisionId": "issue-25-utc-recovery-08-normal",
+          "phase": "not-submitted-to-worker"
+        }
+      ]
+    }
+  ],
+  "receiptSetSha256": "8a55413ee9fedf32fd64ce6fddebd28d1d636ff7de0fcc1fd063a5b15524d56d",
+  "pendingRecords": [
+    {
+      "type": "citations",
+      "id": "37c7fedf-a002-4ef3-9bc9-32bd655c6509",
+      "observations": [
+        {
+          "reference": "78864fba3b8d08f6a09e",
+          "recordId": "37c7fedf-a002-4ef3-9bc9-32bd655c6509",
+          "recordSha256": "b3e528af28afefe367de625a6b4d9a10231e0cf4ce7728bbe816dba5975cb7e1",
+          "stage": "raw-candidate"
+        }
+      ],
+      "acceptances": [],
+      "approvals": [],
+      "releases": [],
+      "holds": [],
+      "state": "held",
+      "preparationState": "not-release-prepared",
+      "recordSha256": "b3e528af28afefe367de625a6b4d9a10231e0cf4ce7728bbe816dba5975cb7e1",
+      "record": {
+        "id": "37c7fedf-a002-4ef3-9bc9-32bd655c6509",
+        "claimId": "fb541a79-5cf1-470b-9509-65cb8ede41f3",
+        "sourceId": "b199fe5f-f5ce-4bca-b375-bafccaf18bbe",
+        "locator": "dc:creator（責任表示） / ISBN 9784091813411",
+        "note": "原表記（ja）: 浦沢直樹 著。指定刊行物の責任表示で確認された担当。全巻・全版・全期間への外挿、原作から別Roleへの変換はしない。同一資料由来の記録を独立した根拠と数えない。",
+        "accessedAt": "2026-10-18",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "浦沢直樹 著",
+          "language": "ja"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      },
+      "label": "37c7fedf-a002-4ef3-9bc9-32bd655c6509",
+      "aliases": [],
+      "nextStep": "参照先Claimの保留理由を確認",
+      "dependencies": [
+        {
+          "type": "claims",
+          "id": "fb541a79-5cf1-470b-9509-65cb8ede41f3"
+        },
+        {
+          "type": "sources",
+          "id": "b199fe5f-f5ce-4bca-b375-bafccaf18bbe"
+        }
+      ],
+      "versionHashes": [
+        "b3e528af28afefe367de625a6b4d9a10231e0cf4ce7728bbe816dba5975cb7e1"
+      ]
+    },
+    {
+      "type": "citations",
+      "id": "a7b3db1c-b6eb-4088-afa6-7f954ee0c4ad",
+      "observations": [
+        {
+          "reference": "78864fba3b8d08f6a09e",
+          "recordId": "a7b3db1c-b6eb-4088-afa6-7f954ee0c4ad",
+          "recordSha256": "9209c3284fadf2b24e022fa9631af6e60b67c384d5e977f177b8a01766cf6e19",
+          "stage": "raw-candidate"
+        }
+      ],
+      "acceptances": [],
+      "approvals": [],
+      "releases": [],
+      "holds": [],
+      "state": "held",
+      "preparationState": "not-release-prepared",
+      "recordSha256": "9209c3284fadf2b24e022fa9631af6e60b67c384d5e977f177b8a01766cf6e19",
+      "record": {
+        "id": "a7b3db1c-b6eb-4088-afa6-7f954ee0c4ad",
+        "claimId": "e3356616-466b-4ad1-9a56-079f0e118aa8",
+        "sourceId": "0121512a-8598-4aae-b6d3-51015bd27249",
+        "locator": "dc:creator（責任表示） / ISBN 9784091855312",
+        "note": "原表記（ja）: 浦沢直樹 著。指定刊行物の責任表示で確認された担当。全巻・全版・全期間への外挿、原作から別Roleへの変換はしない。同一資料由来の記録を独立した根拠と数えない。",
+        "accessedAt": "2026-10-18",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "浦沢直樹 著",
+          "language": "ja"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      },
+      "label": "a7b3db1c-b6eb-4088-afa6-7f954ee0c4ad",
+      "aliases": [],
+      "nextStep": "参照先Claimの保留理由を確認",
+      "dependencies": [
+        {
+          "type": "claims",
+          "id": "e3356616-466b-4ad1-9a56-079f0e118aa8"
+        },
+        {
+          "type": "sources",
+          "id": "0121512a-8598-4aae-b6d3-51015bd27249"
+        }
+      ],
+      "versionHashes": [
+        "9209c3284fadf2b24e022fa9631af6e60b67c384d5e977f177b8a01766cf6e19"
+      ]
+    },
+    {
+      "type": "citations",
+      "id": "a90932b0-25dc-4ab1-9670-c49fecb805cf",
+      "observations": [
+        {
+          "reference": "78864fba3b8d08f6a09e",
+          "recordId": "a90932b0-25dc-4ab1-9670-c49fecb805cf",
+          "recordSha256": "b0c62bbc9bb176b5b16f969fb999efeba00155e6c2079f10066f5b4d96ee6ae8",
+          "stage": "raw-candidate"
+        }
+      ],
+      "acceptances": [],
+      "approvals": [],
+      "releases": [],
+      "holds": [],
+      "state": "held",
+      "preparationState": "not-release-prepared",
+      "recordSha256": "b0c62bbc9bb176b5b16f969fb999efeba00155e6c2079f10066f5b4d96ee6ae8",
+      "record": {
+        "id": "a90932b0-25dc-4ab1-9670-c49fecb805cf",
+        "claimId": "406aebfe-a6eb-48c1-9d93-b377bbd39d8f",
+        "sourceId": "d9b3e501-ab02-4001-9254-de6df2af90ac",
+        "locator": "dc:creator（責任表示） / ISBN 9784091836519",
+        "note": "原表記（ja）: 浦沢直樹 著。指定刊行物の責任表示で確認された担当。全巻・全版・全期間への外挿、原作から別Roleへの変換はしない。同一資料由来の記録を独立した根拠と数えない。",
+        "accessedAt": "2026-10-18",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "浦沢直樹 著",
+          "language": "ja"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      },
+      "label": "a90932b0-25dc-4ab1-9670-c49fecb805cf",
+      "aliases": [],
+      "nextStep": "参照先Claimの保留理由を確認",
+      "dependencies": [
+        {
+          "type": "claims",
+          "id": "406aebfe-a6eb-48c1-9d93-b377bbd39d8f"
+        },
+        {
+          "type": "sources",
+          "id": "d9b3e501-ab02-4001-9254-de6df2af90ac"
+        }
+      ],
+      "versionHashes": [
+        "b0c62bbc9bb176b5b16f969fb999efeba00155e6c2079f10066f5b4d96ee6ae8"
+      ]
+    },
+    {
+      "type": "claims",
+      "id": "406aebfe-a6eb-48c1-9d93-b377bbd39d8f",
+      "observations": [
+        {
+          "reference": "78864fba3b8d08f6a09e",
+          "recordId": "406aebfe-a6eb-48c1-9d93-b377bbd39d8f",
+          "recordSha256": "00391430fbb4ac99c1a9bb7f891ddbb10c683bd1036159a20cb31345c095fe66",
+          "stage": "raw-candidate"
+        }
+      ],
+      "acceptances": [],
+      "approvals": [],
+      "releases": [],
+      "holds": [
+        {
+          "reference": "2c61894baea89b657418",
+          "claimId": "406aebfe-a6eb-48c1-9d93-b377bbd39d8f",
+          "person": "浦沢直樹",
+          "work": "MONSTER",
+          "subjectId": "d900543a-9c11-48c1-be76-1822b756fcc4",
+          "objectId": "5939642c-8fe8-459b-98c8-1aef555ba212",
+          "roleId": "AUTHORSHIP",
+          "scope": {
+            "kind": "publication",
+            "isbn13": "9784091836519",
+            "volumeLabel": "第1巻（NDL巻次 1 (ヘルDr.テンマ)）",
+            "editionLabel": null,
+            "language": "ja"
+          },
+          "status": "held",
+          "reasons": [
+            "endpoint-identity-held"
+          ],
+          "supportingCitationIds": [
+            "a90932b0-25dc-4ab1-9670-c49fecb805cf"
+          ],
+          "existingState": null,
+          "existingClaimId": null,
+          "originalTexts": [
+            "浦沢直樹 著"
+          ],
+          "citationIds": [
+            "a90932b0-25dc-4ab1-9670-c49fecb805cf"
+          ],
+          "sourceUrls": [
+            "https://ndlsearch.ndl.go.jp/books/R100000002-I000002418467"
+          ],
+          "sourceIds": [
+            "d9b3e501-ab02-4001-9254-de6df2af90ac"
+          ]
+        }
+      ],
+      "reviews": [
+        {
+          "reference": "2c61894baea89b657418",
+          "claimId": "406aebfe-a6eb-48c1-9d93-b377bbd39d8f",
+          "person": "浦沢直樹",
+          "work": "MONSTER",
+          "subjectId": "d900543a-9c11-48c1-be76-1822b756fcc4",
+          "objectId": "5939642c-8fe8-459b-98c8-1aef555ba212",
+          "roleId": "AUTHORSHIP",
+          "scope": {
+            "kind": "publication",
+            "isbn13": "9784091836519",
+            "volumeLabel": "第1巻（NDL巻次 1 (ヘルDr.テンマ)）",
+            "editionLabel": null,
+            "language": "ja"
+          },
+          "status": "held",
+          "reasons": [
+            "endpoint-identity-held"
+          ],
+          "supportingCitationIds": [
+            "a90932b0-25dc-4ab1-9670-c49fecb805cf"
+          ],
+          "existingState": null,
+          "existingClaimId": null,
+          "originalTexts": [
+            "浦沢直樹 著"
+          ],
+          "citationIds": [
+            "a90932b0-25dc-4ab1-9670-c49fecb805cf"
+          ],
+          "sourceUrls": [
+            "https://ndlsearch.ndl.go.jp/books/R100000002-I000002418467"
+          ],
+          "sourceIds": [
+            "d9b3e501-ab02-4001-9254-de6df2af90ac"
+          ]
+        }
+      ],
+      "state": "held",
+      "preparationState": "not-release-prepared",
+      "recordSha256": "00391430fbb4ac99c1a9bb7f891ddbb10c683bd1036159a20cb31345c095fe66",
+      "record": {
+        "id": "406aebfe-a6eb-48c1-9d93-b377bbd39d8f",
+        "subjectId": "d900543a-9c11-48c1-be76-1822b756fcc4",
+        "objectId": "5939642c-8fe8-459b-98c8-1aef555ba212",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "hidden",
+        "createdAt": "2026-10-18T18:54:58Z",
+        "updatedAt": "2026-10-18T18:54:58Z",
+        "contribution": {
+          "roleId": "AUTHORSHIP",
+          "scope": {
+            "kind": "publication",
+            "isbn13": "9784091836519",
+            "volumeLabel": "第1巻（NDL巻次 1 (ヘルDr.テンマ)）",
+            "editionLabel": null,
+            "language": "ja"
+          }
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      },
+      "label": "406aebfe-a6eb-48c1-9d93-b377bbd39d8f",
+      "aliases": [],
+      "nextStep": "同定・意味・scope・根拠を人間が再確認",
+      "dependencies": [
+        {
+          "type": "entities",
+          "id": "d900543a-9c11-48c1-be76-1822b756fcc4"
+        },
+        {
+          "type": "entities",
+          "id": "5939642c-8fe8-459b-98c8-1aef555ba212"
+        }
+      ],
+      "supportingCitations": [
+        "a90932b0-25dc-4ab1-9670-c49fecb805cf"
+      ],
+      "versionHashes": [
+        "00391430fbb4ac99c1a9bb7f891ddbb10c683bd1036159a20cb31345c095fe66"
+      ],
+      "exactPublicSemanticMatches": []
+    },
+    {
+      "type": "claims",
+      "id": "e3356616-466b-4ad1-9a56-079f0e118aa8",
+      "observations": [
+        {
+          "reference": "78864fba3b8d08f6a09e",
+          "recordId": "e3356616-466b-4ad1-9a56-079f0e118aa8",
+          "recordSha256": "c5e449745e228795b040f3b3f99f985b6153e3bdea1e9199f9d4f6d7db13ce78",
+          "stage": "raw-candidate"
+        }
+      ],
+      "acceptances": [],
+      "approvals": [],
+      "releases": [],
+      "holds": [
+        {
+          "reference": "2c61894baea89b657418",
+          "claimId": "e3356616-466b-4ad1-9a56-079f0e118aa8",
+          "person": "浦沢直樹",
+          "work": "20世紀少年",
+          "subjectId": "d900543a-9c11-48c1-be76-1822b756fcc4",
+          "objectId": "64859a28-f815-4982-9123-594ffa0cf4f8",
+          "roleId": "AUTHORSHIP",
+          "scope": {
+            "kind": "publication",
+            "isbn13": "9784091855312",
+            "volumeLabel": "第1巻（NDL巻次 1）",
+            "editionLabel": null,
+            "language": "ja"
+          },
+          "status": "held",
+          "reasons": [
+            "endpoint-identity-held"
+          ],
+          "supportingCitationIds": [
+            "a7b3db1c-b6eb-4088-afa6-7f954ee0c4ad"
+          ],
+          "existingState": null,
+          "existingClaimId": null,
+          "originalTexts": [
+            "浦沢直樹 著"
+          ],
+          "citationIds": [
+            "a7b3db1c-b6eb-4088-afa6-7f954ee0c4ad"
+          ],
+          "sourceUrls": [
+            "https://ndlsearch.ndl.go.jp/books/R100000002-I000002863103"
+          ],
+          "sourceIds": [
+            "0121512a-8598-4aae-b6d3-51015bd27249"
+          ]
+        }
+      ],
+      "reviews": [
+        {
+          "reference": "2c61894baea89b657418",
+          "claimId": "e3356616-466b-4ad1-9a56-079f0e118aa8",
+          "person": "浦沢直樹",
+          "work": "20世紀少年",
+          "subjectId": "d900543a-9c11-48c1-be76-1822b756fcc4",
+          "objectId": "64859a28-f815-4982-9123-594ffa0cf4f8",
+          "roleId": "AUTHORSHIP",
+          "scope": {
+            "kind": "publication",
+            "isbn13": "9784091855312",
+            "volumeLabel": "第1巻（NDL巻次 1）",
+            "editionLabel": null,
+            "language": "ja"
+          },
+          "status": "held",
+          "reasons": [
+            "endpoint-identity-held"
+          ],
+          "supportingCitationIds": [
+            "a7b3db1c-b6eb-4088-afa6-7f954ee0c4ad"
+          ],
+          "existingState": null,
+          "existingClaimId": null,
+          "originalTexts": [
+            "浦沢直樹 著"
+          ],
+          "citationIds": [
+            "a7b3db1c-b6eb-4088-afa6-7f954ee0c4ad"
+          ],
+          "sourceUrls": [
+            "https://ndlsearch.ndl.go.jp/books/R100000002-I000002863103"
+          ],
+          "sourceIds": [
+            "0121512a-8598-4aae-b6d3-51015bd27249"
+          ]
+        }
+      ],
+      "state": "held",
+      "preparationState": "not-release-prepared",
+      "recordSha256": "c5e449745e228795b040f3b3f99f985b6153e3bdea1e9199f9d4f6d7db13ce78",
+      "record": {
+        "id": "e3356616-466b-4ad1-9a56-079f0e118aa8",
+        "subjectId": "d900543a-9c11-48c1-be76-1822b756fcc4",
+        "objectId": "64859a28-f815-4982-9123-594ffa0cf4f8",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "hidden",
+        "createdAt": "2026-10-18T18:54:58Z",
+        "updatedAt": "2026-10-18T18:54:58Z",
+        "contribution": {
+          "roleId": "AUTHORSHIP",
+          "scope": {
+            "kind": "publication",
+            "isbn13": "9784091855312",
+            "volumeLabel": "第1巻（NDL巻次 1）",
+            "editionLabel": null,
+            "language": "ja"
+          }
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      },
+      "label": "e3356616-466b-4ad1-9a56-079f0e118aa8",
+      "aliases": [],
+      "nextStep": "同定・意味・scope・根拠を人間が再確認",
+      "dependencies": [
+        {
+          "type": "entities",
+          "id": "d900543a-9c11-48c1-be76-1822b756fcc4"
+        },
+        {
+          "type": "entities",
+          "id": "64859a28-f815-4982-9123-594ffa0cf4f8"
+        }
+      ],
+      "supportingCitations": [
+        "a7b3db1c-b6eb-4088-afa6-7f954ee0c4ad"
+      ],
+      "versionHashes": [
+        "c5e449745e228795b040f3b3f99f985b6153e3bdea1e9199f9d4f6d7db13ce78"
+      ],
+      "exactPublicSemanticMatches": []
+    },
+    {
+      "type": "claims",
+      "id": "fb541a79-5cf1-470b-9509-65cb8ede41f3",
+      "observations": [
+        {
+          "reference": "78864fba3b8d08f6a09e",
+          "recordId": "fb541a79-5cf1-470b-9509-65cb8ede41f3",
+          "recordSha256": "cb33e14ab20857f4d1a28a6655fa6a3aa77d921058d91ab2e6156ddf2e67a17f",
+          "stage": "raw-candidate"
+        }
+      ],
+      "acceptances": [],
+      "approvals": [],
+      "releases": [],
+      "holds": [
+        {
+          "reference": "2c61894baea89b657418",
+          "claimId": "fb541a79-5cf1-470b-9509-65cb8ede41f3",
+          "person": "浦沢直樹",
+          "work": "YAWARA!",
+          "subjectId": "d900543a-9c11-48c1-be76-1822b756fcc4",
+          "objectId": "4d0910a7-e548-4ba7-9ef0-f03377c7e1fe",
+          "roleId": "AUTHORSHIP",
+          "scope": {
+            "kind": "publication",
+            "isbn13": "9784091813411",
+            "volumeLabel": "第1巻（NDL巻次 1）",
+            "editionLabel": null,
+            "language": "ja"
+          },
+          "status": "held",
+          "reasons": [
+            "endpoint-identity-held"
+          ],
+          "supportingCitationIds": [
+            "37c7fedf-a002-4ef3-9bc9-32bd655c6509"
+          ],
+          "existingState": null,
+          "existingClaimId": null,
+          "originalTexts": [
+            "浦沢直樹 著"
+          ],
+          "citationIds": [
+            "37c7fedf-a002-4ef3-9bc9-32bd655c6509"
+          ],
+          "sourceUrls": [
+            "https://ndlsearch.ndl.go.jp/books/R100000002-I000001854814"
+          ],
+          "sourceIds": [
+            "b199fe5f-f5ce-4bca-b375-bafccaf18bbe"
+          ]
+        }
+      ],
+      "reviews": [
+        {
+          "reference": "2c61894baea89b657418",
+          "claimId": "fb541a79-5cf1-470b-9509-65cb8ede41f3",
+          "person": "浦沢直樹",
+          "work": "YAWARA!",
+          "subjectId": "d900543a-9c11-48c1-be76-1822b756fcc4",
+          "objectId": "4d0910a7-e548-4ba7-9ef0-f03377c7e1fe",
+          "roleId": "AUTHORSHIP",
+          "scope": {
+            "kind": "publication",
+            "isbn13": "9784091813411",
+            "volumeLabel": "第1巻（NDL巻次 1）",
+            "editionLabel": null,
+            "language": "ja"
+          },
+          "status": "held",
+          "reasons": [
+            "endpoint-identity-held"
+          ],
+          "supportingCitationIds": [
+            "37c7fedf-a002-4ef3-9bc9-32bd655c6509"
+          ],
+          "existingState": null,
+          "existingClaimId": null,
+          "originalTexts": [
+            "浦沢直樹 著"
+          ],
+          "citationIds": [
+            "37c7fedf-a002-4ef3-9bc9-32bd655c6509"
+          ],
+          "sourceUrls": [
+            "https://ndlsearch.ndl.go.jp/books/R100000002-I000001854814"
+          ],
+          "sourceIds": [
+            "b199fe5f-f5ce-4bca-b375-bafccaf18bbe"
+          ]
+        }
+      ],
+      "state": "held",
+      "preparationState": "not-release-prepared",
+      "recordSha256": "cb33e14ab20857f4d1a28a6655fa6a3aa77d921058d91ab2e6156ddf2e67a17f",
+      "record": {
+        "id": "fb541a79-5cf1-470b-9509-65cb8ede41f3",
+        "subjectId": "d900543a-9c11-48c1-be76-1822b756fcc4",
+        "objectId": "4d0910a7-e548-4ba7-9ef0-f03377c7e1fe",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "hidden",
+        "createdAt": "2026-10-18T18:54:58Z",
+        "updatedAt": "2026-10-18T18:54:58Z",
+        "contribution": {
+          "roleId": "AUTHORSHIP",
+          "scope": {
+            "kind": "publication",
+            "isbn13": "9784091813411",
+            "volumeLabel": "第1巻（NDL巻次 1）",
+            "editionLabel": null,
+            "language": "ja"
+          }
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      },
+      "label": "fb541a79-5cf1-470b-9509-65cb8ede41f3",
+      "aliases": [],
+      "nextStep": "同定・意味・scope・根拠を人間が再確認",
+      "dependencies": [
+        {
+          "type": "entities",
+          "id": "d900543a-9c11-48c1-be76-1822b756fcc4"
+        },
+        {
+          "type": "entities",
+          "id": "4d0910a7-e548-4ba7-9ef0-f03377c7e1fe"
+        }
+      ],
+      "supportingCitations": [
+        "37c7fedf-a002-4ef3-9bc9-32bd655c6509"
+      ],
+      "versionHashes": [
+        "cb33e14ab20857f4d1a28a6655fa6a3aa77d921058d91ab2e6156ddf2e67a17f"
+      ],
+      "exactPublicSemanticMatches": []
+    },
+    {
+      "type": "entities",
+      "id": "3d279a30-0131-4b37-9429-9a39e8027e05",
+      "observations": [
+        {
+          "reference": "3a0cb31e212a32bad62b",
+          "recordId": "3d279a30-0131-4b37-9429-9a39e8027e05",
+          "recordSha256": "82f1f42888b9f3021319b8313ad038cc56c29d6b207377ddcf2caf12e4377fe3",
+          "stage": "raw-candidate"
+        }
+      ],
+      "acceptances": [],
+      "approvals": [],
+      "releases": [],
+      "holds": [
+        {
+          "id": "3d279a30-0131-4b37-9429-9a39e8027e05",
+          "reference": "af0b58cdadfad0e8be6e",
+          "reasons": [
+            "excluded-from-this-formal-acceptance"
+          ]
+        },
+        {
+          "id": "3d279a30-0131-4b37-9429-9a39e8027e05",
+          "reference": "3642f16769755c36942a",
+          "reasons": [
+            "excluded-from-this-formal-acceptance"
+          ]
+        }
+      ],
+      "state": "held",
+      "preparationState": "not-release-prepared",
+      "recordSha256": "82f1f42888b9f3021319b8313ad038cc56c29d6b207377ddcf2caf12e4377fe3",
+      "record": {
+        "id": "3d279a30-0131-4b37-9429-9a39e8027e05",
+        "kind": "person",
+        "name": "村田雄介",
+        "description": "収集候補。Wikidata識別子とNDL書誌を照合し、人間の受入前です。",
+        "aliases": [
+          "Murata Yusuke",
+          "Murata Yuusuke",
+          "Murata Yūsuke",
+          "Yusuke Murata",
+          "Yuusuke Murata",
+          "Yūsuke Murata"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q2602377"
+          }
+        ],
+        "createdAt": "2026-10-16T00:00:00Z",
+        "updatedAt": "2026-10-16T00:00:00Z",
+        "event": null
+      },
+      "label": "村田雄介",
+      "aliases": [],
+      "nextStep": "同定・意味・scope・根拠を人間が再確認",
+      "dependencies": [],
+      "versionHashes": [
+        "82f1f42888b9f3021319b8313ad038cc56c29d6b207377ddcf2caf12e4377fe3"
+      ],
+      "currentPublicNameMatchesForHumanReview": [],
+      "currentPublicExternalIdMatchesForHumanReview": []
+    },
+    {
+      "type": "entities",
+      "id": "45401343-bba1-4070-b4b0-ddd9cc7047fb",
+      "observations": [
+        {
+          "reference": "673fc01476692ad8744f",
+          "recordId": "45401343-bba1-4070-b4b0-ddd9cc7047fb",
+          "recordSha256": "00ea3fe6a9f6bf28eec3bc897a0742b5c71394216e3efabffe5243eb29e2d7a9",
+          "stage": "candidate"
+        },
+        {
+          "reference": "5af0da2d99279a33eaaa",
+          "recordId": "45401343-bba1-4070-b4b0-ddd9cc7047fb",
+          "recordSha256": "00ea3fe6a9f6bf28eec3bc897a0742b5c71394216e3efabffe5243eb29e2d7a9",
+          "stage": "raw-candidate"
+        }
+      ],
+      "acceptances": [],
+      "approvals": [],
+      "releases": [],
+      "holds": [],
+      "reviews": [
+        {
+          "reference": "0a8e22eaa03de2acb36f",
+          "entityId": "45401343-bba1-4070-b4b0-ddd9cc7047fb",
+          "name": "黄泉のツガイ",
+          "kind": "work",
+          "wikidata": "Q111944796",
+          "existingEntityId": null,
+          "status": "candidate",
+          "reasons": [],
+          "checks": {
+            "providerIdentity": true
+          },
+          "inputPopulation": "identity-only"
+        }
+      ],
+      "state": "candidate",
+      "preparationState": "not-release-prepared",
+      "recordSha256": "00ea3fe6a9f6bf28eec3bc897a0742b5c71394216e3efabffe5243eb29e2d7a9",
+      "record": {
+        "id": "45401343-bba1-4070-b4b0-ddd9cc7047fb",
+        "kind": "work",
+        "name": "黄泉のツガイ",
+        "description": null,
+        "aliases": [
+          "Daemons of the Shadow Realm"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q111944796"
+          }
+        ],
+        "createdAt": "2026-10-18T18:54:58Z",
+        "updatedAt": "2026-10-18T18:54:58Z",
+        "event": null
+      },
+      "label": "黄泉のツガイ",
+      "aliases": [],
+      "nextStep": "既存レビューに沿って人間が個別判断",
+      "dependencies": [],
+      "versionHashes": [
+        "00ea3fe6a9f6bf28eec3bc897a0742b5c71394216e3efabffe5243eb29e2d7a9"
+      ],
+      "currentPublicNameMatchesForHumanReview": [],
+      "currentPublicExternalIdMatchesForHumanReview": []
+    },
+    {
+      "type": "entities",
+      "id": "4d0910a7-e548-4ba7-9ef0-f03377c7e1fe",
+      "observations": [
+        {
+          "reference": "78864fba3b8d08f6a09e",
+          "recordId": "4d0910a7-e548-4ba7-9ef0-f03377c7e1fe",
+          "recordSha256": "9ccdb4e6b9d68560c02b53680b0975a5e228f76f1cbaead322d733a877fd546f",
+          "stage": "raw-candidate"
+        }
+      ],
+      "acceptances": [],
+      "approvals": [],
+      "releases": [],
+      "holds": [
+        {
+          "reference": "2c61894baea89b657418",
+          "entityId": "4d0910a7-e548-4ba7-9ef0-f03377c7e1fe",
+          "name": "YAWARA!",
+          "kind": "work",
+          "wikidata": "Q528619",
+          "existingEntityId": null,
+          "status": "held",
+          "reasons": [
+            "existing-identity-needs-explicit-uuid-mapping"
+          ],
+          "checks": {
+            "providerIdentity": true
+          },
+          "inputPopulation": "relation-endpoint"
+        }
+      ],
+      "reviews": [
+        {
+          "reference": "2c61894baea89b657418",
+          "entityId": "4d0910a7-e548-4ba7-9ef0-f03377c7e1fe",
+          "name": "YAWARA!",
+          "kind": "work",
+          "wikidata": "Q528619",
+          "existingEntityId": null,
+          "status": "held",
+          "reasons": [
+            "existing-identity-needs-explicit-uuid-mapping"
+          ],
+          "checks": {
+            "providerIdentity": true
+          },
+          "inputPopulation": "relation-endpoint"
+        }
+      ],
+      "state": "held",
+      "preparationState": "not-release-prepared",
+      "recordSha256": "9ccdb4e6b9d68560c02b53680b0975a5e228f76f1cbaead322d733a877fd546f",
+      "record": {
+        "id": "4d0910a7-e548-4ba7-9ef0-f03377c7e1fe",
+        "kind": "work",
+        "name": "YAWARA!",
+        "description": null,
+        "aliases": [
+          "Yawara!"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q528619"
+          }
+        ],
+        "createdAt": "2026-10-18T18:54:58Z",
+        "updatedAt": "2026-10-18T18:54:58Z",
+        "event": null
+      },
+      "label": "YAWARA!",
+      "aliases": [],
+      "nextStep": "同定・意味・scope・根拠を人間が再確認",
+      "dependencies": [],
+      "versionHashes": [
+        "9ccdb4e6b9d68560c02b53680b0975a5e228f76f1cbaead322d733a877fd546f"
+      ],
+      "currentPublicNameMatchesForHumanReview": [
+        {
+          "id": "ed3e72d6-42a5-4a49-ab0c-307d9f051e2b",
+          "name": "YAWARA!"
+        }
+      ],
+      "currentPublicExternalIdMatchesForHumanReview": []
+    },
+    {
+      "type": "entities",
+      "id": "5939642c-8fe8-459b-98c8-1aef555ba212",
+      "observations": [
+        {
+          "reference": "78864fba3b8d08f6a09e",
+          "recordId": "5939642c-8fe8-459b-98c8-1aef555ba212",
+          "recordSha256": "60e27f6aa577645da27e3f42ee2f00194cd09c7678f8016f997c21dc54cb0e90",
+          "stage": "raw-candidate"
+        }
+      ],
+      "acceptances": [],
+      "approvals": [],
+      "releases": [],
+      "holds": [
+        {
+          "reference": "2c61894baea89b657418",
+          "entityId": "5939642c-8fe8-459b-98c8-1aef555ba212",
+          "name": "MONSTER",
+          "kind": "work",
+          "wikidata": "Q858384",
+          "existingEntityId": null,
+          "status": "held",
+          "reasons": [
+            "existing-identity-needs-explicit-uuid-mapping"
+          ],
+          "checks": {
+            "providerIdentity": true
+          },
+          "inputPopulation": "relation-endpoint"
+        }
+      ],
+      "reviews": [
+        {
+          "reference": "2c61894baea89b657418",
+          "entityId": "5939642c-8fe8-459b-98c8-1aef555ba212",
+          "name": "MONSTER",
+          "kind": "work",
+          "wikidata": "Q858384",
+          "existingEntityId": null,
+          "status": "held",
+          "reasons": [
+            "existing-identity-needs-explicit-uuid-mapping"
+          ],
+          "checks": {
+            "providerIdentity": true
+          },
+          "inputPopulation": "relation-endpoint"
+        }
+      ],
+      "state": "held",
+      "preparationState": "not-release-prepared",
+      "recordSha256": "60e27f6aa577645da27e3f42ee2f00194cd09c7678f8016f997c21dc54cb0e90",
+      "record": {
+        "id": "5939642c-8fe8-459b-98c8-1aef555ba212",
+        "kind": "work",
+        "name": "MONSTER",
+        "description": null,
+        "aliases": [
+          "Monster"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q858384"
+          }
+        ],
+        "createdAt": "2026-10-18T18:54:58Z",
+        "updatedAt": "2026-10-18T18:54:58Z",
+        "event": null
+      },
+      "label": "MONSTER",
+      "aliases": [],
+      "nextStep": "同定・意味・scope・根拠を人間が再確認",
+      "dependencies": [],
+      "versionHashes": [
+        "60e27f6aa577645da27e3f42ee2f00194cd09c7678f8016f997c21dc54cb0e90"
+      ],
+      "currentPublicNameMatchesForHumanReview": [
+        {
+          "id": "a6521d80-b9d0-4477-a435-6fa02eb58c04",
+          "name": "MONSTER"
+        }
+      ],
+      "currentPublicExternalIdMatchesForHumanReview": []
+    },
+    {
+      "type": "entities",
+      "id": "64859a28-f815-4982-9123-594ffa0cf4f8",
+      "observations": [
+        {
+          "reference": "78864fba3b8d08f6a09e",
+          "recordId": "64859a28-f815-4982-9123-594ffa0cf4f8",
+          "recordSha256": "e21409642c5a42df0569e102080a71ee717d06b9f0dd15de3011b1b34369797f",
+          "stage": "raw-candidate"
+        }
+      ],
+      "acceptances": [],
+      "approvals": [],
+      "releases": [],
+      "holds": [
+        {
+          "reference": "2c61894baea89b657418",
+          "entityId": "64859a28-f815-4982-9123-594ffa0cf4f8",
+          "name": "20世紀少年",
+          "kind": "work",
+          "wikidata": "Q91458",
+          "existingEntityId": null,
+          "status": "held",
+          "reasons": [
+            "existing-identity-needs-explicit-uuid-mapping"
+          ],
+          "checks": {
+            "providerIdentity": true
+          },
+          "inputPopulation": "relation-endpoint"
+        }
+      ],
+      "reviews": [
+        {
+          "reference": "2c61894baea89b657418",
+          "entityId": "64859a28-f815-4982-9123-594ffa0cf4f8",
+          "name": "20世紀少年",
+          "kind": "work",
+          "wikidata": "Q91458",
+          "existingEntityId": null,
+          "status": "held",
+          "reasons": [
+            "existing-identity-needs-explicit-uuid-mapping"
+          ],
+          "checks": {
+            "providerIdentity": true
+          },
+          "inputPopulation": "relation-endpoint"
+        }
+      ],
+      "state": "held",
+      "preparationState": "not-release-prepared",
+      "recordSha256": "e21409642c5a42df0569e102080a71ee717d06b9f0dd15de3011b1b34369797f",
+      "record": {
+        "id": "64859a28-f815-4982-9123-594ffa0cf4f8",
+        "kind": "work",
+        "name": "20世紀少年",
+        "description": null,
+        "aliases": [
+          "20th Century Boys"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q91458"
+          }
+        ],
+        "createdAt": "2026-10-18T18:54:58Z",
+        "updatedAt": "2026-10-18T18:54:58Z",
+        "event": null
+      },
+      "label": "20世紀少年",
+      "aliases": [],
+      "nextStep": "同定・意味・scope・根拠を人間が再確認",
+      "dependencies": [],
+      "versionHashes": [
+        "e21409642c5a42df0569e102080a71ee717d06b9f0dd15de3011b1b34369797f"
+      ],
+      "currentPublicNameMatchesForHumanReview": [
+        {
+          "id": "a87ce993-a862-4f18-b956-7fa24c9df8a2",
+          "name": "20世紀少年"
+        }
+      ],
+      "currentPublicExternalIdMatchesForHumanReview": []
+    },
+    {
+      "type": "entities",
+      "id": "a81be119-25d0-4759-9c93-ee6335ef8885",
+      "observations": [
+        {
+          "reference": "50d665b692599774f807",
+          "recordId": "a81be119-25d0-4759-9c93-ee6335ef8885",
+          "recordSha256": "e5456aba3a995d81bcf291a7e6f8ea6bf1cecb56d961fcab0381c9159cdc9607",
+          "stage": "candidate"
+        },
+        {
+          "reference": "1d161c12e3e743c045af",
+          "recordId": "a81be119-25d0-4759-9c93-ee6335ef8885",
+          "recordSha256": "e5456aba3a995d81bcf291a7e6f8ea6bf1cecb56d961fcab0381c9159cdc9607",
+          "stage": "raw-candidate"
+        }
+      ],
+      "acceptances": [],
+      "approvals": [],
+      "releases": [],
+      "holds": [],
+      "reviews": [
+        {
+          "reference": "066847662dccdc3d22b4",
+          "entityId": "a81be119-25d0-4759-9c93-ee6335ef8885",
+          "name": "藤子・F・不二雄",
+          "kind": "person",
+          "wikidata": "Q17572",
+          "existingEntityId": null,
+          "status": "candidate",
+          "reasons": [],
+          "checks": {
+            "providerIdentity": true
+          },
+          "inputPopulation": "identity-only"
+        }
+      ],
+      "state": "candidate",
+      "preparationState": "not-release-prepared",
+      "recordSha256": "e5456aba3a995d81bcf291a7e6f8ea6bf1cecb56d961fcab0381c9159cdc9607",
+      "record": {
+        "id": "a81be119-25d0-4759-9c93-ee6335ef8885",
+        "kind": "person",
+        "name": "藤子・F・不二雄",
+        "description": null,
+        "aliases": [
+          "Fujiko F. Fujio"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q17572"
+          }
+        ],
+        "createdAt": "2026-10-18T18:54:58Z",
+        "updatedAt": "2026-10-18T18:54:58Z",
+        "event": null
+      },
+      "label": "藤子・F・不二雄",
+      "aliases": [],
+      "nextStep": "既存レビューに沿って人間が個別判断",
+      "dependencies": [],
+      "versionHashes": [
+        "e5456aba3a995d81bcf291a7e6f8ea6bf1cecb56d961fcab0381c9159cdc9607"
+      ],
+      "currentPublicNameMatchesForHumanReview": [],
+      "currentPublicExternalIdMatchesForHumanReview": []
+    },
+    {
+      "type": "entities",
+      "id": "a8b8fe75-b4fe-492e-b044-593f92ac5cd4",
+      "observations": [
+        {
+          "reference": "673fc01476692ad8744f",
+          "recordId": "a8b8fe75-b4fe-492e-b044-593f92ac5cd4",
+          "recordSha256": "bd49e306621dd6e76602b1cb58cf5b4f0e2b2699ec760512a8a59d3886374d03",
+          "stage": "candidate"
+        },
+        {
+          "reference": "5af0da2d99279a33eaaa",
+          "recordId": "a8b8fe75-b4fe-492e-b044-593f92ac5cd4",
+          "recordSha256": "bd49e306621dd6e76602b1cb58cf5b4f0e2b2699ec760512a8a59d3886374d03",
+          "stage": "raw-candidate"
+        }
+      ],
+      "acceptances": [],
+      "approvals": [],
+      "releases": [],
+      "holds": [],
+      "reviews": [
+        {
+          "reference": "0a8e22eaa03de2acb36f",
+          "entityId": "a8b8fe75-b4fe-492e-b044-593f92ac5cd4",
+          "name": "荒川弘",
+          "kind": "person",
+          "wikidata": "Q230962",
+          "existingEntityId": null,
+          "status": "candidate",
+          "reasons": [],
+          "checks": {
+            "providerIdentity": true
+          },
+          "inputPopulation": "identity-only"
+        }
+      ],
+      "state": "candidate",
+      "preparationState": "not-release-prepared",
+      "recordSha256": "bd49e306621dd6e76602b1cb58cf5b4f0e2b2699ec760512a8a59d3886374d03",
+      "record": {
+        "id": "a8b8fe75-b4fe-492e-b044-593f92ac5cd4",
+        "kind": "person",
+        "name": "荒川弘",
+        "description": null,
+        "aliases": [
+          "Hiromu Arakawa"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q230962"
+          }
+        ],
+        "createdAt": "2026-10-18T18:54:58Z",
+        "updatedAt": "2026-10-18T18:54:58Z",
+        "event": null
+      },
+      "label": "荒川弘",
+      "aliases": [],
+      "nextStep": "既存レビューに沿って人間が個別判断",
+      "dependencies": [],
+      "versionHashes": [
+        "bd49e306621dd6e76602b1cb58cf5b4f0e2b2699ec760512a8a59d3886374d03"
+      ],
+      "currentPublicNameMatchesForHumanReview": [],
+      "currentPublicExternalIdMatchesForHumanReview": []
+    },
+    {
+      "type": "sources",
+      "id": "0121512a-8598-4aae-b6d3-51015bd27249",
+      "observations": [
+        {
+          "reference": "78864fba3b8d08f6a09e",
+          "recordId": "0121512a-8598-4aae-b6d3-51015bd27249",
+          "recordSha256": "e9b6b2067bc0c7b69574b1fe112d1088f386ae1830da1bf947e97d9f523b3ad7",
+          "stage": "raw-candidate"
+        }
+      ],
+      "acceptances": [],
+      "approvals": [],
+      "releases": [],
+      "holds": [],
+      "state": "held",
+      "preparationState": "not-release-prepared",
+      "recordSha256": "e9b6b2067bc0c7b69574b1fe112d1088f386ae1830da1bf947e97d9f523b3ad7",
+      "record": {
+        "id": "0121512a-8598-4aae-b6d3-51015bd27249",
+        "kind": "web",
+        "title": "NDLサーチ: 20世紀少年. 1",
+        "authors": [],
+        "publisher": "国立国会図書館",
+        "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I000002863103",
+        "publishedAt": null,
+        "edition": null,
+        "note": "国立国会図書館作成書誌（iss-ndl-opac）の責任表示。メタデータ CC BY 4.0: https://creativecommons.org/licenses/by/4.0/ ; 提供元条件 https://ndlsearch.ndl.go.jp/help/api/provider 。本文・画像・第三者所蔵情報は含まない。",
+        "isDemo": false
+      },
+      "label": "NDLサーチ: 20世紀少年. 1",
+      "aliases": [],
+      "nextStep": "全参照Citationが保留。対応Claimの理由を確認",
+      "dependencies": [],
+      "versionHashes": [
+        "e9b6b2067bc0c7b69574b1fe112d1088f386ae1830da1bf947e97d9f523b3ad7"
+      ]
+    },
+    {
+      "type": "sources",
+      "id": "b199fe5f-f5ce-4bca-b375-bafccaf18bbe",
+      "observations": [
+        {
+          "reference": "78864fba3b8d08f6a09e",
+          "recordId": "b199fe5f-f5ce-4bca-b375-bafccaf18bbe",
+          "recordSha256": "d53794179982b3049f89355142da9d8dd361874554c270bd6849552d930a68c1",
+          "stage": "raw-candidate"
+        }
+      ],
+      "acceptances": [],
+      "approvals": [],
+      "releases": [],
+      "holds": [],
+      "state": "held",
+      "preparationState": "not-release-prepared",
+      "recordSha256": "d53794179982b3049f89355142da9d8dd361874554c270bd6849552d930a68c1",
+      "record": {
+        "id": "b199fe5f-f5ce-4bca-b375-bafccaf18bbe",
+        "kind": "web",
+        "title": "NDLサーチ: Yawara!. 1",
+        "authors": [],
+        "publisher": "国立国会図書館",
+        "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I000001854814",
+        "publishedAt": null,
+        "edition": null,
+        "note": "国立国会図書館作成書誌（iss-ndl-opac）の責任表示。メタデータ CC BY 4.0: https://creativecommons.org/licenses/by/4.0/ ; 提供元条件 https://ndlsearch.ndl.go.jp/help/api/provider 。本文・画像・第三者所蔵情報は含まない。",
+        "isDemo": false
+      },
+      "label": "NDLサーチ: Yawara!. 1",
+      "aliases": [],
+      "nextStep": "全参照Citationが保留。対応Claimの理由を確認",
+      "dependencies": [],
+      "versionHashes": [
+        "d53794179982b3049f89355142da9d8dd361874554c270bd6849552d930a68c1"
+      ]
+    },
+    {
+      "type": "sources",
+      "id": "d9b3e501-ab02-4001-9254-de6df2af90ac",
+      "observations": [
+        {
+          "reference": "78864fba3b8d08f6a09e",
+          "recordId": "d9b3e501-ab02-4001-9254-de6df2af90ac",
+          "recordSha256": "95d780b5e4ec4f69aa211882b5fa5d43af777873670070009de94dc0818780e3",
+          "stage": "raw-candidate"
+        }
+      ],
+      "acceptances": [],
+      "approvals": [],
+      "releases": [],
+      "holds": [],
+      "state": "held",
+      "preparationState": "not-release-prepared",
+      "recordSha256": "95d780b5e4ec4f69aa211882b5fa5d43af777873670070009de94dc0818780e3",
+      "record": {
+        "id": "d9b3e501-ab02-4001-9254-de6df2af90ac",
+        "kind": "web",
+        "title": "NDLサーチ: Monster. 1 (ヘルDr.テンマ)",
+        "authors": [],
+        "publisher": "国立国会図書館",
+        "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I000002418467",
+        "publishedAt": null,
+        "edition": null,
+        "note": "国立国会図書館作成書誌（iss-ndl-opac）の責任表示。メタデータ CC BY 4.0: https://creativecommons.org/licenses/by/4.0/ ; 提供元条件 https://ndlsearch.ndl.go.jp/help/api/provider 。本文・画像・第三者所蔵情報は含まない。",
+        "isDemo": false
+      },
+      "label": "NDLサーチ: Monster. 1 (ヘルDr.テンマ)",
+      "aliases": [],
+      "nextStep": "全参照Citationが保留。対応Claimの理由を確認",
+      "dependencies": [],
+      "versionHashes": [
+        "95d780b5e4ec4f69aa211882b5fa5d43af777873670070009de94dc0818780e3"
+      ]
+    }
+  ],
+  "preparationCounts": {
+    "approvedWorks": 23,
+    "preparedWorks": 17,
+    "preparedPeople": 10,
+    "batches": 10,
+    "holds": 6,
+    "networkAttempts": 89
+  },
+  "preparationHolds": [
+    {
+      "target": "NARUTO",
+      "person": "岸本斉史",
+      "reason": "No dated, exact first-volume Japanese manga publication"
+    },
+    {
+      "target": "かぐや様は告らせたい",
+      "person": "赤坂アカ",
+      "reason": "Exact name/type QID is not unique: かぐや様は告らせたい"
+    },
+    {
+      "target": "ジョジョの奇妙な冒険 第1部 ファントムブラッド",
+      "person": "荒木飛呂彦",
+      "reason": "Exact name/type QID is not unique: ジョジョの奇妙な冒険 第1部 ファントムブラッド"
+    },
+    {
+      "target": "鋼の錬金術師",
+      "person": "荒川弘",
+      "reason": "ISBN lookup does not uniquely preserve selected publication"
+    },
+    {
+      "target": "銀の匙 Silver Spoon",
+      "person": "荒川弘",
+      "reason": "No dated, exact first-volume Japanese manga publication"
+    },
+    {
+      "target": "キテレツ大百科",
+      "person": "藤子・F・不二雄",
+      "reason": "Exact name/type QID is not unique: キテレツ大百科"
+    }
+  ],
+  "unstructuredObservations": [
+    {
+      "id": "hold-77d4b17f8fdac10d",
+      "detail": {
+        "reason": "unsupported-responsibility-role",
+        "work": "PLUTO",
+        "rawResponsibility": "手塚眞 監修",
+        "sourceUrl": "https://ndlsearch.ndl.go.jp/books/R100000002-I000007510854"
+      },
+      "state": "historical-observation-check-current-uuid-state",
+      "observations": [
+        {
+          "reference": "59ad339b6bf1660a55a2",
+          "kind": "historical-collection-hold"
+        }
+      ],
+      "exactPublishedSourceAndOriginalTextMatches": [],
+      "countAsClaim": false
+    },
+    {
+      "id": "hold-d145a61e002fe478",
+      "detail": {
+        "reason": "unsupported-responsibility-role",
+        "work": "PLUTO",
+        "rawResponsibility": "浦沢直樹 [ほか]著",
+        "sourceUrl": "https://ndlsearch.ndl.go.jp/books/R100000002-I000007510854"
+      },
+      "state": "historical-observation-check-current-uuid-state",
+      "observations": [
+        {
+          "reference": "59ad339b6bf1660a55a2",
+          "kind": "historical-collection-hold"
+        }
+      ],
+      "exactPublishedSourceAndOriginalTextMatches": [],
+      "countAsClaim": false
+    },
+    {
+      "id": "hold-63d35c9563c74a9f",
+      "detail": {
+        "reason": "unsupported-responsibility-role",
+        "work": "トリリオンゲーム",
+        "rawResponsibility": "稲垣理一郎 原作",
+        "sourceUrl": "https://ndlsearch.ndl.go.jp/books/R100000002-I031350948"
+      },
+      "state": "historical-observation-check-current-uuid-state",
+      "observations": [
+        {
+          "reference": "59ad339b6bf1660a55a2",
+          "kind": "historical-collection-hold"
+        }
+      ],
+      "exactPublishedSourceAndOriginalTextMatches": [
+        "c3f1e013-68cc-42b7-b076-495178247899"
+      ],
+      "countAsClaim": false
+    },
+    {
+      "id": "hold-2df3f91f843cc988",
+      "detail": {
+        "reason": "unsupported-responsibility-role",
+        "work": "Dr.STONE",
+        "rawResponsibility": "稲垣理一郎 原作",
+        "sourceUrl": "https://ndlsearch.ndl.go.jp/books/R100000002-I028309496"
+      },
+      "state": "historical-observation-check-current-uuid-state",
+      "observations": [
+        {
+          "reference": "59ad339b6bf1660a55a2",
+          "kind": "historical-collection-hold"
+        }
+      ],
+      "exactPublishedSourceAndOriginalTextMatches": [
+        "f638cf0b-3750-49f6-b833-844d5465b99f"
+      ],
+      "countAsClaim": false
+    },
+    {
+      "id": "hold-1ad0deed42174cfe",
+      "detail": {
+        "reason": "unsupported-responsibility-role",
+        "work": "アイシールド21",
+        "rawResponsibility": "稲垣理一郎 原作",
+        "sourceUrl": "https://ndlsearch.ndl.go.jp/books/R100000002-I000004050151"
+      },
+      "state": "historical-observation-check-current-uuid-state",
+      "observations": [
+        {
+          "reference": "59ad339b6bf1660a55a2",
+          "kind": "historical-collection-hold"
+        }
+      ],
+      "exactPublishedSourceAndOriginalTextMatches": [
+        "043e8592-5827-4167-9c93-f8201dd110bc"
+      ],
+      "countAsClaim": false
+    },
+    {
+      "id": "hold-08545ebd8b012dea",
+      "detail": {
+        "reason": "unsupported-responsibility-role",
+        "work": "アイシールド21",
+        "rawResponsibility": "村田雄介 漫画",
+        "sourceUrl": "https://ndlsearch.ndl.go.jp/books/R100000002-I000004050151"
+      },
+      "state": "historical-observation-check-current-uuid-state",
+      "observations": [
+        {
+          "reference": "59ad339b6bf1660a55a2",
+          "kind": "historical-collection-hold"
+        }
+      ],
+      "exactPublishedSourceAndOriginalTextMatches": [],
+      "countAsClaim": false
+    },
+    {
+      "id": "hold-80b71d6ed7cf628d",
+      "detail": {
+        "reason": "unsupported-responsibility-role",
+        "work": "DEATH NOTE",
+        "rawResponsibility": "大場つぐみ 原作",
+        "sourceUrl": "https://ndlsearch.ndl.go.jp/books/R100000002-I000007330339"
+      },
+      "state": "historical-observation-check-current-uuid-state",
+      "observations": [
+        {
+          "reference": "59ad339b6bf1660a55a2",
+          "kind": "historical-collection-hold"
+        }
+      ],
+      "exactPublishedSourceAndOriginalTextMatches": [
+        "6ed29ee4-2b62-4fe7-83a6-aafe300754d7"
+      ],
+      "countAsClaim": false
+    },
+    {
+      "id": "hold-3f598eaf239fbf56",
+      "detail": {
+        "reason": "unsupported-responsibility-role",
+        "work": "DEATH NOTE",
+        "rawResponsibility": "小畑健 漫画",
+        "sourceUrl": "https://ndlsearch.ndl.go.jp/books/R100000002-I000007330339"
+      },
+      "state": "historical-observation-check-current-uuid-state",
+      "observations": [
+        {
+          "reference": "59ad339b6bf1660a55a2",
+          "kind": "historical-collection-hold"
+        }
+      ],
+      "exactPublishedSourceAndOriginalTextMatches": [],
+      "countAsClaim": false
+    },
+    {
+      "id": "hold-d5304eeb6bb2960c",
+      "detail": {
+        "reason": "unsupported-responsibility-role",
+        "work": "ヒカルの碁",
+        "rawResponsibility": "ほったゆみ 原作",
+        "sourceUrl": "https://ndlsearch.ndl.go.jp/books/R100000002-I000002788748"
+      },
+      "state": "historical-observation-check-current-uuid-state",
+      "observations": [
+        {
+          "reference": "59ad339b6bf1660a55a2",
+          "kind": "historical-collection-hold"
+        }
+      ],
+      "exactPublishedSourceAndOriginalTextMatches": [
+        "10f72eb0-3526-4d50-a552-e2239c01fc39"
+      ],
+      "countAsClaim": false
+    },
+    {
+      "id": "hold-91e25507429cdd53",
+      "detail": {
+        "reason": "unsupported-responsibility-role",
+        "work": "ヒカルの碁",
+        "rawResponsibility": "小畑健 漫画",
+        "sourceUrl": "https://ndlsearch.ndl.go.jp/books/R100000002-I000002788748"
+      },
+      "state": "historical-observation-check-current-uuid-state",
+      "observations": [
+        {
+          "reference": "59ad339b6bf1660a55a2",
+          "kind": "historical-collection-hold"
+        }
+      ],
+      "exactPublishedSourceAndOriginalTextMatches": [],
+      "countAsClaim": false
+    },
+    {
+      "id": "hold-ee3590e4d8cf23e2",
+      "detail": {
+        "reason": "unsupported-responsibility-role",
+        "work": "ヒカルの碁",
+        "rawResponsibility": "梅澤由香里 監修",
+        "sourceUrl": "https://ndlsearch.ndl.go.jp/books/R100000002-I000002788748"
+      },
+      "state": "historical-observation-check-current-uuid-state",
+      "observations": [
+        {
+          "reference": "59ad339b6bf1660a55a2",
+          "kind": "historical-collection-hold"
+        }
+      ],
+      "exactPublishedSourceAndOriginalTextMatches": [],
+      "countAsClaim": false
+    },
+    {
+      "id": "hold-1274cc7cac0f0b9a",
+      "detail": {
+        "reason": "unsupported-responsibility-role",
+        "work": "バクマン。",
+        "rawResponsibility": "小畑健 漫画",
+        "sourceUrl": "https://ndlsearch.ndl.go.jp/books/R100000002-I028322829"
+      },
+      "state": "historical-observation-check-current-uuid-state",
+      "observations": [
+        {
+          "reference": "a5ba93a974be8fce4e0c",
+          "kind": "historical-collection-hold"
+        },
+        {
+          "reference": "d492458c7bb62136bc08",
+          "kind": "unstructured-collection-hold"
+        }
+      ],
+      "exactPublishedSourceAndOriginalTextMatches": [],
+      "countAsClaim": false
+    },
+    {
+      "id": "hold-5fb0406439928a99",
+      "detail": {
+        "reason": "unsupported-responsibility-role",
+        "work": "【推しの子】",
+        "rawResponsibility": "赤坂アカ, 横槍メンゴ 著",
+        "sourceUrl": "https://ndlsearch.ndl.go.jp/books/R100000002-I030509435"
+      },
+      "state": "historical-observation-check-current-uuid-state",
+      "observations": [
+        {
+          "reference": "a5ba93a974be8fce4e0c",
+          "kind": "historical-collection-hold"
+        },
+        {
+          "reference": "d492458c7bb62136bc08",
+          "kind": "unstructured-collection-hold"
+        }
+      ],
+      "exactPublishedSourceAndOriginalTextMatches": [],
+      "countAsClaim": false
+    },
+    {
+      "id": "hold-14a52756d6d97d02",
+      "detail": {
+        "reason": "publication-identity-unconfirmed",
+        "work": "鉄腕アトム",
+        "isbn13": "9784091480866",
+        "matchingRecords": 0,
+        "records": [
+          {
+            "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I000007780614",
+            "isbn13": [
+              "9784091480866"
+            ],
+            "title": [
+              "鉄腕アトム. 第1巻"
+            ],
+            "mainTitles": [
+              "鉄腕アトム"
+            ],
+            "volume": [
+              "第1巻"
+            ],
+            "edition": [],
+            "responsibilities": [
+              "手塚治虫 著"
+            ],
+            "publisher": [
+              "小学館"
+            ],
+            "language": [
+              "jpn"
+            ],
+            "genre": [
+              "児童図書",
+              "漫画"
+            ]
+          }
+        ]
+      },
+      "state": "historical-observation-check-current-uuid-state",
+      "observations": [
+        {
+          "reference": "f5efc20c0bbbbcbf42e6",
+          "kind": "unstructured-collection-hold"
+        }
+      ],
+      "exactPublishedSourceAndOriginalTextMatches": [],
+      "countAsClaim": false
+    },
+    {
+      "id": "hold-3adbe21b4d667c0b",
+      "detail": {
+        "reason": "unsupported-responsibility-role",
+        "work": "黄泉のツガイ",
+        "rawResponsibility": "荒川弘",
+        "sourceUrl": "https://ndlsearch.ndl.go.jp/books/R100000002-I032181220"
+      },
+      "state": "historical-observation-check-current-uuid-state",
+      "observations": [
+        {
+          "reference": "0a8e22eaa03de2acb36f",
+          "kind": "unstructured-collection-hold"
+        }
+      ],
+      "exactPublishedSourceAndOriginalTextMatches": [],
+      "countAsClaim": false
+    },
+    {
+      "id": "hold-d3acb0f903d4032b",
+      "detail": {
+        "reason": "publication-identity-unconfirmed",
+        "work": "タッチ",
+        "isbn13": "9784091218612",
+        "matchingRecords": 0,
+        "records": [
+          {
+            "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I000001790190",
+            "isbn13": [
+              "9784091218612"
+            ],
+            "title": [
+              "タッチ. vol.1"
+            ],
+            "mainTitles": [
+              "タッチ"
+            ],
+            "volume": [
+              "vol.1"
+            ],
+            "edition": [],
+            "responsibilities": [
+              "あだち充 原作"
+            ],
+            "publisher": [
+              "小学館"
+            ],
+            "language": [
+              "jpn"
+            ],
+            "genre": [
+              "児童図書",
+              "漫画"
+            ]
+          }
+        ]
+      },
+      "state": "historical-observation-check-current-uuid-state",
+      "observations": [
+        {
+          "reference": "b28e10a3cd2ef8d27091",
+          "kind": "unstructured-collection-hold"
+        }
+      ],
+      "exactPublishedSourceAndOriginalTextMatches": [],
+      "countAsClaim": false
+    },
+    {
+      "id": "hold-3a8724257014b937",
+      "detail": {
+        "reason": "publication-identity-unconfirmed",
+        "work": "パーマン",
+        "isbn13": "9784091941114",
+        "matchingRecords": 0,
+        "records": [
+          {
+            "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I000002609338",
+            "isbn13": [
+              "9784091941114"
+            ],
+            "title": [
+              "パーマン. 1"
+            ],
+            "mainTitles": [
+              "パーマン"
+            ],
+            "volume": [
+              "1"
+            ],
+            "edition": [],
+            "responsibilities": [
+              "藤子・F・不二雄 著"
+            ],
+            "publisher": [
+              "小学館"
+            ],
+            "language": [
+              "jpn"
+            ],
+            "genre": [
+              "児童図書",
+              "漫画"
+            ]
+          }
+        ]
+      },
+      "state": "historical-observation-check-current-uuid-state",
+      "observations": [
+        {
+          "reference": "066847662dccdc3d22b4",
+          "kind": "unstructured-collection-hold"
+        }
+      ],
+      "exactPublishedSourceAndOriginalTextMatches": [],
+      "countAsClaim": false
+    }
+  ],
+  "requestsBeforeRecovery": [
+    {
+      "requestId": "issue-25-manga23-20261019",
+      "kind": "issue-prepare",
+      "phase": "blocked",
+      "message": "Artifact escapes runtime",
+      "attempts": 1,
+      "executionComplete": true,
+      "requestSha256": "ac202bb18150f55b7da1103ce43f2d684aa101e4d5d5107a892223bce4590039",
+      "reviewReference": null,
+      "decisionDrafts": null
+    },
+    {
+      "requestId": "issue-25-manga23-20261019-repair1",
+      "kind": "issue-prepare",
+      "phase": "completed",
+      "message": null,
+      "attempts": 1,
+      "executionComplete": true,
+      "requestSha256": "03bec8fbdac351776eab61b2dc4b47c7c9a687094ed8bfca5873b90a2ea86b35",
+      "reviewReference": null,
+      "decisionDrafts": null
+    },
+    {
+      "requestId": "issue-25-manga23-20261019-repair1-batch-01",
+      "kind": "collect-review",
+      "phase": "blocked",
+      "message": "Existing public:validate failed (Node 24 + dependencies required): 9|\\\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\\\d|30)|(?:02)-(?:0[1-9]|1\\\\d|2[0-8])))T(?:(?:[01]\\\\d|2[0-3]):[0-5]\\\\d:[0-5]\\\\d(?:\\\\.\\\\d+)?(?:Z))$/\",\n    \"path\": [\n      \"claims\",\n      442,\n      \"updatedAt\"\n    ],\n    \"message\": \"Invalid ISO datetime\"\n  },\n  {\n    \"origin\": \"string\",\n    \"code\": \"invalid_format\",\n    \"format\": \"datetime\",\n    \"pattern\": \"/^(?:(?:\\\\d\\\\d[2468][048]|\\\\d\\\\d[13579][26]|\\\\d\\\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\\\d|30)|(?:02)-(?:0[1-9]|1\\\\d|2[0-8])))T(?:(?:[01]\\\\d|2[0-3]):[0-5]\\\\d:[0-5]\\\\d(?:\\\\.\\\\d+)?(?:Z))$/\",\n    \"path\": [\n      \"claims\",\n      1616,\n      \"createdAt\"\n    ],\n    \"message\": \"Invalid ISO datetime\"\n  },\n  {\n    \"origin\": \"string\",\n    \"code\": \"invalid_format\",\n    \"format\": \"datetime\",\n    \"pattern\": \"/^(?:(?:\\\\d\\\\d[2468][048]|\\\\d\\\\d[13579][26]|\\\\d\\\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\\\d|30)|(?:02)-(?:0[1-9]|1\\\\d|2[0-8])))T(?:(?:[01]\\\\d|2[0-3]):[0-5]\\\\d:[0-5]\\\\d(?:\\\\.\\\\d+)?(?:Z))$/\",\n    \"path\": [\n      \"claims\",\n      1616,\n      \"updatedAt\"\n    ],\n    \"message\": \"Invalid ISO datetime\"\n  },\n  {\n    \"origin\": \"string\",\n    \"code\": \"invalid_format\",\n    \"format\": \"datetime\",\n    \"pattern\": \"/^(?:(?:\\\\d\\\\d[2468][048]|\\\\d\\\\d[13579][26]|\\\\d\\\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\\\d|30)|(?:02)-(?:0[1-9]|1\\\\d|2[0-8])))T(?:(?:[01]\\\\d|2[0-3]):[0-5]\\\\d:[0-5]\\\\d(?:\\\\.\\\\d+)?(?:Z))$/\",\n    \"path\": [\n      \"claims\",\n      1817,\n      \"createdAt\"\n    ],\n    \"message\": \"Invalid ISO datetime\"\n  },\n  {\n    \"origin\": \"string\",\n    \"code\": \"invalid_format\",\n    \"format\": \"datetime\",\n    \"pattern\": \"/^(?:(?:\\\\d\\\\d[2468][048]|\\\\d\\\\d[13579][26]|\\\\d\\\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\\\d|30)|(?:02)-(?:0[1-9]|1\\\\d|2[0-8])))T(?:(?:[01]\\\\d|2[0-3]):[0-5]\\\\d:[0-5]\\\\d(?:\\\\.\\\\d+)?(?:Z))$/\",\n    \"path\": [\n      \"claims\",\n      1817,\n      \"updatedAt\"\n    ],\n    \"message\": \"Invalid ISO datetime\"\n  }\n]\n    at loadPublicRelease (/home/isinxnisi/.local/share/plunode-collection-worker/runtime/lib/server/public-dataset.ts:92:35)\n    at async <anonymous> (/home/isinxnisi/.local/share/plunode-collection-worker/runtime/scripts/public-kg.ts:21:45)\n\nNode.js v24.21.0\n",
+      "attempts": 1,
+      "executionComplete": null,
+      "requestSha256": "9e62bc58b8c3047940024842cc6b23c2744de2d19667d399d82fd9d6a4782baf",
+      "reviewReference": null,
+      "decisionDrafts": null
+    },
+    {
+      "requestId": "issue-25-manga23-20261019-repair1-batch-02",
+      "kind": "collect-review",
+      "phase": "completed",
+      "message": null,
+      "attempts": 1,
+      "executionComplete": true,
+      "requestSha256": "f6dafe2918c68170c1ad046adfd7776290868ad25ad81aa3eecfa2fb2b3955f8",
+      "reviewReference": {
+        "file": "datasets/manga-collection/workflow-reviews/issue-25-manga23-20261019-repair1-r0002-df04edc80fbfff8d-review-42eff9594609d2a5/review-manifest.json",
+        "sha256": "b1efb2dab025163659e0a06a6df5a50f64dfd1441cd7ece43420b3659b3ae3e2"
+      },
+      "decisionDrafts": []
+    },
+    {
+      "requestId": "issue-25-manga23-20261019-repair1-batch-03",
+      "kind": "collect-review",
+      "phase": "blocked",
+      "message": "Existing public:validate failed (Node 24 + dependencies required): 4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\\\d|30)|(?:02)-(?:0[1-9]|1\\\\d|2[0-8])))T(?:(?:[01]\\\\d|2[0-3]):[0-5]\\\\d:[0-5]\\\\d(?:\\\\.\\\\d+)?(?:Z))$/\",\n    \"path\": [\n      \"entities\",\n      952,\n      \"updatedAt\"\n    ],\n    \"message\": \"Invalid ISO datetime\"\n  },\n  {\n    \"origin\": \"string\",\n    \"code\": \"invalid_format\",\n    \"format\": \"datetime\",\n    \"pattern\": \"/^(?:(?:\\\\d\\\\d[2468][048]|\\\\d\\\\d[13579][26]|\\\\d\\\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\\\d|30)|(?:02)-(?:0[1-9]|1\\\\d|2[0-8])))T(?:(?:[01]\\\\d|2[0-3]):[0-5]\\\\d:[0-5]\\\\d(?:\\\\.\\\\d+)?(?:Z))$/\",\n    \"path\": [\n      \"entities\",\n      1070,\n      \"createdAt\"\n    ],\n    \"message\": \"Invalid ISO datetime\"\n  },\n  {\n    \"origin\": \"string\",\n    \"code\": \"invalid_format\",\n    \"format\": \"datetime\",\n    \"pattern\": \"/^(?:(?:\\\\d\\\\d[2468][048]|\\\\d\\\\d[13579][26]|\\\\d\\\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\\\d|30)|(?:02)-(?:0[1-9]|1\\\\d|2[0-8])))T(?:(?:[01]\\\\d|2[0-3]):[0-5]\\\\d:[0-5]\\\\d(?:\\\\.\\\\d+)?(?:Z))$/\",\n    \"path\": [\n      \"entities\",\n      1070,\n      \"updatedAt\"\n    ],\n    \"message\": \"Invalid ISO datetime\"\n  },\n  {\n    \"origin\": \"string\",\n    \"code\": \"invalid_format\",\n    \"format\": \"datetime\",\n    \"pattern\": \"/^(?:(?:\\\\d\\\\d[2468][048]|\\\\d\\\\d[13579][26]|\\\\d\\\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\\\d|30)|(?:02)-(?:0[1-9]|1\\\\d|2[0-8])))T(?:(?:[01]\\\\d|2[0-3]):[0-5]\\\\d:[0-5]\\\\d(?:\\\\.\\\\d+)?(?:Z))$/\",\n    \"path\": [\n      \"claims\",\n      1425,\n      \"createdAt\"\n    ],\n    \"message\": \"Invalid ISO datetime\"\n  },\n  {\n    \"origin\": \"string\",\n    \"code\": \"invalid_format\",\n    \"format\": \"datetime\",\n    \"pattern\": \"/^(?:(?:\\\\d\\\\d[2468][048]|\\\\d\\\\d[13579][26]|\\\\d\\\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\\\d|30)|(?:02)-(?:0[1-9]|1\\\\d|2[0-8])))T(?:(?:[01]\\\\d|2[0-3]):[0-5]\\\\d:[0-5]\\\\d(?:\\\\.\\\\d+)?(?:Z))$/\",\n    \"path\": [\n      \"claims\",\n      1425,\n      \"updatedAt\"\n    ],\n    \"message\": \"Invalid ISO datetime\"\n  }\n]\n    at loadPublicRelease (/home/isinxnisi/.local/share/plunode-collection-worker/runtime/lib/server/public-dataset.ts:92:35)\n    at async <anonymous> (/home/isinxnisi/.local/share/plunode-collection-worker/runtime/scripts/public-kg.ts:21:45)\n\nNode.js v24.21.0\n",
+      "attempts": 1,
+      "executionComplete": null,
+      "requestSha256": "1681cf457acc46b08545b65ca23863c85b4e5287c8c9e015fa26ecb734e08341",
+      "reviewReference": null,
+      "decisionDrafts": null
+    },
+    {
+      "requestId": "issue-25-manga23-20261019-repair1-batch-04",
+      "kind": "collect-review",
+      "phase": "blocked",
+      "message": "Existing public:validate failed (Node 24 + dependencies required): 4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\\\d|30)|(?:02)-(?:0[1-9]|1\\\\d|2[0-8])))T(?:(?:[01]\\\\d|2[0-3]):[0-5]\\\\d:[0-5]\\\\d(?:\\\\.\\\\d+)?(?:Z))$/\",\n    \"path\": [\n      \"entities\",\n      201,\n      \"updatedAt\"\n    ],\n    \"message\": \"Invalid ISO datetime\"\n  },\n  {\n    \"origin\": \"string\",\n    \"code\": \"invalid_format\",\n    \"format\": \"datetime\",\n    \"pattern\": \"/^(?:(?:\\\\d\\\\d[2468][048]|\\\\d\\\\d[13579][26]|\\\\d\\\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\\\d|30)|(?:02)-(?:0[1-9]|1\\\\d|2[0-8])))T(?:(?:[01]\\\\d|2[0-3]):[0-5]\\\\d:[0-5]\\\\d(?:\\\\.\\\\d+)?(?:Z))$/\",\n    \"path\": [\n      \"entities\",\n      1394,\n      \"createdAt\"\n    ],\n    \"message\": \"Invalid ISO datetime\"\n  },\n  {\n    \"origin\": \"string\",\n    \"code\": \"invalid_format\",\n    \"format\": \"datetime\",\n    \"pattern\": \"/^(?:(?:\\\\d\\\\d[2468][048]|\\\\d\\\\d[13579][26]|\\\\d\\\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\\\d|30)|(?:02)-(?:0[1-9]|1\\\\d|2[0-8])))T(?:(?:[01]\\\\d|2[0-3]):[0-5]\\\\d:[0-5]\\\\d(?:\\\\.\\\\d+)?(?:Z))$/\",\n    \"path\": [\n      \"entities\",\n      1394,\n      \"updatedAt\"\n    ],\n    \"message\": \"Invalid ISO datetime\"\n  },\n  {\n    \"origin\": \"string\",\n    \"code\": \"invalid_format\",\n    \"format\": \"datetime\",\n    \"pattern\": \"/^(?:(?:\\\\d\\\\d[2468][048]|\\\\d\\\\d[13579][26]|\\\\d\\\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\\\d|30)|(?:02)-(?:0[1-9]|1\\\\d|2[0-8])))T(?:(?:[01]\\\\d|2[0-3]):[0-5]\\\\d:[0-5]\\\\d(?:\\\\.\\\\d+)?(?:Z))$/\",\n    \"path\": [\n      \"claims\",\n      1832,\n      \"createdAt\"\n    ],\n    \"message\": \"Invalid ISO datetime\"\n  },\n  {\n    \"origin\": \"string\",\n    \"code\": \"invalid_format\",\n    \"format\": \"datetime\",\n    \"pattern\": \"/^(?:(?:\\\\d\\\\d[2468][048]|\\\\d\\\\d[13579][26]|\\\\d\\\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\\\d|30)|(?:02)-(?:0[1-9]|1\\\\d|2[0-8])))T(?:(?:[01]\\\\d|2[0-3]):[0-5]\\\\d:[0-5]\\\\d(?:\\\\.\\\\d+)?(?:Z))$/\",\n    \"path\": [\n      \"claims\",\n      1832,\n      \"updatedAt\"\n    ],\n    \"message\": \"Invalid ISO datetime\"\n  }\n]\n    at loadPublicRelease (/home/isinxnisi/.local/share/plunode-collection-worker/runtime/lib/server/public-dataset.ts:92:35)\n    at async <anonymous> (/home/isinxnisi/.local/share/plunode-collection-worker/runtime/scripts/public-kg.ts:21:45)\n\nNode.js v24.21.0\n",
+      "attempts": 1,
+      "executionComplete": null,
+      "requestSha256": "7ff25d34dee666ffbc02ef6a6c85d3c240577bacaf6711d2a3ae88570b9ddffd",
+      "reviewReference": null,
+      "decisionDrafts": null
+    },
+    {
+      "requestId": "issue-25-manga23-20261019-repair1-batch-05",
+      "kind": "collect-review",
+      "phase": "blocked",
+      "message": "Existing public:validate failed (Node 24 + dependencies required): {4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\\\d|30)|(?:02)-(?:0[1-9]|1\\\\d|2[0-8])))T(?:(?:[01]\\\\d|2[0-3]):[0-5]\\\\d:[0-5]\\\\d(?:\\\\.\\\\d+)?(?:Z))$/\",\n    \"path\": [\n      \"entities\",\n      76,\n      \"updatedAt\"\n    ],\n    \"message\": \"Invalid ISO datetime\"\n  },\n  {\n    \"origin\": \"string\",\n    \"code\": \"invalid_format\",\n    \"format\": \"datetime\",\n    \"pattern\": \"/^(?:(?:\\\\d\\\\d[2468][048]|\\\\d\\\\d[13579][26]|\\\\d\\\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\\\d|30)|(?:02)-(?:0[1-9]|1\\\\d|2[0-8])))T(?:(?:[01]\\\\d|2[0-3]):[0-5]\\\\d:[0-5]\\\\d(?:\\\\.\\\\d+)?(?:Z))$/\",\n    \"path\": [\n      \"entities\",\n      1019,\n      \"createdAt\"\n    ],\n    \"message\": \"Invalid ISO datetime\"\n  },\n  {\n    \"origin\": \"string\",\n    \"code\": \"invalid_format\",\n    \"format\": \"datetime\",\n    \"pattern\": \"/^(?:(?:\\\\d\\\\d[2468][048]|\\\\d\\\\d[13579][26]|\\\\d\\\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\\\d|30)|(?:02)-(?:0[1-9]|1\\\\d|2[0-8])))T(?:(?:[01]\\\\d|2[0-3]):[0-5]\\\\d:[0-5]\\\\d(?:\\\\.\\\\d+)?(?:Z))$/\",\n    \"path\": [\n      \"entities\",\n      1019,\n      \"updatedAt\"\n    ],\n    \"message\": \"Invalid ISO datetime\"\n  },\n  {\n    \"origin\": \"string\",\n    \"code\": \"invalid_format\",\n    \"format\": \"datetime\",\n    \"pattern\": \"/^(?:(?:\\\\d\\\\d[2468][048]|\\\\d\\\\d[13579][26]|\\\\d\\\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\\\d|30)|(?:02)-(?:0[1-9]|1\\\\d|2[0-8])))T(?:(?:[01]\\\\d|2[0-3]):[0-5]\\\\d:[0-5]\\\\d(?:\\\\.\\\\d+)?(?:Z))$/\",\n    \"path\": [\n      \"claims\",\n      1316,\n      \"createdAt\"\n    ],\n    \"message\": \"Invalid ISO datetime\"\n  },\n  {\n    \"origin\": \"string\",\n    \"code\": \"invalid_format\",\n    \"format\": \"datetime\",\n    \"pattern\": \"/^(?:(?:\\\\d\\\\d[2468][048]|\\\\d\\\\d[13579][26]|\\\\d\\\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\\\d|30)|(?:02)-(?:0[1-9]|1\\\\d|2[0-8])))T(?:(?:[01]\\\\d|2[0-3]):[0-5]\\\\d:[0-5]\\\\d(?:\\\\.\\\\d+)?(?:Z))$/\",\n    \"path\": [\n      \"claims\",\n      1316,\n      \"updatedAt\"\n    ],\n    \"message\": \"Invalid ISO datetime\"\n  }\n]\n    at loadPublicRelease (/home/isinxnisi/.local/share/plunode-collection-worker/runtime/lib/server/public-dataset.ts:92:35)\n    at async <anonymous> (/home/isinxnisi/.local/share/plunode-collection-worker/runtime/scripts/public-kg.ts:21:45)\n\nNode.js v24.21.0\n",
+      "attempts": 1,
+      "executionComplete": null,
+      "requestSha256": "790ef37cbbd0b9ee0701581921d7eaf16fc4df8b8c59d3f0e02a0a7961cd9666",
+      "reviewReference": null,
+      "decisionDrafts": null
+    },
+    {
+      "requestId": "issue-25-manga23-20261019-repair1-batch-06",
+      "kind": "collect-review",
+      "phase": "blocked",
+      "message": "Installed code differs from source commit; reviewed worker upgrade required",
+      "attempts": 1,
+      "executionComplete": null,
+      "requestSha256": "f15de743a9554e8b64dbfaef3221a3d96b2e163c69c190ac51e3577a6e05e27f",
+      "reviewReference": null,
+      "decisionDrafts": null
+    },
+    {
+      "requestId": "issue-25-manga23-20261019-repair1-batch-07",
+      "kind": "collect-review",
+      "phase": "blocked",
+      "message": "Existing public:validate failed (Node 24 + dependencies required): -29|\\\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\\\d|30)|(?:02)-(?:0[1-9]|1\\\\d|2[0-8])))T(?:(?:[01]\\\\d|2[0-3]):[0-5]\\\\d:[0-5]\\\\d(?:\\\\.\\\\d+)?(?:Z))$/\",\n    \"path\": [\n      \"claims\",\n      480,\n      \"updatedAt\"\n    ],\n    \"message\": \"Invalid ISO datetime\"\n  },\n  {\n    \"origin\": \"string\",\n    \"code\": \"invalid_format\",\n    \"format\": \"datetime\",\n    \"pattern\": \"/^(?:(?:\\\\d\\\\d[2468][048]|\\\\d\\\\d[13579][26]|\\\\d\\\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\\\d|30)|(?:02)-(?:0[1-9]|1\\\\d|2[0-8])))T(?:(?:[01]\\\\d|2[0-3]):[0-5]\\\\d:[0-5]\\\\d(?:\\\\.\\\\d+)?(?:Z))$/\",\n    \"path\": [\n      \"claims\",\n      705,\n      \"createdAt\"\n    ],\n    \"message\": \"Invalid ISO datetime\"\n  },\n  {\n    \"origin\": \"string\",\n    \"code\": \"invalid_format\",\n    \"format\": \"datetime\",\n    \"pattern\": \"/^(?:(?:\\\\d\\\\d[2468][048]|\\\\d\\\\d[13579][26]|\\\\d\\\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\\\d|30)|(?:02)-(?:0[1-9]|1\\\\d|2[0-8])))T(?:(?:[01]\\\\d|2[0-3]):[0-5]\\\\d:[0-5]\\\\d(?:\\\\.\\\\d+)?(?:Z))$/\",\n    \"path\": [\n      \"claims\",\n      705,\n      \"updatedAt\"\n    ],\n    \"message\": \"Invalid ISO datetime\"\n  },\n  {\n    \"origin\": \"string\",\n    \"code\": \"invalid_format\",\n    \"format\": \"datetime\",\n    \"pattern\": \"/^(?:(?:\\\\d\\\\d[2468][048]|\\\\d\\\\d[13579][26]|\\\\d\\\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\\\d|30)|(?:02)-(?:0[1-9]|1\\\\d|2[0-8])))T(?:(?:[01]\\\\d|2[0-3]):[0-5]\\\\d:[0-5]\\\\d(?:\\\\.\\\\d+)?(?:Z))$/\",\n    \"path\": [\n      \"claims\",\n      1354,\n      \"createdAt\"\n    ],\n    \"message\": \"Invalid ISO datetime\"\n  },\n  {\n    \"origin\": \"string\",\n    \"code\": \"invalid_format\",\n    \"format\": \"datetime\",\n    \"pattern\": \"/^(?:(?:\\\\d\\\\d[2468][048]|\\\\d\\\\d[13579][26]|\\\\d\\\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\\\d|30)|(?:02)-(?:0[1-9]|1\\\\d|2[0-8])))T(?:(?:[01]\\\\d|2[0-3]):[0-5]\\\\d:[0-5]\\\\d(?:\\\\.\\\\d+)?(?:Z))$/\",\n    \"path\": [\n      \"claims\",\n      1354,\n      \"updatedAt\"\n    ],\n    \"message\": \"Invalid ISO datetime\"\n  }\n]\n    at loadPublicRelease (/home/isinxnisi/.local/share/plunode-collection-worker/runtime/lib/server/public-dataset.ts:92:35)\n    at async <anonymous> (/home/isinxnisi/.local/share/plunode-collection-worker/runtime/scripts/public-kg.ts:21:45)\n\nNode.js v24.21.0\n",
+      "attempts": 1,
+      "executionComplete": null,
+      "requestSha256": "485d298e7753f789d88bd9b89912d594586bb9d811dc9e1c3704515d368da200",
+      "reviewReference": null,
+      "decisionDrafts": null
+    },
+    {
+      "requestId": "issue-25-manga23-20261019-repair1-batch-08",
+      "kind": "collect-review",
+      "phase": "blocked",
+      "message": "Installed code differs from source commit; reviewed worker upgrade required",
+      "attempts": 1,
+      "executionComplete": null,
+      "requestSha256": "c851adc5de0740c85e343baf8eb0672dce54f79f9647c1fae16ad244eef9fad2",
+      "reviewReference": null,
+      "decisionDrafts": null
+    },
+    {
+      "requestId": "issue-25-manga23-20261019-repair1-batch-09",
+      "kind": "collect-review",
+      "phase": "blocked",
+      "message": "Installed code differs from source commit; reviewed worker upgrade required",
+      "attempts": 1,
+      "executionComplete": null,
+      "requestSha256": "9cfb278787a39e9fcfdc49e4bee7a5c2a4c946f94236037bdc199e70699dc9cf",
+      "reviewReference": null,
+      "decisionDrafts": null
+    },
+    {
+      "requestId": "issue-25-manga23-20261019-repair1-batch-10",
+      "kind": "collect-review",
+      "phase": "blocked",
+      "message": "Installed code differs from source commit; reviewed worker upgrade required",
+      "attempts": 1,
+      "executionComplete": null,
+      "requestSha256": "ed885e08b9e56344ecbc4f622edae4438fd5dd4f8336ffa4606190ad19fb9ff3",
+      "reviewReference": null,
+      "decisionDrafts": null
+    },
+    {
+      "requestId": "issue-25-utc-recovery-01",
+      "kind": "collect-review",
+      "phase": "blocked",
+      "message": "Artifact escapes runtime",
+      "attempts": 1,
+      "executionComplete": true,
+      "requestSha256": "a8d4288b56a6c82bb0472be22152432c1f4167bdc3234420c83b586b6724b345",
+      "reviewReference": {
+        "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0001-2aae694af25bda6e-review-7eb226d781eece54/review-manifest.json",
+        "sha256": "71e08c7a3ef28a9ad30d39669e7784abc8eaa99dfff2f172bed042186d752895"
+      },
+      "decisionDrafts": [
+        "datasets/manga-collection/decisions/issue-25-utc-recovery-01-normal-draft.json"
+      ]
+    },
+    {
+      "requestId": "issue-25-utc-recovery-02",
+      "kind": "collect-review",
+      "phase": "blocked",
+      "message": "Artifact escapes runtime",
+      "attempts": 1,
+      "executionComplete": true,
+      "requestSha256": "a25b93cfbe06d29201c862380f1208dfa929a0856e6f8ca7473a82b223769b34",
+      "reviewReference": {
+        "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0002-195d12ba8ceee0b8-review-5c31a884f4894165/review-manifest.json",
+        "sha256": "451fb079e97c22e4fbc5a4db062053733334a9f27ddc3665db2d3796f3e09837"
+      },
+      "decisionDrafts": []
+    },
+    {
+      "requestId": "issue-25-utc-recovery-03",
+      "kind": "collect-review",
+      "phase": "blocked",
+      "message": "Artifact escapes runtime",
+      "attempts": 1,
+      "executionComplete": true,
+      "requestSha256": "67aa46a50204029b93086cb11c41b6251061d0fa3fc2ed6f131aaadc0e078a56",
+      "reviewReference": {
+        "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0003-4e7b3edf51e9545b-review-7ac1287be3ae3491/review-manifest.json",
+        "sha256": "ccb73e2f413433913cd3338750b53428ed346165db8363a62dba44f004f0a9f0"
+      },
+      "decisionDrafts": [
+        "datasets/manga-collection/decisions/issue-25-utc-recovery-03-normal-draft.json"
+      ]
+    },
+    {
+      "requestId": "issue-25-utc-recovery-04",
+      "kind": "collect-review",
+      "phase": "blocked",
+      "message": "Artifact escapes runtime",
+      "attempts": 1,
+      "executionComplete": true,
+      "requestSha256": "b9ed2e411f3f66641455c5a151b3855481e163f36332a59fb8e6559a447b1bc0",
+      "reviewReference": {
+        "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0004-b96c712262173821-review-ed4c6573c40b9103/review-manifest.json",
+        "sha256": "dbe609a826e90940a08952c5f6a3c9a59dc1422c3f96f8beaaf4d385dbc5b80b"
+      },
+      "decisionDrafts": [
+        "datasets/manga-collection/decisions/issue-25-utc-recovery-04-normal-draft.json"
+      ]
+    },
+    {
+      "requestId": "issue-25-utc-recovery-05",
+      "kind": "collect-review",
+      "phase": "blocked",
+      "message": "Artifact escapes runtime",
+      "attempts": 1,
+      "executionComplete": true,
+      "requestSha256": "137298d028f21a48a58499dcc3e99b0b928944b2ca1df819a8470c57bc4cc619",
+      "reviewReference": {
+        "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0005-7e3b350d672334cb-review-79898df155b2aa91/review-manifest.json",
+        "sha256": "5ad67f522f33fe68bb563bcc04298a0410c0845e5508c7f54d0482f243bac04a"
+      },
+      "decisionDrafts": [
+        "datasets/manga-collection/decisions/issue-25-utc-recovery-05-identity-draft.json"
+      ]
+    },
+    {
+      "requestId": "issue-25-utc-recovery-06",
+      "kind": "collect-review",
+      "phase": "blocked",
+      "message": "Artifact escapes runtime",
+      "attempts": 1,
+      "executionComplete": true,
+      "requestSha256": "265e3aca49beaa1963c0cefcef4d65cad00104bbd90e8073b380047d38621650",
+      "reviewReference": {
+        "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0006-18bb8d898648582b-review-d3f087b63d8ec60c/review-manifest.json",
+        "sha256": "77a7af521ada5498b3ea46e7c93ef1c9bc33fbc5ceba706a3aa781e03387a959"
+      },
+      "decisionDrafts": [
+        "datasets/manga-collection/decisions/issue-25-utc-recovery-06-normal-draft.json"
+      ]
+    },
+    {
+      "requestId": "issue-25-utc-recovery-07",
+      "kind": "collect-review",
+      "phase": "blocked",
+      "message": "Artifact escapes runtime",
+      "attempts": 1,
+      "executionComplete": true,
+      "requestSha256": "d46cb9ff59261ccd4dd4dbdc1680c4d95e07d8c71c86da9bb78cf58a3e4aac80",
+      "reviewReference": {
+        "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0007-0b3c13e86c5f069c-review-434525971928f744/review-manifest.json",
+        "sha256": "6899290eb5daf4af86ba6b899dfdf8a24f1daf4cbc3b3d93f2f37e9bbcbc456d"
+      },
+      "decisionDrafts": [
+        "datasets/manga-collection/decisions/issue-25-utc-recovery-07-normal-draft.json"
+      ]
+    },
+    {
+      "requestId": "issue-25-utc-recovery-08",
+      "kind": "collect-review",
+      "phase": "blocked",
+      "message": "Artifact escapes runtime",
+      "attempts": 1,
+      "executionComplete": true,
+      "requestSha256": "0814b8af0f80dc7f8cb28d448971a9da6a86cee02c9b6879d53a41b4a4621a76",
+      "reviewReference": {
+        "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0008-9f792bd2246a1595-review-7b6502faf255147c/review-manifest.json",
+        "sha256": "97ae2100ec16c5c871f7445d1426e6d7a22da6cb9b98dff9c7f90739bff8d2bc"
+      },
+      "decisionDrafts": [
+        "datasets/manga-collection/decisions/issue-25-utc-recovery-08-normal-draft.json"
+      ]
+    },
+    {
+      "requestId": "issue-25-utc-recovery-09",
+      "kind": "collect-review",
+      "phase": "blocked",
+      "message": "Artifact escapes runtime",
+      "attempts": 1,
+      "executionComplete": true,
+      "requestSha256": "78ffd17af073fb5ff238579eca1957d2be68063bca8157b4cac2eba3f2f88eb3",
+      "reviewReference": {
+        "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0009-dcce01b7349906fb-review-b0659f95322d7b52/review-manifest.json",
+        "sha256": "5d45f047df77beefd96e8ce7a3b134a4f6d869ea994f71141953a87424a5e4a7"
+      },
+      "decisionDrafts": [
+        "datasets/manga-collection/decisions/issue-25-utc-recovery-09-identity-draft.json"
+      ]
+    },
+    {
+      "requestId": "issue-25-utc-recovery-01-normal",
+      "kind": "accept-release",
+      "phase": "completed",
+      "message": null,
+      "attempts": 1,
+      "executionComplete": true,
+      "requestSha256": "d869a89ba7e08cb1b065e23fa560e68b285c22299c758113fe6b122ca602894a",
+      "reviewReference": null,
+      "decisionDrafts": null
+    },
+    {
+      "requestId": "issue-25-normal-sequence-after-first-20261020",
+      "kind": "accept-sequence",
+      "phase": "completed",
+      "message": null,
+      "attempts": 6,
+      "executionComplete": true,
+      "requestSha256": "bfed193b23c19b24e7f0f5b5f5ffb812861f4730840f0b23a0024b927f5d6ab5",
+      "reviewReference": null,
+      "decisionDrafts": null
+    }
+  ],
+  "collectionJobs": [
+    {
+      "id": "famous-manga-creators-r0002-97c171eb654963e4",
+      "status": "candidate-ready",
+      "reference": "228046feeed5f5c2b1b9"
+    },
+    {
+      "id": "famous-manga-creators-r0003-907fdec3b7f86662",
+      "status": "candidate-ready",
+      "reference": "b410856159d9e81bcee1"
+    },
+    {
+      "id": "issue-25-manga23-20261019-repair1-r0002-df04edc80fbfff8d",
+      "status": "candidate-ready",
+      "reference": "b9747bc20ecaeb3c6faf"
+    },
+    {
+      "id": "issue-25-utc-recovery-r0001-2aae694af25bda6e",
+      "status": "candidate-ready",
+      "reference": "c6799e343f3fe20ba0bf"
+    },
+    {
+      "id": "issue-25-utc-recovery-r0002-195d12ba8ceee0b8",
+      "status": "candidate-ready",
+      "reference": "d785c72b2e8bbcb6ba54"
+    },
+    {
+      "id": "issue-25-utc-recovery-r0003-4e7b3edf51e9545b",
+      "status": "candidate-ready",
+      "reference": "515bd4d14454ecc1bb4b"
+    },
+    {
+      "id": "issue-25-utc-recovery-r0004-b96c712262173821",
+      "status": "candidate-ready",
+      "reference": "cf79435797c01a8e600d"
+    },
+    {
+      "id": "issue-25-utc-recovery-r0005-7e3b350d672334cb",
+      "status": "candidate-ready",
+      "reference": "415476dc18e6873ec08f"
+    },
+    {
+      "id": "issue-25-utc-recovery-r0006-18bb8d898648582b",
+      "status": "candidate-ready",
+      "reference": "d11f296fd6105753ff77"
+    },
+    {
+      "id": "issue-25-utc-recovery-r0007-0b3c13e86c5f069c",
+      "status": "candidate-ready",
+      "reference": "6e543d6eff4c1655a220"
+    },
+    {
+      "id": "issue-25-utc-recovery-r0008-9f792bd2246a1595",
+      "status": "candidate-ready",
+      "reference": "33a713abfaa737faf402"
+    },
+    {
+      "id": "issue-25-utc-recovery-r0009-dcce01b7349906fb",
+      "status": "candidate-ready",
+      "reference": "b6a2360dc2cac1916872"
+    }
+  ],
+  "references": {
+    "066847662dccdc3d22b4": {
+      "file": "runtime/datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0009-dcce01b7349906fb-review-b0659f95322d7b52/review-manifest.json",
+      "sha256": "5d45f047df77beefd96e8ce7a3b134a4f6d869ea994f71141953a87424a5e4a7"
+    },
+    "0a8e22eaa03de2acb36f": {
+      "file": "runtime/datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0005-7e3b350d672334cb-review-79898df155b2aa91/review-manifest.json",
+      "sha256": "5ad67f522f33fe68bb563bcc04298a0410c0845e5508c7f54d0482f243bac04a"
+    },
+    "101d7d2d9a24925370de": {
+      "file": "github/collection-control/approval-registers/issue-25-20261019-normal-10.json",
+      "sha256": "82b53f2bb1e0c1e5402af117a22de2a809ecf0588a56743e6aaef3258b42e8d6"
+    },
+    "1d161c12e3e743c045af": {
+      "file": "runtime/.local/collection-jobs/issue-25-utc-recovery-r0009-dcce01b7349906fb/artifacts/candidate/data.json",
+      "sha256": "bf8b05dccf39ad092aa888ba41ff2d48cfaee738cafdb2e45599c30696d89544"
+    },
+    "2c61894baea89b657418": {
+      "file": "runtime/datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0002-195d12ba8ceee0b8-review-5c31a884f4894165/review-manifest.json",
+      "sha256": "451fb079e97c22e4fbc5a4db062053733334a9f27ddc3665db2d3796f3e09837"
+    },
+    "3642f16769755c36942a": {
+      "file": "runtime/datasets/manga-collection/accepted-r0002-20261017/acceptance.json",
+      "sha256": "9b28562b9846970cd30b9261d4659d505e9df06e014d2809d6517aa39836f567"
+    },
+    "36c37b383a6f7548d443": {
+      "file": "runtime/datasets/manga-collection/accepted-issue-25-utc-recovery-04-normal/acceptance.json",
+      "sha256": "052a7d1ef334074ce2b94837a7d0dfc803bde9526abc9d8e8e7f058b36acdf62"
+    },
+    "3a0cb31e212a32bad62b": {
+      "file": "runtime/.local/collection-jobs/famous-manga-creators-r0002-97c171eb654963e4/artifacts/candidate/data.json",
+      "sha256": "dcb8abc4b1e5257eb1e4c130d51c07dc60eb8d863b2e77358f36cbd1a0293df2"
+    },
+    "50d665b692599774f807": {
+      "file": "runtime/datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0009-dcce01b7349906fb-review-b0659f95322d7b52/identity-only-records.json",
+      "sha256": "1a382c8ee90198a49846b8a520f1c1f55e9aee1a78e565023bb705e4c8131cee"
+    },
+    "59ad339b6bf1660a55a2": {
+      "file": "runtime/datasets/manga-collection/review-r0002-20261017/review.json",
+      "sha256": "dec7cd6e012e82be409541418480e95565214c3457bb48ddbc4eca280c12ec76"
+    },
+    "5af0da2d99279a33eaaa": {
+      "file": "runtime/.local/collection-jobs/issue-25-utc-recovery-r0005-7e3b350d672334cb/artifacts/candidate/data.json",
+      "sha256": "ec2467dd261dc94545aa6459eb79f4ff19b7621a4eebd60ce272f089382b4e0f"
+    },
+    "673fc01476692ad8744f": {
+      "file": "runtime/datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0005-7e3b350d672334cb-review-79898df155b2aa91/identity-only-records.json",
+      "sha256": "50a477a5018cc1b205ea13235f362dd8aeb378bdbdd950f14f5fddc8d87d2405"
+    },
+    "78864fba3b8d08f6a09e": {
+      "file": "runtime/.local/collection-jobs/issue-25-utc-recovery-r0002-195d12ba8ceee0b8/artifacts/candidate/data.json",
+      "sha256": "7e93e61cbd26e4e5769c29b5b70054682a635074eeb77be2d908b49d7e770dc4"
+    },
+    "985531d78187c46ff61a": {
+      "file": "runtime/datasets/manga-collection/accepted-issue-25-utc-recovery-06-normal/acceptance.json",
+      "sha256": "4e94de08943725549f4e01be9e6b1b09f2f9d88c5ca2dfaa9aa5b7c2395930f4"
+    },
+    "a4bec6c5e6a10cb50cab": {
+      "file": "runtime/datasets/manga-collection/accepted-issue-34-obata-drawing-20261021/acceptance.json",
+      "sha256": "7f62ec0f27d4fedfbb09066893d4ac94d88eaf016c2fff3959a001ea9f228efe"
+    },
+    "a5ba93a974be8fce4e0c": {
+      "file": "runtime/datasets/manga-collection/review-r0003-20261017/review.json",
+      "sha256": "03f0c1ad829a31173d8bc78d4f6f32fcbcf3ca4a5a6a245f14352592cfa25f19"
+    },
+    "af0b58cdadfad0e8be6e": {
+      "file": "runtime/datasets/manga-collection/accepted-original-story-r0002-20261017/acceptance.json",
+      "sha256": "9fdb9933c0d78795769bf27eebb7ecb4ec7cccc37f6ee6827e55dd119e727801"
+    },
+    "b28e10a3cd2ef8d27091": {
+      "file": "runtime/datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0008-9f792bd2246a1595-review-7b6502faf255147c/review-manifest.json",
+      "sha256": "97ae2100ec16c5c871f7445d1426e6d7a22da6cb9b98dff9c7f90739bff8d2bc"
+    },
+    "b80c6b4e0112c8a61914": {
+      "file": "runtime/datasets/manga-collection/accepted-issue-25-utc-recovery-01-normal/acceptance.json",
+      "sha256": "d271f32767dab030bd26ddcef669f48237cc303a8c605c58df047df8aea71fb6"
+    },
+    "d131224753b09422f689": {
+      "file": "runtime/datasets/manga-collection/accepted-issue-25-utc-recovery-03-normal/acceptance.json",
+      "sha256": "2cd8cb76b64be0d9d19fb3da8ceb4d3e185ca086bba0e90917a7b24a1da0bedf"
+    },
+    "d492458c7bb62136bc08": {
+      "file": "runtime/datasets/manga-collection/workflow-reviews/famous-manga-creators-r0003-907fdec3b7f86662-review-cbc8b5e35025755c/review-manifest.json",
+      "sha256": "c2942da951065dcde950ec7cc57b13d189f4c099dd003f3f5032fa92fa4e57ce"
+    },
+    "e6ae8936d87a87dc0fe7": {
+      "file": "runtime/datasets/manga-collection/accepted-issue-25-utc-recovery-07-normal/acceptance.json",
+      "sha256": "b6a521d5fffdd6cafc3a3df9f8f963c571520812053aad4f259eea3e22ebee0b"
+    },
+    "f2368b524c18fb27f9d7": {
+      "file": "runtime/datasets/manga-collection/accepted-r0003-20261017/acceptance.json",
+      "sha256": "7d53abbd472fcbf0cba57fa5202d6fd4f8eb12c9ebda34bd1e7a8badca701831"
+    },
+    "f41bbae97487bafe7713": {
+      "file": "runtime/datasets/manga-collection/accepted-issue-25-utc-recovery-08-normal/acceptance.json",
+      "sha256": "5b3fdc3aa705c5e73f5ba11b40052be700d71069b0a25a12943cb189a2ee1109"
+    },
+    "f5efc20c0bbbbcbf42e6": {
+      "file": "runtime/datasets/manga-collection/workflow-reviews/issue-25-manga23-20261019-repair1-r0002-df04edc80fbfff8d-review-42eff9594609d2a5/review-manifest.json",
+      "sha256": "b1efb2dab025163659e0a06a6df5a50f64dfd1441cd7ece43420b3659b3ae3e2"
+    }
+  },
+  "inventorySha256": "9dddf7aa5244670d2ebc57e49823b2db7e6d61454f24743ff58dce2a84d0f1e1",
+  "inventoryFileSha256": "ada2188881ac627c0806bfba422f7931d3d372563bb9098170183422a8b4a4d9",
+  "issues": [],
+  "deduplication": "Inventory UUID canonicalization uses formal receipt mappings only; body versions, Claim Role/scope, Source/Citation hashes and original evidence text are retained. Names alone never authorize identity mapping. Observations without UUID are not Claim counts.",
+  "issueApprovalEvidence": [
+    {
+      "url": "https://github.com/isinxnisi/graph-knowledge/issues/25#issuecomment-6266814515",
+      "scope": "normal 10 Claims only; identity/book/Role holds excluded; already accepted and published"
+    },
+    {
+      "url": "https://github.com/isinxnisi/graph-knowledge/issues/25#issuecomment-6256770697",
+      "scope": "datetime-only recovery; explicit UUID mapping holds retained"
+    }
+  ]
+}
