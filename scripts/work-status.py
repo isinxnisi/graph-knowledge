@@ -53,7 +53,7 @@ def stamp(path):
 
 
 def cell(value):
-    return html.escape(str(value if value is not None else '未確認')).replace('|', '&#124;').replace('\n', ' ')
+    return html.escape(str(value if value is not None else '未確認')).replace('|', '&#124;').replace('\n', '<br>')
 
 
 def table(headers, rows):
@@ -80,7 +80,7 @@ def manual_checked(data):
         if set(row) - {'id', 'name', 'purpose', 'service', 'ports', 'url', 'worktree', 'reference'}:
             raise ValueError('environment-fields')
     for row in data['operations']:
-        if set(row) != {'name', 'action'}:
+        if set(row) not in [{'name', 'action'}, {'category', 'name', 'action'}]:
             raise ValueError('operation-fields')
     text = json.dumps(data, ensure_ascii=False)
     if re.search(r'://[^/\s]*@', text):
@@ -281,7 +281,7 @@ def stable(value):
 
 
 def render(manual, snapshot, observed):
-    fingerprint = digest(dict(format=1, manual=manual, snapshot=stable(snapshot)))
+    fingerprint = digest(dict(format=2, manual=manual, snapshot=stable(snapshot)))
     lines = ['# Plunode 開発・運用の統合一覧', '',
         f'観測：**{observed}**（JST）。30分周期・AI呼出し0。確認時点の記録です。90分以上古い場合は現在稼働を保証しません。',
         '手動の予定・名前は [WORK_SESSIONS.json](WORK_SESSIONS.json) をこのbranchで編集。自動更新はこのMarkdownだけを変更します。',
@@ -291,8 +291,11 @@ def render(manual, snapshot, observed):
             return '[根拠](' + value + ')' if value.startswith('https://') else value
         return table(['セッション', '状態', '現在の段階', '次の対応', '環境ID／根拠'], [
             [s['name'], s['state'], s['stage'], s['next'], ', '.join(s['environments']) + ' / ' + ref(s.get('reference', ''))] for s in rows])
-    lines += sessions([s for s in manual['sessions'] if s['state'] != '完了'])
-    completed = [s for s in manual['sessions'] if s['state'] == '完了']
+    state_order = {'進行中': 0, '予定': 1, '保留': 2, '完了': 3}
+    ordered_sessions = sorted(manual['sessions'], key=lambda s: state_order[s['state']])
+    lines += ['状態順：進行中 → 予定 → 保留 → 完了。', '']
+    lines += sessions([s for s in ordered_sessions if s['state'] != '完了'])
+    completed = [s for s in ordered_sessions if s['state'] == '完了']
     if completed:
         lines += ['', '<details><summary>完了した作業</summary>', ''] + sessions(completed) + ['', '</details>']
     ports = snapshot.get('ports'); windows = snapshot.get('windows') or {}; containers = snapshot.get('docker')
@@ -313,10 +316,29 @@ def render(manual, snapshot, observed):
             return ' / '.join(f'{p}: ' + ('待受あり・' + snapshot.get('portOwners', {}).get(p, 'プロセス未同定') if p in ports else '待受なし') for p in row['ports']) if ports is not None else 'ポート未確認'
         return '設定・記録のみ／現在状態未確認'
     users = {e['id']: ', '.join(s['name'] for s in manual['sessions'] if e['id'] in s['environments']) for e in manual['environments']}
-    lines += ['', '## B. 実行環境・サーバー', '', '用途・service・port・URLは手動設定。稼働欄は上記観測時点の実測。停止操作はしません。', '']
-    lines += table(['環境ID／ホスト', '用途・service', '設定port／公開URL', 'worktree設定', '実測／未確認', '利用セッション'], [
-        [e['id'] + ' / ' + e['name'], e['purpose'] + ' / ' + e['service'], ','.join(map(str, e['ports'])) + ' / ' + ('[URL](' + e['url'] + ')' if e['url'] else ''),
-         e['worktree'], environment_status(e), users[e['id']]] for e in manual['environments']])
+    lines += ['', '## B. 実行環境・サーバー', '',
+              '接続・配置は設定情報、観測結果は確認時点の実測です。', '']
+    endpoint_ids = {'beta', 'production'}
+    platform_ids = {'windows', 'wsl', 'docker', 'tunnel'}
+    groups = [('公開先・確認先', [e for e in manual['environments'] if e['id'] in endpoint_ids]),
+              ('サービス・作業環境', [e for e in manual['environments'] if e['id'] not in endpoint_ids | platform_ids]),
+              ('ホスト・共通基盤', [e for e in manual['environments'] if e['id'] in platform_ids])]
+    for title, environments in groups:
+        if not environments:
+            continue
+        lines += ['### ' + title, '']
+        rows = []
+        for e in environments:
+            connection = []
+            if e['ports']:
+                connection.append('port: ' + ', '.join(map(str, e['ports'])))
+            if e['url']:
+                connection.append('[URL](' + e['url'] + ')')
+            connection.append('worktree: ' + e['worktree'])
+            rows.append([e['name'] + '\nID: ' + e['id'] + '\n' + e['purpose'] + '\n' + e['service'],
+                         '\n'.join(connection), environment_status(e).replace(' / ', '\n'),
+                         users[e['id']].replace(', ', '\n') or '—'])
+        lines += table(['環境・用途', '接続・配置（設定）', '観測結果', '利用セッション'], rows) + ['']
     lines += ['', '<details><summary>worktree・branchの実測（絶対パス非公開）</summary>', '']
     lines += table(['worktree名', 'branch', 'HEAD', '所在'], [[v['name'], v['branch'], v['revision'], '存在' if v['exists'] and not v['prunable'] else '未到達／prunable記録'] for v in snapshot.get('worktrees') or []])
     lines += ['', '</details>', '', '## C. Worker・自動処理', '']
@@ -340,28 +362,40 @@ def render(manual, snapshot, observed):
     rows = []
     if collection:
         phases = collection['phases']; rows += [
-            ['Worker依頼台帳（過去含む）', ' / '.join(f'{k}: {v}依頼' for k,v in sorted(phases.items())), '依頼数。旧停止・受入依頼を含み、残Claim数ではない'],
-            ['収集・レビューの継続待ち／実行中', str(sum(v['phase'] not in ['completed','duplicate','blocked'] and v['kind'] in ['issue-prepare','collect-review'] for v in collection['requests'])) + '依頼 / 実処理 ' + (collection['active'] or 'なし'), '通常Workerの時間帯・ロック・休憩に従う'],
-            ['保存レビューの受入候補', str(collection['savedCandidateClaims']) + ' Claim', '保存レビューのUUIDを重複排除し正式受入ID／既承認mappingを除外。未取得レビュー ' + str(collection['unavailableReviews']) + '件。受入判断は人間'],
-            ['保存レビューの保留', str(collection['savedHeldClaims']) + ' Claim / ' + str(collection['savedHeldWorks']) + '作品（旧準備記録）', '根拠・同定の保存保留。旧保留を含み、現在の残件数ではない'],
-            ['正式受入済み', str(collection['formalClaims']) + ' Claim / ' + str(collection['receiptCount']) + ' receipts', '既存正式台帳の小集計。意味・根拠の再検証はしない']]
+            ['Worker依頼（履歴を含む）', '\n'.join(f'{k}: {v}依頼' for k,v in sorted(phases.items()))],
+            ['収集・レビューの継続待ち／実行中', str(sum(v['phase'] not in ['completed','duplicate','blocked'] and v['kind'] in ['issue-prepare','collect-review'] for v in collection['requests'])) + '依頼\n実処理: ' + (collection['active'] or 'なし')],
+            ['未受入の保存レビュー候補', str(collection['savedCandidateClaims']) + ' Claim'],
+            ['保存された保留（旧記録を含む）', str(collection['savedHeldClaims']) + ' Claim\n' + str(collection['savedHeldWorks']) + '作品（旧準備記録）'],
+            ['正式受入済み', str(collection['formalClaims']) + ' Claim / ' + str(collection['receiptCount']) + ' receipts']]
     inv = snapshot.get('publishedInventory'); http = snapshot.get('http', {}).get('production', {})
     if inv and collection:
         matches = inv.get('receiptSetSha256') == collection['receiptSetSha256'] and inv.get('baseRevision') == http.get('revision')
-        rows += [['公開済み（正式受入分）', str(inv['counts']['publishedAccepted']['claims']) + ' Claim（既存照合記録）', '既存照合 ' + inv['observedAt']],
-                 ['正式未公開／公開待ち', str(inv['counts']['acceptedUnpublished']['claims']) + ' Claim' if matches else '未確認（receipt集合または公開revisionが既存照合記録から変化）', '既存照合・公開準備／承認待ち台帳＋現在receipt fingerprint＋公開API revisionの一致のみ確認']]
+        rows += [['公開済み（正式受入分）', str(inv['counts']['publishedAccepted']['claims']) + ' Claim（照合記録）'],
+                 ['正式未公開／公開待ち', str(inv['counts']['acceptedUnpublished']['claims']) + ' Claim' if matches else '未確認（台帳または公開版が照合時点から変化）']]
     if not inv:
-        rows += [['公開済み／公開待ち', '未確認', '既存照合情報を取得できないため件数を断定しない']]
+        rows += [['公開済み／公開待ち', '未確認（照合情報を取得できないため）']]
     if snapshot.get('publication'):
-        rows += [['公開配送', ', '.join(v.get('stage') or '未確認' for v in snapshot['publication']['deliveries']) or '登録記録なし', '署名・公開承認をこの一覧から実行しない']]
-    lines += table(['区分', '件数・状態', '根拠／次の対応'], rows)
+        rows += [['公開配送', ', '.join(v.get('stage') or '未確認' for v in snapshot['publication']['deliveries']) or '登録記録なし']]
+    lines += table(['区分', '件数・状態'], rows)
+    lines += ['', '正式受入・公開の件数はClaim単位です。保存レビュー・旧保留・依頼履歴は、現在の残件数とは区別しています。']
+    if collection and collection['unavailableReviews']:
+        lines += ['未取得の保存レビュー: ' + str(collection['unavailableReviews']) + '件（候補数は取得できた範囲）。']
+    if inv:
+        lines += ['公開件数の照合記録: ' + inv['observedAt'] + '。台帳または公開版が変わった場合、公開待ちは未確認に戻ります。']
     lines += ['', '現在の公開API revision：' + str(http.get('revision') or '未確認') + '（全公開KGの現在版）。正式受入分51等の件数とKG全体の件数は別です。']
     if collection:
         attention = [v for v in collection['requests'] if v['phase'] not in ['completed', 'duplicate']]
         lines += ['', '<details><summary>待機・保留・停止の依頼（旧停止も保持）</summary>', '']
         lines += table(['依頼', '種別／状態', '試行', '元状態の記録時刻'], [[v['id'], str(v['kind']) + ' / ' + str(v['phase']), v['attempts'], v['observedAt']] for v in attention])
         lines += ['', f'[既存Worker結果]({REPO}/tree/codex/collection-control/collection-control/results)', '', '</details>']
-    lines += ['', '## E. 固定運営業務', ''] + table(['業務', '運営者の対応'], [[v['name'], v['action']] for v in manual['operations']])
+    lines += ['', '## E. 固定運営業務', '']
+    categories = {}
+    for operation in manual['operations']:
+        categories.setdefault(operation.get('category', '未分類'), []).append(operation)
+    for category, operations in categories.items():
+        lines += ['### ' + cell(category), '']
+        lines += [str(i) + '. **' + cell(v['name']) + '**：' + cell(v['action'])
+                  for i, v in enumerate(operations, 1)] + ['']
     lines += ['', '取得失敗：' + (', '.join(snapshot.get('failures', [])) or 'なし') + '。失敗した取得元は現在正常と扱いません。',
               f'更新方法・制約：[運用手順]({REPO}/blob/main/WORK_STATUS.md)。秘密情報・内部IP・絶対パスは掲載しません。', '']
     return '\n'.join(lines), fingerprint
