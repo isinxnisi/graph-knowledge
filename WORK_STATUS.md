@@ -1,8 +1,8 @@
 # Plunode 開発・運用の統合一覧
 
-観測：**2026-10-25T19:22:58+09:00**（JST）。30分周期・AI呼出し0。確認時点の記録です。90分以上古い場合は現在稼働を保証しません。
+観測：**2026-10-25T19:31:52+09:00**（JST）。30分周期・AI呼出し0。確認時点の記録です。90分以上古い場合は現在稼働を保証しません。
 手動の予定・名前は [WORK_SESSIONS.json](WORK_SESSIONS.json) をこのbranchで編集。自動更新はこのMarkdownだけを変更します。
-<!-- work-status:260f78479728ddd087da2e83366a44390ef21f616c798c62834f65c26c9e46f8 day:2026-10-25 -->
+<!-- work-status:c352028ffd665dda07c1970f9ca5e9f64cf4edd551d2ecf25d4a5bc321add633 day:2026-10-25 -->
 
 ## A. 作業セッション
 
@@ -49,14 +49,14 @@
 
 | worktree名 | branch | HEAD | 所在 |
 |---|---|---|---|
-| main | main | a24e1211 | 存在 |
+| main | main | 1f96c283 | 存在 |
 | graph-ai-lab | codex/ai-lab-foundation | af31afd5 | 存在 |
 | graph-ai-lab-publication | codex/issue36-ai-lab-publication | 02bf1c5e | 存在 |
 | graph-issue16-network-budget | codex/issue16-network-budget | d3e377d5 | 存在 |
 | graph-issue33-durable-pause | codex/issue33-durable-pause | 2debaf15 | 存在 |
 | graph-issue33-vps-installation | codex/collection-acceptance-recovery-20261025 | 0936f905 | 存在 |
 | graph-issue5-comparison-closure | codex/issue5-comparison-closure | 4d6ce466 | 存在 |
-| graph-work-status | codex/work-status-initial | a24e1211 | 存在 |
+| graph-work-status | codex/work-status-initial | 1f96c283 | 存在 |
 | 7.graph-knowledge | codex/issue33-publication-gate | 0819b3f6 | 未到達／prunable記録 |
 | 7.graph-knowledge | codex/issue34-saved-evidence-acceptance | 7df210ff | 未到達／prunable記録 |
 | graph-knowledge-autopilot | autopilot/20261008-20261014 | 5c357e44 | 存在 |
@@ -77,7 +77,7 @@ Windows task観測時刻：2026-10-25T19:22:39+09:00。
 
 task結果267009は実行中を意味し、終了成功ではありません。表の次回時刻を過ぎた場合は新しい観測を待ってください。
 
-CollectionWorker記録：online（health観測 2026-10-25T10:22:23+00:00）。実処理 なし、pause なし。
+CollectionWorker記録：online（health観測 2026-10-25T10:31:25+00:00）。実処理 なし、pause なし。
 許可枠：03:00–07:00 JST / 09:00–12:00 JST / 15:00–18:00 JST、既存10分休憩を維持。
 catalog同期：blocked-review-required（固定runtimeとの差異の確認事項。自動修復しません）。
 公開候補準備の既存health：waiting-local-lock（記録時刻 2026-10-25T19:21:38+09:00）。
@@ -92,7 +92,7 @@ catalog同期：blocked-review-required（固定runtimeとの差異の確認事�
 | 保存レビューの保留 | 3 Claim / 23作品（旧準備記録） | 根拠・同定の保存保留。旧保留を含み、現在の残件数ではない |
 | 正式受入済み | 51 Claim / 10 receipts | 既存正式台帳の小集計。意味・根拠の再検証はしない |
 | 公開済み（正式受入分） | 51 Claim（既存照合記録） | 既存照合 2026-10-24T03:02:47+09:00 |
-| 正式未公開／公開待ち | 0 Claim | 既存照合記録＋現在receipt fingerprint＋公開API revisionの一致のみ確認 |
+| 正式未公開／公開待ち | 0 Claim | 既存照合・公開準備／承認待ち台帳＋現在receipt fingerprint＋公開API revisionの一致のみ確認 |
 | 公開配送 | completed | 署名・公開承認をこの一覧から実行しない |
 
 現在の公開API revision：b74a4b00-9454-412f-af5d-1317713a543c（全公開KGの現在版）。正式受入分51等の件数とKG全体の件数は別です。
@@ -101,17 +101,17 @@ catalog同期：blocked-review-required（固定runtimeとの差異の確認事�
 
 | 依頼 | 種別／状態 | 試行 | 元状態の記録時刻 |
 |---|---|---|---|
-| issue-25-manga23-20261019 | issue-prepare / blocked | 1 | 2026-10-25T10:21:50+00:00 |
-| issue-25-manga23-20261019-repair1-batch-01 | collect-review / blocked | 1 | 2026-10-25T10:21:53+00:00 |
-| issue-25-manga23-20261019-repair1-batch-03 | collect-review / blocked | 1 | 2026-10-25T10:21:56+00:00 |
-| issue-25-manga23-20261019-repair1-batch-04 | collect-review / blocked | 1 | 2026-10-25T10:21:57+00:00 |
-| issue-25-manga23-20261019-repair1-batch-05 | collect-review / blocked | 1 | 2026-10-25T10:21:59+00:00 |
-| issue-25-manga23-20261019-repair1-batch-06 | collect-review / blocked | 1 | 2026-10-25T10:22:01+00:00 |
-| issue-25-manga23-20261019-repair1-batch-07 | collect-review / blocked | 1 | 2026-10-25T10:22:02+00:00 |
-| issue-25-manga23-20261019-repair1-batch-08 | collect-review / blocked | 1 | 2026-10-25T10:22:04+00:00 |
-| issue-25-manga23-20261019-repair1-batch-09 | collect-review / blocked | 1 | 2026-10-25T10:22:05+00:00 |
-| issue-25-manga23-20261019-repair1-batch-10 | collect-review / blocked | 1 | 2026-10-25T10:22:07+00:00 |
-| issue-5-dot-tezuka-adolf-20261025-batch-01 | collect-review / waiting-control | 5 | 2026-10-25T10:22:22+00:00 |
+| issue-25-manga23-20261019 | issue-prepare / blocked | 1 | 2026-10-25T10:30:50+00:00 |
+| issue-25-manga23-20261019-repair1-batch-01 | collect-review / blocked | 1 | 2026-10-25T10:30:53+00:00 |
+| issue-25-manga23-20261019-repair1-batch-03 | collect-review / blocked | 1 | 2026-10-25T10:30:56+00:00 |
+| issue-25-manga23-20261019-repair1-batch-04 | collect-review / blocked | 1 | 2026-10-25T10:30:58+00:00 |
+| issue-25-manga23-20261019-repair1-batch-05 | collect-review / blocked | 1 | 2026-10-25T10:30:59+00:00 |
+| issue-25-manga23-20261019-repair1-batch-06 | collect-review / blocked | 1 | 2026-10-25T10:31:01+00:00 |
+| issue-25-manga23-20261019-repair1-batch-07 | collect-review / blocked | 1 | 2026-10-25T10:31:02+00:00 |
+| issue-25-manga23-20261019-repair1-batch-08 | collect-review / blocked | 1 | 2026-10-25T10:31:04+00:00 |
+| issue-25-manga23-20261019-repair1-batch-09 | collect-review / blocked | 1 | 2026-10-25T10:31:05+00:00 |
+| issue-25-manga23-20261019-repair1-batch-10 | collect-review / blocked | 1 | 2026-10-25T10:31:07+00:00 |
+| issue-5-dot-tezuka-adolf-20261025-batch-01 | collect-review / waiting-control | 5 | 2026-10-25T10:31:23+00:00 |
 
 [既存Worker結果](https://github.com/isinxnisi/graph-knowledge/tree/codex/collection-control/collection-control/results)
 
