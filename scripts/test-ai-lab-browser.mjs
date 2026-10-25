@@ -9,12 +9,13 @@ try{
  for(const lang of ['ja','en'])for(const width of [1440,390])for(const theme of ['light','dark-blue']){
   const cases=process.env.LAB_CASES||process.env.LAB_CASE;if(cases&&!cases.split(',').includes(`${lang}-${width}-${theme}`))continue;
   const context=await browser.newContext({viewport:{width,height:900},reducedMotion:'no-preference',hasTouch:width<500}),page=await context.newPage(),errors=[],modelCalls=[],writes=[];
-  await context.addInitScript(theme=>localStorage.setItem('graph-knowledge:appearance:v1',JSON.stringify({theme,palette:theme==='dark-blue'?'blue':'brown'})),theme);
+  await context.addInitScript(theme=>{if(window.top===window)localStorage.setItem('graph-knowledge:appearance:v1',JSON.stringify({theme,palette:theme==='dark-blue'?'blue':'brown'}));},theme);
   page.on('pageerror',e=>errors.push(e.message));page.on('request',r=>{if(/8009|systemone|kev/i.test(r.url()))modelCalls.push(r.url());const url=new URL(r.url());if(!['GET','HEAD'].includes(r.method())&&!(url.origin===new URL(base).origin&&url.pathname==='/cdn-cgi/rum'))writes.push(r.url());});
   const local=url=>(lang==='en'?'/en':'')+url;
   const menuLink=async id=>{const link=page.getByTestId(id);if(!await link.isVisible())await page.getByLabel(lang==='en'?'Site menu':'サイトメニュー',{exact:true}).click();await link.click();};
   await page.goto(base+local(''));await menuLink('lab-entry');await page.getByRole('heading',{level:1,name:lang==='en'?'AI Lab':'AI育成ラボ',exact:true}).waitFor();assert.equal(await page.getByTestId('entry-return').count(),0);assert.equal(await page.getByTestId('lab-entry').locator('svg').count(),1);
   assert.equal(new URL(page.url()).pathname,local('/ai-lab'));
+  await page.waitForFunction(theme=>document.documentElement.dataset.theme===theme,theme);
   const avatar=page.getByTestId('lab-motion-avatar'),image=avatar.locator('img');
   const moving=value=>page.waitForFunction(value=>document.querySelector('[data-testid="lab-motion-avatar"]')?.dataset.moving===String(value),value);
   const frozen=async()=>{const transform=await image.evaluate(el=>getComputedStyle(el).transform);await page.waitForTimeout(150);assert.equal(await image.evaluate(el=>getComputedStyle(el).transform),transform);};

@@ -48,3 +48,13 @@ CloudflareはPython標準User-Agentの一部の直接HTTP要求を403とした�
 - [PC日本語ライト](ai-lab-beta-20261025/ja-desktop-light.png)／[スマホ英語ダーク](ai-lab-beta-20261025/en-mobile-dark.png)。実betaの匿名表示。撮影時だけ浮遊の位相を固定し、その前に自動再生・停止を試験した。
 
 今回のbeta評価を妨げる既知の問題はない。iPhone実機／Safari・WebKitは今回未検証で、Chromiumのスマホ幅確認と区別する。VPS・正式サイトへの反映、正式アセット／アニメーション確定、実推論・追加学習・実活動連動・公式AIの実コメントは今回の完了条件に含めず、実施していない。KG apply／restore／再seed、会員migration、Kev、CollectionWorker、公開ゲート、Tunnelの変更も行っていない。
+
+## 同日の追加調整：ラボの見出し・アイコン・復帰
+
+ユーザーの画面評価に基づき、Webソース `fe8fdbfdfcea2ed5e215bcdf272ceb9ae6a61545`／beta build `uDoes90NL7lw4Wew0eDmf` へ更新。上部の「元の探索・アカウントへ戻る」を削除し、共通PageIdentity＋h1「AI育成ラボ / AI Lab」と見習いのh2を設けた。ラボ入口は共通書式のフラスコ、ラボ記録復帰は戻るアイコンとする。`#apprentice` から開いてもページタイトルが画面内に入る。元のGraph／アカウントには既存メニューから移動し、GraphのURL・版・pan／zoom／座標を保全する。
+
+関連6ファイルの44テスト、変更箇所のeslint、production buildの型検査が成功。実HTTPSではJA 1440 light／JA 390 dark-blue／EN 1440 dark-blue／EN 390 lightの4代表条件で、タイトル・上部リンク不在・メニューicon・0回表示・浮遊停止条件・履歴／根拠／Graph往復・既存メニューからの復帰が成功。別途、実ログイン済みbetaの見出し・メニューも目視した。初回確認で発見した共通メニューのsoft navigationによるpan欠落は、ラボの元探索リンクだけを通常の文書遷移にして修正・再検証した。試験のテーマ注入をtop documentに限定し、広告sandbox frameへのlocalStorageアクセスを起こさないよう検証スクリプトも修正した。
+
+既存betaの19環境設定値と`.env.public`全bytesは更新前と同一。Home日英・会員・コミュニティ・運営が同buildを返し、KG revisionも不変。追加の実推論・学習・公式AIのコメント生成は行わない。現状は記録開始だけで公式AIコメントが表示される実装ではない。VPS・正式サイト・隔離ラボは未変更。
+
+更新後の実beta画像：[PC日本語](ai-lab-beta-20261025/ja-desktop-title.png)／[スマホ英語](ai-lab-beta-20261025/en-mobile-title.png)。
