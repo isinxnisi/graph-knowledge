@@ -1,6 +1,7 @@
 {
   "savedJobVerified": true,
   "replayStable": true,
+  "workflowSha256": "4cf976114b8b4f79bdb3f5e8f1573db91cbfd395080f4fae75e79fafbc1e704e",
   "jobCacheReceiptsUnchanged": true,
   "formalReceiptCount": 10,
   "comparisonCounts": {
@@ -57,5 +58,30 @@
   "maxAttempts": 30,
   "providerAttemptsAdded": 0,
   "formalAcceptance": false,
-  "publicApply": false
+  "publicApply": false,
+  "deployment": {
+    "sourceCommit": "7952e08b46de9537d27b87309e3ac4b9d0205595",
+    "backportBase": "973c7b0c599f79905a029b28b524f4924e169376",
+    "backportPatchCommit": "7952e08",
+    "patchSha256": "a60b54e21d36c7e80b5fb78f2d0821b4e91df4c78d77fd02aa507bb66184851e",
+    "preserveStage": "/home/isinxnisi/.local/share/plunode-collection-worker-phase-b-20261020/issue5-workflow-backport-ak42oh8_",
+    "afterSha256": "4cf976114b8b4f79bdb3f5e8f1573db91cbfd395080f4fae75e79fafbc1e704e",
+    "immutableFilesChecked": 1127,
+    "workerControlChanged": false
+  },
+  "liveObservation": {
+    "phase": "waiting-control",
+    "attempts": 5,
+    "updatedAt": "2026-10-25T09:27:19+00:00",
+    "message": "Execution gate: outside-window",
+    "retryAt": 1792918140.5841866,
+    "requestSha256": "9b3f98315bb28650d44225f8b197ba408b2d39b00c24771052dcbfbca976ea00",
+    "observedAt": "2026-10-25T18:28:01.338752+09:00"
+  },
+  "normalWorkerCompletionConfirmed": false,
+  "nextPermittedWindow": "2026-10-26T03:00:00+09:00",
+  "publicApi": {
+    "dataset": "public-kg",
+    "revision": "b74a4b00-9454-412f-af5d-1317713a543c"
+  }
 }

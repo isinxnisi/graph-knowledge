@@ -6,7 +6,6 @@ import argparse
 import importlib.util
 import json
 from pathlib import Path
-import tempfile
 from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -16,10 +15,14 @@ spec.loader.exec_module(w)
 
 
 def main():
+    global w
     cli = argparse.ArgumentParser(__doc__)
     cli.add_argument('--runtime', type=Path, required=True)
     cli.add_argument('--public', type=Path, required=True)
+    cli.add_argument('--workflow', type=Path, default=ROOT / 'scripts/collection-workflow.py',
+                     help='Explicit installed module for backport compatibility replay')
     args = cli.parse_args()
+    w = w.load('issue5_selected_workflow', args.workflow.resolve())
     w.ROOT = args.runtime.resolve()
     w.CODE_ROOT = w.ROOT
     public = w.read(args.public)
@@ -53,7 +56,7 @@ def main():
     else:
         raise AssertionError('Missing Entity was silently accepted')
     review = outputs['review.json']
-    print(w.dump(dict(savedJobVerified=True, replayStable=True, jobCacheReceiptsUnchanged=True,
+    print(w.dump(dict(savedJobVerified=True, replayStable=True, workflowSha256=w.gate.file_hash(args.workflow), jobCacheReceiptsUnchanged=True,
         formalReceiptCount=len(receipts), comparisonCounts={f: len(v) for f, v in accepted.items()},
         counts=review['newCandidateCounts'], heldClaims=review['heldClaimCount'],
         claims=review['claims'], inheritedHolds=review['inheritedHolds'],
