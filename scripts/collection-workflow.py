@@ -79,7 +79,7 @@ def public_snapshot(path=None):
         'references': [reference(release / f) for f in ['data.json', 'manifest.json']]}
 
 
-def accepted_additions(release, receipts):
+def accepted_additions(release, receipts, *, comparison=False):
     """Verify accepted records against hashed reviewed proposals, not just a published flag."""
     empty = {f: [] for f in FIELDS}
     if release is None:
@@ -139,12 +139,15 @@ def accepted_additions(release, receipts):
         additions = {k: v for k, v in current[field].items() if k not in base[field]}
         require(additions == {k: v for k, v in permitted[field].items() if k not in base[field]},
                 'Accepted candidate contains missing or unaccepted records: ' + field)
-        empty[field] = list(additions.values())
+        # Publication callers need the delta against this release's historical base.
+        # Review can observe an older public snapshot: include every receipt-verified
+        # record, including dependencies already present in the newer release base.
+        empty[field] = list((permitted[field] if comparison else additions).values())
     node(['scripts/public-kg.ts', 'validate', str(release)])
     return empty, sorted({(v['file'], v['sha256']) for v in refs})
 
 
-def discover_accepted():
+def discover_accepted(*, comparison=False):
     """Find a fully receipt-covered cumulative manga candidate; never trust 'latest' alone."""
     receipts = sorted((ROOT / 'datasets/manga-collection').glob('accepted-*/acceptance.json'))
     if not receipts:
@@ -169,7 +172,7 @@ def discover_accepted():
         if not (directory / 'manifest.json').is_file():
             continue
         try:
-            valid.append(accepted_additions(directory, receipts))
+            valid.append(accepted_additions(directory, receipts, comparison=comparison))
         except (ValueError, KeyError):
             continue  # Older partial snapshots are expected to lack newer accepted records.
     require(valid, 'No cumulative release covers all formal receipts; specify/review the accepted inputs explicitly')
@@ -214,6 +217,7 @@ def review_job(directory, public, public_context, accepted, accepted_refs):
             if ident not in known[field]:
                 known[field][ident] = value
                 states[field][ident] = 'formally-accepted-not-applied'
+    require_references(known)
     approved_entities, approved_claims = {}, {}
     for path, sha in accepted_refs:
         if Path(path).name != 'acceptance.json':
@@ -443,7 +447,20 @@ def review_job(directory, public, public_context, accepted, accepted_refs):
     return outputs
 
 
+def require_references(records):
+    """Fail closed on incomplete comparison inputs; never invent or skip endpoints."""
+    for claim in records['claims'].values():
+        for key in ['subjectId', 'objectId']:
+            require(claim[key] in records['entities'],
+                    'Comparison Entity required: ' + claim[key] + ' by Claim ' + claim['id'] + '/' + key)
+    for cite in records['citations'].values():
+        for key, field in [('claimId', 'claims'), ('sourceId', 'sources')]:
+            require(cite[key] in records[field],
+                    'Comparison reference required: ' + cite[key] + ' by Citation ' + cite['id'] + '/' + key)
+
+
 def exploration_paths(records, states, focus, held):
+    require_references(records)
     edges, by_person, by_work = {}, defaultdict(list), defaultdict(list)
     citations = defaultdict(list)
     for cite in records['citations'].values():
@@ -566,8 +583,8 @@ def execute(args):
         original_order = gate.packet(registry, value)  # Approval and current collector/input hashes, before any work.
     else:
         require(re.fullmatch(r'[a-z0-9-]+-r[0-9]{4}-[0-9a-f]{16}', args.job_id), 'Invalid frozen job ID')
-    accepted, refs = (accepted_additions(args.accepted_release, args.accepted_receipt)
-                      if args.accepted_release is not None or args.accepted_receipt else discover_accepted())
+    accepted, refs = (accepted_additions(args.accepted_release, args.accepted_receipt, comparison=True)
+                      if args.accepted_release is not None or args.accepted_receipt else discover_accepted(comparison=True))
     if args.command == 'collect-review':
         key = digest({'order': original_order, 'runnerSha256': gate.file_hash(ROOT / 'scripts/collection-themes.py')})
         expected_id = value['id'] + '-r' + str(value['revision']).zfill(4) + '-' + key[:16]
@@ -636,7 +653,10 @@ def main():
         args = parser().parse_args()
         print(dump(execute(args)), end='')
     except (ValueError, OSError, KeyError, TypeError, subprocess.SubprocessError) as error:
-        failure = {'error': str(error), 'notice': 'No public apply. Immutable completed stages, including any saved human acceptance, remain available for retry.'}
+        failure = {'error': str(error), 'errorType': type(error).__name__, 'notice': 'No public apply. Immutable completed stages, including any saved human acceptance, remain available for retry.'}
+        if args and args.command in ['collect-review', 'review-job'] and isinstance(error, (KeyError, TypeError)):
+            failure['humanReviewRequired'] = True
+            failure['error'] = str(error)[:1000]
         if args and args.command == 'accept-sequence' and isinstance(error, (ValueError, KeyError, TypeError)):
             # Integrity/equivalence failures require a human even if their text is
             # unfamiliar. I/O and subprocess interruption can still resume safely.

@@ -197,3 +197,10 @@ python3 tests/check_collection_acceptance_cli.py
 - ローカル3200・ベータの/api/datasetは200、公開revision 82b01515-594c-48ca-b4b6-515eefac83caを維持。Web／API／DB schemaの変更がなく、再build・配置は不要。公開apply・restore・VPS配置・会員DB変更は実行していない。
 
 受入済みcandidateが将来の公開baseになった場合の追加集合再利用も、r0003ファイルによる仮想状態で検証した。実際のpublic:backup／planの基準は引き続き現公開20261014-credits-001であり、未適用候補を現在の公開状態に読み替えていない。
+
+
+## 異なる世代の公開snapshotと正式受入集合の比較
+
+収集レビューの比較は、累積releaseの直前baseとの差分だけでなく、全正式receiptにより本文・Role・scope・根拠を検証した累積レコードを採用する。`accepted_additions(..., comparison=True)` と `discover_accepted(comparison=True)` をレビュー経路で明示し、公開準備・受入等の既存呼出しには従来の差分を返す。新しいbaseへ既に移った依存Entityを古い公開snapshotとの比較から落とさない。receiptにないbaseレコードを承認済みとして補完しない。
+
+比較集合のClaim→Entity、Citation→Claim／Sourceの参照欠落は、UUIDと参照元を明示して人間確認へ停止する。行を除外したりEntityを推測作成して経路を成功扱いにしない。collect-review／review-jobの未想定KeyError／TypeErrorも例外名付きの `humanReviewRequired` を返し、既存Workerが同じ論理エラーを無限再試行しない。I/O・通信失敗の既存再開、凍結collector／承認hash・共有通信台帳・時間帯・休憩条件は維持する。
