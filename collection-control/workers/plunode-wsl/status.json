@@ -26,16 +26,20 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-10-25T06:24:32.665143+00:00",
-  "phase": "ready",
+  "nextStartAt": "2026-10-25T08:14:13.396152+00:00",
+  "phase": "running",
   "recoveredAttempt": null,
   "admission": {
-    "ready": true,
-    "reason": "ready",
-    "eligibleAt": null,
+    "ready": false,
+    "reason": "interval",
+    "eligibleAt": "2026-10-25T08:14:13.396152+00:00",
     "windowEndAt": "2026-10-25T09:00:00+00:00"
   },
-  "activeAttempt": null,
+  "activeAttempt": {
+    "requestId": "issue-5-dot-tezuka-adolf-20261025",
+    "startedAt": "2026-10-25T07:09:13.396155+00:00",
+    "limitAt": "2026-10-25T08:04:13.396152+00:00"
+  },
   "lastAttempt": {
     "requestId": "issue-16-adachi-three-20261025",
     "endedAt": "2026-10-25T06:14:32.665145+00:00"
@@ -43,7 +47,8 @@
   "controlError": null,
   "requestsByPhase": {
     "blocked": 10,
-    "completed": 14
+    "completed": 14,
+    "pending": 1
   },
   "issueIntake": {
     "collection-control/issue-sources/25.json": {
@@ -53,6 +58,10 @@
     "collection-control/issue-sources/16.json": {
       "status": "registered: issue-16-adachi-three-20261025",
       "checkedAt": "2026-10-25T03:39:57+00:00"
+    },
+    "collection-control/issue-sources/5.json": {
+      "status": "registered: issue-5-dot-tezuka-adolf-20261025",
+      "checkedAt": "2026-10-25T07:09:00+00:00"
     }
   },
   "publicApply": false,
@@ -94,5 +103,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-10-25T06:57:15.465120+00:00"
+  "checkedAt": "2026-10-25T07:09:20.485880+00:00"
 }
