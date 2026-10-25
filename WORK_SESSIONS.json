@@ -1,0 +1,272 @@
+{
+  "version": 1,
+  "sessions": [
+    {
+      "id": "community",
+      "name": "コミュニティ基盤",
+      "state": "完了",
+      "stage": "第1弾・サイト運営を本番公開済み（2026-10-25記録）",
+      "next": "日常運用。C2掲載・Graph連携は後続",
+      "environments": [
+        "production",
+        "beta",
+        "member-beta",
+        "community-preview"
+      ],
+      "reference": "https://github.com/isinxnisi/graph-knowledge/blob/main/docs/verification/COMMUNITY_PRODUCTION_20261025.md"
+    },
+    {
+      "id": "rooms",
+      "name": "ルーム基盤",
+      "state": "予定",
+      "stage": "期限付きルーム・招待通知の構想。設計チャット「個別チャット設計案」で検討中",
+      "next": "実装着手前に仕様を整理（実装承認を意味しない）",
+      "environments": [],
+      "reference": "2026-10-25の既存設計セッションを参照"
+    },
+    {
+      "id": "ai-lab",
+      "name": "AI育成ラボ",
+      "state": "進行中",
+      "stage": "AI-LAB:実装を開始／隔離初版・main統合・beta表示検証済み",
+      "next": "実コメント生成・実推論／学習は別工程。本番反映は未実施",
+      "environments": [
+        "lab",
+        "beta",
+        "main",
+        "kev"
+      ],
+      "reference": "https://github.com/isinxnisi/graph-knowledge/blob/main/docs/verification/AI_LAB_BETA_20261025.md"
+    },
+    {
+      "id": "search",
+      "name": "検索・Graph改善",
+      "state": "保留",
+      "stage": "Discovery・プリセットを既存betaで利用。サービス全体のUX課題を整理セッションあり",
+      "next": "次の変更対象を人間が選定。自動着手しない",
+      "environments": [
+        "main",
+        "beta",
+        "production"
+      ],
+      "reference": "https://github.com/isinxnisi/graph-knowledge/blob/main/docs/PROJECT_CONTEXT.md"
+    },
+    {
+      "id": "collection",
+      "name": "データ収集・受入",
+      "state": "進行中",
+      "stage": "Issue #5 子の比較集合修復を既存Workerへ反映。通常次枠での終了確認待ち",
+      "next": "通常Worker結果を確認し、候補・根拠の正式受入は人間が判断",
+      "environments": [
+        "wsl",
+        "collection",
+        "kg-public"
+      ],
+      "reference": "https://github.com/isinxnisi/graph-knowledge/blob/main/docs/verification/ISSUE5_COLLECTION_COMPARISON_20261025.md"
+    },
+    {
+      "id": "publication",
+      "name": "データ公開・配送",
+      "state": "進行中",
+      "stage": "Issue #33 配送済み。正式受入後の候補準備から承認待ちへの自動接続を導入",
+      "next": "既存health・公開承認待ちを確認。新しい本番applyは人間の署名後",
+      "environments": [
+        "wsl",
+        "publication",
+        "production"
+      ],
+      "reference": "https://github.com/isinxnisi/graph-knowledge/issues/33"
+    },
+    {
+      "id": "operations-status",
+      "name": "統合管理一覧",
+      "state": "進行中",
+      "stage": "初版構築・定期観測の検証",
+      "next": "30分周期の通常スクリプトで維持。新しい予定はJSONへ追加",
+      "environments": [
+        "windows",
+        "wsl",
+        "main"
+      ],
+      "reference": "https://github.com/isinxnisi/graph-knowledge/blob/main/WORK_STATUS.md"
+    }
+  ],
+  "environments": [
+    {
+      "id": "windows",
+      "name": "Windows PC",
+      "purpose": "起動元・Task Scheduler",
+      "service": "専用通常ユーザーtask",
+      "ports": [],
+      "url": "",
+      "worktree": "なし"
+    },
+    {
+      "id": "wsl",
+      "name": "WSL Ubuntu",
+      "purpose": "Python／Git／Worker",
+      "service": "既存WSL",
+      "ports": [],
+      "url": "",
+      "worktree": "複数（実測表参照）"
+    },
+    {
+      "id": "main",
+      "name": "main worktree",
+      "purpose": "本線ソース・beta実行元",
+      "service": "Next.js",
+      "ports": [
+        3200
+      ],
+      "url": "https://graph-beta.isinxnisi.com/",
+      "worktree": "main"
+    },
+    {
+      "id": "beta",
+      "name": "ローカルWeb／Tunnel",
+      "purpose": "日常確認・実beta",
+      "service": "Next.js／共有Cloudflare Tunnel",
+      "ports": [
+        3200
+      ],
+      "url": "https://graph-beta.isinxnisi.com/",
+      "worktree": "main"
+    },
+    {
+      "id": "production",
+      "name": "VPS本番",
+      "purpose": "正式公開",
+      "service": "Web／公開KG（内部状態は未確認）",
+      "ports": [
+        3200
+      ],
+      "url": "https://plunode.net",
+      "worktree": "VPS配置記録。local worktreeではない"
+    },
+    {
+      "id": "docker",
+      "name": "Docker Desktop／WSL",
+      "purpose": "既存DB・共有service",
+      "service": "既存container（停止分は維持）",
+      "ports": [],
+      "url": "",
+      "worktree": "Compose設定は既存記録参照"
+    },
+    {
+      "id": "tunnel",
+      "name": "Cloudflare Tunnel",
+      "purpose": "beta公開経路",
+      "service": "cloudflared（Windows／共有container）",
+      "ports": [],
+      "url": "https://graph-beta.isinxnisi.com/",
+      "worktree": "なし"
+    },
+    {
+      "id": "kg-public",
+      "name": "ローカル公開KG",
+      "purpose": "既存収集比較snapshot",
+      "service": "Neo4j",
+      "ports": [
+        7481,
+        7694
+      ],
+      "url": "",
+      "worktree": "mainのCompose（本番KGとは別）"
+    },
+    {
+      "id": "member-beta",
+      "name": "beta会員DB",
+      "purpose": "本番と独立したbeta会員",
+      "service": "PostgreSQL",
+      "ports": [
+        55433
+      ],
+      "url": "",
+      "worktree": "mainのCompose"
+    },
+    {
+      "id": "lab",
+      "name": "AIラボ隔離",
+      "purpose": "検証済み初版を保全",
+      "service": "隔離worktree・公開画面はbeta",
+      "ports": [],
+      "url": "",
+      "worktree": "graph-ai-lab / graph-ai-lab-publication"
+    },
+    {
+      "id": "collection",
+      "name": "収集runtime",
+      "purpose": "収集・受入・レビュー",
+      "service": "CollectionWorker（source互換973c7b0＋検証済み差分）",
+      "ports": [],
+      "url": "",
+      "worktree": "専用runtime／mainとは別"
+    },
+    {
+      "id": "publication",
+      "name": "公開runtime",
+      "purpose": "候補準備・署名済み配送",
+      "service": "Publication Delivery",
+      "ports": [],
+      "url": "",
+      "worktree": "固定インストールコード"
+    },
+    {
+      "id": "kev",
+      "name": "共有Kev",
+      "purpose": "既存の独立service（この一覧は呼出しなし）",
+      "service": "Kev service",
+      "ports": [
+        8009,
+        8089
+      ],
+      "url": "",
+      "worktree": "別プロジェクト。今回変更なし"
+    },
+    {
+      "id": "community-preview",
+      "name": "コミュニティ架空試作",
+      "purpose": "設定・過去の比較用（実会員とは別）",
+      "service": "隔離Next prototype",
+      "ports": [
+        3275
+      ],
+      "url": "https://graph-com.isinxnisi.com/",
+      "worktree": "prototypes/community-connected（記録）"
+    },
+    {
+      "id": "frozen",
+      "name": "凍結比較環境",
+      "purpose": "過去の比較環境（稼働は実測参照）",
+      "service": "凍結Web",
+      "ports": [
+        3210,
+        3211,
+        3212,
+        3213,
+        3214,
+        3215
+      ],
+      "url": "",
+      "worktree": "旧凍結配置／現worktree未確認"
+    }
+  ],
+  "operations": [
+    {
+      "name": "公開承認",
+      "action": "固定release・receipt集合・revisionの内容を確認して署名。自動一覧は承認しない"
+    },
+    {
+      "name": "収集・正式受入の判断",
+      "action": "既存Issue・reviewの同定／Role／scope／根拠を確認。不足資料は保留を維持"
+    },
+    {
+      "name": "サービス状態確認",
+      "action": "B・Cの観測時刻・失敗表示を確認。90分以上古ければ現在の正常稼働とみなさない"
+    },
+    {
+      "name": "予定・セッション更新",
+      "action": "このbranchのWORK_SESSIONS.jsonだけを編集。次の正常な30分更新で一覧へ反映"
+    }
+  ]
+}
