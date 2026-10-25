@@ -1,5 +1,25 @@
 # 公開プロフィール／AIIdentityの適用と復旧
 
+## 2026-10-26 正式公開用の固定手順
+
+運営者の[正式公開指示](https://github.com/isinxnisi/graph-knowledge/issues/39#issuecomment-6400600301)により、この公開では本番会員DBへの009／010適用とWeb切替を行う。スマホ実機評価は運営者が完了済み。以前の「本番を操作しない」という記録は当時の作業範囲である。
+
+アプリ固定SHA `767020c1af11cb8919cca8cdb4866efb1956284f`、build `p2mPLpwWtvRzE54EdYqwS`。[固定manifest](../releases/public-accounts-20261026-manifest.json)でconfig IDと同じarchive内のOCI manifest IDを照合する。公式AI画像と既存AI停止CLIの同梱を補い、機能・UIは変更していない。[本番移行スクリプト](../../scripts/release-public-accounts-production.py)と[実イメージ・別DB復元リハーサル](../../scripts/test-public-accounts-production-release.py)を使用する。
+
+VPSの `/home/develop/graph-accounts-release-20261026/` に固定bundleを配置し、転送先でも全SHA256を照合する。実行には既存developのsudoパスワードが必要。パスワードをチャットへ送らず、管理者本人が通常のSSH端末で次を実行する。sudo設定やSSHホスト鍵検証を緩めない。
+
+```sh
+bash /home/develop/graph-accounts-release-20261026/run-release.sh
+```
+
+wrapperはchecksum照合後に、`sudo python3 .../release-public-accounts-production.py --directory /home/develop/graph-accounts-release-20261026 --apply` を実行し、秘密を除いた結果だけを `release-result.log` へ保存する。共通Autopilot hold保持中に実行する。
+
+本番旧build `nLR2kDd65nabsE7jj4-EW` と000〜008のchecksumが異なる場合は上書きせず停止する。`/opt/graph-knowledge/.member-activation.lock` を取得し、Web/member-opsの固定imageと既存 `PUBLIC_PROFILES_ENABLED`／`AI_LAB_ENABLED` の引継ぎだけを許可する。Google、secret、Cookie、運営者、広告、KGその他の設定は比較して保持する。KG用ops image・PG・Neo4j・Caddy・Workerを置換しない。
+
+Web停止→private dump→同じPG内の別名 `graph_member_restore_issue39_<UTC時刻>` へ実restore→旧全24テーブルの列・全行hash・ledger照合→復元先だけを削除→暗号化控え作成→明示009／010適用→旧列保全・統一名・プロフィール欠落0・AI安定ID・再実行照合→新Web切替の順。復元DBはPUBLICのCONNECTを取り消してから使用する。移行前dumpや秘密設定はroot0700配下／file0600に保持し、RSA-OAEP-SHA256で包んだ鍵とAES256-CBC/PBKDF2 200000の暗号化bundleだけをローカルへ回収する。復号秘密鍵はローカル `~/.local/share/plunode-recovery/accounts-release-20261026/` から外へ出さない。
+
+切替エラー時、migration着手後は新buildの上記2機能をoffにして復旧し、DBを戻さない。正常切替後の一時停止も同じbundleの `--disable` を使う。正式DBを古いdumpで自動上書きする処理はない。DB障害の復元は下記の失効・退会・停止差分の再適用手順に従う。実行結果とGoogle・既存経路の確認は[公開記録](../verification/PUBLIC_ACCOUNTS_PRODUCTION_20261026.md)へ記録する。
+
 ## 010受入済み版のローカル確認環境（2026-10-26）
 
 `codex/issue39-initial-corrections` の専用worktreeで、Web3221・OIDC3222・会員PG55432・公開KGコピー7695を使用する。会員DB、認証secret、Cookie、AIIdentity fixtureは既存betaと独立。公開KGも読取backupを別Neo4jへrestoreしており、元DBへ書き込まない。確認URLと結果は [隔離評価記録](../verification/PUBLIC_ACCOUNTS_INITIAL_CORRECTION_20261025.md) を参照。

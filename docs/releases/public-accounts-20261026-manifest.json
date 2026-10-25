@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "sourceCommit": "767020c1af11cb8919cca8cdb4866efb1956284f",
+  "build": "p2mPLpwWtvRzE54EdYqwS",
+  "web": {
+    "tag": "graph-knowledge-web:accounts-release-20261026-767020c",
+    "configId": "sha256:41b0ec0f3caf76990c2cb67543f642194b773af01c81e6bda78629957bfc41a1",
+    "allowedImageIds": [
+      "sha256:41b0ec0f3caf76990c2cb67543f642194b773af01c81e6bda78629957bfc41a1",
+      "sha256:fdb86ef1d50ef53f31ce09b1900e458f5e8c7385d356e26fb3b233863fc60c4f"
+    ],
+    "platform": "linux/amd64",
+    "manifestId": "sha256:fdb86ef1d50ef53f31ce09b1900e458f5e8c7385d356e26fb3b233863fc60c4f"
+  },
+  "memberOps": {
+    "tag": "graph-knowledge-member-ops:accounts-release-20261026-767020c",
+    "configId": "sha256:fe677e0e6d9b95ebe4c5d7a5f63514da181d5cd9617119be02fa5c01dd32890c",
+    "allowedImageIds": [
+      "sha256:fe677e0e6d9b95ebe4c5d7a5f63514da181d5cd9617119be02fa5c01dd32890c",
+      "sha256:8dbb4a89e53d938e809198eb3cdefe26b254be83df09308d1684ce428ace4d1e"
+    ],
+    "platform": "linux/amd64",
+    "manifestId": "sha256:8dbb4a89e53d938e809198eb3cdefe26b254be83df09308d1684ce428ace4d1e"
+  },
+  "archive": {
+    "file": "images.tar.gz",
+    "sha256": "4ce89d5530a4dfbd932376f34ee3a74a875cf7517a4e1ec58154263b0f6688b1"
+  },
+  "migrations": {
+    "000-auth.sql": "2bf2c433610d77c0574de11c1646dc8777e0ca6903eeded337bb543bdeba88d3",
+    "001-capsules.sql": "de7f0d9c5890d568e61c022d5ac8b03c36480be20f3073f36537f1c06083ae23",
+    "002-capsule-sharing.sql": "3d3909b5a4cdf41f260153038d539eb547fa76ffbc9b2111f5f55bf83805b9b7",
+    "003-capsule-discussion.sql": "f2554048e32a3a3f58ab6dc0680daeeedd8ef6aca7fc3d561d9021b227997353",
+    "004-account-operations.sql": "4519d8dd507d8d337cf012cebde0ad0114918d09f2de2fcdd18e8db5b2a5ca8b",
+    "005-communities.sql": "1457d0e2ab88d8eaefc589a4b91500e8cef71a01b344624c1d8b8f971d1b0540",
+    "006-community-continuity.sql": "70e7f05554e5960772c28c3be4ce2ea86b8ba0e861fc152d7574994f62657ac1",
+    "007-community-safety.sql": "b0a77195770598da2a5fc9435cc429ca018d46534ce6b1eba63f699e8034087f",
+    "008-site-operations.sql": "709f74b36a1b3f9c763335b58ab12d9b42d554a163176d5385ec91ffa8b1d799",
+    "009-public-profiles.sql": "9a77e02ff90b3c84f2770903915179c344b0a9f9cc49b3e888b2be69cae76663",
+    "010-account-initial-experience.sql": "699b0a30ef6b6dfc53e7382ec62e8268aee4efe9dcf5590bd7bfff941812254a"
+  },
+  "releaseFiles": {
+    "release-public-accounts-production.py": "3750561b970c2894a09d399b376de8f58053669e1492fd79143828abb5ddaf02",
+    "recovery-public.pem": "a1ba6be91bcfdb97772b59cfe4f75277b14cae9141f65e2f270078611c2cec52"
+  }
+}
