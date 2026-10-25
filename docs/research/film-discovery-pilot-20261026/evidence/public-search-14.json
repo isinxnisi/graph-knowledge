@@ -1,0 +1,10 @@
+{
+  "url": "https://plunode.net/api/entities?q=Morgan+Freeman&limit=20",
+  "status": 200,
+  "observed_at": "2026-10-25T18:41:48.563431+00:00",
+  "sha256": "e5704fff58eefd0cf292fac70cf2188cb4408349e8fc8e650b0bb7a2dd88a767",
+  "data": {
+    "items": [],
+    "hasMore": false
+  }
+}

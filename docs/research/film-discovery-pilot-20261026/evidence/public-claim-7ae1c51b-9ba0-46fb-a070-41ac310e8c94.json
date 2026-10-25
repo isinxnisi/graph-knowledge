@@ -1,0 +1,57 @@
+{
+  "url": "https://plunode.net/api/claims/7ae1c51b-9ba0-46fb-a070-41ac310e8c94",
+  "status": 200,
+  "observed_at": "2026-10-25T18:41:50.334723+00:00",
+  "sha256": "537a98706424aaf13891425c4c76af0e0093851f997ffc821f096c629d227ac5",
+  "data": {
+    "revision": "b74a4b00-9454-412f-af5d-1317713a543c",
+    "claim": {
+      "id": "7ae1c51b-9ba0-46fb-a070-41ac310e8c94",
+      "subjectId": "d5e39491-5a5f-423c-9222-2eb3c18db9a8",
+      "objectId": "0c29d0e2-685f-4c56-9805-6bf1baf40e7c",
+      "predicate": "CONTRIBUTED_TO",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "contribution": {
+        "roleId": "DRAWING",
+        "scope": null
+      },
+      "organizationParticipation": null,
+      "eventParticipation": null,
+      "sourceCount": 1,
+      "createdAt": "2026-10-20T15:09:57Z",
+      "updatedAt": "2026-10-20T15:09:57Z",
+      "citations": [
+        {
+          "id": "995e3891-aa9c-4af6-a2ba-3114dfb61fec",
+          "locator": "見出し「ジャーナリストクラブ賞受賞」下の受賞説明、原作者・作画・監修を列挙する文。元HTML 25行、Shift_JIS元body byte [1024,1074) に作品名と担当者の短い文脈。",
+          "note": "「ヒカルの碁」の原作者ほったゆみ氏、作画の小畑健氏。作品単位の作画を支持する。scope=nullは適用巻・版の未構造化であり全巻・全版の証明ではない。期間不明。保存NDLの「漫画」は対象漫画の照合補助でありRoleへ自動変換しない。",
+          "accessedAt": "2026-10-20",
+          "stance": "support",
+          "source": {
+            "id": "932fb74b-9292-4fb9-9f8a-29ce35d83823",
+            "kind": "web",
+            "title": "ジャーナリスト賞",
+            "authors": [],
+            "publisher": "日本棋院",
+            "url": "https://archive.nihonkiin.or.jp/kishihp/umezawa/journal.htm",
+            "publishedAt": null,
+            "edition": null,
+            "note": "見出し「ジャーナリストクラブ賞受賞」。ページ表示日2001年12月13日。作品単位の作画明示のみ。取得2026-10-20T13:27:00.414Z、元HTML SHA-256 86cfb31314e9e3fe2bf26e04425580c2dc3d5660cbd3b522e32e8be1d533af1b。巻・版・ISBN・制作期間の証明に拡張しない。",
+            "isDemo": false
+          },
+          "roleEvidence": {
+            "originalText": "作画の小畑健氏",
+            "language": "ja"
+          },
+          "positionEvidence": null,
+          "eventParticipationEvidence": null
+        }
+      ]
+    },
+    "relatedClaimIds": []
+  }
+}

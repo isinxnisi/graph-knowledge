@@ -1,0 +1,1662 @@
+{
+  "authority": "isolated-pure-domain-runtime-proof-no-public-results",
+  "node": "v24.15.0",
+  "tests": [
+    "unknown film roles rejected",
+    "film cut scope rejected; null publication scope remains representable",
+    "step-specific roles rejected by current strict condition",
+    "unknown preset revision rejected",
+    "actual other-works v1 geometry finds two screenplay paths",
+    "current pattern rev2 validates both complete witnesses",
+    "missing or reversed independent Claim rejects witness",
+    "real sample exposes default results cutoff",
+    "research callback finds seven per-step witnesses using existing traversal",
+    "zero under constrained acquisition is explicitly partial"
+  ],
+  "passed": 10,
+  "limits": {
+    "neighbors": 20,
+    "expansions": 24,
+    "prefixes": 128,
+    "results": 12
+  },
+  "inputHashes": {
+    "docs/research/film-discovery-pilot-20261026/CANDIDATES.json": "06690102bb27b9ed9ab06d57f717ab4dce1e962bd1d409609b8c2e76dfccd470",
+    "docs/research/film-discovery-pilot-20261026/check-current.ts": "1b572776de37baa5e5ce09a4c2f54aa0a3d860cbdbf4acd24cd481276b1d5880",
+    "lib/domain/contribution.ts": "0864214a74e18fa1bfa73db717f708ff0025d9147fb567050e69c9e9aa958130",
+    "lib/domain/discovery-paths.ts": "60c9a5ff1a8141fcc059d3c2d6011b93941c19c017df6059b13ae990cdb9d7cb",
+    "lib/domain/discovery-path-presets.ts": "34f9d0507e941f5dd0d5ff041261dfb49c5ebbfeae921f268cb8adbd0f1d8a5f",
+    "lib/domain/relation-conditions.ts": "b6e8c2e793561d4bd2c52ac13f32184398e65ddd2ef579de983ce599cf27982a",
+    "lib/domain/relation-patterns.ts": "ffcc481c49348bbdbe9219395d0b49fad171fc94aa735647cb87486b2fab171c",
+    "lib/server/relation-pattern-execution.ts": "2fa50546dec4fd2cce77f7554456de46319807919b8b085ed3fcee6824afe9b6"
+  },
+  "baselineWitnesses": {
+    "paths": [
+      {
+        "nodeIds": [
+          "54105db8-8c7c-48a0-8054-b11f2802458c",
+          "10cef0a5-9d2d-4d2a-80c5-53515f45204e",
+          "f9796ab4-8aab-4514-88b6-d52a61516a7d"
+        ],
+        "claimIds": [
+          [
+            "2995048d-d10d-472e-8b2f-69494ca011b5"
+          ],
+          [
+            "4a39d6fd-b743-48b2-871d-765b1b1096bc"
+          ]
+        ],
+        "researchNodes": [
+          "Q184843",
+          "Q1372703",
+          "Q21500755"
+        ],
+        "candidateIds": [
+          [
+            "candidate:q184843$7BFE807E-21C2-4F1A-8EB9-16DF92DCAD9E"
+          ],
+          [
+            "candidate:Q21500755$d67b18c8-46b4-2882-88d9-6de6930f17c6"
+          ]
+        ]
+      },
+      {
+        "nodeIds": [
+          "54105db8-8c7c-48a0-8054-b11f2802458c",
+          "426873d4-9fe0-49dc-8c13-eb6826295deb",
+          "5b5ad231-c681-477a-8f13-727f156d7a99"
+        ],
+        "claimIds": [
+          [
+            "fa297381-dd05-4223-8cf8-74aa91ba7279"
+          ],
+          [
+            "ec7b22ca-188d-400c-8e75-ff4a73f0d3e9"
+          ]
+        ],
+        "researchNodes": [
+          "Q184843",
+          "Q1177114",
+          "Q104137"
+        ],
+        "candidateIds": [
+          [
+            "candidate:q184843$284E2874-A3FC-4CCB-B36F-9D4334F2BB83"
+          ],
+          [
+            "candidate:q104137$3BA0821B-A1E1-45FE-BF84-4E013DD4B557"
+          ]
+        ]
+      }
+    ],
+    "scan": {
+      "expanded": 3,
+      "reasons": [],
+      "limitedIds": []
+    }
+  },
+  "geometryOnly": {
+    "note": "All 77 checked credit records projected to role=null ONLY to measure geometry. No film-role compatibility claim.",
+    "exact": {
+      "paths": [
+        {
+          "nodeIds": [
+            "54105db8-8c7c-48a0-8054-b11f2802458c",
+            "10cef0a5-9d2d-4d2a-80c5-53515f45204e",
+            "f9796ab4-8aab-4514-88b6-d52a61516a7d",
+            "bd553d24-ffb1-4982-8560-80eba3799742"
+          ],
+          "claimIds": [
+            [
+              "2995048d-d10d-472e-8b2f-69494ca011b5"
+            ],
+            [
+              "4a39d6fd-b743-48b2-871d-765b1b1096bc"
+            ],
+            [
+              "707760a1-c598-4f40-8978-dcba10e6b647"
+            ]
+          ],
+          "researchNodes": [
+            "Q184843",
+            "Q1372703",
+            "Q21500755",
+            "Q193815"
+          ],
+          "candidateIds": [
+            [
+              "candidate:q184843$7BFE807E-21C2-4F1A-8EB9-16DF92DCAD9E"
+            ],
+            [
+              "candidate:Q21500755$d67b18c8-46b4-2882-88d9-6de6930f17c6"
+            ],
+            [
+              "candidate:Q21500755$0b844a43-4e1d-5c02-c6ca-7ba24d9f4e4d"
+            ]
+          ]
+        },
+        {
+          "nodeIds": [
+            "54105db8-8c7c-48a0-8054-b11f2802458c",
+            "10cef0a5-9d2d-4d2a-80c5-53515f45204e",
+            "f9796ab4-8aab-4514-88b6-d52a61516a7d",
+            "d1a349eb-cf29-47ff-88ba-e9889ca7b002"
+          ],
+          "claimIds": [
+            [
+              "2995048d-d10d-472e-8b2f-69494ca011b5"
+            ],
+            [
+              "4a39d6fd-b743-48b2-871d-765b1b1096bc"
+            ],
+            [
+              "77aea308-6ac7-4ac8-89c0-95499565a1dc"
+            ]
+          ],
+          "researchNodes": [
+            "Q184843",
+            "Q1372703",
+            "Q21500755",
+            "Q44158"
+          ],
+          "candidateIds": [
+            [
+              "candidate:q184843$7BFE807E-21C2-4F1A-8EB9-16DF92DCAD9E"
+            ],
+            [
+              "candidate:Q21500755$d67b18c8-46b4-2882-88d9-6de6930f17c6"
+            ],
+            [
+              "candidate:Q21500755$d188a830-4fd2-17fe-c2ce-7434a1e82f61"
+            ]
+          ]
+        },
+        {
+          "nodeIds": [
+            "54105db8-8c7c-48a0-8054-b11f2802458c",
+            "10cef0a5-9d2d-4d2a-80c5-53515f45204e",
+            "f9796ab4-8aab-4514-88b6-d52a61516a7d",
+            "ec02c67f-35b8-4a3e-8a35-09c7fde0750c"
+          ],
+          "claimIds": [
+            [
+              "2995048d-d10d-472e-8b2f-69494ca011b5"
+            ],
+            [
+              "4a39d6fd-b743-48b2-871d-765b1b1096bc"
+            ],
+            [
+              "8003754c-6964-4d80-8f55-3c25c2264592"
+            ]
+          ],
+          "researchNodes": [
+            "Q184843",
+            "Q1372703",
+            "Q21500755",
+            "Q272972"
+          ],
+          "candidateIds": [
+            [
+              "candidate:q184843$7BFE807E-21C2-4F1A-8EB9-16DF92DCAD9E"
+            ],
+            [
+              "candidate:Q21500755$d67b18c8-46b4-2882-88d9-6de6930f17c6"
+            ],
+            [
+              "candidate:Q21500755$35dfb20f-4e8a-13ff-e72c-eda27ec75fc0"
+            ]
+          ]
+        },
+        {
+          "nodeIds": [
+            "54105db8-8c7c-48a0-8054-b11f2802458c",
+            "10cef0a5-9d2d-4d2a-80c5-53515f45204e",
+            "f9796ab4-8aab-4514-88b6-d52a61516a7d",
+            "ab8f46e2-0411-4c10-8c58-49c52ff5fa5d"
+          ],
+          "claimIds": [
+            [
+              "2995048d-d10d-472e-8b2f-69494ca011b5"
+            ],
+            [
+              "4a39d6fd-b743-48b2-871d-765b1b1096bc"
+            ],
+            [
+              "a9f6c48d-d369-4543-8d85-a97990ea7c61"
+            ]
+          ],
+          "researchNodes": [
+            "Q184843",
+            "Q1372703",
+            "Q21500755",
+            "Q548823"
+          ],
+          "candidateIds": [
+            [
+              "candidate:q184843$7BFE807E-21C2-4F1A-8EB9-16DF92DCAD9E"
+            ],
+            [
+              "candidate:Q21500755$d67b18c8-46b4-2882-88d9-6de6930f17c6"
+            ],
+            [
+              "candidate:Q21500755$3b2b8856-4ac9-a659-fe86-9a94d3ec6f33"
+            ]
+          ]
+        },
+        {
+          "nodeIds": [
+            "54105db8-8c7c-48a0-8054-b11f2802458c",
+            "10cef0a5-9d2d-4d2a-80c5-53515f45204e",
+            "f9796ab4-8aab-4514-88b6-d52a61516a7d",
+            "bac84423-538f-4b32-8cc8-19c70867475f"
+          ],
+          "claimIds": [
+            [
+              "2995048d-d10d-472e-8b2f-69494ca011b5"
+            ],
+            [
+              "4a39d6fd-b743-48b2-871d-765b1b1096bc"
+            ],
+            [
+              "aa1067ad-4d17-4f20-8aee-b9562cbf2ca5"
+            ]
+          ],
+          "researchNodes": [
+            "Q184843",
+            "Q1372703",
+            "Q21500755",
+            "Q81328"
+          ],
+          "candidateIds": [
+            [
+              "candidate:q184843$7BFE807E-21C2-4F1A-8EB9-16DF92DCAD9E"
+            ],
+            [
+              "candidate:Q21500755$d67b18c8-46b4-2882-88d9-6de6930f17c6"
+            ],
+            [
+              "candidate:Q21500755$06462c6d-4916-0ce3-c60f-e9e6cc86d80a"
+            ]
+          ]
+        },
+        {
+          "nodeIds": [
+            "54105db8-8c7c-48a0-8054-b11f2802458c",
+            "10cef0a5-9d2d-4d2a-80c5-53515f45204e",
+            "f9796ab4-8aab-4514-88b6-d52a61516a7d",
+            "0fb86cfc-8c32-4edf-8ead-c76de52d6fe2"
+          ],
+          "claimIds": [
+            [
+              "2995048d-d10d-472e-8b2f-69494ca011b5"
+            ],
+            [
+              "4a39d6fd-b743-48b2-871d-765b1b1096bc"
+            ],
+            [
+              "ba0dfefc-b769-44b9-8615-79733685f6d4"
+            ]
+          ],
+          "researchNodes": [
+            "Q184843",
+            "Q1372703",
+            "Q21500755",
+            "Q460277"
+          ],
+          "candidateIds": [
+            [
+              "candidate:q184843$7BFE807E-21C2-4F1A-8EB9-16DF92DCAD9E"
+            ],
+            [
+              "candidate:Q21500755$d67b18c8-46b4-2882-88d9-6de6930f17c6"
+            ],
+            [
+              "candidate:Q21500755$d6894ac6-412c-1cfb-2ce9-e90cdfe8b8f1"
+            ]
+          ]
+        },
+        {
+          "nodeIds": [
+            "54105db8-8c7c-48a0-8054-b11f2802458c",
+            "10cef0a5-9d2d-4d2a-80c5-53515f45204e",
+            "f9796ab4-8aab-4514-88b6-d52a61516a7d",
+            "7e734671-5f5b-4c78-882e-e3a1b5c4bae6"
+          ],
+          "claimIds": [
+            [
+              "2995048d-d10d-472e-8b2f-69494ca011b5"
+            ],
+            [
+              "4a39d6fd-b743-48b2-871d-765b1b1096bc"
+            ],
+            [
+              "c24ef73d-7700-458f-80f4-a283e075f378"
+            ]
+          ],
+          "researchNodes": [
+            "Q184843",
+            "Q1372703",
+            "Q21500755",
+            "Q6056440"
+          ],
+          "candidateIds": [
+            [
+              "candidate:q184843$7BFE807E-21C2-4F1A-8EB9-16DF92DCAD9E"
+            ],
+            [
+              "candidate:Q21500755$d67b18c8-46b4-2882-88d9-6de6930f17c6"
+            ],
+            [
+              "candidate:Q21500755$aaed40e2-464d-32b6-a3fc-1b1a87b75af3"
+            ]
+          ]
+        },
+        {
+          "nodeIds": [
+            "54105db8-8c7c-48a0-8054-b11f2802458c",
+            "10cef0a5-9d2d-4d2a-80c5-53515f45204e",
+            "f9796ab4-8aab-4514-88b6-d52a61516a7d",
+            "eaa10cdb-de36-4757-8ebc-d7f06df70e90"
+          ],
+          "claimIds": [
+            [
+              "2995048d-d10d-472e-8b2f-69494ca011b5"
+            ],
+            [
+              "4a39d6fd-b743-48b2-871d-765b1b1096bc"
+            ],
+            [
+              "d036bbb3-140c-4254-8971-fe9f60611202"
+            ]
+          ],
+          "researchNodes": [
+            "Q184843",
+            "Q1372703",
+            "Q21500755",
+            "Q6830765"
+          ],
+          "candidateIds": [
+            [
+              "candidate:q184843$7BFE807E-21C2-4F1A-8EB9-16DF92DCAD9E"
+            ],
+            [
+              "candidate:Q21500755$d67b18c8-46b4-2882-88d9-6de6930f17c6"
+            ],
+            [
+              "candidate:Q21500755$28f45ed9-4138-5ce8-15f7-af2e58d04bbc"
+            ]
+          ]
+        },
+        {
+          "nodeIds": [
+            "54105db8-8c7c-48a0-8054-b11f2802458c",
+            "10cef0a5-9d2d-4d2a-80c5-53515f45204e",
+            "f9796ab4-8aab-4514-88b6-d52a61516a7d",
+            "36253af1-5589-4114-8556-0282879799ed"
+          ],
+          "claimIds": [
+            [
+              "2995048d-d10d-472e-8b2f-69494ca011b5"
+            ],
+            [
+              "4a39d6fd-b743-48b2-871d-765b1b1096bc"
+            ],
+            [
+              "da00ffb6-1833-4ce4-889d-a162b8e89dd7"
+            ]
+          ],
+          "researchNodes": [
+            "Q184843",
+            "Q1372703",
+            "Q21500755",
+            "Q76364"
+          ],
+          "candidateIds": [
+            [
+              "candidate:q184843$7BFE807E-21C2-4F1A-8EB9-16DF92DCAD9E"
+            ],
+            [
+              "candidate:Q21500755$d67b18c8-46b4-2882-88d9-6de6930f17c6"
+            ],
+            [
+              "candidate:Q21500755$6925bf24-4769-6c57-1559-3f160d471644"
+            ]
+          ]
+        },
+        {
+          "nodeIds": [
+            "54105db8-8c7c-48a0-8054-b11f2802458c",
+            "10cef0a5-9d2d-4d2a-80c5-53515f45204e",
+            "f9796ab4-8aab-4514-88b6-d52a61516a7d",
+            "4dd8d34c-3ca3-4a85-82d8-c01c4d129977"
+          ],
+          "claimIds": [
+            [
+              "2995048d-d10d-472e-8b2f-69494ca011b5"
+            ],
+            [
+              "4a39d6fd-b743-48b2-871d-765b1b1096bc"
+            ],
+            [
+              "f79b9cc4-ad09-43c7-8ce0-ace5c39adb6e"
+            ]
+          ],
+          "researchNodes": [
+            "Q184843",
+            "Q1372703",
+            "Q21500755",
+            "Q4757652"
+          ],
+          "candidateIds": [
+            [
+              "candidate:q184843$7BFE807E-21C2-4F1A-8EB9-16DF92DCAD9E"
+            ],
+            [
+              "candidate:Q21500755$d67b18c8-46b4-2882-88d9-6de6930f17c6"
+            ],
+            [
+              "candidate:Q21500755$e4aa1901-4f60-f014-0f04-bd7e9abeb05e"
+            ]
+          ]
+        },
+        {
+          "nodeIds": [
+            "54105db8-8c7c-48a0-8054-b11f2802458c",
+            "bac84423-538f-4b32-8cc8-19c70867475f",
+            "f9796ab4-8aab-4514-88b6-d52a61516a7d",
+            "10cef0a5-9d2d-4d2a-80c5-53515f45204e"
+          ],
+          "claimIds": [
+            [
+              "8b1dc232-ed4d-4bc3-83dd-a04e2c02d79f"
+            ],
+            [
+              "aa1067ad-4d17-4f20-8aee-b9562cbf2ca5"
+            ],
+            [
+              "4a39d6fd-b743-48b2-871d-765b1b1096bc"
+            ]
+          ],
+          "researchNodes": [
+            "Q184843",
+            "Q81328",
+            "Q21500755",
+            "Q1372703"
+          ],
+          "candidateIds": [
+            [
+              "candidate:q184843$C9B16D9C-B7F1-42A9-9200-FBD2CF7312B3"
+            ],
+            [
+              "candidate:Q21500755$06462c6d-4916-0ce3-c60f-e9e6cc86d80a"
+            ],
+            [
+              "candidate:Q21500755$d67b18c8-46b4-2882-88d9-6de6930f17c6"
+            ]
+          ]
+        },
+        {
+          "nodeIds": [
+            "54105db8-8c7c-48a0-8054-b11f2802458c",
+            "bac84423-538f-4b32-8cc8-19c70867475f",
+            "f9796ab4-8aab-4514-88b6-d52a61516a7d",
+            "bd553d24-ffb1-4982-8560-80eba3799742"
+          ],
+          "claimIds": [
+            [
+              "8b1dc232-ed4d-4bc3-83dd-a04e2c02d79f"
+            ],
+            [
+              "aa1067ad-4d17-4f20-8aee-b9562cbf2ca5"
+            ],
+            [
+              "707760a1-c598-4f40-8978-dcba10e6b647"
+            ]
+          ],
+          "researchNodes": [
+            "Q184843",
+            "Q81328",
+            "Q21500755",
+            "Q193815"
+          ],
+          "candidateIds": [
+            [
+              "candidate:q184843$C9B16D9C-B7F1-42A9-9200-FBD2CF7312B3"
+            ],
+            [
+              "candidate:Q21500755$06462c6d-4916-0ce3-c60f-e9e6cc86d80a"
+            ],
+            [
+              "candidate:Q21500755$0b844a43-4e1d-5c02-c6ca-7ba24d9f4e4d"
+            ]
+          ]
+        },
+        {
+          "nodeIds": [
+            "54105db8-8c7c-48a0-8054-b11f2802458c",
+            "bac84423-538f-4b32-8cc8-19c70867475f",
+            "f9796ab4-8aab-4514-88b6-d52a61516a7d",
+            "d1a349eb-cf29-47ff-88ba-e9889ca7b002"
+          ],
+          "claimIds": [
+            [
+              "8b1dc232-ed4d-4bc3-83dd-a04e2c02d79f"
+            ],
+            [
+              "aa1067ad-4d17-4f20-8aee-b9562cbf2ca5"
+            ],
+            [
+              "77aea308-6ac7-4ac8-89c0-95499565a1dc"
+            ]
+          ],
+          "researchNodes": [
+            "Q184843",
+            "Q81328",
+            "Q21500755",
+            "Q44158"
+          ],
+          "candidateIds": [
+            [
+              "candidate:q184843$C9B16D9C-B7F1-42A9-9200-FBD2CF7312B3"
+            ],
+            [
+              "candidate:Q21500755$06462c6d-4916-0ce3-c60f-e9e6cc86d80a"
+            ],
+            [
+              "candidate:Q21500755$d188a830-4fd2-17fe-c2ce-7434a1e82f61"
+            ]
+          ]
+        },
+        {
+          "nodeIds": [
+            "54105db8-8c7c-48a0-8054-b11f2802458c",
+            "bac84423-538f-4b32-8cc8-19c70867475f",
+            "f9796ab4-8aab-4514-88b6-d52a61516a7d",
+            "ec02c67f-35b8-4a3e-8a35-09c7fde0750c"
+          ],
+          "claimIds": [
+            [
+              "8b1dc232-ed4d-4bc3-83dd-a04e2c02d79f"
+            ],
+            [
+              "aa1067ad-4d17-4f20-8aee-b9562cbf2ca5"
+            ],
+            [
+              "8003754c-6964-4d80-8f55-3c25c2264592"
+            ]
+          ],
+          "researchNodes": [
+            "Q184843",
+            "Q81328",
+            "Q21500755",
+            "Q272972"
+          ],
+          "candidateIds": [
+            [
+              "candidate:q184843$C9B16D9C-B7F1-42A9-9200-FBD2CF7312B3"
+            ],
+            [
+              "candidate:Q21500755$06462c6d-4916-0ce3-c60f-e9e6cc86d80a"
+            ],
+            [
+              "candidate:Q21500755$35dfb20f-4e8a-13ff-e72c-eda27ec75fc0"
+            ]
+          ]
+        },
+        {
+          "nodeIds": [
+            "54105db8-8c7c-48a0-8054-b11f2802458c",
+            "bac84423-538f-4b32-8cc8-19c70867475f",
+            "f9796ab4-8aab-4514-88b6-d52a61516a7d",
+            "ab8f46e2-0411-4c10-8c58-49c52ff5fa5d"
+          ],
+          "claimIds": [
+            [
+              "8b1dc232-ed4d-4bc3-83dd-a04e2c02d79f"
+            ],
+            [
+              "aa1067ad-4d17-4f20-8aee-b9562cbf2ca5"
+            ],
+            [
+              "a9f6c48d-d369-4543-8d85-a97990ea7c61"
+            ]
+          ],
+          "researchNodes": [
+            "Q184843",
+            "Q81328",
+            "Q21500755",
+            "Q548823"
+          ],
+          "candidateIds": [
+            [
+              "candidate:q184843$C9B16D9C-B7F1-42A9-9200-FBD2CF7312B3"
+            ],
+            [
+              "candidate:Q21500755$06462c6d-4916-0ce3-c60f-e9e6cc86d80a"
+            ],
+            [
+              "candidate:Q21500755$3b2b8856-4ac9-a659-fe86-9a94d3ec6f33"
+            ]
+          ]
+        },
+        {
+          "nodeIds": [
+            "54105db8-8c7c-48a0-8054-b11f2802458c",
+            "bac84423-538f-4b32-8cc8-19c70867475f",
+            "f9796ab4-8aab-4514-88b6-d52a61516a7d",
+            "0fb86cfc-8c32-4edf-8ead-c76de52d6fe2"
+          ],
+          "claimIds": [
+            [
+              "8b1dc232-ed4d-4bc3-83dd-a04e2c02d79f"
+            ],
+            [
+              "aa1067ad-4d17-4f20-8aee-b9562cbf2ca5"
+            ],
+            [
+              "ba0dfefc-b769-44b9-8615-79733685f6d4"
+            ]
+          ],
+          "researchNodes": [
+            "Q184843",
+            "Q81328",
+            "Q21500755",
+            "Q460277"
+          ],
+          "candidateIds": [
+            [
+              "candidate:q184843$C9B16D9C-B7F1-42A9-9200-FBD2CF7312B3"
+            ],
+            [
+              "candidate:Q21500755$06462c6d-4916-0ce3-c60f-e9e6cc86d80a"
+            ],
+            [
+              "candidate:Q21500755$d6894ac6-412c-1cfb-2ce9-e90cdfe8b8f1"
+            ]
+          ]
+        },
+        {
+          "nodeIds": [
+            "54105db8-8c7c-48a0-8054-b11f2802458c",
+            "bac84423-538f-4b32-8cc8-19c70867475f",
+            "f9796ab4-8aab-4514-88b6-d52a61516a7d",
+            "7e734671-5f5b-4c78-882e-e3a1b5c4bae6"
+          ],
+          "claimIds": [
+            [
+              "8b1dc232-ed4d-4bc3-83dd-a04e2c02d79f"
+            ],
+            [
+              "aa1067ad-4d17-4f20-8aee-b9562cbf2ca5"
+            ],
+            [
+              "c24ef73d-7700-458f-80f4-a283e075f378"
+            ]
+          ],
+          "researchNodes": [
+            "Q184843",
+            "Q81328",
+            "Q21500755",
+            "Q6056440"
+          ],
+          "candidateIds": [
+            [
+              "candidate:q184843$C9B16D9C-B7F1-42A9-9200-FBD2CF7312B3"
+            ],
+            [
+              "candidate:Q21500755$06462c6d-4916-0ce3-c60f-e9e6cc86d80a"
+            ],
+            [
+              "candidate:Q21500755$aaed40e2-464d-32b6-a3fc-1b1a87b75af3"
+            ]
+          ]
+        },
+        {
+          "nodeIds": [
+            "54105db8-8c7c-48a0-8054-b11f2802458c",
+            "bac84423-538f-4b32-8cc8-19c70867475f",
+            "f9796ab4-8aab-4514-88b6-d52a61516a7d",
+            "eaa10cdb-de36-4757-8ebc-d7f06df70e90"
+          ],
+          "claimIds": [
+            [
+              "8b1dc232-ed4d-4bc3-83dd-a04e2c02d79f"
+            ],
+            [
+              "aa1067ad-4d17-4f20-8aee-b9562cbf2ca5"
+            ],
+            [
+              "d036bbb3-140c-4254-8971-fe9f60611202"
+            ]
+          ],
+          "researchNodes": [
+            "Q184843",
+            "Q81328",
+            "Q21500755",
+            "Q6830765"
+          ],
+          "candidateIds": [
+            [
+              "candidate:q184843$C9B16D9C-B7F1-42A9-9200-FBD2CF7312B3"
+            ],
+            [
+              "candidate:Q21500755$06462c6d-4916-0ce3-c60f-e9e6cc86d80a"
+            ],
+            [
+              "candidate:Q21500755$28f45ed9-4138-5ce8-15f7-af2e58d04bbc"
+            ]
+          ]
+        },
+        {
+          "nodeIds": [
+            "54105db8-8c7c-48a0-8054-b11f2802458c",
+            "bac84423-538f-4b32-8cc8-19c70867475f",
+            "f9796ab4-8aab-4514-88b6-d52a61516a7d",
+            "36253af1-5589-4114-8556-0282879799ed"
+          ],
+          "claimIds": [
+            [
+              "8b1dc232-ed4d-4bc3-83dd-a04e2c02d79f"
+            ],
+            [
+              "aa1067ad-4d17-4f20-8aee-b9562cbf2ca5"
+            ],
+            [
+              "da00ffb6-1833-4ce4-889d-a162b8e89dd7"
+            ]
+          ],
+          "researchNodes": [
+            "Q184843",
+            "Q81328",
+            "Q21500755",
+            "Q76364"
+          ],
+          "candidateIds": [
+            [
+              "candidate:q184843$C9B16D9C-B7F1-42A9-9200-FBD2CF7312B3"
+            ],
+            [
+              "candidate:Q21500755$06462c6d-4916-0ce3-c60f-e9e6cc86d80a"
+            ],
+            [
+              "candidate:Q21500755$6925bf24-4769-6c57-1559-3f160d471644"
+            ]
+          ]
+        },
+        {
+          "nodeIds": [
+            "54105db8-8c7c-48a0-8054-b11f2802458c",
+            "bac84423-538f-4b32-8cc8-19c70867475f",
+            "f9796ab4-8aab-4514-88b6-d52a61516a7d",
+            "4dd8d34c-3ca3-4a85-82d8-c01c4d129977"
+          ],
+          "claimIds": [
+            [
+              "8b1dc232-ed4d-4bc3-83dd-a04e2c02d79f"
+            ],
+            [
+              "aa1067ad-4d17-4f20-8aee-b9562cbf2ca5"
+            ],
+            [
+              "f79b9cc4-ad09-43c7-8ce0-ace5c39adb6e"
+            ]
+          ],
+          "researchNodes": [
+            "Q184843",
+            "Q81328",
+            "Q21500755",
+            "Q4757652"
+          ],
+          "candidateIds": [
+            [
+              "candidate:q184843$C9B16D9C-B7F1-42A9-9200-FBD2CF7312B3"
+            ],
+            [
+              "candidate:Q21500755$06462c6d-4916-0ce3-c60f-e9e6cc86d80a"
+            ],
+            [
+              "candidate:Q21500755$e4aa1901-4f60-f014-0f04-bd7e9abeb05e"
+            ]
+          ]
+        },
+        {
+          "nodeIds": [
+            "54105db8-8c7c-48a0-8054-b11f2802458c",
+            "426873d4-9fe0-49dc-8c13-eb6826295deb",
+            "5b5ad231-c681-477a-8f13-727f156d7a99",
+            "9cbabbcb-12e2-4932-8fbf-18f238a0fb43"
+          ],
+          "claimIds": [
+            [
+              "fa297381-dd05-4223-8cf8-74aa91ba7279"
+            ],
+            [
+              "ec7b22ca-188d-400c-8e75-ff4a73f0d3e9"
+            ],
+            [
+              "1740c563-d0d7-4b04-8c11-79b96bc9b1d6"
+            ]
+          ],
+          "researchNodes": [
+            "Q184843",
+            "Q1177114",
+            "Q104137",
+            "Q150943"
+          ],
+          "candidateIds": [
+            [
+              "candidate:q184843$284E2874-A3FC-4CCB-B36F-9D4334F2BB83"
+            ],
+            [
+              "candidate:q104137$3BA0821B-A1E1-45FE-BF84-4E013DD4B557"
+            ],
+            [
+              "candidate:q104137$1B0E36E9-AA57-43D1-81FA-2CC6987D5367"
+            ]
+          ]
+        },
+        {
+          "nodeIds": [
+            "54105db8-8c7c-48a0-8054-b11f2802458c",
+            "426873d4-9fe0-49dc-8c13-eb6826295deb",
+            "5b5ad231-c681-477a-8f13-727f156d7a99",
+            "2ab4b8fb-7868-487d-8458-2286d0cf834a"
+          ],
+          "claimIds": [
+            [
+              "fa297381-dd05-4223-8cf8-74aa91ba7279"
+            ],
+            [
+              "ec7b22ca-188d-400c-8e75-ff4a73f0d3e9"
+            ],
+            [
+              "1c125855-f36e-4517-8777-27dd30c24b88"
+            ]
+          ],
+          "researchNodes": [
+            "Q184843",
+            "Q1177114",
+            "Q104137",
+            "Q48337"
+          ],
+          "candidateIds": [
+            [
+              "candidate:q184843$284E2874-A3FC-4CCB-B36F-9D4334F2BB83"
+            ],
+            [
+              "candidate:q104137$3BA0821B-A1E1-45FE-BF84-4E013DD4B557"
+            ],
+            [
+              "candidate:q104137$3B57142F-2116-4265-901D-3F772622D3C1"
+            ]
+          ]
+        },
+        {
+          "nodeIds": [
+            "54105db8-8c7c-48a0-8054-b11f2802458c",
+            "426873d4-9fe0-49dc-8c13-eb6826295deb",
+            "5b5ad231-c681-477a-8f13-727f156d7a99",
+            "9ed98ff9-7113-45e5-87c6-d0aca7464f46"
+          ],
+          "claimIds": [
+            [
+              "fa297381-dd05-4223-8cf8-74aa91ba7279"
+            ],
+            [
+              "ec7b22ca-188d-400c-8e75-ff4a73f0d3e9"
+            ],
+            [
+              "31ffac91-cbad-48a1-8b81-5e11caacd211",
+              "5b1e46c2-8bd4-4fb1-8018-1fd175abcdaa"
+            ]
+          ],
+          "researchNodes": [
+            "Q184843",
+            "Q1177114",
+            "Q104137",
+            "Q43203"
+          ],
+          "candidateIds": [
+            [
+              "candidate:q184843$284E2874-A3FC-4CCB-B36F-9D4334F2BB83"
+            ],
+            [
+              "candidate:q104137$3BA0821B-A1E1-45FE-BF84-4E013DD4B557"
+            ],
+            [
+              "candidate:q104137$B226BBA0-92F8-4A47-8EC8-21697BAFADBA",
+              "candidate:Q104137$3D0CF582-4DF0-445D-9EB3-221A8DC7E84F"
+            ]
+          ]
+        }
+      ],
+      "scan": {
+        "expanded": 12,
+        "reasons": [],
+        "limitedIds": []
+      }
+    },
+    "bounded": {
+      "paths": [
+        {
+          "nodeIds": [
+            "54105db8-8c7c-48a0-8054-b11f2802458c",
+            "10cef0a5-9d2d-4d2a-80c5-53515f45204e",
+            "f9796ab4-8aab-4514-88b6-d52a61516a7d",
+            "bd553d24-ffb1-4982-8560-80eba3799742"
+          ],
+          "claimIds": [
+            [
+              "2995048d-d10d-472e-8b2f-69494ca011b5"
+            ],
+            [
+              "4a39d6fd-b743-48b2-871d-765b1b1096bc"
+            ],
+            [
+              "707760a1-c598-4f40-8978-dcba10e6b647"
+            ]
+          ],
+          "researchNodes": [
+            "Q184843",
+            "Q1372703",
+            "Q21500755",
+            "Q193815"
+          ],
+          "candidateIds": [
+            [
+              "candidate:q184843$7BFE807E-21C2-4F1A-8EB9-16DF92DCAD9E"
+            ],
+            [
+              "candidate:Q21500755$d67b18c8-46b4-2882-88d9-6de6930f17c6"
+            ],
+            [
+              "candidate:Q21500755$0b844a43-4e1d-5c02-c6ca-7ba24d9f4e4d"
+            ]
+          ]
+        },
+        {
+          "nodeIds": [
+            "54105db8-8c7c-48a0-8054-b11f2802458c",
+            "10cef0a5-9d2d-4d2a-80c5-53515f45204e",
+            "f9796ab4-8aab-4514-88b6-d52a61516a7d",
+            "d1a349eb-cf29-47ff-88ba-e9889ca7b002"
+          ],
+          "claimIds": [
+            [
+              "2995048d-d10d-472e-8b2f-69494ca011b5"
+            ],
+            [
+              "4a39d6fd-b743-48b2-871d-765b1b1096bc"
+            ],
+            [
+              "77aea308-6ac7-4ac8-89c0-95499565a1dc"
+            ]
+          ],
+          "researchNodes": [
+            "Q184843",
+            "Q1372703",
+            "Q21500755",
+            "Q44158"
+          ],
+          "candidateIds": [
+            [
+              "candidate:q184843$7BFE807E-21C2-4F1A-8EB9-16DF92DCAD9E"
+            ],
+            [
+              "candidate:Q21500755$d67b18c8-46b4-2882-88d9-6de6930f17c6"
+            ],
+            [
+              "candidate:Q21500755$d188a830-4fd2-17fe-c2ce-7434a1e82f61"
+            ]
+          ]
+        },
+        {
+          "nodeIds": [
+            "54105db8-8c7c-48a0-8054-b11f2802458c",
+            "10cef0a5-9d2d-4d2a-80c5-53515f45204e",
+            "f9796ab4-8aab-4514-88b6-d52a61516a7d",
+            "ec02c67f-35b8-4a3e-8a35-09c7fde0750c"
+          ],
+          "claimIds": [
+            [
+              "2995048d-d10d-472e-8b2f-69494ca011b5"
+            ],
+            [
+              "4a39d6fd-b743-48b2-871d-765b1b1096bc"
+            ],
+            [
+              "8003754c-6964-4d80-8f55-3c25c2264592"
+            ]
+          ],
+          "researchNodes": [
+            "Q184843",
+            "Q1372703",
+            "Q21500755",
+            "Q272972"
+          ],
+          "candidateIds": [
+            [
+              "candidate:q184843$7BFE807E-21C2-4F1A-8EB9-16DF92DCAD9E"
+            ],
+            [
+              "candidate:Q21500755$d67b18c8-46b4-2882-88d9-6de6930f17c6"
+            ],
+            [
+              "candidate:Q21500755$35dfb20f-4e8a-13ff-e72c-eda27ec75fc0"
+            ]
+          ]
+        },
+        {
+          "nodeIds": [
+            "54105db8-8c7c-48a0-8054-b11f2802458c",
+            "10cef0a5-9d2d-4d2a-80c5-53515f45204e",
+            "f9796ab4-8aab-4514-88b6-d52a61516a7d",
+            "ab8f46e2-0411-4c10-8c58-49c52ff5fa5d"
+          ],
+          "claimIds": [
+            [
+              "2995048d-d10d-472e-8b2f-69494ca011b5"
+            ],
+            [
+              "4a39d6fd-b743-48b2-871d-765b1b1096bc"
+            ],
+            [
+              "a9f6c48d-d369-4543-8d85-a97990ea7c61"
+            ]
+          ],
+          "researchNodes": [
+            "Q184843",
+            "Q1372703",
+            "Q21500755",
+            "Q548823"
+          ],
+          "candidateIds": [
+            [
+              "candidate:q184843$7BFE807E-21C2-4F1A-8EB9-16DF92DCAD9E"
+            ],
+            [
+              "candidate:Q21500755$d67b18c8-46b4-2882-88d9-6de6930f17c6"
+            ],
+            [
+              "candidate:Q21500755$3b2b8856-4ac9-a659-fe86-9a94d3ec6f33"
+            ]
+          ]
+        },
+        {
+          "nodeIds": [
+            "54105db8-8c7c-48a0-8054-b11f2802458c",
+            "10cef0a5-9d2d-4d2a-80c5-53515f45204e",
+            "f9796ab4-8aab-4514-88b6-d52a61516a7d",
+            "bac84423-538f-4b32-8cc8-19c70867475f"
+          ],
+          "claimIds": [
+            [
+              "2995048d-d10d-472e-8b2f-69494ca011b5"
+            ],
+            [
+              "4a39d6fd-b743-48b2-871d-765b1b1096bc"
+            ],
+            [
+              "aa1067ad-4d17-4f20-8aee-b9562cbf2ca5"
+            ]
+          ],
+          "researchNodes": [
+            "Q184843",
+            "Q1372703",
+            "Q21500755",
+            "Q81328"
+          ],
+          "candidateIds": [
+            [
+              "candidate:q184843$7BFE807E-21C2-4F1A-8EB9-16DF92DCAD9E"
+            ],
+            [
+              "candidate:Q21500755$d67b18c8-46b4-2882-88d9-6de6930f17c6"
+            ],
+            [
+              "candidate:Q21500755$06462c6d-4916-0ce3-c60f-e9e6cc86d80a"
+            ]
+          ]
+        },
+        {
+          "nodeIds": [
+            "54105db8-8c7c-48a0-8054-b11f2802458c",
+            "10cef0a5-9d2d-4d2a-80c5-53515f45204e",
+            "f9796ab4-8aab-4514-88b6-d52a61516a7d",
+            "0fb86cfc-8c32-4edf-8ead-c76de52d6fe2"
+          ],
+          "claimIds": [
+            [
+              "2995048d-d10d-472e-8b2f-69494ca011b5"
+            ],
+            [
+              "4a39d6fd-b743-48b2-871d-765b1b1096bc"
+            ],
+            [
+              "ba0dfefc-b769-44b9-8615-79733685f6d4"
+            ]
+          ],
+          "researchNodes": [
+            "Q184843",
+            "Q1372703",
+            "Q21500755",
+            "Q460277"
+          ],
+          "candidateIds": [
+            [
+              "candidate:q184843$7BFE807E-21C2-4F1A-8EB9-16DF92DCAD9E"
+            ],
+            [
+              "candidate:Q21500755$d67b18c8-46b4-2882-88d9-6de6930f17c6"
+            ],
+            [
+              "candidate:Q21500755$d6894ac6-412c-1cfb-2ce9-e90cdfe8b8f1"
+            ]
+          ]
+        },
+        {
+          "nodeIds": [
+            "54105db8-8c7c-48a0-8054-b11f2802458c",
+            "10cef0a5-9d2d-4d2a-80c5-53515f45204e",
+            "f9796ab4-8aab-4514-88b6-d52a61516a7d",
+            "7e734671-5f5b-4c78-882e-e3a1b5c4bae6"
+          ],
+          "claimIds": [
+            [
+              "2995048d-d10d-472e-8b2f-69494ca011b5"
+            ],
+            [
+              "4a39d6fd-b743-48b2-871d-765b1b1096bc"
+            ],
+            [
+              "c24ef73d-7700-458f-80f4-a283e075f378"
+            ]
+          ],
+          "researchNodes": [
+            "Q184843",
+            "Q1372703",
+            "Q21500755",
+            "Q6056440"
+          ],
+          "candidateIds": [
+            [
+              "candidate:q184843$7BFE807E-21C2-4F1A-8EB9-16DF92DCAD9E"
+            ],
+            [
+              "candidate:Q21500755$d67b18c8-46b4-2882-88d9-6de6930f17c6"
+            ],
+            [
+              "candidate:Q21500755$aaed40e2-464d-32b6-a3fc-1b1a87b75af3"
+            ]
+          ]
+        },
+        {
+          "nodeIds": [
+            "54105db8-8c7c-48a0-8054-b11f2802458c",
+            "10cef0a5-9d2d-4d2a-80c5-53515f45204e",
+            "f9796ab4-8aab-4514-88b6-d52a61516a7d",
+            "eaa10cdb-de36-4757-8ebc-d7f06df70e90"
+          ],
+          "claimIds": [
+            [
+              "2995048d-d10d-472e-8b2f-69494ca011b5"
+            ],
+            [
+              "4a39d6fd-b743-48b2-871d-765b1b1096bc"
+            ],
+            [
+              "d036bbb3-140c-4254-8971-fe9f60611202"
+            ]
+          ],
+          "researchNodes": [
+            "Q184843",
+            "Q1372703",
+            "Q21500755",
+            "Q6830765"
+          ],
+          "candidateIds": [
+            [
+              "candidate:q184843$7BFE807E-21C2-4F1A-8EB9-16DF92DCAD9E"
+            ],
+            [
+              "candidate:Q21500755$d67b18c8-46b4-2882-88d9-6de6930f17c6"
+            ],
+            [
+              "candidate:Q21500755$28f45ed9-4138-5ce8-15f7-af2e58d04bbc"
+            ]
+          ]
+        },
+        {
+          "nodeIds": [
+            "54105db8-8c7c-48a0-8054-b11f2802458c",
+            "10cef0a5-9d2d-4d2a-80c5-53515f45204e",
+            "f9796ab4-8aab-4514-88b6-d52a61516a7d",
+            "36253af1-5589-4114-8556-0282879799ed"
+          ],
+          "claimIds": [
+            [
+              "2995048d-d10d-472e-8b2f-69494ca011b5"
+            ],
+            [
+              "4a39d6fd-b743-48b2-871d-765b1b1096bc"
+            ],
+            [
+              "da00ffb6-1833-4ce4-889d-a162b8e89dd7"
+            ]
+          ],
+          "researchNodes": [
+            "Q184843",
+            "Q1372703",
+            "Q21500755",
+            "Q76364"
+          ],
+          "candidateIds": [
+            [
+              "candidate:q184843$7BFE807E-21C2-4F1A-8EB9-16DF92DCAD9E"
+            ],
+            [
+              "candidate:Q21500755$d67b18c8-46b4-2882-88d9-6de6930f17c6"
+            ],
+            [
+              "candidate:Q21500755$6925bf24-4769-6c57-1559-3f160d471644"
+            ]
+          ]
+        },
+        {
+          "nodeIds": [
+            "54105db8-8c7c-48a0-8054-b11f2802458c",
+            "10cef0a5-9d2d-4d2a-80c5-53515f45204e",
+            "f9796ab4-8aab-4514-88b6-d52a61516a7d",
+            "4dd8d34c-3ca3-4a85-82d8-c01c4d129977"
+          ],
+          "claimIds": [
+            [
+              "2995048d-d10d-472e-8b2f-69494ca011b5"
+            ],
+            [
+              "4a39d6fd-b743-48b2-871d-765b1b1096bc"
+            ],
+            [
+              "f79b9cc4-ad09-43c7-8ce0-ace5c39adb6e"
+            ]
+          ],
+          "researchNodes": [
+            "Q184843",
+            "Q1372703",
+            "Q21500755",
+            "Q4757652"
+          ],
+          "candidateIds": [
+            [
+              "candidate:q184843$7BFE807E-21C2-4F1A-8EB9-16DF92DCAD9E"
+            ],
+            [
+              "candidate:Q21500755$d67b18c8-46b4-2882-88d9-6de6930f17c6"
+            ],
+            [
+              "candidate:Q21500755$e4aa1901-4f60-f014-0f04-bd7e9abeb05e"
+            ]
+          ]
+        },
+        {
+          "nodeIds": [
+            "54105db8-8c7c-48a0-8054-b11f2802458c",
+            "bac84423-538f-4b32-8cc8-19c70867475f",
+            "f9796ab4-8aab-4514-88b6-d52a61516a7d",
+            "10cef0a5-9d2d-4d2a-80c5-53515f45204e"
+          ],
+          "claimIds": [
+            [
+              "8b1dc232-ed4d-4bc3-83dd-a04e2c02d79f"
+            ],
+            [
+              "aa1067ad-4d17-4f20-8aee-b9562cbf2ca5"
+            ],
+            [
+              "4a39d6fd-b743-48b2-871d-765b1b1096bc"
+            ]
+          ],
+          "researchNodes": [
+            "Q184843",
+            "Q81328",
+            "Q21500755",
+            "Q1372703"
+          ],
+          "candidateIds": [
+            [
+              "candidate:q184843$C9B16D9C-B7F1-42A9-9200-FBD2CF7312B3"
+            ],
+            [
+              "candidate:Q21500755$06462c6d-4916-0ce3-c60f-e9e6cc86d80a"
+            ],
+            [
+              "candidate:Q21500755$d67b18c8-46b4-2882-88d9-6de6930f17c6"
+            ]
+          ]
+        },
+        {
+          "nodeIds": [
+            "54105db8-8c7c-48a0-8054-b11f2802458c",
+            "bac84423-538f-4b32-8cc8-19c70867475f",
+            "f9796ab4-8aab-4514-88b6-d52a61516a7d",
+            "bd553d24-ffb1-4982-8560-80eba3799742"
+          ],
+          "claimIds": [
+            [
+              "8b1dc232-ed4d-4bc3-83dd-a04e2c02d79f"
+            ],
+            [
+              "aa1067ad-4d17-4f20-8aee-b9562cbf2ca5"
+            ],
+            [
+              "707760a1-c598-4f40-8978-dcba10e6b647"
+            ]
+          ],
+          "researchNodes": [
+            "Q184843",
+            "Q81328",
+            "Q21500755",
+            "Q193815"
+          ],
+          "candidateIds": [
+            [
+              "candidate:q184843$C9B16D9C-B7F1-42A9-9200-FBD2CF7312B3"
+            ],
+            [
+              "candidate:Q21500755$06462c6d-4916-0ce3-c60f-e9e6cc86d80a"
+            ],
+            [
+              "candidate:Q21500755$0b844a43-4e1d-5c02-c6ca-7ba24d9f4e4d"
+            ]
+          ]
+        }
+      ],
+      "scan": {
+        "expanded": 12,
+        "reasons": [
+          "results"
+        ],
+        "limitedIds": []
+      }
+    }
+  },
+  "proposedStepCallback": {
+    "note": "Research-only callback, not exposed by current public request schema.",
+    "result": {
+      "paths": [
+        {
+          "nodeIds": [
+            "54105db8-8c7c-48a0-8054-b11f2802458c",
+            "10cef0a5-9d2d-4d2a-80c5-53515f45204e",
+            "f9796ab4-8aab-4514-88b6-d52a61516a7d",
+            "bd553d24-ffb1-4982-8560-80eba3799742"
+          ],
+          "claimIds": [
+            [
+              "2995048d-d10d-472e-8b2f-69494ca011b5"
+            ],
+            [
+              "4a39d6fd-b743-48b2-871d-765b1b1096bc"
+            ],
+            [
+              "707760a1-c598-4f40-8978-dcba10e6b647"
+            ]
+          ],
+          "researchNodes": [
+            "Q184843",
+            "Q1372703",
+            "Q21500755",
+            "Q193815"
+          ],
+          "candidateIds": [
+            [
+              "candidate:q184843$7BFE807E-21C2-4F1A-8EB9-16DF92DCAD9E"
+            ],
+            [
+              "candidate:Q21500755$d67b18c8-46b4-2882-88d9-6de6930f17c6"
+            ],
+            [
+              "candidate:Q21500755$0b844a43-4e1d-5c02-c6ca-7ba24d9f4e4d"
+            ]
+          ]
+        },
+        {
+          "nodeIds": [
+            "54105db8-8c7c-48a0-8054-b11f2802458c",
+            "10cef0a5-9d2d-4d2a-80c5-53515f45204e",
+            "f9796ab4-8aab-4514-88b6-d52a61516a7d",
+            "d1a349eb-cf29-47ff-88ba-e9889ca7b002"
+          ],
+          "claimIds": [
+            [
+              "2995048d-d10d-472e-8b2f-69494ca011b5"
+            ],
+            [
+              "4a39d6fd-b743-48b2-871d-765b1b1096bc"
+            ],
+            [
+              "77aea308-6ac7-4ac8-89c0-95499565a1dc"
+            ]
+          ],
+          "researchNodes": [
+            "Q184843",
+            "Q1372703",
+            "Q21500755",
+            "Q44158"
+          ],
+          "candidateIds": [
+            [
+              "candidate:q184843$7BFE807E-21C2-4F1A-8EB9-16DF92DCAD9E"
+            ],
+            [
+              "candidate:Q21500755$d67b18c8-46b4-2882-88d9-6de6930f17c6"
+            ],
+            [
+              "candidate:Q21500755$d188a830-4fd2-17fe-c2ce-7434a1e82f61"
+            ]
+          ]
+        },
+        {
+          "nodeIds": [
+            "54105db8-8c7c-48a0-8054-b11f2802458c",
+            "10cef0a5-9d2d-4d2a-80c5-53515f45204e",
+            "f9796ab4-8aab-4514-88b6-d52a61516a7d",
+            "ec02c67f-35b8-4a3e-8a35-09c7fde0750c"
+          ],
+          "claimIds": [
+            [
+              "2995048d-d10d-472e-8b2f-69494ca011b5"
+            ],
+            [
+              "4a39d6fd-b743-48b2-871d-765b1b1096bc"
+            ],
+            [
+              "8003754c-6964-4d80-8f55-3c25c2264592"
+            ]
+          ],
+          "researchNodes": [
+            "Q184843",
+            "Q1372703",
+            "Q21500755",
+            "Q272972"
+          ],
+          "candidateIds": [
+            [
+              "candidate:q184843$7BFE807E-21C2-4F1A-8EB9-16DF92DCAD9E"
+            ],
+            [
+              "candidate:Q21500755$d67b18c8-46b4-2882-88d9-6de6930f17c6"
+            ],
+            [
+              "candidate:Q21500755$35dfb20f-4e8a-13ff-e72c-eda27ec75fc0"
+            ]
+          ]
+        },
+        {
+          "nodeIds": [
+            "54105db8-8c7c-48a0-8054-b11f2802458c",
+            "10cef0a5-9d2d-4d2a-80c5-53515f45204e",
+            "f9796ab4-8aab-4514-88b6-d52a61516a7d",
+            "bac84423-538f-4b32-8cc8-19c70867475f"
+          ],
+          "claimIds": [
+            [
+              "2995048d-d10d-472e-8b2f-69494ca011b5"
+            ],
+            [
+              "4a39d6fd-b743-48b2-871d-765b1b1096bc"
+            ],
+            [
+              "aa1067ad-4d17-4f20-8aee-b9562cbf2ca5"
+            ]
+          ],
+          "researchNodes": [
+            "Q184843",
+            "Q1372703",
+            "Q21500755",
+            "Q81328"
+          ],
+          "candidateIds": [
+            [
+              "candidate:q184843$7BFE807E-21C2-4F1A-8EB9-16DF92DCAD9E"
+            ],
+            [
+              "candidate:Q21500755$d67b18c8-46b4-2882-88d9-6de6930f17c6"
+            ],
+            [
+              "candidate:Q21500755$06462c6d-4916-0ce3-c60f-e9e6cc86d80a"
+            ]
+          ]
+        },
+        {
+          "nodeIds": [
+            "54105db8-8c7c-48a0-8054-b11f2802458c",
+            "426873d4-9fe0-49dc-8c13-eb6826295deb",
+            "5b5ad231-c681-477a-8f13-727f156d7a99",
+            "9cbabbcb-12e2-4932-8fbf-18f238a0fb43"
+          ],
+          "claimIds": [
+            [
+              "fa297381-dd05-4223-8cf8-74aa91ba7279"
+            ],
+            [
+              "ec7b22ca-188d-400c-8e75-ff4a73f0d3e9"
+            ],
+            [
+              "1740c563-d0d7-4b04-8c11-79b96bc9b1d6"
+            ]
+          ],
+          "researchNodes": [
+            "Q184843",
+            "Q1177114",
+            "Q104137",
+            "Q150943"
+          ],
+          "candidateIds": [
+            [
+              "candidate:q184843$284E2874-A3FC-4CCB-B36F-9D4334F2BB83"
+            ],
+            [
+              "candidate:q104137$3BA0821B-A1E1-45FE-BF84-4E013DD4B557"
+            ],
+            [
+              "candidate:q104137$1B0E36E9-AA57-43D1-81FA-2CC6987D5367"
+            ]
+          ]
+        },
+        {
+          "nodeIds": [
+            "54105db8-8c7c-48a0-8054-b11f2802458c",
+            "426873d4-9fe0-49dc-8c13-eb6826295deb",
+            "5b5ad231-c681-477a-8f13-727f156d7a99",
+            "2ab4b8fb-7868-487d-8458-2286d0cf834a"
+          ],
+          "claimIds": [
+            [
+              "fa297381-dd05-4223-8cf8-74aa91ba7279"
+            ],
+            [
+              "ec7b22ca-188d-400c-8e75-ff4a73f0d3e9"
+            ],
+            [
+              "1c125855-f36e-4517-8777-27dd30c24b88"
+            ]
+          ],
+          "researchNodes": [
+            "Q184843",
+            "Q1177114",
+            "Q104137",
+            "Q48337"
+          ],
+          "candidateIds": [
+            [
+              "candidate:q184843$284E2874-A3FC-4CCB-B36F-9D4334F2BB83"
+            ],
+            [
+              "candidate:q104137$3BA0821B-A1E1-45FE-BF84-4E013DD4B557"
+            ],
+            [
+              "candidate:q104137$3B57142F-2116-4265-901D-3F772622D3C1"
+            ]
+          ]
+        },
+        {
+          "nodeIds": [
+            "54105db8-8c7c-48a0-8054-b11f2802458c",
+            "426873d4-9fe0-49dc-8c13-eb6826295deb",
+            "5b5ad231-c681-477a-8f13-727f156d7a99",
+            "9ed98ff9-7113-45e5-87c6-d0aca7464f46"
+          ],
+          "claimIds": [
+            [
+              "fa297381-dd05-4223-8cf8-74aa91ba7279"
+            ],
+            [
+              "ec7b22ca-188d-400c-8e75-ff4a73f0d3e9"
+            ],
+            [
+              "5b1e46c2-8bd4-4fb1-8018-1fd175abcdaa"
+            ]
+          ],
+          "researchNodes": [
+            "Q184843",
+            "Q1177114",
+            "Q104137",
+            "Q43203"
+          ],
+          "candidateIds": [
+            [
+              "candidate:q184843$284E2874-A3FC-4CCB-B36F-9D4334F2BB83"
+            ],
+            [
+              "candidate:q104137$3BA0821B-A1E1-45FE-BF84-4E013DD4B557"
+            ],
+            [
+              "candidate:Q104137$3D0CF582-4DF0-445D-9EB3-221A8DC7E84F"
+            ]
+          ]
+        }
+      ],
+      "scan": {
+        "expanded": 5,
+        "reasons": [],
+        "limitedIds": []
+      }
+    }
+  },
+  "syntheticLimitOnRealData": {
+    "note": "neighbor cap=1, not default production settings",
+    "result": {
+      "paths": [],
+      "scan": {
+        "expanded": 2,
+        "reasons": [
+          "neighbors"
+        ],
+        "limitedIds": [
+          "54105db8-8c7c-48a0-8054-b11f2802458c"
+        ]
+      }
+    }
+  }
+}
