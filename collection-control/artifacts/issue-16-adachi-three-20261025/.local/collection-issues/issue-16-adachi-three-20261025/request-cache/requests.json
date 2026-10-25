@@ -1,0 +1,220 @@
+{
+  "policy": {
+    "maxAttempts": 30,
+    "attemptsPerRequest": 2,
+    "minIntervalSeconds": 3,
+    "timeoutSeconds": 20,
+    "maxBytes": 4194304
+  },
+  "attempts": [
+    {
+      "key": "lookup-ef0a90f9f4fc61f17de06cfb",
+      "url": "https://www.wikidata.org/w/api.php?format=json&action=wbgetentities&sites=jawiki&titles=%E3%81%82%E3%81%A0%E3%81%A1%E5%85%85%7C%E3%82%BF%E3%83%83%E3%83%81%7CH2%7CMIX&props=labels%7Caliases%7Cclaims&languages=ja%7Cen",
+      "time": 1792908837.0042977,
+      "status": "succeeded"
+    }
+  ],
+  "responses": {
+    "lookup-ef0a90f9f4fc61f17de06cfb": {
+      "url": "https://www.wikidata.org/w/api.php?format=json&action=wbgetentities&sites=jawiki&titles=%E3%81%82%E3%81%A0%E3%81%A1%E5%85%85%7C%E3%82%BF%E3%83%83%E3%83%81%7CH2%7CMIX&props=labels%7Caliases%7Cclaims&languages=ja%7Cen",
+      "sha256": "561351badd966e9c069c594df7d77edec0f50bf8270b00431a6ed9bb4423f1ba",
+      "bytes": 58312,
+      "fetchedAt": "2026-10-25T06:14:03+00:00"
+    },
+    "wikidata-Q351742": {
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q351742.json",
+      "sha256": "14efdc36b2a7dd49135a9275e5aa09c25f7fca2cceceacc848540e9a5e059432",
+      "bytes": 63318,
+      "fetchedAt": "2026-10-18T18:39:39+00:00"
+    },
+    "lookup-b2b7d448d0922b23a2b00b0e": {
+      "url": "https://www.wikidata.org/w/api.php?format=json&action=wbsearchentities&search=%E3%82%BF%E3%83%83%E3%83%81&language=ja&type=item&limit=5",
+      "sha256": "fb22013500dd23cc496fa0821d27f21091a17d89cc47893f9f207bd9b60c6819",
+      "bytes": 2670,
+      "fetchedAt": "2026-10-18T18:41:59+00:00"
+    },
+    "lookup-7f000bad3cb67c966c9d30a7": {
+      "url": "https://www.wikidata.org/w/api.php?format=json&action=wbgetentities&ids=Q619500%7CQ2000338%7CQ7828614%7CQ165970%7CQ79997509&props=labels%7Caliases%7Cclaims&languages=ja%7Cen",
+      "sha256": "bc11c4ee724c9c9f4d53fdd68ad41c248e39e7ecd938c005d5e231cafa0720ae",
+      "bytes": 96214,
+      "fetchedAt": "2026-10-18T18:42:03+00:00"
+    },
+    "wikidata-Q619500": {
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q619500.json",
+      "sha256": "a65cd5332f31f1f55f20dce7ff2f8caab613f19124c99eb42fd884edfe0a7bf4",
+      "bytes": 38348,
+      "fetchedAt": "2026-10-18T18:42:06+00:00"
+    },
+    "publication-8e7c7aee16a3aa6238fd935d": {
+      "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&onlyBib=true&maximumRecords=100&query=title%3D%22%E3%82%BF%E3%83%83%E3%83%81%22+AND+creator%3D%22%E3%81%82%E3%81%A0%E3%81%A1%E5%85%85%22+AND+dpid%3Diss-ndl-opac+sortBy+issued_date%2Fsort.ascending",
+      "sha256": "1b12dc03d5177dc736b6a6ca62145e89823712ade97d731168641658a55c3ec9",
+      "bytes": 575416,
+      "fetchedAt": "2026-10-18T18:42:11+00:00"
+    },
+    "ndl-9784091218612": {
+      "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&maximumRecords=5&query=isbn%3D%229784091218612%22+AND+dpid%3Diss-ndl-opac",
+      "sha256": "b25cad851331cbfa67ced0bef168d01f4e6976293b4bc0c17639c36db0ef7854",
+      "bytes": 9168,
+      "fetchedAt": "2026-10-18T18:55:45+00:00"
+    },
+    "lookup-7cde1b5e1554318fa9470327": {
+      "url": "https://www.wikidata.org/w/api.php?format=json&action=wbsearchentities&search=H2&language=ja&type=item&limit=5",
+      "sha256": "5a2c9bc40e876449ba789e9895ec2cd17f2bf1c66b5adabfa85f1ae87d7f225b",
+      "bytes": 2238,
+      "fetchedAt": "2026-10-18T18:42:12+00:00"
+    },
+    "lookup-4ec9e467deb6ab935017072d": {
+      "url": "https://www.wikidata.org/w/api.php?format=json&action=wbgetentities&ids=Q252804%7CQ652892%7CQ3027893%7CQ106576595%7CQ5636328&props=labels%7Caliases%7Cclaims&languages=ja%7Cen",
+      "sha256": "fdf87943f80f62be5441c5c8caa4529cfcac8fa204695008f3917b36b64a53dc",
+      "bytes": 181982,
+      "fetchedAt": "2026-10-18T18:42:16+00:00"
+    },
+    "wikidata-Q652892": {
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q652892.json",
+      "sha256": "bc7393508664918e11053bdd0d016b399ce427a978b2fe0026928d253419f85b",
+      "bytes": 13373,
+      "fetchedAt": "2026-10-18T18:42:18+00:00"
+    },
+    "publication-8a39cf1aa6967fa89d26b2c9": {
+      "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&onlyBib=true&maximumRecords=100&query=title%3D%22H2%22+AND+creator%3D%22%E3%81%82%E3%81%A0%E3%81%A1%E5%85%85%22+AND+dpid%3Diss-ndl-opac+sortBy+issued_date%2Fsort.ascending",
+      "sha256": "f0e8294983e00709b436c00986bc94ec67077f3c8e9d9613accee92f1a762f5a",
+      "bytes": 579456,
+      "fetchedAt": "2026-10-18T18:42:22+00:00"
+    },
+    "ndl-9784091231512": {
+      "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&maximumRecords=5&query=isbn%3D%229784091231512%22+AND+dpid%3Diss-ndl-opac",
+      "sha256": "9f989573101f724f8967c277701ca6ebf70df184bfe64c1e82c7d614eff38fb5",
+      "bytes": 20137,
+      "fetchedAt": "2026-10-18T18:55:48+00:00"
+    },
+    "lookup-aef32443b3ea9d21e0c2ed76": {
+      "url": "https://www.wikidata.org/w/api.php?format=json&action=wbsearchentities&search=MIX&language=ja&type=item&limit=5",
+      "sha256": "baba4a677925cdaf1408b5a00c7286d8d2afdbd186c7eae3f3484e47e9d9054f",
+      "bytes": 1850,
+      "fetchedAt": "2026-10-18T18:42:24+00:00"
+    },
+    "lookup-048cc2770dcf1104333b5c4f": {
+      "url": "https://www.wikidata.org/w/api.php?format=json&action=wbgetentities&ids=Q11231713%7CQ371805%7CQ105261329%7CQ135977808%7CQ3269313&props=labels%7Caliases%7Cclaims&languages=ja%7Cen",
+      "sha256": "3f77a37d92c03f40c7c3fe5b2edfb5ad93918aaffd2328965cadc58f9d1ce4bf",
+      "bytes": 25953,
+      "fetchedAt": "2026-10-18T18:42:27+00:00"
+    },
+    "wikidata-Q11231713": {
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q11231713.json",
+      "sha256": "428b94a173c98d9112004cb23f7b5189d9bb8039d0794eb6fdf56d31d229b0cb",
+      "bytes": 20755,
+      "fetchedAt": "2026-10-18T18:42:30+00:00"
+    },
+    "publication-18bd3366f2396135ae36673c": {
+      "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&onlyBib=true&maximumRecords=100&query=title%3D%22MIX%22+AND+creator%3D%22%E3%81%82%E3%81%A0%E3%81%A1%E5%85%85%22+AND+dpid%3Diss-ndl-opac+sortBy+issued_date%2Fsort.ascending",
+      "sha256": "076fbb4a076e6948c55b7971b2387166e1aa069f62408384a2fe80fe22942a4a",
+      "bytes": 217405,
+      "fetchedAt": "2026-10-18T18:42:34+00:00"
+    },
+    "ndl-9784091238672": {
+      "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&maximumRecords=5&query=isbn%3D%229784091238672%22+AND+dpid%3Diss-ndl-opac",
+      "sha256": "e26b03e8d9bc84b3c1dde0262b663cf87baa6d01deeccc7d994a9173c42870dc",
+      "bytes": 11610,
+      "fetchedAt": "2026-10-18T18:55:50+00:00"
+    }
+  },
+  "blockedUntil": 0,
+  "reusedResponses": {
+    "wikidata-Q351742": {
+      "sourceIndex": "/home/isinxnisi/.local/share/plunode-collection-worker-phase-b-20261020/runtime/.local/collection-issues/issue-25-manga23-20261019/request-cache/requests.json",
+      "sourceIndexSha256": "1d5a0cca13cea21eb6aefca4dc5a62dc48ffa90f337c26a0875f20fc0e2f7826",
+      "responseSha256": "14efdc36b2a7dd49135a9275e5aa09c25f7fca2cceceacc848540e9a5e059432",
+      "providerAttemptsAdded": 0
+    },
+    "lookup-b2b7d448d0922b23a2b00b0e": {
+      "sourceIndex": "/home/isinxnisi/.local/share/plunode-collection-worker-phase-b-20261020/runtime/.local/collection-issues/issue-25-manga23-20261019/request-cache/requests.json",
+      "sourceIndexSha256": "1d5a0cca13cea21eb6aefca4dc5a62dc48ffa90f337c26a0875f20fc0e2f7826",
+      "responseSha256": "fb22013500dd23cc496fa0821d27f21091a17d89cc47893f9f207bd9b60c6819",
+      "providerAttemptsAdded": 0
+    },
+    "lookup-7f000bad3cb67c966c9d30a7": {
+      "sourceIndex": "/home/isinxnisi/.local/share/plunode-collection-worker-phase-b-20261020/runtime/.local/collection-issues/issue-25-manga23-20261019/request-cache/requests.json",
+      "sourceIndexSha256": "1d5a0cca13cea21eb6aefca4dc5a62dc48ffa90f337c26a0875f20fc0e2f7826",
+      "responseSha256": "bc11c4ee724c9c9f4d53fdd68ad41c248e39e7ecd938c005d5e231cafa0720ae",
+      "providerAttemptsAdded": 0
+    },
+    "wikidata-Q619500": {
+      "sourceIndex": "/home/isinxnisi/.local/share/plunode-collection-worker-phase-b-20261020/runtime/.local/collection-issues/issue-25-manga23-20261019/request-cache/requests.json",
+      "sourceIndexSha256": "1d5a0cca13cea21eb6aefca4dc5a62dc48ffa90f337c26a0875f20fc0e2f7826",
+      "responseSha256": "a65cd5332f31f1f55f20dce7ff2f8caab613f19124c99eb42fd884edfe0a7bf4",
+      "providerAttemptsAdded": 0
+    },
+    "publication-8e7c7aee16a3aa6238fd935d": {
+      "sourceIndex": "/home/isinxnisi/.local/share/plunode-collection-worker-phase-b-20261020/runtime/.local/collection-issues/issue-25-manga23-20261019/request-cache/requests.json",
+      "sourceIndexSha256": "1d5a0cca13cea21eb6aefca4dc5a62dc48ffa90f337c26a0875f20fc0e2f7826",
+      "responseSha256": "1b12dc03d5177dc736b6a6ca62145e89823712ade97d731168641658a55c3ec9",
+      "providerAttemptsAdded": 0
+    },
+    "ndl-9784091218612": {
+      "sourceIndex": "/home/isinxnisi/.local/share/plunode-collection-worker-phase-b-20261020/runtime/.local/collection-issues/issue-25-manga23-20261019/request-cache/requests.json",
+      "sourceIndexSha256": "1d5a0cca13cea21eb6aefca4dc5a62dc48ffa90f337c26a0875f20fc0e2f7826",
+      "responseSha256": "b25cad851331cbfa67ced0bef168d01f4e6976293b4bc0c17639c36db0ef7854",
+      "providerAttemptsAdded": 0
+    },
+    "lookup-7cde1b5e1554318fa9470327": {
+      "sourceIndex": "/home/isinxnisi/.local/share/plunode-collection-worker-phase-b-20261020/runtime/.local/collection-issues/issue-25-manga23-20261019/request-cache/requests.json",
+      "sourceIndexSha256": "1d5a0cca13cea21eb6aefca4dc5a62dc48ffa90f337c26a0875f20fc0e2f7826",
+      "responseSha256": "5a2c9bc40e876449ba789e9895ec2cd17f2bf1c66b5adabfa85f1ae87d7f225b",
+      "providerAttemptsAdded": 0
+    },
+    "lookup-4ec9e467deb6ab935017072d": {
+      "sourceIndex": "/home/isinxnisi/.local/share/plunode-collection-worker-phase-b-20261020/runtime/.local/collection-issues/issue-25-manga23-20261019/request-cache/requests.json",
+      "sourceIndexSha256": "1d5a0cca13cea21eb6aefca4dc5a62dc48ffa90f337c26a0875f20fc0e2f7826",
+      "responseSha256": "fdf87943f80f62be5441c5c8caa4529cfcac8fa204695008f3917b36b64a53dc",
+      "providerAttemptsAdded": 0
+    },
+    "wikidata-Q652892": {
+      "sourceIndex": "/home/isinxnisi/.local/share/plunode-collection-worker-phase-b-20261020/runtime/.local/collection-issues/issue-25-manga23-20261019/request-cache/requests.json",
+      "sourceIndexSha256": "1d5a0cca13cea21eb6aefca4dc5a62dc48ffa90f337c26a0875f20fc0e2f7826",
+      "responseSha256": "bc7393508664918e11053bdd0d016b399ce427a978b2fe0026928d253419f85b",
+      "providerAttemptsAdded": 0
+    },
+    "publication-8a39cf1aa6967fa89d26b2c9": {
+      "sourceIndex": "/home/isinxnisi/.local/share/plunode-collection-worker-phase-b-20261020/runtime/.local/collection-issues/issue-25-manga23-20261019/request-cache/requests.json",
+      "sourceIndexSha256": "1d5a0cca13cea21eb6aefca4dc5a62dc48ffa90f337c26a0875f20fc0e2f7826",
+      "responseSha256": "f0e8294983e00709b436c00986bc94ec67077f3c8e9d9613accee92f1a762f5a",
+      "providerAttemptsAdded": 0
+    },
+    "ndl-9784091231512": {
+      "sourceIndex": "/home/isinxnisi/.local/share/plunode-collection-worker-phase-b-20261020/runtime/.local/collection-issues/issue-25-manga23-20261019/request-cache/requests.json",
+      "sourceIndexSha256": "1d5a0cca13cea21eb6aefca4dc5a62dc48ffa90f337c26a0875f20fc0e2f7826",
+      "responseSha256": "9f989573101f724f8967c277701ca6ebf70df184bfe64c1e82c7d614eff38fb5",
+      "providerAttemptsAdded": 0
+    },
+    "lookup-aef32443b3ea9d21e0c2ed76": {
+      "sourceIndex": "/home/isinxnisi/.local/share/plunode-collection-worker-phase-b-20261020/runtime/.local/collection-issues/issue-25-manga23-20261019/request-cache/requests.json",
+      "sourceIndexSha256": "1d5a0cca13cea21eb6aefca4dc5a62dc48ffa90f337c26a0875f20fc0e2f7826",
+      "responseSha256": "baba4a677925cdaf1408b5a00c7286d8d2afdbd186c7eae3f3484e47e9d9054f",
+      "providerAttemptsAdded": 0
+    },
+    "lookup-048cc2770dcf1104333b5c4f": {
+      "sourceIndex": "/home/isinxnisi/.local/share/plunode-collection-worker-phase-b-20261020/runtime/.local/collection-issues/issue-25-manga23-20261019/request-cache/requests.json",
+      "sourceIndexSha256": "1d5a0cca13cea21eb6aefca4dc5a62dc48ffa90f337c26a0875f20fc0e2f7826",
+      "responseSha256": "3f77a37d92c03f40c7c3fe5b2edfb5ad93918aaffd2328965cadc58f9d1ce4bf",
+      "providerAttemptsAdded": 0
+    },
+    "wikidata-Q11231713": {
+      "sourceIndex": "/home/isinxnisi/.local/share/plunode-collection-worker-phase-b-20261020/runtime/.local/collection-issues/issue-25-manga23-20261019/request-cache/requests.json",
+      "sourceIndexSha256": "1d5a0cca13cea21eb6aefca4dc5a62dc48ffa90f337c26a0875f20fc0e2f7826",
+      "responseSha256": "428b94a173c98d9112004cb23f7b5189d9bb8039d0794eb6fdf56d31d229b0cb",
+      "providerAttemptsAdded": 0
+    },
+    "publication-18bd3366f2396135ae36673c": {
+      "sourceIndex": "/home/isinxnisi/.local/share/plunode-collection-worker-phase-b-20261020/runtime/.local/collection-issues/issue-25-manga23-20261019/request-cache/requests.json",
+      "sourceIndexSha256": "1d5a0cca13cea21eb6aefca4dc5a62dc48ffa90f337c26a0875f20fc0e2f7826",
+      "responseSha256": "076fbb4a076e6948c55b7971b2387166e1aa069f62408384a2fe80fe22942a4a",
+      "providerAttemptsAdded": 0
+    },
+    "ndl-9784091238672": {
+      "sourceIndex": "/home/isinxnisi/.local/share/plunode-collection-worker-phase-b-20261020/runtime/.local/collection-issues/issue-25-manga23-20261019/request-cache/requests.json",
+      "sourceIndexSha256": "1d5a0cca13cea21eb6aefca4dc5a62dc48ffa90f337c26a0875f20fc0e2f7826",
+      "responseSha256": "e26b03e8d9bc84b3c1dde0262b663cf87baa6d01deeccc7d994a9173c42870dc",
+      "providerAttemptsAdded": 0
+    }
+  }
+}
