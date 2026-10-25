@@ -1,0 +1,446 @@
+[
+  {
+    "id": "S01",
+    "title": "Blade Runner — AFI Catalog",
+    "url": "https://catalog.afi.com/Film/68260-BLADE-RUNNER",
+    "publisher": "American Film Institute",
+    "language": "en",
+    "locator": "Cast / Director / Writers / Producer / Cinematographer; HISTORY",
+    "note": "1982年作品の人物別クレジットを照合。複数上映時間を持つ記録であり全cutの同一クレジット保証ではない。",
+    "film": "Q184843",
+    "supports": {
+      "P57": [
+        "Q56005"
+      ],
+      "P58": [
+        "Q1372703",
+        "Q1177114"
+      ],
+      "P162": [
+        "Q656655"
+      ],
+      "P344": [
+        "Q715198"
+      ],
+      "P161": [
+        "Q81328",
+        "Q213574",
+        "Q230736"
+      ]
+    },
+    "accessed_on": "2026-10-26",
+    "retrieval": "web tool, public page; factual notes only",
+    "reuse": "No open-content license established. Store URL, locator and minimal factual review only; no page text or images.",
+    "formalAcceptance": false,
+    "role_terms": {
+      "P57": "Director",
+      "P58": "Writers",
+      "P162": "Producer",
+      "P344": "Cinematographer",
+      "P161": "Cast"
+    },
+    "role_term_policy": "Short credit heading only; not a reconstructed verbatim personal credit. Missing terms are untranscribed."
+  },
+  {
+    "id": "S02",
+    "title": "ブレードランナー — Warner Bros.",
+    "url": "https://www.warnerbros.co.jp/home_entertainment/5xw5dns0b/?c=2&title_id=5",
+    "publisher": "Warner Bros. Japan",
+    "language": "ja",
+    "locator": "作品情報 / キャスト / スタッフ",
+    "note": "Final Cutの商品説明を含む。役名と俳優、括弧内の吹替担当を分離する。",
+    "film": "Q184843",
+    "supports": {
+      "P57": [
+        "Q56005"
+      ],
+      "P86": [
+        "Q153172"
+      ],
+      "P161": [
+        "Q81328",
+        "Q213574",
+        "Q230736"
+      ]
+    },
+    "accessed_on": "2026-10-26",
+    "retrieval": "web tool, public page; factual notes only",
+    "reuse": "No open-content license established. Store URL, locator and minimal factual review only; no page text or images.",
+    "formalAcceptance": false,
+    "role_terms": {},
+    "role_term_policy": "Short credit heading only; not a reconstructed verbatim personal credit. Missing terms are untranscribed."
+  },
+  {
+    "id": "S03",
+    "title": "ブレードランナー 2049 — Sony Pictures",
+    "url": "https://www.sonypictures.jp/he/2210060",
+    "publisher": "Sony Pictures Japan",
+    "language": "ja",
+    "locator": "作品情報 / スタッフ / キャスト / 冒頭続編説明",
+    "note": "2017年作品と2018年ソフト発売日を分離。原案・脚本は脚本部分だけを対応。製作総指揮を製作へ潰さない。",
+    "film": "Q21500755",
+    "supports": {
+      "P57": [
+        "Q548823"
+      ],
+      "P58": [
+        "Q1372703",
+        "Q6830765"
+      ],
+      "P86": [
+        "Q76364",
+        "Q6056440"
+      ],
+      "P344": [
+        "Q460277"
+      ],
+      "P162": [
+        "Q4757652"
+      ],
+      "P161": [
+        "Q193815",
+        "Q81328",
+        "Q272972",
+        "Q44158"
+      ],
+      "P155": [
+        "Q184843"
+      ]
+    },
+    "accessed_on": "2026-10-26",
+    "retrieval": "web tool, public page; factual notes only",
+    "reuse": "No open-content license established. Store URL, locator and minimal factual review only; no page text or images.",
+    "formalAcceptance": false,
+    "role_terms": {},
+    "role_term_policy": "Short credit heading only; not a reconstructed verbatim personal credit. Missing terms are untranscribed."
+  },
+  {
+    "id": "S04",
+    "title": "Dune (1984) — ACMI Collection",
+    "url": "https://www.acmi.net.au/works/86289--dune/",
+    "publisher": "ACMI",
+    "language": "en",
+    "locator": "Description / Credits / Collection metadata (307950)",
+    "note": "1984年映画と原作小説・Lynch・Kyleを同定。Wikimedia由来情報を含み得る旨の明記があり、Wikidataとの完全独立な二資料検証と数えない。",
+    "film": "Q114819",
+    "supports": {
+      "P57": [
+        "Q2071"
+      ],
+      "P162": [
+        "Q512184"
+      ],
+      "P161": [
+        "Q207506",
+        "Q483203"
+      ],
+      "P144": [
+        "Q190192"
+      ]
+    },
+    "accessed_on": "2026-10-26",
+    "retrieval": "web tool, public page; factual notes only",
+    "reuse": "No open-content license established. Store URL, locator and minimal factual review only; no page text or images.",
+    "formalAcceptance": false,
+    "role_terms": {},
+    "role_term_policy": "Short credit heading only; not a reconstructed verbatim personal credit. Missing terms are untranscribed."
+  },
+  {
+    "id": "S05",
+    "title": "DUNE/デューン 砂の惑星 — Warner Bros.",
+    "url": "https://www.warnerbros.co.jp/home_entertainment/o5kdyecgb/",
+    "publisher": "Warner Bros. Japan",
+    "language": "ja",
+    "locator": "作品情報 / クレジット",
+    "note": "2021年映画、監督・脚本3名、原作小説を明記。原著作者の映画脚本担当は推論しない。",
+    "film": "Q60834962",
+    "supports": {
+      "P57": [
+        "Q548823"
+      ],
+      "P58": [
+        "Q942932",
+        "Q6271612",
+        "Q548823"
+      ],
+      "P161": [
+        "Q19877770",
+        "Q4947838"
+      ],
+      "P144": [
+        "Q190192"
+      ]
+    },
+    "accessed_on": "2026-10-26",
+    "retrieval": "web tool, public page; factual notes only",
+    "reuse": "No open-content license established. Store URL, locator and minimal factual review only; no page text or images.",
+    "formalAcceptance": false,
+    "role_terms": {},
+    "role_term_policy": "Short credit heading only; not a reconstructed verbatim personal credit. Missing terms are untranscribed."
+  },
+  {
+    "id": "S06",
+    "title": "Arrival — Paramount",
+    "url": "https://www.paramount.com/movies/arrival",
+    "publisher": "Paramount Pictures",
+    "language": "en",
+    "locator": "About the Cast / About the Crew",
+    "note": "Writer=Heisserer、Based on Short Story By=原著者を分離。原著者の英字表記にTed Chaingとある点はそのまま記録し、無断で別人物へ統合しない。",
+    "film": "Q20382729",
+    "supports": {
+      "P57": [
+        "Q548823"
+      ],
+      "P58": [
+        "Q5386707"
+      ],
+      "P86": [
+        "Q428347"
+      ],
+      "P162": [
+        "Q323076"
+      ],
+      "P161": [
+        "Q481832",
+        "Q23365",
+        "Q182763"
+      ]
+    },
+    "accessed_on": "2026-10-26",
+    "retrieval": "web tool, public page; factual notes only",
+    "reuse": "No open-content license established. Store URL, locator and minimal factual review only; no page text or images.",
+    "formalAcceptance": false,
+    "role_terms": {
+      "P57": "Director",
+      "P58": "Writer",
+      "P86": "Music Scoring",
+      "P162": "Producer",
+      "P161": "Cast"
+    },
+    "role_term_policy": "Short credit heading only; not a reconstructed verbatim personal credit. Missing terms are untranscribed."
+  },
+  {
+    "id": "S07",
+    "title": "インセプション — Warner Bros.",
+    "url": "https://www.warnerbros.co.jp/home_entertainment/p3xup8h269/",
+    "publisher": "Warner Bros. Japan",
+    "language": "ja",
+    "locator": "キャスト / スタッフ / 2010年作品表示",
+    "note": "監督・脚本・製作の兼務と音楽担当を個別確認。吹替担当は映画のオリジナル出演者に混ぜない。",
+    "film": "Q25188",
+    "supports": {
+      "P57": [
+        "Q25191"
+      ],
+      "P58": [
+        "Q25191"
+      ],
+      "P86": [
+        "Q76364"
+      ],
+      "P162": [
+        "Q25191",
+        "Q242951"
+      ],
+      "P161": [
+        "Q38111",
+        "Q211553",
+        "Q123351"
+      ]
+    },
+    "accessed_on": "2026-10-26",
+    "retrieval": "web tool, public page; factual notes only",
+    "reuse": "No open-content license established. Store URL, locator and minimal factual review only; no page text or images.",
+    "formalAcceptance": false,
+    "role_terms": {},
+    "role_term_policy": "Short credit heading only; not a reconstructed verbatim personal credit. Missing terms are untranscribed."
+  },
+  {
+    "id": "S08",
+    "title": "インターステラー — Warner Bros.",
+    "url": "https://www.warnerbros.co.jp/home_entertainment/k4hjvhjawk2/",
+    "publisher": "Warner Bros. Japan",
+    "language": "ja",
+    "locator": "キャスト / スタッフ / 2014年作品表示",
+    "note": "Nolan兄弟の脚本、Christopherの監督・製作、Zimmerの音楽を照合。別々の役割Claimとする。",
+    "film": "Q13417189",
+    "supports": {
+      "P57": [
+        "Q25191"
+      ],
+      "P58": [
+        "Q25191",
+        "Q372788"
+      ],
+      "P86": [
+        "Q76364"
+      ],
+      "P162": [
+        "Q25191"
+      ],
+      "P161": [
+        "Q188955",
+        "Q123351"
+      ]
+    },
+    "accessed_on": "2026-10-26",
+    "retrieval": "web tool, public page; factual notes only",
+    "reuse": "No open-content license established. Store URL, locator and minimal factual review only; no page text or images.",
+    "formalAcceptance": false,
+    "role_terms": {},
+    "role_term_policy": "Short credit heading only; not a reconstructed verbatim personal credit. Missing terms are untranscribed."
+  },
+  {
+    "id": "S09",
+    "title": "PER UN PUGNO DI DOLLARI — Cannes",
+    "url": "https://www.festival-cannes.com/f/per-un-pugno-di-dollari/",
+    "publisher": "Festival de Cannes",
+    "language": "fr",
+    "locator": "Année de production / Crédits / Casting / introduction",
+    "note": "製作1964年と2014年の復元上映枠を区別。ドル三部作への所属を説明。",
+    "film": "Q76479",
+    "supports": {
+      "P57": [
+        "Q164562"
+      ],
+      "P58": [
+        "Q716460",
+        "Q164562"
+      ],
+      "P86": [
+        "Q23848"
+      ],
+      "P161": [
+        "Q43203",
+        "Q317110",
+        "Q77405"
+      ],
+      "P179": [
+        "Q370180"
+      ]
+    },
+    "accessed_on": "2026-10-26",
+    "retrieval": "web tool, public page; factual notes only",
+    "reuse": "No open-content license established. Store URL, locator and minimal factual review only; no page text or images.",
+    "formalAcceptance": false,
+    "role_terms": {},
+    "role_term_policy": "Short credit heading only; not a reconstructed verbatim personal credit. Missing terms are untranscribed."
+  },
+  {
+    "id": "S10",
+    "title": "UNFORGIVEN — Cannes",
+    "url": "https://www.festival-cannes.com/en/f/unforgiven/",
+    "publisher": "Festival de Cannes",
+    "language": "en",
+    "locator": "Year of production / Credits / Casting",
+    "note": "製作1992年と2017年のCannes Classics枠を区別。David WEBB PEOPLESとWikidata David Peoplesの名称差を役割・作品で照合。",
+    "film": "Q104137",
+    "supports": {
+      "P57": [
+        "Q43203"
+      ],
+      "P58": [
+        "Q1177114"
+      ],
+      "P161": [
+        "Q43203",
+        "Q48337",
+        "Q150943"
+      ]
+    },
+    "accessed_on": "2026-10-26",
+    "retrieval": "web tool, public page; factual notes only",
+    "reuse": "No open-content license established. Store URL, locator and minimal factual review only; no page text or images.",
+    "formalAcceptance": false,
+    "role_terms": {},
+    "role_term_policy": "Short credit heading only; not a reconstructed verbatim personal credit. Missing terms are untranscribed."
+  },
+  {
+    "id": "S11",
+    "title": "Million Dollar Baby — AFI Catalog",
+    "url": "https://catalog.afi.com/Catalog/moviedetails/54369",
+    "publisher": "American Film Institute",
+    "language": "en",
+    "locator": "Cast / Director / Writer / Producers / Cinematographer / MUSIC / LITERARY / DETAILS",
+    "note": "ページ見出し2005と2004年の限定公開・premiereを区別。原作短編／短編集と脚本Haggisを区別。Musと楽曲別作曲を混同せず音楽担当として比較する。",
+    "film": "Q184255",
+    "supports": {
+      "P57": [
+        "Q43203"
+      ],
+      "P58": [
+        "Q314935"
+      ],
+      "P162": [
+        "Q43203",
+        "Q280490",
+        "Q7817415",
+        "Q314935"
+      ],
+      "P344": [
+        "Q2063318"
+      ],
+      "P86": [
+        "Q43203"
+      ],
+      "P161": [
+        "Q93187",
+        "Q43203",
+        "Q48337"
+      ]
+    },
+    "accessed_on": "2026-10-26",
+    "retrieval": "web tool, public page; factual notes only",
+    "reuse": "No open-content license established. Store URL, locator and minimal factual review only; no page text or images.",
+    "formalAcceptance": false,
+    "role_terms": {
+      "P57": "Director",
+      "P58": "Writer",
+      "P162": "Producers",
+      "P344": "Cinematographer",
+      "P86": "Mus",
+      "P161": "Cast"
+    },
+    "role_term_policy": "Short credit heading only; not a reconstructed verbatim personal credit. Missing terms are untranscribed."
+  },
+  {
+    "id": "S12",
+    "title": "The 94th Academy Awards — 2022",
+    "url": "https://www.oscars.org/oscars/ceremonies/2022",
+    "publisher": "Academy of Motion Picture Arts and Sciences",
+    "language": "en",
+    "locator": "Music (Original Score): Dune — Hans Zimmer",
+    "note": "映画DuneのOriginal Score担当を照合。受賞自体は今回の関係候補へ追加しない。",
+    "film": "Q60834962",
+    "supports": {
+      "P86": [
+        "Q76364"
+      ]
+    },
+    "accessed_on": "2026-10-26",
+    "retrieval": "web tool, public page; factual notes only",
+    "reuse": "No open-content license established. Store URL, locator and minimal factual review only; no page text or images.",
+    "formalAcceptance": false,
+    "role_terms": {
+      "P86": "Music (Original Score)"
+    },
+    "role_term_policy": "Short credit heading only; not a reconstructed verbatim personal credit. Missing terms are untranscribed."
+  },
+  {
+    "id": "S13",
+    "title": "Out of the Vaults: A Fistful of Dollars, 1964",
+    "url": "https://www.film-foundation.org/hfpa-fistful",
+    "publisher": "The Film Foundation; Meher Tatna",
+    "language": "en",
+    "locator": "2020-09-01 article, paragraphs on Yojimbo and alternate credited names",
+    "note": "Yojimboとの由来と別名を調査。法的評価は採用せず、リメイク候補の補助資料に留める。",
+    "film": "Q76479",
+    "supports": {},
+    "accessed_on": "2026-10-26",
+    "retrieval": "web tool, public page; factual notes only",
+    "reuse": "No open-content license established. Store URL, locator and minimal factual review only; no page text or images.",
+    "formalAcceptance": false,
+    "role_terms": {},
+    "role_term_policy": "Short credit heading only; not a reconstructed verbatim personal credit. Missing terms are untranscribed."
+  }
+]

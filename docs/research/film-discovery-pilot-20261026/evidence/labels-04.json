@@ -1,0 +1,1775 @@
+{
+  "url": "https://www.wikidata.org/w/api.php?action=wbgetentities&ids=Q462162%7CQ471839%7CQ4757652%7CQ4772822%7CQ4809088%7CQ481832%7CQ483203%7CQ48337%7CQ484523%7CQ492169%7CQ4947838%7CQ496523%7CQ4972958%7CQ498420%7CQ503095%7CQ5055911%7CQ511554%7CQ512184%7CQ514003%7CQ5200155%7CQ52158949%7CQ5220242%7CQ5287%7CQ532169%7CQ5368467%7CQ5386707%7CQ548823%7CQ5525494%7CQ56005%7CQ5605621%7CQ5674022%7CQ5700054%7CQ5940014%7CQ5944399%7CQ5945123%7CQ598178%7CQ5997112%7CQ603317%7CQ603716%7CQ604431%7CQ605249%7CQ6056440%7CQ61356%7CQ6144319%7CQ6175537%7CQ6271612%7CQ6302315%7CQ636682%7CQ652%7CQ656655&props=info%7Clabels%7Cdescriptions%7Caliases&languages=en%7Cja&redirects=yes&format=json",
+  "accessed_at": "2026-10-25T18:34:22.162526+00:00",
+  "license": "CC0-1.0",
+  "response_sha256": "d6a39bcb55d2a1ef74e17ac015cc88a26499e8e02b775878052e15235403d643",
+  "data": {
+    "entities": {
+      "Q462162": {
+        "pageid": 435920,
+        "ns": 0,
+        "title": "Q462162",
+        "lastrevid": 2555411035,
+        "modified": "2026-10-09T21:18:57Z",
+        "type": "item",
+        "id": "Q462162",
+        "labels": {
+          "ja": {
+            "language": "ja",
+            "value": "ルシア・ライカ"
+          },
+          "en": {
+            "language": "en",
+            "value": "Lucia Rijker"
+          }
+        },
+        "descriptions": {
+          "en": {
+            "language": "en",
+            "value": "Dutch boxer (born 1967)"
+          }
+        },
+        "aliases": {
+          "en": [
+            {
+              "language": "en",
+              "value": "Lucia Frederica Rijker"
+            }
+          ]
+        }
+      },
+      "Q471839": {
+        "pageid": 444890,
+        "ns": 0,
+        "title": "Q471839",
+        "lastrevid": 2540865648,
+        "modified": "2026-09-06T05:31:32Z",
+        "type": "item",
+        "id": "Q471839",
+        "labels": {
+          "ja": {
+            "language": "ja",
+            "value": "SF映画"
+          },
+          "en": {
+            "language": "en",
+            "value": "science fiction film"
+          }
+        },
+        "descriptions": {
+          "en": {
+            "language": "en",
+            "value": "film genre"
+          },
+          "ja": {
+            "language": "ja",
+            "value": "映画のジャンル"
+          }
+        },
+        "aliases": {
+          "en": [
+            {
+              "language": "en",
+              "value": "sci-fi film"
+            },
+            {
+              "language": "en",
+              "value": "science fiction movie"
+            },
+            {
+              "language": "en",
+              "value": "sci-fi movie"
+            },
+            {
+              "language": "en",
+              "value": "scifi film"
+            },
+            {
+              "language": "en",
+              "value": "scifi movie"
+            },
+            {
+              "language": "en",
+              "value": "sci fi film"
+            },
+            {
+              "language": "en",
+              "value": "sci fi movie"
+            },
+            {
+              "language": "en",
+              "value": "scifi-film"
+            },
+            {
+              "language": "en",
+              "value": "scifi"
+            }
+          ]
+        }
+      },
+      "Q4757652": {
+        "pageid": 4546238,
+        "ns": 0,
+        "title": "Q4757652",
+        "lastrevid": 2545361122,
+        "modified": "2026-09-14T02:46:22Z",
+        "type": "item",
+        "id": "Q4757652",
+        "labels": {
+          "en": {
+            "language": "en",
+            "value": "Andrew Kosove"
+          },
+          "ja": {
+            "language": "ja",
+            "value": "アンドリュー・コソボ"
+          }
+        },
+        "descriptions": {
+          "en": {
+            "language": "en",
+            "value": "American film producer"
+          }
+        },
+        "aliases": {
+          "en": [
+            {
+              "language": "en",
+              "value": "Andrew A. Kosove"
+            },
+            {
+              "language": "en",
+              "value": "Andrew A Kosove"
+            }
+          ],
+          "ja": [
+            {
+              "language": "ja",
+              "value": "アンドリュー・コソーヴ"
+            },
+            {
+              "language": "ja",
+              "value": "アンドリュー・A・コソーヴ"
+            }
+          ]
+        }
+      },
+      "Q4772822": {
+        "pageid": 4560731,
+        "ns": 0,
+        "title": "Q4772822",
+        "lastrevid": 2539776067,
+        "modified": "2026-09-03T18:25:04Z",
+        "type": "item",
+        "id": "Q4772822",
+        "labels": {
+          "en": {
+            "language": "en",
+            "value": "Anthony James"
+          },
+          "ja": {
+            "language": "ja",
+            "value": "アンソニー・ジェームズ"
+          }
+        },
+        "descriptions": {
+          "en": {
+            "language": "en",
+            "value": "American actor (1942–2020)"
+          }
+        },
+        "aliases": {
+          "en": [
+            {
+              "language": "en",
+              "value": "James Anthony"
+            }
+          ]
+        }
+      },
+      "Q4809088": {
+        "pageid": 4595317,
+        "ns": 0,
+        "title": "Q4809088",
+        "lastrevid": 2546594581,
+        "modified": "2026-09-16T09:22:41Z",
+        "type": "item",
+        "id": "Q4809088",
+        "labels": {
+          "en": {
+            "language": "en",
+            "value": "Roger Yuan"
+          },
+          "ja": {
+            "language": "ja",
+            "value": "ロジャー・ユアン"
+          }
+        },
+        "descriptions": {
+          "en": {
+            "language": "en",
+            "value": "American stunt actor"
+          }
+        },
+        "aliases": {
+          "en": [
+            {
+              "language": "en",
+              "value": "Roger Winston Yuan"
+            }
+          ]
+        }
+      },
+      "Q481832": {
+        "pageid": 453772,
+        "ns": 0,
+        "title": "Q481832",
+        "lastrevid": 2558325163,
+        "modified": "2026-10-18T08:42:40Z",
+        "type": "item",
+        "id": "Q481832",
+        "labels": {
+          "en": {
+            "language": "en",
+            "value": "Amy Adams"
+          },
+          "ja": {
+            "language": "ja",
+            "value": "エイミー・アダムス"
+          }
+        },
+        "descriptions": {
+          "en": {
+            "language": "en",
+            "value": "American actress (born 1974)"
+          },
+          "ja": {
+            "language": "ja",
+            "value": "アメリカ合衆国の女優"
+          }
+        },
+        "aliases": {
+          "en": [
+            {
+              "language": "en",
+              "value": "Amy Lou Adams"
+            }
+          ]
+        }
+      },
+      "Q483203": {
+        "pageid": 454803,
+        "ns": 0,
+        "title": "Q483203",
+        "lastrevid": 2560437170,
+        "modified": "2026-10-24T21:25:04Z",
+        "type": "item",
+        "id": "Q483203",
+        "labels": {
+          "ja": {
+            "language": "ja",
+            "value": "スティング"
+          },
+          "en": {
+            "language": "en",
+            "value": "Sting"
+          }
+        },
+        "descriptions": {
+          "en": {
+            "language": "en",
+            "value": "British musician (born 1951)"
+          },
+          "ja": {
+            "language": "ja",
+            "value": "英国のミュージシャン"
+          }
+        },
+        "aliases": {
+          "en": [
+            {
+              "language": "en",
+              "value": "Gordon Matthew Thomas Sumner"
+            },
+            {
+              "language": "en",
+              "value": "Gordon Sumner"
+            },
+            {
+              "language": "en",
+              "value": "G.M. Sumner"
+            }
+          ],
+          "ja": [
+            {
+              "language": "ja",
+              "value": "ゴードン・マシュー・トーマス・サムナー"
+            },
+            {
+              "language": "ja",
+              "value": "ゴードン・サムナー"
+            }
+          ]
+        }
+      },
+      "Q48337": {
+        "pageid": 50327,
+        "ns": 0,
+        "title": "Q48337",
+        "lastrevid": 2558174944,
+        "modified": "2026-10-18T00:21:06Z",
+        "type": "item",
+        "id": "Q48337",
+        "labels": {
+          "ja": {
+            "language": "ja",
+            "value": "モーガン・フリーマン"
+          },
+          "en": {
+            "language": "en",
+            "value": "Morgan Freeman"
+          }
+        },
+        "descriptions": {
+          "en": {
+            "language": "en",
+            "value": "American actor and producer (born 1937)"
+          },
+          "ja": {
+            "language": "ja",
+            "value": "アメリカの俳優、映画監督、ナレーター"
+          }
+        },
+        "aliases": {}
+      },
+      "Q484523": {
+        "pageid": 456065,
+        "ns": 0,
+        "title": "Q484523",
+        "lastrevid": 2557955115,
+        "modified": "2026-10-17T10:44:29Z",
+        "type": "item",
+        "id": "Q484523",
+        "labels": {
+          "en": {
+            "language": "en",
+            "value": "Jared Leto"
+          },
+          "ja": {
+            "language": "ja",
+            "value": "ジャレッド・レト"
+          }
+        },
+        "descriptions": {
+          "en": {
+            "language": "en",
+            "value": "American actor, singer, musician and songwriter (born 1971)"
+          },
+          "ja": {
+            "language": "ja",
+            "value": "アメリカの俳優 (1971-)"
+          }
+        },
+        "aliases": {}
+      },
+      "Q492169": {
+        "pageid": 463217,
+        "ns": 0,
+        "title": "Q492169",
+        "lastrevid": 2546061031,
+        "modified": "2026-09-15T06:55:47Z",
+        "type": "item",
+        "id": "Q492169",
+        "labels": {
+          "ja": {
+            "language": "ja",
+            "value": "リチャード・ジョーダン"
+          },
+          "en": {
+            "language": "en",
+            "value": "Richard Jordan"
+          }
+        },
+        "descriptions": {
+          "en": {
+            "language": "en",
+            "value": "American actor, producer, director and screenwriter (1937-1993)"
+          }
+        },
+        "aliases": {
+          "en": [
+            {
+              "language": "en",
+              "value": "Robert Anson Jordan Jr."
+            }
+          ]
+        }
+      },
+      "Q4947838": {
+        "pageid": 4728579,
+        "ns": 0,
+        "title": "Q4947838",
+        "lastrevid": 2551824937,
+        "modified": "2026-10-01T16:06:42Z",
+        "type": "item",
+        "id": "Q4947838",
+        "labels": {
+          "en": {
+            "language": "en",
+            "value": "Rebecca Ferguson"
+          },
+          "ja": {
+            "language": "ja",
+            "value": "レベッカ・ファーガソン"
+          }
+        },
+        "descriptions": {
+          "en": {
+            "language": "en",
+            "value": "Swedish actress (born 1983)"
+          },
+          "ja": {
+            "language": "ja",
+            "value": "スウェーデンの女優"
+          }
+        },
+        "aliases": {
+          "en": [
+            {
+              "language": "en",
+              "value": "Rebecca Ferguson Sundström"
+            }
+          ]
+        }
+      },
+      "Q496523": {
+        "pageid": 467131,
+        "ns": 0,
+        "title": "Q496523",
+        "lastrevid": 2545534671,
+        "modified": "2026-09-14T10:02:46Z",
+        "type": "item",
+        "id": "Q496523",
+        "labels": {
+          "en": {
+            "language": "en",
+            "value": "heist film"
+          },
+          "ja": {
+            "language": "ja",
+            "value": "強盗映画"
+          }
+        },
+        "descriptions": {
+          "en": {
+            "language": "en",
+            "value": "film that has an intricate plot woven around a group of people trying to steal something"
+          }
+        },
+        "aliases": {
+          "en": [
+            {
+              "language": "en",
+              "value": "heist movie"
+            },
+            {
+              "language": "en",
+              "value": "heist"
+            },
+            {
+              "language": "en",
+              "value": "heist films"
+            },
+            {
+              "language": "en",
+              "value": "heist movies"
+            },
+            {
+              "language": "en",
+              "value": "caper film"
+            },
+            {
+              "language": "en",
+              "value": "caper movies"
+            }
+          ]
+        }
+      },
+      "Q4972958": {
+        "pageid": 4753674,
+        "ns": 0,
+        "title": "Q4972958",
+        "lastrevid": 2545359774,
+        "modified": "2026-09-14T02:43:22Z",
+        "type": "item",
+        "id": "Q4972958",
+        "labels": {
+          "en": {
+            "language": "en",
+            "value": "Broderick Johnson"
+          },
+          "ja": {
+            "language": "ja",
+            "value": "ブロデリック・ジョンソン"
+          }
+        },
+        "descriptions": {
+          "en": {
+            "language": "en",
+            "value": "American film producer"
+          }
+        },
+        "aliases": {}
+      },
+      "Q498420": {
+        "pageid": 468865,
+        "ns": 0,
+        "title": "Q498420",
+        "lastrevid": 2548610406,
+        "modified": "2026-09-22T22:08:02Z",
+        "type": "item",
+        "id": "Q498420",
+        "labels": {
+          "en": {
+            "language": "en",
+            "value": "M. Emmet Walsh"
+          },
+          "ja": {
+            "language": "ja",
+            "value": "M・エメット・ウォルシュ"
+          }
+        },
+        "descriptions": {
+          "ja": {
+            "language": "ja",
+            "value": "アメリカの俳優 (1935-2024)"
+          },
+          "en": {
+            "language": "en",
+            "value": "American actor (1935–2024)"
+          }
+        },
+        "aliases": {
+          "en": [
+            {
+              "language": "en",
+              "value": "Michael Emmet Walsh"
+            }
+          ]
+        }
+      },
+      "Q503095": {
+        "pageid": 473163,
+        "ns": 0,
+        "title": "Q503095",
+        "lastrevid": 2540669315,
+        "modified": "2026-09-05T21:27:58Z",
+        "type": "item",
+        "id": "Q503095",
+        "labels": {
+          "en": {
+            "language": "en",
+            "value": "Ted Chiang"
+          },
+          "ja": {
+            "language": "ja",
+            "value": "テッド・チャン"
+          }
+        },
+        "descriptions": {
+          "en": {
+            "language": "en",
+            "value": "American science fiction writer"
+          },
+          "ja": {
+            "language": "ja",
+            "value": "台湾系アメリカ人のSF作家"
+          }
+        },
+        "aliases": {
+          "en": [
+            {
+              "language": "en",
+              "value": "Chiang Feng-nan"
+            },
+            {
+              "language": "en",
+              "value": "Jiang Fengnan"
+            }
+          ]
+        }
+      },
+      "Q5055911": {
+        "pageid": 4831618,
+        "ns": 0,
+        "title": "Q5055911",
+        "lastrevid": 2549894101,
+        "modified": "2026-09-27T05:38:24Z",
+        "type": "item",
+        "id": "Q5055911",
+        "labels": {
+          "en": {
+            "language": "en",
+            "value": "Ned Eisenberg"
+          },
+          "ja": {
+            "language": "ja",
+            "value": "ネッド・アイゼンバーグ"
+          }
+        },
+        "descriptions": {
+          "en": {
+            "language": "en",
+            "value": "American actor (1957–2022)"
+          }
+        },
+        "aliases": {}
+      },
+      "Q511554": {
+        "pageid": 481108,
+        "ns": 0,
+        "title": "Q511554",
+        "lastrevid": 2540294828,
+        "modified": "2026-09-04T23:28:56Z",
+        "type": "item",
+        "id": "Q511554",
+        "labels": {
+          "en": {
+            "language": "en",
+            "value": "Anthony Mackie"
+          },
+          "ja": {
+            "language": "ja",
+            "value": "アンソニー・マッキー"
+          }
+        },
+        "descriptions": {
+          "en": {
+            "language": "en",
+            "value": "American actor"
+          }
+        },
+        "aliases": {
+          "en": [
+            {
+              "language": "en",
+              "value": "Anthony Dwane Mackie"
+            }
+          ]
+        }
+      },
+      "Q512184": {
+        "pageid": 481714,
+        "ns": 0,
+        "title": "Q512184",
+        "lastrevid": 2552710830,
+        "modified": "2026-10-03T18:28:33Z",
+        "type": "item",
+        "id": "Q512184",
+        "labels": {
+          "en": {
+            "language": "en",
+            "value": "Raffaella De Laurentiis"
+          },
+          "ja": {
+            "language": "ja",
+            "value": "ラファエラ・デ・ラウレンティス"
+          }
+        },
+        "descriptions": {
+          "en": {
+            "language": "en",
+            "value": "Italian film producer"
+          },
+          "ja": {
+            "language": "ja",
+            "value": "イタリアの映画プロデューサー (1954-)"
+          }
+        },
+        "aliases": {}
+      },
+      "Q514003": {
+        "pageid": 483437,
+        "ns": 0,
+        "title": "Q514003",
+        "lastrevid": 2557925433,
+        "modified": "2026-10-17T08:30:37Z",
+        "type": "item",
+        "id": "Q514003",
+        "labels": {
+          "ja": {
+            "language": "ja",
+            "value": "ホイテ・ヴァン・ホイテマ"
+          },
+          "en": {
+            "language": "en",
+            "value": "Hoyte van Hoytema"
+          }
+        },
+        "descriptions": {
+          "en": {
+            "language": "en",
+            "value": "Dutch-Swedish cinematographer (born 1971)"
+          }
+        },
+        "aliases": {}
+      },
+      "Q5200155": {
+        "pageid": 4970305,
+        "ns": 0,
+        "title": "Q5200155",
+        "lastrevid": 2552715311,
+        "modified": "2026-10-03T18:42:12Z",
+        "type": "item",
+        "id": "Q5200155",
+        "labels": {
+          "en": {
+            "language": "en",
+            "value": "Cynthia Sikes"
+          },
+          "ja": {
+            "language": "ja",
+            "value": "シンシア・サイクス"
+          }
+        },
+        "descriptions": {
+          "en": {
+            "language": "en",
+            "value": "American actress"
+          }
+        },
+        "aliases": {
+          "ja": [
+            {
+              "language": "ja",
+              "value": "シンシア・サイクス・ヨーキン"
+            }
+          ],
+          "en": [
+            {
+              "language": "en",
+              "value": "Cynthia Sikes Yorkin"
+            }
+          ]
+        }
+      },
+      "Q52158949": {
+        "pageid": 53036779,
+        "ns": 0,
+        "title": "Q52158949",
+        "lastrevid": 2543374456,
+        "modified": "2026-09-10T16:37:28Z",
+        "type": "item",
+        "id": "Q52158949",
+        "labels": {
+          "en": {
+            "language": "en",
+            "value": "José López Rodero"
+          }
+        },
+        "descriptions": {
+          "en": {
+            "language": "en",
+            "value": "Spanish actor, assistant director, production manager & producer"
+          }
+        },
+        "aliases": {}
+      },
+      "Q5220242": {
+        "pageid": 4989627,
+        "ns": 0,
+        "title": "Q5220242",
+        "lastrevid": 2539206161,
+        "modified": "2026-09-01T20:52:56Z",
+        "type": "item",
+        "id": "Q5220242",
+        "labels": {
+          "en": {
+            "language": "en",
+            "value": "Danny Corkill"
+          },
+          "ja": {
+            "language": "ja",
+            "value": "ダニー・コーキル"
+          }
+        },
+        "descriptions": {
+          "en": {
+            "language": "en",
+            "value": "American actor"
+          },
+          "ja": {
+            "language": "ja",
+            "value": "アメリカの男優"
+          }
+        },
+        "aliases": {
+          "en": [
+            {
+              "language": "en",
+              "value": "Daniel Bryon Corkill"
+            }
+          ]
+        }
+      },
+      "Q5287": {
+        "pageid": 6231,
+        "ns": 0,
+        "title": "Q5287",
+        "lastrevid": 2558862424,
+        "modified": "2026-10-19T17:27:33Z",
+        "type": "item",
+        "id": "Q5287",
+        "labels": {
+          "en": {
+            "language": "en",
+            "value": "Japanese"
+          },
+          "ja": {
+            "language": "ja",
+            "value": "日本語"
+          }
+        },
+        "descriptions": {
+          "en": {
+            "language": "en",
+            "value": "language spoken in East Asia"
+          },
+          "ja": {
+            "language": "ja",
+            "value": "東アジアの言語"
+          }
+        },
+        "aliases": {
+          "en": [
+            {
+              "language": "en",
+              "value": "Japanese language"
+            },
+            {
+              "language": "en",
+              "value": "Japanesic"
+            }
+          ],
+          "ja": [
+            {
+              "language": "ja",
+              "value": "現代日本語"
+            },
+            {
+              "language": "ja",
+              "value": "日語"
+            },
+            {
+              "language": "ja",
+              "value": "にほんご"
+            },
+            {
+              "language": "ja",
+              "value": "ニホンゴ"
+            },
+            {
+              "language": "ja",
+              "value": "大和語"
+            }
+          ]
+        }
+      },
+      "Q532169": {
+        "pageid": 501023,
+        "ns": 0,
+        "title": "Q532169",
+        "lastrevid": 2549027325,
+        "modified": "2026-09-24T13:09:15Z",
+        "type": "item",
+        "id": "Q532169",
+        "labels": {
+          "en": {
+            "language": "en",
+            "value": "Lukas Haas"
+          },
+          "ja": {
+            "language": "ja",
+            "value": "ルーカス・ハース"
+          }
+        },
+        "descriptions": {
+          "en": {
+            "language": "en",
+            "value": "American actor"
+          }
+        },
+        "aliases": {
+          "en": [
+            {
+              "language": "en",
+              "value": "Lukas Daniel Haas"
+            }
+          ]
+        }
+      },
+      "Q5368467": {
+        "pageid": 5134816,
+        "ns": 0,
+        "title": "Q5368467",
+        "lastrevid": 2546587355,
+        "modified": "2026-09-16T08:57:51Z",
+        "type": "item",
+        "id": "Q5368467",
+        "labels": {
+          "en": {
+            "language": "en",
+            "value": "Elyes Gabel"
+          },
+          "ja": {
+            "language": "ja",
+            "value": "エリス・ガベル"
+          }
+        },
+        "descriptions": {
+          "en": {
+            "language": "en",
+            "value": "British actor"
+          },
+          "ja": {
+            "language": "ja",
+            "value": "イギリス出身の俳優、ミュージシャン"
+          }
+        },
+        "aliases": {
+          "en": [
+            {
+              "language": "en",
+              "value": "Elyes Cherif Gabel"
+            }
+          ]
+        }
+      },
+      "Q5386707": {
+        "pageid": 5152003,
+        "ns": 0,
+        "title": "Q5386707",
+        "lastrevid": 2546591511,
+        "modified": "2026-09-16T09:13:31Z",
+        "type": "item",
+        "id": "Q5386707",
+        "labels": {
+          "en": {
+            "language": "en",
+            "value": "Eric Heisserer"
+          },
+          "ja": {
+            "language": "ja",
+            "value": "エリック・ハイセラー"
+          }
+        },
+        "descriptions": {
+          "en": {
+            "language": "en",
+            "value": "American screenwriter"
+          }
+        },
+        "aliases": {
+          "en": [
+            {
+              "language": "en",
+              "value": "Eric Andrew Heisserer"
+            }
+          ],
+          "ja": [
+            {
+              "language": "ja",
+              "value": "エリック・ヘイサラー"
+            }
+          ]
+        }
+      },
+      "Q548823": {
+        "pageid": 517127,
+        "ns": 0,
+        "title": "Q548823",
+        "lastrevid": 2557852908,
+        "modified": "2026-10-17T04:05:53Z",
+        "type": "item",
+        "id": "Q548823",
+        "labels": {
+          "en": {
+            "language": "en",
+            "value": "Denis Villeneuve"
+          },
+          "ja": {
+            "language": "ja",
+            "value": "ドゥニ・ヴィルヌーヴ"
+          }
+        },
+        "descriptions": {
+          "en": {
+            "language": "en",
+            "value": "Canadian film director and screenwriter (born 1967)"
+          },
+          "ja": {
+            "language": "ja",
+            "value": "カナダの映画監督、脚本家 (1967-)"
+          }
+        },
+        "aliases": {}
+      },
+      "Q5525494": {
+        "pageid": 5286108,
+        "ns": 0,
+        "title": "Q5525494",
+        "lastrevid": 2541276128,
+        "modified": "2026-09-06T19:36:18Z",
+        "type": "item",
+        "id": "Q5525494",
+        "labels": {
+          "en": {
+            "language": "en",
+            "value": "Gary Lucchesi"
+          },
+          "ja": {
+            "language": "ja",
+            "value": "ゲイリー・ルチェッシ"
+          }
+        },
+        "descriptions": {
+          "en": {
+            "language": "en",
+            "value": "American film producer"
+          }
+        },
+        "aliases": {}
+      },
+      "Q56005": {
+        "pageid": 58759,
+        "ns": 0,
+        "title": "Q56005",
+        "lastrevid": 2558224664,
+        "modified": "2026-10-18T03:05:21Z",
+        "type": "item",
+        "id": "Q56005",
+        "labels": {
+          "en": {
+            "language": "en",
+            "value": "Ridley Scott"
+          },
+          "ja": {
+            "language": "ja",
+            "value": "リドリー・スコット"
+          }
+        },
+        "descriptions": {
+          "en": {
+            "language": "en",
+            "value": "English filmmaker (born 1937)"
+          },
+          "ja": {
+            "language": "ja",
+            "value": "イギリスの映画監督 (1937-)"
+          }
+        },
+        "aliases": {}
+      },
+      "Q5605621": {
+        "pageid": 5366503,
+        "ns": 0,
+        "title": "Q5605621",
+        "lastrevid": 2529350559,
+        "modified": "2026-08-09T21:00:48Z",
+        "type": "item",
+        "id": "Q5605621",
+        "labels": {
+          "en": {
+            "language": "en",
+            "value": "Greg Goossen"
+          },
+          "ja": {
+            "language": "ja",
+            "value": "グレッグ・グースセン"
+          }
+        },
+        "descriptions": {
+          "en": {
+            "language": "en",
+            "value": "American baseball player (1945-2011)"
+          },
+          "ja": {
+            "language": "ja",
+            "value": "アメリカ合衆国の野球選手 (1945-2011)"
+          }
+        },
+        "aliases": {
+          "en": [
+            {
+              "language": "en",
+              "value": "Gregory Bryant Goossen"
+            }
+          ]
+        }
+      },
+      "Q5674022": {
+        "pageid": 5436145,
+        "ns": 0,
+        "title": "Q5674022",
+        "lastrevid": 2560460517,
+        "modified": "2026-10-24T22:38:17Z",
+        "type": "item",
+        "id": "Q5674022",
+        "labels": {
+          "en": {
+            "language": "en",
+            "value": "Ana Ofelia Murguía"
+          },
+          "ja": {
+            "language": "ja",
+            "value": "アナ・オフェリア・ムルギア"
+          }
+        },
+        "descriptions": {
+          "en": {
+            "language": "en",
+            "value": "Mexican actress (1933–2023)"
+          }
+        },
+        "aliases": {
+          "en": [
+            {
+              "language": "en",
+              "value": "Ana Ofelia Murguia"
+            }
+          ]
+        }
+      },
+      "Q5700054": {
+        "pageid": 5463860,
+        "ns": 0,
+        "title": "Q5700054",
+        "lastrevid": 2541388477,
+        "modified": "2026-09-07T00:10:16Z",
+        "type": "item",
+        "id": "Q5700054",
+        "labels": {
+          "en": {
+            "language": "en",
+            "value": "Antonio Vico Camarer"
+          }
+        },
+        "descriptions": {
+          "en": {
+            "language": "en",
+            "value": "Spanish actor (1903–1972)"
+          }
+        },
+        "aliases": {}
+      },
+      "Q5940014": {
+        "pageid": 5713140,
+        "ns": 0,
+        "title": "Q5940014",
+        "lastrevid": 2551255318,
+        "modified": "2026-09-30T09:40:02Z",
+        "type": "item",
+        "id": "Q5940014",
+        "labels": {
+          "en": {
+            "language": "en",
+            "value": "Humberto Elizondo"
+          }
+        },
+        "descriptions": {
+          "en": {
+            "language": "en",
+            "value": "actor"
+          }
+        },
+        "aliases": {
+          "en": [
+            {
+              "language": "en",
+              "value": "Humberto Elizondo Kauffman"
+            }
+          ]
+        }
+      },
+      "Q5944399": {
+        "pageid": 5717873,
+        "ns": 0,
+        "title": "Q5944399",
+        "lastrevid": 2560464113,
+        "modified": "2026-10-24T22:48:04Z",
+        "type": "item",
+        "id": "Q5944399",
+        "labels": {
+          "en": {
+            "language": "en",
+            "value": "José Orjas"
+          }
+        },
+        "descriptions": {
+          "en": {
+            "language": "en",
+            "value": "Spanish actor (1906-1983)"
+          }
+        },
+        "aliases": {
+          "en": [
+            {
+              "language": "en",
+              "value": "Jose Orjas"
+            }
+          ]
+        }
+      },
+      "Q5945123": {
+        "pageid": 5718677,
+        "ns": 0,
+        "title": "Q5945123",
+        "lastrevid": 2560466809,
+        "modified": "2026-10-24T23:00:30Z",
+        "type": "item",
+        "id": "Q5945123",
+        "labels": {
+          "en": {
+            "language": "en",
+            "value": "José Riesgo"
+          }
+        },
+        "descriptions": {
+          "en": {
+            "language": "en",
+            "value": "Spanish actor (1919-2002)"
+          }
+        },
+        "aliases": {
+          "en": [
+            {
+              "language": "en",
+              "value": "Jose Riesgo"
+            }
+          ]
+        }
+      },
+      "Q598178": {
+        "pageid": 562943,
+        "ns": 0,
+        "title": "Q598178",
+        "lastrevid": 2559023166,
+        "modified": "2026-10-20T02:07:10Z",
+        "type": "item",
+        "id": "Q598178",
+        "labels": {
+          "en": {
+            "language": "en",
+            "value": "Tzi Ma"
+          },
+          "ja": {
+            "language": "ja",
+            "value": "ツィ・マー"
+          }
+        },
+        "descriptions": {
+          "en": {
+            "language": "en",
+            "value": "Hong Kong actor"
+          }
+        },
+        "aliases": {}
+      },
+      "Q5997112": {
+        "pageid": 5776045,
+        "ns": 0,
+        "title": "Q5997112",
+        "lastrevid": 2542971416,
+        "modified": "2026-09-10T00:10:59Z",
+        "type": "item",
+        "id": "Q5997112",
+        "labels": {
+          "en": {
+            "language": "en",
+            "value": "Margarita Sanz"
+          },
+          "ja": {
+            "language": "ja",
+            "value": "マルガリータ・サンス"
+          }
+        },
+        "descriptions": {
+          "en": {
+            "language": "en",
+            "value": "Mexican actress"
+          }
+        },
+        "aliases": {}
+      },
+      "Q603317": {
+        "pageid": 567929,
+        "ns": 0,
+        "title": "Q603317",
+        "lastrevid": 2549162517,
+        "modified": "2026-09-25T03:58:46Z",
+        "type": "item",
+        "id": "Q603317",
+        "labels": {
+          "en": {
+            "language": "en",
+            "value": "Bill Irwin"
+          },
+          "ja": {
+            "language": "ja",
+            "value": "ビル・アーウィン"
+          }
+        },
+        "descriptions": {
+          "en": {
+            "language": "en",
+            "value": "American actor, clown, and comedian (born 1950)"
+          },
+          "ja": {
+            "language": "ja",
+            "value": "アメリカ合衆国の俳優 (1950生)"
+          }
+        },
+        "aliases": {
+          "en": [
+            {
+              "language": "en",
+              "value": "William Mills Irwin"
+            },
+            {
+              "language": "en",
+              "value": "William Mills \"Bill\" Irwin"
+            },
+            {
+              "language": "en",
+              "value": "William Thomas Irwin"
+            }
+          ]
+        }
+      },
+      "Q603716": {
+        "pageid": 568316,
+        "ns": 0,
+        "title": "Q603716",
+        "lastrevid": 2558689309,
+        "modified": "2026-10-19T07:02:35Z",
+        "type": "item",
+        "id": "Q603716",
+        "labels": {
+          "en": {
+            "language": "en",
+            "value": "Antonio Molino Rojo"
+          },
+          "ja": {
+            "language": "ja",
+            "value": "アントニオ・モリノ・ロホ"
+          }
+        },
+        "descriptions": {
+          "en": {
+            "language": "en",
+            "value": "Spanish actor"
+          }
+        },
+        "aliases": {
+          "en": [
+            {
+              "language": "en",
+              "value": "Antonio Cruz Molino Rojo"
+            }
+          ]
+        }
+      },
+      "Q604431": {
+        "pageid": 569017,
+        "ns": 0,
+        "title": "Q604431",
+        "lastrevid": 2549164072,
+        "modified": "2026-09-25T04:05:43Z",
+        "type": "item",
+        "id": "Q604431",
+        "labels": {
+          "en": {
+            "language": "en",
+            "value": "Antonio Prieto"
+          },
+          "ja": {
+            "language": "ja",
+            "value": "アントニオ・プリエート"
+          }
+        },
+        "descriptions": {
+          "en": {
+            "language": "en",
+            "value": "Chilean actor and singer (1926-2011)"
+          }
+        },
+        "aliases": {
+          "en": [
+            {
+              "language": "en",
+              "value": "Juan Antonio Espinoza Prieto"
+            }
+          ]
+        }
+      },
+      "Q605249": {
+        "pageid": 569811,
+        "ns": 0,
+        "title": "Q605249",
+        "lastrevid": 2549165275,
+        "modified": "2026-09-25T04:15:09Z",
+        "type": "item",
+        "id": "Q605249",
+        "labels": {
+          "en": {
+            "language": "en",
+            "value": "Do Androids Dream of Electric Sheep?"
+          },
+          "ja": {
+            "language": "ja",
+            "value": "アンドロイドは電気羊の夢を見るか?"
+          }
+        },
+        "descriptions": {
+          "en": {
+            "language": "en",
+            "value": "science fiction novel by Philip K. Dick"
+          },
+          "ja": {
+            "language": "ja",
+            "value": "アメリカのSF小説。ディック作、1968年刊行、ローカス賞受賞。映画『ブレードランナー』の原作"
+          }
+        },
+        "aliases": {
+          "en": [
+            {
+              "language": "en",
+              "value": "Blade Runner"
+            }
+          ]
+        }
+      },
+      "Q6056440": {
+        "pageid": 5842754,
+        "ns": 0,
+        "title": "Q6056440",
+        "lastrevid": 2528949918,
+        "modified": "2026-08-08T22:46:25Z",
+        "type": "item",
+        "id": "Q6056440",
+        "labels": {
+          "en": {
+            "language": "en",
+            "value": "Benjamin Wallfisch"
+          },
+          "ja": {
+            "language": "ja",
+            "value": "ベンジャミン・ウォルフィッシュ"
+          }
+        },
+        "descriptions": {
+          "en": {
+            "language": "en",
+            "value": "British composer and conductor (born 1979)"
+          },
+          "ja": {
+            "language": "ja",
+            "value": "イギリスの作曲家、指揮者"
+          }
+        },
+        "aliases": {
+          "en": [
+            {
+              "language": "en",
+              "value": "Benjamin Mark Lasker Wallfisch"
+            }
+          ]
+        }
+      },
+      "Q61356": {
+        "pageid": 64105,
+        "ns": 0,
+        "title": "Q61356",
+        "lastrevid": 2555672433,
+        "modified": "2026-10-10T20:12:26Z",
+        "type": "item",
+        "id": "Q61356",
+        "labels": {
+          "en": {
+            "language": "en",
+            "value": "Jürgen Prochnow"
+          },
+          "ja": {
+            "language": "ja",
+            "value": "ユルゲン・プロホノフ"
+          }
+        },
+        "descriptions": {
+          "en": {
+            "language": "en",
+            "value": "German actor"
+          },
+          "ja": {
+            "language": "ja",
+            "value": "ドイツの俳優"
+          }
+        },
+        "aliases": {
+          "ja": [
+            {
+              "language": "ja",
+              "value": "ユルゲン・プロフノウ"
+            }
+          ],
+          "en": [
+            {
+              "language": "en",
+              "value": "Juergen Prochnow"
+            },
+            {
+              "language": "en",
+              "value": "Jurgen Prochnow"
+            }
+          ]
+        }
+      },
+      "Q6144319": {
+        "pageid": 5938563,
+        "ns": 0,
+        "title": "Q6144319",
+        "lastrevid": 2530346034,
+        "modified": "2026-08-12T09:19:12Z",
+        "type": "item",
+        "id": "Q6144319",
+        "labels": {
+          "ja": {
+            "language": "ja",
+            "value": "キム・ストラウス"
+          },
+          "en": {
+            "language": "en",
+            "value": "Kim Strauss"
+          }
+        },
+        "descriptions": {
+          "en": {
+            "language": "en",
+            "value": "American voice actor"
+          }
+        },
+        "aliases": {
+          "ja": [
+            {
+              "language": "ja",
+              "value": "キム・シュトラウス"
+            }
+          ]
+        }
+      },
+      "Q6175537": {
+        "pageid": 5971622,
+        "ns": 0,
+        "title": "Q6175537",
+        "lastrevid": 2530039817,
+        "modified": "2026-08-11T14:56:01Z",
+        "type": "item",
+        "id": "Q6175537",
+        "labels": {
+          "en": {
+            "language": "en",
+            "value": "Jefferson Mappin"
+          },
+          "ja": {
+            "language": "ja",
+            "value": "ジェファーソン・マッピン"
+          }
+        },
+        "descriptions": {
+          "en": {
+            "language": "en",
+            "value": "Canadian actor"
+          }
+        },
+        "aliases": {}
+      },
+      "Q6271612": {
+        "pageid": 6076231,
+        "ns": 0,
+        "title": "Q6271612",
+        "lastrevid": 2548452455,
+        "modified": "2026-09-22T13:44:46Z",
+        "type": "item",
+        "id": "Q6271612",
+        "labels": {
+          "en": {
+            "language": "en",
+            "value": "Jon Spaihts"
+          },
+          "ja": {
+            "language": "ja",
+            "value": "ジョン・スペイツ"
+          }
+        },
+        "descriptions": {
+          "en": {
+            "language": "en",
+            "value": "American screenwriter and author"
+          }
+        },
+        "aliases": {
+          "en": [
+            {
+              "language": "en",
+              "value": "Jonathan Spaihts"
+            }
+          ]
+        }
+      },
+      "Q6302315": {
+        "pageid": 6108672,
+        "ns": 0,
+        "title": "Q6302315",
+        "lastrevid": 2553739055,
+        "modified": "2026-10-06T03:09:22Z",
+        "type": "item",
+        "id": "Q6302315",
+        "labels": {
+          "en": {
+            "language": "en",
+            "value": "Judd Omen"
+          },
+          "ja": {
+            "language": "ja",
+            "value": "ジャッド・オーメン"
+          }
+        },
+        "descriptions": {
+          "en": {
+            "language": "en",
+            "value": "American actor"
+          },
+          "ja": {
+            "language": "ja",
+            "value": "アメリカの男優"
+          }
+        },
+        "aliases": {}
+      },
+      "Q636682": {
+        "pageid": 598978,
+        "ns": 0,
+        "title": "Q636682",
+        "lastrevid": 2552663462,
+        "modified": "2026-10-03T16:28:16Z",
+        "type": "item",
+        "id": "Q636682",
+        "labels": {
+          "en": {
+            "language": "en",
+            "value": "Lennie James"
+          },
+          "ja": {
+            "language": "ja",
+            "value": "レニー・ジェームズ"
+          }
+        },
+        "descriptions": {
+          "en": {
+            "language": "en",
+            "value": "British actor"
+          },
+          "ja": {
+            "language": "ja",
+            "value": "イギリスの俳優、脚本家、劇作家 (1965 - )"
+          }
+        },
+        "aliases": {
+          "en": [
+            {
+              "language": "en",
+              "value": "Lennie Michael James"
+            }
+          ]
+        }
+      },
+      "Q652": {
+        "pageid": 951,
+        "ns": 0,
+        "title": "Q652",
+        "lastrevid": 2559724801,
+        "modified": "2026-10-22T18:34:11Z",
+        "type": "item",
+        "id": "Q652",
+        "labels": {
+          "en": {
+            "language": "en",
+            "value": "Italian"
+          },
+          "ja": {
+            "language": "ja",
+            "value": "イタリア語"
+          }
+        },
+        "descriptions": {
+          "en": {
+            "language": "en",
+            "value": "Romance language"
+          },
+          "ja": {
+            "language": "ja",
+            "value": "インド・ヨーロッパ語族イタリック語派のロマンス諸語に属する言語"
+          }
+        },
+        "aliases": {
+          "en": [
+            {
+              "language": "en",
+              "value": "Italian language"
+            },
+            {
+              "language": "en",
+              "value": "Italiana"
+            }
+          ],
+          "ja": [
+            {
+              "language": "ja",
+              "value": "伊語"
+            },
+            {
+              "language": "ja",
+              "value": "イタリヤ語"
+            }
+          ]
+        }
+      },
+      "Q656655": {
+        "pageid": 618043,
+        "ns": 0,
+        "title": "Q656655",
+        "lastrevid": 2539337381,
+        "modified": "2026-09-02T05:40:13Z",
+        "type": "item",
+        "id": "Q656655",
+        "labels": {
+          "en": {
+            "language": "en",
+            "value": "Michael Deeley"
+          },
+          "ja": {
+            "language": "ja",
+            "value": "マイケル・ディーリー"
+          }
+        },
+        "descriptions": {
+          "en": {
+            "language": "en",
+            "value": "British film producer"
+          }
+        },
+        "aliases": {}
+      }
+    },
+    "success": 1
+  }
+}
