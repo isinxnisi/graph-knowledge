@@ -1,6 +1,6 @@
 # CollectionWorkerの実行制御
 
-確認: 2026-10-25 11:22:03 JST。
+確認: 2026-10-25 11:24:16 JST。
 
 反映済みcontrolRevision: 4／最後の操作: pub-b36af1ba-d283-412e-aa29-465d360928b7-resume。
 
@@ -25,6 +25,11 @@ Issue確認結果:
   "collection-control/issue-sources/25.json": {
     "status": "registered: issue-25-manga23-20261019",
     "checkedAt": "2026-10-18T18:35:58+00:00"
+  },
+  "collection-control/issue-sources/16.json": {
+    "status": "held",
+    "reason": "Network scope differs; separate human decision required",
+    "checkedAt": "2026-10-25T02:23:44+00:00"
   }
 }
 ```

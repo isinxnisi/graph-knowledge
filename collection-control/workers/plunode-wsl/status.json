@@ -50,6 +50,11 @@
     "collection-control/issue-sources/25.json": {
       "status": "registered: issue-25-manga23-20261019",
       "checkedAt": "2026-10-18T18:35:58+00:00"
+    },
+    "collection-control/issue-sources/16.json": {
+      "status": "held",
+      "reason": "Network scope differs; separate human decision required",
+      "checkedAt": "2026-10-25T02:23:44+00:00"
     }
   },
   "publicApply": false,
@@ -91,5 +96,5 @@
       "phase": "waiting-control"
     }
   },
-  "checkedAt": "2026-10-25T02:22:03.462156+00:00"
+  "checkedAt": "2026-10-25T02:24:16.348125+00:00"
 }
