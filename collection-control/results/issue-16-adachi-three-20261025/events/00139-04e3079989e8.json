@@ -1,0 +1,80 @@
+{
+  "requestId": "issue-16-adachi-three-20261025",
+  "request": {
+    "schemaVersion": 1,
+    "id": "issue-16-adachi-three-20261025",
+    "kind": "issue-prepare",
+    "status": "approved",
+    "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
+    "issueAdapterSha256": "9e0231ab0f444e181e6672d28759b729c108ae2d7816915789a794ba1465656e",
+    "applyAuthorized": {
+      "local": false,
+      "beta": false,
+      "vps": false
+    },
+    "approvalScope": "issue-manga-preparation-collection-review-only",
+    "humanDecision": {
+      "actorType": "human",
+      "reviewer": "プロジェクト運営者",
+      "decidedAt": "2026-10-25T11:22:31+09:00",
+      "statement": "2026-10-25のチャットで、あだち充・タッチ・H2・MIXの3作品について、WikidataとNDL作成書誌、合計最大30試行で候補収集を明示承認し、既存CollectionWorkerの正式なIssue許可と購読登録を依頼。対象3組と2取得元に限定し、収集・候補レビューまで。正式受入・公開applyは含まない。Issue #25の同名対象で過去に収集済みの成果があれば重複収集せず照合・再利用する。"
+    },
+    "permission": {
+      "schemaVersion": 1,
+      "approvalId": "adachi-three-20261025",
+      "status": "approved",
+      "approvalScope": "issue-manga-preparation-collection-review-only",
+      "adapter": "manga-discovery-v2",
+      "targets": [
+        {
+          "person": "あだち充",
+          "work": "タッチ"
+        },
+        {
+          "person": "あだち充",
+          "work": "H2"
+        },
+        {
+          "person": "あだち充",
+          "work": "MIX"
+        }
+      ],
+      "requestPolicy": {
+        "maxAttempts": 30,
+        "attemptsPerRequest": 2,
+        "minIntervalSeconds": 3,
+        "timeoutSeconds": 20,
+        "maxBytes": 4194304
+      },
+      "humanDecision": {
+        "actorType": "human",
+        "reviewer": "プロジェクト運営者",
+        "decidedAt": "2026-10-25T11:22:31+09:00",
+        "statement": "2026-10-25のチャットで、あだち充・タッチ・H2・MIXの3作品について、WikidataとNDL作成書誌、合計最大30試行で候補収集を明示承認し、既存CollectionWorkerの正式なIssue許可と購読登録を依頼。対象3組と2取得元に限定し、収集・候補レビューまで。正式受入・公開applyは含まない。Issue #25の同名対象で過去に収集済みの成果があれば重複収集せず照合・再利用する。"
+      }
+    },
+    "issueOrigin": {
+      "repository": "isinxnisi/graph-knowledge",
+      "issueNumber": 16,
+      "approvalId": "adachi-three-20261025",
+      "permissionSha256": "0db3f253fc65572d886419bc9982b1e3f1052e6002d9a5443e54bc444fef0184",
+      "issueBodySha256": "130fbcdce3b248d1b3b4498a54ff9076aaba6b451b41456304c9c493b3a1c7c7"
+    },
+    "issueSnapshot": {
+      "url": "https://github.com/isinxnisi/graph-knowledge/issues/16",
+      "updatedAt": "2026-10-25T02:22:46Z",
+      "body": "> **収集計画台帳の具体候補／実行未承認**。このIssueは「検索プリセットそのもの」でも「Workerへの収集依頼」でもありません。台帳を作成・編集してもWorkerは起動しません。\n\n| 項目 | 内容 |\n| --- | --- |\n| 位置づけ | 具体的な探索を可能にするための**収集企画候補** |\n| 関連親企画 | #5 |\n| 知識世界 | 漫画・アニメ |\n| 準備状態 | 実行定義前の具体候補 |\n| 優先度 | 未評価（人間との計画検討で決める） |\n| 実行承認 | **なし** |\n\n## ユーザーに届けたい探索体験\nタッチから作者を通ってH2／MIXへ辿れるか。作品とシリーズ・続編を別の意味として扱えるか。\n\n**想定する経路**：漫画作品 → 著者 → 漫画作品（同一人物による制作Claim）\n\n## 最初の調査・収集範囲（企画案）\nあだち充と漫画『タッチ』『H2』『MIX』の代表刊行物・著作者クレジット。派生アニメ・実写は含めない。\n\n## 候補資料と根拠\n小学館公式作品情報・NDL作成書誌の候補。ISBN、QID、巻・版は別途確認。\n\n## 意味・品質上の注意\nシリーズ／続編を事実としてつなぐには独立根拠・関係定義が必要。著作者の同一性を確認。\n\n既存102作品候補に存在。新規取得対象か、既存公開KGと照合が必要。\n\n## 実行可能になるまで\n1. 対象Entity／期間／版・資料の利用可能性を確定し、既存公開KGと正式受入済み未公開集合を区別して重複を確認。\n2. 必要なPredicate／Role・現在の検索能力と、データだけでは実現できない探索条件を切り分ける。\n3. 実装可能なadapter・上限・具体的な識別子／資料を伴うテーマrevision／recipeを作成し、**別途人間レビュー・承認**を受ける。\n\n探索の問いとテーマは1対1固定ではない。複数収集テーマが同じ探索体験を補強することもある。\n\n参照：[知識世界・探索計画](https://github.com/isinxnisi/graph-knowledge/blob/main/docs/design/KNOWLEDGE_WORLDS_AND_COVERAGE_PLAN.md) ／ [具体的な探索プリセット](https://github.com/isinxnisi/graph-knowledge/blob/main/docs/design/DISCOVERY_PATH_PRESETS.md) ／ [収集契約](https://github.com/isinxnisi/graph-knowledge/blob/main/docs/design/COLLECTION_THEMES.md)\n\n---\n**実行の境界**：実行依頼は、明示的人間承認と固定版・hashを伴って専用ブランチ `codex/collection-control` の `collection-control/requests/*.json` に登録された場合に限る。\n\n## 2026-10-25：3作品の候補収集を承認\n\n運営者はあだち充→タッチ／H2／MIXの3組、Wikidata構造化情報とNDL作成書誌、準備と子収集合計最大30試行の候補収集を明示承認。旧Issue #25の対象と重なるため、既存の実行成果・cache・承認・receiptの重複を照合し、再受入・再公開はしない。同一3組について既存の取得で十分なら通信0件・既存成果のレビュー共有でもよい。Role・書誌同定の保留は推測解除しない。正式受入・公開は別判断。\n\n<!-- plunode-collection-permission:v1 -->\n```json\n{\n  \"schemaVersion\": 1,\n  \"approvalId\": \"adachi-three-20261025\",\n  \"status\": \"approved\",\n  \"approvalScope\": \"issue-manga-preparation-collection-review-only\",\n  \"adapter\": \"manga-discovery-v2\",\n  \"targets\": [\n    {\n      \"person\": \"あだち充\",\n      \"work\": \"タッチ\"\n    },\n    {\n      \"person\": \"あだち充\",\n      \"work\": \"H2\"\n    },\n    {\n      \"person\": \"あだち充\",\n      \"work\": \"MIX\"\n    }\n  ],\n  \"requestPolicy\": {\n    \"maxAttempts\": 30,\n    \"attemptsPerRequest\": 2,\n    \"minIntervalSeconds\": 3,\n    \"timeoutSeconds\": 20,\n    \"maxBytes\": 4194304\n  },\n  \"humanDecision\": {\n    \"actorType\": \"human\",\n    \"reviewer\": \"プロジェクト運営者\",\n    \"decidedAt\": \"2026-10-25T11:22:31+09:00\",\n    \"statement\": \"2026-10-25のチャットで、あだち充・タッチ・H2・MIXの3作品について、WikidataとNDL作成書誌、合計最大30試行で候補収集を明示承認し、既存CollectionWorkerの正式なIssue許可と購読登録を依頼。対象3組と2取得元に限定し、収集・候補レビューまで。正式受入・公開applyは含まない。Issue #25の同名対象で過去に収集済みの成果があれば重複収集せず照合・再利用する。\"\n  }\n}\n```\n<!-- /plunode-collection-permission:v1 -->\n"
+    },
+    "firstRecipeRevision": 26,
+    "recipeRevisionCount": 1
+  },
+  "requestSha256": "5c15cdf5d521ca7bb54c94cb6471fb129263d9cd25987a548b0fd50b56aab288",
+  "kind": "issue-prepare",
+  "phase": "running",
+  "generation": 139,
+  "attempts": 1,
+  "workerId": "plunode-wsl",
+  "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
+  "updatedAt": "2026-10-25T06:12:45+00:00",
+  "message": "Execution gate: interval"
+}
