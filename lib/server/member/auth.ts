@@ -36,6 +36,15 @@ export function createMemberAuth(config: MemberConfig, pool: Pool) {
       locale: { type: "string", defaultValue: "ja", input: false },
     } },
     databaseHooks: {
+      // OAuth refreshes may update provider attributes, but a returning login
+      // must never replace the name the member chose in Plunode.
+      user: { update: { before: async data => {
+        // Name editing uses our authenticated member/profile APIs. The auth
+        // namespace exposes no update-user endpoint.
+        // Hooks merge returned fields into the original update. Explicit
+        // undefined removes name from the adapter's SQL update.
+        return { data: {...data,name:undefined,updatedAt:new Date()} };
+      } } },
       // Provider API access is outside this slice; discard tokens after identity
       // verification instead of retaining a second service credential store.
       account: {

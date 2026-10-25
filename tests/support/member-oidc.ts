@@ -17,6 +17,8 @@ export async function startMemberOidc() {
   };
   for(const name of ['community-a','community-b','community-d','notification-owner','notification-recipient','notification-other','suspend','delete'])identities[name]={email:name+'@example.invalid',name};
   for(const key of ['profile-a','profile-b','profile-third','lifecycle-profile'])identities[key]={email:key+'@example.invalid',name:'Private provider name '+key};
+  identities['profile-empty']={email:'profile-empty@example.invalid',name:''};
+  identities['profile-email']={email:'profile-email@example.invalid',name:'profile-email@example.invalid'};
   const server = createServer(async (request, response) => {
     const url = new URL(request.url ?? "/", issuer);
     const json = (body: unknown, status = 200) => { response.writeHead(status, { "Content-Type": "application/json", "Cache-Control": "no-store" }); response.end(JSON.stringify(body)); };
@@ -63,5 +65,5 @@ export async function startMemberOidc() {
     } catch { json({ error: "fixture_failed" }, 500); }
   });
   await new Promise<void>((resolve, reject) => { server.once("error", reject); server.listen(3222, "127.0.0.1", resolve); });
-  return { close: () => new Promise<void>((resolve, reject) => { server.closeAllConnections(); server.close(error => error ? reject(error) : resolve()); }) };
+  return { setName:(id:string,name:string)=>{if(!identities[id])throw Error('Unknown test identity');identities[id].name=name;}, close: () => new Promise<void>((resolve, reject) => { server.closeAllConnections(); server.close(error => error ? reject(error) : resolve()); }) };
 }

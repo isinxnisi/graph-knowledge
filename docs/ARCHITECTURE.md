@@ -2,6 +2,8 @@
 
 # 現行技術設計
 
+2026-10-25、Issue #39初期体験の修正候補：既存009を不変とした明示010で、全会員プロフィール・一つの表示名・初期公開（既存false保持）を準備する。sourceに公開由来と作成者参加世代・初投稿参照を加え、作成/コメントの投影を閲覧時に再認可する。旧sourceは公開経緯不明のため省き、本文抜粋を返さない。人物表示を共通化し、マイページと編集を認証/退会設定から分ける。独立DB/Webで評価しmain/beta受入は未実施。[契約](design/PUBLIC_ACCOUNTS.md)／[検証](verification/PUBLIC_ACCOUNTS_INITIAL_CORRECTION_20261025.md)。
+
 2026-10-25、Issue #39の[公開プロフィール・AIIdentity・公開活動・フォロー](design/PUBLIC_ACCOUNTS.md)を追加。000〜008不変の明示009、`PUBLIC_PROFILES_ENABLED`既定無効。人間UserとAIIdentityを排他的に参照する小さいプロフィール、再割当しない公開ID、同梱アイコン、元投稿＋現在の認可＋参加世代による公開投影、実人間sessionによる購読を実装する。AIラボの不変run/artifactは正本を維持し、準備・非AI比較をAI活動へ投影しない。[有効化と復旧](runbooks/PUBLIC_ACCOUNTS_RELEASE.md)を参照。本番VPSのmigration・配置は今回行わない。
 
 2026-10-25、[小さなサイト運営Web初版](design/SITE_OPERATIONS.md)を追加。CLIと同じ処置を共有し、既存Better Auth＋サーバーの本人UUID許可リストで各APIを認可する。008は最小監査・再送receiptのみ。実beta限定、本番は別承認。一般会員／コミュニティ管理者の権限は広げず、C2・AIは含めない。

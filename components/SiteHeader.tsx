@@ -21,8 +21,10 @@ import styles from "./SiteHeader.module.css";
 import { supportLabels } from "../lib/i18n/support";
 import { appearanceKey, defaultAppearance, readAppearance, type Appearance } from "../lib/client/appearance";
 
+import ProfileAvatar from './ProfileAvatar';
+import {usePublicProfilesEnabled} from './PublicProfileAvailability';
 export default function SiteHeader({ dataset, page = "explore", onBeforeAccountNavigation, onPrivacySettings, onLogout, accountBusy = false }: { onBeforeAccountNavigation?: () => boolean; onPrivacySettings?: () => void; onLogout?: () => void; accountBusy?: boolean; user?: MemberUser | null; dataset: DatasetMode; page?: "explore" | "member" | "community" | "shared" | "support" | "ai-lab" }) {
-  const communitiesEnabled=useCommunitiesEnabled();
+  const communitiesEnabled=useCommunitiesEnabled(),profiles=usePublicProfilesEnabled();
   const { locale, setLocale, storageError: languageError } = useUiLocale();
   const ui = explorerLabels(locale), text = siteLabels(locale), data = datasetLabels(dataset, locale);
   const identity = useMemberSession();
@@ -32,14 +34,14 @@ export default function SiteHeader({ dataset, page = "explore", onBeforeAccountN
   const pendingLabel=operations.status==='ready'?`${locale==='en'?'Pending':'未対応'} ${operations.data?.pendingCount}`:operations.status==='error'?(locale==='en'?'Pending count unavailable':'未対応件数を確認できません'):(locale==='en'?'Checking pending cases':'未対応件数を確認中');
   const operationsBadge=<span className={styles.operationsBadge} role="status" data-pending={operations.status==='ready'&&!!operations.data?.pendingCount} aria-label={pendingLabel} title={pendingLabel}>{operations.status==='ready'?(operations.data!.pendingCount>99?'99+':operations.data!.pendingCount):operations.status==='error'?'!':'…'}</span>;
   const displayName = currentUser?.name.trim() || text.account;
-  const mark = currentUser ? <span className={styles.memberMark} aria-hidden="true">{Array.from(displayName)[0]}</span> : <Icon name="person" />;
+  const mark = currentUser ? <ProfileAvatar small compact icon={currentUser.profile?.icon??'person'}/> : <Icon name="person" />;
   const [appearance, setAppearance] = useState(defaultAppearance);
   const [storageError, setStorageError] = useState(false);
   const menu = useRef<HTMLDetailsElement>(null);
   const accountMenu = useRef<HTMLDetailsElement>(null);
   const siteMenu = useRef<HTMLDetailsElement>(null);
   const hash=usePersonalHash();const selected=page==="member"||page==="community"?personalSection(page==="member",hash):undefined;
-  const groups=personalNavigation(locale,identity.status!=="guest",communitiesEnabled);
+  const groups=personalNavigation(locale,identity.status!=="guest",communitiesEnabled,profiles,currentUser?.profile?.handle).sort((a,b)=>Number(b.items.some(i=>i.id==="capsules"))-Number(a.items.some(i=>i.id==="capsules")));
   const [returnHref, setReturnHref] = useState("/");
   // Lab returns use a document navigation so URL/revision-bound Graph pan can
   // verify the lab referrer, just as the former dedicated return link did.

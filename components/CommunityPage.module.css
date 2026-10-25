@@ -37,3 +37,6 @@
 .dialog{position:fixed;inset:auto;margin:0;left:50%;top:50%;transform:translate(-50%,-50%);width:min(540px,calc(var(--dialog-width,100vw) - 24px));max-height:calc(var(--dialog-height,100dvh) - 24px);overscroll-behavior:contain;padding:22px;overflow-wrap:anywhere}
 .dialog[open]{animation:none}.dialog textarea{font-size:16px;resize:vertical}.dialog .safetyForm{gap:12px}.dialog .safetyForm fieldset .actions{gap:8px 14px}.dialog .safetyForm fieldset label{display:inline-flex;align-items:center;min-height:30px}
 @media(max-width:760px){.dialog{padding:18px}.shell .menuPanel button{min-height:40px}.conversation{margin-top:12px}}
+.creatorLine{margin:6px 0 10px}.inlineCreator{display:inline-block;max-width:100%;margin:4px 0 4px 12px}.postContent{width:100%}.postMeta>div{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+@media(max-width:760px){.inlineCreator{display:block;margin:6px 0}.creatorLine{margin:6px 0 8px}}
+.communityHeading>.creatorLine{padding-left:54px}@media(max-width:760px){.communityHeading>.creatorLine{padding-left:45px}}

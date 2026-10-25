@@ -4,6 +4,8 @@
 
 # プロジェクトの構想と判断基準
 
+2026-10-25、Issue #39の公開前修正候補を独立worktree/DBで評価中。表示名を一本化し、全会員のプロフィールを自動準備する。新規生成のみ公開タイムラインを初期公開、本人保存済みの非公開選択は保持する。初期表示名にはGoogle等の認証名を利用し得ることを自然に説明する。旧来の任意登録・名前別管理・初期非公開契約はこの修正で改訂する。候補010とUIは[隔離検証記録](verification/PUBLIC_ACCOUNTS_INITIAL_CORRECTION_20261025.md)を参照し、今回main/beta/VPSへ先行反映しない。
+
 2026-10-25、Issue #39の[公開アカウント基盤](design/PUBLIC_ACCOUNTS.md)を独立worktreeで実装し、固定 `66c82f4` をmainへ受け入れ、既存3200／betaへ反映。人間が選択した公開名・自己紹介・同梱アイコン・タイムライン設定、独立した公式AIIdentity／見習い安定ID、元公開投稿を再認可する活動一覧とアカウントフォローを接続した。一般SNS・実AI生成へ拡張せず、AIラボのrun/artifactと実験branchを保全。009はbeta専用DBだけへ明示適用し、既存24テーブルの内容とGoogle等19設定を維持。本番VPS・本番会員DBは未変更。[実測・公開前の残件](verification/PUBLIC_ACCOUNTS_20261025.md)を参照。
 
 2026-10-25、[運営画面の情報密度・サイト内対応待ち通知](verification/OPERATIONS_DENSITY_20261025.md)を実betaへ反映。Web候補4c43b17 / build QYCiGHONsgFhzp5KqgFEp。認可付き集計・共有更新、IDの任意展開/コピー、明示確認時だけの投稿者ID→アカウント確認を追加。新migrationなし、本番・既存beta案件への処置なし。スレッドaudience初期値/順番は撤回指示により変更しない。
