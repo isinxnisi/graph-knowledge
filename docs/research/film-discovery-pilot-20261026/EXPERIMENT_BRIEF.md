@@ -26,6 +26,27 @@
 - 収集の試作やスキーマ案は研究用ファイルへ隔離し、本線の実行経路が自動で読み込むディレクトリへ置かない。実装検証が必要なら隔離fixture／mock／read-only APIを使う。
 - 他セッションのGit・Worker lockを強制解除しない。研究目的に必要な読み取り／コミット以外の共有操作は控える。
 
+## 既存分析資産を先に再利用（2026-10-26追記）
+
+**新しい分析方式やプリセットをゼロから設計する前に、下記7点を実際に読んで再利用できる手順・評価観点を抽出する。** 単に参考文献として列挙するだけでなく、洋画への具体的な再利用／適用できない理由を `EVALUATION.md` に対応づける。
+
+| 優先 | 既存資産 | 再利用する役割 |
+| --- | --- | --- |
+| A | `datasets/connectivity/issue-34/report/README.md` と必要な `report.json` | 連結成分、1〜3段到達、分岐、橋渡し、取得・列挙上限の構造評価。大型JSONは必要部分だけ読む |
+| A | `docs/verification/COLLECTION_CANDIDATES_20261020.md` | 実際の経路増分から収集候補の優先度を比較する方法。再収集の要否／未確認Roleや書誌の扱い |
+| A | `scripts/collection-bridge-candidates.py` | 固定版・オフラインでの候補差分分析の実装。**Issue #34固有の入力／検査があるので汎用映画adapterとみなさない** |
+| B | `docs/design/DISCOVERY_MULTI_STEP.md` | 2〜3段探索、claim列、方向、LIMIT・部分取得・根拠、実装済み検索能力と不足 |
+| B | `docs/design/DISCOVERY_PATH_PRESETS.md` | 版付きの探索経路の形、現在のプリセット利用例と制約 |
+| B | `lib/domain/discovery-path-presets.ts` | 実装中のpreset ID、depth、predicate、Entity kind順、検証ルールの正本 |
+| B | `docs/design/KNOWLEDGE_WORLDS_AND_COVERAGE_PLAN.md` | ユーザーが追いたい問いから収集を考える枠組み、Breadth/Depth/Discoverability/Evidenceの評価軸 |
+
+**映画研究での具体的な評価**：
+- 収集した関係に対して「追加のClaimがある」と「新しい対象・経路に到達できる」を分け、2〜3段の実証経路・Role・Citationを記録する。
+- 現行検索／表示上限による「未発見」を「経路なし」と誤判定しない。現行の版付き検索で確認できた経路と、研究用の推定経路は別表示にする。
+- 原作と翻案、監督と出演などの意味の違いを、現行 `CONTRIBUTED_TO`・Roleへ強制的に押し込まず、既存設計との差分を具体化する。
+- 旧レポートの数値・公開revisionは**過去の観測**であり、最新KGの現在値として引用しない。現行公開・受入状態は研究開始時に読み取りで再照合する。
+- この追加は**参考・再利用指示**であり、既存Issue／control branch／Worker／本線コード／公開環境の変更許可ではない。
+
 ## 比較・判断方法
 モデル間の競争ではなく、**現行Plunodeに対する追加価値**で評価する。
 
