@@ -29,4 +29,17 @@
 
 独立worktreeでの修正・隔離試験は運営者が先行許可。共有mainへの統合と実Worker配置は共通hold取得後、Workerロック・activeAttemptなしを確認した安全な境界で行う。runtimeのWorker moduleだけを原子的に更新し、旧code・前後hashを保全する。state／retryAt／cache／承認／receipt／task／時間帯／休憩は編集しない。
 
-実配置・通常Workerの最終結果は、確認後に追記する。隔離試験のcompletedを実運用完了とは扱わない。
+### 実配置・通常完了の確認
+
+- 共通ロック解放後の04:08 JSTにholdを取得し、固定 `705c28a` をmainへFF統合・通常pushした。別作業・Autopilotの未受入変更は取り込まない。
+- 04:09 JST、共通hold＋Workerの非待機flockとactiveAttemptなしを確認し、runtimeの `collection-worker.py` だけを原子的に配置した。CLI起動も成功。
+- 旧SHA `aa7a27163d330d322d376fed51b052c008e0c647709797051156bb4283411eff` → 新SHA `d5720b662bbcb794d9079f67a0cec39e18e8d938b094615a02c181e298fd77c4`。旧code・配置前state・配置receiptの保全先は `<worker-home>/issue5-finish-update-21w6vbe1`。
+- 互換基準973c7b0、config、Issue adapter、collector、前回修正済みworkflow、その他module、state、retryAt、cacheは配置時不変。既存1,200データ／成果ファイルもhash不変。Windows taskや制御記録は変更しない。
+- 04:09 JSTにholdを解放。手動once・watch・task起動・再収集は行わず、保存retryAt 04:14:16 JST以降の既存スケジュールを待った。
+- **通常Workerは04:15:27 JSTに後処理を開始し、04:16:09 JSTに完了**。health online、activeAttemptなし、phase completed、attempts6・executionComplete=trueのまま。次回重処理開始可能時刻は既存10分休憩後の04:26:09 JST。既存毎分pollは継続し、completedを再収集しない。
+- [GitHubの共有結果](https://github.com/isinxnisi/graph-knowledge/blob/0f6cc5ec05b58d977aa26dd963c37cda5e9aa445/collection-control/results/issue-5-dot-tezuka-adolf-20261025-batch-01/README.md)を固定commit `0f6cc5ec05b58d977aa26dd963c37cda5e9aa445` で外部から確認。レビュー8ファイル、未承認のnormal判断用下書きとaccept-release依頼下書きを共有し、ローカルと共有bytesが一致。両下書きはdraft-not-approved、判断者はnull、全環境apply権限false。
+- 通常完了後にも既存1,200ファイル・config・他module・正式receipt10件の不変を照合。親子ledgerは **4/30試行**、追加provider通信0。元request SHA `9b3f98315bb28650d44225f8b197ba408b2d39b00c24771052dcbfbca976ea00` を保持。
+
+残る判断は、この1 Claimを正式受入するかという人間の判断。今回の収集・レビュー後処理の修復は完了し、これを正式受入済みや公開済みとは扱わない。正式受入・公開apply・VPS・会員DB・Web UIは変更していない。Webのbuild対象変更はないため3200／beta／VPSの再配置は不要。
+
+復旧が必要な場合は、共通hold＋Worker flock・activeAttemptなしの境界で保全済み旧codeのSHAを確認し、moduleだけを原子的に戻す。state／nonce／receipt／承認／成果／cacheを過去へ戻さない。ただし旧codeは新規候補で同じディレクトリ衝突が再発するため、通常継続には修正版を使う。

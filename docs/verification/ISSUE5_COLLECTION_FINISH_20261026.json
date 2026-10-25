@@ -52,5 +52,25 @@
   "networkAttempts": 4,
   "maxAttempts": 30,
   "formalAcceptance": false,
-  "publicApply": false
+  "publicApply": false,
+  "productionWorker": {
+    "phase": "completed",
+    "attempts": 6,
+    "executionComplete": true,
+    "sharedCommit": "0f6cc5ec05b58d977aa26dd963c37cda5e9aa445",
+    "resultUrl": "https://github.com/isinxnisi/graph-knowledge/blob/0f6cc5ec05b58d977aa26dd963c37cda5e9aa445/collection-control/results/issue-5-dot-tezuka-adolf-20261025-batch-01/README.md",
+    "requestSha256": "9b3f98315bb28650d44225f8b197ba408b2d39b00c24771052dcbfbca976ea00",
+    "decisionDraft": "collection-control/artifacts/issue-5-dot-tezuka-adolf-20261025-batch-01/datasets/collection-decision-drafts/issue-5-dot-tezuka-adolf-20261025-batch-01/b5a5b41315011872ca9968477872ae167c70bbfb67341eb8eb1e0d0623fe66a3/issue-5-dot-tezuka-adolf-20261025-batch-01-normal-draft.json",
+    "requestDraft": "collection-control/artifacts/issue-5-dot-tezuka-adolf-20261025-batch-01/datasets/collection-decision-drafts/issue-5-dot-tezuka-adolf-20261025-batch-01/b5a5b41315011872ca9968477872ae167c70bbfb67341eb8eb1e0d0623fe66a3/issue-5-dot-tezuka-adolf-20261025-batch-01-normal-request-draft.json",
+    "sharedBytesMatch": true,
+    "formalReceiptCountUnchanged": 10,
+    "frozenFilesUnchanged": 1200,
+    "providerAttemptsAdded": 0,
+    "networkAttempts": 4,
+    "maxAttempts": 30,
+    "normalScheduleOnly": true,
+    "stateReset": false,
+    "formalAcceptance": false,
+    "publicApply": false
+  }
 }
