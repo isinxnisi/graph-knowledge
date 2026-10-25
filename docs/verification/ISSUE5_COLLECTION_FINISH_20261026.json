@@ -1,0 +1,56 @@
+{
+  "testOnly": true,
+  "originalCollisionReproduced": true,
+  "collisionFiles": [
+    "datasets/manga-collection/decisions/issue-25-utc-recovery-01-normal.json"
+  ],
+  "stack": "Traceback (most recent call last):\n  File \"<worktree>/tests/check_issue5_decision_drafts.py\", line 58, in main\n    w.execute(old_args)\n  File \"<runtime>/scripts/collection-workflow.py\", line 564, in execute\n    return acceptance.execute(args, SimpleNamespace(**globals()))\n  File \"<runtime>/scripts/collection-acceptance.py\", line 416, in execute\n    return template(args, w)\n  File \"<runtime>/scripts/collection-acceptance.py\", line 118, in template\n    protect_inputs([args.output], args.review, context, w)\n  File \"<runtime>/scripts/collection-acceptance.py\", line 102, in protect_inputs\n    w.require(not any(target == p or target.is_relative_to(p) or p.is_relative_to(target) for p in protected),\n  File \"<runtime>/scripts/collection-themes.py\", line 68, in require\n    raise ValueError(message)\nValueError: Output overlaps frozen review, job, registry or referenced artifacts\n",
+  "isolatedWorkerPhase": "completed",
+  "attempts": 6,
+  "draftStatus": "draft-not-approved",
+  "recordIds": {
+    "entities": [
+      "5d6abf48-b5b2-4b83-9403-b70cfc7c01fc"
+    ],
+    "claims": [
+      "3e652339-e18e-472f-b3bb-8cc375804660"
+    ],
+    "sources": [
+      "22159b20-110b-4ed1-a563-cb13ce1dbff3"
+    ],
+    "citations": [
+      "6d1457d3-8c2e-438d-a182-2f0c3f81ed23"
+    ]
+  },
+  "scopeByClaim": [
+    {
+      "id": "3e652339-e18e-472f-b3bb-8cc375804660",
+      "subjectId": "eb0af7e1-caa6-435f-86fb-0591421982b5",
+      "objectId": "5d6abf48-b5b2-4b83-9403-b70cfc7c01fc",
+      "predicate": "CONTRIBUTED_TO",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "contribution": {
+        "roleId": "AUTHORSHIP",
+        "scope": {
+          "kind": "publication",
+          "isbn13": "9784168110139",
+          "volumeLabel": "第1巻（NDL巻次 第1巻）",
+          "editionLabel": null,
+          "language": "ja"
+        }
+      },
+      "organizationParticipation": null,
+      "eventParticipation": null
+    }
+  ],
+  "existingArtifactFilesUnchanged": 1200,
+  "providerAttemptsAdded": 0,
+  "networkAttempts": 4,
+  "maxAttempts": 30,
+  "formalAcceptance": false,
+  "publicApply": false
+}
