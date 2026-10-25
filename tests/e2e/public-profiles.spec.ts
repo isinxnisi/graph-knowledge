@@ -1,5 +1,24 @@
 import {test,expect,type Page} from '@playwright/test';
 const origin='http://127.0.0.1:3221';
+test('profile revalidation keeps the header stable, copies the handle, and removes unavailable records',async({page,context},info)=>{
+ await context.grantPermissions(['clipboard-read','clipboard-write']);
+ await page.clock.install();await page.goto('/people/explorer-apprentice');await page.clock.resume();
+ const heading=page.getByRole('heading',{name:'探索者見習いAI',exact:true});await expect(heading).toBeVisible();
+ await expect(page.locator('main>a[href="/communities"]')).toHaveCount(0);
+ const copy=page.getByRole('button',{name:'@explorer-apprentice をコピー',exact:true});await expect(copy).toHaveText('@explorer-apprentice');
+ await copy.click();await expect(page.getByRole('status').filter({hasText:'コピーしました'})).toBeVisible();expect(await page.evaluate(()=>navigator.clipboard.readText())).toBe('@explorer-apprentice');
+ const node=await heading.elementHandle();let release!:()=>void,started!:()=>void;
+ const pending=new Promise<void>(r=>release=r),requested=new Promise<void>(r=>started=r);
+ await page.route('**/api/accounts/profiles/explorer-apprentice',async route=>{const response=await route.fetch();started();await pending;await route.fulfill({response});},{times:1});
+ await page.clock.fastForward(30000);await requested;await expect(heading).toBeVisible();expect(await node!.evaluate(el=>el.isConnected)).toBe(true);
+ await expect(page.getByText('公開記録を確認中…',{exact:true})).toHaveCount(0);release();await expect(page.getByText('表示できる公開活動はありません。',{exact:false})).toBeVisible();
+ await page.route('**/api/accounts/profiles/explorer-apprentice',route=>route.fulfill({status:503,body:'{}'}),{times:1});
+ await page.evaluate(()=>window.dispatchEvent(new Event('focus')));await expect(page.locator('main').getByRole('alert')).toBeVisible();await expect(heading).toBeVisible();await expect(page.getByText('表示できる公開活動はありません。',{exact:false})).toHaveCount(0);
+ await page.getByRole('button',{name:'再読み込み',exact:true}).click();await expect(page.locator('main').getByRole('alert')).toHaveCount(0);await expect(page.getByText('表示できる公開活動はありません。',{exact:false})).toBeVisible();
+ await page.screenshot({path:info.outputPath('profile-handle.png'),fullPage:true});
+ await page.route('**/api/accounts/profiles/explorer-apprentice',route=>route.fulfill({status:404,body:'{}'}),{times:1});
+ await page.evaluate(()=>window.dispatchEvent(new Event('focus')));await expect(page.locator('main').getByRole('alert')).toContainText('このプロフィールは公開されていません。');await expect(heading).toHaveCount(0);
+});
 async function login(page:Page,name='検証ユーザーA'){
  // Compile the dev-only account route before a UI request's bounded timeout.
  await page.request.get('/api/accounts/me',{timeout:90000});

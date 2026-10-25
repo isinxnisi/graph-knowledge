@@ -63,3 +63,20 @@
 終了時のmain/origin/mainも `30ffa72`。mainの `memo.txt`、既存AIの2 worktree・各固定HEADを保全した。remoteのcollection-control branch更新は取り込んでいない。既存betaのWeb・Google設定・会員DB、正式VPSは未変更。残件は利用者のUI評価、並行差分の再確認と固定SHA受入、対象Webを停止した上でのbackup/010適用/build切替、実Google・実機Safariの最終確認。本番移行は今回の対象外。
 
 追加は `010-account-initial-experience.sql`。000〜009のbytes/checksumを保持する。具体的なbackup・別DB復元・適用・機能停止時の手順は [運用手順](../runbooks/PUBLIC_ACCOUNTS_RELEASE.md) の追記を参照する。
+
+## 2026-10-26・画面評価からの修正
+
+プロフィールの一律「コミュニティへ戻る」を削除。公開IDは `@handle` 自体を押してコピーする控えめなボタンに変更し、キーボード操作・フォーカス表示・日英の成功/失敗通知を付けた。コピー用の独立したボタン文言は置かない。
+
+30秒間隔・focus/visibility復帰時の再取得で、プロフィール全体をnullへ戻していたことがちらつきの原因だった。通常の再取得では現在の表示を維持し、確認結果を置き換える。タブ非表示時は活動を破棄して復帰時に再認可、通信失敗時は活動を隠す。focusでは先行中の取得を取り消すため、非公開化前の遅い応答で古い活動を復活させない。404ではプロフィールも取り除く。再確認の30秒間隔・公開APIの認可契約は維持する。
+
+特定投稿への移動時は背景と左端の強調・スクロール/フォーカスで位置を伝え、「この発言から会話を再開 / Continue from this message」の説明を削除した。返信の動作は変更しない。DB/migration・会員設定・AI基盤・main/betaには変更なし。
+
+
+追検証：実OIDC・人物導線・フォロー往復と、非公開化前の遅延応答を無効にする既存シナリオが成功。追加した画面試験は30秒タイマー中の見出しDOM保持、handleの実Clipboardコピー、503時の活動除去、再試行、404時のプロフィール除去を確認。追加試験＋日英×1440/390px×light/dark-blueの9件も同じ実行で成功した。最初の追加試験はNextのroute announcerもalertとして拾うテストの対象指定をmain内へ絞って再試験した。buildとdev画面試験の並行時は生成型ファイルが競合したため、画面試験終了後の単独実行で型検査込みbuildが成功した。lintも警告・エラーなし。
+
+![公開ID・JA mobile](public-accounts-initial-20261025/profile-handle-ja-mobile.png)
+![公開ID・EN desktop dark](public-accounts-initial-20261025/profile-handle-en-desktop-dark.png)
+
+
+更新後の隔離buildは `7R2R6u-RJ2YfVQvVT394r`。同じPG/KGのvolume・fixtureを保持して3221を再開し、実ブラウザでhandleクリックの「コピーしました」、対象投稿への移動・強調と説明の除去を確認した。[対象投稿の実画面](public-accounts-initial-20261025/thread-focus-feedback.png)。main/origin/mainは引き続き `30ffa72`、既存AI worktreeは変更なし。main/betaへは未反映。
