@@ -35,7 +35,19 @@ public→members→publicで旧cohortが復活しない、withdraw／hide／comm
 
 ## beta反映
 
-この実装commit時点は隔離検証完了。固定SHAをレビューしてmainへ受け入れた後、既存3200／graph-betaへ反映し、結果を本節へ追記する。正式VPS・本番会員DB・KG・Kev・CollectionWorker・自動runnerは変更しない。
+固定実装SHA `66c82f4b2a43a4c4f651900c1a2f5177115d563d` を再レビューし、mainを `9efbd43` からfast-forwardで受け入れた。独立branchを通常pushし、既存3200／graph-betaを検証済みbuild `wB2V-kS7P7DtuvvrE0q8g` へ更新。以降のcommitは検証記録・画像だけで、Webの再buildは不要。
+
+beta専用PGのbackupを使い捨てPGへ復元・009の反復適用を検証した後、実betaへ009を明示適用。ledgerは9→10件、AIIdentity2件、人間プロフィールの自動作成0件。migration前後の既存24テーブルの全既存列を内容hashで照合した。投稿の新しい参加世代メタデータ以外に、既存会員・Capsule・共有・投稿・権限・監査の内容変更はない。
+
+元runtimeのGoogle provider、secret、Cookie prefix、DB接続、運営者allowlist、コミュニティ・運営・ラボ・広告・KGなど19設定を値単位で保持した。`.env.public` の元bytesを保全し、`PUBLIC_PROFILES_ENABLED=1` の1行だけを追加。KG metadataとrevision `82b01515-594c-48ca-b4b6-515eefac83ca` は更新前後で一致する。旧build・元env・private dumpを復旧用に保持。
+
+ローカルHTTPの23チェックはすべて成功。同buildの日英・会員・コミュニティ・運営・ラボ・プロフィール／フォロー画面、Google provider、匿名の本人／フォロー／運営APIの401、公開2個体の安定IDと0件、no-store／noindex、匿名の実公開投稿からUser UUIDを返さないことを確認した。
+
+実HTTPSの既存Googleログイン済みセッションでも、公開ID・公開名・紹介が空欄、タイムライン初期値非公開、フォロー中、既存運営権限・未対応表示、既存コミュニティを確認した。本人プロフィールや購読を代筆登録せず、betaで投稿・運営処置は行わない。ラボの非AI比較5／送信前保留2／実推論0／学習0、2個体へのプロフィールリンク、監修記録→実Graph（3 Entity・3 Claim）→同じrun／filterへの復帰も成功。
+
+実HTTPSでは日本語PCと英語390pxのdark-brown表示・画像読込・横はみ出しなしを確認。確認ツールの一度の同期停止は新しい同ブラウザのタブで回復し、アプリのエラーと混同しない。検証中のテーマ・viewportは元へ戻した。配備Webの公開画像は、実会員ヘッダーを含めない同じ3200の匿名表示で記録した：[公式AI・PC日本語](public-accounts-20261025/beta-official-ja-desktop.png)／[見習い・英語スマホダーク](public-accounts-20261025/beta-apprentice-en-mobile-dark.png)。
+
+正式VPS・本番会員DB・KG・Kev・CollectionWorker・自動runnerは今回変更していない。既存AI育成worktree／branch／run／公開artifactは不変。現行mainのラボUIは公開プロフィールへの導線と説明だけを変更した。mainに元からある `memo.txt` はhash一致を確認して保全した。
 
 private backup・元runtime設定・元`.env.public`・復元リハーサルの原記録は、このPCの `~/.local/share/plunode-backups/issue39-20261025/` に保持する。秘密値・dump・実会員の内容をGitへ含めない。[公開前の適用・backup・復旧手順](../runbooks/PUBLIC_ACCOUNTS_RELEASE.md)を参照。
 

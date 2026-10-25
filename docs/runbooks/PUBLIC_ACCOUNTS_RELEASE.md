@@ -20,7 +20,7 @@ node --import tsx scripts/member-migrate.ts --public-profiles --confirm-origin "
 
 `--public-profiles` は000〜008のchecksumを照合してから `009-public-profiles.sql` だけを追加し、同transaction内でledgerへ記録する。009はAIIdentity2件、公開プロフィール2件とclaim、フォロー、AI停止監査、投稿時参加世代のcolumn/index/trigger。人間プロフィールの自動作成、認証名・画像のコピー、Capsuleやrun/artifactの書換えはしない。既存投稿本文・status・時刻・audienceは変更しない。
 
-10件のledger、既存000〜008のchecksumと全既存列の内容、AIの2安定ID、認証UserにAIが混入していないことを確認する。再実行が無変更で成功することも確認。失敗はtransaction全体をrollbackし、有効化しない。
+既存投稿の世代は、現在もactiveの初回参加世代だけを補い、既に再参加した人の当時の世代を推測しない。10件のledger、既存000〜008のchecksumと全既存列の内容、AIの2安定ID、認証UserにAIが混入していないことを確認する。再実行が無変更で成功することも確認。失敗はtransaction全体をrollbackし、有効化しない。
 
 `PUBLIC_PROFILES_ENABLED=1` だけを対象Web設定へ追加し、main受入済み固定SHAのbuildへ切り替える。通常起動時にはmigrationしない。Google実認証・既存コミュニティ・運営・Graph・AIラボと、匿名プロフィール／日英／PC・狭幅／明暗を確認する。本人のプロフィール登録は本人が設定画面で選択し、運営者が実名を代筆・自動公開しない。
 
