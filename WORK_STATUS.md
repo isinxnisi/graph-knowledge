@@ -1,8 +1,8 @@
 # Plunode 開発・運用の統合一覧
 
-観測：**2026-10-25T19:31:52+09:00**（JST）。30分周期・AI呼出し0。確認時点の記録です。90分以上古い場合は現在稼働を保証しません。
+観測：**2026-10-25T19:47:07+09:00**（JST）。30分周期・AI呼出し0。確認時点の記録です。90分以上古い場合は現在稼働を保証しません。
 手動の予定・名前は [WORK_SESSIONS.json](WORK_SESSIONS.json) をこのbranchで編集。自動更新はこのMarkdownだけを変更します。
-<!-- work-status:c352028ffd665dda07c1970f9ca5e9f64cf4edd551d2ecf25d4a5bc321add633 day:2026-10-25 -->
+<!-- work-status:70f38504bf6259fb5986855c5006c0b89bbe466127a5cf0e337cdff224af9b83 day:2026-10-25 -->
 
 ## A. 作業セッション
 
@@ -29,7 +29,7 @@
 
 | 環境ID／ホスト | 用途・service | 設定port／公開URL | worktree設定 | 実測／未確認 | 利用セッション |
 |---|---|---|---|---|---|
-| windows / Windows PC | 起動元・Task Scheduler / 専用通常ユーザーtask |  /  | なし | Windows観測 2026-10-25T19:22:39+09:00 | 統合管理一覧 |
+| windows / Windows PC | 起動元・Task Scheduler / 専用通常ユーザーtask |  /  | なし | Windows観測 2026-10-25T19:46:49+09:00 | 統合管理一覧 |
 | wsl / WSL Ubuntu | Python／Git／Worker / 既存WSL |  /  | 複数（実測表参照） | WSL観測済み（この時点のみ） | データ収集・受入, データ公開・配送, 統合管理一覧 |
 | main / main worktree | 本線ソース・beta実行元 / Next.js | 3200 / [URL](https://graph-beta.isinxnisi.com/) | main | 3200: 待受あり・実プロセスcwd: main | AI育成ラボ, 検索・Graph改善, 統合管理一覧 |
 | beta / ローカルWeb／Tunnel | 日常確認・実beta / Next.js／共有Cloudflare Tunnel | 3200 / [URL](https://graph-beta.isinxnisi.com/) | main | 取得失敗・現在状態未確認 | コミュニティ基盤, AI育成ラボ, 検索・Graph改善 |
@@ -65,22 +65,22 @@
 
 ## C. Worker・自動処理
 
-Windows task観測時刻：2026-10-25T19:22:39+09:00。
+Windows task観測時刻：2026-10-25T19:46:49+09:00。
 
 | 処理／目的 | task観測状態／終了結果 | 周期／次回 | 最終起動（観測時） |
 |---|---|---|---|
 | Afterglow-LoginRecovery / ログオン復帰 | Ready / 0 | Logon / None | 2026-10-24T08:26:33.0000000+09:00 |
 | GraphKnowledge-Autopilot / 自動開発 | Disabled / 0 | PT2H / None | 2026-10-10T10:00:02.0000000+09:00 |
-| Plunode-CollectionWorker / 収集／正式受入（依頼別・同一Worker） | Running / 267009 | PT1M,Logon / 2026-10-25T19:23:30.0000000+09:00 | 2026-10-25T19:22:31.0000000+09:00 |
-| Plunode-Publication-Delivery / 公開候補準備／承認済み配送 | Ready / 0 | Logon,PT5M / 2026-10-25T19:25:22.0000000+09:00 | 2026-10-25T19:20:23.0000000+09:00 |
-| Plunode-WorkStatus / 一覧の観測・差分反映（AIなし） | Ready / 0 | PT30M / 2026-10-25T19:46:46.0000000+09:00 | 2026-10-25T19:16:46.0000000+09:00 |
+| Plunode-CollectionWorker / 収集／正式受入（依頼別・同一Worker） | Running / 267009 | PT1M,Logon / 2026-10-25T19:47:30.0000000+09:00 | 2026-10-25T19:46:31.0000000+09:00 |
+| Plunode-Publication-Delivery / 公開候補準備／承認済み配送 | Ready / 0 | Logon,PT5M / 2026-10-25T19:50:22.0000000+09:00 | 2026-10-25T19:45:23.0000000+09:00 |
+| Plunode-WorkStatus / 一覧の観測・差分反映（AIなし） | Running / 267009 | PT30M / 2026-10-25T20:16:46.0000000+09:00 | 2026-10-25T19:46:47.0000000+09:00 |
 
 task結果267009は実行中を意味し、終了成功ではありません。表の次回時刻を過ぎた場合は新しい観測を待ってください。
 
-CollectionWorker記録：online（health観測 2026-10-25T10:31:25+00:00）。実処理 なし、pause なし。
+CollectionWorker記録：online（health観測 2026-10-25T10:46:23+00:00）。実処理 なし、pause なし。
 許可枠：03:00–07:00 JST / 09:00–12:00 JST / 15:00–18:00 JST、既存10分休憩を維持。
 catalog同期：blocked-review-required（固定runtimeとの差異の確認事項。自動修復しません）。
-公開候補準備の既存health：waiting-local-lock（記録時刻 2026-10-25T19:21:38+09:00）。
+公開候補準備の既存health：up-to-date（記録時刻 2026-10-25T19:41:25+09:00）。
 
 ## D. データ収集・受入・公開
 
@@ -91,7 +91,7 @@ catalog同期：blocked-review-required（固定runtimeとの差異の確認事�
 | 保存レビューの受入候補 | 0 Claim | 保存レビューのUUIDを重複排除し正式受入ID／既承認mappingを除外。未取得レビュー 1件。受入判断は人間 |
 | 保存レビューの保留 | 3 Claim / 23作品（旧準備記録） | 根拠・同定の保存保留。旧保留を含み、現在の残件数ではない |
 | 正式受入済み | 51 Claim / 10 receipts | 既存正式台帳の小集計。意味・根拠の再検証はしない |
-| 公開済み（正式受入分） | 51 Claim（既存照合記録） | 既存照合 2026-10-24T03:02:47+09:00 |
+| 公開済み（正式受入分） | 51 Claim（既存照合記録） | 既存照合 2026-10-25T19:41:25+09:00 |
 | 正式未公開／公開待ち | 0 Claim | 既存照合・公開準備／承認待ち台帳＋現在receipt fingerprint＋公開API revisionの一致のみ確認 |
 | 公開配送 | completed | 署名・公開承認をこの一覧から実行しない |
 
@@ -101,17 +101,17 @@ catalog同期：blocked-review-required（固定runtimeとの差異の確認事�
 
 | 依頼 | 種別／状態 | 試行 | 元状態の記録時刻 |
 |---|---|---|---|
-| issue-25-manga23-20261019 | issue-prepare / blocked | 1 | 2026-10-25T10:30:50+00:00 |
-| issue-25-manga23-20261019-repair1-batch-01 | collect-review / blocked | 1 | 2026-10-25T10:30:53+00:00 |
-| issue-25-manga23-20261019-repair1-batch-03 | collect-review / blocked | 1 | 2026-10-25T10:30:56+00:00 |
-| issue-25-manga23-20261019-repair1-batch-04 | collect-review / blocked | 1 | 2026-10-25T10:30:58+00:00 |
-| issue-25-manga23-20261019-repair1-batch-05 | collect-review / blocked | 1 | 2026-10-25T10:30:59+00:00 |
-| issue-25-manga23-20261019-repair1-batch-06 | collect-review / blocked | 1 | 2026-10-25T10:31:01+00:00 |
-| issue-25-manga23-20261019-repair1-batch-07 | collect-review / blocked | 1 | 2026-10-25T10:31:02+00:00 |
-| issue-25-manga23-20261019-repair1-batch-08 | collect-review / blocked | 1 | 2026-10-25T10:31:04+00:00 |
-| issue-25-manga23-20261019-repair1-batch-09 | collect-review / blocked | 1 | 2026-10-25T10:31:05+00:00 |
-| issue-25-manga23-20261019-repair1-batch-10 | collect-review / blocked | 1 | 2026-10-25T10:31:07+00:00 |
-| issue-5-dot-tezuka-adolf-20261025-batch-01 | collect-review / waiting-control | 5 | 2026-10-25T10:31:23+00:00 |
+| issue-25-manga23-20261019 | issue-prepare / blocked | 1 | 2026-10-25T10:46:50+00:00 |
+| issue-25-manga23-20261019-repair1-batch-01 | collect-review / blocked | 1 | 2026-10-25T10:46:53+00:00 |
+| issue-25-manga23-20261019-repair1-batch-03 | collect-review / blocked | 1 | 2026-10-25T10:46:56+00:00 |
+| issue-25-manga23-20261019-repair1-batch-04 | collect-review / blocked | 1 | 2026-10-25T10:46:57+00:00 |
+| issue-25-manga23-20261019-repair1-batch-05 | collect-review / blocked | 1 | 2026-10-25T10:46:59+00:00 |
+| issue-25-manga23-20261019-repair1-batch-06 | collect-review / blocked | 1 | 2026-10-25T10:46:00+00:00 |
+| issue-25-manga23-20261019-repair1-batch-07 | collect-review / blocked | 1 | 2026-10-25T10:46:01+00:00 |
+| issue-25-manga23-20261019-repair1-batch-08 | collect-review / blocked | 1 | 2026-10-25T10:46:03+00:00 |
+| issue-25-manga23-20261019-repair1-batch-09 | collect-review / blocked | 1 | 2026-10-25T10:46:04+00:00 |
+| issue-25-manga23-20261019-repair1-batch-10 | collect-review / blocked | 1 | 2026-10-25T10:46:06+00:00 |
+| issue-5-dot-tezuka-adolf-20261025-batch-01 | collect-review / waiting-control | 5 | 2026-10-25T10:46:21+00:00 |
 
 [既存Worker結果](https://github.com/isinxnisi/graph-knowledge/tree/codex/collection-control/collection-control/results)
 
