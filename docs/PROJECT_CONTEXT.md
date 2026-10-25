@@ -1,3 +1,5 @@
+2026-10-26、Issue #39の公開前修正010・招待 `@handle` 対応を固定 `71b61fb` でmainへ受入。既存3200/betaをbuild `omVu8EDJfIyAox7r8SYAw` へ切替。全会員プロフィール・表示名・活動公開境界・人物表示を整理し、UUID招待互換・失効を維持。旧29テーブルの保全、別DB復元、Google再ログイン・既存Capsule/コミュニティ/運営/Graph/AIラボを確認。正式VPS・正式会員DB・既存AI実験worktreeは未変更。[受入記録](verification/PUBLIC_ACCOUNTS_BETA_ACCEPTANCE_20261026.md)。
+
 2026-10-25、Issue #36／PR #37の[AI育成ラボ](design/AI_LAB_PUBLICATION.md)を現行mainへ統合する。実推論0・追加学習0・初出動前から観察し、非AI比較と送信前保留を区別する。今回の対象はmainと既存3200／betaでの有効化・評価まで。比較専用ルートは取り込まず、隔離環境を保全する。VPS／正式サイトの配置は今回行わない。
 
 2026-10-25、利用者の公開承認に基づき、コミュニティ第1弾・サイト運営・対応待ち通知を正式origin plunode.netで有効化。Webソース57ab605／build nLR2kDd65nabsE7jj4-EW。005〜008を適用しledger9件、既存会員・Capsule・本番KG revision／2,175対象・1,895関係を保持。本人Google・限定会話・通報から運営確認と履歴まで実操作。C2は準備中、AIは後続。詳細は[本番公開記録](verification/COMMUNITY_PRODUCTION_20261025.md)。

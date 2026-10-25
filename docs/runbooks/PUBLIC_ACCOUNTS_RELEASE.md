@@ -1,6 +1,6 @@
 # 公開プロフィール／AIIdentityの適用と復旧
 
-## 010候補のローカル評価環境（2026-10-26）
+## 010受入済み版のローカル確認環境（2026-10-26）
 
 `codex/issue39-initial-corrections` の専用worktreeで、Web3221・OIDC3222・会員PG55432・公開KGコピー7695を使用する。会員DB、認証secret、Cookie、AIIdentity fixtureは既存betaと独立。公開KGも読取backupを別Neo4jへrestoreしており、元DBへ書き込まない。確認URLと結果は [隔離評価記録](../verification/PUBLIC_ACCOUNTS_INITIAL_CORRECTION_20261025.md) を参照。
 
@@ -8,7 +8,7 @@
 
 専用containerを起動済みの場合、専用worktreeから `node --import tsx scripts/preview-public-accounts.ts` で再開できる。既存review.jsonがあるときは本人設定や投稿を再seedしない。通常の統合試験と同じfixture専用portを使うため同時起動しない。試験へ戻す場合はprivate PIDのcmdlineとcwdが今回のhelperであることを確認してそのprocessへTERMを送り、今回の専用PG/Neo4j containerだけをstopする。volume・backupは保持し、他作業のcontainerやserverを停止しない。Beta/VPSの配置手順とは別の確認環境である。
 
-2026-10-25、Issue #39。初版009は既存3200／betaへ適用済み。公開前修正010は独立環境で評価し、main/beta反映判断を待つ。本番VPS・本番会員DBは操作しない。以下の本番手順は正式公開時に運営者が対象と影響を確認して行う。
+2026-10-25、Issue #39。初版009は既存3200／betaへ適用済み。2026-10-26、公開前修正010・招待公開ID対応の固定 `71b61fb` をmainへ受入、既存3200/betaのGoogle認証・PGを維持して反映済み。[backup・復元・実Googleの記録](../verification/PUBLIC_ACCOUNTS_BETA_ACCEPTANCE_20261026.md)を参照。本番VPS・本番会員DBは操作しない。以下の本番手順は正式公開時に運営者が対象と影響を確認して行う。
 
 ## 前提と記録
 

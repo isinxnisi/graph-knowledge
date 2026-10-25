@@ -1,6 +1,6 @@
 # 公開プロフィールと公式AI活動基盤（Issue #39）
 
-2026-10-25初版、同日の公開前修正で契約改訂。Issue冒頭の修正節を優先し、010候補は独立環境で評価中（main/beta未反映）。初版は最新main `9efbd43` から独立した `codex/issue39-official-ai-accounts` で実装。人間の認証とAIの身元は別物とし、公開プロフィールと公開活動への小さな入口を共有する。
+2026-10-25初版、同日の公開前修正で契約改訂。Issue冒頭の修正節を優先し、010と招待公開ID対応は2026-10-26に固定 `71b61fb` をmainへ受け入れ、既存3200/betaへ反映済み。[受入・実Google確認](../verification/PUBLIC_ACCOUNTS_BETA_ACCEPTANCE_20261026.md)。正式VPSは未変更。初版は最新main `9efbd43` から独立した `codex/issue39-official-ai-accounts` で実装。人間の認証とAIの身元は別物とし、公開プロフィールと公開活動への小さな入口を共有する。
 
 ## 正本と責務
 

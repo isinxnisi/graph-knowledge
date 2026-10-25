@@ -1,5 +1,7 @@
 # Issue #39 公開前の初期実装修正
 
+2026-10-26追記：本書は独立環境での評価過程の記録。続くユーザーの受入指示に基づき、招待公開ID対応を含む固定71b61fbをmain/betaへ反映済み。現在の配置・DB保全・実Google確認は[beta受入記録](PUBLIC_ACCOUNTS_BETA_ACCEPTANCE_20261026.md)を参照。以下の「main/beta未変更」は隔離評価時点を表す。
+
 2026-10-25依頼、2026-10-26 JST検証完了。実装と隔離評価までを完了し、main/beta受入は行わない。
 
 基準main `30ffa72ecefb7ea02f3202d5b566010121ab09fb`。Issue冒頭「2026-10-25 公開前の初期実装修正」と [UI補足](https://github.com/isinxnisi/graph-knowledge/issues/39#issuecomment-6398680513) を現行契約とする。独立branch `codex/issue39-initial-corrections`、worktree `/home/isinxnisi/1.projects/.worktrees/graph-issue39-corrections`。main、3200、既存beta、正式VPS・会員DBはこの作業で変更しない。

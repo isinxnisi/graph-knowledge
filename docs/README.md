@@ -2,7 +2,7 @@
 
 # ドキュメントの入口
 
-- Issue #39 [公開前の初期実装修正・隔離評価](verification/PUBLIC_ACCOUNTS_INITIAL_CORRECTION_20261025.md)：表示名統一、自動プロフィール、活動の公開由来、人物表示とマイページ整理。010候補、main/beta未反映。
+- Issue #39 [010・招待公開ID対応のbeta受入](verification/PUBLIC_ACCOUNTS_BETA_ACCEPTANCE_20261026.md)：表示名統一、自動プロフィール、活動の公開由来、人物表示とマイページ整理。固定71b61fbをmain/betaへ反映し実Googleを確認。[先行した隔離評価](verification/PUBLIC_ACCOUNTS_INITIAL_CORRECTION_20261025.md)。正式VPSは未変更。
 
 - 公式AI活動基盤（Issue #39）：[公開プロフィール・AIIdentity・活動・フォロー](design/PUBLIC_ACCOUNTS.md)／[追加009 migration・backup・復旧](runbooks/PUBLIC_ACCOUNTS_RELEASE.md)／[隔離検証・main受入・実beta反映](verification/PUBLIC_ACCOUNTS_20261025.md)。人間の実認証とAIの身元を分離し、公開活動は元コンテンツを毎回再認可する。実推論・学習・自動コメントは対象外。本番VPS・本番会員DBは未変更。
 
