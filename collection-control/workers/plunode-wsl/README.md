@@ -1,6 +1,6 @@
 # CollectionWorkerの実行制御
 
-確認: 2026-10-25 11:43:30 JST。
+確認: 2026-10-25 11:44:06 JST。
 
 反映済みcontrolRevision: 4／最後の操作: pub-b36af1ba-d283-412e-aa29-465d360928b7-resume。
 
@@ -11,8 +11,6 @@
 次の開始候補: 2026-10-25 15:00:00 JST
 
 最後の操作SHA-256: 58c6e70ebf2ccd9b4d23bb15fc60e419f08d3df5df107ad26f6ff533e47681f6
-
-処理中: issue-25-utc-recovery-08
 
 ChatGPTは[未承認の操作雛形](control-template.json)を読み、運営者が明示した操作だけを controls/plunode-wsl/ID.json に新規登録する。
 
@@ -49,5 +47,5 @@ Issue確認結果:
 - [issue-25-utc-recovery-05](../../results/issue-25-utc-recovery-05/README.md): completed（旧 issue-25-manga23-20261019-repair1-batch-06）
 - [issue-25-utc-recovery-06](../../results/issue-25-utc-recovery-06/README.md): completed（旧 issue-25-manga23-20261019-repair1-batch-07）
 - [issue-25-utc-recovery-07](../../results/issue-25-utc-recovery-07/README.md): completed（旧 issue-25-manga23-20261019-repair1-batch-08）
-- [issue-25-utc-recovery-08](../../results/issue-25-utc-recovery-08/README.md): waiting-control（旧 issue-25-manga23-20261019-repair1-batch-09）
+- [issue-25-utc-recovery-08](../../results/issue-25-utc-recovery-08/README.md): completed（旧 issue-25-manga23-20261019-repair1-batch-09）
 - [issue-25-utc-recovery-09](../../results/issue-25-utc-recovery-09/README.md): waiting-control（旧 issue-25-manga23-20261019-repair1-batch-10）
