@@ -1,3 +1,5 @@
+[開発・運用の統合管理一覧／予定登録](../WORK_STATUS.md)（既存状態の30分観測、AI呼出しなし）。
+
 # ドキュメントの入口
 
 - AI育成ラボ：[0回からの本線統合・公開条件](design/AI_LAB_PUBLICATION.md)／[artifact更新と復旧](runbooks/AI_LAB_ARTIFACT_DELIVERY.md)／[2026-10-25のmain受入・実beta検証](verification/AI_LAB_BETA_20261025.md)。実推論0・追加学習0・初出動前でbeta評価が可能。比較専用ルートは隔離版だけに保持し、VPS／正式サイトは未変更。[10-22の候補検証](verification/AI_LAB_PUBLICATION_20261022.md)は当時の記録。

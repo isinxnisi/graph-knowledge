@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<job id="PlunodeWorkStatus"><script language="JScript"><![CDATA[
+// GUI entry point hides child creation and preserves scheduler exit/wait semantics.
+var shell = new ActiveXObject("WScript.Shell");
+var files = new ActiveXObject("Scripting.FileSystemObject");
+var folder = files.GetParentFolderName(WScript.ScriptFullName);
+var exe = shell.ExpandEnvironmentStrings("%SystemRoot%\\System32\\WindowsPowerShell\\v1.0\\powershell.exe");
+var runner = files.BuildPath(folder, "runner.ps1");
+shell.CurrentDirectory = folder;
+WScript.Quit(shell.Run('"' + exe + '" -NoProfile -NonInteractive -WindowStyle Hidden -ExecutionPolicy Bypass -File "' + runner + '" -Mode Run', 0, true));
+]]></script></job>
