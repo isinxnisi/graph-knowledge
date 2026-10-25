@@ -1,0 +1,3433 @@
+{
+  "schemaVersion": 1,
+  "authority": "scoped-observation-not-knowledge-acceptance",
+  "revision": "b74a4b00-9454-412f-af5d-1317713a543c",
+  "origin": "https://plunode.net",
+  "publicWindow": {
+    "from": "2026-10-25T17:41:39.496707+00:00",
+    "to": "2026-10-25T17:46:01.912100+00:00"
+  },
+  "sourceCommit": "d1e3b99603645f327f5d98c61bc6aa73cbd2bc6a",
+  "definitionHashes": {
+    "catalog.json": "08416f912a42a655f7ddc1871b0d3fbd1309f999ba53f143172082648e688aae",
+    "cohort.json": "de76411f1bf491363d9cc4c4534513c5aaa5202301d62562fe219eb89234ad73"
+  },
+  "searchInputHashes": {
+    "lib/domain/discovery-path-presets.ts": "34f9d0507e941f5dd0d5ff041261dfb49c5ebbfeae921f268cb8adbd0f1d8a5f",
+    "lib/domain/discovery-paths.ts": "60c9a5ff1a8141fcc059d3c2d6011b93941c19c017df6059b13ae990cdb9d7cb",
+    "lib/domain/relation-conditions.ts": "b6e8c2e793561d4bd2c52ac13f32184398e65ddd2ef579de983ce599cf27982a",
+    "lib/domain/relation-patterns.ts": "ffcc481c49348bbdbe9219395d0b49fad171fc94aa735647cb87486b2fab171c",
+    "lib/domain/pattern-graph.ts": "f2e1518a7d0198f274bff7f49351946acf15f017e1f7ff4ba492e89adbd1ac6f",
+    "lib/server/discovery-paths.ts": "245570873ec3bb21223ab92ef21fd553f6bd66b4bce8cad94c9f9eecac5b76d6",
+    "lib/server/pattern-graph.ts": "6b2165494131634388b1a69a0325bd7151f6804287d9d2bce5fb0a569a8baf01",
+    "lib/server/relation-pattern-execution.ts": "2fa50546dec4fd2cce77f7554456de46319807919b8b085ed3fcee6824afe9b6",
+    "lib/server/discovery-targets.ts": "1c21595ea0de30fd38f2821e839879b348bc69c87d1f845073446d60261d7369",
+    "lib/domain/contribution.ts": "0864214a74e18fa1bfa73db717f708ff0025d9147fb567050e69c9e9aa958130",
+    "lib/domain/organization-participation.ts": "a993c0ba959a040650540026c3ec2bb10f82417143887115bb43d503824060fc",
+    "lib/domain/exploration.ts": "bbd5c7917c655253aa3c5a0b3ebc292f72a33138d962abb78c8c163fe1c006e2",
+    "lib/domain/predicates.ts": "d1ec7bc98bc8d7bd688a36e4512517e8894462d1bc79d70868888ba6be5d15e0",
+    "lib/domain/dates.ts": "b5cfe90d891a2b12b31f7558cec48764706d00068bdb39666429df9c63532375",
+    "lib/server/graph.ts": "9f75e21f6ffdb8b88d6667882b8eca2d18cbf85337af4bc66ac05e1800f9507d",
+    "lib/server/queries.ts": "e4e794a49f3fe167404481202dae15c9f8258651be46bd6d1c2be6e284cfd866",
+    "lib/server/http.ts": "23b2981786e7bd98bbb8f7b6490153f8297d8b1955ffd141ac154f89c8716d2c",
+    "lib/server/neighbor-cursor.ts": "99996145cace9acafe88f512aa4ab708561a19e8139ab17b575bc71aa70be8c8",
+    "lib/server/read-db.ts": "201833bcf667f9d1c7cc7efa52aaba4701ca22b30f961e7370cfd3df02c31bd0",
+    "lib/server/public-revision.ts": "9d95351a81fcc03aad19e927871426231861c0d74dfedff3f607c5dfc0a5a2f4",
+    "lib/server/mappers.ts": "378d13daa71318e19ec0d0a19cef90aade7e4e271f9af45dd74b5be7bc1e6163",
+    "lib/server/relation-http.ts": "200e9f075f89ae71e2870a12040147938a1b947d46bc76c7222304d8ef5f2f92",
+    "lib/domain/api.ts": "7dc1eb56a6c19597e3ea543efb9fe79f88181d72f2018e8126cdf1e36527ee1b",
+    "lib/domain/discovery-targets.ts": "f49d3dedf48d3851fc53094a5aed94fedd0026a6d100d4b1e3d6190e4dc3c8e0",
+    "app/api/entities/route.ts": "1cc7c27d4d34f1fb7a5db156ca37ef5bbf7fe795f2cf956e1397f2a5d5bf5285",
+    "app/api/entities/[id]/neighbors/route.ts": "0cb3806ebb36fa30566ec43a6582939eacfbb60df71d9172e10b6e1e911a3b98",
+    "app/api/discovery/paths/route.ts": "6e910c51f751b07bdf050692813c24883a319eeb4b71eba013738725937255b8",
+    "app/api/discovery/entities/route.ts": "41141ce5ccad7ece7a0be9c0bb1427bad4f1f2572046cb29d848d56b05a596f5",
+    "package-lock.json": "2167a62bb95f9c5008bfaa6bb225cc0443922dc2bbacce2d7849cccf9ad105bd"
+  },
+  "coverage": {
+    "anchors": 18,
+    "anchorIds": [
+      "0820c3e8-7219-4e57-abb0-7d04e253fd4a",
+      "0c29d0e2-685f-4c56-9805-6bf1baf40e7c",
+      "1530af15-129d-40bf-a1ca-ce8343dc7491",
+      "1abd838a-b22d-45a4-913f-0ef09205e1e8",
+      "29e9caea-6c44-4c1f-9abc-f4350003ca3b",
+      "2b7c6289-d050-4dc0-93e3-9307681253cc",
+      "326dd821-2ca6-406a-a683-e424eb534998",
+      "3427040b-88fd-4db5-b546-dd237abad032",
+      "48ca311c-c403-4a24-a1e3-cb6392764397",
+      "52a671d1-bc5c-4a52-9d98-8c9418f5ec5c",
+      "7ca5fc7d-545a-4d39-a2dc-6cce86390112",
+      "87ce941c-6937-49f8-912d-4800d14a48c6",
+      "8e322435-4318-4ad0-835b-3f71d2537421",
+      "a13205e2-220c-4b7d-8a1a-39dbefe52db8",
+      "bb47fc9c-87b1-4df5-a7d6-ecf175d93eb0",
+      "d5e39491-5a5f-423c-9222-2eb3c18db9a8",
+      "d900543a-9c11-48c1-be76-1822b756fcc4",
+      "e0183e9c-dc97-4d85-b46e-14a1b76707fd"
+    ],
+    "policy": "complete-incident-claims-for-fixed-anchors",
+    "entitiesInProjection": 48,
+    "claims": 64,
+    "fullKg": false
+  },
+  "representativeRoutes": [
+    {
+      "id": "pluto-billy-role",
+      "case": "pluto",
+      "type": "S1",
+      "nodeIds": [
+        "2b7c6289-d050-4dc0-93e3-9307681253cc",
+        "29e9caea-6c44-4c1f-9abc-f4350003ca3b",
+        "326dd821-2ca6-406a-a683-e424eb534998"
+      ],
+      "claimIds": [
+        "dbc08a85-9165-4cc8-a3af-d133c83d8f67",
+        "29f3bd67-b461-49a8-bdfa-d98b1d7dcfe1"
+      ],
+      "question": "PLUTOのプロデュース担当は別作品でストーリー共同制作をしている？",
+      "requiredConditions": {
+        "polarity": "affirmed",
+        "nodesDistinct": true,
+        "steps": [
+          {
+            "predicate": "CONTRIBUTED_TO",
+            "traversal": "reverse",
+            "role": "PRODUCING",
+            "organizationPosition": null,
+            "period": "unrestricted-preserve-unknown",
+            "scope": "preserve-this-Claim-no-cross-step-equality"
+          },
+          {
+            "predicate": "CONTRIBUTED_TO",
+            "traversal": "forward",
+            "role": "STORY_CO_CREATION",
+            "organizationPosition": null,
+            "period": "unrestricted-preserve-unknown",
+            "scope": "preserve-this-Claim-no-cross-step-equality"
+          }
+        ]
+      },
+      "state": "published",
+      "missingClaimIds": [],
+      "steps": [
+        {
+          "claim": {
+            "id": "dbc08a85-9165-4cc8-a3af-d133c83d8f67",
+            "subjectId": "29e9caea-6c44-4c1f-9abc-f4350003ca3b",
+            "objectId": "2b7c6289-d050-4dc0-93e3-9307681253cc",
+            "predicate": "CONTRIBUTED_TO",
+            "polarity": "affirmed",
+            "period": {
+              "from": null,
+              "to": null
+            },
+            "contribution": {
+              "roleId": "PRODUCING",
+              "scope": {
+                "kind": "publication",
+                "isbn13": "9784091874313",
+                "volumeLabel": "第1巻",
+                "editionLabel": null,
+                "language": "ja"
+              }
+            },
+            "organizationParticipation": null,
+            "eventParticipation": null,
+            "sourceCount": 1
+          },
+          "traversal": "reverse",
+          "citations": [
+            {
+              "id": "48922d83-9686-4bc9-b5b4-5f4bf1ffd8b4",
+              "locator": "タイトル直下のクレジット",
+              "note": "v1の広いClaim e3b37447-87f5-40ed-b738-6ba37578c8c3 と同じ資料に由来する限定Claim。ユーザーが公式の商品情報上のRole表記と対象刊行物を確認して受入。指定された刊行物の商品情報において、その人物が当該Roleでクレジットされている範囲。当該巻だけの担当、全巻・全版での担当、全期間の担当を意味しない。受入日は記録日、時刻は未確認のため日付境界を用いる。",
+              "accessedAt": "2026-10-03",
+              "stance": "support",
+              "source": {
+                "id": "b7266fbf-a778-407e-8a4b-374b97523a26",
+                "kind": "web",
+                "title": "小学館：PLUTO 第1巻 商品情報",
+                "authors": [],
+                "publisher": "小学館",
+                "url": "https://shogakukan-comic.jp/book?isbn=9784091874313",
+                "publishedAt": null,
+                "edition": "PLUTO 第1巻",
+                "note": "出版社のWeb商品情報を確認。書籍本文は未確認。発売日はWeb公開日や制作関与期間ではありません。",
+                "isDemo": false
+              },
+              "roleEvidence": {
+                "originalText": "長崎尚志プロデュース",
+                "language": "ja"
+              },
+              "positionEvidence": null,
+              "eventParticipationEvidence": null
+            }
+          ]
+        },
+        {
+          "claim": {
+            "id": "29f3bd67-b461-49a8-bdfa-d98b1d7dcfe1",
+            "subjectId": "29e9caea-6c44-4c1f-9abc-f4350003ca3b",
+            "objectId": "326dd821-2ca6-406a-a683-e424eb534998",
+            "predicate": "CONTRIBUTED_TO",
+            "polarity": "affirmed",
+            "period": {
+              "from": null,
+              "to": null
+            },
+            "contribution": {
+              "roleId": "STORY_CO_CREATION",
+              "scope": {
+                "kind": "publication",
+                "isbn13": "9784063729221",
+                "volumeLabel": "第4巻",
+                "editionLabel": null,
+                "language": "ja"
+              }
+            },
+            "organizationParticipation": null,
+            "eventParticipation": null,
+            "sourceCount": 1
+          },
+          "traversal": "forward",
+          "citations": [
+            {
+              "id": "ef69e88a-9351-4a14-a6ec-db4f4eec0bdc",
+              "locator": "タイトル直下のクレジット・内容紹介末尾",
+              "note": "v1の広いClaim 1ad08ee5-bbc3-41bf-b647-4b7419820a14 と同じ資料に由来する限定Claim。ユーザーが公式の商品情報上のRole表記と対象刊行物を確認して受入。指定された刊行物の商品情報において、その人物が当該Roleでクレジットされている範囲。当該巻だけの担当、全巻・全版での担当、全期間の担当を意味しない。受入日は記録日、時刻は未確認のため日付境界を用いる。",
+              "accessedAt": "2026-10-03",
+              "stance": "support",
+              "source": {
+                "id": "699c3147-79e2-43c8-8c08-9369eab559fa",
+                "kind": "web",
+                "title": "講談社：BILLY BAT 第4巻 商品情報",
+                "authors": [],
+                "publisher": "講談社",
+                "url": "https://www.kodansha.co.jp/comic/products/0000014047",
+                "publishedAt": null,
+                "edition": "BILLY BAT 第4巻",
+                "note": "出版社のWeb商品情報を確認。書籍本文は未確認。発売日はWeb公開日や制作関与期間ではありません。",
+                "isDemo": false
+              },
+              "roleEvidence": {
+                "originalText": "ストーリー共同制作",
+                "language": "ja"
+              },
+              "positionEvidence": null,
+              "eventParticipationEvidence": null
+            }
+          ]
+        }
+      ],
+      "names": [
+        "PLUTO",
+        "長崎尚志",
+        "BILLY BAT"
+      ]
+    },
+    {
+      "id": "pluto-keaton-role",
+      "case": "pluto",
+      "type": "S1",
+      "nodeIds": [
+        "2b7c6289-d050-4dc0-93e3-9307681253cc",
+        "29e9caea-6c44-4c1f-9abc-f4350003ca3b",
+        "e87a40f9-3139-47a1-a962-6610eb2b8878"
+      ],
+      "claimIds": [
+        "dbc08a85-9165-4cc8-a3af-d133c83d8f67",
+        "7142e160-c0d5-4358-9b70-63c03bfd44ad"
+      ],
+      "question": "PLUTOのプロデュース担当は別作品で脚本を担当している？",
+      "requiredConditions": {
+        "polarity": "affirmed",
+        "nodesDistinct": true,
+        "steps": [
+          {
+            "predicate": "CONTRIBUTED_TO",
+            "traversal": "reverse",
+            "role": "PRODUCING",
+            "organizationPosition": null,
+            "period": "unrestricted-preserve-unknown",
+            "scope": "preserve-this-Claim-no-cross-step-equality"
+          },
+          {
+            "predicate": "CONTRIBUTED_TO",
+            "traversal": "forward",
+            "role": "SCRIPT_WRITING",
+            "organizationPosition": null,
+            "period": "unrestricted-preserve-unknown",
+            "scope": "preserve-this-Claim-no-cross-step-equality"
+          }
+        ]
+      },
+      "state": "published",
+      "missingClaimIds": [],
+      "steps": [
+        {
+          "claim": {
+            "id": "dbc08a85-9165-4cc8-a3af-d133c83d8f67",
+            "subjectId": "29e9caea-6c44-4c1f-9abc-f4350003ca3b",
+            "objectId": "2b7c6289-d050-4dc0-93e3-9307681253cc",
+            "predicate": "CONTRIBUTED_TO",
+            "polarity": "affirmed",
+            "period": {
+              "from": null,
+              "to": null
+            },
+            "contribution": {
+              "roleId": "PRODUCING",
+              "scope": {
+                "kind": "publication",
+                "isbn13": "9784091874313",
+                "volumeLabel": "第1巻",
+                "editionLabel": null,
+                "language": "ja"
+              }
+            },
+            "organizationParticipation": null,
+            "eventParticipation": null,
+            "sourceCount": 1
+          },
+          "traversal": "reverse",
+          "citations": [
+            {
+              "id": "48922d83-9686-4bc9-b5b4-5f4bf1ffd8b4",
+              "locator": "タイトル直下のクレジット",
+              "note": "v1の広いClaim e3b37447-87f5-40ed-b738-6ba37578c8c3 と同じ資料に由来する限定Claim。ユーザーが公式の商品情報上のRole表記と対象刊行物を確認して受入。指定された刊行物の商品情報において、その人物が当該Roleでクレジットされている範囲。当該巻だけの担当、全巻・全版での担当、全期間の担当を意味しない。受入日は記録日、時刻は未確認のため日付境界を用いる。",
+              "accessedAt": "2026-10-03",
+              "stance": "support",
+              "source": {
+                "id": "b7266fbf-a778-407e-8a4b-374b97523a26",
+                "kind": "web",
+                "title": "小学館：PLUTO 第1巻 商品情報",
+                "authors": [],
+                "publisher": "小学館",
+                "url": "https://shogakukan-comic.jp/book?isbn=9784091874313",
+                "publishedAt": null,
+                "edition": "PLUTO 第1巻",
+                "note": "出版社のWeb商品情報を確認。書籍本文は未確認。発売日はWeb公開日や制作関与期間ではありません。",
+                "isDemo": false
+              },
+              "roleEvidence": {
+                "originalText": "長崎尚志プロデュース",
+                "language": "ja"
+              },
+              "positionEvidence": null,
+              "eventParticipationEvidence": null
+            }
+          ]
+        },
+        {
+          "claim": {
+            "id": "7142e160-c0d5-4358-9b70-63c03bfd44ad",
+            "subjectId": "29e9caea-6c44-4c1f-9abc-f4350003ca3b",
+            "objectId": "e87a40f9-3139-47a1-a962-6610eb2b8878",
+            "predicate": "CONTRIBUTED_TO",
+            "polarity": "affirmed",
+            "period": {
+              "from": null,
+              "to": null
+            },
+            "contribution": {
+              "roleId": "SCRIPT_WRITING",
+              "scope": {
+                "kind": "publication",
+                "isbn13": "9784091841612",
+                "volumeLabel": "第1巻",
+                "editionLabel": "完全版",
+                "language": "ja"
+              }
+            },
+            "organizationParticipation": null,
+            "eventParticipation": null,
+            "sourceCount": 1
+          },
+          "traversal": "forward",
+          "citations": [
+            {
+              "id": "2c3c2891-fb58-47f8-a40b-591999532432",
+              "locator": "タイトル直下のクレジット",
+              "note": "v1の広いClaim 48c3605b-34d8-409d-a4d2-fdd50c524c74 と同じ資料に由来する限定Claim。ユーザーが公式の商品情報上のRole表記と対象刊行物を確認して受入。指定された刊行物の商品情報において、その人物が当該Roleでクレジットされている範囲。当該巻だけの担当、全巻・全版での担当、全期間の担当を意味しない。受入日は記録日、時刻は未確認のため日付境界を用いる。",
+              "accessedAt": "2026-10-03",
+              "stance": "support",
+              "source": {
+                "id": "3b00d7a4-2c90-4771-94b6-870c64e12f57",
+                "kind": "web",
+                "title": "小学館：MASTERキートン 完全版 第1巻 商品情報",
+                "authors": [],
+                "publisher": "小学館",
+                "url": "https://shogakukan-comic.jp/book?isbn=9784091841612",
+                "publishedAt": null,
+                "edition": "MASTERキートン 完全版 第1巻",
+                "note": "出版社のWeb商品情報を確認。書籍本文は未確認。発売日はWeb公開日や制作関与期間ではありません。",
+                "isDemo": false
+              },
+              "roleEvidence": {
+                "originalText": "脚本",
+                "language": "ja"
+              },
+              "positionEvidence": null,
+              "eventParticipationEvidence": null
+            }
+          ]
+        }
+      ],
+      "names": [
+        "PLUTO",
+        "長崎尚志",
+        "MASTERキートン"
+      ]
+    },
+    {
+      "id": "pluto-remaster-role",
+      "case": "pluto",
+      "type": "S1",
+      "nodeIds": [
+        "2b7c6289-d050-4dc0-93e3-9307681253cc",
+        "29e9caea-6c44-4c1f-9abc-f4350003ca3b",
+        "87ce941c-6937-49f8-912d-4800d14a48c6"
+      ],
+      "claimIds": [
+        "dbc08a85-9165-4cc8-a3af-d133c83d8f67",
+        "4ad66ba5-a65d-4942-939e-c84a67e735d9"
+      ],
+      "question": "PLUTOのプロデュース担当を著者欄の別作品へ辿れる？",
+      "requiredConditions": {
+        "polarity": "affirmed",
+        "nodesDistinct": true,
+        "steps": [
+          {
+            "predicate": "CONTRIBUTED_TO",
+            "traversal": "reverse",
+            "role": "PRODUCING",
+            "organizationPosition": null,
+            "period": "unrestricted-preserve-unknown",
+            "scope": "preserve-this-Claim-no-cross-step-equality"
+          },
+          {
+            "predicate": "CONTRIBUTED_TO",
+            "traversal": "forward",
+            "role": "AUTHORSHIP",
+            "organizationPosition": null,
+            "period": "unrestricted-preserve-unknown",
+            "scope": "preserve-this-Claim-no-cross-step-equality"
+          }
+        ]
+      },
+      "state": "published",
+      "missingClaimIds": [],
+      "steps": [
+        {
+          "claim": {
+            "id": "dbc08a85-9165-4cc8-a3af-d133c83d8f67",
+            "subjectId": "29e9caea-6c44-4c1f-9abc-f4350003ca3b",
+            "objectId": "2b7c6289-d050-4dc0-93e3-9307681253cc",
+            "predicate": "CONTRIBUTED_TO",
+            "polarity": "affirmed",
+            "period": {
+              "from": null,
+              "to": null
+            },
+            "contribution": {
+              "roleId": "PRODUCING",
+              "scope": {
+                "kind": "publication",
+                "isbn13": "9784091874313",
+                "volumeLabel": "第1巻",
+                "editionLabel": null,
+                "language": "ja"
+              }
+            },
+            "organizationParticipation": null,
+            "eventParticipation": null,
+            "sourceCount": 1
+          },
+          "traversal": "reverse",
+          "citations": [
+            {
+              "id": "48922d83-9686-4bc9-b5b4-5f4bf1ffd8b4",
+              "locator": "タイトル直下のクレジット",
+              "note": "v1の広いClaim e3b37447-87f5-40ed-b738-6ba37578c8c3 と同じ資料に由来する限定Claim。ユーザーが公式の商品情報上のRole表記と対象刊行物を確認して受入。指定された刊行物の商品情報において、その人物が当該Roleでクレジットされている範囲。当該巻だけの担当、全巻・全版での担当、全期間の担当を意味しない。受入日は記録日、時刻は未確認のため日付境界を用いる。",
+              "accessedAt": "2026-10-03",
+              "stance": "support",
+              "source": {
+                "id": "b7266fbf-a778-407e-8a4b-374b97523a26",
+                "kind": "web",
+                "title": "小学館：PLUTO 第1巻 商品情報",
+                "authors": [],
+                "publisher": "小学館",
+                "url": "https://shogakukan-comic.jp/book?isbn=9784091874313",
+                "publishedAt": null,
+                "edition": "PLUTO 第1巻",
+                "note": "出版社のWeb商品情報を確認。書籍本文は未確認。発売日はWeb公開日や制作関与期間ではありません。",
+                "isDemo": false
+              },
+              "roleEvidence": {
+                "originalText": "長崎尚志プロデュース",
+                "language": "ja"
+              },
+              "positionEvidence": null,
+              "eventParticipationEvidence": null
+            }
+          ]
+        },
+        {
+          "claim": {
+            "id": "4ad66ba5-a65d-4942-939e-c84a67e735d9",
+            "subjectId": "29e9caea-6c44-4c1f-9abc-f4350003ca3b",
+            "objectId": "87ce941c-6937-49f8-912d-4800d14a48c6",
+            "predicate": "CONTRIBUTED_TO",
+            "polarity": "affirmed",
+            "period": {
+              "from": null,
+              "to": null
+            },
+            "contribution": {
+              "roleId": "AUTHORSHIP",
+              "scope": {
+                "kind": "publication",
+                "isbn13": "9784091867261",
+                "volumeLabel": null,
+                "editionLabel": null,
+                "language": "ja"
+              }
+            },
+            "organizationParticipation": null,
+            "eventParticipation": null,
+            "sourceCount": 1
+          },
+          "traversal": "forward",
+          "citations": [
+            {
+              "id": "2aa0a209-db24-47a6-b04d-d8348b946c09",
+              "locator": "題名直下の著者・クレジット欄",
+              "note": "資料の明示クレジット、または漫画の本人制作回想だけ。語の置換や期間の転記をしない。 既存の広い制作関与Claimと独立した限定Claimです。同一資料由来は独立根拠の増加を意味しません。期間は未確認のまま保持します。 この指定刊行物について確認されたクレジットの適用範囲で、その巻だけ・全巻全版・全期間の担当ではありません。",
+              "accessedAt": "2026-10-14",
+              "stance": "support",
+              "source": {
+                "id": "80505354-d721-4297-bb2c-1eb4451ebd80",
+                "kind": "web",
+                "title": "MASTERキートン Reマスター — 小学館商品情報",
+                "authors": [],
+                "publisher": "小学館",
+                "url": "https://shogakukan-comic.jp/book?isbn=9784091867261",
+                "publishedAt": null,
+                "edition": null,
+                "note": "公式のクレジット・著者本人の制作回想・会社の人物関与記録を参照。ウェブ本文・画像・あらすじは転載していません。",
+                "isDemo": false
+              },
+              "roleEvidence": {
+                "originalText": "著: 長崎尚志",
+                "language": "ja"
+              },
+              "positionEvidence": null,
+              "eventParticipationEvidence": null
+            }
+          ]
+        }
+      ],
+      "names": [
+        "PLUTO",
+        "長崎尚志",
+        "MASTERキートン Reマスター"
+      ]
+    },
+    {
+      "id": "pluto-next-person",
+      "case": "pluto",
+      "type": "S3",
+      "nodeIds": [
+        "2b7c6289-d050-4dc0-93e3-9307681253cc",
+        "d900543a-9c11-48c1-be76-1822b756fcc4",
+        "87ce941c-6937-49f8-912d-4800d14a48c6",
+        "29e9caea-6c44-4c1f-9abc-f4350003ca3b"
+      ],
+      "claimIds": [
+        "839b0bb8-1781-4a3e-8446-9a22d08d1658",
+        "88c2e0d1-f65e-4d6c-818d-3a7f39d9b45f",
+        "4ad66ba5-a65d-4942-939e-c84a67e735d9"
+      ],
+      "question": "浦沢直樹の別作品から別の著者へ進める？",
+      "requiredConditions": {
+        "polarity": "affirmed",
+        "nodesDistinct": true,
+        "steps": [
+          {
+            "predicate": "CONTRIBUTED_TO",
+            "traversal": "reverse",
+            "role": "AUTHORSHIP",
+            "organizationPosition": null,
+            "period": "unrestricted-preserve-unknown",
+            "scope": "preserve-this-Claim-no-cross-step-equality"
+          },
+          {
+            "predicate": "CONTRIBUTED_TO",
+            "traversal": "forward",
+            "role": null,
+            "organizationPosition": null,
+            "period": "unrestricted-preserve-unknown",
+            "scope": "preserve-this-Claim-no-cross-step-equality"
+          },
+          {
+            "predicate": "CONTRIBUTED_TO",
+            "traversal": "reverse",
+            "role": "AUTHORSHIP",
+            "organizationPosition": null,
+            "period": "unrestricted-preserve-unknown",
+            "scope": "preserve-this-Claim-no-cross-step-equality"
+          }
+        ]
+      },
+      "state": "published",
+      "missingClaimIds": [],
+      "steps": [
+        {
+          "claim": {
+            "id": "839b0bb8-1781-4a3e-8446-9a22d08d1658",
+            "subjectId": "d900543a-9c11-48c1-be76-1822b756fcc4",
+            "objectId": "2b7c6289-d050-4dc0-93e3-9307681253cc",
+            "predicate": "CONTRIBUTED_TO",
+            "polarity": "affirmed",
+            "period": {
+              "from": null,
+              "to": null
+            },
+            "contribution": {
+              "roleId": "AUTHORSHIP",
+              "scope": {
+                "kind": "publication",
+                "isbn13": "9784091874313",
+                "volumeLabel": "第1巻",
+                "editionLabel": null,
+                "language": "ja"
+              }
+            },
+            "organizationParticipation": null,
+            "eventParticipation": null,
+            "sourceCount": 1
+          },
+          "traversal": "reverse",
+          "citations": [
+            {
+              "id": "ef16246b-7930-4cfb-8f44-770162f7fc60",
+              "locator": "書誌の責任表示（ISBN一致をOpenSearchでも照合）",
+              "note": "本人名に掛かる著だけを認定し、併記された他の人・組織の役割は生成しない。書誌確認であり原本実見ではない。 既存の広い制作関与Claimと独立した限定Claimです。同一資料由来は独立根拠の増加を意味しません。期間は未確認のまま保持します。 この指定刊行物について確認されたクレジットの適用範囲で、その巻だけ・全巻全版・全期間の担当ではありません。",
+              "accessedAt": "2026-10-14",
+              "stance": "support",
+              "source": {
+                "id": "a091ec69-8902-4956-b181-eab5176c38be",
+                "kind": "web",
+                "title": "国立国会図書館サーチ：PLUTO 第1巻 書誌",
+                "authors": [],
+                "publisher": "国立国会図書館",
+                "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I000007510854",
+                "publishedAt": null,
+                "edition": null,
+                "note": "ISBNを照合した書誌の責任表示。原本実見や全巻全版の担当認定ではありません。",
+                "isDemo": false
+              },
+              "roleEvidence": {
+                "originalText": "手塚眞 監修,浦沢直樹 [ほか]著",
+                "language": "ja"
+              },
+              "positionEvidence": null,
+              "eventParticipationEvidence": null
+            }
+          ]
+        },
+        {
+          "claim": {
+            "id": "88c2e0d1-f65e-4d6c-818d-3a7f39d9b45f",
+            "subjectId": "d900543a-9c11-48c1-be76-1822b756fcc4",
+            "objectId": "87ce941c-6937-49f8-912d-4800d14a48c6",
+            "predicate": "CONTRIBUTED_TO",
+            "polarity": "affirmed",
+            "period": {
+              "from": null,
+              "to": null
+            },
+            "contribution": {
+              "roleId": null,
+              "scope": {
+                "kind": "publication",
+                "isbn13": "9784091867261",
+                "volumeLabel": null,
+                "editionLabel": null,
+                "language": "ja"
+              }
+            },
+            "organizationParticipation": null,
+            "eventParticipation": null,
+            "sourceCount": 1
+          },
+          "traversal": "forward",
+          "citations": [
+            {
+              "id": "03442d84-c725-4f0c-8e2f-8f406b7c0cfb",
+              "locator": "題名直下の著者・クレジット欄",
+              "note": "原表記（ja）: 著: 浦沢直樹。指定刊行物の商品情報で確認されたクレジットの適用範囲です。その巻だけの担当、全巻・全版の担当、全期間の関与は認定しません。著・作・画を新しいRoleへ正規化せず、資料の日付や作品の連載期間をClaim.periodへ転記しません。",
+              "accessedAt": "2026-10-14",
+              "stance": "support",
+              "source": {
+                "id": "80505354-d721-4297-bb2c-1eb4451ebd80",
+                "kind": "web",
+                "title": "MASTERキートン Reマスター — 小学館商品情報",
+                "authors": [],
+                "publisher": "小学館",
+                "url": "https://shogakukan-comic.jp/book?isbn=9784091867261",
+                "publishedAt": null,
+                "edition": null,
+                "note": "公式のクレジット・著者本人の制作回想・会社の人物関与記録を参照。ウェブ本文・画像・あらすじは転載していません。",
+                "isDemo": false
+              },
+              "roleEvidence": null,
+              "positionEvidence": null,
+              "eventParticipationEvidence": null
+            }
+          ]
+        },
+        {
+          "claim": {
+            "id": "4ad66ba5-a65d-4942-939e-c84a67e735d9",
+            "subjectId": "29e9caea-6c44-4c1f-9abc-f4350003ca3b",
+            "objectId": "87ce941c-6937-49f8-912d-4800d14a48c6",
+            "predicate": "CONTRIBUTED_TO",
+            "polarity": "affirmed",
+            "period": {
+              "from": null,
+              "to": null
+            },
+            "contribution": {
+              "roleId": "AUTHORSHIP",
+              "scope": {
+                "kind": "publication",
+                "isbn13": "9784091867261",
+                "volumeLabel": null,
+                "editionLabel": null,
+                "language": "ja"
+              }
+            },
+            "organizationParticipation": null,
+            "eventParticipation": null,
+            "sourceCount": 1
+          },
+          "traversal": "reverse",
+          "citations": [
+            {
+              "id": "2aa0a209-db24-47a6-b04d-d8348b946c09",
+              "locator": "題名直下の著者・クレジット欄",
+              "note": "資料の明示クレジット、または漫画の本人制作回想だけ。語の置換や期間の転記をしない。 既存の広い制作関与Claimと独立した限定Claimです。同一資料由来は独立根拠の増加を意味しません。期間は未確認のまま保持します。 この指定刊行物について確認されたクレジットの適用範囲で、その巻だけ・全巻全版・全期間の担当ではありません。",
+              "accessedAt": "2026-10-14",
+              "stance": "support",
+              "source": {
+                "id": "80505354-d721-4297-bb2c-1eb4451ebd80",
+                "kind": "web",
+                "title": "MASTERキートン Reマスター — 小学館商品情報",
+                "authors": [],
+                "publisher": "小学館",
+                "url": "https://shogakukan-comic.jp/book?isbn=9784091867261",
+                "publishedAt": null,
+                "edition": null,
+                "note": "公式のクレジット・著者本人の制作回想・会社の人物関与記録を参照。ウェブ本文・画像・あらすじは転載していません。",
+                "isDemo": false
+              },
+              "roleEvidence": {
+                "originalText": "著: 長崎尚志",
+                "language": "ja"
+              },
+              "positionEvidence": null,
+              "eventParticipationEvidence": null
+            }
+          ]
+        }
+      ],
+      "names": [
+        "PLUTO",
+        "浦沢直樹",
+        "MASTERキートン Reマスター",
+        "長崎尚志"
+      ]
+    },
+    {
+      "id": "hikaru-bakuman",
+      "case": "hikaru",
+      "type": "S1",
+      "nodeIds": [
+        "0c29d0e2-685f-4c56-9805-6bf1baf40e7c",
+        "d5e39491-5a5f-423c-9222-2eb3c18db9a8",
+        "3427040b-88fd-4db5-b546-dd237abad032"
+      ],
+      "claimIds": [
+        "7ae1c51b-9ba0-46fb-a070-41ac310e8c94",
+        "cd294bb9-a7de-4f21-95c2-84b878c0e7cc"
+      ],
+      "question": "ヒカルの碁の作画担当には著者欄で辿れる別作品がある？",
+      "requiredConditions": {
+        "polarity": "affirmed",
+        "nodesDistinct": true,
+        "steps": [
+          {
+            "predicate": "CONTRIBUTED_TO",
+            "traversal": "reverse",
+            "role": "DRAWING",
+            "organizationPosition": null,
+            "period": "unrestricted-preserve-unknown",
+            "scope": "preserve-this-Claim-no-cross-step-equality"
+          },
+          {
+            "predicate": "CONTRIBUTED_TO",
+            "traversal": "forward",
+            "role": "AUTHORSHIP",
+            "organizationPosition": null,
+            "period": "unrestricted-preserve-unknown",
+            "scope": "preserve-this-Claim-no-cross-step-equality"
+          }
+        ]
+      },
+      "state": "published",
+      "missingClaimIds": [],
+      "steps": [
+        {
+          "claim": {
+            "id": "7ae1c51b-9ba0-46fb-a070-41ac310e8c94",
+            "subjectId": "d5e39491-5a5f-423c-9222-2eb3c18db9a8",
+            "objectId": "0c29d0e2-685f-4c56-9805-6bf1baf40e7c",
+            "predicate": "CONTRIBUTED_TO",
+            "polarity": "affirmed",
+            "period": {
+              "from": null,
+              "to": null
+            },
+            "contribution": {
+              "roleId": "DRAWING",
+              "scope": null
+            },
+            "organizationParticipation": null,
+            "eventParticipation": null,
+            "sourceCount": 1
+          },
+          "traversal": "reverse",
+          "citations": [
+            {
+              "id": "995e3891-aa9c-4af6-a2ba-3114dfb61fec",
+              "locator": "見出し「ジャーナリストクラブ賞受賞」下の受賞説明、原作者・作画・監修を列挙する文。元HTML 25行、Shift_JIS元body byte [1024,1074) に作品名と担当者の短い文脈。",
+              "note": "「ヒカルの碁」の原作者ほったゆみ氏、作画の小畑健氏。作品単位の作画を支持する。scope=nullは適用巻・版の未構造化であり全巻・全版の証明ではない。期間不明。保存NDLの「漫画」は対象漫画の照合補助でありRoleへ自動変換しない。",
+              "accessedAt": "2026-10-20",
+              "stance": "support",
+              "source": {
+                "id": "932fb74b-9292-4fb9-9f8a-29ce35d83823",
+                "kind": "web",
+                "title": "ジャーナリスト賞",
+                "authors": [],
+                "publisher": "日本棋院",
+                "url": "https://archive.nihonkiin.or.jp/kishihp/umezawa/journal.htm",
+                "publishedAt": null,
+                "edition": null,
+                "note": "見出し「ジャーナリストクラブ賞受賞」。ページ表示日2001年12月13日。作品単位の作画明示のみ。取得2026-10-20T13:27:00.414Z、元HTML SHA-256 86cfb31314e9e3fe2bf26e04425580c2dc3d5660cbd3b522e32e8be1d533af1b。巻・版・ISBN・制作期間の証明に拡張しない。",
+                "isDemo": false
+              },
+              "roleEvidence": {
+                "originalText": "作画の小畑健氏",
+                "language": "ja"
+              },
+              "positionEvidence": null,
+              "eventParticipationEvidence": null
+            }
+          ]
+        },
+        {
+          "claim": {
+            "id": "cd294bb9-a7de-4f21-95c2-84b878c0e7cc",
+            "subjectId": "d5e39491-5a5f-423c-9222-2eb3c18db9a8",
+            "objectId": "3427040b-88fd-4db5-b546-dd237abad032",
+            "predicate": "CONTRIBUTED_TO",
+            "polarity": "affirmed",
+            "period": {
+              "from": null,
+              "to": null
+            },
+            "contribution": {
+              "roleId": "AUTHORSHIP",
+              "scope": {
+                "kind": "publication",
+                "isbn13": "9784086196901",
+                "volumeLabel": "第1巻",
+                "editionLabel": null,
+                "language": "ja"
+              }
+            },
+            "organizationParticipation": null,
+            "eventParticipation": null,
+            "sourceCount": 1
+          },
+          "traversal": "forward",
+          "citations": [
+            {
+              "id": "c2a11bab-9544-49af-a352-668f7cb08aff",
+              "locator": "紙版ISBN／著者欄",
+              "note": "同一ISBNを明示する出版社の著者欄による別候補。NDLの漫画をDRAWING／AUTHORSHIPへ置換したものではない。原資料間の異なる呼称を保持する。",
+              "accessedAt": "2026-10-17",
+              "stance": "support",
+              "source": {
+                "id": "6dfb8c00-412a-4bd6-88f8-58f85b98247e",
+                "kind": "web",
+                "title": "バクマン。 1 — 集英社",
+                "authors": [],
+                "publisher": "集英社",
+                "url": "https://www.shueisha.co.jp/books/items/contents.html?isbn=978-4-08-619690-1",
+                "publishedAt": null,
+                "edition": null,
+                "note": "公式資料の必要な書誌・担当表記のみ。本文・画像・あらすじを転載しない。正式受入済みの追加根拠。",
+                "isDemo": false
+              },
+              "roleEvidence": {
+                "originalText": "著者：小畑 健",
+                "language": "ja"
+              },
+              "positionEvidence": null,
+              "eventParticipationEvidence": null
+            }
+          ]
+        }
+      ],
+      "names": [
+        "ヒカルの碁",
+        "小畑健",
+        "バクマン。"
+      ]
+    },
+    {
+      "id": "hikaru-next-person",
+      "case": "hikaru",
+      "type": "S3",
+      "nodeIds": [
+        "0c29d0e2-685f-4c56-9805-6bf1baf40e7c",
+        "d5e39491-5a5f-423c-9222-2eb3c18db9a8",
+        "3427040b-88fd-4db5-b546-dd237abad032",
+        "a13205e2-220c-4b7d-8a1a-39dbefe52db8"
+      ],
+      "claimIds": [
+        "7ae1c51b-9ba0-46fb-a070-41ac310e8c94",
+        "cd294bb9-a7de-4f21-95c2-84b878c0e7cc",
+        "48a9f51e-beb1-4c3a-9c30-5923bc852925"
+      ],
+      "question": "ヒカルの碁から別作品の原作担当者へ進める？",
+      "requiredConditions": {
+        "polarity": "affirmed",
+        "nodesDistinct": true,
+        "steps": [
+          {
+            "predicate": "CONTRIBUTED_TO",
+            "traversal": "reverse",
+            "role": "DRAWING",
+            "organizationPosition": null,
+            "period": "unrestricted-preserve-unknown",
+            "scope": "preserve-this-Claim-no-cross-step-equality"
+          },
+          {
+            "predicate": "CONTRIBUTED_TO",
+            "traversal": "forward",
+            "role": "AUTHORSHIP",
+            "organizationPosition": null,
+            "period": "unrestricted-preserve-unknown",
+            "scope": "preserve-this-Claim-no-cross-step-equality"
+          },
+          {
+            "predicate": "CONTRIBUTED_TO",
+            "traversal": "reverse",
+            "role": "ORIGINAL_STORY",
+            "organizationPosition": null,
+            "period": "unrestricted-preserve-unknown",
+            "scope": "preserve-this-Claim-no-cross-step-equality"
+          }
+        ]
+      },
+      "state": "published",
+      "missingClaimIds": [],
+      "steps": [
+        {
+          "claim": {
+            "id": "7ae1c51b-9ba0-46fb-a070-41ac310e8c94",
+            "subjectId": "d5e39491-5a5f-423c-9222-2eb3c18db9a8",
+            "objectId": "0c29d0e2-685f-4c56-9805-6bf1baf40e7c",
+            "predicate": "CONTRIBUTED_TO",
+            "polarity": "affirmed",
+            "period": {
+              "from": null,
+              "to": null
+            },
+            "contribution": {
+              "roleId": "DRAWING",
+              "scope": null
+            },
+            "organizationParticipation": null,
+            "eventParticipation": null,
+            "sourceCount": 1
+          },
+          "traversal": "reverse",
+          "citations": [
+            {
+              "id": "995e3891-aa9c-4af6-a2ba-3114dfb61fec",
+              "locator": "見出し「ジャーナリストクラブ賞受賞」下の受賞説明、原作者・作画・監修を列挙する文。元HTML 25行、Shift_JIS元body byte [1024,1074) に作品名と担当者の短い文脈。",
+              "note": "「ヒカルの碁」の原作者ほったゆみ氏、作画の小畑健氏。作品単位の作画を支持する。scope=nullは適用巻・版の未構造化であり全巻・全版の証明ではない。期間不明。保存NDLの「漫画」は対象漫画の照合補助でありRoleへ自動変換しない。",
+              "accessedAt": "2026-10-20",
+              "stance": "support",
+              "source": {
+                "id": "932fb74b-9292-4fb9-9f8a-29ce35d83823",
+                "kind": "web",
+                "title": "ジャーナリスト賞",
+                "authors": [],
+                "publisher": "日本棋院",
+                "url": "https://archive.nihonkiin.or.jp/kishihp/umezawa/journal.htm",
+                "publishedAt": null,
+                "edition": null,
+                "note": "見出し「ジャーナリストクラブ賞受賞」。ページ表示日2001年12月13日。作品単位の作画明示のみ。取得2026-10-20T13:27:00.414Z、元HTML SHA-256 86cfb31314e9e3fe2bf26e04425580c2dc3d5660cbd3b522e32e8be1d533af1b。巻・版・ISBN・制作期間の証明に拡張しない。",
+                "isDemo": false
+              },
+              "roleEvidence": {
+                "originalText": "作画の小畑健氏",
+                "language": "ja"
+              },
+              "positionEvidence": null,
+              "eventParticipationEvidence": null
+            }
+          ]
+        },
+        {
+          "claim": {
+            "id": "cd294bb9-a7de-4f21-95c2-84b878c0e7cc",
+            "subjectId": "d5e39491-5a5f-423c-9222-2eb3c18db9a8",
+            "objectId": "3427040b-88fd-4db5-b546-dd237abad032",
+            "predicate": "CONTRIBUTED_TO",
+            "polarity": "affirmed",
+            "period": {
+              "from": null,
+              "to": null
+            },
+            "contribution": {
+              "roleId": "AUTHORSHIP",
+              "scope": {
+                "kind": "publication",
+                "isbn13": "9784086196901",
+                "volumeLabel": "第1巻",
+                "editionLabel": null,
+                "language": "ja"
+              }
+            },
+            "organizationParticipation": null,
+            "eventParticipation": null,
+            "sourceCount": 1
+          },
+          "traversal": "forward",
+          "citations": [
+            {
+              "id": "c2a11bab-9544-49af-a352-668f7cb08aff",
+              "locator": "紙版ISBN／著者欄",
+              "note": "同一ISBNを明示する出版社の著者欄による別候補。NDLの漫画をDRAWING／AUTHORSHIPへ置換したものではない。原資料間の異なる呼称を保持する。",
+              "accessedAt": "2026-10-17",
+              "stance": "support",
+              "source": {
+                "id": "6dfb8c00-412a-4bd6-88f8-58f85b98247e",
+                "kind": "web",
+                "title": "バクマン。 1 — 集英社",
+                "authors": [],
+                "publisher": "集英社",
+                "url": "https://www.shueisha.co.jp/books/items/contents.html?isbn=978-4-08-619690-1",
+                "publishedAt": null,
+                "edition": null,
+                "note": "公式資料の必要な書誌・担当表記のみ。本文・画像・あらすじを転載しない。正式受入済みの追加根拠。",
+                "isDemo": false
+              },
+              "roleEvidence": {
+                "originalText": "著者：小畑 健",
+                "language": "ja"
+              },
+              "positionEvidence": null,
+              "eventParticipationEvidence": null
+            }
+          ]
+        },
+        {
+          "claim": {
+            "id": "48a9f51e-beb1-4c3a-9c30-5923bc852925",
+            "subjectId": "a13205e2-220c-4b7d-8a1a-39dbefe52db8",
+            "objectId": "3427040b-88fd-4db5-b546-dd237abad032",
+            "predicate": "CONTRIBUTED_TO",
+            "polarity": "affirmed",
+            "period": {
+              "from": null,
+              "to": null
+            },
+            "contribution": {
+              "roleId": "ORIGINAL_STORY",
+              "scope": {
+                "kind": "publication",
+                "isbn13": "9784086196901",
+                "volumeLabel": "第1巻",
+                "editionLabel": null,
+                "language": "ja"
+              }
+            },
+            "organizationParticipation": null,
+            "eventParticipation": null,
+            "sourceCount": 1
+          },
+          "traversal": "reverse",
+          "citations": [
+            {
+              "id": "85b6215a-d659-4c08-850a-c9611e94bd43",
+              "locator": "dc:creator（責任表示） / ISBN 9784086196901",
+              "note": "原表記（ja）: 大場つぐみ 原作。指定刊行物の責任表示で確認された担当。全巻・全版・全期間への外挿、原作から別Roleへの変換はしない。同一資料由来の記録を独立した根拠と数えない。",
+              "accessedAt": "2026-10-17",
+              "stance": "support",
+              "source": {
+                "id": "fa2da69a-8a61-4364-8dab-05b9678d77aa",
+                "kind": "web",
+                "title": "NDLサーチ: バクマン。. 1",
+                "authors": [],
+                "publisher": "国立国会図書館",
+                "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I028322829",
+                "publishedAt": null,
+                "edition": null,
+                "note": "国立国会図書館作成書誌（iss-ndl-opac）の責任表示。メタデータ CC BY 4.0: https://creativecommons.org/licenses/by/4.0/ ; 提供元条件 https://ndlsearch.ndl.go.jp/help/api/provider 。本文・画像・第三者所蔵情報は含まない。",
+                "isDemo": false
+              },
+              "roleEvidence": {
+                "originalText": "大場つぐみ 原作",
+                "language": "ja"
+              },
+              "positionEvidence": null,
+              "eventParticipationEvidence": null
+            }
+          ]
+        }
+      ],
+      "names": [
+        "ヒカルの碁",
+        "小畑健",
+        "バクマン。",
+        "大場つぐみ"
+      ]
+    },
+    {
+      "id": "bakuman-different-roles",
+      "case": "hikaru",
+      "type": "S2",
+      "nodeIds": [
+        "d5e39491-5a5f-423c-9222-2eb3c18db9a8",
+        "3427040b-88fd-4db5-b546-dd237abad032",
+        "a13205e2-220c-4b7d-8a1a-39dbefe52db8"
+      ],
+      "claimIds": [
+        "cd294bb9-a7de-4f21-95c2-84b878c0e7cc",
+        "48a9f51e-beb1-4c3a-9c30-5923bc852925"
+      ],
+      "question": "バクマン。では人物ごとにどんなクレジットがある？",
+      "requiredConditions": {
+        "polarity": "affirmed",
+        "nodesDistinct": true,
+        "steps": [
+          {
+            "predicate": "CONTRIBUTED_TO",
+            "traversal": "forward",
+            "role": "AUTHORSHIP",
+            "organizationPosition": null,
+            "period": "unrestricted-preserve-unknown",
+            "scope": "preserve-this-Claim-no-cross-step-equality"
+          },
+          {
+            "predicate": "CONTRIBUTED_TO",
+            "traversal": "reverse",
+            "role": "ORIGINAL_STORY",
+            "organizationPosition": null,
+            "period": "unrestricted-preserve-unknown",
+            "scope": "preserve-this-Claim-no-cross-step-equality"
+          }
+        ]
+      },
+      "state": "published",
+      "missingClaimIds": [],
+      "steps": [
+        {
+          "claim": {
+            "id": "cd294bb9-a7de-4f21-95c2-84b878c0e7cc",
+            "subjectId": "d5e39491-5a5f-423c-9222-2eb3c18db9a8",
+            "objectId": "3427040b-88fd-4db5-b546-dd237abad032",
+            "predicate": "CONTRIBUTED_TO",
+            "polarity": "affirmed",
+            "period": {
+              "from": null,
+              "to": null
+            },
+            "contribution": {
+              "roleId": "AUTHORSHIP",
+              "scope": {
+                "kind": "publication",
+                "isbn13": "9784086196901",
+                "volumeLabel": "第1巻",
+                "editionLabel": null,
+                "language": "ja"
+              }
+            },
+            "organizationParticipation": null,
+            "eventParticipation": null,
+            "sourceCount": 1
+          },
+          "traversal": "forward",
+          "citations": [
+            {
+              "id": "c2a11bab-9544-49af-a352-668f7cb08aff",
+              "locator": "紙版ISBN／著者欄",
+              "note": "同一ISBNを明示する出版社の著者欄による別候補。NDLの漫画をDRAWING／AUTHORSHIPへ置換したものではない。原資料間の異なる呼称を保持する。",
+              "accessedAt": "2026-10-17",
+              "stance": "support",
+              "source": {
+                "id": "6dfb8c00-412a-4bd6-88f8-58f85b98247e",
+                "kind": "web",
+                "title": "バクマン。 1 — 集英社",
+                "authors": [],
+                "publisher": "集英社",
+                "url": "https://www.shueisha.co.jp/books/items/contents.html?isbn=978-4-08-619690-1",
+                "publishedAt": null,
+                "edition": null,
+                "note": "公式資料の必要な書誌・担当表記のみ。本文・画像・あらすじを転載しない。正式受入済みの追加根拠。",
+                "isDemo": false
+              },
+              "roleEvidence": {
+                "originalText": "著者：小畑 健",
+                "language": "ja"
+              },
+              "positionEvidence": null,
+              "eventParticipationEvidence": null
+            }
+          ]
+        },
+        {
+          "claim": {
+            "id": "48a9f51e-beb1-4c3a-9c30-5923bc852925",
+            "subjectId": "a13205e2-220c-4b7d-8a1a-39dbefe52db8",
+            "objectId": "3427040b-88fd-4db5-b546-dd237abad032",
+            "predicate": "CONTRIBUTED_TO",
+            "polarity": "affirmed",
+            "period": {
+              "from": null,
+              "to": null
+            },
+            "contribution": {
+              "roleId": "ORIGINAL_STORY",
+              "scope": {
+                "kind": "publication",
+                "isbn13": "9784086196901",
+                "volumeLabel": "第1巻",
+                "editionLabel": null,
+                "language": "ja"
+              }
+            },
+            "organizationParticipation": null,
+            "eventParticipation": null,
+            "sourceCount": 1
+          },
+          "traversal": "reverse",
+          "citations": [
+            {
+              "id": "85b6215a-d659-4c08-850a-c9611e94bd43",
+              "locator": "dc:creator（責任表示） / ISBN 9784086196901",
+              "note": "原表記（ja）: 大場つぐみ 原作。指定刊行物の責任表示で確認された担当。全巻・全版・全期間への外挿、原作から別Roleへの変換はしない。同一資料由来の記録を独立した根拠と数えない。",
+              "accessedAt": "2026-10-17",
+              "stance": "support",
+              "source": {
+                "id": "fa2da69a-8a61-4364-8dab-05b9678d77aa",
+                "kind": "web",
+                "title": "NDLサーチ: バクマン。. 1",
+                "authors": [],
+                "publisher": "国立国会図書館",
+                "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I028322829",
+                "publishedAt": null,
+                "edition": null,
+                "note": "国立国会図書館作成書誌（iss-ndl-opac）の責任表示。メタデータ CC BY 4.0: https://creativecommons.org/licenses/by/4.0/ ; 提供元条件 https://ndlsearch.ndl.go.jp/help/api/provider 。本文・画像・第三者所蔵情報は含まない。",
+                "isDemo": false
+              },
+              "roleEvidence": {
+                "originalText": "大場つぐみ 原作",
+                "language": "ja"
+              },
+              "positionEvidence": null,
+              "eventParticipationEvidence": null
+            }
+          ]
+        }
+      ],
+      "names": [
+        "小畑健",
+        "バクマン。",
+        "大場つぐみ"
+      ]
+    },
+    {
+      "id": "nbi-pauli-princeton",
+      "case": "institutions",
+      "type": "S4",
+      "nodeIds": [
+        "8e322435-4318-4ad0-835b-3f71d2537421",
+        "52a671d1-bc5c-4a52-9d98-8c9418f5ec5c",
+        "0820c3e8-7219-4e57-abb0-7d04e253fd4a"
+      ],
+      "claimIds": [
+        "c23fe1f3-fae6-43c1-9ed7-af1d94e4712c",
+        "554bbc81-73df-498e-b867-c90219496e2f"
+      ],
+      "question": "NBIとPrincetonに同じ人物の関わりが記録されている？",
+      "requiredConditions": {
+        "polarity": "affirmed",
+        "nodesDistinct": true,
+        "steps": [
+          {
+            "predicate": "AFFILIATED_WITH",
+            "traversal": "reverse",
+            "role": null,
+            "organizationPosition": null,
+            "period": "unrestricted-preserve-unknown",
+            "scope": "preserve-this-Claim-no-cross-step-equality"
+          },
+          {
+            "predicate": "AFFILIATED_WITH",
+            "traversal": "forward",
+            "role": null,
+            "organizationPosition": null,
+            "period": "unrestricted-preserve-unknown",
+            "scope": "preserve-this-Claim-no-cross-step-equality"
+          }
+        ]
+      },
+      "state": "published",
+      "missingClaimIds": [],
+      "steps": [
+        {
+          "claim": {
+            "id": "c23fe1f3-fae6-43c1-9ed7-af1d94e4712c",
+            "subjectId": "52a671d1-bc5c-4a52-9d98-8c9418f5ec5c",
+            "objectId": "8e322435-4318-4ad0-835b-3f71d2537421",
+            "predicate": "AFFILIATED_WITH",
+            "polarity": "affirmed",
+            "period": {
+              "from": {
+                "value": "1922",
+                "precision": "year"
+              },
+              "to": {
+                "value": "1923",
+                "precision": "year"
+              }
+            },
+            "contribution": null,
+            "organizationParticipation": null,
+            "eventParticipation": null,
+            "sourceCount": 1
+          },
+          "traversal": "reverse",
+          "citations": [
+            {
+              "id": "1e122ac6-db31-4a76-bb32-ec8a7e9d8ab4",
+              "locator": "Niels Bohr InstituteのVisitor欄",
+              "note": "研究所にVisitorとして関わったことを確認。 原表記（en）：Visitor。期間原表記：1922-23。常勤・雇用・全期間の所属へ強めない。 この原表記は根拠の説明でありClaimの構造化した職位ではない。全経歴・連続在籍・期間外の不存在を認定しない。 受入：ユーザーの2026-10-05受入。資料の具体的関与に基づく広いAFFILIATED_WITHに限る。職位・雇用形態・所属種別の構造化保証、同時在籍・面識・共同研究は意味しない。",
+              "accessedAt": "2026-10-04",
+              "stance": "support",
+              "source": {
+                "id": "02e2f940-31d5-41bb-900e-7c76a1dd3561",
+                "kind": "web",
+                "title": "Wolfgang Pauli",
+                "authors": [],
+                "publisher": "Niels Bohr Institute / University of Copenhagen",
+                "url": "https://nbi.ku.dk/hhh/nobel/associated_with_nbi/wolfgang_pauli/",
+                "publishedAt": {
+                  "value": "2010-06-02",
+                  "precision": "day"
+                },
+                "edition": null,
+                "note": "原資料本文の言語：en。研究所へのVisitorとして1922–23を明示。",
+                "isDemo": false
+              },
+              "roleEvidence": null,
+              "positionEvidence": null,
+              "eventParticipationEvidence": null
+            }
+          ]
+        },
+        {
+          "claim": {
+            "id": "554bbc81-73df-498e-b867-c90219496e2f",
+            "subjectId": "52a671d1-bc5c-4a52-9d98-8c9418f5ec5c",
+            "objectId": "0820c3e8-7219-4e57-abb0-7d04e253fd4a",
+            "predicate": "AFFILIATED_WITH",
+            "polarity": "affirmed",
+            "period": {
+              "from": null,
+              "to": null
+            },
+            "contribution": null,
+            "organizationParticipation": null,
+            "eventParticipation": null,
+            "sourceCount": 1
+          },
+          "traversal": "forward",
+          "citations": [
+            {
+              "id": "64ac3e43-c273-4725-bf0f-a53f4e046432",
+              "locator": "nobelPrizes[0].affiliations[0] / 1945 Physics",
+              "note": "原表記（en）: Princeton University。1945年 Physics受賞時のaffiliationとして記載。受賞年は所属期間の開始／終了ではありません。職位・雇用形態・全期間の所属、同時在籍・面識・共同研究は推論しません。人物と組織との広い関わりだけを表します。",
+              "accessedAt": "2026-10-14",
+              "stance": "support",
+              "source": {
+                "id": "6227d272-7c4a-4688-90e8-ae9da11cff85",
+                "kind": "web",
+                "title": "Nobel Prize API: Wolfgang Pauli — laureate 50",
+                "authors": [],
+                "publisher": "Nobel Prize",
+                "url": "https://api.nobelprize.org/2.1/laureate/50",
+                "publishedAt": null,
+                "edition": "API 2.1 / 2026-10-14 snapshot",
+                "note": "Nobel Prize公式API。受賞時所属機関の記録を参照。API利用条件はCC0。受賞理由や伝記本文・画像は取り込んでいません。",
+                "isDemo": false
+              },
+              "roleEvidence": null,
+              "positionEvidence": null,
+              "eventParticipationEvidence": null
+            }
+          ]
+        }
+      ],
+      "names": [
+        "ニールス・ボーア研究所",
+        "ヴォルフガング・パウリ",
+        "Princeton University"
+      ]
+    },
+    {
+      "id": "nbi-heisenberg-goettingen",
+      "case": "institutions",
+      "type": "S4",
+      "nodeIds": [
+        "8e322435-4318-4ad0-835b-3f71d2537421",
+        "1530af15-129d-40bf-a1ca-ce8343dc7491",
+        "a1af9abb-843a-4611-853c-50f630b817ae"
+      ],
+      "claimIds": [
+        "e71f548b-65c2-4032-a40f-342ab75b5d3e",
+        "47d46b69-b111-4b76-addb-632d679ae4f8"
+      ],
+      "question": "VisitorとしてNBIにいた人物の別機関記録を探せる？",
+      "requiredConditions": {
+        "polarity": "affirmed",
+        "nodesDistinct": true,
+        "steps": [
+          {
+            "predicate": "AFFILIATED_WITH",
+            "traversal": "reverse",
+            "role": null,
+            "organizationPosition": "VISITOR",
+            "period": "unrestricted-preserve-unknown",
+            "scope": "preserve-this-Claim-no-cross-step-equality"
+          },
+          {
+            "predicate": "AFFILIATED_WITH",
+            "traversal": "forward",
+            "role": null,
+            "organizationPosition": null,
+            "period": "unrestricted-preserve-unknown",
+            "scope": "preserve-this-Claim-no-cross-step-equality"
+          }
+        ]
+      },
+      "state": "published",
+      "missingClaimIds": [],
+      "steps": [
+        {
+          "claim": {
+            "id": "e71f548b-65c2-4032-a40f-342ab75b5d3e",
+            "subjectId": "1530af15-129d-40bf-a1ca-ce8343dc7491",
+            "objectId": "8e322435-4318-4ad0-835b-3f71d2537421",
+            "predicate": "AFFILIATED_WITH",
+            "polarity": "affirmed",
+            "period": {
+              "from": {
+                "value": "1924",
+                "precision": "year"
+              },
+              "to": {
+                "value": "1925",
+                "precision": "year"
+              }
+            },
+            "contribution": null,
+            "organizationParticipation": {
+              "positionId": "VISITOR"
+            },
+            "eventParticipation": null,
+            "sourceCount": 1
+          },
+          "traversal": "reverse",
+          "citations": [
+            {
+              "id": "021f7c10-51a9-4f61-af63-d5efd8488a14",
+              "locator": "Werner Heisenberg見出し直下、Niels Bohr Institute行",
+              "note": "NBIの資料がVisitorとして1924–25に関与したと記す。雇用種別を認定しない。 期間原表記：1924-25。対象はこの研究所への資料記載の関与。日本の客員職・有給・専任を保証しない。 資料が記すNBIでの立場と各期間に限定。既存広いClaimの受入だけから立場を自動構造化していない。 同じSourceからの限定付き主張であり独立した新しい根拠ではない。Sourceの「今回Visitorのみ受入」はv1の収集履歴。v2では2立場を個別に受け入れている。",
+              "accessedAt": "2026-10-05",
+              "stance": "support",
+              "source": {
+                "id": "3d8bfd32-31fd-4e8a-aff6-7b7fb80265c0",
+                "kind": "web",
+                "title": "Werner Heisenberg",
+                "authors": [],
+                "publisher": "Niels Bohr Institute / University of Copenhagen",
+                "url": "https://nbi.ku.dk/hhh/nobel/associated_with_nbi/werner_heisenberg/",
+                "publishedAt": {
+                  "value": "2010-06-02",
+                  "precision": "day"
+                },
+                "edition": null,
+                "note": "原資料本文の言語：en。1924–25のVisitorと1926–27の別役職を列記。今回Visitorのみ受入。",
+                "isDemo": false
+              },
+              "roleEvidence": null,
+              "positionEvidence": {
+                "originalText": "Visitor",
+                "language": "en"
+              },
+              "eventParticipationEvidence": null
+            }
+          ]
+        },
+        {
+          "claim": {
+            "id": "47d46b69-b111-4b76-addb-632d679ae4f8",
+            "subjectId": "1530af15-129d-40bf-a1ca-ce8343dc7491",
+            "objectId": "a1af9abb-843a-4611-853c-50f630b817ae",
+            "predicate": "AFFILIATED_WITH",
+            "polarity": "affirmed",
+            "period": {
+              "from": null,
+              "to": null
+            },
+            "contribution": null,
+            "organizationParticipation": null,
+            "eventParticipation": null,
+            "sourceCount": 1
+          },
+          "traversal": "forward",
+          "citations": [
+            {
+              "id": "931dc662-fe56-49c6-a629-6374416e8129",
+              "locator": "冒頭、学業・助手・1924年資格取得とPrivatdozentの段落",
+              "note": "大学での学業・Bornの助手・Privatdozentという早期経歴を確認。 原表記（en）：assistant; Privatdozent [associate professor]。期間原表記：habilitated here in 1924。1924は資格取得年。関与開始や連続在籍期間を補完せず、後年の別研究所の経歴も混ぜない。 この原表記は根拠の説明でありClaimの構造化した職位ではない。全経歴・連続在籍・期間外の不存在を認定しない。 受入：ユーザーの2026-10-05受入。資料の具体的関与に基づく広いAFFILIATED_WITHに限る。職位・雇用形態・所属種別の構造化保証、同時在籍・面識・共同研究は意味しない。",
+              "accessedAt": "2026-10-04",
+              "stance": "support",
+              "source": {
+                "id": "5d880ab0-1a13-4621-8c4e-7e4a45e864d1",
+                "kind": "web",
+                "title": "Werner Heisenberg, Physics (1901 to 1976)",
+                "authors": [],
+                "publisher": "University of Göttingen",
+                "url": "https://www.uni-goettingen.de/en/62607.html",
+                "publishedAt": null,
+                "edition": null,
+                "note": "原資料本文の言語：en。大学での早期経歴を説明。後年の都市Göttingenや別研究所の経歴をこのClaimへ混ぜない。",
+                "isDemo": false
+              },
+              "roleEvidence": null,
+              "positionEvidence": null,
+              "eventParticipationEvidence": null
+            }
+          ]
+        }
+      ],
+      "names": [
+        "ニールス・ボーア研究所",
+        "ヴェルナー・ハイゼンベルク",
+        "ゲッティンゲン大学"
+      ]
+    },
+    {
+      "id": "h2-mix",
+      "case": "adachi",
+      "type": "S1",
+      "nodeIds": [
+        "bb47fc9c-87b1-4df5-a7d6-ecf175d93eb0",
+        "1abd838a-b22d-45a4-913f-0ef09205e1e8",
+        "48ca311c-c403-4a24-a1e3-cb6392764397"
+      ],
+      "claimIds": [
+        "f1260c3f-2637-416f-b407-2052a7c36717",
+        "c72262df-ce7b-4514-9341-55d242f94bca"
+      ],
+      "question": "H2と同じ著者の別作品を探せる？",
+      "requiredConditions": {
+        "polarity": "affirmed",
+        "nodesDistinct": true,
+        "steps": [
+          {
+            "predicate": "CONTRIBUTED_TO",
+            "traversal": "reverse",
+            "role": "AUTHORSHIP",
+            "organizationPosition": null,
+            "period": "unrestricted-preserve-unknown",
+            "scope": "preserve-this-Claim-no-cross-step-equality"
+          },
+          {
+            "predicate": "CONTRIBUTED_TO",
+            "traversal": "forward",
+            "role": "AUTHORSHIP",
+            "organizationPosition": null,
+            "period": "unrestricted-preserve-unknown",
+            "scope": "preserve-this-Claim-no-cross-step-equality"
+          }
+        ]
+      },
+      "state": "published",
+      "missingClaimIds": [],
+      "steps": [
+        {
+          "claim": {
+            "id": "f1260c3f-2637-416f-b407-2052a7c36717",
+            "subjectId": "1abd838a-b22d-45a4-913f-0ef09205e1e8",
+            "objectId": "bb47fc9c-87b1-4df5-a7d6-ecf175d93eb0",
+            "predicate": "CONTRIBUTED_TO",
+            "polarity": "affirmed",
+            "period": {
+              "from": null,
+              "to": null
+            },
+            "contribution": {
+              "roleId": "AUTHORSHIP",
+              "scope": {
+                "kind": "publication",
+                "isbn13": "9784091231512",
+                "volumeLabel": "第1巻（NDL巻次 1）",
+                "editionLabel": null,
+                "language": "ja"
+              }
+            },
+            "organizationParticipation": null,
+            "eventParticipation": null,
+            "sourceCount": 1
+          },
+          "traversal": "reverse",
+          "citations": [
+            {
+              "id": "07906647-1603-470d-a950-a663290bbd75",
+              "locator": "dc:creator（責任表示） / ISBN 9784091231512",
+              "note": "原表記（ja）: あだち充 著。指定刊行物の責任表示で確認された担当。全巻・全版・全期間への外挿、原作から別Roleへの変換はしない。同一資料由来の記録を独立した根拠と数えない。",
+              "accessedAt": "2026-10-18",
+              "stance": "support",
+              "source": {
+                "id": "4ede2d3e-9899-4d1b-bf8a-e08fd3f36080",
+                "kind": "web",
+                "title": "NDLサーチ: H2. 1",
+                "authors": [],
+                "publisher": "国立国会図書館",
+                "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I000002238601",
+                "publishedAt": null,
+                "edition": null,
+                "note": "国立国会図書館作成書誌（iss-ndl-opac）の責任表示。メタデータ CC BY 4.0: https://creativecommons.org/licenses/by/4.0/ ; 提供元条件 https://ndlsearch.ndl.go.jp/help/api/provider 。本文・画像・第三者所蔵情報は含まない。",
+                "isDemo": false
+              },
+              "roleEvidence": {
+                "originalText": "あだち充 著",
+                "language": "ja"
+              },
+              "positionEvidence": null,
+              "eventParticipationEvidence": null
+            }
+          ]
+        },
+        {
+          "claim": {
+            "id": "c72262df-ce7b-4514-9341-55d242f94bca",
+            "subjectId": "1abd838a-b22d-45a4-913f-0ef09205e1e8",
+            "objectId": "48ca311c-c403-4a24-a1e3-cb6392764397",
+            "predicate": "CONTRIBUTED_TO",
+            "polarity": "affirmed",
+            "period": {
+              "from": null,
+              "to": null
+            },
+            "contribution": {
+              "roleId": "AUTHORSHIP",
+              "scope": {
+                "kind": "publication",
+                "isbn13": "9784091238672",
+                "volumeLabel": "第1巻（NDL巻次 1）",
+                "editionLabel": null,
+                "language": "ja"
+              }
+            },
+            "organizationParticipation": null,
+            "eventParticipation": null,
+            "sourceCount": 1
+          },
+          "traversal": "forward",
+          "citations": [
+            {
+              "id": "1cd43ec8-2630-4fbc-8267-1ce03a9ee04c",
+              "locator": "dc:creator（責任表示） / ISBN 9784091238672",
+              "note": "原表記（ja）: あだち充 著。指定刊行物の責任表示で確認された担当。全巻・全版・全期間への外挿、原作から別Roleへの変換はしない。同一資料由来の記録を独立した根拠と数えない。",
+              "accessedAt": "2026-10-18",
+              "stance": "support",
+              "source": {
+                "id": "d5e2fedb-35fc-4544-9fbd-c0d81ccb9080",
+                "kind": "web",
+                "title": "NDLサーチ: Mix. 1",
+                "authors": [],
+                "publisher": "国立国会図書館",
+                "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I023983988",
+                "publishedAt": null,
+                "edition": null,
+                "note": "国立国会図書館作成書誌（iss-ndl-opac）の責任表示。メタデータ CC BY 4.0: https://creativecommons.org/licenses/by/4.0/ ; 提供元条件 https://ndlsearch.ndl.go.jp/help/api/provider 。本文・画像・第三者所蔵情報は含まない。",
+                "isDemo": false
+              },
+              "roleEvidence": {
+                "originalText": "あだち充 著",
+                "language": "ja"
+              },
+              "positionEvidence": null,
+              "eventParticipationEvidence": null
+            }
+          ]
+        }
+      ],
+      "names": [
+        "H2",
+        "あだち充",
+        "MIX"
+      ]
+    }
+  ],
+  "apiObservations": [
+    {
+      "url": "https://plunode.net/api/discovery/paths?anchor=2b7c6289-d050-4dc0-93e3-9307681253cc&preset=other-works&presetRevision=1&revision=b74a4b00-9454-412f-af5d-1317713a543c",
+      "method": "GET",
+      "body": null,
+      "status": 200,
+      "routeCount": 11,
+      "scan": {
+        "expanded": 4,
+        "reasons": [],
+        "limitedIds": []
+      },
+      "page": null,
+      "error": null
+    },
+    {
+      "url": "https://plunode.net/api/discovery/paths?anchor=2b7c6289-d050-4dc0-93e3-9307681253cc&preset=work-creators&presetRevision=1&revision=b74a4b00-9454-412f-af5d-1317713a543c",
+      "method": "GET",
+      "body": null,
+      "status": 200,
+      "routeCount": 9,
+      "scan": {
+        "expanded": 12,
+        "reasons": [],
+        "limitedIds": []
+      },
+      "page": null,
+      "error": null
+    },
+    {
+      "url": "https://plunode.net/api/discovery/paths?anchor=0c29d0e2-685f-4c56-9805-6bf1baf40e7c&preset=other-works&presetRevision=1&revision=b74a4b00-9454-412f-af5d-1317713a543c",
+      "method": "GET",
+      "body": null,
+      "status": 200,
+      "routeCount": 1,
+      "scan": {
+        "expanded": 3,
+        "reasons": [],
+        "limitedIds": []
+      },
+      "page": null,
+      "error": null
+    },
+    {
+      "url": "https://plunode.net/api/discovery/paths?anchor=0c29d0e2-685f-4c56-9805-6bf1baf40e7c&preset=work-creators&presetRevision=1&revision=b74a4b00-9454-412f-af5d-1317713a543c",
+      "method": "GET",
+      "body": null,
+      "status": 200,
+      "routeCount": 1,
+      "scan": {
+        "expanded": 4,
+        "reasons": [],
+        "limitedIds": []
+      },
+      "page": null,
+      "error": null
+    },
+    {
+      "url": "https://plunode.net/api/discovery/paths?anchor=8e322435-4318-4ad0-835b-3f71d2537421&preset=institution-bridge&presetRevision=1&revision=b74a4b00-9454-412f-af5d-1317713a543c",
+      "method": "GET",
+      "body": null,
+      "status": 200,
+      "routeCount": 6,
+      "scan": {
+        "expanded": 6,
+        "reasons": [],
+        "limitedIds": []
+      },
+      "page": null,
+      "error": null
+    },
+    {
+      "url": "https://plunode.net/api/discovery/paths?anchor=0820c3e8-7219-4e57-abb0-7d04e253fd4a&preset=institution-bridge&presetRevision=1&revision=b74a4b00-9454-412f-af5d-1317713a543c",
+      "method": "GET",
+      "body": null,
+      "status": 200,
+      "routeCount": 2,
+      "scan": {
+        "expanded": 19,
+        "reasons": [],
+        "limitedIds": []
+      },
+      "page": null,
+      "error": null
+    },
+    {
+      "url": "https://plunode.net/api/discovery/paths?anchor=bb47fc9c-87b1-4df5-a7d6-ecf175d93eb0&preset=other-works&presetRevision=1&revision=b74a4b00-9454-412f-af5d-1317713a543c",
+      "method": "GET",
+      "body": null,
+      "status": 200,
+      "routeCount": 1,
+      "scan": {
+        "expanded": 2,
+        "reasons": [],
+        "limitedIds": []
+      },
+      "page": null,
+      "error": null
+    },
+    {
+      "url": "https://plunode.net/api/discovery/paths",
+      "method": "POST",
+      "body": {
+        "version": 1,
+        "dataset": "public-kg",
+        "rootId": "2b7c6289-d050-4dc0-93e3-9307681253cc",
+        "revision": "b74a4b00-9454-412f-af5d-1317713a543c",
+        "relation": {
+          "version": 1,
+          "type": "pattern",
+          "pattern": {
+            "id": "other-works",
+            "revision": 1
+          },
+          "polarity": "affirmed",
+          "contributionRoles": null
+        },
+        "operation": {
+          "type": "page",
+          "after": null,
+          "requiredWitness": null
+        }
+      },
+      "status": 200,
+      "routeCount": 11,
+      "scan": null,
+      "page": {
+        "hasMore": false,
+        "nextCursor": null,
+        "claimCoverage": "witness-only"
+      },
+      "error": null
+    },
+    {
+      "url": "https://plunode.net/api/discovery/paths",
+      "method": "POST",
+      "body": {
+        "version": 1,
+        "dataset": "public-kg",
+        "rootId": "0c29d0e2-685f-4c56-9805-6bf1baf40e7c",
+        "revision": "b74a4b00-9454-412f-af5d-1317713a543c",
+        "relation": {
+          "version": 1,
+          "type": "pattern",
+          "pattern": {
+            "id": "other-works",
+            "revision": 1
+          },
+          "polarity": "affirmed",
+          "contributionRoles": null
+        },
+        "operation": {
+          "type": "page",
+          "after": null,
+          "requiredWitness": null
+        }
+      },
+      "status": 200,
+      "routeCount": 1,
+      "scan": null,
+      "page": {
+        "hasMore": false,
+        "nextCursor": null,
+        "claimCoverage": "witness-only"
+      },
+      "error": null
+    },
+    {
+      "url": "https://plunode.net/api/discovery/paths",
+      "method": "POST",
+      "body": {
+        "version": 1,
+        "dataset": "public-kg",
+        "rootId": "bb47fc9c-87b1-4df5-a7d6-ecf175d93eb0",
+        "revision": "b74a4b00-9454-412f-af5d-1317713a543c",
+        "relation": {
+          "version": 1,
+          "type": "pattern",
+          "pattern": {
+            "id": "other-works",
+            "revision": 1
+          },
+          "polarity": "affirmed",
+          "contributionRoles": null
+        },
+        "operation": {
+          "type": "page",
+          "after": null,
+          "requiredWitness": null
+        }
+      },
+      "status": 200,
+      "routeCount": 1,
+      "scan": null,
+      "page": {
+        "hasMore": false,
+        "nextCursor": null,
+        "claimCoverage": "witness-only"
+      },
+      "error": null
+    },
+    {
+      "url": "https://plunode.net/api/discovery/paths?anchor=2b7c6289-d050-4dc0-93e3-9307681253cc&preset=other-works&presetRevision=1&revision=b74a4b00-9454-412f-af5d-1317713a543c&contributionRoles=PRODUCING",
+      "method": "GET",
+      "body": null,
+      "status": 200,
+      "routeCount": 0,
+      "scan": {
+        "expanded": 2,
+        "reasons": [],
+        "limitedIds": []
+      },
+      "page": null,
+      "error": null
+    },
+    {
+      "url": "https://plunode.net/api/discovery/paths?anchor=0c29d0e2-685f-4c56-9805-6bf1baf40e7c&preset=other-works&presetRevision=1&revision=b74a4b00-9454-412f-af5d-1317713a543c&contributionRoles=DRAWING",
+      "method": "GET",
+      "body": null,
+      "status": 200,
+      "routeCount": 0,
+      "scan": {
+        "expanded": 2,
+        "reasons": [],
+        "limitedIds": []
+      },
+      "page": null,
+      "error": null
+    },
+    {
+      "url": "https://plunode.net/api/discovery/paths?anchor=0c29d0e2-685f-4c56-9805-6bf1baf40e7c&preset=other-works&presetRevision=1&revision=b74a4b00-9454-412f-af5d-1317713a543c&contributionRoles=AUTHORSHIP",
+      "method": "GET",
+      "body": null,
+      "status": 200,
+      "routeCount": 0,
+      "scan": {
+        "expanded": 1,
+        "reasons": [],
+        "limitedIds": []
+      },
+      "page": null,
+      "error": null
+    },
+    {
+      "url": "https://plunode.net/api/discovery/paths?anchor=0c29d0e2-685f-4c56-9805-6bf1baf40e7c&preset=other-works&presetRevision=1&revision=b74a4b00-9454-412f-af5d-1317713a543c&contributionRoles=DRAWING%2CAUTHORSHIP",
+      "method": "GET",
+      "body": null,
+      "status": 200,
+      "routeCount": 1,
+      "scan": {
+        "expanded": 2,
+        "reasons": [],
+        "limitedIds": []
+      },
+      "page": null,
+      "error": null
+    },
+    {
+      "url": "https://plunode.net/api/discovery/paths?anchor=2b7c6289-d050-4dc0-93e3-9307681253cc&preset=other-works&presetRevision=1&revision=b74a4b00-9454-412f-af5d-1317713a543c&stepRoles=PRODUCING%2CSTORY_CO_CREATION",
+      "method": "GET",
+      "body": null,
+      "status": 400,
+      "routeCount": 0,
+      "scan": null,
+      "page": null,
+      "error": {
+        "code": "INVALID_ARGUMENT",
+        "message": "経路の検索条件が不正または未対応です。"
+      }
+    },
+    {
+      "url": "https://plunode.net/api/discovery/paths?anchor=8e322435-4318-4ad0-835b-3f71d2537421&preset=institution-bridge&presetRevision=1&revision=b74a4b00-9454-412f-af5d-1317713a543c&from=1922&to=1923",
+      "method": "GET",
+      "body": null,
+      "status": 400,
+      "routeCount": 0,
+      "scan": null,
+      "page": null,
+      "error": {
+        "code": "INVALID_ARGUMENT",
+        "message": "経路の検索条件が不正または未対応です。"
+      }
+    },
+    {
+      "url": "https://plunode.net/api/discovery/paths?anchor=8e322435-4318-4ad0-835b-3f71d2537421&preset=institution-bridge&presetRevision=1&revision=b74a4b00-9454-412f-af5d-1317713a543c&organizationPositions=VISITOR",
+      "method": "GET",
+      "body": null,
+      "status": 400,
+      "routeCount": 0,
+      "scan": null,
+      "page": null,
+      "error": {
+        "code": "INVALID_ARGUMENT",
+        "message": "経路の検索条件が不正または未対応です。"
+      }
+    }
+  ],
+  "scopedAcceptanceStates": [
+    {
+      "claimId": "c72262df-ce7b-4514-9341-55d242f94bca",
+      "state": "published",
+      "receipt": "/home/isinxnisi/.local/share/plunode-collection-worker-phase-b-20261020/runtime/datasets/manga-collection/accepted-issue-25-utc-recovery-08-normal/acceptance.json",
+      "receiptSha256": "5b3fdc3aa705c5e73f5ba11b40052be700d71069b0a25a12943cb189a2ee1109",
+      "recordedAt": "2026-10-19T19:38:57.087154+00:00",
+      "publicContentDifferences": []
+    },
+    {
+      "claimId": "f1260c3f-2637-416f-b407-2052a7c36717",
+      "state": "published",
+      "receipt": "/home/isinxnisi/.local/share/plunode-collection-worker-phase-b-20261020/runtime/datasets/manga-collection/accepted-issue-25-utc-recovery-08-normal/acceptance.json",
+      "receiptSha256": "5b3fdc3aa705c5e73f5ba11b40052be700d71069b0a25a12943cb189a2ee1109",
+      "recordedAt": "2026-10-19T19:38:57.087154+00:00",
+      "publicContentDifferences": []
+    },
+    {
+      "claimId": "7ae1c51b-9ba0-46fb-a070-41ac310e8c94",
+      "state": "published",
+      "receipt": "/home/isinxnisi/.local/share/plunode-collection-worker-phase-b-20261020/runtime/datasets/manga-collection/accepted-issue-34-obata-drawing-20261021/acceptance.json",
+      "receiptSha256": "7f62ec0f27d4fedfbb09066893d4ac94d88eaf016c2fff3959a001ea9f228efe",
+      "recordedAt": "2026-10-20T17:52:45.754800+00:00",
+      "publicContentDifferences": []
+    },
+    {
+      "claimId": "6ed29ee4-2b62-4fe7-83a6-aafe300754d7",
+      "state": "published",
+      "receipt": "/home/isinxnisi/.local/share/plunode-collection-worker-phase-b-20261020/runtime/datasets/manga-collection/accepted-original-story-r0002-20261017/acceptance.json",
+      "receiptSha256": "9fdb9933c0d78795769bf27eebb7ecb4ec7cccc37f6ee6827e55dd119e727801",
+      "recordedAt": "2026-10-17T10:34:25+09:00",
+      "publicContentDifferences": []
+    },
+    {
+      "claimId": "10f72eb0-3526-4d50-a552-e2239c01fc39",
+      "state": "published",
+      "receipt": "/home/isinxnisi/.local/share/plunode-collection-worker-phase-b-20261020/runtime/datasets/manga-collection/accepted-original-story-r0002-20261017/acceptance.json",
+      "receiptSha256": "9fdb9933c0d78795769bf27eebb7ecb4ec7cccc37f6ee6827e55dd119e727801",
+      "recordedAt": "2026-10-17T10:34:25+09:00",
+      "publicContentDifferences": []
+    },
+    {
+      "claimId": "18c75118-e284-4c85-accf-e3894a6da3f3",
+      "state": "published",
+      "receipt": "/home/isinxnisi/.local/share/plunode-collection-worker-phase-b-20261020/runtime/datasets/manga-collection/accepted-r0003-20261017/acceptance.json",
+      "receiptSha256": "7d53abbd472fcbf0cba57fa5202d6fd4f8eb12c9ebda34bd1e7a8badca701831",
+      "recordedAt": "2026-10-17T20:41:30+09:00",
+      "publicContentDifferences": []
+    },
+    {
+      "claimId": "48a9f51e-beb1-4c3a-9c30-5923bc852925",
+      "state": "published",
+      "receipt": "/home/isinxnisi/.local/share/plunode-collection-worker-phase-b-20261020/runtime/datasets/manga-collection/accepted-r0003-20261017/acceptance.json",
+      "receiptSha256": "7d53abbd472fcbf0cba57fa5202d6fd4f8eb12c9ebda34bd1e7a8badca701831",
+      "recordedAt": "2026-10-17T20:41:30+09:00",
+      "publicContentDifferences": []
+    },
+    {
+      "claimId": "cd294bb9-a7de-4f21-95c2-84b878c0e7cc",
+      "state": "published",
+      "receipt": "/home/isinxnisi/.local/share/plunode-collection-worker-phase-b-20261020/runtime/datasets/manga-collection/accepted-r0003-20261017/acceptance.json",
+      "receiptSha256": "7d53abbd472fcbf0cba57fa5202d6fd4f8eb12c9ebda34bd1e7a8badca701831",
+      "recordedAt": "2026-10-17T20:41:30+09:00",
+      "publicContentDifferences": []
+    },
+    {
+      "claimId": "fb933ff4-2061-4a0c-a72c-6e7dd2958737",
+      "state": "published",
+      "receipt": "/home/isinxnisi/.local/share/plunode-collection-worker-phase-b-20261020/runtime/datasets/manga-collection/accepted-r0003-20261017/acceptance.json",
+      "receiptSha256": "7d53abbd472fcbf0cba57fa5202d6fd4f8eb12c9ebda34bd1e7a8badca701831",
+      "recordedAt": "2026-10-17T20:41:30+09:00",
+      "publicContentDifferences": []
+    }
+  ],
+  "heldCandidates": [
+    {
+      "reason": "publication-identity-unconfirmed",
+      "work": "タッチ",
+      "isbn13": "9784091218612",
+      "matchingRecords": 0,
+      "records": [
+        {
+          "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I000001790190",
+          "isbn13": [
+            "9784091218612"
+          ],
+          "title": [
+            "タッチ. vol.1"
+          ],
+          "mainTitles": [
+            "タッチ"
+          ],
+          "volume": [
+            "vol.1"
+          ],
+          "edition": [],
+          "responsibilities": [
+            "あだち充 原作"
+          ],
+          "publisher": [
+            "小学館"
+          ],
+          "language": [
+            "jpn"
+          ],
+          "genre": [
+            "児童図書",
+            "漫画"
+          ]
+        }
+      ],
+      "priorReview": {
+        "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0008-9f792bd2246a1595-review-7b6502faf255147c/review-manifest.json",
+        "sha256": "97ae2100ec16c5c871f7445d1426e6d7a22da6cb9b98dff9c7f90739bff8d2bc"
+      }
+    }
+  ],
+  "candidateControlCommit": "c189e0634c5c18596df968f68a48003da2153056",
+  "historicalComparison": {
+    "baseline": "datasets/connectivity/issue-34/after-data.json.gz",
+    "claimChangesWithinSameAnchors": {
+      "added": [
+        "7ae1c51b-9ba0-46fb-a070-41ac310e8c94"
+      ],
+      "removed": [],
+      "changed": []
+    },
+    "hikaruGrowth": {
+      "scope": "Hikaru connected component only; no current global census",
+      "currentCohortClosed": true,
+      "beforeHikaruGroup": [
+        "0c29d0e2-685f-4c56-9805-6bf1baf40e7c",
+        "e0183e9c-dc97-4d85-b46e-14a1b76707fd"
+      ],
+      "beforeBakumanGroup": [
+        "3427040b-88fd-4db5-b546-dd237abad032",
+        "7ca5fc7d-545a-4d39-a2dc-6cce86390112",
+        "a13205e2-220c-4b7d-8a1a-39dbefe52db8",
+        "d5e39491-5a5f-423c-9222-2eb3c18db9a8"
+      ],
+      "currentGroup": [
+        "0c29d0e2-685f-4c56-9805-6bf1baf40e7c",
+        "3427040b-88fd-4db5-b546-dd237abad032",
+        "7ca5fc7d-545a-4d39-a2dc-6cce86390112",
+        "a13205e2-220c-4b7d-8a1a-39dbefe52db8",
+        "d5e39491-5a5f-423c-9222-2eb3c18db9a8",
+        "e0183e9c-dc97-4d85-b46e-14a1b76707fd"
+      ],
+      "beforeWithinHops": [
+        1,
+        1,
+        1
+      ],
+      "currentWithinHops": [
+        2,
+        3,
+        4
+      ]
+    }
+  },
+  "claimsForComparison": [
+    {
+      "subjectId": "a4fd8a5e-0c03-454e-8899-7d910d992a2d",
+      "objectId": "8e322435-4318-4ad0-835b-3f71d2537421",
+      "predicate": "AFFILIATED_WITH",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "contribution": null,
+      "organizationParticipation": null,
+      "eventParticipation": null,
+      "id": "0dfc4a11-3ce3-44f0-8b3c-294b561f24c6"
+    },
+    {
+      "subjectId": "e0183e9c-dc97-4d85-b46e-14a1b76707fd",
+      "objectId": "0c29d0e2-685f-4c56-9805-6bf1baf40e7c",
+      "predicate": "CONTRIBUTED_TO",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "contribution": {
+        "roleId": "ORIGINAL_STORY",
+        "scope": {
+          "kind": "publication",
+          "isbn13": "9784088727172",
+          "volumeLabel": "第1巻",
+          "editionLabel": null,
+          "language": "ja"
+        }
+      },
+      "organizationParticipation": null,
+      "eventParticipation": null,
+      "id": "10f72eb0-3526-4d50-a552-e2239c01fc39"
+    },
+    {
+      "subjectId": "a80ce3f6-62b5-4af0-8ac7-5accf878fc92",
+      "objectId": "0820c3e8-7219-4e57-abb0-7d04e253fd4a",
+      "predicate": "AFFILIATED_WITH",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "contribution": null,
+      "organizationParticipation": null,
+      "eventParticipation": null,
+      "id": "11bbe5b7-0a51-4cab-b26a-771fd0b61d85"
+    },
+    {
+      "subjectId": "d900543a-9c11-48c1-be76-1822b756fcc4",
+      "objectId": "326dd821-2ca6-406a-a683-e424eb534998",
+      "predicate": "CONTRIBUTED_TO",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "contribution": {
+        "roleId": null,
+        "scope": null
+      },
+      "organizationParticipation": null,
+      "eventParticipation": null,
+      "id": "11d202ab-e9a4-4da5-9ff2-735f48f83133"
+    },
+    {
+      "subjectId": "496895c7-23f5-4b3e-a6f4-a8963b83afb7",
+      "objectId": "0820c3e8-7219-4e57-abb0-7d04e253fd4a",
+      "predicate": "AFFILIATED_WITH",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "contribution": null,
+      "organizationParticipation": null,
+      "eventParticipation": null,
+      "id": "159f0263-b1e7-443b-83ec-ad6fd8d50210"
+    },
+    {
+      "subjectId": "d900543a-9c11-48c1-be76-1822b756fcc4",
+      "objectId": "290ab095-192d-4910-90f3-ae741f9d1f32",
+      "predicate": "CONTRIBUTED_TO",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "contribution": {
+        "roleId": "DRAWING",
+        "scope": {
+          "kind": "publication",
+          "isbn13": "9784091810816",
+          "volumeLabel": "第1巻",
+          "editionLabel": null,
+          "language": "ja"
+        }
+      },
+      "organizationParticipation": null,
+      "eventParticipation": null,
+      "id": "18c75118-e284-4c85-accf-e3894a6da3f3"
+    },
+    {
+      "subjectId": "29e9caea-6c44-4c1f-9abc-f4350003ca3b",
+      "objectId": "326dd821-2ca6-406a-a683-e424eb534998",
+      "predicate": "CONTRIBUTED_TO",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "contribution": {
+        "roleId": null,
+        "scope": null
+      },
+      "organizationParticipation": null,
+      "eventParticipation": null,
+      "id": "1ad08ee5-bbc3-41bf-b647-4b7419820a14"
+    },
+    {
+      "subjectId": "a9140625-9306-4163-8560-7e5e3e5a3ac7",
+      "objectId": "0820c3e8-7219-4e57-abb0-7d04e253fd4a",
+      "predicate": "AFFILIATED_WITH",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "contribution": null,
+      "organizationParticipation": null,
+      "eventParticipation": null,
+      "id": "1ce4dd88-cf32-4d04-b81d-1231c929016d"
+    },
+    {
+      "subjectId": "29e9caea-6c44-4c1f-9abc-f4350003ca3b",
+      "objectId": "326dd821-2ca6-406a-a683-e424eb534998",
+      "predicate": "CONTRIBUTED_TO",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "contribution": {
+        "roleId": "STORY_CO_CREATION",
+        "scope": {
+          "kind": "publication",
+          "isbn13": "9784063729221",
+          "volumeLabel": "第4巻",
+          "editionLabel": null,
+          "language": "ja"
+        }
+      },
+      "organizationParticipation": null,
+      "eventParticipation": null,
+      "id": "29f3bd67-b461-49a8-bdfa-d98b1d7dcfe1"
+    },
+    {
+      "subjectId": "52a671d1-bc5c-4a52-9d98-8c9418f5ec5c",
+      "objectId": "a1af9abb-843a-4611-853c-50f630b817ae",
+      "predicate": "AFFILIATED_WITH",
+      "polarity": "affirmed",
+      "period": {
+        "from": {
+          "value": "1921",
+          "precision": "year"
+        },
+        "to": {
+          "value": "1922",
+          "precision": "year"
+        }
+      },
+      "contribution": null,
+      "organizationParticipation": null,
+      "eventParticipation": null,
+      "id": "2bdd7207-c8af-4936-ac23-961a8450eaad"
+    },
+    {
+      "subjectId": "944e167e-57ef-4df7-ac37-8c3ab8c6f477",
+      "objectId": "0820c3e8-7219-4e57-abb0-7d04e253fd4a",
+      "predicate": "AFFILIATED_WITH",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "contribution": null,
+      "organizationParticipation": null,
+      "eventParticipation": null,
+      "id": "37b6c108-5bce-44e6-9ac9-3955a40b4815"
+    },
+    {
+      "subjectId": "a58b8ae8-e68f-4e6c-9463-539c106a5f19",
+      "objectId": "8e322435-4318-4ad0-835b-3f71d2537421",
+      "predicate": "AFFILIATED_WITH",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "contribution": null,
+      "organizationParticipation": null,
+      "eventParticipation": null,
+      "id": "3ce6d2ff-9cdf-4568-b246-719a0e07c410"
+    },
+    {
+      "subjectId": "3252068c-e10c-4619-a9bc-45f02431e3c0",
+      "objectId": "0820c3e8-7219-4e57-abb0-7d04e253fd4a",
+      "predicate": "AFFILIATED_WITH",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "contribution": null,
+      "organizationParticipation": null,
+      "eventParticipation": null,
+      "id": "41125c4c-d61a-4266-a562-5f5ec556dfd8"
+    },
+    {
+      "subjectId": "1530af15-129d-40bf-a1ca-ce8343dc7491",
+      "objectId": "a1af9abb-843a-4611-853c-50f630b817ae",
+      "predicate": "AFFILIATED_WITH",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "contribution": null,
+      "organizationParticipation": null,
+      "eventParticipation": null,
+      "id": "47d46b69-b111-4b76-addb-632d679ae4f8"
+    },
+    {
+      "subjectId": "a13205e2-220c-4b7d-8a1a-39dbefe52db8",
+      "objectId": "3427040b-88fd-4db5-b546-dd237abad032",
+      "predicate": "CONTRIBUTED_TO",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "contribution": {
+        "roleId": "ORIGINAL_STORY",
+        "scope": {
+          "kind": "publication",
+          "isbn13": "9784086196901",
+          "volumeLabel": "第1巻",
+          "editionLabel": null,
+          "language": "ja"
+        }
+      },
+      "organizationParticipation": null,
+      "eventParticipation": null,
+      "id": "48a9f51e-beb1-4c3a-9c30-5923bc852925"
+    },
+    {
+      "subjectId": "29e9caea-6c44-4c1f-9abc-f4350003ca3b",
+      "objectId": "e87a40f9-3139-47a1-a962-6610eb2b8878",
+      "predicate": "CONTRIBUTED_TO",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "contribution": {
+        "roleId": null,
+        "scope": null
+      },
+      "organizationParticipation": null,
+      "eventParticipation": null,
+      "id": "48c3605b-34d8-409d-a4d2-fdd50c524c74"
+    },
+    {
+      "subjectId": "29e9caea-6c44-4c1f-9abc-f4350003ca3b",
+      "objectId": "87ce941c-6937-49f8-912d-4800d14a48c6",
+      "predicate": "CONTRIBUTED_TO",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "contribution": {
+        "roleId": "AUTHORSHIP",
+        "scope": {
+          "kind": "publication",
+          "isbn13": "9784091867261",
+          "volumeLabel": null,
+          "editionLabel": null,
+          "language": "ja"
+        }
+      },
+      "organizationParticipation": null,
+      "eventParticipation": null,
+      "id": "4ad66ba5-a65d-4942-939e-c84a67e735d9"
+    },
+    {
+      "subjectId": "afb08ae1-bf1c-4117-b924-46445c0e85be",
+      "objectId": "0820c3e8-7219-4e57-abb0-7d04e253fd4a",
+      "predicate": "AFFILIATED_WITH",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "contribution": null,
+      "organizationParticipation": null,
+      "eventParticipation": null,
+      "id": "4b4192b5-40b1-4503-b1a5-e8c62d9b62d8"
+    },
+    {
+      "subjectId": "d900543a-9c11-48c1-be76-1822b756fcc4",
+      "objectId": "e87a40f9-3139-47a1-a962-6610eb2b8878",
+      "predicate": "CONTRIBUTED_TO",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "contribution": {
+        "roleId": "AUTHORSHIP",
+        "scope": {
+          "kind": "publication",
+          "isbn13": "9784091841612",
+          "volumeLabel": "第1巻",
+          "editionLabel": "完全版",
+          "language": "ja"
+        }
+      },
+      "organizationParticipation": null,
+      "eventParticipation": null,
+      "id": "4e212aa6-9e75-47a4-aacf-96432e7eb517"
+    },
+    {
+      "subjectId": "d900543a-9c11-48c1-be76-1822b756fcc4",
+      "objectId": "290ab095-192d-4910-90f3-ae741f9d1f32",
+      "predicate": "CONTRIBUTED_TO",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "contribution": {
+        "roleId": null,
+        "scope": {
+          "kind": "publication",
+          "isbn13": "9784091921116",
+          "volumeLabel": "第1巻",
+          "editionLabel": "小学館文庫",
+          "language": "ja"
+        }
+      },
+      "organizationParticipation": null,
+      "eventParticipation": null,
+      "id": "524b2cb1-f0f9-4c0d-8bee-1892d2256dcf"
+    },
+    {
+      "subjectId": "29e9caea-6c44-4c1f-9abc-f4350003ca3b",
+      "objectId": "87ce941c-6937-49f8-912d-4800d14a48c6",
+      "predicate": "CONTRIBUTED_TO",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "contribution": {
+        "roleId": null,
+        "scope": {
+          "kind": "publication",
+          "isbn13": "9784091867261",
+          "volumeLabel": null,
+          "editionLabel": null,
+          "language": "ja"
+        }
+      },
+      "organizationParticipation": null,
+      "eventParticipation": null,
+      "id": "54ca01b9-b0d3-45c7-bd11-f37f6e0df4e5"
+    },
+    {
+      "subjectId": "52a671d1-bc5c-4a52-9d98-8c9418f5ec5c",
+      "objectId": "0820c3e8-7219-4e57-abb0-7d04e253fd4a",
+      "predicate": "AFFILIATED_WITH",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "contribution": null,
+      "organizationParticipation": null,
+      "eventParticipation": null,
+      "id": "554bbc81-73df-498e-b867-c90219496e2f"
+    },
+    {
+      "subjectId": "1530af15-129d-40bf-a1ca-ce8343dc7491",
+      "objectId": "de4da44e-bec2-477e-9d3b-f64163dba424",
+      "predicate": "AFFILIATED_WITH",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "contribution": null,
+      "organizationParticipation": null,
+      "eventParticipation": null,
+      "id": "596ccdf5-cd34-42c0-9dc3-871481b768e6"
+    },
+    {
+      "subjectId": "7e33a470-c0a0-4f14-a906-3094c1c84488",
+      "objectId": "0820c3e8-7219-4e57-abb0-7d04e253fd4a",
+      "predicate": "AFFILIATED_WITH",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "contribution": null,
+      "organizationParticipation": null,
+      "eventParticipation": null,
+      "id": "642207ca-b9bf-4b15-a11f-72598048b9da"
+    },
+    {
+      "subjectId": "d900543a-9c11-48c1-be76-1822b756fcc4",
+      "objectId": "a87ce993-a862-4f18-b956-7fa24c9df8a2",
+      "predicate": "CONTRIBUTED_TO",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "contribution": {
+        "roleId": null,
+        "scope": {
+          "kind": "publication",
+          "isbn13": "9784091875365",
+          "volumeLabel": "第1巻",
+          "editionLabel": "完全版",
+          "language": "ja"
+        }
+      },
+      "organizationParticipation": null,
+      "eventParticipation": null,
+      "id": "6698edea-a6d6-4f44-94d8-f262331bd429"
+    },
+    {
+      "subjectId": "d900543a-9c11-48c1-be76-1822b756fcc4",
+      "objectId": "a6521d80-b9d0-4477-a435-6fa02eb58c04",
+      "predicate": "CONTRIBUTED_TO",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "contribution": {
+        "roleId": "AUTHORSHIP",
+        "scope": {
+          "kind": "publication",
+          "isbn13": "9784091817907",
+          "volumeLabel": "第1巻",
+          "editionLabel": "完全版",
+          "language": "ja"
+        }
+      },
+      "organizationParticipation": null,
+      "eventParticipation": null,
+      "id": "6d5ff5e4-5f59-4948-8248-cbdac3888a7c"
+    },
+    {
+      "subjectId": "a13205e2-220c-4b7d-8a1a-39dbefe52db8",
+      "objectId": "7ca5fc7d-545a-4d39-a2dc-6cce86390112",
+      "predicate": "CONTRIBUTED_TO",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "contribution": {
+        "roleId": "ORIGINAL_STORY",
+        "scope": {
+          "kind": "publication",
+          "isbn13": "9784088736211",
+          "volumeLabel": "第1巻",
+          "editionLabel": null,
+          "language": "ja"
+        }
+      },
+      "organizationParticipation": null,
+      "eventParticipation": null,
+      "id": "6ed29ee4-2b62-4fe7-83a6-aafe300754d7"
+    },
+    {
+      "subjectId": "dac2ca0e-f309-4953-9d0d-bb6c52ba358d",
+      "objectId": "0820c3e8-7219-4e57-abb0-7d04e253fd4a",
+      "predicate": "AFFILIATED_WITH",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "contribution": null,
+      "organizationParticipation": null,
+      "eventParticipation": null,
+      "id": "712cec44-55c1-46d5-ba1a-cacc2c0f87f6"
+    },
+    {
+      "subjectId": "29e9caea-6c44-4c1f-9abc-f4350003ca3b",
+      "objectId": "e87a40f9-3139-47a1-a962-6610eb2b8878",
+      "predicate": "CONTRIBUTED_TO",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "contribution": {
+        "roleId": "SCRIPT_WRITING",
+        "scope": {
+          "kind": "publication",
+          "isbn13": "9784091841612",
+          "volumeLabel": "第1巻",
+          "editionLabel": "完全版",
+          "language": "ja"
+        }
+      },
+      "organizationParticipation": null,
+      "eventParticipation": null,
+      "id": "7142e160-c0d5-4358-9b70-63c03bfd44ad"
+    },
+    {
+      "subjectId": "bdb742c2-2973-4c1c-a523-c828374111fc",
+      "objectId": "2b7c6289-d050-4dc0-93e3-9307681253cc",
+      "predicate": "CONTRIBUTED_TO",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "contribution": {
+        "roleId": null,
+        "scope": null
+      },
+      "organizationParticipation": null,
+      "eventParticipation": null,
+      "id": "75f911ca-a247-42bd-8bf0-c166649ce145"
+    },
+    {
+      "subjectId": "d5e39491-5a5f-423c-9222-2eb3c18db9a8",
+      "objectId": "0c29d0e2-685f-4c56-9805-6bf1baf40e7c",
+      "predicate": "CONTRIBUTED_TO",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "contribution": {
+        "roleId": "DRAWING",
+        "scope": null
+      },
+      "organizationParticipation": null,
+      "eventParticipation": null,
+      "id": "7ae1c51b-9ba0-46fb-a070-41ac310e8c94"
+    },
+    {
+      "subjectId": "ee968c06-c569-4ca1-94bf-61de6cf2a809",
+      "objectId": "0820c3e8-7219-4e57-abb0-7d04e253fd4a",
+      "predicate": "AFFILIATED_WITH",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "contribution": null,
+      "organizationParticipation": null,
+      "eventParticipation": null,
+      "id": "7cf74dd9-5788-4f53-9a58-f8207bb40235"
+    },
+    {
+      "subjectId": "b8949272-b2c2-456d-8d0f-011105defa2f",
+      "objectId": "0820c3e8-7219-4e57-abb0-7d04e253fd4a",
+      "predicate": "AFFILIATED_WITH",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "contribution": null,
+      "organizationParticipation": null,
+      "eventParticipation": null,
+      "id": "7fa26d83-58a0-4f99-ae22-37a9f91e09d3"
+    },
+    {
+      "subjectId": "d900543a-9c11-48c1-be76-1822b756fcc4",
+      "objectId": "290ab095-192d-4910-90f3-ae741f9d1f32",
+      "predicate": "CONTRIBUTED_TO",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "contribution": {
+        "roleId": "DRAWING",
+        "scope": {
+          "kind": "publication",
+          "isbn13": "9784091921116",
+          "volumeLabel": "第1巻",
+          "editionLabel": "小学館文庫",
+          "language": "ja"
+        }
+      },
+      "organizationParticipation": null,
+      "eventParticipation": null,
+      "id": "7ff703da-d90e-413d-b02e-087f136faa21"
+    },
+    {
+      "subjectId": "439a9edc-134d-48e5-b6c8-8376a95ce4e6",
+      "objectId": "0820c3e8-7219-4e57-abb0-7d04e253fd4a",
+      "predicate": "AFFILIATED_WITH",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "contribution": null,
+      "organizationParticipation": null,
+      "eventParticipation": null,
+      "id": "8030f059-7797-4062-9a23-f0f07bf251a0"
+    },
+    {
+      "subjectId": "d900543a-9c11-48c1-be76-1822b756fcc4",
+      "objectId": "2b7c6289-d050-4dc0-93e3-9307681253cc",
+      "predicate": "CONTRIBUTED_TO",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "contribution": {
+        "roleId": "AUTHORSHIP",
+        "scope": {
+          "kind": "publication",
+          "isbn13": "9784091874313",
+          "volumeLabel": "第1巻",
+          "editionLabel": null,
+          "language": "ja"
+        }
+      },
+      "organizationParticipation": null,
+      "eventParticipation": null,
+      "id": "839b0bb8-1781-4a3e-8446-9a22d08d1658"
+    },
+    {
+      "subjectId": "10bcb2d5-1827-4ac9-8fb3-25fdbba41a08",
+      "objectId": "0820c3e8-7219-4e57-abb0-7d04e253fd4a",
+      "predicate": "AFFILIATED_WITH",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "contribution": null,
+      "organizationParticipation": null,
+      "eventParticipation": null,
+      "id": "864dbba4-41c8-4f23-ab6e-98d37f727ab5"
+    },
+    {
+      "subjectId": "d900543a-9c11-48c1-be76-1822b756fcc4",
+      "objectId": "87ce941c-6937-49f8-912d-4800d14a48c6",
+      "predicate": "CONTRIBUTED_TO",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "contribution": {
+        "roleId": null,
+        "scope": {
+          "kind": "publication",
+          "isbn13": "9784091867261",
+          "volumeLabel": null,
+          "editionLabel": null,
+          "language": "ja"
+        }
+      },
+      "organizationParticipation": null,
+      "eventParticipation": null,
+      "id": "88c2e0d1-f65e-4d6c-818d-3a7f39d9b45f"
+    },
+    {
+      "subjectId": "5eb7488f-ee20-4d9e-9f00-16624c4f3ba1",
+      "objectId": "0820c3e8-7219-4e57-abb0-7d04e253fd4a",
+      "predicate": "AFFILIATED_WITH",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "contribution": null,
+      "organizationParticipation": null,
+      "eventParticipation": null,
+      "id": "8e02d35f-9f37-41a8-b3b1-df7a9a5456aa"
+    },
+    {
+      "subjectId": "e06e6b05-b9e1-466f-8785-1bc015450e47",
+      "objectId": "0820c3e8-7219-4e57-abb0-7d04e253fd4a",
+      "predicate": "AFFILIATED_WITH",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "contribution": null,
+      "organizationParticipation": null,
+      "eventParticipation": null,
+      "id": "90e2b01d-fab1-4993-8314-d6efe27ec8ec"
+    },
+    {
+      "subjectId": "d900543a-9c11-48c1-be76-1822b756fcc4",
+      "objectId": "326dd821-2ca6-406a-a683-e424eb534998",
+      "predicate": "CONTRIBUTED_TO",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "contribution": {
+        "roleId": "AUTHORSHIP",
+        "scope": {
+          "kind": "publication",
+          "isbn13": "9784063729221",
+          "volumeLabel": "第4巻",
+          "editionLabel": null,
+          "language": "ja"
+        }
+      },
+      "organizationParticipation": null,
+      "eventParticipation": null,
+      "id": "9dd13005-045e-4c8c-b9e2-76866d04f7d5"
+    },
+    {
+      "subjectId": "d900543a-9c11-48c1-be76-1822b756fcc4",
+      "objectId": "2b7c6289-d050-4dc0-93e3-9307681253cc",
+      "predicate": "CONTRIBUTED_TO",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "contribution": {
+        "roleId": null,
+        "scope": null
+      },
+      "organizationParticipation": null,
+      "eventParticipation": null,
+      "id": "aacddf82-87ae-4981-8542-0470e981a94f"
+    },
+    {
+      "subjectId": "d900543a-9c11-48c1-be76-1822b756fcc4",
+      "objectId": "ed3e72d6-42a5-4a49-ab0c-307d9f051e2b",
+      "predicate": "CONTRIBUTED_TO",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "contribution": {
+        "roleId": "CREATION",
+        "scope": {
+          "kind": "publication",
+          "isbn13": "9784091922816",
+          "volumeLabel": "第1巻",
+          "editionLabel": "小学館文庫",
+          "language": "ja"
+        }
+      },
+      "organizationParticipation": null,
+      "eventParticipation": null,
+      "id": "b4b6ae57-3104-49ef-948a-7ccf17240954"
+    },
+    {
+      "subjectId": "d900543a-9c11-48c1-be76-1822b756fcc4",
+      "objectId": "eb0af7e1-caa6-435f-86fb-0591421982b5",
+      "predicate": "INFLUENCED_BY",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "contribution": null,
+      "organizationParticipation": null,
+      "eventParticipation": null,
+      "id": "b6ce3407-e3bb-44c9-867b-7b7434861af5"
+    },
+    {
+      "subjectId": "d900543a-9c11-48c1-be76-1822b756fcc4",
+      "objectId": "a87ce993-a862-4f18-b956-7fa24c9df8a2",
+      "predicate": "CONTRIBUTED_TO",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "contribution": {
+        "roleId": "AUTHORSHIP",
+        "scope": {
+          "kind": "publication",
+          "isbn13": "9784091875365",
+          "volumeLabel": "第1巻",
+          "editionLabel": "完全版",
+          "language": "ja"
+        }
+      },
+      "organizationParticipation": null,
+      "eventParticipation": null,
+      "id": "b6dde58c-a093-4ced-b9a6-87d51cec5faf"
+    },
+    {
+      "subjectId": "c2ec1d21-6796-43cf-99f0-f0c9acdc1a24",
+      "objectId": "0820c3e8-7219-4e57-abb0-7d04e253fd4a",
+      "predicate": "AFFILIATED_WITH",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "contribution": null,
+      "organizationParticipation": null,
+      "eventParticipation": null,
+      "id": "b9bdafb5-b68c-438b-801e-15334e0f1862"
+    },
+    {
+      "subjectId": "52a671d1-bc5c-4a52-9d98-8c9418f5ec5c",
+      "objectId": "8e322435-4318-4ad0-835b-3f71d2537421",
+      "predicate": "AFFILIATED_WITH",
+      "polarity": "affirmed",
+      "period": {
+        "from": {
+          "value": "1922",
+          "precision": "year"
+        },
+        "to": {
+          "value": "1923",
+          "precision": "year"
+        }
+      },
+      "contribution": null,
+      "organizationParticipation": null,
+      "eventParticipation": null,
+      "id": "c23fe1f3-fae6-43c1-9ed7-af1d94e4712c"
+    },
+    {
+      "subjectId": "1abd838a-b22d-45a4-913f-0ef09205e1e8",
+      "objectId": "48ca311c-c403-4a24-a1e3-cb6392764397",
+      "predicate": "CONTRIBUTED_TO",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "contribution": {
+        "roleId": "AUTHORSHIP",
+        "scope": {
+          "kind": "publication",
+          "isbn13": "9784091238672",
+          "volumeLabel": "第1巻（NDL巻次 1）",
+          "editionLabel": null,
+          "language": "ja"
+        }
+      },
+      "organizationParticipation": null,
+      "eventParticipation": null,
+      "id": "c72262df-ce7b-4514-9341-55d242f94bca"
+    },
+    {
+      "subjectId": "bdb742c2-2973-4c1c-a523-c828374111fc",
+      "objectId": "2b7c6289-d050-4dc0-93e3-9307681253cc",
+      "predicate": "CONTRIBUTED_TO",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "contribution": {
+        "roleId": "SUPERVISION",
+        "scope": {
+          "kind": "publication",
+          "isbn13": "9784091874313",
+          "volumeLabel": "第1巻",
+          "editionLabel": null,
+          "language": "ja"
+        }
+      },
+      "organizationParticipation": null,
+      "eventParticipation": null,
+      "id": "cc2bc0c3-d8e7-47fe-8aaf-1b219bff0137"
+    },
+    {
+      "subjectId": "d5e39491-5a5f-423c-9222-2eb3c18db9a8",
+      "objectId": "3427040b-88fd-4db5-b546-dd237abad032",
+      "predicate": "CONTRIBUTED_TO",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "contribution": {
+        "roleId": "AUTHORSHIP",
+        "scope": {
+          "kind": "publication",
+          "isbn13": "9784086196901",
+          "volumeLabel": "第1巻",
+          "editionLabel": null,
+          "language": "ja"
+        }
+      },
+      "organizationParticipation": null,
+      "eventParticipation": null,
+      "id": "cd294bb9-a7de-4f21-95c2-84b878c0e7cc"
+    },
+    {
+      "subjectId": "d900543a-9c11-48c1-be76-1822b756fcc4",
+      "objectId": "a6521d80-b9d0-4477-a435-6fa02eb58c04",
+      "predicate": "CONTRIBUTED_TO",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "contribution": {
+        "roleId": null,
+        "scope": {
+          "kind": "publication",
+          "isbn13": "9784091817907",
+          "volumeLabel": "第1巻",
+          "editionLabel": "完全版",
+          "language": "ja"
+        }
+      },
+      "organizationParticipation": null,
+      "eventParticipation": null,
+      "id": "cdbcaa44-689b-4e96-8a0f-2c4f0c36028d"
+    },
+    {
+      "subjectId": "d900543a-9c11-48c1-be76-1822b756fcc4",
+      "objectId": "e87a40f9-3139-47a1-a962-6610eb2b8878",
+      "predicate": "CONTRIBUTED_TO",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "contribution": {
+        "roleId": null,
+        "scope": null
+      },
+      "organizationParticipation": null,
+      "eventParticipation": null,
+      "id": "d9780089-361d-49a0-b95a-a54c2cd2fa7a"
+    },
+    {
+      "subjectId": "29e9caea-6c44-4c1f-9abc-f4350003ca3b",
+      "objectId": "2b7c6289-d050-4dc0-93e3-9307681253cc",
+      "predicate": "CONTRIBUTED_TO",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "contribution": {
+        "roleId": "PRODUCING",
+        "scope": {
+          "kind": "publication",
+          "isbn13": "9784091874313",
+          "volumeLabel": "第1巻",
+          "editionLabel": null,
+          "language": "ja"
+        }
+      },
+      "organizationParticipation": null,
+      "eventParticipation": null,
+      "id": "dbc08a85-9165-4cc8-a3af-d133c83d8f67"
+    },
+    {
+      "subjectId": "96d02e22-ead6-460c-9fbd-ea197b6bcd5e",
+      "objectId": "0820c3e8-7219-4e57-abb0-7d04e253fd4a",
+      "predicate": "AFFILIATED_WITH",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "contribution": null,
+      "organizationParticipation": null,
+      "eventParticipation": null,
+      "id": "e0b68701-b80d-4d77-b321-52bb9ef8487e"
+    },
+    {
+      "subjectId": "29e9caea-6c44-4c1f-9abc-f4350003ca3b",
+      "objectId": "2b7c6289-d050-4dc0-93e3-9307681253cc",
+      "predicate": "CONTRIBUTED_TO",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "contribution": {
+        "roleId": null,
+        "scope": null
+      },
+      "organizationParticipation": null,
+      "eventParticipation": null,
+      "id": "e3b37447-87f5-40ed-b738-6ba37578c8c3"
+    },
+    {
+      "subjectId": "aebd828a-b745-467f-8cdd-45a2e1be2142",
+      "objectId": "0820c3e8-7219-4e57-abb0-7d04e253fd4a",
+      "predicate": "AFFILIATED_WITH",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "contribution": null,
+      "organizationParticipation": null,
+      "eventParticipation": null,
+      "id": "e4e254a6-ff24-4160-8c2b-d8e9162dde01"
+    },
+    {
+      "subjectId": "1530af15-129d-40bf-a1ca-ce8343dc7491",
+      "objectId": "8e322435-4318-4ad0-835b-3f71d2537421",
+      "predicate": "AFFILIATED_WITH",
+      "polarity": "affirmed",
+      "period": {
+        "from": {
+          "value": "1924",
+          "precision": "year"
+        },
+        "to": {
+          "value": "1925",
+          "precision": "year"
+        }
+      },
+      "contribution": null,
+      "organizationParticipation": {
+        "positionId": "VISITOR"
+      },
+      "eventParticipation": null,
+      "id": "e71f548b-65c2-4032-a40f-342ab75b5d3e"
+    },
+    {
+      "subjectId": "1530af15-129d-40bf-a1ca-ce8343dc7491",
+      "objectId": "8e322435-4318-4ad0-835b-3f71d2537421",
+      "predicate": "AFFILIATED_WITH",
+      "polarity": "affirmed",
+      "period": {
+        "from": {
+          "value": "1924",
+          "precision": "year"
+        },
+        "to": {
+          "value": "1925",
+          "precision": "year"
+        }
+      },
+      "contribution": null,
+      "organizationParticipation": null,
+      "eventParticipation": null,
+      "id": "eb7182aa-e7f1-4064-a731-bffe7c59227c"
+    },
+    {
+      "subjectId": "d900543a-9c11-48c1-be76-1822b756fcc4",
+      "objectId": "ed3e72d6-42a5-4a49-ab0c-307d9f051e2b",
+      "predicate": "CONTRIBUTED_TO",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "contribution": {
+        "roleId": null,
+        "scope": {
+          "kind": "publication",
+          "isbn13": "9784091922816",
+          "volumeLabel": "第1巻",
+          "editionLabel": "小学館文庫",
+          "language": "ja"
+        }
+      },
+      "organizationParticipation": null,
+      "eventParticipation": null,
+      "id": "ed25d35b-1dd8-4a73-ae84-649682afadf2"
+    },
+    {
+      "subjectId": "5cda395a-4927-4cae-92fe-839b29d05095",
+      "objectId": "8e322435-4318-4ad0-835b-3f71d2537421",
+      "predicate": "AFFILIATED_WITH",
+      "polarity": "affirmed",
+      "period": {
+        "from": {
+          "value": "1926",
+          "precision": "year"
+        },
+        "to": {
+          "value": "1927",
+          "precision": "year"
+        }
+      },
+      "contribution": null,
+      "organizationParticipation": null,
+      "eventParticipation": null,
+      "id": "f05e54fa-67a1-49c6-876a-0f4b01534cb0"
+    },
+    {
+      "subjectId": "1abd838a-b22d-45a4-913f-0ef09205e1e8",
+      "objectId": "bb47fc9c-87b1-4df5-a7d6-ecf175d93eb0",
+      "predicate": "CONTRIBUTED_TO",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "contribution": {
+        "roleId": "AUTHORSHIP",
+        "scope": {
+          "kind": "publication",
+          "isbn13": "9784091231512",
+          "volumeLabel": "第1巻（NDL巻次 1）",
+          "editionLabel": null,
+          "language": "ja"
+        }
+      },
+      "organizationParticipation": null,
+      "eventParticipation": null,
+      "id": "f1260c3f-2637-416f-b407-2052a7c36717"
+    },
+    {
+      "subjectId": "d900543a-9c11-48c1-be76-1822b756fcc4",
+      "objectId": "87ce941c-6937-49f8-912d-4800d14a48c6",
+      "predicate": "CONTRIBUTED_TO",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "contribution": {
+        "roleId": "AUTHORSHIP",
+        "scope": {
+          "kind": "publication",
+          "isbn13": "9784091867261",
+          "volumeLabel": null,
+          "editionLabel": null,
+          "language": "ja"
+        }
+      },
+      "organizationParticipation": null,
+      "eventParticipation": null,
+      "id": "f7c734f6-5fdb-428f-b178-910988ba9bc8"
+    },
+    {
+      "subjectId": "d900543a-9c11-48c1-be76-1822b756fcc4",
+      "objectId": "c1e93fb7-3547-4b64-bd7c-bce073a1198a",
+      "predicate": "CONTRIBUTED_TO",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "contribution": {
+        "roleId": "AUTHORSHIP",
+        "scope": {
+          "kind": "publication",
+          "isbn13": "9784098602780",
+          "volumeLabel": "第1巻",
+          "editionLabel": null,
+          "language": "ja"
+        }
+      },
+      "organizationParticipation": null,
+      "eventParticipation": null,
+      "id": "fb933ff4-2061-4a0c-a72c-6e7dd2958737"
+    },
+    {
+      "subjectId": "1530af15-129d-40bf-a1ca-ce8343dc7491",
+      "objectId": "8e322435-4318-4ad0-835b-3f71d2537421",
+      "predicate": "AFFILIATED_WITH",
+      "polarity": "affirmed",
+      "period": {
+        "from": {
+          "value": "1926",
+          "precision": "year"
+        },
+        "to": {
+          "value": "1927",
+          "precision": "year"
+        }
+      },
+      "contribution": null,
+      "organizationParticipation": {
+        "positionId": "ASSOCIATE_PROFESSOR"
+      },
+      "eventParticipation": null,
+      "id": "ffbe8c65-5435-4373-85c7-c091892e51d9"
+    }
+  ],
+  "evidenceHashes": {
+    "0dfc4a11-3ce3-44f0-8b3c-294b561f24c6": "f76389b159c2f1a6ace0307a1f73b3b377f93a9b38b44a0556b4872c5c937ac3",
+    "10f72eb0-3526-4d50-a552-e2239c01fc39": "5b00721ab7d8c1087e0896d027e407df39d782d9b9f21b46799ea2220a250aab",
+    "11bbe5b7-0a51-4cab-b26a-771fd0b61d85": "ef896d54d95a9e745a96d8f098bbf340e93bb8d5523fcc80fd660b6eb61597f1",
+    "11d202ab-e9a4-4da5-9ff2-735f48f83133": "d230ba3df1fb5cfc4b1aa745b7c5c8242750c7499534939c05a7a75f7449db4c",
+    "159f0263-b1e7-443b-83ec-ad6fd8d50210": "14c16d52e38303f9567e0e22885f9294dcde717561f7b3f1f9f2c9870b27365a",
+    "18c75118-e284-4c85-accf-e3894a6da3f3": "046794495ea28526dc5dbbbd5d434db2efe5771332c4b677db7bf6beee4164fd",
+    "1ad08ee5-bbc3-41bf-b647-4b7419820a14": "4524bac52e696b38776a0865babc4e2b84a1036703a5ba26e6247ad32b8f25c5",
+    "1ce4dd88-cf32-4d04-b81d-1231c929016d": "0e3be79e8c9f2703ea37e6b4cfafd054ce2043f647e1ab43657127602f57ff12",
+    "29f3bd67-b461-49a8-bdfa-d98b1d7dcfe1": "379ce83f412bf7f8c82c2765e92d5183c3e7d25d7cd91e4c62f72d7cc762e9c3",
+    "2bdd7207-c8af-4936-ac23-961a8450eaad": "236fc6803742f1da41fa1d196f6758be505b6dd9591442eb48b352ffff987b90",
+    "37b6c108-5bce-44e6-9ac9-3955a40b4815": "5088f38f31ca16b79678d0f57956ae0537f566c68090489261ab7549c29c93dc",
+    "3ce6d2ff-9cdf-4568-b246-719a0e07c410": "a17ac2a18b8e1a88c6b6ce58571bcbc22d9c33797d82ed79aab70c17662d5822",
+    "41125c4c-d61a-4266-a562-5f5ec556dfd8": "aea5bce1679c26a484b2b8f2cf1fef80a2180abf026036287f6d9327b869eaeb",
+    "47d46b69-b111-4b76-addb-632d679ae4f8": "6c62eedef5c9414d659113e18ae38b4d6e80d42973887c8dc45673026da6f7cd",
+    "48a9f51e-beb1-4c3a-9c30-5923bc852925": "d9499a0269b3ab7607e3b1da58cea80ae62143a7cdfc4b2c92f66e3b5ce136ce",
+    "48c3605b-34d8-409d-a4d2-fdd50c524c74": "f14fffe3d00e3a964ab55eeafa215a21fddca521ffec980e2785ba6d1ed75f61",
+    "4ad66ba5-a65d-4942-939e-c84a67e735d9": "f4f23163adb1317acb93ba3a33f0d72cadfcefed572076ca646d8fea5f9bb061",
+    "4b4192b5-40b1-4503-b1a5-e8c62d9b62d8": "2faec37fcb0f1094aeaaee56dff0f7b16d38dab35254fdc1f6aa751c41f40d2d",
+    "4e212aa6-9e75-47a4-aacf-96432e7eb517": "c1894ddaa187a3b724e6fb0b36657acff18cad768393629d64f813159e3fdd3c",
+    "524b2cb1-f0f9-4c0d-8bee-1892d2256dcf": "6cce5664dde567a18d897a6a6f7cd7be7a875fb9b33ce65edbf2da8ede00523e",
+    "54ca01b9-b0d3-45c7-bd11-f37f6e0df4e5": "969e2ac27ac49b3b3b2c5ed9db0c245d4651b51ec382e4b7aa8e0d73bdf71466",
+    "554bbc81-73df-498e-b867-c90219496e2f": "374c9588e6be86167ff140b2dc6f0b60638c78ec25bf3462b845833f982a1944",
+    "596ccdf5-cd34-42c0-9dc3-871481b768e6": "aef027e2cadd674f96644a6ea50b94f73b81529dda47b0c9752879b0c193f523",
+    "642207ca-b9bf-4b15-a11f-72598048b9da": "1e46fa9d0e32044093a99bed8e5eae876387906c87949cdf35b5660e91f11ab0",
+    "6698edea-a6d6-4f44-94d8-f262331bd429": "c9bf2a4ca816228abbf9b5ba07979936637fe1bb3fdce71bb283eaa4d699c5d2",
+    "6d5ff5e4-5f59-4948-8248-cbdac3888a7c": "4cd6b32214751339461360f40458075601d6b64cde9f380def0f5d15467343fe",
+    "6ed29ee4-2b62-4fe7-83a6-aafe300754d7": "db0166913e6aad5a80a2d40d2cf359d6d9eed9a9f77af45375bf19f779017685",
+    "712cec44-55c1-46d5-ba1a-cacc2c0f87f6": "61d9e9d852192d455f1fba9825175e8be3df80eb53d0bce3f900808a6fbcfac7",
+    "7142e160-c0d5-4358-9b70-63c03bfd44ad": "108e48a3f01a6dbf1204bdf8645d51c94cbaeebded3e4afd8375fce710fd137c",
+    "75f911ca-a247-42bd-8bf0-c166649ce145": "267e4b8dfd81ffd6671b04cbe8bd3a025f732a36db3ab4a520033e2a57a01f6d",
+    "7ae1c51b-9ba0-46fb-a070-41ac310e8c94": "a18612f7296dd613a82ae17c74ba456b51dbea9c6952a1c1f61de0ea5458c3b1",
+    "7cf74dd9-5788-4f53-9a58-f8207bb40235": "ca395c1cb955657ec783b9b4ffbed4a1ed1046f08ea9dee10095e58c1a174694",
+    "7fa26d83-58a0-4f99-ae22-37a9f91e09d3": "eb7b47d5e955a853a047ec319542f9d94ea8b4512d0666a203d344bf56a424c1",
+    "7ff703da-d90e-413d-b02e-087f136faa21": "3ef8709b7d58536fe52df4ea7862155a0839f0b0f49d3105af9fb403278fad30",
+    "8030f059-7797-4062-9a23-f0f07bf251a0": "f502aeb7bbaf04f954de5bbd49d4611337a53da697c5ec5561a6fc06abdd0ff7",
+    "839b0bb8-1781-4a3e-8446-9a22d08d1658": "8af001e5eba4abb10548d35c7be89569402006af1362d2c8f3b787f1d194ca9f",
+    "864dbba4-41c8-4f23-ab6e-98d37f727ab5": "0b2709e2304c4b1e2c29278f9fd0978ec962a9cb21cb2698d1540002d12c07ad",
+    "88c2e0d1-f65e-4d6c-818d-3a7f39d9b45f": "aefa88d24eda86ee9e5e83fbf846217e235183a1f0c0329177f398c4d6e363c5",
+    "8e02d35f-9f37-41a8-b3b1-df7a9a5456aa": "18bdd2437a55aeb7ba48ee8a6ac89c7b9b32bbc85ef00a80e7019ca46fa6b32a",
+    "90e2b01d-fab1-4993-8314-d6efe27ec8ec": "e3d6e54a75f65cf5708f5c501efe56423b08a20c21e0f5ebc709f0af8cb222fe",
+    "9dd13005-045e-4c8c-b9e2-76866d04f7d5": "f4b57d45780a21aefca623600480729ddb4e4d226f735f28a915f615bb07ac04",
+    "aacddf82-87ae-4981-8542-0470e981a94f": "02df440b39b4ff0fcef724295d06136cf8130188597a419fdbd2cfeca3dc7f07",
+    "b4b6ae57-3104-49ef-948a-7ccf17240954": "bf65af1d7be348a26ac75f8cc2b7bca27609e7ddce6205c6c8a7b110587f8e09",
+    "b6ce3407-e3bb-44c9-867b-7b7434861af5": "fcd6987fc469cbe65ce413dad53804b74dab41a05184134aab72775b4052293e",
+    "b6dde58c-a093-4ced-b9a6-87d51cec5faf": "3e1d88a1e08f6afca58aa337d18b2f048828df644d325f56fe70d82332e74bff",
+    "b9bdafb5-b68c-438b-801e-15334e0f1862": "1b804e1db827853fabf606278971d904c02b49ea2af42694753b0bb10b68263c",
+    "c23fe1f3-fae6-43c1-9ed7-af1d94e4712c": "d3ef5e4581d40a3b39b42f26446b2d82a36539d03639024e17b9987228b80df2",
+    "c72262df-ce7b-4514-9341-55d242f94bca": "890185e331e51c00cd99a85c00419fca3ca6040d06572370d27380a474aa9c64",
+    "cc2bc0c3-d8e7-47fe-8aaf-1b219bff0137": "c026ec21ba625a4f1b21a62452ddd337621875a1c7e0e4feccf59aae5f52cc33",
+    "cd294bb9-a7de-4f21-95c2-84b878c0e7cc": "23ccc162d151084f22c7cea3306c95c4f0c828920fe4f21a93988c805e10560c",
+    "cdbcaa44-689b-4e96-8a0f-2c4f0c36028d": "c248298513b2297ba36750fe39c0563839ecb2c8a036aa7c90e7eca0663ae282",
+    "d9780089-361d-49a0-b95a-a54c2cd2fa7a": "e6241810b77f92f4c6a84f38b187f6fd21c3b1366b893854fe35f5a14bd5725e",
+    "dbc08a85-9165-4cc8-a3af-d133c83d8f67": "5e9716e3288a616c02d337087b1f23702d6235cc79d6699218c339c5778743ca",
+    "e0b68701-b80d-4d77-b321-52bb9ef8487e": "934846ccecf3d16dc2377b33ecad27779623c5b4f05b6e23887ce4a7fd82709c",
+    "e3b37447-87f5-40ed-b738-6ba37578c8c3": "0189a44a18828a385df69addea6dedc359d19dc0273adb598260423f230775c3",
+    "e4e254a6-ff24-4160-8c2b-d8e9162dde01": "bb83af917cac3e5b415858c13d7743b958623d75ddab3600cfca07d9cb2625c7",
+    "e71f548b-65c2-4032-a40f-342ab75b5d3e": "e7cfb1e1a96b4b9a8570014baefbc19f958fa41ccc0b3ab3c5ff9aef3249e0b3",
+    "eb7182aa-e7f1-4064-a731-bffe7c59227c": "731bdf17d85a5d2f7a8a989ac9545e5c0283191f87ae3f65d50e6f2b87461e42",
+    "ed25d35b-1dd8-4a73-ae84-649682afadf2": "a55338aeb71da0d631c7d159bb7c04900ff4d412a939736c750ec1f478874784",
+    "f05e54fa-67a1-49c6-876a-0f4b01534cb0": "8c59d4c04a760d9f3111be89e9b59fe043724a0e8c2e083152bf57fb6d30002f",
+    "f1260c3f-2637-416f-b407-2052a7c36717": "9e0f5d93775d731d80fbac31146d29422185c936738da59bf42c12cc9573435d",
+    "f7c734f6-5fdb-428f-b178-910988ba9bc8": "43ccd7c27da3ffd80be6e8b7ea8bbf8cd87411834c118d2eaea3f45a5bda0514",
+    "fb933ff4-2061-4a0c-a72c-6e7dd2958737": "aaade5eda0eb392fb9e8edb881492087512ecd4d56439295b58acf835b39f17c",
+    "ffbe8c65-5435-4373-85c7-c091892e51d9": "fe88d6af89c0f38a30a7cad215844f95ef2369b65d21d8cf7cc3b1254fe223e9"
+  }
+}

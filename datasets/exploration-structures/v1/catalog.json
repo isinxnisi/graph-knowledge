@@ -1,0 +1,137 @@
+{
+  "schemaVersion": 1,
+  "revision": 1,
+  "authority": "research-catalog-not-runtime-preset-or-query-DSL",
+  "types": [
+    {
+      "id": "S1",
+      "revision": 1,
+      "title": "同じ人物を介して別作品へ",
+      "nodeKinds": [
+        "work",
+        "person",
+        "work"
+      ],
+      "predicate": "CONTRIBUTED_TO",
+      "canonicalDirection": "person -> work/organization on every step",
+      "polarity": "affirmed",
+      "simplePath": true,
+      "questions": [
+        "役割を限定せず別作品を知る",
+        "段ごとに別Roleを指定して担当の違いを比較",
+        "各段で同じRoleの記録だけを追う"
+      ],
+      "stepConditions": [
+        "predicate",
+        "direction",
+        "contributionRole or organizationPosition",
+        "period with precision and unknown policy",
+        "publication scope when applicable"
+      ],
+      "noInference": [
+        "coauthorship",
+        "acquaintance",
+        "causation",
+        "chronological move",
+        "series or sequel"
+      ]
+    },
+    {
+      "id": "S2",
+      "revision": 1,
+      "title": "一作品の別担当者へ",
+      "nodeKinds": [
+        "person",
+        "work",
+        "person"
+      ],
+      "predicate": "CONTRIBUTED_TO",
+      "canonicalDirection": "person -> work/organization on every step",
+      "polarity": "affirmed",
+      "simplePath": true,
+      "questions": [
+        "各人物の役割と書誌scopeを別々に読む"
+      ],
+      "stepConditions": [
+        "predicate",
+        "direction",
+        "contributionRole or organizationPosition",
+        "period with precision and unknown policy",
+        "publication scope when applicable"
+      ],
+      "noInference": [
+        "coauthorship",
+        "acquaintance",
+        "causation",
+        "chronological move",
+        "series or sequel"
+      ]
+    },
+    {
+      "id": "S3",
+      "revision": 1,
+      "title": "別作品を介して別担当者へ",
+      "nodeKinds": [
+        "work",
+        "person",
+        "work",
+        "person"
+      ],
+      "predicate": "CONTRIBUTED_TO",
+      "canonicalDirection": "person -> work/organization on every step",
+      "polarity": "affirmed",
+      "simplePath": true,
+      "questions": [
+        "最初の人物の別作品から次の担当者を見つける"
+      ],
+      "stepConditions": [
+        "predicate",
+        "direction",
+        "contributionRole or organizationPosition",
+        "period with precision and unknown policy",
+        "publication scope when applicable"
+      ],
+      "noInference": [
+        "coauthorship",
+        "acquaintance",
+        "causation",
+        "chronological move",
+        "series or sequel"
+      ]
+    },
+    {
+      "id": "S4",
+      "revision": 1,
+      "title": "同一人物を介して別機関へ",
+      "nodeKinds": [
+        "organization",
+        "person",
+        "organization"
+      ],
+      "predicate": "AFFILIATED_WITH",
+      "canonicalDirection": "person -> work/organization on every step",
+      "polarity": "affirmed",
+      "simplePath": true,
+      "questions": [
+        "接続先機関を見つける",
+        "段ごとの立場・記録期間で限定する",
+        "同時期かを問う場合は不明と記録時点限定を分離する"
+      ],
+      "stepConditions": [
+        "predicate",
+        "direction",
+        "contributionRole or organizationPosition",
+        "period with precision and unknown policy",
+        "publication scope when applicable"
+      ],
+      "noInference": [
+        "coauthorship",
+        "acquaintance",
+        "causation",
+        "chronological move",
+        "series or sequel"
+      ]
+    }
+  ],
+  "growthPolicy": "New entities or Role values under the same question and constraints add examples. New path geometry, quantification or time/scope meaning requires review; increment definition revision, retain old observations."
+}

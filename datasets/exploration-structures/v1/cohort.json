@@ -1,0 +1,474 @@
+{
+  "schemaVersion": 1,
+  "revision": 1,
+  "seedEntities": [
+    {
+      "name": "PLUTO",
+      "id": "2b7c6289-d050-4dc0-93e3-9307681253cc"
+    },
+    {
+      "name": "浦沢直樹",
+      "id": "d900543a-9c11-48c1-be76-1822b756fcc4"
+    },
+    {
+      "name": "長崎尚志",
+      "id": "29e9caea-6c44-4c1f-9abc-f4350003ca3b"
+    },
+    {
+      "name": "BILLY BAT",
+      "id": "326dd821-2ca6-406a-a683-e424eb534998"
+    },
+    {
+      "name": "MASTERキートン Reマスター",
+      "id": "87ce941c-6937-49f8-912d-4800d14a48c6"
+    },
+    {
+      "name": "ヒカルの碁",
+      "id": "0c29d0e2-685f-4c56-9805-6bf1baf40e7c"
+    },
+    {
+      "name": "小畑健",
+      "id": "d5e39491-5a5f-423c-9222-2eb3c18db9a8"
+    },
+    {
+      "name": "バクマン。",
+      "id": "3427040b-88fd-4db5-b546-dd237abad032"
+    },
+    {
+      "name": "DEATH NOTE",
+      "id": "7ca5fc7d-545a-4d39-a2dc-6cce86390112"
+    },
+    {
+      "name": "ほったゆみ",
+      "id": "e0183e9c-dc97-4d85-b46e-14a1b76707fd"
+    },
+    {
+      "name": "大場つぐみ",
+      "id": "a13205e2-220c-4b7d-8a1a-39dbefe52db8"
+    },
+    {
+      "name": "ニールス・ボーア研究所",
+      "id": "8e322435-4318-4ad0-835b-3f71d2537421"
+    },
+    {
+      "name": "Princeton University",
+      "id": "0820c3e8-7219-4e57-abb0-7d04e253fd4a"
+    },
+    {
+      "name": "ヴォルフガング・パウリ",
+      "id": "52a671d1-bc5c-4a52-9d98-8c9418f5ec5c"
+    },
+    {
+      "name": "ヴェルナー・ハイゼンベルク",
+      "id": "1530af15-129d-40bf-a1ca-ce8343dc7491"
+    },
+    {
+      "name": "あだち充",
+      "id": "1abd838a-b22d-45a4-913f-0ef09205e1e8"
+    },
+    {
+      "name": "H2",
+      "id": "bb47fc9c-87b1-4df5-a7d6-ecf175d93eb0"
+    },
+    {
+      "name": "MIX",
+      "id": "48ca311c-c403-4a24-a1e3-cb6392764397"
+    }
+  ],
+  "absentNameQueries": [
+    "タッチ",
+    "Touch"
+  ],
+  "paths": [
+    {
+      "id": "pluto-billy-role",
+      "case": "pluto",
+      "type": "S1",
+      "nodeIds": [
+        "2b7c6289-d050-4dc0-93e3-9307681253cc",
+        "29e9caea-6c44-4c1f-9abc-f4350003ca3b",
+        "326dd821-2ca6-406a-a683-e424eb534998"
+      ],
+      "claimIds": [
+        "dbc08a85-9165-4cc8-a3af-d133c83d8f67",
+        "29f3bd67-b461-49a8-bdfa-d98b1d7dcfe1"
+      ],
+      "question": "PLUTOのプロデュース担当は別作品でストーリー共同制作をしている？",
+      "requiredConditions": {
+        "polarity": "affirmed",
+        "nodesDistinct": true,
+        "steps": [
+          {
+            "predicate": "CONTRIBUTED_TO",
+            "traversal": "reverse",
+            "role": "PRODUCING",
+            "organizationPosition": null,
+            "period": "unrestricted-preserve-unknown",
+            "scope": "preserve-this-Claim-no-cross-step-equality"
+          },
+          {
+            "predicate": "CONTRIBUTED_TO",
+            "traversal": "forward",
+            "role": "STORY_CO_CREATION",
+            "organizationPosition": null,
+            "period": "unrestricted-preserve-unknown",
+            "scope": "preserve-this-Claim-no-cross-step-equality"
+          }
+        ]
+      }
+    },
+    {
+      "id": "pluto-keaton-role",
+      "case": "pluto",
+      "type": "S1",
+      "nodeIds": [
+        "2b7c6289-d050-4dc0-93e3-9307681253cc",
+        "29e9caea-6c44-4c1f-9abc-f4350003ca3b",
+        "e87a40f9-3139-47a1-a962-6610eb2b8878"
+      ],
+      "claimIds": [
+        "dbc08a85-9165-4cc8-a3af-d133c83d8f67",
+        "7142e160-c0d5-4358-9b70-63c03bfd44ad"
+      ],
+      "question": "PLUTOのプロデュース担当は別作品で脚本を担当している？",
+      "requiredConditions": {
+        "polarity": "affirmed",
+        "nodesDistinct": true,
+        "steps": [
+          {
+            "predicate": "CONTRIBUTED_TO",
+            "traversal": "reverse",
+            "role": "PRODUCING",
+            "organizationPosition": null,
+            "period": "unrestricted-preserve-unknown",
+            "scope": "preserve-this-Claim-no-cross-step-equality"
+          },
+          {
+            "predicate": "CONTRIBUTED_TO",
+            "traversal": "forward",
+            "role": "SCRIPT_WRITING",
+            "organizationPosition": null,
+            "period": "unrestricted-preserve-unknown",
+            "scope": "preserve-this-Claim-no-cross-step-equality"
+          }
+        ]
+      }
+    },
+    {
+      "id": "pluto-remaster-role",
+      "case": "pluto",
+      "type": "S1",
+      "nodeIds": [
+        "2b7c6289-d050-4dc0-93e3-9307681253cc",
+        "29e9caea-6c44-4c1f-9abc-f4350003ca3b",
+        "87ce941c-6937-49f8-912d-4800d14a48c6"
+      ],
+      "claimIds": [
+        "dbc08a85-9165-4cc8-a3af-d133c83d8f67",
+        "4ad66ba5-a65d-4942-939e-c84a67e735d9"
+      ],
+      "question": "PLUTOのプロデュース担当を著者欄の別作品へ辿れる？",
+      "requiredConditions": {
+        "polarity": "affirmed",
+        "nodesDistinct": true,
+        "steps": [
+          {
+            "predicate": "CONTRIBUTED_TO",
+            "traversal": "reverse",
+            "role": "PRODUCING",
+            "organizationPosition": null,
+            "period": "unrestricted-preserve-unknown",
+            "scope": "preserve-this-Claim-no-cross-step-equality"
+          },
+          {
+            "predicate": "CONTRIBUTED_TO",
+            "traversal": "forward",
+            "role": "AUTHORSHIP",
+            "organizationPosition": null,
+            "period": "unrestricted-preserve-unknown",
+            "scope": "preserve-this-Claim-no-cross-step-equality"
+          }
+        ]
+      }
+    },
+    {
+      "id": "pluto-next-person",
+      "case": "pluto",
+      "type": "S3",
+      "nodeIds": [
+        "2b7c6289-d050-4dc0-93e3-9307681253cc",
+        "d900543a-9c11-48c1-be76-1822b756fcc4",
+        "87ce941c-6937-49f8-912d-4800d14a48c6",
+        "29e9caea-6c44-4c1f-9abc-f4350003ca3b"
+      ],
+      "claimIds": [
+        "839b0bb8-1781-4a3e-8446-9a22d08d1658",
+        "88c2e0d1-f65e-4d6c-818d-3a7f39d9b45f",
+        "4ad66ba5-a65d-4942-939e-c84a67e735d9"
+      ],
+      "question": "浦沢直樹の別作品から別の著者へ進める？",
+      "requiredConditions": {
+        "polarity": "affirmed",
+        "nodesDistinct": true,
+        "steps": [
+          {
+            "predicate": "CONTRIBUTED_TO",
+            "traversal": "reverse",
+            "role": "AUTHORSHIP",
+            "organizationPosition": null,
+            "period": "unrestricted-preserve-unknown",
+            "scope": "preserve-this-Claim-no-cross-step-equality"
+          },
+          {
+            "predicate": "CONTRIBUTED_TO",
+            "traversal": "forward",
+            "role": null,
+            "organizationPosition": null,
+            "period": "unrestricted-preserve-unknown",
+            "scope": "preserve-this-Claim-no-cross-step-equality"
+          },
+          {
+            "predicate": "CONTRIBUTED_TO",
+            "traversal": "reverse",
+            "role": "AUTHORSHIP",
+            "organizationPosition": null,
+            "period": "unrestricted-preserve-unknown",
+            "scope": "preserve-this-Claim-no-cross-step-equality"
+          }
+        ]
+      }
+    },
+    {
+      "id": "hikaru-bakuman",
+      "case": "hikaru",
+      "type": "S1",
+      "nodeIds": [
+        "0c29d0e2-685f-4c56-9805-6bf1baf40e7c",
+        "d5e39491-5a5f-423c-9222-2eb3c18db9a8",
+        "3427040b-88fd-4db5-b546-dd237abad032"
+      ],
+      "claimIds": [
+        "7ae1c51b-9ba0-46fb-a070-41ac310e8c94",
+        "cd294bb9-a7de-4f21-95c2-84b878c0e7cc"
+      ],
+      "question": "ヒカルの碁の作画担当には著者欄で辿れる別作品がある？",
+      "requiredConditions": {
+        "polarity": "affirmed",
+        "nodesDistinct": true,
+        "steps": [
+          {
+            "predicate": "CONTRIBUTED_TO",
+            "traversal": "reverse",
+            "role": "DRAWING",
+            "organizationPosition": null,
+            "period": "unrestricted-preserve-unknown",
+            "scope": "preserve-this-Claim-no-cross-step-equality"
+          },
+          {
+            "predicate": "CONTRIBUTED_TO",
+            "traversal": "forward",
+            "role": "AUTHORSHIP",
+            "organizationPosition": null,
+            "period": "unrestricted-preserve-unknown",
+            "scope": "preserve-this-Claim-no-cross-step-equality"
+          }
+        ]
+      }
+    },
+    {
+      "id": "hikaru-next-person",
+      "case": "hikaru",
+      "type": "S3",
+      "nodeIds": [
+        "0c29d0e2-685f-4c56-9805-6bf1baf40e7c",
+        "d5e39491-5a5f-423c-9222-2eb3c18db9a8",
+        "3427040b-88fd-4db5-b546-dd237abad032",
+        "a13205e2-220c-4b7d-8a1a-39dbefe52db8"
+      ],
+      "claimIds": [
+        "7ae1c51b-9ba0-46fb-a070-41ac310e8c94",
+        "cd294bb9-a7de-4f21-95c2-84b878c0e7cc",
+        "48a9f51e-beb1-4c3a-9c30-5923bc852925"
+      ],
+      "question": "ヒカルの碁から別作品の原作担当者へ進める？",
+      "requiredConditions": {
+        "polarity": "affirmed",
+        "nodesDistinct": true,
+        "steps": [
+          {
+            "predicate": "CONTRIBUTED_TO",
+            "traversal": "reverse",
+            "role": "DRAWING",
+            "organizationPosition": null,
+            "period": "unrestricted-preserve-unknown",
+            "scope": "preserve-this-Claim-no-cross-step-equality"
+          },
+          {
+            "predicate": "CONTRIBUTED_TO",
+            "traversal": "forward",
+            "role": "AUTHORSHIP",
+            "organizationPosition": null,
+            "period": "unrestricted-preserve-unknown",
+            "scope": "preserve-this-Claim-no-cross-step-equality"
+          },
+          {
+            "predicate": "CONTRIBUTED_TO",
+            "traversal": "reverse",
+            "role": "ORIGINAL_STORY",
+            "organizationPosition": null,
+            "period": "unrestricted-preserve-unknown",
+            "scope": "preserve-this-Claim-no-cross-step-equality"
+          }
+        ]
+      }
+    },
+    {
+      "id": "bakuman-different-roles",
+      "case": "hikaru",
+      "type": "S2",
+      "nodeIds": [
+        "d5e39491-5a5f-423c-9222-2eb3c18db9a8",
+        "3427040b-88fd-4db5-b546-dd237abad032",
+        "a13205e2-220c-4b7d-8a1a-39dbefe52db8"
+      ],
+      "claimIds": [
+        "cd294bb9-a7de-4f21-95c2-84b878c0e7cc",
+        "48a9f51e-beb1-4c3a-9c30-5923bc852925"
+      ],
+      "question": "バクマン。では人物ごとにどんなクレジットがある？",
+      "requiredConditions": {
+        "polarity": "affirmed",
+        "nodesDistinct": true,
+        "steps": [
+          {
+            "predicate": "CONTRIBUTED_TO",
+            "traversal": "forward",
+            "role": "AUTHORSHIP",
+            "organizationPosition": null,
+            "period": "unrestricted-preserve-unknown",
+            "scope": "preserve-this-Claim-no-cross-step-equality"
+          },
+          {
+            "predicate": "CONTRIBUTED_TO",
+            "traversal": "reverse",
+            "role": "ORIGINAL_STORY",
+            "organizationPosition": null,
+            "period": "unrestricted-preserve-unknown",
+            "scope": "preserve-this-Claim-no-cross-step-equality"
+          }
+        ]
+      }
+    },
+    {
+      "id": "nbi-pauli-princeton",
+      "case": "institutions",
+      "type": "S4",
+      "nodeIds": [
+        "8e322435-4318-4ad0-835b-3f71d2537421",
+        "52a671d1-bc5c-4a52-9d98-8c9418f5ec5c",
+        "0820c3e8-7219-4e57-abb0-7d04e253fd4a"
+      ],
+      "claimIds": [
+        "c23fe1f3-fae6-43c1-9ed7-af1d94e4712c",
+        "554bbc81-73df-498e-b867-c90219496e2f"
+      ],
+      "question": "NBIとPrincetonに同じ人物の関わりが記録されている？",
+      "requiredConditions": {
+        "polarity": "affirmed",
+        "nodesDistinct": true,
+        "steps": [
+          {
+            "predicate": "AFFILIATED_WITH",
+            "traversal": "reverse",
+            "role": null,
+            "organizationPosition": null,
+            "period": "unrestricted-preserve-unknown",
+            "scope": "preserve-this-Claim-no-cross-step-equality"
+          },
+          {
+            "predicate": "AFFILIATED_WITH",
+            "traversal": "forward",
+            "role": null,
+            "organizationPosition": null,
+            "period": "unrestricted-preserve-unknown",
+            "scope": "preserve-this-Claim-no-cross-step-equality"
+          }
+        ]
+      }
+    },
+    {
+      "id": "nbi-heisenberg-goettingen",
+      "case": "institutions",
+      "type": "S4",
+      "nodeIds": [
+        "8e322435-4318-4ad0-835b-3f71d2537421",
+        "1530af15-129d-40bf-a1ca-ce8343dc7491",
+        "a1af9abb-843a-4611-853c-50f630b817ae"
+      ],
+      "claimIds": [
+        "e71f548b-65c2-4032-a40f-342ab75b5d3e",
+        "47d46b69-b111-4b76-addb-632d679ae4f8"
+      ],
+      "question": "VisitorとしてNBIにいた人物の別機関記録を探せる？",
+      "requiredConditions": {
+        "polarity": "affirmed",
+        "nodesDistinct": true,
+        "steps": [
+          {
+            "predicate": "AFFILIATED_WITH",
+            "traversal": "reverse",
+            "role": null,
+            "organizationPosition": "VISITOR",
+            "period": "unrestricted-preserve-unknown",
+            "scope": "preserve-this-Claim-no-cross-step-equality"
+          },
+          {
+            "predicate": "AFFILIATED_WITH",
+            "traversal": "forward",
+            "role": null,
+            "organizationPosition": null,
+            "period": "unrestricted-preserve-unknown",
+            "scope": "preserve-this-Claim-no-cross-step-equality"
+          }
+        ]
+      }
+    },
+    {
+      "id": "h2-mix",
+      "case": "adachi",
+      "type": "S1",
+      "nodeIds": [
+        "bb47fc9c-87b1-4df5-a7d6-ecf175d93eb0",
+        "1abd838a-b22d-45a4-913f-0ef09205e1e8",
+        "48ca311c-c403-4a24-a1e3-cb6392764397"
+      ],
+      "claimIds": [
+        "f1260c3f-2637-416f-b407-2052a7c36717",
+        "c72262df-ce7b-4514-9341-55d242f94bca"
+      ],
+      "question": "H2と同じ著者の別作品を探せる？",
+      "requiredConditions": {
+        "polarity": "affirmed",
+        "nodesDistinct": true,
+        "steps": [
+          {
+            "predicate": "CONTRIBUTED_TO",
+            "traversal": "reverse",
+            "role": "AUTHORSHIP",
+            "organizationPosition": null,
+            "period": "unrestricted-preserve-unknown",
+            "scope": "preserve-this-Claim-no-cross-step-equality"
+          },
+          {
+            "predicate": "CONTRIBUTED_TO",
+            "traversal": "forward",
+            "role": "AUTHORSHIP",
+            "organizationPosition": null,
+            "period": "unrestricted-preserve-unknown",
+            "scope": "preserve-this-Claim-no-cross-step-equality"
+          }
+        ]
+      }
+    }
+  ]
+}
