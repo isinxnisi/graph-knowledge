@@ -26,29 +26,25 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-10-25T08:38:26.596627+00:00",
-  "phase": "running",
+  "nextStartAt": "2026-10-25T07:45:00.939245+00:00",
+  "phase": "interval",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
     "reason": "interval",
-    "eligibleAt": "2026-10-25T08:38:26.596627+00:00",
+    "eligibleAt": "2026-10-25T07:45:00.939245+00:00",
     "windowEndAt": "2026-10-25T09:00:00+00:00"
   },
-  "activeAttempt": {
-    "requestId": "issue-5-dot-tezuka-adolf-20261025-batch-01",
-    "startedAt": "2026-10-25T07:33:26.596630+00:00",
-    "limitAt": "2026-10-25T08:28:26.596627+00:00"
-  },
+  "activeAttempt": null,
   "lastAttempt": {
     "requestId": "issue-5-dot-tezuka-adolf-20261025-batch-01",
-    "endedAt": "2026-10-25T07:23:02.178941+00:00"
+    "endedAt": "2026-10-25T07:35:00.939246+00:00"
   },
   "controlError": null,
   "requestsByPhase": {
     "blocked": 10,
     "completed": 15,
-    "running": 1
+    "retry-wait": 1
   },
   "issueIntake": {
     "collection-control/issue-sources/25.json": {
@@ -103,5 +99,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-10-25T07:34:08.416012+00:00"
+  "checkedAt": "2026-10-25T07:35:14.620613+00:00"
 }
