@@ -23,3 +23,18 @@
 実環境プレビューで、正式receipt fingerprintは既存照合summaryと一致し、VPS API revision `b74a4b00-9454-412f-af5d-1317713a543c` を確認。既存停止container／待受なしportを停止状態のまま記録した。旧停止10依頼と通常待機1依頼を混同しない。旧保存保留は現在残件数の断定に使わない。
 
 Windows taskの導入と実起動結果、既存task定義の不変確認は以下へ追記する。画面・API・DB実装を変えていないため3200／betaの再build・VPS配置はしない。
+
+
+## 実導入・定期実行の結果
+
+- 初版ソース `06c8855` をmainと専用開発branchへcommit・通常pushした。固定PythonをWSLの専用私有ディレクトリへ配置し、configには取得元と既存の非対話Git認証helperだけを設定した。秘密値の新設・変更はない。
+- 一覧branch `codex/work-status` を2 fileのみで新規作成した。初回commit `4b59d5c`、実定期起動による反映 `c4f2006d`。mainへの自動commitは行っていない。
+- Windows `Plunode-WorkStatus` を通常ユーザー・Limited／Interactive、30分 (`PT30M`)、IgnoreNew、StartWhenAvailable、制限3分で登録した。wscript GUI入口を使い子起動を非表示にする。認証・sudo操作は不要だった。
+- **2026-10-25 19:16:46 JSTの最初の予定起動**が正常終了0。19:17:06に取得・GitHub反映を完了し、次回は19:46:46。これは手動のPython成功だけでなく、実Task Scheduler入口からの確認である。
+- 19:18:32の実再実行は `unchanged`、commitなし。毎回のhealth時刻やtaskのRunning／Readyだけで新しいcommitを作らないことを実環境でも確認した。beta API取得失敗は未確認のまま表示し、更新自体は完結する。
+- 既存のCollectionWorker、Publication Delivery、GraphKnowledge-Autopilot、Afterglow-LoginRecoveryのExport-ScheduledTask SHAを前後比較し、**4件すべて完全一致**。Worker／サービスの起動・停止・設定変更、データ変更、VPS配置は実行していない。
+- GitHub連携の通常contents更新で `WORK_SESSIONS.json` の「統合管理一覧」だけを完了へ変更（commit `9bdbd947`）。予定の「ルーム基盤」、他の名前と内容を維持した。これにより、ChatGPTが特別な管理APIなしに小さな手動fileを変更できる経路も実確認した。自動再生成後のblob一致を最終確認する。
+
+公開一覧では時刻の経過だけで動的な警告色を出すWeb機構は作らず、観測時刻と90分の鮮度基準を明示する。Windows taskには独立した取得時刻を表示する。ローカル実行記録は毎回更新され、GitHubに変化がなくても定期実行の継続を確認できる。
+
+残る未確認：VPS内部のservice／Docker／port、認証なしでは取得できないbeta API。既存catalog同期は `blocked-review-required` の記録を表示し、今回修復対象にはしない。物理的PC再起動試験や新しい秘密情報配置はこの一覧の導入に含めない。追加の手動設定は残っていない。

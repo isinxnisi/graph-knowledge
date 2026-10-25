@@ -251,7 +251,7 @@ def stable(value):
 
 
 def render(manual, snapshot, observed):
-    fingerprint = digest(dict(manual=manual, snapshot=stable(snapshot)))
+    fingerprint = digest(dict(format=1, manual=manual, snapshot=stable(snapshot)))
     lines = ['# Plunode 開発・運用の統合一覧', '',
         f'観測：**{observed}**（JST）。30分周期・AI呼出し0。確認時点の記録です。90分以上古い場合は現在稼働を保証しません。',
         '手動の予定・名前は [WORK_SESSIONS.json](WORK_SESSIONS.json) をこのbranchで編集。自動更新はこのMarkdownだけを変更します。',
@@ -272,7 +272,7 @@ def render(manual, snapshot, observed):
             http = snapshot['http'][ident]
             return http['status'] + (' / revision ' + http['revision'][:8] if http['revision'] else '') + (' / VPS内部未確認' if ident == 'production' else '')
         if ident == 'windows':
-            return 'Windows観測済み（この時点のみ）' if windows else '取得失敗・未確認'
+            return 'Windows観測 ' + windows['observedAt'] if windows else '取得失敗・未確認'
         if ident == 'docker':
             return f'対象{sum(c["state"] == "running" for c in containers)}稼働／{sum(c["state"] != "running" for c in containers)}停止' if containers is not None else '取得失敗・未確認'
         if ident == 'wsl':
@@ -290,6 +290,7 @@ def render(manual, snapshot, observed):
     lines += ['', '<details><summary>worktree・branchの実測（絶対パス非公開）</summary>', '']
     lines += table(['worktree名', 'branch', 'HEAD', '所在'], [[v['name'], v['branch'], v['revision'], '存在' if v['exists'] and not v['prunable'] else '未到達／prunable記録'] for v in snapshot.get('worktrees') or []])
     lines += ['', '</details>', '', '## C. Worker・自動処理', '']
+    lines += ['Windows task観測時刻：' + str(windows.get('observedAt', '未確認')) + '。', '']
     tasks = windows.get('tasks', [])
     purpose = {'Plunode-CollectionWorker': '収集／正式受入（依頼別・同一Worker）',
                'Plunode-Publication-Delivery': '公開候補準備／承認済み配送', 'GraphKnowledge-Autopilot': '自動開発',
