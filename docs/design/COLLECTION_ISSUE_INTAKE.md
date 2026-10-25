@@ -14,6 +14,18 @@
 
 許可と名前は電子署名ではない。既存の信頼された運営者とGitHub権限管理を前提とする。技術的に保証するのは範囲・内容hash・履歴・実行境界であり、会話の本人性をWorkerが認証するものではない。
 
+## 承認済みの縮小予算・既存cacheの再利用（2026-10-25）
+
+`requestPolicy.maxAttempts` は整数1〜142の範囲で人間が承認した値をそのまま使う。142は既定上限であり、30等への縮小を拒否しない。同一要求2回、逐次3秒、20秒timeout、4MiB、Wikidata＋NDL作成書誌という他の条件・キー集合・整数型は固定する。上限超過や他条件の変更は引き続き拒否する。一度登録した許可の縮小も内容hashの変更として停止し、既存依頼を書き換えない。
+
+新しいIssueの準備・子収集は、そのIssue専用の同一cache／承認予算を共有する。旧Issueの`attempts`・policy・許可・cacheリンクを新予算へコピーしない。要求のkey＋URLが一致する既存のprivate responseだけを、body SHA-256・サイズ・元index SHAを照合して新cacheへ複製できる。元index／body／89/142等の履歴は変更せず、新indexへ由来を記録する。コピーはprovider試行に数えず、不足要求だけ新予算へ送信前に計上する。元のRetry-Afterも維持し、改変されたcacheは停止する。子collectorの既存予算検査も同じ30試行cacheへ適用される。
+
+過去の完成済みjob／reviewも、人物QID・作品QID・ISBN・巻／版とprovider body SHAが一致する範囲だけ再利用できる。既公開分は正式receiptと本番APIのClaim／Citation／Source完全一致を必須とし、保留は元の凍結観測・理由を保持する。この検証で対象がすべて既公開または既存保留に分類できれば、新しいcollect-review子依頼を作らない。再利用proofをcheckpointしてから凍結し、通信断・PC停止後も同じas-of記録から再開する。ローカルKGの旧版と本番を混同せず、KG自体への同期applyはしない。自身の公開KGの読取照合・GitHub制御通信は外部書誌provider取得とは分ける。
+
+新規のIssue親依頼には、実際の`collection-issues.py`の`issueAdapterSha256`も固定する。準備開始前に照合し、後日のコード更新で未完了依頼を黙って別実装へ再束縛しない。従来のSHA未記録の142試行依頼は互換性を維持する。coreのsourceCommit検査、承認hash、公開との排他・時間帯・10分休憩は緩めない。
+
+Worker本体・排他コード・公開側が参照する互換基準973c7b0を維持する実運用では、この単一Issue連携モジュールをレビュー済みbackportとして配置する。base commitだけを最新実装と表示せず、追加moduleの実SHA・取得元commit・変更前後SHAをprivate maintenance receiptと実運用記録へ明記する。新規依頼のadapter SHAはその実配置と一致する。既存receipt・承認・runtime成果・VPSの固定コード／鍵／設定は変更しない。実施範囲と検証は[Issue #16の記録](../verification/ISSUE16_COLLECTION_BUDGET_20261025.md)を参照。
+
 ## 自動処理
 
 軽量なIssue確認は時間外・共通ロック使用中も続ける。QID・ISBN準備は新しいheavy operation `issue-prepare` として既存排他・時間枠に入れる。03–07／09–12／15–18 JSTの途中から開始可能。終盤15分の新規開始回避、55分上限・終了後10分休憩・チェックポイント再開を変更しない。PC停止中は処理せず、再起動後に同じ依頼・cache・進捗から継続する。

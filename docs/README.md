@@ -51,6 +51,7 @@
 | [承認済み受入の逐次継続](design/COLLECTION_ACCEPTANCE_SEQUENCE.md) | Issue #32 Phase B。元承認を不変に保って比較・同一性を再検証し、既存Workerで1グループずつ継続。2026-10-20の別途指示で[実運用切替・残り5グループ登録](verification/COLLECTION_SEQUENCE_ROLLOUT_20261020.md)。全件完了はGitHub結果で確認 |
 | [未公開データの統合棚卸し](design/COLLECTION_INVENTORY.md) | Issue #32 Phase A。公開snapshot・正式receipt・累積release・承認register・Worker履歴を読み取り専用で突合。型＋UUIDの一意集計、Markdown／JSON、保留・復旧・欠落。受入・公開apply・VPS／会員DB変更なし |
 | [ChatGPT承認連携・収集Worker](design/COLLECTION_WORKER.md) | GitHubの明示承認から既存collect-review／accept-releaseを実行。専用branch、隔離runtime、共通ロック、状態・Markdown共有、再開・重複／改変拒否。公開applyは実装対象外 |
+| [Issue #16の縮小通信予算・既存成果再利用](verification/ISSUE16_COLLECTION_BUDGET_20261025.md) | 2026-10-25。既定142を維持して承認30を受付。H2／MIXの正式receipt・本番API一致とタッチの既存保留を再利用。単一moduleを実Workerへbackport、通常起動による受付・15時の時間帯待ちを確認。54試験・実データ隔離一巡／復旧成功。正式受入・公開applyなし |
 | [Issue起点の収集準備](design/COLLECTION_ISSUE_INTAKE.md) | 計画Issueの明示許可からQID・ISBN・recipeを生成し、既存Workerの時間帯・10分休憩付きキューへ接続。範囲外・不確かな同定は保留 |
 | [収集Workerの日時形式復旧](design/COLLECTION_DATETIME_RECOVERY.md) | UTC Z形式のproducer修正、旧承認・UUID・cacheを保持した新規依頼による停止9バッチの復旧。validator・公開KGは変更しない |
 | [収集レビュー・正式受入後の公開準備](design/COLLECTION_WORKFLOW.md) | 2026-10-18。collect-reviewに加え、未承認雛形decision-templateと人間判断入力accept-releaseを実装。対象／根拠hash照合、不変受入→release→validate→最新無書込planを連続処理。部分受入・失敗再開・改変拒否を隔離検証。公開applyは含めない |

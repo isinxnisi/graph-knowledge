@@ -1,0 +1,114 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-10-25T03:42:41.346253+00:00",
+  "phase": "registered-waiting-for-existing-window",
+  "controlCommit": "fe076394aeb54093f2b88eacd57dd9a9a788bc05",
+  "requestId": "issue-16-adachi-three-20261025",
+  "requestSha256": "5c15cdf5d521ca7bb54c94cb6471fb129263d9cd25987a548b0fd50b56aab288",
+  "permissionSha256": "0db3f253fc65572d886419bc9982b1e3f1052e6002d9a5443e54bc444fef0184",
+  "issueAdapterSha256": "9e0231ab0f444e181e6672d28759b729c108ae2d7816915789a794ba1465656e",
+  "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
+  "approvedPolicy": {
+    "maxAttempts": 30,
+    "attemptsPerRequest": 2,
+    "minIntervalSeconds": 3,
+    "timeoutSeconds": 20,
+    "maxBytes": 4194304
+  },
+  "humanDecision": {
+    "actorType": "human",
+    "reviewer": "プロジェクト運営者",
+    "decidedAt": "2026-10-25T11:22:31+09:00",
+    "statement": "2026-10-25のチャットで、あだち充・タッチ・H2・MIXの3作品について、WikidataとNDL作成書誌、合計最大30試行で候補収集を明示承認し、既存CollectionWorkerの正式なIssue許可と購読登録を依頼。対象3組と2取得元に限定し、収集・候補レビューまで。正式受入・公開applyは含まない。Issue #25の同名対象で過去に収集済みの成果があれば重複収集せず照合・再利用する。"
+  },
+  "status": {
+    "phase": "waiting-control",
+    "attempts": 0,
+    "message": "Execution gate: outside-window",
+    "updatedAt": "2026-10-25T03:39:59+00:00"
+  },
+  "issueReceipt": {
+    "repository": "isinxnisi/graph-knowledge",
+    "issueNumber": 16,
+    "approvalId": "adachi-three-20261025",
+    "permissionSha256": "0db3f253fc65572d886419bc9982b1e3f1052e6002d9a5443e54bc444fef0184",
+    "issueBodySha256": "130fbcdce3b248d1b3b4498a54ff9076aaba6b451b41456304c9c493b3a1c7c7",
+    "firstRecipeRevision": 26,
+    "recipeRevisionCount": 1,
+    "requestSha256": "88e7a6e90f33dd9aa8ee2cf052c74fc784f9594a390d521b6a97806ffe14a8a7",
+    "registeredAt": "2026-10-25T03:39:44+00:00"
+  },
+  "expectedNextStart": "2026-10-25T15:00:00+09:00",
+  "nextStartSubjectTo": "existing pause/window/common-lock/rest controls",
+  "manualWorkerRuns": 0,
+  "liveProviderAttempts": 0,
+  "priorIssue25Attempts": 89,
+  "priorIssue25MaxAttempts": 142,
+  "immutableFilesVerified": 1066,
+  "immutableFileChanges": [],
+  "formalReceiptCount": 10,
+  "formalReceiptsUnchanged": true,
+  "workerConfigAndCoreUnchanged": true,
+  "executionControlsUnchanged": true,
+  "publicRevision": "b74a4b00-9454-412f-af5d-1317713a543c",
+  "h2MixApiChecks": [
+    {
+      "claimId": "c72262df-ce7b-4514-9341-55d242f94bca",
+      "role": "AUTHORSHIP",
+      "scope": {
+        "kind": "publication",
+        "isbn13": "9784091238672",
+        "volumeLabel": "第1巻（NDL巻次 1）",
+        "editionLabel": null,
+        "language": "ja"
+      },
+      "claimSha256": "581231788c6fae440c60b1e6c91c780247429338acdde2b656ecacbb3997cbdb",
+      "apiRevision": "b74a4b00-9454-412f-af5d-1317713a543c"
+    },
+    {
+      "claimId": "f1260c3f-2637-416f-b407-2052a7c36717",
+      "role": "AUTHORSHIP",
+      "scope": {
+        "kind": "publication",
+        "isbn13": "9784091231512",
+        "volumeLabel": "第1巻（NDL巻次 1）",
+        "editionLabel": null,
+        "language": "ja"
+      },
+      "claimSha256": "79b5636c34e9b90f8d53ef1a380ae98506cb3ae5bbf3b5b85379814b3644edea",
+      "apiRevision": "b74a4b00-9454-412f-af5d-1317713a543c"
+    }
+  ],
+  "formalAcceptance": false,
+  "publicApply": false,
+  "vpsChanged": false,
+  "memberDbChanged": false,
+  "deployment": {
+    "schemaVersion": 1,
+    "phase": "issue-adapter-backport-installed",
+    "installedAt": "2026-10-25T03:39:17.356689+00:00",
+    "sourceCommit": "c95d94edcedf3249c74336e27522ac91a3d7dec1",
+    "baseCodeCommit": "973c7b0c599f79905a029b28b524f4924e169376",
+    "workerId": "plunode-wsl",
+    "module": "scripts/collection-issues.py",
+    "beforeSha256": "24051bf10310b680bc106b05618c189696ea03df982c73df6fcd1ed8f32f4884",
+    "afterSha256": "9e0231ab0f444e181e6672d28759b729c108ae2d7816915789a794ba1465656e",
+    "configSha256": "d3411e24937f2f422495bf347bac9361b5a6364375443d104c266f96de4763e9",
+    "coreCodeSha256": {
+      "collection-worker.py": "aa7a27163d330d322d376fed51b052c008e0c647709797051156bb4283411eff",
+      "collection-worker-control.py": "23eeb89cc05da240b2f0fe4f6666dcd4db66b7f0d2d38261e5e71c96cb85d314",
+      "collection-workflow.py": "1caee6a1b45dc836b4c6a4c3b11476e5b53ca1183ea9076ed9d271a70ca5f485",
+      "collection-themes.py": "1f36d3010c7a7e471091620c6820b1401aa0a0b53a997da187f51f9fa68b2ae2",
+      "collect-manga.py": "a52864e69386c12e32c62fe5a0bbf7ce6573f8c736acceac1ccd0c1a16dca7cd",
+      "collect-manga-v2.py": "d887d490159b03a1d0b90dba060f6d77e248c1d7308497c0adb3d3048bf60f88"
+    },
+    "baselineSha256": "ae0d8eeee57b163924288c28f9b867905e734b24420433e06734256b5e4003e2",
+    "preserveDirectory": "/home/isinxnisi/.local/share/plunode-collection-worker-phase-b-20261020/issue16-module-backport-amndib9b",
+    "stateEdited": false,
+    "workerTaskChanged": false,
+    "coordinatorChanged": false,
+    "vpsChanged": false,
+    "formalAcceptance": false,
+    "publicApply": false
+  }
+}
