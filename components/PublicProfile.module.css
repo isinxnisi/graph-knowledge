@@ -13,6 +13,6 @@
 .icons{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}.icons button{flex-direction:column;min-width:0;padding:6px;font-size:12px}.form input:not([type=checkbox]),.form textarea{color:var(--color-text);background:var(--color-panel);border:1px solid var(--color-border);border-radius:6px}
 
 .handle{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
-.handleCopy{appearance:none;border:0;border-radius:4px;background:transparent;color:var(--color-accent);font:inherit;overflow-wrap:anywhere;text-align:left;padding:6px 0;cursor:copy;min-height:40px}
-.handleCopy:hover{text-decoration:underline;text-underline-offset:4px}.handleCopy:focus-visible{outline:2px solid var(--color-accent);outline-offset:4px}
+.handle .handleCopy{appearance:none;border:0;border-radius:4px;background:transparent;color:var(--color-accent);font:inherit;overflow-wrap:anywhere;text-align:left;padding:6px 0;cursor:copy;min-height:40px}
+.handle .handleCopy:hover{text-decoration:underline;text-underline-offset:4px}.handle .handleCopy:focus-visible{outline:2px solid var(--color-accent);outline-offset:4px}
 .copyStatus{font-family:var(--font-ui-face),sans-serif;font-size:.8rem;color:var(--color-muted)}

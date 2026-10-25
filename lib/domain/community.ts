@@ -9,7 +9,7 @@ export const communityResponse=z.object({
  posts:z.array(z.object({id:z.uuid(),body:z.string(),status:z.string(),createdAt:z.string().optional(),readable:z.boolean().optional(),threadId:z.uuid().optional(),threadTitle:z.string().optional(),communityTitle:z.string().optional(),revision:z.number().optional(),hiddenBy:z.enum(['community','site']).nullable().optional(),canWithdraw:z.boolean().optional(),author:z.object({handle:z.string(),icon:z.string()}).nullable().optional(),author_id:z.string().nullable().optional(),name:z.string().nullable().optional()})).optional(),
  members:z.array(z.object({id:z.uuid(),name:z.string(),role:z.string(),admin_offered:z.boolean(),creator:personSchema.nullable().optional()})).optional(),
  nextCursor:z.string().nullable().optional(),membersCursor:z.string().nullable().optional(),
- invitations:z.array(z.object({id:z.uuid(),communityId:z.uuid(),title:z.string().nullable(),targetId:z.uuid(),revision:z.number(),status:z.string(),expiresAt:z.string(),readmission:z.boolean()})).optional(),
+ invitations:z.array(z.object({id:z.uuid(),communityId:z.uuid(),title:z.string().nullable(),targetId:z.uuid(),targetHandle:z.string().nullable().optional(),revision:z.number(),status:z.string(),expiresAt:z.string(),readmission:z.boolean()})).optional(),
  participation:z.array(z.object({communityId:z.uuid(),title:z.string().nullable(),status:z.string(),role:z.string(),canRequestRecovery:z.boolean()})).optional(),
  recoveries:z.array(z.object({id:z.uuid(),communityId:z.uuid(),status:z.string(),revision:z.number(),readmissionRequired:z.boolean().optional()})).optional(),
  reports:z.array(z.object({id:z.uuid(),kind:z.string(),status:z.string()})).optional(),

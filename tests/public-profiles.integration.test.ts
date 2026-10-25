@@ -35,6 +35,12 @@ async function change(cid:string,who:Person,action:string,extra={}){const c=(awa
 async function thread(cid:string,who:Person,audience='public',text='Public message'){const c=(await(await com('/'+cid,who)).json()).community;const r=await com('/'+cid+'/threads',who,{requestId:randomUUID(),expectedRevision:c.revision,title:text+' title',body:text,audience});expect(r.status).toBe(201);const id=(await r.json()).id;return {id,post:(await(await com('/threads/'+id,who)).json()).posts[0].id};}
 let issuer:Awaited<ReturnType<typeof startMemberOidc>>,a:Person,b:Person;
 const oldTables:{name:string;columns:string;rows:unknown[];after?:unknown[]}[]=[];
+async function inviteFixture(){
+ const owner=await person('invite-owner'),target=await person('invite-target'),other=await person('invite-third'),handle='invite-'+randomUUID().slice(0,8);
+ expect((await save(target,handle)).status).toBe(200);const community=await make(owner,'members');
+ const issue=async(userId:string,who:Person|undefined=owner,extra={})=>{const current=(await(await com('/'+community.id,owner)).json()).community;return com('/'+community.id+'/invitations',who,{expectedRevision:current.revision,userId,...extra});};
+ return {owner,target,other,handle,community,issue};
+}
 let legacyPost='',legacyFirstPost='',legacyBefore:unknown[]=[],bootstrap:ReturnType<typeof memberPool>;
 beforeAll(async()=>{
  if(process.env.PUBLIC_PROFILES_ENABLED!=='1')throw Error('Use test-member --accounts');issuer=await startMemberOidc();
@@ -260,4 +266,50 @@ it('disabled feature cannot access profile/follow storage and keeps community pr
   const source=await(await com('/threads/'+tid)).json();expect(source.posts.every((p:{name:string|null,author:unknown})=>p.name===null&&p.author===null)).toBe(true);
   expect(JSON.stringify(source)).not.toContain(a.id);expect(JSON.stringify(source)).not.toContain(b.id);
  }finally{process.env.PUBLIC_PROFILES_ENABLED='1';}
+});
+
+it('@handle and legacy UUID issue the same bound invitation; rename, reissue, other-user and cancellation stay safe',async()=>{
+ const f=await inviteFixture(),oldThread=await thread(f.community.id,f.owner,'cohort','before-invite');
+ const first=await f.issue(' @'+f.handle.toUpperCase()+' ');expect(first.status).toBe(201);const firstId=(await first.json()).id;
+ const sent=await(await com('/'+f.community.id+'/invitations',f.owner)).json();expect(sent.community.creator.handle).toBe((await(await call('/me',f.owner)).json()).profile.handle);
+ const pending=(await(await com('/invitations',f.target)).json()).invitations.find((i:{id:string})=>i.id===firstId);expect(pending.targetId).toBe(f.target.id);expect(pending.targetHandle).toBe(f.handle);
+ expect((await com('/invitations/'+firstId+'/accept',f.other,{expectedRevision:1})).status).toBe(404);
+ const duplicate=await f.issue(f.target.id.toUpperCase());expect(duplicate.status).toBe(201);const id=(await duplicate.json()).id;
+ expect((await com('/invitations/'+firstId+'/accept',f.target,{expectedRevision:1})).status).toBe(409);
+ const newHandle='renamed-'+randomUUID().slice(0,8);expect((await save(f.target,newHandle)).status).toBe(200);
+ expect((await f.issue('@'+f.handle)).status).toBe(400);
+ expect((await com('/invitations/'+id+'/accept',f.target,{expectedRevision:1})).status).toBe(200);
+ expect((await com('/threads/'+oldThread.id,f.target)).status).toBe(404);
+ expect((await f.issue('@'+newHandle)).status).toBe(409);
+ await change(f.community.id,f.target,'leave');
+ const again=await f.issue('@'+newHandle);expect(again.status).toBe(201);const cancel=(await again.json()).id;
+ expect((await com('/invitations/'+cancel+'/revoke',f.owner,{expectedRevision:1})).status).toBe(200);
+ expect((await com('/invitations/'+cancel+'/accept',f.target,{expectedRevision:2})).status).toBe(409);
+});
+it('invite resolution requires management and charges failed lookups; AI, missing, inactive and withdrawn handles share one error',async()=>{
+ const f=await inviteFixture(),pool=memberRuntime().pool;
+ for(const who of [undefined,{...f.owner,cookie:''},f.other])for(const key of ['@'+f.handle,'@unavailable-human']){
+  const current=(await(await com('/'+f.community.id,f.owner)).json()).community;
+  const r=await com('/'+f.community.id+'/invitations',who,{expectedRevision:current.revision,userId:key});expect(r.status).toBe(!who?400:who.cookie?404:401);
+ }
+ expect((await pool.query("SELECT * FROM community_rate WHERE action='invitation'")).rowCount).toBe(0);
+ const unavailable=async(key:string)=>{const r=await f.issue(key);expect(r.status).toBe(400);expect(await r.json()).toEqual({error:{code:'TARGET_UNAVAILABLE'}});};
+ for(const key of ['@unavailable-human','@plunode-official-ai','@explorer-apprentice',OFFICIAL_AI_ID])await unavailable(key);
+ await operateMember(pool,{action:'suspend-user',target:f.target.id,actor:'test',reason:'security'},true);await unavailable('@'+f.handle);await unavailable(f.target.id);
+ await operateMember(pool,{action:'resume-user',target:f.target.id,actor:'test',reason:'correction'},true);
+ await pool.query('UPDATE "user" SET active=false WHERE id=$1',[f.other.id]);await unavailable('@'+f.handle+'-unknown');
+ const otherHandle=(await pool.query('SELECT handle FROM public_profile WHERE user_id=$1',[f.other.id])).rows[0].handle;await unavailable('@'+otherHandle);await pool.query('DELETE FROM "user" WHERE id=$1',[f.other.id]);await unavailable('@'+otherHandle);await unavailable(f.other.id);
+ await pool.query("UPDATE community_rate SET used=60 WHERE user_id=$1 AND action='invitation'",[f.owner.id]);expect((await f.issue('@unavailable-human')).status).toBe(429);expect((await f.issue('@'+f.handle)).status).toBe(429);
+});
+it('@handle invitations retain expiry, issuer generation and target suspension invalidation',async()=>{
+ const f=await inviteFixture(),pool=memberRuntime().pool;
+ const issue=async()=>{const r=await f.issue('@'+f.handle);expect(r.status).toBe(201);return (await r.json()).id;};
+ const expired=await issue();await pool.query("UPDATE community_invitation SET expires_at=clock_timestamp()-interval '1 second' WHERE id=$1",[expired]);expect((await com('/invitations/'+expired+'/accept',f.target,{expectedRevision:1})).status).toBe(409);
+ const generation=await issue();await pool.query('UPDATE community_member SET generation=generation+1 WHERE community_id=$1 AND user_id=$2',[f.community.id,f.owner.id]);expect((await com('/invitations/'+generation+'/accept',f.target,{expectedRevision:1})).status).toBe(409);
+ const stopped=await issue();await operateMember(pool,{action:'suspend-user',target:f.target.id,actor:'test',reason:'security'},true);expect((await com('/invitations/'+stopped+'/accept',f.target,{expectedRevision:1})).status).toBe(401);
+ await operateMember(pool,{action:'resume-user',target:f.target.id,actor:'test',reason:'correction'},true);const signed=await person('invite-target');expect((await com('/invitations/'+stopped+'/accept',signed,{expectedRevision:2})).status).toBe(409);
+});
+it('handle changes while user locking is pending never redirect an invitation to a different or retired handle',async()=>{
+ const f=await inviteFixture(),pool=memberRuntime().pool,lock=await pool.connect();
+ try{await lock.query('BEGIN');await lock.query('SELECT id FROM "user" WHERE id=$1 FOR UPDATE',[f.target.id]);const pending=f.issue('@'+f.handle);await vi.waitFor(async()=>expect((await pool.query("SELECT 1 FROM pg_stat_activity WHERE wait_event_type='Lock' AND query LIKE 'SELECT active FROM%'")).rowCount).toBeGreaterThan(0));await lock.query('UPDATE public_profile SET handle=$2 WHERE user_id=$1',[f.target.id,'moved-'+randomUUID().slice(0,8)]);await lock.query('COMMIT');expect((await pending).status).toBe(400);expect((await pool.query('SELECT id FROM community_invitation WHERE community_id=$1',[f.community.id])).rowCount).toBe(0);}finally{await lock.query('ROLLBACK');lock.release();}
 });

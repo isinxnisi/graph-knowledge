@@ -1,6 +1,8 @@
 "use client";
 import PageIdentity from "./PageIdentity";
 import {useState} from 'react';
+import PublicHandleCopy from './PublicHandleCopy';
+import {useUiLocale} from '../lib/client/ui-locale';
 import {z} from 'zod';
 import {communityResponse} from '../lib/domain/community';
 import type {MemberUser} from '../lib/client/member-api';
@@ -11,7 +13,7 @@ import {CommunityMark} from './CommunityPrimitives';
 
 import {CommunityDialog} from './CommunityDialog';
 export default function CommunityContinuity({data,user,busy,route,t,mutate}:{data:Data,user:MemberUser|null,busy:boolean,route:string,t:(ja:string,en:string)=>string,mutate:Mutation}){
- const [copied,setCopied]=useState(false);
+ const {locale}=useUiLocale();
  const [target,setTarget]=useState(''),[days,setDays]=useState(7),[readmission,setReadmission]=useState(false);
  const [confirmation,setConfirmation]=useState<{path:string;input:Record<string,unknown>;kind:'request'|'cancel';id:string}|null>(null);
  const c=data.community;
@@ -20,17 +22,17 @@ export default function CommunityContinuity({data,user,busy,route,t,mutate}:{dat
  {confirmation&&<CommunityDialog title={confirmation.kind==='request'?t('運営復帰の申請を確認','Confirm recovery request'):t('申請の取消を確認','Confirm cancellation')} busy={busy} onCancel={()=>setConfirmation(null)}><p>{t('対象コミュニティID','Community ID')}: <code>{confirmation.id}</code></p><p>{confirmation.kind==='request'?t('申請だけで管理権は付与されません。サイト運営者の判断後、本人による承諾と場所の再開が別途必要です。以前の限定会話の権限は戻りません。','A request does not grant administration. Operator review, your acceptance and reopening are separate. Earlier restricted conversations remain inaccessible.'):t('この運営復帰申請を取り消します。コミュニティや他のメンバーは削除されません。','Cancel this recovery request. The community and other members will not be deleted.')}</p><div className={css.actions}><button disabled={busy} onClick={()=>setConfirmation(null)}>{t('戻る','Go back')}</button><button className={css.primary} disabled={busy} onClick={async()=>{const result=await mutate(confirmation.path,confirmation.input);if(result.ok)setConfirmation(null);}}>{confirmation.kind==='request'?t('申請を確定','Submit request'):t('取消を確定','Confirm cancellation')}</button></div></CommunityDialog>}
  {data.invitations&&<section>
  <header className={css.heading}><div>{!c&&<PageIdentity area="account"/>}{c?<h2>{t('招待の管理','Manage invitations')}</h2>:<h1>{t('届いた招待','Your invitations')}</h1>}<p>{t('参加するかどうかは、招待を受けた本人が選べます。','Every invitation is yours to accept or decline.')}</p></div></header>
- {!c&&user&&<p className={css.identity}>{t('招待用アカウントID','Your account ID for invitations')}: <code>{user.id}</code> <button onClick={async()=>{try{await navigator.clipboard.writeText(user.id);setCopied(true);}catch{setCopied(false);}}}>{copied?t('コピー済み','Copied'):t('コピー','Copy')}</button></p>}
+ {!c&&user?.profile&&<div className={css.identity}>{t('招待を受けるときは、この公開IDを相手に伝えてください。','Share this public ID with someone who wants to invite you.')}<PublicHandleCopy key={user.profile.handle} handle={user.profile.handle} en={locale==='en'}/></div>}
  {c&&c.role==='admin'&&<form className={css.form} onSubmit={e=>{e.preventDefault();void mutate('/'+c.id+'/invitations',{expectedRevision:c.revision,userId:target,days,readmission});}}>
- <p>{t('相手から共有されたアカウントIDを指定します。発行だけでは参加権は増えず、本人の承諾が必要です。','Use the account ID shared by the invitee. Issuing an invitation grants no access; the invitee must accept.')}</p>
- <label>{t('招待先アカウントID','Invitee account ID')}<input required pattern="[a-fA-F0-9-]{36}" value={target} onChange={e=>setTarget(e.target.value)} autoComplete="off" autoCapitalize="none" spellCheck={false}/></label>
+ <p>{t('相手から共有された @handle を指定します。発行だけでは参加権は増えず、本人の承諾が必要です。','Use the @handle shared by the invitee. Issuing an invitation grants no access; the invitee must accept.')}</p>
+ <label>{t('招待先の公開ID','Invitee public ID')}<input required placeholder="@handle" maxLength={37} value={target} onChange={e=>setTarget(e.target.value)} autoComplete="off" autoCapitalize="none" spellCheck={false}/></label>
  <fieldset><legend>{t('有効期間','Valid for')}</legend>{[1,7,30].map(d=><label key={d}><input type="radio" checked={days===d} onChange={()=>setDays(d)}/>{d}{t('日',d===1?' day':' days')}</label>)}</fieldset>
  <label><input type="checkbox" checked={readmission} onChange={e=>setReadmission(e.target.checked)}/>{t('除外・停止後の再参加として明示的に受け入れる','Explicitly readmit a removed or suspended membership')}</label>
  <p>{t('同じ相手へ再発行すると、古い招待を取り消します。過去の限定会話は共有されません。メール送信は行いません。','Reissuing cancels the previous invitation. Past restricted threads stay restricted. No email is sent.')}</p>
  <button disabled={busy||c.status!=='active'} className={css.primary}>{t('招待を発行・再発行','Issue / reissue invitation')}</button>
  </form>}
  {data.invitations.length===0&&<p>{t('招待はありません。','No invitations.')}</p>}
- {data.invitations.map(i=><article className={css.row} key={i.id}><div className={css.placeInfo}><CommunityMark name={i.title??'·'}/><div><strong>{i.title??t('コミュニティへの招待','Community invitation')}</strong><small>{state(i.status)} · {new Date(i.expiresAt).toLocaleDateString()}</small>{c&&<small>{t('宛先','To')}: {i.targetId}</small>}{i.readmission&&<small>{t('再受入・過去の限定会話は含みません','Readmission · excludes past restricted threads')}</small>}</div></div><div className={css.actions}>
+ {data.invitations.map(i=><article className={css.row} key={i.id}><div className={css.placeInfo}><CommunityMark name={i.title??'·'}/><div><strong>{i.title??t('コミュニティへの招待','Community invitation')}</strong><small>{state(i.status)} · {new Date(i.expiresAt).toLocaleDateString()}</small>{c&&<small>{t('宛先','To')}: {i.targetHandle?'@'+i.targetHandle:t('公開IDを表示できません','Public ID unavailable')}</small>}{i.readmission&&<small>{t('再受入・過去の限定会話は含みません','Readmission · excludes past restricted threads')}</small>}</div></div><div className={css.actions}>
  {i.status==='pending'&&(c?<button disabled={busy} onClick={()=>void mutate('/invitations/'+i.id+'/revoke',{expectedRevision:i.revision})}>{t('取り消す','Cancel invitation')}</button>:<><button disabled={busy} className={css.primary} onClick={()=>void mutate('/invitations/'+i.id+'/accept',{expectedRevision:i.revision})}>{t('承諾して参加','Accept & join')}</button><button disabled={busy} onClick={()=>void mutate('/invitations/'+i.id+'/decline',{expectedRevision:i.revision})}>{t('辞退','Decline')}</button></>)}
  {!c&&i.status==='accepted'&&<a href={'#'+encodeURIComponent('/'+i.communityId)}>{t('コミュニティへ','Visit community')} →</a>}
  </div></article>)}

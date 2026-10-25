@@ -60,7 +60,7 @@ export function createCommunityService(pool:Pool, origin:string, owner:Owner, se
   async function cohort(c:PoolClient,threadId:string,cid:string){await c.query("INSERT INTO community_audience_member(thread_id,user_id,generation) SELECT $1,user_id,generation FROM community_member WHERE community_id=$2 AND status='active' ON CONFLICT DO NOTHING",[threadId,cid]);}
   return {
     ...createCommunitySafety(pool,{actor,identity,context,admin,expected,dto:communityDto},secret),
-    ...createCommunityContinuity(pool,{actor,identity,context,admin,writable,expected,bump,dto:communityDto},secret),
+    ...createCommunityContinuity(pool,{actor,identity,context,admin,writable,expected,bump,dto:async(row,c)=>communityDto((await withCreators(c,[row],"created_by"))[0])},secret),
     async list(req:Request){const user=await identity(req);const mine=new URL(req.url).searchParams.get('mine')==='1';if(mine&&!user)throw new MemberError(401,'UNAUTHENTICATED');return memberTransaction(pool,async c=>{if(user)await activeMember(c,user.id);
       const page=await communityPage(c,req,secret,'directory:'+mine,user?.id??null,'',`SELECT c.*,m.role,m.admin_offered,c.id AS page_id,${pageTime('c.created_at')} FROM community c LEFT JOIN community_member m ON m.community_id=c.id AND m.user_id=$1 AND m.status='active' WHERE c.status<>'suspended' AND (c.visibility='public' OR m.user_id IS NOT NULL) AND (NOT $2::boolean OR m.user_id IS NOT NULL)`,[user?.id??null,mine],'c.created_at','c.id');
       return memberJson({communities:(await withCreators(c,page.rows,"created_by")).map(communityDto),nextCursor:page.nextCursor,partial:page.partial});});},

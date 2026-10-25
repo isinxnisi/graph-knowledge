@@ -80,3 +80,14 @@
 
 
 更新後の隔離buildは `7R2R6u-RJ2YfVQvVT394r`。同じPG/KGのvolume・fixtureを保持して3221を再開し、実ブラウザでhandleクリックの「コピーしました」、対象投稿への移動・強調と説明の除去を確認した。[対象投稿の実画面](public-accounts-initial-20261025/thread-focus-feedback.png)。main/origin/mainは引き続き `30ffa72`、既存AI worktreeは変更なし。main/betaへは未反映。
+
+
+## 2026-10-26・招待の公開ID対応と010の受入候補
+
+[Issueの最新指示](https://github.com/isinxnisi/graph-knowledge/issues/39#issuecomment-6400053458)に従い、同じ独立worktreeへ招待の `@handle` 対応を同梱。既存 `userId` 入力のUUID互換、内部のUUID宛先、承諾・取消・失効・参加世代を保持した。handleは権限確認・既存quotaの消費後に解決し、User→Profile→Communityで再確認する。無効な対象もquotaを消費する。本人の公開IDコピーは共通部品にし、管理画面の宛先も公開IDで表示。招待管理画面でも作成者の既存人物表示を返す。新API・検索・migrationは追加していない。
+
+実DB/実OIDCの26件、既存会員33件・コミュニティ29件・安全対策14件・運営14件、計116件が成功。全単体71 files/856件も成功。招待の追加4シナリオでは、UUID/大文字/空白handle、別User/匿名、旧handle、二重発行、取消・承諾、過去cohort非付与、不明/AI/停止/退会の同一エラー、失敗試行の上限、期限・issuer世代・停止失効、ロック待ち中のhandle変更を確認した。作成者表示の補修後に26件・29件を再実行して成功。
+
+画面はJA/1440/lightとEN/390/dark-blueで、実OIDC→本人IDコピー→管理者のhandle入力→発行→宛先表示→本人承諾を確認。再取得安定性の試験も別実行で成功。開発用初回コンパイル待ちの失敗は、既存ログインhelperと同様に実APIを事前取得して再確認した。実betaのGoogle認証にfixtureを接続しない。
+
+[招待・日本語PC](public-accounts-initial-20261025/invite-ja-desktop.png) / [招待・英語スマホ](public-accounts-initial-20261025/invite-en-mobile.png) / [本人ID・英語スマホ](public-accounts-initial-20261025/invitation-id-en-mobile.png)

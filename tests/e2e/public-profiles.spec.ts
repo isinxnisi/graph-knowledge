@@ -2,6 +2,7 @@ import {test,expect,type Page} from '@playwright/test';
 const origin='http://127.0.0.1:3221';
 test('profile revalidation keeps the header stable, copies the handle, and removes unavailable records',async({page,context},info)=>{
  await context.grantPermissions(['clipboard-read','clipboard-write']);
+ expect((await page.request.get('/api/accounts/profiles/explorer-apprentice',{timeout:90000})).status()).toBe(200);
  await page.clock.install();await page.goto('/people/explorer-apprentice');await page.clock.resume();
  const heading=page.getByRole('heading',{name:'探索者見習いAI',exact:true});await expect(heading).toBeVisible();
  await expect(page.locator('main>a[href="/communities"]')).toHaveCount(0);
@@ -25,6 +26,21 @@ async function login(page:Page,name='検証ユーザーA'){
  await page.goto('/member#profile');await page.getByRole('button',{name:/検証用OIDCでログイン|Log in with test OIDC/}).click();await page.getByRole('link',{name,exact:true}).click();await page.waitForURL(u=>u.pathname==='/member');
  await page.goto('/member#profile');await expect(page.locator('#public-profile-settings input[name=public-handle]')).toBeVisible();return (await(await page.request.get('/api/member/profile')).json()).user;
 }
+for(const [locale,width,theme] of [['ja',1440,'light'],['en',390,'dark-blue']] as const)test(`handle invitation UI ${locale} ${width}`,async({page,browser},info)=>{
+ test.setTimeout(240000);const en=locale==='en';await page.setViewportSize({width,height:900});
+ await page.addInitScript(({locale,theme})=>{localStorage.setItem('graph-knowledge.ui-locale.v1',locale);localStorage.setItem('graph-knowledge:appearance:v1',JSON.stringify({theme,palette:theme==='dark-blue'?'blue':'brown'}));},{locale,theme});
+ const owner=await login(page),context=await browser.newContext({viewport:{width,height:900},permissions:['clipboard-read','clipboard-write']});
+ try{
+  const other=await context.newPage();await other.addInitScript(({locale,theme})=>{localStorage.setItem('graph-knowledge.ui-locale.v1',locale);localStorage.setItem('graph-knowledge:appearance:v1',JSON.stringify({theme,palette:theme==='dark-blue'?'blue':'brown'}));},{locale,theme});
+  const target=await login(other,'検証ユーザーB'),handle=target.profile.handle;
+  await other.goto('/communities#/invitations');const copy=other.getByRole('button',{name:en?'Copy @'+handle:'@'+handle+' をコピー',exact:true});await expect(copy).toBeVisible();await copy.click();expect(await other.evaluate(()=>navigator.clipboard.readText())).toBe('@'+handle);expect(await other.locator('main').innerText()).not.toContain(target.id);
+  await other.screenshot({path:info.outputPath('invitation-id.png'),fullPage:true});
+  const title=en?'Handle invitation review':'公開IDで招待を確認',headers={origin,'x-member-user':owner.id};const response=await page.request.post('/api/communities',{headers,data:{requestId:crypto.randomUUID(),title,description:'',visibility:'members'}});expect(response.status()).toBe(201);const c=(await response.json()).community;
+  await page.goto('/communities#/'+c.id+'/invitations');await expect(page.getByRole('heading',{name:en?'Manage invitations':'招待の管理',exact:true})).toBeVisible();await page.getByLabel(en?'Invitee public ID':'招待先の公開ID',{exact:true}).fill('@'+handle);
+  await page.getByRole('button',{name:en?'Issue / reissue invitation':'招待を発行・再発行',exact:true}).click();await expect(page.getByText((en?'To':'宛先')+': @'+handle,{exact:true})).toBeVisible();expect(await page.locator('main').innerText()).not.toContain(target.id);expect(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth)).toBe(false);await page.screenshot({path:info.outputPath('invite-by-handle.png'),fullPage:true});
+  await other.reload();const invitation=other.locator('article').filter({hasText:title});await expect(invitation).toBeVisible();await invitation.getByRole('button',{name:en?'Accept & join':'承諾して参加',exact:true}).click();await expect(invitation.getByRole('link',{name:/Visit community|コミュニティへ/})).toBeVisible();
+ }finally{await context.close();}
+});
 test('real OIDC, automatic profile, one name, author links, follow and unfollow round trip',async({page,browser},info)=>{
  test.setTimeout(240000);
  const user=await login(page);const editor=page.locator('#public-profile-settings');
