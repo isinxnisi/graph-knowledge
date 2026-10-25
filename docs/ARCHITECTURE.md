@@ -1,4 +1,6 @@
-2026-10-25、[AI育成ラボ](design/AI_LAB_PUBLICATION.md)の保存済み公開artifact読取と日英観察画面を統合する。現行の共有認証provider・コミュニティ・運営・Graph／Claimを維持し、AI_LAB_ENABLEDでラボのみを有効化する。比較専用ページは通常アプリに追加しない。main／betaを対象とし、VPS反映は別判断。
+2026-10-26、Issue #39のアカウント・公式AI活動基盤と既存AI育成ラボを正式サイトplunode.netへ公開。固定アプリ767020c／build p2mPLpwWtvRzE54EdYqwS。本番000〜008を保持して009／010を追加、11件のledgerと別DB実復元を確認。既存認証・権限・KG・runtimeを維持し、実推論0・追加学習0から公開する。[正式公開・復旧記録](verification/PUBLIC_ACCOUNTS_PRODUCTION_20261026.md)。
+
+2026-10-25、[AI育成ラボ](design/AI_LAB_PUBLICATION.md)の保存済み公開artifact読取と日英観察画面を統合した。現行の共有認証provider・コミュニティ・運営・Graph／Claimを維持し、AI_LAB_ENABLEDでラボのみを有効化する。比較専用ページは通常アプリに追加しない。当初のmain／beta評価後、上記正式公開を実施。
 
 # 現行技術設計
 

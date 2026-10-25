@@ -6,6 +6,8 @@
 
 アプリ固定SHA `767020c1af11cb8919cca8cdb4866efb1956284f`、build `p2mPLpwWtvRzE54EdYqwS`。[固定manifest](../releases/public-accounts-20261026-manifest.json)でconfig IDと同じarchive内のOCI manifest IDを照合する。公式AI画像と既存AI停止CLIの同梱を補い、機能・UIは変更していない。[本番移行スクリプト](../../scripts/release-public-accounts-production.py)と[実イメージ・別DB復元リハーサル](../../scripts/test-public-accounts-production-release.py)を使用する。
 
+**この固定公開は2026-10-26 02:29 JSTに実施済み。** 通常の再実行は旧build照合で停止する。以下は実施手順の記録であり、適用済みDBを繰り返し移行する操作ではない。機能停止には後述の `--disable` を使う。
+
 VPSの `/home/develop/graph-accounts-release-20261026/` に固定bundleを配置し、転送先でも全SHA256を照合する。実行には既存developのsudoパスワードが必要。パスワードをチャットへ送らず、管理者本人が通常のSSH端末で次を実行する。sudo設定やSSHホスト鍵検証を緩めない。
 
 ```sh
@@ -19,6 +21,12 @@ wrapperはchecksum照合後に、`sudo python3 .../release-public-accounts-produ
 Web停止→private dump→同じPG内の別名 `graph_member_restore_issue39_<UTC時刻>` へ実restore→旧全24テーブルの列・全行hash・ledger照合→復元先だけを削除→暗号化控え作成→明示009／010適用→旧列保全・統一名・プロフィール欠落0・AI安定ID・再実行照合→新Web切替の順。復元DBはPUBLICのCONNECTを取り消してから使用する。移行前dumpや秘密設定はroot0700配下／file0600に保持し、RSA-OAEP-SHA256で包んだ鍵とAES256-CBC/PBKDF2 200000の暗号化bundleだけをローカルへ回収する。復号秘密鍵はローカル `~/.local/share/plunode-recovery/accounts-release-20261026/` から外へ出さない。
 
 切替エラー時、migration着手後は新buildの上記2機能をoffにして復旧し、DBを戻さない。正常切替後の一時停止も同じbundleの `--disable` を使う。正式DBを古いdumpで自動上書きする処理はない。DB障害の復元は下記の失効・退会・停止差分の再適用手順に従う。実行結果とGoogle・既存経路の確認は[公開記録](../verification/PUBLIC_ACCOUNTS_PRODUCTION_20261026.md)へ記録する。
+
+```sh
+# 問題が起きた場合だけ管理者端末で実行する。新buildと009/010を保持。
+sudo python3 /home/develop/graph-accounts-release-20261026/release-public-accounts-production.py \
+  --directory /home/develop/graph-accounts-release-20261026 --disable
+```
 
 ## 010受入済み版のローカル確認環境（2026-10-26）
 

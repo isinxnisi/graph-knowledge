@@ -2,11 +2,11 @@
 
 # ドキュメントの入口
 
-- Issue #39 [010・招待公開ID対応のbeta受入](verification/PUBLIC_ACCOUNTS_BETA_ACCEPTANCE_20261026.md)：表示名統一、自動プロフィール、活動の公開由来、人物表示とマイページ整理。固定71b61fbをmain/betaへ反映し実Googleを確認。[先行した隔離評価](verification/PUBLIC_ACCOUNTS_INITIAL_CORRECTION_20261025.md)。正式VPSは未変更。
+- Issue #39 [正式公開・本番backup/別DB復元/009・010適用](verification/PUBLIC_ACCOUNTS_PRODUCTION_20261026.md)：固定767020c／build p2mPLpwWtvRzE54EdYqwSをplunode.netへ公開。実Google、既存Capsule、プロフィール・フォロー・招待・限定境界、コミュニティ・運営・Graph・AIラボを確認。スマホ実機は運営者評価済み。[先行するbeta受入](verification/PUBLIC_ACCOUNTS_BETA_ACCEPTANCE_20261026.md)／[隔離評価](verification/PUBLIC_ACCOUNTS_INITIAL_CORRECTION_20261025.md)。
 
-- 公式AI活動基盤（Issue #39）：[公開プロフィール・AIIdentity・活動・フォロー](design/PUBLIC_ACCOUNTS.md)／[追加009 migration・backup・復旧](runbooks/PUBLIC_ACCOUNTS_RELEASE.md)／[隔離検証・main受入・実beta反映](verification/PUBLIC_ACCOUNTS_20261025.md)。人間の実認証とAIの身元を分離し、公開活動は元コンテンツを毎回再認可する。実推論・学習・自動コメントは対象外。本番VPS・本番会員DBは未変更。
+- 公式AI活動基盤（Issue #39）：[公開プロフィール・AIIdentity・活動・フォロー](design/PUBLIC_ACCOUNTS.md)／[009・010適用と復旧](runbooks/PUBLIC_ACCOUNTS_RELEASE.md)／[初版の隔離検証・main/beta反映](verification/PUBLIC_ACCOUNTS_20261025.md)。人間の実認証とAIの身元を分離し、公開活動は元コンテンツを毎回再認可する。実推論・学習・自動コメントは対象外。正式環境の結果は上記公開記録を参照。
 
-- AI育成ラボ：[0回からの本線統合・公開条件](design/AI_LAB_PUBLICATION.md)／[artifact更新と復旧](runbooks/AI_LAB_ARTIFACT_DELIVERY.md)／[2026-10-25のmain受入・実beta検証](verification/AI_LAB_BETA_20261025.md)。実推論0・追加学習0・初出動前でbeta評価が可能。比較専用ルートは隔離版だけに保持し、VPS／正式サイトは未変更。[10-22の候補検証](verification/AI_LAB_PUBLICATION_20261022.md)は当時の記録。
+- AI育成ラボ：[0回からの本線統合・公開条件](design/AI_LAB_PUBLICATION.md)／[artifact更新と復旧](runbooks/AI_LAB_ARTIFACT_DELIVERY.md)／[2026-10-25のmain受入・実beta検証](verification/AI_LAB_BETA_20261025.md)。実推論0・追加学習0・初出動前の既存記録を2026-10-26に正式公開。比較専用ルートは隔離版だけに保持。[10-22の候補検証](verification/AI_LAB_PUBLICATION_20261022.md)は当時の記録。
 
 2026-10-15。現行仕様・継続検討・完了履歴を分ける。フェーズ番号は記録の整理用であり、未実装機能の着手順や承認を意味しない。
 

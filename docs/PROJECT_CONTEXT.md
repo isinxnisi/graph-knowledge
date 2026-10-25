@@ -1,4 +1,6 @@
-2026-10-26、Issue #39の公開前修正010・招待 `@handle` 対応を固定 `71b61fb` でmainへ受入。既存3200/betaをbuild `omVu8EDJfIyAox7r8SYAw` へ切替。全会員プロフィール・表示名・活動公開境界・人物表示を整理し、UUID招待互換・失効を維持。旧29テーブルの保全、別DB復元、Google再ログイン・既存Capsule/コミュニティ/運営/Graph/AIラボを確認。正式VPS・正式会員DB・既存AI実験worktreeは未変更。[受入記録](verification/PUBLIC_ACCOUNTS_BETA_ACCEPTANCE_20261026.md)。
+2026-10-26、運営者の正式公開指示に基づき、Issue #39のアカウント・公式AI活動基盤と既存AIラボを正式origin **plunode.net** へ公開。アプリ固定 `767020c`／build `p2mPLpwWtvRzE54EdYqwS`。本番会員DBをprivate backup・別DB実restoreで全24テーブル照合後、009／010を明示適用してledger11件。既存Google・Capsule・限定会話・運営履歴、本番KG revision／2,175対象・1,895主張を保持。正式Google再ログイン、フォロー実操作、招待・公開境界、Graph／AIラボの往復を確認。スマホ実機は運営者が評価済み。KG・Kev・既存AI実験worktree／artifactを変更していない。[公開・復旧記録](verification/PUBLIC_ACCOUNTS_PRODUCTION_20261026.md)。
+
+2026-10-26、Issue #39の公開前修正010・招待 `@handle` 対応を固定 `71b61fb` でmainへ受入。既存3200/betaをbuild `omVu8EDJfIyAox7r8SYAw` へ切替。全会員プロフィール・表示名・活動公開境界・人物表示を整理し、UUID招待互換・失効を維持。旧29テーブルの保全、別DB復元、Google再ログイン・既存Capsule/コミュニティ/運営/Graph/AIラボを確認。このbeta受入時点では正式VPS・正式会員DBは未変更。[受入記録](verification/PUBLIC_ACCOUNTS_BETA_ACCEPTANCE_20261026.md)。
 
 2026-10-25、Issue #36／PR #37の[AI育成ラボ](design/AI_LAB_PUBLICATION.md)を現行mainへ統合する。実推論0・追加学習0・初出動前から観察し、非AI比較と送信前保留を区別する。今回の対象はmainと既存3200／betaでの有効化・評価まで。比較専用ルートは取り込まず、隔離環境を保全する。VPS／正式サイトの配置は今回行わない。
 
