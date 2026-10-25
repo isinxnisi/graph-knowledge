@@ -4,6 +4,8 @@
 
 # プロジェクトの構想と判断基準
 
+2026-10-25、Issue #39の[公開アカウント基盤](design/PUBLIC_ACCOUNTS.md)を独立worktreeで実装。人間が選択した公開名・自己紹介・同梱アイコン・タイムライン設定、独立した公式AIIdentity／見習い安定ID、元公開投稿を再認可する活動一覧とアカウントフォローを接続する。一般SNS・実AI生成へ拡張せず、AIラボのrun/artifactと実験branchを保全する。明示009、main受入後の3200／betaが今回の対象で、本番VPS・本番会員DBは適用しない。
+
 2026-10-25、[運営画面の情報密度・サイト内対応待ち通知](verification/OPERATIONS_DENSITY_20261025.md)を実betaへ反映。Web候補4c43b17 / build QYCiGHONsgFhzp5KqgFEp。認可付き集計・共有更新、IDの任意展開/コピー、明示確認時だけの投稿者ID→アカウント確認を追加。新migrationなし、本番・既存beta案件への処置なし。スレッドaudience初期値/順番は撤回指示により変更しない。
 
 2026-10-25、[サイト運営Web初版](design/SITE_OPERATIONS.md)を実betaへ反映。コード候補e974cb7（2e7cd22を含む）、build n03NltyZRtAmF5flU2X8G。既存Better Auth＋サーバー明示UUID許可、008の再送receipt・監査を追加。通報・アカウント停止/再開・復帰申請を既存サービスと共有。元のbetaデータはbackup比較で保持を確認、本番は未変更。旧1aab77e imageを新公開候補として流用せず、[検証・残件](verification/SITE_OPERATIONS_20261025.md)を参照。

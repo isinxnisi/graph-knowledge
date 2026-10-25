@@ -3,7 +3,8 @@ import { randomBytes, randomUUID } from "node:crypto";
 
 // Disposable dedicated PostgreSQL. Never targets a configured product DB, and
 // cleanup only removes the uniquely named container created by this invocation.
-const operationsTests=process.argv.includes("--operations");
+const accountTests=process.argv.includes("--accounts");
+const operationsTests=process.argv.includes("--operations")||accountTests;
 const communityTests = process.argv.includes("--community")||operationsTests;
 const safetyTests=process.argv.includes("--safety");
 const browserTests = process.argv.includes("--e2e");
@@ -16,6 +17,7 @@ const env: NodeJS.ProcessEnv = { ...process.env, NODE_ENV: "test", GRAPH_DATASET
   POSTGRES_USER: "gk_member", POSTGRES_PASSWORD: password, POSTGRES_DB: "graph_member_test" };
 if (communityTests) env.COMMUNITY_ENABLED = "1";
 if(operationsTests)env.SITE_OPERATIONS_ENABLED="1";
+if(accountTests)env.PUBLIC_PROFILES_ENABLED="1";
 const docker = (args: string[]) => spawnSync("docker", args, { env, encoding: "utf8", timeout: 30_000 });
 let child: ReturnType<typeof spawn> | undefined;
 let created = false;
@@ -35,8 +37,8 @@ try {
   }
   if (!ready) throw new Error("Dedicated member PostgreSQL did not become ready");
   child = spawn("node", browserTests
-    ? ["--import", "tsx", "scripts/test-member-browser.ts", ...process.argv.slice(2).filter(arg => arg !== "--e2e" && arg !== "--community" && arg !== "--safety" && arg !== "--operations")]
-    : ["node_modules/vitest/vitest.mjs", "run", ...(communityTests ? [operationsTests ? "tests/site-operations.integration.test.ts" : safetyTests ? "tests/community-safety.integration.test.ts" : "tests/community.integration.test.ts"] : ["tests/member.integration.test.ts", "tests/member-cold.integration.test.ts"]), "--maxWorkers=1", "--no-file-parallelism"], { env, stdio: "inherit" });
+    ? ["--import", "tsx", "scripts/test-member-browser.ts", ...process.argv.slice(2).filter(arg => arg !== "--e2e" && arg !== "--community" && arg !== "--safety" && arg !== "--operations" && arg !== "--accounts")]
+    : ["node_modules/vitest/vitest.mjs", "run", ...(communityTests ? [accountTests ? "tests/public-profiles.integration.test.ts" : operationsTests ? "tests/site-operations.integration.test.ts" : safetyTests ? "tests/community-safety.integration.test.ts" : "tests/community.integration.test.ts"] : ["tests/member.integration.test.ts", "tests/member-cold.integration.test.ts"]), "--maxWorkers=1", "--no-file-parallelism"], { env, stdio: "inherit" });
   const timer = setTimeout(() => child?.kill("SIGTERM"), browserTests ? 960_000 : 180_000);
   const code = await new Promise<number>((resolve, reject) => { child!.once("error", reject); child!.once("exit", code => resolve(code ?? 1)); });
   clearTimeout(timer);

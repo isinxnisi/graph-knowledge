@@ -21,6 +21,7 @@ import AnimatedDetails from "./AnimatedDetails";
 import { notifyMemberSessionChange } from "../lib/client/account-navigation";
 import MemberAccountDeletion from "./MemberAccountDeletion";
 import MemberProfileSettings from "./MemberProfileSettings";
+import PublicProfileEditor from "./PublicProfileEditor";
 import { capsuleLabels } from "../lib/i18n/capsules";
 import MemberCapsuleEditor from "./MemberCapsuleEditor";
 import CapsuleShareControls from "./CapsuleShareControls";
@@ -161,7 +162,7 @@ export default function MemberCapsules({ dataset, initialImport = "" }: { datase
     if (!user || busy || error) return;
     const value = new URLSearchParams(location.search).get('returnTo');
     if (!value) return;
-    try { const target = new URL(value, location.origin); if (target.origin === location.origin && target.pathname === '/communities' && !target.search && !target.username && !target.password) location.replace(target.pathname + target.hash); } catch { /* Invalid return targets never navigate. */ }
+    try { const target = new URL(value, location.origin); if (target.origin === location.origin && (target.pathname === '/communities' || target.pathname === '/following' || /^\/(?:en\/)?people\/[a-z][a-z0-9-]{2,29}$/.test(target.pathname)) && !target.search && !target.username && !target.password) location.replace(target.pathname + target.hash); } catch { /* Invalid return targets never navigate. */ }
   }, [user, busy, error]);
   function signalAuthChange() { notifyMemberSessionChange(); }
   function logout(all: boolean) {
@@ -249,6 +250,7 @@ export default function MemberCapsules({ dataset, initialImport = "" }: { datase
       {confirm === "logoutAll" && <div role="alert"><p>{text.logoutAllConfirm}</p><button onClick={() => logout(true)}>{text.confirmLogoutAll}</button><button onClick={() => setConfirm(null)}>{text.cancel}</button></div>}
     </section>
     <div hidden={section !== "settings"}>
+    {user && section === "settings" && <PublicProfileEditor key={`public-profile:${user.id}`} user={user}/>}
     {user && (section === "settings" || !!profileDraft) && <MemberProfileSettings key={`profile:${user.id}`} user={user} value={profileDraft?.ownerId === user.id ? profileDraft.name : user.name} disabled={busy}
       onChange={name => setProfileDraft(name === null || name === user.name ? null : { ownerId: user.id, name })}
       onSaved={updated => { setUser(current => current?.id === updated.id ? updated : current); setProfileDraft(null); signalAuthChange(); }}

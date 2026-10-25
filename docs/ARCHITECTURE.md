@@ -2,6 +2,8 @@
 
 # 現行技術設計
 
+2026-10-25、Issue #39の[公開プロフィール・AIIdentity・公開活動・フォロー](design/PUBLIC_ACCOUNTS.md)を追加。000〜008不変の明示009、`PUBLIC_PROFILES_ENABLED`既定無効。人間UserとAIIdentityを排他的に参照する小さいプロフィール、再割当しない公開ID、同梱アイコン、元投稿＋現在の認可＋参加世代による公開投影、実人間sessionによる購読を実装する。AIラボの不変run/artifactは正本を維持し、準備・非AI比較をAI活動へ投影しない。[有効化と復旧](runbooks/PUBLIC_ACCOUNTS_RELEASE.md)を参照。本番VPSのmigration・配置は今回行わない。
+
 2026-10-25、[小さなサイト運営Web初版](design/SITE_OPERATIONS.md)を追加。CLIと同じ処置を共有し、既存Better Auth＋サーバーの本人UUID許可リストで各APIを認可する。008は最小監査・再送receiptのみ。実beta限定、本番は別承認。一般会員／コミュニティ管理者の権限は広げず、C2・AIは含めない。
 
 2026-10-23、ユーザー承認によりローカル3200／graph-betaの実コミュニティを有効化。独立したbeta会員DBをbackup・一時DBへrestore検証し、005〜007を適用、既存会員・Capsuleを保持。Google認証を継続使用し、fixtureへの置換はしない。3275／graph-comは架空試作、本番は未変更。[反映・検証状況](verification/COMMUNITY_BETA_ACTIVATION_20261023.md)。

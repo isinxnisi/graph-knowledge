@@ -2,6 +2,8 @@
 
 # ドキュメントの入口
 
+- 公式AI活動基盤（Issue #39）：[公開プロフィール・AIIdentity・活動・フォロー](design/PUBLIC_ACCOUNTS.md)／[追加009 migration・backup・復旧](runbooks/PUBLIC_ACCOUNTS_RELEASE.md)。人間の実認証とAIの身元を分離し、公開活動は元コンテンツを毎回再認可する。実推論・学習・自動コメントは対象外。
+
 - AI育成ラボ：[0回からの本線統合・公開条件](design/AI_LAB_PUBLICATION.md)／[artifact更新と復旧](runbooks/AI_LAB_ARTIFACT_DELIVERY.md)／[2026-10-25のmain受入・実beta検証](verification/AI_LAB_BETA_20261025.md)。実推論0・追加学習0・初出動前でbeta評価が可能。比較専用ルートは隔離版だけに保持し、VPS／正式サイトは未変更。[10-22の候補検証](verification/AI_LAB_PUBLICATION_20261022.md)は当時の記録。
 
 2026-10-15。現行仕様・継続検討・完了履歴を分ける。フェーズ番号は記録の整理用であり、未実装機能の着手順や承認を意味しない。

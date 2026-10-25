@@ -13,6 +13,7 @@ import { activeMember, deleteMember, memberTransaction } from "./operations";
 import {createSiteOperationsService,isSiteOperator} from "./site-operations";
 import { createCommunityService } from "./community";
 import { memberProfileUpdateSchema } from "../../domain/member-profile";
+import { createPublicProfiles } from "./public-profiles";
 
 function dto(row: QueryResultRow) {
   return memberCapsuleSchema.parse({ id: row.id, schemaVersion: row.schema_version, revision: Number(row.revision),
@@ -40,6 +41,7 @@ export function createMemberService(config: MemberConfig, pool: Pool, auth: Memb
     if (content.dataset !== dataset) throw new MemberError(400, "DATASET_MISMATCH");
   }
   return {
+    accounts: createPublicProfiles(pool, config.origin, owner, config.secret),
     community: createCommunityService(pool, config.origin, owner, config.secret),
     operator: createSiteOperationsService(pool, config.origin, owner, config.secret),
     ...createCapsuleSharing(pool, dataset, config.origin, owner),

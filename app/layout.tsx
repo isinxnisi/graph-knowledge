@@ -1,6 +1,7 @@
 import {MemberIdentityProvider} from "../lib/client/use-member-identity";
 import {AiLabAvailability} from "../components/AiLabLinks";
 import {CommunityAvailability} from "../components/CommunityAvailability";
+import {PublicProfileAvailability} from "../components/PublicProfileAvailability";
 import FocusModality from "../components/FocusModality";
 import { headers } from "next/headers";
 import localFont from "next/font/local";
@@ -18,5 +19,5 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
   const requestHeaders = await headers();
   const locale = requestHeaders.get("x-plunode-locale") === "en" ? "en" : "ja";
   const publicLocale = requestHeaders.get("x-plunode-public-locale");
-  return <html lang={locale} data-input-modality="initial" className={editorial.variable}><body className={styles.body}><UiLocaleProvider initialLocale={publicLocale === "en" ? "en" : publicLocale === "ja" ? "ja" : undefined}><CommunityAvailability enabled={process.env.COMMUNITY_ENABLED === "1"}><AiLabAvailability enabled={process.env.AI_LAB_ENABLED === "1" && process.env.GRAPH_DATASET === "public-kg"}><MemberIdentityProvider communityEnabled={process.env.COMMUNITY_ENABLED === "1"}><FocusModality />{children}</MemberIdentityProvider></AiLabAvailability></CommunityAvailability></UiLocaleProvider></body></html>;
+  return <html lang={locale} data-input-modality="initial" className={editorial.variable}><body className={styles.body}><UiLocaleProvider initialLocale={publicLocale === "en" ? "en" : publicLocale === "ja" ? "ja" : undefined}><PublicProfileAvailability enabled={process.env.PUBLIC_PROFILES_ENABLED === "1"}><CommunityAvailability enabled={process.env.COMMUNITY_ENABLED === "1"}><AiLabAvailability enabled={process.env.AI_LAB_ENABLED === "1" && process.env.GRAPH_DATASET === "public-kg"}><MemberIdentityProvider communityEnabled={process.env.COMMUNITY_ENABLED === "1"}><FocusModality />{children}</MemberIdentityProvider></AiLabAvailability></CommunityAvailability></PublicProfileAvailability></UiLocaleProvider></body></html>;
 }

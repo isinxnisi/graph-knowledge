@@ -7,6 +7,7 @@ import { memberProfileUpdateSchema } from "../lib/domain/member-profile";
 import { MemberClientError, memberProfileSchema, memberRequest, type MemberUser } from "../lib/client/member-api";
 import { memberLabels } from "../lib/i18n/member";
 import css from "./MemberCapsules.module.css";
+import {usePublicProfilesEnabled} from "./PublicProfileAvailability";
 
 export default function MemberProfileSettings({ user, value, disabled, onChange, onSaved, onUnauthorized }: {
   user: MemberUser; value: string; disabled: boolean; onChange: (name: string | null) => void;
@@ -14,6 +15,7 @@ export default function MemberProfileSettings({ user, value, disabled, onChange,
 }) {
   const { locale } = useUiLocale();
   const text = memberLabels(locale);
+  const profiles = usePublicProfilesEnabled();
   const active = useRef<AbortController | null>(null);
   const [busy, setBusy] = useState(false), [error, setError] = useState<string | null>(null), [saved, setSaved] = useState(false);
   useEffect(() => {
@@ -43,7 +45,7 @@ export default function MemberProfileSettings({ user, value, disabled, onChange,
       <label htmlFor="member-display-name">{text.displayName}</label>
       <input id="member-display-name" value={value} maxLength={80} autoComplete="nickname" disabled={busy || disabled}
         aria-describedby="member-display-name-help" onChange={event => { onChange(event.target.value); setSaved(false); setError(null); }} />
-      <p id="member-display-name-help" className={css.muted}>{text.displayNameHelp}</p>
+      <p id="member-display-name-help" className={css.muted}>{profiles?(locale==='en'?'Your account name is used for Capsule comments. Choose the name shown on public profiles and community posts in Public profile above.':'このアカウント名はCapsuleのコメントに使います。公開プロフィール・コミュニティ投稿の名前は上の公開プロフィールで選びます。'):text.displayNameHelp}</p>
       {!parsed.success && <p role="status">{text.profileInvalid}</p>}
       <div><button data-variant="primary" type="submit" disabled={busy || disabled || !parsed.success || parsed.data.name === user.name}>{text.saveProfile}</button>
         {value !== user.name && <button type="button" disabled={busy} onClick={() => { onChange(null); setError(null); setSaved(false); }}>{text.cancel}</button>}</div>
