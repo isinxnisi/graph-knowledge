@@ -253,20 +253,14 @@
   ],
   "operations": [
     {
+      "category": "データ収集",
       "name": "公開承認",
       "action": "固定release・receipt集合・revisionの内容を確認して署名。自動一覧は承認しない"
     },
     {
+      "category": "データ収集",
       "name": "収集・正式受入の判断",
       "action": "既存Issue・reviewの同定／Role／scope／根拠を確認。不足資料は保留を維持"
-    },
-    {
-      "name": "サービス状態確認",
-      "action": "B・Cの観測時刻・失敗表示を確認。90分以上古ければ現在の正常稼働とみなさない"
-    },
-    {
-      "name": "予定・セッション更新",
-      "action": "このbranchのWORK_SESSIONS.jsonだけを編集。次の正常な30分更新で一覧へ反映"
     }
   ]
 }
