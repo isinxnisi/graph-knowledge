@@ -1,6 +1,6 @@
 # ドキュメントの入口
 
-- AI育成ラボ初段公開：[0回からの本線統合候補・公開条件](design/AI_LAB_PUBLICATION.md)／[artifact更新と復旧](runbooks/AI_LAB_ARTIFACT_DELIVERY.md)／[検証・反映境界](verification/AI_LAB_PUBLICATION_20261022.md)。実推論0・追加学習0で始める。main取り込み・beta更新・VPS公開は別判断。
+- AI育成ラボ：[0回からの本線統合・公開条件](design/AI_LAB_PUBLICATION.md)／[artifact更新と復旧](runbooks/AI_LAB_ARTIFACT_DELIVERY.md)／[2026-10-25のmain受入・実beta検証](verification/AI_LAB_BETA_20261025.md)。実推論0・追加学習0・初出動前でbeta評価が可能。比較専用ルートは隔離版だけに保持し、VPS／正式サイトは未変更。[10-22の候補検証](verification/AI_LAB_PUBLICATION_20261022.md)は当時の記録。
 
 2026-10-15。現行仕様・継続検討・完了履歴を分ける。フェーズ番号は記録の整理用であり、未実装機能の着手順や承認を意味しない。
 
