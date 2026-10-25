@@ -19,7 +19,7 @@
 
 ## 検証
 
-`python3 -B -m unittest discover -s tests -p 'test_collection_worker*.py' -v`：36件成功（新規4件を含む）。
+`python3 -B -m unittest discover -s tests -p 'test_collection_worker*.py' -v`：36件成功（新規4件を含む）。既存 `test_collection_sequence_worker.py` 7件も成功、合計43件。
 
 新規4件は、旧保護衝突を再現して異なる2 Claimの新規候補をそれぞれcompleted／未承認下書き共有へ進めること、normal／identity／allの生成と旧下書き参照後の別review、hash改変のblocked・次tick再試行なし、下書き保存後I/O失敗からの再開。既存のロック・時間枠・10分休憩・通信障害・失効・重複排除も成功。
 

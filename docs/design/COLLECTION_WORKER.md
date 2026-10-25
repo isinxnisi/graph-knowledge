@@ -44,6 +44,7 @@ ChatGPTはGitHub連携のfile read/createを使用する。mainへ直接承認�
 
 1. ChatGPTはレビューの名前・各ClaimのRole／scope／原責任表示／根拠・既存との差・保留理由を説明する。AI推奨やgroup名だけを承認とみなさない。
 2. 成果内の`*-request-draft.json`を出発点に、**人間が承認したUUID全件**を持つ依頼を作る。normal、identity-onlyと、両方の明示inventoryを合わせたallの雛形を用意する。すべて未承認。allにも保留レコードは入らない。
+   新規雛形は `datasets/collection-decision-drafts/<request-id>/<review-manifest-sha256>/` へ保存する。過去の正式承認が保護するディレクトリと分離し、normal／identity／allと依頼雛形を同じreview単位で共有する。既存の承認・下書きは移動しない。後処理のhash／path／schema違反はblockedとし、I/O失敗だけ保存済み結果から再開する。
 3. envelopeとdecisionのstatusをapprovedにし、decision.humanDecisionへ実際の人間判断を記録する。`acceptedRecordIds`4種類、`recordSha256`、`scopeByClaim`、`referenceArtifacts`、review manifestのhash、baseRelease／baseRevisionは既存decision-template契約のまま維持する。`parentRequestId`は完了した収集依頼、`approvalScope`はformal-record-acceptance-and-release-preparation-only。部分受入は承認したIDと必要な依存の**明示選択**を行い、対応するhash／scopeも同じ集合にする。判断対象を推測追加しない。
 4. 新規requests/ID.jsonを登録する。Workerは受信ファイルSHA-256を記録し、内包するdecisionを凍結保存して既存accept-releaseへ実ファイルhashを渡す。ChatGPTが修正済みJSONのファイルSHAを手計算する必要はない。対象／本文／根拠のhash照合は省略しない。
 5. 人間判断に基づく正式受入記録→受入済みだけのrelease→validate→最新KGへの無書込plan→GitHub報告が自動で進む。公開applyは実行しない。
