@@ -1,0 +1,41 @@
+{
+  "version": 2,
+  "sourceCommit": "57ab6055c9d00ba89f1b2505755cb140f99379bf",
+  "uiBase": "4c43b17",
+  "build": "nLR2kDd65nabsE7jj4-EW",
+  "web": {
+    "tag": "graph-knowledge-web:community-release-20261025-57ab605",
+    "configId": "sha256:8b073b3a5f63b66a836a46f672e1503f99c5d287f518d958cfc3cbf2c6c61bc7",
+    "platform": "linux/amd64",
+    "manifestId": "sha256:9ce61a97918975e9193b67143f165bb14d22fedef4d393ebc73d284a2fba7fa2",
+    "allowedImageIds": [
+      "sha256:8b073b3a5f63b66a836a46f672e1503f99c5d287f518d958cfc3cbf2c6c61bc7",
+      "sha256:9ce61a97918975e9193b67143f165bb14d22fedef4d393ebc73d284a2fba7fa2"
+    ]
+  },
+  "memberOps": {
+    "tag": "graph-knowledge-member-ops:community-release-20261025-57ab605",
+    "configId": "sha256:a0130dfc0fe2c4760d96986053555160f81257fabcc0a270d7844e17064d8ed8",
+    "platform": "linux/amd64",
+    "manifestId": "sha256:17cad14f2f77e2adfaa9a7a8cab2ff14dce5c11810f94b2c7a175a30b6a94c51",
+    "allowedImageIds": [
+      "sha256:a0130dfc0fe2c4760d96986053555160f81257fabcc0a270d7844e17064d8ed8",
+      "sha256:17cad14f2f77e2adfaa9a7a8cab2ff14dce5c11810f94b2c7a175a30b6a94c51"
+    ]
+  },
+  "archive": {
+    "file": "images.tar.gz",
+    "sha256": "9c9e045bed47150776a221d06971028a6e7b81354d77b0b2d794f3df99401427"
+  },
+  "migrations": {
+    "000-auth.sql": "2bf2c433610d77c0574de11c1646dc8777e0ca6903eeded337bb543bdeba88d3",
+    "001-capsules.sql": "de7f0d9c5890d568e61c022d5ac8b03c36480be20f3073f36537f1c06083ae23",
+    "002-capsule-sharing.sql": "3d3909b5a4cdf41f260153038d539eb547fa76ffbc9b2111f5f55bf83805b9b7",
+    "003-capsule-discussion.sql": "f2554048e32a3a3f58ab6dc0680daeeedd8ef6aca7fc3d561d9021b227997353",
+    "004-account-operations.sql": "4519d8dd507d8d337cf012cebde0ad0114918d09f2de2fcdd18e8db5b2a5ca8b",
+    "005-communities.sql": "1457d0e2ab88d8eaefc589a4b91500e8cef71a01b344624c1d8b8f971d1b0540",
+    "006-community-continuity.sql": "70e7f05554e5960772c28c3be4ce2ea86b8ba0e861fc152d7574994f62657ac1",
+    "007-community-safety.sql": "b0a77195770598da2a5fc9435cc429ca018d46534ce6b1eba63f699e8034087f",
+    "008-site-operations.sql": "709f74b36a1b3f9c763335b58ab12d9b42d554a163176d5385ec91ffa8b1d799"
+  }
+}

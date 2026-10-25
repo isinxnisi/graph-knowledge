@@ -1,6 +1,20 @@
+2026-10-25、Issue #36／PR #37の[AI育成ラボ](design/AI_LAB_PUBLICATION.md)を現行mainへ統合する。実推論0・追加学習0・初出動前から観察し、非AI比較と送信前保留を区別する。今回の対象はmainと既存3200／betaでの有効化・評価まで。比較専用ルートは取り込まず、隔離環境を保全する。VPS／正式サイトの配置は今回行わない。
+
+2026-10-25、利用者の公開承認に基づき、コミュニティ第1弾・サイト運営・対応待ち通知を正式origin plunode.netで有効化。Webソース57ab605／build nLR2kDd65nabsE7jj4-EW。005〜008を適用しledger9件、既存会員・Capsule・本番KG revision／2,175対象・1,895関係を保持。本人Google・限定会話・通報から運営確認と履歴まで実操作。C2は準備中、AIは後続。詳細は[本番公開記録](verification/COMMUNITY_PRODUCTION_20261025.md)。
+
 # プロジェクトの構想と判断基準
 
-2026-10-22、Issue #36の[AI育成ラボ初段公開候補](design/AI_LAB_PUBLICATION.md)。見習いを実推論0・追加学習0の誕生直後から観察する。非AI比較と保留をAIの成長にせず、一般画面から架空の育成コメント・開発操作を除く。本線UIと公開artifactの読取を独立branchで統合検証し、main／beta／VPSの反映は別判断。GPU問題解消・実推論成功・採点承認を初段公開の必須条件にしない。
+2026-10-25、[運営画面の情報密度・サイト内対応待ち通知](verification/OPERATIONS_DENSITY_20261025.md)を実betaへ反映。Web候補4c43b17 / build QYCiGHONsgFhzp5KqgFEp。認可付き集計・共有更新、IDの任意展開/コピー、明示確認時だけの投稿者ID→アカウント確認を追加。新migrationなし、本番・既存beta案件への処置なし。スレッドaudience初期値/順番は撤回指示により変更しない。
+
+2026-10-25、[サイト運営Web初版](design/SITE_OPERATIONS.md)を実betaへ反映。コード候補e974cb7（2e7cd22を含む）、build n03NltyZRtAmF5flU2X8G。既存Better Auth＋サーバー明示UUID許可、008の再送receipt・監査を追加。通報・アカウント停止/再開・復帰申請を既存サービスと共有。元のbetaデータはbackup比較で保持を確認、本番は未変更。旧1aab77e imageを新公開候補として流用せず、[検証・残件](verification/SITE_OPERATIONS_20261025.md)を参照。
+
+2026-10-24、コミュニティ第1弾の公開準備を実施。UI候補77364c5と実beta build QNMnJbnTc8UZJnqJgAmV-は利用者了承済み。正式サイトは657f1cf／build N7WjNWiM65EwItM1tux_Y、会員DB000〜004、コミュニティ無効を管理者の読取結果で確認。C1a/C1b/C3-minは実beta利用まで成立。C2は独立後続、AIは第2弾。本番反映・005〜007適用は未承認。[公開準備](verification/COMMUNITY_RELEASE_READINESS_20261024.md)／[導入手順](runbooks/COMMUNITY_FIRST_RELEASE.md)。
+
+2026-10-23、ユーザー承認によりローカル3200／graph-betaの実コミュニティを有効化。独立したbeta会員DBをbackup・一時DBへrestore検証し、005〜007を適用、既存会員・Capsuleを保持。Google認証を継続使用し、fixtureへの置換はしない。3275／graph-comは架空試作、本番は未変更。[反映・検証状況](verification/COMMUNITY_BETA_ACTIVATION_20261023.md)。
+
+2026-10-23、コミュニティC3-minをfeature flag内に実装。通報、管理者非表示、通報対象に限定した監査付き運営確認、サイト停止・アーカイブ復帰、原子的な濫用制限を追加。初回公開条件はC1a／C1b／C3-minと公開前検証へ変更し、C2掲載・Graph連携は独立した後続、AIは第2弾とする。[契約](design/COMMUNITY_SAFETY_MIN.md)／[隔離検証](verification/COMMUNITY_C3_MIN_20261023.md)。通常3200／betaは無効、3275／graph-comは架空試作を維持。本番・既存会員DBへの適用は未実施。
+
+2026-10-23、人間向けコミュニティC1bをfeature flag内に実装。アカウント宛て招待・本人承諾、明示的再受入、運営判断と本人同意を分けた管理者不在復帰、認可付きcursorを既存Better Auth／PGへ接続する。[契約](design/COMMUNITY_CONTINUITY.md)／[隔離検証](verification/COMMUNITY_C1B_20261023.md)。通常3200／betaは無効、3275／graph-comは架空データのまま。本番・既存会員DBへのmigration、C2掲載・AI・KG変更は行わない。
 
 2026-10-22、Issue #33の専用VPS DBで、単回commit後のverify-only復旧、閉鎖→条件付きshadow resume→finish、同nonce/別nonce同releaseの再適用拒否を完了。試験applyは1回のまま、追加合成1 Claim（試験DB累計3 Claim）を検証した。専用DB/Web/network/試験SSH鍵/sudoを撤去し、予約・凍結成果・journalは保全。本番導入済み72338b7はdisabled、本番apply0、revision不変。coverage/manifest修正候補f812955と対応imageの本番配置、固定peer往復、鍵/監査/branch保護、最新receipt同期と有効化承認は未完了。[完了範囲と残条件](verification/PUBLICATION_ENVIRONMENT_20261021.md#2026-10-22専用実機試験の完了と撤去)。
 

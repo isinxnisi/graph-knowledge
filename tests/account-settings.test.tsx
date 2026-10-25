@@ -1,15 +1,27 @@
 // @vitest-environment jsdom
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { act, cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
+import {MemberIdentityProvider,invalidateMemberIdentity,refreshMemberIdentity} from "../lib/client/use-member-identity";
 import SiteHeader from "../components/SiteHeader";
 import MemberAccountDeletion from "../components/MemberAccountDeletion";
 import MemberProfileSettings from "../components/MemberProfileSettings";
 import { appearanceKey, readAppearance } from "../lib/client/appearance";
 import { memberProfileUpdateSchema } from "../lib/domain/member-profile";
 
-beforeEach(() => { localStorage.clear(); delete document.documentElement.dataset.theme; Object.defineProperty(document, "visibilityState", { configurable: true, value: "visible" }); });
+beforeEach(() => { invalidateMemberIdentity(); vi.stubGlobal("fetch",vi.fn().mockResolvedValue(Response.json({error:{code:"UNAUTHENTICATED"}},{status:401}))); localStorage.clear(); delete document.documentElement.dataset.theme; Object.defineProperty(document, "visibilityState", { configurable: true, value: "visible" }); });
 afterEach(() => { cleanup(); vi.unstubAllGlobals(); vi.restoreAllMocks(); });
+function Header(props: React.ComponentProps<typeof SiteHeader>) { return <MemberIdentityProvider communityEnabled={false}><SiteHeader {...props}/></MemberIdentityProvider>; }
 describe("最小アカウント設定", () => {
+  it("コミュニティのヘッダーは共有認証から実アカウントへ移動する", async () => {
+    const fetch=vi.fn().mockResolvedValue(Response.json({error:{code:"UNAUTHENTICATED"}},{status:401}));vi.stubGlobal("fetch",fetch);
+    render(<Header dataset="demo" page="community"/>);
+    expect((await screen.findByRole("link",{name:"ログイン・アカウント"})).getAttribute("href")).toBe("/member");
+    fetch.mockResolvedValue(Response.json({user:{id:"10000000-0000-4000-8000-000000000001",name:"Beta",locale:"ja"}}));
+    await act(async()=>{await refreshMemberIdentity(true);});
+    const links=screen.getAllByRole("link",{hidden:true}).map(x=>x.getAttribute("href"));
+    expect(links).toContain("/member#my-capsules");expect(links).toContain("/member#account-settings");expect(links).toContain("/member#my-posts");
+    expect(fetch.mock.calls.map(c=>c[0])).toEqual(["/api/member/profile","/api/member/profile"]);
+  });
   it("表示名だけ許し、空・制御文字・過長・権限fieldを拒否する", () => {
     expect(memberProfileUpdateSchema.parse({ name: "  名 前  " })).toEqual({ name: "名 前" });
     for (const value of [{ name: " " }, { name: "n\na" }, { name: "x".repeat(81) }, { name: "名前", active: true }, { name: "名前", userId: "other" }]) expect(memberProfileUpdateSchema.safeParse(value).success).toBe(false);
@@ -17,7 +29,7 @@ describe("最小アカウント設定", () => {
   it("保存テーマを復元し、テーマ変更では本人表示以外の会員内容を取得しない", async () => {
     const fetch = vi.fn().mockResolvedValue(Response.json({ error: { code: "MEMBER_UNAVAILABLE" } }, { status: 503 })); vi.stubGlobal("fetch", fetch);
     localStorage.setItem(appearanceKey, JSON.stringify({ theme: "dark-blue", palette: "blue" }));
-    render(<SiteHeader dataset="demo" />);
+    render(<Header dataset="demo" />);
     await waitFor(() => expect(document.documentElement.dataset.theme).toBe("dark-blue"));
     fireEvent(window, new StorageEvent("storage", { key: appearanceKey, newValue: JSON.stringify({ theme: "dark-brown", palette: "brown" }) }));
     expect(document.documentElement.dataset.theme).toBe("dark-brown");
@@ -25,7 +37,7 @@ describe("最小アカウント設定", () => {
     expect(document.documentElement.dataset.theme).toBe("light"); expect(fetch.mock.calls.map(call => call[0])).toEqual(["/api/member/profile"]);
   });
   it("テーマ変更を保存し、Escape・外側クリックで設定を閉じる", async () => {
-    render(<SiteHeader dataset="demo" />);
+    render(<Header dataset="demo" />);
     await waitFor(() => expect(document.documentElement.dataset.theme).toBe("light"));
     const details = screen.getByLabelText("表示設定").closest("details") as HTMLDetailsElement;
     details.open = true;
@@ -38,53 +50,44 @@ describe("最小アカウント設定", () => {
   it("保存不能でもその画面のテーマを使え、破損した値は安全な既定へ戻す", async () => {
     expect(readAppearance('{"theme":"injected"}').theme).toBe("light");
     vi.spyOn(Storage.prototype, "setItem").mockImplementation(() => { throw new Error("blocked"); });
-    render(<SiteHeader dataset="demo" />);
+    render(<Header dataset="demo" />);
     await waitFor(() => expect(document.documentElement.dataset.theme).toBe("light"));
     (screen.getByLabelText("表示設定").closest("details") as HTMLDetailsElement).open = true;
     fireEvent.click(screen.getByRole("button", { name: "ダークモード" }));
     expect(document.documentElement.dataset.theme).toBe("dark-brown");
-    expect(screen.getByRole("status").textContent).toContain("テーマを保存できません");
+    expect(screen.getByText(/テーマを保存できません/).textContent).toContain("テーマを保存できません");
   });
-  it("会員ページ内のメニューは編集中URLを変更するnavigationをしない", () => {
-    render(<SiteHeader dataset="demo" page="member" user={{ id: "10000000-0000-4000-8000-000000000001", name: "本人", locale: "ja" }} />);
-    (screen.getByLabelText("本人のアカウントメニュー").closest("details") as HTMLDetailsElement).open = true;
-    expect(screen.getByRole("link", { name: "アカウント設定" }).getAttribute("href")).toBe("#account-settings");
+  it("会員ページの現在地内で設定へ移動し、編集中は既存の拒否処理を使う", async () => {
+    history.replaceState(null,"","/member#my-capsules");const before=vi.fn(()=>false);
+    vi.stubGlobal("fetch",vi.fn().mockResolvedValue(Response.json({user:{id:"10000000-0000-4000-8000-000000000001",name:"本人",locale:"ja"}})));
+    render(<Header dataset="demo" page="member" onBeforeAccountNavigation={before}/>);
+    await screen.findByTitle("本人でログイン中");(screen.getByLabelText("アカウントメニュー").closest("details") as HTMLDetailsElement).open=true;
+    const settings=screen.getByRole("link",{name:"アカウント設定"});expect(settings.getAttribute("href")).toBe("/member#account-settings");
+    fireEvent.click(settings);expect(before).toHaveBeenCalledOnce();expect(location.hash).toBe("#my-capsules");
   });
   it("ヘッダは本人確認済みの名前を表示し、会員内容や名前をブラウザへ保存しない", async () => {
     const user = { id: "10000000-0000-4000-8000-000000000001", name: "本人の表示名", locale: "ja" };
     const fetch = vi.fn().mockResolvedValue(Response.json({ user })); vi.stubGlobal("fetch", fetch);
-    render(<SiteHeader dataset="demo" />);
-    const account = await screen.findByLabelText("本人の表示名のアカウントメニュー");
+    render(<Header dataset="demo" />);
+    const account = await screen.findByTitle("本人の表示名でログイン中");
     expect(account.getAttribute("data-signed-in")).toBe("true");
     expect(fetch.mock.calls.map(call => call[0])).toEqual(["/api/member/profile"]);
     expect(fetch.mock.calls[0][1]).toMatchObject({ cache: "no-store", credentials: "same-origin" });
     expect(JSON.stringify(localStorage)).not.toContain(user.name);
   });
-  it("非表示と他タブのログアウトで名前を消し、遅い本人応答を受け入れない", async () => {
-    const user = { id: "10000000-0000-4000-8000-000000000001", name: "前の本人", locale: "ja" };
-    let finish!: (response: Response) => void;
-    const fetch = vi.fn().mockResolvedValueOnce(Response.json({ user }))
-      .mockImplementationOnce(() => new Promise<Response>(resolve => { finish = resolve; }))
-      .mockResolvedValue(Response.json({ error: { code: "UNAUTHENTICATED" } }, { status: 401 }));
-    vi.stubGlobal("fetch", fetch); render(<SiteHeader dataset="demo" />);
-    await screen.findByLabelText("前の本人のアカウントメニュー");
-    Object.defineProperty(document, "visibilityState", { configurable: true, value: "hidden" }); fireEvent(document, new Event("visibilitychange"));
-    expect(screen.queryAllByText("前の本人")).toHaveLength(0);
-    Object.defineProperty(document, "visibilityState", { configurable: true, value: "visible" }); fireEvent(document, new Event("visibilitychange"));
-    await waitFor(() => expect(fetch).toHaveBeenCalledTimes(2));
-    fireEvent(window, new StorageEvent("storage", { key: "graph-knowledge:member-session-changed", newValue: "changed" }));
-    await waitFor(() => expect(fetch).toHaveBeenCalledTimes(3));
-    finish(Response.json({ user }));
-    await waitFor(() => expect(screen.getByRole("link", { name: "ログイン" })).toBeDefined());
-    expect(screen.queryAllByText("前の本人")).toHaveLength(0);
+  it("再確認中の本人表示を保ち、他タブログアウト後の遅い応答を採用しない", async () => {
+    const user={id:"10000000-0000-4000-8000-000000000001",name:"前の本人",locale:"ja"};let finish!:(response:Response)=>void;
+    const fetch=vi.fn().mockResolvedValueOnce(Response.json({user})).mockImplementationOnce(()=>new Promise<Response>(resolve=>{finish=resolve;})).mockResolvedValue(Response.json({error:{code:"UNAUTHENTICATED"}},{status:401}));vi.stubGlobal("fetch",fetch);
+    render(<Header dataset="demo"/>);await screen.findByTitle("前の本人でログイン中");
+    fireEvent(window,new Event("focus"));await waitFor(()=>expect(fetch).toHaveBeenCalledTimes(2));expect(screen.getByTitle("前の本人でログイン中")).toBeDefined();
+    fireEvent(window,new StorageEvent("storage",{key:"graph-knowledge:member-session-changed",newValue:"changed"}));
+    await screen.findByRole("link",{name:"ログイン・アカウント"});await act(async()=>finish(Response.json({user})));
+    expect(fetch).toHaveBeenCalledTimes(3);expect(screen.queryByTitle("前の本人でログイン中")).toBeNull();
   });
-  it("会員画面のヘッダは親で確認した名前を使い、余分な本人取得を行わない", () => {
-    const fetch = vi.fn(); vi.stubGlobal("fetch", fetch);
-    const user = { id: "10000000-0000-4000-8000-000000000001", name: "確認済み", locale: "ja" };
-    const view = render(<SiteHeader dataset="demo" page="member" user={user} />);
-    expect(screen.getByTitle("確認済みでログイン中")).toBeDefined();
-    view.rerender(<SiteHeader dataset="demo" page="member" user={null} />);
-    expect(screen.queryByTitle("確認済みでログイン中")).toBeNull(); expect(fetch).not.toHaveBeenCalled();
+  it("複数のヘッダで共有本人表示を使い、余分な本人取得を行わない", async () => {
+    const user={id:"10000000-0000-4000-8000-000000000001",name:"確認済み",locale:"ja"};const fetch=vi.fn().mockResolvedValue(Response.json({user}));vi.stubGlobal("fetch",fetch);
+    render(<MemberIdentityProvider communityEnabled={false}><SiteHeader dataset="demo" page="member"/><SiteHeader dataset="demo" page="community"/></MemberIdentityProvider>);
+    await waitFor(()=>expect(screen.getAllByTitle("確認済みでログイン中")).toHaveLength(2));expect(fetch).toHaveBeenCalledTimes(1);
   });
   it("名前の保存失敗でも入力を消さず、利用者を固定して送り、成功のときだけ反映する", async () => {
     const user = { id: "10000000-0000-4000-8000-000000000001", name: "元の名前", locale: "ja" };

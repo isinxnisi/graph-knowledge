@@ -2,6 +2,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { UiLocaleProvider, useUiLocale, uiLocaleKey, normalizeUiLocale } from "../lib/client/ui-locale";
+import {MemberIdentityProvider,invalidateMemberIdentity} from "../lib/client/use-member-identity";
 import SiteHeader from "../components/SiteHeader";
 import SearchPanel from "../components/SearchPanel";
 import RelationFilter from "../components/RelationFilter";
@@ -19,12 +20,12 @@ import { fetchClaim, searchEntities } from "../lib/client/api";
 
 vi.mock("../lib/client/api", async original => ({ ...(await original<typeof import("../lib/client/api")>()), searchEntities: vi.fn(), fetchClaim: vi.fn() }));
 beforeEach(() => {
-  localStorage.clear(); document.documentElement.lang = "ja";
+  invalidateMemberIdentity();vi.stubGlobal("fetch",vi.fn().mockResolvedValue(Response.json({error:{code:"UNAUTHENTICATED"}},{status:401})));localStorage.clear(); document.documentElement.lang = "ja";
   Object.defineProperty(document, "visibilityState", { configurable: true, value: "visible" });
   HTMLDialogElement.prototype.showModal = function () { this.open = true; };
   HTMLDialogElement.prototype.close = function () { this.open = false; };
 });
-afterEach(() => { cleanup(); vi.restoreAllMocks(); vi.clearAllMocks(); });
+afterEach(() => { cleanup(); vi.unstubAllGlobals(); vi.restoreAllMocks(); vi.clearAllMocks(); });
 function Controls() { const { setLocale } = useUiLocale(); return <><button onClick={() => setLocale("en")}>English</button><button onClick={() => setLocale("ja")}>日本語</button></>; }
 function sync(locale: string | null) { fireEvent(window, new StorageEvent("storage", { key: uiLocaleKey, newValue: locale })); }
 const page = examples.neighbors as NeighborsResponse;
@@ -41,7 +42,7 @@ describe("表示localeと探索の分離", () => {
     expect(normalizeUiLocale("en-US")).toBe("en"); expect(normalizeUiLocale("fr")).toBe("ja");
     localStorage.setItem(uiLocaleKey, "en-GB");
     const fetch = vi.fn().mockResolvedValue(Response.json({ error: { code: "UNAUTHENTICATED" } }, { status: 401 })); vi.stubGlobal("fetch", fetch);
-    render(<UiLocaleProvider><SiteHeader dataset="demo" /></UiLocaleProvider>);
+    render(<UiLocaleProvider><MemberIdentityProvider communityEnabled={false}><SiteHeader dataset="demo" /></MemberIdentityProvider></UiLocaleProvider>);
     await waitFor(() => expect(document.documentElement.lang).toBe("en"), { timeout: 5000 });
     expect(screen.getByRole("heading", { name: "Plunode" })).toBeTruthy();
     sync(null); expect(document.documentElement.lang).toBe("ja"); expect(screen.getByRole("heading", { name: "Plunode" })).toBeTruthy();
@@ -50,7 +51,7 @@ describe("表示localeと探索の分離", () => {
     expect(fetch.mock.calls[0][0]).toBe("/api/member/profile"); vi.unstubAllGlobals();
   });
   it("明示選択を保存し、保存不能でも画面には反映する", async () => {
-    render(<UiLocaleProvider><SiteHeader dataset="demo" /></UiLocaleProvider>);
+    render(<UiLocaleProvider><MemberIdentityProvider communityEnabled={false}><SiteHeader dataset="demo" /></MemberIdentityProvider></UiLocaleProvider>);
     await waitFor(() => expect(document.documentElement.lang).toBe("ja"));
     (screen.getByLabelText("表示設定").parentElement as HTMLDetailsElement).open = true;
     fireEvent.change(screen.getByLabelText("表示言語"), { target: { value: "en" } });
@@ -58,7 +59,7 @@ describe("表示localeと探索の分離", () => {
     vi.spyOn(Storage.prototype, "setItem").mockImplementation(() => { throw new Error("blocked"); });
     fireEvent.change(screen.getByLabelText("Language"), { target: { value: "ja" } });
     expect(document.documentElement.lang).toBe("ja");
-    expect(screen.getByRole("status").textContent).toContain("表示言語を保存できません");
+    expect(screen.getByText(/表示言語を保存できません/).textContent).toContain("表示言語を保存できません");
   });
   it("取得中に切り替えても検索語・kind・遅い応答を保ち、通信を増やさない", async () => {
     let resolve!: (value: EntitySearchResponse) => void;

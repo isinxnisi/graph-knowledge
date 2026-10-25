@@ -20,8 +20,8 @@ async function login(page: Page, identity = "検証ユーザーA") {
   await page.getByRole("button", { name: "検証用OIDCでログイン", exact: true }).click();
   await page.getByRole("link", { name: identity, exact: true }).click();
   await page.waitForURL(url => url.pathname === "/member");
-  await expect(page.getByTestId("site-header").getByLabel(`${identity}のアカウントメニュー`, { exact: true })).toBeVisible();
-  await expect(page.getByRole("button", { name: "アカウントと一覧を再確認", exact: true })).toBeEnabled();
+  await expect(page.getByTestId("site-header").getByLabel("アカウントメニュー", { exact: true })).toContainText(identity);
+  await expect(page.getByRole("button", { name: "最新の状態に更新", exact: true })).toBeEnabled();
 }
 checkMemberLocale(login, mockKnowledge);
 async function clearPrivateTestData() {
@@ -252,7 +252,7 @@ test("保存中の失効・応答消失・他端末更新・全端末ログア�
   await page.getByRole("button", { name: "アカウントから削除", exact: true }).click();
   await page.getByRole("button", { name: "このCapsuleをアカウントから削除する", exact: true }).click();
   await expect(page.getByRole("main").getByRole("alert")).toContainText("保存内容が更新・削除されています");
-  await page.getByRole("button", { name: "アカウントと一覧を再確認", exact: true }).click();
+  await page.getByRole("button", { name: "最新の状態に更新", exact: true }).click();
   await expect(page.getByText("別端末の更新", { exact: true })).toBeVisible();
   await page.getByRole("button", { name: "アカウントから削除", exact: true }).click();
   await page.getByRole("button", { name: "このCapsuleをアカウントから削除する", exact: true }).click();
@@ -388,13 +388,13 @@ test("編集の失効・別アカウント・非表示を越えて、本人に�
   await page.getByRole("link", { name: "別タブでログインし直す", exact: true }).click();
   const auth = await popup;
   await login(auth, "検証ユーザーB"); await page.bringToFront();
-  await page.getByRole("button", { name: "アカウントと一覧を再確認", exact: true }).click();
+  await page.getByRole("button", { name: "最新の状態に更新", exact: true }).click();
   await expect(page.getByText("検証ユーザーB", { exact: true })).toBeVisible();
   await expect(page.getByRole("textbox", { name: "自分の説明", exact: true })).toHaveCount(0);
   await auth.bringToFront();
   await auth.getByRole("button", { name: "ログアウト", exact: true }).click();
   await login(auth); await auth.close(); await page.bringToFront();
-  await page.getByRole("button", { name: "アカウントと一覧を再確認", exact: true }).click();
+  await page.getByRole("button", { name: "最新の状態に更新", exact: true }).click();
   await expect(editor.getByRole("textbox", { name: "自分の説明", exact: true })).toHaveValue("本人にだけ戻す未保存の入力");
   // Simulate the document lifecycle directly so headless visibility is deterministic.
   await page.evaluate(() => { Object.defineProperty(document, "visibilityState", { configurable: true, value: "hidden" }); document.dispatchEvent(new Event("visibilitychange")); });
@@ -464,14 +464,14 @@ for (const width of [390, 1440]) {
       await account.waitForURL(url => url.pathname === "/member");
       await account.bringToFront();
       await expect(account.getByText("検証ユーザーB", { exact: true })).toBeVisible();
-      await expect(account.getByRole("button", { name: "アカウントと一覧を再確認", exact: true })).toBeEnabled();
+      await expect(account.getByRole("button", { name: "最新の状態に更新", exact: true })).toBeEnabled();
       await account.close(); await reader.bringToFront(); await reader.getByRole("button", { name: "リンクを再確認", exact: true }).click();
       await thread.getByRole("button", { name: "この版のコメントを見る", exact: true }).click();
       await thread.getByLabel("コメント本文", { exact: true }).fill("本文の期間は、どの資料から確認できますか？");
       await thread.getByRole("button", { name: "この版へ投稿する", exact: true }).click();
       await expect(thread.getByText("本文の期間は、どの資料から確認できますか？", { exact: true })).toBeVisible();
       await expect(thread.getByLabel("コメント本文", { exact: true })).toHaveValue("");
-      await page.bringToFront(); await page.getByRole("button", { name: "アカウントと一覧を再確認", exact: true }).click();
+      await page.bringToFront(); await page.getByRole("button", { name: "最新の状態に更新", exact: true }).click();
       await ownerThread.getByRole("button", { name: "この版のコメントを見る", exact: true }).click();
       await expect(ownerThread.getByText("本文の期間は、どの資料から確認できますか？", { exact: true })).toBeVisible();
       await expect(ownerThread.getByRole("button", { name: "自分の投稿を撤回", exact: true })).toHaveCount(0);
@@ -491,7 +491,7 @@ for (const width of [390, 1440]) {
       await thread.getByRole("button", { name: "本文を削除して撤回する", exact: true }).click();
       await expect(thread.getByText("投稿者が撤回しました。", { exact: true })).toBeVisible();
       await expect(thread.getByText("本文の期間は、どの資料から確認できますか？", { exact: true })).toHaveCount(0);
-      await page.bringToFront(); await page.getByRole("button", { name: "アカウントと一覧を再確認", exact: true }).click();
+      await page.bringToFront(); await page.getByRole("button", { name: "最新の状態に更新", exact: true }).click();
       await ownerThread.getByRole("button", { name: "この版のコメントを見る", exact: true }).click();
       await ownerThread.getByRole("button", { name: "新しい投稿を停止する", exact: true }).click();
       await expect(ownerThread.getByRole("button", { name: "投稿を受け付ける", exact: true })).toBeVisible();
@@ -686,7 +686,7 @@ for (const width of [390, 1440]) {
     await picker.getByRole("button", { name: "リンクの内容を確認", exact: true }).click();
     await picker.getByRole("button", { name: "確認した参照を編集中の構成へ追加", exact: true }).click();
     // Confirmed additions survive reauthorization without persisting private drafts.
-    if (width === 390) await page.getByRole("button", { name: "アカウントと一覧を再確認", exact: true }).click();
+    if (width === 390) await page.getByRole("button", { name: "最新の状態に更新", exact: true }).click();
     await expect(page.getByRole("checkbox", { name: /青葉ハル → アシスタントだった → 黒川レン/ })).toBeChecked();
     await page.getByRole("button", { name: "アカウントの変更を保存", exact: true }).click();
     await expect(page.getByText("アカウントのCapsuleを更新しました。", { exact: true })).toBeVisible();
@@ -957,7 +957,7 @@ test("運営CLI: 投稿非表示・共有停止・User停止と再開を画面�
     await expect(reader.getByText("この投稿は表示できません。本文を削除して撤回することはできます。", { exact: true })).toBeVisible();
     await expect(reader.getByText("非表示確認の本文", { exact: true })).toHaveCount(0);
     operate("suspend-user", user.id);
-    await reader.getByRole("button", { name: "アカウントと一覧を再確認", exact: true }).click();
+    await reader.getByRole("button", { name: "最新の状態に更新", exact: true }).click();
     await expect(reader.getByRole("button", { name: "検証用OIDCでログイン", exact: true })).toBeVisible();
     expect((await reader.request.get("/api/member/profile")).status()).toBe(401);
     operate("resume-user", user.id);

@@ -117,11 +117,11 @@ describe("閲覧・会員・共有の表示言語と保存内容を分ける", (
     show(<SharedCapsule dataset="demo" />);
     await screen.findByRole("heading", { name: capsule.content.title });
     await screen.findByRole("link", { name: memberPostsLabels().manageLink });
-    expect(requests).toHaveBeenCalledTimes(2);
+    expect(requests).toHaveBeenCalledTimes(1);
     language("en"); await screen.findByRole("heading", { name: "Shared Capsule" });
     language("ja"); await screen.findByRole("heading", { name: "共有されたCapsule" });
     expect(screen.getByText(capsule.content.note)).toBeTruthy();
-    expect(requests).toHaveBeenCalledTimes(2); expect(location.hash).toBe(`#${token}`);
+    expect(requests).toHaveBeenCalledTimes(1); expect(location.hash).toBe(`#${token}`);
   });
 
   it("発行済みリンク・確認状態を維持し、英語の通知も日本語へ戻せる", async () => {

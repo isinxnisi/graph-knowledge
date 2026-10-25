@@ -4,9 +4,13 @@ import { labEntry, labEntryEvent, labExplorationPan, labRecordReturn, rememberLa
 
 afterEach(()=>{sessionStorage.clear();history.replaceState(null,"","/");vi.restoreAllMocks();});
 it("復帰先を同originの実装済み経路に限定し、外部URLや壊れたstorageを使わない",()=>{
-  for(const value of ["/","/en","/ai-lab?run=x#records","/en/ai-lab","/member#my-capsules","/explore/2b7c6289-d050-4dc0-93e3-9307681253cc?s=x"])expect(safeLabReturn(value)).toBe(true);
+  for(const value of ["/","/en","/ai-lab?run=x#records","/en/ai-lab","/member#my-capsules","/communities#discover","/operations","/explore/2b7c6289-d050-4dc0-93e3-9307681253cc?s=x"])expect(safeLabReturn(value)).toBe(true);
   for(const value of ["//evil.invalid","https://evil.invalid","/\\evil.invalid","/member-evil","/ai-lab-evil","/communities/private","/\n"])expect(safeLabReturn(value)).toBe(false);
   sessionStorage.setItem("plunode:ai-lab-entry:v1",'{"href":"//evil.invalid","scroll":1}');expect(labEntry()).toBeNull();
+});
+it("コミュニティ・運営からの入口を保存し、未対応の経路から古い復帰元を再利用しない",()=>{
+  for(const href of ['/communities#discover','/operations']){history.replaceState(null,'',href);rememberLabEntry();expect(labEntry()?.href).toBe(href);}
+  history.replaceState(null,'','/unsupported');rememberLabEntry();expect(labEntry()).toBeNull();
 });
 it("既存Graphのcheckpoint後に公開URLとpanだけを保存し、同じKG版への復帰でだけ再利用する",()=>{
   const href="/explore/2b7c6289-d050-4dc0-93e3-9307681253cc?s=encoded";history.replaceState(null,"",href);

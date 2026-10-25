@@ -3,13 +3,13 @@ import { memberCapsuleSchema, memberCapsuleContentSchema, memberCreateSchema, ty
 import type { DatasetMode } from "../domain/dataset";
 import type { LocalCapsule } from "./local-capsules";
 
-export const memberProfileSchema = z.object({ user: z.object({ id: z.uuidv4(), name: z.string(), locale: z.string() }) });
+export const memberProfileSchema = z.object({ user: z.object({ id: z.uuidv4(), name: z.string(), locale: z.string(), siteOperator:z.boolean().optional() }) });
 export type MemberUser = z.infer<typeof memberProfileSchema>["user"];
 export class MemberClientError extends Error {
   constructor(public status: number, public code: string) { super(code); }
 }
-export async function memberRequest<T>(path: string, schema: z.ZodType<T>, options: { method?: string; body?: unknown; user?: string; signal?: AbortSignal } = {}): Promise<T> {
-  const response = await fetch(path, { method: options.method ?? "GET", credentials: "same-origin", cache: "no-store",
+export async function memberRequest<T>(path: string, schema: z.ZodType<T>, options: { method?: string; body?: unknown; user?: string; signal?: AbortSignal; publicOnly?: boolean } = {}): Promise<T> {
+  const response = await fetch(path, { method: options.method ?? "GET", credentials: options.publicOnly ? "omit" : "same-origin", cache: "no-store",
     headers: { ...(options.body !== undefined ? { "Content-Type": "application/json" } : {}), ...(options.user ? { "X-Member-User": options.user } : {}) },
     body: options.body === undefined ? undefined : JSON.stringify(options.body), signal: options.signal ? AbortSignal.any([options.signal, AbortSignal.timeout(15_000)]) : AbortSignal.timeout(15_000) });
   if (!response.ok) {

@@ -1,6 +1,6 @@
 # AI育成ラボ：0回からの初段公開
 
-2026-10-22。[Issue #36](https://github.com/isinxnisi/graph-knowledge/issues/36)と運営者の明示方針を適用する。main `214b5c4ab4e4ac4b55f5a8fd1ac98c034bd1ea60` を基準にした `codex/issue36-ai-lab-publication` の統合候補。main取り込み・3200/beta更新・VPS配置は別々の判断を待ち、今回実施しない。
+2026-10-25更新。[Issue #36](https://github.com/isinxnisi/graph-knowledge/issues/36)／[PR #37](https://github.com/isinxnisi/graph-knowledge/pull/37)の元候補 `0686d58208fa183126065c332b902c08867d1801` と、コミュニティ正式公開後のmain `d3e377d5255f4c487d608e73954dc40aeb0b3cba` を統合する。今回の明示指示はmain受入と既存3200／betaでの有効化・操作検証までを一仕事とする。Issue本文の本番公開までという指示より、この最新の範囲指定を優先する。VPS／正式サイトは変更しない。
 
 ## 公開する状態
 
@@ -32,8 +32,8 @@
 
 ## 受入の3段階
 
-1. **main取り込み**：候補の固定SHAと最新mainとの差分、共有UI・認証・Graph・既存テストと未確認事項を確認して、通常mergeを別途判断する。自動側未受入成果の無条件取り込みはしない。
-2. **beta更新**：受入済みmainの固定SHAを3200へ配置する可否を別途判断する。ラボflag、日英導線、会員・コミュニティの有効化状態を確認する。未受入候補を3200へ直接配置しない。
+1. **main取り込み**：固定SHAと最新mainの差分を共通lock内でレビュー・競合解消・検証し、通常mergeする。共有認証provider・運営通知・サイトメニューを現行mainの構成で維持する。自動側未受入成果の無条件取り込みはしない。
+2. **beta更新**：受入済みmainを既存3200へbuild・配置し、AI_LAB_ENABLEDだけを1に追加する。現在のbetaの会員・コミュニティ・運営・広告設定を保持し、本番設定をコピーしない。公開URLで日英・明暗・幅・停止条件・記録／根拠／Graph往復と既存機能を確認する。
 3. **VPS本番反映**：通常時RAM/CPU/swap/disk・Web/Neo4j/会員PG・公開ゲートとの資源競合、Web image、artifact更新主体と最小権限、rollback、PC停止中の外部閲覧を確認する。実会員回帰と、可能な範囲のWebKit/iPhone確認結果・未確認事項を示し、運営者の明示確認を受ける。KG apply、再seed、Worker制御、Caddy/Access/SSH変更をWeb公開へ混ぜない。
 
-既存隔離3268/graph-ailabと比較専用画面は元のlab版を維持する。統合候補は別のloopback3269で確認する。一般向け候補にデザイン／動作比較画面や開発4課題レビューの正式導線は追加しない。
+既存隔離3268/graph-ailabと比較専用画面は元のlab版を維持する。統合候補は別のloopback3269で確認する。デザイン／動作比較・開発4課題レビューのページはメニューから隠すだけでなく、通常アプリの公開ルート自体に追加しない。

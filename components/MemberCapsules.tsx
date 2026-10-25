@@ -1,4 +1,9 @@
 "use client";
+import PageIdentity from "./PageIdentity";
+import {useMemberSession,refreshMemberIdentity} from "../lib/client/use-member-identity";
+import {usePersonalHash} from "../lib/client/personal-location";
+import {PersonalMemberControls} from "./PersonalFrame";
+
 import {useCommunitiesEnabled} from "./CommunityAvailability";
 import { focusDestination } from "../lib/client/focus-destination";
 import { useUiLocale } from "../lib/client/ui-locale";
@@ -9,10 +14,8 @@ import { z } from "zod";
 import type { DatasetMode } from "../lib/domain/dataset";
 import type { MemberCapsule } from "../lib/domain/member-capsule";
 import { capsulesKey, readCapsules, type LocalCapsule } from "../lib/client/local-capsules";
-import { MemberClientError, memberCreateResultSchema, memberImportRequest, memberItemSchema, memberListSchema, memberProfileSchema, memberReaderCapsule, memberRequest, type MemberUser } from "../lib/client/member-api";
+import { MemberClientError, memberCreateResultSchema, memberImportRequest, memberItemSchema, memberListSchema, memberReaderCapsule, memberRequest, type MemberUser } from "../lib/client/member-api";
 import { memberLabels } from "../lib/i18n/member";
-import SiteHeader from "./SiteHeader";
-import SiteFooter from "./SiteFooter";
 import Icon from "./Icon";
 import AnimatedDetails from "./AnimatedDetails";
 import { notifyMemberSessionChange } from "../lib/client/account-navigation";
@@ -37,9 +40,11 @@ export default function MemberCapsules({ dataset, initialImport = "" }: { datase
   const communitiesEnabled=useCommunitiesEnabled();
   const { locale } = useUiLocale();
   const text = memberLabels(locale), captions = capsuleLabels(locale), historyText = capsuleHistoryLabels(locale);
-  const [section, setSection] = useState<"saved" | "settings" | "posts">("saved");
+  const identity=useMemberSession(),hash=usePersonalHash();
+  const section=hash==="account-settings"?"settings":hash==="my-posts"?"posts":"saved";
   const [readingTab, setReadingTab] = useState<"content" | "sharing">("content");
-  const [user, setUser] = useState<MemberUser | null>(null);
+  const [loadedUser, setUser] = useState<MemberUser | null>(null);
+  const user=identity.status==='authenticated'&&identity.user?.id===loadedUser?.id?loadedUser:null;
   const [profileDraft, setProfileDraft] = useState<{ ownerId: string; name: string } | null>(null);
   const [provider, setProvider] = useState<"google" | "fixture" | null>(null);
   const [items, setItems] = useState<MemberCapsule[]>([]);
@@ -63,7 +68,7 @@ export default function MemberCapsules({ dataset, initialImport = "" }: { datase
   const clearPrivate = useCallback(() => { setUser(null); setItems([]); setSelected(null); setHistorical(false); setConfirm(null); }, []);
   const fail = useCallback((cause: unknown) => {
     if (cause instanceof MemberClientError) {
-      if (cause.status === 401) { clearPrivate(); setError(textMessages.expired); return; }
+      if (cause.status === 401) { void refreshMemberIdentity(true).catch(()=>{}); clearPrivate(); setError(textMessages.expired); return; }
       if (cause.status === 503) setProvider(null);
       setError(cause.status === 503 ? textMessages.unavailable : cause.status === 404 ? textMessages.notFound : cause.status === 409 ? textMessages.conflict : cause.code === "CAPSULE_LIMIT" ? textMessages.limit : textMessages.failed);
     } else setError(textMessages.failed);
@@ -76,7 +81,7 @@ export default function MemberCapsules({ dataset, initialImport = "" }: { datase
     catch (cause) { if (!controller.signal.aborted) fail(cause); }
     finally { if (!controller.signal.aborted) setBusy(false); }
   }, [fail]);
-  const refresh = useCallback(() => {
+  const refresh = useCallback((force=true) => {
     clearPrivate(); setProvider(null);
     // A storage notification may arrive while this tab is hidden. Keep private
     // content out of the DOM until visibility restoration reauthorizes it.
@@ -85,9 +90,9 @@ export default function MemberCapsules({ dataset, initialImport = "" }: { datase
       const status = await memberRequest("/api/member/status", z.object({ provider: z.enum(["google", "fixture"]) }), { signal });
       if (signal.aborted) return;
       setProvider(status.provider);
-      let profile;
-      try { profile = await memberRequest("/api/member/profile", memberProfileSchema, { signal }); }
-      catch (cause) { if (cause instanceof MemberClientError && cause.status === 401) { if (!signal.aborted && new URL(location.href).searchParams.has("error")) setError(textMessages.loginFailed); return; } throw cause; }
+      const identityUser=await refreshMemberIdentity(force);
+      if(!identityUser){if(!signal.aborted&&new URL(location.href).searchParams.has("error"))setError(textMessages.loginFailed);return;}
+      const profile={user:identityUser};
       const result = await memberRequest("/api/member/capsules", memberListSchema, { user: profile.user.id, signal });
       for (const item of result.capsules) memberReaderCapsule(item, dataset);
       if (signal.aborted) return;
@@ -115,7 +120,7 @@ export default function MemberCapsules({ dataset, initialImport = "" }: { datase
       catch { setLocal([]); setLocalError(textMessages.localError); }
     };
     // Defer browser/session synchronization until hydration has committed.
-    const initial = window.setTimeout(() => { readLocal(); refresh(); }, 0);
+    const initial = window.setTimeout(() => { readLocal(); refresh(false); }, 0);
     const changed = (event: StorageEvent) => {
       if (event.key === null || event.key === capsulesKey(dataset)) readLocal();
       if (event.key === authEventKey || event.key === null) refresh();
@@ -129,10 +134,9 @@ export default function MemberCapsules({ dataset, initialImport = "" }: { datase
     const restored = (event: PageTransitionEvent) => { if (event.persisted) refresh(); };
     window.addEventListener("storage", changed); document.addEventListener("visibilitychange", visibility); window.addEventListener("pageshow", restored);
     return () => { window.clearTimeout(initial); active.current?.abort(); window.removeEventListener("storage", changed); document.removeEventListener("visibilitychange", visibility); window.removeEventListener("pageshow", restored); };
-  }, [dataset, refresh, clearPrivate]);
+  }, [dataset, refresh, clearPrivate,identity.version]);
   useEffect(() => {
     const sync = () => {
-      setSection(location.hash === "#account-settings" ? "settings" : location.hash === "#my-posts" ? "posts" : "saved");
       requestAnimationFrame(() => { focusDestination(heading.current); window.scrollTo({ top: 0 }); });
     };
     const initial = setTimeout(sync, 0);
@@ -153,6 +157,12 @@ export default function MemberCapsules({ dataset, initialImport = "" }: { datase
     history.replaceState(history.state, "", url);
     requestAnimationFrame(() => focusDestination(heading.current, {}));
   }
+  useEffect(() => {
+    if (!user || busy || error) return;
+    const value = new URLSearchParams(location.search).get('returnTo');
+    if (!value) return;
+    try { const target = new URL(value, location.origin); if (target.origin === location.origin && target.pathname === '/communities' && !target.search && !target.username && !target.password) location.replace(target.pathname + target.hash); } catch { /* Invalid return targets never navigate. */ }
+  }, [user, busy, error]);
   function signalAuthChange() { notifyMemberSessionChange(); }
   function logout(all: boolean) {
     void run(async signal => {
@@ -219,20 +229,20 @@ export default function MemberCapsules({ dataset, initialImport = "" }: { datase
       if (!signal.aborted) { setItems(previous => previous.filter(item => item.id !== selected.id)); setSelected(null); setMessage(text.removed); navigate(null); }
     });
   }
-  const title = !user ? text.loginTitle : section === "settings" ? text.settings : section === "posts" ? text.postsTitle : text.savedTitle;
-  return <><SiteHeader dataset={dataset} page="member" user={user} onLogout={() => logout(false)} accountBusy={busy || !!draft || !!profileDraft} /><main lang={locale} className={css.page}>
-    <div className={css.memberLayout}>
-    {user && <nav className={css.memberNavigation} aria-label={text.navigation}>
+  const title = identity.status==='guest' ? text.loginTitle : hash===null||identity.status==='checking' ? text.checking : section === "settings" ? text.settings : section === "posts" ? text.postsTitle : text.savedTitle;
+  return <><PersonalMemberControls logout={() => logout(false)} busy={busy || !!draft || !!profileDraft} guard={()=>!(draft||profileDraft)||window.confirm(locale==='en'?'Leave without saving this draft?':'未保存の入力を破棄して移動しますか？')} /><main lang={locale} className={css.page}>
+    <div className={communitiesEnabled?undefined:css.memberLayout}>
+    {user && !communitiesEnabled && <nav className={css.memberNavigation} aria-label={text.navigation}>
       <a href="#my-capsules" aria-current={section === "saved" ? "page" : undefined}><Icon name="capsule" />{text.savedTitle}</a>
       <a href="#account-settings" aria-current={section === "settings" ? "page" : undefined}><Icon name="person" />{text.settings}</a>
       <a href="#my-posts" aria-current={section === "posts" ? "page" : undefined}><Icon name="book" />{text.postsTitle}</a>
       {communitiesEnabled&&<a href="/communities#%3Fmine%3D1">{locale==="en"?"Joined & managed":"参加・運営"}</a>}
     </nav>}
     <div className={css.memberContent}>
-    <header className={css.pageHeader}><h1 ref={heading} tabIndex={-1} data-focus-destination>{title}</h1><p>{user ? section === "settings" ? text.settingsHelp : section === "posts" ? text.postsHelp : text.savedHelp : text.loggedOut}</p></header>
+    <header className={css.pageHeader}><PageIdentity area={section==="posts"?"activity":"account"}/><h1 ref={heading} tabIndex={-1} data-focus-destination>{title}</h1><p>{user ? section === "settings" ? text.settingsHelp : section === "posts" ? text.postsHelp : text.savedHelp : identity.status==='guest'?text.loggedOut:identity.error?(locale==='en'?'Account verification failed. Retry below.':'認証を確認できませんでした。再試行してください。'):text.checking}</p></header>
     <section id="member-login" className={user ? css.feedback : css.account} aria-label={text.title}>
-      {!user && !busy && provider && <button data-variant="primary" disabled={!!draft} onClick={login}>{provider === "fixture" ? text.fixtureLogin : text.login}</button>}
-      <button className={css.refresh} disabled={busy} onClick={refresh}><Icon name="history" />{text.refresh}</button>
+      {identity.status==='guest' && !busy && provider && <button data-variant="primary" disabled={!!draft} onClick={login}>{provider === "fixture" ? text.fixtureLogin : text.login}</button>}
+      <button className={css.refresh} title={locale==="en"?"Recheck your account and saved data without discarding your draft":"入力を保持したまま、アカウントと保存データを再取得します"} disabled={busy} onClick={()=>refresh()}><Icon name="refresh" />{text.refresh}</button>
       {draft && <p>{text.editingAccountHelp}</p>}
       {busy && <p role="status">{user ? text.busy : text.checking}</p>}
       {error && <p role="alert">{contentMessage(error, locale)}</p>}{message && <p role="status">{contentMessage(message, locale)}</p>}
@@ -302,5 +312,5 @@ export default function MemberCapsules({ dataset, initialImport = "" }: { datase
     </AnimatedDetails>
     </div>
     </div></div>
-  </main><SiteFooter /></>;
+  </main></>;
 }

@@ -45,6 +45,9 @@ services:
       graph-neo4j: { condition: service_healthy }
     environment:
       <<: [*graph-environment, *member-environment]
+      COMMUNITY_ENABLED: "${COMMUNITY_ENABLED:-0}"
+      SITE_OPERATIONS_ENABLED: "${SITE_OPERATIONS_ENABLED:-0}"
+      SITE_OPERATOR_USER_IDS: "${SITE_OPERATOR_USER_IDS:-}"
       PLUNODE_PUBLIC_ENABLED: "${PLUNODE_PUBLIC_ENABLED:-0}"
       PLUNODE_ADS_ENABLED: "${PLUNODE_ADS_ENABLED:-0}"
       AI_LAB_ENABLED: "${AI_LAB_ENABLED:-0}"

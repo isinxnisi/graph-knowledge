@@ -13,8 +13,9 @@ for(const locale of ["ja","en"] as const)for(const width of [1280,390])test(`Dis
  const featured=catalog.getByRole("region",{name:en?"Recommended presets":"おすすめプリセット",exact:true});await expect(featured.getByRole("button")).toHaveCount(3);
  const fixedRow=catalog.locator('[data-catalog-result="pluto"]'),presetAction=fixedRow.getByRole("button",{name:en?"Explore in Graph":"Graphで探索",exact:true});
  const presetDesign=await presetAction.evaluate(el=>{const s=getComputedStyle(el);return{fontSize:s.fontSize,color:s.color,background:s.backgroundColor,padding:s.padding,borderRadius:s.borderRadius};});
- if(width>850){const title=(await fixedRow.getByRole("heading").boundingBox())!,action=(await presetAction.boundingBox())!;expect(action.x).toBeGreaterThan(title.x+title.width);}
+ if(width>850){const {title,action,secondary}=await fixedRow.evaluate(row=>{const controls=row.querySelectorAll("button,a");return{title:row.querySelector("h4")!.getBoundingClientRect().toJSON(),secondary:controls[0].getBoundingClientRect().toJSON(),action:controls[1].getBoundingClientRect().toJSON()};});expect(action.y).toBeGreaterThan(title.y+title.height);expect(Math.abs(action.y-secondary.y)).toBeLessThan(1);expect(action.x).toBeGreaterThan(secondary.x+secondary.width);}
  expect(await body.evaluate(el=>el.scrollWidth-el.clientWidth)).toBeLessThanOrEqual(1);await page.screenshot({path:info.outputPath("catalogue.png"),animations:"disabled"});
+ if(locale==="ja"&&width===1280){for(const theme of ["dark-brown","dark-blue"]){await page.evaluate(theme=>{document.documentElement.dataset.theme=theme;},theme);await page.screenshot({path:info.outputPath(`catalogue-${theme}.png`),animations:"disabled"});}await page.evaluate(()=>{document.documentElement.dataset.theme="light";});}
  await catalog.locator('[data-catalog-world="film"]').click();await expect(catalog.locator("[data-catalog-result]")).toHaveCount(0);await catalog.locator('[data-catalog-world="film"]').click();
  const sort=catalog.getByRole("group",{name:en?"Preset order":"プリセットの並び順",exact:true});await sort.getByRole("button",{name:en?"Popular":"人気順",exact:true}).click();await expect(catalog).toContainText(en?"not been measured":"まだ未集計");
  await sort.getByRole("button",{name:en?"Newest":"新着順",exact:true}).click();await catalog.locator('[data-catalog-world="manga"]').click();
@@ -24,7 +25,7 @@ for(const locale of ["ja","en"] as const)for(const width of [1280,390])test(`Dis
  await expect(name).toHaveValue("");await expect.poll(()=>rows.count()).toBeGreaterThan(1);expect(targets.at(-1)).toMatchObject({criteria:{q:"",kind:"work",relation:{type:"pattern",pattern:{id:"other-works",revision:2},polarity:"affirmed"}}});
  const firstAction=rows.first().getByRole("link",{name:en?"Explore in Graph":"Graphで探索",exact:true});
  expect(await firstAction.evaluate(el=>{const s=getComputedStyle(el);return{fontSize:s.fontSize,color:s.color,background:s.backgroundColor,padding:s.padding,borderRadius:s.borderRadius};})).toEqual(presetDesign);
- if(width>850){const title=(await rows.first().getByRole("heading").boundingBox())!,action=(await firstAction.boundingBox())!;expect(action.x).toBeGreaterThan(title.x+title.width);}
+ if(width>850){const {title,action,secondary}=await rows.first().evaluate(row=>{const controls=row.querySelectorAll("button,a");return{title:row.querySelector("h4")!.getBoundingClientRect().toJSON(),secondary:controls[0].getBoundingClientRect().toJSON(),action:controls[1].getBoundingClientRect().toJSON()};});expect(action.y).toBeGreaterThan(title.y+title.height);expect(Math.abs(action.y-secondary.y)).toBeLessThan(1);expect(action.x).toBeGreaterThan(secondary.x+secondary.width);}
  await info.attach("first-subject-row-height",{body:String(await rows.first().evaluate(el=>el.getBoundingClientRect().height)),contentType:"text/plain"});
  await expect(flow.getByTestId("prototype-claim")).toHaveCount(0);await page.screenshot({path:info.outputPath("subjects.png"),animations:"disabled"});
  const root=await rows.first().getAttribute("data-target-id");await rows.first().getByRole("button",{name:en?"Explore this subject":"この対象から探す",exact:true}).click();
@@ -62,6 +63,33 @@ test("bound preset skips subject search, optional subject change, and unsupporte
  await expect(page.getByTestId("discovery-connections")).toHaveAttribute("data-stage","targets");await expect(page.getByRole("textbox",{name:"対象の名前・別名",exact:true})).toHaveValue("");await expect.poll(()=>page.locator("[data-target-id]").count()).toBeGreaterThan(1);
  await page.getByRole("button",{name:"← プリセット検索へ戻る",exact:true}).click();await expect(catalog.locator('[data-catalog-result]')).toHaveCount(5);await expect(catalog.getByRole("button",{name:/従来方式|で試す/})).toHaveCount(0);
  expect(await page.getByTestId("prototype-body").evaluate(el=>el.scrollWidth-el.clientWidth)).toBeLessThanOrEqual(1);
+});
+
+test("selection controls stay distinct and Graph handoff does not paint the return stage",async({page},info)=>{
+ await page.setViewportSize({width:1440,height:1000});
+ await page.addInitScript(()=>localStorage.setItem("plunode:privacy:v1",'{"analytics":false,"ads":false}'));
+ await page.goto(info.project.use.baseURL!+"/?discovery=presets");await page.getByTestId("discovery-search-entry").click();
+ const order=page.getByRole("group",{name:"プリセットの並び順",exact:true}),recommended=order.getByRole("button",{name:"おすすめ順",exact:true});
+ await order.getByRole("button",{name:"新着順",exact:true}).click();await recommended.dblclick();
+ await expect(recommended).toHaveAttribute("aria-pressed","true");
+ expect(await page.evaluate(()=>getSelection()?.toString())).toBe("");
+ expect(await recommended.evaluate(el=>el.closest("label"))).toBeNull();
+ await expect(recommended).toHaveCSS("border-top-width","0px");
+ await expect(page.getByRole("button",{name:"プリセットを探す",exact:true})).toHaveCSS("border-top-color","rgba(0, 0, 0, 0)");
+ await page.keyboard.press("Tab");expect(await page.locator(":focus").evaluate(el=>el.matches(":focus-visible")&&getComputedStyle(el).outlineStyle!=="none")).toBe(true);
+ // Slow the new document so any intermediate selected-subject paint is observable.
+ await page.route(url=>url.searchParams.has("match"),async route=>{if(route.request().isNavigationRequest())await new Promise(r=>setTimeout(r,700));await route.continue();});
+ const watch=async()=>page.evaluate(()=>{
+  let flashed=false;const check=()=>{flashed ||= !!document.querySelector('[data-testid="discovery-connections"][data-stage="selected"]');};
+  const observer=new MutationObserver(check);observer.observe(document.body,{subtree:true,childList:true,attributes:true});
+  window.addEventListener("pagehide",()=>{check();sessionStorage.setItem("discovery-stage-flashed",String(flashed));observer.disconnect();},{once:true});
+ });
+ await watch();await page.locator('[data-catalog-result="pluto"]').getByRole("button",{name:"Graphで探索",exact:true}).click();
+ await expect(page.getByTestId("exploration-root")).toContainText("PLUTO");expect(await page.evaluate(()=>sessionStorage.getItem("discovery-stage-flashed"))).toBe("false");
+ await page.goBack();await expect(page.getByTestId("discovery-connections")).toHaveAttribute("data-stage","selected");
+ await page.getByRole("button",{name:"対象を探す",exact:true}).click();const row=page.locator("[data-target-id]").first();await expect(row).toBeVisible();
+ await watch();await row.getByRole("link",{name:"Graphで探索",exact:true}).click();await expect(page.getByTestId("exploration-root")).toBeVisible();expect(await page.evaluate(()=>sessionStorage.getItem("discovery-stage-flashed"))).toBe("false");
+ await page.goBack();await expect(page.getByTestId("discovery-connections")).toHaveAttribute("data-stage","selected");
 });
 test("failed fixed launch and changed target revision remain unconfirmed",async({page},info)=>{
  await page.addInitScript(()=>localStorage.setItem("plunode:privacy:v1",'{"analytics":false,"ads":false}'));

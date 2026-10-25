@@ -1,6 +1,14 @@
+2026-10-25、[AI育成ラボ](design/AI_LAB_PUBLICATION.md)の保存済み公開artifact読取と日英観察画面を統合する。現行の共有認証provider・コミュニティ・運営・Graph／Claimを維持し、AI_LAB_ENABLEDでラボのみを有効化する。比較専用ページは通常アプリに追加しない。main／betaを対象とし、VPS反映は別判断。
+
 # 現行技術設計
 
-2026-10-22、Issue #36の[AIラボ公開候補](design/AI_LAB_PUBLICATION.md)。通常App Routerの `/ai-lab`／`/en/ai-lab` と読み取り専用JSON APIを、既定無効の `AI_LAB_ENABLED`＋public-kgで制御する。保存済み公開artifactのstrict schema・checksum・公開KG参照検査と原子的な版切替／rollbackを分離。Webに推論・学習・投稿・KG／会員書込を追加せず、既存SiteHeader・認証・Graph／Claimと復帰を再利用する。主表示の浮遊は演出で、実活動は未監視。[検証と未反映範囲](verification/AI_LAB_PUBLICATION_20261022.md)。
+2026-10-25、[小さなサイト運営Web初版](design/SITE_OPERATIONS.md)を追加。CLIと同じ処置を共有し、既存Better Auth＋サーバーの本人UUID許可リストで各APIを認可する。008は最小監査・再送receiptのみ。実beta限定、本番は別承認。一般会員／コミュニティ管理者の権限は広げず、C2・AIは含めない。
+
+2026-10-23、ユーザー承認によりローカル3200／graph-betaの実コミュニティを有効化。独立したbeta会員DBをbackup・一時DBへrestore検証し、005〜007を適用、既存会員・Capsuleを保持。Google認証を継続使用し、fixtureへの置換はしない。3275／graph-comは架空試作、本番は未変更。[反映・検証状況](verification/COMMUNITY_BETA_ACTIVATION_20261023.md)。
+
+2026-10-23、コミュニティC3-minをfeature flag内に実装。通報、管理者非表示、通報対象に限定した監査付き運営確認、サイト停止・アーカイブ復帰、原子的な濫用制限を追加。初回公開条件はC1a／C1b／C3-minと公開前検証へ変更し、C2掲載・Graph連携は独立した後続、AIは第2弾とする。[契約](design/COMMUNITY_SAFETY_MIN.md)／[隔離検証](verification/COMMUNITY_C3_MIN_20261023.md)。通常3200／betaは無効、3275／graph-comは架空試作を維持。本番・既存会員DBへの適用は未実施。
+
+2026-10-23、人間向けコミュニティC1bをfeature flag内に実装。アカウント宛て招待・本人承諾、明示的再受入、運営判断と本人同意を分けた管理者不在復帰、認可付きcursorを既存Better Auth／PGへ接続する。[契約](design/COMMUNITY_CONTINUITY.md)／[隔離検証](verification/COMMUNITY_C1B_20261023.md)。通常3200／betaは無効、3275／graph-comは架空データのまま。本番・既存会員DBへのmigration、C2掲載・AI・KG変更は行わない。
 
 2026-10-20、[収集接続性評価v1](design/COLLECTION_CONNECTIVITY.md)。保存backup／fixture v4／公開manifest／公開観測をhashとrevisionで照合し、オフラインCLIで既存KG・追加後・追加単独の成分、1〜3段到達、元Claimの根拠付き経路を比較する。単独／テーマ効果と経路列挙上限を分離。Web API・UI・Worker・DBへ変更なし。[実測](verification/COLLECTION_CONNECTIVITY_20261020.md)。
 

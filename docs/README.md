@@ -42,7 +42,7 @@
 
 | 現役の設計文書 | 状態・読む場面 |
 | --- | --- |
-| [コミュニティ体験設計](design/COMMUNITY_EXPERIENCE.md)／[基礎設計](design/COMMUNITY_FOUNDATION.md)／[導入計画](design/COMMUNITY_IMPLEMENTATION_PLAN.md) | 2026-10-21。コミュニティを中心に会員・独立会話・版付き掲載・公開範囲・管理・AIを整理。隔離ローカル3275の操作試作。[検証](verification/COMMUNITY_PROTOTYPE_20261021.md)。実API・migration・beta／本番・AI接続なし |
+| [コミュニティ体験設計](design/COMMUNITY_EXPERIENCE.md)／[基礎設計](design/COMMUNITY_FOUNDATION.md)／[導入計画](design/COMMUNITY_IMPLEMENTATION_PLAN.md) | コミュニティを中心に会員・独立会話・版付き掲載・公開範囲・管理・AIを整理。人間向けC1a／C1bはfeature flag内で実装・隔離検証。C3-minを追加し、C2を初回公開条件から分離。[現行C1b](design/COMMUNITY_CONTINUITY.md)／[初期試作](verification/COMMUNITY_PROTOTYPE_20261021.md)。本番・既存会員DB適用・AI接続なし |
 | [コミュニティ本線UI接続確認版](design/COMMUNITY_CONNECTION_PREVIEW.md) | 実Home・Explorer・会員画面を再利用する隔離3275／graph-com。架空会員/コミュニティと公開KG読み取りを分離。A〜Cの往復・状態復元・密度比較。[検証](verification/COMMUNITY_CONNECTION_20261021.md) |
 | [保存原文からの正式受入](design/SAVED_EVIDENCE_ACCEPTANCE.md) | Issue #34。取得済み原文・人間の意味承認・固定1 Claim＋Source/Citationを既存receipt基盤へ接続。検証済み本番backupの明示モード、旧baseと最新VPS実planを区別。Workerコード・state・scheduleは維持。[実受入1 Claim・release準備完了](verification/SAVED_EVIDENCE_ACCEPTANCE_20261021.md) |
 | [本番有効化前の固定版更新・接続確認](runbooks/PUBLICATION_ENABLEMENT_READINESS.md) | Issue #33。修正版code/image/trustの一括更新、実peer・監査認証・branch保護・鍵保管の承認対象。本番はdisabled、未公開1 Claimを保持 |
@@ -53,6 +53,7 @@
 | [承認済み受入の逐次継続](design/COLLECTION_ACCEPTANCE_SEQUENCE.md) | Issue #32 Phase B。元承認を不変に保って比較・同一性を再検証し、既存Workerで1グループずつ継続。2026-10-20の別途指示で[実運用切替・残り5グループ登録](verification/COLLECTION_SEQUENCE_ROLLOUT_20261020.md)。全件完了はGitHub結果で確認 |
 | [未公開データの統合棚卸し](design/COLLECTION_INVENTORY.md) | Issue #32 Phase A。公開snapshot・正式receipt・累積release・承認register・Worker履歴を読み取り専用で突合。型＋UUIDの一意集計、Markdown／JSON、保留・復旧・欠落。受入・公開apply・VPS／会員DB変更なし |
 | [ChatGPT承認連携・収集Worker](design/COLLECTION_WORKER.md) | GitHubの明示承認から既存collect-review／accept-releaseを実行。専用branch、隔離runtime、共通ロック、状態・Markdown共有、再開・重複／改変拒否。公開applyは実装対象外 |
+| [Issue #16の縮小通信予算・既存成果再利用](verification/ISSUE16_COLLECTION_BUDGET_20261025.md) | 2026-10-25。既定142を維持して承認30を受付。H2／MIXの正式receipt・本番API一致とタッチの既存保留を再利用。単一moduleを実Workerへbackport、通常起動による受付・15時の時間帯待ちを確認。54試験・実データ隔離一巡／復旧成功。正式受入・公開applyなし |
 | [Issue起点の収集準備](design/COLLECTION_ISSUE_INTAKE.md) | 計画Issueの明示許可からQID・ISBN・recipeを生成し、既存Workerの時間帯・10分休憩付きキューへ接続。範囲外・不確かな同定は保留 |
 | [収集Workerの日時形式復旧](design/COLLECTION_DATETIME_RECOVERY.md) | UTC Z形式のproducer修正、旧承認・UUID・cacheを保持した新規依頼による停止9バッチの復旧。validator・公開KGは変更しない |
 | [収集レビュー・正式受入後の公開準備](design/COLLECTION_WORKFLOW.md) | 2026-10-18。collect-reviewに加え、未承認雛形decision-templateと人間判断入力accept-releaseを実装。対象／根拠hash照合、不変受入→release→validate→最新無書込planを連続処理。部分受入・失敗再開・改変拒否を隔離検証。公開applyは含めない |
@@ -212,4 +213,23 @@ Phase 08：任意のEntity関係俯瞰、明示起点切替、直前一件復帰
 
 - Issue #33 本番導入工程：[2026-10-21の実環境確認](verification/PUBLICATION_ENVIRONMENT_20261021.md) / [一括承認対象・確定差分・復旧手順](runbooks/PUBLICATION_ROLLOUT_20261021.md)。導入・専用実機試験は承認済みで完了。本番はdisabled。有効化と固定code/image更新・運用条件は未承認。
 
-- コミュニティ第1弾：人間のC1a実基盤と隔離検証。[リリース計画](design/COMMUNITY_IMPLEMENTATION_PLAN.md)／[実装・検証記録](verification/COMMUNITY_C1A_20261022.md)。招待・実掲載・最低限の通報対応は公開前の残作業。
+- コミュニティ第1弾：人間のC1a／C1b実基盤と隔離検証。[リリース計画](design/COMMUNITY_IMPLEMENTATION_PLAN.md)／[実装・検証記録](verification/COMMUNITY_C1A_20261022.md)。C3-minと公開前検証を初回の必須範囲とし、C2実掲載は独立後続。
+
+- コミュニティC1b：[招待・再参加・運営復帰・ページングの契約](design/COMMUNITY_CONTINUITY.md)／[検証結果](verification/COMMUNITY_C1B_20261023.md)。C2の実掲載は別工程。
+
+- コミュニティC3-min：[通報・非表示・サイト停止と限定確認](design/COMMUNITY_SAFETY_MIN.md)。C2・AIは有効化せず、隔離DBで認可・競合を検証する。
+
+- 実betaコミュニティ：[有効化記録](verification/COMMUNITY_BETA_ACTIVATION_20261023.md)／[入力保持・共通ナビゲーション・通報UIの修正](verification/COMMUNITY_BETA_UX_20261024.md)。3275の架空データ試作とは別。本番公開は未承認。
+
+- 実betaの[認証状態・共通レイアウト・対応待ち招待](verification/COMMUNITY_AUTH_NAV_20261024.md)。初回確認と未ログインを分離し、本文遷移と招待通知を検証。
+
+- 実コミュニティの[UIデザイン体系](design/COMMUNITY_UI_DESIGN.md)：場所・話題・会話・活動・招待・管理の共通規則、投稿位置への認可付き読取、作成と補助操作。
+
+- 最新の[共通ヘッダー・本人ナビ・見出し](design/PERSONAL_SHELL.md)：スマホの重複ナビを整理し、本人名・探索復帰・PC追随を統一。[検証・比較画像](verification/PERSONAL_SHELL_20261024.md)。
+- 直前の実コミュニティの[スマホナビゲーション](design/COMMUNITY_MOBILE_NAVIGATION.md)：カテゴリ・サイトメニュー・個別コミュニティの現在地とライトの視認性。[検証・変更前後画像](verification/COMMUNITY_MOBILE_20261024.md)。
+
+- コミュニティ第1弾の[本番公開準備](verification/COMMUNITY_RELEASE_READINESS_20261024.md)／[導入・停止・運営手順](runbooks/COMMUNITY_FIRST_RELEASE.md)：77364c5のUI了承を基準に、本番の読取確認・005〜007の隔離移行/別DB復元・運営CLI試験を整理。本番反映は別承認。
+
+- サイト運営Web初版：[契約](design/SITE_OPERATIONS.md)／[操作・指定・解除](runbooks/SITE_OPERATIONS.md)／[隔離・beta検証](verification/SITE_OPERATIONS_20261025.md)。一般会員・コミュニティ管理者とは別のサーバー明示許可。追加008、本番反映は別承認。
+
+- サイト運営の[密度・対応待ち通知・限定投稿者確認](verification/OPERATIONS_DENSITY_20261025.md)：4c43b17 / 実beta反映、同幅の比較画像と認可・更新・保存の重点検証。本番は別承認。

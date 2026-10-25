@@ -1,6 +1,6 @@
 # コミュニティ基礎設計：身元・公開範囲・活動の境界
 
-2026-10-21。v0.1と現行main `2ae165d` の読み取り照合による**次実装向けの採用案**。SQL migration、会員API、KG、Kevの変更は今回行わない。[体験設計](COMMUNITY_EXPERIENCE.md)／[工程と受入条件](COMMUNITY_IMPLEMENTATION_PLAN.md)。
+2026-10-21初版。v0.1とmain `2ae165d` の照合から作成した基礎設計。2026-10-23現在は人間向けC1a／C1bを隔離DBで実装・検証し、[現行契約](COMMUNITY_CONTINUITY.md)へ具体化した。以下のC2・AI・分析等の論理モデル全体が実装済みという意味ではない。[体験設計](COMMUNITY_EXPERIENCE.md)／[工程と受入条件](COMMUNITY_IMPLEMENTATION_PLAN.md)。
 
 ## 1. 採用する分離
 
@@ -34,7 +34,7 @@ DBへの一括実装図ではない。初回に必要なCommunity・membership�
 | `service.ts`、`001-capsules.sql` | owner＋dataset、期待版、再送receipt、本人保存／編集／削除 | Capsule所有者の正本を維持。community参加でowner条件を広げない |
 | `sharing.ts`、`002-capsule-sharing.sql` | 明示共有版snapshot、Capsuleごと1つの有効token、再発行で旧token失効 | tokenはその版のcapabilityのまま。会員・参加・公開への変換なし |
 | `discussion.ts`、`003-capsule-discussion.sql` | threadはCapsule単位、postは共有revision単位、作者撤回、受付制御、再認可 | 新しい独立threadに流用しない。過去のコメントを自動移動しない |
-| `operations.ts`、`004-account-operations.sql` | 停止／復帰、共有block、post非表示、監査、物理退会 | communityを追加したら停止／退会の対象を同じtransactionへ追加する必要がある |
+| `operations.ts`、`004-account-operations.sql` | 停止／復帰、共有block、post非表示、監査、物理退会 | C1a／C1bでcommunityの停止／退会・招待失効を同じtransactionへ統合。旧DB互換を維持 |
 | `lib/client/use-member-identity.ts`、会員Reader | 期待User、非表示・復帰・失効時の内容破棄、遅着排除 | 同じ原則をcommunity読取へ適用。UIだけの認可にしない |
 | 現行Capsule／Graph形式 | 参照中心Capsule、現在KGの再解決、View／Workspace／URL | 内容の歴史保存と混同しない。既存schemaやGraph条件を移行しない |
 
@@ -49,6 +49,7 @@ DBへの一括実装図ではない。初回に必要なCommunity・membership�
 | Community | id、title、description、entranceVisibility、joinPolicy、status、policyRevision、createdBy | active／archived／site-suspended／deleted。作成者と現在admin集合を分離 |
 | Membership | communityId、humanUserId、role(member/admin)、status、generation、joinedAt | 一意な現参加。leave/removeでgenerationを失効。再参加は新世代 |
 | Invitation | communityId、宛先、提案role、nonce hash、有効期限、accepted/revoked | 招待を見ただけでは参加しない。承諾前はアクセスなし |
+| Recovery | communityId、申請User、参加世代、再受入要否、case、判断、期限、revision | 運営判断と本人の就任承諾を分離。承認だけでは参加権を付与しない |
 | Audience | communityId、scope(public/cohort)、cohort revision | 限定会話は作成時の参加世代集合を参照。内容本文とは別 |
 | AudienceMember | audienceId、membershipId＋generation | 現在membershipが有効な間だけ読める。cohortをIDで共有し、大量のUser配列を各postへ複製しない |
 | CommunityThread | id、communityId、audienceId、title、author、status、revision | Capsuleなしでも存続。thread全体の削除は独立操作 |
@@ -191,3 +192,17 @@ cursorは安定時刻＋UUIDのkeysetを使い、viewer・filter・policy世代�
 人間のC1aを実認証・隔離PGで実装した。現行の実装範囲は[リリース計画](COMMUNITY_IMPLEMENTATION_PLAN.md)と[C1a検証](../verification/COMMUNITY_C1A_20261022.md)を参照する。本文のAIIdentity・活動・分析は第2弾以後の設計であり、第1弾の有効な設定や公開条件ではない。
 
 初回の保守的な初期値：参加名簿は管理者だけ、限定会話は投稿時のmembership世代を固定、後参加・再参加では過去の会話を共有しない。公開→限定→公開でも旧会話を自動公開しない。限定作成者だけのC1aから、招待・本人承諾はC1bで追加する。参加している事実のより細かな公開設定は後続評価とする。
+
+
+## 2026-10-23：C1bの具体化
+
+招待・再参加・運営復帰・ページングの現行契約は[COMMUNITY_CONTINUITY](COMMUNITY_CONTINUITY.md)。初回の招待は相手から共有されたUser UUID宛てのアプリ内招待とし、上の論理モデルのnonce hashはbearer link導入まで作らない。Invitation IDを知っても本人性の代わりにはならない。
+
+元のaudience・所有権の分離は維持。運営復帰はサイト運営者のcase判断と本人承諾を分け、アーカイブの再開や過去の限定会話の復活を伴わない。サイト担当者に会話本文の包括的な閲覧権を与えない。
+
+
+## 2026-10-23：初回公開と安全管理の確定
+
+第1弾はC1a＋C1b＋C3-minと公開前検証。C2公開版・掲載・ギャラリー・Graph連携は独立後続へ変更し、コミュニティのCapsule項目は準備中で非活性にする。既存の個人Capsuleは維持する。AIは第2弾のまま。
+
+現在の通報・管理非表示・サイト停止、期限付きの報告対象だけの運営確認は[COMMUNITY_SAFETY_MIN](COMMUNITY_SAFETY_MIN.md)を正本とする。本文の将来モデルや過去のAPI案を、実装済み権限や公開条件と読み替えない。

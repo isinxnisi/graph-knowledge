@@ -119,7 +119,7 @@ export default function DiscoveryExplorer({ lab = false, presetBrowser = false, 
   }, [lab, onClose, presetBrowser]);
   const snapshot = useMemo(() => ({ layoutVersion: 2, context, entry, variant, lookupOpen, lookupQ, listCriteria, listCursors, pathUi, ...(presetBrowser ? { catalog,connectionFlow } : {}) }), [context, entry, variant, lookupOpen, lookupQ, listCriteria, listCursors, pathUi, presetBrowser, catalog,connectionFlow]);
   const {checkpoint,flush}=useDiscoveryHistory(snapshot,ready,lab,returnFocus);
-  const checkpointConnection=useCallback((flow:ConnectionsWorkspace)=>{setConnectionFlow(flow);checkpoint(flow);},[checkpoint]);
+  const checkpointConnection=useCallback((flow:ConnectionsWorkspace)=>{if(!selected.current)setConnectionFlow(flow);checkpoint(flow);},[checkpoint]);
   useLayoutEffect(() => {
     if (!ready || !browsingPresets || catalogRestore.current === null || !body.current) return;
     body.current.scrollTop = catalogRestore.current;
@@ -264,7 +264,7 @@ export default function DiscoveryExplorer({ lab = false, presetBrowser = false, 
 
           </nav>
         {preview ? ready&&<DiscoveryConnections value={connectionFlow} onChange={setConnectionFlow} body={body} onCheckpoint={checkpointConnection} onGraph={snapshot=>{
-          selected.current=true;setConnectionFlow(snapshot);
+          selected.current=true;
           checkpoint(snapshot,true);
         }}/>:entry === "list" ? <DiscoveryListPanel criteria={listCriteria} cursors={listCursors} onChange={value => { setListCriteria(value); setListCursors([null]); }} onPage={setListCursors} onChoose={chooseListResult}/> : browsingPresets ? <DiscoveryPresetBrowser filters={catalog.filters} onChange={filters=>setCatalog(old=>({...old,filters}))} onSelect={selectCatalog} onNames={showCatalogNames} busy={catalogBusy} error={catalogError}/> : <>
         {!(preview && catalog.mode === "names" && !context.anchor) && <section className={styles.selectionSummary} data-empty={!hasConditions || undefined} aria-label={t("選択要約", "Selection summary")}>

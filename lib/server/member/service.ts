@@ -10,6 +10,7 @@ import { createCapsuleSharing } from "./sharing";
 import { createCapsuleDiscussion } from "./discussion";
 import { z } from "zod";
 import { activeMember, deleteMember, memberTransaction } from "./operations";
+import {createSiteOperationsService,isSiteOperator} from "./site-operations";
 import { createCommunityService } from "./community";
 import { memberProfileUpdateSchema } from "../../domain/member-profile";
 
@@ -39,12 +40,13 @@ export function createMemberService(config: MemberConfig, pool: Pool, auth: Memb
     if (content.dataset !== dataset) throw new MemberError(400, "DATASET_MISMATCH");
   }
   return {
-    community: createCommunityService(pool, config.origin, owner),
+    community: createCommunityService(pool, config.origin, owner, config.secret),
+    operator: createSiteOperationsService(pool, config.origin, owner, config.secret),
     ...createCapsuleSharing(pool, dataset, config.origin, owner),
     ...createCapsuleDiscussion(pool, dataset, config.origin, owner),
     async profile(request: Request) {
       const user = await owner(request);
-      return memberJson({ user: { id: user.id, name: user.name, locale: user.locale } });
+      return memberJson({ user: { id: user.id, name: user.name, locale: user.locale, ...(isSiteOperator(user.id)?{siteOperator:true}:{}) } });
     },
     async deleteAccount(request: Request) {
       assertMemberOrigin(request, config.origin);

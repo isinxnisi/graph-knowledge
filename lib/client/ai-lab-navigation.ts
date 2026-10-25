@@ -5,7 +5,7 @@ const entryKey = "plunode:ai-lab-entry:v1", departureKey = "plunode:ai-lab-depar
 export const labEntryEvent = "plunode:ai-lab-entry";
 export function safeLabReturn(value: unknown): value is string {
   if (typeof value !== "string" || value.length > 10000 || /[\\\r\n]/.test(value)) return false;
-  return /^(?:\/(?:en(?:\/ai-lab|\/explore\/[a-f0-9-]{36})?|ai-lab|explore\/[a-f0-9-]{36}|member)?)(?:[?#]|$)/.test(value);
+  return /^(?:\/(?:en(?:\/ai-lab|\/explore\/[a-f0-9-]{36})?|ai-lab|explore\/[a-f0-9-]{36}|member|communities|operations)?)(?:[?#]|$)/.test(value);
 }
 const position = z.number().finite().min(0).max(10_000_000);
 const entrySchema = z.strictObject({ href: z.string().refine(safeLabReturn), scroll: position });
@@ -16,7 +16,7 @@ export function labEntry() {
 export function rememberLabEntry() {
   if (/^\/(en\/)?ai-lab$/.test(location.pathname)) return;
   window.dispatchEvent(new Event(labEntryEvent));
-  try { if (safeLabReturn(locationPath())) sessionStorage.setItem(entryKey, JSON.stringify({ href: locationPath(), scroll: scrollY })); } catch { /* Browser history remains available. */ }
+  try { if (safeLabReturn(locationPath())) sessionStorage.setItem(entryKey, JSON.stringify({ href: locationPath(), scroll: scrollY })); else sessionStorage.removeItem(entryKey); } catch { /* Browser history remains available. */ }
 }
 export function saveLabExplorationView(href: string, revision: string | null, view: Pick<GraphView,"pan">) {
   try { sessionStorage.setItem(viewKey, JSON.stringify({ href, revision, pan: view.pan })); } catch { /* URL replay still preserves nodes and zoom. */ }

@@ -1,0 +1,47 @@
+import {followPersonal,personalSidebar} from '../support/personal-navigation';
+import {test,expect,type Page} from '@playwright/test';
+import {resetCommunityTestAllowance} from '../support/community-quota';
+test.beforeEach(resetCommunityTestAllowance);
+async function login(page:Page,who='検証ユーザーA') {await page.goto('/member');await page.getByRole('button',{name:'検証用OIDCでログイン',exact:true}).click();await page.getByRole('link',{name:who,exact:true}).click();await page.waitForURL(u=>u.pathname==='/member');await expect(page.getByText('最新の状態に更新',{exact:true})).toBeEnabled();}
+for(const [language,width] of [['ja',1440],['en',320],['ja',390]] as const)test(`shared authentication delayed navigation ${language} ${width}`,async({page},info)=>{
+ const t=(ja:string,en:string)=>language==='en'?en:ja;await page.setViewportSize({width,height:900});await login(page);await page.evaluate(l=>localStorage.setItem('graph-knowledge.ui-locale.v1',l),language);
+ let release!:()=>void;const gate=new Promise<void>(r=>release=r);let profiles=0;await page.route('**/api/member/profile',async r=>{profiles++;await gate;await r.continue();});
+ await page.addInitScript(()=>{const w=window as typeof window&{guestFrames:string[]};w.guestFrames=[];new MutationObserver(()=>{if(document.querySelector('[data-signed-in="false"]'))w.guestFrames.push('guest');}).observe(document,{childList:true,subtree:true});});
+ await page.goto('/communities#%2Finvitations',{waitUntil:'domcontentloaded'});await expect(page.getByTestId('site-header').getByRole('status')).toContainText(t('認証を確認中','Checking account'));await expect(page.locator('[data-signed-in="false"]')).toHaveCount(0);await expect(personalSidebar(page).locator('a[aria-label]').filter({hasText:t('コミュニティを見つける','Discover communities')})).not.toHaveAttribute('aria-current','page');await expect(page.getByRole('heading',{name:t('関心を持ち寄る場所','A place for shared interests'),exact:true})).toHaveCount(0);
+ await page.screenshot({path:info.outputPath('checking.png'),fullPage:true});release();await expect(page.locator('[data-signed-in="true"]')).toBeVisible();await expect(page.locator('main [inert]')).toHaveCount(0);expect(await page.evaluate(()=>(window as typeof window&{guestFrames:string[]}).guestFrames)).toEqual([]);
+ await page.evaluate(()=>{document.querySelector('[data-testid="site-header"]')!.setAttribute('data-retained','header');document.querySelector('nav[aria-label="'+(document.documentElement.lang==='en'?'Account and communities':'アカウントとコミュニティ')+'"]')!.setAttribute('data-retained','menu');});
+ await followPersonal(page,t('参加・運営','Joined & managed'));await followPersonal(page,t('届いた招待','Received invitations'));
+ const before=profiles;await followPersonal(page,t('自分のCapsule','My Capsules'));await expect(page.getByRole('heading',{name:t('保存したCapsule','Saved Capsules'),exact:true})).toBeVisible();await expect(page.locator('[data-retained="header"]')).toHaveCount(1);await expect(page.locator('[data-retained="menu"]')).toHaveCount(1);
+ await page.goBack();await expect(page.getByRole('heading',{name:t('届いた招待','Your invitations'),exact:true})).toBeVisible();await page.goForward();await expect(page.getByRole('heading',{name:t('保存したCapsule','Saved Capsules'),exact:true})).toBeVisible();
+ await followPersonal(page,t('コミュニティの投稿','Community posts'));await expect(page.getByRole('heading',{name:t('コミュニティの投稿','Community posts'),exact:true})).toBeVisible();await expect(personalSidebar(page).getByRole('link',{name:t('コミュニティの投稿','Community posts'),exact:true,includeHidden:true})).toHaveAttribute('aria-current','page');await page.goBack();await expect(page.getByRole('heading',{name:t('保存したCapsule','Saved Capsules'),exact:true})).toBeVisible();await page.goForward();await expect(page.getByRole('heading',{name:t('コミュニティの投稿','Community posts'),exact:true})).toBeVisible();expect(profiles-before).toBeLessThanOrEqual(1);await expect(page.locator('[data-retained="header"]')).toHaveCount(1);
+ await followPersonal(page,t('参加・運営','Joined & managed'));await expect(page).toHaveURL(/communities#%3Fmine%3D1$/);await expect(page.getByRole('heading',{name:t('自分のコミュニティ','Your communities'),exact:true})).toBeVisible();
+ await page.route('**/api/communities/reports',r=>r.fulfill({status:403,json:{error:{code:'FORBIDDEN'}}}));await followPersonal(page,t('自分の通報','My reports'));await expect(page.locator('main').getByRole('alert')).toBeVisible();await expect(page.locator('[data-signed-in="true"]')).toBeVisible();await expect(page.locator('[data-retained="menu"]')).toHaveCount(1);await expect(personalSidebar(page).getByRole('link',{name:t('自分の通報','My reports'),exact:true,includeHidden:true})).toHaveAttribute('aria-current','page');expect(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth)).toBe(false);await page.screenshot({path:info.outputPath('menu-error.png'),fullPage:true});
+});
+test('authentication failure differs from guest and can retry',async({page})=>{
+ await page.route('**/api/member/profile',r=>r.fulfill({status:503,json:{error:{code:'UNAVAILABLE'}}}));await page.goto('/member#account-settings');await expect(page.getByRole('alert').filter({hasText:'アカウントを確認できません'})).toBeVisible();await expect(page.locator('[data-signed-in="false"]')).toHaveCount(0);await expect(page.getByRole('button',{name:'検証用OIDCでログイン',exact:true})).toHaveCount(0);await page.unroute('**/api/member/profile');await page.getByRole('alert').getByRole('button',{name:'再試行',exact:true}).click();await expect(page.locator('[data-signed-in="false"]')).toBeVisible();await expect(page.getByRole('link',{name:'アカウント設定',exact:true})).toHaveCount(0);
+});
+test('pending invitation arrives without document reload and survives viewing',async({page,browser},info)=>{
+ test.setTimeout(180000);await login(page,'検証ユーザーB');const recipient=(await(await page.request.get('/api/member/profile')).json()).user;const other=await browser.newContext(),sender=await other.newPage();try{await login(sender);const owner=(await(await sender.request.get('/api/member/profile')).json()).user;const headers={origin:'http://127.0.0.1:3221','x-member-user':owner.id};await page.goto('/communities');await expect(page.locator('[data-signed-in="true"]')).toBeVisible();await page.evaluate(()=>document.querySelector('[data-testid="site-header"]')!.setAttribute('data-retained','notify'));
+ const baseline=(await(await page.request.get('/api/communities/invitations/summary')).json()).pendingCount;const c=(await(await sender.request.post('/api/communities',{headers,data:{requestId:crypto.randomUUID(),title:'Notification test',description:'Isolated fixture only',visibility:'members'}})).json()).community;await sender.request.post('/api/communities/'+c.id+'/invitations',{headers,data:{expectedRevision:c.revision,userId:recipient.id}});
+ await expect(page.getByTestId('site-header').locator('summary [data-pending="true"]')).toHaveText(String(baseline+1),{timeout:45000});await expect(page.locator('[data-retained="notify"]')).toHaveCount(1);await page.getByRole('link',{name:'届いた招待',exact:true}).click();await expect(page.locator('article').filter({hasText:'Notification test'})).toBeVisible();expect((await(await page.request.get('/api/communities/invitations/summary')).json()).pendingCount).toBe(baseline+1);
+ await page.screenshot({path:info.outputPath('pending.png'),fullPage:true});await page.locator('article').filter({hasText:'Notification test'}).getByRole('button',{name:'辞退',exact:true}).click();await expect(page.getByTestId('site-header').locator('summary [role="status"]')).toHaveAttribute('aria-label',`対応待ちの招待 ${baseline}件`);
+ await page.route('**/api/communities/invitations/summary',r=>r.fulfill({status:503,json:{error:{code:'UNAVAILABLE'}}}));await page.evaluate(()=>window.dispatchEvent(new Event('focus')));await expect(page.getByTestId('site-header').locator('summary [role="status"]')).toHaveAttribute('aria-label','招待件数を確認できません');await expect(page.getByTestId('site-header').locator('summary [role="status"]')).toHaveText('!');
+ }finally{await other.close();}
+});
+
+for(const width of [1440,390])test(`fragment removal returns to directory without stuck revalidation ${width}`,async({page})=>{
+ await page.setViewportSize({width,height:900});
+ await login(page);
+ await page.goto('/communities#%2Finvitations');
+ await expect(page.getByRole('heading',{name:'届いた招待',exact:true})).toBeVisible();
+ await page.getByTestId('site-header').getByLabel('サイトメニュー',{exact:true}).click();await page.getByTestId('site-header').getByRole('navigation',{name:'サービス内の移動',exact:true}).getByRole('link',{name:'コミュニティを見つける',exact:true}).click();
+ await expect(page).toHaveURL(/\/communities$/);
+ await expect(page.locator('main [inert]')).toHaveCount(0);
+ await expect(page.getByRole('heading',{name:'関心を持ち寄る場所',exact:true})).toBeVisible();
+ await page.goBack();await expect(page.getByRole('heading',{name:'届いた招待',exact:true})).toBeVisible();
+ await page.goForward();await expect(page.getByRole('heading',{name:'関心を持ち寄る場所',exact:true})).toBeVisible();
+ await followPersonal(page,'コミュニティの投稿');
+ await followPersonal(page,'コミュニティを見つける');
+ await expect(page.locator('main [inert]')).toHaveCount(0);
+ await expect(page.getByRole('heading',{name:'関心を持ち寄る場所',exact:true})).toBeVisible();
+});

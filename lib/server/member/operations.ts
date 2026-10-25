@@ -22,10 +22,10 @@ export async function activeMember(client: PoolClient, userId: string) {
   if (result.rows[0]?.active !== true) throw new MemberError(401, "UNAUTHENTICATED");
 }
 
-// HTTP公開しない。DBへ接続できる運営者だけがCLIから呼ぶ。
-export async function operateMember(pool: Pool, raw: MemberOperation, apply = false) {
+// CLIと明示認可済みWebサービスが共有する処置。認証・Origin検査は呼出側で必須。
+export async function operateMember(pool: Pool, raw: MemberOperation, apply = false, client?: PoolClient) {
   const input = memberOperationSchema.parse(raw);
-  return memberTransaction(pool, async client => {
+  const run = async (client: PoolClient) => {
     let changed = false;
     if (input.action === "suspend-user" || input.action === "resume-user") {
       const user = await client.query('SELECT active FROM "user" WHERE id=$1 FOR UPDATE', [input.target]);
@@ -64,7 +64,8 @@ export async function operateMember(pool: Pool, raw: MemberOperation, apply = fa
     }
     if (apply && changed) await client.query("INSERT INTO member_operation(action,target_id,actor,reason) VALUES ($1,$2,$3,$4)", [input.action, input.target, input.actor, input.reason]);
     return { action: input.action, target: input.target, applied: apply, changed };
-  });
+  };
+  return client ? run(client) : memberTransaction(pool,run);
 }
 
 export async function deleteMember(pool: Pool, userId: string, sessionId: string) {

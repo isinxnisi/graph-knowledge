@@ -64,7 +64,8 @@
 .memberContent .pageHeader h1 { margin: 0 0 8px; font-size: 28px; }
 .memberContent .pageHeader p { margin: 0; font-size: 13px; }
 .feedback { padding: 8px 0 0; font-size: 13px; }
-.page .refresh { display: inline-flex; align-items: center; gap: 6px; min-height: 32px; margin: 0; padding: 4px 0; border-color: transparent; font-size: 12px; color: var(--color-muted); }
+.page .refresh { display: inline-flex; align-items: center; gap: 6px; min-height: 36px; margin: 0; padding: 7px 11px; border: 1px solid var(--color-border); border-radius: 6px; background: transparent; font-size: 12px; line-height: 1.5; color: var(--color-muted); }
+.page .refresh:hover:not(:disabled) { background: var(--color-hover); border-color: var(--color-control-border); color: var(--color-text); } .page .refresh:disabled { opacity: .5; } .page .refresh svg { width: 15px; height: 15px; }
 .feedback:has(> .refresh:only-child) { padding-bottom: 0; }
 .memberContent .card { margin: 12px 0; padding: 16px; }
 .memberContent .card h2 { font-size: 20px; margin-bottom: 12px; }
@@ -105,3 +106,4 @@
   .memberNavigation a { flex: 1; min-width: 0; justify-content: center; padding-inline: 4px; white-space: nowrap; }
   .memberNavigation :global(.ui-icon) { display: none; }
 }
+.page:has(nav[aria-label="アカウントとコミュニティ"]),.page:has(nav[aria-label="Account and communities"]){max-width:1280px;padding-top:16px;flex:1}.memberContent{min-width:0}

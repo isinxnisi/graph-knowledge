@@ -66,7 +66,7 @@ class IssueTests(unittest.TestCase):
 
     def test_mutated_or_revoked_permission_holds_old_queue(self):
         request = self.register()
-        for body in [self.live['body'].replace('"approved"', '"revoked"'), self.live['body'].replace('142', '143')]:
+        for body in [self.live['body'].replace('"approved"', '"revoked"'), self.live['body'].replace('142', '143'), self.live['body'].replace('142', '30')]:
             self.worker.issue_api.value = {**self.live, 'body': body}
             with self.assertRaises(ValueError): b.issues.assert_live(request, self.worker.issue_api)
             b.issues.poll(self.worker)

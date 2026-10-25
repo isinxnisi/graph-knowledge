@@ -4,6 +4,8 @@
 .dialog[open] { display: flex; flex-direction: column; }
 .dialog::backdrop { background: rgb(28 42 51 / .25); }
 .dialog button, .dialog a { touch-action: manipulation; }
+.dialog button { user-select:none; -webkit-user-select:none; }
+.dialog button[aria-pressed="true"] { border-width:1px; }
 .dialog button { display: inline-flex; align-items: center; justify-content: center; gap: 5px; min-height: 32px; padding: 5px 9px; color: var(--color-text); background: transparent; border: 1px solid transparent; border-radius: 6px; cursor: pointer; font-size: 12px; line-height: 1.5; transition: background 150ms ease, border-color 150ms ease, color 150ms ease; }
 .dialog button:hover:not(:disabled) { background: var(--color-hover); }
 .dialog button:disabled { cursor: default; opacity: .4; }
@@ -18,7 +20,7 @@
 .header h2:focus { outline: none; }
 .headerActions { display: flex; align-items: center; gap: 18px; }
 .language { display: flex; gap: 1px; }
-.dialog .language button { min-width: 28px; min-height: 28px; padding: 2px 5px; font-size: 10px; color: var(--color-muted); }
+.dialog .language button[aria-pressed] { min-width: 28px; min-height: 28px; padding: 2px 5px; font-size: 10px; color: var(--color-muted); border:1px solid transparent; }
 .dialog .language button[aria-pressed="true"] { color: var(--color-text); font-weight: 650; background: var(--color-page); }
 .dialog .close { width: 32px; padding: 0; border-radius: 50%; background: var(--color-page); }
 .body { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; scrollbar-gutter: stable; padding: 0 28px 24px; }
