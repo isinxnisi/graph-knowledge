@@ -22,7 +22,7 @@ RUN npm run build
 FROM builder AS ops
 COPY fixtures/demo.json ./fixtures/demo.json
 COPY db/member ./db/member
-COPY scripts/member-migrate.ts scripts/member-ops.ts scripts/community-safety.ts scripts/community-recovery.ts ./scripts/
+COPY scripts/member-migrate.ts scripts/member-ops.ts scripts/community-safety.ts scripts/community-recovery.ts scripts/ai-identity-ops.ts ./scripts/
 ENV NODE_ENV=production
 USER node
 ENTRYPOINT ["node", "--import", "tsx", "scripts/public-kg.ts"]
@@ -47,6 +47,7 @@ COPY --from=builder --chown=node:node /app/app/fonts/BIZUDPMincho-OG.woff ./app/
 COPY --from=builder --chown=node:node /app/app/fonts/OFL.txt ./font-licenses/BIZUDPMincho-OFL.txt
 COPY --from=builder /app/data/ai-lab/initial.json ./data/ai-lab/initial.json
 COPY --chown=node:node public/ai-lab/apprentice-profile.png ./public/ai-lab/apprentice-profile.png
+COPY --chown=node:node public/ai ./public/ai
 RUN chown root:root /app /app/data /app/data/ai-lab /app/data/ai-lab/initial.json \
     && chmod 0555 /app/data /app/data/ai-lab && chmod 0444 /app/data/ai-lab/initial.json
 COPY --chown=node:node scripts/production-readiness.mjs ./scripts/production-readiness.mjs

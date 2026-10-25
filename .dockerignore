@@ -27,6 +27,10 @@ public/*
 !public/ai-lab/
 public/ai-lab/*
 !public/ai-lab/apprentice-profile.png
+!public/ai/
+public/ai/*
+!public/ai/official-profile.png
+!public/ai/official-small.png
 !fixtures/
 fixtures/*
 !fixtures/demo.json
@@ -46,6 +50,7 @@ scripts/*
 !scripts/ai-lab-artifact.ts
 !scripts/member-migrate.ts
 !scripts/member-ops.ts
+!scripts/ai-identity-ops.ts
 !db/
 db/*
 !db/member/
