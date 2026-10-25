@@ -134,6 +134,35 @@ class StatusUpdate(unittest.TestCase):
         actual=w.command(['git','--git-dir='+str(self.remote),'rev-parse','refs/heads/'+w.BRANCH])
         self.assertEqual(actual,head)
 
+    def test_new_receipts_follow_existing_preparation_and_approval_waiting_outputs(self):
+        home=self.root/'publication'; prep=home/'preparation'; health=prep/'health.json'
+        config=dict(self.config,publicationHome=str(home),publicationSummary=str(self.root/'baseline.json'))
+        w.save(config['publicationSummary'],dict(baseRelease='old',baseRevision='old-revision',receiptSetSha256='old-set',counts={'pending':0}))
+        self.assertEqual(w.publication_inventory(config)['source'],'existing-initial-inventory')
+        w.save(health,dict(phase='up-to-date',baseRelease='live',baseRevision='live-revision',receiptSetSha256='new-set',counts={'pending':1}))
+        summary=w.publication_inventory(config);self.assertEqual(summary['receiptSetSha256'],'new-set')
+        w.save(self.root/'state/last-observation.json',dict(snapshot=dict(publishedInventory=summary)))
+        w.save(health,dict(phase='waiting-local-lock'))
+        self.assertEqual(w.publication_inventory(config),summary)
+        candidate=prep/'candidates/next';w.save(candidate/'ledger.json',dict(release='live',revision='live-revision',receiptSetSha256='newer-set',counts={'pending':2}))
+        w.save(prep/'state.json',dict(phase='awaiting-approval',candidate=str(candidate)))
+        latest=w.publication_inventory(config)
+        self.assertEqual(latest['source'],'existing-approval-waiting-ledger');self.assertEqual(latest['counts'],{'pending':2})
+
+    def test_publication_summary_never_reads_arbitrary_candidate_paths(self):
+        home=self.root/'publication';prep=home/'preparation'
+        w.save(prep/'state.json',dict(phase='awaiting-approval',candidate=str(self.root/'outside')))
+        with self.assertRaisesRegex(ValueError,'outside-preparation'):
+            w.publication_inventory(dict(self.config,publicationHome=str(home)))
+
+    def test_existing_git_hooks_cannot_run_from_periodic_status_push(self):
+        publisher=self.pub(); marker=self.root/'hook-called'
+        hook=publisher.path/'hooks/pre-push'
+        hook.write_text('#!/bin/sh\necho forbidden > '+str(marker)+'\n')
+        hook.chmod(0o700)
+        self.assertEqual(self.run_update()['phase'],'published')
+        self.assertFalse(marker.exists())
+
     def test_private_paths_and_unknown_session_fields_are_rejected(self):
         for value in ['/home/operator/secret','C:\\Users\\operator','/root/secrets']:
             manual=copy.deepcopy(MANUAL);manual['sessions'][0]['stage']=value

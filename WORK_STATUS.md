@@ -53,14 +53,14 @@ python3 -B ~/.local/share/plunode-work-status/work-status.py \
 - A：既存作業・設計チャットと現行検証記録から初期登録。以降は手動JSONが正本。会話の自動読取・AI要約は行わない。
 - B：実 `ss`、プロセスcwd、Docker状態、Git worktree metadata、Windows cloudflared数、既存公開API。用途・port設定と実測は分ける。絶対パス・PID・内部IP・Docker環境変数・SSH設定・鍵は公開しない。
 - C：Windows Task Scheduler、CollectionWorkerのstate/health、既存公開準備health、配送jobの必要なfield。267009は実行中であり、終了成功ではない。既存Workerを起動・再起動しない。
-- D：既存stateに記録済みのreviewと小さな正式receiptをUUIDで小集計。正式受入分の公開件数は既存照合summaryを再利用し、そのreceipt fingerprintと現在の公開API revisionが一致する場合だけ正式未公開件数を表示する。新receiptや公開版の変化では未確認へ戻す。意味・根拠の再検証、全データ走査、収集・受入・release/plan/applyの実行は行わない。
+- D：既存stateに記録済みのreviewと小さな正式receiptをUUIDで小集計。正式受入分の公開件数は既存照合summary・通常公開準備health・承認待ち候補ledgerを再利用し、そのreceipt fingerprintと現在の公開API revisionが一致する場合だけ正式未公開件数を表示する。新receiptや公開版の変化では未確認へ戻す。意味・根拠の再検証、全データ走査、収集・受入・release/plan/applyの実行は行わない。
 - E：固定の人間作業。承認・署名・サービス制御機能は持たない。
 
 公開APIの応答はVPS内部のDocker・port・sudo権限やサービス状態の確認ではない。betaの認証なしAPI確認が失敗する場合は未確認を表示し、新しい秘密情報の配置は要求しない。現在の構成で取得できない情報を推測しない。旧停止依頼・保存保留は過去を含む台帳で、現在の残件数と区別する。
 
 観測時刻から90分以上経過した一覧を「現在も正常」と扱わない。GitHub更新に失敗した間も前の一覧と手動登録は残り、ローカル記録とtask結果で失敗を確認できる。コードを変更しても導入済み固定コピーは自動更新しない。導入はレビューしたcommitからこの専用taskのファイルだけを置換する。
 
-定期処理はPython標準ライブラリ・Git・Windowsの既存管理機能だけを使う。Codex・ChatGPT・Gemini・Kev・AI API・GitHub Actionsを起動しない。専用branchは2つの管理ファイルだけから開始し、GitHub Actions workflowを含めない。後からworkflowが追加された場合も更新を停止し、間接起動を防ぐ。**定期更新のAIトークン消費は0**。
+定期処理はPython標準ライブラリ・Git・Windowsの既存管理機能だけを使う。Codex・ChatGPT・Gemini・Kev・AI API・GitHub Actionsを起動しない。専用branchは2つの管理ファイルだけから開始し、GitHub Actions workflowを含めず、専用Git操作はhooksを無効にする。後からworkflowが追加された場合も更新を停止し、間接起動を防ぐ。**定期更新のAIトークン消費は0**。
 
 ## 導入・検証記録
 

@@ -101,6 +101,36 @@ def common_lock(config, token=None):
         yield
 
 
+def publication_inventory(config):
+    """Reuse future normal preparation results; the initial summary is only a fallback."""
+    home = Path(config['publicationHome']) / 'preparation'
+    health_path = home / 'health.json'
+    health = read(health_path) if health_path.exists() else {}
+    if health.get('phase') == 'up-to-date' and health.get('counts'):
+        return dict(baseRelease=health['baseRelease'], baseRevision=health['baseRevision'],
+            receiptSetSha256=health['receiptSetSha256'], counts=health['counts'],
+            observedAt=stamp(health_path), source='existing-preparation-health')
+    state_path = home / 'state.json'
+    state = read(state_path) if state_path.exists() else {}
+    if state.get('phase') == 'awaiting-approval':
+        candidate = Path(state['candidate']).resolve()
+        if not candidate.is_relative_to((home / 'candidates').resolve()):
+            raise ValueError('candidate-summary-outside-preparation')
+        path = candidate / 'ledger.json'; ledger = read(path)
+        return dict(baseRelease=ledger['release'], baseRevision=ledger['revision'],
+            receiptSetSha256=ledger['receiptSetSha256'], counts=ledger['counts'],
+            observedAt=stamp(path), source='existing-approval-waiting-ledger')
+    previous = Path(config['stateHome']) / 'last-observation.json'
+    if previous.exists():
+        cached = read(previous).get('snapshot', {}).get('publishedInventory')
+        if cached:
+            return cached  # Preserve its original evidence time; current receipt/API matching is still required.
+    path = Path(config['publicationSummary']); baseline = read(path)
+    return dict(baseRelease=baseline['baseRelease'], baseRevision=baseline['baseRevision'],
+        receiptSetSha256=baseline['receiptSetSha256'], counts=baseline['counts'], observedAt=stamp(path),
+        source='existing-initial-inventory')
+
+
 def local_snapshot(config):
     """Only short reads of existing state, metadata and small receipts/review outputs."""
     result = {}; failures = []
@@ -180,7 +210,7 @@ def local_snapshot(config):
         path = home / 'preparation/health.json'
         return dict(deliveries=rows, preparation=read(path).get('phase'), observedAt=stamp(path))
     observe('publication', publication)
-    observe('publishedInventory', lambda: dict(**read(config['publicationSummary']), observedAt=stamp(config['publicationSummary'])))
+    observe('publishedInventory', lambda: publication_inventory(config))
     return result, failures
 
 
@@ -319,7 +349,9 @@ def render(manual, snapshot, observed):
     if inv and collection:
         matches = inv.get('receiptSetSha256') == collection['receiptSetSha256'] and inv.get('baseRevision') == http.get('revision')
         rows += [['公開済み（正式受入分）', str(inv['counts']['publishedAccepted']['claims']) + ' Claim（既存照合記録）', '既存照合 ' + inv['observedAt']],
-                 ['正式未公開／公開待ち', str(inv['counts']['acceptedUnpublished']['claims']) + ' Claim' if matches else '未確認（receipt集合または公開revisionが既存照合記録から変化）', '既存照合記録＋現在receipt fingerprint＋公開API revisionの一致のみ確認']]
+                 ['正式未公開／公開待ち', str(inv['counts']['acceptedUnpublished']['claims']) + ' Claim' if matches else '未確認（receipt集合または公開revisionが既存照合記録から変化）', '既存照合・公開準備／承認待ち台帳＋現在receipt fingerprint＋公開API revisionの一致のみ確認']]
+    if not inv:
+        rows += [['公開済み／公開待ち', '未確認', '既存照合情報を取得できないため件数を断定しない']]
     if snapshot.get('publication'):
         rows += [['公開配送', ', '.join(v.get('stage') or '未確認' for v in snapshot['publication']['deliveries']) or '登録記録なし', '署名・公開承認をこの一覧から実行しない']]
     lines += table(['区分', '件数・状態', '根拠／次の対応'], rows)
@@ -340,7 +372,7 @@ class Publisher:
     def __init__(self, config):
         self.path = Path(config['stateHome']) / 'status.git'
         self.env = dict(os.environ, GIT_TERMINAL_PROMPT='0', GCM_INTERACTIVE='Never')
-        self.prefix = ['git', '-c', 'credential.interactive=never']
+        self.prefix = ['git', '-c', 'core.hooksPath=/dev/null', '-c', 'credential.interactive=never']
         if config.get('credentialHelper'):
             self.prefix += ['-c', 'credential.helper=', '-c', 'credential.helper=' + config['credentialHelper']]
         if not self.path.exists():
