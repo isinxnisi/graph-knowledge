@@ -13,7 +13,7 @@ import { activeMember, deleteMember, memberTransaction } from "./operations";
 import {createSiteOperationsService,isSiteOperator} from "./site-operations";
 import { createCommunityService } from "./community";
 import { memberProfileUpdateSchema } from "../../domain/member-profile";
-import { createPublicProfiles } from "./public-profiles";
+import { publicProfilesEnabled, createPublicProfiles } from "./public-profiles";
 
 function dto(row: QueryResultRow) {
   return memberCapsuleSchema.parse({ id: row.id, schemaVersion: row.schema_version, revision: Number(row.revision),
@@ -48,7 +48,10 @@ export function createMemberService(config: MemberConfig, pool: Pool, auth: Memb
     ...createCapsuleDiscussion(pool, dataset, config.origin, owner),
     async profile(request: Request) {
       const user = await owner(request);
-      return memberJson({ user: { id: user.id, name: user.name, locale: user.locale, ...(isSiteOperator(user.id)?{siteOperator:true}:{}) } });
+      const row=(await pool.query('SELECT id,name,locale FROM "user" WHERE id=$1 AND active=true',[user.id])).rows[0];
+      if(!row)throw new MemberError(401,'UNAUTHENTICATED');
+      const profile=publicProfilesEnabled()?(await pool.query('SELECT handle,icon FROM public_profile WHERE user_id=$1',[user.id])).rows[0]:null;
+      return memberJson({ user: { ...row, ...(profile?{profile}:{}), ...(isSiteOperator(user.id)?{siteOperator:true}:{}) } });
     },
     async deleteAccount(request: Request) {
       assertMemberOrigin(request, config.origin);

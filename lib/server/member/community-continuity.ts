@@ -5,24 +5,26 @@ import {z} from 'zod';
 import {activeMember,memberTransaction} from './operations';
 import {MemberError,memberId,memberInput,memberJson} from './http';
 import {communityPage,pageTime} from './community-pagination';
+import {publicHandleSchema} from '../../domain/public-profile';
 type Helpers={
  actor:(req:Request)=>Promise<{id:string}>;
  identity:(req:Request,required?:boolean)=>Promise<{id:string}|null>;
  context:(c:PoolClient,id:string,user:string|null,write?:boolean)=>Promise<QueryResultRow>;
  admin:(row:QueryResultRow)=>void;writable:(row:QueryResultRow)=>void;
  expected:(row:QueryResultRow,n:number)=>void;
- dto:(r:QueryResultRow)=>unknown;
+ dto:(r:QueryResultRow,c:PoolClient)=>Promise<unknown>;
  bump:(c:PoolClient,id:string,user:string,action:string,target?:string)=>Promise<void>;
 };
 const revision=z.number().int().positive();
-const inviteInput=z.strictObject({expectedRevision:revision,userId:z.uuidv4(),days:z.number().int().min(1).max(30).default(7),readmission:z.boolean().default(false)});
+const inviteTarget=z.union([z.uuidv4().transform(v=>v.toLowerCase()),z.string().trim().regex(/^@/).transform(v=>v.slice(1)).pipe(publicHandleSchema).transform(v=>'@'+v)]);
+const inviteInput=z.strictObject({expectedRevision:revision,userId:inviteTarget,days:z.number().int().min(1).max(30).default(7),readmission:z.boolean().default(false)});
 const decisionInput=z.strictObject({expectedRevision:revision});
 const notFound=()=>new MemberError(404,'NOT_FOUND');
 const changed=()=>new MemberError(409,'INVITATION_CHANGED');
 const inviteValid=`i.status='pending' AND i.expires_at>clock_timestamp() AND c.status='active'
  AND EXISTS(SELECT 1 FROM community_member im JOIN "user" iu ON iu.id=im.user_id WHERE im.community_id=i.community_id AND im.user_id=i.issuer_id AND im.status='active' AND im.role='admin' AND im.generation=i.issuer_generation AND iu.active)
  AND COALESCE((SELECT generation FROM community_member tm WHERE tm.community_id=i.community_id AND tm.user_id=i.target_id),0)=i.target_generation`;
-const invitationDto=(r:QueryResultRow)=>({id:r.id,communityId:r.community_id,title:r.title_allowed?r.title:null,targetId:r.target_id,revision:r.revision,status:r.status==='pending'?(r.valid?'pending':r.expired?'expired':'unavailable'):r.status,expiresAt:new Date(r.expires_at).toISOString(),readmission:r.readmission});
+const invitationDto=(r:QueryResultRow)=>({id:r.id,communityId:r.community_id,title:r.title_allowed?r.title:null,targetId:r.target_id,targetHandle:r.target_handle??null,revision:r.revision,status:r.status==='pending'?(r.valid?'pending':r.expired?'expired':'unavailable'):r.status,expiresAt:new Date(r.expires_at).toISOString(),readmission:r.readmission});
 export function createCommunityContinuity(pool:Pool,h:Helpers,secret:string){
  return {
   async invitationSummary(req:Request){
@@ -35,24 +37,32 @@ export function createCommunityContinuity(pool:Pool,h:Helpers,secret:string){
   async invitations(req:Request,rawCid?:string){
    const u=(await h.identity(req,true))!;return memberTransaction(pool,async c=>{
     await activeMember(c,u.id);let policy='',cid:string|undefined,community:unknown;
-    if(rawCid){cid=memberId(rawCid);const row=await h.context(c,cid,u.id);h.admin(row);policy=String(row.revision);community=h.dto(row);}
+    if(rawCid){cid=memberId(rawCid);const row=await h.context(c,cid,u.id);h.admin(row);policy=String(row.revision);community=await h.dto(row,c);}
     const page=await communityPage(c,req,secret,cid?'sent:'+cid:'invitations',u.id,policy,
-     `SELECT i.*,c.title,(${inviteValid} OR (c.status<>'suspended' AND EXISTS(SELECT 1 FROM community_member vm WHERE vm.community_id=c.id AND vm.user_id=$2 AND vm.status='active'))) AS title_allowed,(${inviteValid}) AS valid,i.expires_at<=clock_timestamp() AS expired,i.id AS page_id,${pageTime('i.created_at')} FROM community_invitation i JOIN community c ON c.id=i.community_id WHERE ${cid?'i.community_id=$1':'i.target_id=$1'}`,[cid??u.id,u.id],'i.created_at','i.id');
+     `SELECT i.*,c.title,${process.env.PUBLIC_PROFILES_ENABLED==='1'?`(SELECT p.handle FROM public_profile p JOIN "user" tu ON tu.id=p.user_id WHERE p.user_id=i.target_id AND p.ai_identity_id IS NULL AND tu.active)`:'NULL'} AS target_handle,(${inviteValid} OR (c.status<>'suspended' AND EXISTS(SELECT 1 FROM community_member vm WHERE vm.community_id=c.id AND vm.user_id=$2 AND vm.status='active'))) AS title_allowed,(${inviteValid}) AS valid,i.expires_at<=clock_timestamp() AS expired,i.id AS page_id,${pageTime('i.created_at')} FROM community_invitation i JOIN community c ON c.id=i.community_id WHERE ${cid?'i.community_id=$1':'i.target_id=$1'}`,[cid??u.id,u.id],'i.created_at','i.id');
     return memberJson({community,invitations:page.rows.map(invitationDto),nextCursor:page.nextCursor,partial:page.partial});
    });
   },
   async invite(req:Request,rawCid:string){
    const cid=memberId(rawCid),u=await h.actor(req),input=await memberInput(req,inviteInput);
+   // Authorize before resolving a public ID. Charge attempts in a separate
+   // committed transaction so an unavailable target cannot bypass the quota.
+   await memberTransaction(pool,async c=>{await activeMember(c,u.id);const row=await h.context(c,cid,u.id);h.admin(row);h.writable(row);h.expected(row,input.expectedRevision);await communityAllowance(c,u.id,'invitation');});
    return memberTransaction(pool,async c=>{
-    for(const uid of [...new Set([u.id,input.userId])].sort()){try{await activeMember(c,uid);}catch(e){if(uid!==u.id&&e instanceof MemberError&&e.status===401)throw new MemberError(400,'TARGET_UNAVAILABLE');throw e;}}const row=await h.context(c,cid,u.id,true);h.admin(row);h.writable(row);h.expected(row,input.expectedRevision);
-    const target=(await c.query('SELECT active FROM "user" WHERE id=$1',[input.userId])).rows[0];if(!target?.active||input.userId===u.id)throw new MemberError(400,'TARGET_UNAVAILABLE');
-    const prior=(await c.query('SELECT * FROM community_member WHERE community_id=$1 AND user_id=$2',[cid,input.userId])).rows[0];
+    const handle=input.userId.startsWith('@')?input.userId.slice(1):null;
+    const targetId=handle?(process.env.PUBLIC_PROFILES_ENABLED==='1'?(await c.query(`SELECT p.user_id FROM public_profile p JOIN "user" tu ON tu.id=p.user_id WHERE p.handle=$1 AND p.ai_identity_id IS NULL AND tu.active`,[handle])).rows[0]?.user_id:null):input.userId;
+    if(!targetId)throw new MemberError(400,'TARGET_UNAVAILABLE');
+    for(const uid of [...new Set<string>([u.id,targetId])].sort()){try{await activeMember(c,uid);}catch(e){if(uid!==u.id&&e instanceof MemberError&&e.status===401)throw new MemberError(400,'TARGET_UNAVAILABLE');throw e;}}
+    // User -> Profile -> Community is the same lock order as profile updates.
+    if(handle&&!(await c.query("SELECT id FROM public_profile WHERE handle=$1 AND user_id=$2 AND ai_identity_id IS NULL FOR SHARE",[handle,targetId])).rowCount)throw new MemberError(400,'TARGET_UNAVAILABLE');
+    const row=await h.context(c,cid,u.id,true);h.admin(row);h.writable(row);h.expected(row,input.expectedRevision);
+    if(targetId===u.id)throw new MemberError(400,'TARGET_UNAVAILABLE');
+    const prior=(await c.query('SELECT * FROM community_member WHERE community_id=$1 AND user_id=$2',[cid,targetId])).rows[0];
     if(prior?.status==='active')throw new MemberError(409,'ALREADY_MEMBER');
     if(['removed','suspended'].includes(prior?.status)&&!input.readmission)throw new MemberError(409,'READMISSION_REQUIRED');
-    await communityAllowance(c,u.id,'invitation');
-    await c.query("UPDATE community_invitation SET status='revoked',revision=revision+1 WHERE community_id=$1 AND target_id=$2 AND status='pending'",[cid,input.userId]);
+    await c.query("UPDATE community_invitation SET status='revoked',revision=revision+1 WHERE community_id=$1 AND target_id=$2 AND status='pending'",[cid,targetId]);
     const issuer=(await c.query('SELECT generation FROM community_member WHERE community_id=$1 AND user_id=$2',[cid,u.id])).rows[0];
-    const id=randomUUID();await c.query("INSERT INTO community_invitation(id,community_id,target_id,issuer_id,issuer_generation,target_generation,expires_at,readmission) VALUES($1,$2,$3,$4,$5,$6,clock_timestamp()+$7*interval '1 day',$8)",[id,cid,input.userId,u.id,issuer.generation,prior?.generation??0,input.days,input.readmission]);
+    const id=randomUUID();await c.query("INSERT INTO community_invitation(id,community_id,target_id,issuer_id,issuer_generation,target_generation,expires_at,readmission) VALUES($1,$2,$3,$4,$5,$6,clock_timestamp()+$7*interval '1 day',$8)",[id,cid,targetId,u.id,issuer.generation,prior?.generation??0,input.days,input.readmission]);
     await h.bump(c,cid,u.id,'invite',id);return memberJson({id},201);
    });
   },

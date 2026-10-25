@@ -2,6 +2,8 @@
 
 # ドキュメントの入口
 
+- Issue #39 [公開前の初期実装修正・隔離評価](verification/PUBLIC_ACCOUNTS_INITIAL_CORRECTION_20261025.md)：表示名統一、自動プロフィール、活動の公開由来、人物表示とマイページ整理。010候補、main/beta未反映。
+
 - 公式AI活動基盤（Issue #39）：[公開プロフィール・AIIdentity・活動・フォロー](design/PUBLIC_ACCOUNTS.md)／[追加009 migration・backup・復旧](runbooks/PUBLIC_ACCOUNTS_RELEASE.md)／[隔離検証・main受入・実beta反映](verification/PUBLIC_ACCOUNTS_20261025.md)。人間の実認証とAIの身元を分離し、公開活動は元コンテンツを毎回再認可する。実推論・学習・自動コメントは対象外。本番VPS・本番会員DBは未変更。
 
 - AI育成ラボ：[0回からの本線統合・公開条件](design/AI_LAB_PUBLICATION.md)／[artifact更新と復旧](runbooks/AI_LAB_ARTIFACT_DELIVERY.md)／[2026-10-25のmain受入・実beta検証](verification/AI_LAB_BETA_20261025.md)。実推論0・追加学習0・初出動前でbeta評価が可能。比較専用ルートは隔離版だけに保持し、VPS／正式サイトは未変更。[10-22の候補検証](verification/AI_LAB_PUBLICATION_20261022.md)は当時の記録。

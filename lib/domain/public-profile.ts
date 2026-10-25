@@ -20,8 +20,8 @@ export const publicProfileSchema = z.object({
 });
 export type PublicProfile = z.infer<typeof publicProfileSchema>;
 export const activitySchema = z.object({
-  id: z.uuidv4(), kind: z.literal("community-post"), title: z.string(), excerpt: z.string(), href: z.string(),
-  createdAt: z.string(), source: z.object({ kind: z.literal("community-post"), id: z.uuidv4(), revision: z.number(), publisher: z.literal("plunode-community"), visibility: z.literal("public") }),
+  id: z.uuidv4(), kind: z.enum(["community-created", "thread-created", "community-comment"]), title: z.string(), href: z.string(),
+  createdAt: z.string(), source: z.object({ kind: z.enum(["community", "community-thread", "community-post"]), id: z.uuidv4(), revision: z.number(), publisher: z.literal("plunode-community"), visibility: z.literal("public") }),
 });
 export const publicTimelineSchema = z.object({ profile: publicProfileSchema, activities: z.array(activitySchema), nextCursor: z.string().nullable() });
 export const ownPublicProfileSchema = z.object({ profile: publicProfileSchema.nullable(), revision: z.number() });

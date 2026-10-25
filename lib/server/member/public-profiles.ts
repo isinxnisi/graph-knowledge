@@ -43,24 +43,35 @@ export function createPublicProfiles(pool:Pool,origin:string,owner:(req:Request)
         // The same public projection for owner, other members and anonymous readers.
         // Non-AI preparation/held attempts are not apprentice activity.
         if(!p.timeline_public||p.ai_id||process.env.COMMUNITY_ENABLED!=='1')return memberJson({profile:publicProfileDto(p),activities:[],nextCursor:null});
-        // Serialize with community visibility, moderation and generation revocation.
-        await c.query(`SELECT place.id FROM community place WHERE place.visibility='public' AND place.status<>'suspended'
-          AND EXISTS(SELECT 1 FROM community_thread t JOIN community_post post ON post.thread_id=t.id
-           JOIN community_member m ON m.community_id=place.id AND m.user_id=post.author_id
-           WHERE t.community_id=place.id AND t.audience='public' AND post.author_id=$1 AND post.status='visible'
-           AND m.status='active' AND m.generation=post.author_generation) ORDER BY place.id FOR SHARE`,[p.user_id]);
+        // Lock current public places before projection, in lifecycle lock order.
+        await c.query(`SELECT place.id FROM community place JOIN community_member m ON m.community_id=place.id
+          WHERE place.visibility='public' AND place.status<>'suspended' AND m.user_id=$1 AND m.status='active'
+          ORDER BY place.id FOR SHARE OF place`,[p.user_id]);
         const page=await communityPage(c,req,secret,'public-activity:'+key,null,String(p.revision),
-          `SELECT post.id,post.body,post.revision,t.id AS thread_id,t.title,post.id AS page_id,${pageTime('post.created_at')}
-           FROM community_post post JOIN community_thread t ON t.id=post.thread_id JOIN community place ON place.id=t.community_id
-           JOIN community_member m ON m.community_id=place.id AND m.user_id=post.author_id
-           WHERE post.author_id=$1 AND post.status='visible' AND place.visibility='public' AND place.status<>'suspended'
-           AND t.audience='public' AND m.status='active' AND m.generation=post.author_generation
-           AND EXISTS(SELECT 1 FROM "user" u WHERE u.id=post.author_id AND u.active=true)
-           AND EXISTS(SELECT 1 FROM public_profile pp WHERE pp.id=$2 AND pp.timeline_public=true)`,
-          [p.user_id,p.id],'post.created_at','post.id');
-        return memberJson({profile:publicProfileDto(p),activities:page.rows.map(r=>({id:r.id,kind:'community-post',title:r.title,excerpt:r.body.slice(0,240),createdAt:r.page_time,
-          href:'/communities#'+encodeURIComponent('/threads/'+r.thread_id+'?post='+r.id),
-          source:{kind:'community-post',id:r.id,revision:r.revision,publisher:'plunode-community',visibility:'public'}})),nextCursor:page.nextCursor});
+          `SELECT activity.*,activity.id AS page_id,${pageTime('activity.created_at')} FROM (
+            SELECT place.id,'community-created' AS kind,place.title,place.created_at,1 AS revision,'community' AS source_kind,
+              '/communities#/'||place.id::text AS href
+            FROM community place JOIN community_member m ON m.community_id=place.id AND m.user_id=place.created_by
+            WHERE place.created_by=$1 AND place.activity_public AND place.visibility='public' AND place.status<>'suspended'
+              AND m.status='active' AND m.generation=place.creator_generation
+            UNION ALL
+            SELECT t.id,'thread-created',t.title,t.created_at,1,'community-thread','/communities#/threads/'||t.id::text
+            FROM community_thread t JOIN community place ON place.id=t.community_id
+            JOIN community_post opening ON opening.id=t.opening_post_id AND opening.status='visible' AND opening.author_id=t.author_id
+            JOIN community_member m ON m.community_id=place.id AND m.user_id=t.author_id
+            WHERE t.author_id=$1 AND t.activity_public AND t.audience='public' AND place.visibility='public' AND place.status<>'suspended'
+              AND opening.activity_public AND m.status='active' AND m.generation=t.author_generation AND m.generation=opening.author_generation
+            UNION ALL
+            SELECT post.id,'community-comment',t.title,post.created_at,post.revision,'community-post',
+              '/communities#/threads/'||t.id::text||'?post='||post.id::text
+            FROM community_post post JOIN community_thread t ON t.id=post.thread_id JOIN community place ON place.id=t.community_id
+            JOIN community_member m ON m.community_id=place.id AND m.user_id=post.author_id
+            WHERE post.author_id=$1 AND post.status='visible' AND post.activity_public AND t.activity_public
+              AND post.id<>t.opening_post_id AND place.visibility='public' AND place.status<>'suspended' AND t.audience='public'
+              AND m.status='active' AND m.generation=post.author_generation
+          ) activity WHERE true`,[p.user_id],'activity.created_at','activity.id');
+        return memberJson({profile:publicProfileDto(p),activities:page.rows.map(r=>({id:r.id,kind:r.kind,title:r.title,createdAt:r.page_time,href:r.href,
+          source:{kind:r.source_kind,id:r.id,revision:r.revision,publisher:'plunode-community',visibility:'public'}})),nextCursor:page.nextCursor});
       });
     },
     async own(req:Request) {

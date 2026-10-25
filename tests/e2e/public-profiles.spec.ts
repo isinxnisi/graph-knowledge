@@ -1,14 +1,51 @@
 import {test,expect,type Page} from '@playwright/test';
 const origin='http://127.0.0.1:3221';
+test('profile revalidation keeps the header stable, copies the handle, and removes unavailable records',async({page,context},info)=>{
+ await context.grantPermissions(['clipboard-read','clipboard-write']);
+ expect((await page.request.get('/api/accounts/profiles/explorer-apprentice',{timeout:90000})).status()).toBe(200);
+ await page.clock.install();await page.goto('/people/explorer-apprentice');await page.clock.resume();
+ const heading=page.getByRole('heading',{name:'探索者見習いAI',exact:true});await expect(heading).toBeVisible();
+ await expect(page.locator('main>a[href="/communities"]')).toHaveCount(0);
+ const copy=page.getByRole('button',{name:'@explorer-apprentice をコピー',exact:true});await expect(copy).toHaveText('@explorer-apprentice');
+ await copy.click();await expect(page.getByRole('status').filter({hasText:'コピーしました'})).toBeVisible();expect(await page.evaluate(()=>navigator.clipboard.readText())).toBe('@explorer-apprentice');
+ const node=await heading.elementHandle();let release!:()=>void,started!:()=>void;
+ const pending=new Promise<void>(r=>release=r),requested=new Promise<void>(r=>started=r);
+ await page.route('**/api/accounts/profiles/explorer-apprentice',async route=>{const response=await route.fetch();started();await pending;await route.fulfill({response});},{times:1});
+ await page.clock.fastForward(30000);await requested;await expect(heading).toBeVisible();expect(await node!.evaluate(el=>el.isConnected)).toBe(true);
+ await expect(page.getByText('公開記録を確認中…',{exact:true})).toHaveCount(0);release();await expect(page.getByText('表示できる公開活動はありません。',{exact:false})).toBeVisible();
+ await page.route('**/api/accounts/profiles/explorer-apprentice',route=>route.fulfill({status:503,body:'{}'}),{times:1});
+ await page.evaluate(()=>window.dispatchEvent(new Event('focus')));await expect(page.locator('main').getByRole('alert')).toBeVisible();await expect(heading).toBeVisible();await expect(page.getByText('表示できる公開活動はありません。',{exact:false})).toHaveCount(0);
+ await page.getByRole('button',{name:'再読み込み',exact:true}).click();await expect(page.locator('main').getByRole('alert')).toHaveCount(0);await expect(page.getByText('表示できる公開活動はありません。',{exact:false})).toBeVisible();
+ await page.screenshot({path:info.outputPath('profile-handle.png'),fullPage:true});
+ await page.route('**/api/accounts/profiles/explorer-apprentice',route=>route.fulfill({status:404,body:'{}'}),{times:1});
+ await page.evaluate(()=>window.dispatchEvent(new Event('focus')));await expect(page.locator('main').getByRole('alert')).toContainText('このプロフィールは公開されていません。');await expect(heading).toHaveCount(0);
+});
 async function login(page:Page,name='検証ユーザーA'){
- await page.goto('/member#account-settings');await page.getByRole('button',{name:'検証用OIDCでログイン',exact:true}).click();await page.getByRole('link',{name,exact:true}).click();await page.waitForURL(u=>u.pathname==='/member');
- await page.goto('/member#account-settings');await expect(page.locator('#public-profile-settings input[name=public-handle]')).toBeVisible();return (await(await page.request.get('/api/member/profile')).json()).user;
+ // Compile the dev-only account route before a UI request's bounded timeout.
+ await page.request.get('/api/accounts/me',{timeout:90000});
+ await page.goto('/member#profile');await page.getByRole('button',{name:/検証用OIDCでログイン|Log in with test OIDC/}).click();await page.getByRole('link',{name,exact:true}).click();await page.waitForURL(u=>u.pathname==='/member');
+ await page.goto('/member#profile');await expect(page.locator('#public-profile-settings input[name=public-handle]')).toBeVisible();return (await(await page.request.get('/api/member/profile')).json()).user;
 }
-test('real OIDC, opt-in edit, public post author, follow and unfollow round trip',async({page,browser},info)=>{
+for(const [locale,width,theme] of [['ja',1440,'light'],['en',390,'dark-blue']] as const)test(`handle invitation UI ${locale} ${width}`,async({page,browser},info)=>{
+ test.setTimeout(240000);const en=locale==='en';await page.setViewportSize({width,height:900});
+ await page.addInitScript(({locale,theme})=>{localStorage.setItem('graph-knowledge.ui-locale.v1',locale);localStorage.setItem('graph-knowledge:appearance:v1',JSON.stringify({theme,palette:theme==='dark-blue'?'blue':'brown'}));},{locale,theme});
+ const owner=await login(page),context=await browser.newContext({viewport:{width,height:900},permissions:['clipboard-read','clipboard-write']});
+ try{
+  const other=await context.newPage();await other.addInitScript(({locale,theme})=>{localStorage.setItem('graph-knowledge.ui-locale.v1',locale);localStorage.setItem('graph-knowledge:appearance:v1',JSON.stringify({theme,palette:theme==='dark-blue'?'blue':'brown'}));},{locale,theme});
+  const target=await login(other,'検証ユーザーB'),handle=target.profile.handle;
+  await other.goto('/communities#/invitations');const copy=other.getByRole('button',{name:en?'Copy @'+handle:'@'+handle+' をコピー',exact:true});await expect(copy).toBeVisible();await copy.click();expect(await other.evaluate(()=>navigator.clipboard.readText())).toBe('@'+handle);expect(await other.locator('main').innerText()).not.toContain(target.id);
+  await other.screenshot({path:info.outputPath('invitation-id.png'),fullPage:true});
+  const title=en?'Handle invitation review':'公開IDで招待を確認',headers={origin,'x-member-user':owner.id};const response=await page.request.post('/api/communities',{headers,data:{requestId:crypto.randomUUID(),title,description:'',visibility:'members'}});expect(response.status()).toBe(201);const c=(await response.json()).community;
+  await page.goto('/communities#/'+c.id+'/invitations');await expect(page.getByRole('heading',{name:en?'Manage invitations':'招待の管理',exact:true})).toBeVisible();await page.getByLabel(en?'Invitee public ID':'招待先の公開ID',{exact:true}).fill('@'+handle);
+  await page.getByRole('button',{name:en?'Issue / reissue invitation':'招待を発行・再発行',exact:true}).click();await expect(page.getByText((en?'To':'宛先')+': @'+handle,{exact:true})).toBeVisible();expect(await page.locator('main').innerText()).not.toContain(target.id);expect(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth)).toBe(false);await page.screenshot({path:info.outputPath('invite-by-handle.png'),fullPage:true});
+  await other.reload();const invitation=other.locator('article').filter({hasText:title});await expect(invitation).toBeVisible();await invitation.getByRole('button',{name:en?'Accept & join':'承諾して参加',exact:true}).click();await expect(invitation.getByRole('link',{name:/Visit community|コミュニティへ/})).toBeVisible();
+ }finally{await context.close();}
+});
+test('real OIDC, automatic profile, one name, author links, follow and unfollow round trip',async({page,browser},info)=>{
  test.setTimeout(240000);
  const user=await login(page);const editor=page.locator('#public-profile-settings');
- await expect(editor.locator('input[name=public-name]')).toHaveValue('');await expect(editor.locator('input[name=public-handle]')).toHaveValue('');
- await editor.locator('input[name=public-handle]').fill('browser-alice');await editor.locator('input[name=public-name]').fill('公開の探索者');await editor.locator('textarea').fill('関係と根拠を辿っています。');await editor.getByRole('button',{name:'orbit',exact:true}).click();await editor.locator('input[type=checkbox]').check();await editor.getByRole('button',{name:'公開プロフィールを保存',exact:true}).click();await expect(editor.getByRole('status')).toHaveText('公開プロフィールを保存しました。');
+ await expect(editor.locator('input[name=public-name]')).toHaveValue('検証ユーザーA');await expect(editor.locator('input[name=public-handle]')).toHaveValue(/^member-[a-f0-9]{16}$/);await expect(editor.locator('input[type=checkbox]')).toBeChecked();
+ await editor.locator('input[name=public-handle]').fill('browser-alice');await editor.locator('input[name=public-name]').fill('公開の探索者');await editor.locator('textarea').fill('関係と根拠を辿っています。');await editor.getByRole('button',{name:'軌道',exact:true}).click();await editor.locator('input[type=checkbox]').check();await editor.getByRole('button',{name:'公開プロフィールを保存',exact:true}).click();await expect(editor.getByRole('status')).toHaveText('公開プロフィールを保存しました。');
  const headers={origin,'x-member-user':user.id},c=(await(await page.request.post('/api/communities',{headers,data:{requestId:crypto.randomUUID(),title:'Profile browser public',description:'Isolated verification',visibility:'public'}})).json()).community;
  const thread=(await(await page.request.post('/api/communities/'+c.id+'/threads',{headers,data:{requestId:crypto.randomUUID(),expectedRevision:c.revision,title:'記録された公開活動',body:'実際の公開投稿です。',audience:'public'}})).json()).id;
  const secret=(await(await page.request.post('/api/communities/'+c.id+'/threads',{headers,data:{requestId:crypto.randomUUID(),expectedRevision:c.revision,title:'SECRET-LIMITED-TITLE',body:'SECRET-LIMITED-BODY',audience:'cohort'}})).json()).id;
@@ -25,7 +62,7 @@ test('real OIDC, opt-in edit, public post author, follow and unfollow round trip
   await other.evaluate(()=>window.dispatchEvent(new Event('focus')));await expect(other.getByText('このタイムラインは非公開です。',{exact:true})).toBeVisible();release();await expect(other.getByRole('link',{name:'記録された公開活動',exact:true})).toHaveCount(0);
   await other.screenshot({path:info.outputPath('private-timeline.png'),fullPage:true});expect((await other.request.get('/api/accounts/following',{headers:{'x-member-user':second.id}})).status()).toBe(200);
  }finally{await context.close();}
- await page.goto('/member#account-settings');await expect(editor.locator('input[type=checkbox]')).not.toBeChecked();await page.screenshot({path:info.outputPath('profile-settings.png'),fullPage:true});
+ await page.goto('/member#profile');await expect(editor.locator('input[type=checkbox]')).not.toBeChecked();await page.screenshot({path:info.outputPath('profile-settings.png'),fullPage:true});
 });
 
 for(const locale of ['ja','en'] as const)for(const width of [1440,390])for(const theme of ['light','dark-blue'])test(`AI profiles ${locale} ${width} ${theme}`,async({page},info)=>{
@@ -37,6 +74,34 @@ for(const locale of ['ja','en'] as const)for(const width of [1440,390])for(const
  await page.goto((locale==='en'?'/en':'')+'/people/explorer-apprentice');await expect(page.getByRole('heading',{name:locale==='en'?'Apprentice exploration AI':'探索者見習いAI',exact:true})).toBeVisible();expect(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth)).toBe(false);await page.screenshot({path:info.outputPath('apprentice.png'),fullPage:true});
 });
 
+for(const locale of ['ja','en'] as const)for(const width of [1440,390])for(const theme of ['light','dark-blue'])test(`People and account UI ${locale} ${width} ${theme}`,async({page},info)=>{
+ test.setTimeout(180000);const en=locale==='en';
+ await page.setViewportSize({width,height:900});await page.addInitScript(({locale,theme})=>{localStorage.setItem('graph-knowledge.ui-locale.v1',locale);localStorage.setItem('graph-knowledge:appearance:v1',JSON.stringify({theme,palette:theme==='dark-blue'?'blue':'brown'}));},{locale,theme});
+ const user=await login(page),headers={origin,'x-member-user':user.id};
+ const title=en?'Community and moderation testing':'コミュニティと管理のテスト状況',threadTitle=en?'Testing reports together':'通報のテストを行う';
+ // Reuse the same real sources across visual variants, respecting production quotas.
+ const directory=await(await page.request.get('/api/communities?mine=1',{headers})).json();
+ let c=directory.communities.find((r:{title:string})=>r.title===title);
+ if(!c){const result=await page.request.post('/api/communities',{headers,data:{requestId:crypto.randomUUID(),title,description:'',visibility:'public'}});expect(result.status()).toBe(201);c=(await result.json()).community;}
+ const current=await(await page.request.get('/api/communities/'+c.id,{headers})).json();
+ if(!current.threads.some((r:{title:string})=>r.title===threadTitle)){const result=await page.request.post('/api/communities/'+c.id+'/threads',{headers,data:{requestId:crypto.randomUUID(),expectedRevision:current.community.revision,title:threadTitle,body:en?'Let us check the conversation.':'会話の表示を確認します。',audience:'public'}});expect(result.status()).toBe(201);}
+ await page.goto('/communities#'+encodeURIComponent('/'+c.id));await expect(page.getByRole('heading',{name:c.title,exact:true})).toBeVisible();
+ const people=page.locator('main a[href$="/people/'+user.profile.handle+'"]');await expect(people).toHaveCount(2);
+ for(const chip of await people.all()){await expect(chip.locator('[data-profile-icon]')).toHaveCount(1);await expect(chip).toHaveText(user.name);}
+ expect(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth)).toBe(false);await page.screenshot({path:info.outputPath('community.png'),fullPage:true});
+ await page.getByRole('link',{name:en?'Testing reports together':'通報のテストを行う',exact:true}).click();await expect(page.getByRole('heading',{name:en?'Testing reports together':'通報のテストを行う',exact:true})).toBeVisible();
+ const authors=page.locator('main a[href$="/people/'+user.profile.handle+'"]');await expect(authors).toHaveCount(2);await expect(authors.last().locator('[data-profile-icon]')).toHaveCount(1);
+ expect(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth)).toBe(false);await page.screenshot({path:info.outputPath('thread.png'),fullPage:true});
+ await authors.first().click();await expect(page.getByRole('heading',{name:user.name,exact:true})).toBeVisible();
+ await page.getByRole('link',{name:en?'Edit profile':'プロフィールを編集',exact:true}).click();const editor=page.locator('#public-profile-settings');await expect(editor.locator('input[name=public-name]')).toHaveValue(user.name);await expect(page.locator('#member-display-name')).toHaveCount(0);
+ await page.screenshot({path:info.outputPath('edit.png'),fullPage:true});
+ await page.goto('/member#account-settings');await expect(page.getByRole('heading',{name:en?'Account settings':'アカウント設定',exact:true})).toBeVisible();await expect(page.locator('input[name=public-name],#member-display-name')).toHaveCount(0);
+ await page.screenshot({path:info.outputPath('settings.png'),fullPage:true});
+ const menu=page.getByLabel(en?'Account menu':'アカウントメニュー');await menu.click();const panel=menu.locator('..');
+ const first=panel.getByRole('navigation').getByRole('link').first();await expect(first).toHaveText(en?'My page':'マイページ');await expect(menu.locator('[data-profile-icon]')).toHaveAttribute('data-profile-icon',user.profile.icon);
+ await first.click();await expect(page.getByRole('heading',{name:user.name,exact:true})).toBeVisible();await page.screenshot({path:info.outputPath('mypage.png'),fullPage:true});
+});
+
 test('editor conflicts keep input, wrong origin and identity are rejected by real HTTP API',async({page})=>{
  const user=await login(page),headers={origin,'x-member-user':user.id},own=await(await page.request.get('/api/accounts/me',{headers})).json();const editor=page.locator('#public-profile-settings');
  await editor.locator('textarea').fill('My unsaved profile');const current=own.profile;
@@ -44,4 +109,18 @@ test('editor conflicts keep input, wrong origin and identity are rejected by rea
  await editor.getByRole('button',{name:'公開プロフィールを保存',exact:true}).click();await expect(editor.getByRole('alert')).toContainText('別の画面でプロフィールが変更されました');await expect(editor.locator('textarea')).toHaveValue('My unsaved profile');
  expect((await page.request.put('/api/accounts/me',{headers:{...headers,origin:'https://evil.example'},data:{}})).status()).toBe(403);
  expect((await page.request.get('/api/accounts/me',{headers:{'x-member-user':'501350be-a89f-4bde-9a06-d94631b47be5'}})).status()).toBe(401);
+});
+
+test('profile drafts survive cancelled links and browser history navigation',async({page})=>{
+ await login(page);const editor=page.locator('#public-profile-settings');
+ await editor.locator('textarea').fill('Draft retained while moving through my account');
+ page.once('dialog',d=>d.dismiss());await editor.getByRole('link',{name:/公開プロフィールを見る/}).click();await expect(editor.locator('textarea')).toHaveValue('Draft retained while moving through my account');
+ page.once('dialog',d=>d.dismiss());await page.evaluate(()=>{location.hash='account-settings';});
+ await expect(page).toHaveURL(/member#profile$/);await expect(editor.locator('textarea')).toHaveValue('Draft retained while moving through my account');
+ await page.getByRole('button',{name:'キャンセル',exact:true}).click();
+ await page.evaluate(()=>{location.hash='account-settings';});await expect(page.getByRole('heading',{name:'アカウント設定',exact:true})).toBeVisible();
+ await page.evaluate(()=>{location.hash='profile';});await expect(editor.locator('textarea')).toBeVisible();await editor.locator('textarea').fill('Back must keep this draft');
+ page.once('dialog',d=>d.dismiss());await page.evaluate(()=>history.back());
+ await expect(page).toHaveURL(/member#profile$/);await expect(editor.locator('textarea')).toHaveValue('Back must keep this draft');
+ await page.getByRole('button',{name:'キャンセル',exact:true}).click();
 });

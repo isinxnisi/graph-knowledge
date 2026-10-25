@@ -27,6 +27,13 @@ export function refreshMemberIdentity(force=false):Promise<MemberUser|null>{
  }finally{if(seq===sequence)pending=null;}})();return pending;
 }
 export function invalidateMemberIdentity(){sequence++;pending=null;checkedAt=0;publish({...initial,version:state.version+1});clearInvitations();clearOperationsSummary();}
+// A successful profile save updates the shared header immediately. An older
+// identity request must not restore the previous name/icon after that save.
+export function updateMemberProfileDisplay(userId:string,profile:{displayName:string;handle:string;icon:string}){
+ if(state.user?.id!==userId)return;
+ sequence++;pending=null;checkedAt=0;
+ publish({...state,user:{...state.user,name:profile.displayName,profile:{handle:profile.handle,icon:profile.icon}}});
+}
 export function useMemberIdentity(enabled=true){const value=useMemberSession();return enabled?value.user:null;}
 type Invitations={owner:string|null;status:'checking'|'ready'|'error';count:number|null};
 const initialInvites:Invitations={owner:null,status:'checking',count:null};

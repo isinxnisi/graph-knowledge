@@ -21,6 +21,7 @@ import AnimatedDetails from "./AnimatedDetails";
 import { notifyMemberSessionChange } from "../lib/client/account-navigation";
 import MemberAccountDeletion from "./MemberAccountDeletion";
 import MemberProfileSettings from "./MemberProfileSettings";
+import {usePublicProfilesEnabled} from './PublicProfileAvailability';
 import PublicProfileEditor from "./PublicProfileEditor";
 import { capsuleLabels } from "../lib/i18n/capsules";
 import MemberCapsuleEditor from "./MemberCapsuleEditor";
@@ -42,7 +43,10 @@ export default function MemberCapsules({ dataset, initialImport = "" }: { datase
   const { locale } = useUiLocale();
   const text = memberLabels(locale), captions = capsuleLabels(locale), historyText = capsuleHistoryLabels(locale);
   const identity=useMemberSession(),hash=usePersonalHash();
-  const section=hash==="account-settings"?"settings":hash==="my-posts"?"posts":"saved";
+  const profilesEnabled=usePublicProfilesEnabled();
+  const profileOwner=identity.status==="authenticated"&&!identity.error?identity.user:null;
+  const [publicProfileDirty,setPublicProfileDirty]=useState(false);
+  const section=publicProfileDirty?"profile":hash==="profile"?"profile":hash==="account-settings"?"settings":hash==="my-posts"?"posts":"saved";
   const [readingTab, setReadingTab] = useState<"content" | "sharing">("content");
   const [loadedUser, setUser] = useState<MemberUser | null>(null);
   const user=identity.status==='authenticated'&&identity.user?.id===loadedUser?.id?loadedUser:null;
@@ -230,8 +234,8 @@ export default function MemberCapsules({ dataset, initialImport = "" }: { datase
       if (!signal.aborted) { setItems(previous => previous.filter(item => item.id !== selected.id)); setSelected(null); setMessage(text.removed); navigate(null); }
     });
   }
-  const title = identity.status==='guest' ? text.loginTitle : hash===null||identity.status==='checking' ? text.checking : section === "settings" ? text.settings : section === "posts" ? text.postsTitle : text.savedTitle;
-  return <><PersonalMemberControls logout={() => logout(false)} busy={busy || !!draft || !!profileDraft} guard={()=>!(draft||profileDraft)||window.confirm(locale==='en'?'Leave without saving this draft?':'未保存の入力を破棄して移動しますか？')} /><main lang={locale} className={css.page}>
+  const title = identity.status==='guest' ? text.loginTitle : hash===null||identity.status==='checking' ? text.checking : section === "profile" ? (locale==='en'?'Edit profile':'プロフィールを編集') : section === "settings" ? text.settings : section === "posts" ? text.postsTitle : text.savedTitle;
+  return <><PersonalMemberControls logout={() => logout(false)} busy={busy || !!draft || !!profileDraft || publicProfileDirty} guard={()=>!(draft||profileDraft)||window.confirm(locale==='en'?'Leave without saving this draft?':'未保存の入力を破棄して移動しますか？')} /><main lang={locale} className={css.page}>
     <div className={communitiesEnabled?undefined:css.memberLayout}>
     {user && !communitiesEnabled && <nav className={css.memberNavigation} aria-label={text.navigation}>
       <a href="#my-capsules" aria-current={section === "saved" ? "page" : undefined}><Icon name="capsule" />{text.savedTitle}</a>
@@ -240,8 +244,9 @@ export default function MemberCapsules({ dataset, initialImport = "" }: { datase
       {communitiesEnabled&&<a href="/communities#%3Fmine%3D1">{locale==="en"?"Joined & managed":"参加・運営"}</a>}
     </nav>}
     <div className={css.memberContent}>
-    <header className={css.pageHeader}><PageIdentity area={section==="posts"?"activity":"account"}/><h1 ref={heading} tabIndex={-1} data-focus-destination>{title}</h1><p>{user ? section === "settings" ? text.settingsHelp : section === "posts" ? text.postsHelp : text.savedHelp : identity.status==='guest'?text.loggedOut:identity.error?(locale==='en'?'Account verification failed. Retry below.':'認証を確認できませんでした。再試行してください。'):text.checking}</p></header>
+    <header className={css.pageHeader}><PageIdentity area={section==="posts"?"activity":"account"}/><h1 ref={heading} tabIndex={-1} data-focus-destination>{title}</h1><p>{(section==="profile"?profileOwner:user) ? section === "profile" ? (locale==='en'?'Your public identity across Plunode.':'Plunodeで共通の、あなたの公開プロフィール。') : section === "settings" ? text.settingsHelp : section === "posts" ? text.postsHelp : text.savedHelp : identity.status==='guest'?text.loggedOut:identity.error?(locale==='en'?'Account verification failed. Retry below.':'認証を確認できませんでした。再試行してください。'):text.checking}</p></header>
     <section id="member-login" className={user ? css.feedback : css.account} aria-label={text.title}>
+      {identity.status==='guest'&&profilesEnabled&&<p>{locale==='en'?'Your profile is prepared automatically. Your Google name may be its initial display name; you can change it immediately. Email and Google photo are not displayed.':'プロフィールは自動で準備されます。Google等の名前が表示名の初期値になる場合があり、すぐに変更できます。メールとGoogle画像は表示しません。'}</p>}
       {identity.status==='guest' && !busy && provider && <button data-variant="primary" disabled={!!draft} onClick={login}>{provider === "fixture" ? text.fixtureLogin : text.login}</button>}
       <button className={css.refresh} title={locale==="en"?"Recheck your account and saved data without discarding your draft":"入力を保持したまま、アカウントと保存データを再取得します"} disabled={busy} onClick={()=>refresh()}><Icon name="refresh" />{text.refresh}</button>
       {draft && <p>{text.editingAccountHelp}</p>}
@@ -249,9 +254,10 @@ export default function MemberCapsules({ dataset, initialImport = "" }: { datase
       {error && <p role="alert">{contentMessage(error, locale)}</p>}{message && <p role="status">{contentMessage(message, locale)}</p>}
       {confirm === "logoutAll" && <div role="alert"><p>{text.logoutAllConfirm}</p><button onClick={() => logout(true)}>{text.confirmLogoutAll}</button><button onClick={() => setConfirm(null)}>{text.cancel}</button></div>}
     </section>
+    {profileOwner && section === "profile" && <PublicProfileEditor key={`public-profile:${profileOwner.id}`} user={profileOwner} onDirtyChange={setPublicProfileDirty}/>}
     <div hidden={section !== "settings"}>
-    {user && section === "settings" && <PublicProfileEditor key={`public-profile:${user.id}`} user={user}/>}
-    {user && (section === "settings" || !!profileDraft) && <MemberProfileSettings key={`profile:${user.id}`} user={user} value={profileDraft?.ownerId === user.id ? profileDraft.name : user.name} disabled={busy}
+
+    {user && !profilesEnabled && (section === "settings" || !!profileDraft) && <MemberProfileSettings key={`profile:${user.id}`} user={user} value={profileDraft?.ownerId === user.id ? profileDraft.name : user.name} disabled={busy}
       onChange={name => setProfileDraft(name === null || name === user.name ? null : { ownerId: user.id, name })}
       onSaved={updated => { setUser(current => current?.id === updated.id ? updated : current); setProfileDraft(null); signalAuthChange(); }}
       onUnauthorized={() => fail(new MemberClientError(401, "UNAUTHENTICATED"))} />}
