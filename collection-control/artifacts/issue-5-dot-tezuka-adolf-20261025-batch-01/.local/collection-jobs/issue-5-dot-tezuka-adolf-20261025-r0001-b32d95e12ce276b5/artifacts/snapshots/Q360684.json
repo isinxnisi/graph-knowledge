@@ -1,0 +1,273 @@
+{
+  "id": "Q360684",
+  "lastrevid": 2437729956,
+  "labels": {
+    "ru": {
+      "language": "ru",
+      "value": "Adolf (манга)"
+    },
+    "fr": {
+      "language": "fr",
+      "value": "L'Histoire des 3 Adolf"
+    },
+    "en": {
+      "language": "en",
+      "value": "Message to Adolf"
+    },
+    "zh": {
+      "language": "zh",
+      "value": "三個阿道夫"
+    },
+    "pt": {
+      "language": "pt",
+      "value": "Adolf"
+    },
+    "la": {
+      "language": "la",
+      "value": "Adolphorum Nuntio"
+    },
+    "ko": {
+      "language": "ko",
+      "value": "아돌프에게 고한다"
+    },
+    "de": {
+      "language": "de",
+      "value": "Adolf"
+    },
+    "tr": {
+      "language": "tr",
+      "value": "Adolf ni tsugu"
+    },
+    "it": {
+      "language": "it",
+      "value": "La storia dei tre Adolf"
+    },
+    "sv": {
+      "language": "sv",
+      "value": "Adolf ni tsugu"
+    },
+    "tl": {
+      "language": "tl",
+      "value": "Adolf (manga)"
+    },
+    "ja": {
+      "language": "ja",
+      "value": "アドルフに告ぐ"
+    },
+    "es": {
+      "language": "es",
+      "value": "Adolf ni Tsugu"
+    },
+    "nl": {
+      "language": "nl",
+      "value": "Adolf"
+    },
+    "pl": {
+      "language": "pl",
+      "value": "Do Adolfów"
+    },
+    "cs": {
+      "language": "cs",
+      "value": "Zpráva pro Adolfa"
+    },
+    "ca": {
+      "language": "ca",
+      "value": "Adolf"
+    },
+    "uk": {
+      "language": "uk",
+      "value": "Message to Adolf"
+    }
+  },
+  "aliases": {
+    "ru": [
+      {
+        "language": "ru",
+        "value": "Адольф (манга)"
+      },
+      {
+        "language": "ru",
+        "value": "Adolf Ni Tsugu"
+      }
+    ],
+    "fr": [
+      {
+        "language": "fr",
+        "value": "L'histoire des 3 Adolf"
+      },
+      {
+        "language": "fr",
+        "value": "L'histoire des 3 adolf"
+      },
+      {
+        "language": "fr",
+        "value": "L'Histoire Des 3 Adolf"
+      },
+      {
+        "language": "fr",
+        "value": "L’Histoire des 3 Adolf"
+      },
+      {
+        "language": "fr",
+        "value": "L’histoire des 3 Adolf"
+      }
+    ],
+    "pt": [
+      {
+        "language": "pt",
+        "value": "Adolf ni Tsugu"
+      }
+    ],
+    "la": [
+      {
+        "language": "la",
+        "value": "Adolfum Nuntio"
+      }
+    ],
+    "de": [
+      {
+        "language": "de",
+        "value": "アドルフに告ぐ"
+      },
+      {
+        "language": "de",
+        "value": "Adolf ni Tsugu"
+      },
+      {
+        "language": "de",
+        "value": "Adorufu ni Tsugu"
+      }
+    ],
+    "tr": [
+      {
+        "language": "tr",
+        "value": "Adolf Ni Tsugu"
+      }
+    ],
+    "ja": [
+      {
+        "language": "ja",
+        "value": "峠草平"
+      },
+      {
+        "language": "ja",
+        "value": "（Adolf）"
+      }
+    ],
+    "es": [
+      {
+        "language": "es",
+        "value": "Adolf (manga)"
+      },
+      {
+        "language": "es",
+        "value": "Adolf ni tsugu"
+      }
+    ],
+    "nl": [
+      {
+        "language": "nl",
+        "value": "Message to Adolf"
+      }
+    ],
+    "en": [
+      {
+        "language": "en",
+        "value": "Adolf ni Tsugu"
+      },
+      {
+        "language": "en",
+        "value": "Adolf"
+      }
+    ],
+    "it": [
+      {
+        "language": "it",
+        "value": "Adorufu ni tsugu"
+      }
+    ],
+    "pl": [
+      {
+        "language": "pl",
+        "value": "Adolf ni tsugu"
+      }
+    ],
+    "uk": [
+      {
+        "language": "uk",
+        "value": "Adolf"
+      }
+    ]
+  },
+  "claims": {
+    "P31": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P31",
+          "hash": "549c072d6be8a6a43f999d1d0e82640b16c4260e",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 21198342,
+              "id": "Q21198342"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q360684$2788A12D-9763-40F7-B56B-5AC2977DD6CD",
+        "rank": "normal"
+      }
+    ],
+    "P50": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P50",
+          "hash": "8879e5e4c7e6c841f6eed350c57548e66f6be8f3",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 193300,
+              "id": "Q193300"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q360684$20C48E26-CC73-47DC-9319-B77C6B6F3EAA",
+        "rank": "normal",
+        "references": [
+          {
+            "hash": "d4bd87b862b12d99d26e86472d44f26858dee639",
+            "snaks": {
+              "P143": [
+                {
+                  "snaktype": "value",
+                  "property": "P143",
+                  "hash": "f30cbd35620c4ea6d0633aaf0210a8916130469b",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 8447,
+                      "id": "Q8447"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P143"
+            ]
+          }
+        ]
+      }
+    ],
+    "P110": []
+  }
+}

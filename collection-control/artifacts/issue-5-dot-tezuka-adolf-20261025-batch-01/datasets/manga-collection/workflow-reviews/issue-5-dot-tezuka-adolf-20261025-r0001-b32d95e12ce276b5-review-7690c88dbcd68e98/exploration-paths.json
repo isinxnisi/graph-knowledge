@@ -1,0 +1,46 @@
+[
+  {
+    "state": "collection-candidate",
+    "observation": "verified-records-only-not-a-live-exploration-test",
+    "edges": [
+      {
+        "claimId": "3e652339-e18e-472f-b3bb-8cc375804660",
+        "subjectId": "eb0af7e1-caa6-435f-86fb-0591421982b5",
+        "objectId": "5d6abf48-b5b2-4b83-9403-b70cfc7c01fc",
+        "person": "手塚治虫",
+        "work": "アドルフに告ぐ",
+        "roleId": "AUTHORSHIP",
+        "scope": {
+          "kind": "publication",
+          "isbn13": "9784168110139",
+          "volumeLabel": "第1巻（NDL巻次 第1巻）",
+          "editionLabel": null,
+          "language": "ja"
+        },
+        "state": "collection-candidate",
+        "citationIds": [
+          "6d1457d3-8c2e-438d-a182-2f0c3f81ed23"
+        ],
+        "sourceIds": [
+          "22159b20-110b-4ed1-a563-cb13ce1dbff3"
+        ]
+      },
+      {
+        "claimId": "0d45948d-7aa4-4cc9-821c-b283d99cd118",
+        "subjectId": "eb0af7e1-caa6-435f-86fb-0591421982b5",
+        "objectId": "bfe1cb3f-a174-4e4f-b4df-a06590f66c4e",
+        "person": "手塚治虫",
+        "work": "鉄腕アトム",
+        "roleId": "DRAWING",
+        "scope": null,
+        "state": "published-in-public-snapshot",
+        "citationIds": [
+          "d44f2763-d71e-48c4-afc1-c2fcd194e4a1"
+        ],
+        "sourceIds": [
+          "2a414ecb-7fa1-485a-9296-c92b6f748353"
+        ]
+      }
+    ]
+  }
+]

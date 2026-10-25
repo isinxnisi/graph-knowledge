@@ -1,0 +1,138 @@
+{
+  "schemaVersion": 2,
+  "status": "pending-human-acceptance",
+  "recipe": "manga-r0027",
+  "collectionContext": {
+    "themeId": "issue-5-dot-tezuka-adolf-20261025",
+    "themeRevision": 1,
+    "definitionSha256": "5ba336d044c00b9c2663f0286ec7d31f312945b03fa14ca31d5404bc11097b06",
+    "approvalSha256": "1fb613c9993e4eb3057c68f1b40a4cb9cf84ec098bd89afc8c7e84a44c426c60"
+  },
+  "execution": {
+    "adapter": "manga-discovery-v2",
+    "codeSha256": "80e05b67bc0129b963653b90df4cfbfa5bd6aff190acda99f54c08541e55801e",
+    "inputs": [
+      {
+        "file": "datasets/manga-collection/r0027/recipe.json",
+        "sha256": "d6e0414784f5d7da93231f30ee4fa5248f4eceb38fe0c36daa1cbe521051fe3b"
+      },
+      {
+        "file": "datasets/manga-collection/r0027/anchor-review.json",
+        "sha256": "871d4c2a56c77ce812eaade479e0cfe9d57f9ed6b7e5c88075140cf6c371a0f6"
+      },
+      {
+        "file": "datasets/manga-collection/r0027/publication-review.json",
+        "sha256": "93f832aaa5a814af259f359631a395a6c02f1104d716547a6a8dd408dbe79396"
+      },
+      {
+        "file": "docs/research/famous-manga-creators/20261016/candidates.json",
+        "sha256": "8531fada01e5c635ba2ee278a7ef944a73f64676af14ed42ae0e690f5a1ff978"
+      },
+      {
+        "file": "datasets/public-kg/releases/20261014-credits-001/data.json",
+        "sha256": "ea91b16f52a211b5a8464382ad498b7b2bb2be69a6f33fe125a73a3c7b9da2b5"
+      },
+      {
+        "file": "datasets/public-kg/releases/20261014-credits-001/manifest.json",
+        "sha256": "e4aa3b58ed884f7d1f8fffee43b260261cc2b4d3a867fda942919f439d2bce17"
+      }
+    ],
+    "maxEntities": 2111,
+    "maxClaims": 1847
+  },
+  "identityMappings": [
+    {
+      "name": "手塚治虫",
+      "wikidata": "Q193300",
+      "entityId": "eb0af7e1-caa6-435f-86fb-0591421982b5",
+      "basis": "exact-external-id-or-explicit-catalog-uuid",
+      "reused": true
+    },
+    {
+      "name": "アドルフに告ぐ",
+      "wikidata": "Q360684",
+      "entityId": "5d6abf48-b5b2-4b83-9403-b70cfc7c01fc",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    }
+  ],
+  "rows": [
+    {
+      "kind": "wikidata-relation",
+      "work": "アドルフに告ぐ",
+      "property": "P50",
+      "personQid": "Q193300",
+      "statementId": "Q360684$20C48E26-CC73-47DC-9319-B77C6B6F3EAA",
+      "qualifiers": {},
+      "references": [
+        {
+          "hash": "d4bd87b862b12d99d26e86472d44f26858dee639",
+          "snaks": {
+            "P143": [
+              {
+                "snaktype": "value",
+                "property": "P143",
+                "hash": "f30cbd35620c4ea6d0633aaf0210a8916130469b",
+                "datavalue": {
+                  "value": {
+                    "entity-type": "item",
+                    "numeric-id": 8447,
+                    "id": "Q8447"
+                  },
+                  "type": "wikibase-entityid"
+                },
+                "datatype": "wikibase-item"
+              }
+            ]
+          },
+          "snaks-order": [
+            "P143"
+          ]
+        }
+      ],
+      "status": "candidate-only-no-role-inference",
+      "reason": "Wikidata propertyだけで具体Roleや直接制作の意味を確定しない"
+    },
+    {
+      "kind": "ndl-credit",
+      "work": "アドルフに告ぐ",
+      "isbn13": "9784168110139",
+      "rawResponsibility": "手塚治虫 著",
+      "sourceUrl": "https://ndlsearch.ndl.go.jp/books/R100000002-I000002168304",
+      "status": "pending-human-acceptance",
+      "roleId": "AUTHORSHIP",
+      "person": "手塚治虫",
+      "claimId": "3e652339-e18e-472f-b3bb-8cc375804660",
+      "reusedClaim": false,
+      "subjectId": "eb0af7e1-caa6-435f-86fb-0591421982b5",
+      "objectId": "5d6abf48-b5b2-4b83-9403-b70cfc7c01fc"
+    }
+  ],
+  "holds": [],
+  "acquisitions": [
+    {
+      "kind": "wikidata",
+      "identifier": "Q193300",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q193300.json",
+      "sha256": "9b54ad03be8a5948514d0efba7a5347ad14c2ea47644fc4c6634632d685fe09d",
+      "bytes": 212261,
+      "fetchedAt": "2026-10-18T18:39:10+00:00"
+    },
+    {
+      "kind": "wikidata",
+      "identifier": "Q360684",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q360684.json",
+      "sha256": "a8ecb552ba8362a120a5fca12e4f456a8b077d0c3ae697a720f71d72adec4e05",
+      "bytes": 34200,
+      "fetchedAt": "2026-10-25T07:10:24+00:00"
+    },
+    {
+      "kind": "ndl",
+      "identifier": "9784168110139",
+      "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&maximumRecords=5&query=isbn%3D%229784168110139%22+AND+dpid%3Diss-ndl-opac",
+      "sha256": "d9f9ff5146ca651636f1c8822df490e4772e4b46e44f2ec4e06a93c93d0ad1ba",
+      "bytes": 46727,
+      "fetchedAt": "2026-10-25T07:10:37+00:00"
+    }
+  ]
+}

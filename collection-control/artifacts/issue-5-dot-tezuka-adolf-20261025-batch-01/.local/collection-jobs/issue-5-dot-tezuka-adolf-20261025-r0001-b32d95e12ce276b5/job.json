@@ -1,0 +1,166 @@
+{
+  "schemaVersion": 1,
+  "jobId": "issue-5-dot-tezuka-adolf-20261025-r0001-b32d95e12ce276b5",
+  "jobKey": "b32d95e12ce276b583dae262e32b2cd6654b549d9444c848c4103a241d896308",
+  "runnerSha256": "1f36d3010c7a7e471091620c6820b1401aa0a0b53a997da187f51f9fa68b2ae2",
+  "workOrder": {
+    "schemaVersion": 1,
+    "theme": {
+      "schemaVersion": 1,
+      "id": "issue-5-dot-tezuka-adolf-20261025",
+      "revision": 1,
+      "title": "Issue 5：手塚治虫／候補収集",
+      "purpose": "既存の明示的人間許可を範囲内の導出recipeへ束縛。知識の正式受入・公開適用を許可しない。",
+      "worlds": [
+        "漫画・アニメ",
+        "美術・文学"
+      ],
+      "relatedThemes": [
+        "famous-manga-creators"
+      ],
+      "scope": {
+        "include": [
+          "Issue permission SHA256 3c4bd377fe1f940519f2e82509de1c5543da2f7267c591f0c36a085f19705ab2",
+          "[\n  {\n    \"person\": \"手塚治虫\",\n    \"work\": \"アドルフに告ぐ\"\n  }\n]\n",
+          "Wikidata完全一致・NDL作成書誌の日本語第1巻ISBN。原語・既存制作Role契約を維持。"
+        ],
+        "exclude": [
+          "許可外人物作品・不確かな同定・意味変換・正式受入・公開apply・VPS配置・会員DB変更"
+        ]
+      },
+      "dataRequirements": [
+        {
+          "kind": "entity",
+          "description": "一覧内の人物と漫画作品、確認された日英別名・外部ID",
+          "granularity": "個人と共同筆名を区別し、漫画版・特定部・特定初出版を同定する。既存UUIDは再利用"
+        },
+        {
+          "kind": "claim",
+          "description": "明示された人物→漫画制作のRole候補。ORIGINAL_STORYを含む既存Role契約に従う",
+          "granularity": "代表ISBNごとのpublication scope。原語・巻・版を固定し、作品全体や別Roleへ自動拡張しない"
+        },
+        {
+          "kind": "citation",
+          "description": "資料URL、参照箇所、取得日、担当原語、刊行物と利用条件",
+          "granularity": "資料と取込由来を分け、同資料を共有する記録を独立根拠として数えない"
+        },
+        {
+          "kind": "identity",
+          "description": "作品単位と筆名・既存Entity対応の判断",
+          "granularity": "武論尊／史村翔、藤子共同名義、ワンパンマンの版、火の鳥の初出版等を個別に判断"
+        },
+        {
+          "kind": "model-gap",
+          "description": "漫画表記、原著、原案、集約著者などの未確定関係とシリーズ／巻／版の構造",
+          "granularity": "この企画の承認だけでは実装・語彙承認しない。必要なら個別レビューへ分ける"
+        }
+      ],
+      "sources": [
+        {
+          "name": "Wikidata（構造化取得の有力候補）",
+          "url": "https://www.wikidata.org/wiki/Help:Data_access",
+          "usage": "識別子・日英名・別名・作品関係候補と参照先。propertyから既存Roleを推測しない。",
+          "termsNote": "Wikidata構造化APIとcanonical EntityData。Issue全体で準備・収集合計30試行。"
+        },
+        {
+          "name": "NDLサーチ・NDL作成書誌",
+          "url": "https://ndlsearch.ndl.go.jp/help/api/provider",
+          "usage": "SRUのiss-ndl-opac限定、固定ISBN検索・maximumRecords=5。NDL作成書誌のISBN・主書名・巻・版・言語・漫画種別・責任表示を一意に照合。第三者所蔵情報はsnapshotへ出さない。",
+          "termsNote": "NDL作成書誌のCC BY4.0。題名・著者検索で代表ISBNを選びcanonical ISBN検索で一意性を再確認。所蔵・本文を転載しない。"
+        }
+      ],
+      "exploration": {
+        "questions": [
+          "既存浦沢直樹からあさドラ！・パイナップルARMYと工藤かずやへ渡れるか？",
+          "サンクチュアリと北斗の拳を同じ人物の別名義・異なるRoleの根拠で辿れるか？",
+          "ポーの一族から萩尾望都を経て11人いる！、風と木の詩から竹宮惠子を経て地球へ…に渡れるか？",
+          "r0002公開後に大場つぐみ・Boichi・藤本タツキの別作品へ進めるか？ 未受入・原語未確定の枝を区別できるか？"
+        ],
+        "existingPredicates": [
+          "CONTRIBUTED_TO"
+        ],
+        "modelGaps": [
+          "漫画表記や集約著者表示は既存Roleへ自動変換できない。ORIGINAL_STORYは原作担当の明示に限定する。",
+          "掲載・翻案・シリーズ／巻／版の独立関係は対象外",
+          "ジャンルは編集上の入口説明であり分類Claimは生成しない"
+        ]
+      },
+      "coverageReferences": [
+        "datasets/manga-collection/r0027/anchor-review.json",
+        "datasets/manga-collection/r0027/publication-review.json"
+      ],
+      "execution": {
+        "adapter": "manga-discovery-v2",
+        "codeSha256": "80e05b67bc0129b963653b90df4cfbfa5bd6aff190acda99f54c08541e55801e",
+        "inputs": [
+          {
+            "file": "datasets/manga-collection/r0027/recipe.json",
+            "sha256": "d6e0414784f5d7da93231f30ee4fa5248f4eceb38fe0c36daa1cbe521051fe3b"
+          },
+          {
+            "file": "datasets/manga-collection/r0027/anchor-review.json",
+            "sha256": "871d4c2a56c77ce812eaade479e0cfe9d57f9ed6b7e5c88075140cf6c371a0f6"
+          },
+          {
+            "file": "datasets/manga-collection/r0027/publication-review.json",
+            "sha256": "93f832aaa5a814af259f359631a395a6c02f1104d716547a6a8dd408dbe79396"
+          },
+          {
+            "file": "docs/research/famous-manga-creators/20261016/candidates.json",
+            "sha256": "8531fada01e5c635ba2ee278a7ef944a73f64676af14ed42ae0e690f5a1ff978"
+          },
+          {
+            "file": "datasets/public-kg/releases/20261014-credits-001/data.json",
+            "sha256": "ea91b16f52a211b5a8464382ad498b7b2bb2be69a6f33fe125a73a3c7b9da2b5"
+          },
+          {
+            "file": "datasets/public-kg/releases/20261014-credits-001/manifest.json",
+            "sha256": "e4aa3b58ed884f7d1f8fffee43b260261cc2b4d3a867fda942919f439d2bce17"
+          }
+        ],
+        "maxEntities": 2111,
+        "maxClaims": 1847
+      }
+    },
+    "definitionSha256": "5ba336d044c00b9c2663f0286ec7d31f312945b03fa14ca31d5404bc11097b06",
+    "approval": {
+      "schemaVersion": 1,
+      "themeId": "issue-5-dot-tezuka-adolf-20261025",
+      "revision": 1,
+      "definitionSha256": "5ba336d044c00b9c2663f0286ec7d31f312945b03fa14ca31d5404bc11097b06",
+      "reviewer": "プロジェクト運営者（範囲を限定した委任）",
+      "reviewedAt": "2026-10-25T07:10:42+00:00",
+      "note": "既存Issue承認の技術的束縛。追加のAI判断ではない。\n{\n  \"issueOrigin\": {\n    \"repository\": \"isinxnisi/graph-knowledge\",\n    \"issueNumber\": 5,\n    \"approvalId\": \"dot-tezuka-adolf-20261025\",\n    \"permissionSha256\": \"3c4bd377fe1f940519f2e82509de1c5543da2f7267c591f0c36a085f19705ab2\",\n    \"issueBodySha256\": \"62f76734a536c8f0d1cba529b6e4f867e73e1722eef2068f8f2b3ce8d379bb8b\"\n  },\n  \"humanDecision\": {\n    \"actorType\": \"human\",\n    \"reviewer\": \"プロジェクト運営者（範囲を限定した委任）\",\n    \"decidedAt\": \"2026-10-25T13:07:49+09:00\",\n    \"statement\": \"2026-10-25 13:07:49 JST、運営者は既存Worker対応の現在の漫画テーマ候補からdotが対象を選び、毎回の個別提示なしでGitHubの収集許可と購読を登録し、候補収集・レビューまで進める限定委任を明示承認した。確認は1日3回、新規投入は1日最大1バッチ、先行親子処理完了後、Wikidata構造化情報とNDL作成書誌のみ、準備と子収集合計30試行以内、取得済み成果優先。運営者がこの人物作品組を個別審査したとの記録ではない。dotは固定catalog d3e377d5255f4c487d608e73954dc40aeb0b3cba と既存runtimeの共通候補から手塚治虫→アドルフに告ぐの1組を選定した。根拠不足・同定・Roleは保留し、既公開・既受入は再処理しない。正式受入・公開apply・新取得元・コード変更は含まない。\"\n  }\n}\n",
+      "checks": [
+        "purpose",
+        "scope",
+        "data-granularity",
+        "sources-and-terms",
+        "exploration",
+        "execution-boundary"
+      ]
+    },
+    "approvalSha256": "1fb613c9993e4eb3057c68f1b40a4cb9cf84ec098bd89afc8c7e84a44c426c60",
+    "executionStatus": "frozen-adapter",
+    "authority": "candidate-collection-only; not knowledge acceptance or public release approval"
+  },
+  "status": "candidate-ready",
+  "attempts": [
+    {
+      "number": 1,
+      "startedAt": "2026-10-25T07:22:47+00:00",
+      "status": "succeeded",
+      "stage": "candidate-ready",
+      "finishedAt": "2026-10-25T07:22:49+00:00"
+    }
+  ],
+  "artifacts": {
+    "candidate/data.json": "009f9b9d2f543d661f5706a51201b37dba8def496e72d0a562fad501d733fc88",
+    "candidate/manifest.json": "1d189ee41577ff02e08b9504e4ae4b5389129d8ae3f3833213769486036fae06",
+    "ledger.json": "e035d8b0e0b530d602043782ce9d6c67ad556b36131de49b507fee366ac3de36",
+    "snapshots/Q193300.json": "d6eed2f47765243dfe3c02389e3220e7a74a7805f32954c7d8fd16993c36a805",
+    "snapshots/Q360684.json": "b3b16319800e7d96ddf72ba7ad9e0917e430edcd1e8b3e7ddabcd4df15ca918e",
+    "snapshots/ndl-9784168110139.json": "5f7897247baa0abb7d84d49ebc8e03ba3ff2d6babff47900d1ba9f97117a8802",
+    "summary.json": "cc3cf7cec18bd15c79335aeca9d33bc79fa6fb22767b2ad8a6a5af96464a0386"
+  }
+}

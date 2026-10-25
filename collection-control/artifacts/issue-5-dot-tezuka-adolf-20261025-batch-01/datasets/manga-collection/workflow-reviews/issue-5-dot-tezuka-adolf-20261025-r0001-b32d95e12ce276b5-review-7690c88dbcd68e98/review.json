@@ -1,0 +1,71 @@
+{
+  "status": "pending-human-acceptance",
+  "humanReviewer": null,
+  "entities": [
+    {
+      "entityId": "5d6abf48-b5b2-4b83-9403-b70cfc7c01fc",
+      "name": "アドルフに告ぐ",
+      "kind": "work",
+      "wikidata": "Q360684",
+      "existingEntityId": null,
+      "status": "candidate",
+      "reasons": [],
+      "checks": {
+        "providerIdentity": true
+      },
+      "inputPopulation": "relation-endpoint"
+    }
+  ],
+  "claims": [
+    {
+      "claimId": "3e652339-e18e-472f-b3bb-8cc375804660",
+      "person": "手塚治虫",
+      "work": "アドルフに告ぐ",
+      "subjectId": "eb0af7e1-caa6-435f-86fb-0591421982b5",
+      "objectId": "5d6abf48-b5b2-4b83-9403-b70cfc7c01fc",
+      "roleId": "AUTHORSHIP",
+      "scope": {
+        "kind": "publication",
+        "isbn13": "9784168110139",
+        "volumeLabel": "第1巻（NDL巻次 第1巻）",
+        "editionLabel": null,
+        "language": "ja"
+      },
+      "status": "candidate",
+      "reasons": [],
+      "supportingCitationIds": [
+        "6d1457d3-8c2e-438d-a182-2f0c3f81ed23"
+      ],
+      "existingState": null,
+      "existingClaimId": null,
+      "originalTexts": [
+        "手塚治虫 著"
+      ],
+      "citationIds": [
+        "6d1457d3-8c2e-438d-a182-2f0c3f81ed23"
+      ],
+      "sourceUrls": [
+        "https://ndlsearch.ndl.go.jp/books/R100000002-I000002168304"
+      ],
+      "sourceIds": [
+        "22159b20-110b-4ed1-a563-cb13ce1dbff3"
+      ]
+    }
+  ],
+  "inheritedHolds": [],
+  "newCandidateCounts": {
+    "entities": 1,
+    "claims": 1,
+    "sources": 1,
+    "citations": 1
+  },
+  "recordConflicts": [],
+  "roleCounts": {
+    "AUTHORSHIP": 1
+  },
+  "normalReviewedEntityCount": 1,
+  "reusedCitationIds": [],
+  "identityOnlyEntityIds": [],
+  "heldClaimCount": 0,
+  "heldEntityCount": 0
+}

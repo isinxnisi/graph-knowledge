@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "reviewId": "issue-5-dot-tezuka-adolf-20261025-r0001-b32d95e12ce276b5-review-7690c88dbcd68e98",
+  "inputSha256": "7690c88dbcd68e98dd60d10359beb9b1756f2b1568fa8bc60259a4b291fb7a67",
+  "artifacts": {
+    "context.json": "9dbcc1011be16d41de63118190659306e47846ac805f9243fe7f2109d3fbc87a",
+    "review.json": "1965479f93ec8623563921acd6af35727c8b1a6b0e959fdcb75030e6cd9bec7f",
+    "proposed-records.json": "0f208bb7869d6c4ea3692d3626b06ee978be1b873a29455a3d580eaa1b129447",
+    "identity-only-records.json": "1fc314e4a47717bce195b39fe7f1e66bd31f6af892fca4a9420a653eab927a37",
+    "exploration-paths.json": "91cf0007081cca78b4d0b3af8d4f8bdb10442ef89f543790bffb27948a81f13c",
+    "decision-request.json": "5b33dcb8fa91c3c231a69c70782f015696bc94346aa57bda468c7f3542a792c2",
+    "README.md": "87b5583166fd8af28bd8aec6aa66af9d31e343a48eaa07d2feca0dd9d34ee76f"
+  },
+  "authority": "pending-human-review-only"
+}

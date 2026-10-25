@@ -1,0 +1,111 @@
+{
+  "schemaVersion": 1,
+  "decisionId": "issue-5-dot-tezuka-adolf-20261025-batch-01-normal",
+  "status": "draft-not-approved",
+  "humanDecision": {
+    "actorType": "human",
+    "reviewer": null,
+    "decidedAt": null,
+    "statement": null
+  },
+  "approvalScope": "formal-record-acceptance-and-release-preparation-only",
+  "applyAuthorized": {
+    "local": false,
+    "beta": false,
+    "vps": false
+  },
+  "review": {
+    "file": "datasets/manga-collection/workflow-reviews/issue-5-dot-tezuka-adolf-20261025-r0001-b32d95e12ce276b5-review-7690c88dbcd68e98/review-manifest.json",
+    "sha256": "b5a5b41315011872ca9968477872ae167c70bbfb67341eb8eb1e0d0623fe66a3"
+  },
+  "referenceArtifacts": [
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-5-dot-tezuka-adolf-20261025-r0001-b32d95e12ce276b5-review-7690c88dbcd68e98/README.md",
+      "sha256": "87b5583166fd8af28bd8aec6aa66af9d31e343a48eaa07d2feca0dd9d34ee76f"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-5-dot-tezuka-adolf-20261025-r0001-b32d95e12ce276b5-review-7690c88dbcd68e98/context.json",
+      "sha256": "9dbcc1011be16d41de63118190659306e47846ac805f9243fe7f2109d3fbc87a"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-5-dot-tezuka-adolf-20261025-r0001-b32d95e12ce276b5-review-7690c88dbcd68e98/decision-request.json",
+      "sha256": "5b33dcb8fa91c3c231a69c70782f015696bc94346aa57bda468c7f3542a792c2"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-5-dot-tezuka-adolf-20261025-r0001-b32d95e12ce276b5-review-7690c88dbcd68e98/exploration-paths.json",
+      "sha256": "91cf0007081cca78b4d0b3af8d4f8bdb10442ef89f543790bffb27948a81f13c"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-5-dot-tezuka-adolf-20261025-r0001-b32d95e12ce276b5-review-7690c88dbcd68e98/identity-only-records.json",
+      "sha256": "1fc314e4a47717bce195b39fe7f1e66bd31f6af892fca4a9420a653eab927a37"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-5-dot-tezuka-adolf-20261025-r0001-b32d95e12ce276b5-review-7690c88dbcd68e98/proposed-records.json",
+      "sha256": "0f208bb7869d6c4ea3692d3626b06ee978be1b873a29455a3d580eaa1b129447"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-5-dot-tezuka-adolf-20261025-r0001-b32d95e12ce276b5-review-7690c88dbcd68e98/review-manifest.json",
+      "sha256": "b5a5b41315011872ca9968477872ae167c70bbfb67341eb8eb1e0d0623fe66a3"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-5-dot-tezuka-adolf-20261025-r0001-b32d95e12ce276b5-review-7690c88dbcd68e98/review.json",
+      "sha256": "1965479f93ec8623563921acd6af35727c8b1a6b0e959fdcb75030e6cd9bec7f"
+    }
+  ],
+  "acceptedRecordIds": {
+    "entities": [
+      "5d6abf48-b5b2-4b83-9403-b70cfc7c01fc"
+    ],
+    "claims": [
+      "3e652339-e18e-472f-b3bb-8cc375804660"
+    ],
+    "sources": [
+      "22159b20-110b-4ed1-a563-cb13ce1dbff3"
+    ],
+    "citations": [
+      "6d1457d3-8c2e-438d-a182-2f0c3f81ed23"
+    ]
+  },
+  "recordSha256": {
+    "entities": {
+      "5d6abf48-b5b2-4b83-9403-b70cfc7c01fc": "f0f400e98b360b1f9dd5303dc92f06a4abf77809cd2bddf9832aeaf0fcb155c2"
+    },
+    "claims": {
+      "3e652339-e18e-472f-b3bb-8cc375804660": "a969e6605c823db12e187c9662c1c703cace8715afe098bcbf84d1ce40da304b"
+    },
+    "sources": {
+      "22159b20-110b-4ed1-a563-cb13ce1dbff3": "9a17eb1be862db38614bf29ff84c9663aa44a990ca8e0661b5c738aa0d749ff8"
+    },
+    "citations": {
+      "6d1457d3-8c2e-438d-a182-2f0c3f81ed23": "f6e7122cf1b8f592c2c41d2aa01f6451e538a4da12c788fcb815854a33abf4f3"
+    }
+  },
+  "scopeByClaim": [
+    {
+      "id": "3e652339-e18e-472f-b3bb-8cc375804660",
+      "subjectId": "eb0af7e1-caa6-435f-86fb-0591421982b5",
+      "objectId": "5d6abf48-b5b2-4b83-9403-b70cfc7c01fc",
+      "predicate": "CONTRIBUTED_TO",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "contribution": {
+        "roleId": "AUTHORSHIP",
+        "scope": {
+          "kind": "publication",
+          "isbn13": "9784168110139",
+          "volumeLabel": "第1巻（NDL巻次 第1巻）",
+          "editionLabel": null,
+          "language": "ja"
+        }
+      },
+      "organizationParticipation": null,
+      "eventParticipation": null
+    }
+  ],
+  "baseRelease": "20261014-credits-001",
+  "baseRevision": "82b01515-594c-48ca-b4b6-515eefac83ca",
+  "releaseId": "manga-issue-5-dot-tezuka-adolf-20261025-batch-01-normal"
+}
