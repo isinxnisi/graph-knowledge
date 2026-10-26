@@ -16,7 +16,7 @@ export function parseTargetSearch(input: unknown): TargetSearchRequest {
   const parsed = targetSearchRequestSchema.safeParse(input);
   if (!parsed.success) {
     const relation = (input as { criteria?: { relation?: { type?: string; version?: number; pattern?: { id?: string; revision?: number }; traversal?: string; polarity?: string } } })?.criteria?.relation;
-    if (relation && (relation.version !== 1 || !["adjacent", "pattern"].includes(relation.type ?? "") || relation.type === "pattern" && (relation.pattern?.id !== "other-works" || relation.pattern.revision !== 1 || relation.polarity !== "affirmed") || relation.type === "adjacent" && relation.traversal !== "either")) throw invalid("UNSUPPORTED_CONDITION");
+    if (relation && (relation.version !== 1 || !["adjacent", "pattern"].includes(relation.type ?? "") || relation.type === "pattern" && (relation.pattern?.id !== "other-works" || ![1, 2, 3].includes(relation.pattern.revision!) || relation.polarity !== "affirmed") || relation.type === "adjacent" && relation.traversal !== "either")) throw invalid("UNSUPPORTED_CONDITION");
     throw invalid(parsed.error.issues.some(i => i.path.includes("criteria")) ? "INVALID_CONDITION" : "INVALID_REQUEST");
   }
   return parsed.data;

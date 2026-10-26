@@ -52,7 +52,7 @@ export const workspaceV2Schema = z.strictObject({
     pan: point, zoom: z.number().min(0.15).max(2), initialLayoutDone: z.boolean() }).nullable(),
 }).superRefine((v, ctx) => {
   const ex = v.execution;
-  let valid = ex.type === v.relation.type && (v.version===3)===(v.relation.type==="pattern"&&v.relation.pattern.revision===2);
+  let valid = ex.type === v.relation.type && (v.version===3)===(v.relation.type==="pattern"&&v.relation.pattern.revision!==1);
   if (ex.type === "pattern") {
     const keys = ex.routes.map(r => routeKey(r.route));
     valid &&= v.dataset === "public-kg" && new Set(keys).size === keys.length
@@ -104,7 +104,7 @@ export function captureWorkspace(dataset: DatasetMode, title: string, graph: Gra
   const branches = Object.entries(graph.expansions).map(([id, meta]) => ({ id, open: meta.open, pages: meta.pages.length }));
   if (branches.reduce((sum, branch) => sum + branch.pages, 0) > WORKSPACE_PAGE_LIMIT) throw new WorkspaceError("limit");
   return workspaceV2Schema.parse({
-    version: graph.relation?.type==="pattern"&&graph.relation.pattern.revision===2?3:2, dataset, id: crypto.randomUUID(), title, savedAt: new Date().toISOString(), rootId: graph.centerId,
+    version: graph.relation?.type==="pattern"&&graph.relation.pattern.revision!==1?3:2, dataset, id: crypto.randomUUID(), title, savedAt: new Date().toISOString(), rootId: graph.centerId,
     relation: graphRelation(graph), observedRevision: graph.revision ?? null,
     execution: graph.execution?.type === "pattern" ? { type: "pattern", routes: Object.values(graph.execution.routes), requiredRouteKey: graph.execution.requiredRoute, candidateBoundary: graph.execution.candidateBoundary,
       entityState: { version: 1, branches: Object.entries(graph.expansions).map(([id, m]) => ({ id, open: m.open, claimIds: [...new Set(m.pages.flatMap(p => p.claimIds))] })),

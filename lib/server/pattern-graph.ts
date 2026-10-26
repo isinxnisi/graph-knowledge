@@ -15,7 +15,7 @@ export function parsePatternGraph(input: unknown): PatternGraphRequest {
   const parsed = patternGraphRequestSchema.safeParse(input);
   if (!parsed.success) {
     const r = (input as { relation?: { type?: string; version?: number; pattern?: { id?: string; revision?: number }; polarity?: string } })?.relation;
-    if (r && (r.type !== "pattern" || r.version !== 1 || r.pattern?.id !== "other-works" || r.pattern.revision !== 1 || r.polarity !== "affirmed")) throw invalid("UNSUPPORTED_CONDITION");
+    if (r && (r.type !== "pattern" || r.version !== 1 || r.pattern?.id !== "other-works" || ![1, 2, 3].includes(r.pattern.revision!) || r.polarity !== "affirmed")) throw invalid("UNSUPPORTED_CONDITION");
     throw invalid("INVALID_REQUEST");
   }
   return parsed.data;
@@ -25,7 +25,7 @@ function encode(input: PatternGraphRequest, revision: string, route: RouteRef) {
   return Buffer.from(JSON.stringify({ v: 1, operation: "pattern-page", dataset: "public-kg", rootId: input.rootId, conditionKey: relationConditionKey(input.relation), revision, person: route.nodeIds[1], work: route.nodeIds[2] })).toString("base64url");
 }
 async function candidates(tx: RelationReadTx, input: PatternGraphRequest, boundary: { person: string; work: string } | null, take: number) {
-  const query=input.version===2?`CALL { ${OTHER_WORKS_PAGE} UNION ${CONTRIBUTOR_WORKS_PAGE} } RETURN nodeIds,claimIds ORDER BY nodeIds[1],nodeIds[2] LIMIT $take`:OTHER_WORKS_PAGE;
+  const query=input.version===2&&input.relation.pattern.revision===2?`CALL { ${OTHER_WORKS_PAGE} UNION ${CONTRIBUTOR_WORKS_PAGE} } RETURN nodeIds,claimIds ORDER BY nodeIds[1],nodeIds[2] LIMIT $take`:OTHER_WORKS_PAGE;
   const result = await tx.run(query, { ...relationQueryParameters(input.relation), rootId: input.rootId, afterPerson: boundary?.person ?? null, afterWork: boundary?.work ?? null, take: int(take) });
   return result.records.map(row => routeRefSchema.parse({ nodeIds: row.get("nodeIds"), claimIds: row.get("claimIds") }));
 }

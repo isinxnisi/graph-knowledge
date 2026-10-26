@@ -48,7 +48,8 @@ export function projectGraph(graph: GraphState): GraphState {
         const claim = graph.cacheClaims[claimId];
         if (!claim) { if (allowed) throw Error("Missing pattern Claim"); continue; }
         if (allowed && (!allowed.has(claimId) || ![claim.subjectId, claim.objectId].includes(id))) throw Error("Unverified pattern branch");
-        if (!(graph.relation ? relationAcceptsClaim(graph.relation, claim) : matchesClaim(claim, graph.predicates, graph.contributionRoles ?? null, graph.organizationPositions ?? null, graph.eventRoles ?? null)) || !graph.cacheNodes[claim.subjectId] || !graph.cacheNodes[claim.objectId]) continue;
+        // Complete routes already validate each Claim at its own step; a shared filter would erase ordered-role paths.
+        if (!(allowed || (graph.relation ? relationAcceptsClaim(graph.relation, claim) : matchesClaim(claim, graph.predicates, graph.contributionRoles ?? null, graph.organizationPositions ?? null, graph.eventRoles ?? null))) || !graph.cacheNodes[claim.subjectId] || !graph.cacheNodes[claim.objectId]) continue;
         claims[claim.id] = claim; ids.add(claim.subjectId); ids.add(claim.objectId);
       }
     }
