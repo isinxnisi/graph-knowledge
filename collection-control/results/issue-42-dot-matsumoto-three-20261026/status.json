@@ -70,12 +70,12 @@
   },
   "requestSha256": "90859cacf56fa33c3fc06c58206d81879a7d4e3995746680dd483e94a7cdcafc",
   "kind": "issue-prepare",
-  "phase": "retry-wait",
-  "generation": 177,
+  "phase": "waiting-control",
+  "generation": 185,
   "attempts": 3,
   "workerId": "plunode-wsl",
   "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
-  "updatedAt": "2026-10-26T07:22:53+00:00",
-  "message": "Provider transport interrupted; durable cache retained: publication-11ed1863efca60a31a8ea668",
+  "updatedAt": "2026-10-26T07:32:52+00:00",
+  "message": "Execution gate: interval",
   "retryAt": 1792999935.285662
 }
