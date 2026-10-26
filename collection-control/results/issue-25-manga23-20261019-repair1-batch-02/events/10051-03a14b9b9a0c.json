@@ -1,0 +1,116 @@
+{
+  "requestId": "issue-25-manga23-20261019-repair1-batch-02",
+  "request": {
+    "schemaVersion": 1,
+    "id": "issue-25-manga23-20261019-repair1-batch-02",
+    "kind": "collect-review",
+    "status": "approved",
+    "sourceCommit": "916cc77d3aeab22650e309b694661cac07a72a47",
+    "parentRequestId": "issue-25-manga23-20261019-repair1",
+    "applyAuthorized": {
+      "local": false,
+      "beta": false,
+      "vps": false
+    },
+    "approvalScope": "collection-candidates-and-review-only",
+    "humanDecision": {
+      "actorType": "human",
+      "reviewer": "プロジェクト運営者",
+      "decidedAt": "2026-10-19T02:52:00+09:00",
+      "statement": "Issue #25の2026-10-19 02:52 JST先行許可を転記。明示された23作品・人物の同定、QID・日本語代表ISBN探索、recipe生成、hidden候補収集と根拠・保留・レビュー資料生成を承認。Wikidata構造化データとNDL作成書誌だけを用い、準備・収集合計142試行、同一要求2試行、逐次3秒、20秒、4MiB以内。既設時間帯・10分休憩で途中開始・数日継続を許可。同一範囲の再承認は不要。不確かな同定・資料不足・範囲外は保留。個別正式受入・公開apply・VPS配置・会員DB変更は承認しない。"
+    },
+    "issueOrigin": {
+      "repository": "isinxnisi/graph-knowledge",
+      "issueNumber": 25,
+      "approvalId": "manga23-20261019",
+      "permissionSha256": "673d380b4fb61ab2cdef204140d63a47bbf25dbb288199f25d0e3ae740ef11b3",
+      "issueBodySha256": "5f302ff42139b5230da70d38734577da414a3b89a24a82f90302e0297afc3c69"
+    },
+    "target": {
+      "themeId": "issue-25-manga23-20261019-repair1",
+      "revision": 2,
+      "definitionSha256": "fa7388c5c6d690ecaea9eb110b87ac2f7bff457bf72129937aa19df79d0b3012",
+      "execution": {
+        "adapter": "manga-discovery-v2",
+        "codeSha256": "80e05b67bc0129b963653b90df4cfbfa5bd6aff190acda99f54c08541e55801e",
+        "inputs": [
+          {
+            "file": "datasets/manga-collection/r0005/recipe.json",
+            "sha256": "7823a30fe43d788053e2d29a14beddf12fc447045eaac41bde4abb8672352800"
+          },
+          {
+            "file": "datasets/manga-collection/r0005/anchor-review.json",
+            "sha256": "69463646c3e3b6a2a69378ad383216523ea22461f66795e5f9417d9caf97047e"
+          },
+          {
+            "file": "datasets/manga-collection/r0005/publication-review.json",
+            "sha256": "c1200889428899155bff242dc6ff3c7423910202e3fcdad1a0e532ec2dae92af"
+          },
+          {
+            "file": "docs/research/famous-manga-creators/20261016/candidates.json",
+            "sha256": "8531fada01e5c635ba2ee278a7ef944a73f64676af14ed42ae0e690f5a1ff978"
+          },
+          {
+            "file": "datasets/public-kg/releases/20261014-credits-001/data.json",
+            "sha256": "ea91b16f52a211b5a8464382ad498b7b2bb2be69a6f33fe125a73a3c7b9da2b5"
+          },
+          {
+            "file": "datasets/public-kg/releases/20261014-credits-001/manifest.json",
+            "sha256": "e4aa3b58ed884f7d1f8fffee43b260261cc2b4d3a867fda942919f439d2bce17"
+          }
+        ],
+        "maxEntities": 2111,
+        "maxClaims": 1847
+      },
+      "targets": {
+        "people": [
+          {
+            "name": "手塚治虫",
+            "qid": "Q193300"
+          }
+        ],
+        "works": [
+          {
+            "name": "鉄腕アトム",
+            "qid": "Q673036",
+            "isbn13": "9784091480866"
+          }
+        ]
+      },
+      "existingApprovalSha256": "e4c3ddffcde48ac704c9b6314503175787789eef69c7bf427630f1ae946041af"
+    }
+  },
+  "requestSha256": "f6dafe2918c68170c1ad046adfd7776290868ad25ad81aa3eecfa2fb2b3955f8",
+  "kind": "collect-review",
+  "phase": "retry-wait",
+  "generation": 10051,
+  "attempts": 1,
+  "workerId": "plunode-wsl",
+  "sourceCommit": "916cc77d3aeab22650e309b694661cac07a72a47",
+  "updatedAt": "2026-10-26T16:50:05+00:00",
+  "result": {
+    "jobId": "issue-25-manga23-20261019-repair1-r0002-df04edc80fbfff8d",
+    "collectionUnchanged": false,
+    "reviewUnchanged": false,
+    "transportAttemptsAdded": 0,
+    "reviewDirectory": "/home/isinxnisi/.local/share/plunode-collection-worker/runtime/datasets/manga-collection/workflow-reviews/issue-25-manga23-20261019-repair1-r0002-df04edc80fbfff8d-review-42eff9594609d2a5",
+    "reviewOnly": true,
+    "formalAcceptance": false,
+    "publicApply": false,
+    "counts": {
+      "entities": 0,
+      "claims": 0,
+      "sources": 0,
+      "citations": 0
+    },
+    "heldClaims": 0
+  },
+  "executionComplete": true,
+  "reviewReference": {
+    "file": "datasets/manga-collection/workflow-reviews/issue-25-manga23-20261019-repair1-r0002-df04edc80fbfff8d-review-42eff9594609d2a5/review-manifest.json",
+    "sha256": "b1efb2dab025163659e0a06a6df5a50f64dfd1441cd7ece43420b3659b3ae3e2"
+  },
+  "decisionDrafts": [],
+  "message": "Command '['git', '-c', 'http.version=HTTP/2', '-c', 'http.lowSpeedLimit=1', '-c', 'http.lowSpeedTime=20', '-c', 'credential.helper=!\"/mnt/c/Program Files/Git/mingw64/libexec/git-core/git-credential-manager.exe\"', '-c', 'credential.interactive=never', '--git-dir=/home/isinxnisi/.local/share/plunode-collection-worker-phase-b-20261020/control.git', 'credential', 'fill']' timed out after 90 seconds",
+  "retryAt": 1793033615.8361814
+}

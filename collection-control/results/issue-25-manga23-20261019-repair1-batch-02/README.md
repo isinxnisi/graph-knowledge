@@ -1,8 +1,10 @@
 # 収集Workerの処理結果
 
-issue-25-manga23-20261019-repair1-batch-02：**completed**
+issue-25-manga23-20261019-repair1-batch-02：**retry-wait**
 
 公開apply・restore・本番配置は行わない。承認者名は本人認証の証明ではない。
+
+Command '['git', '-c', 'http.version=HTTP/2', '-c', 'http.lowSpeedLimit=1', '-c', 'http.lowSpeedTime=20', '-c', 'credential.helper=!"/mnt/c/Program Files/Git/mingw64/libexec/git-core/git-credential-manager.exe"', '-c', 'credential.interactive=never', '--git-dir=/home/isinxnisi/.local/share/plunode-collection-worker-phase-b-20261020/control.git', 'credential', 'fill']' timed out after 90 seconds
 
 ```json
 {
@@ -18,6 +20,3 @@ issue-25-manga23-20261019-repair1-batch-02：**completed**
 
 収集候補／正式受入済み未適用／公開snapshot収録は下記資料の接続ごとの状態を参照。公開画面の実探索確認ではない。
 
-- [datasets/manga-collection/workflow-reviews/issue-25-manga23-20261019-repair1-r0002-df04edc80fbfff8d-review-42eff9594609d2a5/README.md](../../artifacts/issue-25-manga23-20261019-repair1-batch-02/datasets/manga-collection/workflow-reviews/issue-25-manga23-20261019-repair1-r0002-df04edc80fbfff8d-review-42eff9594609d2a5/README.md)
-- [datasets/manga-collection/workflow-reviews/issue-25-manga23-20261019-repair1-r0002-df04edc80fbfff8d-review-42eff9594609d2a5/decision-request.json](../../artifacts/issue-25-manga23-20261019-repair1-batch-02/datasets/manga-collection/workflow-reviews/issue-25-manga23-20261019-repair1-r0002-df04edc80fbfff8d-review-42eff9594609d2a5/decision-request.json)
-- [datasets/manga-collection/workflow-reviews/issue-25-manga23-20261019-repair1-r0002-df04edc80fbfff8d-review-42eff9594609d2a5/exploration-paths.json](../../artifacts/issue-25-manga23-20261019-repair1-batch-02/datasets/manga-collection/workflow-reviews/issue-25-manga23-20261019-repair1-r0002-df04edc80fbfff8d-review-42eff9594609d2a5/exploration-paths.json)
