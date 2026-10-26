@@ -1,0 +1,2527 @@
+[
+  {
+    "candidateId": "candidate:Q76479$31CFF1E6-A537-40F3-90DD-99C6FECC98C1",
+    "claimId": "a310275e-1c3b-4323-989d-5ad5ab6495cd",
+    "subjectQid": "Q164562",
+    "workQid": "Q76479",
+    "proposedRole": "DIRECTING",
+    "status": "held",
+    "reasons": [
+      "person-credit-excerpt-not-supplemented-in-this-minimum"
+    ],
+    "scope": {
+      "level": "film-work-record",
+      "cut": null,
+      "territory": null,
+      "language": null,
+      "interpretation": "credit scope unresolved across versions; null is not all cuts"
+    },
+    "scopeInterpretation": "null is unstructured, not all cuts/territories/languages",
+    "wikidata": {
+      "entity": "Q76479",
+      "property": "P57",
+      "statement_id": "Q76479$31CFF1E6-A537-40F3-90DD-99C6FECC98C1",
+      "entity_revision": 2560598109,
+      "acquired_at": "2026-10-25T18:34:10.102536+00:00",
+      "raw_statement": {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P57",
+          "hash": "344d166eaa27804b2bf0395b1fdae72fd1142de2",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 164562,
+              "id": "Q164562"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q76479$31CFF1E6-A537-40F3-90DD-99C6FECC98C1",
+        "rank": "normal",
+        "references": [
+          {
+            "hash": "3910a55cde36f72fbfc020500cd1fd0f85d6f3b5",
+            "snaks": {
+              "P248": [
+                {
+                  "snaktype": "value",
+                  "property": "P248",
+                  "hash": "8d47e4ff1432a81ed9918a0b2603e6b1d1af79ce",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 15706812,
+                      "id": "Q15706812"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P248"
+            ]
+          }
+        ]
+      }
+    },
+    "priorCitations": [
+      {
+        "source_id": "WD:Q76479",
+        "locator": "P57/Q76479$31CFF1E6-A537-40F3-90DD-99C6FECC98C1",
+        "stance": "support-as-recorded",
+        "statement_url": "https://www.wikidata.org/wiki/Q76479#P57",
+        "revision_url": "https://www.wikidata.org/w/index.php?oldid=2560598109",
+        "upstream_references_checked": false
+      },
+      {
+        "source_id": "S09",
+        "locator": "Année de production / Crédits / Casting / introduction",
+        "stance": "support",
+        "original_role_heading": null,
+        "review_scope": "exact film/person/role listed in source_reviews.json"
+      }
+    ],
+    "citationIds": [
+      "184a6004-4327-4628-8740-739a837d08fb"
+    ],
+    "potentialExisting": []
+  },
+  {
+    "candidateId": "candidate:q104137$1B0E36E9-AA57-43D1-81FA-2CC6987D5367",
+    "claimId": "ec446d93-3ef9-4bad-9639-c7478f9fb5f1",
+    "subjectQid": "Q150943",
+    "workQid": "Q104137",
+    "proposedRole": "ACTING",
+    "status": "held",
+    "reasons": [
+      "person-credit-excerpt-not-supplemented-in-this-minimum"
+    ],
+    "scope": {
+      "level": "film-work-record",
+      "cut": null,
+      "territory": null,
+      "language": null,
+      "interpretation": "credit scope unresolved across versions; null is not all cuts"
+    },
+    "scopeInterpretation": "null is unstructured, not all cuts/territories/languages",
+    "wikidata": {
+      "entity": "Q104137",
+      "property": "P161",
+      "statement_id": "q104137$1B0E36E9-AA57-43D1-81FA-2CC6987D5367",
+      "entity_revision": 2560711092,
+      "acquired_at": "2026-10-25T18:34:10.102536+00:00",
+      "raw_statement": {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P161",
+          "hash": "bc12405601b492046e2f32fb1be14e3a835aa4dd",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 150943,
+              "id": "Q150943"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "qualifiers": {
+          "P4633": [
+            {
+              "snaktype": "value",
+              "property": "P4633",
+              "hash": "f8602eb1a37724830053965db722b923da8a1a40",
+              "datavalue": {
+                "value": "\"Little\" Bill Daggett",
+                "type": "string"
+              },
+              "datatype": "string"
+            }
+          ]
+        },
+        "qualifiers-order": [
+          "P4633"
+        ],
+        "id": "q104137$1B0E36E9-AA57-43D1-81FA-2CC6987D5367",
+        "rank": "normal",
+        "references": [
+          {
+            "hash": "fa278ebfc458360e5aed63d5058cca83c46134f1",
+            "snaks": {
+              "P143": [
+                {
+                  "snaktype": "value",
+                  "property": "P143",
+                  "hash": "e4f6d9441d0600513c4533c672b5ab472dc73694",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 328,
+                      "id": "Q328"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P143"
+            ]
+          },
+          {
+            "hash": "7b47ed62604aed79ff557cb195b48365e6fec600",
+            "snaks": {
+              "P854": [
+                {
+                  "snaktype": "value",
+                  "property": "P854",
+                  "hash": "9be47a4ad515efe208a9c43352ba729e5cf992bb",
+                  "datavalue": {
+                    "value": "http://www.the-numbers.com/movie/Unforgiven",
+                    "type": "string"
+                  },
+                  "datatype": "url"
+                }
+              ],
+              "P813": [
+                {
+                  "snaktype": "value",
+                  "property": "P813",
+                  "hash": "43550dfd78edabc8a02fcf1493a3355e8d09b5ba",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2016-05-13T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P854",
+              "P813"
+            ]
+          },
+          {
+            "hash": "6dcb1f464443b88ba40aabd222a9826976acc94f",
+            "snaks": {
+              "P854": [
+                {
+                  "snaktype": "value",
+                  "property": "P854",
+                  "hash": "2619acd98071c4b3b5a759eb05ff87320f560d84",
+                  "datavalue": {
+                    "value": "http://stopklatka.pl/film/bez-przebaczenia",
+                    "type": "string"
+                  },
+                  "datatype": "url"
+                }
+              ],
+              "P813": [
+                {
+                  "snaktype": "value",
+                  "property": "P813",
+                  "hash": "43550dfd78edabc8a02fcf1493a3355e8d09b5ba",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2016-05-13T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P854",
+              "P813"
+            ]
+          },
+          {
+            "hash": "6b8b98d863836ccef7970c3f97d3b2dba15acd25",
+            "snaks": {
+              "P854": [
+                {
+                  "snaktype": "value",
+                  "property": "P854",
+                  "hash": "1db48ad98e8c580fdfd811a2c8d4d9d9f8b18786",
+                  "datavalue": {
+                    "value": "http://www.imdb.com/title/tt0105695/fullcredits",
+                    "type": "string"
+                  },
+                  "datatype": "url"
+                }
+              ],
+              "P813": [
+                {
+                  "snaktype": "value",
+                  "property": "P813",
+                  "hash": "43550dfd78edabc8a02fcf1493a3355e8d09b5ba",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2016-05-13T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P854",
+              "P813"
+            ]
+          },
+          {
+            "hash": "db23d868631ec52beabbc036e8a4ad0ca729a7ef",
+            "snaks": {
+              "P854": [
+                {
+                  "snaktype": "value",
+                  "property": "P854",
+                  "hash": "ee2ab246be266654e5427b6d5ebc7e0dbdfabae6",
+                  "datavalue": {
+                    "value": "http://www.allocine.fr/film/fichefilm_gen_cfilm=7663.html",
+                    "type": "string"
+                  },
+                  "datatype": "url"
+                }
+              ],
+              "P813": [
+                {
+                  "snaktype": "value",
+                  "property": "P813",
+                  "hash": "43550dfd78edabc8a02fcf1493a3355e8d09b5ba",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2016-05-13T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P854",
+              "P813"
+            ]
+          },
+          {
+            "hash": "dc3b5067c6a79d4090fce433859165b3f20121ed",
+            "snaks": {
+              "P854": [
+                {
+                  "snaktype": "value",
+                  "property": "P854",
+                  "hash": "b0ad8b95f9e8a0fc94fc6f6ac7c172bae7c05310",
+                  "datavalue": {
+                    "value": "http://www.metacritic.com/movie/unforgiven",
+                    "type": "string"
+                  },
+                  "datatype": "url"
+                }
+              ],
+              "P813": [
+                {
+                  "snaktype": "value",
+                  "property": "P813",
+                  "hash": "43550dfd78edabc8a02fcf1493a3355e8d09b5ba",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2016-05-13T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P854",
+              "P813"
+            ]
+          },
+          {
+            "hash": "6b450d34cec7b33b9902e63400e60666d4196280",
+            "snaks": {
+              "P854": [
+                {
+                  "snaktype": "value",
+                  "property": "P854",
+                  "hash": "91cad4a18cd906bf1e574d657d1370010832bae6",
+                  "datavalue": {
+                    "value": "http://www.bbfc.co.uk/releases/unforgiven-1970-0",
+                    "type": "string"
+                  },
+                  "datatype": "url"
+                }
+              ],
+              "P813": [
+                {
+                  "snaktype": "value",
+                  "property": "P813",
+                  "hash": "43550dfd78edabc8a02fcf1493a3355e8d09b5ba",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2016-05-13T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P854",
+              "P813"
+            ]
+          }
+        ]
+      }
+    },
+    "priorCitations": [
+      {
+        "source_id": "WD:Q104137",
+        "locator": "P161/q104137$1B0E36E9-AA57-43D1-81FA-2CC6987D5367",
+        "stance": "support-as-recorded",
+        "statement_url": "https://www.wikidata.org/wiki/Q104137#P161",
+        "revision_url": "https://www.wikidata.org/w/index.php?oldid=2560711092",
+        "upstream_references_checked": false
+      },
+      {
+        "source_id": "S10",
+        "locator": "Year of production / Credits / Casting",
+        "stance": "support",
+        "original_role_heading": null,
+        "review_scope": "exact film/person/role listed in source_reviews.json"
+      }
+    ],
+    "citationIds": [
+      "f7a88f51-18d8-4856-b492-1e2695f06a7e"
+    ],
+    "potentialExisting": []
+  },
+  {
+    "candidateId": "candidate:q104137$3B57142F-2116-4265-901D-3F772622D3C1",
+    "claimId": "46ec4090-1029-4edf-9cf8-bc41011efcc6",
+    "subjectQid": "Q48337",
+    "workQid": "Q104137",
+    "proposedRole": "ACTING",
+    "status": "held",
+    "reasons": [
+      "person-credit-excerpt-not-supplemented-in-this-minimum"
+    ],
+    "scope": {
+      "level": "film-work-record",
+      "cut": null,
+      "territory": null,
+      "language": null,
+      "interpretation": "credit scope unresolved across versions; null is not all cuts"
+    },
+    "scopeInterpretation": "null is unstructured, not all cuts/territories/languages",
+    "wikidata": {
+      "entity": "Q104137",
+      "property": "P161",
+      "statement_id": "q104137$3B57142F-2116-4265-901D-3F772622D3C1",
+      "entity_revision": 2560711092,
+      "acquired_at": "2026-10-25T18:34:10.102536+00:00",
+      "raw_statement": {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P161",
+          "hash": "a616c970600048ad7f1811a5ad6f6a108f58e6b0",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 48337,
+              "id": "Q48337"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "qualifiers": {
+          "P4633": [
+            {
+              "snaktype": "value",
+              "property": "P4633",
+              "hash": "0d08197a47db58e63158771981467b6a1d56a049",
+              "datavalue": {
+                "value": "Ned Logan",
+                "type": "string"
+              },
+              "datatype": "string"
+            }
+          ]
+        },
+        "qualifiers-order": [
+          "P4633"
+        ],
+        "id": "q104137$3B57142F-2116-4265-901D-3F772622D3C1",
+        "rank": "normal",
+        "references": [
+          {
+            "hash": "fa278ebfc458360e5aed63d5058cca83c46134f1",
+            "snaks": {
+              "P143": [
+                {
+                  "snaktype": "value",
+                  "property": "P143",
+                  "hash": "e4f6d9441d0600513c4533c672b5ab472dc73694",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 328,
+                      "id": "Q328"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P143"
+            ]
+          },
+          {
+            "hash": "7b47ed62604aed79ff557cb195b48365e6fec600",
+            "snaks": {
+              "P854": [
+                {
+                  "snaktype": "value",
+                  "property": "P854",
+                  "hash": "9be47a4ad515efe208a9c43352ba729e5cf992bb",
+                  "datavalue": {
+                    "value": "http://www.the-numbers.com/movie/Unforgiven",
+                    "type": "string"
+                  },
+                  "datatype": "url"
+                }
+              ],
+              "P813": [
+                {
+                  "snaktype": "value",
+                  "property": "P813",
+                  "hash": "43550dfd78edabc8a02fcf1493a3355e8d09b5ba",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2016-05-13T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P854",
+              "P813"
+            ]
+          },
+          {
+            "hash": "6dcb1f464443b88ba40aabd222a9826976acc94f",
+            "snaks": {
+              "P854": [
+                {
+                  "snaktype": "value",
+                  "property": "P854",
+                  "hash": "2619acd98071c4b3b5a759eb05ff87320f560d84",
+                  "datavalue": {
+                    "value": "http://stopklatka.pl/film/bez-przebaczenia",
+                    "type": "string"
+                  },
+                  "datatype": "url"
+                }
+              ],
+              "P813": [
+                {
+                  "snaktype": "value",
+                  "property": "P813",
+                  "hash": "43550dfd78edabc8a02fcf1493a3355e8d09b5ba",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2016-05-13T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P854",
+              "P813"
+            ]
+          },
+          {
+            "hash": "6b8b98d863836ccef7970c3f97d3b2dba15acd25",
+            "snaks": {
+              "P854": [
+                {
+                  "snaktype": "value",
+                  "property": "P854",
+                  "hash": "1db48ad98e8c580fdfd811a2c8d4d9d9f8b18786",
+                  "datavalue": {
+                    "value": "http://www.imdb.com/title/tt0105695/fullcredits",
+                    "type": "string"
+                  },
+                  "datatype": "url"
+                }
+              ],
+              "P813": [
+                {
+                  "snaktype": "value",
+                  "property": "P813",
+                  "hash": "43550dfd78edabc8a02fcf1493a3355e8d09b5ba",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2016-05-13T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P854",
+              "P813"
+            ]
+          },
+          {
+            "hash": "db23d868631ec52beabbc036e8a4ad0ca729a7ef",
+            "snaks": {
+              "P854": [
+                {
+                  "snaktype": "value",
+                  "property": "P854",
+                  "hash": "ee2ab246be266654e5427b6d5ebc7e0dbdfabae6",
+                  "datavalue": {
+                    "value": "http://www.allocine.fr/film/fichefilm_gen_cfilm=7663.html",
+                    "type": "string"
+                  },
+                  "datatype": "url"
+                }
+              ],
+              "P813": [
+                {
+                  "snaktype": "value",
+                  "property": "P813",
+                  "hash": "43550dfd78edabc8a02fcf1493a3355e8d09b5ba",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2016-05-13T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P854",
+              "P813"
+            ]
+          },
+          {
+            "hash": "dc3b5067c6a79d4090fce433859165b3f20121ed",
+            "snaks": {
+              "P854": [
+                {
+                  "snaktype": "value",
+                  "property": "P854",
+                  "hash": "b0ad8b95f9e8a0fc94fc6f6ac7c172bae7c05310",
+                  "datavalue": {
+                    "value": "http://www.metacritic.com/movie/unforgiven",
+                    "type": "string"
+                  },
+                  "datatype": "url"
+                }
+              ],
+              "P813": [
+                {
+                  "snaktype": "value",
+                  "property": "P813",
+                  "hash": "43550dfd78edabc8a02fcf1493a3355e8d09b5ba",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2016-05-13T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P854",
+              "P813"
+            ]
+          },
+          {
+            "hash": "6b450d34cec7b33b9902e63400e60666d4196280",
+            "snaks": {
+              "P854": [
+                {
+                  "snaktype": "value",
+                  "property": "P854",
+                  "hash": "91cad4a18cd906bf1e574d657d1370010832bae6",
+                  "datavalue": {
+                    "value": "http://www.bbfc.co.uk/releases/unforgiven-1970-0",
+                    "type": "string"
+                  },
+                  "datatype": "url"
+                }
+              ],
+              "P813": [
+                {
+                  "snaktype": "value",
+                  "property": "P813",
+                  "hash": "43550dfd78edabc8a02fcf1493a3355e8d09b5ba",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2016-05-13T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P854",
+              "P813"
+            ]
+          }
+        ]
+      }
+    },
+    "priorCitations": [
+      {
+        "source_id": "WD:Q104137",
+        "locator": "P161/q104137$3B57142F-2116-4265-901D-3F772622D3C1",
+        "stance": "support-as-recorded",
+        "statement_url": "https://www.wikidata.org/wiki/Q104137#P161",
+        "revision_url": "https://www.wikidata.org/w/index.php?oldid=2560711092",
+        "upstream_references_checked": false
+      },
+      {
+        "source_id": "S10",
+        "locator": "Year of production / Credits / Casting",
+        "stance": "support",
+        "original_role_heading": null,
+        "review_scope": "exact film/person/role listed in source_reviews.json"
+      }
+    ],
+    "citationIds": [
+      "3c788c63-994b-4de7-b504-8c07b3a5e635"
+    ],
+    "potentialExisting": []
+  },
+  {
+    "candidateId": "candidate:q104137$B226BBA0-92F8-4A47-8EC8-21697BAFADBA",
+    "claimId": "700cd727-a4b3-4cd6-b07f-01facb29d937",
+    "subjectQid": "Q43203",
+    "workQid": "Q104137",
+    "proposedRole": "DIRECTING",
+    "status": "held",
+    "reasons": [
+      "person-credit-excerpt-not-supplemented-in-this-minimum"
+    ],
+    "scope": {
+      "level": "film-work-record",
+      "cut": null,
+      "territory": null,
+      "language": null,
+      "interpretation": "credit scope unresolved across versions; null is not all cuts"
+    },
+    "scopeInterpretation": "null is unstructured, not all cuts/territories/languages",
+    "wikidata": {
+      "entity": "Q104137",
+      "property": "P57",
+      "statement_id": "q104137$B226BBA0-92F8-4A47-8EC8-21697BAFADBA",
+      "entity_revision": 2560711092,
+      "acquired_at": "2026-10-25T18:34:10.102536+00:00",
+      "raw_statement": {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P57",
+          "hash": "1a5173a359a3f659c46290f05877469200758629",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 43203,
+              "id": "Q43203"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "q104137$B226BBA0-92F8-4A47-8EC8-21697BAFADBA",
+        "rank": "normal",
+        "references": [
+          {
+            "hash": "fa278ebfc458360e5aed63d5058cca83c46134f1",
+            "snaks": {
+              "P143": [
+                {
+                  "snaktype": "value",
+                  "property": "P143",
+                  "hash": "e4f6d9441d0600513c4533c672b5ab472dc73694",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 328,
+                      "id": "Q328"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P143"
+            ]
+          },
+          {
+            "hash": "7b47ed62604aed79ff557cb195b48365e6fec600",
+            "snaks": {
+              "P854": [
+                {
+                  "snaktype": "value",
+                  "property": "P854",
+                  "hash": "9be47a4ad515efe208a9c43352ba729e5cf992bb",
+                  "datavalue": {
+                    "value": "http://www.the-numbers.com/movie/Unforgiven",
+                    "type": "string"
+                  },
+                  "datatype": "url"
+                }
+              ],
+              "P813": [
+                {
+                  "snaktype": "value",
+                  "property": "P813",
+                  "hash": "43550dfd78edabc8a02fcf1493a3355e8d09b5ba",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2016-05-13T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P854",
+              "P813"
+            ]
+          },
+          {
+            "hash": "6dcb1f464443b88ba40aabd222a9826976acc94f",
+            "snaks": {
+              "P854": [
+                {
+                  "snaktype": "value",
+                  "property": "P854",
+                  "hash": "2619acd98071c4b3b5a759eb05ff87320f560d84",
+                  "datavalue": {
+                    "value": "http://stopklatka.pl/film/bez-przebaczenia",
+                    "type": "string"
+                  },
+                  "datatype": "url"
+                }
+              ],
+              "P813": [
+                {
+                  "snaktype": "value",
+                  "property": "P813",
+                  "hash": "43550dfd78edabc8a02fcf1493a3355e8d09b5ba",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2016-05-13T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P854",
+              "P813"
+            ]
+          },
+          {
+            "hash": "5620b6c4bb3ee045c34fb988dc04a2da8d363c67",
+            "snaks": {
+              "P854": [
+                {
+                  "snaktype": "value",
+                  "property": "P854",
+                  "hash": "4a44cb2583a9c869790bd39768bdf48f77f22978",
+                  "datavalue": {
+                    "value": "http://www.imdb.com/title/tt0105695/",
+                    "type": "string"
+                  },
+                  "datatype": "url"
+                }
+              ],
+              "P813": [
+                {
+                  "snaktype": "value",
+                  "property": "P813",
+                  "hash": "43550dfd78edabc8a02fcf1493a3355e8d09b5ba",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2016-05-13T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P854",
+              "P813"
+            ]
+          },
+          {
+            "hash": "74ddcb7a8b4b490fc890414a00ab61c6b6d2be2a",
+            "snaks": {
+              "P854": [
+                {
+                  "snaktype": "value",
+                  "property": "P854",
+                  "hash": "7acf9c0956114a544bf3fd00bc71ddfb37b4e80b",
+                  "datavalue": {
+                    "value": "https://www.filmaffinity.com/en/film262344.html",
+                    "type": "string"
+                  },
+                  "datatype": "url"
+                }
+              ],
+              "P813": [
+                {
+                  "snaktype": "value",
+                  "property": "P813",
+                  "hash": "43550dfd78edabc8a02fcf1493a3355e8d09b5ba",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2016-05-13T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P854",
+              "P813"
+            ]
+          },
+          {
+            "hash": "db23d868631ec52beabbc036e8a4ad0ca729a7ef",
+            "snaks": {
+              "P854": [
+                {
+                  "snaktype": "value",
+                  "property": "P854",
+                  "hash": "ee2ab246be266654e5427b6d5ebc7e0dbdfabae6",
+                  "datavalue": {
+                    "value": "http://www.allocine.fr/film/fichefilm_gen_cfilm=7663.html",
+                    "type": "string"
+                  },
+                  "datatype": "url"
+                }
+              ],
+              "P813": [
+                {
+                  "snaktype": "value",
+                  "property": "P813",
+                  "hash": "43550dfd78edabc8a02fcf1493a3355e8d09b5ba",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2016-05-13T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P854",
+              "P813"
+            ]
+          },
+          {
+            "hash": "8f52cb8e58f17ba37bfc810044fa97ff25c5ebf8",
+            "snaks": {
+              "P854": [
+                {
+                  "snaktype": "value",
+                  "property": "P854",
+                  "hash": "f764233527e30b9e20a06b6236558688f4265d05",
+                  "datavalue": {
+                    "value": "http://www.cinemarx.ro/filme/Unforgiven-Necrutatorul-1475.html",
+                    "type": "string"
+                  },
+                  "datatype": "url"
+                }
+              ],
+              "P813": [
+                {
+                  "snaktype": "value",
+                  "property": "P813",
+                  "hash": "43550dfd78edabc8a02fcf1493a3355e8d09b5ba",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2016-05-13T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P854",
+              "P813"
+            ]
+          },
+          {
+            "hash": "6b450d34cec7b33b9902e63400e60666d4196280",
+            "snaks": {
+              "P854": [
+                {
+                  "snaktype": "value",
+                  "property": "P854",
+                  "hash": "91cad4a18cd906bf1e574d657d1370010832bae6",
+                  "datavalue": {
+                    "value": "http://www.bbfc.co.uk/releases/unforgiven-1970-0",
+                    "type": "string"
+                  },
+                  "datatype": "url"
+                }
+              ],
+              "P813": [
+                {
+                  "snaktype": "value",
+                  "property": "P813",
+                  "hash": "43550dfd78edabc8a02fcf1493a3355e8d09b5ba",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2016-05-13T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P854",
+              "P813"
+            ]
+          }
+        ]
+      }
+    },
+    "priorCitations": [
+      {
+        "source_id": "WD:Q104137",
+        "locator": "P57/q104137$B226BBA0-92F8-4A47-8EC8-21697BAFADBA",
+        "stance": "support-as-recorded",
+        "statement_url": "https://www.wikidata.org/wiki/Q104137#P57",
+        "revision_url": "https://www.wikidata.org/w/index.php?oldid=2560711092",
+        "upstream_references_checked": false
+      },
+      {
+        "source_id": "S10",
+        "locator": "Year of production / Credits / Casting",
+        "stance": "support",
+        "original_role_heading": null,
+        "review_scope": "exact film/person/role listed in source_reviews.json"
+      }
+    ],
+    "citationIds": [
+      "9b2d7e44-5a00-4b58-8c24-05e6e1534e19"
+    ],
+    "potentialExisting": []
+  },
+  {
+    "candidateId": "candidate:q184255$301FF7F2-A06A-488D-9D09-33EE54CA49DE",
+    "claimId": "66cd4918-4e6d-4d18-b429-fa4e59fcf3c5",
+    "subjectQid": "Q43203",
+    "workQid": "Q184255",
+    "proposedRole": "ACTING",
+    "status": "held",
+    "reasons": [
+      "person-credit-excerpt-not-supplemented-in-this-minimum"
+    ],
+    "scope": {
+      "level": "film-work-record",
+      "cut": null,
+      "territory": null,
+      "language": null,
+      "interpretation": "credit scope unresolved across versions; null is not all cuts"
+    },
+    "scopeInterpretation": "null is unstructured, not all cuts/territories/languages",
+    "wikidata": {
+      "entity": "Q184255",
+      "property": "P161",
+      "statement_id": "q184255$301FF7F2-A06A-488D-9D09-33EE54CA49DE",
+      "entity_revision": 2558359845,
+      "acquired_at": "2026-10-25T18:34:10.102536+00:00",
+      "raw_statement": {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P161",
+          "hash": "05b7d012d88c84e299df29ba033b82e45ba377f6",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 43203,
+              "id": "Q43203"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "q184255$301FF7F2-A06A-488D-9D09-33EE54CA49DE",
+        "rank": "normal",
+        "references": [
+          {
+            "hash": "d5847b9b6032aa8b13dae3c2dfd9ed5d114d21b3",
+            "snaks": {
+              "P143": [
+                {
+                  "snaktype": "value",
+                  "property": "P143",
+                  "hash": "5a343e7e758a4282a01316d3e959b6e653b767fc",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 11920,
+                      "id": "Q11920"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P143"
+            ]
+          },
+          {
+            "hash": "c730c69cb74892256d5faa916f5506ea40e26225",
+            "snaks": {
+              "P854": [
+                {
+                  "snaktype": "value",
+                  "property": "P854",
+                  "hash": "1418d8b5d4550fd954c7ba712f40d3cced1c463c",
+                  "datavalue": {
+                    "value": "http://www.adorocinema.com/filmes/filme-56714/",
+                    "type": "string"
+                  },
+                  "datatype": "url"
+                }
+              ],
+              "P813": [
+                {
+                  "snaktype": "value",
+                  "property": "P813",
+                  "hash": "0a7f70a2cfca079a50766dc29a6eaa6da6d07b7c",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2016-05-02T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P854",
+              "P813"
+            ]
+          },
+          {
+            "hash": "302e0325d629f7cc275f2ff8dc99c379072be0ca",
+            "snaks": {
+              "P854": [
+                {
+                  "snaktype": "value",
+                  "property": "P854",
+                  "hash": "1a1358fb5f25ae895b3720b4967be935fa5b3698",
+                  "datavalue": {
+                    "value": "http://stopklatka.pl/film/za-wszelka-cene-2004",
+                    "type": "string"
+                  },
+                  "datatype": "url"
+                }
+              ],
+              "P813": [
+                {
+                  "snaktype": "value",
+                  "property": "P813",
+                  "hash": "0a7f70a2cfca079a50766dc29a6eaa6da6d07b7c",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2016-05-02T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P854",
+              "P813"
+            ]
+          },
+          {
+            "hash": "66f2dde072aba1ff11aa3724654e99faf1573e9f",
+            "snaks": {
+              "P854": [
+                {
+                  "snaktype": "value",
+                  "property": "P854",
+                  "hash": "9f6df6e484ee4e59c19f5fdd566d89bd26b81325",
+                  "datavalue": {
+                    "value": "http://www.filmaffinity.com/es/film314359.html",
+                    "type": "string"
+                  },
+                  "datatype": "url"
+                }
+              ],
+              "P813": [
+                {
+                  "snaktype": "value",
+                  "property": "P813",
+                  "hash": "0a7f70a2cfca079a50766dc29a6eaa6da6d07b7c",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2016-05-02T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P854",
+              "P813"
+            ]
+          },
+          {
+            "hash": "24e8f535571be4aa0d1c8aa1a8d1e71fc9e1c4fc",
+            "snaks": {
+              "P854": [
+                {
+                  "snaktype": "value",
+                  "property": "P854",
+                  "hash": "bb7e3344dab092aa27a88a3c964efafb346b5e28",
+                  "datavalue": {
+                    "value": "http://www.cinematografo.it/cinedatabase/film/million-dollar-baby/44654/",
+                    "type": "string"
+                  },
+                  "datatype": "url"
+                }
+              ],
+              "P813": [
+                {
+                  "snaktype": "value",
+                  "property": "P813",
+                  "hash": "0a7f70a2cfca079a50766dc29a6eaa6da6d07b7c",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2016-05-02T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P854",
+              "P813"
+            ]
+          },
+          {
+            "hash": "55ef87eed6b1045d51a76365afa710ca4ce7d59c",
+            "snaks": {
+              "P854": [
+                {
+                  "snaktype": "value",
+                  "property": "P854",
+                  "hash": "ecc2bed81d0d7cf6506cfd5b529aae916e61d4bd",
+                  "datavalue": {
+                    "value": "http://www.metacritic.com/movie/million-dollar-baby",
+                    "type": "string"
+                  },
+                  "datatype": "url"
+                }
+              ],
+              "P813": [
+                {
+                  "snaktype": "value",
+                  "property": "P813",
+                  "hash": "0a7f70a2cfca079a50766dc29a6eaa6da6d07b7c",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2016-05-02T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P854",
+              "P813"
+            ]
+          },
+          {
+            "hash": "bea0e63117c46170f9d4fc34a99ba1e4baa4db70",
+            "snaks": {
+              "P854": [
+                {
+                  "snaktype": "value",
+                  "property": "P854",
+                  "hash": "40783a57022aef4ca464c1c6ef44ef82fbc25965",
+                  "datavalue": {
+                    "value": "http://www.allocine.fr/film/fichefilm_gen_cfilm=56714.html",
+                    "type": "string"
+                  },
+                  "datatype": "url"
+                }
+              ],
+              "P813": [
+                {
+                  "snaktype": "value",
+                  "property": "P813",
+                  "hash": "0a7f70a2cfca079a50766dc29a6eaa6da6d07b7c",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2016-05-02T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P854",
+              "P813"
+            ]
+          },
+          {
+            "hash": "c3f1ce3e704d0ce28dd49eaa6227d76947bf9a33",
+            "snaks": {
+              "P854": [
+                {
+                  "snaktype": "value",
+                  "property": "P854",
+                  "hash": "410d28745fc7f7e223df83e44b107e7eeb83d62c",
+                  "datavalue": {
+                    "value": "http://www.imdb.com/title/tt0405159/fullcredits",
+                    "type": "string"
+                  },
+                  "datatype": "url"
+                }
+              ],
+              "P813": [
+                {
+                  "snaktype": "value",
+                  "property": "P813",
+                  "hash": "0a7f70a2cfca079a50766dc29a6eaa6da6d07b7c",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2016-05-02T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P854",
+              "P813"
+            ]
+          }
+        ]
+      }
+    },
+    "priorCitations": [
+      {
+        "source_id": "WD:Q184255",
+        "locator": "P161/q184255$301FF7F2-A06A-488D-9D09-33EE54CA49DE",
+        "stance": "support-as-recorded",
+        "statement_url": "https://www.wikidata.org/wiki/Q184255#P161",
+        "revision_url": "https://www.wikidata.org/w/index.php?oldid=2558359845",
+        "upstream_references_checked": false
+      },
+      {
+        "source_id": "S11",
+        "locator": "Cast / Director / Writer / Producers / Cinematographer / MUSIC / LITERARY / DETAILS",
+        "stance": "support",
+        "original_role_heading": "Cast",
+        "review_scope": "exact film/person/role listed in source_reviews.json"
+      }
+    ],
+    "citationIds": [
+      "85ef0743-6916-4f3a-b341-202d9980e540"
+    ],
+    "potentialExisting": []
+  },
+  {
+    "candidateId": "candidate:q184255$442501B0-0AC6-4E42-B522-9B71D64E7DFD",
+    "claimId": "be664da8-8ca7-495c-b654-50257cf3bb5f",
+    "subjectQid": "Q48337",
+    "workQid": "Q184255",
+    "proposedRole": "ACTING",
+    "status": "held",
+    "reasons": [
+      "person-credit-excerpt-not-supplemented-in-this-minimum"
+    ],
+    "scope": {
+      "level": "film-work-record",
+      "cut": null,
+      "territory": null,
+      "language": null,
+      "interpretation": "credit scope unresolved across versions; null is not all cuts"
+    },
+    "scopeInterpretation": "null is unstructured, not all cuts/territories/languages",
+    "wikidata": {
+      "entity": "Q184255",
+      "property": "P161",
+      "statement_id": "q184255$442501B0-0AC6-4E42-B522-9B71D64E7DFD",
+      "entity_revision": 2558359845,
+      "acquired_at": "2026-10-25T18:34:10.102536+00:00",
+      "raw_statement": {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P161",
+          "hash": "a616c970600048ad7f1811a5ad6f6a108f58e6b0",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 48337,
+              "id": "Q48337"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "q184255$442501B0-0AC6-4E42-B522-9B71D64E7DFD",
+        "rank": "normal",
+        "references": [
+          {
+            "hash": "d5847b9b6032aa8b13dae3c2dfd9ed5d114d21b3",
+            "snaks": {
+              "P143": [
+                {
+                  "snaktype": "value",
+                  "property": "P143",
+                  "hash": "5a343e7e758a4282a01316d3e959b6e653b767fc",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 11920,
+                      "id": "Q11920"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P143"
+            ]
+          },
+          {
+            "hash": "c730c69cb74892256d5faa916f5506ea40e26225",
+            "snaks": {
+              "P854": [
+                {
+                  "snaktype": "value",
+                  "property": "P854",
+                  "hash": "1418d8b5d4550fd954c7ba712f40d3cced1c463c",
+                  "datavalue": {
+                    "value": "http://www.adorocinema.com/filmes/filme-56714/",
+                    "type": "string"
+                  },
+                  "datatype": "url"
+                }
+              ],
+              "P813": [
+                {
+                  "snaktype": "value",
+                  "property": "P813",
+                  "hash": "0a7f70a2cfca079a50766dc29a6eaa6da6d07b7c",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2016-05-02T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P854",
+              "P813"
+            ]
+          },
+          {
+            "hash": "302e0325d629f7cc275f2ff8dc99c379072be0ca",
+            "snaks": {
+              "P854": [
+                {
+                  "snaktype": "value",
+                  "property": "P854",
+                  "hash": "1a1358fb5f25ae895b3720b4967be935fa5b3698",
+                  "datavalue": {
+                    "value": "http://stopklatka.pl/film/za-wszelka-cene-2004",
+                    "type": "string"
+                  },
+                  "datatype": "url"
+                }
+              ],
+              "P813": [
+                {
+                  "snaktype": "value",
+                  "property": "P813",
+                  "hash": "0a7f70a2cfca079a50766dc29a6eaa6da6d07b7c",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2016-05-02T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P854",
+              "P813"
+            ]
+          },
+          {
+            "hash": "24e8f535571be4aa0d1c8aa1a8d1e71fc9e1c4fc",
+            "snaks": {
+              "P854": [
+                {
+                  "snaktype": "value",
+                  "property": "P854",
+                  "hash": "bb7e3344dab092aa27a88a3c964efafb346b5e28",
+                  "datavalue": {
+                    "value": "http://www.cinematografo.it/cinedatabase/film/million-dollar-baby/44654/",
+                    "type": "string"
+                  },
+                  "datatype": "url"
+                }
+              ],
+              "P813": [
+                {
+                  "snaktype": "value",
+                  "property": "P813",
+                  "hash": "0a7f70a2cfca079a50766dc29a6eaa6da6d07b7c",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2016-05-02T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P854",
+              "P813"
+            ]
+          },
+          {
+            "hash": "55ef87eed6b1045d51a76365afa710ca4ce7d59c",
+            "snaks": {
+              "P854": [
+                {
+                  "snaktype": "value",
+                  "property": "P854",
+                  "hash": "ecc2bed81d0d7cf6506cfd5b529aae916e61d4bd",
+                  "datavalue": {
+                    "value": "http://www.metacritic.com/movie/million-dollar-baby",
+                    "type": "string"
+                  },
+                  "datatype": "url"
+                }
+              ],
+              "P813": [
+                {
+                  "snaktype": "value",
+                  "property": "P813",
+                  "hash": "0a7f70a2cfca079a50766dc29a6eaa6da6d07b7c",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2016-05-02T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P854",
+              "P813"
+            ]
+          },
+          {
+            "hash": "bea0e63117c46170f9d4fc34a99ba1e4baa4db70",
+            "snaks": {
+              "P854": [
+                {
+                  "snaktype": "value",
+                  "property": "P854",
+                  "hash": "40783a57022aef4ca464c1c6ef44ef82fbc25965",
+                  "datavalue": {
+                    "value": "http://www.allocine.fr/film/fichefilm_gen_cfilm=56714.html",
+                    "type": "string"
+                  },
+                  "datatype": "url"
+                }
+              ],
+              "P813": [
+                {
+                  "snaktype": "value",
+                  "property": "P813",
+                  "hash": "0a7f70a2cfca079a50766dc29a6eaa6da6d07b7c",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2016-05-02T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P854",
+              "P813"
+            ]
+          },
+          {
+            "hash": "c3f1ce3e704d0ce28dd49eaa6227d76947bf9a33",
+            "snaks": {
+              "P854": [
+                {
+                  "snaktype": "value",
+                  "property": "P854",
+                  "hash": "410d28745fc7f7e223df83e44b107e7eeb83d62c",
+                  "datavalue": {
+                    "value": "http://www.imdb.com/title/tt0405159/fullcredits",
+                    "type": "string"
+                  },
+                  "datatype": "url"
+                }
+              ],
+              "P813": [
+                {
+                  "snaktype": "value",
+                  "property": "P813",
+                  "hash": "0a7f70a2cfca079a50766dc29a6eaa6da6d07b7c",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2016-05-02T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P854",
+              "P813"
+            ]
+          }
+        ]
+      }
+    },
+    "priorCitations": [
+      {
+        "source_id": "WD:Q184255",
+        "locator": "P161/q184255$442501B0-0AC6-4E42-B522-9B71D64E7DFD",
+        "stance": "support-as-recorded",
+        "statement_url": "https://www.wikidata.org/wiki/Q184255#P161",
+        "revision_url": "https://www.wikidata.org/w/index.php?oldid=2558359845",
+        "upstream_references_checked": false
+      },
+      {
+        "source_id": "S11",
+        "locator": "Cast / Director / Writer / Producers / Cinematographer / MUSIC / LITERARY / DETAILS",
+        "stance": "support",
+        "original_role_heading": "Cast",
+        "review_scope": "exact film/person/role listed in source_reviews.json"
+      }
+    ],
+    "citationIds": [
+      "d1bfb088-ec8f-491f-a783-e7e1a91bd74e"
+    ],
+    "potentialExisting": []
+  },
+  {
+    "candidateId": "candidate:q184255$6E39F62D-CB25-409E-8DF0-C9D4DC7A7D8B",
+    "claimId": "ed8d6cc2-016e-420b-8975-b8baa9ca6fba",
+    "subjectQid": "Q93187",
+    "workQid": "Q184255",
+    "proposedRole": "ACTING",
+    "status": "held",
+    "reasons": [
+      "person-credit-excerpt-not-supplemented-in-this-minimum"
+    ],
+    "scope": {
+      "level": "film-work-record",
+      "cut": null,
+      "territory": null,
+      "language": null,
+      "interpretation": "credit scope unresolved across versions; null is not all cuts"
+    },
+    "scopeInterpretation": "null is unstructured, not all cuts/territories/languages",
+    "wikidata": {
+      "entity": "Q184255",
+      "property": "P161",
+      "statement_id": "q184255$6E39F62D-CB25-409E-8DF0-C9D4DC7A7D8B",
+      "entity_revision": 2558359845,
+      "acquired_at": "2026-10-25T18:34:10.102536+00:00",
+      "raw_statement": {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P161",
+          "hash": "2f0082844c45bd4a0c9b799cefb8dd23b3ce3ef6",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 93187,
+              "id": "Q93187"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "q184255$6E39F62D-CB25-409E-8DF0-C9D4DC7A7D8B",
+        "rank": "normal",
+        "references": [
+          {
+            "hash": "fa278ebfc458360e5aed63d5058cca83c46134f1",
+            "snaks": {
+              "P143": [
+                {
+                  "snaktype": "value",
+                  "property": "P143",
+                  "hash": "e4f6d9441d0600513c4533c672b5ab472dc73694",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 328,
+                      "id": "Q328"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P143"
+            ]
+          },
+          {
+            "hash": "c730c69cb74892256d5faa916f5506ea40e26225",
+            "snaks": {
+              "P854": [
+                {
+                  "snaktype": "value",
+                  "property": "P854",
+                  "hash": "1418d8b5d4550fd954c7ba712f40d3cced1c463c",
+                  "datavalue": {
+                    "value": "http://www.adorocinema.com/filmes/filme-56714/",
+                    "type": "string"
+                  },
+                  "datatype": "url"
+                }
+              ],
+              "P813": [
+                {
+                  "snaktype": "value",
+                  "property": "P813",
+                  "hash": "0a7f70a2cfca079a50766dc29a6eaa6da6d07b7c",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2016-05-02T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P854",
+              "P813"
+            ]
+          },
+          {
+            "hash": "302e0325d629f7cc275f2ff8dc99c379072be0ca",
+            "snaks": {
+              "P854": [
+                {
+                  "snaktype": "value",
+                  "property": "P854",
+                  "hash": "1a1358fb5f25ae895b3720b4967be935fa5b3698",
+                  "datavalue": {
+                    "value": "http://stopklatka.pl/film/za-wszelka-cene-2004",
+                    "type": "string"
+                  },
+                  "datatype": "url"
+                }
+              ],
+              "P813": [
+                {
+                  "snaktype": "value",
+                  "property": "P813",
+                  "hash": "0a7f70a2cfca079a50766dc29a6eaa6da6d07b7c",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2016-05-02T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P854",
+              "P813"
+            ]
+          },
+          {
+            "hash": "24e8f535571be4aa0d1c8aa1a8d1e71fc9e1c4fc",
+            "snaks": {
+              "P854": [
+                {
+                  "snaktype": "value",
+                  "property": "P854",
+                  "hash": "bb7e3344dab092aa27a88a3c964efafb346b5e28",
+                  "datavalue": {
+                    "value": "http://www.cinematografo.it/cinedatabase/film/million-dollar-baby/44654/",
+                    "type": "string"
+                  },
+                  "datatype": "url"
+                }
+              ],
+              "P813": [
+                {
+                  "snaktype": "value",
+                  "property": "P813",
+                  "hash": "0a7f70a2cfca079a50766dc29a6eaa6da6d07b7c",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2016-05-02T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P854",
+              "P813"
+            ]
+          },
+          {
+            "hash": "55ef87eed6b1045d51a76365afa710ca4ce7d59c",
+            "snaks": {
+              "P854": [
+                {
+                  "snaktype": "value",
+                  "property": "P854",
+                  "hash": "ecc2bed81d0d7cf6506cfd5b529aae916e61d4bd",
+                  "datavalue": {
+                    "value": "http://www.metacritic.com/movie/million-dollar-baby",
+                    "type": "string"
+                  },
+                  "datatype": "url"
+                }
+              ],
+              "P813": [
+                {
+                  "snaktype": "value",
+                  "property": "P813",
+                  "hash": "0a7f70a2cfca079a50766dc29a6eaa6da6d07b7c",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2016-05-02T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P854",
+              "P813"
+            ]
+          },
+          {
+            "hash": "bea0e63117c46170f9d4fc34a99ba1e4baa4db70",
+            "snaks": {
+              "P854": [
+                {
+                  "snaktype": "value",
+                  "property": "P854",
+                  "hash": "40783a57022aef4ca464c1c6ef44ef82fbc25965",
+                  "datavalue": {
+                    "value": "http://www.allocine.fr/film/fichefilm_gen_cfilm=56714.html",
+                    "type": "string"
+                  },
+                  "datatype": "url"
+                }
+              ],
+              "P813": [
+                {
+                  "snaktype": "value",
+                  "property": "P813",
+                  "hash": "0a7f70a2cfca079a50766dc29a6eaa6da6d07b7c",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2016-05-02T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P854",
+              "P813"
+            ]
+          },
+          {
+            "hash": "c3f1ce3e704d0ce28dd49eaa6227d76947bf9a33",
+            "snaks": {
+              "P854": [
+                {
+                  "snaktype": "value",
+                  "property": "P854",
+                  "hash": "410d28745fc7f7e223df83e44b107e7eeb83d62c",
+                  "datavalue": {
+                    "value": "http://www.imdb.com/title/tt0405159/fullcredits",
+                    "type": "string"
+                  },
+                  "datatype": "url"
+                }
+              ],
+              "P813": [
+                {
+                  "snaktype": "value",
+                  "property": "P813",
+                  "hash": "0a7f70a2cfca079a50766dc29a6eaa6da6d07b7c",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2016-05-02T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P854",
+              "P813"
+            ]
+          }
+        ]
+      }
+    },
+    "priorCitations": [
+      {
+        "source_id": "WD:Q184255",
+        "locator": "P161/q184255$6E39F62D-CB25-409E-8DF0-C9D4DC7A7D8B",
+        "stance": "support-as-recorded",
+        "statement_url": "https://www.wikidata.org/wiki/Q184255#P161",
+        "revision_url": "https://www.wikidata.org/w/index.php?oldid=2558359845",
+        "upstream_references_checked": false
+      },
+      {
+        "source_id": "S11",
+        "locator": "Cast / Director / Writer / Producers / Cinematographer / MUSIC / LITERARY / DETAILS",
+        "stance": "support",
+        "original_role_heading": "Cast",
+        "review_scope": "exact film/person/role listed in source_reviews.json"
+      }
+    ],
+    "citationIds": [
+      "e97e62f2-f655-4296-a296-55b47c28ac86"
+    ],
+    "potentialExisting": []
+  },
+  {
+    "candidateId": "candidate:q76479$A7047A0A-A345-4BB2-AD7B-AE8A33436BE8",
+    "claimId": "872707ca-2bbc-4070-a5f0-8701fbc4558a",
+    "subjectQid": "Q317110",
+    "workQid": "Q76479",
+    "proposedRole": "ACTING",
+    "status": "held",
+    "reasons": [
+      "person-credit-excerpt-not-supplemented-in-this-minimum"
+    ],
+    "scope": {
+      "level": "film-work-record",
+      "cut": null,
+      "territory": null,
+      "language": null,
+      "interpretation": "credit scope unresolved across versions; null is not all cuts"
+    },
+    "scopeInterpretation": "null is unstructured, not all cuts/territories/languages",
+    "wikidata": {
+      "entity": "Q76479",
+      "property": "P161",
+      "statement_id": "q76479$A7047A0A-A345-4BB2-AD7B-AE8A33436BE8",
+      "entity_revision": 2560598109,
+      "acquired_at": "2026-10-25T18:34:10.102536+00:00",
+      "raw_statement": {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P161",
+          "hash": "f1cc38fffb1592ea358ddd077afa9da77be9e820",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 317110,
+              "id": "Q317110"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "qualifiers": {
+          "P1810": [
+            {
+              "snaktype": "value",
+              "property": "P1810",
+              "hash": "1a8feafe4ede1a19357951c42c0f6a084bdcaadc",
+              "datavalue": {
+                "value": "Johnny Wels",
+                "type": "string"
+              },
+              "datatype": "string"
+            }
+          ]
+        },
+        "qualifiers-order": [
+          "P1810"
+        ],
+        "id": "q76479$A7047A0A-A345-4BB2-AD7B-AE8A33436BE8",
+        "rank": "normal",
+        "references": [
+          {
+            "hash": "d5847b9b6032aa8b13dae3c2dfd9ed5d114d21b3",
+            "snaks": {
+              "P143": [
+                {
+                  "snaktype": "value",
+                  "property": "P143",
+                  "hash": "5a343e7e758a4282a01316d3e959b6e653b767fc",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 11920,
+                      "id": "Q11920"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P143"
+            ]
+          }
+        ]
+      }
+    },
+    "priorCitations": [
+      {
+        "source_id": "WD:Q76479",
+        "locator": "P161/q76479$A7047A0A-A345-4BB2-AD7B-AE8A33436BE8",
+        "stance": "support-as-recorded",
+        "statement_url": "https://www.wikidata.org/wiki/Q76479#P161",
+        "revision_url": "https://www.wikidata.org/w/index.php?oldid=2560598109",
+        "upstream_references_checked": false
+      },
+      {
+        "source_id": "S09",
+        "locator": "Année de production / Crédits / Casting / introduction",
+        "stance": "support",
+        "original_role_heading": null,
+        "review_scope": "exact film/person/role listed in source_reviews.json"
+      }
+    ],
+    "citationIds": [
+      "aef7b099-3df5-447a-a5a1-d7b56e88ba4d"
+    ],
+    "potentialExisting": []
+  },
+  {
+    "candidateId": "candidate:q76479$DCB1920A-56D0-41ED-B4BB-735AF1ECDC3F",
+    "claimId": "85967b27-ffb9-461d-b218-6c97ec3f9de1",
+    "subjectQid": "Q77405",
+    "workQid": "Q76479",
+    "proposedRole": "ACTING",
+    "status": "held",
+    "reasons": [
+      "person-credit-excerpt-not-supplemented-in-this-minimum"
+    ],
+    "scope": {
+      "level": "film-work-record",
+      "cut": null,
+      "territory": null,
+      "language": null,
+      "interpretation": "credit scope unresolved across versions; null is not all cuts"
+    },
+    "scopeInterpretation": "null is unstructured, not all cuts/territories/languages",
+    "wikidata": {
+      "entity": "Q76479",
+      "property": "P161",
+      "statement_id": "q76479$DCB1920A-56D0-41ED-B4BB-735AF1ECDC3F",
+      "entity_revision": 2560598109,
+      "acquired_at": "2026-10-25T18:34:10.102536+00:00",
+      "raw_statement": {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P161",
+          "hash": "8e50248fee446d9e6e28f65cd1f0c0b663d18bf2",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 77405,
+              "id": "Q77405"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "q76479$DCB1920A-56D0-41ED-B4BB-735AF1ECDC3F",
+        "rank": "normal",
+        "references": [
+          {
+            "hash": "d5847b9b6032aa8b13dae3c2dfd9ed5d114d21b3",
+            "snaks": {
+              "P143": [
+                {
+                  "snaktype": "value",
+                  "property": "P143",
+                  "hash": "5a343e7e758a4282a01316d3e959b6e653b767fc",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 11920,
+                      "id": "Q11920"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P143"
+            ]
+          }
+        ]
+      }
+    },
+    "priorCitations": [
+      {
+        "source_id": "WD:Q76479",
+        "locator": "P161/q76479$DCB1920A-56D0-41ED-B4BB-735AF1ECDC3F",
+        "stance": "support-as-recorded",
+        "statement_url": "https://www.wikidata.org/wiki/Q76479#P161",
+        "revision_url": "https://www.wikidata.org/w/index.php?oldid=2560598109",
+        "upstream_references_checked": false
+      },
+      {
+        "source_id": "S09",
+        "locator": "Année de production / Crédits / Casting / introduction",
+        "stance": "support",
+        "original_role_heading": null,
+        "review_scope": "exact film/person/role listed in source_reviews.json"
+      }
+    ],
+    "citationIds": [
+      "8283ba0d-594d-4347-ad7a-f101d196c81d"
+    ],
+    "potentialExisting": []
+  },
+  {
+    "candidateId": "candidate:q76479$EF2A64B1-B6BC-4535-848B-D53BA099DB4C",
+    "claimId": "362edaa7-42ca-41ec-8cee-9ae1117cb688",
+    "subjectQid": "Q43203",
+    "workQid": "Q76479",
+    "proposedRole": "ACTING",
+    "status": "held",
+    "reasons": [
+      "person-credit-excerpt-not-supplemented-in-this-minimum"
+    ],
+    "scope": {
+      "level": "film-work-record",
+      "cut": null,
+      "territory": null,
+      "language": null,
+      "interpretation": "credit scope unresolved across versions; null is not all cuts"
+    },
+    "scopeInterpretation": "null is unstructured, not all cuts/territories/languages",
+    "wikidata": {
+      "entity": "Q76479",
+      "property": "P161",
+      "statement_id": "q76479$EF2A64B1-B6BC-4535-848B-D53BA099DB4C",
+      "entity_revision": 2560598109,
+      "acquired_at": "2026-10-25T18:34:10.102536+00:00",
+      "raw_statement": {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P161",
+          "hash": "05b7d012d88c84e299df29ba033b82e45ba377f6",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 43203,
+              "id": "Q43203"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "qualifiers": {
+          "P453": [
+            {
+              "snaktype": "value",
+              "property": "P453",
+              "hash": "8965d19eda3f2a94e366fb1fbffe29a212dd135b",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 596978,
+                  "id": "Q596978"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            }
+          ],
+          "P1810": [
+            {
+              "snaktype": "value",
+              "property": "P1810",
+              "hash": "d9f81b82f0d304f59116886f0bcd746651272a6b",
+              "datavalue": {
+                "value": "Joe",
+                "type": "string"
+              },
+              "datatype": "string"
+            }
+          ]
+        },
+        "qualifiers-order": [
+          "P453",
+          "P1810"
+        ],
+        "id": "q76479$EF2A64B1-B6BC-4535-848B-D53BA099DB4C",
+        "rank": "normal",
+        "references": [
+          {
+            "hash": "d5847b9b6032aa8b13dae3c2dfd9ed5d114d21b3",
+            "snaks": {
+              "P143": [
+                {
+                  "snaktype": "value",
+                  "property": "P143",
+                  "hash": "5a343e7e758a4282a01316d3e959b6e653b767fc",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 11920,
+                      "id": "Q11920"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P143"
+            ]
+          }
+        ]
+      }
+    },
+    "priorCitations": [
+      {
+        "source_id": "WD:Q76479",
+        "locator": "P161/q76479$EF2A64B1-B6BC-4535-848B-D53BA099DB4C",
+        "stance": "support-as-recorded",
+        "statement_url": "https://www.wikidata.org/wiki/Q76479#P161",
+        "revision_url": "https://www.wikidata.org/w/index.php?oldid=2560598109",
+        "upstream_references_checked": false
+      },
+      {
+        "source_id": "S09",
+        "locator": "Année de production / Crédits / Casting / introduction",
+        "stance": "support",
+        "original_role_heading": null,
+        "review_scope": "exact film/person/role listed in source_reviews.json"
+      }
+    ],
+    "citationIds": [
+      "64daeb86-133f-43a8-8e83-bb374cbeae32"
+    ],
+    "potentialExisting": []
+  }
+]

@@ -97,6 +97,11 @@ async function target(tx: ManagedTransaction) {
 }
 
 export async function createPublicBackup(driver: Driver, database: string): Promise<PublicBackup> {
+  const guard = driver.session({ database, defaultAccessMode: "READ" });
+  try {
+    const trial = await guard.run("MATCH (s:FilmBetaState) RETURN count(s) AS n");
+    if (trial.records[0].get("n").toNumber() !== 0) throw new Error("Film beta trial cannot be exported as a public KG backup");
+  } finally { await guard.close(); }
   const session = driver.session({ database });
   try { return await session.executeRead(async tx => {
     const before = await target(tx);

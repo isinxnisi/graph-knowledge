@@ -1,0 +1,142 @@
+[
+  {
+    "id": "film-directing-20261026-draft",
+    "targetId": "DIRECTING",
+    "kind": "role",
+    "change": "addition",
+    "beforeHash": null,
+    "afterHash": "a4c6d3607165c97e6ecf252b6cd6b79dbb3f39abb17c12062300996be65aae73",
+    "status": "draft",
+    "reviewer": null,
+    "reviewedAt": null,
+    "outcome": "qualifier",
+    "motivation": "Issue #43の狭い意味でbeta評価し、正式語彙承認を別途記録する。",
+    "evidenceExample": "AFI Million Dollar Baby: Clint Eastwood / Dir",
+    "counterexample": "監修、製作、撮影監督、会社のdirector、追加撮影監督だけの担当。",
+    "predicateRationale": "人物→作品の制作関与を限定し、CONTRIBUTED_TOの端点・方向・命題を変更しない。声・吹替等の除外は関与そのものの否定ではなく、このRoleへの未対応。",
+    "comparisons": [
+      {
+        "roleId": "SCRIPT_WRITING",
+        "relation": "distinct",
+        "rationale": "脚本を書く担当と演出・実演は別。兼務は別Claimで確認する。"
+      },
+      {
+        "roleId": "SUPERVISION",
+        "relation": "distinct",
+        "rationale": "監修・内容確認を監督や出演へ変換しない。"
+      },
+      {
+        "roleId": "PRODUCING",
+        "relation": "distinct",
+        "rationale": "企画・製作統括と演出・実演は別。producer creditから推論しない。"
+      },
+      {
+        "roleId": "STORY_CO_CREATION",
+        "relation": "distinct",
+        "rationale": "ストーリー共同制作を演出・実演へ変換しない。"
+      },
+      {
+        "roleId": "AUTHORSHIP",
+        "relation": "distinct",
+        "rationale": "著者クレジットだけでは演出・実演の工程を認定しない。"
+      },
+      {
+        "roleId": "CREATION",
+        "relation": "distinct",
+        "rationale": "作という資料表記から監督・出演を推論しない。"
+      },
+      {
+        "roleId": "DRAWING",
+        "relation": "distinct",
+        "rationale": "漫画を描く担当と演出・実演は異なる。"
+      },
+      {
+        "roleId": "ORIGINAL_STORY",
+        "relation": "distinct",
+        "rationale": "漫画制作の原作担当とも翻案元原著者とも異なる。"
+      },
+      {
+        "roleId": "ACTING",
+        "relation": "distinct",
+        "rationale": "演出と実演は別の制作関与で、兼務は独立Claim。"
+      }
+    ],
+    "impacts": {
+      "claims": "一Claim一Role。既存8 Roleと過去Claimは保持。映画2 Claimの正式受入は別判断。",
+      "conditions": "other-works rev3の各段を独立指定。",
+      "translations": "固定した日英表示。",
+      "presentation": "未正式受入のbeta試験表示。"
+    },
+    "rationale": "Issue #40の定義と既存8 Roleおよび相互の差を保持。scope:nullは未構造化。"
+  },
+  {
+    "id": "film-acting-20261026-draft",
+    "targetId": "ACTING",
+    "kind": "role",
+    "change": "addition",
+    "beforeHash": null,
+    "afterHash": "78640b719b6a10db555abb33b3ac28ff2f297c5bc81ffd200cc9dc0b6b7e465e",
+    "status": "draft",
+    "reviewer": null,
+    "reviewedAt": null,
+    "outcome": "qualifier",
+    "motivation": "Issue #43の狭い意味でbeta評価し、正式語彙承認を別途記録する。",
+    "evidenceExample": "AFI Unforgiven: CAST / Clint Eastwood / Bill Munny",
+    "counterexample": "声の出演、吹替、歌唱だけ、スタントだけ、アーカイブ映像の再使用、本人インタビューだけ。",
+    "predicateRationale": "人物→作品の制作関与を限定し、CONTRIBUTED_TOの端点・方向・命題を変更しない。声・吹替等の除外は関与そのものの否定ではなく、このRoleへの未対応。",
+    "comparisons": [
+      {
+        "roleId": "SCRIPT_WRITING",
+        "relation": "distinct",
+        "rationale": "脚本を書く担当と演出・実演は別。兼務は別Claimで確認する。"
+      },
+      {
+        "roleId": "SUPERVISION",
+        "relation": "distinct",
+        "rationale": "監修・内容確認を監督や出演へ変換しない。"
+      },
+      {
+        "roleId": "PRODUCING",
+        "relation": "distinct",
+        "rationale": "企画・製作統括と演出・実演は別。producer creditから推論しない。"
+      },
+      {
+        "roleId": "STORY_CO_CREATION",
+        "relation": "distinct",
+        "rationale": "ストーリー共同制作を演出・実演へ変換しない。"
+      },
+      {
+        "roleId": "AUTHORSHIP",
+        "relation": "distinct",
+        "rationale": "著者クレジットだけでは演出・実演の工程を認定しない。"
+      },
+      {
+        "roleId": "CREATION",
+        "relation": "distinct",
+        "rationale": "作という資料表記から監督・出演を推論しない。"
+      },
+      {
+        "roleId": "DRAWING",
+        "relation": "distinct",
+        "rationale": "漫画を描く担当と演出・実演は異なる。"
+      },
+      {
+        "roleId": "ORIGINAL_STORY",
+        "relation": "distinct",
+        "rationale": "漫画制作の原作担当とも翻案元原著者とも異なる。"
+      },
+      {
+        "roleId": "DIRECTING",
+        "relation": "distinct",
+        "rationale": "演出と実演は別の制作関与で、兼務は独立Claim。"
+      }
+    ],
+    "impacts": {
+      "claims": "一Claim一Role。既存8 Roleと過去Claimは保持。映画2 Claimの正式受入は別判断。",
+      "conditions": "other-works rev3の各段を独立指定。",
+      "translations": "固定した日英表示。",
+      "presentation": "未正式受入のbeta試験表示。"
+    },
+    "rationale": "Issue #40の定義と既存8 Roleおよび相互の差を保持。scope:nullは未構造化。"
+  }
+]

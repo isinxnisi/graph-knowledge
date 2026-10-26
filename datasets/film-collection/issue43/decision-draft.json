@@ -1,0 +1,134 @@
+{
+  "schemaVersion": 1,
+  "decisionId": "film-issue43-two-claims-20261026",
+  "status": "draft-not-approved",
+  "humanDecision": {
+    "actorType": "human",
+    "reviewer": null,
+    "decidedAt": null,
+    "statement": null
+  },
+  "approvalScope": "formal-record-acceptance-and-release-preparation-only",
+  "applyAuthorized": {
+    "local": false,
+    "beta": false,
+    "vps": false
+  },
+  "review": {
+    "file": "datasets/film-collection/issue43/review/review-manifest.json",
+    "sha256": "7dbaa23023ea1ac7ee89131efd77d1bb7254a81a47f77385674948a8fc93aa7a"
+  },
+  "referenceArtifacts": [
+    {
+      "file": "datasets/film-collection/issue43/review/context.json",
+      "sha256": "0ac7cefddeaca4eec686fdffee5ccddf8ca0b4277b511242465fa9fe30740ec8"
+    },
+    {
+      "file": "datasets/film-collection/issue43/review/decision-request.json",
+      "sha256": "122ea82800f2f88b6fa4e1e33115a4965a1278ef6d7c56e656ecd4c1f50c83a2"
+    },
+    {
+      "file": "datasets/film-collection/issue43/review/proposed-records.json",
+      "sha256": "a911874c6a0cde6bf9b1bfcc4d0f413fcd9f4b9b378787bca661b261ee959b76"
+    },
+    {
+      "file": "datasets/film-collection/issue43/review/review-manifest.json",
+      "sha256": "7dbaa23023ea1ac7ee89131efd77d1bb7254a81a47f77385674948a8fc93aa7a"
+    },
+    {
+      "file": "datasets/film-collection/issue43/review/review.json",
+      "sha256": "f1f6107ec4c172435b02c475b9c2c9a781b8e4656915f2c00b2b2bd326eeb3b6"
+    },
+    {
+      "file": "datasets/film-collection/issue43/recipe.json",
+      "sha256": "9d88c1bda2830c6ed510e23a3b27ff360397dc252d29d9c0439d10f98564171e"
+    },
+    {
+      "file": "datasets/film-collection/issue43/trial/bundle-manifest.json",
+      "sha256": "76045b30555e0c1cb5021fde068c605ab554532d68afb3e3ed2b1f7ad36f5811"
+    },
+    {
+      "file": "datasets/film-collection/issue43/comparison.json.gz",
+      "sha256": "54698243c17763f8c6fdd95c1ee4cda253bca4ea678c30feaf4e4473b4019b8c"
+    }
+  ],
+  "acceptedRecordIds": {
+    "entities": [
+      "490ee589-76db-4a5e-8923-13d24b7cb3a2",
+      "604eb49e-df41-4157-8b49-bd92a0d93ad4",
+      "805b9630-cd9a-4931-8cde-0bcb92bf8a9f"
+    ],
+    "claims": [
+      "34b41d23-f4e6-4fc6-aa6f-2905f3c2a890",
+      "4c88b8e8-154d-47ad-bf82-f19876ecaebd"
+    ],
+    "sources": [
+      "54461ad1-e977-4b68-a2bf-7f972ff29002",
+      "c198ac9b-8baa-4ec2-a880-6ce9de171fcb"
+    ],
+    "citations": [
+      "8a6fe8f5-f3b3-4d08-8ad9-60eae3f8a583",
+      "dba11353-9e7f-47bc-86bb-9f2e5f8a6d6e"
+    ]
+  },
+  "recordSha256": {
+    "entities": {
+      "490ee589-76db-4a5e-8923-13d24b7cb3a2": "1fe15223e00ff8c2cc986eeadafd2b95d76724be0d0f531e07adf080d0174474",
+      "604eb49e-df41-4157-8b49-bd92a0d93ad4": "466f65051a847d74530ba6a9b34dbc82016e3a2a2c86aaa56856e307fcb14695",
+      "805b9630-cd9a-4931-8cde-0bcb92bf8a9f": "e0cfd5abd64649e64b572184f576d7f360fcc1cb3086ae071ef568d5d0c39370"
+    },
+    "claims": {
+      "34b41d23-f4e6-4fc6-aa6f-2905f3c2a890": "5c9bac955699442bd0813caa23a1928ef82d35fb0fccd7cd39be21f4bda7a0a4",
+      "4c88b8e8-154d-47ad-bf82-f19876ecaebd": "0661ca6c346efeb884e96b8e1fbe512100db3c9a4eecfcf73485461b162c494b"
+    },
+    "sources": {
+      "54461ad1-e977-4b68-a2bf-7f972ff29002": "e4dd517c33718ebffe76ee2805b967768d52153b08da3e2136b5c56e33f7f53a",
+      "c198ac9b-8baa-4ec2-a880-6ce9de171fcb": "b645812809422c48e52f7e30d1899ba2bfc6fd9f687e1d321f5739056b917f97"
+    },
+    "citations": {
+      "8a6fe8f5-f3b3-4d08-8ad9-60eae3f8a583": "7f2a22242d6b7dfbf89e3336e684f65064f4c7e579c104c17b4fe00fa48d3ca5",
+      "dba11353-9e7f-47bc-86bb-9f2e5f8a6d6e": "943c0a22e289bc1f17c44a32e68d98f53a87e89d0f74b7ffed3b3141ba78d60c"
+    }
+  },
+  "scopeByClaim": [
+    {
+      "id": "34b41d23-f4e6-4fc6-aa6f-2905f3c2a890",
+      "subjectId": "490ee589-76db-4a5e-8923-13d24b7cb3a2",
+      "objectId": "805b9630-cd9a-4931-8cde-0bcb92bf8a9f",
+      "predicate": "CONTRIBUTED_TO",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "contribution": {
+        "roleId": "DIRECTING",
+        "scope": null
+      },
+      "organizationParticipation": null,
+      "eventParticipation": null
+    },
+    {
+      "id": "4c88b8e8-154d-47ad-bf82-f19876ecaebd",
+      "subjectId": "490ee589-76db-4a5e-8923-13d24b7cb3a2",
+      "objectId": "604eb49e-df41-4157-8b49-bd92a0d93ad4",
+      "predicate": "CONTRIBUTED_TO",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "contribution": {
+        "roleId": "ACTING",
+        "scope": null
+      },
+      "organizationParticipation": null,
+      "eventParticipation": null
+    }
+  ],
+  "baseRelease": "manga-issue-34-obata-drawing-20261023",
+  "baseRevision": "b74a4b00-9454-412f-af5d-1317713a543c",
+  "releaseId": "film-issue43-two-claims-20261026",
+  "identityDecision": null,
+  "sourceKind": "film-discovery-v1"
+}

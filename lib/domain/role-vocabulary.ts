@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { vocabularyEntrySchema, vocabularyHash, vocabularyReviewSchema } from "./vocabulary";
-import { CONTRIBUTION_ROLE_IDS, roleIdSchema } from "./contribution";
+import { ADOPTED_CONTRIBUTION_ROLE_IDS as CONTRIBUTION_ROLE_IDS, roleIdSchema } from "./contribution";
 import { contributionLabels } from "../i18n/contribution";
 const text = z.string().trim().min(1);
 const comparisons = z.array(z.strictObject({ roleId: roleIdSchema, relation: z.enum(["same", "narrower", "overlap", "distinct"]), rationale: text }));
@@ -35,6 +35,7 @@ export function checkRoleVocabulary(catalogInput: unknown, baselineInput: unknow
   if (new Set(catalog.entries.map((entry) => entry.id)).size !== catalog.entries.length) errors.push("Duplicate role ID");
   for (const id of CONTRIBUTION_ROLE_IDS) if (!catalog.entries.some((entry) => entry.id === id)) errors.push(`Missing role ${id}`);
   for (const entry of catalog.entries) {
+    if (!(CONTRIBUTION_ROLE_IDS as readonly string[]).includes(entry.id)) errors.push(entry.id + ": pending role cannot enter the adopted catalog");
     for (const category of ["include", "exclude", "boundary"]) if (!entry.meaning.examples.some((example) => example.category === category)) errors.push(`${entry.id}: missing ${category}`);
     if (entry.translations.ja?.label !== contributionLabels().roles[entry.id]) errors.push(`${entry.id}: runtime label mismatch`);
     const ids = entry.comparisons.map((item) => item.roleId);

@@ -44,3 +44,6 @@ playwright-report/
 /.local/collection-jobs/
 /.local/collection-trials/
 /.local/acceptance-sequences/
+
+# Issue43 private trial runs and unsigned preparation history
+/.local/film43/

@@ -11,7 +11,7 @@ def evidence_module(w):
 
 
 def source_directory(context):
-    return Path(context['evidenceDirectory'] if context.get('sourceKind') == 'saved-evidence-v1' else context['jobDirectory'])
+    return Path(context['evidenceDirectory'] if context.get('sourceKind') in ['saved-evidence-v1', 'film-discovery-v1'] else context['jobDirectory'])
 
 
 def observe(args, w):
@@ -70,6 +70,8 @@ def bundle(directory, w):
     """Only the immutable Task1 format; recommendations remain non-authoritative."""
     directory = directory.resolve()
     manifest = w.read(directory / 'review-manifest.json')
+    if manifest.get('sourceKind') == 'film-discovery-v1':
+        return w.load('film_review_bundle', w.CODE_ROOT / 'scripts/collection-film.py').bundle(directory, w)
     if manifest.get('sourceKind') == 'saved-evidence-v1':
         return evidence_module(w).bundle(directory, w)
     w.require(manifest['schemaVersion'] == 1 and manifest['authority'] == 'pending-human-review-only', 'Unsupported review format')
@@ -151,6 +153,8 @@ def template(args, w):
               'recordSha256': {f: {r['id']: w.digest(r) for r in selected[f]} for f in w.FIELDS},
               'scopeByClaim': scope_rows(selected, w), 'baseRelease': context['public']['release'],
               'baseRevision': context['public']['revision'], 'releaseId': slug(args.release, w)}
+    if context.get('sourceKind') == 'film-discovery-v1':
+        result['identityDecision'] = None
     if context.get('sourceKind'):
         result['sourceKind'] = context['sourceKind']
     w.require(args.output.resolve() not in [Path(r['file']).resolve() for r in refs], 'Decision must not replace review artifacts')
@@ -289,6 +293,8 @@ def accept(args, w):
     w.require(decision.get('sourceKind') == context.get('sourceKind'), 'Decision source kind differs from review')
     w.require(decision['referenceArtifacts'] == review_refs, 'Human-approved evidence inventory differs')
     selected = selection(decision['acceptedRecordIds'], records, w)
+    if context.get('sourceKind') == 'film-discovery-v1':
+        w.load('film_human_decision', w.CODE_ROOT / 'scripts/collection-film.py').validate_decision(decision, selected, w)
     w.require(decision['recordSha256'] == {f: {r['id']: w.digest(r) for r in selected[f]} for f in w.FIELDS}, 'Approved record body/hash differs')
     w.require(decision['scopeByClaim'] == scope_rows(selected, w), 'Approved Claim meaning/Role/scope differs')
     w.require(decision['baseRelease'] == context['public']['release'] and decision['baseRevision'] == context['public']['revision'],
@@ -362,13 +368,13 @@ def accept(args, w):
         reason='人間の明示的な判断に基づく受入済み集合の公開準備。公開applyは別承認待ち。')
     receipt_ref = {'file': str(receipt_path.relative_to(w.ROOT)) if receipt_path.is_relative_to(w.ROOT) else str(receipt_path),
                    'sha256': w.gate.digest(immutable['acceptance.json'].encode())}
-    for row in prior_manifest['inputs'] + [{'dataset': 'manga-workflow-accepted', **r} for r in receipt['referenceArtifacts'] + [receipt_ref]]:
+    for row in prior_manifest['inputs'] + [{'dataset': 'film-workflow-accepted' if context.get('sourceKind') == 'film-discovery-v1' else 'manga-workflow-accepted', **r} for r in receipt['referenceArtifacts'] + [receipt_ref]]:
         if row not in manifest['inputs']:
             manifest['inputs'].append(row)
     base_claim_ids = {c['id'] for c in public['claims']}
     old_origins = {r['claimId']: r for r in prior_manifest['claimOrigins']}
     manifest['claimOrigins'] += [copy.deepcopy(old_origins.get(c['id'], {
-        'claimId': c['id'], 'dataset': 'manga-workflow-accepted', 'sourceClaimId': c['id']}))
+        'claimId': c['id'], 'dataset': 'film-workflow-accepted' if context.get('sourceKind') == 'film-discovery-v1' else 'manga-workflow-accepted', 'sourceClaimId': c['id']}))
         for c in fixture['claims'] if c['id'] not in base_claim_ids]
     files = {'data.json': data, 'manifest.json': w.dump(manifest)}
     if release.exists():
@@ -398,6 +404,8 @@ def accept(args, w):
         code_root = Path(__file__).resolve().parents[1]
         validation_key = w.digest({'files': files, 'validator': w.gate.file_hash(code_root / 'lib/server/public-dataset.ts'),
                                   'schema': w.gate.file_hash(code_root / 'lib/domain/fixture.ts')})
+        if context.get('sourceKind') == 'film-discovery-v1':
+            validation_key = w.digest({'files': files, 'programs': context['programSha256']})
         cached = target / 'validation.json'
         validation_reused = cached.exists() and w.read(cached)['inputSha256'] == validation_key
         validation = w.read(cached)['result'] if validation_reused else w.node(['scripts/public-kg.ts', 'validate', str(release)])

@@ -145,7 +145,7 @@ describe("predicate meaning contracts", () => {
     try {
       mkdirSync(join(directory, "vocabulary/reviews"), { recursive: true });
       mkdirSync(join(directory, "vocabulary/contribution-roles"), { recursive: true });
-      for (const name of ["catalog.json", "baseline-v1.json", "reviews.json"]) writeFileSync(join(directory, "vocabulary/contribution-roles", name), readFileSync(resolve("vocabulary/contribution-roles", name)));
+      for (const name of ["catalog.json", "baseline-v1.json", "reviews.json", "film-pending.json"]) writeFileSync(join(directory, "vocabulary/contribution-roles", name), readFileSync(resolve("vocabulary/contribution-roles", name)));
       const review = approval(contracts.entries[0], contracts.entries[0], "clarification");
       for (const [path, value] of [["catalog.json", catalog], ["baseline-v1.json", baseline], ["reviews/records.json", [...currentReviews, review]]] as const) writeFileSync(join(directory, "vocabulary", path), JSON.stringify(value));
       execFileSync("git", ["init", "-q"], { cwd: directory });

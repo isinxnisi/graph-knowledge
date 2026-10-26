@@ -1,3 +1,4 @@
+import { checkPendingFilmRoles } from "../lib/domain/pending-film-roles";
 import { checkRoleVocabulary } from "../lib/domain/role-vocabulary";
 import { readFile } from "node:fs/promises";
 import { execFileSync } from "node:child_process";
@@ -61,3 +62,7 @@ if (printHashes) {
     console.log(JSON.stringify({ kind: "role", targetId: entry.id, beforeHash: before ? vocabularyHash(before) : null, afterHash: vocabularyHash(entry) }));
   }
 }
+
+const pendingFilm = checkPendingFilmRoles(JSON.parse(await readFile("vocabulary/contribution-roles/film-pending.json", "utf8")));
+console.log("映画Role試験登録: 2 pending / 正式語彙承認なし");
+if (printHashes) for (const draft of pendingFilm) console.log(JSON.stringify({ kind: "role", ...draft }));
