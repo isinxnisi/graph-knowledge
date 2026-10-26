@@ -60,4 +60,4 @@ Role判断／Claim判断／個別公開署名が未完了なら、その境界�
 
 ## 現在の引継ぎ
 
-main統合済み実装はd6a21acd。3200／betaはbuild jCKofzeGk3iNCU32pxk0T、実ブラウザ6件成功。本番は未変更。最初に必要な実操作は上記2の完全backup exportである。SSH非対話認証は使えないため、運営者の既存developログインとsudoが必要。以降のRole／Claim判断・実image固定・個別公開署名も同じ作業枠へまとめるが、まだ存在しないrequest hashへの承認を先取りしない。exporterの固定SHAは[validation.json](../research/film-release-20261027/validation.json)のexporterSha256を確認する。プログラムを確認し、転送後にも同じSHAを照合してから実行する。
+main統合済み実装はd6a21acd、初回検証記録はa0dd6c21。3200／betaはbuild jCKofzeGk3iNCU32pxk0T、実ブラウザ6件成功。本番は未変更。運営者が上記2の完全backup exportを実行し、Codexが実ファイルを検証済み。backup SHAは f6a716d7264ce1023d3f9100cbd7fa6bd628cd174d2d2412546a0e4e3938b2d3。[本番backup・全receipt・重複照合結果](../research/film-release-20261027/production-backup-verification.json)を参照。次は上記3の固定Role判断票への正式判断である。Role登録後、実際の審査コードhashで2 Claimの正式受入票を確定する。Role／Claim判断・実image固定・個別公開署名を順に進め、まだ存在しないrequest hashへの承認を先取りしない。

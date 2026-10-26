@@ -32,3 +32,12 @@
 
 
 スマホ390幅では、Graph右下の作品名と既存表示controlの一部重なりが残る。タップ展開・保存復元は成功し、pan／zoomで位置調整できる。これは#43の既知制約で、今回Graph配置処理は変更していない。
+
+
+## 正式公開再開：本番完全backup受領・検証
+
+運営者が既存SSH／sudoで固定exporterを実行し、実本番KGの完全backupを取得した。SHAは f6a716d7264ce1023d3f9100cbd7fa6bd628cd174d2d2412546a0e4e3938b2d3。実ファイルをCodex側で既存CLIへ渡し、checksum／schema／graph／履歴、公開artifactとの全record一致、live revision前後一致、全10正式受入receiptの本文・参照hash、比較集合の完全一致を検証した。[検証結果](../research/film-release-20261027/production-backup-verification.json)。
+
+本番revisionはb74a4b00-9454-412f-af5d-1317713a543c、2,175 Entity／1,895 Claim／1,795 Source／1,932 Citation。KGの公開履歴receiptは6件、収集の正式受入receiptは10件であり、種類を混同しない。保存済み候補本文は前回と完全一致、映画2 Claimは意味キー重複0、新規3 Entityは外部IDの既存所有0。AFI根拠を再収集していない。旧83保護ファイルはSHA一致。既存Worker・会員DB・本番KG・権限・自動化の変更なし。
+
+Role判断票は以前の未承認草稿とbyte一致。file SHAはfe9a2a739fcf663fe2adc58d6fb12cd50c6bda32113f69be8f354bb9087b902f。DIRECTING／ACTINGの定義hash・scope未構造化方針の明示的な人間判断待ち。Role登録によって審査プログラムhashが変わるため、先にRoleを正式登録し、その実コードと完全backupで2 Claimの正式受入票を作る。未承認の判断者／日時・Claim受入・個別公開署名を先取りしない。

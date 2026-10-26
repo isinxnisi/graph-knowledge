@@ -1,0 +1,112 @@
+{
+  "status": "production-backup-verified-awaiting-fixed-role-decision",
+  "sourceMain": "a0dd6c2107e7366668a52c8ca4b035967f42a4d1",
+  "productionBackup": {
+    "sha256": "f6a716d7264ce1023d3f9100cbd7fa6bd628cd174d2d2412546a0e4e3938b2d3",
+    "savedAt": "2026-10-26T16:08:26.164Z",
+    "release": "manga-issue-34-obata-drawing-20261023",
+    "revision": "b74a4b00-9454-412f-af5d-1317713a543c",
+    "graphDigest": "509b460f9fc56e414677d5cf4f1a25634ab48171810ac27413461db2914f3da4",
+    "publicKgHistoryReceipts": 6,
+    "counts": {
+      "entities": 2175,
+      "claims": 1895,
+      "sources": 1795,
+      "citations": 1932
+    }
+  },
+  "validation": {
+    "checksumSchemaGraphHistory": true,
+    "publishedArtifactExactEquality": true,
+    "liveRevisionBeforeAfter": true,
+    "allFormalReceiptBodiesAndReferences": true,
+    "comparisonExactEquality": true,
+    "formalReceiptCount": 10,
+    "savedCandidateBodiesUnchanged": true,
+    "duplicateCandidateIdsByClaim": {
+      "34b41d23-f4e6-4fc6-aa6f-2905f3c2a890": [],
+      "4c88b8e8-154d-47ad-bf82-f19876ecaebd": []
+    },
+    "existingExternalIdentifierOwners": 0,
+    "protectedFilesUnchanged": 83
+  },
+  "selected": {
+    "entities": [
+      {
+        "id": "490ee589-76db-4a5e-8923-13d24b7cb3a2",
+        "name": "クリント・イーストウッド",
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q43203"
+          }
+        ]
+      },
+      {
+        "id": "604eb49e-df41-4157-8b49-bd92a0d93ad4",
+        "name": "許されざる者",
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q104137"
+          }
+        ]
+      },
+      {
+        "id": "805b9630-cd9a-4931-8cde-0bcb92bf8a9f",
+        "name": "ミリオンダラー・ベイビー",
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q184255"
+          }
+        ]
+      }
+    ],
+    "claims": [
+      {
+        "id": "34b41d23-f4e6-4fc6-aa6f-2905f3c2a890",
+        "role": "DIRECTING",
+        "scope": null,
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "recordSha256": "5c9bac955699442bd0813caa23a1928ef82d35fb0fccd7cd39be21f4bda7a0a4"
+      },
+      {
+        "id": "4c88b8e8-154d-47ad-bf82-f19876ecaebd",
+        "role": "ACTING",
+        "scope": null,
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "recordSha256": "0661ca6c346efeb884e96b8e1fbe512100db3c9a4eecfcf73485461b162c494b"
+      }
+    ],
+    "sources": 2,
+    "citations": 2
+  },
+  "roleDecision": {
+    "status": "draft-not-approved",
+    "fileSha256": "fe9a2a739fcf663fe2adc58d6fb12cd50c6bda32113f69be8f354bb9087b902f",
+    "roles": [
+      {
+        "targetId": "DIRECTING",
+        "beforeHash": null,
+        "afterHash": "a4c6d3607165c97e6ecf252b6cd6b79dbb3f39abb17c12062300996be65aae73"
+      },
+      {
+        "targetId": "ACTING",
+        "beforeHash": null,
+        "afterHash": "78640b719b6a10db555abb33b3ac28ff2f297c5bc81ffd200cc9dc0b6b7e465e"
+      }
+    ]
+  },
+  "newFormalReceipts": 0,
+  "roleRegistrationPerformed": false,
+  "publicApply": false,
+  "newAutomationImplemented": false,
+  "nextBoundary": "Human approval of the two fixed Role definitions and scope policy, then registration and fresh Claim acceptance review"
+}
