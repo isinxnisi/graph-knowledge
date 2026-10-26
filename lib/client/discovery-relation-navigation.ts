@@ -12,7 +12,7 @@ const handoffSchema=z.strictObject({version:z.literal(1),revision:publicRevision
 export function discoveryRelationHref(input:ConnectionSelection){
  const value=connectionSelectionSchema.parse(input),relation=value.relation??allRelations(),route=value.witness?.route;
  if(value.unmatched||relation.type==="pattern"&&(!route||!patternAcceptsRoot(relation,value.entity.kind)))throw Error("Missing pattern evidence");
- const href=explorationHref({version:relation.type==="pattern"&&relation.pattern.revision===2?3:2,dataset:"public-kg",id:value.entity.id,rootId:value.entity.id,title:"Discovery",savedAt:"2000-01-01T00:00:00.000Z",relation,observedRevision:value.revision,view:null,
+ const href=explorationHref({version:relation.type==="pattern"&&relation.pattern.revision!==1?3:2,dataset:"public-kg",id:value.entity.id,rootId:value.entity.id,title:"Discovery",savedAt:"2000-01-01T00:00:00.000Z",relation,observedRevision:value.revision,view:null,
   execution:relation.type==="pattern"?{type:"pattern",routes:[{route:route!,open:false}],requiredRouteKey:routeKey(route!),candidateBoundary:null,
    entityState:{version:1,branches:[{id:value.entity.id,open:true,claimIds:route!.claimIds.filter((_,i)=>[route!.nodeIds[i],route!.nodeIds[i+1]].includes(value.entity.id))}],sources:[{id:value.entity.id,requiredRouteKey:routeKey(route!),candidateBoundary:null}]}}
    :{type:"adjacent",branches:[{id:value.entity.id,open:true,pages:1}]}});

@@ -1,0 +1,10 @@
+{
+  "url": "https://plunode.net/api/entities?q=%E8%A8%B1%E3%81%95%E3%82%8C%E3%81%96%E3%82%8B%E8%80%85&limit=20",
+  "status": 200,
+  "observed_at": "2026-10-25T18:41:47.685838+00:00",
+  "sha256": "e5704fff58eefd0cf292fac70cf2188cb4408349e8fc8e650b0bb7a2dd88a767",
+  "data": {
+    "items": [],
+    "hasMore": false
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "url": "https://plunode.net/api/dataset",
+  "status": 200,
+  "observed_at": "2026-10-25T18:41:50.628267+00:00",
+  "sha256": "69266eb0c667d385077e2a95ed747cd939be223d29ac3eda7b42fe985be00366",
+  "data": {
+    "dataset": "public-kg",
+    "revision": "b74a4b00-9454-412f-af5d-1317713a543c"
+  }
+}

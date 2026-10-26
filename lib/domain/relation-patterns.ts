@@ -30,7 +30,7 @@ export function validateRelationRoute(condition: RelationCondition, rootId: stri
   route.nodeIds.forEach((id, i) => { if (!nodes.has(id) || kinds && nodes.get(id)!.kind !== kinds[i]) throw new RelationWitnessError("Invalid witness entity"); });
   route.claimIds.forEach((id, step) => {
     const c = claims.get(id), from = route.nodeIds[step], to = route.nodeIds[step + 1];
-    if (!c || !relationAcceptsClaim(condition, c) || !([c.subjectId, c.objectId].includes(from) && [c.subjectId, c.objectId].includes(to))) throw new RelationWitnessError("Invalid witness claim");
+    if (!c || !relationAcceptsClaim(condition, c, step as 0 | 1) || !([c.subjectId, c.objectId].includes(from) && [c.subjectId, c.objectId].includes(to))) throw new RelationWitnessError("Invalid witness claim");
     const definition = PREDICATES[c.predicate];
     if (nodes.get(c.subjectId)?.kind !== definition.subjectKind || nodes.get(c.objectId)?.kind !== definition.objectKind) throw new RelationWitnessError("Invalid canonical endpoint");
     if (kinds && (c.subjectId !== route.nodeIds[1] || c.objectId !== route.nodeIds[step === 0 ? 0 : 2])) throw new RelationWitnessError("Invalid canonical direction");

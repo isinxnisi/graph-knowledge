@@ -37,6 +37,8 @@ function ConditionEditor({ value, roles, positions, eventRoles, onApply, onCance
   const eventText = eventParticipationLabels(locale);
   const [selection, setSelection] = useState<RelationSelection>(() => relation?.type === "adjacent" && relation.predicates?.length === PREDICATE_KEYS.length ? { mode: "custom", predicates: relation.predicates } : selectionFromPredicates(value));
   const facetText = relationFacetLabels(locale);
+  const [perStep, setPerStep] = useState(initial.type === "pattern" && initial.pattern.revision === 3);
+  const [stepRoles, setStepRoles] = useState<[ContributionRoleFilter, ContributionRoleFilter]>(initial.type === "pattern" && initial.stepRoles ? initial.stepRoles : [roles, roles]);
   const [draftRoles, setDraftRoles] = useState<ContributionRoleFilter>(roles);
   const [draftPositions, setDraftPositions] = useState<OrganizationPositionFilter>(positions);
   const [positionOpen, setPositionOpen] = useState(positions !== null);
@@ -50,7 +52,7 @@ function ConditionEditor({ value, roles, positions, eventRoles, onApply, onCance
   const normalizedRoles = normalizeContributionRoles(draftRoles, normalized);
   const normalizedPositions = normalizeOrganizationPositions(draftPositions, normalized);
   const normalizedEventRoles = normalizeEventRoles(draftEventRoles, normalized);
-  const nextRelation = normalizeRelationCondition(mode === "pattern" ? { version: 1, type: "pattern", pattern: { id: "other-works", revision: initial.type==="pattern"?initial.pattern.revision:2 }, polarity: "affirmed", contributionRoles: draftRoles } : { version: 1, type: "adjacent", traversal: "either", polarity, predicates: normalized, contributionRoles: normalizedRoles, organizationPositions: normalizedPositions, eventRoles: normalizedEventRoles });
+  const nextRelation = normalizeRelationCondition(mode === "pattern" ? { version: 1, type: "pattern", pattern: { id: "other-works", revision: perStep ? 3 : initial.type==="pattern" && initial.pattern.revision === 1 ? 1 : 2 }, polarity: "affirmed", contributionRoles: perStep ? null : draftRoles, ...(perStep ? { stepRoles } : {}) } : { version: 1, type: "adjacent", traversal: "either", polarity, predicates: normalized, contributionRoles: normalizedRoles, organizationPositions: normalizedPositions, eventRoles: normalizedEventRoles });
   const dirty = relationConditionKey(nextRelation) !== relationConditionKey(initial);
   useEffect(() => { dialog.current?.showModal(); }, []);
   const cancel = useDialogDismiss(dialog, () => { onCancelRelation?.(); dialog.current?.close(); onCancel(); });
@@ -91,7 +93,15 @@ function ConditionEditor({ value, roles, positions, eventRoles, onApply, onCance
     </fieldset>}
     {mode === "adjacent" && onApplyRelation && <label className={styles.filterChoices}><input type="checkbox" checked={polarity === "affirmed"} onChange={e => setPolarity(e.target.checked ? "affirmed" : "all-records")} />{sharedText.affirmed}</label>}
     {draft.some(predicate => ["CONTRIBUTED_TO", "AFFILIATED_WITH", "PARTICIPATED_IN"].includes(predicate)) && <h3 className={styles.preciseTitle}>{facetText.precise}</h3>}
-    {draft.includes("CONTRIBUTED_TO") && <section className={styles.roleSettings}>
+    {mode === "pattern" && <section>
+      <label><input type="checkbox" checked={perStep} onChange={e => setPerStep(e.target.checked)} />{locale === "en" ? "Specify a role for each step (work origin)" : "段ごとにRoleを指定（作品を起点）"}</label>
+      {perStep && <><p>{locale === "en" ? "Roles follow the origin work and the other work, even when an arrow points backwards. Switching to single relations removes these step filters." : "矢印の向きにかかわらず、起点作品側・別作品側の順に指定します。一段の関係に切り替えると段別条件は解除されます。"}</p>
+      {stepRoles.map((selected, step) => <fieldset key={step} className={styles.roleFilter}><legend>{step === 0 ? (locale === "en" ? "Origin work" : "起点作品側") : (locale === "en" ? "Other work" : "別作品側")}</legend>
+        <label><input type="checkbox" checked={selected === null} onChange={e => setStepRoles(previous => { const next: typeof previous = [...previous]; next[step] = e.target.checked ? null : []; return next; })} />{text.noRole}</label>
+        {selected !== null && CONTRIBUTION_ROLE_IDS.map(role => <label key={role}><input type="checkbox" checked={selected.includes(role)} onChange={e => setStepRoles(previous => { const next: typeof previous = [...previous]; next[step] = e.target.checked ? [...selected, role] : selected.filter(r => r !== role); return next; })} />{roleText.roles[role]}</label>)}
+      </fieldset>)}</>}
+    </section>}
+    {draft.includes("CONTRIBUTED_TO") && !(mode === "pattern" && perStep) && <section className={styles.roleSettings}>
       <button aria-expanded={roleOpen} aria-controls="role-editor" onClick={() => setRoleOpen(!roleOpen)}>{text.roleEdit}<span aria-hidden="true" className={styles.conditionChevron}><Icon name="chevron" /></span></button>
       {roleOpen && <fieldset id="role-editor" className={styles.roleFilter}><legend>{roleText.title}</legend>
         <div className={styles.filterChoices}>

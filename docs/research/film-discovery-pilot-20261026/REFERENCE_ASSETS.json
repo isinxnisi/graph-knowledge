@@ -1,0 +1,39 @@
+{
+  "basis_commit": "8369d6ef0c5083e6a34a02db5f51cba863fb16c2",
+  "hash_policy": "UTF-8 text CRLF normalized to LF",
+  "files": [
+    {
+      "file": "datasets/connectivity/issue-34/report/README.md",
+      "sha256": "8ef5318180858c9f8feac787857b25eb6289c0a05de073d206aea8f62fea5a8b"
+    },
+    {
+      "file": "datasets/connectivity/issue-34/report/report.json",
+      "sha256": "35f98b7bda573e3727dbc35363606086f7531069d9e76cb420ab0f96d48964ff"
+    },
+    {
+      "file": "docs/verification/COLLECTION_CANDIDATES_20261020.md",
+      "sha256": "7be9bb5723a5624b314dfa931816a47136de19ecda966a0bb3ab8acdc04b8f9d"
+    },
+    {
+      "file": "scripts/collection-bridge-candidates.py",
+      "sha256": "5815e154af541d9ce0cc84bd4f6af5ed5a7f835f9df85e34f423720c97c9bf52"
+    },
+    {
+      "file": "docs/design/DISCOVERY_MULTI_STEP.md",
+      "sha256": "f2d817cdf098f7a97139268f0ba6401e4014c52b14f956e0cb5052386d8256b4"
+    },
+    {
+      "file": "docs/design/DISCOVERY_PATH_PRESETS.md",
+      "sha256": "8d5b3baf6ed7258347aea7a3b22a47f6dd77e8471cbed1da1ceeecc7c3c7e40a"
+    },
+    {
+      "file": "lib/domain/discovery-path-presets.ts",
+      "sha256": "34f9d0507e941f5dd0d5ff041261dfb49c5ebbfeae921f268cb8adbd0f1d8a5f"
+    },
+    {
+      "file": "docs/design/KNOWLEDGE_WORLDS_AND_COVERAGE_PLAN.md",
+      "sha256": "49f124dbb3cb50a2377d5c1c4c0c01ed06433d3d0b9a4eda43687547d347761a"
+    }
+  ],
+  "historical_report_use": "Read semantics, aggregate before/after fields and provenance only; historical counts not current KG."
+}

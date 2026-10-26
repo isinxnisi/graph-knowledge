@@ -1,0 +1,38 @@
+{
+  "baseMain": "b34e9ebe9df23835226651adbbda072908c933ab",
+  "priorResearch": "461cd1ca614e5bebefd8181eecb0e89661d4a616",
+  "node": "v24.15.0",
+  "neo4j": "5.26.31-community",
+  "files": {
+    "lib/domain/relation-conditions.ts": "56e016f8d7bf584016caa3432a2f1788f7370c314f2b37f4cd0899f2a8056afe",
+    "lib/domain/relation-patterns.ts": "1d8b228a8cbf12a1f5f5e2c1b3ef7ddbfcfcdb228d44c7cd70cd06faa1b721da",
+    "lib/domain/discovery-targets.ts": "a476a1cee5a4e36a6ccc8c5e237a7acadbe69892a01021d4112a46581940687b",
+    "lib/server/relation-pattern-execution.ts": "68ec37fb75efab606ab3c922a1759429d3d011983ebc93b688ba834496141afd",
+    "lib/server/pattern-graph.ts": "973a6b4e7c18fbbf0bb8fba9c35e461302fdee5fa156742dcb9ff1feecc5237d",
+    "lib/server/discovery-targets.ts": "eefc5bed5065a245d64b90e0c5d79fab6e3ff89dde2a0c2e688c91d49dc080fc",
+    "lib/client/graph-state.ts": "b109e4958093134b9fcd9934ffc1b66b8661b3b3bc82df4c07dd75c393c7338e",
+    "lib/client/saved-workspace.ts": "a70d8d036735df43b54b369adba6f1df4efa52f7c5bf7b813e4274715aff44f8",
+    "lib/client/discovery-relation-navigation.ts": "4520dd32dceaf9194a3140418976b3a7002c167d9658f7260fa14fee2ffef8f9",
+    "lib/client/pattern-graph.ts": "f0b9b2497b5a3a90027541bad8233e0ea3fe9394f30ee8c80c336eab697a4925",
+    "tests/film-step-roles.integration.test.ts": "e1869cce64fe4be489edf26ba5114bffdee00cb5294096818455db01d24c606f",
+    "scripts/test-film-step-roles.py": "850dbf440cd50b8a8703c1f22052d8f8931a4578372ddf3b5bc900e0cbc2810d",
+    "docs/research/film-step-roles-issue40/fixture.json": "362b1b0d316b8a47eee560d90068e88a25465d10a5d4e8c8e3e9a16bde8e906f",
+    "components/RelationFilter.tsx": "000d576fcfaf17d9269adce88ae3af9931c22fd5825b4de567df99f197719f3b",
+    "components/DiscoveryConnections.tsx": "772c9102f7f6357ef1ea3188eac6346ec6bbf767cb1a172a188e0ee660c2d0d0",
+    "lib/domain/discovery-connections.ts": "efebf9577db8667c4d54871afc971910d7150145a079ed93217ccf0174c69284",
+    "lib/i18n/relation-condition.ts": "0028e2218bb6f9d1a0e9108298930c3c06beb82ccc12a6905107c0a379037da8",
+    "tests/step-roles.test.ts": "787e5d97b4adbd9c272c099612fe701c5f52ff9e0a5993adc5250f013f1c0401",
+    "tests/step-roles-ui.test.tsx": "f66c533aca69f13acc2767fb8b325e0d91199399db47071adc43e83392b3c1fd",
+    "docs/research/film-step-roles-issue40/build_fixture.py": "0225757ab1c7dc75ee8a21f630d3c50ae8e5377168b2568e52fe255b27539b34",
+    "docs/research/film-step-roles-issue40/role-proposals.json": "50400fef170aceed9ca598e9f53085db8a68c72cd9cf980d72164dedd170c4c8"
+  },
+  "priorResearchFilesUnchanged": true,
+  "verification": {
+    "normalTests": 862,
+    "normalTestFiles": 73,
+    "isolatedScenarios": 4,
+    "typecheck": "passed",
+    "lint": "passed",
+    "browserE2E": "not-run"
+  }
+}

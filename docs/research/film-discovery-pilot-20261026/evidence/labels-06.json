@@ -1,0 +1,117 @@
+{
+  "url": "https://www.wikidata.org/w/api.php?action=wbgetentities&ids=Q955798%7CQ959790%7CQ976176&props=info%7Clabels%7Cdescriptions%7Caliases&languages=en%7Cja&redirects=yes&format=json",
+  "accessed_at": "2026-10-25T18:34:25.356009+00:00",
+  "license": "CC0-1.0",
+  "response_sha256": "65d4789dd4d1cca02ebb17c349ad5bbbf74803f39470e6e763a07c403adfe0df",
+  "data": {
+    "entities": {
+      "Q955798": {
+        "pageid": 905661,
+        "ns": 0,
+        "title": "Q955798",
+        "lastrevid": 2559459654,
+        "modified": "2026-10-21T09:44:32Z",
+        "type": "item",
+        "id": "Q955798",
+        "labels": {
+          "en": {
+            "language": "en",
+            "value": "Aldo Sambrell"
+          },
+          "ja": {
+            "language": "ja",
+            "value": "アルド・サンブレル"
+          }
+        },
+        "descriptions": {
+          "ja": {
+            "language": "ja",
+            "value": "スペインの映画俳優"
+          },
+          "en": {
+            "language": "en",
+            "value": "Spanish actor (1931–2010)"
+          }
+        },
+        "aliases": {
+          "ja": [
+            {
+              "language": "ja",
+              "value": "アルド・サムブレル"
+            }
+          ]
+        }
+      },
+      "Q959790": {
+        "pageid": 909614,
+        "ns": 0,
+        "title": "Q959790",
+        "lastrevid": 2516994325,
+        "modified": "2026-07-13T09:20:45Z",
+        "type": "item",
+        "id": "Q959790",
+        "labels": {
+          "en": {
+            "language": "en",
+            "value": "crime film"
+          },
+          "ja": {
+            "language": "ja",
+            "value": "クライム映画"
+          }
+        },
+        "descriptions": {
+          "en": {
+            "language": "en",
+            "value": "film genre"
+          },
+          "ja": {
+            "language": "ja",
+            "value": "犯罪小説の文学ジャンルに触発された、類似する映画のジャンル"
+          }
+        },
+        "aliases": {
+          "ja": [
+            {
+              "language": "ja",
+              "value": "犯罪映画"
+            }
+          ],
+          "en": [
+            {
+              "language": "en",
+              "value": "crime movie"
+            }
+          ]
+        }
+      },
+      "Q976176": {
+        "pageid": 925858,
+        "ns": 0,
+        "title": "Q976176",
+        "lastrevid": 2557412664,
+        "modified": "2026-10-15T20:27:50Z",
+        "type": "item",
+        "id": "Q976176",
+        "labels": {
+          "en": {
+            "language": "en",
+            "value": "Saul Rubinek"
+          },
+          "ja": {
+            "language": "ja",
+            "value": "ソウル・ルビネック"
+          }
+        },
+        "descriptions": {
+          "en": {
+            "language": "en",
+            "value": "Canadian actor and director (born 1948)"
+          }
+        },
+        "aliases": {}
+      }
+    },
+    "success": 1
+  }
+}

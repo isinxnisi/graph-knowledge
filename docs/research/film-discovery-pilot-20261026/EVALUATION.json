@@ -1,0 +1,2573 @@
+{
+  "authority": "isolated-research-not-public-search",
+  "fixed_node_universe": 64,
+  "baseline_note": "Syntax-only projection SCREENWRITING->SCRIPT_WRITING, PRODUCING->PRODUCING; no approved film ingest or publication.",
+  "input_hashes": {
+    "docs/research/film-discovery-pilot-20261026/CANDIDATES.json": "06690102bb27b9ed9ab06d57f717ab4dce1e962bd1d409609b8c2e76dfccd470",
+    "docs/research/film-discovery-pilot-20261026/source_reviews.json": "0564cc3416d947019341f580a6391532525b77125812a54c23cd7b39a577735c",
+    "scripts/collection-bridge-candidates.py": "5815e154af541d9ce0cc84bd4f6af5ed5a7f835f9df85e34f423720c97c9bf52"
+  },
+  "reused_functions": [
+    "scripts/collection-bridge-candidates.py:graph",
+    "scripts/collection-bridge-candidates.py:reach"
+  ],
+  "semantics": {
+    "components": "weak, fixed checked-node universe incl. isolates",
+    "reach": "exact cumulative <=1/2/3 distinct ordered pairs",
+    "paths": "exact 2/3 simple Claim paths for 10 roots; guard 100000 inspected edges per root; no scope/time inference"
+  },
+  "counts_by_role": {
+    "DIRECTING": 11,
+    "SCREENWRITING": 15,
+    "MUSIC": 9,
+    "CINEMATOGRAPHY": 3,
+    "PRODUCING": 11,
+    "CAST": 28,
+    "SEQUEL_OF": 1,
+    "BASED_ON": 2,
+    "SERIES_MEMBERSHIP": 1
+  },
+  "cohorts": {
+    "current_role_syntax_projection": {
+      "nodes": 64,
+      "records": 26,
+      "unique_endpoint_pairs": 23,
+      "components": 41,
+      "component_sizes": [
+        8,
+        5,
+        5,
+        4,
+        3,
+        3,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "branching_nodes": 11,
+      "within_hops_ordered_pairs": [
+        46,
+        90,
+        106
+      ],
+      "film_root_within_hops": {
+        "Q104137": [
+          1,
+          2,
+          4
+        ],
+        "Q114819": [
+          1,
+          1,
+          1
+        ],
+        "Q13417189": [
+          2,
+          3,
+          4
+        ],
+        "Q184255": [
+          4,
+          4,
+          4
+        ],
+        "Q184843": [
+          3,
+          5,
+          7
+        ],
+        "Q20382729": [
+          2,
+          2,
+          2
+        ],
+        "Q21500755": [
+          3,
+          4,
+          6
+        ],
+        "Q25188": [
+          2,
+          3,
+          4
+        ],
+        "Q60834962": [
+          3,
+          3,
+          3
+        ],
+        "Q76479": [
+          2,
+          2,
+          2
+        ]
+      },
+      "new_ordered_endpoint_pairs_vs_baseline": [
+        0,
+        0,
+        0
+      ],
+      "film_root_exact_hop_claim_paths": {
+        "2": 12,
+        "3": 14
+      },
+      "new_claim_paths_vs_baseline": {
+        "2": 0,
+        "3": 0
+      },
+      "active_endpoint_only_components": 7
+    },
+    "plus_directing": {
+      "nodes": 64,
+      "records": 37,
+      "unique_endpoint_pairs": 28,
+      "components": 36,
+      "component_sizes": [
+        21,
+        5,
+        3,
+        3,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "branching_nodes": 15,
+      "within_hops_ordered_pairs": [
+        56,
+        128,
+        188
+      ],
+      "film_root_within_hops": {
+        "Q104137": [
+          2,
+          4,
+          10
+        ],
+        "Q114819": [
+          2,
+          2,
+          2
+        ],
+        "Q13417189": [
+          2,
+          3,
+          4
+        ],
+        "Q184255": [
+          4,
+          5,
+          6
+        ],
+        "Q184843": [
+          4,
+          6,
+          10
+        ],
+        "Q20382729": [
+          3,
+          5,
+          10
+        ],
+        "Q21500755": [
+          4,
+          7,
+          14
+        ],
+        "Q25188": [
+          2,
+          3,
+          4
+        ],
+        "Q60834962": [
+          3,
+          5,
+          10
+        ],
+        "Q76479": [
+          2,
+          2,
+          2
+        ]
+      },
+      "new_ordered_endpoint_pairs_vs_baseline": [
+        10,
+        38,
+        82
+      ],
+      "film_root_exact_hop_claim_paths": {
+        "2": 36,
+        "3": 61
+      },
+      "new_claim_paths_vs_baseline": {
+        "2": 24,
+        "3": 47
+      },
+      "active_endpoint_only_components": 4
+    },
+    "plus_cast": {
+      "nodes": 64,
+      "records": 54,
+      "unique_endpoint_pairs": 50,
+      "components": 17,
+      "component_sizes": [
+        27,
+        9,
+        6,
+        6,
+        4,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "branching_nodes": 17,
+      "within_hops_ordered_pairs": [
+        100,
+        318,
+        404
+      ],
+      "film_root_within_hops": {
+        "Q104137": [
+          4,
+          7,
+          20
+        ],
+        "Q114819": [
+          3,
+          3,
+          3
+        ],
+        "Q13417189": [
+          4,
+          5,
+          8
+        ],
+        "Q184255": [
+          6,
+          8,
+          14
+        ],
+        "Q184843": [
+          6,
+          8,
+          16
+        ],
+        "Q20382729": [
+          5,
+          5,
+          5
+        ],
+        "Q21500755": [
+          7,
+          8,
+          12
+        ],
+        "Q25188": [
+          5,
+          6,
+          8
+        ],
+        "Q60834962": [
+          5,
+          5,
+          5
+        ],
+        "Q76479": [
+          5,
+          7,
+          14
+        ]
+      },
+      "new_ordered_endpoint_pairs_vs_baseline": [
+        54,
+        228,
+        298
+      ],
+      "film_root_exact_hop_claim_paths": {
+        "2": 28,
+        "3": 122
+      },
+      "new_claim_paths_vs_baseline": {
+        "2": 16,
+        "3": 108
+      },
+      "active_endpoint_only_components": 5
+    },
+    "plus_music": {
+      "nodes": 64,
+      "records": 35,
+      "unique_endpoint_pairs": 31,
+      "components": 34,
+      "component_sizes": [
+        20,
+        5,
+        4,
+        4,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "branching_nodes": 12,
+      "within_hops_ordered_pairs": [
+        62,
+        156,
+        234
+      ],
+      "film_root_within_hops": {
+        "Q104137": [
+          1,
+          2,
+          5
+        ],
+        "Q114819": [
+          1,
+          1,
+          1
+        ],
+        "Q13417189": [
+          3,
+          6,
+          14
+        ],
+        "Q184255": [
+          4,
+          4,
+          4
+        ],
+        "Q184843": [
+          4,
+          6,
+          10
+        ],
+        "Q20382729": [
+          3,
+          3,
+          3
+        ],
+        "Q21500755": [
+          5,
+          9,
+          18
+        ],
+        "Q25188": [
+          3,
+          6,
+          14
+        ],
+        "Q60834962": [
+          4,
+          7,
+          14
+        ],
+        "Q76479": [
+          3,
+          3,
+          3
+        ]
+      },
+      "new_ordered_endpoint_pairs_vs_baseline": [
+        16,
+        66,
+        128
+      ],
+      "film_root_exact_hop_claim_paths": {
+        "2": 24,
+        "3": 65
+      },
+      "new_claim_paths_vs_baseline": {
+        "2": 12,
+        "3": 51
+      },
+      "active_endpoint_only_components": 5
+    },
+    "all_checked_credits": {
+      "nodes": 64,
+      "records": 77,
+      "unique_endpoint_pairs": 65,
+      "components": 4,
+      "component_sizes": [
+        57,
+        5,
+        1,
+        1
+      ],
+      "branching_nodes": 19,
+      "within_hops_ordered_pairs": [
+        130,
+        544,
+        820
+      ],
+      "film_root_within_hops": {
+        "Q104137": [
+          4,
+          7,
+          25
+        ],
+        "Q114819": [
+          4,
+          4,
+          4
+        ],
+        "Q13417189": [
+          5,
+          8,
+          25
+        ],
+        "Q184255": [
+          7,
+          9,
+          16
+        ],
+        "Q184843": [
+          9,
+          11,
+          23
+        ],
+        "Q20382729": [
+          7,
+          9,
+          23
+        ],
+        "Q21500755": [
+          11,
+          16,
+          40
+        ],
+        "Q25188": [
+          6,
+          9,
+          25
+        ],
+        "Q60834962": [
+          6,
+          10,
+          32
+        ],
+        "Q76479": [
+          6,
+          8,
+          16
+        ]
+      },
+      "new_ordered_endpoint_pairs_vs_baseline": [
+        84,
+        454,
+        714
+      ],
+      "film_root_exact_hop_claim_paths": {
+        "2": 78,
+        "3": 467
+      },
+      "new_claim_paths_vs_baseline": {
+        "2": 66,
+        "3": 453
+      },
+      "active_endpoint_only_components": 2
+    },
+    "all_checked_relations": {
+      "nodes": 64,
+      "records": 81,
+      "unique_endpoint_pairs": 69,
+      "components": 1,
+      "component_sizes": [
+        64
+      ],
+      "branching_nodes": 20,
+      "within_hops_ordered_pairs": [
+        138,
+        616,
+        1028
+      ],
+      "film_root_within_hops": {
+        "Q104137": [
+          4,
+          7,
+          27
+        ],
+        "Q114819": [
+          5,
+          6,
+          12
+        ],
+        "Q13417189": [
+          5,
+          8,
+          27
+        ],
+        "Q184255": [
+          7,
+          9,
+          17
+        ],
+        "Q184843": [
+          10,
+          20,
+          27
+        ],
+        "Q20382729": [
+          7,
+          9,
+          25
+        ],
+        "Q21500755": [
+          12,
+          23,
+          42
+        ],
+        "Q25188": [
+          6,
+          9,
+          27
+        ],
+        "Q60834962": [
+          7,
+          12,
+          39
+        ],
+        "Q76479": [
+          7,
+          9,
+          17
+        ]
+      },
+      "new_ordered_endpoint_pairs_vs_baseline": [
+        92,
+        526,
+        922
+      ],
+      "film_root_exact_hop_claim_paths": {
+        "2": 100,
+        "3": 505
+      },
+      "new_claim_paths_vs_baseline": {
+        "2": 88,
+        "3": 491
+      },
+      "active_endpoint_only_components": 1
+    }
+  },
+  "single_record_bridges": [
+    {
+      "candidate_id": "candidate:q184843$6B465DFF-8D56-4B69-8C76-8713705A64A3",
+      "role": "DIRECTING",
+      "relation": "CREDIT",
+      "both_sides_have_person_and_work": false
+    },
+    {
+      "candidate_id": "candidate:q184843$284E2874-A3FC-4CCB-B36F-9D4334F2BB83",
+      "role": "SCREENWRITING",
+      "relation": "CREDIT",
+      "both_sides_have_person_and_work": true
+    },
+    {
+      "candidate_id": "candidate:Q184843$427D5372-BD68-43CB-A918-3F328927EA21",
+      "role": "MUSIC",
+      "relation": "CREDIT",
+      "both_sides_have_person_and_work": false
+    },
+    {
+      "candidate_id": "candidate:q184843$150599BE-9B8C-498F-9435-C518FB09497A",
+      "role": "CINEMATOGRAPHY",
+      "relation": "CREDIT",
+      "both_sides_have_person_and_work": false
+    },
+    {
+      "candidate_id": "candidate:q184843$63D3168A-DCFC-4CE5-A958-5353CF3765D5",
+      "role": "PRODUCING",
+      "relation": "CREDIT",
+      "both_sides_have_person_and_work": false
+    },
+    {
+      "candidate_id": "candidate:q184843$9D2ED00E-F7DA-4ECC-9882-4B3317D4641E",
+      "role": "CAST",
+      "relation": "CREDIT",
+      "both_sides_have_person_and_work": false
+    },
+    {
+      "candidate_id": "candidate:q184843$DDC64615-F83C-4B82-B2B6-91C37F701010",
+      "role": "CAST",
+      "relation": "CREDIT",
+      "both_sides_have_person_and_work": false
+    },
+    {
+      "candidate_id": "candidate:Q21500755$28f45ed9-4138-5ce8-15f7-af2e58d04bbc",
+      "role": "SCREENWRITING",
+      "relation": "CREDIT",
+      "both_sides_have_person_and_work": false
+    },
+    {
+      "candidate_id": "candidate:Q21500755$aaed40e2-464d-32b6-a3fc-1b1a87b75af3",
+      "role": "MUSIC",
+      "relation": "CREDIT",
+      "both_sides_have_person_and_work": false
+    },
+    {
+      "candidate_id": "candidate:Q21500755$d6894ac6-412c-1cfb-2ce9-e90cdfe8b8f1",
+      "role": "CINEMATOGRAPHY",
+      "relation": "CREDIT",
+      "both_sides_have_person_and_work": false
+    },
+    {
+      "candidate_id": "candidate:Q21500755$e4aa1901-4f60-f014-0f04-bd7e9abeb05e",
+      "role": "PRODUCING",
+      "relation": "CREDIT",
+      "both_sides_have_person_and_work": false
+    },
+    {
+      "candidate_id": "candidate:Q21500755$0b844a43-4e1d-5c02-c6ca-7ba24d9f4e4d",
+      "role": "CAST",
+      "relation": "CREDIT",
+      "both_sides_have_person_and_work": false
+    },
+    {
+      "candidate_id": "candidate:Q21500755$35dfb20f-4e8a-13ff-e72c-eda27ec75fc0",
+      "role": "CAST",
+      "relation": "CREDIT",
+      "both_sides_have_person_and_work": false
+    },
+    {
+      "candidate_id": "candidate:Q21500755$d188a830-4fd2-17fe-c2ce-7434a1e82f61",
+      "role": "CAST",
+      "relation": "CREDIT",
+      "both_sides_have_person_and_work": false
+    },
+    {
+      "candidate_id": "candidate:q114819$0E42EC3B-0FFA-4BAE-B381-60A174B944A0",
+      "role": "DIRECTING",
+      "relation": "CREDIT",
+      "both_sides_have_person_and_work": false
+    },
+    {
+      "candidate_id": "candidate:q114819$75238C3F-A721-4983-B25E-A042EDEF24FD",
+      "role": "PRODUCING",
+      "relation": "CREDIT",
+      "both_sides_have_person_and_work": false
+    },
+    {
+      "candidate_id": "candidate:q114819$7CEE9BF8-76F2-43C4-8760-A9C3E873965A",
+      "role": "CAST",
+      "relation": "CREDIT",
+      "both_sides_have_person_and_work": false
+    },
+    {
+      "candidate_id": "candidate:q114819$2EEAC07C-F2EF-492E-BD1C-D7B9CF066F55",
+      "role": "CAST",
+      "relation": "CREDIT",
+      "both_sides_have_person_and_work": false
+    },
+    {
+      "candidate_id": "candidate:q114819$101EFA3E-5EA8-4FBB-BA1D-7B441F72B971",
+      "role": null,
+      "relation": "BASED_ON",
+      "both_sides_have_person_and_work": true
+    },
+    {
+      "candidate_id": "candidate:Q60834962$D0BEA4F6-A9DB-4307-AA8D-162B800A28EB",
+      "role": "SCREENWRITING",
+      "relation": "CREDIT",
+      "both_sides_have_person_and_work": false
+    },
+    {
+      "candidate_id": "candidate:Q60834962$3BB01902-E1C1-4B94-B039-64BECEA0B835",
+      "role": "SCREENWRITING",
+      "relation": "CREDIT",
+      "both_sides_have_person_and_work": false
+    },
+    {
+      "candidate_id": "candidate:Q60834962$3D5F5CF8-E25C-4F47-8AF3-E328D22B58E1",
+      "role": "CAST",
+      "relation": "CREDIT",
+      "both_sides_have_person_and_work": false
+    },
+    {
+      "candidate_id": "candidate:Q60834962$D7294273-7319-4F53-A49E-3582D9C97CAC",
+      "role": "CAST",
+      "relation": "CREDIT",
+      "both_sides_have_person_and_work": false
+    },
+    {
+      "candidate_id": "candidate:Q60834962$A13C8BF4-4667-4E47-A85E-03D6C4F77220",
+      "role": null,
+      "relation": "BASED_ON",
+      "both_sides_have_person_and_work": true
+    },
+    {
+      "candidate_id": "candidate:Q20382729$93FD369A-82DC-4CCF-8DBC-63BF52640C59",
+      "role": "DIRECTING",
+      "relation": "CREDIT",
+      "both_sides_have_person_and_work": true
+    },
+    {
+      "candidate_id": "candidate:Q20382729$2b274e33-442a-e21b-66e5-d97ed8896633",
+      "role": "SCREENWRITING",
+      "relation": "CREDIT",
+      "both_sides_have_person_and_work": false
+    },
+    {
+      "candidate_id": "candidate:Q20382729$695A3058-E77E-40E5-B0D4-B46FCB495C49",
+      "role": "MUSIC",
+      "relation": "CREDIT",
+      "both_sides_have_person_and_work": false
+    },
+    {
+      "candidate_id": "candidate:Q20382729$F052360C-494F-452A-BD1C-D2CC5DB95C5C",
+      "role": "PRODUCING",
+      "relation": "CREDIT",
+      "both_sides_have_person_and_work": false
+    },
+    {
+      "candidate_id": "candidate:Q20382729$E60AE03F-263A-48A9-9209-D760E6EFC86D",
+      "role": "CAST",
+      "relation": "CREDIT",
+      "both_sides_have_person_and_work": false
+    },
+    {
+      "candidate_id": "candidate:Q20382729$0a0095fe-4ba8-c4a2-afb3-0c794e8608bf",
+      "role": "CAST",
+      "relation": "CREDIT",
+      "both_sides_have_person_and_work": false
+    },
+    {
+      "candidate_id": "candidate:Q20382729$796c9587-4a71-b3d1-0da0-a18b3c7eca14",
+      "role": "CAST",
+      "relation": "CREDIT",
+      "both_sides_have_person_and_work": false
+    },
+    {
+      "candidate_id": "candidate:q25188$982BD52A-FC20-416B-BE22-E5BB9807797D",
+      "role": "PRODUCING",
+      "relation": "CREDIT",
+      "both_sides_have_person_and_work": false
+    },
+    {
+      "candidate_id": "candidate:q25188$16028A37-81AB-472B-BE4D-D0E7B2D9F6C9",
+      "role": "CAST",
+      "relation": "CREDIT",
+      "both_sides_have_person_and_work": false
+    },
+    {
+      "candidate_id": "candidate:q25188$274B2201-308C-4D04-9878-711BA61918C5",
+      "role": "CAST",
+      "relation": "CREDIT",
+      "both_sides_have_person_and_work": false
+    },
+    {
+      "candidate_id": "candidate:q13417189$507641b4-4bcb-d882-0ce7-5088ebad4e86",
+      "role": "SCREENWRITING",
+      "relation": "CREDIT",
+      "both_sides_have_person_and_work": false
+    },
+    {
+      "candidate_id": "candidate:q13417189$89b53edc-450f-a73f-52c3-0d801b92ce20",
+      "role": "CAST",
+      "relation": "CREDIT",
+      "both_sides_have_person_and_work": false
+    },
+    {
+      "candidate_id": "candidate:q76479$81A944FA-1D65-462F-A173-AF2D5D5E0367",
+      "role": "SCREENWRITING",
+      "relation": "CREDIT",
+      "both_sides_have_person_and_work": false
+    },
+    {
+      "candidate_id": "candidate:Q76479$D1E2698A-055B-4019-817C-235AC430D94F",
+      "role": "MUSIC",
+      "relation": "CREDIT",
+      "both_sides_have_person_and_work": false
+    },
+    {
+      "candidate_id": "candidate:q76479$EF2A64B1-B6BC-4535-848B-D53BA099DB4C",
+      "role": "CAST",
+      "relation": "CREDIT",
+      "both_sides_have_person_and_work": true
+    },
+    {
+      "candidate_id": "candidate:q76479$A7047A0A-A345-4BB2-AD7B-AE8A33436BE8",
+      "role": "CAST",
+      "relation": "CREDIT",
+      "both_sides_have_person_and_work": false
+    },
+    {
+      "candidate_id": "candidate:q76479$DCB1920A-56D0-41ED-B4BB-735AF1ECDC3F",
+      "role": "CAST",
+      "relation": "CREDIT",
+      "both_sides_have_person_and_work": false
+    },
+    {
+      "candidate_id": "candidate:Q76479$e581077b-43b6-f033-4b67-406f93be0451",
+      "role": null,
+      "relation": "SERIES_MEMBERSHIP",
+      "both_sides_have_person_and_work": false
+    },
+    {
+      "candidate_id": "candidate:q104137$3BA0821B-A1E1-45FE-BF84-4E013DD4B557",
+      "role": "SCREENWRITING",
+      "relation": "CREDIT",
+      "both_sides_have_person_and_work": true
+    },
+    {
+      "candidate_id": "candidate:q104137$1B0E36E9-AA57-43D1-81FA-2CC6987D5367",
+      "role": "CAST",
+      "relation": "CREDIT",
+      "both_sides_have_person_and_work": false
+    },
+    {
+      "candidate_id": "candidate:q184255$3893E217-9574-4A9A-BEC0-915083C81D6A",
+      "role": "CINEMATOGRAPHY",
+      "relation": "CREDIT",
+      "both_sides_have_person_and_work": false
+    },
+    {
+      "candidate_id": "candidate:q184255$863B6F03-C061-483A-9BB1-85AED09F1433",
+      "role": "PRODUCING",
+      "relation": "CREDIT",
+      "both_sides_have_person_and_work": false
+    },
+    {
+      "candidate_id": "candidate:q184255$F701BD1C-8D6B-46A4-A68F-BF93ECF5695D",
+      "role": "PRODUCING",
+      "relation": "CREDIT",
+      "both_sides_have_person_and_work": false
+    },
+    {
+      "candidate_id": "candidate:q184255$6E39F62D-CB25-409E-8DF0-C9D4DC7A7D8B",
+      "role": "CAST",
+      "relation": "CREDIT",
+      "both_sides_have_person_and_work": false
+    }
+  ],
+  "ablations": {
+    "without_acmi": {
+      "nodes": 64,
+      "records": 76,
+      "unique_endpoint_pairs": 64,
+      "components": 6,
+      "component_sizes": [
+        59,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "branching_nodes": 18,
+      "within_hops_ordered_pairs": [
+        128,
+        584,
+        976
+      ],
+      "film_root_within_hops": {
+        "Q104137": [
+          4,
+          7,
+          27
+        ],
+        "Q114819": [
+          0,
+          0,
+          0
+        ],
+        "Q13417189": [
+          5,
+          8,
+          27
+        ],
+        "Q184255": [
+          7,
+          9,
+          17
+        ],
+        "Q184843": [
+          10,
+          20,
+          27
+        ],
+        "Q20382729": [
+          7,
+          9,
+          25
+        ],
+        "Q21500755": [
+          12,
+          23,
+          42
+        ],
+        "Q25188": [
+          6,
+          9,
+          27
+        ],
+        "Q60834962": [
+          7,
+          11,
+          34
+        ],
+        "Q76479": [
+          7,
+          9,
+          17
+        ]
+      }
+    },
+    "without_david_peoples": {
+      "nodes": 64,
+      "records": 79,
+      "unique_endpoint_pairs": 67,
+      "components": 3,
+      "component_sizes": [
+        46,
+        17,
+        1
+      ],
+      "branching_nodes": 19,
+      "within_hops_ordered_pairs": [
+        134,
+        586,
+        952
+      ],
+      "film_root_within_hops": {
+        "Q104137": [
+          3,
+          5,
+          16
+        ],
+        "Q114819": [
+          5,
+          6,
+          12
+        ],
+        "Q13417189": [
+          5,
+          8,
+          27
+        ],
+        "Q184255": [
+          7,
+          9,
+          16
+        ],
+        "Q184843": [
+          9,
+          18,
+          22
+        ],
+        "Q20382729": [
+          7,
+          9,
+          25
+        ],
+        "Q21500755": [
+          12,
+          22,
+          40
+        ],
+        "Q25188": [
+          6,
+          9,
+          27
+        ],
+        "Q60834962": [
+          7,
+          12,
+          39
+        ],
+        "Q76479": [
+          7,
+          9,
+          16
+        ]
+      }
+    }
+  },
+  "queries": {
+    "same_screenwriter": {
+      "root": "Q184843",
+      "roles": [
+        [
+          "SCREENWRITING"
+        ],
+        [
+          "SCREENWRITING"
+        ]
+      ],
+      "relations": null,
+      "path_count": 2,
+      "distinct_targets": [
+        "Q104137",
+        "Q21500755"
+      ],
+      "paths": [
+        {
+          "nodes": [
+            "Q184843",
+            "Q1177114",
+            "Q104137"
+          ],
+          "names": [
+            "Blade Runner",
+            "David Peoples",
+            "Unforgiven"
+          ],
+          "steps": [
+            {
+              "candidate_id": "candidate:q184843$284E2874-A3FC-4CCB-B36F-9D4334F2BB83",
+              "role": "SCREENWRITING",
+              "relation": "CREDIT",
+              "canonical_subject": "Q1177114",
+              "canonical_object": "Q184843",
+              "traversal": "reverse",
+              "source_ids": [
+                "S01"
+              ]
+            },
+            {
+              "candidate_id": "candidate:q104137$3BA0821B-A1E1-45FE-BF84-4E013DD4B557",
+              "role": "SCREENWRITING",
+              "relation": "CREDIT",
+              "canonical_subject": "Q1177114",
+              "canonical_object": "Q104137",
+              "traversal": "forward",
+              "source_ids": [
+                "S10"
+              ]
+            }
+          ]
+        },
+        {
+          "nodes": [
+            "Q184843",
+            "Q1372703",
+            "Q21500755"
+          ],
+          "names": [
+            "Blade Runner",
+            "Hampton Fancher",
+            "Blade Runner 2049"
+          ],
+          "steps": [
+            {
+              "candidate_id": "candidate:q184843$7BFE807E-21C2-4F1A-8EB9-16DF92DCAD9E",
+              "role": "SCREENWRITING",
+              "relation": "CREDIT",
+              "canonical_subject": "Q1372703",
+              "canonical_object": "Q184843",
+              "traversal": "reverse",
+              "source_ids": [
+                "S01"
+              ]
+            },
+            {
+              "candidate_id": "candidate:Q21500755$d67b18c8-46b4-2882-88d9-6de6930f17c6",
+              "role": "SCREENWRITING",
+              "relation": "CREDIT",
+              "canonical_subject": "Q1372703",
+              "canonical_object": "Q21500755",
+              "traversal": "forward",
+              "source_ids": [
+                "S03"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "same_director": {
+      "root": "Q20382729",
+      "roles": [
+        [
+          "DIRECTING"
+        ],
+        [
+          "DIRECTING"
+        ]
+      ],
+      "relations": null,
+      "path_count": 2,
+      "distinct_targets": [
+        "Q21500755",
+        "Q60834962"
+      ],
+      "paths": [
+        {
+          "nodes": [
+            "Q20382729",
+            "Q548823",
+            "Q21500755"
+          ],
+          "names": [
+            "Arrival",
+            "Denis Villeneuve",
+            "Blade Runner 2049"
+          ],
+          "steps": [
+            {
+              "candidate_id": "candidate:Q20382729$93FD369A-82DC-4CCF-8DBC-63BF52640C59",
+              "role": "DIRECTING",
+              "relation": "CREDIT",
+              "canonical_subject": "Q548823",
+              "canonical_object": "Q20382729",
+              "traversal": "reverse",
+              "source_ids": [
+                "S06"
+              ]
+            },
+            {
+              "candidate_id": "candidate:Q21500755$3b2b8856-4ac9-a659-fe86-9a94d3ec6f33",
+              "role": "DIRECTING",
+              "relation": "CREDIT",
+              "canonical_subject": "Q548823",
+              "canonical_object": "Q21500755",
+              "traversal": "forward",
+              "source_ids": [
+                "S03"
+              ]
+            }
+          ]
+        },
+        {
+          "nodes": [
+            "Q20382729",
+            "Q548823",
+            "Q60834962"
+          ],
+          "names": [
+            "Arrival",
+            "Denis Villeneuve",
+            "Dune"
+          ],
+          "steps": [
+            {
+              "candidate_id": "candidate:Q20382729$93FD369A-82DC-4CCF-8DBC-63BF52640C59",
+              "role": "DIRECTING",
+              "relation": "CREDIT",
+              "canonical_subject": "Q548823",
+              "canonical_object": "Q20382729",
+              "traversal": "reverse",
+              "source_ids": [
+                "S06"
+              ]
+            },
+            {
+              "candidate_id": "candidate:Q60834962$27E7FD47-4BE4-4B52-817C-A65C5E7F3CA4",
+              "role": "DIRECTING",
+              "relation": "CREDIT",
+              "canonical_subject": "Q548823",
+              "canonical_object": "Q60834962",
+              "traversal": "forward",
+              "source_ids": [
+                "S05"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "cast_to_director": {
+      "root": "Q104137",
+      "roles": [
+        [
+          "CAST"
+        ],
+        [
+          "DIRECTING"
+        ]
+      ],
+      "relations": null,
+      "path_count": 1,
+      "distinct_targets": [
+        "Q184255"
+      ],
+      "paths": [
+        {
+          "nodes": [
+            "Q104137",
+            "Q43203",
+            "Q184255"
+          ],
+          "names": [
+            "Unforgiven",
+            "Clint Eastwood",
+            "Million Dollar Baby"
+          ],
+          "steps": [
+            {
+              "candidate_id": "candidate:Q104137$3D0CF582-4DF0-445D-9EB3-221A8DC7E84F",
+              "role": "CAST",
+              "relation": "CREDIT",
+              "canonical_subject": "Q43203",
+              "canonical_object": "Q104137",
+              "traversal": "reverse",
+              "source_ids": [
+                "S10"
+              ]
+            },
+            {
+              "candidate_id": "candidate:q184255$E97BDEC1-96DE-489D-B0D0-2BE2CC42818F",
+              "role": "DIRECTING",
+              "relation": "CREDIT",
+              "canonical_subject": "Q43203",
+              "canonical_object": "Q184255",
+              "traversal": "forward",
+              "source_ids": [
+                "S11"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "uniform_cast_or_director": {
+      "root": "Q104137",
+      "roles": [
+        [
+          "CAST",
+          "DIRECTING"
+        ],
+        [
+          "CAST",
+          "DIRECTING"
+        ]
+      ],
+      "relations": null,
+      "path_count": 7,
+      "distinct_targets": [
+        "Q184255",
+        "Q76479"
+      ],
+      "paths": [
+        {
+          "nodes": [
+            "Q104137",
+            "Q43203",
+            "Q184255"
+          ],
+          "names": [
+            "Unforgiven",
+            "Clint Eastwood",
+            "Million Dollar Baby"
+          ],
+          "steps": [
+            {
+              "candidate_id": "candidate:Q104137$3D0CF582-4DF0-445D-9EB3-221A8DC7E84F",
+              "role": "CAST",
+              "relation": "CREDIT",
+              "canonical_subject": "Q43203",
+              "canonical_object": "Q104137",
+              "traversal": "reverse",
+              "source_ids": [
+                "S10"
+              ]
+            },
+            {
+              "candidate_id": "candidate:q184255$301FF7F2-A06A-488D-9D09-33EE54CA49DE",
+              "role": "CAST",
+              "relation": "CREDIT",
+              "canonical_subject": "Q43203",
+              "canonical_object": "Q184255",
+              "traversal": "forward",
+              "source_ids": [
+                "S11"
+              ]
+            }
+          ]
+        },
+        {
+          "nodes": [
+            "Q104137",
+            "Q43203",
+            "Q184255"
+          ],
+          "names": [
+            "Unforgiven",
+            "Clint Eastwood",
+            "Million Dollar Baby"
+          ],
+          "steps": [
+            {
+              "candidate_id": "candidate:Q104137$3D0CF582-4DF0-445D-9EB3-221A8DC7E84F",
+              "role": "CAST",
+              "relation": "CREDIT",
+              "canonical_subject": "Q43203",
+              "canonical_object": "Q104137",
+              "traversal": "reverse",
+              "source_ids": [
+                "S10"
+              ]
+            },
+            {
+              "candidate_id": "candidate:q184255$E97BDEC1-96DE-489D-B0D0-2BE2CC42818F",
+              "role": "DIRECTING",
+              "relation": "CREDIT",
+              "canonical_subject": "Q43203",
+              "canonical_object": "Q184255",
+              "traversal": "forward",
+              "source_ids": [
+                "S11"
+              ]
+            }
+          ]
+        },
+        {
+          "nodes": [
+            "Q104137",
+            "Q43203",
+            "Q76479"
+          ],
+          "names": [
+            "Unforgiven",
+            "Clint Eastwood",
+            "A Fistful of Dollars"
+          ],
+          "steps": [
+            {
+              "candidate_id": "candidate:Q104137$3D0CF582-4DF0-445D-9EB3-221A8DC7E84F",
+              "role": "CAST",
+              "relation": "CREDIT",
+              "canonical_subject": "Q43203",
+              "canonical_object": "Q104137",
+              "traversal": "reverse",
+              "source_ids": [
+                "S10"
+              ]
+            },
+            {
+              "candidate_id": "candidate:q76479$EF2A64B1-B6BC-4535-848B-D53BA099DB4C",
+              "role": "CAST",
+              "relation": "CREDIT",
+              "canonical_subject": "Q43203",
+              "canonical_object": "Q76479",
+              "traversal": "forward",
+              "source_ids": [
+                "S09"
+              ]
+            }
+          ]
+        },
+        {
+          "nodes": [
+            "Q104137",
+            "Q48337",
+            "Q184255"
+          ],
+          "names": [
+            "Unforgiven",
+            "Morgan Freeman",
+            "Million Dollar Baby"
+          ],
+          "steps": [
+            {
+              "candidate_id": "candidate:q104137$3B57142F-2116-4265-901D-3F772622D3C1",
+              "role": "CAST",
+              "relation": "CREDIT",
+              "canonical_subject": "Q48337",
+              "canonical_object": "Q104137",
+              "traversal": "reverse",
+              "source_ids": [
+                "S10"
+              ]
+            },
+            {
+              "candidate_id": "candidate:q184255$442501B0-0AC6-4E42-B522-9B71D64E7DFD",
+              "role": "CAST",
+              "relation": "CREDIT",
+              "canonical_subject": "Q48337",
+              "canonical_object": "Q184255",
+              "traversal": "forward",
+              "source_ids": [
+                "S11"
+              ]
+            }
+          ]
+        },
+        {
+          "nodes": [
+            "Q104137",
+            "Q43203",
+            "Q184255"
+          ],
+          "names": [
+            "Unforgiven",
+            "Clint Eastwood",
+            "Million Dollar Baby"
+          ],
+          "steps": [
+            {
+              "candidate_id": "candidate:q104137$B226BBA0-92F8-4A47-8EC8-21697BAFADBA",
+              "role": "DIRECTING",
+              "relation": "CREDIT",
+              "canonical_subject": "Q43203",
+              "canonical_object": "Q104137",
+              "traversal": "reverse",
+              "source_ids": [
+                "S10"
+              ]
+            },
+            {
+              "candidate_id": "candidate:q184255$301FF7F2-A06A-488D-9D09-33EE54CA49DE",
+              "role": "CAST",
+              "relation": "CREDIT",
+              "canonical_subject": "Q43203",
+              "canonical_object": "Q184255",
+              "traversal": "forward",
+              "source_ids": [
+                "S11"
+              ]
+            }
+          ]
+        },
+        {
+          "nodes": [
+            "Q104137",
+            "Q43203",
+            "Q184255"
+          ],
+          "names": [
+            "Unforgiven",
+            "Clint Eastwood",
+            "Million Dollar Baby"
+          ],
+          "steps": [
+            {
+              "candidate_id": "candidate:q104137$B226BBA0-92F8-4A47-8EC8-21697BAFADBA",
+              "role": "DIRECTING",
+              "relation": "CREDIT",
+              "canonical_subject": "Q43203",
+              "canonical_object": "Q104137",
+              "traversal": "reverse",
+              "source_ids": [
+                "S10"
+              ]
+            },
+            {
+              "candidate_id": "candidate:q184255$E97BDEC1-96DE-489D-B0D0-2BE2CC42818F",
+              "role": "DIRECTING",
+              "relation": "CREDIT",
+              "canonical_subject": "Q43203",
+              "canonical_object": "Q184255",
+              "traversal": "forward",
+              "source_ids": [
+                "S11"
+              ]
+            }
+          ]
+        },
+        {
+          "nodes": [
+            "Q104137",
+            "Q43203",
+            "Q76479"
+          ],
+          "names": [
+            "Unforgiven",
+            "Clint Eastwood",
+            "A Fistful of Dollars"
+          ],
+          "steps": [
+            {
+              "candidate_id": "candidate:q104137$B226BBA0-92F8-4A47-8EC8-21697BAFADBA",
+              "role": "DIRECTING",
+              "relation": "CREDIT",
+              "canonical_subject": "Q43203",
+              "canonical_object": "Q104137",
+              "traversal": "reverse",
+              "source_ids": [
+                "S10"
+              ]
+            },
+            {
+              "candidate_id": "candidate:q76479$EF2A64B1-B6BC-4535-848B-D53BA099DB4C",
+              "role": "CAST",
+              "relation": "CREDIT",
+              "canonical_subject": "Q43203",
+              "canonical_object": "Q76479",
+              "traversal": "forward",
+              "source_ids": [
+                "S09"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "same_director_inception": {
+      "root": "Q25188",
+      "roles": [
+        [
+          "DIRECTING"
+        ],
+        [
+          "DIRECTING"
+        ]
+      ],
+      "relations": null,
+      "path_count": 1,
+      "distinct_targets": [
+        "Q13417189"
+      ],
+      "paths": [
+        {
+          "nodes": [
+            "Q25188",
+            "Q25191",
+            "Q13417189"
+          ],
+          "names": [
+            "Inception",
+            "Christopher Nolan",
+            "Interstellar"
+          ],
+          "steps": [
+            {
+              "candidate_id": "candidate:q25188$63A635C4-638B-4D44-AED4-8AB033C28731",
+              "role": "DIRECTING",
+              "relation": "CREDIT",
+              "canonical_subject": "Q25191",
+              "canonical_object": "Q25188",
+              "traversal": "reverse",
+              "source_ids": [
+                "S07"
+              ]
+            },
+            {
+              "candidate_id": "candidate:q13417189$213eb681-48af-a80e-fecd-a3ff61638f1d",
+              "role": "DIRECTING",
+              "relation": "CREDIT",
+              "canonical_subject": "Q25191",
+              "canonical_object": "Q13417189",
+              "traversal": "forward",
+              "source_ids": [
+                "S08"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "same_music_inception": {
+      "root": "Q25188",
+      "roles": [
+        [
+          "MUSIC"
+        ],
+        [
+          "MUSIC"
+        ]
+      ],
+      "relations": null,
+      "path_count": 3,
+      "distinct_targets": [
+        "Q13417189",
+        "Q21500755",
+        "Q60834962"
+      ],
+      "paths": [
+        {
+          "nodes": [
+            "Q25188",
+            "Q76364",
+            "Q13417189"
+          ],
+          "names": [
+            "Inception",
+            "Hans Zimmer",
+            "Interstellar"
+          ],
+          "steps": [
+            {
+              "candidate_id": "candidate:Q25188$6C418E9D-0DF3-46F6-A492-EF9B81BF58AB",
+              "role": "MUSIC",
+              "relation": "CREDIT",
+              "canonical_subject": "Q76364",
+              "canonical_object": "Q25188",
+              "traversal": "reverse",
+              "source_ids": [
+                "S07"
+              ]
+            },
+            {
+              "candidate_id": "candidate:Q13417189$fae030ae-4f52-9ab4-a0aa-430fdfeb917c",
+              "role": "MUSIC",
+              "relation": "CREDIT",
+              "canonical_subject": "Q76364",
+              "canonical_object": "Q13417189",
+              "traversal": "forward",
+              "source_ids": [
+                "S08"
+              ]
+            }
+          ]
+        },
+        {
+          "nodes": [
+            "Q25188",
+            "Q76364",
+            "Q21500755"
+          ],
+          "names": [
+            "Inception",
+            "Hans Zimmer",
+            "Blade Runner 2049"
+          ],
+          "steps": [
+            {
+              "candidate_id": "candidate:Q25188$6C418E9D-0DF3-46F6-A492-EF9B81BF58AB",
+              "role": "MUSIC",
+              "relation": "CREDIT",
+              "canonical_subject": "Q76364",
+              "canonical_object": "Q25188",
+              "traversal": "reverse",
+              "source_ids": [
+                "S07"
+              ]
+            },
+            {
+              "candidate_id": "candidate:Q21500755$6925bf24-4769-6c57-1559-3f160d471644",
+              "role": "MUSIC",
+              "relation": "CREDIT",
+              "canonical_subject": "Q76364",
+              "canonical_object": "Q21500755",
+              "traversal": "forward",
+              "source_ids": [
+                "S03"
+              ]
+            }
+          ]
+        },
+        {
+          "nodes": [
+            "Q25188",
+            "Q76364",
+            "Q60834962"
+          ],
+          "names": [
+            "Inception",
+            "Hans Zimmer",
+            "Dune"
+          ],
+          "steps": [
+            {
+              "candidate_id": "candidate:Q25188$6C418E9D-0DF3-46F6-A492-EF9B81BF58AB",
+              "role": "MUSIC",
+              "relation": "CREDIT",
+              "canonical_subject": "Q76364",
+              "canonical_object": "Q25188",
+              "traversal": "reverse",
+              "source_ids": [
+                "S07"
+              ]
+            },
+            {
+              "candidate_id": "candidate:Q60834962$d7d9969e-4d43-3f14-4c10-d5b24b7ff449",
+              "role": "MUSIC",
+              "relation": "CREDIT",
+              "canonical_subject": "Q76364",
+              "canonical_object": "Q60834962",
+              "traversal": "forward",
+              "source_ids": [
+                "S12"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "uniform_director_or_music": {
+      "root": "Q25188",
+      "roles": [
+        [
+          "DIRECTING",
+          "MUSIC"
+        ],
+        [
+          "DIRECTING",
+          "MUSIC"
+        ]
+      ],
+      "relations": null,
+      "path_count": 4,
+      "distinct_targets": [
+        "Q13417189",
+        "Q21500755",
+        "Q60834962"
+      ],
+      "paths": [
+        {
+          "nodes": [
+            "Q25188",
+            "Q76364",
+            "Q13417189"
+          ],
+          "names": [
+            "Inception",
+            "Hans Zimmer",
+            "Interstellar"
+          ],
+          "steps": [
+            {
+              "candidate_id": "candidate:Q25188$6C418E9D-0DF3-46F6-A492-EF9B81BF58AB",
+              "role": "MUSIC",
+              "relation": "CREDIT",
+              "canonical_subject": "Q76364",
+              "canonical_object": "Q25188",
+              "traversal": "reverse",
+              "source_ids": [
+                "S07"
+              ]
+            },
+            {
+              "candidate_id": "candidate:Q13417189$fae030ae-4f52-9ab4-a0aa-430fdfeb917c",
+              "role": "MUSIC",
+              "relation": "CREDIT",
+              "canonical_subject": "Q76364",
+              "canonical_object": "Q13417189",
+              "traversal": "forward",
+              "source_ids": [
+                "S08"
+              ]
+            }
+          ]
+        },
+        {
+          "nodes": [
+            "Q25188",
+            "Q76364",
+            "Q21500755"
+          ],
+          "names": [
+            "Inception",
+            "Hans Zimmer",
+            "Blade Runner 2049"
+          ],
+          "steps": [
+            {
+              "candidate_id": "candidate:Q25188$6C418E9D-0DF3-46F6-A492-EF9B81BF58AB",
+              "role": "MUSIC",
+              "relation": "CREDIT",
+              "canonical_subject": "Q76364",
+              "canonical_object": "Q25188",
+              "traversal": "reverse",
+              "source_ids": [
+                "S07"
+              ]
+            },
+            {
+              "candidate_id": "candidate:Q21500755$6925bf24-4769-6c57-1559-3f160d471644",
+              "role": "MUSIC",
+              "relation": "CREDIT",
+              "canonical_subject": "Q76364",
+              "canonical_object": "Q21500755",
+              "traversal": "forward",
+              "source_ids": [
+                "S03"
+              ]
+            }
+          ]
+        },
+        {
+          "nodes": [
+            "Q25188",
+            "Q76364",
+            "Q60834962"
+          ],
+          "names": [
+            "Inception",
+            "Hans Zimmer",
+            "Dune"
+          ],
+          "steps": [
+            {
+              "candidate_id": "candidate:Q25188$6C418E9D-0DF3-46F6-A492-EF9B81BF58AB",
+              "role": "MUSIC",
+              "relation": "CREDIT",
+              "canonical_subject": "Q76364",
+              "canonical_object": "Q25188",
+              "traversal": "reverse",
+              "source_ids": [
+                "S07"
+              ]
+            },
+            {
+              "candidate_id": "candidate:Q60834962$d7d9969e-4d43-3f14-4c10-d5b24b7ff449",
+              "role": "MUSIC",
+              "relation": "CREDIT",
+              "canonical_subject": "Q76364",
+              "canonical_object": "Q60834962",
+              "traversal": "forward",
+              "source_ids": [
+                "S12"
+              ]
+            }
+          ]
+        },
+        {
+          "nodes": [
+            "Q25188",
+            "Q25191",
+            "Q13417189"
+          ],
+          "names": [
+            "Inception",
+            "Christopher Nolan",
+            "Interstellar"
+          ],
+          "steps": [
+            {
+              "candidate_id": "candidate:q25188$63A635C4-638B-4D44-AED4-8AB033C28731",
+              "role": "DIRECTING",
+              "relation": "CREDIT",
+              "canonical_subject": "Q25191",
+              "canonical_object": "Q25188",
+              "traversal": "reverse",
+              "source_ids": [
+                "S07"
+              ]
+            },
+            {
+              "candidate_id": "candidate:q13417189$213eb681-48af-a80e-fecd-a3ff61638f1d",
+              "role": "DIRECTING",
+              "relation": "CREDIT",
+              "canonical_subject": "Q25191",
+              "canonical_object": "Q13417189",
+              "traversal": "forward",
+              "source_ids": [
+                "S08"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "same_novel": {
+      "root": "Q114819",
+      "roles": null,
+      "relations": [
+        [
+          "BASED_ON"
+        ],
+        [
+          "BASED_ON"
+        ]
+      ],
+      "path_count": 1,
+      "distinct_targets": [
+        "Q60834962"
+      ],
+      "paths": [
+        {
+          "nodes": [
+            "Q114819",
+            "Q190192",
+            "Q60834962"
+          ],
+          "names": [
+            "Dune",
+            "Dune",
+            "Dune"
+          ],
+          "steps": [
+            {
+              "candidate_id": "candidate:q114819$101EFA3E-5EA8-4FBB-BA1D-7B441F72B971",
+              "role": null,
+              "relation": "BASED_ON",
+              "canonical_subject": "Q114819",
+              "canonical_object": "Q190192",
+              "traversal": "forward",
+              "source_ids": [
+                "S04"
+              ]
+            },
+            {
+              "candidate_id": "candidate:Q60834962$A13C8BF4-4667-4E47-A85E-03D6C4F77220",
+              "role": null,
+              "relation": "BASED_ON",
+              "canonical_subject": "Q60834962",
+              "canonical_object": "Q190192",
+              "traversal": "reverse",
+              "source_ids": [
+                "S05"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "sequel_to_previous_cast": {
+      "root": "Q21500755",
+      "roles": null,
+      "relations": [
+        [
+          "SEQUEL_OF"
+        ],
+        [
+          "CREDIT"
+        ]
+      ],
+      "path_count": 3,
+      "distinct_targets": [
+        "Q213574",
+        "Q230736",
+        "Q81328"
+      ],
+      "paths": [
+        {
+          "nodes": [
+            "Q21500755",
+            "Q184843",
+            "Q213574"
+          ],
+          "names": [
+            "Blade Runner 2049",
+            "Blade Runner",
+            "Rutger Hauer"
+          ],
+          "steps": [
+            {
+              "candidate_id": "candidate:Q21500755$908d11f0-406e-8cdb-7073-f258d8b56170",
+              "role": null,
+              "relation": "SEQUEL_OF",
+              "canonical_subject": "Q21500755",
+              "canonical_object": "Q184843",
+              "traversal": "forward",
+              "source_ids": [
+                "S03"
+              ]
+            },
+            {
+              "candidate_id": "candidate:q184843$9D2ED00E-F7DA-4ECC-9882-4B3317D4641E",
+              "role": "CAST",
+              "relation": "CREDIT",
+              "canonical_subject": "Q213574",
+              "canonical_object": "Q184843",
+              "traversal": "reverse",
+              "source_ids": [
+                "S01",
+                "S02"
+              ]
+            }
+          ]
+        },
+        {
+          "nodes": [
+            "Q21500755",
+            "Q184843",
+            "Q81328"
+          ],
+          "names": [
+            "Blade Runner 2049",
+            "Blade Runner",
+            "Harrison Ford"
+          ],
+          "steps": [
+            {
+              "candidate_id": "candidate:Q21500755$908d11f0-406e-8cdb-7073-f258d8b56170",
+              "role": null,
+              "relation": "SEQUEL_OF",
+              "canonical_subject": "Q21500755",
+              "canonical_object": "Q184843",
+              "traversal": "forward",
+              "source_ids": [
+                "S03"
+              ]
+            },
+            {
+              "candidate_id": "candidate:q184843$C9B16D9C-B7F1-42A9-9200-FBD2CF7312B3",
+              "role": "CAST",
+              "relation": "CREDIT",
+              "canonical_subject": "Q81328",
+              "canonical_object": "Q184843",
+              "traversal": "reverse",
+              "source_ids": [
+                "S01",
+                "S02"
+              ]
+            }
+          ]
+        },
+        {
+          "nodes": [
+            "Q21500755",
+            "Q184843",
+            "Q230736"
+          ],
+          "names": [
+            "Blade Runner 2049",
+            "Blade Runner",
+            "Sean Young"
+          ],
+          "steps": [
+            {
+              "candidate_id": "candidate:Q21500755$908d11f0-406e-8cdb-7073-f258d8b56170",
+              "role": null,
+              "relation": "SEQUEL_OF",
+              "canonical_subject": "Q21500755",
+              "canonical_object": "Q184843",
+              "traversal": "forward",
+              "source_ids": [
+                "S03"
+              ]
+            },
+            {
+              "candidate_id": "candidate:q184843$DDC64615-F83C-4B82-B2B6-91C37F701010",
+              "role": "CAST",
+              "relation": "CREDIT",
+              "canonical_subject": "Q230736",
+              "canonical_object": "Q184843",
+              "traversal": "reverse",
+              "source_ids": [
+                "S01",
+                "S02"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "writer_other_film_cast": {
+      "root": "Q184843",
+      "roles": [
+        [
+          "SCREENWRITING"
+        ],
+        [
+          "SCREENWRITING"
+        ],
+        [
+          "CAST"
+        ]
+      ],
+      "relations": null,
+      "path_count": 7,
+      "distinct_targets": [
+        "Q150943",
+        "Q193815",
+        "Q272972",
+        "Q43203",
+        "Q44158",
+        "Q48337",
+        "Q81328"
+      ],
+      "paths": [
+        {
+          "nodes": [
+            "Q184843",
+            "Q1177114",
+            "Q104137",
+            "Q43203"
+          ],
+          "names": [
+            "Blade Runner",
+            "David Peoples",
+            "Unforgiven",
+            "Clint Eastwood"
+          ],
+          "steps": [
+            {
+              "candidate_id": "candidate:q184843$284E2874-A3FC-4CCB-B36F-9D4334F2BB83",
+              "role": "SCREENWRITING",
+              "relation": "CREDIT",
+              "canonical_subject": "Q1177114",
+              "canonical_object": "Q184843",
+              "traversal": "reverse",
+              "source_ids": [
+                "S01"
+              ]
+            },
+            {
+              "candidate_id": "candidate:q104137$3BA0821B-A1E1-45FE-BF84-4E013DD4B557",
+              "role": "SCREENWRITING",
+              "relation": "CREDIT",
+              "canonical_subject": "Q1177114",
+              "canonical_object": "Q104137",
+              "traversal": "forward",
+              "source_ids": [
+                "S10"
+              ]
+            },
+            {
+              "candidate_id": "candidate:Q104137$3D0CF582-4DF0-445D-9EB3-221A8DC7E84F",
+              "role": "CAST",
+              "relation": "CREDIT",
+              "canonical_subject": "Q43203",
+              "canonical_object": "Q104137",
+              "traversal": "reverse",
+              "source_ids": [
+                "S10"
+              ]
+            }
+          ]
+        },
+        {
+          "nodes": [
+            "Q184843",
+            "Q1177114",
+            "Q104137",
+            "Q150943"
+          ],
+          "names": [
+            "Blade Runner",
+            "David Peoples",
+            "Unforgiven",
+            "Gene Hackman"
+          ],
+          "steps": [
+            {
+              "candidate_id": "candidate:q184843$284E2874-A3FC-4CCB-B36F-9D4334F2BB83",
+              "role": "SCREENWRITING",
+              "relation": "CREDIT",
+              "canonical_subject": "Q1177114",
+              "canonical_object": "Q184843",
+              "traversal": "reverse",
+              "source_ids": [
+                "S01"
+              ]
+            },
+            {
+              "candidate_id": "candidate:q104137$3BA0821B-A1E1-45FE-BF84-4E013DD4B557",
+              "role": "SCREENWRITING",
+              "relation": "CREDIT",
+              "canonical_subject": "Q1177114",
+              "canonical_object": "Q104137",
+              "traversal": "forward",
+              "source_ids": [
+                "S10"
+              ]
+            },
+            {
+              "candidate_id": "candidate:q104137$1B0E36E9-AA57-43D1-81FA-2CC6987D5367",
+              "role": "CAST",
+              "relation": "CREDIT",
+              "canonical_subject": "Q150943",
+              "canonical_object": "Q104137",
+              "traversal": "reverse",
+              "source_ids": [
+                "S10"
+              ]
+            }
+          ]
+        },
+        {
+          "nodes": [
+            "Q184843",
+            "Q1177114",
+            "Q104137",
+            "Q48337"
+          ],
+          "names": [
+            "Blade Runner",
+            "David Peoples",
+            "Unforgiven",
+            "Morgan Freeman"
+          ],
+          "steps": [
+            {
+              "candidate_id": "candidate:q184843$284E2874-A3FC-4CCB-B36F-9D4334F2BB83",
+              "role": "SCREENWRITING",
+              "relation": "CREDIT",
+              "canonical_subject": "Q1177114",
+              "canonical_object": "Q184843",
+              "traversal": "reverse",
+              "source_ids": [
+                "S01"
+              ]
+            },
+            {
+              "candidate_id": "candidate:q104137$3BA0821B-A1E1-45FE-BF84-4E013DD4B557",
+              "role": "SCREENWRITING",
+              "relation": "CREDIT",
+              "canonical_subject": "Q1177114",
+              "canonical_object": "Q104137",
+              "traversal": "forward",
+              "source_ids": [
+                "S10"
+              ]
+            },
+            {
+              "candidate_id": "candidate:q104137$3B57142F-2116-4265-901D-3F772622D3C1",
+              "role": "CAST",
+              "relation": "CREDIT",
+              "canonical_subject": "Q48337",
+              "canonical_object": "Q104137",
+              "traversal": "reverse",
+              "source_ids": [
+                "S10"
+              ]
+            }
+          ]
+        },
+        {
+          "nodes": [
+            "Q184843",
+            "Q1372703",
+            "Q21500755",
+            "Q81328"
+          ],
+          "names": [
+            "Blade Runner",
+            "Hampton Fancher",
+            "Blade Runner 2049",
+            "Harrison Ford"
+          ],
+          "steps": [
+            {
+              "candidate_id": "candidate:q184843$7BFE807E-21C2-4F1A-8EB9-16DF92DCAD9E",
+              "role": "SCREENWRITING",
+              "relation": "CREDIT",
+              "canonical_subject": "Q1372703",
+              "canonical_object": "Q184843",
+              "traversal": "reverse",
+              "source_ids": [
+                "S01"
+              ]
+            },
+            {
+              "candidate_id": "candidate:Q21500755$d67b18c8-46b4-2882-88d9-6de6930f17c6",
+              "role": "SCREENWRITING",
+              "relation": "CREDIT",
+              "canonical_subject": "Q1372703",
+              "canonical_object": "Q21500755",
+              "traversal": "forward",
+              "source_ids": [
+                "S03"
+              ]
+            },
+            {
+              "candidate_id": "candidate:Q21500755$06462c6d-4916-0ce3-c60f-e9e6cc86d80a",
+              "role": "CAST",
+              "relation": "CREDIT",
+              "canonical_subject": "Q81328",
+              "canonical_object": "Q21500755",
+              "traversal": "reverse",
+              "source_ids": [
+                "S03"
+              ]
+            }
+          ]
+        },
+        {
+          "nodes": [
+            "Q184843",
+            "Q1372703",
+            "Q21500755",
+            "Q193815"
+          ],
+          "names": [
+            "Blade Runner",
+            "Hampton Fancher",
+            "Blade Runner 2049",
+            "Ryan Gosling"
+          ],
+          "steps": [
+            {
+              "candidate_id": "candidate:q184843$7BFE807E-21C2-4F1A-8EB9-16DF92DCAD9E",
+              "role": "SCREENWRITING",
+              "relation": "CREDIT",
+              "canonical_subject": "Q1372703",
+              "canonical_object": "Q184843",
+              "traversal": "reverse",
+              "source_ids": [
+                "S01"
+              ]
+            },
+            {
+              "candidate_id": "candidate:Q21500755$d67b18c8-46b4-2882-88d9-6de6930f17c6",
+              "role": "SCREENWRITING",
+              "relation": "CREDIT",
+              "canonical_subject": "Q1372703",
+              "canonical_object": "Q21500755",
+              "traversal": "forward",
+              "source_ids": [
+                "S03"
+              ]
+            },
+            {
+              "candidate_id": "candidate:Q21500755$0b844a43-4e1d-5c02-c6ca-7ba24d9f4e4d",
+              "role": "CAST",
+              "relation": "CREDIT",
+              "canonical_subject": "Q193815",
+              "canonical_object": "Q21500755",
+              "traversal": "reverse",
+              "source_ids": [
+                "S03"
+              ]
+            }
+          ]
+        },
+        {
+          "nodes": [
+            "Q184843",
+            "Q1372703",
+            "Q21500755",
+            "Q272972"
+          ],
+          "names": [
+            "Blade Runner",
+            "Hampton Fancher",
+            "Blade Runner 2049",
+            "Robin Wright"
+          ],
+          "steps": [
+            {
+              "candidate_id": "candidate:q184843$7BFE807E-21C2-4F1A-8EB9-16DF92DCAD9E",
+              "role": "SCREENWRITING",
+              "relation": "CREDIT",
+              "canonical_subject": "Q1372703",
+              "canonical_object": "Q184843",
+              "traversal": "reverse",
+              "source_ids": [
+                "S01"
+              ]
+            },
+            {
+              "candidate_id": "candidate:Q21500755$d67b18c8-46b4-2882-88d9-6de6930f17c6",
+              "role": "SCREENWRITING",
+              "relation": "CREDIT",
+              "canonical_subject": "Q1372703",
+              "canonical_object": "Q21500755",
+              "traversal": "forward",
+              "source_ids": [
+                "S03"
+              ]
+            },
+            {
+              "candidate_id": "candidate:Q21500755$35dfb20f-4e8a-13ff-e72c-eda27ec75fc0",
+              "role": "CAST",
+              "relation": "CREDIT",
+              "canonical_subject": "Q272972",
+              "canonical_object": "Q21500755",
+              "traversal": "reverse",
+              "source_ids": [
+                "S03"
+              ]
+            }
+          ]
+        },
+        {
+          "nodes": [
+            "Q184843",
+            "Q1372703",
+            "Q21500755",
+            "Q44158"
+          ],
+          "names": [
+            "Blade Runner",
+            "Hampton Fancher",
+            "Blade Runner 2049",
+            "Dave Bautista"
+          ],
+          "steps": [
+            {
+              "candidate_id": "candidate:q184843$7BFE807E-21C2-4F1A-8EB9-16DF92DCAD9E",
+              "role": "SCREENWRITING",
+              "relation": "CREDIT",
+              "canonical_subject": "Q1372703",
+              "canonical_object": "Q184843",
+              "traversal": "reverse",
+              "source_ids": [
+                "S01"
+              ]
+            },
+            {
+              "candidate_id": "candidate:Q21500755$d67b18c8-46b4-2882-88d9-6de6930f17c6",
+              "role": "SCREENWRITING",
+              "relation": "CREDIT",
+              "canonical_subject": "Q1372703",
+              "canonical_object": "Q21500755",
+              "traversal": "forward",
+              "source_ids": [
+                "S03"
+              ]
+            },
+            {
+              "candidate_id": "candidate:Q21500755$d188a830-4fd2-17fe-c2ce-7434a1e82f61",
+              "role": "CAST",
+              "relation": "CREDIT",
+              "canonical_subject": "Q44158",
+              "canonical_object": "Q21500755",
+              "traversal": "reverse",
+              "source_ids": [
+                "S03"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "director_and_music": {
+      "distinct_targets": [
+        "Q13417189"
+      ],
+      "witnesses": {
+        "Q13417189": [
+          {
+            "nodes": [
+              "Q25188",
+              "Q25191",
+              "Q13417189"
+            ],
+            "names": [
+              "Inception",
+              "Christopher Nolan",
+              "Interstellar"
+            ],
+            "steps": [
+              {
+                "candidate_id": "candidate:q25188$63A635C4-638B-4D44-AED4-8AB033C28731",
+                "role": "DIRECTING",
+                "relation": "CREDIT",
+                "canonical_subject": "Q25191",
+                "canonical_object": "Q25188",
+                "traversal": "reverse",
+                "source_ids": [
+                  "S07"
+                ]
+              },
+              {
+                "candidate_id": "candidate:q13417189$213eb681-48af-a80e-fecd-a3ff61638f1d",
+                "role": "DIRECTING",
+                "relation": "CREDIT",
+                "canonical_subject": "Q25191",
+                "canonical_object": "Q13417189",
+                "traversal": "forward",
+                "source_ids": [
+                  "S08"
+                ]
+              }
+            ]
+          },
+          {
+            "nodes": [
+              "Q25188",
+              "Q76364",
+              "Q13417189"
+            ],
+            "names": [
+              "Inception",
+              "Hans Zimmer",
+              "Interstellar"
+            ],
+            "steps": [
+              {
+                "candidate_id": "candidate:Q25188$6C418E9D-0DF3-46F6-A492-EF9B81BF58AB",
+                "role": "MUSIC",
+                "relation": "CREDIT",
+                "canonical_subject": "Q76364",
+                "canonical_object": "Q25188",
+                "traversal": "reverse",
+                "source_ids": [
+                  "S07"
+                ]
+              },
+              {
+                "candidate_id": "candidate:Q13417189$fae030ae-4f52-9ab4-a0aa-430fdfeb917c",
+                "role": "MUSIC",
+                "relation": "CREDIT",
+                "canonical_subject": "Q76364",
+                "canonical_object": "Q13417189",
+                "traversal": "forward",
+                "source_ids": [
+                  "S08"
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    }
+  }
+}
