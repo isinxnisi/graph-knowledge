@@ -44,7 +44,7 @@
   "requestsByPhase": {
     "blocked": 11,
     "completed": 14,
-    "waiting-control": 1
+    "waiting-control": 2
   },
   "issueIntake": {
     "collection-control/issue-sources/25.json": {
@@ -58,6 +58,10 @@
     "collection-control/issue-sources/5.json": {
       "status": "registered: issue-5-dot-tezuka-adolf-20261025",
       "checkedAt": "2026-10-25T07:09:00+00:00"
+    },
+    "collection-control/issue-sources/42.json": {
+      "status": "registered: issue-42-dot-matsumoto-three-20261026",
+      "checkedAt": "2026-10-26T03:42:01+00:00"
     }
   },
   "publicApply": false,
@@ -99,5 +103,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-10-26T03:32:20.714541+00:00"
+  "checkedAt": "2026-10-26T03:42:51.015316+00:00"
 }
