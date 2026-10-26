@@ -249,7 +249,7 @@ class Executor:
         elif request['kind'] == 'issue-prepare':
             if request.get('resumePreparationId'):
                 slug(request['resumePreparationId']); slug(request['preparationCycle'])
-                insist(parent and parent['requestId'] == request['resumePreparationId'] and parent['phase'] == 'completed' and
+                insist(parent and parent['requestId'] == request['resumePreparationId'] and parent['phase'] in ['completed', 'awaiting-recovery', 'retry-transport'] and
                        parent['kind'] == 'issue-prepare' and parent['result']['batchRequests'] == [] and
                        parent['request']['permission'] == request['permission'] and parent['request']['issueOrigin'] == request['issueOrigin'],
                        'Same-scope completed preparation without dispatched children required')
@@ -643,7 +643,7 @@ class Worker:
                            'Same operation ID with changed targets/decision; explicit new review required')
                     record.update(phase='duplicate', message='Duplicate of ' + owner); self.checkpoint(); self.publish(request, record); continue
                 self.state['operations'][operation] = ident
-                if record['phase'] in ['completed', 'blocked', 'duplicate']:
+                if record['phase'] in ['completed', 'blocked', 'duplicate', 'awaiting-recovery']:
                     self.checkpoint(); continue
                 if record.get('retryAt', 0) > self.now(): continue
                 admission = self.control.gate()
@@ -691,6 +691,14 @@ class Worker:
                                     record.update(result=result, executionComplete=False, phase='sequence-progress', sequencePublicationPending=True)
                                     self.checkpoint()
                                     self.publish_sequence_progress(request, record)
+                                    continue
+                                if request['kind'] == 'issue-prepare' and result.get('preparationComplete') is False:
+                                    retry = result.get('retryAt')
+                                    record.update(result=result, executionComplete=False,
+                                                  phase='retry-transport' if retry is not None else 'awaiting-recovery',
+                                                  message='Technical acquisition incomplete; no semantic hold or acceptance',
+                                                  retryAt=retry or 0)
+                                    self.checkpoint(); self.publish(request, record)
                                     continue
                                 record.update(result=result, executionComplete=True, phase='publishing'); self.checkpoint()
                             else:

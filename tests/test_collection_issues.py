@@ -111,7 +111,7 @@ class IssueTests(unittest.TestCase):
         (directory / 'wikidata-Q5.body').write_bytes(body); i.save(f.index, f.state)
         f = i.Acquisition(directory, i.POLICY)
         self.assertEqual(f.url('wikidata-Q5', url)[0], body)
-        with self.assertRaisesRegex(ValueError, 'budget exhausted'): f.url('wikidata-Q6', i.legacy.request_url('wikidata', 'Q6'))
+        with self.assertRaisesRegex(i.transport.TechnicalWait, 'shared-budget-exhausted'): f.url('wikidata-Q6', i.legacy.request_url('wikidata', 'Q6'))
         self.assertEqual(len(f.state['attempts']), 142)
 
     def test_transport_interruption_counts_before_request_and_retry_after_is_durable(self):

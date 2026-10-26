@@ -1,0 +1,68 @@
+{
+  "testOnly": true,
+  "source": "Issue #42 saved NDL-created selected fields; no raw SRU/holdings",
+  "searchBodySha256": "85c38b372f85ab5d93af766a1b8ed3720ac97cea012d5c8ed22442dd60e35e0c",
+  "records": [
+    {
+      "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I000011265536",
+      "isbn13": [
+        "9784091591029"
+      ],
+      "title": [
+        "Sunny. 第1集"
+      ],
+      "mainTitles": [
+        "Sunny"
+      ],
+      "volume": [
+        "第1集"
+      ],
+      "edition": [
+        "ヨーヨー付き限定特装版"
+      ],
+      "responsibilities": [
+        "松本大洋 著"
+      ],
+      "publisher": [
+        "小学館"
+      ],
+      "language": [
+        "jpn"
+      ],
+      "genre": [
+        "漫画"
+      ],
+      "issued": "2011.8"
+    },
+    {
+      "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I000011265531",
+      "isbn13": [
+        "9784091885579"
+      ],
+      "title": [
+        "Sunny. 第1集"
+      ],
+      "mainTitles": [
+        "Sunny"
+      ],
+      "volume": [
+        "第1集"
+      ],
+      "edition": [],
+      "responsibilities": [
+        "松本大洋 著"
+      ],
+      "publisher": [
+        "小学館"
+      ],
+      "language": [
+        "jpn"
+      ],
+      "genre": [
+        "漫画"
+      ],
+      "issued": "2011.9"
+    }
+  ],
+  "attribution": "国立国会図書館サーチ・NDL作成書誌（CC BY 4.0）、各record.urlを参照。選択フィールドのみ。"
+}

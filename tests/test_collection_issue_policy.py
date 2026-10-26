@@ -76,11 +76,11 @@ class PolicyTests(unittest.TestCase):
         new = i.Acquisition(self.new, self.policy)
         with patch.object(i.urllib.request, 'build_opener') as opener, patch.object(i.time, 'sleep'):
             opener.return_value.open.return_value = Response()
-            for n in range(30): new.url('new-' + str(n), 'https://ndlsearch.ndl.go.jp/api/sru?test=' + str(n))
+            for n in range(30): new.url('new-' + str(n), 'https://ndlsearch.ndl.go.jp/api/sru?query=' + str(n))
             self.assertEqual(opener.return_value.open.call_count, 30)
             restarted = i.Acquisition(self.new, self.policy)
-            with self.assertRaisesRegex(ValueError, 'budget exhausted'):
-                restarted.url('new-31', 'https://ndlsearch.ndl.go.jp/api/sru?test=31')
+            with self.assertRaisesRegex(i.transport.TechnicalWait, 'shared-budget-exhausted'):
+                restarted.url('new-31', 'https://ndlsearch.ndl.go.jp/api/sru?query=31')
             self.assertEqual(opener.return_value.open.call_count, 30)
         self.assertEqual(len(restarted.state['attempts']), 30)
         # The unchanged child collector uses the SAME durable 30-attempt cache.
@@ -94,8 +94,8 @@ class PolicyTests(unittest.TestCase):
         old, key, url, body = self.seed()
         (self.old / (key + '.body')).write_bytes(b'tampered')
         new = i.Acquisition(self.new, self.policy)
-        with self.assertRaisesRegex(ValueError, 'Prior cached response changed'): new.url(key, url)
-        with self.assertRaisesRegex(ValueError, 'outside approval'): new.url(key, 'https://example.org/')
+        with self.assertRaisesRegex(i.transport.LocalFailure, 'Prior cache verification failed'): new.url(key, url)
+        with self.assertRaisesRegex(i.transport.LocalFailure, 'outside approval'): new.url(key, 'https://example.org/')
         self.assertEqual(new.state['attempts'], [])
 
     def test_provider_retry_after_survives_reuse_without_copying_attempts(self):

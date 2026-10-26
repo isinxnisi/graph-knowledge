@@ -33,6 +33,7 @@ def module(name, path):
 
 gate = module('issue_gate', ROOT / 'scripts/collection-themes.py')
 legacy = module('issue_manga', ROOT / 'scripts/collect-manga.py')
+transport = module('issue_transport', ROOT / 'scripts/collection-transport.py')
 read, save, dump, digest, require = gate.read, gate.save, gate.dump, gate.content_hash, gate.require
 
 
@@ -181,48 +182,91 @@ class Acquisition(legacy.Fetcher):
                 'responseSha256': receipt['sha256'], 'providerAttemptsAdded': 0}
             # Provider Retry-After is transport state, not a fresh Issue budget.
             self.state['blockedUntil'] = max(self.state['blockedUntil'], previous.get('blockedUntil', 0))
+            for host, until in previous.get('providerBlockedUntil', {}).items():
+                if host in ['www.wikidata.org', 'ndlsearch.ndl.go.jp']:
+                    values = self.state.setdefault('providerBlockedUntil', {})
+                    values[host] = max(values.get(host, 0), until)
             save(self.index, self.state)
             return
 
+    def persist(self): save(self.index, self.state)
+    request_digest = staticmethod(digest)
+
     def url(self, key, url):
-        require(urllib.parse.urlsplit(url).netloc in ['www.wikidata.org', 'ndlsearch.ndl.go.jp'] and url.startswith('https://'), 'Provider outside approval')
-        if key not in self.state['responses']: self.reuse(key, url)
+        try: host = transport.provider(url)
+        except ValueError: raise transport.LocalFailure('Provider request outside approval') from None
+        require(re.fullmatch(r'[a-zA-Z0-9-]+', key), 'Invalid request cache key')
+        if key not in self.state['responses']:
+            try: self.reuse(key, url)
+            except (ValueError, KeyError, TypeError) as error:
+                raise transport.LocalFailure('Prior cache verification failed: ' + type(error).__name__) from None
         if key in self.state['responses']:
             r = self.state['responses'][key]; body = (self.directory / (key + '.body')).read_bytes()
-            require(r['url'] == url and legacy.sha(body) == r['sha256'], 'Cached response changed')
+            if r['url'] != url or legacy.sha(body) != r['sha256'] or len(body) != r['bytes'] or len(body) > self.policy['maxBytes']:
+                raise transport.LocalFailure('Cached response changed')
             return body, r
+        transport.wait_for(self.state, self.policy, key, url, getattr(self, 'recovery_grant', None))
         attempts = self.state['attempts']
-        require(len(attempts) < self.policy['maxAttempts'], 'Approved shared network budget exhausted')
-        require(sum(a['key'] == key for a in attempts) < self.policy['attemptsPerRequest'], 'Request attempts exhausted: ' + key)
-        if time.time() < self.state['blockedUntil']: raise RuntimeError('Provider Retry-After active; resume later')
         if attempts: time.sleep(max(0, self.policy['minIntervalSeconds'] - (time.time() - attempts[-1]['time'])))
+        # A cooldown may have changed while waiting; no attempt is spent until handoff.
+        transport.wait_for(self.state, self.policy, key, url, getattr(self, 'recovery_grant', None))
         entry = {'key': key, 'url': url, 'time': time.time(), 'status': 'started'}
-        attempts.append(entry); save(self.index, self.state)
+        attempts.append(entry); self.persist()
+        started, phase, status = time.monotonic(), 'open-through-response-headers', None
         try:
             with urllib.request.build_opener(legacy.SameOriginRedirect()).open(urllib.request.Request(url, headers={'User-Agent': legacy.UA}), timeout=self.policy['timeoutSeconds']) as response:
+                status = response.status; phase = 'response-body-read'
                 body = response.read(self.policy['maxBytes'] + 1)
-                require(response.status == 200 and len(body) <= self.policy['maxBytes'], 'Unexpected/oversized provider response')
-            receipt = {'url': url, 'sha256': legacy.sha(body), 'bytes': len(body), 'fetchedAt': gate.now()}
-            (self.directory / (key + '.body')).write_bytes(body)
-            self.state['responses'][key] = receipt; entry['status'] = 'succeeded'; save(self.index, self.state)
-            return body, receipt
-        except Exception as error:
-            entry.update(status='failed', error=type(error).__name__)
+        except (urllib.error.URLError, TimeoutError, ConnectionError, OSError, transport.http.client.HTTPException) as error:
+            # Only network open/read is caught here. Disk/JSON/validation errors stay local.
+            entry.update(status='failed', error=type(error).__name__, diagnostic=transport.diagnostic(error, phase, started, status))
+            until = time.time() + min(300, 60 * 2 ** min(2, sum(a['key'] == key for a in attempts) - 1))
             if isinstance(error, urllib.error.HTTPError) and error.code in [429, 503]:
                 from email.utils import parsedate_to_datetime
                 retry = error.headers.get('Retry-After', '60')
                 try: seconds = float(retry) if retry.isdigit() else parsedate_to_datetime(retry).timestamp() - time.time()
                 except (ValueError, TypeError, OverflowError): seconds = 60
-                self.state['blockedUntil'] = time.time() + max(1, seconds)
-            save(self.index, self.state)
-            raise RuntimeError('Provider transport interrupted; durable cache retained: ' + key) from None
+                until = time.time() + max(1, seconds)
+                self.state.setdefault('providerBlockedUntil', {})[host] = until
+                entry['diagnostic']['retryAfterUntil'] = until
+            self.state.setdefault('requestRetryAt', {})[key] = until
+            self.persist()
+            # Re-evaluate limits: the second failure requires permission, not infinite polling.
+            transport.wait_for(self.state, self.policy, key, url, getattr(self, 'recovery_grant', None))
+            raise transport.TechnicalWait('transport', key, host, until) from None
+        if status != 200 or len(body) > self.policy['maxBytes']:
+            entry.update(status='failed', diagnostic={'category': 'response-contract', 'httpStatus': status,
+                         'phase': 'response-validation', 'elapsedSeconds': round(time.monotonic() - started, 6)})
+            self.persist()
+            raise transport.LocalFailure('Unexpected/oversized provider response')
+        receipt = {'url': url, 'sha256': legacy.sha(body), 'bytes': len(body), 'fetchedAt': gate.now()}
+        # A disk failure leaves a counted started attempt; do not call it provider failure.
+        try:
+            (self.directory / (key + '.body')).write_bytes(body)
+        except OSError as error:
+            entry.update(status='failed', diagnostic={'category': 'local-processing', 'phase': 'cache-write',
+                         'causes': [{'type': type(error).__name__}]})
+            try: self.persist()
+            except OSError: pass  # Original disk error remains a local failure, even if journaling also fails.
+            raise transport.LocalFailure('Response cache write failed') from None
+        self.state['responses'][key] = receipt
+        entry.update(status='succeeded', diagnostic={'category': 'success', 'phase': 'response-complete',
+                     'httpStatus': status, 'elapsedSeconds': round(time.monotonic() - started, 6), 'finishedAt': gate.now()})
+        self.state.setdefault('requestRetryAt', {}).pop(key, None)
+        self.persist()
+        return body, receipt
 
     def entity(self, qid):
-        return legacy.wikidata(self.url('wikidata-' + qid, legacy.request_url('wikidata', qid))[0], qid)
+        body = self.url('wikidata-' + qid, legacy.request_url('wikidata', qid))[0]
+        try: json.loads(body)
+        except (ValueError, UnicodeError): raise transport.LocalFailure('Malformed canonical entity JSON') from None
+        return legacy.wikidata(body, qid)
 
     def api(self, **params):
         url = 'https://www.wikidata.org/w/api.php?' + urllib.parse.urlencode({'format': 'json', **params})
-        return json.loads(self.url('lookup-' + legacy.sha(url.encode())[:24], url)[0])
+        body = self.url('lookup-' + legacy.sha(url.encode())[:24], url)[0]
+        try: return json.loads(body)
+        except (ValueError, UnicodeError): raise transport.LocalFailure('Malformed provider JSON') from None
 
 
 def identify(fetch, name, kind, entities):
@@ -269,7 +313,7 @@ def choose_publication(records, truncated, person, entity):
         explicit_person = any(legacy.norm(re.sub(r'\s*(著者|原作|作画|監修|漫画|著|作|画)$', '', c)) == legacy.norm(person) for c in r['responsibilities'])
         if (r['language'] == ['jpn'] and '漫画' in r['genre'] and not r['edition'] and len(r['isbn13']) == 1
                 and any(legacy.norm(n) in names for n in r['mainTitles'])
-                and len(r['volume']) == 1 and re.fullmatch(r'(?:1|第1巻|1巻|vol\.?1|volume1)(?:\(.+\))?', legacy.norm(r['volume'][0])) and explicit_person):
+                and len(r['volume']) == 1 and re.fullmatch(r'(?:1|第1巻|第1集|1巻|vol\.?1|volume1)(?:\(.+\))?', legacy.norm(r['volume'][0])) and explicit_person):
             candidates.append(r)
     # A representative first volume, never a claim that this is the work's first edition.
     candidates = [r for r in candidates if date_range(r['issued'])]
@@ -460,7 +504,8 @@ def prepare(root, request, fetch_factory=Acquisition):
         predecessor = root / '.local/collection-issues' / request['resumePreparationId']
         previous = read(predecessor / 'request.json')
         require(previous['permission'] == p and previous['issueOrigin'] == request['issueOrigin'], 'Preparation resume permission differs')
-        require(read(predecessor / 'result.json')['batchRequests'] == [], 'Preparation with dispatched children cannot be replaced')
+        prior_result = read(predecessor / ('result.json' if (predecessor / 'result.json').exists() else 'technical-progress.json'))
+        require(prior_result['batchRequests'] == [], 'Preparation with dispatched children cannot be replaced')
         cache = work / 'request-cache'
         if cache.is_symlink(): require(cache.resolve() == (predecessor / 'request-cache').resolve(), 'Preparation resume cache differs')
         else:
@@ -481,44 +526,81 @@ def prepare(root, request, fetch_factory=Acquisition):
     def checkpoint(): save(progress_path, {'requestSha256': digest(request), 'sha256': digest(progress), 'payload': progress})
     checkpoint()
     fetch = fetch_factory(work / 'request-cache', p['requestPolicy'])
+    if request.get('transportRecovery'):
+        require(request.get('resumePreparationId'), 'Transport recovery requires predecessor')
+        transport.install_grant(fetch, request, previous)
+    pending = {}
+    def deferred(target, error):
+        pending[target] = dict(error.detail, target=target)
+        latest = next((a.get('diagnostic') for a in reversed(fetch.state['attempts']) if a['key'] == error.detail['key']), None)
+        if latest: pending[target]['lastDiagnostic'] = copy.deepcopy(latest)
+        # A technical wait is never stored as works[name]=None or a semantic hold.
+        progress.setdefault('technicalWaits', {})[target] = pending[target]
+        checkpoint()
+    def technical_result():
+        waits = list(pending.values())
+        retry = [v['retryAt'] for v in waits if v['retryAt'] is not None]
+        result = {'schemaVersion': 1, 'status': 'technical-incomplete', 'preparationComplete': False,
+                  'issueOrigin': request['issueOrigin'], 'preparationDirectory': str(work),
+                  'batchRequests': [], 'generatedArtifacts': {}, 'technicalWaits': waits,
+                  'retryAt': min(retry) if retry else None, 'publicApply': False,
+                  'counts': {'networkAttempts': len(fetch.state['attempts']), 'holds': len(progress['holds']),
+                             'identifiedWorks': sum(bool(w) for w in progress['works'].values()), 'technicalWaits': len(waits)}}
+        save(work / 'technical-progress.json', result)
+        return result
     persons = list(dict.fromkeys(t['person'] for t in p['targets']))
     titles = persons + [t['work'] for t in p['targets']]
     # Structured Wikidata only; never fetch Wikipedia article text.
     try:
         lookup = fetch.api(action='wbgetentities', sites='jawiki', titles='|'.join(titles), props='labels|aliases|claims', languages='ja|en')['entities']
+        progress.setdefault('technicalWaits', {}).pop('Wikidata anchors', None)
+    except transport.TechnicalWait as error:
+        deferred('Wikidata anchors', error); return technical_result()
     except ValueError as error:
         lookup = {}; progress['holds'].append({'target': 'Wikidata anchors', 'reason': str(error)})
     for person in persons:
         if person in progress['people']: continue
         try:
             entity = identify(fetch, person, 'person', lookup)
+            progress.setdefault('technicalWaits', {}).pop(person, None)
             progress['people'][person] = {'name': person, 'catalogName': person, 'wikidata': entity['id'], 'identityNames': [person], 'creditNames': [person]}
+        except transport.TechnicalWait as error:
+            deferred(person, error)
         except ValueError as error:
             progress['people'][person] = None; progress['holds'].append({'target': person, 'reason': str(error)})
         checkpoint()
     for target in p['targets']:
         person, name = target['person'], target['work']
         if name in progress['works']: continue
+        if person in pending: continue
         try:
             require(progress['people'].get(person), 'Person identity is unresolved')
             entity = identify(fetch, name, 'work', lookup)
             # NDL CQL has no volume index. Select and verify first-volume bibliography locally.
             query = 'title="' + name.replace('"', '') + '" AND creator="' + person.replace('"', '') + '" AND dpid=iss-ndl-opac sortBy issued_date/sort.ascending'
             url = 'https://ndlsearch.ndl.go.jp/api/sru?' + urllib.parse.urlencode({'operation': 'searchRetrieve', 'version': '1.2', 'recordSchema': 'dcndl', 'onlyBib': 'true', 'maximumRecords': '100', 'query': query})
-            records, truncated = publication_records(fetch.url('publication-' + legacy.sha(url.encode())[:24], url)[0])
+            body = fetch.url('publication-' + legacy.sha(url.encode())[:24], url)[0]
+            try: records, truncated = publication_records(body)
+            except (ET.ParseError, ValueError): raise transport.LocalFailure('Malformed provider XML contract') from None
             chosen = choose_publication(records, truncated, person, entity)
             isbn = chosen['isbn13'][0]
-            canonical, reason = legacy.ndl_records(fetch.url('ndl-' + isbn, legacy.request_url('ndl', isbn))[0])
+            canonical_body = fetch.url('ndl-' + isbn, legacy.request_url('ndl', isbn))[0]
+            try: canonical, reason = legacy.ndl_records(canonical_body)
+            except (ET.ParseError, ValueError): raise transport.LocalFailure('Malformed canonical XML contract') from None
             exact = [r for r in canonical if r['url'] == chosen['url']]
             require(not reason and len(canonical) == 1 and len(exact) == 1 and all(exact[0][k] == chosen[k] for k in exact[0]), 'ISBN lookup does not uniquely preserve selected publication')
+            progress.setdefault('technicalWaits', {}).pop(name, None)
             progress['works'][name] = {'name': name, 'wikidata': entity['id'], 'identityNames': [name], 'isbn13': isbn,
                 'ndlMainTitles': chosen['mainTitles'], 'expectedVolume': chosen['volume'], 'expectedEdition': [],
-                'volumeLabel': '第1巻（NDL巻次 ' + '/'.join(chosen['volume']) + '）', 'editionLabel': None,
+                'volumeLabel': ('第1集（NDL巻次原語）' if chosen['volume'] == ['第1集'] else '第1巻（NDL巻次 ' + '/'.join(chosen['volume']) + '）'), 'editionLabel': None,
                 'identityNote': 'Issueの名称とWikidataの完全一致・漫画型、NDL作成書誌の主書名・責任表示・巻次を照合。作品全体の担当へ外挿しない。',
                 'selectionReason': '承認済みIssue内の同作者経路の拡張。', 'preparationEvidence': chosen}
+        except transport.TechnicalWait as error:
+            deferred(name, error)
         except ValueError as error:
             progress['works'][name] = None; progress['holds'].append({'target': name, 'person': person, 'reason': str(error)})
         checkpoint()
+    if pending: return technical_result()
     workflow = module('issue_workflow', root / 'scripts/collection-workflow.py')
     worker_module = module('issue_worker_proposal', root / 'scripts/collection-worker.py')
     g, registry = workflow.gate, root / 'datasets/collection-themes'
@@ -588,7 +670,7 @@ def prepare(root, request, fetch_factory=Acquisition):
     if reused:
         reused_path = work / 'reused-reviews.json'; frozen(reused_path, reused); generated.append(reused_path)
     inherited_holds = [dict(hold, priorReview=item['review']) for item in reused for hold in item.get('holds', [])]
-    report = {'schemaVersion': 1, 'status': 'prepared-candidates-not-accepted', 'issueOrigin': request['issueOrigin'],
+    report = {'schemaVersion': 1, 'status': 'prepared-candidates-not-accepted', 'preparationComplete': True, 'issueOrigin': request['issueOrigin'],
               'counts': {'approvedWorks': len(p['targets']), 'preparedWorks': sum(len(c['target']['targets']['works']) for c in children),
                          'preparedPeople': len(children), 'batches': len(children), 'holds': len(progress['holds']) + len(inherited_holds), 'networkAttempts': len(fetch.state['attempts']),
                          'reusedWorks': len(reused), 'reusedPublishedClaims': sum(len(v.get('claimSha256', {})) for v in reused),
@@ -614,5 +696,7 @@ if __name__ == '__main__':
     cli = argparse.ArgumentParser(); cli.add_argument('--request', type=Path, required=True)
     args = cli.parse_args()
     try: print(dump(prepare(ROOT, read(args.request))), end='')
-    except (ValueError, RuntimeError, OSError, KeyError) as error:
-        print(dump({'error': str(error)}), file=sys.stderr, end=''); sys.exit(1)
+    except (ValueError, RuntimeError, OSError, KeyError, TypeError, ET.ParseError) as error:
+        print(dump({'error': 'Issue preparation stopped: ' + type(error).__name__,
+                    'failureCategory': 'local-processing', 'humanReviewRequired': True,
+                    'reason': str(error) if isinstance(error, transport.LocalFailure) else None}), file=sys.stderr, end=''); sys.exit(1)
