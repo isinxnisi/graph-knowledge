@@ -82,12 +82,12 @@
   },
   "requestSha256": "f6dafe2918c68170c1ad046adfd7776290868ad25ad81aa3eecfa2fb2b3955f8",
   "kind": "collect-review",
-  "phase": "waiting-control",
-  "generation": 10052,
+  "phase": "blocked",
+  "generation": 10102,
   "attempts": 1,
   "workerId": "plunode-wsl",
   "sourceCommit": "916cc77d3aeab22650e309b694661cac07a72a47",
-  "updatedAt": "2026-10-26T16:54:02+00:00",
+  "updatedAt": "2026-10-26T18:00:00+00:00",
   "result": {
     "jobId": "issue-25-manga23-20261019-repair1-r0002-df04edc80fbfff8d",
     "collectionUnchanged": false,
@@ -111,6 +111,6 @@
     "sha256": "b1efb2dab025163659e0a06a6df5a50f64dfd1441cd7ece43420b3659b3ae3e2"
   },
   "decisionDrafts": [],
-  "message": "Execution gate: outside-window",
+  "message": "Artifact escapes runtime",
   "retryAt": 1793033615.8361814
 }
