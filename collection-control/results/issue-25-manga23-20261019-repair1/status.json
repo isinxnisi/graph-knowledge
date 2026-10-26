@@ -152,12 +152,12 @@
   },
   "requestSha256": "03bec8fbdac351776eab61b2dc4b47c7c9a687094ed8bfca5873b90a2ea86b35",
   "kind": "issue-prepare",
-  "phase": "completed",
-  "generation": 6,
+  "phase": "retry-wait",
+  "generation": 9306,
   "attempts": 1,
   "workerId": "plunode-wsl",
   "sourceCommit": "916cc77d3aeab22650e309b694661cac07a72a47",
-  "updatedAt": "2026-10-18T18:53:44+00:00",
+  "updatedAt": "2026-10-26T00:40:48+00:00",
   "result": {
     "schemaVersion": 1,
     "status": "prepared-candidates-not-accepted",
@@ -1100,5 +1100,7 @@
       "datasets/collection-themes/approvals/issue-25-manga23-20261019-repair1/r0010.json": "06cbc1286beac352664004bad946212525a0f2ffbd6c9a2469d5cdfe2a1f9c71"
     }
   },
-  "executionComplete": true
+  "executionComplete": true,
+  "message": "GitHub Issue read failed: HTTP 502",
+  "retryAt": 1792975379.823811
 }
