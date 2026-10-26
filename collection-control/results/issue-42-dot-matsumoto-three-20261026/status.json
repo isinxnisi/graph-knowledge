@@ -71,11 +71,11 @@
   "requestSha256": "90859cacf56fa33c3fc06c58206d81879a7d4e3995746680dd483e94a7cdcafc",
   "kind": "issue-prepare",
   "phase": "waiting-lock",
-  "generation": 162,
+  "generation": 163,
   "attempts": 2,
   "workerId": "plunode-wsl",
   "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
-  "updatedAt": "2026-10-26T06:52:54+00:00",
+  "updatedAt": "2026-10-26T06:54:54+00:00",
   "message": "共通ロック使用中。次回に再確認する。",
   "retryAt": 1792996237.1910903
 }
