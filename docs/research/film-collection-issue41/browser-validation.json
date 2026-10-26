@@ -1,0 +1,46 @@
+{
+  "bindingSha256": "25ade9b2c8d01c9ccb8f01931b8470c3284077b4f47a65fdb41295427cf45acb",
+  "mode": "real Next webpack dev + disposable real Neo4j + Chromium; no API stubs",
+  "tests": [
+    {
+      "title": "film candidates: conditions, evidence, Graph and saved restore 1440",
+      "ok": true,
+      "results": [
+        {
+          "status": "passed",
+          "duration": 62331,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "film candidates: conditions, evidence, Graph and saved restore 390",
+      "ok": true,
+      "results": [
+        {
+          "status": "passed",
+          "duration": 20996,
+          "errors": []
+        }
+      ]
+    }
+  ],
+  "statistics": {
+    "startTime": "2026-10-26T04:03:49.120Z",
+    "duration": 85038.89099999999,
+    "expected": 2,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "runtimeSha256": "15a8d74f6b8b6857456a38f9b2bde1ceb9d2f6b3ff8085737ecf38af9a28aee4",
+  "codeSha256": {
+    "scripts/test-film-collection.py": "d784392db603c669cca0b00accf02fcd1dd6d3e19f42e93197ef9a7ac9f5871a",
+    "scripts/film41-runtime.ts": "4223e406e3573d871414d0a6a7027c099178c6654be0069a493efbb1e63e062e",
+    "tests/film41/film-collection.spec.ts": "7ff01d23e14b1da8bc63682d9837d1939234c7a72bdbcdec7413814b21a356d3",
+    "playwright.film41.config.ts": "b0799256653f52ce13cfc16c0725a6498c1414671b2dd15775e36f615b545b85"
+  },
+  "ordinaryRolesAdopted": false,
+  "claimsAccepted": false,
+  "productionWrites": 0
+}

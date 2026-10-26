@@ -1,0 +1,29 @@
+{
+  "authority": "offline-research-validation",
+  "passed": 10,
+  "tests": [
+    "__main__.ResearchChecks.test_all_candidates_preserve_actual_statements_and_state",
+    "__main__.ResearchChecks.test_cache_replay_never_fetches",
+    "__main__.ResearchChecks.test_deterministic_offline_rebuild",
+    "__main__.ResearchChecks.test_frozen_evidence_hashes",
+    "__main__.ResearchChecks.test_golden_discovery_results",
+    "__main__.ResearchChecks.test_hold_and_structured_only_never_leak_into_witness",
+    "__main__.ResearchChecks.test_no_automatic_remake_from_shared_novel",
+    "__main__.ResearchChecks.test_publication_reconciliation_is_not_stale_unpublished_claim",
+    "__main__.ResearchChecks.test_reused_topology_distinguishes_branch_from_bridge",
+    "__main__.ResearchChecks.test_runtime_proof_has_positive_and_negative_evidence"
+  ],
+  "runtime_checks": 10,
+  "outputs_sha256": {
+    "CANDIDATES.json": "06690102bb27b9ed9ab06d57f717ab4dce1e962bd1d409609b8c2e76dfccd470",
+    "EVALUATION.json": "773b1ea13fcdee92b995281f9bed37020bdc2a774edab4b220c69ba7a6bfaab5",
+    "CURRENT_RUNTIME_PROOF.json": "dde348ea0f9167e4f0f9e856feb71729d4bc5a251ca60065c20b199c7a738c2b",
+    "KG_RECONCILIATION.json": "06fc47b1a94639e5ac2954687c0e8b61820e0bb836b26d12c28c698581659468",
+    "evidence/manifest.json": "f25c4b56933fab63d5583dfa1bb08815db6bfb50cba7e673aed156f11a515454"
+  },
+  "limitations": [
+    "No actual database queries or UI rendering tested.",
+    "No formal film ingestion, acceptance or publication.",
+    "No user study or production performance benchmark."
+  ]
+}

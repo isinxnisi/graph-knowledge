@@ -3,7 +3,7 @@ import { patternGraphRequestSchema, patternGraphResponseSchema, routeKey, type P
 import { relationConditionKey } from "../domain/relation-conditions";
 
 export async function fetchPatternGraph(input: PatternGraphRequest, signal: AbortSignal) {
-  const request = patternGraphRequestSchema.parse({...input,version:input.relation.pattern.revision===2?2:input.version}), controller = new AbortController();
+  const request = patternGraphRequestSchema.parse({...input,version:input.relation.pattern.revision!==1?2:input.version}), controller = new AbortController();
   const cancel = () => controller.abort(signal.reason);
   signal.addEventListener("abort", cancel, { once: true }); if (signal.aborted) cancel();
   const timer = setTimeout(() => controller.abort(), CLIENT_REQUEST_TIMEOUT_MS);

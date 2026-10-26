@@ -1,0 +1,72 @@
+{
+  "environment": "disposable loopback DB, proposed role overlay",
+  "formalAcceptance": false,
+  "inputs": {
+    "CANDIDATES.json": "06690102bb27b9ed9ab06d57f717ab4dce1e962bd1d409609b8c2e76dfccd470",
+    "source_reviews.json": "0564cc3416d947019341f580a6391532525b77125812a54c23cd7b39a577735c"
+  },
+  "entityCount": 10,
+  "claimCount": 12,
+  "results": [
+    {
+      "scenario": "Unforgiven acting to directing",
+      "milliseconds": 7631,
+      "witness": {
+        "version": 2,
+        "dataset": "public-kg",
+        "revision": "issue40-r1",
+        "conditionKey": "{\"version\":1,\"type\":\"pattern\",\"pattern\":{\"id\":\"other-works\",\"revision\":3},\"polarity\":\"affirmed\",\"contributionRoles\":null,\"stepRoles\":[[\"ACTING\"],[\"DIRECTING\"]]}",
+        "route": {
+          "nodeIds": [
+            "9871e0c0-bf96-4998-8214-bfbf4cb9c7c4",
+            "743d2ef4-dccd-4231-b5b0-0edd0e10f577",
+            "04da0fb9-5795-4821-8939-838876b0109c"
+          ],
+          "claimIds": [
+            "4f8b9855-0426-47db-91d9-dc1d93d2f23a",
+            "b23c47c2-9273-4331-b08a-0e28bb37a33d"
+          ]
+        },
+        "subjectId": "9871e0c0-bf96-4998-8214-bfbf4cb9c7c4",
+        "subjectPosition": "work",
+        "matchContext": {
+          "q": "unforgiven",
+          "kind": "work",
+          "nameTarget": "subject"
+        }
+      },
+      "target": "Million Dollar Baby",
+      "restored": true
+    },
+    {
+      "scenario": "shared OR vs ordered steps",
+      "sharedEndpointPairs": 3,
+      "actingToDirecting": 1,
+      "directingToActing": 2
+    },
+    {
+      "scenario": "negative controls",
+      "emptyRoles": true,
+      "denied": true,
+      "hidden": true,
+      "noRole": true,
+      "wrongDirection": true,
+      "tamperedWitness": true,
+      "changedRevision": true,
+      "missingOriginalPreserved": true
+    },
+    {
+      "scenario": "synthetic pagination (not film evidence)",
+      "targetPages": [
+        20,
+        5
+      ],
+      "graphPages": [
+        12,
+        12,
+        1
+      ],
+      "crossConditionCursorRejected": true
+    }
+  ]
+}

@@ -1,0 +1,660 @@
+{
+  "schema": "issue40-isolated-fixture-v1",
+  "notAnImport": true,
+  "formalAcceptance": false,
+  "published": false,
+  "basis": "461cd1ca614e5bebefd8181eecb0e89661d4a616",
+  "inputs": {
+    "CANDIDATES.json": "06690102bb27b9ed9ab06d57f717ab4dce1e962bd1d409609b8c2e76dfccd470",
+    "source_reviews.json": "0564cc3416d947019341f580a6391532525b77125812a54c23cd7b39a577735c"
+  },
+  "entities": [
+    {
+      "id": "9871e0c0-bf96-4998-8214-bfbf4cb9c7c4",
+      "qid": "Q104137",
+      "kind": "work",
+      "name": "Unforgiven",
+      "description": null
+    },
+    {
+      "id": "65072179-f25f-4f7d-acc0-44d121b7f996",
+      "qid": "Q150943",
+      "kind": "person",
+      "name": "Gene Hackman",
+      "description": null
+    },
+    {
+      "id": "3a307e0a-6942-4025-9834-60a8823c0f60",
+      "qid": "Q164562",
+      "kind": "person",
+      "name": "Sergio Leone",
+      "description": null
+    },
+    {
+      "id": "04da0fb9-5795-4821-8939-838876b0109c",
+      "qid": "Q184255",
+      "kind": "work",
+      "name": "Million Dollar Baby",
+      "description": null
+    },
+    {
+      "id": "5b612710-2cc2-4bdd-8ac1-97a987cf1477",
+      "qid": "Q317110",
+      "kind": "person",
+      "name": "Gian Maria Volonte",
+      "description": null
+    },
+    {
+      "id": "743d2ef4-dccd-4231-b5b0-0edd0e10f577",
+      "qid": "Q43203",
+      "kind": "person",
+      "name": "Clint Eastwood",
+      "description": null
+    },
+    {
+      "id": "c8bacf83-576b-48fa-a5d8-0fb1d3f7816d",
+      "qid": "Q48337",
+      "kind": "person",
+      "name": "Morgan Freeman",
+      "description": null
+    },
+    {
+      "id": "b74ceaca-61b5-41e0-974a-8f5a172678b0",
+      "qid": "Q76479",
+      "kind": "work",
+      "name": "A Fistful of Dollars",
+      "description": null
+    },
+    {
+      "id": "4313edb7-0501-4b44-b1a2-8cb3ba294a30",
+      "qid": "Q77405",
+      "kind": "person",
+      "name": "Marianne Koch",
+      "description": null
+    },
+    {
+      "id": "889e4f15-f1f8-4225-8dfb-8d931448faaa",
+      "qid": "Q93187",
+      "kind": "person",
+      "name": "Hilary Swank",
+      "description": null
+    }
+  ],
+  "claims": [
+    {
+      "id": "4f8b9855-0426-47db-91d9-dc1d93d2f23a",
+      "candidateId": "candidate:Q104137$3D0CF582-4DF0-445D-9EB3-221A8DC7E84F",
+      "subjectId": "743d2ef4-dccd-4231-b5b0-0edd0e10f577",
+      "objectId": "9871e0c0-bf96-4998-8214-bfbf4cb9c7c4",
+      "predicate": "CONTRIBUTED_TO",
+      "polarity": "affirmed",
+      "contribution": {
+        "roleId": "ACTING",
+        "scope": null
+      },
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "sourceCount": 1,
+      "organizationParticipation": null,
+      "eventParticipation": null,
+      "citations": [
+        {
+          "id": "f8ce54ee-fcea-48ee-89a6-b23356b215a8",
+          "sourceId": "S10",
+          "locator": "Year of production / Credits / Casting",
+          "roleEvidence": null,
+          "evidenceLimit": "credit heading only; personal credit checked in prior notes; no full source transcript"
+        }
+      ],
+      "scopeNote": {
+        "level": "film-work-record",
+        "cut": null,
+        "territory": null,
+        "language": null,
+        "interpretation": "credit scope unresolved across versions; null is not all cuts"
+      },
+      "wikidataStatement": "Q104137$3D0CF582-4DF0-445D-9EB3-221A8DC7E84F",
+      "formalAcceptance": false
+    },
+    {
+      "id": "8a2abdc9-cf58-49ec-b7f1-0f2a979a944c",
+      "candidateId": "candidate:Q76479$31CFF1E6-A537-40F3-90DD-99C6FECC98C1",
+      "subjectId": "3a307e0a-6942-4025-9834-60a8823c0f60",
+      "objectId": "b74ceaca-61b5-41e0-974a-8f5a172678b0",
+      "predicate": "CONTRIBUTED_TO",
+      "polarity": "affirmed",
+      "contribution": {
+        "roleId": "DIRECTING",
+        "scope": null
+      },
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "sourceCount": 1,
+      "organizationParticipation": null,
+      "eventParticipation": null,
+      "citations": [
+        {
+          "id": "69078d8d-d6c4-42e0-a543-33deaf6959fc",
+          "sourceId": "S09",
+          "locator": "Année de production / Crédits / Casting / introduction",
+          "roleEvidence": null,
+          "evidenceLimit": "credit heading only; personal credit checked in prior notes; no full source transcript"
+        }
+      ],
+      "scopeNote": {
+        "level": "film-work-record",
+        "cut": null,
+        "territory": null,
+        "language": null,
+        "interpretation": "credit scope unresolved across versions; null is not all cuts"
+      },
+      "wikidataStatement": "Q76479$31CFF1E6-A537-40F3-90DD-99C6FECC98C1",
+      "formalAcceptance": false
+    },
+    {
+      "id": "f9f1cdc6-3ed1-4aa9-bf59-4370c6fb3cfc",
+      "candidateId": "candidate:q104137$1B0E36E9-AA57-43D1-81FA-2CC6987D5367",
+      "subjectId": "65072179-f25f-4f7d-acc0-44d121b7f996",
+      "objectId": "9871e0c0-bf96-4998-8214-bfbf4cb9c7c4",
+      "predicate": "CONTRIBUTED_TO",
+      "polarity": "affirmed",
+      "contribution": {
+        "roleId": "ACTING",
+        "scope": null
+      },
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "sourceCount": 1,
+      "organizationParticipation": null,
+      "eventParticipation": null,
+      "citations": [
+        {
+          "id": "1acc9918-f18a-4c89-a504-2a0f49d38eab",
+          "sourceId": "S10",
+          "locator": "Year of production / Credits / Casting",
+          "roleEvidence": null,
+          "evidenceLimit": "credit heading only; personal credit checked in prior notes; no full source transcript"
+        }
+      ],
+      "scopeNote": {
+        "level": "film-work-record",
+        "cut": null,
+        "territory": null,
+        "language": null,
+        "interpretation": "credit scope unresolved across versions; null is not all cuts"
+      },
+      "wikidataStatement": "q104137$1B0E36E9-AA57-43D1-81FA-2CC6987D5367",
+      "formalAcceptance": false
+    },
+    {
+      "id": "d1567f2e-f653-437a-b24f-e5db64853ab5",
+      "candidateId": "candidate:q104137$3B57142F-2116-4265-901D-3F772622D3C1",
+      "subjectId": "c8bacf83-576b-48fa-a5d8-0fb1d3f7816d",
+      "objectId": "9871e0c0-bf96-4998-8214-bfbf4cb9c7c4",
+      "predicate": "CONTRIBUTED_TO",
+      "polarity": "affirmed",
+      "contribution": {
+        "roleId": "ACTING",
+        "scope": null
+      },
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "sourceCount": 1,
+      "organizationParticipation": null,
+      "eventParticipation": null,
+      "citations": [
+        {
+          "id": "5af3b3c3-dedb-4c07-9af7-d7a1b4c1a8f2",
+          "sourceId": "S10",
+          "locator": "Year of production / Credits / Casting",
+          "roleEvidence": null,
+          "evidenceLimit": "credit heading only; personal credit checked in prior notes; no full source transcript"
+        }
+      ],
+      "scopeNote": {
+        "level": "film-work-record",
+        "cut": null,
+        "territory": null,
+        "language": null,
+        "interpretation": "credit scope unresolved across versions; null is not all cuts"
+      },
+      "wikidataStatement": "q104137$3B57142F-2116-4265-901D-3F772622D3C1",
+      "formalAcceptance": false
+    },
+    {
+      "id": "46dc24eb-a930-4c82-927d-88816ba93a6a",
+      "candidateId": "candidate:q104137$B226BBA0-92F8-4A47-8EC8-21697BAFADBA",
+      "subjectId": "743d2ef4-dccd-4231-b5b0-0edd0e10f577",
+      "objectId": "9871e0c0-bf96-4998-8214-bfbf4cb9c7c4",
+      "predicate": "CONTRIBUTED_TO",
+      "polarity": "affirmed",
+      "contribution": {
+        "roleId": "DIRECTING",
+        "scope": null
+      },
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "sourceCount": 1,
+      "organizationParticipation": null,
+      "eventParticipation": null,
+      "citations": [
+        {
+          "id": "6473258e-df5a-4c29-859e-fc9c4db1c1d5",
+          "sourceId": "S10",
+          "locator": "Year of production / Credits / Casting",
+          "roleEvidence": null,
+          "evidenceLimit": "credit heading only; personal credit checked in prior notes; no full source transcript"
+        }
+      ],
+      "scopeNote": {
+        "level": "film-work-record",
+        "cut": null,
+        "territory": null,
+        "language": null,
+        "interpretation": "credit scope unresolved across versions; null is not all cuts"
+      },
+      "wikidataStatement": "q104137$B226BBA0-92F8-4A47-8EC8-21697BAFADBA",
+      "formalAcceptance": false
+    },
+    {
+      "id": "80a52ccb-1deb-4098-a632-c408204be0b3",
+      "candidateId": "candidate:q184255$301FF7F2-A06A-488D-9D09-33EE54CA49DE",
+      "subjectId": "743d2ef4-dccd-4231-b5b0-0edd0e10f577",
+      "objectId": "04da0fb9-5795-4821-8939-838876b0109c",
+      "predicate": "CONTRIBUTED_TO",
+      "polarity": "affirmed",
+      "contribution": {
+        "roleId": "ACTING",
+        "scope": null
+      },
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "sourceCount": 1,
+      "organizationParticipation": null,
+      "eventParticipation": null,
+      "citations": [
+        {
+          "id": "2ee4136e-3d68-4e9d-a382-347355ffe0c2",
+          "sourceId": "S11",
+          "locator": "Cast / Director / Writer / Producers / Cinematographer / MUSIC / LITERARY / DETAILS",
+          "roleEvidence": {
+            "originalText": "Cast",
+            "language": "en"
+          },
+          "evidenceLimit": "credit heading only; personal credit checked in prior notes; no full source transcript"
+        }
+      ],
+      "scopeNote": {
+        "level": "film-work-record",
+        "cut": null,
+        "territory": null,
+        "language": null,
+        "interpretation": "credit scope unresolved across versions; null is not all cuts"
+      },
+      "wikidataStatement": "q184255$301FF7F2-A06A-488D-9D09-33EE54CA49DE",
+      "formalAcceptance": false
+    },
+    {
+      "id": "fff81893-2abf-489f-9436-ca772c1fdb62",
+      "candidateId": "candidate:q184255$442501B0-0AC6-4E42-B522-9B71D64E7DFD",
+      "subjectId": "c8bacf83-576b-48fa-a5d8-0fb1d3f7816d",
+      "objectId": "04da0fb9-5795-4821-8939-838876b0109c",
+      "predicate": "CONTRIBUTED_TO",
+      "polarity": "affirmed",
+      "contribution": {
+        "roleId": "ACTING",
+        "scope": null
+      },
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "sourceCount": 1,
+      "organizationParticipation": null,
+      "eventParticipation": null,
+      "citations": [
+        {
+          "id": "591495cb-dc37-4a77-a8e8-72d3ff318cff",
+          "sourceId": "S11",
+          "locator": "Cast / Director / Writer / Producers / Cinematographer / MUSIC / LITERARY / DETAILS",
+          "roleEvidence": {
+            "originalText": "Cast",
+            "language": "en"
+          },
+          "evidenceLimit": "credit heading only; personal credit checked in prior notes; no full source transcript"
+        }
+      ],
+      "scopeNote": {
+        "level": "film-work-record",
+        "cut": null,
+        "territory": null,
+        "language": null,
+        "interpretation": "credit scope unresolved across versions; null is not all cuts"
+      },
+      "wikidataStatement": "q184255$442501B0-0AC6-4E42-B522-9B71D64E7DFD",
+      "formalAcceptance": false
+    },
+    {
+      "id": "4cf8855c-ba47-4693-a970-0d0c28731a9e",
+      "candidateId": "candidate:q184255$6E39F62D-CB25-409E-8DF0-C9D4DC7A7D8B",
+      "subjectId": "889e4f15-f1f8-4225-8dfb-8d931448faaa",
+      "objectId": "04da0fb9-5795-4821-8939-838876b0109c",
+      "predicate": "CONTRIBUTED_TO",
+      "polarity": "affirmed",
+      "contribution": {
+        "roleId": "ACTING",
+        "scope": null
+      },
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "sourceCount": 1,
+      "organizationParticipation": null,
+      "eventParticipation": null,
+      "citations": [
+        {
+          "id": "c8fcbfe1-32e1-4995-a29d-46d869f7b745",
+          "sourceId": "S11",
+          "locator": "Cast / Director / Writer / Producers / Cinematographer / MUSIC / LITERARY / DETAILS",
+          "roleEvidence": {
+            "originalText": "Cast",
+            "language": "en"
+          },
+          "evidenceLimit": "credit heading only; personal credit checked in prior notes; no full source transcript"
+        }
+      ],
+      "scopeNote": {
+        "level": "film-work-record",
+        "cut": null,
+        "territory": null,
+        "language": null,
+        "interpretation": "credit scope unresolved across versions; null is not all cuts"
+      },
+      "wikidataStatement": "q184255$6E39F62D-CB25-409E-8DF0-C9D4DC7A7D8B",
+      "formalAcceptance": false
+    },
+    {
+      "id": "b23c47c2-9273-4331-b08a-0e28bb37a33d",
+      "candidateId": "candidate:q184255$E97BDEC1-96DE-489D-B0D0-2BE2CC42818F",
+      "subjectId": "743d2ef4-dccd-4231-b5b0-0edd0e10f577",
+      "objectId": "04da0fb9-5795-4821-8939-838876b0109c",
+      "predicate": "CONTRIBUTED_TO",
+      "polarity": "affirmed",
+      "contribution": {
+        "roleId": "DIRECTING",
+        "scope": null
+      },
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "sourceCount": 1,
+      "organizationParticipation": null,
+      "eventParticipation": null,
+      "citations": [
+        {
+          "id": "c404282c-ca93-45cd-8849-fb97e2082fc2",
+          "sourceId": "S11",
+          "locator": "Cast / Director / Writer / Producers / Cinematographer / MUSIC / LITERARY / DETAILS",
+          "roleEvidence": {
+            "originalText": "Director",
+            "language": "en"
+          },
+          "evidenceLimit": "credit heading only; personal credit checked in prior notes; no full source transcript"
+        }
+      ],
+      "scopeNote": {
+        "level": "film-work-record",
+        "cut": null,
+        "territory": null,
+        "language": null,
+        "interpretation": "credit scope unresolved across versions; null is not all cuts"
+      },
+      "wikidataStatement": "q184255$E97BDEC1-96DE-489D-B0D0-2BE2CC42818F",
+      "formalAcceptance": false
+    },
+    {
+      "id": "f0b41e79-8632-4515-a446-208a95852a3b",
+      "candidateId": "candidate:q76479$A7047A0A-A345-4BB2-AD7B-AE8A33436BE8",
+      "subjectId": "5b612710-2cc2-4bdd-8ac1-97a987cf1477",
+      "objectId": "b74ceaca-61b5-41e0-974a-8f5a172678b0",
+      "predicate": "CONTRIBUTED_TO",
+      "polarity": "affirmed",
+      "contribution": {
+        "roleId": "ACTING",
+        "scope": null
+      },
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "sourceCount": 1,
+      "organizationParticipation": null,
+      "eventParticipation": null,
+      "citations": [
+        {
+          "id": "d2124353-6482-4d34-9fe1-54bf70368064",
+          "sourceId": "S09",
+          "locator": "Année de production / Crédits / Casting / introduction",
+          "roleEvidence": null,
+          "evidenceLimit": "credit heading only; personal credit checked in prior notes; no full source transcript"
+        }
+      ],
+      "scopeNote": {
+        "level": "film-work-record",
+        "cut": null,
+        "territory": null,
+        "language": null,
+        "interpretation": "credit scope unresolved across versions; null is not all cuts"
+      },
+      "wikidataStatement": "q76479$A7047A0A-A345-4BB2-AD7B-AE8A33436BE8",
+      "formalAcceptance": false
+    },
+    {
+      "id": "a5d7aba9-a8e4-4620-ae3a-516ae88de626",
+      "candidateId": "candidate:q76479$DCB1920A-56D0-41ED-B4BB-735AF1ECDC3F",
+      "subjectId": "4313edb7-0501-4b44-b1a2-8cb3ba294a30",
+      "objectId": "b74ceaca-61b5-41e0-974a-8f5a172678b0",
+      "predicate": "CONTRIBUTED_TO",
+      "polarity": "affirmed",
+      "contribution": {
+        "roleId": "ACTING",
+        "scope": null
+      },
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "sourceCount": 1,
+      "organizationParticipation": null,
+      "eventParticipation": null,
+      "citations": [
+        {
+          "id": "0545bc8c-abc4-4737-b757-87997cafea8a",
+          "sourceId": "S09",
+          "locator": "Année de production / Crédits / Casting / introduction",
+          "roleEvidence": null,
+          "evidenceLimit": "credit heading only; personal credit checked in prior notes; no full source transcript"
+        }
+      ],
+      "scopeNote": {
+        "level": "film-work-record",
+        "cut": null,
+        "territory": null,
+        "language": null,
+        "interpretation": "credit scope unresolved across versions; null is not all cuts"
+      },
+      "wikidataStatement": "q76479$DCB1920A-56D0-41ED-B4BB-735AF1ECDC3F",
+      "formalAcceptance": false
+    },
+    {
+      "id": "25a00649-ff0d-46c0-ae08-5393268756c1",
+      "candidateId": "candidate:q76479$EF2A64B1-B6BC-4535-848B-D53BA099DB4C",
+      "subjectId": "743d2ef4-dccd-4231-b5b0-0edd0e10f577",
+      "objectId": "b74ceaca-61b5-41e0-974a-8f5a172678b0",
+      "predicate": "CONTRIBUTED_TO",
+      "polarity": "affirmed",
+      "contribution": {
+        "roleId": "ACTING",
+        "scope": null
+      },
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "sourceCount": 1,
+      "organizationParticipation": null,
+      "eventParticipation": null,
+      "citations": [
+        {
+          "id": "0d9d9ee0-14dc-4519-a34a-edaa337e5089",
+          "sourceId": "S09",
+          "locator": "Année de production / Crédits / Casting / introduction",
+          "roleEvidence": null,
+          "evidenceLimit": "credit heading only; personal credit checked in prior notes; no full source transcript"
+        }
+      ],
+      "scopeNote": {
+        "level": "film-work-record",
+        "cut": null,
+        "territory": null,
+        "language": null,
+        "interpretation": "credit scope unresolved across versions; null is not all cuts"
+      },
+      "wikidataStatement": "q76479$EF2A64B1-B6BC-4535-848B-D53BA099DB4C",
+      "formalAcceptance": false
+    }
+  ],
+  "sources": [
+    {
+      "id": "S10",
+      "title": "UNFORGIVEN — Cannes",
+      "url": "https://www.festival-cannes.com/en/f/unforgiven/",
+      "publisher": "Festival de Cannes",
+      "language": "en",
+      "locator": "Year of production / Credits / Casting",
+      "note": "製作1992年と2017年のCannes Classics枠を区別。David WEBB PEOPLESとWikidata David Peoplesの名称差を役割・作品で照合。",
+      "film": "Q104137",
+      "supports": {
+        "P57": [
+          "Q43203"
+        ],
+        "P58": [
+          "Q1177114"
+        ],
+        "P161": [
+          "Q43203",
+          "Q48337",
+          "Q150943"
+        ]
+      },
+      "accessed_on": "2026-10-26",
+      "retrieval": "web tool, public page; factual notes only",
+      "reuse": "No open-content license established. Store URL, locator and minimal factual review only; no page text or images.",
+      "formalAcceptance": false,
+      "role_terms": {},
+      "role_term_policy": "Short credit heading only; not a reconstructed verbatim personal credit. Missing terms are untranscribed.",
+      "runtimeId": "d5f8fcb5-375c-4c98-8c30-68c99ff06936"
+    },
+    {
+      "id": "S09",
+      "title": "PER UN PUGNO DI DOLLARI — Cannes",
+      "url": "https://www.festival-cannes.com/f/per-un-pugno-di-dollari/",
+      "publisher": "Festival de Cannes",
+      "language": "fr",
+      "locator": "Année de production / Crédits / Casting / introduction",
+      "note": "製作1964年と2014年の復元上映枠を区別。ドル三部作への所属を説明。",
+      "film": "Q76479",
+      "supports": {
+        "P57": [
+          "Q164562"
+        ],
+        "P58": [
+          "Q716460",
+          "Q164562"
+        ],
+        "P86": [
+          "Q23848"
+        ],
+        "P161": [
+          "Q43203",
+          "Q317110",
+          "Q77405"
+        ],
+        "P179": [
+          "Q370180"
+        ]
+      },
+      "accessed_on": "2026-10-26",
+      "retrieval": "web tool, public page; factual notes only",
+      "reuse": "No open-content license established. Store URL, locator and minimal factual review only; no page text or images.",
+      "formalAcceptance": false,
+      "role_terms": {},
+      "role_term_policy": "Short credit heading only; not a reconstructed verbatim personal credit. Missing terms are untranscribed.",
+      "runtimeId": "489b5751-44f2-42a0-b994-ecb378497713"
+    },
+    {
+      "id": "S11",
+      "title": "Million Dollar Baby — AFI Catalog",
+      "url": "https://catalog.afi.com/Catalog/moviedetails/54369",
+      "publisher": "American Film Institute",
+      "language": "en",
+      "locator": "Cast / Director / Writer / Producers / Cinematographer / MUSIC / LITERARY / DETAILS",
+      "note": "ページ見出し2005と2004年の限定公開・premiereを区別。原作短編／短編集と脚本Haggisを区別。Musと楽曲別作曲を混同せず音楽担当として比較する。",
+      "film": "Q184255",
+      "supports": {
+        "P57": [
+          "Q43203"
+        ],
+        "P58": [
+          "Q314935"
+        ],
+        "P162": [
+          "Q43203",
+          "Q280490",
+          "Q7817415",
+          "Q314935"
+        ],
+        "P344": [
+          "Q2063318"
+        ],
+        "P86": [
+          "Q43203"
+        ],
+        "P161": [
+          "Q93187",
+          "Q43203",
+          "Q48337"
+        ]
+      },
+      "accessed_on": "2026-10-26",
+      "retrieval": "web tool, public page; factual notes only",
+      "reuse": "No open-content license established. Store URL, locator and minimal factual review only; no page text or images.",
+      "formalAcceptance": false,
+      "role_terms": {
+        "P57": "Director",
+        "P58": "Writer",
+        "P162": "Producers",
+        "P344": "Cinematographer",
+        "P86": "Mus",
+        "P161": "Cast"
+      },
+      "role_term_policy": "Short credit heading only; not a reconstructed verbatim personal credit. Missing terms are untranscribed.",
+      "runtimeId": "2d4f271c-a3a2-4154-8ce6-57aacc466ac0"
+    }
+  ],
+  "droppedParallelStatements": true
+}

@@ -1,7 +1,7 @@
 import "server-only";
 import type { Transaction } from "neo4j-driver";
 import { PREDICATES } from "../domain/predicates";
-import { relationConditionKey, type RelationCondition } from "../domain/relation-conditions";
+import { relationRolesAt, relationConditionKey, type RelationCondition } from "../domain/relation-conditions";
 import { matchWitnessSchema, validateRelationRoute, RelationWitnessError, witnessSubjectId, type MatchWitness, type RouteRef } from "../domain/relation-patterns";
 import type { ClaimSummary, EntitySummary } from "../domain/api";
 import { entitySummary, claimSummary } from "./mappers";
@@ -17,12 +17,12 @@ const claimFilter = (c: "c" | "a" | "b") => `${c}.visibility = 'published'
  AND ($eventRoles IS NULL OR ${c}.predicate <> 'PARTICIPATED_IN' OR ${c}.eventRoleId IN $eventRoles)`;
 export function relationQueryParameters(condition: RelationCondition) {
   return { predicates: condition.type === "pattern" ? ["CONTRIBUTED_TO"] : condition.predicates, polarity: condition.polarity,
-    roles: condition.contributionRoles, relatedQ:"", positions: condition.type === "adjacent" ? condition.organizationPositions : null,
+    roles: condition.contributionRoles, firstRoles: relationRolesAt(condition, 0), secondRoles: relationRolesAt(condition, 1), relatedQ:"", positions: condition.type === "adjacent" ? condition.organizationPositions : null,
     eventRoles: condition.type === "adjacent" ? condition.eventRoles : null,
     endpoints: Object.entries(PREDICATES).map(([predicate, p]) => ({ predicate, subjectKind: p.subjectKind, objectKind: p.objectKind })) };
 }
 const patternClaimFilter = (c: "a" | "b") => `${c}.visibility = 'published' AND ${c}.predicate = 'CONTRIBUTED_TO' AND ${c}.polarity = 'affirmed'
- AND ($roles IS NULL OR ${c}.contributionRoleId IN $roles)`;
+ AND ($${c === "a" ? "firstRoles" : "secondRoles"} IS NULL OR ${c}.contributionRoleId IN $${c === "a" ? "firstRoles" : "secondRoles"})`;
 const FIRST = `MATCH (e)<-[:OBJECT]-(a:Claim)-[:SUBJECT]->(p:Entity)
  WHERE ${patternClaimFilter("a")} AND e.kind = 'work' AND p.kind = 'person' AND p.id <> e.id`;
 const NAMED_FIRST=FIRST+` AND ($relatedQ='' OR any(name IN p.searchNames WHERE name CONTAINS $relatedQ))`;

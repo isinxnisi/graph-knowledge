@@ -1,0 +1,86 @@
+{
+  "schemaVersion": 1,
+  "authority": "factual-supplement-not-semantic-approval",
+  "limitedFetches": [
+    {
+      "url": "https://www.festival-cannes.com/en/f/unforgiven/",
+      "status": 403,
+      "action": "No bypass or repeated retrieval; original record preserved."
+    }
+  ],
+  "credits": [
+    {
+      "id": "afi-unforgiven-acting",
+      "filmQid": "Q104137",
+      "personQid": "Q43203",
+      "proposedRole": "ACTING",
+      "sourceUrl": "https://catalog.afi.com/Film/67274-UNFORGIVEN",
+      "title": "Unforgiven — AFI Catalog",
+      "publisher": "American Film Institute",
+      "language": "en",
+      "retrievedAt": "2026-10-26T03:38:08.508897+00:00",
+      "httpStatus": 200,
+      "responseSha256": "4f5491f7e2e0e02f30d4ce5e90a36b98cd48354e50a3a4fdd137b4f08bc68540",
+      "excerpt": {
+        "file": "datasets/film-collection/v1/evidence/unforgiven-credit.txt",
+        "sha256": "84328b5aa0ff0dfe807819ed62e315d20d00b4a17a25cc75bdaa3125547fdf9c",
+        "selection": "Whitespace-normalized HTML text nodes; selected credit row, not a reconstructed contiguous sentence",
+        "textNodeStart": 275,
+        "textNodeCount": 6,
+        "tokens": [
+          "CAST",
+          "NAME",
+          "CREDITED AS",
+          "CREDIT",
+          "Clint Eastwood",
+          "Bill Munny"
+        ]
+      },
+      "originalRoleText": "CAST",
+      "personText": "Clint Eastwood",
+      "characterText": "Bill Munny",
+      "locator": "CREDITS / CAST / Clint Eastwood / Bill Munny",
+      "interpretation": "named dramatic character in the live-action cast; no voice/dub/archive designation in this row",
+      "scope": "work-level credit; no claim about every cut, territory or language",
+      "identityNote": "AFI 1992 matches saved Unforgiven work identity.",
+      "reviewer": "Codex factual preparation only; not human acceptance",
+      "reuse": "Minimal factual credit excerpt only. No film images or page prose redistributed.",
+      "formalAcceptance": false
+    },
+    {
+      "id": "afi-million-dollar-baby-directing",
+      "filmQid": "Q184255",
+      "personQid": "Q43203",
+      "proposedRole": "DIRECTING",
+      "sourceUrl": "https://catalog.afi.com/Catalog/moviedetails/54369",
+      "title": "Million Dollar Baby — AFI Catalog",
+      "publisher": "American Film Institute",
+      "language": "en",
+      "retrievedAt": "2026-10-26T03:38:09.498824+00:00",
+      "httpStatus": 200,
+      "responseSha256": "afc93df3bba933893241fc3ad8c7bf53e89effa23def7c22216f96dc9895ff9a",
+      "excerpt": {
+        "file": "datasets/film-collection/v1/evidence/million-dollar-baby-credit.txt",
+        "sha256": "0555d359bc926e05f549174adf3559c1203279bc7596c1fd83617760acdaa760",
+        "selection": "Whitespace-normalized HTML text nodes; selected credit row, not a reconstructed contiguous sentence",
+        "textNodeStart": 480,
+        "textNodeCount": 3,
+        "tokens": [
+          "DIRECTORS",
+          "Clint Eastwood",
+          "Dir"
+        ]
+      },
+      "originalRoleText": "Dir",
+      "personText": "Clint Eastwood",
+      "characterText": null,
+      "locator": "CREDITS / PRODUCTION CREDITS / DIRECTORS / Clint Eastwood / Dir",
+      "interpretation": "Dir in DIRECTORS row for this person, distinct from assistant directors",
+      "scope": "work-level credit; no claim about every cut, territory or language",
+      "identityNote": "AFI displays 2005 US release; saved work identity uses 2004. Same title, director and principal cast, not a different film; release year is not Claim period.",
+      "reviewer": "Codex factual preparation only; not human acceptance",
+      "reuse": "Minimal factual credit excerpt only. No film images or page prose redistributed.",
+      "formalAcceptance": false
+    }
+  ]
+}
