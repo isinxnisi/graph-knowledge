@@ -1,0 +1,30 @@
+import { test, expect } from "@playwright/test";
+test.use({ userAgent:"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36" });
+test("existing manga, presets, Google/member boundaries and AI lab", async ({page})=>{
+ await page.addInitScript(()=>localStorage.setItem("plunode:privacy:v1", '{"analytics":false,"ads":false}'));
+ await page.goto("/");
+ await page.getByRole("button",{name:"PLUTOから探索を開始",exact:true}).click();
+ await expect(page.getByTestId("exploration-root")).toContainText("PLUTO");
+ await expect(page.getByTestId("graph-counts")).toContainText("Entity");
+ await expect.poll(()=>page.getByTestId("graph-canvas").evaluate(el=>{
+  const cy=(el as unknown as {_cyreg:{cy:import("cytoscape").Core}})._cyreg.cy;
+  return cy.nodes().length;
+ })).toBeGreaterThan(1);
+ await page.screenshot({path:test.info().outputPath("manga.png"),animations:"disabled"});
+ await page.goto("/");
+ await page.getByTestId("discovery-search-entry").click();
+ await page.getByTestId("preset-browser").locator('[data-catalog-result="other-works"]').getByRole("button",{name:"条件に合う対象を探す",exact:true}).click();
+ const flow=page.getByTestId("discovery-connections");
+ await flow.getByRole("textbox").fill("PLUTO");
+ await expect(flow.locator("[data-target-id]").first()).toContainText("PLUTO");
+ await page.goto("/member");
+ await expect(page.getByText(/Google/).first()).toBeVisible();
+ for(const path of ["/api/member/profile","/api/member/capsules","/api/accounts/me"]) expect((await page.request.get(path)).status()).toBe(401);
+ const status=await (await page.request.get("/api/member/status")).json();expect(status.provider).toBe("google");
+ await page.goto("/communities");
+ await expect(page.getByRole("heading",{name:"コミュニティ",exact:true})).toBeVisible();
+ await page.goto("/ai-lab");
+ await expect(page.getByRole("heading",{name:/AI育成ラボ/})).toBeVisible();
+ await page.goto("/en/");
+ await expect(page.getByTestId("film-beta-notice")).toContainText("unaccepted");
+});

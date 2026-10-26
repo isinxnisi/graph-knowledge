@@ -1,0 +1,44 @@
+{
+  "implementationCommit": "b99bd9c",
+  "mainIntegrationCommit": "5d22751d73232b4be959d95827a056f4a7bc561f",
+  "buildId": "iHWHWVq9QOp2LZxWl76g9",
+  "engine": "Chromium (Playwright 1.63.0), desktop 1440 and mobile emulation 390 x 1000 with touch",
+  "node": "24.15.0",
+  "network": "real HTTP/API, no API stubs; film cases allow only the tested origin",
+  "formalAcceptance": false,
+  "productionPublished": false,
+  "runs": [
+    {
+      "origin": "http://127.0.0.1:3200",
+      "stats": {
+        "startTime": "2026-10-26T07:15:11.441Z",
+        "duration": 38668.809,
+        "expected": 3,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      },
+      "reportSha256": "f7cbfff48740e7874b6f6d7a609919d77fa222fade6e90b04b9d7a77479d4a9c"
+    },
+    {
+      "origin": "https://graph-beta.isinxnisi.com",
+      "stats": {
+        "startTime": "2026-10-26T07:15:11.460Z",
+        "duration": 65515.748,
+        "expected": 3,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      },
+      "reportSha256": "a6d7f2415a487d980f60d04c6bae9fc0d641b2dd1a6b550f84b8966e5de15851"
+    }
+  ],
+  "screenshots": {
+    "e2e/local-1440-film-restored.png": "9cc55e8289e444a75c0a0e730bf7ab71338b48ff436db45ec2bc972026ec17df",
+    "e2e/local-390-film-restored.png": "0e94ffe9a5072db81103032b1df096f98063cede8bc023197ca5dd364f8dbf6b",
+    "e2e/beta-1440-film-restored.png": "6158dfbcd9ec25e1c7e96193c3ba68b044e3eeb83e40c3ed7eceb9d39f8bfa04",
+    "e2e/beta-1440-film-search.png": "a3bd72cfe3d41e08fb7ccfda034acad486926478b3788e275c3fe6c3049fb0a6",
+    "e2e/beta-390-film-restored.png": "92cf8facde57a021c28c3ca793a3dad2d7a7082c98147f8eacff26d733f8ca0c",
+    "e2e/beta-390-film-search.png": "88892a4db085903bfa05f3e50fd62161e1e0e83cfe760be11510d67ae782e7d6"
+  }
+}

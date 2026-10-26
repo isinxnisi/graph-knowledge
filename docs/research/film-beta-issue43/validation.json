@@ -1,0 +1,48 @@
+{
+  "unit": {
+    "files": 74,
+    "passed": 865
+  },
+  "filmPython": {
+    "collection": 16,
+    "dispatch": 3,
+    "dispatchOptimizedPython": 3
+  },
+  "legacyPython": {
+    "acceptance": 16,
+    "workflow": 16
+  },
+  "typecheck": true,
+  "lint": true,
+  "webpackBuild": true,
+  "realBrowserPassed": 6,
+  "betaMember": {
+    "restoredToSeparateDatabase": true,
+    "tables": 29,
+    "allRowsEqualAfterRestore": true,
+    "allRowsUnchangedAfterDeployment": true,
+    "migrationsApplied": 0
+  },
+  "originalKg": {
+    "unchanged": true,
+    "revision": "82b01515-594c-48ca-b4b6-515eefac83ca",
+    "graphDigest": "6179ed66255cdd441fe7df7166500ab7121a013f64737c4eaa620ab9e37e1c63"
+  },
+  "production": {
+    "readOnlyMetadata": true,
+    "revision": "b74a4b00-9454-412f-af5d-1317713a543c",
+    "webDeployed": false,
+    "kgApplied": false
+  },
+  "formalReceipts": {
+    "unchanged": true,
+    "count": 10
+  },
+  "settingsBytesUnchanged": true,
+  "userMemoPreserved": true,
+  "limitations": [
+    "Chromiumのスマホ幅・タッチ検証。実機iPhone/Safariではない。",
+    "今回Googleの再ログイン・実会員のCapsule書込は行わず、既存データ全行保持とGoogle入口・匿名認可境界を確認。",
+    "公開同一性はlive revisionと配送済み固定release・全receiptの照合。正式受入前は最新本番完全backupによる再レビューが必要。"
+  ]
+}

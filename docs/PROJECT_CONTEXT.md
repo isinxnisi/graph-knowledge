@@ -1,4 +1,4 @@
-2026-10-26、Issue #43で洋画の段別Role探索と映画2 Claimのbeta試験を本線へ接続する。監督・出演は試験登録で正式承認前。専用KG7696に既存betaデータを保持し、本番公開を行わない。[契約](design/FILM_BETA.md)／[検証・配置状況](verification/FILM_BETA_20261026.md)。
+2026-10-26、Issue #43で洋画の段別Role探索と映画2 Claimのbeta試験を本線へ統合し、3200／HTTPS betaへ配置・実ブラウザ6件を確認した。監督・出演は試験登録で正式承認前。専用KG7696に既存betaデータを保持し、本番公開を行わない。[契約](design/FILM_BETA.md)／[検証・配置状況](verification/FILM_BETA_20261026.md)。
 
 2026-10-26、運営者の正式公開指示に基づき、Issue #39のアカウント・公式AI活動基盤と既存AIラボを正式origin **plunode.net** へ公開。アプリ固定 `767020c`／build `p2mPLpwWtvRzE54EdYqwS`。本番会員DBをprivate backup・別DB実restoreで全24テーブル照合後、009／010を明示適用してledger11件。既存Google・Capsule・限定会話・運営履歴、本番KG revision／2,175対象・1,895主張を保持。正式Google再ログイン、フォロー実操作、招待・公開境界、Graph／AIラボの往復を確認。スマホ実機は運営者が評価済み。KG・Kev・既存AI実験worktree／artifactを変更していない。[公開・復旧記録](verification/PUBLIC_ACCOUNTS_PRODUCTION_20261026.md)。
 

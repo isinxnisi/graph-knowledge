@@ -1,0 +1,37 @@
+{
+  "mainCommit": "5d22751d73232b4be959d95827a056f4a7bc561f",
+  "implementationCommit": "b99bd9c",
+  "buildId": "iHWHWVq9QOp2LZxWl76g9",
+  "origins": {
+    "http://127.0.0.1:3200": {
+      "dataset": {
+        "dataset": "public-kg",
+        "trial": {
+          "id": "issue43",
+          "claims": 2,
+          "formalAcceptance": false,
+          "productionPublished": false
+        },
+        "revision": "film-beta-issue43-unaccepted-v1"
+      },
+      "buildMatched": true,
+      "googleProvider": true,
+      "http200": true
+    },
+    "https://graph-beta.isinxnisi.com": {
+      "dataset": {
+        "dataset": "public-kg",
+        "trial": {
+          "id": "issue43",
+          "claims": 2,
+          "formalAcceptance": false,
+          "productionPublished": false
+        },
+        "revision": "film-beta-issue43-unaccepted-v1"
+      },
+      "buildMatched": true,
+      "googleProvider": true,
+      "http200": true
+    }
+  }
+}

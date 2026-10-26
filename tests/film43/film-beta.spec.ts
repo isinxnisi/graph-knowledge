@@ -34,12 +34,17 @@ for (const width of [1440, 390]) test("film candidates: conditions, evidence, Gr
  await flow.getByRole("button", { name: "成立証拠と根拠を確認 ＋", exact: true }).click();
  await expect(flow.getByTestId("prototype-claim")).toHaveCount(2);
  await flow.getByRole("button", { name: "根拠を開く ＋", exact: true }).first().click();
- await expect(flow.getByRole("link", { name: "この記録の詳細ページへ" })).toBeVisible();
+ await flow.getByRole("button", { name: "根拠を開く ＋", exact: true }).last().click();
+ await expect(flow.getByRole("link", { name: "この記録の詳細ページへ" })).toHaveCount(2);
+ await expect(flow.getByText(/CAST\s*資料表記の言語：en/)).toBeVisible();
+ await expect(flow.getByText(/Dir\s*資料表記の言語：en/)).toBeVisible();
  // Follow the original citation into the actual server-rendered Claim page, then return.
- await flow.getByRole("link", { name: "この記録の詳細ページへ" }).click();
+ await flow.getByRole("link", { name: "この記録の詳細ページへ" }).first().click();
  await expect(page.getByText(/CAST|Dir/, {exact:true}).first()).toBeVisible();
  await page.goBack();
- if (!await flow.isVisible()) await page.getByTestId("discovery-search-entry").click();
+ try { await flow.waitFor({state:"visible",timeout:3000}); }
+ catch { await page.getByTestId("discovery-search-entry").click(); }
+ await expect(flow).toBeVisible();
  const proof = flow.getByRole("button", {name:"成立証拠と根拠を確認 ＋",exact:true});
  if (await proof.isVisible()) await proof.click();
  await expect(flow.getByTestId("prototype-claim")).toHaveCount(2);
@@ -92,7 +97,10 @@ for (const width of [1440, 390]) test("film candidates: conditions, evidence, Gr
  await page.reload();
  await expect.poll(() => model().execution).toEqual(expected);
  await expect.poll(async () => (await snapshot()).edges.length).toBe(2);
- await page.screenshot({ path: info.outputPath("film-restored.png"), animations: "disabled" });
+ await page.getByRole("button",{name:"全体を表示",exact:true}).click();
+ await expect.poll(async () => (await snapshot()).edges.length).toBe(2);
+ await page.evaluate(()=>scrollTo(0,0));
+ await page.screenshot({ path: info.outputPath("film-restored.png"), animations: "disabled", fullPage:true });
  expect(endpoints).toContain("/api/discovery/entities");
  expect(endpoints).toContain("/api/discovery/paths");
  expect(errors).toEqual([]);
