@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "status": "prepared-candidates-not-accepted",
+  "issueOrigin": {
+    "repository": "isinxnisi/graph-knowledge",
+    "issueNumber": 42,
+    "approvalId": "dot-matsumoto-three-20261026",
+    "permissionSha256": "22aa37126cd4dd12393c290a8c5dccb1c3c699c82c0f4de012606486ec06ab2b",
+    "issueBodySha256": "55759934be60f937cbbeb33bf7c5b0f81526da540eda244b96b4d6de88aa9fd7"
+  },
+  "counts": {
+    "approvedWorks": 3,
+    "preparedWorks": 0,
+    "preparedPeople": 0,
+    "batches": 0,
+    "holds": 3,
+    "networkAttempts": 16,
+    "reusedWorks": 0,
+    "reusedPublishedClaims": 0,
+    "reusedHeldWorks": 0
+  },
+  "holds": [
+    {
+      "target": "ピンポン",
+      "person": "松本大洋",
+      "reason": "Request attempts exhausted: publication-753a877561d519907dd709d9"
+    },
+    {
+      "target": "鉄コン筋クリート",
+      "person": "松本大洋",
+      "reason": "Request attempts exhausted: ndl-9784091847317"
+    },
+    {
+      "target": "Sunny",
+      "person": "松本大洋",
+      "reason": "No dated, exact first-volume Japanese manga publication"
+    }
+  ],
+  "reusedReviews": [],
+  "batchRequests": [],
+  "publicApply": false,
+  "preparationDirectory": "/home/isinxnisi/.local/share/plunode-collection-worker-phase-b-20261020/runtime/.local/collection-issues/issue-42-dot-matsumoto-three-20261026"
+}
