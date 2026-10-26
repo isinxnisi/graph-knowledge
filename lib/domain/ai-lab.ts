@@ -30,6 +30,7 @@ const runSchema = z.strictObject({
   disposition: z.enum(["candidate", "rejected"]).nullable(),
   observation: z.strictObject({
     requestSent: z.boolean(), responseValidated: z.boolean(),
+    gateVersion:z.literal("kev-short-window-v1").optional(),
     errorCode: z.enum(["gpu_busy", "gpu_too_warm", "vram_insufficient", "ram_insufficient", "disk_insufficient", "resources_unknown", "request_too_large", "transport_error", "validation_or_lock_error", "interrupted_no_retry", "provider_error"]).nullable(),
     telemetrySha256: labHashSchema, sampleCount: z.number().int().min(1).max(2000),
     wallSeconds: z.number().finite().nonnegative().max(600).nullable(),
@@ -38,20 +39,85 @@ const runSchema = z.strictObject({
   }).optional(),
 });
 
+const educationTaskSchema=z.strictObject({
+  taskId:identifier,split:z.enum(['train','holdout']),kind:z.enum(['direction','evidence','polarity','role','scope','period','purpose']),
+  objective:z.string().min(1).max(400),originId:z.uuidv4(),componentSha256:labHashSchema,
+  entities:z.array(z.strictObject({id:z.uuidv4(),name:z.string().min(1).max(160)})).min(1).max(8),
+  paths:z.array(labPathSchema.extend({steps:z.array(labStepSchema.extend({polarity:claimSchema.shape.polarity})).min(1).max(2)})).max(6),
+  expectedChoice:z.enum(['C0','STOP','HOLD']).nullable(),evaluationBasis:z.enum(['machine-structural','pending-human']),
+  semanticReview:z.literal('pending-human'),sourceSnapshotSha256:labHashSchema,
+});
+const modelEvaluation=z.strictObject({taskId:identifier,choice:z.enum(['C0','STOP','HOLD','A','B']),
+  probabilities:z.record(identifier,z.number().finite().min(0).max(1)),tokens:z.number().int().min(1).max(512)});
+export const educationCycleSchema=z.strictObject({
+  cycleId:z.uuidv4(),kind:z.enum(['structural-education','synthetic-infrastructure']),
+  status:z.enum(['completed','held','failed','unknown']),reason:identifier.nullable(),startedAt:stamp,finishedAt:stamp,
+  codeCommit:z.string().regex(/^[a-f0-9]{40}$/),sourceSha256:labHashSchema,resultSha256:labHashSchema,
+  modelRevision:z.string().regex(/^[a-f0-9]{40}$/),baseRevision:z.string().regex(/^[a-f0-9]{40}$/),
+  tasks:z.array(educationTaskSchema).max(4),inferenceCalls:z.number().int().min(0).max(8),
+  training:z.strictObject({optimizerUpdates:z.union([z.literal(0),z.literal(1)]),frozenUnchanged:z.boolean().nullable(),
+    beforeSha256:labHashSchema.nullable(),afterSha256:labHashSchema.nullable(),
+    checkpointSaved:z.boolean(),checkpointReloaded:z.boolean(),checkpointSha256:labHashSchema.nullable(),
+    adopted:z.literal(false)}),
+  comparison:z.strictObject({basis:z.literal('machine-structural-only'),before:z.array(modelEvaluation).max(4),after:z.array(modelEvaluation).max(4),
+    holdoutTaskIds:z.array(identifier).max(2),capabilityImprovement:z.literal('unconfirmed'),semanticAccepted:z.null(),reloadVerified:z.boolean()}).nullable(),
+  stages:z.array(z.strictObject({phase:z.enum(['train','reload']),name:z.enum(['loaded','frozen','evaluated-before','forward','backward','optimizer','evaluated-after','saved','reloaded']),
+    elapsedSeconds:z.number().finite().nonnegative().max(240),cpuSeconds:z.number().finite().nonnegative().max(600),
+    peakRssMiB:z.number().finite().nonnegative().max(6144)})).max(12),
+  limits:z.strictObject({ramMiB:z.literal(6144),cpus:z.literal(2),wallSeconds:z.literal(180),outputMiB:z.literal(256)}),
+  nextTasks:z.array(z.strictObject({taskId:identifier,kind:educationTaskSchema.shape.kind,evaluationBasis:educationTaskSchema.shape.evaluationBasis})).max(4),
+  semanticReview:z.literal('pending-human'),generalizationEvidence:z.literal(false),
+}).superRefine((cycle,ctx)=>{
+  const fail=()=>ctx.addIssue({code:'custom',message:'Inconsistent education observation'});
+  if(Date.parse(cycle.finishedAt)<Date.parse(cycle.startedAt))fail();
+  const train=new Set(cycle.tasks.filter(t=>t.split==='train').flatMap(t=>t.entities.map(e=>e.id))),holdout=cycle.tasks.filter(t=>t.split==='holdout');
+  if(holdout.some(t=>t.entities.some(e=>train.has(e.id))))fail();
+  const trainComponents=new Set(cycle.tasks.filter(t=>t.split==='train').map(t=>t.componentSha256));
+  if(holdout.some(t=>trainComponents.has(t.componentSha256))||new Set(cycle.tasks.map(t=>t.taskId)).size!==cycle.tasks.length)fail();
+  const trainClaims=new Set(cycle.tasks.filter(t=>t.split==='train').flatMap(t=>t.paths.flatMap(p=>p.steps.map(s=>s.claimId))));
+  if(holdout.some(t=>t.paths.some(p=>p.steps.some(s=>trainClaims.has(s.claimId)))))fail();
+  if(cycle.training.optimizerUpdates===1&&(!cycle.training.frozenUnchanged||!cycle.training.beforeSha256||!cycle.training.afterSha256||cycle.training.beforeSha256===cycle.training.afterSha256||!cycle.stages.some(s=>s.name==='optimizer')))fail();
+  if(cycle.training.checkpointReloaded&&(!cycle.training.checkpointSaved||!cycle.training.checkpointSha256||!cycle.stages.some(s=>s.name==='reloaded')))fail();
+  if(cycle.training.checkpointSaved&&!cycle.stages.some(s=>s.name==='saved'))fail();
+  if(cycle.kind==='synthetic-infrastructure'&&(cycle.tasks.length||cycle.inferenceCalls||cycle.comparison))fail();
+  if(cycle.kind==='structural-education'&&cycle.status==='completed'&&(!cycle.training.checkpointReloaded||!cycle.comparison||!holdout.length))fail();
+  for(const t of cycle.tasks){
+    if(t.evaluationBasis==='pending-human'&&t.expectedChoice!==null)fail();
+    const entities=new Set(t.entities.map(e=>e.id));
+    if(!entities.has(t.originId))fail();
+    for(const p of t.paths)for(const s of p.steps){
+      if(![s.fromId,s.toId,s.subjectId,s.objectId].every(id=>entities.has(id)))fail();
+      if(s.direction==='incoming'?s.fromId!==s.objectId||s.toId!==s.subjectId:s.fromId!==s.subjectId||s.toId!==s.objectId)fail();
+    }
+  }
+  if(cycle.comparison){
+    if(cycle.status==='completed'&&cycle.inferenceCalls!==cycle.comparison.before.length+cycle.comparison.after.length+(cycle.training.checkpointReloaded?cycle.comparison.holdoutTaskIds.length:0))fail();
+    for(const e of [...cycle.comparison.before,...cycle.comparison.after]){
+      const values=Object.values(e.probabilities);
+      if(!cycle.tasks.some(t=>t.taskId===e.taskId)||!(e.choice in e.probabilities)||Math.abs(values.reduce((a,b)=>a+b,0)-1)>.02)fail();
+    }
+    if(cycle.comparison.holdoutTaskIds.some(id=>!holdout.some(t=>t.taskId===id)))fail();
+    if(cycle.comparison.after.some(e=>!cycle.comparison!.holdoutTaskIds.includes(e.taskId)))fail();
+  }
+});
+
 // v1 retains the immutable birth state. v2 adds observed, sealed inference records.
-// Neither contract permits training or automatically accepted semantic scores.
+// v3 adds measured independent updates; semantic scores and adoption stay unapproved.
 export const labPayloadSchema = z.strictObject({
-  schemaVersion: z.union([z.literal(1),z.literal(2)]), version: identifier, aiId: z.literal(APPRENTICE_AI_ID), operator: z.literal("plunode"),
+  schemaVersion: z.union([z.literal(1),z.literal(2),z.literal(3)]), version: identifier, aiId: z.literal(APPRENTICE_AI_ID), operator: z.literal("plunode"),
   liveStatus: z.literal("not-monitored"), officialAi: z.strictObject({ binding: z.literal("plunode-official-ai"), aiIdentityId: z.null() }),
   kgRevision: z.uuidv4(), kgSha256: labHashSchema, recordedAt: stamp,
   source: z.strictObject({ commit: z.string().regex(/^[a-f0-9]{40}$/), artifactSha256: labHashSchema }),
   entities: z.array(z.strictObject({ id: z.uuidv4(), name: z.string().trim().min(1).max(160) })).min(1).max(32),
   runs: z.array(runSchema).min(1).max(128),
+  education:z.strictObject({version:z.literal('autonomous-v1'),cycles:z.array(educationCycleSchema).min(1).max(32)}).optional(),
 }).superRefine((data, ctx) => {
   const fail = () => ctx.addIssue({ code: "custom", message: "Inconsistent saved lab record" });
   const entities = new Set(data.entities.map(e => e.id)), runs = new Set(data.runs.map(r => r.runId));
   if (entities.size !== data.entities.length || runs.size !== data.runs.length) fail();
-  if (data.recordedAt !== [...data.runs].sort((a,b) => Date.parse(b.finishedAt)-Date.parse(a.finishedAt))[0].finishedAt) fail();
+  if((data.schemaVersion!==3&&data.education)||(data.schemaVersion===3&&!data.education))fail();
+  if (data.recordedAt !== [...data.runs,...(data.education?.cycles??[])].sort((a,b) => Date.parse(b.finishedAt)-Date.parse(a.finishedAt))[0].finishedAt) fail();
+  if(new Set(data.education?.cycles.map(c=>c.cycleId)).size!==(data.education?.cycles.length??0))fail();
   for (const run of data.runs) {
     if (Date.parse(run.finishedAt) < Date.parse(run.startedAt) || run.parentRunId && !runs.has(run.parentRunId)) fail();
     if (data.schemaVersion === 1 && (run.observation || !["rule","not-connected"].includes(run.executionKind) || !["completed","held"].includes(run.status))) fail();
@@ -86,7 +152,8 @@ export const labArtifactSchema = z.strictObject({ sha256: labHashSchema, payload
 export type LabArtifact = z.infer<typeof labArtifactSchema>;
 export type LabRun = LabArtifact["payload"]["runs"][number];
 export function labCounts(data: LabArtifact["payload"]) {
-  return { inference: data.runs.filter(r => r.executionKind === "kev-api" && r.status === "completed" && r.observation?.responseValidated).length, training: 0, baseline: data.runs.filter(r => r.executionKind === "rule").length, held: data.runs.filter(r => r.status === "held").length };
+  const cycles=data.education?.cycles.filter(c=>c.kind==='structural-education')??[];
+  return { inference: data.runs.filter(r => r.executionKind === "kev-api" && r.status === "completed" && r.observation?.responseValidated).length+cycles.reduce((n,c)=>n+c.inferenceCalls,0), training:cycles.reduce((n,c)=>n+c.training.optimizerUpdates,0), baseline: data.runs.filter(r => r.executionKind === "rule").length, held: data.runs.filter(r => r.status === "held").length };
 }
 export function canonicalLabJson(value: unknown): string {
   if (Array.isArray(value)) return "[" + value.map(canonicalLabJson).join(",") + "]";

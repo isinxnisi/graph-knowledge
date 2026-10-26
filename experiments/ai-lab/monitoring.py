@@ -20,7 +20,7 @@ def gpu_sample():
                     [float(value.strip()) for value in rows[0].split(",")]))
 
 
-def monitored_execute(home, run_id, task, token):
+def monitored_execute(home, run_id, task, token, *, limits=None, observation=probe):
     # Existing run identity belongs to its original source version; never resubmit it.
     directory = Path(home) / "runs" / run_id
     if (directory / "result.json").exists():
@@ -64,7 +64,7 @@ def monitored_execute(home, run_id, task, token):
     try:
         time.sleep(3)
         phase[0] = "preflight-and-inference"
-        return execute(home, run_id, task, "kev", "purpose-role-v1", observe=probe, before_send=before_send)
+        return execute(home, run_id, task, "kev", "purpose-role-v1", observe=observation, before_send=before_send,limits=limits)
     finally:
         sending.clear()
         phase[0] = "baseline-after"

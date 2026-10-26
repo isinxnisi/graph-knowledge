@@ -1,0 +1,79 @@
+{
+  "cpuExperiments": [
+    {
+      "experimentId": "f6471037-178e-4f66-9c41-71352e00c4d0",
+      "purpose": "synthetic-infrastructure-only",
+      "status": "completed",
+      "optimizerUpdates": 1,
+      "checkpointReloaded": true,
+      "stages": [
+        {
+          "phase": "train",
+          "wallSeconds": 76.48670356400544,
+          "peakRssMiB": 5333.375
+        },
+        {
+          "phase": "reload",
+          "wallSeconds": 23.8135516269831,
+          "peakRssMiB": 5281.6875
+        }
+      ],
+      "checkpointBytes": 156534934,
+      "maxProbabilityDifference": 0.0
+    },
+    {
+      "experimentId": "d012cea7-acf2-4a9c-81e0-c9620db9d177",
+      "purpose": "structural-education-candidate",
+      "status": "completed",
+      "optimizerUpdates": 1,
+      "checkpointReloaded": true,
+      "stages": [
+        {
+          "phase": "train",
+          "wallSeconds": 92.94038670300506,
+          "peakRssMiB": 5572.09375
+        },
+        {
+          "phase": "reload",
+          "wallSeconds": 48.73400335200131,
+          "peakRssMiB": 5281.9609375
+        }
+      ],
+      "checkpointBytes": 156535418,
+      "maxProbabilityDifference": 0.0
+    }
+  ],
+  "gpuTrial": {
+    "at": "2026-10-26T16:36:21.472740+00:00",
+    "runId": "d9758ffb-afce-416c-9242-fc31d099a204",
+    "gateVersion": "kev-short-window-v1",
+    "status": "completed",
+    "errorCode": null,
+    "requestSent": true,
+    "resourcesAtSend": {
+      "temperatureC": 72,
+      "totalMiB": 8192,
+      "usedMiB": 5694,
+      "freeMiB": 2367,
+      "utilizationPercent": 0
+    },
+    "wallSeconds": 5.606306931993458,
+    "peak": {
+      "temperatureC": 76.0,
+      "utilizationPercent": 99.0,
+      "powerWatts": 83.17,
+      "usedMiB": 5704.0
+    },
+    "minimumFreeVramMiB": 2357.0,
+    "apparentAdditionalVramMiB": 10.0,
+    "serverCancellationGuaranteed": false,
+    "trainingGateChanged": false,
+    "conclusion": "single-observation-only; no OOM-based threshold lowering; GPU scheduling remains disabled"
+  },
+  "publicationCommandVerified": {
+    "sha256": "e3bd77124b0fbdaf6e565827b109a2c1d2a7d57e9ef4be031a288e268b9db8d3",
+    "previous": "e3bd77124b0fbdaf6e565827b109a2c1d2a7d57e9ef4be031a288e268b9db8d3",
+    "validatedKgRevision": "film-beta-issue43-unaccepted-v1"
+  },
+  "realModelRequestsDuringPublication": 0
+}

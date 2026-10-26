@@ -1,5 +1,7 @@
 # 8GiB環境：学習方式の比較と段階検証
 
+2026-10-27追記：CPU FP32・既存LoRA/headで合成入力と実KG教育それぞれbackward→Optimizer1更新→checkpoint保存→別process再読込が成功。実KG側peak RSS5572.09MiB、train92.94秒＋reload48.73秒。これは方式の実行成立であり、能力向上や候補採用の承認ではない。[実測](../verification/AI_LAB_AUTONOMOUS_20261027.md)／[有限worker](../runbooks/AI_LAB_AUTONOMOUS_EDUCATION.md)が現在の運転仕様。以下の「未測定」「ロードまで」は10-26時点の方式比較と段階計画。GPU学習・NF4互換は引き続き未検証。
+
 2026-10-26、Issue #36の最新指示と運営者の補足に基づく。**学習不可能という結論ではない。FP32・共有Kev併存・追加VRAM上限2GiBという旧案が不成立**。実教育のデータ準備と、インフラとして学習を実行できるかは別の判定軸とする。共有Kevの停止・変更・配備は行わない。
 
 ## 今回の実測と判定範囲

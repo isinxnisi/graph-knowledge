@@ -1,5 +1,9 @@
 # 見習いAI：有限の実行と教育サイクル
 
+2026-10-27の現在仕様は[自動教育v1の運転](../../docs/runbooks/AI_LAB_AUTONOMOUS_EDUCATION.md)と[実測](../../docs/verification/AI_LAB_AUTONOMOUS_20261027.md)。`autonomy.py`がJST時間窓・日次予算・共通guardを管理し、`curriculum.py`→`sandbox.py`/`cpu_step.py`→`project_education.py`で独立CPU教育と公開観測を行う。既定paused、GPUなし、モデル採用なし。共有Kev短時間推論の試験gateは`gpu_trial.py`に版を分けた。
+
+以下は互換維持する10-26版の単回実行・再評価コマンド。旧4課題は独立finalに流用しない。
+
 Issue #36の2026-10-26指示で、旧 `codex/ai-lab-foundation` の実行基盤だけを最新mainへ選別移植した。公開ラボ・AIIdentityはmainが正本。比較用Nextアプリや公開ルートを移植しない。原runと比較素材は旧worktreeに保全し、新しいprivate runtimeはGit外の `~/.local/share/plunode-ai-lab/first-sortie-20261026` に置く。
 
 ## 実行境界

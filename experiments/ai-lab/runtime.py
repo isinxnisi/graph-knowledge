@@ -116,19 +116,28 @@ def probe():
     return result
 
 
-def resource_gate(observation):
+def resource_gate(observation, limits=None):
+    limits=limits or LIMITS
     gpu = observation.get("gpu")
     if not gpu or observation.get("availableRamMiB") is None:
         return "resources_unknown"
-    if gpu["temperatureC"] >= LIMITS["startBelowC"]:
+    if gpu["temperatureC"] >= limits["startBelowC"]:
         return "gpu_too_warm"
-    if gpu["freeMiB"] < LIMITS["minFreeVramMiB"]:
+    if gpu["freeMiB"] < limits["minFreeVramMiB"]:
         return "vram_insufficient"
-    if gpu["utilizationPercent"] > LIMITS["maxGpuUtilPercent"]:
-        return "gpu_busy"
-    if observation["availableRamMiB"] < LIMITS["minAvailableRamMiB"]:
+    if limits.get('gateVersion')=='kev-short-window-v1':
+        import statistics
+        window=observation.get('window',[])
+        if len(window)!=6 or not all(row.get('gpu') for row in window):return 'resources_unknown'
+        if max(row['gpu']['temperatureC'] for row in window)>=77:return 'gpu_too_warm'
+        if window[-1]['gpu']['temperatureC']-window[0]['gpu']['temperatureC']>1:return 'gpu_too_warm'
+        if min(row['gpu']['freeMiB'] for row in window)<1536:return 'vram_insufficient'
+        utilization=[row['gpu']['utilizationPercent'] for row in window]
+        if statistics.median(utilization)>5 or sum(v>20 for v in utilization)>2:return 'gpu_busy'
+    elif gpu["utilizationPercent"] > limits["maxGpuUtilPercent"]:return "gpu_busy"
+    if observation["availableRamMiB"] < limits["minAvailableRamMiB"]:
         return "ram_insufficient"
-    if observation["freeDiskMiB"] < LIMITS["minDiskMiB"]:
+    if observation["freeDiskMiB"] < limits["minDiskMiB"]:
         return "disk_insufficient"
     return None
 
@@ -171,7 +180,8 @@ class ProviderError(Exception):
     pass
 
 
-def execute(home, run_id, task, mode, policy, parent=None, *, provider=None, observe=probe, before_send=lambda: None):
+def execute(home, run_id, task, mode, policy, parent=None, *, provider=None, observe=probe, before_send=lambda: None, limits=None):
+    limits=limits or LIMITS
     uid(run_id)
     if parent is not None:
         uid(parent)
@@ -185,7 +195,7 @@ def execute(home, run_id, task, mode, policy, parent=None, *, provider=None, obs
             "model": EXPECTED_MODEL if mode == "kev" else None, "adapterRevision": None,
             "trainingDataVersion": None, "evaluationDataVersion": "development-v1",
             "scoringVersion": "relation-choice-v1", "kgRevision": manifest["revision"],
-            "kgSha256": manifest["snapshotSha256"], "code": code, "limits": LIMITS,
+            "kgSha256": manifest["snapshotSha256"], "code": code, "limits": limits,
             "candidates": generated, "requestWire": wire(payload)}
     with local_lock(home):
         run_dir = Path(home) / "runs" / run_id
@@ -213,7 +223,7 @@ def execute(home, run_id, task, mode, policy, parent=None, *, provider=None, obs
                 result["selection"] = baseline(task, generated, policy)
                 result["status"] = "completed"
             else:
-                error = resource_gate(observation)
+                error = resource_gate(observation,limits)
                 if error:
                     result.update(status="held", errorCode=error)
                 elif len(wire(payload).encode()) > LIMITS["maxRequestBytes"]:
@@ -225,7 +235,7 @@ def execute(home, run_id, task, mode, policy, parent=None, *, provider=None, obs
                     before_send()
                     final_observation = observe()
                     result["resourcesAtSend"] = final_observation
-                    error = resource_gate(final_observation)
+                    error = resource_gate(final_observation,limits)
                     if error:
                         result.update(status="held", errorCode=error)
                     else:

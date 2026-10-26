@@ -65,6 +65,8 @@ def project(home, initial, run_ids):
                 "atSend": {"temperatureC": at_send["temperatureC"], "utilizationPercent": at_send["utilizationPercent"], "freeVramMiB": at_send["freeMiB"]} if at_send else None,
                 "peak": {target: max(s[source] for s in samples) for target, source in [("temperatureC", "temperatureC"), ("utilizationPercent", "utilizationPercent"), ("powerWatts", "powerWatts"), ("usedVramMiB", "usedMiB")]}}
         })
+        if spec['limits'].get('gateVersion'):
+            payload['runs'][-1]['observation']['gateVersion']=spec['limits']['gateVersion']
         existing.add(run_id)
     payload.update(schemaVersion=2, version="first-sortie-20261026-v2", recordedAt=max(payload["runs"], key=lambda r:r["finishedAt"])["finishedAt"])
     return payload

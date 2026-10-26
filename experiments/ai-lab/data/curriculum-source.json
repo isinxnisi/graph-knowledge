@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "sha256": "306cd45886f5e147bfc10f493a0a26d92946f8bd8c042216038020161b477901",
+  "backupChecksum": "36fcd56dacc80d54135c2d5441f501ad89a83b416d0c5041dcf75cb066896cb7",
+  "graphDigest": "6179ed66255cdd441fe7df7166500ab7121a013f64737c4eaa620ab9e37e1c63",
+  "revision": "82b01515-594c-48ca-b4b6-515eefac83ca",
+  "savedAt": "2026-10-26T06:40:51.329Z",
+  "release": "20261014-credits-001",
+  "source": "validated public KG backup; no credentials or private user data"
+}

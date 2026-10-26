@@ -49,12 +49,13 @@ export async function verifyLabPublicReferences(artifact: LabArtifact, get: LabK
   // Compare before/after exactly and still verify every Entity/Claim/support.
   const revision = async () => z.object({ dataset: z.literal("public-kg"), revision: z.string().regex(/^[a-zA-Z0-9][a-zA-Z0-9._:-]{0,159}$/) }).parse(await get("/api/dataset")).revision;
   const before = await revision();
-  for (const entity of artifact.payload.entities) {
+  const tasks=artifact.payload.education?.cycles.flatMap(c=>c.tasks)??[];
+  for (const entity of [...artifact.payload.entities,...tasks.flatMap(t=>t.entities)]) {
     const actual = entityDetailSchema.parse(z.object({ entity: z.unknown() }).parse(await get("/api/entities/" + entity.id)).entity);
     if (actual.id !== entity.id || actual.name !== entity.name) throw Error("Lab entity reference differs from public KG");
   }
   const claims = new Map<string,z.infer<typeof claimDetailSchema>>();
-  for (const step of artifact.payload.runs.flatMap(r => r.paths.flatMap(p => p.steps))) {
+  for (const step of [...artifact.payload.runs.flatMap(r => r.paths.flatMap(p => p.steps)),...tasks.flatMap(t=>t.paths.flatMap(p=>p.steps))]) {
     let actual = claims.get(step.claimId);
     if (!actual) { actual = claimDetailSchema.parse(z.object({ claim: z.unknown() }).parse(await get("/api/claims/" + step.claimId)).claim); claims.set(step.claimId,actual); }
     if (actual.withdrawal || actual.id !== step.claimId || actual.subjectId !== step.subjectId || actual.objectId !== step.objectId || actual.predicate !== step.predicate || actual.polarity !== step.polarity || canonicalLabJson(actual.period) !== canonicalLabJson(step.period) || canonicalLabJson(actual.contribution) !== canonicalLabJson(step.contribution)) throw Error("Lab Claim reference differs from public KG");
@@ -99,6 +100,7 @@ export async function activateLabArtifact(directory: string, artifact: LabArtifa
     // A new version appends immutable observations. An already retained version
     // may be selected for rollback without deleting the newer release on disk.
     if (!retainedVersion && (previous.payload.runs.some(old => !checked.payload.runs.some(run => run.runId === old.runId && canonicalLabJson(run) === canonicalLabJson(old))) || ["source","entities","kgRevision","kgSha256"].some(key => canonicalLabJson(checked.payload[key as keyof typeof checked.payload]) !== canonicalLabJson(previous.payload[key as keyof typeof previous.payload])))) throw Error("Saved lab history is immutable");
+    if(!retainedVersion&&previous.payload.education?.cycles.some(old=>!checked.payload.education?.cycles.some(c=>c.cycleId===old.cycleId&&canonicalLabJson(c)===canonicalLabJson(old))))throw Error('Saved education history is immutable');
     try { const fd = await open(destination, "wx", 0o640); try { await fd.writeFile(content); await fd.sync(); } finally { await fd.close(); } }
     catch (error) { if ((error as NodeJS.ErrnoException).code !== "EEXIST" || (await readLabFile(destination)).toString() !== content) throw error; }
     const folder = await open(releases, "r"); try { await folder.sync(); } finally { await folder.close(); }

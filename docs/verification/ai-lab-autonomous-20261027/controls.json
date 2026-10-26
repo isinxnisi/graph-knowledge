@@ -1,0 +1,117 @@
+{
+  "recordedAt": "2026-10-26T16:51:50.482290+00:00",
+  "records": [
+    {
+      "at": "2026-10-26T16:51:43.954189+00:00",
+      "command": "enable",
+      "status": null,
+      "reason": null,
+      "enabled": true,
+      "workerRunning": false,
+      "cycleId": null
+    },
+    {
+      "at": "2026-10-26T16:51:44.134768+00:00",
+      "command": "tick",
+      "status": "skipped",
+      "reason": "outside-window",
+      "enabled": null,
+      "workerRunning": false,
+      "cycleId": null
+    },
+    {
+      "at": "2026-10-26T16:51:44.268592+00:00",
+      "command": "pause",
+      "status": null,
+      "reason": null,
+      "enabled": false,
+      "workerRunning": false,
+      "cycleId": null
+    },
+    {
+      "at": "2026-10-26T16:51:44.736963+00:00",
+      "command": "run-once",
+      "status": "prepared",
+      "reason": null,
+      "enabled": null,
+      "workerRunning": false,
+      "cycleId": "b0e4ebdc-9a89-4502-a9e7-fe2e6466298e"
+    },
+    {
+      "at": "2026-10-26T16:51:45.250083+00:00",
+      "command": "run-once",
+      "status": "prepared",
+      "reason": null,
+      "enabled": null,
+      "workerRunning": false,
+      "cycleId": "4c13f426-7696-4062-b41d-a912f1b30aa1"
+    },
+    {
+      "at": "2026-10-26T16:51:45.390641+00:00",
+      "command": "start",
+      "status": null,
+      "reason": null,
+      "enabled": false,
+      "workerRunning": true,
+      "cycleId": null
+    },
+    {
+      "at": "2026-10-26T16:51:47.081869+00:00",
+      "command": "stop",
+      "status": null,
+      "reason": null,
+      "enabled": false,
+      "workerRunning": true,
+      "cycleId": null
+    },
+    {
+      "at": "2026-10-26T16:51:47.754949+00:00",
+      "command": "status",
+      "status": null,
+      "reason": null,
+      "enabled": false,
+      "workerRunning": false,
+      "cycleId": null
+    },
+    {
+      "at": "2026-10-26T16:51:47.932499+00:00",
+      "command": "resume",
+      "status": null,
+      "reason": null,
+      "enabled": true,
+      "workerRunning": false,
+      "cycleId": null
+    },
+    {
+      "at": "2026-10-26T16:51:48.112038+00:00",
+      "command": "start",
+      "status": null,
+      "reason": null,
+      "enabled": true,
+      "workerRunning": true,
+      "cycleId": null
+    },
+    {
+      "at": "2026-10-26T16:51:49.749826+00:00",
+      "command": "stop",
+      "status": null,
+      "reason": null,
+      "enabled": false,
+      "workerRunning": true,
+      "cycleId": null
+    },
+    {
+      "at": "2026-10-26T16:51:50.482236+00:00",
+      "command": "status",
+      "status": null,
+      "reason": null,
+      "enabled": false,
+      "workerRunning": false,
+      "cycleId": null
+    }
+  ],
+  "realModelRequests": 0,
+  "finite": true,
+  "finalEnabled": false,
+  "finalWorkerRunning": false
+}
