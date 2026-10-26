@@ -46,4 +46,13 @@ v3 artifactは旧birth7件・v2の10件を完全保持し、GPU実応答1件と�
 
 Python37件、AI artifact/navigation17件、教育画面2件が通過。英語Claimリンクの末尾slashによる復帰先不一致を画面検証で検出し、既存locale URL helperへ揃えて修正・回帰テストを追加した。npm標準suiteは76ファイル中74通過・既存2件timeout、当該2ファイル22件を1workerで再実行し全通過。timeout緩和やtest削除なし。変更TS/TSXのESLint、Next16.3.8 webpack build・TypeScriptが通過。
 
-main受入、beta build、日英実画面の最終receiptは検証後に追記する。VPS／正式サイト、共有Kev、KG、会員DB、収集Worker、公開ゲート、Tunnelの変更は行わない。
+実装固定SHA **`80fa9803bf6abcbf3cd6be2f11b488fa0834e8aa`** をmainへFF受入し、同じbuild **`vjaK2QJ9Op6MsmK0iTJen`** を既存3200へ配置。既存betaの保護設定22項目と`.env.public`全byte、映画KG `film-beta-issue43-unaccepted-v1` を維持した。設定の追加・変更なし。旧buildと元環境の復旧控えをprivateに保持した。
+
+- 公開betaで日英×1440/390px×明/暗の8ケース通過。実推論6／教育1、教育3記録、train/holdout、STOP→C0、既存11 run、Claim・Graph往復、既存Graphの配置/pan/zoom復帰、会員入口、見習いの自動浮遊・動き低減/画面外/非表示停止、横溢れなし、CSP/noindex/read-only/比較ルート404を確認。page error・Kevアクセス・アプリ書込リクエスト0。
+- 日英のcycle直URLでも選択復元、RSS5572.1MiBとreload stageの詳細開閉、新GPU gate/76℃の表示を確認。
+- loopback/HTTPSの42項目通過。同一build・artifact、Google provider、コミュニティ一覧/詳細、会員/運営APIの匿名401、公式/見習いプロフィールの既存Identityと空のtimeline、KG版不変を確認。
+- Dockerの既存稼働container ID/imageと旧lab branchのSHA/cleanを確認。旧比較環境はそのまま、今回だけの検証3269は停止した。mainの既存`memo.txt`は未変更。
+
+[日本語の教育記録](https://graph-beta.isinxnisi.com/ai-lab?cycle=891edfc6-9e0a-472a-8b59-dc3795df1273#education)／[English education record](https://graph-beta.isinxnisi.com/en/ai-lab?cycle=891edfc6-9e0a-472a-8b59-dc3795df1273#education)。[配備と検証receipt](ai-lab-autonomous-20261027/beta-verification.json)。受入後の追記は検証文書のみで、app buildの再作成は不要。
+
+今回VPS／正式サイト、共有Kev、KG、会員DB、収集Worker、公開ゲート、Tunnelは変更していない。実Google再ログイン、会員/運営の書込、iPhone実機は未試験で、既存unitと匿名read/認証guardを確認した範囲。残る技術的制約は、CPUの短い1課題・1holdoutを越える資源/品質、独立finalと意味評価、GPU境界/量子化学習、強制終了時の原記録照合、候補checkpointの累積採用方式。公式AIコメント生成は未実装で、実験記録を公式AIの発言に変換していない。

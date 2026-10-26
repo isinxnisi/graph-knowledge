@@ -1,0 +1,260 @@
+{
+  "deployment": {
+    "sourceCommit": "80fa9803bf6abcbf3cd6be2f11b488fa0834e8aa",
+    "build": "vjaK2QJ9Op6MsmK0iTJen",
+    "pid": 1501644,
+    "oldBuild": "jCKofzeGk3iNCU32pxk0T",
+    "protectedSettingsPreserved": 22,
+    "configurationChanges": [],
+    "artifactSha256": "e3bd77124b0fbdaf6e565827b109a2c1d2a7d57e9ef4be031a288e268b9db8d3",
+    "previousArtifactSha256": "7130ee54dffe4d33ec8da512b6f6ce992647f3399954aed061b5e5620602abe3",
+    "filmBetaRevision": "film-beta-issue43-unaccepted-v1",
+    "memberDatabaseChanged": false,
+    "kgChanged": false,
+    "kevChanged": false,
+    "vpsChanged": false
+  },
+  "httpChecks": [
+    {
+      "origin": "http://127.0.0.1:3200",
+      "path": "/",
+      "status": 200
+    },
+    {
+      "origin": "http://127.0.0.1:3200",
+      "path": "/en",
+      "status": 200
+    },
+    {
+      "origin": "http://127.0.0.1:3200",
+      "path": "/ai-lab",
+      "status": 200
+    },
+    {
+      "origin": "http://127.0.0.1:3200",
+      "path": "/en/ai-lab",
+      "status": 200
+    },
+    {
+      "origin": "http://127.0.0.1:3200",
+      "path": "/communities",
+      "status": 200
+    },
+    {
+      "origin": "http://127.0.0.1:3200",
+      "path": "/member",
+      "status": 200
+    },
+    {
+      "origin": "http://127.0.0.1:3200",
+      "path": "/operations",
+      "status": 200
+    },
+    {
+      "origin": "http://127.0.0.1:3200",
+      "path": "/following",
+      "status": 200
+    },
+    {
+      "origin": "http://127.0.0.1:3200",
+      "path": "/people/plunode-official-ai",
+      "status": 200
+    },
+    {
+      "origin": "http://127.0.0.1:3200",
+      "path": "/en/people/explorer-apprentice",
+      "status": 200
+    },
+    {
+      "origin": "http://127.0.0.1:3200",
+      "path": "/api/dataset",
+      "status": 200
+    },
+    {
+      "origin": "http://127.0.0.1:3200",
+      "path": "/api/member/status",
+      "status": 200
+    },
+    {
+      "origin": "http://127.0.0.1:3200",
+      "path": "/api/communities",
+      "status": 200
+    },
+    {
+      "origin": "http://127.0.0.1:3200",
+      "path": "/api/communities/6047e2f1-45af-4096-803d-7dd1f9cd4057",
+      "status": 200
+    },
+    {
+      "origin": "http://127.0.0.1:3200",
+      "path": "/api/member/profile",
+      "status": 401
+    },
+    {
+      "origin": "http://127.0.0.1:3200",
+      "path": "/api/site-operations/summary",
+      "status": 401
+    },
+    {
+      "origin": "http://127.0.0.1:3200",
+      "path": "/api/accounts/me",
+      "status": 401
+    },
+    {
+      "origin": "http://127.0.0.1:3200",
+      "path": "/api/communities/invitations",
+      "status": 401
+    },
+    {
+      "origin": "http://127.0.0.1:3200",
+      "path": "/api/accounts/profiles/plunode-official-ai",
+      "status": 200
+    },
+    {
+      "origin": "http://127.0.0.1:3200",
+      "path": "/api/accounts/profiles/explorer-apprentice",
+      "status": 200
+    },
+    {
+      "origin": "http://127.0.0.1:3200",
+      "path": "/api/ai-lab",
+      "status": 200
+    },
+    {
+      "origin": "https://graph-beta.isinxnisi.com",
+      "path": "/",
+      "status": 200
+    },
+    {
+      "origin": "https://graph-beta.isinxnisi.com",
+      "path": "/en",
+      "status": 200
+    },
+    {
+      "origin": "https://graph-beta.isinxnisi.com",
+      "path": "/ai-lab",
+      "status": 200
+    },
+    {
+      "origin": "https://graph-beta.isinxnisi.com",
+      "path": "/en/ai-lab",
+      "status": 200
+    },
+    {
+      "origin": "https://graph-beta.isinxnisi.com",
+      "path": "/communities",
+      "status": 200
+    },
+    {
+      "origin": "https://graph-beta.isinxnisi.com",
+      "path": "/member",
+      "status": 200
+    },
+    {
+      "origin": "https://graph-beta.isinxnisi.com",
+      "path": "/operations",
+      "status": 200
+    },
+    {
+      "origin": "https://graph-beta.isinxnisi.com",
+      "path": "/following",
+      "status": 200
+    },
+    {
+      "origin": "https://graph-beta.isinxnisi.com",
+      "path": "/people/plunode-official-ai",
+      "status": 200
+    },
+    {
+      "origin": "https://graph-beta.isinxnisi.com",
+      "path": "/en/people/explorer-apprentice",
+      "status": 200
+    },
+    {
+      "origin": "https://graph-beta.isinxnisi.com",
+      "path": "/api/dataset",
+      "status": 200
+    },
+    {
+      "origin": "https://graph-beta.isinxnisi.com",
+      "path": "/api/member/status",
+      "status": 200
+    },
+    {
+      "origin": "https://graph-beta.isinxnisi.com",
+      "path": "/api/communities",
+      "status": 200
+    },
+    {
+      "origin": "https://graph-beta.isinxnisi.com",
+      "path": "/api/communities/6047e2f1-45af-4096-803d-7dd1f9cd4057",
+      "status": 200
+    },
+    {
+      "origin": "https://graph-beta.isinxnisi.com",
+      "path": "/api/member/profile",
+      "status": 401
+    },
+    {
+      "origin": "https://graph-beta.isinxnisi.com",
+      "path": "/api/site-operations/summary",
+      "status": 401
+    },
+    {
+      "origin": "https://graph-beta.isinxnisi.com",
+      "path": "/api/accounts/me",
+      "status": 401
+    },
+    {
+      "origin": "https://graph-beta.isinxnisi.com",
+      "path": "/api/communities/invitations",
+      "status": 401
+    },
+    {
+      "origin": "https://graph-beta.isinxnisi.com",
+      "path": "/api/accounts/profiles/plunode-official-ai",
+      "status": 200
+    },
+    {
+      "origin": "https://graph-beta.isinxnisi.com",
+      "path": "/api/accounts/profiles/explorer-apprentice",
+      "status": 200
+    },
+    {
+      "origin": "https://graph-beta.isinxnisi.com",
+      "path": "/api/ai-lab",
+      "status": 200
+    }
+  ],
+  "containersUnchanged": true,
+  "betaEnvFileUnchanged": true,
+  "legacyWorktreeUnchanged": true,
+  "workerEnabled": false,
+  "workerRunning": false,
+  "vpsChanged": false,
+  "writesDuringVerification": 0,
+  "browserCases": 8,
+  "directJaEnCycleVerified": true,
+  "animationStopConditionsVerified": true,
+  "browserApplicationWriteRequests": 0,
+  "browserModelRequests": 0,
+  "pageErrors": 0,
+  "unitVerification": {
+    "python": 37,
+    "webFilesCovered": 77,
+    "standardSuiteFiles": 76,
+    "standardSuitePassedInitially": 74,
+    "timedOutFilesPassedSeparately": 2,
+    "educationUiTests": 2
+  },
+  "screenshotSha256": {
+    "en-1440-dark-blue-education.png": "ba77ca34dd74cff9d3dc632a72f105d3d79ddb268caf1b933156056b074ef988",
+    "en-1440-light-education.png": "f52fc99e8a66fcc05145bc96daef3bfea5c2ea6b9f04e585eb19caf74bfafdf5",
+    "en-390-dark-blue-education.png": "b8175ce0a227da9f98e0c4efd9d0f552585b2da9e9cc628eb53e4b0eeca3df7a",
+    "en-390-light-education.png": "f574cb400c4bd8e3e646b9b5404667ea8cca33f15fb1f9f97f981443824c9460",
+    "ja-1440-dark-blue-education.png": "001d787caef021f66ceb29c4d59c28409846743cab71be2a8d50d452daca48a5",
+    "ja-1440-light-education.png": "cc8f24f3cf67041a1376aba25322aa761bd3bab3118dbddaaf0afa2229cf7e87",
+    "ja-390-dark-blue-education.png": "c10bc3558599a0c8067fa121df550a182b599106706d60bfd5dcf879b02ee855",
+    "ja-390-light-education.png": "94f3fad7ac38b0d7623b4bc1f9d02b607031dbb62fbb3c7bb0fc4ee72ebbb27d"
+  }
+}
