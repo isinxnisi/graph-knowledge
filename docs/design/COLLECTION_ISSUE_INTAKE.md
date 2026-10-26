@@ -61,3 +61,48 @@ control branchの `collection-control/workers/plunode-wsl/README.md`／`status.j
 issue-receiptのrequestSha256は正規化JSONの内容hash、実行statusのrequestSha256は受信ファイルのバイトhash。permissionSha256は共通の正規化内容hashで範囲を比較する。
 
 既存Worker32試験と、`tests/check_collection_worker.py` のlocal bare Gitを使う一巡試験（実validator・無書込plan模擬・再開・非重複）も実施する。実試験の模擬判断は本番承認へ流用しない。設置はprivate runtimeのみ更新し、既存dataset／.local／承認／cache／lock inodeとWindows毎分非表示タスクを保全する。Web変更はなく3200／beta／VPS再配置はしない。
+
+
+## 2026-10-26：技術的未完了と有界な通信復旧（Issue #42、隔離実装）
+
+本節は修正版の契約。実運用runtimeへの配置・旧依頼の実行許可ではない。従来の凍結recipe／collector3本・承認・正式受入経路は変更しない。
+
+`collection-issues.py` の取得に小さな `collection-transport.py` を使用する。要求を送る前の計上、同一URL既定2試行、総量、3秒間隔、20秒timeout、4MiBは維持する。成功cacheはURL・SHA・bytesを照合して先に返す。親から子まで同じ台帳を使い、子collectorは従来どおり準備済みcanonical cacheを消費する。任意の旧collector単体へ新しい復旧権限を広げない。
+
+### 診断と分類
+
+- private requests.json：開始epoch、終了UTC、monotonic所要時間、HTTPコード、例外型のcause chain・整数errnoを保存。URLは既存provider／queryキーだけを許可し、認証URLを拒否する。例外本文・HTTPヘッダー・任意のcause文字列・秘密値・パスは記録しない。
+- `open-through-response-headers` はDNS／TCP／TLS／応答header待ちを含む。DNS例外、TLS例外、明示接続errnoがあれば細分するが、open中のTimeoutErrorだけで段階を断定しない。response取得後のreadは `response-body-read`。HTTP IncompleteReadも記録する。
+- 通信障害、URL枠切れ、総量枠切れは `TechnicalWait`。HTTP 429/503のRetry-Afterはprovider別、その他は要求key別60/120秒等の有界backoff。旧台帳の所属不明なblockedUntilも尊重する。NDLの新しい待機をWikidataへ一律拡張しない。
+- サイズ／HTTP応答契約、cache改変／書込、構文破損等はローカル処理・応答契約の故障として停止する。作品同定や書誌条件の不一致と混ぜない。CLIの安全な失敗カテゴリと例外型をWorkerへ渡し、論理故障を一般retryで回し続けない。
+- 同定／書誌条件の正当な保留は従来のholds。技術的未了は `progress.technicalWaits` と `technical-progress.json` に再開key・provider・対象・次回時刻・直近の安全な診断を保持する。`works[name]=None` や最終resultへ変換しない。
+
+Workerは再送枠が残る場合 `retry-transport`、枠切れのみなら `awaiting-recovery`。`executionComplete=false` を維持し、後者は追加許可なしにheavy retryしない。途中のGitHub共有失敗／PC停止後も保存checkpointと消費台帳から再評価する。作品ごとに通信例外を捕捉し、その回で別作品・別providerの準備を進める。時間帯・共通／Worker lock・10分休憩が優先される。
+
+子依頼の公開は従来の「完了親と完全一致の子を同一commitで共有」を維持する。そのため他作品の**取得・同定**は進むが、親に技術的未了があれば子の発行は待つ。部分的な子の発行と後続復旧の二重発行防止を新設する改修は含めない。
+
+### 不変の後続準備依頼による追加許可
+
+既存の `resumePreparationId / parentRequestId / preparationCycle` を再利用する。先行親がcompleted、awaiting-recovery、retry-transportのいずれかで、子を一つも発行していないこと、permission／issueOriginが完全一致することを必須にする。元request・result・progressを編集せず、新cycleは旧cacheへ接続して総消費を引き継ぐ。コード固定SHAが変わる旧依頼はその場で再束縛せず、レビュー済みコードを固定した後続依頼を作る。
+
+同一URL枠の追加は、新依頼の `transportRecovery` だけに記録する。人間が承認した復旧記録であり、元の知識収集許可や正式受入承認の代わりではない。
+
+| 項目 | 拘束 |
+|---|---|
+| schemaVersion / approvalScope | 1 / bounded-provider-transport-recovery-only |
+| predecessorRequestSha256 | 元requestの既存content hash |
+| successorRequestSha256 | transportRecoveryを除いた新requestのcontent hash。別ID・別コードへの許可再利用を拒否 |
+| permissionSha256 | 元Issue許可hash |
+| ledgerSha256 / attemptCount | 許可対象の実台帳byte hash・累計。許可後の状態変化は再判断 |
+| requests | 消費済み失敗key・URL・additionalAttempts（各1〜2）。総追加枠は元総予算の残枠以下 |
+| humanDecision / expiresAt | 明示人間判断と有効期限。判断後最大7日、送信直前も期限確認 |
+
+台帳に承認内容hashと旧attempt prefix hashを一度だけ保存し、再開時は同じgrantだけを再利用する。既に使った追加枠は消費済み件数に含む。元依頼や別cycleが同じcacheを開いても、そのgrantを自動利用できない。成功済み要求の復旧、URL差替え、総量上限の追加、履歴改変、失効後の追加送信は拒否する。成功cacheの読取は失効後も可能。
+
+この実装は復旧許可を自動作成・登録しない。通常の枠内リトライは自動、使い切った枠の追加は明示復旧許可が必要。恒常的な有界復旧policyを別途承認する場合も、今回の実装から自動承認を推定しない。
+
+### 第1集と未検証境界
+
+通常版「第1集」を明示第1巻相当の選択表記として限定対応する。`expectedVolume`・`volumeLabel`に原語を残し、ISBN個別scope・通常版／特装版・著者・Role・出典・canonical全抽出フィールド一致を維持する。保存検索応答をcanonical ISBN応答として実運用へ流用しない。
+
+実資料・隔離試験・配置時の差分／復旧案は [検証記録](../verification/ISSUE42_COLLECTION_RECOVERY_20261026.md)。実効bundleとcatalog更新単位は [Issue #44](https://github.com/isinxnisi/graph-knowledge/issues/44)へ分離し、`sync_inputs`の広いhash検査を緩和していない。
