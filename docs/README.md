@@ -77,6 +77,7 @@
 | [GraphのEntity操作統一](design/DISCOVERY_GRAPH_ENTITY_INTERACTION.md) | 2026-10-19。通常探索とpatternのクリック／タッチ・枝の開閉を統一。完全証拠と段階表示を分離、別作品からの継続・旧保存移行。STEP 4aでも同じ操作を利用 |
 | [共通関係条件：STEP 3b Graph編集・保存・復元](design/DISCOVERY_PATTERN_GRAPH_PERSISTENCE.md) | 2026-10-19。draft編集・自由探索切替・Undo、View v2／Workspace v3／URL v2と旧形式の非破壊移行・経路再検証。現行操作は上記のEntity単位へ更新 |
 | [共通関係条件：STEP 3a Graph実行基盤](design/DISCOVERY_PATTERN_GRAPH_EXECUTION.md) | 2026-10-18。完全経路POST・証拠／取得済み参照の検証、候補ページ、pattern和集合投影と開閉・上限・中止、neighbors肯否。編集UI・保存版移行・Discovery接続・本番更新なし |
+| [映画収集v1・Issue #41](research/film-collection-issue41/README.md) | 2026-10-26。保存3作品から候補12・判断対象2 Claim・保留10、独立adapterと人物別根拠・PC/スマホ実E2E。正式Role採用・受入・公開は未実施 |
 | [洋画の段別Role探索・Issue #40](research/film-step-roles-issue40/README.md) | 2026-10-26。独立branchの実装・隔離実証。監督／出演Roleは未承認案、映画収集・受入・公開は未実施 |
 | [共通関係条件：STEP 2 対象検索と成立証拠](design/DISCOVERY_TARGET_SEARCH.md) | 2026-10-18。読み取り専用POST、完全EXISTSとEntityページング、同版の完全経路証拠、公開KG・高次数・異常時の検証。UI／Graph状態・公開KG・正式VPS変更なし |
 | [Discovery共通関係条件：STEP 1設計契約](design/DISCOVERY_RELATION_CONTRACT.md) | 2026-10-18。adjacent／pattern、bound／unbound、全段肯定・完全経路、対象検索とGraphのPOST契約、旧保存／URL移行、STEP 2〜4の受入条件。運営者採用済み、STEP 3／4は未着手 |

@@ -1,0 +1,43 @@
+{
+  "mainBaseline": "b34e9ebe9df23835226651adbbda072908c933ab",
+  "priorResearch": "461cd1ca614e5bebefd8181eecb0e89661d4a616",
+  "priorImplementation": "12f3476844fbda0f4503f584aa8157e4001a65d6",
+  "bundleBindingSha256": "25ade9b2c8d01c9ccb8f01931b8470c3284077b4f47a65fdb41295427cf45acb",
+  "tests": {
+    "vitest": {
+      "files": 73,
+      "passed": 862
+    },
+    "python": {
+      "passed": 16,
+      "normal": true,
+      "optimized": true
+    },
+    "realBrowser": {
+      "passed": 2,
+      "widths": [
+        1440,
+        390
+      ]
+    },
+    "typecheck": "passed",
+    "lint": "passed"
+  },
+  "formalRoleAdoption": false,
+  "claimAcceptance": false,
+  "publicApply": false,
+  "deployment": false,
+  "artifacts": {
+    "INTEGRATION.md": "b3028d6ca80c0e8a00644c53575ccb4223007f4a68619a6c9a68ebf977057dc2",
+    "README.md": "c2032da04cf0f769814730633756d30b5623e3262d74f9a553080bd90ac705c4",
+    "VALIDATION.md": "feecfc1dbe0f82006738264c707039d9c95533f58c2d3aee62c20c143a794706",
+    "browser-validation.json": "ecb873498f547b11808e327dc03a4845092202f4456485462831ddf279835cf5",
+    "e2e/1440-film-restored.png": "d0402a80ba9f7fabe7c71b5ee4bbe2e2b0f7d518899a2f3d5418081665b617d4",
+    "e2e/1440-film-search.png": "b61df40cae1b43e946193b3333c6197226dd43a3276539eccedaeebf96b7ea61",
+    "e2e/390-film-restored.png": "f9ed9a5bb4a380282410242827f06a5942cbf3770c200e648bb4259db04dc9dc",
+    "e2e/390-film-search.png": "d213e7093debf8ce17e14943b12573fd9485191681e7f494546efec368b2c74a",
+    "manga-impact.json": "8b3c292e46d58b415f26534f9ab6d6c51706806da15ae4ddfe1a4c3fd92ab414",
+    "ordinary-runtime.json": "231d1faf109e1970f63061f2451c72c8a90e7ca3ad24794f3375b505c6b27006",
+    "runtime-validation.json": "15a8d74f6b8b6857456a38f9b2bde1ceb9d2f6b3ff8085737ecf38af9a28aee4"
+  }
+}
