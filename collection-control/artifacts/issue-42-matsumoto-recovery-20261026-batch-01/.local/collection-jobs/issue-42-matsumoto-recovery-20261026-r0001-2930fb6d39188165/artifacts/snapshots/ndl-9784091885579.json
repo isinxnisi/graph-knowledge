@@ -1,0 +1,36 @@
+{
+  "provider": "iss-ndl-opac / 国立国会図書館",
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "terms": "https://ndlsearch.ndl.go.jp/help/api/provider",
+  "records": [
+    {
+      "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I000011265531",
+      "isbn13": [
+        "9784091885579"
+      ],
+      "title": [
+        "Sunny. 第1集"
+      ],
+      "mainTitles": [
+        "Sunny"
+      ],
+      "volume": [
+        "第1集"
+      ],
+      "edition": [],
+      "responsibilities": [
+        "松本大洋 著"
+      ],
+      "publisher": [
+        "小学館"
+      ],
+      "language": [
+        "jpn"
+      ],
+      "genre": [
+        "漫画"
+      ]
+    }
+  ],
+  "error": null
+}

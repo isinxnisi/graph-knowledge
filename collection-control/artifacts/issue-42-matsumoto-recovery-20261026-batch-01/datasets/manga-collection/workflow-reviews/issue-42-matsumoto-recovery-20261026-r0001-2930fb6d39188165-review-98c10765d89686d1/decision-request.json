@@ -1,0 +1,153 @@
+{
+  "status": "pending-human-decision",
+  "reviewer": null,
+  "recordedAt": null,
+  "applyAuthorized": {
+    "local": false,
+    "beta": false,
+    "vps": false
+  },
+  "groups": {
+    "normal": {
+      "recordIds": {
+        "entities": [
+          "4e381195-6f4c-4cc0-baae-1387b089a408",
+          "a442f5b0-ff10-43d7-9d32-b20070f2c524",
+          "add1b76d-07c6-46bd-999c-096d5593e670",
+          "f7a0ef9b-f8af-45f6-9f5d-e44fc0dab4f6"
+        ],
+        "claims": [
+          "64aaee6b-13f7-46ea-abdf-87702307c9dd",
+          "683a9810-956c-400f-9b52-75157028dd25",
+          "93af343c-0b9b-44d7-8ec3-162f6aefaefd"
+        ],
+        "sources": [
+          "84a109e0-e3ca-4734-a455-176ab17e5e9f",
+          "a656a76e-07a2-4e6a-b7cc-d8af8bf04f82",
+          "b5d28387-3d9e-4e4d-814f-c4e1cc82ce3f"
+        ],
+        "citations": [
+          "1b95df52-cb80-46da-8635-cdb9e899f135",
+          "383d45a0-87e9-42c4-9f03-b9f5e09922a4",
+          "5c22c627-73cd-407d-9c21-6912a24ce8b4"
+        ]
+      },
+      "scopeByClaim": [
+        {
+          "id": "64aaee6b-13f7-46ea-abdf-87702307c9dd",
+          "subjectId": "add1b76d-07c6-46bd-999c-096d5593e670",
+          "objectId": "a442f5b0-ff10-43d7-9d32-b20070f2c524",
+          "predicate": "CONTRIBUTED_TO",
+          "polarity": "affirmed",
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "contribution": {
+            "roleId": "AUTHORSHIP",
+            "scope": {
+              "kind": "publication",
+              "isbn13": "9784091847362",
+              "volumeLabel": "第1巻（NDL巻次 1）",
+              "editionLabel": null,
+              "language": "ja"
+            }
+          },
+          "organizationParticipation": null,
+          "eventParticipation": null
+        },
+        {
+          "id": "683a9810-956c-400f-9b52-75157028dd25",
+          "subjectId": "add1b76d-07c6-46bd-999c-096d5593e670",
+          "objectId": "f7a0ef9b-f8af-45f6-9f5d-e44fc0dab4f6",
+          "predicate": "CONTRIBUTED_TO",
+          "polarity": "affirmed",
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "contribution": {
+            "roleId": "AUTHORSHIP",
+            "scope": {
+              "kind": "publication",
+              "isbn13": "9784091885579",
+              "volumeLabel": "第1集（NDL巻次原語）",
+              "editionLabel": null,
+              "language": "ja"
+            }
+          },
+          "organizationParticipation": null,
+          "eventParticipation": null
+        },
+        {
+          "id": "93af343c-0b9b-44d7-8ec3-162f6aefaefd",
+          "subjectId": "add1b76d-07c6-46bd-999c-096d5593e670",
+          "objectId": "4e381195-6f4c-4cc0-baae-1387b089a408",
+          "predicate": "CONTRIBUTED_TO",
+          "polarity": "affirmed",
+          "period": {
+            "from": null,
+            "to": null
+          },
+          "contribution": {
+            "roleId": "AUTHORSHIP",
+            "scope": {
+              "kind": "publication",
+              "isbn13": "9784091847317",
+              "volumeLabel": "第1巻（NDL巻次 1）",
+              "editionLabel": null,
+              "language": "ja"
+            }
+          },
+          "organizationParticipation": null,
+          "eventParticipation": null
+        }
+      ],
+      "existingEntityDependencies": [],
+      "counts": {
+        "entities": 4,
+        "claims": 3,
+        "sources": 3,
+        "citations": 3
+      }
+    },
+    "identity-only": {
+      "recordIds": {
+        "entities": [],
+        "claims": [],
+        "sources": [],
+        "citations": []
+      },
+      "notice": "Identity only; do not accept held production relations by implication."
+    }
+  },
+  "heldClaimIds": [],
+  "heldEntityIds": [],
+  "existingDependencies": {
+    "claims": [],
+    "sources": []
+  },
+  "referenceArtifacts": [
+    {
+      "file": "context.json",
+      "sha256": "c3ef12d073ba38d57f8910bbc971e82cfd6f49eddb55cf39a4d073c522a34d54"
+    },
+    {
+      "file": "review.json",
+      "sha256": "ae81102df77e0c55495687aa7f054ee941b89e7afad7b38a53123b548a2a27cf"
+    },
+    {
+      "file": "proposed-records.json",
+      "sha256": "1dbb31c36fdbf8b5d196e54633f2e3882f96fc108fc1c8c71143d3c8747f89dc"
+    },
+    {
+      "file": "identity-only-records.json",
+      "sha256": "1fc314e4a47717bce195b39fe7f1e66bd31f6af892fca4a9420a653eab927a37"
+    },
+    {
+      "file": "exploration-paths.json",
+      "sha256": "79773e992acff7604b37fdcbb0a210cdfd085bb0a37a458807a011d450cb0581"
+    }
+  ],
+  "notice": "Automatic checks and grouped recommendations only. Important identity/meaning decisions remain human."
+}

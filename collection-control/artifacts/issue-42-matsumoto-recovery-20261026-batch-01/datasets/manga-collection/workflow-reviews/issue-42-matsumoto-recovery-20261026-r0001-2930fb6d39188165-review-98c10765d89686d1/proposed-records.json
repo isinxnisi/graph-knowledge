@@ -1,0 +1,244 @@
+{
+  "status": "pending-human-acceptance",
+  "formalAcceptance": "pending",
+  "notForPublicApply": true,
+  "records": {
+    "entities": [
+      {
+        "id": "4e381195-6f4c-4cc0-baae-1387b089a408",
+        "kind": "work",
+        "name": "鉄コン筋クリート",
+        "description": null,
+        "aliases": [
+          "Tekkonkinkreet"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q111988774"
+          }
+        ],
+        "createdAt": "2026-10-26T18:12:08Z",
+        "updatedAt": "2026-10-26T18:12:08Z",
+        "event": null
+      },
+      {
+        "id": "a442f5b0-ff10-43d7-9d32-b20070f2c524",
+        "kind": "work",
+        "name": "ピンポン",
+        "description": null,
+        "aliases": [
+          "Ping Pong"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q837883"
+          }
+        ],
+        "createdAt": "2026-10-26T18:12:08Z",
+        "updatedAt": "2026-10-26T18:12:08Z",
+        "event": null
+      },
+      {
+        "id": "add1b76d-07c6-46bd-999c-096d5593e670",
+        "kind": "person",
+        "name": "松本大洋",
+        "description": null,
+        "aliases": [
+          "Taiyō Matsumoto"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q1504165"
+          }
+        ],
+        "createdAt": "2026-10-26T18:12:08Z",
+        "updatedAt": "2026-10-26T18:12:08Z",
+        "event": null
+      },
+      {
+        "id": "f7a0ef9b-f8af-45f6-9f5d-e44fc0dab4f6",
+        "kind": "work",
+        "name": "Sunny",
+        "description": null,
+        "aliases": [],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q18154676"
+          }
+        ],
+        "createdAt": "2026-10-26T18:12:08Z",
+        "updatedAt": "2026-10-26T18:12:08Z",
+        "event": null
+      }
+    ],
+    "claims": [
+      {
+        "id": "64aaee6b-13f7-46ea-abdf-87702307c9dd",
+        "subjectId": "add1b76d-07c6-46bd-999c-096d5593e670",
+        "objectId": "a442f5b0-ff10-43d7-9d32-b20070f2c524",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "hidden",
+        "createdAt": "2026-10-26T18:12:08Z",
+        "updatedAt": "2026-10-26T18:12:08Z",
+        "contribution": {
+          "roleId": "AUTHORSHIP",
+          "scope": {
+            "kind": "publication",
+            "isbn13": "9784091847362",
+            "volumeLabel": "第1巻（NDL巻次 1）",
+            "editionLabel": null,
+            "language": "ja"
+          }
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      },
+      {
+        "id": "683a9810-956c-400f-9b52-75157028dd25",
+        "subjectId": "add1b76d-07c6-46bd-999c-096d5593e670",
+        "objectId": "f7a0ef9b-f8af-45f6-9f5d-e44fc0dab4f6",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "hidden",
+        "createdAt": "2026-10-26T18:12:08Z",
+        "updatedAt": "2026-10-26T18:12:08Z",
+        "contribution": {
+          "roleId": "AUTHORSHIP",
+          "scope": {
+            "kind": "publication",
+            "isbn13": "9784091885579",
+            "volumeLabel": "第1集（NDL巻次原語）",
+            "editionLabel": null,
+            "language": "ja"
+          }
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      },
+      {
+        "id": "93af343c-0b9b-44d7-8ec3-162f6aefaefd",
+        "subjectId": "add1b76d-07c6-46bd-999c-096d5593e670",
+        "objectId": "4e381195-6f4c-4cc0-baae-1387b089a408",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "hidden",
+        "createdAt": "2026-10-26T18:12:08Z",
+        "updatedAt": "2026-10-26T18:12:08Z",
+        "contribution": {
+          "roleId": "AUTHORSHIP",
+          "scope": {
+            "kind": "publication",
+            "isbn13": "9784091847317",
+            "volumeLabel": "第1巻（NDL巻次 1）",
+            "editionLabel": null,
+            "language": "ja"
+          }
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      }
+    ],
+    "sources": [
+      {
+        "id": "84a109e0-e3ca-4734-a455-176ab17e5e9f",
+        "kind": "web",
+        "title": "NDLサーチ: Sunny. 第1集",
+        "authors": [],
+        "publisher": "国立国会図書館",
+        "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I000011265531",
+        "publishedAt": null,
+        "edition": null,
+        "note": "国立国会図書館作成書誌（iss-ndl-opac）の責任表示。メタデータ CC BY 4.0: https://creativecommons.org/licenses/by/4.0/ ; 提供元条件 https://ndlsearch.ndl.go.jp/help/api/provider 。本文・画像・第三者所蔵情報は含まない。",
+        "isDemo": false
+      },
+      {
+        "id": "a656a76e-07a2-4e6a-b7cc-d8af8bf04f82",
+        "kind": "web",
+        "title": "NDLサーチ: 鉄コン筋クリート. 1",
+        "authors": [],
+        "publisher": "国立国会図書館",
+        "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I000002304847",
+        "publishedAt": null,
+        "edition": null,
+        "note": "国立国会図書館作成書誌（iss-ndl-opac）の責任表示。メタデータ CC BY 4.0: https://creativecommons.org/licenses/by/4.0/ ; 提供元条件 https://ndlsearch.ndl.go.jp/help/api/provider 。本文・画像・第三者所蔵情報は含まない。",
+        "isDemo": false
+      },
+      {
+        "id": "b5d28387-3d9e-4e4d-814f-c4e1cc82ce3f",
+        "kind": "web",
+        "title": "NDLサーチ: ピンポン. 1",
+        "authors": [],
+        "publisher": "国立国会図書館",
+        "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I000002504019",
+        "publishedAt": null,
+        "edition": null,
+        "note": "国立国会図書館作成書誌（iss-ndl-opac）の責任表示。メタデータ CC BY 4.0: https://creativecommons.org/licenses/by/4.0/ ; 提供元条件 https://ndlsearch.ndl.go.jp/help/api/provider 。本文・画像・第三者所蔵情報は含まない。",
+        "isDemo": false
+      }
+    ],
+    "citations": [
+      {
+        "id": "1b95df52-cb80-46da-8635-cdb9e899f135",
+        "claimId": "93af343c-0b9b-44d7-8ec3-162f6aefaefd",
+        "sourceId": "a656a76e-07a2-4e6a-b7cc-d8af8bf04f82",
+        "locator": "dc:creator（責任表示） / ISBN 9784091847317",
+        "note": "原表記（ja）: 松本大洋 著。指定刊行物の責任表示で確認された担当。全巻・全版・全期間への外挿、原作から別Roleへの変換はしない。同一資料由来の記録を独立した根拠と数えない。",
+        "accessedAt": "2026-10-26",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "松本大洋 著",
+          "language": "ja"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      },
+      {
+        "id": "383d45a0-87e9-42c4-9f03-b9f5e09922a4",
+        "claimId": "64aaee6b-13f7-46ea-abdf-87702307c9dd",
+        "sourceId": "b5d28387-3d9e-4e4d-814f-c4e1cc82ce3f",
+        "locator": "dc:creator（責任表示） / ISBN 9784091847362",
+        "note": "原表記（ja）: 松本大洋 著。指定刊行物の責任表示で確認された担当。全巻・全版・全期間への外挿、原作から別Roleへの変換はしない。同一資料由来の記録を独立した根拠と数えない。",
+        "accessedAt": "2026-10-26",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "松本大洋 著",
+          "language": "ja"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      },
+      {
+        "id": "5c22c627-73cd-407d-9c21-6912a24ce8b4",
+        "claimId": "683a9810-956c-400f-9b52-75157028dd25",
+        "sourceId": "84a109e0-e3ca-4734-a455-176ab17e5e9f",
+        "locator": "dc:creator（責任表示） / ISBN 9784091885579",
+        "note": "原表記（ja）: 松本大洋 著。指定刊行物の責任表示で確認された担当。全巻・全版・全期間への外挿、原作から別Roleへの変換はしない。同一資料由来の記録を独立した根拠と数えない。",
+        "accessedAt": "2026-10-26",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "松本大洋 著",
+          "language": "ja"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      }
+    ]
+  }
+}

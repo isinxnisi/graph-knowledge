@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "reviewId": "issue-42-matsumoto-recovery-20261026-r0001-2930fb6d39188165-review-98c10765d89686d1",
+  "inputSha256": "98c10765d89686d1ea3c786ab603a48ea7658c063f516753dddf41c01803c2cd",
+  "artifacts": {
+    "context.json": "c3ef12d073ba38d57f8910bbc971e82cfd6f49eddb55cf39a4d073c522a34d54",
+    "review.json": "ae81102df77e0c55495687aa7f054ee941b89e7afad7b38a53123b548a2a27cf",
+    "proposed-records.json": "1dbb31c36fdbf8b5d196e54633f2e3882f96fc108fc1c8c71143d3c8747f89dc",
+    "identity-only-records.json": "1fc314e4a47717bce195b39fe7f1e66bd31f6af892fca4a9420a653eab927a37",
+    "exploration-paths.json": "79773e992acff7604b37fdcbb0a210cdfd085bb0a37a458807a011d450cb0581",
+    "decision-request.json": "16f97999c8af68a171b188dd2b86e12b6b89e4b5ff23936fd1589f9682405ded",
+    "README.md": "4db3a63fa9a10561a955e1372ff9ede4b8660da30ffc4e2e02993cbaafa615ad"
+  },
+  "authority": "pending-human-review-only"
+}

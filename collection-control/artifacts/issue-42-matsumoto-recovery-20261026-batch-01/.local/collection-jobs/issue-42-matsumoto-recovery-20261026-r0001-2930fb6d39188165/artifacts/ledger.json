@@ -1,0 +1,231 @@
+{
+  "schemaVersion": 2,
+  "status": "pending-human-acceptance",
+  "recipe": "manga-r0029",
+  "collectionContext": {
+    "themeId": "issue-42-matsumoto-recovery-20261026",
+    "themeRevision": 1,
+    "definitionSha256": "facdb3199e1f09cab6bbe02dfe6e157e8208c1c06b57b9558eccef11a0cec79f",
+    "approvalSha256": "11f63ef91dc3b96d4e9657a8fc03efea8001ea790aeaf73260f62d0c39690685"
+  },
+  "execution": {
+    "adapter": "manga-discovery-v2",
+    "codeSha256": "80e05b67bc0129b963653b90df4cfbfa5bd6aff190acda99f54c08541e55801e",
+    "inputs": [
+      {
+        "file": "datasets/manga-collection/r0029/recipe.json",
+        "sha256": "8764cd3aed1e397f2c00a3a8cb073542793152f3aa93bd07c3cf35d920f7117e"
+      },
+      {
+        "file": "datasets/manga-collection/r0029/anchor-review.json",
+        "sha256": "688e8f02a5f8341e75851ee2c2f46daf05166629e951a36cbf49920e3028c946"
+      },
+      {
+        "file": "datasets/manga-collection/r0029/publication-review.json",
+        "sha256": "0418216bfa67d4d1853a400609ceca0cbe6992425a7ad9bfc1f3b250b331132a"
+      },
+      {
+        "file": "docs/research/famous-manga-creators/20261016/candidates.json",
+        "sha256": "8531fada01e5c635ba2ee278a7ef944a73f64676af14ed42ae0e690f5a1ff978"
+      },
+      {
+        "file": "datasets/public-kg/releases/20261014-credits-001/data.json",
+        "sha256": "ea91b16f52a211b5a8464382ad498b7b2bb2be69a6f33fe125a73a3c7b9da2b5"
+      },
+      {
+        "file": "datasets/public-kg/releases/20261014-credits-001/manifest.json",
+        "sha256": "e4aa3b58ed884f7d1f8fffee43b260261cc2b4d3a867fda942919f439d2bce17"
+      }
+    ],
+    "maxEntities": 2113,
+    "maxClaims": 1853
+  },
+  "identityMappings": [
+    {
+      "name": "松本大洋",
+      "wikidata": "Q1504165",
+      "entityId": "add1b76d-07c6-46bd-999c-096d5593e670",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "ピンポン",
+      "wikidata": "Q837883",
+      "entityId": "a442f5b0-ff10-43d7-9d32-b20070f2c524",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "鉄コン筋クリート",
+      "wikidata": "Q111988774",
+      "entityId": "4e381195-6f4c-4cc0-baae-1387b089a408",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "Sunny",
+      "wikidata": "Q18154676",
+      "entityId": "f7a0ef9b-f8af-45f6-9f5d-e44fc0dab4f6",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    }
+  ],
+  "rows": [
+    {
+      "kind": "wikidata-relation",
+      "work": "ピンポン",
+      "property": "P50",
+      "personQid": "Q1504165",
+      "statementId": "Q837883$704b2c26-43a4-2444-c51c-031c8eac4da2",
+      "qualifiers": {},
+      "references": [],
+      "status": "candidate-only-no-role-inference",
+      "reason": "Wikidata propertyだけで具体Roleや直接制作の意味を確定しない"
+    },
+    {
+      "kind": "wikidata-relation",
+      "work": "ピンポン",
+      "property": "P110",
+      "personQid": "Q1504165",
+      "statementId": "Q837883$A4F91792-B8E5-4903-B6D1-D534DF4E0929",
+      "qualifiers": {},
+      "references": [],
+      "status": "candidate-only-no-role-inference",
+      "reason": "Wikidata propertyだけで具体Roleや直接制作の意味を確定しない"
+    },
+    {
+      "kind": "ndl-credit",
+      "work": "ピンポン",
+      "isbn13": "9784091847362",
+      "rawResponsibility": "松本大洋 著",
+      "sourceUrl": "https://ndlsearch.ndl.go.jp/books/R100000002-I000002504019",
+      "status": "pending-human-acceptance",
+      "roleId": "AUTHORSHIP",
+      "person": "松本大洋",
+      "claimId": "64aaee6b-13f7-46ea-abdf-87702307c9dd",
+      "reusedClaim": false,
+      "subjectId": "add1b76d-07c6-46bd-999c-096d5593e670",
+      "objectId": "a442f5b0-ff10-43d7-9d32-b20070f2c524"
+    },
+    {
+      "kind": "wikidata-relation",
+      "work": "鉄コン筋クリート",
+      "property": "P50",
+      "personQid": "Q1504165",
+      "statementId": "Q111988774$15aade10-4da9-a3c2-f6cd-55f883e1e7b1",
+      "qualifiers": {},
+      "references": [],
+      "status": "candidate-only-no-role-inference",
+      "reason": "Wikidata propertyだけで具体Roleや直接制作の意味を確定しない"
+    },
+    {
+      "kind": "wikidata-relation",
+      "work": "鉄コン筋クリート",
+      "property": "P110",
+      "personQid": "Q1504165",
+      "statementId": "Q111988774$EC998FA4-827F-43E8-A11E-F42F8CAC50E2",
+      "qualifiers": {},
+      "references": [],
+      "status": "candidate-only-no-role-inference",
+      "reason": "Wikidata propertyだけで具体Roleや直接制作の意味を確定しない"
+    },
+    {
+      "kind": "ndl-credit",
+      "work": "鉄コン筋クリート",
+      "isbn13": "9784091847317",
+      "rawResponsibility": "松本大洋 著",
+      "sourceUrl": "https://ndlsearch.ndl.go.jp/books/R100000002-I000002304847",
+      "status": "pending-human-acceptance",
+      "roleId": "AUTHORSHIP",
+      "person": "松本大洋",
+      "claimId": "93af343c-0b9b-44d7-8ec3-162f6aefaefd",
+      "reusedClaim": false,
+      "subjectId": "add1b76d-07c6-46bd-999c-096d5593e670",
+      "objectId": "4e381195-6f4c-4cc0-baae-1387b089a408"
+    },
+    {
+      "kind": "wikidata-relation",
+      "work": "Sunny",
+      "property": "P50",
+      "personQid": "Q1504165",
+      "statementId": "Q18154676$2d581e2a-42e4-3a0d-fb5e-bfffea27759a",
+      "qualifiers": {},
+      "references": [],
+      "status": "candidate-only-no-role-inference",
+      "reason": "Wikidata propertyだけで具体Roleや直接制作の意味を確定しない"
+    },
+    {
+      "kind": "ndl-credit",
+      "work": "Sunny",
+      "isbn13": "9784091885579",
+      "rawResponsibility": "松本大洋 著",
+      "sourceUrl": "https://ndlsearch.ndl.go.jp/books/R100000002-I000011265531",
+      "status": "pending-human-acceptance",
+      "roleId": "AUTHORSHIP",
+      "person": "松本大洋",
+      "claimId": "683a9810-956c-400f-9b52-75157028dd25",
+      "reusedClaim": false,
+      "subjectId": "add1b76d-07c6-46bd-999c-096d5593e670",
+      "objectId": "f7a0ef9b-f8af-45f6-9f5d-e44fc0dab4f6"
+    }
+  ],
+  "holds": [],
+  "acquisitions": [
+    {
+      "kind": "wikidata",
+      "identifier": "Q1504165",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q1504165.json",
+      "sha256": "852557f47f589ef060b2f3a65b867f3aabb1249ef025a707832480dba6635f48",
+      "bytes": 55566,
+      "fetchedAt": "2026-10-26T06:14:14+00:00"
+    },
+    {
+      "kind": "wikidata",
+      "identifier": "Q837883",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q837883.json",
+      "sha256": "bfd9fd653319296dfe7ef4b5cb290c58c82b170250e412699226d4fc4dc6f9c2",
+      "bytes": 22601,
+      "fetchedAt": "2026-10-26T06:14:22+00:00"
+    },
+    {
+      "kind": "ndl",
+      "identifier": "9784091847362",
+      "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&maximumRecords=5&query=isbn%3D%229784091847362%22+AND+dpid%3Diss-ndl-opac",
+      "sha256": "e5258b4ccb8cbe7473b1e0718be0a9d558760278a495e8c3d2063d21f2affbac",
+      "bytes": 21310,
+      "fetchedAt": "2026-10-26T18:12:23+00:00"
+    },
+    {
+      "kind": "wikidata",
+      "identifier": "Q111988774",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q111988774.json",
+      "sha256": "924389560de9a39dd7dd2cef86b1138f7fc17c4b577ef2b0e20f67efad3bc7e9",
+      "bytes": 8162,
+      "fetchedAt": "2026-10-26T07:24:11+00:00"
+    },
+    {
+      "kind": "ndl",
+      "identifier": "9784091847317",
+      "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&maximumRecords=5&query=isbn%3D%229784091847317%22+AND+dpid%3Diss-ndl-opac",
+      "sha256": "066c1d71d11e5ca9da04306a680fec87e0ea79e79421649081e1c0c63e2fd7f0",
+      "bytes": 18374,
+      "fetchedAt": "2026-10-26T18:12:41+00:00"
+    },
+    {
+      "kind": "wikidata",
+      "identifier": "Q18154676",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q18154676.json",
+      "sha256": "0f67cec803bbd07d06dcf83fa8abb78dc5e1ff9e07b0fa334479110fb5701c4c",
+      "bytes": 20147,
+      "fetchedAt": "2026-10-26T08:29:18+00:00"
+    },
+    {
+      "kind": "ndl",
+      "identifier": "9784091885579",
+      "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&maximumRecords=5&query=isbn%3D%229784091885579%22+AND+dpid%3Diss-ndl-opac",
+      "sha256": "24e8fb462c990c0142623f6828ef9892f8ef43ff1092423cb856e4cd3acd31d3",
+      "bytes": 10843,
+      "fetchedAt": "2026-10-26T18:12:43+00:00"
+    }
+  ]
+}

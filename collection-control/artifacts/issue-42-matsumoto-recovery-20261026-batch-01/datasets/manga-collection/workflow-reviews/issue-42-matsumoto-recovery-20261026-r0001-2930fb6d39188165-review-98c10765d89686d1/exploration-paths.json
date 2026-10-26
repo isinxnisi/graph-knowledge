@@ -1,0 +1,52 @@
+[
+  {
+    "state": "collection-candidate",
+    "observation": "verified-records-only-not-a-live-exploration-test",
+    "edges": [
+      {
+        "claimId": "64aaee6b-13f7-46ea-abdf-87702307c9dd",
+        "subjectId": "add1b76d-07c6-46bd-999c-096d5593e670",
+        "objectId": "a442f5b0-ff10-43d7-9d32-b20070f2c524",
+        "person": "松本大洋",
+        "work": "ピンポン",
+        "roleId": "AUTHORSHIP",
+        "scope": {
+          "kind": "publication",
+          "isbn13": "9784091847362",
+          "volumeLabel": "第1巻（NDL巻次 1）",
+          "editionLabel": null,
+          "language": "ja"
+        },
+        "state": "collection-candidate",
+        "citationIds": [
+          "383d45a0-87e9-42c4-9f03-b9f5e09922a4"
+        ],
+        "sourceIds": [
+          "b5d28387-3d9e-4e4d-814f-c4e1cc82ce3f"
+        ]
+      },
+      {
+        "claimId": "683a9810-956c-400f-9b52-75157028dd25",
+        "subjectId": "add1b76d-07c6-46bd-999c-096d5593e670",
+        "objectId": "f7a0ef9b-f8af-45f6-9f5d-e44fc0dab4f6",
+        "person": "松本大洋",
+        "work": "Sunny",
+        "roleId": "AUTHORSHIP",
+        "scope": {
+          "kind": "publication",
+          "isbn13": "9784091885579",
+          "volumeLabel": "第1集（NDL巻次原語）",
+          "editionLabel": null,
+          "language": "ja"
+        },
+        "state": "collection-candidate",
+        "citationIds": [
+          "5c22c627-73cd-407d-9c21-6912a24ce8b4"
+        ],
+        "sourceIds": [
+          "84a109e0-e3ca-4734-a455-176ab17e5e9f"
+        ]
+      }
+    ]
+  }
+]

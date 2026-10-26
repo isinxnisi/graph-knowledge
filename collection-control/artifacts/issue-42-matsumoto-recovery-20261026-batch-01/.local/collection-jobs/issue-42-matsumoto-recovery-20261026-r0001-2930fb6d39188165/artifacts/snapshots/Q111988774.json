@@ -1,0 +1,143 @@
+{
+  "id": "Q111988774",
+  "lastrevid": 2395560146,
+  "labels": {
+    "en": {
+      "language": "en",
+      "value": "Tekkonkinkreet"
+    },
+    "fr": {
+      "language": "fr",
+      "value": "Amer Béton"
+    },
+    "ar": {
+      "language": "ar",
+      "value": "تكونكينكريت"
+    },
+    "es": {
+      "language": "es",
+      "value": "Tekkonkinkreet"
+    },
+    "id": {
+      "language": "id",
+      "value": "Tekkonkinkreet"
+    },
+    "zh": {
+      "language": "zh",
+      "value": "惡童"
+    },
+    "ru": {
+      "language": "ru",
+      "value": "Железобетон (манга)"
+    },
+    "fa": {
+      "language": "fa",
+      "value": "تکونکینکریت"
+    },
+    "pt": {
+      "language": "pt",
+      "value": "Tekkonkinkreet"
+    },
+    "vi": {
+      "language": "vi",
+      "value": "Tekkonkinkreet"
+    },
+    "ja": {
+      "language": "ja",
+      "value": "鉄コン筋クリート"
+    },
+    "pl": {
+      "language": "pl",
+      "value": "Tekkonkinkreet"
+    },
+    "he": {
+      "language": "he",
+      "value": "שחור ולבן"
+    },
+    "bg": {
+      "language": "bg",
+      "value": "Теконкинкрийт"
+    },
+    "ca": {
+      "language": "ca",
+      "value": "Tekkonkinkreet"
+    },
+    "ko": {
+      "language": "ko",
+      "value": "철근 콘크리트"
+    }
+  },
+  "aliases": {
+    "en": [
+      {
+        "language": "en",
+        "value": "Tekkon Kinkreet"
+      }
+    ]
+  },
+  "claims": {
+    "P31": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P31",
+          "hash": "549c072d6be8a6a43f999d1d0e82640b16c4260e",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 21198342,
+              "id": "Q21198342"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q111988774$8699348f-4b8f-7f96-9b23-f30d27a50445",
+        "rank": "normal"
+      }
+    ],
+    "P50": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P50",
+          "hash": "e1a3cdac66178e6275405638fb3a0cc40298dba7",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 1504165,
+              "id": "Q1504165"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q111988774$15aade10-4da9-a3c2-f6cd-55f883e1e7b1",
+        "rank": "normal"
+      }
+    ],
+    "P110": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P110",
+          "hash": "f0dab929b038820152e1aa40d9bb2874de9eaadc",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 1504165,
+              "id": "Q1504165"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q111988774$EC998FA4-827F-43E8-A11E-F42F8CAC50E2",
+        "rank": "normal"
+      }
+    ]
+  }
+}

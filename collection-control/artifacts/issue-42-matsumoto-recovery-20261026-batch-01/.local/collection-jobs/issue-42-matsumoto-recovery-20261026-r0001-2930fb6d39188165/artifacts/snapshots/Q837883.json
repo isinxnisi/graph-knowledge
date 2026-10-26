@@ -1,0 +1,163 @@
+{
+  "id": "Q837883",
+  "lastrevid": 2548149286,
+  "labels": {
+    "zh-hans": {
+      "language": "zh-hans",
+      "value": "乒乓"
+    },
+    "zh-hant": {
+      "language": "zh-hant",
+      "value": "乒乓"
+    },
+    "zh-hk": {
+      "language": "zh-hk",
+      "value": "乒乓"
+    },
+    "zh-tw": {
+      "language": "zh-tw",
+      "value": "桌球"
+    },
+    "ja": {
+      "language": "ja",
+      "value": "ピンポン"
+    },
+    "fr": {
+      "language": "fr",
+      "value": "Ping pong"
+    },
+    "en": {
+      "language": "en",
+      "value": "Ping Pong"
+    },
+    "zh": {
+      "language": "zh",
+      "value": "乒乓"
+    },
+    "it": {
+      "language": "it",
+      "value": "Ping Pong"
+    },
+    "ko": {
+      "language": "ko",
+      "value": "핑퐁"
+    },
+    "de": {
+      "language": "de",
+      "value": "Ping Pong"
+    },
+    "nl": {
+      "language": "nl",
+      "value": "Ping Pong"
+    },
+    "es": {
+      "language": "es",
+      "value": "Ping Pong"
+    },
+    "ast": {
+      "language": "ast",
+      "value": "Ping Pong"
+    },
+    "ga": {
+      "language": "ga",
+      "value": "Ping Pong"
+    },
+    "pt": {
+      "language": "pt",
+      "value": "Ping Pong"
+    },
+    "ar": {
+      "language": "ar",
+      "value": "بينغ بونغ"
+    },
+    "mn": {
+      "language": "mn",
+      "value": "Одон Бөмбөг"
+    },
+    "fa": {
+      "language": "fa",
+      "value": "پینگ پنگ"
+    },
+    "uk": {
+      "language": "uk",
+      "value": "Ping Pong"
+    },
+    "acm": {
+      "language": "acm",
+      "value": "بينگ بونگ"
+    }
+  },
+  "aliases": {
+    "fr": [
+      {
+        "language": "fr",
+        "value": "Ping-pong"
+      }
+    ]
+  },
+  "claims": {
+    "P31": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P31",
+          "hash": "549c072d6be8a6a43f999d1d0e82640b16c4260e",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 21198342,
+              "id": "Q21198342"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q837883$2987147F-E379-426C-9943-1AFE6F2CA241",
+        "rank": "normal"
+      }
+    ],
+    "P50": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P50",
+          "hash": "e1a3cdac66178e6275405638fb3a0cc40298dba7",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 1504165,
+              "id": "Q1504165"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q837883$704b2c26-43a4-2444-c51c-031c8eac4da2",
+        "rank": "normal"
+      }
+    ],
+    "P110": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P110",
+          "hash": "f0dab929b038820152e1aa40d9bb2874de9eaadc",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 1504165,
+              "id": "Q1504165"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q837883$A4F91792-B8E5-4903-B6D1-D534DF4E0929",
+        "rank": "normal"
+      }
+    ]
+  }
+}

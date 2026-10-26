@@ -1,0 +1,188 @@
+{
+  "schemaVersion": 1,
+  "id": "issue-42-matsumoto-recovery-20261026-batch-01-normal",
+  "kind": "accept-release",
+  "status": "draft-not-approved",
+  "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
+  "parentRequestId": "issue-42-matsumoto-recovery-20261026-batch-01",
+  "applyAuthorized": {
+    "local": false,
+    "beta": false,
+    "vps": false
+  },
+  "decision": {
+    "schemaVersion": 1,
+    "decisionId": "issue-42-matsumoto-recovery-20261026-batch-01-normal",
+    "status": "draft-not-approved",
+    "humanDecision": {
+      "actorType": "human",
+      "reviewer": null,
+      "decidedAt": null,
+      "statement": null
+    },
+    "approvalScope": "formal-record-acceptance-and-release-preparation-only",
+    "applyAuthorized": {
+      "local": false,
+      "beta": false,
+      "vps": false
+    },
+    "review": {
+      "file": "datasets/manga-collection/workflow-reviews/issue-42-matsumoto-recovery-20261026-r0001-2930fb6d39188165-review-98c10765d89686d1/review-manifest.json",
+      "sha256": "8820113eb3be4e81411e62830052de774289304fdd9868486866341d766f3adb"
+    },
+    "referenceArtifacts": [
+      {
+        "file": "datasets/manga-collection/workflow-reviews/issue-42-matsumoto-recovery-20261026-r0001-2930fb6d39188165-review-98c10765d89686d1/README.md",
+        "sha256": "4db3a63fa9a10561a955e1372ff9ede4b8660da30ffc4e2e02993cbaafa615ad"
+      },
+      {
+        "file": "datasets/manga-collection/workflow-reviews/issue-42-matsumoto-recovery-20261026-r0001-2930fb6d39188165-review-98c10765d89686d1/context.json",
+        "sha256": "c3ef12d073ba38d57f8910bbc971e82cfd6f49eddb55cf39a4d073c522a34d54"
+      },
+      {
+        "file": "datasets/manga-collection/workflow-reviews/issue-42-matsumoto-recovery-20261026-r0001-2930fb6d39188165-review-98c10765d89686d1/decision-request.json",
+        "sha256": "16f97999c8af68a171b188dd2b86e12b6b89e4b5ff23936fd1589f9682405ded"
+      },
+      {
+        "file": "datasets/manga-collection/workflow-reviews/issue-42-matsumoto-recovery-20261026-r0001-2930fb6d39188165-review-98c10765d89686d1/exploration-paths.json",
+        "sha256": "79773e992acff7604b37fdcbb0a210cdfd085bb0a37a458807a011d450cb0581"
+      },
+      {
+        "file": "datasets/manga-collection/workflow-reviews/issue-42-matsumoto-recovery-20261026-r0001-2930fb6d39188165-review-98c10765d89686d1/identity-only-records.json",
+        "sha256": "1fc314e4a47717bce195b39fe7f1e66bd31f6af892fca4a9420a653eab927a37"
+      },
+      {
+        "file": "datasets/manga-collection/workflow-reviews/issue-42-matsumoto-recovery-20261026-r0001-2930fb6d39188165-review-98c10765d89686d1/proposed-records.json",
+        "sha256": "1dbb31c36fdbf8b5d196e54633f2e3882f96fc108fc1c8c71143d3c8747f89dc"
+      },
+      {
+        "file": "datasets/manga-collection/workflow-reviews/issue-42-matsumoto-recovery-20261026-r0001-2930fb6d39188165-review-98c10765d89686d1/review-manifest.json",
+        "sha256": "8820113eb3be4e81411e62830052de774289304fdd9868486866341d766f3adb"
+      },
+      {
+        "file": "datasets/manga-collection/workflow-reviews/issue-42-matsumoto-recovery-20261026-r0001-2930fb6d39188165-review-98c10765d89686d1/review.json",
+        "sha256": "ae81102df77e0c55495687aa7f054ee941b89e7afad7b38a53123b548a2a27cf"
+      }
+    ],
+    "acceptedRecordIds": {
+      "entities": [
+        "4e381195-6f4c-4cc0-baae-1387b089a408",
+        "a442f5b0-ff10-43d7-9d32-b20070f2c524",
+        "add1b76d-07c6-46bd-999c-096d5593e670",
+        "f7a0ef9b-f8af-45f6-9f5d-e44fc0dab4f6"
+      ],
+      "claims": [
+        "64aaee6b-13f7-46ea-abdf-87702307c9dd",
+        "683a9810-956c-400f-9b52-75157028dd25",
+        "93af343c-0b9b-44d7-8ec3-162f6aefaefd"
+      ],
+      "sources": [
+        "84a109e0-e3ca-4734-a455-176ab17e5e9f",
+        "a656a76e-07a2-4e6a-b7cc-d8af8bf04f82",
+        "b5d28387-3d9e-4e4d-814f-c4e1cc82ce3f"
+      ],
+      "citations": [
+        "1b95df52-cb80-46da-8635-cdb9e899f135",
+        "383d45a0-87e9-42c4-9f03-b9f5e09922a4",
+        "5c22c627-73cd-407d-9c21-6912a24ce8b4"
+      ]
+    },
+    "recordSha256": {
+      "entities": {
+        "4e381195-6f4c-4cc0-baae-1387b089a408": "bb28e4977de0ac8fb68a4ea4e6bf38482841bda3f86567c3ea030e7c75d1fe56",
+        "a442f5b0-ff10-43d7-9d32-b20070f2c524": "29e5bb58144a73af1876e6eb3b6afac2b198035f30ad525efd299e2ab3a2e5d8",
+        "add1b76d-07c6-46bd-999c-096d5593e670": "6c2cbc2be57e2b7cdc200803026b67859311de3a7baeda13fe16b41ac6d5e67c",
+        "f7a0ef9b-f8af-45f6-9f5d-e44fc0dab4f6": "cce2c06e34c2b3304e051f6204d312b3242a53bf88448fe34997e34daba01a3d"
+      },
+      "claims": {
+        "64aaee6b-13f7-46ea-abdf-87702307c9dd": "476b9d72cf3de22bff354a5d788604990241227e0a5950b23a8bd480913b3e8a",
+        "683a9810-956c-400f-9b52-75157028dd25": "011e63a40ce3f3e1e3b098256cdfaef8d0dc97cf26e75ab435d9dea9422faef6",
+        "93af343c-0b9b-44d7-8ec3-162f6aefaefd": "f7e9d4c64a95ae5094aa316414497523c4bc74d7421478c74ef5698b2587ecc3"
+      },
+      "sources": {
+        "84a109e0-e3ca-4734-a455-176ab17e5e9f": "4aae23967bd67012b617745b8bccde1777286ec97314021e8d9b5c080f492637",
+        "a656a76e-07a2-4e6a-b7cc-d8af8bf04f82": "d3e66c3e401713e702b96226275d366e5e0f01fde55a6d41dd38511ba1b0408e",
+        "b5d28387-3d9e-4e4d-814f-c4e1cc82ce3f": "2619294a42651d0435b65d953b7be2410488f8dcc8c79a2c68b6e57bd1dd1d7b"
+      },
+      "citations": {
+        "1b95df52-cb80-46da-8635-cdb9e899f135": "4101debeff0c44b80a6497461a86629b20f26f90d17c514fd0d6548acbfb64ed",
+        "383d45a0-87e9-42c4-9f03-b9f5e09922a4": "afd8f6d43d0bc43a867a58056cd6f748cb813718f31b8c8b51b3a1d7f8677b47",
+        "5c22c627-73cd-407d-9c21-6912a24ce8b4": "e2d658191316f26dc405fc56790afd444e756e9e431cf36c51aea70a52f70746"
+      }
+    },
+    "scopeByClaim": [
+      {
+        "id": "64aaee6b-13f7-46ea-abdf-87702307c9dd",
+        "subjectId": "add1b76d-07c6-46bd-999c-096d5593e670",
+        "objectId": "a442f5b0-ff10-43d7-9d32-b20070f2c524",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "contribution": {
+          "roleId": "AUTHORSHIP",
+          "scope": {
+            "kind": "publication",
+            "isbn13": "9784091847362",
+            "volumeLabel": "第1巻（NDL巻次 1）",
+            "editionLabel": null,
+            "language": "ja"
+          }
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      },
+      {
+        "id": "683a9810-956c-400f-9b52-75157028dd25",
+        "subjectId": "add1b76d-07c6-46bd-999c-096d5593e670",
+        "objectId": "f7a0ef9b-f8af-45f6-9f5d-e44fc0dab4f6",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "contribution": {
+          "roleId": "AUTHORSHIP",
+          "scope": {
+            "kind": "publication",
+            "isbn13": "9784091885579",
+            "volumeLabel": "第1集（NDL巻次原語）",
+            "editionLabel": null,
+            "language": "ja"
+          }
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      },
+      {
+        "id": "93af343c-0b9b-44d7-8ec3-162f6aefaefd",
+        "subjectId": "add1b76d-07c6-46bd-999c-096d5593e670",
+        "objectId": "4e381195-6f4c-4cc0-baae-1387b089a408",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "contribution": {
+          "roleId": "AUTHORSHIP",
+          "scope": {
+            "kind": "publication",
+            "isbn13": "9784091847317",
+            "volumeLabel": "第1巻（NDL巻次 1）",
+            "editionLabel": null,
+            "language": "ja"
+          }
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      }
+    ],
+    "baseRelease": "20261014-credits-001",
+    "baseRevision": "82b01515-594c-48ca-b4b6-515eefac83ca",
+    "releaseId": "manga-issue-42-matsumoto-recovery-20261026-batch-01-normal"
+  }
+}

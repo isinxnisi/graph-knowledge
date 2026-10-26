@@ -1,0 +1,100 @@
+{
+  "id": "Q18154676",
+  "lastrevid": 2547720583,
+  "labels": {
+    "en": {
+      "language": "en",
+      "value": "Sunny"
+    },
+    "es": {
+      "language": "es",
+      "value": "Sunny"
+    },
+    "fr": {
+      "language": "fr",
+      "value": "Sunny"
+    },
+    "it": {
+      "language": "it",
+      "value": "Sunny"
+    },
+    "tl": {
+      "language": "tl",
+      "value": "Sunny"
+    },
+    "ja": {
+      "language": "ja",
+      "value": "Sunny"
+    },
+    "de": {
+      "language": "de",
+      "value": "Sunny"
+    },
+    "ml": {
+      "language": "ml",
+      "value": "സണ്ണി"
+    },
+    "sr": {
+      "language": "sr",
+      "value": "Sunny (манга)"
+    },
+    "uk": {
+      "language": "uk",
+      "value": "Sunny"
+    },
+    "pl": {
+      "language": "pl",
+      "value": "Sunny"
+    },
+    "pt": {
+      "language": "pt",
+      "value": "Sunny (mangá)"
+    }
+  },
+  "aliases": {},
+  "claims": {
+    "P31": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P31",
+          "hash": "549c072d6be8a6a43f999d1d0e82640b16c4260e",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 21198342,
+              "id": "Q21198342"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q18154676$D1B24FE1-E72E-4923-B7B5-C783983B3A71",
+        "rank": "normal"
+      }
+    ],
+    "P50": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P50",
+          "hash": "e1a3cdac66178e6275405638fb3a0cc40298dba7",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 1504165,
+              "id": "Q1504165"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q18154676$2d581e2a-42e4-3a0d-fb5e-bfffea27759a",
+        "rank": "normal"
+      }
+    ],
+    "P110": []
+  }
+}
