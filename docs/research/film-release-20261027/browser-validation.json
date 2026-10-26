@@ -1,0 +1,43 @@
+{
+  "build": "jCKofzeGk3iNCU32pxk0T",
+  "sourceCommit": "d6a21acdbae1a002720a4162f9d5df5bc79752dc",
+  "origins": [
+    {
+      "origin": "http://127.0.0.1:3200",
+      "passed": 3,
+      "failed": 0,
+      "durationMs": 57288.032999999996
+    },
+    {
+      "origin": "https://graph-beta.isinxnisi.com",
+      "passed": 3,
+      "failed": 0,
+      "durationMs": 62534.252
+    }
+  ],
+  "verified": [
+    "PC/mobile film search",
+    "separate ACTING/DIRECTING steps",
+    "AFI original term/language",
+    "full Claim page",
+    "Graph entity expansion",
+    "save/reopen/reload",
+    "reverse Role no-match",
+    "PLUTO Graph",
+    "Google anonymous boundaries",
+    "community",
+    "AI lab",
+    "English home",
+    "no global film banner",
+    "trial notes only on two Claim cards"
+  ],
+  "production": {
+    "changed": false,
+    "revision": "b74a4b00-9454-412f-af5d-1317713a543c",
+    "filmClaimHttpStatus": [
+      404,
+      404
+    ],
+    "formalFilmBrowserFlowVerified": false
+  }
+}

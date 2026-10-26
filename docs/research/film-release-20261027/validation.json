@@ -27,5 +27,8 @@
   "roleCatalogCount": 8,
   "formalReceiptsAdded": 0,
   "productionTouched": false,
-  "exporterSha256": "9b7c71793ce2698f9bd647013513d4972447a81208f6bdeece5b5f8db86b38e5"
+  "exporterSha256": "9b7c71793ce2698f9bd647013513d4972447a81208f6bdeece5b5f8db86b38e5",
+  "finalBrowserTests": 6,
+  "filmReceiptInventoryVerified": true,
+  "backupExporterTests": 3
 }

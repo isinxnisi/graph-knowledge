@@ -56,3 +56,8 @@ Role判断／Claim判断／個別公開署名が未完了なら、その境界�
 
 
 公開後の実ブラウザ検証は同じPC／スマホspecを再利用できる。FILM43_BASE_URL=https://plunode.net と FILM_FORMAL_REVISION=<公開後の実revision> を明示して npm run film:e2e を実行する。本番ではtrial metadata／Claim試験表示がないことも要求する。未公開のrevisionを推測して成功扱いしない。
+
+
+## 現在の引継ぎ
+
+main統合済み実装はd6a21acd。3200／betaはbuild jCKofzeGk3iNCU32pxk0T、実ブラウザ6件成功。本番は未変更。最初に必要な実操作は上記2の完全backup exportである。SSH非対話認証は使えないため、運営者の既存developログインとsudoが必要。以降のRole／Claim判断・実image固定・個別公開署名も同じ作業枠へまとめるが、まだ存在しないrequest hashへの承認を先取りしない。exporterの固定SHAは[validation.json](../research/film-release-20261027/validation.json)のexporterSha256を確認する。プログラムを確認し、転送後にも同じSHAを照合してから実行する。

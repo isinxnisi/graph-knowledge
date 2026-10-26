@@ -1,0 +1,20 @@
+{
+  "sourceCommit": "d6a21acdbae1a002720a4162f9d5df5bc79752dc",
+  "oldBuild": "GNboaMZH6Y3SKCESOVQRa",
+  "build": "jCKofzeGk3iNCU32pxk0T",
+  "local3200": {
+    "dataset": "public-kg",
+    "trial": {
+      "id": "issue43",
+      "claims": 2,
+      "formalAcceptance": false,
+      "productionPublished": false
+    },
+    "revision": "film-beta-issue43-unaccepted-v1"
+  },
+  "productionUpdated": false,
+  "memberMigration": false,
+  "rollbackBuildPreserved": true,
+  "betaHttpsVerified": true,
+  "browserTestsPassed": 6
+}

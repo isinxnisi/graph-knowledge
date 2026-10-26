@@ -22,4 +22,13 @@
 
 ## 配置・保全
 
-3200／beta反映と実ブラウザ結果は完了時に追記。本番Web／本番KG／会員DBには変更していない。
+実装commit d6a21acdをmainへfast-forward統合・main／専用branchへpush済み。検証済みbuild jCKofzeGk3iNCU32pxk0Tを3200へ配置し、HTTPS betaでも確認した。旧build GNboaMZH6Y3SKCESOVQRaと設定・会員dump・比較記録はprivate backupに保全。Webだけを再起動し、KG／PG containerは変更しない。betaの専用KG7696とtrial revisionを維持する。
+
+[実ブラウザ6件](../research/film-release-20261027/browser-validation.json)成功：3200・HTTPS betaの各PC1440／mobile390で条件検索、ACTING→DIRECTING、AFI CAST／Dirと英語表記、単独Claim詳細、Graph2段展開、保存・再読込復元、逆Role順不一致。PLUTO、Google認証入口と匿名401、コミュニティ、AIラボ、英語入口を確認。共通bannerなし、対象2 Claimの詳細だけ試験表示。[PC画面](../research/film-release-20261027/beta-graph-1440.png)／[スマホ画面](../research/film-release-20261027/beta-graph-390.png)。
+
+[保全結果](../research/film-release-20261027/preservation.json)：beta／元ローカルKGの全Node・Relationship property digest一致、会員DB29テーブルの全row fingerprint一致、設定・memo・Worker設置コード・旧receipt等83ファイルのSHA一致。旧8 Roleのcatalog／baseline／reviewsもbyte一致。新migration、Worker／control branch／収集承認の変更、正式Role・Claim受入はない。
+
+本番Web／本番KGは未変更。最終読取でもrevision b74a4b00-9454-412f-af5d-1317713a543c、映画2 Claimは404。plunode.netでの正式映画一巡は未実施で、beta成功を代用しない。SSH／sudoによる本番backup取得、固定hash正式判断、新imageと準備・gateの固定更新、既存個別公開request署名が必要。運営者操作は[公開手順](../runbooks/FILM_INITIAL_RELEASE.md)へ集約した。
+
+
+スマホ390幅では、Graph右下の作品名と既存表示controlの一部重なりが残る。タップ展開・保存復元は成功し、pan／zoomで位置調整できる。これは#43の既知制約で、今回Graph配置処理は変更していない。
