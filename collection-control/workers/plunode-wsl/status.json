@@ -26,16 +26,20 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-10-26T18:23:11.463522+00:00",
-  "phase": "interval",
+  "nextStartAt": "2026-10-26T19:28:37.260792+00:00",
+  "phase": "running",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
     "reason": "interval",
-    "eligibleAt": "2026-10-26T18:23:11.463522+00:00",
+    "eligibleAt": "2026-10-26T19:28:37.260792+00:00",
     "windowEndAt": "2026-10-26T22:00:00+00:00"
   },
-  "activeAttempt": null,
+  "activeAttempt": {
+    "requestId": "issue-42-matsumoto-recovery-20261026-batch-01",
+    "startedAt": "2026-10-26T18:23:37.260795+00:00",
+    "limitAt": "2026-10-26T19:18:37.260792+00:00"
+  },
   "lastAttempt": {
     "requestId": "issue-42-matsumoto-recovery-20261026",
     "endedAt": "2026-10-26T18:13:11.463526+00:00"
@@ -103,5 +107,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-10-26T18:15:43.841345+00:00"
+  "checkedAt": "2026-10-26T18:23:44.328995+00:00"
 }
