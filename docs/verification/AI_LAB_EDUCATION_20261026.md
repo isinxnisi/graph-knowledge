@@ -50,4 +50,19 @@ Webへは公開専用directoryのみを指定し、private runtime、wire、採�
 - ESLint変更箇所通過、webpack公開buildとTypeScript通過。元のNext16.3.8ガイドを参照。
 - loopback3269で日PC明/英スマホ暗の実画面確認通過：実推論1/学習0/10記録、70→74℃と5.24秒、根拠往復、Graph状態復帰、アカウント入口、自動浮遊・低減/画面外/非表示停止、noindex/CSP/read-only/比較ルート404。page error/モデルアクセス/アプリ書込0。
 
-main固定SHA受入・既存3200への同一build反映と公開beta結果は、実施後に本記録へ追記する。VPS/正式サイト・共有Kev・KG apply/restore/seed・会員DBの変更は行わない。
+## main受入・公開betaの確認結果
+
+実装固定SHA `d8535989ac85b46d7d0eaff3ef996976a3d183f5` をmainへFF受入。公開betaのスマホ検証で、Issue43の試験バナーがあると固定top60pxのメニューがヘッダーに重なり、Graph復帰リンクを押せないことを検知。共通ヘッダーのモバイルメニューを実ヘッダー下端へ配置する3行のCSS修正 `b4e0b4a5a4a7f11479d640bbdebaddcdbbb7f932` を加え、同じ作業内で再build・再検証した。
+
+最終beta sourceは `b4e0b4a5`、build **`GNboaMZH6Y3SKCESOVQRa`**。既存3200へ固定SHAの同一buildを移し、22項目の保護設定と映画専用KG `film-beta-issue43-unaccepted-v1` を維持。変更した設定は公開専用 `AI_LAB_ARTIFACT_DIRECTORY` の追加だけ。member DB/migration、KG apply/restore/seed、共有Kev、Worker/公開ゲート、Tunnel、VPS/正式サイトの更新はしていない。
+
+- [日本語の実推論記録](https://graph-beta.isinxnisi.com/ai-lab?run=c93ab46c-e14b-446e-8620-05d2d3b6843e&filter=inference#records)
+- [English inference record](https://graph-beta.isinxnisi.com/en/ai-lab?run=c93ab46c-e14b-446e-8620-05d2d3b6843e&filter=inference#records)
+- 公開URLで日英×1440/390px×明/暗の8ケースすべて通過。animation停止条件、記録選択、Claim根拠往復、Graph配置/pan/zoom復帰、会員入口、可読性/横溢れ、開発操作なし、CSP/noindex/Host・私有path防御を確認。page error・Kevリクエスト・アプリ書込0。
+- local/HTTPS 38項目通過：同一build、Google provider、community一覧、member/運営APIの認証guard、公式/見習いプロフィールと既存AIIdentity、映画trialの維持、v2 artifact一致。
+- 修正後のmember identity/community session/navigation 18 test追加確認、webpack/TypeScript再通過。
+- 正式サイトの公開APIはbirth SHA `750398d6806967f44ba2200db32df8c54d92449b3668cacaa0ac6763e65ab255` を保持。最初の読み取りがHTTP403だったため不明とし、後の読み取りで200と同SHAを確認した。変更操作は実施していない。
+
+[配備と検証receipt](ai-lab-education-20261026/beta-verification.json)。実Googleログインの新規認証・会員/運営の書込・iPhone実機は今回試していない。既存flag/DBを保全し、匿名read/認証拒否と既存unit回帰を確認した範囲である。
+
+残件は、方式別のbackward→Optimizer1更新→checkpoint保存/再読、独立NF4 runtimeの互換検証、人間確認済みtrainと採点基準・独立final、必要になった場合の共有Kev停止影響判断。CPUロード成功と実教育の成立を混同しない。プロフィールtimelineへのrun投影と公式AIコメント生成も未実装で、現在は既存プロフィールとラボの相互リンクから実記録を読む。旧worktreeの削除は所有者の終了確認後に別途行う。
