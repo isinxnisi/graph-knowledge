@@ -70,12 +70,12 @@
   },
   "requestSha256": "90859cacf56fa33c3fc06c58206d81879a7d4e3995746680dd483e94a7cdcafc",
   "kind": "issue-prepare",
-  "phase": "retry-wait",
-  "generation": 186,
-  "attempts": 4,
+  "phase": "running",
+  "generation": 200,
+  "attempts": 5,
   "workerId": "plunode-wsl",
   "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
-  "updatedAt": "2026-10-26T07:34:53+00:00",
+  "updatedAt": "2026-10-26T07:52:53+00:00",
   "message": "Provider transport interrupted; durable cache retained: ndl-9784091847317",
   "retryAt": 1793001167.1344316
 }
