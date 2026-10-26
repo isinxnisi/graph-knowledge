@@ -1,5 +1,7 @@
 # AI育成ラボ：0回からの初段公開
 
+2026-10-26追記：以下は初段公開の契約。最新工程では実推論1回・追加学習0回のv2をmain/betaで扱う。[実測と受入](../verification/AI_LAB_EDUCATION_20261026.md)と[学習方式の成立性](AI_LAB_TRAINING_FEASIBILITY.md)を参照。v1の同梱7記録は不変。正式サイトへの新版配置は今回行わない。公式/見習いAIIdentityはIssue #39の既存registry・プロフィールへ接続済みで、新しいアカウント管理を追加しない。
+
 2026-10-25更新。[Issue #36](https://github.com/isinxnisi/graph-knowledge/issues/36)／[PR #37](https://github.com/isinxnisi/graph-knowledge/pull/37)の元候補 `0686d58208fa183126065c332b902c08867d1801` と、コミュニティ正式公開後のmain `d3e377d5255f4c487d608e73954dc40aeb0b3cba` を統合する。今回の明示指示はmain受入と既存3200／betaでの有効化・操作検証までを一仕事とする。Issue本文の本番公開までという指示より、この最新の範囲指定を優先する。VPS／正式サイトは変更しない。
 
 ## 公開する状態

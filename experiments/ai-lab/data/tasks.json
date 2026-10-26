@@ -1,0 +1,84 @@
+{
+  "schemaVersion": 1,
+  "version": "development-v1",
+  "tasks": [
+    {
+      "id": "pluto-supervisor",
+      "split": "development",
+      "originId": "2b7c6289-d050-4dc0-93e3-9307681253cc",
+      "objective": "PLUTO第1巻で監修を担当した人物へ進む。著者やプロデュースと区別し、指定の刊行物と明示Roleを保つ。",
+      "desiredRole": "SUPERVISION",
+      "visited": [],
+      "filters": {
+        "direction": "incoming",
+        "roles": null,
+        "isbn13": null
+      },
+      "limits": {
+        "depth": 1,
+        "candidates": 6,
+        "edgeChecks": 100
+      }
+    },
+    {
+      "id": "pluto-no-outgoing",
+      "split": "development",
+      "originId": "2b7c6289-d050-4dc0-93e3-9307681253cc",
+      "objective": "PLUTOから主語側の制作関与を辿る。提示snapshotに対象経路がなければ範囲内で停止する。",
+      "desiredRole": null,
+      "visited": [],
+      "filters": {
+        "direction": "outgoing",
+        "roles": null,
+        "isbn13": null
+      },
+      "limits": {
+        "depth": 1,
+        "candidates": 6,
+        "edgeChecks": 100
+      }
+    },
+    {
+      "id": "pluto-limited",
+      "split": "development",
+      "originId": "2b7c6289-d050-4dc0-93e3-9307681253cc",
+      "objective": "PLUTO第1巻の監修者を探す。取得が未完了なら保留する。",
+      "desiredRole": "SUPERVISION",
+      "visited": [],
+      "filters": {
+        "direction": "incoming",
+        "roles": null,
+        "isbn13": null
+      },
+      "limits": {
+        "depth": 1,
+        "candidates": 1,
+        "edgeChecks": 100
+      }
+    },
+    {
+      "id": "pluto-other-work",
+      "split": "development",
+      "originId": "2b7c6289-d050-4dc0-93e3-9307681253cc",
+      "objective": "PLUTOの著者から、著者として関わる別の作品へ進む。各刊行物scopeを保持し、人物同士の直接関係は推論しない。",
+      "desiredRole": "AUTHORSHIP",
+      "visited": [],
+      "filters": {
+        "direction": "both",
+        "roles": [
+          "AUTHORSHIP"
+        ],
+        "isbn13": null
+      },
+      "limits": {
+        "depth": 2,
+        "candidates": 6,
+        "edgeChecks": 100
+      }
+    }
+  ],
+  "reservedSplits": {
+    "train": [],
+    "final": []
+  }
+}

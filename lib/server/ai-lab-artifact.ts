@@ -45,7 +45,9 @@ export async function readActiveLabArtifact(directory: string): Promise<LabArtif
 
 export type LabKgReader = (relativePath: string) => Promise<unknown>;
 export async function verifyLabPublicReferences(artifact: LabArtifact, get: LabKgReader): Promise<string> {
-  const revision = async () => z.object({ dataset: z.literal("public-kg"), revision: z.uuidv4() }).parse(await get("/api/dataset")).revision;
+  // Current beta can expose a named unaccepted film trial; revision is opaque.
+  // Compare before/after exactly and still verify every Entity/Claim/support.
+  const revision = async () => z.object({ dataset: z.literal("public-kg"), revision: z.string().regex(/^[a-zA-Z0-9][a-zA-Z0-9._:-]{0,159}$/) }).parse(await get("/api/dataset")).revision;
   const before = await revision();
   for (const entity of artifact.payload.entities) {
     const actual = entityDetailSchema.parse(z.object({ entity: z.unknown() }).parse(await get("/api/entities/" + entity.id)).entity);

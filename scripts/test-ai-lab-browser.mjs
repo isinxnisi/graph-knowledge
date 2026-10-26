@@ -2,6 +2,7 @@ import {chromium,webkit} from '@playwright/test';
 import {mkdir} from 'node:fs/promises';
 import assert from 'node:assert/strict';
 const base=process.env.AI_LAB_ORIGIN||'http://127.0.0.1:3269',hostBase=process.env.AI_LAB_HOST_ORIGIN||base,engine=process.env.LAB_BROWSER||'chromium',out=process.env.AI_LAB_SCREENSHOTS||'/tmp/plunode-issue36-'+engine;
+const expectedInference=Number(process.env.LAB_EXPECT_INFERENCE||0),expectedRuns=Number(process.env.LAB_EXPECT_RUNS||7);
 await mkdir(out,{recursive:true});
 const browser=await (engine==='webkit'?webkit:chromium).launch({headless:true,...(engine==='webkit'&&process.env.LAB_WEBKIT_EXECUTABLE?{executablePath:process.env.LAB_WEBKIT_EXECUTABLE}:{})});
 const root='2b7c6289-d050-4dc0-93e3-9307681253cc';
@@ -21,8 +22,8 @@ try{
   const frozen=async()=>{const transform=await image.evaluate(el=>getComputedStyle(el).transform);await page.waitForTimeout(150);assert.equal(await image.evaluate(el=>getComputedStyle(el).transform),transform);};
   const advances=async()=>{const before=await image.evaluate(el=>el.getAnimations()[0].currentTime);await page.waitForTimeout(150);assert.ok(await image.evaluate(el=>el.getAnimations()[0].currentTime)>before);};
   await moving(true);await page.waitForFunction(()=>document.querySelector('[data-testid="lab-motion-avatar"] img').naturalWidth>0);await page.evaluate(()=>document.fonts.ready);await advances();
-  assert.equal(await page.getByTestId('inference-count').textContent(),'0');assert.equal(await page.getByTestId('training-count').textContent(),'0');
-  assert.equal(await page.getByTestId('lab-run').count(),7);assert.equal(await avatar.getAttribute('data-strength'),'standard');
+  assert.equal(await page.getByTestId('inference-count').textContent(),String(expectedInference));assert.equal(await page.getByTestId('training-count').textContent(),'0');
+  assert.equal(await page.getByTestId('lab-run').count(),expectedRuns);assert.equal(await avatar.getAttribute('data-strength'),'standard');
   assert.equal(await page.locator('[data-testid="motion-play"],[data-strength-pick],.official-ai-avatar').count(),0);
   assert.doesNotMatch(await page.locator('[data-ai-lab]').innerText(),/DEMO|仮配置|隔離確認|isolated preview/i);
   assert.match(await page.locator('[data-ai-lab]').innerText(),lang==='en'?/not monitored/:/未監視/);
@@ -36,7 +37,8 @@ try{
   // Freeze only for a repeatable screenshot, after exercising the live stop conditions.
   await image.evaluate(el=>{const animation=el.getAnimations()[0];animation.pause();animation.currentTime=1800;});
   await page.screenshot({path:`${out}/${lang}-${width}-${theme}.png`,fullPage:true});
-  await page.locator('[data-ai-lab] select').selectOption('inference');assert.equal(await page.getByTestId('lab-run').count(),0);
+  await page.locator('[data-ai-lab] select').selectOption('inference');assert.equal(await page.getByTestId('lab-run').count(),expectedInference);
+  if(expectedInference){await page.getByTestId('lab-run').first().click();assert.match(await page.locator('[data-ai-lab] article').innerText(),/74℃/);assert.match(await page.locator('[data-ai-lab] article').innerText(),/71.31/);await page.screenshot({path:`${out}/${lang}-${width}-${theme}-inference.png`,fullPage:true});const actualRecord=page.url();await page.locator('[data-ai-lab] article a[href*="read=claim"]').click();await page.getByRole('dialog').getByTestId('lab-record-return').click();assert.equal(page.url(),actualRecord);}
   await page.getByRole('button',{name:/purpose-role-v1/}).click();assert.equal(await page.getByTestId('lab-run').count(),5);
   const record=page.url();await page.locator('[data-ai-lab] article a[href*="read=claim"]').click();
   const dialog=page.getByRole('dialog');await dialog.getByTestId('lab-record-return').waitFor();await dialog.getByTestId('lab-record-return').click();assert.equal(page.url(),record);
@@ -52,7 +54,7 @@ try{
    await page.goto(base+'/member');await menuLink('lab-entry');await page.getByLabel(lang==='en'?'Account menu':'アカウントメニュー',{exact:true}).click();await page.getByRole('link',{name:lang==='en'?'Sign in / Account':'ログイン・アカウント',exact:true}).click();await page.waitForURL(url=>url.pathname==='/member');
   }
   assert.deepEqual(errors,[]);assert.deepEqual(modelCalls,[]);assert.deepEqual(writes,[]);
-  console.log('PASS',engine,lang,width,theme,'birth0, autoplay/stop/resume, no demo/control UI, history/evidence/Graph/account return');await context.close();
+  console.log('PASS',engine,lang,width,theme,`inference${expectedInference}, autoplay/stop/resume, no demo/control UI, history/evidence/Graph/account return`);await context.close();
  }
  const page=await browser.newPage();const response=await page.goto(base+'/ai-lab#apprentice');const title=page.getByRole('heading',{level:1,name:'AI育成ラボ',exact:true});await title.waitFor();assert.ok((await title.boundingBox()).y>=0);assert.equal(response.status(),200);assert.match(response.headers()['content-security-policy'],/connect-src 'self'/);assert.match(response.headers()['x-robots-tag'],/noindex/);
  for(const route of ['/api/ai-lab/run','/api/ai-lab/train','/.env.public','/.runtime/runs','/data/ai-lab/initial.json','/ai-apprentice-motion-study','/ai-character-study','/ai-apprentice-study','/en/ai-apprentice-motion-study'])assert.equal((await page.request.get(base+route)).status(),404,route);

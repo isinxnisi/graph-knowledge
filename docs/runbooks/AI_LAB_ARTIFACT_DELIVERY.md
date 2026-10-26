@@ -1,5 +1,7 @@
 # AIラボ：公開artifactの更新と復旧
 
+2026-10-26追記：初段の本番公開はIssue #39工程で実施済み。今回の新版はmain/betaだけ。v2は実応答/送信前保留/失敗/不明と測定要約を追加し、学習は依然0回。[実測記録](../verification/AI_LAB_EDUCATION_20261026.md)を参照。beta専用の公開directoryと`AI_LAB_ARTIFACT_DIRECTORY`を使用し、private runtimeはWebへ渡さない。現在KG revisionはUUIDとは限らず、film betaの版文字列も前後一致＋実参照で検証する。以下の初段準備記述は当時の経緯を含む。
+
 Issue #36の準備手順。配置・権限変更の承認ではない。VPSへのWeb反映・新しいdirectory/bind mount・ラボ有効化は未実施。通常の[Web更新規約](../design/PRODUCTION_DEPLOYMENT.md)を維持し、KG applyや公開ゲートの導入scriptを再実行しない。
 
 ## 配置物

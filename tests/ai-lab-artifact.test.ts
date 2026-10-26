@@ -8,6 +8,7 @@ import { canonicalLabJson, labCounts, MAX_LAB_ARTIFACT_BYTES } from "../lib/doma
 import { activateLabArtifact, parseLabArtifact, publicLabKgReader, readActiveLabArtifact, readLabPointer, sealLabArtifact, verifyLabPublicReferences, type LabKgReader } from "../lib/server/ai-lab-artifact";
 
 const initial = parseLabArtifact(await readFile("data/ai-lab/initial.json"));
+const sortie = parseLabArtifact(await readFile("docs/verification/ai-lab-education-20261026/public-artifact.json"));
 const fixture = fixtureV4Schema.parse(JSON.parse(gunzipSync(await readFile("datasets/connectivity/issue-34/after-data.json.gz")).toString()));
 const revision = "88437056-b74f-42ab-88c0-33ed435bdccc";
 const kg: LabKgReader = async url => {
@@ -24,6 +25,40 @@ async function directory() { const p = await mkdtemp(path.join(tmpdir(),"plunode
 afterEach(async()=>{ for (const p of directories.splice(0)) await rm(p,{recursive:true,force:true}); vi.unstubAllEnvs(); });
 
 describe("AIラボ初段の公開artifact",()=>{
+  it("v2は実応答1件・新規送信前保留2件を追記し、初段7件を変更しない",async()=>{
+    expect(labCounts(sortie.payload)).toEqual({inference:1,training:0,baseline:5,held:4});
+    expect(sortie.payload.runs.slice(0,7)).toEqual(initial.payload.runs);
+    const real=sortie.payload.runs.find(r=>r.executionKind==='kev-api')!;
+    expect(real.choice).toBe('path-400881205d404a66cd397e09');
+    expect(real.observation?.atSend?.temperatureC).toBe(70);
+    expect(real.observation?.peak).toEqual({temperatureC:74,utilizationPercent:99,powerWatts:71.31,usedVramMiB:6378});
+    expect(real.semanticReview).toBe('pending-human');
+    expect(canonicalLabJson(sortie)).not.toMatch(/requestWire|rawResponse|acceptable|\/home\/|apiKey/);
+    const dir=await directory();
+    await activateLabArtifact(dir,initial,null,kg);
+    await activateLabArtifact(dir,sortie,initial.sha256,kg);
+    expect((await readActiveLabArtifact(dir))?.sha256).toBe(sortie.sha256);
+    await activateLabArtifact(dir,initial,sortie.sha256,kg);
+    expect((await readActiveLabArtifact(dir))?.sha256).toBe(initial.sha256);
+  });
+  it("送信後の失敗・不明は推論完了に数えず、機械検証・モデル版・送信の矛盾を拒否する",()=>{
+    for(const status of ['failed','unknown'] as const){
+      const value=structuredClone(sortie.payload),real=value.runs.find(r=>r.executionKind==='kev-api')!;
+      real.status=status;real.choice=null;real.observation!.responseValidated=false;real.observation!.errorCode='transport_error';
+      expect(labCounts(sealLabArtifact(value).payload).inference).toBe(0);
+    }
+    for(const mutate of [
+      (r: typeof sortie.payload.runs[number])=>{r.observation!.requestSent=false;},
+      (r: typeof sortie.payload.runs[number])=>{r.observation!.responseValidated=false;},
+      (r: typeof sortie.payload.runs[number])=>{r.modelRevision=null;},
+      (r: typeof sortie.payload.runs[number])=>{r.status='unknown';},
+      (r: typeof sortie.payload.runs[number])=>{r.observation!.peak.powerWatts=Infinity;},
+    ]){const value=structuredClone(sortie.payload);mutate(value.runs.find(r=>r.executionKind==='kev-api')!);expect(()=>sealLabArtifact(value)).toThrow();}
+    expect(()=>sealLabArtifact({...sortie.payload,schemaVersion:1})).toThrow();
+  });
+  it("現在KGの不透明なbeta試験版を保持しながら実Claimを検査する",async()=>{
+    expect(await verifyLabPublicReferences(sortie,async url=>url==='/api/dataset'?{dataset:'public-kg',revision:'film-beta-issue43-unaccepted-v1'}:kg(url))).toBe('film-beta-issue43-unaccepted-v1');
+  });
   it("0回の誕生状態と実在する7記録を保持し、採点案・実コメントを配信しない",()=>{
     expect(labCounts(initial.payload)).toEqual({inference:0,training:0,baseline:5,held:2});
     expect(initial.payload.runs).toHaveLength(7);

@@ -6,7 +6,7 @@
 
 - 公式AI活動基盤（Issue #39）：[公開プロフィール・AIIdentity・活動・フォロー](design/PUBLIC_ACCOUNTS.md)／[009・010適用と復旧](runbooks/PUBLIC_ACCOUNTS_RELEASE.md)／[初版の隔離検証・main/beta反映](verification/PUBLIC_ACCOUNTS_20261025.md)。人間の実認証とAIの身元を分離し、公開活動は元コンテンツを毎回再認可する。実推論・学習・自動コメントは対象外。正式環境の結果は上記公開記録を参照。
 
-- AI育成ラボ：[0回からの本線統合・公開条件](design/AI_LAB_PUBLICATION.md)／[artifact更新と復旧](runbooks/AI_LAB_ARTIFACT_DELIVERY.md)／[2026-10-25のmain受入・実beta検証](verification/AI_LAB_BETA_20261025.md)。実推論0・追加学習0・初出動前の既存記録を2026-10-26に正式公開。比較専用ルートは隔離版だけに保持。[10-22の候補検証](verification/AI_LAB_PUBLICATION_20261022.md)は当時の記録。
+- AI育成ラボ：[初段公開とartifact契約](design/AI_LAB_PUBLICATION.md)／[artifact更新と復旧](runbooks/AI_LAB_ARTIFACT_DELIVERY.md)／[初回実推論・自動教育の実測](verification/AI_LAB_EDUCATION_20261026.md)／[8GiB学習方式の比較](design/AI_LAB_TRAINING_FEASIBILITY.md)。正式サイトは0回の初段を維持し、main/betaは実推論1回・追加学習0回のv2を検証する。比較専用ルートと旧private記録は保全。[10-25のbeta受入](verification/AI_LAB_BETA_20261025.md)・[10-22の候補検証](verification/AI_LAB_PUBLICATION_20261022.md)は当時の記録。
 
 2026-10-15。現行仕様・継続検討・完了履歴を分ける。フェーズ番号は記録の整理用であり、未実装機能の着手順や承認を意味しない。
 

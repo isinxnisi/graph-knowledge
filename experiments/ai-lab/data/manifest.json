@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "id": "public-pluto-subset-v1",
+  "dataset": "public-kg",
+  "revision": "88437056-b74f-42ab-88c0-33ed435bdccc",
+  "release": "manga-issue-25-utc-recovery-08-normal",
+  "observedAt": "2026-10-20T04:11:08.611944Z",
+  "origin": "https://plunode.net",
+  "sourceArtifact": {
+    "file": "after-data.json.gz",
+    "sha256": "ea3137d7ab46920ee482e2854efc859ab0a7c288c959d3185ea8245837c0c6ae"
+  },
+  "sourceManifest": {
+    "file": "after-manifest.json.gz",
+    "sha256": "4a19b835142e23fbe19e183489b1164c5ae312e98b38e53dbbf4698a2cbecf4d"
+  },
+  "observationArtifact": {
+    "file": "public-observation.json",
+    "sha256": "d97defe3a594db19423bbfed67ceae92098f7ba7d0313cd4cd74e8fb89b98c74"
+  },
+  "snapshotSha256": "3a342621f5236b701c37abbd0ce047892901e664fe39dfe1b49b2d7a29da8237",
+  "scope": "selected-public-subset; not exhaustive; no inference of absence outside this snapshot",
+  "claimIds": [
+    "4e212aa6-9e75-47a4-aacf-96432e7eb517",
+    "6d5ff5e4-5f59-4948-8248-cbdac3888a7c",
+    "75f911ca-a247-42bd-8bf0-c166649ce145",
+    "839b0bb8-1781-4a3e-8446-9a22d08d1658",
+    "aacddf82-87ae-4981-8542-0470e981a94f",
+    "cc2bc0c3-d8e7-47fe-8aaf-1b219bff0137",
+    "dbc08a85-9165-4cc8-a3af-d133c83d8f67",
+    "e3b37447-87f5-40ed-b738-6ba37578c8c3"
+  ]
+}

@@ -18,7 +18,7 @@ export const labStepSchema = z.strictObject({
 export const labPathSchema = z.strictObject({ id: z.string().regex(/^path-[a-f0-9]{24}$/), targetId: z.uuidv4(), steps: z.array(labStepSchema).min(1).max(2) });
 const runSchema = z.strictObject({
   runId: z.uuidv4(), taskId: labTaskSchema, parentRunId: z.uuidv4().nullable(),
-  executionKind: z.enum(["rule", "not-connected"]), status: z.enum(["completed", "held"]),
+  executionKind: z.enum(["rule", "not-connected", "kev-api", "interrupted"]), status: z.enum(["completed", "held", "failed", "unknown"]),
   startedAt: stamp, finishedAt: stamp, policyVersion: identifier,
   modelRevision: z.string().regex(/^[a-f0-9]{40}$/).nullable(),
   codeCommit: z.string().regex(/^[a-f0-9]{40}$/), resultSha256: labHashSchema,
@@ -28,12 +28,20 @@ const runSchema = z.strictObject({
   choice: z.string().regex(/^(?:path-[a-f0-9]{24}|STOP|HOLD)$/).nullable(),
   completeWithinSnapshot: z.boolean(), paths: z.array(labPathSchema).max(6),
   disposition: z.enum(["candidate", "rejected"]).nullable(),
+  observation: z.strictObject({
+    requestSent: z.boolean(), responseValidated: z.boolean(),
+    errorCode: z.enum(["gpu_busy", "gpu_too_warm", "vram_insufficient", "ram_insufficient", "disk_insufficient", "resources_unknown", "request_too_large", "transport_error", "validation_or_lock_error", "interrupted_no_retry", "provider_error"]).nullable(),
+    telemetrySha256: labHashSchema, sampleCount: z.number().int().min(1).max(2000),
+    wallSeconds: z.number().finite().nonnegative().max(600).nullable(),
+    atSend: z.strictObject({ temperatureC:z.number().finite().min(0).max(150), utilizationPercent:z.number().finite().min(0).max(100), freeVramMiB:z.number().finite().nonnegative() }).nullable(),
+    peak: z.strictObject({ temperatureC:z.number().finite().min(0).max(150), utilizationPercent:z.number().finite().min(0).max(100), powerWatts:z.number().finite().nonnegative(), usedVramMiB:z.number().finite().nonnegative() }),
+  }).optional(),
 });
 
-// Initial public contract is deliberately limited to the recorded birth state.
-// Real inference / training require a separately reviewed contract, not a counter edit.
+// v1 retains the immutable birth state. v2 adds observed, sealed inference records.
+// Neither contract permits training or automatically accepted semantic scores.
 export const labPayloadSchema = z.strictObject({
-  schemaVersion: z.literal(1), version: identifier, aiId: z.literal(APPRENTICE_AI_ID), operator: z.literal("plunode"),
+  schemaVersion: z.union([z.literal(1),z.literal(2)]), version: identifier, aiId: z.literal(APPRENTICE_AI_ID), operator: z.literal("plunode"),
   liveStatus: z.literal("not-monitored"), officialAi: z.strictObject({ binding: z.literal("plunode-official-ai"), aiIdentityId: z.null() }),
   kgRevision: z.uuidv4(), kgSha256: labHashSchema, recordedAt: stamp,
   source: z.strictObject({ commit: z.string().regex(/^[a-f0-9]{40}$/), artifactSha256: labHashSchema }),
@@ -46,7 +54,18 @@ export const labPayloadSchema = z.strictObject({
   if (data.recordedAt !== [...data.runs].sort((a,b) => Date.parse(b.finishedAt)-Date.parse(a.finishedAt))[0].finishedAt) fail();
   for (const run of data.runs) {
     if (Date.parse(run.finishedAt) < Date.parse(run.startedAt) || run.parentRunId && !runs.has(run.parentRunId)) fail();
-    if (run.executionKind === "not-connected" ? run.status !== "held" || run.choice !== null : run.status !== "completed" || run.choice === null || run.modelRevision !== null) fail();
+    if (data.schemaVersion === 1 && (run.observation || !["rule","not-connected"].includes(run.executionKind) || !["completed","held"].includes(run.status))) fail();
+    if (run.executionKind === "rule") {
+      if (run.status !== "completed" || run.choice === null || run.modelRevision !== null || run.observation) fail();
+    } else if (run.executionKind === "not-connected") {
+      if (!["held","failed"].includes(run.status) || run.choice !== null || run.observation?.requestSent) fail();
+    } else {
+      if (!run.observation || !run.modelRevision || run.status === "held") fail();
+      if (run.executionKind === "kev-api" && !run.observation?.requestSent) fail();
+      if (run.status === "completed" ? run.choice === null || !run.observation?.responseValidated : run.choice !== null || run.observation?.responseValidated) fail();
+      if (run.executionKind === "interrupted" && run.status !== "unknown") fail();
+    }
+    if (run.observation && (run.observation.responseValidated !== (run.status === "completed") || run.status === "completed" && run.observation.errorCode !== null)) fail();
     if (run.choice === "STOP" && !run.completeWithinSnapshot) fail();
     if (run.choice?.startsWith("path-") && !run.paths.some(p => p.id === run.choice)) fail();
     if (new Set(run.paths.map(p => p.id)).size !== run.paths.length) fail();
@@ -67,7 +86,7 @@ export const labArtifactSchema = z.strictObject({ sha256: labHashSchema, payload
 export type LabArtifact = z.infer<typeof labArtifactSchema>;
 export type LabRun = LabArtifact["payload"]["runs"][number];
 export function labCounts(data: LabArtifact["payload"]) {
-  return { inference: 0, training: 0, baseline: data.runs.filter(r => r.executionKind === "rule").length, held: data.runs.filter(r => r.status === "held").length };
+  return { inference: data.runs.filter(r => r.executionKind === "kev-api" && r.status === "completed" && r.observation?.responseValidated).length, training: 0, baseline: data.runs.filter(r => r.executionKind === "rule").length, held: data.runs.filter(r => r.status === "held").length };
 }
 export function canonicalLabJson(value: unknown): string {
   if (Array.isArray(value)) return "[" + value.map(canonicalLabJson).join(",") + "]";

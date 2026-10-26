@@ -1,0 +1,599 @@
+{
+  "legacyCommit": "af31afd5523655da45d2ceab87e0bca37cecd7dc",
+  "mainBase": "fdd05df8dd5b7c0f6c780caf2ad0a4c8c8d59eb9",
+  "files": [
+    {
+      "file": "docs/README.md",
+      "sha256": "fef33cc8b5df137ad6d6bdbe7e23dc4b4ce9e762d11d37764bc2e831191013ae",
+      "disposition": "development-archive"
+    },
+    {
+      "file": "docs/design/AI_LAB_FOUNDATION.md",
+      "sha256": "e7fdfeee96cecffd4051b24534bc33d0aa084445d793cd37749f9f0a58ac5d04",
+      "disposition": "development-archive"
+    },
+    {
+      "file": "docs/design/AI_LAB_MOTION_STUDY.md",
+      "sha256": "4d4351f2e74d414b1ee28be9a91bfbca3521d4e4ea3cc742ca6b99140010c9dd",
+      "disposition": "development-archive"
+    },
+    {
+      "file": "docs/design/AI_LAB_OBSERVER.md",
+      "sha256": "0e3071b003f61a48951d6bec3325dd974aa0c99c78fca14de86b86cf8c51cd7f",
+      "disposition": "development-archive"
+    },
+    {
+      "file": "docs/design/AI_LAB_OFFICIAL_MENTOR.md",
+      "sha256": "f112d5ac791a2bd9826a84a168225a06c32eb641f3b2288412529f5159c8e70c",
+      "disposition": "development-archive"
+    },
+    {
+      "file": "docs/design/OFFICIAL_AI_CHARACTER.md",
+      "sha256": "f217342aabf72e2d5594489950553f782f3e57d4553ec14ec032cb2d8d1087d2",
+      "disposition": "development-archive"
+    },
+    {
+      "file": "docs/runbooks/AI_LAB_VPS_READONLY.md",
+      "sha256": "fa63b4b51476d5e4069cb58947da67a217b333defee38724633a634db580c26d",
+      "disposition": "development-archive"
+    },
+    {
+      "file": "docs/verification/AI_LAB_20261021.md",
+      "sha256": "af3999117d6a41bcf94a62958e8a13568b74f4b6bcbb095889d96bc043bab88e",
+      "disposition": "development-archive"
+    },
+    {
+      "file": "docs/verification/AI_LAB_AMBIENT_MOTION_20261022.md",
+      "sha256": "664642708e3cc47d70e5855aa1ee95b8aeeb2db356db383272ed3db0482bee0e",
+      "disposition": "development-archive"
+    },
+    {
+      "file": "docs/verification/AI_LAB_APPRENTICE_20261022.md",
+      "sha256": "286486eb28e2cf661104fdbabfa870d63a55d741b2e26e9a3a9587fe83e65ebc",
+      "disposition": "development-archive"
+    },
+    {
+      "file": "docs/verification/AI_LAB_FOCUS_20261022.md",
+      "sha256": "c2c51b3f34f38e977a99a7a3df6b2c39d344387492a34ff673376d138b213552",
+      "disposition": "development-archive"
+    },
+    {
+      "file": "docs/verification/AI_LAB_HERO_MOTION_20261022.md",
+      "sha256": "99fd4a53c129ad654af49371ddb4274d240d7265bfda46a0ee647e583c898bc2",
+      "disposition": "development-archive"
+    },
+    {
+      "file": "docs/verification/AI_LAB_MOTION_20261022.md",
+      "sha256": "afe0be1b0833cd4496bbd4ff99609487a6ae7e507db0f2065fe717f601ea249b",
+      "disposition": "development-archive"
+    },
+    {
+      "file": "docs/verification/AI_LAB_MOTION_STRENGTH_20261022.md",
+      "sha256": "3c7790df4746114af02ed007f049a332b2286c215d77e6dc64afabfe75a008ea",
+      "disposition": "development-archive"
+    },
+    {
+      "file": "docs/verification/AI_LAB_OBSERVER_20261022.md",
+      "sha256": "166d73e36792c420c9aba147e15f29696a94d016a2e33a82c8b86e6996cd2414",
+      "disposition": "development-archive"
+    },
+    {
+      "file": "docs/verification/AI_LAB_OFFICIAL_MENTOR_20261022.md",
+      "sha256": "700e317483be9fe15e662146c5bccf892814f3d19169c701300140ad73cb8dde",
+      "disposition": "development-archive"
+    },
+    {
+      "file": "docs/verification/AI_LAB_TUNNEL_20261022.md",
+      "sha256": "ddcb68f0f0769d3505fa98c27ccf1300238cf889405452552b0d86932e021046",
+      "disposition": "development-archive"
+    },
+    {
+      "file": "docs/verification/OFFICIAL_AI_CHARACTER_20261022.md",
+      "sha256": "9e01dcf1f469daf0c449963bed6d326a13ec8c0c3908f254e02f55f31a8cfae7",
+      "disposition": "development-archive"
+    },
+    {
+      "file": "docs/verification/ai-lab-20261021/execution-summary.json",
+      "sha256": "2b5d7637931c76e9f1310220c9a09a44c47c8c035a396d8f27cd72b0037b5088",
+      "disposition": "development-archive"
+    },
+    {
+      "file": "docs/verification/ai-lab-20261021/first-public.json",
+      "sha256": "a728e4a0cb407033469851d03e61849417a8355d17b6a6e785ae9851842b9b0b",
+      "disposition": "development-archive"
+    },
+    {
+      "file": "docs/verification/ai-lab-20261021/public.json",
+      "sha256": "ac717033fd787d2a5f0468fbd0170c2f6e94aaeefd0466332cbed62abfc178e2",
+      "disposition": "development-archive"
+    },
+    {
+      "file": "docs/verification/ai-lab-20261021/training-plan.json",
+      "sha256": "bca20a8a5548bfd0f62bb3d046fb8eca937e9688dad9ad8f4038a166e17adabf",
+      "disposition": "development-archive"
+    },
+    {
+      "file": "docs/verification/ai-lab-20261022/REVIEW.md",
+      "sha256": "e85b0fb25b38f3570b599c6c5fb5e72e5f79ca5248e8609ae425bb58808eaa4c",
+      "disposition": "development-archive"
+    },
+    {
+      "file": "docs/verification/ai-lab-20261022/cooling-samples.json",
+      "sha256": "95662a54af742e345cfd5f78cda96e0deaa793ec07124684d61d61fde586c09d",
+      "disposition": "development-archive"
+    },
+    {
+      "file": "docs/verification/ai-lab-20261022/public.json",
+      "sha256": "2954ecda9787b08d5214783544d37c4fe1423d8cd6dc57fe80b756289d9fcbfa",
+      "disposition": "development-archive"
+    },
+    {
+      "file": "docs/verification/ai-lab-20261022/readiness.json",
+      "sha256": "3d14f9d556c29d58d26ba2a3e9c1f51e358b386f7c11d4bc1e455e14b9744edb",
+      "disposition": "development-archive"
+    },
+    {
+      "file": "docs/verification/ai-lab-20261022/review.json",
+      "sha256": "01000b1b46430e9ac9cb715c544521fa7db2a51166ccfde1f04db6b3125d10ef",
+      "disposition": "development-archive"
+    },
+    {
+      "file": "docs/verification/ai-lab-20261022/screenshots/en-390-overview.png",
+      "sha256": "1c8ee00c7aae727932ab8529264c30ffae8a923caa11d26c85e85853e0d3e35c",
+      "disposition": "development-archive"
+    },
+    {
+      "file": "docs/verification/ai-lab-20261022/screenshots/ja-1440-overview.png",
+      "sha256": "e8af6b85eaacce08c19aecb88ea0538226b4a1fbd08ddeac65cac7ec3c7fe4e1",
+      "disposition": "development-archive"
+    },
+    {
+      "file": "docs/verification/ai-lab-20261022/screenshots/ja-1440-review.png",
+      "sha256": "63aa88f8a47725daa195f8cc86c31586f9d8ece450c4beac2c17923680bda3ad",
+      "disposition": "development-archive"
+    },
+    {
+      "file": "docs/verification/ai-lab-20261022/screenshots/ja-390-held.png",
+      "sha256": "efd69cd915dbe0908d0c950de15794554c71e909f174bd2f5cabc085207298d5",
+      "disposition": "development-archive"
+    },
+    {
+      "file": "docs/verification/ai-lab-20261022/training-preflight.json",
+      "sha256": "39a0fe6ecf723abaaa72f0acc2107256e81dc9b3a536fe58298848dd4d2b9a50",
+      "disposition": "development-archive"
+    },
+    {
+      "file": "docs/verification/ambient-motion-20261022/desktop-light.png",
+      "sha256": "06b2426825e9149541ceb44744d5598447d898d089c804c7d74279b39abcc731",
+      "disposition": "development-archive"
+    },
+    {
+      "file": "docs/verification/ambient-motion-20261022/mobile-dark.png",
+      "sha256": "a179f6840e3534b091d5630e9008c83995c6b03e4b078bfe9e0f5b118210b320",
+      "disposition": "development-archive"
+    },
+    {
+      "file": "docs/verification/ambient-motion-20261022/mobile-english.png",
+      "sha256": "07a7050b9851b629ccc326fc5e8c33f75bf086a8fc1e97837ced802356614650",
+      "disposition": "development-archive"
+    },
+    {
+      "file": "docs/verification/apprentice-20261022/desktop-light.png",
+      "sha256": "d423f9041faa54806e917cfe9b21f16d01725f821a15e42f7dd4b1285206ad86",
+      "disposition": "development-archive"
+    },
+    {
+      "file": "docs/verification/apprentice-20261022/lab-dark.png",
+      "sha256": "8c7c8889d35da464f586d5ff244b5ff30bdac96e95c0698234844684790a7114",
+      "disposition": "development-archive"
+    },
+    {
+      "file": "docs/verification/apprentice-20261022/mobile-dark.png",
+      "sha256": "3aec0bbe9b8eaf8f90618d445e8a19e42499c3288f22929b241fe31cbbad6f20",
+      "disposition": "development-archive"
+    },
+    {
+      "file": "docs/verification/hero-motion-20261022/desktop-page.png",
+      "sha256": "3c3318c55f3987a50468445c7490eb040bcaf916b00748ae0c4dbefc4582dc03",
+      "disposition": "development-archive"
+    },
+    {
+      "file": "docs/verification/hero-motion-20261022/desktop-standard.png",
+      "sha256": "820a2a1c62ebb8490bed27c854d70890c6a7e7179091aa1f408f0b01c503823e",
+      "disposition": "development-archive"
+    },
+    {
+      "file": "docs/verification/hero-motion-20261022/desktop-strong.png",
+      "sha256": "67819430de668d0d81b153e4c7732780484081a75e41ea1ea82dba86a036b241",
+      "disposition": "development-archive"
+    },
+    {
+      "file": "docs/verification/hero-motion-20261022/mobile-dark.png",
+      "sha256": "20c70b7b768e96191cc80766849d2fe99f0ebb0e3e5b3ee93c13d04187de8997",
+      "disposition": "development-archive"
+    },
+    {
+      "file": "docs/verification/hero-motion-20261022/mobile-page.png",
+      "sha256": "c782e0a988014b143f89346f462c0d8d5d08bc14c094e62093eb0cb7d41e2388",
+      "disposition": "development-archive"
+    },
+    {
+      "file": "docs/verification/lab-focus-20261022/desktop-lab.png",
+      "sha256": "5d8f18d74f706d5109dbf5f80b05dd27c28f98eb2cffd036cc9f783a1b17c057",
+      "disposition": "development-archive"
+    },
+    {
+      "file": "docs/verification/lab-focus-20261022/mobile-lab.png",
+      "sha256": "2773ad66bec516865c2d27cd205a6fc9e474a2931558c63e9870a864e92c67ee",
+      "disposition": "development-archive"
+    },
+    {
+      "file": "docs/verification/lab-focus-20261022/three-renditions.png",
+      "sha256": "16375d30613a66c5bc04b3730a9a613d59ec2ad5a34ba1b61e07b9c45161df5a",
+      "disposition": "development-archive"
+    },
+    {
+      "file": "docs/verification/motion-20261022/desktop-light.png",
+      "sha256": "2b262d12e40ec9e4d785b63444c1a465921efd99ea3d2f6213f7f4e1a65a46e7",
+      "disposition": "development-archive"
+    },
+    {
+      "file": "docs/verification/motion-20261022/mobile-dark.png",
+      "sha256": "1d4ccb0cc569fa60259feabab35556f1741010de8729809657ceb173cd2450ed",
+      "disposition": "development-archive"
+    },
+    {
+      "file": "docs/verification/motion-strength-20261022/desktop-found-strong.png",
+      "sha256": "7f4cc57808a83fb009d37985cdc374300b9de6fd49dc663029791776d1a122ec",
+      "disposition": "development-archive"
+    },
+    {
+      "file": "docs/verification/motion-strength-20261022/mobile-found-strong.png",
+      "sha256": "007fad15151ed9b76219970d4f25966f04c8b71a6df818714dca1e8707364a6f",
+      "disposition": "development-archive"
+    },
+    {
+      "file": "docs/verification/official-ai-character-20261022/comparison.png",
+      "sha256": "b26faa9998d2714553395528d38dce1000c13f39ad3549b43881a8f952504845",
+      "disposition": "development-archive"
+    },
+    {
+      "file": "docs/verification/official-ai-character-20261022/graph-dark.png",
+      "sha256": "efe62829a2368375cd5071fbf0d027aec043840547d4ee80982519ea81fdce5e",
+      "disposition": "development-archive"
+    },
+    {
+      "file": "docs/verification/official-ai-character-20261022/home-light.png",
+      "sha256": "e6e9f051b2e93aefad5c87b555cb28f4fd16c3a7ba8790f151f80b040160ca8d",
+      "disposition": "development-archive"
+    },
+    {
+      "file": "docs/verification/official-ai-character-20261022/mobile-home.png",
+      "sha256": "6cd508eacefef56b0bf71034ca727bc1fe03e06327a2c72b7543798af5272a41",
+      "disposition": "development-archive"
+    },
+    {
+      "file": "docs/verification/official-mentor-20261022/desktop-dark.png",
+      "sha256": "5389a7daa4a5ba5986a32141abd3c988275e063d9b04a4214e9a829cfed1aeda",
+      "disposition": "development-archive"
+    },
+    {
+      "file": "docs/verification/official-mentor-20261022/desktop-light.png",
+      "sha256": "0bc705612af066106e669d609dabd2d408bb8db4f25b5f536fb9c278dfdffa79",
+      "disposition": "development-archive"
+    },
+    {
+      "file": "docs/verification/official-mentor-20261022/mobile-dark.png",
+      "sha256": "d6ec31a7715a7184529927a5f04400814d20428ccb647c96db66d1c1d16efc98",
+      "disposition": "development-archive"
+    },
+    {
+      "file": "experiments/ai-lab/.gitignore",
+      "sha256": "65f5fe434574d4e56a107f7471406a03572fdf6f05278d46c91772d6ad0f1a24",
+      "disposition": "migrated-runtime"
+    },
+    {
+      "file": "experiments/ai-lab/README.md",
+      "sha256": "105b20d97f207791e7aaa0bee2c8c08ecc211fb622fb2979ee01946c3fa6fa71",
+      "disposition": "development-archive"
+    },
+    {
+      "file": "experiments/ai-lab/core.py",
+      "sha256": "afebc71381d5aac4e11ba56f51c1a7b0e55068d01aad9abf1dca8013b4cde377",
+      "disposition": "migrated-runtime"
+    },
+    {
+      "file": "experiments/ai-lab/data/manifest.json",
+      "sha256": "a6704d2156a6fa9f2c36d71661efd624dc4cf3363a09ca2c671346b788d2a8ea",
+      "disposition": "migrated-runtime"
+    },
+    {
+      "file": "experiments/ai-lab/data/snapshot.json",
+      "sha256": "3a342621f5236b701c37abbd0ce047892901e664fe39dfe1b49b2d7a29da8237",
+      "disposition": "migrated-runtime"
+    },
+    {
+      "file": "experiments/ai-lab/data/tasks.json",
+      "sha256": "b3eca9dbcf5a717bc252b80fc123a2144214edf6a07f1764d0140ccf402b3432",
+      "disposition": "migrated-runtime"
+    },
+    {
+      "file": "experiments/ai-lab/evaluation/development-labels.json",
+      "sha256": "6691049edde74723f2eaa35ed76bc0167ff6383062c57826bbaf8996748774f7",
+      "disposition": "migrated-runtime"
+    },
+    {
+      "file": "experiments/ai-lab/lab.py",
+      "sha256": "d48203e6b03feaf3ac9a7f496e36662b5ddacf7709a228d9481d044df318c519",
+      "disposition": "migrated-runtime"
+    },
+    {
+      "file": "experiments/ai-lab/prepare.ts",
+      "sha256": "c5fda13a72e964c074d1c4ab7ebf515cfa204420a297daf3a772f9c47dec7ba7",
+      "disposition": "migrated-runtime"
+    },
+    {
+      "file": "experiments/ai-lab/review.py",
+      "sha256": "503f70cc05a5d337dda11ab466debd4bab5d8354e124280f6e22a8c775595362",
+      "disposition": "development-archive"
+    },
+    {
+      "file": "experiments/ai-lab/runtime.py",
+      "sha256": "cc990956d79c79888da228a848ce772a1be321acea7717be015c98c2be30f3f0",
+      "disposition": "migrated-runtime"
+    },
+    {
+      "file": "experiments/ai-lab/test_lab.py",
+      "sha256": "19cf13d80e200c1c71b58701be1a87d9b86c30c05ec2448187fbe0d4becae8df",
+      "disposition": "migrated-runtime"
+    },
+    {
+      "file": "experiments/ai-lab/test_review.py",
+      "sha256": "c5c101834855379c2a4892bc2742ea77684654604fe5f1acac5097d56e6c2379",
+      "disposition": "development-archive"
+    },
+    {
+      "file": "experiments/ai-lab/training.py",
+      "sha256": "f5c0a73d4de09779a6f9726f871d4f470887d2f0cc1c3684697c3743add9a2c7",
+      "disposition": "migrated-runtime"
+    },
+    {
+      "file": "experiments/ai-lab/training_preflight.py",
+      "sha256": "53a9480984f4717d51caa60b041727d796786f7677685171fc671432a37d6c4a",
+      "disposition": "migrated-runtime"
+    },
+    {
+      "file": "prototypes/ai-lab/.gitignore",
+      "sha256": "32dae3052f331ee34d628ef535709b301259a45df7c7522c4d35dcf49873f00b",
+      "disposition": "development-archive"
+    },
+    {
+      "file": "prototypes/ai-lab/Lab.tsx.txt",
+      "sha256": "e72243b1226a5cd6afe5178599f922d3a88d7fb277dbef09d8c1c3035514cbf3",
+      "disposition": "development-archive"
+    },
+    {
+      "file": "prototypes/ai-lab/README.md",
+      "sha256": "03965cdf8c32a39e3dbb46b05a1b1339f6be525f9a2ef161d4925eb2284395d2",
+      "disposition": "development-archive"
+    },
+    {
+      "file": "prototypes/ai-lab/api.ts.txt",
+      "sha256": "e6d82ad8fb3d467e0e1e2f48403b416ebadd3783440f8183071f2d7dea2e44d9",
+      "disposition": "development-archive"
+    },
+    {
+      "file": "prototypes/ai-lab/environment.test.mjs",
+      "sha256": "0675d7e9f1d67b211b31bda838d49d8cb25f91cc8a942779b4f47be617ed665b",
+      "disposition": "development-archive"
+    },
+    {
+      "file": "prototypes/ai-lab/lab.css",
+      "sha256": "4378277ed6514db19dd5d896f95e78033a54fa6e8ef6713579428cb1c1a6b65c",
+      "disposition": "development-archive"
+    },
+    {
+      "file": "prototypes/ai-lab/legacy-port.mjs",
+      "sha256": "2b873a80118d6f9961d5d7113b0ad1325a1c83de702d7f4d280f922226da6e11",
+      "disposition": "development-archive"
+    },
+    {
+      "file": "prototypes/ai-lab/mentorship.test.mjs",
+      "sha256": "8d313eb813463054221045f4892b99e6bfdfe0e256a9ceda373531241420c2ca",
+      "disposition": "development-archive"
+    },
+    {
+      "file": "prototypes/ai-lab/navigation.test.mjs",
+      "sha256": "2781bf7cc3b442532f95d92eaf9629deb80f86aee6c2ee416b7b2b9b6507e0e9",
+      "disposition": "development-archive"
+    },
+    {
+      "file": "prototypes/ai-lab/navigation.tsx.txt",
+      "sha256": "1661d420e34ca68aa7e3708e8c34c995abbaa1727ebe246d6294e542539579a0",
+      "disposition": "development-archive"
+    },
+    {
+      "file": "prototypes/ai-lab/prepare.py",
+      "sha256": "bc971de16e34a249524309bc0bce4a5ee1c40a8917c2b1ff2050d1ef63042303",
+      "disposition": "development-archive"
+    },
+    {
+      "file": "prototypes/ai-lab/run.mjs",
+      "sha256": "3aa9cf1e3d093f96ec4569c09b5139c4719114f76313dd1a9495ec7318e7a516",
+      "disposition": "development-archive"
+    },
+    {
+      "file": "prototypes/ai-lab/serve.py",
+      "sha256": "e612816f68db8118f36c15940d739be883f1020641f59e60fbaad4ebfa36baf8",
+      "disposition": "development-archive"
+    },
+    {
+      "file": "prototypes/ai-lab/state.test.mjs",
+      "sha256": "1d6642bfe37e04708082f38202c53a4f51fbbcaa59bdaf3ef4c3207be691f7c9",
+      "disposition": "development-archive"
+    },
+    {
+      "file": "prototypes/ai-lab/state.ts.txt",
+      "sha256": "07db447e184726056d288aa6398ef6b127c410daba392e5573514fd1d6721936",
+      "disposition": "development-archive"
+    },
+    {
+      "file": "prototypes/apprentice-character/Apprentice.tsx.txt",
+      "sha256": "d6bcd63bdc39c56472b167c01aa9a4ad72065266eea18d1e3ce2d32408e6bd46",
+      "disposition": "development-archive"
+    },
+    {
+      "file": "prototypes/apprentice-character/ApprenticeStudy.tsx.txt",
+      "sha256": "8897a21073b8fbd2ea0d75672d501a216fbad8d9bf9804538bba50f1cd6755bd",
+      "disposition": "development-archive"
+    },
+    {
+      "file": "prototypes/apprentice-character/LabApprenticeHero.tsx.txt",
+      "sha256": "5ba80a51946329f29cc6abe951b0bcdabd19184b43ed7405e17ce7c86d5b6d05",
+      "disposition": "development-archive"
+    },
+    {
+      "file": "prototypes/apprentice-character/MotionStudy.tsx.txt",
+      "sha256": "89d3ee029001b9c0b314b1cb63daacf5a8cca261cf03d4430d974638108681c8",
+      "disposition": "development-archive"
+    },
+    {
+      "file": "prototypes/apprentice-character/PROMPTS.md",
+      "sha256": "cf5ce02733226e9d72c11ebfb5b9bbdf9a589b89398130d0abf3972896177322",
+      "disposition": "development-archive"
+    },
+    {
+      "file": "prototypes/apprentice-character/SIZE_PROMPTS.md",
+      "sha256": "f9e68a8701213a8d200718228c027c6411c71f652e625a679aaf58f1ee8ae4a5",
+      "disposition": "development-archive"
+    },
+    {
+      "file": "prototypes/apprentice-character/apprentice.css",
+      "sha256": "3cdf1a0cebd9b68437f7290ffaa3e6d88392d97a92eddd18d67748c24a1d9c07",
+      "disposition": "development-archive"
+    },
+    {
+      "file": "prototypes/apprentice-character/assets/bprime-regular.png",
+      "sha256": "af15a802a095bed99c122be5e86cd61b963b86f9f500c8c36fff3d8404840cf6",
+      "disposition": "development-archive"
+    },
+    {
+      "file": "prototypes/apprentice-character/assets/bprime-study.png",
+      "sha256": "e48842809366adc4417e90f35be02af330bf9e48aa4ccce1c172c84449e8c01a",
+      "disposition": "already-main",
+      "mainPaths": [
+        "public/ai-lab/apprentice-profile.png"
+      ]
+    },
+    {
+      "file": "prototypes/apprentice-character/assets/bprime-tiny.png",
+      "sha256": "b8fdd9e364e02dd1ceac808276f8b392a8a20d2a6f44e617ac669baacdbe06f3",
+      "disposition": "development-archive"
+    },
+    {
+      "file": "prototypes/apprentice-character/lab-motion.test.mjs",
+      "sha256": "952bfcb5c0b7f5289533a0ba457446e14e17d3aefed71f52472e6994880d9903",
+      "disposition": "development-archive"
+    },
+    {
+      "file": "prototypes/apprentice-character/motion.css",
+      "sha256": "956baedb35abd43d9f7013af3d3f54bd7c6c761a4060921e50e5cf626f654234",
+      "disposition": "development-archive"
+    },
+    {
+      "file": "prototypes/apprentice-character/motion.test.mjs",
+      "sha256": "50bcd380da3a21453977fe72ac66c2bc4247cc64590c9efc4d709ea8687244d4",
+      "disposition": "development-archive"
+    },
+    {
+      "file": "prototypes/apprentice-character/motion.tsx.txt",
+      "sha256": "266c15c142c4d2fd89da63f131fd6088ff1de1d90e3db2239fdbb8fd204db69d",
+      "disposition": "development-archive"
+    },
+    {
+      "file": "prototypes/apprentice-character/references/PLUNODE_APPRENTICE_BPRIME_BRIEF.md",
+      "sha256": "10a3ecca99368b3a335ec70d28b65d57593a34ee000e119925cf1d83c684efef",
+      "disposition": "development-archive"
+    },
+    {
+      "file": "prototypes/apprentice-character/references/PLUNODE_APPRENTICE_MOTION_BRIEF.md",
+      "sha256": "b7f793429a3bbbafcb2cef9e9344d9d1959988c5244a20af03a55318548d23a2",
+      "disposition": "development-archive"
+    },
+    {
+      "file": "prototypes/apprentice-character/references/plunode_apprentice_motion_study.html",
+      "sha256": "806ce3a16cfefda052f41cffdb9572d28cfe353e1e4cad61a925a558cc860a19",
+      "disposition": "development-archive"
+    },
+    {
+      "file": "prototypes/apprentice-character/references/plunode_explorer_apprentice_Bprime_reference.png",
+      "sha256": "9e353674c6115fe2ec9307e3611fd3e02ff73873c77a4660a0403ed520807250",
+      "disposition": "development-archive"
+    },
+    {
+      "file": "prototypes/official-ai-character/CharacterStudy.tsx.txt",
+      "sha256": "6502e99b640c0eb287dacd28e115c08efbf63c4ecf90d497e3f2036e8e5c1f14",
+      "disposition": "development-archive"
+    },
+    {
+      "file": "prototypes/official-ai-character/OfficialAi.tsx.txt",
+      "sha256": "18253aed197a4bb556e760e565f3e75226a3364bf465612068bef651d3e22a23",
+      "disposition": "development-archive"
+    },
+    {
+      "file": "prototypes/official-ai-character/PROMPTS.md",
+      "sha256": "4b240292a4d78dcca873828199e26e415d73dad32f89f281e849cc7855ae8b3a",
+      "disposition": "development-archive"
+    },
+    {
+      "file": "prototypes/official-ai-character/README.md",
+      "sha256": "5a9c70247868a2f4e5821717ea6bdce1664a0df9abd52d1cad6b765ca0466f42",
+      "disposition": "development-archive"
+    },
+    {
+      "file": "prototypes/official-ai-character/assets/v02-soft-flat.png",
+      "sha256": "17799c136ed34477335c581c8640bd26e263461ae8c994a4246518f8e94203c1",
+      "disposition": "already-main",
+      "mainPaths": [
+        "public/ai/official-small.png"
+      ]
+    },
+    {
+      "file": "prototypes/official-ai-character/assets/v02-symbolic-flat.png",
+      "sha256": "003847ee776f7c54931c6ffe43e54f8d1235671f3e4d8f82c8268c5a105b6f43",
+      "disposition": "development-archive"
+    },
+    {
+      "file": "prototypes/official-ai-character/assets/v02-translucent.png",
+      "sha256": "372ada0a80883ef472e5cc596d5200cd6e8d2406b7f4b6eeebf1f5b40263f48e",
+      "disposition": "already-main",
+      "mainPaths": [
+        "public/ai/official-profile.png"
+      ]
+    },
+    {
+      "file": "prototypes/official-ai-character/character.css",
+      "sha256": "bc406300269c5e0917be3ba32d7d6976e8080afb2830a79c5be8e724cd321388",
+      "disposition": "development-archive"
+    },
+    {
+      "file": "prototypes/official-ai-character/official-ai.css",
+      "sha256": "8ff710b70a8d744da633f9f026fe1057882099d5b904917c2ffa930246e65141",
+      "disposition": "development-archive"
+    },
+    {
+      "file": "prototypes/official-ai-character/official-ai.ts.txt",
+      "sha256": "288373f9eea45ba96bd4fec4256cffb373cb95f8bcad46cb2eb3e0897430094c",
+      "disposition": "development-archive"
+    },
+    {
+      "file": "prototypes/official-ai-character/verify.mjs",
+      "sha256": "6e63f87014128dbdd0757bd77a354a304e998b5519873008ed34e2d138cb4590",
+      "disposition": "development-archive"
+    }
+  ],
+  "privateRuntime": "Preserved outside Git; imported immutable runs/evaluations/decisions retain original hashes. Legacy runtime is not deleted.",
+  "legacyWorktreePurpose": "Historical development/comparison archive only; no new service development.",
+  "runtimeSourceOfTruth": "latest main experiments/ai-lab; private records outside Git",
+  "legacyDisposition": "preserved archive/comparison materials; no owner finish confirmation, no deletion"
+}
