@@ -1,0 +1,133 @@
+{
+  "deployment": {
+    "phase": "reviewed-three-modules-installed",
+    "installedAt": "2026-10-26T12:59:34.316430+00:00",
+    "implementationSourceCommit": "68437af35b6d9cf84de0eb860061f0a2f364140e",
+    "compatibilityCodeCommit": "973c7b0c599f79905a029b28b524f4924e169376",
+    "modulesBefore": {
+      "collection-issues.py": "9e0231ab0f444e181e6672d28759b729c108ae2d7816915789a794ba1465656e",
+      "collection-worker.py": "d5720b662bbcb794d9079f67a0cec39e18e8d938b094615a02c181e298fd77c4",
+      "collection-transport.py": null
+    },
+    "modulesAfter": {
+      "collection-issues.py": "38aadaee84b039f9f991ac1cc831a9498a4d83fab062d96b7c252d7175326dab",
+      "collection-worker.py": "0f6dfd1367e7f07e1bdc85d9944688c6803ce785c21261a86757f45b86484583",
+      "collection-transport.py": "c0fa12142779b2ba15bede136b85d4510fd37e306a100f45901f0820571e6483"
+    },
+    "protectedFilesAndLinksUnchanged": 1321,
+    "protectedManifestSha256": "14537fde694d63d14e7836bc0d8698ad2d325e05aef0d2ca72e790f46a652350",
+    "backupSha256": "3ee28e40a54e53fe4fc80705f37c635ed452f145389d631262cb45e949845d35",
+    "workerLockInodeUnchanged": true,
+    "configAndStateBytesUnchanged": true,
+    "pauseControlChanged": false,
+    "peerConfigUnchanged": true,
+    "installedImportsVerified": true,
+    "isolationTests": 83,
+    "realIssue42SavedMaterialReplayPassed": true,
+    "providerNetworkCalls": 0,
+    "newRecoveryRequestRegistered": false,
+    "publicApply": false
+  },
+  "postInstallValidation": {
+    "installedModuleImports": true,
+    "realSourceCommitCompatibilityValidated": true,
+    "oldRequestsApprovalsResultsAndAttemptsUnchanged": true,
+    "isolatedGrantWithRealLedgerValidated": true,
+    "isolatedGrantOnly": true,
+    "liveLedgerAttempts": 16,
+    "liveCachedResponses": 11,
+    "liveLedgerSha256": "199bf793f20d2384be7bb33e2ad0c943bd302604954e995290d6a787faf1ac1e",
+    "liveGrantRegistered": false,
+    "liveRecoveryRequestRegistered": false,
+    "providerNetworkCalls": 0,
+    "publicApply": false
+  },
+  "normalScheduleObservation": {
+    "phase": "normal-schedule-confirmed",
+    "health": {
+      "checkedAt": "2026-10-26T13:03:31+00:00",
+      "status": "online",
+      "publicApply": false
+    },
+    "phaseCounts": {
+      "blocked": 11,
+      "completed": 16
+    },
+    "control": {
+      "revision": 4,
+      "pauseMode": null,
+      "activeAttempt": null
+    },
+    "protectedNonOperationalStateFilesUnchanged": 1320,
+    "requestsSemanticallyUnchanged": 27,
+    "workerConfigUnchanged": true,
+    "newRecoveryRegistered": false,
+    "providerCalls": 0,
+    "privateDraftRequestContentSha256": "735a78f3886034197f3fad16d153bcd54fd2073b8650cd298936fd7506c7dbaa"
+  },
+  "recoveryProposal": {
+    "status": "draft-not-registered",
+    "candidateRecipeRevision": 29,
+    "runtimeCompatibilityCodeCommit": "973c7b0c599f79905a029b28b524f4924e169376",
+    "implementationSourceCommit": "68437af35b6d9cf84de0eb860061f0a2f364140e",
+    "draftRequestContentSha256": "735a78f3886034197f3fad16d153bcd54fd2073b8650cd298936fd7506c7dbaa",
+    "ledgerSha256": "199bf793f20d2384be7bb33e2ad0c943bd302604954e995290d6a787faf1ac1e",
+    "existingAttempts": 16,
+    "cachedResponses": 11,
+    "approvedMaximum": 30,
+    "requests": [
+      {
+        "key": "publication-753a877561d519907dd709d9",
+        "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&onlyBib=true&maximumRecords=100&query=title%3D%22%E3%83%94%E3%83%B3%E3%83%9D%E3%83%B3%22+AND+creator%3D%22%E6%9D%BE%E6%9C%AC%E5%A4%A7%E6%B4%8B%22+AND+dpid%3Diss-ndl-opac+sortBy+issued_date%2Fsort.ascending",
+        "additionalAttempts": 2
+      },
+      {
+        "key": "ndl-9784091847317",
+        "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&maximumRecords=5&query=isbn%3D%229784091847317%22+AND+dpid%3Diss-ndl-opac",
+        "additionalAttempts": 2
+      }
+    ],
+    "additionalPreviouslyUnrequested": [
+      {
+        "key": "ndl-9784091885579",
+        "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&maximumRecords=5&query=isbn%3D%229784091885579%22+AND+dpid%3Diss-ndl-opac",
+        "maximumAttempts": 2,
+        "work": "Sunny"
+      },
+      {
+        "key": "ndl-<ピンポン検索で一意に選ばれるISBN>",
+        "maximumAttempts": 2,
+        "work": "ピンポン",
+        "condition": "選択書誌1件と一致するcanonical ISBN URLだけ"
+      }
+    ],
+    "maximumExpectedNewNdlAttempts": 8,
+    "maximumExpectedCumulative": 24,
+    "newWikidataAttemptsExpected": 0,
+    "expiryProposal": "実承認時刻から48時間（本番値は承認後に確定）",
+    "notRegistered": true
+  },
+  "privatePreservationDirectoryName": "issue42-module-rollout-bh_5ebae",
+  "productionWorkerFullSync": false,
+  "catalogUpgradeImplemented": false,
+  "lastCompletedTaskObservation": {
+    "observedDateJst": "2026-10-26",
+    "lastRunJst": "22:07:31",
+    "nextRunJst": "22:08:30",
+    "state": "Ready",
+    "enabled": true,
+    "lastTaskResult": 0,
+    "manuallyStarted": false
+  },
+  "taskDefinitionsSha256": {
+    "Plunode-CollectionWorker": "ae508068e4e498fe27d7a44872e9659fcfd1c8b6eb960a3b15c0e58c90d53589",
+    "Plunode-Publication-Delivery": "f829146d23cee8fda1b66b413d1d41b67280009cb72bfca7d9208e423c444111",
+    "GraphKnowledge-Autopilot": "3774aaef4d46c54d046d2d8beed46f4aec9e615d1dd946a914b2432dc45d4be4"
+  },
+  "finalChecks": {
+    "liveCachedBodiesVerified": 11,
+    "liveNetworkAttempts": 16,
+    "controlBranchRecoveryRequestAbsent": true,
+    "controlHeadObserved": "ba94fefa03007f7c3619a3af5c6befc168837f65"
+  }
+}

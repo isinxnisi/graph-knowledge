@@ -106,3 +106,7 @@ Workerは再送枠が残る場合 `retry-transport`、枠切れのみなら `awa
 通常版「第1集」を明示第1巻相当の選択表記として限定対応する。`expectedVolume`・`volumeLabel`に原語を残し、ISBN個別scope・通常版／特装版・著者・Role・出典・canonical全抽出フィールド一致を維持する。保存検索応答をcanonical ISBN応答として実運用へ流用しない。
 
 実資料・隔離試験・配置時の差分／復旧案は [検証記録](../verification/ISSUE42_COLLECTION_RECOVERY_20261026.md)。実効bundleとcatalog更新単位は [Issue #44](https://github.com/isinxnisi/graph-knowledge/issues/44)へ分離し、`sync_inputs`の広いhash検査を緩和していない。
+
+### 2026-10-26 実Workerへの限定導入
+
+運営者の後続指示に基づき、68437afの修正3本を互換基準973c7b0へ限定backportした。config・既存workflow／collector・公開peer・固定承認を保持し、通常スケジュール成功を確認した。**Issue #42の新cycle・追加URL枠は未承認下書きのみ、実通信0。** 最新の配置SHA、保全・隔離試験、実行前の一括許可案と次の操作は [実Worker導入記録](../verification/ISSUE42_WORKER_ROLLOUT_20261026.md)を参照する。前工程の「実Worker未配置」はその時点の履歴である。
