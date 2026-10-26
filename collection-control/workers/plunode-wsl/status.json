@@ -26,16 +26,20 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-10-26T06:24:47.706449+00:00",
-  "phase": "interval",
+  "nextStartAt": "2026-10-26T07:30:01.512227+00:00",
+  "phase": "running",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
     "reason": "interval",
-    "eligibleAt": "2026-10-26T06:24:47.706449+00:00",
+    "eligibleAt": "2026-10-26T07:30:01.512227+00:00",
     "windowEndAt": "2026-10-26T09:00:00+00:00"
   },
-  "activeAttempt": null,
+  "activeAttempt": {
+    "requestId": "issue-42-dot-matsumoto-three-20261026",
+    "startedAt": "2026-10-26T06:25:01.512231+00:00",
+    "limitAt": "2026-10-26T07:20:01.512227+00:00"
+  },
   "lastAttempt": {
     "requestId": "issue-42-dot-matsumoto-three-20261026",
     "endedAt": "2026-10-26T06:14:47.706453+00:00"
@@ -103,5 +107,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-10-26T06:17:38.664924+00:00"
+  "checkedAt": "2026-10-26T06:25:09.856052+00:00"
 }
