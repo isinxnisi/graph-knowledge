@@ -1,0 +1,95 @@
+{
+  "schemaVersion": 2,
+  "id": "manga-r0029",
+  "catalog": "docs/research/famous-manga-creators/20261016/candidates.json",
+  "baseRelease": "datasets/public-kg/releases/20261014-credits-001",
+  "stamp": "2026-10-26T18:12:08Z",
+  "requestPolicy": {
+    "maxAttempts": 30,
+    "attemptsPerRequest": 2,
+    "minIntervalSeconds": 3,
+    "timeoutSeconds": 20,
+    "maxBytes": 4194304
+  },
+  "outputPolicy": {
+    "maxNewEntities": 4,
+    "maxNewClaims": 9,
+    "newClaimVisibility": "hidden"
+  },
+  "people": [
+    {
+      "name": "松本大洋",
+      "catalogName": "松本大洋",
+      "wikidata": "Q1504165",
+      "identityNames": [
+        "松本大洋"
+      ],
+      "creditNames": [
+        "松本大洋"
+      ]
+    }
+  ],
+  "works": [
+    {
+      "name": "ピンポン",
+      "wikidata": "Q837883",
+      "identityNames": [
+        "ピンポン"
+      ],
+      "isbn13": "9784091847362",
+      "ndlMainTitles": [
+        "ピンポン"
+      ],
+      "expectedVolume": [
+        "1"
+      ],
+      "expectedEdition": [],
+      "volumeLabel": "第1巻（NDL巻次 1）",
+      "editionLabel": null,
+      "identityNote": "Issueの名称とWikidataの完全一致・漫画型、NDL作成書誌の主書名・責任表示・巻次を照合。作品全体の担当へ外挿しない。",
+      "selectionReason": "承認済みIssue内の同作者経路の拡張。"
+    },
+    {
+      "name": "鉄コン筋クリート",
+      "wikidata": "Q111988774",
+      "identityNames": [
+        "鉄コン筋クリート"
+      ],
+      "isbn13": "9784091847317",
+      "ndlMainTitles": [
+        "鉄コン筋クリート"
+      ],
+      "expectedVolume": [
+        "1"
+      ],
+      "expectedEdition": [],
+      "volumeLabel": "第1巻（NDL巻次 1）",
+      "editionLabel": null,
+      "identityNote": "Issueの名称とWikidataの完全一致・漫画型、NDL作成書誌の主書名・責任表示・巻次を照合。作品全体の担当へ外挿しない。",
+      "selectionReason": "承認済みIssue内の同作者経路の拡張。"
+    },
+    {
+      "name": "Sunny",
+      "wikidata": "Q18154676",
+      "identityNames": [
+        "Sunny"
+      ],
+      "isbn13": "9784091885579",
+      "ndlMainTitles": [
+        "Sunny"
+      ],
+      "expectedVolume": [
+        "第1集"
+      ],
+      "expectedEdition": [],
+      "volumeLabel": "第1集（NDL巻次原語）",
+      "editionLabel": null,
+      "identityNote": "Issueの名称とWikidataの完全一致・漫画型、NDL作成書誌の主書名・責任表示・巻次を照合。作品全体の担当へ外挿しない。",
+      "selectionReason": "承認済みIssue内の同作者経路の拡張。"
+    }
+  ],
+  "reviewArtifacts": [
+    "datasets/manga-collection/r0029/anchor-review.json",
+    "datasets/manga-collection/r0029/publication-review.json"
+  ]
+}

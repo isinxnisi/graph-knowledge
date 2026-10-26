@@ -1,0 +1,89 @@
+{
+  "schemaVersion": 1,
+  "status": "issue-authorized-candidates-only",
+  "issueOrigin": {
+    "repository": "isinxnisi/graph-knowledge",
+    "issueNumber": 42,
+    "approvalId": "dot-matsumoto-three-20261026",
+    "permissionSha256": "22aa37126cd4dd12393c290a8c5dccb1c3c699c82c0f4de012606486ec06ab2b",
+    "issueBodySha256": "55759934be60f937cbbeb33bf7c5b0f81526da540eda244b96b4d6de88aa9fd7"
+  },
+  "humanDecision": {
+    "actorType": "human",
+    "reviewer": "プロジェクト運営者（範囲を限定した委任）",
+    "decidedAt": "2026-10-26T12:37:31+09:00",
+    "statement": "2026-10-25 13:07:49 JST、運営者は既存Worker対応の現在の漫画テーマ候補からdotが対象を選び、毎回の個別提示なしでGitHubの収集許可と購読を登録し、候補収集・レビューまで進める限定委任を明示承認した。2026-10-25 16:17:04 JST、固定の1日1バッチ上限を撤廃し、進捗・収集量・負荷に応じた少量の投入判断を許可した。2026-10-26 12:37:31 JST、松本大洋のピンポン・鉄コン筋クリート・Sunnyを次候補として提示したうえで、過去の許可を上書きせず追加分をバッチ専用の新Issueへ登録する方式への確認に、認証済み運営者が肯定リアクションした。dotが12:37:36 JSTに当該確認メッセージの現在の反応を読取り検証した。個別の関係・Role・ISBNを人間が審査済みとの記録ではない。今回の選定は既存テーマIssue #5と固定catalog d3e377d5255f4c487d608e73954dc40aeb0b3cba（blob f3d33d0e83b6299a7f443fa841232407ce67657c）のM40、および導入Worker対応組の共通部分である。Wikidata構造化情報とNDL作成書誌のみ、親準備と全子収集合計30試行以内、保存成果・cache優先。既公開・既受入・既存同条件保留を再収集せず、不確かな同定・Role・刊行物scopeは保留する。時間帯・直列排他・10分休憩を維持し、常時フル稼働や大量先行投入はしない。正式受入・公開apply・新取得元・コード変更・VPS・会員DB操作は含まない。"
+  },
+  "people": [
+    {
+      "name": "松本大洋",
+      "catalogName": "松本大洋",
+      "wikidata": "Q1504165",
+      "identityNames": [
+        "松本大洋"
+      ],
+      "creditNames": [
+        "松本大洋"
+      ]
+    }
+  ],
+  "works": [
+    {
+      "name": "ピンポン",
+      "wikidata": "Q837883",
+      "identityNames": [
+        "ピンポン"
+      ],
+      "isbn13": "9784091847362",
+      "ndlMainTitles": [
+        "ピンポン"
+      ],
+      "expectedVolume": [
+        "1"
+      ],
+      "expectedEdition": [],
+      "volumeLabel": "第1巻（NDL巻次 1）",
+      "editionLabel": null,
+      "identityNote": "Issueの名称とWikidataの完全一致・漫画型、NDL作成書誌の主書名・責任表示・巻次を照合。作品全体の担当へ外挿しない。",
+      "selectionReason": "承認済みIssue内の同作者経路の拡張。"
+    },
+    {
+      "name": "鉄コン筋クリート",
+      "wikidata": "Q111988774",
+      "identityNames": [
+        "鉄コン筋クリート"
+      ],
+      "isbn13": "9784091847317",
+      "ndlMainTitles": [
+        "鉄コン筋クリート"
+      ],
+      "expectedVolume": [
+        "1"
+      ],
+      "expectedEdition": [],
+      "volumeLabel": "第1巻（NDL巻次 1）",
+      "editionLabel": null,
+      "identityNote": "Issueの名称とWikidataの完全一致・漫画型、NDL作成書誌の主書名・責任表示・巻次を照合。作品全体の担当へ外挿しない。",
+      "selectionReason": "承認済みIssue内の同作者経路の拡張。"
+    },
+    {
+      "name": "Sunny",
+      "wikidata": "Q18154676",
+      "identityNames": [
+        "Sunny"
+      ],
+      "isbn13": "9784091885579",
+      "ndlMainTitles": [
+        "Sunny"
+      ],
+      "expectedVolume": [
+        "第1集"
+      ],
+      "expectedEdition": [],
+      "volumeLabel": "第1集（NDL巻次原語）",
+      "editionLabel": null,
+      "identityNote": "Issueの名称とWikidataの完全一致・漫画型、NDL作成書誌の主書名・責任表示・巻次を照合。作品全体の担当へ外挿しない。",
+      "selectionReason": "承認済みIssue内の同作者経路の拡張。"
+    }
+  ]
+}
