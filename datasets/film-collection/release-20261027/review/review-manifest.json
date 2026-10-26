@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "sourceKind": "film-discovery-v1",
+  "authority": "pending-human-review-only",
+  "inputSha256": "3cab031a0e28c0baafd129732e9f8716ca720b8aa4f4ab864ca6925b9d8b1b1f",
+  "artifacts": {
+    "context.json": "12ff1df6452053b1565313d9fd52aecfe7a7e49d0bc3ea2256a70397d0af269a",
+    "decision-request.json": "122ea82800f2f88b6fa4e1e33115a4965a1278ef6d7c56e656ecd4c1f50c83a2",
+    "proposed-records.json": "a911874c6a0cde6bf9b1bfcc4d0f413fcd9f4b9b378787bca661b261ee959b76",
+    "review.json": "f1f6107ec4c172435b02c475b9c2c9a781b8e4656915f2c00b2b2bd326eeb3b6"
+  }
+}

@@ -1,4 +1,5 @@
 "use client";
+import { useFilmTrialClaim } from "../lib/client/film-trial";
 import { trackPublicEvent } from "../lib/client/public-events";
 import { useEffect, useId, useRef, useState } from "react";
 import { useUiLocale } from "../lib/client/ui-locale";
@@ -67,11 +68,13 @@ export function ClaimCard({ claim, nodes, title, dataset, referenceDataset = dat
   const positionText = organizationParticipationLabels(locale);
   const contribution = contributionOf(claim);
   const roleText = contributionLabels(locale);
+  const filmTrial = useFilmTrialClaim(claim.id);
   const term = contribution ? (contribution.roleId ? roleText.roles[contribution.roleId] : null)
     : claim.predicate === "AFFILIATED_WITH" ? (position ? positionText.positions[position.positionId] : null)
     : claim.predicate === "PARTICIPATED_IN" ? (eventParticipation ? eventText.roles[eventParticipation.roleId] : null) : null;
   return <article id={`${idPrefix}claim-${claim.id}`} tabIndex={-1} className={styles.claimCard} data-testid={`claim-card-${claim.id}`}>
     <header className={styles.recordHeader}><h4>{title}</h4><span className={claim.polarity === "denied" ? styles.recordDenied : styles.recordStatus}>{claim.polarity === "denied" ? text.recordDenied : text.recordAffirmed}</span></header>
+    {filmTrial && <p role="note" data-testid="film-trial-claim">{locale === "en" ? "Isolated beta trial claim. Not formally accepted or published to production." : "隔離betaの試験用Claimです。正式受入・本番公開は行っていません。"}</p>}
     {term && <p className={styles.recordTerm}>{term}</p>}
     {contribution?.scope && <p className={styles.recordScopeHint}>{text.verifiedPublication}：{contribution.scope.volumeLabel ?? roleText.volumeUnknown}{contribution.scope.editionLabel ? ` / ${contribution.scope.editionLabel}` : ""}</p>}
     {claim.withdrawal && <section role="note" className={styles.error}><strong>{dataReleaseLabels(locale).withdrawn}</strong><p>{dataReleaseLabels(locale).withdrawnHelp}</p><p>{claim.withdrawal.reason}</p>

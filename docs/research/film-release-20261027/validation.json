@@ -1,0 +1,31 @@
+{
+  "status": "verified-preparation-not-published",
+  "sourceBase": "d59c330193fca187f6677fa81372565293b64453",
+  "unit": {
+    "files": 75,
+    "tests": 871,
+    "passed": true
+  },
+  "typecheck": true,
+  "lint": true,
+  "build": "jCKofzeGk3iNCU32pxk0T",
+  "python": {
+    "publication": 153,
+    "publicationSkipped": 3,
+    "legacyAcceptance": 16,
+    "legacyWorkflow": 16,
+    "savedEvidence": 11,
+    "filmAdapter": 16,
+    "filmProduction": 2,
+    "backupExporter": 3
+  },
+  "previewBrowser": {
+    "origin": "http://127.0.0.1:3286",
+    "tests": 3,
+    "passed": true
+  },
+  "roleCatalogCount": 8,
+  "formalReceiptsAdded": 0,
+  "productionTouched": false,
+  "exporterSha256": "9b7c71793ce2698f9bd647013513d4972447a81208f6bdeece5b5f8db86b38e5"
+}

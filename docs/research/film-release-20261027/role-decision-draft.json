@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "status": "draft-not-approved",
+  "baseCatalogHash": "3df233d0c63c390c93ab98593591e16b81a0aead291a5730c3d4051ce6e8b6c9",
+  "baseReviewsHash": "e48c4269ed96d88ea1265a280320e8868d1aac67a9e57d74d5afa0ef2ac17974",
+  "pendingHash": "c04ec3b628cc3cb04d5315169881e3f6c77cf0530110da36fc0d3733b49ea7dc",
+  "reviewDraftsHash": "28fdabe94c844f5656cacb65dd0610059f0c30428707397f3cecd9dc3dbb5fb7",
+  "roles": [
+    {
+      "targetId": "DIRECTING",
+      "beforeHash": null,
+      "afterHash": "a4c6d3607165c97e6ecf252b6cd6b79dbb3f39abb17c12062300996be65aae73"
+    },
+    {
+      "targetId": "ACTING",
+      "beforeHash": null,
+      "afterHash": "78640b719b6a10db555abb33b3ac28ff2f297c5bc81ffd200cc9dc0b6b7e465e"
+    }
+  ],
+  "humanDecision": null
+}

@@ -6,6 +6,8 @@ test("existing manga, presets, Google/member boundaries and AI lab", async ({pag
  await page.getByRole("button",{name:"PLUTOから探索を開始",exact:true}).click();
  await expect(page.getByTestId("exploration-root")).toContainText("PLUTO");
  await expect(page.getByTestId("graph-counts")).toContainText("Entity");
+ await expect(page.getByTestId("film-trial-claim")).toHaveCount(0);
+ await expect(page.getByTestId("film-beta-notice")).toHaveCount(0);
  await expect.poll(()=>page.getByTestId("graph-canvas").evaluate(el=>{
   const cy=(el as unknown as {_cyreg:{cy:import("cytoscape").Core}})._cyreg.cy;
   return cy.nodes().length;
@@ -26,5 +28,6 @@ test("existing manga, presets, Google/member boundaries and AI lab", async ({pag
  await page.goto("/ai-lab");
  await expect(page.getByRole("heading",{name:/AI育成ラボ/})).toBeVisible();
  await page.goto("/en/");
- await expect(page.getByTestId("film-beta-notice")).toContainText("unaccepted");
+ await expect(page.getByTestId("film-beta-notice")).toHaveCount(0);
+ await expect(page.getByTestId("film-trial-claim")).toHaveCount(0);
 });

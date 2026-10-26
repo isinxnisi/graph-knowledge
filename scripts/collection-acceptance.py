@@ -22,7 +22,7 @@ def observe(args, w):
 
 def check_public(expected, observed, args, w):
     if getattr(args, 'production_backup', None):
-        w.require(getattr(args, 'command', None) == 'accept-evidence', 'Backup mode is restricted to saved-evidence acceptance')
+        w.require(getattr(args, 'command', None) in ['accept-evidence', 'accept-film'], 'Backup mode is restricted to saved-evidence/film acceptance')
         w.require(observed['observation'] == 'supplied-backup-not-a-live-check'
                   and observed.get('productionBackupSha256') == args.backup_sha
                   and observed.get('liveMetadata', {}).get('revision') == expected['revision'], 'Verified production backup and live revision required')
@@ -294,6 +294,8 @@ def accept(args, w):
     w.require(decision['referenceArtifacts'] == review_refs, 'Human-approved evidence inventory differs')
     selected = selection(decision['acceptedRecordIds'], records, w)
     if context.get('sourceKind') == 'film-discovery-v1':
+        w.require(getattr(args, 'command', None) == 'accept-film' and context.get('productionAcceptanceReady') is True,
+                  'Film acceptance requires guarded accept-film and a fresh production review')
         w.load('film_human_decision', w.CODE_ROOT / 'scripts/collection-film.py').validate_decision(decision, selected, w)
     w.require(decision['recordSha256'] == {f: {r['id']: w.digest(r) for r in selected[f]} for f in w.FIELDS}, 'Approved record body/hash differs')
     w.require(decision['scopeByClaim'] == scope_rows(selected, w), 'Approved Claim meaning/Role/scope differs')
@@ -321,11 +323,11 @@ def accept(args, w):
     public, observed = observe(args, w)
     expected = {'release': decision['baseRelease'], 'revision': decision['baseRevision']}
     check_public(expected, observed, args, w)
-    if context.get('sourceKind') == 'saved-evidence-v1':
+    if context.get('sourceKind') in ['saved-evidence-v1', 'film-discovery-v1'] and context.get('public', {}).get('productionBackupSha256'):
         w.require(context['public'] == observed, 'Saved-evidence production comparison changed')
     fixture, reused = merge(public, prior, selected, w)
     data = (evidence_module(w).release_data(fixture, w)
-            if context.get('sourceKind') == 'saved-evidence-v1' else w.dump(fixture))
+            if context.get('sourceKind') in ['saved-evidence-v1', 'film-discovery-v1'] else w.dump(fixture))
     base_path = w.ROOT / 'datasets/public-kg/releases' / observed['release']
     manifest = copy.deepcopy(w.read(base_path / 'manifest.json'))
     accepted_path = target / 'accepted-records.json'
@@ -341,7 +343,7 @@ def accept(args, w):
         'acceptedRecordIds': decision['acceptedRecordIds'], 'scopeByClaim': decision['scopeByClaim'],
         'counts': {f: len(selected[f]) for f in w.FIELDS}, 'baseRelease': observed['release'], 'baseRevision': observed['revision'],
         'combinedReleaseCandidate': release_id, 'sourceJobId': context.get('jobId'), 'applyAuthorized': NO_APPLY}
-    if context.get('sourceKind') == 'saved-evidence-v1':
+    if context.get('sourceKind') in ['saved-evidence-v1', 'film-discovery-v1'] and context.get('public', {}).get('productionBackupSha256'):
         receipt['sourceReviewKind'] = context['sourceKind']
         receipt['productionObservation'] = observed
         receipt['acceptanceProgramSha256'] = context['programSha256']

@@ -1,4 +1,5 @@
 import { z } from "zod";
+// Historical minimum: later adoptions are validated against the immutable catalog/reviews.
 export const ADOPTED_CONTRIBUTION_ROLE_IDS = ["SCRIPT_WRITING", "SUPERVISION", "PRODUCING", "STORY_CO_CREATION", "AUTHORSHIP", "CREATION", "DRAWING", "ORIGINAL_STORY"] as const;
 // Recognized for beta evaluation; registration is not semantic approval.
 export const PENDING_CONTRIBUTION_ROLE_IDS = ["DIRECTING", "ACTING"] as const;

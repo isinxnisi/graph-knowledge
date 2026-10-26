@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "authority": "technical-preflight-not-formal-acceptance",
+  "bindingSha256": "ee29c6602b782f6ef94dff86137526b3a90324521cc029ef5f87d8fd6535c740",
+  "minimumEvidenceReady": true,
+  "readyClaims": [
+    "34b41d23-f4e6-4fc6-aa6f-2905f3c2a890",
+    "4c88b8e8-154d-47ad-bf82-f19876ecaebd"
+  ],
+  "closedDependencies": true,
+  "duplicateComparison": "supplied-frozen-public-plus-receipt-covered-records",
+  "runtimeRoleValidation": "recognized-pending-role-schema; public-release-rejects-unapproved-film-roles",
+  "adoptionBlockers": [
+    "film-role-human-adoption",
+    "claim-human-acceptance",
+    "fresh-public-and-receipt-observation-before-real-acceptance",
+    "provisional-uuid-promotion-or-existing-identity-mapping"
+  ],
+  "formalAcceptance": false,
+  "publicApply": false
+}

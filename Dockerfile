@@ -9,6 +9,7 @@ COPY tsconfig.json next.config.ts proxy.ts ./
 COPY app ./app
 COPY components ./components
 COPY lib ./lib
+COPY vocabulary ./vocabulary
 COPY neo4j ./neo4j
 COPY datasets ./datasets
 COPY data/advertising ./data/advertising

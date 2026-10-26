@@ -11,3 +11,6 @@
 !scripts/public-kg.ts
 !scripts/publication-runtime.ts
 !scripts/publication-backup-plan.ts
+
+!vocabulary/
+!vocabulary/**

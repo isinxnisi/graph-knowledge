@@ -557,12 +557,12 @@ def execute(args):
     global ROOT
     if args.command == 'film-review':
         return load('film_workflow', CODE_ROOT / 'scripts/collection-film.py').review(args, SimpleNamespace(**globals()))
-    if args.command in ['evidence-review', 'accept-evidence']:
+    if args.command in ['evidence-review', 'accept-evidence', 'film-production-review', 'accept-film']:
         # Only data paths change. Never import or execute programs from the Worker data root.
         previous = ROOT
         try:
             ROOT = args.data_root.resolve()
-            evidence = load('collection_evidence', CODE_ROOT / 'scripts/collection-evidence.py')
+            evidence = load('collection_evidence', CODE_ROOT / ('scripts/collection-film.py' if args.command in ['film-production-review', 'accept-film'] else 'scripts/collection-evidence.py'))
             return evidence.execute(args, SimpleNamespace(**globals()))
         finally:
             ROOT = previous
@@ -630,6 +630,7 @@ def parser():
     acceptance = load('collection_acceptance_parser', ROOT / 'scripts/collection-acceptance.py')
     acceptance.add_parsers(sub, ROOT)
     load("film_parser", CODE_ROOT / "scripts/collection-film.py").add_parser(sub)
+    load("film_production_parser", CODE_ROOT / "scripts/collection-film.py").add_production_parsers(sub, ROOT)
     evidence = load('collection_evidence_parser', CODE_ROOT / 'scripts/collection-evidence.py')
     evidence.add_parsers(sub, ROOT)
     inventory = load('collection_inventory_parser', ROOT / 'scripts/collection-inventory.py')

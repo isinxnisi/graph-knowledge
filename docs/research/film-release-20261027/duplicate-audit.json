@@ -1,0 +1,35 @@
+{
+  "status": "not-formal-acceptance",
+  "observedAt": "2026-10-26T15:12:18.437096+00:00",
+  "productionRevision": "b74a4b00-9454-412f-af5d-1317713a543c",
+  "release": "manga-issue-34-obata-drawing-20261023",
+  "receiptCount": 10,
+  "comparison": "datasets/film-collection/release-20261027/comparison.json.gz",
+  "authority": "live-metadata-plus-delivered-artifact-and-formal-receipts; not-fresh-production-DB-backup",
+  "counts": {
+    "entities": 2175,
+    "claims": 1895,
+    "sources": 1795,
+    "citations": 1932
+  },
+  "readyClaims": [
+    "34b41d23-f4e6-4fc6-aa6f-2905f3c2a890",
+    "4c88b8e8-154d-47ad-bf82-f19876ecaebd"
+  ],
+  "duplicateCandidates": 0,
+  "newDependencies": {
+    "entities": 3,
+    "sources": 2,
+    "citations": 2
+  },
+  "scope": "null means unstructured, not all versions/territories",
+  "formalAcceptance": false,
+  "publicApply": false,
+  "blockedBy": [
+    "fresh-authoritative-production-backup",
+    "fixed-human-role-decision",
+    "fixed-human-claim-and-identity-decision",
+    "real-image-and-gate-update",
+    "individual-publication-request-signature"
+  ]
+}

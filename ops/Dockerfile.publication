@@ -8,6 +8,7 @@ WORKDIR /app
 COPY --from=dependencies /app/node_modules ./node_modules
 COPY package.json tsconfig.json ./
 COPY lib ./lib
+COPY vocabulary ./vocabulary
 COPY neo4j ./neo4j
 COPY scripts/public-kg.ts scripts/publication-runtime.ts scripts/publication-backup-plan.ts ./scripts/
 ENV NODE_ENV=production GRAPH_DATASET=public-kg GRAPH_DEPLOYMENT=production TSX_DISABLE_CACHE=1

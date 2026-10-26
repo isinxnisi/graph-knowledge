@@ -45,3 +45,8 @@ Node24で、映画レビューは次のコマンド。出力が既に存在す�
 #41のtrial・runtime overlay・検証画像は当時の凍結証跡。今の正式語彙状態を表す資料ではない。当時の完全再現には固定2f1f6d6を使い、上書きしない。現在の検証は#43のchecker／テストを使う。
 
 復旧はbeta Webだけを止め、private beta-film.jsonを保全して無効化し、保存した旧 .next-public と旧起動設定で3200を再起動する。元KG7694は今回書き換えないため再seed／restore不要。会員PGへのmigration／restoreも不要。試験DB・volumeは復旧後も証跡として保持し、他containerを停止しない。private backupの場所と実測は [検証記録](../verification/FILM_BETA_20261026.md)。
+
+
+## 2026-10-27：正式公開準備時の表示境界
+
+全画面共通の映画試験bannerは撤去する。隔離betaの対象2 Claimだけ、ClaimCard（探索の根拠・Graph詳細・単独詳細ページ）で正式受入前／本番未公開と明示する。Roleや作品分野だけで試験状態を推定せず、隔離環境とClaim IDの組合せで判定する。漫画・会員・コミュニティ等には注意書きを出さない。正式データへの切替は[正式公開手順](../runbooks/FILM_INITIAL_RELEASE.md)に従い、markerを消すだけで受入済みとはしない。

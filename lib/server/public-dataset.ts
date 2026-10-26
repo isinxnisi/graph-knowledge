@@ -1,4 +1,7 @@
-import { ADOPTED_CONTRIBUTION_ROLE_IDS } from "../domain/contribution";
+import roleCatalog from "../../vocabulary/contribution-roles/catalog.json";
+import roleBaseline from "../../vocabulary/contribution-roles/baseline-v1.json";
+import roleReviews from "../../vocabulary/contribution-roles/reviews.json";
+import { checkRoleVocabulary } from "../domain/role-vocabulary";
 import { readFile } from "node:fs/promises";
 import { createHash } from "node:crypto";
 import { fixtureV4Schema, fixtureCounts, type Fixture } from "../domain/fixture";
@@ -24,7 +27,9 @@ export type PublicRelease = { manifest: PublicManifest; fixture: Fixture };
 export function validatePublicRelease(input: PublicRelease): PublicRelease {
   const manifest = publicManifestSchema.parse(input.manifest);
   const fixture = fixtureV4Schema.parse(input.fixture);
-  if (fixture.claims.some(claim => claim.contribution?.roleId && !(ADOPTED_CONTRIBUTION_ROLE_IDS as readonly string[]).includes(claim.contribution.roleId))) throw new Error("Pending film Roles require human vocabulary adoption before public release");
+  const roleCheck = checkRoleVocabulary(roleCatalog, roleBaseline, roleReviews);
+  if (roleCheck.errors.length) throw new Error("Invalid adopted Role catalog: " + roleCheck.errors.join("; "));
+  if (fixture.claims.some(claim => claim.contribution?.roleId && !roleCatalog.entries.some(entry => entry.id === claim.contribution?.roleId))) throw new Error("Pending film Roles require human vocabulary adoption before public release");
   if (fixture.sources.some(source => source.isDemo)) throw new Error("Demo sources cannot enter public-kg");
   if (sha256(JSON.stringify(fixture, null, 2) + "\n") !== manifest.dataSha256) throw new Error("Public release data hash mismatch");
   if (manifest.claimOrigins.length !== fixture.claims.length || new Set(manifest.claimOrigins.map(row => row.claimId)).size !== fixture.claims.length || manifest.claimOrigins.some(row => !fixture.claims.some(claim => claim.id === row.claimId))) throw new Error("Every public claim needs exactly one recorded origin");

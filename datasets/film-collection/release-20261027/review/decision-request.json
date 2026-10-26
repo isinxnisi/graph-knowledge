@@ -1,0 +1,34 @@
+{
+  "status": "pending-human-decision",
+  "groups": {
+    "normal": {
+      "recordIds": {
+        "entities": [
+          "490ee589-76db-4a5e-8923-13d24b7cb3a2",
+          "604eb49e-df41-4157-8b49-bd92a0d93ad4",
+          "805b9630-cd9a-4931-8cde-0bcb92bf8a9f"
+        ],
+        "claims": [
+          "34b41d23-f4e6-4fc6-aa6f-2905f3c2a890",
+          "4c88b8e8-154d-47ad-bf82-f19876ecaebd"
+        ],
+        "sources": [
+          "54461ad1-e977-4b68-a2bf-7f972ff29002",
+          "c198ac9b-8baa-4ec2-a880-6ce9de171fcb"
+        ],
+        "citations": [
+          "8a6fe8f5-f3b3-4d08-8ad9-60eae3f8a583",
+          "dba11353-9e7f-47bc-86bb-9f2e5f8a6d6e"
+        ]
+      }
+    }
+  },
+  "heldClaimIds": [],
+  "heldEntityIds": [],
+  "adoptionBlockers": [
+    "fixed-role-human-review",
+    "fixed-record-human-acceptance",
+    "provisional-identity-decision",
+    "fresh-authoritative-public-backup-and-all-receipts-at-acceptance"
+  ]
+}

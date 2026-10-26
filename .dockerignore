@@ -58,3 +58,6 @@ db/*
 
 !scripts/community-safety.ts
 !scripts/community-recovery.ts
+
+!vocabulary/
+!vocabulary/**

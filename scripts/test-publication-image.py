@@ -18,7 +18,7 @@ def run(argv,check=True):
     return result
 
 
-def verify(image, public_fixture):
+def verify(image, public_fixture, film_fixture=None):
     info=json.loads(run(['docker','image','inspect',image]).stdout)[0]
     image=info['Id'];assert info['Os']=='linux' and info['Architecture']=='amd64'
     suffix=uuid.uuid4().hex[:12];network='plunode-publication-test-'+suffix;container=None
@@ -40,12 +40,24 @@ def verify(image, public_fixture):
             # Only two real, already public records are projected into this disposable test DB.
             data=json.loads(public_fixture.read_text())
             selected=[next(c for c in data['claims'] if (c.get('contribution') or {}).get('roleId')==role) for role in ['AUTHORSHIP','ORIGINAL_STORY']]
+            if film_fixture:
+                import copy
+                film = json.loads(film_fixture.read_text())["records"]
+                for field in ["entities","claims","sources","citations"]:
+                    rows = copy.deepcopy(film[field])
+                    if field == "claims":
+                        for row in rows: row["visibility"] = "published"
+                        selected += rows
+                    data[field] += rows
             def release(path,claims,ident,base):
                 path.mkdir();ids={c['id'] for c in claims};entities={c[k] for c in claims for k in ['subjectId','objectId']}
                 citations=[c for c in data['citations'] if c['claimId'] in ids];sources={c['sourceId'] for c in citations}
                 fixture={'schemaVersion':4,'entities':[e for e in data['entities'] if e['id'] in entities],'claims':claims,
                     'sources':[s for s in data['sources'] if s['id'] in sources],'citations':citations}
-                body=json.dumps(fixture,ensure_ascii=False,indent=2)+'\n';(path/'data.json').write_text(body)
+                normalized=subprocess.run(["node","--import","tsx","-e",
+                    "const fs=require('node:fs'),{fixtureV4Schema}=require('./lib/domain/fixture.ts');console.log(JSON.stringify(fixtureV4Schema.parse(JSON.parse(fs.readFileSync(0,'utf8'))),null,2));"],
+                    input=json.dumps(fixture,ensure_ascii=False),capture_output=True,text=True,cwd=ROOT,timeout=30,check=True)
+                body=normalized.stdout;(path/'data.json').write_text(body)
                 manifest={'dataset':'public-kg','release':ident,'baseRelease':base,'reason':'ISOLATED TEST ONLY',
                     'dataSha256':hashlib.sha256(body.encode()).hexdigest(),'inputs':[{'dataset':'isolated','file':'fixture','sha256':'a'*64}],
                     'claimOrigins':[{'claimId':c['id'],'dataset':'isolated','sourceClaimId':c['id']} for c in claims]}
@@ -64,7 +76,7 @@ def verify(image, public_fixture):
             ops(['scripts/public-kg.ts','apply','/incoming'],base)  # Bootstrap this disposable DB only.
             before=json.loads(ops(['scripts/publication-runtime.ts','observe']).stdout)['payload']
             plan=json.loads(ops(['scripts/public-kg.ts','plan','/incoming']).stdout)
-            assert not plan['updated'] and not plan['unchanged'] and sum(x.startswith('Claim:') for x in plan['added'])==1
+            assert not plan['updated'] and not plan['unchanged'] and sum(x.startswith('Claim:') for x in plan['added'])==len(selected)-1
             stale=ops(['scripts/publication-runtime.ts','apply','wrong-revision'],check=False);assert stale.returncode!=0
             assert json.loads(ops(['scripts/publication-runtime.ts','observe']).stdout)['payload']['revision']==before['revision']
             ops(['scripts/publication-runtime.ts','apply',before['revision']])
@@ -76,6 +88,7 @@ def verify(image, public_fixture):
             return {'imageId':image,'platform':'linux/amd64','capabilities':caps,'validate':True,'plan':plan,
                 'guardedIsolatedApply':True,'staleRevisionRejected':True,'repeatedApplyRejected':True,
                 'verifiedCounts':result['counts'],'receiptCount':len(after['receipts']),'compatibilityMountUsed':False,
+                'filmRolesVerified': sorted({c.get('contribution',{}).get('roleId') for c in selected}),
                 'productionTouched':False,'privateNetwork':True,'resourcesRemovedOnExit':True}
     finally:
         if container:run(['docker','rm','-f',container])
@@ -83,6 +96,7 @@ def verify(image, public_fixture):
 
 if __name__=='__main__':
     parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--image',required=True);parser.add_argument('--output',type=Path,required=True);parser.add_argument('--public-fixture',type=Path,required=True)
-    args=parser.parse_args();result=verify(args.image,args.public_fixture)
+    parser.add_argument('--film-fixture',type=Path)
+    args=parser.parse_args();result=verify(args.image,args.public_fixture,args.film_fixture)
     with args.output.open('x') as out:json.dump(result,out,ensure_ascii=False,indent=2)
     print(json.dumps(result))

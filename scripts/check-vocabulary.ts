@@ -64,5 +64,5 @@ if (printHashes) {
 }
 
 const pendingFilm = checkPendingFilmRoles(JSON.parse(await readFile("vocabulary/contribution-roles/film-pending.json", "utf8")));
-console.log("映画Role試験登録: 2 pending / 正式語彙承認なし");
+console.log("映画Role: " + pendingFilm.filter(role => !roleValues[0].entries.some((entry: {id: string}) => entry.id === role.targetId)).length + " pending / 承認済みcatalogを正本として判定");
 if (printHashes) for (const draft of pendingFilm) console.log(JSON.stringify({ kind: "role", ...draft }));

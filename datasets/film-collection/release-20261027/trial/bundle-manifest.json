@@ -1,0 +1,147 @@
+{
+  "schemaVersion": 1,
+  "authority": "immutable-isolated-film-review-not-acceptance",
+  "bindingSha256": "ee29c6602b782f6ef94dff86137526b3a90324521cc029ef5f87d8fd6535c740",
+  "inputs": [
+    {
+      "file": "datasets/film-collection/release-20261027/comparison.json.gz",
+      "sha256": "baf51444e3d2493e37035d1d05aad9c55c4b2e51e6187fe0be16aa9f3552cc2c"
+    },
+    {
+      "file": "datasets/film-collection/release-20261027/recipe.json",
+      "sha256": "a07f4e693ca939932e023df52f92f20af620a26acd3c6eb24c07179cecdd7d34"
+    },
+    {
+      "file": "datasets/film-collection/v1/evidence/million-dollar-baby-credit.txt",
+      "sha256": "0555d359bc926e05f549174adf3559c1203279bc7596c1fd83617760acdaa760"
+    },
+    {
+      "file": "datasets/film-collection/v1/evidence/supplements.json",
+      "sha256": "6ce8f2d48ee0d6d3cc90041bc94f41ae21cb146c1c8819387a2d408241fd0700"
+    },
+    {
+      "file": "datasets/film-collection/v1/evidence/unforgiven-credit.txt",
+      "sha256": "84328b5aa0ff0dfe807819ed62e315d20d00b4a17a25cc75bdaa3125547fdf9c"
+    },
+    {
+      "file": "docs/research/film-discovery-pilot-20261026/CANDIDATES.json",
+      "sha256": "06690102bb27b9ed9ab06d57f717ab4dce1e962bd1d409609b8c2e76dfccd470"
+    },
+    {
+      "file": "docs/research/film-discovery-pilot-20261026/source_reviews.json",
+      "sha256": "0564cc3416d947019341f580a6391532525b77125812a54c23cd7b39a577735c"
+    },
+    {
+      "file": "docs/research/film-step-roles-issue40/fixture.json",
+      "sha256": "362b1b0d316b8a47eee560d90068e88a25465d10a5d4e8c8e3e9a16bde8e906f"
+    },
+    {
+      "file": "docs/research/film-step-roles-issue40/role-proposals.json",
+      "sha256": "50400fef170aceed9ca598e9f53085db8a68c72cd9cf980d72164dedd170c4c8"
+    },
+    {
+      "file": "lib/domain/api.ts",
+      "sha256": "7dc1eb56a6c19597e3ea543efb9fe79f88181d72f2018e8126cdf1e36527ee1b"
+    },
+    {
+      "file": "lib/domain/contribution.ts",
+      "sha256": "b9b13f25e38bc26b1a3b01f1d357143be39fb8253863b52c4b9ea0a499054b37"
+    },
+    {
+      "file": "lib/domain/dates.ts",
+      "sha256": "b5cfe90d891a2b12b31f7558cec48764706d00068bdb39666429df9c63532375"
+    },
+    {
+      "file": "lib/domain/event-participation.ts",
+      "sha256": "c81e50763afd42aeaccb1877c5723a00e7dcfa93bd63fb5493a3f013d7a3673d"
+    },
+    {
+      "file": "lib/domain/evidence.ts",
+      "sha256": "f76cebc0ef7dd023faeb13a4ed532458f3f0fad9e4b4e0a05e5d149c01de39b2"
+    },
+    {
+      "file": "lib/domain/fixture.ts",
+      "sha256": "f278e09c84502f7d7832f9607567e08aa339bb66a3232df822fe4b00a4f73184"
+    },
+    {
+      "file": "lib/domain/organization-participation.ts",
+      "sha256": "a993c0ba959a040650540026c3ec2bb10f82417143887115bb43d503824060fc"
+    },
+    {
+      "file": "lib/domain/predicates.ts",
+      "sha256": "d1ec7bc98bc8d7bd688a36e4512517e8894462d1bc79d70868888ba6be5d15e0"
+    },
+    {
+      "file": "lib/domain/public-release.ts",
+      "sha256": "89581e93c6387751a4b8d6ccfb53773ed60b847af80747056b754f56e83b6750"
+    },
+    {
+      "file": "lib/domain/qualifications.ts",
+      "sha256": "938d72c454fd135ec2b62cae44c48d7783a00837fc3951a202d5751910b52ff7"
+    },
+    {
+      "file": "lib/domain/relation-conditions.ts",
+      "sha256": "56e016f8d7bf584016caa3432a2f1788f7370c314f2b37f4cd0899f2a8056afe"
+    },
+    {
+      "file": "lib/domain/relation-patterns.ts",
+      "sha256": "1d8b228a8cbf12a1f5f5e2c1b3ef7ddbfcfcdb228d44c7cd70cd06faa1b721da"
+    },
+    {
+      "file": "lib/server/mappers.ts",
+      "sha256": "378d13daa71318e19ec0d0a19cef90aade7e4e271f9af45dd74b5be7bc1e6163"
+    },
+    {
+      "file": "lib/server/public-dataset.ts",
+      "sha256": "6e60b9fdc9047f7498686a7c5014b6c6fca92ae9d0f4ab4f0649fe46cdbe4753"
+    },
+    {
+      "file": "lib/server/relation-pattern-execution.ts",
+      "sha256": "68ec37fb75efab606ab3c922a1759429d3d011983ebc93b688ba834496141afd"
+    },
+    {
+      "file": "package-lock.json",
+      "sha256": "2167a62bb95f9c5008bfaa6bb225cc0443922dc2bbacce2d7849cccf9ad105bd"
+    },
+    {
+      "file": "package.json",
+      "sha256": "e3c22a2a94c50f5a94099d43d827dfddacdfad62262e9ee168fbd31d4b44bf5f"
+    },
+    {
+      "file": "scripts/collect-film-v1.py",
+      "sha256": "9f248c2cdced752436a9ccac215f406127d5a8312a38d1cb44a9632efa6027c2"
+    },
+    {
+      "file": "scripts/film41-runtime.ts",
+      "sha256": "4223e406e3573d871414d0a6a7027c099178c6654be0069a493efbb1e63e062e"
+    },
+    {
+      "file": "scripts/freeze-film-comparison.py",
+      "sha256": "aa1f523f20737c9190d96409cf22c19606da973c6737c53d179b2fe5db06d437"
+    },
+    {
+      "file": "vocabulary/contribution-roles/baseline-v1.json",
+      "sha256": "3c64fb16a2c2eeac374767cccb4fa1b0702db5a97b8c67ea45d997d1aba139fb"
+    },
+    {
+      "file": "vocabulary/contribution-roles/catalog.json",
+      "sha256": "2d5370cab52998b822331eafa13292864ae5cc1af37b71c4d9d389b5ecf7f652"
+    },
+    {
+      "file": "vocabulary/contribution-roles/reviews.json",
+      "sha256": "ed6098bff4474c0cd1c8b8658540ecb5b88a6e04aae555f4da1c813842317e9c"
+    }
+  ],
+  "artifacts": {
+    "candidate/data.json": "fff6abddb7126ed085b1f30b38b51a394e4b0185eded13c5cb340cd240ecf767",
+    "candidate/manifest.json": "e2dd3338f81fd02f1ecc7fb6d5d7292dfb13ea8ab15445da60c5a69b6aee7d8c",
+    "ledger.json": "3a9fb5993eecdc2dfa01e24299f043bc30dcc4bee1ed51145cafcf7a55ce5283",
+    "held.json": "764e0c72814d911948b29ac186855e5ff616adf6a78f6dd71c121270acd62ad2",
+    "review/proposed-records.json": "65cad5b289ddeca56650743370ad35d7b549a755fe96974f12b4e3cb85b58c09",
+    "review/review.json": "063e7af499f27266cdee3b5f866a0976bdbef2ee02574a4d1e8d7537ee7733cb",
+    "review/decision-request.json": "15989cb8c2d265b1eca56ae0ee5135cdfd7ec48421d76fb3bd38bf7d6cfda9af",
+    "review/decision-draft.json": "0e4cb31c5c8395ce7edf45f9bdf03fd1c0dbba8d1ec11b48879f95929cd24e8e",
+    "preflight.json": "fad6a86be38feca0f4f86009f9edb3ab25cc9968bbe2b841e1b4008f17cec7a6",
+    "README.md": "bdb8a93b1b6ceb0b9aba54d27d34f0f36add4eaa7d1b2cf7f56f172702d04cef"
+  }
+}

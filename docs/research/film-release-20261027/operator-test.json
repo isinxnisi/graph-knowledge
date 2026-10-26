@@ -1,0 +1,89 @@
+{
+  "imageId": "sha256:230201a671a564ad592072570e3fc044bc11bb668d80562ae5a529b8ff02c633",
+  "platform": "linux/amd64",
+  "capabilities": {
+    "schemaVersion": 1,
+    "originalStory": true,
+    "guardedApply": true,
+    "manifestFileSha256": true
+  },
+  "validate": true,
+  "plan": {
+    "release": "isolated-publication-next",
+    "unchanged": false,
+    "added": [
+      "Citation:8a6fe8f5-f3b3-4d08-8ad9-60eae3f8a583",
+      "Citation:bb15e42b-438b-46f3-bfe2-2c0676424db4",
+      "Citation:dba11353-9e7f-47bc-86bb-9f2e5f8a6d6e",
+      "Claim:043e8592-5827-4167-9c93-f8201dd110bc",
+      "Claim:34b41d23-f4e6-4fc6-aa6f-2905f3c2a890",
+      "Claim:4c88b8e8-154d-47ad-bf82-f19876ecaebd",
+      "Entity:0e0ed535-f78e-4cb0-bd3d-7dffd6b7148e",
+      "Entity:490ee589-76db-4a5e-8923-13d24b7cb3a2",
+      "Entity:604eb49e-df41-4157-8b49-bd92a0d93ad4",
+      "Entity:805b9630-cd9a-4931-8cde-0bcb92bf8a9f",
+      "Entity:8b0d27c2-1116-4731-a00a-b90c869524a2",
+      "ExternalIdentifier:[\"wikidata\",\"Q104137\"]",
+      "ExternalIdentifier:[\"wikidata\",\"Q184255\"]",
+      "ExternalIdentifier:[\"wikidata\",\"Q2602357\"]",
+      "ExternalIdentifier:[\"wikidata\",\"Q43203\"]",
+      "ExternalIdentifier:[\"wikidata\",\"Q696941\"]",
+      "Source:2bdfa31d-ad7a-4705-8bdf-2be58ae606f6",
+      "Source:54461ad1-e977-4b68-a2bf-7f972ff29002",
+      "Source:c198ac9b-8baa-4ec2-a880-6ce9de171fcb"
+    ],
+    "updated": [],
+    "relationshipsAdded": 17,
+    "counts": {
+      "nodes": {
+        "Entity": 7,
+        "Claim": 4,
+        "Source": 4,
+        "Citation": 4,
+        "ExternalIdentifier": 7
+      },
+      "relationships": {
+        "SUBJECT": 4,
+        "OBJECT": 4,
+        "HAS_CITATION": 4,
+        "CITES": 4,
+        "HAS_EXTERNAL_ID": 7
+      }
+    }
+  },
+  "guardedIsolatedApply": true,
+  "staleRevisionRejected": true,
+  "repeatedApplyRejected": true,
+  "verifiedCounts": {
+    "nodes": {
+      "Entity": 7,
+      "Claim": 4,
+      "Source": 4,
+      "Citation": 4,
+      "ExternalIdentifier": 7
+    },
+    "relationships": {
+      "SUBJECT": 4,
+      "OBJECT": 4,
+      "HAS_CITATION": 4,
+      "CITES": 4,
+      "HAS_EXTERNAL_ID": 7
+    }
+  },
+  "receiptCount": 2,
+  "compatibilityMountUsed": false,
+  "filmRolesVerified": [
+    "ACTING",
+    "AUTHORSHIP",
+    "DIRECTING",
+    "ORIGINAL_STORY"
+  ],
+  "productionTouched": false,
+  "privateNetwork": true,
+  "resourcesRemovedOnExit": true,
+  "testOnly": true,
+  "productionInstallable": false,
+  "approval": "synthetic-temporary-fixture",
+  "imageTag": "graph-knowledge-publication:film-synthetic-test-f2fe28b9",
+  "imageRemoved": true
+}

@@ -1,0 +1,1218 @@
+{
+  "schemaVersion": 1,
+  "kind": "film-discovery-v1-isolated-review",
+  "authority": "pending-human-review-only",
+  "bindingSha256": "ee29c6602b782f6ef94dff86137526b3a90324521cc029ef5f87d8fd6535c740",
+  "counts": {
+    "candidates": 12,
+    "ready": 2,
+    "held": 10
+  },
+  "comparison": {
+    "schemaVersion": 1,
+    "authority": "frozen-offline-comparison-not-live-production",
+    "public": {
+      "release": "manga-issue-34-obata-drawing-20261023",
+      "revision": "b74a4b00-9454-412f-af5d-1317713a543c",
+      "savedAt": "2026-10-26T15:12:18.437096+00:00"
+    },
+    "receiptCount": 10,
+    "references": [
+      [
+        ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/comparisons/80f5cb52152905adbf07d60a814e43a39f9ea95e92b5ca71a8289c1ec273ffad/data.json",
+        "5803b8b9b1038b5735f698f057b2d73d0f0a52afd524061ca52ca9bfbc883d5e"
+      ],
+      [
+        ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/comparisons/80f5cb52152905adbf07d60a814e43a39f9ea95e92b5ca71a8289c1ec273ffad/manifest.json",
+        "6f1802d95c31f2c0c485dd8e463980859c68e6100e55e1435ea3f373d637623a"
+      ],
+      [
+        ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/comparisons/8dabd4404ff604a24e58643be0f7f2262b4e45f1d50c69c645d699f300d907f5/data.json",
+        "4ffb72c38fb9066ab365ceb35f52884149f4135ba1add5b898cd11045da347dd"
+      ],
+      [
+        ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/comparisons/8dabd4404ff604a24e58643be0f7f2262b4e45f1d50c69c645d699f300d907f5/manifest.json",
+        "3bea6db06a281094f859763ef2619a30b976841a241c754ffff23302ee67e687"
+      ],
+      [
+        ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/comparisons/bc22326e03e9b1eabed4e326186c86de53fd08fc419d6586de10d8db1d7cb1ee/data.json",
+        "ca9b299f8867abb1d75a07ee67861bceb8f7a16e9750c10ea783f9b8ee65d9d6"
+      ],
+      [
+        ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/comparisons/bc22326e03e9b1eabed4e326186c86de53fd08fc419d6586de10d8db1d7cb1ee/manifest.json",
+        "14dbe248500b7f3b7573c54cb4f33301bcf86cd17e15325aff058dcd26bd9163"
+      ],
+      [
+        ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/comparisons/cc623ededeffcd8f3f957d5743b6a3f3ba45e3ca8a513a3e5dfc009b07a88736/data.json",
+        "811e36bf7d91b160451afd9cd1d12ee0f40e90f96096479ae9bb6b44e36b9739"
+      ],
+      [
+        ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/comparisons/cc623ededeffcd8f3f957d5743b6a3f3ba45e3ca8a513a3e5dfc009b07a88736/manifest.json",
+        "5fdeebf0e40108ce3a5e8c00991edadd5eefb87e1e792ce433c491d6ad170163"
+      ],
+      [
+        ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/comparisons/f4d3926cb576b6c53594da70215f63711c9afe348abefc602f6a89e78eea2947/data.json",
+        "e6e0927f43249d1f8d5a3e223956d431dea91d762bd2f82fa0482042632c2521"
+      ],
+      [
+        ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/comparisons/f4d3926cb576b6c53594da70215f63711c9afe348abefc602f6a89e78eea2947/manifest.json",
+        "2fcfd75e78f444d10d6f634ed432e3f43164730df65e537068fde06667f19655"
+      ],
+      [
+        ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/decisions/issue-25-utc-recovery-03-normal.json",
+        "1226b6c2488d01ccaca02831b1ddb4ed5bba0e4e8999ae905722352a9c75cb72"
+      ],
+      [
+        ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/decisions/issue-25-utc-recovery-04-normal.json",
+        "5d933e22561e19f3248500b5f29b3aafa668e69735a66c2a4a96f9a1233c5cd4"
+      ],
+      [
+        ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/decisions/issue-25-utc-recovery-06-normal.json",
+        "b7dfa07c233b6eda6aab4bc5f3582038fd66de07cf6d43dd7b062a5c4d36cf2b"
+      ],
+      [
+        ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/decisions/issue-25-utc-recovery-07-normal.json",
+        "e181b3ae516b7b08d204871567f2312dc9ad8705e2ce24209946b0559eafaa0e"
+      ],
+      [
+        ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/decisions/issue-25-utc-recovery-08-normal.json",
+        "3075be3d7f612ff381f5b527d8a984010bcc172ff0de725f9f34612179543382"
+      ],
+      [
+        ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/proofs/issue-25-utc-recovery-03-normal-18ed8ea504ce672eec80.json",
+        "30b1a2d8680aa9091c422e7e6297c8eed078a3665d63357dfa5ad5217ceced8c"
+      ],
+      [
+        ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/proofs/issue-25-utc-recovery-04-normal-25e5997824ddd8657a9f.json",
+        "164de980dea70ffb8d51f9804de073223de36df8455e7afb1f7256a362c0c3e1"
+      ],
+      [
+        ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/proofs/issue-25-utc-recovery-06-normal-c7c5e01d33077285dfb2.json",
+        "ccc229a3019c595546bdc099c48111738017d744312864c37affa14038213c8a"
+      ],
+      [
+        ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/proofs/issue-25-utc-recovery-07-normal-7c4ffb5ab9449ea3db1c.json",
+        "90ac5e202fca8e7d68571c1d02c4171579e47999b14bfea0b5acd3db91646252"
+      ],
+      [
+        ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/proofs/issue-25-utc-recovery-08-normal-0b9fd42c36343904ce80.json",
+        "6629254deaba0a412199384645b1017e810961247e2d64132b18e83bfde0807d"
+      ],
+      [
+        ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/register-source.json",
+        "82b53f2bb1e0c1e5402af117a22de2a809ecf0588a56743e6aaef3258b42e8d6"
+      ],
+      [
+        ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0003-4e7b3edf51e9545b-review-c1ab7772b1b72fea/README.md",
+        "723b6041becbc7e0310f3506bc2c132408799b9f8b9a046768b97e9d0eb975ff"
+      ],
+      [
+        ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0003-4e7b3edf51e9545b-review-c1ab7772b1b72fea/context.json",
+        "0f485f7429b54f44ea96e8641e83991f9657863a687f8206221411972fa72b5f"
+      ],
+      [
+        ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0003-4e7b3edf51e9545b-review-c1ab7772b1b72fea/decision-request.json",
+        "a70e8c6b2232c6a51ec0a438939c0cdf25b0029328f9b32080b8d09abbfb07f7"
+      ],
+      [
+        ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0003-4e7b3edf51e9545b-review-c1ab7772b1b72fea/exploration-paths.json",
+        "0d20374cc148071e0757648ce676db82cd42ce54fb873340098dc3b9b18bce7f"
+      ],
+      [
+        ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0003-4e7b3edf51e9545b-review-c1ab7772b1b72fea/identity-only-records.json",
+        "1fc314e4a47717bce195b39fe7f1e66bd31f6af892fca4a9420a653eab927a37"
+      ],
+      [
+        ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0003-4e7b3edf51e9545b-review-c1ab7772b1b72fea/proposed-records.json",
+        "da8f0d581f1c86cd6a369e05723f391f96f0f7170bd83e40d99af87e80d58cf5"
+      ],
+      [
+        ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0003-4e7b3edf51e9545b-review-c1ab7772b1b72fea/review-manifest.json",
+        "6dd9f224ffa41a4875a971bd2ad39b709c8cbd093146a4d40c9715df5b9bec49"
+      ],
+      [
+        ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0003-4e7b3edf51e9545b-review-c1ab7772b1b72fea/review.json",
+        "ad9bdf1fd2112fdf7a1663195abc1e4ae418d2dd819cae2b35fbac41c121487d"
+      ],
+      [
+        ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0004-b96c712262173821-review-d9500d40636871b4/README.md",
+        "7e26b7dc06b2b63fddba9275c118d7cda20ed9a44e95b7b3d6c55527bf73af09"
+      ],
+      [
+        ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0004-b96c712262173821-review-d9500d40636871b4/context.json",
+        "552c404723dab2df7def87b79d4d8d8f9c365621977325328214417dfdc241c1"
+      ],
+      [
+        ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0004-b96c712262173821-review-d9500d40636871b4/decision-request.json",
+        "e26da787a024a59b6cc6bbde04b5a4134e87c49ecd8b14484e24720142ceee70"
+      ],
+      [
+        ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0004-b96c712262173821-review-d9500d40636871b4/exploration-paths.json",
+        "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+      ],
+      [
+        ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0004-b96c712262173821-review-d9500d40636871b4/identity-only-records.json",
+        "1fc314e4a47717bce195b39fe7f1e66bd31f6af892fca4a9420a653eab927a37"
+      ],
+      [
+        ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0004-b96c712262173821-review-d9500d40636871b4/proposed-records.json",
+        "780f04908867993e485244ad2e939fd11ff6fa408a35ff59bdd82b06e7f853bf"
+      ],
+      [
+        ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0004-b96c712262173821-review-d9500d40636871b4/review-manifest.json",
+        "1fd25da2ba0bb78036b790da539f72e510c0e860061ce26c62c08892be0e739f"
+      ],
+      [
+        ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0004-b96c712262173821-review-d9500d40636871b4/review.json",
+        "aa1d4d3087818559d5bd38ecf786e2b121621ce6a2f131665f73ef6736db65bd"
+      ],
+      [
+        ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0006-18bb8d898648582b-review-d38b26ea39279e93/README.md",
+        "401ee93d4f4665626b306ed6e24638aee64ef3dc383b0d3ab612de70b24e5b25"
+      ],
+      [
+        ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0006-18bb8d898648582b-review-d38b26ea39279e93/context.json",
+        "08b7e3816fd65b83a7746256dd4e78a9d79b04b55f98a36bd0dd69c2295cf8e7"
+      ],
+      [
+        ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0006-18bb8d898648582b-review-d38b26ea39279e93/decision-request.json",
+        "180efa7c7f5547e20904a2966e2559ce43f701ada05ff139d5ea98c2e828676d"
+      ],
+      [
+        ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0006-18bb8d898648582b-review-d38b26ea39279e93/exploration-paths.json",
+        "3f08afdda78f6ddf3bfeb1242a7a77a3c127d2e87c0ca52ecbd6825906b3981d"
+      ],
+      [
+        ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0006-18bb8d898648582b-review-d38b26ea39279e93/identity-only-records.json",
+        "1fc314e4a47717bce195b39fe7f1e66bd31f6af892fca4a9420a653eab927a37"
+      ],
+      [
+        ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0006-18bb8d898648582b-review-d38b26ea39279e93/proposed-records.json",
+        "58b7666ca44a79ab4c9b5081e0a70bc0b5b9934cabdc3c6c8ea0e62ece256b67"
+      ],
+      [
+        ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0006-18bb8d898648582b-review-d38b26ea39279e93/review-manifest.json",
+        "6517dbb8c279234aa7256ce1a3dfe70e63a38989ff4b0559e83390603389a7e8"
+      ],
+      [
+        ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0006-18bb8d898648582b-review-d38b26ea39279e93/review.json",
+        "584edf8d337a7c17d4d08aec16fdc807903bad688c2f81a77619431f31c8dee5"
+      ],
+      [
+        ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0007-0b3c13e86c5f069c-review-9cb3e5c8a5348de9/README.md",
+        "056800f017506ed213ed31c65b373c284b5f9a57d9b95e54980960d0b73a49f0"
+      ],
+      [
+        ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0007-0b3c13e86c5f069c-review-9cb3e5c8a5348de9/context.json",
+        "ab95c7cbf825ad89dc611ce24e0c10c93adab1022419f167c1846ba2861d3885"
+      ],
+      [
+        ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0007-0b3c13e86c5f069c-review-9cb3e5c8a5348de9/decision-request.json",
+        "af8f169986a61757c10d6ba567085e3e43c42e2b6506da4a0ef19061b29bbaf9"
+      ],
+      [
+        ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0007-0b3c13e86c5f069c-review-9cb3e5c8a5348de9/exploration-paths.json",
+        "14c62e53896f0776d658794aa9f5e8d20ef37c8f53645af1ea7e3db59f68e99f"
+      ],
+      [
+        ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0007-0b3c13e86c5f069c-review-9cb3e5c8a5348de9/identity-only-records.json",
+        "1fc314e4a47717bce195b39fe7f1e66bd31f6af892fca4a9420a653eab927a37"
+      ],
+      [
+        ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0007-0b3c13e86c5f069c-review-9cb3e5c8a5348de9/proposed-records.json",
+        "20e255e4b4755121dee032b8cf90f28cab043844f4a8367382188c9909d495db"
+      ],
+      [
+        ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0007-0b3c13e86c5f069c-review-9cb3e5c8a5348de9/review-manifest.json",
+        "965d902f925d6a1b038152e95e616096901481ac9fb4d689bff222b079331f76"
+      ],
+      [
+        ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0007-0b3c13e86c5f069c-review-9cb3e5c8a5348de9/review.json",
+        "267aae7ad44fee6bec2bcca0386d60ca42dca34f08bd1dd3a9970b56eac45fed"
+      ],
+      [
+        ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0008-9f792bd2246a1595-review-da16fa40ca3dcbf9/README.md",
+        "aae590ea54f45343ec442477858f96103fa3f0e22237a51a95f4ffa828af5ab9"
+      ],
+      [
+        ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0008-9f792bd2246a1595-review-da16fa40ca3dcbf9/context.json",
+        "0e3a7f69c9e20e097a31a9e0bf8ba57867a96e6f82f3eb983536f068e45e5855"
+      ],
+      [
+        ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0008-9f792bd2246a1595-review-da16fa40ca3dcbf9/decision-request.json",
+        "ff156c4cd58b6b9356d44161a97942f31d1de42bec6bb690cf4df298c42db33c"
+      ],
+      [
+        ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0008-9f792bd2246a1595-review-da16fa40ca3dcbf9/exploration-paths.json",
+        "d2aaf0388fff0e2100fbe1e0e0bbcf5d9a7b6ec0e4ab84dd439a9e123bfdde4b"
+      ],
+      [
+        ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0008-9f792bd2246a1595-review-da16fa40ca3dcbf9/identity-only-records.json",
+        "1fc314e4a47717bce195b39fe7f1e66bd31f6af892fca4a9420a653eab927a37"
+      ],
+      [
+        ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0008-9f792bd2246a1595-review-da16fa40ca3dcbf9/proposed-records.json",
+        "172ef5758067fbaabb6594fc02f900b21b8dfe276e4d7c86feebae2e364466c7"
+      ],
+      [
+        ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0008-9f792bd2246a1595-review-da16fa40ca3dcbf9/review-manifest.json",
+        "39cc046c6d0ec10cfec1c2c5468a2497cf5ec9645433418d74fe10bc94e50cc5"
+      ],
+      [
+        ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0008-9f792bd2246a1595-review-da16fa40ca3dcbf9/review.json",
+        "e377727d77498bbc03b86a86b9997ce3bab23d3cef0a9dbca02191549e0aa032"
+      ],
+      [
+        "datasets/connectivity/issue-34-obata-evidence/review.json",
+        "6c591904aeeb7fa5a26a085ea628450d05f24a8adbb6fcfac1f99b4f777c989c"
+      ],
+      [
+        "datasets/manga-collection/accepted-issue-25-utc-recovery-01-normal/acceptance.json",
+        "d271f32767dab030bd26ddcef669f48237cc303a8c605c58df047df8aea71fb6"
+      ],
+      [
+        "datasets/manga-collection/accepted-issue-25-utc-recovery-01-normal/accepted-records.json",
+        "2741fc2872c73b9c0f83a416097db1cfe0775f61c31ea668a2eb8bf790e74e88"
+      ],
+      [
+        "datasets/manga-collection/accepted-issue-25-utc-recovery-03-normal/acceptance.json",
+        "2cd8cb76b64be0d9d19fb3da8ceb4d3e185ca086bba0e90917a7b24a1da0bedf"
+      ],
+      [
+        "datasets/manga-collection/accepted-issue-25-utc-recovery-03-normal/accepted-records.json",
+        "620deab693c47e6aca568aae93c870cf347c5d7d192c5206b20dde9cb664bf84"
+      ],
+      [
+        "datasets/manga-collection/accepted-issue-25-utc-recovery-04-normal/acceptance.json",
+        "052a7d1ef334074ce2b94837a7d0dfc803bde9526abc9d8e8e7f058b36acdf62"
+      ],
+      [
+        "datasets/manga-collection/accepted-issue-25-utc-recovery-04-normal/accepted-records.json",
+        "789a055dfececcac1ef1f5bd156ce196a98b30eb477ed0d17a4ba92a42ea09ad"
+      ],
+      [
+        "datasets/manga-collection/accepted-issue-25-utc-recovery-06-normal/acceptance.json",
+        "4e94de08943725549f4e01be9e6b1b09f2f9d88c5ca2dfaa9aa5b7c2395930f4"
+      ],
+      [
+        "datasets/manga-collection/accepted-issue-25-utc-recovery-06-normal/accepted-records.json",
+        "81887ebdb7194fde96ffd0afdf560f3f536b3a0e419b68566d74e1baaa67caae"
+      ],
+      [
+        "datasets/manga-collection/accepted-issue-25-utc-recovery-07-normal/acceptance.json",
+        "b6a521d5fffdd6cafc3a3df9f8f963c571520812053aad4f259eea3e22ebee0b"
+      ],
+      [
+        "datasets/manga-collection/accepted-issue-25-utc-recovery-07-normal/accepted-records.json",
+        "513a03c10b3fcbcd1448cb9e7a649f01d7b5d72586ff56d785f40df105a25d3f"
+      ],
+      [
+        "datasets/manga-collection/accepted-issue-25-utc-recovery-08-normal/acceptance.json",
+        "5b3fdc3aa705c5e73f5ba11b40052be700d71069b0a25a12943cb189a2ee1109"
+      ],
+      [
+        "datasets/manga-collection/accepted-issue-25-utc-recovery-08-normal/accepted-records.json",
+        "0909499fdb3d2080a4ee123bbe4e49e52ecaff443509414df1e60a787910c7b5"
+      ],
+      [
+        "datasets/manga-collection/accepted-issue-34-obata-drawing-20261021/acceptance.json",
+        "7f62ec0f27d4fedfbb09066893d4ac94d88eaf016c2fff3959a001ea9f228efe"
+      ],
+      [
+        "datasets/manga-collection/accepted-issue-34-obata-drawing-20261021/accepted-records.json",
+        "15ec2b9d9013a7b5af64f0539b1fe2a07302c92d60abb7bb58daf7e9215140d6"
+      ],
+      [
+        "datasets/manga-collection/accepted-original-story-r0002-20261017/acceptance.json",
+        "9fdb9933c0d78795769bf27eebb7ecb4ec7cccc37f6ee6827e55dd119e727801"
+      ],
+      [
+        "datasets/manga-collection/accepted-r0002-20261017/acceptance.json",
+        "9b28562b9846970cd30b9261d4659d505e9df06e014d2809d6517aa39836f567"
+      ],
+      [
+        "datasets/manga-collection/accepted-r0003-20261017/acceptance.json",
+        "7d53abbd472fcbf0cba57fa5202d6fd4f8eb12c9ebda34bd1e7a8badca701831"
+      ],
+      [
+        "datasets/manga-collection/decisions/issue-25-utc-recovery-01-normal.json",
+        "5fd68796f374c8ffd38eff50da7c316617ff4fceec8ba16b64c6ddfa096b0217"
+      ],
+      [
+        "datasets/manga-collection/evidence-decisions/issue-34-obata-drawing-20261021-r2.json",
+        "72fd7dc968cdc2bd2f265382e270cb300f6188c51d180f5c6c3daaae5775b99d"
+      ],
+      [
+        "datasets/manga-collection/evidence-reviews/issue-34-obata-drawing-20261021-r2/context.json",
+        "3f10dae6a259169b6390885a67d99b806a675bfdd6a4ea9d3621bb1a5a259619"
+      ],
+      [
+        "datasets/manga-collection/evidence-reviews/issue-34-obata-drawing-20261021-r2/decision-request.json",
+        "2012c8f945c6f3f40a4d78f56baba858d04f7f8c3cdb2d55bdc4d800f2156fa4"
+      ],
+      [
+        "datasets/manga-collection/evidence-reviews/issue-34-obata-drawing-20261021-r2/proposed-records.json",
+        "15ec2b9d9013a7b5af64f0539b1fe2a07302c92d60abb7bb58daf7e9215140d6"
+      ],
+      [
+        "datasets/manga-collection/evidence-reviews/issue-34-obata-drawing-20261021-r2/review-manifest.json",
+        "1f8c0fa0c236cbc25d6a8e591252f535ce356882e8ce9cf8d6ce70a6078d0449"
+      ],
+      [
+        "datasets/manga-collection/evidence-reviews/issue-34-obata-drawing-20261021-r2/review.json",
+        "f1f6107ec4c172435b02c475b9c2c9a781b8e4656915f2c00b2b2bd326eeb3b6"
+      ],
+      [
+        "datasets/manga-collection/issue-34-obata-drawing-20261021/approval-record.json",
+        "e0bec27c3c1d2546aaa5dfccb02263af5e73ed96d01f70b8c2b48998ad1c55a6"
+      ],
+      [
+        "datasets/manga-collection/issue-34-obata-drawing-20261021/authorization-binding.json",
+        "9e4e9cd91059d81060e75658c33f576befe416ffdc8eca09839bc4c605c2159f"
+      ],
+      [
+        "datasets/manga-collection/issue-34-obata-drawing-20261021/proposed-records.json",
+        "79ba556db26f0c48ce79c3ed1dda2e65dae1d0b72fd560a2a861131a496b72c0"
+      ],
+      [
+        "datasets/manga-collection/original-story-r0002-20261017/candidates.json",
+        "d13136e8e383bce126e8521bfc1015529210f617da220ccd71a4ce1f9f409348"
+      ],
+      [
+        "datasets/manga-collection/original-story-r0002-20261017/ndl-9784088727172.json",
+        "9e302be016583de26a8907bef77390d34d1bc45db01a08f6e680076cbd5c975a"
+      ],
+      [
+        "datasets/manga-collection/original-story-r0002-20261017/ndl-9784088733708.json",
+        "035008f311bc5e2e4fdd56e6a216c20f93792583675a2fe5a036e9c99ce71319"
+      ],
+      [
+        "datasets/manga-collection/original-story-r0002-20261017/ndl-9784088736211.json",
+        "42957040ed44ffa3caa223d68d1cbd0ab733434c9c6af1cc3bdc03c59af9858d"
+      ],
+      [
+        "datasets/manga-collection/original-story-r0002-20261017/ndl-9784088811840.json",
+        "97ae7be91605bb1d81a54062716132bb0d727b845d811a5b232f487ae4501cb0"
+      ],
+      [
+        "datasets/manga-collection/original-story-r0002-20261017/ndl-9784098610105.json",
+        "a8992f7327ac45150fa7dba2e2ad1877ed7914c4642918442d2ce2c7e9fa2a4a"
+      ],
+      [
+        "datasets/manga-collection/review-r0002-20261017/proposed-records.json",
+        "8ef5b68ccda860c453078bef5a57615495320eb470e4230fe04ceda8f7262d81"
+      ],
+      [
+        "datasets/manga-collection/review-r0002-20261017/review.json",
+        "dec7cd6e012e82be409541418480e95565214c3457bb48ddbc4eca280c12ec76"
+      ],
+      [
+        "datasets/manga-collection/review-r0002-20261017/verification.json",
+        "2385eebc8bea8ba17b9ad05110785755102d6692c634ae94f0487827d97f6c09"
+      ],
+      [
+        "datasets/manga-collection/review-r0003-20261017/additional-evidence.json",
+        "1187f72352c46cd775df22b2de54f2bf52020860832fbfe676cf8c4255baf844"
+      ],
+      [
+        "datasets/manga-collection/review-r0003-20261017/decision-request.json",
+        "bf76be5ab0320e0844a0b3fc2f25fc1602a3922dd534c3fa9f7fb7b4706dd09e"
+      ],
+      [
+        "datasets/manga-collection/review-r0003-20261017/frozen-inputs.json",
+        "6d437879c330de1a1f885f8a8aace6058193e9e83b3f941d764592e6be0ad5ad"
+      ],
+      [
+        "datasets/manga-collection/review-r0003-20261017/identity-evidence.json",
+        "fb3ed6e7b9df51da5b1171afa8047b6ae520630df88e5945aeec9b8f98f85505"
+      ],
+      [
+        "datasets/manga-collection/review-r0003-20261017/proposed-records.json",
+        "b9db863d52318528237fb1f9aa06fb1bfef4bc4ce355dd47229d72e746cb3be4"
+      ],
+      [
+        "datasets/manga-collection/review-r0003-20261017/review.json",
+        "03f0c1ad829a31173d8bc78d4f6f32fcbcf3ca4a5a6a245f14352592cfa25f19"
+      ],
+      [
+        "datasets/manga-collection/review-r0003-20261017/technical-verification.json",
+        "09b3be4c48f93c1327f593e801d71061f847cd1a3a940253095cc6548ae289ac"
+      ],
+      [
+        "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0001-2aae694af25bda6e-review-7eb226d781eece54/README.md",
+        "fddf51670c1430d785106e61101f40708f0f0067cd55fd058f00e0d4b9365c8e"
+      ],
+      [
+        "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0001-2aae694af25bda6e-review-7eb226d781eece54/context.json",
+        "040db63cf5b715bf998ce38e7bc999dc4fe98e024f97db9cc93fe5944297c016"
+      ],
+      [
+        "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0001-2aae694af25bda6e-review-7eb226d781eece54/decision-request.json",
+        "301c332bafab3d0d7e25201bcca64179e283b2ca1a4345b89131895590a72bcd"
+      ],
+      [
+        "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0001-2aae694af25bda6e-review-7eb226d781eece54/exploration-paths.json",
+        "68213add9ed9ce5d89ccec4aeeb8d461911ce52271837a042ab3c14cc49795e8"
+      ],
+      [
+        "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0001-2aae694af25bda6e-review-7eb226d781eece54/identity-only-records.json",
+        "1fc314e4a47717bce195b39fe7f1e66bd31f6af892fca4a9420a653eab927a37"
+      ],
+      [
+        "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0001-2aae694af25bda6e-review-7eb226d781eece54/proposed-records.json",
+        "6251199c917f6e2e19debfc4fe2bf6df3b8de9e8fc74a0896782b7d470c7a3d6"
+      ],
+      [
+        "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0001-2aae694af25bda6e-review-7eb226d781eece54/review-manifest.json",
+        "71e08c7a3ef28a9ad30d39669e7784abc8eaa99dfff2f172bed042186d752895"
+      ],
+      [
+        "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0001-2aae694af25bda6e-review-7eb226d781eece54/review.json",
+        "eaea0b676aeb13cee448fff619716e7dcb5be9e5a2df28a65fdd9c14b3b2e936"
+      ],
+      [
+        "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0003-4e7b3edf51e9545b-review-7ac1287be3ae3491/README.md",
+        "723b6041becbc7e0310f3506bc2c132408799b9f8b9a046768b97e9d0eb975ff"
+      ],
+      [
+        "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0003-4e7b3edf51e9545b-review-7ac1287be3ae3491/context.json",
+        "8c7730681fc0f8afe769f87064f1a3fa3fed392c457eaa037b68563a17f15fa8"
+      ],
+      [
+        "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0003-4e7b3edf51e9545b-review-7ac1287be3ae3491/decision-request.json",
+        "14d517b49951376663c6e578228c582955f338bcc3812c3daa01932384f391f7"
+      ],
+      [
+        "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0003-4e7b3edf51e9545b-review-7ac1287be3ae3491/exploration-paths.json",
+        "0d20374cc148071e0757648ce676db82cd42ce54fb873340098dc3b9b18bce7f"
+      ],
+      [
+        "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0003-4e7b3edf51e9545b-review-7ac1287be3ae3491/identity-only-records.json",
+        "1fc314e4a47717bce195b39fe7f1e66bd31f6af892fca4a9420a653eab927a37"
+      ],
+      [
+        "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0003-4e7b3edf51e9545b-review-7ac1287be3ae3491/proposed-records.json",
+        "da8f0d581f1c86cd6a369e05723f391f96f0f7170bd83e40d99af87e80d58cf5"
+      ],
+      [
+        "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0003-4e7b3edf51e9545b-review-7ac1287be3ae3491/review-manifest.json",
+        "ccb73e2f413433913cd3338750b53428ed346165db8363a62dba44f004f0a9f0"
+      ],
+      [
+        "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0003-4e7b3edf51e9545b-review-7ac1287be3ae3491/review.json",
+        "ad9bdf1fd2112fdf7a1663195abc1e4ae418d2dd819cae2b35fbac41c121487d"
+      ],
+      [
+        "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0004-b96c712262173821-review-ed4c6573c40b9103/README.md",
+        "7e26b7dc06b2b63fddba9275c118d7cda20ed9a44e95b7b3d6c55527bf73af09"
+      ],
+      [
+        "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0004-b96c712262173821-review-ed4c6573c40b9103/context.json",
+        "7c86d336339442638f6bbb9d93c00f47a5fbec2d9f6fe19ea504924690dcefe7"
+      ],
+      [
+        "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0004-b96c712262173821-review-ed4c6573c40b9103/decision-request.json",
+        "858770b9cc718bde519d33617d06247f2865c2d5ca96341d0d49dd983a98d308"
+      ],
+      [
+        "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0004-b96c712262173821-review-ed4c6573c40b9103/exploration-paths.json",
+        "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+      ],
+      [
+        "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0004-b96c712262173821-review-ed4c6573c40b9103/identity-only-records.json",
+        "1fc314e4a47717bce195b39fe7f1e66bd31f6af892fca4a9420a653eab927a37"
+      ],
+      [
+        "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0004-b96c712262173821-review-ed4c6573c40b9103/proposed-records.json",
+        "780f04908867993e485244ad2e939fd11ff6fa408a35ff59bdd82b06e7f853bf"
+      ],
+      [
+        "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0004-b96c712262173821-review-ed4c6573c40b9103/review-manifest.json",
+        "dbe609a826e90940a08952c5f6a3c9a59dc1422c3f96f8beaaf4d385dbc5b80b"
+      ],
+      [
+        "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0004-b96c712262173821-review-ed4c6573c40b9103/review.json",
+        "aa1d4d3087818559d5bd38ecf786e2b121621ce6a2f131665f73ef6736db65bd"
+      ],
+      [
+        "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0006-18bb8d898648582b-review-d3f087b63d8ec60c/README.md",
+        "401ee93d4f4665626b306ed6e24638aee64ef3dc383b0d3ab612de70b24e5b25"
+      ],
+      [
+        "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0006-18bb8d898648582b-review-d3f087b63d8ec60c/context.json",
+        "1b88538e679f168c2ebe9f6e17ef83dc1b49d9eca169fa2b157619af15f2ffbd"
+      ],
+      [
+        "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0006-18bb8d898648582b-review-d3f087b63d8ec60c/decision-request.json",
+        "447790da947f795377d084cfdc225827c4c7862844ba4ab9caae70747c8969fe"
+      ],
+      [
+        "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0006-18bb8d898648582b-review-d3f087b63d8ec60c/exploration-paths.json",
+        "3f08afdda78f6ddf3bfeb1242a7a77a3c127d2e87c0ca52ecbd6825906b3981d"
+      ],
+      [
+        "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0006-18bb8d898648582b-review-d3f087b63d8ec60c/identity-only-records.json",
+        "1fc314e4a47717bce195b39fe7f1e66bd31f6af892fca4a9420a653eab927a37"
+      ],
+      [
+        "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0006-18bb8d898648582b-review-d3f087b63d8ec60c/proposed-records.json",
+        "58b7666ca44a79ab4c9b5081e0a70bc0b5b9934cabdc3c6c8ea0e62ece256b67"
+      ],
+      [
+        "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0006-18bb8d898648582b-review-d3f087b63d8ec60c/review-manifest.json",
+        "77a7af521ada5498b3ea46e7c93ef1c9bc33fbc5ceba706a3aa781e03387a959"
+      ],
+      [
+        "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0006-18bb8d898648582b-review-d3f087b63d8ec60c/review.json",
+        "584edf8d337a7c17d4d08aec16fdc807903bad688c2f81a77619431f31c8dee5"
+      ],
+      [
+        "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0007-0b3c13e86c5f069c-review-434525971928f744/README.md",
+        "056800f017506ed213ed31c65b373c284b5f9a57d9b95e54980960d0b73a49f0"
+      ],
+      [
+        "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0007-0b3c13e86c5f069c-review-434525971928f744/context.json",
+        "3ce40b7b373df3d7835b0a97f9ce2ebdff4605c5ef6252bce4c3e7e558236905"
+      ],
+      [
+        "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0007-0b3c13e86c5f069c-review-434525971928f744/decision-request.json",
+        "0a36bbd0201f392830bc0539cf7ba89a5c452297ba6be0030734ce09986263c0"
+      ],
+      [
+        "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0007-0b3c13e86c5f069c-review-434525971928f744/exploration-paths.json",
+        "14c62e53896f0776d658794aa9f5e8d20ef37c8f53645af1ea7e3db59f68e99f"
+      ],
+      [
+        "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0007-0b3c13e86c5f069c-review-434525971928f744/identity-only-records.json",
+        "1fc314e4a47717bce195b39fe7f1e66bd31f6af892fca4a9420a653eab927a37"
+      ],
+      [
+        "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0007-0b3c13e86c5f069c-review-434525971928f744/proposed-records.json",
+        "20e255e4b4755121dee032b8cf90f28cab043844f4a8367382188c9909d495db"
+      ],
+      [
+        "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0007-0b3c13e86c5f069c-review-434525971928f744/review-manifest.json",
+        "6899290eb5daf4af86ba6b899dfdf8a24f1daf4cbc3b3d93f2f37e9bbcbc456d"
+      ],
+      [
+        "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0007-0b3c13e86c5f069c-review-434525971928f744/review.json",
+        "267aae7ad44fee6bec2bcca0386d60ca42dca34f08bd1dd3a9970b56eac45fed"
+      ],
+      [
+        "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0008-9f792bd2246a1595-review-7b6502faf255147c/README.md",
+        "aae590ea54f45343ec442477858f96103fa3f0e22237a51a95f4ffa828af5ab9"
+      ],
+      [
+        "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0008-9f792bd2246a1595-review-7b6502faf255147c/context.json",
+        "a1544db5e8e0c65d065d56e4c7447332fafdb35d5c2fe2f3723cda4e26e94b4a"
+      ],
+      [
+        "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0008-9f792bd2246a1595-review-7b6502faf255147c/decision-request.json",
+        "6aad3613743de6564ab999a966bb4d67c8e00d5afeb98c24256145fed8e62f34"
+      ],
+      [
+        "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0008-9f792bd2246a1595-review-7b6502faf255147c/exploration-paths.json",
+        "d2aaf0388fff0e2100fbe1e0e0bbcf5d9a7b6ec0e4ab84dd439a9e123bfdde4b"
+      ],
+      [
+        "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0008-9f792bd2246a1595-review-7b6502faf255147c/identity-only-records.json",
+        "1fc314e4a47717bce195b39fe7f1e66bd31f6af892fca4a9420a653eab927a37"
+      ],
+      [
+        "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0008-9f792bd2246a1595-review-7b6502faf255147c/proposed-records.json",
+        "172ef5758067fbaabb6594fc02f900b21b8dfe276e4d7c86feebae2e364466c7"
+      ],
+      [
+        "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0008-9f792bd2246a1595-review-7b6502faf255147c/review-manifest.json",
+        "97ae2100ec16c5c871f7445d1426e6d7a22da6cb9b98dff9c7f90739bff8d2bc"
+      ],
+      [
+        "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0008-9f792bd2246a1595-review-7b6502faf255147c/review.json",
+        "e377727d77498bbc03b86a86b9997ce3bab23d3cef0a9dbca02191549e0aa032"
+      ],
+      [
+        "datasets/public-kg/releases/20261014-credits-001/data.json",
+        "ea91b16f52a211b5a8464382ad498b7b2bb2be69a6f33fe125a73a3c7b9da2b5"
+      ],
+      [
+        "datasets/public-kg/releases/20261014-credits-001/manifest.json",
+        "e4aa3b58ed884f7d1f8fffee43b260261cc2b4d3a867fda942919f439d2bce17"
+      ],
+      [
+        "datasets/public-kg/releases/20261017-manga-r0002-001/data.json",
+        "a52c93f78cbc6a7440dee640d1161d040d88effee494d02045c49637801975db"
+      ],
+      [
+        "datasets/public-kg/releases/20261017-manga-r0002-001/manifest.json",
+        "5714648b348fff62605f99f3b25c25bc1f22a22e2e4acdaefae7196ddb5712a8"
+      ],
+      [
+        "datasets/public-kg/releases/20261017-manga-r0002-002/data.json",
+        "6180481328c77abb40d16579d1f0cee34cbda6d8438769a95a23df71536f90aa"
+      ],
+      [
+        "datasets/public-kg/releases/20261017-manga-r0002-002/manifest.json",
+        "5ae3f008be8c05f29cafa620a5cb0926792bc2984b0e0694a4bf1986032bd87c"
+      ],
+      [
+        "datasets/public-kg/releases/20261017-manga-r0003-001/data.json",
+        "3bae93608cefa4ccf9ef8b026819575ff738c0133664e1473dca52d15dc60be1"
+      ],
+      [
+        "datasets/public-kg/releases/20261017-manga-r0003-001/manifest.json",
+        "c5e8230be9bd0acb43041fd04d0a6b769c03c99dac9e38a051bca8a768e2e24d"
+      ],
+      [
+        "datasets/public-kg/releases/manga-issue-25-utc-recovery-08-normal/data.json",
+        "44cb7d65c4ece8ac04ffcca988c0b37f35a5bf61cc934ef482cbefda39ec09e7"
+      ],
+      [
+        "datasets/public-kg/releases/manga-issue-25-utc-recovery-08-normal/manifest.json",
+        "325522f3efa7ddc0ff67f278456fc81956420ab0d00999d5823988dfc33cd9a3"
+      ],
+      [
+        "docs/design/MANGA_R0002_ACCEPTANCE_REVIEW.md",
+        "7cdf6a84158f655465a26d7755f528668c23309a5f79ed8cd2d5e01905e00265"
+      ],
+      [
+        "docs/design/MANGA_R0002_ACCEPTED_RELEASE.md",
+        "4f29556605f1b10241e9275b546db5b43495230e60233eade630df59fcb48113"
+      ],
+      [
+        "docs/design/MANGA_R0003_ACCEPTANCE_REVIEW.md",
+        "af2114355cf8b2a6c6813a1fde71a3683daccb80fbcdabe6a14442342a21cb3f"
+      ],
+      [
+        "docs/design/ORIGINAL_STORY.md",
+        "26cde0cff0d4d3128f6a3b52201f8649cd3f414294f3a81fcddea9f8d54c5a27"
+      ],
+      [
+        "supplied-public-backup",
+        "750850776e2824b7e1eb20a3fc73db56e41dc188f71cfba214290741dd7071ab"
+      ],
+      [
+        "/home/isinxnisi/.local/share/plunode-publication/deliveries/b36af1ba-d283-412e-aa29-465d360928b7/job.json",
+        "edd0a83119516093a3683b7bc9e30f32780b568b8f519eea733e392faeb2789c"
+      ],
+      [
+        "/home/isinxnisi/.local/share/plunode-collection-worker-phase-b-20261020/runtime/datasets/public-kg/releases/manga-issue-34-obata-drawing-20261023/manifest.json",
+        "7aab70b429c8a825e4a7e59b00a389055beb2a812117cac0c4ce686ef24e2a50"
+      ],
+      [
+        "/home/isinxnisi/.local/share/plunode-collection-worker-phase-b-20261020/runtime/datasets/public-kg/releases/manga-issue-34-obata-drawing-20261023/data.json",
+        "bab5fd783adf0cdb622cc6c11441bce35bb7213074d489bc7f3e2989a5ca435b"
+      ]
+    ],
+    "receiptDataRoot": "/home/isinxnisi/.local/share/plunode-collection-worker-phase-b-20261020/runtime",
+    "observation": "live-revision-plus-verified-delivered-fixture-and-formal-receipts-not-live-db-backup",
+    "liveMetadata": {
+      "dataset": "public-kg",
+      "revision": "b74a4b00-9454-412f-af5d-1317713a543c"
+    }
+  },
+  "identities": [
+    {
+      "qid": "Q104137",
+      "id": "604eb49e-df41-4157-8b49-bd92a0d93ad4",
+      "state": "provisional-candidate",
+      "action": "new-draft-uuid-requires-final-identity-check"
+    },
+    {
+      "qid": "Q150943",
+      "id": "40a8fa53-04fe-43ed-bfc2-c9df879655f5",
+      "state": "provisional-candidate",
+      "action": "new-draft-uuid-requires-final-identity-check"
+    },
+    {
+      "qid": "Q164562",
+      "id": "b1b51481-6c75-4939-ab6c-d88a062fe28c",
+      "state": "provisional-candidate",
+      "action": "new-draft-uuid-requires-final-identity-check"
+    },
+    {
+      "qid": "Q184255",
+      "id": "805b9630-cd9a-4931-8cde-0bcb92bf8a9f",
+      "state": "provisional-candidate",
+      "action": "new-draft-uuid-requires-final-identity-check"
+    },
+    {
+      "qid": "Q317110",
+      "id": "c2d7dfd6-ad6e-430c-a2b2-3e5cb1a53db9",
+      "state": "provisional-candidate",
+      "action": "new-draft-uuid-requires-final-identity-check"
+    },
+    {
+      "qid": "Q43203",
+      "id": "490ee589-76db-4a5e-8923-13d24b7cb3a2",
+      "state": "provisional-candidate",
+      "action": "new-draft-uuid-requires-final-identity-check"
+    },
+    {
+      "qid": "Q48337",
+      "id": "3db5a731-1dca-4ee0-8023-56e42fc38f30",
+      "state": "provisional-candidate",
+      "action": "new-draft-uuid-requires-final-identity-check"
+    },
+    {
+      "qid": "Q76479",
+      "id": "3f3dc102-e794-4fd4-a04d-e09e3db7aab9",
+      "state": "provisional-candidate",
+      "action": "new-draft-uuid-requires-final-identity-check"
+    },
+    {
+      "qid": "Q77405",
+      "id": "1631c0f2-dc02-4794-838d-942f1a156af9",
+      "state": "provisional-candidate",
+      "action": "new-draft-uuid-requires-final-identity-check"
+    },
+    {
+      "qid": "Q93187",
+      "id": "52ca321b-9da2-4da2-bffc-63a6c83c070f",
+      "state": "provisional-candidate",
+      "action": "new-draft-uuid-requires-final-identity-check"
+    }
+  ],
+  "claims": [
+    {
+      "candidateId": "candidate:Q104137$3D0CF582-4DF0-445D-9EB3-221A8DC7E84F",
+      "claimId": "4c88b8e8-154d-47ad-bf82-f19876ecaebd",
+      "subjectQid": "Q43203",
+      "workQid": "Q104137",
+      "proposedRole": "ACTING",
+      "status": "ready-for-human-review",
+      "reasons": [],
+      "scope": {
+        "level": "film-work-record",
+        "cut": null,
+        "territory": null,
+        "language": null,
+        "interpretation": "credit scope unresolved across versions; null is not all cuts"
+      },
+      "scopeInterpretation": "null is unstructured, not all cuts/territories/languages",
+      "citationIds": [
+        "dba11353-9e7f-47bc-86bb-9f2e5f8a6d6e"
+      ],
+      "potentialExisting": []
+    },
+    {
+      "candidateId": "candidate:Q76479$31CFF1E6-A537-40F3-90DD-99C6FECC98C1",
+      "claimId": "a310275e-1c3b-4323-989d-5ad5ab6495cd",
+      "subjectQid": "Q164562",
+      "workQid": "Q76479",
+      "proposedRole": "DIRECTING",
+      "status": "held",
+      "reasons": [
+        "person-credit-excerpt-not-supplemented-in-this-minimum"
+      ],
+      "scope": {
+        "level": "film-work-record",
+        "cut": null,
+        "territory": null,
+        "language": null,
+        "interpretation": "credit scope unresolved across versions; null is not all cuts"
+      },
+      "scopeInterpretation": "null is unstructured, not all cuts/territories/languages",
+      "citationIds": [
+        "184a6004-4327-4628-8740-739a837d08fb"
+      ],
+      "potentialExisting": []
+    },
+    {
+      "candidateId": "candidate:q104137$1B0E36E9-AA57-43D1-81FA-2CC6987D5367",
+      "claimId": "ec446d93-3ef9-4bad-9639-c7478f9fb5f1",
+      "subjectQid": "Q150943",
+      "workQid": "Q104137",
+      "proposedRole": "ACTING",
+      "status": "held",
+      "reasons": [
+        "person-credit-excerpt-not-supplemented-in-this-minimum"
+      ],
+      "scope": {
+        "level": "film-work-record",
+        "cut": null,
+        "territory": null,
+        "language": null,
+        "interpretation": "credit scope unresolved across versions; null is not all cuts"
+      },
+      "scopeInterpretation": "null is unstructured, not all cuts/territories/languages",
+      "citationIds": [
+        "f7a88f51-18d8-4856-b492-1e2695f06a7e"
+      ],
+      "potentialExisting": []
+    },
+    {
+      "candidateId": "candidate:q104137$3B57142F-2116-4265-901D-3F772622D3C1",
+      "claimId": "46ec4090-1029-4edf-9cf8-bc41011efcc6",
+      "subjectQid": "Q48337",
+      "workQid": "Q104137",
+      "proposedRole": "ACTING",
+      "status": "held",
+      "reasons": [
+        "person-credit-excerpt-not-supplemented-in-this-minimum"
+      ],
+      "scope": {
+        "level": "film-work-record",
+        "cut": null,
+        "territory": null,
+        "language": null,
+        "interpretation": "credit scope unresolved across versions; null is not all cuts"
+      },
+      "scopeInterpretation": "null is unstructured, not all cuts/territories/languages",
+      "citationIds": [
+        "3c788c63-994b-4de7-b504-8c07b3a5e635"
+      ],
+      "potentialExisting": []
+    },
+    {
+      "candidateId": "candidate:q104137$B226BBA0-92F8-4A47-8EC8-21697BAFADBA",
+      "claimId": "700cd727-a4b3-4cd6-b07f-01facb29d937",
+      "subjectQid": "Q43203",
+      "workQid": "Q104137",
+      "proposedRole": "DIRECTING",
+      "status": "held",
+      "reasons": [
+        "person-credit-excerpt-not-supplemented-in-this-minimum"
+      ],
+      "scope": {
+        "level": "film-work-record",
+        "cut": null,
+        "territory": null,
+        "language": null,
+        "interpretation": "credit scope unresolved across versions; null is not all cuts"
+      },
+      "scopeInterpretation": "null is unstructured, not all cuts/territories/languages",
+      "citationIds": [
+        "9b2d7e44-5a00-4b58-8c24-05e6e1534e19"
+      ],
+      "potentialExisting": []
+    },
+    {
+      "candidateId": "candidate:q184255$301FF7F2-A06A-488D-9D09-33EE54CA49DE",
+      "claimId": "66cd4918-4e6d-4d18-b429-fa4e59fcf3c5",
+      "subjectQid": "Q43203",
+      "workQid": "Q184255",
+      "proposedRole": "ACTING",
+      "status": "held",
+      "reasons": [
+        "person-credit-excerpt-not-supplemented-in-this-minimum"
+      ],
+      "scope": {
+        "level": "film-work-record",
+        "cut": null,
+        "territory": null,
+        "language": null,
+        "interpretation": "credit scope unresolved across versions; null is not all cuts"
+      },
+      "scopeInterpretation": "null is unstructured, not all cuts/territories/languages",
+      "citationIds": [
+        "85ef0743-6916-4f3a-b341-202d9980e540"
+      ],
+      "potentialExisting": []
+    },
+    {
+      "candidateId": "candidate:q184255$442501B0-0AC6-4E42-B522-9B71D64E7DFD",
+      "claimId": "be664da8-8ca7-495c-b654-50257cf3bb5f",
+      "subjectQid": "Q48337",
+      "workQid": "Q184255",
+      "proposedRole": "ACTING",
+      "status": "held",
+      "reasons": [
+        "person-credit-excerpt-not-supplemented-in-this-minimum"
+      ],
+      "scope": {
+        "level": "film-work-record",
+        "cut": null,
+        "territory": null,
+        "language": null,
+        "interpretation": "credit scope unresolved across versions; null is not all cuts"
+      },
+      "scopeInterpretation": "null is unstructured, not all cuts/territories/languages",
+      "citationIds": [
+        "d1bfb088-ec8f-491f-a783-e7e1a91bd74e"
+      ],
+      "potentialExisting": []
+    },
+    {
+      "candidateId": "candidate:q184255$6E39F62D-CB25-409E-8DF0-C9D4DC7A7D8B",
+      "claimId": "ed8d6cc2-016e-420b-8975-b8baa9ca6fba",
+      "subjectQid": "Q93187",
+      "workQid": "Q184255",
+      "proposedRole": "ACTING",
+      "status": "held",
+      "reasons": [
+        "person-credit-excerpt-not-supplemented-in-this-minimum"
+      ],
+      "scope": {
+        "level": "film-work-record",
+        "cut": null,
+        "territory": null,
+        "language": null,
+        "interpretation": "credit scope unresolved across versions; null is not all cuts"
+      },
+      "scopeInterpretation": "null is unstructured, not all cuts/territories/languages",
+      "citationIds": [
+        "e97e62f2-f655-4296-a296-55b47c28ac86"
+      ],
+      "potentialExisting": []
+    },
+    {
+      "candidateId": "candidate:q184255$E97BDEC1-96DE-489D-B0D0-2BE2CC42818F",
+      "claimId": "34b41d23-f4e6-4fc6-aa6f-2905f3c2a890",
+      "subjectQid": "Q43203",
+      "workQid": "Q184255",
+      "proposedRole": "DIRECTING",
+      "status": "ready-for-human-review",
+      "reasons": [],
+      "scope": {
+        "level": "film-work-record",
+        "cut": null,
+        "territory": null,
+        "language": null,
+        "interpretation": "credit scope unresolved across versions; null is not all cuts"
+      },
+      "scopeInterpretation": "null is unstructured, not all cuts/territories/languages",
+      "citationIds": [
+        "8a6fe8f5-f3b3-4d08-8ad9-60eae3f8a583"
+      ],
+      "potentialExisting": []
+    },
+    {
+      "candidateId": "candidate:q76479$A7047A0A-A345-4BB2-AD7B-AE8A33436BE8",
+      "claimId": "872707ca-2bbc-4070-a5f0-8701fbc4558a",
+      "subjectQid": "Q317110",
+      "workQid": "Q76479",
+      "proposedRole": "ACTING",
+      "status": "held",
+      "reasons": [
+        "person-credit-excerpt-not-supplemented-in-this-minimum"
+      ],
+      "scope": {
+        "level": "film-work-record",
+        "cut": null,
+        "territory": null,
+        "language": null,
+        "interpretation": "credit scope unresolved across versions; null is not all cuts"
+      },
+      "scopeInterpretation": "null is unstructured, not all cuts/territories/languages",
+      "citationIds": [
+        "aef7b099-3df5-447a-a5a1-d7b56e88ba4d"
+      ],
+      "potentialExisting": []
+    },
+    {
+      "candidateId": "candidate:q76479$DCB1920A-56D0-41ED-B4BB-735AF1ECDC3F",
+      "claimId": "85967b27-ffb9-461d-b218-6c97ec3f9de1",
+      "subjectQid": "Q77405",
+      "workQid": "Q76479",
+      "proposedRole": "ACTING",
+      "status": "held",
+      "reasons": [
+        "person-credit-excerpt-not-supplemented-in-this-minimum"
+      ],
+      "scope": {
+        "level": "film-work-record",
+        "cut": null,
+        "territory": null,
+        "language": null,
+        "interpretation": "credit scope unresolved across versions; null is not all cuts"
+      },
+      "scopeInterpretation": "null is unstructured, not all cuts/territories/languages",
+      "citationIds": [
+        "8283ba0d-594d-4347-ad7a-f101d196c81d"
+      ],
+      "potentialExisting": []
+    },
+    {
+      "candidateId": "candidate:q76479$EF2A64B1-B6BC-4535-848B-D53BA099DB4C",
+      "claimId": "362edaa7-42ca-41ec-8cee-9ae1117cb688",
+      "subjectQid": "Q43203",
+      "workQid": "Q76479",
+      "proposedRole": "ACTING",
+      "status": "held",
+      "reasons": [
+        "person-credit-excerpt-not-supplemented-in-this-minimum"
+      ],
+      "scope": {
+        "level": "film-work-record",
+        "cut": null,
+        "territory": null,
+        "language": null,
+        "interpretation": "credit scope unresolved across versions; null is not all cuts"
+      },
+      "scopeInterpretation": "null is unstructured, not all cuts/territories/languages",
+      "citationIds": [
+        "64daeb86-133f-43a8-8e83-bb374cbeae32"
+      ],
+      "potentialExisting": []
+    }
+  ],
+  "evidenceByClaim": {
+    "4c88b8e8-154d-47ad-bf82-f19876ecaebd": {
+      "id": "afi-unforgiven-acting",
+      "filmQid": "Q104137",
+      "personQid": "Q43203",
+      "proposedRole": "ACTING",
+      "sourceUrl": "https://catalog.afi.com/Film/67274-UNFORGIVEN",
+      "title": "Unforgiven — AFI Catalog",
+      "publisher": "American Film Institute",
+      "language": "en",
+      "retrievedAt": "2026-10-26T03:38:08.508897+00:00",
+      "httpStatus": 200,
+      "responseSha256": "4f5491f7e2e0e02f30d4ce5e90a36b98cd48354e50a3a4fdd137b4f08bc68540",
+      "excerpt": {
+        "file": "datasets/film-collection/v1/evidence/unforgiven-credit.txt",
+        "sha256": "84328b5aa0ff0dfe807819ed62e315d20d00b4a17a25cc75bdaa3125547fdf9c",
+        "selection": "Whitespace-normalized HTML text nodes; selected credit row, not a reconstructed contiguous sentence",
+        "textNodeStart": 275,
+        "textNodeCount": 6,
+        "tokens": [
+          "CAST",
+          "NAME",
+          "CREDITED AS",
+          "CREDIT",
+          "Clint Eastwood",
+          "Bill Munny"
+        ]
+      },
+      "originalRoleText": "CAST",
+      "personText": "Clint Eastwood",
+      "characterText": "Bill Munny",
+      "locator": "CREDITS / CAST / Clint Eastwood / Bill Munny",
+      "interpretation": "named dramatic character in the live-action cast; no voice/dub/archive designation in this row",
+      "scope": "work-level credit; no claim about every cut, territory or language",
+      "identityNote": "AFI 1992 matches saved Unforgiven work identity.",
+      "reviewer": "Codex factual preparation only; not human acceptance",
+      "reuse": "Minimal factual credit excerpt only. No film images or page prose redistributed.",
+      "formalAcceptance": false
+    },
+    "34b41d23-f4e6-4fc6-aa6f-2905f3c2a890": {
+      "id": "afi-million-dollar-baby-directing",
+      "filmQid": "Q184255",
+      "personQid": "Q43203",
+      "proposedRole": "DIRECTING",
+      "sourceUrl": "https://catalog.afi.com/Catalog/moviedetails/54369",
+      "title": "Million Dollar Baby — AFI Catalog",
+      "publisher": "American Film Institute",
+      "language": "en",
+      "retrievedAt": "2026-10-26T03:38:09.498824+00:00",
+      "httpStatus": 200,
+      "responseSha256": "afc93df3bba933893241fc3ad8c7bf53e89effa23def7c22216f96dc9895ff9a",
+      "excerpt": {
+        "file": "datasets/film-collection/v1/evidence/million-dollar-baby-credit.txt",
+        "sha256": "0555d359bc926e05f549174adf3559c1203279bc7596c1fd83617760acdaa760",
+        "selection": "Whitespace-normalized HTML text nodes; selected credit row, not a reconstructed contiguous sentence",
+        "textNodeStart": 480,
+        "textNodeCount": 3,
+        "tokens": [
+          "DIRECTORS",
+          "Clint Eastwood",
+          "Dir"
+        ]
+      },
+      "originalRoleText": "Dir",
+      "personText": "Clint Eastwood",
+      "characterText": null,
+      "locator": "CREDITS / PRODUCTION CREDITS / DIRECTORS / Clint Eastwood / Dir",
+      "interpretation": "Dir in DIRECTORS row for this person, distinct from assistant directors",
+      "scope": "work-level credit; no claim about every cut, territory or language",
+      "identityNote": "AFI displays 2005 US release; saved work identity uses 2004. Same title, director and principal cast, not a different film; release year is not Claim period.",
+      "reviewer": "Codex factual preparation only; not human acceptance",
+      "reuse": "Minimal factual credit excerpt only. No film images or page prose redistributed.",
+      "formalAcceptance": false
+    }
+  },
+  "citationProvenance": {
+    "dba11353-9e7f-47bc-86bb-9f2e5f8a6d6e": {
+      "supplementId": "afi-unforgiven-acting",
+      "excerptSha256": "84328b5aa0ff0dfe807819ed62e315d20d00b4a17a25cc75bdaa3125547fdf9c",
+      "priorSourceIds": [
+        "S10"
+      ]
+    },
+    "184a6004-4327-4628-8740-739a837d08fb": {
+      "supplementId": null,
+      "excerptSha256": null,
+      "priorSourceIds": [
+        "S09"
+      ]
+    },
+    "f7a88f51-18d8-4856-b492-1e2695f06a7e": {
+      "supplementId": null,
+      "excerptSha256": null,
+      "priorSourceIds": [
+        "S10"
+      ]
+    },
+    "3c788c63-994b-4de7-b504-8c07b3a5e635": {
+      "supplementId": null,
+      "excerptSha256": null,
+      "priorSourceIds": [
+        "S10"
+      ]
+    },
+    "9b2d7e44-5a00-4b58-8c24-05e6e1534e19": {
+      "supplementId": null,
+      "excerptSha256": null,
+      "priorSourceIds": [
+        "S10"
+      ]
+    },
+    "85ef0743-6916-4f3a-b341-202d9980e540": {
+      "supplementId": null,
+      "excerptSha256": null,
+      "priorSourceIds": [
+        "S11"
+      ]
+    },
+    "d1bfb088-ec8f-491f-a783-e7e1a91bd74e": {
+      "supplementId": null,
+      "excerptSha256": null,
+      "priorSourceIds": [
+        "S11"
+      ]
+    },
+    "e97e62f2-f655-4296-a296-55b47c28ac86": {
+      "supplementId": null,
+      "excerptSha256": null,
+      "priorSourceIds": [
+        "S11"
+      ]
+    },
+    "8a6fe8f5-f3b3-4d08-8ad9-60eae3f8a583": {
+      "supplementId": "afi-million-dollar-baby-directing",
+      "excerptSha256": "0555d359bc926e05f549174adf3559c1203279bc7596c1fd83617760acdaa760",
+      "priorSourceIds": [
+        "S11"
+      ]
+    },
+    "aef7b099-3df5-447a-a5a1-d7b56e88ba4d": {
+      "supplementId": null,
+      "excerptSha256": null,
+      "priorSourceIds": [
+        "S09"
+      ]
+    },
+    "8283ba0d-594d-4347-ad7a-f101d196c81d": {
+      "supplementId": null,
+      "excerptSha256": null,
+      "priorSourceIds": [
+        "S09"
+      ]
+    },
+    "64daeb86-133f-43a8-8e83-bb374cbeae32": {
+      "supplementId": null,
+      "excerptSha256": null,
+      "priorSourceIds": [
+        "S09"
+      ]
+    }
+  },
+  "adoptionBlockers": [
+    "film-role-human-adoption",
+    "claim-human-acceptance",
+    "fresh-public-and-receipt-observation-before-real-acceptance",
+    "provisional-uuid-promotion-or-existing-identity-mapping"
+  ],
+  "formalAcceptance": false,
+  "publicApply": false
+}

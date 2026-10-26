@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "adapter": "film-discovery-v1",
+  "recordedAt": "2026-10-26T03:49:50.355Z",
+  "targets": [
+    "Q104137",
+    "Q184255",
+    "Q76479"
+  ],
+  "minimum": [
+    {
+      "subjectQid": "Q43203",
+      "workQid": "Q104137",
+      "proposedRole": "ACTING"
+    },
+    {
+      "subjectQid": "Q43203",
+      "workQid": "Q184255",
+      "proposedRole": "DIRECTING"
+    }
+  ],
+  "inputs": {
+    "candidates": {
+      "file": "docs/research/film-discovery-pilot-20261026/CANDIDATES.json",
+      "sha256": "06690102bb27b9ed9ab06d57f717ab4dce1e962bd1d409609b8c2e76dfccd470"
+    },
+    "sourceReviews": {
+      "file": "docs/research/film-discovery-pilot-20261026/source_reviews.json",
+      "sha256": "0564cc3416d947019341f580a6391532525b77125812a54c23cd7b39a577735c"
+    },
+    "priorFixture": {
+      "file": "docs/research/film-step-roles-issue40/fixture.json",
+      "sha256": "362b1b0d316b8a47eee560d90068e88a25465d10a5d4e8c8e3e9a16bde8e906f"
+    },
+    "roleProposal": {
+      "file": "docs/research/film-step-roles-issue40/role-proposals.json",
+      "sha256": "50400fef170aceed9ca598e9f53085db8a68c72cd9cf980d72164dedd170c4c8"
+    },
+    "supplements": {
+      "file": "datasets/film-collection/v1/evidence/supplements.json",
+      "sha256": "6ce8f2d48ee0d6d3cc90041bc94f41ae21cb146c1c8819387a2d408241fd0700"
+    },
+    "comparison": {
+      "file": "datasets/film-collection/release-20261027/comparison.json.gz",
+      "sha256": "baf51444e3d2493e37035d1d05aad9c55c4b2e51e6187fe0be16aa9f3552cc2c"
+    }
+  },
+  "maxClaims": 12
+}

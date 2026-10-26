@@ -15,12 +15,15 @@ for (const width of [1440, 390]) test("film candidates: conditions, evidence, Gr
  page.on("requestfinished", r => { const path = new URL(r.url()).pathname; if (path.startsWith("/api/discovery/")) endpoints.push(path); });
  await page.route("**/*", route => [new URL(info.project.use.baseURL!).hostname].includes(new URL(route.request().url()).hostname) ? route.continue() : route.abort());
  const response = await page.request.get(info.project.use.baseURL + "/api/dataset");
- expect((await response.json()).revision).toBe("film-beta-issue43-unaccepted-v1");
+ const dataset = await response.json(), formal = !!process.env.FILM_FORMAL_REVISION;
+ expect(dataset.revision).toBe(process.env.FILM_FORMAL_REVISION ?? "film-beta-issue43-unaccepted-v1");
+ if (formal) expect(dataset.trial).toBeUndefined();
  const status = await page.request.get(info.project.use.baseURL + "/api/member/status");
  expect((await status.json()).provider).toBe("google");
  expect((await page.request.get(info.project.use.baseURL + "/api/member/profile")).status()).toBe(401);
  await page.goto("/");
- await expect(page.getByTestId("film-beta-notice")).toContainText("未正式受入");
+ await expect(page.getByTestId("film-beta-notice")).toHaveCount(0);
+ await expect(page.getByTestId("film-trial-claim")).toHaveCount(0);
  await page.getByTestId("discovery-search-entry").click();
  await page.getByTestId("preset-browser").locator('[data-catalog-result="other-works"]').getByRole("button", { name: "条件に合う対象を探す", exact: true }).click();
  const flow = page.getByTestId("discovery-connections");
@@ -36,11 +39,13 @@ for (const width of [1440, 390]) test("film candidates: conditions, evidence, Gr
  await flow.getByRole("button", { name: "根拠を開く ＋", exact: true }).first().click();
  await flow.getByRole("button", { name: "根拠を開く ＋", exact: true }).last().click();
  await expect(flow.getByRole("link", { name: "この記録の詳細ページへ" })).toHaveCount(2);
+ await expect(flow.getByTestId("film-trial-claim")).toHaveCount(formal ? 0 : 2);
  await expect(flow.getByText(/CAST\s*資料表記の言語：en/)).toBeVisible();
  await expect(flow.getByText(/Dir\s*資料表記の言語：en/)).toBeVisible();
  // Follow the original citation into the actual server-rendered Claim page, then return.
  await flow.getByRole("link", { name: "この記録の詳細ページへ" }).first().click();
  await expect(page.getByText(/CAST|Dir/, {exact:true}).first()).toBeVisible();
+ await expect(page.getByTestId("film-trial-claim")).toHaveCount(formal ? 0 : 1);
  await page.goBack();
  try { await flow.waitFor({state:"visible",timeout:3000}); }
  catch { await page.getByTestId("discovery-search-entry").click(); }

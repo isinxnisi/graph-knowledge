@@ -1,3 +1,5 @@
+2026-10-27、映画Roleの固定hash登録、最新本番backup＋全receiptに基づく映画受入経路、公開operatorの隔離実証、Claim個別のbeta試験表示を準備。正式Role／Claim判断・SSH/sudo・個別公開署名は未実施。全画面bannerは撤去候補。[手順](runbooks/FILM_INITIAL_RELEASE.md)／[検証](verification/FILM_RELEASE_20261027.md)。
+
 2026-10-26、Issue #43で洋画の段別Role探索と映画2 Claimのbeta試験を本線へ統合し、3200／HTTPS betaへ配置・実ブラウザ6件を確認した。監督・出演は試験登録で正式承認前。専用KG7696に既存betaデータを保持し、本番公開を行わない。[契約](design/FILM_BETA.md)／[検証・配置状況](verification/FILM_BETA_20261026.md)。
 
 2026-10-26、Issue #39のアカウント・公式AI活動基盤と既存AI育成ラボを正式サイトplunode.netへ公開。固定アプリ767020c／build p2mPLpwWtvRzE54EdYqwS。本番000〜008を保持して009／010を追加、11件のledgerと別DB実復元を確認。既存認証・権限・KG・runtimeを維持し、実推論0・追加学習0から公開する。[正式公開・復旧記録](verification/PUBLIC_ACCOUNTS_PRODUCTION_20261026.md)。
