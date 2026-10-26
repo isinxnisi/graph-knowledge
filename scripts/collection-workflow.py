@@ -555,6 +555,8 @@ def write_review(reviews, outputs):
 
 def execute(args):
     global ROOT
+    if args.command == 'film-review':
+        return load('film_workflow', CODE_ROOT / 'scripts/collection-film.py').review(args, SimpleNamespace(**globals()))
     if args.command in ['evidence-review', 'accept-evidence']:
         # Only data paths change. Never import or execute programs from the Worker data root.
         previous = ROOT
@@ -627,6 +629,7 @@ def parser():
     sub = cli.add_subparsers(dest='command', required=True)
     acceptance = load('collection_acceptance_parser', ROOT / 'scripts/collection-acceptance.py')
     acceptance.add_parsers(sub, ROOT)
+    load("film_parser", CODE_ROOT / "scripts/collection-film.py").add_parser(sub)
     evidence = load('collection_evidence_parser', CODE_ROOT / 'scripts/collection-evidence.py')
     evidence.add_parsers(sub, ROOT)
     inventory = load('collection_inventory_parser', ROOT / 'scripts/collection-inventory.py')

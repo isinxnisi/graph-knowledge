@@ -1,0 +1,160 @@
+{
+  "schemaVersion": 1,
+  "adapter": "film-discovery-v1",
+  "authority": "unaccepted-candidates-only",
+  "notForCurrentPublicApply": true,
+  "dataSha256": "fff6abddb7126ed085b1f30b38b51a394e4b0185eded13c5cb340cd240ecf767",
+  "binding": {
+    "adapter": "film-discovery-v1",
+    "inputs": [
+      {
+        "file": "datasets/film-collection/issue43/comparison.json.gz",
+        "sha256": "54698243c17763f8c6fdd95c1ee4cda253bca4ea678c30feaf4e4473b4019b8c"
+      },
+      {
+        "file": "datasets/film-collection/issue43/recipe.json",
+        "sha256": "9d88c1bda2830c6ed510e23a3b27ff360397dc252d29d9c0439d10f98564171e"
+      },
+      {
+        "file": "datasets/film-collection/v1/evidence/million-dollar-baby-credit.txt",
+        "sha256": "0555d359bc926e05f549174adf3559c1203279bc7596c1fd83617760acdaa760"
+      },
+      {
+        "file": "datasets/film-collection/v1/evidence/supplements.json",
+        "sha256": "6ce8f2d48ee0d6d3cc90041bc94f41ae21cb146c1c8819387a2d408241fd0700"
+      },
+      {
+        "file": "datasets/film-collection/v1/evidence/unforgiven-credit.txt",
+        "sha256": "84328b5aa0ff0dfe807819ed62e315d20d00b4a17a25cc75bdaa3125547fdf9c"
+      },
+      {
+        "file": "docs/research/film-discovery-pilot-20261026/CANDIDATES.json",
+        "sha256": "06690102bb27b9ed9ab06d57f717ab4dce1e962bd1d409609b8c2e76dfccd470"
+      },
+      {
+        "file": "docs/research/film-discovery-pilot-20261026/source_reviews.json",
+        "sha256": "0564cc3416d947019341f580a6391532525b77125812a54c23cd7b39a577735c"
+      },
+      {
+        "file": "docs/research/film-step-roles-issue40/fixture.json",
+        "sha256": "362b1b0d316b8a47eee560d90068e88a25465d10a5d4e8c8e3e9a16bde8e906f"
+      },
+      {
+        "file": "docs/research/film-step-roles-issue40/role-proposals.json",
+        "sha256": "50400fef170aceed9ca598e9f53085db8a68c72cd9cf980d72164dedd170c4c8"
+      },
+      {
+        "file": "lib/domain/api.ts",
+        "sha256": "7dc1eb56a6c19597e3ea543efb9fe79f88181d72f2018e8126cdf1e36527ee1b"
+      },
+      {
+        "file": "lib/domain/contribution.ts",
+        "sha256": "2ed81135c5dcf58b78860dad91f3ddb21313a6c9dd0442a538d3a5f8d3e73dc5"
+      },
+      {
+        "file": "lib/domain/dates.ts",
+        "sha256": "b5cfe90d891a2b12b31f7558cec48764706d00068bdb39666429df9c63532375"
+      },
+      {
+        "file": "lib/domain/event-participation.ts",
+        "sha256": "c81e50763afd42aeaccb1877c5723a00e7dcfa93bd63fb5493a3f013d7a3673d"
+      },
+      {
+        "file": "lib/domain/evidence.ts",
+        "sha256": "f76cebc0ef7dd023faeb13a4ed532458f3f0fad9e4b4e0a05e5d149c01de39b2"
+      },
+      {
+        "file": "lib/domain/fixture.ts",
+        "sha256": "f278e09c84502f7d7832f9607567e08aa339bb66a3232df822fe4b00a4f73184"
+      },
+      {
+        "file": "lib/domain/organization-participation.ts",
+        "sha256": "a993c0ba959a040650540026c3ec2bb10f82417143887115bb43d503824060fc"
+      },
+      {
+        "file": "lib/domain/predicates.ts",
+        "sha256": "d1ec7bc98bc8d7bd688a36e4512517e8894462d1bc79d70868888ba6be5d15e0"
+      },
+      {
+        "file": "lib/domain/public-release.ts",
+        "sha256": "89581e93c6387751a4b8d6ccfb53773ed60b847af80747056b754f56e83b6750"
+      },
+      {
+        "file": "lib/domain/qualifications.ts",
+        "sha256": "938d72c454fd135ec2b62cae44c48d7783a00837fc3951a202d5751910b52ff7"
+      },
+      {
+        "file": "lib/domain/relation-conditions.ts",
+        "sha256": "56e016f8d7bf584016caa3432a2f1788f7370c314f2b37f4cd0899f2a8056afe"
+      },
+      {
+        "file": "lib/domain/relation-patterns.ts",
+        "sha256": "1d8b228a8cbf12a1f5f5e2c1b3ef7ddbfcfcdb228d44c7cd70cd06faa1b721da"
+      },
+      {
+        "file": "lib/server/mappers.ts",
+        "sha256": "378d13daa71318e19ec0d0a19cef90aade7e4e271f9af45dd74b5be7bc1e6163"
+      },
+      {
+        "file": "lib/server/public-dataset.ts",
+        "sha256": "387ce1173cf7e83dd13a8bd2ecb6fe332e6d9bc0a4ce032994b7856c6c4f9071"
+      },
+      {
+        "file": "lib/server/relation-pattern-execution.ts",
+        "sha256": "68ec37fb75efab606ab3c922a1759429d3d011983ebc93b688ba834496141afd"
+      },
+      {
+        "file": "package-lock.json",
+        "sha256": "2167a62bb95f9c5008bfaa6bb225cc0443922dc2bbacce2d7849cccf9ad105bd"
+      },
+      {
+        "file": "package.json",
+        "sha256": "fba65a5fff37a5707854644b6181012e5359be4134e87f6f8a25956d6055c8c4"
+      },
+      {
+        "file": "scripts/collect-film-v1.py",
+        "sha256": "9f248c2cdced752436a9ccac215f406127d5a8312a38d1cb44a9632efa6027c2"
+      },
+      {
+        "file": "scripts/film41-runtime.ts",
+        "sha256": "4223e406e3573d871414d0a6a7027c099178c6654be0069a493efbb1e63e062e"
+      },
+      {
+        "file": "scripts/freeze-film-comparison.py",
+        "sha256": "aa1f523f20737c9190d96409cf22c19606da973c6737c53d179b2fe5db06d437"
+      },
+      {
+        "file": "vocabulary/contribution-roles/baseline-v1.json",
+        "sha256": "3c64fb16a2c2eeac374767cccb4fa1b0702db5a97b8c67ea45d997d1aba139fb"
+      },
+      {
+        "file": "vocabulary/contribution-roles/catalog.json",
+        "sha256": "2d5370cab52998b822331eafa13292864ae5cc1af37b71c4d9d389b5ecf7f652"
+      },
+      {
+        "file": "vocabulary/contribution-roles/reviews.json",
+        "sha256": "ed6098bff4474c0cd1c8b8658540ecb5b88a6e04aae555f4da1c813842317e9c"
+      }
+    ],
+    "records": {
+      "entities": {
+        "490ee589-76db-4a5e-8923-13d24b7cb3a2": "1fe15223e00ff8c2cc986eeadafd2b95d76724be0d0f531e07adf080d0174474",
+        "604eb49e-df41-4157-8b49-bd92a0d93ad4": "466f65051a847d74530ba6a9b34dbc82016e3a2a2c86aaa56856e307fcb14695",
+        "805b9630-cd9a-4931-8cde-0bcb92bf8a9f": "e0cfd5abd64649e64b572184f576d7f360fcc1cb3086ae071ef568d5d0c39370"
+      },
+      "claims": {
+        "34b41d23-f4e6-4fc6-aa6f-2905f3c2a890": "5c9bac955699442bd0813caa23a1928ef82d35fb0fccd7cd39be21f4bda7a0a4",
+        "4c88b8e8-154d-47ad-bf82-f19876ecaebd": "0661ca6c346efeb884e96b8e1fbe512100db3c9a4eecfcf73485461b162c494b"
+      },
+      "sources": {
+        "54461ad1-e977-4b68-a2bf-7f972ff29002": "e4dd517c33718ebffe76ee2805b967768d52153b08da3e2136b5c56e33f7f53a",
+        "c198ac9b-8baa-4ec2-a880-6ce9de171fcb": "b645812809422c48e52f7e30d1899ba2bfc6fd9f687e1d321f5739056b917f97"
+      },
+      "citations": {
+        "8a6fe8f5-f3b3-4d08-8ad9-60eae3f8a583": "7f2a22242d6b7dfbf89e3336e684f65064f4c7e579c104c17b4fe00fa48d3ca5",
+        "dba11353-9e7f-47bc-86bb-9f2e5f8a6d6e": "943c0a22e289bc1f17c44a32e68d98f53a87e89d0f74b7ffed3b3141ba78d60c"
+      }
+    },
+    "roleStatus": "proposal-not-approved"
+  }
+}

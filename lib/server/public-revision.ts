@@ -1,3 +1,4 @@
+import { filmBetaEnabled, FILM_BETA_REVISION } from "./film-beta";
 import type { ManagedTransaction } from "neo4j-driver";
 import { ApiError } from "./http";
 import { dataReleaseLabels } from "../i18n/data-release";
@@ -7,6 +8,10 @@ export async function readPublicRevision(tx: Pick<ManagedTransaction, "run">, ex
   if (rows.length !== 1 || !rows[0].get("release")) throw new ApiError(503, "SERVICE_UNAVAILABLE", dataReleaseLabels().preparing);
   // step4で投入済みのDBも、書き換えずに読み取れる。
   const revision: string = rows[0].get("revision") ?? `legacy:${rows[0].get("release")}`;
+  if (filmBetaEnabled()) {
+    const trial = (await tx.run("MATCH (s:FilmBetaState {id:'issue43'}) RETURN s.revision AS revision")).records;
+    if (trial.length !== 1 || trial[0].get("revision") !== FILM_BETA_REVISION || revision !== FILM_BETA_REVISION) throw new ApiError(503, "SERVICE_UNAVAILABLE", "Film beta dataset is not ready");
+  }
   if (expected !== null && expected !== revision) throw new ApiError(409, "DATASET_CHANGED", dataReleaseLabels().changed);
   return revision;
 }

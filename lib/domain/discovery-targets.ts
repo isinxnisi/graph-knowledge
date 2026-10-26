@@ -11,8 +11,8 @@ export const targetCriteriaSchema = z.strictObject({ q: z.string().transform(nor
   .transform(c => ({ q: c.q, kind: c.relation?.type === "pattern" ? "work" as const : c.kind, relation: c.relation === null ? null : normalizeRelationCondition(c.relation) }));
 export const publicRevisionSchema = z.string().regex(/^[a-zA-Z0-9:._-]{1,160}$/);
 export const targetCriteriaV2Schema=z.strictObject({q:z.string().transform(normalizeSearch).refine(q=>[...q].length<=100),kind:z.enum(ENTITY_KINDS).nullable(),relation:relationConditionSchema.nullable(),nameTarget:z.enum(["subject","contributor"])}).superRefine((c,ctx)=>{
- if(c.relation?.type==="pattern"&&(!["work","person"].includes(c.kind??"work")||c.relation.pattern.revision===1&&c.kind==="person"))ctx.addIssue({code:"custom",path:["kind"],message:"この関係の対象位置は作品・制作担当者です。"});
- if(c.nameTarget==="contributor"&&!(c.relation?.type==="pattern"&&c.relation.pattern.revision===2&&(c.kind===null||c.kind==="work")))ctx.addIssue({code:"custom",path:["nameTarget"],message:"制作担当者名は作品を探す場合に指定できます。"});
+ if(c.relation?.type==="pattern"&&(!["work","person"].includes(c.kind??"work")||c.relation.pattern.revision!==2&&c.kind==="person"))ctx.addIssue({code:"custom",path:["kind"],message:"この関係の対象位置は作品・制作担当者です。"});
+ if(c.nameTarget==="contributor"&&!(c.relation?.type==="pattern"&&c.relation.pattern.revision!==1&&(c.kind===null||c.kind==="work")))ctx.addIssue({code:"custom",path:["nameTarget"],message:"制作担当者名は作品を探す場合に指定できます。"});
 }).transform(c=>({...c,kind:c.relation?.type==="pattern"?(c.kind??"work"):c.kind,relation:c.relation===null?null:normalizeRelationCondition(c.relation)}));
 export const anyTargetCriteriaSchema=z.union([targetCriteriaSchema,targetCriteriaV2Schema]);
 const targetSearchV1RequestSchema = z.strictObject({ version: z.literal(1), dataset: z.literal("public-kg"), criteria: targetCriteriaSchema,

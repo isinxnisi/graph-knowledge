@@ -1,0 +1,227 @@
+{
+  "schemaVersion": 1,
+  "status": "pending-human-review",
+  "reviewer": null,
+  "reviewedAt": null,
+  "adoptionPolicy": "Issue #43 narrow definitions; fixed review remains pending",
+  "entries": [
+    {
+      "id": "DIRECTING",
+      "predicate": "CONTRIBUTED_TO",
+      "definitionLanguage": "ja",
+      "meaning": {
+        "definition": "対象作品の監督として、演出を担ったと資料に明示された人物の制作関与。",
+        "subjectRole": "資料で当該役割を確認した人物",
+        "objectRole": "対象作品（資料が支持する適用範囲）",
+        "direction": "subject-to-object",
+        "rules": [
+          "一Claim一Role。監督と出演の兼務は独立ClaimとCitationを持つ。",
+          "Wikidata P57/P161だけでは支持確認済みへ昇格しない。原資料の人物・作品・役割の同定を別途確認する。",
+          "映画専用IDにせず別の作品領域でも同じ意味なら再利用可能。ただし舞台等は今回未検証。",
+          "scope:null は未構造化であり全cut・地域・言語・全期間への適用を意味しない。公開年はClaim periodに転記しない。"
+        ],
+        "examples": [
+          {
+            "id": "DIRECTING-include",
+            "category": "include",
+            "scenario": "Director / Directed by の欄に対象作品と人物が特定されるクレジット。",
+            "rationale": "対象作品の当該担当を直接示す資料が必要。"
+          },
+          {
+            "id": "DIRECTING-exclude",
+            "category": "exclude",
+            "scenario": "監修、製作、撮影監督、会社のdirector、追加撮影監督だけの担当。",
+            "rationale": "近接する工程・関与・再使用を含意しない。"
+          },
+          {
+            "id": "DIRECTING-boundary",
+            "category": "boundary",
+            "scenario": "総監督・共同監督・second unit director等は文字列包含で正規化しない。全体監督としての共同担当が明示されれば個別審査し、限定工程や特定cutのみなら保留。",
+            "rationale": "対象・工程・版が未確定なら役割を補完しない。"
+          }
+        ],
+        "nearbyConcepts": [
+          {
+            "term": "SUPERVISION",
+            "difference": "監修は別Role。日本語の監督・監修を同一視しない。"
+          },
+          {
+            "term": "ACTING",
+            "difference": "同一人物でも別担当。兼務は独立した根拠を必要とする。"
+          }
+        ]
+      },
+      "translations": {
+        "ja": {
+          "label": "監督",
+          "reverseLabel": "監督としての制作関与",
+          "description": "対象作品の監督として、演出を担ったと資料に明示された人物の制作関与。",
+          "aliases": []
+        },
+        "en": {
+          "label": "Directing",
+          "reverseLabel": "Contribution credited for directing",
+          "description": "Directing explicitly credited for the target work; no automatic inference from a nearby credit.",
+          "aliases": []
+        }
+      },
+      "predicateRationale": "人物→作品の制作関与を限定し、CONTRIBUTED_TOの端点・方向・命題を変更しない。声・吹替等の除外は関与そのものの否定ではなく、このRoleへの未対応。",
+      "comparisons": [
+        {
+          "roleId": "SCRIPT_WRITING",
+          "relation": "distinct",
+          "rationale": "脚本を書く担当と演出・実演は別。兼務は別Claimで確認する。"
+        },
+        {
+          "roleId": "SUPERVISION",
+          "relation": "distinct",
+          "rationale": "監修・内容確認を監督や出演へ変換しない。"
+        },
+        {
+          "roleId": "PRODUCING",
+          "relation": "distinct",
+          "rationale": "企画・製作統括と演出・実演は別。producer creditから推論しない。"
+        },
+        {
+          "roleId": "STORY_CO_CREATION",
+          "relation": "distinct",
+          "rationale": "ストーリー共同制作を演出・実演へ変換しない。"
+        },
+        {
+          "roleId": "AUTHORSHIP",
+          "relation": "distinct",
+          "rationale": "著者クレジットだけでは演出・実演の工程を認定しない。"
+        },
+        {
+          "roleId": "CREATION",
+          "relation": "distinct",
+          "rationale": "作という資料表記から監督・出演を推論しない。"
+        },
+        {
+          "roleId": "DRAWING",
+          "relation": "distinct",
+          "rationale": "漫画を描く担当と演出・実演は異なる。"
+        },
+        {
+          "roleId": "ORIGINAL_STORY",
+          "relation": "distinct",
+          "rationale": "漫画制作の原作担当とも翻案元原著者とも異なる。"
+        },
+        {
+          "roleId": "ACTING",
+          "relation": "distinct",
+          "rationale": "演出と実演は別の制作関与で、兼務は独立Claim。"
+        }
+      ]
+    },
+    {
+      "id": "ACTING",
+      "predicate": "CONTRIBUTED_TO",
+      "definitionLanguage": "ja",
+      "meaning": {
+        "definition": "対象作品で役柄を実演した演者として資料に明示された人物の制作関与。",
+        "subjectRole": "資料で当該役割を確認した人物",
+        "objectRole": "対象作品（資料が支持する適用範囲）",
+        "direction": "subject-to-object",
+        "rules": [
+          "一Claim一Role。監督と出演の兼務は独立ClaimとCitationを持つ。",
+          "Wikidata P57/P161だけでは支持確認済みへ昇格しない。原資料の人物・作品・役割の同定を別途確認する。",
+          "映画専用IDにせず別の作品領域でも同じ意味なら再利用可能。ただし舞台等は今回未検証。",
+          "scope:null は未構造化であり全cut・地域・言語・全期間への適用を意味しない。公開年はClaim periodに転記しない。"
+        ],
+        "examples": [
+          {
+            "id": "ACTING-include",
+            "category": "include",
+            "scenario": "実写作品のcast欄で人物の役柄を伴う出演、又は演技担当と確認されたクレジット。",
+            "rationale": "対象作品の当該担当を直接示す資料が必要。"
+          },
+          {
+            "id": "ACTING-exclude",
+            "category": "exclude",
+            "scenario": "声の出演、吹替、歌唱だけ、スタントだけ、アーカイブ映像の再使用、本人インタビューだけ。",
+            "rationale": "近接する工程・関与・再使用を含意しない。"
+          },
+          {
+            "id": "ACTING-boundary",
+            "category": "boundary",
+            "scenario": "Cast / 出演という見出しだけでは声・吹替・本人登場と区別できない。資料文脈で演技担当を確認し、不明なら保留。",
+            "rationale": "対象・工程・版が未確定なら役割を補完しない。"
+          }
+        ],
+        "nearbyConcepts": [
+          {
+            "term": "SUPERVISION",
+            "difference": "監修は別Role。日本語の監督・監修を同一視しない。"
+          },
+          {
+            "term": "DIRECTING",
+            "difference": "同一人物でも別担当。兼務は独立した根拠を必要とする。"
+          }
+        ]
+      },
+      "translations": {
+        "ja": {
+          "label": "出演（演技）",
+          "reverseLabel": "出演（演技）としての制作関与",
+          "description": "対象作品で役柄を実演した演者として資料に明示された人物の制作関与。",
+          "aliases": []
+        },
+        "en": {
+          "label": "Acting performance",
+          "reverseLabel": "Contribution credited for acting performance",
+          "description": "Acting performance explicitly credited for the target work; no automatic inference from a nearby credit.",
+          "aliases": []
+        }
+      },
+      "predicateRationale": "人物→作品の制作関与を限定し、CONTRIBUTED_TOの端点・方向・命題を変更しない。声・吹替等の除外は関与そのものの否定ではなく、このRoleへの未対応。",
+      "comparisons": [
+        {
+          "roleId": "SCRIPT_WRITING",
+          "relation": "distinct",
+          "rationale": "脚本を書く担当と演出・実演は別。兼務は別Claimで確認する。"
+        },
+        {
+          "roleId": "SUPERVISION",
+          "relation": "distinct",
+          "rationale": "監修・内容確認を監督や出演へ変換しない。"
+        },
+        {
+          "roleId": "PRODUCING",
+          "relation": "distinct",
+          "rationale": "企画・製作統括と演出・実演は別。producer creditから推論しない。"
+        },
+        {
+          "roleId": "STORY_CO_CREATION",
+          "relation": "distinct",
+          "rationale": "ストーリー共同制作を演出・実演へ変換しない。"
+        },
+        {
+          "roleId": "AUTHORSHIP",
+          "relation": "distinct",
+          "rationale": "著者クレジットだけでは演出・実演の工程を認定しない。"
+        },
+        {
+          "roleId": "CREATION",
+          "relation": "distinct",
+          "rationale": "作という資料表記から監督・出演を推論しない。"
+        },
+        {
+          "roleId": "DRAWING",
+          "relation": "distinct",
+          "rationale": "漫画を描く担当と演出・実演は異なる。"
+        },
+        {
+          "roleId": "ORIGINAL_STORY",
+          "relation": "distinct",
+          "rationale": "漫画制作の原作担当とも翻案元原著者とも異なる。"
+        },
+        {
+          "roleId": "DIRECTING",
+          "relation": "distinct",
+          "rationale": "演出と実演は別の制作関与で、兼務は独立Claim。"
+        }
+      ]
+    }
+  ]
+}

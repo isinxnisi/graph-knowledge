@@ -5,8 +5,13 @@ export function datasetMode(value: string | undefined): DatasetMode {
   if (DATASET_MODES.includes(value as DatasetMode)) return value as DatasetMode;
   throw new Error("Unknown GRAPH_DATASET");
 }
-export function assertDatasetTarget(mode: DatasetMode, uri: string, deployment = process.env.GRAPH_DEPLOYMENT) {
+export function assertDatasetTarget(mode: DatasetMode, uri: string, deployment = process.env.GRAPH_DEPLOYMENT, filmBeta = process.env.GRAPH_FILM_BETA) {
   const target = new URL(uri);
+  if (filmBeta !== undefined && filmBeta !== "0") {
+    if (filmBeta !== "1" || deployment !== undefined || mode !== "public-kg" || !["127.0.0.1", "localhost"].includes(target.hostname) || target.port !== "7696") throw new Error("Film beta requires its isolated loopback database on 7696, outside production");
+    return;
+  }
+  if (target.port === "7696") throw new Error("Film beta database requires GRAPH_FILM_BETA=1");
   if (deployment !== undefined && deployment !== "production") throw new Error("Unknown GRAPH_DEPLOYMENT");
   if (deployment === "production") {
     // 本番の名前解決は専用Compose network内だけ。凍結版・任意の外部DBは許可しない。

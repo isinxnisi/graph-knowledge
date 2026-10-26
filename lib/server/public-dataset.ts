@@ -1,3 +1,4 @@
+import { ADOPTED_CONTRIBUTION_ROLE_IDS } from "../domain/contribution";
 import { readFile } from "node:fs/promises";
 import { createHash } from "node:crypto";
 import { fixtureV4Schema, fixtureCounts, type Fixture } from "../domain/fixture";
@@ -23,6 +24,7 @@ export type PublicRelease = { manifest: PublicManifest; fixture: Fixture };
 export function validatePublicRelease(input: PublicRelease): PublicRelease {
   const manifest = publicManifestSchema.parse(input.manifest);
   const fixture = fixtureV4Schema.parse(input.fixture);
+  if (fixture.claims.some(claim => claim.contribution?.roleId && !(ADOPTED_CONTRIBUTION_ROLE_IDS as readonly string[]).includes(claim.contribution.roleId))) throw new Error("Pending film Roles require human vocabulary adoption before public release");
   if (fixture.sources.some(source => source.isDemo)) throw new Error("Demo sources cannot enter public-kg");
   if (sha256(JSON.stringify(fixture, null, 2) + "\n") !== manifest.dataSha256) throw new Error("Public release data hash mismatch");
   if (manifest.claimOrigins.length !== fixture.claims.length || new Set(manifest.claimOrigins.map(row => row.claimId)).size !== fixture.claims.length || manifest.claimOrigins.some(row => !fixture.claims.some(claim => claim.id === row.claimId))) throw new Error("Every public claim needs exactly one recorded origin");

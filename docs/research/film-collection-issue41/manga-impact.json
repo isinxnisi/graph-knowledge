@@ -1,0 +1,22 @@
+{
+  "mainBaseline": "b34e9ebe9df23835226651adbbda072908c933ab",
+  "reusedIssue40": "12f3476844fbda0f4503f584aa8157e4001a65d6",
+  "mangaV2PlanEqual": true,
+  "codeSha256": "80e05b67bc0129b963653b90df4cfbfa5bd6aff190acda99f54c08541e55801e",
+  "inputHashesEqual": true,
+  "protectedFiles": {
+    "scripts/collection-themes.py": "1f36d3010c7a7e471091620c6820b1401aa0a0b53a997da187f51f9fa68b2ae2",
+    "scripts/collection-workflow.py": "ac490edce3573fb888bcb2801ea4ade3ae7fc60641a87cff9bf2324f7bb1df53",
+    "scripts/collection-acceptance.py": "ddd9f2e7f4f83f3ebfd411158198abbfbc2038a4c9814eb11170b1cd60ca72f3",
+    "scripts/collection-worker.py": "d5720b662bbcb794d9079f67a0cec39e18e8d938b094615a02c181e298fd77c4",
+    "scripts/collection-worker-control.py": "23eeb89cc05da240b2f0fe4f6666dcd4db66b7f0d2d38261e5e71c96cb85d314",
+    "scripts/collect-manga.py": "a52864e69386c12e32c62fe5a0bbf7ce6573f8c736acceac1ccd0c1a16dca7cd",
+    "scripts/collect-manga-v2.py": "d887d490159b03a1d0b90dba060f6d77e248c1d7308497c0adb3d3048bf60f88",
+    "scripts/collection-sequence.py": "254b7c24250a9e1bfe6e275dd1d5a71d4e19d8330fb6c265d1384cc9a6bfe3f3",
+    "scripts/collection-evidence.py": "a3b50fc78ec8efb8c7daa3315a2e06c5c8f4d761acb7ef23c09d38658ddee76a",
+    "lib/domain/contribution.ts": "0864214a74e18fa1bfa73db717f708ff0025d9147fb567050e69c9e9aa958130",
+    "vocabulary/contribution-roles/catalog.json": "2d5370cab52998b822331eafa13292864ae5cc1af37b71c4d9d389b5ecf7f652",
+    "vocabulary/contribution-roles/reviews.json": "ed6098bff4474c0cd1c8b8658540ecb5b88a6e04aae555f4da1c813842317e9c"
+  },
+  "runtimeOrApprovalWrites": 0
+}
