@@ -66,11 +66,68 @@
   },
   "requestSha256": "45fdbc030fa87fdc492b1ccb14ab70e9bed7c6bfcf45915863626aab4cbd1b3a",
   "kind": "issue-prepare",
-  "phase": "running",
+  "phase": "retry-transport",
   "generation": 49,
   "attempts": 1,
   "workerId": "plunode-wsl",
   "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
   "updatedAt": "2026-10-27T06:26:01+00:00",
-  "message": "Execution gate: interval"
+  "message": "Technical acquisition incomplete; no semantic hold or acceptance",
+  "result": {
+    "schemaVersion": 1,
+    "status": "technical-incomplete",
+    "preparationComplete": false,
+    "issueOrigin": {
+      "repository": "isinxnisi/graph-knowledge",
+      "issueNumber": 47,
+      "approvalId": "dot-yukimura-two-20261027",
+      "permissionSha256": "9777fd01d5882090f9ac94f29ba5f00362f48e5552f6d90dfc035080b6b823c1",
+      "issueBodySha256": "0e9b94b49aff664874124b1cb7c33fc78999c78f4786d015edb8f5aad04f8d86"
+    },
+    "preparationDirectory": "/home/isinxnisi/.local/share/plunode-collection-worker-phase-b-20261020/runtime/.local/collection-issues/issue-47-dot-yukimura-two-20261027",
+    "batchRequests": [],
+    "generatedArtifacts": {},
+    "technicalWaits": [
+      {
+        "category": "provider-backoff",
+        "key": "publication-77b8612bf4f62364a4034f52",
+        "provider": "ndlsearch.ndl.go.jp",
+        "retryAt": 1793082507.068866,
+        "recoveryRequired": false,
+        "target": "プラネテス",
+        "lastDiagnostic": {
+          "category": "transport",
+          "phase": "open-through-response-headers",
+          "phaseBoundary": "open-through-response-headers",
+          "elapsedSeconds": 0.136578,
+          "finishedAt": "2026-10-27T06:27:27.068831+00:00",
+          "httpStatus": 429,
+          "causes": [
+            {
+              "type": "HTTPError"
+            }
+          ],
+          "retryAfterUntil": 1793082507.068866
+        }
+      },
+      {
+        "category": "provider-backoff",
+        "key": "publication-8b44db175f32627ab3347f2f",
+        "provider": "ndlsearch.ndl.go.jp",
+        "retryAt": 1793082507.068866,
+        "recoveryRequired": false,
+        "target": "ヴィンランド・サガ"
+      }
+    ],
+    "retryAt": 1793082507.068866,
+    "publicApply": false,
+    "counts": {
+      "networkAttempts": 5,
+      "holds": 0,
+      "identifiedWorks": 0,
+      "technicalWaits": 2
+    }
+  },
+  "executionComplete": false,
+  "retryAt": 1793082507.068866
 }
