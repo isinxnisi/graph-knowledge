@@ -43,15 +43,6 @@ r=json.load(open('release.json'))
 assert sys.argv[1] in r['imageDigests'], 'Image identity mismatch'
 PY
 test "$(docker image inspect "$actual" --format '{{.Os}}/{{.Architecture}}')" = linux/amd64
-# GRAPH_IMAGE_TAG is shared by Web/ops. Retag the EXISTING operator bits so its
-# resolved image remains identical; never build/execute an operator for this update.
-old_ops=$(python3 - "$receipt/config-before.json" <<'PY'
-import json,sys
-print(json.load(open(sys.argv[1]))['services']['ops']['image'])
-PY
-)
-old_ops_id=$(docker image inspect "$old_ops" --format '{{.Id}}')
-docker tag "$old_ops_id" "graph-knowledge-ops:$tag"
 changed=0
 rollback() {
   cp -p "$receipt/app.env" "$app/app.env"
@@ -71,12 +62,16 @@ trap finish EXIT
 changed=1
 python3 - "$app/app.env" "$app/compose.yaml" "$tag" <<'PY'
 from pathlib import Path
-import sys
+import sys,re
 env,compose=map(Path,sys.argv[1:3]); tag=sys.argv[3]
-lines=env.read_text().splitlines()
-assert sum(s.startswith('GRAPH_IMAGE_TAG=') for s in lines)==1
-env.write_text('\n'.join('GRAPH_IMAGE_TAG='+tag if s.startswith('GRAPH_IMAGE_TAG=') else s for s in lines)+'\n')
 s=compose.read_text()
+# Production releases may pin Web directly instead of using GRAPH_IMAGE_TAG.
+# Replace only its image; preserve shared tag and every operator image.
+match=re.search(r'^  web:\n(?:(?!^  [A-Za-z0-9_-]+:).)*',s,re.M|re.S)
+assert match, 'Expected one web service block'
+block,count=re.subn(r'^    image:.*$', '    image: "graph-knowledge-web:'+tag+'"', match.group(), flags=re.M)
+assert count==1, 'Expected one Web image'
+s=s[:match.start()]+block+s[match.end():]
 anchor='      PUBLIC_PROFILES_ENABLED: "${PUBLIC_PROFILES_ENABLED:-0}"\n'
 assert s.count(anchor)==1, 'Unexpected Compose: no mutation of other services allowed'
 assert 'GRAPH_NEIGHBOR_ORDER:' not in s, 'Existing operator override requires review'
@@ -90,13 +85,17 @@ python3 - "$receipt" <<'PY'
 import json,sys
 from pathlib import Path
 p=Path(sys.argv[1]); a=json.loads((p/'config-before.json').read_text()); b=json.loads((p/'config-after.json').read_text())
-for service in ('web','ops','member-ops'):
-    if service in a['services']: b['services'][service]['image']=a['services'][service]['image']
+release=json.load(open('release.json'))
+assert b['services']['web']['image']=='graph-knowledge-web:'+release['tag'], 'Web image did not switch'
+b['services']['web']['image']=a['services']['web']['image']
 for key,value in [('GRAPH_NEIGHBOR_ORDER','bounded'),('GRAPH_NEIGHBOR_CANDIDATES','200'),('GRAPH_NEIGHBOR_CONNECTIONS','50')]:
     assert b['services']['web']['environment'].pop(key)==value, 'Runtime ranking settings differ from verified release'
 assert a==b, 'Unexpected configuration change'
 PY
 "${dc[@]}" up -d --no-deps --pull never --wait --wait-timeout 180 web
+running_image=$(docker inspect "$("${dc[@]}" ps -q web)" --format '{{.Image}}')
+echo "Web image: $running_image (expected $actual)"
+test "$running_image" = "$actual"
 "${dc[@]}" exec -T web node scripts/production-readiness.mjs
 # Exercise the new read path before accepting the deployment. A cold-query
 # timeout is a failed rollout too; do not silently relax the DB timeout.
@@ -119,7 +118,7 @@ print(json.dumps({'build':sys.argv[2].strip(),'revision':b['revision'],'datasetU
 PY
 snapshot > "$receipt/other-containers-after"
 cmp "$receipt/other-containers-before" "$receipt/other-containers-after"
-test "$(docker image inspect "graph-knowledge-ops:$tag" --format '{{.Id}}')" = "$old_ops_id"
+cmp "$receipt/app.env" "$app/app.env"
 systemctl is-active docker caddy cloudflared-plunode-admin resale-ebay-notifications
 "${dc[@]}" ps web
 docker stats --no-stream --format '{{.Name}} {{.MemUsage}} {{.CPUPerc}}' "$("${dc[@]}" ps -q web)"

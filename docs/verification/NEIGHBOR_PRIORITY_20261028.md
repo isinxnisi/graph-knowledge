@@ -75,3 +75,9 @@ VPS `/home/develop/graph-neighbor-order-issue54/` へ同一image archive・relea
 管理者の初回実行はarchive照合・image読込後、通常のCompose configに`ops` profileが含まれないため`KeyError: ops`で停止した。設定変更・Web起動より前の位置であり、SSH読取でKG revision `7c54da24-6fa9-46a5-810d-834eed8328d9`とdocker/caddy/管理Connector/通知serviceのactiveを確認した。
 
 設定比較だけに`--profile '*'`を付け、休止profileも含む全構成を比較する。起動コマンドは引き続きWebだけでprofileを有効にしない。共通image tagを使う`member-ops`も比較対象へ含め、ops実体は既存imageを保持する。架空の環境値・一時Composeによる回帰検証で、通常configのops省略を再現し、修正後の全profile比較成功と無関係なmember-ops環境変更の拒否を確認した（サービス起動なし）。Bash/Python構文・diff検査成功。Web image/releaseは変更せず、deploy scriptとSHA256SUMSだけ更新して同じ管理者コマンドを再実行する。
+
+### Web image指定の修正と自動復帰
+
+2回目の管理者実行はWeb healthy後の新方式GETで`ranking`を取得できず、旧Web/configへの自動復帰を実行した。receipt `/opt/graph-knowledge/neighbor-order-13Nl0Qck`。復帰後の実GETで旧順のPLUTO6 Claimと従来revisionを確認、既存4 serviceはactive。
+
+過去の本番更新scriptはWebのimageをCompose内で固定指定する（release-public-accounts-production.py等）。共通GRAPH_IMAGE_TAGだけの更新では固定Webが切り替わらず、従来の比較ではimage差を正規化してこの未切替を見落としていた可能性が高い。root専用receiptは直接読めないため、実行時構成の確定診断とは区別する。対策としてWeb blockのimageだけを検証済みtagへ明示設定し、app.env／ops／member-opsの指定は変更しない。全profile設定比較に加え、起動前の解決済みWeb imageと起動後のcontainer実image ID一致を必須化した。通常変数参照・固定imageの両ComposeでWebだけ更新／app.envと全非Web service保持／旧Web指定の拒否をローカルで検証。サービス起動なし。Bash/Python構文とdiff確認済み。archiveとWebコードに変更はなく、再buildは不要。
