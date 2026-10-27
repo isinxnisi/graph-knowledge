@@ -46,7 +46,7 @@ betaの実画面で、通常のEntityリンクも旧保存の再生として扱�
 
 ローカル3287のGET専用proxyで、8秒遅延、503、409を模擬した。Entity4／Claim6を保持したまま対象名付き待機、503時Entity12／Claim21保持、再試行でClaim23へ復帰、409時Entity12／Claim27保持、明示読み直しで起点へ復帰を実画面で確認。390px幅の[待機表示](../research/neighbor-priority-20261028/mobile-loading.png)は小さな通知で、Graphを覆う大きなモーダルを追加していない。DBへ障害やrevision変更を起こした試験ではない。
 
-現時点ではbeta実画面・本番用bundle準備中。VPS developのsudoはpasswordを要求するため、準備・検証完了後の管理者一括コマンドが必要。未反映を反映済みと扱わない。
+以下は準備段階の記録（最終結果は末尾）。当時はbeta実画面・本番用bundle準備中。VPS developのsudoはpasswordを要求するため、準備・検証完了後の管理者一括コマンドが必要。未反映を反映済みと扱わない。
 
 ## 工程時間
 
@@ -81,3 +81,19 @@ VPS `/home/develop/graph-neighbor-order-issue54/` へ同一image archive・relea
 2回目の管理者実行はWeb healthy後の新方式GETで`ranking`を取得できず、旧Web/configへの自動復帰を実行した。receipt `/opt/graph-knowledge/neighbor-order-13Nl0Qck`。復帰後の実GETで旧順のPLUTO6 Claimと従来revisionを確認、既存4 serviceはactive。
 
 過去の本番更新scriptはWebのimageをCompose内で固定指定する（release-public-accounts-production.py等）。共通GRAPH_IMAGE_TAGだけの更新では固定Webが切り替わらず、従来の比較ではimage差を正規化してこの未切替を見落としていた可能性が高い。root専用receiptは直接読めないため、実行時構成の確定診断とは区別する。対策としてWeb blockのimageだけを検証済みtagへ明示設定し、app.env／ops／member-opsの指定は変更しない。全profile設定比較に加え、起動前の解決済みWeb imageと起動後のcontainer実image ID一致を必須化した。通常変数参照・固定imageの両ComposeでWebだけ更新／app.envと全非Web service保持／旧Web指定の拒否をローカルで検証。サービス起動なし。Bash/Python構文とdiff確認済み。archiveとWebコードに変更はなく、再buildは不要。
+
+## 本番反映完了
+
+管理者の最終実行でWebのみ更新成功。実image `sha256:8803c499a7d511621eb7293d5e1e21dd21ba35253d5a2a6700a9ee7fa50ecc25`（archiveのOCI manifest ID）、build `4oMzKiOEXiHL1oW4Z59Mm` はbetaと同じ検証済み成果物。readinessと新方式PLUTO GET成功、dataset前後一致、他containerのID/image/起動時刻一致、app.env保持。表示上のkg-admin orphan警告は別Composeで管理する既存専用containerによるもの。remove-orphansは使っておらず、管理Webを削除・再起動していない。Web起動5.9秒、確認時76.12MiB/768MiB・CPU0%。receipt `/opt/graph-knowledge/neighbor-order-RhlArBx2`。
+
+正式HTTPS `https://plunode.net` で東京大学の初回20 Claimと次20 Claimが重複なく40件、bounded200候補×50接続、revision `7c54da24-6fa9-46a5-810d-834eed8328d9` を確認。ネットワーク込み270ms／294ms（代表2要求のみ、負荷試験を再反復しない）。実画面でもEntity21/Claim20→Entity41/Claim40と順位説明を確認。[API証跡](../research/neighbor-priority-20261028/production-api.json)／[画面](../research/neighbor-priority-20261028/production-final.png)。
+
+既存Googleログイン済みセッションでアカウントのCapsule一覧、PLUTO内容版1の本文・Graph（対象6/主張9）、コミュニティ一覧の読取成功。新規Googleログイン・投稿・保存等の書込みは再実行していない。公開originの`/kg-admin`と`/api/kg-admin`は404、管理専用originへの未認証GETは403。SSHでdocker/caddy/管理Connector/通知serviceのactiveを再確認。管理者の前後比較と併せ、DB構造変更・KG書込み・非Web container更新なしを確認した。revisionは全件内容の独立再照合ではない。
+
+復旧は次の管理者コマンド。適用後に設定が変わっていれば上書きせず停止する。DB復旧や巻戻しは行わない。
+
+```sh
+sudo bash /opt/graph-knowledge/neighbor-order-RhlArBx2/rollback.sh
+```
+
+mainのアプリコードは`6b0fc78b`、最終配置scriptは`b43810d0`。beta/3200と本番は同じbuildへ反映済み。以降は記録のみで再build不要。cold時10秒timeoutが一度発生した制約は上記に残し、最終配置では検索成功を確認した。必要時には従来ID方式または旧imageへ復帰できる。完了記録のcommit/push後、手動holdを解放する。

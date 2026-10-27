@@ -248,7 +248,7 @@ Phase 08：任意のEntity関係俯瞰、明示起点切替、直前一件復帰
 
 2026-10-27 映画初期実装：[正式公開手順](runbooks/FILM_INITIAL_RELEASE.md)／[公開前検証](verification/FILM_RELEASE_20261027.md)。Role・Claim正式判断と本番backup／個別公開署名は未完了。研究時の試験データを正式受入済みとは扱わない。
 
-## Issue #54 進行中
+## Issue #54 反映完了
 
 - [条件付き近傍優先順・互換性・切戻し](design/NEIGHBOR_PRIORITY.md)
 - [性能・検証・配置記録](verification/NEIGHBOR_PRIORITY_20261028.md)

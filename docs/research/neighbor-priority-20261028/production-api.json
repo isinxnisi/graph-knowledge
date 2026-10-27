@@ -1,0 +1,17 @@
+{
+  "origin": "https://plunode.net",
+  "revision": "7c54da24-6fa9-46a5-810d-834eed8328d9",
+  "ranking": {
+    "mode": "bounded",
+    "candidateLimit": 200,
+    "connectionLimit": 50,
+    "evaluatedCandidates": 200,
+    "unevaluatedCandidates": true,
+    "cappedCandidates": 0
+  },
+  "firstClaims": 20,
+  "secondClaims": 20,
+  "uniqueClaims": 40,
+  "firstMs": 270,
+  "secondMs": 294
+}
