@@ -1,3 +1,25 @@
+# 2026-10-27：正式Role登録と映画2 Claim受入票の固定
+
+Roleの固定hash承認を実際の人間発言・時刻とともに保存し、e7e1a8d5をmain／専用branchへ統合・push。catalog10件、既存8定義・過去承認・baseline・研究草稿を保持した。Claim受入と本番公開は未実施。
+
+[次の正式受入判断票](../research/film-release-20261027/CLAIM_ACCEPTANCE_REVIEW.md)／[機械検証JSON](../research/film-release-20261027/role-registration-and-claim-readiness.json)。判断ファイルSHAは6bdc6af8165719975b57bb132c0188a18f18712fecf0cf1a93945b794a3747b6。完全本番backupと全10 receipt・live revision・凍結159コードファイルを再照合し、重複候補0、既存外部ID所有者0。2 Claimの本文・原文・UUIDを保持し、Citationの候補状態の注記だけを明確化した。
+
+- 定義済みnpm test：79 files / 885 tests成功、型検査・変更TypeScript lint成功。
+- 映画adapter16・dispatch3・隔離正式受入2 tests成功。注記修正後もadapter16・正式受入2件を再確認。
+- 正式catalogの実operator image 2bf646a2…で、ACTING／DIRECTING／AUTHORSHIP／ORIGINAL_STORY、追加のみplan、guarded apply／verify、stale revision・再適用拒否をprivate Neo4jで確認。試験DB・networkは撤去。[実測](../research/film-release-20261027/operator-registered-test.json)。Node PATH未指定による初回起動失敗は、明示Node24で解消した。模擬Role承認imageを流用していない。
+- 3200／HTTPS betaはbuild vBqJY67wdqijTKKY-EMJLへ更新。PC1440／スマホ390の検索→AFI根拠→段別Role Graph→保存・reload復元、逆Role順不一致、PLUTO／Google認可境界／コミュニティ／AIラボ／英語ヘッダを実ブラウザ計6件で確認。[PC](../research/film-release-20261027/role-approved-beta/film-restored-1440.png)／[スマホ](../research/film-release-20261027/role-approved-beta/film-restored-390.png)。既存のスマホ右下Graph操作ボタンとラベルの重なりは以前からの制約で、pan／zoom・展開・保存復元は成功した。
+- betaのtrial revision／FilmBetaState／2 Claim個別の試験表示は維持。正式Role採用だけで試験Claimを正式受入済み扱いしない。全画面共通の映画注意書きはない。
+- Web切替前後で元漫画KG10067 nodes/9926 relationships、試験KG10080/9937の全内容hashと、会員PG29テーブルの全行指紋が一致。既存83保護ファイル、Worker承認・control・旧receipt・設定を保持。migrationなし。betaのAI教育artifactを維持し、Kev／学習／本番AIを操作していない。
+- 正式Role入りWeb image de7b21f3…もbuild済み。本番Web／本番KG／root trust／署名鍵は未変更。実本番revisionはb74a4b00-9454-412f-af5d-1317713a543cのまま。
+- 広いvitest自動検出は専用環境を必要とする統合/E2Eを含めてしまったため中断し、プロジェクトで定義済みのnpm testを再実行。専用テスト用接続の不足等による試行失敗を全体成功として数えない。
+- 公開を妨げない状態表示・入力保持の不足は[Issue #53](https://github.com/isinxnisi/graph-knowledge/issues/53)へ分離。新しい自動化機構は開発しない。
+
+次の人間操作は固定票の2 Claimと依存3 Entityの正式UUID確定・2 Source／2 Citation・null scope/periodへの正式受入判断。SSH/sudoはこの判断には不要。正式receipt作成後のVPS固定image／trust更新・公開request署名・本番反映は未実施で、今後の既存契約に従う。
+
+以下は初回準備時の履歴であり、未承認Roleや完全backup未取得という記述を現在状態と取り違えない。
+
+---
+
 # 映画初期実装の正式公開前検証
 
 2026-10-27。#40（12f3476）／#41（2f1f6d6）／#43（b99bd9c）と最新main d59c3301を再利用。正式公開は未実施。運営者のSSH／sudoと固定hashへの正式判断・個別公開署名が残る。

@@ -1,0 +1,173 @@
+{
+  "schemaVersion": 1,
+  "decisionId": "film-initial-20261027",
+  "status": "draft-not-approved",
+  "humanDecision": {
+    "actorType": "human",
+    "reviewer": null,
+    "decidedAt": null,
+    "statement": null
+  },
+  "approvalScope": "formal-record-acceptance-and-release-preparation-only",
+  "applyAuthorized": {
+    "local": false,
+    "beta": false,
+    "vps": false
+  },
+  "review": {
+    "file": "datasets/film-collection/initial-20261027-final/review/review-manifest.json",
+    "sha256": "ebb44d4e64872da5c843939067944123c1eb0bc16d1da1482db4ad597d41af65"
+  },
+  "referenceArtifacts": [
+    {
+      "file": "datasets/film-collection/initial-20261027-final/review/context.json",
+      "sha256": "cc2232772a56a88c937c0d6bb08181e336429dc3478b8391bfff8617ccd2a730"
+    },
+    {
+      "file": "datasets/film-collection/initial-20261027-final/review/decision-request.json",
+      "sha256": "122ea82800f2f88b6fa4e1e33115a4965a1278ef6d7c56e656ecd4c1f50c83a2"
+    },
+    {
+      "file": "datasets/film-collection/initial-20261027-final/review/proposed-records.json",
+      "sha256": "f861a207785a59fabdb3e66885b5e4820de116eea31c624b63539f63b10d01f3"
+    },
+    {
+      "file": "datasets/film-collection/initial-20261027-final/review/review-manifest.json",
+      "sha256": "ebb44d4e64872da5c843939067944123c1eb0bc16d1da1482db4ad597d41af65"
+    },
+    {
+      "file": "datasets/film-collection/initial-20261027-final/review/review.json",
+      "sha256": "f1f6107ec4c172435b02c475b9c2c9a781b8e4656915f2c00b2b2bd326eeb3b6"
+    },
+    {
+      "file": "datasets/film-collection/initial-20261027-final/trial/bundle-manifest.json",
+      "sha256": "5a3aff9a31b28405a7d48ce0259d3264a83df5522f6bad24e6469db41984e9ff"
+    },
+    {
+      "file": "datasets/film-collection/initial-20261027-final/frozen-inputs/000-comparison.json.gz",
+      "sha256": "6837f278d767ae5d127ac62d8e74af7c4cd676ab25a376c2f3d04b5872ccfde5"
+    },
+    {
+      "file": "datasets/film-collection/initial-20261027-final/frozen-inputs/001-recipe.json",
+      "sha256": "274b6020dcee3d424d90ae5315e5410e12e4227c87c3a5b0b9fae41cc38959c5"
+    },
+    {
+      "file": "datasets/film-collection/initial-20261027-final/frozen-inputs/002-million-dollar-baby-credit.txt",
+      "sha256": "0555d359bc926e05f549174adf3559c1203279bc7596c1fd83617760acdaa760"
+    },
+    {
+      "file": "datasets/film-collection/initial-20261027-final/frozen-inputs/003-supplements.json",
+      "sha256": "6ce8f2d48ee0d6d3cc90041bc94f41ae21cb146c1c8819387a2d408241fd0700"
+    },
+    {
+      "file": "datasets/film-collection/initial-20261027-final/frozen-inputs/004-unforgiven-credit.txt",
+      "sha256": "84328b5aa0ff0dfe807819ed62e315d20d00b4a17a25cc75bdaa3125547fdf9c"
+    },
+    {
+      "file": "datasets/film-collection/initial-20261027-final/frozen-inputs/005-CANDIDATES.json",
+      "sha256": "06690102bb27b9ed9ab06d57f717ab4dce1e962bd1d409609b8c2e76dfccd470"
+    },
+    {
+      "file": "datasets/film-collection/initial-20261027-final/frozen-inputs/006-source_reviews.json",
+      "sha256": "0564cc3416d947019341f580a6391532525b77125812a54c23cd7b39a577735c"
+    },
+    {
+      "file": "datasets/film-collection/initial-20261027-final/frozen-inputs/007-fixture.json",
+      "sha256": "362b1b0d316b8a47eee560d90068e88a25465d10a5d4e8c8e3e9a16bde8e906f"
+    },
+    {
+      "file": "datasets/film-collection/initial-20261027-final/frozen-inputs/008-role-proposals.json",
+      "sha256": "50400fef170aceed9ca598e9f53085db8a68c72cd9cf980d72164dedd170c4c8"
+    },
+    {
+      "file": "datasets/film-collection/initial-20261027-final/frozen-inputs/009-public-backup.json",
+      "sha256": "f6a716d7264ce1023d3f9100cbd7fa6bd628cd174d2d2412546a0e4e3938b2d3"
+    }
+  ],
+  "acceptedRecordIds": {
+    "entities": [
+      "490ee589-76db-4a5e-8923-13d24b7cb3a2",
+      "604eb49e-df41-4157-8b49-bd92a0d93ad4",
+      "805b9630-cd9a-4931-8cde-0bcb92bf8a9f"
+    ],
+    "claims": [
+      "34b41d23-f4e6-4fc6-aa6f-2905f3c2a890",
+      "4c88b8e8-154d-47ad-bf82-f19876ecaebd"
+    ],
+    "sources": [
+      "54461ad1-e977-4b68-a2bf-7f972ff29002",
+      "c198ac9b-8baa-4ec2-a880-6ce9de171fcb"
+    ],
+    "citations": [
+      "8a6fe8f5-f3b3-4d08-8ad9-60eae3f8a583",
+      "dba11353-9e7f-47bc-86bb-9f2e5f8a6d6e"
+    ]
+  },
+  "recordSha256": {
+    "entities": {
+      "490ee589-76db-4a5e-8923-13d24b7cb3a2": "1fe15223e00ff8c2cc986eeadafd2b95d76724be0d0f531e07adf080d0174474",
+      "604eb49e-df41-4157-8b49-bd92a0d93ad4": "466f65051a847d74530ba6a9b34dbc82016e3a2a2c86aaa56856e307fcb14695",
+      "805b9630-cd9a-4931-8cde-0bcb92bf8a9f": "e0cfd5abd64649e64b572184f576d7f360fcc1cb3086ae071ef568d5d0c39370"
+    },
+    "claims": {
+      "34b41d23-f4e6-4fc6-aa6f-2905f3c2a890": "5c9bac955699442bd0813caa23a1928ef82d35fb0fccd7cd39be21f4bda7a0a4",
+      "4c88b8e8-154d-47ad-bf82-f19876ecaebd": "0661ca6c346efeb884e96b8e1fbe512100db3c9a4eecfcf73485461b162c494b"
+    },
+    "sources": {
+      "54461ad1-e977-4b68-a2bf-7f972ff29002": "e4dd517c33718ebffe76ee2805b967768d52153b08da3e2136b5c56e33f7f53a",
+      "c198ac9b-8baa-4ec2-a880-6ce9de171fcb": "b645812809422c48e52f7e30d1899ba2bfc6fd9f687e1d321f5739056b917f97"
+    },
+    "citations": {
+      "8a6fe8f5-f3b3-4d08-8ad9-60eae3f8a583": "bc0496ebe8e97dcee84f055403c0f58536836e7687e553d50140c559661bd4e7",
+      "dba11353-9e7f-47bc-86bb-9f2e5f8a6d6e": "97d0f35fbcf44936ab960463bb469118bcbaf3a3fe778a8132473523181f985d"
+    }
+  },
+  "scopeByClaim": [
+    {
+      "id": "34b41d23-f4e6-4fc6-aa6f-2905f3c2a890",
+      "subjectId": "490ee589-76db-4a5e-8923-13d24b7cb3a2",
+      "objectId": "805b9630-cd9a-4931-8cde-0bcb92bf8a9f",
+      "predicate": "CONTRIBUTED_TO",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "contribution": {
+        "roleId": "DIRECTING",
+        "scope": null
+      },
+      "organizationParticipation": null,
+      "eventParticipation": null
+    },
+    {
+      "id": "4c88b8e8-154d-47ad-bf82-f19876ecaebd",
+      "subjectId": "490ee589-76db-4a5e-8923-13d24b7cb3a2",
+      "objectId": "604eb49e-df41-4157-8b49-bd92a0d93ad4",
+      "predicate": "CONTRIBUTED_TO",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "contribution": {
+        "roleId": "ACTING",
+        "scope": null
+      },
+      "organizationParticipation": null,
+      "eventParticipation": null
+    }
+  ],
+  "baseRelease": "manga-issue-34-obata-drawing-20261023",
+  "baseRevision": "b74a4b00-9454-412f-af5d-1317713a543c",
+  "releaseId": "film-initial-20261027",
+  "identityDecision": {
+    "statement": "依存する3 Entityを、クリント・イーストウッド（Q43203）、許されざる者（Q104137）、ミリオンダラー・ベイビー（Q184255）それぞれの正式UUIDとして確定する。既存の別Entityとの自動mergeは行わない。",
+    "entityIds": [
+      "490ee589-76db-4a5e-8923-13d24b7cb3a2",
+      "604eb49e-df41-4157-8b49-bd92a0d93ad4",
+      "805b9630-cd9a-4931-8cde-0bcb92bf8a9f"
+    ]
+  },
+  "sourceKind": "film-discovery-v1"
+}

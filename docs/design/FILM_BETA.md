@@ -4,7 +4,7 @@
 
 ## 実行時の認識と正式採用
 
-DIRECTING（監督）・ACTING（実写の演技出演）はschema・日英表示で認識する試験登録。正式採用済み8 Roleは ADOPTED_CONTRIBUTION_ROLE_IDS と既存catalogで保持し、追加2 Roleは PENDING_CONTRIBUTION_ROLE_IDS と film-pending.json に分離する。既存baseline・approved reviewを変更しない。既存語彙checkerは正式8件を引き続き審査し、別のcheckerで試験2定義・9件ずつの比較・日英表示を照合する。固定審査票は [role-review-drafts.json](../research/film-beta-issue43/role-review-drafts.json)。status=draft、reviewer/reviewedAt=null。Issueの採用方針を具体hashへの正式承認と取り違えない。
+2026-10-27、運営者の固定hash・scope方針への承認に基づきDIRECTING（監督）・ACTING（実写の演技出演）を正式catalogへ登録した。正式採用は既存8件と合わせて10件。旧8定義・過去の承認記録・baselineは保持する。現在の採用状態の正本はcatalog.json／reviews.jsonであり、ADOPTED_CONTRIBUTION_ROLE_IDSは歴史的な8件の最小集合、PENDING_CONTRIBUTION_ROLE_IDSは元の映画研究cohort名として残る。film-pending.jsonと[研究審査草稿](../research/film-beta-issue43/role-review-drafts.json)は未承認時の凍結履歴で上書きしない。[正式Role判断](../research/film-release-20261027/role-decision-approved.json)を参照。映画2 Claimの正式受入・本番公開は別判断で未実施。
 
 監修・製作・撮影監督・限定工程、声・吹替・アーカイブ等を自動統合しない。一Claim一Role、人物→作品の独立Claim。scope:nullは未構造化、periodの両端nullを公開年で補完しない。
 
@@ -14,17 +14,17 @@ other-works revision3で、起点作品側と別作品側のRoleを独立指定�
 
 GRAPH_FILM_BETA=1、GRAPH_DATASET=public-kg の読取protocolを利用するが、接続先は厳密にloopback Bolt7696。GRAPH_DEPLOYMENT=production、共有7694/7695、任意ホストとの組合せを拒否する。専用DBには既存betaのKG backupを別DBへ復元して完全照合後、既存レコード更新0の追加投影だけを行う。
 
-FilmBetaStateを持ち、revisionは film-beta-issue43-unaccepted-v1。本番公開receiptを新しく作らず、元の正式履歴を保持する。既存APIのvisibility投影のため試験DB内の2 Claimだけをpublished相当にするが、元候補JSONはhiddenのまま。画面全体と候補根拠カードに未正式受入の試験表示を出す。これは公開KGへの受入・公開ではない。試験DBを公開KG backupとしてexportする通常経路も拒否する。正式release validatorは未採用Roleを拒否するため、試験JSONをそのまま公開releaseへ流用できない。
+FilmBetaStateを持ち、revisionは film-beta-issue43-unaccepted-v1。本番公開receiptを新しく作らず、元の正式履歴を保持する。既存APIのvisibility投影のため試験DB内の2 Claimだけをpublished相当にするが、元候補JSONはhiddenのまま。現在は末尾の2026-10-27表示境界に従い、対象Claimの個別根拠カードだけに未正式受入の試験表示を出す。これは公開KGへの受入・公開ではない。試験DBを公開KG backupとしてexportする通常経路も拒否する。正式release validatorは採用済みRoleとschemaを検査する。Claimの正式受入は別の人間判断・receipt被覆gateで要求し、beta JSONのpublished化を正式受入の代わりにしない。
 
 既存会員PG・Google設定・migrationは変更しない。private beta-film.jsonの再起動設定はKG接続5項目のみ。会員等の既存設定は .env.public を継続使用する。
 
 ## 収集・受入の接続
 
-既存3作品・12候補とAFI人物別原語資料を再利用し、追加通信なしでready2・held10を維持する。collection-workflow.py film-review の明示dispatchから、既存acceptance coreのdecision-template／UUID本文hash／scopeByClaim／依存／apply禁止形式へ接続する。accepted/approvedの実記録は作らない。新しいEntity同定に衝突があれば保留し、仮UUIDの昇格・対応は identityDecision に人間が明示する。
+既存3作品・12候補とAFI人物別原語資料を再利用し、追加通信なしでready2・held10を維持する。collection-workflow.py film-review の明示dispatchから、既存acceptance coreのdecision-template／UUID本文hash／scopeByClaim／依存／apply禁止形式へ接続する。このbeta準備ではClaim accepted/approvedの実記録は作らない。新しいEntity同定に衝突があれば保留し、仮UUIDの昇格・対応は identityDecision に人間が明示する。
 
 レビューはschema・語彙・表示・validator・mappers・query等の推移的コードhashに拘束する。正式receiptの全件集合とその参照資料を再照合し、変更時は再レビュー。正式受入側にも映画kindの明示dispatchと語彙採用・identity判断の事前gateを持つ。検証cacheは映画だけこの全コードbindingを含める。既存漫画collector／collection-themes.pyのcodeSha256・承認・Workerの設置済みコードは変更しない。
 
-今回の公開同一性照合は、本番のlive revisionと、そのrevisionを記録した完了済み配送結果・公開固定release・全正式receiptを照合したもの。新しい本番DBの完全backupを取得したとは記録しない。正式受入時は最新の権威ある公開backup、全receiptを備えた隔離data rootで再レビューし、固定判断を入力する。beta用cloneのbackupを正式受入の比較baseへ使わない。
+Issue #43時点の公開同一性照合は、本番のlive revisionと、そのrevisionを記録した完了済み配送結果・公開固定release・全正式receiptを照合したもの。新しい本番DBの完全backupを取得したとは記録しない。正式受入時は最新の権威ある公開backup、全receiptを備えた隔離data rootで再レビューし、固定判断を入力する。beta用cloneのbackupを正式受入の比較baseへ使わない。2026-10-27には運営者が実本番DBの完全backupを取得し、全10 receiptと再照合した。[現在の正式受入判断票](../research/film-release-20261027/CLAIM_ACCEPTANCE_REVIEW.md)を優先する。
 
 ## 固定した判断対象
 

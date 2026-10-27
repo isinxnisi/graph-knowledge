@@ -1,0 +1,144 @@
+{
+  "status": "roles-formally-registered-claims-awaiting-human-acceptance",
+  "verifiedAt": "2026-10-27T12:20:44.400517+00:00",
+  "roleRegistrationCommit": "e7e1a8d5",
+  "roleHumanDecisionSha256": "288756a509a9503ee5891265a65f77977d7d12cd0fe7b76883d40f046d6477c6",
+  "oldEightDefinitionsAndAllPriorReviewsPreserved": true,
+  "baselineAndResearchDraftBytesPreserved": true,
+  "formalRoleCount": 10,
+  "claimDecisionDraftSha256": "6bdc6af8165719975b57bb132c0188a18f18712fecf0cf1a93945b794a3747b6",
+  "reviewManifest": {
+    "file": "datasets/film-collection/initial-20261027-final/review/review-manifest.json",
+    "sha256": "ebb44d4e64872da5c843939067944123c1eb0bc16d1da1482db4ad597d41af65"
+  },
+  "productionAcceptanceReady": true,
+  "boundProgramFiles": 159,
+  "frozenBundleRevalidated": true,
+  "receiptCount": 10,
+  "productionBackupSha256": "f6a716d7264ce1023d3f9100cbd7fa6bd628cd174d2d2412546a0e4e3938b2d3",
+  "baseRelease": "manga-issue-34-obata-drawing-20261023",
+  "baseRevision": "b74a4b00-9454-412f-af5d-1317713a543c",
+  "counts": {
+    "entities": 3,
+    "claims": 2,
+    "sources": 2,
+    "citations": 2
+  },
+  "readyAndHeldCounts": {
+    "candidates": 12,
+    "ready": 2,
+    "held": 10
+  },
+  "duplicateCandidateIdsByClaim": {
+    "4c88b8e8-154d-47ad-bf82-f19876ecaebd": [],
+    "34b41d23-f4e6-4fc6-aa6f-2905f3c2a890": []
+  },
+  "existingExternalIdentifierOwners": 0,
+  "claimBodiesAndIdsUnchanged": true,
+  "citationChange": "Capture-time annotation clarified only; original terms, AFI bytes, locators and IDs unchanged",
+  "recordSha256": {
+    "entities": {
+      "490ee589-76db-4a5e-8923-13d24b7cb3a2": "1fe15223e00ff8c2cc986eeadafd2b95d76724be0d0f531e07adf080d0174474",
+      "604eb49e-df41-4157-8b49-bd92a0d93ad4": "466f65051a847d74530ba6a9b34dbc82016e3a2a2c86aaa56856e307fcb14695",
+      "805b9630-cd9a-4931-8cde-0bcb92bf8a9f": "e0cfd5abd64649e64b572184f576d7f360fcc1cb3086ae071ef568d5d0c39370"
+    },
+    "claims": {
+      "34b41d23-f4e6-4fc6-aa6f-2905f3c2a890": "5c9bac955699442bd0813caa23a1928ef82d35fb0fccd7cd39be21f4bda7a0a4",
+      "4c88b8e8-154d-47ad-bf82-f19876ecaebd": "0661ca6c346efeb884e96b8e1fbe512100db3c9a4eecfcf73485461b162c494b"
+    },
+    "sources": {
+      "54461ad1-e977-4b68-a2bf-7f972ff29002": "e4dd517c33718ebffe76ee2805b967768d52153b08da3e2136b5c56e33f7f53a",
+      "c198ac9b-8baa-4ec2-a880-6ce9de171fcb": "b645812809422c48e52f7e30d1899ba2bfc6fd9f687e1d321f5739056b917f97"
+    },
+    "citations": {
+      "8a6fe8f5-f3b3-4d08-8ad9-60eae3f8a583": "bc0496ebe8e97dcee84f055403c0f58536836e7687e553d50140c559661bd4e7",
+      "dba11353-9e7f-47bc-86bb-9f2e5f8a6d6e": "97d0f35fbcf44936ab960463bb469118bcbaf3a3fe778a8132473523181f985d"
+    }
+  },
+  "proposedIdentityDecisionNotYetApproved": {
+    "statement": "依存する3 Entityを、クリント・イーストウッド（Q43203）、許されざる者（Q104137）、ミリオンダラー・ベイビー（Q184255）それぞれの正式UUIDとして確定する。既存の別Entityとの自動mergeは行わない。",
+    "entityIds": [
+      "490ee589-76db-4a5e-8923-13d24b7cb3a2",
+      "604eb49e-df41-4157-8b49-bd92a0d93ad4",
+      "805b9630-cd9a-4931-8cde-0bcb92bf8a9f"
+    ]
+  },
+  "formalAcceptance": false,
+  "publicApply": false,
+  "newFormalReceipts": 0,
+  "operatorImage": "sha256:2bf646a22e867e5aa5fce5a155db45c337c4134ad6c0f337b65617c5799912e9",
+  "operatorTestFileSha256": "26ba47b6bd3f2b40b4f4b8b932dc34086706ea240ed39df44d4730f06c00c0e9",
+  "webImageBuiltNotDeployed": "sha256:de7b21f30277226965de2fdc7200ba0088fd00f8c9d731958eb52355c92f72ab",
+  "betaBuildId": "vBqJY67wdqijTKKY-EMJL",
+  "live": {
+    "production": {
+      "httpStatus": 200,
+      "metadata": {
+        "dataset": "public-kg",
+        "revision": "b74a4b00-9454-412f-af5d-1317713a543c"
+      }
+    },
+    "local": {
+      "httpStatus": 200,
+      "metadata": {
+        "dataset": "public-kg",
+        "trial": {
+          "id": "issue43",
+          "claims": 2,
+          "formalAcceptance": false,
+          "productionPublished": false
+        },
+        "revision": "film-beta-issue43-unaccepted-v1"
+      }
+    },
+    "beta": {
+      "httpStatus": 200,
+      "metadata": {
+        "dataset": "public-kg",
+        "trial": {
+          "id": "issue43",
+          "claims": 2,
+          "formalAcceptance": false,
+          "productionPublished": false
+        },
+        "revision": "film-beta-issue43-unaccepted-v1"
+      }
+    }
+  },
+  "preservation": {
+    "protectedFilesUnchanged": 83,
+    "graphs": {
+      "beta": {
+        "nodes": 10080,
+        "relationships": 9937,
+        "sha256": "db6fee5875120eb992bcd96fe563c3ea9da8f20925bd7b179d706b80484ff488"
+      },
+      "original": {
+        "nodes": 10067,
+        "relationships": 9926,
+        "sha256": "d48097750f76abcc5990f04e5e32ad60d4be5ff2e5620858e84ab88504cb9644"
+      }
+    },
+    "memberTables": 29,
+    "allTableRowsUnchanged": true,
+    "memberMigrationPerformed": false
+  },
+  "tests": {
+    "npmTest": {
+      "files": 79,
+      "tests": 885,
+      "passed": true
+    },
+    "typescript": true,
+    "changedTypeScriptLint": true,
+    "filmAdapter": 16,
+    "filmDispatch": 3,
+    "filmProductionAcceptance": 2,
+    "localBrowser": 3,
+    "httpsBetaBrowser": 3,
+    "operatorActualImage": true
+  },
+  "newAutomationImplemented": false,
+  "nonblockingFollowupIssue": "https://github.com/isinxnisi/graph-knowledge/issues/53",
+  "nextBoundary": "Human fixed Claim acceptance and explicit promotion of exactly three provisional Entity UUIDs; individual production signature remains separate"
+}

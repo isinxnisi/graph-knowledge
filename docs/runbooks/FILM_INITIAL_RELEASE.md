@@ -9,7 +9,7 @@
 - [正式Role判断](../research/film-release-20261027/role-decision-approved.json) と[人間承認の出所](../research/film-release-20261027/role-approval-provenance.json)を保存。固定hash・scope方針を運営者が2026-10-27 20:20:06 JSTに承認。元のRole判断草稿は履歴として未承認のまま保持する。
 - Eastwood→許されざる者 ACTING: 4c88b8e8-154d-47ad-bf82-f19876ecaebd
 - Eastwood→ミリオンダラー・ベイビー DIRECTING: 34b41d23-f4e6-4fc6-aa6f-2905f3c2a890
-- [2 Claim草稿](../../datasets/film-collection/release-20261027/decision-draft.json) に依存3 Entity／2 Source／2 CitationのUUID、本文hash、scope／period、AFI原表記を固定。最新公開artifact＋10正式receiptとの照合結果であり、本番DB backup付き正式受入票ではない。
+- [現在の2 Claim正式受入判断票](../research/film-release-20261027/CLAIM_ACCEPTANCE_REVIEW.md)は、実本番DBの完全backup・live revision・全10正式receipt・正式Role登録後の審査コード159ファイルに拘束する。判断JSONのSHAは6bdc6af8165719975b57bb132c0188a18f18712fecf0cf1a93945b794a3747b6。旧release-20261027草稿は完全backup前の履歴で、今回の判断に流用しない。
 - scope=nullは適用範囲未構造化。全版・全地域・全期間の宣言ではない。periodを公開年から補わない。新規3 EntityのUUID昇格・同一性判断も明記する。
 
 ## 運営者操作を一つの作業枠へまとめる
@@ -61,3 +61,4 @@ Role判断／Claim判断／個別公開署名が未完了なら、その境界�
 ## 現在の引継ぎ
 
 main統合済み実装はd6a21acd、初回検証記録はa0dd6c21。3200／betaはbuild jCKofzeGk3iNCU32pxk0T、実ブラウザ6件成功。本番は未変更。運営者が上記2の完全backup exportを実行し、Codexが実ファイルを検証済み。backup SHAは f6a716d7264ce1023d3f9100cbd7fa6bd628cd174d2d2412546a0e4e3938b2d3。[本番backup・全receipt・重複照合結果](../research/film-release-20261027/production-backup-verification.json)を参照。上記3の固定Role判断・登録は完了。実際の審査コードhashで2 Claimの正式受入票を固定し、次はそのClaim・依存Entityの人間判断へ進む。Role／Claim判断・実image固定・個別公開署名を順に進め、まだ存在しないrequest hashへの承認を先取りしない。
+\n\n2026-10-27 Role承認後の現在地：Role登録e7e1a8d5をmain／専用branchへpush、3200／beta build vBqJY67wdqijTKKY-EMJL、実ブラウザ6件成功。実Role catalog入りoperator image sha256:2bf646a22e867e5aa5fce5a155db45c337c4134ad6c0f337b65617c5799912e9は隔離検証成功、Web image sha256:de7b21f30277226965de2fdc7200ba0088fd00f8c9d731958eb52355c92f72abもbuild済み。いずれもVPS/root trustへ未配置。次の人間操作は[固定Claim受入票](../research/film-release-20261027/CLAIM_ACCEPTANCE_REVIEW.md)への意味・同一性判断だけで、SSH/sudoはまだ不要。承認待ちではholdを解放し、再開時に実環境・全receiptとbindingを再検証する。\n
