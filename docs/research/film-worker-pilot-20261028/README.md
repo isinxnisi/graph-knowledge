@@ -1,6 +1,6 @@
 # まとまり1：固定Workerの映画互換と保存候補の受入準備
 
-> 2026-10-28更新：固定対象2件への運営者承認を受け、Worker5ファイル更新と34 Claimの正式受入・release候補・offline planまで完了した。[最新状態](FORMAL_ACCEPTANCE_STATUS.md)。以下はcommit e2776c49時点の判断前資料として保持する。
+> 2026-10-28更新：固定対象2件への運営者承認を受け、Worker5ファイル更新と34 Claimの正式受入、release候補・offline／root実plan・delivery登録まで完了した。[次の個別公開承認](PUBLICATION_APPROVAL_REVIEW.md)／[最新状態](FORMAL_ACCEPTANCE_STATUS.md)。以下はcommit e2776c49時点の判断前資料として保持する。
 
 2026-10-28。設計レビュー `8380f312` 第9章の実装・検証結果。main基準は `129c1eb411cece336cce02996c520f8f21b12f0a`。mainへの統合、稼働Workerへの更新、正式受入、公開は実施していない。
 

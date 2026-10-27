@@ -1,6 +1,6 @@
 # Worker更新・映画34 Claim正式受入後の現在地
 
-2026-10-28。運営者の固定対象への実承認を受け、5ファイルbackport、34 Claimの正式受入、release候補とoffline planを完了した。**本番公開署名・apply・beta／本番Web切替は行っていない。公開requestは既存Issue #33の経路で準備中。**
+2026-10-28。運営者の固定対象への実承認を受け、5ファイルbackport、34 Claimの正式受入、release候補・offline plan・root実plan・既存delivery登録まで完了した。**本番公開署名・apply・beta／本番Web切替は行っていない。** 次は [固定requestの個別公開署名](PUBLICATION_APPROVAL_REVIEW.md)。
 
 ## 実施した固定対象
 
@@ -30,6 +30,8 @@
 [公開候補](publication-candidate.json)は既存固定source7392d8eのreceipt-only builder、正式10 Role対応image、全12 receiptを使用。新規自動化・gate更新は行っていない。既存自動準備が作成済みのdurable intentを同じ入力・同じnonceで継続した。Issue #53で既知の一時directory mount／JSONキー順の問題には、前回と同じ一度限りのschema直列化を再利用し、JSON値の完全一致を要求した。稼働自動化コードは変更していない。
 
 候補nonce `13abfb93-ba2d-44f7-a56b-352aa7ab0ab0`、release `publication-8b0b1d67656a15c7e505ba1f`。この段階のplan hashはoffline planであり、個別公開署名に使うroot実planとは区別する。
+
+後続のroot実plan SHAは `8e6dbf83d411acef77c2631c1dde6a466f2b8fb7a45e742371334560416ee5e7`。同じ131 node／165 relationship追加・更新0の投影とhash一致。全12 receiptの既存peer証明、通常Workerのpause-new ACK（revision7）、rootの公開承認待ち、delivery登録とoperator describe成功を確認した。[最終検証](results/publication-preparation-verification.json)。公開承認ファイルは未作成で、本番revisionは不変。
 
 ## 停止・再開の記録
 

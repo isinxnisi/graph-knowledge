@@ -1,6 +1,6 @@
 # 運営者判断：Worker更新と34 Claim受入
 
-> 2026-10-28更新：以下の2固定対象は運営者が承認し、Worker更新・正式受入・offline planまで完了。[最新状態](FORMAL_ACCEPTANCE_STATUS.md)。次は個別公開署名の境界であり、下記の判断・backup取得を繰り返す依頼ではない。
+> 2026-10-28更新：以下の2固定対象は運営者が承認し、Worker更新・正式受入・offline plan・root実plan・delivery登録まで完了。[次に必要な一つの公開承認操作](PUBLICATION_APPROVAL_REVIEW.md)／[最新状態](FORMAL_ACCEPTANCE_STATUS.md)。下記の判断・backup取得を繰り返す依頼ではない。
 
 backup取得は運営者実行・Codex検証とも完了。現在必要なのは次の固定対象への判断であり、SSH／sudoの追加操作は現時点ではない。
 

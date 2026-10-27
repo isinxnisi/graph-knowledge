@@ -1,0 +1,31 @@
+{
+  "nonce": "13abfb93-ba2d-44f7-a56b-352aa7ab0ab0",
+  "phase": "awaiting-publication-approval",
+  "request": {
+    "artifactSha256": "9a58b3a3515c4e8fb4093a76210acc4828a8cfefc68b1dbba135b019ee41d2da",
+    "baseRelease": "publication-film-initial-20261027",
+    "baseRevision": "7c54da24-6fa9-46a5-810d-834eed8328d9",
+    "environment": "production",
+    "operatorDigest": "sha256:7042781b105067ce3adea0c59bccfb4c8326f84c0ca6aa5f1b8c26e6cd3d5cef",
+    "planSha256": "8e6dbf83d411acef77c2631c1dde6a466f2b8fb7a45e742371334560416ee5e7",
+    "purpose": "public-kg-publication",
+    "receiptSetSha256": "9cfd5c4f9a84d6f37ac6a58228421d76d1859d0f7e48b117b424c42495af1969",
+    "release": "publication-8b0b1d67656a15c7e505ba1f",
+    "schemaVersion": 1
+  },
+  "exclusion": {
+    "artifactSha256": "9a58b3a3515c4e8fb4093a76210acc4828a8cfefc68b1dbba135b019ee41d2da",
+    "codeCommit": "973c7b0c599f79905a029b28b524f4924e169376",
+    "generation": 3,
+    "nonce": "13abfb93-ba2d-44f7-a56b-352aa7ab0ab0",
+    "pause": {
+      "controlId": "pub-13abfb93-ba2d-44f7-a56b-352aa7ab0ab0-pause",
+      "controlSha256": "4e3110c15c04a17bbcc5418fd2f16c161305db03a383ee4764b1088f49334411",
+      "revision": 7
+    },
+    "phase": "open",
+    "receiptSetSha256": "9cfd5c4f9a84d6f37ac6a58228421d76d1859d0f7e48b117b424c42495af1969",
+    "ticketId": "748c32a4-d7f2-4ea6-8334-63d8d8e8f1ee",
+    "workerId": "plunode-wsl"
+  }
+}

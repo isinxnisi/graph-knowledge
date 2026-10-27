@@ -1,0 +1,12 @@
+{
+  "artifactSha256": "9a58b3a3515c4e8fb4093a76210acc4828a8cfefc68b1dbba135b019ee41d2da",
+  "baseRelease": "publication-film-initial-20261027",
+  "baseRevision": "7c54da24-6fa9-46a5-810d-834eed8328d9",
+  "environment": "production",
+  "operatorDigest": "sha256:7042781b105067ce3adea0c59bccfb4c8326f84c0ca6aa5f1b8c26e6cd3d5cef",
+  "planSha256": "8e6dbf83d411acef77c2631c1dde6a466f2b8fb7a45e742371334560416ee5e7",
+  "purpose": "public-kg-publication",
+  "receiptSetSha256": "9cfd5c4f9a84d6f37ac6a58228421d76d1859d0f7e48b117b424c42495af1969",
+  "release": "publication-8b0b1d67656a15c7e505ba1f",
+  "schemaVersion": 1
+}
