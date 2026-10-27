@@ -44,7 +44,8 @@
   "requestsByPhase": {
     "blocked": 12,
     "completed": 21,
-    "awaiting-recovery": 1
+    "awaiting-recovery": 1,
+    "waiting-control": 1
   },
   "issueIntake": {
     "collection-control/issue-sources/25.json": {
@@ -74,6 +75,10 @@
     "collection-control/issue-sources/48.json": {
       "status": "registered: issue-48-dot-toriyama-three-20261027",
       "checkedAt": "2026-10-27T06:22:04+00:00"
+    },
+    "collection-control/issue-sources/49.json": {
+      "status": "registered: issue-49-dot-hara-souten-20261027",
+      "checkedAt": "2026-10-27T07:53:07+00:00"
     }
   },
   "publicApply": false,
@@ -115,5 +120,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-10-27T07:45:45.705101+00:00"
+  "checkedAt": "2026-10-27T07:54:10.026779+00:00"
 }
