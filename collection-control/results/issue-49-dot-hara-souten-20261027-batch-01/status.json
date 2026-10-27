@@ -82,12 +82,12 @@
   },
   "requestSha256": "4b36751528d2556648cc38baa8a234f5cbdf78ca4d0b1370b8e5f749358552a0",
   "kind": "collect-review",
-  "phase": "completed",
-  "generation": 5,
+  "phase": "retry-wait",
+  "generation": 273,
   "attempts": 1,
   "workerId": "plunode-wsl",
   "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
-  "updatedAt": "2026-10-27T08:09:40+00:00",
+  "updatedAt": "2026-10-27T18:08:14+00:00",
   "result": {
     "jobId": "issue-49-dot-hara-souten-20261027-r0001-71d22e5d1577c85e",
     "collectionUnchanged": false,
@@ -112,5 +112,7 @@
   },
   "decisionDrafts": [
     "datasets/collection-decision-drafts/issue-49-dot-hara-souten-20261027-batch-01/9a94a3f5608d629ac0f98d646a06230c091e891583fa483fd1af8dad08ffd288/issue-49-dot-hara-souten-20261027-batch-01-normal-draft.json"
-  ]
+  ],
+  "message": "GitHub Issue read failed: HTTP 502",
+  "retryAt": 1793124626.8461587
 }
