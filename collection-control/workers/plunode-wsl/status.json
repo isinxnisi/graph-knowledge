@@ -26,29 +26,25 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-10-27T07:31:09.712540+00:00",
-  "phase": "running",
+  "nextStartAt": "2026-10-27T06:37:46.121553+00:00",
+  "phase": "interval",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
     "reason": "interval",
-    "eligibleAt": "2026-10-27T07:31:09.712540+00:00",
+    "eligibleAt": "2026-10-27T06:37:46.121553+00:00",
     "windowEndAt": "2026-10-27T09:00:00+00:00"
   },
-  "activeAttempt": {
-    "requestId": "issue-47-dot-yukimura-two-20261027",
-    "startedAt": "2026-10-27T06:26:09.712542+00:00",
-    "limitAt": "2026-10-27T07:21:09.712540+00:00"
-  },
+  "activeAttempt": null,
   "lastAttempt": {
-    "requestId": "issue-46-dot-aoyama-three-20261027-batch-01",
-    "endedAt": "2026-10-27T06:14:41.667001+00:00"
+    "requestId": "issue-47-dot-yukimura-two-20261027",
+    "endedAt": "2026-10-27T06:27:46.121556+00:00"
   },
   "controlError": null,
   "requestsByPhase": {
     "blocked": 12,
     "completed": 19,
-    "running": 1,
+    "retry-transport": 1,
     "waiting-control": 1
   },
   "issueIntake": {
@@ -120,5 +116,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-10-27T06:26:51.919739+00:00"
+  "checkedAt": "2026-10-27T06:28:19.361382+00:00"
 }
