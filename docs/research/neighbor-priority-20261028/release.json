@@ -1,0 +1,10 @@
+{
+  "tag": "issue54-20261028",
+  "build": "4oMzKiOEXiHL1oW4Z59Mm",
+  "source": "6b0fc78bec37a22928e994e81a891b4d477f6058",
+  "previousBuild": "oTXBAgU034CoviTmmAHQ9",
+  "imageDigests": [
+    "sha256:1fc15f65573edec91346091c9fb4b99644099c0c6af731c576e7ab4d5850ba25",
+    "sha256:8803c499a7d511621eb7293d5e1e21dd21ba35253d5a2a6700a9ee7fa50ecc25"
+  ]
+}
