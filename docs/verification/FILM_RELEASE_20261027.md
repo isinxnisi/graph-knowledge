@@ -1,3 +1,5 @@
+2026-10-27追記：最初の運営者sudo操作は、別作業の共通holdによりWSL設定更新前のBlockingIOErrorで停止。delivery設定の元SHA一致・VPS段階未実行を確認し、他作業の正常終了・解放を待った。作成済みroot資材のSHAを再検査する --resume-wsl-staged を追加。固定rootプログラム・image・manifest・bundle SHAは維持。未変更設定と更新前backup／resultなしを条件に、更新開始前のロック競合だけ最大90秒待つ。その他の失敗・更新開始後は再試行しない。隔離安全テスト16件成功。[再開コマンドと成功時確認](../research/film-release-20261027/FORMAL_ACCEPTANCE_STATUS.md)／[実測](../research/film-release-20261027/operator-lock-resume-verification.json)。本番署名・apply・Web／DB変更なし。
+
 # 2026-10-27：映画2 Claim正式受入完了・公開候補固定
 
 固定票6bdc6af8…への運営者の実承認に従い、既存accept-filmから正式receipt 3ac7b6be…を作成した。2 Claim＋依存3 Entity／2 Source／2 Citation、scope／periodはnullを保持。旧10 receiptの65ファイルと全旧公開recordは不変。正式receiptは11件、release validate成功、offline planは追加のみ・既存更新0。本番apply／署名は未実施。

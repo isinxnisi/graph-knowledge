@@ -30,11 +30,15 @@ WSL端末で次を実行する。失敗時はroot作業directoryを消さず、�
 set -eu
 cd /home/isinxnisi/1.projects/7.graph-knowledge
 printf '%s  %s\n' \
-  47af380a501209fd5a56d97242a58b9dd4c6e261b4253369c1be1340268dfc70 \
+  9d64f68fbdde9a99303b91b4e42dfae33cacede68f2343255fd99fa351889a2c \
   ops/run-film-operator-image-step.py | sha256sum -c -
-python3 ops/run-film-operator-image-step.py
+python3 ops/run-film-operator-image-step.py --resume-wsl-staged
 )
 ```
+
+2026-10-27の初回sudo操作は、別作業が保持中の共通ロックでBlockingIOErrorとなり、WSLの設定更新前に停止した。Codexがdelivery設定のSHAを元の8b03ee69…と照合し、未更新を確認。VPS段階は未実行。別作業の正常終了・ロック解放を確認済み。
+
+上記はこの停止後の**再開コマンド**。既存root資材の固定hashを再検査し、未変更設定・更新前backupなし・完了resultなしを条件に再開する。root資材を消す／上書きコピーする操作はない。共通／preparationロックの競合だけは、更新が一切始まっていない場合に最大90秒待つ。他のエラーや更新開始後の失敗は再試行しない。固定root更新プログラム・image・trust manifest・SHA256SUMSは変更していない。新しい公開自動化・署名機構ではなく、今回のoperator操作入口だけの再開対応。
 
 成功時に表示される2 JSONの確認点：
 

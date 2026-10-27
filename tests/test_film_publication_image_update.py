@@ -1,8 +1,11 @@
 """One-time film pin update: fixed scope, lock refusal and config rollback."""
+import contextlib
 import fcntl
+import io
 import importlib.util
 import json
 import os
+import runpy
 from pathlib import Path
 import tempfile
 from types import SimpleNamespace
@@ -149,6 +152,50 @@ class FilmPinUpdateTests(unittest.TestCase):
 
     def test_vps_updates_only_image_pins(self): self.exercise_vps()
     def test_vps_advanced_revision_restores_both_pins(self): self.exercise_vps(advanced=True)
+
+class FilmPinResumeTests(unittest.TestCase):
+    def run_retry(self, responses, marker=False, before=False, expired=False):
+        launcher = runpy.run_path(str(Path(__file__).resolve().parents[1] / "ops/run-film-operator-image-step.py"))
+        with tempfile.TemporaryDirectory() as tmp:
+            stage = Path(tmp); config = stage / "delivery.json"; config.write_bytes(b"unchanged")
+            code = launcher["LOCK_RETRY_CODE"].replace("/etc/plunode-publication/delivery.json", str(config)).replace(m.OLD_DELIVERY, m.sha(config))
+            if before: (stage / "delivery.before.json").touch()
+            calls = []
+            def child(*args, **kwargs):
+                calls.append(args[0])
+                if marker: (stage / "delivery.before.json").touch()
+                return responses[len(calls)-1]
+            clocks = [0, 100] if expired else [0, 1, 2, 3]
+            exit_code = 0
+            with patch.object(Path, "cwd", return_value=stage), patch("subprocess.run", side_effect=child), patch("time.monotonic", side_effect=clocks), patch("time.sleep") as sleeper, contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(io.StringIO()):
+                try: exec(compile(code, "<fixed-lock-retry-test>", "exec"), {})
+                except SystemExit as error: exit_code = error.code
+            self.assertEqual(config.read_bytes(), b"unchanged")
+            return exit_code, calls, sleeper.call_count
+
+    def blocked(self):
+        return SimpleNamespace(returncode=1, stdout='{"errorType":"BlockingIOError","publicApply":false,"signed":false}', stderr="")
+
+    def test_lock_before_any_update_can_retry(self):
+        result = self.run_retry([self.blocked(), SimpleNamespace(returncode=0, stdout='{"target":"wsl"}', stderr="")])
+        self.assertEqual(result[0], 0); self.assertEqual(len(result[1]), 2); self.assertEqual(result[2], 1)
+
+    def test_failure_after_backup_must_not_retry(self):
+        result = self.run_retry([self.blocked()], marker=True)
+        self.assertEqual(result[0], 1); self.assertEqual(len(result[1]), 1); self.assertEqual(result[2], 0)
+
+    def test_existing_backup_refuses_without_child(self):
+        result = self.run_retry([], before=True)
+        self.assertNotEqual(result[0], 0); self.assertEqual(len(result[1]), 0)
+
+    def test_non_lock_failure_never_retries(self):
+        error = SimpleNamespace(returncode=1, stdout='{"errorType":"ValueError","publicApply":false,"signed":false}', stderr="")
+        result = self.run_retry([error])
+        self.assertEqual(result[0], 1); self.assertEqual(len(result[1]), 1); self.assertEqual(result[2], 0)
+
+    def test_retry_deadline_never_bypasses_lock(self):
+        result = self.run_retry([self.blocked()], expired=True)
+        self.assertEqual(result[0], 1); self.assertEqual(len(result[1]), 1); self.assertEqual(result[2], 0)
 
 if __name__ == "__main__":
     unittest.main()

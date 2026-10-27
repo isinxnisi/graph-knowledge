@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-10-27T23:44:11.589104+09:00",
+  "firstOperatorAttempt": {
+    "target": "wsl",
+    "errorType": "BlockingIOError",
+    "stoppedBeforeConfigWrite": true,
+    "vpsStageStarted": false,
+    "publicApply": false,
+    "signed": false
+  },
+  "observedDeliverySha256": "8b03ee69d4d9eaf090bc6f68910ac1eb34d7f631d3123c0770e06745c56134d4",
+  "conflictingManualWork": "Issue #52を実装",
+  "conflictingWorkCompletedMain": "32569e80cda96716ce1fa0ef9ee74dd8ba07abdf",
+  "conflictingLockNormallyReleased": true,
+  "originalFrozenRootProgramSha256": "db670372f43d7ff65ea39b89907dbd494c6cd4fea7090e81d508039efc395ade",
+  "originalBundleSha256": "8998152004de259a793a13fd97803965621597c4bfaf2214bd354538c58df116",
+  "rootAssetsChanged": false,
+  "launcherSha256": "9d64f68fbdde9a99303b91b4e42dfae33cacede68f2343255fd99fa351889a2c",
+  "resumeFlag": "--resume-wsl-staged",
+  "retryOnlyBeforeAnyUpdate": true,
+  "lockWaitMaxSeconds": 90,
+  "safetyTestsPassed": 16,
+  "protectedPinsChangedByCodex": false,
+  "publicApply": false,
+  "signed": false
+}
