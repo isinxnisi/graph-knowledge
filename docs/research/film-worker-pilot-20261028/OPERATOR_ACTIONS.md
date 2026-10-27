@@ -1,6 +1,6 @@
 # 運営者判断：Worker更新と34 Claim受入
 
-> 2026-10-28更新：以下の2固定対象は運営者が承認し、Worker更新・正式受入・offline plan・root実plan・delivery登録まで完了。[次に必要な一つの公開承認操作](PUBLICATION_APPROVAL_REVIEW.md)／[最新状態](FORMAL_ACCEPTANCE_STATUS.md)。下記の判断・backup取得を繰り返す依頼ではない。
+> 2026-10-28更新：以下の2固定対象は承認・実施済み。個別公開署名も完了し、34 Claimが本番公開された。追加の運営者操作・再署名は不要。[公開完了・検証・残件](PUBLICATION_COMPLETED.md)。以下の判断・backup・コマンドは当時の履歴であり、再実行の依頼ではない。
 
 backup取得は運営者実行・Codex検証とも完了。現在必要なのは次の固定対象への判断であり、SSH／sudoの追加操作は現時点ではない。
 

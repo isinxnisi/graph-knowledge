@@ -1,0 +1,523 @@
+{
+  "authority": "verification-harness-attempts-not-production-failures",
+  "attempts": [
+    {
+      "attempt": "production",
+      "stats": {
+        "startTime": "2026-10-27T23:31:56.948Z",
+        "duration": 6260.361999999999,
+        "expected": 0,
+        "skipped": 0,
+        "unexpected": 3,
+        "flaky": 0
+      },
+      "suites": [
+        {
+          "title": "film-beta.spec.ts",
+          "file": "film-beta.spec.ts",
+          "column": 0,
+          "line": 0,
+          "specs": [
+            {
+              "title": "film candidates: conditions, evidence, Graph and saved restore 1440",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 180000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 9,
+                      "error": {
+                        "message": "Error: browserType.launch: Target page, context or browser has been closed\nBrowser logs:\n\n<launching> /home/isinxnisi/.cache/ms-playwright/chromium_headless_shell-1243/chrome-headless-shell-linux64/chrome-headless-shell --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-edgeupdater --disable-extensions --disable-features=AvoidUnnecessaryBeforeUnloadCheckSync,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,BlockOriginHeaderModificationOnRedirect,Translate,AutoDeElevate,OptimizationHints,msForceBrowserSignIn,msEdgeUpdateLaunchServicesPreferredVersion --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --disable-updater-scheduler --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --disable-infobars --disable-search-engine-choice-screen --disable-sync --enable-unsafe-swiftshader --headless --hide-scrollbars --mute-audio --blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4 --no-sandbox --user-data-dir=/tmp/playwright_chromiumdev_profile-GLNGHD --remote-debugging-pipe --no-startup-window\n<launched> pid=1333820\n[pid=1333820][err] /home/isinxnisi/.cache/ms-playwright/chromium_headless_shell-1243/chrome-headless-shell-linux64/chrome-headless-shell: error while loading shared libraries: libnspr4.so: cannot open shared object file: No such file or directory\nCall log:\n\u001b[2m  - <launching> /home/isinxnisi/.cache/ms-playwright/chromium_headless_shell-1243/chrome-headless-shell-linux64/chrome-headless-shell --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-edgeupdater --disable-extensions --disable-features=AvoidUnnecessaryBeforeUnloadCheckSync,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,BlockOriginHeaderModificationOnRedirect,Translate,AutoDeElevate,OptimizationHints,msForceBrowserSignIn,msEdgeUpdateLaunchServicesPreferredVersion --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --disable-updater-scheduler --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --disable-infobars --disable-search-engine-choice-screen --disable-sync --enable-unsafe-swiftshader --headless --hide-scrollbars --mute-audio --blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4 --no-sandbox --user-data-dir=/tmp/playwright_chromiumdev_profile-GLNGHD --remote-debugging-pipe --no-startup-window\u001b[22m\n\u001b[2m  - <launched> pid=1333820\u001b[22m\n\u001b[2m  - [pid=1333820][err] /home/isinxnisi/.cache/ms-playwright/chromium_headless_shell-1243/chrome-headless-shell-linux64/chrome-headless-shell: error while loading shared libraries: libnspr4.so: cannot open shared object file: No such file or directory\u001b[22m\n\u001b[2m  - [pid=1333820] <gracefully close start>\u001b[22m\n\u001b[2m  - [pid=1333820] <kill>\u001b[22m\n\u001b[2m  - [pid=1333820] <will force kill>\u001b[22m\n\u001b[2m  - [pid=1333820] exception while trying to kill process: Error: kill ESRCH\u001b[22m\n\u001b[2m  - [pid=1333820] <process did exit: exitCode=127, signal=null>\u001b[22m\n\u001b[2m  - [pid=1333820] starting temporary directories cleanup\u001b[22m\n\u001b[2m  - [pid=1333820] finished temporary directories cleanup\u001b[22m\n\u001b[2m  - [pid=1333820] <gracefully close end>\u001b[22m\n",
+                        "stack": "Error: browserType.launch: Target page, context or browser has been closed\nBrowser logs:\n\n<launching> /home/isinxnisi/.cache/ms-playwright/chromium_headless_shell-1243/chrome-headless-shell-linux64/chrome-headless-shell --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-edgeupdater --disable-extensions --disable-features=AvoidUnnecessaryBeforeUnloadCheckSync,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,BlockOriginHeaderModificationOnRedirect,Translate,AutoDeElevate,OptimizationHints,msForceBrowserSignIn,msEdgeUpdateLaunchServicesPreferredVersion --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --disable-updater-scheduler --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --disable-infobars --disable-search-engine-choice-screen --disable-sync --enable-unsafe-swiftshader --headless --hide-scrollbars --mute-audio --blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4 --no-sandbox --user-data-dir=/tmp/playwright_chromiumdev_profile-GLNGHD --remote-debugging-pipe --no-startup-window\n<launched> pid=1333820\n[pid=1333820][err] /home/isinxnisi/.cache/ms-playwright/chromium_headless_shell-1243/chrome-headless-shell-linux64/chrome-headless-shell: error while loading shared libraries: libnspr4.so: cannot open shared object file: No such file or directory\nCall log:\n\u001b[2m  - <launching> /home/isinxnisi/.cache/ms-playwright/chromium_headless_shell-1243/chrome-headless-shell-linux64/chrome-headless-shell --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-edgeupdater --disable-extensions --disable-features=AvoidUnnecessaryBeforeUnloadCheckSync,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,BlockOriginHeaderModificationOnRedirect,Translate,AutoDeElevate,OptimizationHints,msForceBrowserSignIn,msEdgeUpdateLaunchServicesPreferredVersion --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --disable-updater-scheduler --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --disable-infobars --disable-search-engine-choice-screen --disable-sync --enable-unsafe-swiftshader --headless --hide-scrollbars --mute-audio --blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4 --no-sandbox --user-data-dir=/tmp/playwright_chromiumdev_profile-GLNGHD --remote-debugging-pipe --no-startup-window\u001b[22m\n\u001b[2m  - <launched> pid=1333820\u001b[22m\n\u001b[2m  - [pid=1333820][err] /home/isinxnisi/.cache/ms-playwright/chromium_headless_shell-1243/chrome-headless-shell-linux64/chrome-headless-shell: error while loading shared libraries: libnspr4.so: cannot open shared object file: No such file or directory\u001b[22m\n\u001b[2m  - [pid=1333820] <gracefully close start>\u001b[22m\n\u001b[2m  - [pid=1333820] <kill>\u001b[22m\n\u001b[2m  - [pid=1333820] <will force kill>\u001b[22m\n\u001b[2m  - [pid=1333820] exception while trying to kill process: Error: kill ESRCH\u001b[22m\n\u001b[2m  - [pid=1333820] <process did exit: exitCode=127, signal=null>\u001b[22m\n\u001b[2m  - [pid=1333820] starting temporary directories cleanup\u001b[22m\n\u001b[2m  - [pid=1333820] finished temporary directories cleanup\u001b[22m\n\u001b[2m  - [pid=1333820] <gracefully close end>\u001b[22m\n"
+                      },
+                      "errors": [
+                        {
+                          "message": "Error: browserType.launch: Target page, context or browser has been closed\nBrowser logs:\n\n<launching> /home/isinxnisi/.cache/ms-playwright/chromium_headless_shell-1243/chrome-headless-shell-linux64/chrome-headless-shell --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-edgeupdater --disable-extensions --disable-features=AvoidUnnecessaryBeforeUnloadCheckSync,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,BlockOriginHeaderModificationOnRedirect,Translate,AutoDeElevate,OptimizationHints,msForceBrowserSignIn,msEdgeUpdateLaunchServicesPreferredVersion --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --disable-updater-scheduler --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --disable-infobars --disable-search-engine-choice-screen --disable-sync --enable-unsafe-swiftshader --headless --hide-scrollbars --mute-audio --blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4 --no-sandbox --user-data-dir=/tmp/playwright_chromiumdev_profile-GLNGHD --remote-debugging-pipe --no-startup-window\n<launched> pid=1333820\n[pid=1333820][err] /home/isinxnisi/.cache/ms-playwright/chromium_headless_shell-1243/chrome-headless-shell-linux64/chrome-headless-shell: error while loading shared libraries: libnspr4.so: cannot open shared object file: No such file or directory\nCall log:\n\u001b[2m  - <launching> /home/isinxnisi/.cache/ms-playwright/chromium_headless_shell-1243/chrome-headless-shell-linux64/chrome-headless-shell --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-edgeupdater --disable-extensions --disable-features=AvoidUnnecessaryBeforeUnloadCheckSync,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,BlockOriginHeaderModificationOnRedirect,Translate,AutoDeElevate,OptimizationHints,msForceBrowserSignIn,msEdgeUpdateLaunchServicesPreferredVersion --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --disable-updater-scheduler --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --disable-infobars --disable-search-engine-choice-screen --disable-sync --enable-unsafe-swiftshader --headless --hide-scrollbars --mute-audio --blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4 --no-sandbox --user-data-dir=/tmp/playwright_chromiumdev_profile-GLNGHD --remote-debugging-pipe --no-startup-window\u001b[22m\n\u001b[2m  - <launched> pid=1333820\u001b[22m\n\u001b[2m  - [pid=1333820][err] /home/isinxnisi/.cache/ms-playwright/chromium_headless_shell-1243/chrome-headless-shell-linux64/chrome-headless-shell: error while loading shared libraries: libnspr4.so: cannot open shared object file: No such file or directory\u001b[22m\n\u001b[2m  - [pid=1333820] <gracefully close start>\u001b[22m\n\u001b[2m  - [pid=1333820] <kill>\u001b[22m\n\u001b[2m  - [pid=1333820] <will force kill>\u001b[22m\n\u001b[2m  - [pid=1333820] exception while trying to kill process: Error: kill ESRCH\u001b[22m\n\u001b[2m  - [pid=1333820] <process did exit: exitCode=127, signal=null>\u001b[22m\n\u001b[2m  - [pid=1333820] starting temporary directories cleanup\u001b[22m\n\u001b[2m  - [pid=1333820] finished temporary directories cleanup\u001b[22m\n\u001b[2m  - [pid=1333820] <gracefully close end>\u001b[22m\n"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-27T23:31:59.908Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/isinxnisi/1.projects/.worktrees/graph-knowledge-film-worker-manifest/.local/film-ab-publication-browser/production/film-beta-film-candidates--174ac-raph-and-saved-restore-1440/error-context.md"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "2a35a59aeb92e8084c13-a7318d612beaf2fd1837",
+              "file": "film-beta.spec.ts",
+              "line": 10,
+              "column": 34
+            },
+            {
+              "title": "film candidates: conditions, evidence, Graph and saved restore 390",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 180000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 12,
+                      "error": {
+                        "message": "Error: browserType.launch: Target page, context or browser has been closed\nBrowser logs:\n\n<launching> /home/isinxnisi/.cache/ms-playwright/chromium_headless_shell-1243/chrome-headless-shell-linux64/chrome-headless-shell --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-edgeupdater --disable-extensions --disable-features=AvoidUnnecessaryBeforeUnloadCheckSync,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,BlockOriginHeaderModificationOnRedirect,Translate,AutoDeElevate,OptimizationHints,msForceBrowserSignIn,msEdgeUpdateLaunchServicesPreferredVersion --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --disable-updater-scheduler --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --disable-infobars --disable-search-engine-choice-screen --disable-sync --enable-unsafe-swiftshader --headless --hide-scrollbars --mute-audio --blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4 --no-sandbox --user-data-dir=/tmp/playwright_chromiumdev_profile-dKtt0z --remote-debugging-pipe --no-startup-window\n<launched> pid=1333841\n[pid=1333841][err] /home/isinxnisi/.cache/ms-playwright/chromium_headless_shell-1243/chrome-headless-shell-linux64/chrome-headless-shell: error while loading shared libraries: libnspr4.so: cannot open shared object file: No such file or directory\nCall log:\n\u001b[2m  - <launching> /home/isinxnisi/.cache/ms-playwright/chromium_headless_shell-1243/chrome-headless-shell-linux64/chrome-headless-shell --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-edgeupdater --disable-extensions --disable-features=AvoidUnnecessaryBeforeUnloadCheckSync,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,BlockOriginHeaderModificationOnRedirect,Translate,AutoDeElevate,OptimizationHints,msForceBrowserSignIn,msEdgeUpdateLaunchServicesPreferredVersion --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --disable-updater-scheduler --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --disable-infobars --disable-search-engine-choice-screen --disable-sync --enable-unsafe-swiftshader --headless --hide-scrollbars --mute-audio --blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4 --no-sandbox --user-data-dir=/tmp/playwright_chromiumdev_profile-dKtt0z --remote-debugging-pipe --no-startup-window\u001b[22m\n\u001b[2m  - <launched> pid=1333841\u001b[22m\n\u001b[2m  - [pid=1333841][err] /home/isinxnisi/.cache/ms-playwright/chromium_headless_shell-1243/chrome-headless-shell-linux64/chrome-headless-shell: error while loading shared libraries: libnspr4.so: cannot open shared object file: No such file or directory\u001b[22m\n\u001b[2m  - [pid=1333841] <gracefully close start>\u001b[22m\n\u001b[2m  - [pid=1333841] <kill>\u001b[22m\n\u001b[2m  - [pid=1333841] <will force kill>\u001b[22m\n\u001b[2m  - [pid=1333841] exception while trying to kill process: Error: kill ESRCH\u001b[22m\n\u001b[2m  - [pid=1333841] <process did exit: exitCode=127, signal=null>\u001b[22m\n\u001b[2m  - [pid=1333841] starting temporary directories cleanup\u001b[22m\n\u001b[2m  - [pid=1333841] finished temporary directories cleanup\u001b[22m\n\u001b[2m  - [pid=1333841] <gracefully close end>\u001b[22m\n",
+                        "stack": "Error: browserType.launch: Target page, context or browser has been closed\nBrowser logs:\n\n<launching> /home/isinxnisi/.cache/ms-playwright/chromium_headless_shell-1243/chrome-headless-shell-linux64/chrome-headless-shell --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-edgeupdater --disable-extensions --disable-features=AvoidUnnecessaryBeforeUnloadCheckSync,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,BlockOriginHeaderModificationOnRedirect,Translate,AutoDeElevate,OptimizationHints,msForceBrowserSignIn,msEdgeUpdateLaunchServicesPreferredVersion --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --disable-updater-scheduler --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --disable-infobars --disable-search-engine-choice-screen --disable-sync --enable-unsafe-swiftshader --headless --hide-scrollbars --mute-audio --blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4 --no-sandbox --user-data-dir=/tmp/playwright_chromiumdev_profile-dKtt0z --remote-debugging-pipe --no-startup-window\n<launched> pid=1333841\n[pid=1333841][err] /home/isinxnisi/.cache/ms-playwright/chromium_headless_shell-1243/chrome-headless-shell-linux64/chrome-headless-shell: error while loading shared libraries: libnspr4.so: cannot open shared object file: No such file or directory\nCall log:\n\u001b[2m  - <launching> /home/isinxnisi/.cache/ms-playwright/chromium_headless_shell-1243/chrome-headless-shell-linux64/chrome-headless-shell --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-edgeupdater --disable-extensions --disable-features=AvoidUnnecessaryBeforeUnloadCheckSync,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,BlockOriginHeaderModificationOnRedirect,Translate,AutoDeElevate,OptimizationHints,msForceBrowserSignIn,msEdgeUpdateLaunchServicesPreferredVersion --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --disable-updater-scheduler --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --disable-infobars --disable-search-engine-choice-screen --disable-sync --enable-unsafe-swiftshader --headless --hide-scrollbars --mute-audio --blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4 --no-sandbox --user-data-dir=/tmp/playwright_chromiumdev_profile-dKtt0z --remote-debugging-pipe --no-startup-window\u001b[22m\n\u001b[2m  - <launched> pid=1333841\u001b[22m\n\u001b[2m  - [pid=1333841][err] /home/isinxnisi/.cache/ms-playwright/chromium_headless_shell-1243/chrome-headless-shell-linux64/chrome-headless-shell: error while loading shared libraries: libnspr4.so: cannot open shared object file: No such file or directory\u001b[22m\n\u001b[2m  - [pid=1333841] <gracefully close start>\u001b[22m\n\u001b[2m  - [pid=1333841] <kill>\u001b[22m\n\u001b[2m  - [pid=1333841] <will force kill>\u001b[22m\n\u001b[2m  - [pid=1333841] exception while trying to kill process: Error: kill ESRCH\u001b[22m\n\u001b[2m  - [pid=1333841] <process did exit: exitCode=127, signal=null>\u001b[22m\n\u001b[2m  - [pid=1333841] starting temporary directories cleanup\u001b[22m\n\u001b[2m  - [pid=1333841] finished temporary directories cleanup\u001b[22m\n\u001b[2m  - [pid=1333841] <gracefully close end>\u001b[22m\n"
+                      },
+                      "errors": [
+                        {
+                          "message": "Error: browserType.launch: Target page, context or browser has been closed\nBrowser logs:\n\n<launching> /home/isinxnisi/.cache/ms-playwright/chromium_headless_shell-1243/chrome-headless-shell-linux64/chrome-headless-shell --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-edgeupdater --disable-extensions --disable-features=AvoidUnnecessaryBeforeUnloadCheckSync,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,BlockOriginHeaderModificationOnRedirect,Translate,AutoDeElevate,OptimizationHints,msForceBrowserSignIn,msEdgeUpdateLaunchServicesPreferredVersion --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --disable-updater-scheduler --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --disable-infobars --disable-search-engine-choice-screen --disable-sync --enable-unsafe-swiftshader --headless --hide-scrollbars --mute-audio --blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4 --no-sandbox --user-data-dir=/tmp/playwright_chromiumdev_profile-dKtt0z --remote-debugging-pipe --no-startup-window\n<launched> pid=1333841\n[pid=1333841][err] /home/isinxnisi/.cache/ms-playwright/chromium_headless_shell-1243/chrome-headless-shell-linux64/chrome-headless-shell: error while loading shared libraries: libnspr4.so: cannot open shared object file: No such file or directory\nCall log:\n\u001b[2m  - <launching> /home/isinxnisi/.cache/ms-playwright/chromium_headless_shell-1243/chrome-headless-shell-linux64/chrome-headless-shell --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-edgeupdater --disable-extensions --disable-features=AvoidUnnecessaryBeforeUnloadCheckSync,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,BlockOriginHeaderModificationOnRedirect,Translate,AutoDeElevate,OptimizationHints,msForceBrowserSignIn,msEdgeUpdateLaunchServicesPreferredVersion --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --disable-updater-scheduler --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --disable-infobars --disable-search-engine-choice-screen --disable-sync --enable-unsafe-swiftshader --headless --hide-scrollbars --mute-audio --blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4 --no-sandbox --user-data-dir=/tmp/playwright_chromiumdev_profile-dKtt0z --remote-debugging-pipe --no-startup-window\u001b[22m\n\u001b[2m  - <launched> pid=1333841\u001b[22m\n\u001b[2m  - [pid=1333841][err] /home/isinxnisi/.cache/ms-playwright/chromium_headless_shell-1243/chrome-headless-shell-linux64/chrome-headless-shell: error while loading shared libraries: libnspr4.so: cannot open shared object file: No such file or directory\u001b[22m\n\u001b[2m  - [pid=1333841] <gracefully close start>\u001b[22m\n\u001b[2m  - [pid=1333841] <kill>\u001b[22m\n\u001b[2m  - [pid=1333841] <will force kill>\u001b[22m\n\u001b[2m  - [pid=1333841] exception while trying to kill process: Error: kill ESRCH\u001b[22m\n\u001b[2m  - [pid=1333841] <process did exit: exitCode=127, signal=null>\u001b[22m\n\u001b[2m  - [pid=1333841] starting temporary directories cleanup\u001b[22m\n\u001b[2m  - [pid=1333841] finished temporary directories cleanup\u001b[22m\n\u001b[2m  - [pid=1333841] <gracefully close end>\u001b[22m\n"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-27T23:32:01.404Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/isinxnisi/1.projects/.worktrees/graph-knowledge-film-worker-manifest/.local/film-ab-publication-browser/production/film-beta-film-candidates--83284-Graph-and-saved-restore-390/error-context.md"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "2a35a59aeb92e8084c13-a9e327b7081bf0ce3ca1",
+              "file": "film-beta.spec.ts",
+              "line": 10,
+              "column": 34
+            }
+          ]
+        },
+        {
+          "title": "regressions.spec.ts",
+          "file": "regressions.spec.ts",
+          "column": 0,
+          "line": 0,
+          "specs": [
+            {
+              "title": "existing manga, presets, Google/member boundaries and AI lab",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 180000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 12,
+                      "error": {
+                        "message": "Error: browserType.launch: Target page, context or browser has been closed\nBrowser logs:\n\n<launching> /home/isinxnisi/.cache/ms-playwright/chromium_headless_shell-1243/chrome-headless-shell-linux64/chrome-headless-shell --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-edgeupdater --disable-extensions --disable-features=AvoidUnnecessaryBeforeUnloadCheckSync,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,BlockOriginHeaderModificationOnRedirect,Translate,AutoDeElevate,OptimizationHints,msForceBrowserSignIn,msEdgeUpdateLaunchServicesPreferredVersion --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --disable-updater-scheduler --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --disable-infobars --disable-search-engine-choice-screen --disable-sync --enable-unsafe-swiftshader --headless --hide-scrollbars --mute-audio --blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4 --no-sandbox --user-data-dir=/tmp/playwright_chromiumdev_profile-yPZiIU --remote-debugging-pipe --no-startup-window\n<launched> pid=1333862\n[pid=1333862][err] /home/isinxnisi/.cache/ms-playwright/chromium_headless_shell-1243/chrome-headless-shell-linux64/chrome-headless-shell: error while loading shared libraries: libnspr4.so: cannot open shared object file: No such file or directory\nCall log:\n\u001b[2m  - <launching> /home/isinxnisi/.cache/ms-playwright/chromium_headless_shell-1243/chrome-headless-shell-linux64/chrome-headless-shell --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-edgeupdater --disable-extensions --disable-features=AvoidUnnecessaryBeforeUnloadCheckSync,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,BlockOriginHeaderModificationOnRedirect,Translate,AutoDeElevate,OptimizationHints,msForceBrowserSignIn,msEdgeUpdateLaunchServicesPreferredVersion --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --disable-updater-scheduler --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --disable-infobars --disable-search-engine-choice-screen --disable-sync --enable-unsafe-swiftshader --headless --hide-scrollbars --mute-audio --blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4 --no-sandbox --user-data-dir=/tmp/playwright_chromiumdev_profile-yPZiIU --remote-debugging-pipe --no-startup-window\u001b[22m\n\u001b[2m  - <launched> pid=1333862\u001b[22m\n\u001b[2m  - [pid=1333862][err] /home/isinxnisi/.cache/ms-playwright/chromium_headless_shell-1243/chrome-headless-shell-linux64/chrome-headless-shell: error while loading shared libraries: libnspr4.so: cannot open shared object file: No such file or directory\u001b[22m\n\u001b[2m  - [pid=1333862] <gracefully close start>\u001b[22m\n\u001b[2m  - [pid=1333862] <kill>\u001b[22m\n\u001b[2m  - [pid=1333862] <will force kill>\u001b[22m\n\u001b[2m  - [pid=1333862] exception while trying to kill process: Error: kill ESRCH\u001b[22m\n\u001b[2m  - [pid=1333862] <process did exit: exitCode=127, signal=null>\u001b[22m\n\u001b[2m  - [pid=1333862] starting temporary directories cleanup\u001b[22m\n\u001b[2m  - [pid=1333862] finished temporary directories cleanup\u001b[22m\n\u001b[2m  - [pid=1333862] <gracefully close end>\u001b[22m\n",
+                        "stack": "Error: browserType.launch: Target page, context or browser has been closed\nBrowser logs:\n\n<launching> /home/isinxnisi/.cache/ms-playwright/chromium_headless_shell-1243/chrome-headless-shell-linux64/chrome-headless-shell --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-edgeupdater --disable-extensions --disable-features=AvoidUnnecessaryBeforeUnloadCheckSync,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,BlockOriginHeaderModificationOnRedirect,Translate,AutoDeElevate,OptimizationHints,msForceBrowserSignIn,msEdgeUpdateLaunchServicesPreferredVersion --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --disable-updater-scheduler --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --disable-infobars --disable-search-engine-choice-screen --disable-sync --enable-unsafe-swiftshader --headless --hide-scrollbars --mute-audio --blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4 --no-sandbox --user-data-dir=/tmp/playwright_chromiumdev_profile-yPZiIU --remote-debugging-pipe --no-startup-window\n<launched> pid=1333862\n[pid=1333862][err] /home/isinxnisi/.cache/ms-playwright/chromium_headless_shell-1243/chrome-headless-shell-linux64/chrome-headless-shell: error while loading shared libraries: libnspr4.so: cannot open shared object file: No such file or directory\nCall log:\n\u001b[2m  - <launching> /home/isinxnisi/.cache/ms-playwright/chromium_headless_shell-1243/chrome-headless-shell-linux64/chrome-headless-shell --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-edgeupdater --disable-extensions --disable-features=AvoidUnnecessaryBeforeUnloadCheckSync,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,BlockOriginHeaderModificationOnRedirect,Translate,AutoDeElevate,OptimizationHints,msForceBrowserSignIn,msEdgeUpdateLaunchServicesPreferredVersion --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --disable-updater-scheduler --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --disable-infobars --disable-search-engine-choice-screen --disable-sync --enable-unsafe-swiftshader --headless --hide-scrollbars --mute-audio --blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4 --no-sandbox --user-data-dir=/tmp/playwright_chromiumdev_profile-yPZiIU --remote-debugging-pipe --no-startup-window\u001b[22m\n\u001b[2m  - <launched> pid=1333862\u001b[22m\n\u001b[2m  - [pid=1333862][err] /home/isinxnisi/.cache/ms-playwright/chromium_headless_shell-1243/chrome-headless-shell-linux64/chrome-headless-shell: error while loading shared libraries: libnspr4.so: cannot open shared object file: No such file or directory\u001b[22m\n\u001b[2m  - [pid=1333862] <gracefully close start>\u001b[22m\n\u001b[2m  - [pid=1333862] <kill>\u001b[22m\n\u001b[2m  - [pid=1333862] <will force kill>\u001b[22m\n\u001b[2m  - [pid=1333862] exception while trying to kill process: Error: kill ESRCH\u001b[22m\n\u001b[2m  - [pid=1333862] <process did exit: exitCode=127, signal=null>\u001b[22m\n\u001b[2m  - [pid=1333862] starting temporary directories cleanup\u001b[22m\n\u001b[2m  - [pid=1333862] finished temporary directories cleanup\u001b[22m\n\u001b[2m  - [pid=1333862] <gracefully close end>\u001b[22m\n"
+                      },
+                      "errors": [
+                        {
+                          "message": "Error: browserType.launch: Target page, context or browser has been closed\nBrowser logs:\n\n<launching> /home/isinxnisi/.cache/ms-playwright/chromium_headless_shell-1243/chrome-headless-shell-linux64/chrome-headless-shell --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-edgeupdater --disable-extensions --disable-features=AvoidUnnecessaryBeforeUnloadCheckSync,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,BlockOriginHeaderModificationOnRedirect,Translate,AutoDeElevate,OptimizationHints,msForceBrowserSignIn,msEdgeUpdateLaunchServicesPreferredVersion --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --disable-updater-scheduler --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --disable-infobars --disable-search-engine-choice-screen --disable-sync --enable-unsafe-swiftshader --headless --hide-scrollbars --mute-audio --blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4 --no-sandbox --user-data-dir=/tmp/playwright_chromiumdev_profile-yPZiIU --remote-debugging-pipe --no-startup-window\n<launched> pid=1333862\n[pid=1333862][err] /home/isinxnisi/.cache/ms-playwright/chromium_headless_shell-1243/chrome-headless-shell-linux64/chrome-headless-shell: error while loading shared libraries: libnspr4.so: cannot open shared object file: No such file or directory\nCall log:\n\u001b[2m  - <launching> /home/isinxnisi/.cache/ms-playwright/chromium_headless_shell-1243/chrome-headless-shell-linux64/chrome-headless-shell --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-edgeupdater --disable-extensions --disable-features=AvoidUnnecessaryBeforeUnloadCheckSync,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,BlockOriginHeaderModificationOnRedirect,Translate,AutoDeElevate,OptimizationHints,msForceBrowserSignIn,msEdgeUpdateLaunchServicesPreferredVersion --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --disable-updater-scheduler --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --disable-infobars --disable-search-engine-choice-screen --disable-sync --enable-unsafe-swiftshader --headless --hide-scrollbars --mute-audio --blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4 --no-sandbox --user-data-dir=/tmp/playwright_chromiumdev_profile-yPZiIU --remote-debugging-pipe --no-startup-window\u001b[22m\n\u001b[2m  - <launched> pid=1333862\u001b[22m\n\u001b[2m  - [pid=1333862][err] /home/isinxnisi/.cache/ms-playwright/chromium_headless_shell-1243/chrome-headless-shell-linux64/chrome-headless-shell: error while loading shared libraries: libnspr4.so: cannot open shared object file: No such file or directory\u001b[22m\n\u001b[2m  - [pid=1333862] <gracefully close start>\u001b[22m\n\u001b[2m  - [pid=1333862] <kill>\u001b[22m\n\u001b[2m  - [pid=1333862] <will force kill>\u001b[22m\n\u001b[2m  - [pid=1333862] exception while trying to kill process: Error: kill ESRCH\u001b[22m\n\u001b[2m  - [pid=1333862] <process did exit: exitCode=127, signal=null>\u001b[22m\n\u001b[2m  - [pid=1333862] starting temporary directories cleanup\u001b[22m\n\u001b[2m  - [pid=1333862] finished temporary directories cleanup\u001b[22m\n\u001b[2m  - [pid=1333862] <gracefully close end>\u001b[22m\n"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-27T23:32:02.874Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/isinxnisi/1.projects/.worktrees/graph-knowledge-film-worker-manifest/.local/film-ab-publication-browser/production/regressions-existing-manga-348fc-ember-boundaries-and-AI-lab/error-context.md"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "a34af78d704591628420-cbf8dc98a212235078ee",
+              "file": "regressions.spec.ts",
+              "line": 3,
+              "column": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "attempt": "ab-new-data",
+      "stats": {
+        "startTime": "2026-10-27T23:34:42.217Z",
+        "duration": 54885.147,
+        "expected": 0,
+        "skipped": 0,
+        "unexpected": 1,
+        "flaky": 0
+      },
+      "suites": [
+        {
+          "title": "film-ab-published.spec.ts",
+          "file": "film-ab-published.spec.ts",
+          "column": 0,
+          "line": 0,
+          "specs": [
+            {
+              "title": "published AB: Nolan directing to screenwriting, evidence, Graph and restore",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 180000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 52582,
+                      "error": {
+                        "message": "TimeoutError: locator.click: Timeout 45000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByTestId('discovery-connections').getByRole('button', { name: '根拠を開く ＋', exact: true }).nth(1)\u001b[22m\n",
+                        "stack": "TimeoutError: locator.click: Timeout 45000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByTestId('discovery-connections').getByRole('button', { name: '根拠を開く ＋', exact: true }).nth(1)\u001b[22m\n\n    at /home/isinxnisi/1.projects/.worktrees/graph-knowledge-film-worker-manifest/tests/film43/film-ab-published.spec.ts:32:108",
+                        "location": {
+                          "file": "/home/isinxnisi/1.projects/.worktrees/graph-knowledge-film-worker-manifest/tests/film43/film-ab-published.spec.ts",
+                          "column": 108,
+                          "line": 32
+                        },
+                        "snippet": "  30 |  await expect(flow).toContainText(\"クリストファー・ノーラン\");\n  31 |  await expect(flow.getByTestId(\"prototype-claim\")).toHaveCount(2);\n> 32 |  for (const button of await flow.getByRole(\"button\", { name: \"根拠を開く ＋\", exact: true }).all()) await button.click();\n     |                                                                                                            ^\n  33 |  await expect(flow).toContainText(\"クレジット / スタッフ / 監督 / クリストファー・ノーラン\");\n  34 |  await expect(flow).toContainText(\"クレジット / スタッフ / 脚本 / クリストファー・ノーラン\");\n  35 |  await expect(flow.getByRole(\"link\", { name: \"この記録の詳細ページへ\" })).toHaveCount(2);"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/isinxnisi/1.projects/.worktrees/graph-knowledge-film-worker-manifest/tests/film43/film-ab-published.spec.ts",
+                            "column": 108,
+                            "line": 32
+                          },
+                          "message": "TimeoutError: locator.click: Timeout 45000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByTestId('discovery-connections').getByRole('button', { name: '根拠を開く ＋', exact: true }).nth(1)\u001b[22m\n\n\n  30 |  await expect(flow).toContainText(\"クリストファー・ノーラン\");\n  31 |  await expect(flow.getByTestId(\"prototype-claim\")).toHaveCount(2);\n> 32 |  for (const button of await flow.getByRole(\"button\", { name: \"根拠を開く ＋\", exact: true }).all()) await button.click();\n     |                                                                                                            ^\n  33 |  await expect(flow).toContainText(\"クレジット / スタッフ / 監督 / クリストファー・ノーラン\");\n  34 |  await expect(flow).toContainText(\"クレジット / スタッフ / 脚本 / クリストファー・ノーラン\");\n  35 |  await expect(flow.getByRole(\"link\", { name: \"この記録の詳細ページへ\" })).toHaveCount(2);\n    at /home/isinxnisi/1.projects/.worktrees/graph-knowledge-film-worker-manifest/tests/film43/film-ab-published.spec.ts:32:108"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-27T23:34:44.044Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/isinxnisi/1.projects/.worktrees/graph-knowledge-film-worker-manifest/.local/film-ab-publication-browser/ab-new-data/film-ab-published-publishe-596bc--evidence-Graph-and-restore/error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/isinxnisi/1.projects/.worktrees/graph-knowledge-film-worker-manifest/tests/film43/film-ab-published.spec.ts",
+                        "column": 108,
+                        "line": 32
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "32b97987d57e3878c88f-2a09f83fbb66905a4f98",
+              "file": "film-ab-published.spec.ts",
+              "line": 6,
+              "column": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "attempt": "ab-new-data-verified",
+      "stats": {
+        "startTime": "2026-10-27T23:35:50.684Z",
+        "duration": 22029.887,
+        "expected": 0,
+        "skipped": 0,
+        "unexpected": 1,
+        "flaky": 0
+      },
+      "suites": [
+        {
+          "title": "film-ab-published.spec.ts",
+          "file": "film-ab-published.spec.ts",
+          "column": 0,
+          "line": 0,
+          "specs": [
+            {
+              "title": "published AB: Nolan directing to screenwriting, evidence, Graph and restore",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 180000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 17753,
+                      "error": {
+                        "message": "TypeError: n.id is not a function",
+                        "stack": "TypeError: n.id is not a function\n    at map (/home/isinxnisi/1.projects/.worktrees/graph-knowledge-film-worker-manifest/tests/film43/film-ab-published.spec.ts:48:68)\n    at /home/isinxnisi/1.projects/.worktrees/graph-knowledge-film-worker-manifest/tests/film43/film-ab-published.spec.ts:48:57\n    at /home/isinxnisi/1.projects/.worktrees/graph-knowledge-film-worker-manifest/tests/film43/film-ab-published.spec.ts:48:2",
+                        "location": {
+                          "file": "/home/isinxnisi/1.projects/.worktrees/graph-knowledge-film-worker-manifest/tests/film43/film-ab-published.spec.ts",
+                          "column": 68,
+                          "line": 48
+                        },
+                        "snippet": "  46 |   return { nodes: cy.nodes().map(n => ({ id: n.id(), label: n.data(\"label\") })), edges: cy.edges().map(e => e.id()).sort() };\n  47 |  });\n> 48 |  await expect.poll(async () => (await snapshot()).nodes.map(n => n.id()).sort()).toEqual([rootId, personId].sort());\n     |                                                                    ^\n  49 |  const point = await canvas.evaluate((el, id) => {\n  50 |   const cy = (el as unknown as { _cyreg: { cy: import(\"cytoscape\").Core } })._cyreg.cy;\n  51 |   const p = cy.getElementById(id).renderedPosition(), rect = el.getBoundingClientRect();"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/isinxnisi/1.projects/.worktrees/graph-knowledge-film-worker-manifest/tests/film43/film-ab-published.spec.ts",
+                            "column": 68,
+                            "line": 48
+                          },
+                          "message": "TypeError: n.id is not a function\n\n  46 |   return { nodes: cy.nodes().map(n => ({ id: n.id(), label: n.data(\"label\") })), edges: cy.edges().map(e => e.id()).sort() };\n  47 |  });\n> 48 |  await expect.poll(async () => (await snapshot()).nodes.map(n => n.id()).sort()).toEqual([rootId, personId].sort());\n     |                                                                    ^\n  49 |  const point = await canvas.evaluate((el, id) => {\n  50 |   const cy = (el as unknown as { _cyreg: { cy: import(\"cytoscape\").Core } })._cyreg.cy;\n  51 |   const p = cy.getElementById(id).renderedPosition(), rect = el.getBoundingClientRect();\n    at map (/home/isinxnisi/1.projects/.worktrees/graph-knowledge-film-worker-manifest/tests/film43/film-ab-published.spec.ts:48:68)\n    at /home/isinxnisi/1.projects/.worktrees/graph-knowledge-film-worker-manifest/tests/film43/film-ab-published.spec.ts:48:57\n    at /home/isinxnisi/1.projects/.worktrees/graph-knowledge-film-worker-manifest/tests/film43/film-ab-published.spec.ts:48:2"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-27T23:35:54.252Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/isinxnisi/1.projects/.worktrees/graph-knowledge-film-worker-manifest/.local/film-ab-publication-browser/ab-new-data-verified/film-ab-published-publishe-596bc--evidence-Graph-and-restore/error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/isinxnisi/1.projects/.worktrees/graph-knowledge-film-worker-manifest/tests/film43/film-ab-published.spec.ts",
+                        "column": 68,
+                        "line": 48
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "32b97987d57e3878c88f-2a09f83fbb66905a4f98",
+              "file": "film-ab-published.spec.ts",
+              "line": 6,
+              "column": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "attempt": "ab-final",
+      "stats": {
+        "startTime": "2026-10-27T23:36:24.417Z",
+        "duration": 49333.312000000005,
+        "expected": 0,
+        "skipped": 0,
+        "unexpected": 1,
+        "flaky": 0
+      },
+      "suites": [
+        {
+          "title": "film-ab-published.spec.ts",
+          "file": "film-ab-published.spec.ts",
+          "column": 0,
+          "line": 0,
+          "specs": [
+            {
+              "title": "published AB: Nolan directing to screenwriting, evidence, Graph and restore",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 180000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 44771,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 9\u001b[39m\n\n\u001b[33m@@ -7,10 +7,18 @@\u001b[39m\n\u001b[2m            \"c8ddd4bd-09c6-4e36-8546-7629cca5cbf6\",\u001b[22m\n\u001b[2m          ],\u001b[22m\n\u001b[2m          \"id\": \"420865b6-1377-4d02-8678-09cf0ed28fac\",\u001b[22m\n\u001b[2m          \"open\": true,\u001b[22m\n\u001b[2m        },\u001b[22m\n\u001b[31m+       Object {\u001b[39m\n\u001b[31m+         \"claimIds\": Array [\u001b[39m\n\u001b[31m+           \"c8ddd4bd-09c6-4e36-8546-7629cca5cbf6\",\u001b[39m\n\u001b[31m+           \"34817c14-af7e-4203-93ae-f0e542d0c710\",\u001b[39m\n\u001b[31m+         ],\u001b[39m\n\u001b[31m+         \"id\": \"1b217c91-1e2d-46e1-9e4c-b90d706d3f7a\",\u001b[39m\n\u001b[31m+         \"open\": true,\u001b[39m\n\u001b[31m+       },\u001b[39m\n\u001b[2m      ],\u001b[22m\n\u001b[2m      \"sources\": Array [\u001b[22m\n\u001b[2m        Object {\u001b[22m\n\u001b[2m          \"candidateBoundary\": null,\u001b[22m\n\u001b[2m          \"id\": \"420865b6-1377-4d02-8678-09cf0ed28fac\",\u001b[22m\n\u001b[33m@@ -20,11 +28,11 @@\u001b[39m\n\u001b[2m      \"version\": 1,\u001b[22m\n\u001b[2m    },\u001b[22m\n\u001b[2m    \"requiredRouteKey\": \"420865b6-1377-4d02-8678-09cf0ed28fac:1b217c91-1e2d-46e1-9e4c-b90d706d3f7a:6e1a7c3e-155a-4fa3-beef-83564b2f93b2\",\u001b[22m\n\u001b[2m    \"routes\": Array [\u001b[22m\n\u001b[2m      Object {\u001b[22m\n\u001b[32m-       \"open\": false,\u001b[39m\n\u001b[31m+       \"open\": true,\u001b[39m\n\u001b[2m        \"route\": Object {\u001b[22m\n\u001b[2m          \"claimIds\": Array [\u001b[22m\n\u001b[2m            \"c8ddd4bd-09c6-4e36-8546-7629cca5cbf6\",\u001b[22m\n\u001b[2m            \"34817c14-af7e-4203-93ae-f0e542d0c710\",\u001b[22m\n\u001b[2m          ],\u001b[22m\n\nCall Log:\n- Timeout 30000ms exceeded while waiting on the predicate",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 9\u001b[39m\n\n\u001b[33m@@ -7,10 +7,18 @@\u001b[39m\n\u001b[2m            \"c8ddd4bd-09c6-4e36-8546-7629cca5cbf6\",\u001b[22m\n\u001b[2m          ],\u001b[22m\n\u001b[2m          \"id\": \"420865b6-1377-4d02-8678-09cf0ed28fac\",\u001b[22m\n\u001b[2m          \"open\": true,\u001b[22m\n\u001b[2m        },\u001b[22m\n\u001b[31m+       Object {\u001b[39m\n\u001b[31m+         \"claimIds\": Array [\u001b[39m\n\u001b[31m+           \"c8ddd4bd-09c6-4e36-8546-7629cca5cbf6\",\u001b[39m\n\u001b[31m+           \"34817c14-af7e-4203-93ae-f0e542d0c710\",\u001b[39m\n\u001b[31m+         ],\u001b[39m\n\u001b[31m+         \"id\": \"1b217c91-1e2d-46e1-9e4c-b90d706d3f7a\",\u001b[39m\n\u001b[31m+         \"open\": true,\u001b[39m\n\u001b[31m+       },\u001b[39m\n\u001b[2m      ],\u001b[22m\n\u001b[2m      \"sources\": Array [\u001b[22m\n\u001b[2m        Object {\u001b[22m\n\u001b[2m          \"candidateBoundary\": null,\u001b[22m\n\u001b[2m          \"id\": \"420865b6-1377-4d02-8678-09cf0ed28fac\",\u001b[22m\n\u001b[33m@@ -20,11 +28,11 @@\u001b[39m\n\u001b[2m      \"version\": 1,\u001b[22m\n\u001b[2m    },\u001b[22m\n\u001b[2m    \"requiredRouteKey\": \"420865b6-1377-4d02-8678-09cf0ed28fac:1b217c91-1e2d-46e1-9e4c-b90d706d3f7a:6e1a7c3e-155a-4fa3-beef-83564b2f93b2\",\u001b[22m\n\u001b[2m    \"routes\": Array [\u001b[22m\n\u001b[2m      Object {\u001b[22m\n\u001b[32m-       \"open\": false,\u001b[39m\n\u001b[31m+       \"open\": true,\u001b[39m\n\u001b[2m        \"route\": Object {\u001b[22m\n\u001b[2m          \"claimIds\": Array [\u001b[22m\n\u001b[2m            \"c8ddd4bd-09c6-4e36-8546-7629cca5cbf6\",\u001b[22m\n\u001b[2m            \"34817c14-af7e-4203-93ae-f0e542d0c710\",\u001b[22m\n\u001b[2m          ],\u001b[22m\n\nCall Log:\n- Timeout 30000ms exceeded while waiting on the predicate\n    at /home/isinxnisi/1.projects/.worktrees/graph-knowledge-film-worker-manifest/tests/film43/film-ab-published.spec.ts:68:45",
+                        "location": {
+                          "file": "/home/isinxnisi/1.projects/.worktrees/graph-knowledge-film-worker-manifest/tests/film43/film-ab-published.spec.ts",
+                          "column": 45,
+                          "line": 68
+                        },
+                        "snippet": "  66 |  dialog = page.getByRole(\"dialog\");\n  67 |  await dialog.getByRole(\"button\", { name: labels.open, exact: true }).click();\n> 68 |  await expect.poll(() => model().execution).toEqual(expected);\n     |                                             ^\n  69 |  await expect.poll(snapshot).toEqual(graph);\n  70 |  await page.getByRole(\"button\", { name: \"全体を表示\", exact: true }).click();\n  71 |  await page.screenshot({ path: info.outputPath(\"nolan-restored.png\"), fullPage: true });"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/isinxnisi/1.projects/.worktrees/graph-knowledge-film-worker-manifest/tests/film43/film-ab-published.spec.ts",
+                            "column": 45,
+                            "line": 68
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 9\u001b[39m\n\n\u001b[33m@@ -7,10 +7,18 @@\u001b[39m\n\u001b[2m            \"c8ddd4bd-09c6-4e36-8546-7629cca5cbf6\",\u001b[22m\n\u001b[2m          ],\u001b[22m\n\u001b[2m          \"id\": \"420865b6-1377-4d02-8678-09cf0ed28fac\",\u001b[22m\n\u001b[2m          \"open\": true,\u001b[22m\n\u001b[2m        },\u001b[22m\n\u001b[31m+       Object {\u001b[39m\n\u001b[31m+         \"claimIds\": Array [\u001b[39m\n\u001b[31m+           \"c8ddd4bd-09c6-4e36-8546-7629cca5cbf6\",\u001b[39m\n\u001b[31m+           \"34817c14-af7e-4203-93ae-f0e542d0c710\",\u001b[39m\n\u001b[31m+         ],\u001b[39m\n\u001b[31m+         \"id\": \"1b217c91-1e2d-46e1-9e4c-b90d706d3f7a\",\u001b[39m\n\u001b[31m+         \"open\": true,\u001b[39m\n\u001b[31m+       },\u001b[39m\n\u001b[2m      ],\u001b[22m\n\u001b[2m      \"sources\": Array [\u001b[22m\n\u001b[2m        Object {\u001b[22m\n\u001b[2m          \"candidateBoundary\": null,\u001b[22m\n\u001b[2m          \"id\": \"420865b6-1377-4d02-8678-09cf0ed28fac\",\u001b[22m\n\u001b[33m@@ -20,11 +28,11 @@\u001b[39m\n\u001b[2m      \"version\": 1,\u001b[22m\n\u001b[2m    },\u001b[22m\n\u001b[2m    \"requiredRouteKey\": \"420865b6-1377-4d02-8678-09cf0ed28fac:1b217c91-1e2d-46e1-9e4c-b90d706d3f7a:6e1a7c3e-155a-4fa3-beef-83564b2f93b2\",\u001b[22m\n\u001b[2m    \"routes\": Array [\u001b[22m\n\u001b[2m      Object {\u001b[22m\n\u001b[32m-       \"open\": false,\u001b[39m\n\u001b[31m+       \"open\": true,\u001b[39m\n\u001b[2m        \"route\": Object {\u001b[22m\n\u001b[2m          \"claimIds\": Array [\u001b[22m\n\u001b[2m            \"c8ddd4bd-09c6-4e36-8546-7629cca5cbf6\",\u001b[22m\n\u001b[2m            \"34817c14-af7e-4203-93ae-f0e542d0c710\",\u001b[22m\n\u001b[2m          ],\u001b[22m\n\nCall Log:\n- Timeout 30000ms exceeded while waiting on the predicate\n\n  66 |  dialog = page.getByRole(\"dialog\");\n  67 |  await dialog.getByRole(\"button\", { name: labels.open, exact: true }).click();\n> 68 |  await expect.poll(() => model().execution).toEqual(expected);\n     |                                             ^\n  69 |  await expect.poll(snapshot).toEqual(graph);\n  70 |  await page.getByRole(\"button\", { name: \"全体を表示\", exact: true }).click();\n  71 |  await page.screenshot({ path: info.outputPath(\"nolan-restored.png\"), fullPage: true });\n    at /home/isinxnisi/1.projects/.worktrees/graph-knowledge-film-worker-manifest/tests/film43/film-ab-published.spec.ts:68:45"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-27T23:36:28.416Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/isinxnisi/1.projects/.worktrees/graph-knowledge-film-worker-manifest/.local/film-ab-publication-browser/ab-final/film-ab-published-publishe-596bc--evidence-Graph-and-restore/error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/isinxnisi/1.projects/.worktrees/graph-knowledge-film-worker-manifest/tests/film43/film-ab-published.spec.ts",
+                        "column": 45,
+                        "line": 68
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "32b97987d57e3878c88f-2a09f83fbb66905a4f98",
+              "file": "film-ab-published.spec.ts",
+              "line": 6,
+              "column": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "attempt": "ab-complete",
+      "stats": {
+        "startTime": "2026-10-27T23:37:37.114Z",
+        "duration": 51001.391,
+        "expected": 0,
+        "skipped": 0,
+        "unexpected": 1,
+        "flaky": 0
+      },
+      "suites": [
+        {
+          "title": "film-ab-published.spec.ts",
+          "file": "film-ab-published.spec.ts",
+          "column": 0,
+          "line": 0,
+          "specs": [
+            {
+              "title": "published AB: Nolan directing to screenwriting, evidence, Graph and restore",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 180000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 48119,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByText('製作', { exact: true }).first()\nExpected: visible\nTimeout: 30000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" getByText('製作', { exact: true }).first() with timeout 30000ms\u001b[22m\n\u001b[2m  - waiting for getByText('製作', { exact: true }).first()\u001b[22m\n",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByText('製作', { exact: true }).first()\nExpected: visible\nTimeout: 30000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" getByText('製作', { exact: true }).first() with timeout 30000ms\u001b[22m\n\u001b[2m  - waiting for getByText('製作', { exact: true }).first()\u001b[22m\n\n    at /home/isinxnisi/1.projects/.worktrees/graph-knowledge-film-worker-manifest/tests/film43/film-ab-published.spec.ts:79:62",
+                        "location": {
+                          "file": "/home/isinxnisi/1.projects/.worktrees/graph-knowledge-film-worker-manifest/tests/film43/film-ab-published.spec.ts",
+                          "column": 62,
+                          "line": 79
+                        },
+                        "snippet": "  77 |  await info.attach(\"published-ab-route\", { body: JSON.stringify({ relation: model().relation, execution: expected, graph }), contentType: \"application/json\" });\n  78 |  await page.goto(readingHref({ dataset: \"public-kg\", kind: \"claim\", id: \"c100d4b3-373c-47ed-9007-04cd799ac0d2\" }));\n> 79 |  await expect(page.getByText(\"製作\", { exact: true }).first()).toBeVisible();\n     |                                                              ^\n  80 |  await expect(page.getByText(\"クレジット / スタッフ / 製作 / クリストファー・ノーラン\", { exact: true })).toBeVisible();\n  81 |  await expect(page.getByTestId(\"film-trial-claim\")).toHaveCount(0);\n  82 |  expect(errors).toEqual([]);"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/isinxnisi/1.projects/.worktrees/graph-knowledge-film-worker-manifest/tests/film43/film-ab-published.spec.ts",
+                            "column": 62,
+                            "line": 79
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByText('製作', { exact: true }).first()\nExpected: visible\nTimeout: 30000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" getByText('製作', { exact: true }).first() with timeout 30000ms\u001b[22m\n\u001b[2m  - waiting for getByText('製作', { exact: true }).first()\u001b[22m\n\n\n  77 |  await info.attach(\"published-ab-route\", { body: JSON.stringify({ relation: model().relation, execution: expected, graph }), contentType: \"application/json\" });\n  78 |  await page.goto(readingHref({ dataset: \"public-kg\", kind: \"claim\", id: \"c100d4b3-373c-47ed-9007-04cd799ac0d2\" }));\n> 79 |  await expect(page.getByText(\"製作\", { exact: true }).first()).toBeVisible();\n     |                                                              ^\n  80 |  await expect(page.getByText(\"クレジット / スタッフ / 製作 / クリストファー・ノーラン\", { exact: true })).toBeVisible();\n  81 |  await expect(page.getByTestId(\"film-trial-claim\")).toHaveCount(0);\n  82 |  expect(errors).toEqual([]);\n    at /home/isinxnisi/1.projects/.worktrees/graph-knowledge-film-worker-manifest/tests/film43/film-ab-published.spec.ts:79:62"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-27T23:37:39.449Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "published-ab-route",
+                          "contentType": "application/json",
+                          "body": "eyJyZWxhdGlvbiI6eyJ2ZXJzaW9uIjoxLCJ0eXBlIjoicGF0dGVybiIsInBhdHRlcm4iOnsiaWQiOiJvdGhlci13b3JrcyIsInJldmlzaW9uIjozfSwicG9sYXJpdHkiOiJhZmZpcm1lZCIsImNvbnRyaWJ1dGlvblJvbGVzIjpudWxsLCJzdGVwUm9sZXMiOltbIkRJUkVDVElORyJdLFsiU0NSSVBUX1dSSVRJTkciXV19LCJleGVjdXRpb24iOnsidHlwZSI6InBhdHRlcm4iLCJyb3V0ZXMiOlt7InJvdXRlIjp7Im5vZGVJZHMiOlsiNDIwODY1YjYtMTM3Ny00ZDAyLTg2NzgtMDljZjBlZDI4ZmFjIiwiMWIyMTdjOTEtMWUyZC00NmUxLTllNGMtYjkwZDcwNmQzZjdhIiwiNmUxYTdjM2UtMTU1YS00ZmEzLWJlZWYtODM1NjRiMmY5M2IyIl0sImNsYWltSWRzIjpbImM4ZGRkNGJkLTA5YzYtNGUzNi04NTQ2LTc2MjljY2E1Y2JmNiIsIjM0ODE3YzE0LWFmN2UtNDIwMy05M2FlLWYwZTU0MmQwYzcxMCJdfSwib3BlbiI6dHJ1ZX1dLCJyZXF1aXJlZFJvdXRlS2V5IjoiNDIwODY1YjYtMTM3Ny00ZDAyLTg2NzgtMDljZjBlZDI4ZmFjOjFiMjE3YzkxLTFlMmQtNDZlMS05ZTRjLWI5MGQ3MDZkM2Y3YTo2ZTFhN2MzZS0xNTVhLTRmYTMtYmVlZi04MzU2NGIyZjkzYjIiLCJjYW5kaWRhdGVCb3VuZGFyeSI6bnVsbCwiZW50aXR5U3RhdGUiOnsidmVyc2lvbiI6MSwiYnJhbmNoZXMiOlt7ImlkIjoiNDIwODY1YjYtMTM3Ny00ZDAyLTg2NzgtMDljZjBlZDI4ZmFjIiwib3BlbiI6dHJ1ZSwiY2xhaW1JZHMiOlsiYzhkZGQ0YmQtMDljNi00ZTM2LTg1NDYtNzYyOWNjYTVjYmY2Il19LHsiaWQiOiIxYjIxN2M5MS0xZTJkLTQ2ZTEtOWU0Yy1iOTBkNzA2ZDNmN2EiLCJvcGVuIjp0cnVlLCJjbGFpbUlkcyI6WyJjOGRkZDRiZC0wOWM2LTRlMzYtODU0Ni03NjI5Y2NhNWNiZjYiLCIzNDgxN2MxNC1hZjdlLTQyMDMtOTNhZS1mMGU1NDJkMGM3MTAiXX1dLCJzb3VyY2VzIjpbeyJpZCI6IjQyMDg2NWI2LTEzNzctNGQwMi04Njc4LTA5Y2YwZWQyOGZhYyIsInJlcXVpcmVkUm91dGVLZXkiOiI0MjA4NjViNi0xMzc3LTRkMDItODY3OC0wOWNmMGVkMjhmYWM6MWIyMTdjOTEtMWUyZC00NmUxLTllNGMtYjkwZDcwNmQzZjdhOjZlMWE3YzNlLTE1NWEtNGZhMy1iZWVmLTgzNTY0YjJmOTNiMiIsImNhbmRpZGF0ZUJvdW5kYXJ5IjpudWxsfV19fSwiZ3JhcGgiOnsibm9kZXMiOlt7ImlkIjoiNDIwODY1YjYtMTM3Ny00ZDAyLTg2NzgtMDljZjBlZDI4ZmFjIiwibGFiZWwiOiLjgqTjg7Pjgrvjg5fjgrfjg6fjg7MifSx7ImlkIjoiMWIyMTdjOTEtMWUyZC00NmUxLTllNGMtYjkwZDcwNmQzZjdhIiwibGFiZWwiOiLjgq/jg6rjgrnjg4jjg5XjgqHjg7zjg7vjg47jg7zjg6njg7MifSx7ImlkIjoiNmUxYTdjM2UtMTU1YS00ZmEzLWJlZWYtODM1NjRiMmY5M2IyIiwibGFiZWwiOiLjgqTjg7Pjgr/jg7zjgrnjg4bjg6njg7wifV0sImVkZ2VzIjpbInJlbGF0aW9uOjFiMjE3YzkxLTFlMmQtNDZlMS05ZTRjLWI5MGQ3MDZkM2Y3YTpDT05UUklCVVRFRF9UTzo0MjA4NjViNi0xMzc3LTRkMDItODY3OC0wOWNmMGVkMjhmYWMiLCJyZWxhdGlvbjoxYjIxN2M5MS0xZTJkLTQ2ZTEtOWU0Yy1iOTBkNzA2ZDNmN2E6Q09OVFJJQlVURURfVE86NmUxYTdjM2UtMTU1YS00ZmEzLWJlZWYtODM1NjRiMmY5M2IyIl19fQ=="
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/isinxnisi/1.projects/.worktrees/graph-knowledge-film-worker-manifest/.local/film-ab-publication-browser/ab-complete/film-ab-published-publishe-596bc--evidence-Graph-and-restore/error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/isinxnisi/1.projects/.worktrees/graph-knowledge-film-worker-manifest/tests/film43/film-ab-published.spec.ts",
+                        "column": 62,
+                        "line": 79
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "32b97987d57e3878c88f-2a09f83fbb66905a4f98",
+              "file": "film-ab-published.spec.ts",
+              "line": 7,
+              "column": 1
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

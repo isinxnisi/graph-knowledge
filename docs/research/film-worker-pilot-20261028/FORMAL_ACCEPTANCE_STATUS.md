@@ -1,5 +1,7 @@
 # Worker更新・映画34 Claim正式受入後の現在地
 
+> 最新状態：運営者の個別署名後、本番公開・全件検証・監査・排他終了・Worker再開まで完了。追加操作は不要。[公開完了記録](PUBLICATION_COMPLETED.md)。以下は署名前の受入・公開準備時点の記録であり、当時の「未公開」は現在の状態を表さない。
+
 2026-10-28。運営者の固定対象への実承認を受け、5ファイルbackport、34 Claimの正式受入、release候補・offline plan・root実plan・既存delivery登録まで完了した。**本番公開署名・apply・beta／本番Web切替は行っていない。** 次は [固定requestの個別公開署名](PUBLICATION_APPROVAL_REVIEW.md)。
 
 ## 実施した固定対象

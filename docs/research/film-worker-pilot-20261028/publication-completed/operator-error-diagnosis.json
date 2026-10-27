@@ -1,0 +1,24 @@
+{
+  "observedUserOutput": {
+    "error": "operator-approval-or-delivery-stopped",
+    "newNonceAuthorized": false
+  },
+  "nonce": "13abfb93-ba2d-44f7-a56b-352aa7ab0ab0",
+  "firstInspectedRootAndDeliveryWereCompleted": true,
+  "signedApprovalPresentAndCryptographicallyVerified": true,
+  "rootWholeGraphAnd34ApiClaimsVerified": true,
+  "rootPendingAudit": false,
+  "rootExclusionPhase": "finished",
+  "directWrapperExceptionCause": "unconfirmed",
+  "childStdoutStderrFromFailedOperatorInvocation": "not available",
+  "installedSourcesSha256": {
+    "/usr/local/sbin/plunode-publication-approve": "536ff5659cedc6b724c452b38fb44861716d35fee7983135490181565a18924f",
+    "/usr/local/lib/plunode-receipts/7392d8e343a11644b1047364c71653779ad0c93c/scripts/publication-delivery.py": "1b84a8da2ed79a9c4dbf947295e454529ab071673e0f730341d8cd06593d9290"
+  },
+  "sourceFinding": "The operator catches all exceptions after signing and prints one generic error. It checks child exit code, stdout byte limit and JSON decoding; it does not retain child output or exception details. These checks do not establish which exception occurred in this invocation.",
+  "reSignByCodex": false,
+  "newNonceCreatedByCodex": false,
+  "executeOrApplyByCodexDuringDiagnosis": false,
+  "restoreByCodex": false,
+  "protectedOperatorChanged": false
+}

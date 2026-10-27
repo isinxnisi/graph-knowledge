@@ -1,0 +1,108 @@
+{
+  "history": {
+    "announced": true,
+    "baseRelease": "publication-film-initial-20261027",
+    "baseRevision": "7c54da24-6fa9-46a5-810d-834eed8328d9",
+    "candidate": "/home/isinxnisi/.local/share/plunode-publication/preparation/candidates/13abfb93-ba2d-44f7-a56b-352aa7ab0ab0",
+    "nonce": "13abfb93-ba2d-44f7-a56b-352aa7ab0ab0",
+    "operatorDigest": "sha256:7042781b105067ce3adea0c59bccfb4c8326f84c0ca6aa5f1b8c26e6cd3d5cef",
+    "phase": "retired",
+    "reason": "publication-completed",
+    "receiptSetSha256": "9cfd5c4f9a84d6f37ac6a58228421d76d1859d0f7e48b117b424c42495af1969",
+    "receipts": [
+      {
+        "file": "datasets/manga-collection/accepted-film-initial-20261027/acceptance.json",
+        "sha256": "3ac7b6be38e24aa9dfd7bf67233b7c5e80822c4313ca9b58d34408611cdc83c3"
+      },
+      {
+        "file": "datasets/manga-collection/accepted-film-saved-ab-20261028/acceptance.json",
+        "sha256": "7b96b1c64ed106b1a17d493ca86b5b12e1e306e2551c191e52d6df77876c5df6"
+      },
+      {
+        "file": "datasets/manga-collection/accepted-issue-25-utc-recovery-01-normal/acceptance.json",
+        "sha256": "d271f32767dab030bd26ddcef669f48237cc303a8c605c58df047df8aea71fb6"
+      },
+      {
+        "file": "datasets/manga-collection/accepted-issue-25-utc-recovery-03-normal/acceptance.json",
+        "sha256": "2cd8cb76b64be0d9d19fb3da8ceb4d3e185ca086bba0e90917a7b24a1da0bedf"
+      },
+      {
+        "file": "datasets/manga-collection/accepted-issue-25-utc-recovery-04-normal/acceptance.json",
+        "sha256": "052a7d1ef334074ce2b94837a7d0dfc803bde9526abc9d8e8e7f058b36acdf62"
+      },
+      {
+        "file": "datasets/manga-collection/accepted-issue-25-utc-recovery-06-normal/acceptance.json",
+        "sha256": "4e94de08943725549f4e01be9e6b1b09f2f9d88c5ca2dfaa9aa5b7c2395930f4"
+      },
+      {
+        "file": "datasets/manga-collection/accepted-issue-25-utc-recovery-07-normal/acceptance.json",
+        "sha256": "b6a521d5fffdd6cafc3a3df9f8f963c571520812053aad4f259eea3e22ebee0b"
+      },
+      {
+        "file": "datasets/manga-collection/accepted-issue-25-utc-recovery-08-normal/acceptance.json",
+        "sha256": "5b3fdc3aa705c5e73f5ba11b40052be700d71069b0a25a12943cb189a2ee1109"
+      },
+      {
+        "file": "datasets/manga-collection/accepted-issue-34-obata-drawing-20261021/acceptance.json",
+        "sha256": "7f62ec0f27d4fedfbb09066893d4ac94d88eaf016c2fff3959a001ea9f228efe"
+      },
+      {
+        "file": "datasets/manga-collection/accepted-original-story-r0002-20261017/acceptance.json",
+        "sha256": "9fdb9933c0d78795769bf27eebb7ecb4ec7cccc37f6ee6827e55dd119e727801"
+      },
+      {
+        "file": "datasets/manga-collection/accepted-r0002-20261017/acceptance.json",
+        "sha256": "9b28562b9846970cd30b9261d4659d505e9df06e014d2809d6517aa39836f567"
+      },
+      {
+        "file": "datasets/manga-collection/accepted-r0003-20261017/acceptance.json",
+        "sha256": "7d53abbd472fcbf0cba57fa5202d6fd4f8eb12c9ebda34bd1e7a8badca701831"
+      }
+    ],
+    "release": "publication-8b0b1d67656a15c7e505ba1f",
+    "schemaVersion": 1,
+    "ticket": {
+      "artifactSha256": "9a58b3a3515c4e8fb4093a76210acc4828a8cfefc68b1dbba135b019ee41d2da",
+      "codeCommit": "973c7b0c599f79905a029b28b524f4924e169376",
+      "generation": 3,
+      "nonce": "13abfb93-ba2d-44f7-a56b-352aa7ab0ab0",
+      "pause": null,
+      "phase": "open",
+      "receiptSetSha256": "9cfd5c4f9a84d6f37ac6a58228421d76d1859d0f7e48b117b424c42495af1969",
+      "ticketId": "748c32a4-d7f2-4ea6-8334-63d8d8e8f1ee",
+      "workerId": "plunode-wsl"
+    }
+  },
+  "state": {
+    "phase": "idle",
+    "schemaVersion": 1
+  },
+  "health": {
+    "baseRelease": "publication-8b0b1d67656a15c7e505ba1f",
+    "baseRevision": "f5dbf83f-c89e-4e40-95ee-57957016089f",
+    "counts": {
+      "acceptedUnpublished": {
+        "citations": 0,
+        "claims": 0,
+        "entities": 0,
+        "sources": 0
+      },
+      "publishedAccepted": {
+        "citations": 88,
+        "claims": 87,
+        "entities": 98,
+        "sources": 51
+      }
+    },
+    "phase": "up-to-date",
+    "publicationApproval": "human-only",
+    "receiptSetSha256": "9cfd5c4f9a84d6f37ac6a58228421d76d1859d0f7e48b117b424c42495af1969",
+    "schemaVersion": 1
+  },
+  "runtimePublishedBase": {
+    "release": "publication-8b0b1d67656a15c7e505ba1f",
+    "dataSha256": "908e6f3cc180a004d53cb5a34937daa8ca3ff539788dc35ffd56e496eca12f1b",
+    "manifestFileSha256": "b54b3ceb0d7c5146bed49fd15b65bc8c0b1f675a15312a8593206706a986834c",
+    "matchedCompletedRootVerification": true
+  }
+}

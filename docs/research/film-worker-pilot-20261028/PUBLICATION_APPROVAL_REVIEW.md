@@ -1,4 +1,6 @@
-# 映画34 Claim：個別本番公開承認待ち
+# 映画34 Claim：個別本番公開承認の記録
+
+> **公開完了。以下の承認コマンドを再実行しない。** 運営者の署名は有効で、同nonceのroot・deliveryともcompleted、監査完了・exclusion finished・Worker resume ACK 8を確認した。公開revision `f5dbf83f-c89e-4e40-95ee-57957016089f`。[公開後検証・エラー表示の診断](PUBLICATION_COMPLETED.md)。以下は署名前に提示した固定対象と手順の履歴。
 
 2026-10-28。承認済みWorker5ファイル更新、映画34 Claimと29/5/34の正式受入、release準備、offline plan、VPSへの候補転送、通常Worker ACK、root実plan、既存delivery登録まで完了した。**本番公開署名・本番KG apply・beta／本番Web切替は未実施。**
 

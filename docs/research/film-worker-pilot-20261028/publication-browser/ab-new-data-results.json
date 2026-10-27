@@ -1,0 +1,128 @@
+{
+  "config": {
+    "argv": [
+      "/home/isinxnisi/.nvm/versions/node/v24.15.0/bin/node",
+      "/home/isinxnisi/1.projects/.worktrees/graph-knowledge-film-worker-manifest/node_modules/@playwright/test/cli.js",
+      "test",
+      "--config",
+      "playwright.film43.config.ts",
+      "tests/film43/film-ab-published.spec.ts"
+    ],
+    "configFile": "/home/isinxnisi/1.projects/.worktrees/graph-knowledge-film-worker-manifest/playwright.film43.config.ts",
+    "rootDir": "/home/isinxnisi/1.projects/.worktrees/graph-knowledge-film-worker-manifest/tests/film43",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "/home/isinxnisi/1.projects/.worktrees/graph-knowledge-film-worker-manifest/.local/film-ab-publication-browser/ab-success",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "",
+        "name": "",
+        "testDir": "/home/isinxnisi/1.projects/.worktrees/graph-knowledge-film-worker-manifest/tests/film43",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 180000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": ".local/film-ab-publication-browser/ab-success/results.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.63.0",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "film-ab-published.spec.ts",
+      "file": "film-ab-published.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "published AB: Nolan directing to screenwriting, evidence, Graph and restore",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 16855,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-27T23:39:02.253Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "published-ab-route",
+                      "contentType": "application/json",
+                      "body": "eyJyZWxhdGlvbiI6eyJ2ZXJzaW9uIjoxLCJ0eXBlIjoicGF0dGVybiIsInBhdHRlcm4iOnsiaWQiOiJvdGhlci13b3JrcyIsInJldmlzaW9uIjozfSwicG9sYXJpdHkiOiJhZmZpcm1lZCIsImNvbnRyaWJ1dGlvblJvbGVzIjpudWxsLCJzdGVwUm9sZXMiOltbIkRJUkVDVElORyJdLFsiU0NSSVBUX1dSSVRJTkciXV19LCJleGVjdXRpb24iOnsidHlwZSI6InBhdHRlcm4iLCJyb3V0ZXMiOlt7InJvdXRlIjp7Im5vZGVJZHMiOlsiNDIwODY1YjYtMTM3Ny00ZDAyLTg2NzgtMDljZjBlZDI4ZmFjIiwiMWIyMTdjOTEtMWUyZC00NmUxLTllNGMtYjkwZDcwNmQzZjdhIiwiNmUxYTdjM2UtMTU1YS00ZmEzLWJlZWYtODM1NjRiMmY5M2IyIl0sImNsYWltSWRzIjpbImM4ZGRkNGJkLTA5YzYtNGUzNi04NTQ2LTc2MjljY2E1Y2JmNiIsIjM0ODE3YzE0LWFmN2UtNDIwMy05M2FlLWYwZTU0MmQwYzcxMCJdfSwib3BlbiI6dHJ1ZX1dLCJyZXF1aXJlZFJvdXRlS2V5IjoiNDIwODY1YjYtMTM3Ny00ZDAyLTg2NzgtMDljZjBlZDI4ZmFjOjFiMjE3YzkxLTFlMmQtNDZlMS05ZTRjLWI5MGQ3MDZkM2Y3YTo2ZTFhN2MzZS0xNTVhLTRmYTMtYmVlZi04MzU2NGIyZjkzYjIiLCJjYW5kaWRhdGVCb3VuZGFyeSI6bnVsbCwiZW50aXR5U3RhdGUiOnsidmVyc2lvbiI6MSwiYnJhbmNoZXMiOlt7ImlkIjoiNDIwODY1YjYtMTM3Ny00ZDAyLTg2NzgtMDljZjBlZDI4ZmFjIiwib3BlbiI6dHJ1ZSwiY2xhaW1JZHMiOlsiYzhkZGQ0YmQtMDljNi00ZTM2LTg1NDYtNzYyOWNjYTVjYmY2Il19LHsiaWQiOiIxYjIxN2M5MS0xZTJkLTQ2ZTEtOWU0Yy1iOTBkNzA2ZDNmN2EiLCJvcGVuIjp0cnVlLCJjbGFpbUlkcyI6WyJjOGRkZDRiZC0wOWM2LTRlMzYtODU0Ni03NjI5Y2NhNWNiZjYiLCIzNDgxN2MxNC1hZjdlLTQyMDMtOTNhZS1mMGU1NDJkMGM3MTAiXX1dLCJzb3VyY2VzIjpbeyJpZCI6IjQyMDg2NWI2LTEzNzctNGQwMi04Njc4LTA5Y2YwZWQyOGZhYyIsInJlcXVpcmVkUm91dGVLZXkiOiI0MjA4NjViNi0xMzc3LTRkMDItODY3OC0wOWNmMGVkMjhmYWM6MWIyMTdjOTEtMWUyZC00NmUxLTllNGMtYjkwZDcwNmQzZjdhOjZlMWE3YzNlLTE1NWEtNGZhMy1iZWVmLTgzNTY0YjJmOTNiMiIsImNhbmRpZGF0ZUJvdW5kYXJ5IjpudWxsfV19fSwiZ3JhcGgiOnsibm9kZXMiOlt7ImlkIjoiNDIwODY1YjYtMTM3Ny00ZDAyLTg2NzgtMDljZjBlZDI4ZmFjIiwibGFiZWwiOiLjgqTjg7Pjgrvjg5fjgrfjg6fjg7MifSx7ImlkIjoiMWIyMTdjOTEtMWUyZC00NmUxLTllNGMtYjkwZDcwNmQzZjdhIiwibGFiZWwiOiLjgq/jg6rjgrnjg4jjg5XjgqHjg7zjg7vjg47jg7zjg6njg7MifSx7ImlkIjoiNmUxYTdjM2UtMTU1YS00ZmEzLWJlZWYtODM1NjRiMmY5M2IyIiwibGFiZWwiOiLjgqTjg7Pjgr/jg7zjgrnjg4bjg6njg7wifV0sImVkZ2VzIjpbInJlbGF0aW9uOjFiMjE3YzkxLTFlMmQtNDZlMS05ZTRjLWI5MGQ3MDZkM2Y3YTpDT05UUklCVVRFRF9UTzo0MjA4NjViNi0xMzc3LTRkMDItODY3OC0wOWNmMGVkMjhmYWMiLCJyZWxhdGlvbjoxYjIxN2M5MS0xZTJkLTQ2ZTEtOWU0Yy1iOTBkNzA2ZDNmN2E6Q09OVFJJQlVURURfVE86NmUxYTdjM2UtMTU1YS00ZmEzLWJlZWYtODM1NjRiMmY5M2IyIl19fQ=="
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "32b97987d57e3878c88f-2a09f83fbb66905a4f98",
+          "file": "film-ab-published.spec.ts",
+          "line": 7,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-27T23:38:59.731Z",
+    "duration": 19760.192,
+    "expected": 1,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

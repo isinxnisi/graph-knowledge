@@ -1,0 +1,91 @@
+{
+  "observedAt": "2026-10-27T23:34:02.885125+00:00",
+  "nonce": "13abfb93-ba2d-44f7-a56b-352aa7ab0ab0",
+  "revision": "f5dbf83f-c89e-4e40-95ee-57957016089f",
+  "phase": "completed",
+  "signatureVerified": true,
+  "signatureBoundToExactLiveRequest": true,
+  "apiNewClaimsVerified": 34,
+  "counts": {
+    "nodes": {
+      "Citation": 1968,
+      "Claim": 1931,
+      "Entity": 2207,
+      "ExternalIdentifier": 2576,
+      "Source": 1802
+    },
+    "relationships": {
+      "CITES": 1968,
+      "HAS_CITATION": 1968,
+      "HAS_EXTERNAL_ID": 2576,
+      "OBJECT": 1931,
+      "SUBJECT": 1931
+    }
+  },
+  "pendingAudit": false,
+  "exclusion": "finished",
+  "workerResumeAckRevision": 8,
+  "workerPauseMode": null,
+  "fiveApprovedWorkerFilesMatched": true,
+  "oldElevenReceiptsUnchanged": true,
+  "existingThirtyEightRequestHashesUnchanged": true,
+  "workerConfigUnchanged": true,
+  "preparationRetiredAsCompleted": true,
+  "environmentMetadata": {
+    "https://plunode.net": {
+      "dataset": "public-kg",
+      "revision": "f5dbf83f-c89e-4e40-95ee-57957016089f"
+    },
+    "https://graph-beta.isinxnisi.com": {
+      "dataset": "public-kg",
+      "revision": "34befbcd-8f5f-4cd9-a059-242a3f0b5ffb"
+    },
+    "http://127.0.0.1:3200": {
+      "dataset": "public-kg",
+      "revision": "34befbcd-8f5f-4cd9-a059-242a3f0b5ffb"
+    }
+  },
+  "betaSnapshot": {
+    "https://graph-beta.isinxnisi.com": {
+      "newNolanClaimStatus": 404,
+      "switchedByThisTask": false
+    },
+    "http://127.0.0.1:3200": {
+      "newNolanClaimStatus": 404,
+      "switchedByThisTask": false
+    }
+  },
+  "signedOrAppliedByThisVerifier": false,
+  "workerPublishedBaseSynced": true,
+  "preparationHealth": {
+    "baseRelease": "publication-8b0b1d67656a15c7e505ba1f",
+    "baseRevision": "f5dbf83f-c89e-4e40-95ee-57957016089f",
+    "counts": {
+      "acceptedUnpublished": {
+        "citations": 0,
+        "claims": 0,
+        "entities": 0,
+        "sources": 0
+      },
+      "publishedAccepted": {
+        "citations": 88,
+        "claims": 87,
+        "entities": 98,
+        "sources": 51
+      }
+    },
+    "phase": "up-to-date",
+    "publicationApproval": "human-only",
+    "receiptSetSha256": "9cfd5c4f9a84d6f37ac6a58228421d76d1859d0f7e48b117b424c42495af1969",
+    "schemaVersion": 1
+  },
+  "formalReceiptAcceptedUnpublished": {
+    "citations": 0,
+    "claims": 0,
+    "entities": 0,
+    "sources": 0
+  },
+  "preservedInstalledFourBackportsMatched": true,
+  "protectedConfigurationFilesUnchanged": true,
+  "mainAndRemoteMainUnchanged": true
+}

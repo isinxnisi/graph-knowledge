@@ -1,0 +1,244 @@
+{
+  "revision": "f5dbf83f-c89e-4e40-95ee-57957016089f",
+  "claims": [
+    {
+      "claimId": "01e2a86b-6801-472b-8e32-a91cc0925dfc",
+      "role": "ACTING",
+      "citationId": "9bb6e392-5c51-4abe-a6d3-5520f6f439a2",
+      "sourceId": "5cda4bab-b317-40d7-887c-f6ee42e3c8de",
+      "identityMeaningAndEvidenceMatched": true
+    },
+    {
+      "claimId": "0a7e8587-895a-46b7-9b20-9363f4d444a6",
+      "role": "ACTING",
+      "citationId": "cada65aa-102d-4ee5-b121-cf3ca68186dc",
+      "sourceId": "5cda4bab-b317-40d7-887c-f6ee42e3c8de",
+      "identityMeaningAndEvidenceMatched": true
+    },
+    {
+      "claimId": "11db956d-70a9-43cf-805b-9ffa576da501",
+      "role": "SCRIPT_WRITING",
+      "citationId": "c12e60a5-bc8d-458c-a4a2-848da3e65a51",
+      "sourceId": "529ddee7-dcea-4eb3-97c5-da3ada7922de",
+      "identityMeaningAndEvidenceMatched": true
+    },
+    {
+      "claimId": "1baf9c26-c4bb-4d09-9caa-16114a81b8af",
+      "role": "ACTING",
+      "citationId": "7b0b17d4-e313-47ba-932b-6ebc32062d97",
+      "sourceId": "cff578b8-3458-462f-8568-39aa9881b578",
+      "identityMeaningAndEvidenceMatched": true
+    },
+    {
+      "claimId": "204905b0-1f64-4e98-beb9-974b6031c7b0",
+      "role": "PRODUCING",
+      "citationId": "1e7e9a63-908e-42c8-a330-d01de08489f6",
+      "sourceId": "cff578b8-3458-462f-8568-39aa9881b578",
+      "identityMeaningAndEvidenceMatched": true
+    },
+    {
+      "claimId": "2560c363-e2f7-4481-84cc-025833259a0d",
+      "role": "ACTING",
+      "citationId": "d4887aea-fbd8-43e6-adc5-e5ac3e62ecda",
+      "sourceId": "cff578b8-3458-462f-8568-39aa9881b578",
+      "identityMeaningAndEvidenceMatched": true
+    },
+    {
+      "claimId": "2721d599-98fa-48bd-836d-cff2aa4f023b",
+      "role": "DIRECTING",
+      "citationId": "20934604-2dba-42fd-be93-f70d794d2ed0",
+      "sourceId": "7ecb3b65-d211-42c7-aeb4-7f1152c9a051",
+      "identityMeaningAndEvidenceMatched": true
+    },
+    {
+      "claimId": "2e210c78-b456-45cd-86ad-09f2a334a992",
+      "role": "DIRECTING",
+      "citationId": "dc073585-9553-4be8-9a67-7f78b08753cc",
+      "sourceId": "cff578b8-3458-462f-8568-39aa9881b578",
+      "identityMeaningAndEvidenceMatched": true
+    },
+    {
+      "claimId": "34817c14-af7e-4203-93ae-f0e542d0c710",
+      "role": "SCRIPT_WRITING",
+      "citationId": "2ffd9a52-09d4-4898-a7e9-009675aefec1",
+      "sourceId": "cff578b8-3458-462f-8568-39aa9881b578",
+      "identityMeaningAndEvidenceMatched": true
+    },
+    {
+      "claimId": "382e652d-e1ff-4b2a-8766-cbc9d0c95233",
+      "role": "ACTING",
+      "citationId": "773f106a-776d-44bd-9d2b-a18112275449",
+      "sourceId": "5cda4bab-b317-40d7-887c-f6ee42e3c8de",
+      "identityMeaningAndEvidenceMatched": true
+    },
+    {
+      "claimId": "422b17a4-5fe4-49d9-94d9-be05bef2c220",
+      "role": "PRODUCING",
+      "citationId": "35a4c638-afc5-49f2-8fb1-073653b13842",
+      "sourceId": "29153c7c-75b7-4d90-9ac1-7f5eec2daaff",
+      "identityMeaningAndEvidenceMatched": true
+    },
+    {
+      "claimId": "45753517-c284-4c62-828b-52bbd06c4935",
+      "role": "PRODUCING",
+      "citationId": "d281ce6f-1728-44a3-a40d-45c431840519",
+      "sourceId": "7ecb3b65-d211-42c7-aeb4-7f1152c9a051",
+      "identityMeaningAndEvidenceMatched": true
+    },
+    {
+      "claimId": "560df70e-2deb-4cbc-a09a-6269fdecf53a",
+      "role": "SCRIPT_WRITING",
+      "citationId": "3d5eb662-0649-4656-a498-3f9c3bc38ba9",
+      "sourceId": "29153c7c-75b7-4d90-9ac1-7f5eec2daaff",
+      "identityMeaningAndEvidenceMatched": true
+    },
+    {
+      "claimId": "57fa063b-d69d-4829-8567-4d0ab4c4a234",
+      "role": "PRODUCING",
+      "citationId": "c8f99838-b5e7-4c52-8cbb-d8a35994aecb",
+      "sourceId": "5cda4bab-b317-40d7-887c-f6ee42e3c8de",
+      "identityMeaningAndEvidenceMatched": true
+    },
+    {
+      "claimId": "624472b2-7788-4984-b13c-9ba4c1515bee",
+      "role": "PRODUCING",
+      "citationId": "7e9756e3-d65b-4268-8103-48c3770552ef",
+      "sourceId": "54461ad1-e977-4b68-a2bf-7f972ff29002",
+      "identityMeaningAndEvidenceMatched": true
+    },
+    {
+      "claimId": "67675c33-057a-422f-86bd-6535e46da126",
+      "role": "SCRIPT_WRITING",
+      "citationId": "99703bb1-9a64-43fa-8b60-6f8fc4cb4342",
+      "sourceId": "529ddee7-dcea-4eb3-97c5-da3ada7922de",
+      "identityMeaningAndEvidenceMatched": true
+    },
+    {
+      "claimId": "7a54eab9-c780-4c1c-a5a0-99104c431e42",
+      "role": "SCRIPT_WRITING",
+      "citationId": "255c06da-c9c7-412d-9225-82ac8a78470f",
+      "sourceId": "cff578b8-3458-462f-8568-39aa9881b578",
+      "identityMeaningAndEvidenceMatched": true
+    },
+    {
+      "claimId": "7d12c79b-67b5-484e-965c-297982a220d7",
+      "role": "SCRIPT_WRITING",
+      "citationId": "be46f8b5-ff79-46f1-b6e4-506b9fe46505",
+      "sourceId": "54461ad1-e977-4b68-a2bf-7f972ff29002",
+      "identityMeaningAndEvidenceMatched": true
+    },
+    {
+      "claimId": "8031d324-16b1-423c-a98f-8cafb00d1778",
+      "role": "ACTING",
+      "citationId": "77539c6c-efd6-4850-ae48-573b6b82db96",
+      "sourceId": "7ecb3b65-d211-42c7-aeb4-7f1152c9a051",
+      "identityMeaningAndEvidenceMatched": true
+    },
+    {
+      "claimId": "850a9f83-aafd-4d1a-ad58-185791bd98bb",
+      "role": "PRODUCING",
+      "citationId": "670897d6-f5ee-43fd-8c7c-a086d8334aa4",
+      "sourceId": "54461ad1-e977-4b68-a2bf-7f972ff29002",
+      "identityMeaningAndEvidenceMatched": true
+    },
+    {
+      "claimId": "8974c334-d6c9-4a20-a4ee-35d3ee322c9a",
+      "role": "SCRIPT_WRITING",
+      "citationId": "a1886b5f-310e-42d5-a579-ffc796ac1d5c",
+      "sourceId": "5cda4bab-b317-40d7-887c-f6ee42e3c8de",
+      "identityMeaningAndEvidenceMatched": true
+    },
+    {
+      "claimId": "94596246-2d89-4026-8fe6-8e996dd61b63",
+      "role": "DIRECTING",
+      "citationId": "d140ccf0-a260-4821-a691-70865f58d5a1",
+      "sourceId": "529ddee7-dcea-4eb3-97c5-da3ada7922de",
+      "identityMeaningAndEvidenceMatched": true
+    },
+    {
+      "claimId": "a8a3b22b-854e-416c-bfbb-fbb69cde8071",
+      "role": "SCRIPT_WRITING",
+      "citationId": "1af08b9b-c6ff-4e8b-819b-3277cbcea4da",
+      "sourceId": "29153c7c-75b7-4d90-9ac1-7f5eec2daaff",
+      "identityMeaningAndEvidenceMatched": true
+    },
+    {
+      "claimId": "a8a44bd2-ca25-4bef-9aeb-95efba2bc616",
+      "role": "SCRIPT_WRITING",
+      "citationId": "10a37f67-8c0d-4441-ba05-98c420806fd1",
+      "sourceId": "7ecb3b65-d211-42c7-aeb4-7f1152c9a051",
+      "identityMeaningAndEvidenceMatched": true
+    },
+    {
+      "claimId": "ab1fad8c-95ba-4a39-9f93-134b85856b8b",
+      "role": "ACTING",
+      "citationId": "c1f71e63-f97b-459d-9a0b-8defe37daad8",
+      "sourceId": "29153c7c-75b7-4d90-9ac1-7f5eec2daaff",
+      "identityMeaningAndEvidenceMatched": true
+    },
+    {
+      "claimId": "be664da8-8ca7-495c-b654-50257cf3bb5f",
+      "role": "ACTING",
+      "citationId": "ecfa2c06-b940-4a19-84e3-45a458608cd3",
+      "sourceId": "54461ad1-e977-4b68-a2bf-7f972ff29002",
+      "identityMeaningAndEvidenceMatched": true
+    },
+    {
+      "claimId": "c100d4b3-373c-47ed-9007-04cd799ac0d2",
+      "role": "PRODUCING",
+      "citationId": "f2839c8c-d2bc-4833-a89a-3044312898d5",
+      "sourceId": "5cda4bab-b317-40d7-887c-f6ee42e3c8de",
+      "identityMeaningAndEvidenceMatched": true
+    },
+    {
+      "claimId": "c8ddd4bd-09c6-4e36-8546-7629cca5cbf6",
+      "role": "DIRECTING",
+      "citationId": "acd5e66f-1a9a-4985-8445-e3cb82225bf0",
+      "sourceId": "5cda4bab-b317-40d7-887c-f6ee42e3c8de",
+      "identityMeaningAndEvidenceMatched": true
+    },
+    {
+      "claimId": "c9511222-9477-422d-9572-049fdc20d768",
+      "role": "ACTING",
+      "citationId": "b8ef97e6-581a-4370-9ee7-1208b029beb3",
+      "sourceId": "7ecb3b65-d211-42c7-aeb4-7f1152c9a051",
+      "identityMeaningAndEvidenceMatched": true
+    },
+    {
+      "claimId": "caa6fa13-44c3-4925-858b-1c8c9eff7e4c",
+      "role": "DIRECTING",
+      "citationId": "bef05e24-5855-456a-b6fe-809f046e983a",
+      "sourceId": "29153c7c-75b7-4d90-9ac1-7f5eec2daaff",
+      "identityMeaningAndEvidenceMatched": true
+    },
+    {
+      "claimId": "db41e530-e1d5-4bda-8a9b-83334857a96c",
+      "role": "PRODUCING",
+      "citationId": "4a5cbe8b-3914-41f2-8efa-ecb422a61043",
+      "sourceId": "54461ad1-e977-4b68-a2bf-7f972ff29002",
+      "identityMeaningAndEvidenceMatched": true
+    },
+    {
+      "claimId": "e21681a9-a721-4bc0-83d6-16a907119c75",
+      "role": "ACTING",
+      "citationId": "38258329-e45b-4a36-bdcd-f1acf457bf88",
+      "sourceId": "7ecb3b65-d211-42c7-aeb4-7f1152c9a051",
+      "identityMeaningAndEvidenceMatched": true
+    },
+    {
+      "claimId": "e77e4769-69de-4229-9484-ea1886b1a8ac",
+      "role": "SCRIPT_WRITING",
+      "citationId": "383f77a6-7398-45de-a18f-7e4b96ef7222",
+      "sourceId": "529ddee7-dcea-4eb3-97c5-da3ada7922de",
+      "identityMeaningAndEvidenceMatched": true
+    },
+    {
+      "claimId": "fab3dc5d-7565-4bb2-892e-b04a65f440f0",
+      "role": "PRODUCING",
+      "citationId": "8319371f-c0d0-464c-8b44-256b10e84d2b",
+      "sourceId": "54461ad1-e977-4b68-a2bf-7f972ff29002",
+      "identityMeaningAndEvidenceMatched": true
+    }
+  ],
+  "oldTwoClaimsStillReadable": true
+}
