@@ -1,0 +1,76 @@
+{
+  "schemaVersion": 2,
+  "id": "manga-r0030",
+  "catalog": "docs/research/famous-manga-creators/20261016/candidates.json",
+  "baseRelease": "datasets/public-kg/releases/20261014-credits-001",
+  "stamp": "2026-10-27T06:01:10Z",
+  "requestPolicy": {
+    "maxAttempts": 30,
+    "attemptsPerRequest": 2,
+    "minIntervalSeconds": 3,
+    "timeoutSeconds": 20,
+    "maxBytes": 4194304
+  },
+  "outputPolicy": {
+    "maxNewEntities": 3,
+    "maxNewClaims": 6,
+    "newClaimVisibility": "hidden"
+  },
+  "people": [
+    {
+      "name": "青山剛昌",
+      "catalogName": "青山剛昌",
+      "wikidata": "Q313945",
+      "identityNames": [
+        "青山剛昌"
+      ],
+      "creditNames": [
+        "青山剛昌"
+      ]
+    }
+  ],
+  "works": [
+    {
+      "name": "YAIBA",
+      "wikidata": "Q626947",
+      "identityNames": [
+        "YAIBA"
+      ],
+      "isbn13": "9784091222718",
+      "ndlMainTitles": [
+        "Yaiba"
+      ],
+      "expectedVolume": [
+        "1"
+      ],
+      "expectedEdition": [],
+      "volumeLabel": "第1巻（NDL巻次 1）",
+      "editionLabel": null,
+      "identityNote": "Issueの名称とWikidataの完全一致・漫画型、NDL作成書誌の主書名・責任表示・巻次を照合。作品全体の担当へ外挿しない。",
+      "selectionReason": "承認済みIssue内の同作者経路の拡張。"
+    },
+    {
+      "name": "まじっく快斗",
+      "wikidata": "Q113329",
+      "identityNames": [
+        "まじっく快斗"
+      ],
+      "isbn13": "9784091220813",
+      "ndlMainTitles": [
+        "まじっく快斗"
+      ],
+      "expectedVolume": [
+        "1"
+      ],
+      "expectedEdition": [],
+      "volumeLabel": "第1巻（NDL巻次 1）",
+      "editionLabel": null,
+      "identityNote": "Issueの名称とWikidataの完全一致・漫画型、NDL作成書誌の主書名・責任表示・巻次を照合。作品全体の担当へ外挿しない。",
+      "selectionReason": "承認済みIssue内の同作者経路の拡張。"
+    }
+  ],
+  "reviewArtifacts": [
+    "datasets/manga-collection/r0030/anchor-review.json",
+    "datasets/manga-collection/r0030/publication-review.json"
+  ]
+}
