@@ -1,0 +1,72 @@
+{
+  "requestId": "issue-51-dot-araki-rohan-20261027",
+  "request": {
+    "schemaVersion": 1,
+    "id": "issue-51-dot-araki-rohan-20261027",
+    "kind": "issue-prepare",
+    "status": "approved",
+    "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
+    "issueAdapterSha256": "38aadaee84b039f9f991ac1cc831a9498a4d83fab062d96b7c252d7175326dab",
+    "applyAuthorized": {
+      "local": false,
+      "beta": false,
+      "vps": false
+    },
+    "approvalScope": "issue-manga-preparation-collection-review-only",
+    "humanDecision": {
+      "actorType": "human",
+      "reviewer": "プロジェクト運営者（範囲を限定した委任）",
+      "decidedAt": "2026-10-25T13:07:49+09:00",
+      "statement": "2026-10-25 13:07:49 JST、運営者は既存Worker対応の現在の漫画テーマ候補からdotが対象を選び、毎回の個別提示なしでGitHubの収集許可と購読を登録し、候補収集・レビューまで進める限定委任を明示承認した。同日16:17:04 JSTに固定1日1バッチ上限を撤廃し、進捗・収集量・負荷による投入調整を許可した。2026-10-26 12:37:31 JST、過去の許可を上書きせず追加分をバッチ専用の新Issueに登録する方式への明示確認に本人が肯定リアクションし、親会話で現在の反応を検証済み。2026-10-27 13:37〜13:41 JST、運営者はdotが相談中として継続していた追加投入抑制を問い直し、データ収集を急いでいること、多少多く実行してほしいこと、1日何件という制約を付ける段階ではないことを明示した。元の限定委任の範囲で投入を再開し、日次件数上限を設けず実処理・待機量・負荷を見て少量ずつ補充する。個々の人物作品組・Role・ISBNを人間が審査済みとの記録ではない。今回dotが選んだのは既存テーマIssue #5と固定catalog d3e377d5255f4c487d608e73954dc40aeb0b3cba（blob f3d33d0e83b6299a7f443fa841232407ce67657c）のM39の荒木飛呂彦→岸辺露伴は動かない1組、および導入Worker対応組との共通部分だけ。Wikidata構造化情報とNDL作成書誌のみ、1作者1作品、親準備と全子収集合計30試行以内、同一要求2試行・3秒間隔・20秒・4MiB、保存成果とcache優先。既公開・既受入・既収集の同内容、同条件の根拠保留は再収集せず、不確かな同定・Role・刊行物scopeは保留。既設時間帯・直列排他・10分休憩を維持する。固定catalog全組・将来追加テーマへの無条件許可ではなく、正式受入・公開apply・追加取得元・予算拡大・コード/adapter/権限/認証/VPS/会員DB/時間帯/ロック変更は含まない。"
+    },
+    "permission": {
+      "schemaVersion": 1,
+      "approvalId": "dot-araki-rohan-20261027",
+      "status": "approved",
+      "approvalScope": "issue-manga-preparation-collection-review-only",
+      "adapter": "manga-discovery-v2",
+      "targets": [
+        {
+          "person": "荒木飛呂彦",
+          "work": "岸辺露伴は動かない"
+        }
+      ],
+      "requestPolicy": {
+        "maxAttempts": 30,
+        "attemptsPerRequest": 2,
+        "minIntervalSeconds": 3,
+        "timeoutSeconds": 20,
+        "maxBytes": 4194304
+      },
+      "humanDecision": {
+        "actorType": "human",
+        "reviewer": "プロジェクト運営者（範囲を限定した委任）",
+        "decidedAt": "2026-10-25T13:07:49+09:00",
+        "statement": "2026-10-25 13:07:49 JST、運営者は既存Worker対応の現在の漫画テーマ候補からdotが対象を選び、毎回の個別提示なしでGitHubの収集許可と購読を登録し、候補収集・レビューまで進める限定委任を明示承認した。同日16:17:04 JSTに固定1日1バッチ上限を撤廃し、進捗・収集量・負荷による投入調整を許可した。2026-10-26 12:37:31 JST、過去の許可を上書きせず追加分をバッチ専用の新Issueに登録する方式への明示確認に本人が肯定リアクションし、親会話で現在の反応を検証済み。2026-10-27 13:37〜13:41 JST、運営者はdotが相談中として継続していた追加投入抑制を問い直し、データ収集を急いでいること、多少多く実行してほしいこと、1日何件という制約を付ける段階ではないことを明示した。元の限定委任の範囲で投入を再開し、日次件数上限を設けず実処理・待機量・負荷を見て少量ずつ補充する。個々の人物作品組・Role・ISBNを人間が審査済みとの記録ではない。今回dotが選んだのは既存テーマIssue #5と固定catalog d3e377d5255f4c487d608e73954dc40aeb0b3cba（blob f3d33d0e83b6299a7f443fa841232407ce67657c）のM39の荒木飛呂彦→岸辺露伴は動かない1組、および導入Worker対応組との共通部分だけ。Wikidata構造化情報とNDL作成書誌のみ、1作者1作品、親準備と全子収集合計30試行以内、同一要求2試行・3秒間隔・20秒・4MiB、保存成果とcache優先。既公開・既受入・既収集の同内容、同条件の根拠保留は再収集せず、不確かな同定・Role・刊行物scopeは保留。既設時間帯・直列排他・10分休憩を維持する。固定catalog全組・将来追加テーマへの無条件許可ではなく、正式受入・公開apply・追加取得元・予算拡大・コード/adapter/権限/認証/VPS/会員DB/時間帯/ロック変更は含まない。"
+      }
+    },
+    "issueOrigin": {
+      "repository": "isinxnisi/graph-knowledge",
+      "issueNumber": 51,
+      "approvalId": "dot-araki-rohan-20261027",
+      "permissionSha256": "a6f3953a9baf6b9276761c858448f2aeb900099bf202961d09eb2df82beb137e",
+      "issueBodySha256": "9b4c3e37ef6f4be8aba82c5fdad0891a1eb944367f3cd2719a2bdd2dd5cf96c5"
+    },
+    "issueSnapshot": {
+      "url": "https://github.com/isinxnisi/graph-knowledge/issues/51",
+      "updatedAt": "2026-10-27T10:03:22Z",
+      "body": "## 限定収集バッチ：荒木飛呂彦 → 岸辺露伴は動かない\n\n元テーマは [Issue #5 有名漫画家と代表作品](https://github.com/isinxnisi/graph-knowledge/issues/5)。過去の許可を変更せず、限定委任内のこの1組だけを独立登録する。\n\n- 対象：荒木飛呂彦 → 岸辺露伴は動かない。漫画制作クレジットのみ、1作者1作品。\n- 固定catalog commit d3e377d5255f4c487d608e73954dc40aeb0b3cba、blob f3d33d0e83b6299a7f443fa841232407ce67657c のM39と元テーマの共通部分。mainとWorker互換基準973c7b0も同blob。固定catalog全組への無条件許可ではない。\n- 重複照合：全37 request、r0002/r0003 recipe、同定・刊行物・候補review、累積公開用snapshot（blob f035b50f2e6f627c33b07489a1ebfd7fa9ee90c2）と後続小畑1 Claim、最新Issueに今回組の既収集・根拠保留なし。実行時の公開・正式受入集合との厳密照合を維持する。\n- 接続は未確定。確認した累積公開用snapshotには作者・作品ともなく、新しい作者作品の組になる見込みで、既存グラフへの接続成功とは報告しない。ジョジョ全体・部・巻、別作品、人物間や影響・助手関係を追加/統合しない。QID・ISBN・Roleを先取りしない。\n- 投入量判断：19時の確認では通常実行可能な待ち案件0、未受入7 Claimと同定のみ2件、技術復旧待ち#47/#50。両案件を別Issueで再収集せず、URL枠・ledgerは変更しない。直近のNDL 429とTimeoutを考慮し今回は新しい1作品だけ。次の通常枠は2026-10-28 03:00 JSTで、登録・受付と実行・完了を区別する。日次件数上限ではなく実際の負荷・残レビュー量に基づく。\n- Wikidata構造化APIとNDL作成書誌のみ。親準備と全子合計30試行、同一要求2回、逐次3秒以上、20秒timeout、4MiB。保存成果/cache優先、Retry-After維持、既存142枠や他バッチの予算・履歴を混同/リセットしない。\n- 通常Workerの時間帯・直列排他・10分休憩を維持。新規親をこれ以上一括で積まず子レビューを優先する。手動実行・並行化しない。\n- 候補・根拠レビューまで。正式受入/公開apply、コード/adapter/権限/認証/VPS/会員DB/時間帯/ロック変更は不可。同定・Role・scope不明は保留、同条件保留の反復取得はしない。\n\n<!-- plunode-collection-permission:v1 -->\n```json\n{\n  \"schemaVersion\": 1,\n  \"approvalId\": \"dot-araki-rohan-20261027\",\n  \"status\": \"approved\",\n  \"approvalScope\": \"issue-manga-preparation-collection-review-only\",\n  \"adapter\": \"manga-discovery-v2\",\n  \"targets\": [\n    {\n      \"person\": \"荒木飛呂彦\",\n      \"work\": \"岸辺露伴は動かない\"\n    }\n  ],\n  \"requestPolicy\": {\n    \"maxAttempts\": 30,\n    \"attemptsPerRequest\": 2,\n    \"minIntervalSeconds\": 3,\n    \"timeoutSeconds\": 20,\n    \"maxBytes\": 4194304\n  },\n  \"humanDecision\": {\n    \"actorType\": \"human\",\n    \"reviewer\": \"プロジェクト運営者（範囲を限定した委任）\",\n    \"decidedAt\": \"2026-10-25T13:07:49+09:00\",\n    \"statement\": \"2026-10-25 13:07:49 JST、運営者は既存Worker対応の現在の漫画テーマ候補からdotが対象を選び、毎回の個別提示なしでGitHubの収集許可と購読を登録し、候補収集・レビューまで進める限定委任を明示承認した。同日16:17:04 JSTに固定1日1バッチ上限を撤廃し、進捗・収集量・負荷による投入調整を許可した。2026-10-26 12:37:31 JST、過去の許可を上書きせず追加分をバッチ専用の新Issueに登録する方式への明示確認に本人が肯定リアクションし、親会話で現在の反応を検証済み。2026-10-27 13:37〜13:41 JST、運営者はdotが相談中として継続していた追加投入抑制を問い直し、データ収集を急いでいること、多少多く実行してほしいこと、1日何件という制約を付ける段階ではないことを明示した。元の限定委任の範囲で投入を再開し、日次件数上限を設けず実処理・待機量・負荷を見て少量ずつ補充する。個々の人物作品組・Role・ISBNを人間が審査済みとの記録ではない。今回dotが選んだのは既存テーマIssue #5と固定catalog d3e377d5255f4c487d608e73954dc40aeb0b3cba（blob f3d33d0e83b6299a7f443fa841232407ce67657c）のM39の荒木飛呂彦→岸辺露伴は動かない1組、および導入Worker対応組との共通部分だけ。Wikidata構造化情報とNDL作成書誌のみ、1作者1作品、親準備と全子収集合計30試行以内、同一要求2試行・3秒間隔・20秒・4MiB、保存成果とcache優先。既公開・既受入・既収集の同内容、同条件の根拠保留は再収集せず、不確かな同定・Role・刊行物scopeは保留。既設時間帯・直列排他・10分休憩を維持する。固定catalog全組・将来追加テーマへの無条件許可ではなく、正式受入・公開apply・追加取得元・予算拡大・コード/adapter/権限/認証/VPS/会員DB/時間帯/ロック変更は含まない。\"\n  }\n}\n```\n<!-- /plunode-collection-permission:v1 -->\n"
+    },
+    "firstRecipeRevision": 35,
+    "recipeRevisionCount": 1
+  },
+  "requestSha256": "e71e0fe6adecfdbb6df5ce5a84a59a8c91f6cd3ac738dc6055d28e86adc2a88b",
+  "kind": "issue-prepare",
+  "phase": "waiting-lock",
+  "generation": 214,
+  "attempts": 0,
+  "workerId": "plunode-wsl",
+  "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
+  "updatedAt": "2026-10-27T18:07:20+00:00",
+  "message": "共通ロック使用中。次回に再確認する。"
+}
