@@ -1,5 +1,9 @@
 import { z } from "zod";
-export const CONTRIBUTION_ROLE_IDS = ["SCRIPT_WRITING", "SUPERVISION", "PRODUCING", "STORY_CO_CREATION", "AUTHORSHIP", "CREATION", "DRAWING", "ORIGINAL_STORY"] as const;
+// Historical minimum: later adoptions are validated against the immutable catalog/reviews.
+export const ADOPTED_CONTRIBUTION_ROLE_IDS = ["SCRIPT_WRITING", "SUPERVISION", "PRODUCING", "STORY_CO_CREATION", "AUTHORSHIP", "CREATION", "DRAWING", "ORIGINAL_STORY"] as const;
+// Historical film draft cohort. Current adoption is determined by catalog.json/reviews.json, not this name.
+export const PENDING_CONTRIBUTION_ROLE_IDS = ["DIRECTING", "ACTING"] as const;
+export const CONTRIBUTION_ROLE_IDS = [...ADOPTED_CONTRIBUTION_ROLE_IDS, ...PENDING_CONTRIBUTION_ROLE_IDS] as const;
 export type ContributionRoleId = typeof CONTRIBUTION_ROLE_IDS[number];
 export const roleIdSchema = z.enum(CONTRIBUTION_ROLE_IDS);
 import { languageSchema, originalTermEvidenceSchema } from "./evidence";
