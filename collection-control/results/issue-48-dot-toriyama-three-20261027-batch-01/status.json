@@ -82,11 +82,35 @@
   },
   "requestSha256": "42647bce621bda1430fe1abe5ac77fda6be97db99885827eefd7248346e104ce",
   "kind": "collect-review",
-  "phase": "running",
+  "phase": "completed",
   "generation": 5,
   "attempts": 1,
   "workerId": "plunode-wsl",
   "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
   "updatedAt": "2026-10-27T07:43:38+00:00",
-  "message": "Execution gate: interval"
+  "result": {
+    "jobId": "issue-48-dot-toriyama-three-20261027-r0001-bfe689d065a388d9",
+    "collectionUnchanged": false,
+    "reviewUnchanged": false,
+    "transportAttemptsAdded": 0,
+    "reviewDirectory": "/home/isinxnisi/.local/share/plunode-collection-worker-phase-b-20261020/runtime/datasets/manga-collection/workflow-reviews/issue-48-dot-toriyama-three-20261027-r0001-bfe689d065a388d9-review-2966e0d62aa0fc82",
+    "reviewOnly": true,
+    "formalAcceptance": false,
+    "publicApply": false,
+    "counts": {
+      "entities": 0,
+      "claims": 0,
+      "sources": 0,
+      "citations": 0
+    },
+    "heldClaims": 0
+  },
+  "executionComplete": true,
+  "reviewReference": {
+    "file": "datasets/manga-collection/workflow-reviews/issue-48-dot-toriyama-three-20261027-r0001-bfe689d065a388d9-review-2966e0d62aa0fc82/review-manifest.json",
+    "sha256": "4607282644225dd3f239445ba377ba5750cee423ac0cabd972fb0e5285417d6a"
+  },
+  "decisionDrafts": [
+    "datasets/collection-decision-drafts/issue-48-dot-toriyama-three-20261027-batch-01/4607282644225dd3f239445ba377ba5750cee423ac0cabd972fb0e5285417d6a/issue-48-dot-toriyama-three-20261027-batch-01-identity-draft.json"
+  ]
 }

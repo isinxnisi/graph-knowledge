@@ -1,0 +1,175 @@
+{
+  "schemaVersion": 2,
+  "status": "pending-human-acceptance",
+  "recipe": "manga-r0032",
+  "collectionContext": {
+    "themeId": "issue-48-dot-toriyama-three-20261027",
+    "themeRevision": 1,
+    "definitionSha256": "4df644d5b7a4280b3c2deeac89e0012aeaa3abf035cb75d6c510984ccce1fcc6",
+    "approvalSha256": "e9338695a868c7c2d37245f8a60c6ee4d389b0a7c35b7745dbd00a74d2c427c7"
+  },
+  "execution": {
+    "adapter": "manga-discovery-v2",
+    "codeSha256": "80e05b67bc0129b963653b90df4cfbfa5bd6aff190acda99f54c08541e55801e",
+    "inputs": [
+      {
+        "file": "datasets/manga-collection/r0032/recipe.json",
+        "sha256": "5ac6a50cad014047fce33f22cf0df8a071ea48372bc807707536e54ef4be1186"
+      },
+      {
+        "file": "datasets/manga-collection/r0032/anchor-review.json",
+        "sha256": "d5fb156f6d4a255980ed76fcfbd40ad698bd0bdf4bb58a7494fc13664873cb8d"
+      },
+      {
+        "file": "datasets/manga-collection/r0032/publication-review.json",
+        "sha256": "f6a24663434f38ee4b9939dcbc852c759220d9c839486d5a5344eb1463fae07f"
+      },
+      {
+        "file": "docs/research/famous-manga-creators/20261016/candidates.json",
+        "sha256": "8531fada01e5c635ba2ee278a7ef944a73f64676af14ed42ae0e690f5a1ff978"
+      },
+      {
+        "file": "datasets/public-kg/releases/20261014-credits-001/data.json",
+        "sha256": "ea91b16f52a211b5a8464382ad498b7b2bb2be69a6f33fe125a73a3c7b9da2b5"
+      },
+      {
+        "file": "datasets/public-kg/releases/20261014-credits-001/manifest.json",
+        "sha256": "e4aa3b58ed884f7d1f8fffee43b260261cc2b4d3a867fda942919f439d2bce17"
+      }
+    ],
+    "maxEntities": 2111,
+    "maxClaims": 1847
+  },
+  "identityMappings": [
+    {
+      "name": "鳥山明",
+      "wikidata": "Q208582",
+      "entityId": "1f0b1334-8326-4f6b-9387-85279fa87f00",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "Dr.スランプ",
+      "wikidata": "Q92555",
+      "entityId": "ce49e6e9-c1e3-48e2-b282-154842fcb513",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    }
+  ],
+  "rows": [
+    {
+      "kind": "wikidata-relation",
+      "work": "Dr.スランプ",
+      "property": "P50",
+      "personQid": "Q208582",
+      "statementId": "Q92555$639603EA-ED87-4FCA-9EEE-B194850D05DB",
+      "qualifiers": {},
+      "references": [
+        {
+          "hash": "d4bd87b862b12d99d26e86472d44f26858dee639",
+          "snaks": {
+            "P143": [
+              {
+                "snaktype": "value",
+                "property": "P143",
+                "hash": "f30cbd35620c4ea6d0633aaf0210a8916130469b",
+                "datavalue": {
+                  "value": {
+                    "entity-type": "item",
+                    "numeric-id": 8447,
+                    "id": "Q8447"
+                  },
+                  "type": "wikibase-entityid"
+                },
+                "datatype": "wikibase-item"
+              }
+            ]
+          },
+          "snaks-order": [
+            "P143"
+          ]
+        }
+      ],
+      "status": "candidate-only-no-role-inference",
+      "reason": "Wikidata propertyだけで具体Roleや直接制作の意味を確定しない"
+    },
+    {
+      "kind": "wikidata-relation",
+      "work": "Dr.スランプ",
+      "property": "P110",
+      "personQid": "Q208582",
+      "statementId": "Q92555$142F99B0-B79A-4828-9634-18CED3D92F2B",
+      "qualifiers": {},
+      "references": [
+        {
+          "hash": "d4bd87b862b12d99d26e86472d44f26858dee639",
+          "snaks": {
+            "P143": [
+              {
+                "snaktype": "value",
+                "property": "P143",
+                "hash": "f30cbd35620c4ea6d0633aaf0210a8916130469b",
+                "datavalue": {
+                  "value": {
+                    "entity-type": "item",
+                    "numeric-id": 8447,
+                    "id": "Q8447"
+                  },
+                  "type": "wikibase-entityid"
+                },
+                "datatype": "wikibase-item"
+              }
+            ]
+          },
+          "snaks-order": [
+            "P143"
+          ]
+        }
+      ],
+      "status": "candidate-only-no-role-inference",
+      "reason": "Wikidata propertyだけで具体Roleや直接制作の意味を確定しない"
+    },
+    {
+      "kind": "ndl-credit",
+      "work": "Dr.スランプ",
+      "isbn13": "9784088511818",
+      "rawResponsibility": "鳥山明",
+      "sourceUrl": "https://ndlsearch.ndl.go.jp/books/R100000002-I033813933",
+      "status": "held"
+    }
+  ],
+  "holds": [
+    {
+      "reason": "unsupported-responsibility-role",
+      "work": "Dr.スランプ",
+      "rawResponsibility": "鳥山明",
+      "sourceUrl": "https://ndlsearch.ndl.go.jp/books/R100000002-I033813933"
+    }
+  ],
+  "acquisitions": [
+    {
+      "kind": "wikidata",
+      "identifier": "Q208582",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q208582.json",
+      "sha256": "344cb200a037c550588e9454883f74513b488a209c6f646d27055ffd5c4dbe9e",
+      "bytes": 192994,
+      "fetchedAt": "2026-10-27T07:18:24+00:00"
+    },
+    {
+      "kind": "wikidata",
+      "identifier": "Q92555",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q92555.json",
+      "sha256": "686b7f0bb144a266ccd8c5a930551408c343a77a7d34dff8d9415c859958b795",
+      "bytes": 21181,
+      "fetchedAt": "2026-10-27T07:18:44+00:00"
+    },
+    {
+      "kind": "ndl",
+      "identifier": "9784088511818",
+      "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&maximumRecords=5&query=isbn%3D%229784088511818%22+AND+dpid%3Diss-ndl-opac",
+      "sha256": "8387feb8cada51ef59a3d1241cf657a8280e428c2a418272e5741465ae8e4510",
+      "bytes": 14225,
+      "fetchedAt": "2026-10-27T07:18:50+00:00"
+    }
+  ]
+}

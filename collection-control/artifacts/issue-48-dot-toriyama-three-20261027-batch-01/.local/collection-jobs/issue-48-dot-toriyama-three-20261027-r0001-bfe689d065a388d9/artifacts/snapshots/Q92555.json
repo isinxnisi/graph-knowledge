@@ -1,0 +1,231 @@
+{
+  "id": "Q92555",
+  "lastrevid": 2538459918,
+  "labels": {
+    "it": {
+      "language": "it",
+      "value": "Dr. Slump & Arale"
+    },
+    "ca": {
+      "language": "ca",
+      "value": "Dr. Slump"
+    },
+    "de": {
+      "language": "de",
+      "value": "Dr. Slump"
+    },
+    "de-ch": {
+      "language": "de-ch",
+      "value": "Dr. Slump"
+    },
+    "en": {
+      "language": "en",
+      "value": "Dr. Slump"
+    },
+    "en-ca": {
+      "language": "en-ca",
+      "value": "Dr. Slump"
+    },
+    "en-gb": {
+      "language": "en-gb",
+      "value": "Dr. Slump"
+    },
+    "es": {
+      "language": "es",
+      "value": "Dr. Slump"
+    },
+    "fr": {
+      "language": "fr",
+      "value": "Dr. Slump"
+    },
+    "gl": {
+      "language": "gl",
+      "value": "O doutor Slump e Arale"
+    },
+    "id": {
+      "language": "id",
+      "value": "Dr. Slump"
+    },
+    "ja": {
+      "language": "ja",
+      "value": "Dr.スランプ"
+    },
+    "ko": {
+      "language": "ko",
+      "value": "닥터 슬럼프"
+    },
+    "ms": {
+      "language": "ms",
+      "value": "Dr. Slump"
+    },
+    "pl": {
+      "language": "pl",
+      "value": "Dr. Slump"
+    },
+    "pt": {
+      "language": "pt",
+      "value": "Dr. Slump"
+    },
+    "pt-br": {
+      "language": "pt-br",
+      "value": "Dr. Slump"
+    },
+    "sv": {
+      "language": "sv",
+      "value": "Dr. Slump"
+    },
+    "th": {
+      "language": "th",
+      "value": "ดร.สลัมป์ กับหนูน้อยอาราเล่"
+    },
+    "tl": {
+      "language": "tl",
+      "value": "Dr. Slump"
+    },
+    "tr": {
+      "language": "tr",
+      "value": "Dr. Slump"
+    },
+    "vi": {
+      "language": "vi",
+      "value": "Tiến sĩ Slump"
+    },
+    "zh": {
+      "language": "zh",
+      "value": "IQ博士"
+    },
+    "oc": {
+      "language": "oc",
+      "value": "Dr. Slump"
+    },
+    "nl": {
+      "language": "nl",
+      "value": "Dr. Slump"
+    }
+  },
+  "aliases": {
+    "en": [
+      {
+        "language": "en",
+        "value": "Doctor Slump"
+      }
+    ]
+  },
+  "claims": {
+    "P31": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P31",
+          "hash": "549c072d6be8a6a43f999d1d0e82640b16c4260e",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 21198342,
+              "id": "Q21198342"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q92555$D8998A0D-67A0-4DF7-B255-AD15D0C95EE3",
+        "rank": "normal"
+      }
+    ],
+    "P50": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P50",
+          "hash": "48234efb9e6dde2d984983240d4e21d7bf929c90",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 208582,
+              "id": "Q208582"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q92555$639603EA-ED87-4FCA-9EEE-B194850D05DB",
+        "rank": "normal",
+        "references": [
+          {
+            "hash": "d4bd87b862b12d99d26e86472d44f26858dee639",
+            "snaks": {
+              "P143": [
+                {
+                  "snaktype": "value",
+                  "property": "P143",
+                  "hash": "f30cbd35620c4ea6d0633aaf0210a8916130469b",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 8447,
+                      "id": "Q8447"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P143"
+            ]
+          }
+        ]
+      }
+    ],
+    "P110": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P110",
+          "hash": "47fe797b974bac40159d4f521cfceb038d2eca44",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 208582,
+              "id": "Q208582"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q92555$142F99B0-B79A-4828-9634-18CED3D92F2B",
+        "rank": "normal",
+        "references": [
+          {
+            "hash": "d4bd87b862b12d99d26e86472d44f26858dee639",
+            "snaks": {
+              "P143": [
+                {
+                  "snaktype": "value",
+                  "property": "P143",
+                  "hash": "f30cbd35620c4ea6d0633aaf0210a8916130469b",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 8447,
+                      "id": "Q8447"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P143"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

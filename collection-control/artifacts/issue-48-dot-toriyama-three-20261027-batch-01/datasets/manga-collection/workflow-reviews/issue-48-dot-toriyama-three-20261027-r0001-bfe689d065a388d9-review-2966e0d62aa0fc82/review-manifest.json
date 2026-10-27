@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "reviewId": "issue-48-dot-toriyama-three-20261027-r0001-bfe689d065a388d9-review-2966e0d62aa0fc82",
+  "inputSha256": "2966e0d62aa0fc8276da26dcf9e86fcdecd4694c3ceb7e8057935c67520fe159",
+  "artifacts": {
+    "context.json": "bbf0c699121016361af5fe95e5aba5d509d3c3afe4a54d4fa1b5cc989c8ffac7",
+    "review.json": "caa91f33b886a848b6cce184d18af4b5cc9a017a41d85429d92de659e72ec508",
+    "proposed-records.json": "ff3382e35738eba753a90c55086ebbdfb3ee4a3afb843bf4250d731969f0a91f",
+    "identity-only-records.json": "cad7aaee709d0e4f44030ab2971da49e1e744c8de4a986c80f1dbf807251442e",
+    "exploration-paths.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+    "decision-request.json": "1d550dc3cc51ab0ea862c0b770fde35883f0abe2e0d22854e1dda6c80a14da93",
+    "README.md": "edf03e365b65c97c35bb069b0314b563899a1e830ea22dbc7def816ff732823c"
+  },
+  "authority": "pending-human-review-only"
+}

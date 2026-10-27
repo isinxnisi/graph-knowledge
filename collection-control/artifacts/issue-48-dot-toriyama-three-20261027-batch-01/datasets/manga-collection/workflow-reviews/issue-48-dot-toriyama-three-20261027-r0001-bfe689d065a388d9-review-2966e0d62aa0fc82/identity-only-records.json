@@ -1,0 +1,46 @@
+{
+  "status": "pending-human-identity-only-decision",
+  "records": {
+    "entities": [
+      {
+        "id": "1f0b1334-8326-4f6b-9387-85279fa87f00",
+        "kind": "person",
+        "name": "鳥山明",
+        "description": null,
+        "aliases": [
+          "Akira Toriyama"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q208582"
+          }
+        ],
+        "createdAt": "2026-10-27T07:18:15Z",
+        "updatedAt": "2026-10-27T07:18:15Z",
+        "event": null
+      },
+      {
+        "id": "ce49e6e9-c1e3-48e2-b282-154842fcb513",
+        "kind": "work",
+        "name": "Dr.スランプ",
+        "description": null,
+        "aliases": [
+          "Dr. Slump"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q92555"
+          }
+        ],
+        "createdAt": "2026-10-27T07:18:15Z",
+        "updatedAt": "2026-10-27T07:18:15Z",
+        "event": null
+      }
+    ],
+    "claims": [],
+    "sources": [],
+    "citations": []
+  }
+}

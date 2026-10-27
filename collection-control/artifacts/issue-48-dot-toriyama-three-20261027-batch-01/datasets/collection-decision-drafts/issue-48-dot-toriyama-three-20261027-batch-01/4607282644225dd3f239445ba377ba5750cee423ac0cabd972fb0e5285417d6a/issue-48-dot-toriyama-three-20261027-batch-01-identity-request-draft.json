@@ -1,0 +1,90 @@
+{
+  "schemaVersion": 1,
+  "id": "issue-48-dot-toriyama-three-20261027-batch-01-identity",
+  "kind": "accept-release",
+  "status": "draft-not-approved",
+  "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
+  "parentRequestId": "issue-48-dot-toriyama-three-20261027-batch-01",
+  "applyAuthorized": {
+    "local": false,
+    "beta": false,
+    "vps": false
+  },
+  "decision": {
+    "schemaVersion": 1,
+    "decisionId": "issue-48-dot-toriyama-three-20261027-batch-01-identity",
+    "status": "draft-not-approved",
+    "humanDecision": {
+      "actorType": "human",
+      "reviewer": null,
+      "decidedAt": null,
+      "statement": null
+    },
+    "approvalScope": "formal-record-acceptance-and-release-preparation-only",
+    "applyAuthorized": {
+      "local": false,
+      "beta": false,
+      "vps": false
+    },
+    "review": {
+      "file": "datasets/manga-collection/workflow-reviews/issue-48-dot-toriyama-three-20261027-r0001-bfe689d065a388d9-review-2966e0d62aa0fc82/review-manifest.json",
+      "sha256": "4607282644225dd3f239445ba377ba5750cee423ac0cabd972fb0e5285417d6a"
+    },
+    "referenceArtifacts": [
+      {
+        "file": "datasets/manga-collection/workflow-reviews/issue-48-dot-toriyama-three-20261027-r0001-bfe689d065a388d9-review-2966e0d62aa0fc82/README.md",
+        "sha256": "edf03e365b65c97c35bb069b0314b563899a1e830ea22dbc7def816ff732823c"
+      },
+      {
+        "file": "datasets/manga-collection/workflow-reviews/issue-48-dot-toriyama-three-20261027-r0001-bfe689d065a388d9-review-2966e0d62aa0fc82/context.json",
+        "sha256": "bbf0c699121016361af5fe95e5aba5d509d3c3afe4a54d4fa1b5cc989c8ffac7"
+      },
+      {
+        "file": "datasets/manga-collection/workflow-reviews/issue-48-dot-toriyama-three-20261027-r0001-bfe689d065a388d9-review-2966e0d62aa0fc82/decision-request.json",
+        "sha256": "1d550dc3cc51ab0ea862c0b770fde35883f0abe2e0d22854e1dda6c80a14da93"
+      },
+      {
+        "file": "datasets/manga-collection/workflow-reviews/issue-48-dot-toriyama-three-20261027-r0001-bfe689d065a388d9-review-2966e0d62aa0fc82/exploration-paths.json",
+        "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+      },
+      {
+        "file": "datasets/manga-collection/workflow-reviews/issue-48-dot-toriyama-three-20261027-r0001-bfe689d065a388d9-review-2966e0d62aa0fc82/identity-only-records.json",
+        "sha256": "cad7aaee709d0e4f44030ab2971da49e1e744c8de4a986c80f1dbf807251442e"
+      },
+      {
+        "file": "datasets/manga-collection/workflow-reviews/issue-48-dot-toriyama-three-20261027-r0001-bfe689d065a388d9-review-2966e0d62aa0fc82/proposed-records.json",
+        "sha256": "ff3382e35738eba753a90c55086ebbdfb3ee4a3afb843bf4250d731969f0a91f"
+      },
+      {
+        "file": "datasets/manga-collection/workflow-reviews/issue-48-dot-toriyama-three-20261027-r0001-bfe689d065a388d9-review-2966e0d62aa0fc82/review-manifest.json",
+        "sha256": "4607282644225dd3f239445ba377ba5750cee423ac0cabd972fb0e5285417d6a"
+      },
+      {
+        "file": "datasets/manga-collection/workflow-reviews/issue-48-dot-toriyama-three-20261027-r0001-bfe689d065a388d9-review-2966e0d62aa0fc82/review.json",
+        "sha256": "caa91f33b886a848b6cce184d18af4b5cc9a017a41d85429d92de659e72ec508"
+      }
+    ],
+    "acceptedRecordIds": {
+      "entities": [
+        "1f0b1334-8326-4f6b-9387-85279fa87f00",
+        "ce49e6e9-c1e3-48e2-b282-154842fcb513"
+      ],
+      "claims": [],
+      "sources": [],
+      "citations": []
+    },
+    "recordSha256": {
+      "entities": {
+        "1f0b1334-8326-4f6b-9387-85279fa87f00": "9ff4ffc96008fecae6edfbe045b24c02280e2580c7e9561e9eb89405b8feaa4f",
+        "ce49e6e9-c1e3-48e2-b282-154842fcb513": "fa8e847761e2c25a97562ab263e6072a53154f7fb7c979696637faab6e8da14b"
+      },
+      "claims": {},
+      "sources": {},
+      "citations": {}
+    },
+    "scopeByClaim": [],
+    "baseRelease": "20261014-credits-001",
+    "baseRevision": "82b01515-594c-48ca-b4b6-515eefac83ca",
+    "releaseId": "manga-issue-48-dot-toriyama-three-20261027-batch-01-identity"
+  }
+}

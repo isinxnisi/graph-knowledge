@@ -1,0 +1,1033 @@
+{
+  "id": "Q208582",
+  "lastrevid": 2548274333,
+  "labels": {
+    "zh-hans": {
+      "language": "zh-hans",
+      "value": "鸟山明"
+    },
+    "zh-hant": {
+      "language": "zh-hant",
+      "value": "鳥山明"
+    },
+    "zh-hk": {
+      "language": "zh-hk",
+      "value": "鳥山明"
+    },
+    "zh-cn": {
+      "language": "zh-cn",
+      "value": "鸟山明"
+    },
+    "zh-sg": {
+      "language": "zh-sg",
+      "value": "鸟山明"
+    },
+    "zh-tw": {
+      "language": "zh-tw",
+      "value": "鳥山明"
+    },
+    "eu": {
+      "language": "eu",
+      "value": "Akira Toriyama"
+    },
+    "pl": {
+      "language": "pl",
+      "value": "Akira Toriyama"
+    },
+    "ko": {
+      "language": "ko",
+      "value": "도리야마 아키라"
+    },
+    "fr": {
+      "language": "fr",
+      "value": "Akira Toriyama"
+    },
+    "es": {
+      "language": "es",
+      "value": "Akira Toriyama"
+    },
+    "ms": {
+      "language": "ms",
+      "value": "Akira Toriyama"
+    },
+    "lv": {
+      "language": "lv",
+      "value": "Akira Torijama"
+    },
+    "it": {
+      "language": "it",
+      "value": "Akira Toriyama"
+    },
+    "gl": {
+      "language": "gl",
+      "value": "Akira Toriyama"
+    },
+    "de": {
+      "language": "de",
+      "value": "Akira Toriyama"
+    },
+    "id": {
+      "language": "id",
+      "value": "Akira Toriyama"
+    },
+    "ja": {
+      "language": "ja",
+      "value": "鳥山明"
+    },
+    "sq": {
+      "language": "sq",
+      "value": "Akira Toriyama"
+    },
+    "vi": {
+      "language": "vi",
+      "value": "Toriyama Akira"
+    },
+    "en": {
+      "language": "en",
+      "value": "Akira Toriyama"
+    },
+    "ar": {
+      "language": "ar",
+      "value": "أكيرا تورياما"
+    },
+    "sv": {
+      "language": "sv",
+      "value": "Akira Toriyama"
+    },
+    "nl": {
+      "language": "nl",
+      "value": "Akira Toriyama"
+    },
+    "pt": {
+      "language": "pt",
+      "value": "Akira Toriyama"
+    },
+    "ru": {
+      "language": "ru",
+      "value": "Акира Торияма"
+    },
+    "th": {
+      "language": "th",
+      "value": "อากิระ โทริยามะ"
+    },
+    "ro": {
+      "language": "ro",
+      "value": "Akira Toriyama"
+    },
+    "ca": {
+      "language": "ca",
+      "value": "Akira Toriyama"
+    },
+    "fi": {
+      "language": "fi",
+      "value": "Akira Toriyama"
+    },
+    "la": {
+      "language": "la",
+      "value": "Toriyama Akira"
+    },
+    "nn": {
+      "language": "nn",
+      "value": "Akira Toriyama"
+    },
+    "lt": {
+      "language": "lt",
+      "value": "Akira Torijama"
+    },
+    "da": {
+      "language": "da",
+      "value": "Akira Toriyama"
+    },
+    "nb": {
+      "language": "nb",
+      "value": "Akira Toriyama"
+    },
+    "zh": {
+      "language": "zh",
+      "value": "鳥山明"
+    },
+    "fa": {
+      "language": "fa",
+      "value": "آکیرا توریاما"
+    },
+    "sr": {
+      "language": "sr",
+      "value": "Акира Торијама"
+    },
+    "af": {
+      "language": "af",
+      "value": "Akira Toriyama"
+    },
+    "an": {
+      "language": "an",
+      "value": "Akira Toriyama"
+    },
+    "ast": {
+      "language": "ast",
+      "value": "Akira Toriyama"
+    },
+    "bar": {
+      "language": "bar",
+      "value": "Akira Toriyama"
+    },
+    "br": {
+      "language": "br",
+      "value": "Akira Toriyama"
+    },
+    "co": {
+      "language": "co",
+      "value": "Akira Toriyama"
+    },
+    "cs": {
+      "language": "cs",
+      "value": "Akira Torijama"
+    },
+    "cy": {
+      "language": "cy",
+      "value": "Akira Toriyama"
+    },
+    "de-at": {
+      "language": "de-at",
+      "value": "Akira Toriyama"
+    },
+    "de-ch": {
+      "language": "de-ch",
+      "value": "Akira Toriyama"
+    },
+    "en-ca": {
+      "language": "en-ca",
+      "value": "Akira Toriyama"
+    },
+    "en-gb": {
+      "language": "en-gb",
+      "value": "Akira Toriyama"
+    },
+    "eo": {
+      "language": "eo",
+      "value": "Akira Toriyama"
+    },
+    "et": {
+      "language": "et",
+      "value": "Akira Toriyama"
+    },
+    "frp": {
+      "language": "frp",
+      "value": "Akira Toriyama"
+    },
+    "fur": {
+      "language": "fur",
+      "value": "Akira Toriyama"
+    },
+    "ga": {
+      "language": "ga",
+      "value": "Akira Toriyama"
+    },
+    "gd": {
+      "language": "gd",
+      "value": "Akira Toriyama"
+    },
+    "gsw": {
+      "language": "gsw",
+      "value": "Akira Toriyama"
+    },
+    "hr": {
+      "language": "hr",
+      "value": "Akira Toriyama"
+    },
+    "hu": {
+      "language": "hu",
+      "value": "Torijama Akira"
+    },
+    "ia": {
+      "language": "ia",
+      "value": "Akira Toriyama"
+    },
+    "ie": {
+      "language": "ie",
+      "value": "Akira Toriyama"
+    },
+    "io": {
+      "language": "io",
+      "value": "Akira Toriyama"
+    },
+    "is": {
+      "language": "is",
+      "value": "Akira Toriyama"
+    },
+    "kg": {
+      "language": "kg",
+      "value": "Akira Toriyama"
+    },
+    "lb": {
+      "language": "lb",
+      "value": "Akira Toriyama"
+    },
+    "li": {
+      "language": "li",
+      "value": "Akira Toriyama"
+    },
+    "lij": {
+      "language": "lij",
+      "value": "Akira Toriyama"
+    },
+    "mg": {
+      "language": "mg",
+      "value": "Akira Toriyama"
+    },
+    "min": {
+      "language": "min",
+      "value": "Akira Toriyama"
+    },
+    "nap": {
+      "language": "nap",
+      "value": "Akira Toriyama"
+    },
+    "nds": {
+      "language": "nds",
+      "value": "Akira Toriyama"
+    },
+    "nds-nl": {
+      "language": "nds-nl",
+      "value": "Akira Toriyama"
+    },
+    "nrm": {
+      "language": "nrm",
+      "value": "Akira Toriyama"
+    },
+    "oc": {
+      "language": "oc",
+      "value": "Akira Toriyama"
+    },
+    "pcd": {
+      "language": "pcd",
+      "value": "Akira Toriyama"
+    },
+    "pms": {
+      "language": "pms",
+      "value": "Akira Toriyama"
+    },
+    "pt-br": {
+      "language": "pt-br",
+      "value": "Akira Toriyama"
+    },
+    "rm": {
+      "language": "rm",
+      "value": "Akira Toriyama"
+    },
+    "sc": {
+      "language": "sc",
+      "value": "Akira Toriyama"
+    },
+    "scn": {
+      "language": "scn",
+      "value": "Akira Toriyama"
+    },
+    "sco": {
+      "language": "sco",
+      "value": "Akira Toriyama"
+    },
+    "sk": {
+      "language": "sk",
+      "value": "Akira Toriyama"
+    },
+    "sl": {
+      "language": "sl",
+      "value": "Akira Torijama"
+    },
+    "sr-el": {
+      "language": "sr-el",
+      "value": "Akira Toriyama"
+    },
+    "sw": {
+      "language": "sw",
+      "value": "Akira Toriyama"
+    },
+    "vec": {
+      "language": "vec",
+      "value": "Akira Toriyama"
+    },
+    "vls": {
+      "language": "vls",
+      "value": "Akira Toriyama"
+    },
+    "vo": {
+      "language": "vo",
+      "value": "Akira Toriyama"
+    },
+    "wa": {
+      "language": "wa",
+      "value": "Akira Toriyama"
+    },
+    "wo": {
+      "language": "wo",
+      "value": "Akira Toriyama"
+    },
+    "zu": {
+      "language": "zu",
+      "value": "Akira Toriyama"
+    },
+    "tr": {
+      "language": "tr",
+      "value": "Akira Toriyama"
+    },
+    "he": {
+      "language": "he",
+      "value": "אקירה טורייאמה"
+    },
+    "ckb": {
+      "language": "ckb",
+      "value": "ئاکیرا توریاما"
+    },
+    "sah": {
+      "language": "sah",
+      "value": "Торияма Акира"
+    },
+    "bn": {
+      "language": "bn",
+      "value": "আকিরা তোরিয়ামা"
+    },
+    "nan": {
+      "language": "nan",
+      "value": "Toriyama Akira"
+    },
+    "hy": {
+      "language": "hy",
+      "value": "Ակիրա Տորիյամա"
+    },
+    "wuu": {
+      "language": "wuu",
+      "value": "鸟山明"
+    },
+    "yue": {
+      "language": "yue",
+      "value": "鳥山明"
+    },
+    "uk": {
+      "language": "uk",
+      "value": "Торіяма Акіра"
+    },
+    "ku": {
+      "language": "ku",
+      "value": "Akira Toriyama"
+    },
+    "arz": {
+      "language": "arz",
+      "value": "اكيرا تورياما"
+    },
+    "qu": {
+      "language": "qu",
+      "value": "Akira Toriyama"
+    },
+    "el": {
+      "language": "el",
+      "value": "Ακίρα Τοριγιάμα"
+    },
+    "kn": {
+      "language": "kn",
+      "value": "ಅಕಿರಾ ತೊರಿಯಾಮಾ"
+    },
+    "pap": {
+      "language": "pap",
+      "value": "Akira Toriyama"
+    },
+    "ary": {
+      "language": "ary",
+      "value": "أكيرا طوريياما"
+    },
+    "lld": {
+      "language": "lld",
+      "value": "Akira Toriyama"
+    },
+    "ryu": {
+      "language": "ryu",
+      "value": "鳥山明"
+    },
+    "ig": {
+      "language": "ig",
+      "value": "Akira Toriyama"
+    },
+    "gn": {
+      "language": "gn",
+      "value": "Akira Toriyama"
+    },
+    "az": {
+      "language": "az",
+      "value": "Akira Toriyama"
+    },
+    "ceb": {
+      "language": "ceb",
+      "value": "Akira Toriyama"
+    },
+    "ka": {
+      "language": "ka",
+      "value": "აკირა ტორიამა"
+    },
+    "haw": {
+      "language": "haw",
+      "value": "Akira Toriyama"
+    },
+    "ur": {
+      "language": "ur",
+      "value": "اکیرا توری یاما"
+    },
+    "mul": {
+      "language": "mul",
+      "value": "Akira Toriyama"
+    }
+  },
+  "aliases": {
+    "zh": [
+      {
+        "language": "zh",
+        "value": "鸟山明"
+      }
+    ],
+    "ko": [
+      {
+        "language": "ko",
+        "value": "토리야마 아키라"
+      },
+      {
+        "language": "ko",
+        "value": "조산명"
+      }
+    ],
+    "fr": [
+      {
+        "language": "fr",
+        "value": "Toriyama"
+      },
+      {
+        "language": "fr",
+        "value": "Toriyama Akira"
+      }
+    ],
+    "lv": [
+      {
+        "language": "lv",
+        "value": "Akira Toriyama"
+      }
+    ],
+    "it": [
+      {
+        "language": "it",
+        "value": "Toriyama Akira"
+      },
+      {
+        "language": "it",
+        "value": "Bird Studio"
+      }
+    ],
+    "de": [
+      {
+        "language": "de",
+        "value": "Toriyama Akira"
+      }
+    ],
+    "vi": [
+      {
+        "language": "vi",
+        "value": "Toriyama"
+      },
+      {
+        "language": "vi",
+        "value": "Akira Toriyama"
+      }
+    ],
+    "sv": [
+      {
+        "language": "sv",
+        "value": "Toriyama"
+      },
+      {
+        "language": "sv",
+        "value": "Akiara"
+      }
+    ],
+    "nl": [
+      {
+        "language": "nl",
+        "value": "Toriyama"
+      },
+      {
+        "language": "nl",
+        "value": "Ahira Toriyama"
+      },
+      {
+        "language": "nl",
+        "value": "A. Toriyama"
+      }
+    ],
+    "ru": [
+      {
+        "language": "ru",
+        "value": "Торияма Акира"
+      },
+      {
+        "language": "ru",
+        "value": "Торияма, Акира"
+      },
+      {
+        "language": "ru",
+        "value": "Торияма А."
+      }
+    ],
+    "th": [
+      {
+        "language": "th",
+        "value": "อากิร่า โทริยามา"
+      },
+      {
+        "language": "th",
+        "value": "อากิรา โทริยามา"
+      },
+      {
+        "language": "th",
+        "value": "โทริยามา อากิรา"
+      },
+      {
+        "language": "th",
+        "value": "โทริยามา อากิร่า"
+      },
+      {
+        "language": "th",
+        "value": "โทริยาม่า อากิรา"
+      },
+      {
+        "language": "th",
+        "value": "โทริยาม่า อากิระ"
+      },
+      {
+        "language": "th",
+        "value": "อากิระ โทริยามา"
+      }
+    ],
+    "la": [
+      {
+        "language": "la",
+        "value": "Toriiama Acira"
+      }
+    ],
+    "lt": [
+      {
+        "language": "lt",
+        "value": "Akira Toriyama"
+      }
+    ],
+    "es": [
+      {
+        "language": "es",
+        "value": "Toriyama"
+      }
+    ],
+    "en": [
+      {
+        "language": "en",
+        "value": "Toriyama Akira"
+      },
+      {
+        "language": "en",
+        "value": "Toriyama"
+      }
+    ],
+    "sl": [
+      {
+        "language": "sl",
+        "value": "Torijama, Akira"
+      }
+    ],
+    "ar": [
+      {
+        "language": "ar",
+        "value": "تورياما أكيرا"
+      }
+    ],
+    "ast": [
+      {
+        "language": "ast",
+        "value": "Toriyama Akira"
+      }
+    ],
+    "ig": [
+      {
+        "language": "ig",
+        "value": "Toriyama Akira"
+      }
+    ],
+    "qu": [
+      {
+        "language": "qu",
+        "value": "Akira Turiyama"
+      }
+    ]
+  },
+  "claims": {
+    "P31": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P31",
+          "hash": "ad7d38a03cdd40cdc373de0dc4e7b7fcbccb31d9",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 5,
+              "id": "Q5"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "q208582$25A36F94-5C0E-483C-AB69-44AF27A627FF",
+        "rank": "normal",
+        "references": [
+          {
+            "hash": "72963024440f52f8652ae5d7e110661eddeec451",
+            "snaks": {
+              "P248": [
+                {
+                  "snaktype": "value",
+                  "property": "P248",
+                  "hash": "def9f19d84b65167a2a17ce38364d264c16127fc",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 19938912,
+                      "id": "Q19938912"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ],
+              "P268": [
+                {
+                  "snaktype": "value",
+                  "property": "P268",
+                  "hash": "75ab1947a257b658905288c61e8067d61938adb4",
+                  "datavalue": {
+                    "value": "12336978f",
+                    "type": "string"
+                  },
+                  "datatype": "external-id"
+                }
+              ],
+              "P813": [
+                {
+                  "snaktype": "value",
+                  "property": "P813",
+                  "hash": "d6162a1716489623c6e595e448b17f8dca4fb2e8",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2015-10-10T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P248",
+              "P268",
+              "P813"
+            ]
+          },
+          {
+            "hash": "65811d5e5569ceba9d318024242c45ab5d90ba8b",
+            "snaks": {
+              "P214": [
+                {
+                  "snaktype": "value",
+                  "property": "P214",
+                  "hash": "3aa825cb2a175cbf492780661eb494d9d9147df0",
+                  "datavalue": {
+                    "value": "114308174",
+                    "type": "string"
+                  },
+                  "datatype": "external-id"
+                }
+              ],
+              "P248": [
+                {
+                  "snaktype": "value",
+                  "property": "P248",
+                  "hash": "6b7d4330c4aac4caec4ede9de0311ce273f88ecd",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 54919,
+                      "id": "Q54919"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ],
+              "P813": [
+                {
+                  "snaktype": "value",
+                  "property": "P813",
+                  "hash": "97df1ac3363eb970d1d85f437bcaf5d15676952d",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2024-03-08T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P214",
+              "P248",
+              "P813"
+            ]
+          },
+          {
+            "hash": "a6af2dcfa823a59d74febbf27bce0e056d0d9369",
+            "snaks": {
+              "P1006": [
+                {
+                  "snaktype": "value",
+                  "property": "P1006",
+                  "hash": "c007f72b1e39b53f2de538644302f6be216fa5f3",
+                  "datavalue": {
+                    "value": "12373665X",
+                    "type": "string"
+                  },
+                  "datatype": "external-id"
+                }
+              ],
+              "P248": [
+                {
+                  "snaktype": "value",
+                  "property": "P248",
+                  "hash": "0d14b2432822fb9e4d8dcd81867899d1a89589fa",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 105488572,
+                      "id": "Q105488572"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ],
+              "P813": [
+                {
+                  "snaktype": "value",
+                  "property": "P813",
+                  "hash": "97df1ac3363eb970d1d85f437bcaf5d15676952d",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2024-03-08T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P1006",
+              "P248",
+              "P813"
+            ]
+          },
+          {
+            "hash": "59454f6a334bb792fa618003f855b35430bf331f",
+            "snaks": {
+              "P248": [
+                {
+                  "snaktype": "value",
+                  "property": "P248",
+                  "hash": "e5f853298b310a45c2ee3b01a2a4940640f7985a",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 47757534,
+                      "id": "Q47757534"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ],
+              "P269": [
+                {
+                  "snaktype": "value",
+                  "property": "P269",
+                  "hash": "81033c33aaebe41752ddbee92590bd63d5c0d5a7",
+                  "datavalue": {
+                    "value": "03231647X",
+                    "type": "string"
+                  },
+                  "datatype": "external-id"
+                }
+              ],
+              "P813": [
+                {
+                  "snaktype": "value",
+                  "property": "P813",
+                  "hash": "97df1ac3363eb970d1d85f437bcaf5d15676952d",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2024-03-08T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P248",
+              "P269",
+              "P813"
+            ]
+          },
+          {
+            "hash": "94ec3885afef9aebc392989efb3506b15b9c1ae2",
+            "snaks": {
+              "P227": [
+                {
+                  "snaktype": "value",
+                  "property": "P227",
+                  "hash": "1084222658234340aef16eb2cef14840e7e32b09",
+                  "datavalue": {
+                    "value": "120332590",
+                    "type": "string"
+                  },
+                  "datatype": "external-id"
+                }
+              ],
+              "P248": [
+                {
+                  "snaktype": "value",
+                  "property": "P248",
+                  "hash": "019a50b7de741e0068bde41c9d9955b22a5de47b",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 36578,
+                      "id": "Q36578"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ],
+              "P813": [
+                {
+                  "snaktype": "value",
+                  "property": "P813",
+                  "hash": "97df1ac3363eb970d1d85f437bcaf5d15676952d",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2024-03-08T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P227",
+              "P248",
+              "P813"
+            ]
+          },
+          {
+            "hash": "1f0b7a0158afb61feee762736a4dcbc9b709ae7c",
+            "snaks": {
+              "P248": [
+                {
+                  "snaktype": "value",
+                  "property": "P248",
+                  "hash": "45037a2d1d89deebcdfc5840e9adbaa4b64cebc6",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 50358336,
+                      "id": "Q50358336"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ],
+              "P813": [
+                {
+                  "snaktype": "value",
+                  "property": "P813",
+                  "hash": "9248bb3021b82085181399288e20d70e2e6576c1",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2024-05-05T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ],
+              "P950": [
+                {
+                  "snaktype": "value",
+                  "property": "P950",
+                  "hash": "ca30a1689f3d8995755f3fa5f770048398f41fc4",
+                  "datavalue": {
+                    "value": "XX1023762",
+                    "type": "string"
+                  },
+                  "datatype": "external-id"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P248",
+              "P813",
+              "P950"
+            ]
+          }
+        ]
+      }
+    ],
+    "P50": [],
+    "P110": []
+  }
+}

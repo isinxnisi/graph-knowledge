@@ -1,0 +1,57 @@
+{
+  "status": "pending-human-acceptance",
+  "humanReviewer": null,
+  "entities": [
+    {
+      "entityId": "1f0b1334-8326-4f6b-9387-85279fa87f00",
+      "name": "鳥山明",
+      "kind": "person",
+      "wikidata": "Q208582",
+      "existingEntityId": null,
+      "status": "candidate",
+      "reasons": [],
+      "checks": {
+        "providerIdentity": true
+      },
+      "inputPopulation": "identity-only"
+    },
+    {
+      "entityId": "ce49e6e9-c1e3-48e2-b282-154842fcb513",
+      "name": "Dr.スランプ",
+      "kind": "work",
+      "wikidata": "Q92555",
+      "existingEntityId": null,
+      "status": "candidate",
+      "reasons": [],
+      "checks": {
+        "providerIdentity": true
+      },
+      "inputPopulation": "identity-only"
+    }
+  ],
+  "claims": [],
+  "inheritedHolds": [
+    {
+      "reason": "unsupported-responsibility-role",
+      "work": "Dr.スランプ",
+      "rawResponsibility": "鳥山明",
+      "sourceUrl": "https://ndlsearch.ndl.go.jp/books/R100000002-I033813933"
+    }
+  ],
+  "newCandidateCounts": {
+    "entities": 0,
+    "claims": 0,
+    "sources": 0,
+    "citations": 0
+  },
+  "recordConflicts": [],
+  "roleCounts": {},
+  "normalReviewedEntityCount": 0,
+  "reusedCitationIds": [],
+  "identityOnlyEntityIds": [
+    "1f0b1334-8326-4f6b-9387-85279fa87f00",
+    "ce49e6e9-c1e3-48e2-b282-154842fcb513"
+  ],
+  "heldClaimCount": 0,
+  "heldEntityCount": 0
+}

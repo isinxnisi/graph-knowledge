@@ -1,0 +1,36 @@
+{
+  "provider": "iss-ndl-opac / 国立国会図書館",
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "terms": "https://ndlsearch.ndl.go.jp/help/api/provider",
+  "records": [
+    {
+      "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I033813933",
+      "isbn13": [
+        "9784088511818"
+      ],
+      "title": [
+        "Dr. スランプ. 第1巻"
+      ],
+      "mainTitles": [
+        "Dr. スランプ"
+      ],
+      "volume": [
+        "第1巻"
+      ],
+      "edition": [],
+      "responsibilities": [
+        "鳥山明"
+      ],
+      "publisher": [
+        "集英社"
+      ],
+      "language": [
+        "jpn"
+      ],
+      "genre": [
+        "漫画"
+      ]
+    }
+  ],
+  "error": null
+}
