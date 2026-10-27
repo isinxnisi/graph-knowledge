@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "reviewId": "issue-49-dot-hara-souten-20261027-r0001-71d22e5d1577c85e-review-e1fe8c29ae1ffa6b",
+  "inputSha256": "e1fe8c29ae1ffa6b01c34b15b90cad380ef70a9a1b354cca6b28a528dfa3fb77",
+  "artifacts": {
+    "context.json": "6aca4899f3b77459fee5fd7539d3548091a63e8e0b99458b83f615e157fe2ca3",
+    "review.json": "90d56e2060ddf9bbb08628d82a22ae9529c692fe1a84413207824f2cd8b1896a",
+    "proposed-records.json": "cc576a7515d1fe9e6b8da35fff058c6e2b6493c64a2eca6ca6ef40f274537272",
+    "identity-only-records.json": "1fc314e4a47717bce195b39fe7f1e66bd31f6af892fca4a9420a653eab927a37",
+    "exploration-paths.json": "ae1f6d6118a2119979c71707854b9ba127f73fd0b6ebb37a24a1960f8d9bc4a2",
+    "decision-request.json": "7b3b453eaf957c50badf870d6e56dbde9106bbfc0f1fe0121d991ff87a272f89",
+    "README.md": "c933e2eeb0364e4c9e9a0f75948dee4d84b623d613dd1ec9d54b56dae193a2bd"
+  },
+  "authority": "pending-human-review-only"
+}

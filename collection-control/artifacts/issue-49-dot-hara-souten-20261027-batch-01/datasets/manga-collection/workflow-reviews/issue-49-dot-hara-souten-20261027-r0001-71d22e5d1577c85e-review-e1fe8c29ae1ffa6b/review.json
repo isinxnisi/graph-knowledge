@@ -1,0 +1,90 @@
+{
+  "status": "pending-human-acceptance",
+  "humanReviewer": null,
+  "entities": [
+    {
+      "entityId": "ccb5ddb2-fb7c-4dad-8178-1a170342d0c6",
+      "name": "原哲夫",
+      "kind": "person",
+      "wikidata": "Q1319232",
+      "existingEntityId": "ccb5ddb2-fb7c-4dad-8178-1a170342d0c6",
+      "status": "reuse-formally-accepted-not-applied",
+      "reasons": [],
+      "checks": {
+        "providerIdentity": true
+      },
+      "inputPopulation": "relation-endpoint"
+    },
+    {
+      "entityId": "f66ff5d9-4bf2-4904-bbec-ea5ff6410342",
+      "name": "蒼天の拳",
+      "kind": "work",
+      "wikidata": "Q542112",
+      "existingEntityId": null,
+      "status": "candidate",
+      "reasons": [],
+      "checks": {
+        "providerIdentity": true
+      },
+      "inputPopulation": "relation-endpoint"
+    }
+  ],
+  "claims": [
+    {
+      "claimId": "4452cfd6-d9ec-48fe-8dd2-d13abecfedbe",
+      "person": "原哲夫",
+      "work": "蒼天の拳",
+      "subjectId": "ccb5ddb2-fb7c-4dad-8178-1a170342d0c6",
+      "objectId": "f66ff5d9-4bf2-4904-bbec-ea5ff6410342",
+      "roleId": "AUTHORSHIP",
+      "scope": {
+        "kind": "publication",
+        "isbn13": "9784107710000",
+        "volumeLabel": "第1巻（NDL巻次 1）",
+        "editionLabel": null,
+        "language": "ja"
+      },
+      "status": "candidate",
+      "reasons": [],
+      "supportingCitationIds": [
+        "ca03a2ab-2719-41fb-87bc-0f04fbcc6a10"
+      ],
+      "existingState": null,
+      "existingClaimId": null,
+      "originalTexts": [
+        "原哲夫 著"
+      ],
+      "citationIds": [
+        "ca03a2ab-2719-41fb-87bc-0f04fbcc6a10"
+      ],
+      "sourceUrls": [
+        "https://ndlsearch.ndl.go.jp/books/R100000002-I000003032807"
+      ],
+      "sourceIds": [
+        "ac4332d9-32d7-433f-a4a8-2185aaa64bbb"
+      ]
+    }
+  ],
+  "inheritedHolds": [
+    {
+      "reason": "person-outside-recipe-or-ambiguous",
+      "work": "蒼天の拳",
+      "rawResponsibility": "武論尊 監修"
+    }
+  ],
+  "newCandidateCounts": {
+    "entities": 1,
+    "claims": 1,
+    "sources": 1,
+    "citations": 1
+  },
+  "recordConflicts": [],
+  "roleCounts": {
+    "AUTHORSHIP": 1
+  },
+  "normalReviewedEntityCount": 1,
+  "reusedCitationIds": [],
+  "identityOnlyEntityIds": [],
+  "heldClaimCount": 0,
+  "heldEntityCount": 0
+}

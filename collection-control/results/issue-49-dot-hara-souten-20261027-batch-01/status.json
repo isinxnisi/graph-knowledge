@@ -82,11 +82,35 @@
   },
   "requestSha256": "4b36751528d2556648cc38baa8a234f5cbdf78ca4d0b1370b8e5f749358552a0",
   "kind": "collect-review",
-  "phase": "running",
+  "phase": "completed",
   "generation": 5,
   "attempts": 1,
   "workerId": "plunode-wsl",
   "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
   "updatedAt": "2026-10-27T08:09:40+00:00",
-  "message": "Execution gate: interval"
+  "result": {
+    "jobId": "issue-49-dot-hara-souten-20261027-r0001-71d22e5d1577c85e",
+    "collectionUnchanged": false,
+    "reviewUnchanged": false,
+    "transportAttemptsAdded": 0,
+    "reviewDirectory": "/home/isinxnisi/.local/share/plunode-collection-worker-phase-b-20261020/runtime/datasets/manga-collection/workflow-reviews/issue-49-dot-hara-souten-20261027-r0001-71d22e5d1577c85e-review-e1fe8c29ae1ffa6b",
+    "reviewOnly": true,
+    "formalAcceptance": false,
+    "publicApply": false,
+    "counts": {
+      "entities": 1,
+      "claims": 1,
+      "sources": 1,
+      "citations": 1
+    },
+    "heldClaims": 0
+  },
+  "executionComplete": true,
+  "reviewReference": {
+    "file": "datasets/manga-collection/workflow-reviews/issue-49-dot-hara-souten-20261027-r0001-71d22e5d1577c85e-review-e1fe8c29ae1ffa6b/review-manifest.json",
+    "sha256": "9a94a3f5608d629ac0f98d646a06230c091e891583fa483fd1af8dad08ffd288"
+  },
+  "decisionDrafts": [
+    "datasets/collection-decision-drafts/issue-49-dot-hara-souten-20261027-batch-01/9a94a3f5608d629ac0f98d646a06230c091e891583fa483fd1af8dad08ffd288/issue-49-dot-hara-souten-20261027-batch-01-normal-draft.json"
+  ]
 }

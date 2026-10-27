@@ -1,0 +1,152 @@
+{
+  "schemaVersion": 2,
+  "status": "pending-human-acceptance",
+  "recipe": "manga-r0033",
+  "collectionContext": {
+    "themeId": "issue-49-dot-hara-souten-20261027",
+    "themeRevision": 1,
+    "definitionSha256": "5f1deb2a401598a6f5e7da5c486b1e431bc90efe2781d935967cd2cc4f0efd68",
+    "approvalSha256": "b02e6d3a1d795630c90273a633ced10588b7219f681678d6829165bf14c73366"
+  },
+  "execution": {
+    "adapter": "manga-discovery-v2",
+    "codeSha256": "80e05b67bc0129b963653b90df4cfbfa5bd6aff190acda99f54c08541e55801e",
+    "inputs": [
+      {
+        "file": "datasets/manga-collection/r0033/recipe.json",
+        "sha256": "5c91330d762ed47cf02fd72a8af26f29695306e4c1751d40c3debd07157710da"
+      },
+      {
+        "file": "datasets/manga-collection/r0033/anchor-review.json",
+        "sha256": "711c674d72e86d21db904a8ab6ae5723030cd7776e1cd365bb7772c0bc8c30bd"
+      },
+      {
+        "file": "datasets/manga-collection/r0033/publication-review.json",
+        "sha256": "5228fd0217a3063940d295787261fadaea81e5445c4e6b1be0052e1a2a84cf9d"
+      },
+      {
+        "file": "docs/research/famous-manga-creators/20261016/candidates.json",
+        "sha256": "8531fada01e5c635ba2ee278a7ef944a73f64676af14ed42ae0e690f5a1ff978"
+      },
+      {
+        "file": "datasets/public-kg/releases/20261014-credits-001/data.json",
+        "sha256": "ea91b16f52a211b5a8464382ad498b7b2bb2be69a6f33fe125a73a3c7b9da2b5"
+      },
+      {
+        "file": "datasets/public-kg/releases/20261014-credits-001/manifest.json",
+        "sha256": "e4aa3b58ed884f7d1f8fffee43b260261cc2b4d3a867fda942919f439d2bce17"
+      }
+    ],
+    "maxEntities": 2111,
+    "maxClaims": 1847
+  },
+  "identityMappings": [
+    {
+      "name": "原哲夫",
+      "wikidata": "Q1319232",
+      "entityId": "ccb5ddb2-fb7c-4dad-8178-1a170342d0c6",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "蒼天の拳",
+      "wikidata": "Q542112",
+      "entityId": "f66ff5d9-4bf2-4904-bbec-ea5ff6410342",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    }
+  ],
+  "rows": [
+    {
+      "kind": "wikidata-relation",
+      "work": "蒼天の拳",
+      "property": "P50",
+      "personQid": "Q1016880",
+      "statementId": "Q542112$4A98062F-104B-457C-AFA9-E7AAC61D47C2",
+      "qualifiers": {},
+      "references": [
+        {
+          "hash": "d4bd87b862b12d99d26e86472d44f26858dee639",
+          "snaks": {
+            "P143": [
+              {
+                "snaktype": "value",
+                "property": "P143",
+                "hash": "f30cbd35620c4ea6d0633aaf0210a8916130469b",
+                "datavalue": {
+                  "value": {
+                    "entity-type": "item",
+                    "numeric-id": 8447,
+                    "id": "Q8447"
+                  },
+                  "type": "wikibase-entityid"
+                },
+                "datatype": "wikibase-item"
+              }
+            ]
+          },
+          "snaks-order": [
+            "P143"
+          ]
+        }
+      ],
+      "status": "candidate-only-no-role-inference",
+      "reason": "Wikidata propertyだけで具体Roleや直接制作の意味を確定しない"
+    },
+    {
+      "kind": "ndl-credit",
+      "work": "蒼天の拳",
+      "isbn13": "9784107710000",
+      "rawResponsibility": "原哲夫 著",
+      "sourceUrl": "https://ndlsearch.ndl.go.jp/books/R100000002-I000003032807",
+      "status": "pending-human-acceptance",
+      "roleId": "AUTHORSHIP",
+      "person": "原哲夫",
+      "claimId": "4452cfd6-d9ec-48fe-8dd2-d13abecfedbe",
+      "reusedClaim": false,
+      "subjectId": "ccb5ddb2-fb7c-4dad-8178-1a170342d0c6",
+      "objectId": "f66ff5d9-4bf2-4904-bbec-ea5ff6410342"
+    },
+    {
+      "kind": "ndl-credit",
+      "work": "蒼天の拳",
+      "isbn13": "9784107710000",
+      "rawResponsibility": "武論尊 監修",
+      "sourceUrl": "https://ndlsearch.ndl.go.jp/books/R100000002-I000003032807",
+      "status": "held"
+    }
+  ],
+  "holds": [
+    {
+      "reason": "person-outside-recipe-or-ambiguous",
+      "work": "蒼天の拳",
+      "rawResponsibility": "武論尊 監修"
+    }
+  ],
+  "acquisitions": [
+    {
+      "kind": "wikidata",
+      "identifier": "Q1319232",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q1319232.json",
+      "sha256": "0a8ac962d5881fcafaaaade5efef1d361e0677873fc0dfe221a7fd60585185f2",
+      "bytes": 51226,
+      "fetchedAt": "2026-10-27T07:58:26+00:00"
+    },
+    {
+      "kind": "wikidata",
+      "identifier": "Q542112",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q542112.json",
+      "sha256": "58b820b648f2fdaa9535d2fc124cf38f7f40f24b2a734afa0968061cdb131904",
+      "bytes": 9327,
+      "fetchedAt": "2026-10-27T07:58:29+00:00"
+    },
+    {
+      "kind": "ndl",
+      "identifier": "9784107710000",
+      "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&maximumRecords=5&query=isbn%3D%229784107710000%22+AND+dpid%3Diss-ndl-opac",
+      "sha256": "8266368ccfc88960056e9eeb622f4640c8179020dcb72118afdabc9d9e9585c1",
+      "bytes": 12693,
+      "fetchedAt": "2026-10-27T07:58:35+00:00"
+    }
+  ]
+}

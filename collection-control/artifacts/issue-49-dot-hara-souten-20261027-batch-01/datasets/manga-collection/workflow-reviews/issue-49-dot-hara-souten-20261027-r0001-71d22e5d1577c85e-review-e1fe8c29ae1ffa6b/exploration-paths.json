@@ -1,0 +1,52 @@
+[
+  {
+    "state": "collection-candidate",
+    "observation": "verified-records-only-not-a-live-exploration-test",
+    "edges": [
+      {
+        "claimId": "4452cfd6-d9ec-48fe-8dd2-d13abecfedbe",
+        "subjectId": "ccb5ddb2-fb7c-4dad-8178-1a170342d0c6",
+        "objectId": "f66ff5d9-4bf2-4904-bbec-ea5ff6410342",
+        "person": "原哲夫",
+        "work": "蒼天の拳",
+        "roleId": "AUTHORSHIP",
+        "scope": {
+          "kind": "publication",
+          "isbn13": "9784107710000",
+          "volumeLabel": "第1巻（NDL巻次 1）",
+          "editionLabel": null,
+          "language": "ja"
+        },
+        "state": "collection-candidate",
+        "citationIds": [
+          "ca03a2ab-2719-41fb-87bc-0f04fbcc6a10"
+        ],
+        "sourceIds": [
+          "ac4332d9-32d7-433f-a4a8-2185aaa64bbb"
+        ]
+      },
+      {
+        "claimId": "81684aff-84cf-4977-a3b5-7c2f5d746e5a",
+        "subjectId": "ccb5ddb2-fb7c-4dad-8178-1a170342d0c6",
+        "objectId": "cd2e6949-6c1b-4818-990f-4d4dbc5c5d54",
+        "person": "原哲夫",
+        "work": "北斗の拳",
+        "roleId": "DRAWING",
+        "scope": {
+          "kind": "publication",
+          "isbn13": "9784086172837",
+          "volumeLabel": "第1巻",
+          "editionLabel": null,
+          "language": "ja"
+        },
+        "state": "formally-accepted-not-applied",
+        "citationIds": [
+          "a2006985-9169-4009-a16a-688a7c47632c"
+        ],
+        "sourceIds": [
+          "d742ddc4-acb8-411a-a159-efd815afecd6"
+        ]
+      }
+    ]
+  }
+]

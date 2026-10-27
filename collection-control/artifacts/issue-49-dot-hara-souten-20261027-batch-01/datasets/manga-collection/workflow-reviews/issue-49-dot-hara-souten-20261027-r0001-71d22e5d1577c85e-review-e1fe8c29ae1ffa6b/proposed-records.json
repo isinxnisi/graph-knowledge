@@ -1,0 +1,86 @@
+{
+  "status": "pending-human-acceptance",
+  "formalAcceptance": "pending",
+  "notForPublicApply": true,
+  "records": {
+    "entities": [
+      {
+        "id": "f66ff5d9-4bf2-4904-bbec-ea5ff6410342",
+        "kind": "work",
+        "name": "蒼天の拳",
+        "description": null,
+        "aliases": [
+          "Fist of the Blue Sky"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q542112"
+          }
+        ],
+        "createdAt": "2026-10-27T07:58:18Z",
+        "updatedAt": "2026-10-27T07:58:18Z",
+        "event": null
+      }
+    ],
+    "claims": [
+      {
+        "id": "4452cfd6-d9ec-48fe-8dd2-d13abecfedbe",
+        "subjectId": "ccb5ddb2-fb7c-4dad-8178-1a170342d0c6",
+        "objectId": "f66ff5d9-4bf2-4904-bbec-ea5ff6410342",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "hidden",
+        "createdAt": "2026-10-27T07:58:18Z",
+        "updatedAt": "2026-10-27T07:58:18Z",
+        "contribution": {
+          "roleId": "AUTHORSHIP",
+          "scope": {
+            "kind": "publication",
+            "isbn13": "9784107710000",
+            "volumeLabel": "第1巻（NDL巻次 1）",
+            "editionLabel": null,
+            "language": "ja"
+          }
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      }
+    ],
+    "sources": [
+      {
+        "id": "ac4332d9-32d7-433f-a4a8-2185aaa64bbb",
+        "kind": "web",
+        "title": "NDLサーチ: 蒼天の拳. 1",
+        "authors": [],
+        "publisher": "国立国会図書館",
+        "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I000003032807",
+        "publishedAt": null,
+        "edition": null,
+        "note": "国立国会図書館作成書誌（iss-ndl-opac）の責任表示。メタデータ CC BY 4.0: https://creativecommons.org/licenses/by/4.0/ ; 提供元条件 https://ndlsearch.ndl.go.jp/help/api/provider 。本文・画像・第三者所蔵情報は含まない。",
+        "isDemo": false
+      }
+    ],
+    "citations": [
+      {
+        "id": "ca03a2ab-2719-41fb-87bc-0f04fbcc6a10",
+        "claimId": "4452cfd6-d9ec-48fe-8dd2-d13abecfedbe",
+        "sourceId": "ac4332d9-32d7-433f-a4a8-2185aaa64bbb",
+        "locator": "dc:creator（責任表示） / ISBN 9784107710000",
+        "note": "原表記（ja）: 原哲夫 著。指定刊行物の責任表示で確認された担当。全巻・全版・全期間への外挿、原作から別Roleへの変換はしない。同一資料由来の記録を独立した根拠と数えない。",
+        "accessedAt": "2026-10-27",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "原哲夫 著",
+          "language": "ja"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      }
+    ]
+  }
+}

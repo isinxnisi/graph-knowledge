@@ -1,0 +1,111 @@
+{
+  "schemaVersion": 1,
+  "decisionId": "issue-49-dot-hara-souten-20261027-batch-01-normal",
+  "status": "draft-not-approved",
+  "humanDecision": {
+    "actorType": "human",
+    "reviewer": null,
+    "decidedAt": null,
+    "statement": null
+  },
+  "approvalScope": "formal-record-acceptance-and-release-preparation-only",
+  "applyAuthorized": {
+    "local": false,
+    "beta": false,
+    "vps": false
+  },
+  "review": {
+    "file": "datasets/manga-collection/workflow-reviews/issue-49-dot-hara-souten-20261027-r0001-71d22e5d1577c85e-review-e1fe8c29ae1ffa6b/review-manifest.json",
+    "sha256": "9a94a3f5608d629ac0f98d646a06230c091e891583fa483fd1af8dad08ffd288"
+  },
+  "referenceArtifacts": [
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-49-dot-hara-souten-20261027-r0001-71d22e5d1577c85e-review-e1fe8c29ae1ffa6b/README.md",
+      "sha256": "c933e2eeb0364e4c9e9a0f75948dee4d84b623d613dd1ec9d54b56dae193a2bd"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-49-dot-hara-souten-20261027-r0001-71d22e5d1577c85e-review-e1fe8c29ae1ffa6b/context.json",
+      "sha256": "6aca4899f3b77459fee5fd7539d3548091a63e8e0b99458b83f615e157fe2ca3"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-49-dot-hara-souten-20261027-r0001-71d22e5d1577c85e-review-e1fe8c29ae1ffa6b/decision-request.json",
+      "sha256": "7b3b453eaf957c50badf870d6e56dbde9106bbfc0f1fe0121d991ff87a272f89"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-49-dot-hara-souten-20261027-r0001-71d22e5d1577c85e-review-e1fe8c29ae1ffa6b/exploration-paths.json",
+      "sha256": "ae1f6d6118a2119979c71707854b9ba127f73fd0b6ebb37a24a1960f8d9bc4a2"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-49-dot-hara-souten-20261027-r0001-71d22e5d1577c85e-review-e1fe8c29ae1ffa6b/identity-only-records.json",
+      "sha256": "1fc314e4a47717bce195b39fe7f1e66bd31f6af892fca4a9420a653eab927a37"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-49-dot-hara-souten-20261027-r0001-71d22e5d1577c85e-review-e1fe8c29ae1ffa6b/proposed-records.json",
+      "sha256": "cc576a7515d1fe9e6b8da35fff058c6e2b6493c64a2eca6ca6ef40f274537272"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-49-dot-hara-souten-20261027-r0001-71d22e5d1577c85e-review-e1fe8c29ae1ffa6b/review-manifest.json",
+      "sha256": "9a94a3f5608d629ac0f98d646a06230c091e891583fa483fd1af8dad08ffd288"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-49-dot-hara-souten-20261027-r0001-71d22e5d1577c85e-review-e1fe8c29ae1ffa6b/review.json",
+      "sha256": "90d56e2060ddf9bbb08628d82a22ae9529c692fe1a84413207824f2cd8b1896a"
+    }
+  ],
+  "acceptedRecordIds": {
+    "entities": [
+      "f66ff5d9-4bf2-4904-bbec-ea5ff6410342"
+    ],
+    "claims": [
+      "4452cfd6-d9ec-48fe-8dd2-d13abecfedbe"
+    ],
+    "sources": [
+      "ac4332d9-32d7-433f-a4a8-2185aaa64bbb"
+    ],
+    "citations": [
+      "ca03a2ab-2719-41fb-87bc-0f04fbcc6a10"
+    ]
+  },
+  "recordSha256": {
+    "entities": {
+      "f66ff5d9-4bf2-4904-bbec-ea5ff6410342": "8f5b27cc35645b031a04fc8da203d08bd392d8c9215d7c3b20d3028d97eec44f"
+    },
+    "claims": {
+      "4452cfd6-d9ec-48fe-8dd2-d13abecfedbe": "4903f340016e8f028a1ee0cf69950af5bf01a7dc49e8ea55613f4463b4394bdc"
+    },
+    "sources": {
+      "ac4332d9-32d7-433f-a4a8-2185aaa64bbb": "22fbc9ad0791b067ac8302ba100c8f803a2eed14e046550c9c827ab90cc9f717"
+    },
+    "citations": {
+      "ca03a2ab-2719-41fb-87bc-0f04fbcc6a10": "3b4bf1c5a279e1b9409ba2da0a8a084d7e6ce38c217697a4320793fb0d0b24c1"
+    }
+  },
+  "scopeByClaim": [
+    {
+      "id": "4452cfd6-d9ec-48fe-8dd2-d13abecfedbe",
+      "subjectId": "ccb5ddb2-fb7c-4dad-8178-1a170342d0c6",
+      "objectId": "f66ff5d9-4bf2-4904-bbec-ea5ff6410342",
+      "predicate": "CONTRIBUTED_TO",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "contribution": {
+        "roleId": "AUTHORSHIP",
+        "scope": {
+          "kind": "publication",
+          "isbn13": "9784107710000",
+          "volumeLabel": "第1巻（NDL巻次 1）",
+          "editionLabel": null,
+          "language": "ja"
+        }
+      },
+      "organizationParticipation": null,
+      "eventParticipation": null
+    }
+  ],
+  "baseRelease": "20261014-credits-001",
+  "baseRevision": "82b01515-594c-48ca-b4b6-515eefac83ca",
+  "releaseId": "manga-issue-49-dot-hara-souten-20261027-batch-01-normal"
+}

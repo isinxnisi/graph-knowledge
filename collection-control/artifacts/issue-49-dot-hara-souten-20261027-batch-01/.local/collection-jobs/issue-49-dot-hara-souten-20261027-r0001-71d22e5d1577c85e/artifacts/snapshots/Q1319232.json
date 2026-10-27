@@ -1,0 +1,267 @@
+{
+  "id": "Q1319232",
+  "lastrevid": 2549535131,
+  "labels": {
+    "zh-hans": {
+      "language": "zh-hans",
+      "value": "原哲夫"
+    },
+    "zh-hant": {
+      "language": "zh-hant",
+      "value": "原哲夫"
+    },
+    "zh-hk": {
+      "language": "zh-hk",
+      "value": "原哲夫"
+    },
+    "ja": {
+      "language": "ja",
+      "value": "原哲夫"
+    },
+    "ko": {
+      "language": "ko",
+      "value": "하라 테츠오"
+    },
+    "fr": {
+      "language": "fr",
+      "value": "Tetsuo Hara"
+    },
+    "es": {
+      "language": "es",
+      "value": "Tetsuo Hara"
+    },
+    "en": {
+      "language": "en",
+      "value": "Tetsuo Hara"
+    },
+    "ca": {
+      "language": "ca",
+      "value": "Tetsuo Hara"
+    },
+    "it": {
+      "language": "it",
+      "value": "Tetsuo Hara"
+    },
+    "zh": {
+      "language": "zh",
+      "value": "原哲夫"
+    },
+    "nl": {
+      "language": "nl",
+      "value": "Tetsuo Hara"
+    },
+    "de": {
+      "language": "de",
+      "value": "Tetsuo Hara"
+    },
+    "ru": {
+      "language": "ru",
+      "value": "Тэцуо Хара"
+    },
+    "ar": {
+      "language": "ar",
+      "value": "تتسو هارا"
+    },
+    "nan": {
+      "language": "nan",
+      "value": "Hara Tetuo"
+    },
+    "ms": {
+      "language": "ms",
+      "value": "Tetsuo Hara"
+    },
+    "ast": {
+      "language": "ast",
+      "value": "Tetsuo Hara"
+    },
+    "sq": {
+      "language": "sq",
+      "value": "Tetsuo Hara"
+    },
+    "lld": {
+      "language": "lld",
+      "value": "Tetsuo Hara"
+    },
+    "tr": {
+      "language": "tr",
+      "value": "Tetsuo Hara"
+    },
+    "fa": {
+      "language": "fa",
+      "value": "تتسو هارا"
+    },
+    "th": {
+      "language": "th",
+      "value": "เท็ตสึโอะ ฮาระ"
+    },
+    "mul": {
+      "language": "mul",
+      "value": "Tetsuo Hara"
+    }
+  },
+  "aliases": {
+    "ko": [
+      {
+        "language": "ko",
+        "value": "하라 데쓰오"
+      },
+      {
+        "language": "ko",
+        "value": "테츠오 하라"
+      }
+    ],
+    "en": [
+      {
+        "language": "en",
+        "value": "Hara Tetsuo"
+      }
+    ],
+    "ru": [
+      {
+        "language": "ru",
+        "value": "Хара, Тэцуо"
+      }
+    ]
+  },
+  "claims": {
+    "P31": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P31",
+          "hash": "ad7d38a03cdd40cdc373de0dc4e7b7fcbccb31d9",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 5,
+              "id": "Q5"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q1319232$F00FCC00-4681-4678-867F-DA037F9F0265",
+        "rank": "normal",
+        "references": [
+          {
+            "hash": "5ae5429385e680fbd06175cf118c5b3103176b07",
+            "snaks": {
+              "P248": [
+                {
+                  "snaktype": "value",
+                  "property": "P248",
+                  "hash": "def9f19d84b65167a2a17ce38364d264c16127fc",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 19938912,
+                      "id": "Q19938912"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ],
+              "P268": [
+                {
+                  "snaktype": "value",
+                  "property": "P268",
+                  "hash": "a8d31b11972e29d7132d69695fef0ebe1140efb0",
+                  "datavalue": {
+                    "value": "15530752h",
+                    "type": "string"
+                  },
+                  "datatype": "external-id"
+                }
+              ],
+              "P813": [
+                {
+                  "snaktype": "value",
+                  "property": "P813",
+                  "hash": "d6162a1716489623c6e595e448b17f8dca4fb2e8",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2015-10-10T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P248",
+              "P268",
+              "P813"
+            ]
+          },
+          {
+            "hash": "888231f781012f6465acf1fde51f64de082e121b",
+            "snaks": {
+              "P248": [
+                {
+                  "snaktype": "value",
+                  "property": "P248",
+                  "hash": "45037a2d1d89deebcdfc5840e9adbaa4b64cebc6",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 50358336,
+                      "id": "Q50358336"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ],
+              "P813": [
+                {
+                  "snaktype": "value",
+                  "property": "P813",
+                  "hash": "51aa3eccfa026b1f3b1481e169f910744e504a47",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2024-04-07T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ],
+              "P950": [
+                {
+                  "snaktype": "value",
+                  "property": "P950",
+                  "hash": "65b6f67ef35ce8235509eba5f05b40148fd6ad64",
+                  "datavalue": {
+                    "value": "XX964500",
+                    "type": "string"
+                  },
+                  "datatype": "external-id"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P248",
+              "P813",
+              "P950"
+            ]
+          }
+        ]
+      }
+    ],
+    "P50": [],
+    "P110": []
+  }
+}
