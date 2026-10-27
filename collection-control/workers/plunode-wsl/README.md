@@ -1,6 +1,6 @@
 # CollectionWorkerの実行制御
 
-確認: 2026-10-28 08:02:54 JST。
+確認: 2026-10-28 08:19:13 JST。
 
 反映済みcontrolRevision: 7／最後の操作: pub-13abfb93-ba2d-44f7-a56b-352aa7ab0ab0-pause。
 
