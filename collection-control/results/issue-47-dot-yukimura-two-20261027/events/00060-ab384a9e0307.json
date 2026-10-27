@@ -1,0 +1,147 @@
+{
+  "requestId": "issue-47-dot-yukimura-two-20261027",
+  "request": {
+    "schemaVersion": 1,
+    "id": "issue-47-dot-yukimura-two-20261027",
+    "kind": "issue-prepare",
+    "status": "approved",
+    "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
+    "issueAdapterSha256": "38aadaee84b039f9f991ac1cc831a9498a4d83fab062d96b7c252d7175326dab",
+    "applyAuthorized": {
+      "local": false,
+      "beta": false,
+      "vps": false
+    },
+    "approvalScope": "issue-manga-preparation-collection-review-only",
+    "humanDecision": {
+      "actorType": "human",
+      "reviewer": "プロジェクト運営者（範囲を限定した委任）",
+      "decidedAt": "2026-10-25T13:07:49+09:00",
+      "statement": "2026-10-25 13:07:49 JST、運営者は既存Worker対応の現在の漫画テーマ候補からdotが対象を選び、毎回の個別提示なしでGitHubの収集許可と購読を登録し、候補収集・レビューまで進める限定委任を明示承認した。同日16:17:04 JSTに固定1日1バッチ上限を撤廃し、進捗・収集量・負荷による投入調整を許可した。2026-10-26 12:37:31 JST、過去の許可を上書きせず追加分をバッチ専用の新Issueに登録する方式への明示確認に本人が肯定リアクションし、親会話で現在の反応を検証済み。2026-10-27 13:37〜13:41 JST、運営者はdotが相談中として継続していた追加投入抑制を問い直し、データ収集を急いでいること、多少多く実行してほしいこと、1日何件という制約を付ける段階ではないことを明示した。元の限定委任の範囲で投入を再開し、日次件数上限を設けず実処理・待機量・負荷を見て少量ずつ補充する。個々の人物作品組・Role・ISBNを人間が審査済みとの記録ではない。今回dotが選んだのは既存テーマIssue #5と固定catalog d3e377d5255f4c487d608e73954dc40aeb0b3cba（blob f3d33d0e83b6299a7f443fa841232407ce67657c）のM36、および導入Worker対応組との共通部分だけ。Wikidata構造化情報とNDL作成書誌のみ、1作者2作品、親準備と全子収集合計30試行以内、同一要求2試行・3秒間隔・20秒・4MiB、保存成果とcache優先。既公開・既受入・既収集の同内容、同条件の根拠保留は再収集せず、不確かな同定・Role・刊行物scopeは保留。既設時間帯・直列排他・10分休憩を維持する。固定catalog全組・将来追加テーマへの無条件許可ではなく、正式受入・公開apply・追加取得元・予算拡大・コード/adapter/権限/認証/VPS/会員DB/時間帯/ロック変更は含まない。"
+    },
+    "permission": {
+      "schemaVersion": 1,
+      "approvalId": "dot-yukimura-two-20261027",
+      "status": "approved",
+      "approvalScope": "issue-manga-preparation-collection-review-only",
+      "adapter": "manga-discovery-v2",
+      "targets": [
+        {
+          "person": "幸村誠",
+          "work": "プラネテス"
+        },
+        {
+          "person": "幸村誠",
+          "work": "ヴィンランド・サガ"
+        }
+      ],
+      "requestPolicy": {
+        "maxAttempts": 30,
+        "attemptsPerRequest": 2,
+        "minIntervalSeconds": 3,
+        "timeoutSeconds": 20,
+        "maxBytes": 4194304
+      },
+      "humanDecision": {
+        "actorType": "human",
+        "reviewer": "プロジェクト運営者（範囲を限定した委任）",
+        "decidedAt": "2026-10-25T13:07:49+09:00",
+        "statement": "2026-10-25 13:07:49 JST、運営者は既存Worker対応の現在の漫画テーマ候補からdotが対象を選び、毎回の個別提示なしでGitHubの収集許可と購読を登録し、候補収集・レビューまで進める限定委任を明示承認した。同日16:17:04 JSTに固定1日1バッチ上限を撤廃し、進捗・収集量・負荷による投入調整を許可した。2026-10-26 12:37:31 JST、過去の許可を上書きせず追加分をバッチ専用の新Issueに登録する方式への明示確認に本人が肯定リアクションし、親会話で現在の反応を検証済み。2026-10-27 13:37〜13:41 JST、運営者はdotが相談中として継続していた追加投入抑制を問い直し、データ収集を急いでいること、多少多く実行してほしいこと、1日何件という制約を付ける段階ではないことを明示した。元の限定委任の範囲で投入を再開し、日次件数上限を設けず実処理・待機量・負荷を見て少量ずつ補充する。個々の人物作品組・Role・ISBNを人間が審査済みとの記録ではない。今回dotが選んだのは既存テーマIssue #5と固定catalog d3e377d5255f4c487d608e73954dc40aeb0b3cba（blob f3d33d0e83b6299a7f443fa841232407ce67657c）のM36、および導入Worker対応組との共通部分だけ。Wikidata構造化情報とNDL作成書誌のみ、1作者2作品、親準備と全子収集合計30試行以内、同一要求2試行・3秒間隔・20秒・4MiB、保存成果とcache優先。既公開・既受入・既収集の同内容、同条件の根拠保留は再収集せず、不確かな同定・Role・刊行物scopeは保留。既設時間帯・直列排他・10分休憩を維持する。固定catalog全組・将来追加テーマへの無条件許可ではなく、正式受入・公開apply・追加取得元・予算拡大・コード/adapter/権限/認証/VPS/会員DB/時間帯/ロック変更は含まない。"
+      }
+    },
+    "issueOrigin": {
+      "repository": "isinxnisi/graph-knowledge",
+      "issueNumber": 47,
+      "approvalId": "dot-yukimura-two-20261027",
+      "permissionSha256": "9777fd01d5882090f9ac94f29ba5f00362f48e5552f6d90dfc035080b6b823c1",
+      "issueBodySha256": "0e9b94b49aff664874124b1cb7c33fc78999c78f4786d015edb8f5aad04f8d86"
+    },
+    "issueSnapshot": {
+      "url": "https://github.com/isinxnisi/graph-knowledge/issues/47",
+      "updatedAt": "2026-10-27T04:44:20Z",
+      "body": "## 限定収集バッチ：幸村誠の漫画2作品\n\n元テーマは [Issue #5 有名漫画家と代表作品](https://github.com/isinxnisi/graph-knowledge/issues/5)。過去の許可を変更せず、委任範囲内の今回分だけを独立登録する。[#46 青山剛昌3作品](https://github.com/isinxnisi/graph-knowledge/issues/46)に続く先行待機1バッチとして登録し、並行実行や大量投入はしない。\n\n- 対象：幸村誠 → プラネテス／ヴィンランド・サガ。漫画制作クレジットのみ、1作者2作品。\n- 選定：固定catalog commit d3e377d5255f4c487d608e73954dc40aeb0b3cba、blob f3d33d0e83b6299a7f443fa841232407ce67657c のM36と既存テーマ・導入Worker対応組との共通部分。現行main・互換基準973c7b0でも同catalogを確認。\n- 事前照合：既存29 request、r0002/r0003、#25準備・保留、累積公開用2175 Entity/1894 Claim、および後続の小畑健1 Claimに同対象なし。#42復旧3作品・アドルフ・#46とは別対象。実行時の最新公開・正式受入集合との厳密照合はWorkerで維持する。\n- ねらい：SFと歴史漫画の入口と同作者の別作品を増やす。歴史人物・史実・創作上の設定、アニメ等への拡張は含めない。関係成立・Role・QID・ISBNは未審査であり、Workerが同定・根拠を検証するまでClaimにしない。\n- 取得元：Wikidata構造化APIとNDL作成書誌のみ。この親準備と全子合計30試行、同一要求2回、逐次3秒以上、20秒timeout、4MiB以下。保存成果/cache優先。別バッチの旧通信台帳や予算をリセット・混同しない。\n- 通常Workerの時間帯・直列排他・10分休憩を維持。登録・実受付・実行・完了を区別する。日次件数上限は設けないが、子のレビュー処理を遅らせないよう実処理と待機量・負荷で補充を調整する。\n- 候補・根拠レビューまで。正式受入・公開apply、コード・adapter・権限・認証・VPS・会員DB・時間帯・ロック変更は不可。不明な同定・意味・刊行物scopeは推測で解消せず保留。同条件の根拠保留を反復収集しない。\n\n<!-- plunode-collection-permission:v1 -->\n```json\n{\n  \"schemaVersion\": 1,\n  \"approvalId\": \"dot-yukimura-two-20261027\",\n  \"status\": \"approved\",\n  \"approvalScope\": \"issue-manga-preparation-collection-review-only\",\n  \"adapter\": \"manga-discovery-v2\",\n  \"targets\": [\n    {\n      \"person\": \"幸村誠\",\n      \"work\": \"プラネテス\"\n    },\n    {\n      \"person\": \"幸村誠\",\n      \"work\": \"ヴィンランド・サガ\"\n    }\n  ],\n  \"requestPolicy\": {\n    \"maxAttempts\": 30,\n    \"attemptsPerRequest\": 2,\n    \"minIntervalSeconds\": 3,\n    \"timeoutSeconds\": 20,\n    \"maxBytes\": 4194304\n  },\n  \"humanDecision\": {\n    \"actorType\": \"human\",\n    \"reviewer\": \"プロジェクト運営者（範囲を限定した委任）\",\n    \"decidedAt\": \"2026-10-25T13:07:49+09:00\",\n    \"statement\": \"2026-10-25 13:07:49 JST、運営者は既存Worker対応の現在の漫画テーマ候補からdotが対象を選び、毎回の個別提示なしでGitHubの収集許可と購読を登録し、候補収集・レビューまで進める限定委任を明示承認した。同日16:17:04 JSTに固定1日1バッチ上限を撤廃し、進捗・収集量・負荷による投入調整を許可した。2026-10-26 12:37:31 JST、過去の許可を上書きせず追加分をバッチ専用の新Issueに登録する方式への明示確認に本人が肯定リアクションし、親会話で現在の反応を検証済み。2026-10-27 13:37〜13:41 JST、運営者はdotが相談中として継続していた追加投入抑制を問い直し、データ収集を急いでいること、多少多く実行してほしいこと、1日何件という制約を付ける段階ではないことを明示した。元の限定委任の範囲で投入を再開し、日次件数上限を設けず実処理・待機量・負荷を見て少量ずつ補充する。個々の人物作品組・Role・ISBNを人間が審査済みとの記録ではない。今回dotが選んだのは既存テーマIssue #5と固定catalog d3e377d5255f4c487d608e73954dc40aeb0b3cba（blob f3d33d0e83b6299a7f443fa841232407ce67657c）のM36、および導入Worker対応組との共通部分だけ。Wikidata構造化情報とNDL作成書誌のみ、1作者2作品、親準備と全子収集合計30試行以内、同一要求2試行・3秒間隔・20秒・4MiB、保存成果とcache優先。既公開・既受入・既収集の同内容、同条件の根拠保留は再収集せず、不確かな同定・Role・刊行物scopeは保留。既設時間帯・直列排他・10分休憩を維持する。固定catalog全組・将来追加テーマへの無条件許可ではなく、正式受入・公開apply・追加取得元・予算拡大・コード/adapter/権限/認証/VPS/会員DB/時間帯/ロック変更は含まない。\"\n  }\n}\n```\n<!-- /plunode-collection-permission:v1 -->\n"
+    },
+    "firstRecipeRevision": 31,
+    "recipeRevisionCount": 1
+  },
+  "requestSha256": "45fdbc030fa87fdc492b1ccb14ab70e9bed7c6bfcf45915863626aab4cbd1b3a",
+  "kind": "issue-prepare",
+  "phase": "retry-transport",
+  "generation": 60,
+  "attempts": 3,
+  "workerId": "plunode-wsl",
+  "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
+  "updatedAt": "2026-10-27T06:51:01+00:00",
+  "message": "Technical acquisition incomplete; no semantic hold or acceptance",
+  "result": {
+    "schemaVersion": 1,
+    "status": "technical-incomplete",
+    "preparationComplete": false,
+    "issueOrigin": {
+      "repository": "isinxnisi/graph-knowledge",
+      "issueNumber": 47,
+      "approvalId": "dot-yukimura-two-20261027",
+      "permissionSha256": "9777fd01d5882090f9ac94f29ba5f00362f48e5552f6d90dfc035080b6b823c1",
+      "issueBodySha256": "0e9b94b49aff664874124b1cb7c33fc78999c78f4786d015edb8f5aad04f8d86"
+    },
+    "preparationDirectory": "/home/isinxnisi/.local/share/plunode-collection-worker-phase-b-20261020/runtime/.local/collection-issues/issue-47-dot-yukimura-two-20261027",
+    "batchRequests": [],
+    "generatedArtifacts": {},
+    "technicalWaits": [
+      {
+        "category": "request-attempts-exhausted",
+        "key": "publication-77b8612bf4f62364a4034f52",
+        "provider": "ndlsearch.ndl.go.jp",
+        "retryAt": null,
+        "recoveryRequired": true,
+        "target": "プラネテス",
+        "lastDiagnostic": {
+          "category": "transport",
+          "phase": "open-through-response-headers",
+          "phaseBoundary": "open-through-response-headers",
+          "elapsedSeconds": 5.139841,
+          "finishedAt": "2026-10-27T06:39:17.762560+00:00",
+          "httpStatus": 429,
+          "causes": [
+            {
+              "type": "HTTPError"
+            }
+          ],
+          "retryAfterUntil": 1793083217.7626884
+        }
+      },
+      {
+        "category": "provider-backoff",
+        "key": "publication-8b44db175f32627ab3347f2f",
+        "provider": "ndlsearch.ndl.go.jp",
+        "retryAt": 1793083997.4918745,
+        "recoveryRequired": false,
+        "target": "ヴィンランド・サガ",
+        "lastDiagnostic": {
+          "category": "transport",
+          "phase": "open-through-response-headers",
+          "phaseBoundary": "open-through-response-headers",
+          "elapsedSeconds": 5.197987,
+          "finishedAt": "2026-10-27T06:52:17.491677+00:00",
+          "httpStatus": 429,
+          "causes": [
+            {
+              "type": "HTTPError"
+            }
+          ],
+          "retryAfterUntil": 1793083997.4918745
+        }
+      }
+    ],
+    "retryAt": 1793083997.4918745,
+    "publicApply": false,
+    "counts": {
+      "networkAttempts": 7,
+      "holds": 0,
+      "identifiedWorks": 0,
+      "technicalWaits": 2
+    }
+  },
+  "executionComplete": false,
+  "retryAt": 1793083997.4918745
+}
