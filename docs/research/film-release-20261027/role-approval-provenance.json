@@ -1,0 +1,13 @@
+{
+  "source": "trusted-human-message-in-current-Codex-chat",
+  "threadId": "01a17453-6c87-7961-9773-7ad78e90dbd7",
+  "turnId": "01a17d16-c51a-7b93-92b4-191c89384f3a",
+  "messageStartedAtUnix": 1793100006,
+  "approvalTimestamp": "2026-10-27T11:20:06.000Z",
+  "decisionFile": "docs/research/film-release-20261027/role-decision-approved.json",
+  "decisionFileSha256": "288756a509a9503ee5891265a65f77977d7d12cd0fe7b76883d40f046d6477c6",
+  "approvedScope": "two-fixed-Role-definitions-and-null-scope-policy",
+  "claimAcceptanceApproved": false,
+  "productionPublicationApproved": false,
+  "humanText": "この2Roleの固定hashとscope方針を正式承認します。\n\n- DIRECTING：a4c6d3607165c97e6ecf252b6cd6b79dbb3f39abb17c12062300996be65aae73\n- ACTING：78640b719b6a10db555abb33b3ac28ff2f297c5bc81ffd200cc9dc0b6b7e465e\n\n正式登録・互換検証・commit／pushを進め、そのまま映画2 Claimの正式受入票の確定まで進めてください。次の人間判断が必要になる地点まで、可能な作業はまとめて実施してください。"
+}

@@ -13,7 +13,6 @@
     "motivation": "今回の明示クレジットを広い制作関与だけに圧縮せずGraphと詳細で保持する。",
     "evidenceExample": "出版社のReマスター商品情報が両者に著を明記",
     "counterexample": "原作由来の人名との併記だけでは個別の著者Roleを認定しない",
-    "predicateRationale": "制作に関与したというCONTRIBUTED_TOの命題内の役割限定であり、端点・保存方向・Predicate意味を変えない。",
     "comparisons": [
       {
         "roleId": "SCRIPT_WRITING",
@@ -52,7 +51,8 @@
       "translations": "日本語の具体語と保守的な英語表示を追加する。",
       "presentation": "既存制作badgeとRole名を利用。SourceのnoteをGraphで解析しない。"
     },
-    "rationale": "資料の著／著者クレジットとして明示された制作関与。原作・脚本・作画・単独著者・著作権者を認定しない。 ユーザーがこの3定義・広いClaimを保持する投影・独立根拠数を増やしたように扱わない境界を明示承認した。"
+    "rationale": "資料の著／著者クレジットとして明示された制作関与。原作・脚本・作画・単独著者・著作権者を認定しない。 ユーザーがこの3定義・広いClaimを保持する投影・独立根拠数を増やしたように扱わない境界を明示承認した。",
+    "predicateRationale": "制作に関与したというCONTRIBUTED_TOの命題内の役割限定であり、端点・保存方向・Predicate意味を変えない。"
   },
   {
     "id": "credit-creation-20261014",
@@ -68,7 +68,6 @@
     "motivation": "今回の明示クレジットを広い制作関与だけに圧縮せずGraphと詳細で保持する。",
     "evidenceExample": "YAWARA!第1巻商品情報に作と明記",
     "counterexample": "作家という肩書や原作という別表記だけでは作を認定しない",
-    "predicateRationale": "制作に関与したというCONTRIBUTED_TOの命題内の役割限定であり、端点・保存方向・Predicate意味を変えない。",
     "comparisons": [
       {
         "roleId": "SCRIPT_WRITING",
@@ -107,7 +106,8 @@
       "translations": "日本語の具体語と保守的な英語表示を追加する。",
       "presentation": "既存制作badgeとRole名を利用。SourceのnoteをGraphで解析しない。"
     },
-    "rationale": "原資料の作クレジットとして明示された制作関与。原作・脚本・著者・作画へ自動変換しない。 ユーザーがこの3定義・広いClaimを保持する投影・独立根拠数を増やしたように扱わない境界を明示承認した。"
+    "rationale": "原資料の作クレジットとして明示された制作関与。原作・脚本・著者・作画へ自動変換しない。 ユーザーがこの3定義・広いClaimを保持する投影・独立根拠数を増やしたように扱わない境界を明示承認した。",
+    "predicateRationale": "制作に関与したというCONTRIBUTED_TOの命題内の役割限定であり、端点・保存方向・Predicate意味を変えない。"
   },
   {
     "id": "credit-drawing-20261014",
@@ -123,7 +123,6 @@
     "motivation": "今回の明示クレジットを広い制作関与だけに圧縮せずGraphと詳細で保持する。",
     "evidenceExample": "パイナップルARMY第1巻で画と明記",
     "counterexample": "著者欄の人名や作品の絵柄から作画担当を推定しない",
-    "predicateRationale": "制作に関与したというCONTRIBUTED_TOの命題内の役割限定であり、端点・保存方向・Predicate意味を変えない。",
     "comparisons": [
       {
         "roleId": "SCRIPT_WRITING",
@@ -162,7 +161,8 @@
       "translations": "日本語の具体語と保守的な英語表示を追加する。",
       "presentation": "既存制作badgeとRole名を利用。SourceのnoteをGraphで解析しない。"
     },
-    "rationale": "漫画の画／作画、または本人が当該漫画を描いたと明示する制作関与。原作・脚本・著者の兼務を認定しない。 ユーザーがこの3定義・広いClaimを保持する投影・独立根拠数を増やしたように扱わない境界を明示承認した。"
+    "rationale": "漫画の画／作画、または本人が当該漫画を描いたと明示する制作関与。原作・脚本・著者の兼務を認定しない。 ユーザーがこの3定義・広いClaimを保持する投影・独立根拠数を増やしたように扱わない境界を明示承認した。",
+    "predicateRationale": "制作に関与したというCONTRIBUTED_TOの命題内の役割限定であり、端点・保存方向・Predicate意味を変えない。"
   },
   {
     "id": "original-story-20261017",
@@ -178,7 +178,6 @@
     "motivation": "漫画原作の制作担当を既存Roleへ置換せず保持する。",
     "evidenceExample": "Dr.STONE公式の原作・作画の分担と同ISBNのNDL書誌。",
     "counterexample": "PLUTOの翻案元の作者であるだけの手塚治虫。",
-    "predicateRationale": "対象漫画への制作関与の役割限定で、CONTRIBUTED_TOの端点・方向・意味を維持する。翻案元であるだけの人物は対象外。",
     "comparisons": [
       {
         "roleId": "SCRIPT_WRITING",
@@ -222,6 +221,147 @@
       "translations": "原作（漫画制作）と保守的な英語表示を追加。",
       "presentation": "制作表示束・詳細・原語を既存UIで表示。"
     },
-    "rationale": "本チャットで意味定義を明示採用。実記録日時・参照artifact hashはdatasets/manga-collection/accepted-r0002-20261017/acceptance.jsonに保持。個別原作Claimや公開applyの承認ではない。"
+    "rationale": "本チャットで意味定義を明示採用。実記録日時・参照artifact hashはdatasets/manga-collection/accepted-r0002-20261017/acceptance.jsonに保持。個別原作Claimや公開applyの承認ではない。",
+    "predicateRationale": "対象漫画への制作関与の役割限定で、CONTRIBUTED_TOの端点・方向・意味を維持する。翻案元であるだけの人物は対象外。"
+  },
+  {
+    "id": "film-directing-20261026-draft",
+    "targetId": "DIRECTING",
+    "kind": "role",
+    "change": "addition",
+    "beforeHash": null,
+    "afterHash": "a4c6d3607165c97e6ecf252b6cd6b79dbb3f39abb17c12062300996be65aae73",
+    "status": "approved",
+    "reviewer": "isinxnisi（運営者）",
+    "reviewedAt": "2026-10-27",
+    "outcome": "qualifier",
+    "motivation": "Issue #43の狭い意味でbeta評価し、正式語彙承認を別途記録する。",
+    "evidenceExample": "AFI Million Dollar Baby: Clint Eastwood / Dir",
+    "counterexample": "監修、製作、撮影監督、会社のdirector、追加撮影監督だけの担当。",
+    "comparisons": [
+      {
+        "roleId": "SCRIPT_WRITING",
+        "relation": "distinct",
+        "rationale": "脚本を書く担当と演出・実演は別。兼務は別Claimで確認する。"
+      },
+      {
+        "roleId": "SUPERVISION",
+        "relation": "distinct",
+        "rationale": "監修・内容確認を監督や出演へ変換しない。"
+      },
+      {
+        "roleId": "PRODUCING",
+        "relation": "distinct",
+        "rationale": "企画・製作統括と演出・実演は別。producer creditから推論しない。"
+      },
+      {
+        "roleId": "STORY_CO_CREATION",
+        "relation": "distinct",
+        "rationale": "ストーリー共同制作を演出・実演へ変換しない。"
+      },
+      {
+        "roleId": "AUTHORSHIP",
+        "relation": "distinct",
+        "rationale": "著者クレジットだけでは演出・実演の工程を認定しない。"
+      },
+      {
+        "roleId": "CREATION",
+        "relation": "distinct",
+        "rationale": "作という資料表記から監督・出演を推論しない。"
+      },
+      {
+        "roleId": "DRAWING",
+        "relation": "distinct",
+        "rationale": "漫画を描く担当と演出・実演は異なる。"
+      },
+      {
+        "roleId": "ORIGINAL_STORY",
+        "relation": "distinct",
+        "rationale": "漫画制作の原作担当とも翻案元原著者とも異なる。"
+      },
+      {
+        "roleId": "ACTING",
+        "relation": "distinct",
+        "rationale": "演出と実演は別の制作関与で、兼務は独立Claim。"
+      }
+    ],
+    "impacts": {
+      "claims": "一Claim一Role。既存8 Roleと過去Claimは保持。映画2 Claimの正式受入は別判断。",
+      "conditions": "other-works rev3の各段を独立指定。",
+      "translations": "固定した日英表示。",
+      "presentation": "未正式受入のbeta試験表示。"
+    },
+    "rationale": "Issue #40の定義と既存8 Roleおよび相互の差を保持。scope:nullは未構造化。",
+    "predicateRationale": "人物→作品の制作関与を限定し、CONTRIBUTED_TOの端点・方向・命題を変更しない。声・吹替等の除外は関与そのものの否定ではなく、このRoleへの未対応。"
+  },
+  {
+    "id": "film-acting-20261026-draft",
+    "targetId": "ACTING",
+    "kind": "role",
+    "change": "addition",
+    "beforeHash": null,
+    "afterHash": "78640b719b6a10db555abb33b3ac28ff2f297c5bc81ffd200cc9dc0b6b7e465e",
+    "status": "approved",
+    "reviewer": "isinxnisi（運営者）",
+    "reviewedAt": "2026-10-27",
+    "outcome": "qualifier",
+    "motivation": "Issue #43の狭い意味でbeta評価し、正式語彙承認を別途記録する。",
+    "evidenceExample": "AFI Unforgiven: CAST / Clint Eastwood / Bill Munny",
+    "counterexample": "声の出演、吹替、歌唱だけ、スタントだけ、アーカイブ映像の再使用、本人インタビューだけ。",
+    "comparisons": [
+      {
+        "roleId": "SCRIPT_WRITING",
+        "relation": "distinct",
+        "rationale": "脚本を書く担当と演出・実演は別。兼務は別Claimで確認する。"
+      },
+      {
+        "roleId": "SUPERVISION",
+        "relation": "distinct",
+        "rationale": "監修・内容確認を監督や出演へ変換しない。"
+      },
+      {
+        "roleId": "PRODUCING",
+        "relation": "distinct",
+        "rationale": "企画・製作統括と演出・実演は別。producer creditから推論しない。"
+      },
+      {
+        "roleId": "STORY_CO_CREATION",
+        "relation": "distinct",
+        "rationale": "ストーリー共同制作を演出・実演へ変換しない。"
+      },
+      {
+        "roleId": "AUTHORSHIP",
+        "relation": "distinct",
+        "rationale": "著者クレジットだけでは演出・実演の工程を認定しない。"
+      },
+      {
+        "roleId": "CREATION",
+        "relation": "distinct",
+        "rationale": "作という資料表記から監督・出演を推論しない。"
+      },
+      {
+        "roleId": "DRAWING",
+        "relation": "distinct",
+        "rationale": "漫画を描く担当と演出・実演は異なる。"
+      },
+      {
+        "roleId": "ORIGINAL_STORY",
+        "relation": "distinct",
+        "rationale": "漫画制作の原作担当とも翻案元原著者とも異なる。"
+      },
+      {
+        "roleId": "DIRECTING",
+        "relation": "distinct",
+        "rationale": "演出と実演は別の制作関与で、兼務は独立Claim。"
+      }
+    ],
+    "impacts": {
+      "claims": "一Claim一Role。既存8 Roleと過去Claimは保持。映画2 Claimの正式受入は別判断。",
+      "conditions": "other-works rev3の各段を独立指定。",
+      "translations": "固定した日英表示。",
+      "presentation": "未正式受入のbeta試験表示。"
+    },
+    "rationale": "Issue #40の定義と既存8 Roleおよび相互の差を保持。scope:nullは未構造化。",
+    "predicateRationale": "人物→作品の制作関与を限定し、CONTRIBUTED_TOの端点・方向・命題を変更しない。声・吹替等の除外は関与そのものの否定ではなく、このRoleへの未対応。"
   }
 ]

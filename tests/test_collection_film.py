@@ -28,12 +28,12 @@ class FilmDispatch(unittest.TestCase):
     self.assertEqual(ctx["comparisonReceiptCount"],10)
     self.assertIn("lib/domain/contribution.ts",ctx["programSha256"])
     self.assertIn("vocabulary/contribution-roles/reviews.json",ctx["programSha256"])
- def test_draft_cannot_enter_acceptance_and_fake_role_adoption_is_not_inferred(self):
+ def test_role_adoption_does_not_replace_claim_or_identity_approval(self):
     core=film.core(w)
     args=argparse.Namespace(decision=self.args.decision_output,decision_sha=w.gate.file_hash(self.args.decision_output))
     with self.assertRaisesRegex(ValueError,"Explicit human approval"):core.accept(args,w)
     selected=w.read(self.args.output/"proposed-records.json")["records"]
-    with self.assertRaisesRegex(ValueError,"human vocabulary review"):film.validate_decision({},selected,w)
+    with self.assertRaisesRegex(ValueError,"Explicit human decision promoting or mapping"):film.validate_decision({},selected,w)
     self.assertFalse((self.directory/"accepted-test-only-film").exists())
  def test_tampering_even_rehashed_does_not_rebind_frozen_candidates(self):
     p=self.args.trial/"review/proposed-records.json"

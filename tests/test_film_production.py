@@ -63,7 +63,7 @@ class FilmProduction(unittest.TestCase):
     # The test-only vocabulary approval is created in the disposable code copy.
     w.node(["-e", "const fs=require('node:fs');const {prepareFilmRoleDecision,registerFilmRoles}=require('./lib/domain/film-role-registration.ts');"
       "const p='vocabulary/contribution-roles/',read=f=>JSON.parse(fs.readFileSync(f));"
-      "const c=read(p+'catalog.json'),b=read(p+'baseline-v1.json'),r=read(p+'reviews.json'),d=read(p+'film-pending.json'),t=read('docs/research/film-beta-issue43/role-review-drafts.json');"
+      "const old=read(p+'catalog.json'),c={...old,entries:old.entries.filter(e=>!['DIRECTING','ACTING'].includes(e.id))},b=read(p+'baseline-v1.json'),r=read(p+'reviews.json').filter(e=>!['DIRECTING','ACTING'].includes(e.targetId)),d=read(p+'film-pending.json'),t=read('docs/research/film-beta-issue43/role-review-drafts.json');"
       "const a={...prepareFilmRoleDecision(c,r,d,t),status:'approved',humanDecision:{actorType:'human',reviewer:'ISOLATED TEST ONLY',decidedAt:'2026-10-26T00:00:00Z',statement:'Synthetic test only'}};"
       "const n=registerFilmRoles(a,c,b,r,d,t);fs.writeFileSync(p+'catalog.json',JSON.stringify(n.catalog));fs.writeFileSync(p+'reviews.json',JSON.stringify(n.reviews));console.log(JSON.stringify({isolated:true}));"])
     w.gate.save(self.home / "config.json",{"home":str(self.home),"codeCommit":"ISOLATED","workerId":"ISOLATED"})

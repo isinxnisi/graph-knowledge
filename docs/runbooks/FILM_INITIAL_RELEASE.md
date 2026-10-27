@@ -1,12 +1,12 @@
 # 映画初期実装の正式公開手順
 
-2026-10-27。#40/#41/#43の保存資料を再利用。**正式判断・本番公開は未実施**。[検証記録](../verification/FILM_RELEASE_20261027.md)。
+2026-10-27。#40/#41/#43の保存資料を再利用。**Role 2件は2026-10-27の人間承認により正式登録。Claim受入・本番公開は未実施**。[検証記録](../verification/FILM_RELEASE_20261027.md)。
 
 ## 固定された判断対象
 
 - DIRECTING 定義hash: a4c6d3607165c97e6ecf252b6cd6b79dbb3f39abb17c12062300996be65aae73
 - ACTING 定義hash: 78640b719b6a10db555abb33b3ac28ff2f297c5bc81ffd200cc9dc0b6b7e465e
-- [Role判断草稿](../research/film-release-20261027/role-decision-draft.json) は既存catalog・reviews・定義・比較票のcanonical hashを束縛する。statusとhumanDecisionは未承認のまま。
+- [正式Role判断](../research/film-release-20261027/role-decision-approved.json) と[人間承認の出所](../research/film-release-20261027/role-approval-provenance.json)を保存。固定hash・scope方針を運営者が2026-10-27 20:20:06 JSTに承認。元のRole判断草稿は履歴として未承認のまま保持する。
 - Eastwood→許されざる者 ACTING: 4c88b8e8-154d-47ad-bf82-f19876ecaebd
 - Eastwood→ミリオンダラー・ベイビー DIRECTING: 34b41d23-f4e6-4fc6-aa6f-2905f3c2a890
 - [2 Claim草稿](../../datasets/film-collection/release-20261027/decision-draft.json) に依存3 Entity／2 Source／2 CitationのUUID、本文hash、scope／period、AFI原表記を固定。最新公開artifact＋10正式receiptとの照合結果であり、本番DB backup付き正式受入票ではない。
@@ -60,4 +60,4 @@ Role判断／Claim判断／個別公開署名が未完了なら、その境界�
 
 ## 現在の引継ぎ
 
-main統合済み実装はd6a21acd、初回検証記録はa0dd6c21。3200／betaはbuild jCKofzeGk3iNCU32pxk0T、実ブラウザ6件成功。本番は未変更。運営者が上記2の完全backup exportを実行し、Codexが実ファイルを検証済み。backup SHAは f6a716d7264ce1023d3f9100cbd7fa6bd628cd174d2d2412546a0e4e3938b2d3。[本番backup・全receipt・重複照合結果](../research/film-release-20261027/production-backup-verification.json)を参照。次は上記3の固定Role判断票への正式判断である。Role登録後、実際の審査コードhashで2 Claimの正式受入票を確定する。Role／Claim判断・実image固定・個別公開署名を順に進め、まだ存在しないrequest hashへの承認を先取りしない。
+main統合済み実装はd6a21acd、初回検証記録はa0dd6c21。3200／betaはbuild jCKofzeGk3iNCU32pxk0T、実ブラウザ6件成功。本番は未変更。運営者が上記2の完全backup exportを実行し、Codexが実ファイルを検証済み。backup SHAは f6a716d7264ce1023d3f9100cbd7fa6bd628cd174d2d2412546a0e4e3938b2d3。[本番backup・全receipt・重複照合結果](../research/film-release-20261027/production-backup-verification.json)を参照。上記3の固定Role判断・登録は完了。実際の審査コードhashで2 Claimの正式受入票を固定し、次はそのClaim・依存Entityの人間判断へ進む。Role／Claim判断・実image固定・個別公開署名を順に進め、まだ存在しないrequest hashへの承認を先取りしない。

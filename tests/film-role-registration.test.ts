@@ -6,12 +6,24 @@ import { vocabularyHash } from "../lib/domain/vocabulary";
 import { isFilmTrialClaim, FILM_TRIAL_CLAIM_IDS } from "../lib/domain/film-trial";
 const read = (file: string) => JSON.parse(readFileSync(file, "utf8"));
 const dir = "vocabulary/contribution-roles/";
-const catalog = read(dir + "catalog.json"), baseline = read(dir + "baseline-v1.json"), reviews = read(dir + "reviews.json");
+const registeredCatalog = read(dir + "catalog.json"), baseline = read(dir + "baseline-v1.json"), registeredReviews = read(dir + "reviews.json");
+// Replay registration against the historical eight in memory, never rewriting the real approvals.
+const filmIds = new Set(["DIRECTING", "ACTING"]);
+const catalog = { ...registeredCatalog, entries: registeredCatalog.entries.filter((e: { id: string }) => !filmIds.has(e.id)) };
+const reviews = registeredReviews.filter((r: { targetId: string }) => !filmIds.has(r.targetId));
 const pending = read(dir + "film-pending.json"), drafts = read("docs/research/film-beta-issue43/role-review-drafts.json");
 const packet = () => prepareFilmRoleDecision(catalog, reviews, pending, drafts);
 const testDecision = () => ({ ...packet(), status: "approved",
   humanDecision: { actorType: "human", reviewer: "ISOLATED TEST ONLY", decidedAt: "2026-10-26T00:00:00Z", statement: "Synthetic unit fixture; never a real approval" } });
 describe("fixed film Role registration", () => {
+ it("validates the real adopted catalog and hash-bound human approval without accepting Claims", () => {
+  const decision = read("docs/research/film-release-20261027/role-decision-approved.json");
+  const next = registerFilmRoles(decision, catalog, baseline, reviews, pending, drafts);
+  expect(next.catalog).toEqual(registeredCatalog);
+  expect(next.reviews).toEqual(registeredReviews);
+  expect(registeredCatalog.entries).toHaveLength(10);
+  expect(checkRoleVocabulary(registeredCatalog, baseline, registeredReviews).errors).toEqual([]);
+ });
  it("rejects draft, missing person/time, altered definition/hash and review template", () => {
   expect(() => registerFilmRoles(packet(), catalog, baseline, reviews, pending, drafts)).toThrow(/human Role decision/);
   for (const edit of [

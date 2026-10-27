@@ -62,7 +62,7 @@ describe("原作担当の限定は旧Role・無限定と別命題", () => {
 
 it("過去の承認票を維持し、新Role側の7比較と固定baselineを検証する", () => {
   expect(checkRoleVocabulary(catalog, baseline, reviews).errors).toEqual([]);
-  const previous = { ...catalog, entries: catalog.entries.filter(e => e.id !== "ORIGINAL_STORY") };
+  const previous = { ...catalog, entries: catalog.entries.filter(e => !["ORIGINAL_STORY", "DIRECTING", "ACTING"].includes(e.id)) };
   expect(checkRoleVocabulary(catalog, previous, reviews).errors).toEqual([]);
   const incomplete = structuredClone(reviews);
   const review = incomplete.find(r => r.targetId === "ORIGINAL_STORY")!;

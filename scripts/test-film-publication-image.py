@@ -18,7 +18,7 @@ def verify(public_fixture,film_fixture,output):
         run(["node","--import","tsx","-e",
             "const fs=require('node:fs'),{prepareFilmRoleDecision,registerFilmRoles}=require('./lib/domain/film-role-registration.ts');"
             "const p='vocabulary/contribution-roles/',r=f=>JSON.parse(fs.readFileSync(f));"
-            "const c=r(p+'catalog.json'),b=r(p+'baseline-v1.json'),v=r(p+'reviews.json'),d=r(p+'film-pending.json'),t=r('docs/research/film-beta-issue43/role-review-drafts.json');"
+            "const old=r(p+'catalog.json'),c={...old,entries:old.entries.filter(e=>!['DIRECTING','ACTING'].includes(e.id))},b=r(p+'baseline-v1.json'),v=r(p+'reviews.json').filter(e=>!['DIRECTING','ACTING'].includes(e.targetId)),d=r(p+'film-pending.json'),t=r('docs/research/film-beta-issue43/role-review-drafts.json');"
             "const a={...prepareFilmRoleDecision(c,v,d,t),status:'approved',humanDecision:{actorType:'human',reviewer:'ISOLATED TEST ONLY',decidedAt:'2026-10-26T00:00:00Z',statement:'Synthetic disposable Docker validation only'}};"
             "const n=registerFilmRoles(a,c,b,v,d,t);fs.writeFileSync(p+'catalog.json',JSON.stringify(n.catalog));fs.writeFileSync(p+'reviews.json',JSON.stringify(n.reviews));"],code)
         tag="graph-knowledge-publication:film-synthetic-test-"+uuid.uuid4().hex[:8]
