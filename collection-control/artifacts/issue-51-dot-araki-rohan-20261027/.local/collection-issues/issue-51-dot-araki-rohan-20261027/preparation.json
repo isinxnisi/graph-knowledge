@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "status": "prepared-candidates-not-accepted",
+  "preparationComplete": true,
+  "issueOrigin": {
+    "repository": "isinxnisi/graph-knowledge",
+    "issueNumber": 51,
+    "approvalId": "dot-araki-rohan-20261027",
+    "permissionSha256": "a6f3953a9baf6b9276761c858448f2aeb900099bf202961d09eb2df82beb137e",
+    "issueBodySha256": "9b4c3e37ef6f4be8aba82c5fdad0891a1eb944367f3cd2719a2bdd2dd5cf96c5"
+  },
+  "counts": {
+    "approvedWorks": 1,
+    "preparedWorks": 0,
+    "preparedPeople": 0,
+    "batches": 0,
+    "holds": 1,
+    "networkAttempts": 3,
+    "reusedWorks": 0,
+    "reusedPublishedClaims": 0,
+    "reusedHeldWorks": 0
+  },
+  "holds": [
+    {
+      "target": "岸辺露伴は動かない",
+      "person": "荒木飛呂彦",
+      "reason": "No dated, exact first-volume Japanese manga publication"
+    }
+  ],
+  "reusedReviews": [],
+  "batchRequests": [],
+  "publicApply": false,
+  "preparationDirectory": "/home/isinxnisi/.local/share/plunode-collection-worker-phase-b-20261020/runtime/.local/collection-issues/issue-51-dot-araki-rohan-20261027"
+}

@@ -62,11 +62,46 @@
   },
   "requestSha256": "e71e0fe6adecfdbb6df5ce5a84a59a8c91f6cd3ac738dc6055d28e86adc2a88b",
   "kind": "issue-prepare",
-  "phase": "running",
+  "phase": "completed",
   "generation": 220,
   "attempts": 1,
   "workerId": "plunode-wsl",
   "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
   "updatedAt": "2026-10-27T18:23:19+00:00",
-  "message": "Execution gate: interval"
+  "result": {
+    "schemaVersion": 1,
+    "status": "prepared-candidates-not-accepted",
+    "preparationComplete": true,
+    "issueOrigin": {
+      "repository": "isinxnisi/graph-knowledge",
+      "issueNumber": 51,
+      "approvalId": "dot-araki-rohan-20261027",
+      "permissionSha256": "a6f3953a9baf6b9276761c858448f2aeb900099bf202961d09eb2df82beb137e",
+      "issueBodySha256": "9b4c3e37ef6f4be8aba82c5fdad0891a1eb944367f3cd2719a2bdd2dd5cf96c5"
+    },
+    "counts": {
+      "approvedWorks": 1,
+      "preparedWorks": 0,
+      "preparedPeople": 0,
+      "batches": 0,
+      "holds": 1,
+      "networkAttempts": 3,
+      "reusedWorks": 0,
+      "reusedPublishedClaims": 0,
+      "reusedHeldWorks": 0
+    },
+    "holds": [
+      {
+        "target": "岸辺露伴は動かない",
+        "person": "荒木飛呂彦",
+        "reason": "No dated, exact first-volume Japanese manga publication"
+      }
+    ],
+    "reusedReviews": [],
+    "batchRequests": [],
+    "publicApply": false,
+    "preparationDirectory": "/home/isinxnisi/.local/share/plunode-collection-worker-phase-b-20261020/runtime/.local/collection-issues/issue-51-dot-araki-rohan-20261027",
+    "generatedArtifacts": {}
+  },
+  "executionComplete": true
 }

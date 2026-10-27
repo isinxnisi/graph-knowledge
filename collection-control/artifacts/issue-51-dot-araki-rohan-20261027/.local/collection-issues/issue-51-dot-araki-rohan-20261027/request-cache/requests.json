@@ -1,0 +1,86 @@
+{
+  "policy": {
+    "maxAttempts": 30,
+    "attemptsPerRequest": 2,
+    "minIntervalSeconds": 3,
+    "timeoutSeconds": 20,
+    "maxBytes": 4194304
+  },
+  "attempts": [
+    {
+      "key": "lookup-8bbfde10b7854d9c3ce92322",
+      "url": "https://www.wikidata.org/w/api.php?format=json&action=wbgetentities&sites=jawiki&titles=%E8%8D%92%E6%9C%A8%E9%A3%9B%E5%91%82%E5%BD%A6%7C%E5%B2%B8%E8%BE%BA%E9%9C%B2%E4%BC%B4%E3%81%AF%E5%8B%95%E3%81%8B%E3%81%AA%E3%81%84&props=labels%7Caliases%7Cclaims&languages=ja%7Cen",
+      "time": 1793125474.0908113,
+      "status": "succeeded",
+      "diagnostic": {
+        "category": "success",
+        "phase": "response-complete",
+        "httpStatus": 200,
+        "elapsedSeconds": 6.550517,
+        "finishedAt": "2026-10-27T18:24:40+00:00"
+      }
+    },
+    {
+      "key": "wikidata-Q11476023",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q11476023.json",
+      "time": 1793125480.6824603,
+      "status": "succeeded",
+      "diagnostic": {
+        "category": "success",
+        "phase": "response-complete",
+        "httpStatus": 200,
+        "elapsedSeconds": 1.424743,
+        "finishedAt": "2026-10-27T18:24:42+00:00"
+      }
+    },
+    {
+      "key": "publication-5adfb6cdc179b4a6074acfd3",
+      "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&onlyBib=true&maximumRecords=100&query=title%3D%22%E5%B2%B8%E8%BE%BA%E9%9C%B2%E4%BC%B4%E3%81%AF%E5%8B%95%E3%81%8B%E3%81%AA%E3%81%84%22+AND+creator%3D%22%E8%8D%92%E6%9C%A8%E9%A3%9B%E5%91%82%E5%BD%A6%22+AND+dpid%3Diss-ndl-opac+sortBy+issued_date%2Fsort.ascending",
+      "time": 1793125483.684302,
+      "status": "succeeded",
+      "diagnostic": {
+        "category": "success",
+        "phase": "response-complete",
+        "httpStatus": 200,
+        "elapsedSeconds": 2.882812,
+        "finishedAt": "2026-10-27T18:24:46+00:00"
+      }
+    }
+  ],
+  "responses": {
+    "lookup-8bbfde10b7854d9c3ce92322": {
+      "url": "https://www.wikidata.org/w/api.php?format=json&action=wbgetentities&sites=jawiki&titles=%E8%8D%92%E6%9C%A8%E9%A3%9B%E5%91%82%E5%BD%A6%7C%E5%B2%B8%E8%BE%BA%E9%9C%B2%E4%BC%B4%E3%81%AF%E5%8B%95%E3%81%8B%E3%81%AA%E3%81%84&props=labels%7Caliases%7Cclaims&languages=ja%7Cen",
+      "sha256": "6937b6852dcda739e50aa2cedd30e209c81dc7f0c258fc9afeba21b850b5521f",
+      "bytes": 91784,
+      "fetchedAt": "2026-10-27T18:24:40+00:00"
+    },
+    "wikidata-Q719354": {
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q719354.json",
+      "sha256": "a23397b1245d74831b1c21b00c48c1ed06e171b21640aeb92004411965145595",
+      "bytes": 83759,
+      "fetchedAt": "2026-10-18T18:39:28+00:00"
+    },
+    "wikidata-Q11476023": {
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q11476023.json",
+      "sha256": "f360028c79117cddf33cd2a361b8b0dfadb3d2eef680027f3adb33e50acfbc54",
+      "bytes": 23961,
+      "fetchedAt": "2026-10-27T18:24:42+00:00"
+    },
+    "publication-5adfb6cdc179b4a6074acfd3": {
+      "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&onlyBib=true&maximumRecords=100&query=title%3D%22%E5%B2%B8%E8%BE%BA%E9%9C%B2%E4%BC%B4%E3%81%AF%E5%8B%95%E3%81%8B%E3%81%AA%E3%81%84%22+AND+creator%3D%22%E8%8D%92%E6%9C%A8%E9%A3%9B%E5%91%82%E5%BD%A6%22+AND+dpid%3Diss-ndl-opac+sortBy+issued_date%2Fsort.ascending",
+      "sha256": "8413e55508db3830efd14e6f1140b4785320478e7bf44e2be3f51d94f0543127",
+      "bytes": 73415,
+      "fetchedAt": "2026-10-27T18:24:46+00:00"
+    }
+  },
+  "blockedUntil": 0,
+  "requestRetryAt": {},
+  "reusedResponses": {
+    "wikidata-Q719354": {
+      "sourceIndex": "/home/isinxnisi/.local/share/plunode-collection-worker-phase-b-20261020/runtime/.local/collection-issues/issue-25-manga23-20261019/request-cache/requests.json",
+      "sourceIndexSha256": "1d5a0cca13cea21eb6aefca4dc5a62dc48ffa90f337c26a0875f20fc0e2f7826",
+      "responseSha256": "a23397b1245d74831b1c21b00c48c1ed06e171b21640aeb92004411965145595",
+      "providerAttemptsAdded": 0
+    }
+  }
+}
