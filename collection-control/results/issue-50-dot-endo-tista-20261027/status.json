@@ -62,13 +62,13 @@
   },
   "requestSha256": "cb434c39ad43fc5b828ba608df40b56f268ab7ac3e0b177d5824ca1886c7e227",
   "kind": "issue-prepare",
-  "phase": "running",
+  "phase": "awaiting-recovery",
   "generation": 9,
   "attempts": 2,
   "workerId": "plunode-wsl",
   "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
   "updatedAt": "2026-10-27T08:37:14+00:00",
-  "message": "Execution gate: interval",
+  "message": "Technical acquisition incomplete; no semantic hold or acceptance",
   "result": {
     "schemaVersion": 1,
     "status": "technical-incomplete",
@@ -85,18 +85,18 @@
     "generatedArtifacts": {},
     "technicalWaits": [
       {
-        "category": "provider-backoff",
+        "category": "request-attempts-exhausted",
         "key": "publication-11f6fb0120e667fdc08e260b",
         "provider": "ndlsearch.ndl.go.jp",
-        "retryAt": 1793089562.3074598,
-        "recoveryRequired": false,
+        "retryAt": null,
+        "recoveryRequired": true,
         "target": "TISTA",
         "lastDiagnostic": {
           "category": "transport",
           "phase": "open-through-response-headers",
           "phaseBoundary": "open-through-response-headers",
-          "elapsedSeconds": 20.104539,
-          "finishedAt": "2026-10-27T08:25:02.307434+00:00",
+          "elapsedSeconds": 25.102504,
+          "finishedAt": "2026-10-27T08:38:52.694532+00:00",
           "httpStatus": null,
           "causes": [
             {
@@ -106,15 +106,15 @@
         }
       }
     ],
-    "retryAt": 1793089562.3074598,
+    "retryAt": null,
     "publicApply": false,
     "counts": {
-      "networkAttempts": 4,
+      "networkAttempts": 5,
       "holds": 0,
       "identifiedWorks": 0,
       "technicalWaits": 1
     }
   },
   "executionComplete": false,
-  "retryAt": 1793089562.3074598
+  "retryAt": 0
 }
