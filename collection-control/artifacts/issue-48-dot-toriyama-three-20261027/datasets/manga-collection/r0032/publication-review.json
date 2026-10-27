@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "scope": "specified-japanese-volume-1-isbn-only",
+  "publications": [
+    {
+      "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I033813933",
+      "isbn13": [
+        "9784088511818"
+      ],
+      "title": [
+        "Dr. スランプ. 第1巻"
+      ],
+      "mainTitles": [
+        "Dr. スランプ"
+      ],
+      "volume": [
+        "第1巻"
+      ],
+      "edition": [],
+      "responsibilities": [
+        "鳥山明"
+      ],
+      "publisher": [
+        "集英社"
+      ],
+      "language": [
+        "jpn"
+      ],
+      "genre": [
+        "漫画"
+      ],
+      "issued": "1980.8",
+      "searchTruncated": false,
+      "selectionBoundary": "representative-first-volume-among-observed-records-not-original-edition"
+    }
+  ]
+}

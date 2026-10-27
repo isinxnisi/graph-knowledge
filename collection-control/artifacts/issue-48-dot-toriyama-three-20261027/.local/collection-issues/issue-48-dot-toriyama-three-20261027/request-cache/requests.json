@@ -1,0 +1,282 @@
+{
+  "policy": {
+    "maxAttempts": 30,
+    "attemptsPerRequest": 2,
+    "minIntervalSeconds": 3,
+    "timeoutSeconds": 20,
+    "maxBytes": 4194304
+  },
+  "attempts": [
+    {
+      "key": "lookup-6654872d38e6f0447b7dec2b",
+      "url": "https://www.wikidata.org/w/api.php?format=json&action=wbgetentities&sites=jawiki&titles=%E9%B3%A5%E5%B1%B1%E6%98%8E%7CDRAGON+BALL%7CDr.%E3%82%B9%E3%83%A9%E3%83%B3%E3%83%97%7CSAND+LAND&props=labels%7Caliases%7Cclaims&languages=ja%7Cen",
+      "time": 1793085495.088407,
+      "status": "succeeded",
+      "diagnostic": {
+        "category": "success",
+        "phase": "response-complete",
+        "httpStatus": 200,
+        "elapsedSeconds": 7.247917,
+        "finishedAt": "2026-10-27T07:18:22+00:00"
+      }
+    },
+    {
+      "key": "wikidata-Q208582",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q208582.json",
+      "time": 1793085502.3682342,
+      "status": "succeeded",
+      "diagnostic": {
+        "category": "success",
+        "phase": "response-complete",
+        "httpStatus": 200,
+        "elapsedSeconds": 1.709614,
+        "finishedAt": "2026-10-27T07:18:24+00:00"
+      }
+    },
+    {
+      "key": "lookup-7795e6604a968a07ca5b9c1e",
+      "url": "https://www.wikidata.org/w/api.php?format=json&action=wbsearchentities&search=DRAGON+BALL&language=ja&type=item&limit=5",
+      "time": 1793085505.3697352,
+      "status": "succeeded",
+      "diagnostic": {
+        "category": "success",
+        "phase": "response-complete",
+        "httpStatus": 200,
+        "elapsedSeconds": 0.789744,
+        "finishedAt": "2026-10-27T07:18:26+00:00"
+      }
+    },
+    {
+      "key": "lookup-7b06cf909f43af32edc5e81e",
+      "url": "https://www.wikidata.org/w/api.php?format=json&action=wbgetentities&ids=Q2020%7CQ239506%7CQ15051307%7CQ477916%7CQ16515139&props=labels%7Caliases%7Cclaims&languages=ja%7Cen",
+      "time": 1793085508.370407,
+      "status": "succeeded",
+      "diagnostic": {
+        "category": "success",
+        "phase": "response-complete",
+        "httpStatus": 200,
+        "elapsedSeconds": 2.297173,
+        "finishedAt": "2026-10-27T07:18:30+00:00"
+      }
+    },
+    {
+      "key": "wikidata-Q15051307",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q15051307.json",
+      "time": 1793085511.3717217,
+      "status": "succeeded",
+      "diagnostic": {
+        "category": "success",
+        "phase": "response-complete",
+        "httpStatus": 200,
+        "elapsedSeconds": 0.979145,
+        "finishedAt": "2026-10-27T07:18:32+00:00"
+      }
+    },
+    {
+      "key": "publication-72a0a2617fb32ac5bf3fe794",
+      "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&onlyBib=true&maximumRecords=100&query=title%3D%22DRAGON+BALL%22+AND+creator%3D%22%E9%B3%A5%E5%B1%B1%E6%98%8E%22+AND+dpid%3Diss-ndl-opac+sortBy+issued_date%2Fsort.ascending",
+      "time": 1793085514.3736367,
+      "status": "succeeded",
+      "diagnostic": {
+        "category": "success",
+        "phase": "response-complete",
+        "httpStatus": 200,
+        "elapsedSeconds": 3.364553,
+        "finishedAt": "2026-10-27T07:18:37+00:00"
+      }
+    },
+    {
+      "key": "lookup-0e497e6149fae04e166b0c93",
+      "url": "https://www.wikidata.org/w/api.php?format=json&action=wbsearchentities&search=Dr.%E3%82%B9%E3%83%A9%E3%83%B3%E3%83%97&language=ja&type=item&limit=5",
+      "time": 1793085517.8202891,
+      "status": "succeeded",
+      "diagnostic": {
+        "category": "success",
+        "phase": "response-complete",
+        "httpStatus": 200,
+        "elapsedSeconds": 0.818262,
+        "finishedAt": "2026-10-27T07:18:38+00:00"
+      }
+    },
+    {
+      "key": "lookup-279a39ce6e06dfbeaa431f69",
+      "url": "https://www.wikidata.org/w/api.php?format=json&action=wbgetentities&ids=Q18008936%7CQ92555%7CQ22130557%7CQ3038453%7CQ3900283&props=labels%7Caliases%7Cclaims&languages=ja%7Cen",
+      "time": 1793085520.8226333,
+      "status": "succeeded",
+      "diagnostic": {
+        "category": "success",
+        "phase": "response-complete",
+        "httpStatus": 200,
+        "elapsedSeconds": 1.052361,
+        "finishedAt": "2026-10-27T07:18:41+00:00"
+      }
+    },
+    {
+      "key": "wikidata-Q92555",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q92555.json",
+      "time": 1793085523.8247724,
+      "status": "succeeded",
+      "diagnostic": {
+        "category": "success",
+        "phase": "response-complete",
+        "httpStatus": 200,
+        "elapsedSeconds": 1.072079,
+        "finishedAt": "2026-10-27T07:18:44+00:00"
+      }
+    },
+    {
+      "key": "publication-9b061f471af7300091ba4a51",
+      "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&onlyBib=true&maximumRecords=100&query=title%3D%22Dr.%E3%82%B9%E3%83%A9%E3%83%B3%E3%83%97%22+AND+creator%3D%22%E9%B3%A5%E5%B1%B1%E6%98%8E%22+AND+dpid%3Diss-ndl-opac+sortBy+issued_date%2Fsort.ascending",
+      "time": 1793085526.827038,
+      "status": "succeeded",
+      "diagnostic": {
+        "category": "success",
+        "phase": "response-complete",
+        "httpStatus": 200,
+        "elapsedSeconds": 2.927455,
+        "finishedAt": "2026-10-27T07:18:49+00:00"
+      }
+    },
+    {
+      "key": "ndl-9784088511818",
+      "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&maximumRecords=5&query=isbn%3D%229784088511818%22+AND+dpid%3Diss-ndl-opac",
+      "time": 1793085529.8461096,
+      "status": "succeeded",
+      "diagnostic": {
+        "category": "success",
+        "phase": "response-complete",
+        "httpStatus": 200,
+        "elapsedSeconds": 0.946897,
+        "finishedAt": "2026-10-27T07:18:50+00:00"
+      }
+    },
+    {
+      "key": "wikidata-Q1573106",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q1573106.json",
+      "time": 1793085532.8485146,
+      "status": "succeeded",
+      "diagnostic": {
+        "category": "success",
+        "phase": "response-complete",
+        "httpStatus": 200,
+        "elapsedSeconds": 0.95445,
+        "finishedAt": "2026-10-27T07:18:53+00:00"
+      }
+    },
+    {
+      "key": "publication-ce8a353d29c11a47aaeada3c",
+      "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&onlyBib=true&maximumRecords=100&query=title%3D%22SAND+LAND%22+AND+creator%3D%22%E9%B3%A5%E5%B1%B1%E6%98%8E%22+AND+dpid%3Diss-ndl-opac+sortBy+issued_date%2Fsort.ascending",
+      "time": 1793085535.850925,
+      "status": "failed",
+      "error": "TimeoutError",
+      "diagnostic": {
+        "category": "transport",
+        "phase": "open-through-response-headers",
+        "phaseBoundary": "open-through-response-headers",
+        "elapsedSeconds": 20.125212,
+        "finishedAt": "2026-10-27T07:19:15.980232+00:00",
+        "httpStatus": null,
+        "causes": [
+          {
+            "type": "TimeoutError"
+          }
+        ]
+      }
+    },
+    {
+      "key": "publication-ce8a353d29c11a47aaeada3c",
+      "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&onlyBib=true&maximumRecords=100&query=title%3D%22SAND+LAND%22+AND+creator%3D%22%E9%B3%A5%E5%B1%B1%E6%98%8E%22+AND+dpid%3Diss-ndl-opac+sortBy+issued_date%2Fsort.ascending",
+      "time": 1793086334.7509522,
+      "status": "succeeded",
+      "diagnostic": {
+        "category": "success",
+        "phase": "response-complete",
+        "httpStatus": 200,
+        "elapsedSeconds": 7.119938,
+        "finishedAt": "2026-10-27T07:32:21+00:00"
+      }
+    }
+  ],
+  "responses": {
+    "lookup-6654872d38e6f0447b7dec2b": {
+      "url": "https://www.wikidata.org/w/api.php?format=json&action=wbgetentities&sites=jawiki&titles=%E9%B3%A5%E5%B1%B1%E6%98%8E%7CDRAGON+BALL%7CDr.%E3%82%B9%E3%83%A9%E3%83%B3%E3%83%97%7CSAND+LAND&props=labels%7Caliases%7Cclaims&languages=ja%7Cen",
+      "sha256": "7caf6ecd5e42030538d4da42d591eba48b5194b39e4f3168bedc23ec1fee0e23",
+      "bytes": 207846,
+      "fetchedAt": "2026-10-27T07:18:22+00:00"
+    },
+    "wikidata-Q208582": {
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q208582.json",
+      "sha256": "344cb200a037c550588e9454883f74513b488a209c6f646d27055ffd5c4dbe9e",
+      "bytes": 192994,
+      "fetchedAt": "2026-10-27T07:18:24+00:00"
+    },
+    "lookup-7795e6604a968a07ca5b9c1e": {
+      "url": "https://www.wikidata.org/w/api.php?format=json&action=wbsearchentities&search=DRAGON+BALL&language=ja&type=item&limit=5",
+      "sha256": "81a14986419992ece8c852e8d5f43d2eb0d1ad6076ddbbb4fc51452c17d063a8",
+      "bytes": 2243,
+      "fetchedAt": "2026-10-27T07:18:26+00:00"
+    },
+    "lookup-7b06cf909f43af32edc5e81e": {
+      "url": "https://www.wikidata.org/w/api.php?format=json&action=wbgetentities&ids=Q2020%7CQ239506%7CQ15051307%7CQ477916%7CQ16515139&props=labels%7Caliases%7Cclaims&languages=ja%7Cen",
+      "sha256": "a909ce2b543fcab646bf16dbbdc72327bda3faca2d4f3ad35e1e66dbd84509b4",
+      "bytes": 275614,
+      "fetchedAt": "2026-10-27T07:18:30+00:00"
+    },
+    "wikidata-Q15051307": {
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q15051307.json",
+      "sha256": "2b647fd14b781eaf9922ed42e1b07f2ad1b38bb47aae52f1b6d9b2182b9a9812",
+      "bytes": 47734,
+      "fetchedAt": "2026-10-27T07:18:32+00:00"
+    },
+    "publication-72a0a2617fb32ac5bf3fe794": {
+      "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&onlyBib=true&maximumRecords=100&query=title%3D%22DRAGON+BALL%22+AND+creator%3D%22%E9%B3%A5%E5%B1%B1%E6%98%8E%22+AND+dpid%3Diss-ndl-opac+sortBy+issued_date%2Fsort.ascending",
+      "sha256": "6cb11829501eda380741cd83c84971b620c38076789f6bf791ea5dd54fa04a96",
+      "bytes": 456623,
+      "fetchedAt": "2026-10-27T07:18:37+00:00"
+    },
+    "lookup-0e497e6149fae04e166b0c93": {
+      "url": "https://www.wikidata.org/w/api.php?format=json&action=wbsearchentities&search=Dr.%E3%82%B9%E3%83%A9%E3%83%B3%E3%83%97&language=ja&type=item&limit=5",
+      "sha256": "32d3238b4bc4c63e6afb428eef7f1ac91c5183ba8d90d8c6d6a9bee56154ab2a",
+      "bytes": 2570,
+      "fetchedAt": "2026-10-27T07:18:38+00:00"
+    },
+    "lookup-279a39ce6e06dfbeaa431f69": {
+      "url": "https://www.wikidata.org/w/api.php?format=json&action=wbgetentities&ids=Q18008936%7CQ92555%7CQ22130557%7CQ3038453%7CQ3900283&props=labels%7Caliases%7Cclaims&languages=ja%7Cen",
+      "sha256": "3f990a61f98ead8b8f7b9ebeab3042ff161b85ee1c938db5f743f2ae88753311",
+      "bytes": 62041,
+      "fetchedAt": "2026-10-27T07:18:41+00:00"
+    },
+    "wikidata-Q92555": {
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q92555.json",
+      "sha256": "686b7f0bb144a266ccd8c5a930551408c343a77a7d34dff8d9415c859958b795",
+      "bytes": 21181,
+      "fetchedAt": "2026-10-27T07:18:44+00:00"
+    },
+    "publication-9b061f471af7300091ba4a51": {
+      "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&onlyBib=true&maximumRecords=100&query=title%3D%22Dr.%E3%82%B9%E3%83%A9%E3%83%B3%E3%83%97%22+AND+creator%3D%22%E9%B3%A5%E5%B1%B1%E6%98%8E%22+AND+dpid%3Diss-ndl-opac+sortBy+issued_date%2Fsort.ascending",
+      "sha256": "b38ec78a52e62bbd05a3c828c40ffa96b68dffea295351b029bec6ba3d70c368",
+      "bytes": 392906,
+      "fetchedAt": "2026-10-27T07:18:49+00:00"
+    },
+    "ndl-9784088511818": {
+      "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&maximumRecords=5&query=isbn%3D%229784088511818%22+AND+dpid%3Diss-ndl-opac",
+      "sha256": "8387feb8cada51ef59a3d1241cf657a8280e428c2a418272e5741465ae8e4510",
+      "bytes": 14225,
+      "fetchedAt": "2026-10-27T07:18:50+00:00"
+    },
+    "wikidata-Q1573106": {
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q1573106.json",
+      "sha256": "8956e082c278885977f35ab062841ffffba4db6e34e966776282df8270310f39",
+      "bytes": 34473,
+      "fetchedAt": "2026-10-27T07:18:53+00:00"
+    },
+    "publication-ce8a353d29c11a47aaeada3c": {
+      "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&onlyBib=true&maximumRecords=100&query=title%3D%22SAND+LAND%22+AND+creator%3D%22%E9%B3%A5%E5%B1%B1%E6%98%8E%22+AND+dpid%3Diss-ndl-opac+sortBy+issued_date%2Fsort.ascending",
+      "sha256": "a8dd62f630a5c5ddcc92db6a697949466fefef3afc0c17c4e7a68b9e419727c3",
+      "bytes": 18959,
+      "fetchedAt": "2026-10-27T07:32:21+00:00"
+    }
+  },
+  "blockedUntil": 0,
+  "requestRetryAt": {}
+}
