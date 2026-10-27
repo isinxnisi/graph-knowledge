@@ -1,0 +1,272 @@
+{
+  "authority": "log-metadata-analysis-only",
+  "method": "task_started to task_complete; union paired custom_tool_call and function_call output timestamps, clipped to window. custom-only union is also retained. otherElapsed excludes the all-tool union. Neither union is a CPU-idle counter. No raw messages/reasoning/arguments exported.",
+  "sources": [
+    {
+      "file": "rollout-2026-10-26T03-29-47-01a17453-6c87-7961-9773-7ad78e90dbd7.jsonl",
+      "prefixThroughUtc": "2026-10-27T16:19:31.058Z",
+      "prefixSha256": "2fdb3dd22aa9f0acd0c2b02bd76fd0643381304bf07fe5d653cdcc7c2e5de1fd",
+      "lines": 2390
+    },
+    {
+      "file": "rollout-2026-10-26T23-52-59-01a17453-6c87-7961-9773-7ad78e90dbd7_01a178b3-4dd1-7e43-acbc-4923c0ceb0b7.jsonl",
+      "prefixThroughUtc": "2026-10-27T16:19:31.058Z",
+      "prefixSha256": "9fb4055663a7edd273bb9c59057d3a841714f346d8e280735b3f0af15148774d",
+      "lines": 4266
+    }
+  ],
+  "rows": [
+    {
+      "number": 1,
+      "turnId": "01a17454-1967-7232-8e4b-557ff32957dd",
+      "name": "研究資料収集・探索モデル評価",
+      "startedAt": "2026-10-25T18:30:31.769000+00:00",
+      "completedAt": "2026-10-25T19:07:06.391000+00:00",
+      "elapsedMinutes": 36.57703333333333,
+      "synchronousCustomToolMinutes": 5.601866666666666,
+      "synchronousAllToolMinutes": 5.601866666666666,
+      "otherElapsedMinutes": 30.975166666666667,
+      "modelAndEffort": [
+        [
+          "gpt-6-astra",
+          "high"
+        ]
+      ],
+      "serviceTiersObserved": [
+        "default"
+      ]
+    },
+    {
+      "number": 2,
+      "turnId": "01a1756b-4542-7c60-a2d5-5b8852394853",
+      "name": "Role定義・段別検索",
+      "startedAt": "2026-10-25T23:35:26.921000+00:00",
+      "completedAt": "2026-10-26T00:01:32.789000+00:00",
+      "elapsedMinutes": 26.0978,
+      "synchronousCustomToolMinutes": 4.358116666666666,
+      "synchronousAllToolMinutes": 4.358116666666666,
+      "otherElapsedMinutes": 21.739683333333332,
+      "modelAndEffort": [
+        [
+          "gpt-6-astra",
+          "high"
+        ]
+      ],
+      "serviceTiersObserved": [
+        "default"
+      ]
+    },
+    {
+      "number": 3,
+      "turnId": "01a17647-4235-7001-b563-e7437d1922ef",
+      "name": "映画adapter・受入準備",
+      "startedAt": "2026-10-26T03:35:43.989000+00:00",
+      "completedAt": "2026-10-26T04:17:09.332000+00:00",
+      "elapsedMinutes": 41.42238333333333,
+      "synchronousCustomToolMinutes": 4.673666666666666,
+      "synchronousAllToolMinutes": 4.673666666666666,
+      "otherElapsedMinutes": 36.74871666666667,
+      "modelAndEffort": [
+        [
+          "gpt-6.1-sol",
+          "xhigh"
+        ]
+      ],
+      "serviceTiersObserved": [
+        "default"
+      ]
+    },
+    {
+      "number": 4,
+      "turnId": "01a176df-d26e-7003-97bf-22f920b0ef90",
+      "name": "main統合・試験beta配置",
+      "startedAt": "2026-10-26T06:22:22.413000+00:00",
+      "completedAt": "2026-10-26T07:21:45.237000+00:00",
+      "elapsedMinutes": 59.3804,
+      "synchronousCustomToolMinutes": 8.628833333333334,
+      "synchronousAllToolMinutes": 8.628833333333334,
+      "otherElapsedMinutes": 50.75156666666667,
+      "modelAndEffort": [
+        [
+          "gpt-6.1-sol",
+          "xhigh"
+        ]
+      ],
+      "serviceTiersObserved": [
+        "default"
+      ]
+    },
+    {
+      "number": 5,
+      "turnId": "01a178b3-5706-7173-bcb7-b116ef82d880",
+      "name": "正式登録・受入・公開経路の整備",
+      "startedAt": "2026-10-26T14:53:01.674000+00:00",
+      "completedAt": "2026-10-26T15:34:30.404000+00:00",
+      "elapsedMinutes": 41.478833333333334,
+      "synchronousCustomToolMinutes": 7.665716666666663,
+      "synchronousAllToolMinutes": 7.668116666666663,
+      "otherElapsedMinutes": 33.81071666666667,
+      "modelAndEffort": [
+        [
+          "gpt-6.1-sol",
+          "high"
+        ]
+      ],
+      "serviceTiersObserved": [
+        "priority",
+        "default"
+      ]
+    },
+    {
+      "number": 6,
+      "turnId": "01a178f1-ecd2-75f1-9dd4-e812b3e77eef",
+      "name": "再開現況照合・backup取得案内",
+      "startedAt": "2026-10-26T16:01:23.320000+00:00",
+      "completedAt": "2026-10-26T16:07:16.837000+00:00",
+      "elapsedMinutes": 5.89195,
+      "synchronousCustomToolMinutes": 0.6267999999999999,
+      "synchronousAllToolMinutes": 0.6267999999999999,
+      "otherElapsedMinutes": 5.265149999999999,
+      "modelAndEffort": [
+        [
+          "gpt-6.1-sol",
+          "high"
+        ]
+      ],
+      "serviceTiersObserved": [
+        "priority"
+      ]
+    },
+    {
+      "number": 7,
+      "turnId": "01a178f9-4341-79a3-a37d-bd157e7bee3f",
+      "name": "本番backup・重複照合",
+      "startedAt": "2026-10-26T16:09:24.171000+00:00",
+      "completedAt": "2026-10-26T16:15:39.336000+00:00",
+      "elapsedMinutes": 6.252750000000001,
+      "synchronousCustomToolMinutes": 0.9608,
+      "synchronousAllToolMinutes": 0.9608,
+      "otherElapsedMinutes": 5.291950000000001,
+      "modelAndEffort": [
+        [
+          "gpt-6.1-sol",
+          "high"
+        ]
+      ],
+      "serviceTiersObserved": [
+        "priority"
+      ]
+    },
+    {
+      "number": 8,
+      "turnId": "01a17d16-c51a-7b93-92b4-191c89384f3a",
+      "name": "Role正式登録・Claim受入票確定",
+      "startedAt": "2026-10-27T11:20:06.889000+00:00",
+      "completedAt": "2026-10-27T12:25:05.008000+00:00",
+      "elapsedMinutes": 64.96865,
+      "synchronousCustomToolMinutes": 21.652383333333336,
+      "synchronousAllToolMinutes": 25.663416666666674,
+      "otherElapsedMinutes": 39.30523333333332,
+      "modelAndEffort": [
+        [
+          "gpt-6.1-sol",
+          "high"
+        ]
+      ],
+      "serviceTiersObserved": [
+        "default"
+      ]
+    },
+    {
+      "number": 9,
+      "turnId": "01a17d82-4668-79f2-a523-37d5148332e6",
+      "name": "Claim正式受入・公開候補固定",
+      "startedAt": "2026-10-27T13:17:32.355000+00:00",
+      "completedAt": "2026-10-27T14:37:10.337000+00:00",
+      "elapsedMinutes": 79.63303333333333,
+      "synchronousCustomToolMinutes": 10.552,
+      "synchronousAllToolMinutes": 11.120249999999999,
+      "otherElapsedMinutes": 68.51278333333333,
+      "modelAndEffort": [
+        [
+          "gpt-6.1-sol",
+          "high"
+        ]
+      ],
+      "serviceTiersObserved": [
+        "default"
+      ]
+    },
+    {
+      "number": 10,
+      "turnId": "01a17dcc-4cd9-7633-b6c8-ef250660c6b2",
+      "name": "operator更新のロック競合復旧",
+      "startedAt": "2026-10-27T14:38:23.617000+00:00",
+      "completedAt": "2026-10-27T14:45:31.535000+00:00",
+      "elapsedMinutes": 7.131966666666667,
+      "synchronousCustomToolMinutes": 1.29555,
+      "synchronousAllToolMinutes": 1.29555,
+      "otherElapsedMinutes": 5.836416666666667,
+      "modelAndEffort": [
+        [
+          "gpt-6.1-sol",
+          "high"
+        ]
+      ],
+      "serviceTiersObserved": [
+        "default"
+      ]
+    },
+    {
+      "number": 11,
+      "turnId": "01a17dd4-e03d-79b0-9fca-ddda453625ef",
+      "name": "実plan・公開request・Web更新準備",
+      "startedAt": "2026-10-27T14:47:45.643000+00:00",
+      "completedAt": "2026-10-27T15:47:21.888000+00:00",
+      "elapsedMinutes": 59.60408333333333,
+      "synchronousCustomToolMinutes": 4.581066666666667,
+      "synchronousAllToolMinutes": 4.581066666666667,
+      "otherElapsedMinutes": 55.02301666666666,
+      "modelAndEffort": [
+        [
+          "gpt-6.1-sol",
+          "high"
+        ]
+      ],
+      "serviceTiersObserved": [
+        "default"
+      ]
+    },
+    {
+      "number": 12,
+      "turnId": "01a17e0d-6b79-7b81-802f-c2c08cda95a7",
+      "name": "公開結果確認・beta整理・終了処理",
+      "startedAt": "2026-10-27T15:49:31.338000+00:00",
+      "completedAt": "2026-10-27T16:19:31.058000+00:00",
+      "elapsedMinutes": 29.995333333333335,
+      "synchronousCustomToolMinutes": 7.441466666666667,
+      "synchronousAllToolMinutes": 7.441466666666667,
+      "otherElapsedMinutes": 22.553866666666668,
+      "modelAndEffort": [
+        [
+          "gpt-6.1-sol",
+          "high"
+        ]
+      ],
+      "serviceTiersObserved": [
+        "default"
+      ]
+    }
+  ],
+  "totals": {
+    "elapsedMinutes": 458.43421666666666,
+    "customToolMinutes": 78.03826666666667,
+    "allToolMinutes": 82.61995000000002,
+    "betweenWindowsMinutes": 2290.553933333333
+  },
+  "limitations": [
+    "Subtask estimates in report are not instrumented counters.",
+    "Between-window gaps are not measured human labor.",
+    "Token events are cumulative/repeated across compactions; no billing or causal model-efficiency estimate is inferred."
+  ]
+}

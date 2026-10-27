@@ -1,0 +1,115 @@
+{
+  "sourceCommit": "129c1eb411cece336cce02996c520f8f21b12f0a",
+  "oldWorkerSourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
+  "node": "v24.15.0",
+  "inputArtifactFiles": {
+    "data.json": "c8c59c6d5f9a78b616ffe6ca733cad341ec17b414ea7abe8783969449777c56c",
+    "manifest.json": "d25627720d2d77e5efaaa5b1fe2adb8d788291e39799f424746f22d840dd8187"
+  },
+  "runtime": {
+    "authority": "isolated-schema-and-format-probe-not-approval-or-deployment",
+    "oldFixedWorkerSchema": {
+      "accepted": false,
+      "issues": [
+        {
+          "path": [
+            "claims",
+            370,
+            "contribution",
+            "roleId"
+          ],
+          "code": "invalid_value"
+        },
+        {
+          "path": [
+            "claims",
+            536,
+            "contribution",
+            "roleId"
+          ],
+          "code": "invalid_value"
+        }
+      ]
+    },
+    "currentSchema": {
+      "accepted": true
+    },
+    "oldSchemaWithGeneratedRoleIdsOnly": {
+      "accepted": true
+    },
+    "currentPublicReleaseValidator": "passed-read-only",
+    "syntheticExtraRole": {
+      "unchangedCurrentRejected": true,
+      "generatedIdsAndLabelsAccepted": true,
+      "conditionRoundtrip": true,
+      "oldEightNullAndIsbnScopesPreserved": true,
+      "unknownRoleRejected": true,
+      "newScopeStructureRejected": true,
+      "invalidIsbnRejected": true,
+      "wrongPredicateRejected": true
+    },
+    "serialization": {
+      "sameValuesDifferentWire": true,
+      "legacyValidatorRejectsReorderedWire": true,
+      "schemaNormalizedBytesMatchPublishedArtifact": true,
+      "pythonAndNodeCanonicalMatch": true,
+      "dataWireSha256": "c8c59c6d5f9a78b616ffe6ca733cad341ec17b414ea7abe8783969449777c56c",
+      "canonicalDataSha256": "534738ad5e210d651990f06671b9854a4a50a494a03316373397268d886a5c4f",
+      "mutationsDetected": {
+        "role": true,
+        "scope": true,
+        "period": true,
+        "locator": true,
+        "source": true,
+        "identity": true
+      }
+    },
+    "limits": [
+      "Old schema import is from pinned Git source; not an installed Worker execution.",
+      "Generated variant tests schema, label and condition roundtrip only; it is not public acceptance, a Web build, actual image execution or the full Worker collect-review/accept-release flow.",
+      "Canonical comparison covers this saved JSON domain, not a general cross-language number/Unicode canonicalization standard."
+    ]
+  },
+  "binding": {
+    "authority": "synthetic-binding-and-bookkeeping-only",
+    "checks": {
+      "evidenceEditInvalidates": true,
+      "selectionShrinkInvalidates": true,
+      "roleDefinitionEditInvalidates": true,
+      "identityEditInvalidates": true,
+      "baseReceiptExecutorChangeRequiresNewTechnicalProof": true
+    },
+    "samples": [
+      {
+        "syntheticRecords": 79,
+        "packetSize": 20,
+        "packets": 4,
+        "milliseconds": [
+          0.5463439738377929,
+          1.024482015054673,
+          0.5677459994331002,
+          0.48803898971527815,
+          0.5580449942499399
+        ]
+      },
+      {
+        "syntheticRecords": 1000,
+        "packetSize": 20,
+        "packets": 50,
+        "milliseconds": [
+          7.518203987274319,
+          8.644194982480258,
+          8.912215009331703,
+          18.062649993225932,
+          12.71652098512277
+        ]
+      }
+    ],
+    "limits": [
+      "Not a human review benchmark, database load test, publication throughput test or formal approval schema.",
+      "A stable semantic digest alone never authorizes acceptance/apply; identity/conflicts and fresh signed live plan remain mandatory."
+    ]
+  },
+  "noDatabaseOrNetworkCalls": true,
+  "noFormalAcceptanceOrDeployment": true
+}
