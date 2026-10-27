@@ -1,0 +1,329 @@
+{
+  "id": "Q113329",
+  "lastrevid": 2560970404,
+  "labels": {
+    "lb": {
+      "language": "lb",
+      "value": "Kaito Kid"
+    },
+    "zh-hans": {
+      "language": "zh-hans",
+      "value": "魔术快斗"
+    },
+    "zh-hant": {
+      "language": "zh-hant",
+      "value": "神偷怪盜"
+    },
+    "zh-hk": {
+      "language": "zh-hk",
+      "value": "魔術快斗"
+    },
+    "zh-cn": {
+      "language": "zh-cn",
+      "value": "魔术快斗"
+    },
+    "zh-sg": {
+      "language": "zh-sg",
+      "value": "魔术快斗"
+    },
+    "zh-tw": {
+      "language": "zh-tw",
+      "value": "神偷怪盜"
+    },
+    "ru": {
+      "language": "ru",
+      "value": "Magic Kaito"
+    },
+    "fr": {
+      "language": "fr",
+      "value": "Magic Kaitō"
+    },
+    "ko": {
+      "language": "ko",
+      "value": "매직 쾌두"
+    },
+    "en": {
+      "language": "en",
+      "value": "Magic Kaito"
+    },
+    "es": {
+      "language": "es",
+      "value": "Magic Kaito"
+    },
+    "th": {
+      "language": "th",
+      "value": "จอมโจรอัจฉริยะ"
+    },
+    "ms": {
+      "language": "ms",
+      "value": "Magic Kaito"
+    },
+    "it": {
+      "language": "it",
+      "value": "Kaito Kid"
+    },
+    "de": {
+      "language": "de",
+      "value": "Kaito Kid"
+    },
+    "id": {
+      "language": "id",
+      "value": "Magic Kaito"
+    },
+    "ja": {
+      "language": "ja",
+      "value": "まじっく快斗"
+    },
+    "vi": {
+      "language": "vi",
+      "value": "Magic Kaito"
+    },
+    "nl": {
+      "language": "nl",
+      "value": "Magic Kaito"
+    },
+    "zh": {
+      "language": "zh",
+      "value": "魔术快斗"
+    },
+    "pl": {
+      "language": "pl",
+      "value": "Magic Kaito"
+    },
+    "ar": {
+      "language": "ar",
+      "value": "ماجك كايتو"
+    },
+    "pt": {
+      "language": "pt",
+      "value": "Magic Kaito"
+    },
+    "hy": {
+      "language": "hy",
+      "value": "Magic Kaito"
+    },
+    "ca": {
+      "language": "ca",
+      "value": "Magic Kaito"
+    },
+    "ku": {
+      "language": "ku",
+      "value": "Magic Kaito"
+    },
+    "yue": {
+      "language": "yue",
+      "value": "魔術快斗"
+    },
+    "sq": {
+      "language": "sq",
+      "value": "Magic Kaito"
+    },
+    "tr": {
+      "language": "tr",
+      "value": "Magic Kaito"
+    },
+    "bn": {
+      "language": "bn",
+      "value": "ম্যাজিক কাইটো"
+    },
+    "sr": {
+      "language": "sr",
+      "value": "Магични Каито"
+    }
+  },
+  "aliases": {
+    "zh": [
+      {
+        "language": "zh",
+        "value": "神偷怪盜"
+      },
+      {
+        "language": "zh",
+        "value": "神偷怪盗"
+      }
+    ],
+    "ru": [
+      {
+        "language": "ru",
+        "value": "Волшебник Кайто"
+      },
+      {
+        "language": "ru",
+        "value": "Rebirth of the Phantom Thief"
+      },
+      {
+        "language": "ru",
+        "value": "Yomigaeru Kaitou"
+      }
+    ],
+    "fr": [
+      {
+        "language": "fr",
+        "value": "Magic Kaito"
+      }
+    ],
+    "ko": [
+      {
+        "language": "ko",
+        "value": "매직 카이토"
+      }
+    ],
+    "th": [
+      {
+        "language": "th",
+        "value": "Kaito KID"
+      },
+      {
+        "language": "th",
+        "value": "Magic Kaito"
+      }
+    ],
+    "it": [
+      {
+        "language": "it",
+        "value": "Kaitou Kid"
+      },
+      {
+        "language": "it",
+        "value": "Magic kaito"
+      }
+    ],
+    "de": [
+      {
+        "language": "de",
+        "value": "Magic Kaitō"
+      },
+      {
+        "language": "de",
+        "value": "Magic Kaito"
+      }
+    ],
+    "zh-hant": [
+      {
+        "language": "zh-hant",
+        "value": "神偷怪盜1412"
+      },
+      {
+        "language": "zh-hant",
+        "value": "魔術快斗"
+      }
+    ]
+  },
+  "claims": {
+    "P31": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P31",
+          "hash": "549c072d6be8a6a43f999d1d0e82640b16c4260e",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 21198342,
+              "id": "Q21198342"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q113329$BB8B242F-568C-4DC9-A74A-A06CE056704D",
+        "rank": "normal"
+      }
+    ],
+    "P50": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P50",
+          "hash": "9440c1d62db91d9c0ef97bfa8e8091d65ecc078f",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 313945,
+              "id": "Q313945"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q113329$95AC7B35-7877-4D69-ADEC-16769977444B",
+        "rank": "normal",
+        "references": [
+          {
+            "hash": "d4bd87b862b12d99d26e86472d44f26858dee639",
+            "snaks": {
+              "P143": [
+                {
+                  "snaktype": "value",
+                  "property": "P143",
+                  "hash": "f30cbd35620c4ea6d0633aaf0210a8916130469b",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 8447,
+                      "id": "Q8447"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P143"
+            ]
+          }
+        ]
+      }
+    ],
+    "P110": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P110",
+          "hash": "822a8645369c00eb467b769c05f3370ee8da307c",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 313945,
+              "id": "Q313945"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q113329$36B516A1-B121-4911-9E32-BC06B1720E58",
+        "rank": "normal",
+        "references": [
+          {
+            "hash": "d4bd87b862b12d99d26e86472d44f26858dee639",
+            "snaks": {
+              "P143": [
+                {
+                  "snaktype": "value",
+                  "property": "P143",
+                  "hash": "f30cbd35620c4ea6d0633aaf0210a8916130469b",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 8447,
+                      "id": "Q8447"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P143"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

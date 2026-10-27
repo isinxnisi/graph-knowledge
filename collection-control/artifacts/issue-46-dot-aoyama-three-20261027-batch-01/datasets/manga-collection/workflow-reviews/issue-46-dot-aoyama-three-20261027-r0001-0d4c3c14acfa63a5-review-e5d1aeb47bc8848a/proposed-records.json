@@ -1,0 +1,175 @@
+{
+  "status": "pending-human-acceptance",
+  "formalAcceptance": "pending",
+  "notForPublicApply": true,
+  "records": {
+    "entities": [
+      {
+        "id": "7f7081d8-364a-4b56-b3e1-ceea35edb5a2",
+        "kind": "work",
+        "name": "YAIBA",
+        "description": null,
+        "aliases": [
+          "Yaiba"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q626947"
+          }
+        ],
+        "createdAt": "2026-10-27T06:01:10Z",
+        "updatedAt": "2026-10-27T06:01:10Z",
+        "event": null
+      },
+      {
+        "id": "a580b967-9c99-483e-94ef-fb5834e1f520",
+        "kind": "work",
+        "name": "まじっく快斗",
+        "description": null,
+        "aliases": [
+          "Magic Kaito"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q113329"
+          }
+        ],
+        "createdAt": "2026-10-27T06:01:10Z",
+        "updatedAt": "2026-10-27T06:01:10Z",
+        "event": null
+      },
+      {
+        "id": "ced2e2f2-b82e-41b3-a3cb-c5a36214d6b5",
+        "kind": "person",
+        "name": "青山剛昌",
+        "description": null,
+        "aliases": [
+          "Gosho Aoyama"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q313945"
+          }
+        ],
+        "createdAt": "2026-10-27T06:01:10Z",
+        "updatedAt": "2026-10-27T06:01:10Z",
+        "event": null
+      }
+    ],
+    "claims": [
+      {
+        "id": "6f399d03-39b1-4597-a6f7-5ea502d6f0de",
+        "subjectId": "ced2e2f2-b82e-41b3-a3cb-c5a36214d6b5",
+        "objectId": "a580b967-9c99-483e-94ef-fb5834e1f520",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "hidden",
+        "createdAt": "2026-10-27T06:01:10Z",
+        "updatedAt": "2026-10-27T06:01:10Z",
+        "contribution": {
+          "roleId": "AUTHORSHIP",
+          "scope": {
+            "kind": "publication",
+            "isbn13": "9784091220813",
+            "volumeLabel": "第1巻（NDL巻次 1）",
+            "editionLabel": null,
+            "language": "ja"
+          }
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      },
+      {
+        "id": "93e90c81-89b2-4415-aa66-47880b088ea9",
+        "subjectId": "ced2e2f2-b82e-41b3-a3cb-c5a36214d6b5",
+        "objectId": "7f7081d8-364a-4b56-b3e1-ceea35edb5a2",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "hidden",
+        "createdAt": "2026-10-27T06:01:10Z",
+        "updatedAt": "2026-10-27T06:01:10Z",
+        "contribution": {
+          "roleId": "AUTHORSHIP",
+          "scope": {
+            "kind": "publication",
+            "isbn13": "9784091222718",
+            "volumeLabel": "第1巻（NDL巻次 1）",
+            "editionLabel": null,
+            "language": "ja"
+          }
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      }
+    ],
+    "sources": [
+      {
+        "id": "10c873f0-6bca-48a6-b1fa-bae9023f0eb6",
+        "kind": "web",
+        "title": "NDLサーチ: Yaiba. 1",
+        "authors": [],
+        "publisher": "国立国会図書館",
+        "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I000001987533",
+        "publishedAt": null,
+        "edition": null,
+        "note": "国立国会図書館作成書誌（iss-ndl-opac）の責任表示。メタデータ CC BY 4.0: https://creativecommons.org/licenses/by/4.0/ ; 提供元条件 https://ndlsearch.ndl.go.jp/help/api/provider 。本文・画像・第三者所蔵情報は含まない。",
+        "isDemo": false
+      },
+      {
+        "id": "f623c3d4-a42e-4f7f-959f-31eb529fb23d",
+        "kind": "web",
+        "title": "NDLサーチ: まじっく快斗. 1",
+        "authors": [],
+        "publisher": "国立国会図書館",
+        "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I000001925410",
+        "publishedAt": null,
+        "edition": null,
+        "note": "国立国会図書館作成書誌（iss-ndl-opac）の責任表示。メタデータ CC BY 4.0: https://creativecommons.org/licenses/by/4.0/ ; 提供元条件 https://ndlsearch.ndl.go.jp/help/api/provider 。本文・画像・第三者所蔵情報は含まない。",
+        "isDemo": false
+      }
+    ],
+    "citations": [
+      {
+        "id": "33e9cad2-025a-42a2-9af5-379eacdd9e24",
+        "claimId": "6f399d03-39b1-4597-a6f7-5ea502d6f0de",
+        "sourceId": "f623c3d4-a42e-4f7f-959f-31eb529fb23d",
+        "locator": "dc:creator（責任表示） / ISBN 9784091220813",
+        "note": "原表記（ja）: 青山剛昌 著。指定刊行物の責任表示で確認された担当。全巻・全版・全期間への外挿、原作から別Roleへの変換はしない。同一資料由来の記録を独立した根拠と数えない。",
+        "accessedAt": "2026-10-27",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "青山剛昌 著",
+          "language": "ja"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      },
+      {
+        "id": "7477d6a0-9af0-4b01-be7d-27fe83d955ca",
+        "claimId": "93e90c81-89b2-4415-aa66-47880b088ea9",
+        "sourceId": "10c873f0-6bca-48a6-b1fa-bae9023f0eb6",
+        "locator": "dc:creator（責任表示） / ISBN 9784091222718",
+        "note": "原表記（ja）: 青山剛昌 著。指定刊行物の責任表示で確認された担当。全巻・全版・全期間への外挿、原作から別Roleへの変換はしない。同一資料由来の記録を独立した根拠と数えない。",
+        "accessedAt": "2026-10-27",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "青山剛昌 著",
+          "language": "ja"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      }
+    ]
+  }
+}

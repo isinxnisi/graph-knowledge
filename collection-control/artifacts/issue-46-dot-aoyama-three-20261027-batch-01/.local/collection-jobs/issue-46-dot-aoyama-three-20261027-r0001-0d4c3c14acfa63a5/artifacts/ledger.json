@@ -1,0 +1,283 @@
+{
+  "schemaVersion": 2,
+  "status": "pending-human-acceptance",
+  "recipe": "manga-r0030",
+  "collectionContext": {
+    "themeId": "issue-46-dot-aoyama-three-20261027",
+    "themeRevision": 1,
+    "definitionSha256": "b96cd4deed2fc9f9d30016cd06e984e7c6b04268d68adb65c306e9df4a37f21c",
+    "approvalSha256": "a0e9b44f10c1ac2534086e659550755545ac6dea1f30f528c091e66477a361af"
+  },
+  "execution": {
+    "adapter": "manga-discovery-v2",
+    "codeSha256": "80e05b67bc0129b963653b90df4cfbfa5bd6aff190acda99f54c08541e55801e",
+    "inputs": [
+      {
+        "file": "datasets/manga-collection/r0030/recipe.json",
+        "sha256": "da94c039f8f9acca4565c0d69e7c06f92aa67d7fcdc8b26bfdfbb78dc19469a0"
+      },
+      {
+        "file": "datasets/manga-collection/r0030/anchor-review.json",
+        "sha256": "8015b92fcaec48f0b4d794e4ca1ad5933d5799ce2c5101c8affce75e4127f2e6"
+      },
+      {
+        "file": "datasets/manga-collection/r0030/publication-review.json",
+        "sha256": "caf9c68e68e69715982a1c519b9c749802987943ffcb4464c77de878eb0a83f8"
+      },
+      {
+        "file": "docs/research/famous-manga-creators/20261016/candidates.json",
+        "sha256": "8531fada01e5c635ba2ee278a7ef944a73f64676af14ed42ae0e690f5a1ff978"
+      },
+      {
+        "file": "datasets/public-kg/releases/20261014-credits-001/data.json",
+        "sha256": "ea91b16f52a211b5a8464382ad498b7b2bb2be69a6f33fe125a73a3c7b9da2b5"
+      },
+      {
+        "file": "datasets/public-kg/releases/20261014-credits-001/manifest.json",
+        "sha256": "e4aa3b58ed884f7d1f8fffee43b260261cc2b4d3a867fda942919f439d2bce17"
+      }
+    ],
+    "maxEntities": 2112,
+    "maxClaims": 1850
+  },
+  "identityMappings": [
+    {
+      "name": "青山剛昌",
+      "wikidata": "Q313945",
+      "entityId": "ced2e2f2-b82e-41b3-a3cb-c5a36214d6b5",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "YAIBA",
+      "wikidata": "Q626947",
+      "entityId": "7f7081d8-364a-4b56-b3e1-ceea35edb5a2",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "まじっく快斗",
+      "wikidata": "Q113329",
+      "entityId": "a580b967-9c99-483e-94ef-fb5834e1f520",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    }
+  ],
+  "rows": [
+    {
+      "kind": "wikidata-relation",
+      "work": "YAIBA",
+      "property": "P50",
+      "personQid": "Q313945",
+      "statementId": "Q626947$02CE9FD0-0925-43CA-B5BD-DECD4F0F3431",
+      "qualifiers": {},
+      "references": [
+        {
+          "hash": "d4bd87b862b12d99d26e86472d44f26858dee639",
+          "snaks": {
+            "P143": [
+              {
+                "snaktype": "value",
+                "property": "P143",
+                "hash": "f30cbd35620c4ea6d0633aaf0210a8916130469b",
+                "datavalue": {
+                  "value": {
+                    "entity-type": "item",
+                    "numeric-id": 8447,
+                    "id": "Q8447"
+                  },
+                  "type": "wikibase-entityid"
+                },
+                "datatype": "wikibase-item"
+              }
+            ]
+          },
+          "snaks-order": [
+            "P143"
+          ]
+        }
+      ],
+      "status": "candidate-only-no-role-inference",
+      "reason": "Wikidata propertyだけで具体Roleや直接制作の意味を確定しない"
+    },
+    {
+      "kind": "wikidata-relation",
+      "work": "YAIBA",
+      "property": "P110",
+      "personQid": "Q313945",
+      "statementId": "Q626947$281145FE-DE6E-47F4-A7B0-D88BF03A8D80",
+      "qualifiers": {},
+      "references": [
+        {
+          "hash": "d4bd87b862b12d99d26e86472d44f26858dee639",
+          "snaks": {
+            "P143": [
+              {
+                "snaktype": "value",
+                "property": "P143",
+                "hash": "f30cbd35620c4ea6d0633aaf0210a8916130469b",
+                "datavalue": {
+                  "value": {
+                    "entity-type": "item",
+                    "numeric-id": 8447,
+                    "id": "Q8447"
+                  },
+                  "type": "wikibase-entityid"
+                },
+                "datatype": "wikibase-item"
+              }
+            ]
+          },
+          "snaks-order": [
+            "P143"
+          ]
+        }
+      ],
+      "status": "candidate-only-no-role-inference",
+      "reason": "Wikidata propertyだけで具体Roleや直接制作の意味を確定しない"
+    },
+    {
+      "kind": "ndl-credit",
+      "work": "YAIBA",
+      "isbn13": "9784091222718",
+      "rawResponsibility": "青山剛昌 著",
+      "sourceUrl": "https://ndlsearch.ndl.go.jp/books/R100000002-I000001987533",
+      "status": "pending-human-acceptance",
+      "roleId": "AUTHORSHIP",
+      "person": "青山剛昌",
+      "claimId": "93e90c81-89b2-4415-aa66-47880b088ea9",
+      "reusedClaim": false,
+      "subjectId": "ced2e2f2-b82e-41b3-a3cb-c5a36214d6b5",
+      "objectId": "7f7081d8-364a-4b56-b3e1-ceea35edb5a2"
+    },
+    {
+      "kind": "wikidata-relation",
+      "work": "まじっく快斗",
+      "property": "P50",
+      "personQid": "Q313945",
+      "statementId": "Q113329$95AC7B35-7877-4D69-ADEC-16769977444B",
+      "qualifiers": {},
+      "references": [
+        {
+          "hash": "d4bd87b862b12d99d26e86472d44f26858dee639",
+          "snaks": {
+            "P143": [
+              {
+                "snaktype": "value",
+                "property": "P143",
+                "hash": "f30cbd35620c4ea6d0633aaf0210a8916130469b",
+                "datavalue": {
+                  "value": {
+                    "entity-type": "item",
+                    "numeric-id": 8447,
+                    "id": "Q8447"
+                  },
+                  "type": "wikibase-entityid"
+                },
+                "datatype": "wikibase-item"
+              }
+            ]
+          },
+          "snaks-order": [
+            "P143"
+          ]
+        }
+      ],
+      "status": "candidate-only-no-role-inference",
+      "reason": "Wikidata propertyだけで具体Roleや直接制作の意味を確定しない"
+    },
+    {
+      "kind": "wikidata-relation",
+      "work": "まじっく快斗",
+      "property": "P110",
+      "personQid": "Q313945",
+      "statementId": "Q113329$36B516A1-B121-4911-9E32-BC06B1720E58",
+      "qualifiers": {},
+      "references": [
+        {
+          "hash": "d4bd87b862b12d99d26e86472d44f26858dee639",
+          "snaks": {
+            "P143": [
+              {
+                "snaktype": "value",
+                "property": "P143",
+                "hash": "f30cbd35620c4ea6d0633aaf0210a8916130469b",
+                "datavalue": {
+                  "value": {
+                    "entity-type": "item",
+                    "numeric-id": 8447,
+                    "id": "Q8447"
+                  },
+                  "type": "wikibase-entityid"
+                },
+                "datatype": "wikibase-item"
+              }
+            ]
+          },
+          "snaks-order": [
+            "P143"
+          ]
+        }
+      ],
+      "status": "candidate-only-no-role-inference",
+      "reason": "Wikidata propertyだけで具体Roleや直接制作の意味を確定しない"
+    },
+    {
+      "kind": "ndl-credit",
+      "work": "まじっく快斗",
+      "isbn13": "9784091220813",
+      "rawResponsibility": "青山剛昌 著",
+      "sourceUrl": "https://ndlsearch.ndl.go.jp/books/R100000002-I000001925410",
+      "status": "pending-human-acceptance",
+      "roleId": "AUTHORSHIP",
+      "person": "青山剛昌",
+      "claimId": "6f399d03-39b1-4597-a6f7-5ea502d6f0de",
+      "reusedClaim": false,
+      "subjectId": "ced2e2f2-b82e-41b3-a3cb-c5a36214d6b5",
+      "objectId": "a580b967-9c99-483e-94ef-fb5834e1f520"
+    }
+  ],
+  "holds": [],
+  "acquisitions": [
+    {
+      "kind": "wikidata",
+      "identifier": "Q313945",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q313945.json",
+      "sha256": "8f0d1c21f82ca29148da358dfdbd501d20b0089955d28cc28de253ae77de0425",
+      "bytes": 83627,
+      "fetchedAt": "2026-10-27T06:01:18+00:00"
+    },
+    {
+      "kind": "wikidata",
+      "identifier": "Q626947",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q626947.json",
+      "sha256": "a9eeebce2a148a4f8f0f0ffd7f5939ddcbffb08d6943342cb1bbb55f7485197c",
+      "bytes": 29654,
+      "fetchedAt": "2026-10-27T06:01:27+00:00"
+    },
+    {
+      "kind": "ndl",
+      "identifier": "9784091222718",
+      "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&maximumRecords=5&query=isbn%3D%229784091222718%22+AND+dpid%3Diss-ndl-opac",
+      "sha256": "b516a2a64b66e69b56b2d532e74422ea234be095ea0c8ad1f0b0ff44fa90d090",
+      "bytes": 14069,
+      "fetchedAt": "2026-10-27T06:01:37+00:00"
+    },
+    {
+      "kind": "wikidata",
+      "identifier": "Q113329",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q113329.json",
+      "sha256": "6eaf9b93c4953d5f39d7a8cda9f51cbcf9adf7951c5d6c256674b89697045895",
+      "bytes": 28293,
+      "fetchedAt": "2026-10-27T06:01:39+00:00"
+    },
+    {
+      "kind": "ndl",
+      "identifier": "9784091220813",
+      "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&maximumRecords=5&query=isbn%3D%229784091220813%22+AND+dpid%3Diss-ndl-opac",
+      "sha256": "568ca28967f8d1a311a04d388c9f42fdc0174c7d32b26b54404421c4b228f4a1",
+      "bytes": 15627,
+      "fetchedAt": "2026-10-27T06:01:48+00:00"
+    }
+  ]
+}

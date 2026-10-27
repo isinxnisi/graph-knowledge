@@ -87,11 +87,35 @@
   },
   "requestSha256": "dbbd9ac962a478f5a8f351fcdbd05ab3373bfebe364f8b738b58bffb17d3d104",
   "kind": "collect-review",
-  "phase": "running",
+  "phase": "completed",
   "generation": 5,
   "attempts": 1,
   "workerId": "plunode-wsl",
   "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
   "updatedAt": "2026-10-27T06:12:30+00:00",
-  "message": "Execution gate: interval"
+  "result": {
+    "jobId": "issue-46-dot-aoyama-three-20261027-r0001-0d4c3c14acfa63a5",
+    "collectionUnchanged": false,
+    "reviewUnchanged": false,
+    "transportAttemptsAdded": 0,
+    "reviewDirectory": "/home/isinxnisi/.local/share/plunode-collection-worker-phase-b-20261020/runtime/datasets/manga-collection/workflow-reviews/issue-46-dot-aoyama-three-20261027-r0001-0d4c3c14acfa63a5-review-e5d1aeb47bc8848a",
+    "reviewOnly": true,
+    "formalAcceptance": false,
+    "publicApply": false,
+    "counts": {
+      "entities": 3,
+      "claims": 2,
+      "sources": 2,
+      "citations": 2
+    },
+    "heldClaims": 0
+  },
+  "executionComplete": true,
+  "reviewReference": {
+    "file": "datasets/manga-collection/workflow-reviews/issue-46-dot-aoyama-three-20261027-r0001-0d4c3c14acfa63a5-review-e5d1aeb47bc8848a/review-manifest.json",
+    "sha256": "a1c214cb4271a8014aea807e9ae859255c126c3f261ab6590a96ff3abcf67664"
+  },
+  "decisionDrafts": [
+    "datasets/collection-decision-drafts/issue-46-dot-aoyama-three-20261027-batch-01/a1c214cb4271a8014aea807e9ae859255c126c3f261ab6590a96ff3abcf67664/issue-46-dot-aoyama-three-20261027-batch-01-normal-draft.json"
+  ]
 }

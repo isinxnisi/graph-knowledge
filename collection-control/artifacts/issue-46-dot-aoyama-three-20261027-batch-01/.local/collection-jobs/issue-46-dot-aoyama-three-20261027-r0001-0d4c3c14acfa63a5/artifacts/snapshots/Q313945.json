@@ -1,0 +1,505 @@
+{
+  "id": "Q313945",
+  "lastrevid": 2555630307,
+  "labels": {
+    "lb": {
+      "language": "lb",
+      "value": "Gosho Aoyama"
+    },
+    "zh-hans": {
+      "language": "zh-hans",
+      "value": "青山刚昌"
+    },
+    "zh-hant": {
+      "language": "zh-hant",
+      "value": "青山剛昌"
+    },
+    "zh-hk": {
+      "language": "zh-hk",
+      "value": "青山剛昌"
+    },
+    "zh-cn": {
+      "language": "zh-cn",
+      "value": "青山刚昌"
+    },
+    "zh-sg": {
+      "language": "zh-sg",
+      "value": "青山刚昌"
+    },
+    "zh-tw": {
+      "language": "zh-tw",
+      "value": "青山剛昌"
+    },
+    "eo": {
+      "language": "eo",
+      "value": "Aoyama Gōshō"
+    },
+    "jv": {
+      "language": "jv",
+      "value": "Gōshō Aoyama"
+    },
+    "pl": {
+      "language": "pl",
+      "value": "Gōshō Aoyama"
+    },
+    "fr": {
+      "language": "fr",
+      "value": "Gōshō Aoyama"
+    },
+    "ko": {
+      "language": "ko",
+      "value": "아오야마 고쇼"
+    },
+    "en": {
+      "language": "en",
+      "value": "Gosho Aoyama"
+    },
+    "es": {
+      "language": "es",
+      "value": "Gōshō Aoyama"
+    },
+    "th": {
+      "language": "th",
+      "value": "โกโช อะโอะยะมะ"
+    },
+    "ca": {
+      "language": "ca",
+      "value": "Gosho Aoyama"
+    },
+    "ms": {
+      "language": "ms",
+      "value": "Gosho Aoyama"
+    },
+    "fi": {
+      "language": "fi",
+      "value": "Gōshō Aoyama"
+    },
+    "it": {
+      "language": "it",
+      "value": "Gōshō Aoyama"
+    },
+    "gl": {
+      "language": "gl",
+      "value": "Gosho Aoyama"
+    },
+    "id": {
+      "language": "id",
+      "value": "Gōshō Aoyama"
+    },
+    "de": {
+      "language": "de",
+      "value": "Gosho Aoyama"
+    },
+    "ja": {
+      "language": "ja",
+      "value": "青山剛昌"
+    },
+    "vi": {
+      "language": "vi",
+      "value": "Aoyama Gōshō"
+    },
+    "hr": {
+      "language": "hr",
+      "value": "Gōshō Aoyama"
+    },
+    "tl": {
+      "language": "tl",
+      "value": "Gōshō Aoyama"
+    },
+    "ar": {
+      "language": "ar",
+      "value": "غوشو أوياما"
+    },
+    "nl": {
+      "language": "nl",
+      "value": "Gosho Aoyama"
+    },
+    "zh": {
+      "language": "zh",
+      "value": "靑山剛昌"
+    },
+    "ru": {
+      "language": "ru",
+      "value": "Госё Аояма"
+    },
+    "nb": {
+      "language": "nb",
+      "value": "Gosho Aoyama"
+    },
+    "su": {
+      "language": "su",
+      "value": "Aoyama Gosho"
+    },
+    "ckb": {
+      "language": "ckb",
+      "value": "گۆشۆ ئۆیاما"
+    },
+    "nan": {
+      "language": "nan",
+      "value": "Aoyama Gosho"
+    },
+    "tr": {
+      "language": "tr",
+      "value": "Gōshō Aoyama"
+    },
+    "ku": {
+      "language": "ku",
+      "value": "Gosho Aoyama"
+    },
+    "cs": {
+      "language": "cs",
+      "value": "Góšó Aojama"
+    },
+    "sv": {
+      "language": "sv",
+      "value": "Gōshō Aoyama"
+    },
+    "yue": {
+      "language": "yue",
+      "value": "青山剛昌"
+    },
+    "eu": {
+      "language": "eu",
+      "value": "Gosho Aoyama"
+    },
+    "pt": {
+      "language": "pt",
+      "value": "Gōshō Aoyama"
+    },
+    "sq": {
+      "language": "sq",
+      "value": "Gosho Aoyama"
+    },
+    "pt-br": {
+      "language": "pt-br",
+      "value": "Gōshō Aoyama"
+    },
+    "arz": {
+      "language": "arz",
+      "value": "جوشو اوياما"
+    },
+    "hu": {
+      "language": "hu",
+      "value": "Aojama Gósó"
+    },
+    "fa": {
+      "language": "fa",
+      "value": "گوشو آئویاما"
+    },
+    "ur": {
+      "language": "ur",
+      "value": "گوشو آوایاما"
+    },
+    "ro": {
+      "language": "ro",
+      "value": "Gosho Aoyama"
+    },
+    "uk": {
+      "language": "uk",
+      "value": "Аояма Ґошьо"
+    },
+    "az": {
+      "language": "az",
+      "value": "Qoşo Aoyama"
+    },
+    "ka": {
+      "language": "ka",
+      "value": "გოშო აოიამა"
+    }
+  },
+  "aliases": {
+    "lb": [
+      {
+        "language": "lb",
+        "value": "Aoyama Gōshō"
+      }
+    ],
+    "zh": [
+      {
+        "language": "zh",
+        "value": "青山剛昌"
+      },
+      {
+        "language": "zh",
+        "value": "73"
+      }
+    ],
+    "eo": [
+      {
+        "language": "eo",
+        "value": "Aojama Goŝo"
+      }
+    ],
+    "fr": [
+      {
+        "language": "fr",
+        "value": "Gôshô Aoyama"
+      }
+    ],
+    "es": [
+      {
+        "language": "es",
+        "value": "Goshō Aoyama"
+      }
+    ],
+    "th": [
+      {
+        "language": "th",
+        "value": "อาโอยาม่า โกโช"
+      },
+      {
+        "language": "th",
+        "value": "โกโช อาโอยาม่า"
+      },
+      {
+        "language": "th",
+        "value": "อาโอยามะ โกโช"
+      }
+    ],
+    "ca": [
+      {
+        "language": "ca",
+        "value": "Yoshimasa Aoyama"
+      }
+    ],
+    "it": [
+      {
+        "language": "it",
+        "value": "Yoshimasa Aoyama"
+      }
+    ],
+    "id": [
+      {
+        "language": "id",
+        "value": "Aoyama gosho"
+      }
+    ],
+    "de": [
+      {
+        "language": "de",
+        "value": "Aoyama Gōshō"
+      }
+    ],
+    "ja": [
+      {
+        "language": "ja",
+        "value": "青山カイト"
+      }
+    ],
+    "tl": [
+      {
+        "language": "tl",
+        "value": "Aoyama Yoshimasa"
+      },
+      {
+        "language": "tl",
+        "value": "Aoyama Gōshō"
+      },
+      {
+        "language": "tl",
+        "value": "Aoyama Goushou"
+      },
+      {
+        "language": "tl",
+        "value": "Yoshimasa Aoyama"
+      }
+    ],
+    "ar": [
+      {
+        "language": "ar",
+        "value": "غوشو اوياما"
+      }
+    ],
+    "nl": [
+      {
+        "language": "nl",
+        "value": "Aoyama Gōshō"
+      }
+    ],
+    "ru": [
+      {
+        "language": "ru",
+        "value": "Аояма, Госё"
+      }
+    ],
+    "eu": [
+      {
+        "language": "eu",
+        "value": "Gôshô Aoyama"
+      }
+    ],
+    "en": [
+      {
+        "language": "en",
+        "value": "Gôshô Aoyama"
+      },
+      {
+        "language": "en",
+        "value": "Aoyama Goushou"
+      },
+      {
+        "language": "en",
+        "value": "Gōshō Aoyam"
+      }
+    ],
+    "mul": [
+      {
+        "language": "mul",
+        "value": "Gōshō Aoyama"
+      },
+      {
+        "language": "mul",
+        "value": "Aoyama Gosho"
+      },
+      {
+        "language": "mul",
+        "value": "Gosho Aoyama"
+      },
+      {
+        "language": "mul",
+        "value": "Goushou Aoyama"
+      }
+    ]
+  },
+  "claims": {
+    "P31": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P31",
+          "hash": "ad7d38a03cdd40cdc373de0dc4e7b7fcbccb31d9",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 5,
+              "id": "Q5"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q313945$40705E83-F410-4CED-88AA-7BE16264900A",
+        "rank": "normal",
+        "references": [
+          {
+            "hash": "4ccab9bed68e4c6f79fd0fdc7da4f95e5f0a3f02",
+            "snaks": {
+              "P248": [
+                {
+                  "snaktype": "value",
+                  "property": "P248",
+                  "hash": "def9f19d84b65167a2a17ce38364d264c16127fc",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 19938912,
+                      "id": "Q19938912"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ],
+              "P268": [
+                {
+                  "snaktype": "value",
+                  "property": "P268",
+                  "hash": "2f1b1bef0b9d7ac7650e232db77e6909fb42d4ac",
+                  "datavalue": {
+                    "value": "125678849",
+                    "type": "string"
+                  },
+                  "datatype": "external-id"
+                }
+              ],
+              "P813": [
+                {
+                  "snaktype": "value",
+                  "property": "P813",
+                  "hash": "d6162a1716489623c6e595e448b17f8dca4fb2e8",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2015-10-10T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P248",
+              "P268",
+              "P813"
+            ]
+          },
+          {
+            "hash": "7cf2dcc139526750ff307ebf766e00454680138f",
+            "snaks": {
+              "P248": [
+                {
+                  "snaktype": "value",
+                  "property": "P248",
+                  "hash": "45037a2d1d89deebcdfc5840e9adbaa4b64cebc6",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 50358336,
+                      "id": "Q50358336"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ],
+              "P813": [
+                {
+                  "snaktype": "value",
+                  "property": "P813",
+                  "hash": "7fd1086b52e097ccb40463333a8e55ffecbf5ee1",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2024-04-05T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ],
+              "P950": [
+                {
+                  "snaktype": "value",
+                  "property": "P950",
+                  "hash": "44c9d9c2dda7a0550ca5cac8bc8e105614c3b566",
+                  "datavalue": {
+                    "value": "XX1602118",
+                    "type": "string"
+                  },
+                  "datatype": "external-id"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P248",
+              "P813",
+              "P950"
+            ]
+          }
+        ]
+      }
+    ],
+    "P50": [],
+    "P110": []
+  }
+}

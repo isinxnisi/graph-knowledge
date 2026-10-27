@@ -1,0 +1,343 @@
+{
+  "id": "Q626947",
+  "lastrevid": 2556216323,
+  "labels": {
+    "zh-hans": {
+      "language": "zh-hans",
+      "value": "城市风云儿"
+    },
+    "zh-hant": {
+      "language": "zh-hant",
+      "value": "城市風雲兒"
+    },
+    "zh-hk": {
+      "language": "zh-hk",
+      "value": "YAIBA 鐵刃"
+    },
+    "id": {
+      "language": "id",
+      "value": "Yaiba"
+    },
+    "de": {
+      "language": "de",
+      "value": "Yaiba"
+    },
+    "ja": {
+      "language": "ja",
+      "value": "YAIBA"
+    },
+    "pl": {
+      "language": "pl",
+      "value": "Yaiba – legendarny samuraj"
+    },
+    "vi": {
+      "language": "vi",
+      "value": "Yaiba"
+    },
+    "fr": {
+      "language": "fr",
+      "value": "Yaiba"
+    },
+    "ko": {
+      "language": "ko",
+      "value": "YAIBA"
+    },
+    "es": {
+      "language": "es",
+      "value": "Yaiba"
+    },
+    "en": {
+      "language": "en",
+      "value": "Yaiba"
+    },
+    "tl": {
+      "language": "tl",
+      "value": "Yaiba"
+    },
+    "it": {
+      "language": "it",
+      "value": "Yaiba"
+    },
+    "nl": {
+      "language": "nl",
+      "value": "Yaiba"
+    },
+    "ms": {
+      "language": "ms",
+      "value": "Yaiba"
+    },
+    "zh": {
+      "language": "zh",
+      "value": "城市風雲兒"
+    },
+    "th": {
+      "language": "th",
+      "value": "ไยบะ เจ้าหนูซามูไร"
+    },
+    "pt": {
+      "language": "pt",
+      "value": "Yaiba"
+    },
+    "ar": {
+      "language": "ar",
+      "value": "يايبا"
+    },
+    "tr": {
+      "language": "tr",
+      "value": "Yaiba"
+    },
+    "yue": {
+      "language": "yue",
+      "value": "鐵刃"
+    },
+    "uk": {
+      "language": "uk",
+      "value": "Yaiba"
+    },
+    "lt": {
+      "language": "lt",
+      "value": "Yaiba"
+    },
+    "zh-sg": {
+      "language": "zh-sg",
+      "value": "剑勇传说"
+    },
+    "zh-tw": {
+      "language": "zh-tw",
+      "value": "城市風雲兒"
+    },
+    "sr": {
+      "language": "sr",
+      "value": "Yaiba"
+    }
+  },
+  "aliases": {
+    "zh": [
+      {
+        "language": "zh",
+        "value": "YAIBA 鐵刃"
+      },
+      {
+        "language": "zh",
+        "value": "九龍珠"
+      },
+      {
+        "language": "zh",
+        "value": "反斗剑神"
+      },
+      {
+        "language": "zh",
+        "value": "九龙珠"
+      },
+      {
+        "language": "zh",
+        "value": "劍勇傳說YAIBA"
+      },
+      {
+        "language": "zh",
+        "value": "YAIBA"
+      },
+      {
+        "language": "zh",
+        "value": "剣勇伝説YAIBA"
+      }
+    ],
+    "de": [
+      {
+        "language": "de",
+        "value": "Kenyū Densetsu Yaiba"
+      },
+      {
+        "language": "de",
+        "value": "Kenyuu Densetsu Yaiba"
+      }
+    ],
+    "ja": [
+      {
+        "language": "ja",
+        "value": "Y∀IBA"
+      }
+    ],
+    "ko": [
+      {
+        "language": "ko",
+        "value": "검용전설 YAIBA"
+      },
+      {
+        "language": "ko",
+        "value": "야이바"
+      },
+      {
+        "language": "ko",
+        "value": "검용전설 야이바"
+      }
+    ],
+    "es": [
+      {
+        "language": "es",
+        "value": "Kenyu Densetsu Yaiba"
+      },
+      {
+        "language": "es",
+        "value": "Kenyuu Densetsu Yaiba"
+      },
+      {
+        "language": "es",
+        "value": "Kenyū Densetsu Yaiba"
+      }
+    ],
+    "zh-hant": [
+      {
+        "language": "zh-hant",
+        "value": "真·侍傳 YAIBA"
+      },
+      {
+        "language": "zh-hant",
+        "value": "真･武士傳YAIBA"
+      }
+    ],
+    "zh-tw": [
+      {
+        "language": "zh-tw",
+        "value": "九龍珠"
+      },
+      {
+        "language": "zh-tw",
+        "value": "真・武士傳YAIBA"
+      },
+      {
+        "language": "zh-tw",
+        "value": "城市小泰山"
+      }
+    ],
+    "yue": [
+      {
+        "language": "yue",
+        "value": "反斗劍神"
+      }
+    ],
+    "zh-hk": [
+      {
+        "language": "zh-hk",
+        "value": "反斗劍神"
+      }
+    ]
+  },
+  "claims": {
+    "P31": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P31",
+          "hash": "549c072d6be8a6a43f999d1d0e82640b16c4260e",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 21198342,
+              "id": "Q21198342"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q626947$94E6F45C-99FB-4CD2-84FB-4B5F0646D24D",
+        "rank": "normal"
+      }
+    ],
+    "P50": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P50",
+          "hash": "9440c1d62db91d9c0ef97bfa8e8091d65ecc078f",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 313945,
+              "id": "Q313945"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q626947$02CE9FD0-0925-43CA-B5BD-DECD4F0F3431",
+        "rank": "normal",
+        "references": [
+          {
+            "hash": "d4bd87b862b12d99d26e86472d44f26858dee639",
+            "snaks": {
+              "P143": [
+                {
+                  "snaktype": "value",
+                  "property": "P143",
+                  "hash": "f30cbd35620c4ea6d0633aaf0210a8916130469b",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 8447,
+                      "id": "Q8447"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P143"
+            ]
+          }
+        ]
+      }
+    ],
+    "P110": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P110",
+          "hash": "822a8645369c00eb467b769c05f3370ee8da307c",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 313945,
+              "id": "Q313945"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q626947$281145FE-DE6E-47F4-A7B0-D88BF03A8D80",
+        "rank": "normal",
+        "references": [
+          {
+            "hash": "d4bd87b862b12d99d26e86472d44f26858dee639",
+            "snaks": {
+              "P143": [
+                {
+                  "snaktype": "value",
+                  "property": "P143",
+                  "hash": "f30cbd35620c4ea6d0633aaf0210a8916130469b",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 8447,
+                      "id": "Q8447"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P143"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

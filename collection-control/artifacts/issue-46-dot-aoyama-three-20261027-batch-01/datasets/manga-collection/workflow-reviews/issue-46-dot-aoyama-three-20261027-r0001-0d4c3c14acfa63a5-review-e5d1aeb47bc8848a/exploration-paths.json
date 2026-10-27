@@ -1,0 +1,52 @@
+[
+  {
+    "state": "collection-candidate",
+    "observation": "verified-records-only-not-a-live-exploration-test",
+    "edges": [
+      {
+        "claimId": "6f399d03-39b1-4597-a6f7-5ea502d6f0de",
+        "subjectId": "ced2e2f2-b82e-41b3-a3cb-c5a36214d6b5",
+        "objectId": "a580b967-9c99-483e-94ef-fb5834e1f520",
+        "person": "青山剛昌",
+        "work": "まじっく快斗",
+        "roleId": "AUTHORSHIP",
+        "scope": {
+          "kind": "publication",
+          "isbn13": "9784091220813",
+          "volumeLabel": "第1巻（NDL巻次 1）",
+          "editionLabel": null,
+          "language": "ja"
+        },
+        "state": "collection-candidate",
+        "citationIds": [
+          "33e9cad2-025a-42a2-9af5-379eacdd9e24"
+        ],
+        "sourceIds": [
+          "f623c3d4-a42e-4f7f-959f-31eb529fb23d"
+        ]
+      },
+      {
+        "claimId": "93e90c81-89b2-4415-aa66-47880b088ea9",
+        "subjectId": "ced2e2f2-b82e-41b3-a3cb-c5a36214d6b5",
+        "objectId": "7f7081d8-364a-4b56-b3e1-ceea35edb5a2",
+        "person": "青山剛昌",
+        "work": "YAIBA",
+        "roleId": "AUTHORSHIP",
+        "scope": {
+          "kind": "publication",
+          "isbn13": "9784091222718",
+          "volumeLabel": "第1巻（NDL巻次 1）",
+          "editionLabel": null,
+          "language": "ja"
+        },
+        "state": "collection-candidate",
+        "citationIds": [
+          "7477d6a0-9af0-4b01-be7d-27fe83d955ca"
+        ],
+        "sourceIds": [
+          "10c873f0-6bca-48a6-b1fa-bae9023f0eb6"
+        ]
+      }
+    ]
+  }
+]

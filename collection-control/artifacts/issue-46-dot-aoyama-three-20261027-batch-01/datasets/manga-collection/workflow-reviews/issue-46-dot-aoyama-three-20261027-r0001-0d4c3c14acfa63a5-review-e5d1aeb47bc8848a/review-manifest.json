@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "reviewId": "issue-46-dot-aoyama-three-20261027-r0001-0d4c3c14acfa63a5-review-e5d1aeb47bc8848a",
+  "inputSha256": "e5d1aeb47bc8848a4e198008dc0f0eda3ea69dc664b870a97de70bcb16fb5652",
+  "artifacts": {
+    "context.json": "7bc5e9ecb7ac31ec40ca51ca5b13b197e5a4ad764f5701e89e9d95459ad2aa1c",
+    "review.json": "ca6ad6d1166b2bd87e2e79812ff67a53f230ad7429c2445423910294d7cca2ba",
+    "proposed-records.json": "0d0434760e18ec3726253d8b1f2a1e6c8e98eeda0f557d02d18dddf29d941aa0",
+    "identity-only-records.json": "1fc314e4a47717bce195b39fe7f1e66bd31f6af892fca4a9420a653eab927a37",
+    "exploration-paths.json": "83a5a054d555b27ae98c974c819774b860f9a8b6acca819a276bad8a1d145ebe",
+    "decision-request.json": "976a0c89c31740ce8d354f9d01a7e760a12175ecc0740b234d0b5e7ebf288010",
+    "README.md": "0977cb8e4216cf17383594520617b36a090f2d5bd65a1f1b5e935ed18077d4c0"
+  },
+  "authority": "pending-human-review-only"
+}
