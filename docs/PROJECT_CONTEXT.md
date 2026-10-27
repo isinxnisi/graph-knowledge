@@ -1,3 +1,5 @@
+2026-10-28、映画Role operatorのWSL／VPS固定pin更新を運営者が完了。Codexが既存Issue #33経路で同じ映画2 Claim候補をarm・通常Worker ACK・root追加のみ実plan・delivery登録まで実施し、個別公開署名待ち。Webは旧8 Role版のため、正式10 Role対応Web切替と固定request署名を[一つの運営者枠](research/film-release-20261027/PUBLICATION_APPROVAL_REVIEW.md)へ準備。本番KG／Webの変更・署名は未実施。Worker設定・収集承認は保持し、公開協調のpause-newだけをACK。未収録79記録・94 Entity候補の拡充は別作業。
+
 2026-10-27、固定票6bdc6af8…への運営者の正式承認に基づき、映画2 Claim＋依存3 Entity／2 Source／2 Citationを既存accept-filmで正式受入。receipt 3ac7b6be…、旧10 receipt不変、release validate／追加のみoffline plan成功。固定公開候補を準備したが、VPS image pin更新・root live plan・個別公開署名・本番applyは未実施。[現在地・次の運営者操作](research/film-release-20261027/FORMAL_ACCEPTANCE_STATUS.md)。Astra全体を収録済みとせず、未受入79記録・94 Entity候補を[後続拡充](research/film-release-20261027/ASTRA_RESEARCH_BACKLOG.md)へ引き継ぐ。漫画Worker・control・会員DB・本番KGは保持。
 
 2026-10-27、運営者が映画DIRECTING／ACTINGの固定hashとscope方針を正式承認。既存8 Role・baseline・過去承認を保持して正式catalogへ2件を追加した。Claim受入・本番公開は別判断で未実施。[正式Role判断](research/film-release-20261027/role-decision-approved.json)／[出所](research/film-release-20261027/role-approval-provenance.json)。

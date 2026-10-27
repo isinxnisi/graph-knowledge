@@ -4,7 +4,7 @@
 
 ## 現在の進行管理（2026-10-27更新）
 
-[正式受入完了・固定公開候補・次の運営者操作](../research/film-release-20261027/FORMAL_ACCEPTANCE_STATUS.md)を現在地とする。以下の11工程は契約全体であり、運営者への一括実行依頼ではない。backup取得・Role登録・固定Claim判断・正式受入・release準備・offline候補固定は完了。次は準備済みWSL／VPS operator image pin更新（sudo）だけを依頼する。root live plan登録後の個別本番公開署名は別の未完了境界。
+[固定request・Web切替・個別本番公開署名の次操作](../research/film-release-20261027/PUBLICATION_APPROVAL_REVIEW.md)を現在地とする。以下の11工程は契約全体であり、運営者への一括実行依頼ではない。backup取得・Role登録・固定Claim判断・正式受入・release準備・offline候補固定は完了。WSL／VPS operator pin更新・root実plan・既存delivery登録も完了。次はWebだけの切替と個別公開署名を一つの運営者枠へまとめて依頼する。署名・本番applyは未実施。Workerは公開協調のpause-newをACKし、署名閉鎖後の条件付きresumeまで保持する。
 
 受入範囲は2 Claimと依存3 Entity／2 Source／2 Citation。Astraの81記録・97 Entity候補全体の収録ではなく、未受入79記録・94 Entity候補を[後続拡充へ引継ぎ](../research/film-release-20261027/ASTRA_RESEARCH_BACKLOG.md)。
 

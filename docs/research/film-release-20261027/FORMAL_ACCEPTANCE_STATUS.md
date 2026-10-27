@@ -1,4 +1,6 @@
-# 映画2 Claimの正式受入完了と次の運営者操作
+# 映画2 Claimの正式受入完了と進行履歴
+
+2026-10-28の現在地：operator pin更新・通常Worker ACK・root実plan・既存delivery登録は完了。次の人間操作は[固定requestに対するWeb切替・個別本番公開署名](PUBLICATION_APPROVAL_REVIEW.md)。以下のpin更新／ロック競合時のコマンドは実行済み履歴で、再実行しない。
 
 2026-10-27。固定受入票 `6bdc6af8165719975b57bb132c0188a18f18712fecf0cf1a93945b794a3747b6` への運営者の実発言（22:17:32 JST）を記録し、既存accept-filmの共通hold・worker.lock・正常非pause・固定hash・全receipt検査を通して正式受入した。本番公開署名・applyは含まない。
 
@@ -15,7 +17,7 @@
 
 成功試行ではTMPDIRを既存preparation home内へ限定し、既存fixtureV4Schemaでキー順だけを直列化した。全JSON値の完全一致を要求し、正式Role入りの実operator imageでvalidate／追加のみoffline planを再確認した。gateのchecksum・承認・read-only mount・ネットワーク分離を維持した。[後続Issue #53](https://github.com/isinxnisi/graph-knowledge/issues/53)へoperator継承・一時mount・直列化の課題を追記済み。
 
-## 次の運営者操作：固定operator image pin更新
+## 固定operator image pin更新（完了履歴）
 
 既存の保護されたroot trust／delivery設定を変更するため、WSLとVPSのsudoは運営者が実行する。[既存gate設置契約](../../runbooks/PUBLICATION_GATE_INSTALLATION.md)に従う。**公開署名・apply・Web切替はしない**。
 

@@ -1,0 +1,16 @@
+{
+  "webConfigId": "sha256:de7b21f30277226965de2fdc7200ba0088fd00f8c9d731958eb52355c92f72ab",
+  "build": "oTXBAgU034CoviTmmAHQ9",
+  "dataset": {
+    "dataset": "public-kg",
+    "revision": "b3ebeba8-961b-418f-b4c6-e3bf5142896b"
+  },
+  "privateGraph": true,
+  "savedFormallyAcceptedRelease": "/home/isinxnisi/.local/share/plunode-collection-worker-phase-b-20261020/runtime/datasets/public-kg/releases/film-initial-20261027",
+  "privateBootstrapManifestOnly": true,
+  "browserTestsPassed": 1,
+  "realGoogleLoginTested": false,
+  "memberDatabaseConnected": "isolated PostgreSQL with real migrations 000-010",
+  "memberConfiguration": "isolated dummy Google settings for anonymous boundary only",
+  "productionChanged": false
+}

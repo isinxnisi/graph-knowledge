@@ -1,0 +1,86 @@
+{
+  "schemaVersion": 1,
+  "purpose": "one-time-film-web-update-followed-by-human-protected-publication-approval",
+  "sourceCommit": "4eee46a0ab16f9828de41b5c69147425b0623004",
+  "build": "oTXBAgU034CoviTmmAHQ9",
+  "image": {
+    "configId": "sha256:de7b21f30277226965de2fdc7200ba0088fd00f8c9d731958eb52355c92f72ab",
+    "manifestId": "sha256:afaa4a8203e757f5a604c08653a83f4944856717d1cafc45af3be8c1d000e65d",
+    "archiveSha256": "0cbecda5f351aae60f08c9b26fb8b893208b6f8a0e745662e01e971096520497",
+    "archiveBytes": 120135028,
+    "sourceCommit": "4eee46a0ab16f9828de41b5c69147425b0623004"
+  },
+  "initialAiSha256": "5e547936530f188ece4b6412841d67efbcbbd070ae7124b3b9097581b68ee3db",
+  "migrations": {
+    "000-auth.sql": "2bf2c433610d77c0574de11c1646dc8777e0ca6903eeded337bb543bdeba88d3",
+    "001-capsules.sql": "de7f0d9c5890d568e61c022d5ac8b03c36480be20f3073f36537f1c06083ae23",
+    "002-capsule-sharing.sql": "3d3909b5a4cdf41f260153038d539eb547fa76ffbc9b2111f5f55bf83805b9b7",
+    "003-capsule-discussion.sql": "f2554048e32a3a3f58ab6dc0680daeeedd8ef6aca7fc3d561d9021b227997353",
+    "004-account-operations.sql": "4519d8dd507d8d337cf012cebde0ad0114918d09f2de2fcdd18e8db5b2a5ca8b",
+    "005-communities.sql": "1457d0e2ab88d8eaefc589a4b91500e8cef71a01b344624c1d8b8f971d1b0540",
+    "006-community-continuity.sql": "70e7f05554e5960772c28c3be4ce2ea86b8ba0e861fc152d7574994f62657ac1",
+    "007-community-safety.sql": "b0a77195770598da2a5fc9435cc429ca018d46534ce6b1eba63f699e8034087f",
+    "008-site-operations.sql": "709f74b36a1b3f9c763335b58ab12d9b42d554a163176d5385ec91ffa8b1d799",
+    "009-public-profiles.sql": "9a77e02ff90b3c84f2770903915179c344b0a9f9cc49b3e888b2be69cae76663",
+    "010-account-initial-experience.sql": "699b0a30ef6b6dfc53e7382ec62e8268aee4efe9dcf5590bd7bfff941812254a"
+  },
+  "publicationRequest": {
+    "artifactSha256": "055bcacb42dfe5b7c3b32cb17fece1b8748a1900fb5c7618c4faa61ffa9894d7",
+    "baseRelease": "manga-issue-34-obata-drawing-20261023",
+    "baseRevision": "b74a4b00-9454-412f-af5d-1317713a543c",
+    "environment": "production",
+    "operatorDigest": "sha256:7042781b105067ce3adea0c59bccfb4c8326f84c0ca6aa5f1b8c26e6cd3d5cef",
+    "planSha256": "16dc070797315903397389d071b4a118acdbbb5a1cdd5dd0a0f6677503d95ebc",
+    "purpose": "public-kg-publication",
+    "receiptSetSha256": "614a0f3ccff3854280012767f580a99427c94f72bd846a920e4dc1ed91d57ffd",
+    "release": "publication-film-initial-20261027",
+    "schemaVersion": 1
+  },
+  "receiptReferences": [
+    {
+      "file": "datasets/manga-collection/accepted-film-initial-20261027/acceptance.json",
+      "sha256": "3ac7b6be38e24aa9dfd7bf67233b7c5e80822c4313ca9b58d34408611cdc83c3"
+    },
+    {
+      "file": "datasets/manga-collection/accepted-issue-25-utc-recovery-01-normal/acceptance.json",
+      "sha256": "d271f32767dab030bd26ddcef669f48237cc303a8c605c58df047df8aea71fb6"
+    },
+    {
+      "file": "datasets/manga-collection/accepted-issue-25-utc-recovery-03-normal/acceptance.json",
+      "sha256": "2cd8cb76b64be0d9d19fb3da8ceb4d3e185ca086bba0e90917a7b24a1da0bedf"
+    },
+    {
+      "file": "datasets/manga-collection/accepted-issue-25-utc-recovery-04-normal/acceptance.json",
+      "sha256": "052a7d1ef334074ce2b94837a7d0dfc803bde9526abc9d8e8e7f058b36acdf62"
+    },
+    {
+      "file": "datasets/manga-collection/accepted-issue-25-utc-recovery-06-normal/acceptance.json",
+      "sha256": "4e94de08943725549f4e01be9e6b1b09f2f9d88c5ca2dfaa9aa5b7c2395930f4"
+    },
+    {
+      "file": "datasets/manga-collection/accepted-issue-25-utc-recovery-07-normal/acceptance.json",
+      "sha256": "b6a521d5fffdd6cafc3a3df9f8f963c571520812053aad4f259eea3e22ebee0b"
+    },
+    {
+      "file": "datasets/manga-collection/accepted-issue-25-utc-recovery-08-normal/acceptance.json",
+      "sha256": "5b3fdc3aa705c5e73f5ba11b40052be700d71069b0a25a12943cb189a2ee1109"
+    },
+    {
+      "file": "datasets/manga-collection/accepted-issue-34-obata-drawing-20261021/acceptance.json",
+      "sha256": "7f62ec0f27d4fedfbb09066893d4ac94d88eaf016c2fff3959a001ea9f228efe"
+    },
+    {
+      "file": "datasets/manga-collection/accepted-original-story-r0002-20261017/acceptance.json",
+      "sha256": "9fdb9933c0d78795769bf27eebb7ecb4ec7cccc37f6ee6827e55dd119e727801"
+    },
+    {
+      "file": "datasets/manga-collection/accepted-r0002-20261017/acceptance.json",
+      "sha256": "9b28562b9846970cd30b9261d4659d505e9df06e014d2809d6517aa39836f567"
+    },
+    {
+      "file": "datasets/manga-collection/accepted-r0003-20261017/acceptance.json",
+      "sha256": "7d53abbd472fcbf0cba57fa5202d6fd4f8eb12c9ebda34bd1e7a8badca701831"
+    }
+  ],
+  "publicationApproved": false
+}

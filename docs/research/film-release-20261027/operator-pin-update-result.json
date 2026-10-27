@@ -1,0 +1,35 @@
+{
+  "recordedAt": "2026-10-27T14:52:12.176180+00:00",
+  "evidence": "Human operator pasted the actual two result JSON objects; Codex separately rechecked the WSL config raw SHA and completed root status via fixed verified channel.",
+  "wsl": {
+    "target": "wsl",
+    "sourceCommitUnchanged": "7392d8e343a11644b1047364c71653779ad0c93c",
+    "nodeImage": "sha256:2bf646a22e867e5aa5fce5a155db45c337c4134ad6c0f337b65617c5799912e9",
+    "newPreparationEnabled": false,
+    "deliveryEnabled": true,
+    "configSha256": "5dae7bf518d24beda3b38c937dc65fdd417fde0e4ead3de45baab48f58c1e294",
+    "workerChanged": false,
+    "signed": false,
+    "publicApply": false
+  },
+  "vps": {
+    "target": "vps",
+    "operatorDigest": "sha256:7042781b105067ce3adea0c59bccfb4c8326f84c0ca6aa5f1b8c26e6cd3d5cef",
+    "programManifestSha256": "0e92dd6f187265577d2a27780f91db50dcca2047e025aa8c3d38b219780722c9",
+    "configSha256": "c15a21f30206bd741658a0ef190ff3d80f9918c21c5f928264cc60cbf7284946",
+    "revision": "b74a4b00-9454-412f-af5d-1317713a543c",
+    "graphDigest": "509b460f9fc56e414677d5cf4f1a25634ab48171810ac27413461db2914f3da4",
+    "counts": {
+      "entities": 2175,
+      "claims": 1895,
+      "sources": 1795,
+      "citations": 1932
+    },
+    "protectedTrustAndJournalsUnchanged": true,
+    "gateCodeChanged": false,
+    "signed": false,
+    "publicApply": false
+  },
+  "publicApply": false,
+  "productionSigned": false
+}

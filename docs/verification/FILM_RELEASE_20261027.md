@@ -1,3 +1,21 @@
+# 2026-10-28：operator更新・root実plan・個別署名待ち
+
+運営者がWSL／VPSの固定operator pin更新を完了。WSL設定SHA5dae7bf5…、VPS program manifest 0e92dd6f…、config c15a21f3…、operator7042781b…。新imageで読取したKGは従来のb74a4b00…／graph509b460f…、2175 Entity／1895 Claimを保持。[実操作出力と独立再照合](../research/film-release-20261027/operator-pin-update-result.json)。
+
+Codexが既存source7392d8e…の固定経路で同nonce6b240b18…を転送・arm、pause-new revision5・通常Worker ACK、root image／validate／実backup／追加のみplan、既存delivery登録まで実行した。最初のpeerは通常Worker tickのlockでVPS plan開始前に停止し、自然解放後に同nonceで成功。Worker設定と収集承認・元10 receiptの65ファイル不変。activeAttemptなし。現在は公開協調のpause-newを保持し、個別本番公開署名待ち。
+
+- [実root request](../research/film-release-20261027/publication-live/live-request.json)のplan SHAは16dc0707…で、旧offline1c8075dd…を転用していない。追加12 node（3 Entity／2 Claim／2 Source／2 Citation／3外部ID）・11 relationship、既存更新0のcanonical投影hashが実requestと一致。root statusはawaiting-publication-approval／exclusion=open。個別approval fileなし、未予約・未apply。
+- [次の運営者枠と固定hash](../research/film-release-20261027/PUBLICATION_APPROVAL_REVIEW.md)はWebだけの切替→既存preparation再有効化→既存保護approverでのrelease確認入力・個別署名。新しい公開自動化・署名機構やgate／Worker／SSH／sudoersの変更を開発していない。既存program／鍵／個別署名／配送／復旧を再利用する、一度限りの運営者資材。
+- 本番Webの旧source767020cは8 Roleのみで、KG公開前にWeb更新が必要。正式10 Role入り実Web image de7b21f3…／VPS manifest afaa4a82…／build oTXBAgU034CoviTmmAHQ9を準備。Docker入力は現mainと4eee46a0…でbytes一致。初期AI artifact5e547936…を維持。
+- [実Web imageの隔離ブラウザ1件](../research/film-release-20261027/web-image-private-test.json)成功：正式受入fixtureを独立KGへ置き、映画ACTING→DIRECTING検索・AFI根拠・Graph・保存復元・逆順不一致・試験表示なし。空の試験KGへは専用bootstrap manifestだけを作り、formal fixture本文を変更していない。独立PGへ000〜010を適用した匿名境界を確認。Google設定は試験用で、実ログインは検証していない。private bootstrap／JSON newline／未接続PGによるセットアップ失敗は解消後の成功だけを数え、全試験container／networkを撤去。
+- Web切替scope保持・旧Web復旧・途中stop失敗・未対応Role拒否・prep flagだけの復帰など13件と、既存一度限りpin更新16件の計29テスト成功。会員指紋SQLは既存betaで読取のみ検証。これは本番sudo Web切替の成功記録ではない。
+- [最新HTTPS beta回帰1件](../research/film-release-20261027/publication-beta-check/results.json)成功：PLUTO／条件検索／Google・会員匿名境界／コミュニティ／AIラボ／英語ヘッダ。共通映画bannerなし。3200／beta build vBqJY67wdqijTKKY-EMJLと旧trialを維持し、実行物の変更がないため再buildしない。
+- 固定image 120135028 bytesと運営者資材をWSL private／VPS develop stagingへ配置し、全SHA一致。本番Web切替・個別署名・KG applyは未実施。源資料81記録・97 Entity候補全体の収録は完了しておらず、未受入79記録・94 Entity候補は既存後続台帳を維持する。
+
+[機械検証結果](../research/film-release-20261027/publication-readiness-verification.json)。以下は先行段階の履歴。
+
+---
+
 2026-10-27追記：最初の運営者sudo操作は、別作業の共通holdによりWSL設定更新前のBlockingIOErrorで停止。delivery設定の元SHA一致・VPS段階未実行を確認し、他作業の正常終了・解放を待った。作成済みroot資材のSHAを再検査する --resume-wsl-staged を追加。固定rootプログラム・image・manifest・bundle SHAは維持。未変更設定と更新前backup／resultなしを条件に、更新開始前のロック競合だけ最大90秒待つ。その他の失敗・更新開始後は再試行しない。隔離安全テスト16件成功。[再開コマンドと成功時確認](../research/film-release-20261027/FORMAL_ACCEPTANCE_STATUS.md)／[実測](../research/film-release-20261027/operator-lock-resume-verification.json)。本番署名・apply・Web／DB変更なし。
 
 # 2026-10-27：映画2 Claim正式受入完了・公開候補固定
