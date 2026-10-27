@@ -96,6 +96,15 @@ assert a==b, 'Unexpected configuration change'
 PY
 "${dc[@]}" up -d --no-deps --pull never --wait --wait-timeout 180 web
 "${dc[@]}" exec -T web node scripts/production-readiness.mjs
+# Exercise the new read path before accepting the deployment. A cold-query
+# timeout is a failed rollout too; do not silently relax the DB timeout.
+curl --fail --silent --max-time 20 http://127.0.0.1:3200/api/entities/2b7c6289-d050-4dc0-93e3-9307681253cc/neighbors > "$receipt/neighbors.json"
+python3 - "$receipt/neighbors.json" <<'PY'
+import json,sys
+p=json.load(open(sys.argv[1]))
+assert p['ranking']['mode']=='bounded' and p['ranking']['candidateLimit']==200 and p['ranking']['connectionLimit']==50
+assert p['claims'] and len({c['id'] for c in p['claims']})==len(p['claims'])
+PY
 curl --fail --silent http://127.0.0.1:3200/api/dataset > "$receipt/dataset-after.json"
 new_build=$("${dc[@]}" exec -T web cat .next-public/BUILD_ID)
 python3 - "$receipt" "$new_build" <<'PY'

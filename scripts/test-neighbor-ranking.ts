@@ -4,7 +4,7 @@ import neo4j from "neo4j-driver";
 
 // Own disposable DB, allocated port: never reuse the running beta/trial DBs.
 const name = `graph-neighbor-ranking-test-${process.pid}`, password = randomBytes(18).toString("hex");
-if (process.argv[2] && process.argv[2] !== "--compatibility") throw Error("Unknown test selection");
+if (process.argv[2] && !["--compatibility", "--continuation"].includes(process.argv[2])) throw Error("Unknown test selection");
 let started = false;
 try {
   const db = spawnSync("docker", ["run", "--rm", "-d", "--name", name, "--memory", "1536m", "-p", "127.0.0.1::7687",
@@ -20,7 +20,7 @@ try {
     for (let n = 0; n < 150; n++) { try { await driver.verifyConnectivity(); ready = true; break; } catch { await new Promise(r => setTimeout(r, 1000)); } }
     if (!ready) throw Error("Isolated DB startup failed");
   } finally { await driver.close(); }
-  const child = spawn(process.execPath, ["node_modules/vitest/vitest.mjs", "run", "tests/neighbor-ranking.integration.test.ts", "--no-file-parallelism", ...(process.argv[2] ? ["-t", "保存互換"] : [])], {
+  const child = spawn(process.execPath, ["node_modules/vitest/vitest.mjs", "run", "tests/neighbor-ranking.integration.test.ts", "--no-file-parallelism", ...(process.argv[2] ? ["-t", process.argv[2] === "--continuation" ? "復元から継続" : "保存互換"] : [])], {
     stdio: "inherit", env: { ...process.env, GRAPH_DATASET: "public-kg", RANKING_TEST_URI: uri, RANKING_TEST_PASSWORD: password, RANKING_TEST_CONTAINER: name },
   });
   process.exitCode = await new Promise<number>(r => child.on("exit", code => r(code ?? 1)));

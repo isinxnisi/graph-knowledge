@@ -109,3 +109,20 @@ it("保存互換: 初回から従来順を指定し、新cursorとの混在と�
   let hits = 0; const walk = (p: typeof result.summary.profile) => { if (p) { hits += p.dbHits; p.children?.forEach(walk); } }; walk(result.summary.profile);
   console.log(JSON.stringify({ profile: "scores-200", dbHits: hits, rows: result.records.length }));
 }, 60000);
+
+it("復元から継続: legacy形式の初回と同条件relationの次ページを接続する", async () => {
+  const all: RelationCondition = { version: 1, type: "adjacent", traversal: "either", polarity: "all-records", predicates: null, contributionRoles: null, organizationPositions: null, eventRoles: null };
+  const started = performance.now();
+  const first = await getNeighbors(id(1), 20, null).catch(async error => {
+    // Fresh DB query compilation can exceed the unchanged 10s transaction
+    // budget. Record it explicitly and exercise the existing user retry path.
+    if (!String(error.code).includes("TransactionTimedOut")) throw error;
+    console.log(JSON.stringify({ coldTimedOut: true, elapsedMs: performance.now() - started, code: error.code }));
+    return getNeighbors(id(1), 20, null);
+  });
+  const next = await getNeighbors(id(1), 20, first.page.nextCursor, null, null, null, null, "ranking-r1", all);
+  expect(next.claims).toHaveLength(20);
+  expect(new Set([...first.claims, ...next.claims].map(c => c.id)).size).toBe(40);
+  expect((await getNeighbors(id(1), 20, first.page.nextCursor)).claims).toEqual(next.claims);
+  await expect(getNeighbors(id(1), 20, first.page.nextCursor, null, null, null, null, "ranking-r1", { ...all, polarity: "affirmed" })).rejects.toMatchObject({ status: 400 });
+}, 60000);

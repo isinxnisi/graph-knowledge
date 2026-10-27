@@ -11,7 +11,6 @@ import type { EventRoleFilter, ContributionRoleFilter, OrganizationPositionFilte
 import { readPublicRevision } from "./public-revision";
 import { encodeNeighborCursor, decodeNeighborCursor, encodeRelationNeighborCursor, decodeRelationNeighborCursor } from "./neighbor-cursor";
 import { relationAcceptsClaim, relationConditionKey, type RelationCondition } from "../domain/relation-conditions";
-import { explorationKey } from "../domain/exploration";
 import { neighborRankingConfig, isRankedCursor, decodeRankedCursor, encodeRankedCursor, rankedNeighbors } from "./neighbor-ranking";
 import { ApiError } from "./http";
 import { readTransaction } from "./read-db";
@@ -46,7 +45,9 @@ export function getNeighbors(id: string, limit: number, after: string | null, pr
     const rankedCursor = isRankedCursor(after);
     if (rankedCursor && (!config.enabled || order === "id")) throw new ApiError(409, "DATASET_CHANGED", "表示順が変わりました。取得し直してください。");
     const ranked = !!revision && config.enabled && order !== "id" && (!after || rankedCursor);
-    const scope = { center: id, condition: relation ? relationConditionKey(relation) : explorationKey(predicates, contributionRoles, organizationPositions, eventRoles), revision: revision ?? "", candidates: config.candidates, connections: config.connections };
+    // Saved restoration can use legacy query parameters before the live client
+    // continues with an explicit relation. Bind equal conditions identically.
+    const scope = { center: id, condition: relationConditionKey(relation ?? { version: 1, type: "adjacent", traversal: "either", polarity: "all-records", predicates, contributionRoles, organizationPositions, eventRoles }), revision: revision ?? "", candidates: config.candidates, connections: config.connections };
     const position = ranked && after ? decodeRankedCursor(after, scope) : null;
     const queryAfter = ranked ? null : relation ? decodeRelationNeighborCursor(after, id, relation, datasetMode(process.env.GRAPH_DATASET), revision) : revision ? decodeNeighborCursor(after, id, predicates, contributionRoles, "public-kg", organizationPositions, eventRoles, revision) : after;
     const centerResult = await tx.run(ENTITY_DETAIL, { id });
