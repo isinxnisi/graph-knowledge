@@ -26,30 +26,25 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-10-27T07:17:39.064619+00:00",
-  "phase": "running",
+  "nextStartAt": "2026-10-27T06:24:41.666997+00:00",
+  "phase": "interval",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
     "reason": "interval",
-    "eligibleAt": "2026-10-27T07:17:39.064619+00:00",
+    "eligibleAt": "2026-10-27T06:24:41.666997+00:00",
     "windowEndAt": "2026-10-27T09:00:00+00:00"
   },
-  "activeAttempt": {
-    "requestId": "issue-46-dot-aoyama-three-20261027-batch-01",
-    "startedAt": "2026-10-27T06:12:39.064621+00:00",
-    "limitAt": "2026-10-27T07:07:39.064619+00:00"
-  },
+  "activeAttempt": null,
   "lastAttempt": {
-    "requestId": "issue-46-dot-aoyama-three-20261027",
-    "endedAt": "2026-10-27T06:02:19.214916+00:00"
+    "requestId": "issue-46-dot-aoyama-three-20261027-batch-01",
+    "endedAt": "2026-10-27T06:14:41.667001+00:00"
   },
   "controlError": null,
   "requestsByPhase": {
     "blocked": 12,
-    "completed": 18,
-    "waiting-control": 1,
-    "running": 1
+    "completed": 19,
+    "waiting-control": 1
   },
   "issueIntake": {
     "collection-control/issue-sources/25.json": {
@@ -116,5 +111,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-10-27T06:13:26.048801+00:00"
+  "checkedAt": "2026-10-27T06:14:43.318666+00:00"
 }
