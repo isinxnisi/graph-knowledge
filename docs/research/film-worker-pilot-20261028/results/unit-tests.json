@@ -1,0 +1,28 @@
+{
+  "checks": [
+    {
+      "test": "test_film_manifest.py",
+      "exitCode": 0,
+      "elapsedSeconds": 4.265,
+      "output": "test_all_selected_held_deferred_and_published_conserved (test_film_manifest.FilmManifestTests) ... ok\ntest_altered_output_does_not_become_a_review_by_rehashing (test_film_manifest.FilmManifestTests) ... ok\ntest_changed_evidence_bytes_and_rehashed_wrong_person_are_rejected (test_film_manifest.FilmManifestTests) ... ok\ntest_existing_acceptance_core_requires_explicit_mapping_judgment (test_film_manifest.FilmManifestTests) ... ok\ntest_held_collection_cannot_be_silently_removed (test_film_manifest.FilmManifestTests) ... ok\ntest_maximum_and_arbitrary_role_expansion_rejected (test_film_manifest.FilmManifestTests) ... ok\ntest_no_silent_selection_reduction_or_published_reacceptance (test_film_manifest.FilmManifestTests) ... ok\ntest_non_utc_timestamp_rejected_before_a_draft (test_film_manifest.FilmManifestTests) ... ok\n\n----------------------------------------------------------------------\nRan 8 tests in 4.062s\n\nOK\n"
+    },
+    {
+      "test": "test_film_collection.py",
+      "exitCode": 0,
+      "elapsedSeconds": 32.77,
+      "output": "test_ambiguous_entity_external_id_is_rejected (test_film_collection.FilmCollection) ... ok\ntest_changed_excerpt_is_rejected (test_film_collection.FilmCollection) ... ok\ntest_changed_frozen_input_is_rejected (test_film_collection.FilmCollection) ... ok\ntest_cut_is_held_without_inventing_scope (test_film_collection.FilmCollection) ... ok\ntest_duplicate_source_and_provider_role_mismatch_rejected (test_film_collection.FilmCollection) ... ok\ntest_existing_entity_and_source_ids_are_reused_without_overwrite (test_film_collection.FilmCollection) ... ok\ntest_extra_artifact_and_input_path_escape_rejected (test_film_collection.FilmCollection) ... ok\ntest_minimum_closed_records_and_unapproved_decision (test_film_collection.FilmCollection) ... ok\ntest_missing_supplement_is_a_hold (test_film_collection.FilmCollection) ... ok\ntest_other_role_is_not_merged_and_withdrawal_is_not_reaccepted (test_film_collection.FilmCollection) ... ok\ntest_person_and_work_mismatch_rejected (test_film_collection.FilmCollection) ... ok\ntest_rehashed_output_and_forged_approval_still_rejected (test_film_collection.FilmCollection) ... ok\ntest_replay_is_byte_identical_and_uses_new_provisional_ids (test_film_collection.FilmCollection) ... ok\ntest_same_role_null_scope_overlap_held_in_both_comparison_states (test_film_collection.FilmCollection) ... ok\ntest_scope_and_all_transitive_role_hashes_are_bound (test_film_collection.FilmCollection) ... ok\ntest_unknown_and_wrong_role_terms_rejected (test_film_collection.FilmCollection) ... ok\n\n----------------------------------------------------------------------\nRan 16 tests in 32.619s\n\nOK\n"
+    },
+    {
+      "test": "test_collection_film.py",
+      "exitCode": 0,
+      "elapsedSeconds": 19.521,
+      "output": "test_explicit_existing_core_draft (test_collection_film.FilmDispatch) ... ok\ntest_role_adoption_does_not_replace_claim_or_identity_approval (test_collection_film.FilmDispatch) ... ok\ntest_tampering_even_rehashed_does_not_rebind_frozen_candidates (test_collection_film.FilmDispatch) ... ok\n\n----------------------------------------------------------------------\nRan 3 tests in 19.257s\n\nOK\n"
+    },
+    {
+      "test": "test_film_production.py",
+      "exitCode": 0,
+      "elapsedSeconds": 58.021,
+      "output": "test_draft_changed_live_revision_and_worker_pause_refuse (test_film_production.FilmProduction) ... ok\ntest_two_claim_formal_receipt_release_validate_plan_repeat (test_film_production.FilmProduction) ... ok\n\n----------------------------------------------------------------------\nRan 2 tests in 57.845s\n\nOK\n"
+    }
+  ]
+}

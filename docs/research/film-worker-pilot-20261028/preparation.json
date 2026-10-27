@@ -1,0 +1,32 @@
+{
+  "reviewDirectory": "/home/isinxnisi/1.projects/.worktrees/graph-knowledge-film-worker-manifest/.local/film-manifest-review-34/review",
+  "decisionFile": "/home/isinxnisi/1.projects/.worktrees/graph-knowledge-film-worker-manifest/.local/film-manifest-review-34/decision-draft.json",
+  "status": "draft-not-approved",
+  "formalAcceptance": false,
+  "publicApply": false,
+  "counts": {
+    "entities": 29,
+    "claims": 34,
+    "sources": 5,
+    "citations": 34
+  },
+  "receiptCount": 11,
+  "authority": "pending-human-review-not-formal-acceptance",
+  "manifest": {
+    "file": ".local/film-manifest-review-34/manifest.json",
+    "sha256": "aa84681a90153909a9d7654fe30eee287eb45da0c24e14eaddb3887bef3042e7"
+  },
+  "comparison": {
+    "file": ".local/film-manifest-review-34/comparison.json.gz",
+    "sha256": "bf28a324ddc6d0a2e986e93fa926fa03d81b388aa02bbc1053ba016bf48739de"
+  },
+  "productionAcceptanceReady": false,
+  "productionRevision": "7c54da24-6fa9-46a5-810d-834eed8328d9",
+  "nextBoundary": "Fresh production backup + runtime/identity/Role-application judgments; never treat this offline draft as acceptance",
+  "submittedCounts": {
+    "entities": 29,
+    "claims": 34,
+    "sources": 5,
+    "citations": 34
+  }
+}

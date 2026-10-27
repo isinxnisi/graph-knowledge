@@ -51,3 +51,7 @@ playwright-report/
 # Issue52 disposable TLS keys, browser captures and local diagnostic scripts
 /.local/gk-issue52-*/
 /.local/issue52-*
+
+# Issue55 isolated Worker copies and unsigned film manifest material
+/.local/film-worker-compat*/
+/.local/film-manifest*/

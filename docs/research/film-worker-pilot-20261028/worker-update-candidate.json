@@ -1,0 +1,899 @@
+{
+  "authority": "read-only-update-candidate-not-installation-approval",
+  "mainCommit": "129c1eb411cece336cce02996c520f8f21b12f0a",
+  "worker": {
+    "workerId": "plunode-wsl",
+    "installedCodeCommit": "973c7b0c599f79905a029b28b524f4924e169376",
+    "configSha256": "d3411e24937f2f422495bf347bac9361b5a6364375443d104c266f96de4763e9",
+    "collectorFileSha256": "d887d490159b03a1d0b90dba060f6d77e248c1d7308497c0adb3d3048bf60f88",
+    "collectorExecutionCodeSha256": "80e05b67bc0129b963653b90df4cfbfa5bd6aff190acda99f54c08541e55801e"
+  },
+  "candidate": {
+    "baselineSnapshotCommit": "d0b62e7b7a33dc8a5e5257b8504f8ab5494854c5",
+    "codeCommit": "089ee51922d68b03f2e8a9029a3811babfc3dc67",
+    "changedFiles": [
+      {
+        "file": "lib/domain/contribution.ts",
+        "installedSha256": "0864214a74e18fa1bfa73db717f708ff0025d9147fb567050e69c9e9aa958130",
+        "candidateSha256": "7bb75f38d7b27829c6e5de32bbc90ef6cd740f5ce6d3ff3b6978f73ab35fd59b"
+      },
+      {
+        "file": "lib/domain/role-vocabulary.ts",
+        "installedSha256": "a353b3f76a235fd226f2fbc4b19da8143b27d9e7595bf02f4726ace9c7b25061",
+        "candidateSha256": "c6fcd2d9ed6b3c4bd2dc8c84c6451780136ae783c212e03a577ad000a8a6a329"
+      },
+      {
+        "file": "lib/i18n/contribution.ts",
+        "installedSha256": "2f6569a6f77bb85298c68e360861ce924c83b7001cede635128cb575f29906fc",
+        "candidateSha256": "dcbf69965240a0d1089f8f2a34f38be22bd63bb0617c332fbfe75b4cf03ff390"
+      },
+      {
+        "file": "vocabulary/contribution-roles/catalog.json",
+        "installedSha256": "2d5370cab52998b822331eafa13292864ae5cc1af37b71c4d9d389b5ecf7f652",
+        "candidateSha256": "0464f247eefa16442d01a0cfdabb8cc2e83fab7d6cbe2d8e9937b403b4aad094"
+      },
+      {
+        "file": "vocabulary/contribution-roles/reviews.json",
+        "installedSha256": "ed6098bff4474c0cd1c8b8658540ecb5b88a6e04aae555f4da1c813842317e9c",
+        "candidateSha256": "e233cdfaaa98e5e1899d757f31aeb015ffd21287bae3d4ef5780d04a33169d30"
+      }
+    ],
+    "preservedInstalledBackports": [
+      "scripts/collection-issues.py",
+      "scripts/collection-worker.py",
+      "scripts/collection-workflow.py",
+      "scripts/collection-transport.py"
+    ],
+    "recommendedMode": "explicitly-reviewed-five-file-backport-on-existing-base-pin",
+    "baseCodeCommitToPreserve": "973c7b0c599f79905a029b28b524f4924e169376",
+    "fullRuntimeReplacementIsSeparate": true,
+    "candidateIsInCurrentMain": false,
+    "overlayManifestSha256": "68b62c2f93704d8f82b93f0ac2dc6cc94e020c7802edd0a16e8ace5651f44d0e"
+  },
+  "requests": [
+    {
+      "id": "issue-25-manga23-20261019",
+      "kind": "issue-prepare",
+      "phase": "blocked",
+      "requestSha256": "ac202bb18150f55b7da1103ce43f2d684aa101e4d5d5107a892223bce4590039",
+      "sourceCommit": "c87051e0d15c903737d37f7c114bff0f17702ffa",
+      "collectorCodeSha256": null,
+      "recipes": [],
+      "fixedDecisionBase": null,
+      "lastReviewBase": null,
+      "lastReviewRevision": null,
+      "technicalWaits": [],
+      "updateDisposition": "preparation-recovery-preserve-existing-permission",
+      "candidateSyncInputsNeedsNewSourceReview": false
+    },
+    {
+      "id": "issue-25-manga23-20261019-repair1",
+      "kind": "issue-prepare",
+      "phase": "blocked",
+      "requestSha256": "03bec8fbdac351776eab61b2dc4b47c7c9a687094ed8bfca5873b90a2ea86b35",
+      "sourceCommit": "916cc77d3aeab22650e309b694661cac07a72a47",
+      "collectorCodeSha256": null,
+      "recipes": [],
+      "fixedDecisionBase": null,
+      "lastReviewBase": null,
+      "lastReviewRevision": null,
+      "technicalWaits": [],
+      "updateDisposition": "preparation-recovery-preserve-existing-permission",
+      "candidateSyncInputsNeedsNewSourceReview": false
+    },
+    {
+      "id": "issue-25-manga23-20261019-repair1-batch-01",
+      "kind": "collect-review",
+      "phase": "blocked",
+      "requestSha256": "9e62bc58b8c3047940024842cc6b23c2744de2d19667d399d82fd9d6a4782baf",
+      "sourceCommit": "916cc77d3aeab22650e309b694661cac07a72a47",
+      "collectorCodeSha256": "80e05b67bc0129b963653b90df4cfbfa5bd6aff190acda99f54c08541e55801e",
+      "recipes": [
+        {
+          "file": "datasets/manga-collection/r0004/recipe.json",
+          "sha256": "1bd3f9f3b51c991942038cc27efd3633edaaaa2b07584618777ce1f46006ea0f",
+          "presentAndUnchanged": true,
+          "baseRelease": "datasets/public-kg/releases/20261014-credits-001"
+        }
+      ],
+      "fixedDecisionBase": null,
+      "lastReviewBase": null,
+      "lastReviewRevision": null,
+      "technicalWaits": [],
+      "updateDisposition": "old-request-preserve-no-rebinding",
+      "candidateSyncInputsNeedsNewSourceReview": true
+    },
+    {
+      "id": "issue-25-manga23-20261019-repair1-batch-02",
+      "kind": "collect-review",
+      "phase": "blocked",
+      "requestSha256": "f6dafe2918c68170c1ad046adfd7776290868ad25ad81aa3eecfa2fb2b3955f8",
+      "sourceCommit": "916cc77d3aeab22650e309b694661cac07a72a47",
+      "collectorCodeSha256": "80e05b67bc0129b963653b90df4cfbfa5bd6aff190acda99f54c08541e55801e",
+      "recipes": [
+        {
+          "file": "datasets/manga-collection/r0005/recipe.json",
+          "sha256": "7823a30fe43d788053e2d29a14beddf12fc447045eaac41bde4abb8672352800",
+          "presentAndUnchanged": true,
+          "baseRelease": "datasets/public-kg/releases/20261014-credits-001"
+        }
+      ],
+      "fixedDecisionBase": null,
+      "lastReviewBase": "20261014-credits-001",
+      "lastReviewRevision": "82b01515-594c-48ca-b4b6-515eefac83ca",
+      "technicalWaits": [],
+      "updateDisposition": "old-request-preserve-no-rebinding",
+      "candidateSyncInputsNeedsNewSourceReview": true
+    },
+    {
+      "id": "issue-25-manga23-20261019-repair1-batch-03",
+      "kind": "collect-review",
+      "phase": "blocked",
+      "requestSha256": "1681cf457acc46b08545b65ca23863c85b4e5287c8c9e015fa26ecb734e08341",
+      "sourceCommit": "916cc77d3aeab22650e309b694661cac07a72a47",
+      "collectorCodeSha256": "80e05b67bc0129b963653b90df4cfbfa5bd6aff190acda99f54c08541e55801e",
+      "recipes": [
+        {
+          "file": "datasets/manga-collection/r0006/recipe.json",
+          "sha256": "c7b5fd6acda7483539fbe5d2ad03ef715a2357ea0938fe27cb8a115772f715d6",
+          "presentAndUnchanged": true,
+          "baseRelease": "datasets/public-kg/releases/20261014-credits-001"
+        }
+      ],
+      "fixedDecisionBase": null,
+      "lastReviewBase": null,
+      "lastReviewRevision": null,
+      "technicalWaits": [],
+      "updateDisposition": "old-request-preserve-no-rebinding",
+      "candidateSyncInputsNeedsNewSourceReview": true
+    },
+    {
+      "id": "issue-25-manga23-20261019-repair1-batch-04",
+      "kind": "collect-review",
+      "phase": "blocked",
+      "requestSha256": "7ff25d34dee666ffbc02ef6a6c85d3c240577bacaf6711d2a3ae88570b9ddffd",
+      "sourceCommit": "916cc77d3aeab22650e309b694661cac07a72a47",
+      "collectorCodeSha256": "80e05b67bc0129b963653b90df4cfbfa5bd6aff190acda99f54c08541e55801e",
+      "recipes": [
+        {
+          "file": "datasets/manga-collection/r0009/recipe.json",
+          "sha256": "68f83691e91d0de1d5f86230c4d3a216e8fb05b07bbc53cc92f55ee93c5215d0",
+          "presentAndUnchanged": true,
+          "baseRelease": "datasets/public-kg/releases/20261014-credits-001"
+        }
+      ],
+      "fixedDecisionBase": null,
+      "lastReviewBase": null,
+      "lastReviewRevision": null,
+      "technicalWaits": [],
+      "updateDisposition": "old-request-preserve-no-rebinding",
+      "candidateSyncInputsNeedsNewSourceReview": true
+    },
+    {
+      "id": "issue-25-manga23-20261019-repair1-batch-05",
+      "kind": "collect-review",
+      "phase": "blocked",
+      "requestSha256": "790ef37cbbd0b9ee0701581921d7eaf16fc4df8b8c59d3f0e02a0a7961cd9666",
+      "sourceCommit": "916cc77d3aeab22650e309b694661cac07a72a47",
+      "collectorCodeSha256": "80e05b67bc0129b963653b90df4cfbfa5bd6aff190acda99f54c08541e55801e",
+      "recipes": [
+        {
+          "file": "datasets/manga-collection/r0010/recipe.json",
+          "sha256": "d0e0458158dd0eb33c75037bc98112064eb935882dad6f30e5882f299961dd45",
+          "presentAndUnchanged": true,
+          "baseRelease": "datasets/public-kg/releases/20261014-credits-001"
+        }
+      ],
+      "fixedDecisionBase": null,
+      "lastReviewBase": null,
+      "lastReviewRevision": null,
+      "technicalWaits": [],
+      "updateDisposition": "old-request-preserve-no-rebinding",
+      "candidateSyncInputsNeedsNewSourceReview": true
+    },
+    {
+      "id": "issue-25-manga23-20261019-repair1-batch-06",
+      "kind": "collect-review",
+      "phase": "blocked",
+      "requestSha256": "f15de743a9554e8b64dbfaef3221a3d96b2e163c69c190ac51e3577a6e05e27f",
+      "sourceCommit": "916cc77d3aeab22650e309b694661cac07a72a47",
+      "collectorCodeSha256": "80e05b67bc0129b963653b90df4cfbfa5bd6aff190acda99f54c08541e55801e",
+      "recipes": [
+        {
+          "file": "datasets/manga-collection/r0012/recipe.json",
+          "sha256": "c5406e8709bf721a1d6ccd599d7d527e3306597eb3ab07ad48f0c55db2d2e9a3",
+          "presentAndUnchanged": true,
+          "baseRelease": "datasets/public-kg/releases/20261014-credits-001"
+        }
+      ],
+      "fixedDecisionBase": null,
+      "lastReviewBase": null,
+      "lastReviewRevision": null,
+      "technicalWaits": [],
+      "updateDisposition": "old-request-preserve-no-rebinding",
+      "candidateSyncInputsNeedsNewSourceReview": true
+    },
+    {
+      "id": "issue-25-manga23-20261019-repair1-batch-07",
+      "kind": "collect-review",
+      "phase": "blocked",
+      "requestSha256": "485d298e7753f789d88bd9b89912d594586bb9d811dc9e1c3704515d368da200",
+      "sourceCommit": "916cc77d3aeab22650e309b694661cac07a72a47",
+      "collectorCodeSha256": "80e05b67bc0129b963653b90df4cfbfa5bd6aff190acda99f54c08541e55801e",
+      "recipes": [
+        {
+          "file": "datasets/manga-collection/r0013/recipe.json",
+          "sha256": "220668e9207c44b7bc36794f50107b68264fb86c9a78bf8784a3dfe2ae9d718b",
+          "presentAndUnchanged": true,
+          "baseRelease": "datasets/public-kg/releases/20261014-credits-001"
+        }
+      ],
+      "fixedDecisionBase": null,
+      "lastReviewBase": null,
+      "lastReviewRevision": null,
+      "technicalWaits": [],
+      "updateDisposition": "old-request-preserve-no-rebinding",
+      "candidateSyncInputsNeedsNewSourceReview": true
+    },
+    {
+      "id": "issue-25-manga23-20261019-repair1-batch-08",
+      "kind": "collect-review",
+      "phase": "blocked",
+      "requestSha256": "c851adc5de0740c85e343baf8eb0672dce54f79f9647c1fae16ad244eef9fad2",
+      "sourceCommit": "916cc77d3aeab22650e309b694661cac07a72a47",
+      "collectorCodeSha256": "80e05b67bc0129b963653b90df4cfbfa5bd6aff190acda99f54c08541e55801e",
+      "recipes": [
+        {
+          "file": "datasets/manga-collection/r0014/recipe.json",
+          "sha256": "131bbac279b32b94ecabd52c70238069b64a18ecb8d2323421887d72da5d0ee3",
+          "presentAndUnchanged": true,
+          "baseRelease": "datasets/public-kg/releases/20261014-credits-001"
+        }
+      ],
+      "fixedDecisionBase": null,
+      "lastReviewBase": null,
+      "lastReviewRevision": null,
+      "technicalWaits": [],
+      "updateDisposition": "old-request-preserve-no-rebinding",
+      "candidateSyncInputsNeedsNewSourceReview": true
+    },
+    {
+      "id": "issue-25-manga23-20261019-repair1-batch-09",
+      "kind": "collect-review",
+      "phase": "blocked",
+      "requestSha256": "9cfb278787a39e9fcfdc49e4bee7a5c2a4c946f94236037bdc199e70699dc9cf",
+      "sourceCommit": "916cc77d3aeab22650e309b694661cac07a72a47",
+      "collectorCodeSha256": "80e05b67bc0129b963653b90df4cfbfa5bd6aff190acda99f54c08541e55801e",
+      "recipes": [
+        {
+          "file": "datasets/manga-collection/r0015/recipe.json",
+          "sha256": "62f2113f334b8cafd4f1eb238cf33926a618984975243f43b7f980e5c8b3e0ba",
+          "presentAndUnchanged": true,
+          "baseRelease": "datasets/public-kg/releases/20261014-credits-001"
+        }
+      ],
+      "fixedDecisionBase": null,
+      "lastReviewBase": null,
+      "lastReviewRevision": null,
+      "technicalWaits": [],
+      "updateDisposition": "old-request-preserve-no-rebinding",
+      "candidateSyncInputsNeedsNewSourceReview": true
+    },
+    {
+      "id": "issue-25-manga23-20261019-repair1-batch-10",
+      "kind": "collect-review",
+      "phase": "blocked",
+      "requestSha256": "ed885e08b9e56344ecbc4f622edae4438fd5dd4f8336ffa4606190ad19fb9ff3",
+      "sourceCommit": "916cc77d3aeab22650e309b694661cac07a72a47",
+      "collectorCodeSha256": "80e05b67bc0129b963653b90df4cfbfa5bd6aff190acda99f54c08541e55801e",
+      "recipes": [
+        {
+          "file": "datasets/manga-collection/r0016/recipe.json",
+          "sha256": "bedf687ab6fd6dff0331e0658d00d9c928fff83197d65cec0bab05f36420d606",
+          "presentAndUnchanged": true,
+          "baseRelease": "datasets/public-kg/releases/20261014-credits-001"
+        }
+      ],
+      "fixedDecisionBase": null,
+      "lastReviewBase": null,
+      "lastReviewRevision": null,
+      "technicalWaits": [],
+      "updateDisposition": "old-request-preserve-no-rebinding",
+      "candidateSyncInputsNeedsNewSourceReview": true
+    },
+    {
+      "id": "issue-25-utc-recovery-01",
+      "kind": "collect-review",
+      "phase": "completed",
+      "requestSha256": "a8d4288b56a6c82bb0472be22152432c1f4167bdc3234420c83b586b6724b345",
+      "sourceCommit": "ed89e5a6ff0cf7d8b485330be790a234a064eacd",
+      "collectorCodeSha256": "80e05b67bc0129b963653b90df4cfbfa5bd6aff190acda99f54c08541e55801e",
+      "recipes": [
+        {
+          "file": "datasets/manga-collection/r0017/recipe.json",
+          "sha256": "b3b58514a20ecfdc79090bc397fa9db81841dfc397860d98ef1dde4cc80bc5a9",
+          "presentAndUnchanged": true,
+          "baseRelease": "datasets/public-kg/releases/20261014-credits-001"
+        }
+      ],
+      "fixedDecisionBase": null,
+      "lastReviewBase": "20261014-credits-001",
+      "lastReviewRevision": "82b01515-594c-48ca-b4b6-515eefac83ca",
+      "technicalWaits": [],
+      "updateDisposition": "completed-record-preserve-no-replay",
+      "candidateSyncInputsNeedsNewSourceReview": true
+    },
+    {
+      "id": "issue-25-utc-recovery-02",
+      "kind": "collect-review",
+      "phase": "completed",
+      "requestSha256": "a25b93cfbe06d29201c862380f1208dfa929a0856e6f8ca7473a82b223769b34",
+      "sourceCommit": "ed89e5a6ff0cf7d8b485330be790a234a064eacd",
+      "collectorCodeSha256": "80e05b67bc0129b963653b90df4cfbfa5bd6aff190acda99f54c08541e55801e",
+      "recipes": [
+        {
+          "file": "datasets/manga-collection/r0018/recipe.json",
+          "sha256": "aa7943be05294785dd119bc3290ba09f3870043ae595503737faf70e42850c12",
+          "presentAndUnchanged": true,
+          "baseRelease": "datasets/public-kg/releases/20261014-credits-001"
+        }
+      ],
+      "fixedDecisionBase": null,
+      "lastReviewBase": "20261014-credits-001",
+      "lastReviewRevision": "82b01515-594c-48ca-b4b6-515eefac83ca",
+      "technicalWaits": [],
+      "updateDisposition": "completed-record-preserve-no-replay",
+      "candidateSyncInputsNeedsNewSourceReview": true
+    },
+    {
+      "id": "issue-25-utc-recovery-03",
+      "kind": "collect-review",
+      "phase": "completed",
+      "requestSha256": "67aa46a50204029b93086cb11c41b6251061d0fa3fc2ed6f131aaadc0e078a56",
+      "sourceCommit": "ed89e5a6ff0cf7d8b485330be790a234a064eacd",
+      "collectorCodeSha256": "80e05b67bc0129b963653b90df4cfbfa5bd6aff190acda99f54c08541e55801e",
+      "recipes": [
+        {
+          "file": "datasets/manga-collection/r0019/recipe.json",
+          "sha256": "d58e652152ae9ec04a3e4bdca38b985763186fc9c9f1eb421124e44401eb87c3",
+          "presentAndUnchanged": true,
+          "baseRelease": "datasets/public-kg/releases/20261014-credits-001"
+        }
+      ],
+      "fixedDecisionBase": null,
+      "lastReviewBase": "20261014-credits-001",
+      "lastReviewRevision": "82b01515-594c-48ca-b4b6-515eefac83ca",
+      "technicalWaits": [],
+      "updateDisposition": "completed-record-preserve-no-replay",
+      "candidateSyncInputsNeedsNewSourceReview": true
+    },
+    {
+      "id": "issue-25-utc-recovery-04",
+      "kind": "collect-review",
+      "phase": "completed",
+      "requestSha256": "b9ed2e411f3f66641455c5a151b3855481e163f36332a59fb8e6559a447b1bc0",
+      "sourceCommit": "ed89e5a6ff0cf7d8b485330be790a234a064eacd",
+      "collectorCodeSha256": "80e05b67bc0129b963653b90df4cfbfa5bd6aff190acda99f54c08541e55801e",
+      "recipes": [
+        {
+          "file": "datasets/manga-collection/r0020/recipe.json",
+          "sha256": "56d6be35fb3bdda4453561af677b103a553ba533c1ff183ca0fe1431fd1c2e8f",
+          "presentAndUnchanged": true,
+          "baseRelease": "datasets/public-kg/releases/20261014-credits-001"
+        }
+      ],
+      "fixedDecisionBase": null,
+      "lastReviewBase": "20261014-credits-001",
+      "lastReviewRevision": "82b01515-594c-48ca-b4b6-515eefac83ca",
+      "technicalWaits": [],
+      "updateDisposition": "completed-record-preserve-no-replay",
+      "candidateSyncInputsNeedsNewSourceReview": true
+    },
+    {
+      "id": "issue-25-utc-recovery-05",
+      "kind": "collect-review",
+      "phase": "completed",
+      "requestSha256": "137298d028f21a48a58499dcc3e99b0b928944b2ca1df819a8470c57bc4cc619",
+      "sourceCommit": "ed89e5a6ff0cf7d8b485330be790a234a064eacd",
+      "collectorCodeSha256": "80e05b67bc0129b963653b90df4cfbfa5bd6aff190acda99f54c08541e55801e",
+      "recipes": [
+        {
+          "file": "datasets/manga-collection/r0021/recipe.json",
+          "sha256": "02e344e0cd018632be797b5b21a635514de80202b9887e74e3790efdfd15be65",
+          "presentAndUnchanged": true,
+          "baseRelease": "datasets/public-kg/releases/20261014-credits-001"
+        }
+      ],
+      "fixedDecisionBase": null,
+      "lastReviewBase": "20261014-credits-001",
+      "lastReviewRevision": "82b01515-594c-48ca-b4b6-515eefac83ca",
+      "technicalWaits": [],
+      "updateDisposition": "completed-record-preserve-no-replay",
+      "candidateSyncInputsNeedsNewSourceReview": true
+    },
+    {
+      "id": "issue-25-utc-recovery-06",
+      "kind": "collect-review",
+      "phase": "completed",
+      "requestSha256": "265e3aca49beaa1963c0cefcef4d65cad00104bbd90e8073b380047d38621650",
+      "sourceCommit": "ed89e5a6ff0cf7d8b485330be790a234a064eacd",
+      "collectorCodeSha256": "80e05b67bc0129b963653b90df4cfbfa5bd6aff190acda99f54c08541e55801e",
+      "recipes": [
+        {
+          "file": "datasets/manga-collection/r0022/recipe.json",
+          "sha256": "d10d21b8206aa1980325ac7c81fb0f7eb5c2855a966e7c37773cafda1777d390",
+          "presentAndUnchanged": true,
+          "baseRelease": "datasets/public-kg/releases/20261014-credits-001"
+        }
+      ],
+      "fixedDecisionBase": null,
+      "lastReviewBase": "20261014-credits-001",
+      "lastReviewRevision": "82b01515-594c-48ca-b4b6-515eefac83ca",
+      "technicalWaits": [],
+      "updateDisposition": "completed-record-preserve-no-replay",
+      "candidateSyncInputsNeedsNewSourceReview": true
+    },
+    {
+      "id": "issue-25-utc-recovery-07",
+      "kind": "collect-review",
+      "phase": "completed",
+      "requestSha256": "d46cb9ff59261ccd4dd4dbdc1680c4d95e07d8c71c86da9bb78cf58a3e4aac80",
+      "sourceCommit": "ed89e5a6ff0cf7d8b485330be790a234a064eacd",
+      "collectorCodeSha256": "80e05b67bc0129b963653b90df4cfbfa5bd6aff190acda99f54c08541e55801e",
+      "recipes": [
+        {
+          "file": "datasets/manga-collection/r0023/recipe.json",
+          "sha256": "818cd0d60ecd2c55845217575ffd0c67d95801cb36becf8011e0070d6bb4624b",
+          "presentAndUnchanged": true,
+          "baseRelease": "datasets/public-kg/releases/20261014-credits-001"
+        }
+      ],
+      "fixedDecisionBase": null,
+      "lastReviewBase": "20261014-credits-001",
+      "lastReviewRevision": "82b01515-594c-48ca-b4b6-515eefac83ca",
+      "technicalWaits": [],
+      "updateDisposition": "completed-record-preserve-no-replay",
+      "candidateSyncInputsNeedsNewSourceReview": true
+    },
+    {
+      "id": "issue-25-utc-recovery-08",
+      "kind": "collect-review",
+      "phase": "completed",
+      "requestSha256": "0814b8af0f80dc7f8cb28d448971a9da6a86cee02c9b6879d53a41b4a4621a76",
+      "sourceCommit": "ed89e5a6ff0cf7d8b485330be790a234a064eacd",
+      "collectorCodeSha256": "80e05b67bc0129b963653b90df4cfbfa5bd6aff190acda99f54c08541e55801e",
+      "recipes": [
+        {
+          "file": "datasets/manga-collection/r0024/recipe.json",
+          "sha256": "a472de07f66a745e963de375daaa5cbde62f67e8ff10c9024dd516ad11c5be21",
+          "presentAndUnchanged": true,
+          "baseRelease": "datasets/public-kg/releases/20261014-credits-001"
+        }
+      ],
+      "fixedDecisionBase": null,
+      "lastReviewBase": "20261014-credits-001",
+      "lastReviewRevision": "82b01515-594c-48ca-b4b6-515eefac83ca",
+      "technicalWaits": [],
+      "updateDisposition": "completed-record-preserve-no-replay",
+      "candidateSyncInputsNeedsNewSourceReview": true
+    },
+    {
+      "id": "issue-25-utc-recovery-09",
+      "kind": "collect-review",
+      "phase": "completed",
+      "requestSha256": "78ffd17af073fb5ff238579eca1957d2be68063bca8157b4cac2eba3f2f88eb3",
+      "sourceCommit": "ed89e5a6ff0cf7d8b485330be790a234a064eacd",
+      "collectorCodeSha256": "80e05b67bc0129b963653b90df4cfbfa5bd6aff190acda99f54c08541e55801e",
+      "recipes": [
+        {
+          "file": "datasets/manga-collection/r0025/recipe.json",
+          "sha256": "ca039cc58330319a8e52c0f41f0803e9254b67f3b0081af6f8eaefb1f4f6b3a7",
+          "presentAndUnchanged": true,
+          "baseRelease": "datasets/public-kg/releases/20261014-credits-001"
+        }
+      ],
+      "fixedDecisionBase": null,
+      "lastReviewBase": "20261014-credits-001",
+      "lastReviewRevision": "82b01515-594c-48ca-b4b6-515eefac83ca",
+      "technicalWaits": [],
+      "updateDisposition": "completed-record-preserve-no-replay",
+      "candidateSyncInputsNeedsNewSourceReview": true
+    },
+    {
+      "id": "issue-25-utc-recovery-01-normal",
+      "kind": "accept-release",
+      "phase": "completed",
+      "requestSha256": "d869a89ba7e08cb1b065e23fa560e68b285c22299c758113fe6b122ca602894a",
+      "sourceCommit": "ed89e5a6ff0cf7d8b485330be790a234a064eacd",
+      "collectorCodeSha256": null,
+      "recipes": [],
+      "fixedDecisionBase": "20261014-credits-001",
+      "lastReviewBase": null,
+      "lastReviewRevision": null,
+      "technicalWaits": [],
+      "updateDisposition": "completed-record-preserve-no-replay",
+      "candidateSyncInputsNeedsNewSourceReview": true
+    },
+    {
+      "id": "issue-25-normal-sequence-after-first-20261020",
+      "kind": "accept-sequence",
+      "phase": "completed",
+      "requestSha256": "bfed193b23c19b24e7f0f5b5f5ffb812861f4730840f0b23a0024b927f5d6ab5",
+      "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
+      "collectorCodeSha256": null,
+      "recipes": [],
+      "fixedDecisionBase": null,
+      "lastReviewBase": null,
+      "lastReviewRevision": null,
+      "technicalWaits": [],
+      "updateDisposition": "completed-record-preserve-no-replay",
+      "candidateSyncInputsNeedsNewSourceReview": true
+    },
+    {
+      "id": "issue-16-adachi-three-20261025",
+      "kind": "issue-prepare",
+      "phase": "completed",
+      "requestSha256": "5c15cdf5d521ca7bb54c94cb6471fb129263d9cd25987a548b0fd50b56aab288",
+      "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
+      "collectorCodeSha256": null,
+      "recipes": [],
+      "fixedDecisionBase": null,
+      "lastReviewBase": null,
+      "lastReviewRevision": null,
+      "technicalWaits": [],
+      "updateDisposition": "completed-record-preserve-no-replay",
+      "candidateSyncInputsNeedsNewSourceReview": false
+    },
+    {
+      "id": "issue-5-dot-tezuka-adolf-20261025",
+      "kind": "issue-prepare",
+      "phase": "completed",
+      "requestSha256": "0ed08bb8ae9c087005eea5e86a48e44646eb7fad735db377406fda4a52e4600c",
+      "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
+      "collectorCodeSha256": null,
+      "recipes": [],
+      "fixedDecisionBase": null,
+      "lastReviewBase": null,
+      "lastReviewRevision": null,
+      "technicalWaits": [],
+      "updateDisposition": "completed-record-preserve-no-replay",
+      "candidateSyncInputsNeedsNewSourceReview": false
+    },
+    {
+      "id": "issue-5-dot-tezuka-adolf-20261025-batch-01",
+      "kind": "collect-review",
+      "phase": "completed",
+      "requestSha256": "9b3f98315bb28650d44225f8b197ba408b2d39b00c24771052dcbfbca976ea00",
+      "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
+      "collectorCodeSha256": "80e05b67bc0129b963653b90df4cfbfa5bd6aff190acda99f54c08541e55801e",
+      "recipes": [
+        {
+          "file": "datasets/manga-collection/r0027/recipe.json",
+          "sha256": "d6e0414784f5d7da93231f30ee4fa5248f4eceb38fe0c36daa1cbe521051fe3b",
+          "presentAndUnchanged": true,
+          "baseRelease": "datasets/public-kg/releases/20261014-credits-001"
+        }
+      ],
+      "fixedDecisionBase": null,
+      "lastReviewBase": "20261014-credits-001",
+      "lastReviewRevision": "82b01515-594c-48ca-b4b6-515eefac83ca",
+      "technicalWaits": [],
+      "updateDisposition": "completed-record-preserve-no-replay",
+      "candidateSyncInputsNeedsNewSourceReview": true
+    },
+    {
+      "id": "issue-42-dot-matsumoto-three-20261026",
+      "kind": "issue-prepare",
+      "phase": "completed",
+      "requestSha256": "90859cacf56fa33c3fc06c58206d81879a7d4e3995746680dd483e94a7cdcafc",
+      "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
+      "collectorCodeSha256": null,
+      "recipes": [],
+      "fixedDecisionBase": null,
+      "lastReviewBase": null,
+      "lastReviewRevision": null,
+      "technicalWaits": [],
+      "updateDisposition": "completed-record-preserve-no-replay",
+      "candidateSyncInputsNeedsNewSourceReview": false
+    },
+    {
+      "id": "issue-42-matsumoto-recovery-20261026",
+      "kind": "issue-prepare",
+      "phase": "completed",
+      "requestSha256": "7c353b1d9f9b781aa4f32f432a2e32a0733601e18c23e0407b7aa17af38bfd08",
+      "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
+      "collectorCodeSha256": null,
+      "recipes": [],
+      "fixedDecisionBase": null,
+      "lastReviewBase": null,
+      "lastReviewRevision": null,
+      "technicalWaits": [],
+      "updateDisposition": "completed-record-preserve-no-replay",
+      "candidateSyncInputsNeedsNewSourceReview": false
+    },
+    {
+      "id": "issue-42-matsumoto-recovery-20261026-batch-01",
+      "kind": "collect-review",
+      "phase": "completed",
+      "requestSha256": "d63f6347d120cf07af48aab70b01d7b0f650b0d01d73d7d856597c8c044b5647",
+      "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
+      "collectorCodeSha256": "80e05b67bc0129b963653b90df4cfbfa5bd6aff190acda99f54c08541e55801e",
+      "recipes": [
+        {
+          "file": "datasets/manga-collection/r0029/recipe.json",
+          "sha256": "8764cd3aed1e397f2c00a3a8cb073542793152f3aa93bd07c3cf35d920f7117e",
+          "presentAndUnchanged": true,
+          "baseRelease": "datasets/public-kg/releases/20261014-credits-001"
+        }
+      ],
+      "fixedDecisionBase": null,
+      "lastReviewBase": "20261014-credits-001",
+      "lastReviewRevision": "82b01515-594c-48ca-b4b6-515eefac83ca",
+      "technicalWaits": [],
+      "updateDisposition": "completed-record-preserve-no-replay",
+      "candidateSyncInputsNeedsNewSourceReview": true
+    },
+    {
+      "id": "issue-46-dot-aoyama-three-20261027",
+      "kind": "issue-prepare",
+      "phase": "completed",
+      "requestSha256": "8277772eae902e72cdf68b5e7d02eb6ce10b4f37c6de085af9af6ac8a595ab10",
+      "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
+      "collectorCodeSha256": null,
+      "recipes": [],
+      "fixedDecisionBase": null,
+      "lastReviewBase": null,
+      "lastReviewRevision": null,
+      "technicalWaits": [],
+      "updateDisposition": "completed-record-preserve-no-replay",
+      "candidateSyncInputsNeedsNewSourceReview": false
+    },
+    {
+      "id": "issue-47-dot-yukimura-two-20261027",
+      "kind": "issue-prepare",
+      "phase": "awaiting-recovery",
+      "requestSha256": "45fdbc030fa87fdc492b1ccb14ab70e9bed7c6bfcf45915863626aab4cbd1b3a",
+      "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
+      "collectorCodeSha256": null,
+      "recipes": [],
+      "fixedDecisionBase": null,
+      "lastReviewBase": null,
+      "lastReviewRevision": null,
+      "technicalWaits": [
+        {
+          "category": "request-attempts-exhausted",
+          "provider": "ndlsearch.ndl.go.jp",
+          "httpStatus": 429
+        }
+      ],
+      "updateDisposition": "preparation-recovery-preserve-existing-permission",
+      "candidateSyncInputsNeedsNewSourceReview": false
+    },
+    {
+      "id": "issue-46-dot-aoyama-three-20261027-batch-01",
+      "kind": "collect-review",
+      "phase": "completed",
+      "requestSha256": "dbbd9ac962a478f5a8f351fcdbd05ab3373bfebe364f8b738b58bffb17d3d104",
+      "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
+      "collectorCodeSha256": "80e05b67bc0129b963653b90df4cfbfa5bd6aff190acda99f54c08541e55801e",
+      "recipes": [
+        {
+          "file": "datasets/manga-collection/r0030/recipe.json",
+          "sha256": "da94c039f8f9acca4565c0d69e7c06f92aa67d7fcdc8b26bfdfbb78dc19469a0",
+          "presentAndUnchanged": true,
+          "baseRelease": "datasets/public-kg/releases/20261014-credits-001"
+        }
+      ],
+      "fixedDecisionBase": null,
+      "lastReviewBase": "20261014-credits-001",
+      "lastReviewRevision": "82b01515-594c-48ca-b4b6-515eefac83ca",
+      "technicalWaits": [],
+      "updateDisposition": "completed-record-preserve-no-replay",
+      "candidateSyncInputsNeedsNewSourceReview": true
+    },
+    {
+      "id": "issue-48-dot-toriyama-three-20261027",
+      "kind": "issue-prepare",
+      "phase": "completed",
+      "requestSha256": "5b9b942bc0bce702658f19be34503c58facd1a72f12bb45e79f6ca63d9491c62",
+      "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
+      "collectorCodeSha256": null,
+      "recipes": [],
+      "fixedDecisionBase": null,
+      "lastReviewBase": null,
+      "lastReviewRevision": null,
+      "technicalWaits": [],
+      "updateDisposition": "completed-record-preserve-no-replay",
+      "candidateSyncInputsNeedsNewSourceReview": false
+    },
+    {
+      "id": "issue-48-dot-toriyama-three-20261027-batch-01",
+      "kind": "collect-review",
+      "phase": "completed",
+      "requestSha256": "42647bce621bda1430fe1abe5ac77fda6be97db99885827eefd7248346e104ce",
+      "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
+      "collectorCodeSha256": "80e05b67bc0129b963653b90df4cfbfa5bd6aff190acda99f54c08541e55801e",
+      "recipes": [
+        {
+          "file": "datasets/manga-collection/r0032/recipe.json",
+          "sha256": "5ac6a50cad014047fce33f22cf0df8a071ea48372bc807707536e54ef4be1186",
+          "presentAndUnchanged": true,
+          "baseRelease": "datasets/public-kg/releases/20261014-credits-001"
+        }
+      ],
+      "fixedDecisionBase": null,
+      "lastReviewBase": "20261014-credits-001",
+      "lastReviewRevision": "82b01515-594c-48ca-b4b6-515eefac83ca",
+      "technicalWaits": [],
+      "updateDisposition": "completed-record-preserve-no-replay",
+      "candidateSyncInputsNeedsNewSourceReview": true
+    },
+    {
+      "id": "issue-49-dot-hara-souten-20261027",
+      "kind": "issue-prepare",
+      "phase": "completed",
+      "requestSha256": "6f99836b9eb7221d5176dd9c536d2720d4192f5adc9f5ae010bca6bd6be3baa5",
+      "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
+      "collectorCodeSha256": null,
+      "recipes": [],
+      "fixedDecisionBase": null,
+      "lastReviewBase": null,
+      "lastReviewRevision": null,
+      "technicalWaits": [],
+      "updateDisposition": "completed-record-preserve-no-replay",
+      "candidateSyncInputsNeedsNewSourceReview": false
+    },
+    {
+      "id": "issue-49-dot-hara-souten-20261027-batch-01",
+      "kind": "collect-review",
+      "phase": "completed",
+      "requestSha256": "4b36751528d2556648cc38baa8a234f5cbdf78ca4d0b1370b8e5f749358552a0",
+      "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
+      "collectorCodeSha256": "80e05b67bc0129b963653b90df4cfbfa5bd6aff190acda99f54c08541e55801e",
+      "recipes": [
+        {
+          "file": "datasets/manga-collection/r0033/recipe.json",
+          "sha256": "5c91330d762ed47cf02fd72a8af26f29695306e4c1751d40c3debd07157710da",
+          "presentAndUnchanged": true,
+          "baseRelease": "datasets/public-kg/releases/20261014-credits-001"
+        }
+      ],
+      "fixedDecisionBase": null,
+      "lastReviewBase": "20261014-credits-001",
+      "lastReviewRevision": "82b01515-594c-48ca-b4b6-515eefac83ca",
+      "technicalWaits": [],
+      "updateDisposition": "completed-record-preserve-no-replay",
+      "candidateSyncInputsNeedsNewSourceReview": true
+    },
+    {
+      "id": "issue-50-dot-endo-tista-20261027",
+      "kind": "issue-prepare",
+      "phase": "awaiting-recovery",
+      "requestSha256": "cb434c39ad43fc5b828ba608df40b56f268ab7ac3e0b177d5824ca1886c7e227",
+      "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
+      "collectorCodeSha256": null,
+      "recipes": [],
+      "fixedDecisionBase": null,
+      "lastReviewBase": null,
+      "lastReviewRevision": null,
+      "technicalWaits": [
+        {
+          "category": "request-attempts-exhausted",
+          "provider": "ndlsearch.ndl.go.jp",
+          "httpStatus": null
+        }
+      ],
+      "updateDisposition": "preparation-recovery-preserve-existing-permission",
+      "candidateSyncInputsNeedsNewSourceReview": false
+    },
+    {
+      "id": "issue-51-dot-araki-rohan-20261027",
+      "kind": "issue-prepare",
+      "phase": "completed",
+      "requestSha256": "e71e0fe6adecfdbb6df5ce5a84a59a8c91f6cd3ac738dc6055d28e86adc2a88b",
+      "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
+      "collectorCodeSha256": null,
+      "recipes": [],
+      "fixedDecisionBase": null,
+      "lastReviewBase": null,
+      "lastReviewRevision": null,
+      "technicalWaits": [],
+      "updateDisposition": "completed-record-preserve-no-replay",
+      "candidateSyncInputsNeedsNewSourceReview": false
+    }
+  ],
+  "formalReceipts": [
+    {
+      "file": "datasets/manga-collection/accepted-film-initial-20261027/acceptance.json",
+      "sha256": "3ac7b6be38e24aa9dfd7bf67233b7c5e80822c4313ca9b58d34408611cdc83c3",
+      "baseRelease": "manga-issue-34-obata-drawing-20261023",
+      "sourceReviewKind": "film-discovery-v1"
+    },
+    {
+      "file": "datasets/manga-collection/accepted-issue-25-utc-recovery-01-normal/acceptance.json",
+      "sha256": "d271f32767dab030bd26ddcef669f48237cc303a8c605c58df047df8aea71fb6",
+      "baseRelease": "20261014-credits-001",
+      "sourceReviewKind": null
+    },
+    {
+      "file": "datasets/manga-collection/accepted-issue-25-utc-recovery-03-normal/acceptance.json",
+      "sha256": "2cd8cb76b64be0d9d19fb3da8ceb4d3e185ca086bba0e90917a7b24a1da0bedf",
+      "baseRelease": "20261014-credits-001",
+      "sourceReviewKind": null
+    },
+    {
+      "file": "datasets/manga-collection/accepted-issue-25-utc-recovery-04-normal/acceptance.json",
+      "sha256": "052a7d1ef334074ce2b94837a7d0dfc803bde9526abc9d8e8e7f058b36acdf62",
+      "baseRelease": "20261014-credits-001",
+      "sourceReviewKind": null
+    },
+    {
+      "file": "datasets/manga-collection/accepted-issue-25-utc-recovery-06-normal/acceptance.json",
+      "sha256": "4e94de08943725549f4e01be9e6b1b09f2f9d88c5ca2dfaa9aa5b7c2395930f4",
+      "baseRelease": "20261014-credits-001",
+      "sourceReviewKind": null
+    },
+    {
+      "file": "datasets/manga-collection/accepted-issue-25-utc-recovery-07-normal/acceptance.json",
+      "sha256": "b6a521d5fffdd6cafc3a3df9f8f963c571520812053aad4f259eea3e22ebee0b",
+      "baseRelease": "20261014-credits-001",
+      "sourceReviewKind": null
+    },
+    {
+      "file": "datasets/manga-collection/accepted-issue-25-utc-recovery-08-normal/acceptance.json",
+      "sha256": "5b3fdc3aa705c5e73f5ba11b40052be700d71069b0a25a12943cb189a2ee1109",
+      "baseRelease": "20261014-credits-001",
+      "sourceReviewKind": null
+    },
+    {
+      "file": "datasets/manga-collection/accepted-issue-34-obata-drawing-20261021/acceptance.json",
+      "sha256": "7f62ec0f27d4fedfbb09066893d4ac94d88eaf016c2fff3959a001ea9f228efe",
+      "baseRelease": "manga-issue-25-utc-recovery-08-normal",
+      "sourceReviewKind": "saved-evidence-v1"
+    },
+    {
+      "file": "datasets/manga-collection/accepted-original-story-r0002-20261017/acceptance.json",
+      "sha256": "9fdb9933c0d78795769bf27eebb7ecb4ec7cccc37f6ee6827e55dd119e727801",
+      "baseRelease": "20261014-credits-001",
+      "sourceReviewKind": null
+    },
+    {
+      "file": "datasets/manga-collection/accepted-r0002-20261017/acceptance.json",
+      "sha256": "9b28562b9846970cd30b9261d4659d505e9df06e014d2809d6517aa39836f567",
+      "baseRelease": null,
+      "sourceReviewKind": null
+    },
+    {
+      "file": "datasets/manga-collection/accepted-r0003-20261017/acceptance.json",
+      "sha256": "7d53abbd472fcbf0cba57fa5202d6fd4f8eb12c9ebda34bd1e7a8badca701831",
+      "baseRelease": "20261014-credits-001",
+      "sourceReviewKind": null
+    }
+  ],
+  "coordination": {
+    "configSha256": "497365a7b53c443bd4b2c67ac0c779c896cfb5e6a9a7552feedc30b323f213ba",
+    "workerId": "plunode-wsl",
+    "codeCommit": "973c7b0c599f79905a029b28b524f4924e169376",
+    "recommendedBackport": {
+      "workerCodeCommitUnchanged": true,
+      "coordinatorConfigUnchanged": true,
+      "receiptPeerIdentityUnchanged": true,
+      "basis": "Only five recognition/vocabulary/label files change; execution/control handlers and collector code hash are unchanged. Isolated real Executor guard tested."
+    },
+    "fullReplacementRequiredReview": [
+      "Worker config codeCommit",
+      "Coordinator codeCommit",
+      "VPS fixed receipt-peer/exclusion Worker identity",
+      "Pending unsigned publication tickets and active exclusion state",
+      "New request sourceCommit trust and code tree guard"
+    ]
+  },
+  "humanBoundaries": [
+    "Review exact candidate and existing-request disposition before any installation.",
+    "Do not change old request sourceCommit, collectorCodeSha256, human decisions or receipts.",
+    "Approve the exact five-file overlay before applying it. Preserve existing base codeCommit and peer tuple for the recommended backport.",
+    "If choosing full replacement, candidate source is not in trusted main: a reviewed integration and peer/config change are required; never weaken sync_inputs.",
+    "Current main differs broadly from installed Worker. Do not install whole latest main as this minimal update."
+  ],
+  "changedRunningWorker": false
+}

@@ -1,0 +1,133 @@
+{
+  "authority": "isolated-real-workflow-not-formal-acceptance",
+  "candidateCommit": "089ee51922d68b03f2e8a9029a3811babfc3dc67",
+  "jobId": "issue-49-dot-hara-souten-20261027-r0001-71d22e5d1577c85e",
+  "recipeBase": "datasets/public-kg/releases/20261014-credits-001",
+  "comparisonBase": "publication-film-initial-20261027",
+  "receiptCount": 11,
+  "savedFilmReceiptIncluded": true,
+  "oldVocabularyAndReviewsPreserved": {
+    "catalog.json": true,
+    "reviews.json": true
+  },
+  "oldSchemaNegative": {
+    "accepted": false,
+    "paths": [
+      [
+        "claims",
+        370,
+        "contribution",
+        "roleId"
+      ],
+      [
+        "claims",
+        536,
+        "contribution",
+        "roleId"
+      ]
+    ]
+  },
+  "firstReview": {
+    "jobId": "issue-49-dot-hara-souten-20261027-r0001-71d22e5d1577c85e",
+    "collectionUnchanged": true,
+    "reviewUnchanged": false,
+    "transportAttemptsAdded": 0,
+    "reviewDirectory": "/home/isinxnisi/1.projects/.worktrees/graph-knowledge-film-worker-manifest/.local/film-worker-compat-04/reviews/issue-49-dot-hara-souten-20261027-r0001-71d22e5d1577c85e-review-4b5343f251025089",
+    "reviewOnly": true,
+    "formalAcceptance": false,
+    "publicApply": false,
+    "counts": {
+      "entities": 1,
+      "claims": 1,
+      "sources": 1,
+      "citations": 1
+    },
+    "heldClaims": 0
+  },
+  "repeatReview": {
+    "jobId": "issue-49-dot-hara-souten-20261027-r0001-71d22e5d1577c85e",
+    "collectionUnchanged": true,
+    "reviewUnchanged": true,
+    "transportAttemptsAdded": 0,
+    "reviewDirectory": "/home/isinxnisi/1.projects/.worktrees/graph-knowledge-film-worker-manifest/.local/film-worker-compat-04/reviews/issue-49-dot-hara-souten-20261027-r0001-71d22e5d1577c85e-review-4b5343f251025089",
+    "reviewOnly": true,
+    "formalAcceptance": false,
+    "publicApply": false,
+    "counts": {
+      "entities": 1,
+      "claims": 1,
+      "sources": 1,
+      "citations": 1
+    },
+    "heldClaims": 0
+  },
+  "decisionStatus": "draft-not-approved",
+  "selectedCounts": {
+    "entities": 1,
+    "claims": 1,
+    "sources": 1,
+    "citations": 1
+  },
+  "technicalValidation": {
+    "valid": true,
+    "counts": {
+      "nodes": {
+        "Entity": 2179,
+        "Claim": 1898,
+        "Source": 1798,
+        "Citation": 1935,
+        "ExternalIdentifier": 2548
+      },
+      "relationships": {
+        "SUBJECT": 1898,
+        "OBJECT": 1898,
+        "HAS_CITATION": 1935,
+        "CITES": 1935,
+        "HAS_EXTERNAL_ID": 2548
+      }
+    }
+  },
+  "plan": {
+    "added": [
+      "Citation:ca03a2ab-2719-41fb-87bc-0f04fbcc6a10",
+      "Claim:4452cfd6-d9ec-48fe-8dd2-d13abecfedbe",
+      "Entity:f66ff5d9-4bf2-4904-bbec-ea5ff6410342",
+      "ExternalIdentifier:[\"wikidata\",\"Q542112\"]",
+      "Source:ac4332d9-32d7-433f-a4a8-2185aaa64bbb"
+    ],
+    "updated": [],
+    "relationshipsAdded": 5
+  },
+  "oldBaseValidation": {
+    "valid": true,
+    "counts": {
+      "nodes": {
+        "Entity": 2109,
+        "Claim": 1844,
+        "Source": 1751,
+        "Citation": 1880,
+        "ExternalIdentifier": 2478
+      },
+      "relationships": {
+        "SUBJECT": 1844,
+        "OBJECT": 1844,
+        "HAS_CITATION": 1880,
+        "CITES": 1880,
+        "HAS_EXTERNAL_ID": 2478
+      }
+    }
+  },
+  "guards": {
+    "oldEightNullAndIsbn": true,
+    "unknownRoleRejected": true,
+    "unknownScopeRejected": true
+  },
+  "newFormalReceipts": 0,
+  "publicApply": false,
+  "installedCodeConfigAndReceiptsUnchanged": true,
+  "limits": [
+    "The backup is an isolated projection of a saved published artifact, not a fresh production DB backup.",
+    "Collector replay uses the original completed job and approval with zero network attempts.",
+    "No installed Worker tick, formal acceptance, database plan/apply, or production deployment was performed."
+  ]
+}

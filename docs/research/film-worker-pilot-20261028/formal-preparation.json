@@ -1,0 +1,24 @@
+{
+  "reviewDirectory": "/home/isinxnisi/.local/share/plunode-collection-worker-phase-b-20261020/runtime/datasets/film-collection/ab-manifest-20261028/review",
+  "decisionFile": "/home/isinxnisi/.local/share/plunode-collection-worker-phase-b-20261020/runtime/datasets/film-collection/ab-manifest-20261028/decision-draft.json",
+  "status": "draft-not-approved",
+  "formalAcceptance": false,
+  "publicApply": false,
+  "counts": {
+    "entities": 29,
+    "claims": 34,
+    "sources": 5,
+    "citations": 34
+  },
+  "receiptCount": 11,
+  "authority": "fixed-pending-human-decision-not-acceptance",
+  "productionBackupSha256": "c914fb71d0dd3953ea6f5be90603f8de4da137addaa8eaf548c8d632436669ae",
+  "productionRevision": "7c54da24-6fa9-46a5-810d-834eed8328d9",
+  "manifest": {
+    "file": ".local/film-manifest-production/manifest.json",
+    "sha256": "e1ad6399058f27bd0982cd2922c1ed96a5196b4bb1fabf254f3997cac129cd07"
+  },
+  "newFormalReceipts": 0,
+  "installedWorkerCodeChanged": false,
+  "sameProposedRecordsAsOfflineReview": true
+}

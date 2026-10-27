@@ -1,0 +1,48 @@
+{
+  "authority": "preparation-and-isolated-verification-not-acceptance",
+  "mainCommit": "129c1eb411cece336cce02996c520f8f21b12f0a",
+  "workerCandidateCommit": "089ee51922d68b03f2e8a9029a3811babfc3dc67",
+  "overlayManifestSha256": "68b62c2f93704d8f82b93f0ac2dc6cc94e020c7802edd0a16e8ace5651f44d0e",
+  "fixedAcceptanceDraftSha256": "153830c9413b9d1368939b67289126a5e6dde5bc275cc2bcdfa31bdb5881f51a",
+  "productionBackupSha256": "c914fb71d0dd3953ea6f5be90603f8de4da137addaa8eaf548c8d632436669ae",
+  "productionRevision": "7c54da24-6fa9-46a5-810d-834eed8328d9",
+  "abStatusCounts": {
+    "A": {
+      "ready-for-human-review": 15,
+      "missing-evidence": 21,
+      "identity-judgment": 1
+    },
+    "B": {
+      "ready-for-human-review": 19,
+      "missing-evidence": 7
+    }
+  },
+  "recordCounts": {
+    "entities": 29,
+    "claims": 34,
+    "sources": 5,
+    "citations": 34
+  },
+  "unitTestCount": 29,
+  "allUnitTestsPassed": true,
+  "workerRealWorkflowPassed": true,
+  "workerSourceGuardPassed": true,
+  "filmFreshBackupPlanPassed": true,
+  "installedCodeConfigAndElevenReceiptsUnchanged": true,
+  "existingThirtyEightRequestsUnchanged": true,
+  "formalAcceptanceExecuted": false,
+  "publicApply": false,
+  "publishedFilmClaimsReaccepted": 0,
+  "newFormalReceipts": 0,
+  "pendingReviewDataCreated": "/home/isinxnisi/.local/share/plunode-collection-worker-phase-b-20261020/runtime/datasets/film-collection/ab-manifest-20261028",
+  "unrecordedResearchRecords": 79,
+  "unresolvedEntityCandidates": 94,
+  "notSubmittedCheckedRecords": 45,
+  "structuredCandidatesPreserved": 37,
+  "researchHoldsPreserved": 6,
+  "limits": [
+    "No live DB/VPS apply plan or installed Worker tick was executed by this work.",
+    "Actual Worker code/config/control/approvals were not changed. Only pending review data was created under its data root.",
+    "Formal acceptance requires real fixed human judgments and stale-input revalidation."
+  ]
+}

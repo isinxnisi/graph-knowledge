@@ -155,6 +155,10 @@ def template(args, w):
               'baseRevision': context['public']['revision'], 'releaseId': slug(args.release, w)}
     if context.get('sourceKind') == 'film-discovery-v1':
         result['identityDecision'] = None
+        if context.get('filmAdapter') == 'film-saved-manifest-v1':
+            result['identityDecision'] = {'statement': None, 'entityIds': sorted(e['id'] for e in selected['entities'])}
+            result['roleMappingDecision'] = {'statement': None, 'claimIds': sorted(c['id'] for c in selected['claims']
+                if c['contribution']['roleId'] in ['SCRIPT_WRITING', 'PRODUCING'])}
     if context.get('sourceKind'):
         result['sourceKind'] = context['sourceKind']
     w.require(args.output.resolve() not in [Path(r['file']).resolve() for r in refs], 'Decision must not replace review artifacts')

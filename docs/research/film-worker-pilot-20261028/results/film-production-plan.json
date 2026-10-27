@@ -1,0 +1,46 @@
+{
+  "authority": "isolated-unsigned-manifest-plan-not-acceptance",
+  "claimCount": 34,
+  "recordCounts": {
+    "entities": 29,
+    "claims": 34,
+    "sources": 5,
+    "citations": 34
+  },
+  "validation": {
+    "valid": true,
+    "counts": {
+      "nodes": {
+        "Entity": 2207,
+        "Claim": 1931,
+        "Source": 1802,
+        "Citation": 1968,
+        "ExternalIdentifier": 2576
+      },
+      "relationships": {
+        "SUBJECT": 1931,
+        "OBJECT": 1931,
+        "HAS_CITATION": 1968,
+        "CITES": 1968,
+        "HAS_EXTERNAL_ID": 2576
+      }
+    }
+  },
+  "planCounts": {
+    "added": 131,
+    "updated": 0,
+    "relationshipsAdded": 165
+  },
+  "draftRejectedByAcceptanceCore": true,
+  "allPublishedClaimsUnchanged": true,
+  "publishedFilmClaimsReaccepted": 0,
+  "formalReceiptCount": 11,
+  "newFormalReceipts": 0,
+  "databaseConnections": 0,
+  "publicApply": false,
+  "productionBackupBound": true,
+  "limits": [
+    "A fresh validated production export and all receipts supply identities. The merged candidate remains isolated and unsigned.",
+    "No live DB/VPS apply plan was executed; explicit fixed human decisions and revalidation remain required."
+  ]
+}
