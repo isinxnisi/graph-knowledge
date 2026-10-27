@@ -169,7 +169,7 @@ export default function Explorer({ dataset = "demo", initialRoot, services, publ
   }, [activePane, key]);
   const patternExecution = graph.execution?.type === "pattern" ? graph.execution : null;
   const loading = Object.values(graph.expansions).filter((meta) => meta.loading).length + (patternExecution?.loading ? 1 : 0) + (relationLoading ? 1 : 0);
-  const feedbackKey = `${key}:${loading}:${selectedEntity ? graph.expansions[selectedEntity.id]?.open : ""}`;
+  const feedbackKey = `${key}:${selectedEntity ? graph.expansions[selectedEntity.id]?.open : ""}`;
   const blocked = Object.values(graph.expansions).find((meta) => meta.blocked);
   const notice = !dataChanged ? graphNoticePresentation(graph.notice, locale) : null;
   const atHome = !!discoveryHome && !graph.centerId && !initialRoot;
@@ -213,7 +213,7 @@ export default function Explorer({ dataset = "demo", initialRoot, services, publ
         }}>{panes.toRelations}<Icon name="chevron" /></button>} onViewChange={urlState.schedule} navigation={<GraphNavigator compact key={graph.generation} nodes={graph.nodes} selection={selection} onNavigate={(id) => {
           inspectEntity(id); canvas.current?.focusEntity(id);
         }} />} ref={canvas} restoration={viewRestoration} interactionBlocked={relationLoading || !!discoveryCriteria || !!overview || savedViewsOpen || workspaceOpen || capsuleOpen || !!reading} onEntityDoubleClick={(id) => { if (graph.nodes[id]) setOverview(graph.nodes[id]); }} graph={graph} selection={selection} onEntity={selectEntity} onRelation={id => { selectRelation(id); if (matchMedia("(min-width: 801px)").matches) trackPublicEvent("relation_detail"); }} onRelationDoubleClick={(id) => { selectRelation(id); moveToPane("detail"); if (matchMedia("(max-width: 800px)").matches) trackPublicEvent("relation_detail"); }} onToggleEntity={id => { if (!graph.expansions[id]?.open) trackPublicEvent("graph_expand"); toggleEntity(id); }} feedback={<>
-          <div className={`${styles.feedback} ${!graph.centerId ? styles.initialFeedback : ""}`} aria-live="polite"><div key={feedbackKey} className={styles.feedbackContent}><p data-testid="selection-status">{ui.selected}：{selectionText}</p><p>{loading ? ui.graphLoading(loading) : selectedEntity ? graph.expansions[selectedEntity.id]?.expanded ? ui.expanded : graph.expansions[selectedEntity.id]?.pages.length ? ui.closed : ui.expandHelp : <><span className={styles.desktopRelationHelp}>{ui.grouped}</span><span className={styles.touchRelationHelp}>{entry.touchRelationHelp}</span></>}</p></div></div>
+          <div className={`${styles.feedback} ${!graph.centerId ? styles.initialFeedback : ""}`} aria-live="polite"><div key={feedbackKey} className={styles.feedbackContent}><p data-testid="selection-status">{ui.selected}：{selectionText}</p><p>{selectedEntity ? graph.expansions[selectedEntity.id]?.expanded ? ui.expanded : graph.expansions[selectedEntity.id]?.pages.length ? ui.closed : ui.expandHelp : <><span className={styles.desktopRelationHelp}>{ui.grouped}</span><span className={styles.touchRelationHelp}>{entry.touchRelationHelp}</span></>}</p></div></div>
         </>} />
       </section>
       {services && (services.ads || services.analytics) && <PublicServices ref={publicServices} inline active={activePane === "graph" && !atHome} policy={services} beforeNavigation={beforeAccountNavigation} />}

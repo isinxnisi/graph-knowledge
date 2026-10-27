@@ -88,10 +88,18 @@ export function searchInput(request: Request) {
   };
 }
 
-export function neighborsInput(request: Request) {
+export function neighborsInput(request: Request): {
+  limit: number; after: string | null; predicates: import("../domain/exploration").PredicateFilter;
+  contributionRoles?: import("../domain/exploration").ContributionRoleFilter;
+  organizationPositions?: import("../domain/exploration").OrganizationPositionFilter;
+  eventRoles?: import("../domain/exploration").EventRoleFilter;
+  relation?: z.infer<typeof adjacentRelationSchema>; order?: "id";
+} {
   const params = new URL(request.url).searchParams;
   const after = single(params, "after");
-  for (const key of params.keys()) if (!["after", "limit", "predicates", "contributionRoles", "organizationPositions", "eventRoles", "polarity", ...(process.env.GRAPH_DATASET === "public-kg" ? ["revision"] : [])].includes(key)) {
+  const order = single(params, "order");
+  if (order !== null && order !== "id") throw new ApiError(400, "INVALID_ARGUMENT", "未対応の表示順です。");
+  for (const key of params.keys()) if (!["after", "limit", "order", "predicates", "contributionRoles", "organizationPositions", "eventRoles", "polarity", ...(process.env.GRAPH_DATASET === "public-kg" ? ["revision"] : [])].includes(key)) {
     throw new ApiError(400, "INVALID_ARGUMENT", explorationLabels().unsupported);
   }
   const raw = single(params, "predicates");
@@ -100,7 +108,7 @@ export function neighborsInput(request: Request) {
     const list = (key: string) => { const value = single(params, key); return value === null ? null : value === "" ? [] : value.split(","); };
     const relation = parse(adjacentRelationSchema, { version: 1, type: "adjacent", predicates: raw === null ? null : raw === "" ? [] : raw.split(","), traversal: "either", polarity,
       contributionRoles: list("contributionRoles"), organizationPositions: list("organizationPositions"), eventRoles: list("eventRoles") }, "関係の条件が不正です。");
-    return { limit: limit(params, 20, 50), after, predicates: relation.predicates, contributionRoles: relation.contributionRoles, organizationPositions: relation.organizationPositions, eventRoles: relation.eventRoles, relation };
+    return { limit: limit(params, 20, 50), after, ...(order ? { order } : {}), predicates: relation.predicates, contributionRoles: relation.contributionRoles, organizationPositions: relation.organizationPositions, eventRoles: relation.eventRoles, relation };
   }
   const predicates = raw === null ? null : normalizePredicates(parse(z.array(z.enum(PREDICATE_KEYS)), raw === "" ? [] : raw.split(","), explorationLabels().invalidPredicates));
   const rawRoles = single(params, "contributionRoles");
@@ -109,5 +117,5 @@ export function neighborsInput(request: Request) {
   const positions = rawPositions === null ? null : normalizeOrganizationPositions(parse(z.array(organizationPositionSchema), rawPositions === "" ? [] : rawPositions.split(","), organizationParticipationLabels().invalid), predicates);
   const rawEventRoles = single(params, "eventRoles");
   const eventRoles = rawEventRoles === null ? null : normalizeEventRoles(parse(z.array(eventRoleSchema), rawEventRoles === "" ? [] : rawEventRoles.split(","), eventParticipationLabels().invalid), predicates);
-  return { limit: limit(params, 20, 50), after, predicates, ...(roles !== null ? { contributionRoles: roles } : {}), ...(positions !== null ? { organizationPositions: positions } : {}), ...(eventRoles !== null ? { eventRoles } : {}) };
+  return { limit: limit(params, 20, 50), after, ...(order ? { order } : {}), predicates, ...(roles !== null ? { contributionRoles: roles } : {}), ...(positions !== null ? { organizationPositions: positions } : {}), ...(eventRoles !== null ? { eventRoles } : {}) };
 }

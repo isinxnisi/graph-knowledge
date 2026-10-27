@@ -10,7 +10,9 @@ import { claimDetailSchema, type EntitySearchResponse, type EntityResponse, type
 import type { EventRoleFilter, ContributionRoleFilter, OrganizationPositionFilter, PredicateFilter } from "../domain/exploration";
 import { readPublicRevision } from "./public-revision";
 import { encodeNeighborCursor, decodeNeighborCursor, encodeRelationNeighborCursor, decodeRelationNeighborCursor } from "./neighbor-cursor";
-import { relationAcceptsClaim, type RelationCondition } from "../domain/relation-conditions";
+import { relationAcceptsClaim, relationConditionKey, type RelationCondition } from "../domain/relation-conditions";
+import { explorationKey } from "../domain/exploration";
+import { neighborRankingConfig, isRankedCursor, decodeRankedCursor, encodeRankedCursor, rankedNeighbors } from "./neighbor-ranking";
 import { ApiError } from "./http";
 import { readTransaction } from "./read-db";
 import { entitySummary, entityDetail, claimSummary, citationDetail, relatedId } from "./mappers";
@@ -33,20 +35,28 @@ export function getEntity(id: string): Promise<EntityResponse> {
   });
 }
 
-export function getNeighbors(id: string, limit: number, after: string | null, predicates: PredicateFilter = null, contributionRoles: ContributionRoleFilter = null, organizationPositions: OrganizationPositionFilter = null, eventRoles: EventRoleFilter = null, expectedRevision: string | null = null, relation?: RelationCondition): Promise<NeighborsResponse> {
+export function getNeighbors(id: string, limit: number, after: string | null, predicates: PredicateFilter = null, contributionRoles: ContributionRoleFilter = null, organizationPositions: OrganizationPositionFilter = null, eventRoles: EventRoleFilter = null, expectedRevision: string | null = null, relation?: RelationCondition, order?: "id"): Promise<NeighborsResponse> {
   if (relation) {
     if (relation.type !== "adjacent") throw new ApiError(400, "INVALID_ARGUMENT", "一段の関係条件が必要です。");
     predicates = relation.predicates; contributionRoles = relation.contributionRoles; organizationPositions = relation.organizationPositions; eventRoles = relation.eventRoles;
   }
   return readTransaction(async (tx) => {
     const revision = process.env.GRAPH_DATASET === "public-kg" ? await readPublicRevision(tx, expectedRevision) : null;
-    const queryAfter = relation ? decodeRelationNeighborCursor(after, id, relation, datasetMode(process.env.GRAPH_DATASET), revision) : revision ? decodeNeighborCursor(after, id, predicates, contributionRoles, "public-kg", organizationPositions, eventRoles, revision) : after;
+    const config = neighborRankingConfig();
+    const rankedCursor = isRankedCursor(after);
+    if (rankedCursor && (!config.enabled || order === "id")) throw new ApiError(409, "DATASET_CHANGED", "表示順が変わりました。取得し直してください。");
+    const ranked = !!revision && config.enabled && order !== "id" && (!after || rankedCursor);
+    const scope = { center: id, condition: relation ? relationConditionKey(relation) : explorationKey(predicates, contributionRoles, organizationPositions, eventRoles), revision: revision ?? "", candidates: config.candidates, connections: config.connections };
+    const position = ranked && after ? decodeRankedCursor(after, scope) : null;
+    const queryAfter = ranked ? null : relation ? decodeRelationNeighborCursor(after, id, relation, datasetMode(process.env.GRAPH_DATASET), revision) : revision ? decodeNeighborCursor(after, id, predicates, contributionRoles, "public-kg", organizationPositions, eventRoles, revision) : after;
     const centerResult = await tx.run(ENTITY_DETAIL, { id });
     if (!centerResult.records.length) throw notFound();
     const center = entitySummary(centerResult.records[0].get("entity"));
     let query = eventRoles !== null ? NEIGHBORS_BY_EVENT : organizationPositions !== null ? NEIGHBORS_BY_QUALIFICATION : contributionRoles === null ? NEIGHBORS : NEIGHBORS_BY_ROLE;
     if (relation?.polarity === "affirmed") query = query.replace("WHERE c.visibility = 'published'", "WHERE c.visibility = 'published' AND c.polarity = 'affirmed'");
-    const result = await tx.run(query, { id, after: queryAfter, predicates, contributionRoles, organizationPositions, eventRoles, take: int(limit + 1) });
+    const params = { id, after: queryAfter, predicates, contributionRoles, organizationPositions, eventRoles, polarity: relation?.polarity ?? "all-records", take: int(limit + 1) };
+    const rankedPage = ranked ? await rankedNeighbors(tx, params, config, position) : null;
+    const result = rankedPage?.result ?? await tx.run(query, params);
     const nodes = new Map([[center.id, center]]);
     const claims = result.records.slice(0, limit).map((record) => {
       const subject = entitySummary(record.get("subject"));
@@ -57,8 +67,9 @@ export function getNeighbors(id: string, limit: number, after: string | null, pr
     const hasMore = result.records.length > limit;
     if (revision) await readPublicRevision(tx, revision);
     if (relation && claims.some(c => !relationAcceptsClaim(relation, c))) throw new Error("Unexpected relation claim");
-    return { ...(revision ? { revision } : {}), ...(relation ? { relation } : {}), centerId: id, nodes: [...nodes.values()], claims,
-      page: { hasMore, nextCursor: hasMore ? relation ? encodeRelationNeighborCursor(id, relation, claims.at(-1)!.id, datasetMode(process.env.GRAPH_DATASET), revision) : encodeNeighborCursor(id, predicates, claims.at(-1)!.id, contributionRoles, undefined, organizationPositions, eventRoles, revision ?? undefined) : null } };
+    const last = result.records[limit - 1];
+    return { ...(revision ? { revision } : {}), ...(relation ? { relation } : {}), ...(rankedPage ? { ranking: rankedPage.ranking } : {}), centerId: id, nodes: [...nodes.values()], claims,
+      page: { hasMore, nextCursor: hasMore ? ranked ? encodeRankedCursor(scope, { round: last.get("round").toNumber(), rank: last.get("rank").toNumber(), neighbor: last.get("neighbor") }) : relation ? encodeRelationNeighborCursor(id, relation, claims.at(-1)!.id, datasetMode(process.env.GRAPH_DATASET), revision) : encodeNeighborCursor(id, predicates, claims.at(-1)!.id, contributionRoles, undefined, organizationPositions, eventRoles, revision ?? undefined) : null } };
   });
 }
 

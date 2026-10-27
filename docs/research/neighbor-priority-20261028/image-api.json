@@ -1,0 +1,69 @@
+{
+  "origin": "http://127.0.0.1:3288",
+  "revision": "34befbcd-8f5f-4cd9-a059-242a3f0b5ffb",
+  "checks": [
+    {
+      "path": "/api/dataset",
+      "ms": 102,
+      "status": 200
+    },
+    {
+      "path": "/api/entities",
+      "ms": 814,
+      "status": 200
+    },
+    {
+      "path": "/api/entities/d900543a-9c11-48c1-be76-1822b756fcc4/neighbors",
+      "ms": 3067,
+      "status": 200
+    },
+    {
+      "path": "/api/entities/d900543a-9c11-48c1-be76-1822b756fcc4/neighbors",
+      "ms": 86,
+      "status": 200
+    },
+    {
+      "name": "浦沢直樹",
+      "id": "d900543a-9c11-48c1-be76-1822b756fcc4",
+      "claims": 17,
+      "ranking": {
+        "mode": "bounded",
+        "candidateLimit": 200,
+        "connectionLimit": 50,
+        "evaluatedCandidates": 9,
+        "unevaluatedCandidates": false,
+        "cappedCandidates": 0
+      },
+      "sameEvidenceAsLegacy": true
+    },
+    {
+      "path": "/api/entities",
+      "ms": 35,
+      "status": 200
+    },
+    {
+      "path": "/api/entities/2b7c6289-d050-4dc0-93e3-9307681253cc/neighbors",
+      "ms": 128,
+      "status": 200
+    },
+    {
+      "path": "/api/entities/2b7c6289-d050-4dc0-93e3-9307681253cc/neighbors",
+      "ms": 45,
+      "status": 200
+    },
+    {
+      "name": "PLUTO",
+      "id": "2b7c6289-d050-4dc0-93e3-9307681253cc",
+      "claims": 6,
+      "ranking": {
+        "mode": "bounded",
+        "candidateLimit": 200,
+        "connectionLimit": 50,
+        "evaluatedCandidates": 3,
+        "unevaluatedCandidates": false,
+        "cappedCandidates": 0
+      },
+      "sameEvidenceAsLegacy": true
+    }
+  ]
+}

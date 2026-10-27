@@ -113,8 +113,8 @@ export function useGraphExplorer() {
         }
         return;
       }
-      const page = state.relation ? await fetchAdjacentNeighbors(id, after, controller.signal, state.relation, state.revision ?? null)
-        : await fetchNeighbors(id, after, controller.signal, state.predicates, state.contributionRoles ?? null, state.organizationPositions ?? null, state.eventRoles ?? null, ...(state.revision ? [state.revision] as const : []));
+      const page = state.relation ? await fetchAdjacentNeighbors(id, after, controller.signal, state.relation, state.revision ?? null, ...(state.neighborOrder === "id" && state.revision ? ["id"] as const : []))
+        : await fetchNeighbors(id, after, controller.signal, state.predicates, state.contributionRoles ?? null, state.organizationPositions ?? null, state.eventRoles ?? null, ...(state.revision ? [state.revision, ...(state.neighborOrder === "id" ? ["id"] as const : [])] as const : []));
       if (!valid()) return;
       if (page.centerId !== id) throw new Error("Unexpected center");
       commit(mergePage(current.current, page, after));

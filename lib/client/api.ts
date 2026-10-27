@@ -44,8 +44,9 @@ export const discoverEntities = (params: URLSearchParams, signal: AbortSignal) =
 export const fetchEntity = (id: string, signal: AbortSignal) => get<EntityResponse>(`/api/entities/${encodeURIComponent(id)}`, signal);
 export const fetchClaim = (id: string, signal: AbortSignal, revision: string | null = null) => get<ClaimResponse>(`/api/claims/${encodeURIComponent(id)}${revision ? `?${new URLSearchParams({ revision })}` : ""}`, signal);
 export const fetchDatasetRevision = (signal: AbortSignal) => get<{ dataset: string; revision: string | null }>("/api/dataset", signal);
-export const fetchNeighbors = (id: string, after: string | null, signal: AbortSignal, predicates: PredicateFilter = null, roles: ContributionRoleFilter = null, positions: OrganizationPositionFilter = null, eventRoles: EventRoleFilter = null, revision: string | null = null) => {
+export const fetchNeighbors = (id: string, after: string | null, signal: AbortSignal, predicates: PredicateFilter = null, roles: ContributionRoleFilter = null, positions: OrganizationPositionFilter = null, eventRoles: EventRoleFilter = null, revision: string | null = null, order?: "id") => {
   const params = new URLSearchParams();
+  if (order) params.set("order", order);
   if (revision) params.set("revision", revision);
   if (eventRoles !== null) params.set("eventRoles", eventRoles.join(","));
   if (after !== null) params.set("after", after);
@@ -54,10 +55,11 @@ export const fetchNeighbors = (id: string, after: string | null, signal: AbortSi
   if (predicates !== null) params.set("predicates", predicates.join(","));
   return get<NeighborsResponse>(`/api/entities/${encodeURIComponent(id)}/neighbors${params.size ? `?${params}` : ""}`, signal);
 };
-export async function fetchAdjacentNeighbors(id: string, after: string | null, signal: AbortSignal, input: RelationCondition, revision: string | null = null) {
+export async function fetchAdjacentNeighbors(id: string, after: string | null, signal: AbortSignal, input: RelationCondition, revision: string | null = null, order?: "id") {
   const relation = normalizeRelationCondition(input);
   if (relation.type !== "adjacent") throw new ClientApiError("一段の関係条件が必要です。", 400);
   const params = new URLSearchParams({ polarity: relation.polarity });
+  if (order) params.set("order", order);
   if (revision) params.set("revision", revision); if (after) params.set("after", after);
   for (const [key, list] of [["predicates", relation.predicates], ["contributionRoles", relation.contributionRoles], ["organizationPositions", relation.organizationPositions], ["eventRoles", relation.eventRoles]] as const) if (list !== null) params.set(key, list.join(","));
   const result = await get<NeighborsResponse>(`/api/entities/${encodeURIComponent(id)}/neighbors?${params}`, signal);

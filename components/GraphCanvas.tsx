@@ -21,6 +21,7 @@ import { attachGraphBadges } from "../lib/client/graph-badges";
 import { createGraphMotion } from "../lib/client/graph-motion";
 import styles from "./Explorer.module.css";
 import AnimatedDetails from "./AnimatedDetails";
+import NeighborLoading from "./NeighborLoading";
 
 type Props = { compactGuide?: boolean; footerAction?: ReactNode; onViewChange?: () => void; contentOnly?: boolean; ref?: Ref<GraphCanvasHandle>; notification?: ReactNode; feedback?: ReactNode; navigation?: ReactNode; restoration?: ViewRestoration | null; interactionBlocked?: boolean; graph: GraphState; selection: Selection; onEntity: (id: string) => void; onRelation: (id: string) => void; onRelationDoubleClick?: (id: string) => void; onToggleEntity: (id: string) => void; onEntityDoubleClick?: (id: string) => void };
 
@@ -263,7 +264,10 @@ export default function GraphCanvas({ compactGuide = false, footerAction, onView
       </div>
       <div className={styles.cySurface} ref={container} onPointerDownCapture={() => core.current?.resize()} data-testid="graph-canvas" tabIndex={-1} data-focus-destination role="img" aria-label={ui.graphAria} />
       <div className={styles.relationPatches} ref={badgeLayer} aria-hidden="true" />
-      <div className={styles.graphOverlay} data-testid="graph-overlay">{feedback}</div>
+      <div className={styles.graphOverlay} data-testid="graph-overlay">{feedback}
+        {Object.entries(graph.expansions).filter(([, meta]) => meta.active && meta.loading).map(([id, meta]) =>
+          <NeighborLoading key={`${id}:${meta.request}`} name={graph.nodes[id]?.name ?? ""} more={meta.expanded} />)}
+      </div>
       {notification && <div className={styles.canvasNotification}>{notification}</div>}
     </div>
     {compactGuide ? <div className={styles.graphFooter}>

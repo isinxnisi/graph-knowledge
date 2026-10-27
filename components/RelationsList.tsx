@@ -1,5 +1,6 @@
 import { useState } from "react";
 import AnimatedDetails from "./AnimatedDetails";
+import NeighborLoading from "./NeighborLoading";
 import { useUiLocale } from "../lib/client/ui-locale";
 import { explorerLabels, explorerMessage } from "../lib/i18n/explorer";
 import type { DatasetMode } from "../lib/domain/dataset";
@@ -40,7 +41,7 @@ export default function RelationsList({ graph, selection, onEntity, onClaim, onE
     </div>
     <AnimatedDetails key={entity.id} open className={styles.adjacencyDisclosure} bodyClassName={styles.adjacencyBody} summary={<><h3>{ui.adjacent(entity.name)}<small className={styles.muted}>{ui.adjacentHelp}</small></h3><span className={styles.disclosureChevron} aria-hidden="true"><Icon name="chevron" /></span></>}>
     <div className={styles.actions}>{expansion?.open ? <button onClick={() => onClose(entity.id)}>{ui.closeBranch}</button> : <button onClick={() => onExpand(entity.id)}>{expansion?.pages.length ? ui.reopenBranch : ui.expand}</button>}</div>
-    {expansion?.loading && <p role="status">{expansion.expanded ? text.neighborsLoadingMore : text.neighborsLoading}</p>}
+    {expansion?.loading && <NeighborLoading key={`${entity.id}:${expansion.request}`} name={entity.name} more={expansion.expanded} />}
     {expansion?.error && <div role="alert" className={styles.error}>
       <p>{explorerMessage(expansion.error, locale)}</p>
       <button disabled={expansion.loading} onClick={() => onExpand(entity.id, expansion.open && expansion.expanded)}>{text.neighborsRetry}</button>
@@ -48,9 +49,11 @@ export default function RelationsList({ graph, selection, onEntity, onClaim, onE
     {expansion?.open && expansion.hasMore && <div>
       <p className={styles.muted}>{text.neighborsPartial}</p>
       <button onClick={() => onExpand(entity.id, true)} disabled={expansion.loading || expansion.blocked}>
-        {expansion.loading ? text.neighborsLoadingMore : text.neighborsMore}
+        {text.neighborsMore}
       </button>
     </div>}
+    {expansion?.expanded && !expansion.loading && !expansion.error && <p className={styles.muted}>{text.neighborsShown(claims.length)} {expansion.hasMore ? "" : text.neighborsComplete}</p>}
+    {expansion?.ranking && <p className={styles.muted}>{text.neighborsRanked}</p>}
     {!claims.length && !expansion?.loading && !expansion?.error && <p role="status">{expansion?.expanded && expansion.pages.every((page) => !page.claimIds.length) && !expansion.hasMore ? graph.predicates === null && graph.contributionRoles === null && graph.organizationPositions === null && graph.eventRoles === null ? datasetLabels(dataset, locale).empty : text.empty : !expansion?.open ? ui.closedHelp : ui.noAdjacent}</p>}
     <ul className={styles.relationList}>
       {claims.map((claim) => {

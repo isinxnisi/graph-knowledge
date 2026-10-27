@@ -36,7 +36,7 @@ export const legacyWorkspaceSchema = z.strictObject({
 const branchesSchema = z.array(z.strictObject({ id: z.uuidv4(), open: z.boolean(), pages: z.number().int().min(0).max(WORKSPACE_PAGE_LIMIT) })).max(CACHE_LIMITS.entities)
   .refine(v => new Set(v.map(b => b.id)).size === v.length && v.reduce((sum, b) => sum + b.pages, 0) <= WORKSPACE_PAGE_LIMIT);
 export const savedExecutionSchema = z.discriminatedUnion("type", [
-  z.strictObject({ type: z.literal("adjacent"), branches: branchesSchema }),
+  z.strictObject({ type: z.literal("adjacent"), branches: branchesSchema, order: z.literal("bounded").optional() }),
   z.strictObject({ type: z.literal("pattern"), routes: z.array(z.strictObject({ route: routeRefSchema, open: z.boolean() })).max(100),
     requiredRouteKey: z.string().nullable(), candidateBoundary: routeRefSchema.nullable(),
     entityState: z.strictObject({ version: z.literal(1),
@@ -109,7 +109,7 @@ export function captureWorkspace(dataset: DatasetMode, title: string, graph: Gra
     execution: graph.execution?.type === "pattern" ? { type: "pattern", routes: Object.values(graph.execution.routes), requiredRouteKey: graph.execution.requiredRoute, candidateBoundary: graph.execution.candidateBoundary,
       entityState: { version: 1, branches: Object.entries(graph.expansions).map(([id, m]) => ({ id, open: m.open, claimIds: [...new Set(m.pages.flatMap(p => p.claimIds))] })),
         sources: [{ id: graph.centerId!, requiredRouteKey: graph.execution.requiredRoute, candidateBoundary: graph.execution.candidateBoundary },
-          ...Object.entries(graph.execution.sources ?? {}).map(([id, s]) => ({ id, requiredRouteKey: s.requiredRoute, candidateBoundary: s.candidateBoundary }))] } } : { type: "adjacent", branches },
+          ...Object.entries(graph.execution.sources ?? {}).map(([id, s]) => ({ id, requiredRouteKey: s.requiredRoute, candidateBoundary: s.candidateBoundary }))] } } : { type: "adjacent", branches, ...(graph.neighborOrder === "bounded" || Object.values(graph.expansions).some(m => m.ranking) ? { order: "bounded" } : {}) },
     view: view ? { pan: view.pan, zoom: view.zoom, initialLayoutDone: view.initialLayoutDone, positions: Object.fromEntries(Object.entries(view.positions).filter(([id]) => graph.cacheNodes[id])) } : null,
   });
 }
@@ -260,7 +260,7 @@ export async function rebuildWorkspace(value: WorkspaceInput, signal: AbortSigna
     predicates: conditions.predicates, contributionRoles: conditions.contributionRoles,
     organizationPositions: conditions.organizationPositions, eventRoles: conditions.eventRoles,
   }))) === relationConditionKey(conditions);
-  let graph: GraphState = { ...emptyGraph(), predicates: conditions.predicates, contributionRoles: conditions.contributionRoles,
+  let graph: GraphState = { ...emptyGraph(), neighborOrder: workspace.execution.order ?? "id", predicates: conditions.predicates, contributionRoles: conditions.contributionRoles,
     organizationPositions: conditions.organizationPositions, eventRoles: conditions.eventRoles, relation: conditions,
     conditionKey: relationConditionKey(conditions),
     roots: [root.id], centerId: root.id, cacheNodes: { [root.id]: root },
@@ -283,8 +283,8 @@ export async function rebuildWorkspace(value: WorkspaceInput, signal: AbortSigna
       signal.throwIfAborted();
       const after = meta.nextCursor;
       const parsed = neighborsSchema.safeParse(!legacyCompatible
-        ? await fetchAdjacentNeighbors(branch.id, after, signal, conditions, graph.revision ?? null)
-        : await fetchNeighbors(branch.id, after, signal, conditions.predicates, conditions.contributionRoles, conditions.organizationPositions, conditions.eventRoles, ...(graph.revision ? [graph.revision] as const : [])));
+        ? await fetchAdjacentNeighbors(branch.id, after, signal, conditions, graph.revision ?? null, ...(graph.neighborOrder === "id" && workspace.dataset === "public-kg" ? ["id"] as const : []))
+        : await fetchNeighbors(branch.id, after, signal, conditions.predicates, conditions.contributionRoles, conditions.organizationPositions, conditions.eventRoles, ...(graph.neighborOrder === "id" && workspace.dataset === "public-kg" ? [graph.revision ?? null, "id"] as const : graph.revision ? [graph.revision] as const : [])));
       signal.throwIfAborted();
       if (!parsed.success) throw new WorkspaceError("response");
       const page = parsed.data;

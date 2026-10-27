@@ -1,0 +1,17 @@
+[
+  {
+    "id": "31e2b0cd-dcfc-48f5-b7fc-ebe1022f3e50",
+    "name": "University of Tokyo",
+    "claims": 970
+  },
+  {
+    "id": "640e9b42-df05-45b1-b9c7-b1793a445211",
+    "name": "Harvard University",
+    "claims": 29
+  },
+  {
+    "id": "e121941b-d976-4b91-ba23-ba72a9a33236",
+    "name": "Massachusetts Institute of Technology (MIT)",
+    "claims": 25
+  }
+]

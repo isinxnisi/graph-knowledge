@@ -27,6 +27,7 @@ export type EntitySearchResponse = { items: EntityDetail[]; hasMore: boolean };
 export type DiscoverySearchResponse = EntitySearchResponse & { revision?: string; nextCursor: string | null; starts: EntitySummary[]; total?: number; facets?: import("./discovery").DiscoveryFacet[]; themes?: import("./discovery").DiscoveryTheme[] };
 export type EntityResponse = { entity: EntityDetail };
 export type NeighborsResponse = {
+  ranking?: { mode: "bounded"; candidateLimit: number; connectionLimit: number; evaluatedCandidates: number; unevaluatedCandidates: boolean; cappedCandidates: number };
   revision?: string;
   relation?: import("./relation-conditions").RelationCondition;
   centerId: string; nodes: EntitySummary[]; claims: ClaimSummary[];

@@ -12,11 +12,13 @@ export const GRAPH_LIMIT_MESSAGE = "表示上限に達したため、他の展�
 export type Selection = { kind: "entity" | "claim" | "relation"; id: string } | null;
 export type AcceptedPage = { after: string | null; claimIds: string[]; nextCursor: string | null };
 export type Expansion = {
+  ranking?: NeighborsResponse["ranking"];
   open: boolean; expanded: boolean; active: boolean; pages: AcceptedPage[];
   nextCursor: string | null; hasMore: boolean;
   loading: boolean; error: string | null; blocked: boolean; request: number; used: number;
 };
 export type GraphState = {
+  neighborOrder?: "id" | "bounded";
   // Missing on legacy in-memory snapshots. No persistence migration in STEP 3a.
   relation?: RelationCondition;
   execution?: { type: "adjacent" } | PatternExecution;
@@ -103,7 +105,7 @@ export function mergePage(graph: GraphState, page: NeighborsResponse, after: str
   const pages = [...previous.pages.filter((entry) => entry.after !== after), accepted];
   let candidate = projectGraph({ ...graph, ...(page.revision ? { revision: page.revision } : {}), roots, centerId: roots[0], cacheNodes, cacheClaims, lastExpandedId: page.centerId, evictedIds: graph.evictedIds.filter((id) => id !== page.centerId), clock: graph.clock + 1, notice: null,
     expansions: { ...graph.expansions, [page.centerId]: { ...previous, open: true, pages,
-      nextCursor: page.page.nextCursor, hasMore: page.page.hasMore, loading: false, error: null, blocked: false, used: graph.clock + 1 } } });
+      nextCursor: page.page.nextCursor, hasMore: page.page.hasMore, ranking: page.ranking, loading: false, error: null, blocked: false, used: graph.clock + 1 } } });
   if (!withinLimits(candidate)) return reject(graph, page.centerId);
   candidate = trimCache(candidate);
   if (!cacheFits(candidate)) return reject(graph, page.centerId, "一時キャッシュの上限に達したため、中心を選び直してください。");

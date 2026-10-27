@@ -1,0 +1,45 @@
+[
+  {
+    "mode": "bounded",
+    "firstMs": 326,
+    "warmMs": [
+      220,
+      153,
+      134
+    ],
+    "additionalMs": 882,
+    "concurrent4WallMs": 368,
+    "parallelMs": [
+      202,
+      233,
+      337,
+      262
+    ],
+    "ranking": {
+      "mode": "bounded",
+      "candidateLimit": 200,
+      "connectionLimit": 50,
+      "evaluatedCandidates": 200,
+      "unevaluatedCandidates": true,
+      "cappedCandidates": 0
+    }
+  },
+  {
+    "mode": "id",
+    "firstMs": 49,
+    "warmMs": [
+      58,
+      70,
+      71
+    ],
+    "additionalMs": 423,
+    "concurrent4WallMs": 91,
+    "parallelMs": [
+      78,
+      82,
+      88,
+      83
+    ],
+    "ranking": null
+  }
+]

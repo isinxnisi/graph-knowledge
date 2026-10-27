@@ -70,7 +70,7 @@ describe("隣接一覧からの取得", () => {
     const expansion = graph.expansions[root.id];
     for (const state of [{ blocked: true }, { loading: true }]) {
       rerender(<RelationsList {...handlers} graph={{ ...graph, expansions: { [root.id]: { ...expansion, ...state } } }} selection={selection} />);
-      const button = screen.getByRole("button", { name: state.loading ? "隣接関係の続きを取得中…" : "隣接関係の続きを表示" });
+      const button = screen.getByRole("button", { name: "隣接関係の続きを表示" });
       expect((button as HTMLButtonElement).disabled).toBe(true);
       fireEvent.click(button);
     }
