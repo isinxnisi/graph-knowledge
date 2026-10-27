@@ -26,8 +26,8 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-10-27T09:20:00+00:00",
-  "phase": "running",
+  "nextStartAt": "2026-10-27T08:49:14.131286+00:00",
+  "phase": "interval",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
@@ -35,21 +35,16 @@
     "eligibleAt": "2026-10-27T18:00:00+00:00",
     "windowEndAt": "2026-10-27T22:00:00+00:00"
   },
-  "activeAttempt": {
-    "requestId": "issue-50-dot-endo-tista-20261027",
-    "startedAt": "2026-10-27T08:37:23.829498+00:00",
-    "limitAt": "2026-10-27T09:10:00+00:00"
-  },
+  "activeAttempt": null,
   "lastAttempt": {
     "requestId": "issue-50-dot-endo-tista-20261027",
-    "endedAt": "2026-10-27T08:25:21.152285+00:00"
+    "endedAt": "2026-10-27T08:39:14.131288+00:00"
   },
   "controlError": null,
   "requestsByPhase": {
     "blocked": 12,
     "completed": 23,
-    "awaiting-recovery": 1,
-    "running": 1
+    "awaiting-recovery": 2
   },
   "issueIntake": {
     "collection-control/issue-sources/25.json": {
@@ -128,5 +123,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-10-27T08:38:06.568493+00:00"
+  "checkedAt": "2026-10-27T08:39:52.213062+00:00"
 }
