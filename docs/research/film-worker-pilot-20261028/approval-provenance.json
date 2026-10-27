@@ -1,0 +1,16 @@
+{
+  "source": "trusted-human-message-in-current-Codex-chat",
+  "threadId": "01a17453-6c87-7961-9773-7ad78e90dbd7",
+  "turnId": "01a17f0c-05e5-7650-8d19-af2d43551e5c",
+  "userMessageId": "01a17f0c-06b9-7553-8498-e4b12ce8f997",
+  "startedAt": 1793132856,
+  "approvalTimestamp": "2026-10-27T20:27:36.000Z",
+  "timestampSource": "Codex turn.startedAt (seconds precision; user message reception)",
+  "humanText": "以下の固定対象について、運営者として両方の実施を承認します。\n\n① 固定漫画Workerの5ファイル更新\n\n* source commit：089ee51922d68b03f2e8a9029a3811babfc3dc67\n* overlay manifest SHA-256：68b62c2f93704d8f82b93f0ac2dc6cc94e020c7802edd0a16e8ace5651f44d0e\n\n承認済み5ファイルのみを既存Workerへbackportしてください。既存base pin、collector実行hash、既存承認・依頼、coordinator／peerとの契約は保持してください。\n\n② 映画34 Claimの正式受入\n\n* 判断票：formal-decision-draft.json\n* SHA-256：153830c9413b9d1368939b67289126a5e6dde5bc275cc2bcdfa31bdb5881f51a\n\nCANDIDATE_REVIEW.mdに記載されたA群15件＋B群19件の34 Claim、29新EntityのUUID確定、5新Source、34 Citationの正式受入を承認します。\n\nB群19件のSCRIPT_WRITING／PRODUCINGの意味対応、および記載されたnull scope／periodの扱いも承認対象に含みます。既存3 Entityの正式UUIDは維持してください。\n\n実施条件\n\n* 最新の本番revision、全11 receipt、固定hash、Worker状態を実施前に再確認する。\n* 承認済みの意味・対象・根拠・同一性が一致する範囲で進める。\n* 判断票への実際の承認記録と、変換後のhashを正しく残す。\n* 不一致・新たな判断事項が発生した場合は、対象を勝手に変更せず停止する。\n* 更新・正式受入後は、既存契約によるrelease候補作成とoffline planまで継続する。\n* 検証・記録・commit・pushまで完了する。\n\n今回の承認に、本番公開署名・本番apply・beta／本番Web切替は含めません。\n\n必要な公開requestを準備した後、次の運営者判断地点で結果を報告してください。",
+  "approvedWorkerSourceCommit": "089ee51922d68b03f2e8a9029a3811babfc3dc67",
+  "approvedOverlayManifestSha256": "68b62c2f93704d8f82b93f0ac2dc6cc94e020c7802edd0a16e8ace5651f44d0e",
+  "approvedDraftSha256": "153830c9413b9d1368939b67289126a5e6dde5bc275cc2bcdfa31bdb5881f51a",
+  "productionPublicationSignatureIncluded": false,
+  "publicApplyAuthorized": false,
+  "betaOrWebSwitchAuthorized": false
+}

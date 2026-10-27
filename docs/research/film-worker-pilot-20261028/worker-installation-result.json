@@ -1,0 +1,48 @@
+{
+  "status": "approved-five-file-backport-installed",
+  "sourceCommit": "089ee51922d68b03f2e8a9029a3811babfc3dc67",
+  "overlayManifestSha256": "68b62c2f93704d8f82b93f0ac2dc6cc94e020c7802edd0a16e8ace5651f44d0e",
+  "approvalTimestamp": "2026-10-27T20:27:36.000Z",
+  "installedAt": "2026-10-27T20:33:27+00:00",
+  "changedFiles": [
+    {
+      "file": "lib/domain/contribution.ts",
+      "installedSha256": "0864214a74e18fa1bfa73db717f708ff0025d9147fb567050e69c9e9aa958130",
+      "candidateSha256": "7bb75f38d7b27829c6e5de32bbc90ef6cd740f5ce6d3ff3b6978f73ab35fd59b"
+    },
+    {
+      "file": "lib/domain/role-vocabulary.ts",
+      "installedSha256": "a353b3f76a235fd226f2fbc4b19da8143b27d9e7595bf02f4726ace9c7b25061",
+      "candidateSha256": "c6fcd2d9ed6b3c4bd2dc8c84c6451780136ae783c212e03a577ad000a8a6a329"
+    },
+    {
+      "file": "lib/i18n/contribution.ts",
+      "installedSha256": "2f6569a6f77bb85298c68e360861ce924c83b7001cede635128cb575f29906fc",
+      "candidateSha256": "dcbf69965240a0d1089f8f2a34f38be22bd63bb0617c332fbfe75b4cf03ff390"
+    },
+    {
+      "file": "vocabulary/contribution-roles/catalog.json",
+      "installedSha256": "2d5370cab52998b822331eafa13292864ae5cc1af37b71c4d9d389b5ecf7f652",
+      "candidateSha256": "0464f247eefa16442d01a0cfdabb8cc2e83fab7d6cbe2d8e9937b403b4aad094"
+    },
+    {
+      "file": "vocabulary/contribution-roles/reviews.json",
+      "installedSha256": "ed6098bff4474c0cd1c8b8658540ecb5b88a6e04aae555f4da1c813842317e9c",
+      "candidateSha256": "e233cdfaaa98e5e1899d757f31aeb015ffd21287bae3d4ef5780d04a33169d30"
+    }
+  ],
+  "baseCodeCommitUnchanged": "973c7b0c599f79905a029b28b524f4924e169376",
+  "collectorExecutionHashUnchanged": "80e05b67bc0129b963653b90df4cfbfa5bd6aff190acda99f54c08541e55801e",
+  "configStateRequestsAndCoordinationUnchanged": true,
+  "elevenReceiptBytesUnchanged": true,
+  "validation": {
+    "filmBase": true,
+    "oldBase": true,
+    "oldEightAndIsbn": true,
+    "unknownRoleRejected": true,
+    "unknownScopeRejected": true
+  },
+  "recovery": "/home/isinxnisi/.local/share/plunode-recovery/film-worker-accepted-20261028/worker-before",
+  "publicApply": false,
+  "signed": false
+}

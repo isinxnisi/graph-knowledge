@@ -1,0 +1,34 @@
+{
+  "nonce": "13abfb93-ba2d-44f7-a56b-352aa7ab0ab0",
+  "candidate": "/home/isinxnisi/.local/share/plunode-publication/preparation/candidates/13abfb93-ba2d-44f7-a56b-352aa7ab0ab0",
+  "request": {
+    "schemaVersion": 1,
+    "purpose": "public-kg-publication",
+    "environment": "production",
+    "release": "publication-8b0b1d67656a15c7e505ba1f",
+    "baseRelease": "publication-film-initial-20261027",
+    "baseRevision": "7c54da24-6fa9-46a5-810d-834eed8328d9",
+    "receiptSetSha256": "9cfd5c4f9a84d6f37ac6a58228421d76d1859d0f7e48b117b424c42495af1969",
+    "planSha256": "7f21012079e7c71ae096e6bd83d8ddd242746a9ed289ae60aa4b465ff867912f",
+    "operatorDigest": "sha256:7042781b105067ce3adea0c59bccfb4c8326f84c0ca6aa5f1b8c26e6cd3d5cef",
+    "artifactSha256": "9a58b3a3515c4e8fb4093a76210acc4828a8cfefc68b1dbba135b019ee41d2da"
+  },
+  "counts": {
+    "entities": 29,
+    "claims": 34,
+    "sources": 5,
+    "citations": 34
+  },
+  "formalReceipts": 12,
+  "builderSource": "7392d8e343a11644b1047364c71653779ad0c93c",
+  "validationImage": "sha256:2bf646a22e867e5aa5fce5a155db45c337c4134ad6c0f337b65617c5799912e9",
+  "priorOneOffBuilderSha256": "7c368c946d7e81b843505996cc1ad4701a5a375790083935d551cc66ee96ad52",
+  "serialization": "Existing fixtureV4Schema key order only; exact JSON values preserved",
+  "reusedExistingDurableIntent": true,
+  "backupSha256": "c914fb71d0dd3953ea6f5be90603f8de4da137addaa8eaf548c8d632436669ae",
+  "existingPreparationState": "uploading",
+  "armed": false,
+  "liveVpsPlanPerformed": false,
+  "signed": false,
+  "publicApply": false
+}

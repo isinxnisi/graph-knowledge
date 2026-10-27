@@ -108,8 +108,10 @@ const b=validatePublicBackup({payload,checksum:sha256(stableJson(payload))});fs.
     after={str(p.relative_to(runtime)):sha(p) for p in (runtime/"datasets/manga-collection").glob("accepted-*/acceptance.json")}
     assert after==receipt_hashes,"No test may create a formal receipt"
     film_receipts=[p for p in receipts if json.loads(p.read_text()).get("sourceReviewKind")=="film-discovery-v1"]
-    assert len(film_receipts)==1
-    assert set(json.loads(film_receipts[0].read_text())["acceptedRecordIds"]["claims"])=={"34b41d23-f4e6-4fc6-aa6f-2905f3c2a890","4c88b8e8-154d-47ad-bf82-f19876ecaebd"}
+    # Later formally accepted film sets may remain unpublished. Keep proving the
+    # original published two-Claim receipt without assuming it is the only one.
+    published_film_ids={"34b41d23-f4e6-4fc6-aa6f-2905f3c2a890","4c88b8e8-154d-47ad-bf82-f19876ecaebd"}
+    assert len([p for p in film_receipts if set(json.loads(p.read_text())["acceptedRecordIds"]["claims"])==published_film_ids])==1
     preserved={}
     for name,key in [("catalog.json","entries"),("reviews.json",None)]:
         old=json.loads((INSTALLED/"runtime/vocabulary/contribution-roles"/name).read_text())

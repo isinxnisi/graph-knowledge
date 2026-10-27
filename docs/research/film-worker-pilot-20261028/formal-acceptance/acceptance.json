@@ -1,0 +1,1736 @@
+{
+  "version": 1,
+  "status": "accepted-for-release-preparation-only",
+  "reviewer": "isinxnisi（運営者）",
+  "recordedAt": "2026-10-27T20:38:59.528925+00:00",
+  "instructionAt": "2026-10-27T20:27:36+00:00",
+  "humanInstruction": "以下の固定対象について、運営者として両方の実施を承認します。\n\n① 固定漫画Workerの5ファイル更新\n\n* source commit：089ee51922d68b03f2e8a9029a3811babfc3dc67\n* overlay manifest SHA-256：68b62c2f93704d8f82b93f0ac2dc6cc94e020c7802edd0a16e8ace5651f44d0e\n\n承認済み5ファイルのみを既存Workerへbackportしてください。既存base pin、collector実行hash、既存承認・依頼、coordinator／peerとの契約は保持してください。\n\n② 映画34 Claimの正式受入\n\n* 判断票：formal-decision-draft.json\n* SHA-256：153830c9413b9d1368939b67289126a5e6dde5bc275cc2bcdfa31bdb5881f51a\n\nCANDIDATE_REVIEW.mdに記載されたA群15件＋B群19件の34 Claim、29新EntityのUUID確定、5新Source、34 Citationの正式受入を承認します。\n\nB群19件のSCRIPT_WRITING／PRODUCINGの意味対応、および記載されたnull scope／periodの扱いも承認対象に含みます。既存3 Entityの正式UUIDは維持してください。\n\n実施条件\n\n* 最新の本番revision、全11 receipt、固定hash、Worker状態を実施前に再確認する。\n* 承認済みの意味・対象・根拠・同一性が一致する範囲で進める。\n* 判断票への実際の承認記録と、変換後のhashを正しく残す。\n* 不一致・新たな判断事項が発生した場合は、対象を勝手に変更せず停止する。\n* 更新・正式受入後は、既存契約によるrelease候補作成とoffline planまで継続する。\n* 検証・記録・commit・pushまで完了する。\n\n今回の承認に、本番公開署名・本番apply・beta／本番Web切替は含めません。\n\n必要な公開requestを準備した後、次の運営者判断地点で結果を報告してください。",
+  "decisionId": "film-saved-ab-20261028",
+  "humanDecisionSha256": "61dddbb75935d90768d61c403ccdb4cd6c6522b95da876b76feae9e87b2cdb71",
+  "referenceArtifacts": [
+    {
+      "file": "datasets/film-collection/ab-manifest-20261028/review/context.json",
+      "sha256": "03f032cf14411db7461d8fb46c8ee673fa935afdd162b991a7f6711949e3d020"
+    },
+    {
+      "file": "datasets/film-collection/ab-manifest-20261028/review/decision-request.json",
+      "sha256": "438fdf17bb0fd191e333004d618d7a4d7509bb4aedb73efd5239c71fd7607468"
+    },
+    {
+      "file": "datasets/film-collection/ab-manifest-20261028/review/proposed-records.json",
+      "sha256": "6af8d3f378027940b3f0425e53dcb485c7e9896284b63f466d7ef47bfd76fc3f"
+    },
+    {
+      "file": "datasets/film-collection/ab-manifest-20261028/review/review-manifest.json",
+      "sha256": "1580dc2a4fb18f8a3ac8f5c30cc3ebe2a572f86e41efdd60a8daac0a42dcb599"
+    },
+    {
+      "file": "datasets/film-collection/ab-manifest-20261028/review/review.json",
+      "sha256": "f1f6107ec4c172435b02c475b9c2c9a781b8e4656915f2c00b2b2bd326eeb3b6"
+    },
+    {
+      "file": "datasets/film-collection/ab-manifest-20261028/trial/bundle-manifest.json",
+      "sha256": "d90b1058308a60526f77b911373efe8c75615067cb036efc561f8ede5cafd3a4"
+    },
+    {
+      "file": "datasets/film-collection/ab-manifest-20261028/frozen-inputs/000-comparison.json.gz",
+      "sha256": "99370f04b43e51fc32ee3b22d1778f9af3911c9c29bdc1fee74550546a1d7790"
+    },
+    {
+      "file": "datasets/film-collection/ab-manifest-20261028/frozen-inputs/001-manifest.json",
+      "sha256": "e1ad6399058f27bd0982cd2922c1ed96a5196b4bb1fabf254f3997cac129cd07"
+    },
+    {
+      "file": "datasets/film-collection/ab-manifest-20261028/frozen-inputs/002-CANDIDATES.json",
+      "sha256": "06690102bb27b9ed9ab06d57f717ab4dce1e962bd1d409609b8c2e76dfccd470"
+    },
+    {
+      "file": "datasets/film-collection/ab-manifest-20261028/frozen-inputs/003-source_reviews.json",
+      "sha256": "0564cc3416d947019341f580a6391532525b77125812a54c23cd7b39a577735c"
+    },
+    {
+      "file": "datasets/film-collection/ab-manifest-20261028/frozen-inputs/004-ASTRA_RESEARCH_COVERAGE.json",
+      "sha256": "b4f2e265efe301c8edefd30cde7a210788b1bcf355264184ee6430efce21f79c"
+    },
+    {
+      "file": "datasets/film-collection/ab-manifest-20261028/frozen-inputs/005-minimal-credit-notes.json",
+      "sha256": "41d1b5124129b5a32b21fc5b8d1754f88971025c968d9eb57a5a8a922a327a7e"
+    },
+    {
+      "file": "datasets/film-collection/ab-manifest-20261028/frozen-inputs/006-public-backup.json",
+      "sha256": "c914fb71d0dd3953ea6f5be90603f8de4da137addaa8eaf548c8d632436669ae"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/comparisons/80f5cb52152905adbf07d60a814e43a39f9ea95e92b5ca71a8289c1ec273ffad/data.json",
+      "sha256": "5803b8b9b1038b5735f698f057b2d73d0f0a52afd524061ca52ca9bfbc883d5e"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/comparisons/80f5cb52152905adbf07d60a814e43a39f9ea95e92b5ca71a8289c1ec273ffad/manifest.json",
+      "sha256": "6f1802d95c31f2c0c485dd8e463980859c68e6100e55e1435ea3f373d637623a"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/comparisons/8dabd4404ff604a24e58643be0f7f2262b4e45f1d50c69c645d699f300d907f5/data.json",
+      "sha256": "4ffb72c38fb9066ab365ceb35f52884149f4135ba1add5b898cd11045da347dd"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/comparisons/8dabd4404ff604a24e58643be0f7f2262b4e45f1d50c69c645d699f300d907f5/manifest.json",
+      "sha256": "3bea6db06a281094f859763ef2619a30b976841a241c754ffff23302ee67e687"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/comparisons/bc22326e03e9b1eabed4e326186c86de53fd08fc419d6586de10d8db1d7cb1ee/data.json",
+      "sha256": "ca9b299f8867abb1d75a07ee67861bceb8f7a16e9750c10ea783f9b8ee65d9d6"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/comparisons/bc22326e03e9b1eabed4e326186c86de53fd08fc419d6586de10d8db1d7cb1ee/manifest.json",
+      "sha256": "14dbe248500b7f3b7573c54cb4f33301bcf86cd17e15325aff058dcd26bd9163"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/comparisons/cc623ededeffcd8f3f957d5743b6a3f3ba45e3ca8a513a3e5dfc009b07a88736/data.json",
+      "sha256": "811e36bf7d91b160451afd9cd1d12ee0f40e90f96096479ae9bb6b44e36b9739"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/comparisons/cc623ededeffcd8f3f957d5743b6a3f3ba45e3ca8a513a3e5dfc009b07a88736/manifest.json",
+      "sha256": "5fdeebf0e40108ce3a5e8c00991edadd5eefb87e1e792ce433c491d6ad170163"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/comparisons/f4d3926cb576b6c53594da70215f63711c9afe348abefc602f6a89e78eea2947/data.json",
+      "sha256": "e6e0927f43249d1f8d5a3e223956d431dea91d762bd2f82fa0482042632c2521"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/comparisons/f4d3926cb576b6c53594da70215f63711c9afe348abefc602f6a89e78eea2947/manifest.json",
+      "sha256": "2fcfd75e78f444d10d6f634ed432e3f43164730df65e537068fde06667f19655"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/decisions/issue-25-utc-recovery-03-normal.json",
+      "sha256": "1226b6c2488d01ccaca02831b1ddb4ed5bba0e4e8999ae905722352a9c75cb72"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/decisions/issue-25-utc-recovery-04-normal.json",
+      "sha256": "5d933e22561e19f3248500b5f29b3aafa668e69735a66c2a4a96f9a1233c5cd4"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/decisions/issue-25-utc-recovery-06-normal.json",
+      "sha256": "b7dfa07c233b6eda6aab4bc5f3582038fd66de07cf6d43dd7b062a5c4d36cf2b"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/decisions/issue-25-utc-recovery-07-normal.json",
+      "sha256": "e181b3ae516b7b08d204871567f2312dc9ad8705e2ce24209946b0559eafaa0e"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/decisions/issue-25-utc-recovery-08-normal.json",
+      "sha256": "3075be3d7f612ff381f5b527d8a984010bcc172ff0de725f9f34612179543382"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/proofs/issue-25-utc-recovery-03-normal-18ed8ea504ce672eec80.json",
+      "sha256": "30b1a2d8680aa9091c422e7e6297c8eed078a3665d63357dfa5ad5217ceced8c"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/proofs/issue-25-utc-recovery-04-normal-25e5997824ddd8657a9f.json",
+      "sha256": "164de980dea70ffb8d51f9804de073223de36df8455e7afb1f7256a362c0c3e1"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/proofs/issue-25-utc-recovery-06-normal-c7c5e01d33077285dfb2.json",
+      "sha256": "ccc229a3019c595546bdc099c48111738017d744312864c37affa14038213c8a"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/proofs/issue-25-utc-recovery-07-normal-7c4ffb5ab9449ea3db1c.json",
+      "sha256": "90ac5e202fca8e7d68571c1d02c4171579e47999b14bfea0b5acd3db91646252"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/proofs/issue-25-utc-recovery-08-normal-0b9fd42c36343904ce80.json",
+      "sha256": "6629254deaba0a412199384645b1017e810961247e2d64132b18e83bfde0807d"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/register-source.json",
+      "sha256": "82b53f2bb1e0c1e5402af117a22de2a809ecf0588a56743e6aaef3258b42e8d6"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0003-4e7b3edf51e9545b-review-c1ab7772b1b72fea/README.md",
+      "sha256": "723b6041becbc7e0310f3506bc2c132408799b9f8b9a046768b97e9d0eb975ff"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0003-4e7b3edf51e9545b-review-c1ab7772b1b72fea/context.json",
+      "sha256": "0f485f7429b54f44ea96e8641e83991f9657863a687f8206221411972fa72b5f"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0003-4e7b3edf51e9545b-review-c1ab7772b1b72fea/decision-request.json",
+      "sha256": "a70e8c6b2232c6a51ec0a438939c0cdf25b0029328f9b32080b8d09abbfb07f7"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0003-4e7b3edf51e9545b-review-c1ab7772b1b72fea/exploration-paths.json",
+      "sha256": "0d20374cc148071e0757648ce676db82cd42ce54fb873340098dc3b9b18bce7f"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0003-4e7b3edf51e9545b-review-c1ab7772b1b72fea/identity-only-records.json",
+      "sha256": "1fc314e4a47717bce195b39fe7f1e66bd31f6af892fca4a9420a653eab927a37"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0003-4e7b3edf51e9545b-review-c1ab7772b1b72fea/proposed-records.json",
+      "sha256": "da8f0d581f1c86cd6a369e05723f391f96f0f7170bd83e40d99af87e80d58cf5"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0003-4e7b3edf51e9545b-review-c1ab7772b1b72fea/review-manifest.json",
+      "sha256": "6dd9f224ffa41a4875a971bd2ad39b709c8cbd093146a4d40c9715df5b9bec49"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0003-4e7b3edf51e9545b-review-c1ab7772b1b72fea/review.json",
+      "sha256": "ad9bdf1fd2112fdf7a1663195abc1e4ae418d2dd819cae2b35fbac41c121487d"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0004-b96c712262173821-review-d9500d40636871b4/README.md",
+      "sha256": "7e26b7dc06b2b63fddba9275c118d7cda20ed9a44e95b7b3d6c55527bf73af09"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0004-b96c712262173821-review-d9500d40636871b4/context.json",
+      "sha256": "552c404723dab2df7def87b79d4d8d8f9c365621977325328214417dfdc241c1"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0004-b96c712262173821-review-d9500d40636871b4/decision-request.json",
+      "sha256": "e26da787a024a59b6cc6bbde04b5a4134e87c49ecd8b14484e24720142ceee70"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0004-b96c712262173821-review-d9500d40636871b4/exploration-paths.json",
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0004-b96c712262173821-review-d9500d40636871b4/identity-only-records.json",
+      "sha256": "1fc314e4a47717bce195b39fe7f1e66bd31f6af892fca4a9420a653eab927a37"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0004-b96c712262173821-review-d9500d40636871b4/proposed-records.json",
+      "sha256": "780f04908867993e485244ad2e939fd11ff6fa408a35ff59bdd82b06e7f853bf"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0004-b96c712262173821-review-d9500d40636871b4/review-manifest.json",
+      "sha256": "1fd25da2ba0bb78036b790da539f72e510c0e860061ce26c62c08892be0e739f"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0004-b96c712262173821-review-d9500d40636871b4/review.json",
+      "sha256": "aa1d4d3087818559d5bd38ecf786e2b121621ce6a2f131665f73ef6736db65bd"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0006-18bb8d898648582b-review-d38b26ea39279e93/README.md",
+      "sha256": "401ee93d4f4665626b306ed6e24638aee64ef3dc383b0d3ab612de70b24e5b25"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0006-18bb8d898648582b-review-d38b26ea39279e93/context.json",
+      "sha256": "08b7e3816fd65b83a7746256dd4e78a9d79b04b55f98a36bd0dd69c2295cf8e7"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0006-18bb8d898648582b-review-d38b26ea39279e93/decision-request.json",
+      "sha256": "180efa7c7f5547e20904a2966e2559ce43f701ada05ff139d5ea98c2e828676d"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0006-18bb8d898648582b-review-d38b26ea39279e93/exploration-paths.json",
+      "sha256": "3f08afdda78f6ddf3bfeb1242a7a77a3c127d2e87c0ca52ecbd6825906b3981d"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0006-18bb8d898648582b-review-d38b26ea39279e93/identity-only-records.json",
+      "sha256": "1fc314e4a47717bce195b39fe7f1e66bd31f6af892fca4a9420a653eab927a37"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0006-18bb8d898648582b-review-d38b26ea39279e93/proposed-records.json",
+      "sha256": "58b7666ca44a79ab4c9b5081e0a70bc0b5b9934cabdc3c6c8ea0e62ece256b67"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0006-18bb8d898648582b-review-d38b26ea39279e93/review-manifest.json",
+      "sha256": "6517dbb8c279234aa7256ce1a3dfe70e63a38989ff4b0559e83390603389a7e8"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0006-18bb8d898648582b-review-d38b26ea39279e93/review.json",
+      "sha256": "584edf8d337a7c17d4d08aec16fdc807903bad688c2f81a77619431f31c8dee5"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0007-0b3c13e86c5f069c-review-9cb3e5c8a5348de9/README.md",
+      "sha256": "056800f017506ed213ed31c65b373c284b5f9a57d9b95e54980960d0b73a49f0"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0007-0b3c13e86c5f069c-review-9cb3e5c8a5348de9/context.json",
+      "sha256": "ab95c7cbf825ad89dc611ce24e0c10c93adab1022419f167c1846ba2861d3885"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0007-0b3c13e86c5f069c-review-9cb3e5c8a5348de9/decision-request.json",
+      "sha256": "af8f169986a61757c10d6ba567085e3e43c42e2b6506da4a0ef19061b29bbaf9"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0007-0b3c13e86c5f069c-review-9cb3e5c8a5348de9/exploration-paths.json",
+      "sha256": "14c62e53896f0776d658794aa9f5e8d20ef37c8f53645af1ea7e3db59f68e99f"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0007-0b3c13e86c5f069c-review-9cb3e5c8a5348de9/identity-only-records.json",
+      "sha256": "1fc314e4a47717bce195b39fe7f1e66bd31f6af892fca4a9420a653eab927a37"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0007-0b3c13e86c5f069c-review-9cb3e5c8a5348de9/proposed-records.json",
+      "sha256": "20e255e4b4755121dee032b8cf90f28cab043844f4a8367382188c9909d495db"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0007-0b3c13e86c5f069c-review-9cb3e5c8a5348de9/review-manifest.json",
+      "sha256": "965d902f925d6a1b038152e95e616096901481ac9fb4d689bff222b079331f76"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0007-0b3c13e86c5f069c-review-9cb3e5c8a5348de9/review.json",
+      "sha256": "267aae7ad44fee6bec2bcca0386d60ca42dca34f08bd1dd3a9970b56eac45fed"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0008-9f792bd2246a1595-review-da16fa40ca3dcbf9/README.md",
+      "sha256": "aae590ea54f45343ec442477858f96103fa3f0e22237a51a95f4ffa828af5ab9"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0008-9f792bd2246a1595-review-da16fa40ca3dcbf9/context.json",
+      "sha256": "0e3a7f69c9e20e097a31a9e0bf8ba57867a96e6f82f3eb983536f068e45e5855"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0008-9f792bd2246a1595-review-da16fa40ca3dcbf9/decision-request.json",
+      "sha256": "ff156c4cd58b6b9356d44161a97942f31d1de42bec6bb690cf4df298c42db33c"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0008-9f792bd2246a1595-review-da16fa40ca3dcbf9/exploration-paths.json",
+      "sha256": "d2aaf0388fff0e2100fbe1e0e0bbcf5d9a7b6ec0e4ab84dd439a9e123bfdde4b"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0008-9f792bd2246a1595-review-da16fa40ca3dcbf9/identity-only-records.json",
+      "sha256": "1fc314e4a47717bce195b39fe7f1e66bd31f6af892fca4a9420a653eab927a37"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0008-9f792bd2246a1595-review-da16fa40ca3dcbf9/proposed-records.json",
+      "sha256": "172ef5758067fbaabb6594fc02f900b21b8dfe276e4d7c86feebae2e364466c7"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0008-9f792bd2246a1595-review-da16fa40ca3dcbf9/review-manifest.json",
+      "sha256": "39cc046c6d0ec10cfec1c2c5468a2497cf5ec9645433418d74fe10bc94e50cc5"
+    },
+    {
+      "file": ".local/acceptance-sequences/issue-25-normal-sequence-after-first-20261020/reviews/issue-25-utc-recovery-r0008-9f792bd2246a1595-review-da16fa40ca3dcbf9/review.json",
+      "sha256": "e377727d77498bbc03b86a86b9997ce3bab23d3cef0a9dbca02191549e0aa032"
+    },
+    {
+      "file": "datasets/connectivity/issue-34-obata-evidence/review.json",
+      "sha256": "6c591904aeeb7fa5a26a085ea628450d05f24a8adbb6fcfac1f99b4f777c989c"
+    },
+    {
+      "file": "datasets/film-collection/initial-20261027-final/decision-approved.json",
+      "sha256": "edd3552a7c2b87d391c68a0f0cf9b46bc7a9f9bd409ec9aaf270d959c10b2df3"
+    },
+    {
+      "file": "datasets/film-collection/initial-20261027-final/frozen-inputs/000-comparison.json.gz",
+      "sha256": "6837f278d767ae5d127ac62d8e74af7c4cd676ab25a376c2f3d04b5872ccfde5"
+    },
+    {
+      "file": "datasets/film-collection/initial-20261027-final/frozen-inputs/001-recipe.json",
+      "sha256": "274b6020dcee3d424d90ae5315e5410e12e4227c87c3a5b0b9fae41cc38959c5"
+    },
+    {
+      "file": "datasets/film-collection/initial-20261027-final/frozen-inputs/002-million-dollar-baby-credit.txt",
+      "sha256": "0555d359bc926e05f549174adf3559c1203279bc7596c1fd83617760acdaa760"
+    },
+    {
+      "file": "datasets/film-collection/initial-20261027-final/frozen-inputs/003-supplements.json",
+      "sha256": "6ce8f2d48ee0d6d3cc90041bc94f41ae21cb146c1c8819387a2d408241fd0700"
+    },
+    {
+      "file": "datasets/film-collection/initial-20261027-final/frozen-inputs/004-unforgiven-credit.txt",
+      "sha256": "84328b5aa0ff0dfe807819ed62e315d20d00b4a17a25cc75bdaa3125547fdf9c"
+    },
+    {
+      "file": "datasets/film-collection/initial-20261027-final/frozen-inputs/005-CANDIDATES.json",
+      "sha256": "06690102bb27b9ed9ab06d57f717ab4dce1e962bd1d409609b8c2e76dfccd470"
+    },
+    {
+      "file": "datasets/film-collection/initial-20261027-final/frozen-inputs/006-source_reviews.json",
+      "sha256": "0564cc3416d947019341f580a6391532525b77125812a54c23cd7b39a577735c"
+    },
+    {
+      "file": "datasets/film-collection/initial-20261027-final/frozen-inputs/007-fixture.json",
+      "sha256": "362b1b0d316b8a47eee560d90068e88a25465d10a5d4e8c8e3e9a16bde8e906f"
+    },
+    {
+      "file": "datasets/film-collection/initial-20261027-final/frozen-inputs/008-role-proposals.json",
+      "sha256": "50400fef170aceed9ca598e9f53085db8a68c72cd9cf980d72164dedd170c4c8"
+    },
+    {
+      "file": "datasets/film-collection/initial-20261027-final/frozen-inputs/009-public-backup.json",
+      "sha256": "f6a716d7264ce1023d3f9100cbd7fa6bd628cd174d2d2412546a0e4e3938b2d3"
+    },
+    {
+      "file": "datasets/film-collection/initial-20261027-final/review/context.json",
+      "sha256": "cc2232772a56a88c937c0d6bb08181e336429dc3478b8391bfff8617ccd2a730"
+    },
+    {
+      "file": "datasets/film-collection/initial-20261027-final/review/decision-request.json",
+      "sha256": "122ea82800f2f88b6fa4e1e33115a4965a1278ef6d7c56e656ecd4c1f50c83a2"
+    },
+    {
+      "file": "datasets/film-collection/initial-20261027-final/review/proposed-records.json",
+      "sha256": "f861a207785a59fabdb3e66885b5e4820de116eea31c624b63539f63b10d01f3"
+    },
+    {
+      "file": "datasets/film-collection/initial-20261027-final/review/review-manifest.json",
+      "sha256": "ebb44d4e64872da5c843939067944123c1eb0bc16d1da1482db4ad597d41af65"
+    },
+    {
+      "file": "datasets/film-collection/initial-20261027-final/review/review.json",
+      "sha256": "f1f6107ec4c172435b02c475b9c2c9a781b8e4656915f2c00b2b2bd326eeb3b6"
+    },
+    {
+      "file": "datasets/film-collection/initial-20261027-final/trial/bundle-manifest.json",
+      "sha256": "5a3aff9a31b28405a7d48ce0259d3264a83df5522f6bad24e6469db41984e9ff"
+    },
+    {
+      "file": "datasets/manga-collection/accepted-film-initial-20261027/acceptance.json",
+      "sha256": "3ac7b6be38e24aa9dfd7bf67233b7c5e80822c4313ca9b58d34408611cdc83c3"
+    },
+    {
+      "file": "datasets/manga-collection/accepted-film-initial-20261027/accepted-records.json",
+      "sha256": "f861a207785a59fabdb3e66885b5e4820de116eea31c624b63539f63b10d01f3"
+    },
+    {
+      "file": "datasets/manga-collection/accepted-issue-25-utc-recovery-01-normal/acceptance.json",
+      "sha256": "d271f32767dab030bd26ddcef669f48237cc303a8c605c58df047df8aea71fb6"
+    },
+    {
+      "file": "datasets/manga-collection/accepted-issue-25-utc-recovery-01-normal/accepted-records.json",
+      "sha256": "2741fc2872c73b9c0f83a416097db1cfe0775f61c31ea668a2eb8bf790e74e88"
+    },
+    {
+      "file": "datasets/manga-collection/accepted-issue-25-utc-recovery-03-normal/acceptance.json",
+      "sha256": "2cd8cb76b64be0d9d19fb3da8ceb4d3e185ca086bba0e90917a7b24a1da0bedf"
+    },
+    {
+      "file": "datasets/manga-collection/accepted-issue-25-utc-recovery-03-normal/accepted-records.json",
+      "sha256": "620deab693c47e6aca568aae93c870cf347c5d7d192c5206b20dde9cb664bf84"
+    },
+    {
+      "file": "datasets/manga-collection/accepted-issue-25-utc-recovery-04-normal/acceptance.json",
+      "sha256": "052a7d1ef334074ce2b94837a7d0dfc803bde9526abc9d8e8e7f058b36acdf62"
+    },
+    {
+      "file": "datasets/manga-collection/accepted-issue-25-utc-recovery-04-normal/accepted-records.json",
+      "sha256": "789a055dfececcac1ef1f5bd156ce196a98b30eb477ed0d17a4ba92a42ea09ad"
+    },
+    {
+      "file": "datasets/manga-collection/accepted-issue-25-utc-recovery-06-normal/acceptance.json",
+      "sha256": "4e94de08943725549f4e01be9e6b1b09f2f9d88c5ca2dfaa9aa5b7c2395930f4"
+    },
+    {
+      "file": "datasets/manga-collection/accepted-issue-25-utc-recovery-06-normal/accepted-records.json",
+      "sha256": "81887ebdb7194fde96ffd0afdf560f3f536b3a0e419b68566d74e1baaa67caae"
+    },
+    {
+      "file": "datasets/manga-collection/accepted-issue-25-utc-recovery-07-normal/acceptance.json",
+      "sha256": "b6a521d5fffdd6cafc3a3df9f8f963c571520812053aad4f259eea3e22ebee0b"
+    },
+    {
+      "file": "datasets/manga-collection/accepted-issue-25-utc-recovery-07-normal/accepted-records.json",
+      "sha256": "513a03c10b3fcbcd1448cb9e7a649f01d7b5d72586ff56d785f40df105a25d3f"
+    },
+    {
+      "file": "datasets/manga-collection/accepted-issue-25-utc-recovery-08-normal/acceptance.json",
+      "sha256": "5b3fdc3aa705c5e73f5ba11b40052be700d71069b0a25a12943cb189a2ee1109"
+    },
+    {
+      "file": "datasets/manga-collection/accepted-issue-25-utc-recovery-08-normal/accepted-records.json",
+      "sha256": "0909499fdb3d2080a4ee123bbe4e49e52ecaff443509414df1e60a787910c7b5"
+    },
+    {
+      "file": "datasets/manga-collection/accepted-issue-34-obata-drawing-20261021/acceptance.json",
+      "sha256": "7f62ec0f27d4fedfbb09066893d4ac94d88eaf016c2fff3959a001ea9f228efe"
+    },
+    {
+      "file": "datasets/manga-collection/accepted-issue-34-obata-drawing-20261021/accepted-records.json",
+      "sha256": "15ec2b9d9013a7b5af64f0539b1fe2a07302c92d60abb7bb58daf7e9215140d6"
+    },
+    {
+      "file": "datasets/manga-collection/accepted-original-story-r0002-20261017/acceptance.json",
+      "sha256": "9fdb9933c0d78795769bf27eebb7ecb4ec7cccc37f6ee6827e55dd119e727801"
+    },
+    {
+      "file": "datasets/manga-collection/accepted-r0002-20261017/acceptance.json",
+      "sha256": "9b28562b9846970cd30b9261d4659d505e9df06e014d2809d6517aa39836f567"
+    },
+    {
+      "file": "datasets/manga-collection/accepted-r0003-20261017/acceptance.json",
+      "sha256": "7d53abbd472fcbf0cba57fa5202d6fd4f8eb12c9ebda34bd1e7a8badca701831"
+    },
+    {
+      "file": "datasets/manga-collection/decisions/issue-25-utc-recovery-01-normal.json",
+      "sha256": "5fd68796f374c8ffd38eff50da7c316617ff4fceec8ba16b64c6ddfa096b0217"
+    },
+    {
+      "file": "datasets/manga-collection/evidence-decisions/issue-34-obata-drawing-20261021-r2.json",
+      "sha256": "72fd7dc968cdc2bd2f265382e270cb300f6188c51d180f5c6c3daaae5775b99d"
+    },
+    {
+      "file": "datasets/manga-collection/evidence-reviews/issue-34-obata-drawing-20261021-r2/context.json",
+      "sha256": "3f10dae6a259169b6390885a67d99b806a675bfdd6a4ea9d3621bb1a5a259619"
+    },
+    {
+      "file": "datasets/manga-collection/evidence-reviews/issue-34-obata-drawing-20261021-r2/decision-request.json",
+      "sha256": "2012c8f945c6f3f40a4d78f56baba858d04f7f8c3cdb2d55bdc4d800f2156fa4"
+    },
+    {
+      "file": "datasets/manga-collection/evidence-reviews/issue-34-obata-drawing-20261021-r2/proposed-records.json",
+      "sha256": "15ec2b9d9013a7b5af64f0539b1fe2a07302c92d60abb7bb58daf7e9215140d6"
+    },
+    {
+      "file": "datasets/manga-collection/evidence-reviews/issue-34-obata-drawing-20261021-r2/review-manifest.json",
+      "sha256": "1f8c0fa0c236cbc25d6a8e591252f535ce356882e8ce9cf8d6ce70a6078d0449"
+    },
+    {
+      "file": "datasets/manga-collection/evidence-reviews/issue-34-obata-drawing-20261021-r2/review.json",
+      "sha256": "f1f6107ec4c172435b02c475b9c2c9a781b8e4656915f2c00b2b2bd326eeb3b6"
+    },
+    {
+      "file": "datasets/manga-collection/issue-34-obata-drawing-20261021/approval-record.json",
+      "sha256": "e0bec27c3c1d2546aaa5dfccb02263af5e73ed96d01f70b8c2b48998ad1c55a6"
+    },
+    {
+      "file": "datasets/manga-collection/issue-34-obata-drawing-20261021/authorization-binding.json",
+      "sha256": "9e4e9cd91059d81060e75658c33f576befe416ffdc8eca09839bc4c605c2159f"
+    },
+    {
+      "file": "datasets/manga-collection/issue-34-obata-drawing-20261021/proposed-records.json",
+      "sha256": "79ba556db26f0c48ce79c3ed1dda2e65dae1d0b72fd560a2a861131a496b72c0"
+    },
+    {
+      "file": "datasets/manga-collection/original-story-r0002-20261017/candidates.json",
+      "sha256": "d13136e8e383bce126e8521bfc1015529210f617da220ccd71a4ce1f9f409348"
+    },
+    {
+      "file": "datasets/manga-collection/original-story-r0002-20261017/ndl-9784088727172.json",
+      "sha256": "9e302be016583de26a8907bef77390d34d1bc45db01a08f6e680076cbd5c975a"
+    },
+    {
+      "file": "datasets/manga-collection/original-story-r0002-20261017/ndl-9784088733708.json",
+      "sha256": "035008f311bc5e2e4fdd56e6a216c20f93792583675a2fe5a036e9c99ce71319"
+    },
+    {
+      "file": "datasets/manga-collection/original-story-r0002-20261017/ndl-9784088736211.json",
+      "sha256": "42957040ed44ffa3caa223d68d1cbd0ab733434c9c6af1cc3bdc03c59af9858d"
+    },
+    {
+      "file": "datasets/manga-collection/original-story-r0002-20261017/ndl-9784088811840.json",
+      "sha256": "97ae7be91605bb1d81a54062716132bb0d727b845d811a5b232f487ae4501cb0"
+    },
+    {
+      "file": "datasets/manga-collection/original-story-r0002-20261017/ndl-9784098610105.json",
+      "sha256": "a8992f7327ac45150fa7dba2e2ad1877ed7914c4642918442d2ce2c7e9fa2a4a"
+    },
+    {
+      "file": "datasets/manga-collection/review-r0002-20261017/proposed-records.json",
+      "sha256": "8ef5b68ccda860c453078bef5a57615495320eb470e4230fe04ceda8f7262d81"
+    },
+    {
+      "file": "datasets/manga-collection/review-r0002-20261017/review.json",
+      "sha256": "dec7cd6e012e82be409541418480e95565214c3457bb48ddbc4eca280c12ec76"
+    },
+    {
+      "file": "datasets/manga-collection/review-r0002-20261017/verification.json",
+      "sha256": "2385eebc8bea8ba17b9ad05110785755102d6692c634ae94f0487827d97f6c09"
+    },
+    {
+      "file": "datasets/manga-collection/review-r0003-20261017/additional-evidence.json",
+      "sha256": "1187f72352c46cd775df22b2de54f2bf52020860832fbfe676cf8c4255baf844"
+    },
+    {
+      "file": "datasets/manga-collection/review-r0003-20261017/decision-request.json",
+      "sha256": "bf76be5ab0320e0844a0b3fc2f25fc1602a3922dd534c3fa9f7fb7b4706dd09e"
+    },
+    {
+      "file": "datasets/manga-collection/review-r0003-20261017/frozen-inputs.json",
+      "sha256": "6d437879c330de1a1f885f8a8aace6058193e9e83b3f941d764592e6be0ad5ad"
+    },
+    {
+      "file": "datasets/manga-collection/review-r0003-20261017/identity-evidence.json",
+      "sha256": "fb3ed6e7b9df51da5b1171afa8047b6ae520630df88e5945aeec9b8f98f85505"
+    },
+    {
+      "file": "datasets/manga-collection/review-r0003-20261017/proposed-records.json",
+      "sha256": "b9db863d52318528237fb1f9aa06fb1bfef4bc4ce355dd47229d72e746cb3be4"
+    },
+    {
+      "file": "datasets/manga-collection/review-r0003-20261017/review.json",
+      "sha256": "03f0c1ad829a31173d8bc78d4f6f32fcbcf3ca4a5a6a245f14352592cfa25f19"
+    },
+    {
+      "file": "datasets/manga-collection/review-r0003-20261017/technical-verification.json",
+      "sha256": "09b3be4c48f93c1327f593e801d71061f847cd1a3a940253095cc6548ae289ac"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0001-2aae694af25bda6e-review-7eb226d781eece54/README.md",
+      "sha256": "fddf51670c1430d785106e61101f40708f0f0067cd55fd058f00e0d4b9365c8e"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0001-2aae694af25bda6e-review-7eb226d781eece54/context.json",
+      "sha256": "040db63cf5b715bf998ce38e7bc999dc4fe98e024f97db9cc93fe5944297c016"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0001-2aae694af25bda6e-review-7eb226d781eece54/decision-request.json",
+      "sha256": "301c332bafab3d0d7e25201bcca64179e283b2ca1a4345b89131895590a72bcd"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0001-2aae694af25bda6e-review-7eb226d781eece54/exploration-paths.json",
+      "sha256": "68213add9ed9ce5d89ccec4aeeb8d461911ce52271837a042ab3c14cc49795e8"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0001-2aae694af25bda6e-review-7eb226d781eece54/identity-only-records.json",
+      "sha256": "1fc314e4a47717bce195b39fe7f1e66bd31f6af892fca4a9420a653eab927a37"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0001-2aae694af25bda6e-review-7eb226d781eece54/proposed-records.json",
+      "sha256": "6251199c917f6e2e19debfc4fe2bf6df3b8de9e8fc74a0896782b7d470c7a3d6"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0001-2aae694af25bda6e-review-7eb226d781eece54/review-manifest.json",
+      "sha256": "71e08c7a3ef28a9ad30d39669e7784abc8eaa99dfff2f172bed042186d752895"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0001-2aae694af25bda6e-review-7eb226d781eece54/review.json",
+      "sha256": "eaea0b676aeb13cee448fff619716e7dcb5be9e5a2df28a65fdd9c14b3b2e936"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0003-4e7b3edf51e9545b-review-7ac1287be3ae3491/README.md",
+      "sha256": "723b6041becbc7e0310f3506bc2c132408799b9f8b9a046768b97e9d0eb975ff"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0003-4e7b3edf51e9545b-review-7ac1287be3ae3491/context.json",
+      "sha256": "8c7730681fc0f8afe769f87064f1a3fa3fed392c457eaa037b68563a17f15fa8"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0003-4e7b3edf51e9545b-review-7ac1287be3ae3491/decision-request.json",
+      "sha256": "14d517b49951376663c6e578228c582955f338bcc3812c3daa01932384f391f7"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0003-4e7b3edf51e9545b-review-7ac1287be3ae3491/exploration-paths.json",
+      "sha256": "0d20374cc148071e0757648ce676db82cd42ce54fb873340098dc3b9b18bce7f"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0003-4e7b3edf51e9545b-review-7ac1287be3ae3491/identity-only-records.json",
+      "sha256": "1fc314e4a47717bce195b39fe7f1e66bd31f6af892fca4a9420a653eab927a37"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0003-4e7b3edf51e9545b-review-7ac1287be3ae3491/proposed-records.json",
+      "sha256": "da8f0d581f1c86cd6a369e05723f391f96f0f7170bd83e40d99af87e80d58cf5"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0003-4e7b3edf51e9545b-review-7ac1287be3ae3491/review-manifest.json",
+      "sha256": "ccb73e2f413433913cd3338750b53428ed346165db8363a62dba44f004f0a9f0"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0003-4e7b3edf51e9545b-review-7ac1287be3ae3491/review.json",
+      "sha256": "ad9bdf1fd2112fdf7a1663195abc1e4ae418d2dd819cae2b35fbac41c121487d"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0004-b96c712262173821-review-ed4c6573c40b9103/README.md",
+      "sha256": "7e26b7dc06b2b63fddba9275c118d7cda20ed9a44e95b7b3d6c55527bf73af09"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0004-b96c712262173821-review-ed4c6573c40b9103/context.json",
+      "sha256": "7c86d336339442638f6bbb9d93c00f47a5fbec2d9f6fe19ea504924690dcefe7"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0004-b96c712262173821-review-ed4c6573c40b9103/decision-request.json",
+      "sha256": "858770b9cc718bde519d33617d06247f2865c2d5ca96341d0d49dd983a98d308"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0004-b96c712262173821-review-ed4c6573c40b9103/exploration-paths.json",
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0004-b96c712262173821-review-ed4c6573c40b9103/identity-only-records.json",
+      "sha256": "1fc314e4a47717bce195b39fe7f1e66bd31f6af892fca4a9420a653eab927a37"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0004-b96c712262173821-review-ed4c6573c40b9103/proposed-records.json",
+      "sha256": "780f04908867993e485244ad2e939fd11ff6fa408a35ff59bdd82b06e7f853bf"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0004-b96c712262173821-review-ed4c6573c40b9103/review-manifest.json",
+      "sha256": "dbe609a826e90940a08952c5f6a3c9a59dc1422c3f96f8beaaf4d385dbc5b80b"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0004-b96c712262173821-review-ed4c6573c40b9103/review.json",
+      "sha256": "aa1d4d3087818559d5bd38ecf786e2b121621ce6a2f131665f73ef6736db65bd"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0006-18bb8d898648582b-review-d3f087b63d8ec60c/README.md",
+      "sha256": "401ee93d4f4665626b306ed6e24638aee64ef3dc383b0d3ab612de70b24e5b25"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0006-18bb8d898648582b-review-d3f087b63d8ec60c/context.json",
+      "sha256": "1b88538e679f168c2ebe9f6e17ef83dc1b49d9eca169fa2b157619af15f2ffbd"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0006-18bb8d898648582b-review-d3f087b63d8ec60c/decision-request.json",
+      "sha256": "447790da947f795377d084cfdc225827c4c7862844ba4ab9caae70747c8969fe"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0006-18bb8d898648582b-review-d3f087b63d8ec60c/exploration-paths.json",
+      "sha256": "3f08afdda78f6ddf3bfeb1242a7a77a3c127d2e87c0ca52ecbd6825906b3981d"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0006-18bb8d898648582b-review-d3f087b63d8ec60c/identity-only-records.json",
+      "sha256": "1fc314e4a47717bce195b39fe7f1e66bd31f6af892fca4a9420a653eab927a37"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0006-18bb8d898648582b-review-d3f087b63d8ec60c/proposed-records.json",
+      "sha256": "58b7666ca44a79ab4c9b5081e0a70bc0b5b9934cabdc3c6c8ea0e62ece256b67"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0006-18bb8d898648582b-review-d3f087b63d8ec60c/review-manifest.json",
+      "sha256": "77a7af521ada5498b3ea46e7c93ef1c9bc33fbc5ceba706a3aa781e03387a959"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0006-18bb8d898648582b-review-d3f087b63d8ec60c/review.json",
+      "sha256": "584edf8d337a7c17d4d08aec16fdc807903bad688c2f81a77619431f31c8dee5"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0007-0b3c13e86c5f069c-review-434525971928f744/README.md",
+      "sha256": "056800f017506ed213ed31c65b373c284b5f9a57d9b95e54980960d0b73a49f0"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0007-0b3c13e86c5f069c-review-434525971928f744/context.json",
+      "sha256": "3ce40b7b373df3d7835b0a97f9ce2ebdff4605c5ef6252bce4c3e7e558236905"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0007-0b3c13e86c5f069c-review-434525971928f744/decision-request.json",
+      "sha256": "0a36bbd0201f392830bc0539cf7ba89a5c452297ba6be0030734ce09986263c0"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0007-0b3c13e86c5f069c-review-434525971928f744/exploration-paths.json",
+      "sha256": "14c62e53896f0776d658794aa9f5e8d20ef37c8f53645af1ea7e3db59f68e99f"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0007-0b3c13e86c5f069c-review-434525971928f744/identity-only-records.json",
+      "sha256": "1fc314e4a47717bce195b39fe7f1e66bd31f6af892fca4a9420a653eab927a37"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0007-0b3c13e86c5f069c-review-434525971928f744/proposed-records.json",
+      "sha256": "20e255e4b4755121dee032b8cf90f28cab043844f4a8367382188c9909d495db"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0007-0b3c13e86c5f069c-review-434525971928f744/review-manifest.json",
+      "sha256": "6899290eb5daf4af86ba6b899dfdf8a24f1daf4cbc3b3d93f2f37e9bbcbc456d"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0007-0b3c13e86c5f069c-review-434525971928f744/review.json",
+      "sha256": "267aae7ad44fee6bec2bcca0386d60ca42dca34f08bd1dd3a9970b56eac45fed"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0008-9f792bd2246a1595-review-7b6502faf255147c/README.md",
+      "sha256": "aae590ea54f45343ec442477858f96103fa3f0e22237a51a95f4ffa828af5ab9"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0008-9f792bd2246a1595-review-7b6502faf255147c/context.json",
+      "sha256": "a1544db5e8e0c65d065d56e4c7447332fafdb35d5c2fe2f3723cda4e26e94b4a"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0008-9f792bd2246a1595-review-7b6502faf255147c/decision-request.json",
+      "sha256": "6aad3613743de6564ab999a966bb4d67c8e00d5afeb98c24256145fed8e62f34"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0008-9f792bd2246a1595-review-7b6502faf255147c/exploration-paths.json",
+      "sha256": "d2aaf0388fff0e2100fbe1e0e0bbcf5d9a7b6ec0e4ab84dd439a9e123bfdde4b"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0008-9f792bd2246a1595-review-7b6502faf255147c/identity-only-records.json",
+      "sha256": "1fc314e4a47717bce195b39fe7f1e66bd31f6af892fca4a9420a653eab927a37"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0008-9f792bd2246a1595-review-7b6502faf255147c/proposed-records.json",
+      "sha256": "172ef5758067fbaabb6594fc02f900b21b8dfe276e4d7c86feebae2e364466c7"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0008-9f792bd2246a1595-review-7b6502faf255147c/review-manifest.json",
+      "sha256": "97ae2100ec16c5c871f7445d1426e6d7a22da6cb9b98dff9c7f90739bff8d2bc"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0008-9f792bd2246a1595-review-7b6502faf255147c/review.json",
+      "sha256": "e377727d77498bbc03b86a86b9997ce3bab23d3cef0a9dbca02191549e0aa032"
+    },
+    {
+      "file": "datasets/public-kg/releases/20261014-credits-001/data.json",
+      "sha256": "ea91b16f52a211b5a8464382ad498b7b2bb2be69a6f33fe125a73a3c7b9da2b5"
+    },
+    {
+      "file": "datasets/public-kg/releases/20261014-credits-001/manifest.json",
+      "sha256": "e4aa3b58ed884f7d1f8fffee43b260261cc2b4d3a867fda942919f439d2bce17"
+    },
+    {
+      "file": "datasets/public-kg/releases/20261017-manga-r0002-001/data.json",
+      "sha256": "a52c93f78cbc6a7440dee640d1161d040d88effee494d02045c49637801975db"
+    },
+    {
+      "file": "datasets/public-kg/releases/20261017-manga-r0002-001/manifest.json",
+      "sha256": "5714648b348fff62605f99f3b25c25bc1f22a22e2e4acdaefae7196ddb5712a8"
+    },
+    {
+      "file": "datasets/public-kg/releases/20261017-manga-r0002-002/data.json",
+      "sha256": "6180481328c77abb40d16579d1f0cee34cbda6d8438769a95a23df71536f90aa"
+    },
+    {
+      "file": "datasets/public-kg/releases/20261017-manga-r0002-002/manifest.json",
+      "sha256": "5ae3f008be8c05f29cafa620a5cb0926792bc2984b0e0694a4bf1986032bd87c"
+    },
+    {
+      "file": "datasets/public-kg/releases/20261017-manga-r0003-001/data.json",
+      "sha256": "3bae93608cefa4ccf9ef8b026819575ff738c0133664e1473dca52d15dc60be1"
+    },
+    {
+      "file": "datasets/public-kg/releases/20261017-manga-r0003-001/manifest.json",
+      "sha256": "c5e8230be9bd0acb43041fd04d0a6b769c03c99dac9e38a051bca8a768e2e24d"
+    },
+    {
+      "file": "datasets/public-kg/releases/manga-issue-25-utc-recovery-08-normal/data.json",
+      "sha256": "44cb7d65c4ece8ac04ffcca988c0b37f35a5bf61cc934ef482cbefda39ec09e7"
+    },
+    {
+      "file": "datasets/public-kg/releases/manga-issue-25-utc-recovery-08-normal/manifest.json",
+      "sha256": "325522f3efa7ddc0ff67f278456fc81956420ab0d00999d5823988dfc33cd9a3"
+    },
+    {
+      "file": "datasets/public-kg/releases/manga-issue-34-obata-drawing-20261023/data.json",
+      "sha256": "bab5fd783adf0cdb622cc6c11441bce35bb7213074d489bc7f3e2989a5ca435b"
+    },
+    {
+      "file": "datasets/public-kg/releases/manga-issue-34-obata-drawing-20261023/manifest.json",
+      "sha256": "7aab70b429c8a825e4a7e59b00a389055beb2a812117cac0c4ce686ef24e2a50"
+    },
+    {
+      "file": "datasets/public-kg/releases/publication-film-initial-20261027/data.json",
+      "sha256": "c8c59c6d5f9a78b616ffe6ca733cad341ec17b414ea7abe8783969449777c56c"
+    },
+    {
+      "file": "datasets/public-kg/releases/publication-film-initial-20261027/manifest.json",
+      "sha256": "d25627720d2d77e5efaaa5b1fe2adb8d788291e39799f424746f22d840dd8187"
+    },
+    {
+      "file": "docs/design/MANGA_R0002_ACCEPTANCE_REVIEW.md",
+      "sha256": "7cdf6a84158f655465a26d7755f528668c23309a5f79ed8cd2d5e01905e00265"
+    },
+    {
+      "file": "docs/design/MANGA_R0002_ACCEPTED_RELEASE.md",
+      "sha256": "4f29556605f1b10241e9275b546db5b43495230e60233eade630df59fcb48113"
+    },
+    {
+      "file": "docs/design/MANGA_R0003_ACCEPTANCE_REVIEW.md",
+      "sha256": "af2114355cf8b2a6c6813a1fde71a3683daccb80fbcdabe6a14442342a21cb3f"
+    },
+    {
+      "file": "docs/design/ORIGINAL_STORY.md",
+      "sha256": "26cde0cff0d4d3128f6a3b52201f8649cd3f414294f3a81fcddea9f8d54c5a27"
+    },
+    {
+      "file": "datasets/public-kg/releases/publication-film-initial-20261027/data.json",
+      "sha256": "c8c59c6d5f9a78b616ffe6ca733cad341ec17b414ea7abe8783969449777c56c"
+    },
+    {
+      "file": "datasets/public-kg/releases/publication-film-initial-20261027/manifest.json",
+      "sha256": "d25627720d2d77e5efaaa5b1fe2adb8d788291e39799f424746f22d840dd8187"
+    },
+    {
+      "file": "datasets/film-collection/ab-manifest-20261028/decision-approved-offset.json",
+      "sha256": "61dddbb75935d90768d61c403ccdb4cd6c6522b95da876b76feae9e87b2cdb71"
+    },
+    {
+      "file": "datasets/manga-collection/accepted-film-saved-ab-20261028/accepted-records.json",
+      "sha256": "6af8d3f378027940b3f0425e53dcb485c7e9896284b63f466d7ef47bfd76fc3f"
+    }
+  ],
+  "acceptedRecordIds": {
+    "citations": [
+      "10a37f67-8c0d-4441-ba05-98c420806fd1",
+      "1af08b9b-c6ff-4e8b-819b-3277cbcea4da",
+      "1e7e9a63-908e-42c8-a330-d01de08489f6",
+      "20934604-2dba-42fd-be93-f70d794d2ed0",
+      "255c06da-c9c7-412d-9225-82ac8a78470f",
+      "2ffd9a52-09d4-4898-a7e9-009675aefec1",
+      "35a4c638-afc5-49f2-8fb1-073653b13842",
+      "38258329-e45b-4a36-bdcd-f1acf457bf88",
+      "383f77a6-7398-45de-a18f-7e4b96ef7222",
+      "3d5eb662-0649-4656-a498-3f9c3bc38ba9",
+      "4a5cbe8b-3914-41f2-8efa-ecb422a61043",
+      "670897d6-f5ee-43fd-8c7c-a086d8334aa4",
+      "773f106a-776d-44bd-9d2b-a18112275449",
+      "77539c6c-efd6-4850-ae48-573b6b82db96",
+      "7b0b17d4-e313-47ba-932b-6ebc32062d97",
+      "7e9756e3-d65b-4268-8103-48c3770552ef",
+      "8319371f-c0d0-464c-8b44-256b10e84d2b",
+      "99703bb1-9a64-43fa-8b60-6f8fc4cb4342",
+      "9bb6e392-5c51-4abe-a6d3-5520f6f439a2",
+      "a1886b5f-310e-42d5-a579-ffc796ac1d5c",
+      "acd5e66f-1a9a-4985-8445-e3cb82225bf0",
+      "b8ef97e6-581a-4370-9ee7-1208b029beb3",
+      "be46f8b5-ff79-46f1-b6e4-506b9fe46505",
+      "bef05e24-5855-456a-b6fe-809f046e983a",
+      "c12e60a5-bc8d-458c-a4a2-848da3e65a51",
+      "c1f71e63-f97b-459d-9a0b-8defe37daad8",
+      "c8f99838-b5e7-4c52-8cbb-d8a35994aecb",
+      "cada65aa-102d-4ee5-b121-cf3ca68186dc",
+      "d140ccf0-a260-4821-a691-70865f58d5a1",
+      "d281ce6f-1728-44a3-a40d-45c431840519",
+      "d4887aea-fbd8-43e6-adc5-e5ac3e62ecda",
+      "dc073585-9553-4be8-9a67-7f78b08753cc",
+      "ecfa2c06-b940-4a19-84e3-45a458608cd3",
+      "f2839c8c-d2bc-4833-a89a-3044312898d5"
+    ],
+    "claims": [
+      "01e2a86b-6801-472b-8e32-a91cc0925dfc",
+      "0a7e8587-895a-46b7-9b20-9363f4d444a6",
+      "11db956d-70a9-43cf-805b-9ffa576da501",
+      "1baf9c26-c4bb-4d09-9caa-16114a81b8af",
+      "204905b0-1f64-4e98-beb9-974b6031c7b0",
+      "2560c363-e2f7-4481-84cc-025833259a0d",
+      "2721d599-98fa-48bd-836d-cff2aa4f023b",
+      "2e210c78-b456-45cd-86ad-09f2a334a992",
+      "34817c14-af7e-4203-93ae-f0e542d0c710",
+      "382e652d-e1ff-4b2a-8766-cbc9d0c95233",
+      "422b17a4-5fe4-49d9-94d9-be05bef2c220",
+      "45753517-c284-4c62-828b-52bbd06c4935",
+      "560df70e-2deb-4cbc-a09a-6269fdecf53a",
+      "57fa063b-d69d-4829-8567-4d0ab4c4a234",
+      "624472b2-7788-4984-b13c-9ba4c1515bee",
+      "67675c33-057a-422f-86bd-6535e46da126",
+      "7a54eab9-c780-4c1c-a5a0-99104c431e42",
+      "7d12c79b-67b5-484e-965c-297982a220d7",
+      "8031d324-16b1-423c-a98f-8cafb00d1778",
+      "850a9f83-aafd-4d1a-ad58-185791bd98bb",
+      "8974c334-d6c9-4a20-a4ee-35d3ee322c9a",
+      "94596246-2d89-4026-8fe6-8e996dd61b63",
+      "a8a3b22b-854e-416c-bfbb-fbb69cde8071",
+      "a8a44bd2-ca25-4bef-9aeb-95efba2bc616",
+      "ab1fad8c-95ba-4a39-9f93-134b85856b8b",
+      "be664da8-8ca7-495c-b654-50257cf3bb5f",
+      "c100d4b3-373c-47ed-9007-04cd799ac0d2",
+      "c8ddd4bd-09c6-4e36-8546-7629cca5cbf6",
+      "c9511222-9477-422d-9572-049fdc20d768",
+      "caa6fa13-44c3-4925-858b-1c8c9eff7e4c",
+      "db41e530-e1d5-4bda-8a9b-83334857a96c",
+      "e21681a9-a721-4bc0-83d6-16a907119c75",
+      "e77e4769-69de-4229-9484-ea1886b1a8ac",
+      "fab3dc5d-7565-4bb2-892e-b04a65f440f0"
+    ],
+    "entities": [
+      "0d2aa95b-aae3-423d-9a2f-f4e9ca038810",
+      "13a23327-ce46-4939-af3b-c39408e27ae2",
+      "1b217c91-1e2d-46e1-9e4c-b90d706d3f7a",
+      "2c043ccb-8726-4883-acb1-e5821969e379",
+      "2d427fb3-d54f-479e-8579-e608c3364111",
+      "2e28a4a4-48cc-4aa7-a1bf-4cb3a5f9ce3b",
+      "342bb682-268a-419e-b9d2-c6ff0975f195",
+      "3a2ef351-d225-4896-a3b8-01bbe33743d4",
+      "3db5a731-1dca-4ee0-8023-56e42fc38f30",
+      "3dd652cb-1ac1-40ec-8919-288745ac2926",
+      "420865b6-1377-4d02-8678-09cf0ed28fac",
+      "4646b1f4-e33a-4b1c-8103-b5740c4e8b76",
+      "492646fd-364d-4996-a265-5bfee0ae281d",
+      "5be3a84e-9c85-4218-bc7e-1829f824bc5e",
+      "5eb8ec0c-c524-42b3-ae4b-4f1962f9e38f",
+      "60a67ae8-ccd6-4d86-89a6-93ce3c942d9d",
+      "6e1a7c3e-155a-4fa3-beef-83564b2f93b2",
+      "7ce6d8b7-d0d6-45a2-8cb8-f629d0d764c1",
+      "7d6dbe11-be31-40e7-bc25-320779528c8e",
+      "8524ec91-2665-46c4-b6e3-58c31f221f74",
+      "911cb38f-1215-4b2b-9d5d-3ac6f390261b",
+      "99df2f68-ca27-4f34-8b4d-edd68044e3b3",
+      "9d669326-483d-445a-b344-943c0d3652a8",
+      "9e6f483a-ffc7-4219-94bb-dc2897224c9d",
+      "aad624bf-c14a-44f8-a1af-14cbc967e02a",
+      "bd8a8e29-f3e7-41a4-b068-acf80a96b82d",
+      "cbc950e1-2c7a-4696-a845-85db20787297",
+      "d72eb196-d40b-4a14-822e-2ade9134c256",
+      "ead8bbfd-28c3-4202-9e6a-b5cfc4eccc6e"
+    ],
+    "sources": [
+      "29153c7c-75b7-4d90-9ac1-7f5eec2daaff",
+      "529ddee7-dcea-4eb3-97c5-da3ada7922de",
+      "5cda4bab-b317-40d7-887c-f6ee42e3c8de",
+      "7ecb3b65-d211-42c7-aeb4-7f1152c9a051",
+      "cff578b8-3458-462f-8568-39aa9881b578"
+    ]
+  },
+  "scopeByClaim": [
+    {
+      "contribution": {
+        "roleId": "ACTING",
+        "scope": null
+      },
+      "eventParticipation": null,
+      "id": "01e2a86b-6801-472b-8e32-a91cc0925dfc",
+      "objectId": "420865b6-1377-4d02-8678-09cf0ed28fac",
+      "organizationParticipation": null,
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "polarity": "affirmed",
+      "predicate": "CONTRIBUTED_TO",
+      "subjectId": "3a2ef351-d225-4896-a3b8-01bbe33743d4"
+    },
+    {
+      "contribution": {
+        "roleId": "ACTING",
+        "scope": null
+      },
+      "eventParticipation": null,
+      "id": "0a7e8587-895a-46b7-9b20-9363f4d444a6",
+      "objectId": "420865b6-1377-4d02-8678-09cf0ed28fac",
+      "organizationParticipation": null,
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "polarity": "affirmed",
+      "predicate": "CONTRIBUTED_TO",
+      "subjectId": "13a23327-ce46-4939-af3b-c39408e27ae2"
+    },
+    {
+      "contribution": {
+        "roleId": "SCRIPT_WRITING",
+        "scope": null
+      },
+      "eventParticipation": null,
+      "id": "11db956d-70a9-43cf-805b-9ffa576da501",
+      "objectId": "2d427fb3-d54f-479e-8579-e608c3364111",
+      "organizationParticipation": null,
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "polarity": "affirmed",
+      "predicate": "CONTRIBUTED_TO",
+      "subjectId": "bd8a8e29-f3e7-41a4-b068-acf80a96b82d"
+    },
+    {
+      "contribution": {
+        "roleId": "ACTING",
+        "scope": null
+      },
+      "eventParticipation": null,
+      "id": "1baf9c26-c4bb-4d09-9caa-16114a81b8af",
+      "objectId": "6e1a7c3e-155a-4fa3-beef-83564b2f93b2",
+      "organizationParticipation": null,
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "polarity": "affirmed",
+      "predicate": "CONTRIBUTED_TO",
+      "subjectId": "aad624bf-c14a-44f8-a1af-14cbc967e02a"
+    },
+    {
+      "contribution": {
+        "roleId": "PRODUCING",
+        "scope": null
+      },
+      "eventParticipation": null,
+      "id": "204905b0-1f64-4e98-beb9-974b6031c7b0",
+      "objectId": "6e1a7c3e-155a-4fa3-beef-83564b2f93b2",
+      "organizationParticipation": null,
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "polarity": "affirmed",
+      "predicate": "CONTRIBUTED_TO",
+      "subjectId": "1b217c91-1e2d-46e1-9e4c-b90d706d3f7a"
+    },
+    {
+      "contribution": {
+        "roleId": "ACTING",
+        "scope": null
+      },
+      "eventParticipation": null,
+      "id": "2560c363-e2f7-4481-84cc-025833259a0d",
+      "objectId": "6e1a7c3e-155a-4fa3-beef-83564b2f93b2",
+      "organizationParticipation": null,
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "polarity": "affirmed",
+      "predicate": "CONTRIBUTED_TO",
+      "subjectId": "8524ec91-2665-46c4-b6e3-58c31f221f74"
+    },
+    {
+      "contribution": {
+        "roleId": "DIRECTING",
+        "scope": null
+      },
+      "eventParticipation": null,
+      "id": "2721d599-98fa-48bd-836d-cff2aa4f023b",
+      "objectId": "5be3a84e-9c85-4218-bc7e-1829f824bc5e",
+      "organizationParticipation": null,
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "polarity": "affirmed",
+      "predicate": "CONTRIBUTED_TO",
+      "subjectId": "342bb682-268a-419e-b9d2-c6ff0975f195"
+    },
+    {
+      "contribution": {
+        "roleId": "DIRECTING",
+        "scope": null
+      },
+      "eventParticipation": null,
+      "id": "2e210c78-b456-45cd-86ad-09f2a334a992",
+      "objectId": "6e1a7c3e-155a-4fa3-beef-83564b2f93b2",
+      "organizationParticipation": null,
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "polarity": "affirmed",
+      "predicate": "CONTRIBUTED_TO",
+      "subjectId": "1b217c91-1e2d-46e1-9e4c-b90d706d3f7a"
+    },
+    {
+      "contribution": {
+        "roleId": "SCRIPT_WRITING",
+        "scope": null
+      },
+      "eventParticipation": null,
+      "id": "34817c14-af7e-4203-93ae-f0e542d0c710",
+      "objectId": "6e1a7c3e-155a-4fa3-beef-83564b2f93b2",
+      "organizationParticipation": null,
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "polarity": "affirmed",
+      "predicate": "CONTRIBUTED_TO",
+      "subjectId": "1b217c91-1e2d-46e1-9e4c-b90d706d3f7a"
+    },
+    {
+      "contribution": {
+        "roleId": "ACTING",
+        "scope": null
+      },
+      "eventParticipation": null,
+      "id": "382e652d-e1ff-4b2a-8766-cbc9d0c95233",
+      "objectId": "420865b6-1377-4d02-8678-09cf0ed28fac",
+      "organizationParticipation": null,
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "polarity": "affirmed",
+      "predicate": "CONTRIBUTED_TO",
+      "subjectId": "aad624bf-c14a-44f8-a1af-14cbc967e02a"
+    },
+    {
+      "contribution": {
+        "roleId": "PRODUCING",
+        "scope": null
+      },
+      "eventParticipation": null,
+      "id": "422b17a4-5fe4-49d9-94d9-be05bef2c220",
+      "objectId": "7d6dbe11-be31-40e7-bc25-320779528c8e",
+      "organizationParticipation": null,
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "polarity": "affirmed",
+      "predicate": "CONTRIBUTED_TO",
+      "subjectId": "5eb8ec0c-c524-42b3-ae4b-4f1962f9e38f"
+    },
+    {
+      "contribution": {
+        "roleId": "PRODUCING",
+        "scope": null
+      },
+      "eventParticipation": null,
+      "id": "45753517-c284-4c62-828b-52bbd06c4935",
+      "objectId": "5be3a84e-9c85-4218-bc7e-1829f824bc5e",
+      "organizationParticipation": null,
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "polarity": "affirmed",
+      "predicate": "CONTRIBUTED_TO",
+      "subjectId": "d72eb196-d40b-4a14-822e-2ade9134c256"
+    },
+    {
+      "contribution": {
+        "roleId": "SCRIPT_WRITING",
+        "scope": null
+      },
+      "eventParticipation": null,
+      "id": "560df70e-2deb-4cbc-a09a-6269fdecf53a",
+      "objectId": "7d6dbe11-be31-40e7-bc25-320779528c8e",
+      "organizationParticipation": null,
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "polarity": "affirmed",
+      "predicate": "CONTRIBUTED_TO",
+      "subjectId": "60a67ae8-ccd6-4d86-89a6-93ce3c942d9d"
+    },
+    {
+      "contribution": {
+        "roleId": "PRODUCING",
+        "scope": null
+      },
+      "eventParticipation": null,
+      "id": "57fa063b-d69d-4829-8567-4d0ab4c4a234",
+      "objectId": "420865b6-1377-4d02-8678-09cf0ed28fac",
+      "organizationParticipation": null,
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "polarity": "affirmed",
+      "predicate": "CONTRIBUTED_TO",
+      "subjectId": "99df2f68-ca27-4f34-8b4d-edd68044e3b3"
+    },
+    {
+      "contribution": {
+        "roleId": "PRODUCING",
+        "scope": null
+      },
+      "eventParticipation": null,
+      "id": "624472b2-7788-4984-b13c-9ba4c1515bee",
+      "objectId": "805b9630-cd9a-4931-8cde-0bcb92bf8a9f",
+      "organizationParticipation": null,
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "polarity": "affirmed",
+      "predicate": "CONTRIBUTED_TO",
+      "subjectId": "911cb38f-1215-4b2b-9d5d-3ac6f390261b"
+    },
+    {
+      "contribution": {
+        "roleId": "SCRIPT_WRITING",
+        "scope": null
+      },
+      "eventParticipation": null,
+      "id": "67675c33-057a-422f-86bd-6535e46da126",
+      "objectId": "2d427fb3-d54f-479e-8579-e608c3364111",
+      "organizationParticipation": null,
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "polarity": "affirmed",
+      "predicate": "CONTRIBUTED_TO",
+      "subjectId": "7ce6d8b7-d0d6-45a2-8cb8-f629d0d764c1"
+    },
+    {
+      "contribution": {
+        "roleId": "SCRIPT_WRITING",
+        "scope": null
+      },
+      "eventParticipation": null,
+      "id": "7a54eab9-c780-4c1c-a5a0-99104c431e42",
+      "objectId": "6e1a7c3e-155a-4fa3-beef-83564b2f93b2",
+      "organizationParticipation": null,
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "polarity": "affirmed",
+      "predicate": "CONTRIBUTED_TO",
+      "subjectId": "cbc950e1-2c7a-4696-a845-85db20787297"
+    },
+    {
+      "contribution": {
+        "roleId": "SCRIPT_WRITING",
+        "scope": null
+      },
+      "eventParticipation": null,
+      "id": "7d12c79b-67b5-484e-965c-297982a220d7",
+      "objectId": "805b9630-cd9a-4931-8cde-0bcb92bf8a9f",
+      "organizationParticipation": null,
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "polarity": "affirmed",
+      "predicate": "CONTRIBUTED_TO",
+      "subjectId": "2e28a4a4-48cc-4aa7-a1bf-4cb3a5f9ce3b"
+    },
+    {
+      "contribution": {
+        "roleId": "ACTING",
+        "scope": null
+      },
+      "eventParticipation": null,
+      "id": "8031d324-16b1-423c-a98f-8cafb00d1778",
+      "objectId": "5be3a84e-9c85-4218-bc7e-1829f824bc5e",
+      "organizationParticipation": null,
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "polarity": "affirmed",
+      "predicate": "CONTRIBUTED_TO",
+      "subjectId": "2c043ccb-8726-4883-acb1-e5821969e379"
+    },
+    {
+      "contribution": {
+        "roleId": "PRODUCING",
+        "scope": null
+      },
+      "eventParticipation": null,
+      "id": "850a9f83-aafd-4d1a-ad58-185791bd98bb",
+      "objectId": "805b9630-cd9a-4931-8cde-0bcb92bf8a9f",
+      "organizationParticipation": null,
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "polarity": "affirmed",
+      "predicate": "CONTRIBUTED_TO",
+      "subjectId": "2e28a4a4-48cc-4aa7-a1bf-4cb3a5f9ce3b"
+    },
+    {
+      "contribution": {
+        "roleId": "SCRIPT_WRITING",
+        "scope": null
+      },
+      "eventParticipation": null,
+      "id": "8974c334-d6c9-4a20-a4ee-35d3ee322c9a",
+      "objectId": "420865b6-1377-4d02-8678-09cf0ed28fac",
+      "organizationParticipation": null,
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "polarity": "affirmed",
+      "predicate": "CONTRIBUTED_TO",
+      "subjectId": "1b217c91-1e2d-46e1-9e4c-b90d706d3f7a"
+    },
+    {
+      "contribution": {
+        "roleId": "DIRECTING",
+        "scope": null
+      },
+      "eventParticipation": null,
+      "id": "94596246-2d89-4026-8fe6-8e996dd61b63",
+      "objectId": "2d427fb3-d54f-479e-8579-e608c3364111",
+      "organizationParticipation": null,
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "polarity": "affirmed",
+      "predicate": "CONTRIBUTED_TO",
+      "subjectId": "342bb682-268a-419e-b9d2-c6ff0975f195"
+    },
+    {
+      "contribution": {
+        "roleId": "SCRIPT_WRITING",
+        "scope": null
+      },
+      "eventParticipation": null,
+      "id": "a8a3b22b-854e-416c-bfbb-fbb69cde8071",
+      "objectId": "7d6dbe11-be31-40e7-bc25-320779528c8e",
+      "organizationParticipation": null,
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "polarity": "affirmed",
+      "predicate": "CONTRIBUTED_TO",
+      "subjectId": "9d669326-483d-445a-b344-943c0d3652a8"
+    },
+    {
+      "contribution": {
+        "roleId": "SCRIPT_WRITING",
+        "scope": null
+      },
+      "eventParticipation": null,
+      "id": "a8a44bd2-ca25-4bef-9aeb-95efba2bc616",
+      "objectId": "5be3a84e-9c85-4218-bc7e-1829f824bc5e",
+      "organizationParticipation": null,
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "polarity": "affirmed",
+      "predicate": "CONTRIBUTED_TO",
+      "subjectId": "0d2aa95b-aae3-423d-9a2f-f4e9ca038810"
+    },
+    {
+      "contribution": {
+        "roleId": "ACTING",
+        "scope": null
+      },
+      "eventParticipation": null,
+      "id": "ab1fad8c-95ba-4a39-9f93-134b85856b8b",
+      "objectId": "7d6dbe11-be31-40e7-bc25-320779528c8e",
+      "organizationParticipation": null,
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "polarity": "affirmed",
+      "predicate": "CONTRIBUTED_TO",
+      "subjectId": "4646b1f4-e33a-4b1c-8103-b5740c4e8b76"
+    },
+    {
+      "contribution": {
+        "roleId": "ACTING",
+        "scope": null
+      },
+      "eventParticipation": null,
+      "id": "be664da8-8ca7-495c-b654-50257cf3bb5f",
+      "objectId": "805b9630-cd9a-4931-8cde-0bcb92bf8a9f",
+      "organizationParticipation": null,
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "polarity": "affirmed",
+      "predicate": "CONTRIBUTED_TO",
+      "subjectId": "3db5a731-1dca-4ee0-8023-56e42fc38f30"
+    },
+    {
+      "contribution": {
+        "roleId": "PRODUCING",
+        "scope": null
+      },
+      "eventParticipation": null,
+      "id": "c100d4b3-373c-47ed-9007-04cd799ac0d2",
+      "objectId": "420865b6-1377-4d02-8678-09cf0ed28fac",
+      "organizationParticipation": null,
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "polarity": "affirmed",
+      "predicate": "CONTRIBUTED_TO",
+      "subjectId": "1b217c91-1e2d-46e1-9e4c-b90d706d3f7a"
+    },
+    {
+      "contribution": {
+        "roleId": "DIRECTING",
+        "scope": null
+      },
+      "eventParticipation": null,
+      "id": "c8ddd4bd-09c6-4e36-8546-7629cca5cbf6",
+      "objectId": "420865b6-1377-4d02-8678-09cf0ed28fac",
+      "organizationParticipation": null,
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "polarity": "affirmed",
+      "predicate": "CONTRIBUTED_TO",
+      "subjectId": "1b217c91-1e2d-46e1-9e4c-b90d706d3f7a"
+    },
+    {
+      "contribution": {
+        "roleId": "ACTING",
+        "scope": null
+      },
+      "eventParticipation": null,
+      "id": "c9511222-9477-422d-9572-049fdc20d768",
+      "objectId": "5be3a84e-9c85-4218-bc7e-1829f824bc5e",
+      "organizationParticipation": null,
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "polarity": "affirmed",
+      "predicate": "CONTRIBUTED_TO",
+      "subjectId": "9e6f483a-ffc7-4219-94bb-dc2897224c9d"
+    },
+    {
+      "contribution": {
+        "roleId": "DIRECTING",
+        "scope": null
+      },
+      "eventParticipation": null,
+      "id": "caa6fa13-44c3-4925-858b-1c8c9eff7e4c",
+      "objectId": "7d6dbe11-be31-40e7-bc25-320779528c8e",
+      "organizationParticipation": null,
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "polarity": "affirmed",
+      "predicate": "CONTRIBUTED_TO",
+      "subjectId": "3dd652cb-1ac1-40ec-8919-288745ac2926"
+    },
+    {
+      "contribution": {
+        "roleId": "PRODUCING",
+        "scope": null
+      },
+      "eventParticipation": null,
+      "id": "db41e530-e1d5-4bda-8a9b-83334857a96c",
+      "objectId": "805b9630-cd9a-4931-8cde-0bcb92bf8a9f",
+      "organizationParticipation": null,
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "polarity": "affirmed",
+      "predicate": "CONTRIBUTED_TO",
+      "subjectId": "490ee589-76db-4a5e-8923-13d24b7cb3a2"
+    },
+    {
+      "contribution": {
+        "roleId": "ACTING",
+        "scope": null
+      },
+      "eventParticipation": null,
+      "id": "e21681a9-a721-4bc0-83d6-16a907119c75",
+      "objectId": "5be3a84e-9c85-4218-bc7e-1829f824bc5e",
+      "organizationParticipation": null,
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "polarity": "affirmed",
+      "predicate": "CONTRIBUTED_TO",
+      "subjectId": "492646fd-364d-4996-a265-5bfee0ae281d"
+    },
+    {
+      "contribution": {
+        "roleId": "SCRIPT_WRITING",
+        "scope": null
+      },
+      "eventParticipation": null,
+      "id": "e77e4769-69de-4229-9484-ea1886b1a8ac",
+      "objectId": "2d427fb3-d54f-479e-8579-e608c3364111",
+      "organizationParticipation": null,
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "polarity": "affirmed",
+      "predicate": "CONTRIBUTED_TO",
+      "subjectId": "342bb682-268a-419e-b9d2-c6ff0975f195"
+    },
+    {
+      "contribution": {
+        "roleId": "PRODUCING",
+        "scope": null
+      },
+      "eventParticipation": null,
+      "id": "fab3dc5d-7565-4bb2-892e-b04a65f440f0",
+      "objectId": "805b9630-cd9a-4931-8cde-0bcb92bf8a9f",
+      "organizationParticipation": null,
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "polarity": "affirmed",
+      "predicate": "CONTRIBUTED_TO",
+      "subjectId": "ead8bbfd-28c3-4202-9e6a-b5cfc4eccc6e"
+    }
+  ],
+  "counts": {
+    "entities": 29,
+    "claims": 34,
+    "sources": 5,
+    "citations": 34
+  },
+  "baseRelease": "publication-film-initial-20261027",
+  "baseRevision": "7c54da24-6fa9-46a5-810d-834eed8328d9",
+  "combinedReleaseCandidate": "film-saved-ab-20261028",
+  "sourceJobId": null,
+  "applyAuthorized": {
+    "local": false,
+    "beta": false,
+    "vps": false
+  },
+  "sourceReviewKind": "film-discovery-v1",
+  "productionObservation": {
+    "release": "publication-film-initial-20261027",
+    "revision": "7c54da24-6fa9-46a5-810d-834eed8328d9",
+    "observation": "supplied-backup-not-a-live-check",
+    "fixtureSha256": "534738ad5e210d651990f06671b9854a4a50a494a03316373397268d886a5c4f",
+    "withdrawals": [],
+    "historySha256": "f2289b290bed854f6c02005f5b9663d1339e73805a6659724d7e81436bcc31f6",
+    "references": [
+      {
+        "file": "datasets/public-kg/releases/publication-film-initial-20261027/data.json",
+        "sha256": "c8c59c6d5f9a78b616ffe6ca733cad341ec17b414ea7abe8783969449777c56c"
+      },
+      {
+        "file": "datasets/public-kg/releases/publication-film-initial-20261027/manifest.json",
+        "sha256": "d25627720d2d77e5efaaa5b1fe2adb8d788291e39799f424746f22d840dd8187"
+      }
+    ],
+    "productionBackupSha256": "c914fb71d0dd3953ea6f5be90603f8de4da137addaa8eaf548c8d632436669ae",
+    "liveMetadata": {
+      "url": "https://plunode.net/api/dataset",
+      "httpStatus": 200,
+      "dataset": "public-kg",
+      "revision": "7c54da24-6fa9-46a5-810d-834eed8328d9"
+    }
+  },
+  "acceptanceProgramSha256": {
+    "lib/domain/ai-lab.ts": "28cdeb4489b709cda36d110774ef2c36dbae9368a38130b8abb2dddac5880d58",
+    "lib/domain/api.ts": "59f706a8a592f9971eadf89088682da7b67bc4310b967ea2ff9994793e99a34f",
+    "lib/domain/capsule-discussion.ts": "2c8aecc220d73c3fe8a46678f36660bf60ad616bb36e49182854d587763abec2",
+    "lib/domain/capsule-sharing.ts": "067a3b6128e7c7582fd6a8c2af4594edaca0dbdaa3fb21ea20083b57352261ad",
+    "lib/domain/community.ts": "9d6222533cf6363b35eda3fc41e405d9d31617a6ae1f234bb537755390807f35",
+    "lib/domain/contribution.ts": "7bb75f38d7b27829c6e5de32bbc90ef6cd740f5ce6d3ff3b6978f73ab35fd59b",
+    "lib/domain/dataset.ts": "8184de5d226069b40755b0309bcff37e4c596e2c5bc0ddf8a137b2fcbbace68f",
+    "lib/domain/dates.ts": "b5cfe90d891a2b12b31f7558cec48764706d00068bdb39666429df9c63532375",
+    "lib/domain/discovery-connections.ts": "efebf9577db8667c4d54871afc971910d7150145a079ed93217ccf0174c69284",
+    "lib/domain/discovery-home.ts": "59804b0384bddb4441695a793d996d437bab523fbd6c2dc76e8fbd214a04024c",
+    "lib/domain/discovery-path-presets.ts": "34f9d0507e941f5dd0d5ff041261dfb49c5ebbfeae921f268cb8adbd0f1d8a5f",
+    "lib/domain/discovery-path-state.ts": "35d4b52e0000878cbbf74128c476c250f4499541311adbe40e6508b036da65c7",
+    "lib/domain/discovery-paths.ts": "60c9a5ff1a8141fcc059d3c2d6011b93941c19c017df6059b13ae990cdb9d7cb",
+    "lib/domain/discovery-preset-catalog.ts": "315d341931ef278f1dd1824f0c9b7669246a12971ce75d767f574cc6f462784b",
+    "lib/domain/discovery-prototype.ts": "27323e08d452ec04225d7cdb4976d241eee8cd8f0c44809780eda14074e5bca3",
+    "lib/domain/discovery-records.ts": "84f413016e515b8ef9aaec37e84f4deb9d10a7127dceade4d9f8574dbf72cf4f",
+    "lib/domain/discovery-targets.ts": "a476a1cee5a4e36a6ccc8c5e237a7acadbe69892a01021d4112a46581940687b",
+    "lib/domain/discovery.ts": "ab6582016acccf1016d5cb03612b1e260ddc9a8a7f137b87b20a51d99228ec2e",
+    "lib/domain/event-participation.ts": "c81e50763afd42aeaccb1877c5723a00e7dcfa93bd63fb5493a3f013d7a3673d",
+    "lib/domain/event-role-vocabulary.ts": "d29002a386ad4d9949e672916d6cfb5385f60f5be4dec73d55dce5300a890e98",
+    "lib/domain/evidence.ts": "f76cebc0ef7dd023faeb13a4ed532458f3f0fad9e4b4e0a05e5d149c01de39b2",
+    "lib/domain/exploration.ts": "bbd5c7917c655253aa3c5a0b3ebc292f72a33138d962abb78c8c163fe1c006e2",
+    "lib/domain/film-role-registration.ts": "c26f18336950a230b9abcb7a01b5c00754c59ec69076881e5b546e34bd87e91a",
+    "lib/domain/film-trial.ts": "7d7fe8a833ea063d8da1ba4de66eea03c21af94ee7c1a43fbfcd3da6b514efdc",
+    "lib/domain/fixture.ts": "f278e09c84502f7d7832f9607567e08aa339bb66a3232df822fe4b00a4f73184",
+    "lib/domain/kg-admin.ts": "f0c4c0d51ae0c4a6008558d49bb9c667606708c76d8087640099e8864933d36b",
+    "lib/domain/member-capsule.ts": "5270ae31cb89553695df5c8a35b52cf60fec8a912b527315beb4fdf63990c395",
+    "lib/domain/member-profile.ts": "949914c711c00fc496bf978860f7ebd499d859f6bc85cb4f471a3e291697e0c7",
+    "lib/domain/organization-participation.ts": "a993c0ba959a040650540026c3ec2bb10f82417143887115bb43d503824060fc",
+    "lib/domain/pattern-graph.ts": "f2e1518a7d0198f274bff7f49351946acf15f017e1f7ff4ba492e89adbd1ac6f",
+    "lib/domain/pending-film-roles.ts": "d8d05643d74ec7343be5cc3b59b94c023732fff133da0bdbb4339314cbc43519",
+    "lib/domain/position-vocabulary.ts": "c974875cd4819f1a25d423df58cac016cd69f82e96e3a3a068ab53a6e5a77719",
+    "lib/domain/predicates.ts": "d1ec7bc98bc8d7bd688a36e4512517e8894462d1bc79d70868888ba6be5d15e0",
+    "lib/domain/public-profile.ts": "6dc9534a59bb3c146689559841232704b16f99c4ce5c3018d1997c899f52edb8",
+    "lib/domain/public-release.ts": "89581e93c6387751a4b8d6ccfb53773ed60b847af80747056b754f56e83b6750",
+    "lib/domain/public-routes.ts": "192f69ef6918d04df88ff9a8aec4274143c270494dd4c45c57f496ccf7e0a992",
+    "lib/domain/publication.ts": "8a915f297d8e528de07248623581dbd72114bd53ea3fbe413d5eacdfa5ebabda",
+    "lib/domain/qualifications.ts": "938d72c454fd135ec2b62cae44c48d7783a00837fc3951a202d5751910b52ff7",
+    "lib/domain/relation-conditions.ts": "56e016f8d7bf584016caa3432a2f1788f7370c314f2b37f4cd0899f2a8056afe",
+    "lib/domain/relation-patterns.ts": "1d8b228a8cbf12a1f5f5e2c1b3ef7ddbfcfcdb228d44c7cd70cd06faa1b721da",
+    "lib/domain/role-vocabulary.ts": "c6fcd2d9ed6b3c4bd2dc8c84c6451780136ae783c212e03a577ad000a8a6a329",
+    "lib/domain/search.ts": "52cbf14a31d3e13c87f4826fa3ec029a75a99f73d5d145d43460835e6a47735d",
+    "lib/domain/vocabulary.ts": "6ec1cfc8a48b0ba3308c5b5d5a0b3b1b61c8cf55c761a2472e1f729cfa7c332b",
+    "lib/i18n/capsule-comparison.ts": "d940922cc2a1fc4a9e0fdd4225751ac03becac77aad33d87e90d16ede7968bf4",
+    "lib/i18n/capsule-discussion.ts": "42e55a91dd4c0816f3c51b7b8bdecf506bd9625f6492d1ad7e8582acde413f63",
+    "lib/i18n/capsule-history.ts": "6882fcf3e04bca09ee3d52dbe8ce1586babadfd0d22261120be2b05767d50ade",
+    "lib/i18n/capsule-sharing.ts": "5af7c10ff1d74a8547fd1a6370d7988444fce24400144cc27e1793ff23ac6677",
+    "lib/i18n/capsules.ts": "796df8f9c84cb94cc783c949b032e93abbdab52ef5e170625dc809a7652f545d",
+    "lib/i18n/content.ts": "86359305a1a52b65868245b5e29120905aeabb15e60828c431d20ed58fe5bcea",
+    "lib/i18n/contribution.ts": "dcbf69965240a0d1089f8f2a34f38be22bd63bb0617c332fbfe75b4cf03ff390",
+    "lib/i18n/data-release.ts": "1cf504252522c01714ac10339b813058a847eacb4d85e253c0f1cb90da1ee699",
+    "lib/i18n/dataset.ts": "6833df5f6a700eee9d4360be191e0c2bf725f8e8156abcbc325c4f9e4041de98",
+    "lib/i18n/design.ts": "5f6a8a237cf35588e8a3900bfb0003e63e19fd7ed4be2cf9d2a1af43c3c898f9",
+    "lib/i18n/discovery-home.ts": "c5950af6403574844184a204691e911ba8ca54171243f908ccc3cd3d137c1689",
+    "lib/i18n/discovery-search.ts": "ccaebfee796fe869383a627c5d0a117dc63a2d74fb36154ed1bd59886b092714",
+    "lib/i18n/entity-overview.ts": "ed524d63dd0fb362dc420c709cce44faef9216c1042516880f93ad0ef30144c5",
+    "lib/i18n/entity-search.ts": "87fc19c4689ce3ab8323e48dc0b3194e5ac067ce8920fe4fc6613b05fabec23b",
+    "lib/i18n/event-participation.ts": "82255b8523b2d608204e299f922142f439e0975da1d08a3395dd2b63b267ee84",
+    "lib/i18n/exploration-entry.ts": "c3dd1bbda4e0a21815f950e780114df22b664b39c45c70814d4fac8f432397d3",
+    "lib/i18n/exploration-url.ts": "7658248ac14fb1f6d750ee44662d825e9aa74b3d34f41963fa268a0cebe64259",
+    "lib/i18n/exploration.ts": "56451a1035488167bee96689c22ded7c463309cc9b2477122f46992a1540e533",
+    "lib/i18n/explorer-panes.ts": "175dcf1d56de79b9dd23918081e76082beb76cc45eecc0a96cb2e1e6351846a4",
+    "lib/i18n/explorer.ts": "a50a3df7ed828cc044c9bc92fed33b939f4b3e7050a6ce227cf0f449e847e7cf",
+    "lib/i18n/graph-navigation.ts": "b07b3a482d8fcda45a2c5e9c02d473c9e457aa5946eebc9d9f13e1efbb6d4f81",
+    "lib/i18n/graph-notice.ts": "1508d1937686919664e48060f9f5223f91b383cedbdb6f0415f781791ee29424",
+    "lib/i18n/graph-path.ts": "6fb07e5d663ab36df4f33a91a2e77973ab8515160a45c4d54825652421093230",
+    "lib/i18n/graph-viewport.ts": "e36708673e242bf9a9e17f75157d888bac39706c462413638885b30c5bc74fc3",
+    "lib/i18n/member-posts.ts": "0fe2ef20897065acbf60b659f106402c4ca918ca2b1c8f7d2004a6f8198f01e5",
+    "lib/i18n/member.ts": "2a808cf4fa42f4a2e1c00b7aaf32d4ba0a46f166f7006748e9e8be4f21686c63",
+    "lib/i18n/organization-participation.ts": "ead1024e51567a6a92b1ee7c979d2bf22133a57671934f243f6c42b75dd5f443",
+    "lib/i18n/public-discovery.ts": "ec44f361c0c1b781a7496e7aca02c767ae04a4fd8ceb5d232fbdd27bb49a2f96",
+    "lib/i18n/reading-reference.ts": "05117bf85e564225b734f46813e334171c18c053f80d456c91d30904bd3c59e8",
+    "lib/i18n/relation-condition.ts": "0028e2218bb6f9d1a0e9108298930c3c06beb82ccc12a6905107c0a379037da8",
+    "lib/i18n/relation-facets.ts": "00c076dec0cb605c4cfb2524c54c8cc87d92560f35878c4c6ef0471e1dff927c",
+    "lib/i18n/relation-presentation.ts": "60d8225d0ff935a7e27e08612cdd75168444d81816f33e1a6ff172a4396b7120",
+    "lib/i18n/saved-views.ts": "9512dff579fe185ec0fc05249311132eec15b3c5139edf973ddfae98e7c3b597",
+    "lib/i18n/site.ts": "11d55e093a8eb9567476c845b3105f7ede18b94ac289aec7434c4041eb1ff39e",
+    "lib/i18n/start-examples.ts": "ab82a67a596e2a06896680165f3e246d5995a5bcd86f982cf3c4b2a2133d7f9e",
+    "lib/i18n/support.ts": "c7d4c84f4dd7568b7de069b2780ba572913a987d26b683522c764a84e326d0a8",
+    "lib/i18n/workspace.ts": "878983ec1a2443676efe43cb905c1e6438f98977d6ee057a10ac5fb885d822d6",
+    "lib/server/advertising-country.ts": "fa7193966a596cbd313eee50ebc0250836d0655236911a05777bf51507c76705",
+    "lib/server/ai-lab-artifact.ts": "34bd170c7e52c8b3d29bf98ad94c600e76fc9ed9611221a58482179b3f24bdd0",
+    "lib/server/ai-lab.ts": "f25c2ea55f7ee6aa670f87cbff9f2f0e63cf756c02629297e2b67cc3e6d71918",
+    "lib/server/discovery-home.ts": "4ed10040962e3fbc0d52b0b28bc78d00e171474c852b7a2ce88653c511c0f92a",
+    "lib/server/discovery-paths.ts": "245570873ec3bb21223ab92ef21fd553f6bd66b4bce8cad94c9f9eecac5b76d6",
+    "lib/server/discovery-records.ts": "389b034be5db6631cd9f49495d4d7666efd46879b6e33a3e499db9621e514e05",
+    "lib/server/discovery-search.ts": "0e74e0bfb3c7e350020312f334fd73215278b89f34deaf66be6711367c417b9f",
+    "lib/server/discovery-subject-matches.ts": "fbaae9642dc2244e11fd6b3474c74bdb9629364de88c5f7848eb95d72a5f6110",
+    "lib/server/discovery-targets.ts": "eefc5bed5065a245d64b90e0c5d79fab6e3ff89dde2a0c2e688c91d49dc080fc",
+    "lib/server/event-dataset.ts": "205bac4773de39bf1632d4b47ffa49845bddd98d64255d8881ce04db79ee97ed",
+    "lib/server/film-beta.ts": "2954c62b598af04189630973b024b81ed5b5a4c334478c8a2a166df1c9ae22f5",
+    "lib/server/graph.ts": "6d1ed4c777cbce7077cc02d370230913fd70dc5ec67e3cdc16811b413d065180",
+    "lib/server/http.ts": "1116d22a59ccbb9b5406596e81650b2e7da72b9f6f5caff3354dc8fef0452f4f",
+    "lib/server/integration-frames.ts": "fc3770275d685ff67d59d43b26a87ffbd41cb70f1950dbd4014ee09d6786954f",
+    "lib/server/kg-admin-access.ts": "0580d546cf7cc75e058ab27578aa781752dd6e9afd8b7c6f9269a4818df869fa",
+    "lib/server/kg-admin-analysis.ts": "5199d4935a3dce3c71904a3be1162dc2fc0f90f2e15b345d33f9d80dc0283fdf",
+    "lib/server/kg-admin.ts": "e08a8d24b5dcbd02b74ba14325e15f557bbf8c66ca6455e9eac9c76b988b2947",
+    "lib/server/mappers.ts": "378d13daa71318e19ec0d0a19cef90aade7e4e271f9af45dd74b5be7bc1e6163",
+    "lib/server/member/ai-identity.ts": "ec8aece62069d321486da6bdc27c98f9c374ea1238f2414aadbdb36b38bd0e6c",
+    "lib/server/member/auth.ts": "9feb60a855319fc1d20848a901f18de60b7ab547ecf29cea2677529d48bf4da8",
+    "lib/server/member/community-continuity.ts": "b1c9d4e9157d5d1bebc28be2c2c2e891da2f3eab262ae1d016adb548a4873e04",
+    "lib/server/member/community-pagination.ts": "c9445afe47ef114975415dbdd8c9d1aa1aede2e3f89d081281ab824bade57e96",
+    "lib/server/member/community-rate.ts": "50d24cd989c331b501c58fe45c28523cd79f50a6fc7443ea4ea8d7ce8e232228",
+    "lib/server/member/community-recovery.ts": "0a1a3c299552794b0d3b63f704ce57ff526156644704e5c217c3482984744f3c",
+    "lib/server/member/community-safety.ts": "583982ac060a34e234b66e872766c4ac3ea86b658145aef9945127f4122a20ac",
+    "lib/server/member/community-site-safety.ts": "18858ed66cd27644282919e0a8fabec01e7edd63ca9395d6c74370d9238e0c18",
+    "lib/server/member/community.ts": "6ddd610da67fed971b790512c9398d649dfbabb3851252425e92bc9976ab5269",
+    "lib/server/member/config.ts": "288810c4f7d8d3d7d649377afd0600885282250adf713cc19c94e34be0206d75",
+    "lib/server/member/discussion.ts": "211b619f572e790b57bfaa3777391dd84cbba699adc92b88908b0a57473e3beb",
+    "lib/server/member/http.ts": "e88aa3fbbdde9be205db463b01b249cef4cda013655408dadffd2d1959ab0972",
+    "lib/server/member/migrate.ts": "6816826e566f06706fe4792f1c86e25445e2bf3a3973211c4c9ee75dcb9f0233",
+    "lib/server/member/operations.ts": "311642c09ffe86155c52f5e84cabc16241662578f1e39e58853be82e184a902f",
+    "lib/server/member/public-profiles.ts": "5535ff7c0b1edcd2334729977bff73e60f5d36391aa1540190a2fa1c71f5d93f",
+    "lib/server/member/runtime.ts": "2f71ed54933324310082986a9c64ebf2f780bd0b845a025fc6baa7c7d63d4f5a",
+    "lib/server/member/service.ts": "15bf36a70a3d2b5773b8c6d756245b39375c9bb9a2d2a70a4cd9b5572452c9e3",
+    "lib/server/member/sharing.ts": "3942ac151569b7d5da53a7359da03beee0214a8566494f828e1c5d293a532e7d",
+    "lib/server/member/site-operations.ts": "4ae85dbe65d97a4981c0d04f7fd430fc128a4fc7ab3d52bcb0a68deea40d67af",
+    "lib/server/neighbor-cursor.ts": "99996145cace9acafe88f512aa4ab708561a19e8139ab17b575bc71aa70be8c8",
+    "lib/server/neighbor-ranking.ts": "8d2f1914c4e2b43613062047696ee1dac56b17e74f1e61d292c2067c54c4c028",
+    "lib/server/neo4j.ts": "c7d4bfce9f048546dcf83dfcbcabe257e5bcb4342f014b755e02c407f996e8c0",
+    "lib/server/pattern-graph.ts": "973a6b4e7c18fbbf0bb8fba9c35e461302fdee5fa156742dcb9ff1feecc5237d",
+    "lib/server/pilot-dataset.ts": "cd44015fcd94b18a39a0cee4c20d7109e3e6dc12f85809f06298b79cdf08d434",
+    "lib/server/pilot-v2-dataset.ts": "550f65bf5d8a019d030ace9665583db9e852280c456d2d3a5f4f80e33f38dbad",
+    "lib/server/public-backup.ts": "2d5649ff7193cfe6a3edc3724e41c29aa2e3e835ceeb7918b0ea438354a67913",
+    "lib/server/public-dataset.ts": "6e60b9fdc9047f7498686a7c5014b6c6fca92ae9d0f4ab4f0649fe46cdbe4753",
+    "lib/server/public-discovery.ts": "5a04fb5e659ce91228cc6a6e16d7cf592d39766838e6d66b81b3e94bbed4d073",
+    "lib/server/public-graph.ts": "382da37abb6acd1461010b3d6a49ea293c4d219f4a17598aec25b4d4417e62d9",
+    "lib/server/public-identities.ts": "1cd2393f2efddc98b5ccbf455b3b63abe8349697912ecc88e15a9c0c60aebf25",
+    "lib/server/public-revision.ts": "a3bd78914dfaede7d6d8024409e90608abea873267deadeb76b40b72b66c3471",
+    "lib/server/publication.ts": "0ff9640c26000e01c186d07e54852e6214a85167b98a472cbcc9bf9d1abec86f",
+    "lib/server/queries.ts": "e4e794a49f3fe167404481202dae15c9f8258651be46bd6d1c2be6e284cfd866",
+    "lib/server/read-db.ts": "201833bcf667f9d1c7cc7efa52aaba4701ca22b30f961e7370cfd3df02c31bd0",
+    "lib/server/relation-http.ts": "200e9f075f89ae71e2870a12040147938a1b947d46bc76c7222304d8ef5f2f92",
+    "lib/server/relation-pattern-execution.ts": "68ec37fb75efab606ab3c922a1759429d3d011983ebc93b688ba834496141afd",
+    "lib/server/science-dataset.ts": "35d204aec1c5b21254df99213a9d7618364dc2483bee5eb31f262a0c50a65723",
+    "lib/server/science-v2-dataset.ts": "926caba1033f415e2088a8fbc369ca578b06648b85eadc85e91e55220e46003b",
+    "lib/server/seed.ts": "3a1d00d2403b93320bc6d20b7cbeef5036896fd3f878eac4a075dd753d32c255",
+    "package-lock.json": "3ceacf3184b0b6ac339718419da2246cf667a301a2a0df6b3e8368edad1ce4b9",
+    "package.json": "01f0aa8d14f1a7932853ac2b51fa417bd1c422db8943990e7829757b67f3f280",
+    "scripts/check-vocabulary.ts": "d4c85167800bbb0b175c288ed51191e4a1d94341290205ba0159e03a79a8ccb0",
+    "scripts/collect-film-manifest.py": "e11534038d89aeee202688485caad5bd65707e99c5352e8649d0e25e5e12763e",
+    "scripts/collect-film-v1.py": "4aa36a3a3664f5bdf366a2e609054821f2e3d54177394082731ac43960ff4fe8",
+    "scripts/collect-manga-v2.py": "d887d490159b03a1d0b90dba060f6d77e248c1d7308497c0adb3d3048bf60f88",
+    "scripts/collect-manga.py": "a52864e69386c12e32c62fe5a0bbf7ce6573f8c736acceac1ccd0c1a16dca7cd",
+    "scripts/collection-acceptance.py": "7e81dd8ebc9a2fea28f279b107c18d3a8bbef9f7fe4d226454b98cde9698732d",
+    "scripts/collection-evidence.py": "a3b50fc78ec8efb8c7daa3315a2e06c5c8f4d761acb7ef23c09d38658ddee76a",
+    "scripts/collection-film.py": "e4a0989dd6d5f045f207ebc39763d2918e700f6a81a880a9ab9200e1350e6039",
+    "scripts/collection-themes.py": "1f36d3010c7a7e471091620c6820b1401aa0a0b53a997da187f51f9fa68b2ae2",
+    "scripts/collection-workflow.py": "51b7fd931aec8f0d740077a3552de3ecb4235b2f69f6e2e56d9f6ed0e2c35449",
+    "scripts/film-beta.ts": "4f7893066d403c45de6168bbc1b1732877e2de0041b6013c5be0a38419b95efe",
+    "scripts/film41-runtime.ts": "4223e406e3573d871414d0a6a7027c099178c6654be0069a493efbb1e63e062e",
+    "scripts/freeze-film-comparison.py": "aa1f523f20737c9190d96409cf22c19606da973c6737c53d179b2fe5db06d437",
+    "scripts/prepare-film-production-inputs.py": "306f3cb92d3e16186ed09c3651f91d7fc709b5751d68ca23fe526904abf5a822",
+    "scripts/public-kg.ts": "99fbddb907cdb4a1f61a1bf59ba60a626bf721f75c492c99449289b293b2df33",
+    "scripts/publication-backup-plan.ts": "cb5c1b698b920f55946838fb04caabdc1c5796f65e4061d50b41a9b7088ee333",
+    "scripts/refresh-film-comparison.py": "54f6a21de390726090a667a7b4dad930e282639a58821b858f6923fdafa9585d",
+    "scripts/start-local-previews.py": "f07508e287d067f21b1b7d5c8bef79b866161a8e79ea5bf333ba388bc4424814",
+    "vocabulary/contribution-roles/baseline-v1.json": "3c64fb16a2c2eeac374767cccb4fa1b0702db5a97b8c67ea45d997d1aba139fb",
+    "vocabulary/contribution-roles/catalog.json": "0464f247eefa16442d01a0cfdabb8cc2e83fab7d6cbe2d8e9937b403b4aad094",
+    "vocabulary/contribution-roles/film-pending.json": "659d2a2c087ace1992a53250f061d4e923dc3d7f09d95bd4e52aaa6dbefe22b1",
+    "vocabulary/contribution-roles/reviews.json": "e233cdfaaa98e5e1899d757f31aeb015ffd21287bae3d4ef5780d04a33169d30"
+  }
+}

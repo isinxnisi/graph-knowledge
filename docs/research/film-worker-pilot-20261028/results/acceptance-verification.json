@@ -1,0 +1,51 @@
+{
+  "authority": "approved-formal-acceptance-and-unpublished-candidate-verification",
+  "workerOverlaySha256": "68b62c2f93704d8f82b93f0ac2dc6cc94e020c7802edd0a16e8ace5651f44d0e",
+  "approvedDraftSha256": "153830c9413b9d1368939b67289126a5e6dde5bc275cc2bcdfa31bdb5881f51a",
+  "approvedDecisionSha256": "61dddbb75935d90768d61c403ccdb4cd6c6522b95da876b76feae9e87b2cdb71",
+  "formalReceiptSha256": "7b96b1c64ed106b1a17d493ca86b5b12e1e306e2551c191e52d6df77876c5df6",
+  "acceptedCounts": {
+    "entities": 29,
+    "claims": 34,
+    "sources": 5,
+    "citations": 34
+  },
+  "formalReceiptCount": 12,
+  "oldElevenReceiptsUnchanged": true,
+  "existingPublicRecordBodiesUnchanged": true,
+  "oldTwoFilmClaimsReaccepted": false,
+  "fiveFilesMatchApprovedSource": true,
+  "workerConfigAndCoordinationUnchanged": true,
+  "existingThirtyEightRequestsUnchanged": true,
+  "reviewedProgramBindingUnchanged": true,
+  "releaseStatus": "release-prepared-not-applied",
+  "offlinePlan": {
+    "addedNodes": 131,
+    "updatedNodes": 0,
+    "relationshipsAdded": 165
+  },
+  "productionMetadata": {
+    "dataset": "public-kg",
+    "revision": "7c54da24-6fa9-46a5-810d-834eed8328d9"
+  },
+  "publicApply": false,
+  "productionSigned": false,
+  "coverage": {
+    "checkedResearchRecords": 81,
+    "formallyAcceptedCheckedRecords": 36,
+    "unacceptedCheckedRecords": 45,
+    "productionPublishedResearchClaims": 2,
+    "acceptedUnpublishedResearchClaims": 34,
+    "allResearchCandidates": 124,
+    "notFormallyAcceptedAllCandidates": 88,
+    "structuredOnlyPreserved": 37,
+    "researchHoldsPreserved": 6,
+    "entityCandidates": 97,
+    "formalEntityUuids": 32,
+    "remainingEntityCandidates": 65,
+    "abReviewed": 63,
+    "abNewlyAccepted": 34,
+    "abNotAccepted": 29,
+    "cdNotAccepted": 16
+  }
+}

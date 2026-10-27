@@ -1,0 +1,1817 @@
+{
+  "records": {
+    "entities": [
+      {
+        "id": "0d2aa95b-aae3-423d-9a2f-f4e9ca038810",
+        "kind": "person",
+        "name": "エリック・ハイセラー",
+        "description": null,
+        "aliases": [
+          "Eric Andrew Heisserer",
+          "Eric Heisserer",
+          "エリック・ヘイサラー"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q5386707"
+          }
+        ],
+        "event": null,
+        "createdAt": "2026-10-27T18:55:00Z",
+        "updatedAt": "2026-10-27T18:55:00Z"
+      },
+      {
+        "id": "13a23327-ce46-4939-af3b-c39408e27ae2",
+        "kind": "person",
+        "name": "渡辺謙",
+        "description": null,
+        "aliases": [
+          "Ken Watanabe",
+          "Watanabe Ken"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q211553"
+          }
+        ],
+        "event": null,
+        "createdAt": "2026-10-27T18:55:00Z",
+        "updatedAt": "2026-10-27T18:55:00Z"
+      },
+      {
+        "id": "1b217c91-1e2d-46e1-9e4c-b90d706d3f7a",
+        "kind": "person",
+        "name": "クリストファー・ノーラン",
+        "description": null,
+        "aliases": [
+          "Christopher Nolan"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q25191"
+          }
+        ],
+        "event": null,
+        "createdAt": "2026-10-27T18:55:00Z",
+        "updatedAt": "2026-10-27T18:55:00Z"
+      },
+      {
+        "id": "2c043ccb-8726-4883-acb1-e5821969e379",
+        "kind": "person",
+        "name": "ジェレミー・レナー",
+        "description": null,
+        "aliases": [
+          "Jeremy Renner"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q23365"
+          }
+        ],
+        "event": null,
+        "createdAt": "2026-10-27T18:55:00Z",
+        "updatedAt": "2026-10-27T18:55:00Z"
+      },
+      {
+        "id": "2d427fb3-d54f-479e-8579-e608c3364111",
+        "kind": "work",
+        "name": "デューン",
+        "description": null,
+        "aliases": [
+          "Dune",
+          "Dune (2021)",
+          "Dune: Part One"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q60834962"
+          }
+        ],
+        "event": null,
+        "createdAt": "2026-10-27T18:55:00Z",
+        "updatedAt": "2026-10-27T18:55:00Z"
+      },
+      {
+        "id": "2e28a4a4-48cc-4aa7-a1bf-4cb3a5f9ce3b",
+        "kind": "person",
+        "name": "ポール・ハギス",
+        "description": null,
+        "aliases": [
+          "Paul Edward Haggis",
+          "Paul Haggis"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q314935"
+          }
+        ],
+        "event": null,
+        "createdAt": "2026-10-27T18:55:00Z",
+        "updatedAt": "2026-10-27T18:55:00Z"
+      },
+      {
+        "id": "342bb682-268a-419e-b9d2-c6ff0975f195",
+        "kind": "person",
+        "name": "ドゥニ・ヴィルヌーヴ",
+        "description": null,
+        "aliases": [
+          "Denis Villeneuve"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q548823"
+          }
+        ],
+        "event": null,
+        "createdAt": "2026-10-27T18:55:00Z",
+        "updatedAt": "2026-10-27T18:55:00Z"
+      },
+      {
+        "id": "3a2ef351-d225-4896-a3b8-01bbe33743d4",
+        "kind": "person",
+        "name": "レオナルド・ディカプリオ",
+        "description": null,
+        "aliases": [
+          "Leonardo DiCaprio",
+          "Leonardo Wilhelm DiCaprio",
+          "ディカプリオ",
+          "レオナルド・デカプリオ"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q38111"
+          }
+        ],
+        "event": null,
+        "createdAt": "2026-10-27T18:55:00Z",
+        "updatedAt": "2026-10-27T18:55:00Z"
+      },
+      {
+        "id": "3db5a731-1dca-4ee0-8023-56e42fc38f30",
+        "kind": "person",
+        "name": "モーガン・フリーマン",
+        "description": null,
+        "aliases": [
+          "Morgan Freeman"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q48337"
+          }
+        ],
+        "event": null,
+        "createdAt": "2026-10-27T18:55:00Z",
+        "updatedAt": "2026-10-27T18:55:00Z"
+      },
+      {
+        "id": "3dd652cb-1ac1-40ec-8919-288745ac2926",
+        "kind": "person",
+        "name": "リドリー・スコット",
+        "description": null,
+        "aliases": [
+          "Ridley Scott"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q56005"
+          }
+        ],
+        "event": null,
+        "createdAt": "2026-10-27T18:55:00Z",
+        "updatedAt": "2026-10-27T18:55:00Z"
+      },
+      {
+        "id": "420865b6-1377-4d02-8678-09cf0ed28fac",
+        "kind": "work",
+        "name": "インセプション",
+        "description": null,
+        "aliases": [
+          "Inception"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q25188"
+          }
+        ],
+        "event": null,
+        "createdAt": "2026-10-27T18:55:00Z",
+        "updatedAt": "2026-10-27T18:55:00Z"
+      },
+      {
+        "id": "4646b1f4-e33a-4b1c-8103-b5740c4e8b76",
+        "kind": "person",
+        "name": "ハリソン・フォード",
+        "description": null,
+        "aliases": [
+          "Harrison Ford",
+          "ハリソンフォード"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q81328"
+          }
+        ],
+        "event": null,
+        "createdAt": "2026-10-27T18:55:00Z",
+        "updatedAt": "2026-10-27T18:55:00Z"
+      },
+      {
+        "id": "492646fd-364d-4996-a265-5bfee0ae281d",
+        "kind": "person",
+        "name": "フォレスト・ウィテカー",
+        "description": null,
+        "aliases": [
+          "Forest Steven Whitaker",
+          "Forest Whitaker",
+          "フォレスト・ウィッテカー"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q182763"
+          }
+        ],
+        "event": null,
+        "createdAt": "2026-10-27T18:55:00Z",
+        "updatedAt": "2026-10-27T18:55:00Z"
+      },
+      {
+        "id": "5be3a84e-9c85-4218-bc7e-1829f824bc5e",
+        "kind": "work",
+        "name": "メッセージ",
+        "description": null,
+        "aliases": [
+          "Arrival"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q20382729"
+          }
+        ],
+        "event": null,
+        "createdAt": "2026-10-27T18:55:00Z",
+        "updatedAt": "2026-10-27T18:55:00Z"
+      },
+      {
+        "id": "5eb8ec0c-c524-42b3-ae4b-4f1962f9e38f",
+        "kind": "person",
+        "name": "マイケル・ディーリー",
+        "description": null,
+        "aliases": [
+          "Michael Deeley"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q656655"
+          }
+        ],
+        "event": null,
+        "createdAt": "2026-10-27T18:55:00Z",
+        "updatedAt": "2026-10-27T18:55:00Z"
+      },
+      {
+        "id": "60a67ae8-ccd6-4d86-89a6-93ce3c942d9d",
+        "kind": "person",
+        "name": "ハンプトン・ファンチャー",
+        "description": null,
+        "aliases": [
+          "Hampton Fancher",
+          "Hampton Lansden Fancher"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q1372703"
+          }
+        ],
+        "event": null,
+        "createdAt": "2026-10-27T18:55:00Z",
+        "updatedAt": "2026-10-27T18:55:00Z"
+      },
+      {
+        "id": "6e1a7c3e-155a-4fa3-beef-83564b2f93b2",
+        "kind": "work",
+        "name": "インターステラー",
+        "description": null,
+        "aliases": [
+          "Interstellar"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q13417189"
+          }
+        ],
+        "event": null,
+        "createdAt": "2026-10-27T18:55:00Z",
+        "updatedAt": "2026-10-27T18:55:00Z"
+      },
+      {
+        "id": "7ce6d8b7-d0d6-45a2-8cb8-f629d0d764c1",
+        "kind": "person",
+        "name": "エリック・ロス",
+        "description": null,
+        "aliases": [
+          "Eric R. Roth",
+          "Eric Roth"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q942932"
+          }
+        ],
+        "event": null,
+        "createdAt": "2026-10-27T18:55:00Z",
+        "updatedAt": "2026-10-27T18:55:00Z"
+      },
+      {
+        "id": "7d6dbe11-be31-40e7-bc25-320779528c8e",
+        "kind": "work",
+        "name": "ブレードランナー",
+        "description": null,
+        "aliases": [
+          "Blade Runner"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q184843"
+          }
+        ],
+        "event": null,
+        "createdAt": "2026-10-27T18:55:00Z",
+        "updatedAt": "2026-10-27T18:55:00Z"
+      },
+      {
+        "id": "8524ec91-2665-46c4-b6e3-58c31f221f74",
+        "kind": "person",
+        "name": "マシュー・マコノヒー",
+        "description": null,
+        "aliases": [
+          "Matthew McConaughey",
+          "マシュー・デイヴィッド・マコノヒー"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q188955"
+          }
+        ],
+        "event": null,
+        "createdAt": "2026-10-27T18:55:00Z",
+        "updatedAt": "2026-10-27T18:55:00Z"
+      },
+      {
+        "id": "911cb38f-1215-4b2b-9d5d-3ac6f390261b",
+        "kind": "person",
+        "name": "アルバート・S・ラディー",
+        "description": null,
+        "aliases": [
+          "Albert S. Ruddy",
+          "Albert Stotland Ruddy",
+          "アルバート・S・ルディ"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q280490"
+          }
+        ],
+        "event": null,
+        "createdAt": "2026-10-27T18:55:00Z",
+        "updatedAt": "2026-10-27T18:55:00Z"
+      },
+      {
+        "id": "99df2f68-ca27-4f34-8b4d-edd68044e3b3",
+        "kind": "person",
+        "name": "エマ・トーマス",
+        "description": null,
+        "aliases": [
+          "Dame Emma Thomas",
+          "Dame Emma Thomas Nolan",
+          "Dame Emma Thomas, Lady Nolan",
+          "Emma Thomas",
+          "Emma Thomas Nolan",
+          "Lady Nolan"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q242951"
+          }
+        ],
+        "event": null,
+        "createdAt": "2026-10-27T18:55:00Z",
+        "updatedAt": "2026-10-27T18:55:00Z"
+      },
+      {
+        "id": "9d669326-483d-445a-b344-943c0d3652a8",
+        "kind": "person",
+        "name": "デイヴィッド・ピープルズ",
+        "description": null,
+        "aliases": [
+          "David Peoples",
+          "David Webb Peoples",
+          "デイヴィッド・ウェッブ・ピープルズ"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q1177114"
+          }
+        ],
+        "event": null,
+        "createdAt": "2026-10-27T18:55:00Z",
+        "updatedAt": "2026-10-27T18:55:00Z"
+      },
+      {
+        "id": "9e6f483a-ffc7-4219-94bb-dc2897224c9d",
+        "kind": "person",
+        "name": "エイミー・アダムス",
+        "description": null,
+        "aliases": [
+          "Amy Adams",
+          "Amy Lou Adams"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q481832"
+          }
+        ],
+        "event": null,
+        "createdAt": "2026-10-27T18:55:00Z",
+        "updatedAt": "2026-10-27T18:55:00Z"
+      },
+      {
+        "id": "aad624bf-c14a-44f8-a1af-14cbc967e02a",
+        "kind": "person",
+        "name": "マイケル・ケイン",
+        "description": null,
+        "aliases": [
+          "Maurice Joseph Micklewhite",
+          "Maurice Joseph Micklewhite, Jr.",
+          "Michael Caine",
+          "Sir Michael Caine",
+          "Sir Michael Caine, CBE"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q123351"
+          }
+        ],
+        "event": null,
+        "createdAt": "2026-10-27T18:55:00Z",
+        "updatedAt": "2026-10-27T18:55:00Z"
+      },
+      {
+        "id": "bd8a8e29-f3e7-41a4-b068-acf80a96b82d",
+        "kind": "person",
+        "name": "ジョン・スペイツ",
+        "description": null,
+        "aliases": [
+          "Jon Spaihts",
+          "Jonathan Spaihts"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q6271612"
+          }
+        ],
+        "event": null,
+        "createdAt": "2026-10-27T18:55:00Z",
+        "updatedAt": "2026-10-27T18:55:00Z"
+      },
+      {
+        "id": "cbc950e1-2c7a-4696-a845-85db20787297",
+        "kind": "person",
+        "name": "ジョナサン・ノーラン",
+        "description": null,
+        "aliases": [
+          "Jonah Nolan",
+          "Jonathan \"Jonah\" Nolan",
+          "Jonathan Nolan"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q372788"
+          }
+        ],
+        "event": null,
+        "createdAt": "2026-10-27T18:55:00Z",
+        "updatedAt": "2026-10-27T18:55:00Z"
+      },
+      {
+        "id": "d72eb196-d40b-4a14-822e-2ade9134c256",
+        "kind": "person",
+        "name": "ショーン・レヴィ",
+        "description": null,
+        "aliases": [
+          "Shawn Adam Levy",
+          "Shawn Levy"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q323076"
+          }
+        ],
+        "event": null,
+        "createdAt": "2026-10-27T18:55:00Z",
+        "updatedAt": "2026-10-27T18:55:00Z"
+      },
+      {
+        "id": "ead8bbfd-28c3-4202-9e6a-b5cfc4eccc6e",
+        "kind": "person",
+        "name": "トム・ローゼンバーグ",
+        "description": null,
+        "aliases": [
+          "Tom Rosenberg"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q7817415"
+          }
+        ],
+        "event": null,
+        "createdAt": "2026-10-27T18:55:00Z",
+        "updatedAt": "2026-10-27T18:55:00Z"
+      }
+    ],
+    "claims": [
+      {
+        "id": "01e2a86b-6801-472b-8e32-a91cc0925dfc",
+        "subjectId": "3a2ef351-d225-4896-a3b8-01bbe33743d4",
+        "objectId": "420865b6-1377-4d02-8678-09cf0ed28fac",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "hidden",
+        "createdAt": "2026-10-27T18:55:00Z",
+        "updatedAt": "2026-10-27T18:55:00Z",
+        "contribution": {
+          "roleId": "ACTING",
+          "scope": null
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      },
+      {
+        "id": "0a7e8587-895a-46b7-9b20-9363f4d444a6",
+        "subjectId": "13a23327-ce46-4939-af3b-c39408e27ae2",
+        "objectId": "420865b6-1377-4d02-8678-09cf0ed28fac",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "hidden",
+        "createdAt": "2026-10-27T18:55:00Z",
+        "updatedAt": "2026-10-27T18:55:00Z",
+        "contribution": {
+          "roleId": "ACTING",
+          "scope": null
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      },
+      {
+        "id": "11db956d-70a9-43cf-805b-9ffa576da501",
+        "subjectId": "bd8a8e29-f3e7-41a4-b068-acf80a96b82d",
+        "objectId": "2d427fb3-d54f-479e-8579-e608c3364111",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "hidden",
+        "createdAt": "2026-10-27T18:55:00Z",
+        "updatedAt": "2026-10-27T18:55:00Z",
+        "contribution": {
+          "roleId": "SCRIPT_WRITING",
+          "scope": null
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      },
+      {
+        "id": "1baf9c26-c4bb-4d09-9caa-16114a81b8af",
+        "subjectId": "aad624bf-c14a-44f8-a1af-14cbc967e02a",
+        "objectId": "6e1a7c3e-155a-4fa3-beef-83564b2f93b2",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "hidden",
+        "createdAt": "2026-10-27T18:55:00Z",
+        "updatedAt": "2026-10-27T18:55:00Z",
+        "contribution": {
+          "roleId": "ACTING",
+          "scope": null
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      },
+      {
+        "id": "204905b0-1f64-4e98-beb9-974b6031c7b0",
+        "subjectId": "1b217c91-1e2d-46e1-9e4c-b90d706d3f7a",
+        "objectId": "6e1a7c3e-155a-4fa3-beef-83564b2f93b2",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "hidden",
+        "createdAt": "2026-10-27T18:55:00Z",
+        "updatedAt": "2026-10-27T18:55:00Z",
+        "contribution": {
+          "roleId": "PRODUCING",
+          "scope": null
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      },
+      {
+        "id": "2560c363-e2f7-4481-84cc-025833259a0d",
+        "subjectId": "8524ec91-2665-46c4-b6e3-58c31f221f74",
+        "objectId": "6e1a7c3e-155a-4fa3-beef-83564b2f93b2",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "hidden",
+        "createdAt": "2026-10-27T18:55:00Z",
+        "updatedAt": "2026-10-27T18:55:00Z",
+        "contribution": {
+          "roleId": "ACTING",
+          "scope": null
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      },
+      {
+        "id": "2721d599-98fa-48bd-836d-cff2aa4f023b",
+        "subjectId": "342bb682-268a-419e-b9d2-c6ff0975f195",
+        "objectId": "5be3a84e-9c85-4218-bc7e-1829f824bc5e",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "hidden",
+        "createdAt": "2026-10-27T18:55:00Z",
+        "updatedAt": "2026-10-27T18:55:00Z",
+        "contribution": {
+          "roleId": "DIRECTING",
+          "scope": null
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      },
+      {
+        "id": "2e210c78-b456-45cd-86ad-09f2a334a992",
+        "subjectId": "1b217c91-1e2d-46e1-9e4c-b90d706d3f7a",
+        "objectId": "6e1a7c3e-155a-4fa3-beef-83564b2f93b2",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "hidden",
+        "createdAt": "2026-10-27T18:55:00Z",
+        "updatedAt": "2026-10-27T18:55:00Z",
+        "contribution": {
+          "roleId": "DIRECTING",
+          "scope": null
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      },
+      {
+        "id": "34817c14-af7e-4203-93ae-f0e542d0c710",
+        "subjectId": "1b217c91-1e2d-46e1-9e4c-b90d706d3f7a",
+        "objectId": "6e1a7c3e-155a-4fa3-beef-83564b2f93b2",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "hidden",
+        "createdAt": "2026-10-27T18:55:00Z",
+        "updatedAt": "2026-10-27T18:55:00Z",
+        "contribution": {
+          "roleId": "SCRIPT_WRITING",
+          "scope": null
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      },
+      {
+        "id": "382e652d-e1ff-4b2a-8766-cbc9d0c95233",
+        "subjectId": "aad624bf-c14a-44f8-a1af-14cbc967e02a",
+        "objectId": "420865b6-1377-4d02-8678-09cf0ed28fac",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "hidden",
+        "createdAt": "2026-10-27T18:55:00Z",
+        "updatedAt": "2026-10-27T18:55:00Z",
+        "contribution": {
+          "roleId": "ACTING",
+          "scope": null
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      },
+      {
+        "id": "422b17a4-5fe4-49d9-94d9-be05bef2c220",
+        "subjectId": "5eb8ec0c-c524-42b3-ae4b-4f1962f9e38f",
+        "objectId": "7d6dbe11-be31-40e7-bc25-320779528c8e",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "hidden",
+        "createdAt": "2026-10-27T18:55:00Z",
+        "updatedAt": "2026-10-27T18:55:00Z",
+        "contribution": {
+          "roleId": "PRODUCING",
+          "scope": null
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      },
+      {
+        "id": "45753517-c284-4c62-828b-52bbd06c4935",
+        "subjectId": "d72eb196-d40b-4a14-822e-2ade9134c256",
+        "objectId": "5be3a84e-9c85-4218-bc7e-1829f824bc5e",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "hidden",
+        "createdAt": "2026-10-27T18:55:00Z",
+        "updatedAt": "2026-10-27T18:55:00Z",
+        "contribution": {
+          "roleId": "PRODUCING",
+          "scope": null
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      },
+      {
+        "id": "560df70e-2deb-4cbc-a09a-6269fdecf53a",
+        "subjectId": "60a67ae8-ccd6-4d86-89a6-93ce3c942d9d",
+        "objectId": "7d6dbe11-be31-40e7-bc25-320779528c8e",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "hidden",
+        "createdAt": "2026-10-27T18:55:00Z",
+        "updatedAt": "2026-10-27T18:55:00Z",
+        "contribution": {
+          "roleId": "SCRIPT_WRITING",
+          "scope": null
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      },
+      {
+        "id": "57fa063b-d69d-4829-8567-4d0ab4c4a234",
+        "subjectId": "99df2f68-ca27-4f34-8b4d-edd68044e3b3",
+        "objectId": "420865b6-1377-4d02-8678-09cf0ed28fac",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "hidden",
+        "createdAt": "2026-10-27T18:55:00Z",
+        "updatedAt": "2026-10-27T18:55:00Z",
+        "contribution": {
+          "roleId": "PRODUCING",
+          "scope": null
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      },
+      {
+        "id": "624472b2-7788-4984-b13c-9ba4c1515bee",
+        "subjectId": "911cb38f-1215-4b2b-9d5d-3ac6f390261b",
+        "objectId": "805b9630-cd9a-4931-8cde-0bcb92bf8a9f",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "hidden",
+        "createdAt": "2026-10-27T18:55:00Z",
+        "updatedAt": "2026-10-27T18:55:00Z",
+        "contribution": {
+          "roleId": "PRODUCING",
+          "scope": null
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      },
+      {
+        "id": "67675c33-057a-422f-86bd-6535e46da126",
+        "subjectId": "7ce6d8b7-d0d6-45a2-8cb8-f629d0d764c1",
+        "objectId": "2d427fb3-d54f-479e-8579-e608c3364111",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "hidden",
+        "createdAt": "2026-10-27T18:55:00Z",
+        "updatedAt": "2026-10-27T18:55:00Z",
+        "contribution": {
+          "roleId": "SCRIPT_WRITING",
+          "scope": null
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      },
+      {
+        "id": "7a54eab9-c780-4c1c-a5a0-99104c431e42",
+        "subjectId": "cbc950e1-2c7a-4696-a845-85db20787297",
+        "objectId": "6e1a7c3e-155a-4fa3-beef-83564b2f93b2",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "hidden",
+        "createdAt": "2026-10-27T18:55:00Z",
+        "updatedAt": "2026-10-27T18:55:00Z",
+        "contribution": {
+          "roleId": "SCRIPT_WRITING",
+          "scope": null
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      },
+      {
+        "id": "7d12c79b-67b5-484e-965c-297982a220d7",
+        "subjectId": "2e28a4a4-48cc-4aa7-a1bf-4cb3a5f9ce3b",
+        "objectId": "805b9630-cd9a-4931-8cde-0bcb92bf8a9f",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "hidden",
+        "createdAt": "2026-10-27T18:55:00Z",
+        "updatedAt": "2026-10-27T18:55:00Z",
+        "contribution": {
+          "roleId": "SCRIPT_WRITING",
+          "scope": null
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      },
+      {
+        "id": "8031d324-16b1-423c-a98f-8cafb00d1778",
+        "subjectId": "2c043ccb-8726-4883-acb1-e5821969e379",
+        "objectId": "5be3a84e-9c85-4218-bc7e-1829f824bc5e",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "hidden",
+        "createdAt": "2026-10-27T18:55:00Z",
+        "updatedAt": "2026-10-27T18:55:00Z",
+        "contribution": {
+          "roleId": "ACTING",
+          "scope": null
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      },
+      {
+        "id": "850a9f83-aafd-4d1a-ad58-185791bd98bb",
+        "subjectId": "2e28a4a4-48cc-4aa7-a1bf-4cb3a5f9ce3b",
+        "objectId": "805b9630-cd9a-4931-8cde-0bcb92bf8a9f",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "hidden",
+        "createdAt": "2026-10-27T18:55:00Z",
+        "updatedAt": "2026-10-27T18:55:00Z",
+        "contribution": {
+          "roleId": "PRODUCING",
+          "scope": null
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      },
+      {
+        "id": "8974c334-d6c9-4a20-a4ee-35d3ee322c9a",
+        "subjectId": "1b217c91-1e2d-46e1-9e4c-b90d706d3f7a",
+        "objectId": "420865b6-1377-4d02-8678-09cf0ed28fac",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "hidden",
+        "createdAt": "2026-10-27T18:55:00Z",
+        "updatedAt": "2026-10-27T18:55:00Z",
+        "contribution": {
+          "roleId": "SCRIPT_WRITING",
+          "scope": null
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      },
+      {
+        "id": "94596246-2d89-4026-8fe6-8e996dd61b63",
+        "subjectId": "342bb682-268a-419e-b9d2-c6ff0975f195",
+        "objectId": "2d427fb3-d54f-479e-8579-e608c3364111",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "hidden",
+        "createdAt": "2026-10-27T18:55:00Z",
+        "updatedAt": "2026-10-27T18:55:00Z",
+        "contribution": {
+          "roleId": "DIRECTING",
+          "scope": null
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      },
+      {
+        "id": "a8a3b22b-854e-416c-bfbb-fbb69cde8071",
+        "subjectId": "9d669326-483d-445a-b344-943c0d3652a8",
+        "objectId": "7d6dbe11-be31-40e7-bc25-320779528c8e",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "hidden",
+        "createdAt": "2026-10-27T18:55:00Z",
+        "updatedAt": "2026-10-27T18:55:00Z",
+        "contribution": {
+          "roleId": "SCRIPT_WRITING",
+          "scope": null
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      },
+      {
+        "id": "a8a44bd2-ca25-4bef-9aeb-95efba2bc616",
+        "subjectId": "0d2aa95b-aae3-423d-9a2f-f4e9ca038810",
+        "objectId": "5be3a84e-9c85-4218-bc7e-1829f824bc5e",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "hidden",
+        "createdAt": "2026-10-27T18:55:00Z",
+        "updatedAt": "2026-10-27T18:55:00Z",
+        "contribution": {
+          "roleId": "SCRIPT_WRITING",
+          "scope": null
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      },
+      {
+        "id": "ab1fad8c-95ba-4a39-9f93-134b85856b8b",
+        "subjectId": "4646b1f4-e33a-4b1c-8103-b5740c4e8b76",
+        "objectId": "7d6dbe11-be31-40e7-bc25-320779528c8e",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "hidden",
+        "createdAt": "2026-10-27T18:55:00Z",
+        "updatedAt": "2026-10-27T18:55:00Z",
+        "contribution": {
+          "roleId": "ACTING",
+          "scope": null
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      },
+      {
+        "id": "be664da8-8ca7-495c-b654-50257cf3bb5f",
+        "subjectId": "3db5a731-1dca-4ee0-8023-56e42fc38f30",
+        "objectId": "805b9630-cd9a-4931-8cde-0bcb92bf8a9f",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "hidden",
+        "createdAt": "2026-10-27T18:55:00Z",
+        "updatedAt": "2026-10-27T18:55:00Z",
+        "contribution": {
+          "roleId": "ACTING",
+          "scope": null
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      },
+      {
+        "id": "c100d4b3-373c-47ed-9007-04cd799ac0d2",
+        "subjectId": "1b217c91-1e2d-46e1-9e4c-b90d706d3f7a",
+        "objectId": "420865b6-1377-4d02-8678-09cf0ed28fac",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "hidden",
+        "createdAt": "2026-10-27T18:55:00Z",
+        "updatedAt": "2026-10-27T18:55:00Z",
+        "contribution": {
+          "roleId": "PRODUCING",
+          "scope": null
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      },
+      {
+        "id": "c8ddd4bd-09c6-4e36-8546-7629cca5cbf6",
+        "subjectId": "1b217c91-1e2d-46e1-9e4c-b90d706d3f7a",
+        "objectId": "420865b6-1377-4d02-8678-09cf0ed28fac",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "hidden",
+        "createdAt": "2026-10-27T18:55:00Z",
+        "updatedAt": "2026-10-27T18:55:00Z",
+        "contribution": {
+          "roleId": "DIRECTING",
+          "scope": null
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      },
+      {
+        "id": "c9511222-9477-422d-9572-049fdc20d768",
+        "subjectId": "9e6f483a-ffc7-4219-94bb-dc2897224c9d",
+        "objectId": "5be3a84e-9c85-4218-bc7e-1829f824bc5e",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "hidden",
+        "createdAt": "2026-10-27T18:55:00Z",
+        "updatedAt": "2026-10-27T18:55:00Z",
+        "contribution": {
+          "roleId": "ACTING",
+          "scope": null
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      },
+      {
+        "id": "caa6fa13-44c3-4925-858b-1c8c9eff7e4c",
+        "subjectId": "3dd652cb-1ac1-40ec-8919-288745ac2926",
+        "objectId": "7d6dbe11-be31-40e7-bc25-320779528c8e",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "hidden",
+        "createdAt": "2026-10-27T18:55:00Z",
+        "updatedAt": "2026-10-27T18:55:00Z",
+        "contribution": {
+          "roleId": "DIRECTING",
+          "scope": null
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      },
+      {
+        "id": "db41e530-e1d5-4bda-8a9b-83334857a96c",
+        "subjectId": "490ee589-76db-4a5e-8923-13d24b7cb3a2",
+        "objectId": "805b9630-cd9a-4931-8cde-0bcb92bf8a9f",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "hidden",
+        "createdAt": "2026-10-27T18:55:00Z",
+        "updatedAt": "2026-10-27T18:55:00Z",
+        "contribution": {
+          "roleId": "PRODUCING",
+          "scope": null
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      },
+      {
+        "id": "e21681a9-a721-4bc0-83d6-16a907119c75",
+        "subjectId": "492646fd-364d-4996-a265-5bfee0ae281d",
+        "objectId": "5be3a84e-9c85-4218-bc7e-1829f824bc5e",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "hidden",
+        "createdAt": "2026-10-27T18:55:00Z",
+        "updatedAt": "2026-10-27T18:55:00Z",
+        "contribution": {
+          "roleId": "ACTING",
+          "scope": null
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      },
+      {
+        "id": "e77e4769-69de-4229-9484-ea1886b1a8ac",
+        "subjectId": "342bb682-268a-419e-b9d2-c6ff0975f195",
+        "objectId": "2d427fb3-d54f-479e-8579-e608c3364111",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "hidden",
+        "createdAt": "2026-10-27T18:55:00Z",
+        "updatedAt": "2026-10-27T18:55:00Z",
+        "contribution": {
+          "roleId": "SCRIPT_WRITING",
+          "scope": null
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      },
+      {
+        "id": "fab3dc5d-7565-4bb2-892e-b04a65f440f0",
+        "subjectId": "ead8bbfd-28c3-4202-9e6a-b5cfc4eccc6e",
+        "objectId": "805b9630-cd9a-4931-8cde-0bcb92bf8a9f",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "hidden",
+        "createdAt": "2026-10-27T18:55:00Z",
+        "updatedAt": "2026-10-27T18:55:00Z",
+        "contribution": {
+          "roleId": "PRODUCING",
+          "scope": null
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      }
+    ],
+    "sources": [
+      {
+        "id": "29153c7c-75b7-4d90-9ac1-7f5eec2daaff",
+        "kind": "web",
+        "title": "Blade Runner — AFI Catalog",
+        "authors": [],
+        "publisher": "American Film Institute",
+        "url": "https://catalog.afi.com/Film/68260-BLADE-RUNNER",
+        "publishedAt": null,
+        "edition": null,
+        "note": "保存済み映画資料の人物・作品・原役割対応。適用範囲は未構造化。",
+        "isDemo": false
+      },
+      {
+        "id": "529ddee7-dcea-4eb3-97c5-da3ada7922de",
+        "kind": "web",
+        "title": "DUNE/デューン 砂の惑星 — Warner Bros.",
+        "authors": [],
+        "publisher": "Warner Bros. Japan",
+        "url": "https://www.warnerbros.co.jp/home_entertainment/o5kdyecgb",
+        "publishedAt": null,
+        "edition": null,
+        "note": "保存済み映画資料の人物・作品・原役割対応。適用範囲は未構造化。",
+        "isDemo": false
+      },
+      {
+        "id": "5cda4bab-b317-40d7-887c-f6ee42e3c8de",
+        "kind": "web",
+        "title": "インセプション — Warner Bros.",
+        "authors": [],
+        "publisher": "Warner Bros. Japan",
+        "url": "https://www.warnerbros.co.jp/home_entertainment/p3xup8h269",
+        "publishedAt": null,
+        "edition": null,
+        "note": "保存済み映画資料の人物・作品・原役割対応。適用範囲は未構造化。",
+        "isDemo": false
+      },
+      {
+        "id": "7ecb3b65-d211-42c7-aeb4-7f1152c9a051",
+        "kind": "web",
+        "title": "Arrival — Paramount",
+        "authors": [],
+        "publisher": "Paramount Pictures",
+        "url": "https://www.paramount.com/movies/arrival",
+        "publishedAt": null,
+        "edition": null,
+        "note": "保存済み映画資料の人物・作品・原役割対応。適用範囲は未構造化。",
+        "isDemo": false
+      },
+      {
+        "id": "cff578b8-3458-462f-8568-39aa9881b578",
+        "kind": "web",
+        "title": "インターステラー — Warner Bros.",
+        "authors": [],
+        "publisher": "Warner Bros. Japan",
+        "url": "https://www.warnerbros.co.jp/home_entertainment/k4hjvhjawk2",
+        "publishedAt": null,
+        "edition": null,
+        "note": "保存済み映画資料の人物・作品・原役割対応。適用範囲は未構造化。",
+        "isDemo": false
+      }
+    ],
+    "citations": [
+      {
+        "id": "10a37f67-8c0d-4441-ba05-98c420806fd1",
+        "claimId": "a8a44bd2-ca25-4bef-9aeb-95efba2bc616",
+        "sourceId": "7ecb3b65-d211-42c7-aeb4-7f1152c9a051",
+        "locator": "About the Cast / About the Crew",
+        "note": "保存済み照合記録に基づく人物・作品・役割の対応。個人別原文の再構成ではない。",
+        "accessedAt": "2026-10-26",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "Writer",
+          "language": "en"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      },
+      {
+        "id": "1af08b9b-c6ff-4e8b-819b-3277cbcea4da",
+        "claimId": "a8a3b22b-854e-416c-bfbb-fbb69cde8071",
+        "sourceId": "29153c7c-75b7-4d90-9ac1-7f5eec2daaff",
+        "locator": "Cast / Director / Writers / Producer / Cinematographer; HISTORY",
+        "note": "保存済み照合記録に基づく人物・作品・役割の対応。個人別原文の再構成ではない。",
+        "accessedAt": "2026-10-26",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "Writers",
+          "language": "en"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      },
+      {
+        "id": "1e7e9a63-908e-42c8-a330-d01de08489f6",
+        "claimId": "204905b0-1f64-4e98-beb9-974b6031c7b0",
+        "sourceId": "cff578b8-3458-462f-8568-39aa9881b578",
+        "locator": "クレジット / スタッフ / 製作 / クリストファー・ノーラン",
+        "note": "保存済み照合記録に基づく人物・作品・役割の対応。個人別原文の再構成ではない。",
+        "accessedAt": "2026-10-28",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "製作",
+          "language": "ja"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      },
+      {
+        "id": "20934604-2dba-42fd-be93-f70d794d2ed0",
+        "claimId": "2721d599-98fa-48bd-836d-cff2aa4f023b",
+        "sourceId": "7ecb3b65-d211-42c7-aeb4-7f1152c9a051",
+        "locator": "About the Cast / About the Crew",
+        "note": "保存済み照合記録に基づく人物・作品・役割の対応。個人別原文の再構成ではない。",
+        "accessedAt": "2026-10-26",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "Director",
+          "language": "en"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      },
+      {
+        "id": "255c06da-c9c7-412d-9225-82ac8a78470f",
+        "claimId": "7a54eab9-c780-4c1c-a5a0-99104c431e42",
+        "sourceId": "cff578b8-3458-462f-8568-39aa9881b578",
+        "locator": "クレジット / スタッフ / 脚本 / ジョナサン・ノーラン",
+        "note": "保存済み照合記録に基づく人物・作品・役割の対応。個人別原文の再構成ではない。",
+        "accessedAt": "2026-10-28",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "脚本",
+          "language": "ja"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      },
+      {
+        "id": "2ffd9a52-09d4-4898-a7e9-009675aefec1",
+        "claimId": "34817c14-af7e-4203-93ae-f0e542d0c710",
+        "sourceId": "cff578b8-3458-462f-8568-39aa9881b578",
+        "locator": "クレジット / スタッフ / 脚本 / クリストファー・ノーラン",
+        "note": "保存済み照合記録に基づく人物・作品・役割の対応。個人別原文の再構成ではない。",
+        "accessedAt": "2026-10-28",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "脚本",
+          "language": "ja"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      },
+      {
+        "id": "35a4c638-afc5-49f2-8fb1-073653b13842",
+        "claimId": "422b17a4-5fe4-49d9-94d9-be05bef2c220",
+        "sourceId": "29153c7c-75b7-4d90-9ac1-7f5eec2daaff",
+        "locator": "Cast / Director / Writers / Producer / Cinematographer; HISTORY",
+        "note": "保存済み照合記録に基づく人物・作品・役割の対応。個人別原文の再構成ではない。",
+        "accessedAt": "2026-10-26",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "Producer",
+          "language": "en"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      },
+      {
+        "id": "38258329-e45b-4a36-bdcd-f1acf457bf88",
+        "claimId": "e21681a9-a721-4bc0-83d6-16a907119c75",
+        "sourceId": "7ecb3b65-d211-42c7-aeb4-7f1152c9a051",
+        "locator": "About the Cast / Forest Whitaker / Colonel Weber",
+        "note": "保存済み照合記録に基づく人物・作品・役割の対応。個人別原文の再構成ではない。 役柄: Colonel Weber。",
+        "accessedAt": "2026-10-28",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "About the Cast",
+          "language": "en"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      },
+      {
+        "id": "383f77a6-7398-45de-a18f-7e4b96ef7222",
+        "claimId": "e77e4769-69de-4229-9484-ea1886b1a8ac",
+        "sourceId": "529ddee7-dcea-4eb3-97c5-da3ada7922de",
+        "locator": "クレジット / スタッフ / 脚本 / ドゥニ・ヴィルヌーヴ",
+        "note": "保存済み照合記録に基づく人物・作品・役割の対応。個人別原文の再構成ではない。",
+        "accessedAt": "2026-10-28",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "脚本",
+          "language": "ja"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      },
+      {
+        "id": "3d5eb662-0649-4656-a498-3f9c3bc38ba9",
+        "claimId": "560df70e-2deb-4cbc-a09a-6269fdecf53a",
+        "sourceId": "29153c7c-75b7-4d90-9ac1-7f5eec2daaff",
+        "locator": "Cast / Director / Writers / Producer / Cinematographer; HISTORY",
+        "note": "保存済み照合記録に基づく人物・作品・役割の対応。個人別原文の再構成ではない。",
+        "accessedAt": "2026-10-26",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "Writers",
+          "language": "en"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      },
+      {
+        "id": "4a5cbe8b-3914-41f2-8efa-ecb422a61043",
+        "claimId": "db41e530-e1d5-4bda-8a9b-83334857a96c",
+        "sourceId": "54461ad1-e977-4b68-a2bf-7f972ff29002",
+        "locator": "Cast / Director / Writer / Producers / Cinematographer / MUSIC / LITERARY / DETAILS",
+        "note": "保存済み照合記録に基づく人物・作品・役割の対応。個人別原文の再構成ではない。",
+        "accessedAt": "2026-10-26",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "Producers",
+          "language": "en"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      },
+      {
+        "id": "670897d6-f5ee-43fd-8c7c-a086d8334aa4",
+        "claimId": "850a9f83-aafd-4d1a-ad58-185791bd98bb",
+        "sourceId": "54461ad1-e977-4b68-a2bf-7f972ff29002",
+        "locator": "Cast / Director / Writer / Producers / Cinematographer / MUSIC / LITERARY / DETAILS",
+        "note": "保存済み照合記録に基づく人物・作品・役割の対応。個人別原文の再構成ではない。",
+        "accessedAt": "2026-10-26",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "Producers",
+          "language": "en"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      },
+      {
+        "id": "773f106a-776d-44bd-9d2b-a18112275449",
+        "claimId": "382e652d-e1ff-4b2a-8766-cbc9d0c95233",
+        "sourceId": "5cda4bab-b317-40d7-887c-f6ee42e3c8de",
+        "locator": "キャスト / キャスト / マイケル・ケイン / マイルズ",
+        "note": "保存済み照合記録に基づく人物・作品・役割の対応。個人別原文の再構成ではない。 役柄: マイルズ。",
+        "accessedAt": "2026-10-28",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "キャスト",
+          "language": "ja"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      },
+      {
+        "id": "77539c6c-efd6-4850-ae48-573b6b82db96",
+        "claimId": "8031d324-16b1-423c-a98f-8cafb00d1778",
+        "sourceId": "7ecb3b65-d211-42c7-aeb4-7f1152c9a051",
+        "locator": "About the Cast / Jeremy Renner / Ian Donnelly",
+        "note": "保存済み照合記録に基づく人物・作品・役割の対応。個人別原文の再構成ではない。 役柄: Ian Donnelly。",
+        "accessedAt": "2026-10-28",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "About the Cast",
+          "language": "en"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      },
+      {
+        "id": "7b0b17d4-e313-47ba-932b-6ebc32062d97",
+        "claimId": "1baf9c26-c4bb-4d09-9caa-16114a81b8af",
+        "sourceId": "cff578b8-3458-462f-8568-39aa9881b578",
+        "locator": "キャスト / キャスト / マイケル・ケイン / ブランド教授",
+        "note": "保存済み照合記録に基づく人物・作品・役割の対応。個人別原文の再構成ではない。 役柄: ブランド教授。",
+        "accessedAt": "2026-10-28",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "キャスト",
+          "language": "ja"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      },
+      {
+        "id": "7e9756e3-d65b-4268-8103-48c3770552ef",
+        "claimId": "624472b2-7788-4984-b13c-9ba4c1515bee",
+        "sourceId": "54461ad1-e977-4b68-a2bf-7f972ff29002",
+        "locator": "Cast / Director / Writer / Producers / Cinematographer / MUSIC / LITERARY / DETAILS",
+        "note": "保存済み照合記録に基づく人物・作品・役割の対応。個人別原文の再構成ではない。",
+        "accessedAt": "2026-10-26",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "Producers",
+          "language": "en"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      },
+      {
+        "id": "8319371f-c0d0-464c-8b44-256b10e84d2b",
+        "claimId": "fab3dc5d-7565-4bb2-892e-b04a65f440f0",
+        "sourceId": "54461ad1-e977-4b68-a2bf-7f972ff29002",
+        "locator": "Cast / Director / Writer / Producers / Cinematographer / MUSIC / LITERARY / DETAILS",
+        "note": "保存済み照合記録に基づく人物・作品・役割の対応。個人別原文の再構成ではない。",
+        "accessedAt": "2026-10-26",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "Producers",
+          "language": "en"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      },
+      {
+        "id": "99703bb1-9a64-43fa-8b60-6f8fc4cb4342",
+        "claimId": "67675c33-057a-422f-86bd-6535e46da126",
+        "sourceId": "529ddee7-dcea-4eb3-97c5-da3ada7922de",
+        "locator": "クレジット / スタッフ / 脚本 / エリック・ロス",
+        "note": "保存済み照合記録に基づく人物・作品・役割の対応。個人別原文の再構成ではない。",
+        "accessedAt": "2026-10-28",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "脚本",
+          "language": "ja"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      },
+      {
+        "id": "9bb6e392-5c51-4abe-a6d3-5520f6f439a2",
+        "claimId": "01e2a86b-6801-472b-8e32-a91cc0925dfc",
+        "sourceId": "5cda4bab-b317-40d7-887c-f6ee42e3c8de",
+        "locator": "キャスト / キャスト / レオナルド・ディカプリオ / ドム・コブ",
+        "note": "保存済み照合記録に基づく人物・作品・役割の対応。個人別原文の再構成ではない。 役柄: ドム・コブ。",
+        "accessedAt": "2026-10-28",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "キャスト",
+          "language": "ja"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      },
+      {
+        "id": "a1886b5f-310e-42d5-a579-ffc796ac1d5c",
+        "claimId": "8974c334-d6c9-4a20-a4ee-35d3ee322c9a",
+        "sourceId": "5cda4bab-b317-40d7-887c-f6ee42e3c8de",
+        "locator": "クレジット / スタッフ / 脚本 / クリストファー・ノーラン",
+        "note": "保存済み照合記録に基づく人物・作品・役割の対応。個人別原文の再構成ではない。",
+        "accessedAt": "2026-10-28",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "脚本",
+          "language": "ja"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      },
+      {
+        "id": "acd5e66f-1a9a-4985-8445-e3cb82225bf0",
+        "claimId": "c8ddd4bd-09c6-4e36-8546-7629cca5cbf6",
+        "sourceId": "5cda4bab-b317-40d7-887c-f6ee42e3c8de",
+        "locator": "クレジット / スタッフ / 監督 / クリストファー・ノーラン",
+        "note": "保存済み照合記録に基づく人物・作品・役割の対応。個人別原文の再構成ではない。",
+        "accessedAt": "2026-10-28",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "監督",
+          "language": "ja"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      },
+      {
+        "id": "b8ef97e6-581a-4370-9ee7-1208b029beb3",
+        "claimId": "c9511222-9477-422d-9572-049fdc20d768",
+        "sourceId": "7ecb3b65-d211-42c7-aeb4-7f1152c9a051",
+        "locator": "About the Cast / Amy Adams / Louise Banks",
+        "note": "保存済み照合記録に基づく人物・作品・役割の対応。個人別原文の再構成ではない。 役柄: Louise Banks。",
+        "accessedAt": "2026-10-28",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "About the Cast",
+          "language": "en"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      },
+      {
+        "id": "be46f8b5-ff79-46f1-b6e4-506b9fe46505",
+        "claimId": "7d12c79b-67b5-484e-965c-297982a220d7",
+        "sourceId": "54461ad1-e977-4b68-a2bf-7f972ff29002",
+        "locator": "Cast / Director / Writer / Producers / Cinematographer / MUSIC / LITERARY / DETAILS",
+        "note": "保存済み照合記録に基づく人物・作品・役割の対応。個人別原文の再構成ではない。",
+        "accessedAt": "2026-10-26",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "Writer",
+          "language": "en"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      },
+      {
+        "id": "bef05e24-5855-456a-b6fe-809f046e983a",
+        "claimId": "caa6fa13-44c3-4925-858b-1c8c9eff7e4c",
+        "sourceId": "29153c7c-75b7-4d90-9ac1-7f5eec2daaff",
+        "locator": "Cast / Director / Writers / Producer / Cinematographer; HISTORY",
+        "note": "保存済み照合記録に基づく人物・作品・役割の対応。個人別原文の再構成ではない。",
+        "accessedAt": "2026-10-26",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "Director",
+          "language": "en"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      },
+      {
+        "id": "c12e60a5-bc8d-458c-a4a2-848da3e65a51",
+        "claimId": "11db956d-70a9-43cf-805b-9ffa576da501",
+        "sourceId": "529ddee7-dcea-4eb3-97c5-da3ada7922de",
+        "locator": "クレジット / スタッフ / 脚本 / ジョン・スペイツ",
+        "note": "保存済み照合記録に基づく人物・作品・役割の対応。個人別原文の再構成ではない。",
+        "accessedAt": "2026-10-28",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "脚本",
+          "language": "ja"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      },
+      {
+        "id": "c1f71e63-f97b-459d-9a0b-8defe37daad8",
+        "claimId": "ab1fad8c-95ba-4a39-9f93-134b85856b8b",
+        "sourceId": "29153c7c-75b7-4d90-9ac1-7f5eec2daaff",
+        "locator": "Cast / HISTORY / Harrison Ford / Deckard",
+        "note": "保存済み照合記録に基づく人物・作品・役割の対応。個人別原文の再構成ではない。 役柄: Deckard。",
+        "accessedAt": "2026-10-28",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "Cast",
+          "language": "en"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      },
+      {
+        "id": "c8f99838-b5e7-4c52-8cbb-d8a35994aecb",
+        "claimId": "57fa063b-d69d-4829-8567-4d0ab4c4a234",
+        "sourceId": "5cda4bab-b317-40d7-887c-f6ee42e3c8de",
+        "locator": "クレジット / スタッフ / 製作 / エマ・トーマス",
+        "note": "保存済み照合記録に基づく人物・作品・役割の対応。個人別原文の再構成ではない。",
+        "accessedAt": "2026-10-28",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "製作",
+          "language": "ja"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      },
+      {
+        "id": "cada65aa-102d-4ee5-b121-cf3ca68186dc",
+        "claimId": "0a7e8587-895a-46b7-9b20-9363f4d444a6",
+        "sourceId": "5cda4bab-b317-40d7-887c-f6ee42e3c8de",
+        "locator": "キャスト / キャスト / 渡辺 謙 / サイトー",
+        "note": "保存済み照合記録に基づく人物・作品・役割の対応。個人別原文の再構成ではない。 役柄: サイトー。",
+        "accessedAt": "2026-10-28",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "キャスト",
+          "language": "ja"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      },
+      {
+        "id": "d140ccf0-a260-4821-a691-70865f58d5a1",
+        "claimId": "94596246-2d89-4026-8fe6-8e996dd61b63",
+        "sourceId": "529ddee7-dcea-4eb3-97c5-da3ada7922de",
+        "locator": "クレジット / スタッフ / 監督 / ドゥニ・ヴィルヌーヴ",
+        "note": "保存済み照合記録に基づく人物・作品・役割の対応。個人別原文の再構成ではない。",
+        "accessedAt": "2026-10-28",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "監督",
+          "language": "ja"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      },
+      {
+        "id": "d281ce6f-1728-44a3-a40d-45c431840519",
+        "claimId": "45753517-c284-4c62-828b-52bbd06c4935",
+        "sourceId": "7ecb3b65-d211-42c7-aeb4-7f1152c9a051",
+        "locator": "About the Cast / About the Crew",
+        "note": "保存済み照合記録に基づく人物・作品・役割の対応。個人別原文の再構成ではない。",
+        "accessedAt": "2026-10-26",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "Producer",
+          "language": "en"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      },
+      {
+        "id": "d4887aea-fbd8-43e6-adc5-e5ac3e62ecda",
+        "claimId": "2560c363-e2f7-4481-84cc-025833259a0d",
+        "sourceId": "cff578b8-3458-462f-8568-39aa9881b578",
+        "locator": "キャスト / キャスト / マシュー・マコノヒー / クーパー",
+        "note": "保存済み照合記録に基づく人物・作品・役割の対応。個人別原文の再構成ではない。 役柄: クーパー。",
+        "accessedAt": "2026-10-28",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "キャスト",
+          "language": "ja"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      },
+      {
+        "id": "dc073585-9553-4be8-9a67-7f78b08753cc",
+        "claimId": "2e210c78-b456-45cd-86ad-09f2a334a992",
+        "sourceId": "cff578b8-3458-462f-8568-39aa9881b578",
+        "locator": "クレジット / スタッフ / 監督 / クリストファー・ノーラン",
+        "note": "保存済み照合記録に基づく人物・作品・役割の対応。個人別原文の再構成ではない。",
+        "accessedAt": "2026-10-28",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "監督",
+          "language": "ja"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      },
+      {
+        "id": "ecfa2c06-b940-4a19-84e3-45a458608cd3",
+        "claimId": "be664da8-8ca7-495c-b654-50257cf3bb5f",
+        "sourceId": "54461ad1-e977-4b68-a2bf-7f972ff29002",
+        "locator": "Cast / HISTORY / Morgan Freeman / Eddie Scrap-Iron Dupris",
+        "note": "保存済み照合記録に基づく人物・作品・役割の対応。個人別原文の再構成ではない。 役柄: Eddie Scrap-Iron Dupris。",
+        "accessedAt": "2026-10-28",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "Cast",
+          "language": "en"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      },
+      {
+        "id": "f2839c8c-d2bc-4833-a89a-3044312898d5",
+        "claimId": "c100d4b3-373c-47ed-9007-04cd799ac0d2",
+        "sourceId": "5cda4bab-b317-40d7-887c-f6ee42e3c8de",
+        "locator": "クレジット / スタッフ / 製作 / クリストファー・ノーラン",
+        "note": "保存済み照合記録に基づく人物・作品・役割の対応。個人別原文の再構成ではない。",
+        "accessedAt": "2026-10-28",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "製作",
+          "language": "ja"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      }
+    ]
+  }
+}

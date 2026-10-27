@@ -1,0 +1,941 @@
+{
+  "acceptedRecordIds": {
+    "citations": [
+      "10a37f67-8c0d-4441-ba05-98c420806fd1",
+      "1af08b9b-c6ff-4e8b-819b-3277cbcea4da",
+      "1e7e9a63-908e-42c8-a330-d01de08489f6",
+      "20934604-2dba-42fd-be93-f70d794d2ed0",
+      "255c06da-c9c7-412d-9225-82ac8a78470f",
+      "2ffd9a52-09d4-4898-a7e9-009675aefec1",
+      "35a4c638-afc5-49f2-8fb1-073653b13842",
+      "38258329-e45b-4a36-bdcd-f1acf457bf88",
+      "383f77a6-7398-45de-a18f-7e4b96ef7222",
+      "3d5eb662-0649-4656-a498-3f9c3bc38ba9",
+      "4a5cbe8b-3914-41f2-8efa-ecb422a61043",
+      "670897d6-f5ee-43fd-8c7c-a086d8334aa4",
+      "773f106a-776d-44bd-9d2b-a18112275449",
+      "77539c6c-efd6-4850-ae48-573b6b82db96",
+      "7b0b17d4-e313-47ba-932b-6ebc32062d97",
+      "7e9756e3-d65b-4268-8103-48c3770552ef",
+      "8319371f-c0d0-464c-8b44-256b10e84d2b",
+      "99703bb1-9a64-43fa-8b60-6f8fc4cb4342",
+      "9bb6e392-5c51-4abe-a6d3-5520f6f439a2",
+      "a1886b5f-310e-42d5-a579-ffc796ac1d5c",
+      "acd5e66f-1a9a-4985-8445-e3cb82225bf0",
+      "b8ef97e6-581a-4370-9ee7-1208b029beb3",
+      "be46f8b5-ff79-46f1-b6e4-506b9fe46505",
+      "bef05e24-5855-456a-b6fe-809f046e983a",
+      "c12e60a5-bc8d-458c-a4a2-848da3e65a51",
+      "c1f71e63-f97b-459d-9a0b-8defe37daad8",
+      "c8f99838-b5e7-4c52-8cbb-d8a35994aecb",
+      "cada65aa-102d-4ee5-b121-cf3ca68186dc",
+      "d140ccf0-a260-4821-a691-70865f58d5a1",
+      "d281ce6f-1728-44a3-a40d-45c431840519",
+      "d4887aea-fbd8-43e6-adc5-e5ac3e62ecda",
+      "dc073585-9553-4be8-9a67-7f78b08753cc",
+      "ecfa2c06-b940-4a19-84e3-45a458608cd3",
+      "f2839c8c-d2bc-4833-a89a-3044312898d5"
+    ],
+    "claims": [
+      "01e2a86b-6801-472b-8e32-a91cc0925dfc",
+      "0a7e8587-895a-46b7-9b20-9363f4d444a6",
+      "11db956d-70a9-43cf-805b-9ffa576da501",
+      "1baf9c26-c4bb-4d09-9caa-16114a81b8af",
+      "204905b0-1f64-4e98-beb9-974b6031c7b0",
+      "2560c363-e2f7-4481-84cc-025833259a0d",
+      "2721d599-98fa-48bd-836d-cff2aa4f023b",
+      "2e210c78-b456-45cd-86ad-09f2a334a992",
+      "34817c14-af7e-4203-93ae-f0e542d0c710",
+      "382e652d-e1ff-4b2a-8766-cbc9d0c95233",
+      "422b17a4-5fe4-49d9-94d9-be05bef2c220",
+      "45753517-c284-4c62-828b-52bbd06c4935",
+      "560df70e-2deb-4cbc-a09a-6269fdecf53a",
+      "57fa063b-d69d-4829-8567-4d0ab4c4a234",
+      "624472b2-7788-4984-b13c-9ba4c1515bee",
+      "67675c33-057a-422f-86bd-6535e46da126",
+      "7a54eab9-c780-4c1c-a5a0-99104c431e42",
+      "7d12c79b-67b5-484e-965c-297982a220d7",
+      "8031d324-16b1-423c-a98f-8cafb00d1778",
+      "850a9f83-aafd-4d1a-ad58-185791bd98bb",
+      "8974c334-d6c9-4a20-a4ee-35d3ee322c9a",
+      "94596246-2d89-4026-8fe6-8e996dd61b63",
+      "a8a3b22b-854e-416c-bfbb-fbb69cde8071",
+      "a8a44bd2-ca25-4bef-9aeb-95efba2bc616",
+      "ab1fad8c-95ba-4a39-9f93-134b85856b8b",
+      "be664da8-8ca7-495c-b654-50257cf3bb5f",
+      "c100d4b3-373c-47ed-9007-04cd799ac0d2",
+      "c8ddd4bd-09c6-4e36-8546-7629cca5cbf6",
+      "c9511222-9477-422d-9572-049fdc20d768",
+      "caa6fa13-44c3-4925-858b-1c8c9eff7e4c",
+      "db41e530-e1d5-4bda-8a9b-83334857a96c",
+      "e21681a9-a721-4bc0-83d6-16a907119c75",
+      "e77e4769-69de-4229-9484-ea1886b1a8ac",
+      "fab3dc5d-7565-4bb2-892e-b04a65f440f0"
+    ],
+    "entities": [
+      "0d2aa95b-aae3-423d-9a2f-f4e9ca038810",
+      "13a23327-ce46-4939-af3b-c39408e27ae2",
+      "1b217c91-1e2d-46e1-9e4c-b90d706d3f7a",
+      "2c043ccb-8726-4883-acb1-e5821969e379",
+      "2d427fb3-d54f-479e-8579-e608c3364111",
+      "2e28a4a4-48cc-4aa7-a1bf-4cb3a5f9ce3b",
+      "342bb682-268a-419e-b9d2-c6ff0975f195",
+      "3a2ef351-d225-4896-a3b8-01bbe33743d4",
+      "3db5a731-1dca-4ee0-8023-56e42fc38f30",
+      "3dd652cb-1ac1-40ec-8919-288745ac2926",
+      "420865b6-1377-4d02-8678-09cf0ed28fac",
+      "4646b1f4-e33a-4b1c-8103-b5740c4e8b76",
+      "492646fd-364d-4996-a265-5bfee0ae281d",
+      "5be3a84e-9c85-4218-bc7e-1829f824bc5e",
+      "5eb8ec0c-c524-42b3-ae4b-4f1962f9e38f",
+      "60a67ae8-ccd6-4d86-89a6-93ce3c942d9d",
+      "6e1a7c3e-155a-4fa3-beef-83564b2f93b2",
+      "7ce6d8b7-d0d6-45a2-8cb8-f629d0d764c1",
+      "7d6dbe11-be31-40e7-bc25-320779528c8e",
+      "8524ec91-2665-46c4-b6e3-58c31f221f74",
+      "911cb38f-1215-4b2b-9d5d-3ac6f390261b",
+      "99df2f68-ca27-4f34-8b4d-edd68044e3b3",
+      "9d669326-483d-445a-b344-943c0d3652a8",
+      "9e6f483a-ffc7-4219-94bb-dc2897224c9d",
+      "aad624bf-c14a-44f8-a1af-14cbc967e02a",
+      "bd8a8e29-f3e7-41a4-b068-acf80a96b82d",
+      "cbc950e1-2c7a-4696-a845-85db20787297",
+      "d72eb196-d40b-4a14-822e-2ade9134c256",
+      "ead8bbfd-28c3-4202-9e6a-b5cfc4eccc6e"
+    ],
+    "sources": [
+      "29153c7c-75b7-4d90-9ac1-7f5eec2daaff",
+      "529ddee7-dcea-4eb3-97c5-da3ada7922de",
+      "5cda4bab-b317-40d7-887c-f6ee42e3c8de",
+      "7ecb3b65-d211-42c7-aeb4-7f1152c9a051",
+      "cff578b8-3458-462f-8568-39aa9881b578"
+    ]
+  },
+  "applyAuthorized": {
+    "beta": false,
+    "local": false,
+    "vps": false
+  },
+  "approvalScope": "formal-record-acceptance-and-release-preparation-only",
+  "baseRelease": "publication-film-initial-20261027",
+  "baseRevision": "7c54da24-6fa9-46a5-810d-834eed8328d9",
+  "decisionId": "film-saved-ab-20261028",
+  "humanDecision": {
+    "actorType": "human",
+    "decidedAt": "2026-10-27T20:27:36.000Z",
+    "reviewer": "isinxnisi（運営者）",
+    "statement": "以下の固定対象について、運営者として両方の実施を承認します。\n\n① 固定漫画Workerの5ファイル更新\n\n* source commit：089ee51922d68b03f2e8a9029a3811babfc3dc67\n* overlay manifest SHA-256：68b62c2f93704d8f82b93f0ac2dc6cc94e020c7802edd0a16e8ace5651f44d0e\n\n承認済み5ファイルのみを既存Workerへbackportしてください。既存base pin、collector実行hash、既存承認・依頼、coordinator／peerとの契約は保持してください。\n\n② 映画34 Claimの正式受入\n\n* 判断票：formal-decision-draft.json\n* SHA-256：153830c9413b9d1368939b67289126a5e6dde5bc275cc2bcdfa31bdb5881f51a\n\nCANDIDATE_REVIEW.mdに記載されたA群15件＋B群19件の34 Claim、29新EntityのUUID確定、5新Source、34 Citationの正式受入を承認します。\n\nB群19件のSCRIPT_WRITING／PRODUCINGの意味対応、および記載されたnull scope／periodの扱いも承認対象に含みます。既存3 Entityの正式UUIDは維持してください。\n\n実施条件\n\n* 最新の本番revision、全11 receipt、固定hash、Worker状態を実施前に再確認する。\n* 承認済みの意味・対象・根拠・同一性が一致する範囲で進める。\n* 判断票への実際の承認記録と、変換後のhashを正しく残す。\n* 不一致・新たな判断事項が発生した場合は、対象を勝手に変更せず停止する。\n* 更新・正式受入後は、既存契約によるrelease候補作成とoffline planまで継続する。\n* 検証・記録・commit・pushまで完了する。\n\n今回の承認に、本番公開署名・本番apply・beta／本番Web切替は含めません。\n\n必要な公開requestを準備した後、次の運営者判断地点で結果を報告してください。"
+  },
+  "identityDecision": {
+    "entityIds": [
+      "0d2aa95b-aae3-423d-9a2f-f4e9ca038810",
+      "13a23327-ce46-4939-af3b-c39408e27ae2",
+      "1b217c91-1e2d-46e1-9e4c-b90d706d3f7a",
+      "2c043ccb-8726-4883-acb1-e5821969e379",
+      "2d427fb3-d54f-479e-8579-e608c3364111",
+      "2e28a4a4-48cc-4aa7-a1bf-4cb3a5f9ce3b",
+      "342bb682-268a-419e-b9d2-c6ff0975f195",
+      "3a2ef351-d225-4896-a3b8-01bbe33743d4",
+      "3db5a731-1dca-4ee0-8023-56e42fc38f30",
+      "3dd652cb-1ac1-40ec-8919-288745ac2926",
+      "420865b6-1377-4d02-8678-09cf0ed28fac",
+      "4646b1f4-e33a-4b1c-8103-b5740c4e8b76",
+      "492646fd-364d-4996-a265-5bfee0ae281d",
+      "5be3a84e-9c85-4218-bc7e-1829f824bc5e",
+      "5eb8ec0c-c524-42b3-ae4b-4f1962f9e38f",
+      "60a67ae8-ccd6-4d86-89a6-93ce3c942d9d",
+      "6e1a7c3e-155a-4fa3-beef-83564b2f93b2",
+      "7ce6d8b7-d0d6-45a2-8cb8-f629d0d764c1",
+      "7d6dbe11-be31-40e7-bc25-320779528c8e",
+      "8524ec91-2665-46c4-b6e3-58c31f221f74",
+      "911cb38f-1215-4b2b-9d5d-3ac6f390261b",
+      "99df2f68-ca27-4f34-8b4d-edd68044e3b3",
+      "9d669326-483d-445a-b344-943c0d3652a8",
+      "9e6f483a-ffc7-4219-94bb-dc2897224c9d",
+      "aad624bf-c14a-44f8-a1af-14cbc967e02a",
+      "bd8a8e29-f3e7-41a4-b068-acf80a96b82d",
+      "cbc950e1-2c7a-4696-a845-85db20787297",
+      "d72eb196-d40b-4a14-822e-2ade9134c256",
+      "ead8bbfd-28c3-4202-9e6a-b5cfc4eccc6e"
+    ],
+    "statement": "以下の固定対象について、運営者として両方の実施を承認します。\n\n① 固定漫画Workerの5ファイル更新\n\n* source commit：089ee51922d68b03f2e8a9029a3811babfc3dc67\n* overlay manifest SHA-256：68b62c2f93704d8f82b93f0ac2dc6cc94e020c7802edd0a16e8ace5651f44d0e\n\n承認済み5ファイルのみを既存Workerへbackportしてください。既存base pin、collector実行hash、既存承認・依頼、coordinator／peerとの契約は保持してください。\n\n② 映画34 Claimの正式受入\n\n* 判断票：formal-decision-draft.json\n* SHA-256：153830c9413b9d1368939b67289126a5e6dde5bc275cc2bcdfa31bdb5881f51a\n\nCANDIDATE_REVIEW.mdに記載されたA群15件＋B群19件の34 Claim、29新EntityのUUID確定、5新Source、34 Citationの正式受入を承認します。\n\nB群19件のSCRIPT_WRITING／PRODUCINGの意味対応、および記載されたnull scope／periodの扱いも承認対象に含みます。既存3 Entityの正式UUIDは維持してください。\n\n実施条件\n\n* 最新の本番revision、全11 receipt、固定hash、Worker状態を実施前に再確認する。\n* 承認済みの意味・対象・根拠・同一性が一致する範囲で進める。\n* 判断票への実際の承認記録と、変換後のhashを正しく残す。\n* 不一致・新たな判断事項が発生した場合は、対象を勝手に変更せず停止する。\n* 更新・正式受入後は、既存契約によるrelease候補作成とoffline planまで継続する。\n* 検証・記録・commit・pushまで完了する。\n\n今回の承認に、本番公開署名・本番apply・beta／本番Web切替は含めません。\n\n必要な公開requestを準備した後、次の運営者判断地点で結果を報告してください。"
+  },
+  "recordSha256": {
+    "citations": {
+      "10a37f67-8c0d-4441-ba05-98c420806fd1": "0b36c62e19b9a9e55c8264d66623db84cc9fdb02c75758eee69c171dc0259252",
+      "1af08b9b-c6ff-4e8b-819b-3277cbcea4da": "093896001b8a68a6ab9b1d5563183e848eebafd861077124118773e653cfffa0",
+      "1e7e9a63-908e-42c8-a330-d01de08489f6": "2ff4d25b7bde44b7b4582bf235d8bbdf2c92f59086bdbfc2decc17436be59777",
+      "20934604-2dba-42fd-be93-f70d794d2ed0": "698d1df0dd41bf5568065999fa755dcb34c6521634506d6c17b1d180931fcc5c",
+      "255c06da-c9c7-412d-9225-82ac8a78470f": "a9dbf14cd78a6e3d60c94c7972f66b8fcf3ae5c0fea50c5dd7e65a255b030237",
+      "2ffd9a52-09d4-4898-a7e9-009675aefec1": "d3f76dd424b91ac1fd24c5e134d7aac1a744c21fff5a20bad43bc4f25e39e2a5",
+      "35a4c638-afc5-49f2-8fb1-073653b13842": "435d87f40f61fe8016ee1e8b08efe00960b9b2a9da8c76b432a43c7e465b28aa",
+      "38258329-e45b-4a36-bdcd-f1acf457bf88": "cd7a3c276d5f1a7662506e3a944b74c35913665f8eb7e5b7042dbaab967500e4",
+      "383f77a6-7398-45de-a18f-7e4b96ef7222": "642baa3b8ed01c13a511adc954a3e3785d5756d42db2fb57d887b4bba5788da8",
+      "3d5eb662-0649-4656-a498-3f9c3bc38ba9": "536d70a1cad1d4357d1e45da369cbc42444c932efc2c0e905b365f14d4be413e",
+      "4a5cbe8b-3914-41f2-8efa-ecb422a61043": "f464405270c81172c714cf92b32931da152be812e1cee830567dff15f476ec0c",
+      "670897d6-f5ee-43fd-8c7c-a086d8334aa4": "c6cf2c7de49edaad0f1d57cd458581395f2f4560ea37f8d67269026ead47eedb",
+      "773f106a-776d-44bd-9d2b-a18112275449": "83cd9b185eeb8292714d1e63621e90b11233c3f6c9925a9f816736c00d9c18a5",
+      "77539c6c-efd6-4850-ae48-573b6b82db96": "0974d46ce33b0a1465fdd2cfbf4d9b20eb49e05193b06a194522353aa57980af",
+      "7b0b17d4-e313-47ba-932b-6ebc32062d97": "1613a3993b5dc5f6a0efaea162f50d1d43017c24dc608ff4475bcdf7beb06fc1",
+      "7e9756e3-d65b-4268-8103-48c3770552ef": "748513b4620ada0bd154e5174a27865823f0f1211c5c7f6f6d27bfa8657a7251",
+      "8319371f-c0d0-464c-8b44-256b10e84d2b": "b8b9bdab85a442dbccf62334c5867d65f595ea05a6877315da092022752dad84",
+      "99703bb1-9a64-43fa-8b60-6f8fc4cb4342": "add79102141fb857e84a103375a562fec7bcc999451c5109024eb7125b9322a3",
+      "9bb6e392-5c51-4abe-a6d3-5520f6f439a2": "1a97f17507076c28580dacd7d72fdde870bf52137510a263cf2f97c54273cf56",
+      "a1886b5f-310e-42d5-a579-ffc796ac1d5c": "1110beb6c579ecb3f1c697921aab98487bbd9d15d39a8e9bb0ca3c9bddf63d18",
+      "acd5e66f-1a9a-4985-8445-e3cb82225bf0": "db518805e7ac7d2c0f1340727d7d58656d51358ca87161316ca6fa266eb774b7",
+      "b8ef97e6-581a-4370-9ee7-1208b029beb3": "b35af3680c30e38dc68670981571d8767c23f967877ff31117d2cb946fe32f4b",
+      "be46f8b5-ff79-46f1-b6e4-506b9fe46505": "d5a32eaa1fa929ca4c204a62e395c5a81805e7d8ce306ea55ac676f6a5390744",
+      "bef05e24-5855-456a-b6fe-809f046e983a": "3eadce52f9b0310cd2d789a655006ced142d09cabbd383f2a98467264556c72d",
+      "c12e60a5-bc8d-458c-a4a2-848da3e65a51": "5c2f3af586473e266f6bf6512712f61aa2da81b48c66f77e121fb66f5f383759",
+      "c1f71e63-f97b-459d-9a0b-8defe37daad8": "4756035e722f1b264fa1ebd65446a3463319c575b09da9ba58df88b7b7913396",
+      "c8f99838-b5e7-4c52-8cbb-d8a35994aecb": "323b8501757a89bb223f8582dfa6f4b218418f6485c89de2b479e88e48ef0981",
+      "cada65aa-102d-4ee5-b121-cf3ca68186dc": "e31ebafc6bfcfff130017c9d1e71abf7f08bc544dee1e50c9386805b0a7dfab2",
+      "d140ccf0-a260-4821-a691-70865f58d5a1": "65d3915da88e05d2b2b47f68f94a62939f19ddf745fc3b34a65eb42882b3d79d",
+      "d281ce6f-1728-44a3-a40d-45c431840519": "5c7af85cee274b681ba7f4a93382e9fbabfc9c7259c22c3fbde333f8afe41a1f",
+      "d4887aea-fbd8-43e6-adc5-e5ac3e62ecda": "9b6402ef98302a31eb6ef81be0217fa712febfd93cada9c4bc1b84a6bdd5afb6",
+      "dc073585-9553-4be8-9a67-7f78b08753cc": "069dd636cc7e66a14d8e863e23df136d9fe37e6992edc688dbc40f0103580273",
+      "ecfa2c06-b940-4a19-84e3-45a458608cd3": "921bbd671da3e1f3015647d7c33266d75db15898bf0835df3c6ab1cb17853209",
+      "f2839c8c-d2bc-4833-a89a-3044312898d5": "ad630bb2d4dd9a8da3cbd567185aed28c5caa1a920f39045212ba6f503245f87"
+    },
+    "claims": {
+      "01e2a86b-6801-472b-8e32-a91cc0925dfc": "be45a529e00a71ffc9f1b489c465aad4c2094186c4f7b53878954a980f1c4456",
+      "0a7e8587-895a-46b7-9b20-9363f4d444a6": "34422231d2797cd3310db51ac20e7f73453198e25690cff47ce2535b87f066d1",
+      "11db956d-70a9-43cf-805b-9ffa576da501": "6119e66e0a8ec2794e05834be56cbfb29c0da807dd5ac243ac8eea7461f0b0d5",
+      "1baf9c26-c4bb-4d09-9caa-16114a81b8af": "1834be8e4224fe27b895d8dd195a56998a81cc7ff85915517ecd42d097b09ef5",
+      "204905b0-1f64-4e98-beb9-974b6031c7b0": "9d00e22d94d2a2d5a1d02dd55c6c3d2e22df10d939ed7aab7037d688afd46374",
+      "2560c363-e2f7-4481-84cc-025833259a0d": "2411feacb48fcd088b9b23bdd9d66840804f768e772400e52c34504feb0bd70e",
+      "2721d599-98fa-48bd-836d-cff2aa4f023b": "720d7b82b935202189a1e2872a3a6bb532ea071e56049bbe76a0f2202eb0cc8f",
+      "2e210c78-b456-45cd-86ad-09f2a334a992": "91dc3e59c420c6eaecab2d6782648140fd91ffed558f7899540bec666355bbe8",
+      "34817c14-af7e-4203-93ae-f0e542d0c710": "a31e68253a457dc6eaa289398bb043fc8b245d51112fa14931145447513ce8ad",
+      "382e652d-e1ff-4b2a-8766-cbc9d0c95233": "49f4e82b430a1190ad99f1b83cc307d89f01659b5550cddeb72453e2a14beb4d",
+      "422b17a4-5fe4-49d9-94d9-be05bef2c220": "a49aefa0973e33d3acd60840d2f26a00fe99cee4f2c1f099d941daa36c70d9d0",
+      "45753517-c284-4c62-828b-52bbd06c4935": "9bef10540f6ce4e277663b8b2bd7fe683ce1c3d0d68ade758f6b13f4e119991b",
+      "560df70e-2deb-4cbc-a09a-6269fdecf53a": "386c7a19715b432bfadb23608b895af9dfb7b3e1c3c4a408602db6e1cf29257d",
+      "57fa063b-d69d-4829-8567-4d0ab4c4a234": "0af59821fce88e5ae8ef67ba85e25b6c4800e603f2d58ee60d6669c740ac4d59",
+      "624472b2-7788-4984-b13c-9ba4c1515bee": "08d1eb7a8591125d145853da171e6133c0f947d63036c909493a4903f972aac0",
+      "67675c33-057a-422f-86bd-6535e46da126": "134109be9279eaa34128a0e45b602f5cb662cb3646d584c5662cd038109f17a0",
+      "7a54eab9-c780-4c1c-a5a0-99104c431e42": "34f6104e445d88220aa9140d7b10c2c48763d39d894ab477d65bba2fc6d12b14",
+      "7d12c79b-67b5-484e-965c-297982a220d7": "b3ad17b767829e2cd003a64746b18c8189f4b64255a4c3daf86d01e156df4820",
+      "8031d324-16b1-423c-a98f-8cafb00d1778": "706c8176369bc8ab59823079cd70dfdb2c5df7b79e339f54a11144c37da2e390",
+      "850a9f83-aafd-4d1a-ad58-185791bd98bb": "000d894d97642c57988582cfce8e651d14d6bf6174c85ede2437f55f4e7f13c4",
+      "8974c334-d6c9-4a20-a4ee-35d3ee322c9a": "cf32410fdd609e25a4909baf281a725b1a39108799c1420122502cd6cb8a1eb7",
+      "94596246-2d89-4026-8fe6-8e996dd61b63": "4c0a312e708860788a4c02653b54cd6c1d0ba264be774dc9647b84a44591d9f3",
+      "a8a3b22b-854e-416c-bfbb-fbb69cde8071": "6f84ace2a92f480d9bcd7c79c98dc3fec5b3daed79ea5f00c9ef76213699192f",
+      "a8a44bd2-ca25-4bef-9aeb-95efba2bc616": "48c556edb7e5eaa7f00d3804e3e93cc38d4ee573e4989e44ff6211cf5d43d49d",
+      "ab1fad8c-95ba-4a39-9f93-134b85856b8b": "b91d54060b66bdf1f36473f5e1e1f6973f4566a2870c731991c25986cb39bdc9",
+      "be664da8-8ca7-495c-b654-50257cf3bb5f": "14805b6a11a148659af69b26c000940f4c5e2ee7e7ff90bf3d7c2accbee8861b",
+      "c100d4b3-373c-47ed-9007-04cd799ac0d2": "a9111a1df7cfa36e5030d58b04b760bfafa7e0defc51e030b2ae0b023648fb21",
+      "c8ddd4bd-09c6-4e36-8546-7629cca5cbf6": "41237320dddf297a6631d0fa887a82c81a786c080fad339bc3bdebe89993d94c",
+      "c9511222-9477-422d-9572-049fdc20d768": "909e84c06dce016f027bef8ef2a0d4e0e757c8c006b210fa6a99753c7170f9ae",
+      "caa6fa13-44c3-4925-858b-1c8c9eff7e4c": "35727064b557044e880c846fc8797d231295dfe33aeb9e544cf739c4a5798bbd",
+      "db41e530-e1d5-4bda-8a9b-83334857a96c": "37a5639863db0653aec8cd385009d73862c6871309acb092e13a02b43e5ed358",
+      "e21681a9-a721-4bc0-83d6-16a907119c75": "0d33cfca71ab105dabe12fe1c7428c3818bbf65432e879a8c1db1eb16159a3a4",
+      "e77e4769-69de-4229-9484-ea1886b1a8ac": "ac0a5e25f0970272ed69ad6a142dc14241a67b671ac923e5731b96059ed6f467",
+      "fab3dc5d-7565-4bb2-892e-b04a65f440f0": "a07f97190b66967e22e76a2bbd936bbad971e429f95ac0184ffdb2ec3b71a6a7"
+    },
+    "entities": {
+      "0d2aa95b-aae3-423d-9a2f-f4e9ca038810": "b5f74aebb7b80ae0cbf4424f60cfbf5bfa75db5ca094b0efc131e2803931366f",
+      "13a23327-ce46-4939-af3b-c39408e27ae2": "654ae5582213ee3a68c62b4ce592d756722e6199e035df3bb569082e912e3401",
+      "1b217c91-1e2d-46e1-9e4c-b90d706d3f7a": "d5b7f99561ee89860d2cf627e90b368942de29aecd6513fe2b991885099d3ee1",
+      "2c043ccb-8726-4883-acb1-e5821969e379": "e66e871d3f1dfeabe5cacd341a8e455aad5569415707ac7b3ac81c9d7649dfdc",
+      "2d427fb3-d54f-479e-8579-e608c3364111": "89f65439abf1ce585e65bfbb329bac8da2213f2a41432c31517d95a4b45ad984",
+      "2e28a4a4-48cc-4aa7-a1bf-4cb3a5f9ce3b": "036c01bdaef14b0681368b9ddbfdb9ec779cc2a6cda7181fcecb527868156b92",
+      "342bb682-268a-419e-b9d2-c6ff0975f195": "edf5e70de46fee2ba81552fb4200a0fb8954e57d75293009ba799109d2b165fe",
+      "3a2ef351-d225-4896-a3b8-01bbe33743d4": "f2267dd47fd201b975acb17a22d3fdf372788326775b27126adeb95e5e61dc6e",
+      "3db5a731-1dca-4ee0-8023-56e42fc38f30": "ddec1ccc96f524fae2c895e9cfc626d9b8fdc29b63b15108a9a5f862b9c3989e",
+      "3dd652cb-1ac1-40ec-8919-288745ac2926": "162fab7c2aeb714aa936a8af0f7747b409ebb228d4d77af8b6ad983b0fe2511c",
+      "420865b6-1377-4d02-8678-09cf0ed28fac": "772e7be3fe487537131f5ec49a4027c92a2d1545850c2f56275838d963f004e2",
+      "4646b1f4-e33a-4b1c-8103-b5740c4e8b76": "1fd6c865ae213fb56a71ce1f20f1fa5d4aaff909d6c65499e12d222dbc3afab7",
+      "492646fd-364d-4996-a265-5bfee0ae281d": "fe8e276fd573839eb81216b8334bf2b0aa0c9fb99b8e0ef1d287e4207e3bb089",
+      "5be3a84e-9c85-4218-bc7e-1829f824bc5e": "a3d4d16a88653dd9d34b5d68349ff525487fa6851d3815a03cc779068f6b666b",
+      "5eb8ec0c-c524-42b3-ae4b-4f1962f9e38f": "2eef6ed4fde7f7d356bcb52caca1698d51be10439aa9a028579fc91891d34b1e",
+      "60a67ae8-ccd6-4d86-89a6-93ce3c942d9d": "0b8c7070590eb1784b8a513426c6cde0fd03fe5740fdd6d3f44b1cffece1bf3e",
+      "6e1a7c3e-155a-4fa3-beef-83564b2f93b2": "5e2f0f074ca670a61160fab2289c31ca816dfbbed308171a793a0aeaff6c4312",
+      "7ce6d8b7-d0d6-45a2-8cb8-f629d0d764c1": "309528b87196fa8530c1ad141146eb31b8e234f05ebdf17e611072722c9b7541",
+      "7d6dbe11-be31-40e7-bc25-320779528c8e": "8fec17c376b5087fa127f0015f8ceffe70283f11d6c2775733112d112584ccc1",
+      "8524ec91-2665-46c4-b6e3-58c31f221f74": "ff72540945d2a087b1066592f6d79de031cca03c8a3a6c370c7e7336da0bebc4",
+      "911cb38f-1215-4b2b-9d5d-3ac6f390261b": "d283d6f3190cac37bc319119e20f2cdde33fa4db05326d165328ddd9857c2860",
+      "99df2f68-ca27-4f34-8b4d-edd68044e3b3": "360b7942205a2744961cb3a786cfd1fad783a9381211bfaa778bd75f1d01a432",
+      "9d669326-483d-445a-b344-943c0d3652a8": "8458235e90523c4af9dff9d7ff875d59185ed799cb1de4dca7764fb8e7207de0",
+      "9e6f483a-ffc7-4219-94bb-dc2897224c9d": "25a2b69d123c1454ff3347031e8305b66e85242078ee7154bd31e1b463d46d3f",
+      "aad624bf-c14a-44f8-a1af-14cbc967e02a": "d6cde5f35f026b1d5edfa807ffd5c6f04229b08c2cbf106b5688890a3587353a",
+      "bd8a8e29-f3e7-41a4-b068-acf80a96b82d": "a7a2b00399babd49107793d31d59c15401d43a370fb62f1eebdf481788d11f4d",
+      "cbc950e1-2c7a-4696-a845-85db20787297": "33355b2db3f04cd9404bd68a526f653153bf222866d0b091e84b6f65e0fec71b",
+      "d72eb196-d40b-4a14-822e-2ade9134c256": "5a627fe0d2412a807cd23897e660a616678892abf3594b3fe97ae9eb1a742632",
+      "ead8bbfd-28c3-4202-9e6a-b5cfc4eccc6e": "1e40cf5f9bc0cfef06032029bbb6f0f32357c61e74cbaf774f8b141a385983f0"
+    },
+    "sources": {
+      "29153c7c-75b7-4d90-9ac1-7f5eec2daaff": "8da42975a90a788b64c7304114839adf38e8f4f5e30f597a974437eb600b25a7",
+      "529ddee7-dcea-4eb3-97c5-da3ada7922de": "fb18c5f400437119260511b0eceb3742a9e9816f1cee342ae36adbdee744aee3",
+      "5cda4bab-b317-40d7-887c-f6ee42e3c8de": "b64419a092b49ec145416c0c0562c7733af05a506d966814f10c07147fcae59d",
+      "7ecb3b65-d211-42c7-aeb4-7f1152c9a051": "be31ddb303c6b77b58da5dd6318a4479a3d6309f3d04bb4e91655c1d1e06f003",
+      "cff578b8-3458-462f-8568-39aa9881b578": "82eedc3717858547ae579b0282423b5fed968f275f98c8cb270b3b7896459c79"
+    }
+  },
+  "referenceArtifacts": [
+    {
+      "file": "datasets/film-collection/ab-manifest-20261028/review/context.json",
+      "sha256": "03f032cf14411db7461d8fb46c8ee673fa935afdd162b991a7f6711949e3d020"
+    },
+    {
+      "file": "datasets/film-collection/ab-manifest-20261028/review/decision-request.json",
+      "sha256": "438fdf17bb0fd191e333004d618d7a4d7509bb4aedb73efd5239c71fd7607468"
+    },
+    {
+      "file": "datasets/film-collection/ab-manifest-20261028/review/proposed-records.json",
+      "sha256": "6af8d3f378027940b3f0425e53dcb485c7e9896284b63f466d7ef47bfd76fc3f"
+    },
+    {
+      "file": "datasets/film-collection/ab-manifest-20261028/review/review-manifest.json",
+      "sha256": "1580dc2a4fb18f8a3ac8f5c30cc3ebe2a572f86e41efdd60a8daac0a42dcb599"
+    },
+    {
+      "file": "datasets/film-collection/ab-manifest-20261028/review/review.json",
+      "sha256": "f1f6107ec4c172435b02c475b9c2c9a781b8e4656915f2c00b2b2bd326eeb3b6"
+    },
+    {
+      "file": "datasets/film-collection/ab-manifest-20261028/trial/bundle-manifest.json",
+      "sha256": "d90b1058308a60526f77b911373efe8c75615067cb036efc561f8ede5cafd3a4"
+    },
+    {
+      "file": "datasets/film-collection/ab-manifest-20261028/frozen-inputs/000-comparison.json.gz",
+      "sha256": "99370f04b43e51fc32ee3b22d1778f9af3911c9c29bdc1fee74550546a1d7790"
+    },
+    {
+      "file": "datasets/film-collection/ab-manifest-20261028/frozen-inputs/001-manifest.json",
+      "sha256": "e1ad6399058f27bd0982cd2922c1ed96a5196b4bb1fabf254f3997cac129cd07"
+    },
+    {
+      "file": "datasets/film-collection/ab-manifest-20261028/frozen-inputs/002-CANDIDATES.json",
+      "sha256": "06690102bb27b9ed9ab06d57f717ab4dce1e962bd1d409609b8c2e76dfccd470"
+    },
+    {
+      "file": "datasets/film-collection/ab-manifest-20261028/frozen-inputs/003-source_reviews.json",
+      "sha256": "0564cc3416d947019341f580a6391532525b77125812a54c23cd7b39a577735c"
+    },
+    {
+      "file": "datasets/film-collection/ab-manifest-20261028/frozen-inputs/004-ASTRA_RESEARCH_COVERAGE.json",
+      "sha256": "b4f2e265efe301c8edefd30cde7a210788b1bcf355264184ee6430efce21f79c"
+    },
+    {
+      "file": "datasets/film-collection/ab-manifest-20261028/frozen-inputs/005-minimal-credit-notes.json",
+      "sha256": "41d1b5124129b5a32b21fc5b8d1754f88971025c968d9eb57a5a8a922a327a7e"
+    },
+    {
+      "file": "datasets/film-collection/ab-manifest-20261028/frozen-inputs/006-public-backup.json",
+      "sha256": "c914fb71d0dd3953ea6f5be90603f8de4da137addaa8eaf548c8d632436669ae"
+    }
+  ],
+  "releaseId": "film-saved-ab-20261028",
+  "review": {
+    "file": "datasets/film-collection/ab-manifest-20261028/review/review-manifest.json",
+    "sha256": "1580dc2a4fb18f8a3ac8f5c30cc3ebe2a572f86e41efdd60a8daac0a42dcb599"
+  },
+  "roleMappingDecision": {
+    "claimIds": [
+      "11db956d-70a9-43cf-805b-9ffa576da501",
+      "204905b0-1f64-4e98-beb9-974b6031c7b0",
+      "34817c14-af7e-4203-93ae-f0e542d0c710",
+      "422b17a4-5fe4-49d9-94d9-be05bef2c220",
+      "45753517-c284-4c62-828b-52bbd06c4935",
+      "560df70e-2deb-4cbc-a09a-6269fdecf53a",
+      "57fa063b-d69d-4829-8567-4d0ab4c4a234",
+      "624472b2-7788-4984-b13c-9ba4c1515bee",
+      "67675c33-057a-422f-86bd-6535e46da126",
+      "7a54eab9-c780-4c1c-a5a0-99104c431e42",
+      "7d12c79b-67b5-484e-965c-297982a220d7",
+      "850a9f83-aafd-4d1a-ad58-185791bd98bb",
+      "8974c334-d6c9-4a20-a4ee-35d3ee322c9a",
+      "a8a3b22b-854e-416c-bfbb-fbb69cde8071",
+      "a8a44bd2-ca25-4bef-9aeb-95efba2bc616",
+      "c100d4b3-373c-47ed-9007-04cd799ac0d2",
+      "db41e530-e1d5-4bda-8a9b-83334857a96c",
+      "e77e4769-69de-4229-9484-ea1886b1a8ac",
+      "fab3dc5d-7565-4bb2-892e-b04a65f440f0"
+    ],
+    "statement": "以下の固定対象について、運営者として両方の実施を承認します。\n\n① 固定漫画Workerの5ファイル更新\n\n* source commit：089ee51922d68b03f2e8a9029a3811babfc3dc67\n* overlay manifest SHA-256：68b62c2f93704d8f82b93f0ac2dc6cc94e020c7802edd0a16e8ace5651f44d0e\n\n承認済み5ファイルのみを既存Workerへbackportしてください。既存base pin、collector実行hash、既存承認・依頼、coordinator／peerとの契約は保持してください。\n\n② 映画34 Claimの正式受入\n\n* 判断票：formal-decision-draft.json\n* SHA-256：153830c9413b9d1368939b67289126a5e6dde5bc275cc2bcdfa31bdb5881f51a\n\nCANDIDATE_REVIEW.mdに記載されたA群15件＋B群19件の34 Claim、29新EntityのUUID確定、5新Source、34 Citationの正式受入を承認します。\n\nB群19件のSCRIPT_WRITING／PRODUCINGの意味対応、および記載されたnull scope／periodの扱いも承認対象に含みます。既存3 Entityの正式UUIDは維持してください。\n\n実施条件\n\n* 最新の本番revision、全11 receipt、固定hash、Worker状態を実施前に再確認する。\n* 承認済みの意味・対象・根拠・同一性が一致する範囲で進める。\n* 判断票への実際の承認記録と、変換後のhashを正しく残す。\n* 不一致・新たな判断事項が発生した場合は、対象を勝手に変更せず停止する。\n* 更新・正式受入後は、既存契約によるrelease候補作成とoffline planまで継続する。\n* 検証・記録・commit・pushまで完了する。\n\n今回の承認に、本番公開署名・本番apply・beta／本番Web切替は含めません。\n\n必要な公開requestを準備した後、次の運営者判断地点で結果を報告してください。"
+  },
+  "schemaVersion": 1,
+  "scopeByClaim": [
+    {
+      "contribution": {
+        "roleId": "ACTING",
+        "scope": null
+      },
+      "eventParticipation": null,
+      "id": "01e2a86b-6801-472b-8e32-a91cc0925dfc",
+      "objectId": "420865b6-1377-4d02-8678-09cf0ed28fac",
+      "organizationParticipation": null,
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "polarity": "affirmed",
+      "predicate": "CONTRIBUTED_TO",
+      "subjectId": "3a2ef351-d225-4896-a3b8-01bbe33743d4"
+    },
+    {
+      "contribution": {
+        "roleId": "ACTING",
+        "scope": null
+      },
+      "eventParticipation": null,
+      "id": "0a7e8587-895a-46b7-9b20-9363f4d444a6",
+      "objectId": "420865b6-1377-4d02-8678-09cf0ed28fac",
+      "organizationParticipation": null,
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "polarity": "affirmed",
+      "predicate": "CONTRIBUTED_TO",
+      "subjectId": "13a23327-ce46-4939-af3b-c39408e27ae2"
+    },
+    {
+      "contribution": {
+        "roleId": "SCRIPT_WRITING",
+        "scope": null
+      },
+      "eventParticipation": null,
+      "id": "11db956d-70a9-43cf-805b-9ffa576da501",
+      "objectId": "2d427fb3-d54f-479e-8579-e608c3364111",
+      "organizationParticipation": null,
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "polarity": "affirmed",
+      "predicate": "CONTRIBUTED_TO",
+      "subjectId": "bd8a8e29-f3e7-41a4-b068-acf80a96b82d"
+    },
+    {
+      "contribution": {
+        "roleId": "ACTING",
+        "scope": null
+      },
+      "eventParticipation": null,
+      "id": "1baf9c26-c4bb-4d09-9caa-16114a81b8af",
+      "objectId": "6e1a7c3e-155a-4fa3-beef-83564b2f93b2",
+      "organizationParticipation": null,
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "polarity": "affirmed",
+      "predicate": "CONTRIBUTED_TO",
+      "subjectId": "aad624bf-c14a-44f8-a1af-14cbc967e02a"
+    },
+    {
+      "contribution": {
+        "roleId": "PRODUCING",
+        "scope": null
+      },
+      "eventParticipation": null,
+      "id": "204905b0-1f64-4e98-beb9-974b6031c7b0",
+      "objectId": "6e1a7c3e-155a-4fa3-beef-83564b2f93b2",
+      "organizationParticipation": null,
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "polarity": "affirmed",
+      "predicate": "CONTRIBUTED_TO",
+      "subjectId": "1b217c91-1e2d-46e1-9e4c-b90d706d3f7a"
+    },
+    {
+      "contribution": {
+        "roleId": "ACTING",
+        "scope": null
+      },
+      "eventParticipation": null,
+      "id": "2560c363-e2f7-4481-84cc-025833259a0d",
+      "objectId": "6e1a7c3e-155a-4fa3-beef-83564b2f93b2",
+      "organizationParticipation": null,
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "polarity": "affirmed",
+      "predicate": "CONTRIBUTED_TO",
+      "subjectId": "8524ec91-2665-46c4-b6e3-58c31f221f74"
+    },
+    {
+      "contribution": {
+        "roleId": "DIRECTING",
+        "scope": null
+      },
+      "eventParticipation": null,
+      "id": "2721d599-98fa-48bd-836d-cff2aa4f023b",
+      "objectId": "5be3a84e-9c85-4218-bc7e-1829f824bc5e",
+      "organizationParticipation": null,
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "polarity": "affirmed",
+      "predicate": "CONTRIBUTED_TO",
+      "subjectId": "342bb682-268a-419e-b9d2-c6ff0975f195"
+    },
+    {
+      "contribution": {
+        "roleId": "DIRECTING",
+        "scope": null
+      },
+      "eventParticipation": null,
+      "id": "2e210c78-b456-45cd-86ad-09f2a334a992",
+      "objectId": "6e1a7c3e-155a-4fa3-beef-83564b2f93b2",
+      "organizationParticipation": null,
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "polarity": "affirmed",
+      "predicate": "CONTRIBUTED_TO",
+      "subjectId": "1b217c91-1e2d-46e1-9e4c-b90d706d3f7a"
+    },
+    {
+      "contribution": {
+        "roleId": "SCRIPT_WRITING",
+        "scope": null
+      },
+      "eventParticipation": null,
+      "id": "34817c14-af7e-4203-93ae-f0e542d0c710",
+      "objectId": "6e1a7c3e-155a-4fa3-beef-83564b2f93b2",
+      "organizationParticipation": null,
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "polarity": "affirmed",
+      "predicate": "CONTRIBUTED_TO",
+      "subjectId": "1b217c91-1e2d-46e1-9e4c-b90d706d3f7a"
+    },
+    {
+      "contribution": {
+        "roleId": "ACTING",
+        "scope": null
+      },
+      "eventParticipation": null,
+      "id": "382e652d-e1ff-4b2a-8766-cbc9d0c95233",
+      "objectId": "420865b6-1377-4d02-8678-09cf0ed28fac",
+      "organizationParticipation": null,
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "polarity": "affirmed",
+      "predicate": "CONTRIBUTED_TO",
+      "subjectId": "aad624bf-c14a-44f8-a1af-14cbc967e02a"
+    },
+    {
+      "contribution": {
+        "roleId": "PRODUCING",
+        "scope": null
+      },
+      "eventParticipation": null,
+      "id": "422b17a4-5fe4-49d9-94d9-be05bef2c220",
+      "objectId": "7d6dbe11-be31-40e7-bc25-320779528c8e",
+      "organizationParticipation": null,
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "polarity": "affirmed",
+      "predicate": "CONTRIBUTED_TO",
+      "subjectId": "5eb8ec0c-c524-42b3-ae4b-4f1962f9e38f"
+    },
+    {
+      "contribution": {
+        "roleId": "PRODUCING",
+        "scope": null
+      },
+      "eventParticipation": null,
+      "id": "45753517-c284-4c62-828b-52bbd06c4935",
+      "objectId": "5be3a84e-9c85-4218-bc7e-1829f824bc5e",
+      "organizationParticipation": null,
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "polarity": "affirmed",
+      "predicate": "CONTRIBUTED_TO",
+      "subjectId": "d72eb196-d40b-4a14-822e-2ade9134c256"
+    },
+    {
+      "contribution": {
+        "roleId": "SCRIPT_WRITING",
+        "scope": null
+      },
+      "eventParticipation": null,
+      "id": "560df70e-2deb-4cbc-a09a-6269fdecf53a",
+      "objectId": "7d6dbe11-be31-40e7-bc25-320779528c8e",
+      "organizationParticipation": null,
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "polarity": "affirmed",
+      "predicate": "CONTRIBUTED_TO",
+      "subjectId": "60a67ae8-ccd6-4d86-89a6-93ce3c942d9d"
+    },
+    {
+      "contribution": {
+        "roleId": "PRODUCING",
+        "scope": null
+      },
+      "eventParticipation": null,
+      "id": "57fa063b-d69d-4829-8567-4d0ab4c4a234",
+      "objectId": "420865b6-1377-4d02-8678-09cf0ed28fac",
+      "organizationParticipation": null,
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "polarity": "affirmed",
+      "predicate": "CONTRIBUTED_TO",
+      "subjectId": "99df2f68-ca27-4f34-8b4d-edd68044e3b3"
+    },
+    {
+      "contribution": {
+        "roleId": "PRODUCING",
+        "scope": null
+      },
+      "eventParticipation": null,
+      "id": "624472b2-7788-4984-b13c-9ba4c1515bee",
+      "objectId": "805b9630-cd9a-4931-8cde-0bcb92bf8a9f",
+      "organizationParticipation": null,
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "polarity": "affirmed",
+      "predicate": "CONTRIBUTED_TO",
+      "subjectId": "911cb38f-1215-4b2b-9d5d-3ac6f390261b"
+    },
+    {
+      "contribution": {
+        "roleId": "SCRIPT_WRITING",
+        "scope": null
+      },
+      "eventParticipation": null,
+      "id": "67675c33-057a-422f-86bd-6535e46da126",
+      "objectId": "2d427fb3-d54f-479e-8579-e608c3364111",
+      "organizationParticipation": null,
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "polarity": "affirmed",
+      "predicate": "CONTRIBUTED_TO",
+      "subjectId": "7ce6d8b7-d0d6-45a2-8cb8-f629d0d764c1"
+    },
+    {
+      "contribution": {
+        "roleId": "SCRIPT_WRITING",
+        "scope": null
+      },
+      "eventParticipation": null,
+      "id": "7a54eab9-c780-4c1c-a5a0-99104c431e42",
+      "objectId": "6e1a7c3e-155a-4fa3-beef-83564b2f93b2",
+      "organizationParticipation": null,
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "polarity": "affirmed",
+      "predicate": "CONTRIBUTED_TO",
+      "subjectId": "cbc950e1-2c7a-4696-a845-85db20787297"
+    },
+    {
+      "contribution": {
+        "roleId": "SCRIPT_WRITING",
+        "scope": null
+      },
+      "eventParticipation": null,
+      "id": "7d12c79b-67b5-484e-965c-297982a220d7",
+      "objectId": "805b9630-cd9a-4931-8cde-0bcb92bf8a9f",
+      "organizationParticipation": null,
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "polarity": "affirmed",
+      "predicate": "CONTRIBUTED_TO",
+      "subjectId": "2e28a4a4-48cc-4aa7-a1bf-4cb3a5f9ce3b"
+    },
+    {
+      "contribution": {
+        "roleId": "ACTING",
+        "scope": null
+      },
+      "eventParticipation": null,
+      "id": "8031d324-16b1-423c-a98f-8cafb00d1778",
+      "objectId": "5be3a84e-9c85-4218-bc7e-1829f824bc5e",
+      "organizationParticipation": null,
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "polarity": "affirmed",
+      "predicate": "CONTRIBUTED_TO",
+      "subjectId": "2c043ccb-8726-4883-acb1-e5821969e379"
+    },
+    {
+      "contribution": {
+        "roleId": "PRODUCING",
+        "scope": null
+      },
+      "eventParticipation": null,
+      "id": "850a9f83-aafd-4d1a-ad58-185791bd98bb",
+      "objectId": "805b9630-cd9a-4931-8cde-0bcb92bf8a9f",
+      "organizationParticipation": null,
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "polarity": "affirmed",
+      "predicate": "CONTRIBUTED_TO",
+      "subjectId": "2e28a4a4-48cc-4aa7-a1bf-4cb3a5f9ce3b"
+    },
+    {
+      "contribution": {
+        "roleId": "SCRIPT_WRITING",
+        "scope": null
+      },
+      "eventParticipation": null,
+      "id": "8974c334-d6c9-4a20-a4ee-35d3ee322c9a",
+      "objectId": "420865b6-1377-4d02-8678-09cf0ed28fac",
+      "organizationParticipation": null,
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "polarity": "affirmed",
+      "predicate": "CONTRIBUTED_TO",
+      "subjectId": "1b217c91-1e2d-46e1-9e4c-b90d706d3f7a"
+    },
+    {
+      "contribution": {
+        "roleId": "DIRECTING",
+        "scope": null
+      },
+      "eventParticipation": null,
+      "id": "94596246-2d89-4026-8fe6-8e996dd61b63",
+      "objectId": "2d427fb3-d54f-479e-8579-e608c3364111",
+      "organizationParticipation": null,
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "polarity": "affirmed",
+      "predicate": "CONTRIBUTED_TO",
+      "subjectId": "342bb682-268a-419e-b9d2-c6ff0975f195"
+    },
+    {
+      "contribution": {
+        "roleId": "SCRIPT_WRITING",
+        "scope": null
+      },
+      "eventParticipation": null,
+      "id": "a8a3b22b-854e-416c-bfbb-fbb69cde8071",
+      "objectId": "7d6dbe11-be31-40e7-bc25-320779528c8e",
+      "organizationParticipation": null,
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "polarity": "affirmed",
+      "predicate": "CONTRIBUTED_TO",
+      "subjectId": "9d669326-483d-445a-b344-943c0d3652a8"
+    },
+    {
+      "contribution": {
+        "roleId": "SCRIPT_WRITING",
+        "scope": null
+      },
+      "eventParticipation": null,
+      "id": "a8a44bd2-ca25-4bef-9aeb-95efba2bc616",
+      "objectId": "5be3a84e-9c85-4218-bc7e-1829f824bc5e",
+      "organizationParticipation": null,
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "polarity": "affirmed",
+      "predicate": "CONTRIBUTED_TO",
+      "subjectId": "0d2aa95b-aae3-423d-9a2f-f4e9ca038810"
+    },
+    {
+      "contribution": {
+        "roleId": "ACTING",
+        "scope": null
+      },
+      "eventParticipation": null,
+      "id": "ab1fad8c-95ba-4a39-9f93-134b85856b8b",
+      "objectId": "7d6dbe11-be31-40e7-bc25-320779528c8e",
+      "organizationParticipation": null,
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "polarity": "affirmed",
+      "predicate": "CONTRIBUTED_TO",
+      "subjectId": "4646b1f4-e33a-4b1c-8103-b5740c4e8b76"
+    },
+    {
+      "contribution": {
+        "roleId": "ACTING",
+        "scope": null
+      },
+      "eventParticipation": null,
+      "id": "be664da8-8ca7-495c-b654-50257cf3bb5f",
+      "objectId": "805b9630-cd9a-4931-8cde-0bcb92bf8a9f",
+      "organizationParticipation": null,
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "polarity": "affirmed",
+      "predicate": "CONTRIBUTED_TO",
+      "subjectId": "3db5a731-1dca-4ee0-8023-56e42fc38f30"
+    },
+    {
+      "contribution": {
+        "roleId": "PRODUCING",
+        "scope": null
+      },
+      "eventParticipation": null,
+      "id": "c100d4b3-373c-47ed-9007-04cd799ac0d2",
+      "objectId": "420865b6-1377-4d02-8678-09cf0ed28fac",
+      "organizationParticipation": null,
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "polarity": "affirmed",
+      "predicate": "CONTRIBUTED_TO",
+      "subjectId": "1b217c91-1e2d-46e1-9e4c-b90d706d3f7a"
+    },
+    {
+      "contribution": {
+        "roleId": "DIRECTING",
+        "scope": null
+      },
+      "eventParticipation": null,
+      "id": "c8ddd4bd-09c6-4e36-8546-7629cca5cbf6",
+      "objectId": "420865b6-1377-4d02-8678-09cf0ed28fac",
+      "organizationParticipation": null,
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "polarity": "affirmed",
+      "predicate": "CONTRIBUTED_TO",
+      "subjectId": "1b217c91-1e2d-46e1-9e4c-b90d706d3f7a"
+    },
+    {
+      "contribution": {
+        "roleId": "ACTING",
+        "scope": null
+      },
+      "eventParticipation": null,
+      "id": "c9511222-9477-422d-9572-049fdc20d768",
+      "objectId": "5be3a84e-9c85-4218-bc7e-1829f824bc5e",
+      "organizationParticipation": null,
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "polarity": "affirmed",
+      "predicate": "CONTRIBUTED_TO",
+      "subjectId": "9e6f483a-ffc7-4219-94bb-dc2897224c9d"
+    },
+    {
+      "contribution": {
+        "roleId": "DIRECTING",
+        "scope": null
+      },
+      "eventParticipation": null,
+      "id": "caa6fa13-44c3-4925-858b-1c8c9eff7e4c",
+      "objectId": "7d6dbe11-be31-40e7-bc25-320779528c8e",
+      "organizationParticipation": null,
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "polarity": "affirmed",
+      "predicate": "CONTRIBUTED_TO",
+      "subjectId": "3dd652cb-1ac1-40ec-8919-288745ac2926"
+    },
+    {
+      "contribution": {
+        "roleId": "PRODUCING",
+        "scope": null
+      },
+      "eventParticipation": null,
+      "id": "db41e530-e1d5-4bda-8a9b-83334857a96c",
+      "objectId": "805b9630-cd9a-4931-8cde-0bcb92bf8a9f",
+      "organizationParticipation": null,
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "polarity": "affirmed",
+      "predicate": "CONTRIBUTED_TO",
+      "subjectId": "490ee589-76db-4a5e-8923-13d24b7cb3a2"
+    },
+    {
+      "contribution": {
+        "roleId": "ACTING",
+        "scope": null
+      },
+      "eventParticipation": null,
+      "id": "e21681a9-a721-4bc0-83d6-16a907119c75",
+      "objectId": "5be3a84e-9c85-4218-bc7e-1829f824bc5e",
+      "organizationParticipation": null,
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "polarity": "affirmed",
+      "predicate": "CONTRIBUTED_TO",
+      "subjectId": "492646fd-364d-4996-a265-5bfee0ae281d"
+    },
+    {
+      "contribution": {
+        "roleId": "SCRIPT_WRITING",
+        "scope": null
+      },
+      "eventParticipation": null,
+      "id": "e77e4769-69de-4229-9484-ea1886b1a8ac",
+      "objectId": "2d427fb3-d54f-479e-8579-e608c3364111",
+      "organizationParticipation": null,
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "polarity": "affirmed",
+      "predicate": "CONTRIBUTED_TO",
+      "subjectId": "342bb682-268a-419e-b9d2-c6ff0975f195"
+    },
+    {
+      "contribution": {
+        "roleId": "PRODUCING",
+        "scope": null
+      },
+      "eventParticipation": null,
+      "id": "fab3dc5d-7565-4bb2-892e-b04a65f440f0",
+      "objectId": "805b9630-cd9a-4931-8cde-0bcb92bf8a9f",
+      "organizationParticipation": null,
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "polarity": "affirmed",
+      "predicate": "CONTRIBUTED_TO",
+      "subjectId": "ead8bbfd-28c3-4202-9e6a-b5cfc4eccc6e"
+    }
+  ],
+  "sourceKind": "film-discovery-v1",
+  "status": "approved"
+}
