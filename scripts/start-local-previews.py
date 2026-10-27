@@ -36,13 +36,19 @@ def start(name, node):
         raise SystemExit('Build the isolated community-connected preview first; see its README.')
     film = {}
     film_config = STATE / 'beta-film.json'
+    confirmation_config = STATE / 'beta-confirmation.json'
+    if name == 'beta' and film_config.exists() and confirmation_config.exists():
+        raise ValueError('Choose trial or formal confirmation configuration, never both')
+    if name == 'beta' and confirmation_config.exists():
+        film_config = confirmation_config
     if name == 'beta' and film_config.exists():
         value = film_config.lstat()
         if film_config.is_symlink() or value.st_uid != os.getuid() or stat.S_IMODE(value.st_mode) != 0o600:
             raise ValueError('Private beta film configuration must be owned by this user and mode 0600')
         film = json.loads(film_config.read_text())
         if (set(film) != {'GRAPH_FILM_BETA','NEO4J_URI','NEO4J_USER','NEO4J_PASSWORD','NEO4J_DATABASE'}
-            or film['GRAPH_FILM_BETA'] != '1' or film['NEO4J_URI'] != 'bolt://127.0.0.1:7696'
+            or (film['GRAPH_FILM_BETA'], film['NEO4J_URI']) !=
+                (('0', 'bolt://127.0.0.1:7697') if film_config == confirmation_config else ('1', 'bolt://127.0.0.1:7696'))
             or film['NEO4J_USER'] != 'neo4j' or film['NEO4J_DATABASE'] != 'neo4j'
             or not isinstance(film['NEO4J_PASSWORD'], str) or not film['NEO4J_PASSWORD']):
             raise ValueError('Unexpected isolated film beta configuration')

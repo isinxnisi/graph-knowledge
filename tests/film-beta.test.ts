@@ -37,3 +37,15 @@ describe("film beta isolation and honest role registration", () => {
   }
  });
 });
+
+// Formal confirmation uses a separate local DB; the trial port remains guarded.
+it("isolates formal confirmation from trial, frozen and production targets", () => {
+ expect(() => assertDatasetTarget("public-kg","bolt://127.0.0.1:7697",undefined,"0")).not.toThrow();
+ for (const [mode,uri,deployment,trial] of [
+ ["demo","bolt://127.0.0.1:7697",undefined,"0"],
+ ["public-kg","bolt://remote:7697",undefined,"0"],
+ ["public-kg","bolt://127.0.0.1:7697","production","0"],
+ ["public-kg","bolt://127.0.0.1:7697",undefined,"1"],
+ ["public-kg","bolt://127.0.0.1:7696",undefined,"0"],
+ ] as const) expect(() => assertDatasetTarget(mode,uri,deployment,trial)).toThrow();
+});

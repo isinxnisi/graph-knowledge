@@ -19,8 +19,8 @@ export function assertDatasetTarget(mode: DatasetMode, uri: string, deployment =
     return;
   }
   if (target.hostname === "graph-neo4j") throw new Error("Production database requires GRAPH_DEPLOYMENT=production");
-  if (mode === "public-kg" && (!["127.0.0.1", "localhost"].includes(target.hostname) || !["7694", "7695"].includes(target.port))) throw new Error("Public KG local development requires dedicated port 7694 or isolated test port 7695");
-  if (mode !== "public-kg" && ["7694", "7695"].includes(target.port)) throw new Error("Frozen datasets cannot use a public KG database");
+  if (mode === "public-kg" && (!["127.0.0.1", "localhost"].includes(target.hostname) || !["7694", "7695", "7697"].includes(target.port))) throw new Error("Public KG local development requires dedicated port 7694, isolated test port 7695 or formal confirmation port 7697");
+  if (mode !== "public-kg" && ["7694", "7695", "7697"].includes(target.port)) throw new Error("Frozen datasets cannot use a public KG database");
   if (mode === "pilot-event-v1" && (!["127.0.0.1", "localhost"].includes(target.hostname) || target.port !== "7692")) throw new Error("Event pilot requires dedicated local port 7692");
   if (mode === "pilot-science-v2" && (!["127.0.0.1", "localhost"].includes(target.hostname) || target.port !== "7691")) throw new Error("Science v2 requires dedicated local port 7691");
   if (mode === "pilot-science-v1" && (!["127.0.0.1", "localhost"].includes(target.hostname) || target.port !== "7690")) throw new Error("Science pilot requires dedicated local port 7690");
