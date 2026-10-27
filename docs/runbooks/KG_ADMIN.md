@@ -1,6 +1,6 @@
 # 管理KGとVPS Connectorの導入・運用
 
-Issue #52。Cloudflare作業待ちより先にVPSを読取調査し、その後の運営者指示で準備済みConnectorと検証済みimageを使用した。2026-10-27、専用管理Webを配置・起動し、実Access認証から本番KGの全件読取を確認した。Connectorはrunning／disabled。適用済みrouteのProtect with Access・Team／AUD不一致を最終guardが検出し、自動起動有効化・再起動前に停止している。[本番配置の実測と残件](../verification/KG_ADMIN_PRODUCTION_20261027.md)を参照。公開Plunode・Caddy・DB・ローカルPC Tunnelは変更しない。
+Issue #52。Cloudflare作業待ちより先にVPSを読取調査し、その後の運営者指示で準備済みConnectorと検証済みimageを使用した。2026-10-27、専用管理Webを配置・起動し、実Access認証から本番KGの全件読取を確認した。適用済みrouteのProtect with Access・実Team／AUD・catch-all拒否を照合し、Connectorをenabled／running化。専用Connector再起動後も実画面／APIとOrigin拒否を確認済み。[本番配置・再接続の実測](../verification/KG_ADMIN_PRODUCTION_20261027.md)を参照。公開Plunode・Caddy・DB・ローカルPC Tunnelは変更しない。
 
 ## 1. Connectorを準備（管理者sudoが必要）
 

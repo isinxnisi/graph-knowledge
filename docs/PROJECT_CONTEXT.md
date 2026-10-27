@@ -2,7 +2,7 @@
 
 2026-10-27、運営者が映画DIRECTING／ACTINGの固定hashとscope方針を正式承認。既存8 Role・baseline・過去承認を保持して正式catalogへ2件を追加した。Claim受入・本番公開は別判断で未実施。[正式Role判断](research/film-release-20261027/role-decision-approved.json)／[出所](research/film-release-20261027/role-approval-provenance.json)。
 
-2026-10-27、Issue #52の[現行KG管理検索](design/KG_ADMIN.md)を独立runtimeで実装。準備済みVPS Connectorと固定imageで専用管理Webを配置し、実Accessから正式KGの2,175 Entity／311 Island／1,895 Claimを全件照合した。JWT検証を維持し、既存3200／beta／公開Web・DBを保持。適用済みTunnel routeのProtect with Access・Team／AUD不足で最終guardが停止し、Connectorの永続化・再起動確認は残る。[本番配置の実測・残件](verification/KG_ADMIN_PRODUCTION_20261027.md)／[初回隔離検証](verification/KG_ADMIN_20261027.md)／[運用手順](runbooks/KG_ADMIN.md)。
+2026-10-27、Issue #52の[現行KG管理検索](design/KG_ADMIN.md)を独立runtimeで実装。専用管理Webを本番配置し、実Accessから正式KGの2,175 Entity／311 Island／1,895 Claimを全件照合した。Tunnel routeのProtect with Access・Team／AUD適用を確認し、専用Connectorをenabled化・再起動、実画面／APIの再接続と直接Origin拒否まで成功。アプリのJWT検証と既存3200／beta／公開Web・DBを保持。[本番配置・再接続の実測](verification/KG_ADMIN_PRODUCTION_20261027.md)／[初回隔離検証](verification/KG_ADMIN_20261027.md)／[運用手順](runbooks/KG_ADMIN.md)。
 
 2026-10-27、映画Roleの固定hash登録、最新本番backup＋全receiptに基づく映画受入経路、公開operatorの隔離実証、Claim個別のbeta試験表示を準備。正式Role／Claim判断・SSH/sudo・個別公開署名は未実施。mainへ統合し3200／betaへ配置。全画面bannerを撤去し実ブラウザ6件成功。[手順](runbooks/FILM_INITIAL_RELEASE.md)／[検証](verification/FILM_RELEASE_20261027.md)。
 

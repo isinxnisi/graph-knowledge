@@ -1,0 +1,49 @@
+{
+  "dataset": "public-kg",
+  "revision": "b74a4b00-9454-412f-af5d-1317713a543c",
+  "measuredAt": "2026-10-27T14:37:15.824Z",
+  "summary": {
+    "entityCount": 2175,
+    "islandCount": 311,
+    "isolatedCount": 0,
+    "claimCount": 1895,
+    "distribution": [
+      0,
+      1936,
+      148,
+      91
+    ],
+    "excluded": {
+      "unpublished": 0,
+      "denied": 0,
+      "unsupported": 0
+    }
+  },
+  "range": {
+    "min": 995,
+    "max": 995,
+    "total": 1,
+    "size": 995,
+    "claimCount": 994
+  },
+  "memberPages": {
+    "total": 995,
+    "offsets": [
+      0,
+      40
+    ],
+    "rows": [
+      40,
+      40
+    ],
+    "unique": 80
+  },
+  "connectorReceipt": "/opt/graph-knowledge/kg-admin-finalize-NxO7RKvv",
+  "appliedProtection": {
+    "managementOrigin": true,
+    "protectWithAccess": true,
+    "teamMatches": true,
+    "audienceMatches": true,
+    "catchAll404": true
+  }
+}

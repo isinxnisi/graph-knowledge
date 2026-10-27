@@ -2,7 +2,7 @@
 
 # ドキュメントの入口
 
-- Issue #52 現行KGの管理検索：[設計](design/KG_ADMIN.md)／[VPS Connector・Access運用手順](runbooks/KG_ADMIN.md)／[本番配置・実Access全件照合と残件](verification/KG_ADMIN_PRODUCTION_20261027.md)／[初回隔離検証](verification/KG_ADMIN_20261027.md)。専用管理Webは本番稼働。Tunnel route保護の不一致でConnector永続化前に停止中。
+- Issue #52 現行KGの管理検索：[設計](design/KG_ADMIN.md)／[VPS Connector・Access運用手順](runbooks/KG_ADMIN.md)／[本番配置・実Access全件照合・再接続](verification/KG_ADMIN_PRODUCTION_20261027.md)／[初回隔離検証](verification/KG_ADMIN_20261027.md)。専用管理Webは本番稼働。ConnectorのAccess保護・自動起動有効化・再起動後の実接続を確認済み。
 
 - Issue #39 [正式公開・本番backup/別DB復元/009・010適用](verification/PUBLIC_ACCOUNTS_PRODUCTION_20261026.md)：固定767020c／build p2mPLpwWtvRzE54EdYqwSをplunode.netへ公開。実Google、既存Capsule、プロフィール・フォロー・招待・限定境界、コミュニティ・運営・Graph・AIラボを確認。スマホ実機は運営者評価済み。[先行するbeta受入](verification/PUBLIC_ACCOUNTS_BETA_ACCEPTANCE_20261026.md)／[隔離評価](verification/PUBLIC_ACCOUNTS_INITIAL_CORRECTION_20261025.md)。
 
