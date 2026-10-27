@@ -26,16 +26,20 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-10-27T08:49:14.131286+00:00",
-  "phase": "ready",
+  "nextStartAt": "2026-10-27T19:17:04.284243+00:00",
+  "phase": "running",
   "recoveredAttempt": null,
   "admission": {
-    "ready": true,
-    "reason": "ready",
-    "eligibleAt": null,
+    "ready": false,
+    "reason": "interval",
+    "eligibleAt": "2026-10-27T19:17:04.284243+00:00",
     "windowEndAt": "2026-10-27T22:00:00+00:00"
   },
-  "activeAttempt": null,
+  "activeAttempt": {
+    "requestId": "issue-49-dot-hara-souten-20261027-batch-01",
+    "startedAt": "2026-10-27T18:12:04.284246+00:00",
+    "limitAt": "2026-10-27T19:07:04.284243+00:00"
+  },
   "lastAttempt": {
     "requestId": "issue-50-dot-endo-tista-20261027",
     "endedAt": "2026-10-27T08:39:14.131288+00:00"
@@ -129,5 +133,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-10-27T18:08:43.935764+00:00"
+  "checkedAt": "2026-10-27T18:12:12.269434+00:00"
 }
