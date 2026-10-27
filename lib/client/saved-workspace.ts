@@ -3,7 +3,7 @@ import { dataReleaseLabels } from "../i18n/data-release";
 import { z } from "zod";
 import { workspaceLabels } from "../i18n/workspace";
 import { DATASET_MODES, type DatasetMode } from "../domain/dataset";
-import { claimSummarySchema, entitySummarySchema } from "../domain/api";
+import { claimSummarySchema, entitySummarySchema, neighborRankingSchema } from "../domain/api";
 import { ClientApiError, fetchDatasetRevision, fetchEntity, fetchNeighbors } from "./api";
 import { CACHE_LIMITS, emptyExpansion, emptyGraph, projectGraph, withinLimits, type GraphState } from "./graph-state";
 import type { GraphView } from "./graph-view";
@@ -191,6 +191,7 @@ export function importWorkspace(storage: StorageAccess, dataset: DatasetMode, ex
 }
 
 const neighborsSchema = z.object({
+  ranking: neighborRankingSchema.optional(),
   revision: z.string().min(1).optional(), centerId: z.uuidv4(), nodes: z.array(entitySummarySchema).max(51), claims: z.array(claimSummarySchema).max(50),
   page: z.object({ hasMore: z.boolean(), nextCursor: z.string().min(1).nullable() }),
 });
@@ -288,6 +289,8 @@ export async function rebuildWorkspace(value: WorkspaceInput, signal: AbortSigna
       signal.throwIfAborted();
       if (!parsed.success) throw new WorkspaceError("response");
       const page = parsed.data;
+      if (workspace.dataset === "public-kg" && index === 0) graph.neighborOrder = page.ranking ? "bounded" : "id";
+      meta.ranking = page.ranking;
       if (graph.revision && graph.revision !== page.revision) throw new ClientApiError(dataReleaseLabels().workspaceChanged, 409);
       if (page.revision) graph.revision = page.revision;
       const nodes = new Set(page.nodes.map(node => node.id));
@@ -320,7 +323,7 @@ export async function rebuildWorkspace(value: WorkspaceInput, signal: AbortSigna
 // It never writes to storage and never replaces missing saved routes silently.
 export async function restartWorkspace(value: WorkspaceInput, signal: AbortSignal): Promise<RebuiltWorkspace> {
   const workspace = workspaceSchema.parse(value);
-  if (workspace.relation.type === "adjacent") return rebuildWorkspace({ ...workspace, execution: { type: "adjacent", branches: [{ id: workspace.rootId, open: true, pages: 1 }] }, view: null }, signal);
+  if (workspace.relation.type === "adjacent") return rebuildWorkspace({ ...workspace, execution: { type: "adjacent", ...(workspace.execution.type === "adjacent" && workspace.execution.order ? { order: workspace.execution.order } : {}), branches: [{ id: workspace.rootId, open: true, pages: 1 }] }, view: null }, signal);
   const root = (await fetchEntity(workspace.rootId, signal)).entity;
   signal.throwIfAborted();
   if (root.id !== workspace.rootId || !patternAcceptsRoot(workspace.relation,root.kind)) throw new WorkspaceError("response");

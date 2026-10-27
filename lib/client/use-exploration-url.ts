@@ -95,6 +95,9 @@ export function useExplorationUrl({ dataset, initialRoot, graph, capture, apply,
           conditions: { predicates: null, contributionRoles: null, organizationPositions: null, eventRoles: null },
           branches: [{ id: rootId, open: true, pages: 1 }], view: null,
         });
+        // A bare entity link starts a new exploration; only encoded old saves
+        // replay legacy pages. Witness-bearing legacy paths retain their order.
+        if (encoded === null && !params.has("via") && dataset === "public-kg" && workspace.execution.type === "adjacent") workspace.execution.order = "bounded";
         let witness;
         try {
           if (params.getAll("via").length > 1 || params.has("via") && (dataset !== "public-kg" || location.pathname.length + location.search.length > URL_STATE_LIMIT)) throw Error();

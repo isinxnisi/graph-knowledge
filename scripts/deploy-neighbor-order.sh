@@ -90,7 +90,8 @@ import json,sys
 from pathlib import Path
 p=Path(sys.argv[1]); a=json.loads((p/'config-before.json').read_text()); b=json.loads((p/'config-after.json').read_text())
 for service in ('web','ops'): b['services'][service]['image']=a['services'][service]['image']
-for key in ('GRAPH_NEIGHBOR_ORDER','GRAPH_NEIGHBOR_CANDIDATES','GRAPH_NEIGHBOR_CONNECTIONS'): b['services']['web']['environment'].pop(key)
+for key,value in [('GRAPH_NEIGHBOR_ORDER','bounded'),('GRAPH_NEIGHBOR_CANDIDATES','200'),('GRAPH_NEIGHBOR_CONNECTIONS','50')]:
+    assert b['services']['web']['environment'].pop(key)==value, 'Runtime ranking settings differ from verified release'
 assert a==b, 'Unexpected configuration change'
 PY
 "${dc[@]}" up -d --no-deps --pull never --wait --wait-timeout 180 web

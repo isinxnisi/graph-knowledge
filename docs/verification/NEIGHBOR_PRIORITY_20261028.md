@@ -40,7 +40,11 @@ DBの測定終了時RSS相当container使用量は757〜797MiB／1.5GiB、待機
 
 ## 最終反映
 
-最終image `graph-knowledge-web:issue54-20261028`／config ID `sha256:334c09d620f5712a01dfd81a86f6734f041bc614de4585e6e88d33ebe2d15b37`／build `JPatRyz3_uulQXlSG-62x`。同じimageの実行確認後にそのbuildをbetaへ使用する。
+betaの実画面で、通常のEntityリンクも旧保存の再生として扱われる経路を検出した。裸のリンクと新しい検索結果の引継ぎにboundedを明示し、旧保存との区別を修正した。関連14件、追加した入口回帰2件、型・lint・buildが成功。従来の経路証拠付きリンクはID順を保持する。この修正のため追加buildを行った。
+
+最終image `graph-knowledge-web:issue54-20261028`／config ID `sha256:72a255c9972cc994bf329afa4e883f48fd82612db1ab9684a9fee3054d59d66b`／build `RGTfxR5GC6MqFk7_T4bXw`。初回beta配置の`JPatRyz3_uulQXlSG-62x`は入口修正前の版として区別し、本番候補にしない。
+
+ローカル3287のGET専用proxyで、8秒遅延、503、409を模擬した。Entity4／Claim6を保持したまま対象名付き待機、503時Entity12／Claim21保持、再試行でClaim23へ復帰、409時Entity12／Claim27保持、明示読み直しで起点へ復帰を実画面で確認。390px幅の[待機表示](../research/neighbor-priority-20261028/mobile-loading.png)は小さな通知で、Graphを覆う大きなモーダルを追加していない。DBへ障害やrevision変更を起こした試験ではない。
 
 現時点ではbeta実画面・本番用bundle準備中。VPS developのsudoはpasswordを要求するため、準備・検証完了後の管理者一括コマンドが必要。未反映を反映済みと扱わない。
 

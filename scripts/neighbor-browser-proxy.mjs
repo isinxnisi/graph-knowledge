@@ -16,7 +16,8 @@ const server = createServer(async (req, res) => {
       res.end(JSON.stringify({ error: { code: mode.status === 409 ? "DATASET_CHANGED" : "SERVICE_UNAVAILABLE", message: "ブラウザ検証用の応答" } })); return;
     }
     if (mode.cap) target.searchParams.delete("after");
-    const response = await fetch(target, { headers: { accept: req.headers.accept ?? "*/*" }, signal: AbortSignal.timeout(20000) });
+    const forwarded = Object.fromEntries(Object.entries(req.headers).filter(([key, value]) => ["accept", "rsc", "next-router-state-tree", "next-router-prefetch", "next-url"].includes(key) && typeof value === "string"));
+    const response = await fetch(target, { headers: forwarded, signal: AbortSignal.timeout(20000) });
     let body = Buffer.from(await response.arrayBuffer());
     if (mode.cap && response.ok) {
       const page = JSON.parse(body.toString()), center = page.nodes.find(n => n.id === page.centerId), sample = page.claims[0];

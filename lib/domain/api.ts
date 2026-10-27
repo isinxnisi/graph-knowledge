@@ -26,8 +26,9 @@ export type SourceDetail = z.infer<typeof sourceSchema>;
 export type EntitySearchResponse = { items: EntityDetail[]; hasMore: boolean };
 export type DiscoverySearchResponse = EntitySearchResponse & { revision?: string; nextCursor: string | null; starts: EntitySummary[]; total?: number; facets?: import("./discovery").DiscoveryFacet[]; themes?: import("./discovery").DiscoveryTheme[] };
 export type EntityResponse = { entity: EntityDetail };
+export const neighborRankingSchema = z.object({ mode: z.literal("bounded"), candidateLimit: z.number().int().positive(), connectionLimit: z.number().int().positive(), evaluatedCandidates: z.number().int().nonnegative(), unevaluatedCandidates: z.boolean(), cappedCandidates: z.number().int().nonnegative() });
 export type NeighborsResponse = {
-  ranking?: { mode: "bounded"; candidateLimit: number; connectionLimit: number; evaluatedCandidates: number; unevaluatedCandidates: boolean; cappedCandidates: number };
+  ranking?: z.infer<typeof neighborRankingSchema>;
   revision?: string;
   relation?: import("./relation-conditions").RelationCondition;
   centerId: string; nodes: EntitySummary[]; claims: ClaimSummary[];

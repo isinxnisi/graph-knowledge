@@ -29,7 +29,7 @@ it("対象指定有無は独立プロパティとして判定し、新方式2件
 it("検索と同じ条件・完全証拠・公開版を渡し、初期表示は通常Graphと同じ最初の展開にする",()=>{
  const {workspace,handoff}=parse();expect(workspace.relation).toEqual(relation);expect(handoff.witness).toEqual(witness);
  expect(workspace.execution).toMatchObject({type:"pattern",routes:[{open:false}],entityState:{branches:[{id:id(1),open:true,claimIds:[witness.route.claimIds[0]]}]}});
- const adjacent={...selection,relation:allRelations(),witness:null};expect(parse(adjacent).workspace.execution).toMatchObject({type:"adjacent"});
+ const adjacent={...selection,relation:allRelations(),witness:null};expect(parse(adjacent).workspace.execution).toMatchObject({type:"adjacent",order:"bounded"});
  expect(()=>discoveryRelationHref({...selection,witness:null})).toThrow();
 });
 it("条件・対象・公開版を改ざんした引継ぎを拒否し、旧共有URLには制約を追加しない",()=>{

@@ -32,7 +32,7 @@ it("旧保存URLはID順、新保存URLは評価順で復元し、復元後も�
   const calls: string[] = [];
   vi.stubGlobal("fetch", vi.fn(async (url: string) => {
     calls.push(String(url));
-    const body = String(url).includes("neighbors") ? page : String(url).includes("dataset") ? { dataset: "public-kg", revision: "r1" } : { entity: page.nodes.find(n => n.id === page.centerId) };
+    const body = String(url).includes("neighbors") ? String(url).includes("order=id") ? { ...page, ranking: undefined } : page : String(url).includes("dataset") ? { dataset: "public-kg", revision: "r1" } : { entity: page.nodes.find(n => n.id === page.centerId) };
     return new Response(JSON.stringify(body));
   }));
   const current = await rebuildWorkspace(decoded, new AbortController().signal);

@@ -16,6 +16,13 @@ const graph = (): GraphState => ({ ...emptyGraph(), centerId: id, cacheNodes: { 
 const view = { positions: { [id]: { x: 112.123, y: -45.678 } }, pan: { x: 15, y: 15 }, zoom: 0.71, initialLayoutDone: true };
 afterEach(() => { cleanup(); vi.useRealTimers(); vi.resetAllMocks(); history.replaceState(null, "", "/"); });
 describe("exploration URL synchronization", () => {
+  it("裸の公開Entityリンクは旧保存ではなく新順位の探索を開始する", async () => {
+    history.replaceState(null, "", `/explore/${id}`);
+    vi.mocked(rebuildExplorationUrl).mockResolvedValue({ graph: graph(), view: null, skippedBranches: 0 });
+    renderHook(() => useExplorationUrl({ dataset: "public-kg", initialRoot: id, graph: emptyGraph(), capture: () => null, apply: vi.fn(), locale: "ja" }));
+    await act(async () => {});
+    expect(vi.mocked(rebuildExplorationUrl).mock.calls[0][0].execution).toMatchObject({ type: "adjacent", order: "bounded" });
+  });
   it("rejects a revision change after Discovery verification without applying or replacing the old Graph", async () => {
     const selection={entity:{id,kind:"person" as const,name:"name",description:null,aliases:[],event:null},relation:allRelations(),revision:"r1",witness:null};
     history.replaceState(null,"",discoveryRelationHref(selection));const before=location.href,apply=vi.fn();

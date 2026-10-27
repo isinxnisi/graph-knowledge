@@ -15,7 +15,7 @@ export function discoveryRelationHref(input:ConnectionSelection){
  const href=explorationHref({version:relation.type==="pattern"&&relation.pattern.revision!==1?3:2,dataset:"public-kg",id:value.entity.id,rootId:value.entity.id,title:"Discovery",savedAt:"2000-01-01T00:00:00.000Z",relation,observedRevision:value.revision,view:null,
   execution:relation.type==="pattern"?{type:"pattern",routes:[{route:route!,open:false}],requiredRouteKey:routeKey(route!),candidateBoundary:null,
    entityState:{version:1,branches:[{id:value.entity.id,open:true,claimIds:route!.claimIds.filter((_,i)=>[route!.nodeIds[i],route!.nodeIds[i+1]].includes(value.entity.id))}],sources:[{id:value.entity.id,requiredRouteKey:routeKey(route!),candidateBoundary:null}]}}
-   :{type:"adjacent",branches:[{id:value.entity.id,open:true,pages:1}]}});
+   :{type:"adjacent",order:"bounded",branches:[{id:value.entity.id,open:true,pages:1}]}});
  const handoff=handoffSchema.parse({version:1,revision:value.revision,witness:value.witness});
  const result=href+"&match="+btoa(Array.from(new TextEncoder().encode(JSON.stringify(handoff)),c=>String.fromCharCode(c)).join("")).replaceAll("+","-").replaceAll("/","_").replace(/=+$/,"");
  if(result.length>URL_STATE_LIMIT)throw Error("Graph URL limit");return result;
