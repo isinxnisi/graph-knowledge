@@ -249,7 +249,7 @@ class Executor:
         elif request['kind'] == 'issue-prepare':
             if request.get('resumePreparationId'):
                 slug(request['resumePreparationId']); slug(request['preparationCycle'])
-                insist(parent and parent['requestId'] == request['resumePreparationId'] and parent['phase'] == 'completed' and
+                insist(parent and parent['requestId'] == request['resumePreparationId'] and parent['phase'] in ['completed', 'awaiting-recovery', 'retry-transport'] and
                        parent['kind'] == 'issue-prepare' and parent['result']['batchRequests'] == [] and
                        parent['request']['permission'] == request['permission'] and parent['request']['issueOrigin'] == request['issueOrigin'],
                        'Same-scope completed preparation without dispatched children required')
@@ -356,6 +356,16 @@ class Executor:
             return json.load(out)
 
     def artifacts(self, request, result):
+        try:
+            return self._artifacts(request, result)
+        except Blocked:
+            raise
+        except (ValueError, KeyError, TypeError) as error:
+            # Frozen-input/path/schema failures need inspection, not another collection.
+            # I/O and transport errors remain retryable from executionComplete.
+            raise Blocked('Artifact preparation ' + type(error).__name__ + ': ' + str(error)) from error
+
+    def _artifacts(self, request, result):
         roots, draft_names = [], []
         if request['kind'] == 'accept-sequence':
             roots = [Path(result['stateDirectory'])]
@@ -375,10 +385,14 @@ class Executor:
             t = request['target']
             roots.append(gate.revision_path(self.registry, 'approvals', t['themeId'], t['revision']))
             request_file = read(review / 'decision-request.json')
+            # A prior accepted decision protects its entire directory. Keep each new
+            # request/review's unsigned drafts outside those frozen directories.
+            draft_root = (self.root / 'datasets/collection-decision-drafts' / slug(request['id'])
+                          / gate.file_hash(review / 'review-manifest.json'))
             for group in ['normal', 'identity-only']:
                 if not any(request_file['groups'][group]['recordIds'].values()): continue
                 ident = request['id'][:45] + ('-normal' if group == 'normal' else '-identity')
-                path = self.root / 'datasets/manga-collection/decisions' / (ident + '-draft.json')
+                path = draft_root / (ident + '-draft.json')
                 if not path.exists():
                     args = self.workflow.parser().parse_args(['decision-template', '--review', str(review), '--group', group,
                         '--decision-id', ident, '--release', 'manga-' + ident, '--output', str(path)])
@@ -399,7 +413,7 @@ class Executor:
                     combined['acceptedRecordIds'][field] = sorted({i for d in drafts for i in d['acceptedRecordIds'][field]})
                     combined['recordSha256'][field] = {i: h for d in drafts for i, h in d['recordSha256'][field].items()}
                 combined['scopeByClaim'] = sorted({r['id']: r for d in drafts for r in d['scopeByClaim']}.values(), key=lambda r: r['id'])
-                path = self.root / 'datasets/manga-collection/decisions' / (ident + '-draft.json')
+                path = draft_root / (ident + '-draft.json')
                 if path.exists(): insist(read(path) == combined, 'Combined decision draft changed')
                 else: gate.create(path, combined)
                 envelope = path.with_name(ident + '-request-draft.json')
@@ -629,7 +643,7 @@ class Worker:
                            'Same operation ID with changed targets/decision; explicit new review required')
                     record.update(phase='duplicate', message='Duplicate of ' + owner); self.checkpoint(); self.publish(request, record); continue
                 self.state['operations'][operation] = ident
-                if record['phase'] in ['completed', 'blocked', 'duplicate']:
+                if record['phase'] in ['completed', 'blocked', 'duplicate', 'awaiting-recovery']:
                     self.checkpoint(); continue
                 if record.get('retryAt', 0) > self.now(): continue
                 admission = self.control.gate()
@@ -677,6 +691,14 @@ class Worker:
                                     record.update(result=result, executionComplete=False, phase='sequence-progress', sequencePublicationPending=True)
                                     self.checkpoint()
                                     self.publish_sequence_progress(request, record)
+                                    continue
+                                if request['kind'] == 'issue-prepare' and result.get('preparationComplete') is False:
+                                    retry = result.get('retryAt')
+                                    record.update(result=result, executionComplete=False,
+                                                  phase='retry-transport' if retry is not None else 'awaiting-recovery',
+                                                  message='Technical acquisition incomplete; no semantic hold or acceptance',
+                                                  retryAt=retry or 0)
+                                    self.checkpoint(); self.publish(request, record)
                                     continue
                                 record.update(result=result, executionComplete=True, phase='publishing'); self.checkpoint()
                             else:
