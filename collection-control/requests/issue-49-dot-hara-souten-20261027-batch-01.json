@@ -1,0 +1,80 @@
+{
+  "schemaVersion": 1,
+  "id": "issue-49-dot-hara-souten-20261027-batch-01",
+  "kind": "collect-review",
+  "status": "approved",
+  "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
+  "parentRequestId": "issue-49-dot-hara-souten-20261027",
+  "applyAuthorized": {
+    "local": false,
+    "beta": false,
+    "vps": false
+  },
+  "approvalScope": "collection-candidates-and-review-only",
+  "humanDecision": {
+    "actorType": "human",
+    "reviewer": "プロジェクト運営者（範囲を限定した委任）",
+    "decidedAt": "2026-10-25T13:07:49+09:00",
+    "statement": "2026-10-25 13:07:49 JST、運営者は既存Worker対応の現在の漫画テーマ候補からdotが対象を選び、毎回の個別提示なしでGitHubの収集許可と購読を登録し、候補収集・レビューまで進める限定委任を明示承認した。同日16:17:04 JSTに固定1日1バッチ上限を撤廃し、進捗・収集量・負荷による投入調整を許可した。2026-10-26 12:37:31 JST、過去の許可を上書きせず追加分をバッチ専用の新Issueに登録する方式への明示確認に本人が肯定リアクションし、親会話で現在の反応を検証済み。2026-10-27 13:37〜13:41 JST、運営者はdotが相談中として継続していた追加投入抑制を問い直し、データ収集を急いでいること、多少多く実行してほしいこと、1日何件という制約を付ける段階ではないことを明示した。元の限定委任の範囲で投入を再開し、日次件数上限を設けず実処理・待機量・負荷を見て少量ずつ補充する。個々の人物作品組・Role・ISBNを人間が審査済みとの記録ではない。今回dotが選んだのは既存テーマIssue #5と固定catalog d3e377d5255f4c487d608e73954dc40aeb0b3cba（blob f3d33d0e83b6299a7f443fa841232407ce67657c）のM37の原哲夫→蒼天の拳1組、および導入Worker対応組との共通部分だけ。Wikidata構造化情報とNDL作成書誌のみ、1作者1作品、親準備と全子収集合計30試行以内、同一要求2試行・3秒間隔・20秒・4MiB、保存成果とcache優先。既公開・既受入・既収集の同内容、同条件の根拠保留は再収集せず、不確かな同定・Role・刊行物scopeは保留。既設時間帯・直列排他・10分休憩を維持する。固定catalog全組・将来追加テーマへの無条件許可ではなく、正式受入・公開apply・追加取得元・予算拡大・コード/adapter/権限/認証/VPS/会員DB/時間帯/ロック変更は含まない。"
+  },
+  "issueOrigin": {
+    "repository": "isinxnisi/graph-knowledge",
+    "issueNumber": 49,
+    "approvalId": "dot-hara-souten-20261027",
+    "permissionSha256": "23c175f5c3bdedb6e9dfb5f3260cf5a1466d5196f59a600ea098230a8aaee728",
+    "issueBodySha256": "ce18093c7a301347fc37ec758e25dc08faf69f49db3a6f2551dcdb96fa95bc29"
+  },
+  "target": {
+    "themeId": "issue-49-dot-hara-souten-20261027",
+    "revision": 1,
+    "definitionSha256": "5f1deb2a401598a6f5e7da5c486b1e431bc90efe2781d935967cd2cc4f0efd68",
+    "execution": {
+      "adapter": "manga-discovery-v2",
+      "codeSha256": "80e05b67bc0129b963653b90df4cfbfa5bd6aff190acda99f54c08541e55801e",
+      "inputs": [
+        {
+          "file": "datasets/manga-collection/r0033/recipe.json",
+          "sha256": "5c91330d762ed47cf02fd72a8af26f29695306e4c1751d40c3debd07157710da"
+        },
+        {
+          "file": "datasets/manga-collection/r0033/anchor-review.json",
+          "sha256": "711c674d72e86d21db904a8ab6ae5723030cd7776e1cd365bb7772c0bc8c30bd"
+        },
+        {
+          "file": "datasets/manga-collection/r0033/publication-review.json",
+          "sha256": "5228fd0217a3063940d295787261fadaea81e5445c4e6b1be0052e1a2a84cf9d"
+        },
+        {
+          "file": "docs/research/famous-manga-creators/20261016/candidates.json",
+          "sha256": "8531fada01e5c635ba2ee278a7ef944a73f64676af14ed42ae0e690f5a1ff978"
+        },
+        {
+          "file": "datasets/public-kg/releases/20261014-credits-001/data.json",
+          "sha256": "ea91b16f52a211b5a8464382ad498b7b2bb2be69a6f33fe125a73a3c7b9da2b5"
+        },
+        {
+          "file": "datasets/public-kg/releases/20261014-credits-001/manifest.json",
+          "sha256": "e4aa3b58ed884f7d1f8fffee43b260261cc2b4d3a867fda942919f439d2bce17"
+        }
+      ],
+      "maxEntities": 2111,
+      "maxClaims": 1847
+    },
+    "targets": {
+      "people": [
+        {
+          "name": "原哲夫",
+          "qid": "Q1319232"
+        }
+      ],
+      "works": [
+        {
+          "name": "蒼天の拳",
+          "qid": "Q542112",
+          "isbn13": "9784107710000"
+        }
+      ]
+    },
+    "existingApprovalSha256": "b02e6d3a1d795630c90273a633ced10588b7219f681678d6829165bf14c73366"
+  }
+}

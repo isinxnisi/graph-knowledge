@@ -1,0 +1,117 @@
+{
+  "schemaVersion": 1,
+  "id": "issue-49-dot-hara-souten-20261027",
+  "revision": 1,
+  "title": "Issue 49：原哲夫／候補収集",
+  "purpose": "既存の明示的人間許可を範囲内の導出recipeへ束縛。知識の正式受入・公開適用を許可しない。",
+  "worlds": [
+    "漫画・アニメ",
+    "美術・文学"
+  ],
+  "relatedThemes": [
+    "famous-manga-creators"
+  ],
+  "scope": {
+    "include": [
+      "Issue permission SHA256 23c175f5c3bdedb6e9dfb5f3260cf5a1466d5196f59a600ea098230a8aaee728",
+      "[\n  {\n    \"person\": \"原哲夫\",\n    \"work\": \"蒼天の拳\"\n  }\n]\n",
+      "Wikidata完全一致・NDL作成書誌の日本語第1巻ISBN。原語・既存制作Role契約を維持。"
+    ],
+    "exclude": [
+      "許可外人物作品・不確かな同定・意味変換・正式受入・公開apply・VPS配置・会員DB変更"
+    ]
+  },
+  "dataRequirements": [
+    {
+      "kind": "entity",
+      "description": "一覧内の人物と漫画作品、確認された日英別名・外部ID",
+      "granularity": "個人と共同筆名を区別し、漫画版・特定部・特定初出版を同定する。既存UUIDは再利用"
+    },
+    {
+      "kind": "claim",
+      "description": "明示された人物→漫画制作のRole候補。ORIGINAL_STORYを含む既存Role契約に従う",
+      "granularity": "代表ISBNごとのpublication scope。原語・巻・版を固定し、作品全体や別Roleへ自動拡張しない"
+    },
+    {
+      "kind": "citation",
+      "description": "資料URL、参照箇所、取得日、担当原語、刊行物と利用条件",
+      "granularity": "資料と取込由来を分け、同資料を共有する記録を独立根拠として数えない"
+    },
+    {
+      "kind": "identity",
+      "description": "作品単位と筆名・既存Entity対応の判断",
+      "granularity": "武論尊／史村翔、藤子共同名義、ワンパンマンの版、火の鳥の初出版等を個別に判断"
+    },
+    {
+      "kind": "model-gap",
+      "description": "漫画表記、原著、原案、集約著者などの未確定関係とシリーズ／巻／版の構造",
+      "granularity": "この企画の承認だけでは実装・語彙承認しない。必要なら個別レビューへ分ける"
+    }
+  ],
+  "sources": [
+    {
+      "name": "Wikidata（構造化取得の有力候補）",
+      "url": "https://www.wikidata.org/wiki/Help:Data_access",
+      "usage": "識別子・日英名・別名・作品関係候補と参照先。propertyから既存Roleを推測しない。",
+      "termsNote": "Wikidata構造化APIとcanonical EntityData。Issue全体で準備・収集合計30試行。"
+    },
+    {
+      "name": "NDLサーチ・NDL作成書誌",
+      "url": "https://ndlsearch.ndl.go.jp/help/api/provider",
+      "usage": "SRUのiss-ndl-opac限定、固定ISBN検索・maximumRecords=5。NDL作成書誌のISBN・主書名・巻・版・言語・漫画種別・責任表示を一意に照合。第三者所蔵情報はsnapshotへ出さない。",
+      "termsNote": "NDL作成書誌のCC BY4.0。題名・著者検索で代表ISBNを選びcanonical ISBN検索で一意性を再確認。所蔵・本文を転載しない。"
+    }
+  ],
+  "exploration": {
+    "questions": [
+      "既存浦沢直樹からあさドラ！・パイナップルARMYと工藤かずやへ渡れるか？",
+      "サンクチュアリと北斗の拳を同じ人物の別名義・異なるRoleの根拠で辿れるか？",
+      "ポーの一族から萩尾望都を経て11人いる！、風と木の詩から竹宮惠子を経て地球へ…に渡れるか？",
+      "r0002公開後に大場つぐみ・Boichi・藤本タツキの別作品へ進めるか？ 未受入・原語未確定の枝を区別できるか？"
+    ],
+    "existingPredicates": [
+      "CONTRIBUTED_TO"
+    ],
+    "modelGaps": [
+      "漫画表記や集約著者表示は既存Roleへ自動変換できない。ORIGINAL_STORYは原作担当の明示に限定する。",
+      "掲載・翻案・シリーズ／巻／版の独立関係は対象外",
+      "ジャンルは編集上の入口説明であり分類Claimは生成しない"
+    ]
+  },
+  "coverageReferences": [
+    "datasets/manga-collection/r0033/anchor-review.json",
+    "datasets/manga-collection/r0033/publication-review.json"
+  ],
+  "execution": {
+    "adapter": "manga-discovery-v2",
+    "codeSha256": "80e05b67bc0129b963653b90df4cfbfa5bd6aff190acda99f54c08541e55801e",
+    "inputs": [
+      {
+        "file": "datasets/manga-collection/r0033/recipe.json",
+        "sha256": "5c91330d762ed47cf02fd72a8af26f29695306e4c1751d40c3debd07157710da"
+      },
+      {
+        "file": "datasets/manga-collection/r0033/anchor-review.json",
+        "sha256": "711c674d72e86d21db904a8ab6ae5723030cd7776e1cd365bb7772c0bc8c30bd"
+      },
+      {
+        "file": "datasets/manga-collection/r0033/publication-review.json",
+        "sha256": "5228fd0217a3063940d295787261fadaea81e5445c4e6b1be0052e1a2a84cf9d"
+      },
+      {
+        "file": "docs/research/famous-manga-creators/20261016/candidates.json",
+        "sha256": "8531fada01e5c635ba2ee278a7ef944a73f64676af14ed42ae0e690f5a1ff978"
+      },
+      {
+        "file": "datasets/public-kg/releases/20261014-credits-001/data.json",
+        "sha256": "ea91b16f52a211b5a8464382ad498b7b2bb2be69a6f33fe125a73a3c7b9da2b5"
+      },
+      {
+        "file": "datasets/public-kg/releases/20261014-credits-001/manifest.json",
+        "sha256": "e4aa3b58ed884f7d1f8fffee43b260261cc2b4d3a867fda942919f439d2bce17"
+      }
+    ],
+    "maxEntities": 2111,
+    "maxClaims": 1847
+  }
+}
