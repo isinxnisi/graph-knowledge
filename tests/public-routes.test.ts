@@ -12,13 +12,13 @@ describe("公開ページの日英URLと内部言語header", () => {
     }
     for (const path of ["/member", "/shared", "/api/auth", "/en/member", "//evil.example", "/explore/invalid", "/?s=private"]) expect(publicLocalePath(path,"en")).toBeNull();
   });
-  it("送信者がSSR言語を偽装できず、広告originの隔離も維持する", () => {
+  it("送信者がSSR言語を偽装できず、広告originの隔離も維持する", async () => {
     for (const path of ["/", "/en", "/en/support", `/en/explore/${id}`]) {
-      const response = proxy(new NextRequest("https://plunode.net" + path, { headers: { host: "plunode.net", "x-plunode-locale":"evil", "x-plunode-public-locale":"evil" } }));
+      const response = await proxy(new NextRequest("https://plunode.net" + path, { headers: { host: "plunode.net", "x-plunode-locale":"evil", "x-plunode-public-locale":"evil" } }));
       expect(response.headers.get("x-middleware-request-x-plunode-locale")).toBe(path.startsWith("/en") ? "en" : "ja");
       expect(response.headers.get("x-middleware-request-x-plunode-public-locale")).toBe(path.startsWith("/en") ? "en" : "ja");
     }
-    expect(proxy(new NextRequest("https://ads.plunode.net/en", { headers: {host:"ads.plunode.net"} })).status).toBe(404);
+    expect((await proxy(new NextRequest("https://ads.plunode.net/en", { headers: {host:"ads.plunode.net"} }))).status).toBe(404);
   });
   it("GAの英語ページ位置にもquery・認証・限定共有を含めない", () => {
     expect(publicPagePath(`/en/explore/${id}`)).toBe(`/en/explore/${id}`); expect(publicPagePath("/en")).toBe("/en");

@@ -1,0 +1,40 @@
+# Additive candidate; apply only after operator approval. No new DB or migration.
+# Use with the existing production compose and root-owned app.env on the VPS.
+services:
+  kg-admin:
+    image: "graph-knowledge-web:${KG_ADMIN_IMAGE_TAG:?Set a tested immutable tag}"
+    profiles: [kg-admin]
+    init: true
+    restart: unless-stopped
+    environment:
+      GRAPH_DEPLOYMENT: production
+      GRAPH_DATASET: public-kg
+      KG_ADMIN_ENABLED: "1"
+      KG_ADMIN_ACCESS_TEAM: "${KG_ADMIN_ACCESS_TEAM:?Set the Access team slug}"
+      KG_ADMIN_ACCESS_AUD: "${KG_ADMIN_ACCESS_AUD:?Set the management application AUD}"
+      NEO4J_URI: bolt://graph-neo4j:7687
+      NEO4J_DATABASE: neo4j
+      NEO4J_USER: neo4j
+      NEO4J_PASSWORD: "${NEO4J_PASSWORD:?Use the existing VPS secret}"
+      NEO4J_READ_TIMEOUT_MS: "10000"
+      MEMBER_STORAGE_ENABLED: "0"
+      NODE_OPTIONS: --max-old-space-size=256
+    ports: ["127.0.0.1:3210:3000"]
+    networks:
+      default: { gw_priority: 0 }
+      web-egress: { gw_priority: 1 }
+    mem_limit: 384m
+    cpus: 0.5
+    read_only: true
+    tmpfs: ["/tmp:size=16m,mode=1777"]
+    security_opt: ["no-new-privileges:true"]
+    cap_drop: [ALL]
+    healthcheck:
+      # Liveness only; authenticated API readiness must be checked separately.
+      test: [CMD, node, -e, "fetch('http://127.0.0.1:3000/kg-admin').then(r=>process.exit(r.status===404?0:1)).catch(()=>process.exit(1))"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    logging:
+      driver: json-file
+      options: { max-size: "5m", max-file: "2" }

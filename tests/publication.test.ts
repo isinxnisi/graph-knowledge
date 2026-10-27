@@ -48,8 +48,8 @@ describe("公開・計測・広告の境界", () => {
     expect(response.headers.get("Referrer-Policy")).toBe("no-referrer");
     expect(response.headers.get("X-Robots-Tag")).toContain("noindex");
   });
-  it("広告originでは会員・認証・KG・アプリ画面を提供しない", () => {
-    for (const host of ["ads.plunode.net", "ads.localhost:3200"]) for (const path of ["/", "/member", "/shared", "/privacy", "/api/member/profile", "/api/auth/sign-out", "/api/entities", "/_next/static/private.js"]) expect(proxy(new NextRequest(`https://${host}${path}`, { headers: { host } })).status).toBe(404);
-    expect(proxy(new NextRequest("https://plunode.net/member", { headers: { host: "plunode.net" } })).headers.get("x-middleware-next")).toBe("1");
+  it("広告originでは会員・認証・KG・アプリ画面を提供しない", async () => {
+    for (const host of ["ads.plunode.net", "ads.localhost:3200"]) for (const path of ["/", "/member", "/shared", "/privacy", "/api/member/profile", "/api/auth/sign-out", "/api/entities", "/_next/static/private.js"]) expect((await proxy(new NextRequest(`https://${host}${path}`, { headers: { host } }))).status).toBe(404);
+    expect((await proxy(new NextRequest("https://plunode.net/member", { headers: { host: "plunode.net" } }))).headers.get("x-middleware-next")).toBe("1");
   });
 });

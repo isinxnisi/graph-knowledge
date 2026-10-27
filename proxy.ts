@@ -1,7 +1,20 @@
 import { publicLocalePath } from "./lib/domain/public-routes";
 import { NextResponse, type NextRequest } from "next/server";
+import { adminAuthorized, ADMIN_HEADERS, ADMIN_HOST } from "./lib/server/kg-admin-access";
 // The advertisement origin never serves account, KG APIs, application pages or local saves.
-export function proxy(request: NextRequest) {
+export async function proxy(request: NextRequest) {
+  const adminPath = /^\/(?:en\/)?kg-admin(?:\/|$)/.test(request.nextUrl.pathname) || /^\/api\/kg-admin(?:\/|$)/.test(request.nextUrl.pathname);
+  if (process.env.KG_ADMIN_ENABLED === "1" || adminPath) {
+    if (!await adminAuthorized(request.headers)) return new NextResponse(null, { status: 404, headers: ADMIN_HEADERS });
+    // A dedicated runtime has no account/write/public API routes. Static assets
+    // also require Access; no unauthenticated path exceptions.
+    if (!adminPath && !request.nextUrl.pathname.startsWith("/_next/static/") && request.nextUrl.pathname !== "/") return new NextResponse(null, { status: 404, headers: ADMIN_HEADERS });
+    if (request.nextUrl.pathname === "/") return NextResponse.redirect(`https://${ADMIN_HOST}/kg-admin`, { headers: ADMIN_HEADERS });
+    const requestHeaders = new Headers(request.headers);
+    requestHeaders.set("x-plunode-locale", request.nextUrl.pathname.startsWith("/en/") ? "en" : "ja");
+    requestHeaders.delete("x-plunode-public-locale");
+    return NextResponse.next({ request: { headers: requestHeaders }, headers: ADMIN_HEADERS });
+  }
   const host = request.headers.get("host") ?? "";
   const lab = /^\/(?:en\/)?ai-lab(?:\/|$)/.test(request.nextUrl.pathname) || /^\/api\/ai-lab(?:\/|$)/.test(request.nextUrl.pathname);
   if (lab && !/^(?:(?:plunode\.net|graph\.isinxnisi\.net|graph-beta\.isinxnisi\.com|graph-ailab\.isinxnisi\.com)(?::443)?|(?:localhost|127\.0\.0\.1)(?::\d{1,5})?)$/.test(host.toLowerCase())) return new NextResponse(null,{status:404});

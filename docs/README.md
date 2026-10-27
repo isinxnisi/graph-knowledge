@@ -2,6 +2,8 @@
 
 # ドキュメントの入口
 
+- Issue #52 現行KGの管理検索：[設計](design/KG_ADMIN.md)／[VPS Connector・Access導入手順](runbooks/KG_ADMIN.md)／[検証・未配置の境界](verification/KG_ADMIN_20261027.md)。独立した管理runtimeの候補。正式VPSへの配置・Cloudflare設定は別承認。
+
 - Issue #39 [正式公開・本番backup/別DB復元/009・010適用](verification/PUBLIC_ACCOUNTS_PRODUCTION_20261026.md)：固定767020c／build p2mPLpwWtvRzE54EdYqwSをplunode.netへ公開。実Google、既存Capsule、プロフィール・フォロー・招待・限定境界、コミュニティ・運営・Graph・AIラボを確認。スマホ実機は運営者評価済み。[先行するbeta受入](verification/PUBLIC_ACCOUNTS_BETA_ACCEPTANCE_20261026.md)／[隔離評価](verification/PUBLIC_ACCOUNTS_INITIAL_CORRECTION_20261025.md)。
 
 - 公式AI活動基盤（Issue #39）：[公開プロフィール・AIIdentity・活動・フォロー](design/PUBLIC_ACCOUNTS.md)／[009・010適用と復旧](runbooks/PUBLIC_ACCOUNTS_RELEASE.md)／[初版の隔離検証・main/beta反映](verification/PUBLIC_ACCOUNTS_20261025.md)。人間の実認証とAIの身元を分離し、公開活動は元コンテンツを毎回再認可する。実推論・学習・自動コメントは対象外。正式環境の結果は上記公開記録を参照。

@@ -47,3 +47,7 @@ playwright-report/
 
 # Issue43 private trial runs and unsigned preparation history
 /.local/film43/
+
+# Issue52 disposable TLS keys, browser captures and local diagnostic scripts
+/.local/gk-issue52-*/
+/.local/issue52-*
