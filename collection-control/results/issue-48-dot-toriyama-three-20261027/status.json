@@ -70,11 +70,59 @@
   },
   "requestSha256": "5b9b942bc0bce702658f19be34503c58facd1a72f12bb45e79f6ca63d9491c62",
   "kind": "issue-prepare",
-  "phase": "running",
+  "phase": "retry-transport",
   "generation": 26,
   "attempts": 1,
   "workerId": "plunode-wsl",
   "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
   "updatedAt": "2026-10-27T07:17:03+00:00",
-  "message": "Execution gate: interval"
+  "message": "Technical acquisition incomplete; no semantic hold or acceptance",
+  "result": {
+    "schemaVersion": 1,
+    "status": "technical-incomplete",
+    "preparationComplete": false,
+    "issueOrigin": {
+      "repository": "isinxnisi/graph-knowledge",
+      "issueNumber": 48,
+      "approvalId": "dot-toriyama-three-20261027",
+      "permissionSha256": "eb06d8868ee91ec918d9e98d4986c637df8c8706a7db401ca508eb32bcd05056",
+      "issueBodySha256": "edeed9c68cb2cde13e875c8875fbaa6f08845cc7c455e97822761e3642687144"
+    },
+    "preparationDirectory": "/home/isinxnisi/.local/share/plunode-collection-worker-phase-b-20261020/runtime/.local/collection-issues/issue-48-dot-toriyama-three-20261027",
+    "batchRequests": [],
+    "generatedArtifacts": {},
+    "technicalWaits": [
+      {
+        "category": "provider-backoff",
+        "key": "publication-ce8a353d29c11a47aaeada3c",
+        "provider": "ndlsearch.ndl.go.jp",
+        "retryAt": 1793085615.9802632,
+        "recoveryRequired": false,
+        "target": "SAND LAND",
+        "lastDiagnostic": {
+          "category": "transport",
+          "phase": "open-through-response-headers",
+          "phaseBoundary": "open-through-response-headers",
+          "elapsedSeconds": 20.125212,
+          "finishedAt": "2026-10-27T07:19:15.980232+00:00",
+          "httpStatus": null,
+          "causes": [
+            {
+              "type": "TimeoutError"
+            }
+          ]
+        }
+      }
+    ],
+    "retryAt": 1793085615.9802632,
+    "publicApply": false,
+    "counts": {
+      "networkAttempts": 13,
+      "holds": 1,
+      "identifiedWorks": 1,
+      "technicalWaits": 1
+    }
+  },
+  "executionComplete": false,
+  "retryAt": 1793085615.9802632
 }
