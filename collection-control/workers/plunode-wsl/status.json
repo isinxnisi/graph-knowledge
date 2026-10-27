@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "workerId": "plunode-wsl",
   "codeCommit": "973c7b0c599f79905a029b28b524f4924e169376",
-  "controlRevision": 4,
-  "lastControlSha256": "58c6e70ebf2ccd9b4d23bb15fc60e419f08d3df5df107ad26f6ff533e47681f6",
-  "lastControlId": "pub-b36af1ba-d283-412e-aa29-465d360928b7-resume",
+  "controlRevision": 5,
+  "lastControlSha256": "5c4609166c0ff47d6189f0cd4df7e6482c7cafd22c779dd1bc1f5ac80f9ade1b",
+  "lastControlId": "pub-6b240b18-56e4-4ea4-995f-7be7424c3fb2-pause",
   "timezone": "Asia/Tokyo",
   "windows": [
     {
@@ -20,20 +20,19 @@
       "end": "18:00"
     }
   ],
-  "pauseMode": null,
+  "pauseMode": "pause-new",
   "intervalMinutes": 10,
   "newStartMarginMinutes": 15,
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
   "nextStartAt": "2026-10-27T08:49:14.131286+00:00",
-  "phase": "outside-window",
+  "phase": "pause-new",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
-    "reason": "outside-window",
-    "eligibleAt": "2026-10-27T18:00:00+00:00",
-    "windowEndAt": "2026-10-27T22:00:00+00:00"
+    "reason": "pause-new",
+    "eligibleAt": null
   },
   "activeAttempt": null,
   "lastAttempt": {
@@ -128,5 +127,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-10-27T14:46:38.705404+00:00"
+  "checkedAt": "2026-10-27T14:54:31.422144+00:00"
 }
