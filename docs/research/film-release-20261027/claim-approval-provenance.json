@@ -1,0 +1,12 @@
+{
+  "threadId": "01a17453-6c87-7961-9773-7ad78e90dbd7",
+  "turnId": "01a17d82-4668-79f2-a523-37d5148332e6",
+  "startedAt": 1793107052,
+  "humanText": "固定受入票SHA-256 `6bdc6af8165719975b57bb132c0188a18f18712fecf0cf1a93945b794a3747b6` の映画2 Claim、依存3 Entityの正式UUID確定、2 Source・2 Citation、null scope／periodの扱いを正式受入として承認します。\n既存の検証・承認契約に従って正式受入を実施し、release準備、公開operator・gate更新、公開候補の確定まで、次の人間判断が必要になる地点までまとめて進めてください。\n今回の承認は個別の本番公開署名を含みません。\nまた、今回の2 Claimの受入完了を、Astraが研究した81記録・97 Entity候補全体の収録完了とは扱わないでください。未収録の研究成果は、後続のデータ拡充対象として明確に引き継いでください。",
+  "source": "trusted-human-message-in-current-Codex-chat",
+  "approvedDraftSha256": "6bdc6af8165719975b57bb132c0188a18f18712fecf0cf1a93945b794a3747b6",
+  "approvedDecisionSha256": "edd3552a7c2b87d391c68a0f0cf9b46bc7a9f9bd409ec9aaf270d959c10b2df3",
+  "approvalTimestamp": "2026-10-27T13:17:32+00:00",
+  "productionPublicationSignatureIncluded": false,
+  "astraEntireResearchAccepted": false
+}

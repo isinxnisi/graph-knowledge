@@ -1,6 +1,12 @@
 # 映画初期実装の正式公開手順
 
-2026-10-27。#40/#41/#43の保存資料を再利用。**Role 2件は2026-10-27の人間承認により正式登録。Claim受入・本番公開は未実施**。[検証記録](../verification/FILM_RELEASE_20261027.md)。
+2026-10-27。#40/#41/#43の保存資料を再利用。**Role 2件は正式登録、映画2 Claim＋依存3/2/2は正式受入済み。本番公開署名・applyは未実施**。[検証記録](../verification/FILM_RELEASE_20261027.md)。
+
+## 現在の進行管理（2026-10-27更新）
+
+[正式受入完了・固定公開候補・次の運営者操作](../research/film-release-20261027/FORMAL_ACCEPTANCE_STATUS.md)を現在地とする。以下の11工程は契約全体であり、運営者への一括実行依頼ではない。backup取得・Role登録・固定Claim判断・正式受入・release準備・offline候補固定は完了。次は準備済みWSL／VPS operator image pin更新（sudo）だけを依頼する。root live plan登録後の個別本番公開署名は別の未完了境界。
+
+受入範囲は2 Claimと依存3 Entity／2 Source／2 Citation。Astraの81記録・97 Entity候補全体の収録ではなく、未受入79記録・94 Entity候補を[後続拡充へ引継ぎ](../research/film-release-20261027/ASTRA_RESEARCH_BACKLOG.md)。
 
 ## 固定された判断対象
 
@@ -58,7 +64,9 @@ Role判断／Claim判断／個別公開署名が未完了なら、その境界�
 公開後の実ブラウザ検証は同じPC／スマホspecを再利用できる。FILM43_BASE_URL=https://plunode.net と FILM_FORMAL_REVISION=<公開後の実revision> を明示して npm run film:e2e を実行する。本番ではtrial metadata／Claim試験表示がないことも要求する。未公開のrevisionを推測して成功扱いしない。
 
 
-## 現在の引継ぎ
+## 初回準備からRole承認までの引継ぎ履歴
 
 main統合済み実装はd6a21acd、初回検証記録はa0dd6c21。3200／betaはbuild jCKofzeGk3iNCU32pxk0T、実ブラウザ6件成功。本番は未変更。運営者が上記2の完全backup exportを実行し、Codexが実ファイルを検証済み。backup SHAは f6a716d7264ce1023d3f9100cbd7fa6bd628cd174d2d2412546a0e4e3938b2d3。[本番backup・全receipt・重複照合結果](../research/film-release-20261027/production-backup-verification.json)を参照。上記3の固定Role判断・登録は完了。実際の審査コードhashで2 Claimの正式受入票を固定し、次はそのClaim・依存Entityの人間判断へ進む。Role／Claim判断・実image固定・個別公開署名を順に進め、まだ存在しないrequest hashへの承認を先取りしない。
-\n\n2026-10-27 Role承認後の現在地：Role登録e7e1a8d5をmain／専用branchへpush、3200／beta build vBqJY67wdqijTKKY-EMJL、実ブラウザ6件成功。実Role catalog入りoperator image sha256:2bf646a22e867e5aa5fce5a155db45c337c4134ad6c0f337b65617c5799912e9は隔離検証成功、Web image sha256:de7b21f30277226965de2fdc7200ba0088fd00f8c9d731958eb52355c92f72abもbuild済み。いずれもVPS/root trustへ未配置。次の人間操作は[固定Claim受入票](../research/film-release-20261027/CLAIM_ACCEPTANCE_REVIEW.md)への意味・同一性判断だけで、SSH/sudoはまだ不要。承認待ちではholdを解放し、再開時に実環境・全receiptとbindingを再検証する。\n
+
+
+以下はRole承認直後の履歴（Claim判断前）：Role登録e7e1a8d5をmain／専用branchへpush、3200／beta build vBqJY67wdqijTKKY-EMJL、実ブラウザ6件成功。実Role catalog入りoperator image sha256:2bf646a22e867e5aa5fce5a155db45c337c4134ad6c0f337b65617c5799912e9は隔離検証成功、Web image sha256:de7b21f30277226965de2fdc7200ba0088fd00f8c9d731958eb52355c92f72abもbuild済み。いずれもVPS/root trustへ未配置。次の人間操作は[固定Claim受入票](../research/film-release-20261027/CLAIM_ACCEPTANCE_REVIEW.md)への意味・同一性判断だけで、SSH/sudoはまだ不要。承認待ちではholdを解放し、再開時に実環境・全receiptとbindingを再検証する。

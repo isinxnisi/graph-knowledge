@@ -1,0 +1,2089 @@
+{
+  "authority": "receipt-backed-initial-slice-coverage-not-a-new-acceptance",
+  "sourceResearchCommit": "461cd1c",
+  "sourceFile": "docs/research/film-discovery-pilot-20261026/CANDIDATES.json",
+  "sourceFileSha256": "06690102bb27b9ed9ab06d57f717ab4dce1e962bd1d409609b8c2e76dfccd470",
+  "sourceBytesMatchAstraCommit": true,
+  "formalReceipt": "datasets/manga-collection/accepted-film-initial-20261027/acceptance.json",
+  "formalReceiptSha256": "3ac7b6be38e24aa9dfd7bf67233b7c5e80822c4313ca9b58d34408611cdc83c3",
+  "researchTotals": {
+    "films": 10,
+    "candidates": 124,
+    "sourceCheckedRecords": 81,
+    "entityCandidates": 97
+  },
+  "thisAcceptance": {
+    "claims": 2,
+    "entities": 3,
+    "sources": 2,
+    "citations": 2
+  },
+  "remainingOutsideThisAcceptance": {
+    "sourceCheckedRecords": 79,
+    "entityCandidates": 94,
+    "allCandidateRecords": 122,
+    "structuredOnly": 37,
+    "held": 6
+  },
+  "remainingCheckedRoleCounts": {
+    "DIRECTING": 10,
+    "SCREENWRITING": 15,
+    "MUSIC": 9,
+    "CINEMATOGRAPHY": 3,
+    "PRODUCING": 11,
+    "CAST": 27,
+    "SEQUEL_OF": 1,
+    "BASED_ON": 2,
+    "SERIES_MEMBERSHIP": 1
+  },
+  "fullResearchIngested": false,
+  "productionPublished": false,
+  "automaticRoleMappingPerformed": false,
+  "records": [
+    {
+      "researchCandidateId": "candidate:q184843$6B465DFF-8D56-4B69-8C76-8713705A64A3",
+      "subjectQid": "Q56005",
+      "objectQid": "Q184843",
+      "relation": "CREDIT",
+      "researchRole": "DIRECTING",
+      "researchState": "checked-source-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:q184843$7BFE807E-21C2-4F1A-8EB9-16DF92DCAD9E",
+      "subjectQid": "Q1372703",
+      "objectQid": "Q184843",
+      "relation": "CREDIT",
+      "researchRole": "SCREENWRITING",
+      "researchState": "checked-source-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:q184843$284E2874-A3FC-4CCB-B36F-9D4334F2BB83",
+      "subjectQid": "Q1177114",
+      "objectQid": "Q184843",
+      "relation": "CREDIT",
+      "researchRole": "SCREENWRITING",
+      "researchState": "checked-source-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:Q184843$427D5372-BD68-43CB-A918-3F328927EA21",
+      "subjectQid": "Q153172",
+      "objectQid": "Q184843",
+      "relation": "CREDIT",
+      "researchRole": "MUSIC",
+      "researchState": "checked-source-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:q184843$150599BE-9B8C-498F-9435-C518FB09497A",
+      "subjectQid": "Q715198",
+      "objectQid": "Q184843",
+      "relation": "CREDIT",
+      "researchRole": "CINEMATOGRAPHY",
+      "researchState": "checked-source-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:q184843$63D3168A-DCFC-4CE5-A958-5353CF3765D5",
+      "subjectQid": "Q656655",
+      "objectQid": "Q184843",
+      "relation": "CREDIT",
+      "researchRole": "PRODUCING",
+      "researchState": "checked-source-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:Q184843$2e14142c-4ed5-4082-cb71-cfea34a86da3",
+      "subjectQid": "Q361443",
+      "objectQid": "Q184843",
+      "relation": "CREDIT",
+      "researchRole": "PRODUCING",
+      "researchState": "structured-only-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:Q184843$e49b57a3-4aee-92b3-fa45-b504d7260507",
+      "subjectQid": "Q3808035",
+      "objectQid": "Q184843",
+      "relation": "CREDIT",
+      "researchRole": "PRODUCING",
+      "researchState": "structured-only-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:q184843$C9B16D9C-B7F1-42A9-9200-FBD2CF7312B3",
+      "subjectQid": "Q81328",
+      "objectQid": "Q184843",
+      "relation": "CREDIT",
+      "researchRole": "CAST",
+      "researchState": "checked-source-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:q184843$9D2ED00E-F7DA-4ECC-9882-4B3317D4641E",
+      "subjectQid": "Q213574",
+      "objectQid": "Q184843",
+      "relation": "CREDIT",
+      "researchRole": "CAST",
+      "researchState": "checked-source-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:q184843$DDC64615-F83C-4B82-B2B6-91C37F701010",
+      "subjectQid": "Q230736",
+      "objectQid": "Q184843",
+      "relation": "CREDIT",
+      "researchRole": "CAST",
+      "researchState": "checked-source-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:Q184843$5f191e73-4c09-4acb-4d84-98b0eeb0107b",
+      "subjectQid": "Q184843",
+      "objectQid": "Q605249",
+      "relation": "BASED_ON",
+      "researchRole": null,
+      "researchState": "structured-only-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:Q184843$63a74c87-4f30-1ea1-21bb-955571e0f2ff",
+      "subjectQid": "Q184843",
+      "objectQid": "Q21500755",
+      "relation": "PRECEDES",
+      "researchRole": null,
+      "researchState": "structured-only-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:Q21500755$3b2b8856-4ac9-a659-fe86-9a94d3ec6f33",
+      "subjectQid": "Q548823",
+      "objectQid": "Q21500755",
+      "relation": "CREDIT",
+      "researchRole": "DIRECTING",
+      "researchState": "checked-source-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:Q21500755$d67b18c8-46b4-2882-88d9-6de6930f17c6",
+      "subjectQid": "Q1372703",
+      "objectQid": "Q21500755",
+      "relation": "CREDIT",
+      "researchRole": "SCREENWRITING",
+      "researchState": "checked-source-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:Q21500755$28f45ed9-4138-5ce8-15f7-af2e58d04bbc",
+      "subjectQid": "Q6830765",
+      "objectQid": "Q21500755",
+      "relation": "CREDIT",
+      "researchRole": "SCREENWRITING",
+      "researchState": "checked-source-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:Q21500755$6925bf24-4769-6c57-1559-3f160d471644",
+      "subjectQid": "Q76364",
+      "objectQid": "Q21500755",
+      "relation": "CREDIT",
+      "researchRole": "MUSIC",
+      "researchState": "checked-source-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:Q21500755$aaed40e2-464d-32b6-a3fc-1b1a87b75af3",
+      "subjectQid": "Q6056440",
+      "objectQid": "Q21500755",
+      "relation": "CREDIT",
+      "researchRole": "MUSIC",
+      "researchState": "checked-source-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:Q21500755$d6894ac6-412c-1cfb-2ce9-e90cdfe8b8f1",
+      "subjectQid": "Q460277",
+      "objectQid": "Q21500755",
+      "relation": "CREDIT",
+      "researchRole": "CINEMATOGRAPHY",
+      "researchState": "checked-source-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:Q21500755$062cc06b-4aec-64e3-862b-e81e5e2fb0a6",
+      "subjectQid": "Q4972958",
+      "objectQid": "Q21500755",
+      "relation": "CREDIT",
+      "researchRole": "PRODUCING",
+      "researchState": "structured-only-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:Q21500755$e4aa1901-4f60-f014-0f04-bd7e9abeb05e",
+      "subjectQid": "Q4757652",
+      "objectQid": "Q21500755",
+      "relation": "CREDIT",
+      "researchRole": "PRODUCING",
+      "researchState": "checked-source-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:Q21500755$53eb4ef6-4f67-a251-b3da-79dc1894f394",
+      "subjectQid": "Q361443",
+      "objectQid": "Q21500755",
+      "relation": "CREDIT",
+      "researchRole": "PRODUCING",
+      "researchState": "structured-only-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:Q21500755$4bb06065-4713-7094-55dc-b27a564adbb5",
+      "subjectQid": "Q5200155",
+      "objectQid": "Q21500755",
+      "relation": "CREDIT",
+      "researchRole": "PRODUCING",
+      "researchState": "structured-only-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:Q21500755$0b844a43-4e1d-5c02-c6ca-7ba24d9f4e4d",
+      "subjectQid": "Q193815",
+      "objectQid": "Q21500755",
+      "relation": "CREDIT",
+      "researchRole": "CAST",
+      "researchState": "checked-source-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:Q21500755$06462c6d-4916-0ce3-c60f-e9e6cc86d80a",
+      "subjectQid": "Q81328",
+      "objectQid": "Q21500755",
+      "relation": "CREDIT",
+      "researchRole": "CAST",
+      "researchState": "checked-source-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:Q21500755$35dfb20f-4e8a-13ff-e72c-eda27ec75fc0",
+      "subjectQid": "Q272972",
+      "objectQid": "Q21500755",
+      "relation": "CREDIT",
+      "researchRole": "CAST",
+      "researchState": "checked-source-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:Q21500755$d188a830-4fd2-17fe-c2ce-7434a1e82f61",
+      "subjectQid": "Q44158",
+      "objectQid": "Q21500755",
+      "relation": "CREDIT",
+      "researchRole": "CAST",
+      "researchState": "checked-source-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:Q21500755$908d11f0-406e-8cdb-7073-f258d8b56170",
+      "subjectQid": "Q21500755",
+      "objectQid": "Q184843",
+      "relation": "SEQUEL_OF",
+      "researchRole": null,
+      "researchState": "checked-source-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:q114819$0E42EC3B-0FFA-4BAE-B381-60A174B944A0",
+      "subjectQid": "Q2071",
+      "objectQid": "Q114819",
+      "relation": "CREDIT",
+      "researchRole": "DIRECTING",
+      "researchState": "checked-source-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:q114819$91428178-F9E5-4067-A017-F6DDC566E496",
+      "subjectQid": "Q2071",
+      "objectQid": "Q114819",
+      "relation": "CREDIT",
+      "researchRole": "SCREENWRITING",
+      "researchState": "structured-only-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:Q114819$597B5074-63AB-4910-A326-FF60AB1DB747",
+      "subjectQid": "Q207472",
+      "objectQid": "Q114819",
+      "relation": "CREDIT",
+      "researchRole": "MUSIC",
+      "researchState": "structured-only-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:q114819$496C5DF8-8234-41A3-ABE4-D4D4F9464C83",
+      "subjectQid": "Q1337082",
+      "objectQid": "Q114819",
+      "relation": "CREDIT",
+      "researchRole": "CINEMATOGRAPHY",
+      "researchState": "structured-only-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:q114819$75238C3F-A721-4983-B25E-A042EDEF24FD",
+      "subjectQid": "Q512184",
+      "objectQid": "Q114819",
+      "relation": "CREDIT",
+      "researchRole": "PRODUCING",
+      "researchState": "checked-source-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:Q114819$91044fcf-46b6-e89a-ff7f-31774ed10518",
+      "subjectQid": "Q52158949",
+      "objectQid": "Q114819",
+      "relation": "CREDIT",
+      "researchRole": "PRODUCING",
+      "researchState": "structured-only-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:q114819$7CEE9BF8-76F2-43C4-8760-A9C3E873965A",
+      "subjectQid": "Q207506",
+      "objectQid": "Q114819",
+      "relation": "CREDIT",
+      "researchRole": "CAST",
+      "researchState": "checked-source-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:q114819$2EEAC07C-F2EF-492E-BD1C-D7B9CF066F55",
+      "subjectQid": "Q483203",
+      "objectQid": "Q114819",
+      "relation": "CREDIT",
+      "researchRole": "CAST",
+      "researchState": "checked-source-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:Q114819$5BB30439-7121-4AC7-8AC1-A3CBF5BD8C16",
+      "subjectQid": "Q230736",
+      "objectQid": "Q114819",
+      "relation": "CREDIT",
+      "researchRole": "CAST",
+      "researchState": "structured-only-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:q114819$101EFA3E-5EA8-4FBB-BA1D-7B441F72B971",
+      "subjectQid": "Q114819",
+      "objectQid": "Q190192",
+      "relation": "BASED_ON",
+      "researchRole": null,
+      "researchState": "checked-source-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:Q60834962$27E7FD47-4BE4-4B52-817C-A65C5E7F3CA4",
+      "subjectQid": "Q548823",
+      "objectQid": "Q60834962",
+      "relation": "CREDIT",
+      "researchRole": "DIRECTING",
+      "researchState": "checked-source-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:Q60834962$D0BEA4F6-A9DB-4307-AA8D-162B800A28EB",
+      "subjectQid": "Q942932",
+      "objectQid": "Q60834962",
+      "relation": "CREDIT",
+      "researchRole": "SCREENWRITING",
+      "researchState": "checked-source-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:Q60834962$3BB01902-E1C1-4B94-B039-64BECEA0B835",
+      "subjectQid": "Q6271612",
+      "objectQid": "Q60834962",
+      "relation": "CREDIT",
+      "researchRole": "SCREENWRITING",
+      "researchState": "checked-source-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:Q60834962$7228C7FD-E8FA-458C-BB20-5C9B10084214",
+      "subjectQid": "Q548823",
+      "objectQid": "Q60834962",
+      "relation": "CREDIT",
+      "researchRole": "SCREENWRITING",
+      "researchState": "checked-source-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:Q60834962$d7d9969e-4d43-3f14-4c10-d5b24b7ff449",
+      "subjectQid": "Q76364",
+      "objectQid": "Q60834962",
+      "relation": "CREDIT",
+      "researchRole": "MUSIC",
+      "researchState": "checked-source-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:Q60834962$74472A61-BCF7-4804-987F-B95CC5879852",
+      "subjectQid": "Q17715100",
+      "objectQid": "Q60834962",
+      "relation": "CREDIT",
+      "researchRole": "CINEMATOGRAPHY",
+      "researchState": "structured-only-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:Q60834962$e0109c13-406f-8f4e-d452-a4ca188f60ef",
+      "subjectQid": "Q16213294",
+      "objectQid": "Q60834962",
+      "relation": "CREDIT",
+      "researchRole": "PRODUCING",
+      "researchState": "structured-only-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:Q60834962$06d1bf84-42e1-7d85-9594-000d546a8399",
+      "subjectQid": "Q734155",
+      "objectQid": "Q60834962",
+      "relation": "CREDIT",
+      "researchRole": "PRODUCING",
+      "researchState": "structured-only-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:Q60834962$3ea00f03-49eb-ccee-0a8c-3f6691c75a60",
+      "subjectQid": "Q6780480",
+      "objectQid": "Q60834962",
+      "relation": "CREDIT",
+      "researchRole": "PRODUCING",
+      "researchState": "structured-only-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:Q60834962$d4086d57-4df3-fad8-92cd-c9e1a6cbf91b",
+      "subjectQid": "Q548823",
+      "objectQid": "Q60834962",
+      "relation": "CREDIT",
+      "researchRole": "PRODUCING",
+      "researchState": "structured-only-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:Q60834962$3D5F5CF8-E25C-4F47-8AF3-E328D22B58E1",
+      "subjectQid": "Q19877770",
+      "objectQid": "Q60834962",
+      "relation": "CREDIT",
+      "researchRole": "CAST",
+      "researchState": "checked-source-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:Q60834962$D7294273-7319-4F53-A49E-3582D9C97CAC",
+      "subjectQid": "Q4947838",
+      "objectQid": "Q60834962",
+      "relation": "CREDIT",
+      "researchRole": "CAST",
+      "researchState": "checked-source-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:Q60834962$11D8E923-7A64-4201-9C04-A17EDD7F0877",
+      "subjectQid": "Q44158",
+      "objectQid": "Q60834962",
+      "relation": "CREDIT",
+      "researchRole": "CAST",
+      "researchState": "structured-only-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:Q60834962$A13C8BF4-4667-4E47-A85E-03D6C4F77220",
+      "subjectQid": "Q60834962",
+      "objectQid": "Q190192",
+      "relation": "BASED_ON",
+      "researchRole": null,
+      "researchState": "checked-source-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:Q60834962$4c0c83a3-48f0-23ea-88a4-06c850d2c7dc",
+      "subjectQid": "Q60834962",
+      "objectQid": "Q109300883",
+      "relation": "SERIES_MEMBERSHIP",
+      "researchRole": null,
+      "researchState": "structured-only-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:Q60834962$2ba2a25a-49b6-4e8f-fb77-daf4994272f7",
+      "subjectQid": "Q60834962",
+      "objectQid": null,
+      "relation": "FOLLOWS",
+      "researchRole": null,
+      "researchState": "held",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:Q60834962$c19aa6de-4adf-12a2-ba48-b44a65c81097",
+      "subjectQid": "Q60834962",
+      "objectQid": "Q109228991",
+      "relation": "PRECEDES",
+      "researchRole": null,
+      "researchState": "structured-only-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:Q20382729$93FD369A-82DC-4CCF-8DBC-63BF52640C59",
+      "subjectQid": "Q548823",
+      "objectQid": "Q20382729",
+      "relation": "CREDIT",
+      "researchRole": "DIRECTING",
+      "researchState": "checked-source-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:Q20382729$2b274e33-442a-e21b-66e5-d97ed8896633",
+      "subjectQid": "Q5386707",
+      "objectQid": "Q20382729",
+      "relation": "CREDIT",
+      "researchRole": "SCREENWRITING",
+      "researchState": "checked-source-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:Q20382729$c3b9894e-4851-474e-3bd3-af703f4a16d9",
+      "subjectQid": "Q503095",
+      "objectQid": "Q20382729",
+      "relation": "CREDIT",
+      "researchRole": "SCREENWRITING",
+      "researchState": "held",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:Q20382729$695A3058-E77E-40E5-B0D4-B46FCB495C49",
+      "subjectQid": "Q428347",
+      "objectQid": "Q20382729",
+      "relation": "CREDIT",
+      "researchRole": "MUSIC",
+      "researchState": "checked-source-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:Q20382729$BCCE36D5-AE90-4A74-9BCD-2629799591A1",
+      "subjectQid": "Q16216857",
+      "objectQid": "Q20382729",
+      "relation": "CREDIT",
+      "researchRole": "CINEMATOGRAPHY",
+      "researchState": "structured-only-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:Q20382729$F052360C-494F-452A-BD1C-D2CC5DB95C5C",
+      "subjectQid": "Q323076",
+      "objectQid": "Q20382729",
+      "relation": "CREDIT",
+      "researchRole": "PRODUCING",
+      "researchState": "checked-source-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:Q20382729$E60AE03F-263A-48A9-9209-D760E6EFC86D",
+      "subjectQid": "Q481832",
+      "objectQid": "Q20382729",
+      "relation": "CREDIT",
+      "researchRole": "CAST",
+      "researchState": "checked-source-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:Q20382729$0a0095fe-4ba8-c4a2-afb3-0c794e8608bf",
+      "subjectQid": "Q23365",
+      "objectQid": "Q20382729",
+      "relation": "CREDIT",
+      "researchRole": "CAST",
+      "researchState": "checked-source-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:Q20382729$796c9587-4a71-b3d1-0da0-a18b3c7eca14",
+      "subjectQid": "Q182763",
+      "objectQid": "Q20382729",
+      "relation": "CREDIT",
+      "researchRole": "CAST",
+      "researchState": "checked-source-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:Q20382729$34a3efea-4c9a-d151-047b-c8332538d32d",
+      "subjectQid": "Q20382729",
+      "objectQid": "Q7620415",
+      "relation": "BASED_ON",
+      "researchRole": null,
+      "researchState": "structured-only-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:q25188$63A635C4-638B-4D44-AED4-8AB033C28731",
+      "subjectQid": "Q25191",
+      "objectQid": "Q25188",
+      "relation": "CREDIT",
+      "researchRole": "DIRECTING",
+      "researchState": "checked-source-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:q25188$37070ABE-3653-49B5-9128-E6474D8FFB14",
+      "subjectQid": "Q25191",
+      "objectQid": "Q25188",
+      "relation": "CREDIT",
+      "researchRole": "SCREENWRITING",
+      "researchState": "checked-source-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:Q25188$6C418E9D-0DF3-46F6-A492-EF9B81BF58AB",
+      "subjectQid": "Q76364",
+      "objectQid": "Q25188",
+      "relation": "CREDIT",
+      "researchRole": "MUSIC",
+      "researchState": "checked-source-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:q25188$3FDBD451-CEEA-4E08-BCE2-732157459EC5",
+      "subjectQid": "Q460144",
+      "objectQid": "Q25188",
+      "relation": "CREDIT",
+      "researchRole": "CINEMATOGRAPHY",
+      "researchState": "structured-only-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:q25188$982BD52A-FC20-416B-BE22-E5BB9807797D",
+      "subjectQid": "Q242951",
+      "objectQid": "Q25188",
+      "relation": "CREDIT",
+      "researchRole": "PRODUCING",
+      "researchState": "checked-source-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:q25188$94ED5AF7-36C4-45BA-981D-31CE74121664",
+      "subjectQid": "Q25191",
+      "objectQid": "Q25188",
+      "relation": "CREDIT",
+      "researchRole": "PRODUCING",
+      "researchState": "checked-source-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:q25188$16028A37-81AB-472B-BE4D-D0E7B2D9F6C9",
+      "subjectQid": "Q38111",
+      "objectQid": "Q25188",
+      "relation": "CREDIT",
+      "researchRole": "CAST",
+      "researchState": "checked-source-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:q25188$274B2201-308C-4D04-9878-711BA61918C5",
+      "subjectQid": "Q211553",
+      "objectQid": "Q25188",
+      "relation": "CREDIT",
+      "researchRole": "CAST",
+      "researchState": "checked-source-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:q25188$6C899C49-DC55-4319-B992-CE557D0637B5",
+      "subjectQid": "Q123351",
+      "objectQid": "Q25188",
+      "relation": "CREDIT",
+      "researchRole": "CAST",
+      "researchState": "checked-source-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:Q25188$51E45723-90B8-4958-9216-196B8E3914D3",
+      "subjectQid": "Q25188",
+      "objectQid": "Q26705935",
+      "relation": "SERIES_MEMBERSHIP",
+      "researchRole": null,
+      "researchState": "held",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:q13417189$213eb681-48af-a80e-fecd-a3ff61638f1d",
+      "subjectQid": "Q25191",
+      "objectQid": "Q13417189",
+      "relation": "CREDIT",
+      "researchRole": "DIRECTING",
+      "researchState": "checked-source-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:q13417189$20ff4a57-40a9-837e-dc80-882a46060bcb",
+      "subjectQid": "Q25191",
+      "objectQid": "Q13417189",
+      "relation": "CREDIT",
+      "researchRole": "SCREENWRITING",
+      "researchState": "checked-source-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:q13417189$507641b4-4bcb-d882-0ce7-5088ebad4e86",
+      "subjectQid": "Q372788",
+      "objectQid": "Q13417189",
+      "relation": "CREDIT",
+      "researchRole": "SCREENWRITING",
+      "researchState": "checked-source-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:Q13417189$fae030ae-4f52-9ab4-a0aa-430fdfeb917c",
+      "subjectQid": "Q76364",
+      "objectQid": "Q13417189",
+      "relation": "CREDIT",
+      "researchRole": "MUSIC",
+      "researchState": "checked-source-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:q13417189$bf53cd87-4594-6907-fe4d-937df9f06e2c",
+      "subjectQid": "Q514003",
+      "objectQid": "Q13417189",
+      "relation": "CREDIT",
+      "researchRole": "CINEMATOGRAPHY",
+      "researchState": "structured-only-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:q13417189$078d049f-4cd8-cfe9-7a30-4f961f35e43d",
+      "subjectQid": "Q25191",
+      "objectQid": "Q13417189",
+      "relation": "CREDIT",
+      "researchRole": "PRODUCING",
+      "researchState": "checked-source-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:q13417189$40c1239a-499b-cf15-77a9-498d20bb77c3",
+      "subjectQid": "Q242951",
+      "objectQid": "Q13417189",
+      "relation": "CREDIT",
+      "researchRole": "PRODUCING",
+      "researchState": "structured-only-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:q13417189$f0badc86-4efd-bdd4-fad3-2bd86845e7d8",
+      "subjectQid": "Q6708571",
+      "objectQid": "Q13417189",
+      "relation": "CREDIT",
+      "researchRole": "PRODUCING",
+      "researchState": "structured-only-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:q13417189$89b53edc-450f-a73f-52c3-0d801b92ce20",
+      "subjectQid": "Q188955",
+      "objectQid": "Q13417189",
+      "relation": "CREDIT",
+      "researchRole": "CAST",
+      "researchState": "checked-source-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:q13417189$896bd138-4649-ddf9-3f65-15e3e5cd6522",
+      "subjectQid": "Q123351",
+      "objectQid": "Q13417189",
+      "relation": "CREDIT",
+      "researchRole": "CAST",
+      "researchState": "checked-source-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:Q13417189$52DEF654-D3C2-454E-B303-51CE82A865DF",
+      "subjectQid": "Q19877770",
+      "objectQid": "Q13417189",
+      "relation": "CREDIT",
+      "researchRole": "CAST",
+      "researchState": "structured-only-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:q76479$A0CACE0B-C949-4AF0-B038-A585F46D0BB2",
+      "subjectQid": "Q164562",
+      "objectQid": "Q76479",
+      "relation": "CREDIT",
+      "researchRole": "DIRECTING",
+      "researchState": "checked-source-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:Q76479$51c0f18f-498f-7e63-3c5c-6cda5e26a118",
+      "subjectQid": "Q945188",
+      "objectQid": "Q76479",
+      "relation": "CREDIT",
+      "researchRole": "DIRECTING",
+      "researchState": "held",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:Q76479$31CFF1E6-A537-40F3-90DD-99C6FECC98C1",
+      "subjectQid": "Q164562",
+      "objectQid": "Q76479",
+      "relation": "CREDIT",
+      "researchRole": "DIRECTING",
+      "researchState": "checked-source-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:q76479$81A944FA-1D65-462F-A173-AF2D5D5E0367",
+      "subjectQid": "Q716460",
+      "objectQid": "Q76479",
+      "relation": "CREDIT",
+      "researchRole": "SCREENWRITING",
+      "researchState": "checked-source-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:q76479$BFBBCE13-B026-4763-B830-4B2B58D2B7DB",
+      "subjectQid": "Q920161",
+      "objectQid": "Q76479",
+      "relation": "CREDIT",
+      "researchRole": "SCREENWRITING",
+      "researchState": "structured-only-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:Q76479$186488b8-4fc9-91c6-7c67-1cd02e5f276e",
+      "subjectQid": "Q164562",
+      "objectQid": "Q76479",
+      "relation": "CREDIT",
+      "researchRole": "SCREENWRITING",
+      "researchState": "checked-source-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:Q76479$D1E2698A-055B-4019-817C-235AC430D94F",
+      "subjectQid": "Q23848",
+      "objectQid": "Q76479",
+      "relation": "CREDIT",
+      "researchRole": "MUSIC",
+      "researchState": "checked-source-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:q76479$695D1C4F-D37C-4C7C-A107-AA0E8119E49E",
+      "subjectQid": "Q441964",
+      "objectQid": "Q76479",
+      "relation": "CREDIT",
+      "researchRole": "CINEMATOGRAPHY",
+      "researchState": "structured-only-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:q76479$37165DA0-5D72-41A8-A4D1-4498F1FA3D10",
+      "subjectQid": "Q3623767",
+      "objectQid": "Q76479",
+      "relation": "CREDIT",
+      "researchRole": "PRODUCING",
+      "researchState": "structured-only-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:q76479$D4A07934-6391-4422-A142-2560A0CE3BD3",
+      "subjectQid": "Q3765652",
+      "objectQid": "Q76479",
+      "relation": "CREDIT",
+      "researchRole": "PRODUCING",
+      "researchState": "structured-only-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:q76479$EF2A64B1-B6BC-4535-848B-D53BA099DB4C",
+      "subjectQid": "Q43203",
+      "objectQid": "Q76479",
+      "relation": "CREDIT",
+      "researchRole": "CAST",
+      "researchState": "checked-source-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:q76479$A7047A0A-A345-4BB2-AD7B-AE8A33436BE8",
+      "subjectQid": "Q317110",
+      "objectQid": "Q76479",
+      "relation": "CREDIT",
+      "researchRole": "CAST",
+      "researchState": "checked-source-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:q76479$DCB1920A-56D0-41ED-B4BB-735AF1ECDC3F",
+      "subjectQid": "Q77405",
+      "objectQid": "Q76479",
+      "relation": "CREDIT",
+      "researchRole": "CAST",
+      "researchState": "checked-source-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:q76479$8F2292EB-1DE6-4112-835F-803D82B7720F",
+      "subjectQid": "Q76479",
+      "objectQid": "Q20475",
+      "relation": "BASED_ON",
+      "researchRole": null,
+      "researchState": "structured-only-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:Q76479$f6604789-4e9b-cf90-bb2a-3fae9f2d402d",
+      "subjectQid": "Q76479",
+      "objectQid": "Q1935469",
+      "relation": "BASED_ON",
+      "researchRole": null,
+      "researchState": "held",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:Q76479$e581077b-43b6-f033-4b67-406f93be0451",
+      "subjectQid": "Q76479",
+      "objectQid": "Q370180",
+      "relation": "SERIES_MEMBERSHIP",
+      "researchRole": null,
+      "researchState": "checked-source-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:Q76479$12a353c0-42e5-b8af-3b3a-f007de6d2eb7",
+      "subjectQid": "Q76479",
+      "objectQid": "Q153677",
+      "relation": "PRECEDES",
+      "researchRole": null,
+      "researchState": "structured-only-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:q104137$B226BBA0-92F8-4A47-8EC8-21697BAFADBA",
+      "subjectQid": "Q43203",
+      "objectQid": "Q104137",
+      "relation": "CREDIT",
+      "researchRole": "DIRECTING",
+      "researchState": "checked-source-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:q104137$3BA0821B-A1E1-45FE-BF84-4E013DD4B557",
+      "subjectQid": "Q1177114",
+      "objectQid": "Q104137",
+      "relation": "CREDIT",
+      "researchRole": "SCREENWRITING",
+      "researchState": "checked-source-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:Q104137$6D127B78-45C8-4541-B7CB-1A934C742381",
+      "subjectQid": "Q1818079",
+      "objectQid": "Q104137",
+      "relation": "CREDIT",
+      "researchRole": "MUSIC",
+      "researchState": "structured-only-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:q104137$FE807568-8ACA-4EA2-AC80-4E589AA96AED",
+      "subjectQid": "Q854215",
+      "objectQid": "Q104137",
+      "relation": "CREDIT",
+      "researchRole": "CINEMATOGRAPHY",
+      "researchState": "structured-only-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:q104137$3B3E4265-F0D2-4ED9-B489-257CB43DE2D5",
+      "subjectQid": "Q43203",
+      "objectQid": "Q104137",
+      "relation": "CREDIT",
+      "researchRole": "PRODUCING",
+      "researchState": "structured-only-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:q104137$1B0E36E9-AA57-43D1-81FA-2CC6987D5367",
+      "subjectQid": "Q150943",
+      "objectQid": "Q104137",
+      "relation": "CREDIT",
+      "researchRole": "CAST",
+      "researchState": "checked-source-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:q104137$3B57142F-2116-4265-901D-3F772622D3C1",
+      "subjectQid": "Q48337",
+      "objectQid": "Q104137",
+      "relation": "CREDIT",
+      "researchRole": "CAST",
+      "researchState": "checked-source-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:Q104137$3D0CF582-4DF0-445D-9EB3-221A8DC7E84F",
+      "subjectQid": "Q43203",
+      "objectQid": "Q104137",
+      "relation": "CREDIT",
+      "researchRole": "CAST",
+      "researchState": "checked-source-candidate",
+      "coverage": "formally-accepted-not-production-published",
+      "formalClaimId": "4c88b8e8-154d-47ad-bf82-f19876ecaebd",
+      "formalRoleId": "ACTING"
+    },
+    {
+      "researchCandidateId": "candidate:q184255$E97BDEC1-96DE-489D-B0D0-2BE2CC42818F",
+      "subjectQid": "Q43203",
+      "objectQid": "Q184255",
+      "relation": "CREDIT",
+      "researchRole": "DIRECTING",
+      "researchState": "checked-source-candidate",
+      "coverage": "formally-accepted-not-production-published",
+      "formalClaimId": "34b41d23-f4e6-4fc6-aa6f-2905f3c2a890",
+      "formalRoleId": "DIRECTING"
+    },
+    {
+      "researchCandidateId": "candidate:q184255$8DDE1F3C-2713-4D40-8A76-264F3C6D4A61",
+      "subjectQid": "Q314935",
+      "objectQid": "Q184255",
+      "relation": "CREDIT",
+      "researchRole": "SCREENWRITING",
+      "researchState": "checked-source-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:Q184255$1F72D0AD-5B8E-4DA7-A66F-18208CD2BCBA",
+      "subjectQid": "Q321713",
+      "objectQid": "Q184255",
+      "relation": "CREDIT",
+      "researchRole": "SCREENWRITING",
+      "researchState": "held",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:Q184255$4A191D21-464A-4752-A91F-EC4EB4269A88",
+      "subjectQid": "Q43203",
+      "objectQid": "Q184255",
+      "relation": "CREDIT",
+      "researchRole": "MUSIC",
+      "researchState": "checked-source-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:q184255$3893E217-9574-4A9A-BEC0-915083C81D6A",
+      "subjectQid": "Q2063318",
+      "objectQid": "Q184255",
+      "relation": "CREDIT",
+      "researchRole": "CINEMATOGRAPHY",
+      "researchState": "checked-source-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:q184255$5AD7B160-61B9-4B97-B970-A8EED23695E5",
+      "subjectQid": "Q43203",
+      "objectQid": "Q184255",
+      "relation": "CREDIT",
+      "researchRole": "PRODUCING",
+      "researchState": "checked-source-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:q184255$863B6F03-C061-483A-9BB1-85AED09F1433",
+      "subjectQid": "Q280490",
+      "objectQid": "Q184255",
+      "relation": "CREDIT",
+      "researchRole": "PRODUCING",
+      "researchState": "checked-source-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:q184255$AE2B62BF-170C-45BD-981E-8D12DA585F4D",
+      "subjectQid": "Q314935",
+      "objectQid": "Q184255",
+      "relation": "CREDIT",
+      "researchRole": "PRODUCING",
+      "researchState": "checked-source-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:q184255$F701BD1C-8D6B-46A4-A68F-BF93ECF5695D",
+      "subjectQid": "Q7817415",
+      "objectQid": "Q184255",
+      "relation": "CREDIT",
+      "researchRole": "PRODUCING",
+      "researchState": "checked-source-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:q184255$A7459105-02B7-402D-B0D8-F17307E4B7F0",
+      "subjectQid": "Q5525494",
+      "objectQid": "Q184255",
+      "relation": "CREDIT",
+      "researchRole": "PRODUCING",
+      "researchState": "structured-only-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:q184255$6E39F62D-CB25-409E-8DF0-C9D4DC7A7D8B",
+      "subjectQid": "Q93187",
+      "objectQid": "Q184255",
+      "relation": "CREDIT",
+      "researchRole": "CAST",
+      "researchState": "checked-source-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:q184255$301FF7F2-A06A-488D-9D09-33EE54CA49DE",
+      "subjectQid": "Q43203",
+      "objectQid": "Q184255",
+      "relation": "CREDIT",
+      "researchRole": "CAST",
+      "researchState": "checked-source-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    },
+    {
+      "researchCandidateId": "candidate:q184255$442501B0-0AC6-4E42-B522-9B71D64E7DFD",
+      "subjectQid": "Q48337",
+      "objectQid": "Q184255",
+      "relation": "CREDIT",
+      "researchRole": "CAST",
+      "researchState": "checked-source-candidate",
+      "coverage": "outside-this-acceptance-research-only",
+      "formalClaimId": null,
+      "formalRoleId": null
+    }
+  ],
+  "entities": [
+    {
+      "researchQid": "Q104137",
+      "name": "許されざる者",
+      "kind": "work",
+      "formalUuid": "604eb49e-df41-4157-8b49-bd92a0d93ad4",
+      "coverage": "formally-accepted-dependency-not-production-published"
+    },
+    {
+      "researchQid": "Q109228991",
+      "name": "デューン: パート2",
+      "kind": "work",
+      "formalUuid": null,
+      "coverage": "outside-this-acceptance-needs-identity-review"
+    },
+    {
+      "researchQid": "Q109300883",
+      "name": "Dune",
+      "kind": "work",
+      "formalUuid": null,
+      "coverage": "outside-this-acceptance-needs-identity-review"
+    },
+    {
+      "researchQid": "Q114819",
+      "name": "デューン/砂の惑星",
+      "kind": "work",
+      "formalUuid": null,
+      "coverage": "outside-this-acceptance-needs-identity-review"
+    },
+    {
+      "researchQid": "Q1177114",
+      "name": "デイヴィッド・ピープルズ",
+      "kind": "person",
+      "formalUuid": null,
+      "coverage": "outside-this-acceptance-needs-identity-review"
+    },
+    {
+      "researchQid": "Q123351",
+      "name": "マイケル・ケイン",
+      "kind": "person",
+      "formalUuid": null,
+      "coverage": "outside-this-acceptance-needs-identity-review"
+    },
+    {
+      "researchQid": "Q1337082",
+      "name": "フレディ・フランシス",
+      "kind": "person",
+      "formalUuid": null,
+      "coverage": "outside-this-acceptance-needs-identity-review"
+    },
+    {
+      "researchQid": "Q13417189",
+      "name": "インターステラー",
+      "kind": "work",
+      "formalUuid": null,
+      "coverage": "outside-this-acceptance-needs-identity-review"
+    },
+    {
+      "researchQid": "Q1372703",
+      "name": "ハンプトン・ファンチャー",
+      "kind": "person",
+      "formalUuid": null,
+      "coverage": "outside-this-acceptance-needs-identity-review"
+    },
+    {
+      "researchQid": "Q150943",
+      "name": "ジーン・ハックマン",
+      "kind": "person",
+      "formalUuid": null,
+      "coverage": "outside-this-acceptance-needs-identity-review"
+    },
+    {
+      "researchQid": "Q153172",
+      "name": "ヴァンゲリス",
+      "kind": "person",
+      "formalUuid": null,
+      "coverage": "outside-this-acceptance-needs-identity-review"
+    },
+    {
+      "researchQid": "Q153677",
+      "name": "夕陽のガンマン",
+      "kind": "work",
+      "formalUuid": null,
+      "coverage": "outside-this-acceptance-needs-identity-review"
+    },
+    {
+      "researchQid": "Q16213294",
+      "name": "トーマス・タル",
+      "kind": "person",
+      "formalUuid": null,
+      "coverage": "outside-this-acceptance-needs-identity-review"
+    },
+    {
+      "researchQid": "Q16216857",
+      "name": "ブラッドフォード・ヤング",
+      "kind": "person",
+      "formalUuid": null,
+      "coverage": "outside-this-acceptance-needs-identity-review"
+    },
+    {
+      "researchQid": "Q164562",
+      "name": "セルジオ・レオーネ",
+      "kind": "person",
+      "formalUuid": null,
+      "coverage": "outside-this-acceptance-needs-identity-review"
+    },
+    {
+      "researchQid": "Q17715100",
+      "name": "グリーグ・フレイザー",
+      "kind": "person",
+      "formalUuid": null,
+      "coverage": "outside-this-acceptance-needs-identity-review"
+    },
+    {
+      "researchQid": "Q1818079",
+      "name": "レニー・ニーハウス",
+      "kind": "person",
+      "formalUuid": null,
+      "coverage": "outside-this-acceptance-needs-identity-review"
+    },
+    {
+      "researchQid": "Q182763",
+      "name": "フォレスト・ウィテカー",
+      "kind": "person",
+      "formalUuid": null,
+      "coverage": "outside-this-acceptance-needs-identity-review"
+    },
+    {
+      "researchQid": "Q184255",
+      "name": "ミリオンダラー・ベイビー",
+      "kind": "work",
+      "formalUuid": "805b9630-cd9a-4931-8cde-0bcb92bf8a9f",
+      "coverage": "formally-accepted-dependency-not-production-published"
+    },
+    {
+      "researchQid": "Q184843",
+      "name": "ブレードランナー",
+      "kind": "work",
+      "formalUuid": null,
+      "coverage": "outside-this-acceptance-needs-identity-review"
+    },
+    {
+      "researchQid": "Q188955",
+      "name": "マシュー・マコノヒー",
+      "kind": "person",
+      "formalUuid": null,
+      "coverage": "outside-this-acceptance-needs-identity-review"
+    },
+    {
+      "researchQid": "Q190192",
+      "name": "デューン",
+      "kind": "work",
+      "formalUuid": null,
+      "coverage": "outside-this-acceptance-needs-identity-review"
+    },
+    {
+      "researchQid": "Q1935469",
+      "name": "血の収穫",
+      "kind": "work",
+      "formalUuid": null,
+      "coverage": "outside-this-acceptance-needs-identity-review"
+    },
+    {
+      "researchQid": "Q193815",
+      "name": "ライアン・ゴズリング",
+      "kind": "person",
+      "formalUuid": null,
+      "coverage": "outside-this-acceptance-needs-identity-review"
+    },
+    {
+      "researchQid": "Q19877770",
+      "name": "ティモテ・シャラメ",
+      "kind": "person",
+      "formalUuid": null,
+      "coverage": "outside-this-acceptance-needs-identity-review"
+    },
+    {
+      "researchQid": "Q20382729",
+      "name": "メッセージ",
+      "kind": "work",
+      "formalUuid": null,
+      "coverage": "outside-this-acceptance-needs-identity-review"
+    },
+    {
+      "researchQid": "Q20475",
+      "name": "用心棒",
+      "kind": "work",
+      "formalUuid": null,
+      "coverage": "outside-this-acceptance-needs-identity-review"
+    },
+    {
+      "researchQid": "Q2063318",
+      "name": "トム・スターン",
+      "kind": "person",
+      "formalUuid": null,
+      "coverage": "outside-this-acceptance-needs-identity-review"
+    },
+    {
+      "researchQid": "Q2071",
+      "name": "デヴィッド・リンチ",
+      "kind": "person",
+      "formalUuid": null,
+      "coverage": "outside-this-acceptance-needs-identity-review"
+    },
+    {
+      "researchQid": "Q207472",
+      "name": "TOTO",
+      "kind": "organization",
+      "formalUuid": null,
+      "coverage": "outside-this-acceptance-needs-identity-review"
+    },
+    {
+      "researchQid": "Q207506",
+      "name": "カイル・マクラクラン",
+      "kind": "person",
+      "formalUuid": null,
+      "coverage": "outside-this-acceptance-needs-identity-review"
+    },
+    {
+      "researchQid": "Q211553",
+      "name": "渡辺謙",
+      "kind": "person",
+      "formalUuid": null,
+      "coverage": "outside-this-acceptance-needs-identity-review"
+    },
+    {
+      "researchQid": "Q213574",
+      "name": "ルトガー・ハウアー",
+      "kind": "person",
+      "formalUuid": null,
+      "coverage": "outside-this-acceptance-needs-identity-review"
+    },
+    {
+      "researchQid": "Q21500755",
+      "name": "ブレードランナー 2049",
+      "kind": "work",
+      "formalUuid": null,
+      "coverage": "outside-this-acceptance-needs-identity-review"
+    },
+    {
+      "researchQid": "Q230736",
+      "name": "ショーン・ヤング",
+      "kind": "person",
+      "formalUuid": null,
+      "coverage": "outside-this-acceptance-needs-identity-review"
+    },
+    {
+      "researchQid": "Q23365",
+      "name": "ジェレミー・レナー",
+      "kind": "person",
+      "formalUuid": null,
+      "coverage": "outside-this-acceptance-needs-identity-review"
+    },
+    {
+      "researchQid": "Q23848",
+      "name": "エンニオ・モリコーネ",
+      "kind": "person",
+      "formalUuid": null,
+      "coverage": "outside-this-acceptance-needs-identity-review"
+    },
+    {
+      "researchQid": "Q242951",
+      "name": "エマ・トーマス",
+      "kind": "person",
+      "formalUuid": null,
+      "coverage": "outside-this-acceptance-needs-identity-review"
+    },
+    {
+      "researchQid": "Q25188",
+      "name": "インセプション",
+      "kind": "work",
+      "formalUuid": null,
+      "coverage": "outside-this-acceptance-needs-identity-review"
+    },
+    {
+      "researchQid": "Q25191",
+      "name": "クリストファー・ノーラン",
+      "kind": "person",
+      "formalUuid": null,
+      "coverage": "outside-this-acceptance-needs-identity-review"
+    },
+    {
+      "researchQid": "Q26705935",
+      "name": "BBC's 100 Greatest Films of the 21st Century",
+      "kind": "work",
+      "formalUuid": null,
+      "coverage": "outside-this-acceptance-needs-identity-review"
+    },
+    {
+      "researchQid": "Q272972",
+      "name": "ロビン・ライト",
+      "kind": "person",
+      "formalUuid": null,
+      "coverage": "outside-this-acceptance-needs-identity-review"
+    },
+    {
+      "researchQid": "Q280490",
+      "name": "アルバート・S・ラディー",
+      "kind": "person",
+      "formalUuid": null,
+      "coverage": "outside-this-acceptance-needs-identity-review"
+    },
+    {
+      "researchQid": "Q314935",
+      "name": "ポール・ハギス",
+      "kind": "person",
+      "formalUuid": null,
+      "coverage": "outside-this-acceptance-needs-identity-review"
+    },
+    {
+      "researchQid": "Q317110",
+      "name": "ジャン・マリア・ヴォロンテ",
+      "kind": "person",
+      "formalUuid": null,
+      "coverage": "outside-this-acceptance-needs-identity-review"
+    },
+    {
+      "researchQid": "Q321713",
+      "name": "F・X・トゥール",
+      "kind": "person",
+      "formalUuid": null,
+      "coverage": "outside-this-acceptance-needs-identity-review"
+    },
+    {
+      "researchQid": "Q323076",
+      "name": "ショーン・レヴィ",
+      "kind": "person",
+      "formalUuid": null,
+      "coverage": "outside-this-acceptance-needs-identity-review"
+    },
+    {
+      "researchQid": "Q361443",
+      "name": "バド・ヨーキン",
+      "kind": "person",
+      "formalUuid": null,
+      "coverage": "outside-this-acceptance-needs-identity-review"
+    },
+    {
+      "researchQid": "Q3623767",
+      "name": "Arrigo Colombo",
+      "kind": "person",
+      "formalUuid": null,
+      "coverage": "outside-this-acceptance-needs-identity-review"
+    },
+    {
+      "researchQid": "Q370180",
+      "name": "ドル箱三部作",
+      "kind": "work",
+      "formalUuid": null,
+      "coverage": "outside-this-acceptance-needs-identity-review"
+    },
+    {
+      "researchQid": "Q372788",
+      "name": "ジョナサン・ノーラン",
+      "kind": "person",
+      "formalUuid": null,
+      "coverage": "outside-this-acceptance-needs-identity-review"
+    },
+    {
+      "researchQid": "Q3765652",
+      "name": "Giorgio Papi",
+      "kind": "person",
+      "formalUuid": null,
+      "coverage": "outside-this-acceptance-needs-identity-review"
+    },
+    {
+      "researchQid": "Q3808035",
+      "name": "ジェリー・ペレンチオ",
+      "kind": "person",
+      "formalUuid": null,
+      "coverage": "outside-this-acceptance-needs-identity-review"
+    },
+    {
+      "researchQid": "Q38111",
+      "name": "レオナルド・ディカプリオ",
+      "kind": "person",
+      "formalUuid": null,
+      "coverage": "outside-this-acceptance-needs-identity-review"
+    },
+    {
+      "researchQid": "Q428347",
+      "name": "ヨハン・ヨハンソン",
+      "kind": "person",
+      "formalUuid": null,
+      "coverage": "outside-this-acceptance-needs-identity-review"
+    },
+    {
+      "researchQid": "Q43203",
+      "name": "クリント・イーストウッド",
+      "kind": "person",
+      "formalUuid": "490ee589-76db-4a5e-8923-13d24b7cb3a2",
+      "coverage": "formally-accepted-dependency-not-production-published"
+    },
+    {
+      "researchQid": "Q44158",
+      "name": "デビッド・バウティスタ",
+      "kind": "person",
+      "formalUuid": null,
+      "coverage": "outside-this-acceptance-needs-identity-review"
+    },
+    {
+      "researchQid": "Q441964",
+      "name": "マッシモ・ダラマーノ",
+      "kind": "person",
+      "formalUuid": null,
+      "coverage": "outside-this-acceptance-needs-identity-review"
+    },
+    {
+      "researchQid": "Q460144",
+      "name": "ウォーリー・フィスター",
+      "kind": "person",
+      "formalUuid": null,
+      "coverage": "outside-this-acceptance-needs-identity-review"
+    },
+    {
+      "researchQid": "Q460277",
+      "name": "ロジャー・ディーキンス",
+      "kind": "person",
+      "formalUuid": null,
+      "coverage": "outside-this-acceptance-needs-identity-review"
+    },
+    {
+      "researchQid": "Q4757652",
+      "name": "アンドリュー・コソボ",
+      "kind": "person",
+      "formalUuid": null,
+      "coverage": "outside-this-acceptance-needs-identity-review"
+    },
+    {
+      "researchQid": "Q481832",
+      "name": "エイミー・アダムス",
+      "kind": "person",
+      "formalUuid": null,
+      "coverage": "outside-this-acceptance-needs-identity-review"
+    },
+    {
+      "researchQid": "Q483203",
+      "name": "スティング",
+      "kind": "person",
+      "formalUuid": null,
+      "coverage": "outside-this-acceptance-needs-identity-review"
+    },
+    {
+      "researchQid": "Q48337",
+      "name": "モーガン・フリーマン",
+      "kind": "person",
+      "formalUuid": null,
+      "coverage": "outside-this-acceptance-needs-identity-review"
+    },
+    {
+      "researchQid": "Q4947838",
+      "name": "レベッカ・ファーガソン",
+      "kind": "person",
+      "formalUuid": null,
+      "coverage": "outside-this-acceptance-needs-identity-review"
+    },
+    {
+      "researchQid": "Q4972958",
+      "name": "ブロデリック・ジョンソン",
+      "kind": "person",
+      "formalUuid": null,
+      "coverage": "outside-this-acceptance-needs-identity-review"
+    },
+    {
+      "researchQid": "Q503095",
+      "name": "テッド・チャン",
+      "kind": "person",
+      "formalUuid": null,
+      "coverage": "outside-this-acceptance-needs-identity-review"
+    },
+    {
+      "researchQid": "Q512184",
+      "name": "ラファエラ・デ・ラウレンティス",
+      "kind": "person",
+      "formalUuid": null,
+      "coverage": "outside-this-acceptance-needs-identity-review"
+    },
+    {
+      "researchQid": "Q514003",
+      "name": "ホイテ・ヴァン・ホイテマ",
+      "kind": "person",
+      "formalUuid": null,
+      "coverage": "outside-this-acceptance-needs-identity-review"
+    },
+    {
+      "researchQid": "Q5200155",
+      "name": "シンシア・サイクス",
+      "kind": "person",
+      "formalUuid": null,
+      "coverage": "outside-this-acceptance-needs-identity-review"
+    },
+    {
+      "researchQid": "Q52158949",
+      "name": "José López Rodero",
+      "kind": "person",
+      "formalUuid": null,
+      "coverage": "outside-this-acceptance-needs-identity-review"
+    },
+    {
+      "researchQid": "Q5386707",
+      "name": "エリック・ハイセラー",
+      "kind": "person",
+      "formalUuid": null,
+      "coverage": "outside-this-acceptance-needs-identity-review"
+    },
+    {
+      "researchQid": "Q548823",
+      "name": "ドゥニ・ヴィルヌーヴ",
+      "kind": "person",
+      "formalUuid": null,
+      "coverage": "outside-this-acceptance-needs-identity-review"
+    },
+    {
+      "researchQid": "Q5525494",
+      "name": "ゲイリー・ルチェッシ",
+      "kind": "person",
+      "formalUuid": null,
+      "coverage": "outside-this-acceptance-needs-identity-review"
+    },
+    {
+      "researchQid": "Q56005",
+      "name": "リドリー・スコット",
+      "kind": "person",
+      "formalUuid": null,
+      "coverage": "outside-this-acceptance-needs-identity-review"
+    },
+    {
+      "researchQid": "Q605249",
+      "name": "アンドロイドは電気羊の夢を見るか?",
+      "kind": "work",
+      "formalUuid": null,
+      "coverage": "outside-this-acceptance-needs-identity-review"
+    },
+    {
+      "researchQid": "Q6056440",
+      "name": "ベンジャミン・ウォルフィッシュ",
+      "kind": "person",
+      "formalUuid": null,
+      "coverage": "outside-this-acceptance-needs-identity-review"
+    },
+    {
+      "researchQid": "Q60834962",
+      "name": "DUNE/デューン 砂の惑星",
+      "kind": "work",
+      "formalUuid": null,
+      "coverage": "outside-this-acceptance-needs-identity-review"
+    },
+    {
+      "researchQid": "Q6271612",
+      "name": "ジョン・スペイツ",
+      "kind": "person",
+      "formalUuid": null,
+      "coverage": "outside-this-acceptance-needs-identity-review"
+    },
+    {
+      "researchQid": "Q656655",
+      "name": "マイケル・ディーリー",
+      "kind": "person",
+      "formalUuid": null,
+      "coverage": "outside-this-acceptance-needs-identity-review"
+    },
+    {
+      "researchQid": "Q6708571",
+      "name": "リンダ・オブスト",
+      "kind": "person",
+      "formalUuid": null,
+      "coverage": "outside-this-acceptance-needs-identity-review"
+    },
+    {
+      "researchQid": "Q6780480",
+      "name": "メアリー・ペアレント",
+      "kind": "person",
+      "formalUuid": null,
+      "coverage": "outside-this-acceptance-needs-identity-review"
+    },
+    {
+      "researchQid": "Q6830765",
+      "name": "マイケル・グリーン (脚本家)",
+      "kind": "person",
+      "formalUuid": null,
+      "coverage": "outside-this-acceptance-needs-identity-review"
+    },
+    {
+      "researchQid": "Q715198",
+      "name": "ジョーダン・クローネンウェス",
+      "kind": "person",
+      "formalUuid": null,
+      "coverage": "outside-this-acceptance-needs-identity-review"
+    },
+    {
+      "researchQid": "Q716460",
+      "name": "ドゥッチョ・テッサリ",
+      "kind": "person",
+      "formalUuid": null,
+      "coverage": "outside-this-acceptance-needs-identity-review"
+    },
+    {
+      "researchQid": "Q734155",
+      "name": "リチャード・P・ルビンスタイン",
+      "kind": "person",
+      "formalUuid": null,
+      "coverage": "outside-this-acceptance-needs-identity-review"
+    },
+    {
+      "researchQid": "Q7620415",
+      "name": "あなたの人生の物語",
+      "kind": "work",
+      "formalUuid": null,
+      "coverage": "outside-this-acceptance-needs-identity-review"
+    },
+    {
+      "researchQid": "Q76364",
+      "name": "ハンス・ジマー",
+      "kind": "person",
+      "formalUuid": null,
+      "coverage": "outside-this-acceptance-needs-identity-review"
+    },
+    {
+      "researchQid": "Q76479",
+      "name": "荒野の用心棒",
+      "kind": "work",
+      "formalUuid": null,
+      "coverage": "outside-this-acceptance-needs-identity-review"
+    },
+    {
+      "researchQid": "Q77405",
+      "name": "マリアンネ・コッホ",
+      "kind": "person",
+      "formalUuid": null,
+      "coverage": "outside-this-acceptance-needs-identity-review"
+    },
+    {
+      "researchQid": "Q7817415",
+      "name": "トム・ローゼンバーグ",
+      "kind": "person",
+      "formalUuid": null,
+      "coverage": "outside-this-acceptance-needs-identity-review"
+    },
+    {
+      "researchQid": "Q81328",
+      "name": "ハリソン・フォード",
+      "kind": "person",
+      "formalUuid": null,
+      "coverage": "outside-this-acceptance-needs-identity-review"
+    },
+    {
+      "researchQid": "Q854215",
+      "name": "ジャック・N・グリーン",
+      "kind": "person",
+      "formalUuid": null,
+      "coverage": "outside-this-acceptance-needs-identity-review"
+    },
+    {
+      "researchQid": "Q920161",
+      "name": "フェルナンド・ディ・レオ",
+      "kind": "person",
+      "formalUuid": null,
+      "coverage": "outside-this-acceptance-needs-identity-review"
+    },
+    {
+      "researchQid": "Q93187",
+      "name": "ヒラリー・スワンク",
+      "kind": "person",
+      "formalUuid": null,
+      "coverage": "outside-this-acceptance-needs-identity-review"
+    },
+    {
+      "researchQid": "Q942932",
+      "name": "エリック・ロス",
+      "kind": "person",
+      "formalUuid": null,
+      "coverage": "outside-this-acceptance-needs-identity-review"
+    },
+    {
+      "researchQid": "Q945188",
+      "name": "モンテ・ヘルマン",
+      "kind": "person",
+      "formalUuid": null,
+      "coverage": "outside-this-acceptance-needs-identity-review"
+    }
+  ]
+}

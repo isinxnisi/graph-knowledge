@@ -1,3 +1,21 @@
+# 2026-10-27：映画2 Claim正式受入完了・公開候補固定
+
+固定票6bdc6af8…への運営者の実承認に従い、既存accept-filmから正式receipt 3ac7b6be…を作成した。2 Claim＋依存3 Entity／2 Source／2 Citation、scope／periodはnullを保持。旧10 receiptの65ファイルと全旧公開recordは不変。正式receiptは11件、release validate成功、offline planは追加のみ・既存更新0。本番apply／署名は未実施。
+
+[現在地と次の運営者コマンド](../research/film-release-20261027/FORMAL_ACCEPTANCE_STATUS.md)／[実測JSON](../research/film-release-20261027/formal-acceptance-verification.json)／[実正式receipt](../research/film-release-20261027/formal-acceptance/acceptance.json)。
+
+- 既存Issue #33 builderと実正式Role入りoperatorで公開候補を固定。nonce 6b240b18-56e4-4ea4-995f-7be7424c3fb2、release publication-film-initial-20261027、追加3/2/2/2＋3 ExternalIdentifier、既存更新0。root live preflight／署名request登録は未実施で、offline planを代用しない。
+- pin更新11、既存publication cycle18／executor27／readiness14、計70テスト成功。pin操作の別設定保持・排他競合拒否・backup上書拒否・失敗時の設定復元を隔離試験。これは実sudo操作の成功記録ではない。語彙は10 Role／0 error。
+- 最新HTTPS betaでPC1440の実ブラウザ1件成功：段別ACTING→DIRECTING、AFI根拠・Claim詳細、Graph展開、保存・reload復元、逆Role順不一致。[結果](../research/film-release-20261027/accepted-beta-check/results.json)／[画面](../research/film-release-20261027/accepted-beta-check/film-beta-film-candidates--174ac-raph-and-saved-restore-1440/film-restored.png)。共通映画bannerなし。旧trialは個別試験表示を保持する。初回ブラウザ起動はlibnspr4不足で失敗し、既設のprivate依存library PATHを指定して成功。システムpackageを変更していない。
+- 3200／beta Webコード・build vBqJY67wdqijTKKY-EMJL、KG／会員DBを変更していないため再buildしない。本番API revisionもb74a4b00-9454-412f-af5d-1317713a543cのまま。urllibのbeta API直読は403、同じHTTPSへの上記実ブラウザ経路は成功。
+- 実operator archiveと既存archive verifierを検証し、WSL private資材とVPS develop private資材へ転送・SHA一致。一度限りのimage pin更新だけを準備し、root trust／gate／署名鍵・権限はまだ変更していない。次の人間操作はWSL／VPS sudoによる固定pin更新。公開署名は後続の実plan確定後。
+- 未収録のAstra79照合済み記録・94 Entity候補を[全候補対応台帳と後続拡充](../research/film-release-20261027/ASTRA_RESEARCH_BACKLOG.md)へ引継ぎ。今回の2件を全研究の収録完了としない。新しい収集・漫画Worker/control/既存承認の変更なし。
+- 既存自動準備のoperator継承・一時mount・JSONキー順の不足は[Issue #53](https://github.com/isinxnisi/graph-knowledge/issues/53)へ追記。失敗した未arm候補を保全し、一度限りの既存schema直列化で値を変えず検証。新公開自動化は開発していない。
+
+以下はRole承認直後などの履歴であり、当時のClaim未受入という状態を現在と混同しない。
+
+---
+
 # 2026-10-27：正式Role登録と映画2 Claim受入票の固定
 
 Roleの固定hash承認を実際の人間発言・時刻とともに保存し、e7e1a8d5をmain／専用branchへ統合・push。catalog10件、既存8定義・過去承認・baseline・研究草稿を保持した。Claim受入と本番公開は未実施。

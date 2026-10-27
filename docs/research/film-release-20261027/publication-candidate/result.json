@@ -1,0 +1,11 @@
+{
+  "status": "awaiting-live-preflight-and-operator-release",
+  "candidateCreated": true,
+  "release": "publication-film-initial-20261027",
+  "offlinePlanOnly": true,
+  "productionExecutionEnabled": false,
+  "blocking": [
+    "Fresh root-owned live preflight receipt and supported pinned operator image",
+    "Trusted signed single-use publication approval; execution gate not deployed"
+  ]
+}

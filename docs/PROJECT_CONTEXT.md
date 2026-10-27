@@ -1,3 +1,5 @@
+2026-10-27、固定票6bdc6af8…への運営者の正式承認に基づき、映画2 Claim＋依存3 Entity／2 Source／2 Citationを既存accept-filmで正式受入。receipt 3ac7b6be…、旧10 receipt不変、release validate／追加のみoffline plan成功。固定公開候補を準備したが、VPS image pin更新・root live plan・個別公開署名・本番applyは未実施。[現在地・次の運営者操作](research/film-release-20261027/FORMAL_ACCEPTANCE_STATUS.md)。Astra全体を収録済みとせず、未受入79記録・94 Entity候補を[後続拡充](research/film-release-20261027/ASTRA_RESEARCH_BACKLOG.md)へ引き継ぐ。漫画Worker・control・会員DB・本番KGは保持。
+
 2026-10-27、運営者が映画DIRECTING／ACTINGの固定hashとscope方針を正式承認。既存8 Role・baseline・過去承認を保持して正式catalogへ2件を追加した。Claim受入・本番公開は別判断で未実施。[正式Role判断](research/film-release-20261027/role-decision-approved.json)／[出所](research/film-release-20261027/role-approval-provenance.json)。
 
 2026-10-27、Issue #52の[現行KG管理検索](design/KG_ADMIN.md)を独立runtimeで実装。準備済みVPS Connectorと固定imageで専用管理Webを配置し、実Accessから正式KGの2,175 Entity／311 Island／1,895 Claimを全件照合した。JWT検証を維持し、既存3200／beta／公開Web・DBを保持。適用済みTunnel routeのProtect with Access・Team／AUD不足で最終guardが停止し、Connectorの永続化・再起動確認は残る。[本番配置の実測・残件](verification/KG_ADMIN_PRODUCTION_20261027.md)／[初回隔離検証](verification/KG_ADMIN_20261027.md)／[運用手順](runbooks/KG_ADMIN.md)。

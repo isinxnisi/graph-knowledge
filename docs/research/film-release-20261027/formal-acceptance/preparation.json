@@ -1,0 +1,181 @@
+{
+  "status": "release-prepared-not-applied",
+  "decisionId": "film-initial-20261027",
+  "acceptance": "/home/isinxnisi/.local/share/plunode-collection-worker-phase-b-20261020/runtime/datasets/manga-collection/accepted-film-initial-20261027/acceptance.json",
+  "recordedAt": "2026-10-27T14:02:50.291684+00:00",
+  "checkedAt": "2026-10-27T14:03:23+00:00",
+  "releaseDirectory": "/home/isinxnisi/.local/share/plunode-collection-worker-phase-b-20261020/runtime/datasets/public-kg/releases/film-initial-20261027",
+  "acceptanceReused": false,
+  "releaseUnchanged": false,
+  "validationReused": false,
+  "acceptedCounts": {
+    "entities": 3,
+    "claims": 2,
+    "sources": 2,
+    "citations": 2
+  },
+  "reusedRecordIds": {
+    "entities": [],
+    "claims": [],
+    "sources": [],
+    "citations": []
+  },
+  "releaseAdditions": {
+    "entities": 3,
+    "claims": 2,
+    "sources": 2,
+    "citations": 2
+  },
+  "externalIdentifiersAdded": 3,
+  "notAcceptedRecordIds": {
+    "entities": [],
+    "claims": [],
+    "sources": [],
+    "citations": []
+  },
+  "heldClaimIds": [],
+  "heldEntityIds": [],
+  "heldRecords": {
+    "claims": [],
+    "entities": []
+  },
+  "inheritedHolds": [],
+  "validation": {
+    "valid": true,
+    "counts": {
+      "nodes": {
+        "Entity": 2178,
+        "Claim": 1897,
+        "Source": 1797,
+        "Citation": 1934,
+        "ExternalIdentifier": 2547
+      },
+      "relationships": {
+        "SUBJECT": 1897,
+        "OBJECT": 1897,
+        "HAS_CITATION": 1934,
+        "CITES": 1934,
+        "HAS_EXTERNAL_ID": 2547
+      }
+    }
+  },
+  "plan": {
+    "release": "film-initial-20261027",
+    "observation": "validated-backup-offline-not-a-live-vps-plan",
+    "backupRevision": "b74a4b00-9454-412f-af5d-1317713a543c",
+    "added": [
+      "Citation:8a6fe8f5-f3b3-4d08-8ad9-60eae3f8a583",
+      "Citation:dba11353-9e7f-47bc-86bb-9f2e5f8a6d6e",
+      "Claim:34b41d23-f4e6-4fc6-aa6f-2905f3c2a890",
+      "Claim:4c88b8e8-154d-47ad-bf82-f19876ecaebd",
+      "Entity:490ee589-76db-4a5e-8923-13d24b7cb3a2",
+      "Entity:604eb49e-df41-4157-8b49-bd92a0d93ad4",
+      "Entity:805b9630-cd9a-4931-8cde-0bcb92bf8a9f",
+      "ExternalIdentifier:[\"wikidata\",\"Q104137\"]",
+      "ExternalIdentifier:[\"wikidata\",\"Q184255\"]",
+      "ExternalIdentifier:[\"wikidata\",\"Q43203\"]",
+      "Source:54461ad1-e977-4b68-a2bf-7f972ff29002",
+      "Source:c198ac9b-8baa-4ec2-a880-6ce9de171fcb"
+    ],
+    "updated": [],
+    "relationshipsAdded": 11
+  },
+  "publicBeforePlan": {
+    "release": "manga-issue-34-obata-drawing-20261023",
+    "revision": "b74a4b00-9454-412f-af5d-1317713a543c",
+    "observation": "supplied-backup-not-a-live-check",
+    "fixtureSha256": "5ed83c5ac25f2f0550dce51c9d0978d40ae45a66eb07c468c49f96db27234e88",
+    "withdrawals": [],
+    "historySha256": "669c0851b95328617d0a862481737019b3126e60df418d0b26c4d63eff5db2da",
+    "references": [
+      {
+        "file": "datasets/public-kg/releases/manga-issue-34-obata-drawing-20261023/data.json",
+        "sha256": "bab5fd783adf0cdb622cc6c11441bce35bb7213074d489bc7f3e2989a5ca435b"
+      },
+      {
+        "file": "datasets/public-kg/releases/manga-issue-34-obata-drawing-20261023/manifest.json",
+        "sha256": "7aab70b429c8a825e4a7e59b00a389055beb2a812117cac0c4ce686ef24e2a50"
+      }
+    ],
+    "productionBackupSha256": "f6a716d7264ce1023d3f9100cbd7fa6bd628cd174d2d2412546a0e4e3938b2d3",
+    "liveMetadata": {
+      "url": "https://plunode.net/api/dataset",
+      "httpStatus": 200,
+      "dataset": "public-kg",
+      "revision": "b74a4b00-9454-412f-af5d-1317713a543c"
+    }
+  },
+  "publicAfterPlan": {
+    "release": "manga-issue-34-obata-drawing-20261023",
+    "revision": "b74a4b00-9454-412f-af5d-1317713a543c",
+    "observation": "supplied-backup-not-a-live-check",
+    "fixtureSha256": "5ed83c5ac25f2f0550dce51c9d0978d40ae45a66eb07c468c49f96db27234e88",
+    "withdrawals": [],
+    "historySha256": "669c0851b95328617d0a862481737019b3126e60df418d0b26c4d63eff5db2da",
+    "references": [
+      {
+        "file": "datasets/public-kg/releases/manga-issue-34-obata-drawing-20261023/data.json",
+        "sha256": "bab5fd783adf0cdb622cc6c11441bce35bb7213074d489bc7f3e2989a5ca435b"
+      },
+      {
+        "file": "datasets/public-kg/releases/manga-issue-34-obata-drawing-20261023/manifest.json",
+        "sha256": "7aab70b429c8a825e4a7e59b00a389055beb2a812117cac0c4ce686ef24e2a50"
+      }
+    ],
+    "productionBackupSha256": "f6a716d7264ce1023d3f9100cbd7fa6bd628cd174d2d2412546a0e4e3938b2d3",
+    "liveMetadata": {
+      "url": "https://plunode.net/api/dataset",
+      "httpStatus": 200,
+      "dataset": "public-kg",
+      "revision": "b74a4b00-9454-412f-af5d-1317713a543c"
+    }
+  },
+  "explorationPaths": [
+    {
+      "state": "formally-accepted-not-applied",
+      "observation": "verified-records-only-not-a-live-exploration-test",
+      "edges": [
+        {
+          "claimId": "34b41d23-f4e6-4fc6-aa6f-2905f3c2a890",
+          "subjectId": "490ee589-76db-4a5e-8923-13d24b7cb3a2",
+          "objectId": "805b9630-cd9a-4931-8cde-0bcb92bf8a9f",
+          "person": "クリント・イーストウッド",
+          "work": "ミリオンダラー・ベイビー",
+          "roleId": "DIRECTING",
+          "scope": null,
+          "state": "formally-accepted-not-applied",
+          "citationIds": [
+            "8a6fe8f5-f3b3-4d08-8ad9-60eae3f8a583"
+          ],
+          "sourceIds": [
+            "54461ad1-e977-4b68-a2bf-7f972ff29002"
+          ]
+        },
+        {
+          "claimId": "4c88b8e8-154d-47ad-bf82-f19876ecaebd",
+          "subjectId": "490ee589-76db-4a5e-8923-13d24b7cb3a2",
+          "objectId": "604eb49e-df41-4157-8b49-bd92a0d93ad4",
+          "person": "クリント・イーストウッド",
+          "work": "許されざる者",
+          "roleId": "ACTING",
+          "scope": null,
+          "state": "formally-accepted-not-applied",
+          "citationIds": [
+            "dba11353-9e7f-47bc-86bb-9f2e5f8a6d6e"
+          ],
+          "sourceIds": [
+            "c198ac9b-8baa-4ec2-a880-6ce9de171fcb"
+          ]
+        }
+      ]
+    }
+  ],
+  "publicApply": false,
+  "applyAuthorized": {
+    "local": false,
+    "beta": false,
+    "vps": false
+  },
+  "planObservation": "validated-production-backup-offline",
+  "liveVpsPlanPerformed": false
+}

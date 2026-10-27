@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "purpose": "public-kg-publication",
+  "environment": "production",
+  "release": "publication-film-initial-20261027",
+  "baseRelease": "manga-issue-34-obata-drawing-20261023",
+  "baseRevision": "b74a4b00-9454-412f-af5d-1317713a543c",
+  "receiptSetSha256": "614a0f3ccff3854280012767f580a99427c94f72bd846a920e4dc1ed91d57ffd",
+  "planSha256": "1c8075dd8f57800ef73c929f8d567e12464918e9104cdf22df3bbbfb216004d8",
+  "operatorDigest": "sha256:7042781b105067ce3adea0c59bccfb4c8326f84c0ca6aa5f1b8c26e6cd3d5cef",
+  "artifactSha256": "055bcacb42dfe5b7c3b32cb17fece1b8748a1900fb5c7618c4faa61ffa9894d7"
+}

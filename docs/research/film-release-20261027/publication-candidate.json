@@ -1,0 +1,32 @@
+{
+  "nonce": "6b240b18-56e4-4ea4-995f-7be7424c3fb2",
+  "candidate": "/home/isinxnisi/.local/share/plunode-publication/preparation/candidates/6b240b18-56e4-4ea4-995f-7be7424c3fb2",
+  "request": {
+    "schemaVersion": 1,
+    "purpose": "public-kg-publication",
+    "environment": "production",
+    "release": "publication-film-initial-20261027",
+    "baseRelease": "manga-issue-34-obata-drawing-20261023",
+    "baseRevision": "b74a4b00-9454-412f-af5d-1317713a543c",
+    "receiptSetSha256": "614a0f3ccff3854280012767f580a99427c94f72bd846a920e4dc1ed91d57ffd",
+    "planSha256": "1c8075dd8f57800ef73c929f8d567e12464918e9104cdf22df3bbbfb216004d8",
+    "operatorDigest": "sha256:7042781b105067ce3adea0c59bccfb4c8326f84c0ca6aa5f1b8c26e6cd3d5cef",
+    "artifactSha256": "055bcacb42dfe5b7c3b32cb17fece1b8748a1900fb5c7618c4faa61ffa9894d7"
+  },
+  "counts": {
+    "entities": 3,
+    "claims": 2,
+    "sources": 2,
+    "citations": 2
+  },
+  "formalReceipts": 11,
+  "builderSource": "7392d8e343a11644b1047364c71653779ad0c93c",
+  "validationImage": "sha256:2bf646a22e867e5aa5fce5a155db45c337c4134ad6c0f337b65617c5799912e9",
+  "temporaryValidationDirectory": "/home/isinxnisi/.local/share/plunode-publication/preparation/film-public-validation-tmp",
+  "serialization": "existing fixtureV4Schema key order only; exact JSON values preserved",
+  "backupSha256": "f6a716d7264ce1023d3f9100cbd7fa6bd628cd174d2d2412546a0e4e3938b2d3",
+  "armed": false,
+  "liveVpsPlanPerformed": false,
+  "signed": false,
+  "publicApply": false
+}

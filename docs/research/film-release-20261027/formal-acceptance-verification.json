@@ -1,0 +1,106 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-10-27T14:34:45.282938+00:00",
+  "status": "formally-accepted-offline-candidate-prepared-awaiting-operator-image-pin-update",
+  "humanApprovedDraftSha256": "6bdc6af8165719975b57bb132c0188a18f18712fecf0cf1a93945b794a3747b6",
+  "approvedDecisionSha256": "edd3552a7c2b87d391c68a0f0cf9b46bc7a9f9bd409ec9aaf270d959c10b2df3",
+  "formalReceiptSha256": "3ac7b6be38e24aa9dfd7bf67233b7c5e80822c4313ca9b58d34408611cdc83c3",
+  "acceptedCounts": {
+    "entities": 3,
+    "claims": 2,
+    "sources": 2,
+    "citations": 2
+  },
+  "priorReceiptFilesUnchanged": 65,
+  "formalReceiptsBefore": 10,
+  "formalReceiptsAfter": 11,
+  "candidate": {
+    "nonce": "6b240b18-56e4-4ea4-995f-7be7424c3fb2",
+    "candidate": "/home/isinxnisi/.local/share/plunode-publication/preparation/candidates/6b240b18-56e4-4ea4-995f-7be7424c3fb2",
+    "request": {
+      "schemaVersion": 1,
+      "purpose": "public-kg-publication",
+      "environment": "production",
+      "release": "publication-film-initial-20261027",
+      "baseRelease": "manga-issue-34-obata-drawing-20261023",
+      "baseRevision": "b74a4b00-9454-412f-af5d-1317713a543c",
+      "receiptSetSha256": "614a0f3ccff3854280012767f580a99427c94f72bd846a920e4dc1ed91d57ffd",
+      "planSha256": "1c8075dd8f57800ef73c929f8d567e12464918e9104cdf22df3bbbfb216004d8",
+      "operatorDigest": "sha256:7042781b105067ce3adea0c59bccfb4c8326f84c0ca6aa5f1b8c26e6cd3d5cef",
+      "artifactSha256": "055bcacb42dfe5b7c3b32cb17fece1b8748a1900fb5c7618c4faa61ffa9894d7"
+    },
+    "counts": {
+      "entities": 3,
+      "claims": 2,
+      "sources": 2,
+      "citations": 2
+    },
+    "formalReceipts": 11,
+    "builderSource": "7392d8e343a11644b1047364c71653779ad0c93c",
+    "validationImage": "sha256:2bf646a22e867e5aa5fce5a155db45c337c4134ad6c0f337b65617c5799912e9",
+    "temporaryValidationDirectory": "/home/isinxnisi/.local/share/plunode-publication/preparation/film-public-validation-tmp",
+    "serialization": "existing fixtureV4Schema key order only; exact JSON values preserved",
+    "backupSha256": "f6a716d7264ce1023d3f9100cbd7fa6bd628cd174d2d2412546a0e4e3938b2d3",
+    "armed": false,
+    "liveVpsPlanPerformed": false,
+    "signed": false,
+    "publicApply": false
+  },
+  "tests": {
+    "pinUpdateSafety": 11,
+    "existingPublicationCycle": 18,
+    "existingPublicationExecutor": 27,
+    "existingPublicationReadiness": 14,
+    "total": 70,
+    "failed": 0,
+    "vocabularyErrors": 0,
+    "vocabularyRoles": 10
+  },
+  "browser": {
+    "target": "https://graph-beta.isinxnisi.com",
+    "passed": 1,
+    "failed": 0,
+    "width": 1440,
+    "paths": [
+      "step ACTING then DIRECTING",
+      "AFI original evidence",
+      "claim detail",
+      "Graph two steps",
+      "save/reload restore",
+      "reverse role order mismatch"
+    ],
+    "results": "accepted-beta-check/results.json",
+    "existingTrialProjection": true,
+    "retryNote": "Initial WSL browser launch lacked libnspr4; reused existing /tmp/noir-browser-tools/libs/usr/lib/x86_64-linux-gnu via LD_LIBRARY_PATH. No package/system change."
+  },
+  "environments": {
+    "mainBase": "7d8cdd4b81089bfc0742285b1ab62c2eaa0a9947",
+    "local3200Build": "vBqJY67wdqijTKKY-EMJL",
+    "betaBuild": "vBqJY67wdqijTKKY-EMJL",
+    "trialRevision": "film-beta-issue43-unaccepted-v1",
+    "productionRevision": "b74a4b00-9454-412f-af5d-1317713a543c",
+    "webChanged": false,
+    "databasesChanged": false
+  },
+  "operatorUpdate": {
+    "unprivilegedWslAndVpsStagingShaVerified": true,
+    "bundleSha256": "8998152004de259a793a13fd97803965621597c4bfaf2214bd354538c58df116",
+    "protectedPinsChanged": false,
+    "humanSudoRequired": true
+  },
+  "astra": {
+    "sourceCheckedTotal": 81,
+    "sourceCheckedAccepted": 2,
+    "sourceCheckedOutsideAcceptance": 79,
+    "entityCandidatesTotal": 97,
+    "entityCandidatesAccepted": 3,
+    "entityCandidatesOutsideAcceptance": 94,
+    "fullResearchIngested": false
+  },
+  "workerConfigChanged": false,
+  "controlBranchChanged": false,
+  "memberDbChanged": false,
+  "productionSigned": false,
+  "liveVpsPlanPerformed": false,
+  "publicApply": false
+}
