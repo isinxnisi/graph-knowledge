@@ -1,3 +1,5 @@
+> 2026-10-28更新：本番公開は完了しました。同nonceの公開署名・全件検証・排他finished・監査・条件付きresumeを確認済みです。以下の操作コマンドは当時の履歴であり再実行しません。[最新の公開完了・3200／beta整理記録](../../verification/FILM_INITIAL_PRODUCTION_20261028.md)。
+
 # 映画2 Claimの正式受入完了と進行履歴
 
 2026-10-28の現在地：operator pin更新・通常Worker ACK・root実plan・既存delivery登録は完了。次の人間操作は[固定requestに対するWeb切替・個別本番公開署名](PUBLICATION_APPROVAL_REVIEW.md)。以下のpin更新／ロック競合時のコマンドは実行済み履歴で、再実行しない。

@@ -1,0 +1,30 @@
+{
+  "scope": "read-only validation; no collection or acceptance attempted",
+  "workerCodeCommit": "973c7b0c599f79905a029b28b524f4924e169376",
+  "runtimeContributionRoleCount": 8,
+  "currentPublishedArtifact": "publication-film-initial-20261027",
+  "validationExitCode": 1,
+  "errorType": "ZodError",
+  "rejectedPaths": [
+    [
+      "claims",
+      370,
+      "contribution",
+      "roleId"
+    ],
+    [
+      "claims",
+      536,
+      "contribution",
+      "roleId"
+    ]
+  ],
+  "rejectedRoles": [
+    "ACTING",
+    "DIRECTING"
+  ],
+  "workerCodeOrConfigChanged": false,
+  "allExistingApprovedRecipesAffected": null,
+  "mustCheckBeforeUsingNewBase": true,
+  "followupIssue": "https://github.com/isinxnisi/graph-knowledge/issues/55"
+}

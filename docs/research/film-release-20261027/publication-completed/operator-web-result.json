@@ -1,0 +1,27 @@
+{
+  "source": "operator pasted output; subsequent production browser verified independently",
+  "result": {
+    "build": "oTXBAgU034CoviTmmAHQ9",
+    "webImage": "sha256:afaa4a8203e757f5a604c08653a83f4944856717d1cafc45af3be8c1d000e65d",
+    "oldBuild": "p2mPLpwWtvRzE54EdYqwS",
+    "memberTablesUnchanged": 29,
+    "migrationCountUnchanged": 11,
+    "memberDumpSha256": "1f9142db061557dbfe84d92d4c5c98615a3373700bae045ee573d7a656e1014b",
+    "environmentUnchanged": true,
+    "otherComposeSettingsUnchanged": true,
+    "databaseContainersUnchanged": true,
+    "kgRevision": "b74a4b00-9454-412f-af5d-1317713a543c",
+    "kgGraphDigest": "509b460f9fc56e414677d5cf4f1a25634ab48171810ac27413461db2914f3da4",
+    "initialAiArtifactUnchanged": true,
+    "checks": {
+      "datasetRevision": "b74a4b00-9454-412f-af5d-1317713a543c",
+      "googleProviderPreserved": true,
+      "anonymousProfileStatus": 401,
+      "filmStepRoleRequestStatus": 200,
+      "filmRecordsStillUnpublished": true
+    },
+    "signed": false,
+    "publicApply": false,
+    "backupDirectory": "/root/plunode-film-publication-20261028-vps"
+  }
+}

@@ -1,3 +1,7 @@
+後続の漫画受入で新公開baseを使う前に、設置済み8 Role版Workerの互換対応が必要（[Issue #55](https://github.com/isinxnisi/graph-knowledge/issues/55)）。稼働Workerは変更していない。
+
+2026-10-28、映画DIRECTING／ACTINGと映画2 Claimの正式受入・本番公開を完了。plunode.net revision7c54da24…、Web build oTXBAgU034CoviTmmAHQ9。既存Issue #33の個別署名と同nonce配送を検証し、exclusion finished・監査完了・条件付きWorker resumeを確認。3200／betaは旧試験KGを保全した別DB7697の正式データ確認用投影へ切替。未収録79記録・94 Entity候補は後続。[正式公開・実ブラウザ・保全記録](verification/FILM_INITIAL_PRODUCTION_20261028.md)。以下の先行日付の未承認／未公開記述は当時の履歴。
+
 2026-10-27、映画Roleの固定hash登録、最新本番backup＋全receiptに基づく映画受入経路、公開operatorの隔離実証、Claim個別のbeta試験表示を準備。正式Role／Claim判断・SSH/sudo・個別公開署名は未実施。mainへ統合し3200／betaへ配置。全画面bannerを撤去し実ブラウザ6件成功。[手順](runbooks/FILM_INITIAL_RELEASE.md)／[検証](verification/FILM_RELEASE_20261027.md)。
 
 2026-10-26、Issue #43で洋画の段別Role探索と映画2 Claimのbeta試験を本線へ統合し、3200／HTTPS betaへ配置・実ブラウザ6件を確認した。監督・出演は試験登録で正式承認前。専用KG7696に既存betaデータを保持し、本番公開を行わない。[契約](design/FILM_BETA.md)／[検証・配置状況](verification/FILM_BETA_20261026.md)。

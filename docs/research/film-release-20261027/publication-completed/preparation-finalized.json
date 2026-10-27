@@ -1,0 +1,13 @@
+{
+  "completedAnnouncementPublished": true,
+  "retiredReason": "publication-completed",
+  "state": {
+    "phase": "idle",
+    "schemaVersion": 1
+  },
+  "runtimeBaseSynced": true,
+  "release": "publication-film-initial-20261027",
+  "revision": "7c54da24-6fa9-46a5-810d-834eed8328d9",
+  "dataSha256": "c8c59c6d5f9a78b616ffe6ca733cad341ec17b414ea7abe8783969449777c56c",
+  "manifestFileSha256": "d25627720d2d77e5efaaa5b1fe2adb8d788291e39799f424746f22d840dd8187"
+}

@@ -1,3 +1,7 @@
+後続の漫画受入で新公開baseを使う前に、設置済み8 Role版Workerの互換対応が必要（[Issue #55](https://github.com/isinxnisi/graph-knowledge/issues/55)）。稼働Workerは変更していない。
+
+2026-10-28、映画DIRECTING／ACTINGと映画2 Claimの正式受入・本番公開を完了。plunode.net revision7c54da24…、Web build oTXBAgU034CoviTmmAHQ9。既存Issue #33の個別署名と同nonce配送を検証し、exclusion finished・監査完了・条件付きWorker resumeを確認。3200／betaは旧試験KGを保全した別DB7697の正式データ確認用投影へ切替。未収録79記録・94 Entity候補は後続。[正式公開・実ブラウザ・保全記録](verification/FILM_INITIAL_PRODUCTION_20261028.md)。以下の先行日付の未承認／未公開記述は当時の履歴。
+
 2026-10-28、映画Role operatorのWSL／VPS固定pin更新を運営者が完了。Codexが既存Issue #33経路で同じ映画2 Claim候補をarm・通常Worker ACK・root追加のみ実plan・delivery登録まで実施し、個別公開署名待ち。Webは旧8 Role版のため、正式10 Role対応Web切替と固定request署名を[一つの運営者枠](research/film-release-20261027/PUBLICATION_APPROVAL_REVIEW.md)へ準備。本番KG／Webの変更・署名は未実施。Worker設定・収集承認は保持し、公開協調のpause-newだけをACK。未収録79記録・94 Entity候補の拡充は別作業。
 
 2026-10-27、固定票6bdc6af8…への運営者の正式承認に基づき、映画2 Claim＋依存3 Entity／2 Source／2 Citationを既存accept-filmで正式受入。receipt 3ac7b6be…、旧10 receipt不変、release validate／追加のみoffline plan成功。固定公開候補を準備したが、VPS image pin更新・root live plan・個別公開署名・本番applyは未実施。[現在地・次の運営者操作](research/film-release-20261027/FORMAL_ACCEPTANCE_STATUS.md)。Astra全体を収録済みとせず、未受入79記録・94 Entity候補を[後続拡充](research/film-release-20261027/ASTRA_RESEARCH_BACKLOG.md)へ引き継ぐ。漫画Worker・control・会員DB・本番KGは保持。

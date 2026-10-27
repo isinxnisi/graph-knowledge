@@ -1,3 +1,5 @@
+> 2026-10-28更新：本番公開は完了しました。同nonceの公開署名・全件検証・排他finished・監査・条件付きresumeを確認済みです。以下の操作コマンドは当時の履歴であり再実行しません。[最新の公開完了・3200／beta整理記録](../../verification/FILM_INITIAL_PRODUCTION_20261028.md)。
+
 # 映画初期公開：固定requestの個別本番公開承認
 
 2026-10-28 JST。Role 2件・映画2 Claim＋依存3 Entity／2 Source／2 Citationは正式受入済み。運営者によるWSL／VPS operator pin更新も完了し、Codexが同じ固定候補のarm・通常Worker ACK・root実plan・既存delivery登録まで完了した。**本番Web切替・個別公開署名・本番KG applyはまだ行っていない。**

@@ -1,0 +1,18 @@
+{
+  "oldTrialAndOriginalKgAllBytesUnchanged": true,
+  "betaMemberTablesUnchanged": 29,
+  "oldTrialGraph": {
+    "nodes": 10080,
+    "relationships": 9937,
+    "sha256": "db6fee5875120eb992bcd96fe563c3ea9da8f20925bd7b179d706b80484ff488"
+  },
+  "originalGraph": {
+    "nodes": 10067,
+    "relationships": 9926,
+    "sha256": "d48097750f76abcc5990f04e5e32ad60d4be5ff2e5620858e84ab88504cb9644"
+  },
+  "newConfirmationGraphIsSeparate": true,
+  "noMemberMigration": true,
+  "candidateWebStopped": true,
+  "protectedFilesUnchanged": 83
+}

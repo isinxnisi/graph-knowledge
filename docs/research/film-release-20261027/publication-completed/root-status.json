@@ -1,0 +1,89 @@
+{
+  "artifactSha256": "055bcacb42dfe5b7c3b32cb17fece1b8748a1900fb5c7618c4faa61ffa9894d7",
+  "baseRelease": "manga-issue-34-obata-drawing-20261023",
+  "baseRevision": "b74a4b00-9454-412f-af5d-1317713a543c",
+  "nonce": "6b240b18-56e4-4ea4-995f-7be7424c3fb2",
+  "pendingAudit": false,
+  "phase": "completed",
+  "publishedRevision": "7c54da24-6fa9-46a5-810d-834eed8328d9",
+  "release": "publication-film-initial-20261027",
+  "request": {
+    "artifactSha256": "055bcacb42dfe5b7c3b32cb17fece1b8748a1900fb5c7618c4faa61ffa9894d7",
+    "baseRelease": "manga-issue-34-obata-drawing-20261023",
+    "baseRevision": "b74a4b00-9454-412f-af5d-1317713a543c",
+    "environment": "production",
+    "operatorDigest": "sha256:7042781b105067ce3adea0c59bccfb4c8326f84c0ca6aa5f1b8c26e6cd3d5cef",
+    "planSha256": "16dc070797315903397389d071b4a118acdbbb5a1cdd5dd0a0f6677503d95ebc",
+    "purpose": "public-kg-publication",
+    "receiptSetSha256": "614a0f3ccff3854280012767f580a99427c94f72bd846a920e4dc1ed91d57ffd",
+    "release": "publication-film-initial-20261027",
+    "schemaVersion": 1
+  },
+  "verification": {
+    "apiClaimsVerified": 2,
+    "counts": {
+      "nodes": {
+        "Citation": 1934,
+        "Claim": 1897,
+        "Entity": 2178,
+        "ExternalIdentifier": 2547,
+        "Source": 1797
+      },
+      "relationships": {
+        "CITES": 1934,
+        "HAS_CITATION": 1934,
+        "HAS_EXTERNAL_ID": 2547,
+        "OBJECT": 1897,
+        "SUBJECT": 1897
+      }
+    },
+    "dataSha256": "c8c59c6d5f9a78b616ffe6ca733cad341ec17b414ea7abe8783969449777c56c",
+    "manifestDigest": "8239c49b4b676842cade54547fc594cde72117fa5e8f12ce6b422e24444a12b9",
+    "manifestFileSha256": "d25627720d2d77e5efaaa5b1fe2adb8d788291e39799f424746f22d840dd8187",
+    "release": "publication-film-initial-20261027",
+    "revision": "7c54da24-6fa9-46a5-810d-834eed8328d9",
+    "verified": true
+  },
+  "exclusion": {
+    "artifactSha256": "055bcacb42dfe5b7c3b32cb17fece1b8748a1900fb5c7618c4faa61ffa9894d7",
+    "closure": {
+      "payload": {
+        "artifactSha256": "055bcacb42dfe5b7c3b32cb17fece1b8748a1900fb5c7618c4faa61ffa9894d7",
+        "closedAt": "2026-10-27T15:51:17.845358+00:00",
+        "codeCommit": "973c7b0c599f79905a029b28b524f4924e169376",
+        "generation": 2,
+        "nonce": "6b240b18-56e4-4ea4-995f-7be7424c3fb2",
+        "pause": {
+          "controlId": "pub-6b240b18-56e4-4ea4-995f-7be7424c3fb2-pause",
+          "controlSha256": "5c4609166c0ff47d6189f0cd4df7e6482c7cafd22c779dd1bc1f5ac80f9ade1b",
+          "revision": 5
+        },
+        "phase": "closed",
+        "purpose": "publication-exclusion-closed",
+        "receiptSetSha256": "614a0f3ccff3854280012767f580a99427c94f72bd846a920e4dc1ed91d57ffd",
+        "schemaVersion": 1,
+        "ticketId": "74298afb-83fe-497d-875d-f2c469c9f4a3",
+        "workerId": "plunode-wsl"
+      },
+      "signature": "exizWCkE6ljvx1vEkep1LxHzQEbIRQECyJ3JnVIDApTgY5xAvxqWveX5AnxvHToqrxsIECts3i0XGQAxSd2yAQ=="
+    },
+    "codeCommit": "973c7b0c599f79905a029b28b524f4924e169376",
+    "generation": 2,
+    "nonce": "6b240b18-56e4-4ea4-995f-7be7424c3fb2",
+    "pause": {
+      "controlId": "pub-6b240b18-56e4-4ea4-995f-7be7424c3fb2-pause",
+      "controlSha256": "5c4609166c0ff47d6189f0cd4df7e6482c7cafd22c779dd1bc1f5ac80f9ade1b",
+      "revision": 5
+    },
+    "phase": "finished",
+    "receiptSetSha256": "614a0f3ccff3854280012767f580a99427c94f72bd846a920e4dc1ed91d57ffd",
+    "resume": {
+      "closureSha256": "0fe18653ce60c5b2324306ba140cc310fd16ea0b99e9f05d5538fa13d0671ca7",
+      "controlId": "pub-6b240b18-56e4-4ea4-995f-7be7424c3fb2-resume",
+      "previousControlId": "pub-6b240b18-56e4-4ea4-995f-7be7424c3fb2-pause",
+      "revision": 6
+    },
+    "ticketId": "74298afb-83fe-497d-875d-f2c469c9f4a3",
+    "workerId": "plunode-wsl"
+  }
+}

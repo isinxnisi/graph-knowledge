@@ -50,7 +50,7 @@
 
 | 現役の設計文書 | 状態・読む場面 |
 | --- | --- |
-| [洋画Role・段別探索のbeta接続](design/FILM_BETA.md) | Issue #43。正式8 Roleを保持し監督・出演を試験認識。映画2 Claimは専用KGで評価、正式判断・公開は別。 |
+| [洋画Role・段別探索のbeta接続](design/FILM_BETA.md) | Issue #43を継承し正式10 Role・映画2 Claimを本番公開済み。旧trialを保全してbetaは独立DB7697で正式データを確認。[公開完了](verification/FILM_INITIAL_PRODUCTION_20261028.md)。 |
 | [コミュニティ体験設計](design/COMMUNITY_EXPERIENCE.md)／[基礎設計](design/COMMUNITY_FOUNDATION.md)／[導入計画](design/COMMUNITY_IMPLEMENTATION_PLAN.md) | コミュニティを中心に会員・独立会話・版付き掲載・公開範囲・管理・AIを整理。人間向けC1a／C1bはfeature flag内で実装・隔離検証。C3-minを追加し、C2を初回公開条件から分離。[現行C1b](design/COMMUNITY_CONTINUITY.md)／[初期試作](verification/COMMUNITY_PROTOTYPE_20261021.md)。本番・既存会員DB適用・AI接続なし |
 | [コミュニティ本線UI接続確認版](design/COMMUNITY_CONNECTION_PREVIEW.md) | 実Home・Explorer・会員画面を再利用する隔離3275／graph-com。架空会員/コミュニティと公開KG読み取りを分離。A〜Cの往復・状態復元・密度比較。[検証](verification/COMMUNITY_CONNECTION_20261021.md) |
 | [保存原文からの正式受入](design/SAVED_EVIDENCE_ACCEPTANCE.md) | Issue #34。取得済み原文・人間の意味承認・固定1 Claim＋Source/Citationを既存receipt基盤へ接続。検証済み本番backupの明示モード、旧baseと最新VPS実planを区別。Workerコード・state・scheduleは維持。[実受入1 Claim・release準備完了](verification/SAVED_EVIDENCE_ACCEPTANCE_20261021.md) |

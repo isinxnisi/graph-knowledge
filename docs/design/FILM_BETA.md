@@ -1,3 +1,5 @@
+2026-10-28更新：2 Role・2 Claimは正式受入・本番公開済み。日常betaは旧trialを保全した別DB7697／GRAPH_FILM_BETA=0の確認用投影へ切替。private beta-confirmation.jsonと旧beta-film.jsonの同時指定は拒否する。本番とbetaは異なるrevision・漫画snapshotである。[現在の確認契約・保全・復旧](../verification/FILM_INITIAL_PRODUCTION_20261028.md)。以下はIssue #43からの試験段階の履歴。
+
 # 洋画Role・段別探索の本線接続（Issue #43）
 
 2026-10-26。[Issue #43](https://github.com/isinxnisi/graph-knowledge/issues/43)のbeta評価契約。#40の12f3476、#41の2f1f6d6、Astra研究461cd1cを最新mainへ差分統合する。

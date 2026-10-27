@@ -1,0 +1,40 @@
+{
+  "candidate": "/home/isinxnisi/.local/share/plunode-publication/preparation/candidates/6b240b18-56e4-4ea4-995f-7be7424c3fb2",
+  "deliveryStage": "completed",
+  "humanDecision": {
+    "actorType": "human",
+    "decidedAt": "2026-10-23T17:52:48.636584+00:00",
+    "reviewer": "isinxnisi（運営者）",
+    "statement": "2026-10-24のチャットで運営者がIssue #33の正式受入後から公開承認待ちまでの自動準備の完成と定常運用を指示した。正式receiptだけを使う候補生成・転送・実plan・登録、および既存pause-newと通常Worker ACK、VPSの署名閉鎖後に自分のpauseだけ条件付きresumeする運用を、この指示の範囲で実施する。個別データの公開承認・署名・無承認apply・Worker設定変更・強制終了は認めない。"
+  },
+  "nonce": "6b240b18-56e4-4ea4-995f-7be7424c3fb2",
+  "publicationResult": {
+    "artifactSha256": "055bcacb42dfe5b7c3b32cb17fece1b8748a1900fb5c7618c4faa61ffa9894d7",
+    "nonce": "6b240b18-56e4-4ea4-995f-7be7424c3fb2",
+    "phase": "completed",
+    "publishedRevision": "7c54da24-6fa9-46a5-810d-834eed8328d9",
+    "release": "publication-film-initial-20261027"
+  },
+  "request": {
+    "artifactSha256": "055bcacb42dfe5b7c3b32cb17fece1b8748a1900fb5c7618c4faa61ffa9894d7",
+    "baseRelease": "manga-issue-34-obata-drawing-20261023",
+    "baseRevision": "b74a4b00-9454-412f-af5d-1317713a543c",
+    "environment": "production",
+    "operatorDigest": "sha256:7042781b105067ce3adea0c59bccfb4c8326f84c0ca6aa5f1b8c26e6cd3d5cef",
+    "planSha256": "16dc070797315903397389d071b4a118acdbbb5a1cdd5dd0a0f6677503d95ebc",
+    "purpose": "public-kg-publication",
+    "receiptSetSha256": "614a0f3ccff3854280012767f580a99427c94f72bd846a920e4dc1ed91d57ffd",
+    "release": "publication-film-initial-20261027",
+    "schemaVersion": 1
+  },
+  "schemaVersion": 1,
+  "ticket": {
+    "artifactSha256": "055bcacb42dfe5b7c3b32cb17fece1b8748a1900fb5c7618c4faa61ffa9894d7",
+    "codeCommit": "973c7b0c599f79905a029b28b524f4924e169376",
+    "generation": 2,
+    "nonce": "6b240b18-56e4-4ea4-995f-7be7424c3fb2",
+    "receiptSetSha256": "614a0f3ccff3854280012767f580a99427c94f72bd846a920e4dc1ed91d57ffd",
+    "ticketId": "74298afb-83fe-497d-875d-f2c469c9f4a3",
+    "workerId": "plunode-wsl"
+  }
+}

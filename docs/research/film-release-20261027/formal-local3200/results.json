@@ -1,0 +1,209 @@
+{
+  "config": {
+    "argv": [
+      "/home/isinxnisi/.nvm/versions/node/v24.15.0/bin/node",
+      "/home/isinxnisi/1.projects/.worktrees/graph-film-initial-release/node_modules/.bin/playwright",
+      "test",
+      "--config",
+      "playwright.film43.config.ts"
+    ],
+    "configFile": "/home/isinxnisi/1.projects/.worktrees/graph-film-initial-release/playwright.film43.config.ts",
+    "rootDir": "/home/isinxnisi/1.projects/.worktrees/graph-film-initial-release/tests/film43",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "/home/isinxnisi/1.projects/.worktrees/graph-film-initial-release/docs/research/film-release-20261027/formal-local3200",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "",
+        "name": "",
+        "testDir": "/home/isinxnisi/1.projects/.worktrees/graph-film-initial-release/tests/film43",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 180000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "docs/research/film-release-20261027/formal-local3200/results.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.63.0",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "film-beta.spec.ts",
+      "file": "film-beta.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "film candidates: conditions, evidence, Graph and saved restore 1440",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 29974,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-27T16:04:43.957Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "film-route",
+                      "contentType": "application/json",
+                      "body": "eyJyb290IjoiNjA0ZWI0OWUtZGY0MS00MTU3LThiNDktYmQ5MmEwZDkzYWQ0IiwicGVyc29uIjoiNDkwZWU1ODktNzZkYi00YTVlLTg5MjMtMTNkMjRiN2NiM2EyIiwiZW5kcG9pbnQiOiI4MDViOTYzMC1jZDlhLTQ5MzEtOGNkZS0wYmNiOTJiZjhhOWYiLCJyZWxhdGlvbiI6eyJ2ZXJzaW9uIjoxLCJ0eXBlIjoicGF0dGVybiIsInBhdHRlcm4iOnsiaWQiOiJvdGhlci13b3JrcyIsInJldmlzaW9uIjozfSwicG9sYXJpdHkiOiJhZmZpcm1lZCIsImNvbnRyaWJ1dGlvblJvbGVzIjpudWxsLCJzdGVwUm9sZXMiOltbIkFDVElORyJdLFsiRElSRUNUSU5HIl1dfSwiZXhlY3V0aW9uIjp7InR5cGUiOiJwYXR0ZXJuIiwicm91dGVzIjpbeyJyb3V0ZSI6eyJub2RlSWRzIjpbIjYwNGViNDllLWRmNDEtNDE1Ny04YjQ5LWJkOTJhMGQ5M2FkNCIsIjQ5MGVlNTg5LTc2ZGItNGE1ZS04OTIzLTEzZDI0YjdjYjNhMiIsIjgwNWI5NjMwLWNkOWEtNDkzMS04Y2RlLTBiY2I5MmJmOGE5ZiJdLCJjbGFpbUlkcyI6WyI0Yzg4YjhlOC0xNTRkLTQ3YWQtYmY4Mi1mMTk4NzZlY2FlYmQiLCIzNGI0MWQyMy1mNGU2LTRmYzYtYWE2Zi0yOTA1ZjNjMmE4OTAiXX0sIm9wZW4iOnRydWV9XSwicmVxdWlyZWRSb3V0ZUtleSI6IjYwNGViNDllLWRmNDEtNDE1Ny04YjQ5LWJkOTJhMGQ5M2FkNDo0OTBlZTU4OS03NmRiLTRhNWUtODkyMy0xM2QyNGI3Y2IzYTI6ODA1Yjk2MzAtY2Q5YS00OTMxLThjZGUtMGJjYjkyYmY4YTlmIiwiY2FuZGlkYXRlQm91bmRhcnkiOm51bGwsImVudGl0eVN0YXRlIjp7InZlcnNpb24iOjEsImJyYW5jaGVzIjpbeyJpZCI6IjYwNGViNDllLWRmNDEtNDE1Ny04YjQ5LWJkOTJhMGQ5M2FkNCIsIm9wZW4iOnRydWUsImNsYWltSWRzIjpbIjRjODhiOGU4LTE1NGQtNDdhZC1iZjgyLWYxOTg3NmVjYWViZCJdfSx7ImlkIjoiNDkwZWU1ODktNzZkYi00YTVlLTg5MjMtMTNkMjRiN2NiM2EyIiwib3BlbiI6dHJ1ZSwiY2xhaW1JZHMiOlsiNGM4OGI4ZTgtMTU0ZC00N2FkLWJmODItZjE5ODc2ZWNhZWJkIiwiMzRiNDFkMjMtZjRlNi00ZmM2LWFhNmYtMjkwNWYzYzJhODkwIl19XSwic291cmNlcyI6W3siaWQiOiI2MDRlYjQ5ZS1kZjQxLTQxNTctOGI0OS1iZDkyYTBkOTNhZDQiLCJyZXF1aXJlZFJvdXRlS2V5IjoiNjA0ZWI0OWUtZGY0MS00MTU3LThiNDktYmQ5MmEwZDkzYWQ0OjQ5MGVlNTg5LTc2ZGItNGE1ZS04OTIzLTEzZDI0YjdjYjNhMjo4MDViOTYzMC1jZDlhLTQ5MzEtOGNkZS0wYmNiOTJiZjhhOWYiLCJjYW5kaWRhdGVCb3VuZGFyeSI6bnVsbH1dfX19"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "2a35a59aeb92e8084c13-a7318d612beaf2fd1837",
+          "file": "film-beta.spec.ts",
+          "line": 10,
+          "column": 34
+        },
+        {
+          "title": "film candidates: conditions, evidence, Graph and saved restore 390",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 21309,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-27T16:05:14.210Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "film-route",
+                      "contentType": "application/json",
+                      "body": "eyJyb290IjoiNjA0ZWI0OWUtZGY0MS00MTU3LThiNDktYmQ5MmEwZDkzYWQ0IiwicGVyc29uIjoiNDkwZWU1ODktNzZkYi00YTVlLTg5MjMtMTNkMjRiN2NiM2EyIiwiZW5kcG9pbnQiOiI4MDViOTYzMC1jZDlhLTQ5MzEtOGNkZS0wYmNiOTJiZjhhOWYiLCJyZWxhdGlvbiI6eyJ2ZXJzaW9uIjoxLCJ0eXBlIjoicGF0dGVybiIsInBhdHRlcm4iOnsiaWQiOiJvdGhlci13b3JrcyIsInJldmlzaW9uIjozfSwicG9sYXJpdHkiOiJhZmZpcm1lZCIsImNvbnRyaWJ1dGlvblJvbGVzIjpudWxsLCJzdGVwUm9sZXMiOltbIkFDVElORyJdLFsiRElSRUNUSU5HIl1dfSwiZXhlY3V0aW9uIjp7InR5cGUiOiJwYXR0ZXJuIiwicm91dGVzIjpbeyJyb3V0ZSI6eyJub2RlSWRzIjpbIjYwNGViNDllLWRmNDEtNDE1Ny04YjQ5LWJkOTJhMGQ5M2FkNCIsIjQ5MGVlNTg5LTc2ZGItNGE1ZS04OTIzLTEzZDI0YjdjYjNhMiIsIjgwNWI5NjMwLWNkOWEtNDkzMS04Y2RlLTBiY2I5MmJmOGE5ZiJdLCJjbGFpbUlkcyI6WyI0Yzg4YjhlOC0xNTRkLTQ3YWQtYmY4Mi1mMTk4NzZlY2FlYmQiLCIzNGI0MWQyMy1mNGU2LTRmYzYtYWE2Zi0yOTA1ZjNjMmE4OTAiXX0sIm9wZW4iOnRydWV9XSwicmVxdWlyZWRSb3V0ZUtleSI6IjYwNGViNDllLWRmNDEtNDE1Ny04YjQ5LWJkOTJhMGQ5M2FkNDo0OTBlZTU4OS03NmRiLTRhNWUtODkyMy0xM2QyNGI3Y2IzYTI6ODA1Yjk2MzAtY2Q5YS00OTMxLThjZGUtMGJjYjkyYmY4YTlmIiwiY2FuZGlkYXRlQm91bmRhcnkiOm51bGwsImVudGl0eVN0YXRlIjp7InZlcnNpb24iOjEsImJyYW5jaGVzIjpbeyJpZCI6IjYwNGViNDllLWRmNDEtNDE1Ny04YjQ5LWJkOTJhMGQ5M2FkNCIsIm9wZW4iOnRydWUsImNsYWltSWRzIjpbIjRjODhiOGU4LTE1NGQtNDdhZC1iZjgyLWYxOTg3NmVjYWViZCJdfSx7ImlkIjoiNDkwZWU1ODktNzZkYi00YTVlLTg5MjMtMTNkMjRiN2NiM2EyIiwib3BlbiI6dHJ1ZSwiY2xhaW1JZHMiOlsiNGM4OGI4ZTgtMTU0ZC00N2FkLWJmODItZjE5ODc2ZWNhZWJkIiwiMzRiNDFkMjMtZjRlNi00ZmM2LWFhNmYtMjkwNWYzYzJhODkwIl19XSwic291cmNlcyI6W3siaWQiOiI2MDRlYjQ5ZS1kZjQxLTQxNTctOGI0OS1iZDkyYTBkOTNhZDQiLCJyZXF1aXJlZFJvdXRlS2V5IjoiNjA0ZWI0OWUtZGY0MS00MTU3LThiNDktYmQ5MmEwZDkzYWQ0OjQ5MGVlNTg5LTc2ZGItNGE1ZS04OTIzLTEzZDI0YjdjYjNhMjo4MDViOTYzMC1jZDlhLTQ5MzEtOGNkZS0wYmNiOTJiZjhhOWYiLCJjYW5kaWRhdGVCb3VuZGFyeSI6bnVsbH1dfX19"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "2a35a59aeb92e8084c13-a9e327b7081bf0ce3ca1",
+          "file": "film-beta.spec.ts",
+          "line": 10,
+          "column": 34
+        }
+      ]
+    },
+    {
+      "title": "regressions.spec.ts",
+      "file": "regressions.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "existing manga, presets, Google/member boundaries and AI lab",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 8190,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-27T16:05:35.577Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "a34af78d704591628420-cbf8dc98a212235078ee",
+          "file": "regressions.spec.ts",
+          "line": 3,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-27T16:04:42.115Z",
+    "duration": 61868.185,
+    "expected": 3,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

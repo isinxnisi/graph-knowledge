@@ -1,3 +1,5 @@
+> 2026-10-28更新：本番公開は完了しました。同nonceの公開署名・全件検証・排他finished・監査・条件付きresumeを確認済みです。以下の操作コマンドは当時の履歴であり再実行しません。[最新の公開完了・3200／beta整理記録](FILM_INITIAL_PRODUCTION_20261028.md)。
+
 # 2026-10-28：operator更新・root実plan・個別署名待ち
 
 運営者がWSL／VPSの固定operator pin更新を完了。WSL設定SHA5dae7bf5…、VPS program manifest 0e92dd6f…、config c15a21f3…、operator7042781b…。新imageで読取したKGは従来のb74a4b00…／graph509b460f…、2175 Entity／1895 Claimを保持。[実操作出力と独立再照合](../research/film-release-20261027/operator-pin-update-result.json)。
