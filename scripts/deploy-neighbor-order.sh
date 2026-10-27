@@ -33,7 +33,8 @@ snapshot() {
   done | sort
 }
 snapshot > "$receipt/other-containers-before"
-"${dc[@]}" config --format json > "$receipt/config-before.json"
+# Inspect every profile without starting it. Normal config omits ops/member-ops.
+"${dc[@]}" --profile '*' config --format json > "$receipt/config-before.json"
 docker load -i images.tar.gz
 actual=$(docker image inspect "graph-knowledge-web:$tag" --format '{{.Id}}')
 python3 - "$actual" <<'PY'
@@ -84,12 +85,13 @@ compose.write_text(s)
 PY
 chmod 0600 "$app/app.env"
 "${dc[@]}" config --quiet
-"${dc[@]}" config --format json > "$receipt/config-after.json"
+"${dc[@]}" --profile '*' config --format json > "$receipt/config-after.json"
 python3 - "$receipt" <<'PY'
 import json,sys
 from pathlib import Path
 p=Path(sys.argv[1]); a=json.loads((p/'config-before.json').read_text()); b=json.loads((p/'config-after.json').read_text())
-for service in ('web','ops'): b['services'][service]['image']=a['services'][service]['image']
+for service in ('web','ops','member-ops'):
+    if service in a['services']: b['services'][service]['image']=a['services'][service]['image']
 for key,value in [('GRAPH_NEIGHBOR_ORDER','bounded'),('GRAPH_NEIGHBOR_CANDIDATES','200'),('GRAPH_NEIGHBOR_CONNECTIONS','50')]:
     assert b['services']['web']['environment'].pop(key)==value, 'Runtime ranking settings differ from verified release'
 assert a==b, 'Unexpected configuration change'

@@ -69,3 +69,9 @@ hold開始01:47:57 JST。準備・変更・単体／型／lint・DB統合・ブ�
 VPS `/home/develop/graph-neighbor-order-issue54/` へ同一image archive・release.json・deploy/rollback scriptを転送し、4ファイルSHA照合成功。Docker保存形式のconfig IDとOCI manifest IDの双方をarchiveから検証し、VPS側の表現差を許容する。管理者コマンドは `sudo bash /home/develop/graph-neighbor-order-issue54/deploy-neighbor-order.sh`。sudo passwordが必要なため、まだ本番Webは変更していない。成功時receiptに旧image／設定／他container状態とrollback.shを保存する。失敗時はWebだけ復帰する。管理者の実行後に正式HTTPS代表経路を確認する。
 
 工程の経過時間（JST、並行作業を含む概算）: 最初のhold 01:47:57、準備・実装・単体/型/lint・DB計測を01:48〜02:08、初回image/commit/betaを02:08〜02:10、ブラウザ故障模擬と入口修正を02:10〜02:16。セッション終了後に02:20頃hold再取得、入口修正版betaと次ページ不具合検出を02:20〜02:24、修正・追加DB検証を02:24〜02:27、最終buildを02:28〜02:30、beta最終代表経路とarchive作成・転送を02:30〜02:34。単体/DBの個別所要時間は上記の実測を参照。文書追記で再buildはしない。本番はsudo待ちで、配置・実確認の所要時間は未確定。
+
+### 配置前停止の修正
+
+管理者の初回実行はarchive照合・image読込後、通常のCompose configに`ops` profileが含まれないため`KeyError: ops`で停止した。設定変更・Web起動より前の位置であり、SSH読取でKG revision `7c54da24-6fa9-46a5-810d-834eed8328d9`とdocker/caddy/管理Connector/通知serviceのactiveを確認した。
+
+設定比較だけに`--profile '*'`を付け、休止profileも含む全構成を比較する。起動コマンドは引き続きWebだけでprofileを有効にしない。共通image tagを使う`member-ops`も比較対象へ含め、ops実体は既存imageを保持する。架空の環境値・一時Composeによる回帰検証で、通常configのops省略を再現し、修正後の全profile比較成功と無関係なmember-ops環境変更の拒否を確認した（サービス起動なし）。Bash/Python構文・diff検査成功。Web image/releaseは変更せず、deploy scriptとSHA256SUMSだけ更新して同じ管理者コマンドを再実行する。
