@@ -1,0 +1,29 @@
+{
+  "report": {
+    "status": "published",
+    "kind": "report",
+    "sha256": "0728ad2332dd8dedbda88cc49bc784e05e32358e4096b903f66714f1b419ae89",
+    "transport": {
+      "commentId": 6473602430,
+      "url": "https://github.com/isinxnisi/graph-knowledge/issues/36#issuecomment-6473602430",
+      "author": "isinxnisi"
+    },
+    "at": "2026-10-28T15:46:26.683773+00:00"
+  },
+  "decisions": [
+    {
+      "decisionId": "b85cffb7-0292-4a3d-ad8a-836371d51316",
+      "recordedAt": "2026-10-28T13:26:43.628165+00:00",
+      "planSha256": "6bf70ea27be2782c1c62b0dccba9d9ba5c51dc1853b50c27466b88fb38ec10f3",
+      "reportSha256": "b106bf0ca38862f9a8b7c07e0cbe6fb45ec770d1770bcd73afa69f061e4cfa15",
+      "status": "accepted",
+      "reason": "train-category-only",
+      "transport": {
+        "commentId": 6470219417,
+        "url": "https://github.com/isinxnisi/graph-knowledge/issues/36#issuecomment-6470219417",
+        "author": "isinxnisi"
+      },
+      "selectionSourceSha256": "91218c559073df126bc56ab7fbecce7cf1878412baa40328c63970e9697afbea"
+    }
+  ]
+}

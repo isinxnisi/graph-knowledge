@@ -1,3 +1,5 @@
+2026-10-29、Issue #36の日次教育接続をmain／3200／betaへ反映。既存v1/v2にscheduled提案の正規化・出所確認・限定受入と時間外同期を接続し、公式AIを中心とする評価表示へ整理した。実CPU教育は推論3回・実更新1回・保存まで成立、再読込は180秒総時間上限で未完了。失敗を保持して有界な翌日分を再開し、Workerは20–23時JST・1日1回。クラウドの実方針・日次設定はユーザーがChatGPT側で進める未接続箇所として明示。本番・KG・会員DB・Kev・並行作業は保持。[実測・残接点・評価プロンプト](verification/AI_EDUCATION_SCHEDULED_20261029.md)。以下は各工程時点の履歴。
+
 2026-10-28、公開パイプライン改善・まとまり2の固定更新承認を反映完了。Role正本からの静的生成、3利用側の公開前互換検証、固定artifact/imageの再利用と状態診断をmain／3200／beta／本番Web・gate・operator／WSL delivery・approver・Task／固定Worker指定5ファイルへ反映した。Workerはbase pin `973c7b0c…` を保持し映画入り累積baseを扱う。実1,931 Claimを3利用側で検証し、両定期Task exit 0・準備up-to-date・12 receipt／映画36 Claim保持を確認。追加受入・署名・KG apply・会員migration・鍵／権限変更なし。未収録45記録・65 Entity候補は次の受入判断へ。[完了・検証・復旧資材](research/publication-pipeline-bundle2-20261028/rollout/COMPLETED.md)。以下は各工程時点の履歴。
 
 2026-10-28、映画DIRECTING／ACTINGと映画2 Claimの正式受入・本番公開を完了。plunode.net revision7c54da24…、Web build oTXBAgU034CoviTmmAHQ9。既存Issue #33の個別署名と同nonce配送を検証し、exclusion finished・監査完了・条件付きWorker resumeを確認。3200／betaは旧試験KGを保全した別DB7697の正式データ確認用投影へ切替。未収録79記録・94 Entity候補は後続。[正式公開・実ブラウザ・保全記録](verification/FILM_INITIAL_PRODUCTION_20261028.md)。以下の先行日付の未承認／未公開記述は当時の履歴。

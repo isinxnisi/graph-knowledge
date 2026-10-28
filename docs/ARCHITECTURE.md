@@ -10,6 +10,8 @@
 
 2026-10-25、[AI育成ラボ](design/AI_LAB_PUBLICATION.md)の保存済み公開artifact読取と日英観察画面を統合した。現行の共有認証provider・コミュニティ・運営・Graph／Claimを維持し、AI_LAB_ENABLEDでラボのみを有効化する。比較専用ページは通常アプリに追加しない。当初のmain／beta評価後、上記正式公開を実施。
 
+2026-10-29、[日次教育の接続](verification/AI_EDUCATION_SCHEDULED_20261029.md)をmain/betaへ反映。v1の独立CPU実行・共通guard・JST窓・日次予算と、v2のGitHub report/outbox・限定カテゴリ選択・v4公開artifactを再利用する。scheduled入力は厳密な`education-proposal-v1`からローカルで既存planへ正規化し、初回の運営者による実行確認・登録後のGitHub投稿者/task経路への信頼を区別する。任意コード・holdout変更・モデル採用・KG書込を受け付けない。Webは保存済み公開データを読むだけで、実行API・別教師Identityを追加しない。公式AIの判断内容を前に出し、技術的出所は監査詳細へ保持する。今回の再読込は時間上限で未完了、クラウドの実方針・日次設定も未接続として表示・報告し、本番へ反映していない。
+
 # 現行技術設計
 
 2026-10-25、Issue #39初期体験の修正：既存009を不変とした明示010で、全会員プロフィール・一つの表示名・初期公開（既存false保持）を準備する。sourceに公開由来と作成者参加世代・初投稿参照を加え、作成/コメントの投影を閲覧時に再認可する。旧sourceは公開経緯不明のため省き、本文抜粋を返さない。人物表示を共通化し、マイページと編集を認証/退会設定から分ける。独立DB/Webで評価後、2026-10-26に招待の公開ID/UUID互換対応を同梱した固定71b61fbをmainへ受入、既存3200/betaへ反映し実Googleを確認した。正式VPSは未変更。[契約](design/PUBLIC_ACCOUNTS.md)／[隔離検証](verification/PUBLIC_ACCOUNTS_INITIAL_CORRECTION_20261025.md)／[beta受入](verification/PUBLIC_ACCOUNTS_BETA_ACCEPTANCE_20261026.md)。

@@ -1,0 +1,72 @@
+{
+  "sourceCommit": "606f695333748afb21cc863174e5300d69606819",
+  "betaBuild": "z1Zc8JJyZg6u6jzdwr1wI",
+  "betaArtifactAfterMaintenanceSha256": "a522e5415875834e0b227ea616908de4f9f2dd4ec74a02584c7fbae44bff6255",
+  "pythonTests": 52,
+  "webExistingTests": 892,
+  "webAdditionalPolicyTests": 6,
+  "typecheck": true,
+  "eslint": true,
+  "webpackBuild": true,
+  "browser": {
+    "validationMentorship": [
+      "PASS mentorship ja 1440 light actual AI/machine decision separated; SHA/source/GitHub/Claim return; no new model calls or writes",
+      "PASS mentorship ja 1440 dark-blue actual AI/machine decision separated; SHA/source/GitHub/Claim return; no new model calls or writes",
+      "PASS mentorship ja 390 light actual AI/machine decision separated; SHA/source/GitHub/Claim return; no new model calls or writes",
+      "PASS mentorship ja 390 dark-blue actual AI/machine decision separated; SHA/source/GitHub/Claim return; no new model calls or writes",
+      "PASS mentorship en 1440 light actual AI/machine decision separated; SHA/source/GitHub/Claim return; no new model calls or writes",
+      "PASS mentorship en 1440 dark-blue actual AI/machine decision separated; SHA/source/GitHub/Claim return; no new model calls or writes",
+      "PASS mentorship en 390 light actual AI/machine decision separated; SHA/source/GitHub/Claim return; no new model calls or writes",
+      "PASS mentorship en 390 dark-blue actual AI/machine decision separated; SHA/source/GitHub/Claim return; no new model calls or writes"
+    ],
+    "validationLabJapanese": [
+      "PASS chromium ja 1440 light inference9, autoplay/stop/resume, no demo/control UI, history/evidence/Graph/account return",
+      "PASS chromium ja 1440 dark-blue inference9, autoplay/stop/resume, no demo/control UI, history/evidence/Graph/account return",
+      "PASS chromium ja 390 light inference9, autoplay/stop/resume, no demo/control UI, history/evidence/Graph/account return",
+      "PASS chromium ja 390 dark-blue inference9, autoplay/stop/resume, no demo/control UI, history/evidence/Graph/account return"
+    ],
+    "validationLabEnglish": [
+      "PASS chromium en 1440 light inference9, autoplay/stop/resume, no demo/control UI, history/evidence/Graph/account return",
+      "PASS chromium en 1440 dark-blue inference9, autoplay/stop/resume, no demo/control UI, history/evidence/Graph/account return",
+      "PASS chromium en 390 light inference9, autoplay/stop/resume, no demo/control UI, history/evidence/Graph/account return",
+      "PASS chromium en 390 dark-blue inference9, autoplay/stop/resume, no demo/control UI, history/evidence/Graph/account return",
+      "PASS chromium Host/CSP, read-only artifact, no private files or development routes"
+    ],
+    "betaMentorship": [
+      "PASS mentorship ja 1440 light actual AI/machine decision separated; SHA/source/GitHub/Claim return; no new model calls or writes",
+      "PASS mentorship ja 1440 dark-blue actual AI/machine decision separated; SHA/source/GitHub/Claim return; no new model calls or writes",
+      "PASS mentorship ja 390 light actual AI/machine decision separated; SHA/source/GitHub/Claim return; no new model calls or writes",
+      "PASS mentorship ja 390 dark-blue actual AI/machine decision separated; SHA/source/GitHub/Claim return; no new model calls or writes",
+      "PASS mentorship en 1440 light actual AI/machine decision separated; SHA/source/GitHub/Claim return; no new model calls or writes",
+      "PASS mentorship en 1440 dark-blue actual AI/machine decision separated; SHA/source/GitHub/Claim return; no new model calls or writes",
+      "PASS mentorship en 390 light actual AI/machine decision separated; SHA/source/GitHub/Claim return; no new model calls or writes",
+      "PASS mentorship en 390 dark-blue actual AI/machine decision separated; SHA/source/GitHub/Claim return; no new model calls or writes"
+    ],
+    "betaLab": [
+      "PASS chromium ja 1440 light inference9, autoplay/stop/resume, no demo/control UI, history/evidence/Graph/account return",
+      "PASS chromium ja 1440 dark-blue inference9, autoplay/stop/resume, no demo/control UI, history/evidence/Graph/account return",
+      "PASS chromium ja 390 light inference9, autoplay/stop/resume, no demo/control UI, history/evidence/Graph/account return",
+      "PASS chromium ja 390 dark-blue inference9, autoplay/stop/resume, no demo/control UI, history/evidence/Graph/account return",
+      "PASS chromium en 1440 light inference9, autoplay/stop/resume, no demo/control UI, history/evidence/Graph/account return",
+      "PASS chromium en 1440 dark-blue inference9, autoplay/stop/resume, no demo/control UI, history/evidence/Graph/account return",
+      "PASS chromium en 390 light inference9, autoplay/stop/resume, no demo/control UI, history/evidence/Graph/account return",
+      "PASS chromium en 390 dark-blue inference9, autoplay/stop/resume, no demo/control UI, history/evidence/Graph/account return",
+      "PASS chromium Host/CSP, read-only artifact, no private files or development routes"
+    ]
+  },
+  "loggedInExistingSessionPreserved": true,
+  "pageErrors": 0,
+  "browserModelRequests": 0,
+  "browserWrites": 0,
+  "maintenanceStatus": {
+    "at": "2026-10-28T15:50:05.201563+00:00",
+    "status": "synchronized",
+    "retryInference": false
+  },
+  "cloudActualPlanReceived": false,
+  "cloudDailySettingsInspected": false,
+  "sharedKevChanged": false,
+  "kgChanged": false,
+  "memberDbChanged": false,
+  "vpsChanged": false
+}

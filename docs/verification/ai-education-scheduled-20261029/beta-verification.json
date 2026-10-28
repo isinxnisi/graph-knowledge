@@ -1,0 +1,236 @@
+{
+  "deployment": {
+    "sourceCommit": "606f695333748afb21cc863174e5300d69606819",
+    "build": "z1Zc8JJyZg6u6jzdwr1wI",
+    "pid": 401178,
+    "oldBuild": "ilDXbEewAilubZmocWoTV",
+    "protectedSettingsPreserved": 22,
+    "configurationChanges": [],
+    "artifactSha256": "7e560856c3b7aa63bc3a4c4b9ce5b91057e3b3473753c899f5c97d461b5b962e",
+    "previousArtifactSha256": "b6c2ba0ba6b1a3b4ac32876a126ff268352efe58fd395923fc40c67de0290716",
+    "kgRevision": "34befbcd-8f5f-4cd9-a059-242a3f0b5ffb",
+    "memberDatabaseChanged": false,
+    "kgChanged": false,
+    "kevChanged": false,
+    "vpsChanged": false
+  },
+  "httpChecks": [
+    {
+      "origin": "http://127.0.0.1:3200",
+      "path": "/",
+      "status": 200
+    },
+    {
+      "origin": "http://127.0.0.1:3200",
+      "path": "/en",
+      "status": 200
+    },
+    {
+      "origin": "http://127.0.0.1:3200",
+      "path": "/ai-lab",
+      "status": 200
+    },
+    {
+      "origin": "http://127.0.0.1:3200",
+      "path": "/en/ai-lab",
+      "status": 200
+    },
+    {
+      "origin": "http://127.0.0.1:3200",
+      "path": "/communities",
+      "status": 200
+    },
+    {
+      "origin": "http://127.0.0.1:3200",
+      "path": "/member",
+      "status": 200
+    },
+    {
+      "origin": "http://127.0.0.1:3200",
+      "path": "/operations",
+      "status": 200
+    },
+    {
+      "origin": "http://127.0.0.1:3200",
+      "path": "/following",
+      "status": 200
+    },
+    {
+      "origin": "http://127.0.0.1:3200",
+      "path": "/people/plunode-official-ai",
+      "status": 200
+    },
+    {
+      "origin": "http://127.0.0.1:3200",
+      "path": "/en/people/explorer-apprentice",
+      "status": 200
+    },
+    {
+      "origin": "http://127.0.0.1:3200",
+      "path": "/api/dataset",
+      "status": 200
+    },
+    {
+      "origin": "http://127.0.0.1:3200",
+      "path": "/api/member/status",
+      "status": 200
+    },
+    {
+      "origin": "http://127.0.0.1:3200",
+      "path": "/api/communities",
+      "status": 200
+    },
+    {
+      "origin": "http://127.0.0.1:3200",
+      "path": "/api/communities/6047e2f1-45af-4096-803d-7dd1f9cd4057",
+      "status": 200
+    },
+    {
+      "origin": "http://127.0.0.1:3200",
+      "path": "/api/member/profile",
+      "status": 401
+    },
+    {
+      "origin": "http://127.0.0.1:3200",
+      "path": "/api/site-operations/summary",
+      "status": 401
+    },
+    {
+      "origin": "http://127.0.0.1:3200",
+      "path": "/api/accounts/me",
+      "status": 401
+    },
+    {
+      "origin": "http://127.0.0.1:3200",
+      "path": "/api/communities/invitations",
+      "status": 401
+    },
+    {
+      "origin": "http://127.0.0.1:3200",
+      "path": "/api/accounts/profiles/plunode-official-ai",
+      "status": 200
+    },
+    {
+      "origin": "http://127.0.0.1:3200",
+      "path": "/api/accounts/profiles/explorer-apprentice",
+      "status": 200
+    },
+    {
+      "origin": "http://127.0.0.1:3200",
+      "path": "/api/ai-lab",
+      "status": 200
+    },
+    {
+      "origin": "https://graph-beta.isinxnisi.com",
+      "path": "/",
+      "status": 200
+    },
+    {
+      "origin": "https://graph-beta.isinxnisi.com",
+      "path": "/en",
+      "status": 200
+    },
+    {
+      "origin": "https://graph-beta.isinxnisi.com",
+      "path": "/ai-lab",
+      "status": 200
+    },
+    {
+      "origin": "https://graph-beta.isinxnisi.com",
+      "path": "/en/ai-lab",
+      "status": 200
+    },
+    {
+      "origin": "https://graph-beta.isinxnisi.com",
+      "path": "/communities",
+      "status": 200
+    },
+    {
+      "origin": "https://graph-beta.isinxnisi.com",
+      "path": "/member",
+      "status": 200
+    },
+    {
+      "origin": "https://graph-beta.isinxnisi.com",
+      "path": "/operations",
+      "status": 200
+    },
+    {
+      "origin": "https://graph-beta.isinxnisi.com",
+      "path": "/following",
+      "status": 200
+    },
+    {
+      "origin": "https://graph-beta.isinxnisi.com",
+      "path": "/people/plunode-official-ai",
+      "status": 200
+    },
+    {
+      "origin": "https://graph-beta.isinxnisi.com",
+      "path": "/en/people/explorer-apprentice",
+      "status": 200
+    },
+    {
+      "origin": "https://graph-beta.isinxnisi.com",
+      "path": "/api/dataset",
+      "status": 200
+    },
+    {
+      "origin": "https://graph-beta.isinxnisi.com",
+      "path": "/api/member/status",
+      "status": 200
+    },
+    {
+      "origin": "https://graph-beta.isinxnisi.com",
+      "path": "/api/communities",
+      "status": 200
+    },
+    {
+      "origin": "https://graph-beta.isinxnisi.com",
+      "path": "/api/communities/6047e2f1-45af-4096-803d-7dd1f9cd4057",
+      "status": 200
+    },
+    {
+      "origin": "https://graph-beta.isinxnisi.com",
+      "path": "/api/member/profile",
+      "status": 401
+    },
+    {
+      "origin": "https://graph-beta.isinxnisi.com",
+      "path": "/api/site-operations/summary",
+      "status": 401
+    },
+    {
+      "origin": "https://graph-beta.isinxnisi.com",
+      "path": "/api/accounts/me",
+      "status": 401
+    },
+    {
+      "origin": "https://graph-beta.isinxnisi.com",
+      "path": "/api/communities/invitations",
+      "status": 401
+    },
+    {
+      "origin": "https://graph-beta.isinxnisi.com",
+      "path": "/api/accounts/profiles/plunode-official-ai",
+      "status": 200
+    },
+    {
+      "origin": "https://graph-beta.isinxnisi.com",
+      "path": "/api/accounts/profiles/explorer-apprentice",
+      "status": 200
+    },
+    {
+      "origin": "https://graph-beta.isinxnisi.com",
+      "path": "/api/ai-lab",
+      "status": 200
+    }
+  ],
+  "containersUnchanged": true,
+  "betaEnvFileUnchanged": true,
+  "legacyWorktreeUnchanged": true,
+  "workerEnabled": true,
+  "workerRunning": true,
+  "vpsChanged": false,
+  "writesDuringVerification": 0
+}

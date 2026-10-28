@@ -10,7 +10,7 @@
 
 - 公式AIの教育評価v2：[一往復の実証](verification/AI_EDUCATION_POLICY_20261028.md)／[運転・復旧](runbooks/AI_LAB_EDUCATION_POLICY.md)／[ChatGPT接続試験prompt](runbooks/AI_LAB_CHATGPT_REVIEW_PROMPT.md)。保存済み実結果からAIが方針を提案し、Workerがカテゴリ順を検証・採用。追加推論/学習なし。ChatGPT定期実行・日次登録は未検証/未設定。
 
-- AI育成ラボ：[初段公開とartifact契約](design/AI_LAB_PUBLICATION.md)／[artifact更新と復旧](runbooks/AI_LAB_ARTIFACT_DELIVERY.md)／[初回実推論・自動教育の実測](verification/AI_LAB_EDUCATION_20261026.md)／[自動教育v1の実測](verification/AI_LAB_AUTONOMOUS_20261027.md)／[自動教育の運転](runbooks/AI_LAB_AUTONOMOUS_EDUCATION.md)／[8GiB学習方式の比較](design/AI_LAB_TRAINING_FEASIBILITY.md)。正式サイトは0回の初段を維持し、main/betaは確認済み関係推論6回・独立CPU教育1更新のv3を検証する。候補モデルは未採用、合成基盤テストは別枠。比較専用ルートと旧private記録は保全。[10-25のbeta受入](verification/AI_LAB_BETA_20261025.md)・[10-22の候補検証](verification/AI_LAB_PUBLICATION_20261022.md)は当時の記録。
+- AI育成ラボ：[初段公開とartifact契約](design/AI_LAB_PUBLICATION.md)／[artifact更新と復旧](runbooks/AI_LAB_ARTIFACT_DELIVERY.md)／[教育v1の実測](verification/AI_LAB_AUTONOMOUS_20261027.md)／[自動教育の運転](runbooks/AI_LAB_AUTONOMOUS_EDUCATION.md)／[公式AIの方針受入](runbooks/AI_LAB_EDUCATION_POLICY.md)／[日次接続の実測・未接続箇所](verification/AI_EDUCATION_SCHEDULED_20261029.md)／[ChatGPT日次実評価プロンプト](runbooks/AI_LAB_DAILY_REVIEW_PROMPT.md)／[8GiB学習方式](design/AI_LAB_TRAINING_FEASIBILITY.md)。正式サイトは0回の初段を維持。main/betaは関係推論9回・実更新2回、今回の再読込未完了と旧正常完了を区別して公開する。候補モデルは未採用、合成基盤テストは別枠。scheduled実方針・クラウド日次設定はユーザー側のチャットで進める。比較ルート・旧private記録は保全。[初回実推論](verification/AI_LAB_EDUCATION_20261026.md)・[10-25のbeta受入](verification/AI_LAB_BETA_20261025.md)・[10-22の候補](verification/AI_LAB_PUBLICATION_20261022.md)は当時の記録。
 
 2026-10-15。現行仕様・継続検討・完了履歴を分ける。フェーズ番号は記録の整理用であり、未実装機能の着手順や承認を意味しない。
 

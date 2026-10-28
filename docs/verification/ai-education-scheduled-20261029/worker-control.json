@@ -1,0 +1,52 @@
+{
+  "at": "2026-10-28T15:45:17.194188+00:00",
+  "startedPid": 368589,
+  "stoppedPidConfirmed": true,
+  "resumedPid": 369350,
+  "mainCommit": "606f695333748afb21cc863174e5300d69606819",
+  "commonLockDeferral": {
+    "status": "deferred",
+    "operation": "maintenance",
+    "reason": "common-lock",
+    "exitCode": 75,
+    "at": "2026-10-28T15:45:14.653791+00:00"
+  },
+  "pauseObserved": {
+    "status": "skipped",
+    "reason": "paused",
+    "at": "2026-10-28T15:45:15.198993+00:00"
+  },
+  "resumeObserved": true,
+  "stopObserved": true,
+  "restartObserved": true,
+  "sameDayBudget": "daily-budget",
+  "nextDayInWindowEligible": true,
+  "config": {
+    "version": 1,
+    "enabled": true,
+    "windowStart": "20:00",
+    "windowEnd": "23:00",
+    "intervalMinutes": 60,
+    "dailyMax": 1,
+    "provider": "cpu-independent",
+    "publish": true,
+    "codeSha256": "bfd7619b644e48fc0910b7cc93d8739cf3d999b289adb00d6a7755921a302538"
+  },
+  "latestRealCycleStatus": "failed",
+  "failureReview": {
+    "at": "2026-10-28T15:45:13.674175+00:00",
+    "cycleId": "cd71066d-5ab3-4fa3-bd51-20406a6812fb",
+    "reviewedFailure": "wall_limit",
+    "checkpointSaved": true,
+    "reloadVerified": false,
+    "action": "resume-bounded-next-day-only",
+    "retryInference": false,
+    "dailyMax": 1,
+    "wallSeconds": 180,
+    "reason": "known terminal failure, owned containers removed, old successful cycle retained; no same-day second education"
+  },
+  "actualScheduledPlanReceived": false,
+  "cloudScheduleInspected": false,
+  "additionalInferenceCalls": 0,
+  "additionalOptimizerUpdates": 0
+}
