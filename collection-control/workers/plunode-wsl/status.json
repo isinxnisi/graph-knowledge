@@ -73,8 +73,9 @@
       "checkedAt": "2026-10-27T04:46:03+00:00"
     },
     "collection-control/issue-sources/48.json": {
-      "status": "registered: issue-48-dot-toriyama-three-20261027",
-      "checkedAt": "2026-10-27T17:20:59+00:00"
+      "status": "held",
+      "reason": "<3>WSL (2221108 - ) ERROR: UtilAcceptVsock:273: accept4 failed 110\nfatal: unable to get password from user\n",
+      "checkedAt": "2026-10-28T03:35:01+00:00"
     },
     "collection-control/issue-sources/49.json": {
       "status": "registered: issue-49-dot-hara-souten-20261027",
@@ -144,5 +145,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-10-28T03:34:15.151003+00:00"
+  "checkedAt": "2026-10-28T03:36:17.803534+00:00"
 }
