@@ -1,0 +1,123 @@
+{
+  "schemaVersion": 1,
+  "authority": "proposed-fixed-runtime-update-not-publication-approval",
+  "status": "pending-human-decision",
+  "sourceCommit": "fe3fcb6a3b00ede3dfbf122e124f87da38f9f736",
+  "implementationBaseMain": "129c1eb411cece336cce02996c520f8f21b12f0a",
+  "assetManifestSha256": "f9636c957b2566575ee89266bcd1901e155dbb35aa6e2d342080568bf167a2af",
+  "deploymentSha256": "0a1718eabd0b02e401354a0801c1be40bb357d2418cb73bed8d3270afd054a46",
+  "assetDirectory": "/home/isinxnisi/1.projects/.worktrees/graph-knowledge-publication-pipeline-bundle2/.local/publication-pipeline/update-assets-vps-confirmed",
+  "inventorySha256": "2c7f5b1249e8a86db6708e2297ecf997733c9ddc295348aef2a957a23db722b1",
+  "fixedActions": [
+    {
+      "target": "main / local 3200 / beta",
+      "operation": "Integrate the fixed implementation commit and validate the same code through the existing acceptance/deployment contract; preserve data, environment and member storage."
+    },
+    {
+      "target": "production Web only",
+      "operation": "Use the frozen Web archive and immutable deployment image; change Web image only, preserve environment, KG, member DB and AI artifact."
+    },
+    {
+      "target": "VPS protected gate / operator",
+      "operation": "Replace exactly two gate files, the fixed program manifest, and the fixed two-field config transformation. Preserve wrappers, SSH/sudoers, keys, deploymentEnabled, reservations and journals."
+    },
+    {
+      "target": "WSL delivery / protected approver",
+      "operation": "Install the fixed source directory, the fixed delivery config, and the fixed approver; preserve the key and individual publication TTY confirmation."
+    },
+    {
+      "target": "Windows Plunode-Publication-Delivery task",
+      "operation": "Replace only the Action source commit; preserve launcher, trigger, principal and settings; do not change Worker or WorkStatus task."
+    },
+    {
+      "target": "fixed CollectionWorker",
+      "operation": "Backport exactly the five frozen files; preserve base pin, collector, existing requests/approvals, all receipts and coordinator/peer contract."
+    }
+  ],
+  "images": {
+    "operator": {
+      "configId": "sha256:eed48775a9ff6b790c18b9611c8b04003f2137cabb5fd608e1fb04881a3088a2",
+      "manifestId": "sha256:8099094f5a0bdce1cd322539557ef8cc849e1f4949997f1ba53304d898aac006",
+      "archiveSha256": "2ef9964fb61504e4efdf4ba775bad76915106767e54022a0dbe4ed908b4890cf",
+      "platform": "linux/amd64",
+      "nodeVersion": "v24.21.0"
+    },
+    "web": {
+      "configId": "sha256:7f25fc2f6df0155802db3cd1c17f5de461f2b0dd2fc9abe0dc7d6549fffb952e",
+      "manifestId": "sha256:f4e2a8e484c6c9906d89f163614567007d5b35575c5ac05976434edb238a52d4",
+      "archiveSha256": "714245265b3dc3e3fbd436a6b4e52d15b47a6d6adb95b8d68c3f9ef60038abff",
+      "platform": "linux/amd64",
+      "nodeVersion": "v24.21.0"
+    }
+  },
+  "workerOverlay": {
+    "lib/domain/contribution.ts": {
+      "before": "7bb75f38d7b27829c6e5de32bbc90ef6cd740f5ce6d3ff3b6978f73ab35fd59b",
+      "after": "c5b4f5dc248568a1a62a4e136007e818992fce98b228c75f7c43fc6348313252"
+    },
+    "lib/i18n/contribution.ts": {
+      "before": "dcbf69965240a0d1089f8f2a34f38be22bd63bb0617c332fbfe75b4cf03ff390",
+      "after": "bb4abe600407d39c65d977a97ad2ad4262a78eb9b9439930a84e24873cbd235e"
+    },
+    "lib/generated/contribution-roles.ts": {
+      "before": null,
+      "after": "c422ac67c13de0ae6886c81d6077d347aa8c7a9c26c5da15463fa65beca5c8bc"
+    },
+    "lib/server/publication-compatibility.ts": {
+      "before": null,
+      "after": "590248d1bddc2b04bde2d6b9f7e530e94290ebceada4441393bd87366eb2ff83"
+    },
+    "scripts/publication-compatibility.ts": {
+      "before": null,
+      "after": "7d3f7927a7941eb9d90bca859aeb1eb8731e5ae5c658a6ee4ba5cdadecf241d0"
+    }
+  },
+  "gateOverlay": {
+    "scripts/publication-executor.py": {
+      "before": "237feb3e8b92415184e7a1651598422d9b1824b3f92d08835e155f55a6b9c20c",
+      "after": "3dac2bbaeeadede646682ecda99b8cc5c98ed1a29edb2204f1fca6355c59f62f"
+    },
+    "scripts/publication-cycle.py": {
+      "before": "56a45498d2fff16ef5090012ece9a7e28b3071baf80227563ee818654f23e0a3",
+      "after": "6796c1e47fcbdb7f2ecd80bf001ae6385be2b7059d0dd75810869fb78dbc0385"
+    }
+  },
+  "programManifestAfterSha256": "89a62a0cb7ed7974e48130c27ab4387bab5ec215ea7b683bec284d407664954b",
+  "deliveryConfigAfterSha256": "1b4e49af35cd3c7377f1d8e0fcf10c94b09dea243dbba6c32d2d4c409a95e9e3",
+  "approverBeforeSha256": "536ff5659cedc6b724c452b38fb44861716d35fee7983135490181565a18924f",
+  "approverAfterSha256": "7b97f3a6f65dd55a851a8cf6deaf50e1ccad7b31cbac8f6227d3702061d959a0",
+  "vpsConfigTransform": {
+    "inputSha256": "c15a21f30206bd741658a0ef190ff3d80f9918c21c5f928264cc60cbf7284946",
+    "set": {
+      "operatorDigest": "sha256:8099094f5a0bdce1cd322539557ef8cc849e1f4949997f1ba53304d898aac006",
+      "compatibilityRequired": true
+    },
+    "preserveAllOtherValues": true,
+    "serialization": "Python json.dumps(ensure_ascii=False, indent=2) + LF, UTF-8",
+    "outputSha256KnownBeforeInstall": false,
+    "recordOutputSha256DuringApprovedInstallation": true
+  },
+  "preconditions": [
+    "Recheck exact before hashes, runtime identities, Worker idle state and all 12 receipts immediately before installation.",
+    "Finish or inspect any unfinished signed delivery/exclusion/audit before switching versions.",
+    "A mismatch or a new semantic/data/identity decision stops the update; do not substitute a new target.",
+    "Use existing locks and rollback procedures; no lock deletion, forced termination or permission expansion.",
+    "If main integration changes image inputs or approved file bytes, stop and fix a new review target."
+  ],
+  "excludedActions": [
+    "Role meaning/adoption changes",
+    "Entity/Claim acceptance",
+    "publication signature",
+    "production KG apply/restore",
+    "member migration or data change",
+    "key/sudoers/SSH permission change",
+    "new nonce, re-sign or re-apply of completed publications"
+  ],
+  "formalReceiptsPreserved": 12,
+  "publishedFilmClaimsPreserved": 36,
+  "unacceptedCheckedRecordsTracked": 45,
+  "remainingEntityCandidatesTracked": 65,
+  "operatorApprovalRecorded": false,
+  "signed": false,
+  "applyCalls": 0
+}

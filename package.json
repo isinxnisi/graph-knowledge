@@ -26,7 +26,7 @@
     "pilot:build": "tsx scripts/pilot.ts build",
     "pilot:e2e": "playwright test --config=playwright.pilot.config.ts",
     "pilot:integration": "vitest run tests/pilot.integration.test.ts --no-file-parallelism",
-    "vocabulary:check": "tsx scripts/check-vocabulary.ts",
+    "vocabulary:check": "npm run roles:check && tsx scripts/check-vocabulary.ts",
     "pilot:v2:prepare": "tsx scripts/prepare-pilot-v2.ts",
     "pilot:v2:validate": "tsx scripts/prepare-pilot-v2.ts --check",
     "pilot:v2:seed": "tsx scripts/pilot-v2.ts seed",
@@ -85,7 +85,9 @@
     "film:roles": "tsx scripts/register-film-roles.ts",
     "kg-admin:test": "vitest run tests/kg-admin.test.ts tests/kg-admin-access.test.ts",
     "kg-admin:integration": "bash scripts/test-kg-admin.sh",
-    "kg-admin:browser": "tsx scripts/test-kg-admin-browser.ts"
+    "kg-admin:browser": "tsx scripts/test-kg-admin-browser.ts",
+    "roles:generate": "tsx scripts/generate-contribution-roles.ts",
+    "roles:check": "tsx scripts/generate-contribution-roles.ts --check"
   },
   "dependencies": {
     "better-auth": "1.7.7",

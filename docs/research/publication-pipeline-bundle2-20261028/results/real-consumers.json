@@ -1,0 +1,406 @@
+{
+  "publishedDataSha256": "908e6f3cc180a004d53cb5a34937daa8ca3ff539788dc35ffd56e496eca12f1b",
+  "publishedManifestUnchanged": true,
+  "sameDataBytesAcrossThreeConsumers": true,
+  "sameIsolatedManifestAcrossThreeConsumers": true,
+  "installedOperator": {
+    "image": "sha256:2bf646a22e867e5aa5fce5a155db45c337c4134ad6c0f337b65617c5799912e9",
+    "valid": {
+      "valid": true,
+      "counts": {
+        "nodes": {
+          "Entity": 2207,
+          "Claim": 1931,
+          "Source": 1802,
+          "Citation": 1968,
+          "ExternalIdentifier": 2576
+        },
+        "relationships": {
+          "SUBJECT": 1931,
+          "OBJECT": 1931,
+          "HAS_CITATION": 1968,
+          "CITES": 1968,
+          "HAS_EXTERNAL_ID": 2576
+        }
+      }
+    }
+  },
+  "installedWorker": {
+    "valid": true,
+    "counts": {
+      "nodes": {
+        "Entity": 2207,
+        "Claim": 1931,
+        "Source": 1802,
+        "Citation": 1968,
+        "ExternalIdentifier": 2576
+      },
+      "relationships": {
+        "SUBJECT": 1931,
+        "OBJECT": 1931,
+        "HAS_CITATION": 1968,
+        "CITES": 1968,
+        "HAS_EXTERNAL_ID": 2576
+      }
+    }
+  },
+  "web": {
+    "installed": {
+      "image": "sha256:1fc15f65573edec91346091c9fb4b99644099c0c6af731c576e7ab4d5850ba25",
+      "revision": "e3f1fb91-50f1-4941-a115-ac5a0f468f7f",
+      "filmClaimsReadWithEvidence": 36
+    },
+    "candidate": {
+      "image": "sha256:7f25fc2f6df0155802db3cd1c17f5de461f2b0dd2fc9abe0dc7d6549fffb952e",
+      "revision": "e3f1fb91-50f1-4941-a115-ac5a0f468f7f",
+      "filmClaimsReadWithEvidence": 36
+    }
+  },
+  "candidateProofs": {
+    "web": {
+      "verified": true,
+      "contract": {
+        "schemaVersion": 1,
+        "fixtureSchemaVersion": 4,
+        "serialization": "fixture-v4-schema-json-2lf-v1",
+        "dataSha256": "908e6f3cc180a004d53cb5a34937daa8ca3ff539788dc35ffd56e496eca12f1b",
+        "manifestSha256": "2212a656a5293c9ff2782ba860b9f2a8595a72e03570602f73d0f9044dd83a8f",
+        "catalogSha256": "0464f247eefa16442d01a0cfdabb8cc2e83fab7d6cbe2d8e9937b403b4aad094",
+        "reviewsSha256": "e233cdfaaa98e5e1899d757f31aeb015ffd21287bae3d4ef5780d04a33169d30",
+        "codegenSha256": "69739c48f9e7df38aa810ab9d5bd034b4ce3fe6ffcb4b5fe9634368f372765e1",
+        "labelsSha256": "8d86beea6f274ae5c967e4504c9a8f78df2b28e8fdfb96868061c6fbc5cf2124",
+        "requiredRoleHashes": {
+          "ACTING": "78640b719b6a10db555abb33b3ac28ff2f297c5bc81ffd200cc9dc0b6b7e465e",
+          "ORIGINAL_STORY": "3571e540f8595f289f2bff23bd1934302a4f322be8819b4f914ab02968e4e312",
+          "AUTHORSHIP": "3a06303020dcf6370119aedd792ff0a832abc6fdd876062fbcdd72dbdadd0ebd",
+          "DRAWING": "ab72af78770ab23d7a3c3cee7f11aedc226ad8c3fb53240e78acadc7db4de141",
+          "SCRIPT_WRITING": "e35d252a562e1edec9e271cb0bd18be1b7b34d0af79f88c14132fa330ad63779",
+          "CREATION": "fe32923d4feeb40e49d823983bd423a6a48b23fd47edb2051ac6e02f2526b3ae",
+          "PRODUCING": "9a795575838340c80b6ba4617e0e302955eb6b8f1e10745d492a20d60dfd597c",
+          "DIRECTING": "a4c6d3607165c97e6ecf252b6cd6b79dbb3f39abb17c12062300996be65aae73",
+          "STORY_CO_CREATION": "1dcf9ae249793fe754a40411d1ebaa65634fb99ba7bcce892d95467468a15613",
+          "SUPERVISION": "d54e18f2faf5e19475eda8663df3fd8f101d1b450e0df8f02a48d3f832d486d3"
+        },
+        "scopeFormats": [
+          "null",
+          "publication-isbn13-v1"
+        ],
+        "savedWorkspaceVersions": [
+          1,
+          2,
+          3
+        ],
+        "relationRevisions": [
+          1,
+          2,
+          3
+        ]
+      },
+      "capabilities": {
+        "schemaVersion": 1,
+        "fixtureSchemaVersions": [
+          4
+        ],
+        "serialization": [
+          "fixture-v4-schema-json-2lf-v1"
+        ],
+        "scopeFormats": [
+          "null",
+          "publication-isbn13-v1"
+        ],
+        "savedWorkspaceVersions": [
+          1,
+          2,
+          3
+        ],
+        "relationRevisions": [
+          1,
+          2,
+          3
+        ],
+        "recognizedRoleIds": [
+          "SCRIPT_WRITING",
+          "SUPERVISION",
+          "PRODUCING",
+          "STORY_CO_CREATION",
+          "AUTHORSHIP",
+          "CREATION",
+          "DRAWING",
+          "ORIGINAL_STORY",
+          "DIRECTING",
+          "ACTING"
+        ],
+        "definitionHashes": {
+          "SCRIPT_WRITING": "e35d252a562e1edec9e271cb0bd18be1b7b34d0af79f88c14132fa330ad63779",
+          "SUPERVISION": "d54e18f2faf5e19475eda8663df3fd8f101d1b450e0df8f02a48d3f832d486d3",
+          "PRODUCING": "9a795575838340c80b6ba4617e0e302955eb6b8f1e10745d492a20d60dfd597c",
+          "STORY_CO_CREATION": "1dcf9ae249793fe754a40411d1ebaa65634fb99ba7bcce892d95467468a15613",
+          "AUTHORSHIP": "3a06303020dcf6370119aedd792ff0a832abc6fdd876062fbcdd72dbdadd0ebd",
+          "CREATION": "fe32923d4feeb40e49d823983bd423a6a48b23fd47edb2051ac6e02f2526b3ae",
+          "DRAWING": "ab72af78770ab23d7a3c3cee7f11aedc226ad8c3fb53240e78acadc7db4de141",
+          "ORIGINAL_STORY": "3571e540f8595f289f2bff23bd1934302a4f322be8819b4f914ab02968e4e312",
+          "DIRECTING": "a4c6d3607165c97e6ecf252b6cd6b79dbb3f39abb17c12062300996be65aae73",
+          "ACTING": "78640b719b6a10db555abb33b3ac28ff2f297c5bc81ffd200cc9dc0b6b7e465e"
+        },
+        "catalogSha256": "0464f247eefa16442d01a0cfdabb8cc2e83fab7d6cbe2d8e9937b403b4aad094",
+        "reviewsSha256": "e233cdfaaa98e5e1899d757f31aeb015ffd21287bae3d4ef5780d04a33169d30",
+        "codegenSha256": "69739c48f9e7df38aa810ab9d5bd034b4ce3fe6ffcb4b5fe9634368f372765e1",
+        "labelsSha256": "8d86beea6f274ae5c967e4504c9a8f78df2b28e8fdfb96868061c6fbc5cf2124",
+        "nodeVersion": "v24.21.0",
+        "catalogValid": true,
+        "adoptedDefinitionHashes": {
+          "SCRIPT_WRITING": "e35d252a562e1edec9e271cb0bd18be1b7b34d0af79f88c14132fa330ad63779",
+          "SUPERVISION": "d54e18f2faf5e19475eda8663df3fd8f101d1b450e0df8f02a48d3f832d486d3",
+          "PRODUCING": "9a795575838340c80b6ba4617e0e302955eb6b8f1e10745d492a20d60dfd597c",
+          "STORY_CO_CREATION": "1dcf9ae249793fe754a40411d1ebaa65634fb99ba7bcce892d95467468a15613",
+          "AUTHORSHIP": "3a06303020dcf6370119aedd792ff0a832abc6fdd876062fbcdd72dbdadd0ebd",
+          "CREATION": "fe32923d4feeb40e49d823983bd423a6a48b23fd47edb2051ac6e02f2526b3ae",
+          "DRAWING": "ab72af78770ab23d7a3c3cee7f11aedc226ad8c3fb53240e78acadc7db4de141",
+          "ORIGINAL_STORY": "3571e540f8595f289f2bff23bd1934302a4f322be8819b4f914ab02968e4e312",
+          "DIRECTING": "a4c6d3607165c97e6ecf252b6cd6b79dbb3f39abb17c12062300996be65aae73",
+          "ACTING": "78640b719b6a10db555abb33b3ac28ff2f297c5bc81ffd200cc9dc0b6b7e465e"
+        }
+      }
+    },
+    "operator": {
+      "verified": true,
+      "contract": {
+        "schemaVersion": 1,
+        "fixtureSchemaVersion": 4,
+        "serialization": "fixture-v4-schema-json-2lf-v1",
+        "dataSha256": "908e6f3cc180a004d53cb5a34937daa8ca3ff539788dc35ffd56e496eca12f1b",
+        "manifestSha256": "2212a656a5293c9ff2782ba860b9f2a8595a72e03570602f73d0f9044dd83a8f",
+        "catalogSha256": "0464f247eefa16442d01a0cfdabb8cc2e83fab7d6cbe2d8e9937b403b4aad094",
+        "reviewsSha256": "e233cdfaaa98e5e1899d757f31aeb015ffd21287bae3d4ef5780d04a33169d30",
+        "codegenSha256": "69739c48f9e7df38aa810ab9d5bd034b4ce3fe6ffcb4b5fe9634368f372765e1",
+        "labelsSha256": "8d86beea6f274ae5c967e4504c9a8f78df2b28e8fdfb96868061c6fbc5cf2124",
+        "requiredRoleHashes": {
+          "ACTING": "78640b719b6a10db555abb33b3ac28ff2f297c5bc81ffd200cc9dc0b6b7e465e",
+          "ORIGINAL_STORY": "3571e540f8595f289f2bff23bd1934302a4f322be8819b4f914ab02968e4e312",
+          "AUTHORSHIP": "3a06303020dcf6370119aedd792ff0a832abc6fdd876062fbcdd72dbdadd0ebd",
+          "DRAWING": "ab72af78770ab23d7a3c3cee7f11aedc226ad8c3fb53240e78acadc7db4de141",
+          "SCRIPT_WRITING": "e35d252a562e1edec9e271cb0bd18be1b7b34d0af79f88c14132fa330ad63779",
+          "CREATION": "fe32923d4feeb40e49d823983bd423a6a48b23fd47edb2051ac6e02f2526b3ae",
+          "PRODUCING": "9a795575838340c80b6ba4617e0e302955eb6b8f1e10745d492a20d60dfd597c",
+          "DIRECTING": "a4c6d3607165c97e6ecf252b6cd6b79dbb3f39abb17c12062300996be65aae73",
+          "STORY_CO_CREATION": "1dcf9ae249793fe754a40411d1ebaa65634fb99ba7bcce892d95467468a15613",
+          "SUPERVISION": "d54e18f2faf5e19475eda8663df3fd8f101d1b450e0df8f02a48d3f832d486d3"
+        },
+        "scopeFormats": [
+          "null",
+          "publication-isbn13-v1"
+        ],
+        "savedWorkspaceVersions": [
+          1,
+          2,
+          3
+        ],
+        "relationRevisions": [
+          1,
+          2,
+          3
+        ]
+      },
+      "capabilities": {
+        "schemaVersion": 1,
+        "fixtureSchemaVersions": [
+          4
+        ],
+        "serialization": [
+          "fixture-v4-schema-json-2lf-v1"
+        ],
+        "scopeFormats": [
+          "null",
+          "publication-isbn13-v1"
+        ],
+        "savedWorkspaceVersions": [
+          1,
+          2,
+          3
+        ],
+        "relationRevisions": [
+          1,
+          2,
+          3
+        ],
+        "recognizedRoleIds": [
+          "SCRIPT_WRITING",
+          "SUPERVISION",
+          "PRODUCING",
+          "STORY_CO_CREATION",
+          "AUTHORSHIP",
+          "CREATION",
+          "DRAWING",
+          "ORIGINAL_STORY",
+          "DIRECTING",
+          "ACTING"
+        ],
+        "definitionHashes": {
+          "SCRIPT_WRITING": "e35d252a562e1edec9e271cb0bd18be1b7b34d0af79f88c14132fa330ad63779",
+          "SUPERVISION": "d54e18f2faf5e19475eda8663df3fd8f101d1b450e0df8f02a48d3f832d486d3",
+          "PRODUCING": "9a795575838340c80b6ba4617e0e302955eb6b8f1e10745d492a20d60dfd597c",
+          "STORY_CO_CREATION": "1dcf9ae249793fe754a40411d1ebaa65634fb99ba7bcce892d95467468a15613",
+          "AUTHORSHIP": "3a06303020dcf6370119aedd792ff0a832abc6fdd876062fbcdd72dbdadd0ebd",
+          "CREATION": "fe32923d4feeb40e49d823983bd423a6a48b23fd47edb2051ac6e02f2526b3ae",
+          "DRAWING": "ab72af78770ab23d7a3c3cee7f11aedc226ad8c3fb53240e78acadc7db4de141",
+          "ORIGINAL_STORY": "3571e540f8595f289f2bff23bd1934302a4f322be8819b4f914ab02968e4e312",
+          "DIRECTING": "a4c6d3607165c97e6ecf252b6cd6b79dbb3f39abb17c12062300996be65aae73",
+          "ACTING": "78640b719b6a10db555abb33b3ac28ff2f297c5bc81ffd200cc9dc0b6b7e465e"
+        },
+        "catalogSha256": "0464f247eefa16442d01a0cfdabb8cc2e83fab7d6cbe2d8e9937b403b4aad094",
+        "reviewsSha256": "e233cdfaaa98e5e1899d757f31aeb015ffd21287bae3d4ef5780d04a33169d30",
+        "codegenSha256": "69739c48f9e7df38aa810ab9d5bd034b4ce3fe6ffcb4b5fe9634368f372765e1",
+        "labelsSha256": "8d86beea6f274ae5c967e4504c9a8f78df2b28e8fdfb96868061c6fbc5cf2124",
+        "nodeVersion": "v24.21.0",
+        "catalogValid": true,
+        "adoptedDefinitionHashes": {
+          "SCRIPT_WRITING": "e35d252a562e1edec9e271cb0bd18be1b7b34d0af79f88c14132fa330ad63779",
+          "SUPERVISION": "d54e18f2faf5e19475eda8663df3fd8f101d1b450e0df8f02a48d3f832d486d3",
+          "PRODUCING": "9a795575838340c80b6ba4617e0e302955eb6b8f1e10745d492a20d60dfd597c",
+          "STORY_CO_CREATION": "1dcf9ae249793fe754a40411d1ebaa65634fb99ba7bcce892d95467468a15613",
+          "AUTHORSHIP": "3a06303020dcf6370119aedd792ff0a832abc6fdd876062fbcdd72dbdadd0ebd",
+          "CREATION": "fe32923d4feeb40e49d823983bd423a6a48b23fd47edb2051ac6e02f2526b3ae",
+          "DRAWING": "ab72af78770ab23d7a3c3cee7f11aedc226ad8c3fb53240e78acadc7db4de141",
+          "ORIGINAL_STORY": "3571e540f8595f289f2bff23bd1934302a4f322be8819b4f914ab02968e4e312",
+          "DIRECTING": "a4c6d3607165c97e6ecf252b6cd6b79dbb3f39abb17c12062300996be65aae73",
+          "ACTING": "78640b719b6a10db555abb33b3ac28ff2f297c5bc81ffd200cc9dc0b6b7e465e"
+        }
+      }
+    },
+    "worker": {
+      "verified": true,
+      "contract": {
+        "schemaVersion": 1,
+        "fixtureSchemaVersion": 4,
+        "serialization": "fixture-v4-schema-json-2lf-v1",
+        "dataSha256": "908e6f3cc180a004d53cb5a34937daa8ca3ff539788dc35ffd56e496eca12f1b",
+        "manifestSha256": "2212a656a5293c9ff2782ba860b9f2a8595a72e03570602f73d0f9044dd83a8f",
+        "catalogSha256": "0464f247eefa16442d01a0cfdabb8cc2e83fab7d6cbe2d8e9937b403b4aad094",
+        "reviewsSha256": "e233cdfaaa98e5e1899d757f31aeb015ffd21287bae3d4ef5780d04a33169d30",
+        "codegenSha256": "69739c48f9e7df38aa810ab9d5bd034b4ce3fe6ffcb4b5fe9634368f372765e1",
+        "labelsSha256": "8d86beea6f274ae5c967e4504c9a8f78df2b28e8fdfb96868061c6fbc5cf2124",
+        "requiredRoleHashes": {
+          "ACTING": "78640b719b6a10db555abb33b3ac28ff2f297c5bc81ffd200cc9dc0b6b7e465e",
+          "ORIGINAL_STORY": "3571e540f8595f289f2bff23bd1934302a4f322be8819b4f914ab02968e4e312",
+          "AUTHORSHIP": "3a06303020dcf6370119aedd792ff0a832abc6fdd876062fbcdd72dbdadd0ebd",
+          "DRAWING": "ab72af78770ab23d7a3c3cee7f11aedc226ad8c3fb53240e78acadc7db4de141",
+          "SCRIPT_WRITING": "e35d252a562e1edec9e271cb0bd18be1b7b34d0af79f88c14132fa330ad63779",
+          "CREATION": "fe32923d4feeb40e49d823983bd423a6a48b23fd47edb2051ac6e02f2526b3ae",
+          "PRODUCING": "9a795575838340c80b6ba4617e0e302955eb6b8f1e10745d492a20d60dfd597c",
+          "DIRECTING": "a4c6d3607165c97e6ecf252b6cd6b79dbb3f39abb17c12062300996be65aae73",
+          "STORY_CO_CREATION": "1dcf9ae249793fe754a40411d1ebaa65634fb99ba7bcce892d95467468a15613",
+          "SUPERVISION": "d54e18f2faf5e19475eda8663df3fd8f101d1b450e0df8f02a48d3f832d486d3"
+        },
+        "scopeFormats": [
+          "null",
+          "publication-isbn13-v1"
+        ],
+        "savedWorkspaceVersions": [
+          1,
+          2,
+          3
+        ],
+        "relationRevisions": [
+          1,
+          2,
+          3
+        ]
+      },
+      "capabilities": {
+        "schemaVersion": 1,
+        "fixtureSchemaVersions": [
+          4
+        ],
+        "serialization": [
+          "fixture-v4-schema-json-2lf-v1"
+        ],
+        "scopeFormats": [
+          "null",
+          "publication-isbn13-v1"
+        ],
+        "savedWorkspaceVersions": [
+          1,
+          2,
+          3
+        ],
+        "relationRevisions": [
+          1,
+          2,
+          3
+        ],
+        "recognizedRoleIds": [
+          "SCRIPT_WRITING",
+          "SUPERVISION",
+          "PRODUCING",
+          "STORY_CO_CREATION",
+          "AUTHORSHIP",
+          "CREATION",
+          "DRAWING",
+          "ORIGINAL_STORY",
+          "DIRECTING",
+          "ACTING"
+        ],
+        "definitionHashes": {
+          "SCRIPT_WRITING": "e35d252a562e1edec9e271cb0bd18be1b7b34d0af79f88c14132fa330ad63779",
+          "SUPERVISION": "d54e18f2faf5e19475eda8663df3fd8f101d1b450e0df8f02a48d3f832d486d3",
+          "PRODUCING": "9a795575838340c80b6ba4617e0e302955eb6b8f1e10745d492a20d60dfd597c",
+          "STORY_CO_CREATION": "1dcf9ae249793fe754a40411d1ebaa65634fb99ba7bcce892d95467468a15613",
+          "AUTHORSHIP": "3a06303020dcf6370119aedd792ff0a832abc6fdd876062fbcdd72dbdadd0ebd",
+          "CREATION": "fe32923d4feeb40e49d823983bd423a6a48b23fd47edb2051ac6e02f2526b3ae",
+          "DRAWING": "ab72af78770ab23d7a3c3cee7f11aedc226ad8c3fb53240e78acadc7db4de141",
+          "ORIGINAL_STORY": "3571e540f8595f289f2bff23bd1934302a4f322be8819b4f914ab02968e4e312",
+          "DIRECTING": "a4c6d3607165c97e6ecf252b6cd6b79dbb3f39abb17c12062300996be65aae73",
+          "ACTING": "78640b719b6a10db555abb33b3ac28ff2f297c5bc81ffd200cc9dc0b6b7e465e"
+        },
+        "catalogSha256": "0464f247eefa16442d01a0cfdabb8cc2e83fab7d6cbe2d8e9937b403b4aad094",
+        "reviewsSha256": "e233cdfaaa98e5e1899d757f31aeb015ffd21287bae3d4ef5780d04a33169d30",
+        "codegenSha256": "69739c48f9e7df38aa810ab9d5bd034b4ce3fe6ffcb4b5fe9634368f372765e1",
+        "labelsSha256": "8d86beea6f274ae5c967e4504c9a8f78df2b28e8fdfb96868061c6fbc5cf2124",
+        "nodeVersion": "v24.21.0",
+        "catalogValid": true,
+        "adoptedDefinitionHashes": {
+          "SCRIPT_WRITING": "e35d252a562e1edec9e271cb0bd18be1b7b34d0af79f88c14132fa330ad63779",
+          "SUPERVISION": "d54e18f2faf5e19475eda8663df3fd8f101d1b450e0df8f02a48d3f832d486d3",
+          "PRODUCING": "9a795575838340c80b6ba4617e0e302955eb6b8f1e10745d492a20d60dfd597c",
+          "STORY_CO_CREATION": "1dcf9ae249793fe754a40411d1ebaa65634fb99ba7bcce892d95467468a15613",
+          "AUTHORSHIP": "3a06303020dcf6370119aedd792ff0a832abc6fdd876062fbcdd72dbdadd0ebd",
+          "CREATION": "fe32923d4feeb40e49d823983bd423a6a48b23fd47edb2051ac6e02f2526b3ae",
+          "DRAWING": "ab72af78770ab23d7a3c3cee7f11aedc226ad8c3fb53240e78acadc7db4de141",
+          "ORIGINAL_STORY": "3571e540f8595f289f2bff23bd1934302a4f322be8819b4f914ab02968e4e312",
+          "DIRECTING": "a4c6d3607165c97e6ecf252b6cd6b79dbb3f39abb17c12062300996be65aae73",
+          "ACTING": "78640b719b6a10db555abb33b3ac28ff2f297c5bc81ffd200cc9dc0b6b7e465e"
+        }
+      }
+    }
+  },
+  "privateGuardedApplyVerified": {
+    "verified": true,
+    "release": "isolated-bundle2-published-data",
+    "revision": "e3f1fb91-50f1-4941-a115-ac5a0f468f7f",
+    "manifestDigest": "f6cc89c07fa6c02d1a97eb17f61eabed903c9f39beef2d2faffd9a7cf43685f1",
+    "manifestFileSha256": "2212a656a5293c9ff2782ba860b9f2a8595a72e03570602f73d0f9044dd83a8f",
+    "dataSha256": "908e6f3cc180a004d53cb5a34937daa8ca3ff539788dc35ffd56e496eca12f1b",
+    "counts": {
+      "nodes": {
+        "Entity": 2207,
+        "Claim": 1931,
+        "Source": 1802,
+        "Citation": 1968,
+        "ExternalIdentifier": 2576
+      },
+      "relationships": {
+        "SUBJECT": 1931,
+        "OBJECT": 1931,
+        "HAS_CITATION": 1968,
+        "CITES": 1968,
+        "HAS_EXTERNAL_ID": 2576
+      }
+    }
+  },
+  "staleRevisionRejected": true,
+  "duplicateApplyRejected": true,
+  "productionTouched": false,
+  "memberDatabaseAccessed": false,
+  "resourcesRemovedOnExit": true,
+  "workerSource": "actual installed source copied privately plus five-file overlay"
+}

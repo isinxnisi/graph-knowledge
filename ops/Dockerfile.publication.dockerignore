@@ -11,6 +11,9 @@
 !scripts/public-kg.ts
 !scripts/publication-runtime.ts
 !scripts/publication-backup-plan.ts
+!scripts/publication-compatibility.ts
+!scripts/serialize-publication-fixture.ts
+!scripts/generate-contribution-roles.ts
 
 !vocabulary/
 !vocabulary/**

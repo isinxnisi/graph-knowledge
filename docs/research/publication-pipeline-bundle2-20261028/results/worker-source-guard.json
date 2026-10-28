@@ -1,0 +1,12 @@
+{
+  "authority": "isolated-real-executor-source-guard",
+  "baseCodeCommit": "973c7b0c599f79905a029b28b524f4924e169376",
+  "overlaySourceCommit": "089ee51922d68b03f2e8a9029a3811babfc3dc67",
+  "existingSourceCommitStillAdmitted": true,
+  "unrelatedMainStillRejected": true,
+  "unintegratedSourceStillRejected": true,
+  "configOrRequestRebindingPerformed": false,
+  "receiptBytesUnchanged": true,
+  "networkRequests": 0,
+  "limit": "Local Git replaces remote transport only; no running Worker, control branch or trust config is changed."
+}

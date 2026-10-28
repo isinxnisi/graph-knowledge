@@ -1,0 +1,1735 @@
+{
+  "summary": {
+    "authority": "unaccepted-draft-only",
+    "trackedCandidates": 124,
+    "trackedEntities": 97,
+    "alreadyPublishedExcluded": 36,
+    "abReviewed": 29,
+    "abReady": 0,
+    "abHeld": 29,
+    "deferredPreserved": 59,
+    "unacceptedCheckedRecords": 45,
+    "remainingEntityCandidates": 65,
+    "recipeSha256": "d61c8b7eb752462246e9142f5baa6941319dbf4aa2c66e272c774a7acfb8d292",
+    "formalAcceptance": false,
+    "publicApply": false
+  },
+  "rows": [
+    {
+      "candidateId": "candidate:q184843$9D2ED00E-F7DA-4ECC-9882-4B3317D4641E",
+      "claimId": "5217cf1f-628c-4d92-9a37-18034f61e23f",
+      "subjectQid": "Q213574",
+      "workQid": "Q184843",
+      "researchRole": "CAST",
+      "proposedRole": "ACTING",
+      "status": "missing-evidence",
+      "reasons": [
+        "dramatic-performance-context-needs-confirmation"
+      ],
+      "sourceIds": [
+        "S01",
+        "S02"
+      ],
+      "chosenEvidence": {
+        "source": {
+          "id": "S01",
+          "title": "Blade Runner — AFI Catalog",
+          "url": "https://catalog.afi.com/Film/68260-BLADE-RUNNER",
+          "publisher": "American Film Institute",
+          "language": "en",
+          "locator": "Cast / Director / Writers / Producer / Cinematographer; HISTORY",
+          "note": "1982年作品の人物別クレジットを照合。複数上映時間を持つ記録であり全cutの同一クレジット保証ではない。",
+          "film": "Q184843",
+          "supports": {
+            "P57": [
+              "Q56005"
+            ],
+            "P58": [
+              "Q1372703",
+              "Q1177114"
+            ],
+            "P162": [
+              "Q656655"
+            ],
+            "P344": [
+              "Q715198"
+            ],
+            "P161": [
+              "Q81328",
+              "Q213574",
+              "Q230736"
+            ]
+          },
+          "accessed_on": "2026-10-26",
+          "retrieval": "web tool, public page; factual notes only",
+          "reuse": "No open-content license established. Store URL, locator and minimal factual review only; no page text or images.",
+          "formalAcceptance": false,
+          "role_terms": {
+            "P57": "Director",
+            "P58": "Writers",
+            "P162": "Producer",
+            "P344": "Cinematographer",
+            "P161": "Cast"
+          },
+          "role_term_policy": "Short credit heading only; not a reconstructed verbatim personal credit. Missing terms are untranscribed."
+        },
+        "term": "Cast",
+        "locator": "Cast / Director / Writers / Producer / Cinematographer; HISTORY",
+        "kind": "saved-factual-person-role-review",
+        "character": null,
+        "identityNote": "1982年作品の人物別クレジットを照合。複数上映時間を持つ記録であり全cutの同一クレジット保証ではない。"
+      },
+      "scope": {
+        "level": "film-work-record",
+        "cut": null,
+        "territory": null,
+        "language": null,
+        "interpretation": "credit scope unresolved across versions; null is not all cuts"
+      },
+      "scopeInterpretation": "null is unstructured, not all cuts/territories/languages/periods",
+      "citationIds": [
+        "d60f6266-a9e8-4680-a461-88cc19a50b89"
+      ],
+      "requiresRoleApplicationDecision": false
+    },
+    {
+      "candidateId": "candidate:q184843$DDC64615-F83C-4B82-B2B6-91C37F701010",
+      "claimId": "20b0196d-f9ae-4b20-b418-9638b85b70c0",
+      "subjectQid": "Q230736",
+      "workQid": "Q184843",
+      "researchRole": "CAST",
+      "proposedRole": "ACTING",
+      "status": "missing-evidence",
+      "reasons": [
+        "dramatic-performance-context-needs-confirmation"
+      ],
+      "sourceIds": [
+        "S01",
+        "S02"
+      ],
+      "chosenEvidence": {
+        "source": {
+          "id": "S01",
+          "title": "Blade Runner — AFI Catalog",
+          "url": "https://catalog.afi.com/Film/68260-BLADE-RUNNER",
+          "publisher": "American Film Institute",
+          "language": "en",
+          "locator": "Cast / Director / Writers / Producer / Cinematographer; HISTORY",
+          "note": "1982年作品の人物別クレジットを照合。複数上映時間を持つ記録であり全cutの同一クレジット保証ではない。",
+          "film": "Q184843",
+          "supports": {
+            "P57": [
+              "Q56005"
+            ],
+            "P58": [
+              "Q1372703",
+              "Q1177114"
+            ],
+            "P162": [
+              "Q656655"
+            ],
+            "P344": [
+              "Q715198"
+            ],
+            "P161": [
+              "Q81328",
+              "Q213574",
+              "Q230736"
+            ]
+          },
+          "accessed_on": "2026-10-26",
+          "retrieval": "web tool, public page; factual notes only",
+          "reuse": "No open-content license established. Store URL, locator and minimal factual review only; no page text or images.",
+          "formalAcceptance": false,
+          "role_terms": {
+            "P57": "Director",
+            "P58": "Writers",
+            "P162": "Producer",
+            "P344": "Cinematographer",
+            "P161": "Cast"
+          },
+          "role_term_policy": "Short credit heading only; not a reconstructed verbatim personal credit. Missing terms are untranscribed."
+        },
+        "term": "Cast",
+        "locator": "Cast / Director / Writers / Producer / Cinematographer; HISTORY",
+        "kind": "saved-factual-person-role-review",
+        "character": null,
+        "identityNote": "1982年作品の人物別クレジットを照合。複数上映時間を持つ記録であり全cutの同一クレジット保証ではない。"
+      },
+      "scope": {
+        "level": "film-work-record",
+        "cut": null,
+        "territory": null,
+        "language": null,
+        "interpretation": "credit scope unresolved across versions; null is not all cuts"
+      },
+      "scopeInterpretation": "null is unstructured, not all cuts/territories/languages/periods",
+      "citationIds": [
+        "2ecff0f5-bf59-49d3-9bdf-883400488ebb"
+      ],
+      "requiresRoleApplicationDecision": false
+    },
+    {
+      "candidateId": "candidate:Q21500755$3b2b8856-4ac9-a659-fe86-9a94d3ec6f33",
+      "claimId": "2a289c95-cf5d-4530-805f-443321d7e663",
+      "subjectQid": "Q548823",
+      "workQid": "Q21500755",
+      "researchRole": "DIRECTING",
+      "proposedRole": "DIRECTING",
+      "status": "missing-evidence",
+      "reasons": [
+        "original-role-term-untranscribed"
+      ],
+      "sourceIds": [
+        "S03"
+      ],
+      "chosenEvidence": null,
+      "scope": {
+        "level": "film-work-record",
+        "cut": null,
+        "territory": null,
+        "language": null,
+        "interpretation": "credit scope unresolved across versions; null is not all cuts"
+      },
+      "scopeInterpretation": "null is unstructured, not all cuts/territories/languages/periods",
+      "citationIds": [],
+      "requiresRoleApplicationDecision": false
+    },
+    {
+      "candidateId": "candidate:Q21500755$d67b18c8-46b4-2882-88d9-6de6930f17c6",
+      "claimId": "f4d72867-8db8-443f-a50a-308bd079fabe",
+      "subjectQid": "Q1372703",
+      "workQid": "Q21500755",
+      "researchRole": "SCREENWRITING",
+      "proposedRole": "SCRIPT_WRITING",
+      "status": "missing-evidence",
+      "reasons": [
+        "original-role-term-untranscribed"
+      ],
+      "sourceIds": [
+        "S03"
+      ],
+      "chosenEvidence": null,
+      "scope": {
+        "level": "film-work-record",
+        "cut": null,
+        "territory": null,
+        "language": null,
+        "interpretation": "credit scope unresolved across versions; null is not all cuts"
+      },
+      "scopeInterpretation": "null is unstructured, not all cuts/territories/languages/periods",
+      "citationIds": [],
+      "requiresRoleApplicationDecision": true
+    },
+    {
+      "candidateId": "candidate:Q21500755$28f45ed9-4138-5ce8-15f7-af2e58d04bbc",
+      "claimId": "7a0c63c1-77a3-4b43-8e58-54a33953c913",
+      "subjectQid": "Q6830765",
+      "workQid": "Q21500755",
+      "researchRole": "SCREENWRITING",
+      "proposedRole": "SCRIPT_WRITING",
+      "status": "missing-evidence",
+      "reasons": [
+        "original-role-term-untranscribed"
+      ],
+      "sourceIds": [
+        "S03"
+      ],
+      "chosenEvidence": null,
+      "scope": {
+        "level": "film-work-record",
+        "cut": null,
+        "territory": null,
+        "language": null,
+        "interpretation": "credit scope unresolved across versions; null is not all cuts"
+      },
+      "scopeInterpretation": "null is unstructured, not all cuts/territories/languages/periods",
+      "citationIds": [],
+      "requiresRoleApplicationDecision": true
+    },
+    {
+      "candidateId": "candidate:Q21500755$e4aa1901-4f60-f014-0f04-bd7e9abeb05e",
+      "claimId": "7c9641ef-2f50-47d7-a3cd-468a337a3a7d",
+      "subjectQid": "Q4757652",
+      "workQid": "Q21500755",
+      "researchRole": "PRODUCING",
+      "proposedRole": "PRODUCING",
+      "status": "missing-evidence",
+      "reasons": [
+        "original-role-term-untranscribed"
+      ],
+      "sourceIds": [
+        "S03"
+      ],
+      "chosenEvidence": null,
+      "scope": {
+        "level": "film-work-record",
+        "cut": null,
+        "territory": null,
+        "language": null,
+        "interpretation": "credit scope unresolved across versions; null is not all cuts"
+      },
+      "scopeInterpretation": "null is unstructured, not all cuts/territories/languages/periods",
+      "citationIds": [],
+      "requiresRoleApplicationDecision": true
+    },
+    {
+      "candidateId": "candidate:Q21500755$0b844a43-4e1d-5c02-c6ca-7ba24d9f4e4d",
+      "claimId": "133f9cf1-3221-48c3-acfc-279968e72048",
+      "subjectQid": "Q193815",
+      "workQid": "Q21500755",
+      "researchRole": "CAST",
+      "proposedRole": "ACTING",
+      "status": "missing-evidence",
+      "reasons": [
+        "original-role-term-untranscribed",
+        "dramatic-performance-context-needs-confirmation"
+      ],
+      "sourceIds": [
+        "S03"
+      ],
+      "chosenEvidence": null,
+      "scope": {
+        "level": "film-work-record",
+        "cut": null,
+        "territory": null,
+        "language": null,
+        "interpretation": "credit scope unresolved across versions; null is not all cuts"
+      },
+      "scopeInterpretation": "null is unstructured, not all cuts/territories/languages/periods",
+      "citationIds": [],
+      "requiresRoleApplicationDecision": false
+    },
+    {
+      "candidateId": "candidate:Q21500755$06462c6d-4916-0ce3-c60f-e9e6cc86d80a",
+      "claimId": "c08df3ff-c54e-47cc-b867-8803ce5fbe46",
+      "subjectQid": "Q81328",
+      "workQid": "Q21500755",
+      "researchRole": "CAST",
+      "proposedRole": "ACTING",
+      "status": "missing-evidence",
+      "reasons": [
+        "original-role-term-untranscribed",
+        "dramatic-performance-context-needs-confirmation"
+      ],
+      "sourceIds": [
+        "S03"
+      ],
+      "chosenEvidence": null,
+      "scope": {
+        "level": "film-work-record",
+        "cut": null,
+        "territory": null,
+        "language": null,
+        "interpretation": "credit scope unresolved across versions; null is not all cuts"
+      },
+      "scopeInterpretation": "null is unstructured, not all cuts/territories/languages/periods",
+      "citationIds": [],
+      "requiresRoleApplicationDecision": false
+    },
+    {
+      "candidateId": "candidate:Q21500755$35dfb20f-4e8a-13ff-e72c-eda27ec75fc0",
+      "claimId": "1b2414d8-c9b0-446d-97b0-f8eb6908dbe4",
+      "subjectQid": "Q272972",
+      "workQid": "Q21500755",
+      "researchRole": "CAST",
+      "proposedRole": "ACTING",
+      "status": "missing-evidence",
+      "reasons": [
+        "original-role-term-untranscribed",
+        "dramatic-performance-context-needs-confirmation"
+      ],
+      "sourceIds": [
+        "S03"
+      ],
+      "chosenEvidence": null,
+      "scope": {
+        "level": "film-work-record",
+        "cut": null,
+        "territory": null,
+        "language": null,
+        "interpretation": "credit scope unresolved across versions; null is not all cuts"
+      },
+      "scopeInterpretation": "null is unstructured, not all cuts/territories/languages/periods",
+      "citationIds": [],
+      "requiresRoleApplicationDecision": false
+    },
+    {
+      "candidateId": "candidate:Q21500755$d188a830-4fd2-17fe-c2ce-7434a1e82f61",
+      "claimId": "d68c0998-61d2-40a0-8fcd-058e528d5c8b",
+      "subjectQid": "Q44158",
+      "workQid": "Q21500755",
+      "researchRole": "CAST",
+      "proposedRole": "ACTING",
+      "status": "missing-evidence",
+      "reasons": [
+        "original-role-term-untranscribed",
+        "dramatic-performance-context-needs-confirmation"
+      ],
+      "sourceIds": [
+        "S03"
+      ],
+      "chosenEvidence": null,
+      "scope": {
+        "level": "film-work-record",
+        "cut": null,
+        "territory": null,
+        "language": null,
+        "interpretation": "credit scope unresolved across versions; null is not all cuts"
+      },
+      "scopeInterpretation": "null is unstructured, not all cuts/territories/languages/periods",
+      "citationIds": [],
+      "requiresRoleApplicationDecision": false
+    },
+    {
+      "candidateId": "candidate:q114819$0E42EC3B-0FFA-4BAE-B381-60A174B944A0",
+      "claimId": "e6abf7c8-bf74-4dd7-bd38-34c6a6af18b6",
+      "subjectQid": "Q2071",
+      "workQid": "Q114819",
+      "researchRole": "DIRECTING",
+      "proposedRole": "DIRECTING",
+      "status": "identity-judgment",
+      "reasons": [
+        "original-role-term-untranscribed",
+        "entity-identity-collision"
+      ],
+      "sourceIds": [
+        "S04"
+      ],
+      "chosenEvidence": null,
+      "scope": {
+        "level": "film-work-record",
+        "cut": null,
+        "territory": null,
+        "language": null,
+        "interpretation": "credit scope unresolved across versions; null is not all cuts"
+      },
+      "scopeInterpretation": "null is unstructured, not all cuts/territories/languages/periods",
+      "citationIds": [],
+      "requiresRoleApplicationDecision": false
+    },
+    {
+      "candidateId": "candidate:q114819$75238C3F-A721-4983-B25E-A042EDEF24FD",
+      "claimId": "404fcdbd-6c94-4490-9619-fc1441f79c0f",
+      "subjectQid": "Q512184",
+      "workQid": "Q114819",
+      "researchRole": "PRODUCING",
+      "proposedRole": "PRODUCING",
+      "status": "identity-judgment",
+      "reasons": [
+        "original-role-term-untranscribed",
+        "entity-identity-collision"
+      ],
+      "sourceIds": [
+        "S04"
+      ],
+      "chosenEvidence": null,
+      "scope": {
+        "level": "film-work-record",
+        "cut": null,
+        "territory": null,
+        "language": null,
+        "interpretation": "credit scope unresolved across versions; null is not all cuts"
+      },
+      "scopeInterpretation": "null is unstructured, not all cuts/territories/languages/periods",
+      "citationIds": [],
+      "requiresRoleApplicationDecision": true
+    },
+    {
+      "candidateId": "candidate:q114819$7CEE9BF8-76F2-43C4-8760-A9C3E873965A",
+      "claimId": "4b752e2d-a0de-4da3-8348-9fbc47dff7fa",
+      "subjectQid": "Q207506",
+      "workQid": "Q114819",
+      "researchRole": "CAST",
+      "proposedRole": "ACTING",
+      "status": "identity-judgment",
+      "reasons": [
+        "original-role-term-untranscribed",
+        "dramatic-performance-context-needs-confirmation",
+        "entity-identity-collision"
+      ],
+      "sourceIds": [
+        "S04"
+      ],
+      "chosenEvidence": null,
+      "scope": {
+        "level": "film-work-record",
+        "cut": null,
+        "territory": null,
+        "language": null,
+        "interpretation": "credit scope unresolved across versions; null is not all cuts"
+      },
+      "scopeInterpretation": "null is unstructured, not all cuts/territories/languages/periods",
+      "citationIds": [],
+      "requiresRoleApplicationDecision": false
+    },
+    {
+      "candidateId": "candidate:q114819$2EEAC07C-F2EF-492E-BD1C-D7B9CF066F55",
+      "claimId": "1c50ded9-0b86-49d4-9d3f-38887f2c23ed",
+      "subjectQid": "Q483203",
+      "workQid": "Q114819",
+      "researchRole": "CAST",
+      "proposedRole": "ACTING",
+      "status": "identity-judgment",
+      "reasons": [
+        "original-role-term-untranscribed",
+        "dramatic-performance-context-needs-confirmation",
+        "entity-identity-collision"
+      ],
+      "sourceIds": [
+        "S04"
+      ],
+      "chosenEvidence": null,
+      "scope": {
+        "level": "film-work-record",
+        "cut": null,
+        "territory": null,
+        "language": null,
+        "interpretation": "credit scope unresolved across versions; null is not all cuts"
+      },
+      "scopeInterpretation": "null is unstructured, not all cuts/territories/languages/periods",
+      "citationIds": [],
+      "requiresRoleApplicationDecision": false
+    },
+    {
+      "candidateId": "candidate:Q60834962$3D5F5CF8-E25C-4F47-8AF3-E328D22B58E1",
+      "claimId": "b097ee23-bd7e-444f-8d46-7c9e136c4faa",
+      "subjectQid": "Q19877770",
+      "workQid": "Q60834962",
+      "researchRole": "CAST",
+      "proposedRole": "ACTING",
+      "status": "identity-judgment",
+      "reasons": [
+        "person-name-variant-needs-judgment",
+        "entity-identity-collision"
+      ],
+      "sourceIds": [
+        "S05",
+        "S05"
+      ],
+      "chosenEvidence": {
+        "source": {
+          "id": "S05",
+          "title": "DUNE/デューン 砂の惑星 — Warner Bros.",
+          "url": "https://www.warnerbros.co.jp/home_entertainment/o5kdyecgb/",
+          "publisher": "Warner Bros. Japan",
+          "language": "ja",
+          "locator": "作品情報 / クレジット",
+          "note": "2021年映画、監督・脚本3名、原作小説を明記。原著作者の映画脚本担当は推論しない。",
+          "film": "Q60834962",
+          "supports": {
+            "P57": [
+              "Q548823"
+            ],
+            "P58": [
+              "Q942932",
+              "Q6271612",
+              "Q548823"
+            ],
+            "P161": [
+              "Q19877770",
+              "Q4947838"
+            ],
+            "P144": [
+              "Q190192"
+            ]
+          },
+          "accessed_on": "2026-10-26",
+          "retrieval": "web tool, public page; factual notes only",
+          "reuse": "No open-content license established. Store URL, locator and minimal factual review only; no page text or images.",
+          "formalAcceptance": false,
+          "role_terms": {},
+          "role_term_policy": "Short credit heading only; not a reconstructed verbatim personal credit. Missing terms are untranscribed."
+        },
+        "term": "出演",
+        "locator": "キャスト / 出演 / ティモシー・シャラメ / ポール",
+        "kind": "minimal-factual-supplement",
+        "character": "ポール",
+        "identityNote": "公式表記ティモシー・シャラメと保存labelティモテ・シャラメの対応は人間判断へ保留。QIDだけで同定済みにしない。"
+      },
+      "scope": {
+        "level": "film-work-record",
+        "cut": null,
+        "territory": null,
+        "language": null,
+        "interpretation": "credit scope unresolved across versions; null is not all cuts"
+      },
+      "scopeInterpretation": "null is unstructured, not all cuts/territories/languages/periods",
+      "citationIds": [
+        "764f162d-a4cd-4331-96bc-c6c93eebeaf3"
+      ],
+      "requiresRoleApplicationDecision": false
+    },
+    {
+      "candidateId": "candidate:Q60834962$D7294273-7319-4F53-A49E-3582D9C97CAC",
+      "claimId": "16cfcdfa-ebee-4fc2-9abb-c474563fb1e1",
+      "subjectQid": "Q4947838",
+      "workQid": "Q60834962",
+      "researchRole": "CAST",
+      "proposedRole": "ACTING",
+      "status": "missing-evidence",
+      "reasons": [
+        "original-role-term-untranscribed",
+        "dramatic-performance-context-needs-confirmation"
+      ],
+      "sourceIds": [
+        "S05"
+      ],
+      "chosenEvidence": null,
+      "scope": {
+        "level": "film-work-record",
+        "cut": null,
+        "territory": null,
+        "language": null,
+        "interpretation": "credit scope unresolved across versions; null is not all cuts"
+      },
+      "scopeInterpretation": "null is unstructured, not all cuts/territories/languages/periods",
+      "citationIds": [],
+      "requiresRoleApplicationDecision": false
+    },
+    {
+      "candidateId": "candidate:q76479$A0CACE0B-C949-4AF0-B038-A585F46D0BB2",
+      "claimId": "a310275e-1c3b-4323-989d-5ad5ab6495cd",
+      "subjectQid": "Q164562",
+      "workQid": "Q76479",
+      "researchRole": "DIRECTING",
+      "proposedRole": "DIRECTING",
+      "status": "missing-evidence",
+      "reasons": [
+        "original-role-term-untranscribed"
+      ],
+      "sourceIds": [
+        "S09"
+      ],
+      "chosenEvidence": null,
+      "scope": {
+        "level": "film-work-record",
+        "cut": null,
+        "territory": null,
+        "language": null,
+        "interpretation": "credit scope unresolved across versions; null is not all cuts"
+      },
+      "scopeInterpretation": "null is unstructured, not all cuts/territories/languages/periods",
+      "citationIds": [],
+      "requiresRoleApplicationDecision": false
+    },
+    {
+      "candidateId": "candidate:Q76479$31CFF1E6-A537-40F3-90DD-99C6FECC98C1",
+      "claimId": "a310275e-1c3b-4323-989d-5ad5ab6495cd",
+      "subjectQid": "Q164562",
+      "workQid": "Q76479",
+      "researchRole": "DIRECTING",
+      "proposedRole": "DIRECTING",
+      "status": "missing-evidence",
+      "reasons": [
+        "original-role-term-untranscribed"
+      ],
+      "sourceIds": [
+        "S09"
+      ],
+      "chosenEvidence": null,
+      "scope": {
+        "level": "film-work-record",
+        "cut": null,
+        "territory": null,
+        "language": null,
+        "interpretation": "credit scope unresolved across versions; null is not all cuts"
+      },
+      "scopeInterpretation": "null is unstructured, not all cuts/territories/languages/periods",
+      "citationIds": [],
+      "requiresRoleApplicationDecision": false
+    },
+    {
+      "candidateId": "candidate:q76479$81A944FA-1D65-462F-A173-AF2D5D5E0367",
+      "claimId": "3f119817-43be-45c1-bd4c-018819522c4a",
+      "subjectQid": "Q716460",
+      "workQid": "Q76479",
+      "researchRole": "SCREENWRITING",
+      "proposedRole": "SCRIPT_WRITING",
+      "status": "missing-evidence",
+      "reasons": [
+        "original-role-term-untranscribed"
+      ],
+      "sourceIds": [
+        "S09"
+      ],
+      "chosenEvidence": null,
+      "scope": {
+        "level": "film-work-record",
+        "cut": null,
+        "territory": null,
+        "language": null,
+        "interpretation": "credit scope unresolved across versions; null is not all cuts"
+      },
+      "scopeInterpretation": "null is unstructured, not all cuts/territories/languages/periods",
+      "citationIds": [],
+      "requiresRoleApplicationDecision": true
+    },
+    {
+      "candidateId": "candidate:Q76479$186488b8-4fc9-91c6-7c67-1cd02e5f276e",
+      "claimId": "26f3fc22-9ea1-4990-a77b-782890714813",
+      "subjectQid": "Q164562",
+      "workQid": "Q76479",
+      "researchRole": "SCREENWRITING",
+      "proposedRole": "SCRIPT_WRITING",
+      "status": "missing-evidence",
+      "reasons": [
+        "original-role-term-untranscribed"
+      ],
+      "sourceIds": [
+        "S09"
+      ],
+      "chosenEvidence": null,
+      "scope": {
+        "level": "film-work-record",
+        "cut": null,
+        "territory": null,
+        "language": null,
+        "interpretation": "credit scope unresolved across versions; null is not all cuts"
+      },
+      "scopeInterpretation": "null is unstructured, not all cuts/territories/languages/periods",
+      "citationIds": [],
+      "requiresRoleApplicationDecision": true
+    },
+    {
+      "candidateId": "candidate:q76479$EF2A64B1-B6BC-4535-848B-D53BA099DB4C",
+      "claimId": "362edaa7-42ca-41ec-8cee-9ae1117cb688",
+      "subjectQid": "Q43203",
+      "workQid": "Q76479",
+      "researchRole": "CAST",
+      "proposedRole": "ACTING",
+      "status": "missing-evidence",
+      "reasons": [
+        "original-role-term-untranscribed",
+        "dramatic-performance-context-needs-confirmation"
+      ],
+      "sourceIds": [
+        "S09"
+      ],
+      "chosenEvidence": null,
+      "scope": {
+        "level": "film-work-record",
+        "cut": null,
+        "territory": null,
+        "language": null,
+        "interpretation": "credit scope unresolved across versions; null is not all cuts"
+      },
+      "scopeInterpretation": "null is unstructured, not all cuts/territories/languages/periods",
+      "citationIds": [],
+      "requiresRoleApplicationDecision": false
+    },
+    {
+      "candidateId": "candidate:q76479$A7047A0A-A345-4BB2-AD7B-AE8A33436BE8",
+      "claimId": "872707ca-2bbc-4070-a5f0-8701fbc4558a",
+      "subjectQid": "Q317110",
+      "workQid": "Q76479",
+      "researchRole": "CAST",
+      "proposedRole": "ACTING",
+      "status": "missing-evidence",
+      "reasons": [
+        "original-role-term-untranscribed",
+        "dramatic-performance-context-needs-confirmation"
+      ],
+      "sourceIds": [
+        "S09"
+      ],
+      "chosenEvidence": null,
+      "scope": {
+        "level": "film-work-record",
+        "cut": null,
+        "territory": null,
+        "language": null,
+        "interpretation": "credit scope unresolved across versions; null is not all cuts"
+      },
+      "scopeInterpretation": "null is unstructured, not all cuts/territories/languages/periods",
+      "citationIds": [],
+      "requiresRoleApplicationDecision": false
+    },
+    {
+      "candidateId": "candidate:q76479$DCB1920A-56D0-41ED-B4BB-735AF1ECDC3F",
+      "claimId": "85967b27-ffb9-461d-b218-6c97ec3f9de1",
+      "subjectQid": "Q77405",
+      "workQid": "Q76479",
+      "researchRole": "CAST",
+      "proposedRole": "ACTING",
+      "status": "missing-evidence",
+      "reasons": [
+        "original-role-term-untranscribed",
+        "dramatic-performance-context-needs-confirmation"
+      ],
+      "sourceIds": [
+        "S09"
+      ],
+      "chosenEvidence": null,
+      "scope": {
+        "level": "film-work-record",
+        "cut": null,
+        "territory": null,
+        "language": null,
+        "interpretation": "credit scope unresolved across versions; null is not all cuts"
+      },
+      "scopeInterpretation": "null is unstructured, not all cuts/territories/languages/periods",
+      "citationIds": [],
+      "requiresRoleApplicationDecision": false
+    },
+    {
+      "candidateId": "candidate:q104137$B226BBA0-92F8-4A47-8EC8-21697BAFADBA",
+      "claimId": "700cd727-a4b3-4cd6-b07f-01facb29d937",
+      "subjectQid": "Q43203",
+      "workQid": "Q104137",
+      "researchRole": "DIRECTING",
+      "proposedRole": "DIRECTING",
+      "status": "missing-evidence",
+      "reasons": [
+        "original-role-term-untranscribed"
+      ],
+      "sourceIds": [
+        "S10"
+      ],
+      "chosenEvidence": null,
+      "scope": {
+        "level": "film-work-record",
+        "cut": null,
+        "territory": null,
+        "language": null,
+        "interpretation": "credit scope unresolved across versions; null is not all cuts"
+      },
+      "scopeInterpretation": "null is unstructured, not all cuts/territories/languages/periods",
+      "citationIds": [],
+      "requiresRoleApplicationDecision": false
+    },
+    {
+      "candidateId": "candidate:q104137$3BA0821B-A1E1-45FE-BF84-4E013DD4B557",
+      "claimId": "927450ec-4cca-46a0-8bce-3ec84c0e52cd",
+      "subjectQid": "Q1177114",
+      "workQid": "Q104137",
+      "researchRole": "SCREENWRITING",
+      "proposedRole": "SCRIPT_WRITING",
+      "status": "missing-evidence",
+      "reasons": [
+        "original-role-term-untranscribed"
+      ],
+      "sourceIds": [
+        "S10"
+      ],
+      "chosenEvidence": null,
+      "scope": {
+        "level": "film-work-record",
+        "cut": null,
+        "territory": null,
+        "language": null,
+        "interpretation": "credit scope unresolved across versions; null is not all cuts"
+      },
+      "scopeInterpretation": "null is unstructured, not all cuts/territories/languages/periods",
+      "citationIds": [],
+      "requiresRoleApplicationDecision": true
+    },
+    {
+      "candidateId": "candidate:q104137$1B0E36E9-AA57-43D1-81FA-2CC6987D5367",
+      "claimId": "ec446d93-3ef9-4bad-9639-c7478f9fb5f1",
+      "subjectQid": "Q150943",
+      "workQid": "Q104137",
+      "researchRole": "CAST",
+      "proposedRole": "ACTING",
+      "status": "missing-evidence",
+      "reasons": [
+        "original-role-term-untranscribed",
+        "dramatic-performance-context-needs-confirmation"
+      ],
+      "sourceIds": [
+        "S10"
+      ],
+      "chosenEvidence": null,
+      "scope": {
+        "level": "film-work-record",
+        "cut": null,
+        "territory": null,
+        "language": null,
+        "interpretation": "credit scope unresolved across versions; null is not all cuts"
+      },
+      "scopeInterpretation": "null is unstructured, not all cuts/territories/languages/periods",
+      "citationIds": [],
+      "requiresRoleApplicationDecision": false
+    },
+    {
+      "candidateId": "candidate:q104137$3B57142F-2116-4265-901D-3F772622D3C1",
+      "claimId": "46ec4090-1029-4edf-9cf8-bc41011efcc6",
+      "subjectQid": "Q48337",
+      "workQid": "Q104137",
+      "researchRole": "CAST",
+      "proposedRole": "ACTING",
+      "status": "missing-evidence",
+      "reasons": [
+        "original-role-term-untranscribed",
+        "dramatic-performance-context-needs-confirmation"
+      ],
+      "sourceIds": [
+        "S10"
+      ],
+      "chosenEvidence": null,
+      "scope": {
+        "level": "film-work-record",
+        "cut": null,
+        "territory": null,
+        "language": null,
+        "interpretation": "credit scope unresolved across versions; null is not all cuts"
+      },
+      "scopeInterpretation": "null is unstructured, not all cuts/territories/languages/periods",
+      "citationIds": [],
+      "requiresRoleApplicationDecision": false
+    },
+    {
+      "candidateId": "candidate:q184255$6E39F62D-CB25-409E-8DF0-C9D4DC7A7D8B",
+      "claimId": "ed8d6cc2-016e-420b-8975-b8baa9ca6fba",
+      "subjectQid": "Q93187",
+      "workQid": "Q184255",
+      "researchRole": "CAST",
+      "proposedRole": "ACTING",
+      "status": "missing-evidence",
+      "reasons": [
+        "dramatic-performance-context-needs-confirmation"
+      ],
+      "sourceIds": [
+        "S11"
+      ],
+      "chosenEvidence": {
+        "source": {
+          "id": "S11",
+          "title": "Million Dollar Baby — AFI Catalog",
+          "url": "https://catalog.afi.com/Catalog/moviedetails/54369",
+          "publisher": "American Film Institute",
+          "language": "en",
+          "locator": "Cast / Director / Writer / Producers / Cinematographer / MUSIC / LITERARY / DETAILS",
+          "note": "ページ見出し2005と2004年の限定公開・premiereを区別。原作短編／短編集と脚本Haggisを区別。Musと楽曲別作曲を混同せず音楽担当として比較する。",
+          "film": "Q184255",
+          "supports": {
+            "P57": [
+              "Q43203"
+            ],
+            "P58": [
+              "Q314935"
+            ],
+            "P162": [
+              "Q43203",
+              "Q280490",
+              "Q7817415",
+              "Q314935"
+            ],
+            "P344": [
+              "Q2063318"
+            ],
+            "P86": [
+              "Q43203"
+            ],
+            "P161": [
+              "Q93187",
+              "Q43203",
+              "Q48337"
+            ]
+          },
+          "accessed_on": "2026-10-26",
+          "retrieval": "web tool, public page; factual notes only",
+          "reuse": "No open-content license established. Store URL, locator and minimal factual review only; no page text or images.",
+          "formalAcceptance": false,
+          "role_terms": {
+            "P57": "Director",
+            "P58": "Writer",
+            "P162": "Producers",
+            "P344": "Cinematographer",
+            "P86": "Mus",
+            "P161": "Cast"
+          },
+          "role_term_policy": "Short credit heading only; not a reconstructed verbatim personal credit. Missing terms are untranscribed."
+        },
+        "term": "Cast",
+        "locator": "Cast / Director / Writer / Producers / Cinematographer / MUSIC / LITERARY / DETAILS",
+        "kind": "saved-factual-person-role-review",
+        "character": null,
+        "identityNote": "ページ見出し2005と2004年の限定公開・premiereを区別。原作短編／短編集と脚本Haggisを区別。Musと楽曲別作曲を混同せず音楽担当として比較する。"
+      },
+      "scope": {
+        "level": "film-work-record",
+        "cut": null,
+        "territory": null,
+        "language": null,
+        "interpretation": "credit scope unresolved across versions; null is not all cuts"
+      },
+      "scopeInterpretation": "null is unstructured, not all cuts/territories/languages/periods",
+      "citationIds": [
+        "e97e62f2-f655-4296-a296-55b47c28ac86"
+      ],
+      "requiresRoleApplicationDecision": false
+    },
+    {
+      "candidateId": "candidate:q184255$301FF7F2-A06A-488D-9D09-33EE54CA49DE",
+      "claimId": "66cd4918-4e6d-4d18-b429-fa4e59fcf3c5",
+      "subjectQid": "Q43203",
+      "workQid": "Q184255",
+      "researchRole": "CAST",
+      "proposedRole": "ACTING",
+      "status": "missing-evidence",
+      "reasons": [
+        "dramatic-performance-context-needs-confirmation"
+      ],
+      "sourceIds": [
+        "S11"
+      ],
+      "chosenEvidence": {
+        "source": {
+          "id": "S11",
+          "title": "Million Dollar Baby — AFI Catalog",
+          "url": "https://catalog.afi.com/Catalog/moviedetails/54369",
+          "publisher": "American Film Institute",
+          "language": "en",
+          "locator": "Cast / Director / Writer / Producers / Cinematographer / MUSIC / LITERARY / DETAILS",
+          "note": "ページ見出し2005と2004年の限定公開・premiereを区別。原作短編／短編集と脚本Haggisを区別。Musと楽曲別作曲を混同せず音楽担当として比較する。",
+          "film": "Q184255",
+          "supports": {
+            "P57": [
+              "Q43203"
+            ],
+            "P58": [
+              "Q314935"
+            ],
+            "P162": [
+              "Q43203",
+              "Q280490",
+              "Q7817415",
+              "Q314935"
+            ],
+            "P344": [
+              "Q2063318"
+            ],
+            "P86": [
+              "Q43203"
+            ],
+            "P161": [
+              "Q93187",
+              "Q43203",
+              "Q48337"
+            ]
+          },
+          "accessed_on": "2026-10-26",
+          "retrieval": "web tool, public page; factual notes only",
+          "reuse": "No open-content license established. Store URL, locator and minimal factual review only; no page text or images.",
+          "formalAcceptance": false,
+          "role_terms": {
+            "P57": "Director",
+            "P58": "Writer",
+            "P162": "Producers",
+            "P344": "Cinematographer",
+            "P86": "Mus",
+            "P161": "Cast"
+          },
+          "role_term_policy": "Short credit heading only; not a reconstructed verbatim personal credit. Missing terms are untranscribed."
+        },
+        "term": "Cast",
+        "locator": "Cast / Director / Writer / Producers / Cinematographer / MUSIC / LITERARY / DETAILS",
+        "kind": "saved-factual-person-role-review",
+        "character": null,
+        "identityNote": "ページ見出し2005と2004年の限定公開・premiereを区別。原作短編／短編集と脚本Haggisを区別。Musと楽曲別作曲を混同せず音楽担当として比較する。"
+      },
+      "scope": {
+        "level": "film-work-record",
+        "cut": null,
+        "territory": null,
+        "language": null,
+        "interpretation": "credit scope unresolved across versions; null is not all cuts"
+      },
+      "scopeInterpretation": "null is unstructured, not all cuts/territories/languages/periods",
+      "citationIds": [
+        "85ef0743-6916-4f3a-b341-202d9980e540"
+      ],
+      "requiresRoleApplicationDecision": false
+    }
+  ],
+  "entityMappings": [
+    {
+      "qid": "Q104137",
+      "id": "604eb49e-df41-4157-8b49-bd92a0d93ad4",
+      "status": "reuse-existing-uuid",
+      "existingCandidates": [],
+      "requiresHumanIdentityDecision": false
+    },
+    {
+      "qid": "Q109228991",
+      "id": "0b63c1ca-ffdf-4dae-bf7d-9d98a097d3e4",
+      "status": "proposed-new-uuid",
+      "existingCandidates": [],
+      "requiresHumanIdentityDecision": true
+    },
+    {
+      "qid": "Q109300883",
+      "id": "873787b5-c2a8-4e63-a4a1-0e52def1eae3",
+      "status": "identity-judgment",
+      "existingCandidates": [
+        "2d427fb3-d54f-479e-8579-e608c3364111"
+      ],
+      "requiresHumanIdentityDecision": true
+    },
+    {
+      "qid": "Q114819",
+      "id": "a8a22c53-18c5-42be-9fce-8c4526ecbbe5",
+      "status": "identity-judgment",
+      "existingCandidates": [
+        "2d427fb3-d54f-479e-8579-e608c3364111"
+      ],
+      "requiresHumanIdentityDecision": true
+    },
+    {
+      "qid": "Q1177114",
+      "id": "9d669326-483d-445a-b344-943c0d3652a8",
+      "status": "reuse-existing-uuid",
+      "existingCandidates": [],
+      "requiresHumanIdentityDecision": false
+    },
+    {
+      "qid": "Q123351",
+      "id": "aad624bf-c14a-44f8-a1af-14cbc967e02a",
+      "status": "reuse-existing-uuid",
+      "existingCandidates": [],
+      "requiresHumanIdentityDecision": false
+    },
+    {
+      "qid": "Q1337082",
+      "id": "9239e11d-22c4-4af3-89e6-5cd4bbc315eb",
+      "status": "proposed-new-uuid",
+      "existingCandidates": [],
+      "requiresHumanIdentityDecision": true
+    },
+    {
+      "qid": "Q13417189",
+      "id": "6e1a7c3e-155a-4fa3-beef-83564b2f93b2",
+      "status": "reuse-existing-uuid",
+      "existingCandidates": [],
+      "requiresHumanIdentityDecision": false
+    },
+    {
+      "qid": "Q1372703",
+      "id": "60a67ae8-ccd6-4d86-89a6-93ce3c942d9d",
+      "status": "reuse-existing-uuid",
+      "existingCandidates": [],
+      "requiresHumanIdentityDecision": false
+    },
+    {
+      "qid": "Q150943",
+      "id": "40a8fa53-04fe-43ed-bfc2-c9df879655f5",
+      "status": "proposed-new-uuid",
+      "existingCandidates": [],
+      "requiresHumanIdentityDecision": true
+    },
+    {
+      "qid": "Q153172",
+      "id": "e4211936-87b1-44a1-8bc0-4bfd102baf4c",
+      "status": "proposed-new-uuid",
+      "existingCandidates": [],
+      "requiresHumanIdentityDecision": true
+    },
+    {
+      "qid": "Q153677",
+      "id": "ec6994d0-6640-4f7c-9f3b-4d07af9b7a6c",
+      "status": "proposed-new-uuid",
+      "existingCandidates": [],
+      "requiresHumanIdentityDecision": true
+    },
+    {
+      "qid": "Q16213294",
+      "id": "830b7333-70cc-4a97-96a4-69daca3da199",
+      "status": "proposed-new-uuid",
+      "existingCandidates": [],
+      "requiresHumanIdentityDecision": true
+    },
+    {
+      "qid": "Q16216857",
+      "id": "be988ee3-c913-4862-83d9-5282aa9f7009",
+      "status": "proposed-new-uuid",
+      "existingCandidates": [],
+      "requiresHumanIdentityDecision": true
+    },
+    {
+      "qid": "Q164562",
+      "id": "b1b51481-6c75-4939-ab6c-d88a062fe28c",
+      "status": "proposed-new-uuid",
+      "existingCandidates": [],
+      "requiresHumanIdentityDecision": true
+    },
+    {
+      "qid": "Q17715100",
+      "id": "1211a7b1-22c7-42a6-890f-1c6b07170ce2",
+      "status": "proposed-new-uuid",
+      "existingCandidates": [],
+      "requiresHumanIdentityDecision": true
+    },
+    {
+      "qid": "Q1818079",
+      "id": "0de62dc9-eb92-4f1f-b60f-1c36d3d88905",
+      "status": "proposed-new-uuid",
+      "existingCandidates": [],
+      "requiresHumanIdentityDecision": true
+    },
+    {
+      "qid": "Q182763",
+      "id": "492646fd-364d-4996-a265-5bfee0ae281d",
+      "status": "reuse-existing-uuid",
+      "existingCandidates": [],
+      "requiresHumanIdentityDecision": false
+    },
+    {
+      "qid": "Q184255",
+      "id": "805b9630-cd9a-4931-8cde-0bcb92bf8a9f",
+      "status": "reuse-existing-uuid",
+      "existingCandidates": [],
+      "requiresHumanIdentityDecision": false
+    },
+    {
+      "qid": "Q184843",
+      "id": "7d6dbe11-be31-40e7-bc25-320779528c8e",
+      "status": "reuse-existing-uuid",
+      "existingCandidates": [],
+      "requiresHumanIdentityDecision": false
+    },
+    {
+      "qid": "Q188955",
+      "id": "8524ec91-2665-46c4-b6e3-58c31f221f74",
+      "status": "reuse-existing-uuid",
+      "existingCandidates": [],
+      "requiresHumanIdentityDecision": false
+    },
+    {
+      "qid": "Q190192",
+      "id": "a96c1dbe-6167-4bc2-8da0-7cc69ff60f57",
+      "status": "identity-judgment",
+      "existingCandidates": [
+        "2d427fb3-d54f-479e-8579-e608c3364111"
+      ],
+      "requiresHumanIdentityDecision": true
+    },
+    {
+      "qid": "Q1935469",
+      "id": "2b05a7e4-bef6-4e81-84b6-99a284a7bcf4",
+      "status": "proposed-new-uuid",
+      "existingCandidates": [],
+      "requiresHumanIdentityDecision": true
+    },
+    {
+      "qid": "Q193815",
+      "id": "ab4caf7e-b72c-49db-aeb4-6ecebb368f66",
+      "status": "proposed-new-uuid",
+      "existingCandidates": [],
+      "requiresHumanIdentityDecision": true
+    },
+    {
+      "qid": "Q19877770",
+      "id": "d0a182a5-d62e-4ab9-bf7b-6a15048648db",
+      "status": "identity-judgment",
+      "existingCandidates": [],
+      "requiresHumanIdentityDecision": true
+    },
+    {
+      "qid": "Q20382729",
+      "id": "5be3a84e-9c85-4218-bc7e-1829f824bc5e",
+      "status": "reuse-existing-uuid",
+      "existingCandidates": [],
+      "requiresHumanIdentityDecision": false
+    },
+    {
+      "qid": "Q20475",
+      "id": "22f9ddc9-7c0c-4781-98e4-c6019bb7e604",
+      "status": "proposed-new-uuid",
+      "existingCandidates": [],
+      "requiresHumanIdentityDecision": true
+    },
+    {
+      "qid": "Q2063318",
+      "id": "c0af6ae0-15b7-4272-8fba-3bce31bd9dcf",
+      "status": "proposed-new-uuid",
+      "existingCandidates": [],
+      "requiresHumanIdentityDecision": true
+    },
+    {
+      "qid": "Q2071",
+      "id": "23b9bfee-4a1d-4a71-8ca8-4963dfb850b6",
+      "status": "proposed-new-uuid",
+      "existingCandidates": [],
+      "requiresHumanIdentityDecision": true
+    },
+    {
+      "qid": "Q207472",
+      "id": "7af5e739-52de-43f9-b4e8-0dc755cdd8ee",
+      "status": "proposed-new-uuid",
+      "existingCandidates": [],
+      "requiresHumanIdentityDecision": true
+    },
+    {
+      "qid": "Q207506",
+      "id": "4c5c9aa0-cf9c-4685-95db-3ec12c6c694a",
+      "status": "proposed-new-uuid",
+      "existingCandidates": [],
+      "requiresHumanIdentityDecision": true
+    },
+    {
+      "qid": "Q211553",
+      "id": "13a23327-ce46-4939-af3b-c39408e27ae2",
+      "status": "reuse-existing-uuid",
+      "existingCandidates": [],
+      "requiresHumanIdentityDecision": false
+    },
+    {
+      "qid": "Q213574",
+      "id": "e429b95b-b650-48e4-8050-9ec642870aea",
+      "status": "proposed-new-uuid",
+      "existingCandidates": [],
+      "requiresHumanIdentityDecision": true
+    },
+    {
+      "qid": "Q21500755",
+      "id": "20e56d08-b4f9-4352-a22f-7a5d19f98c96",
+      "status": "proposed-new-uuid",
+      "existingCandidates": [],
+      "requiresHumanIdentityDecision": true
+    },
+    {
+      "qid": "Q230736",
+      "id": "7e649eec-ea8b-418c-b9df-9666bb500365",
+      "status": "proposed-new-uuid",
+      "existingCandidates": [],
+      "requiresHumanIdentityDecision": true
+    },
+    {
+      "qid": "Q23365",
+      "id": "2c043ccb-8726-4883-acb1-e5821969e379",
+      "status": "reuse-existing-uuid",
+      "existingCandidates": [],
+      "requiresHumanIdentityDecision": false
+    },
+    {
+      "qid": "Q23848",
+      "id": "dbbb7761-cd53-41b4-b19b-38631e774227",
+      "status": "proposed-new-uuid",
+      "existingCandidates": [],
+      "requiresHumanIdentityDecision": true
+    },
+    {
+      "qid": "Q242951",
+      "id": "99df2f68-ca27-4f34-8b4d-edd68044e3b3",
+      "status": "reuse-existing-uuid",
+      "existingCandidates": [],
+      "requiresHumanIdentityDecision": false
+    },
+    {
+      "qid": "Q25188",
+      "id": "420865b6-1377-4d02-8678-09cf0ed28fac",
+      "status": "reuse-existing-uuid",
+      "existingCandidates": [],
+      "requiresHumanIdentityDecision": false
+    },
+    {
+      "qid": "Q25191",
+      "id": "1b217c91-1e2d-46e1-9e4c-b90d706d3f7a",
+      "status": "reuse-existing-uuid",
+      "existingCandidates": [],
+      "requiresHumanIdentityDecision": false
+    },
+    {
+      "qid": "Q26705935",
+      "id": "6ba52204-8c35-461f-898e-6be70f7da248",
+      "status": "proposed-new-uuid",
+      "existingCandidates": [],
+      "requiresHumanIdentityDecision": true
+    },
+    {
+      "qid": "Q272972",
+      "id": "ff11df36-55e2-4b57-af94-0d04a7990186",
+      "status": "proposed-new-uuid",
+      "existingCandidates": [],
+      "requiresHumanIdentityDecision": true
+    },
+    {
+      "qid": "Q280490",
+      "id": "911cb38f-1215-4b2b-9d5d-3ac6f390261b",
+      "status": "reuse-existing-uuid",
+      "existingCandidates": [],
+      "requiresHumanIdentityDecision": false
+    },
+    {
+      "qid": "Q314935",
+      "id": "2e28a4a4-48cc-4aa7-a1bf-4cb3a5f9ce3b",
+      "status": "reuse-existing-uuid",
+      "existingCandidates": [],
+      "requiresHumanIdentityDecision": false
+    },
+    {
+      "qid": "Q317110",
+      "id": "c2d7dfd6-ad6e-430c-a2b2-3e5cb1a53db9",
+      "status": "proposed-new-uuid",
+      "existingCandidates": [],
+      "requiresHumanIdentityDecision": true
+    },
+    {
+      "qid": "Q321713",
+      "id": "87b2a10f-6615-4b25-a786-371f629ef41a",
+      "status": "proposed-new-uuid",
+      "existingCandidates": [],
+      "requiresHumanIdentityDecision": true
+    },
+    {
+      "qid": "Q323076",
+      "id": "d72eb196-d40b-4a14-822e-2ade9134c256",
+      "status": "reuse-existing-uuid",
+      "existingCandidates": [],
+      "requiresHumanIdentityDecision": false
+    },
+    {
+      "qid": "Q361443",
+      "id": "83617aa1-4c94-438e-9b17-d1ea5ed31a33",
+      "status": "proposed-new-uuid",
+      "existingCandidates": [],
+      "requiresHumanIdentityDecision": true
+    },
+    {
+      "qid": "Q3623767",
+      "id": "8c7b9b66-40df-422b-98de-72682204ae38",
+      "status": "proposed-new-uuid",
+      "existingCandidates": [],
+      "requiresHumanIdentityDecision": true
+    },
+    {
+      "qid": "Q370180",
+      "id": "b0329ea8-757c-4c61-8af4-5aebbd7787c2",
+      "status": "proposed-new-uuid",
+      "existingCandidates": [],
+      "requiresHumanIdentityDecision": true
+    },
+    {
+      "qid": "Q372788",
+      "id": "cbc950e1-2c7a-4696-a845-85db20787297",
+      "status": "reuse-existing-uuid",
+      "existingCandidates": [],
+      "requiresHumanIdentityDecision": false
+    },
+    {
+      "qid": "Q3765652",
+      "id": "d0974240-9c31-4442-9e48-b743f0ee164e",
+      "status": "proposed-new-uuid",
+      "existingCandidates": [],
+      "requiresHumanIdentityDecision": true
+    },
+    {
+      "qid": "Q3808035",
+      "id": "5fe1e2a6-9261-43b1-9dfb-5294ba3fd15b",
+      "status": "proposed-new-uuid",
+      "existingCandidates": [],
+      "requiresHumanIdentityDecision": true
+    },
+    {
+      "qid": "Q38111",
+      "id": "3a2ef351-d225-4896-a3b8-01bbe33743d4",
+      "status": "reuse-existing-uuid",
+      "existingCandidates": [],
+      "requiresHumanIdentityDecision": false
+    },
+    {
+      "qid": "Q428347",
+      "id": "93465a83-23b7-47a5-bbfd-dd57bca1e4a1",
+      "status": "proposed-new-uuid",
+      "existingCandidates": [],
+      "requiresHumanIdentityDecision": true
+    },
+    {
+      "qid": "Q43203",
+      "id": "490ee589-76db-4a5e-8923-13d24b7cb3a2",
+      "status": "reuse-existing-uuid",
+      "existingCandidates": [],
+      "requiresHumanIdentityDecision": false
+    },
+    {
+      "qid": "Q44158",
+      "id": "31c531d3-718a-45f9-a0e2-384da57da52e",
+      "status": "proposed-new-uuid",
+      "existingCandidates": [],
+      "requiresHumanIdentityDecision": true
+    },
+    {
+      "qid": "Q441964",
+      "id": "0dc53a16-ccb0-4e4f-965e-fa76d15f5bcc",
+      "status": "proposed-new-uuid",
+      "existingCandidates": [],
+      "requiresHumanIdentityDecision": true
+    },
+    {
+      "qid": "Q460144",
+      "id": "42e75995-10b2-4a0a-b8ca-ec085cee8347",
+      "status": "proposed-new-uuid",
+      "existingCandidates": [],
+      "requiresHumanIdentityDecision": true
+    },
+    {
+      "qid": "Q460277",
+      "id": "c225ef07-e9fa-49e1-9fe4-1c2d12ec6e79",
+      "status": "proposed-new-uuid",
+      "existingCandidates": [],
+      "requiresHumanIdentityDecision": true
+    },
+    {
+      "qid": "Q4757652",
+      "id": "f64e1ac3-59f6-4c28-9f17-ce4418e79672",
+      "status": "proposed-new-uuid",
+      "existingCandidates": [],
+      "requiresHumanIdentityDecision": true
+    },
+    {
+      "qid": "Q481832",
+      "id": "9e6f483a-ffc7-4219-94bb-dc2897224c9d",
+      "status": "reuse-existing-uuid",
+      "existingCandidates": [],
+      "requiresHumanIdentityDecision": false
+    },
+    {
+      "qid": "Q483203",
+      "id": "9306e1b8-adb5-455f-90da-1f599df3af79",
+      "status": "proposed-new-uuid",
+      "existingCandidates": [],
+      "requiresHumanIdentityDecision": true
+    },
+    {
+      "qid": "Q48337",
+      "id": "3db5a731-1dca-4ee0-8023-56e42fc38f30",
+      "status": "reuse-existing-uuid",
+      "existingCandidates": [],
+      "requiresHumanIdentityDecision": false
+    },
+    {
+      "qid": "Q4947838",
+      "id": "780840c7-f955-423c-9201-83841f9d3dd3",
+      "status": "proposed-new-uuid",
+      "existingCandidates": [],
+      "requiresHumanIdentityDecision": true
+    },
+    {
+      "qid": "Q4972958",
+      "id": "e463c778-8bc6-44b5-a901-7ec7a1293c83",
+      "status": "proposed-new-uuid",
+      "existingCandidates": [],
+      "requiresHumanIdentityDecision": true
+    },
+    {
+      "qid": "Q503095",
+      "id": "14aea0ac-0312-4770-89a9-991758040aa1",
+      "status": "proposed-new-uuid",
+      "existingCandidates": [],
+      "requiresHumanIdentityDecision": true
+    },
+    {
+      "qid": "Q512184",
+      "id": "16258289-0b9a-4c8a-9797-aa5183239441",
+      "status": "proposed-new-uuid",
+      "existingCandidates": [],
+      "requiresHumanIdentityDecision": true
+    },
+    {
+      "qid": "Q514003",
+      "id": "2119d4db-5075-4b3e-88e9-414939960c78",
+      "status": "proposed-new-uuid",
+      "existingCandidates": [],
+      "requiresHumanIdentityDecision": true
+    },
+    {
+      "qid": "Q5200155",
+      "id": "dbdfbc30-6f34-4e79-ac73-11baf808c90c",
+      "status": "proposed-new-uuid",
+      "existingCandidates": [],
+      "requiresHumanIdentityDecision": true
+    },
+    {
+      "qid": "Q52158949",
+      "id": "56843296-0baf-4159-8f2d-07aa881b8bc8",
+      "status": "proposed-new-uuid",
+      "existingCandidates": [],
+      "requiresHumanIdentityDecision": true
+    },
+    {
+      "qid": "Q5386707",
+      "id": "0d2aa95b-aae3-423d-9a2f-f4e9ca038810",
+      "status": "reuse-existing-uuid",
+      "existingCandidates": [],
+      "requiresHumanIdentityDecision": false
+    },
+    {
+      "qid": "Q548823",
+      "id": "342bb682-268a-419e-b9d2-c6ff0975f195",
+      "status": "reuse-existing-uuid",
+      "existingCandidates": [],
+      "requiresHumanIdentityDecision": false
+    },
+    {
+      "qid": "Q5525494",
+      "id": "c9ce4893-42f4-4343-985c-78eeeb354fb6",
+      "status": "proposed-new-uuid",
+      "existingCandidates": [],
+      "requiresHumanIdentityDecision": true
+    },
+    {
+      "qid": "Q56005",
+      "id": "3dd652cb-1ac1-40ec-8919-288745ac2926",
+      "status": "reuse-existing-uuid",
+      "existingCandidates": [],
+      "requiresHumanIdentityDecision": false
+    },
+    {
+      "qid": "Q605249",
+      "id": "fbb77070-abee-4279-97ff-056c3eb97def",
+      "status": "identity-judgment",
+      "existingCandidates": [
+        "7d6dbe11-be31-40e7-bc25-320779528c8e"
+      ],
+      "requiresHumanIdentityDecision": true
+    },
+    {
+      "qid": "Q6056440",
+      "id": "fab8342b-7f5b-4904-80e7-d24de8b982b9",
+      "status": "proposed-new-uuid",
+      "existingCandidates": [],
+      "requiresHumanIdentityDecision": true
+    },
+    {
+      "qid": "Q60834962",
+      "id": "2d427fb3-d54f-479e-8579-e608c3364111",
+      "status": "reuse-existing-uuid",
+      "existingCandidates": [],
+      "requiresHumanIdentityDecision": false
+    },
+    {
+      "qid": "Q6271612",
+      "id": "bd8a8e29-f3e7-41a4-b068-acf80a96b82d",
+      "status": "reuse-existing-uuid",
+      "existingCandidates": [],
+      "requiresHumanIdentityDecision": false
+    },
+    {
+      "qid": "Q656655",
+      "id": "5eb8ec0c-c524-42b3-ae4b-4f1962f9e38f",
+      "status": "reuse-existing-uuid",
+      "existingCandidates": [],
+      "requiresHumanIdentityDecision": false
+    },
+    {
+      "qid": "Q6708571",
+      "id": "d28daed3-66f6-4ce1-bc4f-063bd72260fd",
+      "status": "proposed-new-uuid",
+      "existingCandidates": [],
+      "requiresHumanIdentityDecision": true
+    },
+    {
+      "qid": "Q6780480",
+      "id": "e4d7c856-0a6c-413d-a6ba-a82b6913c581",
+      "status": "proposed-new-uuid",
+      "existingCandidates": [],
+      "requiresHumanIdentityDecision": true
+    },
+    {
+      "qid": "Q6830765",
+      "id": "5760e5ce-b64e-41d7-9f09-e6d4dd7cd1b2",
+      "status": "proposed-new-uuid",
+      "existingCandidates": [],
+      "requiresHumanIdentityDecision": true
+    },
+    {
+      "qid": "Q715198",
+      "id": "c42cf72c-e4f3-4451-a6e3-ccc437ed96b8",
+      "status": "proposed-new-uuid",
+      "existingCandidates": [],
+      "requiresHumanIdentityDecision": true
+    },
+    {
+      "qid": "Q716460",
+      "id": "bfb7cee8-02bb-4ba2-86fa-c7a5b72fc44a",
+      "status": "proposed-new-uuid",
+      "existingCandidates": [],
+      "requiresHumanIdentityDecision": true
+    },
+    {
+      "qid": "Q734155",
+      "id": "d406322e-f98e-45cb-9856-4ea2653262f6",
+      "status": "proposed-new-uuid",
+      "existingCandidates": [],
+      "requiresHumanIdentityDecision": true
+    },
+    {
+      "qid": "Q7620415",
+      "id": "9a310124-64da-4cbb-a361-dec3e5e79e35",
+      "status": "proposed-new-uuid",
+      "existingCandidates": [],
+      "requiresHumanIdentityDecision": true
+    },
+    {
+      "qid": "Q76364",
+      "id": "fa766eb6-5345-490b-b095-18b077275082",
+      "status": "proposed-new-uuid",
+      "existingCandidates": [],
+      "requiresHumanIdentityDecision": true
+    },
+    {
+      "qid": "Q76479",
+      "id": "3f3dc102-e794-4fd4-a04d-e09e3db7aab9",
+      "status": "proposed-new-uuid",
+      "existingCandidates": [],
+      "requiresHumanIdentityDecision": true
+    },
+    {
+      "qid": "Q77405",
+      "id": "1631c0f2-dc02-4794-838d-942f1a156af9",
+      "status": "proposed-new-uuid",
+      "existingCandidates": [],
+      "requiresHumanIdentityDecision": true
+    },
+    {
+      "qid": "Q7817415",
+      "id": "ead8bbfd-28c3-4202-9e6a-b5cfc4eccc6e",
+      "status": "reuse-existing-uuid",
+      "existingCandidates": [],
+      "requiresHumanIdentityDecision": false
+    },
+    {
+      "qid": "Q81328",
+      "id": "4646b1f4-e33a-4b1c-8103-b5740c4e8b76",
+      "status": "reuse-existing-uuid",
+      "existingCandidates": [],
+      "requiresHumanIdentityDecision": false
+    },
+    {
+      "qid": "Q854215",
+      "id": "3beacb6b-74fa-4bae-b6ea-0ff02efb00f8",
+      "status": "proposed-new-uuid",
+      "existingCandidates": [],
+      "requiresHumanIdentityDecision": true
+    },
+    {
+      "qid": "Q920161",
+      "id": "b8161251-e3c6-42e8-a426-608130e18270",
+      "status": "proposed-new-uuid",
+      "existingCandidates": [],
+      "requiresHumanIdentityDecision": true
+    },
+    {
+      "qid": "Q93187",
+      "id": "52ca321b-9da2-4da2-bffc-63a6c83c070f",
+      "status": "proposed-new-uuid",
+      "existingCandidates": [],
+      "requiresHumanIdentityDecision": true
+    },
+    {
+      "qid": "Q942932",
+      "id": "7ce6d8b7-d0d6-45a2-8cb8-f629d0d764c1",
+      "status": "reuse-existing-uuid",
+      "existingCandidates": [],
+      "requiresHumanIdentityDecision": false
+    },
+    {
+      "qid": "Q945188",
+      "id": "86ab3f0a-8df8-4e6b-91a2-3b890c769e17",
+      "status": "proposed-new-uuid",
+      "existingCandidates": [],
+      "requiresHumanIdentityDecision": true
+    }
+  ]
+}

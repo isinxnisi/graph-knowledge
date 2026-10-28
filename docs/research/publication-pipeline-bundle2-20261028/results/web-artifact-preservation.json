@@ -1,0 +1,12 @@
+{
+  "scope": "cached image copies; no production container writes",
+  "initialAiArtifactUnchanged": true,
+  "images": {
+    "installed-issue54-copy": {
+      "initialAiSha256": "5e547936530f188ece4b6412841d67efbcbbd070ae7124b3b9097581b68ee3db"
+    },
+    "candidate": {
+      "initialAiSha256": "5e547936530f188ece4b6412841d67efbcbbd070ae7124b3b9097581b68ee3db"
+    }
+  }
+}

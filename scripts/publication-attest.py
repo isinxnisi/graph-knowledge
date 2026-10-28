@@ -102,7 +102,7 @@ def main():
         coordination.e.trusted(a.coordination_config,os.geteuid())
         coordinator=coordination.Coordinator(coordination.e.read(a.coordination_config))
         cycle.require((Path(coordinator.config['workerHome'])/'runtime').resolve()==a.runtime.resolve(), 'Wrong fixed Worker runtime')
-    barrier=coordinator.barrier() if coordinator else legacy_lock(a.common_lock)
+    barrier=coordinator.barrier(wait_seconds=30) if coordinator else legacy_lock(a.common_lock)
     with barrier:
         # The installed client embeds its host/key/fixed wrapper. No shell command comes from a candidate.
         child=subprocess.Popen([str(a.client.resolve()),a.command,a.nonce],stdin=subprocess.PIPE,stdout=subprocess.PIPE,stderr=subprocess.DEVNULL,

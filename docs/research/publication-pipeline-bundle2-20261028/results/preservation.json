@@ -1,0 +1,12 @@
+{
+  "formalReceipts": 12,
+  "workerCodeConfigUnchanged": true,
+  "deliveryAndApproverUnchanged": true,
+  "mainUnchanged": true,
+  "productionDataset": {
+    "dataset": "public-kg",
+    "revision": "f5dbf83f-c89e-4e40-95ee-57957016089f"
+  },
+  "signed": false,
+  "applyCalls": 0
+}

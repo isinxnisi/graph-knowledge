@@ -1,0 +1,126 @@
+{
+  "authority": "read-only-local-and-HTTPS-inventory",
+  "mainCommit": "129c1eb411cece336cce02996c520f8f21b12f0a",
+  "dataset": {
+    "dataset": "public-kg",
+    "revision": "f5dbf83f-c89e-4e40-95ee-57957016089f"
+  },
+  "fixedWorker": {
+    "configSha256": "d3411e24937f2f422495bf347bac9361b5a6364375443d104c266f96de4763e9",
+    "config": {
+      "schemaVersion": 1,
+      "home": "/home/isinxnisi/.local/share/plunode-collection-worker-phase-b-20261020",
+      "remote": "https://github.com/isinxnisi/graph-knowledge.git",
+      "branch": "codex/collection-control",
+      "workerId": "plunode-wsl",
+      "codeCommit": "973c7b0c599f79905a029b28b524f4924e169376"
+    },
+    "nodeVersion": "v24.21.0",
+    "nodeSha256": "7fde7b8afa198da66257f42ee2001d874c7355631e6d1579a5fb5ef1f246df4c",
+    "receiptReferences": [
+      {
+        "file": "datasets/manga-collection/accepted-film-initial-20261027/acceptance.json",
+        "sha256": "3ac7b6be38e24aa9dfd7bf67233b7c5e80822c4313ca9b58d34408611cdc83c3"
+      },
+      {
+        "file": "datasets/manga-collection/accepted-film-saved-ab-20261028/acceptance.json",
+        "sha256": "7b96b1c64ed106b1a17d493ca86b5b12e1e306e2551c191e52d6df77876c5df6"
+      },
+      {
+        "file": "datasets/manga-collection/accepted-issue-25-utc-recovery-01-normal/acceptance.json",
+        "sha256": "d271f32767dab030bd26ddcef669f48237cc303a8c605c58df047df8aea71fb6"
+      },
+      {
+        "file": "datasets/manga-collection/accepted-issue-25-utc-recovery-03-normal/acceptance.json",
+        "sha256": "2cd8cb76b64be0d9d19fb3da8ceb4d3e185ca086bba0e90917a7b24a1da0bedf"
+      },
+      {
+        "file": "datasets/manga-collection/accepted-issue-25-utc-recovery-04-normal/acceptance.json",
+        "sha256": "052a7d1ef334074ce2b94837a7d0dfc803bde9526abc9d8e8e7f058b36acdf62"
+      },
+      {
+        "file": "datasets/manga-collection/accepted-issue-25-utc-recovery-06-normal/acceptance.json",
+        "sha256": "4e94de08943725549f4e01be9e6b1b09f2f9d88c5ca2dfaa9aa5b7c2395930f4"
+      },
+      {
+        "file": "datasets/manga-collection/accepted-issue-25-utc-recovery-07-normal/acceptance.json",
+        "sha256": "b6a521d5fffdd6cafc3a3df9f8f963c571520812053aad4f259eea3e22ebee0b"
+      },
+      {
+        "file": "datasets/manga-collection/accepted-issue-25-utc-recovery-08-normal/acceptance.json",
+        "sha256": "5b3fdc3aa705c5e73f5ba11b40052be700d71069b0a25a12943cb189a2ee1109"
+      },
+      {
+        "file": "datasets/manga-collection/accepted-issue-34-obata-drawing-20261021/acceptance.json",
+        "sha256": "7f62ec0f27d4fedfbb09066893d4ac94d88eaf016c2fff3959a001ea9f228efe"
+      },
+      {
+        "file": "datasets/manga-collection/accepted-original-story-r0002-20261017/acceptance.json",
+        "sha256": "9fdb9933c0d78795769bf27eebb7ecb4ec7cccc37f6ee6827e55dd119e727801"
+      },
+      {
+        "file": "datasets/manga-collection/accepted-r0002-20261017/acceptance.json",
+        "sha256": "9b28562b9846970cd30b9261d4659d505e9df06e014d2809d6517aa39836f567"
+      },
+      {
+        "file": "datasets/manga-collection/accepted-r0003-20261017/acceptance.json",
+        "sha256": "7d53abbd472fcbf0cba57fa5202d6fd4f8eb12c9ebda34bd1e7a8badca701831"
+      }
+    ],
+    "controlFiles": {
+      "collection-control/requests/issue-16-adachi-three-20261025.json": "5c15cdf5d521ca7bb54c94cb6471fb129263d9cd25987a548b0fd50b56aab288",
+      "collection-control/requests/issue-25-manga23-20261019-repair1-batch-01.json": "9e62bc58b8c3047940024842cc6b23c2744de2d19667d399d82fd9d6a4782baf",
+      "collection-control/requests/issue-25-manga23-20261019-repair1-batch-02.json": "f6dafe2918c68170c1ad046adfd7776290868ad25ad81aa3eecfa2fb2b3955f8",
+      "collection-control/requests/issue-25-manga23-20261019-repair1-batch-03.json": "1681cf457acc46b08545b65ca23863c85b4e5287c8c9e015fa26ecb734e08341",
+      "collection-control/requests/issue-25-manga23-20261019-repair1-batch-04.json": "7ff25d34dee666ffbc02ef6a6c85d3c240577bacaf6711d2a3ae88570b9ddffd",
+      "collection-control/requests/issue-25-manga23-20261019-repair1-batch-05.json": "790ef37cbbd0b9ee0701581921d7eaf16fc4df8b8c59d3f0e02a0a7961cd9666",
+      "collection-control/requests/issue-25-manga23-20261019-repair1-batch-06.json": "f15de743a9554e8b64dbfaef3221a3d96b2e163c69c190ac51e3577a6e05e27f",
+      "collection-control/requests/issue-25-manga23-20261019-repair1-batch-07.json": "485d298e7753f789d88bd9b89912d594586bb9d811dc9e1c3704515d368da200",
+      "collection-control/requests/issue-25-manga23-20261019-repair1-batch-08.json": "c851adc5de0740c85e343baf8eb0672dce54f79f9647c1fae16ad244eef9fad2",
+      "collection-control/requests/issue-25-manga23-20261019-repair1-batch-09.json": "9cfb278787a39e9fcfdc49e4bee7a5c2a4c946f94236037bdc199e70699dc9cf",
+      "collection-control/requests/issue-25-manga23-20261019-repair1-batch-10.json": "ed885e08b9e56344ecbc4f622edae4438fd5dd4f8336ffa4606190ad19fb9ff3",
+      "collection-control/requests/issue-25-manga23-20261019-repair1.json": "03bec8fbdac351776eab61b2dc4b47c7c9a687094ed8bfca5873b90a2ea86b35",
+      "collection-control/requests/issue-25-manga23-20261019.json": "ac202bb18150f55b7da1103ce43f2d684aa101e4d5d5107a892223bce4590039",
+      "collection-control/requests/issue-25-normal-sequence-after-first-20261020.json": "bfed193b23c19b24e7f0f5b5f5ffb812861f4730840f0b23a0024b927f5d6ab5",
+      "collection-control/requests/issue-25-utc-recovery-01-normal.json": "d869a89ba7e08cb1b065e23fa560e68b285c22299c758113fe6b122ca602894a",
+      "collection-control/requests/issue-25-utc-recovery-01.json": "a8d4288b56a6c82bb0472be22152432c1f4167bdc3234420c83b586b6724b345",
+      "collection-control/requests/issue-25-utc-recovery-02.json": "a25b93cfbe06d29201c862380f1208dfa929a0856e6f8ca7473a82b223769b34",
+      "collection-control/requests/issue-25-utc-recovery-03.json": "67aa46a50204029b93086cb11c41b6251061d0fa3fc2ed6f131aaadc0e078a56",
+      "collection-control/requests/issue-25-utc-recovery-04.json": "b9ed2e411f3f66641455c5a151b3855481e163f36332a59fb8e6559a447b1bc0",
+      "collection-control/requests/issue-25-utc-recovery-05.json": "137298d028f21a48a58499dcc3e99b0b928944b2ca1df819a8470c57bc4cc619",
+      "collection-control/requests/issue-25-utc-recovery-06.json": "265e3aca49beaa1963c0cefcef4d65cad00104bbd90e8073b380047d38621650",
+      "collection-control/requests/issue-25-utc-recovery-07.json": "d46cb9ff59261ccd4dd4dbdc1680c4d95e07d8c71c86da9bb78cf58a3e4aac80",
+      "collection-control/requests/issue-25-utc-recovery-08.json": "0814b8af0f80dc7f8cb28d448971a9da6a86cee02c9b6879d53a41b4a4621a76",
+      "collection-control/requests/issue-25-utc-recovery-09.json": "78ffd17af073fb5ff238579eca1957d2be68063bca8157b4cac2eba3f2f88eb3",
+      "collection-control/requests/issue-42-dot-matsumoto-three-20261026.json": "90859cacf56fa33c3fc06c58206d81879a7d4e3995746680dd483e94a7cdcafc",
+      "collection-control/requests/issue-42-matsumoto-recovery-20261026-batch-01.json": "d63f6347d120cf07af48aab70b01d7b0f650b0d01d73d7d856597c8c044b5647",
+      "collection-control/requests/issue-42-matsumoto-recovery-20261026.json": "7c353b1d9f9b781aa4f32f432a2e32a0733601e18c23e0407b7aa17af38bfd08",
+      "collection-control/requests/issue-46-dot-aoyama-three-20261027-batch-01.json": "dbbd9ac962a478f5a8f351fcdbd05ab3373bfebe364f8b738b58bffb17d3d104",
+      "collection-control/requests/issue-46-dot-aoyama-three-20261027.json": "8277772eae902e72cdf68b5e7d02eb6ce10b4f37c6de085af9af6ac8a595ab10",
+      "collection-control/requests/issue-47-dot-yukimura-two-20261027.json": "45fdbc030fa87fdc492b1ccb14ab70e9bed7c6bfcf45915863626aab4cbd1b3a",
+      "collection-control/requests/issue-48-dot-toriyama-three-20261027-batch-01.json": "42647bce621bda1430fe1abe5ac77fda6be97db99885827eefd7248346e104ce",
+      "collection-control/requests/issue-48-dot-toriyama-three-20261027.json": "5b9b942bc0bce702658f19be34503c58facd1a72f12bb45e79f6ca63d9491c62",
+      "collection-control/requests/issue-49-dot-hara-souten-20261027-batch-01.json": "4b36751528d2556648cc38baa8a234f5cbdf78ca4d0b1370b8e5f749358552a0",
+      "collection-control/requests/issue-49-dot-hara-souten-20261027.json": "6f99836b9eb7221d5176dd9c536d2720d4192f5adc9f5ae010bca6bd6be3baa5",
+      "collection-control/requests/issue-5-dot-tezuka-adolf-20261025-batch-01.json": "9b3f98315bb28650d44225f8b197ba408b2d39b00c24771052dcbfbca976ea00",
+      "collection-control/requests/issue-5-dot-tezuka-adolf-20261025.json": "0ed08bb8ae9c087005eea5e86a48e44646eb7fad735db377406fda4a52e4600c",
+      "collection-control/requests/issue-50-dot-endo-tista-20261027.json": "cb434c39ad43fc5b828ba608df40b56f268ab7ac3e0b177d5824ca1886c7e227",
+      "collection-control/requests/issue-51-dot-araki-rohan-20261027.json": "e71e0fe6adecfdbb6df5ce5a84a59a8c91f6cd3ac738dc6055d28e86adc2a88b",
+      "collection-control/requests/issue-56-dot-urushibara-two-20261028-batch-01.json": "dca59b2b98deb2271d94ac6e75bdee637111e58cfc2c75df5e3ef3cf1005beed",
+      "collection-control/requests/issue-56-dot-urushibara-two-20261028.json": "79a6f50ef6ec42c5e87c9337d9949db9659e05aa3970735fbdb2fc86018f0f07",
+      "collection-control/requests/issue-57-dot-oshima-two-20261028-batch-01.json": "9cbb6194e17516e6f62797e27994fff866424024ac9f707377d098ab744c025d",
+      "collection-control/requests/issue-57-dot-oshima-two-20261028.json": "80479c281c4da7ad392241f815105e48758c0e9db0cc54e3177791e0061164ec",
+      "collection-control/requests/issue-58-dot-takeuchi-two-20261028-batch-01.json": "71a310a43534263d75049dac65eb871806eddb610ee9f1822079a6486e9128d0",
+      "collection-control/requests/issue-58-dot-takeuchi-two-20261028.json": "752c716ce9c52c5e1ddb90a6f0ceff90a2364aec0803de402d595fd68785bce6",
+      "collection-control/requests/issue-59-dot-kubo-two-20261028.json": "be200c888ce96a7f58a587450a39ef8c84c76f8c47ac0a57a4d1d98133132ade"
+    },
+    "observedControlHead": "bc636cc3c1fe392de0fb2fac4f14d93ec94c9ef8"
+  },
+  "delivery": {
+    "configSha256": "d1cf49e26d0cf88de4ade6f3a3501d7d2f822f356bef5e5f17612654fa140e92",
+    "sourceCommit": "7392d8e343a11644b1047364c71653779ad0c93c",
+    "approveProgramSha256": "536ff5659cedc6b724c452b38fb44861716d35fee7983135490181565a18924f"
+  },
+  "freshVpsProtectedInventory": "pending-operator-read-only-export",
+  "liveChangesPerformed": false
+}

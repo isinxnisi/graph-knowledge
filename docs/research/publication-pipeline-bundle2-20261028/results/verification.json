@@ -1,0 +1,38 @@
+{
+  "scope": "isolated and read-only, not deployed",
+  "vitest": {
+    "files": 6,
+    "passed": 96
+  },
+  "publicationPython": {
+    "suiteCases": 74,
+    "passedInSuite": 73,
+    "skippedInSuite": 1,
+    "seconds": 231.634,
+    "skippedImageCaseRerunWithFixedImage": "passed (7.478 seconds)"
+  },
+  "filmManifestAndSequencePython": {
+    "passed": 30,
+    "seconds": 23.288
+  },
+  "builds": {
+    "web": "passed Next 16.3.8 and TypeScript",
+    "operator": "passed",
+    "eslintChangedTypeScript": "passed",
+    "roles": "10, 0 errors, existing warnings preserved"
+  },
+  "images": {
+    "archiveLayersCheckedWithExistingIssue33Verifier": true,
+    "rebuiltDuringFinalVerification": false
+  },
+  "actualInstalledWorkerShadow": {
+    "node": "v24.21.0",
+    "receipts": 12,
+    "filmClaimsInCumulativeBase": 36,
+    "collectReviewAndAcceptancePreparationAndOfflinePlan": "passed",
+    "networkAttempts": 0,
+    "formalAcceptance": false
+  },
+  "liveChanges": false,
+  "freshVpsProtectedInventory": "pending operator read-only export"
+}
