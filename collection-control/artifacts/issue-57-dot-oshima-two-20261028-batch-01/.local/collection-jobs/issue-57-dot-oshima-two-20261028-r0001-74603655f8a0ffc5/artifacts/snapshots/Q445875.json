@@ -1,0 +1,187 @@
+{
+  "id": "Q445875",
+  "lastrevid": 2540461112,
+  "labels": {
+    "de": {
+      "language": "de",
+      "value": "Yumiko Ōshima"
+    },
+    "ja": {
+      "language": "ja",
+      "value": "大島弓子"
+    },
+    "fr": {
+      "language": "fr",
+      "value": "Yumiko Ōshima"
+    },
+    "ru": {
+      "language": "ru",
+      "value": "Юмико Осима"
+    },
+    "nl": {
+      "language": "nl",
+      "value": "Yumiko Ōshima"
+    },
+    "es": {
+      "language": "es",
+      "value": "Yumiko Ōshima"
+    },
+    "ko": {
+      "language": "ko",
+      "value": "오시마 유미코"
+    },
+    "zh": {
+      "language": "zh",
+      "value": "大島弓子"
+    },
+    "ast": {
+      "language": "ast",
+      "value": "Yumiko Ōshima"
+    },
+    "ar": {
+      "language": "ar",
+      "value": "يوميكو أوشيما"
+    },
+    "uk": {
+      "language": "uk",
+      "value": "Юміко Осіма"
+    },
+    "ca": {
+      "language": "ca",
+      "value": "Yumiko Ōshima"
+    },
+    "gl": {
+      "language": "gl",
+      "value": "Yumiko Ōshima"
+    },
+    "en": {
+      "language": "en",
+      "value": "Yumiko Ōshima"
+    },
+    "arz": {
+      "language": "arz",
+      "value": "يوميكو اوشيما"
+    },
+    "sq": {
+      "language": "sq",
+      "value": "Yumiko Oshima"
+    },
+    "tr": {
+      "language": "tr",
+      "value": "Yumiko Ōshima"
+    }
+  },
+  "aliases": {
+    "de": [
+      {
+        "language": "de",
+        "value": "Ōshima Yumiko"
+      },
+      {
+        "language": "de",
+        "value": "Oshima Yumiko"
+      },
+      {
+        "language": "de",
+        "value": "Yumiko Ooshima"
+      },
+      {
+        "language": "de",
+        "value": "Yumiko Oshima"
+      }
+    ],
+    "ja": [
+      {
+        "language": "ja",
+        "value": "ロスト ハウス"
+      },
+      {
+        "language": "ja",
+        "value": "バナナブレッドのプディング"
+      }
+    ],
+    "fr": [
+      {
+        "language": "fr",
+        "value": "Yumiko Oshima"
+      }
+    ],
+    "ru": [
+      {
+        "language": "ru",
+        "value": "Осима, Юмико"
+      }
+    ],
+    "en": [
+      {
+        "language": "en",
+        "value": "Yumiko Oshima"
+      },
+      {
+        "language": "en",
+        "value": "Yumiko Ooshima"
+      },
+      {
+        "language": "en",
+        "value": "Yumiko Ohshima"
+      }
+    ],
+    "nl": [
+      {
+        "language": "nl",
+        "value": "Yumiko Oshima"
+      }
+    ]
+  },
+  "claims": {
+    "P31": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P31",
+          "hash": "ad7d38a03cdd40cdc373de0dc4e7b7fcbccb31d9",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 5,
+              "id": "Q5"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q445875$5CC99CCE-64F9-44EB-8F1A-11D630690D5B",
+        "rank": "normal",
+        "references": [
+          {
+            "hash": "fa278ebfc458360e5aed63d5058cca83c46134f1",
+            "snaks": {
+              "P143": [
+                {
+                  "snaktype": "value",
+                  "property": "P143",
+                  "hash": "e4f6d9441d0600513c4533c672b5ab472dc73694",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 328,
+                      "id": "Q328"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P143"
+            ]
+          }
+        ]
+      }
+    ],
+    "P50": [],
+    "P110": []
+  }
+}

@@ -82,11 +82,35 @@
   },
   "requestSha256": "9cbb6194e17516e6f62797e27994fff866424024ac9f707377d098ab744c025d",
   "kind": "collect-review",
-  "phase": "running",
+  "phase": "completed",
   "generation": 5,
   "attempts": 1,
   "workerId": "plunode-wsl",
   "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
   "updatedAt": "2026-10-28T00:46:56+00:00",
-  "message": "Execution gate: interval"
+  "result": {
+    "jobId": "issue-57-dot-oshima-two-20261028-r0001-74603655f8a0ffc5",
+    "collectionUnchanged": false,
+    "reviewUnchanged": false,
+    "transportAttemptsAdded": 0,
+    "reviewDirectory": "/home/isinxnisi/.local/share/plunode-collection-worker-phase-b-20261020/runtime/datasets/manga-collection/workflow-reviews/issue-57-dot-oshima-two-20261028-r0001-74603655f8a0ffc5-review-d5c67c6a9d880df3",
+    "reviewOnly": true,
+    "formalAcceptance": false,
+    "publicApply": false,
+    "counts": {
+      "entities": 2,
+      "claims": 1,
+      "sources": 1,
+      "citations": 1
+    },
+    "heldClaims": 0
+  },
+  "executionComplete": true,
+  "reviewReference": {
+    "file": "datasets/manga-collection/workflow-reviews/issue-57-dot-oshima-two-20261028-r0001-74603655f8a0ffc5-review-d5c67c6a9d880df3/review-manifest.json",
+    "sha256": "d114c37e8f2b52f8177f9990835b4b0b3ca61432a2c84cc7308f243c0cde3f2c"
+  },
+  "decisionDrafts": [
+    "datasets/collection-decision-drafts/issue-57-dot-oshima-two-20261028-batch-01/d114c37e8f2b52f8177f9990835b4b0b3ca61432a2c84cc7308f243c0cde3f2c/issue-57-dot-oshima-two-20261028-batch-01-normal-draft.json"
+  ]
 }

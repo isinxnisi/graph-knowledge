@@ -1,0 +1,113 @@
+{
+  "schemaVersion": 2,
+  "status": "pending-human-acceptance",
+  "recipe": "manga-r0037",
+  "collectionContext": {
+    "themeId": "issue-57-dot-oshima-two-20261028",
+    "themeRevision": 1,
+    "definitionSha256": "a31d8b8a5297cd58b600a1b369d6f4f352c1c4cc0af4ea9daf3afb4c02672dc1",
+    "approvalSha256": "808e2041f03a8f2cac6c6c47c52edc9620f87ad330c25f1aa773c66b3ab2aaa9"
+  },
+  "execution": {
+    "adapter": "manga-discovery-v2",
+    "codeSha256": "80e05b67bc0129b963653b90df4cfbfa5bd6aff190acda99f54c08541e55801e",
+    "inputs": [
+      {
+        "file": "datasets/manga-collection/r0037/recipe.json",
+        "sha256": "17d63ae438b951d82b7bfa3918f1b5caa631834794426d29c80f1607a994b986"
+      },
+      {
+        "file": "datasets/manga-collection/r0037/anchor-review.json",
+        "sha256": "c661123a789f2ab4a1e791d81f5c0f1630efd16804b51fdf70e785d0108a6b15"
+      },
+      {
+        "file": "datasets/manga-collection/r0037/publication-review.json",
+        "sha256": "95c0f6c06e4107a3e5a89ec9feaa79ee617f93170f0bdcd57a899ae526f26cea"
+      },
+      {
+        "file": "docs/research/famous-manga-creators/20261016/candidates.json",
+        "sha256": "8531fada01e5c635ba2ee278a7ef944a73f64676af14ed42ae0e690f5a1ff978"
+      },
+      {
+        "file": "datasets/public-kg/releases/20261014-credits-001/data.json",
+        "sha256": "ea91b16f52a211b5a8464382ad498b7b2bb2be69a6f33fe125a73a3c7b9da2b5"
+      },
+      {
+        "file": "datasets/public-kg/releases/20261014-credits-001/manifest.json",
+        "sha256": "e4aa3b58ed884f7d1f8fffee43b260261cc2b4d3a867fda942919f439d2bce17"
+      }
+    ],
+    "maxEntities": 2111,
+    "maxClaims": 1847
+  },
+  "identityMappings": [
+    {
+      "name": "大島弓子",
+      "wikidata": "Q445875",
+      "entityId": "4ee6bd52-a328-4dfd-983f-c47432e821ba",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "綿の国星",
+      "wikidata": "Q689013",
+      "entityId": "bdeaa3cb-a8a3-4cb9-be47-7b4b0438eadc",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    }
+  ],
+  "rows": [
+    {
+      "kind": "wikidata-relation",
+      "work": "綿の国星",
+      "property": "P50",
+      "personQid": "Q445875",
+      "statementId": "Q689013$D25226BF-A7A9-4F88-A276-43E06120D5B0",
+      "qualifiers": {},
+      "references": [],
+      "status": "candidate-only-no-role-inference",
+      "reason": "Wikidata propertyだけで具体Roleや直接制作の意味を確定しない"
+    },
+    {
+      "kind": "ndl-credit",
+      "work": "綿の国星",
+      "isbn13": "9784592880615",
+      "rawResponsibility": "大島弓子 著",
+      "sourceUrl": "https://ndlsearch.ndl.go.jp/books/R100000002-I000002324649",
+      "status": "pending-human-acceptance",
+      "roleId": "AUTHORSHIP",
+      "person": "大島弓子",
+      "claimId": "eecc6930-13f8-4c10-a8e2-fbb0f03f55bf",
+      "reusedClaim": false,
+      "subjectId": "4ee6bd52-a328-4dfd-983f-c47432e821ba",
+      "objectId": "bdeaa3cb-a8a3-4cb9-be47-7b4b0438eadc"
+    }
+  ],
+  "holds": [],
+  "acquisitions": [
+    {
+      "kind": "wikidata",
+      "identifier": "Q445875",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q445875.json",
+      "sha256": "5c5ac1ea3a82df453c4ecd793ad7c0ff975726a824c0578c55e3b6906949fb00",
+      "bytes": 30503,
+      "fetchedAt": "2026-10-28T00:33:44+00:00"
+    },
+    {
+      "kind": "wikidata",
+      "identifier": "Q689013",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q689013.json",
+      "sha256": "edfb4caf9c8efc96765581e9c9a5f5a76319c17f0173af5057a5ac48032db859",
+      "bytes": 12488,
+      "fetchedAt": "2026-10-28T00:33:47+00:00"
+    },
+    {
+      "kind": "ndl",
+      "identifier": "9784592880615",
+      "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&maximumRecords=5&query=isbn%3D%229784592880615%22+AND+dpid%3Diss-ndl-opac",
+      "sha256": "fbdd216c6d1204f714b1872d6883a8b57c4c0ab19e04fe1875009e8d0f58af9f",
+      "bytes": 22143,
+      "fetchedAt": "2026-10-28T00:34:13+00:00"
+    }
+  ]
+}

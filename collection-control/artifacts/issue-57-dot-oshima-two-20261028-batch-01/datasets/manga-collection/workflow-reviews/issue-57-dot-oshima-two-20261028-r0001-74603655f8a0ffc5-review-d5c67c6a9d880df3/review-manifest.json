@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "reviewId": "issue-57-dot-oshima-two-20261028-r0001-74603655f8a0ffc5-review-d5c67c6a9d880df3",
+  "inputSha256": "d5c67c6a9d880df35771be6dedf15118017b3e26aaa290e8aafe86f3eed2f924",
+  "artifacts": {
+    "context.json": "5c250be4fcb80ce7707effbf5633cd983b6df29bcc89cde168ff7badb36b73da",
+    "review.json": "44b6d12ec8e122653a6d73d8ca00073abe0077ccdd677e9616616766bdb82c8b",
+    "proposed-records.json": "3ef1c1b1c1e991e94b88bd7f680f31411a149f7c6860af85ad554d4f2f849659",
+    "identity-only-records.json": "1fc314e4a47717bce195b39fe7f1e66bd31f6af892fca4a9420a653eab927a37",
+    "exploration-paths.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+    "decision-request.json": "ce9d3baa74d1428db8ce19b746f78779ddcc4c7c149dc30a3a4fafdb42bd11bc",
+    "README.md": "cdb5adc855ff5a47fcd0d67bbd6b8273fd79da174303fe7a7b661349e2f4c1e3"
+  },
+  "authority": "pending-human-review-only"
+}

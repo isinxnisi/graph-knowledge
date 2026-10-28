@@ -1,0 +1,84 @@
+{
+  "status": "pending-human-acceptance",
+  "humanReviewer": null,
+  "entities": [
+    {
+      "entityId": "4ee6bd52-a328-4dfd-983f-c47432e821ba",
+      "name": "大島弓子",
+      "kind": "person",
+      "wikidata": "Q445875",
+      "existingEntityId": null,
+      "status": "candidate",
+      "reasons": [],
+      "checks": {
+        "providerIdentity": true
+      },
+      "inputPopulation": "relation-endpoint"
+    },
+    {
+      "entityId": "bdeaa3cb-a8a3-4cb9-be47-7b4b0438eadc",
+      "name": "綿の国星",
+      "kind": "work",
+      "wikidata": "Q689013",
+      "existingEntityId": null,
+      "status": "candidate",
+      "reasons": [],
+      "checks": {
+        "providerIdentity": true
+      },
+      "inputPopulation": "relation-endpoint"
+    }
+  ],
+  "claims": [
+    {
+      "claimId": "eecc6930-13f8-4c10-a8e2-fbb0f03f55bf",
+      "person": "大島弓子",
+      "work": "綿の国星",
+      "subjectId": "4ee6bd52-a328-4dfd-983f-c47432e821ba",
+      "objectId": "bdeaa3cb-a8a3-4cb9-be47-7b4b0438eadc",
+      "roleId": "AUTHORSHIP",
+      "scope": {
+        "kind": "publication",
+        "isbn13": "9784592880615",
+        "volumeLabel": "第1巻（NDL巻次 第1巻 (シルク・ムーンプチ・ロード)）",
+        "editionLabel": null,
+        "language": "ja"
+      },
+      "status": "candidate",
+      "reasons": [],
+      "supportingCitationIds": [
+        "0addd8f1-956d-481c-8dcf-8d8fd3a1ed30"
+      ],
+      "existingState": null,
+      "existingClaimId": null,
+      "originalTexts": [
+        "大島弓子 著"
+      ],
+      "citationIds": [
+        "0addd8f1-956d-481c-8dcf-8d8fd3a1ed30"
+      ],
+      "sourceUrls": [
+        "https://ndlsearch.ndl.go.jp/books/R100000002-I000002324649"
+      ],
+      "sourceIds": [
+        "1eb1fb30-6c25-4d2d-adeb-624dbef14e9e"
+      ]
+    }
+  ],
+  "inheritedHolds": [],
+  "newCandidateCounts": {
+    "entities": 2,
+    "claims": 1,
+    "sources": 1,
+    "citations": 1
+  },
+  "recordConflicts": [],
+  "roleCounts": {
+    "AUTHORSHIP": 1
+  },
+  "normalReviewedEntityCount": 2,
+  "reusedCitationIds": [],
+  "identityOnlyEntityIds": [],
+  "heldClaimCount": 0,
+  "heldEntityCount": 0
+}

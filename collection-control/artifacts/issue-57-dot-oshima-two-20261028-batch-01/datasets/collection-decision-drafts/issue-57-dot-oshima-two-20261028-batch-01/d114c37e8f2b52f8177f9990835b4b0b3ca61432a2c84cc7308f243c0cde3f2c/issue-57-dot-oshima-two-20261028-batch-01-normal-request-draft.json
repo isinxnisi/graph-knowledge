@@ -1,0 +1,126 @@
+{
+  "schemaVersion": 1,
+  "id": "issue-57-dot-oshima-two-20261028-batch-01-normal",
+  "kind": "accept-release",
+  "status": "draft-not-approved",
+  "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
+  "parentRequestId": "issue-57-dot-oshima-two-20261028-batch-01",
+  "applyAuthorized": {
+    "local": false,
+    "beta": false,
+    "vps": false
+  },
+  "decision": {
+    "schemaVersion": 1,
+    "decisionId": "issue-57-dot-oshima-two-20261028-batch-01-normal",
+    "status": "draft-not-approved",
+    "humanDecision": {
+      "actorType": "human",
+      "reviewer": null,
+      "decidedAt": null,
+      "statement": null
+    },
+    "approvalScope": "formal-record-acceptance-and-release-preparation-only",
+    "applyAuthorized": {
+      "local": false,
+      "beta": false,
+      "vps": false
+    },
+    "review": {
+      "file": "datasets/manga-collection/workflow-reviews/issue-57-dot-oshima-two-20261028-r0001-74603655f8a0ffc5-review-d5c67c6a9d880df3/review-manifest.json",
+      "sha256": "d114c37e8f2b52f8177f9990835b4b0b3ca61432a2c84cc7308f243c0cde3f2c"
+    },
+    "referenceArtifacts": [
+      {
+        "file": "datasets/manga-collection/workflow-reviews/issue-57-dot-oshima-two-20261028-r0001-74603655f8a0ffc5-review-d5c67c6a9d880df3/README.md",
+        "sha256": "cdb5adc855ff5a47fcd0d67bbd6b8273fd79da174303fe7a7b661349e2f4c1e3"
+      },
+      {
+        "file": "datasets/manga-collection/workflow-reviews/issue-57-dot-oshima-two-20261028-r0001-74603655f8a0ffc5-review-d5c67c6a9d880df3/context.json",
+        "sha256": "5c250be4fcb80ce7707effbf5633cd983b6df29bcc89cde168ff7badb36b73da"
+      },
+      {
+        "file": "datasets/manga-collection/workflow-reviews/issue-57-dot-oshima-two-20261028-r0001-74603655f8a0ffc5-review-d5c67c6a9d880df3/decision-request.json",
+        "sha256": "ce9d3baa74d1428db8ce19b746f78779ddcc4c7c149dc30a3a4fafdb42bd11bc"
+      },
+      {
+        "file": "datasets/manga-collection/workflow-reviews/issue-57-dot-oshima-two-20261028-r0001-74603655f8a0ffc5-review-d5c67c6a9d880df3/exploration-paths.json",
+        "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+      },
+      {
+        "file": "datasets/manga-collection/workflow-reviews/issue-57-dot-oshima-two-20261028-r0001-74603655f8a0ffc5-review-d5c67c6a9d880df3/identity-only-records.json",
+        "sha256": "1fc314e4a47717bce195b39fe7f1e66bd31f6af892fca4a9420a653eab927a37"
+      },
+      {
+        "file": "datasets/manga-collection/workflow-reviews/issue-57-dot-oshima-two-20261028-r0001-74603655f8a0ffc5-review-d5c67c6a9d880df3/proposed-records.json",
+        "sha256": "3ef1c1b1c1e991e94b88bd7f680f31411a149f7c6860af85ad554d4f2f849659"
+      },
+      {
+        "file": "datasets/manga-collection/workflow-reviews/issue-57-dot-oshima-two-20261028-r0001-74603655f8a0ffc5-review-d5c67c6a9d880df3/review-manifest.json",
+        "sha256": "d114c37e8f2b52f8177f9990835b4b0b3ca61432a2c84cc7308f243c0cde3f2c"
+      },
+      {
+        "file": "datasets/manga-collection/workflow-reviews/issue-57-dot-oshima-two-20261028-r0001-74603655f8a0ffc5-review-d5c67c6a9d880df3/review.json",
+        "sha256": "44b6d12ec8e122653a6d73d8ca00073abe0077ccdd677e9616616766bdb82c8b"
+      }
+    ],
+    "acceptedRecordIds": {
+      "entities": [
+        "4ee6bd52-a328-4dfd-983f-c47432e821ba",
+        "bdeaa3cb-a8a3-4cb9-be47-7b4b0438eadc"
+      ],
+      "claims": [
+        "eecc6930-13f8-4c10-a8e2-fbb0f03f55bf"
+      ],
+      "sources": [
+        "1eb1fb30-6c25-4d2d-adeb-624dbef14e9e"
+      ],
+      "citations": [
+        "0addd8f1-956d-481c-8dcf-8d8fd3a1ed30"
+      ]
+    },
+    "recordSha256": {
+      "entities": {
+        "4ee6bd52-a328-4dfd-983f-c47432e821ba": "fea7cb00be563792de6c3fb487b65a6c9e84ef130e7951eb657628f1ab91553c",
+        "bdeaa3cb-a8a3-4cb9-be47-7b4b0438eadc": "3cf9b7e2a1f85b0565e12b5f1f5188b7f84a5fa74ee87261ecdb28843a866804"
+      },
+      "claims": {
+        "eecc6930-13f8-4c10-a8e2-fbb0f03f55bf": "ffc4854225bcdbb396d973609dad410458a1a8af01f9ce4d944e4559a52bf2d6"
+      },
+      "sources": {
+        "1eb1fb30-6c25-4d2d-adeb-624dbef14e9e": "e8b8e8c53ec03387cc015b44ce25266c3965d60bfebff87489fa102a76c37a5b"
+      },
+      "citations": {
+        "0addd8f1-956d-481c-8dcf-8d8fd3a1ed30": "4c64b3f3871b49b8ed35f2723442e1e10555340764cf012d1cd509dd2fa45f20"
+      }
+    },
+    "scopeByClaim": [
+      {
+        "id": "eecc6930-13f8-4c10-a8e2-fbb0f03f55bf",
+        "subjectId": "4ee6bd52-a328-4dfd-983f-c47432e821ba",
+        "objectId": "bdeaa3cb-a8a3-4cb9-be47-7b4b0438eadc",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "contribution": {
+          "roleId": "AUTHORSHIP",
+          "scope": {
+            "kind": "publication",
+            "isbn13": "9784592880615",
+            "volumeLabel": "第1巻（NDL巻次 第1巻 (シルク・ムーンプチ・ロード)）",
+            "editionLabel": null,
+            "language": "ja"
+          }
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      }
+    ],
+    "baseRelease": "20261014-credits-001",
+    "baseRevision": "82b01515-594c-48ca-b4b6-515eefac83ca",
+    "releaseId": "manga-issue-57-dot-oshima-two-20261028-batch-01-normal"
+  }
+}

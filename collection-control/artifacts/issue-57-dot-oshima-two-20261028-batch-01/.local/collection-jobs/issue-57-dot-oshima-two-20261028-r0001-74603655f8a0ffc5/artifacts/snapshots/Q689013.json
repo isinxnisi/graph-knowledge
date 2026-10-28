@@ -1,0 +1,149 @@
+{
+  "id": "Q689013",
+  "lastrevid": 2555512353,
+  "labels": {
+    "de": {
+      "language": "de",
+      "value": "Wata no Kuni Hoshi"
+    },
+    "ja": {
+      "language": "ja",
+      "value": "綿の国星"
+    },
+    "ru": {
+      "language": "ru",
+      "value": "Wata no Kuni Hoshi"
+    },
+    "en": {
+      "language": "en",
+      "value": "The Star of Cottonland"
+    },
+    "zh": {
+      "language": "zh",
+      "value": "綿之國星"
+    },
+    "tl": {
+      "language": "tl",
+      "value": "The Star of Cottonland"
+    }
+  },
+  "aliases": {
+    "de": [
+      {
+        "language": "de",
+        "value": "綿の国星"
+      },
+      {
+        "language": "de",
+        "value": "Wata no Kuniboshi"
+      },
+      {
+        "language": "de",
+        "value": "Wata no Kuni Boshi"
+      },
+      {
+        "language": "de",
+        "value": "Wata no Kunihoshi"
+      }
+    ],
+    "ru": [
+      {
+        "language": "ru",
+        "value": "The Star of Cottonland"
+      },
+      {
+        "language": "ru",
+        "value": "Звезда Пушистландии"
+      }
+    ],
+    "en": [
+      {
+        "language": "en",
+        "value": "Wata no kunihoshi"
+      }
+    ]
+  },
+  "claims": {
+    "P31": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P31",
+          "hash": "549c072d6be8a6a43f999d1d0e82640b16c4260e",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 21198342,
+              "id": "Q21198342"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q689013$A1EEF627-DB92-4F9B-AD5C-CCB8FE27F6B0",
+        "rank": "normal"
+      },
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P31",
+          "hash": "49a107854c5e1c55f5b128b8e4c2de852c4407e1",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 20650540,
+              "id": "Q20650540"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q689013$f37b88c2-41a4-9c81-af44-de765dcfb96c",
+        "rank": "normal"
+      },
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P31",
+          "hash": "dfba02d760fd6e648b0ffa9fdfe1bfa6da44b8a2",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 14946528,
+              "id": "Q14946528"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q689013$de15bf77-49d1-60f9-61d3-ac78fe10e201",
+        "rank": "normal"
+      }
+    ],
+    "P50": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P50",
+          "hash": "262a2de807d8776166c9a7b2db6e51f613f2f6b2",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 445875,
+              "id": "Q445875"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q689013$D25226BF-A7A9-4F88-A276-43E06120D5B0",
+        "rank": "normal"
+      }
+    ],
+    "P110": []
+  }
+}
