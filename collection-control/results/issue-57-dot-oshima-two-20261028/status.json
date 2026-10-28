@@ -66,12 +66,12 @@
   },
   "requestSha256": "80479c281c4da7ad392241f815105e48758c0e9db0cc54e3177791e0061164ec",
   "kind": "issue-prepare",
-  "phase": "completed",
-  "generation": 3,
+  "phase": "retry-wait",
+  "generation": 291,
   "attempts": 1,
   "workerId": "plunode-wsl",
   "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
-  "updatedAt": "2026-10-28T00:32:23+00:00",
+  "updatedAt": "2026-10-28T12:07:36+00:00",
   "result": {
     "schemaVersion": 1,
     "status": "prepared-candidates-not-accepted",
@@ -194,5 +194,7 @@
       "datasets/collection-themes/approvals/issue-57-dot-oshima-two-20261028/r0001.json": "34af079e81174f20ff7f9e6ec9e259dc12bd9879f3ae5f97a76dc126c24c62cf"
     }
   },
-  "executionComplete": true
+  "executionComplete": true,
+  "message": "<3>WSL (3487223 - ) ERROR: UtilAcceptVsock:273: accept4 failed 110\nfatal: unable to get password from user\n",
+  "retryAt": 1793189386.6169622
 }
