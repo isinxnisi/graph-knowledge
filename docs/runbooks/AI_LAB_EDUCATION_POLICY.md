@@ -8,7 +8,7 @@
 
 今回の実評価者は**対話内のCodex AI**。GitHub上の実レポートを読んで仮説・優先順を作成した。ChatGPT定期タスクが評価したとは記録しない。`method=interactive-codex`、`education-plan-v1`、対象cycle/result SHA、report SHA、選択コードSHAを残す。正確な評価モデルのrevisionはこの実行面から取得できず、捏造しない。教師の文章は観察・解釈・提案であり、意味評価の最終受入ではない。
 
-ローカルWorker自身のGitHub GET／POST、現在の対話コネクターでの報告読取は実証済み。ChatGPTクラウド定期実行の読取・書込は**未検証**で、日次タスクは未登録。Codexのheartbeat/cronで代替登録しない。公式ドキュメントでは[Webの定期タスクは接続済みツールを利用可能](https://learn.chatgpt.com/docs/automations)とされるが、このアカウントのscheduled実行・権限・承認・利用枠を保証しない。イベント起動のGitHub対応はPR活動であり、Issueコメントの任意イベントと同一視しない。
+ローカルWorker自身のGitHub GET／POST、現在の対話コネクターでの報告読取・書込probe・再読込も実証済み。ChatGPTクラウド定期実行の読取・書込は**未検証**で、日次タスクは未登録。Codexのheartbeat/cronで代替登録しない。公式ドキュメントでは[Webの定期タスクは接続済みツールを利用可能](https://learn.chatgpt.com/docs/automations)とされるが、このアカウントのscheduled実行・権限・承認・利用枠を保証しない。イベント起動のGitHub対応はPR活動であり、Issueコメントの任意イベントと同一視しない。
 
 ## 既存Workerとの接続
 

@@ -1,0 +1,42 @@
+{
+  "recordedAt": "2026-10-28T13:50:58.796842+00:00",
+  "githubLocalWorkerRead": "verified",
+  "githubLocalWorkerWrite": "verified",
+  "interactiveConnectorRead": "verified",
+  "interactiveEvaluationMethod": "interactive-codex",
+  "chatgptScheduledRead": "not-verified",
+  "chatgptScheduledWrite": "not-verified",
+  "dailyEvaluation": "not-configured",
+  "sourceHashCurrent": "91218c559073df126bc56ab7fbecce7cf1878412baa40328c63970e9697afbea",
+  "planCurrentlyValid": true,
+  "nextSelection": {
+    "version": "teacher-policy-v1",
+    "planSha256": "6bf70ea27be2782c1c62b0dccba9d9ba5c51dc1853b50c27466b88fb38ec10f3",
+    "reason": "accepted-policy",
+    "baselineTaskId": "generated-de0537bbb4ccf7f0c73d",
+    "selectedTaskId": "generated-43a018b21141ad685290",
+    "baselineKind": "polarity",
+    "selectedKind": "evidence",
+    "changed": true,
+    "holdoutUnchanged": true,
+    "splitDisjoint": true,
+    "modelExecuted": false
+  },
+  "githubComments": {
+    "report": [
+      6470180242
+    ],
+    "plan": [
+      6470219417
+    ],
+    "decision": [
+      6470411201
+    ]
+  },
+  "repeatSyncAddedComments": 0,
+  "additionalModelInferenceCalls": 0,
+  "additionalOptimizerUpdates": 0,
+  "workerEnabled": false,
+  "workerRunning": false,
+  "bridgeSyncEnabled": true
+}

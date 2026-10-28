@@ -35,7 +35,7 @@ AIラボでは観測事実、AI解釈、次回方針、ルールによる採用�
 
 ## ChatGPT定期タスク
 
-**実証済み**：ローカルWorkerのGitHub認証/GET/POST、対話コネクターでのreport読取、対話内AIによる実評価、GitHub plan取得、Worker採否・次課題変更、再同期のno-op。
+**実証済み**：ローカルWorkerのGitHub認証/GET/POST、対話コネクターでのreport読取・書込probe/再読込、対話内AIによる実評価、GitHub plan取得、Worker採否・次課題変更、再同期のno-op。
 
 **未検証**：ChatGPTクラウドscheduled実行からのGitHub読書き、このアカウントのscheduled権限・利用枠・承認。**未設定**：日次評価の時刻・schedule、ChatGPT側の自動評価運転。現在のツール面には通常ChatGPTクラウドtaskの登録・実行検査がなく、Codex automationの成功で代用しない。
 
@@ -47,4 +47,15 @@ PC停止中もGitHub記録は残るが、ローカル取得・教育・beta配�
 
 Python44テスト、教育artifact/UI/navigationの24テスト、変更TS/TSXのESLint、webpack buildが通過。任意field・source/履歴/対象hash不一致・期限・予算・不正author・未知method・改ざん・同名plan矛盾・再送禁止・no-op・holdout保護・旧版復旧を検査した。v1の既存37テストを含む。
 
-main受入・beta配備・公開URLの最終結果は実画面検証後に追記する。今回の対象はmain／ローカル3200／betaで、VPS・本番Compose・DB・KG apply・Kev・収集Worker・公開ゲート・Tunnelの変更は行わない。
+実装固定SHA **`f188f8519aec40913a2f3f1cb85cbac2c0ee9bc6`** をmainへFF受入。同じbuild **`ilDXbEewAilubZmocWoTV`** を既存3200へ反映し、v4 public artifactをexpected SHA付きで切り替えた。旧build・環境・artifactはprivate復旧控えに保持。
+
+- [日本語の教育評価欄](https://graph-beta.isinxnisi.com/ai-lab#mentorship)／[English review](https://graph-beta.isinxnisi.com/en/ai-lab#mentorship)。公開betaで日英×1440/390px×明/暗の**新欄8ケース＋既存ラボ8ケース**が通過。AIとWorker判断、元cycle/hash、選択変更、未実施・未接続、GitHub実リンク、Claim復帰、静止公式アイコン、可読性と横溢れなしを確認した。
+- 既存側の実推論6／教育1／11 run／教育3件、見習い自動浮遊と低減/画面外/非表示停止、Graphの配置/pan/zoom復帰、会員入口、CSP/noindex・私有file/実行API/比較ルート非公開を確認。page error／モデルアクセス／アプリ書込リクエストは0。
+- loopback/HTTPSの42項目通過。同じbuild・artifact、Google provider、コミュニティ一覧/詳細、会員・運営APIの匿名401、既存の公式/見習いIdentityとプロフィールを確認した。
+- beta保護設定22項目、`.env.public`全byte、現在KG revision **`34befbcd-8f5f-4cd9-a059-242a3f0b5ffb`**、DB7697を維持。KG/DB操作なし。既存Docker container ID/image不変、旧lab `af31afd5` clean、mainの既存`memo.txt`保全。今回だけの検証3269を停止した。
+- npm標準suite **81ファイル892件全通過**（2worker、timeout緩和なし）。Python44、教育関連24、ESLint、webpack/TypeScriptを含む。[配備・検証receipt](ai-education-policy-20261028/beta-verification.json)
+- 同じreportを実APIで再同期し、コメント増加0・report/plan/decision各1を確認。[交換確認](ai-education-policy-20261028/exchange-verification.json)。通常の対話コネクターでも[書込probe](https://github.com/isinxnisi/graph-knowledge/issues/36#issuecomment-6470812296)と再読込が成功。[probe receipt](ai-education-policy-20261028/connector-probe.json)。これはChatGPTクラウドscheduledの証拠ではない。
+
+今回VPS／本番Compose・本番Web・DB、KG apply、Kev、収集Worker・公開ゲート・Tunnelは変更していない。日次評価を登録せず、v1本体の運転設定はpaused・worker停止のまま。新bridge同期だけは有効で、次の明示的なv1運転時に使う。受入後の追加は検証文書だけで、app再buildは不要。
+
+実Google再ログイン、会員/運営の書込、iPhone実機、ChatGPT scheduledのGitHub実行は未試験。教師の品質、独立final、累積モデル採用、日次運転条件・利用枠の確認は残る。初回の対話内評価→GitHub→Worker選択→beta観察の一往復を完了し、未検証の接続や成長を成功扱いしていない。
