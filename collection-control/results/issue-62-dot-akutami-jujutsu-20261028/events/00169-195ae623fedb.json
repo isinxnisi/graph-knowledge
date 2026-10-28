@@ -1,0 +1,188 @@
+{
+  "requestId": "issue-62-dot-akutami-jujutsu-20261028",
+  "request": {
+    "schemaVersion": 1,
+    "id": "issue-62-dot-akutami-jujutsu-20261028",
+    "kind": "issue-prepare",
+    "status": "approved",
+    "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
+    "issueAdapterSha256": "38aadaee84b039f9f991ac1cc831a9498a4d83fab062d96b7c252d7175326dab",
+    "applyAuthorized": {
+      "local": false,
+      "beta": false,
+      "vps": false
+    },
+    "approvalScope": "issue-manga-preparation-collection-review-only",
+    "humanDecision": {
+      "actorType": "human",
+      "reviewer": "プロジェクト運営者（範囲を限定した委任）",
+      "decidedAt": "2026-10-25T13:07:49+09:00",
+      "statement": "2026-10-25 13:07:49 JST、運営者は既存Worker対応の現在の漫画テーマ候補からdotが対象を選び、毎回の個別提示なしでGitHubの収集許可と購読を登録し、候補収集・レビューまで進める限定委任を明示承認した。同日16:17:04 JSTに固定1日1バッチ上限を撤廃し、進捗・収集量・負荷による投入調整を許可した。2026-10-26 12:37:31 JST、過去の許可を上書きせず追加分をバッチ専用の新Issueに登録する方式への明示確認に本人が肯定リアクションし、親会話で現在の反応を検証済み。2026-10-27 13:37〜13:41 JST、運営者はdotが相談中として継続していた追加投入抑制を問い直し、データ収集を急いでいること、多少多く実行してほしいこと、1日何件という制約を付ける段階ではないことを明示した。元の限定委任の範囲で投入を再開し、日次件数上限を設けず実処理・待機量・負荷を見て少量ずつ補充する。個々の人物作品組・Role・ISBNを人間が審査済みとの記録ではない。今回dotが選んだのは既存テーマIssue #5と固定catalog d3e377d5255f4c487d608e73954dc40aeb0b3cba（blob f3d33d0e83b6299a7f443fa841232407ce67657c）のM44の芥見下々→呪術廻戦の1組、および導入Worker対応組との共通部分だけ。Wikidata構造化情報とNDL作成書誌のみ、1作者1作品、親準備と全子収集合計30試行以内、同一要求2試行・3秒間隔・20秒・4MiB、保存成果とcache優先。既公開・既受入・既収集の同内容、同条件の根拠保留は再収集せず、不確かな同定・Role・刊行物scopeは保留。既設時間帯・直列排他・10分休憩を維持する。固定catalog全組・将来追加テーマへの無条件許可ではなく、正式受入・公開apply・追加取得元・予算拡大・コード/adapter/権限/認証/VPS/会員DB/時間帯/ロック変更は含まない。"
+    },
+    "permission": {
+      "schemaVersion": 1,
+      "approvalId": "dot-akutami-jujutsu-20261028",
+      "status": "approved",
+      "approvalScope": "issue-manga-preparation-collection-review-only",
+      "adapter": "manga-discovery-v2",
+      "targets": [
+        {
+          "person": "芥見下々",
+          "work": "呪術廻戦"
+        }
+      ],
+      "requestPolicy": {
+        "maxAttempts": 30,
+        "attemptsPerRequest": 2,
+        "minIntervalSeconds": 3,
+        "timeoutSeconds": 20,
+        "maxBytes": 4194304
+      },
+      "humanDecision": {
+        "actorType": "human",
+        "reviewer": "プロジェクト運営者（範囲を限定した委任）",
+        "decidedAt": "2026-10-25T13:07:49+09:00",
+        "statement": "2026-10-25 13:07:49 JST、運営者は既存Worker対応の現在の漫画テーマ候補からdotが対象を選び、毎回の個別提示なしでGitHubの収集許可と購読を登録し、候補収集・レビューまで進める限定委任を明示承認した。同日16:17:04 JSTに固定1日1バッチ上限を撤廃し、進捗・収集量・負荷による投入調整を許可した。2026-10-26 12:37:31 JST、過去の許可を上書きせず追加分をバッチ専用の新Issueに登録する方式への明示確認に本人が肯定リアクションし、親会話で現在の反応を検証済み。2026-10-27 13:37〜13:41 JST、運営者はdotが相談中として継続していた追加投入抑制を問い直し、データ収集を急いでいること、多少多く実行してほしいこと、1日何件という制約を付ける段階ではないことを明示した。元の限定委任の範囲で投入を再開し、日次件数上限を設けず実処理・待機量・負荷を見て少量ずつ補充する。個々の人物作品組・Role・ISBNを人間が審査済みとの記録ではない。今回dotが選んだのは既存テーマIssue #5と固定catalog d3e377d5255f4c487d608e73954dc40aeb0b3cba（blob f3d33d0e83b6299a7f443fa841232407ce67657c）のM44の芥見下々→呪術廻戦の1組、および導入Worker対応組との共通部分だけ。Wikidata構造化情報とNDL作成書誌のみ、1作者1作品、親準備と全子収集合計30試行以内、同一要求2試行・3秒間隔・20秒・4MiB、保存成果とcache優先。既公開・既受入・既収集の同内容、同条件の根拠保留は再収集せず、不確かな同定・Role・刊行物scopeは保留。既設時間帯・直列排他・10分休憩を維持する。固定catalog全組・将来追加テーマへの無条件許可ではなく、正式受入・公開apply・追加取得元・予算拡大・コード/adapter/権限/認証/VPS/会員DB/時間帯/ロック変更は含まない。"
+      }
+    },
+    "issueOrigin": {
+      "repository": "isinxnisi/graph-knowledge",
+      "issueNumber": 62,
+      "approvalId": "dot-akutami-jujutsu-20261028",
+      "permissionSha256": "ec49473835c3e697c7b1c533d6a11ce31878415513c919889f6bb9d991745aba",
+      "issueBodySha256": "65f696ee7d17e4f439aa66b3ed965f0fc41944619bc9d3d7fffebd6b325e6e5f"
+    },
+    "issueSnapshot": {
+      "url": "https://github.com/isinxnisi/graph-knowledge/issues/62",
+      "updatedAt": "2026-10-28T10:14:57Z",
+      "body": "## 限定収集バッチ：芥見下々 → 呪術廻戦\n\n元テーマは [Issue #5 有名漫画家と代表作品](https://github.com/isinxnisi/graph-knowledge/issues/5)。過去の許可を変更せず、元の限定委任内の今回1組だけを登録する。\n\n- 漫画制作クレジットのみ、1作者1作品。固定catalog commit d3e377d5255f4c487d608e73954dc40aeb0b3cba、blob f3d33d0e83b6299a7f443fa841232407ce67657c のM44と既存#5テーマ・設置Worker対応組の共通部分。設置基準973c7b0も同catalog、Issue adapter実SHA256 38aadaee84b039f9f991ac1cc831a9498a4d83fab062d96b7c252d7175326dab。映像・影響/助手関係・新しいcatalog組へ拡張しない。\n- 補充判断（2026-10-28 19:13 JST）：既存の通常実行待ち0、32 completed、4 awaiting-recovery。#59子は15:24完了。#47/#50/#60/#61は同一要求2回上限で復旧判断待ちのまま保全し、再登録・リセットしない。#61の2回の429を受け16:29には追加投入を控えた。今回の別対象1件は既設の次03:00枠向けで、最後のNDL通信16:20:57から最短でも約10時間39分間隔が空く。日次件数上限や恒久停止でなく、実通信・待機量・残枠を見た少量補充。\n- 19:05:31のWorkerはoutside-window、次2026-10-29 03:00 JST、control8、pauseMode/controlError/activeAttemptはnull。新規子を遅らせる未完了親子はない。provider回復を確認済みとはしない。保存cacheのbackoff・Retry-After、既存の直列排他・10分休憩を維持する。新たなアクセス制限・timeoutはその結果で再評価し、手動通信や上限回避はしない。\n- 他担当のbundle2更新は最新main35f65c2時点で旧構成のまま、保護側導入未完了。branch上の修正を設置済みとは扱わない。通常ロック・admissionを優先し、設置/実行互換検査が拒否すれば迂回しない。\n- 事前照合：control1143ea86417ba9f500284f3f9a038c0721a8b2b8/tree deaa196ef01feffd2fbcc96819841fffdf11d409の48requestsと、proposed/accepted/preparation/requestの91unique、held/holds/review/preparation/recipeの117uniqueを和英名照合し一致0。最新main後続記録も一致0。保存公開全量datasets/connectivity/issue-34/after-data.json.gz＋小畑1＋映画2/34追加をUUID合成し2207 Entity／1931 Claim／1802 Source／1968 Citation、芥見/呪術/Jujutsu/Akutami一致0。最新本番DBの直接読取ではない。\n- 既存漫画12Claimは8バッチともdraft-not-approved、正式受入・公開しない。最新公開f5dbf83f-c89e-4e40-95ee-57957016089fはcompleted。通常レビューの旧local base表示と最新公開を混同せず、既存receipt/artifactのhash照合を維持し、正式受入前の最新base整合は別確認。\n- 人物QID・漫画作品QID・ISBN・Role・刊行物scopeは未審査。不明同定・曖昧Role・書誌不成立は推測補完しない。既存の島への接続・島数減少は保証しない。\n- Wikidata構造化API＋NDL作成書誌のみ。親準備と全子合計30試行、同一要求2回、逐次3秒以上、20秒timeout、4MiB。保存成果/cache優先、旧142枠や他バッチ履歴を混同・リセットしない。\n- 既設03–07／09–12／15–18 JST、終盤15分の新規開始回避、直列排他、10分休憩を維持。手動収集・並行化・コード/adapter/権限/認証/VPS/会員DB/時間帯/ロック変更禁止。\n- 候補・根拠レビューまで。正式受入・公開apply、新取得元・予算拡大は含まない。登録／実受付／実行／完了を区別。\n\n<!-- plunode-collection-permission:v1 -->\n```json\n{\n  \"schemaVersion\": 1,\n  \"approvalId\": \"dot-akutami-jujutsu-20261028\",\n  \"status\": \"approved\",\n  \"approvalScope\": \"issue-manga-preparation-collection-review-only\",\n  \"adapter\": \"manga-discovery-v2\",\n  \"targets\": [\n    {\n      \"person\": \"芥見下々\",\n      \"work\": \"呪術廻戦\"\n    }\n  ],\n  \"requestPolicy\": {\n    \"maxAttempts\": 30,\n    \"attemptsPerRequest\": 2,\n    \"minIntervalSeconds\": 3,\n    \"timeoutSeconds\": 20,\n    \"maxBytes\": 4194304\n  },\n  \"humanDecision\": {\n    \"actorType\": \"human\",\n    \"reviewer\": \"プロジェクト運営者（範囲を限定した委任）\",\n    \"decidedAt\": \"2026-10-25T13:07:49+09:00\",\n    \"statement\": \"2026-10-25 13:07:49 JST、運営者は既存Worker対応の現在の漫画テーマ候補からdotが対象を選び、毎回の個別提示なしでGitHubの収集許可と購読を登録し、候補収集・レビューまで進める限定委任を明示承認した。同日16:17:04 JSTに固定1日1バッチ上限を撤廃し、進捗・収集量・負荷による投入調整を許可した。2026-10-26 12:37:31 JST、過去の許可を上書きせず追加分をバッチ専用の新Issueに登録する方式への明示確認に本人が肯定リアクションし、親会話で現在の反応を検証済み。2026-10-27 13:37〜13:41 JST、運営者はdotが相談中として継続していた追加投入抑制を問い直し、データ収集を急いでいること、多少多く実行してほしいこと、1日何件という制約を付ける段階ではないことを明示した。元の限定委任の範囲で投入を再開し、日次件数上限を設けず実処理・待機量・負荷を見て少量ずつ補充する。個々の人物作品組・Role・ISBNを人間が審査済みとの記録ではない。今回dotが選んだのは既存テーマIssue #5と固定catalog d3e377d5255f4c487d608e73954dc40aeb0b3cba（blob f3d33d0e83b6299a7f443fa841232407ce67657c）のM44の芥見下々→呪術廻戦の1組、および導入Worker対応組との共通部分だけ。Wikidata構造化情報とNDL作成書誌のみ、1作者1作品、親準備と全子収集合計30試行以内、同一要求2試行・3秒間隔・20秒・4MiB、保存成果とcache優先。既公開・既受入・既収集の同内容、同条件の根拠保留は再収集せず、不確かな同定・Role・刊行物scopeは保留。既設時間帯・直列排他・10分休憩を維持する。固定catalog全組・将来追加テーマへの無条件許可ではなく、正式受入・公開apply・追加取得元・予算拡大・コード/adapter/権限/認証/VPS/会員DB/時間帯/ロック変更は含まない。\"\n  }\n}\n```\n<!-- /plunode-collection-permission:v1 -->\n"
+    },
+    "firstRecipeRevision": 42,
+    "recipeRevisionCount": 1
+  },
+  "requestSha256": "eb477d506c841cab54e59cd71a517fa9dda4e94776f24ae107cc0beb9cc3e43f",
+  "kind": "issue-prepare",
+  "phase": "completed",
+  "generation": 169,
+  "attempts": 1,
+  "workerId": "plunode-wsl",
+  "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
+  "updatedAt": "2026-10-28T18:12:36+00:00",
+  "result": {
+    "schemaVersion": 1,
+    "status": "prepared-candidates-not-accepted",
+    "preparationComplete": true,
+    "issueOrigin": {
+      "repository": "isinxnisi/graph-knowledge",
+      "issueNumber": 62,
+      "approvalId": "dot-akutami-jujutsu-20261028",
+      "permissionSha256": "ec49473835c3e697c7b1c533d6a11ce31878415513c919889f6bb9d991745aba",
+      "issueBodySha256": "65f696ee7d17e4f439aa66b3ed965f0fc41944619bc9d3d7fffebd6b325e6e5f"
+    },
+    "counts": {
+      "approvedWorks": 1,
+      "preparedWorks": 1,
+      "preparedPeople": 1,
+      "batches": 1,
+      "holds": 0,
+      "networkAttempts": 5,
+      "reusedWorks": 0,
+      "reusedPublishedClaims": 0,
+      "reusedHeldWorks": 0
+    },
+    "holds": [],
+    "reusedReviews": [],
+    "batchRequests": [
+      {
+        "schemaVersion": 1,
+        "id": "issue-62-dot-akutami-jujutsu-20261028-batch-01",
+        "kind": "collect-review",
+        "status": "approved",
+        "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
+        "parentRequestId": "issue-62-dot-akutami-jujutsu-20261028",
+        "applyAuthorized": {
+          "local": false,
+          "beta": false,
+          "vps": false
+        },
+        "approvalScope": "collection-candidates-and-review-only",
+        "humanDecision": {
+          "actorType": "human",
+          "reviewer": "プロジェクト運営者（範囲を限定した委任）",
+          "decidedAt": "2026-10-25T13:07:49+09:00",
+          "statement": "2026-10-25 13:07:49 JST、運営者は既存Worker対応の現在の漫画テーマ候補からdotが対象を選び、毎回の個別提示なしでGitHubの収集許可と購読を登録し、候補収集・レビューまで進める限定委任を明示承認した。同日16:17:04 JSTに固定1日1バッチ上限を撤廃し、進捗・収集量・負荷による投入調整を許可した。2026-10-26 12:37:31 JST、過去の許可を上書きせず追加分をバッチ専用の新Issueに登録する方式への明示確認に本人が肯定リアクションし、親会話で現在の反応を検証済み。2026-10-27 13:37〜13:41 JST、運営者はdotが相談中として継続していた追加投入抑制を問い直し、データ収集を急いでいること、多少多く実行してほしいこと、1日何件という制約を付ける段階ではないことを明示した。元の限定委任の範囲で投入を再開し、日次件数上限を設けず実処理・待機量・負荷を見て少量ずつ補充する。個々の人物作品組・Role・ISBNを人間が審査済みとの記録ではない。今回dotが選んだのは既存テーマIssue #5と固定catalog d3e377d5255f4c487d608e73954dc40aeb0b3cba（blob f3d33d0e83b6299a7f443fa841232407ce67657c）のM44の芥見下々→呪術廻戦の1組、および導入Worker対応組との共通部分だけ。Wikidata構造化情報とNDL作成書誌のみ、1作者1作品、親準備と全子収集合計30試行以内、同一要求2試行・3秒間隔・20秒・4MiB、保存成果とcache優先。既公開・既受入・既収集の同内容、同条件の根拠保留は再収集せず、不確かな同定・Role・刊行物scopeは保留。既設時間帯・直列排他・10分休憩を維持する。固定catalog全組・将来追加テーマへの無条件許可ではなく、正式受入・公開apply・追加取得元・予算拡大・コード/adapter/権限/認証/VPS/会員DB/時間帯/ロック変更は含まない。"
+        },
+        "issueOrigin": {
+          "repository": "isinxnisi/graph-knowledge",
+          "issueNumber": 62,
+          "approvalId": "dot-akutami-jujutsu-20261028",
+          "permissionSha256": "ec49473835c3e697c7b1c533d6a11ce31878415513c919889f6bb9d991745aba",
+          "issueBodySha256": "65f696ee7d17e4f439aa66b3ed965f0fc41944619bc9d3d7fffebd6b325e6e5f"
+        },
+        "target": {
+          "themeId": "issue-62-dot-akutami-jujutsu-20261028",
+          "revision": 1,
+          "definitionSha256": "41b4c2e26568d58c62c61525ed9f7b7219c847a3b03215f911f013faf6bf29f7",
+          "execution": {
+            "adapter": "manga-discovery-v2",
+            "codeSha256": "80e05b67bc0129b963653b90df4cfbfa5bd6aff190acda99f54c08541e55801e",
+            "inputs": [
+              {
+                "file": "datasets/manga-collection/r0042/recipe.json",
+                "sha256": "9695118960f91bcbbc5629c5028c4d255ea74ed92b3763552e86dbde176ee01a"
+              },
+              {
+                "file": "datasets/manga-collection/r0042/anchor-review.json",
+                "sha256": "118fd76eb168f9f465c68007643b7ed39d0318d01908e02ac2a96f89c681ffec"
+              },
+              {
+                "file": "datasets/manga-collection/r0042/publication-review.json",
+                "sha256": "893aa05288bc568cbd283e7fdba87c6c4aa82acc0fe9d6682da59e57b79ea71f"
+              },
+              {
+                "file": "docs/research/famous-manga-creators/20261016/candidates.json",
+                "sha256": "8531fada01e5c635ba2ee278a7ef944a73f64676af14ed42ae0e690f5a1ff978"
+              },
+              {
+                "file": "datasets/public-kg/releases/20261014-credits-001/data.json",
+                "sha256": "ea91b16f52a211b5a8464382ad498b7b2bb2be69a6f33fe125a73a3c7b9da2b5"
+              },
+              {
+                "file": "datasets/public-kg/releases/20261014-credits-001/manifest.json",
+                "sha256": "e4aa3b58ed884f7d1f8fffee43b260261cc2b4d3a867fda942919f439d2bce17"
+              }
+            ],
+            "maxEntities": 2111,
+            "maxClaims": 1847
+          },
+          "targets": {
+            "people": [
+              {
+                "name": "芥見下々",
+                "qid": "Q60231010"
+              }
+            ],
+            "works": [
+              {
+                "name": "呪術廻戦",
+                "qid": "Q55522899",
+                "isbn13": "9784088815169"
+              }
+            ]
+          },
+          "existingApprovalSha256": "8bf38380f6350462473e996fa2c4146cf5377e9d02eb13c539bce5b406ddae9a"
+        }
+      }
+    ],
+    "publicApply": false,
+    "preparationDirectory": "/home/isinxnisi/.local/share/plunode-collection-worker-phase-b-20261020/runtime/.local/collection-issues/issue-62-dot-akutami-jujutsu-20261028",
+    "generatedArtifacts": {
+      "datasets/manga-collection/r0042/recipe.json": "9695118960f91bcbbc5629c5028c4d255ea74ed92b3763552e86dbde176ee01a",
+      "datasets/manga-collection/r0042/anchor-review.json": "118fd76eb168f9f465c68007643b7ed39d0318d01908e02ac2a96f89c681ffec",
+      "datasets/manga-collection/r0042/publication-review.json": "893aa05288bc568cbd283e7fdba87c6c4aa82acc0fe9d6682da59e57b79ea71f",
+      "datasets/collection-themes/themes/issue-62-dot-akutami-jujutsu-20261028/r0001.json": "a0a2ae44a999db48b387a465c3af11ab2682a7030865db9e57591f818698b743",
+      "datasets/collection-themes/approvals/issue-62-dot-akutami-jujutsu-20261028/r0001.json": "02074f767a5db37f293a25969916abb967bdbed82b776d456b4500ce00848943"
+    }
+  },
+  "executionComplete": true
+}
