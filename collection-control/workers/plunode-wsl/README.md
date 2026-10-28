@@ -1,6 +1,6 @@
 # CollectionWorkerの実行制御
 
-確認: 2026-10-28 15:24:35 JST。
+確認: 2026-10-28 15:29:44 JST。
 
 反映済みcontrolRevision: 8／最後の操作: pub-13abfb93-ba2d-44f7-a56b-352aa7ab0ab0-resume。
 
@@ -77,6 +77,10 @@ Issue確認結果:
   "collection-control/issue-sources/59.json": {
     "status": "registered: issue-59-dot-kubo-two-20261028",
     "checkedAt": "2026-10-28T01:33:17+00:00"
+  },
+  "collection-control/issue-sources/60.json": {
+    "status": "registered: issue-60-dot-ichikawa-houseki-20261028",
+    "checkedAt": "2026-10-28T06:28:19+00:00"
   }
 }
 ```
