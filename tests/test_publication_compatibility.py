@@ -3,8 +3,12 @@ import copy
 import importlib.util
 import json
 from pathlib import Path
+import subprocess
 import tempfile
+import traceback
+from types import SimpleNamespace
 import unittest
+from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parents[1]
 spec = importlib.util.spec_from_file_location('compatibility_test', ROOT / 'scripts/publication-compatibility.py')
@@ -79,6 +83,51 @@ class CompatibilityTests(unittest.TestCase):
                 c.check_contract({**self.contract, **change}, self.caps)
         caps = copy.deepcopy(self.caps); del caps['adoptedDefinitionHashes']['ACTING']
         with self.assertRaisesRegex(ValueError, 'not adopted'): c.check_contract(self.contract, caps)
+
+    def test_failed_real_probe_adapter_stops_before_other_consumers_and_redacts(self):
+        checker = c.Compatibility(self.policy, self.policy['operator']['deploymentDigest'], fetch=self.fetch)
+        stderr = (b'image unavailable\nAuthorization: DO_NOT_LOG_HEADER\n' + b'token=' + b'x' * 5000 +
+                  b'DO_NOT_LOG_LONG_LINE\n-----BEGIN PRIVATE KEY-----\nDO_NOT_LOG_KEY\n-----END PRIVATE KEY-----\n')
+        result = SimpleNamespace(returncode=17, stdout=b'{"verified":true}', stderr=stderr)
+        with patch.object(c.subprocess, 'run', return_value=result) as child, self.assertRaises(c.ConsumerProbeError) as caught:
+            checker.verify(self.release)
+        child.assert_called_once()  # No further consumer probe or retry after the first failure.
+        detail = caught.exception.detail
+        self.assertEqual(detail['stage'], 'consumer-image-inspect')
+        self.assertEqual(detail['returnCode'], 17)
+        self.assertIn('image unavailable', detail['stderrTail'])
+        self.assertLessEqual(len(detail['stderrTail']), 1600)
+        self.assertNotIn('DO_NOT_LOG', str(caught.exception))
+        self.assertNotIn('verified', str(caught.exception))  # Child stdout is hashed, never echoed.
+
+    def test_timeout_and_spawn_failure_do_not_echo_command_or_retry(self):
+        argv = ['/private/bin/node', '--import', 'tsx', 'DO_NOT_LOG_ARG']
+        failures = [(subprocess.TimeoutExpired(argv, 180, output=b'private output', stderr=b'token=DO_NOT_LOG_TOKEN'), 'timeout'),
+                    (FileNotFoundError(2, 'DO_NOT_LOG_PATH'), 'spawn-error')]
+        for error, reason in failures:
+            with self.subTest(reason=reason), patch.object(c.subprocess, 'run', side_effect=error) as child, self.assertRaises(c.ConsumerProbeError) as caught:
+                c.run(argv)
+            child.assert_called_once()
+            self.assertEqual(child.call_args.kwargs['timeout'], 180)
+            self.assertEqual(caught.exception.detail['reason'], reason)
+            self.assertEqual(caught.exception.detail['errorType'], type(error).__name__)
+            self.assertIsNone(caught.exception.detail['returnCode'])
+            self.assertTrue(caught.exception.__suppress_context__)
+            self.assertNotIn('DO_NOT_LOG', ''.join(traceback.format_exception(caught.exception)))
+            if reason == 'timeout': self.assertEqual(caught.exception.detail['timeoutSeconds'], 180)
+            else: self.assertEqual(caught.exception.detail['errno'], 2)
+
+    def test_success_json_is_unchanged_and_invalid_output_is_not_exposed(self):
+        argv = ['/private/bin/node', 'verify']
+        with patch.object(c.subprocess, 'run', return_value=SimpleNamespace(returncode=0, stdout=b'{"verified":true}', stderr=b'warning')):
+            self.assertEqual(c.run(argv), {'verified': True})
+        for output in [b'DO_NOT_LOG_STDOUT', b'\xff']:
+            with patch.object(c.subprocess, 'run', return_value=SimpleNamespace(returncode=0, stdout=output, stderr=b'invalid probe output')), self.assertRaises(c.ConsumerProbeError) as caught:
+                c.run(argv)
+            self.assertEqual(caught.exception.detail['reason'], 'invalid-json')
+            self.assertEqual(caught.exception.detail['returnCode'], 0)
+            self.assertEqual(caught.exception.detail['stdoutSha256'], c.hashlib.sha256(output).hexdigest())
+            self.assertNotIn('DO_NOT_LOG', str(caught.exception))
 
 
 if __name__ == '__main__': unittest.main()

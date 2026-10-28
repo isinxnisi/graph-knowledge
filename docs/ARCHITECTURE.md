@@ -1,4 +1,4 @@
-後続の漫画受入で新公開baseを使う前に、設置済み8 Role版Workerの互換対応が必要（[Issue #55](https://github.com/isinxnisi/graph-knowledge/issues/55)）。稼働Workerは変更していない。
+公開実行版・固定Workerの設置状態は[更新ガイド](runbooks/PUBLICATION_RUNTIME_UPDATE.md)から完了記録と実設置版を照合する。冒頭の映画初期公開時点の状態記録（Issue #55の旧Worker互換問題を含む）は履歴であり、現在の更新要否を示さない。
 
 2026-10-28、映画DIRECTING／ACTINGと映画2 Claimの正式受入・本番公開を完了。plunode.net revision7c54da24…、Web build oTXBAgU034CoviTmmAHQ9。既存Issue #33の個別署名と同nonce配送を検証し、exclusion finished・監査完了・条件付きWorker resumeを確認。3200／betaは旧試験KGを保全した別DB7697の正式データ確認用投影へ切替。未収録79記録・94 Entity候補は後続。[正式公開・実ブラウザ・保全記録](verification/FILM_INITIAL_PRODUCTION_20261028.md)。以下の先行日付の未承認／未公開記述は当時の履歴。
 

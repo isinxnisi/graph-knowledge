@@ -2,6 +2,8 @@
 
 Read docs/PROJECT_CONTEXT.md and docs/ARCHITECTURE.md before changing this project. Use docs/README.md to locate active designs and completed phase archives; archived records are historical, not the current specification. Follow the current requested implementation scope; future API/UI plans are not authorization to implement them.
 
+公開実行版（Web／publication operator／gate／delivery）・固定CollectionWorker・Windows Taskを更新する作業では、変更前に [公開実行版更新の短い入口](docs/runbooks/PUBLICATION_RUNTIME_UPDATE.md) を読む。設置版の正本・producer・既存検証と引渡し／再開の判断を辿り、完了済みの固定更新コマンドを再実行しない。通常のデータ追加や無関係な作業で、この更新ガイドの通読は不要。
+
 作業完了時は必要な検証を行い、今回の作業に関する変更を日本語のコミットメッセージでコミットする。ユーザーから別の指示がある場合はその指示を優先する。
 
 AI関連の設計・作業前に [共通Kevの接続・責務と検証方針](docs/design/AI_PROCESSING_DIRECTION.md) を読む。Kevは他プロジェクトも使う独立サービスであり、利用は公開APIを原則とする。Kev本体の変更が必要なら目的・他利用者への影響・代替案を整理し、実施前にユーザーへ相談する。

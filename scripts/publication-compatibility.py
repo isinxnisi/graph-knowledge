@@ -17,11 +17,42 @@ def sha(path): return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 def digest(value): return hashlib.sha256(json.dumps(value, sort_keys=True, ensure_ascii=False, separators=(',', ':')).encode()).hexdigest()
 
 
+class ConsumerProbeError(ValueError):
+    """Bounded diagnostics for the existing consumer probe; no command/JSON payload."""
+    def __init__(self, argv, reason, *, returncode=None, stderr=b'', stdout=b'', error=None):
+        text = stderr.decode('utf8', errors='replace') if isinstance(stderr, bytes) else (stderr or '')
+        # Redact before clipping so a long sensitive line cannot lose its label.
+        text = re.sub(r'-----BEGIN [^-]*KEY-----.*?(?:-----END [^-]*KEY-----|\Z)',
+                      '[redacted key]', text, flags=re.S)
+        text = '\n'.join('[redacted sensitive line]' if re.search(
+            r'password|secret|token|private.?key|authorization|cookie', line, re.I) else line
+            for line in text.splitlines())
+        raw = stdout.encode() if isinstance(stdout, str) else (stdout or b'')
+        self.detail = {'stage': 'consumer-image-inspect' if list(argv[1:3]) == ['image', 'inspect'] else 'consumer-verify',
+                       'program': Path(argv[0]).name, 'reason': reason, 'returnCode': returncode,
+                       'timeoutSeconds': 180 if reason == 'timeout' else None,
+                       'errorType': type(error).__name__ if error else None,
+                       'errno': getattr(error, 'errno', None), 'stderrTail': text[-1600:],
+                       'stdoutSha256': hashlib.sha256(raw).hexdigest()}
+        super().__init__(json.dumps(self.detail, ensure_ascii=False))
+
+
 def run(argv, cwd=None):
-    result = subprocess.run(argv, cwd=cwd, capture_output=True, timeout=180,
-                            env={'PATH': '/usr/bin:/bin', 'LANG': 'C.UTF-8', 'TSX_DISABLE_CACHE': '1'})
-    require(result.returncode == 0, 'Consumer probe failed: ' + Path(argv[0]).name)
-    return json.loads(result.stdout)
+    try:
+        result = subprocess.run(argv, cwd=cwd, capture_output=True, timeout=180,
+                                env={'PATH': '/usr/bin:/bin', 'LANG': 'C.UTF-8', 'TSX_DISABLE_CACHE': '1'})
+    except subprocess.TimeoutExpired as error:
+        raise ConsumerProbeError(argv, 'timeout', stderr=error.stderr, stdout=error.stdout, error=error) from None
+    except OSError as error:
+        raise ConsumerProbeError(argv, 'spawn-error', error=error) from None
+    if result.returncode != 0:
+        raise ConsumerProbeError(argv, 'nonzero-exit', returncode=result.returncode,
+                                 stderr=result.stderr, stdout=result.stdout)
+    try:
+        return json.loads(result.stdout)
+    except (ValueError, UnicodeError) as error:
+        raise ConsumerProbeError(argv, 'invalid-json', returncode=result.returncode,
+                                 stderr=result.stderr, stdout=result.stdout, error=error) from None
 
 
 def get(url):
