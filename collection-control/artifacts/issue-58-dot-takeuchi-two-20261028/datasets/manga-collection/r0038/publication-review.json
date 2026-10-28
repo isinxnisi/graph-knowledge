@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "scope": "specified-japanese-volume-1-isbn-only",
+  "publications": [
+    {
+      "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I029519251",
+      "isbn13": [
+        "9784065140857"
+      ],
+      "title": [
+        "コードネームはセーラーV = Codename Sailor V. 1"
+      ],
+      "mainTitles": [
+        "コードネームはセーラーV"
+      ],
+      "volume": [
+        "1"
+      ],
+      "edition": [],
+      "responsibilities": [
+        "武内直子 著"
+      ],
+      "publisher": [
+        "講談社"
+      ],
+      "language": [
+        "jpn"
+      ],
+      "genre": [
+        "漫画"
+      ],
+      "issued": "2019.2",
+      "searchTruncated": false,
+      "selectionBoundary": "representative-first-volume-among-observed-records-not-original-edition"
+    }
+  ]
+}
