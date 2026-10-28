@@ -158,7 +158,9 @@ def describe(path,gateway,coordinator):
         e.require(gateway.config.get('preparation',{}).get('compatibilityRequired') is True, 'Legacy delivery config cannot guide a new guarded publication')
         e.require(request['operatorDigest']==state['activeRuntime']['operatorDigest'], 'Live request uses a stale operator pin')
         module=e.cycle.load('delivery_compatibility', HERE/'publication-compatibility.py')
-        checker=module.Compatibility(gateway.config['preparation']['compatibility'],state.get('activeRuntime',{}).get('operatorDigest'))
+        policy=gateway.config['preparation']['compatibility']
+        e.require('deploymentImage' in policy['web'], 'Fixed installed Web image required')
+        checker=module.Compatibility(policy,state.get('activeRuntime',{}).get('operatorDigest'),active_web=state['activeRuntime'].get('webImage'))
         checker.verify(Path(job['candidate'])/'release',reuse=e.read(Path(job['candidate'])/'compatibility-report.json'))
     return {'nonce':nonce,'request':request}
 

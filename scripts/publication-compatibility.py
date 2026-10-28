@@ -43,9 +43,11 @@ def check_contract(contract, caps):
 
 
 class Compatibility:
-    def __init__(self, policy, active_operator, *, execute=run, fetch=get):
+    def __init__(self, policy, active_operator, *, active_web=None, execute=run, fetch=get):
         self.policy, self.execute, self.fetch = policy, execute, fetch
         require(policy['schemaVersion'] == 1 and active_operator == policy['operator']['deploymentDigest'], 'Active operator pin differs; never inherit an old request pin')
+        if 'deploymentImage' in policy.get('web', {}):
+            require(active_web == policy['web']['deploymentImage'], 'Installed Web image differs from reviewed deployment pin')
 
     def identities(self):
         identities = {}

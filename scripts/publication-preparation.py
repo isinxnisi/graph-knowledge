@@ -89,7 +89,8 @@ class Preparation:
         if not self.policy.get('compatibilityRequired', False): return None  # Legacy configuration/artifacts only.
         module=cycle.load('preparation_compatibility', HERE/'publication-compatibility.py')
         active=root.get('activeRuntime', {}).get('operatorDigest')
-        return module.Compatibility(self.policy['compatibility'], active)
+        e.require('deploymentImage' in self.policy['compatibility']['web'], 'Fixed installed Web image required')
+        return module.Compatibility(self.policy['compatibility'], active, active_web=root.get('activeRuntime', {}).get('webImage'))
     def check_consumers(self, state, root):
         checker=self.compatibility(root)
         if checker is not None:

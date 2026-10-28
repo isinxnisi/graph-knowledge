@@ -172,6 +172,20 @@ class DockerBackend:
         require(len(result.stdout) <= MAX_FILE, 'Operator response too large'); return parse(result.stdout)
     def call(self, stage, payload):
         candidate = Path(payload['candidate'])
+        if stage == 'web-identity':
+            def docker(args):
+                result = subprocess.run(['/usr/bin/docker', *args], capture_output=True, env=CLEAN_ENV, timeout=20)
+                require(result.returncode == 0 and len(result.stdout) <= MAX_FILE, 'Installed Web identity unavailable')
+                return result.stdout
+            containers = docker(['ps', '--filter', 'label=com.docker.compose.service=web', '--format', '{{.ID}}']).decode().splitlines()
+            found = []
+            for ident in containers:
+                require(re.fullmatch('[a-f0-9]{12,64}', ident), 'Invalid Docker container identity')
+                item = parse(docker(['inspect', ident]))[0]
+                ports = [binding for bindings in item['NetworkSettings']['Ports'].values() for binding in (bindings or [])]
+                if any(binding['HostPort'] == '3200' for binding in ports): found.append(item['Image'])
+            require(len(found) == 1 and re.fullmatch('sha256:[a-f0-9]{64}', found[0]), 'Unique installed Web image required')
+            return {'image': found[0]}
         if stage == 'image':
             inspected = subprocess.run(['/usr/bin/docker', 'image', 'inspect', self.config['operatorDigest']], capture_output=True, env=CLEAN_ENV, timeout=20)
             require(inspected.returncode == 0, 'Pinned image unavailable')
@@ -417,7 +431,9 @@ class Gate:
         else:
             state = self._operate(command, nonce, exchange)
         if command == 'status' and self.config.get('compatibilityRequired', False):
-            state = {**state, 'activeRuntime': {'operatorDigest': self.config['operatorDigest'], 'compatibilityRequired': True}}
+            web = self.backend.call('web-identity', {'candidate': str(self.root)})
+            state = {**state, 'activeRuntime': {'operatorDigest': self.config['operatorDigest'], 'compatibilityRequired': True,
+                                               'webImage': web['image']}}
         if command != 'status' and state.get('phase') == 'completed':
             with locked(self.root / 'outbox' / (nonce + '.lock')):
                 state = read(self.job_path(nonce)); return self.notify(nonce, state)

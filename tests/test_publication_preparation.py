@@ -90,9 +90,10 @@ class PreparationTests(unittest.TestCase):
         self.assertEqual(self.tick()['phase'],'awaiting-human-publication-approval');return self.state()
     def test_active_operator_is_selected_instead_of_the_completed_request_pin(self):
         active='sha256:'+'e'*64
-        self.proof['activeRuntime']={'operatorDigest':active,'compatibilityRequired':True}
+        self.proof['activeRuntime']={'operatorDigest':active,'compatibilityRequired':True,'webImage':'sha256:'+'f'*64}
         self.config['preparation'].update(compatibilityRequired=True,compatibility={'schemaVersion':1,
-            'operator':{'deploymentDigest':active,'image':self.config['preparation']['nodeImage']}})
+            'operator':{'deploymentDigest':active,'image':self.config['preparation']['nodeImage']},
+            'web':{'deploymentImage':'sha256:'+'f'*64}})
         with patch.object(p.Preparation,'build',side_effect=RuntimeError('stop before isolated build')):
             with self.assertRaisesRegex(RuntimeError,'stop before isolated build'):self.tick()
         self.assertEqual(self.state()['operatorDigest'],active)

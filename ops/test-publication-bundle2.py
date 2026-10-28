@@ -132,9 +132,9 @@ def main():
         worker_files = {str(p.relative_to(worker)): sha(p) for directory in [worker / 'lib', worker / 'vocabulary/contribution-roles'] for p in directory.rglob('*') if p.is_file() and p.suffix in ['.ts', '.tsx', '.json']}
         worker_files.update({p: sha(worker / p) for p in ['lib/server/publication-compatibility.ts', 'scripts/publication-compatibility.ts']})
         policy = {'schemaVersion': 1, 'operator': {'image': operator, 'deploymentDigest': operator, 'nodeVersion': op_proof['capabilities']['nodeVersion'], 'capabilitiesSha256': module.digest(op_proof['capabilities'])},
-                  'web': {'image': web, 'nodeVersion': web_proof['capabilities']['nodeVersion'], 'capabilitiesSha256': module.digest(web_proof['capabilities']), 'buildId': live['buildId'], 'url': 'https://plunode.net/api/publication/compatibility'},
+                  'web': {'image': web, 'deploymentImage': web, 'nodeVersion': web_proof['capabilities']['nodeVersion'], 'capabilitiesSha256': module.digest(web_proof['capabilities']), 'buildId': live['buildId'], 'url': 'https://plunode.net/api/publication/compatibility'},
                   'worker': {'root': str(worker), 'node': node, 'nodeSha256': sha(node), 'nodeVersion': worker_proof['capabilities']['nodeVersion'], 'capabilitiesSha256': module.digest(worker_proof['capabilities']), 'files': worker_files}}
-        checker = module.Compatibility(policy, operator, fetch=lambda url: get('http://127.0.0.1:3296', '/api/publication/compatibility'))
+        checker = module.Compatibility(policy, operator, active_web=web, fetch=lambda url: get('http://127.0.0.1:3296', '/api/publication/compatibility'))
         proof = checker.verify(release); assert checker.verify(release, reuse=proof) == proof
         save(output / 'compatibility-policy-isolated.json', policy); save(output / 'all-consumer-proof.json', proof)
         save(output / 'browser-target.json', {'baseURL': 'http://127.0.0.1:3296', 'revision': verified['revision']})

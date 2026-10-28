@@ -11,6 +11,7 @@ import tempfile
 import time
 import unittest
 import uuid
+from unittest.mock import patch
 import test_collection_sequence as fixtures
 import test_publication_cycle as draft_fixture
 
@@ -25,6 +26,7 @@ from pathlib import Path
 root=Path(__file__).resolve().parent.parent
 stage=sys.argv[1];p=json.load(sys.stdin);c=Path(p['candidate']);control=json.loads((root/'control.json').read_text())
 with (root/'calls').open('a') as out:out.write(stage+'\n')
+if stage=='web-identity':print(json.dumps({'image':'sha256:'+'f'*64}));sys.exit(0)
 if control.get('fault')==stage:raise SystemExit(7)
 def read(path):return json.loads(path.read_text())
 def save(path,v):path.write_text(json.dumps(v))
@@ -343,6 +345,24 @@ class ExecutorTests(unittest.TestCase):
             self.preflight()
         self.assertEqual(self.calls('apply'), 0)
         self.assertEqual(self.calls('compatibility'), 0)
+
+    def test_new_status_reports_actual_web_image_without_apply(self):
+        self.ready(); self.config['compatibilityRequired'] = True; self.save_config()
+        status = self.gate().run('status', self.nonce, self.exchange)
+        self.assertEqual(status['activeRuntime']['webImage'], 'sha256:' + 'f' * 64)
+        self.assertEqual(self.calls('apply'), 0)
+
+    def test_root_web_identity_selects_only_actual_3200_container(self):
+        def run(argv, **kwargs):
+            if argv[1] == 'ps': body = 'a' * 12 + '\n' + 'b' * 12 + '\n'
+            else:
+                port = '3200' if argv[-1] == 'b' * 12 else '3201'
+                body = json.dumps([{'Image': 'sha256:' + 'e' * 64,
+                    'NetworkSettings': {'Ports': {'3000/tcp': [{'HostPort': port}]}}}])
+            return subprocess.CompletedProcess(argv, 0, stdout=body.encode(), stderr=b'')
+        with patch.object(e.subprocess, 'run', side_effect=run):
+            result = e.DockerBackend(self.root, {}).call('web-identity', {'candidate': str(self.root)})
+        self.assertEqual(result, {'image': 'sha256:' + 'e' * 64})
 
     def test_gate_process_crash_after_db_commit_preserves_single_apply(self):
         self.ready();self.control({'afterCommitDelay':True});child=self.start()

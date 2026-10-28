@@ -58,6 +58,13 @@ class CompatibilityTests(unittest.TestCase):
     def test_old_operator_pin_is_not_inherited(self):
         with self.assertRaisesRegex(ValueError, 'Active operator pin differs'):
             c.Compatibility(self.policy, 'sha256:' + 'd' * 64)
+    def test_actual_installed_web_image_must_match_the_deployment_pin(self):
+        self.policy['web']['deploymentImage'] = 'sha256:' + 'e' * 64
+        with self.assertRaisesRegex(ValueError, 'Installed Web image'):
+            c.Compatibility(self.policy, self.policy['operator']['deploymentDigest'])
+        with self.assertRaisesRegex(ValueError, 'Installed Web image'):
+            c.Compatibility(self.policy, self.policy['operator']['deploymentDigest'], active_web='sha256:' + 'f' * 64)
+        c.Compatibility(self.policy, self.policy['operator']['deploymentDigest'], active_web='sha256:' + 'e' * 64)
     def test_bytes_worker_node_and_live_web_drift_invalidate(self):
         result = self.checker().verify(self.release)
         (self.release / 'data.json').write_text('{"changed":true}')

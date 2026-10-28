@@ -28,7 +28,7 @@
 
 `release/compatibility.json` はdata/manifest bytes、schema、serialization、必要Roleの定義hash、catalog/reviews/表示生成定義、scope、保存形式を束縛する。既存ARTIFACT封印へ追加し、既存request/署名のartifact hashに間接的に束縛する。古い封印・receipt・requestは再直列化しない。
 
-`scripts/publication-compatibility.py` は、root statusの現在のoperator digest、固定image ID/platform、Worker Node実ファイルhash・ソースhash、稼働Webのbuild IDと能力情報を照合する。3利用側のCLIは同じreleaseを読み、同じcontractを返す必要がある。旧requestのdigestは新候補の実行版選択に使用しない。
+`scripts/publication-compatibility.py` は、root statusの現在のoperator digestと実Web container image、固定image ID/platform、Worker Node実ファイルhash・ソースhash、稼働Webのbuild IDと能力情報を照合する。rootの読取検査は既存composeのWeb labelと3200 bindingから一意のcontainerを選ぶ。metadataだけから実imageを推測しない。3利用側のCLIは同じreleaseを読み、同じcontractを返す必要がある。旧requestのdigestは新候補の実行版選択に使用しない。
 
 Webの読取専用 `/api/publication/compatibility` とimage内のbundle CLIは同じ能力を返す。既存Webはこのendpointを持たないため、新しい準備を有効化する前にWebの承認済み更新が必要。稼働Webの能力を取得できない場合は署名案内を出さない。
 
@@ -53,7 +53,7 @@ imageはタグではなくconfig IDでsaveし、archive SHAとOCI manifest IDの
 |検証|結果・根拠|
 |---|---|
 |Role・保存・検索回帰|Vitest 6ファイル96件成功。生成差分、新Role未採用、旧表示、ISBN scope、旧保存形式を含む|
-|gate/配送/準備/診断|Python 70件成功扱い（実行69、環境条件skip 1）＋追加gate拒否1件成功。再開、署名後結果不明、二重apply、base drift、stream attestation、fsync失敗等を維持|
+|gate/配送/準備/診断|Python 74件。通常実行でskipしたimage指定1件も、固定imageと実公開fixtureを指定した個別実行で成功。再開、署名後結果不明、二重apply、base drift、stream attestation、fsync失敗、契約欠落と実Web image不一致の拒否を含む|
 |映画manifest/受入sequence|Python 30件成功。旧比較guard、ISBN変更・意味変更の再判断、根拠改竄、再受入拒否を含む|
 |型・ビルド|Next Webとoperator Docker build成功、TypeScript/変更TSのlint成功。語彙10 Role/0 error、既存warning保持|
 |実公開bytes|data SHA `908e6f3cc180a004d53cb5a34937daa8ca3ff539788dc35ffd56e496eca12f1b`。1931 Claim、うち映画36 Claim。元data/manifest bytes保持|

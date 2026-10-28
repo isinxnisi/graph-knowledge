@@ -67,6 +67,7 @@ def main():
     ap.add_argument('--source', required=True); ap.add_argument('--output', type=Path, required=True)
     ap.add_argument('--proof', type=Path, required=True)
     ap.add_argument('--vps-inventory', type=Path)
+    ap.add_argument('--reuse-images', type=Path, help='Reuse the exact previously frozen archives, checking their hashes')
     args = ap.parse_args(); source = git('rev-parse', args.source).decode().strip(); output = args.output.resolve()
     assert output.is_relative_to(ROOT / '.local/publication-pipeline') and not output.exists()
     # Reject an asset build against a different worktree source, including uncommitted edits.
@@ -77,11 +78,19 @@ def main():
     with (output / 'source.tar').open('xb') as stream:
         subprocess.run(['git', '-C', str(ROOT), 'archive', source, 'scripts', 'ops', 'lib', 'vocabulary',
                         'package.json', 'package-lock.json', 'tsconfig.json'], stdout=stream, check=True)
-    images = {name: image_asset(image, output / (name + '-image.tar.gz')) for name, image in IMAGES.items()}
+    if args.reuse_images:
+        images = read(args.reuse_images / 'deployment.json')['images']
+        for name, image in IMAGES.items():
+            original = args.reuse_images / (name + '-image.tar.gz')
+            assert images[name]['configId'] == image and sha(original) == images[name]['archiveSha256']
+            shutil.copyfile(original, output / original.name)
+    else:
+        images = {name: image_asset(image, output / (name + '-image.tar.gz')) for name, image in IMAGES.items()}
     policy = read(args.proof / 'compatibility-policy-isolated.json')
     assert policy['worker']['nodeVersion'] == 'v24.21.0'
     policy['worker']['root'] = str(WORKER / 'runtime')
     policy['operator']['deploymentDigest'] = images['operator']['manifestId']
+    policy['web']['deploymentImage'] = images['web']['manifestId']
     # Linux Docker can expose config ID locally and OCI manifest ID after archive load. Both are verified above.
     save(output / 'compatibility-policy.json', policy)
     worker_files = {}
@@ -110,6 +119,7 @@ def main():
         shutil.copyfile(args.vps_inventory, output / 'vps-inventory.json')
     updated = copy.deepcopy(previous); updated.update(sourceCommit=source, operatorSourceCommit=source,
         operatorConfigId=images['operator']['configId'], operatorManifestId=images['operator']['manifestId'])
+    updated['configBindings']['compatibilityRequired'] = True
     gate_files = {}
     for relative in ['scripts/publication-executor.py', 'scripts/publication-cycle.py']:
         target = output / 'gate-overlay' / Path(relative).name; target.parent.mkdir(exist_ok=True)
