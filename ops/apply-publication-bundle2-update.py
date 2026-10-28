@@ -103,12 +103,28 @@ def unchanged_stamp(paths):
 
 
 def current_jobs(root):
+    """The gate writes <nonce>.json states and <nonce>-backup.json observations together."""
     require(read(root / 'exclusion.json')['active'] is None, 'Publication exclusion active; no update')
-    for path in (root / 'jobs').glob('*.json'):
-        state = read(path)
-        require(state['phase'] in ['completed', 'cancelled'] and not state.get('pendingAudit', False), 'Unfinished/uncertain publication job; no update')
+    nonce_pattern = r'[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}'
+    states = {}; backups = []
+    for path in sorted((root / 'jobs').glob('*.json')):
+        if re.fullmatch(nonce_pattern + r'\.json', path.name):
+            state = read(path)
+            require(isinstance(state, dict) and state.get('nonce') == path.stem, 'Malformed publication job: ' + path.name)
+            require(state.get('phase') in ['completed', 'cancelled'] and state.get('pendingAudit') is False, 'Unfinished/uncertain publication job: ' + path.name)
+            states[path.stem] = state
+        elif re.fullmatch(nonce_pattern + r'-backup\.json', path.name):
+            backup = read(path)
+            require(isinstance(backup, dict) and set(backup) == {'checksum', 'payload'}
+                    and isinstance(backup.get('checksum'), str) and re.fullmatch('[a-f0-9]{64}', backup['checksum']) is not None
+                    and isinstance(backup['payload'], dict) and backup['payload'].get('version') == 1
+                    and backup['payload'].get('dataset') == 'public-kg', 'Malformed publication backup: ' + path.name)
+            backups.append(path.name.removesuffix('-backup.json'))
+        else: raise ValueError('Unknown publication journal file: ' + path.name)
+    require(all(nonce in states for nonce in backups), 'Orphan publication backup; no update')
     for nonce in read(root / 'reservations.json')['nonces']:
-        require(read(root / 'jobs' / (nonce + '.json'))['phase'] == 'completed', 'Consumed uncertain job; no update')
+        require(nonce in states and states[nonce]['phase'] == 'completed', 'Consumed uncertain job; no update')
+    return {'jobs': len(states), 'backups': len(backups), 'unfinishedJobs': 0}
 
 
 def http(path):
@@ -134,7 +150,7 @@ def vps(stage, files, approved, decision, meta, h, web):
         require(run(['/usr/bin/docker', 'run', '--rm', '--pull=never', '--network=none', '--read-only', '--user=1000:1000', '--entrypoint=node', image['Id'], '--version']).decode().strip() == 'v24.21.0', 'Image Node differs')
     with h.existing_lock(Path('/opt/graph-knowledge/.member-activation.lock'), 0):
         require(entry['verify_installation']() == before_manifest and sha(cfg) == decision['vpsConfigTransform']['inputSha256'], 'VPS advanced under lock')
-        current_jobs(root)
+        job_inventory = current_jobs(root)
         protected = [p for p in trusted.iterdir() if p not in [cfg, trusted / 'program-manifest.json']]
         protected += [root / 'exclusion.json', root / 'reservations.json', *(root / 'jobs').glob('*.json'), *(root / 'outbox').glob('*')]
         protected = [p for p in protected if p.is_file()]; stamps = unchanged_stamp(protected)
@@ -212,7 +228,8 @@ def vps(stage, files, approved, decision, meta, h, web):
         return {'target': 'vps', 'webImage': new_web['Image'], 'webBuild': NEW_BUILD, 'operatorDigest': next_config['operatorDigest'],
                 'programManifestSha256': sha(trusted / 'program-manifest.json'), 'configSha256': sha(cfg), 'kgRevision': BASE,
                 'memberTablesPreserved': 29, 'migrationsPreserved': 11, 'protectedTrustJournalsAndEnvironmentUnchanged': True,
-                'nonWebContainersUnchanged': True, 'operatorVerifiedPublishedData': True, 'backupDirectory': str(stage / 'backup'), 'signed': False, 'applyCalls': 0}
+                'nonWebContainersUnchanged': True, 'operatorVerifiedPublishedData': True, 'jobInventory': job_inventory,
+                'backupDirectory': str(stage / 'backup'), 'signed': False, 'applyCalls': 0}
 
 
 def read_image(image): return json.loads(run(['/usr/bin/docker', 'image', 'inspect', image]))[0]

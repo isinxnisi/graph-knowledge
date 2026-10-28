@@ -4,7 +4,9 @@
 
 Codex側ではmain統合・3200/beta反映・ブラウザ検証・資材固定まで完了した。次の操作にはVPSのdevelop SSH/sudoとWSL sudoが必要である。パスワードをCodexやファイルへ渡さず、いつものWSL端末で入力する。Windows Taskは既存のnishr権限を使い、Actionのsource参照だけ更新する。管理者権限やDACL変更は追加しない。
 
-## 実行するコマンド（1回）
+## 再実行するコマンド（1回）
+
+最初の実行は、ジョブと同じディレクトリに置かれるbackupをジョブ本体として読んだ補助処理の不具合で停止した。Web・gate変更前の停止であり、WSL更新には未到達。補助処理を修正し、承認対象・承認済み資材のbytesは維持した。下記は修正版で、転送済みのimageはVPS内で再利用し、小さな実行資材3ファイルだけを転送する。旧stageを上書きせず、新stageで全hash・実行環境を再照合する。
 
 Codexの手動holdを解放した後に実行する。共通ロック・準備ロック・Workerロックが使用中なら更新を止める。ロック削除、プロセス強制終了はしない。
 
@@ -14,7 +16,7 @@ set -eu
 umask 077
 cd /home/isinxnisi/1.projects/.worktrees/graph-knowledge-publication-pipeline-bundle2
 printf '%s  %s\n' \
-  0f10dcfbf39b4097d0021997f94f0841013809e7def1feafa3fa785c94630fc1 \
+  e0ca4a5993d9dfff51e20173bbbc2085ba2e4a72ebaf4ab403ec8b152c897e28 \
   ops/run-publication-bundle2-update.py | sha256sum -c -
 python3 ops/run-publication-bundle2-update.py all
 )
@@ -33,8 +35,8 @@ python3 ops/run-publication-bundle2-update.py all
 
 ## 固定値と復旧
 
-承認済み資材のSHA256SUMSは `f9636c957b2566575ee89266bcd1901e155dbb35aa6e2d342080568bf167a2af` のまま。一回限りの実行包のmanifestは `ad596417d0abd4b24740b278c20d0cfa0bc708715ad66ed9ec804e1908512261`、root実行補助は `fcbeb6b27129298667befed77e5a1eed1f5ac44ed38278ada574d74b46808826`。包の所在とhashは [operator-package.json](operator-package.json)。承認されたimage・コードbytesは再生成していない。
+承認済み資材のSHA256SUMSは `f9636c957b2566575ee89266bcd1901e155dbb35aa6e2d342080568bf167a2af` のまま。一回限りの実行包のmanifestは `cb472351bf046815e7d04f60343b4e82024645d4911792d5fb8b731b6a71e709`、root実行補助は `eb2f832ba06dd6a4815be257e864c9ac0ff3afbec934ef90b2da3550ca3572f7`。包の所在とhashは [operator-package-journal-fix1.json](operator-package-journal-fix1.json)。承認されたimage・コードbytesは再生成していない。
 
-root stageは両環境の `/root/plunode-bundle2-update-ad596417d0ab`。`backup/` に旧code/config/compose/Task/Workerと、VPSの読取KG backup・会員dumpを保持する。復旧は更新対象コード・設定・Web imageを旧版へ戻す範囲のみ。KG restoreや会員dump restoreを自動実行しない。
+今回のroot stageは両環境の `/root/plunode-bundle2-update-cb472351bf04`。旧stage `/root/plunode-bundle2-update-ad596417d0ab` は診断記録ごと保持する。`backup/` に旧code/config/compose/Task/Workerと、VPSの読取KG backup・会員dumpを保持する。復旧は更新対象コード・設定・Web imageを旧版へ戻す範囲のみ。KG restoreや会員dump restoreを自動実行しない。
 
 エラー時は停止箇所と出力をCodexへ返す。更新途中の例外では当該環境のcode/config/Web差戻しを試み、root stageの `failure.txt` に診断を残す。VPS成功後WSLで停止する場合もあり、両環境を完了扱いにしない。固定対象の不一致、未完了ジョブ、復旧失敗を別資材や再署名で解消しない。既存stage/backupは上書きせず残す。成功記録がある場合の再実行は実設置状態を照合するが、結果不明時に独断で再実行しない。

@@ -30,3 +30,9 @@
 [OPERATOR_ACTIONS.md](OPERATOR_ACTIONS.md) の一括コマンドをWSLの通常端末で実行する。SSH/sudo入力を必要とするため運営者へ引き渡す。追加の意味判断・公開署名は求めない。
 
 結果を受け取り次第、Codexが実設置Web/operator/Workerに同じ公開済み候補を与えた互換検証、本番・betaブラウザ、会員境界・準備処理・Workerの通常動作と退避資材を確認し、最終記録をcommit/pushする。現在これらを完了扱いにしない。未収録45記録・65 Entity候補の台帳も保持する。
+
+## ジョブ棚卸しの停止と修正
+
+最初の運営者実行は `KeyError: phase` で停止した。gateが `jobs/<nonce>-backup.json` に保存する公開KG backupまでジョブ本体として扱った、今回の一回限りの更新補助処理の不具合。制御フロー上はVPS共通ロック取得直後・Web/gate変更前で、WSL更新には未到達。VPSの停止後実状態は次のSSH/sudo内で再確認する。
+
+ジョブとbackupの固定ファイル名・形式・対応先を判別する修正と拒否系の回帰を含め9件成功。未知形式・孤立backup・未完了・監査待ち・消費済み未完了nonceは停止する。更新対象の意味やbytes、承認hashは変更しない。旧包/旧root stageを保持し、別stageの修正版を固定した。[診断記録](journal-inventory-fix.json) / [修正版資材](operator-package-journal-fix1.json)。画像再build・再転送を避け、VPSに転送済みの固定imageを再照合して再利用する。

@@ -1,0 +1,13 @@
+{
+  "authority": "one-time-execution-material-for-approved-fixed-target",
+  "decisionRequestSha256": "142a0dd04342b5429cc9dd736804965646bb6da9e39e7573a2065c97f02fab82",
+  "directory": "/home/isinxnisi/1.projects/.worktrees/graph-knowledge-publication-pipeline-bundle2/.local/publication-pipeline/operator-package-approved-journal-fix1",
+  "operatorManifestSha256": "cb472351bf046815e7d04f60343b4e82024645d4911792d5fb8b731b6a71e709",
+  "applierSha256": "eb2f832ba06dd6a4815be257e864c9ac0ff3afbec934ef90b2da3550ca3572f7",
+  "installed": false,
+  "signed": false,
+  "applyCalls": 0,
+  "runnerSha256": "e0ca4a5993d9dfff51e20173bbbc2085ba2e4a72ebaf4ab403ec8b152c897e28",
+  "previousPackageManifestSha256": "ad596417d0abd4b24740b278c20d0cfa0bc708715ad66ed9ec804e1908512261",
+  "approvedAssetManifestSha256Unchanged": "f9636c957b2566575ee89266bcd1901e155dbb35aa6e2d342080568bf167a2af"
+}

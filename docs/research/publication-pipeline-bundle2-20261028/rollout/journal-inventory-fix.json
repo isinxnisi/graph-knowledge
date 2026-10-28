@@ -1,0 +1,43 @@
+{
+  "recordedAt": "2026-10-28T07:15:58.489778+00:00",
+  "authority": "operator-returned-output-and-fixed-source-control-flow",
+  "receivedError": {
+    "error": "bundle2-update-stopped",
+    "errorType": "KeyError",
+    "reason": "'phase'",
+    "signed": false,
+    "applyCalls": 0
+  },
+  "sourceEvidence": {
+    "producer": "scripts/publication-executor.py Gate.preflight stores <nonce>-backup.json next to <nonce>.json",
+    "consumer": "ops/apply-publication-bundle2-update.py current_jobs applied state[phase] to all jobs/*.json"
+  },
+  "stoppedBeforeRuntimeReplacement": {
+    "basis": "current_jobs is the first operation after acquiring VPS common lock, before backups/compose stop/gate writes",
+    "remoteFailureTraceRead": false,
+    "remoteInstalledStateReconfirmedAfterFailure": false
+  },
+  "runtimeTargetsChanged": false,
+  "originalRootStagePreserved": "/root/plunode-bundle2-update-ad596417d0ab",
+  "repair": {
+    "jobAndBackupPathsClassified": true,
+    "pairedTerminalJobRequired": true,
+    "unknownMalformedOrOrphanJournalsRejected": true,
+    "unfinishedJobsAndPendingAuditRejected": true,
+    "reservedNoncesRequireCompletedJob": true,
+    "testsPassed": 9,
+    "backupChecksumOrSemanticRevalidationClaimed": false
+  },
+  "repeatPrecheck": {
+    "formalReceipts": 12,
+    "workerBeforeUpdate": true,
+    "taskSource": "7392d8e343a11644b1047364c71653779ad0c93c",
+    "signed": false,
+    "applyCalls": 0
+  },
+  "originalPayloadFilesReusedUnchanged": true,
+  "imageRebuilds": 0,
+  "imagesRetransmittedByNewRunner": false,
+  "nextAction": "operator SSH/sudo fixed retry; retain before-hash and runtime checks",
+  "installed": false
+}

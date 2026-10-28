@@ -17,6 +17,8 @@ DECISION = '142a0dd04342b5429cc9dd736804965646bb6da9e39e7573a2065c97f02fab82'
 SSH = ['-o', 'StrictHostKeyChecking=yes', '-o', 'UserKnownHostsFile=/etc/plunode-publication/known_hosts',
        '-o', 'GlobalKnownHostsFile=/dev/null', '-o', 'HostKeyAlgorithms=ssh-ed25519']
 REMOTE = 'develop@153.115.17.82'
+PACKAGE = 'operator-package-approved-journal-fix1'
+PREVIOUS_PAYLOAD = 'ad596417d0abd4b24740b278c20d0cfa0bc708715ad66ed9ec804e1908512261'
 
 
 def sha(path):
@@ -61,13 +63,14 @@ def local_precheck(home):
 
 def prepare():
     decision = DOCS / 'update-decision-request.json'; assert sha(decision) == DECISION
-    d = read(decision); approved = Path(d['assetDirectory']); home = approved.parent / 'operator-package-approved'
+    d = read(decision); approved = Path(d['assetDirectory']); home = approved.parent / PACKAGE
     assert not home.exists(), 'Existing operator package must be verified, not replaced'
     home.mkdir(mode=0o700); payload = home / 'payload'; payload.mkdir(mode=0o700)
     assert sha(approved / 'SHA256SUMS') == d['assetManifestSha256']
     for line in (approved / 'SHA256SUMS').read_text().splitlines():
         expected, name = line.split('  ', 1); assert sha(approved / name) == expected
-    shutil.copytree(approved, payload / 'approved')
+    # Fixed asset bytes are reused; neither the original package nor the approved files is edited.
+    shutil.copytree(approved, payload / 'approved', copy_function=os.link)
     shutil.copyfile(decision, payload / 'decision-request.json')
     approval = DOCS / 'rollout/operator-approval.json'
     assert read(approval)['status'] == 'approved' and read(approval)['decisionRequestSha256'] == DECISION
@@ -85,6 +88,11 @@ def prepare():
         '--mount', 'type=bind,src=' + str(release) + ',dst=/incoming,readonly', '--entrypoint=node', d['images']['operator']['configId'],
         '--import', 'tsx', 'scripts/publication-compatibility.ts', 'contract', '/incoming'])
     save(release / 'compatibility.json', json.loads(contract))
+    save(payload / 'execution-material.json', {'purpose': 'one-time-installer-job-inventory-fix',
+        'decisionRequestSha256Unchanged': DECISION, 'approvedAssetManifestSha256Unchanged': d['assetManifestSha256'],
+        'previousPayloadManifestSha256': PREVIOUS_PAYLOAD,
+        'applierSha256': sha(home / 'apply-publication-bundle2-update.py'),
+        'runtimeTargetsChanged': False, 'signed': False, 'applyCalls': 0})
     sums = ''.join(sha(p) + '  ' + str(p.relative_to(payload)) + '\n' for p in sorted(payload.rglob('*')) if p.is_file())
     (payload / 'OPERATOR_SHA256SUMS').write_text(sums)
     info = {'authority': 'one-time-execution-material-for-approved-fixed-target', 'decisionRequestSha256': DECISION,
@@ -112,7 +120,7 @@ def operation(home, target, incoming, interop=None):
 def main():
     ap = argparse.ArgumentParser(description=__doc__); ap.add_argument('step', choices=['prepare', 'vps', 'wsl', 'all'])
     args = ap.parse_args()
-    home = Path(read(DOCS / 'update-decision-request.json')['assetDirectory']).parent / 'operator-package-approved'
+    home = Path(read(DOCS / 'update-decision-request.json')['assetDirectory']).parent / PACKAGE
     if args.step == 'prepare': prepare(); return
     info = read(home / 'operation.json'); assert sha(home / 'apply-publication-bundle2-update.py') == info['applierSha256']
     assert sha(home / 'payload/OPERATOR_SHA256SUMS') == info['operatorManifestSha256']
@@ -120,9 +128,17 @@ def main():
     # Passwords remain in the existing operator terminal; no -S, password arguments, keys or sudoers changes.
     if args.step in ['vps', 'all']:
         incoming = '/home/develop/plunode-bundle2-update-' + info['operatorManifestSha256'][:12]
-        run(['ssh', *SSH, REMOTE, 'mkdir -p -- ' + shlex.quote(incoming)])
-        run(['scp', *SSH, '-r', home / 'payload', home / 'apply-publication-bundle2-update.py', REMOTE + ':' + incoming + '/'])
-        command = 'sudo /bin/bash -c ' + shlex.quote(operation(home, 'vps', incoming))
+        # The completed prior upload contains the identical approved images. Recheck its manifest,
+        # copy it to a distinct user-owned location, and transfer only the revised execution material.
+        previous = '/home/develop/plunode-bundle2-update-' + PREVIOUS_PAYLOAD[:12] + '/payload'
+        q = shlex.quote
+        reuse = "set -eu\nprintf '%s  %s\\n' " + q(PREVIOUS_PAYLOAD) + ' ' + q(previous + '/OPERATOR_SHA256SUMS') + ' | sha256sum -c -\n'
+        reuse += 'mkdir -p -- ' + q(incoming) + '\nif test ! -e ' + q(incoming + '/payload') + '; then cp -a -- ' + q(previous) + ' ' + q(incoming + '/payload') + '; fi'
+        run(['ssh', *SSH, REMOTE, reuse])
+        run(['scp', *SSH, home / 'payload/execution-material.json', home / 'payload/OPERATOR_SHA256SUMS',
+             home / 'apply-publication-bundle2-update.py', REMOTE + ':' + incoming + '/'])
+        command = 'set -eu\ncp -- ' + q(incoming + '/execution-material.json') + ' ' + q(incoming + '/OPERATOR_SHA256SUMS') + ' ' + q(incoming + '/payload/')
+        command += '\nsudo /bin/bash -c ' + shlex.quote(operation(home, 'vps', incoming))
         run(['ssh', '-t', *SSH, REMOTE, command])
     if args.step in ['wsl', 'all']:
         run(['sudo', '/bin/bash', '-c', operation(home, 'wsl', home, os.environ.get('WSL_INTEROP', ''))])

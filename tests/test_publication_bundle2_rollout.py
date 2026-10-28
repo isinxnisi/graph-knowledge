@@ -58,17 +58,54 @@ class RolloutChecks(unittest.TestCase):
     def test_busy_or_uncertain_jobs_reject_update(self):
         with tempfile.TemporaryDirectory() as folder:
             root = Path(folder); (root / 'jobs').mkdir()
+            nonce = '13abfb93-ba2d-44f7-a56b-352aa7ab0ab0'
             (root / 'exclusion.json').write_text('{"active":null}')
-            (root / 'reservations.json').write_text('{"nonces":["published"]}')
-            job = root / 'jobs/published.json'; job.write_text('{"phase":"completed","pendingAudit":false}')
-            apply.current_jobs(root)
+            (root / 'reservations.json').write_text(json.dumps({'nonces': {nonce: {}}}))
+            job = root / 'jobs' / (nonce + '.json')
+            complete = {'nonce': nonce, 'phase': 'completed', 'pendingAudit': False}
+            job.write_text(json.dumps(complete))
+            backup = root / 'jobs' / (nonce + '-backup.json')
+            backup_body = {'checksum': 'a' * 64, 'payload': {'version': 1, 'dataset': 'public-kg'}}
+            backup.write_text(json.dumps(backup_body))
+            initial = {p.name: p.read_bytes() for p in root.rglob('*.json')}
+            self.assertEqual(apply.current_jobs(root), {'jobs': 1, 'backups': 1, 'unfinishedJobs': 0})
+            self.assertEqual(initial, {p.name: p.read_bytes() for p in root.rglob('*.json')})
             for phase in ['applying', 'awaiting-publication-approval', 'failed']:
-                job.write_text(json.dumps({'phase': phase}))
+                job.write_text(json.dumps({**complete, 'phase': phase}))
                 with self.assertRaises(ValueError): apply.current_jobs(root)
-            job.write_text('{"phase":"completed","pendingAudit":true}')
+            job.write_text(json.dumps({**complete, 'pendingAudit': True}))
             with self.assertRaises(ValueError): apply.current_jobs(root)
-            job.write_text('{"phase":"completed"}'); (root / 'exclusion.json').write_text('{"active":"published"}')
+            job.write_text(json.dumps(complete)); (root / 'exclusion.json').write_text(json.dumps({'active': nonce}))
             with self.assertRaises(ValueError): apply.current_jobs(root)
+
+    def test_unknown_or_malformed_journals_and_orphan_backups_stop(self):
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder); (root / 'jobs').mkdir()
+            nonce = '13abfb93-ba2d-44f7-a56b-352aa7ab0ab0'
+            (root / 'exclusion.json').write_text('{"active":null}')
+            (root / 'reservations.json').write_text('{"nonces":{}}')
+            unknown = root / 'jobs/unknown-backup.json'; unknown.write_text('{}')
+            with self.assertRaisesRegex(ValueError, 'Unknown publication journal'): apply.current_jobs(root)
+            unknown.unlink()
+            backup = root / 'jobs' / (nonce + '-backup.json'); backup.write_text('{}')
+            with self.assertRaisesRegex(ValueError, 'Malformed publication backup'): apply.current_jobs(root)
+            backup.write_text(json.dumps({'checksum': 'a' * 64, 'payload': {'version': 1, 'dataset': 'public-kg'}}))
+            with self.assertRaisesRegex(ValueError, 'Orphan publication backup'): apply.current_jobs(root)
+            job = root / 'jobs' / (nonce + '.json'); job.write_text('{"payload":{}}')
+            with self.assertRaisesRegex(ValueError, 'Malformed publication job'): apply.current_jobs(root)
+            job.write_text(json.dumps({'nonce': nonce, 'phase': 'completed'}))
+            with self.assertRaisesRegex(ValueError, 'Unfinished/uncertain'): apply.current_jobs(root)
+
+    def test_consumed_nonce_still_requires_completed_job(self):
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder); (root / 'jobs').mkdir()
+            nonce = '13abfb93-ba2d-44f7-a56b-352aa7ab0ab0'
+            (root / 'exclusion.json').write_text('{"active":null}')
+            (root / 'reservations.json').write_text(json.dumps({'nonces': {nonce: {}}}))
+            job = root / 'jobs' / (nonce + '.json')
+            for value in [None, {'nonce': nonce, 'phase': 'cancelled', 'pendingAudit': False}]:
+                if value is not None: job.write_text(json.dumps(value))
+                with self.assertRaisesRegex(ValueError, 'Consumed uncertain'): apply.current_jobs(root)
 
     def test_new_worker_directory_is_traversable_without_changing_existing_parent(self):
         with tempfile.TemporaryDirectory() as folder:
@@ -92,6 +129,28 @@ class RolloutChecks(unittest.TestCase):
                 self.assertIn('sha256sum -c -', command)
             # The exact printf format emitted above must delimit one checksum record with LF.
             self.assertEqual(subprocess.check_output(['bash', '-c', "printf '%s  %s\\n' hash name"]), b'hash  name\n')
+
+    def test_repair_reuses_the_previous_upload_and_transfers_only_small_execution_files(self):
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder); docs = root / 'docs'; docs.mkdir()
+            (docs / 'update-decision-request.json').write_text(json.dumps({'assetDirectory': str(root / 'approved')}))
+            home = root / runner.PACKAGE; (home / 'payload').mkdir(parents=True)
+            (home / 'payload/OPERATOR_SHA256SUMS').write_text('fixed payload manifest')
+            (home / 'apply-publication-bundle2-update.py').write_text('fixed applier')
+            info = {'operatorManifestSha256': runner.sha(home / 'payload/OPERATOR_SHA256SUMS'), 'applierSha256': runner.sha(home / 'apply-publication-bundle2-update.py')}
+            (home / 'operation.json').write_text(json.dumps(info))
+            calls = []
+            with patch.object(runner, 'DOCS', docs), patch.object(runner, 'local_precheck'), patch.object(runner, 'run', side_effect=lambda args: calls.append(list(map(str, args)))), patch.object(runner.sys, 'argv', ['runner', 'vps']):
+                runner.main()
+            self.assertEqual(len(calls), 3)
+            self.assertEqual([x[0] for x in calls], ['ssh', 'scp', 'ssh'])
+            transferred = [Path(x).name for x in calls[1] if x.startswith(str(home))]
+            self.assertEqual(transferred, ['execution-material.json', 'OPERATOR_SHA256SUMS', 'apply-publication-bundle2-update.py'])
+            self.assertIn(runner.PREVIOUS_PAYLOAD, calls[0][-1])
+            self.assertIn('cp -a --', calls[0][-1])
+            self.assertIn('sudo /bin/bash -c', calls[2][-1])
+            for command in [calls[0][-1], calls[2][-1]]:
+                subprocess.run(['bash', '-n'], input=command.encode(), check=True)
 
 
 if __name__ == '__main__': unittest.main()
