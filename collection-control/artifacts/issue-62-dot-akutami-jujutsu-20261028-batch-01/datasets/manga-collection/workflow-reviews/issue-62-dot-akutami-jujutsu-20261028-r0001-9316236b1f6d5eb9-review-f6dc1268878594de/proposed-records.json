@@ -1,0 +1,104 @@
+{
+  "status": "pending-human-acceptance",
+  "formalAcceptance": "pending",
+  "notForPublicApply": true,
+  "records": {
+    "entities": [
+      {
+        "id": "532b9547-65c6-463f-a331-f4bd80044fd9",
+        "kind": "person",
+        "name": "芥見下々",
+        "description": null,
+        "aliases": [
+          "Gege Akutami"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q60231010"
+          }
+        ],
+        "createdAt": "2026-10-28T18:13:50Z",
+        "updatedAt": "2026-10-28T18:13:50Z",
+        "event": null
+      },
+      {
+        "id": "77b2696f-4ba7-469a-b591-9e3ce5e1fedb",
+        "kind": "work",
+        "name": "呪術廻戦",
+        "description": null,
+        "aliases": [
+          "Jujutsu Kaisen"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q55522899"
+          }
+        ],
+        "createdAt": "2026-10-28T18:13:50Z",
+        "updatedAt": "2026-10-28T18:13:50Z",
+        "event": null
+      }
+    ],
+    "claims": [
+      {
+        "id": "ac52107c-1fcb-4fbc-ac4e-6b7928c1691f",
+        "subjectId": "532b9547-65c6-463f-a331-f4bd80044fd9",
+        "objectId": "77b2696f-4ba7-469a-b591-9e3ce5e1fedb",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "hidden",
+        "createdAt": "2026-10-28T18:13:50Z",
+        "updatedAt": "2026-10-28T18:13:50Z",
+        "contribution": {
+          "roleId": "AUTHORSHIP",
+          "scope": {
+            "kind": "publication",
+            "isbn13": "9784088815169",
+            "volumeLabel": "第1巻（NDL巻次 1）",
+            "editionLabel": null,
+            "language": "ja"
+          }
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      }
+    ],
+    "sources": [
+      {
+        "id": "6586c5a5-3200-4152-81ef-87cbbcba13b0",
+        "kind": "web",
+        "title": "NDLサーチ: 呪術廻戦. 1",
+        "authors": [],
+        "publisher": "国立国会図書館",
+        "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I029060849",
+        "publishedAt": null,
+        "edition": null,
+        "note": "国立国会図書館作成書誌（iss-ndl-opac）の責任表示。メタデータ CC BY 4.0: https://creativecommons.org/licenses/by/4.0/ ; 提供元条件 https://ndlsearch.ndl.go.jp/help/api/provider 。本文・画像・第三者所蔵情報は含まない。",
+        "isDemo": false
+      }
+    ],
+    "citations": [
+      {
+        "id": "3556b189-8631-45e9-aa25-0ed8b8ea33cc",
+        "claimId": "ac52107c-1fcb-4fbc-ac4e-6b7928c1691f",
+        "sourceId": "6586c5a5-3200-4152-81ef-87cbbcba13b0",
+        "locator": "dc:creator（責任表示） / ISBN 9784088815169",
+        "note": "原表記（ja）: 芥見下々 著。指定刊行物の責任表示で確認された担当。全巻・全版・全期間への外挿、原作から別Roleへの変換はしない。同一資料由来の記録を独立した根拠と数えない。",
+        "accessedAt": "2026-10-28",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "芥見下々 著",
+          "language": "ja"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      }
+    ]
+  }
+}

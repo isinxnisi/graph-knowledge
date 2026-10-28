@@ -1,0 +1,373 @@
+{
+  "id": "Q55522899",
+  "lastrevid": 2560953151,
+  "labels": {
+    "ja": {
+      "language": "ja",
+      "value": "呪術廻戦"
+    },
+    "en": {
+      "language": "en",
+      "value": "Jujutsu Kaisen"
+    },
+    "zh": {
+      "language": "zh",
+      "value": "咒術迴戰"
+    },
+    "id": {
+      "language": "id",
+      "value": "Jujutsu Kaisen"
+    },
+    "it": {
+      "language": "it",
+      "value": "Jujutsu Kaisen - Sorcery Fight"
+    },
+    "es": {
+      "language": "es",
+      "value": "Jujutsu Kaisen"
+    },
+    "de": {
+      "language": "de",
+      "value": "Jujutsu Kaisen"
+    },
+    "pt": {
+      "language": "pt",
+      "value": "Jujutsu Kaisen"
+    },
+    "fr": {
+      "language": "fr",
+      "value": "Jujutsu Kaisen"
+    },
+    "ar": {
+      "language": "ar",
+      "value": "جوجوتسو كايسن"
+    },
+    "zh-hant": {
+      "language": "zh-hant",
+      "value": "咒術迴戰"
+    },
+    "zh-tw": {
+      "language": "zh-tw",
+      "value": "咒術迴戰"
+    },
+    "ko": {
+      "language": "ko",
+      "value": "주술회전"
+    },
+    "th": {
+      "language": "th",
+      "value": "มหาเวทย์ผนึกมาร"
+    },
+    "vi": {
+      "language": "vi",
+      "value": "Chú thuật hồi chiến"
+    },
+    "fa": {
+      "language": "fa",
+      "value": "جوجوتسو کایسن"
+    },
+    "ru": {
+      "language": "ru",
+      "value": "Jujutsu Kaisen"
+    },
+    "nan": {
+      "language": "nan",
+      "value": "Chiù-su̍t Hôe-chiàn"
+    },
+    "ms": {
+      "language": "ms",
+      "value": "Jujutsu Kaisen"
+    },
+    "zh-hk": {
+      "language": "zh-hk",
+      "value": "咒術迴戰"
+    },
+    "tr": {
+      "language": "tr",
+      "value": "Jujutsu Kaisen"
+    },
+    "pl": {
+      "language": "pl",
+      "value": "Jujutsu kaisen"
+    },
+    "ro": {
+      "language": "ro",
+      "value": "Jujutsu Kaisen"
+    },
+    "yue": {
+      "language": "yue",
+      "value": "咒術迴戰"
+    },
+    "mn": {
+      "language": "mn",
+      "value": "Хар шидийн дайн"
+    },
+    "uk": {
+      "language": "uk",
+      "value": "Jujutsu Kaisen"
+    },
+    "ca": {
+      "language": "ca",
+      "value": "Jujutsu Kaisen: la guerra màgica"
+    },
+    "fi": {
+      "language": "fi",
+      "value": "Jujutsu Kaisen"
+    },
+    "lt": {
+      "language": "lt",
+      "value": "Jujutsu Kaisen"
+    },
+    "sr": {
+      "language": "sr",
+      "value": "Џуџитсу Каизен"
+    },
+    "km": {
+      "language": "km",
+      "value": "Jujutsu Kaisen"
+    },
+    "uz": {
+      "language": "uz",
+      "value": "Sehrli jang (Anime)"
+    },
+    "ckb": {
+      "language": "ckb",
+      "value": "جوجوتسو کایسن"
+    },
+    "hy": {
+      "language": "hy",
+      "value": "Մոգական ճակատամարտ"
+    },
+    "ka": {
+      "language": "ka",
+      "value": "ჯუჯუცუ კაისენი"
+    },
+    "cs": {
+      "language": "cs",
+      "value": "Jujutsu Kaisen –⁠ Prokleté války"
+    },
+    "he": {
+      "language": "he",
+      "value": "ג'וג'וטסו קאייזן"
+    },
+    "lzh": {
+      "language": "lzh",
+      "value": "咒術迴戰"
+    },
+    "az": {
+      "language": "az",
+      "value": "Jujutsu Kaisen"
+    },
+    "nl": {
+      "language": "nl",
+      "value": "Jujutsu Kaisen"
+    },
+    "mk": {
+      "language": "mk",
+      "value": "Магична битка"
+    },
+    "bcl": {
+      "language": "bcl",
+      "value": "Jujutsu Kaisen"
+    },
+    "bew": {
+      "language": "bew",
+      "value": "Jujutsu Kaisén"
+    },
+    "zh-hans": {
+      "language": "zh-hans",
+      "value": "咒术回战"
+    },
+    "bn": {
+      "language": "bn",
+      "value": "জুজুৎসু কাইসেন"
+    },
+    "hi": {
+      "language": "hi",
+      "value": "जुजुत्सु काइसेन"
+    },
+    "zh-mo": {
+      "language": "zh-mo",
+      "value": "咒術迴戰"
+    },
+    "zh-cn": {
+      "language": "zh-cn",
+      "value": "咒术回战"
+    },
+    "zh-my": {
+      "language": "zh-my",
+      "value": "咒术回战"
+    },
+    "zh-sg": {
+      "language": "zh-sg",
+      "value": "咒术回战"
+    },
+    "acm": {
+      "language": "acm",
+      "value": "جوجوتسو كايسن"
+    },
+    "sv": {
+      "language": "sv",
+      "value": "Jujutsu Kaisen"
+    },
+    "da": {
+      "language": "da",
+      "value": "Jujutsu Kaisen"
+    },
+    "cbk-zam": {
+      "language": "cbk-zam",
+      "value": "Jujutsu Kaisen"
+    }
+  },
+  "aliases": {
+    "it": [
+      {
+        "language": "it",
+        "value": "Jujutsu Kaisen"
+      }
+    ],
+    "es": [
+      {
+        "language": "es",
+        "value": "Jujutsu Kaisen: guerra de hechiceros"
+      },
+      {
+        "language": "es",
+        "value": "Jujutsu Kaisen: contiendas de brujería"
+      }
+    ],
+    "vi": [
+      {
+        "language": "vi",
+        "value": "Jujutsu Kaisen"
+      }
+    ],
+    "ja": [
+      {
+        "language": "ja",
+        "value": "じゅじゅつかいせん"
+      }
+    ],
+    "ca": [
+      {
+        "language": "ca",
+        "value": "Jujutsu Kaisen"
+      }
+    ],
+    "en": [
+      {
+        "language": "en",
+        "value": "Sorcery Fight"
+      },
+      {
+        "language": "en",
+        "value": "JJK"
+      }
+    ],
+    "cs": [
+      {
+        "language": "cs",
+        "value": "Džudžucu kaisen"
+      }
+    ],
+    "mk": [
+      {
+        "language": "mk",
+        "value": "Jujutsu Kaisen"
+      }
+    ],
+    "hi": [
+      {
+        "language": "hi",
+        "value": "जूजूत्सु कैसेन"
+      },
+      {
+        "language": "hi",
+        "value": "जूजूत्सु काइसेन"
+      },
+      {
+        "language": "hi",
+        "value": "जूजीत्सू काइसन"
+      },
+      {
+        "language": "hi",
+        "value": "जेजेके"
+      },
+      {
+        "language": "hi",
+        "value": "जुजुत्सु कैसेन"
+      }
+    ],
+    "tr": [
+      {
+        "language": "tr",
+        "value": "JJK"
+      }
+    ]
+  },
+  "claims": {
+    "P31": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P31",
+          "hash": "549c072d6be8a6a43f999d1d0e82640b16c4260e",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 21198342,
+              "id": "Q21198342"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q55522899$e49dba1b-4ae4-b704-f89f-66d7d61c17da",
+        "rank": "normal"
+      }
+    ],
+    "P50": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P50",
+          "hash": "db743015d6afdc36ea41de714548de0294ccc33c",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 60231010,
+              "id": "Q60231010"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q55522899$a16c23da-4845-7856-75df-d761c107105d",
+        "rank": "normal"
+      }
+    ],
+    "P110": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P110",
+          "hash": "b6dbc9d34bb67bf1296bed4ac0f60fd5e56efeca",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 60231010,
+              "id": "Q60231010"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q55522899$0DB3E560-06D5-4575-A86A-A4B7ADA41E73",
+        "rank": "normal"
+      }
+    ]
+  }
+}

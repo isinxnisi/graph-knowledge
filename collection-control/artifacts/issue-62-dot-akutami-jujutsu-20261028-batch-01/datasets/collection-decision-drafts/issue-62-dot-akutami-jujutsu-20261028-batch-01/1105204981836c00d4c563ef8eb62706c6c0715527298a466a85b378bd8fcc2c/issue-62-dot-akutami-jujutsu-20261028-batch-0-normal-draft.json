@@ -1,0 +1,113 @@
+{
+  "schemaVersion": 1,
+  "decisionId": "issue-62-dot-akutami-jujutsu-20261028-batch-0-normal",
+  "status": "draft-not-approved",
+  "humanDecision": {
+    "actorType": "human",
+    "reviewer": null,
+    "decidedAt": null,
+    "statement": null
+  },
+  "approvalScope": "formal-record-acceptance-and-release-preparation-only",
+  "applyAuthorized": {
+    "local": false,
+    "beta": false,
+    "vps": false
+  },
+  "review": {
+    "file": "datasets/manga-collection/workflow-reviews/issue-62-dot-akutami-jujutsu-20261028-r0001-9316236b1f6d5eb9-review-f6dc1268878594de/review-manifest.json",
+    "sha256": "1105204981836c00d4c563ef8eb62706c6c0715527298a466a85b378bd8fcc2c"
+  },
+  "referenceArtifacts": [
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-62-dot-akutami-jujutsu-20261028-r0001-9316236b1f6d5eb9-review-f6dc1268878594de/README.md",
+      "sha256": "e295c1bd08756c5aa5c6bd841a3cf91c67f3c0ba72e97cde64983df9e49a4850"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-62-dot-akutami-jujutsu-20261028-r0001-9316236b1f6d5eb9-review-f6dc1268878594de/context.json",
+      "sha256": "bb59120bf39560910e427db61ab673323cd7a458c8a0d98dc5dc1ca2365c4516"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-62-dot-akutami-jujutsu-20261028-r0001-9316236b1f6d5eb9-review-f6dc1268878594de/decision-request.json",
+      "sha256": "472ff92e5ba9b7c5d68b62cdbb8048223ca3fc842fa8123282148830013bd3e0"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-62-dot-akutami-jujutsu-20261028-r0001-9316236b1f6d5eb9-review-f6dc1268878594de/exploration-paths.json",
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-62-dot-akutami-jujutsu-20261028-r0001-9316236b1f6d5eb9-review-f6dc1268878594de/identity-only-records.json",
+      "sha256": "1fc314e4a47717bce195b39fe7f1e66bd31f6af892fca4a9420a653eab927a37"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-62-dot-akutami-jujutsu-20261028-r0001-9316236b1f6d5eb9-review-f6dc1268878594de/proposed-records.json",
+      "sha256": "2a74d9a27e8df3dbc66c2557492ac56f8d041f4cf0b16a6dd26af97c16e19b8f"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-62-dot-akutami-jujutsu-20261028-r0001-9316236b1f6d5eb9-review-f6dc1268878594de/review-manifest.json",
+      "sha256": "1105204981836c00d4c563ef8eb62706c6c0715527298a466a85b378bd8fcc2c"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-62-dot-akutami-jujutsu-20261028-r0001-9316236b1f6d5eb9-review-f6dc1268878594de/review.json",
+      "sha256": "50ac7ffa7b322aee80cf81bc433358cf9aa08b9e3e21b7e36fec1a02768a0578"
+    }
+  ],
+  "acceptedRecordIds": {
+    "entities": [
+      "532b9547-65c6-463f-a331-f4bd80044fd9",
+      "77b2696f-4ba7-469a-b591-9e3ce5e1fedb"
+    ],
+    "claims": [
+      "ac52107c-1fcb-4fbc-ac4e-6b7928c1691f"
+    ],
+    "sources": [
+      "6586c5a5-3200-4152-81ef-87cbbcba13b0"
+    ],
+    "citations": [
+      "3556b189-8631-45e9-aa25-0ed8b8ea33cc"
+    ]
+  },
+  "recordSha256": {
+    "entities": {
+      "532b9547-65c6-463f-a331-f4bd80044fd9": "8788672c502ed623089e4194139c8efe4fa590fa707846449cdb108f778612e3",
+      "77b2696f-4ba7-469a-b591-9e3ce5e1fedb": "524f4c0420244364d8ff5e78a389b0c1c49950b8fa97b68a5cc11c20fb8604a3"
+    },
+    "claims": {
+      "ac52107c-1fcb-4fbc-ac4e-6b7928c1691f": "d40a714f5dcbddab89dd9fae4d0c65ce355f09a89fd44d82726a641209967fde"
+    },
+    "sources": {
+      "6586c5a5-3200-4152-81ef-87cbbcba13b0": "538aef478788cf2521ee951f7a0aa783d1bb75ccb2f3c43227dd791be8665e9f"
+    },
+    "citations": {
+      "3556b189-8631-45e9-aa25-0ed8b8ea33cc": "c64af8d9c34ca8268928a69d0ddca4c12210b46f546e8467f8f4362a32df7692"
+    }
+  },
+  "scopeByClaim": [
+    {
+      "id": "ac52107c-1fcb-4fbc-ac4e-6b7928c1691f",
+      "subjectId": "532b9547-65c6-463f-a331-f4bd80044fd9",
+      "objectId": "77b2696f-4ba7-469a-b591-9e3ce5e1fedb",
+      "predicate": "CONTRIBUTED_TO",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "contribution": {
+        "roleId": "AUTHORSHIP",
+        "scope": {
+          "kind": "publication",
+          "isbn13": "9784088815169",
+          "volumeLabel": "第1巻（NDL巻次 1）",
+          "editionLabel": null,
+          "language": "ja"
+        }
+      },
+      "organizationParticipation": null,
+      "eventParticipation": null
+    }
+  ],
+  "baseRelease": "20261014-credits-001",
+  "baseRevision": "82b01515-594c-48ca-b4b6-515eefac83ca",
+  "releaseId": "manga-issue-62-dot-akutami-jujutsu-20261028-batch-0-normal"
+}

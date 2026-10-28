@@ -1,0 +1,84 @@
+{
+  "status": "pending-human-acceptance",
+  "humanReviewer": null,
+  "entities": [
+    {
+      "entityId": "532b9547-65c6-463f-a331-f4bd80044fd9",
+      "name": "芥見下々",
+      "kind": "person",
+      "wikidata": "Q60231010",
+      "existingEntityId": null,
+      "status": "candidate",
+      "reasons": [],
+      "checks": {
+        "providerIdentity": true
+      },
+      "inputPopulation": "relation-endpoint"
+    },
+    {
+      "entityId": "77b2696f-4ba7-469a-b591-9e3ce5e1fedb",
+      "name": "呪術廻戦",
+      "kind": "work",
+      "wikidata": "Q55522899",
+      "existingEntityId": null,
+      "status": "candidate",
+      "reasons": [],
+      "checks": {
+        "providerIdentity": true
+      },
+      "inputPopulation": "relation-endpoint"
+    }
+  ],
+  "claims": [
+    {
+      "claimId": "ac52107c-1fcb-4fbc-ac4e-6b7928c1691f",
+      "person": "芥見下々",
+      "work": "呪術廻戦",
+      "subjectId": "532b9547-65c6-463f-a331-f4bd80044fd9",
+      "objectId": "77b2696f-4ba7-469a-b591-9e3ce5e1fedb",
+      "roleId": "AUTHORSHIP",
+      "scope": {
+        "kind": "publication",
+        "isbn13": "9784088815169",
+        "volumeLabel": "第1巻（NDL巻次 1）",
+        "editionLabel": null,
+        "language": "ja"
+      },
+      "status": "candidate",
+      "reasons": [],
+      "supportingCitationIds": [
+        "3556b189-8631-45e9-aa25-0ed8b8ea33cc"
+      ],
+      "existingState": null,
+      "existingClaimId": null,
+      "originalTexts": [
+        "芥見下々 著"
+      ],
+      "citationIds": [
+        "3556b189-8631-45e9-aa25-0ed8b8ea33cc"
+      ],
+      "sourceUrls": [
+        "https://ndlsearch.ndl.go.jp/books/R100000002-I029060849"
+      ],
+      "sourceIds": [
+        "6586c5a5-3200-4152-81ef-87cbbcba13b0"
+      ]
+    }
+  ],
+  "inheritedHolds": [],
+  "newCandidateCounts": {
+    "entities": 2,
+    "claims": 1,
+    "sources": 1,
+    "citations": 1
+  },
+  "recordConflicts": [],
+  "roleCounts": {
+    "AUTHORSHIP": 1
+  },
+  "normalReviewedEntityCount": 2,
+  "reusedCitationIds": [],
+  "identityOnlyEntityIds": [],
+  "heldClaimCount": 0,
+  "heldEntityCount": 0
+}

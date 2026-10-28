@@ -1,0 +1,124 @@
+{
+  "schemaVersion": 2,
+  "status": "pending-human-acceptance",
+  "recipe": "manga-r0042",
+  "collectionContext": {
+    "themeId": "issue-62-dot-akutami-jujutsu-20261028",
+    "themeRevision": 1,
+    "definitionSha256": "41b4c2e26568d58c62c61525ed9f7b7219c847a3b03215f911f013faf6bf29f7",
+    "approvalSha256": "8bf38380f6350462473e996fa2c4146cf5377e9d02eb13c539bce5b406ddae9a"
+  },
+  "execution": {
+    "adapter": "manga-discovery-v2",
+    "codeSha256": "80e05b67bc0129b963653b90df4cfbfa5bd6aff190acda99f54c08541e55801e",
+    "inputs": [
+      {
+        "file": "datasets/manga-collection/r0042/recipe.json",
+        "sha256": "9695118960f91bcbbc5629c5028c4d255ea74ed92b3763552e86dbde176ee01a"
+      },
+      {
+        "file": "datasets/manga-collection/r0042/anchor-review.json",
+        "sha256": "118fd76eb168f9f465c68007643b7ed39d0318d01908e02ac2a96f89c681ffec"
+      },
+      {
+        "file": "datasets/manga-collection/r0042/publication-review.json",
+        "sha256": "893aa05288bc568cbd283e7fdba87c6c4aa82acc0fe9d6682da59e57b79ea71f"
+      },
+      {
+        "file": "docs/research/famous-manga-creators/20261016/candidates.json",
+        "sha256": "8531fada01e5c635ba2ee278a7ef944a73f64676af14ed42ae0e690f5a1ff978"
+      },
+      {
+        "file": "datasets/public-kg/releases/20261014-credits-001/data.json",
+        "sha256": "ea91b16f52a211b5a8464382ad498b7b2bb2be69a6f33fe125a73a3c7b9da2b5"
+      },
+      {
+        "file": "datasets/public-kg/releases/20261014-credits-001/manifest.json",
+        "sha256": "e4aa3b58ed884f7d1f8fffee43b260261cc2b4d3a867fda942919f439d2bce17"
+      }
+    ],
+    "maxEntities": 2111,
+    "maxClaims": 1847
+  },
+  "identityMappings": [
+    {
+      "name": "芥見下々",
+      "wikidata": "Q60231010",
+      "entityId": "532b9547-65c6-463f-a331-f4bd80044fd9",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "呪術廻戦",
+      "wikidata": "Q55522899",
+      "entityId": "77b2696f-4ba7-469a-b591-9e3ce5e1fedb",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    }
+  ],
+  "rows": [
+    {
+      "kind": "wikidata-relation",
+      "work": "呪術廻戦",
+      "property": "P50",
+      "personQid": "Q60231010",
+      "statementId": "Q55522899$a16c23da-4845-7856-75df-d761c107105d",
+      "qualifiers": {},
+      "references": [],
+      "status": "candidate-only-no-role-inference",
+      "reason": "Wikidata propertyだけで具体Roleや直接制作の意味を確定しない"
+    },
+    {
+      "kind": "wikidata-relation",
+      "work": "呪術廻戦",
+      "property": "P110",
+      "personQid": "Q60231010",
+      "statementId": "Q55522899$0DB3E560-06D5-4575-A86A-A4B7ADA41E73",
+      "qualifiers": {},
+      "references": [],
+      "status": "candidate-only-no-role-inference",
+      "reason": "Wikidata propertyだけで具体Roleや直接制作の意味を確定しない"
+    },
+    {
+      "kind": "ndl-credit",
+      "work": "呪術廻戦",
+      "isbn13": "9784088815169",
+      "rawResponsibility": "芥見下々 著",
+      "sourceUrl": "https://ndlsearch.ndl.go.jp/books/R100000002-I029060849",
+      "status": "pending-human-acceptance",
+      "roleId": "AUTHORSHIP",
+      "person": "芥見下々",
+      "claimId": "ac52107c-1fcb-4fbc-ac4e-6b7928c1691f",
+      "reusedClaim": false,
+      "subjectId": "532b9547-65c6-463f-a331-f4bd80044fd9",
+      "objectId": "77b2696f-4ba7-469a-b591-9e3ce5e1fedb"
+    }
+  ],
+  "holds": [],
+  "acquisitions": [
+    {
+      "kind": "wikidata",
+      "identifier": "Q60231010",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q60231010.json",
+      "sha256": "edf7ac7c953fb5f2a2d2d03048dbbae3f396d8890a2c97b92e7955670bb6618d",
+      "bytes": 52455,
+      "fetchedAt": "2026-10-28T18:13:58+00:00"
+    },
+    {
+      "kind": "wikidata",
+      "identifier": "Q55522899",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q55522899.json",
+      "sha256": "02a462b311e8859497abf9f6614552a25db29e65365e65f6f17e9c2a07d26e4e",
+      "bytes": 107481,
+      "fetchedAt": "2026-10-28T18:14:02+00:00"
+    },
+    {
+      "kind": "ndl",
+      "identifier": "9784088815169",
+      "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&maximumRecords=5&query=isbn%3D%229784088815169%22+AND+dpid%3Diss-ndl-opac",
+      "sha256": "9f0678500f4ba13776a22d859a1be6db17254851691b7ef886ccad0a937799c0",
+      "bytes": 22254,
+      "fetchedAt": "2026-10-28T18:14:07+00:00"
+    }
+  ]
+}

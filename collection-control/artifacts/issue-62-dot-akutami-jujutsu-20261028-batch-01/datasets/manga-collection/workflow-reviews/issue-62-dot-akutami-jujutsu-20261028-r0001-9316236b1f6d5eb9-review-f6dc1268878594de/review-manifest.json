@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "reviewId": "issue-62-dot-akutami-jujutsu-20261028-r0001-9316236b1f6d5eb9-review-f6dc1268878594de",
+  "inputSha256": "f6dc1268878594de276d957bd5e85225ae2d33ccc4c26a3e267f900801e4d850",
+  "artifacts": {
+    "context.json": "bb59120bf39560910e427db61ab673323cd7a458c8a0d98dc5dc1ca2365c4516",
+    "review.json": "50ac7ffa7b322aee80cf81bc433358cf9aa08b9e3e21b7e36fec1a02768a0578",
+    "proposed-records.json": "2a74d9a27e8df3dbc66c2557492ac56f8d041f4cf0b16a6dd26af97c16e19b8f",
+    "identity-only-records.json": "1fc314e4a47717bce195b39fe7f1e66bd31f6af892fca4a9420a653eab927a37",
+    "exploration-paths.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+    "decision-request.json": "472ff92e5ba9b7c5d68b62cdbb8048223ca3fc842fa8123282148830013bd3e0",
+    "README.md": "e295c1bd08756c5aa5c6bd841a3cf91c67f3c0ba72e97cde64983df9e49a4850"
+  },
+  "authority": "pending-human-review-only"
+}

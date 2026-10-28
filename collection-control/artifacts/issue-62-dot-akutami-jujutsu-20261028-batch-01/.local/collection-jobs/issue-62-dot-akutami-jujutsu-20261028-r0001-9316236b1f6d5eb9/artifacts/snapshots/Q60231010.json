@@ -1,0 +1,272 @@
+{
+  "id": "Q60231010",
+  "lastrevid": 2539331854,
+  "labels": {
+    "ja": {
+      "language": "ja",
+      "value": "芥見下々"
+    },
+    "zh": {
+      "language": "zh",
+      "value": "芥見下下"
+    },
+    "en": {
+      "language": "en",
+      "value": "Gege Akutami"
+    },
+    "fr": {
+      "language": "fr",
+      "value": "Gege Akutami"
+    },
+    "es": {
+      "language": "es",
+      "value": "Gege Akutami"
+    },
+    "nl": {
+      "language": "nl",
+      "value": "Gege Akutami"
+    },
+    "ast": {
+      "language": "ast",
+      "value": "Gege Akutami"
+    },
+    "zh-hk": {
+      "language": "zh-hk",
+      "value": "芥見下下"
+    },
+    "zh-tw": {
+      "language": "zh-tw",
+      "value": "芥見下下"
+    },
+    "de": {
+      "language": "de",
+      "value": "Gege Akutami"
+    },
+    "gl": {
+      "language": "gl",
+      "value": "Gege Akutami"
+    },
+    "it": {
+      "language": "it",
+      "value": "Gege Akutami"
+    },
+    "eu": {
+      "language": "eu",
+      "value": "Gege Akutami"
+    },
+    "ca": {
+      "language": "ca",
+      "value": "Gege Akutami"
+    },
+    "pt": {
+      "language": "pt",
+      "value": "Gege Akutami"
+    },
+    "zh-hant": {
+      "language": "zh-hant",
+      "value": "芥見下下"
+    },
+    "pt-br": {
+      "language": "pt-br",
+      "value": "Gege Akutami"
+    },
+    "he": {
+      "language": "he",
+      "value": "ג'ג אקוטאמי"
+    },
+    "id": {
+      "language": "id",
+      "value": "Gege Akutami"
+    },
+    "ru": {
+      "language": "ru",
+      "value": "Гэгэ Акутами"
+    },
+    "sq": {
+      "language": "sq",
+      "value": "Gege Akutami"
+    },
+    "cs": {
+      "language": "cs",
+      "value": "Gege Akutami"
+    },
+    "ms": {
+      "language": "ms",
+      "value": "Gege Akutami"
+    },
+    "sr": {
+      "language": "sr",
+      "value": "Геге Акутами"
+    },
+    "ko": {
+      "language": "ko",
+      "value": "아쿠타미 게게"
+    },
+    "yue": {
+      "language": "yue",
+      "value": "芥見下下"
+    },
+    "th": {
+      "language": "th",
+      "value": "เกเงะ อากูตามิ"
+    },
+    "pl": {
+      "language": "pl",
+      "value": "Gege Akutami"
+    },
+    "uz": {
+      "language": "uz",
+      "value": "Gege Akutami"
+    },
+    "tr": {
+      "language": "tr",
+      "value": "Gege Akutami"
+    },
+    "sl": {
+      "language": "sl",
+      "value": "Gege Akutami"
+    },
+    "uk": {
+      "language": "uk",
+      "value": "Акутамі Ґеґе"
+    },
+    "hy": {
+      "language": "hy",
+      "value": "Գեգե Ակուտամի"
+    },
+    "ka": {
+      "language": "ka",
+      "value": "გეგე აკუტამი"
+    },
+    "ar": {
+      "language": "ar",
+      "value": "غيغي أكوتامي"
+    }
+  },
+  "aliases": {
+    "ja": [
+      {
+        "language": "ja",
+        "value": "あくたみ げげ"
+      }
+    ],
+    "en": [
+      {
+        "language": "en",
+        "value": "Akutami Gege"
+      }
+    ],
+    "pl": [
+      {
+        "language": "pl",
+        "value": "Akutami Gege"
+      }
+    ],
+    "uk": [
+      {
+        "language": "uk",
+        "value": "Акутамі Геге"
+      },
+      {
+        "language": "uk",
+        "value": "Ґеґе Акутамі"
+      },
+      {
+        "language": "uk",
+        "value": "Ґеґе"
+      },
+      {
+        "language": "uk",
+        "value": "Геге"
+      },
+      {
+        "language": "uk",
+        "value": "Геге Акутамі"
+      }
+    ]
+  },
+  "claims": {
+    "P31": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P31",
+          "hash": "ad7d38a03cdd40cdc373de0dc4e7b7fcbccb31d9",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 5,
+              "id": "Q5"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q60231010$2A0C4331-B15E-4EED-923F-CC6428EF0341",
+        "rank": "normal",
+        "references": [
+          {
+            "hash": "8a6ed2a6760d0576e9ecd4f4b2641f25d7d59d4b",
+            "snaks": {
+              "P248": [
+                {
+                  "snaktype": "value",
+                  "property": "P248",
+                  "hash": "45037a2d1d89deebcdfc5840e9adbaa4b64cebc6",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 50358336,
+                      "id": "Q50358336"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ],
+              "P813": [
+                {
+                  "snaktype": "value",
+                  "property": "P813",
+                  "hash": "2d024887b4f2ee69513e0be2b658ae9e75372e6e",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2024-05-15T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ],
+              "P950": [
+                {
+                  "snaktype": "value",
+                  "property": "P950",
+                  "hash": "eba15c6a5a6a2396ec67637c7ac987defcd5a28d",
+                  "datavalue": {
+                    "value": "XX6345429",
+                    "type": "string"
+                  },
+                  "datatype": "external-id"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P248",
+              "P813",
+              "P950"
+            ]
+          }
+        ]
+      }
+    ],
+    "P50": [],
+    "P110": []
+  }
+}
