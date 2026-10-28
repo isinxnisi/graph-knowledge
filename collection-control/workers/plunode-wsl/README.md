@@ -1,6 +1,6 @@
 # CollectionWorkerの実行制御
 
-確認: 2026-10-28 19:05:31 JST。
+確認: 2026-10-28 19:17:54 JST。
 
 反映済みcontrolRevision: 8／最後の操作: pub-13abfb93-ba2d-44f7-a56b-352aa7ab0ab0-resume。
 
@@ -85,6 +85,10 @@ Issue確認結果:
   "collection-control/issue-sources/61.json": {
     "status": "registered: issue-61-dot-gotouge-kimetsu-20261028",
     "checkedAt": "2026-10-28T07:00:21+00:00"
+  },
+  "collection-control/issue-sources/62.json": {
+    "status": "registered: issue-62-dot-akutami-jujutsu-20261028",
+    "checkedAt": "2026-10-28T10:16:24+00:00"
   }
 }
 ```

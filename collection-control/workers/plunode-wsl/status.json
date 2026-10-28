@@ -44,7 +44,8 @@
   "requestsByPhase": {
     "blocked": 12,
     "completed": 32,
-    "awaiting-recovery": 4
+    "awaiting-recovery": 4,
+    "waiting-control": 1
   },
   "issueIntake": {
     "collection-control/issue-sources/25.json": {
@@ -110,6 +111,10 @@
     "collection-control/issue-sources/61.json": {
       "status": "registered: issue-61-dot-gotouge-kimetsu-20261028",
       "checkedAt": "2026-10-28T07:00:21+00:00"
+    },
+    "collection-control/issue-sources/62.json": {
+      "status": "registered: issue-62-dot-akutami-jujutsu-20261028",
+      "checkedAt": "2026-10-28T10:16:24+00:00"
     }
   },
   "publicApply": false,
@@ -151,5 +156,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-10-28T10:05:31.273085+00:00"
+  "checkedAt": "2026-10-28T10:17:54.655879+00:00"
 }
