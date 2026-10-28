@@ -44,7 +44,8 @@
   "requestsByPhase": {
     "blocked": 12,
     "completed": 34,
-    "awaiting-recovery": 4
+    "awaiting-recovery": 4,
+    "waiting-control": 1
   },
   "issueIntake": {
     "collection-control/issue-sources/25.json": {
@@ -114,6 +115,10 @@
     "collection-control/issue-sources/62.json": {
       "status": "registered: issue-62-dot-akutami-jujutsu-20261028",
       "checkedAt": "2026-10-28T10:16:24+00:00"
+    },
+    "collection-control/issue-sources/64.json": {
+      "status": "registered: issue-64-dot-oda-onepiece-20261029",
+      "checkedAt": "2026-10-28T22:20:22+00:00"
     }
   },
   "publicApply": false,
@@ -155,5 +160,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-10-28T22:18:18.077899+00:00"
+  "checkedAt": "2026-10-28T22:21:48.924277+00:00"
 }
