@@ -1,0 +1,54 @@
+{
+  "recordedAt": "2026-10-28T09:26:40.813483+00:00",
+  "receivedError": {
+    "type": "ValueError",
+    "reason": "Unknown publication journal file: install-readonly-backup.json",
+    "signed": false,
+    "applyCalls": 0
+  },
+  "rootCause": "Historical P33 installation snapshot was missing from one-time installer inventory; no change to the installed gate format was needed.",
+  "producerEvidence": {
+    "file": "ops/install-publication-disabled.py",
+    "introducedByCommit": "5e35479d",
+    "gateSourceCommitInReceipt": "72338b7054b3f2eb2e9762b20859044f9b9e28ce",
+    "scope": "P33-INSTALL-20261021",
+    "receipt": "trusted/installation.json",
+    "backup": "jobs/install-readonly-backup.json",
+    "revision": "88437056-b74f-42ab-88c0-33ed435bdccc"
+  },
+  "classificationRule": "Require protected installation receipt with exact producer/source/phase/revision; require matching backup SHA and exact root/export paths, then verify snapshot identity. No filename-only skip.",
+  "allOtherProductionWritersReviewed": [
+    "scripts/publication-executor.py: nonce states and nonce backups"
+  ],
+  "privateTestWritersExcluded": "ops/publication-acceptance-entry.py writes only under /var/lib/plunode-publication/test",
+  "newDiagnostics": "All jobs JSON filenames, bytes, hashes, top-level keys, phase; operation and traceback frame locations. No backup/member/credential content.",
+  "preflightBeforeWebStop": [
+    "all journals and consumed nonce checks",
+    "current KG fixture/revision",
+    "candidate operator verifies the fixed published fixture",
+    "candidate Web capabilities match fixed policy",
+    "existing Compose/Web/AI image identities",
+    "member SQL/schema/migration ledger read checks"
+  ],
+  "verification": {
+    "isolatedTestsPassed": 11,
+    "directFrozenImageProof": "installation-preflight-image-proof.json",
+    "localPrecheck": "passed",
+    "formalReceipts": 12,
+    "workerBeforeUpdate": true,
+    "taskSource": "7392d8e343a11644b1047364c71653779ad0c93c",
+    "transientTaskRunningObserved": true,
+    "taskForcedStopped": false
+  },
+  "fixedTargetsAndApprovalUnchanged": true,
+  "originalStagesPreserved": [
+    "/root/plunode-bundle2-update-ad596417d0ab",
+    "/root/plunode-bundle2-update-cb472351bf04"
+  ],
+  "vpsInstalled": false,
+  "wslInstalled": false,
+  "signed": false,
+  "applyCalls": 0,
+  "remoteInstallationReceiptMatch": "pending-inside-operator-preflight",
+  "runnerFailureOutput": "Keep child diagnostic JSON and nonzero exit; summarize failing program/returnCode, omit full multiline root argv traceback."
+}

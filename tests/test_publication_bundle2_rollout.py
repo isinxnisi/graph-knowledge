@@ -68,7 +68,7 @@ class RolloutChecks(unittest.TestCase):
             backup_body = {'checksum': 'a' * 64, 'payload': {'version': 1, 'dataset': 'public-kg'}}
             backup.write_text(json.dumps(backup_body))
             initial = {p.name: p.read_bytes() for p in root.rglob('*.json')}
-            self.assertEqual(apply.current_jobs(root), {'jobs': 1, 'backups': 1, 'unfinishedJobs': 0})
+            self.assertEqual(apply.current_jobs(root), {'jobs': 1, 'backups': 1, 'installationBackups': 0, 'unfinishedJobs': 0})
             self.assertEqual(initial, {p.name: p.read_bytes() for p in root.rglob('*.json')})
             for phase in ['applying', 'awaiting-publication-approval', 'failed']:
                 job.write_text(json.dumps({**complete, 'phase': phase}))
@@ -95,6 +95,41 @@ class RolloutChecks(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, 'Malformed publication job'): apply.current_jobs(root)
             job.write_text(json.dumps({'nonce': nonce, 'phase': 'completed'}))
             with self.assertRaisesRegex(ValueError, 'Unfinished/uncertain'): apply.current_jobs(root)
+
+    def test_installation_snapshot_requires_the_original_protected_receipt(self):
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder); (root / 'jobs').mkdir(); (root / 'trusted').mkdir()
+            (root / 'exclusion.json').write_text('{"active":null}'); (root / 'reservations.json').write_text('{"nonces":{}}')
+            backup = root / 'jobs/install-readonly-backup.json'
+            backup.write_text(json.dumps({'checksum': 'a' * 64, 'payload': {'version': 1, 'dataset': 'public-kg',
+                'revision': '88437056-b74f-42ab-88c0-33ed435bdccc', 'release': 'manga-issue-25-utc-recovery-08-normal'}}))
+            receipt = root / 'trusted/installation.json'
+            meta = {'scope': 'P33-INSTALL-20261021', 'sourceCommit': '72338b7054b3f2eb2e9762b20859044f9b9e28ce',
+                'phase': 'installed-disabled', 'deploymentEnabled': False, 'applyCalls': 0,
+                'observedRevision': '88437056-b74f-42ab-88c0-33ed435bdccc',
+                'readOnlyBackup': {'sha256': apply.sha(backup), 'rootPath': str(backup), 'sftpPath': '/export/install-readonly-backup.json'}}
+            receipt.write_text(json.dumps(meta))
+            before = {p: p.read_bytes() for p in root.rglob('*.json')}
+            self.assertEqual(apply.current_jobs(root), {'jobs': 0, 'backups': 0, 'installationBackups': 1, 'unfinishedJobs': 0})
+            self.assertEqual(before, {p: p.read_bytes() for p in root.rglob('*.json')})
+            for patch_meta in [{'scope': 'other'}, {'sourceCommit': '0' * 40}, {'deploymentEnabled': True}, {'applyCalls': 1}, {'readOnlyBackup': {}}]:
+                receipt.write_text(json.dumps({**meta, **patch_meta}))
+                with self.assertRaises(ValueError): apply.current_jobs(root)
+            receipt.write_text(json.dumps(meta)); backup.write_text(backup.read_text() + '\n')
+            with self.assertRaisesRegex(ValueError, 'differs from protected receipt'): apply.current_jobs(root)
+
+    def test_failure_diagnostics_include_every_journal_without_backup_contents(self):
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder); (root / 'jobs').mkdir()
+            (root / 'exclusion.json').write_text('{"active":null}'); (root / 'reservations.json').write_text('{"nonces":{}}')
+            (root / 'jobs/unknown-a.json').write_text('{"payload":{"private":"do-not-export"}}')
+            (root / 'jobs/unknown-b.json').write_text('{bad json')
+            with self.assertRaises(ValueError): apply.current_jobs(root)
+            inventory = apply.DIAGNOSTICS['publicationJournals']
+            self.assertEqual([row['file'] for row in inventory], ['unknown-a.json', 'unknown-b.json'])
+            self.assertEqual(inventory[0]['keys'], ['payload'])
+            self.assertTrue(inventory[1]['parseError'])
+            self.assertNotIn('do-not-export', json.dumps(inventory))
 
     def test_consumed_nonce_still_requires_completed_job(self):
         with tempfile.TemporaryDirectory() as folder:

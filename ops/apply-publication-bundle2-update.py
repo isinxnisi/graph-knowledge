@@ -28,6 +28,7 @@ OLD_BUILD = '4oMzKiOEXiHL1oW4Z59Mm'
 NEW_BUILD = 'lNabFN3qBIdd5U2lV6e6A'
 OLD_WEB = 'sha256:8803c499a7d511621eb7293d5e1e21dd21ba35253d5a2a6700a9ee7fa50ecc25'
 CLEAN = {'PATH': '/usr/sbin:/usr/bin:/sbin:/bin', 'LANG': 'C.UTF-8', 'HOME': '/nonexistent'}
+DIAGNOSTICS = {'operation': 'verify-staged-inputs'}
 
 
 def require(value, reason):
@@ -106,8 +107,20 @@ def current_jobs(root):
     """The gate writes <nonce>.json states and <nonce>-backup.json observations together."""
     require(read(root / 'exclusion.json')['active'] is None, 'Publication exclusion active; no update')
     nonce_pattern = r'[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}'
-    states = {}; backups = []
-    for path in sorted((root / 'jobs').glob('*.json')):
+    paths = sorted((root / 'jobs').glob('*.json')); inventory = []
+    # Return the complete non-secret inventory on failure, rather than one unknown name per retry.
+    for path in paths:
+        row = {'file': path.name, 'sha256': sha(path), 'bytes': path.stat().st_size}
+        try:
+            value = read(path); row['jsonType'] = type(value).__name__
+            if isinstance(value, dict):
+                row['keys'] = sorted(value)
+                if isinstance(value.get('phase'), str): row['phase'] = value['phase']
+        except (ValueError, UnicodeError): row['parseError'] = True
+        inventory.append(row)
+    DIAGNOSTICS['publicationJournals'] = inventory
+    states = {}; backups = []; installation_backups = 0
+    for path in paths:
         if re.fullmatch(nonce_pattern + r'\.json', path.name):
             state = read(path)
             require(isinstance(state, dict) and state.get('nonce') == path.stem, 'Malformed publication job: ' + path.name)
@@ -120,11 +133,34 @@ def current_jobs(root):
                     and isinstance(backup['payload'], dict) and backup['payload'].get('version') == 1
                     and backup['payload'].get('dataset') == 'public-kg', 'Malformed publication backup: ' + path.name)
             backups.append(path.name.removesuffix('-backup.json'))
+        elif path.name == 'install-readonly-backup.json':
+            installation_backup(root, path); installation_backups += 1
         else: raise ValueError('Unknown publication journal file: ' + path.name)
     require(all(nonce in states for nonce in backups), 'Orphan publication backup; no update')
     for nonce in read(root / 'reservations.json')['nonces']:
         require(nonce in states and states[nonce]['phase'] == 'completed', 'Consumed uncertain job; no update')
-    return {'jobs': len(states), 'backups': len(backups), 'unfinishedJobs': 0}
+    return {'jobs': len(states), 'backups': len(backups), 'installationBackups': installation_backups, 'unfinishedJobs': 0}
+
+
+def installation_backup(root, path):
+    """Bind the one P33 installation snapshot to its existing protected installation receipt."""
+    receipt = root / 'trusted/installation.json'
+    for item in [path, receipt]:
+        st = item.lstat()
+        require(not item.is_symlink() and stat.S_ISREG(st.st_mode) and st.st_nlink == 1
+                and st.st_uid == os.geteuid() and not st.st_mode & 0o022, 'Untrusted installation backup/receipt')
+    meta = read(receipt); backup = read(path)
+    require(meta.get('scope') == 'P33-INSTALL-20261021'
+            and meta.get('sourceCommit') == '72338b7054b3f2eb2e9762b20859044f9b9e28ce'
+            and meta.get('phase') == 'installed-disabled' and meta.get('deploymentEnabled') is False
+            and meta.get('applyCalls') == 0 and meta.get('observedRevision') == '88437056-b74f-42ab-88c0-33ed435bdccc', 'Installation receipt provenance differs')
+    require(meta.get('readOnlyBackup') == {'sha256': sha(path), 'rootPath': str(path),
+            'sftpPath': '/export/install-readonly-backup.json'}, 'Installation backup differs from protected receipt')
+    require(isinstance(backup, dict) and set(backup) == {'checksum', 'payload'} and isinstance(backup.get('checksum'), str)
+            and re.fullmatch('[a-f0-9]{64}', backup['checksum']) is not None and isinstance(backup['payload'], dict)
+            and backup['payload'].get('version') == 1 and backup['payload'].get('dataset') == 'public-kg'
+            and backup['payload'].get('revision') == meta['observedRevision']
+            and backup['payload'].get('release') == 'manga-issue-25-utc-recovery-08-normal', 'Installation backup identity differs')
 
 
 def http(path):
@@ -135,6 +171,7 @@ def http(path):
 
 
 def vps(stage, files, approved, decision, meta, h, web):
+    DIAGNOSTICS['operation'] = 'vps-before-identities-and-images'
     root = Path('/var/lib/plunode-publication'); trusted = root / 'trusted'
     entry = runpy.run_path('/usr/local/sbin/plunode-publication'); before_manifest = entry['verify_installation']()
     require(before_manifest == read(approved / 'vps-inventory.json')['programManifest'], 'VPS program manifest advanced')
@@ -149,6 +186,7 @@ def vps(stage, files, approved, decision, meta, h, web):
         require(image['Id'] == meta['images'][kind]['manifestId'] and image['Os'] == 'linux' and image['Architecture'] == 'amd64', 'Loaded image identity differs')
         require(run(['/usr/bin/docker', 'run', '--rm', '--pull=never', '--network=none', '--read-only', '--user=1000:1000', '--entrypoint=node', image['Id'], '--version']).decode().strip() == 'v24.21.0', 'Image Node differs')
     with h.existing_lock(Path('/opt/graph-knowledge/.member-activation.lock'), 0):
+        DIAGNOSTICS['operation'] = 'vps-journal-inventory'
         require(entry['verify_installation']() == before_manifest and sha(cfg) == decision['vpsConfigTransform']['inputSha256'], 'VPS advanced under lock')
         job_inventory = current_jobs(root)
         protected = [p for p in trusted.iterdir() if p not in [cfg, trusted / 'program-manifest.json']]
@@ -158,8 +196,17 @@ def vps(stage, files, approved, decision, meta, h, web):
         require(old_config['operatorDigest'] == meta['images']['operator'].get('previous', 'sha256:7042781b105067ce3adea0c59bccfb4c8326f84c0ca6aa5f1b8c26e6cd3d5cef'), 'Previous operator differs')
         executor = module('bundle2_before_gate', Path('/usr/local/lib/plunode-publication/publication-executor.py'))
         old_backend = executor.DockerBackend(root, old_config)
+        DIAGNOSTICS['operation'] = 'vps-readonly-kg-and-operator'
         before_kg = old_backend.call('observe', {'candidate': str(stage)})['payload']
         require(before_kg['revision'] == BASE and before_kg['fixture'] == read(files / 'probe/release/data.json'), 'Production KG differs from published fixed data')
+        next_config = transformed_config(old_config, decision['vpsConfigTransform'])
+        candidate_backend = executor.DockerBackend(root, next_config)
+        before_proof = candidate_backend.command(['scripts/publication-compatibility.ts', 'verify', '/incoming'], files / 'probe')
+        require(before_proof['verified'] and digest(before_proof['capabilities']) == read(approved / 'compatibility-policy.json')['operator']['capabilitiesSha256'], 'Candidate operator preflight failed')
+        web_caps = json.loads(run(['/usr/bin/docker', 'run', '--rm', '--pull=never', '--network=none', '--read-only', '--user=1000:1000',
+            '--entrypoint=node', meta['images']['web']['manifestId'], '/app/publication-probe.cjs', 'capabilities']))
+        require(digest(web_caps) == read(approved / 'compatibility-policy.json')['web']['capabilitiesSha256'], 'Candidate Web preflight failed')
+        DIAGNOSTICS['operation'] = 'vps-readonly-compose-and-web'
         compose_path = Path('/opt/graph-knowledge/compose.yaml'); env_path = Path('/opt/graph-knowledge/app.env')
         h.trusted(compose_path); h.trusted(env_path); compose_before = compose_path.read_bytes(); env_sha = sha(env_path)
         dc = ['/usr/bin/docker', 'compose', '--env-file', env_path, '-f', compose_path]
@@ -179,6 +226,10 @@ def vps(stage, files, approved, decision, meta, h, web):
             rows = {t: sql("""SELECT json_build_object('count',count(*),'hash',md5(coalesce(string_agg(row_to_json(x)::text,',' ORDER BY row_to_json(x)::text),''))) FROM "{}" x""".format(t)) for t in tables}
             migrations = sql('SELECT json_object_agg(name,checksum) FROM member_migration')
             require(len(migrations) == 11, 'Member migration ledger advanced'); return {'tables': rows, 'migrations': migrations}
+        DIAGNOSTICS['operation'] = 'vps-readonly-member-preflight'
+        member_snapshot()  # Validate SQL/schema/ledger before stopping the existing Web.
+        print(json.dumps({'target': 'vps-preflight', 'passed': True, 'jobInventory': job_inventory, 'kgRevision': BASE,
+            'candidateWebAndOperatorVerified': True, 'memberTables': 29, 'migrations': 11, 'runtimeUpdated': False, 'signed': False, 'applyCalls': 0}), flush=True)
         code = Path('/usr/local/lib/plunode-publication')
         before_files = {code / Path(rel).name: (code / Path(rel).name).read_bytes() for rel in meta['gateOverlay']}
         before_files[trusted / 'program-manifest.json'] = (trusted / 'program-manifest.json').read_bytes()
@@ -188,6 +239,7 @@ def vps(stage, files, approved, decision, meta, h, web):
         backup(stage, 'compose.before.yaml', compose_before, h); backup(stage, 'kg.before.json', body(before_kg), h)
         changed_web = False
         try:
+            DIAGNOSTICS['operation'] = 'vps-web-only-switch'
             compose('stop', 'web'); changed_web = True
             before_member = member_snapshot(); backup(stage, 'member.before.json', body(before_member), h)
             with (stage / 'backup/member.before.dump').open('xb') as stream:
@@ -204,13 +256,14 @@ def vps(stage, files, approved, decision, meta, h, web):
             for ident in ['4c88b8e8-154d-47ad-bf82-f19876ecaebd', '34b41d23-f4e6-4fc6-aa6f-2905f3c2a890']:
                 require(http('/api/claims/' + ident)[0] == 200, 'Published film Claim/evidence unreadable')
             for rel, pins in meta['gateOverlay'].items():
+                DIAGNOSTICS['operation'] = 'vps-fixed-gate-install'
                 target = code / Path(rel).name; require(sha(target) == pins['before'], 'Gate file advanced')
                 h.atomic(target, (approved / 'gate-overlay' / target.name).read_bytes(), stat.S_IMODE(target.stat().st_mode))
-            next_config = transformed_config(old_config, decision['vpsConfigTransform'])
             require({k: v for k, v in next_config.items() if k not in decision['vpsConfigTransform']['set']} == {k: v for k, v in old_config.items() if k not in decision['vpsConfigTransform']['set']}, 'Unapproved config change')
             h.atomic(trusted / 'program-manifest.json', (approved / 'program-manifest.after.json').read_bytes(), 0o600)
             h.atomic(cfg, body(next_config), 0o600); entry['verify_installation']()
             new_executor = module('bundle2_after_gate', code / 'publication-executor.py'); backend = new_executor.DockerBackend(root, next_config)
+            DIAGNOSTICS['operation'] = 'vps-post-update-verification'
             require(backend.call('web-identity', {'candidate': str(stage)})['image'] == meta['images']['web']['manifestId'], 'Root actual Web identity differs')
             proof = backend.call('compatibility', {'candidate': str(files / 'probe')}); require(proof['verified'] and digest(proof['capabilities']) == read(approved / 'compatibility-policy.json')['operator']['capabilitiesSha256'], 'Actual operator candidate verification failed')
             after_kg = backend.call('observe', {'candidate': str(stage)})['payload']
@@ -256,6 +309,7 @@ def windows_task(files, old, new, interop):
 
 
 def wsl(stage, files, approved, decision, meta, h, interop):
+    DIAGNOSTICS['operation'] = 'wsl-before-identities-and-locks'
     home = Path('/home/isinxnisi/.local/share/plunode-publication'); worker = Path('/home/isinxnisi/.local/share/plunode-collection-worker-phase-b-20261020'); runtime = worker / 'runtime'
     cfg = Path('/etc/plunode-publication/delivery.json'); approver = Path('/usr/local/sbin/plunode-publication-approve')
     require(sha(cfg) == meta['deliveryConfigBeforeSha256'] and sha(approver) == decision['approverBeforeSha256'], 'WSL protected code/config advanced')
@@ -302,6 +356,7 @@ def wsl(stage, files, approved, decision, meta, h, interop):
         for path in source.rglob('*'): h.trusted(path, directory=path.is_dir())
         task = None
         try:
+            DIAGNOSTICS['operation'] = 'wsl-fixed-source-task-and-worker-update'
             task = windows_task(files, OLD_SOURCE, SOURCE, interop)
             backup(stage, 'windows-task.before.xml', base64.b64decode(task['beforeXmlBase64']), h)
             for path in before:
@@ -366,4 +421,5 @@ if __name__ == '__main__':
                 with (path / 'failure.txt').open('x') as stream: stream.write(traceback.format_exc())
             except OSError: pass
         print(json.dumps({'error': 'bundle2-update-stopped', 'errorType': type(error).__name__, 'reason': str(error)[:160],
+                          'diagnostics': DIAGNOSTICS, 'traceFrames': [{'file': Path(frame.filename).name, 'function': frame.name, 'line': frame.lineno} for frame in traceback.extract_tb(error.__traceback__)],
                           'signed': False, 'applyCalls': 0}), flush=True); sys.exit(1)

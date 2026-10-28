@@ -1,0 +1,12 @@
+{
+  "authority": "local-frozen-image-execution-of-new-preflight-commands-not-vps-installation",
+  "webProbeVerified": true,
+  "operatorVerifyPublishedFixture": true,
+  "recognizedRoles": 10,
+  "webCapabilitiesSha256": "a10cc7e0746b83272dccb99293b1f26754c8b860626f9a6208bf40525b11aa16",
+  "operatorCapabilitiesSha256": "a10cc7e0746b83272dccb99293b1f26754c8b860626f9a6208bf40525b11aa16",
+  "nodeVersion": "v24.21.0",
+  "network": "none",
+  "signed": false,
+  "applyCalls": 0
+}

@@ -17,7 +17,7 @@ DECISION = '142a0dd04342b5429cc9dd736804965646bb6da9e39e7573a2065c97f02fab82'
 SSH = ['-o', 'StrictHostKeyChecking=yes', '-o', 'UserKnownHostsFile=/etc/plunode-publication/known_hosts',
        '-o', 'GlobalKnownHostsFile=/dev/null', '-o', 'HostKeyAlgorithms=ssh-ed25519']
 REMOTE = 'develop@153.115.17.82'
-PACKAGE = 'operator-package-approved-journal-fix1'
+PACKAGE = 'operator-package-approved-installation-preflight-fix2'
 PREVIOUS_PAYLOAD = 'ad596417d0abd4b24740b278c20d0cfa0bc708715ad66ed9ec804e1908512261'
 
 
@@ -88,9 +88,10 @@ def prepare():
         '--mount', 'type=bind,src=' + str(release) + ',dst=/incoming,readonly', '--entrypoint=node', d['images']['operator']['configId'],
         '--import', 'tsx', 'scripts/publication-compatibility.ts', 'contract', '/incoming'])
     save(release / 'compatibility.json', json.loads(contract))
-    save(payload / 'execution-material.json', {'purpose': 'one-time-installer-job-inventory-fix',
+    save(payload / 'execution-material.json', {'purpose': 'one-time-installer-historical-snapshot-and-preflight-fix',
         'decisionRequestSha256Unchanged': DECISION, 'approvedAssetManifestSha256Unchanged': d['assetManifestSha256'],
         'previousPayloadManifestSha256': PREVIOUS_PAYLOAD,
+        'supersedesAttemptManifestSha256': 'cb472351bf046815e7d04f60343b4e82024645d4911792d5fb8b731b6a71e709',
         'applierSha256': sha(home / 'apply-publication-bundle2-update.py'),
         'runtimeTargetsChanged': False, 'signed': False, 'applyCalls': 0})
     sums = ''.join(sha(p) + '  ' + str(p.relative_to(payload)) + '\n' for p in sorted(payload.rglob('*')) if p.is_file())
@@ -145,4 +146,12 @@ def main():
     print('Requested fixed update steps finished. Return the result JSON lines to Codex for installed verification.')
 
 
-if __name__ == '__main__': main()
+if __name__ == '__main__':
+    try: main()
+    except subprocess.CalledProcessError as error:
+        # The child already printed its operation/result. Preserve nonzero exit without dumping
+        # the entire root installation command over the actionable diagnostic JSON.
+        print(json.dumps({'error': 'operator-step-stopped', 'program': Path(error.cmd[0]).name,
+                          'returnCode': error.returncode, 'stagesPreserved': True,
+                          'action': 'return-the-preceding-result-to-Codex; do-not-retry-automatically'}), flush=True)
+        sys.exit(1)

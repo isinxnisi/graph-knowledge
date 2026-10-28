@@ -36,3 +36,11 @@
 最初の運営者実行は `KeyError: phase` で停止した。gateが `jobs/<nonce>-backup.json` に保存する公開KG backupまでジョブ本体として扱った、今回の一回限りの更新補助処理の不具合。制御フロー上はVPS共通ロック取得直後・Web/gate変更前で、WSL更新には未到達。VPSの停止後実状態は次のSSH/sudo内で再確認する。
 
 ジョブとbackupの固定ファイル名・形式・対応先を判別する修正と拒否系の回帰を含め9件成功。未知形式・孤立backup・未完了・監査待ち・消費済み未完了nonceは停止する。更新対象の意味やbytes、承認hashは変更しない。旧包/旧root stageを保持し、別stageの修正版を固定した。[診断記録](journal-inventory-fix.json) / [修正版資材](operator-package-journal-fix1.json)。画像再build・再転送を避け、VPSに転送済みの固定imageを再照合して再利用する。
+
+## 導入時snapshotの分類とpreflight追加
+
+2回目は初回導入の `install-readonly-backup.json` を未分類として停止。生成元は `ops/install-publication-disabled.py`（導入commit `5e35479d`）で、保護された `trusted/installation.json` にbackup SHAが記録される。ファイル名だけで除外せず、その既存記録のscope/source/revision/phaseと全bytesのSHA・snapshot識別を要求する。ジョブ、nonce別backup、初回導入snapshotの3種以外は拒否し、全journalの非秘密メタデータを一括診断へ出す。別の `/test` 配下へ書く隔離試験コードは本番jobsの根拠に流用しない。
+
+11件の隔離テスト成功。実image上で新しいpreflightのWeb probeと公開済みfixtureのoperator verifyを実行し、両者のcapability hash `a10cc7e0…` とNode v24.21.0が固定policyに一致した。VPSの会員DB/schema/ledgerと実環境の検証は運営者実行内で行う。Web停止前にこれらの読取確認をまとめ、失敗時の操作工程・trace位置も返す。Taskの通常実行中は照合が一時停止したが、強制終了せず終了後の読取precheckは12 receipt・旧Worker/sourceのまま成功した。
+
+承認済み判断票・image・更新対象bytesは不変。旧stageを保全し、[修正版包](operator-package-installation-fix2.json)を別stageへ準備した。詳細は [診断記録](installation-inventory-fix.json) と [実image preflight](installation-preflight-image-proof.json)。本番切替・WSL更新は未完了。
