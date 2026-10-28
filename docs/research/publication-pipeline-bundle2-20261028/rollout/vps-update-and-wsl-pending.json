@@ -1,0 +1,60 @@
+{
+  "recordedAt": "2026-10-28T10:07:41.080940+00:00",
+  "scope": "continue-only-already-approved-WSL-update",
+  "approvalRequestSha256Unchanged": "142a0dd04342b5429cc9dd736804965646bb6da9e39e7573a2065c97f02fab82",
+  "vpsUpdated": true,
+  "wslUpdated": false,
+  "receivedWslStop": {
+    "errorType": "BlockingIOError",
+    "operation": "wsl-before-identities-and-locks",
+    "failedFunction": "film-publication-image-update.py existing_lock",
+    "runtimeWritesReached": false
+  },
+  "observedLockHolder": {
+    "path": "plunode-collection-worker-phase-b-20261020/worker.lock",
+    "initialPid": 2885152,
+    "laterPid": 2983645,
+    "normalProcessCompletionObserved": true,
+    "forcedStop": false,
+    "lockRemoved": false
+  },
+  "wslDeliverySha256StillBefore": "d1cf49e26d0cf88de4ade6f3a3501d7d2f822f356bef5e5f17612654fa140e92",
+  "taskSourceStillBefore": "7392d8e343a11644b1047364c71653779ad0c93c",
+  "browser": {
+    "productionAuthenticated": true,
+    "filmSearch": true,
+    "afiActingOriginal": "CAST",
+    "afiDirectingOriginal": "Dir",
+    "graphEntities": 3,
+    "graphClaims": 3,
+    "graphThirdClaim": "previously-published PRODUCING Claim; no new data added",
+    "localWorkspaceSaveSwitchRestore": true,
+    "urlReloadRestoration": true,
+    "mangaPlutoEntities": 4,
+    "mangaPlutoClaims": 6,
+    "existingMemberCapsulePageLoaded": true,
+    "memberContentEditSubmitted": false
+  },
+  "apiRegression": "production-api-regression.json",
+  "httpsIdentity": "production-https.json",
+  "resume": {
+    "script": "ops/resume-publication-bundle2-wsl.py",
+    "sha256": "47a6ee388197473f9a86cd4c566ca00d805513e22ff390fc688cffeca4d7e48d",
+    "fixedRunnerSha256": "2bc74c5e98e3b51533c6d3ea806b2c023def48792af414fd31171f4840ab81e8",
+    "fixedRootApplierSha256": "74a2bb1a3abe79c897b74f56a0b9e4db1ba1d9a97e8ef0520f9e48dcb9fd50e9",
+    "fixedPayloadSha256": "9955a6dbf84ccb53d0a4e3daa18e7c967746267785426e2926ec0aff13354215",
+    "maximumWaitSeconds": 900,
+    "locksHeldWhileWaiting": false,
+    "vpsOrImagesRepeated": false,
+    "automaticRetryBoundary": "only unchanged root applier existing_lock BlockingIOError before WSL mutations",
+    "isolatedTestsPassed": 8,
+    "rootPreconditionsRecheckedUnderLocks": true
+  },
+  "notYetVerified": [
+    "updated actual WSL Worker compatibility",
+    "updated delivery/approver/Task self-check",
+    "normal preparation and Worker operation after WSL update"
+  ],
+  "signed": false,
+  "applyCalls": 0
+}

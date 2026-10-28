@@ -1,0 +1,27 @@
+{
+  "authority": "operator-returned-success-json",
+  "recordedAt": "2026-10-28T10:07:41.080081+00:00",
+  "result": {
+    "target": "vps",
+    "webImage": "sha256:f4e2a8e484c6c9906d89f163614567007d5b35575c5ac05976434edb238a52d4",
+    "webBuild": "lNabFN3qBIdd5U2lV6e6A",
+    "operatorDigest": "sha256:8099094f5a0bdce1cd322539557ef8cc849e1f4949997f1ba53304d898aac006",
+    "programManifestSha256": "89a62a0cb7ed7974e48130c27ab4387bab5ec215ea7b683bec284d407664954b",
+    "configSha256": "b7c62168c17920fe0bd017b06e3ae988a3013051fd0b6a9209c667bec9e05796",
+    "kgRevision": "f5dbf83f-c89e-4e40-95ee-57957016089f",
+    "memberTablesPreserved": 29,
+    "migrationsPreserved": 11,
+    "protectedTrustJournalsAndEnvironmentUnchanged": true,
+    "nonWebContainersUnchanged": true,
+    "operatorVerifiedPublishedData": true,
+    "jobInventory": {
+      "jobs": 3,
+      "backups": 3,
+      "installationBackups": 1,
+      "unfinishedJobs": 0
+    },
+    "backupDirectory": "/root/plunode-bundle2-update-9955a6dbf84c/backup",
+    "signed": false,
+    "applyCalls": 0
+  }
+}
