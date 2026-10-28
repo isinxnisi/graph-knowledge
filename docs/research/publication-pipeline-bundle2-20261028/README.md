@@ -12,9 +12,9 @@
 |状態診断|未署名、署名済み配送待ち、結果不明、公開済み終了処理待ち、完了、失敗を区別|専用branch。過去2 nonceを読取診断済み|
 |映画manifest|先行成果を移植し、公開36件を除外した次集合・保留集合を保持|専用branch・隔離環境|
 |固定更新資材|ソース、2 image、Worker 5ファイル、gate 2ファイル、設定差分の候補を固定するCLI|私有資材。適用承認なし|
-|本番VPSの保護設定の新規実測|非対話SSHの認証拒否により未確認。過去のrequest/manifestを実測の代用にしない|[読取操作待ち](READONLY_INVENTORY.md)|
+|本番VPSの保護設定の新規実測|運営者が固定exporterを実行。11プログラムhash・現在operator・実Web image・Node・revisionの一致を照合済み|[新規実測と照合](results/vps-inventory-verification.json)|
 
-本番・beta・3200・稼働Worker・会員DB・公開KGは更新していない。設置時の管理者権限、Windowsタスク更新、個別公開署名をこの作業で取得・代行していない。更新資材の固定値は [UPDATE_REVIEW.md](UPDATE_REVIEW.md) に追記する。
+本番・beta・3200・稼働Worker・会員DB・公開KGは更新していない。設置時の管理者権限、Windowsタスク更新、個別公開署名をこの作業で取得・代行していない。現在の固定判断対象は [UPDATE_REVIEW.md](UPDATE_REVIEW.md)。読取結果待ちは解消し、次は固定更新一式に対する運営者判断となる。
 
 ## 2. 実装と既存契約への接続
 
@@ -64,7 +64,9 @@ imageはタグではなくconfig IDでsaveし、archive SHAとOCI manifest IDの
 |実ブラウザ|隔離3296のみ。Inception→Christopher Nolan→InterstellarのDIRECTING→SCRIPT_WRITING、Warner根拠、Graph 3 node/2 edge、保存→別探索→復元→reload成功|
 |実エラー照合|過去2回のgeneric errorのnonceをrootへ読取照合し、両方completed・追加操作不要と判定。再署名・applyなし|
 
-詳細は [results](results/)。`real-consumers.json` はDB/ブラウザ実証、`all-consumer-proof.json` は最後に実設置Worker shadowで取り直した3利用側の能力証跡。`worker-workflow.json` は実設置ソースを用いた工程実証。稼働Web/operatorの新規VPS実測は別途必要で、キャッシュimage・過去設置記録からの同一性推定を実環境確認済みとは扱わない。
+詳細は [results](results/)。`real-consumers.json` はDB/ブラウザ実証、`all-consumer-proof.json` は最後に実設置Worker shadowで取り直した3利用側の能力証跡。`worker-workflow.json` は実設置ソースを用いた工程実証。その後、運営者から新規VPS実測を受領し、過去設置記録とgate全11ファイル・現在operator・実Web imageの一致を `vps-inventory-verification.json` で確認した。既存Webの隔離検証には、その設置imageと対応するWSL側imageを使用していた。新しい候補版の本番設置・本番での全利用側preflightは未実施。
+
+`installed-local-inventory.json` / `verification.json` 等の初回記録にあるVPS確認待ちは当時の状態として保持し、後から書き換えない。現在の確認結果と固定資材は `vps-inventory-verification.json` / `update-assets-vps-confirmed.json` を参照する。追加で、既存Web imageの写しと候補Webの初期AI artifact hashが同一であることも確認した（`web-artifact-preservation.json`）。
 
 隔離manifestは公開release IDを改名した試験専用であり、12件目のreceiptを新規受入したものではない。Webの会員storageを無効化した私有containerだけを使用した。
 

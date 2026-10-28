@@ -1,0 +1,77 @@
+{
+  "authority": "read-only-installed-vps-inventory",
+  "programManifest": {
+    "sourceCommit": "0732af9ebd87f2cd73a033246e88d25493d4ba2a",
+    "operatorSourceCommit": "4eee46a0ab16f9828de41b5c69147425b0623004",
+    "operatorConfigId": "sha256:2bf646a22e867e5aa5fce5a155db45c337c4134ad6c0f337b65617c5799912e9",
+    "operatorManifestId": "sha256:7042781b105067ce3adea0c59bccfb4c8326f84c0ca6aa5f1b8c26e6cd3d5cef",
+    "files": {
+      "ops/plunode-publication": "9d003d6e3b48a9dcc898ac1d97e2eb8240634ef7cd7b73dbd4dbf04fb2950a9a",
+      "ops/publication-ssh.py": "2eb4de930d96d6414e05448de306db449d57d6157e0bb036c5aca1e6cc13eb31",
+      "scripts/publication-executor.py": "237feb3e8b92415184e7a1651598422d9b1824b3f92d08835e155f55a6b9c20c",
+      "scripts/publication-exclusion.py": "c4c9b9d4332acfb0e80f2a6a82d23f733fb0f9b1e82487bdf17944ccca801677",
+      "scripts/publication-policy.py": "48fc9ab5d82d6c17eb3dbdb4b430ddaf4fa636978d329b22080e5c93713591c2",
+      "scripts/publication-cycle.py": "56a45498d2fff16ef5090012ece9a7e28b3071baf80227563ee818654f23e0a3",
+      "scripts/publication-sign.py": "9c800b9df20d29ce0e9868947642eabd6f9f54135e4d464299892ff358becfc9",
+      "scripts/verify-publication.py": "9c9a289b6535fd1cbcdb86f91082b35f6d941c7e80642d5b70e1522dfe16ca43",
+      "scripts/publication-notify.py": "fd74dfb515713090852e99405704cae8b53748cdc398b6016900ca45aef18204",
+      "ops/plunode-publication-readiness": "829561e9ff570002af8f0a131e751af77ba34ba64b4de912b2d92a79f8345d14",
+      "vendor/gh": "2fd925d68889746976958342fb749bf102bc7dc8bcba3abfa533a80ad7791673"
+    },
+    "configBindings": {
+      "profile": "production",
+      "workerId": "plunode-wsl",
+      "workerCodeCommit": "973c7b0c599f79905a029b28b524f4924e169376",
+      "network": "graph-knowledge-production_default",
+      "neo4jUri": "bolt://graph-neo4j:7687",
+      "neo4jDatabase": "neo4j",
+      "freezePolicy": "durable-pause-new-v1",
+      "approverKeySha256": "f1a99f0ba5a10938809a0747433043122d96a9f2a519a528a09a12992ab79e75",
+      "attesterKeySha256": "2a3d9a2532782d318bc9dc7725edbb242904964f25e3ab1eb2a8e600a1064e3a",
+      "exclusionKeySha256": "2bc1efe6bcb1dc1b15850b7430043e47e8caec7ba557aecd644e3d473faeb06d"
+    },
+    "peerSourceCommit": "9b59669f282f811a22c7f276ecae61ca16ec499e"
+  },
+  "programFilesVerified": {
+    "ops/plunode-publication": "9d003d6e3b48a9dcc898ac1d97e2eb8240634ef7cd7b73dbd4dbf04fb2950a9a",
+    "ops/publication-ssh.py": "2eb4de930d96d6414e05448de306db449d57d6157e0bb036c5aca1e6cc13eb31",
+    "scripts/publication-executor.py": "237feb3e8b92415184e7a1651598422d9b1824b3f92d08835e155f55a6b9c20c",
+    "scripts/publication-exclusion.py": "c4c9b9d4332acfb0e80f2a6a82d23f733fb0f9b1e82487bdf17944ccca801677",
+    "scripts/publication-policy.py": "48fc9ab5d82d6c17eb3dbdb4b430ddaf4fa636978d329b22080e5c93713591c2",
+    "scripts/publication-cycle.py": "56a45498d2fff16ef5090012ece9a7e28b3071baf80227563ee818654f23e0a3",
+    "scripts/publication-sign.py": "9c800b9df20d29ce0e9868947642eabd6f9f54135e4d464299892ff358becfc9",
+    "scripts/verify-publication.py": "9c9a289b6535fd1cbcdb86f91082b35f6d941c7e80642d5b70e1522dfe16ca43",
+    "scripts/publication-notify.py": "fd74dfb515713090852e99405704cae8b53748cdc398b6016900ca45aef18204",
+    "ops/plunode-publication-readiness": "829561e9ff570002af8f0a131e751af77ba34ba64b4de912b2d92a79f8345d14",
+    "vendor/gh": "2fd925d68889746976958342fb749bf102bc7dc8bcba3abfa533a80ad7791673"
+  },
+  "config": {
+    "profile": "production",
+    "deploymentEnabled": true,
+    "operatorDigest": "sha256:7042781b105067ce3adea0c59bccfb4c8326f84c0ca6aa5f1b8c26e6cd3d5cef",
+    "freezePolicy": "durable-pause-new-v1",
+    "workerId": "plunode-wsl",
+    "workerCodeCommit": "973c7b0c599f79905a029b28b524f4924e169376"
+  },
+  "configSha256": "c15a21f30206bd741658a0ef190ff3d80f9918c21c5f928264cc60cbf7284946",
+  "operatorImage": {
+    "Id": "sha256:7042781b105067ce3adea0c59bccfb4c8326f84c0ca6aa5f1b8c26e6cd3d5cef",
+    "Os": "linux",
+    "Architecture": "amd64",
+    "RepoDigests": []
+  },
+  "operatorNodeVersion": "v24.21.0",
+  "web": [{
+    "container": "/graph-knowledge-production-web-1",
+    "image": "sha256:8803c499a7d511621eb7293d5e1e21dd21ba35253d5a2a6700a9ee7fa50ecc25",
+    "imageReference": "graph-knowledge-web:issue54-20261028",
+    "startedAt": "2026-10-27T17:42:28.173054548Z",
+    "nodeVersion": "v24.21.0"
+  }],
+  "dataset": {
+    "dataset": "public-kg",
+    "revision": "f5dbf83f-c89e-4e40-95ee-57957016089f"
+  },
+  "signed": false,
+  "applyCalls": 0
+}

@@ -1,5 +1,7 @@
 # VPS設置版の読み取り確認
 
+2026-10-28に運営者が下記を実行済み。[取得JSON](inputs/vps-installed-inventory.json) と [照合結果](results/vps-inventory-verification.json) を保存した。現在の次工程は [固定更新の判断](UPDATE_REVIEW.md) であり、下記の再実行待ちではない。以下は再確認が必要になった場合の保存手順。
+
 Codexからdevelopへの非対話SSHは認証拒否だった。現在の保護gateのmanifest／operator pinと稼働Webの実imageを、過去の公開requestだけで代用しないため、以下の読み取り確認が必要。
 秘密鍵・DB接続env・会員情報は出力しない。署名・apply・設定変更・サービス切替は行わない。
 新しい公開基盤・SSH権限は作らず、既存の運営者SSH／sudoを使う。

@@ -1,0 +1,44 @@
+{
+  "authority": "verified-operator-returned-readonly-inventory",
+  "inputSha256": "2c7f5b1249e8a86db6708e2297ecf997733c9ddc295348aef2a957a23db722b1",
+  "exporterSha256": "51d08bd295265a6c08e3bbc4507166558ce3f9d8154701a86fa3ba8e76ef15df",
+  "inputProvenance": "2026-10-28 operator chat reply; JSON reformatted for storage, not a claimed original stdout hash",
+  "gateFilesMatched": 11,
+  "priorRootTrustManifestMatched": true,
+  "currentOperatorMatched": true,
+  "currentVpsWebMatchedIssue54Image": true,
+  "currentVpsAndWorkerNodeVersion": "v24.21.0",
+  "formalReceiptsUnchanged": 12,
+  "publicDataset": {
+    "dataset": "public-kg",
+    "revision": "f5dbf83f-c89e-4e40-95ee-57957016089f"
+  },
+  "existingNonceDiagnostics": [
+    {
+      "nonce": "13abfb93-ba2d-44f7-a56b-352aa7ab0ab0",
+      "newNonceAuthorized": false,
+      "reSignAuthorized": false,
+      "automaticApplyAuthorized": false,
+      "phase": "completed",
+      "publishedRevision": "f5dbf83f-c89e-4e40-95ee-57957016089f",
+      "release": "publication-8b0b1d67656a15c7e505ba1f",
+      "action": "no-operator-action",
+      "mayResumeDelivery": false,
+      "publicationVerified": true
+    },
+    {
+      "nonce": "6b240b18-56e4-4ea4-995f-7be7424c3fb2",
+      "newNonceAuthorized": false,
+      "reSignAuthorized": false,
+      "automaticApplyAuthorized": false,
+      "phase": "completed",
+      "publishedRevision": "7c54da24-6fa9-46a5-810d-834eed8328d9",
+      "release": "publication-film-initial-20261027",
+      "action": "no-operator-action",
+      "mayResumeDelivery": false,
+      "publicationVerified": true
+    }
+  ],
+  "freshVpsProtectedInventory": "confirmed",
+  "installOrApprovalPerformed": false
+}
