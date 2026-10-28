@@ -1,6 +1,6 @@
 # CollectionWorkerの実行制御
 
-確認: 2026-10-28 10:29:24 JST。
+確認: 2026-10-28 10:34:38 JST。
 
 反映済みcontrolRevision: 8／最後の操作: pub-13abfb93-ba2d-44f7-a56b-352aa7ab0ab0-resume。
 
@@ -73,6 +73,10 @@ Issue確認結果:
   "collection-control/issue-sources/58.json": {
     "status": "registered: issue-58-dot-takeuchi-two-20261028",
     "checkedAt": "2026-10-28T00:57:15+00:00"
+  },
+  "collection-control/issue-sources/59.json": {
+    "status": "registered: issue-59-dot-kubo-two-20261028",
+    "checkedAt": "2026-10-28T01:33:17+00:00"
   }
 }
 ```
