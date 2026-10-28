@@ -140,8 +140,11 @@ class BackupChecks(unittest.TestCase):
                 'formalReceiptsUnchanged': receipts, 'images': {kind: {'configId': kind} for kind in ['web', 'operator']}}
         before = {p: p.read_bytes() for p in env.rglob('*') if p.is_file()}
         stage = Path(folder) / 'stage'; stage.mkdir(); calls = []
-        def task(files, old, new, interop):
+        def task(files, old, new, interop, baseline=None):
             calls.append((old, new))
+            if old != new and new == apply.SOURCE:
+                self.assertIsNotNone(baseline)
+                self.assertTrue((stage / 'backup/windows-task.before.xml').exists())
             return {'beforeXmlBase64': apply.base64.b64encode(b'private-task-before').decode(), 'triggerPrincipalSettingsPreserved': True}
         def run(args, **kwargs):
             if args[-1] == '--version': return b'v24.21.0\n'
@@ -158,13 +161,13 @@ class BackupChecks(unittest.TestCase):
                     apply.wsl(stage, Path(folder), approved, decision, meta, h, '/run/WSL/123_interop')
                 for path, data in before.items(): self.assertEqual(path.read_bytes(), data)
                 for rel in names[2:]: self.assertFalse((runtime / rel).exists())
-                self.assertEqual(calls, [(apply.OLD_SOURCE, apply.SOURCE), (apply.SOURCE, apply.OLD_SOURCE)])
+                self.assertEqual(calls, [(apply.OLD_SOURCE, apply.OLD_SOURCE), (apply.OLD_SOURCE, apply.SOURCE), (apply.SOURCE, apply.OLD_SOURCE)])
             else:
                 result = apply.wsl(stage, Path(folder), approved, decision, meta, h, '/run/WSL/123_interop')
                 self.assertEqual(result['workerOverlayFiles'], 5); self.assertEqual(result['formalReceiptsPreserved'], 12)
                 self.assertFalse(result['signed']); self.assertEqual(result['applyCalls'], 0)
                 for rel, pins in decision['workerOverlay'].items(): self.assertEqual(apply.sha(runtime / rel), pins['after'])
-                self.assertEqual(calls, [(apply.OLD_SOURCE, apply.SOURCE)])
+                self.assertEqual(calls, [(apply.OLD_SOURCE, apply.OLD_SOURCE), (apply.OLD_SOURCE, apply.SOURCE)])
                 for path, data in before.items():
                     if path not in [cfg, approver, *[runtime / rel for rel in names]]: self.assertEqual(path.read_bytes(), data)
             index = json.loads((stage / 'backup/wsl-backup-manifest.json').read_bytes())

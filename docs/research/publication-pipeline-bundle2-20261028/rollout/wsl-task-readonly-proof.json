@@ -1,0 +1,13 @@
+{
+  "authority": "real-task-read-only-same-source-with-installer-environment",
+  "result": {
+    "status": "verified",
+    "task": "Plunode-Publication-Delivery",
+    "sourceBefore": "7392d8e343a11644b1047364c71653779ad0c93c",
+    "sourceAfter": "7392d8e343a11644b1047364c71653779ad0c93c",
+    "triggerPrincipalSettingsPreserved": true,
+    "securityDescriptorSha256": "4a0e3a58f9fb3af8d6bc8ff916664e0b6872b40771836cf5a91cd627a458a67d",
+    "permissionChanged": false
+  },
+  "taskMutated": false
+}

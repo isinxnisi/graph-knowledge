@@ -13,10 +13,10 @@ import time
 import urllib.request
 
 ROOT = Path(__file__).resolve().parents[1]
-PACKAGE = ROOT / '.local/publication-pipeline/operator-package-approved-wsl-backup-fix3'
+PACKAGE = ROOT / '.local/publication-pipeline/operator-package-approved-wsl-task-diagnostics-fix4'
 RUNNER_SHA = '2bc74c5e98e3b51533c6d3ea806b2c023def48792af414fd31171f4840ab81e8'
-APPLIER_SHA = '25ba1bbb90be4bc86e958a922b37dfbb3085749674346d717fa4c35efd05f0c6'
-PAYLOAD_SHA = 'aecfca028124c954a9cdcb178e87ee87b478f3ac2767093cd46885cedab52535'
+APPLIER_SHA = 'f1331087368b757905e753168500e4abe6e028ab85d4ef5dbd0830a5afbb19de'
+PAYLOAD_SHA = '946674efaea508825daa3036529e51c5e97d95419ab10e0b83e8f0ad4c8a66d8'
 LOCKS = [Path('/home/isinxnisi/.local/share/graph-autopilot/autopilot.lock'),
          Path('/home/isinxnisi/.local/share/plunode-publication/preparation/preparation.lock'),
          Path('/home/isinxnisi/.local/share/plunode-collection-worker-phase-b-20261020/worker.lock')]
@@ -95,7 +95,7 @@ def wait_and_resume(helper, runner, *, wait_limit=900, pause=time.sleep, clock=t
         # Probe again immediately before sudo, releasing the entire set as before.
         busy = probe_locks()
         if busy: raise BeforeUpdateBusy(busy)
-        # The unchanged root applier repeats all before hashes, receipts and state under locks.
+        # The fixed root applier repeats all before hashes, receipts and state under locks.
         # Avoid a second slow Task/CIM query between observing the idle window and taking them.
         return subprocess.run(['sudo', '/bin/bash', '-c', runner.operation(PACKAGE, 'wsl', PACKAGE, os.environ.get('WSL_INTEROP', ''))],
                               stdout=subprocess.PIPE, text=True)  # stdin/stderr stay on the operator terminal.

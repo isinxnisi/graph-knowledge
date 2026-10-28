@@ -1,8 +1,10 @@
-# 残る運営者操作：退避名を修正したWSL更新
+# 残る運営者操作：WSL Task診断を伴う更新
 
 承認済み判断票 SHA-256 `142a0dd04342b5429cc9dd736804965646bb6da9e39e7573a2065c97f02fab82` と更新対象のbytesは不変。**VPS Web/gate/operatorは更新済み。SSH・image再転送・VPS再更新は不要。** 今回必要なのはWSLの既存sudoだけで、追加の意味判断・公開署名・権限変更は求めない。
 
-前回の停止原因は、一回限りの更新補助スクリプトがWorkerの `lib/domain/contribution.ts` と `lib/i18n/contribution.ts` に同じ退避名を割り当てた不具合。ログ上はTask/Worker/approver/configの書換え前。Codexの読取照合でも5ファイル・設定・approver・Task参照がすべて更新前の固定値、12 receipt不変、準備idle、配送3件completedだった。[停止原因・修正](wsl-backup-fix.json) / [実状態](wsl-before-backup-fix.json)。
+最新の実行はTask更新を呼び出すPowerShellで停止した。補助処理が標準エラーを捨てていたため直接原因は未確定であり、権限不足や実行中拒否などと断定しない。Worker 5ファイル・delivery設定・approver・12 receiptは旧固定値と一致し、Task参照も旧版。新source 403ファイルは承認archiveと全bytes一致する。今回の通常ユーザーによる同じ環境のTask読取は成功したが、rootからの実更新成功を意味しない。[調査・検証](wsl-task-diagnostics.json) / [実状態・資材照合](wsl-task-fixed-material-check.json)。
+
+修正版はTask変更前にXMLを退避し、読取snapshotと照合してから元と同じAction更新だけを実行する。失敗時はPowerShellの工程・例外・HRESULTと差戻し検査結果を返す。署名・公開・権限変更はしない。以前の退避名衝突修正は維持する。
 
 ## WSL端末で実行
 
@@ -14,7 +16,7 @@ set -eu
 umask 077
 cd /home/isinxnisi/1.projects/.worktrees/graph-knowledge-publication-pipeline-bundle2
 printf '%s  %s\n' \
-  1c6e68f52d6075ad2e7bb3890df20d7d59bfdd882fe7f63552a19c111df78055 \
+  f23921c80d7a28061649b16c65a4a5156e98c0c3adcde8f86409a33b47b87886 \
   ops/resume-publication-bundle2-wsl.py | sha256sum -c -
 python3 ops/resume-publication-bundle2-wsl.py
 )
@@ -27,7 +29,7 @@ root側は新しい別stageで次を実施する。
 1. 全before hash、12 receipt、準備/配送/Worker状態、Node、image識別を既存ロック内で再照合する。
 2. 旧stage `9955a6dbf84c` の実行資材pinと退避ファイルを読取検査する。退避が `worker-contribution.ts.before` 1件・domainの旧SHA `7bb75f38d7b27829c6e5de32bbc90ef6cd740f5ce6d3ff3b6978f73ab35fd59b` と一致しなければ停止する。旧stageは変更しない。
 3. 全退避先を先に検査し、Worker相対パスを保持する一意な名前で保存する。既存4ファイルのbytesと元の所有者/mode、新設3ファイルの「元は不存在」をmanifestへ記録する。
-4. 元の承認範囲の固定source、Windows Delivery TaskのAction参照、Worker 5ファイル、approver、delivery設定を更新し、署名しないself-checkを実行する。失敗時は既存の差戻し処理を使う。
+4. Taskをまず読取照合し、XMLを退避する。そのsnapshotと実状態が一致した場合だけAction参照を更新する。Worker 5ファイル、approver、delivery設定も元の固定対象へ更新し、署名しないself-checkを実行する。Taskの実行中・不一致・権限エラー等は工程／例外／HRESULT／差戻し結果を表示して停止し、権限を追加したり再試行したりしない。
 
 既存base/collector/config/承認/依頼/12 receipt、Taskのtrigger/principal/settings/DACLを保持する。Windows管理者権限は追加しない。受入・署名・KG apply/restore・会員migrationは行わない。
 
@@ -40,11 +42,11 @@ root側は新しい別stageで次を実施する。
 ## 固定資材・復旧
 
 - 元runner: `2bc74c5e98e3b51533c6d3ea806b2c023def48792af414fd31171f4840ab81e8`
-- 修正root applier: `25ba1bbb90be4bc86e958a922b37dfbb3085749674346d717fa4c35efd05f0c6`
-- 修正payload manifest: `aecfca028124c954a9cdcb178e87ee87b478f3ac2767093cd46885cedab52535`
-- 新WSL stage: `/root/plunode-bundle2-update-aecfca028124`
+- 修正root applier: `f1331087368b757905e753168500e4abe6e028ab85d4ef5dbd0830a5afbb19de`
+- 修正payload manifest: `946674efaea508825daa3036529e51c5e97d95419ab10e0b83e8f0ad4c8a66d8`
+- 新WSL stage: `/root/plunode-bundle2-update-946674efaea5`
 - 元の承認済み資材manifest: `f9636c957b2566575ee89266bcd1901e155dbb35aa6e2d342080568bf167a2af`（不変）
 
-[修正版包](operator-package-wsl-backup-fix3.json)のpayloadは既存資材を再利用し、imageを再build・再saveしていない。退避は新stageの `backup/worker/<runtime相対パス>.before`、`backup/protected/<絶対パスの先頭slashを除いたパス>.before`。`backup/wsl-backup-manifest.json` に元ファイルとの対応とSHA/uid/gid/mode/存在有無を保存し、Task XMLは `backup/windows-task.before.xml` に保持する。復旧時はこの対応を使用し、basenameだけから復元先を推測しない。
+[修正版包](operator-package-wsl-task-fix4.json)のpayloadは既存資材を再利用し、imageを再build・再saveしていない。退避は新stageの `backup/worker/<runtime相対パス>.before`、`backup/protected/<絶対パスの先頭slashを除いたパス>.before`。`backup/wsl-backup-manifest.json` に元ファイルとの対応とSHA/uid/gid/mode/存在有無を保存し、Task XMLは `backup/windows-task.before.xml` に保持する。復旧時はこの対応を使用し、basenameだけから復元先を推測しない。
 
-旧stage `ad596417d0ab` / `cb472351bf04` / `9955a6dbf84c` とVPSのbackupは削除・置換しない。コード・設定・Taskの差戻し範囲は [RECOVERY.md](../RECOVERY.md) に従う。KG/member restoreや旧journal/receiptへの巻戻しは行わない。
+旧stage `ad596417d0ab` / `cb472351bf04` / `9955a6dbf84c` / `aecfca028124` とVPSのbackupは削除・置換しない。コード・設定・Taskの差戻し範囲は [RECOVERY.md](../RECOVERY.md) に従う。KG/member restoreや旧journal/receiptへの巻戻しは行わない。

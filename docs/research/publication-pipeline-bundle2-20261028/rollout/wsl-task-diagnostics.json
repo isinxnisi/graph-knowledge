@@ -1,0 +1,54 @@
+{
+  "authority": "operator-returned-trace-plus-local-read-only-investigation",
+  "operatorTrace": {
+    "error": "bundle2-update-stopped",
+    "errorType": "ValueError",
+    "reason": "Fixed command failed: powershell.exe",
+    "operation": "wsl-fixed-source-task-and-worker-update",
+    "site": "wsl:419 -> windows_task:363 -> run:60"
+  },
+  "directCauseConfirmed": false,
+  "originalStderrRetained": false,
+  "possibleCausesNotEstablished": [
+    "Task execution race",
+    "CIM/Windows permissions",
+    "post-update preservation check",
+    "other PowerShell failure"
+  ],
+  "observedCurrentState": "wsl-task-fixed-material-check.json",
+  "realTaskReadOnlyProof": "wsl-task-readonly-proof.json",
+  "nativeEventLogs": "No matching recent warning/error events found in TaskScheduler, WMI-Activity or Windows PowerShell; not proof of no error",
+  "changes": [
+    "Task XML saved before Action update",
+    "snapshot/XML and DACL hash checked before mutation",
+    "child stage, original exception, HRESULT and rollback result retained",
+    "rollback compares Action, trigger/principal/settings and DACL",
+    "unknown native stderr bounded in diagnostics; raw Task XML excluded",
+    "existing non-retry rule maintained"
+  ],
+  "tests": {
+    "command": "python3 -m unittest discover -s tests -p test_publication_bundle2_*.py -v",
+    "passed": 30,
+    "failed": 0,
+    "seconds": 20.384,
+    "powershellScenarios": [
+      "successful Action update",
+      "read-only snapshot",
+      "busy task refusal",
+      "access denied and verified rollback",
+      "preservation mismatch and verified rollback",
+      "original and rollback exceptions both retained",
+      "snapshot drift refusal"
+    ],
+    "taskSettersDuringTests": "mocked; actual Task was only read",
+    "rootInstallationNotProven": true
+  },
+  "fixedAssetsChanged": false,
+  "newPackage": "operator-package-wsl-task-fix4.json",
+  "nextRequiredOperation": "existing WSL sudo; snapshot then approved update or structured stop",
+  "windowsAdministratorNeedConfirmed": false,
+  "vpsRepeated": false,
+  "wslUpdateCompleted": false,
+  "signed": false,
+  "applyCalls": 0
+}

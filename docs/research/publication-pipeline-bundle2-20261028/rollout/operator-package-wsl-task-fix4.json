@@ -1,0 +1,11 @@
+{
+  "authority": "one-time-execution-material-for-approved-fixed-target",
+  "decisionRequestSha256": "142a0dd04342b5429cc9dd736804965646bb6da9e39e7573a2065c97f02fab82",
+  "directory": "/home/isinxnisi/1.projects/.worktrees/graph-knowledge-publication-pipeline-bundle2/.local/publication-pipeline/operator-package-approved-wsl-task-diagnostics-fix4",
+  "operatorManifestSha256": "946674efaea508825daa3036529e51c5e97d95419ab10e0b83e8f0ad4c8a66d8",
+  "applierSha256": "f1331087368b757905e753168500e4abe6e028ab85d4ef5dbd0830a5afbb19de",
+  "taskHelperSha256": "b1fa9b9c1c76fbd169e45d210419d4322cd28f97be1555ac2bc03d9e4e997856",
+  "installed": false,
+  "signed": false,
+  "applyCalls": 0
+}

@@ -1,0 +1,51 @@
+{
+  "observedAt": "2026-10-28T11:58:23.998188+00:00",
+  "authority": "read-only-installed-before-state-and-fixed-task-execution-material",
+  "workerFiles": [
+    {
+      "file": "lib/domain/contribution.ts",
+      "sha256": "7bb75f38d7b27829c6e5de32bbc90ef6cd740f5ce6d3ff3b6978f73ab35fd59b",
+      "matchesBefore": true
+    },
+    {
+      "file": "lib/i18n/contribution.ts",
+      "sha256": "dcbf69965240a0d1089f8f2a34f38be22bd63bb0617c332fbfe75b4cf03ff390",
+      "matchesBefore": true
+    },
+    {
+      "file": "lib/generated/contribution-roles.ts",
+      "sha256": null,
+      "matchesBefore": true
+    },
+    {
+      "file": "lib/server/publication-compatibility.ts",
+      "sha256": null,
+      "matchesBefore": true
+    },
+    {
+      "file": "scripts/publication-compatibility.ts",
+      "sha256": null,
+      "matchesBefore": true
+    }
+  ],
+  "formalReceipts": 12,
+  "formalReceiptsMatch": true,
+  "workerConfigMatches": true,
+  "deliveryMatchesBefore": true,
+  "approverMatchesBefore": true,
+  "stagedSourceExactArchiveFiles": 403,
+  "taskReadOnlyProof": "wsl-task-readonly-proof.json",
+  "decisionRequestSha256": "142a0dd04342b5429cc9dd736804965646bb6da9e39e7573a2065c97f02fab82",
+  "approvedAssetManifestSha256": "f9636c957b2566575ee89266bcd1901e155dbb35aa6e2d342080568bf167a2af",
+  "executionPayloadOnlyDifferences": [
+    "OPERATOR_SHA256SUMS",
+    "execution-material.json",
+    "update-task.ps1"
+  ],
+  "allFixedChecksumsPassed": true,
+  "onlyWslSudoShellSyntaxPassed": true,
+  "productionHttpsFixedIdentityPassed": true,
+  "runtimeUpdateCompleted": false,
+  "signed": false,
+  "applyCalls": 0
+}

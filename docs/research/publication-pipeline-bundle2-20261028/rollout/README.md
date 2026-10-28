@@ -62,3 +62,11 @@ WSLは3ロック取得中に通常漫画Workerのworker.lockへ競合し、sourc
 関連27件成功。今回追加した隔離試験では退避名衝突、途中失敗後のTask/ファイル差戻し、新設3ファイルの不存在への復旧、退避不一致時の新規書込み拒否を確認した。さらに実Workerの固定173ファイル、全12 receipt、承認済みsource archive/5ファイル/設定を私有treeへ複製し、更新制御フローが完走することを確認した。root所有権検査・実Windows Task更新・実approver self-check等はこの隔離試験の代用で完了扱いにしない。
 
 [診断記録](wsl-backup-fix.json) / [実状態](wsl-before-backup-fix.json) / [実bytesを使った隔離確認](wsl-backup-real-input-proof.json) / [固定包の照合](wsl-backup-fixed-material-check.json) / [修正版包](operator-package-wsl-backup-fix3.json)。WSL更新と更新後検証は引き続き未完了。残る操作は [OPERATOR_ACTIONS.md](OPERATOR_ACTIONS.md) のWSL sudo一回だけで、追加承認・SSHは不要。
+
+## Windows Task呼出しの停止と診断補強
+
+次の運営者実行は、退避・source設置を通過し、Task更新のPowerShell呼出しで停止した。旧補助処理が子の標準エラーを捨てていたため、直接原因を確定できない。権限不足・実行中競合・更新後照合等は仮説に留める。現在のWorker 5ファイル、delivery/approver、12 receiptとTask Actionは旧固定値だった。新source 403ファイルは承認archiveと全bytes一致した。最近のWindows関連イベントに対応するエラーは見つからず、通常ユーザーから同じ環境での読取は成功したが、root/CIMでの実更新成功の証明ではない。
+
+Task変更前のXML退避とsnapshot照合、工程別の例外/HRESULT、原例外と差戻し検査の両方を返す診断を追加。Action以外・DACLの保全検査を緩めず、差戻し後も照合する。関連30件成功（うちPowerShell実行は7シナリオ、Task setterは全て隔離mock）。旧stageを保持し、元の固定更新対象・判断票・imageを変えない別包を作成した。原因修正済み／WSL反映済みとは報告しない。
+
+[調査・検証](wsl-task-diagnostics.json) / [実Taskの読取](wsl-task-readonly-proof.json) / [固定資材・実状態](wsl-task-fixed-material-check.json) / [新包](operator-package-wsl-task-fix4.json)。残るsudoではroot側snapshotから始め、成功時だけ元の更新へ進み、失敗時は詳細を返して停止する。VPSの再更新・追加署名・新nonce・再applyは行わない。

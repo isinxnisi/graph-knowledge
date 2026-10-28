@@ -356,12 +356,26 @@ def worker_parent(path, runtime):
         parent.mkdir(mode=0o755); parent.chmod(0o755); os.chown(parent, 1000, 1000)
 
 
-def windows_task(files, old, new, interop):
+def windows_task(files, old, new, interop, baseline=None):
     require(re.fullmatch('/run/WSL/[0-9]+_interop', interop or ''), 'Existing Windows interop required')
     script = (files / 'update-task.ps1').read_text().replace('__FROM__', old).replace('__TO__', new)
+    script = script.replace('__BASELINE_XML__', baseline['beforeXmlBase64'] if baseline else '')
+    script = script.replace('__BASELINE_SECURITY__', baseline['securityDescriptorSha256'] if baseline else '')
     encoded = base64.b64encode(script.encode('utf-16-le')).decode()
-    return json.loads(run(['/mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe', '-NoLogo', '-NoProfile', '-NonInteractive', '-EncodedCommand', encoded],
-                          env={**CLEAN, 'WSL_INTEROP': interop}, timeout=60).decode('utf-8-sig'))
+    result = subprocess.run(['/mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe', '-NoLogo', '-NoProfile', '-NonInteractive', '-EncodedCommand', encoded],
+                            env={**CLEAN, 'WSL_INTEROP': interop}, stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=60)
+    try: value = json.loads(result.stdout.decode('utf-8-sig'))
+    except (ValueError, UnicodeError): value = None
+    if result.returncode != 0 or not isinstance(value, dict) or value.get('status') != 'verified':
+        # Task diagnostics contain no credentials or raw Task XML. Keep the structured
+        # child exception instead of replacing it with 'Fixed command failed'.
+        DIAGNOSTICS['windowsTaskFailure'] = {k: v for k, v in (value if isinstance(value, dict) else {}).items()
+            if k in ['error', 'stage', 'exceptionType', 'hresult', 'message', 'errorId', 'rollback']}
+        DIAGNOSTICS['windowsTaskFailure'].update(returnCode=result.returncode, stderrSha256=hashlib.sha256(result.stderr).hexdigest())
+        if not isinstance(value, dict):
+            DIAGNOSTICS['windowsTaskFailure']['stderrText'] = result.stderr.decode('utf-8', errors='replace')[:1600]
+        raise ValueError('Windows Task step failed; inspect windowsTaskFailure; do not retry')
+    return value
 
 
 def wsl(stage, files, approved, decision, meta, h, interop):
@@ -415,9 +429,11 @@ def wsl(stage, files, approved, decision, meta, h, interop):
         for path in source.rglob('*'): h.trusted(path, directory=path.is_dir())
         task = None
         try:
+            DIAGNOSTICS['operation'] = 'wsl-task-snapshot'
+            task_before = windows_task(files, OLD_SOURCE, OLD_SOURCE, interop)
+            backup(stage, 'windows-task.before.xml', base64.b64decode(task_before['beforeXmlBase64']), h)
             DIAGNOSTICS['operation'] = 'wsl-fixed-source-task-and-worker-update'
-            task = windows_task(files, OLD_SOURCE, SOURCE, interop)
-            backup(stage, 'windows-task.before.xml', base64.b64decode(task['beforeXmlBase64']), h)
+            task = windows_task(files, OLD_SOURCE, SOURCE, interop, baseline=task_before)
             for path in before:
                 if not path.is_relative_to(runtime): continue
                 worker_parent(path, runtime)
