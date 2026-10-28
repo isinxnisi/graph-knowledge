@@ -7,6 +7,7 @@ from unittest.mock import patch
 import autonomy as a
 import mentorship as m
 import scheduled_policy as s
+import education_github as g
 import test_mentorship as fixtures
 from runtime import read_sealed,sealed_write
 
@@ -33,6 +34,15 @@ class ScheduledTests(unittest.TestCase):
         row=self.proposal();value,_,_=s.normalized(row)
         self.assertEqual(s.normalized(row)[0],value);self.assertEqual(m.checked(value)['method'],'chatgpt-scheduled')
         self.assertNotIn('planId',s.parse(row['body']));self.assertNotIn('sha256',s.parse(row['body']))
+    def test_registered_pull_seals_plan_selection_and_one_decision_post(self):
+        row=self.proposal();client=fixtures.FakeGithub();client.rows=[row]
+        with patch('scheduled_policy.held'),patch('mentorship.held'),patch('education_github.held'):
+            self.assertEqual(g.pull(self.home,'token',client)[0]['status'],'held');self.assertEqual(client.posts,0)
+            accepted=s.register(self.home,row,'https://chatgpt.com/c/observed-test-run','ai-education-scheduled-001','token')
+            first=g.pull(self.home,'token',client);second=g.pull(self.home,'token',client)
+            self.assertEqual(first,second);self.assertEqual(first[0]['status'],'accepted');self.assertEqual(client.posts,1)
+            self.assertEqual(len(list((self.home/'mentorship/selections').glob('*.json'))),1)
+            self.assertEqual(read_sealed(next((self.home/'mentorship/selections').glob('*.json')))['planSha256'],accepted['planSha256'])
     def test_untrusted_edited_future_and_extra_fields_rejected(self):
         rows=[];row=self.proposal();row['user']['login']='other';rows.append(row)
         row=self.proposal();row['updated_at']='2020-01-01T00:00:00Z';rows.append(row)

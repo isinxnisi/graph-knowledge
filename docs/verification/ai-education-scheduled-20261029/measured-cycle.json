@@ -1,0 +1,53 @@
+{
+  "cycleId": "cd71066d-5ab3-4fa3-bd51-20406a6812fb",
+  "status": "failed",
+  "reason": "wall_limit",
+  "startedAt": "2026-10-28T15:25:22.096596+00:00",
+  "finishedAt": "2026-10-28T15:28:28.428782+00:00",
+  "inferenceCalls": 3,
+  "optimizerUpdates": 1,
+  "educationPolicy": {
+    "version": "teacher-policy-v1",
+    "planSha256": null,
+    "reason": "source_changed",
+    "baselineTaskId": "generated-de0537bbb4ccf7f0c73d",
+    "selectedTaskId": "generated-de0537bbb4ccf7f0c73d",
+    "baselineKind": "polarity",
+    "selectedKind": "polarity",
+    "changed": false,
+    "holdoutUnchanged": true,
+    "splitDisjoint": true,
+    "modelExecuted": false
+  },
+  "validatedKgRevision": "34befbcd-8f5f-4cd9-a059-242a3f0b5ffb",
+  "resultSha256": "5037b7ba1b5643d5bb1ae0bf0c50eb72871fbe1f3811127d4faba3a469fa28b8",
+  "stages": [
+    {
+      "phase": "train",
+      "status": "completed",
+      "reason": null,
+      "wallSeconds": 146.42614820599556,
+      "exitCode": 0,
+      "oomKilled": false
+    },
+    {
+      "phase": "reload",
+      "status": "failed",
+      "reason": "wall_limit",
+      "wallSeconds": 37.74981322401436,
+      "exitCode": 137,
+      "oomKilled": false
+    }
+  ],
+  "peakRssMiB": 4797.26953125,
+  "checkpointSaved": true,
+  "checkpointReloaded": false,
+  "limits": {
+    "ramMiB": 6144,
+    "cpus": 2,
+    "wallSeconds": 180,
+    "outputMiB": 256,
+    "minAvailableRamMiB": 10240,
+    "minFreeDiskMiB": 2048
+  }
+}

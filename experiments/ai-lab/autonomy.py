@@ -7,6 +7,7 @@ import fcntl
 import http.client
 import json
 import os
+import re
 from pathlib import Path
 import subprocess
 import sys
@@ -157,7 +158,11 @@ def maintain(home,token):
     """Retry exchange/publication from sealed data without rerunning a model."""
     held(token);c=configuration(home);require(code_hash()==c['codeSha256'],'code_changed_reconfigure_required')
     from education_github import synchronize
-    result=synchronize(home,token)
+    try:result=synchronize(home,token)
+    except (ValueError,OSError,subprocess.SubprocessError) as error:
+        code=str(error) if re.fullmatch(r'github_(rate_limit|http_[0-9]{3}|credential_unavailable|response_size|pagination_budget)',str(error)) else 'exchange_unavailable'
+        atomic(home/'mentorship/sync-status.json',{'at':now(),'status':'exchange-unavailable','errorCode':code,'retryInference':False})
+        raise
     if c['publish']:
         subprocess.run([c['node'],'--import','tsx','scripts/ai-lab-policy-artifact.ts','activate',str(home),c['artifactDirectory'],'http://127.0.0.1:3200'],cwd=ROOT,check=True,timeout=90,capture_output=True,text=True)
     state={'at':now(),'status':'synchronized' if result.get('status')!='disabled' else 'bridge-disabled','retryInference':False}
@@ -198,6 +203,8 @@ def execute(home,args):
 
 def tick(home):
     c=configuration(home);reason='unfinished-cycle' if unfinished(home) else due(c,intents(home),datetime.now(JST))
+    if c['enabled'] and code_hash()!=c['codeSha256']:
+        return {'status':'deferred','reason':'code-changed-reconfigure-required','at':now()}
     if reason:
         # Cloud review is independent of the CPU window. Fetch at most hourly while
         # enabled, under the same common lock. Pause/stop disables both operations.
@@ -208,7 +215,10 @@ def tick(home):
     command=[sys.executable,str(ROOT/'scripts/autopilot.py'),'guard','--',sys.executable,str(HERE/'autonomy.py'),'--home',str(home),'maintenance' if reason else 'run-once']
     result=subprocess.run(command,cwd=ROOT,text=True,capture_output=True,timeout=360)
     state={'status':'finished' if result.returncode==0 else 'deferred','operation':'maintenance' if reason else 'education','reason':'common-lock' if result.returncode==75 else reason,'exitCode':result.returncode,'at':now()}
-    if reason and result.returncode not in [0,75]:atomic(home/'mentorship/maintenance-status.json',{**state,'status':'exchange-unavailable','retryInference':False})
+    if reason and result.returncode not in [0,75]:
+        sync=home/'mentorship/sync-status.json'
+        state['reason']=read_json(sync).get('errorCode','exchange-unavailable') if sync.exists() else 'exchange-unavailable'
+        atomic(home/'mentorship/maintenance-status.json',{**state,'status':'exchange-unavailable','retryInference':False})
     return state
 
 def main():

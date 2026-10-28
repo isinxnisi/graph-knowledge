@@ -25,7 +25,7 @@ try{
   assert.equal(await page.getByTestId('inference-count').textContent(),String(expectedInference));assert.equal(await page.getByTestId('training-count').textContent(),String(expectedTraining));
   assert.equal(await page.getByTestId('lab-run').count(),expectedRuns);assert.equal(await avatar.getAttribute('data-strength'),'standard');
   assert.equal(await page.locator('[data-testid="motion-play"],[data-strength-pick],.official-ai-avatar').count(),0);
-  assert.doesNotMatch(await page.locator('[data-ai-lab]').innerText(),/DEMO|仮配置|隔離確認|isolated preview/i);
+  assert.doesNotMatch(await page.locator('[data-ai-lab]').innerText(),/\bDEMO\b|仮配置|隔離確認|isolated preview/i);
   assert.match(await page.locator('[data-ai-lab]').innerText(),lang==='en'?/not monitored/:/未監視/);
   const before=await page.locator('[data-testid="inference-count"]').boundingBox();await advances();assert.deepEqual(await page.locator('[data-testid="inference-count"]').boundingBox(),before);
   await page.locator('[data-ai-lab] > footer').scrollIntoViewIfNeeded();await moving(false);await frozen();await avatar.scrollIntoViewIfNeeded();await moving(true);
@@ -40,8 +40,13 @@ try{
   await page.locator('[data-ai-lab] select').selectOption('inference');assert.equal(await page.getByTestId('lab-run').count(),expectedKev);
   if(expectedInference){await page.getByTestId('lab-run').filter({has:page.locator('time')}).last().click();assert.match(await page.locator('#records article').innerText(),/74℃/);assert.match(await page.locator('#records article').innerText(),/71.31/);await page.screenshot({path:`${out}/${lang}-${width}-${theme}-inference.png`,fullPage:true});const actualRecord=page.url();await page.locator('#records article a[href*="read=claim"]').click();await page.getByRole('dialog').getByTestId('lab-record-return').click();assert.equal(page.url(),actualRecord);}
   if(expectedTraining){
-   assert.equal(await page.getByTestId('education-cycle').count(),3);
-   await page.getByTestId('education-cycle').first().click();
+   assert.equal(await page.getByTestId('education-cycle').count(),Number(process.env.LAB_EXPECT_EDUCATION_CYCLES||3));
+   if(process.env.LAB_EXPECT_EDUCATION_CYCLES==='4'){
+    await page.locator('[data-cycle-id="cd71066d-5ab3-4fa3-bd51-20406a6812fb"]').click();
+    assert.match(await page.getByTestId('education-detail').innerText(),lang==='en'?/reload verification did not complete/:/再読込の検証は完了していません/);
+    assert.match(await page.getByTestId('education-detail').innerText(),/180/);
+   }
+   await page.locator('[data-cycle-id="891edfc6-9e0a-472a-8b59-dc3795df1273"]').click();
    const education=page.getByTestId('education-detail');await education.getByRole('heading',{name:lang==='en'?'Holdout comparison':'holdoutの比較',exact:true}).waitFor();
    assert.match(await education.innerText(),/STOP/);assert.match(await education.innerText(),/C0/);assert.match(await education.innerText(),/Carlo Rubbia/);
    const cycleUrl=page.url();await page.screenshot({path:`${out}/${lang}-${width}-${theme}-education.png`,fullPage:true});

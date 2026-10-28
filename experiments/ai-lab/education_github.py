@@ -50,7 +50,9 @@ class Github:
         try:
             c.request(method,path,body=data,headers={'Authorization':'Bearer '+self.token,'Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28','User-Agent':'Plunode-Education-Exchange/1','Content-Type':'application/json'})
             r=c.getresponse();raw=r.read(1_000_001)
-            require(len(raw)<=1_000_000,'github_response_size');require(200<=r.status<300,'github_http_'+str(r.status))
+            require(len(raw)<=1_000_000,'github_response_size')
+            require(r.status!=429 and not (r.status==403 and r.getheader('X-RateLimit-Remaining')=='0'),'github_rate_limit')
+            require(200<=r.status<300,'github_http_'+str(r.status))
             return json.loads(raw)
         finally:c.close()
     def comments(self):
@@ -117,8 +119,8 @@ def pull(home,token,client=None):
                         from mentorship import preview
                         preview(home,str(uuid.UUID(decision['planSha256'][:32],version=4)),token)
                     receipt=post(home,'decision',envelope(decision),token,client)
-                    require(receipt['status'] in ['published','reconciled'],'decision_sync_unknown')
-                decisions.append(decision)
+                    decisions.append({**decision,'decisionSync':receipt})
+                else:decisions.append(decision)
             else:
                 value=parse_body(row['body'],'plan');decisions.append(admit(home,value,transport(row),token))
         except (ValueError,KeyError,TypeError,json.JSONDecodeError):

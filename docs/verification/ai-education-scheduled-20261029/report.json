@@ -1,0 +1,148 @@
+{
+  "sha256": "3f8dca0bf6bedb1a6a5fa48c4c073d56637a040f9de03b77d5e3ec59bc6a1d90",
+  "payload": {
+    "contract": "education-report-v1",
+    "createdAt": "2026-10-28T15:36:04.988347+00:00",
+    "educatorKey": "plunode-official-ai",
+    "apprenticeId": "fe93a431-85cf-4fae-8b84-127e8bf866a7",
+    "selectionSourceSha256": "e2264404c215375ac1dc9edf1f40676e436b9f1d7f7ece058427a16fa1f014ab",
+    "curriculumSha256": "7c155c25f34b652de0ce18242b41199d2c08fa1bcb05f85c7923b3f8f9d8f39e",
+    "curriculumVersion": "kg-structural-v2",
+    "historySha256": "f0b4bc9c97ceaf2274e7ab52ec15796f1d13ec214327879fb2e13a994cf5b18b",
+    "modelRevision": "bf75a6a8848ea6960ff2ed108d9ed44c2941174f",
+    "cycles": [
+      {
+        "cycleId": "5be3be46-d83f-46e8-8f33-1a9580b7e301",
+        "resultSha256": "d18a81cd52a395c495d46bcfd7fa090f4866db26031ecf464325e27b3effa284",
+        "codeCommit": "837b0668e13a30c4aef50488d7b3e55a9a41164a",
+        "sourceSha256": "1d973a1726cb0b9d45ffab25adc04e698727b6d80c9a6942ef0f29288955e022",
+        "snapshotSha256": null,
+        "status": "failed",
+        "reason": "validation-or-runtime-error",
+        "optimizerUpdates": 0,
+        "inferenceCalls": 0,
+        "trainObservations": [],
+        "holdout": {
+          "count": 0,
+          "beforeMatches": 0,
+          "afterMatches": 0,
+          "reloadVerified": false,
+          "reused": true,
+          "independentFinal": false
+        },
+        "split": {
+          "trainEntities": 0,
+          "holdoutEntities": 0,
+          "trainClaims": 0,
+          "holdoutClaims": 0,
+          "disjoint": true,
+          "protectedEntitiesSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "protectedClaimsSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        "limits": {
+          "ramMiB": 6144,
+          "cpus": 2,
+          "wallSeconds": 180,
+          "outputMiB": 256
+        },
+        "peakRssMiB": 0
+      },
+      {
+        "cycleId": "891edfc6-9e0a-472a-8b59-dc3795df1273",
+        "resultSha256": "cffd5360856cb495d451a39268f8be3b06efee2570b571ba0f9e23ff86035617",
+        "codeCommit": "837b0668e13a30c4aef50488d7b3e55a9a41164a",
+        "sourceSha256": "22a3e48bf6f0587e3d6d64e522cb181150f7e4e18c3b7a3ae2df0428c3851ace",
+        "snapshotSha256": "306cd45886f5e147bfc10f493a0a26d92946f8bd8c042216038020161b477901",
+        "status": "completed",
+        "reason": null,
+        "optimizerUpdates": 1,
+        "inferenceCalls": 4,
+        "trainObservations": [
+          {
+            "category": "direction",
+            "expected": "C0",
+            "observed": "STOP",
+            "matches": false
+          }
+        ],
+        "holdout": {
+          "count": 1,
+          "beforeMatches": 0,
+          "afterMatches": 1,
+          "reloadVerified": true,
+          "reused": true,
+          "independentFinal": false
+        },
+        "split": {
+          "trainEntities": 2,
+          "holdoutEntities": 2,
+          "trainClaims": 1,
+          "holdoutClaims": 1,
+          "disjoint": true,
+          "protectedEntitiesSha256": "640e621985c26453c766a597a37be7171a2041f51d6942cf36ac542023781b6c",
+          "protectedClaimsSha256": "debf9a6bce8c5411c5c2dad5eb7f782af4a1e31fcf119ab81bd82d6e788a6453"
+        },
+        "limits": {
+          "ramMiB": 6144,
+          "cpus": 2,
+          "wallSeconds": 180,
+          "outputMiB": 256
+        },
+        "peakRssMiB": 5572.09
+      },
+      {
+        "cycleId": "cd71066d-5ab3-4fa3-bd51-20406a6812fb",
+        "resultSha256": "5037b7ba1b5643d5bb1ae0bf0c50eb72871fbe1f3811127d4faba3a469fa28b8",
+        "codeCommit": "f0c6d74ddaba759c38acdeed4900d4b1f3343e85",
+        "sourceSha256": "dedfff5fefb106a5a52e0a7f441ee83f1c65dc02ca5d3c8744299e79581a1128",
+        "snapshotSha256": "306cd45886f5e147bfc10f493a0a26d92946f8bd8c042216038020161b477901",
+        "status": "failed",
+        "reason": "wall_limit",
+        "optimizerUpdates": 1,
+        "inferenceCalls": 3,
+        "trainObservations": [
+          {
+            "category": "polarity",
+            "expected": "C0",
+            "observed": "STOP",
+            "matches": false
+          }
+        ],
+        "holdout": {
+          "count": 1,
+          "beforeMatches": 0,
+          "afterMatches": 1,
+          "reloadVerified": false,
+          "reused": true,
+          "independentFinal": false
+        },
+        "split": {
+          "trainEntities": 2,
+          "holdoutEntities": 2,
+          "trainClaims": 1,
+          "holdoutClaims": 1,
+          "disjoint": true,
+          "protectedEntitiesSha256": "f62974c67d6c4f8327cb45150fad59beab891048b83b0063c096026b86b810af",
+          "protectedClaimsSha256": "e17460da99c3a406c83abf2bc4067589045c51bd733a27e24fbbef917e6e5cef"
+        },
+        "limits": {
+          "ramMiB": 6144,
+          "cpus": 2,
+          "wallSeconds": 180,
+          "outputMiB": 256
+        },
+        "peakRssMiB": 4797.27
+      }
+    ],
+    "totals": {
+      "realCycles": 3,
+      "completedCycles": 1,
+      "optimizerUpdates": 2,
+      "inferenceCalls": 7,
+      "modelAdoptions": 0
+    },
+    "semanticReview": "pending-human",
+    "generalizationEvidence": false,
+    "holdoutAnswersIncluded": false
+  }
+}

@@ -23,7 +23,7 @@ python3 experiments/ai-lab/autonomy.py resume
 python3 experiments/ai-lab/autonomy.py start
 ```
 
-`pause`中にworkerが残る場合、再開は`resume`だけでよい。`start`を重ねない。`stop`はstop要求を永続化し、1秒ごとの監視で自分のlabelとcontainer名を照合して停止する。共有Kev・他container・Autopilotを終了しない。OS起動時の自動起動、無期限のGPU運転、クラウド登録は行っていない。今回の完了時は**enabled=false／worker停止**とする。最初の実サイクルと制御検証の結果を確認したうえで上記の有界設定を有効にできる。
+`pause`中にworkerが残る場合、再開は`resume`だけでよい。`start`を重ねない。`stop`はstop要求を永続化し、1秒ごとの監視で自分のlabelとcontainer名を照合して停止する。共有Kev・他container・Autopilotを終了しない。OS起動時の自動起動、無期限のGPU運転、クラウド登録は行っていない。2026-10-29の指示では、日次CPU教育を**20:00–23:00 JST・1日最大1回・公開投影あり**で有効化する。ChatGPT側の実方針・日次設定は[別接点](AI_LAB_EDUCATION_POLICY.md)として区別する。
 
 workerは60秒ごとにJSTの時間窓・日次回数・間隔を確認する。実行時だけ既存`autopilot.py guard`で共通ロックを取得し、親PIDとtokenを照合する。ロック使用中は延期する。手動hold中にguardを重ねない。1日の予算には失敗したreal intentも含め、停止直後の再開で同一試行をやり直さない。Pythonコード変更後は自動続行せず、設定を再確認して`enable`する。
 
