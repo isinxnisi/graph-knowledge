@@ -66,11 +66,59 @@
   },
   "requestSha256": "be200c888ce96a7f58a587450a39ef8c84c76f8c47ac0a57a4d1d98133132ade",
   "kind": "issue-prepare",
-  "phase": "running",
+  "phase": "retry-transport",
   "generation": 4,
   "attempts": 1,
   "workerId": "plunode-wsl",
   "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
   "updatedAt": "2026-10-28T01:40:25+00:00",
-  "message": "Execution gate: interval"
+  "message": "Technical acquisition incomplete; no semantic hold or acceptance",
+  "result": {
+    "schemaVersion": 1,
+    "status": "technical-incomplete",
+    "preparationComplete": false,
+    "issueOrigin": {
+      "repository": "isinxnisi/graph-knowledge",
+      "issueNumber": 59,
+      "approvalId": "dot-kubo-two-20261028",
+      "permissionSha256": "dac1692e5662c7f8618435965016a29ff90ea4008f9310dca722d38a33ac0454",
+      "issueBodySha256": "a34ab03148b791653c32878939ab0e9287649260cdc39cac11ecfe7d820e13bc"
+    },
+    "preparationDirectory": "/home/isinxnisi/.local/share/plunode-collection-worker-phase-b-20261020/runtime/.local/collection-issues/issue-59-dot-kubo-two-20261028",
+    "batchRequests": [],
+    "generatedArtifacts": {},
+    "technicalWaits": [
+      {
+        "category": "provider-backoff",
+        "key": "publication-7304e52e2afdaef222f5f488",
+        "provider": "ndlsearch.ndl.go.jp",
+        "retryAt": 1793151796.7578201,
+        "recoveryRequired": false,
+        "target": "BLEACH",
+        "lastDiagnostic": {
+          "category": "transport",
+          "phase": "open-through-response-headers",
+          "phaseBoundary": "open-through-response-headers",
+          "elapsedSeconds": 20.101274,
+          "finishedAt": "2026-10-28T01:42:16.757801+00:00",
+          "httpStatus": null,
+          "causes": [
+            {
+              "type": "TimeoutError"
+            }
+          ]
+        }
+      }
+    ],
+    "retryAt": 1793151796.7578201,
+    "publicApply": false,
+    "counts": {
+      "networkAttempts": 9,
+      "holds": 0,
+      "identifiedWorks": 1,
+      "technicalWaits": 1
+    }
+  },
+  "executionComplete": false,
+  "retryAt": 1793151796.7578201
 }
