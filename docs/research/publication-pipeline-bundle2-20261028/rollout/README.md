@@ -52,3 +52,13 @@
 WSLは3ロック取得中に通常漫画Workerのworker.lockへ競合し、source/Task/Worker/approver/config変更前で停止。保持PIDが入れ替わり自然終了していることを確認し、強制終了・ロック削除・運用制御変更はしない。VPS全体を再実行せず、既存の固定WSL applierだけを再開する補助コマンドを追加した。待機時は取得済みロックを全解放する。最大15分、変更前の既知lock競合だけ再試行し、その他の不一致・更新途中の失敗は停止。8件の隔離テスト成功。
 
 現在地・固定hashは [vps-update-and-wsl-pending.json](vps-update-and-wsl-pending.json)、残るsudo操作は [OPERATOR_ACTIONS.md](OPERATOR_ACTIONS.md)。更新後Worker/deliveryの実検証は未完了。
+
+## WSL退避名衝突の停止と修正
+
+その後の運営者実行は、最初の待機が15分で安全に終了し、再実行時にはロック取得後の退避処理で停止した。今回の更新補助スクリプトが `lib/domain/contribution.ts` と `lib/i18n/contribution.ts` を同じ `worker-contribution.ts.before` に退避する不具合だった。異なる正しいbytesに対して上書き防止検査が止めたもので、未知の実環境差分を許容した修正ではない。ログ上はsource/Task/Worker/approver/configの更新前。読取照合でも旧5ファイル、設定、approver、Task参照、12 receiptの固定値が一致した。旧root退避の実内容は未読のため、次のsudoで想定1ファイル・固定SHAと一致することを検査し、不一致なら停止する。
+
+退避名をWorker相対パス／保護ファイル絶対パスで一意にし、全退避先を先に検査する。復旧用manifestに元のSHA/所有者/mode/存在有無を残す。旧stageと旧退避には触れず、新WSL stage `aecfca028124` を固定した。更新対象・承認票・image・元資材bytesは不変。VPS処理を再実行しない。sudo直前のロック再確認と、実行メタデータのapplier/payload pin照合も追加した。
+
+関連27件成功。今回追加した隔離試験では退避名衝突、途中失敗後のTask/ファイル差戻し、新設3ファイルの不存在への復旧、退避不一致時の新規書込み拒否を確認した。さらに実Workerの固定173ファイル、全12 receipt、承認済みsource archive/5ファイル/設定を私有treeへ複製し、更新制御フローが完走することを確認した。root所有権検査・実Windows Task更新・実approver self-check等はこの隔離試験の代用で完了扱いにしない。
+
+[診断記録](wsl-backup-fix.json) / [実状態](wsl-before-backup-fix.json) / [実bytesを使った隔離確認](wsl-backup-real-input-proof.json) / [固定包の照合](wsl-backup-fixed-material-check.json) / [修正版包](operator-package-wsl-backup-fix3.json)。WSL更新と更新後検証は引き続き未完了。残る操作は [OPERATOR_ACTIONS.md](OPERATOR_ACTIONS.md) のWSL sudo一回だけで、追加承認・SSHは不要。

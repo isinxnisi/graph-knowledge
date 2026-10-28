@@ -1,0 +1,17 @@
+{
+  "authority": "fixed-wsl-execution-material-unprivileged-read-only-check",
+  "decisionRequestSha256": "142a0dd04342b5429cc9dd736804965646bb6da9e39e7573a2065c97f02fab82",
+  "applierSha256": "25ba1bbb90be4bc86e958a922b37dfbb3085749674346d717fa4c35efd05f0c6",
+  "payloadManifestSha256": "aecfca028124c954a9cdcb178e87ee87b478f3ac2767093cd46885cedab52535",
+  "resumeSha256": "1c6e68f52d6075ad2e7bb3890df20d7d59bfdd882fe7f63552a19c111df78055",
+  "approvedAssetManifestSha256": "f9636c957b2566575ee89266bcd1901e155dbb35aa6e2d342080568bf167a2af",
+  "allPayloadFilesVerified": true,
+  "operationPinsMatch": true,
+  "shellSyntaxPassed": true,
+  "onlyWslSudoCommand": true,
+  "productionHttpsFixedIdentityPassed": true,
+  "rootTrustChecksPending": true,
+  "runtimeUpdated": false,
+  "signed": false,
+  "applyCalls": 0
+}

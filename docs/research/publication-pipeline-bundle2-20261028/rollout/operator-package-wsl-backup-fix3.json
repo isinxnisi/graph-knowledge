@@ -1,0 +1,10 @@
+{
+  "authority": "one-time-execution-material-for-approved-fixed-target",
+  "decisionRequestSha256": "142a0dd04342b5429cc9dd736804965646bb6da9e39e7573a2065c97f02fab82",
+  "directory": "/home/isinxnisi/1.projects/.worktrees/graph-knowledge-publication-pipeline-bundle2/.local/publication-pipeline/operator-package-approved-wsl-backup-fix3",
+  "operatorManifestSha256": "aecfca028124c954a9cdcb178e87ee87b478f3ac2767093cd46885cedab52535",
+  "applierSha256": "25ba1bbb90be4bc86e958a922b37dfbb3085749674346d717fa4c35efd05f0c6",
+  "installed": false,
+  "signed": false,
+  "applyCalls": 0
+}

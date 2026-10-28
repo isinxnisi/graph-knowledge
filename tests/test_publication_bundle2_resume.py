@@ -2,6 +2,7 @@
 import contextlib
 import copy
 import fcntl
+import hashlib
 import importlib.util
 import io
 import json
@@ -95,6 +96,32 @@ class ResumeChecks(unittest.TestCase):
         with contextlib.redirect_stdout(io.StringIO()), self.assertRaises(ValueError):
             resume.wait_and_resume(None, None, probe_locks=lambda: None, probe_task=lambda: False,
                 invoke=lambda: SimpleNamespace(returncode=0, stdout=json.dumps({**SUCCESS, 'target': 'vps'})))
+
+    def test_idle_window_lost_during_https_check_never_invokes_sudo(self):
+        clock = [0]; probes = iter([None, 'worker.lock'])
+        with contextlib.redirect_stdout(io.StringIO()), patch.object(resume, 'public_vps_check'), \
+             patch.object(resume.subprocess, 'run') as run, self.assertRaises(TimeoutError):
+            resume.wait_and_resume(None, None, wait_limit=2, clock=lambda: clock[0],
+                pause=lambda seconds: clock.__setitem__(0, clock[0]+seconds),
+                probe_locks=lambda: next(probes), probe_task=lambda: False)
+        run.assert_not_called()
+
+    def test_root_staging_metadata_cannot_replace_the_pinned_applier_or_payload(self):
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder); package = root / 'package'; (root / 'ops').mkdir(); (package / 'payload').mkdir(parents=True)
+            runner = root / 'ops/run-publication-bundle2-update.py'; runner.write_bytes(b'fixed-runner')
+            applier = package / 'apply-publication-bundle2-update.py'; applier.write_bytes(b'fixed-applier')
+            manifest = package / 'payload/OPERATOR_SHA256SUMS'; manifest.write_bytes(b'fixed-manifest')
+            sha = lambda p: hashlib.sha256(p.read_bytes()).hexdigest()
+            valid = {'applierSha256': sha(applier), 'operatorManifestSha256': sha(manifest)}
+            for key in valid:
+                (package / 'operation.json').write_text(json.dumps({**valid, key: '0' * 64}))
+                with patch.object(resume, 'ROOT', root), patch.object(resume, 'PACKAGE', package), \
+                     patch.object(resume, 'RUNNER_SHA', sha(runner)), patch.object(resume, 'APPLIER_SHA', sha(applier)), \
+                     patch.object(resume, 'PAYLOAD_SHA', sha(manifest)), patch.object(resume, 'load') as load, \
+                     self.assertRaisesRegex(ValueError, 'Root staging command pins differ'):
+                    resume.main()
+                load.assert_not_called()
 
 
 if __name__ == '__main__': unittest.main()

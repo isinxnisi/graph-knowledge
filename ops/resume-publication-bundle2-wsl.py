@@ -13,10 +13,10 @@ import time
 import urllib.request
 
 ROOT = Path(__file__).resolve().parents[1]
-PACKAGE = ROOT / '.local/publication-pipeline/operator-package-approved-installation-preflight-fix2'
+PACKAGE = ROOT / '.local/publication-pipeline/operator-package-approved-wsl-backup-fix3'
 RUNNER_SHA = '2bc74c5e98e3b51533c6d3ea806b2c023def48792af414fd31171f4840ab81e8'
-APPLIER_SHA = '74a2bb1a3abe79c897b74f56a0b9e4db1ba1d9a97e8ef0520f9e48dcb9fd50e9'
-PAYLOAD_SHA = '9955a6dbf84ccb53d0a4e3daa18e7c967746267785426e2926ec0aff13354215'
+APPLIER_SHA = '25ba1bbb90be4bc86e958a922b37dfbb3085749674346d717fa4c35efd05f0c6'
+PAYLOAD_SHA = 'aecfca028124c954a9cdcb178e87ee87b478f3ac2767093cd46885cedab52535'
 LOCKS = [Path('/home/isinxnisi/.local/share/graph-autopilot/autopilot.lock'),
          Path('/home/isinxnisi/.local/share/plunode-publication/preparation/preparation.lock'),
          Path('/home/isinxnisi/.local/share/plunode-collection-worker-phase-b-20261020/worker.lock')]
@@ -29,6 +29,10 @@ def load(name, path):
 
 def require(value, reason):
     if not value: raise ValueError(reason)
+
+
+class BeforeUpdateBusy(Exception):
+    """A final lock probe lost the idle window; root was never invoked."""
 
 
 def busy_lock(helper, paths=LOCKS, uid=1000):
@@ -87,6 +91,10 @@ def wait_and_resume(helper, runner, *, wait_limit=900, pause=time.sleep, clock=t
     probe_locks = probe_locks or (lambda: busy_lock(helper))
     def update():
         public_vps_check()
+        # HTTPS and Windows queries can outlast the idle window observed above.
+        # Probe again immediately before sudo, releasing the entire set as before.
+        busy = probe_locks()
+        if busy: raise BeforeUpdateBusy(busy)
         # The unchanged root applier repeats all before hashes, receipts and state under locks.
         # Avoid a second slow Task/CIM query between observing the idle window and taking them.
         return subprocess.run(['sudo', '/bin/bash', '-c', runner.operation(PACKAGE, 'wsl', PACKAGE, os.environ.get('WSL_INTEROP', ''))],
@@ -99,7 +107,12 @@ def wait_and_resume(helper, runner, *, wait_limit=900, pause=time.sleep, clock=t
                 print(json.dumps({'waiting': 'existing-activity', 'lock': busy, 'locksHeldWhileWaiting': False,
                     'vpsRepeated': False, 'maximumWaitSeconds': wait_limit}), flush=True); next_notice = clock() + 30
             pause(min(2, max(0, deadline - clock()))); continue
-        completed = invoke(); print(completed.stdout, end='', flush=True)
+        try: completed = invoke()
+        except BeforeUpdateBusy as error:
+            print(json.dumps({'waiting': 'pre-update-final-probe', 'lock': str(error),
+                'locksHeldWhileWaiting': False, 'vpsRepeated': False}), flush=True)
+            pause(min(2, max(0, deadline - clock()))); continue
+        print(completed.stdout, end='', flush=True)
         result = child_result(completed.stdout)
         if completed.returncode == 0:
             require(result.get('target') == 'wsl' and result.get('signed') is False and result.get('applyCalls') == 0, 'Unexpected success result; inspect')
@@ -115,6 +128,9 @@ def main():
     require(sha(ROOT / 'ops/run-publication-bundle2-update.py') == RUNNER_SHA, 'Runner fixed bytes differ')
     require(sha(PACKAGE / 'apply-publication-bundle2-update.py') == APPLIER_SHA
             and sha(PACKAGE / 'payload/OPERATOR_SHA256SUMS') == PAYLOAD_SHA, 'Existing fixed package differs')
+    operation = json.loads((PACKAGE / 'operation.json').read_bytes())
+    require(operation['applierSha256'] == APPLIER_SHA and operation['operatorManifestSha256'] == PAYLOAD_SHA,
+            'Root staging command pins differ')
     runner = load('bundle2_fixed_runner', ROOT / 'ops/run-publication-bundle2-update.py')
     # The fixed payload manifest binds the helper; verify its bytes before importing any payload code.
     applier = load('bundle2_fixed_applier', PACKAGE / 'apply-publication-bundle2-update.py')

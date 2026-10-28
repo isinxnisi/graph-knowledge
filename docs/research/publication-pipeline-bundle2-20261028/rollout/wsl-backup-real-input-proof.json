@@ -1,0 +1,31 @@
+{
+  "authority": "isolated-installer-flow-using-exact-installed-before-and-approved-after-bytes",
+  "decisionRequestSha256": "142a0dd04342b5429cc9dd736804965646bb6da9e39e7573a2065c97f02fab82",
+  "approvedAssetsUnchanged": true,
+  "workerPolicyFiles": 173,
+  "formalReceipts": 12,
+  "nodeVersion": "v24.21.0",
+  "backupRecords": 7,
+  "existingBackups": 4,
+  "newFilesRecordedAbsent": 3,
+  "sameBasenameDistinctBytesPreserved": true,
+  "sourceArchiveApproverMatches": true,
+  "workerOverlayFiles": 5,
+  "taskCalls": [
+    [
+      "7392d8e343a11644b1047364c71653779ad0c93c",
+      "fe3fcb6a3b00ede3dfbf122e124f87da38f9f736"
+    ]
+  ],
+  "mocked": [
+    "existing locks (private tree only)",
+    "privileged ownership/trust checks",
+    "Docker inspect",
+    "Windows task mutation",
+    "previous root-stage inspection",
+    "protected approver self-check (not executed)"
+  ],
+  "runtimeInstalled": false,
+  "signed": false,
+  "applyCalls": 0
+}

@@ -92,11 +92,67 @@ def stage_inputs(stage):
     return files, approved, decision, read(approved / 'deployment.json'), h, web
 
 
+def backup_path(stage, name):
+    rel = Path(name)
+    require(name and rel.parts and not rel.is_absolute() and '..' not in rel.parts and '\\' not in name
+            and str(rel) == name, 'Unsafe backup name')
+    root = stage / 'backup'
+    for path in [root, *[root / Path(*rel.parts[:i]) for i in range(1, len(rel.parts))]]:
+        if path.exists() or path.is_symlink():
+            require(not path.is_symlink() and path.is_dir(), 'Unsafe backup directory')
+    return root / rel
+
+
+def check_backup(stage, name, data):
+    path = backup_path(stage, name)
+    if path.exists() or path.is_symlink():
+        require(not path.is_symlink() and path.is_file(), 'Unsafe backup file')
+        if path.read_bytes() != data:
+            DIAGNOSTICS['backupComparison'] = {'file': name, 'expectedSha256': hashlib.sha256(data).hexdigest(), 'actualSha256': sha(path)}
+            raise ValueError('Existing backup differs; preserve and inspect')
+    return path
+
+
 def backup(stage, name, data, h):
-    path = stage / 'backup'; path.mkdir(mode=0o700, exist_ok=True)
-    if (path / name).exists():
-        require((path / name).read_bytes() == data, 'Existing backup differs; preserve and inspect'); return
-    h.save_new(path / name, data)
+    path = check_backup(stage, name, data)
+    if path.exists(): return
+    path.parent.mkdir(mode=0o700, parents=True, exist_ok=True)
+    h.save_new(path, data)
+
+
+def wsl_backup_plan(before, specs, runtime):
+    """Full relative paths identify backups, including files absent before installation."""
+    files = {}; records = []; names = set()
+    for path, data in before.items():
+        rel = ('worker/' + str(path.relative_to(runtime)) if path.is_relative_to(runtime)
+               else 'protected/' + str(path.relative_to('/'))) + '.before'
+        require(rel not in names, 'Duplicate backup destination'); names.add(rel)
+        records.append({'path': str(path), 'backup': rel if data is not None else None,
+                        'existed': data is not None, 'sha256': hashlib.sha256(data).hexdigest() if data is not None else None,
+                        'uid': specs[path][0], 'gid': specs[path][1], 'mode': specs[path][2]})
+        if data is not None: files[rel] = data
+    files['wsl-backup-manifest.json'] = body({'version': 1, 'files': records})
+    return files
+
+
+def save_wsl_backups(stage, before, specs, runtime, h):
+    plan = wsl_backup_plan(before, specs, runtime)
+    # Detect every existing mismatch before creating even the first new backup.
+    for name, data in plan.items(): check_backup(stage, name, data)
+    for name, data in plan.items(): backup(stage, name, data, h)
+
+
+def previous_wsl_backup(h, decision, previous=Path('/root/plunode-bundle2-update-9955a6dbf84c')):
+    """Inspect/preserve the exact partial backup left by the reported failed attempt."""
+    root = previous / 'backup'; h.trusted(previous, directory=True); h.trusted(root, directory=True)
+    require(sha(previous / 'apply-publication-bundle2-update.py') == '74a2bb1a3abe79c897b74f56a0b9e4db1ba1d9a97e8ef0520f9e48dcb9fd50e9'
+            and sha(previous / 'payload/OPERATOR_SHA256SUMS') == '9955a6dbf84ccb53d0a4e3daa18e7c967746267785426e2926ec0aff13354215', 'Previous execution material differs')
+    files = sorted(p.name for p in root.iterdir())
+    require(files == ['worker-contribution.ts.before'], 'Unexpected previous backup; preserve and inspect')
+    path = root / files[0]; h.trusted(path)
+    actual = sha(path)
+    require(actual == decision['workerOverlay']['lib/domain/contribution.ts']['before'], 'Previous backup hash differs; preserve and inspect')
+    return {'directory': str(root), 'files': [{'file': path.name, 'sha256': actual}], 'preserved': True}
 
 
 def unchanged_stamp(paths):
@@ -316,6 +372,7 @@ def wsl(stage, files, approved, decision, meta, h, interop):
     with contextlib.ExitStack() as locks:
         for path in [Path('/home/isinxnisi/.local/share/graph-autopilot/autopilot.lock'), home / 'preparation/preparation.lock', worker / 'worker.lock']:
             locks.enter_context(h.existing_lock(path, 1000))
+        DIAGNOSTICS['operation'] = 'wsl-before-update-verification'
         require(sha(cfg) == meta['deliveryConfigBeforeSha256'] and sha(worker / 'config.json') == meta['workerConfigSha256Unchanged'], 'WSL changed under lock')
         refs = [{'file': str(p.relative_to(runtime)), 'sha256': sha(p)} for p in sorted((runtime / 'datasets/manga-collection').glob('accepted-*/acceptance.json'))]
         require(refs == meta['formalReceiptsUnchanged'] and len(refs) == 12, 'Formal receipts advanced')
@@ -337,8 +394,10 @@ def wsl(stage, files, approved, decision, meta, h, interop):
             specs[path] = (path.stat().st_uid, path.stat().st_gid, stat.S_IMODE(path.stat().st_mode)) if path.exists() else (1000, 1000, 0o644)
         before[cfg] = cfg.read_bytes(); before[approver] = approver.read_bytes()
         for path in [cfg, approver]: specs[path] = (path.stat().st_uid, path.stat().st_gid, stat.S_IMODE(path.stat().st_mode))
-        for path, value in before.items():
-            if value is not None: backup(stage, ('worker-' if path.is_relative_to(runtime) else '') + path.name + '.before', value, h)
+        DIAGNOSTICS['operation'] = 'wsl-backup-preflight'
+        previous_backup = previous_wsl_backup(h, decision)
+        save_wsl_backups(stage, before, specs, runtime, h)
+        DIAGNOSTICS['operation'] = 'wsl-fixed-source-staging'
         source = Path('/usr/local/lib/plunode-receipts') / SOURCE
         require(not source.is_symlink(), 'Source directory symlink')
         existed = source.exists(); source.mkdir(mode=0o755, exist_ok=True); source.chmod(0o755); h.trusted(source, directory=True)
@@ -382,7 +441,8 @@ def wsl(stage, files, approved, decision, meta, h, interop):
         return {'target': 'wsl', 'sourceCommit': SOURCE, 'workerOverlayFiles': 5, 'workerBaseCollectorAndConfigUnchanged': True,
                 'formalReceiptsPreserved': 12, 'deliveryConfigSha256': sha(cfg), 'approverSha256': sha(approver),
                 'windowsTaskTriggerPrincipalSettingsPreserved': task['triggerPrincipalSettingsPreserved'], 'selfCheck': checked,
-                'backupDirectory': str(stage / 'backup'), 'signed': False, 'applyCalls': 0}
+                'backupDirectory': str(stage / 'backup'), 'backupManifestSha256': sha(stage / 'backup/wsl-backup-manifest.json'),
+                'previousBackup': previous_backup, 'signed': False, 'applyCalls': 0}
 
 
 def main():

@@ -1,0 +1,49 @@
+{
+  "authority": "read-only-installed-local-observation",
+  "workerFiles": [
+    {
+      "file": "lib/domain/contribution.ts",
+      "matchesBefore": true,
+      "sha256": "7bb75f38d7b27829c6e5de32bbc90ef6cd740f5ce6d3ff3b6978f73ab35fd59b"
+    },
+    {
+      "file": "lib/i18n/contribution.ts",
+      "matchesBefore": true,
+      "sha256": "dcbf69965240a0d1089f8f2a34f38be22bd63bb0617c332fbfe75b4cf03ff390"
+    },
+    {
+      "file": "lib/generated/contribution-roles.ts",
+      "matchesBefore": true,
+      "sha256": null
+    },
+    {
+      "file": "lib/server/publication-compatibility.ts",
+      "matchesBefore": true,
+      "sha256": null
+    },
+    {
+      "file": "scripts/publication-compatibility.ts",
+      "matchesBefore": true,
+      "sha256": null
+    }
+  ],
+  "formalReceiptCount": 12,
+  "formalReceiptsMatch": true,
+  "workerConfigMatches": true,
+  "deliveryMatchesBefore": true,
+  "approverMatchesBefore": true,
+  "taskSource": "7392d8e343a11644b1047364c71653779ad0c93c",
+  "taskPreserved": true,
+  "controlRevision": 8,
+  "pauseMode": null,
+  "activeAttempt": null,
+  "preparationPhase": "idle",
+  "deliveryStages": [
+    "completed",
+    "completed",
+    "completed"
+  ],
+  "rootBackupRead": false,
+  "signed": false,
+  "applyCalls": 0
+}

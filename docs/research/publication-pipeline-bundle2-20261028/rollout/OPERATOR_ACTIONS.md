@@ -1,12 +1,12 @@
-# 残る運営者操作：WSL更新だけを再開
+# 残る運営者操作：退避名を修正したWSL更新
 
-承認済み判断票 SHA-256 `142a0dd04342b5429cc9dd736804965646bb6da9e39e7573a2065c97f02fab82` の範囲内。**VPS Web/gate/operatorは更新成功済み。SSH・image再転送・VPS再更新は不要。** [VPS結果](vps-installed-result.json) / [現在地と検証](vps-update-and-wsl-pending.json)。
+承認済み判断票 SHA-256 `142a0dd04342b5429cc9dd736804965646bb6da9e39e7573a2065c97f02fab82` と更新対象のbytesは不変。**VPS Web/gate/operatorは更新済み。SSH・image再転送・VPS再更新は不要。** 今回必要なのはWSLの既存sudoだけで、追加の意味判断・公開署名・権限変更は求めない。
 
-WSLは更新前のロック取得で停止し、通常漫画Workerがworker.lockを保持していた。自然終了を待ち、残る固定source・delivery/approver・Task Action参照・Worker指定5ファイルを更新する。既存base/collector/config/承認/12 receipt/権限を保持する。新しい署名・受入・KG apply/restore・会員migrationはしない。
+前回の停止原因は、一回限りの更新補助スクリプトがWorkerの `lib/domain/contribution.ts` と `lib/i18n/contribution.ts` に同じ退避名を割り当てた不具合。ログ上はTask/Worker/approver/configの書換え前。Codexの読取照合でも5ファイル・設定・approver・Task参照がすべて更新前の固定値、12 receipt不変、準備idle、配送3件completedだった。[停止原因・修正](wsl-backup-fix.json) / [実状態](wsl-before-backup-fix.json)。
 
-## WSL端末で実行する1コマンド
+## WSL端末で実行
 
-Codexの手動holdは引渡し前に解放する。sudoパスワードは端末へ入力し、Codexへ渡さない。
+Codexの手動holdは引渡し前に解放する。sudoパスワードは端末に入力し、Codexへ渡さない。
 
 ```bash
 (
@@ -14,28 +14,37 @@ set -eu
 umask 077
 cd /home/isinxnisi/1.projects/.worktrees/graph-knowledge-publication-pipeline-bundle2
 printf '%s  %s\n' \
-  47a6ee388197473f9a86cd4c566ca00d805513e22ff390fc688cffeca4d7e48d \
+  1c6e68f52d6075ad2e7bb3890df20d7d59bfdd882fe7f63552a19c111df78055 \
   ops/resume-publication-bundle2-wsl.py | sha256sum -c -
 python3 ops/resume-publication-bundle2-wsl.py
 )
 ```
 
-通常処理・Taskが実行中なら最大15分待つ。2秒間隔で再確認し、待機中は取得済みの全ロックを解放する。ロックを削除せず、Worker/Taskを強制終了・無効化しない。Taskのtrigger/principal/settings/DACLは維持する。
+通常処理・Taskが実行中なら最大15分待つ。待機中にロックは保持しない。ロック削除・Worker/Taskの強制終了・無効化はしない。HTTPS照合後にもsudo直前のロック再確認を行う。更新前の既知 `existing_lock` 競合だけ再試行し、その他の不一致・更新途中の失敗は停止する。
 
-空きが確認できたら本番HTTPSの固定build/revision/capabilitiesを読取照合し、元の固定WSL root applierをsudoで実行する。root側はロック取得後に全before hash、12 receipt、準備/配送/Worker状態、Node、指定ファイルとTask契約を再照合する。ロック待ちの間に先に取ったロックを保持し続けない。Windows管理者権限は追加しない。
+root側は新しい別stageで次を実施する。
 
-更新前の `existing_lock` 競合だけは自然終了後に再試行できる。固定bytes/実行環境/receipt/状態の不一致、未完了ジョブ、署名やapplyの疑い、更新に入った後の失敗は再試行せず停止する。15分以内に空かなければ安全に終了し、その出力からCodexが確認する。
+1. 全before hash、12 receipt、準備/配送/Worker状態、Node、image識別を既存ロック内で再照合する。
+2. 旧stage `9955a6dbf84c` の実行資材pinと退避ファイルを読取検査する。退避が `worker-contribution.ts.before` 1件・domainの旧SHA `7bb75f38d7b27829c6e5de32bbc90ef6cd740f5ce6d3ff3b6978f73ab35fd59b` と一致しなければ停止する。旧stageは変更しない。
+3. 全退避先を先に検査し、Worker相対パスを保持する一意な名前で保存する。既存4ファイルのbytesと元の所有者/mode、新設3ファイルの「元は不存在」をmanifestへ記録する。
+4. 元の承認範囲の固定source、Windows Delivery TaskのAction参照、Worker 5ファイル、approver、delivery設定を更新し、署名しないself-checkを実行する。失敗時は既存の差戻し処理を使う。
+
+既存base/collector/config/承認/依頼/12 receipt、Taskのtrigger/principal/settings/DACLを保持する。Windows管理者権限は追加しない。受入・署名・KG apply/restore・会員migrationは行わない。
 
 ## 成功時に返すもの
 
-最後の `target: wsl` のJSONを返す。`workerOverlayFiles: 5`、`formalReceiptsPreserved: 12`、`signed: false`、`applyCalls: 0`、署名しないself-checkが成功していることを確認する。結果不明やエラー時はその出力を返し、`all` を再実行しない。
+最後の `target: wsl` JSONを返す。`workerOverlayFiles: 5`、`formalReceiptsPreserved: 12`、`previousBackup.preserved: true`、`backupManifestSha256`、self-check成功、`signed: false`、`applyCalls: 0` を確認する。エラー時はその出力を返し、同じコマンドや `all` を手動で繰り返さない。
 
-その後Codexが実設置Worker/operator/Webの互換性、通常の準備処理、Workerの正常実行・再開状態、退避資材を確認し、最終記録をcommit/pushする。WSL設置が未完了の現在はこれらを完了扱いにしない。
+結果を受け取り、Codexが実設置Worker/operator/Webの互換性、通常準備処理、Workerの正常動作、退避資材を検証し最終記録をcommit/pushする。現在WSL更新は未完了。
 
-## 固定資材と復旧
+## 固定資材・復旧
 
-今回の再開補助は元runner `2bc74c5e…`、root applier `74a2bb1a…`、payload manifest `9955a6db…` を完全hashで固定し、元の承認済み資材 `f9636c95…` を変更しない。詳細は [修正版包](operator-package-installation-fix2.json) と [現在地](vps-update-and-wsl-pending.json)。
+- 元runner: `2bc74c5e98e3b51533c6d3ea806b2c023def48792af414fd31171f4840ab81e8`
+- 修正root applier: `25ba1bbb90be4bc86e958a922b37dfbb3085749674346d717fa4c35efd05f0c6`
+- 修正payload manifest: `aecfca028124c954a9cdcb178e87ee87b478f3ac2767093cd46885cedab52535`
+- 新WSL stage: `/root/plunode-bundle2-update-aecfca028124`
+- 元の承認済み資材manifest: `f9636c957b2566575ee89266bcd1901e155dbb35aa6e2d342080568bf167a2af`（不変）
 
-root stageは両環境の `/root/plunode-bundle2-update-9955a6dbf84c`。VPSのbackup/に旧code/config/compose、KG読取backup、会員dumpが保持される。WSLの更新時も旧source参照/Task/Worker/approver/configを退避する。旧stage `ad596417d0ab` / `cb472351bf04` も保持。復旧は承認されたコード・設定・Web imageの差戻しのみで、KG/member restoreは自動実行しない。
+[修正版包](operator-package-wsl-backup-fix3.json)のpayloadは既存資材を再利用し、imageを再build・再saveしていない。退避は新stageの `backup/worker/<runtime相対パス>.before`、`backup/protected/<絶対パスの先頭slashを除いたパス>.before`。`backup/wsl-backup-manifest.json` に元ファイルとの対応とSHA/uid/gid/mode/存在有無を保存し、Task XMLは `backup/windows-task.before.xml` に保持する。復旧時はこの対応を使用し、basenameだけから復元先を推測しない。
 
-前2回の棚卸しエラーと修正は [README.md](README.md)、[初回分類修正](journal-inventory-fix.json)、[導入snapshot照合](installation-inventory-fix.json)。今回のWSL停止は棚卸しではなく、更新前の正常な排他拒否である。
+旧stage `ad596417d0ab` / `cb472351bf04` / `9955a6dbf84c` とVPSのbackupは削除・置換しない。コード・設定・Taskの差戻し範囲は [RECOVERY.md](../RECOVERY.md) に従う。KG/member restoreや旧journal/receiptへの巻戻しは行わない。

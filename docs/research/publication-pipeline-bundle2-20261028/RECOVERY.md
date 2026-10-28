@@ -29,6 +29,7 @@
 - gate/configの変更途中：新preparationを起動する前に、固定backupのcode/config/manifestを一組として戻す。wrapper整合と現在revisionを確認。keys・journalsを過去へ戻さない。
 - WSL/Windowsの片側だけ切替：delivery source/configとTask Actionを旧sourceの一組へ戻す。scheduleの有効無効で回避せず、通常idleの既存lock内で整合させる。
 - Worker差替え失敗：5ファイルのみbefore bytesへ戻す（新設3ファイルは未参照を確認して取り除く）。config/collector/依頼/receiptへ触れない。
+- 退避名衝突修正後のWSL包：`backup/wsl-backup-manifest.json` の元パス・SHA・uid/gid/mode・存在有無を復旧の対応表とする。`worker/<runtime相対パス>.before` と `protected/<絶対パスの先頭slashを除いたパス>.before` を使い、basenameから復元先を推測しない。旧stage `9955a6dbf84c` の途中退避は上書きせず保持する。更新中の例外は既存のメモリ内before bytesから自動差戻しを行う。プロセス中断等で結果不明なら自動再実行せず、実hash・Task参照と対応表を照合してから承認範囲のコード／設定だけを復旧する。
 - 署名後結果不明：`publication-delivery.py --config /etc/plunode-publication/delivery.json --job <同nonceのjob.json> --diagnose`。completedなら追加操作不要。終了処理待ちなら既存の同nonce配送だけを再開。不一致なら調査し、新nonce・再署名・再applyは行わない。
 
 ## 隔離再現
