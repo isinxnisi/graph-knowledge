@@ -1,6 +1,6 @@
 # CollectionWorkerの実行制御
 
-確認: 2026-10-28 09:22:16 JST。
+確認: 2026-10-28 09:28:28 JST。
 
 反映済みcontrolRevision: 8／最後の操作: pub-13abfb93-ba2d-44f7-a56b-352aa7ab0ab0-resume。
 
@@ -65,6 +65,10 @@ Issue確認結果:
   "collection-control/issue-sources/56.json": {
     "status": "registered: issue-56-dot-urushibara-two-20261028",
     "checkedAt": "2026-10-28T00:05:14+00:00"
+  },
+  "collection-control/issue-sources/57.json": {
+    "status": "registered: issue-57-dot-oshima-two-20261028",
+    "checkedAt": "2026-10-28T00:27:15+00:00"
   }
 }
 ```

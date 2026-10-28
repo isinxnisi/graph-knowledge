@@ -44,7 +44,8 @@
   "requestsByPhase": {
     "blocked": 12,
     "completed": 26,
-    "awaiting-recovery": 2
+    "awaiting-recovery": 2,
+    "waiting-control": 1
   },
   "issueIntake": {
     "collection-control/issue-sources/25.json": {
@@ -90,6 +91,10 @@
     "collection-control/issue-sources/56.json": {
       "status": "registered: issue-56-dot-urushibara-two-20261028",
       "checkedAt": "2026-10-28T00:05:14+00:00"
+    },
+    "collection-control/issue-sources/57.json": {
+      "status": "registered: issue-57-dot-oshima-two-20261028",
+      "checkedAt": "2026-10-28T00:27:15+00:00"
     }
   },
   "publicApply": false,
@@ -131,5 +136,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-10-28T00:22:16.440629+00:00"
+  "checkedAt": "2026-10-28T00:28:28.560130+00:00"
 }
