@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "scope": "specified-japanese-volume-1-isbn-only",
+  "publications": [
+    {
+      "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I000002939424",
+      "isbn13": [
+        "9784063142556"
+      ],
+      "title": [
+        "蟲師. 1"
+      ],
+      "mainTitles": [
+        "蟲師"
+      ],
+      "volume": [
+        "1"
+      ],
+      "edition": [],
+      "responsibilities": [
+        "漆原友紀 著"
+      ],
+      "publisher": [
+        "講談社"
+      ],
+      "language": [
+        "jpn"
+      ],
+      "genre": [
+        "漫画"
+      ],
+      "issued": "2000.11",
+      "searchTruncated": false,
+      "selectionBoundary": "representative-first-volume-among-observed-records-not-original-edition"
+    }
+  ]
+}

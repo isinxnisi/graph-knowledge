@@ -1,0 +1,57 @@
+{
+  "schemaVersion": 2,
+  "id": "manga-r0036",
+  "catalog": "docs/research/famous-manga-creators/20261016/candidates.json",
+  "baseRelease": "datasets/public-kg/releases/20261014-credits-001",
+  "stamp": "2026-10-28T00:06:48Z",
+  "requestPolicy": {
+    "maxAttempts": 30,
+    "attemptsPerRequest": 2,
+    "minIntervalSeconds": 3,
+    "timeoutSeconds": 20,
+    "maxBytes": 4194304
+  },
+  "outputPolicy": {
+    "maxNewEntities": 2,
+    "maxNewClaims": 3,
+    "newClaimVisibility": "hidden"
+  },
+  "people": [
+    {
+      "name": "漆原友紀",
+      "catalogName": "漆原友紀",
+      "wikidata": "Q272333",
+      "identityNames": [
+        "漆原友紀"
+      ],
+      "creditNames": [
+        "漆原友紀"
+      ]
+    }
+  ],
+  "works": [
+    {
+      "name": "蟲師",
+      "wikidata": "Q1055370",
+      "identityNames": [
+        "蟲師"
+      ],
+      "isbn13": "9784063142556",
+      "ndlMainTitles": [
+        "蟲師"
+      ],
+      "expectedVolume": [
+        "1"
+      ],
+      "expectedEdition": [],
+      "volumeLabel": "第1巻（NDL巻次 1）",
+      "editionLabel": null,
+      "identityNote": "Issueの名称とWikidataの完全一致・漫画型、NDL作成書誌の主書名・責任表示・巻次を照合。作品全体の担当へ外挿しない。",
+      "selectionReason": "承認済みIssue内の同作者経路の拡張。"
+    }
+  ],
+  "reviewArtifacts": [
+    "datasets/manga-collection/r0036/anchor-review.json",
+    "datasets/manga-collection/r0036/publication-review.json"
+  ]
+}
