@@ -1,0 +1,76 @@
+{
+  "schemaVersion": 2,
+  "id": "manga-r0039",
+  "catalog": "docs/research/famous-manga-creators/20261016/candidates.json",
+  "baseRelease": "datasets/public-kg/releases/20261014-credits-001",
+  "stamp": "2026-10-28T01:41:37Z",
+  "requestPolicy": {
+    "maxAttempts": 30,
+    "attemptsPerRequest": 2,
+    "minIntervalSeconds": 3,
+    "timeoutSeconds": 20,
+    "maxBytes": 4194304
+  },
+  "outputPolicy": {
+    "maxNewEntities": 3,
+    "maxNewClaims": 6,
+    "newClaimVisibility": "hidden"
+  },
+  "people": [
+    {
+      "name": "久保帯人",
+      "catalogName": "久保帯人",
+      "wikidata": "Q295073",
+      "identityNames": [
+        "久保帯人"
+      ],
+      "creditNames": [
+        "久保帯人"
+      ]
+    }
+  ],
+  "works": [
+    {
+      "name": "BLEACH",
+      "wikidata": "Q12685666",
+      "identityNames": [
+        "BLEACH"
+      ],
+      "isbn13": "9784081135974",
+      "ndlMainTitles": [
+        "Bleach"
+      ],
+      "expectedVolume": [
+        "1 (死神代行篇 1 (邂逅))"
+      ],
+      "expectedEdition": [],
+      "volumeLabel": "第1巻（NDL巻次 1 (死神代行篇 1 (邂逅))）",
+      "editionLabel": null,
+      "identityNote": "Issueの名称とWikidataの完全一致・漫画型、NDL作成書誌の主書名・責任表示・巻次を照合。作品全体の担当へ外挿しない。",
+      "selectionReason": "承認済みIssue内の同作者経路の拡張。"
+    },
+    {
+      "name": "BURN THE WITCH",
+      "wikidata": "Q55237911",
+      "identityNames": [
+        "BURN THE WITCH"
+      ],
+      "isbn13": "9784088824284",
+      "ndlMainTitles": [
+        "BURN THE WITCH"
+      ],
+      "expectedVolume": [
+        "1"
+      ],
+      "expectedEdition": [],
+      "volumeLabel": "第1巻（NDL巻次 1）",
+      "editionLabel": null,
+      "identityNote": "Issueの名称とWikidataの完全一致・漫画型、NDL作成書誌の主書名・責任表示・巻次を照合。作品全体の担当へ外挿しない。",
+      "selectionReason": "承認済みIssue内の同作者経路の拡張。"
+    }
+  ],
+  "reviewArtifacts": [
+    "datasets/manga-collection/r0039/anchor-review.json",
+    "datasets/manga-collection/r0039/publication-review.json"
+  ]
+}

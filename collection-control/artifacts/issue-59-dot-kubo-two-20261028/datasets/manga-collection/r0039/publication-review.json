@@ -1,0 +1,68 @@
+{
+  "schemaVersion": 1,
+  "scope": "specified-japanese-volume-1-isbn-only",
+  "publications": [
+    {
+      "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I029136607",
+      "isbn13": [
+        "9784081135974"
+      ],
+      "title": [
+        "Bleach. 1 (死神代行篇 1 (邂逅))"
+      ],
+      "mainTitles": [
+        "Bleach"
+      ],
+      "volume": [
+        "1 (死神代行篇 1 (邂逅))"
+      ],
+      "edition": [],
+      "responsibilities": [
+        "久保帯人 著"
+      ],
+      "publisher": [
+        "集英社"
+      ],
+      "language": [
+        "jpn"
+      ],
+      "genre": [
+        "漫画"
+      ],
+      "issued": "2016.11",
+      "searchTruncated": true,
+      "selectionBoundary": "representative-first-volume-among-observed-records-not-original-edition"
+    },
+    {
+      "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I030650368",
+      "isbn13": [
+        "9784088824284"
+      ],
+      "title": [
+        "BURN THE WITCH. 1"
+      ],
+      "mainTitles": [
+        "BURN THE WITCH"
+      ],
+      "volume": [
+        "1"
+      ],
+      "edition": [],
+      "responsibilities": [
+        "久保帯人 著"
+      ],
+      "publisher": [
+        "集英社"
+      ],
+      "language": [
+        "jpn"
+      ],
+      "genre": [
+        "漫画"
+      ],
+      "issued": "2020.10",
+      "searchTruncated": false,
+      "selectionBoundary": "representative-first-volume-among-observed-records-not-original-edition"
+    }
+  ]
+}

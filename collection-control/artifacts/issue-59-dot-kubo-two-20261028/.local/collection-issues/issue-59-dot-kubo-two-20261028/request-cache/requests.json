@@ -1,0 +1,225 @@
+{
+  "policy": {
+    "maxAttempts": 30,
+    "attemptsPerRequest": 2,
+    "minIntervalSeconds": 3,
+    "timeoutSeconds": 20,
+    "maxBytes": 4194304
+  },
+  "attempts": [
+    {
+      "key": "lookup-9b7760c1437c583382225940",
+      "url": "https://www.wikidata.org/w/api.php?format=json&action=wbgetentities&sites=jawiki&titles=%E4%B9%85%E4%BF%9D%E5%B8%AF%E4%BA%BA%7CBLEACH%7CBURN+THE+WITCH&props=labels%7Caliases%7Cclaims&languages=ja%7Cen",
+      "time": 1793151697.8928626,
+      "status": "succeeded",
+      "diagnostic": {
+        "category": "success",
+        "phase": "response-complete",
+        "httpStatus": 200,
+        "elapsedSeconds": 6.739159,
+        "finishedAt": "2026-10-28T01:41:44+00:00"
+      }
+    },
+    {
+      "key": "wikidata-Q295073",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q295073.json",
+      "time": 1793151704.6458106,
+      "status": "succeeded",
+      "diagnostic": {
+        "category": "success",
+        "phase": "response-complete",
+        "httpStatus": 200,
+        "elapsedSeconds": 1.433933,
+        "finishedAt": "2026-10-28T01:41:46+00:00"
+      }
+    },
+    {
+      "key": "lookup-ef606754be3c9a3a7e061c1c",
+      "url": "https://www.wikidata.org/w/api.php?format=json&action=wbsearchentities&search=BLEACH&language=ja&type=item&limit=5",
+      "time": 1793151707.6476736,
+      "status": "succeeded",
+      "diagnostic": {
+        "category": "success",
+        "phase": "response-complete",
+        "httpStatus": 200,
+        "elapsedSeconds": 0.804405,
+        "finishedAt": "2026-10-28T01:41:48+00:00"
+      }
+    },
+    {
+      "key": "lookup-bd34172bcc3a9b0be22f5461",
+      "url": "https://www.wikidata.org/w/api.php?format=json&action=wbgetentities&ids=Q904%7CQ5362638%7CQ12685666%7CQ407204%7CQ27958503&props=labels%7Caliases%7Cclaims&languages=ja%7Cen",
+      "time": 1793151710.6500459,
+      "status": "succeeded",
+      "diagnostic": {
+        "category": "success",
+        "phase": "response-complete",
+        "httpStatus": 200,
+        "elapsedSeconds": 2.183984,
+        "finishedAt": "2026-10-28T01:41:52+00:00"
+      }
+    },
+    {
+      "key": "wikidata-Q12685666",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q12685666.json",
+      "time": 1793151713.6512,
+      "status": "succeeded",
+      "diagnostic": {
+        "category": "success",
+        "phase": "response-complete",
+        "httpStatus": 200,
+        "elapsedSeconds": 0.869369,
+        "finishedAt": "2026-10-28T01:41:54+00:00"
+      }
+    },
+    {
+      "key": "publication-7304e52e2afdaef222f5f488",
+      "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&onlyBib=true&maximumRecords=100&query=title%3D%22BLEACH%22+AND+creator%3D%22%E4%B9%85%E4%BF%9D%E5%B8%AF%E4%BA%BA%22+AND+dpid%3Diss-ndl-opac+sortBy+issued_date%2Fsort.ascending",
+      "time": 1793151716.6525254,
+      "status": "failed",
+      "error": "TimeoutError",
+      "diagnostic": {
+        "category": "transport",
+        "phase": "open-through-response-headers",
+        "phaseBoundary": "open-through-response-headers",
+        "elapsedSeconds": 20.101274,
+        "finishedAt": "2026-10-28T01:42:16.757801+00:00",
+        "httpStatus": null,
+        "causes": [
+          {
+            "type": "TimeoutError"
+          }
+        ]
+      }
+    },
+    {
+      "key": "wikidata-Q55237911",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q55237911.json",
+      "time": 1793151736.779553,
+      "status": "succeeded",
+      "diagnostic": {
+        "category": "success",
+        "phase": "response-complete",
+        "httpStatus": 200,
+        "elapsedSeconds": 0.938768,
+        "finishedAt": "2026-10-28T01:42:17+00:00"
+      }
+    },
+    {
+      "key": "publication-c00cf0c068d278d9723d8e4a",
+      "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&onlyBib=true&maximumRecords=100&query=title%3D%22BURN+THE+WITCH%22+AND+creator%3D%22%E4%B9%85%E4%BF%9D%E5%B8%AF%E4%BA%BA%22+AND+dpid%3Diss-ndl-opac+sortBy+issued_date%2Fsort.ascending",
+      "time": 1793151739.7818394,
+      "status": "succeeded",
+      "diagnostic": {
+        "category": "success",
+        "phase": "response-complete",
+        "httpStatus": 200,
+        "elapsedSeconds": 7.637464,
+        "finishedAt": "2026-10-28T01:42:27+00:00"
+      }
+    },
+    {
+      "key": "ndl-9784088824284",
+      "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&maximumRecords=5&query=isbn%3D%229784088824284%22+AND+dpid%3Diss-ndl-opac",
+      "time": 1793151747.439062,
+      "status": "succeeded",
+      "diagnostic": {
+        "category": "success",
+        "phase": "response-complete",
+        "httpStatus": 200,
+        "elapsedSeconds": 5.108403,
+        "finishedAt": "2026-10-28T01:42:32+00:00"
+      }
+    },
+    {
+      "key": "publication-7304e52e2afdaef222f5f488",
+      "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&onlyBib=true&maximumRecords=100&query=title%3D%22BLEACH%22+AND+creator%3D%22%E4%B9%85%E4%BF%9D%E5%B8%AF%E4%BA%BA%22+AND+dpid%3Diss-ndl-opac+sortBy+issued_date%2Fsort.ascending",
+      "time": 1793167843.0022898,
+      "status": "succeeded",
+      "diagnostic": {
+        "category": "success",
+        "phase": "response-complete",
+        "httpStatus": 200,
+        "elapsedSeconds": 16.838348,
+        "finishedAt": "2026-10-28T06:10:59+00:00"
+      }
+    },
+    {
+      "key": "ndl-9784081135974",
+      "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&maximumRecords=5&query=isbn%3D%229784081135974%22+AND+dpid%3Diss-ndl-opac",
+      "time": 1793167859.9544125,
+      "status": "succeeded",
+      "diagnostic": {
+        "category": "success",
+        "phase": "response-complete",
+        "httpStatus": 200,
+        "elapsedSeconds": 6.421399,
+        "finishedAt": "2026-10-28T06:11:06+00:00"
+      }
+    }
+  ],
+  "responses": {
+    "lookup-9b7760c1437c583382225940": {
+      "url": "https://www.wikidata.org/w/api.php?format=json&action=wbgetentities&sites=jawiki&titles=%E4%B9%85%E4%BF%9D%E5%B8%AF%E4%BA%BA%7CBLEACH%7CBURN+THE+WITCH&props=labels%7Caliases%7Cclaims&languages=ja%7Cen",
+      "sha256": "c77089d4e43c92722f66e2bef55b57e42706da29be8995451d3e6fe10918670f",
+      "bytes": 104923,
+      "fetchedAt": "2026-10-28T01:41:44+00:00"
+    },
+    "wikidata-Q295073": {
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q295073.json",
+      "sha256": "bd3c298112f091eee974f6f4479cb926301fc88fcff7eaa70cd3074426a23c15",
+      "bytes": 76213,
+      "fetchedAt": "2026-10-28T01:41:46+00:00"
+    },
+    "lookup-ef606754be3c9a3a7e061c1c": {
+      "url": "https://www.wikidata.org/w/api.php?format=json&action=wbsearchentities&search=BLEACH&language=ja&type=item&limit=5",
+      "sha256": "c272bf3ca1cae5d276ccde2b50e10171f6abc4eb194f7ede5f2cfbf35c869f33",
+      "bytes": 2249,
+      "fetchedAt": "2026-10-28T01:41:48+00:00"
+    },
+    "lookup-bd34172bcc3a9b0be22f5461": {
+      "url": "https://www.wikidata.org/w/api.php?format=json&action=wbgetentities&ids=Q904%7CQ5362638%7CQ12685666%7CQ407204%7CQ27958503&props=labels%7Caliases%7Cclaims&languages=ja%7Cen",
+      "sha256": "cfb2b6818aaf9c5b3e0587487fc01af6bc69f5f22d343154133f6e8beb0a0476",
+      "bytes": 246932,
+      "fetchedAt": "2026-10-28T01:41:52+00:00"
+    },
+    "wikidata-Q12685666": {
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q12685666.json",
+      "sha256": "5e3844128415a557eff91b42a7fa877a82cb1e07ce2b00223f0d06994b507ea7",
+      "bytes": 30890,
+      "fetchedAt": "2026-10-28T01:41:54+00:00"
+    },
+    "wikidata-Q55237911": {
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q55237911.json",
+      "sha256": "e5ddd936bc88b9207cfd98696113fa8609809350e12f2f162aff9055d987c7a2",
+      "bytes": 28067,
+      "fetchedAt": "2026-10-28T01:42:17+00:00"
+    },
+    "publication-c00cf0c068d278d9723d8e4a": {
+      "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&onlyBib=true&maximumRecords=100&query=title%3D%22BURN+THE+WITCH%22+AND+creator%3D%22%E4%B9%85%E4%BF%9D%E5%B8%AF%E4%BA%BA%22+AND+dpid%3Diss-ndl-opac+sortBy+issued_date%2Fsort.ascending",
+      "sha256": "eace309217586a9a5422b38b32a2d350d5cbf7872f538099c5f89437f9358238",
+      "bytes": 19201,
+      "fetchedAt": "2026-10-28T01:42:27+00:00"
+    },
+    "ndl-9784088824284": {
+      "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&maximumRecords=5&query=isbn%3D%229784088824284%22+AND+dpid%3Diss-ndl-opac",
+      "sha256": "4defdbb3aeeac2857a09280a0589c50291c21a1ddde62e6ba6a3db7bc8747e36",
+      "bytes": 8449,
+      "fetchedAt": "2026-10-28T01:42:32+00:00"
+    },
+    "publication-7304e52e2afdaef222f5f488": {
+      "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&onlyBib=true&maximumRecords=100&query=title%3D%22BLEACH%22+AND+creator%3D%22%E4%B9%85%E4%BF%9D%E5%B8%AF%E4%BA%BA%22+AND+dpid%3Diss-ndl-opac+sortBy+issued_date%2Fsort.ascending",
+      "sha256": "9db6e1306f23b0f9fb310b30b7c9405565ba72f73370b1429aca607a7b7ef0ba",
+      "bytes": 598225,
+      "fetchedAt": "2026-10-28T06:10:59+00:00"
+    },
+    "ndl-9784081135974": {
+      "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&maximumRecords=5&query=isbn%3D%229784081135974%22+AND+dpid%3Diss-ndl-opac",
+      "sha256": "2af40c3dca20d55f165146d62acf10d6bd28b1594c79ac458f774d631d62ddfa",
+      "bytes": 7087,
+      "fetchedAt": "2026-10-28T06:11:06+00:00"
+    }
+  },
+  "blockedUntil": 0,
+  "requestRetryAt": {}
+}
