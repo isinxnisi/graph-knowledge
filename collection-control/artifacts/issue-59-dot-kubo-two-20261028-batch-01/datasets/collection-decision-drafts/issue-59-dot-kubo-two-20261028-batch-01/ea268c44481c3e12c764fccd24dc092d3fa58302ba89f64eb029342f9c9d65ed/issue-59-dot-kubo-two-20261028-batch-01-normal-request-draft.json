@@ -1,0 +1,157 @@
+{
+  "schemaVersion": 1,
+  "id": "issue-59-dot-kubo-two-20261028-batch-01-normal",
+  "kind": "accept-release",
+  "status": "draft-not-approved",
+  "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
+  "parentRequestId": "issue-59-dot-kubo-two-20261028-batch-01",
+  "applyAuthorized": {
+    "local": false,
+    "beta": false,
+    "vps": false
+  },
+  "decision": {
+    "schemaVersion": 1,
+    "decisionId": "issue-59-dot-kubo-two-20261028-batch-01-normal",
+    "status": "draft-not-approved",
+    "humanDecision": {
+      "actorType": "human",
+      "reviewer": null,
+      "decidedAt": null,
+      "statement": null
+    },
+    "approvalScope": "formal-record-acceptance-and-release-preparation-only",
+    "applyAuthorized": {
+      "local": false,
+      "beta": false,
+      "vps": false
+    },
+    "review": {
+      "file": "datasets/manga-collection/workflow-reviews/issue-59-dot-kubo-two-20261028-r0001-00347e7b023773d6-review-8c5844afc8a0fbdf/review-manifest.json",
+      "sha256": "ea268c44481c3e12c764fccd24dc092d3fa58302ba89f64eb029342f9c9d65ed"
+    },
+    "referenceArtifacts": [
+      {
+        "file": "datasets/manga-collection/workflow-reviews/issue-59-dot-kubo-two-20261028-r0001-00347e7b023773d6-review-8c5844afc8a0fbdf/README.md",
+        "sha256": "b93dd1c3e21977ebed6cfc8040d68b4d46ec3ceea148a0d54400b225ec289752"
+      },
+      {
+        "file": "datasets/manga-collection/workflow-reviews/issue-59-dot-kubo-two-20261028-r0001-00347e7b023773d6-review-8c5844afc8a0fbdf/context.json",
+        "sha256": "078bf4b1655728395eae9eeedf7cf2fcbef4876896d6e8c744d5a74a34338bb5"
+      },
+      {
+        "file": "datasets/manga-collection/workflow-reviews/issue-59-dot-kubo-two-20261028-r0001-00347e7b023773d6-review-8c5844afc8a0fbdf/decision-request.json",
+        "sha256": "0b0bc3fc170188618ee202211cf8d96b4b3d4cdf5cc2d1131e737003c80e7d22"
+      },
+      {
+        "file": "datasets/manga-collection/workflow-reviews/issue-59-dot-kubo-two-20261028-r0001-00347e7b023773d6-review-8c5844afc8a0fbdf/exploration-paths.json",
+        "sha256": "9e7e350d6feebbe06301fa79765a2e3916c79b19c01868daeed131510978e907"
+      },
+      {
+        "file": "datasets/manga-collection/workflow-reviews/issue-59-dot-kubo-two-20261028-r0001-00347e7b023773d6-review-8c5844afc8a0fbdf/identity-only-records.json",
+        "sha256": "1fc314e4a47717bce195b39fe7f1e66bd31f6af892fca4a9420a653eab927a37"
+      },
+      {
+        "file": "datasets/manga-collection/workflow-reviews/issue-59-dot-kubo-two-20261028-r0001-00347e7b023773d6-review-8c5844afc8a0fbdf/proposed-records.json",
+        "sha256": "f84a8ba158c1a668400a4198dc9f90fd52152f27959d309d00dd8a699a60ffca"
+      },
+      {
+        "file": "datasets/manga-collection/workflow-reviews/issue-59-dot-kubo-two-20261028-r0001-00347e7b023773d6-review-8c5844afc8a0fbdf/review-manifest.json",
+        "sha256": "ea268c44481c3e12c764fccd24dc092d3fa58302ba89f64eb029342f9c9d65ed"
+      },
+      {
+        "file": "datasets/manga-collection/workflow-reviews/issue-59-dot-kubo-two-20261028-r0001-00347e7b023773d6-review-8c5844afc8a0fbdf/review.json",
+        "sha256": "7e580566255094b7f06a2054a6e5d2b20ac6e62679ecd17826bfa92bdd22099c"
+      }
+    ],
+    "acceptedRecordIds": {
+      "entities": [
+        "398992d4-e691-4b85-a3c9-d7aac12a7656",
+        "46f3495e-2aa7-4055-bade-adaaac4684b8",
+        "6d6f4a25-7bac-4d77-961b-b38d332d8501"
+      ],
+      "claims": [
+        "5b908144-891a-4f41-b1a1-7cc53cf9dc20",
+        "fd5be30b-cf2d-4102-ab7d-476a0cea15c3"
+      ],
+      "sources": [
+        "2b975751-7135-4f45-b7f5-c1b1ec554f13",
+        "ce8df1ad-aa8e-487a-a745-149bb94d3719"
+      ],
+      "citations": [
+        "301f91f8-f898-4585-a126-a9b0d0dee5a9",
+        "592176e6-0ed2-41a1-a1c8-086f0ad33adc"
+      ]
+    },
+    "recordSha256": {
+      "entities": {
+        "398992d4-e691-4b85-a3c9-d7aac12a7656": "ef53c8576d46d96db5224d3fb5b7caaa6ba147176f59cc5b9cc10a4e5646cfa1",
+        "46f3495e-2aa7-4055-bade-adaaac4684b8": "ad1afa4e78bd01e402bceffa0df7851ee4a7abb00c8a61bc74bec0ac353919e2",
+        "6d6f4a25-7bac-4d77-961b-b38d332d8501": "53bd50214ab88a6fea60ef281762c51be39a4f656ec531803ee3130dc90f1f53"
+      },
+      "claims": {
+        "5b908144-891a-4f41-b1a1-7cc53cf9dc20": "7561ce0744e2369c71dd2e2a00e5a40bfa82f3ea1d41fbbfdfa223a268c18307",
+        "fd5be30b-cf2d-4102-ab7d-476a0cea15c3": "90298ee67a92f67923c51f894f8f0aec92832ff39bc5dbda282d318a87160ce4"
+      },
+      "sources": {
+        "2b975751-7135-4f45-b7f5-c1b1ec554f13": "515804d8092cbbed60b1cb570f204b6d36b2c3ad0e3ee395dcb54db77a057f0a",
+        "ce8df1ad-aa8e-487a-a745-149bb94d3719": "e2c25f3c0827ed197953b8b5bdc2b951eb65f4ccc3616a220184d5fda9d22be0"
+      },
+      "citations": {
+        "301f91f8-f898-4585-a126-a9b0d0dee5a9": "46ebfedfb8d34d99049fea836a2f847634b8480dca21e13ae23a288fc3843389",
+        "592176e6-0ed2-41a1-a1c8-086f0ad33adc": "3be85ef7f4baefb7eb255c118288763bf921b20a11de2bca0281f4c62ef5cf49"
+      }
+    },
+    "scopeByClaim": [
+      {
+        "id": "5b908144-891a-4f41-b1a1-7cc53cf9dc20",
+        "subjectId": "46f3495e-2aa7-4055-bade-adaaac4684b8",
+        "objectId": "398992d4-e691-4b85-a3c9-d7aac12a7656",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "contribution": {
+          "roleId": "AUTHORSHIP",
+          "scope": {
+            "kind": "publication",
+            "isbn13": "9784081135974",
+            "volumeLabel": "第1巻（NDL巻次 1 (死神代行篇 1 (邂逅))）",
+            "editionLabel": null,
+            "language": "ja"
+          }
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      },
+      {
+        "id": "fd5be30b-cf2d-4102-ab7d-476a0cea15c3",
+        "subjectId": "46f3495e-2aa7-4055-bade-adaaac4684b8",
+        "objectId": "6d6f4a25-7bac-4d77-961b-b38d332d8501",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "contribution": {
+          "roleId": "AUTHORSHIP",
+          "scope": {
+            "kind": "publication",
+            "isbn13": "9784088824284",
+            "volumeLabel": "第1巻（NDL巻次 1）",
+            "editionLabel": null,
+            "language": "ja"
+          }
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      }
+    ],
+    "baseRelease": "20261014-credits-001",
+    "baseRevision": "82b01515-594c-48ca-b4b6-515eefac83ca",
+    "releaseId": "manga-issue-59-dot-kubo-two-20261028-batch-01-normal"
+  }
+}

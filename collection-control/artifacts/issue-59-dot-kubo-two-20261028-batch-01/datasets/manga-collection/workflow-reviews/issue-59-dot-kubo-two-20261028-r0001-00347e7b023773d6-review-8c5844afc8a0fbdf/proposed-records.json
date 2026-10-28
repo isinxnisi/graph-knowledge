@@ -1,0 +1,175 @@
+{
+  "status": "pending-human-acceptance",
+  "formalAcceptance": "pending",
+  "notForPublicApply": true,
+  "records": {
+    "entities": [
+      {
+        "id": "398992d4-e691-4b85-a3c9-d7aac12a7656",
+        "kind": "work",
+        "name": "BLEACH",
+        "description": null,
+        "aliases": [
+          "Bleach"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q12685666"
+          }
+        ],
+        "createdAt": "2026-10-28T01:41:37Z",
+        "updatedAt": "2026-10-28T01:41:37Z",
+        "event": null
+      },
+      {
+        "id": "46f3495e-2aa7-4055-bade-adaaac4684b8",
+        "kind": "person",
+        "name": "久保帯人",
+        "description": null,
+        "aliases": [
+          "Tite Kubo"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q295073"
+          }
+        ],
+        "createdAt": "2026-10-28T01:41:37Z",
+        "updatedAt": "2026-10-28T01:41:37Z",
+        "event": null
+      },
+      {
+        "id": "6d6f4a25-7bac-4d77-961b-b38d332d8501",
+        "kind": "work",
+        "name": "BURN THE WITCH",
+        "description": null,
+        "aliases": [
+          "Burn the Witch"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q55237911"
+          }
+        ],
+        "createdAt": "2026-10-28T01:41:37Z",
+        "updatedAt": "2026-10-28T01:41:37Z",
+        "event": null
+      }
+    ],
+    "claims": [
+      {
+        "id": "5b908144-891a-4f41-b1a1-7cc53cf9dc20",
+        "subjectId": "46f3495e-2aa7-4055-bade-adaaac4684b8",
+        "objectId": "398992d4-e691-4b85-a3c9-d7aac12a7656",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "hidden",
+        "createdAt": "2026-10-28T01:41:37Z",
+        "updatedAt": "2026-10-28T01:41:37Z",
+        "contribution": {
+          "roleId": "AUTHORSHIP",
+          "scope": {
+            "kind": "publication",
+            "isbn13": "9784081135974",
+            "volumeLabel": "第1巻（NDL巻次 1 (死神代行篇 1 (邂逅))）",
+            "editionLabel": null,
+            "language": "ja"
+          }
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      },
+      {
+        "id": "fd5be30b-cf2d-4102-ab7d-476a0cea15c3",
+        "subjectId": "46f3495e-2aa7-4055-bade-adaaac4684b8",
+        "objectId": "6d6f4a25-7bac-4d77-961b-b38d332d8501",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "hidden",
+        "createdAt": "2026-10-28T01:41:37Z",
+        "updatedAt": "2026-10-28T01:41:37Z",
+        "contribution": {
+          "roleId": "AUTHORSHIP",
+          "scope": {
+            "kind": "publication",
+            "isbn13": "9784088824284",
+            "volumeLabel": "第1巻（NDL巻次 1）",
+            "editionLabel": null,
+            "language": "ja"
+          }
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      }
+    ],
+    "sources": [
+      {
+        "id": "2b975751-7135-4f45-b7f5-c1b1ec554f13",
+        "kind": "web",
+        "title": "NDLサーチ: Bleach. 1 (死神代行篇 1 (邂逅))",
+        "authors": [],
+        "publisher": "国立国会図書館",
+        "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I029136607",
+        "publishedAt": null,
+        "edition": null,
+        "note": "国立国会図書館作成書誌（iss-ndl-opac）の責任表示。メタデータ CC BY 4.0: https://creativecommons.org/licenses/by/4.0/ ; 提供元条件 https://ndlsearch.ndl.go.jp/help/api/provider 。本文・画像・第三者所蔵情報は含まない。",
+        "isDemo": false
+      },
+      {
+        "id": "ce8df1ad-aa8e-487a-a745-149bb94d3719",
+        "kind": "web",
+        "title": "NDLサーチ: BURN THE WITCH. 1",
+        "authors": [],
+        "publisher": "国立国会図書館",
+        "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I030650368",
+        "publishedAt": null,
+        "edition": null,
+        "note": "国立国会図書館作成書誌（iss-ndl-opac）の責任表示。メタデータ CC BY 4.0: https://creativecommons.org/licenses/by/4.0/ ; 提供元条件 https://ndlsearch.ndl.go.jp/help/api/provider 。本文・画像・第三者所蔵情報は含まない。",
+        "isDemo": false
+      }
+    ],
+    "citations": [
+      {
+        "id": "301f91f8-f898-4585-a126-a9b0d0dee5a9",
+        "claimId": "fd5be30b-cf2d-4102-ab7d-476a0cea15c3",
+        "sourceId": "ce8df1ad-aa8e-487a-a745-149bb94d3719",
+        "locator": "dc:creator（責任表示） / ISBN 9784088824284",
+        "note": "原表記（ja）: 久保帯人 著。指定刊行物の責任表示で確認された担当。全巻・全版・全期間への外挿、原作から別Roleへの変換はしない。同一資料由来の記録を独立した根拠と数えない。",
+        "accessedAt": "2026-10-28",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "久保帯人 著",
+          "language": "ja"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      },
+      {
+        "id": "592176e6-0ed2-41a1-a1c8-086f0ad33adc",
+        "claimId": "5b908144-891a-4f41-b1a1-7cc53cf9dc20",
+        "sourceId": "2b975751-7135-4f45-b7f5-c1b1ec554f13",
+        "locator": "dc:creator（責任表示） / ISBN 9784081135974",
+        "note": "原表記（ja）: 久保帯人 著。指定刊行物の責任表示で確認された担当。全巻・全版・全期間への外挿、原作から別Roleへの変換はしない。同一資料由来の記録を独立した根拠と数えない。",
+        "accessedAt": "2026-10-28",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "久保帯人 著",
+          "language": "ja"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      }
+    ]
+  }
+}

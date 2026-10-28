@@ -87,11 +87,35 @@
   },
   "requestSha256": "c0d42e0541d38be705e97e5e1ddb185763d08a92fcb2643365314d1c76ae1e83",
   "kind": "collect-review",
-  "phase": "running",
+  "phase": "completed",
   "generation": 4,
   "attempts": 1,
   "workerId": "plunode-wsl",
   "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
   "updatedAt": "2026-10-28T06:22:11+00:00",
-  "message": "Execution gate: interval"
+  "result": {
+    "jobId": "issue-59-dot-kubo-two-20261028-r0001-00347e7b023773d6",
+    "collectionUnchanged": false,
+    "reviewUnchanged": false,
+    "transportAttemptsAdded": 0,
+    "reviewDirectory": "/home/isinxnisi/.local/share/plunode-collection-worker-phase-b-20261020/runtime/datasets/manga-collection/workflow-reviews/issue-59-dot-kubo-two-20261028-r0001-00347e7b023773d6-review-8c5844afc8a0fbdf",
+    "reviewOnly": true,
+    "formalAcceptance": false,
+    "publicApply": false,
+    "counts": {
+      "entities": 3,
+      "claims": 2,
+      "sources": 2,
+      "citations": 2
+    },
+    "heldClaims": 0
+  },
+  "executionComplete": true,
+  "reviewReference": {
+    "file": "datasets/manga-collection/workflow-reviews/issue-59-dot-kubo-two-20261028-r0001-00347e7b023773d6-review-8c5844afc8a0fbdf/review-manifest.json",
+    "sha256": "ea268c44481c3e12c764fccd24dc092d3fa58302ba89f64eb029342f9c9d65ed"
+  },
+  "decisionDrafts": [
+    "datasets/collection-decision-drafts/issue-59-dot-kubo-two-20261028-batch-01/ea268c44481c3e12c764fccd24dc092d3fa58302ba89f64eb029342f9c9d65ed/issue-59-dot-kubo-two-20261028-batch-01-normal-draft.json"
+  ]
 }

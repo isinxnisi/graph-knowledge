@@ -1,0 +1,36 @@
+{
+  "provider": "iss-ndl-opac / 国立国会図書館",
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "terms": "https://ndlsearch.ndl.go.jp/help/api/provider",
+  "records": [
+    {
+      "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I029136607",
+      "isbn13": [
+        "9784081135974"
+      ],
+      "title": [
+        "Bleach. 1 (死神代行篇 1 (邂逅))"
+      ],
+      "mainTitles": [
+        "Bleach"
+      ],
+      "volume": [
+        "1 (死神代行篇 1 (邂逅))"
+      ],
+      "edition": [],
+      "responsibilities": [
+        "久保帯人 著"
+      ],
+      "publisher": [
+        "集英社"
+      ],
+      "language": [
+        "jpn"
+      ],
+      "genre": [
+        "漫画"
+      ]
+    }
+  ],
+  "error": null
+}

@@ -1,0 +1,552 @@
+{
+  "id": "Q295073",
+  "lastrevid": 2546577814,
+  "labels": {
+    "zh-hans": {
+      "language": "zh-hans",
+      "value": "久保带人"
+    },
+    "zh-hant": {
+      "language": "zh-hant",
+      "value": "久保帶人"
+    },
+    "zh-hk": {
+      "language": "zh-hk",
+      "value": "久保帶人"
+    },
+    "zh-cn": {
+      "language": "zh-cn",
+      "value": "久保带人"
+    },
+    "zh-sg": {
+      "language": "zh-sg",
+      "value": "久保带人"
+    },
+    "zh-tw": {
+      "language": "zh-tw",
+      "value": "久保帶人"
+    },
+    "jv": {
+      "language": "jv",
+      "value": "Tite Kubo"
+    },
+    "pl": {
+      "language": "pl",
+      "value": "Tite Kubo"
+    },
+    "he": {
+      "language": "he",
+      "value": "טאיטו קובו"
+    },
+    "ko": {
+      "language": "ko",
+      "value": "쿠보 다이토"
+    },
+    "fr": {
+      "language": "fr",
+      "value": "Tite Kubo"
+    },
+    "es": {
+      "language": "es",
+      "value": "Tite Kubo"
+    },
+    "ms": {
+      "language": "ms",
+      "value": "Tite Kubo"
+    },
+    "hu": {
+      "language": "hu",
+      "value": "Kubo Tite"
+    },
+    "it": {
+      "language": "it",
+      "value": "Tite Kubo"
+    },
+    "sw": {
+      "language": "sw",
+      "value": "Tite Kubo"
+    },
+    "de": {
+      "language": "de",
+      "value": "Tite Kubo"
+    },
+    "ja": {
+      "language": "ja",
+      "value": "久保帯人"
+    },
+    "el": {
+      "language": "el",
+      "value": "Tite Kubo"
+    },
+    "ar": {
+      "language": "ar",
+      "value": "تايت كوبو"
+    },
+    "nl": {
+      "language": "nl",
+      "value": "Tite Kubo"
+    },
+    "sv": {
+      "language": "sv",
+      "value": "Noriaki Kubo"
+    },
+    "pt": {
+      "language": "pt",
+      "value": "Tite Kubo"
+    },
+    "eo": {
+      "language": "eo",
+      "value": "Kubo Tajto"
+    },
+    "ru": {
+      "language": "ru",
+      "value": "Тайто Кубо"
+    },
+    "en": {
+      "language": "en",
+      "value": "Tite Kubo"
+    },
+    "tr": {
+      "language": "tr",
+      "value": "Tite Kubo"
+    },
+    "ro": {
+      "language": "ro",
+      "value": "Tite Kubo"
+    },
+    "th": {
+      "language": "th",
+      "value": "ไทโตะ คุโบะ"
+    },
+    "ca": {
+      "language": "ca",
+      "value": "Tite Kubo"
+    },
+    "fi": {
+      "language": "fi",
+      "value": "Tite Kubo"
+    },
+    "uk": {
+      "language": "uk",
+      "value": "Кубо Тайто"
+    },
+    "zh": {
+      "language": "zh",
+      "value": "久保帶人"
+    },
+    "nb": {
+      "language": "nb",
+      "value": "Tite Kubo"
+    },
+    "fa": {
+      "language": "fa",
+      "value": "تیته کوبو"
+    },
+    "sr": {
+      "language": "sr",
+      "value": "Taito Kubo"
+    },
+    "cs": {
+      "language": "cs",
+      "value": "Tite Kubo"
+    },
+    "eu": {
+      "language": "eu",
+      "value": "Tite Kubo"
+    },
+    "sq": {
+      "language": "sq",
+      "value": "Tite Kubo"
+    },
+    "ckb": {
+      "language": "ckb",
+      "value": "تیتە کوبۆ"
+    },
+    "nan": {
+      "language": "nan",
+      "value": "Kubo Tite"
+    },
+    "hy": {
+      "language": "hy",
+      "value": "Տայտո Կուբո"
+    },
+    "id": {
+      "language": "id",
+      "value": "Tite Kubo"
+    },
+    "pt-br": {
+      "language": "pt-br",
+      "value": "Tite Kubo"
+    },
+    "ast": {
+      "language": "ast",
+      "value": "Tite Kubo"
+    },
+    "arz": {
+      "language": "arz",
+      "value": "تايت كوبو"
+    },
+    "vi": {
+      "language": "vi",
+      "value": "Kubo Taito"
+    },
+    "pap": {
+      "language": "pap",
+      "value": "Tite Kubo"
+    },
+    "ga": {
+      "language": "ga",
+      "value": "Tite Kubo"
+    },
+    "sh": {
+      "language": "sh",
+      "value": "Tite Kubo"
+    },
+    "sl": {
+      "language": "sl",
+      "value": "Tite Kubo"
+    },
+    "ka": {
+      "language": "ka",
+      "value": "ტიტე კუბო"
+    },
+    "oc": {
+      "language": "oc",
+      "value": "Tite Kubo"
+    },
+    "ur": {
+      "language": "ur",
+      "value": "ٹائٹ کوبو"
+    },
+    "az": {
+      "language": "az",
+      "value": "Tayto Kubo"
+    }
+  },
+  "aliases": {
+    "zh": [
+      {
+        "language": "zh",
+        "value": "九保帶人"
+      },
+      {
+        "language": "zh",
+        "value": "久保宣章"
+      }
+    ],
+    "pl": [
+      {
+        "language": "pl",
+        "value": "Noriaki Kubo"
+      }
+    ],
+    "ko": [
+      {
+        "language": "ko",
+        "value": "쿠보 타이토"
+      }
+    ],
+    "fr": [
+      {
+        "language": "fr",
+        "value": "Noriaki Kubo"
+      },
+      {
+        "language": "fr",
+        "value": "Taito Kubo"
+      }
+    ],
+    "es": [
+      {
+        "language": "es",
+        "value": "Kubo Noriaki"
+      },
+      {
+        "language": "es",
+        "value": "Kubo Tite"
+      },
+      {
+        "language": "es",
+        "value": "Kubotite"
+      },
+      {
+        "language": "es",
+        "value": "Noriaki Kubo"
+      }
+    ],
+    "it": [
+      {
+        "language": "it",
+        "value": "Kubo Tite"
+      }
+    ],
+    "de": [
+      {
+        "language": "de",
+        "value": "Kubo Taito"
+      },
+      {
+        "language": "de",
+        "value": "Kubo Noriaki"
+      },
+      {
+        "language": "de",
+        "value": "Taito Kubo"
+      },
+      {
+        "language": "de",
+        "value": "Kubo Tite"
+      },
+      {
+        "language": "de",
+        "value": "Noriaki Kubo"
+      }
+    ],
+    "ja": [
+      {
+        "language": "ja",
+        "value": "久保宜章"
+      }
+    ],
+    "nl": [
+      {
+        "language": "nl",
+        "value": "Noriaki Kubo"
+      }
+    ],
+    "sv": [
+      {
+        "language": "sv",
+        "value": "Tite Kubo"
+      }
+    ],
+    "pt": [
+      {
+        "language": "pt",
+        "value": "Kubo Tite"
+      }
+    ],
+    "ru": [
+      {
+        "language": "ru",
+        "value": "Нориаки Кубо"
+      },
+      {
+        "language": "ru",
+        "value": "Тайт, Кубо"
+      },
+      {
+        "language": "ru",
+        "value": "Кубо Тите"
+      },
+      {
+        "language": "ru",
+        "value": "Куботайт"
+      },
+      {
+        "language": "ru",
+        "value": "Кубо Тайт"
+      },
+      {
+        "language": "ru",
+        "value": "Титэ Кубо"
+      },
+      {
+        "language": "ru",
+        "value": "Кубо, Нориаки"
+      },
+      {
+        "language": "ru",
+        "value": "Кубо, Тайт"
+      },
+      {
+        "language": "ru",
+        "value": "Кубо Тайто"
+      },
+      {
+        "language": "ru",
+        "value": "Тайт Кубо"
+      },
+      {
+        "language": "ru",
+        "value": "Кубо Н."
+      },
+      {
+        "language": "ru",
+        "value": "Кубо Нориаки"
+      },
+      {
+        "language": "ru",
+        "value": "Куботитэ"
+      },
+      {
+        "language": "ru",
+        "value": "Кубо, Тайто"
+      }
+    ],
+    "th": [
+      {
+        "language": "th",
+        "value": "คุโบะ ไทเท"
+      },
+      {
+        "language": "th",
+        "value": "ไทเทะ คุโบะ"
+      },
+      {
+        "language": "th",
+        "value": "คุโบะ ไทเทะ"
+      }
+    ],
+    "ca": [
+      {
+        "language": "ca",
+        "value": "Kubo Noriaki"
+      },
+      {
+        "language": "ca",
+        "value": "Noriaki Kubo"
+      }
+    ],
+    "nb": [
+      {
+        "language": "nb",
+        "value": "Noriaki Kubo"
+      },
+      {
+        "language": "nb",
+        "value": "Kubo Taito"
+      }
+    ],
+    "sq": [
+      {
+        "language": "sq",
+        "value": "Tite kubo"
+      },
+      {
+        "language": "sq",
+        "value": "Noriaki Kubo"
+      }
+    ],
+    "en": [
+      {
+        "language": "en",
+        "value": "Taito Kubo"
+      },
+      {
+        "language": "en",
+        "value": "Noriaki Kubo"
+      }
+    ],
+    "cs": [
+      {
+        "language": "cs",
+        "value": "Noriaki Kubo"
+      },
+      {
+        "language": "cs",
+        "value": "Taito Kubo"
+      }
+    ],
+    "he": [
+      {
+        "language": "he",
+        "value": "נוריאקי קובו"
+      },
+      {
+        "language": "he",
+        "value": "טייט קובו"
+      }
+    ],
+    "sw": [
+      {
+        "language": "sw",
+        "value": "Noriaki Kubo"
+      }
+    ]
+  },
+  "claims": {
+    "P31": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P31",
+          "hash": "ad7d38a03cdd40cdc373de0dc4e7b7fcbccb31d9",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 5,
+              "id": "Q5"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q295073$2916842E-07F6-4D48-A290-49D82FF46B71",
+        "rank": "normal",
+        "references": [
+          {
+            "hash": "3b806f1f7ca65dd85af7565b1b025038f6a994b7",
+            "snaks": {
+              "P248": [
+                {
+                  "snaktype": "value",
+                  "property": "P248",
+                  "hash": "def9f19d84b65167a2a17ce38364d264c16127fc",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 19938912,
+                      "id": "Q19938912"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ],
+              "P268": [
+                {
+                  "snaktype": "value",
+                  "property": "P268",
+                  "hash": "02fa8440ddf4d637c7928e383566442863c7c86c",
+                  "datavalue": {
+                    "value": "145016710",
+                    "type": "string"
+                  },
+                  "datatype": "external-id"
+                }
+              ],
+              "P813": [
+                {
+                  "snaktype": "value",
+                  "property": "P813",
+                  "hash": "d6162a1716489623c6e595e448b17f8dca4fb2e8",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2015-10-10T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P248",
+              "P268",
+              "P813"
+            ]
+          }
+        ]
+      }
+    ],
+    "P50": [],
+    "P110": []
+  }
+}

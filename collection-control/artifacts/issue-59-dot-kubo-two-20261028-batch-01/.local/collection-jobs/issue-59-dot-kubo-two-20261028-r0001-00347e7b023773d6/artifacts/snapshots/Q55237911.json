@@ -1,0 +1,143 @@
+{
+  "id": "Q55237911",
+  "lastrevid": 2556652149,
+  "labels": {
+    "en": {
+      "language": "en",
+      "value": "Burn the Witch"
+    },
+    "ja": {
+      "language": "ja",
+      "value": "BURN THE WITCH"
+    },
+    "id": {
+      "language": "id",
+      "value": "Burn the Witch"
+    },
+    "zh": {
+      "language": "zh",
+      "value": "BURN THE WITCH"
+    },
+    "es": {
+      "language": "es",
+      "value": "Burn the Witch"
+    },
+    "uk": {
+      "language": "uk",
+      "value": "Burn the Witch"
+    },
+    "fr": {
+      "language": "fr",
+      "value": "Burn the Witch"
+    },
+    "de": {
+      "language": "de",
+      "value": "Burn the Witch"
+    },
+    "it": {
+      "language": "it",
+      "value": "Burn the Witch"
+    },
+    "ru": {
+      "language": "ru",
+      "value": "Burn the Witch (манга)"
+    },
+    "zh-hk": {
+      "language": "zh-hk",
+      "value": "BURN THE WITCH"
+    },
+    "zh-hant": {
+      "language": "zh-hant",
+      "value": "BURN THE WITCH"
+    },
+    "ar": {
+      "language": "ar",
+      "value": "أحرق الساحرة"
+    },
+    "vi": {
+      "language": "vi",
+      "value": "Burn the Witch"
+    },
+    "pl": {
+      "language": "pl",
+      "value": "Burn the Witch"
+    },
+    "pt": {
+      "language": "pt",
+      "value": "Burn the Witch (mangá)"
+    },
+    "sr": {
+      "language": "sr",
+      "value": "Burn the Witch"
+    },
+    "tr": {
+      "language": "tr",
+      "value": "Burn the Witch"
+    }
+  },
+  "aliases": {
+    "zh": [
+      {
+        "language": "zh",
+        "value": "龍與魔女"
+      }
+    ],
+    "en": [
+      {
+        "language": "en",
+        "value": "BURN ☩HE WITCH"
+      }
+    ],
+    "pl": [
+      {
+        "language": "pl",
+        "value": "BURN ☩HE WITCH"
+      }
+    ]
+  },
+  "claims": {
+    "P31": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P31",
+          "hash": "549c072d6be8a6a43f999d1d0e82640b16c4260e",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 21198342,
+              "id": "Q21198342"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q55237911$CF64F2FA-37D2-4A0B-A3EC-EE8A2A21ABF4",
+        "rank": "normal"
+      }
+    ],
+    "P50": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P50",
+          "hash": "fe809efc11a3e25a97690f34eb72d8f1416a2a4b",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 295073,
+              "id": "Q295073"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q55237911$8dd0ef79-4034-4458-2da7-251a77fb2b00",
+        "rank": "normal"
+      }
+    ],
+    "P110": []
+  }
+}

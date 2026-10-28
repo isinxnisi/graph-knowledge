@@ -1,0 +1,131 @@
+{
+  "status": "pending-human-acceptance",
+  "humanReviewer": null,
+  "entities": [
+    {
+      "entityId": "398992d4-e691-4b85-a3c9-d7aac12a7656",
+      "name": "BLEACH",
+      "kind": "work",
+      "wikidata": "Q12685666",
+      "existingEntityId": null,
+      "status": "candidate",
+      "reasons": [],
+      "checks": {
+        "providerIdentity": true
+      },
+      "inputPopulation": "relation-endpoint"
+    },
+    {
+      "entityId": "46f3495e-2aa7-4055-bade-adaaac4684b8",
+      "name": "久保帯人",
+      "kind": "person",
+      "wikidata": "Q295073",
+      "existingEntityId": null,
+      "status": "candidate",
+      "reasons": [],
+      "checks": {
+        "providerIdentity": true
+      },
+      "inputPopulation": "relation-endpoint"
+    },
+    {
+      "entityId": "6d6f4a25-7bac-4d77-961b-b38d332d8501",
+      "name": "BURN THE WITCH",
+      "kind": "work",
+      "wikidata": "Q55237911",
+      "existingEntityId": null,
+      "status": "candidate",
+      "reasons": [],
+      "checks": {
+        "providerIdentity": true
+      },
+      "inputPopulation": "relation-endpoint"
+    }
+  ],
+  "claims": [
+    {
+      "claimId": "5b908144-891a-4f41-b1a1-7cc53cf9dc20",
+      "person": "久保帯人",
+      "work": "BLEACH",
+      "subjectId": "46f3495e-2aa7-4055-bade-adaaac4684b8",
+      "objectId": "398992d4-e691-4b85-a3c9-d7aac12a7656",
+      "roleId": "AUTHORSHIP",
+      "scope": {
+        "kind": "publication",
+        "isbn13": "9784081135974",
+        "volumeLabel": "第1巻（NDL巻次 1 (死神代行篇 1 (邂逅))）",
+        "editionLabel": null,
+        "language": "ja"
+      },
+      "status": "candidate",
+      "reasons": [],
+      "supportingCitationIds": [
+        "592176e6-0ed2-41a1-a1c8-086f0ad33adc"
+      ],
+      "existingState": null,
+      "existingClaimId": null,
+      "originalTexts": [
+        "久保帯人 著"
+      ],
+      "citationIds": [
+        "592176e6-0ed2-41a1-a1c8-086f0ad33adc"
+      ],
+      "sourceUrls": [
+        "https://ndlsearch.ndl.go.jp/books/R100000002-I029136607"
+      ],
+      "sourceIds": [
+        "2b975751-7135-4f45-b7f5-c1b1ec554f13"
+      ]
+    },
+    {
+      "claimId": "fd5be30b-cf2d-4102-ab7d-476a0cea15c3",
+      "person": "久保帯人",
+      "work": "BURN THE WITCH",
+      "subjectId": "46f3495e-2aa7-4055-bade-adaaac4684b8",
+      "objectId": "6d6f4a25-7bac-4d77-961b-b38d332d8501",
+      "roleId": "AUTHORSHIP",
+      "scope": {
+        "kind": "publication",
+        "isbn13": "9784088824284",
+        "volumeLabel": "第1巻（NDL巻次 1）",
+        "editionLabel": null,
+        "language": "ja"
+      },
+      "status": "candidate",
+      "reasons": [],
+      "supportingCitationIds": [
+        "301f91f8-f898-4585-a126-a9b0d0dee5a9"
+      ],
+      "existingState": null,
+      "existingClaimId": null,
+      "originalTexts": [
+        "久保帯人 著"
+      ],
+      "citationIds": [
+        "301f91f8-f898-4585-a126-a9b0d0dee5a9"
+      ],
+      "sourceUrls": [
+        "https://ndlsearch.ndl.go.jp/books/R100000002-I030650368"
+      ],
+      "sourceIds": [
+        "ce8df1ad-aa8e-487a-a745-149bb94d3719"
+      ]
+    }
+  ],
+  "inheritedHolds": [],
+  "newCandidateCounts": {
+    "entities": 3,
+    "claims": 2,
+    "sources": 2,
+    "citations": 2
+  },
+  "recordConflicts": [],
+  "roleCounts": {
+    "AUTHORSHIP": 2
+  },
+  "normalReviewedEntityCount": 3,
+  "reusedCitationIds": [],
+  "identityOnlyEntityIds": [],
+  "heldClaimCount": 0,
+  "heldEntityCount": 0
+}

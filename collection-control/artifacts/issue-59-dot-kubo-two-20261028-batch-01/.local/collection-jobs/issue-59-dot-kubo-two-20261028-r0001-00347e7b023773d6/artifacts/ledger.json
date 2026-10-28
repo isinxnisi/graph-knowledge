@@ -1,0 +1,172 @@
+{
+  "schemaVersion": 2,
+  "status": "pending-human-acceptance",
+  "recipe": "manga-r0039",
+  "collectionContext": {
+    "themeId": "issue-59-dot-kubo-two-20261028",
+    "themeRevision": 1,
+    "definitionSha256": "91bade692131fbb6573c5763e09078b1641eb3e850acff88e2f566400a114903",
+    "approvalSha256": "801f4a4ff9f755c0d7b31cc0d525c2a0cb46d124ca477c285ae7cd5d2095cddc"
+  },
+  "execution": {
+    "adapter": "manga-discovery-v2",
+    "codeSha256": "80e05b67bc0129b963653b90df4cfbfa5bd6aff190acda99f54c08541e55801e",
+    "inputs": [
+      {
+        "file": "datasets/manga-collection/r0039/recipe.json",
+        "sha256": "9267f9575135b0a06c355afe8c0b967bb81051b959ff6dcfcbf8978112a7c143"
+      },
+      {
+        "file": "datasets/manga-collection/r0039/anchor-review.json",
+        "sha256": "69caf60dafc107c9df2d8645e76cf9b480941646202ace4d98808b27afe4487f"
+      },
+      {
+        "file": "datasets/manga-collection/r0039/publication-review.json",
+        "sha256": "b06e7313691efbb8904d8944e47eec903e2fdd1675c2fc7918598dbd17b62463"
+      },
+      {
+        "file": "docs/research/famous-manga-creators/20261016/candidates.json",
+        "sha256": "8531fada01e5c635ba2ee278a7ef944a73f64676af14ed42ae0e690f5a1ff978"
+      },
+      {
+        "file": "datasets/public-kg/releases/20261014-credits-001/data.json",
+        "sha256": "ea91b16f52a211b5a8464382ad498b7b2bb2be69a6f33fe125a73a3c7b9da2b5"
+      },
+      {
+        "file": "datasets/public-kg/releases/20261014-credits-001/manifest.json",
+        "sha256": "e4aa3b58ed884f7d1f8fffee43b260261cc2b4d3a867fda942919f439d2bce17"
+      }
+    ],
+    "maxEntities": 2112,
+    "maxClaims": 1850
+  },
+  "identityMappings": [
+    {
+      "name": "久保帯人",
+      "wikidata": "Q295073",
+      "entityId": "46f3495e-2aa7-4055-bade-adaaac4684b8",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "BLEACH",
+      "wikidata": "Q12685666",
+      "entityId": "398992d4-e691-4b85-a3c9-d7aac12a7656",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "BURN THE WITCH",
+      "wikidata": "Q55237911",
+      "entityId": "6d6f4a25-7bac-4d77-961b-b38d332d8501",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    }
+  ],
+  "rows": [
+    {
+      "kind": "wikidata-relation",
+      "work": "BLEACH",
+      "property": "P50",
+      "personQid": "Q295073",
+      "statementId": "Q12685666$b78185d3-44d3-0ed8-e534-8adf70f3a981",
+      "qualifiers": {},
+      "references": [],
+      "status": "candidate-only-no-role-inference",
+      "reason": "Wikidata propertyだけで具体Roleや直接制作の意味を確定しない"
+    },
+    {
+      "kind": "wikidata-relation",
+      "work": "BLEACH",
+      "property": "P110",
+      "personQid": "Q295073",
+      "statementId": "Q12685666$32F653EE-78C1-475E-AADF-99ACCB0B66A3",
+      "qualifiers": {},
+      "references": [],
+      "status": "candidate-only-no-role-inference",
+      "reason": "Wikidata propertyだけで具体Roleや直接制作の意味を確定しない"
+    },
+    {
+      "kind": "ndl-credit",
+      "work": "BLEACH",
+      "isbn13": "9784081135974",
+      "rawResponsibility": "久保帯人 著",
+      "sourceUrl": "https://ndlsearch.ndl.go.jp/books/R100000002-I029136607",
+      "status": "pending-human-acceptance",
+      "roleId": "AUTHORSHIP",
+      "person": "久保帯人",
+      "claimId": "5b908144-891a-4f41-b1a1-7cc53cf9dc20",
+      "reusedClaim": false,
+      "subjectId": "46f3495e-2aa7-4055-bade-adaaac4684b8",
+      "objectId": "398992d4-e691-4b85-a3c9-d7aac12a7656"
+    },
+    {
+      "kind": "wikidata-relation",
+      "work": "BURN THE WITCH",
+      "property": "P50",
+      "personQid": "Q295073",
+      "statementId": "Q55237911$8dd0ef79-4034-4458-2da7-251a77fb2b00",
+      "qualifiers": {},
+      "references": [],
+      "status": "candidate-only-no-role-inference",
+      "reason": "Wikidata propertyだけで具体Roleや直接制作の意味を確定しない"
+    },
+    {
+      "kind": "ndl-credit",
+      "work": "BURN THE WITCH",
+      "isbn13": "9784088824284",
+      "rawResponsibility": "久保帯人 著",
+      "sourceUrl": "https://ndlsearch.ndl.go.jp/books/R100000002-I030650368",
+      "status": "pending-human-acceptance",
+      "roleId": "AUTHORSHIP",
+      "person": "久保帯人",
+      "claimId": "fd5be30b-cf2d-4102-ab7d-476a0cea15c3",
+      "reusedClaim": false,
+      "subjectId": "46f3495e-2aa7-4055-bade-adaaac4684b8",
+      "objectId": "6d6f4a25-7bac-4d77-961b-b38d332d8501"
+    }
+  ],
+  "holds": [],
+  "acquisitions": [
+    {
+      "kind": "wikidata",
+      "identifier": "Q295073",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q295073.json",
+      "sha256": "bd3c298112f091eee974f6f4479cb926301fc88fcff7eaa70cd3074426a23c15",
+      "bytes": 76213,
+      "fetchedAt": "2026-10-28T01:41:46+00:00"
+    },
+    {
+      "kind": "wikidata",
+      "identifier": "Q12685666",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q12685666.json",
+      "sha256": "5e3844128415a557eff91b42a7fa877a82cb1e07ce2b00223f0d06994b507ea7",
+      "bytes": 30890,
+      "fetchedAt": "2026-10-28T01:41:54+00:00"
+    },
+    {
+      "kind": "ndl",
+      "identifier": "9784081135974",
+      "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&maximumRecords=5&query=isbn%3D%229784081135974%22+AND+dpid%3Diss-ndl-opac",
+      "sha256": "2af40c3dca20d55f165146d62acf10d6bd28b1594c79ac458f774d631d62ddfa",
+      "bytes": 7087,
+      "fetchedAt": "2026-10-28T06:11:06+00:00"
+    },
+    {
+      "kind": "wikidata",
+      "identifier": "Q55237911",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q55237911.json",
+      "sha256": "e5ddd936bc88b9207cfd98696113fa8609809350e12f2f162aff9055d987c7a2",
+      "bytes": 28067,
+      "fetchedAt": "2026-10-28T01:42:17+00:00"
+    },
+    {
+      "kind": "ndl",
+      "identifier": "9784088824284",
+      "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&maximumRecords=5&query=isbn%3D%229784088824284%22+AND+dpid%3Diss-ndl-opac",
+      "sha256": "4defdbb3aeeac2857a09280a0589c50291c21a1ddde62e6ba6a3db7bc8747e36",
+      "bytes": 8449,
+      "fetchedAt": "2026-10-28T01:42:32+00:00"
+    }
+  ]
+}

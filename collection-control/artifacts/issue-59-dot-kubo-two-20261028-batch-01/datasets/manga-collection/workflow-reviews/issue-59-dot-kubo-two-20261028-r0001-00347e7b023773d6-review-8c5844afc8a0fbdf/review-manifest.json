@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "reviewId": "issue-59-dot-kubo-two-20261028-r0001-00347e7b023773d6-review-8c5844afc8a0fbdf",
+  "inputSha256": "8c5844afc8a0fbdfa411844167a33765ea863bcc518d69afaf0fcfb9d529a852",
+  "artifacts": {
+    "context.json": "078bf4b1655728395eae9eeedf7cf2fcbef4876896d6e8c744d5a74a34338bb5",
+    "review.json": "7e580566255094b7f06a2054a6e5d2b20ac6e62679ecd17826bfa92bdd22099c",
+    "proposed-records.json": "f84a8ba158c1a668400a4198dc9f90fd52152f27959d309d00dd8a699a60ffca",
+    "identity-only-records.json": "1fc314e4a47717bce195b39fe7f1e66bd31f6af892fca4a9420a653eab927a37",
+    "exploration-paths.json": "9e7e350d6feebbe06301fa79765a2e3916c79b19c01868daeed131510978e907",
+    "decision-request.json": "0b0bc3fc170188618ee202211cf8d96b4b3d4cdf5cc2d1131e737003c80e7d22",
+    "README.md": "b93dd1c3e21977ebed6cfc8040d68b4d46ec3ceea148a0d54400b225ec289752"
+  },
+  "authority": "pending-human-review-only"
+}

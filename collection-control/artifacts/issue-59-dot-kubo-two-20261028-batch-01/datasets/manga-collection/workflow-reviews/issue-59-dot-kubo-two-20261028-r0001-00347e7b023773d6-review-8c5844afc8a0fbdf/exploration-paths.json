@@ -1,0 +1,52 @@
+[
+  {
+    "state": "collection-candidate",
+    "observation": "verified-records-only-not-a-live-exploration-test",
+    "edges": [
+      {
+        "claimId": "5b908144-891a-4f41-b1a1-7cc53cf9dc20",
+        "subjectId": "46f3495e-2aa7-4055-bade-adaaac4684b8",
+        "objectId": "398992d4-e691-4b85-a3c9-d7aac12a7656",
+        "person": "久保帯人",
+        "work": "BLEACH",
+        "roleId": "AUTHORSHIP",
+        "scope": {
+          "kind": "publication",
+          "isbn13": "9784081135974",
+          "volumeLabel": "第1巻（NDL巻次 1 (死神代行篇 1 (邂逅))）",
+          "editionLabel": null,
+          "language": "ja"
+        },
+        "state": "collection-candidate",
+        "citationIds": [
+          "592176e6-0ed2-41a1-a1c8-086f0ad33adc"
+        ],
+        "sourceIds": [
+          "2b975751-7135-4f45-b7f5-c1b1ec554f13"
+        ]
+      },
+      {
+        "claimId": "fd5be30b-cf2d-4102-ab7d-476a0cea15c3",
+        "subjectId": "46f3495e-2aa7-4055-bade-adaaac4684b8",
+        "objectId": "6d6f4a25-7bac-4d77-961b-b38d332d8501",
+        "person": "久保帯人",
+        "work": "BURN THE WITCH",
+        "roleId": "AUTHORSHIP",
+        "scope": {
+          "kind": "publication",
+          "isbn13": "9784088824284",
+          "volumeLabel": "第1巻（NDL巻次 1）",
+          "editionLabel": null,
+          "language": "ja"
+        },
+        "state": "collection-candidate",
+        "citationIds": [
+          "301f91f8-f898-4585-a126-a9b0d0dee5a9"
+        ],
+        "sourceIds": [
+          "ce8df1ad-aa8e-487a-a745-149bb94d3719"
+        ]
+      }
+    ]
+  }
+]
