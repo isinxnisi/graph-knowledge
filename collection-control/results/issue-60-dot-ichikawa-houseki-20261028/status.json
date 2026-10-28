@@ -62,11 +62,59 @@
   },
   "requestSha256": "a0603b6b44256085b8a519beea9e8eb6e4b188965afe2795a0b9f97832626eff",
   "kind": "issue-prepare",
-  "phase": "running",
+  "phase": "retry-transport",
   "generation": 4,
   "attempts": 1,
   "workerId": "plunode-wsl",
   "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
   "updatedAt": "2026-10-28T06:35:29+00:00",
-  "message": "Execution gate: interval"
+  "message": "Technical acquisition incomplete; no semantic hold or acceptance",
+  "result": {
+    "schemaVersion": 1,
+    "status": "technical-incomplete",
+    "preparationComplete": false,
+    "issueOrigin": {
+      "repository": "isinxnisi/graph-knowledge",
+      "issueNumber": 60,
+      "approvalId": "dot-ichikawa-houseki-20261028",
+      "permissionSha256": "47ec0f56a813311573540579c667e2ffeffae1d80c571b290266af5bdb605586",
+      "issueBodySha256": "7d09f0e9a2867ec8bbd49f13a27622ba5bf823fdae55284f8cfba573cb35e9dc"
+    },
+    "preparationDirectory": "/home/isinxnisi/.local/share/plunode-collection-worker-phase-b-20261020/runtime/.local/collection-issues/issue-60-dot-ichikawa-houseki-20261028",
+    "batchRequests": [],
+    "generatedArtifacts": {},
+    "technicalWaits": [
+      {
+        "category": "provider-backoff",
+        "key": "ndl-9784063879063",
+        "provider": "ndlsearch.ndl.go.jp",
+        "retryAt": 1793169503.410962,
+        "recoveryRequired": false,
+        "target": "宝石の国",
+        "lastDiagnostic": {
+          "category": "transport",
+          "phase": "open-through-response-headers",
+          "phaseBoundary": "open-through-response-headers",
+          "elapsedSeconds": 20.107337,
+          "finishedAt": "2026-10-28T06:37:23.410941+00:00",
+          "httpStatus": null,
+          "causes": [
+            {
+              "type": "TimeoutError"
+            }
+          ]
+        }
+      }
+    ],
+    "retryAt": 1793169503.410962,
+    "publicApply": false,
+    "counts": {
+      "networkAttempts": 5,
+      "holds": 0,
+      "identifiedWorks": 0,
+      "technicalWaits": 1
+    }
+  },
+  "executionComplete": false,
+  "retryAt": 1793169503.410962
 }
