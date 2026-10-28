@@ -26,16 +26,20 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-10-28T06:21:41.138751+00:00",
-  "phase": "interval",
+  "nextStartAt": "2026-10-28T07:27:20.126267+00:00",
+  "phase": "running",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
     "reason": "interval",
-    "eligibleAt": "2026-10-28T06:21:41.138751+00:00",
+    "eligibleAt": "2026-10-28T07:27:20.126267+00:00",
     "windowEndAt": "2026-10-28T09:00:00+00:00"
   },
-  "activeAttempt": null,
+  "activeAttempt": {
+    "requestId": "issue-59-dot-kubo-two-20261028-batch-01",
+    "startedAt": "2026-10-28T06:22:20.126270+00:00",
+    "limitAt": "2026-10-28T07:17:20.126267+00:00"
+  },
   "lastAttempt": {
     "requestId": "issue-59-dot-kubo-two-20261028",
     "endedAt": "2026-10-28T06:11:41.138753+00:00"
@@ -144,5 +148,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-10-28T06:15:29.203801+00:00"
+  "checkedAt": "2026-10-28T06:22:27.139343+00:00"
 }
