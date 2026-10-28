@@ -76,7 +76,7 @@
     "discovery:targets:integration": "tsx scripts/test-discovery-targets.ts",
     "collection:connectivity": "tsx scripts/collection-connectivity.ts",
     "discovery:graph:integration": "tsx scripts/test-discovery-targets.ts --pattern-graph",
-    "test:ai-lab": "vitest run tests/ai-lab-education-ui.test.tsx tests/ai-lab-autonomy.test.ts tests/ai-lab-artifact.test.ts tests/ai-lab-navigation.test.ts",
+    "test:ai-lab": "vitest run tests/ai-education-policy.test.tsx tests/ai-lab-education-ui.test.tsx tests/ai-lab-autonomy.test.ts tests/ai-lab-artifact.test.ts tests/ai-lab-navigation.test.ts",
     "ai-lab:artifact": "tsx scripts/ai-lab-artifact.ts",
     "film:prepare": "python3 scripts/collect-film-v1.py prepare --output .local/collection-trials/film-discovery-v1",
     "film:test": "python3 -m unittest discover -s tests -p test_film_collection.py -v",

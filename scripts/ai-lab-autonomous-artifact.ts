@@ -1,3 +1,4 @@
+import {withEducationPolicies} from '../lib/server/ai-lab-policy-artifact';
 import {spawnSync} from 'node:child_process';
 import {writeFile} from 'node:fs/promises';
 import {readActiveLabArtifact,parseLabArtifact,readLabFile,sealLabArtifact,verifyLabPublicReferences,publicLabKgReader,activateLabArtifact} from '../lib/server/ai-lab-artifact';
@@ -22,8 +23,8 @@ for(const id of args){
   if(!previous)additions.push(cycle);
 }
 const cycles=[...(base.payload.education?.cycles??[]),...additions];
-const latest=[...base.payload.runs,...cycles].sort((a,b)=>Date.parse(b.finishedAt)-Date.parse(a.finishedAt))[0].finishedAt;
-const artifact=sealLabArtifact({...base.payload,schemaVersion:3,version:'autonomous-v1-'+cycles.at(-1)!.cycleId.slice(0,8),recordedAt:latest,education:{version:'autonomous-v1',cycles}});
+const latest=[...base.payload.runs,...cycles,...(base.payload.mentorship?.records.map(r=>({finishedAt:r.selection?.recordedAt??r.decision.recordedAt}))??[])].sort((a,b)=>Date.parse(b.finishedAt)-Date.parse(a.finishedAt))[0].finishedAt;
+const artifact=withEducationPolicies(sealLabArtifact({...base.payload,schemaVersion:base.payload.mentorship?4:3,version:'autonomous-v1-'+cycles.at(-1)!.cycleId.slice(0,8),recordedAt:latest,education:{version:'autonomous-v1',cycles}}),home);
 const reader=publicLabKgReader(origin);
 if(command==='stage'){
   const validatedKgRevision=await verifyLabPublicReferences(artifact,reader);

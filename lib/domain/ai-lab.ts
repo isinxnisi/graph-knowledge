@@ -1,4 +1,5 @@
 import { z } from "zod";
+import {educationMentorship,educationPolicySelection} from "./ai-education-policy";
 import { contributionSchema } from "./contribution";
 import { claimSchema } from "./fixture";
 
@@ -50,6 +51,7 @@ const educationTaskSchema=z.strictObject({
 const modelEvaluation=z.strictObject({taskId:identifier,choice:z.enum(['C0','STOP','HOLD','A','B']),
   probabilities:z.record(identifier,z.number().finite().min(0).max(1)),tokens:z.number().int().min(1).max(512)});
 export const educationCycleSchema=z.strictObject({
+  educationPolicy:educationPolicySelection.optional(),
   cycleId:z.uuidv4(),kind:z.enum(['structural-education','synthetic-infrastructure']),
   status:z.enum(['completed','held','failed','unknown']),reason:identifier.nullable(),startedAt:stamp,finishedAt:stamp,
   codeCommit:z.string().regex(/^[a-f0-9]{40}$/),sourceSha256:labHashSchema,resultSha256:labHashSchema,
@@ -104,20 +106,30 @@ export const educationCycleSchema=z.strictObject({
 // v1 retains the immutable birth state. v2 adds observed, sealed inference records.
 // v3 adds measured independent updates; semantic scores and adoption stay unapproved.
 export const labPayloadSchema = z.strictObject({
-  schemaVersion: z.union([z.literal(1),z.literal(2),z.literal(3)]), version: identifier, aiId: z.literal(APPRENTICE_AI_ID), operator: z.literal("plunode"),
+  schemaVersion: z.union([z.literal(1),z.literal(2),z.literal(3),z.literal(4)]), version: identifier, aiId: z.literal(APPRENTICE_AI_ID), operator: z.literal("plunode"),
   liveStatus: z.literal("not-monitored"), officialAi: z.strictObject({ binding: z.literal("plunode-official-ai"), aiIdentityId: z.null() }),
   kgRevision: z.uuidv4(), kgSha256: labHashSchema, recordedAt: stamp,
   source: z.strictObject({ commit: z.string().regex(/^[a-f0-9]{40}$/), artifactSha256: labHashSchema }),
   entities: z.array(z.strictObject({ id: z.uuidv4(), name: z.string().trim().min(1).max(160) })).min(1).max(32),
   runs: z.array(runSchema).min(1).max(128),
+  mentorship:educationMentorship.optional(),
   education:z.strictObject({version:z.literal('autonomous-v1'),cycles:z.array(educationCycleSchema).min(1).max(32)}).optional(),
 }).superRefine((data, ctx) => {
   const fail = () => ctx.addIssue({ code: "custom", message: "Inconsistent saved lab record" });
   const entities = new Set(data.entities.map(e => e.id)), runs = new Set(data.runs.map(r => r.runId));
   if (entities.size !== data.entities.length || runs.size !== data.runs.length) fail();
-  if((data.schemaVersion!==3&&data.education)||(data.schemaVersion===3&&!data.education))fail();
-  if (data.recordedAt !== [...data.runs,...(data.education?.cycles??[])].sort((a,b) => Date.parse(b.finishedAt)-Date.parse(a.finishedAt))[0].finishedAt) fail();
+  if((data.schemaVersion<3&&data.education)||(data.schemaVersion>=3&&!data.education)||(data.schemaVersion===4&&!data.mentorship)||(data.schemaVersion!==4&&data.mentorship))fail();
+  if (data.recordedAt !== [...data.runs,...(data.education?.cycles??[]),...(data.mentorship?.records.map(r=>({finishedAt:r.selection?.recordedAt??r.decision.recordedAt}))??[])].sort((a,b) => Date.parse(b.finishedAt)-Date.parse(a.finishedAt))[0].finishedAt) fail();
   if(new Set(data.education?.cycles.map(c=>c.cycleId)).size!==(data.education?.cycles.length??0))fail();
+  const reviews=data.mentorship?.records??[];
+  if(new Set(reviews.map(r=>r.reviewId)).size!==reviews.length)fail();
+  for(const review of reviews){
+    if(review.report.payload.apprenticeId!==data.aiId)fail();
+    for(const source of review.report.payload.cycles){
+      const actual=data.education?.cycles.find(c=>c.cycleId===source.cycleId&&c.kind==='structural-education');
+      if(!actual||actual.resultSha256!==source.resultSha256||actual.codeCommit!==source.codeCommit||actual.sourceSha256!==source.sourceSha256||actual.status!==source.status||actual.training.optimizerUpdates!==source.optimizerUpdates||actual.inferenceCalls!==source.inferenceCalls)fail();
+    }
+  }
   for (const run of data.runs) {
     if (Date.parse(run.finishedAt) < Date.parse(run.startedAt) || run.parentRunId && !runs.has(run.parentRunId)) fail();
     if (data.schemaVersion === 1 && (run.observation || !["rule","not-connected"].includes(run.executionKind) || !["completed","held"].includes(run.status))) fail();

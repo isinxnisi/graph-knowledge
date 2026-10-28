@@ -1,0 +1,85 @@
+{
+  "sha256": "6bf70ea27be2782c1c62b0dccba9d9ba5c51dc1853b50c27466b88fb38ec10f3",
+  "payload": {
+    "contract": "education-plan-v1",
+    "planId": "e3e30883-77d9-40a5-a4fd-261ff05b9350",
+    "createdAt": "2026-10-28T13:26:25.558275+00:00",
+    "expiresAt": "2026-10-29T13:26:25.558275+00:00",
+    "educatorKey": "plunode-official-ai",
+    "officialAiIdentityId": "501350be-a89f-4bde-9a06-d94631b47be5",
+    "apprenticeId": "fe93a431-85cf-4fae-8b84-127e8bf866a7",
+    "reportSha256": "b106bf0ca38862f9a8b7c07e0cbe6fb45ec770d1770bcd73afa69f061e4cfa15",
+    "selectionSourceSha256": "91218c559073df126bc56ab7fbecce7cf1878412baa40328c63970e9697afbea",
+    "curriculumSha256": "7c155c25f34b652de0ce18242b41199d2c08fa1bcb05f85c7923b3f8f9d8f39e",
+    "basedOn": [
+      {
+        "cycleId": "5be3be46-d83f-46e8-8f33-1a9580b7e301",
+        "resultSha256": "d18a81cd52a395c495d46bcfd7fa090f4866db26031ecf464325e27b3effa284"
+      },
+      {
+        "cycleId": "891edfc6-9e0a-472a-8b59-dc3795df1273",
+        "resultSha256": "cffd5360856cb495d451a39268f8be3b06efee2570b571ba0f9e23ff86035617"
+      }
+    ],
+    "method": "interactive-codex",
+    "facts": [
+      {
+        "ja": "実KG教育の完了は1件、独立更新は1回、関係推論は4回。checkpointの再読込も確認済みです。",
+        "en": "One real-KG cycle completed with one independent update and four relation inference calls. Checkpoint reload was verified.",
+        "cycleIds": [
+          "891edfc6-9e0a-472a-8b59-dc3795df1273"
+        ]
+      },
+      {
+        "ja": "holdoutの構造一致は1問中0件から1件へ変わりました。同じholdoutの再評価であり、独立finalや意味理解の合格ではありません。",
+        "en": "Structural matches on one holdout changed from zero to one. This reuses the same holdout; it is neither an independent final nor semantic approval.",
+        "cycleIds": [
+          "891edfc6-9e0a-472a-8b59-dc3795df1273"
+        ]
+      },
+      {
+        "ja": "別の失敗記録では推論・更新とも0回です。モデルの誤答や学習成功に置き換えず、原因の詳細は元記録で確認します。",
+        "en": "The separate failed record has zero inference calls and zero updates. It is not a model answer or a learning success; detailed cause needs the original record.",
+        "cycleIds": [
+          "5be3be46-d83f-46e8-8f33-1a9580b7e301"
+        ]
+      }
+    ],
+    "hypotheses": [
+      {
+        "ja": "更新前のtrainは候補C0に対してSTOPでした。方向・停止の境界や保守的選択に課題がある可能性がありますが、1例から原因は断定できません。",
+        "en": "The training observation selected STOP against structural target C0. Direction/stop boundaries or conservative choice may be weak, but one example cannot establish the cause.",
+        "cycleIds": [
+          "891edfc6-9e0a-472a-8b59-dc3795df1273"
+        ]
+      },
+      {
+        "ja": "構造一致の変化だけでは、証拠不足時にも候補を選び過ぎないことは未検証です。次は既存train分割のevidenceを優先し、HOLDの境界を確認します。",
+        "en": "A changed structural match does not establish restraint when evidence is incomplete. Prioritize evidence tasks from the existing training split to inspect the HOLD boundary.",
+        "cycleIds": [
+          "891edfc6-9e0a-472a-8b59-dc3795df1273"
+        ]
+      },
+      {
+        "ja": "再利用holdout1問では過学習・評価漏洩の疑いを排除できません。正解をtrainへ渡さず、モデル採用前の独立評価は別の未完条件として保持します。",
+        "en": "One reused holdout cannot rule out overfitting or evaluation leakage. Keep its answers out of training and retain independent assessment as a separate prerequisite for model adoption.",
+        "cycleIds": [
+          "891edfc6-9e0a-472a-8b59-dc3795df1273"
+        ]
+      }
+    ],
+    "priorities": [
+      "evidence",
+      "role",
+      "direction"
+    ],
+    "difficulty": "single-edge",
+    "nextEvaluation": [
+      "protected-holdout",
+      "no-independent-final-claim",
+      "checkpoint-reload",
+      "semantic-review-pending"
+    ],
+    "maxRealCycles": 1
+  }
+}

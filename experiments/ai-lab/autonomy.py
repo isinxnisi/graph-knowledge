@@ -19,6 +19,7 @@ from core import HERE, digest, file_hash, read_json, require, uid, wire
 from curriculum import generate, validate_splits
 from runtime import EXPECTED_MODEL, held, now, probe, read_sealed, sealed_write
 from sandbox import experiment
+from mentorship import selected
 
 ROOT=HERE.parents[1]
 HOME=Path.home()/'.local/share/plunode-ai-lab/autonomous-v1'
@@ -116,13 +117,11 @@ def run_cycle(home,cycle_id,token,*,dry=False):
     require(not directory.exists(),'interrupted_cycle_no_retry')
     require(not unfinished(home),'unfinished_cycle_requires_reconciliation')
     curriculum=generate();offset=sum(i['mode']=='real' for i in intents(home))
-    eligible=lambda split:[t for t in curriculum['tasks'] if t['split']==split and t['evaluationBasis']=='machine-structural']
-    train=eligible('train')[offset%len(eligible('train'))]
-    holdout=eligible('holdout')[offset%len(eligible('holdout'))]
+    train,holdout,policy=selected(home,curriculum,offset)
     rows=[train,holdout];validate_splits(rows)
     intent={'cycleId':cycle_id,'startedAt':now(),'mode':'dry' if dry else 'real','sourceSha256':code_hash(),
             'codeCommit':subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),
-            'inputSha256':digest(curriculum),'model':EXPECTED_MODEL}
+            'inputSha256':digest(curriculum),'model':EXPECTED_MODEL,'educationPolicy':policy}
     sealed_write(directory/'intent.json',intent);sealed_write(directory/'curriculum.json',curriculum)
     result={**intent,'status':'prepared' if dry else 'held','reason':None,'tasks':rows,'curriculumCounts':validate_splits(curriculum['tasks']),
             'semanticReview':'pending-human','generalizationEvidence':False,'automaticAdoption':False,
@@ -167,7 +166,16 @@ def execute(home,args):
         c=configuration(home);reason=due(c,intents(home),datetime.now(JST))
         if not args.dry and not args.allow_one and reason:return {'status':'skipped','reason':reason}
         require(code_hash()==c['codeSha256'],'code_changed_reconfigure_required')
+        if not args.dry:
+            from education_github import configured,pull
+            if configured(home):
+                try:pull(home,token)
+                except (ValueError,OSError,subprocess.SubprocessError):atomic(home/'mentorship/sync-status.json',{'at':now(),'status':'fetch-unavailable-rule-fallback'})
         cycle_id=args.cycle_id or str(uuid.uuid4());result=run_cycle(home,cycle_id,token,dry=args.dry)
+        if not args.dry:
+            from education_github import synchronize
+            try:atomic(home/'mentorship/sync-status.json',{'at':now(),'result':synchronize(home,token)})
+            except (ValueError,OSError,subprocess.SubprocessError):atomic(home/'mentorship/sync-status.json',{'at':now(),'status':'report-sync-failed-no-inference-retry'})
         if not args.dry and c['publish']:
             try:publish(home,cycle_id,c)
             except (OSError,subprocess.SubprocessError):

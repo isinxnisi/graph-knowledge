@@ -40,7 +40,7 @@ def project(home,identifier):
     public_tasks=[{key:t[key] for key in ['taskId','split','kind','objective','originId','componentSha256','entities','paths','expectedChoice','evaluationBasis','semanticReview','sourceSnapshotSha256']} for t in tasks]
     comparison=result.get('comparison') if kind=='cycle' else None
     calls=sum(len(e['evaluations']) for _,e in events if 'evaluations' in e) if kind=='cycle' else 0
-    return {'cycleId':run_id,'kind':'structural-education' if kind=='cycle' else 'synthetic-infrastructure',
+    return {**({'educationPolicy':result['educationPolicy']} if result.get('educationPolicy') else {}),'cycleId':run_id,'kind':'structural-education' if kind=='cycle' else 'synthetic-infrastructure',
             'status':result['status'],'reason':result['reason'],'startedAt':started,'finishedAt':finished,
             'codeCommit':code,'sourceSha256':source,'resultSha256':digest(result),
             'modelRevision':EXPECTED_MODEL['model_revision'],'baseRevision':EXPECTED_MODEL['base_revision'],

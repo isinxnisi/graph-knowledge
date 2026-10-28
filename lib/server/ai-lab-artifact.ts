@@ -3,19 +3,37 @@ import { constants } from "node:fs";
 import { mkdir, open, realpath, rename, unlink } from "node:fs/promises";
 import path from "node:path";
 import { z } from "zod";
+import {OFFICIAL_AI_ID} from "../domain/public-profile";
 import { canonicalLabJson, labArtifactSchema, labHashSchema, labPayloadSchema, MAX_LAB_ARTIFACT_BYTES, type LabArtifact } from "../domain/ai-lab";
 import { claimDetailSchema, entityDetailSchema } from "../domain/api";
 
 const digest = (value: unknown) => createHash("sha256").update(canonicalLabJson(value)).digest("hex");
 export function sealLabArtifact(payload: unknown): LabArtifact {
   const checked = labPayloadSchema.parse(payload);
-  return { sha256: digest(checked), payload: checked };
+  const artifact={ sha256: digest(checked), payload: checked };
+  verifyMentorship(artifact);return artifact;
 }
 export function parseLabArtifact(bytes: string | Buffer): LabArtifact {
   if (Buffer.byteLength(bytes) > MAX_LAB_ARTIFACT_BYTES) throw Error("Lab artifact is too large");
   const artifact = labArtifactSchema.parse(JSON.parse(bytes.toString()));
   if (digest(artifact.payload) !== artifact.sha256) throw Error("Lab artifact checksum mismatch");
-  return artifact;
+  verifyMentorship(artifact);return artifact;
+}
+function verifyMentorship(artifact:LabArtifact){
+  for(const r of artifact.payload.mentorship?.records??[]){
+    if(r.plan.payload.officialAiIdentityId!==OFFICIAL_AI_ID||digest(r.report.payload)!==r.report.sha256||digest(r.plan.payload)!==r.plan.sha256)throw Error('Education exchange identity/checksum mismatch');
+    for(const c of r.report.payload.cycles){
+      const actual=artifact.payload.education?.cycles.find(row=>row.cycleId===c.cycleId);
+      if(!actual)throw Error('Teacher source cycle unavailable');
+      const train=actual.tasks.filter(t=>t.split==='train'),holdout=actual.tasks.filter(t=>t.split==='holdout');
+      const observed=train.flatMap(t=>(actual.comparison?.before??[]).filter(e=>e.taskId===t.taskId).map(e=>({category:t.kind,expected:t.expectedChoice,observed:e.choice,matches:t.expectedChoice===e.choice})));
+      const matches=(phase:'before'|'after')=>(actual.comparison?.[phase]??[]).filter(e=>holdout.some(t=>t.taskId===e.taskId&&t.expectedChoice===e.choice)).length;
+      const ids=(split:typeof train)=>[...new Set(split.flatMap(t=>t.entities.map(e=>e.id)))].sort();
+      const claims=(split:typeof train)=>[...new Set(split.flatMap(t=>t.paths.flatMap(p=>p.steps.map(s=>s.claimId))))].sort();
+      if(canonicalLabJson(observed)!==canonicalLabJson(c.trainObservations)||c.holdout.count!==holdout.length||c.holdout.beforeMatches!==matches('before')||c.holdout.afterMatches!==matches('after')||c.holdout.reloadVerified!==actual.training.checkpointReloaded||c.split.trainEntities!==ids(train).length||c.split.holdoutEntities!==ids(holdout).length||c.split.trainClaims!==claims(train).length||c.split.holdoutClaims!==claims(holdout).length||c.split.protectedEntitiesSha256!==digest(ids(holdout))||c.split.protectedClaimsSha256!==digest(claims(holdout)))throw Error('Teacher report differs from measured cycle');
+    }
+
+  }
 }
 export async function readLabFile(file: string, max = MAX_LAB_ARTIFACT_BYTES): Promise<Buffer> {
   const fd = await open(file, constants.O_RDONLY | constants.O_NOFOLLOW);
@@ -101,6 +119,7 @@ export async function activateLabArtifact(directory: string, artifact: LabArtifa
     // may be selected for rollback without deleting the newer release on disk.
     if (!retainedVersion && (previous.payload.runs.some(old => !checked.payload.runs.some(run => run.runId === old.runId && canonicalLabJson(run) === canonicalLabJson(old))) || ["source","entities","kgRevision","kgSha256"].some(key => canonicalLabJson(checked.payload[key as keyof typeof checked.payload]) !== canonicalLabJson(previous.payload[key as keyof typeof previous.payload])))) throw Error("Saved lab history is immutable");
     if(!retainedVersion&&previous.payload.education?.cycles.some(old=>!checked.payload.education?.cycles.some(c=>c.cycleId===old.cycleId&&canonicalLabJson(c)===canonicalLabJson(old))))throw Error('Saved education history is immutable');
+    if(!retainedVersion&&previous.payload.mentorship?.records.some(old=>!checked.payload.mentorship?.records.some(r=>r.reviewId===old.reviewId&&canonicalLabJson(r)===canonicalLabJson(old))))throw Error('Saved teacher history is immutable');
     try { const fd = await open(destination, "wx", 0o640); try { await fd.writeFile(content); await fd.sync(); } finally { await fd.close(); } }
     catch (error) { if ((error as NodeJS.ErrnoException).code !== "EEXIST" || (await readLabFile(destination)).toString() !== content) throw error; }
     const folder = await open(releases, "r"); try { await folder.sync(); } finally { await folder.close(); }
