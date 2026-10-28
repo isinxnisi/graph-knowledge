@@ -1,0 +1,287 @@
+{
+  "id": "Q868170",
+  "lastrevid": 2534514213,
+  "labels": {
+    "ru": {
+      "language": "ru",
+      "value": "Codename: Sailor V"
+    },
+    "fr": {
+      "language": "fr",
+      "value": "Sailor V"
+    },
+    "en": {
+      "language": "en",
+      "value": "Codename: Sailor V"
+    },
+    "zh": {
+      "language": "zh",
+      "value": "水手战士V"
+    },
+    "pt": {
+      "language": "pt",
+      "value": "Codename wa Sailor V"
+    },
+    "ca": {
+      "language": "ca",
+      "value": "Codename wa Sailor V"
+    },
+    "de": {
+      "language": "de",
+      "value": "Sailor V"
+    },
+    "eo": {
+      "language": "eo",
+      "value": "Koda nomo — Sejla Vi"
+    },
+    "it": {
+      "language": "it",
+      "value": "Codename Sailor V"
+    },
+    "pl": {
+      "language": "pl",
+      "value": "Hasło brzmi: Sailor V"
+    },
+    "th": {
+      "language": "th",
+      "value": "รหัสลับ เซเลอร์วี"
+    },
+    "fi": {
+      "language": "fi",
+      "value": "Codename wa Sailor V"
+    },
+    "hu": {
+      "language": "hu",
+      "value": "Codename: Sailor V"
+    },
+    "ja": {
+      "language": "ja",
+      "value": "コードネームはセーラーV"
+    },
+    "es": {
+      "language": "es",
+      "value": "Czarodziejka z Księżyca Part 7"
+    },
+    "nl": {
+      "language": "nl",
+      "value": "Codename: Sailor V"
+    },
+    "az": {
+      "language": "az",
+      "value": "Codename: Sailor V"
+    },
+    "vi": {
+      "language": "vi",
+      "value": "Codename Sailor V"
+    },
+    "tl": {
+      "language": "tl",
+      "value": "Codename: Sailor V"
+    },
+    "el": {
+      "language": "el",
+      "value": "Codename: Sailor V"
+    },
+    "id": {
+      "language": "id",
+      "value": "Sailor V"
+    },
+    "ko": {
+      "language": "ko",
+      "value": "코드 네임은 세일러 V"
+    },
+    "gl": {
+      "language": "gl",
+      "value": "Codename wa Sailor V"
+    }
+  },
+  "aliases": {
+    "ru": [
+      {
+        "language": "ru",
+        "value": "Sailor V"
+      },
+      {
+        "language": "ru",
+        "value": "Codename wa Sailor V"
+      }
+    ],
+    "fr": [
+      {
+        "language": "fr",
+        "value": "Sailor v"
+      },
+      {
+        "language": "fr",
+        "value": "Codename wa Sailor V"
+      }
+    ],
+    "pt": [
+      {
+        "language": "pt",
+        "value": "Sailor V"
+      },
+      {
+        "language": "pt",
+        "value": "Codename wa sailor v"
+      },
+      {
+        "language": "pt",
+        "value": "Sailor v"
+      }
+    ],
+    "ca": [
+      {
+        "language": "ca",
+        "value": "Code Name wa Sailor V"
+      }
+    ],
+    "de": [
+      {
+        "language": "de",
+        "value": "Codename: Sailor V"
+      },
+      {
+        "language": "de",
+        "value": "Codename wa Sailor V"
+      },
+      {
+        "language": "de",
+        "value": "Codename Sailor V"
+      }
+    ],
+    "eo": [
+      {
+        "language": "eo",
+        "value": "Codename: Sailor V"
+      },
+      {
+        "language": "eo",
+        "value": "Koda Nomo: Sejla Vi"
+      },
+      {
+        "language": "eo",
+        "value": "Koda nomo: Sejla Vi"
+      },
+      {
+        "language": "eo",
+        "value": "Koda nomo Sejla Vi"
+      },
+      {
+        "language": "eo",
+        "value": "Koda Nomo Sejla Vi"
+      },
+      {
+        "language": "eo",
+        "value": "Koda Nomo — Sejla Vi"
+      }
+    ],
+    "it": [
+      {
+        "language": "it",
+        "value": "Codename: Sailor V"
+      },
+      {
+        "language": "it",
+        "value": "Sailor V"
+      }
+    ],
+    "pl": [
+      {
+        "language": "pl",
+        "value": "Hasło Brzmi: Sailor V"
+      }
+    ],
+    "th": [
+      {
+        "language": "th",
+        "value": "Code name is Sailor V"
+      }
+    ],
+    "es": [
+      {
+        "language": "es",
+        "value": "Sailor V"
+      },
+      {
+        "language": "es",
+        "value": "Codename wa sailor v"
+      },
+      {
+        "language": "es",
+        "value": "Codename wa Sailor V"
+      }
+    ]
+  },
+  "claims": {
+    "P31": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P31",
+          "hash": "549c072d6be8a6a43f999d1d0e82640b16c4260e",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 21198342,
+              "id": "Q21198342"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q868170$0E322834-E3D5-4022-A53A-CF85E82DC2DD",
+        "rank": "normal"
+      }
+    ],
+    "P50": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P50",
+          "hash": "3ca8e5d992d7d21653ed3e219a589a1910f3eb28",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 229724,
+              "id": "Q229724"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q868170$1C28483D-ADCA-44EE-853C-DAB337B80A07",
+        "rank": "normal",
+        "references": [
+          {
+            "hash": "d4bd87b862b12d99d26e86472d44f26858dee639",
+            "snaks": {
+              "P143": [
+                {
+                  "snaktype": "value",
+                  "property": "P143",
+                  "hash": "f30cbd35620c4ea6d0633aaf0210a8916130469b",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 8447,
+                      "id": "Q8447"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P143"
+            ]
+          }
+        ]
+      }
+    ],
+    "P110": []
+  }
+}

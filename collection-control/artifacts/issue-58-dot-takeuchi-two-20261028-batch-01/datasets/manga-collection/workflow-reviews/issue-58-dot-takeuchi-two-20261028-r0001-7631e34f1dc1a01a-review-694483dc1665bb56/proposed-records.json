@@ -1,0 +1,104 @@
+{
+  "status": "pending-human-acceptance",
+  "formalAcceptance": "pending",
+  "notForPublicApply": true,
+  "records": {
+    "entities": [
+      {
+        "id": "64f51852-27b2-41c0-88dc-f9d8c895454d",
+        "kind": "person",
+        "name": "武内直子",
+        "description": null,
+        "aliases": [
+          "Naoko Takeuchi"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q229724"
+          }
+        ],
+        "createdAt": "2026-10-28T01:01:35Z",
+        "updatedAt": "2026-10-28T01:01:35Z",
+        "event": null
+      },
+      {
+        "id": "6af9b8cc-6cb0-468e-a77b-bb7066153c9b",
+        "kind": "work",
+        "name": "コードネームはセーラーV",
+        "description": null,
+        "aliases": [
+          "Codename: Sailor V"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q868170"
+          }
+        ],
+        "createdAt": "2026-10-28T01:01:35Z",
+        "updatedAt": "2026-10-28T01:01:35Z",
+        "event": null
+      }
+    ],
+    "claims": [
+      {
+        "id": "6505aa5e-4745-455c-b2f5-7d8c6cb17428",
+        "subjectId": "64f51852-27b2-41c0-88dc-f9d8c895454d",
+        "objectId": "6af9b8cc-6cb0-468e-a77b-bb7066153c9b",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "hidden",
+        "createdAt": "2026-10-28T01:01:35Z",
+        "updatedAt": "2026-10-28T01:01:35Z",
+        "contribution": {
+          "roleId": "AUTHORSHIP",
+          "scope": {
+            "kind": "publication",
+            "isbn13": "9784065140857",
+            "volumeLabel": "第1巻（NDL巻次 1）",
+            "editionLabel": null,
+            "language": "ja"
+          }
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      }
+    ],
+    "sources": [
+      {
+        "id": "55e241de-fc94-4266-b592-443bc1c7d3c8",
+        "kind": "web",
+        "title": "NDLサーチ: コードネームはセーラーV = Codename Sailor V. 1",
+        "authors": [],
+        "publisher": "国立国会図書館",
+        "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I029519251",
+        "publishedAt": null,
+        "edition": null,
+        "note": "国立国会図書館作成書誌（iss-ndl-opac）の責任表示。メタデータ CC BY 4.0: https://creativecommons.org/licenses/by/4.0/ ; 提供元条件 https://ndlsearch.ndl.go.jp/help/api/provider 。本文・画像・第三者所蔵情報は含まない。",
+        "isDemo": false
+      }
+    ],
+    "citations": [
+      {
+        "id": "452caaff-f4c1-4d69-bc81-57c60c1e70cf",
+        "claimId": "6505aa5e-4745-455c-b2f5-7d8c6cb17428",
+        "sourceId": "55e241de-fc94-4266-b592-443bc1c7d3c8",
+        "locator": "dc:creator（責任表示） / ISBN 9784065140857",
+        "note": "原表記（ja）: 武内直子 著。指定刊行物の責任表示で確認された担当。全巻・全版・全期間への外挿、原作から別Roleへの変換はしない。同一資料由来の記録を独立した根拠と数えない。",
+        "accessedAt": "2026-10-28",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "武内直子 著",
+          "language": "ja"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      }
+    ]
+  }
+}

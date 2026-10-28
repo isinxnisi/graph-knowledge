@@ -1,0 +1,402 @@
+{
+  "id": "Q229724",
+  "lastrevid": 2555624049,
+  "labels": {
+    "pt": {
+      "language": "pt",
+      "value": "Naoko Takeuchi"
+    },
+    "zh-hans": {
+      "language": "zh-hans",
+      "value": "武内直子"
+    },
+    "zh-hant": {
+      "language": "zh-hant",
+      "value": "武內直子"
+    },
+    "zh-hk": {
+      "language": "zh-hk",
+      "value": "武內直子"
+    },
+    "zh-cn": {
+      "language": "zh-cn",
+      "value": "武内直子"
+    },
+    "zh-sg": {
+      "language": "zh-sg",
+      "value": "武内直子"
+    },
+    "zh-tw": {
+      "language": "zh-tw",
+      "value": "武內直子"
+    },
+    "eo": {
+      "language": "eo",
+      "value": "Takeuĉi Naoko"
+    },
+    "pl": {
+      "language": "pl",
+      "value": "Naoko Takeuchi"
+    },
+    "fr": {
+      "language": "fr",
+      "value": "Naoko Takeuchi"
+    },
+    "ru": {
+      "language": "ru",
+      "value": "Наоко Такэути"
+    },
+    "ko": {
+      "language": "ko",
+      "value": "타케우치 나오코"
+    },
+    "es": {
+      "language": "es",
+      "value": "Naoko Takeuchi"
+    },
+    "en": {
+      "language": "en",
+      "value": "Naoko Takeuchi"
+    },
+    "tr": {
+      "language": "tr",
+      "value": "Naoko Takeuchi"
+    },
+    "th": {
+      "language": "th",
+      "value": "นะโอะโกะ ทะเกะอุชิ"
+    },
+    "ro": {
+      "language": "ro",
+      "value": "Naoko Takeuchi"
+    },
+    "hu": {
+      "language": "hu",
+      "value": "Takeucsi Naoko"
+    },
+    "uk": {
+      "language": "uk",
+      "value": "Наоко Такеучі"
+    },
+    "it": {
+      "language": "it",
+      "value": "Naoko Takeuchi"
+    },
+    "de": {
+      "language": "de",
+      "value": "Naoko Takeuchi"
+    },
+    "id": {
+      "language": "id",
+      "value": "Naoko Takeuchi"
+    },
+    "ja": {
+      "language": "ja",
+      "value": "武内直子"
+    },
+    "sh": {
+      "language": "sh",
+      "value": "Naoko Takeući"
+    },
+    "hr": {
+      "language": "hr",
+      "value": "Naoko Takeuchi"
+    },
+    "sv": {
+      "language": "sv",
+      "value": "Naoko Takeuchi"
+    },
+    "nl": {
+      "language": "nl",
+      "value": "Naoko Takeuchi"
+    },
+    "zh": {
+      "language": "zh",
+      "value": "武內直子"
+    },
+    "ca": {
+      "language": "ca",
+      "value": "Naoko Takeuchi"
+    },
+    "ar": {
+      "language": "ar",
+      "value": "ناوكو تاكيوتشي"
+    },
+    "az": {
+      "language": "az",
+      "value": "Naoko Takeuçi"
+    },
+    "eu": {
+      "language": "eu",
+      "value": "Naoko Takeuchi"
+    },
+    "vi": {
+      "language": "vi",
+      "value": "Takeuchi Naoko"
+    },
+    "gl": {
+      "language": "gl",
+      "value": "Naoko Takeuchi"
+    },
+    "nan": {
+      "language": "nan",
+      "value": "Takeuti Naoko"
+    },
+    "ast": {
+      "language": "ast",
+      "value": "Naoko Takeuchi"
+    },
+    "pt-br": {
+      "language": "pt-br",
+      "value": "Naoko Takeuchi"
+    },
+    "el": {
+      "language": "el",
+      "value": "Ναόκο Τακεούτσι"
+    },
+    "sq": {
+      "language": "sq",
+      "value": "Naoko Takeuchi"
+    },
+    "kw": {
+      "language": "kw",
+      "value": "Naoko Takeuchi"
+    },
+    "hy": {
+      "language": "hy",
+      "value": "Նաոկո Տակեուչի"
+    },
+    "fi": {
+      "language": "fi",
+      "value": "Naoko Takeuchi"
+    },
+    "cs": {
+      "language": "cs",
+      "value": "Naoko Takeučiová"
+    },
+    "vec": {
+      "language": "vec",
+      "value": "Naoko Takeuchi"
+    },
+    "arz": {
+      "language": "arz",
+      "value": "ناوكو تاكيوتشى"
+    },
+    "nb": {
+      "language": "nb",
+      "value": "Naoko Takeuchi"
+    },
+    "nn": {
+      "language": "nn",
+      "value": "Naoko Takeuchi"
+    },
+    "bn": {
+      "language": "bn",
+      "value": "নাওকো টাকেয়ুচি"
+    },
+    "fa": {
+      "language": "fa",
+      "value": "نائوکو تاکوچی"
+    },
+    "sw": {
+      "language": "sw",
+      "value": "Naoko Takeuchi"
+    }
+  },
+  "aliases": {
+    "eo": [
+      {
+        "language": "eo",
+        "value": "Naoko Takeuchi"
+      },
+      {
+        "language": "eo",
+        "value": "Takeuchi Naoko"
+      },
+      {
+        "language": "eo",
+        "value": "Naoko Takeuĉi"
+      }
+    ],
+    "fr": [
+      {
+        "language": "fr",
+        "value": "Naoko Takeushi"
+      }
+    ],
+    "ru": [
+      {
+        "language": "ru",
+        "value": "Такэути, Наоко"
+      }
+    ],
+    "th": [
+      {
+        "language": "th",
+        "value": "นาโอโกะ ทาเคอุชิ"
+      },
+      {
+        "language": "th",
+        "value": "นาโอโกะ ทาเคอุจิ"
+      }
+    ],
+    "de": [
+      {
+        "language": "de",
+        "value": "Takeuchi Naoko"
+      }
+    ],
+    "sh": [
+      {
+        "language": "sh",
+        "value": "Naoko Takeuchi"
+      }
+    ],
+    "hr": [
+      {
+        "language": "hr",
+        "value": "Naoko Takeući"
+      }
+    ],
+    "sv": [
+      {
+        "language": "sv",
+        "value": "Takeuchi"
+      }
+    ],
+    "zh": [
+      {
+        "language": "zh",
+        "value": "竹内奈緖子"
+      }
+    ],
+    "nl": [
+      {
+        "language": "nl",
+        "value": "N. Takeuchi"
+      }
+    ],
+    "nb": [
+      {
+        "language": "nb",
+        "value": "Takeuchi Naoko"
+      }
+    ],
+    "en": [
+      {
+        "language": "en",
+        "value": "Takeuchi Naoko"
+      }
+    ],
+    "nn": [
+      {
+        "language": "nn",
+        "value": "Takeuchi Naoko"
+      }
+    ],
+    "cs": [
+      {
+        "language": "cs",
+        "value": "直子 武内"
+      },
+      {
+        "language": "cs",
+        "value": "ナオコ タケウチ"
+      },
+      {
+        "language": "cs",
+        "value": "Naoko Togashi"
+      }
+    ],
+    "uk": [
+      {
+        "language": "uk",
+        "value": "Наоко Такеуті"
+      }
+    ]
+  },
+  "claims": {
+    "P31": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P31",
+          "hash": "ad7d38a03cdd40cdc373de0dc4e7b7fcbccb31d9",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 5,
+              "id": "Q5"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q229724$14D05EA0-F7AA-4746-A38A-570F38C0398C",
+        "rank": "normal",
+        "references": [
+          {
+            "hash": "94498ccbc7a74791ce0b56289c33c8906e409e50",
+            "snaks": {
+              "P248": [
+                {
+                  "snaktype": "value",
+                  "property": "P248",
+                  "hash": "def9f19d84b65167a2a17ce38364d264c16127fc",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 19938912,
+                      "id": "Q19938912"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ],
+              "P268": [
+                {
+                  "snaktype": "value",
+                  "property": "P268",
+                  "hash": "c9a036c32c4ebf04f153ad651604fb422bef7f52",
+                  "datavalue": {
+                    "value": "125220246",
+                    "type": "string"
+                  },
+                  "datatype": "external-id"
+                }
+              ],
+              "P813": [
+                {
+                  "snaktype": "value",
+                  "property": "P813",
+                  "hash": "d6162a1716489623c6e595e448b17f8dca4fb2e8",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2015-10-10T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P248",
+              "P268",
+              "P813"
+            ]
+          }
+        ]
+      }
+    ],
+    "P50": [],
+    "P110": []
+  }
+}

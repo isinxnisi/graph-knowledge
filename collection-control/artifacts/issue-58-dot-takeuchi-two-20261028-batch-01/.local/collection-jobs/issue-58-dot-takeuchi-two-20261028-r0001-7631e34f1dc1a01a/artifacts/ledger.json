@@ -1,0 +1,138 @@
+{
+  "schemaVersion": 2,
+  "status": "pending-human-acceptance",
+  "recipe": "manga-r0038",
+  "collectionContext": {
+    "themeId": "issue-58-dot-takeuchi-two-20261028",
+    "themeRevision": 1,
+    "definitionSha256": "46d3b9ccc92cd9e3708836f3cff5c0b5d6764f0413f2fc50e10185843a16309e",
+    "approvalSha256": "747d604f0e86e030ecd2f51fe1bffe040550bd18228d182ac112a65622899d1b"
+  },
+  "execution": {
+    "adapter": "manga-discovery-v2",
+    "codeSha256": "80e05b67bc0129b963653b90df4cfbfa5bd6aff190acda99f54c08541e55801e",
+    "inputs": [
+      {
+        "file": "datasets/manga-collection/r0038/recipe.json",
+        "sha256": "6b4d1ecfc5cc8ae4c0b4fb246629ecaefdd02d9f0447d2839d24ccbad2bbc2c1"
+      },
+      {
+        "file": "datasets/manga-collection/r0038/anchor-review.json",
+        "sha256": "ea3b3dac5f7e36ac0abf296883229a1c2a7243f9ead3a95af984a22980634309"
+      },
+      {
+        "file": "datasets/manga-collection/r0038/publication-review.json",
+        "sha256": "6d6a41cdc8ebd82763d1a44695880932e1c9219cc18ae95c109dbbfdfe392a54"
+      },
+      {
+        "file": "docs/research/famous-manga-creators/20261016/candidates.json",
+        "sha256": "8531fada01e5c635ba2ee278a7ef944a73f64676af14ed42ae0e690f5a1ff978"
+      },
+      {
+        "file": "datasets/public-kg/releases/20261014-credits-001/data.json",
+        "sha256": "ea91b16f52a211b5a8464382ad498b7b2bb2be69a6f33fe125a73a3c7b9da2b5"
+      },
+      {
+        "file": "datasets/public-kg/releases/20261014-credits-001/manifest.json",
+        "sha256": "e4aa3b58ed884f7d1f8fffee43b260261cc2b4d3a867fda942919f439d2bce17"
+      }
+    ],
+    "maxEntities": 2111,
+    "maxClaims": 1847
+  },
+  "identityMappings": [
+    {
+      "name": "武内直子",
+      "wikidata": "Q229724",
+      "entityId": "64f51852-27b2-41c0-88dc-f9d8c895454d",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "コードネームはセーラーV",
+      "wikidata": "Q868170",
+      "entityId": "6af9b8cc-6cb0-468e-a77b-bb7066153c9b",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    }
+  ],
+  "rows": [
+    {
+      "kind": "wikidata-relation",
+      "work": "コードネームはセーラーV",
+      "property": "P50",
+      "personQid": "Q229724",
+      "statementId": "Q868170$1C28483D-ADCA-44EE-853C-DAB337B80A07",
+      "qualifiers": {},
+      "references": [
+        {
+          "hash": "d4bd87b862b12d99d26e86472d44f26858dee639",
+          "snaks": {
+            "P143": [
+              {
+                "snaktype": "value",
+                "property": "P143",
+                "hash": "f30cbd35620c4ea6d0633aaf0210a8916130469b",
+                "datavalue": {
+                  "value": {
+                    "entity-type": "item",
+                    "numeric-id": 8447,
+                    "id": "Q8447"
+                  },
+                  "type": "wikibase-entityid"
+                },
+                "datatype": "wikibase-item"
+              }
+            ]
+          },
+          "snaks-order": [
+            "P143"
+          ]
+        }
+      ],
+      "status": "candidate-only-no-role-inference",
+      "reason": "Wikidata propertyだけで具体Roleや直接制作の意味を確定しない"
+    },
+    {
+      "kind": "ndl-credit",
+      "work": "コードネームはセーラーV",
+      "isbn13": "9784065140857",
+      "rawResponsibility": "武内直子 著",
+      "sourceUrl": "https://ndlsearch.ndl.go.jp/books/R100000002-I029519251",
+      "status": "pending-human-acceptance",
+      "roleId": "AUTHORSHIP",
+      "person": "武内直子",
+      "claimId": "6505aa5e-4745-455c-b2f5-7d8c6cb17428",
+      "reusedClaim": false,
+      "subjectId": "64f51852-27b2-41c0-88dc-f9d8c895454d",
+      "objectId": "6af9b8cc-6cb0-468e-a77b-bb7066153c9b"
+    }
+  ],
+  "holds": [],
+  "acquisitions": [
+    {
+      "kind": "wikidata",
+      "identifier": "Q229724",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q229724.json",
+      "sha256": "cfc9c5ba3e2ca54892550a3da50684604a1eae633770a6fb8570b6c83a8f2e69",
+      "bytes": 86255,
+      "fetchedAt": "2026-10-28T01:01:43+00:00"
+    },
+    {
+      "kind": "wikidata",
+      "identifier": "Q868170",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q868170.json",
+      "sha256": "543f24d09394d74cdab4c2c68a9e3433cc3eec2dc281c73d8e1d17436fca811d",
+      "bytes": 13554,
+      "fetchedAt": "2026-10-28T01:01:51+00:00"
+    },
+    {
+      "kind": "ndl",
+      "identifier": "9784065140857",
+      "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&maximumRecords=5&query=isbn%3D%229784065140857%22+AND+dpid%3Diss-ndl-opac",
+      "sha256": "c152a1b0fc0d52e82a38f7ed9e2b36b09fe0503e7c9a16f810efe593f012442a",
+      "bytes": 7849,
+      "fetchedAt": "2026-10-28T01:15:45+00:00"
+    }
+  ]
+}

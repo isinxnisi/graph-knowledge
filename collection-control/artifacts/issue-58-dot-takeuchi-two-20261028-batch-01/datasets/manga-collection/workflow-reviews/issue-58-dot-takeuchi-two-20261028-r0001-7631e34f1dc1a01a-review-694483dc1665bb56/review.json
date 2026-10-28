@@ -1,0 +1,84 @@
+{
+  "status": "pending-human-acceptance",
+  "humanReviewer": null,
+  "entities": [
+    {
+      "entityId": "64f51852-27b2-41c0-88dc-f9d8c895454d",
+      "name": "武内直子",
+      "kind": "person",
+      "wikidata": "Q229724",
+      "existingEntityId": null,
+      "status": "candidate",
+      "reasons": [],
+      "checks": {
+        "providerIdentity": true
+      },
+      "inputPopulation": "relation-endpoint"
+    },
+    {
+      "entityId": "6af9b8cc-6cb0-468e-a77b-bb7066153c9b",
+      "name": "コードネームはセーラーV",
+      "kind": "work",
+      "wikidata": "Q868170",
+      "existingEntityId": null,
+      "status": "candidate",
+      "reasons": [],
+      "checks": {
+        "providerIdentity": true
+      },
+      "inputPopulation": "relation-endpoint"
+    }
+  ],
+  "claims": [
+    {
+      "claimId": "6505aa5e-4745-455c-b2f5-7d8c6cb17428",
+      "person": "武内直子",
+      "work": "コードネームはセーラーV",
+      "subjectId": "64f51852-27b2-41c0-88dc-f9d8c895454d",
+      "objectId": "6af9b8cc-6cb0-468e-a77b-bb7066153c9b",
+      "roleId": "AUTHORSHIP",
+      "scope": {
+        "kind": "publication",
+        "isbn13": "9784065140857",
+        "volumeLabel": "第1巻（NDL巻次 1）",
+        "editionLabel": null,
+        "language": "ja"
+      },
+      "status": "candidate",
+      "reasons": [],
+      "supportingCitationIds": [
+        "452caaff-f4c1-4d69-bc81-57c60c1e70cf"
+      ],
+      "existingState": null,
+      "existingClaimId": null,
+      "originalTexts": [
+        "武内直子 著"
+      ],
+      "citationIds": [
+        "452caaff-f4c1-4d69-bc81-57c60c1e70cf"
+      ],
+      "sourceUrls": [
+        "https://ndlsearch.ndl.go.jp/books/R100000002-I029519251"
+      ],
+      "sourceIds": [
+        "55e241de-fc94-4266-b592-443bc1c7d3c8"
+      ]
+    }
+  ],
+  "inheritedHolds": [],
+  "newCandidateCounts": {
+    "entities": 2,
+    "claims": 1,
+    "sources": 1,
+    "citations": 1
+  },
+  "recordConflicts": [],
+  "roleCounts": {
+    "AUTHORSHIP": 1
+  },
+  "normalReviewedEntityCount": 2,
+  "reusedCitationIds": [],
+  "identityOnlyEntityIds": [],
+  "heldClaimCount": 0,
+  "heldEntityCount": 0
+}

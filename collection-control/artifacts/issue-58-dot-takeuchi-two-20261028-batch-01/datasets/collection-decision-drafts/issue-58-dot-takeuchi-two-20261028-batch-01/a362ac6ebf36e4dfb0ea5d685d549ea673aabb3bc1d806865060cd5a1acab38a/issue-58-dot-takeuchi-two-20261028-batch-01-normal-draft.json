@@ -1,0 +1,113 @@
+{
+  "schemaVersion": 1,
+  "decisionId": "issue-58-dot-takeuchi-two-20261028-batch-01-normal",
+  "status": "draft-not-approved",
+  "humanDecision": {
+    "actorType": "human",
+    "reviewer": null,
+    "decidedAt": null,
+    "statement": null
+  },
+  "approvalScope": "formal-record-acceptance-and-release-preparation-only",
+  "applyAuthorized": {
+    "local": false,
+    "beta": false,
+    "vps": false
+  },
+  "review": {
+    "file": "datasets/manga-collection/workflow-reviews/issue-58-dot-takeuchi-two-20261028-r0001-7631e34f1dc1a01a-review-694483dc1665bb56/review-manifest.json",
+    "sha256": "a362ac6ebf36e4dfb0ea5d685d549ea673aabb3bc1d806865060cd5a1acab38a"
+  },
+  "referenceArtifacts": [
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-58-dot-takeuchi-two-20261028-r0001-7631e34f1dc1a01a-review-694483dc1665bb56/README.md",
+      "sha256": "b3520b49c0cb63a921c6b7ba4feeac7dd5d3cf6c75a3eddc47030b2335579838"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-58-dot-takeuchi-two-20261028-r0001-7631e34f1dc1a01a-review-694483dc1665bb56/context.json",
+      "sha256": "03df67f122c59cb7cdd9ef00f742f85fb2b6d6580626ade0090ec301759c6f72"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-58-dot-takeuchi-two-20261028-r0001-7631e34f1dc1a01a-review-694483dc1665bb56/decision-request.json",
+      "sha256": "1ad6dcee7cf5b4479c4f5949b339e8a13c277a397a301e844c06dc23a02aa4b1"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-58-dot-takeuchi-two-20261028-r0001-7631e34f1dc1a01a-review-694483dc1665bb56/exploration-paths.json",
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-58-dot-takeuchi-two-20261028-r0001-7631e34f1dc1a01a-review-694483dc1665bb56/identity-only-records.json",
+      "sha256": "1fc314e4a47717bce195b39fe7f1e66bd31f6af892fca4a9420a653eab927a37"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-58-dot-takeuchi-two-20261028-r0001-7631e34f1dc1a01a-review-694483dc1665bb56/proposed-records.json",
+      "sha256": "1c847d14aa98ab9c5213f3f90a8e89c80ef8c6ffbd2fe408bd72145faea52adb"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-58-dot-takeuchi-two-20261028-r0001-7631e34f1dc1a01a-review-694483dc1665bb56/review-manifest.json",
+      "sha256": "a362ac6ebf36e4dfb0ea5d685d549ea673aabb3bc1d806865060cd5a1acab38a"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-58-dot-takeuchi-two-20261028-r0001-7631e34f1dc1a01a-review-694483dc1665bb56/review.json",
+      "sha256": "c4807db28f597c5bb941372d762fca2b8b11074d3058932a9d72dc1f460d094c"
+    }
+  ],
+  "acceptedRecordIds": {
+    "entities": [
+      "64f51852-27b2-41c0-88dc-f9d8c895454d",
+      "6af9b8cc-6cb0-468e-a77b-bb7066153c9b"
+    ],
+    "claims": [
+      "6505aa5e-4745-455c-b2f5-7d8c6cb17428"
+    ],
+    "sources": [
+      "55e241de-fc94-4266-b592-443bc1c7d3c8"
+    ],
+    "citations": [
+      "452caaff-f4c1-4d69-bc81-57c60c1e70cf"
+    ]
+  },
+  "recordSha256": {
+    "entities": {
+      "64f51852-27b2-41c0-88dc-f9d8c895454d": "f59cf57ea15053869b001a7eba4fa3f950e9d72cc3d727e380715e936b94295e",
+      "6af9b8cc-6cb0-468e-a77b-bb7066153c9b": "c08a952a13c0b511fc230dd5439e3c9623c7f0a67450d1e23a08ad079c70497f"
+    },
+    "claims": {
+      "6505aa5e-4745-455c-b2f5-7d8c6cb17428": "829e6e7e05508330d7b4c42b14f3a1319bbd6e7dca03e83b50436f237e59d89d"
+    },
+    "sources": {
+      "55e241de-fc94-4266-b592-443bc1c7d3c8": "dadc8fa64361ada6107199be2d2d4e0b663a81609ee2678ce55d73b5310979e7"
+    },
+    "citations": {
+      "452caaff-f4c1-4d69-bc81-57c60c1e70cf": "41dd1781766eabcc2834bf389339d052cd89a6da4bd6c5fae520a68239c0cade"
+    }
+  },
+  "scopeByClaim": [
+    {
+      "id": "6505aa5e-4745-455c-b2f5-7d8c6cb17428",
+      "subjectId": "64f51852-27b2-41c0-88dc-f9d8c895454d",
+      "objectId": "6af9b8cc-6cb0-468e-a77b-bb7066153c9b",
+      "predicate": "CONTRIBUTED_TO",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "contribution": {
+        "roleId": "AUTHORSHIP",
+        "scope": {
+          "kind": "publication",
+          "isbn13": "9784065140857",
+          "volumeLabel": "第1巻（NDL巻次 1）",
+          "editionLabel": null,
+          "language": "ja"
+        }
+      },
+      "organizationParticipation": null,
+      "eventParticipation": null
+    }
+  ],
+  "baseRelease": "20261014-credits-001",
+  "baseRevision": "82b01515-594c-48ca-b4b6-515eefac83ca",
+  "releaseId": "manga-issue-58-dot-takeuchi-two-20261028-batch-01-normal"
+}

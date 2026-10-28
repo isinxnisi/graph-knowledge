@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "reviewId": "issue-58-dot-takeuchi-two-20261028-r0001-7631e34f1dc1a01a-review-694483dc1665bb56",
+  "inputSha256": "694483dc1665bb5653607d2e420aeb754bdc1625369f8d8aa23f60f6fb8a5e02",
+  "artifacts": {
+    "context.json": "03df67f122c59cb7cdd9ef00f742f85fb2b6d6580626ade0090ec301759c6f72",
+    "review.json": "c4807db28f597c5bb941372d762fca2b8b11074d3058932a9d72dc1f460d094c",
+    "proposed-records.json": "1c847d14aa98ab9c5213f3f90a8e89c80ef8c6ffbd2fe408bd72145faea52adb",
+    "identity-only-records.json": "1fc314e4a47717bce195b39fe7f1e66bd31f6af892fca4a9420a653eab927a37",
+    "exploration-paths.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+    "decision-request.json": "1ad6dcee7cf5b4479c4f5949b339e8a13c277a397a301e844c06dc23a02aa4b1",
+    "README.md": "b3520b49c0cb63a921c6b7ba4feeac7dd5d3cf6c75a3eddc47030b2335579838"
+  },
+  "authority": "pending-human-review-only"
+}

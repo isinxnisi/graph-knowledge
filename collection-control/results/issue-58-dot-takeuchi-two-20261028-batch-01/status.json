@@ -82,11 +82,35 @@
   },
   "requestSha256": "71a310a43534263d75049dac65eb871806eddb610ee9f1822079a6486e9128d0",
   "kind": "collect-review",
-  "phase": "running",
+  "phase": "completed",
   "generation": 5,
   "attempts": 1,
   "workerId": "plunode-wsl",
   "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
   "updatedAt": "2026-10-28T01:27:02+00:00",
-  "message": "Execution gate: interval"
+  "result": {
+    "jobId": "issue-58-dot-takeuchi-two-20261028-r0001-7631e34f1dc1a01a",
+    "collectionUnchanged": false,
+    "reviewUnchanged": false,
+    "transportAttemptsAdded": 0,
+    "reviewDirectory": "/home/isinxnisi/.local/share/plunode-collection-worker-phase-b-20261020/runtime/datasets/manga-collection/workflow-reviews/issue-58-dot-takeuchi-two-20261028-r0001-7631e34f1dc1a01a-review-694483dc1665bb56",
+    "reviewOnly": true,
+    "formalAcceptance": false,
+    "publicApply": false,
+    "counts": {
+      "entities": 2,
+      "claims": 1,
+      "sources": 1,
+      "citations": 1
+    },
+    "heldClaims": 0
+  },
+  "executionComplete": true,
+  "reviewReference": {
+    "file": "datasets/manga-collection/workflow-reviews/issue-58-dot-takeuchi-two-20261028-r0001-7631e34f1dc1a01a-review-694483dc1665bb56/review-manifest.json",
+    "sha256": "a362ac6ebf36e4dfb0ea5d685d549ea673aabb3bc1d806865060cd5a1acab38a"
+  },
+  "decisionDrafts": [
+    "datasets/collection-decision-drafts/issue-58-dot-takeuchi-two-20261028-batch-01/a362ac6ebf36e4dfb0ea5d685d549ea673aabb3bc1d806865060cd5a1acab38a/issue-58-dot-takeuchi-two-20261028-batch-01-normal-draft.json"
+  ]
 }

@@ -1,0 +1,166 @@
+{
+  "schemaVersion": 1,
+  "jobId": "issue-58-dot-takeuchi-two-20261028-r0001-7631e34f1dc1a01a",
+  "jobKey": "7631e34f1dc1a01a924fb63d122eece94dfd2c0bf156566d10fc646c3f3e38cc",
+  "runnerSha256": "1f36d3010c7a7e471091620c6820b1401aa0a0b53a997da187f51f9fa68b2ae2",
+  "workOrder": {
+    "schemaVersion": 1,
+    "theme": {
+      "schemaVersion": 1,
+      "id": "issue-58-dot-takeuchi-two-20261028",
+      "revision": 1,
+      "title": "Issue 58：武内直子／候補収集",
+      "purpose": "既存の明示的人間許可を範囲内の導出recipeへ束縛。知識の正式受入・公開適用を許可しない。",
+      "worlds": [
+        "漫画・アニメ",
+        "美術・文学"
+      ],
+      "relatedThemes": [
+        "famous-manga-creators"
+      ],
+      "scope": {
+        "include": [
+          "Issue permission SHA256 23ac0a7411666f37391202ebc3069be90338ccb59af7f65bc39fd2a327565ee5",
+          "[\n  {\n    \"person\": \"武内直子\",\n    \"work\": \"美少女戦士セーラームーン（漫画）\"\n  },\n  {\n    \"person\": \"武内直子\",\n    \"work\": \"コードネームはセーラーV\"\n  }\n]\n",
+          "Wikidata完全一致・NDL作成書誌の日本語第1巻ISBN。原語・既存制作Role契約を維持。"
+        ],
+        "exclude": [
+          "許可外人物作品・不確かな同定・意味変換・正式受入・公開apply・VPS配置・会員DB変更"
+        ]
+      },
+      "dataRequirements": [
+        {
+          "kind": "entity",
+          "description": "一覧内の人物と漫画作品、確認された日英別名・外部ID",
+          "granularity": "個人と共同筆名を区別し、漫画版・特定部・特定初出版を同定する。既存UUIDは再利用"
+        },
+        {
+          "kind": "claim",
+          "description": "明示された人物→漫画制作のRole候補。ORIGINAL_STORYを含む既存Role契約に従う",
+          "granularity": "代表ISBNごとのpublication scope。原語・巻・版を固定し、作品全体や別Roleへ自動拡張しない"
+        },
+        {
+          "kind": "citation",
+          "description": "資料URL、参照箇所、取得日、担当原語、刊行物と利用条件",
+          "granularity": "資料と取込由来を分け、同資料を共有する記録を独立根拠として数えない"
+        },
+        {
+          "kind": "identity",
+          "description": "作品単位と筆名・既存Entity対応の判断",
+          "granularity": "武論尊／史村翔、藤子共同名義、ワンパンマンの版、火の鳥の初出版等を個別に判断"
+        },
+        {
+          "kind": "model-gap",
+          "description": "漫画表記、原著、原案、集約著者などの未確定関係とシリーズ／巻／版の構造",
+          "granularity": "この企画の承認だけでは実装・語彙承認しない。必要なら個別レビューへ分ける"
+        }
+      ],
+      "sources": [
+        {
+          "name": "Wikidata（構造化取得の有力候補）",
+          "url": "https://www.wikidata.org/wiki/Help:Data_access",
+          "usage": "識別子・日英名・別名・作品関係候補と参照先。propertyから既存Roleを推測しない。",
+          "termsNote": "Wikidata構造化APIとcanonical EntityData。Issue全体で準備・収集合計30試行。"
+        },
+        {
+          "name": "NDLサーチ・NDL作成書誌",
+          "url": "https://ndlsearch.ndl.go.jp/help/api/provider",
+          "usage": "SRUのiss-ndl-opac限定、固定ISBN検索・maximumRecords=5。NDL作成書誌のISBN・主書名・巻・版・言語・漫画種別・責任表示を一意に照合。第三者所蔵情報はsnapshotへ出さない。",
+          "termsNote": "NDL作成書誌のCC BY4.0。題名・著者検索で代表ISBNを選びcanonical ISBN検索で一意性を再確認。所蔵・本文を転載しない。"
+        }
+      ],
+      "exploration": {
+        "questions": [
+          "既存浦沢直樹からあさドラ！・パイナップルARMYと工藤かずやへ渡れるか？",
+          "サンクチュアリと北斗の拳を同じ人物の別名義・異なるRoleの根拠で辿れるか？",
+          "ポーの一族から萩尾望都を経て11人いる！、風と木の詩から竹宮惠子を経て地球へ…に渡れるか？",
+          "r0002公開後に大場つぐみ・Boichi・藤本タツキの別作品へ進めるか？ 未受入・原語未確定の枝を区別できるか？"
+        ],
+        "existingPredicates": [
+          "CONTRIBUTED_TO"
+        ],
+        "modelGaps": [
+          "漫画表記や集約著者表示は既存Roleへ自動変換できない。ORIGINAL_STORYは原作担当の明示に限定する。",
+          "掲載・翻案・シリーズ／巻／版の独立関係は対象外",
+          "ジャンルは編集上の入口説明であり分類Claimは生成しない"
+        ]
+      },
+      "coverageReferences": [
+        "datasets/manga-collection/r0038/anchor-review.json",
+        "datasets/manga-collection/r0038/publication-review.json"
+      ],
+      "execution": {
+        "adapter": "manga-discovery-v2",
+        "codeSha256": "80e05b67bc0129b963653b90df4cfbfa5bd6aff190acda99f54c08541e55801e",
+        "inputs": [
+          {
+            "file": "datasets/manga-collection/r0038/recipe.json",
+            "sha256": "6b4d1ecfc5cc8ae4c0b4fb246629ecaefdd02d9f0447d2839d24ccbad2bbc2c1"
+          },
+          {
+            "file": "datasets/manga-collection/r0038/anchor-review.json",
+            "sha256": "ea3b3dac5f7e36ac0abf296883229a1c2a7243f9ead3a95af984a22980634309"
+          },
+          {
+            "file": "datasets/manga-collection/r0038/publication-review.json",
+            "sha256": "6d6a41cdc8ebd82763d1a44695880932e1c9219cc18ae95c109dbbfdfe392a54"
+          },
+          {
+            "file": "docs/research/famous-manga-creators/20261016/candidates.json",
+            "sha256": "8531fada01e5c635ba2ee278a7ef944a73f64676af14ed42ae0e690f5a1ff978"
+          },
+          {
+            "file": "datasets/public-kg/releases/20261014-credits-001/data.json",
+            "sha256": "ea91b16f52a211b5a8464382ad498b7b2bb2be69a6f33fe125a73a3c7b9da2b5"
+          },
+          {
+            "file": "datasets/public-kg/releases/20261014-credits-001/manifest.json",
+            "sha256": "e4aa3b58ed884f7d1f8fffee43b260261cc2b4d3a867fda942919f439d2bce17"
+          }
+        ],
+        "maxEntities": 2111,
+        "maxClaims": 1847
+      }
+    },
+    "definitionSha256": "46d3b9ccc92cd9e3708836f3cff5c0b5d6764f0413f2fc50e10185843a16309e",
+    "approval": {
+      "schemaVersion": 1,
+      "themeId": "issue-58-dot-takeuchi-two-20261028",
+      "revision": 1,
+      "definitionSha256": "46d3b9ccc92cd9e3708836f3cff5c0b5d6764f0413f2fc50e10185843a16309e",
+      "reviewer": "プロジェクト運営者（範囲を限定した委任）",
+      "reviewedAt": "2026-10-28T01:15:54+00:00",
+      "note": "既存Issue承認の技術的束縛。追加のAI判断ではない。\n{\n  \"issueOrigin\": {\n    \"repository\": \"isinxnisi/graph-knowledge\",\n    \"issueNumber\": 58,\n    \"approvalId\": \"dot-takeuchi-two-20261028\",\n    \"permissionSha256\": \"23ac0a7411666f37391202ebc3069be90338ccb59af7f65bc39fd2a327565ee5\",\n    \"issueBodySha256\": \"7b70027c73175700d3ae052a92056fd473f1d7e7dbf921e3038856a82e2b4b4d\"\n  },\n  \"humanDecision\": {\n    \"actorType\": \"human\",\n    \"reviewer\": \"プロジェクト運営者（範囲を限定した委任）\",\n    \"decidedAt\": \"2026-10-25T13:07:49+09:00\",\n    \"statement\": \"2026-10-25 13:07:49 JST、運営者は既存Worker対応の現在の漫画テーマ候補からdotが対象を選び、毎回の個別提示なしでGitHubの収集許可と購読を登録し、候補収集・レビューまで進める限定委任を明示承認した。同日16:17:04 JSTに固定1日1バッチ上限を撤廃し、進捗・収集量・負荷による投入調整を許可した。2026-10-26 12:37:31 JST、過去の許可を上書きせず追加分をバッチ専用の新Issueに登録する方式への明示確認に本人が肯定リアクションし、親会話で現在の反応を検証済み。2026-10-27 13:37〜13:41 JST、運営者はdotが相談中として継続していた追加投入抑制を問い直し、データ収集を急いでいること、多少多く実行してほしいこと、1日何件という制約を付ける段階ではないことを明示した。元の限定委任の範囲で投入を再開し、日次件数上限を設けず実処理・待機量・負荷を見て少量ずつ補充する。個々の人物作品組・Role・ISBNを人間が審査済みとの記録ではない。今回dotが選んだのは既存テーマIssue #5と固定catalog d3e377d5255f4c487d608e73954dc40aeb0b3cba（blob f3d33d0e83b6299a7f443fa841232407ce67657c）のM31の武内直子→美少女戦士セーラームーン（漫画）／コードネームはセーラーVの2組、および導入Worker対応組との共通部分だけ。Wikidata構造化情報とNDL作成書誌のみ、1作者2作品、親準備と全子収集合計30試行以内、同一要求2試行・3秒間隔・20秒・4MiB、保存成果とcache優先。既公開・既受入・既収集の同内容、同条件の根拠保留は再収集せず、不確かな同定・Role・刊行物scopeは保留。既設時間帯・直列排他・10分休憩を維持する。固定catalog全組・将来追加テーマへの無条件許可ではなく、正式受入・公開apply・追加取得元・予算拡大・コード/adapter/権限/認証/VPS/会員DB/時間帯/ロック変更は含まない。\"\n  }\n}\n",
+      "checks": [
+        "purpose",
+        "scope",
+        "data-granularity",
+        "sources-and-terms",
+        "exploration",
+        "execution-boundary"
+      ]
+    },
+    "approvalSha256": "747d604f0e86e030ecd2f51fe1bffe040550bd18228d182ac112a65622899d1b",
+    "executionStatus": "frozen-adapter",
+    "authority": "candidate-collection-only; not knowledge acceptance or public release approval"
+  },
+  "status": "candidate-ready",
+  "attempts": [
+    {
+      "number": 1,
+      "startedAt": "2026-10-28T01:28:44+00:00",
+      "status": "succeeded",
+      "stage": "candidate-ready",
+      "finishedAt": "2026-10-28T01:28:46+00:00"
+    }
+  ],
+  "artifacts": {
+    "candidate/data.json": "d365a9d52c78979410040d12e248d2bcda6efad82f4a77c2c2774d045b24043a",
+    "candidate/manifest.json": "f6cc8708a7ec0d2544e4da0dcc48c92651efc43493d4c9dfed19dd2966bf249b",
+    "ledger.json": "1b122884b25bb31f65e825b2adb42b6c64a65993532e4019be962a0c84178b55",
+    "snapshots/Q229724.json": "8f5ccf98acc6b5f995f7b418cde2330172415645825cacb5670e59fc24f050af",
+    "snapshots/Q868170.json": "3f670a11173921efa2f34aa1287c14f4fc3f3ee0f10e3ed832b4381587fc12d5",
+    "snapshots/ndl-9784065140857.json": "7b698c6828e34528c463c4072b08786b153111b05a69b1789e13f52454ba568d",
+    "summary.json": "e7a42e5b3d92397ef26e3445051ebcd86089e4680bf4df8dfaff794f570b78ce"
+  }
+}
