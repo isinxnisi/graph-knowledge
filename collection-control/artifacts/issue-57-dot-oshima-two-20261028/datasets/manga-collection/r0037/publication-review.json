@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "scope": "specified-japanese-volume-1-isbn-only",
+  "publications": [
+    {
+      "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I000002324649",
+      "isbn13": [
+        "9784592880615"
+      ],
+      "title": [
+        "綿の国星. 第1巻 (シルク・ムーンプチ・ロード)"
+      ],
+      "mainTitles": [
+        "綿の国星"
+      ],
+      "volume": [
+        "第1巻 (シルク・ムーンプチ・ロード)"
+      ],
+      "edition": [],
+      "responsibilities": [
+        "大島弓子 著"
+      ],
+      "publisher": [
+        "白泉社"
+      ],
+      "language": [
+        "jpn"
+      ],
+      "genre": [
+        "漫画"
+      ],
+      "issued": "1994.6",
+      "searchTruncated": false,
+      "selectionBoundary": "representative-first-volume-among-observed-records-not-original-edition"
+    }
+  ]
+}

@@ -1,0 +1,57 @@
+{
+  "schemaVersion": 2,
+  "id": "manga-r0037",
+  "catalog": "docs/research/famous-manga-creators/20261016/candidates.json",
+  "baseRelease": "datasets/public-kg/releases/20261014-credits-001",
+  "stamp": "2026-10-28T00:33:36Z",
+  "requestPolicy": {
+    "maxAttempts": 30,
+    "attemptsPerRequest": 2,
+    "minIntervalSeconds": 3,
+    "timeoutSeconds": 20,
+    "maxBytes": 4194304
+  },
+  "outputPolicy": {
+    "maxNewEntities": 2,
+    "maxNewClaims": 3,
+    "newClaimVisibility": "hidden"
+  },
+  "people": [
+    {
+      "name": "大島弓子",
+      "catalogName": "大島弓子",
+      "wikidata": "Q445875",
+      "identityNames": [
+        "大島弓子"
+      ],
+      "creditNames": [
+        "大島弓子"
+      ]
+    }
+  ],
+  "works": [
+    {
+      "name": "綿の国星",
+      "wikidata": "Q689013",
+      "identityNames": [
+        "綿の国星"
+      ],
+      "isbn13": "9784592880615",
+      "ndlMainTitles": [
+        "綿の国星"
+      ],
+      "expectedVolume": [
+        "第1巻 (シルク・ムーンプチ・ロード)"
+      ],
+      "expectedEdition": [],
+      "volumeLabel": "第1巻（NDL巻次 第1巻 (シルク・ムーンプチ・ロード)）",
+      "editionLabel": null,
+      "identityNote": "Issueの名称とWikidataの完全一致・漫画型、NDL作成書誌の主書名・責任表示・巻次を照合。作品全体の担当へ外挿しない。",
+      "selectionReason": "承認済みIssue内の同作者経路の拡張。"
+    }
+  ],
+  "reviewArtifacts": [
+    "datasets/manga-collection/r0037/anchor-review.json",
+    "datasets/manga-collection/r0037/publication-review.json"
+  ]
+}

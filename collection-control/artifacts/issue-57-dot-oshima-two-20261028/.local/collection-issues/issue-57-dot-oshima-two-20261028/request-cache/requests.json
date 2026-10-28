@@ -1,0 +1,148 @@
+{
+  "policy": {
+    "maxAttempts": 30,
+    "attemptsPerRequest": 2,
+    "minIntervalSeconds": 3,
+    "timeoutSeconds": 20,
+    "maxBytes": 4194304
+  },
+  "attempts": [
+    {
+      "key": "lookup-148397cb23a47c7f32d00230",
+      "url": "https://www.wikidata.org/w/api.php?format=json&action=wbgetentities&sites=jawiki&titles=%E5%A4%A7%E5%B3%B6%E5%BC%93%E5%AD%90%7C%E7%B6%BF%E3%81%AE%E5%9B%BD%E6%98%9F%7C%E3%82%B0%E3%83%BC%E3%82%B0%E3%83%BC%E3%81%A0%E3%81%A3%E3%81%A6%E7%8C%AB%E3%81%A7%E3%81%82%E3%82%8B&props=labels%7Caliases%7Cclaims&languages=ja%7Cen",
+      "time": 1793147616.863132,
+      "status": "succeeded",
+      "diagnostic": {
+        "category": "success",
+        "phase": "response-complete",
+        "httpStatus": 200,
+        "elapsedSeconds": 6.341426,
+        "finishedAt": "2026-10-28T00:33:43+00:00"
+      }
+    },
+    {
+      "key": "wikidata-Q445875",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q445875.json",
+      "time": 1793147623.2364705,
+      "status": "succeeded",
+      "diagnostic": {
+        "category": "success",
+        "phase": "response-complete",
+        "httpStatus": 200,
+        "elapsedSeconds": 0.907076,
+        "finishedAt": "2026-10-28T00:33:44+00:00"
+      }
+    },
+    {
+      "key": "wikidata-Q689013",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q689013.json",
+      "time": 1793147626.2387524,
+      "status": "succeeded",
+      "diagnostic": {
+        "category": "success",
+        "phase": "response-complete",
+        "httpStatus": 200,
+        "elapsedSeconds": 1.489761,
+        "finishedAt": "2026-10-28T00:33:47+00:00"
+      }
+    },
+    {
+      "key": "publication-ba02ad76b5d66f04144cd46a",
+      "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&onlyBib=true&maximumRecords=100&query=title%3D%22%E7%B6%BF%E3%81%AE%E5%9B%BD%E6%98%9F%22+AND+creator%3D%22%E5%A4%A7%E5%B3%B6%E5%BC%93%E5%AD%90%22+AND+dpid%3Diss-ndl-opac+sortBy+issued_date%2Fsort.ascending",
+      "time": 1793147629.2398503,
+      "status": "succeeded",
+      "diagnostic": {
+        "category": "success",
+        "phase": "response-complete",
+        "httpStatus": 200,
+        "elapsedSeconds": 5.926476,
+        "finishedAt": "2026-10-28T00:33:55+00:00"
+      }
+    },
+    {
+      "key": "ndl-9784592880615",
+      "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&maximumRecords=5&query=isbn%3D%229784592880615%22+AND+dpid%3Diss-ndl-opac",
+      "time": 1793147635.196121,
+      "status": "succeeded",
+      "diagnostic": {
+        "category": "success",
+        "phase": "response-complete",
+        "httpStatus": 200,
+        "elapsedSeconds": 17.974114,
+        "finishedAt": "2026-10-28T00:34:13+00:00"
+      }
+    },
+    {
+      "key": "wikidata-Q10921722",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q10921722.json",
+      "time": 1793147653.1851156,
+      "status": "succeeded",
+      "diagnostic": {
+        "category": "success",
+        "phase": "response-complete",
+        "httpStatus": 200,
+        "elapsedSeconds": 0.677656,
+        "finishedAt": "2026-10-28T00:34:13+00:00"
+      }
+    },
+    {
+      "key": "publication-f07296f395411ee6af1d9d15",
+      "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&onlyBib=true&maximumRecords=100&query=title%3D%22%E3%82%B0%E3%83%BC%E3%82%B0%E3%83%BC%E3%81%A0%E3%81%A3%E3%81%A6%E7%8C%AB%E3%81%A7%E3%81%82%E3%82%8B%22+AND+creator%3D%22%E5%A4%A7%E5%B3%B6%E5%BC%93%E5%AD%90%22+AND+dpid%3Diss-ndl-opac+sortBy+issued_date%2Fsort.ascending",
+      "time": 1793147656.1859975,
+      "status": "succeeded",
+      "diagnostic": {
+        "category": "success",
+        "phase": "response-complete",
+        "httpStatus": 200,
+        "elapsedSeconds": 10.172685,
+        "finishedAt": "2026-10-28T00:34:26+00:00"
+      }
+    }
+  ],
+  "responses": {
+    "lookup-148397cb23a47c7f32d00230": {
+      "url": "https://www.wikidata.org/w/api.php?format=json&action=wbgetentities&sites=jawiki&titles=%E5%A4%A7%E5%B3%B6%E5%BC%93%E5%AD%90%7C%E7%B6%BF%E3%81%AE%E5%9B%BD%E6%98%9F%7C%E3%82%B0%E3%83%BC%E3%82%B0%E3%83%BC%E3%81%A0%E3%81%A3%E3%81%A6%E7%8C%AB%E3%81%A7%E3%81%82%E3%82%8B&props=labels%7Caliases%7Cclaims&languages=ja%7Cen",
+      "sha256": "9d16ee92da654ea197e47b86529d35d39e515f48fca94dc06894261a2e70d099",
+      "bytes": 41491,
+      "fetchedAt": "2026-10-28T00:33:43+00:00"
+    },
+    "wikidata-Q445875": {
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q445875.json",
+      "sha256": "5c5ac1ea3a82df453c4ecd793ad7c0ff975726a824c0578c55e3b6906949fb00",
+      "bytes": 30503,
+      "fetchedAt": "2026-10-28T00:33:44+00:00"
+    },
+    "wikidata-Q689013": {
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q689013.json",
+      "sha256": "edfb4caf9c8efc96765581e9c9a5f5a76319c17f0173af5057a5ac48032db859",
+      "bytes": 12488,
+      "fetchedAt": "2026-10-28T00:33:47+00:00"
+    },
+    "publication-ba02ad76b5d66f04144cd46a": {
+      "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&onlyBib=true&maximumRecords=100&query=title%3D%22%E7%B6%BF%E3%81%AE%E5%9B%BD%E6%98%9F%22+AND+creator%3D%22%E5%A4%A7%E5%B3%B6%E5%BC%93%E5%AD%90%22+AND+dpid%3Diss-ndl-opac+sortBy+issued_date%2Fsort.ascending",
+      "sha256": "09933efa35fe610be454b4a43d51060c786021c01fd8a8993962ad48f08019c7",
+      "bytes": 59449,
+      "fetchedAt": "2026-10-28T00:33:55+00:00"
+    },
+    "ndl-9784592880615": {
+      "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&maximumRecords=5&query=isbn%3D%229784592880615%22+AND+dpid%3Diss-ndl-opac",
+      "sha256": "fbdd216c6d1204f714b1872d6883a8b57c4c0ab19e04fe1875009e8d0f58af9f",
+      "bytes": 22143,
+      "fetchedAt": "2026-10-28T00:34:13+00:00"
+    },
+    "wikidata-Q10921722": {
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q10921722.json",
+      "sha256": "c05121ae665b2fc140f6b4c65f65f806c86c02933155e7b463588d15f9ae4fcd",
+      "bytes": 8965,
+      "fetchedAt": "2026-10-28T00:34:13+00:00"
+    },
+    "publication-f07296f395411ee6af1d9d15": {
+      "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&onlyBib=true&maximumRecords=100&query=title%3D%22%E3%82%B0%E3%83%BC%E3%82%B0%E3%83%BC%E3%81%A0%E3%81%A3%E3%81%A6%E7%8C%AB%E3%81%A7%E3%81%82%E3%82%8B%22+AND+creator%3D%22%E5%A4%A7%E5%B3%B6%E5%BC%93%E5%AD%90%22+AND+dpid%3Diss-ndl-opac+sortBy+issued_date%2Fsort.ascending",
+      "sha256": "f9bb65d12de9f5dd7e4d2fb22fd3aae27b5d7766d8bd1a9e776e6e86ffc20905",
+      "bytes": 109456,
+      "fetchedAt": "2026-10-28T00:34:26+00:00"
+    }
+  },
+  "blockedUntil": 0,
+  "requestRetryAt": {}
+}

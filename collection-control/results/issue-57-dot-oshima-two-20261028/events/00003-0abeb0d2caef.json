@@ -1,0 +1,198 @@
+{
+  "requestId": "issue-57-dot-oshima-two-20261028",
+  "request": {
+    "schemaVersion": 1,
+    "id": "issue-57-dot-oshima-two-20261028",
+    "kind": "issue-prepare",
+    "status": "approved",
+    "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
+    "issueAdapterSha256": "38aadaee84b039f9f991ac1cc831a9498a4d83fab062d96b7c252d7175326dab",
+    "applyAuthorized": {
+      "local": false,
+      "beta": false,
+      "vps": false
+    },
+    "approvalScope": "issue-manga-preparation-collection-review-only",
+    "humanDecision": {
+      "actorType": "human",
+      "reviewer": "プロジェクト運営者（範囲を限定した委任）",
+      "decidedAt": "2026-10-25T13:07:49+09:00",
+      "statement": "2026-10-25 13:07:49 JST、運営者は既存Worker対応の現在の漫画テーマ候補からdotが対象を選び、毎回の個別提示なしでGitHubの収集許可と購読を登録し、候補収集・レビューまで進める限定委任を明示承認した。同日16:17:04 JSTに固定1日1バッチ上限を撤廃し、進捗・収集量・負荷による投入調整を許可した。2026-10-26 12:37:31 JST、過去の許可を上書きせず追加分をバッチ専用の新Issueに登録する方式への明示確認に本人が肯定リアクションし、親会話で現在の反応を検証済み。2026-10-27 13:37〜13:41 JST、運営者はdotが相談中として継続していた追加投入抑制を問い直し、データ収集を急いでいること、多少多く実行してほしいこと、1日何件という制約を付ける段階ではないことを明示した。元の限定委任の範囲で投入を再開し、日次件数上限を設けず実処理・待機量・負荷を見て少量ずつ補充する。個々の人物作品組・Role・ISBNを人間が審査済みとの記録ではない。今回dotが選んだのは既存テーマIssue #5と固定catalog d3e377d5255f4c487d608e73954dc40aeb0b3cba（blob f3d33d0e83b6299a7f443fa841232407ce67657c）のM11の大島弓子→綿の国星／グーグーだって猫であるの2組、および導入Worker対応組との共通部分だけ。Wikidata構造化情報とNDL作成書誌のみ、1作者2作品、親準備と全子収集合計30試行以内、同一要求2試行・3秒間隔・20秒・4MiB、保存成果とcache優先。既公開・既受入・既収集の同内容、同条件の根拠保留は再収集せず、不確かな同定・Role・刊行物scopeは保留。既設時間帯・直列排他・10分休憩を維持する。固定catalog全組・将来追加テーマへの無条件許可ではなく、正式受入・公開apply・追加取得元・予算拡大・コード/adapter/権限/認証/VPS/会員DB/時間帯/ロック変更は含まない。"
+    },
+    "permission": {
+      "schemaVersion": 1,
+      "approvalId": "dot-oshima-two-20261028",
+      "status": "approved",
+      "approvalScope": "issue-manga-preparation-collection-review-only",
+      "adapter": "manga-discovery-v2",
+      "targets": [
+        {
+          "person": "大島弓子",
+          "work": "綿の国星"
+        },
+        {
+          "person": "大島弓子",
+          "work": "グーグーだって猫である"
+        }
+      ],
+      "requestPolicy": {
+        "maxAttempts": 30,
+        "attemptsPerRequest": 2,
+        "minIntervalSeconds": 3,
+        "timeoutSeconds": 20,
+        "maxBytes": 4194304
+      },
+      "humanDecision": {
+        "actorType": "human",
+        "reviewer": "プロジェクト運営者（範囲を限定した委任）",
+        "decidedAt": "2026-10-25T13:07:49+09:00",
+        "statement": "2026-10-25 13:07:49 JST、運営者は既存Worker対応の現在の漫画テーマ候補からdotが対象を選び、毎回の個別提示なしでGitHubの収集許可と購読を登録し、候補収集・レビューまで進める限定委任を明示承認した。同日16:17:04 JSTに固定1日1バッチ上限を撤廃し、進捗・収集量・負荷による投入調整を許可した。2026-10-26 12:37:31 JST、過去の許可を上書きせず追加分をバッチ専用の新Issueに登録する方式への明示確認に本人が肯定リアクションし、親会話で現在の反応を検証済み。2026-10-27 13:37〜13:41 JST、運営者はdotが相談中として継続していた追加投入抑制を問い直し、データ収集を急いでいること、多少多く実行してほしいこと、1日何件という制約を付ける段階ではないことを明示した。元の限定委任の範囲で投入を再開し、日次件数上限を設けず実処理・待機量・負荷を見て少量ずつ補充する。個々の人物作品組・Role・ISBNを人間が審査済みとの記録ではない。今回dotが選んだのは既存テーマIssue #5と固定catalog d3e377d5255f4c487d608e73954dc40aeb0b3cba（blob f3d33d0e83b6299a7f443fa841232407ce67657c）のM11の大島弓子→綿の国星／グーグーだって猫であるの2組、および導入Worker対応組との共通部分だけ。Wikidata構造化情報とNDL作成書誌のみ、1作者2作品、親準備と全子収集合計30試行以内、同一要求2試行・3秒間隔・20秒・4MiB、保存成果とcache優先。既公開・既受入・既収集の同内容、同条件の根拠保留は再収集せず、不確かな同定・Role・刊行物scopeは保留。既設時間帯・直列排他・10分休憩を維持する。固定catalog全組・将来追加テーマへの無条件許可ではなく、正式受入・公開apply・追加取得元・予算拡大・コード/adapter/権限/認証/VPS/会員DB/時間帯/ロック変更は含まない。"
+      }
+    },
+    "issueOrigin": {
+      "repository": "isinxnisi/graph-knowledge",
+      "issueNumber": 57,
+      "approvalId": "dot-oshima-two-20261028",
+      "permissionSha256": "00a0c8d1ab4c81b94379c41585db9b00250c5273ff8e1c783f36afde70fee9fe",
+      "issueBodySha256": "26ccd795a85d1fb10ca50d48dea19cf8267e0907cb257be21531b9584719d3eb"
+    },
+    "issueSnapshot": {
+      "url": "https://github.com/isinxnisi/graph-knowledge/issues/57",
+      "updatedAt": "2026-10-28T00:24:33Z",
+      "body": "## 限定収集バッチ：大島弓子 → 綿の国星／グーグーだって猫である\n\n元テーマは [Issue #5 有名漫画家と代表作品](https://github.com/isinxnisi/graph-knowledge/issues/5)。過去の許可を変更せず、元の限定委任内の今回2組だけを登録する。\n\n- 対象：大島弓子 → 綿の国星／グーグーだって猫である。漫画制作クレジットのみ、1作者2作品。映画化・映像版は対象外。\n- 固定catalog commit d3e377d5255f4c487d608e73954dc40aeb0b3cba、blob f3d33d0e83b6299a7f443fa841232407ce67657c のM11と既存#5テーマとの共通部分。設置互換基準973c7b0でも同catalog。実配置Issue adapterは68437af由来・SHA-256 38aadaee84b039f9f991ac1cc831a9498a4d83fab062d96b7c252d7175326dab。固定catalog全組への無条件許可ではない。\n- 補充判断：#56の親子が通常Workerの各初回試行で09:22 JSTに完了し、通常実行待ち0。control8／pauseMode=null／activeAttemptなし、次開始可能09:32:16 JST。新親優先で未完了子を遅らせないよう、前の子完了を確認して今回1バッチだけ補充する。日次固定件数上限ではない。\n- 事前重複照合：#56を含む全requests・accepted-records・proposed-records 70パス／60 unique blobsに今回組なし。最終漫画公開全量＋後続小畑1・映画初回2・映画34の正式差分をUUID合成した2207 Entity／1931 Claimは、最新本番revision f5dbf83f-c89e-4e40-95ee-57957016089fの公開記録全数と一致し、和英名・別名に今回対象なし。最新単一DB backupの直接読取ではない。\n- 比較契約の注意：通常収集レビューのpublic欄は旧ローカルbaseを指すが、既存workflowのcomparison=Trueで全12正式receiptと最新公開artifactをhash検証して比較集合へ合流する。最新本番を直接観測したレビューとは呼ばず、正式受入前には最新base／receipt整合を別途確認する。#55の互換修正は実配置済み。今回正式受入・公開はしない。\n- 狙いは同作者の別作品へ辿る新しいまとまりの候補。既存の島への接続や島数減少は保証しない。QID・ISBN・Role・関係成立は未審査であり、取得根拠で確認できないものを推測補完しない。\n- 既存漫画8 Claimは未受入として保全。#47/#50の通信復旧待ち、#51および#56水域等の書誌保留を別Issueで迂回・反復収集しない。\n- Wikidata構造化APIとNDL作成書誌のみ。親準備と全子合計30試行、同一要求2回、逐次3秒以上、20秒timeout、4MiB。保存成果/cacheとRetry-Afterを優先し、旧142枠や別バッチの予算・履歴を混同／リセットしない。\n- 既存時間帯・終盤15分の開始回避・直列排他・10分休憩を維持。手動収集・並行化なし。登録・実受付・実行・完了を区別する。\n- 候補・根拠レビューまで。正式受入／公開apply、コード／adapter／権限／認証／VPS／会員DB／時間帯／ロック変更は禁止。共同制作者・影響／助手関係・新取得元・不明scopeへの拡張なし。\n\n<!-- plunode-collection-permission:v1 -->\n```json\n{\n  \"schemaVersion\": 1,\n  \"approvalId\": \"dot-oshima-two-20261028\",\n  \"status\": \"approved\",\n  \"approvalScope\": \"issue-manga-preparation-collection-review-only\",\n  \"adapter\": \"manga-discovery-v2\",\n  \"targets\": [\n    {\n      \"person\": \"大島弓子\",\n      \"work\": \"綿の国星\"\n    },\n    {\n      \"person\": \"大島弓子\",\n      \"work\": \"グーグーだって猫である\"\n    }\n  ],\n  \"requestPolicy\": {\n    \"maxAttempts\": 30,\n    \"attemptsPerRequest\": 2,\n    \"minIntervalSeconds\": 3,\n    \"timeoutSeconds\": 20,\n    \"maxBytes\": 4194304\n  },\n  \"humanDecision\": {\n    \"actorType\": \"human\",\n    \"reviewer\": \"プロジェクト運営者（範囲を限定した委任）\",\n    \"decidedAt\": \"2026-10-25T13:07:49+09:00\",\n    \"statement\": \"2026-10-25 13:07:49 JST、運営者は既存Worker対応の現在の漫画テーマ候補からdotが対象を選び、毎回の個別提示なしでGitHubの収集許可と購読を登録し、候補収集・レビューまで進める限定委任を明示承認した。同日16:17:04 JSTに固定1日1バッチ上限を撤廃し、進捗・収集量・負荷による投入調整を許可した。2026-10-26 12:37:31 JST、過去の許可を上書きせず追加分をバッチ専用の新Issueに登録する方式への明示確認に本人が肯定リアクションし、親会話で現在の反応を検証済み。2026-10-27 13:37〜13:41 JST、運営者はdotが相談中として継続していた追加投入抑制を問い直し、データ収集を急いでいること、多少多く実行してほしいこと、1日何件という制約を付ける段階ではないことを明示した。元の限定委任の範囲で投入を再開し、日次件数上限を設けず実処理・待機量・負荷を見て少量ずつ補充する。個々の人物作品組・Role・ISBNを人間が審査済みとの記録ではない。今回dotが選んだのは既存テーマIssue #5と固定catalog d3e377d5255f4c487d608e73954dc40aeb0b3cba（blob f3d33d0e83b6299a7f443fa841232407ce67657c）のM11の大島弓子→綿の国星／グーグーだって猫であるの2組、および導入Worker対応組との共通部分だけ。Wikidata構造化情報とNDL作成書誌のみ、1作者2作品、親準備と全子収集合計30試行以内、同一要求2試行・3秒間隔・20秒・4MiB、保存成果とcache優先。既公開・既受入・既収集の同内容、同条件の根拠保留は再収集せず、不確かな同定・Role・刊行物scopeは保留。既設時間帯・直列排他・10分休憩を維持する。固定catalog全組・将来追加テーマへの無条件許可ではなく、正式受入・公開apply・追加取得元・予算拡大・コード/adapter/権限/認証/VPS/会員DB/時間帯/ロック変更は含まない。\"\n  }\n}\n```\n<!-- /plunode-collection-permission:v1 -->\n"
+    },
+    "firstRecipeRevision": 37,
+    "recipeRevisionCount": 1
+  },
+  "requestSha256": "80479c281c4da7ad392241f815105e48758c0e9db0cc54e3177791e0061164ec",
+  "kind": "issue-prepare",
+  "phase": "completed",
+  "generation": 3,
+  "attempts": 1,
+  "workerId": "plunode-wsl",
+  "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
+  "updatedAt": "2026-10-28T00:32:23+00:00",
+  "result": {
+    "schemaVersion": 1,
+    "status": "prepared-candidates-not-accepted",
+    "preparationComplete": true,
+    "issueOrigin": {
+      "repository": "isinxnisi/graph-knowledge",
+      "issueNumber": 57,
+      "approvalId": "dot-oshima-two-20261028",
+      "permissionSha256": "00a0c8d1ab4c81b94379c41585db9b00250c5273ff8e1c783f36afde70fee9fe",
+      "issueBodySha256": "26ccd795a85d1fb10ca50d48dea19cf8267e0907cb257be21531b9584719d3eb"
+    },
+    "counts": {
+      "approvedWorks": 2,
+      "preparedWorks": 1,
+      "preparedPeople": 1,
+      "batches": 1,
+      "holds": 1,
+      "networkAttempts": 7,
+      "reusedWorks": 0,
+      "reusedPublishedClaims": 0,
+      "reusedHeldWorks": 0
+    },
+    "holds": [
+      {
+        "target": "グーグーだって猫である",
+        "person": "大島弓子",
+        "reason": "No dated, exact first-volume Japanese manga publication"
+      }
+    ],
+    "reusedReviews": [],
+    "batchRequests": [
+      {
+        "schemaVersion": 1,
+        "id": "issue-57-dot-oshima-two-20261028-batch-01",
+        "kind": "collect-review",
+        "status": "approved",
+        "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
+        "parentRequestId": "issue-57-dot-oshima-two-20261028",
+        "applyAuthorized": {
+          "local": false,
+          "beta": false,
+          "vps": false
+        },
+        "approvalScope": "collection-candidates-and-review-only",
+        "humanDecision": {
+          "actorType": "human",
+          "reviewer": "プロジェクト運営者（範囲を限定した委任）",
+          "decidedAt": "2026-10-25T13:07:49+09:00",
+          "statement": "2026-10-25 13:07:49 JST、運営者は既存Worker対応の現在の漫画テーマ候補からdotが対象を選び、毎回の個別提示なしでGitHubの収集許可と購読を登録し、候補収集・レビューまで進める限定委任を明示承認した。同日16:17:04 JSTに固定1日1バッチ上限を撤廃し、進捗・収集量・負荷による投入調整を許可した。2026-10-26 12:37:31 JST、過去の許可を上書きせず追加分をバッチ専用の新Issueに登録する方式への明示確認に本人が肯定リアクションし、親会話で現在の反応を検証済み。2026-10-27 13:37〜13:41 JST、運営者はdotが相談中として継続していた追加投入抑制を問い直し、データ収集を急いでいること、多少多く実行してほしいこと、1日何件という制約を付ける段階ではないことを明示した。元の限定委任の範囲で投入を再開し、日次件数上限を設けず実処理・待機量・負荷を見て少量ずつ補充する。個々の人物作品組・Role・ISBNを人間が審査済みとの記録ではない。今回dotが選んだのは既存テーマIssue #5と固定catalog d3e377d5255f4c487d608e73954dc40aeb0b3cba（blob f3d33d0e83b6299a7f443fa841232407ce67657c）のM11の大島弓子→綿の国星／グーグーだって猫であるの2組、および導入Worker対応組との共通部分だけ。Wikidata構造化情報とNDL作成書誌のみ、1作者2作品、親準備と全子収集合計30試行以内、同一要求2試行・3秒間隔・20秒・4MiB、保存成果とcache優先。既公開・既受入・既収集の同内容、同条件の根拠保留は再収集せず、不確かな同定・Role・刊行物scopeは保留。既設時間帯・直列排他・10分休憩を維持する。固定catalog全組・将来追加テーマへの無条件許可ではなく、正式受入・公開apply・追加取得元・予算拡大・コード/adapter/権限/認証/VPS/会員DB/時間帯/ロック変更は含まない。"
+        },
+        "issueOrigin": {
+          "repository": "isinxnisi/graph-knowledge",
+          "issueNumber": 57,
+          "approvalId": "dot-oshima-two-20261028",
+          "permissionSha256": "00a0c8d1ab4c81b94379c41585db9b00250c5273ff8e1c783f36afde70fee9fe",
+          "issueBodySha256": "26ccd795a85d1fb10ca50d48dea19cf8267e0907cb257be21531b9584719d3eb"
+        },
+        "target": {
+          "themeId": "issue-57-dot-oshima-two-20261028",
+          "revision": 1,
+          "definitionSha256": "a31d8b8a5297cd58b600a1b369d6f4f352c1c4cc0af4ea9daf3afb4c02672dc1",
+          "execution": {
+            "adapter": "manga-discovery-v2",
+            "codeSha256": "80e05b67bc0129b963653b90df4cfbfa5bd6aff190acda99f54c08541e55801e",
+            "inputs": [
+              {
+                "file": "datasets/manga-collection/r0037/recipe.json",
+                "sha256": "17d63ae438b951d82b7bfa3918f1b5caa631834794426d29c80f1607a994b986"
+              },
+              {
+                "file": "datasets/manga-collection/r0037/anchor-review.json",
+                "sha256": "c661123a789f2ab4a1e791d81f5c0f1630efd16804b51fdf70e785d0108a6b15"
+              },
+              {
+                "file": "datasets/manga-collection/r0037/publication-review.json",
+                "sha256": "95c0f6c06e4107a3e5a89ec9feaa79ee617f93170f0bdcd57a899ae526f26cea"
+              },
+              {
+                "file": "docs/research/famous-manga-creators/20261016/candidates.json",
+                "sha256": "8531fada01e5c635ba2ee278a7ef944a73f64676af14ed42ae0e690f5a1ff978"
+              },
+              {
+                "file": "datasets/public-kg/releases/20261014-credits-001/data.json",
+                "sha256": "ea91b16f52a211b5a8464382ad498b7b2bb2be69a6f33fe125a73a3c7b9da2b5"
+              },
+              {
+                "file": "datasets/public-kg/releases/20261014-credits-001/manifest.json",
+                "sha256": "e4aa3b58ed884f7d1f8fffee43b260261cc2b4d3a867fda942919f439d2bce17"
+              }
+            ],
+            "maxEntities": 2111,
+            "maxClaims": 1847
+          },
+          "targets": {
+            "people": [
+              {
+                "name": "大島弓子",
+                "qid": "Q445875"
+              }
+            ],
+            "works": [
+              {
+                "name": "綿の国星",
+                "qid": "Q689013",
+                "isbn13": "9784592880615"
+              }
+            ]
+          },
+          "existingApprovalSha256": "808e2041f03a8f2cac6c6c47c52edc9620f87ad330c25f1aa773c66b3ab2aaa9"
+        }
+      }
+    ],
+    "publicApply": false,
+    "preparationDirectory": "/home/isinxnisi/.local/share/plunode-collection-worker-phase-b-20261020/runtime/.local/collection-issues/issue-57-dot-oshima-two-20261028",
+    "generatedArtifacts": {
+      "datasets/manga-collection/r0037/recipe.json": "17d63ae438b951d82b7bfa3918f1b5caa631834794426d29c80f1607a994b986",
+      "datasets/manga-collection/r0037/anchor-review.json": "c661123a789f2ab4a1e791d81f5c0f1630efd16804b51fdf70e785d0108a6b15",
+      "datasets/manga-collection/r0037/publication-review.json": "95c0f6c06e4107a3e5a89ec9feaa79ee617f93170f0bdcd57a899ae526f26cea",
+      "datasets/collection-themes/themes/issue-57-dot-oshima-two-20261028/r0001.json": "7c4cb04728609dbb837c3f300bec8e1a882dcba2b4abf4d4d3c88b193e339ca5",
+      "datasets/collection-themes/approvals/issue-57-dot-oshima-two-20261028/r0001.json": "34af079e81174f20ff7f9e6ec9e259dc12bd9879f3ae5f97a76dc126c24c62cf"
+    }
+  },
+  "executionComplete": true
+}
