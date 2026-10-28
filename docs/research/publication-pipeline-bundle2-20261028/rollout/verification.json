@@ -1,0 +1,65 @@
+{
+  "recordedAt": "2026-10-28T06:05:10.530214+00:00",
+  "approvalRequestSha256": "142a0dd04342b5429cc9dd736804965646bb6da9e39e7573a2065c97f02fab82",
+  "mainIntegration": "32e8fe47e64395a6f094c6e9cecceb956091a0ef",
+  "mainPushed": true,
+  "runtimeInputsMatchApprovedSource": true,
+  "regression": {
+    "parallelRun": {
+      "passed": 114,
+      "generationCheckTimeout": 1
+    },
+    "unchangedGenerationCheckStandalone": {
+      "passed": 1,
+      "durationSeconds": 4.515,
+      "timeoutChanged": false
+    },
+    "oneTimeRolloutChecksPassed": 6,
+    "powershellSyntax": "passed",
+    "existingWebOnlyRollbackTestsPassed": 13
+  },
+  "installed": {
+    "local3200": "lNabFN3qBIdd5U2lV6e6A",
+    "httpsBeta": "lNabFN3qBIdd5U2lV6e6A",
+    "vpsWeb": "pending-operator-operation",
+    "vpsGateOperator": "pending-operator-operation",
+    "wslDeliveryApproverTaskWorker": "pending-operator-operation"
+  },
+  "beta": {
+    "datasetRevision": "34befbcd-8f5f-4cd9-a059-242a3f0b5ffb",
+    "kgChanged": false,
+    "existingAuthenticatedSession": true,
+    "filmSearch": true,
+    "afiCitationAndOriginalRole": true,
+    "actingThenDirectingGraph": {
+      "entities": 3,
+      "claims": 2
+    },
+    "saveSwitchRestore": true,
+    "urlReloadRestore": true,
+    "mangaPlutoGraph": {
+      "entities": 4,
+      "claims": 6
+    },
+    "memberWritePerformed": false
+  },
+  "localPrecheck": {
+    "formalReceipts": 12,
+    "workerOverlayBeforeMatched": true,
+    "deliveryAndApproverBeforeMatched": true,
+    "taskSource": "7392d8e343a11644b1047364c71653779ad0c93c",
+    "preparation": "idle",
+    "unfinishedDeliveries": 0,
+    "activeWorkerAttempt": false
+  },
+  "signed": false,
+  "applyCalls": 0,
+  "memberMigration": false,
+  "notYetVerified": [
+    "production HTTPS after update",
+    "actual updated operator and Worker against same published candidate",
+    "normal publication preparation after protected source switch",
+    "post-update Worker heartbeat/normal execution",
+    "post-update production member regression"
+  ]
+}

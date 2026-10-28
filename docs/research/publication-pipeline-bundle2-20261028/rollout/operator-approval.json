@@ -1,0 +1,14 @@
+{
+  "authority": "operator-chat-approval-for-fixed-runtime-update",
+  "decisionRequestSha256": "142a0dd04342b5429cc9dd736804965646bb6da9e39e7573a2065c97f02fab82",
+  "status": "approved",
+  "actorType": "human",
+  "reviewer": "運営者（このチャットのユーザー）",
+  "recordedAt": "2026-10-28T05:54:56.770099+00:00",
+  "approvalTimeIndependentlyProvided": false,
+  "source": "Current operator message; line breaks normalized, no additional authorization inferred",
+  "statement": "固定更新判断票 update-decision-request.json、SHA-256 142a0dd04342b5429cc9dd736804965646bb6da9e39e7573a2065c97f02fab82 に記載された更新一式を、運営者として承認します。承認対象は、main統合・3200／beta、本番Web-only切替、VPS gate／operator、WSL delivery／approver、Windows Delivery Task、固定CollectionWorker指定5ファイルです。判断票と固定資材のhash、実行環境、12 receipt、未完了ジョブ、排他状態を更新直前に再確認し、既存の保護・復旧契約に従って進めてください。既存権限で実施可能な準備・統合・検証は一まとまりで進め、SSH／sudoやWindows管理者権限が必要な操作だけを一括提示してください。データ受入・公開署名・本番KG apply／restore・会員DB migration・鍵や権限の変更は承認しません。承認対象のbytes、実行環境、保全条件に不一致が発生した場合は、別の対象へ置き換えず停止してください。更新後はWeb・operator・Workerの実互換検証、既存データと会員機能の回帰、公開準備の通常動作、Worker再開と復旧資材の保持を確認してください。検証記録をcommit・pushし、実際に更新できた環境、残る操作、異常の有無を報告してください。",
+  "statementSha256": "1e01483601c63b8624b21b2d7aae8e6893c86692ca70ea72c1a18520978745ca",
+  "publicationSignatureIncluded": false,
+  "KGApplyIncluded": false
+}
