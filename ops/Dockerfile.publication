@@ -10,7 +10,8 @@ COPY package.json tsconfig.json ./
 COPY lib ./lib
 COPY vocabulary ./vocabulary
 COPY neo4j ./neo4j
-COPY scripts/public-kg.ts scripts/publication-runtime.ts scripts/publication-backup-plan.ts ./scripts/
+COPY scripts/public-kg.ts scripts/publication-runtime.ts scripts/publication-backup-plan.ts scripts/publication-compatibility.ts scripts/serialize-publication-fixture.ts scripts/generate-contribution-roles.ts ./scripts/
+RUN node --import tsx scripts/generate-contribution-roles.ts --check
 ENV NODE_ENV=production GRAPH_DATASET=public-kg GRAPH_DEPLOYMENT=production TSX_DISABLE_CACHE=1
 USER node
 ENTRYPOINT ["node", "--import", "tsx"]

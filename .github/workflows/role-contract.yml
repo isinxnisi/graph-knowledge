@@ -1,0 +1,18 @@
+name: Role and publication contract
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24.21.0
+          cache: npm
+      - run: npm ci --no-audit --no-fund
+      - run: npm run vocabulary:check
+      - run: npx vitest run tests/role-generation.test.ts tests/publication-compatibility.test.ts tests/film-role-registration.test.ts tests/contribution.test.ts tests/step-roles.test.ts tests/saved-workspace.test.tsx

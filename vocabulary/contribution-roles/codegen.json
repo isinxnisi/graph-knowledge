@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "historicalAdoptedIds": [
+    "SCRIPT_WRITING",
+    "SUPERVISION",
+    "PRODUCING",
+    "STORY_CO_CREATION",
+    "AUTHORSHIP",
+    "CREATION",
+    "DRAWING",
+    "ORIGINAL_STORY"
+  ],
+  "historicalFilmDraftIds": [
+    "DIRECTING",
+    "ACTING"
+  ],
+  "fallbackLabels": {
+    "en": {
+      "SCRIPT_WRITING": "Script writing",
+      "SUPERVISION": "Supervision",
+      "PRODUCING": "Producing",
+      "STORY_CO_CREATION": "Story co-creation",
+      "AUTHORSHIP": "Author",
+      "CREATION": "Creation credit (作)",
+      "DRAWING": "Manga artwork",
+      "ORIGINAL_STORY": "Original story credit (manga production)"
+    }
+  }
+}

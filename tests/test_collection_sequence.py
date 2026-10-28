@@ -124,6 +124,11 @@ class SequenceTests(unittest.TestCase):
         return result
 
     def node(self, command):
+        if command[0] == 'scripts/serialize-publication-fixture.ts':
+            # Tiny transaction fixtures intentionally omit real schema fields. This mock
+            # supplies bytes only; the real serializer is tested against published data separately.
+            data = Path(command[1]).read_text()
+            return {'data': data, 'dataSha256': self.w.gate.digest(data.encode()), 'valuesUnchanged': True}
         self.assertEqual(command[0], 'scripts/public-kg.ts'); self.assertIn(command[1], ['validate', 'plan'])
         self.calls.append(command[1])
         if self.failure == 'post-receipt-validate' and command[1] == 'validate' and Path(command[2]).name == 'release-group-2':

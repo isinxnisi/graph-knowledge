@@ -1,0 +1,20 @@
+{
+  "operator": {
+    "rejected": true,
+    "exitCode": 1,
+    "inputRole": "UNAPPROVED_UNKNOWN_ROLE",
+    "errorPath": "claims[13].contribution.roleId"
+  },
+  "web": {
+    "rejected": true,
+    "exitCode": 1,
+    "inputRole": "UNAPPROVED_UNKNOWN_ROLE",
+    "errorPath": "claims[13].contribution.roleId"
+  },
+  "worker": {
+    "rejected": true,
+    "exitCode": 1,
+    "inputRole": "UNAPPROVED_UNKNOWN_ROLE",
+    "errorPath": "claims[13].contribution.roleId"
+  }
+}

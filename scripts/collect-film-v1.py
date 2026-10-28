@@ -19,6 +19,7 @@ WORKS = {"Q104137", "Q184255", "Q76479"}
 PROGRAMS = ("scripts/collect-film-v1.py", "scripts/freeze-film-comparison.py", "scripts/film41-runtime.ts", "package.json", "package-lock.json")
 # Bind transitive runtime/semantic dependencies, not only the top-level fixture validator.
 CONTRACTS = ("lib/domain/api.ts", "lib/domain/contribution.ts", "lib/domain/evidence.ts", "lib/domain/dates.ts", "lib/domain/fixture.ts", "lib/domain/predicates.ts", "lib/domain/qualifications.ts", "lib/domain/organization-participation.ts", "lib/domain/event-participation.ts", "lib/domain/public-release.ts", "lib/server/public-dataset.ts", "lib/server/mappers.ts", "lib/domain/relation-conditions.ts", "lib/domain/relation-patterns.ts", "lib/server/relation-pattern-execution.ts", "vocabulary/contribution-roles/catalog.json", "vocabulary/contribution-roles/baseline-v1.json", "vocabulary/contribution-roles/reviews.json")
+CONTRACTS += ("lib/generated/contribution-roles.ts", "lib/i18n/contribution.ts", "lib/domain/role-vocabulary.ts", "lib/domain/vocabulary.ts", "vocabulary/contribution-roles/codegen.json", "vocabulary/contribution-roles/generated-compatibility.json")
 def need(ok, message):
     if not ok: raise ValueError(message)
 def dump(value): return json.dumps(value, ensure_ascii=False, indent=2) + "\n"

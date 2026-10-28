@@ -16,6 +16,7 @@ import stat
 import subprocess
 import sys
 import tempfile
+import time
 import uuid
 from urllib.request import urlopen
 
@@ -179,6 +180,7 @@ class DockerBackend:
             caps = self.command(['scripts/publication-runtime.ts', 'capabilities'])
             require(caps == {'schemaVersion': 1, 'originalStory': True, 'guardedApply': True, 'manifestFileSha256': True}, 'Operator capabilities differ')
             return {'operatorDigest': image['Id']}
+        if stage == 'compatibility': return self.command(['scripts/publication-compatibility.ts', 'verify', '/incoming'], candidate)
         if stage in ['validate', 'plan']: return self.command(['scripts/public-kg.ts', stage, '/incoming'], candidate)
         if stage == 'apply': return self.command(['scripts/publication-runtime.ts', 'apply', payload['revision']], candidate)
         if stage == 'observe': return self.command(['scripts/publication-runtime.ts', stage])  # Backup reads no candidate files.
@@ -267,7 +269,9 @@ class Gate:
         cycle.verify_prepared_artifact(target)
         # Only these public JSON files are mounted into the unprivileged container. Host parent stays private.
         (target / 'release').chmod(0o755)
-        for name in ['data.json','manifest.json']: (target / 'release' / name).chmod(0o444)
+        for name in ['data.json', 'manifest.json', 'compatibility.json']:
+            path = target / 'release' / name
+            if path.exists(): path.chmod(0o444)
         return target
 
     def job_path(self, nonce): return self.root / 'jobs' / (nonce + '.json')
@@ -303,6 +307,9 @@ class Gate:
         image = self.backend.call('image', payload)
         require(image['operatorDigest'] == request['operatorDigest'] == self.config['operatorDigest'], 'Operator changed')
         require(self.backend.call('validate', payload)['valid'], 'Validation failed')
+        if self.config.get('compatibilityRequired', False):
+            require((candidate/'release/compatibility.json').is_file(), 'Fixed all-consumer compatibility contract required')
+            require(self.backend.call('compatibility', payload)['verified'], 'Actual operator compatibility failed')
         backup = self.backend.call('observe', payload)
         before = backup['payload']
         require((before['release'], before['revision']) == (request['baseRelease'], request['baseRevision']), 'Live base/revision changed')
@@ -409,18 +416,37 @@ class Gate:
             state = read(self.job_path(nonce)); require(state['phase'] == 'completed', 'No completed audit')
         else:
             state = self._operate(command, nonce, exchange)
+        if command == 'status' and self.config.get('compatibilityRequired', False):
+            state = {**state, 'activeRuntime': {'operatorDigest': self.config['operatorDigest'], 'compatibilityRequired': True}}
         if command != 'status' and state.get('phase') == 'completed':
             with locked(self.root / 'outbox' / (nonce + '.lock')):
                 state = read(self.job_path(nonce)); return self.notify(nonce, state)
         return state
 
 
+def read_attestation(fd, expires_at, *, utc_now=now, monotonic=time.monotonic, wait=select.select, read_bytes=os.read):
+    # Bound the entire streamed response by the existing challenge expiry. A partial line
+    # must not turn select()+readline() into an unbounded wait or renew the deadline.
+    expires = policy.timestamp(expires_at)
+    budget = min(60.0, (expires - utc_now()).total_seconds())
+    require(budget > 0, 'Attestation channel expired')
+    deadline = monotonic() + budget
+    line = b''
+    while b'\n' not in line:
+        remaining = deadline - monotonic()
+        require(remaining > 0 and wait([fd], [], [], remaining)[0], 'Attestation channel timed out')
+        chunk = read_bytes(fd, min(4096, 16385 - len(line)))
+        require(chunk, 'Attestation channel closed')
+        line += chunk
+        require(len(line) <= 16384, 'Attestation channel oversized')
+    require(line.endswith(b'\n') and line.count(b'\n') == 1, 'Unexpected attestation channel data')
+    require(monotonic() < deadline and utc_now() < expires, 'Attestation channel expired')
+    return parse(line)
+
+
 def exchange_stdio(challenge):
     print(json.dumps({'challenge': challenge}), flush=True)
-    require(select.select([sys.stdin], [], [], 15)[0], 'Attestation channel timed out')
-    line = sys.stdin.buffer.readline(16385)
-    require(line.endswith(b'\n') and len(line) <= 16384, 'Attestation channel closed/oversized')
-    return parse(line)
+    return read_attestation(sys.stdin.fileno(), challenge['expiresAt'])
 
 
 def entry(root, sandbox):

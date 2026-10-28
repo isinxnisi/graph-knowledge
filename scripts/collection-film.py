@@ -1,15 +1,19 @@
 """Bounded saved-film adapter dispatch into the existing human acceptance core."""
 from pathlib import Path
+import tempfile
 from types import SimpleNamespace
 
 KIND = "film-discovery-v1"
 
-def adapter(w):
-    return w.load("film_adapter_v1", w.CODE_ROOT / "scripts/collect-film-v1.py")
+def adapter(w, recipe=None):
+    saved = recipe is not None and w.read(recipe).get("adapter") == "film-saved-manifest-v1"
+    return w.load("film_saved_manifest" if saved else "film_adapter_v1",
+                  w.CODE_ROOT / ("scripts/collect-film-manifest.py" if saved else "scripts/collect-film-v1.py"))
 
 def programs(w):
     # Hash the full transitive local validation closure, not a cached top-level pair.
     paths = set(adapter(w).PROGRAMS + adapter(w).CONTRACTS)
+    paths.add("scripts/collect-film-manifest.py")
     paths.update(["scripts/collection-themes.py", w.gate.MANGA_GENERATOR, w.gate.MANGA_V2_GENERATOR])
     paths.update(str(p.relative_to(w.CODE_ROOT)) for folder in ["lib/domain", "lib/server", "lib/i18n"]
                  for p in (w.CODE_ROOT / folder).rglob("*.ts"))
@@ -69,12 +73,15 @@ def production_comparison(args, comparison, w):
     return observed, refs
 
 def material(recipe, trial, w):
-    a = adapter(w)
+    a = adapter(w, recipe)
     a.verify(trial, w.CODE_ROOT, recipe)
     review = w.read(trial / "review/review.json")
-    w.require(review["counts"]["ready"] == 2 and review["counts"]["held"] == 10, "Minimum film evidence/holds changed")
+    saved = w.read(recipe).get("adapter") == "film-saved-manifest-v1"
+    if not saved:
+        w.require(review["counts"]["ready"] == 2 and review["counts"]["held"] == 10, "Minimum film evidence/holds changed")
     records = w.read(trial / "review/proposed-records.json")["records"]
-    w.require(len(records["claims"]) == 2 and all(c["visibility"] == "hidden" for c in records["claims"]), "Exactly two hidden film Claims required")
+    w.require((0 < len(records["claims"]) <= w.read(recipe)["maxClaims"] if saved else len(records["claims"]) == 2)
+              and all(c["visibility"] == "hidden" for c in records["claims"]), "Hidden film Claim selection differs")
     recipe_data = w.read(recipe)
     comparison_ref = recipe_data["inputs"]["comparison"]
     comparison = a.load(a.safe(w.CODE_ROOT, comparison_ref["file"]))
@@ -87,7 +94,17 @@ def material(recipe, trial, w):
         w.require(not collisions, "Film Entity name identity needs human mapping: " + e["id"])
     fixture = {"schemaVersion": 4, **{f: [r["record"] for r in known[f]] for f in w.FIELDS}}
     # Existing core validates UUID, external identifier, semantic duplicates and evidence closure.
-    core(w).merge(fixture, {f: [] for f in w.FIELDS}, records, w)
+    merged, _ = core(w).merge(fixture, {f: [] for f in w.FIELDS}, records, w)
+    if saved:
+        # Validate the actual merged shape before producing a human decision draft.
+        # Never normalize accepted records, relax the schema or connect to a database.
+        with tempfile.TemporaryDirectory(prefix="film-manifest-schema-") as tmp:
+            source = Path(tmp) / "fixture.json"
+            source.write_text(w.dump(merged), encoding="utf-8")
+            w.node(["-e", "const fs=require('node:fs');const assert=require('node:assert/strict');"
+                    "const {fixtureV4Schema}=require('./lib/domain/fixture.ts');"
+                    "const input=JSON.parse(fs.readFileSync(process.argv[1]));"
+                    "assert.deepEqual(fixtureV4Schema.parse(input),input);console.log(JSON.stringify({valid:true}));", str(source)])
     if comparison.get("receiptDataRoot"):
         runtime = Path(comparison["receiptDataRoot"])
         expected = {str(p.relative_to(runtime)) for p in (runtime / "datasets/manga-collection").glob("accepted-*/acceptance.json")}
@@ -132,13 +149,18 @@ def validate_decision(decision, selected, w):
     # Runtime recognition is not vocabulary approval. Existing approved catalog/reviews remain authoritative.
     result = w.node(["-e", "const fs=require('node:fs');const {checkRoleVocabulary}=require('./lib/domain/role-vocabulary.ts');const p='vocabulary/contribution-roles/';const c=JSON.parse(fs.readFileSync(p+'catalog.json'));const r=checkRoleVocabulary(c,JSON.parse(fs.readFileSync(p+'baseline-v1.json')),JSON.parse(fs.readFileSync(p+'reviews.json')));console.log(JSON.stringify({...r,ids:c.entries.map(e=>e.id)}));"])
     w.require(not result["errors"] and all(c["contribution"]["roleId"] in result["ids"] for c in selected["claims"]), "Film Roles still require fixed human vocabulary review")
+    mappings = sorted(c["id"] for c in selected["claims"] if c["contribution"]["roleId"] in ["SCRIPT_WRITING","PRODUCING"])
+    if mappings:
+        applied = decision.get("roleMappingDecision")
+        w.require(isinstance(applied, dict) and applied.get("statement") and applied.get("claimIds") == mappings,
+                  "Explicit human judgment of existing Role application and null film scope required")
     identity = decision.get("identityDecision")
     w.require(isinstance(identity, dict) and identity.get("statement") and
               identity.get("entityIds") == sorted(e["id"] for e in selected["entities"]),
               "Explicit human decision promoting or mapping provisional film identities required")
 
 def review(args, w):
-    a = adapter(w)
+    a = adapter(w, args.recipe)
     args.recipe, args.trial = args.recipe.resolve(), args.trial.resolve()
     if getattr(args, "production_backup", None):
         for path in [args.trial, args.output, args.decision_output]:
@@ -151,7 +173,8 @@ def review(args, w):
                "frozenReferences": [w.reference(args.recipe), w.reference(args.trial / "bundle-manifest.json"),
                                     w.reference(a.safe(w.CODE_ROOT, w.read(args.recipe)["inputs"]["comparison"]["file"]))],
                "comparisonReceiptCount": comparison["receiptCount"],
-               "formalAcceptance": False, "identityStatus": "provisional-candidates-not-production-ids"}
+               "formalAcceptance": False, "identityStatus": "provisional-candidates-not-production-ids",
+               "filmAdapter": w.read(args.recipe)["adapter"]}
     if getattr(args, "production_backup", None):
         observed, prior_refs = production_comparison(args, comparison, w)
         # Receipt consumers deliberately reject absolute references. Archive input bytes

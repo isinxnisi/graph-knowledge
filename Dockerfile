@@ -15,9 +15,9 @@ COPY datasets ./datasets
 COPY data/advertising ./data/advertising
 COPY data/ai-lab/initial.json ./data/ai-lab/initial.json
 COPY docs/research/phase-13-relation-model/v2/ledger.json ./docs/research/phase-13-relation-model/v2/ledger.json
-COPY scripts/public-kg.ts scripts/production-readiness.mjs ./scripts/
+COPY scripts/public-kg.ts scripts/production-readiness.mjs scripts/generate-contribution-roles.ts scripts/build-publication-probe.mjs scripts/publication-compatibility.ts ./scripts/
 ENV GRAPH_DATASET=public-kg GRAPH_DEPLOYMENT=production
-RUN npm run build
+RUN npm run roles:check && node scripts/build-publication-probe.mjs && npm run build
 
 # 運用CLIだけはtsxと受入資料を必要とする。Webへは含めない。
 FROM builder AS ops
@@ -44,6 +44,7 @@ WORKDIR /app
 ENV NODE_ENV=production NEXT_TELEMETRY_DISABLED=1 HOSTNAME=0.0.0.0 PORT=3000
 COPY --from=builder --chown=node:node /app/.next-public/standalone ./
 COPY --from=builder --chown=node:node /app/.next-public/static ./.next-public/static
+COPY --from=builder --chown=node:node /app/.local/publication-probe/publication-probe.cjs ./publication-probe.cjs
 COPY --from=builder --chown=node:node /app/app/fonts/BIZUDPMincho-OG.woff ./app/fonts/BIZUDPMincho-OG.woff
 COPY --from=builder --chown=node:node /app/app/fonts/OFL.txt ./font-licenses/BIZUDPMincho-OFL.txt
 COPY --from=builder /app/data/ai-lab/initial.json ./data/ai-lab/initial.json

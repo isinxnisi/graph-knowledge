@@ -337,6 +337,13 @@ class ExecutorTests(unittest.TestCase):
         with self.assertRaises(ValueError):self.preflight()
         self.assertEqual(self.calls('apply'),0)
 
+    def test_required_compatibility_contract_missing_stops_before_apply(self):
+        self.config['compatibilityRequired'] = True; self.save_config()
+        with self.assertRaisesRegex(ValueError, 'compatibility contract required'):
+            self.preflight()
+        self.assertEqual(self.calls('apply'), 0)
+        self.assertEqual(self.calls('compatibility'), 0)
+
     def test_gate_process_crash_after_db_commit_preserves_single_apply(self):
         self.ready();self.control({'afterCommitDelay':True});child=self.start()
         for _ in range(2):

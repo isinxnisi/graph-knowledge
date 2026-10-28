@@ -47,6 +47,9 @@ docs/research/phase-13-relation-model/v2/*
 scripts/*
 !scripts/public-kg.ts
 !scripts/production-readiness.mjs
+!scripts/generate-contribution-roles.ts
+!scripts/build-publication-probe.mjs
+!scripts/publication-compatibility.ts
 !scripts/ai-lab-artifact.ts
 !scripts/member-migrate.ts
 !scripts/member-ops.ts

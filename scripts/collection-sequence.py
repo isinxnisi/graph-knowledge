@@ -101,7 +101,7 @@ def prepared_first(first, decision, w):
     return True
 
 
-def receipt_projection(public, observed, workspace, w):
+def receipt_projection(public, observed, workspace, w, *, serializer=None):
     """Rebuild from all hash-backed receipts, including a receipt whose release creation failed."""
     inventory = w.load('sequence_receipt_inventory', w.ROOT / 'scripts/collection-inventory.py')
     check = inventory.Inventory(w, [('runtime', w.ROOT)], public, observed)
@@ -142,15 +142,25 @@ def receipt_projection(public, observed, workspace, w):
                 origins[ident] = origin
     key = w.digest({'public': observed, 'receipts': refs})
     ident = 'comparison-' + key[:24]
+    # New projections use one schema serializer. Historical receipts/releases are never rewritten.
+    data = w.dump(fixture)
+    if serializer is not None:
+        workspace.mkdir(parents=True, exist_ok=True)
+        source = workspace / 'fixture-input.json'
+        source.write_text(data, encoding='utf-8')
+        serialized = serializer(source)
+        data = serialized['data']
+        w.require(serialized['valuesUnchanged'] is True and w.read(source) == __import__('json').loads(data)
+                  and w.gate.digest(data.encode()) == serialized['dataSha256'], 'Producer serialization changed values')
     manifest = copy.deepcopy(w.read(w.ROOT / 'datasets/public-kg/releases' / observed['release'] / 'manifest.json'))
-    manifest.update(release=ident, baseRelease=observed['release'], dataSha256=w.gate.digest(w.dump(fixture).encode()),
+    manifest.update(release=ident, baseRelease=observed['release'], dataSha256=w.gate.digest(data.encode()),
         reason='正式受入receiptの不変本文から再構築した比較集合。公開apply用の追加承認ではない。')
     manifest['inputs'] += [{'dataset': 'manga-workflow-accepted', **r} for r in refs if r not in manifest['inputs']]
     existing = {c['claimId'] for c in manifest['claimOrigins']}
     manifest['claimOrigins'] += [origins.get(c['id'], {'claimId': c['id'], 'dataset': 'manga-workflow-accepted', 'sourceClaimId': c['id']})
                                for c in fixture['claims'] if c['id'] not in existing]
     directory = workspace / 'comparisons' / key
-    a.immutable_directory(directory, {'data.json': w.dump(fixture), 'manifest.json': w.dump(manifest)}, w)
+    a.immutable_directory(directory, {'data.json': data, 'manifest.json': w.dump(manifest)}, w)
     additions, checked = w.accepted_additions(directory, receipts)
     return directory, additions, checked, refs
 

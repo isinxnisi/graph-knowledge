@@ -51,3 +51,7 @@ playwright-report/
 # Issue52 disposable TLS keys, browser captures and local diagnostic scripts
 /.local/gk-issue52-*/
 /.local/issue52-*
+
+# まとまり2の隔離DB資材・image archive・非公開診断
+/.local/publication-pipeline/
+/.local/publication-probe/

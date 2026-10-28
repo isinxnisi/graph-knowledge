@@ -1,0 +1,102 @@
+#!/usr/bin/python3 -I
+"""Human operator approval boundary. Key stays root-only; delivery runs with uid1000.
+Installation/config activation and each actual release approval remain separate.
+"""
+import argparse
+import hashlib
+import importlib.util
+import json
+import os
+from pathlib import Path
+import pwd
+import re
+import subprocess
+import sys
+import uuid
+
+CONFIG=Path('/etc/plunode-publication/delivery.json')
+KEY=Path('/root/plunode-publication-operator/approver.pem')
+CONTEXT={'nonce':None,'stage':'initialization','signed':False}
+DIAGNOSTICS=Path('/var/log/plunode-publication-operator')
+
+class ChildFailure(ValueError):
+    def __init__(self,result):
+        self.result=result
+        super().__init__('Fixed delivery child failed or returned invalid JSON')
+
+
+def require(value):
+    if not value:raise ValueError('Fixed operator approval boundary differs')
+def trusted(path):
+    for item in [path,*path.parents]:
+        st=item.lstat();require(not item.is_symlink() and st.st_uid==0 and not st.st_mode&0o022)
+
+def child(config,extra,*,document=None):
+    account=pwd.getpwuid(config['uid']);require(account.pw_name=='isinxnisi' and config['uid']==1000)
+    script=Path('/usr/local/lib/plunode-receipts')/config['sourceCommit']/'scripts/publication-delivery.py';trusted(script)
+    argv=['/usr/sbin/runuser','-u',account.pw_name,'--','/usr/bin/python3','-I',str(script),'--config',str(CONFIG),*extra]
+    CONTEXT['stage']=extra[-1]
+    result=subprocess.run(argv,input=document,capture_output=True,timeout=1800,
+        env={'PATH':'/usr/bin:/bin','LANG':'C.UTF-8','HOME':account.pw_dir})
+    if result.returncode!=0 or len(result.stdout)>65536:raise ChildFailure(result)
+    try:return json.loads(result.stdout)
+    except (ValueError,UnicodeError) as error:raise ChildFailure(result) from error
+
+def confirm_release(release):
+    # TextIOWrapper update mode (r+) requires seeking, which a terminal cannot do.
+    # Separate handles keep the confirmation on the controlling TTY, never stdin.
+    with open('/dev/tty','r',encoding='utf-8') as reader, open('/dev/tty','w',encoding='utf-8') as writer:
+        require(reader.isatty() and writer.isatty())
+        writer.write('本番公開を承認するrelease IDを入力してください: ');writer.flush()
+        require(reader.readline().strip()==release)
+
+def main():
+    require(os.geteuid()==0);trusted(CONFIG);config=json.loads(CONFIG.read_bytes())
+    require(re.fullmatch('[a-f0-9]{40}',config['sourceCommit']) and type(config['deliveryEnabled']) is bool)
+    cli=argparse.ArgumentParser(description=__doc__);cli.add_argument('--nonce');cli.add_argument('--minutes',type=int,default=30)
+    cli.add_argument('--operator-approved',action='store_true');cli.add_argument('--self-check',action='store_true')
+    args=cli.parse_args();trusted(KEY);st=KEY.lstat();require(st.st_mode&0o777==0o600 and st.st_nlink==1)
+    pub=subprocess.run(['/usr/bin/openssl','pkey','-in',str(KEY),'-pubout'],capture_output=True,timeout=15)
+    require(pub.returncode==0 and hashlib.sha256(pub.stdout).hexdigest()==config['approverKeySha256'])
+    if args.self_check:
+        result=child(config,['--installation-check']);require(result['uid']==1000)
+        print(json.dumps({'phase':'operator-handoff-installation-checked','deliveryEnabled':config['deliveryEnabled'],
+            'sourceCommit':config['sourceCommit'],'approverKeyPinMatched':True,'unprivilegedChildVerified':True,'signed':False,'applyCalls':0}));return
+    require(config['deliveryEnabled'] is True and args.operator_approved and args.nonce)
+    nonce=uuid.UUID(args.nonce);require(nonce.version==4 and str(nonce)==args.nonce)
+    CONTEXT['nonce']=args.nonce
+    job=Path(config['queueDir'])/args.nonce/'job.json'
+    fixed=child(config,['--job',str(job),'--describe']);require(fixed['nonce']==args.nonce)
+    print(json.dumps(fixed,ensure_ascii=False,indent=2),flush=True)
+    confirm_release(fixed['request']['release'])
+    path=Path('/usr/local/lib/plunode-receipts')/config['sourceCommit']/'scripts/publication-sign.py';trusted(path)
+    spec=importlib.util.spec_from_file_location('fixed_operator_signer',path);signer=importlib.util.module_from_spec(spec);spec.loader.exec_module(signer)
+    # No approval/private key is written by root under a caller-owned path.
+    CONTEXT['stage']='signing'
+    signed=signer.sign(signer.approve(fixed['request'],args.nonce,args.minutes),KEY)
+    CONTEXT['signed']=True
+    result=child(config,['--job',str(job),'--accept-approval'],document=json.dumps(signed).encode())
+    print(json.dumps(result))
+
+def operator_entry():
+    try:
+        main()
+        return 0
+    except Exception as error:
+        result={'phase':'state-unknown','error':'operator-approval-or-delivery-stopped','newNonceAuthorized':False,'reSignAuthorized':False}
+        try:
+            config=json.loads(CONFIG.read_bytes())
+            path=Path('/usr/local/lib/plunode-receipts')/config['sourceCommit']/'scripts/publication-diagnostics.py';trusted(path)
+            spec=importlib.util.spec_from_file_location('operator_diagnostics',path);diagnostics=importlib.util.module_from_spec(spec);spec.loader.exec_module(diagnostics)
+            nonce=CONTEXT['nonce'];require(nonce)
+            child_result=getattr(error,'result',None)
+            record=diagnostics.private_failure(DIAGNOSTICS,nonce,CONTEXT['stage'],error,
+                stdout=child_result.stdout if child_result else b'',stderr=child_result.stderr if child_result else b'',
+                returncode=child_result.returncode if child_result else None)
+            job=Path(config['queueDir'])/nonce/'job.json'
+            result=child(config,['--job',str(job),'--diagnose'])
+            result.update(operatorChildError=True,diagnosticRecord=record,signingAttempted=CONTEXT['signed'])
+        except Exception:pass
+        print(json.dumps(result));return 0 if result.get('phase')=='completed' else 2
+
+if __name__=='__main__':raise SystemExit(operator_entry())

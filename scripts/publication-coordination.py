@@ -10,6 +10,7 @@ import os
 import subprocess
 from pathlib import Path
 import tempfile
+import time
 
 HERE = Path(__file__).resolve().parent
 
@@ -92,11 +93,27 @@ class Coordinator:
             e.durable(path, journal)
             self.cas(journal['pause']); return journal
     @contextlib.contextmanager
-    def barrier(self):
-        # Match Worker order. Both are nonblocking: never wait holding either lock.
-        with e.locked(self.directory / 'coordinator.lock'):
-            with e.locked(self.home / 'worker.lock'):
-                with e.locked(Path(self.config['commonLock'])): yield
+    def barrier(self, *, wait_seconds=0):
+        # Keep the default nonblocking. The fixed peer may briefly wait for a
+        # normal Worker tick, releasing EVERY acquired lock before each sleep.
+        e.require(0 <= wait_seconds <= 30, 'Bounded lock wait required')
+        deadline = time.monotonic() + wait_seconds
+        while True:
+            stack = contextlib.ExitStack()
+            try:
+                stack.enter_context(e.locked(self.directory / 'coordinator.lock'))
+                stack.enter_context(e.locked(self.home / 'worker.lock'))
+                stack.enter_context(e.locked(Path(self.config['commonLock'])))
+            except BlockingIOError:
+                stack.close()
+                remaining = deadline - time.monotonic()
+                if remaining <= 0: raise
+                time.sleep(min(.25, remaining))
+            except BaseException:
+                stack.close(); raise
+            else: break
+        try: yield
+        finally: stack.close()
     def pause_proof(self, challenge):
         identity = self.ticket(challenge['exclusion']); journal = e.read(self.path(identity['nonce']))
         e.require(journal['ticket'] == identity, 'Stale ticket/generation')

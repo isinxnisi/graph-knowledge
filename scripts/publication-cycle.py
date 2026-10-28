@@ -171,8 +171,17 @@ def candidate(args, ledger, context, staging):
                 'Runtime published artifact differs')
     payload = read(args.public_backup)['payload']
     require(args.release not in {r['id'] for r in payload['receipts']}, 'Release ID already used')
+    return build_candidate(args, ledger, context, staging, public, observed,
+        lambda release: w.node([str(ROOT / 'scripts/publication-backup-plan.ts'),
+            str(args.public_backup.resolve()), str(release), ledger['revision']]))
+
+
+def build_candidate(args, ledger, context, staging, public, observed, planner):
+    """Shared receipt-only release builder. Callers separately verify their base provenance."""
+    w, inv, fixture, pending, receipt_refs = context
     sequence = w.load('cycle_prepare_sequence', w.ROOT / 'scripts/collection-sequence.py')
-    comparison, additions, refs, _ = sequence.receipt_projection(public, observed, staging / 'scratch', w)
+    comparison, additions, refs, _ = sequence.receipt_projection(public, observed, staging / 'scratch', w,
+        serializer=lambda path:w.node(['scripts/serialize-publication-fixture.ts',str(path)]))
     require(all({r['id'] for r in additions[f]} == set(pending[f]) for f in FIELDS), 'Publication delta is not exactly unpublished formal records')
     data = (comparison / 'data.json').read_text()
     manifest = w.read(comparison / 'manifest.json')
@@ -181,7 +190,14 @@ def candidate(args, ledger, context, staging):
     (release / 'data.json').write_text(data); (release / 'manifest.json').write_text(w.dump(manifest))
     validation = w.node(['scripts/public-kg.ts', 'validate', str(release)])
     require(validation['valid'], 'Candidate validation failed')
-    plan = w.node([str(ROOT / 'scripts/publication-backup-plan.ts'), str(args.public_backup.resolve()), str(release), ledger['revision']])
+    verifier = getattr(args, 'compatibility_verifier', None)
+    if verifier is not None:
+        contract = w.node(['scripts/publication-compatibility.ts', 'contract', str(release)])
+        (release / 'compatibility.json').write_text(dump(contract))
+        proof = verifier(release)
+        require(proof['verified'], 'All-consumer compatibility required before signing guidance')
+        (staging / 'compatibility-report.json').write_text(dump(proof))
+    plan = planner(release)
     require(not plan['updated'] and plan['added'], 'No-op or existing update is not a publication candidate')
     shutil.rmtree(staging / 'scratch')
     for path, checksum in inv.readset.items():
