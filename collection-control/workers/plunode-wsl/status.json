@@ -26,16 +26,20 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-10-28T18:24:44.668298+00:00",
-  "phase": "interval",
+  "nextStartAt": "2026-10-28T19:30:28.867403+00:00",
+  "phase": "running",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
     "reason": "interval",
-    "eligibleAt": "2026-10-28T18:24:44.668298+00:00",
+    "eligibleAt": "2026-10-28T19:30:28.867403+00:00",
     "windowEndAt": "2026-10-28T22:00:00+00:00"
   },
-  "activeAttempt": null,
+  "activeAttempt": {
+    "requestId": "issue-62-dot-akutami-jujutsu-20261028-batch-01",
+    "startedAt": "2026-10-28T18:25:28.867406+00:00",
+    "limitAt": "2026-10-28T19:20:28.867403+00:00"
+  },
   "lastAttempt": {
     "requestId": "issue-62-dot-akutami-jujutsu-20261028",
     "endedAt": "2026-10-28T18:14:44.668299+00:00"
@@ -156,5 +160,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-10-28T18:18:36.712462+00:00"
+  "checkedAt": "2026-10-28T18:25:36.178819+00:00"
 }
