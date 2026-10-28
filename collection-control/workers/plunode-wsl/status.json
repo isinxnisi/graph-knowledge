@@ -44,7 +44,8 @@
   "requestsByPhase": {
     "blocked": 12,
     "completed": 32,
-    "awaiting-recovery": 3
+    "awaiting-recovery": 3,
+    "waiting-control": 1
   },
   "issueIntake": {
     "collection-control/issue-sources/25.json": {
@@ -106,6 +107,10 @@
     "collection-control/issue-sources/60.json": {
       "status": "registered: issue-60-dot-ichikawa-houseki-20261028",
       "checkedAt": "2026-10-28T06:28:19+00:00"
+    },
+    "collection-control/issue-sources/61.json": {
+      "status": "registered: issue-61-dot-gotouge-kimetsu-20261028",
+      "checkedAt": "2026-10-28T07:00:21+00:00"
     }
   },
   "publicApply": false,
@@ -147,5 +152,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-10-28T06:53:07.488760+00:00"
+  "checkedAt": "2026-10-28T07:01:50.241763+00:00"
 }
