@@ -1,0 +1,84 @@
+{
+  "status": "pending-human-acceptance",
+  "humanReviewer": null,
+  "entities": [
+    {
+      "entityId": "c0ae7b3f-cd54-448d-9fe1-f8b01a198414",
+      "name": "蟲師",
+      "kind": "work",
+      "wikidata": "Q1055370",
+      "existingEntityId": null,
+      "status": "candidate",
+      "reasons": [],
+      "checks": {
+        "providerIdentity": true
+      },
+      "inputPopulation": "relation-endpoint"
+    },
+    {
+      "entityId": "d172a28a-fa9c-4ee2-8b4b-4345bd47146a",
+      "name": "漆原友紀",
+      "kind": "person",
+      "wikidata": "Q272333",
+      "existingEntityId": null,
+      "status": "candidate",
+      "reasons": [],
+      "checks": {
+        "providerIdentity": true
+      },
+      "inputPopulation": "relation-endpoint"
+    }
+  ],
+  "claims": [
+    {
+      "claimId": "8d1014b1-759c-4a87-a43e-b71b68c9757a",
+      "person": "漆原友紀",
+      "work": "蟲師",
+      "subjectId": "d172a28a-fa9c-4ee2-8b4b-4345bd47146a",
+      "objectId": "c0ae7b3f-cd54-448d-9fe1-f8b01a198414",
+      "roleId": "AUTHORSHIP",
+      "scope": {
+        "kind": "publication",
+        "isbn13": "9784063142556",
+        "volumeLabel": "第1巻（NDL巻次 1）",
+        "editionLabel": null,
+        "language": "ja"
+      },
+      "status": "candidate",
+      "reasons": [],
+      "supportingCitationIds": [
+        "76a5592a-52cc-4ef2-9cb2-7b897f4663c3"
+      ],
+      "existingState": null,
+      "existingClaimId": null,
+      "originalTexts": [
+        "漆原友紀 著"
+      ],
+      "citationIds": [
+        "76a5592a-52cc-4ef2-9cb2-7b897f4663c3"
+      ],
+      "sourceUrls": [
+        "https://ndlsearch.ndl.go.jp/books/R100000002-I000002939424"
+      ],
+      "sourceIds": [
+        "89d2b532-d042-4091-9d98-1e7d8b206d50"
+      ]
+    }
+  ],
+  "inheritedHolds": [],
+  "newCandidateCounts": {
+    "entities": 2,
+    "claims": 1,
+    "sources": 1,
+    "citations": 1
+  },
+  "recordConflicts": [],
+  "roleCounts": {
+    "AUTHORSHIP": 1
+  },
+  "normalReviewedEntityCount": 2,
+  "reusedCitationIds": [],
+  "identityOnlyEntityIds": [],
+  "heldClaimCount": 0,
+  "heldEntityCount": 0
+}

@@ -1,0 +1,104 @@
+{
+  "status": "pending-human-acceptance",
+  "formalAcceptance": "pending",
+  "notForPublicApply": true,
+  "records": {
+    "entities": [
+      {
+        "id": "c0ae7b3f-cd54-448d-9fe1-f8b01a198414",
+        "kind": "work",
+        "name": "蟲師",
+        "description": null,
+        "aliases": [
+          "Mushishi"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q1055370"
+          }
+        ],
+        "createdAt": "2026-10-28T00:06:48Z",
+        "updatedAt": "2026-10-28T00:06:48Z",
+        "event": null
+      },
+      {
+        "id": "d172a28a-fa9c-4ee2-8b4b-4345bd47146a",
+        "kind": "person",
+        "name": "漆原友紀",
+        "description": null,
+        "aliases": [
+          "Yuki Urushibara"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q272333"
+          }
+        ],
+        "createdAt": "2026-10-28T00:06:48Z",
+        "updatedAt": "2026-10-28T00:06:48Z",
+        "event": null
+      }
+    ],
+    "claims": [
+      {
+        "id": "8d1014b1-759c-4a87-a43e-b71b68c9757a",
+        "subjectId": "d172a28a-fa9c-4ee2-8b4b-4345bd47146a",
+        "objectId": "c0ae7b3f-cd54-448d-9fe1-f8b01a198414",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "hidden",
+        "createdAt": "2026-10-28T00:06:48Z",
+        "updatedAt": "2026-10-28T00:06:48Z",
+        "contribution": {
+          "roleId": "AUTHORSHIP",
+          "scope": {
+            "kind": "publication",
+            "isbn13": "9784063142556",
+            "volumeLabel": "第1巻（NDL巻次 1）",
+            "editionLabel": null,
+            "language": "ja"
+          }
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      }
+    ],
+    "sources": [
+      {
+        "id": "89d2b532-d042-4091-9d98-1e7d8b206d50",
+        "kind": "web",
+        "title": "NDLサーチ: 蟲師. 1",
+        "authors": [],
+        "publisher": "国立国会図書館",
+        "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I000002939424",
+        "publishedAt": null,
+        "edition": null,
+        "note": "国立国会図書館作成書誌（iss-ndl-opac）の責任表示。メタデータ CC BY 4.0: https://creativecommons.org/licenses/by/4.0/ ; 提供元条件 https://ndlsearch.ndl.go.jp/help/api/provider 。本文・画像・第三者所蔵情報は含まない。",
+        "isDemo": false
+      }
+    ],
+    "citations": [
+      {
+        "id": "76a5592a-52cc-4ef2-9cb2-7b897f4663c3",
+        "claimId": "8d1014b1-759c-4a87-a43e-b71b68c9757a",
+        "sourceId": "89d2b532-d042-4091-9d98-1e7d8b206d50",
+        "locator": "dc:creator（責任表示） / ISBN 9784063142556",
+        "note": "原表記（ja）: 漆原友紀 著。指定刊行物の責任表示で確認された担当。全巻・全版・全期間への外挿、原作から別Roleへの変換はしない。同一資料由来の記録を独立した根拠と数えない。",
+        "accessedAt": "2026-10-28",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "漆原友紀 著",
+          "language": "ja"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      }
+    ]
+  }
+}

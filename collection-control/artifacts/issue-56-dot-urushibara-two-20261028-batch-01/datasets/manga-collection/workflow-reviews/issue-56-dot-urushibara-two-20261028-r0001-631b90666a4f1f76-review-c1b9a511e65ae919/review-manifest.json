@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "reviewId": "issue-56-dot-urushibara-two-20261028-r0001-631b90666a4f1f76-review-c1b9a511e65ae919",
+  "inputSha256": "c1b9a511e65ae919408e5a9f92fd9ee59bebe554bd4d9707314ad3d953f87eb7",
+  "artifacts": {
+    "context.json": "4bd75b85efe74130592ed9d2eb410c9e0345abe1ae6d1827ab690704b52f6038",
+    "review.json": "f04e332344f1514405f84733e9e57a4987243ce83131e211f6467d19e026b6e0",
+    "proposed-records.json": "68563a559511c41cc5416e7856d623301a7631df46752f9086c839d9beb889bc",
+    "identity-only-records.json": "1fc314e4a47717bce195b39fe7f1e66bd31f6af892fca4a9420a653eab927a37",
+    "exploration-paths.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+    "decision-request.json": "e290ff24a61f5e00bec3550ec8c129806657975a852fcae0d4599add18f8d69f",
+    "README.md": "feefd91993b11157a5ef3ca3072c022db2f9fbc0e4d09072c278c197b423ae09"
+  },
+  "authority": "pending-human-review-only"
+}

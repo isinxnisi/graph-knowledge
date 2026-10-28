@@ -1,0 +1,313 @@
+{
+  "id": "Q1055370",
+  "lastrevid": 2560953771,
+  "labels": {
+    "zh-hans": {
+      "language": "zh-hans",
+      "value": "虫师"
+    },
+    "zh-hant": {
+      "language": "zh-hant",
+      "value": "蟲師"
+    },
+    "zh-hk": {
+      "language": "zh-hk",
+      "value": "蟲師"
+    },
+    "pt": {
+      "language": "pt",
+      "value": "Mushishi"
+    },
+    "pl": {
+      "language": "pl",
+      "value": "Mushishi"
+    },
+    "ko": {
+      "language": "ko",
+      "value": "충사"
+    },
+    "ru": {
+      "language": "ru",
+      "value": "Mushishi"
+    },
+    "fr": {
+      "language": "fr",
+      "value": "Mushishi"
+    },
+    "en": {
+      "language": "en",
+      "value": "Mushishi"
+    },
+    "es": {
+      "language": "es",
+      "value": "Mushishi"
+    },
+    "uk": {
+      "language": "uk",
+      "value": "Mushishi"
+    },
+    "it": {
+      "language": "it",
+      "value": "Mushishi"
+    },
+    "gl": {
+      "language": "gl",
+      "value": "Mushishi"
+    },
+    "de": {
+      "language": "de",
+      "value": "Mushishi"
+    },
+    "ja": {
+      "language": "ja",
+      "value": "蟲師"
+    },
+    "fa": {
+      "language": "fa",
+      "value": "موشی‌شی"
+    },
+    "tl": {
+      "language": "tl",
+      "value": "Mushishi"
+    },
+    "sv": {
+      "language": "sv",
+      "value": "Mushishi"
+    },
+    "nl": {
+      "language": "nl",
+      "value": "Mushishi"
+    },
+    "zh": {
+      "language": "zh",
+      "value": "蟲師"
+    },
+    "ar": {
+      "language": "ar",
+      "value": "موشيشي"
+    },
+    "hy": {
+      "language": "hy",
+      "value": "Մուշիշի"
+    },
+    "id": {
+      "language": "id",
+      "value": "Mushishi"
+    },
+    "wuu": {
+      "language": "wuu",
+      "value": "虫师"
+    },
+    "vi": {
+      "language": "vi",
+      "value": "Trùng sư"
+    },
+    "cs": {
+      "language": "cs",
+      "value": "Muši-ši"
+    },
+    "mn": {
+      "language": "mn",
+      "value": "Мүши судлаач"
+    },
+    "tr": {
+      "language": "tr",
+      "value": "Mushishi"
+    },
+    "sr": {
+      "language": "sr",
+      "value": "Мушиши"
+    },
+    "mk": {
+      "language": "mk",
+      "value": "Мушиши"
+    },
+    "ro": {
+      "language": "ro",
+      "value": "Mushishi"
+    }
+  },
+  "aliases": {
+    "ko": [
+      {
+        "language": "ko",
+        "value": "무시시"
+      }
+    ],
+    "ru": [
+      {
+        "language": "ru",
+        "value": "Mushi-shi"
+      },
+      {
+        "language": "ru",
+        "value": "Мусиси"
+      },
+      {
+        "language": "ru",
+        "value": "Мушиши"
+      },
+      {
+        "language": "ru",
+        "value": "Мастер Муши"
+      },
+      {
+        "language": "ru",
+        "value": "Мастер Муси"
+      }
+    ],
+    "it": [
+      {
+        "language": "it",
+        "value": "Mushi-shi"
+      }
+    ],
+    "de": [
+      {
+        "language": "de",
+        "value": "Mushi-shi"
+      }
+    ],
+    "ja": [
+      {
+        "language": "ja",
+        "value": "虫師"
+      }
+    ],
+    "en": [
+      {
+        "language": "en",
+        "value": "Mushi-Shi"
+      }
+    ],
+    "cs": [
+      {
+        "language": "cs",
+        "value": "Mushi-Shi"
+      }
+    ],
+    "fa": [
+      {
+        "language": "fa",
+        "value": "موشیشی"
+      }
+    ]
+  },
+  "claims": {
+    "P31": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P31",
+          "hash": "549c072d6be8a6a43f999d1d0e82640b16c4260e",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 21198342,
+              "id": "Q21198342"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q1055370$82A57B62-9D4D-4E83-ABD8-6C36E74702BA",
+        "rank": "normal"
+      }
+    ],
+    "P50": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P50",
+          "hash": "717edf0e5b65d47920f3cf6ef4bd03ef1046366a",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 272333,
+              "id": "Q272333"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q1055370$35E10C29-036F-472B-8C65-49869C0F6A05",
+        "rank": "normal",
+        "references": [
+          {
+            "hash": "d4bd87b862b12d99d26e86472d44f26858dee639",
+            "snaks": {
+              "P143": [
+                {
+                  "snaktype": "value",
+                  "property": "P143",
+                  "hash": "f30cbd35620c4ea6d0633aaf0210a8916130469b",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 8447,
+                      "id": "Q8447"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P143"
+            ]
+          }
+        ]
+      }
+    ],
+    "P110": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P110",
+          "hash": "5ad58c819a6fde778daafb2307e2d6ae5ac55135",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 272333,
+              "id": "Q272333"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q1055370$6ADDD67C-40A0-4E34-B01B-F54B8BC63714",
+        "rank": "normal",
+        "references": [
+          {
+            "hash": "d4bd87b862b12d99d26e86472d44f26858dee639",
+            "snaks": {
+              "P143": [
+                {
+                  "snaktype": "value",
+                  "property": "P143",
+                  "hash": "f30cbd35620c4ea6d0633aaf0210a8916130469b",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 8447,
+                      "id": "Q8447"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P143"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

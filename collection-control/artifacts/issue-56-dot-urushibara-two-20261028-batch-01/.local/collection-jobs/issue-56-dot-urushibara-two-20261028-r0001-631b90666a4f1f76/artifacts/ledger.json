@@ -1,0 +1,174 @@
+{
+  "schemaVersion": 2,
+  "status": "pending-human-acceptance",
+  "recipe": "manga-r0036",
+  "collectionContext": {
+    "themeId": "issue-56-dot-urushibara-two-20261028",
+    "themeRevision": 1,
+    "definitionSha256": "c5b7fe3711dc490401afaff9f5fbbf2e2b55de95b9a899d2a6061c67da240856",
+    "approvalSha256": "68d17fd6dfd16f32ac75ae823816969737a086710e24f8e8b5a0d63362d5ec70"
+  },
+  "execution": {
+    "adapter": "manga-discovery-v2",
+    "codeSha256": "80e05b67bc0129b963653b90df4cfbfa5bd6aff190acda99f54c08541e55801e",
+    "inputs": [
+      {
+        "file": "datasets/manga-collection/r0036/recipe.json",
+        "sha256": "ae06f7331afa78ae2093eedef2e9454e55edac853998d316de0e0be6b4ec03a6"
+      },
+      {
+        "file": "datasets/manga-collection/r0036/anchor-review.json",
+        "sha256": "63f5c7ae3e4ec8a30b4c32bf01f2f6a9939f9167649df91be0f2296b774339e8"
+      },
+      {
+        "file": "datasets/manga-collection/r0036/publication-review.json",
+        "sha256": "2d6311e23a68544bf4a361e472d461566b2d4bea59c5c9f3d8e08ba03edd1c0f"
+      },
+      {
+        "file": "docs/research/famous-manga-creators/20261016/candidates.json",
+        "sha256": "8531fada01e5c635ba2ee278a7ef944a73f64676af14ed42ae0e690f5a1ff978"
+      },
+      {
+        "file": "datasets/public-kg/releases/20261014-credits-001/data.json",
+        "sha256": "ea91b16f52a211b5a8464382ad498b7b2bb2be69a6f33fe125a73a3c7b9da2b5"
+      },
+      {
+        "file": "datasets/public-kg/releases/20261014-credits-001/manifest.json",
+        "sha256": "e4aa3b58ed884f7d1f8fffee43b260261cc2b4d3a867fda942919f439d2bce17"
+      }
+    ],
+    "maxEntities": 2111,
+    "maxClaims": 1847
+  },
+  "identityMappings": [
+    {
+      "name": "漆原友紀",
+      "wikidata": "Q272333",
+      "entityId": "d172a28a-fa9c-4ee2-8b4b-4345bd47146a",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "蟲師",
+      "wikidata": "Q1055370",
+      "entityId": "c0ae7b3f-cd54-448d-9fe1-f8b01a198414",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    }
+  ],
+  "rows": [
+    {
+      "kind": "wikidata-relation",
+      "work": "蟲師",
+      "property": "P50",
+      "personQid": "Q272333",
+      "statementId": "Q1055370$35E10C29-036F-472B-8C65-49869C0F6A05",
+      "qualifiers": {},
+      "references": [
+        {
+          "hash": "d4bd87b862b12d99d26e86472d44f26858dee639",
+          "snaks": {
+            "P143": [
+              {
+                "snaktype": "value",
+                "property": "P143",
+                "hash": "f30cbd35620c4ea6d0633aaf0210a8916130469b",
+                "datavalue": {
+                  "value": {
+                    "entity-type": "item",
+                    "numeric-id": 8447,
+                    "id": "Q8447"
+                  },
+                  "type": "wikibase-entityid"
+                },
+                "datatype": "wikibase-item"
+              }
+            ]
+          },
+          "snaks-order": [
+            "P143"
+          ]
+        }
+      ],
+      "status": "candidate-only-no-role-inference",
+      "reason": "Wikidata propertyだけで具体Roleや直接制作の意味を確定しない"
+    },
+    {
+      "kind": "wikidata-relation",
+      "work": "蟲師",
+      "property": "P110",
+      "personQid": "Q272333",
+      "statementId": "Q1055370$6ADDD67C-40A0-4E34-B01B-F54B8BC63714",
+      "qualifiers": {},
+      "references": [
+        {
+          "hash": "d4bd87b862b12d99d26e86472d44f26858dee639",
+          "snaks": {
+            "P143": [
+              {
+                "snaktype": "value",
+                "property": "P143",
+                "hash": "f30cbd35620c4ea6d0633aaf0210a8916130469b",
+                "datavalue": {
+                  "value": {
+                    "entity-type": "item",
+                    "numeric-id": 8447,
+                    "id": "Q8447"
+                  },
+                  "type": "wikibase-entityid"
+                },
+                "datatype": "wikibase-item"
+              }
+            ]
+          },
+          "snaks-order": [
+            "P143"
+          ]
+        }
+      ],
+      "status": "candidate-only-no-role-inference",
+      "reason": "Wikidata propertyだけで具体Roleや直接制作の意味を確定しない"
+    },
+    {
+      "kind": "ndl-credit",
+      "work": "蟲師",
+      "isbn13": "9784063142556",
+      "rawResponsibility": "漆原友紀 著",
+      "sourceUrl": "https://ndlsearch.ndl.go.jp/books/R100000002-I000002939424",
+      "status": "pending-human-acceptance",
+      "roleId": "AUTHORSHIP",
+      "person": "漆原友紀",
+      "claimId": "8d1014b1-759c-4a87-a43e-b71b68c9757a",
+      "reusedClaim": false,
+      "subjectId": "d172a28a-fa9c-4ee2-8b4b-4345bd47146a",
+      "objectId": "c0ae7b3f-cd54-448d-9fe1-f8b01a198414"
+    }
+  ],
+  "holds": [],
+  "acquisitions": [
+    {
+      "kind": "wikidata",
+      "identifier": "Q272333",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q272333.json",
+      "sha256": "48c6bd50296ee4db9a15331f724a930f7a98595a909051a18f6dc0d59b4aefe6",
+      "bytes": 63072,
+      "fetchedAt": "2026-10-28T00:06:56+00:00"
+    },
+    {
+      "kind": "wikidata",
+      "identifier": "Q1055370",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q1055370.json",
+      "sha256": "644fcff9a56cd97bb1e16f625cfe0f9dbf90b6189dfd7acf4a24522459257eda",
+      "bytes": 58593,
+      "fetchedAt": "2026-10-28T00:06:59+00:00"
+    },
+    {
+      "kind": "ndl",
+      "identifier": "9784063142556",
+      "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&maximumRecords=5&query=isbn%3D%229784063142556%22+AND+dpid%3Diss-ndl-opac",
+      "sha256": "8b53701378a27d33818dcdfbd737fc6dc57d59687f0cb1207810011da6926644",
+      "bytes": 30761,
+      "fetchedAt": "2026-10-28T00:07:17+00:00"
+    }
+  ]
+}

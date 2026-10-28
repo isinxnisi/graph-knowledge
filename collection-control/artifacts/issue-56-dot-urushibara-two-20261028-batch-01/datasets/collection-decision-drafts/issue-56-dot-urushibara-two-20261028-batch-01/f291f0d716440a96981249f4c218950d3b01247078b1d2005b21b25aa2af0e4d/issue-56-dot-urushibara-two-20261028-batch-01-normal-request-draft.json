@@ -1,0 +1,126 @@
+{
+  "schemaVersion": 1,
+  "id": "issue-56-dot-urushibara-two-20261028-batch-01-normal",
+  "kind": "accept-release",
+  "status": "draft-not-approved",
+  "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
+  "parentRequestId": "issue-56-dot-urushibara-two-20261028-batch-01",
+  "applyAuthorized": {
+    "local": false,
+    "beta": false,
+    "vps": false
+  },
+  "decision": {
+    "schemaVersion": 1,
+    "decisionId": "issue-56-dot-urushibara-two-20261028-batch-01-normal",
+    "status": "draft-not-approved",
+    "humanDecision": {
+      "actorType": "human",
+      "reviewer": null,
+      "decidedAt": null,
+      "statement": null
+    },
+    "approvalScope": "formal-record-acceptance-and-release-preparation-only",
+    "applyAuthorized": {
+      "local": false,
+      "beta": false,
+      "vps": false
+    },
+    "review": {
+      "file": "datasets/manga-collection/workflow-reviews/issue-56-dot-urushibara-two-20261028-r0001-631b90666a4f1f76-review-c1b9a511e65ae919/review-manifest.json",
+      "sha256": "f291f0d716440a96981249f4c218950d3b01247078b1d2005b21b25aa2af0e4d"
+    },
+    "referenceArtifacts": [
+      {
+        "file": "datasets/manga-collection/workflow-reviews/issue-56-dot-urushibara-two-20261028-r0001-631b90666a4f1f76-review-c1b9a511e65ae919/README.md",
+        "sha256": "feefd91993b11157a5ef3ca3072c022db2f9fbc0e4d09072c278c197b423ae09"
+      },
+      {
+        "file": "datasets/manga-collection/workflow-reviews/issue-56-dot-urushibara-two-20261028-r0001-631b90666a4f1f76-review-c1b9a511e65ae919/context.json",
+        "sha256": "4bd75b85efe74130592ed9d2eb410c9e0345abe1ae6d1827ab690704b52f6038"
+      },
+      {
+        "file": "datasets/manga-collection/workflow-reviews/issue-56-dot-urushibara-two-20261028-r0001-631b90666a4f1f76-review-c1b9a511e65ae919/decision-request.json",
+        "sha256": "e290ff24a61f5e00bec3550ec8c129806657975a852fcae0d4599add18f8d69f"
+      },
+      {
+        "file": "datasets/manga-collection/workflow-reviews/issue-56-dot-urushibara-two-20261028-r0001-631b90666a4f1f76-review-c1b9a511e65ae919/exploration-paths.json",
+        "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+      },
+      {
+        "file": "datasets/manga-collection/workflow-reviews/issue-56-dot-urushibara-two-20261028-r0001-631b90666a4f1f76-review-c1b9a511e65ae919/identity-only-records.json",
+        "sha256": "1fc314e4a47717bce195b39fe7f1e66bd31f6af892fca4a9420a653eab927a37"
+      },
+      {
+        "file": "datasets/manga-collection/workflow-reviews/issue-56-dot-urushibara-two-20261028-r0001-631b90666a4f1f76-review-c1b9a511e65ae919/proposed-records.json",
+        "sha256": "68563a559511c41cc5416e7856d623301a7631df46752f9086c839d9beb889bc"
+      },
+      {
+        "file": "datasets/manga-collection/workflow-reviews/issue-56-dot-urushibara-two-20261028-r0001-631b90666a4f1f76-review-c1b9a511e65ae919/review-manifest.json",
+        "sha256": "f291f0d716440a96981249f4c218950d3b01247078b1d2005b21b25aa2af0e4d"
+      },
+      {
+        "file": "datasets/manga-collection/workflow-reviews/issue-56-dot-urushibara-two-20261028-r0001-631b90666a4f1f76-review-c1b9a511e65ae919/review.json",
+        "sha256": "f04e332344f1514405f84733e9e57a4987243ce83131e211f6467d19e026b6e0"
+      }
+    ],
+    "acceptedRecordIds": {
+      "entities": [
+        "c0ae7b3f-cd54-448d-9fe1-f8b01a198414",
+        "d172a28a-fa9c-4ee2-8b4b-4345bd47146a"
+      ],
+      "claims": [
+        "8d1014b1-759c-4a87-a43e-b71b68c9757a"
+      ],
+      "sources": [
+        "89d2b532-d042-4091-9d98-1e7d8b206d50"
+      ],
+      "citations": [
+        "76a5592a-52cc-4ef2-9cb2-7b897f4663c3"
+      ]
+    },
+    "recordSha256": {
+      "entities": {
+        "c0ae7b3f-cd54-448d-9fe1-f8b01a198414": "c6da7d10d655cd376a4adee0158a7c99773427ddb7f8fb2b345f98470764de1f",
+        "d172a28a-fa9c-4ee2-8b4b-4345bd47146a": "6a937db74b6227c0f02adbf695660fb70b72fe4b9786bd93c8a7fde21abbd998"
+      },
+      "claims": {
+        "8d1014b1-759c-4a87-a43e-b71b68c9757a": "8b722c8e0d221a306407934e260478ebd0736c8daf26783662324a6a0e38fb36"
+      },
+      "sources": {
+        "89d2b532-d042-4091-9d98-1e7d8b206d50": "03c60598ca4bbd638a1e6abb5eaad748aec6f5ce3b75ef7cfbba015c9f4fac89"
+      },
+      "citations": {
+        "76a5592a-52cc-4ef2-9cb2-7b897f4663c3": "9589284611a69d7451e9e94b82bd52892a423f459c93cb567cb102a49b77c037"
+      }
+    },
+    "scopeByClaim": [
+      {
+        "id": "8d1014b1-759c-4a87-a43e-b71b68c9757a",
+        "subjectId": "d172a28a-fa9c-4ee2-8b4b-4345bd47146a",
+        "objectId": "c0ae7b3f-cd54-448d-9fe1-f8b01a198414",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "contribution": {
+          "roleId": "AUTHORSHIP",
+          "scope": {
+            "kind": "publication",
+            "isbn13": "9784063142556",
+            "volumeLabel": "第1巻（NDL巻次 1）",
+            "editionLabel": null,
+            "language": "ja"
+          }
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      }
+    ],
+    "baseRelease": "20261014-credits-001",
+    "baseRevision": "82b01515-594c-48ca-b4b6-515eefac83ca",
+    "releaseId": "manga-issue-56-dot-urushibara-two-20261028-batch-01-normal"
+  }
+}
