@@ -26,16 +26,20 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-10-28T00:18:09.386852+00:00",
-  "phase": "interval",
+  "nextStartAt": "2026-10-28T01:25:02.372589+00:00",
+  "phase": "running",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
     "reason": "interval",
-    "eligibleAt": "2026-10-28T00:18:09.386852+00:00",
+    "eligibleAt": "2026-10-28T01:25:02.372589+00:00",
     "windowEndAt": "2026-10-28T03:00:00+00:00"
   },
-  "activeAttempt": null,
+  "activeAttempt": {
+    "requestId": "issue-56-dot-urushibara-two-20261028-batch-01",
+    "startedAt": "2026-10-28T00:20:02.372592+00:00",
+    "limitAt": "2026-10-28T01:15:02.372589+00:00"
+  },
   "lastAttempt": {
     "requestId": "issue-56-dot-urushibara-two-20261028",
     "endedAt": "2026-10-28T00:08:09.386855+00:00"
@@ -132,5 +136,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-10-28T00:11:18.988686+00:00"
+  "checkedAt": "2026-10-28T00:20:09.520908+00:00"
 }
