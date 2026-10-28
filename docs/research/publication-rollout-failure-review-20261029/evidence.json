@@ -1,0 +1,472 @@
+{
+  "baseline": "99ae8a3c653f57ef463723ceafb42a92e366fed8",
+  "session": {
+    "path": "C:/Users/nishr/.codex/sessions/2026/10/26/rollout-2026-10-26T23-52-59-01a17453-6c87-7961-9773-7ad78e90dbd7_01a178b3-4dd1-7e43-acbc-4923c0ceb0b7.jsonl",
+    "prefixLines": 11106,
+    "prefixSha256": "6d56082c73f403af980bc04bed50a32ff6cc8d390dd64b54b89dd34483a4bb1f",
+    "excluded": "raw content, reasoning, credentials and unrelated turns",
+    "host": "Windows Codex Desktop"
+  },
+  "events": [
+    {
+      "id": "S8517",
+      "line": 8517,
+      "timestamp": "2026-10-28T05:20:17.094Z",
+      "recordType": "response_item",
+      "itemType": "message",
+      "phase": "final_answer",
+      "sha256": "303272e837e4b067f84c7cff3b03f400f2958a3f4f0b61cd1c493cba555cfafa",
+      "observation": "固定更新判断票を提示"
+    },
+    {
+      "id": "S8523",
+      "line": 8523,
+      "timestamp": "2026-10-28T05:24:45.749Z",
+      "recordType": "turn_context",
+      "itemType": null,
+      "phase": null,
+      "sha256": "15ad9f7e4b89c36a15c49953382e9bf8cc15ebf87fd36228bcd84e2368e97a2b",
+      "observation": "更新ターンのモデル設定"
+    },
+    {
+      "id": "S8550",
+      "line": 8550,
+      "timestamp": "2026-10-28T05:26:37.809Z",
+      "recordType": "response_item",
+      "itemType": "custom_tool_call",
+      "phase": null,
+      "sha256": "79b600ee92d232cb880a46b63dcff6c5aaee2266bfd4dc5c42e4416e4bf99222",
+      "observation": "既存Web-only helperとDelivery末尾・実Taskを読取"
+    },
+    {
+      "id": "S8886",
+      "line": 8886,
+      "timestamp": "2026-10-28T05:48:10.475Z",
+      "recordType": "response_item",
+      "itemType": "custom_tool_call",
+      "phase": null,
+      "sha256": "99b35574be6c84e9143579b1a940f9c55ef43f990e42dd685a52d8c53e66752e",
+      "observation": "Task/WSL/VPSの一回限り更新helperを新設"
+    },
+    {
+      "id": "S8980",
+      "line": 8980,
+      "timestamp": "2026-10-28T06:00:55.795Z",
+      "recordType": "response_item",
+      "itemType": "custom_tool_call",
+      "phase": null,
+      "sha256": "9a3cd4c5fe030ecda82980d37d8dce3b6c5f342839e95a9326f5a1251b654fb3",
+      "observation": "新runner/Task helperを再読"
+    },
+    {
+      "id": "S8996",
+      "line": 8996,
+      "timestamp": "2026-10-28T06:01:09.876Z",
+      "recordType": "response_item",
+      "itemType": "custom_tool_call",
+      "phase": null,
+      "sha256": "3ba0db372dcc7ab76fa69a9aa69ef3c71a7e970852aeb4ae72a4ed52fc7f682e",
+      "observation": "固定判断票・既存image helperを読取"
+    },
+    {
+      "id": "S9004",
+      "line": 9004,
+      "timestamp": "2026-10-28T06:01:15.488Z",
+      "recordType": "response_item",
+      "itemType": "custom_tool_call",
+      "phase": null,
+      "sha256": "554d8b6c5f8ff2d12704c158b31dbb7fa0daf382e61f9649b1cd6cc7ecf8738f",
+      "observation": "executorの55-275行を読取"
+    },
+    {
+      "id": "S9007",
+      "line": 9007,
+      "timestamp": "2026-10-28T06:01:17.005Z",
+      "recordType": "response_item",
+      "itemType": "custom_tool_call_output",
+      "phase": null,
+      "sha256": "7d6a196e84f4afef25eba9fcd4aed06647a913127b227d61806ceff68e1f45c2",
+      "observation": "上記読取結果にnonce backup生成行は含まれない"
+    },
+    {
+      "id": "S9059",
+      "line": 9059,
+      "timestamp": "2026-10-28T06:03:08.859Z",
+      "recordType": "response_item",
+      "itemType": "custom_tool_call",
+      "phase": null,
+      "sha256": "00320201b3e42a8cf50e37803be94f7fa390d94dcdc3f62f2a65ce278c5f9346",
+      "observation": "初期6試験を追加。ジョブfixtureは単一state形式"
+    },
+    {
+      "id": "S9199",
+      "line": 9199,
+      "timestamp": "2026-10-28T06:09:34.450Z",
+      "recordType": "response_item",
+      "itemType": "custom_tool_call",
+      "phase": null,
+      "sha256": "33471b3f9c490ff0b5a18f6318ab656c379423f0fe2e79ce83b40423023db8ef",
+      "observation": "最初の依頼直前に3 lockの存在とWorker lock箇所を確認"
+    },
+    {
+      "id": "S9207",
+      "line": 9207,
+      "timestamp": "2026-10-28T06:09:52.045Z",
+      "recordType": "response_item",
+      "itemType": "message",
+      "phase": "final_answer",
+      "sha256": "b2fe6ac9a7ba3e6e9c045703a6eb78389389eee5ed3519d18f88701c0ccceaa9",
+      "observation": "H1 最初のSSH/sudo一括実行依頼"
+    },
+    {
+      "id": "S9218",
+      "line": 9218,
+      "timestamp": "2026-10-28T07:04:51.298Z",
+      "recordType": "response_item",
+      "itemType": "message",
+      "phase": null,
+      "sha256": "e608b3ddd32618289f686764dc15dafe0b5277155127fdacf6d5264f5c604d0f",
+      "observation": "F1 phase KeyErrorの返却attachment"
+    },
+    {
+      "id": "S9245",
+      "line": 9245,
+      "timestamp": "2026-10-28T07:05:54.980Z",
+      "recordType": "response_item",
+      "itemType": "custom_tool_call",
+      "phase": null,
+      "sha256": "0a1bfe9732d719defe558b23ff56c46cb37ef883814b1e21597bfccb55b377f7",
+      "observation": "F1後にexecutorの285-350行を読取"
+    },
+    {
+      "id": "S9298",
+      "line": 9298,
+      "timestamp": "2026-10-28T07:09:32.175Z",
+      "recordType": "response_item",
+      "itemType": "custom_tool_call",
+      "phase": null,
+      "sha256": "0ba33971877ec67569ed70e0a6508d1119951a435de7fd5568eec3f02c788577",
+      "observation": "nonce state/backupを分類する修正"
+    },
+    {
+      "id": "S9421",
+      "line": 9421,
+      "timestamp": "2026-10-28T07:18:19.720Z",
+      "recordType": "response_item",
+      "itemType": "message",
+      "phase": "final_answer",
+      "sha256": "b3b869405484c27f10d7f78806efc2439cc7fd3837e301616d00ea766e577ce0",
+      "observation": "H2 fix1の再実行依頼"
+    },
+    {
+      "id": "S9428",
+      "line": 9428,
+      "timestamp": "2026-10-28T09:11:30.309Z",
+      "recordType": "response_item",
+      "itemType": "message",
+      "phase": null,
+      "sha256": "dbf41f7bb025c16736ca45b04c442e37fa26bde399d8f44ae995213e46c58b5b",
+      "observation": "F2 導入snapshot未知扱いの返却attachment"
+    },
+    {
+      "id": "S9439",
+      "line": 9439,
+      "timestamp": "2026-10-28T09:12:15.990Z",
+      "recordType": "response_item",
+      "itemType": "custom_tool_call",
+      "phase": null,
+      "sha256": "1890d9161bde01ac5340792f48d28d0d5bace80a92696f3ff55cf93c304232d7",
+      "observation": "F2後にops/scriptsのwriterを横断検索"
+    },
+    {
+      "id": "S9449",
+      "line": 9449,
+      "timestamp": "2026-10-28T09:12:31.750Z",
+      "recordType": "response_item",
+      "itemType": "custom_tool_call",
+      "phase": null,
+      "sha256": "b02d6628ce5d344121c791bf44dd38aced8d8feb38a95d07e9f6daadb137c935",
+      "observation": "初期導入snapshot producerと既存資料を読取"
+    },
+    {
+      "id": "S9658",
+      "line": 9658,
+      "timestamp": "2026-10-28T09:32:29.713Z",
+      "recordType": "response_item",
+      "itemType": "message",
+      "phase": "final_answer",
+      "sha256": "41313a7bafc1c76d7e6c2ddf0d66d73b8ff5a9658c21ee9da6093a2d2d4257f5",
+      "observation": "H3 fix2の再実行依頼"
+    },
+    {
+      "id": "S9665",
+      "line": 9665,
+      "timestamp": "2026-10-28T09:43:07.251Z",
+      "recordType": "response_item",
+      "itemType": "message",
+      "phase": null,
+      "sha256": "1eb32f5b5f5ec84545c139395cee56203a903fdc16dede7859f2835d490b3381",
+      "observation": "F3 VPS成功・WSL lock競合の返却"
+    },
+    {
+      "id": "S9673",
+      "line": 9673,
+      "timestamp": "2026-10-28T09:43:33.099Z",
+      "recordType": "response_item",
+      "itemType": "custom_tool_call_output",
+      "phase": null,
+      "sha256": "3a1bb2d798ac131c45434d1759ed82859ee0e3183c315e03f947227f47ee668a",
+      "observation": "Worker lock保持PIDとidle状態の観測"
+    },
+    {
+      "id": "S9843",
+      "line": 9843,
+      "timestamp": "2026-10-28T09:53:50.327Z",
+      "recordType": "response_item",
+      "itemType": "custom_tool_call",
+      "phase": null,
+      "sha256": "e661bee8db836932ef2960ae4bc8bf6ed5d2ac6eb26ca93b444c6d5f652ae408",
+      "observation": "更新前lock限定再試行の隔離試験を追加"
+    },
+    {
+      "id": "S10120",
+      "line": 10120,
+      "timestamp": "2026-10-28T10:14:20.019Z",
+      "recordType": "response_item",
+      "itemType": "message",
+      "phase": "final_answer",
+      "sha256": "1186858241b613f468fa35904d7c4860f112aa4a9a5b6b91ab1d5858856e64d3",
+      "observation": "H4 WSLのみの再開依頼"
+    },
+    {
+      "id": "S10127",
+      "line": 10127,
+      "timestamp": "2026-10-28T11:25:00.793Z",
+      "recordType": "response_item",
+      "itemType": "message",
+      "phase": null,
+      "sha256": "673692014278193b669e6eb00eab8eab9d908e6263abcc0d65d2873382e3677f",
+      "observation": "F4 15分timeout＋再実行時の退避衝突attachment"
+    },
+    {
+      "id": "S10143",
+      "line": 10143,
+      "timestamp": "2026-10-28T11:27:28.315Z",
+      "recordType": "response_item",
+      "itemType": "custom_tool_call",
+      "phase": null,
+      "sha256": "3730d0a6a751714c519531d1c32200551cde17cfefe52158cef861ceb58966ca",
+      "observation": "衝突時のbackup/WSL実装を読取"
+    },
+    {
+      "id": "S10245",
+      "line": 10245,
+      "timestamp": "2026-10-28T11:32:44.043Z",
+      "recordType": "response_item",
+      "itemType": "custom_tool_call",
+      "phase": null,
+      "sha256": "fc13ee8f2a7647d8f76c43ee9f9c544d78650e73b3831c484d6d105faa299390",
+      "observation": "退避修正後に残るTask/self-check実装を読取"
+    },
+    {
+      "id": "S10279",
+      "line": 10279,
+      "timestamp": "2026-10-28T11:35:05.034Z",
+      "recordType": "response_item",
+      "itemType": "custom_tool_call",
+      "phase": null,
+      "sha256": "1f9e5b02860a8441823833f162d22df611e6abb4243afd77c74b86a795634097",
+      "observation": "173ファイルのWorker policyに対応する実before bytesと承認資材を用いた隔離WSLフロー検証"
+    },
+    {
+      "id": "S10389",
+      "line": 10389,
+      "timestamp": "2026-10-28T11:42:05.813Z",
+      "recordType": "response_item",
+      "itemType": "message",
+      "phase": "final_answer",
+      "sha256": "e0782f3ff920f32aee485e7ae009e33849999647c32bac13c765bde3b22d1182",
+      "observation": "H5 fix3の再実行依頼"
+    },
+    {
+      "id": "S10396",
+      "line": 10396,
+      "timestamp": "2026-10-28T11:44:32.702Z",
+      "recordType": "response_item",
+      "itemType": "message",
+      "phase": null,
+      "sha256": "6b37b8bae414faed648b0220444a7e5169c0e46fec54553e8470dcbb33152ea7",
+      "observation": "F5 PowerShell generic errorの返却"
+    },
+    {
+      "id": "S10409",
+      "line": 10409,
+      "timestamp": "2026-10-28T11:45:16.549Z",
+      "recordType": "response_item",
+      "itemType": "custom_tool_call",
+      "phase": null,
+      "sha256": "b3bb6352e5766f4c4de6fc41c37aca30f7a35fb6df69fc6acb0af2b997b4cfc9",
+      "observation": "同CLEAN環境の通常ユーザーでTask同source読取と旧bytesを確認"
+    },
+    {
+      "id": "S10412",
+      "line": 10412,
+      "timestamp": "2026-10-28T11:45:26.829Z",
+      "recordType": "response_item",
+      "itemType": "custom_tool_call_output",
+      "phase": null,
+      "sha256": "a1863bf9689839d2a47bf84610a920f58c3d1fe05627a5c711e89659fc649db8",
+      "observation": "上記読取は成功。元失敗のstderrは未保存"
+    },
+    {
+      "id": "S10488",
+      "line": 10488,
+      "timestamp": "2026-10-28T11:53:46.454Z",
+      "recordType": "response_item",
+      "itemType": "custom_tool_call",
+      "phase": null,
+      "sha256": "bbeb27c8e33d3d808ebc7fee0bb233c316dd83c5089fcd5a43fce2eff33a614b",
+      "observation": "Task事前snapshotと子例外保持を追加"
+    },
+    {
+      "id": "S10496",
+      "line": 10496,
+      "timestamp": "2026-10-28T11:54:21.402Z",
+      "recordType": "response_item",
+      "itemType": "custom_tool_call",
+      "phase": null,
+      "sha256": "96ac40239c6087202845c8d6dc6b7405c6586ac3f76d1dd367fd391805cdfa0f",
+      "observation": "修正版の実Task同source読取"
+    },
+    {
+      "id": "S10596",
+      "line": 10596,
+      "timestamp": "2026-10-28T12:02:55.141Z",
+      "recordType": "response_item",
+      "itemType": "message",
+      "phase": "final_answer",
+      "sha256": "8eda06b8aaf94a5b1bd2f6be79434a287c53d7597bad884c9add14ef3e821472",
+      "observation": "H6 原因未確定と明示したfix4の実行依頼"
+    },
+    {
+      "id": "S10603",
+      "line": 10603,
+      "timestamp": "2026-10-28T12:11:13.164Z",
+      "recordType": "response_item",
+      "itemType": "message",
+      "phase": null,
+      "sha256": "ec1061687844de7bb64d8b48b201b8862b9109f4c975aca7975c5e6f85bda8c5",
+      "observation": "F6 lock競合を限定再試行後WSL成功の返却"
+    },
+    {
+      "id": "S11059",
+      "line": 11059,
+      "timestamp": "2026-10-28T12:46:13.879Z",
+      "recordType": "response_item",
+      "itemType": "custom_tool_call",
+      "sha256": "0936a92543f895b40c9702caa3f9ba0f0b73a358819e36cf41a3e0a4bf0e3dcb",
+      "observation": "checkのexit codeを判定せずcommitへ進む呼出し"
+    },
+    {
+      "id": "S11065",
+      "line": 11065,
+      "timestamp": "2026-10-28T12:46:25.986Z",
+      "recordType": "response_item",
+      "itemType": "custom_tool_call_output",
+      "sha256": "1f533cf4d4d2da728f078df76fabe45e978d6e78276c8ff26370b14584ce68fa",
+      "observation": "diff check失敗とcommit成功が同じ結果に存在"
+    },
+    {
+      "id": "S11069",
+      "line": 11069,
+      "timestamp": "2026-10-28T12:46:49.714Z",
+      "recordType": "response_item",
+      "itemType": "custom_tool_call",
+      "sha256": "183b6815465ddc8505c10cfb26243ce418823b524e97a138ac0b28898eeb5de6",
+      "observation": "LF化後、後続をexit codeで止める呼出しへ修正"
+    },
+    {
+      "id": "S11106",
+      "line": 11106,
+      "timestamp": "2026-10-28T12:48:57.058Z",
+      "recordType": "response_item",
+      "itemType": "message",
+      "phase": "final_answer",
+      "sha256": "e3260245ef81f4a578ac517e2a5ebae35880bc731f4047ab474e8ac2e3fec318",
+      "observation": "実設置検証と通常Task終了の完了報告"
+    }
+  ],
+  "model": {
+    "id": "gpt-6.1-sol",
+    "effort": "xhigh",
+    "fastMode": "not recorded"
+  },
+  "operatorRequests": 6,
+  "visibleOperatorInvocations": 7,
+  "attachments": [
+    {
+      "path": "C:/Users/nishr/.codex/attachments/dd5f5fb0-745a-4e78-be14-2620f1b2870a/貼り付けたテキスト.txt",
+      "sha256": "a8555fd7a4ecd6a50eea5bc4edb7d5fc917943e29867cdd3af5d4870a966dc0e",
+      "visibleInvocations": 1
+    },
+    {
+      "path": "C:/Users/nishr/.codex/attachments/9cec39ae-76ea-4456-86ad-74ea5f41f852/貼り付けたテキスト.txt",
+      "sha256": "ef0787675191970dbc2e7aff7d9627c81a51f24a0e3b9432769caa10d9cc1cdf",
+      "visibleInvocations": 1
+    },
+    {
+      "path": "C:/Users/nishr/.codex/attachments/e1c5a637-f958-425e-8d76-1c81ed062c31/貼り付けたテキスト.txt",
+      "sha256": "0a2fd72a4be5b8b1ece237209a3535ac28d6fd7dfe77ec4c9fabef6bc36d1c0b",
+      "visibleInvocations": 2
+    }
+  ],
+  "notes": [
+    "行hashは末尾LFを含む元JSONL 1行のSHA-256。先頭prefixは追記による変化を避けるため完了報告で区切る。",
+    "操作の要約は利用者向け応答と実ツール入力/出力に限定。非公開の推論は調査レポートへ転記しない。",
+    "6回の実行依頼に対し1つの返却attachmentに2回の実行がある。実行内のlock再試行・パスワード再入力は別回としない。"
+  ],
+  "elapsedRepairWindows": [
+    {
+      "start": "S9218",
+      "end": "S9421",
+      "seconds": 808.422
+    },
+    {
+      "start": "S9428",
+      "end": "S9658",
+      "seconds": 1259.404
+    },
+    {
+      "start": "S10127",
+      "end": "S10389",
+      "seconds": 1025.02
+    },
+    {
+      "start": "S10396",
+      "end": "S10596",
+      "seconds": 1102.439
+    }
+  ],
+  "elapsedRepairWindowTotalMinutes": 69.92141666666666,
+  "elapsedTimeMeaning": "User result received through next operator handoff; includes tools, verification and records, not measured AI active work or fully avoidable time.",
+  "verification": {
+    "verifiedAt": "2026-10-28T16:06:22.591580+00:00",
+    "sourcePrefixMatched": true,
+    "eventsMatched": 39,
+    "attachmentsMatched": 3,
+    "localReferencesMatched": 8,
+    "gitBlobReferencesMatched": 17,
+    "fixedDecisionSha256Matched": true,
+    "legacyExistingBackupCollisions": {
+      "worker-contribution.ts.before": [
+        "lib/domain/contribution.ts",
+        "lib/i18n/contribution.ts"
+      ]
+    },
+    "newFiles": [
+      "docs/research/publication-rollout-failure-review-20261029/README.md",
+      "docs/research/publication-rollout-failure-review-20261029/evidence.json"
+    ],
+    "scope": "read-only history, fixed inputs and report/index consistency; no runtime test or deployment"
+  }
+}
