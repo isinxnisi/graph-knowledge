@@ -1,0 +1,61 @@
+{
+  "observedAt": "2026-10-28T12:29:31.414334+00:00",
+  "authority": "read-only-public-graph-api-after-all-runtime-updates",
+  "environments": [
+    {
+      "environment": "3200",
+      "url": "http://127.0.0.1:3200",
+      "dataset": {
+        "dataset": "public-kg",
+        "revision": "34befbcd-8f5f-4cd9-a059-242a3f0b5ffb"
+      },
+      "build": "lNabFN3qBIdd5U2lV6e6A",
+      "capabilitiesSha256": "a10cc7e0746b83272dccb99293b1f26754c8b860626f9a6208bf40525b11aa16",
+      "actingThenDirectingRoute": {
+        "nodeIds": [
+          "604eb49e-df41-4157-8b49-bd92a0d93ad4",
+          "490ee589-76db-4a5e-8923-13d24b7cb3a2",
+          "805b9630-cd9a-4931-8cde-0bcb92bf8a9f"
+        ],
+        "claimIds": [
+          "4c88b8e8-154d-47ad-bf82-f19876ecaebd",
+          "34b41d23-f4e6-4fc6-aa6f-2905f3c2a890"
+        ]
+      },
+      "unknownRoleStatus": 400,
+      "mangaPlutoFound": true,
+      "signed": false,
+      "applyCalls": 0
+    },
+    {
+      "environment": "production",
+      "url": "https://plunode.net",
+      "dataset": {
+        "dataset": "public-kg",
+        "revision": "f5dbf83f-c89e-4e40-95ee-57957016089f"
+      },
+      "build": "lNabFN3qBIdd5U2lV6e6A",
+      "capabilitiesSha256": "a10cc7e0746b83272dccb99293b1f26754c8b860626f9a6208bf40525b11aa16",
+      "actingThenDirectingRoute": {
+        "nodeIds": [
+          "604eb49e-df41-4157-8b49-bd92a0d93ad4",
+          "490ee589-76db-4a5e-8923-13d24b7cb3a2",
+          "805b9630-cd9a-4931-8cde-0bcb92bf8a9f"
+        ],
+        "claimIds": [
+          "4c88b8e8-154d-47ad-bf82-f19876ecaebd",
+          "34b41d23-f4e6-4fc6-aa6f-2905f3c2a890"
+        ]
+      },
+      "unknownRoleStatus": 400,
+      "mangaPlutoFound": true,
+      "signed": false,
+      "applyCalls": 0
+    }
+  ],
+  "betaCliObservation": {
+    "status": 403,
+    "cloudflareCode": 1010,
+    "fallback": "Authenticated real browser verified API capabilities and dataset; beta Graph and AFI also verified. No protection disabled."
+  }
+}

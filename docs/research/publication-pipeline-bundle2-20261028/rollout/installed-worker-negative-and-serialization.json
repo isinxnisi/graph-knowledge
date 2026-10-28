@@ -1,0 +1,15 @@
+{
+  "authority": "actual-installed-worker-cli",
+  "nodeVersion": "v24.21.0",
+  "reorderedAllObjectPropertiesSerializedToExactFrozenBytes": true,
+  "serializedValuesEqualOriginal": true,
+  "canonicalSerializationSha256": "908e6f3cc180a004d53cb5a34937daa8ca3ff539788dc35ffd56e496eca12f1b",
+  "oldFrozenBytesSha256": "908e6f3cc180a004d53cb5a34937daa8ca3ff539788dc35ffd56e496eca12f1b",
+  "oldFrozenBytesUnchanged": true,
+  "probeCorrection": "Two preliminary harness checks misread serialize CLI output as a string; the documented {data,dataSha256,serialization,valuesUnchanged} envelope is used here. No implementation change or artifact rewrite.",
+  "unknownRoleRejectedByInstalledCli": true,
+  "unknownRoleExitCode": 1,
+  "runtimeFilesEdited": false,
+  "formalAcceptancePerformed": false,
+  "signingOrApplyPerformed": false
+}

@@ -1,0 +1,34 @@
+{
+  "verified": true,
+  "cacheKey": "cce661c8df428501f02a9f370ee314dad06c24cf06eabe259b4522038d43e058",
+  "frozenProofReusedWithoutNewConsumerContainers": true,
+  "sameCandidateSha256": "908e6f3cc180a004d53cb5a34937daa8ca3ff539788dc35ffd56e496eca12f1b",
+  "claims": 1931,
+  "consumers": {
+    "web": {
+      "verified": true,
+      "nodeVersion": "v24.21.0",
+      "capabilitiesSha256": "a10cc7e0746b83272dccb99293b1f26754c8b860626f9a6208bf40525b11aa16"
+    },
+    "operator": {
+      "verified": true,
+      "nodeVersion": "v24.21.0",
+      "capabilitiesSha256": "a10cc7e0746b83272dccb99293b1f26754c8b860626f9a6208bf40525b11aa16"
+    },
+    "worker": {
+      "verified": true,
+      "nodeVersion": "v24.21.0",
+      "capabilitiesSha256": "a10cc7e0746b83272dccb99293b1f26754c8b860626f9a6208bf40525b11aa16"
+    }
+  },
+  "negativeContractsRejected": [
+    "unrecognized-role",
+    "definition-drift",
+    "schema-mismatch",
+    "scope-mismatch",
+    "catalog-drift",
+    "stale-operator-pin"
+  ],
+  "actualVpsOperatorPreviouslyVerified": true,
+  "signingOrApplyPerformed": false
+}

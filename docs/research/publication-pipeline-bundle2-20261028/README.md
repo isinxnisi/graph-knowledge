@@ -1,5 +1,9 @@
 # 公開パイプライン改善・まとまり2
 
+**2026-10-28：固定更新判断票への承認に基づきmain／3200／beta／本番Web／VPS gate・operator／WSL delivery・approver／Windows Task／固定Worker 5ファイルへの反映と実検証が完了。** [最終報告・現在地](rollout/COMPLETED.md)／[機械記録](rollout/final-verification.json)。追加の運営者操作はない。データ受入・公開署名・KG apply/restore・会員migration・鍵／権限変更は行っていない。
+
+以下は初回実装・隔離検証時点の説明と承認前の境界記録。現在の設置状況は上記完了報告を優先する。
+
 実装・隔離検証の結果。main `129c1eb411cece336cce02996c520f8f21b12f0a` からの専用branchであり、main統合・設置・正式受入・公開を行った記録ではない。承認契約・ロック構造の全面変更は含めない。
 
 ## 1. 完了範囲と現在の境界

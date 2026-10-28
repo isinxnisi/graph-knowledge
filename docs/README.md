@@ -252,3 +252,8 @@ Phase 08：任意のEntity関係俯瞰、明示起点切替、直前一件復帰
 
 - [条件付き近傍優先順・互換性・切戻し](design/NEIGHBOR_PRIORITY.md)
 - [性能・検証・配置記録](verification/NEIGHBOR_PRIORITY_20261028.md)
+
+## 公開パイプライン・まとまり2 反映完了
+
+- [実装・互換契約](research/publication-pipeline-bundle2-20261028/README.md)
+- [main／3200／beta／本番Web／operator／固定Workerの完了・実検証・復旧資材](research/publication-pipeline-bundle2-20261028/rollout/COMPLETED.md)

@@ -1,4 +1,8 @@
-# 残る運営者操作：WSL Task診断を伴う更新
+# 運営者操作の完了記録
+
+**2026-10-28 更新完了。現在実行する操作はない。以下のコマンドは履歴であり、再実行しない。** [反映先・実検証・通常Task終了・復旧資材](COMPLETED.md) を参照。WSL固定5ファイル、Task参照、delivery/approverの設置とself-checkが成功し、Codexも実hashと通常運転を確認した。
+
+## 完了したWSL操作（履歴）
 
 承認済み判断票 SHA-256 `142a0dd04342b5429cc9dd736804965646bb6da9e39e7573a2065c97f02fab82` と更新対象のbytesは不変。**VPS Web/gate/operatorは更新済み。SSH・image再転送・VPS再更新は不要。** 今回必要なのはWSLの既存sudoだけで、追加の意味判断・公開署名・権限変更は求めない。
 

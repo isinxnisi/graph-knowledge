@@ -1,0 +1,37 @@
+{
+  "authority": "operator-returned-success-json-not-original-stdout-bytes",
+  "recordedAt": "2026-10-28T12:23:29.514516+00:00",
+  "result": {
+    "target": "wsl",
+    "sourceCommit": "fe3fcb6a3b00ede3dfbf122e124f87da38f9f736",
+    "workerOverlayFiles": 5,
+    "workerBaseCollectorAndConfigUnchanged": true,
+    "formalReceiptsPreserved": 12,
+    "deliveryConfigSha256": "1b4e49af35cd3c7377f1d8e0fcf10c94b09dea243dbba6c32d2d4c409a95e9e3",
+    "approverSha256": "7b97f3a6f65dd55a851a8cf6deaf50e1ccad7b31cbac8f6227d3702061d959a0",
+    "windowsTaskTriggerPrincipalSettingsPreserved": true,
+    "selfCheck": {
+      "phase": "operator-handoff-installation-checked",
+      "deliveryEnabled": true,
+      "sourceCommit": "fe3fcb6a3b00ede3dfbf122e124f87da38f9f736",
+      "approverKeyPinMatched": true,
+      "unprivilegedChildVerified": true,
+      "signed": false,
+      "applyCalls": 0
+    },
+    "backupDirectory": "/root/plunode-bundle2-update-946674efaea5/backup",
+    "backupManifestSha256": "bc9b841f6f2ba3913d6b670aa9dd2aaacf088a61e6e4ed5446cf96808a6267aa",
+    "previousBackup": {
+      "directory": "/root/plunode-bundle2-update-9955a6dbf84c/backup",
+      "files": [
+        {
+          "file": "worker-contribution.ts.before",
+          "sha256": "7bb75f38d7b27829c6e5de32bbc90ef6cd740f5ce6d3ff3b6978f73ab35fd59b"
+        }
+      ],
+      "preserved": true
+    },
+    "signed": false,
+    "applyCalls": 0
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "observedAt": "2026-10-28T12:24:25.945757+00:00",
+  "authority": "independent-installed-local-read-only-verification",
+  "sourceCommit": "fe3fcb6a3b00ede3dfbf122e124f87da38f9f736",
+  "workerBaseCommitPin": "973c7b0c599f79905a029b28b524f4924e169376",
+  "workerRuntimeIsFixedCopyWithoutGitMetadata": true,
+  "workerOverlayFiles": {
+    "lib/domain/contribution.ts": "c5b4f5dc248568a1a62a4e136007e818992fce98b228c75f7c43fc6348313252",
+    "lib/i18n/contribution.ts": "bb4abe600407d39c65d977a97ad2ad4262a78eb9b9439930a84e24873cbd235e",
+    "lib/generated/contribution-roles.ts": "c422ac67c13de0ae6886c81d6077d347aa8c7a9c26c5da15463fa65beca5c8bc",
+    "lib/server/publication-compatibility.ts": "590248d1bddc2b04bde2d6b9f7e530e94290ebceada4441393bd87366eb2ff83",
+    "scripts/publication-compatibility.ts": "7d3f7927a7941eb9d90bca859aeb1eb8731e5ae5c658a6ee4ba5cdadecf241d0"
+  },
+  "workerConfigUnchanged": true,
+  "formalReceiptsUnchanged": 12,
+  "deliveryConfigSha256": "1b4e49af35cd3c7377f1d8e0fcf10c94b09dea243dbba6c32d2d4c409a95e9e3",
+  "approverSha256": "7b97f3a6f65dd55a851a8cf6deaf50e1ccad7b31cbac8f6227d3702061d959a0",
+  "nodeVersion": "v24.21.0",
+  "task": {
+    "status": "verified",
+    "task": "Plunode-Publication-Delivery",
+    "sourceBefore": "fe3fcb6a3b00ede3dfbf122e124f87da38f9f736",
+    "sourceAfter": "fe3fcb6a3b00ede3dfbf122e124f87da38f9f736",
+    "triggerPrincipalSettingsPreserved": true,
+    "securityDescriptorSha256": "4a0e3a58f9fb3af8d6bc8ff916664e0b6872b40771836cf5a91cd627a458a67d",
+    "permissionChanged": false
+  },
+  "executionControl": {
+    "revision": 8,
+    "pauseMode": null,
+    "activeAttempt": null,
+    "windows": [
+      {
+        "start": "03:00",
+        "end": "07:00"
+      },
+      {
+        "start": "09:00",
+        "end": "12:00"
+      },
+      {
+        "start": "15:00",
+        "end": "18:00"
+      }
+    ]
+  },
+  "workerHealth": {
+    "checkedAt": "2026-10-28T12:24:17+00:00",
+    "status": "online",
+    "publicApply": false
+  },
+  "configurationUpdatedAt": "2026-10-28T12:09:44.666712+00:00",
+  "rootBackupVerificationAuthority": "operator result; no additional sudo read by Codex",
+  "signed": false,
+  "applyCalls": 0
+}

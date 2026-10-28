@@ -1,0 +1,97 @@
+{
+  "authority": "read-only-existing-publication-gateway-after-wsl-update",
+  "state": {
+    "artifactSha256": "9a58b3a3515c4e8fb4093a76210acc4828a8cfefc68b1dbba135b019ee41d2da",
+    "baseRelease": "publication-film-initial-20261027",
+    "baseRevision": "7c54da24-6fa9-46a5-810d-834eed8328d9",
+    "nonce": "13abfb93-ba2d-44f7-a56b-352aa7ab0ab0",
+    "pendingAudit": false,
+    "phase": "completed",
+    "publishedRevision": "f5dbf83f-c89e-4e40-95ee-57957016089f",
+    "release": "publication-8b0b1d67656a15c7e505ba1f",
+    "request": {
+      "artifactSha256": "9a58b3a3515c4e8fb4093a76210acc4828a8cfefc68b1dbba135b019ee41d2da",
+      "baseRelease": "publication-film-initial-20261027",
+      "baseRevision": "7c54da24-6fa9-46a5-810d-834eed8328d9",
+      "environment": "production",
+      "operatorDigest": "sha256:7042781b105067ce3adea0c59bccfb4c8326f84c0ca6aa5f1b8c26e6cd3d5cef",
+      "planSha256": "8e6dbf83d411acef77c2631c1dde6a466f2b8fb7a45e742371334560416ee5e7",
+      "purpose": "public-kg-publication",
+      "receiptSetSha256": "9cfd5c4f9a84d6f37ac6a58228421d76d1859d0f7e48b117b424c42495af1969",
+      "release": "publication-8b0b1d67656a15c7e505ba1f",
+      "schemaVersion": 1
+    },
+    "verification": {
+      "apiClaimsVerified": 34,
+      "counts": {
+        "nodes": {
+          "Citation": 1968,
+          "Claim": 1931,
+          "Entity": 2207,
+          "ExternalIdentifier": 2576,
+          "Source": 1802
+        },
+        "relationships": {
+          "CITES": 1968,
+          "HAS_CITATION": 1968,
+          "HAS_EXTERNAL_ID": 2576,
+          "OBJECT": 1931,
+          "SUBJECT": 1931
+        }
+      },
+      "dataSha256": "908e6f3cc180a004d53cb5a34937daa8ca3ff539788dc35ffd56e496eca12f1b",
+      "manifestDigest": "c31f752e59f973bd9be4c43b2d6396adacf7211700aaafd5f99fd409dfccbdad",
+      "manifestFileSha256": "b54b3ceb0d7c5146bed49fd15b65bc8c0b1f675a15312a8593206706a986834c",
+      "release": "publication-8b0b1d67656a15c7e505ba1f",
+      "revision": "f5dbf83f-c89e-4e40-95ee-57957016089f",
+      "verified": true
+    },
+    "exclusion": {
+      "artifactSha256": "9a58b3a3515c4e8fb4093a76210acc4828a8cfefc68b1dbba135b019ee41d2da",
+      "closure": {
+        "payload": {
+          "artifactSha256": "9a58b3a3515c4e8fb4093a76210acc4828a8cfefc68b1dbba135b019ee41d2da",
+          "closedAt": "2026-10-27T23:22:18.152358+00:00",
+          "codeCommit": "973c7b0c599f79905a029b28b524f4924e169376",
+          "generation": 3,
+          "nonce": "13abfb93-ba2d-44f7-a56b-352aa7ab0ab0",
+          "pause": {
+            "controlId": "pub-13abfb93-ba2d-44f7-a56b-352aa7ab0ab0-pause",
+            "controlSha256": "4e3110c15c04a17bbcc5418fd2f16c161305db03a383ee4764b1088f49334411",
+            "revision": 7
+          },
+          "phase": "closed",
+          "purpose": "publication-exclusion-closed",
+          "receiptSetSha256": "9cfd5c4f9a84d6f37ac6a58228421d76d1859d0f7e48b117b424c42495af1969",
+          "schemaVersion": 1,
+          "ticketId": "748c32a4-d7f2-4ea6-8334-63d8d8e8f1ee",
+          "workerId": "plunode-wsl"
+        },
+        "signature": "csuul4AdEWrzDK7RPKP/huUgA5fCoY7YK9tMs9c2rOeHGu7i3erAMQTBK6MjoM1KBA2ZTTf8gdqfe57DxsSqCg=="
+      },
+      "codeCommit": "973c7b0c599f79905a029b28b524f4924e169376",
+      "generation": 3,
+      "nonce": "13abfb93-ba2d-44f7-a56b-352aa7ab0ab0",
+      "pause": {
+        "controlId": "pub-13abfb93-ba2d-44f7-a56b-352aa7ab0ab0-pause",
+        "controlSha256": "4e3110c15c04a17bbcc5418fd2f16c161305db03a383ee4764b1088f49334411",
+        "revision": 7
+      },
+      "phase": "finished",
+      "receiptSetSha256": "9cfd5c4f9a84d6f37ac6a58228421d76d1859d0f7e48b117b424c42495af1969",
+      "resume": {
+        "closureSha256": "5dd3436727402c8deec3723da8c789815a4f2a2faa0bd138731df43f04da3816",
+        "controlId": "pub-13abfb93-ba2d-44f7-a56b-352aa7ab0ab0-resume",
+        "previousControlId": "pub-13abfb93-ba2d-44f7-a56b-352aa7ab0ab0-pause",
+        "revision": 8
+      },
+      "ticketId": "748c32a4-d7f2-4ea6-8334-63d8d8e8f1ee",
+      "workerId": "plunode-wsl"
+    },
+    "activeRuntime": {
+      "operatorDigest": "sha256:8099094f5a0bdce1cd322539557ef8cc849e1f4949997f1ba53304d898aac006",
+      "compatibilityRequired": true,
+      "webImage": "sha256:f4e2a8e484c6c9906d89f163614567007d5b35575c5ac05976434edb238a52d4"
+    }
+  }
+}

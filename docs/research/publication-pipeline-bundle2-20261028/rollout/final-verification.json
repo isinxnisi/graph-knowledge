@@ -1,0 +1,77 @@
+{
+  "observedAt": "2026-10-28T12:40:14.043180+00:00",
+  "authority": "completed-approved-runtime-update-with-read-only-regression",
+  "approvalRequestSha256": "142a0dd04342b5429cc9dd736804965646bb6da9e39e7573a2065c97f02fab82",
+  "implementationSourceCommit": "fe3fcb6a3b00ede3dfbf122e124f87da38f9f736",
+  "verifiedAgainstMainCommit": "fed0af80e41eaee4387f3d196eba88ff9e529592",
+  "installed": {
+    "3200": "lNabFN3qBIdd5U2lV6e6A",
+    "beta": "lNabFN3qBIdd5U2lV6e6A",
+    "productionWeb": "lNabFN3qBIdd5U2lV6e6A",
+    "vpsOperator": "sha256:8099094f5a0bdce1cd322539557ef8cc849e1f4949997f1ba53304d898aac006",
+    "vpsGateFixedOverlayFiles": 2,
+    "wslDeliverySource": "fe3fcb6a3b00ede3dfbf122e124f87da38f9f736",
+    "wslApproverSha256": "7b97f3a6f65dd55a851a8cf6deaf50e1ccad7b31cbac8f6227d3702061d959a0",
+    "windowsTaskActionSource": "fe3fcb6a3b00ede3dfbf122e124f87da38f9f736",
+    "workerOverlayFiles": 5,
+    "workerBaseCommitUnchanged": "973c7b0c599f79905a029b28b524f4924e169376"
+  },
+  "verification": {
+    "allConsumersExactSamePublishedFixture": true,
+    "publishedFixtureClaims": 1931,
+    "consumersCapabilitiesSha256": "a10cc7e0746b83272dccb99293b1f26754c8b860626f9a6208bf40525b11aa16",
+    "nodeVersionAllConsumers": "v24.21.0",
+    "formalReceiptsUnchanged": 12,
+    "publishedFilmClaimsPreserved": 36,
+    "workerUnknownRoleRejected": true,
+    "schemaOrderedSerializationSameBytes": true,
+    "frozenProofReused": true,
+    "normalScheduledPreparation": "up-to-date",
+    "newPublicationsPending": 0,
+    "workerStatus": "online-not-paused",
+    "bothScheduledTasksTerminalExit0": true,
+    "productionBrowserUrlRestore": {
+      "entities": 3,
+      "claims": 3
+    },
+    "productionAfiDirectingEvidence": true,
+    "betaBrowserGraph": {
+      "entities": 3,
+      "claims": 2
+    },
+    "betaAfiDirectingEvidence": true,
+    "productionExistingAuthenticatedCapsuleRead": true,
+    "mangaPlutoSearch3200AndProduction": true,
+    "betaCli403HandledByAuthenticatedBrowser": true
+  },
+  "preserved": {
+    "productionRevision": "f5dbf83f-c89e-4e40-95ee-57957016089f",
+    "betaRevision": "34befbcd-8f5f-4cd9-a059-242a3f0b5ffb",
+    "vpsMemberTables": 29,
+    "vpsMemberMigrations": 11,
+    "sourceAssetsBytesUnchanged": true,
+    "existingRequestsReceiptsSignaturesAndControlPreserved": true,
+    "rootBackupsRetained": [
+      "/root/plunode-bundle2-update-9955a6dbf84c/backup (VPS)",
+      "/root/plunode-bundle2-update-946674efaea5/backup (WSL)"
+    ],
+    "wslBackupManifestSha256": "bc9b841f6f2ba3913d6b670aa9dd2aaacf088a61e6e4ed5446cf96808a6267aa"
+  },
+  "remainingHumanOperations": [],
+  "remainingData": {
+    "unacceptedCheckedRecords": 45,
+    "entityCandidates": 65,
+    "runtimeBlockerForAlreadyAdoptedRoles": false,
+    "semanticEvidenceIdentityAndFixedAcceptanceStillRequired": true
+  },
+  "knownUnchangedConditions": [
+    "Historic PowerShell failure cause unavailable because old helper discarded stderr; final fixed update succeeded and new diagnostics retain child failure details.",
+    "Worker catalog auto-upgrade warning predates this update (07:18 UTC); base pin and approved overlays intentionally preserved.",
+    "Existing manga request Issue61 has a saved NDL429 technical wait; it was not retried or reapproved by this rollout."
+  ],
+  "signed": false,
+  "applyCalls": 0,
+  "formalAcceptancePerformed": false,
+  "memberMigrationPerformed": false,
+  "permissionOrKeyChanged": false
+}

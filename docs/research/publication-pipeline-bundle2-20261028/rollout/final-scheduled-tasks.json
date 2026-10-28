@@ -1,0 +1,32 @@
+{
+  "Authority": "read-only-Windows-scheduler-and-existing-launcher-result",
+  "ObservedAt": "2026-10-28T12:38:53.0319397+00:00",
+  "SchedulerTimezone": "Asia/Tokyo",
+  "Tasks": [
+    {
+      "Name": "Plunode-CollectionWorker",
+      "State": 3,
+      "Enabled": true,
+      "LastRunLocal": "2026-10-28T21:38:31.0000000",
+      "LastResult": 0,
+      "MultipleInstancesPolicy": 2,
+      "ActionArguments": "//B //NoLogo \"C:\\Users\\nishr\\plunode-collection-worker\\worker.wsf\" \"C:\\Users\\nishr\\plunode-collection-worker\\worker.ps1\" \"/home/isinxnisi/.local/share/plunode-collection-worker-phase-b-20261020/config.json\" \"Ubuntu\""
+    },
+    {
+      "Name": "Plunode-Publication-Delivery",
+      "State": 3,
+      "Enabled": true,
+      "LastRunLocal": "2026-10-28T21:35:23.0000000",
+      "LastResult": 0,
+      "MultipleInstancesPolicy": 2,
+      "ActionArguments": "//B //NoLogo \"C:\\Users\\nishr\\plunode-publication-delivery\\delivery.wsf\" fe3fcb6a3b00ede3dfbf122e124f87da38f9f736"
+    }
+  ],
+  "DeliveryLauncher": {
+    "sourceCommit": "fe3fcb6a3b00ede3dfbf122e124f87da38f9f736",
+    "startedAt": "Wed, 28 Oct 2026 12:35:23 UTC",
+    "completedAt": "Wed, 28 Oct 2026 12:35:51 UTC",
+    "exitCode": 0,
+    "launchError": false
+  }
+}

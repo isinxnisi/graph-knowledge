@@ -1,14 +1,16 @@
 # 承認済み更新の進行記録（2026-10-28）
 
+**全反映・実設置検証完了。追加の運営者操作なし。** 現在の正本は [完了報告](COMPLETED.md) と [最終機械記録](final-verification.json)。以下の停止・修正・未完了記述は各工程時点の履歴。
+
 固定判断票 `142a0dd04342b5429cc9dd736804965646bb6da9e39e7573a2065c97f02fab82` に対する今回の運営者承認は [operator-approval.json](operator-approval.json) に記録した。元の判断票と固定資材のbytesは変更していない。署名・データ受入・KG apply/restore・会員migrationの承認へ広げない。
 
 | 対象 | 現在の到達点 | 残る確認 |
 |---|---|---|
-| main | `32e8fe47` で固定実装を統合、push済み。image入力は承認source `fe3fcb6a` と一致 | 実行補助・記録を本ディレクトリへ収録 |
-| 3200 / HTTPS beta | 固定Web imageから同じbuild `lNabFN3qBIdd5U2lV6e6A` を配置。再buildなし | protected側更新後の最終照合 |
-| 本番Web | 固定build `lNabFN3qBIdd5U2lV6e6A` へ切替完了。HTTPS・映画/漫画・保存/復元・会員読取を確認 | WSL更新後の全利用側最終照合 |
-| VPS gate/operator | 固定2ファイル・manifest・設定2項目を更新完了。operatorが公開済みfixtureを検証 | WSL更新後の最終記録 |
-| WSL delivery/approver / Windows Delivery Task / 固定Worker | 旧固定版を維持 | root側固定source設置、Task Actionの参照source、指定5ファイル更新 |
+| main | `32e8fe47` で固定実装を統合、push済み。image入力は承認source `fe3fcb6a` と一致 | なし |
+| 3200 / HTTPS beta | 固定build `lNabFN3qBIdd5U2lV6e6A`。映画・漫画・AFI・能力と既存revisionを確認 | なし |
+| 本番Web | 同じ固定build。HTTPS・映画/漫画・保存URL復元・既存会員Capsule読取を確認 | なし |
+| VPS gate/operator | 固定更新完了。実gateの現在image/pinと3利用側の同一fixture検証成功 | なし |
+| WSL delivery/approver / Windows Delivery Task / 固定Worker | source `fe3fcb6a` と承認済み5ファイルを反映。12 receipt保持。両Task通常終了0、準備up-to-date | なし |
 
 3200/betaの既存KG revision `34befbcd-8f5f-4cd9-a059-242a3f0b5ffb` を保持した。本番revision `f5dbf83f-c89e-4e40-95ee-57957016089f` へ同期する操作は行っていない。以前のbuildと起動環境の退避先は main の `.local/publication-pipeline/rollout/`。環境の退避ファイルは秘密情報を含むためGitへ収録しない。
 
@@ -27,9 +29,7 @@
 
 ## 次の運営者操作
 
-[OPERATOR_ACTIONS.md](OPERATOR_ACTIONS.md) の一括コマンドをWSLの通常端末で実行する。SSH/sudo入力を必要とするため運営者へ引き渡す。追加の意味判断・公開署名は求めない。
-
-結果を受け取り次第、Codexが実設置Web/operator/Workerに同じ公開済み候補を与えた互換検証、本番・betaブラウザ、会員境界・準備処理・Workerの通常動作と退避資材を確認し、最終記録をcommit/pushする。現在これらを完了扱いにしない。未収録45記録・65 Entity候補の台帳も保持する。
+なし。[OPERATOR_ACTIONS.md](OPERATOR_ACTIONS.md) は完了済み操作の履歴。未収録45記録・65 Entity候補は別の固定受入判断へ引き継ぐ。
 
 ## ジョブ棚卸しの停止と修正
 
