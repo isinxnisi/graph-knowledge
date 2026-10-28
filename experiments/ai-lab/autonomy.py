@@ -153,6 +153,16 @@ def publish(home,cycle_id,c):
     command=[c['node'],'--import','tsx','scripts/ai-lab-autonomous-artifact.ts','activate',str(home),c['artifactDirectory'],'cycle:'+cycle_id]
     return subprocess.run(command,cwd=ROOT,check=True,timeout=90,capture_output=True,text=True).stdout
 
+def maintain(home,token):
+    """Retry exchange/publication from sealed data without rerunning a model."""
+    held(token);c=configuration(home);require(code_hash()==c['codeSha256'],'code_changed_reconfigure_required')
+    from education_github import synchronize
+    result=synchronize(home,token)
+    if c['publish']:
+        subprocess.run([c['node'],'--import','tsx','scripts/ai-lab-policy-artifact.ts','activate',str(home),c['artifactDirectory'],'http://127.0.0.1:3200'],cwd=ROOT,check=True,timeout=90,capture_output=True,text=True)
+    state={'at':now(),'status':'synchronized' if result.get('status')!='disabled' else 'bridge-disabled','retryInference':False}
+    atomic(home/'mentorship/maintenance-status.json',state);return state
+
 def guarded_token():
     sys.path.insert(0,str(ROOT/'scripts'))
     from autopilot import KIT
@@ -188,15 +198,24 @@ def execute(home,args):
 
 def tick(home):
     c=configuration(home);reason='unfinished-cycle' if unfinished(home) else due(c,intents(home),datetime.now(JST))
-    if reason:return {'status':'skipped','reason':reason}
-    command=[sys.executable,str(ROOT/'scripts/autopilot.py'),'guard','--',sys.executable,str(HERE/'autonomy.py'),'--home',str(home),'run-once']
+    if reason:
+        # Cloud review is independent of the CPU window. Fetch at most hourly while
+        # enabled, under the same common lock. Pause/stop disables both operations.
+        if reason in ['paused','unfinished-cycle']:return {'status':'skipped','reason':reason,'at':now()}
+        path=home/'mentorship/maintenance-status.json'
+        if path.exists() and (datetime.now(JST)-datetime.fromisoformat(read_json(path)['at'])).total_seconds()<3600:
+            return {'status':'skipped','reason':reason,'at':now()}
+    command=[sys.executable,str(ROOT/'scripts/autopilot.py'),'guard','--',sys.executable,str(HERE/'autonomy.py'),'--home',str(home),'maintenance' if reason else 'run-once']
     result=subprocess.run(command,cwd=ROOT,text=True,capture_output=True,timeout=360)
-    return {'status':'finished' if result.returncode==0 else 'deferred','exitCode':result.returncode,'at':now()}
+    state={'status':'finished' if result.returncode==0 else 'deferred','operation':'maintenance' if reason else 'education','reason':'common-lock' if result.returncode==75 else reason,'exitCode':result.returncode,'at':now()}
+    if reason and result.returncode not in [0,75]:atomic(home/'mentorship/maintenance-status.json',{**state,'status':'exchange-unavailable','retryInference':False})
+    return state
 
 def main():
     parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--home',type=Path,default=HOME)
     sub=parser.add_subparsers(dest='command',required=True)
     for name in ['init','status','pause','stop','start','serve','tick','resume']:sub.add_parser(name)
+    p=sub.add_parser('maintenance');p.add_argument('--token')
     enable=sub.add_parser('enable');enable.add_argument('--window-start',required=True);enable.add_argument('--window-end',required=True)
     enable.add_argument('--interval-minutes',type=int,default=60);enable.add_argument('--daily-max',type=int,default=1);enable.add_argument('--publish',action='store_true')
     recovery=sub.add_parser('recover');recovery.add_argument('--token',required=True);recovery.add_argument('--cycle-id',required=True)
@@ -215,6 +234,7 @@ def main():
         require(code_hash()==c['codeSha256'],'code_changed_reconfigure_required');require(not unfinished(home),'unfinished_cycle_requires_reconciliation')
         c['enabled']=True;atomic(home/'config.json',c);(home/'stop.requested').unlink(missing_ok=True)
     elif args.command=='recover':print(wire(recover(home,args.cycle_id,args.token)));return
+    elif args.command=='maintenance':print(wire(maintain(home,args.token or guarded_token())));return
     elif args.command=='run-once':print(wire(execute(home,args)));return
     elif args.command=='tick':print(wire(tick(home)));return
     elif args.command=='start':

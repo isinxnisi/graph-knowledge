@@ -35,7 +35,7 @@ def stamp(v):
 def identities():
     text=(ROOT/'lib/domain/public-profile.ts').read_text()
     return {key:re.search(r'export const '+key+r' = "([a-z0-9-]+)";',text)[1] for key in ('OFFICIAL_AI_ID','OFFICIAL_AI_KEY')}
-def source_hash():return sha({p:file_hash(HERE/p) for p in ['mentorship.py','curriculum.py','autonomy.py']})
+def source_hash():return sha({p:file_hash(HERE/p) for p in ['mentorship.py','curriculum.py','autonomy.py','scheduled_policy.py','education_github.py']})
 def private_cycles(home):
     rows=[read_sealed(p) for p in sorted((home/'cycles').glob('*/result.json'))]
     return sorted([r for r in rows if r['mode']=='real'],key=lambda r:(r['finishedAt'],r['cycleId']))
@@ -75,7 +75,7 @@ def report(home):
     value=envelope(payload);sealed_write(home/'mentorship/reports'/(value['sha256']+'.json'),value)
     sealed_write(index,{'reportSha256':value['sha256']});return value
 
-def validate_plan(value,source,home,at=None):
+def validate_plan(value,source,home,at=None,*,verify_method=True):
     p=checked(value);r=checked(source);at=at or datetime.now(timezone.utc)
     fields(p,('contract','planId','createdAt','expiresAt','educatorKey','officialAiIdentityId','apprenticeId','reportSha256','selectionSourceSha256','curriculumSha256','basedOn','method','facts','hypotheses','priorities','difficulty','nextEvaluation','maxRealCycles'))
     require(p['contract']=='education-plan-v1' and p['educatorKey']==identities()['OFFICIAL_AI_KEY'] and p['officialAiIdentityId']==identities()['OFFICIAL_AI_ID'] and p['apprenticeId']==AI_ID,'identity_or_contract')
@@ -85,8 +85,12 @@ def validate_plan(value,source,home,at=None):
     require(r['historySha256']==history_hash(home),'stale_report')
     require(stamp(p['createdAt'])>=stamp(r['createdAt']) and stamp(p['createdAt'])<=at+timedelta(minutes=5) and at<stamp(p['expiresAt'])<=stamp(p['createdAt'])+timedelta(days=7),'plan_expired_or_future')
     require(p['method'] in ['interactive-codex','chatgpt-interactive','chatgpt-scheduled','local-evaluator'],'method')
-    # Only the dialogue execution actually demonstrated in this release is attested.
-    require(p['method']=='interactive-codex','evaluation_method_unverified')
+    if p['method']=='chatgpt-scheduled':
+        require(timedelta(0)<=at-stamp(r['createdAt'])<=timedelta(hours=48),'report_too_old')
+        if verify_method:
+            from scheduled_policy import evidence
+            evidence(home,value['sha256'])
+    else:require(p['method']=='interactive-codex','evaluation_method_unverified')
     require(p['basedOn']==[{'cycleId':c['cycleId'],'resultSha256':c['resultSha256']} for c in r['cycles']],'cycle_binding')
     require(type(p['priorities']) is list and 1<=len(p['priorities'])<=6 and len(set(p['priorities']))==len(p['priorities']) and all(k in KINDS for k in p['priorities']),'category_allowlist')
     require(p['difficulty']=='single-edge' and type(p['maxRealCycles']) is int and p['maxRealCycles']==1,'policy_budget')
@@ -117,6 +121,11 @@ def admit(home,value,transport,token):
         report_sha=value['payload']['reportSha256'];hashed(report_sha)
         source=read_sealed(home/'mentorship/reports'/(report_sha+'.json'))
         p=validate_plan(value,source,home)
+        if p['method']=='chatgpt-scheduled':
+            from scheduled_policy import evidence
+            proof=evidence(home,plan_sha);require(proof['transport']==transport,'scheduled_transport_binding')
+            decision['executionEvidence']=proof
+            require(not any(read_sealed(f)['payload']['reportSha256']==p['reportSha256'] and f.stem!=plan_sha for f in (home/'mentorship/plans').glob('*.json')),'report_already_planned')
         require(not any(read_sealed(f)['payload']['planId']==p['planId'] and f.stem!=plan_sha for f in (home/'mentorship/plans').glob('*.json')),'plan_id_conflict')
         choose(generate(),len(private_cycles(home)),p)
         decision.update(status='accepted',reason='train-category-only')

@@ -105,10 +105,22 @@ def post(home,kind,value,token,client=None):
 
 def pull(home,token,client=None):
     held(token);client=client or Github();decisions=[]
-    for row in client.comments():
-        if not row.get('body','').startswith('<!-- plunode-education-plan:v1:'):continue
+    for row in sorted(client.comments(),key=lambda r:r['id']):
+        proposal=row.get('body','').startswith('<!-- plunode-education-proposal:v1:')
+        if not proposal and not row.get('body','').startswith('<!-- plunode-education-plan:v1:'):continue
         try:
-            value=parse_body(row['body'],'plan');decisions.append(admit(home,value,transport(row),token))
+            if proposal:
+                from scheduled_policy import receive
+                decision=receive(home,row,token)
+                if decision['status'] in ['accepted','rejected']:
+                    if decision['status']=='accepted':
+                        from mentorship import preview
+                        preview(home,str(uuid.UUID(decision['planSha256'][:32],version=4)),token)
+                    receipt=post(home,'decision',envelope(decision),token,client)
+                    require(receipt['status'] in ['published','reconciled'],'decision_sync_unknown')
+                decisions.append(decision)
+            else:
+                value=parse_body(row['body'],'plan');decisions.append(admit(home,value,transport(row),token))
         except (ValueError,KeyError,TypeError,json.JSONDecodeError):
             rejection={'at':now(),'commentId':row.get('id'),'bodySha256':sha(row.get('body','')),'reason':'invalid-exchange-no-execution'}
             path=home/'mentorship/rejections'/(sha({'commentId':row.get('id'),'body':row.get('body','')})+'.json')
@@ -124,7 +136,11 @@ def synchronize(home,token):
     held(token)
     if not configured(home):return {'status':'disabled'}
     client=Github();sent=post(home,'report',report(home),token,client)
-    return {'report':sent,'decisions':pull(home,token,client)}
+    decisions=pull(home,token,client)
+    result={'report':sent,'decisions':decisions}
+    from autonomy import atomic
+    atomic(home/'mentorship/sync-status.json',{'at':now(),'result':result})
+    return result
 
 def main():
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('--home',type=Path,default=HOME)

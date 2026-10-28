@@ -6,8 +6,9 @@ import {readFile,mkdtemp,rm} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import path from 'node:path';
 import {gunzipSync} from 'node:zlib';
+import {createHash} from 'node:crypto';
 import {fixtureV4Schema} from '../lib/domain/fixture';
-import {labCounts} from '../lib/domain/ai-lab';
+import {labCounts,canonicalLabJson} from '../lib/domain/ai-lab';
 import {parseLabArtifact,sealLabArtifact,activateLabArtifact,type LabKgReader} from '../lib/server/ai-lab-artifact';
 import AiLabMentorship from '../components/AiLabMentorship';
 const current=parseLabArtifact(await readFile('docs/verification/ai-education-policy-20261028/public-artifact.json'));
@@ -39,6 +40,19 @@ describe('公式AI教育方針の往復',()=>{
    (p:typeof current.payload)=>{Object.assign(p.mentorship!.records[0].plan.payload,{command:'arbitrary'});},
   ]){const p=structuredClone(current.payload);change(p);expect(()=>sealLabArtifact(p)).toThrow();}
  });
+ it('scheduled方針は出所記録を必須とし、旧履歴・モデル実行回数を変えない',()=>{
+  const payload=structuredClone(current.payload),r=payload.mentorship!.records[0];
+  r.plan.payload.method='chatgpt-scheduled';
+  r.plan.sha256=createHash('sha256').update(canonicalLabJson(r.plan.payload)).digest('hex');
+  r.decision.planSha256=r.plan.sha256;r.selection!.planSha256=r.plan.sha256;
+  expect(()=>sealLabArtifact(payload)).toThrow();
+  r.decision.executionEvidence={version:'scheduled-channel-v1',basis:'operator-attested-run',taskId:'ai-education-scheduled-001',runId:'test-only-run',scheduledFor:r.plan.payload.createdAt,
+    planSha256:r.plan.sha256,proposalSha256:'a'.repeat(64),bodySha256:'b'.repeat(64),registrationSha256:'c'.repeat(64),registrationEvidenceUrl:'https://chatgpt.com/c/test-only-evidence',transport:r.decision.transport};
+  const sealed=sealLabArtifact(payload);expect(labCounts(sealed.payload)).toEqual(labCounts(current.payload));
+  expect(sealed.payload.education).toEqual(current.payload.education);expect(sealed.payload.runs).toEqual(current.payload.runs);
+  r.decision.executionEvidence={...r.decision.executionEvidence,transport:{...r.decision.transport,commentId:1}};
+  expect(()=>sealLabArtifact(payload)).toThrow();
+ });
  it('保持済み版へのrollbackを除き教師記録の削除・変更を拒否する',async()=>{
   const dir=await mkdtemp(path.join(tmpdir(),'teacher-artifact-'));
   try{
@@ -50,10 +64,10 @@ describe('公式AI教育方針の往復',()=>{
  });
  for(const en of [false,true])it(`${en?'English':'日本語'}で実AI評価・ルール採用・未実施・未接続を区別する`,()=>{
   render(<AiLabMentorship mentorship={current.payload.mentorship!} cycles={current.payload.education!.cycles} en={en}/>);
-  expect(screen.getByText(en?'AI evaluation · interactive Codex':'AIによる評価・対話内Codex')).toBeTruthy();
+  expect(screen.getByText(en?'Official AI · review and teaching policy':'公式AI・見習いの評価と教育方針')).toBeTruthy();
   expect(screen.getByTestId('mentor-selection').textContent).toMatch(en?/Evidence/:/根拠不足/);
-  expect(screen.getByText(en?/not executed by a ChatGPT scheduled task/:/ChatGPT定期タスクによる評価ではありません/)).toBeTruthy();
-  expect(screen.getByText(en?/no daily evaluation schedule is registered/:/日次評価は未登録/)).toBeTruthy();
+  expect(screen.getByText(en?/historical review was not a ChatGPT scheduled execution/:/過去の評価はChatGPT定期実行によるものではありません/).closest('details')).toBeTruthy();
+  expect(screen.getByText(en?/historical artifact has no verified scheduled connection/:/過去のartifactでは定期実行の接続は未検証/)).toBeTruthy();
   expect(screen.getByRole('link',{name:en?'Plunode official AI · education review':'Plunode公式AI・教育評価'}).getAttribute('href')).toBe(en?'/en/people/plunode-official-ai':'/people/plunode-official-ai');
  });
 });

@@ -1,4 +1,6 @@
-# ChatGPT教育評価の接続試験用プロンプト
+# ChatGPT教育評価プロンプトの履歴
+
+2026-10-29：単発scheduledの読書き・再実行no-opは[実証済み](https://github.com/isinxnisi/graph-knowledge/issues/36#issuecomment-6472415518)。**以下の接続試験を繰り返さない。現在のタスク設定には[日次実評価プロンプト](AI_LAB_DAILY_REVIEW_PROMPT.md)を使う。** 以下は2026-10-28時点の履歴。
 
 これは未登録の試験手順。既存Issue #36だけを使い、定期化の前に通常の対話で一回試す。初版Workerは未検証scheduled方式を採用しないため、下記capability-probeの成功後に実行証拠と方式の信頼設定を確認する。
 

@@ -11,13 +11,14 @@ try{
   page.on('pageerror',e=>errors.push(e.message));page.on('request',r=>{const u=new URL(r.url());if(!['GET','HEAD'].includes(r.method())&&u.pathname!=='/cdn-cgi/rum')writes.push(r.url());if(/8009|systemone|kev/i.test(r.url()))models.push(r.url());});
   const local=path=>(lang==='en'?'/en':'')+path;
   await page.goto(base+local('/ai-lab')+'#mentorship');const mentor=page.getByTestId('mentor-review');await mentor.waitFor();
-  assert.equal(await page.getByTestId('inference-count').innerText(),'6');assert.equal(await page.getByTestId('training-count').innerText(),'1');
+  assert.equal(await page.getByTestId('inference-count').innerText(),process.env.LAB_EXPECT_INFERENCE||'6');assert.equal(await page.getByTestId('training-count').innerText(),process.env.LAB_EXPECT_TRAINING||'1');
   assert.equal(await page.locator('[data-official-ai-id]').getAttribute('data-official-ai-id'),'501350be-a89f-4bde-9a06-d94631b47be5');
-  assert.match(await mentor.innerText(),lang==='en'?/interactive Codex/:/対話内Codex/);assert.match(await page.getByTestId('mentor-selection').innerText(),lang==='en'?/Polarity → Evidence/:/肯定・否定 → 根拠不足/);
-  assert.match(await mentor.innerText(),lang==='en'?/not executed by a ChatGPT scheduled task/:/ChatGPT定期タスクによる評価ではありません/);
-  assert.match(await page.locator('#mentorship').innerText(),lang==='en'?/no daily evaluation schedule is registered/:/日次評価は未登録/);
+  assert.match(await mentor.innerText(),lang==='en'?/Official AI · review and teaching policy/:/公式AI・見習いの評価と教育方針/);assert.match(await page.getByTestId('mentor-selection').innerText(),lang==='en'?/Polarity → Evidence/:/肯定・否定 → 根拠不足/);
+  assert.doesNotMatch(await mentor.innerText(),/Codex|ChatGPT/);
+  assert.match(await page.locator('#mentorship').innerText(),lang==='en'?/Daily cloud evaluation settings have not been inspected/:/クラウドの日次評価設定は、このWorkerからは未確認/);
   const avatar=page.locator('#mentorship [data-profile-icon="official-ai"] img');assert.equal(await avatar.count(),1);assert.equal(await avatar.evaluate(e=>e.getAnimations().length),0);
   await mentor.locator('details summary').click();const report=mentor.getByRole('link',{name:lang==='en'?'GitHub report ↗':'GitHubの実レポート ↗'});await report.waitFor();
+  assert.match(await mentor.innerText(),lang==='en'?/interactive Codex/:/対話内Codex/);
   assert.equal(await report.getAttribute('href'),'https://github.com/isinxnisi/graph-knowledge/issues/36#issuecomment-6470180242');
   assert.match(await mentor.innerText(),/6bf70ea27be2782c/);assert.match(await mentor.innerText(),/cffd5360856cb495/);
   assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);
