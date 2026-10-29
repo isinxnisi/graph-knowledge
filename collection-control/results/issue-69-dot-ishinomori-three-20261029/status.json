@@ -70,13 +70,13 @@
   },
   "requestSha256": "a3f50dae8f31b200fc63d218d4c206ad20ade9fce955125a5af066d52220b20f",
   "kind": "issue-prepare",
-  "phase": "running",
+  "phase": "retry-transport",
   "generation": 7,
   "attempts": 2,
   "workerId": "plunode-wsl",
   "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
   "updatedAt": "2026-10-29T07:09:52+00:00",
-  "message": "Execution gate: interval",
+  "message": "Technical acquisition incomplete; no semantic hold or acceptance",
   "result": {
     "schemaVersion": 1,
     "status": "technical-incomplete",
@@ -93,18 +93,18 @@
     "generatedArtifacts": {},
     "technicalWaits": [
       {
-        "category": "provider-backoff",
+        "category": "request-attempts-exhausted",
         "key": "publication-6267f1a042be5293befdf013",
         "provider": "ndlsearch.ndl.go.jp",
-        "retryAt": 1793257119.9225123,
-        "recoveryRequired": false,
+        "retryAt": null,
+        "recoveryRequired": true,
         "target": "サイボーグ009",
         "lastDiagnostic": {
           "category": "transport",
           "phase": "open-through-response-headers",
           "phaseBoundary": "open-through-response-headers",
-          "elapsedSeconds": 20.148086,
-          "finishedAt": "2026-10-29T06:57:39.922432+00:00",
+          "elapsedSeconds": 25.115575,
+          "finishedAt": "2026-10-29T07:11:30.253912+00:00",
           "httpStatus": null,
           "causes": [
             {
@@ -115,36 +115,35 @@
       },
       {
         "category": "provider-backoff",
-        "key": "publication-7c63b15a7c9ef7999954394f",
+        "key": "ndl-9784091921314",
         "provider": "ndlsearch.ndl.go.jp",
-        "retryAt": 1793257126.106299,
+        "retryAt": 1793257986.0754006,
         "recoveryRequired": false,
         "target": "佐武と市捕物控",
         "lastDiagnostic": {
           "category": "transport",
           "phase": "open-through-response-headers",
           "phaseBoundary": "open-through-response-headers",
-          "elapsedSeconds": 0.144097,
-          "finishedAt": "2026-10-29T06:57:46.106217+00:00",
-          "httpStatus": 429,
+          "elapsedSeconds": 20.137038,
+          "finishedAt": "2026-10-29T07:12:06.075371+00:00",
+          "httpStatus": null,
           "causes": [
             {
-              "type": "HTTPError"
+              "type": "TimeoutError"
             }
-          ],
-          "retryAfterUntil": 1793257126.106299
+          ]
         }
       }
     ],
-    "retryAt": 1793257119.9225123,
+    "retryAt": 1793257986.0754006,
     "publicApply": false,
     "counts": {
-      "networkAttempts": 7,
+      "networkAttempts": 10,
       "holds": 1,
       "identifiedWorks": 0,
       "technicalWaits": 2
     }
   },
   "executionComplete": false,
-  "retryAt": 1793257119.9225123
+  "retryAt": 1793257986.0754006
 }
