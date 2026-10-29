@@ -70,12 +70,12 @@
   },
   "requestSha256": "5c15cdf5d521ca7bb54c94cb6471fb129263d9cd25987a548b0fd50b56aab288",
   "kind": "issue-prepare",
-  "phase": "completed",
-  "generation": 139,
+  "phase": "retry-wait",
+  "generation": 3589,
   "attempts": 1,
   "workerId": "plunode-wsl",
   "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
-  "updatedAt": "2026-10-25T06:12:45+00:00",
+  "updatedAt": "2026-10-29T11:20:22+00:00",
   "result": {
     "schemaVersion": 1,
     "status": "prepared-candidates-not-accepted",
@@ -440,5 +440,7 @@
       ".local/collection-issues/issue-16-adachi-three-20261025/reused-reviews.json": "987608a71b4e9cd73d05c0933b9a2ab5365cd827be7f9bc11deaa8874f15197b"
     }
   },
-  "executionComplete": true
+  "executionComplete": true,
+  "message": "<3>WSL (1073942 - ) ERROR: UtilAcceptVsock:273: accept4 failed 110\nfatal: unable to get password from user\n",
+  "retryAt": 1793272952.367387
 }
