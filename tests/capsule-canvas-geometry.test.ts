@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { capsuleLayoutSchema, capsuleTextSchema, type CapsuleDocument } from "../lib/domain/capsule-document";
 import { capsuleGraphView } from "../lib/client/capsule-editor";
 import { capsuleInsertionPoint } from "../lib/client/capsule-insertion";
+import { capsuleNodeShapeLayout } from "../lib/client/capsule-node-layout";
 import { capsuleTextFormat, capsuleTextLayout } from "../lib/client/capsule-text-layout";
 import { restorationPan, viewportCenter } from "../lib/client/graph-view";
 
@@ -108,5 +109,42 @@ describe("New items occupy visible free space without rearranging the graph", ()
     const doc = document([{ x: 10, y: 20 }]), view = capsuleGraphView(doc.layout);
     expect(capsuleInsertionPoint(doc, view, "node", { explicit: { x: 10, y: 20 } })).toEqual({ x: 10, y: 20 });
     expect(capsuleInsertionPoint(doc, view, "text", { explicit: { x: 1200, y: -500 } })).toEqual({ x: 1200, y: -500 });
+  });
+  it.each(["circle", "diamond"] as const)("avoids the actual %s footprint of a long existing Entity, including its badge", shape => {
+    const doc = document([{ x: 0, y: 0 }]);
+    Object.assign(doc.nodes[0], { title: "あいうえおかき".repeat(4), shape, badge: "考察" });
+    doc.layout.center = { x: 145, y: 0 }; doc.layout.pan = { x: 355, y: 300 };
+    const before = structuredClone(doc), label = capsuleTextLayout(doc.nodes[0].title, "note", { width: 128, fontSize: 15 });
+    const drawn = capsuleNodeShapeLayout(shape, label.labelWidth, Math.min(4, label.lines.length));
+    const point = capsuleInsertionPoint(doc, capsuleGraphView(doc.layout), "node");
+    expect(Math.abs(point.x) >= (drawn.shapeWidth + 24 + 140) / 2 || Math.abs(point.y - 12) >= (drawn.shapeHeight + 48 + 112) / 2).toBe(true);
+    withinView(point, doc, 140, 112); expect(doc).toEqual(before);
+  });
+  it.each(["circle", "diamond"] as const)("uses the final new %s dimensions instead of a provisional short-rectangle position", shape => {
+    const doc = document([{ x: 0, y: 0 }]); doc.nodes[0].title = "Base";
+    doc.layout.center = { x: 145, y: 0 }; doc.layout.pan = { x: 355, y: 300 };
+    const view = capsuleGraphView(doc.layout), before = structuredClone(view), incoming = { title: "あいうえおかき".repeat(4), shape, badge: "追加" };
+    const provisional = capsuleInsertionPoint(doc, view, "node"); expect(provisional).toEqual(doc.layout.center);
+    const point = capsuleInsertionPoint(doc, view, "node", { node: incoming });
+    const label = capsuleTextLayout(incoming.title, "note", { width: 128, fontSize: 15 }), drawn = capsuleNodeShapeLayout(shape, label.labelWidth, 4);
+    expect(point).not.toEqual(provisional);
+    expect(Math.abs(point.x) >= (140 + drawn.shapeWidth + 24) / 2 || Math.abs(point.y + 12) >= (88 + drawn.shapeHeight + 48) / 2).toBe(true);
+    withinView({ x: point.x, y: point.y + 12 }, doc, drawn.shapeWidth + 24, drawn.shapeHeight + 48);
+    expect(view).toEqual(before);
+  });
+  it("reconsiders the final annotation's width, font size and multiline height before inserting", () => {
+    const doc = document([{ x: 0, y: 0 }]); doc.nodes[0].title = "Base";
+    doc.layout.center = { x: 240, y: 0 }; doc.layout.pan = { x: 260, y: 300 };
+    const text = { text: "A wide title\nA second line\nA third line", style: "heading" as const, width: 520, fontSize: 28, fontWeight: "bold" as const, align: "left" as const };
+    const view = capsuleGraphView(doc.layout), before = structuredClone(doc), layout = capsuleTextLayout(text.text, text.style, text);
+    expect(capsuleInsertionPoint(doc, view, "text")).toEqual(doc.layout.center);
+    const point = capsuleInsertionPoint(doc, view, "text", { text });
+    expect(Math.abs(point.x) >= (140 + layout.width + 24) / 2 || Math.abs(point.y) >= (88 + layout.height + 24) / 2).toBe(true);
+    withinView(point, doc, layout.width + 24, layout.height + 24); expect(doc).toEqual(before);
+  });
+  it("preserves explicit background placement after choosing a large shape or long annotation", () => {
+    const doc = document([{ x: 0, y: 0 }]), view = capsuleGraphView(doc.layout), explicit = { x: 10, y: 20 };
+    expect(capsuleInsertionPoint(doc, view, "node", { explicit, node: { title: "長い名前".repeat(20), badge: "分類", shape: "diamond" } })).toEqual(explicit);
+    expect(capsuleInsertionPoint(doc, view, "text", { explicit, text: { text: "長い注釈\n".repeat(20), style: "heading", width: 700, fontSize: 48 } })).toEqual(explicit);
   });
 });

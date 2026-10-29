@@ -66,7 +66,7 @@ export default function CapsuleStudio({ capsule, isNew = false, readOnly = false
   const [menu, setMenu] = useState<GraphContextMenuRequest | null>(null);
   const [titleDraft, setTitleDraft] = useState<string | null>(null);
   const titleInput = useRef<HTMLInputElement>(null), composing = useRef(false);
-  const insertion = useRef<{x: number; y: number} | null>(null);
+  const insertion = useRef<{ anchorKey?: string; explicit?: { x: number; y: number } } | null>(null);
   const [viewChanged, setViewChanged] = useState(false);
   const canvas = useRef<GraphCanvasHandle>(null), active = useRef<AbortController | null>(null);
   const [suspendedView, setSuspendedView] = useState<{ generation: number; view: GraphView } | null>(null);
@@ -231,8 +231,9 @@ export default function CapsuleStudio({ capsule, isNew = false, readOnly = false
     if (editor.kind === "capsule") { if (commit({ ...source, title: editor.title, note: editor.description })) setEditor(null); return; }
     if (editor.kind === "node") {
       if (editor.fresh) {
-        const key = crypto.randomUUID(); doc.nodes.push({ key, title: editor.title, description: editor.description, badge: editor.badge, shape: editor.shape, origin: { kind: "local" } });
-        if (insertion.current) doc.layout.positions[key] = insertion.current;
+        const key = crypto.randomUUID(), added: CapsuleNode = { key, title: editor.title, description: editor.description, badge: editor.badge, shape: editor.shape, origin: { kind: "local" } };
+        doc.layout.positions[key] = capsuleInsertionPoint(source.document!, capsuleGraphView(source.document!.layout), "node", { ...insertion.current, locale, node: added });
+        doc.nodes.push(added);
         doc.evidence.push(...editor.evidence.map(e => ({ ...e, targetKey: key })));
         const next = connectAdded(doc, key); if (!commit(withDocument(source, next), key)) return; setSelected([key]); setSelection({ kind: "entity", id: key });
       } else { doc.nodes = doc.nodes.map(n => editor.keys.includes(n.key) ? { ...n, title: editor.title, description: editor.description, badge: editor.badge, shape: editor.shape } : n); if (!commit(withDocument(source, doc))) return; }
@@ -250,8 +251,9 @@ export default function CapsuleStudio({ capsule, isNew = false, readOnly = false
     }
     else if (editor.kind === "text") {
       if (editor.fresh) {
-        const key = crypto.randomUUID(); doc.texts.push({ key, text: editor.title, style: editor.style, width: editor.width, fontSize: editor.fontSize, fontWeight: editor.fontWeight, align: editor.align });
-        if (insertion.current) doc.layout.positions[key] = insertion.current;
+        const key = crypto.randomUUID(), added = { key, text: editor.title, style: editor.style, width: editor.width, fontSize: editor.fontSize, fontWeight: editor.fontWeight, align: editor.align };
+        doc.layout.positions[key] = capsuleInsertionPoint(source.document!, capsuleGraphView(source.document!.layout), "text", { ...insertion.current, locale, text: added });
+        doc.texts.push(added);
         if (!commit(withDocument(source, doc), key)) return; setSelection({ kind: "entity", id: key }); setSelected([key]);
       } else { doc.texts = doc.texts.map(n => editor.keys.includes(n.key) ? { ...n, text: editor.title, style: editor.style, width: editor.width, fontSize: editor.fontSize, fontWeight: editor.fontWeight, align: editor.align } : n); if (!commit(withDocument(source, doc))) return; }
     } else {
@@ -375,10 +377,7 @@ export default function CapsuleStudio({ capsule, isNew = false, readOnly = false
   }
   function startSearch() { setSearch(true); setResults([]); setSearched(false); setMenu(null); setError(null); }
   function create(kind: "node" | "text") {
-    const captured = canvas.current?.capture() ?? capsuleGraphView(contentDocument.layout);
-    insertion.current = capsuleInsertionPoint(contentDocument, captured, kind, {
-      anchorKey: node?.key ?? text?.key, explicit: menu?.kind === "background" ? menu.position : undefined, locale,
-    });
+    insertion.current = { anchorKey: node?.key ?? text?.key, explicit: menu?.kind === "background" ? menu.position : undefined };
     openEditor(kind,true);
   }
   function editSelected(id = selection?.id) {

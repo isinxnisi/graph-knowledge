@@ -1,11 +1,31 @@
-import type { CapsuleDocument } from "../domain/capsule-document";
+import type { CapsuleDocument, CapsuleNode, CapsuleText } from "../domain/capsule-document";
+import { capsuleNodeShapeLayout } from "./capsule-node-layout";
 import { capsulePresentation } from "./capsule-presentation";
-import { capsuleTextLayout } from "./capsule-text-layout";
+import { CAPSULE_TEXT_FONT, capsuleTextFormat, capsuleTextLayout, type CanvasTextFormat } from "./capsule-text-layout";
 import { edgeRoutes } from "./graph-presentation";
 import { viewportCenter, type GraphView } from "./graph-view";
 
 type Point = { x: number; y: number };
 type Box = Point & { width: number; height: number };
+type NodeContent = Pick<CapsuleNode, "title" | "badge" | "shape">;
+type TextContent = Pick<CapsuleText, "text" | "style" | "width" | "fontSize" | "fontWeight" | "align">;
+let measurement: CanvasRenderingContext2D | null = null;
+function textLayout(text: string, style?: string, format: CanvasTextFormat = {}, node = false) {
+  if (!measurement && typeof CanvasRenderingContext2D !== "undefined") measurement = globalThis.document.createElement("canvas").getContext("2d");
+  const resolved = capsuleTextFormat(style, format), context = measurement;
+  if (context) context.font = `${node ? 600 : resolved.fontWeight === "bold" ? 700 : 400} ${resolved.fontSize}px ${CAPSULE_TEXT_FONT}`;
+  return capsuleTextLayout(text, style, format, context ? value => context.measureText(value).width : undefined);
+}
+function nodeSize(node: NodeContent) {
+  const label = textLayout(node.title, "note", { width: 128, fontSize: 15 }, true);
+  const shape = capsuleNodeShapeLayout(node.shape, label.labelWidth, Math.min(4, label.lines.length));
+  const badge = node.badge ? 24 : 0;
+  return { width: shape.shapeWidth + 24, height: shape.shapeHeight + badge + 24, offsetY: badge / 2 };
+}
+function textSize(text: TextContent) {
+  const layout = textLayout(text.text, text.style, text);
+  return { width: layout.width + 24, height: layout.height + 24, offsetY: 0 };
+}
 const overlap = (a: Box, b: Box) => Math.max(0, (a.width + b.width) / 2 - Math.abs(a.x - b.x))
   * Math.max(0, (a.height + b.height) / 2 - Math.abs(a.y - b.y));
 function crosses(from: Point, to: Point, box: Box) {
@@ -22,14 +42,15 @@ function crosses(from: Point, to: Point, box: Box) {
 
 // Only choose the new item's center. Existing positions and the viewport remain
 // untouched. An explicit background click always wins over automatic placement.
-export function capsuleInsertionPoint(document: CapsuleDocument, view: GraphView, kind: "node" | "text", options: { anchorKey?: string; explicit?: Point; locale?: string } = {}): Point {
+export function capsuleInsertionPoint(document: CapsuleDocument, view: GraphView, kind: "node" | "text", options: { anchorKey?: string; explicit?: Point; locale?: string; node?: NodeContent; text?: TextContent } = {}): Point {
   if (options.explicit) return { ...options.explicit };
   const center = view.center ?? (view.viewport ? viewportCenter(view.pan, view.zoom, view.viewport) : { x: 0, y: 0 });
   const anchor = options.anchorKey ? view.positions[options.anchorKey] : undefined;
   const preferred = anchor ? { x: anchor.x + 200, y: anchor.y } : center;
-  // Reserve room for a short title or several lines of annotation, not only its
-  // anchor point. The editor can subsequently make a text item arbitrarily tall.
-  const size = kind === "text" ? { width: 280, height: 132 } : { width: 140, height: 112 };
+  // Final form content determines the footprint. Defaults remain available for
+  // callers without content, but creation evaluates the authored size on Apply.
+  const size = kind === "text" ? options.text ? textSize(options.text) : { width: 280, height: 132, offsetY: 0 }
+    : options.node ? nodeSize(options.node) : { width: 140, height: 112, offsetY: 0 };
   const viewport = view.viewport ?? { width: 900, height: 600 };
   const frame = { ...center, width: viewport.width / view.zoom, height: viewport.height / view.zoom };
   const marginX = Math.min(24, viewport.width * .04) / view.zoom, marginY = Math.min(56, viewport.height * .12) / view.zoom;
@@ -37,14 +58,12 @@ export function capsuleInsertionPoint(document: CapsuleDocument, view: GraphView
   const boxes: Box[] = [], labels: Box[] = [];
   for (const node of document.nodes) {
     const point = view.positions[node.key]; if (!point) continue;
-    const lines = capsuleTextLayout(node.title, "note", { width: 128, fontSize: 15 }).lines.length;
-    const badge = node.badge ? 24 : 0;
-    boxes.push({ x: point.x, y: point.y + badge / 2, width: 140, height: Math.max(64, Math.min(4, lines) * 20 + 20) + badge + 24 });
+    const size = nodeSize(node);
+    boxes.push({ ...size, x: point.x, y: point.y + size.offsetY });
   }
   for (const text of document.texts) {
     const point = view.positions[text.key]; if (!point) continue;
-    const layout = capsuleTextLayout(text.text, text.style, text);
-    boxes.push({ ...point, width: layout.width + 24, height: layout.height + 24 });
+    boxes.push({ ...point, ...textSize(text) });
   }
   const relations = capsulePresentation(document, options.locale ?? "ja").relations, routes = edgeRoutes(relations, view.positions);
   const paths: Point[][] = [];
@@ -57,7 +76,7 @@ export function capsuleInsertionPoint(document: CapsuleDocument, view: GraphView
       return { x: s * s * from.x + 2 * s * t * control.x + t * t * to.x, y: s * s * from.y + 2 * s * t * control.y + t * t * to.y };
     });
     paths.push(path);
-    const text = capsuleTextLayout(relation.canvasLabel, "note", { width: 185, fontSize: 14 });
+    const text = textLayout(relation.canvasLabel, "note", { width: 185, fontSize: 14 });
     const badgeWidth = relation.badge ? Math.min(100, [...relation.badge].length * 14 + 16) : 0;
     labels.push({ x: path[8].x - badgeWidth / 2, y: path[8].y + route.labelOffset, width: Math.min(165, text.labelWidth) + badgeWidth + 24, height: text.height + 16 });
   }
@@ -69,13 +88,13 @@ export function capsuleInsertionPoint(document: CapsuleDocument, view: GraphView
     candidates.push({ x: origin.x + Math.cos(angle) * radius, y: origin.y + Math.sin(angle) * radius });
   }
   for (let row = 0; row <= 10; row++) for (let column = 0; column <= 12; column++) candidates.push({
-    x: center.x - extent.x + extent.x * column / 6, y: center.y - extent.y + extent.y * row / 5,
+    x: center.x - extent.x + extent.x * column / 6, y: center.y - size.offsetY - extent.y + extent.y * row / 5,
   });
   const ranked = candidates.map(point => {
-    const bounds = { ...point, ...size };
+    const bounds = { ...size, x: point.x, y: point.y + size.offsetY };
     const body = boxes.reduce((sum, box) => sum + overlap(bounds, box), 0), label = labels.reduce((sum, box) => sum + overlap(bounds, box), 0);
     const lines = paths.filter(path => path.some((to, index) => index > 0 && crosses(path[index - 1], to, bounds))).length;
-    const outside = Math.max(0, Math.abs(point.x - center.x) - extent.x) + Math.max(0, Math.abs(point.y - center.y) - extent.y);
+    const outside = Math.max(0, Math.abs(bounds.x - center.x) - extent.x) + Math.max(0, Math.abs(bounds.y - center.y) - extent.y);
     const clear = body === 0 && label === 0 && lines === 0;
     return { point, rank: clear ? outside === 0 ? 0 : 1 : outside === 0 ? 2 : 3,
       score: body * 10 + label * 5 + lines * 5000 + outside * 20 + Math.hypot(point.x - preferred.x, point.y - preferred.y) + Math.hypot(point.x - center.x, point.y - center.y) * .12 };

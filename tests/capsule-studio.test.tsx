@@ -265,6 +265,20 @@ it("keeps text formatting and insertion position when applying, saving and reope
   await waitFor(()=>expect(onSave).toHaveBeenCalledOnce());const document=onSave.mock.calls[0][0].document!;expect(document.texts[0]).toMatchObject({width:410,fontSize:22,fontWeight:"bold",align:"right",text:"A heading\nA longer annotation with an explicit line break."});expect(document.layout.positions[text.id]).toEqual({x:420,y:640});
 });
 
+it("places a newly authored large diamond using the submitted shape while retaining the existing graph and camera",async()=>{
+  const value=capsule(),doc=value.document!;doc.nodes=[{...doc.nodes[0],title:"Base",badge:""}];doc.relations=[];doc.evidence=[];
+  doc.layout={...doc.layout,positions:{[a]:{x:0,y:0}},center:{x:145,y:0},pan:{x:355,y:300}};
+  const before=structuredClone(doc.layout),save=vi.fn(saveResult);render(<CapsuleStudio capsule={value} isNew onSave={save}/>);
+  click("Add custom entity");change("Title","あいうえおかき".repeat(4));click("Diamond");change("Category badge","追加");click("Add");
+  expect(save).not.toHaveBeenCalled();click("Save");await waitFor(()=>expect(save).toHaveBeenCalledOnce());
+  const saved=save.mock.calls[0][0].document!,added=saved.nodes.find(n=>n.key!==a)!;expect(added.shape).toBe("diamond");
+  const point=saved.layout.positions[added.key];
+  // Four 20px lines make the diamond 184px tall and 234px wide. Its badge
+  // extends below it; the base Entity occupies the original 116×64 rectangle.
+  expect(Math.abs(point.x)>=199 || Math.abs(point.y+12)>=160).toBe(true);
+  expect(saved.layout.positions[a]).toEqual(before.positions[a]);expect(saved.layout.pan).toEqual(before.pan);expect(saved.layout.center).toEqual(before.center);expect(saved.layout.zoom).toBe(before.zoom);
+});
+
 it("closing a search cancels its pending result before another search session opens",async()=>{
   let resolve!:(value:unknown)=>void;mocks.search.mockImplementation(()=>new Promise(done=>{resolve=done;}));
   render(<CapsuleStudio capsule={capsule()} isNew onSave={saveResult}/>);click("Search the KG");change("Name or alias","first request");click("Search");
