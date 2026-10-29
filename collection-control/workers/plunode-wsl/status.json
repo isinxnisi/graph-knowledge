@@ -26,16 +26,20 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-10-29T01:35:50.680227+00:00",
-  "phase": "outside-window",
+  "nextStartAt": "2026-10-29T07:06:13.151664+00:00",
+  "phase": "running",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
-    "reason": "outside-window",
-    "eligibleAt": "2026-10-29T06:00:00+00:00",
+    "reason": "interval",
+    "eligibleAt": "2026-10-29T07:06:13.151664+00:00",
     "windowEndAt": "2026-10-29T09:00:00+00:00"
   },
-  "activeAttempt": null,
+  "activeAttempt": {
+    "requestId": "issue-25-utc-recovery-01",
+    "startedAt": "2026-10-29T06:01:13.151668+00:00",
+    "limitAt": "2026-10-29T06:56:13.151664+00:00"
+  },
   "lastAttempt": {
     "requestId": "issue-67-dot-mizuki-two-20261029",
     "endedAt": "2026-10-29T01:25:50.680229+00:00"
@@ -172,5 +176,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-10-29T05:58:32.785182+00:00"
+  "checkedAt": "2026-10-29T06:01:20.297177+00:00"
 }
