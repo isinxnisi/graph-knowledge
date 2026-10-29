@@ -4,6 +4,7 @@ import { claimDetailSchema, entityDetailSchema, type ClaimDetail, type EntityDet
 import { type CapsuleDocument, type CapsuleNode } from "../lib/domain/capsule-document";
 import { capsuleHistory, capsuleClone, recordCapsule, undoCapsule, redoCapsule, sameCapsuleValue, withCapsuleView, withDocument, removeCapsuleElements, snapshotEntity, snapshotClaim, compareCapsuleNeighborhood, capsuleGraphView, type CapsuleNeighborhoodComparison } from "../lib/client/capsule-editor";
 import { capsulePresentation } from "../lib/client/capsule-presentation";
+import { capsuleInsertionPoint } from "../lib/client/capsule-insertion";
 import { capsuleSchema, type LocalCapsule } from "../lib/client/local-capsules";
 import { emptyGraph, type Selection } from "../lib/client/graph-state";
 import { viewportCenter, type GraphView } from "../lib/client/graph-view";
@@ -358,12 +359,11 @@ export default function CapsuleStudio({ capsule, isNew = false, readOnly = false
   }
   function startSearch() { setSearch(true); setResults([]); setSearched(false); setMenu(null); setError(null); }
   function create(kind: "node" | "text") {
-    const view = canvas.current?.capture();
-    const anchor = node && view?.positions[node.key];
-    const origin = menu?.kind === "background" ? menu.position : anchor ? {x:anchor.x+200,y:anchor.y+90} : view?.center ?? {x:0,y:0};
-    let point = {...origin};
-    for (let count=0; count<20 && Object.values(view?.positions ?? {}).some(p => Math.abs(p.x-point.x)<150 && Math.abs(p.y-point.y)<80); count++) point={x:origin.x+(count%3)*70,y:origin.y+90*(count+1)};
-    insertion.current = point; openEditor(kind,true);
+    const captured = canvas.current?.capture() ?? capsuleGraphView(contentDocument.layout);
+    insertion.current = capsuleInsertionPoint(contentDocument, captured, kind, {
+      anchorKey: node?.key ?? text?.key, explicit: menu?.kind === "background" ? menu.position : undefined, locale,
+    });
+    openEditor(kind,true);
   }
   function editSelected(id = selection?.id) {
     if (!id) return;
