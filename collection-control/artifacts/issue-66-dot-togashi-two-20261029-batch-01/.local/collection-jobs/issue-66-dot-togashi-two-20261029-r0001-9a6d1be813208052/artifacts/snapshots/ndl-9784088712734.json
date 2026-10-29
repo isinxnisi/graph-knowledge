@@ -1,0 +1,36 @@
+{
+  "provider": "iss-ndl-opac / 国立国会図書館",
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "terms": "https://ndlsearch.ndl.go.jp/help/api/provider",
+  "records": [
+    {
+      "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I022827273",
+      "isbn13": [
+        "9784088712734"
+      ],
+      "title": [
+        "幽☆遊☆白書. 1"
+      ],
+      "mainTitles": [
+        "幽☆遊☆白書"
+      ],
+      "volume": [
+        "1"
+      ],
+      "edition": [],
+      "responsibilities": [
+        "冨樫義博"
+      ],
+      "publisher": [
+        "集英社"
+      ],
+      "language": [
+        "jpn"
+      ],
+      "genre": [
+        "漫画"
+      ]
+    }
+  ],
+  "error": null
+}

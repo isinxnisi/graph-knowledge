@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "reviewId": "issue-66-dot-togashi-two-20261029-r0001-9a6d1be813208052-review-4a6e254f4ac759ae",
+  "inputSha256": "4a6e254f4ac759ae3cbeecbc1cbe68cd039bef5260ac8611a2e038fd9cfdb25f",
+  "artifacts": {
+    "context.json": "d662bdcdd69b3f45f4d252c974d8973603fbc45e8489b226f6cef5756ee35435",
+    "review.json": "1150c1f5c214f1f7eac1449a05eeb53269011f988f80345205f641f5dc774e59",
+    "proposed-records.json": "f604a9f72c9d0e6e41365e81b52a614649b5498be059506a99c4ac955b1b2d4b",
+    "identity-only-records.json": "1ddb19be1ba3e65a75f92ffe0a0fa2497e63660681e258bb6ee4fe6537c12656",
+    "exploration-paths.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+    "decision-request.json": "2d47b8f74aa8e662306025718a11ac8ba1eb9244711cb3a2b03d3cbf35614117",
+    "README.md": "50881ef81dd1638a910c2ee5d1598108e965b123b170baed0602ceb9053ee90f"
+  },
+  "authority": "pending-human-review-only"
+}

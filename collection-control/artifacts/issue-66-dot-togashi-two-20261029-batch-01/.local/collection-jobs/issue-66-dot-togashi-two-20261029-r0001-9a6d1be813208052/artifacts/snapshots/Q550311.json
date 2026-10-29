@@ -1,0 +1,441 @@
+{
+  "id": "Q550311",
+  "lastrevid": 2553668747,
+  "labels": {
+    "zh-hans": {
+      "language": "zh-hans",
+      "value": "富㭴义博"
+    },
+    "zh-hant": {
+      "language": "zh-hant",
+      "value": "富樫義博"
+    },
+    "zh-hk": {
+      "language": "zh-hk",
+      "value": "富樫義博"
+    },
+    "pt": {
+      "language": "pt",
+      "value": "Yoshihiro Togashi"
+    },
+    "fr": {
+      "language": "fr",
+      "value": "Yoshihiro Togashi"
+    },
+    "ko": {
+      "language": "ko",
+      "value": "도가시 요시히로"
+    },
+    "en": {
+      "language": "en",
+      "value": "Yoshihiro Togashi"
+    },
+    "es": {
+      "language": "es",
+      "value": "Yoshihiro Togashi"
+    },
+    "th": {
+      "language": "th",
+      "value": "โยะชิฮิโระ โทะงะชิ"
+    },
+    "it": {
+      "language": "it",
+      "value": "Yoshihiro Togashi"
+    },
+    "de": {
+      "language": "de",
+      "value": "Yoshihiro Togashi"
+    },
+    "ja": {
+      "language": "ja",
+      "value": "冨樫義博"
+    },
+    "cs": {
+      "language": "cs",
+      "value": "Jošihiro Togaši"
+    },
+    "vi": {
+      "language": "vi",
+      "value": "Togashi Yoshihiro"
+    },
+    "ar": {
+      "language": "ar",
+      "value": "يوشيهيرو توغاشي"
+    },
+    "zh": {
+      "language": "zh",
+      "value": "富樫義博"
+    },
+    "nl": {
+      "language": "nl",
+      "value": "Yoshihiro Togashi"
+    },
+    "ru": {
+      "language": "ru",
+      "value": "Ёсихиро Тогаси"
+    },
+    "id": {
+      "language": "id",
+      "value": "Yoshihiro Togashi"
+    },
+    "tr": {
+      "language": "tr",
+      "value": "Yoshihiro Togashi"
+    },
+    "ckb": {
+      "language": "ckb",
+      "value": "یوشیھیرۆ تۆگاشی"
+    },
+    "azb": {
+      "language": "azb",
+      "value": "یوشیهیرو توقاشی"
+    },
+    "nan": {
+      "language": "nan",
+      "value": "Togasi Yosihiro"
+    },
+    "zh-tw": {
+      "language": "zh-tw",
+      "value": "富樫義博"
+    },
+    "bcl": {
+      "language": "bcl",
+      "value": "Yoshihiro Togashi"
+    },
+    "pt-br": {
+      "language": "pt-br",
+      "value": "Yoshihiro Togashi"
+    },
+    "ast": {
+      "language": "ast",
+      "value": "Yoshihiro Togashi"
+    },
+    "pl": {
+      "language": "pl",
+      "value": "Yoshihiro Togashi"
+    },
+    "ro": {
+      "language": "ro",
+      "value": "Yoshihiro Togashi"
+    },
+    "sq": {
+      "language": "sq",
+      "value": "Yoshihiro Togashi"
+    },
+    "ms": {
+      "language": "ms",
+      "value": "Yoshihiro Togashi"
+    },
+    "arz": {
+      "language": "arz",
+      "value": "يوشيهيرو توجاشى"
+    },
+    "az": {
+      "language": "az",
+      "value": "Yoşihiro Toqaşi"
+    },
+    "hu": {
+      "language": "hu",
+      "value": "Togasi Josihiro"
+    },
+    "ca": {
+      "language": "ca",
+      "value": "Yoshihiro Togashi"
+    },
+    "uk": {
+      "language": "uk",
+      "value": "Тоґаші Йошіхіро"
+    },
+    "sr": {
+      "language": "sr",
+      "value": "Јошихиро Тогаши"
+    },
+    "sv": {
+      "language": "sv",
+      "value": "Yoshihiro Togashi"
+    },
+    "fa": {
+      "language": "fa",
+      "value": "یوشیهیرو توگاشی"
+    },
+    "hy": {
+      "language": "hy",
+      "value": "Էսիխիրո Տոգասի"
+    },
+    "gl": {
+      "language": "gl",
+      "value": "Yoshihiro Togashi"
+    },
+    "ka": {
+      "language": "ka",
+      "value": "იოშიჰირო ტოგასი"
+    }
+  },
+  "aliases": {
+    "zh": [
+      {
+        "language": "zh",
+        "value": "富坚义博"
+      },
+      {
+        "language": "zh",
+        "value": "富㭴义博"
+      },
+      {
+        "language": "zh",
+        "value": "冨㭴義博"
+      },
+      {
+        "language": "zh",
+        "value": "冨樫義博"
+      }
+    ],
+    "fr": [
+      {
+        "language": "fr",
+        "value": "Togashi"
+      },
+      {
+        "language": "fr",
+        "value": "Togashi Yoshihiro"
+      }
+    ],
+    "ko": [
+      {
+        "language": "ko",
+        "value": "토가시 요시히로"
+      },
+      {
+        "language": "ko",
+        "value": "토카시 요시히로"
+      }
+    ],
+    "th": [
+      {
+        "language": "th",
+        "value": "โยชิฮิโร โทงาชิ"
+      },
+      {
+        "language": "th",
+        "value": "โยชิฮิโร โตกาชิ"
+      },
+      {
+        "language": "th",
+        "value": "Yoshihiro Togashi"
+      }
+    ],
+    "de": [
+      {
+        "language": "de",
+        "value": "Togashi Yoshihiro"
+      }
+    ],
+    "ja": [
+      {
+        "language": "ja",
+        "value": "富樫義博"
+      }
+    ],
+    "cs": [
+      {
+        "language": "cs",
+        "value": "Yoshihiro Togashi"
+      }
+    ],
+    "vi": [
+      {
+        "language": "vi",
+        "value": "Yoshihiro Togashi"
+      }
+    ],
+    "ru": [
+      {
+        "language": "ru",
+        "value": "Тогаси, Ёсихиро"
+      }
+    ],
+    "en": [
+      {
+        "language": "en",
+        "value": "Togashi Yoshihiro"
+      }
+    ],
+    "id": [
+      {
+        "language": "id",
+        "value": "Togashi Yoshihiro"
+      },
+      {
+        "language": "id",
+        "value": "Togashi"
+      }
+    ],
+    "uk": [
+      {
+        "language": "uk",
+        "value": "Йошіхіро Тоґаші"
+      },
+      {
+        "language": "uk",
+        "value": "Йосіхіро Тоґаші"
+      },
+      {
+        "language": "uk",
+        "value": "Тоґаші Йосіхіро"
+      }
+    ],
+    "gl": [
+      {
+        "language": "gl",
+        "value": "Togashi Yoshihiro"
+      }
+    ],
+    "zh-hant": [
+      {
+        "language": "zh-hant",
+        "value": "冨樫義博"
+      }
+    ]
+  },
+  "claims": {
+    "P31": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P31",
+          "hash": "ad7d38a03cdd40cdc373de0dc4e7b7fcbccb31d9",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 5,
+              "id": "Q5"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q550311$9C6FD536-D543-4905-B78D-F41045D0FB32",
+        "rank": "normal",
+        "references": [
+          {
+            "hash": "4d19cd27f68d7ecf9eeedbedf74dda6e309be465",
+            "snaks": {
+              "P248": [
+                {
+                  "snaktype": "value",
+                  "property": "P248",
+                  "hash": "def9f19d84b65167a2a17ce38364d264c16127fc",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 19938912,
+                      "id": "Q19938912"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ],
+              "P268": [
+                {
+                  "snaktype": "value",
+                  "property": "P268",
+                  "hash": "86e986a7a68d2919defbf66cbca01d878974e97f",
+                  "datavalue": {
+                    "value": "12567867q",
+                    "type": "string"
+                  },
+                  "datatype": "external-id"
+                }
+              ],
+              "P813": [
+                {
+                  "snaktype": "value",
+                  "property": "P813",
+                  "hash": "d6162a1716489623c6e595e448b17f8dca4fb2e8",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2015-10-10T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P248",
+              "P268",
+              "P813"
+            ]
+          },
+          {
+            "hash": "e41e00dff6cabdabd18b2a9ad04de8083ba1601d",
+            "snaks": {
+              "P248": [
+                {
+                  "snaktype": "value",
+                  "property": "P248",
+                  "hash": "45037a2d1d89deebcdfc5840e9adbaa4b64cebc6",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 50358336,
+                      "id": "Q50358336"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ],
+              "P813": [
+                {
+                  "snaktype": "value",
+                  "property": "P813",
+                  "hash": "c57884fc65017f7b587f906c34c1ffb91a3c8303",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2024-03-23T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ],
+              "P950": [
+                {
+                  "snaktype": "value",
+                  "property": "P950",
+                  "hash": "7346ae63ee1017a892d6bb09197613c0c04df10e",
+                  "datavalue": {
+                    "value": "XX1477662",
+                    "type": "string"
+                  },
+                  "datatype": "external-id"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P248",
+              "P813",
+              "P950"
+            ]
+          }
+        ]
+      }
+    ],
+    "P50": [],
+    "P110": []
+  }
+}

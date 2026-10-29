@@ -1,0 +1,115 @@
+{
+  "schemaVersion": 1,
+  "decisionId": "issue-66-dot-togashi-two-20261029-batch-01-all",
+  "status": "draft-not-approved",
+  "humanDecision": {
+    "actorType": "human",
+    "reviewer": null,
+    "decidedAt": null,
+    "statement": null
+  },
+  "approvalScope": "formal-record-acceptance-and-release-preparation-only",
+  "applyAuthorized": {
+    "local": false,
+    "beta": false,
+    "vps": false
+  },
+  "review": {
+    "file": "datasets/manga-collection/workflow-reviews/issue-66-dot-togashi-two-20261029-r0001-9a6d1be813208052-review-4a6e254f4ac759ae/review-manifest.json",
+    "sha256": "85f2baaf51260e5b50dce38eb265f8ce68ad71e6ce2ee971cd42f7793d2abbfd"
+  },
+  "referenceArtifacts": [
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-66-dot-togashi-two-20261029-r0001-9a6d1be813208052-review-4a6e254f4ac759ae/README.md",
+      "sha256": "50881ef81dd1638a910c2ee5d1598108e965b123b170baed0602ceb9053ee90f"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-66-dot-togashi-two-20261029-r0001-9a6d1be813208052-review-4a6e254f4ac759ae/context.json",
+      "sha256": "d662bdcdd69b3f45f4d252c974d8973603fbc45e8489b226f6cef5756ee35435"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-66-dot-togashi-two-20261029-r0001-9a6d1be813208052-review-4a6e254f4ac759ae/decision-request.json",
+      "sha256": "2d47b8f74aa8e662306025718a11ac8ba1eb9244711cb3a2b03d3cbf35614117"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-66-dot-togashi-two-20261029-r0001-9a6d1be813208052-review-4a6e254f4ac759ae/exploration-paths.json",
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-66-dot-togashi-two-20261029-r0001-9a6d1be813208052-review-4a6e254f4ac759ae/identity-only-records.json",
+      "sha256": "1ddb19be1ba3e65a75f92ffe0a0fa2497e63660681e258bb6ee4fe6537c12656"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-66-dot-togashi-two-20261029-r0001-9a6d1be813208052-review-4a6e254f4ac759ae/proposed-records.json",
+      "sha256": "f604a9f72c9d0e6e41365e81b52a614649b5498be059506a99c4ac955b1b2d4b"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-66-dot-togashi-two-20261029-r0001-9a6d1be813208052-review-4a6e254f4ac759ae/review-manifest.json",
+      "sha256": "85f2baaf51260e5b50dce38eb265f8ce68ad71e6ce2ee971cd42f7793d2abbfd"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-66-dot-togashi-two-20261029-r0001-9a6d1be813208052-review-4a6e254f4ac759ae/review.json",
+      "sha256": "1150c1f5c214f1f7eac1449a05eeb53269011f988f80345205f641f5dc774e59"
+    }
+  ],
+  "acceptedRecordIds": {
+    "entities": [
+      "5c2c00bb-0920-4d7b-8dd6-36555df27242",
+      "8f25239e-773e-498d-b95f-ce10dcb39faa",
+      "926f607a-7ebf-4626-af43-1bfeeaa6ed0c"
+    ],
+    "claims": [
+      "3de6d7eb-222e-437e-86e5-54694dd08d8e"
+    ],
+    "sources": [
+      "74e54dae-4bab-4622-9e78-0f1570605988"
+    ],
+    "citations": [
+      "e15548e3-0842-4d01-b304-adb7c7062d17"
+    ]
+  },
+  "recordSha256": {
+    "entities": {
+      "5c2c00bb-0920-4d7b-8dd6-36555df27242": "86e2bbea01def668eecef8335e160a22c18242feaa27ca7f9151ec4e9aca5492",
+      "926f607a-7ebf-4626-af43-1bfeeaa6ed0c": "19e582b42b676bdebe5067aed7d904812f35ae1084d4f8d2cade317019ca6b17",
+      "8f25239e-773e-498d-b95f-ce10dcb39faa": "28c02054a082375f5115ad48cad840a9b0e073be7f8d59ef8698b1f0b1133489"
+    },
+    "claims": {
+      "3de6d7eb-222e-437e-86e5-54694dd08d8e": "e6416149be5b81843b75aaf0a69c12b61d684e8ba8032a9195535f0426369fc0"
+    },
+    "sources": {
+      "74e54dae-4bab-4622-9e78-0f1570605988": "1881dc787a537431754be48220e0ee3cf65373549c3eb4ad88d0d5a57be55d95"
+    },
+    "citations": {
+      "e15548e3-0842-4d01-b304-adb7c7062d17": "993dc6901a7ff94f0c432da9e73de483cbd6fec09785fdecee76d08ec8622f00"
+    }
+  },
+  "scopeByClaim": [
+    {
+      "id": "3de6d7eb-222e-437e-86e5-54694dd08d8e",
+      "subjectId": "5c2c00bb-0920-4d7b-8dd6-36555df27242",
+      "objectId": "926f607a-7ebf-4626-af43-1bfeeaa6ed0c",
+      "predicate": "CONTRIBUTED_TO",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "contribution": {
+        "roleId": "AUTHORSHIP",
+        "scope": {
+          "kind": "publication",
+          "isbn13": "9784081135516",
+          "volumeLabel": "第1巻（NDL巻次 1）",
+          "editionLabel": null,
+          "language": "ja"
+        }
+      },
+      "organizationParticipation": null,
+      "eventParticipation": null
+    }
+  ],
+  "baseRelease": "20261014-credits-001",
+  "baseRevision": "82b01515-594c-48ca-b4b6-515eefac83ca",
+  "releaseId": "manga-issue-66-dot-togashi-two-20261029-batch-01-all"
+}

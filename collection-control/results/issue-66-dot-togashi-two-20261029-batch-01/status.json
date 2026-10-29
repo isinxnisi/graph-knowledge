@@ -87,11 +87,37 @@
   },
   "requestSha256": "ff7d5f47f8fb69cb81ef360ee3b8cf3adeaaf3b7da6274a7e7a5b1a376f52c70",
   "kind": "collect-review",
-  "phase": "running",
+  "phase": "completed",
   "generation": 4,
   "attempts": 1,
   "workerId": "plunode-wsl",
   "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
   "updatedAt": "2026-10-29T01:09:28+00:00",
-  "message": "Execution gate: interval"
+  "result": {
+    "jobId": "issue-66-dot-togashi-two-20261029-r0001-9a6d1be813208052",
+    "collectionUnchanged": false,
+    "reviewUnchanged": false,
+    "transportAttemptsAdded": 0,
+    "reviewDirectory": "/home/isinxnisi/.local/share/plunode-collection-worker-phase-b-20261020/runtime/datasets/manga-collection/workflow-reviews/issue-66-dot-togashi-two-20261029-r0001-9a6d1be813208052-review-4a6e254f4ac759ae",
+    "reviewOnly": true,
+    "formalAcceptance": false,
+    "publicApply": false,
+    "counts": {
+      "entities": 2,
+      "claims": 1,
+      "sources": 1,
+      "citations": 1
+    },
+    "heldClaims": 0
+  },
+  "executionComplete": true,
+  "reviewReference": {
+    "file": "datasets/manga-collection/workflow-reviews/issue-66-dot-togashi-two-20261029-r0001-9a6d1be813208052-review-4a6e254f4ac759ae/review-manifest.json",
+    "sha256": "85f2baaf51260e5b50dce38eb265f8ce68ad71e6ce2ee971cd42f7793d2abbfd"
+  },
+  "decisionDrafts": [
+    "datasets/collection-decision-drafts/issue-66-dot-togashi-two-20261029-batch-01/85f2baaf51260e5b50dce38eb265f8ce68ad71e6ce2ee971cd42f7793d2abbfd/issue-66-dot-togashi-two-20261029-batch-01-normal-draft.json",
+    "datasets/collection-decision-drafts/issue-66-dot-togashi-two-20261029-batch-01/85f2baaf51260e5b50dce38eb265f8ce68ad71e6ce2ee971cd42f7793d2abbfd/issue-66-dot-togashi-two-20261029-batch-01-identity-draft.json",
+    "datasets/collection-decision-drafts/issue-66-dot-togashi-two-20261029-batch-01/85f2baaf51260e5b50dce38eb265f8ce68ad71e6ce2ee971cd42f7793d2abbfd/issue-66-dot-togashi-two-20261029-batch-01-all-draft.json"
+  ]
 }

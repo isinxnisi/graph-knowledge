@@ -1,0 +1,104 @@
+{
+  "status": "pending-human-acceptance",
+  "formalAcceptance": "pending",
+  "notForPublicApply": true,
+  "records": {
+    "entities": [
+      {
+        "id": "5c2c00bb-0920-4d7b-8dd6-36555df27242",
+        "kind": "person",
+        "name": "冨樫義博",
+        "description": null,
+        "aliases": [
+          "Yoshihiro Togashi"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q550311"
+          }
+        ],
+        "createdAt": "2026-10-29T00:41:55Z",
+        "updatedAt": "2026-10-29T00:41:55Z",
+        "event": null
+      },
+      {
+        "id": "926f607a-7ebf-4626-af43-1bfeeaa6ed0c",
+        "kind": "work",
+        "name": "HUNTER×HUNTER",
+        "description": null,
+        "aliases": [
+          "Hunter × Hunter"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q696071"
+          }
+        ],
+        "createdAt": "2026-10-29T00:41:55Z",
+        "updatedAt": "2026-10-29T00:41:55Z",
+        "event": null
+      }
+    ],
+    "claims": [
+      {
+        "id": "3de6d7eb-222e-437e-86e5-54694dd08d8e",
+        "subjectId": "5c2c00bb-0920-4d7b-8dd6-36555df27242",
+        "objectId": "926f607a-7ebf-4626-af43-1bfeeaa6ed0c",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "hidden",
+        "createdAt": "2026-10-29T00:41:55Z",
+        "updatedAt": "2026-10-29T00:41:55Z",
+        "contribution": {
+          "roleId": "AUTHORSHIP",
+          "scope": {
+            "kind": "publication",
+            "isbn13": "9784081135516",
+            "volumeLabel": "第1巻（NDL巻次 1）",
+            "editionLabel": null,
+            "language": "ja"
+          }
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      }
+    ],
+    "sources": [
+      {
+        "id": "74e54dae-4bab-4622-9e78-0f1570605988",
+        "kind": "web",
+        "title": "NDLサーチ: Hunter×hunter. 1",
+        "authors": [],
+        "publisher": "国立国会図書館",
+        "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I029458700",
+        "publishedAt": null,
+        "edition": null,
+        "note": "国立国会図書館作成書誌（iss-ndl-opac）の責任表示。メタデータ CC BY 4.0: https://creativecommons.org/licenses/by/4.0/ ; 提供元条件 https://ndlsearch.ndl.go.jp/help/api/provider 。本文・画像・第三者所蔵情報は含まない。",
+        "isDemo": false
+      }
+    ],
+    "citations": [
+      {
+        "id": "e15548e3-0842-4d01-b304-adb7c7062d17",
+        "claimId": "3de6d7eb-222e-437e-86e5-54694dd08d8e",
+        "sourceId": "74e54dae-4bab-4622-9e78-0f1570605988",
+        "locator": "dc:creator（責任表示） / ISBN 9784081135516",
+        "note": "原表記（ja）: 冨樫義博 著。指定刊行物の責任表示で確認された担当。全巻・全版・全期間への外挿、原作から別Roleへの変換はしない。同一資料由来の記録を独立した根拠と数えない。",
+        "accessedAt": "2026-10-29",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "冨樫義博 著",
+          "language": "ja"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      }
+    ]
+  }
+}

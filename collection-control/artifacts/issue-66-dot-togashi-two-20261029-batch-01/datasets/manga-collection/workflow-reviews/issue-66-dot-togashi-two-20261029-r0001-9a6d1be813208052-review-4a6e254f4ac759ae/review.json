@@ -1,0 +1,106 @@
+{
+  "status": "pending-human-acceptance",
+  "humanReviewer": null,
+  "entities": [
+    {
+      "entityId": "5c2c00bb-0920-4d7b-8dd6-36555df27242",
+      "name": "冨樫義博",
+      "kind": "person",
+      "wikidata": "Q550311",
+      "existingEntityId": null,
+      "status": "candidate",
+      "reasons": [],
+      "checks": {
+        "providerIdentity": true
+      },
+      "inputPopulation": "relation-endpoint"
+    },
+    {
+      "entityId": "8f25239e-773e-498d-b95f-ce10dcb39faa",
+      "name": "幽☆遊☆白書",
+      "kind": "work",
+      "wikidata": "Q18225473",
+      "existingEntityId": null,
+      "status": "candidate",
+      "reasons": [],
+      "checks": {
+        "providerIdentity": true
+      },
+      "inputPopulation": "identity-only"
+    },
+    {
+      "entityId": "926f607a-7ebf-4626-af43-1bfeeaa6ed0c",
+      "name": "HUNTER×HUNTER",
+      "kind": "work",
+      "wikidata": "Q696071",
+      "existingEntityId": null,
+      "status": "candidate",
+      "reasons": [],
+      "checks": {
+        "providerIdentity": true
+      },
+      "inputPopulation": "relation-endpoint"
+    }
+  ],
+  "claims": [
+    {
+      "claimId": "3de6d7eb-222e-437e-86e5-54694dd08d8e",
+      "person": "冨樫義博",
+      "work": "HUNTER×HUNTER",
+      "subjectId": "5c2c00bb-0920-4d7b-8dd6-36555df27242",
+      "objectId": "926f607a-7ebf-4626-af43-1bfeeaa6ed0c",
+      "roleId": "AUTHORSHIP",
+      "scope": {
+        "kind": "publication",
+        "isbn13": "9784081135516",
+        "volumeLabel": "第1巻（NDL巻次 1）",
+        "editionLabel": null,
+        "language": "ja"
+      },
+      "status": "candidate",
+      "reasons": [],
+      "supportingCitationIds": [
+        "e15548e3-0842-4d01-b304-adb7c7062d17"
+      ],
+      "existingState": null,
+      "existingClaimId": null,
+      "originalTexts": [
+        "冨樫義博 著"
+      ],
+      "citationIds": [
+        "e15548e3-0842-4d01-b304-adb7c7062d17"
+      ],
+      "sourceUrls": [
+        "https://ndlsearch.ndl.go.jp/books/R100000002-I029458700"
+      ],
+      "sourceIds": [
+        "74e54dae-4bab-4622-9e78-0f1570605988"
+      ]
+    }
+  ],
+  "inheritedHolds": [
+    {
+      "reason": "unsupported-responsibility-role",
+      "work": "幽☆遊☆白書",
+      "rawResponsibility": "冨樫義博",
+      "sourceUrl": "https://ndlsearch.ndl.go.jp/books/R100000002-I022827273"
+    }
+  ],
+  "newCandidateCounts": {
+    "entities": 2,
+    "claims": 1,
+    "sources": 1,
+    "citations": 1
+  },
+  "recordConflicts": [],
+  "roleCounts": {
+    "AUTHORSHIP": 1
+  },
+  "normalReviewedEntityCount": 2,
+  "reusedCitationIds": [],
+  "identityOnlyEntityIds": [
+    "8f25239e-773e-498d-b95f-ce10dcb39faa"
+  ],
+  "heldClaimCount": 0,
+  "heldEntityCount": 0
+}

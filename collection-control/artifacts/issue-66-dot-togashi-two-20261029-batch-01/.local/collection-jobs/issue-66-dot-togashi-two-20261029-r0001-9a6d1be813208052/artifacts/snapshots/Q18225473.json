@@ -1,0 +1,387 @@
+{
+  "id": "Q18225473",
+  "lastrevid": 2560956774,
+  "labels": {
+    "ja": {
+      "language": "ja",
+      "value": "幽☆遊☆白書"
+    },
+    "zh": {
+      "language": "zh",
+      "value": "幽遊白書"
+    },
+    "en": {
+      "language": "en",
+      "value": "Yu Yu Hakusho"
+    },
+    "ko": {
+      "language": "ko",
+      "value": "유유백서"
+    },
+    "vi": {
+      "language": "vi",
+      "value": "Hành trình U Linh Giới"
+    },
+    "hr": {
+      "language": "hr",
+      "value": "YuYu Hakusho"
+    },
+    "tr": {
+      "language": "tr",
+      "value": "Yu Yu Hakusho"
+    },
+    "cs": {
+      "language": "cs",
+      "value": "Jú jú hakušo"
+    },
+    "th": {
+      "language": "th",
+      "value": "คนเก่งทะลุโลก"
+    },
+    "tl": {
+      "language": "tl",
+      "value": "Ghost Fighter"
+    },
+    "sk": {
+      "language": "sk",
+      "value": "Jú Jú Hakušo"
+    },
+    "de": {
+      "language": "de",
+      "value": "Yū Yū Hakusho"
+    },
+    "hu": {
+      "language": "hu",
+      "value": "Yu Yu Hakusho"
+    },
+    "es": {
+      "language": "es",
+      "value": "Yū Yū Hakusho"
+    },
+    "ru": {
+      "language": "ru",
+      "value": "YuYu Hakusho"
+    },
+    "ms": {
+      "language": "ms",
+      "value": "YuYu Hakusho"
+    },
+    "nl": {
+      "language": "nl",
+      "value": "YuYu Hakusho"
+    },
+    "fr": {
+      "language": "fr",
+      "value": "Yū Yū Hakusho"
+    },
+    "sv": {
+      "language": "sv",
+      "value": "Yu Yu Hakusho"
+    },
+    "sh": {
+      "language": "sh",
+      "value": "YuYu Hakusho"
+    },
+    "ca": {
+      "language": "ca",
+      "value": "Yū yū hakusho"
+    },
+    "eo": {
+      "language": "eo",
+      "value": "Yu Yu Hakusho"
+    },
+    "it": {
+      "language": "it",
+      "value": "Yu degli spettri"
+    },
+    "ro": {
+      "language": "ro",
+      "value": "YuYu Hakusho"
+    },
+    "wuu": {
+      "language": "wuu",
+      "value": "幽游白书"
+    },
+    "pt": {
+      "language": "pt",
+      "value": "Yu Yu Hakusho"
+    },
+    "zh-tw": {
+      "language": "zh-tw",
+      "value": "幽遊白書"
+    },
+    "zh-hant": {
+      "language": "zh-hant",
+      "value": "幽遊白書"
+    },
+    "yue": {
+      "language": "yue",
+      "value": "幽遊白書"
+    },
+    "fa": {
+      "language": "fa",
+      "value": "یو یو هکوشو"
+    },
+    "he": {
+      "language": "he",
+      "value": "יו יו האקושו"
+    },
+    "ar": {
+      "language": "ar",
+      "value": "يو يو هاكوشو"
+    },
+    "id": {
+      "language": "id",
+      "value": "Yu Yu Hakusho"
+    },
+    "pl": {
+      "language": "pl",
+      "value": "Yu Yu Hakusho – archiwum duchów"
+    },
+    "ast": {
+      "language": "ast",
+      "value": "Yu Yu Hakusho"
+    },
+    "mn": {
+      "language": "mn",
+      "value": "Юү☆Юү☆Хакүшо"
+    },
+    "el": {
+      "language": "el",
+      "value": "Yu Yu Hakusho"
+    },
+    "uk": {
+      "language": "uk",
+      "value": "YuYu Hakusho"
+    },
+    "gl": {
+      "language": "gl",
+      "value": "Yu Yu Hakusho"
+    },
+    "da": {
+      "language": "da",
+      "value": "YuYu Hakusho"
+    }
+  },
+  "aliases": {
+    "ja": [
+      {
+        "language": "ja",
+        "value": "幽遊白書"
+      },
+      {
+        "language": "ja",
+        "value": "幽★遊★白書"
+      }
+    ],
+    "en": [
+      {
+        "language": "en",
+        "value": "YuYu Hakusho"
+      },
+      {
+        "language": "en",
+        "value": "Yuu☆Yuu☆Hakusho"
+      },
+      {
+        "language": "en",
+        "value": "Ghost Fighters"
+      },
+      {
+        "language": "en",
+        "value": "Yuu Yuu Hakusho"
+      },
+      {
+        "language": "en",
+        "value": "Yū Yū Hakusho"
+      }
+    ],
+    "nl": [
+      {
+        "language": "nl",
+        "value": "Yu Yu Hakusho"
+      }
+    ],
+    "cs": [
+      {
+        "language": "cs",
+        "value": "Yu Yu Hakusho"
+      }
+    ],
+    "ast": [
+      {
+        "language": "ast",
+        "value": "YuYu Hakusho"
+      }
+    ],
+    "he": [
+      {
+        "language": "he",
+        "value": "יויו האקושו"
+      }
+    ],
+    "vi": [
+      {
+        "language": "vi",
+        "value": "Yu Yu Hakusho"
+      }
+    ],
+    "pl": [
+      {
+        "language": "pl",
+        "value": "Yū Yū Hakusho"
+      },
+      {
+        "language": "pl",
+        "value": "YuYu Hakusho"
+      },
+      {
+        "language": "pl",
+        "value": "Yuu☆Yuu☆Hakusho"
+      },
+      {
+        "language": "pl",
+        "value": "Yu Yu Hakusho"
+      }
+    ],
+    "fr": [
+      {
+        "language": "fr",
+        "value": "Yu Yu Hakusho"
+      }
+    ],
+    "id": [
+      {
+        "language": "id",
+        "value": "Ghost Fighters"
+      }
+    ],
+    "zh": [
+      {
+        "language": "zh",
+        "value": "幽游白书"
+      },
+      {
+        "language": "zh",
+        "value": "幽☆遊☆白書"
+      }
+    ]
+  },
+  "claims": {
+    "P31": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P31",
+          "hash": "549c072d6be8a6a43f999d1d0e82640b16c4260e",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 21198342,
+              "id": "Q21198342"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q18225473$23193385-3A1F-49CB-965A-0E5359C32974",
+        "rank": "normal"
+      }
+    ],
+    "P50": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P50",
+          "hash": "6dd3e6a1a60b1eebc37dfe263a9b9b3e57a4b420",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 550311,
+              "id": "Q550311"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q18225473$45EA7FB1-39C7-4EBA-BCCD-16AA71CEB816",
+        "rank": "normal",
+        "references": [
+          {
+            "hash": "a29a646602abf65105ed0f39a44231c962ece9ee",
+            "snaks": {
+              "P143": [
+                {
+                  "snaktype": "value",
+                  "property": "P143",
+                  "hash": "c6f1777471211df31724ac60175786f3872c83e9",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 177837,
+                      "id": "Q177837"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P143"
+            ]
+          }
+        ]
+      }
+    ],
+    "P110": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P110",
+          "hash": "7416558b75b642854fd092543fe2be6a5b1bc416",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 550311,
+              "id": "Q550311"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q18225473$4721B499-CFF7-405C-8C6F-E382AF4455D0",
+        "rank": "normal",
+        "references": [
+          {
+            "hash": "a29a646602abf65105ed0f39a44231c962ece9ee",
+            "snaks": {
+              "P143": [
+                {
+                  "snaktype": "value",
+                  "property": "P143",
+                  "hash": "c6f1777471211df31724ac60175786f3872c83e9",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 177837,
+                      "id": "Q177837"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P143"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

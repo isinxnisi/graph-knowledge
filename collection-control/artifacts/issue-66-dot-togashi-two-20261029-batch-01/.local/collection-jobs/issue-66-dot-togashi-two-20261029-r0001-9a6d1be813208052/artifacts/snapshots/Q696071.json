@@ -1,0 +1,625 @@
+{
+  "id": "Q696071",
+  "lastrevid": 2560953585,
+  "labels": {
+    "pt": {
+      "language": "pt",
+      "value": "Hunter × Hunter"
+    },
+    "zh-hans": {
+      "language": "zh-hans",
+      "value": "Hunter × Hunter"
+    },
+    "zh-hant": {
+      "language": "zh-hant",
+      "value": "Hunter × Hunter"
+    },
+    "zh-hk": {
+      "language": "zh-hk",
+      "value": "Hunter × Hunter"
+    },
+    "pl": {
+      "language": "pl",
+      "value": "Hunter × Hunter"
+    },
+    "fr": {
+      "language": "fr",
+      "value": "Hunter × Hunter"
+    },
+    "ru": {
+      "language": "ru",
+      "value": "Hunter × Hunter"
+    },
+    "he": {
+      "language": "he",
+      "value": "האנטר האנטר"
+    },
+    "ko": {
+      "language": "ko",
+      "value": "헌터 X 헌터"
+    },
+    "es": {
+      "language": "es",
+      "value": "Hunter × Hunter"
+    },
+    "en": {
+      "language": "en",
+      "value": "Hunter × Hunter"
+    },
+    "th": {
+      "language": "th",
+      "value": "ฮันเตอร์ × ฮันเตอร์"
+    },
+    "ca": {
+      "language": "ca",
+      "value": "Hunter × Hunter"
+    },
+    "ms": {
+      "language": "ms",
+      "value": "Hunter × Hunter"
+    },
+    "it": {
+      "language": "it",
+      "value": "Hunter × Hunter"
+    },
+    "de": {
+      "language": "de",
+      "value": "Hunter × Hunter"
+    },
+    "id": {
+      "language": "id",
+      "value": "Hunter × Hunter"
+    },
+    "ja": {
+      "language": "ja",
+      "value": "HUNTER×HUNTER"
+    },
+    "cs": {
+      "language": "cs",
+      "value": "Hunter × Hunter"
+    },
+    "fa": {
+      "language": "fa",
+      "value": "هانتر × هانتر"
+    },
+    "vi": {
+      "language": "vi",
+      "value": "Hunter x Hunter"
+    },
+    "tl": {
+      "language": "tl",
+      "value": "Hunter × Hunter"
+    },
+    "sv": {
+      "language": "sv",
+      "value": "Hunter × Hunter"
+    },
+    "ar": {
+      "language": "ar",
+      "value": "القناص"
+    },
+    "nl": {
+      "language": "nl",
+      "value": "Hunter × Hunter"
+    },
+    "zh": {
+      "language": "zh",
+      "value": "HUNTER×HUNTER"
+    },
+    "fi": {
+      "language": "fi",
+      "value": "Hunter × Hunter"
+    },
+    "jv": {
+      "language": "jv",
+      "value": "Hunter x Hunter"
+    },
+    "hu": {
+      "language": "hu",
+      "value": "Hunter × Hunter"
+    },
+    "ckb": {
+      "language": "ckb",
+      "value": "ڕاوچی × ڕاوچی"
+    },
+    "nan": {
+      "language": "nan",
+      "value": "Hunter×Hunter"
+    },
+    "tr": {
+      "language": "tr",
+      "value": "Hunter x Hunter"
+    },
+    "uk": {
+      "language": "uk",
+      "value": "Мисливець × Мисливець"
+    },
+    "ka": {
+      "language": "ka",
+      "value": "Hunter × Hunter"
+    },
+    "bcl": {
+      "language": "bcl",
+      "value": "Hunter × Hunter"
+    },
+    "ceb": {
+      "language": "ceb",
+      "value": "Hunter × Hunter"
+    },
+    "ast": {
+      "language": "ast",
+      "value": "Hunter × Hunter"
+    },
+    "et": {
+      "language": "et",
+      "value": "Hunter x hunter"
+    },
+    "hy": {
+      "language": "hy",
+      "value": "Hunter × Hunter"
+    },
+    "bn": {
+      "language": "bn",
+      "value": "হান্টার × হান্টার"
+    },
+    "lld": {
+      "language": "lld",
+      "value": "Hunter x Hunter"
+    },
+    "ary": {
+      "language": "ary",
+      "value": "هانتر إكس هانتر"
+    },
+    "az": {
+      "language": "az",
+      "value": "Hunter × Hunter"
+    },
+    "lzh": {
+      "language": "lzh",
+      "value": "全職獵人"
+    },
+    "ro": {
+      "language": "ro",
+      "value": "Hunter × Hunter"
+    },
+    "yue": {
+      "language": "yue",
+      "value": "全職獵人"
+    },
+    "gl": {
+      "language": "gl",
+      "value": "Hunter × Hunter"
+    },
+    "mni": {
+      "language": "mni",
+      "value": "ꯍꯟꯇꯔ × ꯍꯟꯇꯔ"
+    },
+    "sr": {
+      "language": "sr",
+      "value": "Hunter x Hunter"
+    }
+  },
+  "aliases": {
+    "pt": [
+      {
+        "language": "pt",
+        "value": "Hunter x Hunter"
+      }
+    ],
+    "zh": [
+      {
+        "language": "zh",
+        "value": "HUNTER X HUNTER"
+      },
+      {
+        "language": "zh",
+        "value": "HunterXHunter"
+      },
+      {
+        "language": "zh",
+        "value": "全职猎人"
+      },
+      {
+        "language": "zh",
+        "value": "全職獵人"
+      },
+      {
+        "language": "zh",
+        "value": "猎人"
+      }
+    ],
+    "pl": [
+      {
+        "language": "pl",
+        "value": "Hunter x Hunter"
+      },
+      {
+        "language": "pl",
+        "value": "HUNTER × HUNTER"
+      },
+      {
+        "language": "pl",
+        "value": "HXH"
+      }
+    ],
+    "fr": [
+      {
+        "language": "fr",
+        "value": "HxH"
+      },
+      {
+        "language": "fr",
+        "value": "Hunter X Hunter"
+      },
+      {
+        "language": "fr",
+        "value": "Hunterxhunter"
+      },
+      {
+        "language": "fr",
+        "value": "Hunter hunter"
+      },
+      {
+        "language": "fr",
+        "value": "HUNTER x HUNTER"
+      }
+    ],
+    "ru": [
+      {
+        "language": "ru",
+        "value": "Охотник x Охотник"
+      },
+      {
+        "language": "ru",
+        "value": "HunterxHunter"
+      },
+      {
+        "language": "ru",
+        "value": "HUNTER×HUNTER"
+      },
+      {
+        "language": "ru",
+        "value": "Hunter x Hunter"
+      },
+      {
+        "language": "ru",
+        "value": "Охотник х Охотник"
+      }
+    ],
+    "he": [
+      {
+        "language": "he",
+        "value": "האנטר x האנטר"
+      },
+      {
+        "language": "he",
+        "value": "האנטר איקס האנטר"
+      },
+      {
+        "language": "he",
+        "value": "האנטר אקס האנטר"
+      }
+    ],
+    "ko": [
+      {
+        "language": "ko",
+        "value": "HUNTER×HUNTER"
+      },
+      {
+        "language": "ko",
+        "value": "헌터X헌터"
+      }
+    ],
+    "es": [
+      {
+        "language": "es",
+        "value": "Cazador x"
+      },
+      {
+        "language": "es",
+        "value": "HxH"
+      },
+      {
+        "language": "es",
+        "value": "Hunter x Hunter"
+      },
+      {
+        "language": "es",
+        "value": "HUNTER × HUNTER"
+      }
+    ],
+    "th": [
+      {
+        "language": "th",
+        "value": "ฮันเตอร์xฮันเตอร์"
+      },
+      {
+        "language": "th",
+        "value": "Hunter x Hunter"
+      },
+      {
+        "language": "th",
+        "value": "Hunterxhunter"
+      }
+    ],
+    "ms": [
+      {
+        "language": "ms",
+        "value": "Hunter x Hunter"
+      }
+    ],
+    "it": [
+      {
+        "language": "it",
+        "value": "H×H"
+      },
+      {
+        "language": "it",
+        "value": "Hunter x hunter"
+      },
+      {
+        "language": "it",
+        "value": "HunterXHunter"
+      },
+      {
+        "language": "it",
+        "value": "HxH"
+      },
+      {
+        "language": "it",
+        "value": "Hunter Hunter"
+      }
+    ],
+    "de": [
+      {
+        "language": "de",
+        "value": "Hunter x Hunter"
+      },
+      {
+        "language": "de",
+        "value": "HxH"
+      }
+    ],
+    "ja": [
+      {
+        "language": "ja",
+        "value": "HUNTER × HUNTER"
+      },
+      {
+        "language": "ja",
+        "value": "HXH"
+      },
+      {
+        "language": "ja",
+        "value": "ハンター×ハンター"
+      },
+      {
+        "language": "ja",
+        "value": "ハンターハンター"
+      },
+      {
+        "language": "ja",
+        "value": "H×H"
+      },
+      {
+        "language": "ja",
+        "value": "HunterXHunter"
+      }
+    ],
+    "cs": [
+      {
+        "language": "cs",
+        "value": "Hunter x Hunter"
+      }
+    ],
+    "sv": [
+      {
+        "language": "sv",
+        "value": "Hunter x hunter"
+      }
+    ],
+    "ar": [
+      {
+        "language": "ar",
+        "value": "هنتر x هنتر"
+      },
+      {
+        "language": "ar",
+        "value": "هنتر × هنتر"
+      },
+      {
+        "language": "ar",
+        "value": "HUNTER × HUNTER"
+      }
+    ],
+    "nl": [
+      {
+        "language": "nl",
+        "value": "Hunter x Hunter"
+      },
+      {
+        "language": "nl",
+        "value": "Hunter * Hunter"
+      }
+    ],
+    "en": [
+      {
+        "language": "en",
+        "value": "Hunter x Hunter"
+      },
+      {
+        "language": "en",
+        "value": "Hunter Hunter"
+      },
+      {
+        "language": "en",
+        "value": "HxH"
+      },
+      {
+        "language": "en",
+        "value": "Hunter×Hunter"
+      },
+      {
+        "language": "en",
+        "value": "H×H"
+      }
+    ],
+    "tl": [
+      {
+        "language": "tl",
+        "value": "Hunter x Hunter"
+      }
+    ],
+    "ast": [
+      {
+        "language": "ast",
+        "value": "HxH"
+      },
+      {
+        "language": "ast",
+        "value": "Hunter x Hunter"
+      }
+    ],
+    "ca": [
+      {
+        "language": "ca",
+        "value": "Hunter x Hunter"
+      },
+      {
+        "language": "ca",
+        "value": "HUNTER × HUNTER"
+      },
+      {
+        "language": "ca",
+        "value": "HXH"
+      }
+    ],
+    "id": [
+      {
+        "language": "id",
+        "value": "Pemburu hadiah"
+      },
+      {
+        "language": "id",
+        "value": "Pemburu barang langka"
+      }
+    ]
+  },
+  "claims": {
+    "P31": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P31",
+          "hash": "549c072d6be8a6a43f999d1d0e82640b16c4260e",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 21198342,
+              "id": "Q21198342"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q696071$35a71449-4eb8-f435-550e-4e3326ddb48a",
+        "rank": "normal"
+      }
+    ],
+    "P50": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P50",
+          "hash": "6dd3e6a1a60b1eebc37dfe263a9b9b3e57a4b420",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 550311,
+              "id": "Q550311"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q696071$37F79A43-616B-4FD0-B1CC-49370572BF58",
+        "rank": "normal",
+        "references": [
+          {
+            "hash": "d4bd87b862b12d99d26e86472d44f26858dee639",
+            "snaks": {
+              "P143": [
+                {
+                  "snaktype": "value",
+                  "property": "P143",
+                  "hash": "f30cbd35620c4ea6d0633aaf0210a8916130469b",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 8447,
+                      "id": "Q8447"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P143"
+            ]
+          }
+        ]
+      }
+    ],
+    "P110": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P110",
+          "hash": "7416558b75b642854fd092543fe2be6a5b1bc416",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 550311,
+              "id": "Q550311"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q696071$7C851541-DDAF-4528-A79F-A6E594ABD6AB",
+        "rank": "normal",
+        "references": [
+          {
+            "hash": "d4bd87b862b12d99d26e86472d44f26858dee639",
+            "snaks": {
+              "P143": [
+                {
+                  "snaktype": "value",
+                  "property": "P143",
+                  "hash": "f30cbd35620c4ea6d0633aaf0210a8916130469b",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 8447,
+                      "id": "Q8447"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P143"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

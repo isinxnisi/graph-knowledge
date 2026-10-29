@@ -1,0 +1,75 @@
+{
+  "schemaVersion": 1,
+  "decisionId": "issue-66-dot-togashi-two-20261029-batch-01-identity",
+  "status": "draft-not-approved",
+  "humanDecision": {
+    "actorType": "human",
+    "reviewer": null,
+    "decidedAt": null,
+    "statement": null
+  },
+  "approvalScope": "formal-record-acceptance-and-release-preparation-only",
+  "applyAuthorized": {
+    "local": false,
+    "beta": false,
+    "vps": false
+  },
+  "review": {
+    "file": "datasets/manga-collection/workflow-reviews/issue-66-dot-togashi-two-20261029-r0001-9a6d1be813208052-review-4a6e254f4ac759ae/review-manifest.json",
+    "sha256": "85f2baaf51260e5b50dce38eb265f8ce68ad71e6ce2ee971cd42f7793d2abbfd"
+  },
+  "referenceArtifacts": [
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-66-dot-togashi-two-20261029-r0001-9a6d1be813208052-review-4a6e254f4ac759ae/README.md",
+      "sha256": "50881ef81dd1638a910c2ee5d1598108e965b123b170baed0602ceb9053ee90f"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-66-dot-togashi-two-20261029-r0001-9a6d1be813208052-review-4a6e254f4ac759ae/context.json",
+      "sha256": "d662bdcdd69b3f45f4d252c974d8973603fbc45e8489b226f6cef5756ee35435"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-66-dot-togashi-two-20261029-r0001-9a6d1be813208052-review-4a6e254f4ac759ae/decision-request.json",
+      "sha256": "2d47b8f74aa8e662306025718a11ac8ba1eb9244711cb3a2b03d3cbf35614117"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-66-dot-togashi-two-20261029-r0001-9a6d1be813208052-review-4a6e254f4ac759ae/exploration-paths.json",
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-66-dot-togashi-two-20261029-r0001-9a6d1be813208052-review-4a6e254f4ac759ae/identity-only-records.json",
+      "sha256": "1ddb19be1ba3e65a75f92ffe0a0fa2497e63660681e258bb6ee4fe6537c12656"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-66-dot-togashi-two-20261029-r0001-9a6d1be813208052-review-4a6e254f4ac759ae/proposed-records.json",
+      "sha256": "f604a9f72c9d0e6e41365e81b52a614649b5498be059506a99c4ac955b1b2d4b"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-66-dot-togashi-two-20261029-r0001-9a6d1be813208052-review-4a6e254f4ac759ae/review-manifest.json",
+      "sha256": "85f2baaf51260e5b50dce38eb265f8ce68ad71e6ce2ee971cd42f7793d2abbfd"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-66-dot-togashi-two-20261029-r0001-9a6d1be813208052-review-4a6e254f4ac759ae/review.json",
+      "sha256": "1150c1f5c214f1f7eac1449a05eeb53269011f988f80345205f641f5dc774e59"
+    }
+  ],
+  "acceptedRecordIds": {
+    "entities": [
+      "8f25239e-773e-498d-b95f-ce10dcb39faa"
+    ],
+    "claims": [],
+    "sources": [],
+    "citations": []
+  },
+  "recordSha256": {
+    "entities": {
+      "8f25239e-773e-498d-b95f-ce10dcb39faa": "28c02054a082375f5115ad48cad840a9b0e073be7f8d59ef8698b1f0b1133489"
+    },
+    "claims": {},
+    "sources": {},
+    "citations": {}
+  },
+  "scopeByClaim": [],
+  "baseRelease": "20261014-credits-001",
+  "baseRevision": "82b01515-594c-48ca-b4b6-515eefac83ca",
+  "releaseId": "manga-issue-66-dot-togashi-two-20261029-batch-01-identity"
+}

@@ -1,0 +1,36 @@
+{
+  "provider": "iss-ndl-opac / 国立国会図書館",
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "terms": "https://ndlsearch.ndl.go.jp/help/api/provider",
+  "records": [
+    {
+      "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I029458700",
+      "isbn13": [
+        "9784081135516"
+      ],
+      "title": [
+        "Hunter×hunter. 1"
+      ],
+      "mainTitles": [
+        "Hunter×hunter"
+      ],
+      "volume": [
+        "1"
+      ],
+      "edition": [],
+      "responsibilities": [
+        "冨樫義博 著"
+      ],
+      "publisher": [
+        "集英社"
+      ],
+      "language": [
+        "jpn"
+      ],
+      "genre": [
+        "漫画"
+      ]
+    }
+  ],
+  "error": null
+}

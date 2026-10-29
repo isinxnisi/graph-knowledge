@@ -1,0 +1,284 @@
+{
+  "schemaVersion": 2,
+  "status": "pending-human-acceptance",
+  "recipe": "manga-r0045",
+  "collectionContext": {
+    "themeId": "issue-66-dot-togashi-two-20261029",
+    "themeRevision": 1,
+    "definitionSha256": "bb5c230eb2a7cab1beb5244972326b72e44dc5c1099c815ed6b73d3047c9a1b0",
+    "approvalSha256": "12922713abb17569c766e7f252fc5f770573e410f0030a253185ae08cc77f37f"
+  },
+  "execution": {
+    "adapter": "manga-discovery-v2",
+    "codeSha256": "80e05b67bc0129b963653b90df4cfbfa5bd6aff190acda99f54c08541e55801e",
+    "inputs": [
+      {
+        "file": "datasets/manga-collection/r0045/recipe.json",
+        "sha256": "01dfd2205db9a5ddc1e7fda1001b013c84c7cd76fc948a4a25c13f974aa3e35d"
+      },
+      {
+        "file": "datasets/manga-collection/r0045/anchor-review.json",
+        "sha256": "bbbd452030c5947a2614a69a41b87f73fedfe2697dc05871ab5d792eaf87988e"
+      },
+      {
+        "file": "datasets/manga-collection/r0045/publication-review.json",
+        "sha256": "5edc88296061212e1c4a7b227beb04288e124dace2e246a8c7830427723006f1"
+      },
+      {
+        "file": "docs/research/famous-manga-creators/20261016/candidates.json",
+        "sha256": "8531fada01e5c635ba2ee278a7ef944a73f64676af14ed42ae0e690f5a1ff978"
+      },
+      {
+        "file": "datasets/public-kg/releases/20261014-credits-001/data.json",
+        "sha256": "ea91b16f52a211b5a8464382ad498b7b2bb2be69a6f33fe125a73a3c7b9da2b5"
+      },
+      {
+        "file": "datasets/public-kg/releases/20261014-credits-001/manifest.json",
+        "sha256": "e4aa3b58ed884f7d1f8fffee43b260261cc2b4d3a867fda942919f439d2bce17"
+      }
+    ],
+    "maxEntities": 2112,
+    "maxClaims": 1850
+  },
+  "identityMappings": [
+    {
+      "name": "冨樫義博",
+      "wikidata": "Q550311",
+      "entityId": "5c2c00bb-0920-4d7b-8dd6-36555df27242",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "幽☆遊☆白書",
+      "wikidata": "Q18225473",
+      "entityId": "8f25239e-773e-498d-b95f-ce10dcb39faa",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "HUNTER×HUNTER",
+      "wikidata": "Q696071",
+      "entityId": "926f607a-7ebf-4626-af43-1bfeeaa6ed0c",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    }
+  ],
+  "rows": [
+    {
+      "kind": "wikidata-relation",
+      "work": "幽☆遊☆白書",
+      "property": "P50",
+      "personQid": "Q550311",
+      "statementId": "Q18225473$45EA7FB1-39C7-4EBA-BCCD-16AA71CEB816",
+      "qualifiers": {},
+      "references": [
+        {
+          "hash": "a29a646602abf65105ed0f39a44231c962ece9ee",
+          "snaks": {
+            "P143": [
+              {
+                "snaktype": "value",
+                "property": "P143",
+                "hash": "c6f1777471211df31724ac60175786f3872c83e9",
+                "datavalue": {
+                  "value": {
+                    "entity-type": "item",
+                    "numeric-id": 177837,
+                    "id": "Q177837"
+                  },
+                  "type": "wikibase-entityid"
+                },
+                "datatype": "wikibase-item"
+              }
+            ]
+          },
+          "snaks-order": [
+            "P143"
+          ]
+        }
+      ],
+      "status": "candidate-only-no-role-inference",
+      "reason": "Wikidata propertyだけで具体Roleや直接制作の意味を確定しない"
+    },
+    {
+      "kind": "wikidata-relation",
+      "work": "幽☆遊☆白書",
+      "property": "P110",
+      "personQid": "Q550311",
+      "statementId": "Q18225473$4721B499-CFF7-405C-8C6F-E382AF4455D0",
+      "qualifiers": {},
+      "references": [
+        {
+          "hash": "a29a646602abf65105ed0f39a44231c962ece9ee",
+          "snaks": {
+            "P143": [
+              {
+                "snaktype": "value",
+                "property": "P143",
+                "hash": "c6f1777471211df31724ac60175786f3872c83e9",
+                "datavalue": {
+                  "value": {
+                    "entity-type": "item",
+                    "numeric-id": 177837,
+                    "id": "Q177837"
+                  },
+                  "type": "wikibase-entityid"
+                },
+                "datatype": "wikibase-item"
+              }
+            ]
+          },
+          "snaks-order": [
+            "P143"
+          ]
+        }
+      ],
+      "status": "candidate-only-no-role-inference",
+      "reason": "Wikidata propertyだけで具体Roleや直接制作の意味を確定しない"
+    },
+    {
+      "kind": "ndl-credit",
+      "work": "幽☆遊☆白書",
+      "isbn13": "9784088712734",
+      "rawResponsibility": "冨樫義博",
+      "sourceUrl": "https://ndlsearch.ndl.go.jp/books/R100000002-I022827273",
+      "status": "held"
+    },
+    {
+      "kind": "wikidata-relation",
+      "work": "HUNTER×HUNTER",
+      "property": "P50",
+      "personQid": "Q550311",
+      "statementId": "Q696071$37F79A43-616B-4FD0-B1CC-49370572BF58",
+      "qualifiers": {},
+      "references": [
+        {
+          "hash": "d4bd87b862b12d99d26e86472d44f26858dee639",
+          "snaks": {
+            "P143": [
+              {
+                "snaktype": "value",
+                "property": "P143",
+                "hash": "f30cbd35620c4ea6d0633aaf0210a8916130469b",
+                "datavalue": {
+                  "value": {
+                    "entity-type": "item",
+                    "numeric-id": 8447,
+                    "id": "Q8447"
+                  },
+                  "type": "wikibase-entityid"
+                },
+                "datatype": "wikibase-item"
+              }
+            ]
+          },
+          "snaks-order": [
+            "P143"
+          ]
+        }
+      ],
+      "status": "candidate-only-no-role-inference",
+      "reason": "Wikidata propertyだけで具体Roleや直接制作の意味を確定しない"
+    },
+    {
+      "kind": "wikidata-relation",
+      "work": "HUNTER×HUNTER",
+      "property": "P110",
+      "personQid": "Q550311",
+      "statementId": "Q696071$7C851541-DDAF-4528-A79F-A6E594ABD6AB",
+      "qualifiers": {},
+      "references": [
+        {
+          "hash": "d4bd87b862b12d99d26e86472d44f26858dee639",
+          "snaks": {
+            "P143": [
+              {
+                "snaktype": "value",
+                "property": "P143",
+                "hash": "f30cbd35620c4ea6d0633aaf0210a8916130469b",
+                "datavalue": {
+                  "value": {
+                    "entity-type": "item",
+                    "numeric-id": 8447,
+                    "id": "Q8447"
+                  },
+                  "type": "wikibase-entityid"
+                },
+                "datatype": "wikibase-item"
+              }
+            ]
+          },
+          "snaks-order": [
+            "P143"
+          ]
+        }
+      ],
+      "status": "candidate-only-no-role-inference",
+      "reason": "Wikidata propertyだけで具体Roleや直接制作の意味を確定しない"
+    },
+    {
+      "kind": "ndl-credit",
+      "work": "HUNTER×HUNTER",
+      "isbn13": "9784081135516",
+      "rawResponsibility": "冨樫義博 著",
+      "sourceUrl": "https://ndlsearch.ndl.go.jp/books/R100000002-I029458700",
+      "status": "pending-human-acceptance",
+      "roleId": "AUTHORSHIP",
+      "person": "冨樫義博",
+      "claimId": "3de6d7eb-222e-437e-86e5-54694dd08d8e",
+      "reusedClaim": false,
+      "subjectId": "5c2c00bb-0920-4d7b-8dd6-36555df27242",
+      "objectId": "926f607a-7ebf-4626-af43-1bfeeaa6ed0c"
+    }
+  ],
+  "holds": [
+    {
+      "reason": "unsupported-responsibility-role",
+      "work": "幽☆遊☆白書",
+      "rawResponsibility": "冨樫義博",
+      "sourceUrl": "https://ndlsearch.ndl.go.jp/books/R100000002-I022827273"
+    }
+  ],
+  "acquisitions": [
+    {
+      "kind": "wikidata",
+      "identifier": "Q550311",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q550311.json",
+      "sha256": "36ea9fb9a974bc0bed7bb0f80d7f50b4fc181a63adb691b57071f845ddf71cbe",
+      "bytes": 72219,
+      "fetchedAt": "2026-10-29T00:42:03+00:00"
+    },
+    {
+      "kind": "wikidata",
+      "identifier": "Q18225473",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q18225473.json",
+      "sha256": "596224d5327c23935ab464dc055b9ebf12ff79e308de8370e04f6e5ae53bf8e5",
+      "bytes": 36377,
+      "fetchedAt": "2026-10-29T00:42:06+00:00"
+    },
+    {
+      "kind": "ndl",
+      "identifier": "9784088712734",
+      "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&maximumRecords=5&query=isbn%3D%229784088712734%22+AND+dpid%3Diss-ndl-opac",
+      "sha256": "32c79297d9d6b6a9d2dee4a701ebd2d568e3385eb20678218f880ad218399402",
+      "bytes": 22093,
+      "fetchedAt": "2026-10-29T00:42:29+00:00"
+    },
+    {
+      "kind": "wikidata",
+      "identifier": "Q696071",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q696071.json",
+      "sha256": "f1bf10477365aab8e9cd09be62230b5506be35c4ddc9c219d8f0fd246cdf98b6",
+      "bytes": 76131,
+      "fetchedAt": "2026-10-29T00:42:31+00:00"
+    },
+    {
+      "kind": "ndl",
+      "identifier": "9784081135516",
+      "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&maximumRecords=5&query=isbn%3D%229784081135516%22+AND+dpid%3Diss-ndl-opac",
+      "sha256": "70bab9abae4f916a93317c317ff4d534d66b4bae93e144fa1f56857f91f19216",
+      "bytes": 7288,
+      "fetchedAt": "2026-10-29T00:57:31+00:00"
+    }
+  ]
+}

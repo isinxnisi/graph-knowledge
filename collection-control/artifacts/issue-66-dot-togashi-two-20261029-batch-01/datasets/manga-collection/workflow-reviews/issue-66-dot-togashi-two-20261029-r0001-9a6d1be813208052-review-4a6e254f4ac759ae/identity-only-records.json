@@ -1,0 +1,28 @@
+{
+  "status": "pending-human-identity-only-decision",
+  "records": {
+    "entities": [
+      {
+        "id": "8f25239e-773e-498d-b95f-ce10dcb39faa",
+        "kind": "work",
+        "name": "幽☆遊☆白書",
+        "description": null,
+        "aliases": [
+          "Yu Yu Hakusho"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q18225473"
+          }
+        ],
+        "createdAt": "2026-10-29T00:41:55Z",
+        "updatedAt": "2026-10-29T00:41:55Z",
+        "event": null
+      }
+    ],
+    "claims": [],
+    "sources": [],
+    "citations": []
+  }
+}
