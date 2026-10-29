@@ -26,30 +26,26 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-10-29T01:45:52.063637+00:00",
-  "phase": "running",
+  "nextStartAt": "2026-10-29T00:52:51.431719+00:00",
+  "phase": "interval",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
     "reason": "interval",
-    "eligibleAt": "2026-10-29T01:45:52.063637+00:00",
+    "eligibleAt": "2026-10-29T00:52:51.431719+00:00",
     "windowEndAt": "2026-10-29T03:00:00+00:00"
   },
-  "activeAttempt": {
-    "requestId": "issue-66-dot-togashi-two-20261029",
-    "startedAt": "2026-10-29T00:40:52.063639+00:00",
-    "limitAt": "2026-10-29T01:35:52.063637+00:00"
-  },
+  "activeAttempt": null,
   "lastAttempt": {
-    "requestId": "issue-65-dot-inoue-three-20261029-batch-01",
-    "endedAt": "2026-10-29T00:27:50.874817+00:00"
+    "requestId": "issue-66-dot-togashi-two-20261029",
+    "endedAt": "2026-10-29T00:42:51.431721+00:00"
   },
   "controlError": null,
   "requestsByPhase": {
     "blocked": 12,
     "completed": 37,
     "awaiting-recovery": 4,
-    "running": 1
+    "retry-transport": 1
   },
   "issueIntake": {
     "collection-control/issue-sources/25.json": {
@@ -172,5 +168,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-10-29T00:41:34.485079+00:00"
+  "checkedAt": "2026-10-29T00:43:38.434107+00:00"
 }
