@@ -96,7 +96,7 @@ export default function SiteHeader({ dataset, page = "explore", onBeforeAccountN
     </div>
     <p className={styles.description}>{data.description}</p>
     <div className={styles.tools}>
-      <button aria-label="My Capsules" title="My Capsules" onClick={() => setCapsulesOpen(true)}><Icon name="capsule" /><span className={styles.toolLabel}>My Capsules</span></button>
+      <button className={styles.capsulesEntry} aria-label="My Capsules" title="My Capsules" onClick={() => setCapsulesOpen(true)}><Icon name="capsule" /><span className={styles.toolLabel}>My Capsules</span></button>
       {capsulesOpen && <MyCapsules dataset={dataset} onClose={() => setCapsulesOpen(false)} />}
       {currentUser?.siteOperator&&<Link className={styles.operationsEntry} href="/operations" onClick={closeAccount} aria-label={operationsLabel} title={operationsLabel+" · "+pendingLabel}><Icon name="shield"/><span className={styles.toolLabel}>{locale==='en'?'Operations':'運営'}</span>{operationsBadge}</Link>}
       <details className={`${styles.settings} ${styles.siteMenu}`} data-floating-menu ref={siteMenu} onToggle={event=>{if(event.currentTarget.open){if(accountMenu.current)accountMenu.current.open=false;if(menu.current)menu.current.open=false;}}}>
@@ -109,7 +109,7 @@ export default function SiteHeader({ dataset, page = "explore", onBeforeAccountN
         </nav></div>
       </details>
       <details className={`${styles.settings} ${styles.accountMenu}`} data-floating-menu ref={accountMenu} onToggle={event=>{if(event.currentTarget.open){if(menu.current)menu.current.open=false;if(siteMenu.current)siteMenu.current.open=false;}}}>
-        <summary aria-label={locale==='en'?'Account menu':'アカウントメニュー'} title={currentUser?text.signedInAs(displayName):text.accountLink} data-signed-in={currentUser?'true':identity.status==='guest'?'false':undefined}>
+        <summary aria-label={locale==='en'?'Account menu':'アカウントメニュー'} aria-description={currentUser?text.signedInAs(displayName):undefined} title={currentUser?text.signedInAs(displayName):text.accountLink} data-signed-in={currentUser?'true':identity.status==='guest'?'false':undefined}>
           {currentUser?mark:<Icon name="person"/>}<span className={styles.accountLabel}>{currentUser?displayName:identity.status==='guest'?(locale==='en'?'Account':'アカウント'):identity.error?(locale==='en'?'Unavailable':'確認失敗'):(locale==='en'?'Checking…':'確認中…')}</span>
           {currentUser&&communitiesEnabled&&<InvitationBadge/>}<Icon name="chevron"/>
           {!currentUser&&identity.status!=='guest'&&<span className={styles.srOnly} role="status">{identity.error?(locale==='en'?'Account unavailable':'認証確認に失敗'):(locale==='en'?'Checking account…':'認証を確認中…')}</span>}

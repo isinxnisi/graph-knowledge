@@ -19,7 +19,7 @@ import type { GraphState, Selection } from "../lib/client/graph-state";
 import { graphRootReady } from "../lib/client/graph-state";
 import { entityLabel, edgeRoutes, displayRelations, relationId, type CanvasRelation } from "../lib/client/graph-presentation";
 import { initialPositions, additionalPositions, contentPositions } from "../lib/client/graph-layout";
-import { createNodeClickHandler, createRelationClickHandler } from "../lib/client/graph-interaction";
+import { attachGraphTouchInput, createNodeClickHandler, createRelationClickHandler, GRAPH_INTERACTION_DEFAULTS, isGraphTouchEvent } from "../lib/client/graph-interaction";
 import { attachGraphBadges } from "../lib/client/graph-badges";
 import { createGraphMotion } from "../lib/client/graph-motion";
 import styles from "./Explorer.module.css";
@@ -55,6 +55,11 @@ export default function GraphCanvas({ onInspectEntity, content, selectedKeys, on
   const handlers = useRef({ onInspectEntity, onEntity, onRelation, onRelationDoubleClick, onToggleEntity, onEntityDoubleClick, selection });
   const gestures = useRef<ReturnType<typeof createNodeClickHandler> | null>(null);
   const relationGestures = useRef<ReturnType<typeof createRelationClickHandler> | null>(null);
+  const contentGestures = useRef<ReturnType<typeof createRelationClickHandler> | null>(null);
+  const touchInput = useRef<ReturnType<typeof attachGraphTouchInput> | null>(null);
+  function cancelGestures() {
+    gestures.current?.cancel(); relationGestures.current?.cancel(); contentGestures.current?.cancel(); touchInput.current?.cancel();
+  }
   const generation = useRef(-1);
   const previousCenter = useRef<string | null>(null);
   const previousCondition = useRef("all");
@@ -98,7 +103,7 @@ export default function GraphCanvas({ onInspectEntity, content, selectedKeys, on
   function changeZoom(factor: number) {
     const cy = core.current;
     if (!cy || !hasNodes || interactionBlocked) return;
-    gestures.current?.cancel(); relationGestures.current?.cancel();
+    cancelGestures();
     resizeCanvas();
     cy.zoom({ level: Math.min(cy.maxZoom(), Math.max(cy.minZoom(), cy.zoom() * factor)),
       renderedPosition: { x: cy.width() / 2, y: cy.height() / 2 } });
@@ -108,7 +113,7 @@ export default function GraphCanvas({ onInspectEntity, content, selectedKeys, on
     if (!cy || !selectedId || interactionBlocked) return;
     const selected = cy.getElementById(selectedId);
     if (!selected.length) return;
-    gestures.current?.cancel(); relationGestures.current?.cancel();
+    cancelGestures();
     resizeCanvas();
     if (selection?.kind === "entity") {
       cy.zoom(Math.max(1, cy.zoom()));
@@ -131,7 +136,7 @@ export default function GraphCanvas({ onInspectEntity, content, selectedKeys, on
     if (!cy) return;
     const node = cy.getElementById(id);
     if (!node.length || !node.isNode()) return;
-    gestures.current?.cancel(); relationGestures.current?.cancel();
+    cancelGestures();
     resizeCanvas();
     cy.zoom(Math.max(1, cy.zoom()));
     cy.center(node);
@@ -152,9 +157,9 @@ export default function GraphCanvas({ onInspectEntity, content, selectedKeys, on
       if (!selectedId || !canvasOptions.current.currentKeys.includes(selectedId)) setMultiple(null);
     });
   }, [selectedId, selectedKeys]);
-  useEffect(() => { if (interactionBlocked) { gestures.current?.cancel(); relationGestures.current?.cancel(); } }, [interactionBlocked]);
+  useEffect(() => { if (interactionBlocked) cancelGestures(); }, [interactionBlocked]);
   useEffect(() => { handlers.current = { onInspectEntity, onEntity, onRelation, onRelationDoubleClick, onToggleEntity, onEntityDoubleClick, selection }; }, [onInspectEntity, onEntity, onRelation, onRelationDoubleClick, onToggleEntity, onEntityDoubleClick, selection]);
-  useEffect(() => { gestures.current?.cancel(); relationGestures.current?.cancel(); }, [graph.generation]);
+  useEffect(() => { cancelGestures(); }, [graph.generation]);
   useEffect(() => { gestures.current?.selectionChanged(selection?.kind === "entity" ? selection.id : null); }, [selection?.kind, selection?.id]);
   const selectedOpen = selection?.kind === "entity" ? graph.expansions[selection.id]?.open : undefined;
   useEffect(() => { gestures.current?.cancelPending(); }, [selectedOpen]);
@@ -189,6 +194,7 @@ export default function GraphCanvas({ onInspectEntity, content, selectedKeys, on
     const cy = cytoscape({
       container: container.current, elements: [], layout: { name: "preset" },
       minZoom: 0.15, maxZoom: 2, style: themeStyles(), autounselectify: true, boxSelectionEnabled: false,
+      touchTapThreshold: GRAPH_INTERACTION_DEFAULTS.touchTapTravel,
     });
     const themeObserver = new MutationObserver(() => cy.style(themeStyles()));
     themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
@@ -210,6 +216,10 @@ export default function GraphCanvas({ onInspectEntity, content, selectedKeys, on
     });
     relationGestures.current = relationClicks;
     gestures.current = clicks;
+    contentGestures.current = contentClicks;
+    const cancelClicks = () => { clicks.cancel(); relationClicks.cancel(); contentClicks.cancel(); };
+    const input = attachGraphTouchInput(container.current, cancelClicks);
+    touchInput.current = input;
     const removeBadges = attachGraphBadges(cy, badgeLayer.current!, styles.relationPatch,
       (id, originalEvent) => choose(id, { originalEvent }, false),
       styles.entityPatch, (id, event) => openContext(id, "edge", event.clientX, event.clientY, "pointer"));
@@ -217,6 +227,11 @@ export default function GraphCanvas({ onInspectEntity, content, selectedKeys, on
     cy.on("mouseout", "node", event => { event.target.removeClass("hovered"); container.current!.removeAttribute("title"); });
     function choose(id: string, event: Pick<cytoscape.EventObject, "originalEvent">, isNode: boolean) {
       if (canvasOptions.current.interactionBlocked) return;
+      const touch = isGraphTouchEvent(event.originalEvent);
+      if (touch && !input.accept(event.originalEvent!)) return;
+      // DOM relation chips deliver a browser click rather than Cytoscape tap.
+      // PointerEvent keeps its touch origin; browser cancellation already ran.
+      const pointer = touch || (event.originalEvent && "pointerType" in event.originalEvent && event.originalEvent.pointerType === "touch") ? "touch" : "mouse";
       const original = event.originalEvent as MouseEvent | undefined;
       const multi = original?.ctrlKey || original?.metaKey || canvasOptions.current.selectionMode;
       const previous = canvasOptions.current.currentKeys;
@@ -224,20 +239,20 @@ export default function GraphCanvas({ onInspectEntity, content, selectedKeys, on
       canvasOptions.current.currentKeys = next; setMultiple(next); canvasOptions.current.onSelectionChange?.(next);
       if (multi || canvasOptions.current.contentOnly) {
         clicks.cancel(); relationClicks.cancel();
-        if (multi) contentClicks.cancel(); else contentClicks.click(id, event.originalEvent?.timeStamp);
+        if (multi) contentClicks.cancel(); else contentClicks.click(id, event.originalEvent?.timeStamp, pointer);
         const primary = next.includes(id) ? id : next.at(-1);
         if (primary) {
           if (cy.getElementById(primary).isNode()) { if (multi && !canvasOptions.current.contentOnly) handlers.current.onInspectEntity?.(primary); else handlers.current.onEntity(primary); }
           else handlers.current.onRelation(primary);
         }
-      } else if (isNode) { relationClicks.cancel(); clicks.click(id, event.originalEvent?.timeStamp); }
-      else { clicks.cancel(); relationClicks.click(id); }
+      } else if (isNode) { relationClicks.cancel(); clicks.click(id, event.originalEvent?.timeStamp, pointer); }
+      else { clicks.cancel(); relationClicks.click(id, event.originalEvent?.timeStamp, pointer); }
     }
     cy.on("tap", "node", event => choose(event.target.id(), event, true));
     cy.on("tap", "edge", event => choose(event.target.id(), event, false));
     function openContext(id: string | undefined, kind: GraphContextMenuRequest["kind"], clientX: number, clientY: number, source: GraphContextMenuRequest["source"]) {
       if (canvasOptions.current.interactionBlocked || !canvasOptions.current.onContextMenu) return;
-      clicks.cancel(); relationClicks.cancel(); contentClicks.cancel();
+      input.cancel();
       const before = canvasOptions.current.currentKeys;
       const next = id && !before.includes(id) ? [id] : [...before];
       if (id && !before.includes(id)) {
@@ -286,11 +301,14 @@ export default function GraphCanvas({ onInspectEntity, content, selectedKeys, on
       }
       dragStart = null; dragging = null;
     });
-    cy.on("tap", (event) => { if (event.target === cy) { clicks.cancel(); relationClicks.cancel(); contentClicks.cancel(); canvasOptions.current.currentKeys = []; setMultiple([]); canvasOptions.current.onSelectionChange?.([]); } });
-    cy.on("drag pan zoom", () => { clicks.cancel(); relationClicks.cancel(); contentClicks.cancel(); });
+    cy.on("tap", (event) => { if (event.target === cy) {
+      if (isGraphTouchEvent(event.originalEvent) && !input.accept(event.originalEvent)) return;
+      input.cancel(); canvasOptions.current.currentKeys = []; setMultiple([]); canvasOptions.current.onSelectionChange?.([]);
+    } });
+    cy.on("drag pan zoom cxttapstart", () => input.cancel());
     const resize = new ResizeObserver(resizeCanvas);
     resize.observe(container.current);
-    return () => { motion.current?.dispose(); motion.current = null; removeBadges(); clicks.cancel(); relationClicks.cancel(); contentClicks.cancel(); surface.removeEventListener("keydown", keyboardContext); relationGestures.current = null; gestures.current = null; themeObserver.disconnect(); resize.disconnect(); cy.destroy(); core.current = null; viewportSize.current = null; generation.current = -1; initialLayoutDone.current = false; };
+    return () => { motion.current?.dispose(); motion.current = null; removeBadges(); input.dispose(); cancelClicks(); surface.removeEventListener("keydown", keyboardContext); relationGestures.current = null; gestures.current = null; contentGestures.current = null; touchInput.current = null; themeObserver.disconnect(); resize.disconnect(); cy.destroy(); core.current = null; viewportSize.current = null; generation.current = -1; initialLayoutDone.current = false; };
   }, []);
 
   useEffect(() => {
@@ -427,7 +445,7 @@ export default function GraphCanvas({ onInspectEntity, content, selectedKeys, on
         <output aria-label={viewportLabels.zoom} aria-live="off">{Math.round(zoom * 100)}%</output>
         <button aria-label={viewportLabels.zoomOut} title={viewportLabels.zoomOut} disabled={!hasNodes || interactionBlocked || zoom <= 0.15} onClick={() => changeZoom(1 / 1.25)}><Icon name="minus" /></button>
         <button aria-label={viewportLabels.fit} title={viewportLabels.fit} disabled={!hasNodes || interactionBlocked} onClick={() => {
-          gestures.current?.cancel(); relationGestures.current?.cancel(); resizeCanvas(); core.current?.fit(undefined, 24);
+          cancelGestures(); resizeCanvas(); core.current?.fit(undefined, 24);
         }}><Icon name="fit" /></button>
       </div>
       <div className={styles.cySurface} ref={container} onPointerDownCapture={resizeCanvas} data-testid="graph-canvas" tabIndex={0} onContextMenu={event => { if (onContextMenu) event.preventDefault(); }} data-focus-destination role="img" aria-label={ui.graphAria} />

@@ -147,6 +147,43 @@ it.each([false, true])("pointer downを挟むダブルクリックでもEntity�
   await doubleTap(cy.edges()[0]); expect(onRelationDoubleClick).toHaveBeenCalledWith(cy.edges()[0].id());
 });
 
+it.each([false, true])("native touchのダブルタップはEntity・関係で揃い、中断・ピンチ・移動を編集と混同しない（Capsule=%s）", async contentOnly => {
+  const graph = mergePatternPage(emptyPatternGraph(root, relation), page([route(100, 2)]), null);
+  const onEntityDoubleClick = vi.fn(), onRelationDoubleClick = vi.fn(), onToggleEntity = vi.fn();
+  render(<GraphCanvas graph={graph} contentOnly={contentOnly} selection={null} onEntity={vi.fn()} onRelation={vi.fn()} onToggleEntity={onToggleEntity} onEntityDoubleClick={onEntityDoubleClick} onRelationDoubleClick={onRelationDoubleClick} />);
+  const cy = created.cores[0], surface = screen.getByTestId("graph-canvas"), node = cy.nodes()[0], edge = cy.edges()[0];
+  const finger = (identifier = 1, clientX = 100) => ({ identifier, clientX, clientY: 100 }) as Touch;
+  const touch = (type: string, timeStamp: number, touches: Touch[], changedTouches = touches) => {
+    const event = new TouchEvent(type, { bubbles: true, touches, changedTouches });
+    Object.defineProperty(event, "timeStamp", { value: timeStamp }); surface.dispatchEvent(event); return event;
+  };
+  const emit = (element: typeof node | typeof edge, type: string, originalEvent: Event) => (element.emit as unknown as (event: object) => void).call(element, { type, originalEvent });
+  const tap = async (element: typeof node | typeof edge, time: number, interruption?: "cancel" | "pinch" | "drag") => act(async () => {
+    const start = touch("touchstart", time, [finger()]);
+    if (element.isNode()) emit(element, "grab", start);
+    emit(element, "touchstart", start);
+    if (interruption === "cancel") touch("touchcancel", time + 10, [], [finger()]);
+    if (interruption === "pinch") touch("touchstart", time + 10, [finger(), finger(2, 150)]);
+    if (interruption === "drag") { touch("touchmove", time + 10, [finger(1, 125)]); emit(element, "drag", start); }
+    const end = touch("touchend", time + 30, [], [finger()]);
+    if (element.isNode()) emit(element, "free", end);
+    emit(element, "touchend", end);
+    // A cancelled/pinched sequence must stay harmless even if a stale renderer
+    // tap arrives. Real Cytoscape normally omits it after a successful drag.
+    emit(element, "tap", end);
+  });
+  await tap(node, 100); await tap(node, 450); expect(onEntityDoubleClick).toHaveBeenCalledExactlyOnceWith(node.id());
+  await tap(edge, 1000); await tap(edge, 1350); expect(onRelationDoubleClick).toHaveBeenCalledExactlyOnceWith(edge.id());
+  for (const interruption of ["cancel", "pinch", "drag"] as const) {
+    onEntityDoubleClick.mockClear(); onRelationDoubleClick.mockClear();
+    await tap(node, 2000); await tap(node, 2100, interruption); await tap(node, 2200);
+    expect(onEntityDoubleClick).not.toHaveBeenCalled();
+    await tap(edge, 2600); await tap(edge, 2700, interruption); await tap(edge, 2800);
+    expect(onRelationDoubleClick).not.toHaveBeenCalled();
+  }
+  expect(onToggleEntity).not.toHaveBeenCalled();
+});
+
 it("自由テキストの直接編集はダブルクリックで開き、実ドラッグではクリック列をリセットする", async () => {
   const open = vi.fn(), graph = emptyGraph();
   render(<GraphCanvas graph={graph} contentOnly content={{ nodes: [{ id: "text", kind: "text", label: "図の説明" }], relations: {} }} selection={null} onEntity={vi.fn()} onRelation={vi.fn()} onToggleEntity={vi.fn()} onEntityDoubleClick={open} />);
@@ -174,6 +211,19 @@ it.each([false, true])("関係チップも線本体と同じCtrl/Meta・複数�
   fireEvent.click(badge!, { metaKey: true });expect(onSelectionChange).toHaveBeenLastCalledWith(ids);
   fireEvent.click(screen.getByRole("button", { name: "複数選択" }));
   fireEvent.click(badge!);expect(onSelectionChange).toHaveBeenLastCalledWith([...ids, edgeId]);
+});
+
+it("関係チップのtouch由来clickにも線本体と同じダブルタップ間隔を使う", async () => {
+  const graph = mergePatternPage(emptyPatternGraph(root, relation), page([route(100, 2)]), null), open = vi.fn();
+  render(<GraphCanvas graph={graph} contentOnly selection={null} onEntity={vi.fn()} onRelation={vi.fn()} onToggleEntity={vi.fn()} onRelationDoubleClick={open} />);
+  await act(async () => { created.cores[0].emit("render"); });
+  const badge = document.querySelector<HTMLButtonElement>("[data-relation-id]")!;
+  for (const timeStamp of [100, 450]) {
+    const event = new MouseEvent("click", { bubbles: true });
+    Object.defineProperties(event, { pointerType: { value: "touch" }, timeStamp: { value: timeStamp } });
+    fireEvent(badge, event);
+  }
+  expect(open).toHaveBeenCalledExactlyOnceWith(badge.dataset.relationId);
 });
 
 it("空文書から復元した最初の対象を配置済みとし、後の追加で既存配置や倍率を動かさない", async () => {

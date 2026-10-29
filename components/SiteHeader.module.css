@@ -20,3 +20,21 @@
 
 /* Explorer headings must not resize the brand; hover never creates a title-sized panel. */
 .header .brandLink:hover{background:transparent;color:var(--color-accent)}
+
+/* Flex gaps own the spacing: a hidden mobile label must not leave an icon margin. */
+.header .capsulesEntry{display:inline-flex;align-items:center;justify-content:center;gap:7px;white-space:nowrap}
+.header .capsulesEntry>svg,.header .operationsEntry>svg,.header .settings>summary>svg{margin:0}
+@media(max-width:800px){
+  .header .capsulesEntry,.header .operationsEntry,.settings:not(.accountMenu)>summary{width:44px;height:44px;min-height:44px;flex:0 0 44px;justify-content:center;gap:0;padding:0}
+  .header .capsulesEntry>svg,.header .operationsEntry>svg,.settings:not(.accountMenu)>summary>svg{width:18px;height:18px}
+  .operationsEntry .operationsBadge{right:0}
+}
+/* Keep navigation on one row; account identity remains in its accessible description and menu. */
+@media(max-width:480px){
+  .tools:has(.operationsEntry) .accountMenu>summary{width:44px;height:44px;justify-content:center;gap:0;padding:0}
+  .tools:has(.operationsEntry) .accountLabel,.tools:has(.operationsEntry) .accountMenu>summary>svg:last-of-type{display:none}
+}
+@media(max-width:360px){
+  .header .brand{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+  .header .brandLink{justify-content:center;width:44px;height:44px;gap:0}
+}
