@@ -1,0 +1,439 @@
+{
+  "id": "Q2318999",
+  "lastrevid": 2534510816,
+  "labels": {
+    "gl": {
+      "language": "gl",
+      "value": "Hattori o ninja"
+    },
+    "zh-hans": {
+      "language": "zh-hans",
+      "value": "忍者小灵精"
+    },
+    "zh-hant": {
+      "language": "zh-hant",
+      "value": "忍者小靈精"
+    },
+    "zh-hk": {
+      "language": "zh-hk",
+      "value": "忍者小靈精"
+    },
+    "zh-cn": {
+      "language": "zh-cn",
+      "value": "忍者哈特利"
+    },
+    "zh-sg": {
+      "language": "zh-sg",
+      "value": "忍者哈特利"
+    },
+    "zh-tw": {
+      "language": "zh-tw",
+      "value": "忍者哈特利"
+    },
+    "pt": {
+      "language": "pt",
+      "value": "Ninja Hattori"
+    },
+    "id": {
+      "language": "id",
+      "value": "Ninja Cilik Hattori"
+    },
+    "ja": {
+      "language": "ja",
+      "value": "忍者ハットリくん"
+    },
+    "es": {
+      "language": "es",
+      "value": "Ninja Hattori"
+    },
+    "en": {
+      "language": "en",
+      "value": "Ninja Hattori-kun"
+    },
+    "th": {
+      "language": "th",
+      "value": "นินจาฮัตโตริ"
+    },
+    "ms": {
+      "language": "ms",
+      "value": "Ninja Hattori-kun"
+    },
+    "it": {
+      "language": "it",
+      "value": "Nino, il mio amico ninja"
+    },
+    "ko": {
+      "language": "ko",
+      "value": "꾸러기 닌자 토리"
+    },
+    "ru": {
+      "language": "ru",
+      "value": "Ninja Hattori-kun"
+    },
+    "zh": {
+      "language": "zh",
+      "value": "忍者小靈精"
+    },
+    "vi": {
+      "language": "vi",
+      "value": "Ninja Hattori-kun"
+    },
+    "hi": {
+      "language": "hi",
+      "value": "निंजा हतोड़ी"
+    },
+    "bn": {
+      "language": "bn",
+      "value": "নিনজা হাতোরি-কুন"
+    },
+    "nl": {
+      "language": "nl",
+      "value": "Ninja Hattori-kun"
+    },
+    "pa": {
+      "language": "pa",
+      "value": "ਨਿੰਜਾ ਹਥੌੜੀ"
+    },
+    "ur": {
+      "language": "ur",
+      "value": "ننجا ہاتوری"
+    },
+    "ca": {
+      "language": "ca",
+      "value": "Ninja Hattori-kun"
+    },
+    "ta": {
+      "language": "ta",
+      "value": "நிஞ்சா ஹட்டோரி"
+    },
+    "tl": {
+      "language": "tl",
+      "value": "Ninja Hattori-kun"
+    },
+    "pnb": {
+      "language": "pnb",
+      "value": "ننجا ہاتوری"
+    },
+    "ast": {
+      "language": "ast",
+      "value": "Ninja Hattori-kun"
+    },
+    "ar": {
+      "language": "ar",
+      "value": "نينجا هاتوري-كون"
+    },
+    "arz": {
+      "language": "arz",
+      "value": "نينجا هاتورى-كون"
+    },
+    "de": {
+      "language": "de",
+      "value": "Hattori the Ninja"
+    },
+    "mr": {
+      "language": "mr",
+      "value": "निन्जा हतौडी"
+    },
+    "fr": {
+      "language": "fr",
+      "value": "Ninja Hattori-kun"
+    },
+    "tr": {
+      "language": "tr",
+      "value": "Ninja Hattori-kun"
+    },
+    "awa": {
+      "language": "awa",
+      "value": "नीन्जा हतौडी"
+    },
+    "ne": {
+      "language": "ne",
+      "value": "निन्जा हतोरी"
+    },
+    "ks": {
+      "language": "ks",
+      "value": "نِنٛجا ہَتوڑی"
+    }
+  },
+  "aliases": {
+    "gl": [
+      {
+        "language": "gl",
+        "value": "Hatori o Ninja"
+      }
+    ],
+    "zh": [
+      {
+        "language": "zh",
+        "value": "忍者ハットリくん"
+      },
+      {
+        "language": "zh",
+        "value": "忍者服部君"
+      },
+      {
+        "language": "zh",
+        "value": "忍者小叮噹"
+      },
+      {
+        "language": "zh",
+        "value": "忍者哈特利"
+      },
+      {
+        "language": "zh",
+        "value": "忍者娃娃"
+      },
+      {
+        "language": "zh",
+        "value": "忍者小靈精正義之戰"
+      },
+      {
+        "language": "zh",
+        "value": "新忍者哈特利"
+      }
+    ],
+    "id": [
+      {
+        "language": "id",
+        "value": "Ninja Hattori"
+      },
+      {
+        "language": "id",
+        "value": "Ninja Hattori-kun"
+      },
+      {
+        "language": "id",
+        "value": "Ninja Cilik Hatori"
+      },
+      {
+        "language": "id",
+        "value": "Ninja Hatori"
+      }
+    ],
+    "ja": [
+      {
+        "language": "ja",
+        "value": "はっとり君"
+      },
+      {
+        "language": "ja",
+        "value": "ハットリカンゾウ"
+      },
+      {
+        "language": "ja",
+        "value": "ハットリくん"
+      },
+      {
+        "language": "ja",
+        "value": "ハットリ君"
+      },
+      {
+        "language": "ja",
+        "value": "忍者ハットリ君"
+      },
+      {
+        "language": "ja",
+        "value": "はっとりくん"
+      }
+    ],
+    "es": [
+      {
+        "language": "es",
+        "value": "El Ninja Hatori"
+      },
+      {
+        "language": "es",
+        "value": "Ninja Hatori"
+      }
+    ],
+    "th": [
+      {
+        "language": "th",
+        "value": "Ninja Hattori-kun"
+      },
+      {
+        "language": "th",
+        "value": "นินจาฮาโตริ"
+      }
+    ],
+    "ms": [
+      {
+        "language": "ms",
+        "value": "Ninja Hattori"
+      }
+    ],
+    "it": [
+      {
+        "language": "it",
+        "value": "Nino il mio amico Ninja"
+      },
+      {
+        "language": "it",
+        "value": "Ninja Hattori-kun"
+      }
+    ],
+    "en": [
+      {
+        "language": "en",
+        "value": "Ninja Hattori"
+      }
+    ],
+    "ar": [
+      {
+        "language": "ar",
+        "value": "Ninja Hattori-kun"
+      }
+    ],
+    "hi": [
+      {
+        "language": "hi",
+        "value": "निंजा हतोड़ी-कुन"
+      },
+      {
+        "language": "hi",
+        "value": "नींजा हतोड़ी"
+      },
+      {
+        "language": "hi",
+        "value": "निंजा हत्तोड़ी"
+      },
+      {
+        "language": "hi",
+        "value": "निंजा हटोड़ी"
+      },
+      {
+        "language": "hi",
+        "value": "निंजा हतोरी"
+      }
+    ],
+    "zh-hant": [
+      {
+        "language": "zh-hant",
+        "value": "忍者哈特利"
+      }
+    ],
+    "ca": [
+      {
+        "language": "ca",
+        "value": "Hattori, el ninja"
+      }
+    ]
+  },
+  "claims": {
+    "P31": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P31",
+          "hash": "549c072d6be8a6a43f999d1d0e82640b16c4260e",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 21198342,
+              "id": "Q21198342"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q2318999$b01db9fa-4569-a6fd-eca3-c5ac9c287f07",
+        "rank": "normal"
+      }
+    ],
+    "P50": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P50",
+          "hash": "3ce36b4bd80bc5df8b0b822a49cdf934d4cdb1ec",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 3376801,
+              "id": "Q3376801"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q2318999$69F8A7E3-DD5B-4EA3-8F11-F0D5344D5800",
+        "rank": "normal",
+        "references": [
+          {
+            "hash": "d4bd87b862b12d99d26e86472d44f26858dee639",
+            "snaks": {
+              "P143": [
+                {
+                  "snaktype": "value",
+                  "property": "P143",
+                  "hash": "f30cbd35620c4ea6d0633aaf0210a8916130469b",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 8447,
+                      "id": "Q8447"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P143"
+            ]
+          }
+        ]
+      }
+    ],
+    "P110": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P110",
+          "hash": "fd98651bdba208caac4dfb28f9826de8a161081d",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 3376801,
+              "id": "Q3376801"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q2318999$0621C062-12A6-4313-A1CB-26E8EAFEEB23",
+        "rank": "normal",
+        "references": [
+          {
+            "hash": "d4bd87b862b12d99d26e86472d44f26858dee639",
+            "snaks": {
+              "P143": [
+                {
+                  "snaktype": "value",
+                  "property": "P143",
+                  "hash": "f30cbd35620c4ea6d0633aaf0210a8916130469b",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 8447,
+                      "id": "Q8447"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P143"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

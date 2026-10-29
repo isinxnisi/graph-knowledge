@@ -1,0 +1,222 @@
+{
+  "schemaVersion": 2,
+  "status": "pending-human-acceptance",
+  "recipe": "manga-r0047",
+  "collectionContext": {
+    "themeId": "issue-68-dot-fujikoa-two-20261029",
+    "themeRevision": 1,
+    "definitionSha256": "b2b30b82e4f80278623bc6147bb5022596660db16f436fae154f39dcd4aac5b0",
+    "approvalSha256": "2fcce4da271a9a83148bdb3846428e3db7524acbca699ad3c475acedaac5dff5"
+  },
+  "execution": {
+    "adapter": "manga-discovery-v2",
+    "codeSha256": "80e05b67bc0129b963653b90df4cfbfa5bd6aff190acda99f54c08541e55801e",
+    "inputs": [
+      {
+        "file": "datasets/manga-collection/r0047/recipe.json",
+        "sha256": "d77aa2b8f9b3d60f744f80abd63b024db27c7458a5e59ef3ec4fd0188638bbde"
+      },
+      {
+        "file": "datasets/manga-collection/r0047/anchor-review.json",
+        "sha256": "fe4b8287f7a884f1d4f7dda2247cf149015a0a680ad62bfbce76a95b6ea3b4f1"
+      },
+      {
+        "file": "datasets/manga-collection/r0047/publication-review.json",
+        "sha256": "baf858258b9c9b7b07a99c6a5f7ea2d8736311c4d205ffce647da8e65672a647"
+      },
+      {
+        "file": "docs/research/famous-manga-creators/20261016/candidates.json",
+        "sha256": "8531fada01e5c635ba2ee278a7ef944a73f64676af14ed42ae0e690f5a1ff978"
+      },
+      {
+        "file": "datasets/public-kg/releases/20261014-credits-001/data.json",
+        "sha256": "ea91b16f52a211b5a8464382ad498b7b2bb2be69a6f33fe125a73a3c7b9da2b5"
+      },
+      {
+        "file": "datasets/public-kg/releases/20261014-credits-001/manifest.json",
+        "sha256": "e4aa3b58ed884f7d1f8fffee43b260261cc2b4d3a867fda942919f439d2bce17"
+      }
+    ],
+    "maxEntities": 2112,
+    "maxClaims": 1850
+  },
+  "identityMappings": [
+    {
+      "name": "藤子不二雄Ⓐ",
+      "wikidata": "Q7784543",
+      "entityId": "c9035374-dd08-4aa7-b304-cecbf79cf2b5",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "忍者ハットリくん",
+      "wikidata": "Q2318999",
+      "entityId": "43fc28cc-dfc8-4a92-9741-0a7cf18b8f60",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "笑ゥせぇるすまん",
+      "wikidata": "Q11599582",
+      "entityId": "c877b096-26ef-4219-a3f1-0810906b1361",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    }
+  ],
+  "rows": [
+    {
+      "kind": "wikidata-relation",
+      "work": "忍者ハットリくん",
+      "property": "P50",
+      "personQid": "Q3376801",
+      "statementId": "Q2318999$69F8A7E3-DD5B-4EA3-8F11-F0D5344D5800",
+      "qualifiers": {},
+      "references": [
+        {
+          "hash": "d4bd87b862b12d99d26e86472d44f26858dee639",
+          "snaks": {
+            "P143": [
+              {
+                "snaktype": "value",
+                "property": "P143",
+                "hash": "f30cbd35620c4ea6d0633aaf0210a8916130469b",
+                "datavalue": {
+                  "value": {
+                    "entity-type": "item",
+                    "numeric-id": 8447,
+                    "id": "Q8447"
+                  },
+                  "type": "wikibase-entityid"
+                },
+                "datatype": "wikibase-item"
+              }
+            ]
+          },
+          "snaks-order": [
+            "P143"
+          ]
+        }
+      ],
+      "status": "candidate-only-no-role-inference",
+      "reason": "Wikidata propertyだけで具体Roleや直接制作の意味を確定しない"
+    },
+    {
+      "kind": "wikidata-relation",
+      "work": "忍者ハットリくん",
+      "property": "P110",
+      "personQid": "Q3376801",
+      "statementId": "Q2318999$0621C062-12A6-4313-A1CB-26E8EAFEEB23",
+      "qualifiers": {},
+      "references": [
+        {
+          "hash": "d4bd87b862b12d99d26e86472d44f26858dee639",
+          "snaks": {
+            "P143": [
+              {
+                "snaktype": "value",
+                "property": "P143",
+                "hash": "f30cbd35620c4ea6d0633aaf0210a8916130469b",
+                "datavalue": {
+                  "value": {
+                    "entity-type": "item",
+                    "numeric-id": 8447,
+                    "id": "Q8447"
+                  },
+                  "type": "wikibase-entityid"
+                },
+                "datatype": "wikibase-item"
+              }
+            ]
+          },
+          "snaks-order": [
+            "P143"
+          ]
+        }
+      ],
+      "status": "candidate-only-no-role-inference",
+      "reason": "Wikidata propertyだけで具体Roleや直接制作の意味を確定しない"
+    },
+    {
+      "kind": "ndl-credit",
+      "work": "忍者ハットリくん",
+      "isbn13": "9784122025318",
+      "rawResponsibility": "藤子不二雄A 著",
+      "sourceUrl": "https://ndlsearch.ndl.go.jp/books/R100000002-I000002470546",
+      "status": "pending-human-acceptance",
+      "roleId": "AUTHORSHIP",
+      "person": "藤子不二雄Ⓐ",
+      "claimId": "beb9db1d-fd1c-4697-8db2-0f94bfe416cd",
+      "reusedClaim": false,
+      "subjectId": "c9035374-dd08-4aa7-b304-cecbf79cf2b5",
+      "objectId": "43fc28cc-dfc8-4a92-9741-0a7cf18b8f60"
+    },
+    {
+      "kind": "wikidata-relation",
+      "work": "笑ゥせぇるすまん",
+      "property": "P50",
+      "personQid": "Q7784543",
+      "statementId": "Q11599582$59d79f61-4a64-70eb-cf20-44651d8ad674",
+      "qualifiers": {},
+      "references": [],
+      "status": "candidate-only-no-role-inference",
+      "reason": "Wikidata propertyだけで具体Roleや直接制作の意味を確定しない"
+    },
+    {
+      "kind": "ndl-credit",
+      "work": "笑ゥせぇるすまん",
+      "isbn13": "9784122033665",
+      "rawResponsibility": "藤子不二雄A 著",
+      "sourceUrl": "https://ndlsearch.ndl.go.jp/books/R100000002-I000002774952",
+      "status": "pending-human-acceptance",
+      "roleId": "AUTHORSHIP",
+      "person": "藤子不二雄Ⓐ",
+      "claimId": "24c99059-18ea-41c3-8bdb-31b8f7635b88",
+      "reusedClaim": false,
+      "subjectId": "c9035374-dd08-4aa7-b304-cecbf79cf2b5",
+      "objectId": "c877b096-26ef-4219-a3f1-0810906b1361"
+    }
+  ],
+  "holds": [],
+  "acquisitions": [
+    {
+      "kind": "wikidata",
+      "identifier": "Q7784543",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q7784543.json",
+      "sha256": "8c9c910626466be89d37db0a64a6d364b1f20ddfdce5418506e08740605116fa",
+      "bytes": 74590,
+      "fetchedAt": "2026-10-29T06:15:16+00:00"
+    },
+    {
+      "kind": "wikidata",
+      "identifier": "Q2318999",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q2318999.json",
+      "sha256": "55aa07c22b7542375e68fe504896fbe3aac0f8a270eca879186d9f1b03f89b39",
+      "bytes": 23234,
+      "fetchedAt": "2026-10-29T06:15:18+00:00"
+    },
+    {
+      "kind": "ndl",
+      "identifier": "9784122025318",
+      "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&maximumRecords=5&query=isbn%3D%229784122025318%22+AND+dpid%3Diss-ndl-opac",
+      "sha256": "d888de948fe59afdb5ce95fe4ff51897204e9c0253ab564616210c17c899d1f6",
+      "bytes": 13881,
+      "fetchedAt": "2026-10-29T06:15:38+00:00"
+    },
+    {
+      "kind": "wikidata",
+      "identifier": "Q11599582",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q11599582.json",
+      "sha256": "cca63c601369a65701c4113a4c13d32f93a996a715fd18a46e81b751f8b403aa",
+      "bytes": 12295,
+      "fetchedAt": "2026-10-29T06:15:39+00:00"
+    },
+    {
+      "kind": "ndl",
+      "identifier": "9784122033665",
+      "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&maximumRecords=5&query=isbn%3D%229784122033665%22+AND+dpid%3Diss-ndl-opac",
+      "sha256": "cb9cdd9abe03eb8d942cde56f1f015e3431b3d4cd420516e03fd9681b7103f02",
+      "bytes": 16334,
+      "fetchedAt": "2026-10-29T06:29:21+00:00"
+    }
+  ]
+}

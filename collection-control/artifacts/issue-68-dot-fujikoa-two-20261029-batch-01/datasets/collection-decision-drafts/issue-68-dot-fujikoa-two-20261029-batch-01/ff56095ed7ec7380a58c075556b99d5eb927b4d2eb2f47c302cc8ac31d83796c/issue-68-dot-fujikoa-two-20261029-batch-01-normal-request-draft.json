@@ -1,0 +1,157 @@
+{
+  "schemaVersion": 1,
+  "id": "issue-68-dot-fujikoa-two-20261029-batch-01-normal",
+  "kind": "accept-release",
+  "status": "draft-not-approved",
+  "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
+  "parentRequestId": "issue-68-dot-fujikoa-two-20261029-batch-01",
+  "applyAuthorized": {
+    "local": false,
+    "beta": false,
+    "vps": false
+  },
+  "decision": {
+    "schemaVersion": 1,
+    "decisionId": "issue-68-dot-fujikoa-two-20261029-batch-01-normal",
+    "status": "draft-not-approved",
+    "humanDecision": {
+      "actorType": "human",
+      "reviewer": null,
+      "decidedAt": null,
+      "statement": null
+    },
+    "approvalScope": "formal-record-acceptance-and-release-preparation-only",
+    "applyAuthorized": {
+      "local": false,
+      "beta": false,
+      "vps": false
+    },
+    "review": {
+      "file": "datasets/manga-collection/workflow-reviews/issue-68-dot-fujikoa-two-20261029-r0001-c20ab8c6124cf234-review-8d25528f663fd903/review-manifest.json",
+      "sha256": "ff56095ed7ec7380a58c075556b99d5eb927b4d2eb2f47c302cc8ac31d83796c"
+    },
+    "referenceArtifacts": [
+      {
+        "file": "datasets/manga-collection/workflow-reviews/issue-68-dot-fujikoa-two-20261029-r0001-c20ab8c6124cf234-review-8d25528f663fd903/README.md",
+        "sha256": "58a1ce2cb43f77d8fdab7a202c2a7cd687eb841e156cab62d10d1be755a60f71"
+      },
+      {
+        "file": "datasets/manga-collection/workflow-reviews/issue-68-dot-fujikoa-two-20261029-r0001-c20ab8c6124cf234-review-8d25528f663fd903/context.json",
+        "sha256": "94ffdb37a5a4727b4137b82a85bcbf9f585e95dcdc63311940df3b8a07c26d2c"
+      },
+      {
+        "file": "datasets/manga-collection/workflow-reviews/issue-68-dot-fujikoa-two-20261029-r0001-c20ab8c6124cf234-review-8d25528f663fd903/decision-request.json",
+        "sha256": "0180eab0d4c01b01f7ccd896898e50fac250c27e125088df3e41373f08974e16"
+      },
+      {
+        "file": "datasets/manga-collection/workflow-reviews/issue-68-dot-fujikoa-two-20261029-r0001-c20ab8c6124cf234-review-8d25528f663fd903/exploration-paths.json",
+        "sha256": "211e9f91423b33bddfc07e009cac3cb4e045b0766765d87650d378722402604c"
+      },
+      {
+        "file": "datasets/manga-collection/workflow-reviews/issue-68-dot-fujikoa-two-20261029-r0001-c20ab8c6124cf234-review-8d25528f663fd903/identity-only-records.json",
+        "sha256": "1fc314e4a47717bce195b39fe7f1e66bd31f6af892fca4a9420a653eab927a37"
+      },
+      {
+        "file": "datasets/manga-collection/workflow-reviews/issue-68-dot-fujikoa-two-20261029-r0001-c20ab8c6124cf234-review-8d25528f663fd903/proposed-records.json",
+        "sha256": "9c3675ed4abeeccd074fb54c472ae5b1000c4e3a5314eddf3ef7786d5d83856a"
+      },
+      {
+        "file": "datasets/manga-collection/workflow-reviews/issue-68-dot-fujikoa-two-20261029-r0001-c20ab8c6124cf234-review-8d25528f663fd903/review-manifest.json",
+        "sha256": "ff56095ed7ec7380a58c075556b99d5eb927b4d2eb2f47c302cc8ac31d83796c"
+      },
+      {
+        "file": "datasets/manga-collection/workflow-reviews/issue-68-dot-fujikoa-two-20261029-r0001-c20ab8c6124cf234-review-8d25528f663fd903/review.json",
+        "sha256": "a392c1f7cc40876b3a9d7f7f09d9ce1f3d8a4dbd2e55baf3376b155d4665afa7"
+      }
+    ],
+    "acceptedRecordIds": {
+      "entities": [
+        "43fc28cc-dfc8-4a92-9741-0a7cf18b8f60",
+        "c877b096-26ef-4219-a3f1-0810906b1361",
+        "c9035374-dd08-4aa7-b304-cecbf79cf2b5"
+      ],
+      "claims": [
+        "24c99059-18ea-41c3-8bdb-31b8f7635b88",
+        "beb9db1d-fd1c-4697-8db2-0f94bfe416cd"
+      ],
+      "sources": [
+        "18b60f71-96b6-4d27-98ba-f2d3f23eeba5",
+        "39583e34-18bb-4ee2-8987-5cd0cbc3ca15"
+      ],
+      "citations": [
+        "12e08d4d-a112-4bc2-a92d-0d2c9ceb41fb",
+        "7f52ce00-7512-4f95-93c6-afb62a1d2ffc"
+      ]
+    },
+    "recordSha256": {
+      "entities": {
+        "43fc28cc-dfc8-4a92-9741-0a7cf18b8f60": "f9fa825bc252c34f1c860b35ade7223e85912c0ca652eb3393a157b54fd3bfbe",
+        "c877b096-26ef-4219-a3f1-0810906b1361": "c3a6908da0bc792f7aab7ac082919099b61864c2ac184a217d7420128b74bfe3",
+        "c9035374-dd08-4aa7-b304-cecbf79cf2b5": "c80022044cb0b2e2082c799f2ed0a4cd622b0e3046b4fd0a6cc8a3e471d14bdd"
+      },
+      "claims": {
+        "24c99059-18ea-41c3-8bdb-31b8f7635b88": "ff49c1dcaed7c46ea870678c504082e2d5419d1c94b7390b215b1e9652e4ab4e",
+        "beb9db1d-fd1c-4697-8db2-0f94bfe416cd": "9ad0f576c97af2e99124003d44ad911cb6f8cab5c3351402cc4f21617e2b8678"
+      },
+      "sources": {
+        "18b60f71-96b6-4d27-98ba-f2d3f23eeba5": "543a8749217e6bb927066228558b6b8a86f4e293c2ee010f2bbe993827b41a97",
+        "39583e34-18bb-4ee2-8987-5cd0cbc3ca15": "0b0cb021f123a515da14b50318c2508b9c08b7a800f1e32fbba7626543713ac9"
+      },
+      "citations": {
+        "12e08d4d-a112-4bc2-a92d-0d2c9ceb41fb": "5c0c43bc446d0dda6d8380e61f262788978d7be6d006a1d0bd8609ce9e2a8669",
+        "7f52ce00-7512-4f95-93c6-afb62a1d2ffc": "571edf84183298505313658f954220b911d61dd88e15a6527ede4c28e2352d06"
+      }
+    },
+    "scopeByClaim": [
+      {
+        "id": "24c99059-18ea-41c3-8bdb-31b8f7635b88",
+        "subjectId": "c9035374-dd08-4aa7-b304-cecbf79cf2b5",
+        "objectId": "c877b096-26ef-4219-a3f1-0810906b1361",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "contribution": {
+          "roleId": "AUTHORSHIP",
+          "scope": {
+            "kind": "publication",
+            "isbn13": "9784122033665",
+            "volumeLabel": "第1巻（NDL巻次 1）",
+            "editionLabel": null,
+            "language": "ja"
+          }
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      },
+      {
+        "id": "beb9db1d-fd1c-4697-8db2-0f94bfe416cd",
+        "subjectId": "c9035374-dd08-4aa7-b304-cecbf79cf2b5",
+        "objectId": "43fc28cc-dfc8-4a92-9741-0a7cf18b8f60",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "contribution": {
+          "roleId": "AUTHORSHIP",
+          "scope": {
+            "kind": "publication",
+            "isbn13": "9784122025318",
+            "volumeLabel": "第1巻（NDL巻次 1）",
+            "editionLabel": null,
+            "language": "ja"
+          }
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      }
+    ],
+    "baseRelease": "20261014-credits-001",
+    "baseRevision": "82b01515-594c-48ca-b4b6-515eefac83ca",
+    "releaseId": "manga-issue-68-dot-fujikoa-two-20261029-batch-01-normal"
+  }
+}

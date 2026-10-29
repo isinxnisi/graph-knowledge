@@ -1,0 +1,52 @@
+[
+  {
+    "state": "collection-candidate",
+    "observation": "verified-records-only-not-a-live-exploration-test",
+    "edges": [
+      {
+        "claimId": "24c99059-18ea-41c3-8bdb-31b8f7635b88",
+        "subjectId": "c9035374-dd08-4aa7-b304-cecbf79cf2b5",
+        "objectId": "c877b096-26ef-4219-a3f1-0810906b1361",
+        "person": "藤子不二雄Ⓐ",
+        "work": "笑ゥせぇるすまん",
+        "roleId": "AUTHORSHIP",
+        "scope": {
+          "kind": "publication",
+          "isbn13": "9784122033665",
+          "volumeLabel": "第1巻（NDL巻次 1）",
+          "editionLabel": null,
+          "language": "ja"
+        },
+        "state": "collection-candidate",
+        "citationIds": [
+          "12e08d4d-a112-4bc2-a92d-0d2c9ceb41fb"
+        ],
+        "sourceIds": [
+          "39583e34-18bb-4ee2-8987-5cd0cbc3ca15"
+        ]
+      },
+      {
+        "claimId": "beb9db1d-fd1c-4697-8db2-0f94bfe416cd",
+        "subjectId": "c9035374-dd08-4aa7-b304-cecbf79cf2b5",
+        "objectId": "43fc28cc-dfc8-4a92-9741-0a7cf18b8f60",
+        "person": "藤子不二雄Ⓐ",
+        "work": "忍者ハットリくん",
+        "roleId": "AUTHORSHIP",
+        "scope": {
+          "kind": "publication",
+          "isbn13": "9784122025318",
+          "volumeLabel": "第1巻（NDL巻次 1）",
+          "editionLabel": null,
+          "language": "ja"
+        },
+        "state": "collection-candidate",
+        "citationIds": [
+          "7f52ce00-7512-4f95-93c6-afb62a1d2ffc"
+        ],
+        "sourceIds": [
+          "18b60f71-96b6-4d27-98ba-f2d3f23eeba5"
+        ]
+      }
+    ]
+  }
+]

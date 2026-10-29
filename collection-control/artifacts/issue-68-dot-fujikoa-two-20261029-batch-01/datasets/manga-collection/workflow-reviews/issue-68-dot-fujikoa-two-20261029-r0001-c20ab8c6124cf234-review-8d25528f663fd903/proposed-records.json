@@ -1,0 +1,175 @@
+{
+  "status": "pending-human-acceptance",
+  "formalAcceptance": "pending",
+  "notForPublicApply": true,
+  "records": {
+    "entities": [
+      {
+        "id": "43fc28cc-dfc8-4a92-9741-0a7cf18b8f60",
+        "kind": "work",
+        "name": "忍者ハットリくん",
+        "description": null,
+        "aliases": [
+          "Ninja Hattori-kun"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q2318999"
+          }
+        ],
+        "createdAt": "2026-10-29T06:15:02Z",
+        "updatedAt": "2026-10-29T06:15:02Z",
+        "event": null
+      },
+      {
+        "id": "c877b096-26ef-4219-a3f1-0810906b1361",
+        "kind": "work",
+        "name": "笑ゥせぇるすまん",
+        "description": null,
+        "aliases": [
+          "The Laughing Salesman"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q11599582"
+          }
+        ],
+        "createdAt": "2026-10-29T06:15:02Z",
+        "updatedAt": "2026-10-29T06:15:02Z",
+        "event": null
+      },
+      {
+        "id": "c9035374-dd08-4aa7-b304-cecbf79cf2b5",
+        "kind": "person",
+        "name": "藤子不二雄Ⓐ",
+        "description": null,
+        "aliases": [
+          "Fujiko Fujio A"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q7784543"
+          }
+        ],
+        "createdAt": "2026-10-29T06:15:02Z",
+        "updatedAt": "2026-10-29T06:15:02Z",
+        "event": null
+      }
+    ],
+    "claims": [
+      {
+        "id": "24c99059-18ea-41c3-8bdb-31b8f7635b88",
+        "subjectId": "c9035374-dd08-4aa7-b304-cecbf79cf2b5",
+        "objectId": "c877b096-26ef-4219-a3f1-0810906b1361",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "hidden",
+        "createdAt": "2026-10-29T06:15:02Z",
+        "updatedAt": "2026-10-29T06:15:02Z",
+        "contribution": {
+          "roleId": "AUTHORSHIP",
+          "scope": {
+            "kind": "publication",
+            "isbn13": "9784122033665",
+            "volumeLabel": "第1巻（NDL巻次 1）",
+            "editionLabel": null,
+            "language": "ja"
+          }
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      },
+      {
+        "id": "beb9db1d-fd1c-4697-8db2-0f94bfe416cd",
+        "subjectId": "c9035374-dd08-4aa7-b304-cecbf79cf2b5",
+        "objectId": "43fc28cc-dfc8-4a92-9741-0a7cf18b8f60",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "hidden",
+        "createdAt": "2026-10-29T06:15:02Z",
+        "updatedAt": "2026-10-29T06:15:02Z",
+        "contribution": {
+          "roleId": "AUTHORSHIP",
+          "scope": {
+            "kind": "publication",
+            "isbn13": "9784122025318",
+            "volumeLabel": "第1巻（NDL巻次 1）",
+            "editionLabel": null,
+            "language": "ja"
+          }
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      }
+    ],
+    "sources": [
+      {
+        "id": "18b60f71-96b6-4d27-98ba-f2d3f23eeba5",
+        "kind": "web",
+        "title": "NDLサーチ: 忍者ハットリくん. 1",
+        "authors": [],
+        "publisher": "国立国会図書館",
+        "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I000002470546",
+        "publishedAt": null,
+        "edition": null,
+        "note": "国立国会図書館作成書誌（iss-ndl-opac）の責任表示。メタデータ CC BY 4.0: https://creativecommons.org/licenses/by/4.0/ ; 提供元条件 https://ndlsearch.ndl.go.jp/help/api/provider 。本文・画像・第三者所蔵情報は含まない。",
+        "isDemo": false
+      },
+      {
+        "id": "39583e34-18bb-4ee2-8987-5cd0cbc3ca15",
+        "kind": "web",
+        "title": "NDLサーチ: 笑ゥせぇるすまん. 1",
+        "authors": [],
+        "publisher": "国立国会図書館",
+        "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I000002774952",
+        "publishedAt": null,
+        "edition": null,
+        "note": "国立国会図書館作成書誌（iss-ndl-opac）の責任表示。メタデータ CC BY 4.0: https://creativecommons.org/licenses/by/4.0/ ; 提供元条件 https://ndlsearch.ndl.go.jp/help/api/provider 。本文・画像・第三者所蔵情報は含まない。",
+        "isDemo": false
+      }
+    ],
+    "citations": [
+      {
+        "id": "12e08d4d-a112-4bc2-a92d-0d2c9ceb41fb",
+        "claimId": "24c99059-18ea-41c3-8bdb-31b8f7635b88",
+        "sourceId": "39583e34-18bb-4ee2-8987-5cd0cbc3ca15",
+        "locator": "dc:creator（責任表示） / ISBN 9784122033665",
+        "note": "原表記（ja）: 藤子不二雄A 著。指定刊行物の責任表示で確認された担当。全巻・全版・全期間への外挿、原作から別Roleへの変換はしない。同一資料由来の記録を独立した根拠と数えない。",
+        "accessedAt": "2026-10-29",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "藤子不二雄A 著",
+          "language": "ja"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      },
+      {
+        "id": "7f52ce00-7512-4f95-93c6-afb62a1d2ffc",
+        "claimId": "beb9db1d-fd1c-4697-8db2-0f94bfe416cd",
+        "sourceId": "18b60f71-96b6-4d27-98ba-f2d3f23eeba5",
+        "locator": "dc:creator（責任表示） / ISBN 9784122025318",
+        "note": "原表記（ja）: 藤子不二雄A 著。指定刊行物の責任表示で確認された担当。全巻・全版・全期間への外挿、原作から別Roleへの変換はしない。同一資料由来の記録を独立した根拠と数えない。",
+        "accessedAt": "2026-10-29",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "藤子不二雄A 著",
+          "language": "ja"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      }
+    ]
+  }
+}

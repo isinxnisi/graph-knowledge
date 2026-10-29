@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "reviewId": "issue-68-dot-fujikoa-two-20261029-r0001-c20ab8c6124cf234-review-8d25528f663fd903",
+  "inputSha256": "8d25528f663fd9039289bfc70fc72f0870a21dd346c230d501afa93d7fe1d498",
+  "artifacts": {
+    "context.json": "94ffdb37a5a4727b4137b82a85bcbf9f585e95dcdc63311940df3b8a07c26d2c",
+    "review.json": "a392c1f7cc40876b3a9d7f7f09d9ce1f3d8a4dbd2e55baf3376b155d4665afa7",
+    "proposed-records.json": "9c3675ed4abeeccd074fb54c472ae5b1000c4e3a5314eddf3ef7786d5d83856a",
+    "identity-only-records.json": "1fc314e4a47717bce195b39fe7f1e66bd31f6af892fca4a9420a653eab927a37",
+    "exploration-paths.json": "211e9f91423b33bddfc07e009cac3cb4e045b0766765d87650d378722402604c",
+    "decision-request.json": "0180eab0d4c01b01f7ccd896898e50fac250c27e125088df3e41373f08974e16",
+    "README.md": "58a1ce2cb43f77d8fdab7a202c2a7cd687eb841e156cab62d10d1be755a60f71"
+  },
+  "authority": "pending-human-review-only"
+}

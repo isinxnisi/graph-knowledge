@@ -1,0 +1,147 @@
+{
+  "id": "Q11599582",
+  "lastrevid": 2552813487,
+  "labels": {
+    "ja": {
+      "language": "ja",
+      "value": "笑ゥせぇるすまん"
+    },
+    "en": {
+      "language": "en",
+      "value": "The Laughing Salesman"
+    },
+    "zh": {
+      "language": "zh",
+      "value": "黑色推銷員"
+    },
+    "ar": {
+      "language": "ar",
+      "value": "مندوب المبيعات الضاحك"
+    },
+    "tl": {
+      "language": "tl",
+      "value": "The Laughing Salesman"
+    },
+    "ast": {
+      "language": "ast",
+      "value": "The Laughing Salesman"
+    },
+    "ga": {
+      "language": "ga",
+      "value": "The Laughing Salesman"
+    },
+    "de": {
+      "language": "de",
+      "value": "The Laughing Salesman"
+    },
+    "vi": {
+      "language": "vi",
+      "value": "Warau seerusuman"
+    },
+    "ko": {
+      "language": "ko",
+      "value": "웃는 세일즈맨"
+    }
+  },
+  "aliases": {
+    "ja": [
+      {
+        "language": "ja",
+        "value": "黒イせえるすまん"
+      },
+      {
+        "language": "ja",
+        "value": "喪黒福造"
+      },
+      {
+        "language": "ja",
+        "value": "笑ウせえるすまん"
+      },
+      {
+        "language": "ja",
+        "value": "帰ッテキタせえるすまん"
+      },
+      {
+        "language": "ja",
+        "value": "笑うセールスマン"
+      },
+      {
+        "language": "ja",
+        "value": "黒ィせえるすまん"
+      },
+      {
+        "language": "ja",
+        "value": "黒ィせぇるすまん"
+      },
+      {
+        "language": "ja",
+        "value": "黒イせぇるすまん"
+      },
+      {
+        "language": "ja",
+        "value": "笑ウせぇるすまん"
+      },
+      {
+        "language": "ja",
+        "value": "笑うせぇるすまん"
+      }
+    ],
+    "zh": [
+      {
+        "language": "zh",
+        "value": "新黑色推銷員"
+      }
+    ],
+    "en": [
+      {
+        "language": "en",
+        "value": "Warau Salesman"
+      }
+    ]
+  },
+  "claims": {
+    "P31": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P31",
+          "hash": "549c072d6be8a6a43f999d1d0e82640b16c4260e",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 21198342,
+              "id": "Q21198342"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q11599582$A65A7B60-014F-4A8A-B45F-1678DA7945EB",
+        "rank": "normal"
+      }
+    ],
+    "P50": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P50",
+          "hash": "cb000a3c9fbe2c4096c3ffcf0a812b6689e01958",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 7784543,
+              "id": "Q7784543"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q11599582$59d79f61-4a64-70eb-cf20-44651d8ad674",
+        "rank": "normal"
+      }
+    ],
+    "P110": []
+  }
+}

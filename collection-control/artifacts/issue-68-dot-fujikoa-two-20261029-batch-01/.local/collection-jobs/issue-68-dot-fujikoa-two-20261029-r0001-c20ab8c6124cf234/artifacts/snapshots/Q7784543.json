@@ -1,0 +1,271 @@
+{
+  "id": "Q7784543",
+  "lastrevid": 2553191646,
+  "labels": {
+    "zh-tw": {
+      "language": "zh-tw",
+      "value": "藤子不二雄Ⓐ"
+    },
+    "zh-hans": {
+      "language": "zh-hans",
+      "value": "藤子不二雄Ⓐ"
+    },
+    "zh-hant": {
+      "language": "zh-hant",
+      "value": "藤子不二雄Ⓐ"
+    },
+    "ja": {
+      "language": "ja",
+      "value": "藤子不二雄Ⓐ"
+    },
+    "ko": {
+      "language": "ko",
+      "value": "후지코 후지오 Ⓐ"
+    },
+    "zh": {
+      "language": "zh",
+      "value": "藤子不二雄Ⓐ"
+    },
+    "zh-hk": {
+      "language": "zh-hk",
+      "value": "藤子不二雄Ⓐ"
+    },
+    "zh-cn": {
+      "language": "zh-cn",
+      "value": "藤子不二雄Ⓐ"
+    },
+    "yue": {
+      "language": "yue",
+      "value": "藤子不二雄Ⓐ"
+    },
+    "en": {
+      "language": "en",
+      "value": "Fujiko Fujio A"
+    },
+    "es": {
+      "language": "es",
+      "value": "Fujiko Fujio A"
+    },
+    "de": {
+      "language": "de",
+      "value": "Motoo Abiko"
+    },
+    "fr": {
+      "language": "fr",
+      "value": "Motoo Abiko"
+    },
+    "nl": {
+      "language": "nl",
+      "value": "Motoo Abiko"
+    },
+    "ast": {
+      "language": "ast",
+      "value": "Motoo Abiko"
+    },
+    "it": {
+      "language": "it",
+      "value": "Fujiko Fujio A"
+    },
+    "sq": {
+      "language": "sq",
+      "value": "Fujiko Fujio A"
+    },
+    "gl": {
+      "language": "gl",
+      "value": "Motoo Abiko"
+    },
+    "ca": {
+      "language": "ca",
+      "value": "Fujiko Fujio A"
+    },
+    "af": {
+      "language": "af",
+      "value": "Fujiko Fujio A"
+    },
+    "nb": {
+      "language": "nb",
+      "value": "Fujiko Fujio A"
+    },
+    "tr": {
+      "language": "tr",
+      "value": "Fujiko Fujio"
+    },
+    "mul": {
+      "language": "mul",
+      "value": "Fujiko Fujio A"
+    }
+  },
+  "aliases": {
+    "en": [
+      {
+        "language": "en",
+        "value": "Fujiko Fujio (A)"
+      },
+      {
+        "language": "en",
+        "value": "Motoo Abiko"
+      }
+    ],
+    "de": [
+      {
+        "language": "de",
+        "value": "Fujiko Fujio (A)"
+      },
+      {
+        "language": "de",
+        "value": "Fujio A. Fujiko"
+      }
+    ],
+    "es": [
+      {
+        "language": "es",
+        "value": "Motoo Abiko"
+      },
+      {
+        "language": "es",
+        "value": "Fujiko Fujio (A)"
+      }
+    ],
+    "fr": [
+      {
+        "language": "fr",
+        "value": "Fujiko Fujio (A)"
+      },
+      {
+        "language": "fr",
+        "value": "Fujio A. Fujiko"
+      }
+    ],
+    "ja": [
+      {
+        "language": "ja",
+        "value": "安孫子素雄"
+      },
+      {
+        "language": "ja",
+        "value": "藤子A"
+      },
+      {
+        "language": "ja",
+        "value": "藤子不二雄A"
+      },
+      {
+        "language": "ja",
+        "value": "あびこ もとお"
+      },
+      {
+        "language": "ja",
+        "value": "ふじこ ふじお えー"
+      }
+    ],
+    "zh": [
+      {
+        "language": "zh",
+        "value": "藤子不二雄A"
+      },
+      {
+        "language": "zh",
+        "value": "安孫子素雄"
+      }
+    ],
+    "gl": [
+      {
+        "language": "gl",
+        "value": "安孫子 素雄"
+      }
+    ],
+    "ca": [
+      {
+        "language": "ca",
+        "value": "Motoo Abiko"
+      },
+      {
+        "language": "ca",
+        "value": "Fujiko A. Fujio"
+      }
+    ],
+    "ko": [
+      {
+        "language": "ko",
+        "value": "아비코 모토오"
+      },
+      {
+        "language": "ko",
+        "value": "후지코 A"
+      },
+      {
+        "language": "ko",
+        "value": "후지코 후지오 A"
+      }
+    ],
+    "af": [
+      {
+        "language": "af",
+        "value": "Fujiko Fujio (A)"
+      },
+      {
+        "language": "af",
+        "value": "Fujio A. Fujiko"
+      },
+      {
+        "language": "af",
+        "value": "Motoo Abiko"
+      },
+      {
+        "language": "af",
+        "value": "Fujiko A. Fujio"
+      }
+    ]
+  },
+  "claims": {
+    "P31": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P31",
+          "hash": "ad7d38a03cdd40cdc373de0dc4e7b7fcbccb31d9",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 5,
+              "id": "Q5"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q7784543$F431C2D8-8D2C-485F-B24B-CB30682148CC",
+        "rank": "normal",
+        "references": [
+          {
+            "hash": "0ee3b3ba1c958f4c3dcba7ed8091fe4b57311348",
+            "snaks": {
+              "P143": [
+                {
+                  "snaktype": "value",
+                  "property": "P143",
+                  "hash": "cb49f6fa327b245e4a5aaf48c44b3f503bcd4265",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 30239,
+                      "id": "Q30239"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P143"
+            ]
+          }
+        ]
+      }
+    ],
+    "P50": [],
+    "P110": []
+  }
+}
