@@ -1,0 +1,446 @@
+{
+  "requestId": "issue-16-adachi-three-20261025",
+  "request": {
+    "schemaVersion": 1,
+    "id": "issue-16-adachi-three-20261025",
+    "kind": "issue-prepare",
+    "status": "approved",
+    "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
+    "issueAdapterSha256": "9e0231ab0f444e181e6672d28759b729c108ae2d7816915789a794ba1465656e",
+    "applyAuthorized": {
+      "local": false,
+      "beta": false,
+      "vps": false
+    },
+    "approvalScope": "issue-manga-preparation-collection-review-only",
+    "humanDecision": {
+      "actorType": "human",
+      "reviewer": "プロジェクト運営者",
+      "decidedAt": "2026-10-25T11:22:31+09:00",
+      "statement": "2026-10-25のチャットで、あだち充・タッチ・H2・MIXの3作品について、WikidataとNDL作成書誌、合計最大30試行で候補収集を明示承認し、既存CollectionWorkerの正式なIssue許可と購読登録を依頼。対象3組と2取得元に限定し、収集・候補レビューまで。正式受入・公開applyは含まない。Issue #25の同名対象で過去に収集済みの成果があれば重複収集せず照合・再利用する。"
+    },
+    "permission": {
+      "schemaVersion": 1,
+      "approvalId": "adachi-three-20261025",
+      "status": "approved",
+      "approvalScope": "issue-manga-preparation-collection-review-only",
+      "adapter": "manga-discovery-v2",
+      "targets": [
+        {
+          "person": "あだち充",
+          "work": "タッチ"
+        },
+        {
+          "person": "あだち充",
+          "work": "H2"
+        },
+        {
+          "person": "あだち充",
+          "work": "MIX"
+        }
+      ],
+      "requestPolicy": {
+        "maxAttempts": 30,
+        "attemptsPerRequest": 2,
+        "minIntervalSeconds": 3,
+        "timeoutSeconds": 20,
+        "maxBytes": 4194304
+      },
+      "humanDecision": {
+        "actorType": "human",
+        "reviewer": "プロジェクト運営者",
+        "decidedAt": "2026-10-25T11:22:31+09:00",
+        "statement": "2026-10-25のチャットで、あだち充・タッチ・H2・MIXの3作品について、WikidataとNDL作成書誌、合計最大30試行で候補収集を明示承認し、既存CollectionWorkerの正式なIssue許可と購読登録を依頼。対象3組と2取得元に限定し、収集・候補レビューまで。正式受入・公開applyは含まない。Issue #25の同名対象で過去に収集済みの成果があれば重複収集せず照合・再利用する。"
+      }
+    },
+    "issueOrigin": {
+      "repository": "isinxnisi/graph-knowledge",
+      "issueNumber": 16,
+      "approvalId": "adachi-three-20261025",
+      "permissionSha256": "0db3f253fc65572d886419bc9982b1e3f1052e6002d9a5443e54bc444fef0184",
+      "issueBodySha256": "130fbcdce3b248d1b3b4498a54ff9076aaba6b451b41456304c9c493b3a1c7c7"
+    },
+    "issueSnapshot": {
+      "url": "https://github.com/isinxnisi/graph-knowledge/issues/16",
+      "updatedAt": "2026-10-25T02:22:46Z",
+      "body": "> **収集計画台帳の具体候補／実行未承認**。このIssueは「検索プリセットそのもの」でも「Workerへの収集依頼」でもありません。台帳を作成・編集してもWorkerは起動しません。\n\n| 項目 | 内容 |\n| --- | --- |\n| 位置づけ | 具体的な探索を可能にするための**収集企画候補** |\n| 関連親企画 | #5 |\n| 知識世界 | 漫画・アニメ |\n| 準備状態 | 実行定義前の具体候補 |\n| 優先度 | 未評価（人間との計画検討で決める） |\n| 実行承認 | **なし** |\n\n## ユーザーに届けたい探索体験\nタッチから作者を通ってH2／MIXへ辿れるか。作品とシリーズ・続編を別の意味として扱えるか。\n\n**想定する経路**：漫画作品 → 著者 → 漫画作品（同一人物による制作Claim）\n\n## 最初の調査・収集範囲（企画案）\nあだち充と漫画『タッチ』『H2』『MIX』の代表刊行物・著作者クレジット。派生アニメ・実写は含めない。\n\n## 候補資料と根拠\n小学館公式作品情報・NDL作成書誌の候補。ISBN、QID、巻・版は別途確認。\n\n## 意味・品質上の注意\nシリーズ／続編を事実としてつなぐには独立根拠・関係定義が必要。著作者の同一性を確認。\n\n既存102作品候補に存在。新規取得対象か、既存公開KGと照合が必要。\n\n## 実行可能になるまで\n1. 対象Entity／期間／版・資料の利用可能性を確定し、既存公開KGと正式受入済み未公開集合を区別して重複を確認。\n2. 必要なPredicate／Role・現在の検索能力と、データだけでは実現できない探索条件を切り分ける。\n3. 実装可能なadapter・上限・具体的な識別子／資料を伴うテーマrevision／recipeを作成し、**別途人間レビュー・承認**を受ける。\n\n探索の問いとテーマは1対1固定ではない。複数収集テーマが同じ探索体験を補強することもある。\n\n参照：[知識世界・探索計画](https://github.com/isinxnisi/graph-knowledge/blob/main/docs/design/KNOWLEDGE_WORLDS_AND_COVERAGE_PLAN.md) ／ [具体的な探索プリセット](https://github.com/isinxnisi/graph-knowledge/blob/main/docs/design/DISCOVERY_PATH_PRESETS.md) ／ [収集契約](https://github.com/isinxnisi/graph-knowledge/blob/main/docs/design/COLLECTION_THEMES.md)\n\n---\n**実行の境界**：実行依頼は、明示的人間承認と固定版・hashを伴って専用ブランチ `codex/collection-control` の `collection-control/requests/*.json` に登録された場合に限る。\n\n## 2026-10-25：3作品の候補収集を承認\n\n運営者はあだち充→タッチ／H2／MIXの3組、Wikidata構造化情報とNDL作成書誌、準備と子収集合計最大30試行の候補収集を明示承認。旧Issue #25の対象と重なるため、既存の実行成果・cache・承認・receiptの重複を照合し、再受入・再公開はしない。同一3組について既存の取得で十分なら通信0件・既存成果のレビュー共有でもよい。Role・書誌同定の保留は推測解除しない。正式受入・公開は別判断。\n\n<!-- plunode-collection-permission:v1 -->\n```json\n{\n  \"schemaVersion\": 1,\n  \"approvalId\": \"adachi-three-20261025\",\n  \"status\": \"approved\",\n  \"approvalScope\": \"issue-manga-preparation-collection-review-only\",\n  \"adapter\": \"manga-discovery-v2\",\n  \"targets\": [\n    {\n      \"person\": \"あだち充\",\n      \"work\": \"タッチ\"\n    },\n    {\n      \"person\": \"あだち充\",\n      \"work\": \"H2\"\n    },\n    {\n      \"person\": \"あだち充\",\n      \"work\": \"MIX\"\n    }\n  ],\n  \"requestPolicy\": {\n    \"maxAttempts\": 30,\n    \"attemptsPerRequest\": 2,\n    \"minIntervalSeconds\": 3,\n    \"timeoutSeconds\": 20,\n    \"maxBytes\": 4194304\n  },\n  \"humanDecision\": {\n    \"actorType\": \"human\",\n    \"reviewer\": \"プロジェクト運営者\",\n    \"decidedAt\": \"2026-10-25T11:22:31+09:00\",\n    \"statement\": \"2026-10-25のチャットで、あだち充・タッチ・H2・MIXの3作品について、WikidataとNDL作成書誌、合計最大30試行で候補収集を明示承認し、既存CollectionWorkerの正式なIssue許可と購読登録を依頼。対象3組と2取得元に限定し、収集・候補レビューまで。正式受入・公開applyは含まない。Issue #25の同名対象で過去に収集済みの成果があれば重複収集せず照合・再利用する。\"\n  }\n}\n```\n<!-- /plunode-collection-permission:v1 -->\n"
+    },
+    "firstRecipeRevision": 26,
+    "recipeRevisionCount": 1
+  },
+  "requestSha256": "5c15cdf5d521ca7bb54c94cb6471fb129263d9cd25987a548b0fd50b56aab288",
+  "kind": "issue-prepare",
+  "phase": "waiting-lock",
+  "generation": 3718,
+  "attempts": 1,
+  "workerId": "plunode-wsl",
+  "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
+  "updatedAt": "2026-10-29T19:48:36+00:00",
+  "result": {
+    "schemaVersion": 1,
+    "status": "prepared-candidates-not-accepted",
+    "issueOrigin": {
+      "repository": "isinxnisi/graph-knowledge",
+      "issueNumber": 16,
+      "approvalId": "adachi-three-20261025",
+      "permissionSha256": "0db3f253fc65572d886419bc9982b1e3f1052e6002d9a5443e54bc444fef0184",
+      "issueBodySha256": "130fbcdce3b248d1b3b4498a54ff9076aaba6b451b41456304c9c493b3a1c7c7"
+    },
+    "counts": {
+      "approvedWorks": 3,
+      "preparedWorks": 0,
+      "preparedPeople": 0,
+      "batches": 0,
+      "holds": 1,
+      "networkAttempts": 1,
+      "reusedWorks": 3,
+      "reusedPublishedClaims": 2,
+      "reusedHeldWorks": 1
+    },
+    "holds": [
+      {
+        "reason": "publication-identity-unconfirmed",
+        "work": "タッチ",
+        "isbn13": "9784091218612",
+        "matchingRecords": 0,
+        "records": [
+          {
+            "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I000001790190",
+            "isbn13": [
+              "9784091218612"
+            ],
+            "title": [
+              "タッチ. vol.1"
+            ],
+            "mainTitles": [
+              "タッチ"
+            ],
+            "volume": [
+              "vol.1"
+            ],
+            "edition": [],
+            "responsibilities": [
+              "あだち充 原作"
+            ],
+            "publisher": [
+              "小学館"
+            ],
+            "language": [
+              "jpn"
+            ],
+            "genre": [
+              "児童図書",
+              "漫画"
+            ]
+          }
+        ],
+        "priorReview": {
+          "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0008-9f792bd2246a1595-review-7b6502faf255147c/review-manifest.json",
+          "sha256": "97ae2100ec16c5c871f7445d1426e6d7a22da6cb9b98dff9c7f90739bff8d2bc"
+        }
+      }
+    ],
+    "reusedReviews": [
+      {
+        "person": "あだち充",
+        "work": "タッチ",
+        "isbn13": "9784091218612",
+        "sourceJobId": "issue-25-utc-recovery-r0008-9f792bd2246a1595",
+        "review": {
+          "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0008-9f792bd2246a1595-review-7b6502faf255147c/review-manifest.json",
+          "sha256": "97ae2100ec16c5c871f7445d1426e6d7a22da6cb9b98dff9c7f90739bff8d2bc"
+        },
+        "providerBodiesSha256": {
+          "wikidata-Q351742": "14efdc36b2a7dd49135a9275e5aa09c25f7fca2cceceacc848540e9a5e059432",
+          "wikidata-Q619500": "a65cd5332f31f1f55f20dce7ff2f8caab613f19124c99eb42fd884edfe0a7bf4",
+          "ndl-9784091218612": "b25cad851331cbfa67ced0bef168d01f4e6976293b4bc0c17639c36db0ef7854"
+        },
+        "receiptReferences": [
+          {
+            "file": "datasets/manga-collection/accepted-r0003-20261017/acceptance.json",
+            "sha256": "7d53abbd472fcbf0cba57fa5202d6fd4f8eb12c9ebda34bd1e7a8badca701831"
+          },
+          {
+            "file": "datasets/manga-collection/accepted-issue-25-utc-recovery-04-normal/acceptance.json",
+            "sha256": "052a7d1ef334074ce2b94837a7d0dfc803bde9526abc9d8e8e7f058b36acdf62"
+          },
+          {
+            "file": "datasets/manga-collection/accepted-issue-34-obata-drawing-20261021/acceptance.json",
+            "sha256": "7f62ec0f27d4fedfbb09066893d4ac94d88eaf016c2fff3959a001ea9f228efe"
+          },
+          {
+            "file": "datasets/manga-collection/accepted-issue-25-utc-recovery-03-normal/acceptance.json",
+            "sha256": "2cd8cb76b64be0d9d19fb3da8ceb4d3e185ca086bba0e90917a7b24a1da0bedf"
+          },
+          {
+            "file": "datasets/manga-collection/accepted-issue-25-utc-recovery-08-normal/acceptance.json",
+            "sha256": "5b3fdc3aa705c5e73f5ba11b40052be700d71069b0a25a12943cb189a2ee1109"
+          },
+          {
+            "file": "datasets/manga-collection/accepted-issue-25-utc-recovery-06-normal/acceptance.json",
+            "sha256": "4e94de08943725549f4e01be9e6b1b09f2f9d88c5ca2dfaa9aa5b7c2395930f4"
+          },
+          {
+            "file": "datasets/manga-collection/accepted-r0002-20261017/acceptance.json",
+            "sha256": "9b28562b9846970cd30b9261d4659d505e9df06e014d2809d6517aa39836f567"
+          },
+          {
+            "file": "datasets/manga-collection/accepted-issue-25-utc-recovery-01-normal/acceptance.json",
+            "sha256": "d271f32767dab030bd26ddcef669f48237cc303a8c605c58df047df8aea71fb6"
+          },
+          {
+            "file": "datasets/manga-collection/accepted-original-story-r0002-20261017/acceptance.json",
+            "sha256": "9fdb9933c0d78795769bf27eebb7ecb4ec7cccc37f6ee6827e55dd119e727801"
+          },
+          {
+            "file": "datasets/manga-collection/accepted-issue-25-utc-recovery-07-normal/acceptance.json",
+            "sha256": "b6a521d5fffdd6cafc3a3df9f8f963c571520812053aad4f259eea3e22ebee0b"
+          }
+        ],
+        "anchors": {
+          "personQid": "Q351742",
+          "workQid": "Q619500",
+          "scope": {
+            "name": "タッチ",
+            "wikidata": "Q619500",
+            "isbn13": "9784091218612",
+            "ndlMainTitles": [
+              "タッチ"
+            ],
+            "expectedVolume": [
+              "vol.1"
+            ],
+            "expectedEdition": [],
+            "volumeLabel": "第1巻（NDL巻次 vol.1）",
+            "editionLabel": null
+          }
+        },
+        "state": "held-existing-evidence",
+        "holds": [
+          {
+            "reason": "publication-identity-unconfirmed",
+            "work": "タッチ",
+            "isbn13": "9784091218612",
+            "matchingRecords": 0,
+            "records": [
+              {
+                "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I000001790190",
+                "isbn13": [
+                  "9784091218612"
+                ],
+                "title": [
+                  "タッチ. vol.1"
+                ],
+                "mainTitles": [
+                  "タッチ"
+                ],
+                "volume": [
+                  "vol.1"
+                ],
+                "edition": [],
+                "responsibilities": [
+                  "あだち充 原作"
+                ],
+                "publisher": [
+                  "小学館"
+                ],
+                "language": [
+                  "jpn"
+                ],
+                "genre": [
+                  "児童図書",
+                  "漫画"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "person": "あだち充",
+        "work": "H2",
+        "isbn13": "9784091231512",
+        "sourceJobId": "issue-25-utc-recovery-r0008-9f792bd2246a1595",
+        "review": {
+          "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0008-9f792bd2246a1595-review-7b6502faf255147c/review-manifest.json",
+          "sha256": "97ae2100ec16c5c871f7445d1426e6d7a22da6cb9b98dff9c7f90739bff8d2bc"
+        },
+        "providerBodiesSha256": {
+          "wikidata-Q351742": "14efdc36b2a7dd49135a9275e5aa09c25f7fca2cceceacc848540e9a5e059432",
+          "wikidata-Q652892": "bc7393508664918e11053bdd0d016b399ce427a978b2fe0026928d253419f85b",
+          "ndl-9784091231512": "9f989573101f724f8967c277701ca6ebf70df184bfe64c1e82c7d614eff38fb5"
+        },
+        "receiptReferences": [
+          {
+            "file": "datasets/manga-collection/accepted-r0003-20261017/acceptance.json",
+            "sha256": "7d53abbd472fcbf0cba57fa5202d6fd4f8eb12c9ebda34bd1e7a8badca701831"
+          },
+          {
+            "file": "datasets/manga-collection/accepted-issue-25-utc-recovery-04-normal/acceptance.json",
+            "sha256": "052a7d1ef334074ce2b94837a7d0dfc803bde9526abc9d8e8e7f058b36acdf62"
+          },
+          {
+            "file": "datasets/manga-collection/accepted-issue-34-obata-drawing-20261021/acceptance.json",
+            "sha256": "7f62ec0f27d4fedfbb09066893d4ac94d88eaf016c2fff3959a001ea9f228efe"
+          },
+          {
+            "file": "datasets/manga-collection/accepted-issue-25-utc-recovery-03-normal/acceptance.json",
+            "sha256": "2cd8cb76b64be0d9d19fb3da8ceb4d3e185ca086bba0e90917a7b24a1da0bedf"
+          },
+          {
+            "file": "datasets/manga-collection/accepted-issue-25-utc-recovery-08-normal/acceptance.json",
+            "sha256": "5b3fdc3aa705c5e73f5ba11b40052be700d71069b0a25a12943cb189a2ee1109"
+          },
+          {
+            "file": "datasets/manga-collection/accepted-issue-25-utc-recovery-06-normal/acceptance.json",
+            "sha256": "4e94de08943725549f4e01be9e6b1b09f2f9d88c5ca2dfaa9aa5b7c2395930f4"
+          },
+          {
+            "file": "datasets/manga-collection/accepted-r0002-20261017/acceptance.json",
+            "sha256": "9b28562b9846970cd30b9261d4659d505e9df06e014d2809d6517aa39836f567"
+          },
+          {
+            "file": "datasets/manga-collection/accepted-issue-25-utc-recovery-01-normal/acceptance.json",
+            "sha256": "d271f32767dab030bd26ddcef669f48237cc303a8c605c58df047df8aea71fb6"
+          },
+          {
+            "file": "datasets/manga-collection/accepted-original-story-r0002-20261017/acceptance.json",
+            "sha256": "9fdb9933c0d78795769bf27eebb7ecb4ec7cccc37f6ee6827e55dd119e727801"
+          },
+          {
+            "file": "datasets/manga-collection/accepted-issue-25-utc-recovery-07-normal/acceptance.json",
+            "sha256": "b6a521d5fffdd6cafc3a3df9f8f963c571520812053aad4f259eea3e22ebee0b"
+          }
+        ],
+        "anchors": {
+          "personQid": "Q351742",
+          "workQid": "Q652892",
+          "scope": {
+            "name": "H2",
+            "wikidata": "Q652892",
+            "isbn13": "9784091231512",
+            "ndlMainTitles": [
+              "H2"
+            ],
+            "expectedVolume": [
+              "1"
+            ],
+            "expectedEdition": [],
+            "volumeLabel": "第1巻（NDL巻次 1）",
+            "editionLabel": null
+          }
+        },
+        "state": "already-published",
+        "evidenceSha256": {
+          "citations": {
+            "07906647-1603-470d-a950-a663290bbd75": "480c7edeb0d073dcf15245efaaa89b4bd4820637ccce201644e71858a34a8a41"
+          },
+          "sources": {
+            "4ede2d3e-9899-4d1b-bf8a-e08fd3f36080": "27faceb207e19658e554bec1a61c39fc358fff4d61c0f120c0c8aa54e074e6f3"
+          }
+        },
+        "publicRevision": "b74a4b00-9454-412f-af5d-1317713a543c",
+        "claimSha256": {
+          "f1260c3f-2637-416f-b407-2052a7c36717": "79b5636c34e9b90f8d53ef1a380ae98506cb3ae5bbf3b5b85379814b3644edea"
+        }
+      },
+      {
+        "person": "あだち充",
+        "work": "MIX",
+        "isbn13": "9784091238672",
+        "sourceJobId": "issue-25-utc-recovery-r0008-9f792bd2246a1595",
+        "review": {
+          "file": "datasets/manga-collection/workflow-reviews/issue-25-utc-recovery-r0008-9f792bd2246a1595-review-7b6502faf255147c/review-manifest.json",
+          "sha256": "97ae2100ec16c5c871f7445d1426e6d7a22da6cb9b98dff9c7f90739bff8d2bc"
+        },
+        "providerBodiesSha256": {
+          "wikidata-Q351742": "14efdc36b2a7dd49135a9275e5aa09c25f7fca2cceceacc848540e9a5e059432",
+          "wikidata-Q11231713": "428b94a173c98d9112004cb23f7b5189d9bb8039d0794eb6fdf56d31d229b0cb",
+          "ndl-9784091238672": "e26b03e8d9bc84b3c1dde0262b663cf87baa6d01deeccc7d994a9173c42870dc"
+        },
+        "receiptReferences": [
+          {
+            "file": "datasets/manga-collection/accepted-r0003-20261017/acceptance.json",
+            "sha256": "7d53abbd472fcbf0cba57fa5202d6fd4f8eb12c9ebda34bd1e7a8badca701831"
+          },
+          {
+            "file": "datasets/manga-collection/accepted-issue-25-utc-recovery-04-normal/acceptance.json",
+            "sha256": "052a7d1ef334074ce2b94837a7d0dfc803bde9526abc9d8e8e7f058b36acdf62"
+          },
+          {
+            "file": "datasets/manga-collection/accepted-issue-34-obata-drawing-20261021/acceptance.json",
+            "sha256": "7f62ec0f27d4fedfbb09066893d4ac94d88eaf016c2fff3959a001ea9f228efe"
+          },
+          {
+            "file": "datasets/manga-collection/accepted-issue-25-utc-recovery-03-normal/acceptance.json",
+            "sha256": "2cd8cb76b64be0d9d19fb3da8ceb4d3e185ca086bba0e90917a7b24a1da0bedf"
+          },
+          {
+            "file": "datasets/manga-collection/accepted-issue-25-utc-recovery-08-normal/acceptance.json",
+            "sha256": "5b3fdc3aa705c5e73f5ba11b40052be700d71069b0a25a12943cb189a2ee1109"
+          },
+          {
+            "file": "datasets/manga-collection/accepted-issue-25-utc-recovery-06-normal/acceptance.json",
+            "sha256": "4e94de08943725549f4e01be9e6b1b09f2f9d88c5ca2dfaa9aa5b7c2395930f4"
+          },
+          {
+            "file": "datasets/manga-collection/accepted-r0002-20261017/acceptance.json",
+            "sha256": "9b28562b9846970cd30b9261d4659d505e9df06e014d2809d6517aa39836f567"
+          },
+          {
+            "file": "datasets/manga-collection/accepted-issue-25-utc-recovery-01-normal/acceptance.json",
+            "sha256": "d271f32767dab030bd26ddcef669f48237cc303a8c605c58df047df8aea71fb6"
+          },
+          {
+            "file": "datasets/manga-collection/accepted-original-story-r0002-20261017/acceptance.json",
+            "sha256": "9fdb9933c0d78795769bf27eebb7ecb4ec7cccc37f6ee6827e55dd119e727801"
+          },
+          {
+            "file": "datasets/manga-collection/accepted-issue-25-utc-recovery-07-normal/acceptance.json",
+            "sha256": "b6a521d5fffdd6cafc3a3df9f8f963c571520812053aad4f259eea3e22ebee0b"
+          }
+        ],
+        "anchors": {
+          "personQid": "Q351742",
+          "workQid": "Q11231713",
+          "scope": {
+            "name": "MIX",
+            "wikidata": "Q11231713",
+            "isbn13": "9784091238672",
+            "ndlMainTitles": [
+              "Mix"
+            ],
+            "expectedVolume": [
+              "1"
+            ],
+            "expectedEdition": [],
+            "volumeLabel": "第1巻（NDL巻次 1）",
+            "editionLabel": null
+          }
+        },
+        "state": "already-published",
+        "evidenceSha256": {
+          "citations": {
+            "1cd43ec8-2630-4fbc-8267-1ce03a9ee04c": "2f862b1b5543732593883e06cc6e7de1aa2a3770e997ccb9d96e4262e8e160d6"
+          },
+          "sources": {
+            "d5e2fedb-35fc-4544-9fbd-c0d81ccb9080": "683ba49d407279d45be32ad93f45614176902e68b927a1e53f6dd7e47be027ef"
+          }
+        },
+        "publicRevision": "b74a4b00-9454-412f-af5d-1317713a543c",
+        "claimSha256": {
+          "c72262df-ce7b-4514-9341-55d242f94bca": "581231788c6fae440c60b1e6c91c780247429338acdde2b656ecacbb3997cbdb"
+        }
+      }
+    ],
+    "batchRequests": [],
+    "publicApply": false,
+    "preparationDirectory": "/home/isinxnisi/.local/share/plunode-collection-worker-phase-b-20261020/runtime/.local/collection-issues/issue-16-adachi-three-20261025",
+    "generatedArtifacts": {
+      ".local/collection-issues/issue-16-adachi-three-20261025/reused-reviews.json": "987608a71b4e9cd73d05c0933b9a2ab5365cd827be7f9bc11deaa8874f15197b"
+    }
+  },
+  "executionComplete": true,
+  "message": "共通ロック使用中。次回に再確認する。",
+  "retryAt": 1793272952.367387
+}
