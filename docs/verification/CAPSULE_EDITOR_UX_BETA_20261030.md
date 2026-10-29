@@ -197,4 +197,22 @@ Surfaceは表示場所、Studioは草稿・履歴・閲覧状態、Workspaceは�
 - 独立レビューではblur後の残留タップと関係DOMチップの時間閾値を追加修正し、再確認で阻害指摘なし。
 - 実ブラウザの390px幅でGraph→Capsule作成→ノードをダブルクリック→Entity編集フォームを確認した。これはマウスイベントでありiPhone実機の指操作とは異なる。native TouchEventの回帰テストも、実機の指の滑りや体感の確認済みという意味ではない。
 
-反映結果・最終画面の記録は、固定commitのproduction buildと既存3200／HTTPS betaへのWeb切替後に追記する。DB migration・設定・本番VPSは今回の追加修正対象外。
+反映結果は以下のとおり。DB migration・設定・本番VPSは今回の追加修正対象外。
+
+
+### スマホ調整版の実環境反映
+
+- 配置commit: `fb8e8f49458f7892d27000a5da34fe8229a225d1`（日本語commitでmainへ通常push成功）。build ID: `1rJbvsAmvjfO_C37LdPZs`。source archive SHA256: `029e203528945ab8e40b1f2ebdb9d0e5cee3d2fb1aafbeae8af61455d7174ed8`。
+- Node v24.21.0／既存launcherを使用。Web用Docker imageの変更なし。production buildのコンパイル・型検査成功後、今回用のWeb切替手順で3200を更新した。古いmigration付きの一回用deployは再実行していない。
+- `http://localhost:3200/`と`https://graph-beta.isinxnisi.com/`の両方で上記buildとの一致を確認。公開KGは`public-kg`／revision `34befbcd-8f5f-4cd9-a059-242a3f0b5ffb`を維持。21 runtime設定、12 containerのID・開始時刻、32 artifact hashを保持した。
+- DB操作はなし。000〜014の15件適用済みという直前検証の記録を引き継ぎ、今回ledgerの再照会・migration・復元は行っていない。backend／DB契約のファイルが直前版と同一であることを切替前に照合した。本番VPSは更新していない。
+- HTTPS betaの既存Googleセッションで管理者メニューとMy Capsulesの会員一覧を確認。390px幅のMy Capsulesは44×44pxでSVGの中心ずれ0px。320px幅でもサイトヘッダー53px高の一段表示で、横overflowなし。
+- 保存済み「β確認・形と矢印」をMy Capsulesから再訪し、閲覧で全体表示→編集、ノードのダブルクリック→Entityフォーム、関係チップのダブルクリック→関係フォーム、タイトル変更→破棄確認→元のタイトル・41%の閲覧状態へ復帰を確認。保存版1のまま維持した。
+- 実betaの390×844pxでCapsuleヘッダー77px、Graph領域642px（直前版576.86px）を確認した。3200も実ブラウザで公開KGのGraph→Capsule作成と77pxのヘッダーを確認し、検証の新規草稿は破棄した。
+- 追加修正後の実Google再ログイン、会員への新しい保存、共有・コメントの再投稿はこの節の確認に含めない。直前の確認記録と区別する。iPhone実機の指操作、native日本語IME、ユーザーによる今回版の体験評価は未確認。タッチの機能テストと小画面のマウス操作だけで実機確認済みにしない。
+- Autopilot reviewは未反映候補0・専用branch cleanを確認し、共通holdを保持して変更・検証・commit・反映を行った。今回と無関係なacknowledge／acceptanceは行わず、既存`memo.txt`を保持。最終記録のcommit／push後に保持terminalへEnterを送り解放する。
+
+実betaの画面（Git対象外、開発PCへ保存）：
+
+- [390pxの管理者ヘッダー](C:/Users/nishr/.codex/visualizations/2026/10/29/01a18791-0fba-7ac0-9f89-54c48fdffcf6/capsule-mobile-header.png)
+- [390pxのCapsule編集画面](C:/Users/nishr/.codex/visualizations/2026/10/29/01a18791-0fba-7ac0-9f89-54c48fdffcf6/capsule-mobile-editor.png)
