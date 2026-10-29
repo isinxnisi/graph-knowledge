@@ -1,6 +1,6 @@
 # CollectionWorkerの実行制御
 
-確認: 2026-10-29 20:17:29 JST。
+確認: 2026-10-29 20:22:55 JST。
 
 反映済みcontrolRevision: 8／最後の操作: pub-13abfb93-ba2d-44f7-a56b-352aa7ab0ab0-resume。
 
@@ -51,8 +51,9 @@ Issue確認結果:
     "checkedAt": "2026-10-28T03:37:52+00:00"
   },
   "collection-control/issue-sources/49.json": {
-    "status": "registered: issue-49-dot-hara-souten-20261027",
-    "checkedAt": "2026-10-27T07:53:07+00:00"
+    "status": "held",
+    "reason": "<3>WSL (1073644 - ) ERROR: UtilAcceptVsock:273: accept4 failed 110\nfatal: unable to get password from user\n",
+    "checkedAt": "2026-10-29T11:19:30+00:00"
   },
   "collection-control/issue-sources/50.json": {
     "status": "registered: issue-50-dot-endo-tista-20261027",
@@ -107,8 +108,9 @@ Issue確認結果:
     "checkedAt": "2026-10-29T01:17:27+00:00"
   },
   "collection-control/issue-sources/68.json": {
-    "status": "registered: issue-68-dot-fujikoa-two-20261029",
-    "checkedAt": "2026-10-29T06:07:29+00:00"
+    "status": "held",
+    "reason": "<3>WSL (1073836 - ) ERROR: UtilAcceptVsock:273: accept4 failed 110\nfatal: unable to get password from user\n",
+    "checkedAt": "2026-10-29T11:20:14+00:00"
   },
   "collection-control/issue-sources/69.json": {
     "status": "registered: issue-69-dot-ishinomori-three-20261029",
