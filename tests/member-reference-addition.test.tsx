@@ -7,6 +7,7 @@ import { memberDraftContent, memberDraftRequired, type MemberCapsuleDraft } from
 import MemberReferencePicker from "../components/MemberReferencePicker";
 import examples from "../docs/API_RESPONSE_EXAMPLES.json";
 import { claimDetailSchema, entityDetailSchema } from "../lib/domain/api";
+import { MEMBER_CAPSULE_LIMITS } from "../lib/domain/member-capsule";
 
 vi.mock("../components/ClaimDetails", () => ({ ClaimCard: () => <p>確認した主張と根拠</p> }));
 const claim = claimDetailSchema.parse(examples.claim.claim);
@@ -66,9 +67,9 @@ describe("会員Capsuleへの参照追加", () => {
     expect(() => memberDraftContent(next)).toThrow();
   });
   it("構成上限・別dataset・端点不足を拒否し元draftを変えない", () => {
-    const base = draft(); base.content = { ...base.content, entityIds: Array.from({ length: 30 }, () => crypto.randomUUID()) };
+    const base = draft(); base.content = { ...base.content, entityIds: Array.from({ length: MEMBER_CAPSULE_LIMITS.entities }, () => crypto.randomUUID()) };
     base.base = { ...base.base, content: base.content };
-    expect(() => addMemberReference(base, addition)).toThrow(); expect(base.content.entityIds).toHaveLength(30); expect(base.content.claimIds).toEqual([]);
+    expect(() => addMemberReference(base, addition)).toThrow(); expect(base.content.entityIds).toHaveLength(MEMBER_CAPSULE_LIMITS.entities); expect(base.content.claimIds).toEqual([]);
     expect(() => addMemberReference(draft(), { ...addition, reference: { ...addition.reference, dataset: "pilot-science-v1" } })).toThrow();
     expect(() => addMemberReference(draft(), { ...addition, entities: [entities[0]] })).toThrow();
   });
@@ -78,10 +79,10 @@ describe("会員Capsuleへの参照追加", () => {
     const both = addMemberReference(next, { ...addition, reference: { ...addition.reference, id: denied.id }, claim: denied });
     expect(memberDraftContent(both).claimIds).toEqual([claim.id, denied.id]);
     const full = draft();
-    full.content = { ...full.content, claimIds: Array.from({ length: 60 }, () => crypto.randomUUID()) };
+    full.content = { ...full.content, claimIds: Array.from({ length: MEMBER_CAPSULE_LIMITS.claims }, () => crypto.randomUUID()) };
     full.base = { ...full.base, content: full.content };
     expect(() => addMemberReference(full, addition)).toThrow();
-    expect(full.content.claimIds).toHaveLength(60);
+    expect(full.content.claimIds).toHaveLength(MEMBER_CAPSULE_LIMITS.claims);
   });
   it("未解決の既存主張を残した追加では元の全対象を保持する", () => {
     const base = draft(); const missing = crypto.randomUUID(); const isolated = crypto.randomUUID();

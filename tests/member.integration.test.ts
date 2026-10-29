@@ -10,7 +10,7 @@ import { getMigrations } from "better-auth/db/migration";
 import { startMemberOidc } from "./support/member-oidc";
 import { memberPool } from "../lib/server/member/auth";
 import { memberConfig } from "../lib/server/member/config";
-import type { MemberCapsuleContent } from "../lib/domain/member-capsule";
+import { MEMBER_CAPSULE_LIMITS, type MemberCapsuleContent } from "../lib/domain/member-capsule";
 
 vi.mock("server-only", () => ({}));
 import { memberRuntime } from "../lib/server/member/runtime";
@@ -164,7 +164,8 @@ describe("実OIDC・PostgreSQLによるprivate Capsule", () => {
     expect((await create(alice.cookies.value, { ...content(), dataset: "pilot-science-v1" })).status).toBe(400);
     const id = randomUUID();
     expect((await create(alice.cookies.value, { ...content(), entityIds: [id, id.toUpperCase()] })).status).toBe(400);
-    expect((await create(alice.cookies.value, { ...content(), note: "あ".repeat(33_000) })).status).toBe(413);
+    expect((await create(alice.cookies.value, { ...content(), note: "あ".repeat(33_000) })).status).toBe(400);
+    expect((await create(alice.cookies.value, { ...content(), note: "x".repeat(MEMBER_CAPSULE_LIMITS.bytes) })).status).toBe(413);
   });
   it("外部origin・Origin欠落・認証の外部callbackを拒否する", async () => {
     for (const badOrigin of ["", "http://evil.invalid", "http://127.0.0.1:3220"]) {
@@ -549,11 +550,14 @@ describe("実OIDC・PostgreSQLによるprivate Capsule", () => {
     expect((await collection.GET(request("/", stopped.cookies.value))).status).toBe(401);
     await pool.query('UPDATE "user" SET active = true WHERE id = $1', [user.id]);
   });
-  it("同時作成しても一所有者・datasetの10件上限を越えない", async () => {
+  it("同時作成しても一所有者・datasetの100件上限を越えない", async () => {
+    const {user} = await (await profile.GET(request("/", bob.cookies.value))).json();
+    const count = Number((await memberRuntime().pool.query("SELECT count(*) FROM member_capsule WHERE owner_user_id=$1 AND dataset='demo'",[user.id])).rows[0].count);
+    await memberRuntime().pool.query("INSERT INTO member_capsule(id,owner_user_id,dataset,content) SELECT gen_random_uuid(),$1,'demo',$2::jsonb FROM generate_series(1,$3)",[user.id,JSON.stringify(content()),91-count]);
     const responses = await Promise.all(Array.from({ length: 12 }, () => create(bob.cookies.value)));
     expect(responses.filter(response => response.status === 201)).toHaveLength(9);
     expect(responses.filter(response => response.status === 422)).toHaveLength(3);
-    expect((await (await collection.GET(request("/", bob.cookies.value))).json()).capsules).toHaveLength(10);
+    expect((await (await collection.GET(request("/", bob.cookies.value))).json()).capsules).toHaveLength(100);
   });
   it("同じ所有者でも別datasetの環境から保存を読めない", async () => {
     const { config, pool, auth } = memberRuntime();

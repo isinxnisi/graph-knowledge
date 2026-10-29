@@ -19,3 +19,9 @@ it('キャンセルで即破棄せず、再認可中はダイアログも閉じ�
  const view=(blocked:boolean)=><CommunityRevalidation.Provider value={blocked}><CommunitySafetyActions kind="post" id="p" revision={1} t={t} mutate={vi.fn()} busy={false} reportable/></CommunityRevalidation.Provider>;
  const {rerender}=render(view(false));fireEvent.click(screen.getByRole('button',{name:/Report\s*· post/}));const input=screen.getByLabelText('Reason for reporting');fireEvent.change(input,{target:{value:'private draft'}});fireEvent.click(screen.getByRole('button',{name:'Cancel'}));expect(screen.getByRole('button',{name:'Keep editing'})).toBeDefined();fireEvent.click(screen.getByRole('button',{name:'Keep editing'}));act(()=>rerender(view(true)));expect(screen.queryByRole('dialog')).toBeNull();act(()=>rerender(view(false)));expect(screen.getByLabelText('Reason for reporting')).toBe(input);fireEvent.click(screen.getByRole('button',{name:'Cancel'}));fireEvent.click(screen.getByRole('button',{name:'Discard & close'}));expect(screen.queryByRole('dialog')).toBeNull();
 });
+it('Capsule掲載の通報は掲載IDと読んだ掲載版を既存受付へ送る',async()=>{
+ const mutate=vi.fn().mockResolvedValue({ok:true});
+ render(<CommunitySafetyActions kind="capsule" id="listing-id" revision={4} t={t} mutate={mutate} busy={false} reportable targetLabel="Shared content"/>);
+ fireEvent.click(screen.getByRole('button',{name:/Report\s*· Capsule/}));fireEvent.change(screen.getByLabelText('Reason for reporting'),{target:{value:'Privacy concern'}});fireEvent.click(screen.getByRole('button',{name:'Send report'}));
+ await waitFor(()=>expect(mutate).toHaveBeenCalledWith('/reports',{kind:'capsule',targetId:'listing-id',expectedRevision:4,category:'spam',detail:'Privacy concern'},true));
+});

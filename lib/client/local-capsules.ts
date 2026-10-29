@@ -4,6 +4,7 @@ import { DATASET_MODES, type DatasetMode } from "../domain/dataset";
 import { claimDetailSchema, entityDetailSchema, type ClaimDetail, type EntityDetail } from "../domain/api";
 import { ClientApiError, fetchDatasetRevision, fetchClaim, fetchEntity } from "./api";
 import { emptyGraph, type GraphState } from "./graph-state";
+import { capsuleDocumentSchema, referencesMatchDocument } from "../domain/capsule-document";
 
 export const CAPSULE_LIMITS = { count: 10, entities: 30, claims: 60, title: 80, note: 4000, bytes: 300_000 } as const;
 const ids = (limit: number) => z.array(z.uuidv4()).max(limit).refine(values => new Set(values).size === values.length);
@@ -15,7 +16,10 @@ const originalCapsuleSchema = z.strictObject({
 });
 export const capsuleSchema = originalCapsuleSchema.extend({
   revision: z.number().int().min(1).max(Number.MAX_SAFE_INTEGER), updatedAt: z.iso.datetime().optional(),
-}).refine(value => value.revision === 1 ? value.updatedAt === undefined : value.updatedAt !== undefined);
+  entityIds: ids(200), claimIds: ids(400), document: capsuleDocumentSchema.optional(),
+}).refine(value => value.revision === 1 ? value.updatedAt === undefined : value.updatedAt !== undefined)
+  .refine(referencesMatchDocument)
+  .refine(value => !!value.document || value.entityIds.length <= CAPSULE_LIMITS.entities && value.claimIds.length <= CAPSULE_LIMITS.claims);
 export type LocalCapsule = z.infer<typeof capsuleSchema>;
 const collectionSchema = z.discriminatedUnion("version", [
   z.strictObject({ format: z.literal("local-capsules"), version: z.literal(1), capsules: z.array(originalCapsuleSchema).max(CAPSULE_LIMITS.count) }),

@@ -17,6 +17,8 @@ async function handle(req:Request,ctx:Context){
   if(p.length===1&&p[0]==='recoveries')return s.recoveries(req);
   if(p.length===2&&p[1]==='invitations')return s.invitations(req,p[0]);
   if(p.length===1&&p[0]==='my-posts')return s.ownPosts(req);
+  if(p.length===2&&p[1]==='capsules')return s.listCapsules(req,p[0]);
+  if(p.length===2&&p[0]==='capsules')return s.readCapsule(req,p[1]);
   if(p.length===1)return s.read(req,p[0]);
   if(p.length===2&&p[0]==='threads')return s.thread(req,p[1]);
  }else{
@@ -27,6 +29,8 @@ async function handle(req:Request,ctx:Context){
   if(p.length===3&&p[0]==='invitations'&&['accept','decline','revoke'].includes(p[2]))return s.decideInvitation(req,p[1],p[2] as 'accept'|'decline'|'revoke');
   if(p.length===2&&p[1]==='recovery')return s.requestRecovery(req,p[0]);
   if(p.length===3&&p[0]==='recoveries'&&['accept','cancel'].includes(p[2]))return s.acceptRecovery(req,p[1],p[2] as 'accept'|'cancel');
+  if(p.length===2&&p[1]==='capsules')return s.createCapsuleListing(req,p[0]);
+  if(p.length===3&&p[0]==='capsules'&&['update','withdraw'].includes(p[2]))return s.changeCapsuleListing(req,p[1],p[2] as 'update'|'withdraw');
   if(p.length===2&&p[1]==='threads')return s.createThread(req,p[0]);
   if(p.length===3&&p[0]==='threads'&&p[2]==='posts')return s.post(req,p[1]);
   if(p.length===3&&p[0]==='threads'&&p[2]==='close')return s.closeThread(req,p[1]);

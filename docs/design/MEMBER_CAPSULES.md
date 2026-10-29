@@ -1,5 +1,7 @@
 # 会員Capsule保存：初回の縦経路
 
+> 2026-10-29の新document付きCapsuleは[現行編集契約](CAPSULE_EDITOR.md)を優先する。以下は参照中心の初回UI・形式・検証履歴で、旧構成編集や毎回の現在KG再解決は新documentへ適用しない。所有者認可・失効・競合の境界は継承し、新本文は本人のアカウントへ保存できる。最近／お気に入りはmemberIDで分離したブラウザ内metadataで端末間同期なし。実装・クラウド検証中、既存beta／VPS未反映。[検証・反映状況](../verification/CAPSULE_EDITOR_20261029.md)／[更新手順](../runbooks/CAPSULE_EDITOR_RELEASE.md)。
+
 2026-10-09採用、**会員保存・再閲覧・構成の編集UIを接続**（2026-10-10に閲覧リンクからの参照追加を実装）。実OIDC／専用PostgreSQLで、Explorer→明示保存→別ブラウザ再訪→現在の根拠を試せる段階。本人表示名の設定は公開β step12で追加（[契約](PRODUCT_UI_FOUNDATIONS.md#アカウントメニューと最小設定公開β-step12)）。Google実接続は未了。
 
 同日後続：[特定版の限定リンク共有](CAPSULE_LINK_SHARING.md)を追加した。以下の共有・過去版保存が未実装という記述は会員保存／編集初回の範囲。明示共有した版だけを追加snapshotへ固定し、private編集APIと既存形式は維持する。一般公開・discussionは引き続き未実装。

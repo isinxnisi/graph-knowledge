@@ -21,6 +21,7 @@ import styles from "./SiteHeader.module.css";
 import { supportLabels } from "../lib/i18n/support";
 import { appearanceKey, defaultAppearance, readAppearance, type Appearance } from "../lib/client/appearance";
 
+import MyCapsules from "./MyCapsules";
 import ProfileAvatar from './ProfileAvatar';
 import {usePublicProfilesEnabled} from './PublicProfileAvailability';
 export default function SiteHeader({ dataset, page = "explore", onBeforeAccountNavigation, onPrivacySettings, onLogout, accountBusy = false }: { onBeforeAccountNavigation?: () => boolean; onPrivacySettings?: () => void; onLogout?: () => void; accountBusy?: boolean; user?: MemberUser | null; dataset: DatasetMode; page?: "explore" | "member" | "community" | "shared" | "support" | "ai-lab" }) {
@@ -36,6 +37,7 @@ export default function SiteHeader({ dataset, page = "explore", onBeforeAccountN
   const displayName = currentUser?.name.trim() || text.account;
   const mark = currentUser ? <ProfileAvatar small compact icon={currentUser.profile?.icon??'person'}/> : <Icon name="person" />;
   const [appearance, setAppearance] = useState(defaultAppearance);
+  const [capsulesOpen, setCapsulesOpen] = useState(false);
   const [storageError, setStorageError] = useState(false);
   const menu = useRef<HTMLDetailsElement>(null);
   const accountMenu = useRef<HTMLDetailsElement>(null);
@@ -94,6 +96,8 @@ export default function SiteHeader({ dataset, page = "explore", onBeforeAccountN
     </div>
     <p className={styles.description}>{data.description}</p>
     <div className={styles.tools}>
+      <button aria-label="My Capsules" title="My Capsules" onClick={() => setCapsulesOpen(true)}><Icon name="capsule" /><span className={styles.toolLabel}>My Capsules</span></button>
+      {capsulesOpen && <MyCapsules dataset={dataset} onClose={() => setCapsulesOpen(false)} />}
       {currentUser?.siteOperator&&<Link className={styles.operationsEntry} href="/operations" onClick={closeAccount} aria-label={operationsLabel} title={operationsLabel+" · "+pendingLabel}><Icon name="shield"/><span className={styles.toolLabel}>{locale==='en'?'Operations':'運営'}</span>{operationsBadge}</Link>}
       <details className={`${styles.settings} ${styles.siteMenu}`} data-floating-menu ref={siteMenu} onToggle={event=>{if(event.currentTarget.open){if(accountMenu.current)accountMenu.current.open=false;if(menu.current)menu.current.open=false;}}}>
         <summary aria-label={locale==='en'?'Site menu':'サイトメニュー'} title={locale==='en'?'Explore & communities':'探索とコミュニティ'}><Icon name="list"/><span className={styles.toolLabel}>{locale==='en'?'Explore & connect':'探索・コミュニティ'}</span><Icon name="chevron"/></summary>

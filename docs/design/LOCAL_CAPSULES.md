@@ -1,5 +1,7 @@
 # ブラウザ内の最小Capsule
 
+> 2026-10-29の現行契約は[Capsule文書・Graph上の編集](CAPSULE_EDITOR.md)。以下は2026-10-09の参照中心形式とその履歴。チェックリスト作成・localStorage保存・毎回の現在KG再解決／自動配置は新documentへ適用せず、documentなしの旧形式の互換読取に限って扱う。新documentは保存した内容・元断面・配置を読む。旧Capsule削除は許可済みで、完全移行を必須としない。[今回の検証・反映状況](../verification/CAPSULE_EDITOR_20261029.md)／[更新手順](../runbooks/CAPSULE_EDITOR_RELEASE.md)。
+
 2026-10-09採用。既存KG参照と利用者の説明をまとめるprivate prototype。[Capsule構想](CAPSULE_AND_USER_CONTRIBUTION_VISION.md)の初回実装であり、会員保存・公開運用・Global受入制度ではない。
 
 ## 操作と範囲

@@ -6,6 +6,8 @@ import { startMemberOidc } from "../tests/support/member-oidc";
 
 const config = memberConfig();
 if (!config || config.provider.kind !== "fixture") throw new Error("Use npm run test:member:e2e with its disposable database");
+const capsules=process.argv.includes("--capsules")||process.env.MEMBER_CAPSULE_TESTS==='1';
+if(capsules){process.env.MEMBER_CAPSULE_TESTS='1';process.env.COMMUNITY_ENABLED='1';}
 const pool = memberPool(config);
 const issuer = await startMemberOidc();
 let child: ReturnType<typeof spawn> | undefined;
@@ -18,7 +20,7 @@ async function stop() {
 process.once("SIGTERM", () => { void stop(); });
 process.once("SIGINT", () => { void stop(); });
 try {
-    await migrateMemberDatabase(pool, process.env.COMMUNITY_ENABLED === "1",process.env.SITE_OPERATIONS_ENABLED==='1',process.env.PUBLIC_PROFILES_ENABLED==='1');
+    await migrateMemberDatabase(pool, process.env.COMMUNITY_ENABLED === "1",process.env.SITE_OPERATIONS_ENABLED==='1',process.env.PUBLIC_PROFILES_ENABLED==='1',capsules,capsules);
   if(process.env.SITE_OPERATIONS_ENABLED==='1'){
     // Real test OIDC before Web startup; no client-selected role or auth bypass.
     const auth=createMemberAuth(config,pool);await memberAuthReady(auth);
@@ -31,7 +33,7 @@ try {
     const session=await auth.api.getSession({headers:req('/').headers});if(!session?.user.id)throw Error('Operator fixture OIDC failed');
     process.env.SITE_OPERATOR_USER_IDS=session.user.id;
   }
-  child = spawn("node", ["node_modules/@playwright/test/cli.js", "test", "--config=playwright.member.config.ts", ...process.argv.slice(2)], { env: process.env, stdio: "inherit" });
+  child = spawn("node", ["node_modules/@playwright/test/cli.js", "test", "--config=playwright.member.config.ts", ...process.argv.slice(2).filter(arg=>arg!=="--capsules")], { env: process.env, stdio: "inherit" });
   process.exitCode = await new Promise<number>((resolve, reject) => { child!.once("error", reject); child!.once("exit", code => resolve(code ?? 1)); });
   // Normal completion must not signal the already-exited Playwright process.
   child = undefined;

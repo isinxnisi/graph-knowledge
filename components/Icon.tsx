@@ -19,7 +19,7 @@ const paths = {
   bookmark: <path d="M6 3h12v18l-6-4-6 4Z" />,
   refresh: <><path d="M20 7V3m0 4h-4M4 17v4m0-4h4M20 7a9 9 0 0 0-16 2m0 8a9 9 0 0 0 16-2" /></>,
   history: <><path d="M3 8V3m0 5h5M3 8a9 9 0 1 1 0 8M12 7v5l3 2" /></>,
-  capsule: <><path d="m12 3 9 5v9l-9 5-9-5V8Zm0 0v19M3 8l9 5 9-5" /></>,
+  capsule: <><rect x="2" y="7" width="20" height="10" rx="5" transform="rotate(-45 12 12)" /><path d="m8.5 8.5 7 7" /></>,
   settings: <><path d="M4 7h16M4 17h16" /><circle cx="8" cy="7" r="3" /><circle cx="16" cy="17" r="3" /></>,
   fit: <path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5" />,
   focus: <><circle cx="12" cy="12" r="7" /><circle cx="12" cy="12" r="2" /><path d="M12 2v3m0 14v3M2 12h3m14 0h3" /></>,

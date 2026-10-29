@@ -14,7 +14,7 @@ import { z } from "zod";
 import type { DatasetMode } from "../lib/domain/dataset";
 import type { MemberCapsule } from "../lib/domain/member-capsule";
 import { capsulesKey, readCapsules, type LocalCapsule } from "../lib/client/local-capsules";
-import { MemberClientError, memberCreateResultSchema, memberImportRequest, memberItemSchema, memberListSchema, memberReaderCapsule, memberRequest, type MemberUser } from "../lib/client/member-api";
+import { MemberClientError, memberCreateResultSchema, memberImportRequest, memberItemSchema, memberListSchema, memberReaderCapsule, memberRequest, type MemberUser, type MemberCapsuleSummary } from "../lib/client/member-api";
 import { memberLabels } from "../lib/i18n/member";
 import Icon from "./Icon";
 import AnimatedDetails from "./AnimatedDetails";
@@ -33,6 +33,7 @@ import { capsuleHistoryLabels } from "../lib/i18n/capsule-history";
 import CapsuleDiscussion, { useDiscussionDraft } from "./CapsuleDiscussion";
 import { memberDraftContent, sameMemberContent, type MemberCapsuleDraft } from "../lib/client/member-capsule-edit";
 import { CapsuleReader } from "./CapsuleDialog";
+import { CapsuleWorkspace } from "./MyCapsules";
 import css from "./MemberCapsules.module.css";
 import capsuleCss from "./CapsuleDialog.module.css";
 
@@ -52,7 +53,7 @@ export default function MemberCapsules({ dataset, initialImport = "" }: { datase
   const user=identity.status==='authenticated'&&identity.user?.id===loadedUser?.id?loadedUser:null;
   const [profileDraft, setProfileDraft] = useState<{ ownerId: string; name: string } | null>(null);
   const [provider, setProvider] = useState<"google" | "fixture" | null>(null);
-  const [items, setItems] = useState<MemberCapsule[]>([]);
+  const [items, setItems] = useState<MemberCapsuleSummary[]>([]);
   const [selected, setSelected] = useState<MemberCapsule | null>(null);
   const [historical, setHistorical] = useState(false);
   const [local, setLocal] = useState<LocalCapsule[]>([]);
@@ -289,9 +290,9 @@ export default function MemberCapsules({ dataset, initialImport = "" }: { datase
         {historical && <div role="status"><h2>{historyText.reading(selected.revision)}</h2><p>{historyText.snapshotHelp}</p><button disabled={busy} onClick={() => read(selected.id)}>{historyText.current}</button></div>}
         <CapsuleRevisionList key={`revisions:${selected.id}:${selected.revision}:${user.id}`} capsuleId={selected.id} userId={user.id} disabled={busy} onRead={revision => read(selected.id, revision)} onUnauthorized={() => fail(new MemberClientError(401, "UNAUTHENTICATED"))} />
         {historical && <CapsuleComparison key={`comparison:${selected.id}:${selected.revision}:${user.id}`} snapshot={selected} userId={user.id} disabled={busy} onUnauthorized={() => fail(new MemberClientError(401, "UNAUTHENTICATED"))} />}
-        <CapsuleReader key={`${selected.id}:${selected.revision}`} capsule={reading} explorationLinks onEdit={!historical && !busy && !draft ? resolved => {
+        {reading.document && !historical ? <CapsuleWorkspace key={`workspace:${selected.id}`} initial={reading} member={selected} ownerId={user.id} onSaved={value => { setSelected(value); setItems(items => items.map(item => item.id === value.id ? value : item)); }} /> : <CapsuleReader key={`${selected.id}:${selected.revision}`} capsule={reading} explorationLinks onEdit={!historical && !busy && !draft ? resolved => {
           setDraft({ ownerId: user.id, base: selected, expected: selected, content: selected.content, resolved, needsCheck: false }); setError(null); setMessage(null);
-        } : undefined} />
+        } : undefined} />}
         </div>
         <div hidden={readingTab !== "sharing"}>
         {!historical && <CapsuleShareControls key={`share:${selected.id}:${selected.revision}`} capsule={selected} userId={user.id} disabled={busy} onUnauthorized={() => fail(new MemberClientError(401, "UNAUTHENTICATED"))} />}
@@ -301,7 +302,7 @@ export default function MemberCapsules({ dataset, initialImport = "" }: { datase
         {!historical && <button disabled={busy} onClick={() => setConfirm("remove")}>{text.remove}</button>}
         {!historical && confirm === "remove" && <div role="alert"><p>{text.removeHelp}</p><button onClick={remove}>{text.removeConfirm}</button><button onClick={() => setConfirm(null)}>{text.cancel}</button></div>}
         </div>
-      </> : <><div className={css.listHeading}><span className={css.listCaption}>{locale === "en" ? "Saved in your account" : "アカウントに保存"}</span><span className={css.count}>{items.length} / 10</span></div>{!items.length && <p>{text.empty}</p>}
+      </> : <><div className={css.listHeading}><span className={css.listCaption}>{locale === "en" ? "Saved in your account" : "アカウントに保存"}</span><span className={css.count}>{items.length} / 100</span></div>{!items.length && <p>{text.empty}</p>}
         <ul className={css.savedList}>{items.map(item => <li key={item.id}><div><h3>{item.content.title}</h3><p>{captions.version(item.revision)} · {captions.selected(item.content.entityIds.length, item.content.claimIds.length)}</p></div><div className={css.actions}><button disabled={busy || !!draft} onClick={() => read(item.id)}>{text.read}</button><button disabled={busy || !!draft} onClick={() => read(item.id, undefined, true)}>{text.manageShare}</button></div></li>)}</ul></>}
     </section>}
     <AnimatedDetails className={`${css.card} ${css.importPanel}`} bodyClassName={css.importBody} open={!!sourceId} summary={<>{text.importReview}<Icon name="chevron" /></>}>

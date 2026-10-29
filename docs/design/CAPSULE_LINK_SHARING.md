@@ -1,5 +1,7 @@
 # 特定版のCapsuleを限定リンクで渡す
 
+> 2026-10-29の新documentの内容・共有は[現行編集契約](CAPSULE_EDITOR.md)を優先する。以下のtoken・固定版・認可・明示失効の境界は継承するが、「知識本文は保存しない」「現在KGを再取得する」はdocumentなしの旧参照形式の範囲。新documentは取り込み断面・独自内容・配置を指定版へ固定し、現在KGとの比較を分ける。履歴の未実装／未公開を現在状態へ戻さず、今回の公開状態は[検証記録](../verification/CAPSULE_EDITOR_20261029.md)／[更新手順](../runbooks/CAPSULE_EDITOR_RELEASE.md)を参照。
+
 2026-10-09採用。会員Capsuleの限定共有をローカルで試す初回。外部公開・一般公開検索・discussion・人間受入は別の段階。
 
 2026-10-10追記：discussionは[版別コメント契約](CAPSULE_DISCUSSION.md)を追加した。既存リンクは読取のままで、作成者が明示して受付を開始した場合だけログインUserが投稿できる。以下のdiscussion未実装は共有初回当時の範囲。

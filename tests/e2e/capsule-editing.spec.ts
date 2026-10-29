@@ -1,151 +1,133 @@
-import { test, expect, type Page } from "@playwright/test";
-import examples from "../../docs/API_RESPONSE_EXAMPLES.json" with { type: "json" };
+import { test, expect } from "@playwright/test";
+import { canvasState, clickNode, dragNode, openSavedCapsule, renameCapsule, startCapsule, storedCapsules, studio } from "./capsule-fixture";
 
-const key = "graph-knowledge:capsules:demo";
-const claim = examples.claim.claim;
-const isolated = examples.neighbors.nodes.find(node => node.id !== claim.subjectId && node.id !== claim.objectId)!;
-const secondClaim = examples.neighbors.claims.find(item => item.id !== claim.id && item.subjectId === claim.subjectId && item.objectId === claim.objectId)!;
-const original = { id: "8cb38bde-9c26-44f4-a9a3-0a437f03d3b4", dataset: "demo", revision: 1, title: "育てる調査メモ", note: "最初の説明", language: "ja", createdAt: "2026-10-09T00:00:00Z", entityIds: [claim.subjectId, claim.objectId], claimIds: [claim.id] };
-const dialog = (page: Page) => page.getByRole("dialog", { name: "自分のCapsule" });
-const stored = (page: Page) => page.evaluate(key => JSON.parse(localStorage.getItem(key)!).capsules[0], key);
-async function fixture(page: Page) {
-  let neighbors = 0;
-  await page.route("**/api/entities/**", async route => {
-    const path = new URL(route.request().url()).pathname;
-    if (path.endsWith("/neighbors")) { neighbors++; await route.fulfill({ json: examples.neighbors }); return; }
-    const entity = examples.neighbors.nodes.find(node => node.id === path.split("/")[3]);
-    await route.fulfill({ json: { entity: { ...entity, aliases: [], event: null } } });
-  });
-  await page.route("**/api/claims/**", async route => {
-    const summary = examples.neighbors.claims.find(item => item.id === route.request().url().split("/").at(-1));
-    await route.fulfill({ json: { claim: { ...claim, ...summary }, relatedClaimIds: examples.claim.relatedClaimIds } });
-  });
-  return () => neighbors;
-}
-async function open(page: Page) {
-  await page.locator("#explorer-search").getByRole("button", { name: "Capsuleを作る・読む", exact: true }).click();
-  await dialog(page).getByRole("button", { name: "読む", exact: true }).click();
-  await dialog(page).getByRole("button", { name: "このCapsuleを編集", exact: true }).click();
-}
+test("閲覧配置を編集へ引き継ぎ、まとめて移動を一操作で戻し、破棄で閲覧配置へ戻る", async ({ page }) => {
+  await startCapsule(page);
+  await studio(page).getByRole("button", { name: "保存", exact: true }).click();
+  await expect(studio(page).getByRole("button", { name: "編集", exact: true })).toBeVisible();
+  const [saved] = await storedCapsules(page);
+  const canvas = studio(page).getByTestId("graph-canvas");
+  const ids = (await canvasState(canvas)).nodes.slice(0, 2).map(n => n.id);
+  await dragNode(page, canvas, ids[0]);
+  const viewing = await canvasState(canvas);
+  expect(viewing.positions).not.toEqual(saved.document!.layout.positions);
+  expect(await storedCapsules(page)).toEqual([saved]);
+  await studio(page).getByRole("button", { name: "編集", exact: true }).click();
+  expect((await canvasState(canvas)).positions).toEqual(viewing.positions);
+  await clickNode(page, canvas, ids[0]);
+  await clickNode(page, canvas, ids[1], "Control");
+  await expect.poll(async () => (await canvasState(canvas)).selected).toEqual([...ids].sort());
+  const before = await canvasState(canvas);
+  await dragNode(page, canvas, ids[0], 50, 35);
+  const moved = await canvasState(canvas);
+  const delta = { x: moved.positions[ids[0]].x - before.positions[ids[0]].x, y: moved.positions[ids[0]].y - before.positions[ids[0]].y };
+  expect(Math.abs(delta.x)).toBeGreaterThan(10);
+  expect(moved.positions[ids[1]].x - before.positions[ids[1]].x).toBeCloseTo(delta.x, 5);
+  expect(moved.positions[ids[1]].y - before.positions[ids[1]].y).toBeCloseTo(delta.y, 5);
+  for (const node of before.nodes.filter(n => !ids.includes(n.id))) expect(moved.positions[node.id]).toEqual(before.positions[node.id]);
+  await studio(page).getByRole("button", { name: "↶ 戻す", exact: true }).click();
+  expect((await canvasState(canvas)).positions).toEqual(before.positions);
+  await studio(page).getByRole("button", { name: "↷ やり直す", exact: true }).click();
+  expect((await canvasState(canvas)).positions).toEqual(moved.positions);
+  await studio(page).getByRole("button", { name: "破棄", exact: true }).click();
+  await studio(page).getByRole("button", { name: "変更を破棄", exact: true }).click();
+  await expect(studio(page).getByRole("button", { name: "編集", exact: true })).toBeVisible();
+  expect((await canvasState(canvas)).positions).toEqual(viewing.positions);
+  expect(await storedCapsules(page)).toEqual([saved]);
+  await studio(page).getByRole("button", { name: "編集", exact: true }).click();
+  await studio(page).getByRole("button", { name: "保存", exact: true }).click();
+  await expect(studio(page).getByRole("button", { name: "編集", exact: true })).toBeVisible();
+  const [revised] = await storedCapsules(page);
+  expect(revised.revision).toBe(2);
+  expect(revised.document!.layout.positions).toEqual(viewing.positions);
+  await page.reload();
+  await openSavedCapsule(page, revised.title);
+  expect((await canvasState(studio(page).getByTestId("graph-canvas"))).positions).toEqual(viewing.positions);
+});
 
-for (const width of [390, 1440]) {
-  test(`Capsuleを編集して次版を再訪し、根拠と探索を保持する（${width}px）`, async ({ page }, testInfo) => {
-    await page.setViewportSize({ width, height: 900 });
-    const errors: string[] = []; page.on("pageerror", error => errors.push(error.message));
-    const neighbors = await fixture(page);
-    await page.goto("/");
-    await page.evaluate(({ key, original }) => localStorage.setItem(key, JSON.stringify({ format: "local-capsules", version: 1, capsules: [original] })), { key, original });
-    await page.getByRole("button", { name: "青葉ハルから探索を開始", exact: true }).click();
-    await expect(page.getByTestId("graph-counts")).toHaveText("Entity 5 / Claim 7");
-    const graphState = () => page.locator("#explorer-graph").getByTestId("graph-canvas").evaluate(el => {
-      const cy = (el as unknown as { _cyreg: { cy: import("cytoscape").Core } })._cyreg.cy;
-      return { positions: Object.fromEntries(cy.nodes().map(node => [node.id(), node.position()])), pan: cy.pan(), zoom: cy.zoom() };
-    });
-    const before = await graphState();
-    const launch = page.locator("#explorer-graph").getByRole("button", { name: "Capsuleを作る・読む", exact: true });
-    await launch.click();
-    const modal = dialog(page);
-    await modal.getByRole("button", { name: "読む", exact: true }).click();
-    await modal.getByRole("button", { name: "このCapsuleを編集", exact: true }).click();
-    await expect(modal.getByLabel("Capsuleの題名", { exact: true })).toBeFocused();
-    await expect(modal.getByRole("button", { name: "変更を保存", exact: true })).toBeDisabled();
-    await modal.getByLabel("Capsuleの題名", { exact: true }).fill("期間の違いを残したメモ");
-    await modal.getByRole("textbox", { name: "自分の説明", exact: true }).fill("資料による期間の違いを比較する。\n同じ主張として統合しない。");
-    await modal.getByRole("group", { name: "含める対象", exact: true }).getByRole("checkbox", { name: new RegExp(isolated.name) }).check();
-    await modal.getByRole("group", { name: "含める主張", exact: true }).getByRole("checkbox", { name: new RegExp(secondClaim.id) }).check();
-    await expect(modal.getByRole("status")).toHaveText("選択：対象 3件 / 主張 2件");
-    await modal.evaluate(el => { el.scrollTop = 0; });
-    await page.screenshot({ path: testInfo.outputPath(`capsule-edit-${width}.png`) });
-    await modal.getByRole("button", { name: "変更を保存", exact: true }).click();
-    await expect(modal.getByRole("heading", { name: "期間の違いを残したメモ", exact: true })).toBeFocused();
-    await expect(modal).toContainText("内容版 2");
-    await expect(modal).toContainText("現在のGraph：対象 3件 / 主張 2件");
-    const revised = await stored(page);
-    expect(revised.id).toBe(original.id); expect(revised.createdAt).toBe(original.createdAt); expect(revised.revision).toBe(2);
-    expect(revised.claimIds).toEqual([claim.id, secondClaim.id]); expect(revised.entityIds).toContain(isolated.id);
-    await modal.getByRole("button", { name: new RegExp(`ID: ${claim.id}`) }).click();
-    await expect(modal.getByRole("heading", { name: "青葉ハルへのインタビュー", exact: true })).toBeVisible();
-    await expect(modal).toContainText("pp.12–13");
-    await modal.getByRole("button", { name: "探索へ戻る", exact: true }).click();
-    await expect(launch).toBeFocused(); expect(await graphState()).toEqual(before); expect(neighbors()).toBe(1);
-
-    await page.reload(); await open(page);
-    await expect(modal.getByRole("textbox", { name: "自分の説明", exact: true })).toHaveValue("資料による期間の違いを比較する。\n同じ主張として統合しない。");
-    // Remove an independent claim and an isolated entity without rebuilding the Capsule.
-    await modal.getByRole("group", { name: "含める主張", exact: true }).getByRole("checkbox", { name: new RegExp(secondClaim.id) }).uncheck();
-    await modal.getByRole("group", { name: "含める対象", exact: true }).getByRole("checkbox", { name: new RegExp(isolated.name) }).uncheck();
-    await modal.getByRole("button", { name: "変更を保存", exact: true }).click();
-    await expect(modal).toContainText("内容版 3");
-    await expect(modal).toContainText("現在のGraph：対象 2件 / 主張 1件");
-    await modal.getByTestId("graph-canvas").scrollIntoViewIfNeeded();
-    await page.screenshot({ path: testInfo.outputPath(`capsule-revised-${width}.png`) });
-    expect((await stored(page)).claimIds).toEqual([claim.id]);
-    expect(await modal.evaluate(el => el.scrollWidth <= el.clientWidth)).toBe(true);
-    await page.keyboard.press("Escape");
-    await expect(modal).toHaveCount(0);
-    await expect(page.getByTestId("graph-counts")).toHaveText("Entity 0 / Claim 0");
-    expect(neighbors()).toBe(1); expect(errors).toEqual([]);
-  });
-}
-
-test("実際の別タブ更新・削除を検出し、未保存入力を上書きしない", async ({ page, context }) => {
-  await fixture(page); await page.goto("/");
-  await page.evaluate(({ key, original }) => localStorage.setItem(key, JSON.stringify({ format: "local-capsules", version: 1, capsules: [original] })), { key, original });
-  await open(page);
-  const other = await context.newPage(); await fixture(other); await other.goto("/"); await open(other);
-  await dialog(other).getByRole("textbox", { name: "自分の説明", exact: true }).fill("後から保存したい入力");
-  await dialog(page).getByLabel("Capsuleの題名", { exact: true }).fill("先に保存した題名");
-  await dialog(page).getByRole("button", { name: "変更を保存", exact: true }).click();
-  await expect(dialog(other)).toContainText("別のタブでこのCapsuleが更新・削除されました");
-  await expect(dialog(other).getByRole("textbox", { name: "自分の説明", exact: true })).toHaveValue("後から保存したい入力");
-  await expect(dialog(other).getByRole("button", { name: "変更を保存", exact: true })).toBeDisabled();
-  expect((await stored(other)).title).toBe("先に保存した題名");
-  await dialog(other).getByRole("button", { name: "保存したCapsuleの一覧へ", exact: true }).click();
-  await dialog(other).getByRole("button", { name: "編集を続ける", exact: true }).click();
-  await expect(dialog(other).getByRole("textbox", { name: "自分の説明", exact: true })).toHaveValue("後から保存したい入力");
-  await dialog(other).getByRole("button", { name: "保存したCapsuleの一覧へ", exact: true }).click();
-  await dialog(other).getByRole("button", { name: "保存せず戻る", exact: true }).click();
-  await dialog(other).getByRole("button", { name: "読む", exact: true }).click();
-  await dialog(other).getByRole("button", { name: "このCapsuleを編集", exact: true }).click();
-  await expect(dialog(other).getByLabel("Capsuleの題名", { exact: true })).toHaveValue("先に保存した題名");
-  await dialog(page).getByRole("button", { name: "保存したCapsuleの一覧へ", exact: true }).click();
-  await dialog(page).getByRole("button", { name: "削除", exact: true }).click();
-  await dialog(page).getByRole("button", { name: "このCapsuleを削除する", exact: true }).click();
-  await expect(dialog(other)).toContainText("別のタブでこのCapsuleが更新・削除されました");
-  await expect(dialog(other).getByRole("button", { name: "変更を保存", exact: true })).toBeDisabled();
-  expect(await stored(other)).toBeUndefined();
+test("別タブの保存との競合で入力を保持し、別のCapsuleとして保存できる", async ({ page, context }) => {
+  await startCapsule(page);
+  await renameCapsule(page, "同じ調査");
+  await studio(page).getByRole("button", { name: "保存", exact: true }).click();
+  await expect(studio(page).getByRole("button", { name: "編集", exact: true })).toBeVisible();
+  const [initial] = await storedCapsules(page);
+  const other = await context.newPage();
+  await other.goto("/");
+  await openSavedCapsule(other, initial.title);
+  await studio(other).getByRole("button", { name: "編集", exact: true }).click();
+  await renameCapsule(other, "後から残したい考え");
+  await studio(page).getByRole("button", { name: "編集", exact: true }).click();
+  await renameCapsule(page, "先に保存した考え");
+  await studio(page).getByRole("button", { name: "保存", exact: true }).click();
+  await expect(studio(page).getByRole("button", { name: "編集", exact: true })).toBeVisible();
+  await studio(other).getByRole("button", { name: "保存", exact: true }).click();
+  await expect(studio(other).getByRole("alert")).toContainText("ブラウザに保存できませんでした");
+  await expect(studio(other).getByRole("heading", { name: "後から残したい考え", exact: true })).toBeVisible();
+  const [first] = await storedCapsules(other);
+  expect(first).toMatchObject({ id: initial.id, revision: 2, title: "先に保存した考え" });
+  await studio(other).getByRole("button", { name: "別のCapsuleとして保存", exact: true }).click();
+  await expect(studio(other).getByRole("button", { name: "編集", exact: true })).toBeVisible();
+  const copies = await storedCapsules(page);
+  expect(copies).toHaveLength(2);
+  expect(copies.find(c => c.id === first.id)).toEqual(first);
+  expect(copies.find(c => c.id !== first.id)).toMatchObject({ title: "後から残したい考え", revision: 1 });
   await other.close();
 });
 
-test("取得できない参照を保持して説明を直し、回復後に根拠を再閲覧する", async ({ page }) => {
-  await page.setViewportSize({ width: 390, height: 900 });
-  await fixture(page);
-  let unavailable = true;
-  await page.route("**/api/claims/**", route => unavailable ? route.fulfill({ status: 404, json: { error: { message: "missing" } } }) : route.fallback());
-  await page.route(`**/api/entities/${claim.objectId}`, route => unavailable ? route.fulfill({ status: 503, json: { error: { message: "failed" } } }) : route.fallback());
-  await page.goto("/");
-  await page.evaluate(({ key, original }) => localStorage.setItem(key, JSON.stringify({ format: "local-capsules", version: 1, capsules: [original] })), { key, original });
-  await open(page);
-  const modal = dialog(page);
-  await expect(modal).toContainText("確認できない主張も選択したまま保持しています");
-  const entities = modal.getByRole("group", { name: "含める対象", exact: true }).getByRole("checkbox");
-  await expect(entities).toHaveCount(2);
-  for (const box of await entities.all()) { await expect(box).toBeChecked(); await expect(box).toBeDisabled(); }
-  await expect(modal.getByRole("group", { name: "含める主張", exact: true }).getByRole("checkbox")).toBeChecked();
-  await modal.getByRole("textbox", { name: "自分の説明", exact: true }).fill("根拠を後日もう一度確認する。");
-  await page.keyboard.press("Escape");
-  await modal.getByRole("button", { name: "編集を続ける", exact: true }).click();
-  await expect(modal.getByRole("textbox", { name: "自分の説明", exact: true })).toHaveValue("根拠を後日もう一度確認する。");
-  await modal.getByRole("button", { name: "変更を保存", exact: true }).click();
-  await expect(modal).toContainText("内容版 2");
-  expect(await stored(page)).toMatchObject({ entityIds: original.entityIds, claimIds: original.claimIds, revision: 2, note: "根拠を後日もう一度確認する。" });
-  unavailable = false;
+for (const modifier of ["Control", "Meta"] as const) {
+  test(`通常Graphも${modifier}で複数選択し、同じ距離だけまとめて移動する`, async ({ page }) => {
+    await page.goto("/");
+    await page.getByRole("button", { name: "青葉ハルから探索を開始", exact: true }).click();
+    await expect(page.getByTestId("graph-counts")).toHaveText("Entity 5 / Claim 7");
+    const canvas = page.locator("#explorer-graph").getByTestId("graph-canvas");
+    const original = await canvasState(canvas);
+    const ids = original.nodes.filter(n => !n.label.includes("青葉ハル")).slice(0, 2).map(n => n.id);
+    await clickNode(page, canvas, ids[0], modifier);
+    await clickNode(page, canvas, ids[1], modifier);
+    await expect.poll(async () => (await canvasState(canvas)).selected).toEqual([...ids].sort());
+    await dragNode(page, canvas, ids[0], 40, 30);
+    const after = await canvasState(canvas);
+    const dx = after.positions[ids[0]].x - original.positions[ids[0]].x;
+    const dy = after.positions[ids[0]].y - original.positions[ids[0]].y;
+    expect(Math.abs(dx)).toBeGreaterThan(10);
+    expect(after.positions[ids[1]].x - original.positions[ids[1]].x).toBeCloseTo(dx, 5);
+    expect(after.positions[ids[1]].y - original.positions[ids[1]].y).toBeCloseTo(dy, 5);
+    for (const n of original.nodes.filter(n => !ids.includes(n.id))) expect(after.positions[n.id]).toEqual(original.positions[n.id]);
+    await expect(page.getByTestId("graph-counts")).toHaveText("Entity 5 / Claim 7");
+    await page.getByRole("button", { name: "移動を元に戻す", exact: true }).click();
+    expect((await canvasState(canvas)).positions).toEqual(original.positions);
+    await clickNode(page, canvas, ids[0], modifier);
+    await clickNode(page, canvas, ids[1], modifier);
+    await expect.poll(async () => (await canvasState(canvas)).selected).toEqual([]);
+  });
+}
+
+test("すべての対象を外した空のCapsuleを保存し、再訪後に組み直せる", async ({ page }) => {
+  const original = await startCapsule(page);
+  await renameCapsule(page, "組み直すための図");
+  const contents = studio(page).locator("details").filter({ has: page.locator("summary", { hasText: "Capsuleの内容一覧" }) }).last();
+  await contents.locator("summary").click();
+  for (let i = 0; i < original.nodes.length; i++) {
+    await contents.getByRole("button").first().click();
+    await studio(page).getByRole("button", { name: "Capsuleから外す", exact: true }).click();
+  }
+  await expect(contents.getByRole("button")).toHaveCount(0);
+  await studio(page).getByRole("button", { name: "保存", exact: true }).click();
+  await expect(studio(page).getByRole("button", { name: "編集", exact: true })).toBeVisible();
+  const [empty] = await storedCapsules(page);
+  expect(empty.document).toMatchObject({ nodes: [], relations: [], texts: [], evidence: [] });
+  expect(empty.entityIds).toEqual([]);
+  expect(empty.claimIds).toEqual([]);
   await page.reload();
-  await page.locator("#explorer-search").getByRole("button", { name: "Capsuleを作る・読む", exact: true }).click();
-  await modal.getByRole("button", { name: "読む", exact: true }).click();
-  await expect(modal).toContainText("現在のGraph：対象 2件 / 主張 1件");
-  await modal.getByRole("button", { name: new RegExp(`ID: ${claim.id}`) }).click();
-  await expect(modal.getByRole("heading", { name: "青葉ハルへのインタビュー", exact: true })).toBeVisible();
-  await expect(modal).toContainText("根拠を後日もう一度確認する。");
-  await expect(modal).toContainText("内容版 2");
+  await openSavedCapsule(page, empty.title);
+  await studio(page).getByRole("button", { name: "編集", exact: true }).click();
+  await studio(page).getByRole("button", { name: "独自Entity", exact: true }).click();
+  const editor = page.getByRole("dialog").last();
+  await editor.getByLabel("タイトル", { exact: true }).fill("新しい出発点");
+  await editor.getByRole("button", { name: "適用", exact: true }).click();
+  await studio(page).getByRole("button", { name: "保存", exact: true }).click();
+  await expect(studio(page).getByRole("button", { name: "編集", exact: true })).toBeVisible();
+  const [rebuilt] = await storedCapsules(page);
+  expect(rebuilt).toMatchObject({ id: empty.id, revision: 2 });
+  expect(rebuilt.document!.nodes).toEqual([expect.objectContaining({ title: "新しい出発点", origin: { kind: "local" } })]);
 });

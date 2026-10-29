@@ -1,8 +1,8 @@
 import { defineConfig } from "@playwright/test";
 export default defineConfig({
-  outputDir: "test-results/member", testDir: "./tests/e2e", testMatch: process.env.PUBLIC_PROFILES_ENABLED==="1" ? ["public-profiles.spec.ts"] : process.env.SITE_OPERATIONS_ENABLED==="1" ? ["site-operations.spec.ts"] : process.env.COMMUNITY_ENABLED === "1" ? ["community.spec.ts", "community-safety.spec.ts", "community-ux.spec.ts", "community-auth.spec.ts", "community-design.spec.ts", "community-mobile.spec.ts", "community-shell.spec.ts", "community-actions.spec.ts"] : ["member.spec.ts", "member-account.spec.ts"],
+  outputDir: "test-results/member", testDir: "./tests/e2e", testMatch: process.env.MEMBER_CAPSULE_TESTS==="1" ? ["capsule-member.spec.ts"] : process.env.PUBLIC_PROFILES_ENABLED==="1" ? ["public-profiles.spec.ts"] : process.env.SITE_OPERATIONS_ENABLED==="1" ? ["site-operations.spec.ts"] : process.env.COMMUNITY_ENABLED === "1" ? ["community.spec.ts", "community-safety.spec.ts", "community-ux.spec.ts", "community-auth.spec.ts", "community-design.spec.ts", "community-mobile.spec.ts", "community-shell.spec.ts", "community-actions.spec.ts"] : ["member.spec.ts", "member-account.spec.ts"],
   fullyParallel: false, workers: 1, timeout: 120_000, expect: { timeout: 15_000 }, globalTimeout: 900_000,
-  use: { baseURL: "http://127.0.0.1:3221", viewport: { width: 1440, height: 1000 }, trace: "retain-on-failure" },
+  use: { baseURL: "http://127.0.0.1:3221", viewport: { width: 1440, height: 1000 }, trace: "retain-on-failure", ...(process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH ? {launchOptions:{executablePath:process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH}} : {}) },
   webServer: { command: "npm run dev -- --webpack --port 3221", url: "http://127.0.0.1:3221/member", reuseExistingServer: false, timeout: 120_000,
     env: { NODE_ENV: "development", NEXT_TELEMETRY_DISABLED: "1", GRAPH_DATASET: "demo" } },
 });

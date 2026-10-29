@@ -11,10 +11,10 @@ import { useEffect, useImperativeHandle, useRef, useState } from "react";
 import type { ReactNode, Ref } from "react";
 import { restorationPositions } from "../lib/client/graph-view";
 import type { GraphView, ViewRestoration } from "../lib/client/graph-view";
-export type GraphCanvasHandle = { capture: () => GraphView | null; focusEntity: (id: string) => void };
+export type GraphCanvasHandle = { capture: () => GraphView | null; focusEntity: (id: string) => void; ensureVisible?: (id: string) => void };
 import type { GraphState, Selection } from "../lib/client/graph-state";
 import { graphRootReady } from "../lib/client/graph-state";
-import { entityLabel, edgeRoutes, displayRelations, relationId } from "../lib/client/graph-presentation";
+import { entityLabel, edgeRoutes, displayRelations, relationId, type CanvasRelation } from "../lib/client/graph-presentation";
 import { initialPositions, additionalPositions, contentPositions } from "../lib/client/graph-layout";
 import { createNodeClickHandler, createRelationClickHandler } from "../lib/client/graph-interaction";
 import { attachGraphBadges } from "../lib/client/graph-badges";
@@ -23,20 +23,29 @@ import styles from "./Explorer.module.css";
 import AnimatedDetails from "./AnimatedDetails";
 import NeighborLoading from "./NeighborLoading";
 
-type Props = { compactGuide?: boolean; footerAction?: ReactNode; onViewChange?: () => void; contentOnly?: boolean; ref?: Ref<GraphCanvasHandle>; notification?: ReactNode; feedback?: ReactNode; navigation?: ReactNode; restoration?: ViewRestoration | null; interactionBlocked?: boolean; graph: GraphState; selection: Selection; onEntity: (id: string) => void; onRelation: (id: string) => void; onRelationDoubleClick?: (id: string) => void; onToggleEntity: (id: string) => void; onEntityDoubleClick?: (id: string) => void };
+export type CanvasContent = { nodes: { id: string; label: string; kind: string; textStyle?: string }[]; relations: Record<string, CanvasRelation> };
+const noSelection: string[] = [];
+type Props = { onInspectEntity?: (id: string) => void; content?: CanvasContent; selectedKeys?: string[]; onSelectionChange?: (ids: string[]) => void; onMove?: (before: GraphView, after: GraphView) => void; onContextMenu?: (id: string, kind: "node" | "edge") => void; compactGuide?: boolean; footerAction?: ReactNode; onViewChange?: () => void; contentOnly?: boolean; ref?: Ref<GraphCanvasHandle>; notification?: ReactNode; feedback?: ReactNode; navigation?: ReactNode; restoration?: ViewRestoration | null; interactionBlocked?: boolean; graph: GraphState; selection: Selection; onEntity: (id: string) => void; onRelation: (id: string) => void; onRelationDoubleClick?: (id: string) => void; onToggleEntity: (id: string) => void; onEntityDoubleClick?: (id: string) => void };
 
-export default function GraphCanvas({ compactGuide = false, footerAction, onViewChange, contentOnly = false, ref, feedback, notification, navigation, restoration, interactionBlocked, graph, selection, onEntity, onRelation, onRelationDoubleClick, onToggleEntity, onEntityDoubleClick }: Props) {
+export default function GraphCanvas({ onInspectEntity, content, selectedKeys, onSelectionChange, onMove, onContextMenu, compactGuide = false, footerAction, onViewChange, contentOnly = false, ref, feedback, notification, navigation, restoration, interactionBlocked, graph, selection, onEntity, onRelation, onRelationDoubleClick, onToggleEntity, onEntityDoubleClick }: Props) {
   const { locale } = useUiLocale();
   const ui = explorerLabels(locale);
   const viewportLabels = graphViewportLabels(locale);
   const [zoom, setZoom] = useState(1);
+  // null follows the surrounding detail selection; [] explicitly clears it.
+  const [multiple, setMultiple] = useState<string[] | null>(null), [selectionMode, setSelectionMode] = useState(false);
+  const [movementCounts, setMovementCounts] = useState({ past: 0, future: 0 });
+  const movementHistory = useRef<{ past: GraphView[]; future: GraphView[] }>({ past: [], future: [] });
+  const currentKeys = selectedKeys ?? multiple ?? noSelection;
+  const canvasOptions = useRef({ contentOnly, content, currentKeys, selectionMode, onSelectionChange, onMove, onContextMenu, interactionBlocked });
+  useEffect(() => { canvasOptions.current = { contentOnly, content, currentKeys, selectionMode, onSelectionChange, onMove, onContextMenu, interactionBlocked }; });
   const viewChange = useRef(onViewChange);
   useEffect(() => { viewChange.current = onViewChange; }, [onViewChange]);
   const container = useRef<HTMLDivElement>(null);
   const badgeLayer = useRef<HTMLDivElement>(null);
   const core = useRef<Core | null>(null);
   const motion = useRef<ReturnType<typeof createGraphMotion> | null>(null);
-  const handlers = useRef({ onEntity, onRelation, onRelationDoubleClick, onToggleEntity, onEntityDoubleClick, selection });
+  const handlers = useRef({ onInspectEntity, onEntity, onRelation, onRelationDoubleClick, onToggleEntity, onEntityDoubleClick, selection });
   const gestures = useRef<ReturnType<typeof createNodeClickHandler> | null>(null);
   const relationGestures = useRef<ReturnType<typeof createRelationClickHandler> | null>(null);
   const generation = useRef(-1);
@@ -44,13 +53,24 @@ export default function GraphCanvas({ compactGuide = false, footerAction, onView
   const previousCondition = useRef("all");
   const savedPositions = useRef<Record<string, { x: number; y: number }>>({});
   const initialLayoutDone = useRef(false);
-  const hasNodes = Object.keys(graph.nodes).length > 0;
+  function captureView(): GraphView | null {
+    const cy = core.current;
+    return cy ? { positions: Object.fromEntries(cy.nodes().map(n => [n.id(), { ...n.position() }])), pan: { ...cy.pan() }, zoom: cy.zoom(), initialLayoutDone: initialLayoutDone.current } : null;
+  }
+  function restoreMovement(direction: "past" | "future") {
+    const cy = core.current, view = movementHistory.current[direction].pop(), current = captureView();
+    if (!cy || !view || !current) return;
+    movementHistory.current[direction === "past" ? "future" : "past"].push(current);
+    cy.batch(() => Object.entries(view.positions).forEach(([id, point]) => cy.getElementById(id).position(point)));
+    viewChange.current?.(); setMovementCounts({ past: movementHistory.current.past.length, future: movementHistory.current.future.length });
+  }
+  const hasNodes = content ? content.nodes.length > 0 : Object.keys(graph.nodes).length > 0;
   const selectedId = selection?.kind === "claim"
     ? graph.claims[selection.id] && relationId(graph.claims[selection.id])
     : selection?.id;
   const canFocusSelection = !!selectedId && (selection?.kind === "entity"
-    ? !!graph.nodes[selectedId]
-    : !!displayRelations(graph.claims, locale)[selectedId]);
+    ? (content ? content.nodes.some(n => n.id === selectedId) : !!graph.nodes[selectedId])
+    : !!(content?.relations ?? displayRelations(graph.claims, locale))[selectedId]);
   function changeZoom(factor: number) {
     const cy = core.current;
     if (!cy || !hasNodes || interactionBlocked) return;
@@ -91,9 +111,25 @@ export default function GraphCanvas({ compactGuide = false, footerAction, onView
     cy.resize();
     cy.zoom(Math.max(1, cy.zoom()));
     cy.center(node);
+  }, ensureVisible: (id) => {
+    const cy = core.current, node = cy?.getElementById(id);
+    if (!cy || !node?.length) return;
+    cy.resize();
+    const bounds = node.renderedBoundingBox(), padding = 28;
+    const shift = (start: number, end: number, size: number) => end - start > size - padding * 2
+      ? size / 2 - (start + end) / 2 : start < padding ? padding - start : end > size - padding ? size - padding - end : 0;
+    const delta = { x: shift(bounds.x1, bounds.x2, cy.width()), y: shift(bounds.y1, bounds.y2, cy.height()) };
+    if (delta.x || delta.y) cy.panBy(delta);
   } }), []);
+  useEffect(() => {
+    if (selectedKeys !== undefined) return;
+    // A selection made in an adjacent list replaces the previous canvas group.
+    queueMicrotask(() => {
+      if (!selectedId || !canvasOptions.current.currentKeys.includes(selectedId)) setMultiple(null);
+    });
+  }, [selectedId, selectedKeys]);
   useEffect(() => { if (interactionBlocked) { gestures.current?.cancel(); relationGestures.current?.cancel(); } }, [interactionBlocked]);
-  useEffect(() => { handlers.current = { onEntity, onRelation, onRelationDoubleClick, onToggleEntity, onEntityDoubleClick, selection }; }, [onEntity, onRelation, onRelationDoubleClick, onToggleEntity, onEntityDoubleClick, selection]);
+  useEffect(() => { handlers.current = { onInspectEntity, onEntity, onRelation, onRelationDoubleClick, onToggleEntity, onEntityDoubleClick, selection }; }, [onInspectEntity, onEntity, onRelation, onRelationDoubleClick, onToggleEntity, onEntityDoubleClick, selection]);
   useEffect(() => { gestures.current?.cancel(); relationGestures.current?.cancel(); }, [graph.generation]);
   useEffect(() => { gestures.current?.selectionChanged(selection?.kind === "entity" ? selection.id : null); }, [selection?.kind, selection?.id]);
   const selectedOpen = selection?.kind === "entity" ? graph.expansions[selection.id]?.open : undefined;
@@ -108,6 +144,10 @@ export default function GraphCanvas({ compactGuide = false, footerAction, onView
         { selector: "node", style: { label: "data(label)", "background-color": color("person"), color: color("text"), "border-width": 1.3, "border-color": color("node-border"), width: 116, height: 64, "font-size": 15, "font-weight": 600, "font-family": "system-ui, sans-serif", "text-valign": "center", "text-halign": "center", "text-wrap": "wrap", "text-max-width": "108px", "text-overflow-wrap": "anywhere" } },
         { selector: 'node[kind="work"]', style: { shape: "round-rectangle", "background-color": color("work") } },
         { selector: 'node[kind="organization"]', style: { shape: "hexagon", "background-color": color("organization") } },
+        { selector: 'node[kind="local"]', style: { shape: "round-rectangle", "background-color": color("panel"), "border-style": "dashed" } },
+        { selector: 'node[kind="text"]', style: { shape: "rectangle", "background-opacity": 0, "border-width": 0, width: 220, height: 80, "text-max-width": "220px", "font-size": 15, "font-weight": 400 } },
+        { selector: 'node[textStyle="heading"]', style: { "font-size": 22, "font-weight": 700 } },
+        { selector: 'node[textStyle="muted"]', style: { "text-opacity": 0.65 } },
         { selector: "node.hovered", style: { "border-color": color("accent"), "underlay-color": color("accent"), "underlay-opacity": 0.08, "underlay-padding": 5 } },
         { selector: "node.center", style: { "border-width": 3, "border-color": color("accent") } },
         { selector: 'node[kind="event"]', style: { shape: "diamond", "background-color": color("work") } },
@@ -122,7 +162,7 @@ export default function GraphCanvas({ compactGuide = false, footerAction, onView
     };
     const cy = cytoscape({
       container: container.current, elements: [], layout: { name: "preset" },
-      minZoom: 0.15, maxZoom: 2, style: themeStyles(),
+      minZoom: 0.15, maxZoom: 2, style: themeStyles(), autounselectify: true, boxSelectionEnabled: false,
     });
     const themeObserver = new MutationObserver(() => cy.style(themeStyles()));
     themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
@@ -142,9 +182,47 @@ export default function GraphCanvas({ compactGuide = false, footerAction, onView
     const removeBadges = attachGraphBadges(cy, badgeLayer.current!, styles.relationPatch, id => { clicks.cancel(); relationClicks.click(id); });
     cy.on("mouseover", "node", event => event.target.addClass("hovered"));
     cy.on("mouseout", "node", event => event.target.removeClass("hovered"));
-    cy.on("tap", "node", (event) => { relationClicks.cancel(); clicks.click(event.target.id(), event.originalEvent?.timeStamp); });
-    cy.on("tap", "edge", (event) => { clicks.cancel(); relationClicks.click(event.target.id()); });
-    cy.on("tap", (event) => { if (event.target === cy) { clicks.cancel(); relationClicks.cancel(); } });
+    function choose(id: string, event: cytoscape.EventObject, isNode: boolean) {
+      if (canvasOptions.current.interactionBlocked) return;
+      const original = event.originalEvent as MouseEvent | undefined;
+      const multi = original?.ctrlKey || original?.metaKey || canvasOptions.current.selectionMode;
+      const previous = canvasOptions.current.currentKeys;
+      const next = multi ? previous.includes(id) ? previous.filter(k => k !== id) : [...previous, id] : [id];
+      canvasOptions.current.currentKeys = next; setMultiple(next); canvasOptions.current.onSelectionChange?.(next);
+      if (multi || canvasOptions.current.contentOnly) {
+        clicks.cancel(); relationClicks.cancel();
+        const primary = next.includes(id) ? id : next.at(-1);
+        if (primary) {
+          if (cy.getElementById(primary).isNode()) { if (multi && !canvasOptions.current.contentOnly) handlers.current.onInspectEntity?.(primary); else handlers.current.onEntity(primary); }
+          else handlers.current.onRelation(primary);
+        }
+      } else if (isNode) { relationClicks.cancel(); clicks.click(id, event.originalEvent?.timeStamp); }
+      else { clicks.cancel(); relationClicks.click(id); }
+    }
+    cy.on("tap", "node", event => choose(event.target.id(), event, true));
+    cy.on("tap", "edge", event => choose(event.target.id(), event, false));
+    cy.on("cxttap", "node, edge", event => {
+      clicks.cancel(); relationClicks.cancel();
+      canvasOptions.current.onContextMenu?.(event.target.id(), event.target.isNode() ? "node" : "edge");
+    });
+    let dragStart: GraphView | null = null, dragging: string | null = null;
+    cy.on("grab", "node", event => { dragStart = captureView(); dragging = event.target.id(); });
+    cy.on("drag", "node", event => {
+      if (!dragStart || dragging !== event.target.id() || !canvasOptions.current.currentKeys.includes(dragging!)) return;
+      const from = dragStart.positions[dragging!], to = event.target.position();
+      cy.batch(() => canvasOptions.current.currentKeys.filter(id => id !== dragging && dragStart!.positions[id]).forEach(id => {
+        const p = dragStart!.positions[id]; cy.getElementById(id).position({ x: p.x + to.x - from.x, y: p.y + to.y - from.y });
+      }));
+    });
+    cy.on("dragfree", "node", () => {
+      const after = captureView();
+      if (dragStart && after && JSON.stringify(dragStart.positions) !== JSON.stringify(after.positions)) {
+        if (canvasOptions.current.onMove) canvasOptions.current.onMove(dragStart, after);
+        else { movementHistory.current = { past: [...movementHistory.current.past.slice(-39), dragStart], future: [] }; setMovementCounts({ past: movementHistory.current.past.length, future: movementHistory.current.future.length }); }
+      }
+      dragStart = null; dragging = null;
+    });
+    cy.on("tap", (event) => { if (event.target === cy) { clicks.cancel(); relationClicks.cancel(); canvasOptions.current.currentKeys = []; setMultiple([]); canvasOptions.current.onSelectionChange?.([]); } });
     cy.on("drag pan zoom", () => { clicks.cancel(); relationClicks.cancel(); });
     const resize = new ResizeObserver(() => cy.resize());
     resize.observe(container.current);
@@ -160,6 +238,11 @@ export default function GraphCanvas({ compactGuide = false, footerAction, onView
     const reset = generation.current !== graph.generation;
     const restored = reset && restoration?.generation === graph.generation ? restoration.view : null;
     if (reset) {
+      if (!contentOnly) {
+        movementHistory.current = { past: [], future: [] };
+        canvasOptions.current.currentKeys = [];
+        queueMicrotask(() => { setMultiple(null); setMovementCounts({ past: 0, future: 0 }); });
+      }
       motion.current?.settle();
       const sameCenter = graph.centerId !== null && previousCenter.current === graph.centerId && previousCondition.current !== graph.conditionKey;
       if (sameCenter) cy.nodes().forEach((node) => { savedPositions.current[node.id()] = { ...node.position() }; });
@@ -167,14 +250,16 @@ export default function GraphCanvas({ compactGuide = false, footerAction, onView
       if (restored) { cy.elements().remove(); savedPositions.current = { ...restored.positions }; initialLayoutDone.current = restored.initialLayoutDone; }
       generation.current = graph.generation; previousCenter.current = graph.centerId; previousCondition.current = graph.conditionKey;
     }
-    const newNodes = Object.values(graph.nodes).filter((node) => !cy.getElementById(node.id).length);
-    const relations = displayRelations(graph.claims, locale);
+    const renderedNodes = content?.nodes ?? Object.values(graph.nodes).map(n => ({ id: n.id, kind: n.kind, label: entityLabel(n, graph.nodes, locale), textStyle: undefined }));
+    const nodeIds = new Set(renderedNodes.map(n => n.id));
+    const newNodes = renderedNodes.filter(node => !cy.getElementById(node.id).length);
+    const relations = content?.relations ?? displayRelations(graph.claims, locale);
     // 同じ世代でも表示対象は減る。端点を消す前に辺を削除する。
-    cy.nodes().forEach((node) => { if (!graph.nodes[node.id()]) savedPositions.current[node.id()] = { ...node.position() }; });
+    cy.nodes().forEach((node) => { if (!nodeIds.has(node.id())) savedPositions.current[node.id()] = { ...node.position() }; });
     Object.keys(savedPositions.current).forEach((id) => { if (!graph.cacheNodes[id] && (!initialLayoutDone.current || rootReady)) delete savedPositions.current[id]; });
-    cy.batch(() => { cy.edges().filter((edge) => !relations[edge.id()]).remove(); cy.nodes().filter((node) => !graph.nodes[node.id()]).remove(); });
+    cy.batch(() => { cy.edges().filter((edge) => !relations[edge.id()]).remove(); cy.nodes().filter((node) => !nodeIds.has(node.id())).remove(); });
     const routes = edgeRoutes(relations);
-    const elements: ElementDefinition[] = newNodes.map((node) => ({ group: "nodes", data: { id: node.id, label: entityLabel(node, graph.nodes, locale), kind: node.kind }, position: { x: 0, y: 0 } }));
+    const elements: ElementDefinition[] = newNodes.map((node) => ({ group: "nodes", data: { id: node.id, label: node.label, kind: node.kind, textStyle: node.textStyle }, position: { x: 0, y: 0 } }));
     Object.values(relations).forEach((claim) => {
       if (!cy.getElementById(claim.id).length) elements.push({ group: "edges", data: { id: claim.id, source: claim.subjectId, target: claim.objectId, polarity: claim.polarity, claimIds: claim.claimIds, badge: claim.badge, canvasLabel: claim.canvasLabel, ...routes[claim.id] } });
     });
@@ -183,13 +268,13 @@ export default function GraphCanvas({ compactGuide = false, footerAction, onView
       Object.values(graph.nodes).forEach((node) => cy.getElementById(node.id).data({ expanded: graph.expansions[node.id]?.expanded ? 1 : 0 }));
       Object.entries(relations).forEach(([id, relation]) => cy.getElementById(id).data({ polarity: relation.polarity, claimIds: relation.claimIds, badge: relation.badge, canvasLabel: relation.canvasLabel, ...routes[id] }));
       if (newNodes.length) { cy.nodes().removeClass("added"); if (!reset && initialLayoutDone.current) newNodes.forEach((node) => cy.getElementById(node.id).addClass("added")); }
-      Object.values(graph.nodes).forEach((node) => { const element = cy.getElementById(node.id); element.data("label", entityLabel(node, graph.nodes, locale)); });
+      renderedNodes.forEach(node => cy.getElementById(node.id).data({ label: node.label, kind: node.kind, textStyle: node.textStyle }));
       cy.nodes().removeClass("center");
       if (graph.centerId) cy.getElementById(graph.centerId).addClass("center");
     });
     if (restored) {
-      Object.entries(restorationPositions(graph, restored)).forEach(([id, point]) => cy.getElementById(id).position(point));
-      if (Object.keys(restored.positions).some((id) => graph.nodes[id])) { cy.zoom(restored.zoom); cy.pan(restored.pan); if (restored.recenter) cy.center(); }
+      Object.entries(content ? additionalPositions(restored.positions, renderedNodes.filter(n => !restored.positions[n.id]).map(n => n.id), relations, null) : restorationPositions(graph, restored)).forEach(([id, point]) => cy.getElementById(id).position(point));
+      if (Object.keys(restored.positions).some((id) => nodeIds.has(id))) { cy.zoom(restored.zoom); cy.pan(restored.pan); if (restored.recenter) cy.center(); }
       else cy.fit(undefined, 40);
       if (rootReady) initialLayoutDone.current = true;
     } else if (contentOnly && !initialLayoutDone.current && newNodes.length) {
@@ -236,7 +321,7 @@ export default function GraphCanvas({ compactGuide = false, footerAction, onView
     }
     cy.on("dragfree", "node", updateRoutes);
     return () => { cy.off("dragfree", "node", updateRoutes); };
-  }, [graph, restoration, contentOnly, locale]);
+  }, [graph, restoration, contentOnly, content, locale]);
 
   useEffect(() => {
     const cy = core.current;
@@ -244,16 +329,19 @@ export default function GraphCanvas({ compactGuide = false, footerAction, onView
     // 移動パネルが閉じた直後も、Canvasの画面内位置とクリック座標を揃える。
     cy.resize();
     cy.elements().removeClass("chosen");
-    if (selection) {
+    currentKeys.forEach(id => cy.getElementById(id).addClass("chosen"));
+    if (selection && selectedKeys === undefined && multiple === null) {
       const id = selection.kind === "claim" && graph.claims[selection.id] ? relationId(graph.claims[selection.id]) : selection.id;
       cy.getElementById(id).addClass("chosen");
     }
-  }, [selection, graph]);
+  }, [selection, graph, currentKeys, selectedKeys, multiple]);
 
   return <>
     <div className={`${styles.canvas} ${navigation ? styles.withNavigation : ""}`}>
       {navigation && <div className={styles.canvasNavigation} onPointerDown={event => event.stopPropagation()} onDoubleClick={event => event.stopPropagation()} onWheel={event => event.stopPropagation()}>{navigation}</div>}
       <div className={`${styles.viewportTools} ${styles.canvasViewportTools}`} role="group" aria-label={viewportLabels.title} onPointerDown={event => event.stopPropagation()} onWheel={event => event.stopPropagation()}>
+        <button aria-pressed={selectionMode} aria-label={locale === "en" ? "Multiple selection" : "複数選択"} title={locale === "en" ? "Multiple selection · Ctrl / ⌘ click" : "複数選択 · Ctrl / ⌘クリック"} onClick={() => setSelectionMode(v => !v)}><Icon name="copy" /></button>
+        {!onMove && <><button aria-label={locale === "en" ? "Undo move" : "移動を元に戻す"} disabled={!movementCounts.past} onClick={() => restoreMovement("past")}>↶</button><button aria-label={locale === "en" ? "Redo move" : "移動をやり直す"} disabled={!movementCounts.future} onClick={() => restoreMovement("future")}>↷</button></>}
         <button aria-label={viewportLabels.selection} disabled={!canFocusSelection || interactionBlocked} title={`${viewportLabels.selection} — ${viewportLabels.selectionHelp}`} onClick={showSelection}><Icon name="focus" /></button>
         <button aria-label={viewportLabels.zoomIn} title={viewportLabels.zoomIn} disabled={!hasNodes || interactionBlocked || zoom >= 2} onClick={() => changeZoom(1.25)}><Icon name="plus" /></button>
         <output aria-label={viewportLabels.zoom} aria-live="off">{Math.round(zoom * 100)}%</output>
@@ -262,7 +350,7 @@ export default function GraphCanvas({ compactGuide = false, footerAction, onView
           gestures.current?.cancel(); relationGestures.current?.cancel(); core.current?.resize(); core.current?.fit(undefined, 24);
         }}><Icon name="fit" /></button>
       </div>
-      <div className={styles.cySurface} ref={container} onPointerDownCapture={() => core.current?.resize()} data-testid="graph-canvas" tabIndex={-1} data-focus-destination role="img" aria-label={ui.graphAria} />
+      <div className={styles.cySurface} ref={container} onPointerDownCapture={() => core.current?.resize()} data-testid="graph-canvas" tabIndex={0} onContextMenu={event => { if (onContextMenu) event.preventDefault(); }} data-focus-destination role="img" aria-label={ui.graphAria} />
       <div className={styles.relationPatches} ref={badgeLayer} aria-hidden="true" />
       <div className={styles.graphOverlay} data-testid="graph-overlay">{feedback}
         {Object.entries(graph.expansions).filter(([, meta]) => meta.active && meta.loading).map(([id, meta]) =>

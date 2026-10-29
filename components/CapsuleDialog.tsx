@@ -21,6 +21,7 @@ import { memberLabels } from "../lib/i18n/member";
 import { capsuleLabels } from "../lib/i18n/capsules";
 import { ClaimCard } from "./ClaimDetails";
 import GraphCanvas from "./GraphCanvas";
+import CapsuleStudio from "./CapsuleStudio";
 import styles from "./Explorer.module.css";
 import css from "./CapsuleDialog.module.css";
 
@@ -36,7 +37,11 @@ export function ClaimCaption({ claim, nodes }: { claim: ClaimSummary & { withdra
     <small className={styles.muted}>ID: {claim.id}</small></>;
 }
 
-export function CapsuleReader({ capsule, onEdit, explorationLinks = false, noteAttribution = "self" }: { capsule: LocalCapsule; onEdit?: (resolved: ResolvedCapsule) => void; explorationLinks?: boolean; noteAttribution?: "self" | "author" }) {
+export function CapsuleReader(props: { capsule: LocalCapsule; onEdit?: (resolved: ResolvedCapsule) => void; explorationLinks?: boolean; noteAttribution?: "self" | "author" }) {
+  return props.capsule.document ? <CapsuleStudio capsule={props.capsule} readOnly /> : <LegacyCapsuleReader {...props} />;
+}
+
+function LegacyCapsuleReader({ capsule, onEdit, explorationLinks = false, noteAttribution = "self" }: { capsule: LocalCapsule; onEdit?: (resolved: ResolvedCapsule) => void; explorationLinks?: boolean; noteAttribution?: "self" | "author" }) {
   const { locale } = useUiLocale();
   const text = capsuleLabels(locale);
   const [resolved, setResolved] = useState<ResolvedCapsule | null>(null);
