@@ -147,4 +147,34 @@ describe("New items occupy visible free space without rearranging the graph", ()
     expect(capsuleInsertionPoint(doc, view, "node", { explicit, node: { title: "長い名前".repeat(20), badge: "分類", shape: "diamond" } })).toEqual(explicit);
     expect(capsuleInsertionPoint(doc, view, "text", { explicit, text: { text: "長い注釈\n".repeat(20), style: "heading", width: 700, fontSize: 48 } })).toEqual(explicit);
   });
+  it("leaves room for the new local connector label and chip between PLUTO and an added circle", () => {
+    const doc = document([{ x: 0, y: 0 }]); doc.nodes[0].title = "PLUTO";
+    const before = structuredClone(doc), incoming = { title: "作者の視点", shape: "circle" as const, badge: "" };
+    const point = capsuleInsertionPoint(doc, capsuleGraphView(doc.layout), "node", { anchorKey: doc.nodes[0].key, node: incoming });
+    // The Japanese label + left-side local chip occupy midpoint −84..+40.
+    // A 200px center distance covers PLUTO; leave its padded right edge clear.
+    expect(point.y).toBe(0); expect(point.x / 2 - 84).toBeGreaterThanOrEqual(70);
+    expect(point.x / 2 + 40).toBeLessThanOrEqual(point.x - 66);
+    withinView(point, doc, 132, 132); expect(doc).toEqual(before);
+  });
+  it.each(["ja", "en"])("keeps both endpoints and the connector readable when a large anchored Entity is near the viewport edge (%s)", locale => {
+    const doc = document([{ x: 340, y: 0 }]); Object.assign(doc.nodes[0], { title: "あいうえおかき".repeat(4), shape: "diamond", badge: "分類" });
+    const incoming = { title: "作者の視点", shape: "circle" as const, badge: "" }, before = structuredClone(doc), anchor = doc.layout.positions[doc.nodes[0].key];
+    const point = capsuleInsertionPoint(doc, capsuleGraphView(doc.layout), "node", { anchorKey: doc.nodes[0].key, node: incoming, locale });
+    const label = capsuleTextLayout(locale === "en" ? "Related" : "関係する", "note", { width: 185, fontSize: 14 });
+    const chipWidth = locale === "en" ? 100 : 44, width = label.labelWidth + chipWidth + 24, height = label.height + 16;
+    const center = { x: (anchor.x + point.x) / 2 - chipWidth / 2, y: (anchor.y + point.y) / 2 };
+    // The source is a 234×184 diamond with a badge below; the destination is
+    // a 108px circle. Assert each whole padded body is separate from the label.
+    expect(Math.abs(center.x - anchor.x) >= (width + 258) / 2 || Math.abs(center.y - 12) >= (height + 232) / 2).toBe(true);
+    expect(Math.abs(center.x - point.x) >= (width + 132) / 2 || Math.abs(center.y - point.y) >= (height + 132) / 2).toBe(true);
+    withinView(point, doc, 132, 132); expect(doc).toEqual(before);
+  });
+  it("does not invent a connector gap for annotations, and never moves an explicit anchored insertion", () => {
+    const doc = document([{ x: 0, y: 0 }]), view = capsuleGraphView(doc.layout), key = doc.nodes[0].key;
+    const annotation = { text: "注釈", style: "note" as const, width: 96, fontSize: 16 };
+    expect(capsuleInsertionPoint(doc, view, "text", { anchorKey: key, text: annotation })).toEqual({ x: 200, y: 0 });
+    const explicit = { x: 150, y: 0 };
+    expect(capsuleInsertionPoint(doc, view, "node", { anchorKey: key, explicit, node: { title: "作者の視点", shape: "circle", badge: "" } })).toEqual(explicit);
+  });
 });

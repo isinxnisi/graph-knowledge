@@ -46,11 +46,26 @@ export function capsuleInsertionPoint(document: CapsuleDocument, view: GraphView
   if (options.explicit) return { ...options.explicit };
   const center = view.center ?? (view.viewport ? viewportCenter(view.pan, view.zoom, view.viewport) : { x: 0, y: 0 });
   const anchor = options.anchorKey ? view.positions[options.anchorKey] : undefined;
-  const preferred = anchor ? { x: anchor.x + 200, y: anchor.y } : center;
   // Final form content determines the footprint. Defaults remain available for
   // callers without content, but creation evaluates the authored size on Apply.
   const size = kind === "text" ? options.text ? textSize(options.text) : { width: 280, height: 132, offsetY: 0 }
     : options.node ? nodeSize(options.node) : { width: 140, height: 112, offsetY: 0 };
+  const anchorNode = kind === "node" && anchor ? document.nodes.find(node => node.key === options.anchorKey) : undefined;
+  const anchorSize = anchorNode ? nodeSize(anchorNode) : null;
+  // A new custom Entity also creates a local connector. Reserve the label and
+  // its left-hand badge between both endpoint bodies, not merely empty space
+  // for the new node. Text annotations and text anchors do not create edges.
+  const relationText = textLayout(options.locale === "en" ? "Related" : "関係する", "note", { width: 185, fontSize: 14 });
+  const relationBadgeWidth = Math.min(100, [...(options.locale === "en" ? "Capsule" : "独自")].length * 14 + 16);
+  const connector = { width: relationText.labelWidth + relationBadgeWidth + 24, height: relationText.height + 16, offsetX: -relationBadgeWidth / 2 };
+  const connectorDistance = (dx: number, dy: number) => {
+    if (!anchorSize) return 0;
+    const length = Math.hypot(dx, dy) || 1, x = Math.abs(dx / length), y = Math.abs(dy / length);
+    const endpoint = Math.max(anchorSize.width * x / 2 + (anchorSize.height / 2 + anchorSize.offsetY) * y,
+      size.width * x / 2 + (size.height / 2 + size.offsetY) * y);
+    return Math.ceil(2 * (endpoint + connector.width * x / 2 + connector.height * y / 2 + Math.abs(connector.offsetX) * x + 12));
+  };
+  const preferred = anchor ? { x: anchor.x + Math.max(200, connectorDistance(1, 0)), y: anchor.y } : center;
   const viewport = view.viewport ?? { width: 900, height: 600 };
   const frame = { ...center, width: viewport.width / view.zoom, height: viewport.height / view.zoom };
   const marginX = Math.min(24, viewport.width * .04) / view.zoom, marginY = Math.min(56, viewport.height * .12) / view.zoom;
@@ -85,7 +100,8 @@ export function capsuleInsertionPoint(document: CapsuleDocument, view: GraphView
   // downward. The grid is bounded even at low zoom or with a large document.
   for (const radius of [180, 270, 380]) for (let i = 0; i < 12; i++) {
     const angle = i * Math.PI / 6, origin = anchor ?? center;
-    candidates.push({ x: origin.x + Math.cos(angle) * radius, y: origin.y + Math.sin(angle) * radius });
+    const x = Math.cos(angle), y = Math.sin(angle), distance = Math.max(radius, connectorDistance(x, y));
+    candidates.push({ x: origin.x + x * distance, y: origin.y + y * distance });
   }
   for (let row = 0; row <= 10; row++) for (let column = 0; column <= 12; column++) candidates.push({
     x: center.x - extent.x + extent.x * column / 6, y: center.y - size.offsetY - extent.y + extent.y * row / 5,
@@ -94,10 +110,13 @@ export function capsuleInsertionPoint(document: CapsuleDocument, view: GraphView
     const bounds = { ...size, x: point.x, y: point.y + size.offsetY };
     const body = boxes.reduce((sum, box) => sum + overlap(bounds, box), 0), label = labels.reduce((sum, box) => sum + overlap(bounds, box), 0);
     const lines = paths.filter(path => path.some((to, index) => index > 0 && crosses(path[index - 1], to, bounds))).length;
+    const connectorBox = anchorSize && anchor ? { ...connector, x: (anchor.x + point.x) / 2 + connector.offsetX, y: (anchor.y + point.y) / 2 } : null;
+    const connectorOverlap = connectorBox ? [...boxes, ...labels, bounds].reduce((sum, box) => sum + overlap(connectorBox, box), 0) : 0;
+    const tooClose = anchorSize && anchor ? Math.max(0, connectorDistance(point.x - anchor.x, point.y - anchor.y) - Math.hypot(point.x - anchor.x, point.y - anchor.y)) : 0;
     const outside = Math.max(0, Math.abs(bounds.x - center.x) - extent.x) + Math.max(0, Math.abs(bounds.y - center.y) - extent.y);
-    const clear = body === 0 && label === 0 && lines === 0;
+    const clear = body === 0 && label === 0 && lines === 0 && connectorOverlap === 0;
     return { point, rank: clear ? outside === 0 ? 0 : 1 : outside === 0 ? 2 : 3,
-      score: body * 10 + label * 5 + lines * 5000 + outside * 20 + Math.hypot(point.x - preferred.x, point.y - preferred.y) + Math.hypot(point.x - center.x, point.y - center.y) * .12 };
+      score: body * 10 + (label + connectorOverlap) * 5 + tooClose * 200 + lines * 5000 + outside * 20 + Math.hypot(point.x - preferred.x, point.y - preferred.y) + Math.hypot(point.x - center.x, point.y - center.y) * .12 };
   });
   ranked.sort((a, b) => a.rank - b.rank || a.score - b.score);
   return { ...ranked[0].point };
