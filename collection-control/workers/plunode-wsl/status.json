@@ -44,7 +44,8 @@
   "requestsByPhase": {
     "blocked": 12,
     "completed": 39,
-    "awaiting-recovery": 4
+    "awaiting-recovery": 4,
+    "waiting-control": 1
   },
   "issueIntake": {
     "collection-control/issue-sources/25.json": {
@@ -126,6 +127,10 @@
     "collection-control/issue-sources/66.json": {
       "status": "registered: issue-66-dot-togashi-two-20261029",
       "checkedAt": "2026-10-29T00:31:32+00:00"
+    },
+    "collection-control/issue-sources/67.json": {
+      "status": "registered: issue-67-dot-mizuki-two-20261029",
+      "checkedAt": "2026-10-29T01:17:27+00:00"
     }
   },
   "publicApply": false,
@@ -167,5 +172,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-10-29T01:11:52.087869+00:00"
+  "checkedAt": "2026-10-29T01:18:59.574711+00:00"
 }
