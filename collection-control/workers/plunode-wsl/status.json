@@ -44,7 +44,8 @@
   "requestsByPhase": {
     "blocked": 12,
     "completed": 42,
-    "awaiting-recovery": 6
+    "awaiting-recovery": 6,
+    "waiting-control": 1
   },
   "issueIntake": {
     "collection-control/issue-sources/25.json": {
@@ -142,6 +143,10 @@
     "collection-control/issue-sources/70.json": {
       "status": "registered: issue-70-dot-fujikof-doraemon-20261029",
       "checkedAt": "2026-10-29T07:33:33+00:00"
+    },
+    "collection-control/issue-sources/71.json": {
+      "status": "registered: issue-71-dot-tezuka-hinotori-com-20261029",
+      "checkedAt": "2026-10-29T10:13:38+00:00"
     }
   },
   "publicApply": false,
@@ -183,5 +188,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-10-29T09:56:54.091572+00:00"
+  "checkedAt": "2026-10-29T10:15:34.421550+00:00"
 }
