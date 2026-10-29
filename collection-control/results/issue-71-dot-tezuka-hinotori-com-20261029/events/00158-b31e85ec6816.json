@@ -1,0 +1,72 @@
+{
+  "requestId": "issue-71-dot-tezuka-hinotori-com-20261029",
+  "request": {
+    "schemaVersion": 1,
+    "id": "issue-71-dot-tezuka-hinotori-com-20261029",
+    "kind": "issue-prepare",
+    "status": "approved",
+    "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
+    "issueAdapterSha256": "38aadaee84b039f9f991ac1cc831a9498a4d83fab062d96b7c252d7175326dab",
+    "applyAuthorized": {
+      "local": false,
+      "beta": false,
+      "vps": false
+    },
+    "approvalScope": "issue-manga-preparation-collection-review-only",
+    "humanDecision": {
+      "actorType": "human",
+      "reviewer": "プロジェクト運営者（範囲を限定した委任）",
+      "decidedAt": "2026-10-25T13:07:49+09:00",
+      "statement": "2026-10-25 13:07:49 JST、運営者は既存Worker対応の現在の漫画テーマ候補からdotが対象を選び、毎回の個別提示なしでGitHubの収集許可と購読を登録し、候補収集・レビューまで進める限定委任を明示承認した。同日16:17:04 JSTに固定1日1バッチ上限を撤廃し、進捗・収集量・負荷による投入調整を許可した。2026-10-26 12:37:31 JST、過去の許可を上書きせず追加分をバッチ専用の新Issueに登録する方式への明示確認に本人が肯定リアクションし、親会話で現在の反応を検証済み。2026-10-27 13:37〜13:41 JST、運営者はdotが相談中として継続していた追加投入抑制を問い直し、データ収集を急いでいること、多少多く実行してほしいこと、1日何件という制約を付ける段階ではないことを明示した。元の限定委任の範囲で投入を再開し、日次件数上限を設けず実処理・待機量・負荷を見て少量ずつ補充する。個々の人物作品組・Role・ISBNを人間が審査済みとの記録ではない。今回dotが選んだのは既存テーマIssue #5と固定catalog d3e377d5255f4c487d608e73954dc40aeb0b3cba（blob f3d33d0e83b6299a7f443fa841232407ce67657c）のM01の手塚治虫→火の鳥（黎明編・COM版）の1組、および導入Worker対応組との共通部分だけ。Wikidata構造化情報とNDL作成書誌のみ、1作者1作品、親準備と全子収集合計30試行以内、同一要求2試行・3秒間隔・20秒・4MiB、保存成果とcache優先。既公開・既受入・既収集の同内容、同条件の根拠保留は再収集せず、不確かな同定・Role・刊行物scopeは保留。既設時間帯・直列排他・10分休憩を維持する。固定catalog全組・将来追加テーマへの無条件許可ではなく、正式受入・公開apply・追加取得元・予算拡大・コード/adapter/権限/認証/VPS/会員DB/時間帯/ロック変更は含まない。 火の鳥シリーズ全体や漫画少年版への置換・自動統合は許可しない。COM版黎明編に一致する作品・刊行物を根拠から特定できなければ保留する。"
+    },
+    "permission": {
+      "schemaVersion": 1,
+      "approvalId": "dot-tezuka-hinotori-com-20261029",
+      "status": "approved",
+      "approvalScope": "issue-manga-preparation-collection-review-only",
+      "adapter": "manga-discovery-v2",
+      "targets": [
+        {
+          "person": "手塚治虫",
+          "work": "火の鳥（黎明編・COM版）"
+        }
+      ],
+      "requestPolicy": {
+        "maxAttempts": 30,
+        "attemptsPerRequest": 2,
+        "minIntervalSeconds": 3,
+        "timeoutSeconds": 20,
+        "maxBytes": 4194304
+      },
+      "humanDecision": {
+        "actorType": "human",
+        "reviewer": "プロジェクト運営者（範囲を限定した委任）",
+        "decidedAt": "2026-10-25T13:07:49+09:00",
+        "statement": "2026-10-25 13:07:49 JST、運営者は既存Worker対応の現在の漫画テーマ候補からdotが対象を選び、毎回の個別提示なしでGitHubの収集許可と購読を登録し、候補収集・レビューまで進める限定委任を明示承認した。同日16:17:04 JSTに固定1日1バッチ上限を撤廃し、進捗・収集量・負荷による投入調整を許可した。2026-10-26 12:37:31 JST、過去の許可を上書きせず追加分をバッチ専用の新Issueに登録する方式への明示確認に本人が肯定リアクションし、親会話で現在の反応を検証済み。2026-10-27 13:37〜13:41 JST、運営者はdotが相談中として継続していた追加投入抑制を問い直し、データ収集を急いでいること、多少多く実行してほしいこと、1日何件という制約を付ける段階ではないことを明示した。元の限定委任の範囲で投入を再開し、日次件数上限を設けず実処理・待機量・負荷を見て少量ずつ補充する。個々の人物作品組・Role・ISBNを人間が審査済みとの記録ではない。今回dotが選んだのは既存テーマIssue #5と固定catalog d3e377d5255f4c487d608e73954dc40aeb0b3cba（blob f3d33d0e83b6299a7f443fa841232407ce67657c）のM01の手塚治虫→火の鳥（黎明編・COM版）の1組、および導入Worker対応組との共通部分だけ。Wikidata構造化情報とNDL作成書誌のみ、1作者1作品、親準備と全子収集合計30試行以内、同一要求2試行・3秒間隔・20秒・4MiB、保存成果とcache優先。既公開・既受入・既収集の同内容、同条件の根拠保留は再収集せず、不確かな同定・Role・刊行物scopeは保留。既設時間帯・直列排他・10分休憩を維持する。固定catalog全組・将来追加テーマへの無条件許可ではなく、正式受入・公開apply・追加取得元・予算拡大・コード/adapter/権限/認証/VPS/会員DB/時間帯/ロック変更は含まない。 火の鳥シリーズ全体や漫画少年版への置換・自動統合は許可しない。COM版黎明編に一致する作品・刊行物を根拠から特定できなければ保留する。"
+      }
+    },
+    "issueOrigin": {
+      "repository": "isinxnisi/graph-knowledge",
+      "issueNumber": 71,
+      "approvalId": "dot-tezuka-hinotori-com-20261029",
+      "permissionSha256": "26e9e37a47daff91da0c84d4d93e73fae1036ad4c84a383602b312cb1c41711f",
+      "issueBodySha256": "dc16c8c20e2194370b50601766edf64e5d15c2b049d6afcc551c0fcb56e2fac1"
+    },
+    "issueSnapshot": {
+      "url": "https://github.com/isinxnisi/graph-knowledge/issues/71",
+      "updatedAt": "2026-10-29T10:09:41Z",
+      "body": "## 限定収集バッチ：手塚治虫 → 火の鳥（黎明編・COM版）\n\n元テーマは [Issue #5 有名漫画家と代表作品](https://github.com/isinxnisi/graph-knowledge/issues/5)。過去の許可・購読を変更せず、未投入の1組だけを登録する。\n\n- 固定catalog commit d3e377d5255f4c487d608e73954dc40aeb0b3cba、blob f3d33d0e83b6299a7f443fa841232407ce67657c のM01、元テーマ#5、設置Worker対応組の共通部分。main・設置互換基準973c7b0でも同じcatalog。全catalog・将来テーマへの無条件許可ではない。\n- 対象名は「火の鳥（黎明編・COM版）」を厳密に維持する。シリーズ全体・漫画少年版・映像作品へ置き換えず、自動統合しない。[版の境界条件](https://github.com/isinxnisi/graph-knowledge/blob/main/docs/design/FAMOUS_MANGA_CREATORS_REVIEW.md)を維持。作品・刊行物・ISBN・Roleの同定が不確かなら保留。既存手塚治虫Entityへの接続可能性はあるが、接続や島数減少は保証しない。\n- 補充判断（2026-10-29 19:09 JST）：通常未処理0、active/pause/controlErrorなし。#69/#70を含む6件は既存の技術復旧待ちであり、失敗URL・履歴・予算をリセット／別Issueで迂回しない。次の通常開始枠は10月30日03:00 JST、最後の実処理終了16:52:55から約10時間空く。provider回復を実測したとは扱わず、新規1作品だけを次枠へ登録して通信結果を再評価する。\n- 事前照合：午後の455 unique JSONとcontrol2525ede729f0bfa0971cc72be4935bf073434affの関連差分23 JSON、最新Issue、正式受入・公開記録を照合。この厳密な組の既収集・同条件の実処理保留は見つからなかった。古い全体企画の版同定注意は保留実績とは区別する。本番DBの直接照会ではなく、通常Workerの実行時同定・重複チェックは維持する。\n- 漫画17 Claim／12バッチは未承認のまま。最新公開revision f5dbf83f-c89e-4e40-95ee-57957016089fと既存正式receiptを保全。\n- Wikidata構造化APIとNDL作成書誌のみ。1作者1作品、親準備と全子合計30試行以内、同一要求2回、逐次3秒以上、20秒timeout、4MiB。保存成果/cache/Retry-Afterを優先。旧142枠・他バッチと履歴を混同しない。\n- 既設03–07／09–12／15–18 JST、終盤15分開始回避、直列排他、10分休憩を維持。固定日次上限・手動収集・技術並行化は導入しない。\n- 候補・根拠レビューまで。正式受入/public apply、追加取得元、予算拡大、コード/adapter/権限/認証/VPS/会員DB/時間帯/ロック変更は禁止。登録／実受付／実行／完了を区別する。\n\n<!-- plunode-collection-permission:v1 -->\n```json\n{\n  \"schemaVersion\": 1,\n  \"approvalId\": \"dot-tezuka-hinotori-com-20261029\",\n  \"status\": \"approved\",\n  \"approvalScope\": \"issue-manga-preparation-collection-review-only\",\n  \"adapter\": \"manga-discovery-v2\",\n  \"targets\": [\n    {\n      \"person\": \"手塚治虫\",\n      \"work\": \"火の鳥（黎明編・COM版）\"\n    }\n  ],\n  \"requestPolicy\": {\n    \"maxAttempts\": 30,\n    \"attemptsPerRequest\": 2,\n    \"minIntervalSeconds\": 3,\n    \"timeoutSeconds\": 20,\n    \"maxBytes\": 4194304\n  },\n  \"humanDecision\": {\n    \"actorType\": \"human\",\n    \"reviewer\": \"プロジェクト運営者（範囲を限定した委任）\",\n    \"decidedAt\": \"2026-10-25T13:07:49+09:00\",\n    \"statement\": \"2026-10-25 13:07:49 JST、運営者は既存Worker対応の現在の漫画テーマ候補からdotが対象を選び、毎回の個別提示なしでGitHubの収集許可と購読を登録し、候補収集・レビューまで進める限定委任を明示承認した。同日16:17:04 JSTに固定1日1バッチ上限を撤廃し、進捗・収集量・負荷による投入調整を許可した。2026-10-26 12:37:31 JST、過去の許可を上書きせず追加分をバッチ専用の新Issueに登録する方式への明示確認に本人が肯定リアクションし、親会話で現在の反応を検証済み。2026-10-27 13:37〜13:41 JST、運営者はdotが相談中として継続していた追加投入抑制を問い直し、データ収集を急いでいること、多少多く実行してほしいこと、1日何件という制約を付ける段階ではないことを明示した。元の限定委任の範囲で投入を再開し、日次件数上限を設けず実処理・待機量・負荷を見て少量ずつ補充する。個々の人物作品組・Role・ISBNを人間が審査済みとの記録ではない。今回dotが選んだのは既存テーマIssue #5と固定catalog d3e377d5255f4c487d608e73954dc40aeb0b3cba（blob f3d33d0e83b6299a7f443fa841232407ce67657c）のM01の手塚治虫→火の鳥（黎明編・COM版）の1組、および導入Worker対応組との共通部分だけ。Wikidata構造化情報とNDL作成書誌のみ、1作者1作品、親準備と全子収集合計30試行以内、同一要求2試行・3秒間隔・20秒・4MiB、保存成果とcache優先。既公開・既受入・既収集の同内容、同条件の根拠保留は再収集せず、不確かな同定・Role・刊行物scopeは保留。既設時間帯・直列排他・10分休憩を維持する。固定catalog全組・将来追加テーマへの無条件許可ではなく、正式受入・公開apply・追加取得元・予算拡大・コード/adapter/権限/認証/VPS/会員DB/時間帯/ロック変更は含まない。 火の鳥シリーズ全体や漫画少年版への置換・自動統合は許可しない。COM版黎明編に一致する作品・刊行物を根拠から特定できなければ保留する。\"\n  }\n}\n```\n<!-- /plunode-collection-permission:v1 -->\n"
+    },
+    "firstRecipeRevision": 50,
+    "recipeRevisionCount": 1
+  },
+  "requestSha256": "ea73a9b911d60c0b9fb5a14b6ad52315da1901b59a69f86a14ca5b246ef55d48",
+  "kind": "issue-prepare",
+  "phase": "running",
+  "generation": 158,
+  "attempts": 1,
+  "workerId": "plunode-wsl",
+  "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
+  "updatedAt": "2026-10-29T20:22:04+00:00",
+  "message": "Execution gate: interval"
+}
