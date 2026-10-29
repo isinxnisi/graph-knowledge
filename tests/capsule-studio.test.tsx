@@ -58,11 +58,36 @@ function context(id:string|undefined,keys:string[]) { act(()=>mocks.canvas!.onCo
 function move(next:GraphView) { const previous=structuredClone(mocks.view!);act(()=>{mocks.view=structuredClone(next);mocks.canvas!.onMove?.(previous,next);mocks.canvas!.onViewChange?.();}); }
 beforeEach(()=>{
   vi.clearAllMocks();mocks.canvas=null;mocks.view=null;
-  Object.defineProperty(HTMLDialogElement.prototype,"showModal",{configurable:true,value:function(this:HTMLDialogElement){this.open=true;this.querySelector<HTMLElement>("[autofocus]")?.focus();}});
+  Object.defineProperty(HTMLDialogElement.prototype,"showModal",{configurable:true,value:function(this:HTMLDialogElement){this.open=true;this.querySelector<HTMLElement>("[autofocus],button,input,textarea,select")?.focus();}});
   Object.defineProperty(HTMLDialogElement.prototype,"close",{configurable:true,value:function(this:HTMLDialogElement){this.open=false;}});
   vi.spyOn(window.history,"pushState").mockImplementation(()=>{});vi.spyOn(window.history,"back").mockImplementation(()=>{});vi.spyOn(window.history,"forward").mockImplementation(()=>{});
 });
 afterEach(()=>{cleanup();vi.restoreAllMocks();});
+
+it.each([
+  ["Add custom entity","Title"],
+  ["Add text","Text"],
+  ["Description","Title"],
+  ["Search the KG","Name or alias"],
+])("focuses the editing field after opening %s and restores its trigger on Escape",(action,label)=>{
+  render(<CapsuleStudio capsule={capsule()} isNew onSave={saveResult}/>);
+  const trigger=button(action);trigger.focus();fireEvent.click(trigger);
+  expect(document.activeElement).toBe(screen.getByLabelText(label));
+  cancel(screen.getByRole("dialog"));expect(document.activeElement).toBe(trigger);
+});
+
+it("focuses source and relation fields after opening directly, then returns to the invoking control",()=>{
+  render(<CapsuleStudio capsule={capsule()} isNew onSave={saveResult}/>);act(()=>mocks.canvas!.onEntity(a));click("Details & evidence");
+  const evidenceButton=button("Edit evidence");evidenceButton.focus();fireEvent.click(evidenceButton);expect(document.activeElement).toBe(screen.getByLabelText("Source title"));
+  click("Cancel");expect(document.activeElement).toBe(evidenceButton);
+  const graph=screen.getByTestId("canvas");graph.focus();act(()=>mocks.canvas!.onRelationDoubleClick!(relation));expect(document.activeElement).toBe(screen.getByLabelText("Label on the graph"));
+  cancel(screen.getByRole("dialog"));expect(document.activeElement).toBe(graph);
+});
+
+it("initially focuses Keep editing in discard confirmation and restores the discard trigger",()=>{
+  render(<CapsuleStudio capsule={capsule()} isNew onSave={saveResult}/>);const trigger=button("Discard");trigger.focus();fireEvent.click(trigger);
+  expect(document.activeElement).toBe(button("Keep editing"));cancel(screen.getByRole("dialog",{name:"Discard your changes?"}));expect(document.activeElement).toBe(trigger);
+});
 
 it("keeps a programmatic view restoration clean and preserves viewing layout through sharing",()=>{
   render(<CapsuleStudio capsule={capsule()} onSave={saveResult} sharing={<p>Saved sharing controls</p>}/>);
