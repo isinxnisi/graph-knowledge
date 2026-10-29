@@ -1,3 +1,5 @@
+2026-10-30、Capsuleの現行UIは[編集契約](design/CAPSULE_EDITOR.md)と[β操作検証](verification/CAPSULE_EDITOR_UX_BETA_20261030.md)を参照する。Surface（表示場所）、Studio（草稿・履歴・閲覧状態）、Workspace（本人・保存先）を分け、作成・再訪・再編集で同じ作業空間を使う。既存3200／HTTPS βに反映し、会員DBは014まで適用済み。旧記録の「未反映」は当時の状態であり、現在のβの状態を表さない。本番VPSは今回更新していない。
+
 2026-10-29、Issue #63の新document付きCapsuleは[現行編集契約](design/CAPSULE_EDITOR.md)を優先する。実装・クラウド検証を完了し、既存beta／VPSは未反映。[検証・反映状況](verification/CAPSULE_EDITOR_20261029.md)／[更新・復旧](runbooks/CAPSULE_EDITOR_RELEASE.md)。以下の日付付き記述は当時の履歴として保持する。
 
 後続の漫画受入で新公開baseを使う前に、設置済み8 Role版Workerの互換対応が必要（[Issue #55](https://github.com/isinxnisi/graph-knowledge/issues/55)）。稼働Workerは変更していない。
