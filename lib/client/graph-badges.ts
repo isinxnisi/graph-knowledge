@@ -1,8 +1,9 @@
 import type { Core } from "cytoscape";
 
 // 小さいカテゴリpatchだけDOMで描画する。主ラベル・線・矢印はCytoscapeに任せる。
-export function attachGraphBadges(cy: Core, layer: HTMLElement, className: string, select: (id: string) => void) {
+export function attachGraphBadges(cy: Core, layer: HTMLElement, className: string, select: (id: string, event: MouseEvent) => void, nodeClassName?: string, contextMenu?: (id: string, event: MouseEvent) => void) {
   const badges = new Map<string, HTMLButtonElement>();
+  const nodeBadges = new Map<string, HTMLSpanElement>();
   const update = () => {
     if (cy.destroyed()) return;
     const visible = new Set<string>(), zoom = cy.zoom(), pan = cy.pan();
@@ -19,7 +20,8 @@ export function attachGraphBadges(cy: Core, layer: HTMLElement, className: strin
         badge.dataset.relationId = edge.id();
         badge.addEventListener("mousedown", event => event.stopPropagation());
         badge.addEventListener("touchstart", event => event.stopPropagation());
-        badge.addEventListener("click", event => { event.stopPropagation(); select(edge.id()); });
+        badge.addEventListener("click", event => { event.stopPropagation(); select(edge.id(), event); });
+        badge.addEventListener("contextmenu", event => { if (contextMenu) { event.preventDefault(); event.stopPropagation(); contextMenu(edge.id(), event); } });
         layer.appendChild(badge); badges.set(edge.id(), badge);
       }
       badge.textContent = category;
@@ -32,7 +34,21 @@ export function attachGraphBadges(cy: Core, layer: HTMLElement, className: strin
       badge.style.transform = `translate(-100%, -50%) scale(${zoom})`;
     });
     badges.forEach((badge, id) => { if (!visible.has(id)) { badge.remove(); badges.delete(id); } });
+    const visibleNodes = new Set<string>();
+    if (nodeClassName) cy.nodes().forEach(node => {
+      const category = node.data("badge") as string | undefined;
+      if (!category || !node.visible()) return;
+      visibleNodes.add(node.id());
+      let badge = nodeBadges.get(node.id());
+      if (!badge) { badge = document.createElement("span"); badge.className = nodeClassName; badge.dataset.nodeId = node.id(); layer.appendChild(badge); nodeBadges.set(node.id(), badge); }
+      badge.textContent = category; badge.title = category; badge.dataset.selected = String(node.hasClass("chosen"));
+      const position = node.renderedPosition();
+      badge.style.left = `${position.x}px`;
+      badge.style.top = `${position.y + node.outerHeight() * zoom / 2 + 4 * zoom}px`;
+      badge.style.transform = `translate(-50%, 0) scale(${zoom})`;
+    });
+    nodeBadges.forEach((badge, id) => { if (!visibleNodes.has(id)) { badge.remove(); nodeBadges.delete(id); } });
   };
   cy.on("render", update);
-  return () => { cy.off("render", update); badges.forEach(badge => badge.remove()); badges.clear(); };
+  return () => { cy.off("render", update); badges.forEach(badge => badge.remove()); badges.clear(); nodeBadges.forEach(badge => badge.remove()); nodeBadges.clear(); };
 }

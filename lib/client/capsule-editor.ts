@@ -27,7 +27,7 @@ export function captureCapsule(graph: GraphState, view: GraphView | null, datase
       revision: graph.revision ?? null, snapshot: snapshotClaim(c), detail: null },
   }));
   const document = capsuleDocumentSchema.parse({ schemaVersion: 1, nodes, relations, texts: [], evidence: [], unresolvedClaimIds: [],
-    layout: { positions: Object.fromEntries(Object.entries(view?.positions ?? {}).filter(([id]) => !!graph.nodes[id])), pan: view?.pan ?? { x: 0, y: 0 }, zoom: view?.zoom ?? 1 } });
+    layout: { positions: Object.fromEntries(Object.entries(view?.positions ?? {}).filter(([id]) => !!graph.nodes[id])), pan: view?.pan ?? { x: 0, y: 0 }, zoom: view?.zoom ?? 1, ...(view?.center && { center: view.center }), ...(view?.viewport && { viewport: view.viewport }) } });
   return capsuleSchema.parse({ id: crypto.randomUUID(), dataset, revision: 1, title: title.slice(0, 80), note: "", language: "ja", createdAt: capturedAt, ...capsuleReferences(document), document });
 }
 
@@ -56,7 +56,20 @@ export function withDocument(capsule: LocalCapsule, document: CapsuleDocument): 
 export function withCapsuleView(capsule: LocalCapsule, view: GraphView | null): LocalCapsule {
   if (!capsule.document || !view) return capsule;
   const ids = new Set([...capsule.document.nodes, ...capsule.document.texts].map(n => n.key));
-  return withDocument(capsule, { ...capsule.document, layout: { positions: Object.fromEntries(Object.entries(view.positions).filter(([id]) => ids.has(id))), pan: view.pan, zoom: view.zoom } });
+  return withDocument(capsule, { ...capsule.document, layout: { positions: Object.fromEntries(Object.entries(view.positions).filter(([id]) => ids.has(id))), pan: view.pan, zoom: view.zoom, ...(view.center && { center: view.center }), ...(view.viewport && { viewport: view.viewport }) } });
+}
+
+// Pre-center documents did not record the viewport dimensions, so their screen
+// pan cannot be faithfully reconstructed. Keep their authored scale and node
+// positions, and open their extent at the center instead of an arbitrary offset.
+// New saves always capture the actual center, including deliberately empty space.
+export function capsuleGraphView(layout: CapsuleDocument["layout"]): GraphView {
+  const positions = Object.values(layout.positions);
+  const center = layout.center ?? (!layout.viewport && positions.length ? {
+    x: (Math.min(...positions.map(p => p.x)) + Math.max(...positions.map(p => p.x))) / 2,
+    y: (Math.min(...positions.map(p => p.y)) + Math.max(...positions.map(p => p.y))) / 2,
+  } : undefined);
+  return { ...layout, ...(center && { center }), initialLayoutDone: positions.length > 0 };
 }
 export function removeCapsuleElements(document: CapsuleDocument, keys: string[]): CapsuleDocument {
   const removed = new Set(keys);

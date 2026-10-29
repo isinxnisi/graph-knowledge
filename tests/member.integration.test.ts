@@ -67,7 +67,7 @@ beforeAll(async () => {
   if (!config || config.provider.kind !== "fixture") throw new Error("Run npm run test:member in its disposable DB");
   fixture = await startMemberOidc();
   const migrationPool = memberPool(config);
-  try { await migrateMemberDatabase(migrationPool); await migrateMemberDatabase(migrationPool); } finally { await migrationPool.end(); }
+  try { await migrateMemberDatabase(migrationPool, false, false, false, false, false, true); await migrateMemberDatabase(migrationPool, false, false, false, false, false, true); } finally { await migrationPool.end(); }
   const { auth } = memberRuntime();
   const plan = await getMigrations(auth.options);
   expect(plan.toBeCreated).toEqual([]);
@@ -228,7 +228,7 @@ describe("実OIDC・PostgreSQLによるprivate Capsule", () => {
     const { share, token } = await issued.json();
     expect(token).toMatch(/^[A-Za-z0-9_-]{43}$/);
     const status = await (await sharing.GET(request("/", alice.cookies.value), ctx)).json();
-    expect(status).toEqual({ share, blocked: false });
+    expect(status).toEqual({ share, blocked: false, commentsClosed: false });
     const rows = await memberRuntime().pool.query("SELECT * FROM member_capsule_share WHERE capsule_id = $1", [capsule.id]);
     expect(rows.rows[0].token_hash).toHaveLength(64);
     expect(JSON.stringify(rows.rows)).not.toContain(token);
@@ -274,7 +274,7 @@ describe("実OIDC・PostgreSQLによるprivate Capsule", () => {
     expect((await revoke(rotated.share.id)).status).toBe(200);
     expect((await revoke(rotated.share.id)).status).toBe(200);
     expect((await read(rotated.token)).status).toBe(404);
-    expect(await (await sharing.GET(request("/", alice.cookies.value), ctx)).json()).toEqual({ share: null, blocked: false });
+    expect(await (await sharing.GET(request("/", alice.cookies.value), ctx)).json()).toEqual({ share: null, blocked: false, commentsClosed: false });
     expect((await memberRuntime().pool.query("SELECT * FROM member_capsule_revision WHERE capsule_id = $1", [capsule.id])).rowCount).toBe(1);
     const next = await (await issue(null)).json();
     expect((await read(next.token)).status).toBe(200);
@@ -369,8 +369,8 @@ describe("実OIDC・PostgreSQLによるprivate Capsule", () => {
       const issued = await sharing.POST(request("/", alice.cookies.value, "POST", { expectedRevision: 1, expectedShareId: null }), context(capsule.id));
       const { token, share } = await issued.json();
       const headers = { "x-capsule-token": token };
-      expect((await discussion.POST(request(path, bob.cookies.value, "POST", { requestId: randomUUID(), revision: 1, body: "既定は停止" }, headers), context(capsule.id))).status).toBe(403);
-      expect((await discussion.PATCH(request(path, alice.cookies.value, "PATCH", { closed: false, expectedClosed: true }), context(capsule.id))).status).toBe(200);
+      expect((await (await discussion.GET(request(path + "?revision=1", bob.cookies.value, "GET", undefined, headers), context(capsule.id))).json()).closed).toBe(false);
+      expect((await discussion.PATCH(request(path, alice.cookies.value, "PATCH", { closed: false, expectedClosed: false }), context(capsule.id))).status).toBe(200);
       const read = (cookie = "", revision = 1, extra: Record<string, string> = headers) => discussion.GET(request(`${path}?revision=${revision}`, cookie, "GET", undefined, extra), context(capsule.id));
       const post = (cookie: string, body: string, revision = 1, requestId = randomUUID(), extra: Record<string, string> = headers) => discussion.POST(request(path, cookie, "POST", { requestId, revision, body }, extra), context(capsule.id));
       expect((await post("", "匿名投稿")).status).toBe(401);
@@ -439,13 +439,38 @@ describe("実OIDC・PostgreSQLによるprivate Capsule", () => {
       expect((await pool.query("SELECT capsule_id FROM member_capsule_thread WHERE capsule_id=$1", [capsule.id])).rowCount).toBe(0);
     }
   });
+  it("新規共有は受付ON、未作成threadもONで整合し、明示OFFと旧版固定を再発行後も保つ", async () => {
+    const { pool } = memberRuntime();
+    const { capsule } = await (await create(alice.cookies.value)).json(), ctx = context(capsule.id);
+    const path = `/api/capsules/${capsule.id}/discussion`;
+    try {
+      const first = await (await sharing.POST(request("/", alice.cookies.value, "POST", { expectedRevision: 1, expectedShareId: null }), ctx)).json();
+      const read = () => discussion.GET(request(path + "?revision=1", alice.cookies.value), ctx);
+      expect((await (await read()).json()).closed).toBe(false);
+      expect((await pool.query("SELECT closed FROM member_capsule_thread WHERE capsule_id=$1", [capsule.id])).rows[0].closed).toBe(false);
+      await pool.query("DELETE FROM member_capsule_thread WHERE capsule_id=$1", [capsule.id]);
+      expect((await (await read()).json()).closed).toBe(false);
+      // The DB default is verified independently of the service's explicit insert.
+      await pool.query("INSERT INTO member_capsule_thread(capsule_id) VALUES($1)", [capsule.id]);
+      expect((await pool.query("SELECT closed FROM member_capsule_thread WHERE capsule_id=$1", [capsule.id])).rows[0].closed).toBe(false);
+      expect((await discussion.PATCH(request(path, alice.cookies.value, "PATCH", { closed: true, expectedClosed: false }), ctx)).status).toBe(200);
+      await migrateMemberDatabase(pool, false, false, false, false, false, true);
+      const next = await (await sharing.POST(request("/", alice.cookies.value, "POST", { expectedRevision: 1, expectedShareId: first.share.id }), ctx)).json();
+      expect((await (await read()).json()).closed).toBe(true);
+      expect((await discussion.POST(request(path, bob.cookies.value, "POST", { requestId: randomUUID(), revision: 1, body: "停止を越えられない" }, { "x-capsule-token": next.token }), ctx)).status).toBe(403);
+      const reopened = await sharing.POST(request("/", alice.cookies.value, "POST", { expectedRevision: 1, expectedShareId: next.share.id, commentsClosed: false }), ctx);
+      expect(reopened.status).toBe(201); expect((await (await read()).json()).closed).toBe(false);
+      expect((await pool.query("SELECT snapshot FROM member_capsule_revision WHERE capsule_id=$1", [capsule.id])).rows[0].snapshot).toEqual(capsule);
+      expect((await sharing.POST(request("/", bob.cookies.value, "POST", { expectedRevision: 1, expectedShareId: (await reopened.json()).share.id, commentsClosed: true }), ctx)).status).toBe(404);
+    } finally { await pool.query("DELETE FROM member_capsule WHERE id=$1", [capsule.id]); }
+  });
   it("投稿の頻度とCapsule全体上限を同時書込でも守り、撤回で上限をリセットしない", async () => {
     const { pool } = memberRuntime();
     const { capsule } = await (await create(alice.cookies.value)).json();
     const path = `/api/capsules/${capsule.id}/discussion`;
     try {
       const { token } = await (await sharing.POST(request("/", alice.cookies.value, "POST", { expectedRevision: 1, expectedShareId: null }), context(capsule.id))).json();
-      expect((await discussion.PATCH(request(path, alice.cookies.value, "PATCH", { closed: false, expectedClosed: true }), context(capsule.id))).status).toBe(200);
+      expect((await discussion.PATCH(request(path, alice.cookies.value, "PATCH", { closed: false, expectedClosed: false }), context(capsule.id))).status).toBe(200);
       const post = () => discussion.POST(request(path, bob.cookies.value, "POST", { requestId: randomUUID(), revision: 1, body: "上限の確認" }, { "x-capsule-token": token }), context(capsule.id));
       const results = await Promise.all(Array.from({ length: 6 }, post));
       expect(results.map(r => r.status).sort()).toEqual([201, 201, 201, 201, 201, 429]);
@@ -469,7 +494,7 @@ describe("実OIDC・PostgreSQLによるprivate Capsule", () => {
     const list = (cookie = bob.cookies.value, headers: Record<string, string> = {}) => ownPosts.GET(request(listPath, cookie, "GET", undefined, headers));
     try {
       const { token, share } = await (await sharing.POST(request("/", alice.cookies.value, "POST", { expectedRevision: 1, expectedShareId: null }), context(capsule.id))).json();
-      expect((await discussion.PATCH(request(path, alice.cookies.value, "PATCH", { closed: false, expectedClosed: true }), context(capsule.id))).status).toBe(200);
+      expect((await discussion.PATCH(request(path, alice.cookies.value, "PATCH", { closed: false, expectedClosed: false }), context(capsule.id))).status).toBe(200);
       const post = async (cookie: string, body: string) => discussion.POST(request(path, cookie, "POST", { requestId: randomUUID(), revision: 1, body }, { "x-capsule-token": token }), context(capsule.id));
       const posted = await post(bob.cookies.value, "失効後も管理する本人の文章");
       expect(posted.status).toBe(201); const { postId } = await posted.json();
@@ -519,7 +544,7 @@ describe("実OIDC・PostgreSQLによるprivate Capsule", () => {
     const list = (query = "", cookie = bob.cookies.value) => ownPosts.GET(request(`/api/member/posts${query}`, cookie));
     try {
       await sharing.POST(request("/", alice.cookies.value, "POST", { expectedRevision: 1, expectedShareId: null }), context(capsule.id));
-      await pool.query("INSERT INTO member_capsule_thread(capsule_id) VALUES ($1)", [capsule.id]);
+      await pool.query("INSERT INTO member_capsule_thread(capsule_id) VALUES ($1) ON CONFLICT DO NOTHING", [capsule.id]);
       await pool.query(`INSERT INTO member_capsule_post(id,capsule_id,revision,author_user_id,request_id,content_hash,body,created_at)
         SELECT gen_random_uuid(),$1,1,$2,gen_random_uuid(),'test','投稿 '||n,
           '2026-10-09T00:00:00.123456Z'::timestamptz - greatest(n-23,0)*interval '1 microsecond' FROM generate_series(1,43) n`, [capsule.id, user.id]);
@@ -623,7 +648,7 @@ describe("退会と最小運営操作（実PostgreSQL）", () => {
   beforeAll(async () => {
     await memberRuntime().pool.query("DELETE FROM member_capsule");
     alice = await login("alice"); bob = await login("bob");
-    expect((await memberRuntime().pool.query("SELECT count(*) FROM member_migration")).rows[0].count).toBe("5");
+    expect((await memberRuntime().pool.query("SELECT count(*) FROM member_migration")).rows[0].count).toBe("6");
   });
   it("停止のdry-runは無変更。適用で全sessionと共有が失効し、再開しても復活しない", async () => {
     const { pool } = memberRuntime();
@@ -659,14 +684,14 @@ describe("退会と最小運営操作（実PostgreSQL）", () => {
     expect((await shared.GET(request("/", "", "GET", undefined, { "x-capsule-token": link.token }))).status).toBe(404);
     const issue = await sharing.POST(request("/", alice.cookies.value, "POST", input), context(capsule.id));
     expect(issue.status).toBe(403); expect(await issue.json()).toEqual({ error: { code: "SHARING_BLOCKED" } });
-    expect((await discussion.PATCH(request("/", alice.cookies.value, "PUT", { closed: false, expectedClosed: true }), context(capsule.id))).status).toBe(404);
+    expect((await discussion.PATCH(request("/", alice.cookies.value, "PUT", { closed: false, expectedClosed: false }), context(capsule.id))).status).toBe(404);
     expect((await item.GET(request("/", alice.cookies.value), context(capsule.id))).status).toBe(200);
     expect(await (await sharing.GET(request("/", alice.cookies.value), context(capsule.id))).json()).toMatchObject({ blocked: true });
   });
   it("投稿非表示は本人撤回と区別され、本文・名前をどちらの読取APIにも返さない", async () => {
     const { capsule } = await (await create(alice.cookies.value)).json();
     const { token } = await (await sharing.POST(request("/", alice.cookies.value, "POST", { expectedRevision: 1, expectedShareId: null }), context(capsule.id))).json();
-    await discussion.PATCH(request("/", alice.cookies.value, "PUT", { closed: false, expectedClosed: true }), context(capsule.id));
+    await discussion.PATCH(request("/", alice.cookies.value, "PUT", { closed: false, expectedClosed: false }), context(capsule.id));
     const result = await discussion.POST(request("/", bob.cookies.value, "POST", { revision: 1, requestId: randomUUID(), body: "運営確認対象の本文" }, { "x-capsule-token": token }), context(capsule.id));
     const { postId } = await result.json(); expect(result.status).toBe(201);
     await operation("hide-post", postId); await operation("hide-post", postId);
@@ -699,7 +724,7 @@ describe("退会と最小運営操作（実PostgreSQL）", () => {
     await anotherDataset.create(request("/", alice.cookies.value, "POST", { requestId: randomUUID(), content: { ...content(), dataset: "pilot-science-v1" } }));
     const other = await (await create(bob.cookies.value)).json();
     const otherLink = await (await sharing.POST(request("/", bob.cookies.value, "POST", { expectedRevision: 1, expectedShareId: null }), context(other.capsule.id))).json();
-    await discussion.PATCH(request("/", bob.cookies.value, "PUT", { closed: false, expectedClosed: true }), context(other.capsule.id));
+    await discussion.PATCH(request("/", bob.cookies.value, "PUT", { closed: false, expectedClosed: false }), context(other.capsule.id));
     await discussion.POST(request("/", alice.cookies.value, "POST", { requestId: randomUUID(), revision: 1, body: "本人の他所への投稿" }, { "x-capsule-token": otherLink.token }), context(other.capsule.id));
     const deleted = await profile.DELETE(request("/", alice.cookies.value, "DELETE", { confirmation: "delete-account" }, { "x-member-user": user.id }));
     expect(deleted.status).toBe(200); expect(deleted.headers.get("cache-control")).toContain("no-store");
@@ -732,7 +757,7 @@ describe("退会と最小運営操作（実PostgreSQL）", () => {
     for (const session of sessions) {
       const { capsule } = await (await create(session.cookies.value)).json();
       const link = await (await sharing.POST(request("/", session.cookies.value, "POST", { expectedRevision: 1, expectedShareId: null }), context(capsule.id))).json();
-      await discussion.PATCH(request("/", session.cookies.value, "PATCH", { closed: false, expectedClosed: true }), context(capsule.id));
+      await discussion.PATCH(request("/", session.cookies.value, "PATCH", { closed: false, expectedClosed: false }), context(capsule.id));
       capsules.push({ ...capsule, token: link.token });
     }
     for (let index = 0; index < 2; index++) {

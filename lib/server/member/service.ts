@@ -75,8 +75,12 @@ export function createMemberService(config: MemberConfig, pool: Pool, auth: Memb
         JOIN community_member issuer ON issuer.community_id=l.community_id AND issuer.user_id=c.owner_user_id AND issuer.status='active' AND issuer.generation=l.issuer_generation
         JOIN member_capsule_revision r ON r.capsule_id=c.id AND r.revision=l.capsule_revision
         WHERE l.capsule_id=c.id AND l.owner_user_id=c.owner_user_id AND l.status='active' AND place.status<>'suspended' AND c.sharing_blocked=false AND r.sharing_blocked=false)` : 'false';
-      const result = await pool.query(`SELECT c.id,c.schema_version,c.revision,c.created_at,c.updated_at,c.content-'document' AS content,(c.content ? 'document') AS has_document,${published} AS published FROM member_capsule c WHERE c.owner_user_id = $1 AND c.dataset = $2 ORDER BY c.updated_at DESC, c.id`, [user.id, dataset]);
-      return memberJson({ capsules: result.rows.map(row => ({ id:row.id,schemaVersion:row.schema_version,revision:Number(row.revision),createdAt:row.created_at.toISOString(),updatedAt:row.updated_at.toISOString(),content:row.content,hasDocument:row.has_document,published:row.published })) });
+      // Return only the presence of a usable link, never its capability or hash.
+      // Private edits can advance the Capsule while the shared revision stays fixed.
+      const shared = `EXISTS(SELECT 1 FROM member_capsule_share s JOIN member_capsule_revision r ON r.capsule_id=s.capsule_id AND r.revision=s.revision
+        WHERE s.capsule_id=c.id AND c.sharing_blocked=false AND COALESCE((to_jsonb(r)->>'sharing_blocked')::boolean,false)=false)`;
+      const result = await pool.query(`SELECT c.id,c.schema_version,c.revision,c.created_at,c.updated_at,c.content-'document' AS content,(c.content ? 'document') AS has_document,${shared} AS shared,${published} AS published FROM member_capsule c WHERE c.owner_user_id = $1 AND c.dataset = $2 ORDER BY c.updated_at DESC, c.id`, [user.id, dataset]);
+      return memberJson({ capsules: result.rows.map(row => ({ id:row.id,schemaVersion:row.schema_version,revision:Number(row.revision),createdAt:row.created_at.toISOString(),updatedAt:row.updated_at.toISOString(),content:row.content,hasDocument:row.has_document,shared:row.shared,published:row.published })) });
     },
     async read(request: Request, rawId: string) {
       const user = await owner(request);

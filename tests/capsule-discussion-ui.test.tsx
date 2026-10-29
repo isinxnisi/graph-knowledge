@@ -3,6 +3,8 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { act, cleanup, fireEvent, render, renderHook, screen, waitFor } from "@testing-library/react";
 import CapsuleDiscussion, { useDiscussionDraft, type DiscussionDraftStore } from "../components/CapsuleDiscussion";
 import type { CapsuleDiscussion as Discussion } from "../lib/domain/capsule-discussion";
+import CapsuleShareControls from "../components/CapsuleShareControls";
+import type { MemberCapsule } from "../lib/domain/member-capsule";
 
 const capsuleId = "10000000-0000-4000-8000-000000000001", userId = "20000000-0000-4000-8000-000000000001", postId = "30000000-0000-4000-8000-000000000001";
 const token = "a".repeat(43);
@@ -11,18 +13,34 @@ let fetchMock: ReturnType<typeof vi.fn>;
 beforeEach(() => {
   Object.defineProperty(document, "visibilityState", { configurable: true, value: "visible" });
   localStorage.clear(); sessionStorage.clear();
+  HTMLDialogElement.prototype.showModal = function () { this.open = true; };
+  HTMLDialogElement.prototype.close = function () { this.open = false; };
   fetchMock = vi.fn(); vi.stubGlobal("fetch", fetchMock);
 });
 afterEach(() => { cleanup(); vi.unstubAllGlobals(); vi.useRealTimers(); });
 async function open(value: Discussion = data, cache?: DiscussionDraftStore) {
   fetchMock.mockResolvedValueOnce(Response.json(value));
   const result = render(<CapsuleDiscussion capsuleId={capsuleId} revision={1} token={token} draftCache={cache} />);
-  fireEvent.click(screen.getByRole("button", { name: "この版のコメントを見る" }));
   await screen.findByText("この版のコメントはまだありません。");
   return result;
 }
 describe("共有版の会話", () => {
-  it("明示して開き、匿名にはログイン導線だけを出す", async () => {
+  it("共有パネル内では実際に共有中の版の会話を開き、受付switchを一つにまとめる", async () => {
+    const capsule: MemberCapsule = { id: capsuleId, schemaVersion: 2, revision: 2, createdAt: "2026-10-30T00:00:00Z", updatedAt: "2026-10-30T00:00:00Z", content: { title: "保存版2の図", note: "", language: "ja", dataset: "demo", entityIds: [], claimIds: [], document: { schemaVersion: 1, nodes: [], relations: [], texts: [], evidence: [], unresolvedClaimIds: [], layout: { positions: {}, pan: { x: 0, y: 0 }, zoom: 1 } } } };
+    fetchMock.mockResolvedValueOnce(Response.json({ share: { id: postId, revision: 1, createdAt: capsule.createdAt }, commentsClosed: false }));
+    fetchMock.mockResolvedValueOnce(Response.json({ ...data, canManage: true }));
+    render(<CapsuleShareControls capsule={capsule} userId={userId} disabled={false} onUnauthorized={vi.fn()} />);
+    await screen.findByLabelText("コメント本文");
+    expect(screen.getAllByRole("switch", { name: "コメント受付" })).toHaveLength(1);
+    expect(fetchMock.mock.calls[1][0]).toContain("revision=1");
+    expect(screen.getByText(/今のリンクは保存版 1/)).toBeTruthy();
+    fetchMock.mockResolvedValueOnce(Response.json({ closed: true }));
+    fetchMock.mockResolvedValueOnce(Response.json({ ...data, canManage: true, closed: true }));
+    fireEvent.click(screen.getByRole("switch", { name: "コメント受付" }));
+    await screen.findByText("コメントの受付を停止しました。");
+    await waitFor(() => expect(screen.queryByLabelText("コメント本文")).toBeNull());
+  });
+  it("自動で会話を開き、匿名にはログイン導線を出す", async () => {
     await open({ ...data, viewer: null });
     expect(screen.queryByLabelText("コメント本文")).toBeNull();
     expect(screen.getByRole("link", { name: /投稿するにはアカウント/ }).getAttribute("href")).toBe("/member");
@@ -98,8 +116,7 @@ describe("共有版の会話", () => {
     const secondData = { ...data, revision: 2 };
     fetchMock.mockResolvedValueOnce(Response.json(secondData));
     const second = render(<CapsuleDiscussion capsuleId={capsuleId} revision={2} userId={userId} draftCache={result.current} />);
-    fireEvent.click(screen.getByRole("button", { name: "この版のコメントを見る" }));
-    await screen.findByLabelText("コメント本文");
+      await screen.findByLabelText("コメント本文");
     expect((screen.getByLabelText("コメント本文") as HTMLTextAreaElement).value).toBe("");
     fireEvent.change(screen.getByLabelText("コメント本文"), { target: { value: "新しい版への投稿" } });
     fetchMock.mockResolvedValueOnce(Response.json({ postId, replayed: false }));
@@ -122,23 +139,29 @@ describe("共有版の会話", () => {
     const onUnauthorized = vi.fn();
     fetchMock.mockResolvedValueOnce(Response.json({ error: { code: "UNAUTHENTICATED" } }, { status: 401 }));
     render(<CapsuleDiscussion capsuleId={capsuleId} revision={1} userId={userId} onUnauthorized={onUnauthorized} />);
-    fireEvent.click(screen.getByRole("button", { name: "この版のコメントを見る" }));
-    await waitFor(() => expect(onUnauthorized).toHaveBeenCalledOnce());
+      await waitFor(() => expect(onUnauthorized).toHaveBeenCalledOnce());
     expect(fetchMock.mock.calls[0][1].headers["X-Member-User"]).toBe(userId);
     expect(screen.queryByLabelText("コメント本文")).toBeNull();
   });
-  it("非表示で会話を消し、取消後の応答を捨てる", async () => {
+  it("通常の再確認・タブ復帰と通信失敗で入力とフォーカスを維持する", async () => {
     await open();
+    const input = screen.getByLabelText("コメント本文") as HTMLTextAreaElement;
+    fireEvent.change(input, { target: { value: "続きを入力している" } }); input.focus();
     let finish!: (response: Response) => void;
     fetchMock.mockImplementationOnce(() => new Promise<Response>(resolve => { finish = resolve; }));
     fireEvent.click(screen.getByRole("button", { name: "コメントとログインを再確認" }));
-    const signal = fetchMock.mock.calls[1][1].signal;
+    expect(input.disabled).toBe(false); expect(document.activeElement).toBe(input);
     Object.defineProperty(document, "visibilityState", { configurable: true, value: "hidden" });
     fireEvent(document, new Event("visibilitychange"));
-    expect(signal.aborted).toBe(true);
+    expect(input.isConnected).toBe(true);
     await act(async () => finish(Response.json(data)));
-    expect(screen.queryByLabelText("コメント本文")).toBeNull();
-    expect(screen.queryByText("この版のコメントはまだありません。")).toBeNull();
+    expect(input.value).toBe("続きを入力している");
+    fetchMock.mockRejectedValueOnce(new TypeError("offline"));
+    Object.defineProperty(document, "visibilityState", { configurable: true, value: "visible" });
+    fireEvent(document, new Event("visibilitychange"));
+    await screen.findByRole("alert");
+    expect(input.isConnected).toBe(true); expect(input.value).toBe("続きを入力している"); expect(input.disabled).toBe(false);
+    expect(document.activeElement).toBe(input);
   });
   it("アカウント変更の再確認中は草稿を隠し、取消された投稿応答で別Userの入力を消さない", async () => {
     const { result } = renderHook(() => useDiscussionDraft());
@@ -153,7 +176,7 @@ describe("共有版の会話", () => {
     fireEvent(window, new StorageEvent("storage", { key: "graph-knowledge:member-session-changed" }));
     expect(originalRequest.signal.aborted).toBe(true);
     expect(screen.queryByLabelText("コメント本文")).toBeNull();
-    expect(screen.queryByText(/読む人 として投稿します/)).toBeNull();
+    expect(screen.queryByText(/読む人 として投稿/)).toBeNull();
     expect(fetchMock).toHaveBeenCalledTimes(3);
     await act(async () => completeCheck(Response.json({ ...data, viewer: { id: postId, name: "別の人" } })));
     expect((screen.getByLabelText("コメント本文") as HTMLTextAreaElement).value).toBe("");
@@ -167,12 +190,30 @@ describe("共有版の会話", () => {
     expect((screen.getByLabelText("コメント本文") as HTMLTextAreaElement).value).toBe("元の本人の草稿");
     expect(result.current.get(`${capsuleId}:1:${userId}`)?.requestId).toBe(JSON.parse(originalRequest.body).requestId);
   });
+  it("30秒の背景確認中も同じ入力要素を保ち、IME変換中のsubmitを投稿にしない", async () => {
+    vi.useFakeTimers();
+    fetchMock.mockResolvedValueOnce(Response.json(data));
+    render(<CapsuleDiscussion capsuleId={capsuleId} revision={1} token={token} />);
+    await act(async () => { await vi.advanceTimersByTimeAsync(1); });
+    const input = screen.getByLabelText("コメント本文") as HTMLTextAreaElement;
+    input.focus(); fireEvent.change(input, { target: { value: "変換中のコメント" } });
+    fireEvent.compositionStart(input);
+    fireEvent.submit(input.closest("form")!);
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    fireEvent.compositionEnd(input);
+    let finish!: (response: Response) => void;
+    fetchMock.mockImplementationOnce(() => new Promise<Response>(resolve => { finish = resolve; }));
+    await act(async () => { await vi.advanceTimersByTimeAsync(30_000); });
+    expect(input.isConnected).toBe(true); expect(input.disabled).toBe(false); expect(document.activeElement).toBe(input);
+    await act(async () => finish(Response.json(data)));
+    expect((screen.getByLabelText("コメント本文") as HTMLTextAreaElement).value).toBe("変換中のコメント");
+    expect(fetchMock.mock.calls.every(call => call[1].method === "GET")).toBe(true);
+  });
   it("作者だけの撤回確認と所有者の投稿停止を別操作にする", async () => {
     const post = { id: postId, revision: 1, authorName: "読む人", body: "<script>alert(1)</script>", createdAt: "2026-10-10T00:00:00Z", withdrawnAt: null, own: true };
     fetchMock.mockResolvedValueOnce(Response.json({ ...data, canManage: true, posts: [post] }));
     render(<CapsuleDiscussion capsuleId={capsuleId} revision={1} userId={userId} />);
-    fireEvent.click(screen.getByRole("button", { name: "この版のコメントを見る" }));
-    await screen.findByText(post.body);
+      await screen.findByText(post.body);
     expect(document.querySelector("script")).toBeNull();
     fireEvent.click(screen.getByRole("button", { name: "自分の投稿を撤回" }));
     expect(fetchMock).toHaveBeenCalledTimes(1);
@@ -183,8 +224,8 @@ describe("共有版の会話", () => {
     expect(JSON.parse(fetchMock.mock.calls[1][1].body)).toEqual({ postId });
     fetchMock.mockResolvedValueOnce(Response.json({ closed: true }));
     fetchMock.mockResolvedValueOnce(Response.json({ ...data, canManage: true, closed: true }));
-    fireEvent.click(screen.getByRole("button", { name: "新しい投稿を停止する" }));
-    await screen.findByRole("button", { name: "投稿を受け付ける" });
+    fireEvent.click(screen.getByRole("switch", { name: "コメント受付" }));
+    await waitFor(() => expect(screen.getByRole("switch", { name: "コメント受付" }).getAttribute("aria-checked")).toBe("false"));
     expect(JSON.parse(fetchMock.mock.calls[3][1].body)).toEqual({ closed: true, expectedClosed: false });
     expect(screen.queryByLabelText("コメント本文")).toBeNull();
   });

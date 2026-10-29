@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 import {act,cleanup,renderHook} from '@testing-library/react';
 import {afterEach,beforeEach,expect,it,vi} from 'vitest';
-import {useMemberSession,usePendingInvitations,refreshMemberIdentity,refreshPendingInvitations,invalidateMemberIdentity,useOperationsSummary,refreshOperationsSummary,updateOperationsSummaryAfterAction} from '../lib/client/use-member-identity';
+import {useMemberSession,usePendingInvitations,refreshMemberIdentity,refreshPendingInvitations,invalidateMemberIdentity,useOperationsSummary,refreshOperationsSummary,updateOperationsSummaryAfterAction,getMemberIdentitySnapshot,updateMemberProfileDisplay} from '../lib/client/use-member-identity';
 const fetcher=vi.fn(),user={id:'00000000-0000-4000-8000-000000000001',name:'A',locale:'ja'};
 beforeEach(()=>{vi.stubGlobal('fetch',fetcher);fetcher.mockReset();invalidateMemberIdentity();});
 afterEach(()=>{cleanup();vi.unstubAllGlobals();});
@@ -17,6 +17,24 @@ it('失敗はguestではなくerror、既知本人のメニューも消さない
 });
 it('別User・ログアウト通知後の旧応答を共有表示へ採用しない',async()=>{
  let resolve!:(r:Response)=>void;fetcher.mockImplementationOnce(()=>new Promise(r=>{resolve=r;}));const {result}=renderHook(()=>useMemberSession());let old!:Promise<unknown>;act(()=>{old=refreshMemberIdentity().catch(()=>{});invalidateMemberIdentity();});fetcher.mockResolvedValue(Response.json({error:{code:'UNAUTHENTICATED'}},{status:401}));await act(async()=>{await refreshMemberIdentity();resolve(Response.json({user}));await old;});expect(result.current.status).toBe('guest');expect(result.current.user).toBeNull();
+});
+it('通常再確認と503ではsession世代を変えず、401では即座に本人と招待を取り下げる',async()=>{
+ fetcher.mockResolvedValueOnce(Response.json({user}));await refreshMemberIdentity();const version=getMemberIdentitySnapshot().version;
+ fetcher.mockResolvedValueOnce(Response.json({pendingCount:2}));await refreshPendingInvitations();
+ const {result}=renderHook(()=>({session:useMemberSession(),invitations:usePendingInvitations()}));
+ let finish!:(r:Response)=>void;fetcher.mockImplementationOnce(()=>new Promise(r=>{finish=r;}));let pending!:Promise<unknown>;
+ act(()=>{pending=refreshMemberIdentity(true).catch(()=>{});});expect(result.current.session).toMatchObject({status:'authenticated',rechecking:true,version});
+ await act(async()=>{finish(Response.json({error:{code:'MEMBER_UNAVAILABLE'}},{status:503}));await pending;});
+ expect(result.current.session).toMatchObject({status:'authenticated',user,error:true,version});
+ fetcher.mockResolvedValueOnce(Response.json({error:{code:'UNAUTHENTICATED'}},{status:401}));await act(async()=>{await refreshMemberIdentity(true);});
+ expect(getMemberIdentitySnapshot()).toMatchObject({status:'guest',user:null,version:version+1});expect(result.current.invitations.owner).toBeNull();
+});
+it('プロフィール更新が古い確認を破棄したときもrecheckingを残さない',async()=>{
+ fetcher.mockResolvedValueOnce(Response.json({user}));await refreshMemberIdentity();
+ let finish!:(r:Response)=>void;fetcher.mockImplementationOnce(()=>new Promise(r=>{finish=r;}));const pending=refreshMemberIdentity(true).catch(()=>{});
+ updateMemberProfileDisplay(user.id,{displayName:'New name',handle:'new-name',icon:'star'});
+ expect(getMemberIdentitySnapshot()).toMatchObject({rechecking:false,user:{id:user.id,name:'New name'}});
+ finish(Response.json({user}));await pending;expect(getMemberIdentitySnapshot().user?.name).toBe('New name');
 });
 it('招待は未取得・失敗を0とせず、一覧を見ても消費せず、別Userへ漏らさない',async()=>{
  fetcher.mockResolvedValueOnce(Response.json({user}));await refreshMemberIdentity();const {result}=renderHook(()=>usePendingInvitations());expect(result.current.count).toBeNull();fetcher.mockResolvedValueOnce(Response.json({pendingCount:12}));await act(async()=>{await refreshPendingInvitations();});expect(result.current.count).toBe(12);fetcher.mockRejectedValueOnce(new Error('offline'));await act(async()=>{await refreshPendingInvitations();});expect(result.current.status).toBe('error');expect(result.current.count).toBeNull();act(()=>invalidateMemberIdentity());expect(result.current.owner).toBeNull();

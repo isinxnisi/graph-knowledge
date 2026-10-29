@@ -20,7 +20,8 @@ async function stop() {
 process.once("SIGTERM", () => { void stop(); });
 process.once("SIGINT", () => { void stop(); });
 try {
-    await migrateMemberDatabase(pool, process.env.COMMUNITY_ENABLED === "1",process.env.SITE_OPERATIONS_ENABLED==='1',process.env.PUBLIC_PROFILES_ENABLED==='1',capsules,capsules);
+  // All member browser fixtures use the current comment acceptance default.
+  await migrateMemberDatabase(pool, process.env.COMMUNITY_ENABLED === "1",process.env.SITE_OPERATIONS_ENABLED==='1',process.env.PUBLIC_PROFILES_ENABLED==='1',capsules,capsules,true);
   if(process.env.SITE_OPERATIONS_ENABLED==='1'){
     // Real test OIDC before Web startup; no client-selected role or auth bypass.
     const auth=createMemberAuth(config,pool);await memberAuthReady(auth);

@@ -6,8 +6,11 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { z } from "zod";
 import { DISCUSSION_LIMITS, discussionSchema, type CapsuleDiscussion as Discussion } from "../lib/domain/capsule-discussion";
 import { MemberClientError } from "../lib/client/member-api";
+import { memberSessionEvent } from "../lib/client/account-navigation";
 import { capsuleDiscussionLabels } from "../lib/i18n/capsule-discussion";
-import css from "./MemberCapsules.module.css";
+import { CommunityDialog } from "./CommunityDialog";
+import Icon from "./Icon";
+import css from "./CapsuleConversation.module.css";
 
 export type DiscussionDraft = { key: string; body: string; requestId: string | null };
 export type DiscussionDraftStore = { get: (key: string) => DiscussionDraft | null; set: (draft: DiscussionDraft) => void; remove: (key: string) => void };
@@ -28,16 +31,17 @@ export function useDiscussionDraft(): DiscussionDraftStore {
   }), []);
 }
 const textMessages = capsuleDiscussionLabels();
-export default function CapsuleDiscussion({ capsuleId, revision, token, userId, draftCache, onUnauthorized }: {
-  capsuleId: string; revision: number; token?: string; userId?: string; draftCache?: DiscussionDraftStore; onUnauthorized?: () => void;
+export default function CapsuleDiscussion({ capsuleId, revision, token, userId, draftCache, onUnauthorized, showSettings = true, refreshVersion = 0 }: {
+  capsuleId: string; revision: number; token?: string; userId?: string; draftCache?: DiscussionDraftStore; onUnauthorized?: () => void; showSettings?: boolean; refreshVersion?: number;
 }) {
   const { locale } = useUiLocale();
   const text = capsuleDiscussionLabels(locale);
   const ownCache = useDiscussionDraft(), cache = draftCache ?? ownCache;
-  const [opened, setOpened] = useState(false), [data, setData] = useState<Discussion | null>(null);
+  const [data, setData] = useState<Discussion | null>(null), [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState(false), [error, setError] = useState<string | null>(null), [message, setMessage] = useState<string | null>(null);
   const [body, setBody] = useState(""), [pending, setPending] = useState(false), [confirm, setConfirm] = useState<string | null>(null);
-  const active = useRef<AbortController | null>(null), mutating = useRef(false);
+  const active = useRef<AbortController | null>(null), mutating = useRef(false), composing = useRef(false);
+  const previousRefresh = useRef(refreshVersion);
   const unauthorized = useRef(onUnauthorized);
   useEffect(() => { unauthorized.current = onUnauthorized; }, [onUnauthorized]);
   const path = `/api/capsules/${capsuleId}/discussion`;
@@ -64,7 +68,7 @@ export default function CapsuleDiscussion({ capsuleId, revision, token, userId, 
   const refresh = useCallback(async () => {
     if (mutating.current || document.visibilityState === "hidden") return;
     active.current?.abort(); const controller = new AbortController(); active.current = controller;
-    setBusy(true); setError(null);
+    setLoading(true); setError(null);
     try {
       const result = await request(discussionSchema, controller.signal, "GET", undefined, userId);
       if (controller.signal.aborted) return;
@@ -73,13 +77,16 @@ export default function CapsuleDiscussion({ capsuleId, revision, token, userId, 
       const key = `${capsuleId}:${revision}:${result.viewer?.id}`;
       const draft = cache.get(key);
       setBody(draft?.key === key ? draft.body : ""); setPending(draft?.key === key && draft.requestId !== null);
-    } catch (cause) { if (!controller.signal.aborted) { setData(null); setBody(""); setPending(false); setError(failure(cause));
+    } catch (cause) { if (!controller.signal.aborted) {
+      // A temporary network error must not tear down the composer or its focus.
+      // An authoritative denial (or invalid response) does remove the old view.
+      if (cause instanceof z.ZodError || cause instanceof MemberClientError && [401, 404].includes(cause.status)) { setData(null); setBody(""); setPending(false); setConfirm(null); }
+      setError(failure(cause));
       if (cause instanceof MemberClientError && cause.status === 401) unauthorized.current?.();
     } }
-    finally { if (!controller.signal.aborted) setBusy(false); }
-  }, [request, userId, capsuleId, revision, cache, failure]);
+    finally { if (!controller.signal.aborted) setLoading(false); }
+  }, [request, userId, capsuleId, revision, cache, failure, setConfirm]);
   useEffect(() => {
-    if (!opened) return;
     const initial = setTimeout(() => void refresh(), 0), poll = setInterval(() => void refresh(), 30_000);
     const invalidate = () => {
       // A shared reader remains mounted across account changes. Hide the old
@@ -89,9 +96,16 @@ export default function CapsuleDiscussion({ capsuleId, revision, token, userId, 
       if (document.visibilityState !== "hidden") void refresh();
     };
     const storage = (event: StorageEvent) => { if (event.key === null || event.key === "graph-knowledge:member-session-changed") invalidate(); };
-    document.addEventListener("visibilitychange", invalidate); window.addEventListener("storage", storage);
-    return () => { clearTimeout(initial); clearInterval(poll); active.current?.abort(); document.removeEventListener("visibilitychange", invalidate); window.removeEventListener("storage", storage); };
-  }, [opened, refresh]);
+    const visibility = () => { if (document.visibilityState !== "hidden") void refresh(); };
+    document.addEventListener("visibilitychange", visibility); window.addEventListener("storage", storage); window.addEventListener(memberSessionEvent, invalidate);
+    return () => { clearTimeout(initial); clearInterval(poll); active.current?.abort(); document.removeEventListener("visibilitychange", visibility); window.removeEventListener("storage", storage); window.removeEventListener(memberSessionEvent, invalidate); };
+  }, [refresh]);
+  useEffect(() => {
+    if (previousRefresh.current === refreshVersion) return;
+    previousRefresh.current = refreshVersion;
+    const timer = setTimeout(() => void refresh(), 0);
+    return () => clearTimeout(timer);
+  }, [refreshVersion, refresh]);
   useEffect(() => {
     if (!body) return;
     const warn = (event: BeforeUnloadEvent) => { event.preventDefault(); event.returnValue = ""; };
@@ -102,7 +116,7 @@ export default function CapsuleDiscussion({ capsuleId, revision, token, userId, 
     setBody(value); cache.set({ key: `${capsuleId}:${revision}:${data.viewer.id}`, body: value, requestId: null });
   }
   async function mutate(kind: "post" | "close" | "withdraw") {
-    if (!data?.viewer || busy) return;
+    if (!data?.viewer || busy || mutating.current) return;
     active.current?.abort(); const controller = new AbortController(); active.current = controller;
     mutating.current = true; setBusy(true); setError(null); setMessage(null);
     const expectedUser = data.viewer.id;
@@ -126,7 +140,7 @@ export default function CapsuleDiscussion({ capsuleId, revision, token, userId, 
         if (controller.signal.aborted) return;
         setConfirm(null);
       }
-      mutating.current = false; await refresh();
+      mutating.current = false; setBusy(false); await refresh();
     } catch (cause) {
       if (controller.signal.aborted) return;
       // A rejection of a retry cannot disprove the earlier ambiguous commit.
@@ -137,34 +151,38 @@ export default function CapsuleDiscussion({ capsuleId, revision, token, userId, 
         setPending(false);
       }
       if (cause instanceof MemberClientError && [401, 404].includes(cause.status)) { setData(null); setBody(""); setConfirm(null); }
+      if (cause instanceof MemberClientError && cause.code === "THREAD_CLOSED") setData(previous => previous ? { ...previous, closed: true } : null);
       setError(failure(cause));
       if (cause instanceof MemberClientError && cause.status === 401) unauthorized.current?.();
     } finally { if (active.current === controller) mutating.current = false; if (!controller.signal.aborted) setBusy(false); }
   }
-  return <section className={css.discussion} aria-label={text.title}>
-    <h2>{text.title}</h2><p>{text.context(revision)}</p><p className={css.muted}>{text.help}</p>
-    {!opened ? <button onClick={() => setOpened(true)}>{text.open}</button> : <>
-      <button disabled={busy} onClick={() => void refresh()}>{text.refresh}</button>
-      {busy && <p role="status">{text.loading}</p>}{error && <p role="alert">{contentMessage(error, locale)}</p>}{message && <p role="status">{contentMessage(message, locale)}</p>}
-      {data && <>
-        {data.posts.length === 0 && <p>{text.empty}</p>}
-        <ol className={css.posts}>{data.posts.map(post => <li key={post.id}>
-          <p className={css.muted}>{post.authorName ?? ""} · <time dateTime={post.createdAt}>{new Date(post.createdAt).toLocaleString(locale === "en" ? "en-GB" : "ja-JP")}</time></p>
+  return <section className={`${css.panel} ${css.discussion}`} aria-label={text.title}>
+    <div className={css.heading}><div><h2>{text.title}{data && data.posts.length > 0 ? ` · ${data.posts.length}` : ""}</h2><p className={css.muted}>{text.context(revision)}</p></div>
+      <button className={`${css.button} ${css.quiet} ${css.iconButton}`} disabled={busy || loading} aria-label={text.refresh} title={text.refresh} onClick={() => void refresh()}><Icon name="refresh" /></button></div>
+    {loading && !data && <p className={css.empty} role="status">{text.loading}</p>}
+    {error && <p className={css.error} role="alert">{contentMessage(error, locale)}</p>}
+    {message && <p className={css.feedback} role="status">{contentMessage(message, locale)}</p>}
+    {data && <>
+      {data.canManage && showSettings && <div className={css.setting}><div><strong>{text.acceptComments}</strong><p className={css.muted}>{data.closed ? text.acceptOff : text.acceptOn}</p></div>
+        <button className={css.switch} role="switch" aria-label={text.acceptComments} aria-checked={!data.closed} title={data.closed ? text.reopen : text.close} disabled={busy} onClick={() => void mutate("close")} /></div>}
+      {data.posts.length === 0 ? <div className={css.empty}><p>{text.empty}</p>{!data.closed && <p>{text.invitation}</p>}</div> :
+        <ol className={css.posts}>{data.posts.map(post => <li className={css.post} key={post.id}>
+          <div className={css.postHeader}><strong>{post.authorName ?? ""}</strong><time dateTime={post.createdAt}>{new Date(post.createdAt).toLocaleString(locale === "en" ? "en-GB" : "ja-JP", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" })}</time></div>
           <p className={css.postBody}>{post.body ?? (post.withdrawnAt ? text.withdrawn : text.hidden)}</p>
-          {post.own && !post.withdrawnAt && <button disabled={busy} onClick={() => setConfirm(post.id)}>{text.withdraw}</button>}
-          {confirm === post.id && <div role="alert"><p>{text.withdrawHelp}</p><button disabled={busy} onClick={() => void mutate("withdraw")}>{text.confirmWithdraw}</button><button onClick={() => setConfirm(null)}>{text.cancel}</button></div>}
-        </li>)}</ol>
-        {data.closed && <p>{text.closed}</p>}
-        {data.canManage && <><p className={css.muted}>{text.manageHelp}</p><button disabled={busy} onClick={() => void mutate("close")}>{data.closed ? text.reopen : text.close}</button></>}
-        {!data.viewer ? <p><a href="/member" target="_blank" rel="noopener noreferrer">{text.login}</a><br />{text.loginHelp}</p> : <>
-          <p>{text.as(data.viewer.name)}</p>
-          {(!data.closed || pending) && <form onSubmit={event => { event.preventDefault(); void mutate("post"); }}>
-            <label className={css.source}>{text.body}<textarea value={body} maxLength={DISCUSSION_LIMITS.body} disabled={busy || pending} onChange={event => edit(event.target.value)} rows={4} /></label>
-            <p className={css.muted}>{text.limit}<br />{text.savedDraft}</p>{pending && <p role="status">{text.pending}</p>}
-            <button disabled={busy || !body.trim()} type="submit">{pending ? text.retry : text.submit}</button>
-          </form>}
-        </>}
-      </>}
+          {post.own && !post.withdrawnAt && <div className={css.postFooter}><button className={`${css.button} ${css.quiet}`} disabled={busy} onClick={() => setConfirm(post.id)}>{text.withdraw}</button></div>}
+        </li>)}</ol>}
+      {data.closed && <p className={css.empty}>{text.closed}</p>}
+      {!data.viewer ? <div className={css.login}><p>{text.loginPrompt}</p><a className={css.button} href="/member" target="_blank" rel="noopener noreferrer"><Icon name="person" />{text.login}</a></div> :
+        (!data.closed || pending) && <form className={css.composer} onSubmit={event => { event.preventDefault(); if (!composing.current) void mutate("post"); }}>
+          <label>{text.body}<textarea value={body} placeholder={text.placeholder} maxLength={DISCUSSION_LIMITS.body} disabled={busy || pending} onCompositionStart={() => { composing.current = true; }} onCompositionEnd={() => { composing.current = false; }} onChange={event => edit(event.target.value)} rows={3} /></label>
+          <div className={css.composerFooter}><span className={css.composerStatus}>{text.as(data.viewer.name)} · {body.length}/{DISCUSSION_LIMITS.body}</span>
+            <button className={`${css.button} ${css.primary}`} disabled={busy || !body.trim()} type="submit"><Icon name="arrow" />{busy ? text.posting : pending ? text.retry : text.submit}</button></div>
+          {pending && <p className={css.feedback} role="status">{text.pending}</p>}
+        </form>}
+      <details className={css.details}><summary>{text.about}</summary><p>{text.help}</p><p>{text.savedDraft}</p>{data.canManage && <p>{text.manageHelp}</p>}</details>
     </>}
+    {confirm && <CommunityDialog className={css.dialog} title={text.withdraw} onCancel={() => setConfirm(null)} busy={busy}><p>{text.withdrawHelp}</p><div className={css.actions}>
+      <button className={css.button} onClick={() => setConfirm(null)} autoFocus>{text.cancel}</button><button className={`${css.button} ${css.primary}`} disabled={busy} onClick={() => void mutate("withdraw")}>{text.confirmWithdraw}</button>
+    </div></CommunityDialog>}
   </section>;
 }

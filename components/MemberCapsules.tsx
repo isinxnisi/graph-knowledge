@@ -294,7 +294,7 @@ export default function MemberCapsules({ dataset, initialImport = "" }: { datase
         {historical && <div role="status"><h2>{historyText.reading(selected.revision)}</h2><p>{historyText.snapshotHelp}</p><button disabled={busy} onClick={() => read(selected.id)}>{historyText.current}</button></div>}
         <CapsuleRevisionList key={`revisions:${selected.id}:${selected.revision}:${user.id}`} capsuleId={selected.id} userId={user.id} disabled={busy} onRead={revision => read(selected.id, revision)} onUnauthorized={() => fail(new MemberClientError(401, "UNAUTHENTICATED"))} />
         {historical && <CapsuleComparison key={`comparison:${selected.id}:${selected.revision}:${user.id}`} snapshot={selected} userId={user.id} disabled={busy} onUnauthorized={() => fail(new MemberClientError(401, "UNAUTHENTICATED"))} />}
-        {reading.document && !historical ? <CapsuleWorkspace key={`workspace:${selected.id}`} initial={reading} member={selected} ownerId={user.id} onSaved={value => { setSelected(value); setItems(items => items.map(item => item.id === value.id ? value : item)); }} /> : <CapsuleReader key={`${selected.id}:${selected.revision}`} capsule={reading} explorationLinks onEdit={!historical && !busy && !draft ? resolved => {
+        {reading.document && !historical ? readingTab === "content" && <CapsuleWorkspace key={`workspace:${selected.id}`} initial={reading} member={selected} ownerId={user.id} onClose={() => { setSelected(null); setConfirm(null); navigate(null); }} onSaved={value => { setSelected(value); setItems(items => items.map(item => item.id === value.id ? value : item)); }} /> : <CapsuleReader key={`${selected.id}:${selected.revision}`} capsule={reading} explorationLinks onEdit={!historical && !busy && !draft ? resolved => {
           setDraft({ ownerId: user.id, base: selected, expected: selected, content: selected.content, resolved, needsCheck: false }); setError(null); setMessage(null);
         } : undefined} />}
         </div>
@@ -302,7 +302,7 @@ export default function MemberCapsules({ dataset, initialImport = "" }: { datase
         {!historical && <CapsuleShareControls key={`share:${selected.id}:${selected.revision}`} capsule={selected} userId={user.id} disabled={busy} onUnauthorized={() => fail(new MemberClientError(401, "UNAUTHENTICATED"))} />}
         </div>
         <div hidden={readingTab !== "content"}>
-        <CapsuleDiscussion key={`discussion:${selected.id}:${selected.revision}:${user.id}`} capsuleId={selected.id} revision={selected.revision} userId={user.id} draftCache={discussionDraft} onUnauthorized={() => fail(new MemberClientError(401, "UNAUTHENTICATED"))} />
+        {!reading.document && <CapsuleDiscussion key={`discussion:${selected.id}:${selected.revision}:${user.id}`} capsuleId={selected.id} revision={selected.revision} userId={user.id} draftCache={discussionDraft} onUnauthorized={() => fail(new MemberClientError(401, "UNAUTHENTICATED"))} />}
         {!historical && <button disabled={busy} onClick={() => setConfirm("remove")}>{text.remove}</button>}
         {!historical && confirm === "remove" && <div role="alert"><p>{text.removeHelp}</p><button onClick={remove}>{text.removeConfirm}</button><button onClick={() => setConfirm(null)}>{text.cancel}</button></div>}
         </div>

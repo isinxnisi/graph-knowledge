@@ -9,9 +9,10 @@ import { graphViewportLabels } from "../lib/i18n/graph-viewport";
 import cytoscape, { type Core, type ElementDefinition } from "cytoscape";
 import { useEffect, useImperativeHandle, useRef, useState } from "react";
 import type { ReactNode, Ref } from "react";
-import { restorationPositions } from "../lib/client/graph-view";
+import { restorationPan, restorationPositions, viewportCenter } from "../lib/client/graph-view";
+import { CAPSULE_TEXT_FONT, capsuleTextFormat, capsuleTextLayout, type CanvasTextFormat } from "../lib/client/capsule-text-layout";
 import type { GraphView, ViewRestoration } from "../lib/client/graph-view";
-export type GraphCanvasHandle = { capture: () => GraphView | null; focusEntity: (id: string) => void; ensureVisible?: (id: string) => void };
+export type GraphCanvasHandle = { capture: () => GraphView | null; focusEntity: (id: string) => void; ensureVisible?: (id: string) => void; focus?: () => void };
 import type { GraphState, Selection } from "../lib/client/graph-state";
 import { graphRootReady } from "../lib/client/graph-state";
 import { entityLabel, edgeRoutes, displayRelations, relationId, type CanvasRelation } from "../lib/client/graph-presentation";
@@ -23,11 +24,15 @@ import styles from "./Explorer.module.css";
 import AnimatedDetails from "./AnimatedDetails";
 import NeighborLoading from "./NeighborLoading";
 
-export type CanvasContent = { nodes: { id: string; label: string; kind: string; textStyle?: string }[]; relations: Record<string, CanvasRelation> };
+export type CanvasContent = { nodes: { id: string; label: string; kind: string; badge?: string; textStyle?: string; textFormat?: CanvasTextFormat }[]; relations: Record<string, CanvasRelation> };
+export type GraphContextMenuRequest = {
+  kind: "node" | "edge" | "background"; id?: string; selectedKeys: string[];
+  clientX: number; clientY: number; position: { x: number; y: number }; source: "pointer" | "keyboard";
+};
 const noSelection: string[] = [];
-type Props = { onInspectEntity?: (id: string) => void; content?: CanvasContent; selectedKeys?: string[]; onSelectionChange?: (ids: string[]) => void; onMove?: (before: GraphView, after: GraphView) => void; onContextMenu?: (id: string, kind: "node" | "edge") => void; compactGuide?: boolean; footerAction?: ReactNode; onViewChange?: () => void; contentOnly?: boolean; ref?: Ref<GraphCanvasHandle>; notification?: ReactNode; feedback?: ReactNode; navigation?: ReactNode; restoration?: ViewRestoration | null; interactionBlocked?: boolean; graph: GraphState; selection: Selection; onEntity: (id: string) => void; onRelation: (id: string) => void; onRelationDoubleClick?: (id: string) => void; onToggleEntity: (id: string) => void; onEntityDoubleClick?: (id: string) => void };
+type Props = { onInspectEntity?: (id: string) => void; content?: CanvasContent; selectedKeys?: string[]; onSelectionChange?: (ids: string[]) => void; onMove?: (before: GraphView, after: GraphView) => void; onContextMenu?: (request: GraphContextMenuRequest) => void; compactGuide?: boolean; fillHeight?: boolean; footerAction?: ReactNode; onViewChange?: () => void; contentOnly?: boolean; ref?: Ref<GraphCanvasHandle>; notification?: ReactNode; feedback?: ReactNode; navigation?: ReactNode; restoration?: ViewRestoration | null; interactionBlocked?: boolean; graph: GraphState; selection: Selection; onEntity: (id: string) => void; onRelation: (id: string) => void; onRelationDoubleClick?: (id: string) => void; onToggleEntity: (id: string) => void; onEntityDoubleClick?: (id: string) => void };
 
-export default function GraphCanvas({ onInspectEntity, content, selectedKeys, onSelectionChange, onMove, onContextMenu, compactGuide = false, footerAction, onViewChange, contentOnly = false, ref, feedback, notification, navigation, restoration, interactionBlocked, graph, selection, onEntity, onRelation, onRelationDoubleClick, onToggleEntity, onEntityDoubleClick }: Props) {
+export default function GraphCanvas({ onInspectEntity, content, selectedKeys, onSelectionChange, onMove, onContextMenu, compactGuide = false, fillHeight = false, footerAction, onViewChange, contentOnly = false, ref, feedback, notification, navigation, restoration, interactionBlocked, graph, selection, onEntity, onRelation, onRelationDoubleClick, onToggleEntity, onEntityDoubleClick }: Props) {
   const { locale } = useUiLocale();
   const ui = explorerLabels(locale);
   const viewportLabels = graphViewportLabels(locale);
@@ -53,9 +58,26 @@ export default function GraphCanvas({ onInspectEntity, content, selectedKeys, on
   const previousCondition = useRef("all");
   const savedPositions = useRef<Record<string, { x: number; y: number }>>({});
   const initialLayoutDone = useRef(false);
+  const viewportSize = useRef<{ width: number; height: number } | null>(null);
+  const textMeasurement = useRef<CanvasRenderingContext2D | null>(null);
+  function resizeCanvas() {
+    const cy = core.current;
+    if (!cy) return;
+    const before = viewportSize.current, pan = { ...cy.pan() }, zoom = cy.zoom();
+    cy.resize();
+    const after = { width: cy.width(), height: cy.height() };
+    if (after.width <= 0 || after.height <= 0) return;
+    if (initialLayoutDone.current && before && (before.width !== after.width || before.height !== after.height)) {
+      cy.pan(restorationPan({ pan, zoom, center: viewportCenter(pan, zoom, before) }, after));
+    }
+    viewportSize.current = after;
+  }
   function captureView(): GraphView | null {
     const cy = core.current;
-    return cy ? { positions: Object.fromEntries(cy.nodes().map(n => [n.id(), { ...n.position() }])), pan: { ...cy.pan() }, zoom: cy.zoom(), initialLayoutDone: initialLayoutDone.current } : null;
+    if (!cy) return null;
+    const viewport = { width: cy.width(), height: cy.height() }, pan = { ...cy.pan() }, zoom = cy.zoom();
+    return { positions: Object.fromEntries(cy.nodes().map(n => [n.id(), { ...n.position() }])), pan, zoom, initialLayoutDone: initialLayoutDone.current,
+      ...(viewport.width > 0 && viewport.height > 0 && { viewport, center: viewportCenter(pan, zoom, viewport) }) };
   }
   function restoreMovement(direction: "past" | "future") {
     const cy = core.current, view = movementHistory.current[direction].pop(), current = captureView();
@@ -75,7 +97,7 @@ export default function GraphCanvas({ onInspectEntity, content, selectedKeys, on
     const cy = core.current;
     if (!cy || !hasNodes || interactionBlocked) return;
     gestures.current?.cancel(); relationGestures.current?.cancel();
-    cy.resize();
+    resizeCanvas();
     cy.zoom({ level: Math.min(cy.maxZoom(), Math.max(cy.minZoom(), cy.zoom() * factor)),
       renderedPosition: { x: cy.width() / 2, y: cy.height() / 2 } });
   }
@@ -85,7 +107,7 @@ export default function GraphCanvas({ onInspectEntity, content, selectedKeys, on
     const selected = cy.getElementById(selectedId);
     if (!selected.length) return;
     gestures.current?.cancel(); relationGestures.current?.cancel();
-    cy.resize();
+    resizeCanvas();
     if (selection?.kind === "entity") {
       cy.zoom(Math.max(1, cy.zoom()));
       cy.center(selected);
@@ -101,26 +123,26 @@ export default function GraphCanvas({ onInspectEntity, content, selectedKeys, on
     if (!cy) return null;
     const positions = { ...savedPositions.current };
     cy.nodes().forEach((node) => { positions[node.id()] = { ...node.position() }; });
-    return { positions, pan: { ...cy.pan() }, zoom: cy.zoom(), initialLayoutDone: initialLayoutDone.current };
+    return { ...captureView()!, positions };
   }, focusEntity: (id) => {
     const cy = core.current;
     if (!cy) return;
     const node = cy.getElementById(id);
     if (!node.length || !node.isNode()) return;
     gestures.current?.cancel(); relationGestures.current?.cancel();
-    cy.resize();
+    resizeCanvas();
     cy.zoom(Math.max(1, cy.zoom()));
     cy.center(node);
   }, ensureVisible: (id) => {
     const cy = core.current, node = cy?.getElementById(id);
     if (!cy || !node?.length) return;
-    cy.resize();
+    resizeCanvas();
     const bounds = node.renderedBoundingBox(), padding = 28;
     const shift = (start: number, end: number, size: number) => end - start > size - padding * 2
       ? size / 2 - (start + end) / 2 : start < padding ? padding - start : end > size - padding ? size - padding - end : 0;
     const delta = { x: shift(bounds.x1, bounds.x2, cy.width()), y: shift(bounds.y1, bounds.y2, cy.height()) };
     if (delta.x || delta.y) cy.panBy(delta);
-  } }), []);
+  }, focus: () => container.current?.focus({ preventScroll: true }) }), []);
   useEffect(() => {
     if (selectedKeys !== undefined) return;
     // A selection made in an adjacent list replaces the previous canvas group.
@@ -141,12 +163,11 @@ export default function GraphCanvas({ onInspectEntity, content, selectedKeys, on
       const theme = getComputedStyle(container.current!);
       const color = (name: string) => theme.getPropertyValue(`--color-${name}`).trim();
       return [
-        { selector: "node", style: { label: "data(label)", "background-color": color("person"), color: color("text"), "border-width": 1.3, "border-color": color("node-border"), width: 116, height: 64, "font-size": 15, "font-weight": 600, "font-family": "system-ui, sans-serif", "text-valign": "center", "text-halign": "center", "text-wrap": "wrap", "text-max-width": "108px", "text-overflow-wrap": "anywhere" } },
+        { selector: "node", style: { label: "data(label)", "background-color": color("person"), color: color("text"), "border-width": 1.3, "border-color": color("node-border"), width: 116, height: "data(nodeHeight)", "font-size": 15, "font-weight": 600, "font-family": "system-ui, sans-serif", "text-valign": "center", "text-halign": "center", "text-wrap": "wrap", "text-max-width": "108px", "text-overflow-wrap": "anywhere" } },
         { selector: 'node[kind="work"]', style: { shape: "round-rectangle", "background-color": color("work") } },
         { selector: 'node[kind="organization"]', style: { shape: "hexagon", "background-color": color("organization") } },
         { selector: 'node[kind="local"]', style: { shape: "round-rectangle", "background-color": color("panel"), "border-style": "dashed" } },
-        { selector: 'node[kind="text"]', style: { shape: "rectangle", "background-opacity": 0, "border-width": 0, width: 220, height: 80, "text-max-width": "220px", "font-size": 15, "font-weight": 400 } },
-        { selector: 'node[textStyle="heading"]', style: { "font-size": 22, "font-weight": 700 } },
+        { selector: 'node[kind="text"]', style: { shape: "round-rectangle", "background-opacity": 0, "border-width": 0, width: "data(textWidth)", height: "data(textHeight)", "text-max-width": "data(textWidth)", "font-size": "data(textFontSize)", "font-weight": (node: cytoscape.NodeSingular) => node.data("textFontWeight") as 400 | 700, "text-justification": (node: cytoscape.NodeSingular) => node.data("textAlign") as "left" | "center" | "right", "text-margin-x": (node: cytoscape.NodeSingular) => Number(node.data("textMarginX")), "line-height": 1.35, "text-overflow-wrap": "whitespace" } },
         { selector: 'node[textStyle="muted"]', style: { "text-opacity": 0.65 } },
         { selector: "node.hovered", style: { "border-color": color("accent"), "underlay-color": color("accent"), "underlay-opacity": 0.08, "underlay-padding": 5 } },
         { selector: "node.center", style: { "border-width": 3, "border-color": color("accent") } },
@@ -157,6 +178,8 @@ export default function GraphCanvas({ onInspectEntity, content, selectedKeys, on
         { selector: "node[expanded = 1]", style: { "border-style": "double", "border-width": 4 } },
         { selector: "node.added", style: { "underlay-color": color("new-node"), "underlay-opacity": 0.25, "underlay-padding": 10 } },
         { selector: "node.chosen", style: { "border-width": 5, "border-color": color("accent-strong"), "underlay-color": color("accent-strong"), "underlay-opacity": 0.12, "underlay-padding": 8 } },
+        { selector: 'node[kind="text"].chosen', style: { "border-width": 1.5, "border-style": "dashed", "background-color": color("accent-soft"), "background-opacity": 0.25, "underlay-opacity": 0 } },
+        { selector: 'node[kind="text"].hovered', style: { "border-width": 1, "border-style": "dashed", "underlay-opacity": 0 } },
         { selector: "edge.chosen", style: { "line-color": color("accent-strong"), "target-arrow-color": color("accent-strong"), width: 4, "text-background-color": color("accent-soft"), "z-index": 10 } },
       ];
     };
@@ -167,6 +190,7 @@ export default function GraphCanvas({ onInspectEntity, content, selectedKeys, on
     const themeObserver = new MutationObserver(() => cy.style(themeStyles()));
     themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
     core.current = cy;
+    viewportSize.current = { width: cy.width(), height: cy.height() };
     motion.current = createGraphMotion(cy, window.matchMedia?.("(prefers-reduced-motion: reduce)") ?? null);
     const updateZoom = () => setZoom(cy.zoom());
     cy.on("zoom", updateZoom);
@@ -177,12 +201,18 @@ export default function GraphCanvas({ onInspectEntity, content, selectedKeys, on
       doubleClick: (id) => handlers.current.onEntityDoubleClick?.(id),
     });
     const relationClicks = createRelationClickHandler(id => handlers.current.onRelation(id), id => handlers.current.onRelationDoubleClick?.(id));
+    const contentClicks = createRelationClickHandler(() => {}, id => {
+      if (cy.getElementById(id).isNode()) handlers.current.onEntityDoubleClick?.(id);
+      else handlers.current.onRelationDoubleClick?.(id);
+    });
     relationGestures.current = relationClicks;
     gestures.current = clicks;
-    const removeBadges = attachGraphBadges(cy, badgeLayer.current!, styles.relationPatch, id => { clicks.cancel(); relationClicks.click(id); });
-    cy.on("mouseover", "node", event => event.target.addClass("hovered"));
-    cy.on("mouseout", "node", event => event.target.removeClass("hovered"));
-    function choose(id: string, event: cytoscape.EventObject, isNode: boolean) {
+    const removeBadges = attachGraphBadges(cy, badgeLayer.current!, styles.relationPatch,
+      (id, originalEvent) => choose(id, { originalEvent }, false),
+      styles.entityPatch, (id, event) => openContext(id, "edge", event.clientX, event.clientY, "pointer"));
+    cy.on("mouseover", "node", event => { event.target.addClass("hovered"); if (event.target.data("kind") !== "text") container.current!.title = [event.target.data("fullLabel"), event.target.data("badge")].filter(Boolean).join(" · "); });
+    cy.on("mouseout", "node", event => { event.target.removeClass("hovered"); container.current!.removeAttribute("title"); });
+    function choose(id: string, event: Pick<cytoscape.EventObject, "originalEvent">, isNode: boolean) {
       if (canvasOptions.current.interactionBlocked) return;
       const original = event.originalEvent as MouseEvent | undefined;
       const multi = original?.ctrlKey || original?.metaKey || canvasOptions.current.selectionMode;
@@ -191,6 +221,7 @@ export default function GraphCanvas({ onInspectEntity, content, selectedKeys, on
       canvasOptions.current.currentKeys = next; setMultiple(next); canvasOptions.current.onSelectionChange?.(next);
       if (multi || canvasOptions.current.contentOnly) {
         clicks.cancel(); relationClicks.cancel();
+        if (multi) contentClicks.cancel(); else contentClicks.click(id, event.originalEvent?.timeStamp);
         const primary = next.includes(id) ? id : next.at(-1);
         if (primary) {
           if (cy.getElementById(primary).isNode()) { if (multi && !canvasOptions.current.contentOnly) handlers.current.onInspectEntity?.(primary); else handlers.current.onEntity(primary); }
@@ -201,12 +232,40 @@ export default function GraphCanvas({ onInspectEntity, content, selectedKeys, on
     }
     cy.on("tap", "node", event => choose(event.target.id(), event, true));
     cy.on("tap", "edge", event => choose(event.target.id(), event, false));
-    cy.on("cxttap", "node, edge", event => {
-      clicks.cancel(); relationClicks.cancel();
-      canvasOptions.current.onContextMenu?.(event.target.id(), event.target.isNode() ? "node" : "edge");
+    function openContext(id: string | undefined, kind: GraphContextMenuRequest["kind"], clientX: number, clientY: number, source: GraphContextMenuRequest["source"]) {
+      if (canvasOptions.current.interactionBlocked || !canvasOptions.current.onContextMenu) return;
+      clicks.cancel(); relationClicks.cancel(); contentClicks.cancel();
+      const before = canvasOptions.current.currentKeys;
+      const next = id && !before.includes(id) ? [id] : [...before];
+      if (id && !before.includes(id)) {
+        canvasOptions.current.currentKeys = next; setMultiple(next); canvasOptions.current.onSelectionChange?.(next);
+        if (kind === "node") handlers.current.onEntity(id); else handlers.current.onRelation(id);
+      }
+      const box = container.current!.getBoundingClientRect(), pan = cy.pan(), zoom = cy.zoom();
+      canvasOptions.current.onContextMenu({ kind, id, selectedKeys: next, clientX, clientY,
+        position: { x: (clientX - box.left - pan.x) / zoom, y: (clientY - box.top - pan.y) / zoom }, source });
+    }
+    cy.on("cxttap", event => {
+      const background = event.target === cy, original = event.originalEvent as MouseEvent | undefined;
+      const box = container.current!.getBoundingClientRect();
+      const rendered = event.renderedPosition ?? { x: cy.width() / 2, y: cy.height() / 2 };
+      openContext(background ? undefined : event.target.id(), background ? "background" : event.target.isNode() ? "node" : "edge",
+        original?.clientX ?? box.left + rendered.x, original?.clientY ?? box.top + rendered.y, "pointer");
     });
+    const keyboardContext = (event: KeyboardEvent) => {
+      if (event.key !== "ContextMenu" && !(event.shiftKey && event.key === "F10")) return;
+      if (!canvasOptions.current.onContextMenu || canvasOptions.current.interactionBlocked || event.isComposing) return;
+      event.preventDefault(); event.stopPropagation();
+      const id = canvasOptions.current.currentKeys.at(-1), selected = id ? cy.getElementById(id) : null;
+      const bounds = selected?.length ? selected.renderedBoundingBox() : null, box = container.current!.getBoundingClientRect();
+      openContext(id, selected?.length ? selected.isNode() ? "node" : "edge" : "background",
+        box.left + (bounds ? Math.min(cy.width() - 16, Math.max(16, (bounds.x1 + bounds.x2) / 2)) : cy.width() / 2),
+        box.top + (bounds ? Math.min(cy.height() - 16, Math.max(16, (bounds.y1 + bounds.y2) / 2)) : cy.height() / 2), "keyboard");
+    };
+    const surface = container.current;
+    surface.addEventListener("keydown", keyboardContext);
     let dragStart: GraphView | null = null, dragging: string | null = null;
-    cy.on("grab", "node", event => { dragStart = captureView(); dragging = event.target.id(); });
+    cy.on("grab", "node", event => { clicks.cancel(); relationClicks.cancel(); contentClicks.cancel(); dragStart = captureView(); dragging = event.target.id(); });
     cy.on("drag", "node", event => {
       if (!dragStart || dragging !== event.target.id() || !canvasOptions.current.currentKeys.includes(dragging!)) return;
       const from = dragStart.positions[dragging!], to = event.target.position();
@@ -222,18 +281,18 @@ export default function GraphCanvas({ onInspectEntity, content, selectedKeys, on
       }
       dragStart = null; dragging = null;
     });
-    cy.on("tap", (event) => { if (event.target === cy) { clicks.cancel(); relationClicks.cancel(); canvasOptions.current.currentKeys = []; setMultiple([]); canvasOptions.current.onSelectionChange?.([]); } });
-    cy.on("drag pan zoom", () => { clicks.cancel(); relationClicks.cancel(); });
-    const resize = new ResizeObserver(() => cy.resize());
+    cy.on("tap", (event) => { if (event.target === cy) { clicks.cancel(); relationClicks.cancel(); contentClicks.cancel(); canvasOptions.current.currentKeys = []; setMultiple([]); canvasOptions.current.onSelectionChange?.([]); } });
+    cy.on("drag pan zoom", () => { clicks.cancel(); relationClicks.cancel(); contentClicks.cancel(); });
+    const resize = new ResizeObserver(resizeCanvas);
     resize.observe(container.current);
-    return () => { motion.current?.dispose(); motion.current = null; removeBadges(); clicks.cancel(); relationClicks.cancel(); relationGestures.current = null; gestures.current = null; themeObserver.disconnect(); resize.disconnect(); cy.destroy(); core.current = null; generation.current = -1; initialLayoutDone.current = false; };
+    return () => { motion.current?.dispose(); motion.current = null; removeBadges(); clicks.cancel(); relationClicks.cancel(); contentClicks.cancel(); surface.removeEventListener("keydown", keyboardContext); relationGestures.current = null; gestures.current = null; themeObserver.disconnect(); resize.disconnect(); cy.destroy(); core.current = null; viewportSize.current = null; generation.current = -1; initialLayoutDone.current = false; };
   }, []);
 
   useEffect(() => {
     const cy = core.current;
     if (!cy) return;
     // 取得中メッセージの切替でCanvasの位置も変わるため、クリック座標のキャッシュを更新する。
-    cy.resize();
+    resizeCanvas();
     const rootReady = graphRootReady(graph);
     const reset = generation.current !== graph.generation;
     const restored = reset && restoration?.generation === graph.generation ? restoration.view : null;
@@ -250,7 +309,23 @@ export default function GraphCanvas({ onInspectEntity, content, selectedKeys, on
       if (restored) { cy.elements().remove(); savedPositions.current = { ...restored.positions }; initialLayoutDone.current = restored.initialLayoutDone; }
       generation.current = graph.generation; previousCenter.current = graph.centerId; previousCondition.current = graph.conditionKey;
     }
-    const renderedNodes = content?.nodes ?? Object.values(graph.nodes).map(n => ({ id: n.id, kind: n.kind, label: entityLabel(n, graph.nodes, locale), textStyle: undefined }));
+    const sourceNodes: CanvasContent["nodes"] = content?.nodes ?? Object.values(graph.nodes).map(n => ({ id: n.id, kind: n.kind, label: entityLabel(n, graph.nodes, locale) }));
+    if (!textMeasurement.current && typeof CanvasRenderingContext2D !== "undefined") textMeasurement.current = document.createElement("canvas").getContext("2d");
+    const renderedNodes = sourceNodes.map(node => {
+      const context = textMeasurement.current;
+      if (node.kind === "text") {
+        const format = capsuleTextFormat(node.textStyle, node.textFormat);
+        if (context) context.font = `${format.fontWeight === "bold" ? 700 : 400} ${format.fontSize}px ${CAPSULE_TEXT_FONT}`;
+        const geometry = capsuleTextLayout(node.label, node.textStyle, node.textFormat, context ? text => context.measureText(text).width : undefined);
+        return { ...node, fullLabel: node.label, label: geometry.label, nodeHeight: geometry.height, textWidth: geometry.width, textHeight: geometry.height,
+          textFontSize: geometry.fontSize, textFontWeight: geometry.fontWeight === "bold" ? 700 : 400, textAlign: geometry.align, textMarginX: geometry.textMarginX };
+      }
+      if (context) context.font = `600 15px ${CAPSULE_TEXT_FONT}`;
+      const geometry = capsuleTextLayout(node.label, "note", { width: 128, fontSize: 15 }, context ? text => context.measureText(text).width : undefined);
+      const lines = geometry.lines.slice(0, 4);
+      if (geometry.lines.length > 4) lines[3] = lines[3].slice(0, -1) + "…";
+      return { ...node, fullLabel: node.label, label: content ? lines.join("\n") : node.label, nodeHeight: content ? Math.max(64, lines.length * 20 + 20) : 64 };
+    });
     const nodeIds = new Set(renderedNodes.map(n => n.id));
     const newNodes = renderedNodes.filter(node => !cy.getElementById(node.id).length);
     const relations = content?.relations ?? displayRelations(graph.claims, locale);
@@ -259,7 +334,7 @@ export default function GraphCanvas({ onInspectEntity, content, selectedKeys, on
     Object.keys(savedPositions.current).forEach((id) => { if (!graph.cacheNodes[id] && (!initialLayoutDone.current || rootReady)) delete savedPositions.current[id]; });
     cy.batch(() => { cy.edges().filter((edge) => !relations[edge.id()]).remove(); cy.nodes().filter((node) => !nodeIds.has(node.id())).remove(); });
     const routes = edgeRoutes(relations);
-    const elements: ElementDefinition[] = newNodes.map((node) => ({ group: "nodes", data: { id: node.id, label: node.label, kind: node.kind, textStyle: node.textStyle }, position: { x: 0, y: 0 } }));
+    const elements: ElementDefinition[] = newNodes.map((node) => ({ group: "nodes", data: node, position: { x: 0, y: 0 } }));
     Object.values(relations).forEach((claim) => {
       if (!cy.getElementById(claim.id).length) elements.push({ group: "edges", data: { id: claim.id, source: claim.subjectId, target: claim.objectId, polarity: claim.polarity, claimIds: claim.claimIds, badge: claim.badge, canvasLabel: claim.canvasLabel, ...routes[claim.id] } });
     });
@@ -268,15 +343,15 @@ export default function GraphCanvas({ onInspectEntity, content, selectedKeys, on
       Object.values(graph.nodes).forEach((node) => cy.getElementById(node.id).data({ expanded: graph.expansions[node.id]?.expanded ? 1 : 0 }));
       Object.entries(relations).forEach(([id, relation]) => cy.getElementById(id).data({ polarity: relation.polarity, claimIds: relation.claimIds, badge: relation.badge, canvasLabel: relation.canvasLabel, ...routes[id] }));
       if (newNodes.length) { cy.nodes().removeClass("added"); if (!reset && initialLayoutDone.current) newNodes.forEach((node) => cy.getElementById(node.id).addClass("added")); }
-      renderedNodes.forEach(node => cy.getElementById(node.id).data({ label: node.label, kind: node.kind, textStyle: node.textStyle }));
+      renderedNodes.forEach(node => cy.getElementById(node.id).data(node));
       cy.nodes().removeClass("center");
       if (graph.centerId) cy.getElementById(graph.centerId).addClass("center");
     });
     if (restored) {
       Object.entries(content ? additionalPositions(restored.positions, renderedNodes.filter(n => !restored.positions[n.id]).map(n => n.id), relations, null) : restorationPositions(graph, restored)).forEach(([id, point]) => cy.getElementById(id).position(point));
-      if (Object.keys(restored.positions).some((id) => nodeIds.has(id))) { cy.zoom(restored.zoom); cy.pan(restored.pan); if (restored.recenter) cy.center(); }
+      if (Object.keys(restored.positions).some((id) => nodeIds.has(id))) { cy.zoom(restored.zoom); cy.pan(restorationPan(restored, { width: cy.width(), height: cy.height() })); if (restored.recenter) cy.center(); }
       else cy.fit(undefined, 40);
-      if (rootReady) initialLayoutDone.current = true;
+      if (rootReady || contentOnly && renderedNodes.length > 0) initialLayoutDone.current = true;
     } else if (contentOnly && !initialLayoutDone.current && newNodes.length) {
       const ids = cy.nodes().map(node => node.id());
       const positions = contentPositions(ids, relations, cy.width() < cy.height());
@@ -327,7 +402,7 @@ export default function GraphCanvas({ onInspectEntity, content, selectedKeys, on
     const cy = core.current;
     if (!cy) return;
     // 移動パネルが閉じた直後も、Canvasの画面内位置とクリック座標を揃える。
-    cy.resize();
+    resizeCanvas();
     cy.elements().removeClass("chosen");
     currentKeys.forEach(id => cy.getElementById(id).addClass("chosen"));
     if (selection && selectedKeys === undefined && multiple === null) {
@@ -337,7 +412,7 @@ export default function GraphCanvas({ onInspectEntity, content, selectedKeys, on
   }, [selection, graph, currentKeys, selectedKeys, multiple]);
 
   return <>
-    <div className={`${styles.canvas} ${navigation ? styles.withNavigation : ""}`}>
+    <div className={`${styles.canvas} ${fillHeight ? styles.workspaceCanvas : ""} ${navigation ? styles.withNavigation : ""}`}>
       {navigation && <div className={styles.canvasNavigation} onPointerDown={event => event.stopPropagation()} onDoubleClick={event => event.stopPropagation()} onWheel={event => event.stopPropagation()}>{navigation}</div>}
       <div className={`${styles.viewportTools} ${styles.canvasViewportTools}`} role="group" aria-label={viewportLabels.title} onPointerDown={event => event.stopPropagation()} onWheel={event => event.stopPropagation()}>
         <button aria-pressed={selectionMode} aria-label={locale === "en" ? "Multiple selection" : "複数選択"} title={locale === "en" ? "Multiple selection · Ctrl / ⌘ click" : "複数選択 · Ctrl / ⌘クリック"} onClick={() => setSelectionMode(v => !v)}><Icon name="copy" /></button>
@@ -347,10 +422,10 @@ export default function GraphCanvas({ onInspectEntity, content, selectedKeys, on
         <output aria-label={viewportLabels.zoom} aria-live="off">{Math.round(zoom * 100)}%</output>
         <button aria-label={viewportLabels.zoomOut} title={viewportLabels.zoomOut} disabled={!hasNodes || interactionBlocked || zoom <= 0.15} onClick={() => changeZoom(1 / 1.25)}><Icon name="minus" /></button>
         <button aria-label={viewportLabels.fit} title={viewportLabels.fit} disabled={!hasNodes || interactionBlocked} onClick={() => {
-          gestures.current?.cancel(); relationGestures.current?.cancel(); core.current?.resize(); core.current?.fit(undefined, 24);
+          gestures.current?.cancel(); relationGestures.current?.cancel(); resizeCanvas(); core.current?.fit(undefined, 24);
         }}><Icon name="fit" /></button>
       </div>
-      <div className={styles.cySurface} ref={container} onPointerDownCapture={() => core.current?.resize()} data-testid="graph-canvas" tabIndex={0} onContextMenu={event => { if (onContextMenu) event.preventDefault(); }} data-focus-destination role="img" aria-label={ui.graphAria} />
+      <div className={styles.cySurface} ref={container} onPointerDownCapture={resizeCanvas} data-testid="graph-canvas" tabIndex={0} onContextMenu={event => { if (onContextMenu) event.preventDefault(); }} data-focus-destination role="img" aria-label={ui.graphAria} />
       <div className={styles.relationPatches} ref={badgeLayer} aria-hidden="true" />
       <div className={styles.graphOverlay} data-testid="graph-overlay">{feedback}
         {Object.entries(graph.expansions).filter(([, meta]) => meta.active && meta.loading).map(([id, meta]) =>

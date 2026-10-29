@@ -19,7 +19,7 @@ export async function memberRequest<T>(path: string, schema: z.ZodType<T>, optio
   return schema.parse(await response.json());
 }
 export const memberSummarySchema = z.strictObject(memberCapsuleSchema.shape).omit({ content: true }).extend({
-  content: z.strictObject(memberCapsuleContentSchema.shape).omit({ document: true }), hasDocument: z.boolean().optional(), published: z.boolean().optional(),
+  content: z.strictObject(memberCapsuleContentSchema.shape).omit({ document: true }), hasDocument: z.boolean().optional(), shared: z.boolean().optional(), published: z.boolean().optional(),
 });
 export type MemberCapsuleSummary = z.infer<typeof memberSummarySchema>;
 export const memberListSchema = z.object({ capsules: z.array(memberSummarySchema).max(MEMBER_CAPSULE_LIMITS.count) });

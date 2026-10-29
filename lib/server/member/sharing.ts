@@ -36,11 +36,12 @@ export function createCapsuleSharing(pool: Pool, dataset: DatasetMode, origin: s
     },
     async shareStatus(request: Request, rawId: string) {
       const user = await owner(request), id = memberId(rawId);
-      const result = await pool.query(`SELECT s.id, s.revision, s.created_at, c.sharing_blocked FROM member_capsule c
+      const result = await pool.query(`SELECT s.id, s.revision, s.created_at, c.sharing_blocked, COALESCE(t.closed, false) AS comments_closed FROM member_capsule c
         LEFT JOIN member_capsule_share s ON s.capsule_id = c.id
+        LEFT JOIN member_capsule_thread t ON t.capsule_id = c.id
         WHERE c.id = $1 AND c.owner_user_id = $2 AND c.dataset = $3`, [id, user.id, dataset]);
       if (!result.rows[0]) throw new MemberError(404, "NOT_FOUND");
-      return memberJson({ share: result.rows[0].id ? shareDto(result.rows[0]) : null, blocked: result.rows[0].sharing_blocked });
+      return memberJson({ share: result.rows[0].id ? shareDto(result.rows[0]) : null, blocked: result.rows[0].sharing_blocked, commentsClosed: result.rows[0].comments_closed });
     },
     async issueShare(request: Request, rawId: string) {
       assertMemberOrigin(request, origin);
@@ -60,6 +61,10 @@ export function createCapsuleSharing(pool: Pool, dataset: DatasetMode, origin: s
         const existing = await client.query("SELECT id FROM member_capsule_share WHERE capsule_id = $1", [id]);
         if ((existing.rows[0]?.id ?? null) !== input.expectedShareId) throw new MemberError(409, "SHARE_CONFLICT");
         await freezeCapsuleRevision(client, row);
+        // Issuing a link and selecting its comment setting are one operation.
+        // An omitted setting preserves an existing owner's closure choice.
+        await client.query("INSERT INTO member_capsule_thread (capsule_id, closed) VALUES ($1, false) ON CONFLICT DO NOTHING", [id]);
+        if (input.commentsClosed !== undefined) await client.query("UPDATE member_capsule_thread SET closed = $2 WHERE capsule_id = $1", [id, input.commentsClosed]);
         const token = randomBytes(32).toString("base64url");
         await client.query("DELETE FROM member_capsule_share WHERE capsule_id = $1", [id]);
         const issued = await client.query("INSERT INTO member_capsule_share (id, capsule_id, revision, token_hash) VALUES ($1, $2, $3, $4) RETURNING *", [randomUUID(), id, input.expectedRevision, hashToken(token)]);

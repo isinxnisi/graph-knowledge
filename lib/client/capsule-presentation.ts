@@ -17,7 +17,7 @@ export function capsulePresentation(document: CapsuleDocument, locale: string) {
     members[r.key] = [r.key];
   }
   return { members, relations, nodes: [
-    ...document.nodes.map(n => ({ id: n.key, label: n.title + (n.badge ? `\n${n.badge}` : ""), kind: n.origin.kind === "kg" ? n.origin.snapshot.kind : "local" })),
-    ...document.texts.map(t => ({ id: t.key, label: t.text, kind: "text", textStyle: t.style })),
+    ...document.nodes.map(n => ({ id: n.key, label: n.title, badge: n.badge, kind: n.origin.kind === "kg" ? n.origin.snapshot.kind : "local" })),
+    ...document.texts.map(t => ({ id: t.key, label: t.text, kind: "text", textStyle: t.style, textFormat: { width: t.width, fontSize: t.fontSize, fontWeight: t.fontWeight, align: t.align } })),
   ] };
 }

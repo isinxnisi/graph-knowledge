@@ -53,6 +53,7 @@ beforeEach(() => {
     if (path === "/api/member/profile") return Response.json({ user: { id: userId, name: "本人の表示名", locale: "ja" } });
     if (path === "/api/member/capsules") return Response.json({ capsules: [capsule] });
     if (path.endsWith("/share")) return Response.json({ share: null });
+    if (path.includes("/discussion")) return Response.json({ capsuleId: capsule.id, revision: 1, closed: false, viewer: { id: userId, name: "本人" }, canManage: false, posts: [] });
     return Response.json({ capsule });
   });
   vi.stubGlobal("fetch", requests);
@@ -117,34 +118,33 @@ describe("閲覧・会員・共有の表示言語と保存内容を分ける", (
     show(<SharedCapsule dataset="demo" />);
     await screen.findByRole("heading", { name: capsule.content.title });
     await screen.findByRole("link", { name: memberPostsLabels().manageLink });
-    expect(requests).toHaveBeenCalledTimes(1);
+    expect(requests.mock.calls.filter(call => call[0] === "/api/shared/capsule")).toHaveLength(1);
     language("en"); await screen.findByRole("heading", { name: "Shared Capsule" });
     language("ja"); await screen.findByRole("heading", { name: "共有されたCapsule" });
     expect(screen.getByText(capsule.content.note)).toBeTruthy();
-    expect(requests).toHaveBeenCalledTimes(1); expect(location.hash).toBe(`#${token}`);
+    expect(requests.mock.calls.filter(call => call[0] === "/api/shared/capsule")).toHaveLength(1); expect(location.hash).toBe(`#${token}`);
   });
 
   it("発行済みリンク・確認状態を維持し、英語の通知も日本語へ戻せる", async () => {
     show(<CapsuleShareControls capsule={capsule} userId={userId} disabled={false} onUnauthorized={vi.fn()} />);
     await screen.findByText(capsuleSharingLabels().stopped);
     language("en");
-    fireEvent.click(screen.getByRole("button", { name: "Create a link to this version" }));
-    language("ja"); expect(screen.getByRole("button", { name: "この版をリンクで閲覧可能にする" })).toBeTruthy();
-    language("en");
     requests.mockResolvedValueOnce(Response.json({ share: { id: capsule.id, revision: 1, createdAt: capsule.createdAt }, token }));
-    fireEvent.click(screen.getByRole("button", { name: "Make this version readable by link" }));
+    fireEvent.click(screen.getByRole("button", { name: "Create sharing link" }));
     const input = await screen.findByLabelText("Sharing link") as HTMLInputElement;
     const url = input.value, count = requests.mock.calls.length;
     language("ja"); expect((screen.getByLabelText("共有リンク") as HTMLInputElement).value).toBe(url);
     expect(screen.getByText(capsuleSharingLabels().issued)).toBeTruthy();
     expect(requests).toHaveBeenCalledTimes(count);
+    fireEvent.click(screen.getByRole("button", { name: "リンクを更新" }));
+    language("en"); expect(screen.getByRole("button", { name: "Update the link" })).toBeTruthy();
+    language("ja"); expect(screen.getByRole("button", { name: "リンクを更新する" })).toBeTruthy();
   });
 
   it("コメントの未送信本文・本人・版・再送keyを言語切替で変えない", async () => {
     const data = { capsuleId: capsule.id, revision: 1, closed: false, viewer: { id: userId, name: "本人" }, canManage: false, posts: [] };
     requests.mockResolvedValueOnce(Response.json(data));
     show(<CapsuleDiscussion capsuleId={capsule.id} revision={1} userId={userId} />);
-    fireEvent.click(screen.getByRole("button", { name: "この版のコメントを見る" }));
     await screen.findByText("この版のコメントはまだありません。");
     fireEvent.change(screen.getByLabelText("コメント本文"), { target: { value: "未送信のコメント" } });
     requests.mockRejectedValueOnce(new TypeError("response lost"));

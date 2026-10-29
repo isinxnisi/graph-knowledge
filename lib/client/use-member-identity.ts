@@ -10,6 +10,10 @@ const listeners=new Set<()=>void>();
 const publish=(next:IdentityState)=>{state=next;listeners.forEach(fn=>fn());};
 const subscribe=(fn:()=>void)=>{listeners.add(fn);return()=>{listeners.delete(fn);};};
 export function useMemberSession(){return useSyncExternalStore(subscribe,()=>state,()=>initial);}
+// Read at asynchronous operation boundaries, rather than waiting for a React
+// effect to mirror the store. A logout notification invalidates results even
+// when the same account signs in again before the request finishes.
+export function getMemberIdentitySnapshot(){return state;}
 // Shared display state is not an authorization cache. Every private API still
 // validates the session, active user, expected user and resource permissions.
 export function refreshMemberIdentity(force=false):Promise<MemberUser|null>{
@@ -19,10 +23,11 @@ export function refreshMemberIdentity(force=false):Promise<MemberUser|null>{
  pending=(async()=>{try{
   const {user}=await memberRequest('/api/member/profile',memberProfileSchema);
   if(seq!==sequence)throw new Error('IDENTITY_CHANGED');
-  if(state.user?.id!==user.id||!user.siteOperator)clearOperationsSummary();
+  if(state.user?.id!==user.id){clearInvitations();clearOperationsSummary();}
+  else if(!user.siteOperator)clearOperationsSummary();
   checkedAt=Date.now();publish({status:'authenticated',user,rechecking:false,error:false,version:state.version+(state.user?.id!==user.id?1:0)});return user;
  }catch(e){if(seq!==sequence)throw e;
-  if(e instanceof MemberClientError&&e.status===401){clearOperationsSummary();checkedAt=Date.now();publish({status:'guest',user:null,rechecking:false,error:false,version:state.version+(state.user?1:0)});return null;}
+  if(e instanceof MemberClientError&&e.status===401){clearInvitations();clearOperationsSummary();checkedAt=Date.now();publish({status:'guest',user:null,rechecking:false,error:false,version:state.version+(state.user?1:0)});return null;}
   publish({...state,status:state.user?'authenticated':'error',rechecking:false,error:true});throw e;
  }finally{if(seq===sequence)pending=null;}})();return pending;
 }
@@ -32,7 +37,7 @@ export function invalidateMemberIdentity(){sequence++;pending=null;checkedAt=0;p
 export function updateMemberProfileDisplay(userId:string,profile:{displayName:string;handle:string;icon:string}){
  if(state.user?.id!==userId)return;
  sequence++;pending=null;checkedAt=0;
- publish({...state,user:{...state.user,name:profile.displayName,profile:{handle:profile.handle,icon:profile.icon}}});
+ publish({...state,rechecking:false,user:{...state.user,name:profile.displayName,profile:{handle:profile.handle,icon:profile.icon}}});
 }
 export function useMemberIdentity(enabled=true){const value=useMemberSession();return enabled?value.user:null;}
 type Invitations={owner:string|null;status:'checking'|'ready'|'error';count:number|null};

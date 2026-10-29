@@ -6,7 +6,13 @@ import { claimDetailSchema, claimSummarySchema, entityDetailSchema, entitySummar
 export const CAPSULE_DOCUMENT_LIMITS = { nodes: 200, relations: 400, texts: 100, evidence: 1000, bytes: 2_000_000 } as const;
 const key = z.uuidv4();
 const point = z.strictObject({ x: z.number().finite().min(-1_000_000).max(1_000_000), y: z.number().finite().min(-1_000_000).max(1_000_000) });
-export const capsuleLayoutSchema = z.strictObject({ positions: z.record(key, point), pan: point, zoom: z.number().min(0.15).max(2) });
+export const capsuleLayoutSchema = z.strictObject({
+  positions: z.record(key, point), pan: point, zoom: z.number().min(0.15).max(2),
+  // A graph-space center survives a different display size. pan is retained for
+  // older readers; it is not the authority when center is available.
+  center: point.optional(),
+  viewport: z.strictObject({ width: z.number().positive().max(100_000), height: z.number().positive().max(100_000) }).optional(),
+});
 const observation = z.strictObject({ capturedAt: z.iso.datetime(), revision: z.string().max(200).nullable() });
 const neighborhood = z.strictObject({
   state: z.enum(["unknown", "partial", "complete"]),
@@ -33,7 +39,11 @@ export const capsuleRelationSchema = z.strictObject({
       detail: claimDetailSchema.nullable() }),
   ]),
 });
-export const capsuleTextSchema = z.strictObject({ key, text: z.string().min(1).max(4000), style: z.enum(["note", "heading", "muted"]) });
+export const capsuleTextSchema = z.strictObject({
+  key, text: z.string().min(1).max(4000), style: z.enum(["note", "heading", "muted"]),
+  width: z.number().min(96).max(800).optional(), fontSize: z.number().min(12).max(48).optional(),
+  fontWeight: z.enum(["normal", "bold"]).optional(), align: z.enum(["left", "center", "right"]).optional(),
+});
 export const capsuleEvidenceSchema = z.strictObject({
   key, targetKey: key, supports: z.enum(["identity", "name", "description", "relation"]),
   title: z.string().trim().min(1).max(300), url: z.url({ protocol: /^https?$/ }).max(2000).nullable(),
@@ -79,6 +89,7 @@ export type CapsuleDocument = z.infer<typeof capsuleDocumentSchema>;
 export type CapsuleNode = z.infer<typeof capsuleNodeSchema>;
 export type CapsuleRelation = z.infer<typeof capsuleRelationSchema>;
 export type CapsuleEvidence = z.infer<typeof capsuleEvidenceSchema>;
+export type CapsuleText = z.infer<typeof capsuleTextSchema>;
 export function capsuleReferences(document: CapsuleDocument) {
   return {
     entityIds: document.nodes.flatMap(n => n.origin.kind === "local" ? [] : [n.origin.id]),

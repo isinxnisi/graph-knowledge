@@ -65,10 +65,9 @@ for (const width of [390, 1440]) {
     const content = { dataset: saved.dataset, title: saved.title, note: saved.note, language: saved.language, entityIds: saved.entityIds, claimIds: saved.claimIds };
     const { capsule } = await (await page.request.post("/api/member/capsules", { headers: { Origin: "http://127.0.0.1:3221" }, data: { requestId: crypto.randomUUID(), content } })).json();
     await page.goto(`/member?capsule=${capsule.id}`);
-    const controls = page.getByRole("region", { name: "限定リンク共有", exact: true });
+    const controls = page.getByRole("region", { name: "リンクで共有", exact: true });
     await expect(controls.getByText("有効な共有リンクはありません。本人だけが読めます。", { exact: true })).toBeVisible();
-    await controls.getByRole("button", { name: "この版の共有リンクを作る", exact: true }).click();
-    await controls.getByRole("button", { name: "この版をリンクで閲覧可能にする", exact: true }).click();
+    await controls.getByRole("button", { name: "共有リンクを作る", exact: true }).click();
     await expect(controls.getByLabel("共有リンク", { exact: true })).toBeVisible();
     const link = await controls.getByLabel("共有リンク", { exact: true }).inputValue();
     const token = new URL(link).hash.slice(1);
@@ -119,9 +118,9 @@ for (const width of [390, 1440]) {
       await expect(page.getByText("次の版だけの説明", { exact: true })).toBeVisible();
       // Token plaintext is not retrievable after returning/reloading the owner UI.
       await expect(controls.getByLabel("共有リンク", { exact: true })).toHaveCount(0);
-      await controls.getByRole("button", { name: "この版でリンクを作り直す", exact: true }).click();
-      await expect(controls.getByText("今表示している内容版 2 を共有します。", { exact: true })).toBeVisible();
-      await controls.getByRole("button", { name: "この版をリンクで閲覧可能にする", exact: true }).click();
+      await controls.getByRole("button", { name: "リンクを更新", exact: true }).click();
+      await expect(controls.getByText("共有する内容 · 保存版 2", { exact: true })).toBeVisible();
+      await page.getByRole("dialog").getByRole("button", { name: "リンクを更新する", exact: true }).click();
       await expect(controls.getByLabel("共有リンク", { exact: true })).toBeVisible();
       const newLink = await controls.getByLabel("共有リンク", { exact: true }).inputValue();
       // Navigating to an identical fragment URL can be a same-document no-op.
@@ -132,8 +131,8 @@ for (const width of [390, 1440]) {
       await reader.goto(newLink);
       await expect(reader.getByText("次の版だけの説明", { exact: true })).toBeVisible();
       await page.bringToFront();
-      await controls.getByRole("button", { name: "共有を停止する", exact: true }).click();
-      await controls.getByRole("button", { name: "リンクを失効する", exact: true }).click();
+      await controls.getByRole("button", { name: "共有を停止", exact: true }).click();
+      await page.getByRole("dialog").getByRole("button", { name: "共有を停止する", exact: true }).click();
       await expect(controls.getByText("共有を停止しました。", { exact: true })).toBeVisible();
       await reader.bringToFront();
       await reader.getByRole("button", { name: "リンクを再確認", exact: true }).click();
@@ -443,17 +442,15 @@ for (const width of [390, 1440]) {
     const link = `/shared#${token}`;
     await page.goto(`/member?capsule=${capsule.id}`);
     const ownerThread = page.getByRole("region", { name: "この版のコメント", exact: true });
-    await ownerThread.getByRole("button", { name: "この版のコメントを見る", exact: true }).click();
-    await expect(ownerThread.getByRole("button", { name: "投稿を受け付ける", exact: true })).toBeVisible();
-    await expect(ownerThread.getByLabel("コメント本文", { exact: true })).toHaveCount(0);
-    await ownerThread.getByRole("button", { name: "投稿を受け付ける", exact: true }).click();
+    await ownerThread.getByRole("button", { name: "コメントとログインを再確認", exact: true }).click();
+    await expect(ownerThread.getByRole("switch", { name: "コメント受付" })).toBeChecked();
     await expect(ownerThread.getByLabel("コメント本文", { exact: true })).toBeVisible();
     const other = await browser.newContext({ baseURL: "http://127.0.0.1:3221", viewport: { width, height: 900 } });
     try {
       await mockKnowledge(other); const reader = await other.newPage(); reader.on("pageerror", error => errors.push(error.message));
       await reader.goto(link);
       const thread = reader.getByRole("region", { name: "この版のコメント", exact: true });
-      await thread.getByRole("button", { name: "この版のコメントを見る", exact: true }).click();
+      await thread.getByRole("button", { name: "コメントとログインを再確認", exact: true }).click();
       await expect(thread.getByRole("link", { name: /投稿するにはアカウントへログイン/ })).toBeVisible();
       await expect(thread.getByLabel("コメント本文", { exact: true })).toHaveCount(0);
       const popup = other.waitForEvent("page");
@@ -466,13 +463,13 @@ for (const width of [390, 1440]) {
       await expect(account.getByText("検証ユーザーB", { exact: true })).toBeVisible();
       await expect(account.getByRole("button", { name: "最新の状態に更新", exact: true })).toBeEnabled();
       await account.close(); await reader.bringToFront(); await reader.getByRole("button", { name: "リンクを再確認", exact: true }).click();
-      await thread.getByRole("button", { name: "この版のコメントを見る", exact: true }).click();
+      await thread.getByRole("button", { name: "コメントとログインを再確認", exact: true }).click();
       await thread.getByLabel("コメント本文", { exact: true }).fill("本文の期間は、どの資料から確認できますか？");
       await thread.getByRole("button", { name: "この版へ投稿する", exact: true }).click();
       await expect(thread.getByText("本文の期間は、どの資料から確認できますか？", { exact: true })).toBeVisible();
       await expect(thread.getByLabel("コメント本文", { exact: true })).toHaveValue("");
       await page.bringToFront(); await page.getByRole("button", { name: "最新の状態に更新", exact: true }).click();
-      await ownerThread.getByRole("button", { name: "この版のコメントを見る", exact: true }).click();
+      await ownerThread.getByRole("button", { name: "コメントとログインを再確認", exact: true }).click();
       await expect(ownerThread.getByText("本文の期間は、どの資料から確認できますか？", { exact: true })).toBeVisible();
       await expect(ownerThread.getByRole("button", { name: "自分の投稿を撤回", exact: true })).toHaveCount(0);
       await ownerThread.getByLabel("コメント本文", { exact: true }).fill("個別の主張を開くと、インタビューの参照箇所を読めます。");
@@ -480,7 +477,7 @@ for (const width of [390, 1440]) {
       await expect(ownerThread.getByText("個別の主張を開くと、インタビューの参照箇所を読めます。", { exact: true })).toBeVisible();
       await expect(ownerThread.getByLabel("コメント本文", { exact: true })).toHaveValue("");
       await reader.bringToFront(); await reader.getByRole("button", { name: "リンクを再確認", exact: true }).click();
-      await thread.getByRole("button", { name: "この版のコメントを見る", exact: true }).click();
+      await thread.getByRole("button", { name: "コメントとログインを再確認", exact: true }).click();
       await expect(thread.getByText("個別の主張を開くと、インタビューの参照箇所を読めます。", { exact: true })).toBeVisible();
       await reader.getByRole("button", { name: /青葉ハル → アシスタントだった → 黒川レン.*2001年〜2003年/ }).click();
       await expect(reader.getByRole("heading", { name: "青葉ハルへのインタビュー", exact: true })).toBeVisible();
@@ -488,15 +485,15 @@ for (const width of [390, 1440]) {
       await reader.screenshot({ path: testInfo.outputPath(`discussion-${width}.png`), fullPage: true });
       expect(await reader.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
       await thread.getByRole("button", { name: "自分の投稿を撤回", exact: true }).click();
-      await thread.getByRole("button", { name: "本文を削除して撤回する", exact: true }).click();
+      await reader.getByRole("dialog").getByRole("button", { name: "本文を削除して撤回する", exact: true }).click();
       await expect(thread.getByText("投稿者が撤回しました。", { exact: true })).toBeVisible();
       await expect(thread.getByText("本文の期間は、どの資料から確認できますか？", { exact: true })).toHaveCount(0);
       await page.bringToFront(); await page.getByRole("button", { name: "最新の状態に更新", exact: true }).click();
-      await ownerThread.getByRole("button", { name: "この版のコメントを見る", exact: true }).click();
-      await ownerThread.getByRole("button", { name: "新しい投稿を停止する", exact: true }).click();
-      await expect(ownerThread.getByRole("button", { name: "投稿を受け付ける", exact: true })).toBeVisible();
+      await ownerThread.getByRole("button", { name: "コメントとログインを再確認", exact: true }).click();
+      await ownerThread.getByRole("switch", { name: "コメント受付", exact: true }).click();
+      await expect(ownerThread.getByRole("switch", { name: "コメント受付" })).not.toBeChecked();
       await reader.bringToFront(); await reader.getByRole("button", { name: "リンクを再確認", exact: true }).click();
-      await thread.getByRole("button", { name: "この版のコメントを見る", exact: true }).click();
+      await thread.getByRole("button", { name: "コメントとログインを再確認", exact: true }).click();
       await expect(thread.getByText(/新しい投稿は受け付けていません/)).toBeVisible();
       await expect(thread.getByLabel("コメント本文", { exact: true })).toHaveCount(0);
       await expect(thread.getByText("個別の主張を開くと、インタビューの参照箇所を読めます。", { exact: true })).toBeVisible();
@@ -519,7 +516,7 @@ for (const width of [390, 1440]) {
     const path = `/api/member/capsules/${capsule.id}`;
     const thread = `/api/capsules/${capsule.id}/discussion`;
     const share = await (await page.request.post(`${path}/share`, { headers, data: { expectedRevision: 1, expectedShareId: null } })).json();
-    expect((await page.request.patch(thread, { headers, data: { closed: false, expectedClosed: true } })).status()).toBe(200);
+    expect((await page.request.patch(thread, { headers, data: { closed: false, expectedClosed: false } })).status()).toBe(200);
     expect((await page.request.post(thread, { headers, data: { requestId: crypto.randomUUID(), revision: 1, body: "初版で確認した根拠について" } })).status()).toBe(201);
     expect((await page.request.put(path, { headers, data: { expectedRevision: 1, content: { ...content, note: "共有しない中間版" } } })).status()).toBe(200);
     expect((await page.request.put(path, { headers, data: { expectedRevision: 2, content: { ...content, note: "三版で訂正した説明" } } })).status()).toBe(200);
@@ -540,21 +537,21 @@ for (const width of [390, 1440]) {
     await expect(page.getByText("現在の非共有の説明", { exact: true })).toHaveCount(0);
     await expect(page.getByRole("button", { name: "このCapsuleを編集", exact: true })).toHaveCount(0);
     await expect(page.getByRole("button", { name: "アカウントから削除", exact: true })).toHaveCount(0);
-    await expect(page.getByRole("region", { name: "限定リンク共有", exact: true })).toHaveCount(0);
-    await page.getByRole("button", { name: "この版のコメントを見る", exact: true }).click();
+    await expect(page.getByRole("region", { name: "リンクで共有", exact: true })).toHaveCount(0);
+    await page.getByRole("button", { name: "コメントとログインを再確認", exact: true }).click();
     await expect(page.getByText("初版で確認した根拠について", { exact: true })).toBeVisible();
     await expect(page.getByText("三版だけについてのコメント", { exact: true })).toHaveCount(0);
     await page.getByRole("textbox", { name: "コメント本文", exact: true }).fill("初版へ残す未送信のメモ");
     await page.getByRole("button", { name: "共有した版を選ぶ", exact: true }).click();
     await page.getByRole("button", { name: "内容版 3 を読む", exact: true }).click();
     await expect(page.getByText("三版で訂正した説明", { exact: true })).toBeVisible();
-    await page.getByRole("button", { name: "この版のコメントを見る", exact: true }).click();
+    await page.getByRole("button", { name: "コメントとログインを再確認", exact: true }).click();
     await expect(page.getByText("三版だけについてのコメント", { exact: true })).toBeVisible();
     await expect(page.getByText("初版で確認した根拠について", { exact: true })).toHaveCount(0);
     await expect(page.getByRole("textbox", { name: "コメント本文", exact: true })).toHaveValue("");
     await page.getByRole("button", { name: "共有した版を選ぶ", exact: true }).click();
     await page.getByRole("button", { name: "内容版 1 を読む", exact: true }).click();
-    await page.getByRole("button", { name: "この版のコメントを見る", exact: true }).click();
+    await page.getByRole("button", { name: "コメントとログインを再確認", exact: true }).click();
     await expect(page.getByRole("textbox", { name: "コメント本文", exact: true })).toHaveValue("初版へ残す未送信のメモ");
     await page.getByRole("textbox", { name: "コメント本文", exact: true }).fill("");
     // Revocation changes visitors' access, not the owner's preserved snapshot.
@@ -588,7 +585,7 @@ for (const width of [390, 1440]) {
     expect(created.status()).toBe(201); const { capsule } = await created.json();
     const path = `/api/member/capsules/${capsule.id}`, thread = `/api/capsules/${capsule.id}/discussion`;
     const { token, share } = await (await page.request.post(`${path}/share`, { headers, data: { expectedRevision: 1, expectedShareId: null } })).json();
-    expect((await page.request.patch(thread, { headers, data: { closed: false, expectedClosed: true } })).status()).toBe(200);
+    expect((await page.request.patch(thread, { headers, data: { closed: false, expectedClosed: false } })).status()).toBe(200);
     expect((await page.request.post(thread, { headers, data: { requestId: crypto.randomUUID(), revision: 1, body: "作者の会話は一覧へ出さない" } })).status()).toBe(201);
     const other = await browser.newContext({ baseURL: "http://127.0.0.1:3221", viewport: { width, height: 900 } });
     try {
@@ -596,7 +593,7 @@ for (const width of [390, 1440]) {
       await reader.goto("/member"); await login(reader, "検証ユーザーB");
       await reader.goto(`/shared#${token}`);
       const comments = reader.getByRole("region", { name: "この版のコメント", exact: true });
-      await comments.getByRole("button", { name: "この版のコメントを見る", exact: true }).click();
+      await comments.getByRole("button", { name: "コメントとログインを再確認", exact: true }).click();
       await comments.getByRole("textbox", { name: "コメント本文", exact: true }).fill("共有停止後も自分で取り消すコメント");
       await comments.getByRole("button", { name: "この版へ投稿する", exact: true }).click();
       await expect(comments.getByText("共有停止後も自分で取り消すコメント", { exact: true })).toBeVisible();
@@ -820,13 +817,11 @@ test.describe("スマホの会員・共有と探索の往復", () => {
     await expect(page.getByRole("region", { name: "関係図と一覧", exact: true })).toBeFocused();
     await expect(choice).toHaveAttribute("aria-pressed", "true");
     expect(await view()).toEqual(before);
-    const sharing = page.getByRole("region", { name: "限定リンク共有", exact: true });
-    await sharing.getByRole("button", { name: "この版の共有リンクを作る", exact: true }).tap();
-    await sharing.getByRole("button", { name: "この版をリンクで閲覧可能にする", exact: true }).tap();
+    const sharing = page.getByRole("region", { name: "リンクで共有", exact: true });
+    await sharing.getByRole("button", { name: "共有リンクを作る", exact: true }).tap();
     await expect(sharing.getByRole("link", { name: "共有内容を別タブで確認", exact: true })).toBeVisible();
     const thread = page.getByRole("region", { name: "この版のコメント", exact: true });
-    await thread.getByRole("button", { name: "この版のコメントを見る", exact: true }).tap();
-    await thread.getByRole("button", { name: "投稿を受け付ける", exact: true }).tap();
+    await thread.getByRole("button", { name: "コメントとログインを再確認", exact: true }).tap();
     await expect(thread.getByRole("textbox", { name: "コメント本文", exact: true })).toBeVisible();
     const sharedOpening = context.waitForEvent("page");
     await sharing.getByRole("link", { name: "共有内容を別タブで確認", exact: true }).tap();
@@ -836,7 +831,7 @@ test.describe("スマホの会員・共有と探索の往復", () => {
     await expect(shared.getByText("参照箇所：pp.12–13", { exact: true })).toBeVisible();
     await shared.getByRole("button", { name: "関係図・一覧へ戻る", exact: true }).tap();
     await expect(shared.getByRole("region", { name: "関係図と一覧", exact: true })).toBeFocused();
-    await shared.getByRole("button", { name: "この版のコメントを見る", exact: true }).tap();
+    await shared.getByRole("button", { name: "コメントとログインを再確認", exact: true }).tap();
     const comment = shared.getByRole("textbox", { name: "コメント本文", exact: true });
     await comment.fill("出典の範囲を確認中。これは未送信の入力です。");
     let posts = 0;
@@ -849,7 +844,6 @@ test.describe("スマホの会員・共有と探索の往復", () => {
     await expect(explorer.getByTestId("graph-counts")).toHaveText("Entity 5 / Claim 7");
     await explorer.close(); await shared.bringToFront();
     await expect(shared.getByRole("heading", { name: saved.title, exact: true })).toBeVisible();
-    if (await shared.getByRole("button", { name: "この版のコメントを見る", exact: true }).isVisible()) await shared.getByRole("button", { name: "この版のコメントを見る", exact: true }).tap();
     await expect(comment).toHaveValue("出典の範囲を確認中。これは未送信の入力です。");
     expect(posts).toBe(0);
     expect(await shared.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
@@ -937,7 +931,7 @@ test("運営CLI: 投稿非表示・共有停止・User停止と再開を画面�
   const content = { dataset: saved.dataset, title: saved.title, note: saved.note, language: saved.language, entityIds: saved.entityIds, claimIds: saved.claimIds };
   const { capsule } = await (await page.request.post("/api/member/capsules", { headers, data: { requestId: crypto.randomUUID(), content } })).json();
   const { token } = await (await page.request.post(`/api/member/capsules/${capsule.id}/share`, { headers, data: { expectedRevision: 1, expectedShareId: null } })).json();
-  await page.request.patch(`/api/capsules/${capsule.id}/discussion`, { headers, data: { closed: false, expectedClosed: true } });
+  await page.request.patch(`/api/capsules/${capsule.id}/discussion`, { headers, data: { closed: false, expectedClosed: false } });
   const other = await browser.newContext({ baseURL: "http://127.0.0.1:3221" });
   const operate = (action: string, target: string) => {
     const result = spawnSync(process.execPath, ["--import", "tsx", "scripts/member-ops.ts", action, target,
@@ -966,9 +960,9 @@ test("運営CLI: 投稿非表示・共有停止・User停止と再開を画面�
     operate("block-sharing", capsule.id);
     expect((await reader.request.get("/api/shared/capsule", { headers: { "X-Capsule-Token": token } })).status()).toBe(404);
     await page.bringToFront(); await page.goto(`/member?capsule=${capsule.id}`);
-    const controls = page.getByRole("region", { name: "限定リンク共有", exact: true });
+    const controls = page.getByRole("region", { name: "リンクで共有", exact: true });
     await expect(controls.getByText("運営によりこのCapsuleの共有を停止しています。新しいリンクは作れません。本人の保存内容は閲覧できます。", { exact: true })).toBeVisible();
-    await expect(controls.getByRole("button", { name: "この版の共有リンクを作る", exact: true })).toBeDisabled();
+    await expect(controls.getByRole("button", { name: "共有リンクを作る", exact: true })).toBeDisabled();
     await expect(page.getByText(saved.note, { exact: true })).toBeVisible();
   } finally { await other.close(); }
 });

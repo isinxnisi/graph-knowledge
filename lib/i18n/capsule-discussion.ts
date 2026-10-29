@@ -1,9 +1,11 @@
 const ja = {
   title: "この版のコメント", open: "この版のコメントを見る", refresh: "コメントとログインを再確認", loading: "コメントを確認しています…",
+  acceptComments: "コメント受付", acceptOn: "ログインした閲覧者が投稿できます。", acceptOff: "新しい投稿の受付は停止中です。",
+  invitation: "気づいたことや、確かめたいことを残しましょう。", placeholder: "この図について、気づいたこと…", posting: "投稿中…", about: "コメントについて", loginPrompt: "ログインすると会話に参加できます。",
   context: (revision: number) => `内容版 ${revision} についての会話です。`,
   help: "コメントはこのCapsuleへの意見・説明です。知識や出典の支持として登録されません。他の版の投稿はここには表示しません。",
   empty: "この版のコメントはまだありません。", login: "投稿するにはアカウントへログイン（別タブ）", loginHelp: "ログイン後、この画面へ戻って再確認してください。",
-  as: (name: string) => `${name} として投稿します。表示名と本文は、作成者とこの版の有効なリンクを持つ人が読めます。`,
+  as: (name: string) => `${name} として投稿`,
   body: "コメント本文", limit: "2,000文字まで。1人につき1分間に5件、Capsule全体で200件まで。", submit: "この版へ投稿する",
   retry: "同じ投稿の結果を確認・再送", pending: "投稿結果が不明です。同じ内容を再送して結果を確認できます。二重には登録しません。",
   failed: "操作を完了できませんでした。再確認してから試してください。", unavailable: "この版のコメントを閲覧できません。共有済みの版と権限を確認してください。",
@@ -17,10 +19,12 @@ const ja = {
 };
 const en: typeof ja = {
 title: "Comments on this version", open: "View comments on this version", refresh: "Refresh comments and login", loading: "Loading comments…",
+  acceptComments: "Accept comments", acceptOn: "Signed-in readers can comment.", acceptOff: "New comments are closed.",
+  invitation: "Share an observation or something you would like to explore.", placeholder: "What do you notice in this graph?", posting: "Posting…", about: "About comments", loginPrompt: "Sign in to join the conversation.",
   context: (revision: number) => `Discussion of version ${revision}.`,
   help: "Comments are opinions or explanations about this Capsule. They are not registered as knowledge or support for sources. Comments on other versions are not shown here.",
   empty: "No comments on this version yet.", login: "Log in to comment (new tab)", loginHelp: "After logging in, return here and refresh.",
-  as: (name: string) => `Commenting as ${name}. Your display name and text are visible to the creator and people with a valid link to this version.`,
+  as: (name: string) => `Commenting as ${name}`,
   body: "Comment text", limit: "Up to 2,000 characters. Five comments per person per minute; 200 per Capsule.", submit: "Post to this version",
   retry: "Check or resend the same comment", pending: "The result is unknown. Resend the same content to check it without creating a duplicate.",
   failed: "Could not complete the action. Refresh before trying again.", unavailable: "Comments on this version are unavailable. Check the shared version and your access.",

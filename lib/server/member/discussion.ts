@@ -94,7 +94,7 @@ export function createCapsuleDiscussion(pool: Pool, dataset: DatasetMode, origin
         const thread = await client.query("SELECT closed FROM member_capsule_thread WHERE capsule_id = $1", [id]);
         const posts = await client.query(`SELECT p.*, u.name, u.active FROM member_capsule_post p JOIN "user" u ON u.id = p.author_user_id
           WHERE p.capsule_id = $1 AND p.revision = $2 ORDER BY p.created_at, p.id LIMIT $3`, [id, revision.data, DISCUSSION_LIMITS.posts]);
-        return memberJson(discussionSchema.parse({ capsuleId: id, revision: revision.data, closed: thread.rows[0]?.closed ?? true, viewer: user ? { id: user.id, name: user.name } : null, canManage,
+        return memberJson(discussionSchema.parse({ capsuleId: id, revision: revision.data, closed: thread.rows[0]?.closed ?? false, viewer: user ? { id: user.id, name: user.name } : null, canManage,
           posts: posts.rows.map(row => ({ id: row.id, revision: Number(row.revision), authorName: row.withdrawn_at || row.hidden_at || !row.active ? null : row.name,
             body: row.withdrawn_at || row.hidden_at || !row.active ? null : row.body, createdAt: row.created_at.toISOString(), withdrawnAt: row.withdrawn_at?.toISOString() ?? null, own: row.author_user_id === user?.id })) }));
       });
@@ -111,7 +111,7 @@ export function createCapsuleDiscussion(pool: Pool, dataset: DatasetMode, origin
           if (replay.rows[0].content_hash !== hash) throw new MemberError(409, "REQUEST_CONFLICT");
           return memberJson({ postId: replay.rows[0].id, replayed: true });
         }
-        await client.query("INSERT INTO member_capsule_thread (capsule_id) VALUES ($1) ON CONFLICT DO NOTHING", [id]);
+        await client.query("INSERT INTO member_capsule_thread (capsule_id, closed) VALUES ($1, false) ON CONFLICT DO NOTHING", [id]);
         const thread = await client.query("SELECT closed FROM member_capsule_thread WHERE capsule_id = $1", [id]);
         if (thread.rows[0].closed) throw new MemberError(403, "THREAD_CLOSED");
         const count = await client.query("SELECT count(*) FROM member_capsule_post WHERE capsule_id = $1", [id]);
@@ -130,7 +130,7 @@ export function createCapsuleDiscussion(pool: Pool, dataset: DatasetMode, origin
         await activeWriter(client, user);
         const own = await client.query("SELECT id FROM member_capsule WHERE id = $1 AND owner_user_id = $2 AND dataset = $3 AND sharing_blocked = false FOR UPDATE", [id, user.id, dataset]);
         if (!own.rowCount) throw new MemberError(404, "NOT_FOUND");
-        await client.query("INSERT INTO member_capsule_thread (capsule_id) VALUES ($1) ON CONFLICT DO NOTHING", [id]);
+        await client.query("INSERT INTO member_capsule_thread (capsule_id, closed) VALUES ($1, false) ON CONFLICT DO NOTHING", [id]);
         const updated = await client.query("UPDATE member_capsule_thread SET closed = $2 WHERE capsule_id = $1 AND closed = $3 RETURNING closed", [id, input.closed, input.expectedClosed]);
         if (!updated.rowCount) throw new MemberError(409, "THREAD_CONFLICT");
         return memberJson({ closed: input.closed });

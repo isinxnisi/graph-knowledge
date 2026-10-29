@@ -2,7 +2,7 @@
 
 # ドキュメントの入口
 
-- Issue #63 `capsule-contribution-001 / r02`：Capsuleの新しい現行契約は[Graph上の編集・文書・保存・固定版共有](design/CAPSULE_EDITOR.md)。[既存beta／VPSの更新・011／012適用・復旧](runbooks/CAPSULE_EDITOR_RELEASE.md)／[実装とクラウド検証の記録](verification/CAPSULE_EDITOR_20261029.md)／[3200・HTTPS beta反映記録](verification/CAPSULE_EDITOR_BETA_20261029.md)。既存3200／HTTPS betaへ反映済み。今回はユーザー指定によりVPSは更新しない。知識の申請は準備中。以下の旧チェックリスト作成・参照中心Readerは、documentを持たない旧形式の契約として読む。
+- Issue #63 `capsule-contribution-001 / r03`：現行契約は[Capsule編集・文書・保存・固定版共有](design/CAPSULE_EDITOR.md)。共通の広い作業面、直接編集、履歴、テキスト書式、共有コメント受付を更新。[更新・011〜013適用・復旧](runbooks/CAPSULE_EDITOR_RELEASE.md)／[UXと3200・HTTPS beta検証](verification/CAPSULE_EDITOR_UX_BETA_20261030.md)／[初期実装のbeta反映履歴](verification/CAPSULE_EDITOR_BETA_20261029.md)。今回の配置・実操作結果は最新検証記録を参照し、ユーザーによる体験受入とは区別する。VPSは今回更新しない。知識申請は準備中。以下の旧チェックリスト作成・参照中心Readerは、documentを持たない旧形式の契約として読む。
 
 - Issue #52 現行KGの管理検索：[設計](design/KG_ADMIN.md)／[VPS Connector・Access運用手順](runbooks/KG_ADMIN.md)／[本番配置・実Access全件照合・再接続](verification/KG_ADMIN_PRODUCTION_20261027.md)／[初回隔離検証](verification/KG_ADMIN_20261027.md)。専用管理Webは本番稼働。ConnectorのAccess保護・自動起動有効化・再起動後の実接続を確認済み。
 
@@ -54,7 +54,7 @@
 
 | 現役の設計文書 | 状態・読む場面 |
 | --- | --- |
-| [Capsule文書とGraph上の編集](design/CAPSULE_EDITOR.md) | Issue #63 / capsule-contribution-001 / r02。表示Graphから文書を作成し、独自対象・関係・根拠・自由テキスト・配置を明示編集／保存。保存断面と現在KGを分け、固定版を共有・掲載。会員本文はアカウント保存できるが、最近／お気に入りはmemberIDで分離したブラウザ内metadataで端末間同期なし。既存3200／HTTPS betaへ反映済み、VPS未反映、知識申請は準備中。[更新手順](runbooks/CAPSULE_EDITOR_RELEASE.md)／[beta反映記録](verification/CAPSULE_EDITOR_BETA_20261029.md) |
+| [Capsule文書とGraph上の編集](design/CAPSULE_EDITOR.md) | Issue #63 / capsule-contribution-001 / r03。共通の広い作業面で直接編集・履歴・明示保存。保存断面と現在KGを分け、固定版の共有・コメント・掲載へ接続。会員本文はアカウント保存できるが、最近／お気に入りはmemberIDで分離したブラウザ内metadataで端末間同期なし。知識申請は準備中。[更新手順](runbooks/CAPSULE_EDITOR_RELEASE.md)／[UX・beta検証記録](verification/CAPSULE_EDITOR_UX_BETA_20261030.md)。VPSは今回更新しない |
 | [洋画Role・段別探索のbeta接続](design/FILM_BETA.md) | Issue #43を継承し正式10 Role・映画2 Claimを本番公開済み。旧trialを保全してbetaは独立DB7697で正式データを確認。[公開完了](verification/FILM_INITIAL_PRODUCTION_20261028.md)。 |
 | [コミュニティ体験設計](design/COMMUNITY_EXPERIENCE.md)／[基礎設計](design/COMMUNITY_FOUNDATION.md)／[導入計画](design/COMMUNITY_IMPLEMENTATION_PLAN.md) | コミュニティを中心に会員・独立会話・版付き掲載・公開範囲・管理・AIを整理。人間向けC1a／C1bはfeature flag内で実装・隔離検証。C3-minを追加し、C2を初回公開条件から分離。[現行C1b](design/COMMUNITY_CONTINUITY.md)／[初期試作](verification/COMMUNITY_PROTOTYPE_20261021.md)。本番・既存会員DB適用・AI接続なし |
 | [コミュニティ本線UI接続確認版](design/COMMUNITY_CONNECTION_PREVIEW.md) | 実Home・Explorer・会員画面を再利用する隔離3275／graph-com。架空会員/コミュニティと公開KG読み取りを分離。A〜Cの往復・状態復元・密度比較。[検証](verification/COMMUNITY_CONNECTION_20261021.md) |

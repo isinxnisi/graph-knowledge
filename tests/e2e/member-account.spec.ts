@@ -47,13 +47,12 @@ for (const width of [1440, 375]) test(`会員UX: 本人表示・保存一覧・�
   const row = page.getByRole('listitem').filter({ hasText: savedTitle });
   await expect(row.getByRole('button', { name: '内容と根拠を読む', exact: true })).toBeVisible();
   await row.getByRole('button', { name: '共有を管理', exact: true }).click();
-  const sharing = page.getByRole('region', { name: '限定リンク共有', exact: true });
+  const sharing = page.getByRole('region', { name: 'リンクで共有', exact: true });
   await expect(sharing).toBeVisible();
-  await sharing.getByRole('button', { name: 'この版の共有リンクを作る', exact: true }).click();
-  await sharing.getByRole('button', { name: 'この版をリンクで閲覧可能にする', exact: true }).click();
+  await sharing.getByRole('button', { name: '共有リンクを作る', exact: true }).click();
   const url = await sharing.getByRole('textbox', { name: '共有リンク', exact: true }).inputValue();
-  await sharing.getByRole('button', { name: '共有を停止する', exact: true }).click();
-  await sharing.getByRole('button', { name: 'リンクを失効する', exact: true }).click();
+  await sharing.getByRole('button', { name: '共有を停止', exact: true }).click();
+  await page.getByRole("dialog").getByRole('button', { name: '共有を停止する', exact: true }).click();
   await expect(sharing).toContainText('有効な共有リンクはありません');
   const anonymous = await browser.newContext();
   try {

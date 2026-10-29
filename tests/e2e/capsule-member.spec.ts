@@ -94,9 +94,8 @@ test("実会員がGraphの文書を直接保存し、固定共有とコミュニ
   console.info("Capsule member phase: direct account save and reload verified");
 
   await studio(page).getByRole("button", { name: "固定版を共有", exact: true }).click();
-  const controls = page.getByRole("region", { name: "限定リンク共有", exact: true });
-  await controls.getByRole("button", { name: "この版の共有リンクを作る", exact: true }).click();
-  await controls.getByRole("button", { name: "この版をリンクで閲覧可能にする", exact: true }).click();
+  const controls = page.getByRole("region", { name: "リンクで共有", exact: true });
+  await controls.getByRole("button", { name: "共有リンクを作る", exact: true }).click();
   const link = await controls.getByLabel("共有リンク", { exact: true }).inputValue();
   const anonymous = await browser.newContext({ baseURL: "http://127.0.0.1:3221", viewport: { width: 1440, height: 1000 } });
   try {

@@ -6,8 +6,19 @@ export type GraphView = {
   recenter?: boolean;
   positions: Record<string, { x: number; y: number }>;
   pan: { x: number; y: number }; zoom: number; initialLayoutDone: boolean;
+  center?: { x: number; y: number };
+  viewport?: { width: number; height: number };
 };
 export type ViewRestoration = { generation: number; view: GraphView };
+
+export function viewportCenter(pan: GraphView["pan"], zoom: number, viewport: { width: number; height: number }) {
+  return { x: (viewport.width / 2 - pan.x) / zoom, y: (viewport.height / 2 - pan.y) / zoom };
+}
+
+export function restorationPan(view: Pick<GraphView, "pan" | "zoom" | "center" | "viewport">, viewport: { width: number; height: number }) {
+  const center = view.center ?? (view.viewport ? viewportCenter(view.pan, view.zoom, view.viewport) : null);
+  return center ? { x: viewport.width / 2 - center.x * view.zoom, y: viewport.height / 2 - center.y * view.zoom } : view.pan;
+}
 
 // 受理と描画の間に切り替えた場合だけ、座標未保存のNodeを補う。
 export function restorationPositions(graph: GraphState, view: GraphView) {

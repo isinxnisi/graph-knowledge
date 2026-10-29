@@ -99,6 +99,26 @@ it('更新再送・結果不明照会・同時編集が版を二重更新せず�
   expect((await call(()=>service().update(request(a,winner),capsule.id))).status).toBe(200);
   const replay = await (await service().update(request(a,input),capsule.id)).json(); expect(replay.appliedRevision).toBe(2); expect(replay.capsule.revision).toBe(3);
 });
+it('本人一覧の限定リンク・コミュニティ状態を独立して返し、共有tokenや停止済み固定版を返さない', async () => {
+  const capsule = await create(), c = await community();
+  const summary = async () => (await (await service().list(request(a))).json()).capsules.find((item:{id:string})=>item.id===capsule.id);
+  expect(await summary()).toMatchObject({shared:false,published:false});
+  const issued = await (await service().issueShare(request(a,{expectedRevision:1,expectedShareId:null}),capsule.id)).json();
+  const linked = await summary();expect(linked).toMatchObject({shared:true,published:false});
+  expect(linked).not.toHaveProperty('token');expect(linked).not.toHaveProperty('token_hash');expect(linked).not.toHaveProperty('share');
+  expect(JSON.stringify(linked)).not.toContain(issued.token);
+  expect((await (await service().list(request(b))).json()).capsules.some((item:{id:string})=>item.id===capsule.id)).toBe(false);
+  expect((await call(()=>service().list(request()))).status).toBe(401);
+  await publish(c.id,capsule);expect(await summary()).toMatchObject({shared:true,published:true});
+  expect((await service().revokeShare(request(a,{expectedShareId:issued.share.id}),capsule.id)).status).toBe(200);
+  expect(await summary()).toMatchObject({shared:false,published:true});
+  await service().issueShare(request(a,{expectedRevision:1,expectedShareId:null}),capsule.id);
+  await service().update(request(a,{requestId:randomUUID(),expectedRevision:1,content:{...capsule.content,title:'非公開の新版'}}),capsule.id);
+  expect(await summary()).toMatchObject({revision:2,shared:true,published:true});
+  await pool().query('UPDATE member_capsule_revision SET sharing_blocked=true WHERE capsule_id=$1 AND revision=1',[capsule.id]);
+  expect(await summary()).toMatchObject({revision:2,shared:false,published:false});
+  expect((await service().read(request(a),capsule.id)).status).toBe(200);
+});
 it('固定共有版はprivate再編集から独立し、更新と再発行の期待版を照合する', async () => {
   const capsule = await create(); const input = {expectedRevision:1,expectedShareId:null};
   const first = await (await service().issueShare(request(a,input),capsule.id)).json();
