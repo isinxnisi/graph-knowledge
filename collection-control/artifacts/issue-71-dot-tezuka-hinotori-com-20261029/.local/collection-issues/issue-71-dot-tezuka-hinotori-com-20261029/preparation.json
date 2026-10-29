@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "status": "prepared-candidates-not-accepted",
+  "preparationComplete": true,
+  "issueOrigin": {
+    "repository": "isinxnisi/graph-knowledge",
+    "issueNumber": 71,
+    "approvalId": "dot-tezuka-hinotori-com-20261029",
+    "permissionSha256": "26e9e37a47daff91da0c84d4d93e73fae1036ad4c84a383602b312cb1c41711f",
+    "issueBodySha256": "dc16c8c20e2194370b50601766edf64e5d15c2b049d6afcc551c0fcb56e2fac1"
+  },
+  "counts": {
+    "approvedWorks": 1,
+    "preparedWorks": 0,
+    "preparedPeople": 0,
+    "batches": 0,
+    "holds": 1,
+    "networkAttempts": 2,
+    "reusedWorks": 0,
+    "reusedPublishedClaims": 0,
+    "reusedHeldWorks": 0
+  },
+  "holds": [
+    {
+      "target": "火の鳥（黎明編・COM版）",
+      "person": "手塚治虫",
+      "reason": "Exact name/type QID is not unique: 火の鳥（黎明編・COM版）"
+    }
+  ],
+  "reusedReviews": [],
+  "batchRequests": [],
+  "publicApply": false,
+  "preparationDirectory": "/home/isinxnisi/.local/share/plunode-collection-worker-phase-b-20261020/runtime/.local/collection-issues/issue-71-dot-tezuka-hinotori-com-20261029"
+}

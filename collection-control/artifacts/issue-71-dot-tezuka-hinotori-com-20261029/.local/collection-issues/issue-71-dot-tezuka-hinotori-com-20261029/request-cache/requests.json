@@ -1,0 +1,67 @@
+{
+  "policy": {
+    "maxAttempts": 30,
+    "attemptsPerRequest": 2,
+    "minIntervalSeconds": 3,
+    "timeoutSeconds": 20,
+    "maxBytes": 4194304
+  },
+  "attempts": [
+    {
+      "key": "lookup-2331df4cd32608fa874031bb",
+      "url": "https://www.wikidata.org/w/api.php?format=json&action=wbgetentities&sites=jawiki&titles=%E6%89%8B%E5%A1%9A%E6%B2%BB%E8%99%AB%7C%E7%81%AB%E3%81%AE%E9%B3%A5%EF%BC%88%E9%BB%8E%E6%98%8E%E7%B7%A8%E3%83%BBCOM%E7%89%88%EF%BC%89&props=labels%7Caliases%7Cclaims&languages=ja%7Cen",
+      "time": 1793305398.5644782,
+      "status": "succeeded",
+      "diagnostic": {
+        "category": "success",
+        "phase": "response-complete",
+        "httpStatus": 200,
+        "elapsedSeconds": 6.841077,
+        "finishedAt": "2026-10-29T20:23:25+00:00"
+      }
+    },
+    {
+      "key": "lookup-a9629b74a8778228f48b94ad",
+      "url": "https://www.wikidata.org/w/api.php?format=json&action=wbsearchentities&search=%E7%81%AB%E3%81%AE%E9%B3%A5%EF%BC%88%E9%BB%8E%E6%98%8E%E7%B7%A8%E3%83%BBCOM%E7%89%88%EF%BC%89&language=ja&type=item&limit=5",
+      "time": 1793305405.4422476,
+      "status": "succeeded",
+      "diagnostic": {
+        "category": "success",
+        "phase": "response-complete",
+        "httpStatus": 200,
+        "elapsedSeconds": 0.849819,
+        "finishedAt": "2026-10-29T20:23:26+00:00"
+      }
+    }
+  ],
+  "responses": {
+    "lookup-2331df4cd32608fa874031bb": {
+      "url": "https://www.wikidata.org/w/api.php?format=json&action=wbgetentities&sites=jawiki&titles=%E6%89%8B%E5%A1%9A%E6%B2%BB%E8%99%AB%7C%E7%81%AB%E3%81%AE%E9%B3%A5%EF%BC%88%E9%BB%8E%E6%98%8E%E7%B7%A8%E3%83%BBCOM%E7%89%88%EF%BC%89&props=labels%7Caliases%7Cclaims&languages=ja%7Cen",
+      "sha256": "c51a5aaad47d48b21999c14d8eb91658d3a21e17c9bd951809bbf2555f21f98c",
+      "bytes": 188229,
+      "fetchedAt": "2026-10-29T20:23:25+00:00"
+    },
+    "wikidata-Q193300": {
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q193300.json",
+      "sha256": "9b54ad03be8a5948514d0efba7a5347ad14c2ea47644fc4c6634632d685fe09d",
+      "bytes": 212261,
+      "fetchedAt": "2026-10-18T18:39:10+00:00"
+    },
+    "lookup-a9629b74a8778228f48b94ad": {
+      "url": "https://www.wikidata.org/w/api.php?format=json&action=wbsearchentities&search=%E7%81%AB%E3%81%AE%E9%B3%A5%EF%BC%88%E9%BB%8E%E6%98%8E%E7%B7%A8%E3%83%BBCOM%E7%89%88%EF%BC%89&language=ja&type=item&limit=5",
+      "sha256": "da7eb8c05e340f44602e30aa2f91bbe2f458cec9173e0e69e7e3c84719bbe8e0",
+      "bytes": 115,
+      "fetchedAt": "2026-10-29T20:23:26+00:00"
+    }
+  },
+  "blockedUntil": 0,
+  "requestRetryAt": {},
+  "reusedResponses": {
+    "wikidata-Q193300": {
+      "sourceIndex": "/home/isinxnisi/.local/share/plunode-collection-worker-phase-b-20261020/runtime/.local/collection-issues/issue-25-manga23-20261019/request-cache/requests.json",
+      "sourceIndexSha256": "1d5a0cca13cea21eb6aefca4dc5a62dc48ffa90f337c26a0875f20fc0e2f7826",
+      "responseSha256": "9b54ad03be8a5948514d0efba7a5347ad14c2ea47644fc4c6634632d685fe09d",
+      "providerAttemptsAdded": 0
+    }
+  }
+}
