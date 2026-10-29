@@ -26,30 +26,27 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-10-29T20:06:03.513382+00:00",
-  "phase": "running",
+  "nextStartAt": "2026-10-29T19:11:55.424140+00:00",
+  "phase": "interval",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
     "reason": "interval",
-    "eligibleAt": "2026-10-29T20:06:03.513382+00:00",
+    "eligibleAt": "2026-10-29T19:11:55.424140+00:00",
     "windowEndAt": "2026-10-29T22:00:00+00:00"
   },
-  "activeAttempt": {
-    "requestId": "issue-48-dot-toriyama-three-20261027",
-    "startedAt": "2026-10-29T19:01:03.513390+00:00",
-    "limitAt": "2026-10-29T19:56:03.513382+00:00"
-  },
+  "activeAttempt": null,
   "lastAttempt": {
-    "requestId": "issue-70-dot-fujikof-doraemon-20261029",
-    "endedAt": "2026-10-29T07:52:55.746385+00:00"
+    "requestId": "issue-48-dot-toriyama-three-20261027",
+    "endedAt": "2026-10-29T19:01:55.424147+00:00"
   },
   "controlError": null,
   "requestsByPhase": {
     "blocked": 12,
-    "completed": 40,
-    "waiting-lock": 3,
-    "awaiting-recovery": 6
+    "completed": 41,
+    "waiting-lock": 1,
+    "awaiting-recovery": 6,
+    "waiting-control": 1
   },
   "issueIntake": {
     "collection-control/issue-sources/25.json": {
@@ -192,5 +189,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-10-29T19:01:12.357114+00:00"
+  "checkedAt": "2026-10-29T19:04:21.770284+00:00"
 }
