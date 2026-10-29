@@ -45,7 +45,7 @@
     "blocked": 12,
     "completed": 40,
     "awaiting-recovery": 4,
-    "retry-transport": 1
+    "waiting-control": 1
   },
   "issueIntake": {
     "collection-control/issue-sources/25.json": {
@@ -176,5 +176,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-10-29T06:16:44.942942+00:00"
+  "checkedAt": "2026-10-29T06:19:50.277280+00:00"
 }
