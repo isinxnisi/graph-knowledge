@@ -100,7 +100,11 @@ export default function MemberCapsules({ dataset, initialImport = "" }: { datase
       if(!identityUser){if(!signal.aborted&&new URL(location.href).searchParams.has("error"))setError(textMessages.loginFailed);return;}
       const profile={user:identityUser};
       const result = await memberRequest("/api/member/capsules", memberListSchema, { user: profile.user.id, signal });
-      for (const item of result.capsules) memberReaderCapsule(item, dataset);
+      // The list contains validated summaries, not complete documents. Only
+      // detail/revision responses can be passed to memberReaderCapsule.
+      for (const item of result.capsules) {
+        if (item.content.dataset !== dataset) throw new Error("Dataset mismatch");
+      }
       if (signal.aborted) return;
       setUser(profile.user); setItems(result.capsules);
       const id = new URL(location.href).searchParams.get("capsule");

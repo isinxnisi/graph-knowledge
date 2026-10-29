@@ -32,7 +32,7 @@ beforeEach(() => {
     if (path === "/api/member/status") return Response.json({ provider: "fixture" });
     if (!identity || ((options.headers as Record<string, string>)?.["X-Member-User"] && (options.headers as Record<string, string>)["X-Member-User"] !== identity)) return Response.json({ error: { code: "UNAUTHENTICATED" } }, { status: 401 });
     if (path === "/api/member/profile") return Response.json({ user: { id: identity, name: identity === owner ? "本人" : "別人", locale: "ja" } });
-    if (path === "/api/member/capsules") return Response.json({ capsules: identity === owner ? [capsule] : [] });
+    if (path === "/api/member/capsules") return Response.json({ capsules: identity === owner ? [{ ...capsule, hasDocument: false, published: false }] : [] });
     if (identity !== owner) return Response.json({ error: { code: "NOT_FOUND" } }, { status: 404 });
     if (path.endsWith("/share")) return Response.json({ share: null });
     return Response.json({ capsule });
@@ -48,6 +48,29 @@ async function edit() {
 async function visibility(value: "hidden" | "visible") {
   await act(async () => { Object.defineProperty(document, "visibilityState", { configurable: true, value }); document.dispatchEvent(new Event("visibilitychange")); });
 }
+describe("会員一覧のdocument省略レスポンス", () => {
+  it.each([1, 2] as const)("schemaVersion %s のsummaryを本文として解釈せず一覧表示する", async schemaVersion => {
+    history.replaceState(null, "", "/member#my-capsules");
+    const fallback = fetchMock.getMockImplementation() as (path: string, options?: RequestInit) => Promise<Response>;
+    fetchMock.mockImplementation((path: string, options: RequestInit = {}) => path === "/api/member/capsules"
+      ? Promise.resolve(Response.json({ capsules: [{ ...capsule, schemaVersion, hasDocument: schemaVersion === 2, published: true }] }))
+      : fallback(path, options));
+    render(<MemberCapsules dataset="demo" />);
+    await screen.findByRole("heading", { name: capsule.content.title });
+    expect(screen.queryByRole("alert")).toBeNull();
+    expect(fetchMock.mock.calls.some(call => call[0] === `/api/member/capsules/${capsule.id}`)).toBe(false);
+  });
+  it("別datasetのsummaryは一覧表示しない", async () => {
+    history.replaceState(null, "", "/member#my-capsules");
+    const fallback = fetchMock.getMockImplementation() as (path: string, options?: RequestInit) => Promise<Response>;
+    fetchMock.mockImplementation((path: string, options: RequestInit = {}) => path === "/api/member/capsules"
+      ? Promise.resolve(Response.json({ capsules: [{ ...capsule, hasDocument: false, published: false, content: { ...capsule.content, dataset: "public-kg" } }] }))
+      : fallback(path, options));
+    render(<MemberCapsules dataset="demo" />);
+    await screen.findByRole("alert");
+    expect(screen.queryByRole("heading", { name: capsule.content.title })).toBeNull();
+  });
+});
 describe("会員編集中のprivate表示と入力保持", () => {
   it("未保存の表示名は別タブ復帰で本人だけに戻り、別人には出ない", async () => {
     history.replaceState(null, "", "/member#account-settings");
