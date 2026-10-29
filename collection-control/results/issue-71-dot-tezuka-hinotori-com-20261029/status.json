@@ -62,11 +62,11 @@
   },
   "requestSha256": "ea73a9b911d60c0b9fb5a14b6ad52315da1901b59a69f86a14ca5b246ef55d48",
   "kind": "issue-prepare",
-  "phase": "waiting-control",
-  "generation": 1,
+  "phase": "waiting-lock",
+  "generation": 132,
   "attempts": 0,
   "workerId": "plunode-wsl",
   "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
-  "updatedAt": "2026-10-29T10:14:24+00:00",
-  "message": "Execution gate: outside-window"
+  "updatedAt": "2026-10-29T18:02:09+00:00",
+  "message": "共通ロック使用中。次回に再確認する。"
 }
