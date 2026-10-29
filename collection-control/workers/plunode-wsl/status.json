@@ -26,16 +26,20 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-10-29T19:11:55.424140+00:00",
-  "phase": "ready",
+  "nextStartAt": "2026-10-29T21:15:37.745477+00:00",
+  "phase": "running",
   "recoveredAttempt": null,
   "admission": {
-    "ready": true,
-    "reason": "ready",
-    "eligibleAt": null,
+    "ready": false,
+    "reason": "interval",
+    "eligibleAt": "2026-10-29T21:15:37.745477+00:00",
     "windowEndAt": "2026-10-29T22:00:00+00:00"
   },
-  "activeAttempt": null,
+  "activeAttempt": {
+    "requestId": "issue-16-adachi-three-20261025",
+    "startedAt": "2026-10-29T20:10:37.745481+00:00",
+    "limitAt": "2026-10-29T21:05:37.745477+00:00"
+  },
   "lastAttempt": {
     "requestId": "issue-48-dot-toriyama-three-20261027",
     "endedAt": "2026-10-29T19:01:55.424147+00:00"
@@ -188,5 +192,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-10-29T20:01:01.796500+00:00"
+  "checkedAt": "2026-10-29T20:10:45.055927+00:00"
 }
