@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "status": "prepared-candidates-not-accepted",
+  "preparationComplete": true,
+  "issueOrigin": {
+    "repository": "isinxnisi/graph-knowledge",
+    "issueNumber": 64,
+    "approvalId": "dot-oda-onepiece-20261029",
+    "permissionSha256": "fe44794647064a13708497eebc20abb802d5da1625b1041e8f3b929cfae7d5f9",
+    "issueBodySha256": "4b3054cf1d0b097e6038d6dd8cf8b9aa6ecbfd6204d8e1f98ef8ec5f544c7584"
+  },
+  "counts": {
+    "approvedWorks": 1,
+    "preparedWorks": 0,
+    "preparedPeople": 0,
+    "batches": 0,
+    "holds": 1,
+    "networkAttempts": 4,
+    "reusedWorks": 0,
+    "reusedPublishedClaims": 0,
+    "reusedHeldWorks": 0
+  },
+  "holds": [
+    {
+      "target": "ONE PIECE",
+      "person": "尾田栄一郎",
+      "reason": "No dated, exact first-volume Japanese manga publication"
+    }
+  ],
+  "reusedReviews": [],
+  "batchRequests": [],
+  "publicApply": false,
+  "preparationDirectory": "/home/isinxnisi/.local/share/plunode-collection-worker-phase-b-20261020/runtime/.local/collection-issues/issue-64-dot-oda-onepiece-20261029"
+}
