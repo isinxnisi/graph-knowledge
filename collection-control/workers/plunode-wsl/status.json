@@ -44,9 +44,8 @@
   "requestsByPhase": {
     "blocked": 12,
     "completed": 41,
-    "retry-wait": 1,
-    "awaiting-recovery": 6,
-    "waiting-control": 1
+    "waiting-control": 2,
+    "awaiting-recovery": 6
   },
   "issueIntake": {
     "collection-control/issue-sources/25.json": {
@@ -78,9 +77,8 @@
       "checkedAt": "2026-10-28T03:37:52+00:00"
     },
     "collection-control/issue-sources/49.json": {
-      "status": "held",
-      "reason": "<3>WSL (1073644 - ) ERROR: UtilAcceptVsock:273: accept4 failed 110\nfatal: unable to get password from user\n",
-      "checkedAt": "2026-10-29T11:19:30+00:00"
+      "status": "registered: issue-49-dot-hara-souten-20261027",
+      "checkedAt": "2026-10-29T11:23:55+00:00"
     },
     "collection-control/issue-sources/50.json": {
       "status": "registered: issue-50-dot-endo-tista-20261027",
@@ -135,9 +133,8 @@
       "checkedAt": "2026-10-29T01:17:27+00:00"
     },
     "collection-control/issue-sources/68.json": {
-      "status": "held",
-      "reason": "<3>WSL (1073836 - ) ERROR: UtilAcceptVsock:273: accept4 failed 110\nfatal: unable to get password from user\n",
-      "checkedAt": "2026-10-29T11:20:14+00:00"
+      "status": "registered: issue-68-dot-fujikoa-two-20261029",
+      "checkedAt": "2026-10-29T11:24:20+00:00"
     },
     "collection-control/issue-sources/69.json": {
       "status": "registered: issue-69-dot-ishinomori-three-20261029",
@@ -191,5 +188,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-10-29T11:22:55.991497+00:00"
+  "checkedAt": "2026-10-29T11:26:20.915512+00:00"
 }
