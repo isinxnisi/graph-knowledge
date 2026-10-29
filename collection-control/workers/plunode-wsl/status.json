@@ -26,31 +26,26 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-10-29T21:27:13.380994+00:00",
-  "phase": "running",
+  "nextStartAt": "2026-10-29T20:33:49.918749+00:00",
+  "phase": "interval",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
     "reason": "interval",
-    "eligibleAt": "2026-10-29T21:27:13.380994+00:00",
+    "eligibleAt": "2026-10-29T20:33:49.918749+00:00",
     "windowEndAt": "2026-10-29T22:00:00+00:00"
   },
-  "activeAttempt": {
-    "requestId": "issue-71-dot-tezuka-hinotori-com-20261029",
-    "startedAt": "2026-10-29T20:22:13.380996+00:00",
-    "limitAt": "2026-10-29T21:17:13.380994+00:00"
-  },
+  "activeAttempt": null,
   "lastAttempt": {
-    "requestId": "issue-16-adachi-three-20261025",
-    "endedAt": "2026-10-29T20:11:20.493890+00:00"
+    "requestId": "issue-71-dot-tezuka-hinotori-com-20261029",
+    "endedAt": "2026-10-29T20:23:49.918751+00:00"
   },
   "controlError": null,
   "requestsByPhase": {
     "blocked": 11,
     "waiting-control": 1,
-    "completed": 42,
-    "awaiting-recovery": 6,
-    "running": 1
+    "completed": 43,
+    "awaiting-recovery": 6
   },
   "issueIntake": {
     "collection-control/issue-sources/25.json": {
@@ -193,5 +188,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-10-29T20:22:57.276526+00:00"
+  "checkedAt": "2026-10-29T20:24:42.585789+00:00"
 }
