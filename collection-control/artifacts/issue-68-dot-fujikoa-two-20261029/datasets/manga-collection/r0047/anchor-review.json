@@ -1,0 +1,70 @@
+{
+  "schemaVersion": 1,
+  "status": "issue-authorized-candidates-only",
+  "issueOrigin": {
+    "repository": "isinxnisi/graph-knowledge",
+    "issueNumber": 68,
+    "approvalId": "dot-fujikoa-two-20261029",
+    "permissionSha256": "682d06f5fa86daae7f008ce59da0cb8a7bbd3ca0edd0138952be58cbb66c3fd3",
+    "issueBodySha256": "6f04b3abf676cc7d6ebe7f6c6bbf078602f1347db535fd80941a40cba062a71f"
+  },
+  "humanDecision": {
+    "actorType": "human",
+    "reviewer": "プロジェクト運営者（範囲を限定した委任）",
+    "decidedAt": "2026-10-25T13:07:49+09:00",
+    "statement": "2026-10-25 13:07:49 JST、運営者は既存Worker対応の現在の漫画テーマ候補からdotが対象を選び、毎回の個別提示なしでGitHubの収集許可と購読を登録し、候補収集・レビューまで進める限定委任を明示承認した。同日16:17:04 JSTに固定1日1バッチ上限を撤廃し、進捗・収集量・負荷による投入調整を許可した。2026-10-26 12:37:31 JST、過去の許可を上書きせず追加分をバッチ専用の新Issueに登録する方式への明示確認に本人が肯定リアクションし、親会話で現在の反応を検証済み。2026-10-27 13:37〜13:41 JST、運営者はdotが相談中として継続していた追加投入抑制を問い直し、データ収集を急いでいること、多少多く実行してほしいこと、1日何件という制約を付ける段階ではないことを明示した。元の限定委任の範囲で投入を再開し、日次件数上限を設けず実処理・待機量・負荷を見て少量ずつ補充する。個々の人物作品組・Role・ISBNを人間が審査済みとの記録ではない。今回dotが選んだのは既存テーマIssue #5と固定catalog d3e377d5255f4c487d608e73954dc40aeb0b3cba（blob f3d33d0e83b6299a7f443fa841232407ce67657c）のM05の藤子不二雄Ⓐ→忍者ハットリくん／笑ゥせぇるすまんの2組、および導入Worker対応組との共通部分だけ。Wikidata構造化情報とNDL作成書誌のみ、1作者2作品、親準備と全子収集合計30試行以内、同一要求2試行・3秒間隔・20秒・4MiB、保存成果とcache優先。既公開・既受入・既収集の同内容、同条件の根拠保留は再収集せず、不確かな同定・Role・刊行物scopeは保留。既設時間帯・直列排他・10分休憩を維持する。固定catalog全組・将来追加テーマへの無条件許可ではなく、正式受入・公開apply・追加取得元・予算拡大・コード/adapter/権限/認証/VPS/会員DB/時間帯/ロック変更は含まない。"
+  },
+  "people": [
+    {
+      "name": "藤子不二雄Ⓐ",
+      "catalogName": "藤子不二雄Ⓐ",
+      "wikidata": "Q7784543",
+      "identityNames": [
+        "藤子不二雄Ⓐ"
+      ],
+      "creditNames": [
+        "藤子不二雄Ⓐ"
+      ]
+    }
+  ],
+  "works": [
+    {
+      "name": "忍者ハットリくん",
+      "wikidata": "Q2318999",
+      "identityNames": [
+        "忍者ハットリくん"
+      ],
+      "isbn13": "9784122025318",
+      "ndlMainTitles": [
+        "忍者ハットリくん"
+      ],
+      "expectedVolume": [
+        "1"
+      ],
+      "expectedEdition": [],
+      "volumeLabel": "第1巻（NDL巻次 1）",
+      "editionLabel": null,
+      "identityNote": "Issueの名称とWikidataの完全一致・漫画型、NDL作成書誌の主書名・責任表示・巻次を照合。作品全体の担当へ外挿しない。",
+      "selectionReason": "承認済みIssue内の同作者経路の拡張。"
+    },
+    {
+      "name": "笑ゥせぇるすまん",
+      "wikidata": "Q11599582",
+      "identityNames": [
+        "笑ゥせぇるすまん"
+      ],
+      "isbn13": "9784122033665",
+      "ndlMainTitles": [
+        "笑ゥせぇるすまん"
+      ],
+      "expectedVolume": [
+        "1"
+      ],
+      "expectedEdition": [],
+      "volumeLabel": "第1巻（NDL巻次 1）",
+      "editionLabel": null,
+      "identityNote": "Issueの名称とWikidataの完全一致・漫画型、NDL作成書誌の主書名・責任表示・巻次を照合。作品全体の担当へ外挿しない。",
+      "selectionReason": "承認済みIssue内の同作者経路の拡張。"
+    }
+  ]
+}
