@@ -5,12 +5,12 @@
 
 ## 現在の状態と残る接続
 
-**本書の作成時点で、この変更は既存3200／HTTPS beta／本番VPSへ未反映。** クラウドでのソース・隔離PG・一時Webの検証を、既存環境の更新済みとは数えない。このクラウドには既存開発PCのrepo／runtime／共通Autopilotロック、対象VPSのSSH設定・鍵・sudo接続が提供されていない。Dockerを使う本番image／Compose検証も、このクラウドの標準コマンド環境からは未接続である。個々の実検証結果は公開時の検証記録へ追記する。
+**2026-10-29、既存3200／HTTPS betaへ反映。本番VPSは未反映。** [開発PCでの反映・復旧・実Google確認記録](../verification/CAPSULE_EDITOR_BETA_20261029.md)を参照。今回はユーザー指定によりbetaで区切り、本番への転送・切替を行わない。[先行クラウド検証](../verification/CAPSULE_EDITOR_20261029.md)と実環境での結果は区別する。
 
 | 残る実行箇所 | 必要な接続と行うこと |
 | --- | --- |
-| 既存開発PC | 既存repo・共通Autopilot hold・beta専用会員PG・private runtime設定。受入済み固定SHAをbuildし、011／012を明示適用して既存3200を更新する |
-| image検証環境 | Dockerと既存のbuild手順。固定SHAからlinux/amd64 Web／member-ops imageを作り、隔離PGで移行と復旧を検証する |
+| 既存開発PC | 3200／HTTPS beta反映、011／012明示適用、backup別DB復元・再実行を確認済み。固定SHA／build IDは反映記録を参照 |
+| image検証環境 | 基点のlinux/amd64 Web／member-ops build・隔離PG検証済み。betaでの一覧修正を含む最終Web imageの再build・固定は次回本番作業で行う |
 | 既存VPS | 通常のdevelop SSHと管理者sudo。固定資材を転送・照合し、既存ComposeのWeb／member-opsだけを切り替える |
 
 接続情報・秘密鍵・sudoパスワードをGitやチャットへ載せない。SSHホスト鍵検証やsudo設定を変更せず、利用可能な既存管理端末から実行する。接続できない段階では、固定資材と本書を引き継いで未反映を明記する。
