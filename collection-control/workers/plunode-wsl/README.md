@@ -1,6 +1,6 @@
 # CollectionWorkerの実行制御
 
-確認: 2026-10-29 09:27:51 JST。
+確認: 2026-10-29 09:33:03 JST。
 
 反映済みcontrolRevision: 8／最後の操作: pub-13abfb93-ba2d-44f7-a56b-352aa7ab0ab0-resume。
 
@@ -97,6 +97,10 @@ Issue確認結果:
   "collection-control/issue-sources/65.json": {
     "status": "registered: issue-65-dot-inoue-three-20261029",
     "checkedAt": "2026-10-29T00:09:25+00:00"
+  },
+  "collection-control/issue-sources/66.json": {
+    "status": "registered: issue-66-dot-togashi-two-20261029",
+    "checkedAt": "2026-10-29T00:31:32+00:00"
   }
 }
 ```
