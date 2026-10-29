@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "reviewId": "issue-65-dot-inoue-three-20261029-r0001-3cd6a6374d327ea4-review-abba49d09039115e",
+  "inputSha256": "abba49d09039115ea7c7fab6c7df38d44393ac76c171e3e4e18e065c9a651f08",
+  "artifacts": {
+    "context.json": "e051fb02670943b3a627e67355a201867c8c313fc40bb5ae71406b3790215d46",
+    "review.json": "05ab16b1157e82d163b25338f526f3d29884ab22aad9d137e82bc82f3b5a350a",
+    "proposed-records.json": "485eefc532df190dcbf3df1523e46cf0a7f022cadaa592c3faec5b1187910be2",
+    "identity-only-records.json": "1fc314e4a47717bce195b39fe7f1e66bd31f6af892fca4a9420a653eab927a37",
+    "exploration-paths.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+    "decision-request.json": "032590f787a5d59d2a762095389acdbbbb0dda7ecdd105ea4b9eb13c0dfb4993",
+    "README.md": "14a944e330ac3193174f0ab29a761405fcf5a754b7b3581cfe1f863cc0329578"
+  },
+  "authority": "pending-human-review-only"
+}

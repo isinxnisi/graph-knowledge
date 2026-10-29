@@ -1,0 +1,186 @@
+{
+  "policy": {
+    "maxAttempts": 30,
+    "attemptsPerRequest": 2,
+    "minIntervalSeconds": 3,
+    "timeoutSeconds": 20,
+    "maxBytes": 4194304
+  },
+  "attempts": [
+    {
+      "key": "lookup-1a87cabe5a4fc6f204b30c57",
+      "url": "https://www.wikidata.org/w/api.php?format=json&action=wbgetentities&sites=jawiki&titles=%E4%BA%95%E4%B8%8A%E9%9B%84%E5%BD%A6%7CSLAM+DUNK%7C%E3%83%90%E3%82%AC%E3%83%9C%E3%83%B3%E3%83%89%7C%E3%83%AA%E3%82%A2%E3%83%AB&props=labels%7Caliases%7Cclaims&languages=ja%7Cen",
+      "time": 1793232832.4721282,
+      "status": "succeeded",
+      "diagnostic": {
+        "category": "success",
+        "phase": "response-complete",
+        "httpStatus": 200,
+        "elapsedSeconds": 6.665959,
+        "finishedAt": "2026-10-29T00:13:59+00:00"
+      }
+    },
+    {
+      "key": "wikidata-Q459911",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q459911.json",
+      "time": 1793232839.1563694,
+      "status": "succeeded",
+      "diagnostic": {
+        "category": "success",
+        "phase": "response-complete",
+        "httpStatus": 200,
+        "elapsedSeconds": 2.003837,
+        "finishedAt": "2026-10-29T00:14:01+00:00"
+      }
+    },
+    {
+      "key": "wikidata-Q714760",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q714760.json",
+      "time": 1793232842.1568875,
+      "status": "succeeded",
+      "diagnostic": {
+        "category": "success",
+        "phase": "response-complete",
+        "httpStatus": 200,
+        "elapsedSeconds": 1.298987,
+        "finishedAt": "2026-10-29T00:14:03+00:00"
+      }
+    },
+    {
+      "key": "publication-7169ba21e40c790cb69c0f64",
+      "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&onlyBib=true&maximumRecords=100&query=title%3D%22SLAM+DUNK%22+AND+creator%3D%22%E4%BA%95%E4%B8%8A%E9%9B%84%E5%BD%A6%22+AND+dpid%3Diss-ndl-opac+sortBy+issued_date%2Fsort.ascending",
+      "time": 1793232845.157344,
+      "status": "succeeded",
+      "diagnostic": {
+        "category": "success",
+        "phase": "response-complete",
+        "httpStatus": 200,
+        "elapsedSeconds": 4.150705,
+        "finishedAt": "2026-10-29T00:14:09+00:00"
+      }
+    },
+    {
+      "key": "wikidata-Q1244799",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q1244799.json",
+      "time": 1793232849.4670215,
+      "status": "succeeded",
+      "diagnostic": {
+        "category": "success",
+        "phase": "response-complete",
+        "httpStatus": 200,
+        "elapsedSeconds": 0.83894,
+        "finishedAt": "2026-10-29T00:14:10+00:00"
+      }
+    },
+    {
+      "key": "publication-35f7f0a473c095c5aa5aa7fd",
+      "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&onlyBib=true&maximumRecords=100&query=title%3D%22%E3%83%90%E3%82%AC%E3%83%9C%E3%83%B3%E3%83%89%22+AND+creator%3D%22%E4%BA%95%E4%B8%8A%E9%9B%84%E5%BD%A6%22+AND+dpid%3Diss-ndl-opac+sortBy+issued_date%2Fsort.ascending",
+      "time": 1793232852.4693851,
+      "status": "succeeded",
+      "diagnostic": {
+        "category": "success",
+        "phase": "response-complete",
+        "httpStatus": 200,
+        "elapsedSeconds": 5.241295,
+        "finishedAt": "2026-10-29T00:14:17+00:00"
+      }
+    },
+    {
+      "key": "ndl-9784063286199",
+      "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&maximumRecords=5&query=isbn%3D%229784063286199%22+AND+dpid%3Diss-ndl-opac",
+      "time": 1793232857.78418,
+      "status": "succeeded",
+      "diagnostic": {
+        "category": "success",
+        "phase": "response-complete",
+        "httpStatus": 200,
+        "elapsedSeconds": 2.268544,
+        "finishedAt": "2026-10-29T00:14:20+00:00"
+      }
+    },
+    {
+      "key": "lookup-e1f6972b88435b0f1d942654",
+      "url": "https://www.wikidata.org/w/api.php?format=json&action=wbsearchentities&search=%E3%83%AA%E3%82%A2%E3%83%AB&language=ja&type=item&limit=5",
+      "time": 1793232860.785125,
+      "status": "succeeded",
+      "diagnostic": {
+        "category": "success",
+        "phase": "response-complete",
+        "httpStatus": 200,
+        "elapsedSeconds": 0.894326,
+        "finishedAt": "2026-10-29T00:14:21+00:00"
+      }
+    },
+    {
+      "key": "lookup-f64bc8908fd93719ea481fb0",
+      "url": "https://www.wikidata.org/w/api.php?format=json&action=wbgetentities&ids=Q1058876%7CQ104026%7CQ171974%7CQ732740%7CQ7322128&props=labels%7Caliases%7Cclaims&languages=ja%7Cen",
+      "time": 1793232863.7871268,
+      "status": "succeeded",
+      "diagnostic": {
+        "category": "success",
+        "phase": "response-complete",
+        "httpStatus": 200,
+        "elapsedSeconds": 1.939828,
+        "finishedAt": "2026-10-29T00:14:25+00:00"
+      }
+    }
+  ],
+  "responses": {
+    "lookup-1a87cabe5a4fc6f204b30c57": {
+      "url": "https://www.wikidata.org/w/api.php?format=json&action=wbgetentities&sites=jawiki&titles=%E4%BA%95%E4%B8%8A%E9%9B%84%E5%BD%A6%7CSLAM+DUNK%7C%E3%83%90%E3%82%AC%E3%83%9C%E3%83%B3%E3%83%89%7C%E3%83%AA%E3%82%A2%E3%83%AB&props=labels%7Caliases%7Cclaims&languages=ja%7Cen",
+      "sha256": "e2e2f8e7abdc55f4c0ec7fd98c8ff25c5e23c49865fc69e06c9b88a633bb88c0",
+      "bytes": 161708,
+      "fetchedAt": "2026-10-29T00:13:59+00:00"
+    },
+    "wikidata-Q459911": {
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q459911.json",
+      "sha256": "cf3bec031d9d5f03a16c6023f1c429f32fc8c69e674128c0fcebcc775caaaf65",
+      "bytes": 105725,
+      "fetchedAt": "2026-10-29T00:14:01+00:00"
+    },
+    "wikidata-Q714760": {
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q714760.json",
+      "sha256": "2b48953d6f0acafaa6b1e2bec647729a83de29ae259a6caf1eaefbbf9181c05d",
+      "bytes": 57392,
+      "fetchedAt": "2026-10-29T00:14:03+00:00"
+    },
+    "publication-7169ba21e40c790cb69c0f64": {
+      "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&onlyBib=true&maximumRecords=100&query=title%3D%22SLAM+DUNK%22+AND+creator%3D%22%E4%BA%95%E4%B8%8A%E9%9B%84%E5%BD%A6%22+AND+dpid%3Diss-ndl-opac+sortBy+issued_date%2Fsort.ascending",
+      "sha256": "55932aa95a688a4f60a9a57024584b80f9a4803316d1730f52bc939a68504e9d",
+      "bytes": 571502,
+      "fetchedAt": "2026-10-29T00:14:09+00:00"
+    },
+    "wikidata-Q1244799": {
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q1244799.json",
+      "sha256": "14d512b435ae7e0a62d86a6a0a0251640742d12126f6c16c3f3f17cc435b096c",
+      "bytes": 32139,
+      "fetchedAt": "2026-10-29T00:14:10+00:00"
+    },
+    "publication-35f7f0a473c095c5aa5aa7fd": {
+      "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&onlyBib=true&maximumRecords=100&query=title%3D%22%E3%83%90%E3%82%AC%E3%83%9C%E3%83%B3%E3%83%89%22+AND+creator%3D%22%E4%BA%95%E4%B8%8A%E9%9B%84%E5%BD%A6%22+AND+dpid%3Diss-ndl-opac+sortBy+issued_date%2Fsort.ascending",
+      "sha256": "7021f0a8559b52e87d3928bcc92251bf0939f7bfadaeadc4890af0def2533d7e",
+      "bytes": 281122,
+      "fetchedAt": "2026-10-29T00:14:17+00:00"
+    },
+    "ndl-9784063286199": {
+      "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&maximumRecords=5&query=isbn%3D%229784063286199%22+AND+dpid%3Diss-ndl-opac",
+      "sha256": "657153b76d5685d63cad467879e31378f51ae39fb3ae13144623b91de1221747",
+      "bytes": 40542,
+      "fetchedAt": "2026-10-29T00:14:20+00:00"
+    },
+    "lookup-e1f6972b88435b0f1d942654": {
+      "url": "https://www.wikidata.org/w/api.php?format=json&action=wbsearchentities&search=%E3%83%AA%E3%82%A2%E3%83%AB&language=ja&type=item&limit=5",
+      "sha256": "4bb840d9175786bad7372181ed38331394599f0deb85b540985a432710bf8fa4",
+      "bytes": 2424,
+      "fetchedAt": "2026-10-29T00:14:21+00:00"
+    },
+    "lookup-f64bc8908fd93719ea481fb0": {
+      "url": "https://www.wikidata.org/w/api.php?format=json&action=wbgetentities&ids=Q1058876%7CQ104026%7CQ171974%7CQ732740%7CQ7322128&props=labels%7Caliases%7Cclaims&languages=ja%7Cen",
+      "sha256": "db6d59ff924f0fa6d97c2524deed52b1308a39fb447efc7916cf5d633c195dbd",
+      "bytes": 267999,
+      "fetchedAt": "2026-10-29T00:14:25+00:00"
+    }
+  },
+  "blockedUntil": 0,
+  "requestRetryAt": {}
+}

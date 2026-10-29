@@ -1,0 +1,104 @@
+{
+  "status": "pending-human-acceptance",
+  "formalAcceptance": "pending",
+  "notForPublicApply": true,
+  "records": {
+    "entities": [
+      {
+        "id": "7e8093fd-fb5d-4e17-84ac-f74f1a02b801",
+        "kind": "person",
+        "name": "井上雄彦",
+        "description": null,
+        "aliases": [
+          "Takehiko Inoue"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q459911"
+          }
+        ],
+        "createdAt": "2026-10-29T00:13:52Z",
+        "updatedAt": "2026-10-29T00:13:52Z",
+        "event": null
+      },
+      {
+        "id": "acb91b7e-a02e-47cd-bf59-c51d6a4ee8ff",
+        "kind": "work",
+        "name": "バガボンド",
+        "description": null,
+        "aliases": [
+          "Vagabond"
+        ],
+        "externalIds": [
+          {
+            "namespace": "wikidata",
+            "value": "Q1244799"
+          }
+        ],
+        "createdAt": "2026-10-29T00:13:52Z",
+        "updatedAt": "2026-10-29T00:13:52Z",
+        "event": null
+      }
+    ],
+    "claims": [
+      {
+        "id": "26d3b29d-3769-4f0f-b785-d6c79efad840",
+        "subjectId": "7e8093fd-fb5d-4e17-84ac-f74f1a02b801",
+        "objectId": "acb91b7e-a02e-47cd-bf59-c51d6a4ee8ff",
+        "predicate": "CONTRIBUTED_TO",
+        "polarity": "affirmed",
+        "period": {
+          "from": null,
+          "to": null
+        },
+        "visibility": "hidden",
+        "createdAt": "2026-10-29T00:13:52Z",
+        "updatedAt": "2026-10-29T00:13:52Z",
+        "contribution": {
+          "roleId": "AUTHORSHIP",
+          "scope": {
+            "kind": "publication",
+            "isbn13": "9784063286199",
+            "volumeLabel": "第1巻（NDL巻次 1）",
+            "editionLabel": null,
+            "language": "ja"
+          }
+        },
+        "organizationParticipation": null,
+        "eventParticipation": null
+      }
+    ],
+    "sources": [
+      {
+        "id": "dfc73829-4337-4174-b5fc-3a2e60cbf104",
+        "kind": "web",
+        "title": "NDLサーチ: バガボンド. 1",
+        "authors": [],
+        "publisher": "国立国会図書館",
+        "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I000002766983",
+        "publishedAt": null,
+        "edition": null,
+        "note": "国立国会図書館作成書誌（iss-ndl-opac）の責任表示。メタデータ CC BY 4.0: https://creativecommons.org/licenses/by/4.0/ ; 提供元条件 https://ndlsearch.ndl.go.jp/help/api/provider 。本文・画像・第三者所蔵情報は含まない。",
+        "isDemo": false
+      }
+    ],
+    "citations": [
+      {
+        "id": "574473cc-a32c-4aa1-963c-5397bc24ac05",
+        "claimId": "26d3b29d-3769-4f0f-b785-d6c79efad840",
+        "sourceId": "dfc73829-4337-4174-b5fc-3a2e60cbf104",
+        "locator": "dc:creator（責任表示） / ISBN 9784063286199",
+        "note": "原表記（ja）: 井上雄彦 著。指定刊行物の責任表示で確認された担当。全巻・全版・全期間への外挿、原作から別Roleへの変換はしない。同一資料由来の記録を独立した根拠と数えない。",
+        "accessedAt": "2026-10-29",
+        "stance": "support",
+        "roleEvidence": {
+          "originalText": "井上雄彦 著",
+          "language": "ja"
+        },
+        "positionEvidence": null,
+        "eventParticipationEvidence": null
+      }
+    ]
+  }
+}

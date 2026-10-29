@@ -1,0 +1,245 @@
+{
+  "id": "Q1244799",
+  "lastrevid": 2561702717,
+  "labels": {
+    "de": {
+      "language": "de",
+      "value": "Vagabond"
+    },
+    "ca": {
+      "language": "ca",
+      "value": "Vagabond"
+    },
+    "en": {
+      "language": "en",
+      "value": "Vagabond"
+    },
+    "es": {
+      "language": "es",
+      "value": "Vagabond"
+    },
+    "fi": {
+      "language": "fi",
+      "value": "Vagabond"
+    },
+    "fr": {
+      "language": "fr",
+      "value": "Vagabond"
+    },
+    "id": {
+      "language": "id",
+      "value": "Vagabond"
+    },
+    "it": {
+      "language": "it",
+      "value": "Vagabond"
+    },
+    "ja": {
+      "language": "ja",
+      "value": "バガボンド"
+    },
+    "pl": {
+      "language": "pl",
+      "value": "Vagabond"
+    },
+    "pt": {
+      "language": "pt",
+      "value": "Vagabond"
+    },
+    "th": {
+      "language": "th",
+      "value": "วากาบอนด์"
+    },
+    "tl": {
+      "language": "tl",
+      "value": "Vagabond"
+    },
+    "vi": {
+      "language": "vi",
+      "value": "Vagabond"
+    },
+    "zh": {
+      "language": "zh",
+      "value": "浪人劍客"
+    },
+    "nl": {
+      "language": "nl",
+      "value": "Vagabond"
+    },
+    "fa": {
+      "language": "fa",
+      "value": "واگاباند"
+    },
+    "ko": {
+      "language": "ko",
+      "value": "배가본드"
+    },
+    "ar": {
+      "language": "ar",
+      "value": "فاجابوند"
+    },
+    "ru": {
+      "language": "ru",
+      "value": "Vagabond"
+    },
+    "sv": {
+      "language": "sv",
+      "value": "Vagabond"
+    },
+    "cs": {
+      "language": "cs",
+      "value": "Vagabond"
+    },
+    "zh-hant": {
+      "language": "zh-hant",
+      "value": "浪人劍客"
+    },
+    "kk": {
+      "language": "kk",
+      "value": "Кезбе"
+    },
+    "uk": {
+      "language": "uk",
+      "value": "Vagabond"
+    },
+    "tr": {
+      "language": "tr",
+      "value": "Vagabond (manga)"
+    },
+    "et": {
+      "language": "et",
+      "value": "Vagabond"
+    },
+    "gl": {
+      "language": "gl",
+      "value": "Vagabond (manga)"
+    },
+    "be-tarask": {
+      "language": "be-tarask",
+      "value": "Валацуга (манга)"
+    },
+    "lt": {
+      "language": "lt",
+      "value": "Vagabond"
+    },
+    "he": {
+      "language": "he",
+      "value": "ווגאבונד"
+    },
+    "mk": {
+      "language": "mk",
+      "value": "Vagabond"
+    },
+    "sr": {
+      "language": "sr",
+      "value": "Вагабонд (манга)"
+    },
+    "ur": {
+      "language": "ur",
+      "value": "ویگا بونڈ (مانگا)"
+    }
+  },
+  "aliases": {
+    "zh": [
+      {
+        "language": "zh",
+        "value": "浪客行"
+      }
+    ],
+    "zh-hant": [
+      {
+        "language": "zh-hant",
+        "value": "浪客行"
+      },
+      {
+        "language": "zh-hant",
+        "value": "浪人剑客"
+      }
+    ],
+    "ru": [
+      {
+        "language": "ru",
+        "value": "Vagabond (манга)"
+      },
+      {
+        "language": "ru",
+        "value": "Вагабондо"
+      },
+      {
+        "language": "ru",
+        "value": "Бродяга (манга)"
+      }
+    ]
+  },
+  "claims": {
+    "P31": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P31",
+          "hash": "549c072d6be8a6a43f999d1d0e82640b16c4260e",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 21198342,
+              "id": "Q21198342"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q1244799$8703C1EF-56E5-46EE-94CE-08B7C0E67E09",
+        "rank": "normal"
+      }
+    ],
+    "P50": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P50",
+          "hash": "0cfc483a5b8c3441c62e8919daa87dc85f5d3877",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 459911,
+              "id": "Q459911"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q1244799$C9D887BA-9F7A-488B-AFF0-FBC2808B244C",
+        "rank": "normal",
+        "references": [
+          {
+            "hash": "d4bd87b862b12d99d26e86472d44f26858dee639",
+            "snaks": {
+              "P143": [
+                {
+                  "snaktype": "value",
+                  "property": "P143",
+                  "hash": "f30cbd35620c4ea6d0633aaf0210a8916130469b",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 8447,
+                      "id": "Q8447"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P143"
+            ]
+          }
+        ]
+      }
+    ],
+    "P110": []
+  }
+}

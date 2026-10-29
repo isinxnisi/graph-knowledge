@@ -1,0 +1,113 @@
+{
+  "schemaVersion": 1,
+  "decisionId": "issue-65-dot-inoue-three-20261029-batch-01-normal",
+  "status": "draft-not-approved",
+  "humanDecision": {
+    "actorType": "human",
+    "reviewer": null,
+    "decidedAt": null,
+    "statement": null
+  },
+  "approvalScope": "formal-record-acceptance-and-release-preparation-only",
+  "applyAuthorized": {
+    "local": false,
+    "beta": false,
+    "vps": false
+  },
+  "review": {
+    "file": "datasets/manga-collection/workflow-reviews/issue-65-dot-inoue-three-20261029-r0001-3cd6a6374d327ea4-review-abba49d09039115e/review-manifest.json",
+    "sha256": "96e87fc9f5241666aa1c367f5c63eebaa3bacc668b0e7a237ed1e90eb5328967"
+  },
+  "referenceArtifacts": [
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-65-dot-inoue-three-20261029-r0001-3cd6a6374d327ea4-review-abba49d09039115e/README.md",
+      "sha256": "14a944e330ac3193174f0ab29a761405fcf5a754b7b3581cfe1f863cc0329578"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-65-dot-inoue-three-20261029-r0001-3cd6a6374d327ea4-review-abba49d09039115e/context.json",
+      "sha256": "e051fb02670943b3a627e67355a201867c8c313fc40bb5ae71406b3790215d46"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-65-dot-inoue-three-20261029-r0001-3cd6a6374d327ea4-review-abba49d09039115e/decision-request.json",
+      "sha256": "032590f787a5d59d2a762095389acdbbbb0dda7ecdd105ea4b9eb13c0dfb4993"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-65-dot-inoue-three-20261029-r0001-3cd6a6374d327ea4-review-abba49d09039115e/exploration-paths.json",
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-65-dot-inoue-three-20261029-r0001-3cd6a6374d327ea4-review-abba49d09039115e/identity-only-records.json",
+      "sha256": "1fc314e4a47717bce195b39fe7f1e66bd31f6af892fca4a9420a653eab927a37"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-65-dot-inoue-three-20261029-r0001-3cd6a6374d327ea4-review-abba49d09039115e/proposed-records.json",
+      "sha256": "485eefc532df190dcbf3df1523e46cf0a7f022cadaa592c3faec5b1187910be2"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-65-dot-inoue-three-20261029-r0001-3cd6a6374d327ea4-review-abba49d09039115e/review-manifest.json",
+      "sha256": "96e87fc9f5241666aa1c367f5c63eebaa3bacc668b0e7a237ed1e90eb5328967"
+    },
+    {
+      "file": "datasets/manga-collection/workflow-reviews/issue-65-dot-inoue-three-20261029-r0001-3cd6a6374d327ea4-review-abba49d09039115e/review.json",
+      "sha256": "05ab16b1157e82d163b25338f526f3d29884ab22aad9d137e82bc82f3b5a350a"
+    }
+  ],
+  "acceptedRecordIds": {
+    "entities": [
+      "7e8093fd-fb5d-4e17-84ac-f74f1a02b801",
+      "acb91b7e-a02e-47cd-bf59-c51d6a4ee8ff"
+    ],
+    "claims": [
+      "26d3b29d-3769-4f0f-b785-d6c79efad840"
+    ],
+    "sources": [
+      "dfc73829-4337-4174-b5fc-3a2e60cbf104"
+    ],
+    "citations": [
+      "574473cc-a32c-4aa1-963c-5397bc24ac05"
+    ]
+  },
+  "recordSha256": {
+    "entities": {
+      "7e8093fd-fb5d-4e17-84ac-f74f1a02b801": "cc9499280a8190ac2f0ac30de15c9ff7bde5c7dc8d065f2c4069b1ef64a6406a",
+      "acb91b7e-a02e-47cd-bf59-c51d6a4ee8ff": "64de037450020986dc1516336c37152e487483e8c2ef82b6a7cfe0b5b9f72274"
+    },
+    "claims": {
+      "26d3b29d-3769-4f0f-b785-d6c79efad840": "b71e192906b1384ceeaf012ff5906cba40eec407bb60d4c16d03429705228a3b"
+    },
+    "sources": {
+      "dfc73829-4337-4174-b5fc-3a2e60cbf104": "bfbcdc2b084559af8efa86eb55b81c1f64e431ddd25e7ffa0e5d8fa38c36f4ae"
+    },
+    "citations": {
+      "574473cc-a32c-4aa1-963c-5397bc24ac05": "197794d4866cfb27629f8b69a0aead109043836991d92f7fea2bd85cddb9165c"
+    }
+  },
+  "scopeByClaim": [
+    {
+      "id": "26d3b29d-3769-4f0f-b785-d6c79efad840",
+      "subjectId": "7e8093fd-fb5d-4e17-84ac-f74f1a02b801",
+      "objectId": "acb91b7e-a02e-47cd-bf59-c51d6a4ee8ff",
+      "predicate": "CONTRIBUTED_TO",
+      "polarity": "affirmed",
+      "period": {
+        "from": null,
+        "to": null
+      },
+      "contribution": {
+        "roleId": "AUTHORSHIP",
+        "scope": {
+          "kind": "publication",
+          "isbn13": "9784063286199",
+          "volumeLabel": "第1巻（NDL巻次 1）",
+          "editionLabel": null,
+          "language": "ja"
+        }
+      },
+      "organizationParticipation": null,
+      "eventParticipation": null
+    }
+  ],
+  "baseRelease": "20261014-credits-001",
+  "baseRevision": "82b01515-594c-48ca-b4b6-515eefac83ca",
+  "releaseId": "manga-issue-65-dot-inoue-three-20261029-batch-01-normal"
+}

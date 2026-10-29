@@ -1,0 +1,624 @@
+{
+  "id": "Q459911",
+  "lastrevid": 2546559545,
+  "labels": {
+    "pt": {
+      "language": "pt",
+      "value": "Takehiko Inoue"
+    },
+    "zh-hans": {
+      "language": "zh-hans",
+      "value": "井上雄彦"
+    },
+    "zh-hant": {
+      "language": "zh-hant",
+      "value": "井上雄彥"
+    },
+    "zh-hk": {
+      "language": "zh-hk",
+      "value": "井上雄彥"
+    },
+    "zh-cn": {
+      "language": "zh-cn",
+      "value": "井上雄彦"
+    },
+    "zh-sg": {
+      "language": "zh-sg",
+      "value": "井上雄彦"
+    },
+    "zh-tw": {
+      "language": "zh-tw",
+      "value": "井上雄彥"
+    },
+    "ko": {
+      "language": "ko",
+      "value": "이노우에 다케히코"
+    },
+    "fr": {
+      "language": "fr",
+      "value": "Takehiko Inoue"
+    },
+    "es": {
+      "language": "es",
+      "value": "Takehiko Inoue"
+    },
+    "en": {
+      "language": "en",
+      "value": "Takehiko Inoue"
+    },
+    "th": {
+      "language": "th",
+      "value": "ทะเกะฮิโกะ อิโนะอุเอะ"
+    },
+    "ca": {
+      "language": "ca",
+      "value": "Takehiko Inoue"
+    },
+    "ms": {
+      "language": "ms",
+      "value": "Takehiko Inoue"
+    },
+    "it": {
+      "language": "it",
+      "value": "Takehiko Inoue"
+    },
+    "id": {
+      "language": "id",
+      "value": "Takehiko Inoue"
+    },
+    "de": {
+      "language": "de",
+      "value": "Takehiko Inoue"
+    },
+    "ja": {
+      "language": "ja",
+      "value": "井上雄彦"
+    },
+    "vi": {
+      "language": "vi",
+      "value": "Inoue Takehiko"
+    },
+    "lt": {
+      "language": "lt",
+      "value": "Takehiko Inoue"
+    },
+    "zh": {
+      "language": "zh",
+      "value": "井上雄彥"
+    },
+    "nl": {
+      "language": "nl",
+      "value": "Takehiko Inoue"
+    },
+    "ar": {
+      "language": "ar",
+      "value": "تاكيهيكو إينوي"
+    },
+    "ru": {
+      "language": "ru",
+      "value": "Такэхико Иноэ"
+    },
+    "ckb": {
+      "language": "ckb",
+      "value": "تاکیھیکۆ ئینۆی"
+    },
+    "nan": {
+      "language": "nan",
+      "value": "Inoue Takehiko"
+    },
+    "cs": {
+      "language": "cs",
+      "value": "Takehiko Inoue"
+    },
+    "pt-br": {
+      "language": "pt-br",
+      "value": "Takehiko Inoue"
+    },
+    "ast": {
+      "language": "ast",
+      "value": "Takehiko Inoue"
+    },
+    "sv": {
+      "language": "sv",
+      "value": "Takehiko Inoue"
+    },
+    "el": {
+      "language": "el",
+      "value": "Τακέχικο Ινούε"
+    },
+    "sq": {
+      "language": "sq",
+      "value": "Takehiko Inoue"
+    },
+    "arz": {
+      "language": "arz",
+      "value": "تاكيهيكو اينوى"
+    },
+    "en-ca": {
+      "language": "en-ca",
+      "value": "Takehiko Inoue"
+    },
+    "en-gb": {
+      "language": "en-gb",
+      "value": "Takehiko Inoue"
+    },
+    "et": {
+      "language": "et",
+      "value": "Takehiko Inoue"
+    },
+    "eu": {
+      "language": "eu",
+      "value": "Takehiko Inoue"
+    },
+    "ga": {
+      "language": "ga",
+      "value": "Takehiko Inoue"
+    },
+    "gl": {
+      "language": "gl",
+      "value": "Takehiko Inoue"
+    },
+    "ro": {
+      "language": "ro",
+      "value": "Takehiko Inoue"
+    },
+    "hu": {
+      "language": "hu",
+      "value": "Inoue Takehiko"
+    },
+    "fa": {
+      "language": "fa",
+      "value": "تاکه‌هیکو اینواوئه"
+    },
+    "tr": {
+      "language": "tr",
+      "value": "Takehiko Inoue"
+    },
+    "ka": {
+      "language": "ka",
+      "value": "ტაკეჰიკო ინოუე"
+    },
+    "sr": {
+      "language": "sr",
+      "value": "Такехико Иноуе"
+    },
+    "uk": {
+      "language": "uk",
+      "value": "Іноуе Такехіко"
+    },
+    "he": {
+      "language": "he",
+      "value": "טקהיקו אינוי"
+    },
+    "pl": {
+      "language": "pl",
+      "value": "Takehiko Inoue"
+    },
+    "ary": {
+      "language": "ary",
+      "value": "طاكيهيكو إنووي"
+    },
+    "ur": {
+      "language": "ur",
+      "value": "تاکےہیکو اینوئے"
+    }
+  },
+  "aliases": {
+    "ko": [
+      {
+        "language": "ko",
+        "value": "이노우에 타케히코"
+      }
+    ],
+    "fr": [
+      {
+        "language": "fr",
+        "value": "Inoue Takehiko"
+      }
+    ],
+    "th": [
+      {
+        "language": "th",
+        "value": "อิโนะอุเอะ ทะเกะฮิโกะ"
+      },
+      {
+        "language": "th",
+        "value": "ทาเคฮิโกะ อิโนอุเอะ"
+      }
+    ],
+    "it": [
+      {
+        "language": "it",
+        "value": "Inoue Takehiko"
+      }
+    ],
+    "de": [
+      {
+        "language": "de",
+        "value": "Inoue Takehiko"
+      }
+    ],
+    "ja": [
+      {
+        "language": "ja",
+        "value": "成合雄彦"
+      },
+      {
+        "language": "ja",
+        "value": "いのうえ たけひこ"
+      }
+    ],
+    "ru": [
+      {
+        "language": "ru",
+        "value": "Иноэ, Такэхико"
+      }
+    ],
+    "en": [
+      {
+        "language": "en",
+        "value": "Inoue Takehiko"
+      },
+      {
+        "language": "en",
+        "value": "Takehiko Nariai"
+      },
+      {
+        "language": "en",
+        "value": "Nariai Takehiko"
+      }
+    ],
+    "zh": [
+      {
+        "language": "zh",
+        "value": "井上雄彦"
+      },
+      {
+        "language": "zh",
+        "value": "成合雄彦"
+      }
+    ],
+    "el": [
+      {
+        "language": "el",
+        "value": "Ινούε Τακέχικο"
+      },
+      {
+        "language": "el",
+        "value": "Ναριάι Τακέχικο"
+      }
+    ],
+    "ast": [
+      {
+        "language": "ast",
+        "value": "Inoue Takehiko"
+      }
+    ],
+    "ca": [
+      {
+        "language": "ca",
+        "value": "Inoue Takehiko"
+      }
+    ],
+    "cs": [
+      {
+        "language": "cs",
+        "value": "Inoue Takehiko"
+      },
+      {
+        "language": "cs",
+        "value": "雄彦 井上"
+      },
+      {
+        "language": "cs",
+        "value": "タケヒコ イノウエ"
+      }
+    ],
+    "en-ca": [
+      {
+        "language": "en-ca",
+        "value": "Inoue Takehiko"
+      }
+    ],
+    "en-gb": [
+      {
+        "language": "en-gb",
+        "value": "Inoue Takehiko"
+      }
+    ],
+    "es": [
+      {
+        "language": "es",
+        "value": "Inoue Takehiko"
+      }
+    ],
+    "et": [
+      {
+        "language": "et",
+        "value": "Inoue Takehiko"
+      }
+    ],
+    "eu": [
+      {
+        "language": "eu",
+        "value": "Inoue Takehiko"
+      }
+    ],
+    "ga": [
+      {
+        "language": "ga",
+        "value": "Inoue Takehiko"
+      }
+    ],
+    "gl": [
+      {
+        "language": "gl",
+        "value": "Inoue Takehiko"
+      }
+    ],
+    "id": [
+      {
+        "language": "id",
+        "value": "Inoue Takehiko"
+      }
+    ],
+    "lt": [
+      {
+        "language": "lt",
+        "value": "Inoue Takehiko"
+      }
+    ],
+    "ms": [
+      {
+        "language": "ms",
+        "value": "Inoue Takehiko"
+      }
+    ],
+    "nl": [
+      {
+        "language": "nl",
+        "value": "Inoue Takehiko"
+      }
+    ],
+    "pt": [
+      {
+        "language": "pt",
+        "value": "Inoue Takehiko"
+      }
+    ],
+    "pt-br": [
+      {
+        "language": "pt-br",
+        "value": "Inoue Takehiko"
+      }
+    ],
+    "ro": [
+      {
+        "language": "ro",
+        "value": "Inoue Takehiko"
+      }
+    ],
+    "sq": [
+      {
+        "language": "sq",
+        "value": "Inoue Takehiko"
+      }
+    ],
+    "sv": [
+      {
+        "language": "sv",
+        "value": "Inoue Takehiko"
+      }
+    ],
+    "uk": [
+      {
+        "language": "uk",
+        "value": "Такехіко Іноуе"
+      }
+    ],
+    "pl": [
+      {
+        "language": "pl",
+        "value": "Inoue Takehiko"
+      }
+    ]
+  },
+  "claims": {
+    "P31": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P31",
+          "hash": "ad7d38a03cdd40cdc373de0dc4e7b7fcbccb31d9",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 5,
+              "id": "Q5"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "q459911$B975F475-82E0-43FC-8EBE-19ACC38FB194",
+        "rank": "normal",
+        "references": [
+          {
+            "hash": "a7f93e870f4cb1544fab7671fa98c12e3cb96334",
+            "snaks": {
+              "P248": [
+                {
+                  "snaktype": "value",
+                  "property": "P248",
+                  "hash": "def9f19d84b65167a2a17ce38364d264c16127fc",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 19938912,
+                      "id": "Q19938912"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ],
+              "P268": [
+                {
+                  "snaktype": "value",
+                  "property": "P268",
+                  "hash": "a47f55ed1b5b90b9a99219c4cefe6bc4f744c610",
+                  "datavalue": {
+                    "value": "135276126",
+                    "type": "string"
+                  },
+                  "datatype": "external-id"
+                }
+              ],
+              "P813": [
+                {
+                  "snaktype": "value",
+                  "property": "P813",
+                  "hash": "d6162a1716489623c6e595e448b17f8dca4fb2e8",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2015-10-10T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P248",
+              "P268",
+              "P813"
+            ]
+          },
+          {
+            "hash": "797cb8dc1f5270ce5f95d543c1b16737eb257644",
+            "snaks": {
+              "P248": [
+                {
+                  "snaktype": "value",
+                  "property": "P248",
+                  "hash": "45037a2d1d89deebcdfc5840e9adbaa4b64cebc6",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 50358336,
+                      "id": "Q50358336"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ],
+              "P813": [
+                {
+                  "snaktype": "value",
+                  "property": "P813",
+                  "hash": "d624c0fc88fc4f377d7daf4c5ea88694480e5b12",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2024-06-11T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ],
+              "P950": [
+                {
+                  "snaktype": "value",
+                  "property": "P950",
+                  "hash": "2ae221354f46b82ade883380e0a120f58bb5b529",
+                  "datavalue": {
+                    "value": "XX1677183",
+                    "type": "string"
+                  },
+                  "datatype": "external-id"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P248",
+              "P813",
+              "P950"
+            ]
+          },
+          {
+            "hash": "91a97b51e635a0211d2fd5418f48cddc97cf844f",
+            "snaks": {
+              "P248": [
+                {
+                  "snaktype": "value",
+                  "property": "P248",
+                  "hash": "80047f9d5b0d2daf06989e71bd5f4ba15b215fd6",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 13550863,
+                      "id": "Q13550863"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ],
+              "P691": [
+                {
+                  "snaktype": "value",
+                  "property": "P691",
+                  "hash": "08396badc5dbf47541471ce4ebdcb6ed46498c33",
+                  "datavalue": {
+                    "value": "xx0347526",
+                    "type": "string"
+                  },
+                  "datatype": "external-id"
+                }
+              ],
+              "P813": [
+                {
+                  "snaktype": "value",
+                  "property": "P813",
+                  "hash": "a72082e714d89dc8a640673ada4967726079796d",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2026-07-27T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P248",
+              "P691",
+              "P813"
+            ]
+          }
+        ]
+      }
+    ],
+    "P50": [],
+    "P110": []
+  }
+}

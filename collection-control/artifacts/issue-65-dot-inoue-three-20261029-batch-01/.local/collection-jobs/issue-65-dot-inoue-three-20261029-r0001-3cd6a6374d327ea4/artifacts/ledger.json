@@ -1,0 +1,152 @@
+{
+  "schemaVersion": 2,
+  "status": "pending-human-acceptance",
+  "recipe": "manga-r0044",
+  "collectionContext": {
+    "themeId": "issue-65-dot-inoue-three-20261029",
+    "themeRevision": 1,
+    "definitionSha256": "d626fec0542db661aaf84574943d5385c5e169dae9173adc57ee60f8911eb4bd",
+    "approvalSha256": "3e091cdfb26e6e5a8f731d6d94d24048bbfd69aa213cca4a67fe067b7ec0bd6c"
+  },
+  "execution": {
+    "adapter": "manga-discovery-v2",
+    "codeSha256": "80e05b67bc0129b963653b90df4cfbfa5bd6aff190acda99f54c08541e55801e",
+    "inputs": [
+      {
+        "file": "datasets/manga-collection/r0044/recipe.json",
+        "sha256": "b1f09025ebd0a5f141d204f00d56832e00e6b0204a4367c63ac4861b3e401a09"
+      },
+      {
+        "file": "datasets/manga-collection/r0044/anchor-review.json",
+        "sha256": "02b5a928ac1a7e3fd0fb982e0039b2cd6b3e3201e12e1fadb5111d9943f74ec2"
+      },
+      {
+        "file": "datasets/manga-collection/r0044/publication-review.json",
+        "sha256": "0e51dc1e738c144f9e2fdb0437368c230985c0e4251e96f71cdf59b8a70e399d"
+      },
+      {
+        "file": "docs/research/famous-manga-creators/20261016/candidates.json",
+        "sha256": "8531fada01e5c635ba2ee278a7ef944a73f64676af14ed42ae0e690f5a1ff978"
+      },
+      {
+        "file": "datasets/public-kg/releases/20261014-credits-001/data.json",
+        "sha256": "ea91b16f52a211b5a8464382ad498b7b2bb2be69a6f33fe125a73a3c7b9da2b5"
+      },
+      {
+        "file": "datasets/public-kg/releases/20261014-credits-001/manifest.json",
+        "sha256": "e4aa3b58ed884f7d1f8fffee43b260261cc2b4d3a867fda942919f439d2bce17"
+      }
+    ],
+    "maxEntities": 2111,
+    "maxClaims": 1847
+  },
+  "identityMappings": [
+    {
+      "name": "井上雄彦",
+      "wikidata": "Q459911",
+      "entityId": "7e8093fd-fb5d-4e17-84ac-f74f1a02b801",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    },
+    {
+      "name": "バガボンド",
+      "wikidata": "Q1244799",
+      "entityId": "acb91b7e-a02e-47cd-bf59-c51d6a4ee8ff",
+      "basis": "reviewed-anchor-and-provider-type-and-name",
+      "reused": false
+    }
+  ],
+  "rows": [
+    {
+      "kind": "wikidata-relation",
+      "work": "バガボンド",
+      "property": "P50",
+      "personQid": "Q459911",
+      "statementId": "Q1244799$C9D887BA-9F7A-488B-AFF0-FBC2808B244C",
+      "qualifiers": {},
+      "references": [
+        {
+          "hash": "d4bd87b862b12d99d26e86472d44f26858dee639",
+          "snaks": {
+            "P143": [
+              {
+                "snaktype": "value",
+                "property": "P143",
+                "hash": "f30cbd35620c4ea6d0633aaf0210a8916130469b",
+                "datavalue": {
+                  "value": {
+                    "entity-type": "item",
+                    "numeric-id": 8447,
+                    "id": "Q8447"
+                  },
+                  "type": "wikibase-entityid"
+                },
+                "datatype": "wikibase-item"
+              }
+            ]
+          },
+          "snaks-order": [
+            "P143"
+          ]
+        }
+      ],
+      "status": "candidate-only-no-role-inference",
+      "reason": "Wikidata propertyだけで具体Roleや直接制作の意味を確定しない"
+    },
+    {
+      "kind": "ndl-credit",
+      "work": "バガボンド",
+      "isbn13": "9784063286199",
+      "rawResponsibility": "井上雄彦 著",
+      "sourceUrl": "https://ndlsearch.ndl.go.jp/books/R100000002-I000002766983",
+      "status": "pending-human-acceptance",
+      "roleId": "AUTHORSHIP",
+      "person": "井上雄彦",
+      "claimId": "26d3b29d-3769-4f0f-b785-d6c79efad840",
+      "reusedClaim": false,
+      "subjectId": "7e8093fd-fb5d-4e17-84ac-f74f1a02b801",
+      "objectId": "acb91b7e-a02e-47cd-bf59-c51d6a4ee8ff"
+    },
+    {
+      "kind": "ndl-credit",
+      "work": "バガボンド",
+      "isbn13": "9784063286199",
+      "rawResponsibility": "吉川英治 原作",
+      "sourceUrl": "https://ndlsearch.ndl.go.jp/books/R100000002-I000002766983",
+      "status": "held"
+    }
+  ],
+  "holds": [
+    {
+      "reason": "person-outside-recipe-or-ambiguous",
+      "work": "バガボンド",
+      "rawResponsibility": "吉川英治 原作"
+    }
+  ],
+  "acquisitions": [
+    {
+      "kind": "wikidata",
+      "identifier": "Q459911",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q459911.json",
+      "sha256": "cf3bec031d9d5f03a16c6023f1c429f32fc8c69e674128c0fcebcc775caaaf65",
+      "bytes": 105725,
+      "fetchedAt": "2026-10-29T00:14:01+00:00"
+    },
+    {
+      "kind": "wikidata",
+      "identifier": "Q1244799",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q1244799.json",
+      "sha256": "14d512b435ae7e0a62d86a6a0a0251640742d12126f6c16c3f3f17cc435b096c",
+      "bytes": 32139,
+      "fetchedAt": "2026-10-29T00:14:10+00:00"
+    },
+    {
+      "kind": "ndl",
+      "identifier": "9784063286199",
+      "url": "https://ndlsearch.ndl.go.jp/api/sru?operation=searchRetrieve&version=1.2&recordSchema=dcndl&maximumRecords=5&query=isbn%3D%229784063286199%22+AND+dpid%3Diss-ndl-opac",
+      "sha256": "657153b76d5685d63cad467879e31378f51ae39fb3ae13144623b91de1221747",
+      "bytes": 40542,
+      "fetchedAt": "2026-10-29T00:14:20+00:00"
+    }
+  ]
+}

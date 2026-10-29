@@ -1,0 +1,37 @@
+{
+  "provider": "iss-ndl-opac / 国立国会図書館",
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "terms": "https://ndlsearch.ndl.go.jp/help/api/provider",
+  "records": [
+    {
+      "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I000002766983",
+      "isbn13": [
+        "9784063286199"
+      ],
+      "title": [
+        "バガボンド. 1"
+      ],
+      "mainTitles": [
+        "バガボンド"
+      ],
+      "volume": [
+        "1"
+      ],
+      "edition": [],
+      "responsibilities": [
+        "井上雄彦 著",
+        "吉川英治 原作"
+      ],
+      "publisher": [
+        "講談社"
+      ],
+      "language": [
+        "jpn"
+      ],
+      "genre": [
+        "漫画"
+      ]
+    }
+  ],
+  "error": null
+}
