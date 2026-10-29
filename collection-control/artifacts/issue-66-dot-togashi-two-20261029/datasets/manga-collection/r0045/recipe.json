@@ -1,0 +1,76 @@
+{
+  "schemaVersion": 2,
+  "id": "manga-r0045",
+  "catalog": "docs/research/famous-manga-creators/20261016/candidates.json",
+  "baseRelease": "datasets/public-kg/releases/20261014-credits-001",
+  "stamp": "2026-10-29T00:41:55Z",
+  "requestPolicy": {
+    "maxAttempts": 30,
+    "attemptsPerRequest": 2,
+    "minIntervalSeconds": 3,
+    "timeoutSeconds": 20,
+    "maxBytes": 4194304
+  },
+  "outputPolicy": {
+    "maxNewEntities": 3,
+    "maxNewClaims": 6,
+    "newClaimVisibility": "hidden"
+  },
+  "people": [
+    {
+      "name": "冨樫義博",
+      "catalogName": "冨樫義博",
+      "wikidata": "Q550311",
+      "identityNames": [
+        "冨樫義博"
+      ],
+      "creditNames": [
+        "冨樫義博"
+      ]
+    }
+  ],
+  "works": [
+    {
+      "name": "幽☆遊☆白書",
+      "wikidata": "Q18225473",
+      "identityNames": [
+        "幽☆遊☆白書"
+      ],
+      "isbn13": "9784088712734",
+      "ndlMainTitles": [
+        "幽☆遊☆白書"
+      ],
+      "expectedVolume": [
+        "1"
+      ],
+      "expectedEdition": [],
+      "volumeLabel": "第1巻（NDL巻次 1）",
+      "editionLabel": null,
+      "identityNote": "Issueの名称とWikidataの完全一致・漫画型、NDL作成書誌の主書名・責任表示・巻次を照合。作品全体の担当へ外挿しない。",
+      "selectionReason": "承認済みIssue内の同作者経路の拡張。"
+    },
+    {
+      "name": "HUNTER×HUNTER",
+      "wikidata": "Q696071",
+      "identityNames": [
+        "HUNTER×HUNTER"
+      ],
+      "isbn13": "9784081135516",
+      "ndlMainTitles": [
+        "Hunter×hunter"
+      ],
+      "expectedVolume": [
+        "1"
+      ],
+      "expectedEdition": [],
+      "volumeLabel": "第1巻（NDL巻次 1）",
+      "editionLabel": null,
+      "identityNote": "Issueの名称とWikidataの完全一致・漫画型、NDL作成書誌の主書名・責任表示・巻次を照合。作品全体の担当へ外挿しない。",
+      "selectionReason": "承認済みIssue内の同作者経路の拡張。"
+    }
+  ],
+  "reviewArtifacts": [
+    "datasets/manga-collection/r0045/anchor-review.json",
+    "datasets/manga-collection/r0045/publication-review.json"
+  ]
+}

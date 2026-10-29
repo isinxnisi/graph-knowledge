@@ -1,0 +1,68 @@
+{
+  "schemaVersion": 1,
+  "scope": "specified-japanese-volume-1-isbn-only",
+  "publications": [
+    {
+      "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I022827273",
+      "isbn13": [
+        "9784088712734"
+      ],
+      "title": [
+        "幽☆遊☆白書. 1"
+      ],
+      "mainTitles": [
+        "幽☆遊☆白書"
+      ],
+      "volume": [
+        "1"
+      ],
+      "edition": [],
+      "responsibilities": [
+        "冨樫義博"
+      ],
+      "publisher": [
+        "集英社"
+      ],
+      "language": [
+        "jpn"
+      ],
+      "genre": [
+        "漫画"
+      ],
+      "issued": "1991.4",
+      "searchTruncated": false,
+      "selectionBoundary": "representative-first-volume-among-observed-records-not-original-edition"
+    },
+    {
+      "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I029458700",
+      "isbn13": [
+        "9784081135516"
+      ],
+      "title": [
+        "Hunter×hunter. 1"
+      ],
+      "mainTitles": [
+        "Hunter×hunter"
+      ],
+      "volume": [
+        "1"
+      ],
+      "edition": [],
+      "responsibilities": [
+        "冨樫義博 著"
+      ],
+      "publisher": [
+        "集英社"
+      ],
+      "language": [
+        "jpn"
+      ],
+      "genre": [
+        "漫画"
+      ],
+      "issued": "2016.5",
+      "searchTruncated": true,
+      "selectionBoundary": "representative-first-volume-among-observed-records-not-original-edition"
+    }
+  ]
+}
