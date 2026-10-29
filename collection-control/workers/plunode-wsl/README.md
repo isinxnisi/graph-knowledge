@@ -1,6 +1,6 @@
 # CollectionWorkerの実行制御
 
-確認: 2026-10-30 07:19:51 JST。
+確認: 2026-10-30 07:23:22 JST。
 
 反映済みcontrolRevision: 8／最後の操作: pub-13abfb93-ba2d-44f7-a56b-352aa7ab0ab0-resume。
 
@@ -121,6 +121,10 @@ Issue確認結果:
   "collection-control/issue-sources/71.json": {
     "status": "registered: issue-71-dot-tezuka-hinotori-com-20261029",
     "checkedAt": "2026-10-29T10:13:38+00:00"
+  },
+  "collection-control/issue-sources/73.json": {
+    "status": "registered: issue-73-dot-murata-onepunch-20261030",
+    "checkedAt": "2026-10-29T22:21:36+00:00"
   }
 }
 ```

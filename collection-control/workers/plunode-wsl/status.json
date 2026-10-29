@@ -44,7 +44,8 @@
   "requestsByPhase": {
     "blocked": 12,
     "completed": 43,
-    "awaiting-recovery": 6
+    "awaiting-recovery": 6,
+    "waiting-control": 1
   },
   "issueIntake": {
     "collection-control/issue-sources/25.json": {
@@ -146,6 +147,10 @@
     "collection-control/issue-sources/71.json": {
       "status": "registered: issue-71-dot-tezuka-hinotori-com-20261029",
       "checkedAt": "2026-10-29T10:13:38+00:00"
+    },
+    "collection-control/issue-sources/73.json": {
+      "status": "registered: issue-73-dot-murata-onepunch-20261030",
+      "checkedAt": "2026-10-29T22:21:36+00:00"
     }
   },
   "publicApply": false,
@@ -187,5 +192,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-10-29T22:19:51.504677+00:00"
+  "checkedAt": "2026-10-29T22:23:22.924654+00:00"
 }
