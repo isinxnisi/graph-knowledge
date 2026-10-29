@@ -70,11 +70,81 @@
   },
   "requestSha256": "a3f50dae8f31b200fc63d218d4c206ad20ade9fce955125a5af066d52220b20f",
   "kind": "issue-prepare",
-  "phase": "running",
+  "phase": "retry-transport",
   "generation": 3,
   "attempts": 1,
   "workerId": "plunode-wsl",
   "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
   "updatedAt": "2026-10-29T06:55:53+00:00",
-  "message": "Execution gate: interval"
+  "message": "Technical acquisition incomplete; no semantic hold or acceptance",
+  "result": {
+    "schemaVersion": 1,
+    "status": "technical-incomplete",
+    "preparationComplete": false,
+    "issueOrigin": {
+      "repository": "isinxnisi/graph-knowledge",
+      "issueNumber": 69,
+      "approvalId": "dot-ishinomori-three-20261029",
+      "permissionSha256": "3f122845aa88acef1b4d686af76689e5ae584504c8e30b634948a42e71d59844",
+      "issueBodySha256": "43f2e970cfb16504ad9fbf39841b54285f82dd7173a18dbbdeae83598a2f6b30"
+    },
+    "preparationDirectory": "/home/isinxnisi/.local/share/plunode-collection-worker-phase-b-20261020/runtime/.local/collection-issues/issue-69-dot-ishinomori-three-20261029",
+    "batchRequests": [],
+    "generatedArtifacts": {},
+    "technicalWaits": [
+      {
+        "category": "provider-backoff",
+        "key": "publication-6267f1a042be5293befdf013",
+        "provider": "ndlsearch.ndl.go.jp",
+        "retryAt": 1793257119.9225123,
+        "recoveryRequired": false,
+        "target": "サイボーグ009",
+        "lastDiagnostic": {
+          "category": "transport",
+          "phase": "open-through-response-headers",
+          "phaseBoundary": "open-through-response-headers",
+          "elapsedSeconds": 20.148086,
+          "finishedAt": "2026-10-29T06:57:39.922432+00:00",
+          "httpStatus": null,
+          "causes": [
+            {
+              "type": "TimeoutError"
+            }
+          ]
+        }
+      },
+      {
+        "category": "provider-backoff",
+        "key": "publication-7c63b15a7c9ef7999954394f",
+        "provider": "ndlsearch.ndl.go.jp",
+        "retryAt": 1793257126.106299,
+        "recoveryRequired": false,
+        "target": "佐武と市捕物控",
+        "lastDiagnostic": {
+          "category": "transport",
+          "phase": "open-through-response-headers",
+          "phaseBoundary": "open-through-response-headers",
+          "elapsedSeconds": 0.144097,
+          "finishedAt": "2026-10-29T06:57:46.106217+00:00",
+          "httpStatus": 429,
+          "causes": [
+            {
+              "type": "HTTPError"
+            }
+          ],
+          "retryAfterUntil": 1793257126.106299
+        }
+      }
+    ],
+    "retryAt": 1793257119.9225123,
+    "publicApply": false,
+    "counts": {
+      "networkAttempts": 7,
+      "holds": 1,
+      "identifiedWorks": 0,
+      "technicalWaits": 2
+    }
+  },
+  "executionComplete": false,
+  "retryAt": 1793257119.9225123
 }
