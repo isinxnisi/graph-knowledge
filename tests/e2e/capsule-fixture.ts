@@ -49,17 +49,31 @@ export async function storedCapsules(page: Page): Promise<LocalCapsule[]> {
 }
 
 export async function renameCapsule(page: Page, title: string) {
-  await studio(page).getByRole("button", { name: "タイトル・説明", exact: true }).click();
-  const editor = page.getByRole("dialog").last();
-  await editor.getByLabel("タイトル", { exact: true }).fill(title);
-  await editor.getByRole("button", { name: "適用", exact: true }).click();
+  await studio(page).getByTitle("タイトルを編集", { exact: true }).click();
+  const input = studio(page).getByLabel("Capsuleのタイトル", { exact: true });
+  await expect(input).toBeFocused();
+  await input.fill(title);
+  await studio(page).getByRole("button", { name: "タイトルを適用", exact: true }).click();
+  await expect(input).toHaveCount(0);
   await expect(studio(page).getByRole("heading", { name: title, exact: true })).toBeVisible();
 }
 
+export async function openContents(page: Page) {
+  const toggle = studio(page).getByRole("button", { name: "内容一覧", exact: true });
+  if (await toggle.getAttribute("aria-pressed") !== "true") await toggle.click();
+  const contents = studio(page).getByRole("complementary").filter({ has: page.getByRole("heading", { name: "内容一覧", exact: true }) });
+  await expect(contents).toBeVisible();
+  return contents;
+}
+
 export async function selectContent(page: Page, title: string) {
-  const contents = studio(page).locator("details").filter({ has: page.locator("summary", { hasText: "Capsuleの内容一覧" }) }).last();
-  if (!(await contents.evaluate(el => (el as HTMLDetailsElement).open))) await contents.locator("summary").click();
+  const contents = await openContents(page);
   await contents.getByRole("button", { name: title, exact: true }).click();
+  await contents.getByRole("button", { name: "内容一覧を閉じる", exact: true }).click();
+  // Existing callers inspect the chosen content or operate on its evidence.
+  // The current workspace opens that pane explicitly instead of keeping it up.
+  await studio(page).getByRole("button", { name: "選択の詳細", exact: true }).click();
+  await expect(studio(page).getByRole("button", { name: "詳細を閉じる", exact: true })).toBeVisible();
 }
 
 async function renderedPoint(canvas: Locator, id: string) {

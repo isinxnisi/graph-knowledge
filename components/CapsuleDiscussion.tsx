@@ -13,9 +13,10 @@ import Icon from "./Icon";
 import css from "./CapsuleConversation.module.css";
 
 export type DiscussionDraft = { key: string; body: string; requestId: string | null };
-export type DiscussionDraftStore = { get: (key: string) => DiscussionDraft | null; set: (draft: DiscussionDraft) => void; remove: (key: string) => void };
+export type DiscussionDraftStore = { get: (key: string) => DiscussionDraft | null; set: (draft: DiscussionDraft) => void; remove: (key: string) => void; hasDraft: () => boolean; hasPending: () => boolean; clear: () => void };
 export function useDiscussionDraft(): DiscussionDraftStore {
   const values = useRef(new Map<string, DiscussionDraft>());
+  const [, setHasDraft] = useState(false);
   useEffect(() => {
     const warn = (event: BeforeUnloadEvent) => {
       if (!values.current.size) return;
@@ -26,8 +27,11 @@ export function useDiscussionDraft(): DiscussionDraftStore {
   }, []);
   return useMemo(() => ({
     get: (key: string) => values.current.get(key) ?? null,
-    set: (draft: DiscussionDraft) => { if (draft.body || draft.requestId) values.current.set(draft.key, draft); else values.current.delete(draft.key); },
-    remove: (key: string) => { values.current.delete(key); },
+    set: (draft: DiscussionDraft) => { if (draft.body || draft.requestId) values.current.set(draft.key, draft); else values.current.delete(draft.key); setHasDraft(values.current.size > 0); },
+    remove: (key: string) => { values.current.delete(key); setHasDraft(values.current.size > 0); },
+    hasDraft: () => values.current.size > 0,
+    hasPending: () => [...values.current.values()].some(draft => draft.requestId !== null),
+    clear: () => { values.current.clear(); setHasDraft(false); },
   }), []);
 }
 const textMessages = capsuleDiscussionLabels();
@@ -106,11 +110,6 @@ export default function CapsuleDiscussion({ capsuleId, revision, token, userId, 
     const timer = setTimeout(() => void refresh(), 0);
     return () => clearTimeout(timer);
   }, [refreshVersion, refresh]);
-  useEffect(() => {
-    if (!body) return;
-    const warn = (event: BeforeUnloadEvent) => { event.preventDefault(); event.returnValue = ""; };
-    window.addEventListener("beforeunload", warn); return () => window.removeEventListener("beforeunload", warn);
-  }, [body]);
   function edit(value: string) {
     if (!data?.viewer) return;
     setBody(value); cache.set({ key: `${capsuleId}:${revision}:${data.viewer.id}`, body: value, requestId: null });
@@ -156,7 +155,7 @@ export default function CapsuleDiscussion({ capsuleId, revision, token, userId, 
       if (cause instanceof MemberClientError && cause.status === 401) unauthorized.current?.();
     } finally { if (active.current === controller) mutating.current = false; if (!controller.signal.aborted) setBusy(false); }
   }
-  return <section className={`${css.panel} ${css.discussion}`} aria-label={text.title}>
+  return <section className={`${css.panel} ${css.discussion}`} aria-label={text.title} aria-busy={busy} data-capsule-draft={cache.hasDraft() ? "true" : undefined} data-capsule-pending={cache.hasPending() ? "true" : undefined}>
     <div className={css.heading}><div><h2>{text.title}{data && data.posts.length > 0 ? ` · ${data.posts.length}` : ""}</h2><p className={css.muted}>{text.context(revision)}</p></div>
       <button className={`${css.button} ${css.quiet} ${css.iconButton}`} disabled={busy || loading} aria-label={text.refresh} title={text.refresh} onClick={() => void refresh()}><Icon name="refresh" /></button></div>
     {loading && !data && <p className={css.empty} role="status">{text.loading}</p>}

@@ -6,7 +6,7 @@ import SharedCapsule from "../components/SharedCapsule";
 import type { MemberCapsule } from "../lib/domain/member-capsule";
 import type { LocalCapsule } from "../lib/client/local-capsules";
 vi.mock("../components/CapsuleDialog", () => ({ CapsuleReader: ({ capsule }: { capsule: LocalCapsule }) => <h3>{capsule.title}</h3> }));
-vi.mock("../components/CapsuleDiscussion", () => ({ default: () => <div>自動表示の会話</div>, useDiscussionDraft: () => ({}) }));
+vi.mock("../components/CapsuleDiscussion", () => ({ default: () => <div>自動表示の会話</div>, useDiscussionDraft: () => ({ hasDraft: () => false, hasPending: () => false }) }));
 const userId = "10000000-0000-4000-8000-000000000001";
 const capsule: MemberCapsule = { id: "20000000-0000-4000-8000-000000000001", schemaVersion: 1, revision: 1, createdAt: "2026-10-09T00:00:00Z", updatedAt: "2026-10-09T00:00:00Z",
   content: { dataset: "demo", title: "共有した版の説明付き関係図", note: "説明", language: "ja", entityIds: ["30000000-0000-4000-8000-000000000001"], claimIds: [] } };
@@ -25,13 +25,43 @@ afterEach(() => { cleanup(); vi.unstubAllGlobals(); vi.restoreAllMocks(); vi.use
 async function visibility(value: "hidden" | "visible") {
   await act(async () => { Object.defineProperty(document, "visibilityState", { configurable: true, value }); document.dispatchEvent(new Event("visibilitychange")); });
 }
-async function controls(value = { share: null as typeof share | null, commentsClosed: false }) {
+async function controls(value: { share: typeof share | null; commentsClosed: boolean; token?: string | null; blocked?: boolean } = { share: null, commentsClosed: false }) {
   fetchMock.mockResolvedValueOnce(Response.json(value));
   render(<CapsuleShareControls capsule={capsule} userId={userId} disabled={false} onUnauthorized={vi.fn()} />);
   await screen.findByText(value.share ? `内容版 ${value.share.revision} の限定リンクが有効です。` : "有効な共有リンクはありません。本人だけが読めます。");
   expect(screen.getByRole("switch", { name: "コメント受付" }).hasAttribute("disabled")).toBe(false);
 }
 describe("限定共有の所有者操作", () => {
+  it("共有画面を開き直しても同じリンクを取得し、版やコメントを更新しない", async () => {
+    await controls({ share, token, commentsClosed: false });
+    expect((screen.getByLabelText("共有リンク") as HTMLInputElement).value).toBe(`${location.origin}/shared#${token}`);
+    cleanup();
+    await controls({ share, token, commentsClosed: false });
+    expect((screen.getByLabelText("共有リンク") as HTMLInputElement).value).toBe(`${location.origin}/shared#${token}`);
+    expect(fetchMock.mock.calls.every(([, options]) => !options.method || options.method === "GET")).toBe(true);
+    expect(localStorage.length).toBe(0); expect(sessionStorage.length).toBe(0);
+  });
+  it("発行応答を失っても再確認で同じ有効リンクを取り戻し、再発行しない", async () => {
+    await controls();
+    fetchMock.mockRejectedValueOnce(new TypeError("Response lost"));
+    fireEvent.click(screen.getByRole("button", { name: "共有リンクを作る" }));
+    await screen.findByRole("alert");
+    fetchMock.mockResolvedValueOnce(Response.json({ share, token, commentsClosed: false }));
+    fireEvent.click(screen.getByRole("button", { name: "共有状態を再確認" }));
+    const field = await screen.findByLabelText("共有リンク") as HTMLInputElement;
+    expect(field.value).toBe(`${location.origin}/shared#${token}`);
+    expect(fetchMock.mock.calls.filter(([, options]) => options.method === "POST")).toHaveLength(1);
+    expect(screen.queryByRole("dialog")).toBeNull();
+  });
+  it("再取得不能な旧リンクだけに移行案内を出し、別リンクへの更新後は古いURLを残さない", async () => {
+    await controls({ share, commentsClosed: false, token: null });
+    expect(screen.getByText(/このリンクは再表示に対応していません/)).toBeTruthy();
+    expect(screen.queryByLabelText("共有リンク")).toBeNull();
+    fetchMock.mockResolvedValueOnce(Response.json({ share: { ...share, id: "40000000-0000-4000-8000-000000000002" }, token: "b".repeat(43), commentsClosed: false }));
+    fireEvent.click(screen.getByRole("button", { name: "共有状態を再確認" }));
+    expect((await screen.findByLabelText("共有リンク") as HTMLInputElement).value).toContain("b".repeat(43));
+    expect(screen.queryByText(/このリンクは再表示に対応していません/)).toBeNull();
+  });
   it("保存版と受付ONを示し、発行時に期待本人と版とコメント設定を原子的に送る", async () => {
     await controls();
     expect(screen.getByText("共有する内容 · 保存版 1")).toBeTruthy();

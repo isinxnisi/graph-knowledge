@@ -47,17 +47,17 @@ test("実会員がGraphの文書を直接保存し、固定共有とコミュニ
   await expect(page.getByTestId("graph-counts")).toHaveText("Entity 5 / Claim 7");
   const original = await canvasState(page.locator("#explorer-graph").getByTestId("graph-canvas"));
   await page.getByRole("button", { name: "Capsule作成", exact: true }).click();
-  await expect(studio(page)).toContainText("アカウントに保存");
+  await expect(studio(page)).toContainText("アカウント");
   await renameCapsule(page, title);
-  await studio(page).getByRole("button", { name: "独自Entity", exact: true }).click();
+  await studio(page).getByRole("button", { name: "独自Entityを追加", exact: true }).click();
   let editor = page.getByRole("dialog").last();
   await editor.getByLabel("タイトル", { exact: true }).fill("会員だけの独自対象");
-  await editor.getByLabel("説明・メモ（任意）", { exact: true }).fill("固定版に取り込む調査メモ。");
-  await editor.getByRole("button", { name: "適用", exact: true }).click();
-  await studio(page).getByRole("button", { name: "テキスト", exact: true }).click();
+  await editor.getByLabel("説明", { exact: true }).fill("固定版に取り込む調査メモ。");
+  await editor.getByRole("button", { name: "追加", exact: true }).click();
+  await studio(page).getByRole("button", { name: "テキストを追加", exact: true }).click();
   editor = page.getByRole("dialog").last();
   await editor.getByLabel("テキスト", { exact: true }).fill("独立した説明も会員保存する");
-  await editor.getByRole("button", { name: "適用", exact: true }).click();
+  await editor.getByRole("button", { name: "追加", exact: true }).click();
   const createdResponse = page.waitForResponse(response => response.url().endsWith("/api/member/capsules") && response.request().method() === "POST");
   await studio(page).getByRole("button", { name: "保存", exact: true }).click();
   const created = await createdResponse; expect(created.status()).toBe(201);
@@ -78,7 +78,7 @@ test("実会員がGraphの文書を直接保存し、固定共有とコミュニ
   const temporaryView=await canvasState(restoredCanvas);
   expect(temporaryView.positions).not.toEqual(saved.content.document.layout.positions);
   await visibility(page,true);
-  await expect(page.getByRole('heading',{name:title,exact:true})).toHaveCount(0);
+  await expect(studio(page).getByRole('heading',{name:title,exact:true})).toBeVisible();
   await visibility(page,false);
   await expect(studio(page).getByRole('heading',{name:title,exact:true})).toBeVisible();
   await expect.poll(async()=>{
@@ -93,10 +93,11 @@ test("実会員がGraphの文書を直接保存し、固定共有とコミュニ
   await studio(page).screenshot({ path: info.outputPath("member-saved-document.png") });
   console.info("Capsule member phase: direct account save and reload verified");
 
-  await studio(page).getByRole("button", { name: "固定版を共有", exact: true }).click();
+  await studio(page).getByRole("button", { name: "共有", exact: true }).click();
   const controls = page.getByRole("region", { name: "リンクで共有", exact: true });
   await controls.getByRole("button", { name: "共有リンクを作る", exact: true }).click();
   const link = await controls.getByLabel("共有リンク", { exact: true }).inputValue();
+  await page.getByRole("button", { name: "共有を閉じる", exact: true }).click();
   const anonymous = await browser.newContext({ baseURL: "http://127.0.0.1:3221", viewport: { width: 1440, height: 1000 } });
   try {
     const reader = await anonymous.newPage(); reader.on("pageerror", error => errors.push(error.message));
@@ -110,15 +111,16 @@ test("実会員がGraphの文書を直接保存し、固定共有とコミュニ
 
     await page.bringToFront();
     await studio(page).getByRole("button", { name: "編集", exact: true }).click();
-    await studio(page).getByRole("button", { name: "タイトル・説明", exact: true }).click();
-    editor=page.getByRole('dialog').last();
-    await editor.getByLabel('タイトル',{exact:true}).fill(updatedTitle);
+    await studio(page).getByTitle("タイトルを編集", { exact: true }).click();
+    const titleInput=studio(page).getByLabel('Capsuleのタイトル',{exact:true});
+    await titleInput.fill(updatedTitle);
+    await expect(titleInput).toBeFocused();
     await visibility(page,true);
-    await expect(page.getByLabel('タイトル',{exact:true})).toHaveCount(0);
+    await expect(titleInput).toHaveValue(updatedTitle);
     await visibility(page,false);
-    editor=page.getByRole('dialog').last();
-    await expect(editor.getByLabel('タイトル',{exact:true})).toHaveValue(updatedTitle);
-    await editor.getByRole('button',{name:'適用',exact:true}).click();
+    await expect(titleInput).toHaveValue(updatedTitle);
+    await expect(titleInput).toBeFocused();
+    await studio(page).getByRole('button',{name:'タイトルを適用',exact:true}).click();
     await expect(studio(page).getByRole('heading',{name:updatedTitle,exact:true})).toBeVisible();
     const updatedResponse = page.waitForResponse(response => response.url().endsWith(`/api/member/capsules/${saved.id}`) && response.request().method() === "PUT");
     await studio(page).getByRole("button", { name: "保存", exact: true }).click();

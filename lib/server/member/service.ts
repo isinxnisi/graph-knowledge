@@ -41,7 +41,7 @@ export function createMemberService(config: MemberConfig, pool: Pool, auth: Memb
     accounts: createPublicProfiles(pool, config.origin, owner, config.secret),
     community: createCommunityService(pool, config.origin, owner, config.secret, dataset),
     operator: createSiteOperationsService(pool, config.origin, owner, config.secret),
-    ...createCapsuleSharing(pool, dataset, config.origin, owner),
+    ...createCapsuleSharing(pool, dataset, config.origin, owner, config.secret),
     ...createCapsuleDiscussion(pool, dataset, config.origin, owner),
     async profile(request: Request) {
       const user = await owner(request);

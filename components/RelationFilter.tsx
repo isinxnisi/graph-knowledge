@@ -8,7 +8,7 @@ import { EVENT_ROLE_IDS } from "../lib/domain/event-participation";
 import { eventParticipationLabels } from "../lib/i18n/event-participation";
 import { ORGANIZATION_POSITION_IDS } from "../lib/domain/organization-participation";
 import { organizationParticipationLabels } from "../lib/i18n/organization-participation";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { CONTRIBUTION_ROLE_IDS } from "../lib/domain/contribution";
 import { contributionLabels } from "../lib/i18n/contribution";
 import { conditionSummary, entryLabels } from "../lib/i18n/exploration-entry";
@@ -150,13 +150,13 @@ function ConditionEditor({ value, roles, positions, eventRoles, onApply, onCance
   </dialog>;
 }
 
-export default function RelationFilter({ value, roles = null, positions = null, eventRoles = null, onApply, relation, patternAllowed, onApplyRelation, onCancelRelation }: SharedEditorProps & { value: PredicateFilter; roles?: ContributionRoleFilter; positions?: OrganizationPositionFilter; eventRoles?: EventRoleFilter; onApply: (value: PredicateFilter, roles: ContributionRoleFilter, positions: OrganizationPositionFilter, eventRoles: EventRoleFilter) => void }) {
+export default function RelationFilter({ value, roles = null, positions = null, eventRoles = null, onApply, relation, patternAllowed, onApplyRelation, onCancelRelation, leadingAction }: SharedEditorProps & { value: PredicateFilter; roles?: ContributionRoleFilter; positions?: OrganizationPositionFilter; eventRoles?: EventRoleFilter; leadingAction?: ReactNode; onApply: (value: PredicateFilter, roles: ContributionRoleFilter, positions: OrganizationPositionFilter, eventRoles: EventRoleFilter) => void }) {
   const { locale } = useUiLocale();
   const [editing, setEditing] = useState(false);
   const text = entryLabels(locale), relations = explorationLabels(locale);
   return <div className={styles.conditionBar}>
     <p data-testid="active-predicates"><strong>{text.applied}：</strong>{relation ? relationSummary(relation, locale) : conditionSummary(value, roles, locale, positions, eventRoles)}</p>
-    <button aria-label={text.edit} title={text.edit} aria-haspopup="dialog" aria-expanded={editing} onClick={() => setEditing(true)}><Icon name="settings" /><span>{text.edit}</span></button>
+    <div className={styles.conditionActions}>{leadingAction}<button className={styles.conditionEdit} aria-label={text.edit} title={text.edit} aria-haspopup="dialog" aria-expanded={editing} onClick={() => setEditing(true)}><Icon name="settings" /><span>{text.edit}</span></button></div>
     {editing && <ConditionEditor relation={relation} patternAllowed={patternAllowed} onApplyRelation={onApplyRelation} onCancelRelation={onCancelRelation} value={value} roles={roles} positions={positions} eventRoles={eventRoles} onCancel={() => setEditing(false)} onApply={(predicates, nextRoles, nextPositions, nextEventRoles) => { onApply(predicates, nextRoles, nextPositions, nextEventRoles); setEditing(false); }} />}
     <span className={styles.srOnly}>{relations.help}</span>
   </div>;

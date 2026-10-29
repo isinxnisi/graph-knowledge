@@ -65,16 +65,20 @@ afterAll(async () => { await pool().end(); await issuer?.close(); });
 it('明示追加migration前は新writerを閉じ、旧保存・共有snapshotを改変せず011/012を冪等適用する', async () => {
   const beforeCaps = await (await service().capabilities(request(a))).json(); expect(beforeCaps).toMatchObject({documents:false,community:false,totalBytes:64_000_000});
   const old = await create(legacy());
+  const unavailable = await call(()=>service().issueShare(request(a,{expectedRevision:1,expectedShareId:null}),old.id));
+  expect(unavailable.status).toBe(503); expect(await unavailable.json()).toEqual({error:{code:'SHARE_RECOVERY_UNAVAILABLE'}});
+  expect((await (await service().shareStatus(request(a),old.id)).json()).token).toBeNull();
+  await migrateMemberDatabase(pool(),true,true,true,false,false,true,true);
   const share = await service().issueShare(request(a,{expectedRevision:1,expectedShareId:null}),old.id); expect(share.status).toBe(201);
   const token = (await share.json()).token;
   const before = (await pool().query('SELECT snapshot::text FROM member_capsule_revision WHERE capsule_id=$1',[old.id])).rows[0].snapshot;
   expect((await call(() => service().create(request(a,{requestId:randomUUID(),content:local()})))).status).toBe(503);
-  await migrateMemberDatabase(pool(),true,true,true,true,true);
-  await migrateMemberDatabase(pool(),true,true,true,true,true);
+  await migrateMemberDatabase(pool(),true,true,true,true,true,true,true);
+  await migrateMemberDatabase(pool(),true,true,true,true,true,true,true);
   expect((await pool().query('SELECT snapshot::text FROM member_capsule_revision WHERE capsule_id=$1',[old.id])).rows[0].snapshot).toBe(before);
   expect((await service().capabilities(request(a))).status).toBe(200);
   const shared = await service().readShared(new Request(origin,{headers:{'x-capsule-token':token}})); expect((await shared.json()).capsule).toEqual(old);
-  expect((await pool().query('SELECT count(*) FROM member_migration')).rows[0].count).toBe('13');
+  expect((await pool().query('SELECT count(*) FROM member_migration')).rows[0].count).toBe('15');
 });
 it('local-only内容・根拠・配置と32kを超える100/200参照を切り捨てず保存し、一覧から文書を除外する', async () => {
   const content = local('大きなlocal図',100); const capsule = await create(content); expect(capsule.schemaVersion).toBe(2); expect(capsule.content).toEqual(content);
@@ -117,14 +121,18 @@ it('本人一覧の限定リンク・コミュニティ状態を独立して返�
   expect(await summary()).toMatchObject({revision:2,shared:true,published:true});
   await pool().query('UPDATE member_capsule_revision SET sharing_blocked=true WHERE capsule_id=$1 AND revision=1',[capsule.id]);
   expect(await summary()).toMatchObject({revision:2,shared:false,published:false});
+  expect((await (await service().shareStatus(request(a),capsule.id)).json()).token).toBeNull();
   expect((await service().read(request(a),capsule.id)).status).toBe(200);
 });
 it('固定共有版はprivate再編集から独立し、更新と再発行の期待版を照合する', async () => {
-  const capsule = await create(); const input = {expectedRevision:1,expectedShareId:null};
+  const content = local(); content.document!.nodes[0].shape = 'circle'; content.document!.nodes[1].shape = 'diamond';
+  const capsule = await create(content); const input = {expectedRevision:1,expectedShareId:null};
   const first = await (await service().issueShare(request(a,input),capsule.id)).json();
-  await service().update(request(a,{requestId:randomUUID(),expectedRevision:1,content:{...capsule.content,title:'privateの後編集'}}),capsule.id);
+  const changed = structuredClone(capsule.content); changed.document.nodes[0].shape = 'rectangle'; changed.title = 'privateの後編集';
+  await service().update(request(a,{requestId:randomUUID(),expectedRevision:1,content:changed}),capsule.id);
   const readToken = (token:string) => call(()=>service().readShared(new Request(origin,{headers:{'x-capsule-token':token}})));
   expect((await (await readToken(first.token)).json()).capsule).toEqual(capsule);
+  expect((await (await service().read(request(a),capsule.id)).json()).capsule.content.document.nodes[0].shape).toBe('rectangle');
   expect((await call(()=>service().issueShare(request(a,{expectedRevision:1,expectedShareId:first.share.id}),capsule.id))).status).toBe(409);
   const second = await (await service().issueShare(request(a,{expectedRevision:2,expectedShareId:first.share.id}),capsule.id)).json();
   expect((await readToken(first.token)).status).toBe(404); expect((await (await readToken(second.token)).json()).capsule.revision).toBe(2);

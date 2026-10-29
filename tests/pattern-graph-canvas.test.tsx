@@ -9,7 +9,7 @@ vi.mock("cytoscape", async original => {
     const cy = runtime.default({ ...options, container: undefined, headless: true, styleEnabled: true }); created.cores.push(cy); return cy;
   } };
 });
-import GraphCanvas, { type GraphCanvasHandle } from "../components/GraphCanvas";
+import GraphCanvas, { type CanvasContent, type GraphCanvasHandle } from "../components/GraphCanvas";
 import { emptyPatternGraph, mergePatternPage, openPatternNode, closeExpansion, emptyGraph, mergePage } from "../lib/client/graph-state";
 import { freeRelation } from "../lib/client/relation-state";
 import { relationConditionKey } from "../lib/domain/relation-conditions";
@@ -129,16 +129,37 @@ it("選択した対象とテキストのまとめ移動を一度の操作とし�
   expect(entity.data("label")).toBe("対象"); expect(entity.data("badge")).toBe("分類");
 });
 
-it("CapsuleのダブルクリックはEntity・テキスト・関係の直接編集へ渡す", async () => {
+it.each([false, true])("pointer downを挟むダブルクリックでもEntity・関係を直接開く（Capsule=%s）", async contentOnly => {
   const graph = mergePatternPage(emptyPatternGraph(root, relation), page([route(100, 2)]), null);
   const onEntityDoubleClick = vi.fn(), onRelationDoubleClick = vi.fn();
-  render(<GraphCanvas graph={graph} contentOnly selection={null} onEntity={vi.fn()} onRelation={vi.fn()} onToggleEntity={vi.fn()} onEntityDoubleClick={onEntityDoubleClick} onRelationDoubleClick={onRelationDoubleClick} />);
+  render(<GraphCanvas graph={graph} contentOnly={contentOnly} selection={null} onEntity={vi.fn()} onRelation={vi.fn()} onToggleEntity={vi.fn()} onEntityDoubleClick={onEntityDoubleClick} onRelationDoubleClick={onRelationDoubleClick} />);
   const cy = created.cores[0];
   async function doubleTap(element: import("cytoscape").NodeSingular | import("cytoscape").EdgeSingular) {
-    await act(async () => { const emit = element.emit as unknown as (event: object) => void; emit.call(element, { type: "tap", originalEvent: { timeStamp: 100 } }); emit.call(element, { type: "tap", originalEvent: { timeStamp: 200 } }); });
+    for (const timeStamp of [100, 200]) await act(async () => {
+      // A real node press emits grab even without any pointer movement.
+      if (element.isNode()) element.emit("grab");
+      const emit = element.emit as unknown as (event: object) => void;
+      emit.call(element, { type: "tap", originalEvent: { timeStamp } });
+      if (element.isNode()) element.emit("free");
+    });
   }
   await doubleTap(cy.nodes()[0]); expect(onEntityDoubleClick).toHaveBeenCalledWith(cy.nodes()[0].id());
   await doubleTap(cy.edges()[0]); expect(onRelationDoubleClick).toHaveBeenCalledWith(cy.edges()[0].id());
+});
+
+it("自由テキストの直接編集はダブルクリックで開き、実ドラッグではクリック列をリセットする", async () => {
+  const open = vi.fn(), graph = emptyGraph();
+  render(<GraphCanvas graph={graph} contentOnly content={{ nodes: [{ id: "text", kind: "text", label: "図の説明" }], relations: {} }} selection={null} onEntity={vi.fn()} onRelation={vi.fn()} onToggleEntity={vi.fn()} onEntityDoubleClick={open} />);
+  const node = created.cores[0].getElementById("text");
+  const tap = async (timeStamp: number) => act(async () => {
+    node.emit("grab");
+    (node.emit as unknown as (event: object) => void).call(node, { type: "tap", originalEvent: { timeStamp } });
+    node.emit("free");
+  });
+  await tap(100);
+  await act(async () => { node.emit("grab"); node.position({ x: 80, y: 90 }); node.emit("drag"); node.emit("dragfree"); });
+  await tap(200); expect(open).not.toHaveBeenCalled();
+  await tap(250); expect(open).toHaveBeenCalledExactlyOnceWith("text");
 });
 
 it.each([false, true])("関係チップも線本体と同じCtrl/Meta・複数選択操作を保つ（Capsule=%s）", async contentOnly => {
@@ -168,4 +189,56 @@ it("空文書から復元した最初の対象を配置済みとし、後の追�
   await act(async () => view.rerender(<GraphCanvas {...props} graph={{ ...graph, generation: graph.generation + 1 }} content={{ nodes: [node, { id: "second", label: "追加", kind: "local" }], relations: {} }} restoration={{ ...restoration, generation: graph.generation + 1 }} />));
   expect(cy.getElementById("first").position()).toEqual({ x: 80, y: 110 }); expect(cy.zoom()).toBe(0.8);
   expect(cy.getElementById("second").position()).not.toEqual(cy.getElementById("first").position());
+});
+
+it("独自関係の向き反転・相互追加・Undoの世代復元で端点だけを更新し、配置と視点を保つ", async () => {
+  const ref = createRef<GraphCanvasHandle>(), graph = emptyGraph();
+  const nodes = [{ id: "a", kind: "local", label: "A" }, { id: "b", kind: "local", label: "B" }];
+  const relation = { id: "local", subjectId: "a", objectId: "b", claimIds: [], polarity: "affirmed" as const, label: "関連", canvasLabel: "関連", badge: "独自" };
+  const props = { ref, contentOnly: true, selection: null, onEntity: vi.fn(), onRelation: vi.fn(), onToggleEntity: vi.fn() };
+  const initial = { positions: { a: { x: 100, y: 120 }, b: { x: 380, y: 250 } }, pan: { x: 15, y: 20 }, zoom: .7, initialLayoutDone: true };
+  const view = render(<GraphCanvas {...props} graph={graph} content={{ nodes, relations: { local: relation } }} restoration={{ generation: graph.generation, view: initial }} />);
+  const cy = created.cores[0], before = ref.current!.capture()!;
+  expect(cy.getElementById("local").source().id()).toBe("a");
+  const reversed = { ...relation, subjectId: "b", objectId: "a" };
+  const reverseCopy = { ...relation, id: "other-direction" };
+  await act(async () => view.rerender(<GraphCanvas {...props} graph={{ ...graph, generation: graph.generation + 1 }} content={{ nodes, relations: { local: reversed, "other-direction": reverseCopy } }} restoration={{ generation: graph.generation + 1, view: before }} />));
+  expect(cy.getElementById("local").source().id()).toBe("b");
+  expect(cy.getElementById("local").target().id()).toBe("a");
+  expect(cy.getElementById("other-direction").source().id()).toBe("a");
+  expect(cy.getElementById("other-direction").target().id()).toBe("b");
+  expect(ref.current!.capture()).toEqual(before);
+  await act(async () => view.rerender(<GraphCanvas {...props} graph={{ ...graph, generation: graph.generation + 2 }} content={{ nodes, relations: { local: relation } }} restoration={{ generation: graph.generation + 2, view: before }} />));
+  expect(cy.edges()).toHaveLength(1);
+  expect(cy.getElementById("local").source().id()).toBe("a");
+  expect(cy.getElementById("local").target().id()).toBe("b");
+  expect(ref.current!.capture()).toEqual(before);
+});
+
+it("形の変更と標準への復帰を描画し、独自Entityは実線で示して分類バッジと位置を保つ", async () => {
+  const ref = createRef<GraphCanvasHandle>(), graph = emptyGraph();
+  const nodes: CanvasContent["nodes"] = [
+    { id: "local", kind: "local", label: "独自の主役", badge: "考察", shape: "circle" },
+    { id: "kg", kind: "organization", label: "長い名称が四行になる場合にも枠の内側に読める形を保つ", shape: "diamond" },
+  ];
+  const props = { ref, graph, contentOnly: true, selection: null, onEntity: vi.fn(), onRelation: vi.fn(), onToggleEntity: vi.fn() };
+  const view = render(<GraphCanvas {...props} content={{ nodes, relations: {} }} />);
+  const cy = created.cores[0], local = cy.getElementById("local"), kg = cy.getElementById("kg");
+  expect(local.style("shape")).toBe("ellipse"); expect(local.style("border-style")).toBe("solid"); expect(local.width()).toBe(local.height());
+  expect(kg.style("shape")).toBe("diamond"); expect(kg.data("kind")).toBe("organization");
+  await act(async () => { cy.zoom(.7); cy.pan({ x: 10, y: 20 }); local.position({ x: 180, y: 160 }); cy.emit("render"); });
+  const before = ref.current!.capture()!, badge = document.querySelector<HTMLSpanElement>('[data-node-id="local"]')!;
+  expect(badge.textContent).toBe("考察");
+  expect(parseFloat(badge.style.top)).toBeCloseTo(local.renderedPosition().y + local.outerHeight() * cy.zoom() / 2 + 4 * cy.zoom());
+  await act(async () => view.rerender(<GraphCanvas {...props} content={{ nodes: nodes.map(n => ({ ...n, shape: undefined })), relations: {} }} />));
+  expect(local.style("shape")).toBe("round-rectangle"); expect(local.style("border-style")).toBe("solid");
+  expect(kg.style("shape")).toBe("hexagon"); expect(ref.current!.capture()).toEqual(before);
+});
+
+it("通常Graphでは意味ごとの従来の形と寸法を変更しない", () => {
+  const nodes = { person: { id: "person", kind: "person" as const, name: "人物", description: null }, work: { id: "work", kind: "work" as const, name: "作品", description: null }, organization: { id: "organization", kind: "organization" as const, name: "組織", description: null } };
+  render(<GraphCanvas graph={{ ...emptyGraph(), nodes }} selection={null} onEntity={vi.fn()} onRelation={vi.fn()} onToggleEntity={vi.fn()} />);
+  const cy = created.cores[0];
+  expect(cy.getElementById("person").style("shape")).toBe("ellipse"); expect(cy.getElementById("work").style("shape")).toBe("round-rectangle"); expect(cy.getElementById("organization").style("shape")).toBe("hexagon");
+  cy.nodes().forEach(node => { expect(node.width()).toBe(116); expect(node.height()).toBe(64); expect(node.data("hasPresentationShape")).toBe(0); });
 });

@@ -9,18 +9,18 @@ import { MemberClientError, memberRequest } from "../lib/client/member-api";
 import { capsuleSharingLabels } from "../lib/i18n/capsule-sharing";
 import { CommunityDialog } from "./CommunityDialog";
 import Icon from "./Icon";
-import CapsuleDiscussion, { useDiscussionDraft } from "./CapsuleDiscussion";
+import CapsuleDiscussion, { useDiscussionDraft, type DiscussionDraftStore } from "./CapsuleDiscussion";
 import css from "./CapsuleConversation.module.css";
 
-export default function CapsuleShareControls({ capsule, userId, disabled, onUnauthorized }: {
-  capsule: MemberCapsule; userId: string; disabled: boolean; onUnauthorized: () => void;
+export default function CapsuleShareControls({ capsule, userId, disabled, onUnauthorized, draftCache }: {
+  capsule: MemberCapsule; userId: string; disabled: boolean; onUnauthorized: () => void; draftCache?: DiscussionDraftStore;
 }) {
   const { locale } = useUiLocale(), text = capsuleSharingLabels(locale), fieldId = useId();
   const [blocked, setBlocked] = useState(false), [share, setShare] = useState<CapsuleShare | null>(null);
   const [known, setKnown] = useState(false), [busy, setBusy] = useState(true), [closed, setClosed] = useState(false);
   const [url, setUrl] = useState(""), [confirm, setConfirm] = useState<"issue" | "revoke" | null>(null);
   const [error, setError] = useState<string | null>(null), [message, setMessage] = useState<string | null>(null);
-  const discussionDraft = useDiscussionDraft();
+  const localDraft = useDiscussionDraft(), discussionDraft = draftCache ?? localDraft;
   const [commentVersion, setCommentVersion] = useState(0);
   const active = useRef<AbortController | null>(null), unauthorized = useRef(onUnauthorized), currentShare = useRef<string | null>(null);
   useEffect(() => { unauthorized.current = onUnauthorized; }, [onUnauthorized]);
@@ -40,7 +40,8 @@ export default function CapsuleShareControls({ capsule, userId, disabled, onUnau
   const refresh = useCallback(() => { void run(async signal => {
     const result = await memberRequest(path, capsuleShareStatusSchema, { user: userId, signal });
     if (!signal.aborted) {
-      if (currentShare.current !== (result.share?.id ?? null)) setUrl("");
+      const sameLink = currentShare.current === (result.share?.id ?? null);
+      setUrl(previous => !result.share || result.blocked ? "" : result.token ? `${location.origin}/shared#${result.token}` : sameLink ? previous : "");
       currentShare.current = result.share?.id ?? null;
       setShare(result.share); setBlocked(result.blocked); setClosed(result.commentsClosed); setKnown(true); setCommentVersion(value => value + 1);
     }
@@ -73,7 +74,7 @@ export default function CapsuleShareControls({ capsule, userId, disabled, onUnau
     try { await navigator.clipboard.writeText(url); setMessage(text.copied); }
     catch { setMessage(text.copyFailed); }
   }
-  return <section className={css.panel} aria-label={text.title}>
+  return <section className={css.panel} aria-label={text.title} aria-busy={busy} data-capsule-draft={discussionDraft.hasDraft() ? "true" : undefined} data-capsule-pending={discussionDraft.hasPending() ? "true" : undefined}>
     <div className={css.heading}><div><h2>{text.title}</h2><span className={css.state} data-active={!!share}>{busy && !known ? text.checking : blocked ? text.blocked : share ? text.active(share.revision) : text.stopped}</span></div>
       <button className={`${css.button} ${css.quiet} ${css.iconButton}`} aria-label={text.refresh} title={text.refresh} disabled={busy || disabled} onClick={refresh}><Icon name="refresh" /></button></div>
     <div className={css.summary}><Icon name="capsule" /><div><strong>{capsule.content.title}</strong><span className={css.muted}>{text.current(capsule.revision)}</span></div></div>
@@ -83,12 +84,13 @@ export default function CapsuleShareControls({ capsule, userId, disabled, onUnau
       <button type="button" className={css.switch} role="switch" aria-label={text.comments} aria-checked={!closed} disabled={busy || disabled || !known || blocked} onClick={changeComments} /></div>
     {error && <p className={css.error} role="alert">{contentMessage(error, locale)}</p>}
     {message && <p className={css.feedback} role="status">{contentMessage(message, locale)}</p>}
+    {share && known && !busy && !blocked && !url && <p className={css.feedback}>{text.unrecoverable}</p>}
     {url ? <div className={css.linkBox}><label htmlFor={fieldId}>{text.url}</label><div className={css.linkField}><input id={fieldId} readOnly value={url} onFocus={event => event.target.select()} />
       <button className={`${css.button} ${css.primary}`} onClick={() => void copy()}><Icon name="copy" />{text.copy}</button></div>
       <a className={`${css.button} ${css.quiet}`} href={url} target="_blank" rel="noopener noreferrer"><Icon name="external" />{text.preview}</a></div> : null}
     <div className={css.actions}>{share && <button className={`${css.button} ${css.quiet}`} disabled={busy || disabled || !known} onClick={() => setConfirm("revoke")}>{text.revoke}</button>}
       <button className={`${css.button} ${url ? "" : css.primary}`} disabled={busy || disabled || !known || blocked} onClick={() => share ? setConfirm("issue") : issue()}><Icon name="link" />{share ? text.rotate : text.issue}</button></div>
-    <details className={css.details}><summary>{text.details}</summary><p>{text.oneTime}</p><p>{text.commentScope}</p></details>
+    <details className={css.details}><summary>{text.details}</summary><p>{text.linkRecovery}</p><p>{text.commentScope}</p></details>
     {capsule.content.document && share && !blocked && <CapsuleDiscussion key={`${capsule.id}:${share.revision}:${userId}`} capsuleId={capsule.id} revision={share.revision} userId={userId} draftCache={discussionDraft} onUnauthorized={onUnauthorized} showSettings={false} refreshVersion={commentVersion} />}
     {confirm && <CommunityDialog className={css.dialog} title={confirm === "issue" ? text.rotate : text.revoke} onCancel={() => setConfirm(null)} busy={busy}>
       <p>{confirm === "issue" ? text.rotationHelp : text.revokeHelp}</p><div className={css.actions}>

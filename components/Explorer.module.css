@@ -26,6 +26,13 @@
 .muted { color: var(--color-muted); font-size: 13px; }
 .error { border-left: 3px solid var(--color-denied); background: var(--color-denied-soft); padding: 10px; color: var(--color-denied); }
 .error p:last-child { margin: 0; }
+/* Status remains outside the inert workspace without changing its dimensions. */
+.urlRestoreFeedback { position: relative; z-index: 30; height: 0; min-height: 0; flex: 0 0 0; pointer-events: none; }
+.urlRestoreMessage { position: absolute; top: 12px; left: 50%; transform: translateX(-50%); width: max-content; max-width: min(540px, calc(100vw - 24px)); max-height: min(60dvh, 440px); overflow: auto; pointer-events: auto; padding: 10px 14px; border: 1px solid var(--color-border); border-radius: var(--radius-panel); background: var(--color-panel); box-shadow: var(--shadow-panel); font-size: 13px; animation: urlRestoreAppear 140ms ease-out; }
+.explorer .urlRestoreMessage { margin: 0; }
+.urlRestoreMessage.error { border-left: 3px solid var(--color-denied); background: var(--color-denied-soft); }
+@keyframes urlRestoreAppear { from { opacity: 0; } to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .urlRestoreMessage { animation: none; } }
 .graphHeader { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 4px 16px; margin-bottom: 4px; flex: 0 0 auto; }
 .graphHeading { display: flex; align-items: center; flex-wrap: wrap; gap: 4px 12px; flex: 0 1 auto; min-width: 0; max-width: 100%; }
 .graphHeading p { font-size: 11px; color: var(--color-muted); font-variant-numeric: tabular-nums; }
@@ -126,7 +133,8 @@
 /* 検索・探索条件・選択詳細を分け、条件編集中もGraphを背後に維持する。 */
 .conditionBar { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 12px; margin-bottom: 4px; padding-bottom: 4px; border-bottom: 1px solid var(--color-border); flex: 0 0 auto; font-size: 12px; }
 .conditionBar > p { margin: 0; flex: 1 1 220px; }
-.conditionBar > button { padding: 4px 8px; }
+.conditionActions { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; min-width: 0; }
+.conditionActions > button { display: inline-flex; align-items: center; justify-content: center; gap: 4px; padding: 4px 8px; }
 .rootLabel { font-size: 12px; color: var(--color-muted); margin-bottom: 6px !important; }
 .conditionDialog { background: var(--color-panel); color: var(--color-text); border: 1px solid var(--color-control-border); border-radius: 8px; padding: 20px; width: min(620px, calc(100vw - 40px)); max-height: calc(100dvh - 60px); overflow: auto; }
 .conditionDialog::backdrop { background: rgb(20 35 55 / .32); }
@@ -326,7 +334,7 @@
 .rootBar { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin-left: auto; }
 .rootLabel { margin: 0 !important; }
 .conditionBar { padding-block: 8px; margin-bottom: 10px; }
-.conditionBar > button { font-size: 12px; border-color: var(--color-border); }
+.conditionActions > button { font-size: 12px; border-color: var(--color-border); }
 .viewportTools { gap: 6px; margin: 10px 0; }
 .viewportTools button { display: inline-flex; justify-content: center; align-items: center; border-color: var(--color-border); }
 .viewportTools button:nth-of-type(3) { margin-left: 8px; }
@@ -556,11 +564,12 @@
   .copyExploration, .restoreExploration { grid-row: 1 / 3; width: 44px; height: 44px; display: grid; place-items: center; padding: 0 !important; border-color: transparent !important; }
   .copyExploration { grid-column: 2; }
   .restoreExploration { grid-column: 3; }
-  .copyExploration > span, .restoreExploration > span, .conditionBar > button > span { display: none; }
-  .copyExploration > :global(.ui-icon), .restoreExploration > :global(.ui-icon), .conditionBar > button > :global(.ui-icon) { margin: 0; }
-  .conditionBar { flex-wrap: nowrap; gap: 8px; padding: 2px 0 4px; margin-bottom: 8px; font-size: 11px; }
-  .conditionBar > p { flex: 1; min-width: 0; }
-  .conditionBar > button { display: grid; place-items: center; flex: 0 0 44px; width: 44px; height: 44px; padding: 0; border-color: transparent; }
+  .copyExploration > span, .restoreExploration > span, .conditionEdit > span { display: none; }
+  .copyExploration > :global(.ui-icon), .restoreExploration > :global(.ui-icon), .conditionEdit > :global(.ui-icon) { margin: 0; }
+  .conditionBar { flex-wrap: wrap; gap: 4px 8px; padding: 2px 0 4px; margin-bottom: 8px; font-size: 11px; }
+  .conditionBar > p { flex: 1 1 120px; min-width: 0; }
+  .conditionActions > button { min-height: 44px; }
+  .conditionActions > .conditionEdit { flex: 0 0 44px; width: 44px; height: 44px; padding: 0; border-color: transparent; }
   .canvas { height: clamp(360px, calc(100dvh - 220px), 640px); }
 }
 @media (max-width: 480px) { .graphHeading > [data-testid="relation-counts"] { display: none; } }

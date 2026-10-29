@@ -10,8 +10,9 @@ import { MemberClientError, memberCreateResultSchema, memberItemSchema, memberLi
 import { useMemberSession, refreshMemberIdentity, getMemberIdentitySnapshot, invalidateMemberIdentity } from "../lib/client/use-member-identity";
 import { useUiLocale } from "../lib/client/ui-locale";
 import CapsuleStudio from "./CapsuleStudio";
-import CapsuleSurface from "./CapsuleSurface";
+import CapsuleSurface, { useCapsuleBackdrop } from "./CapsuleSurface";
 import CapsuleShareControls from "./CapsuleShareControls";
+import { useDiscussionDraft } from "./CapsuleDiscussion";
 import Icon from "./Icon";
 import css from "./CapsuleStudio.module.css";
 
@@ -47,6 +48,7 @@ function useCapsuleIdentityRefresh() {
 
 export function CapsuleWorkspace({ initial, member, ownerId, isNew = false, onClose, onSaved }: { initial: LocalCapsule; member?: MemberCapsule; ownerId?: string; isNew?: boolean; onClose?: () => void; onSaved?: (value: MemberCapsule) => void }) {
   const identity = useMemberSession(), { locale } = useUiLocale();
+  const commentDraft = useDiscussionDraft();
   useCapsuleIdentityRefresh();
   const t = (ja: string, en: string) => locale === "en" ? en : ja;
   const [owner, setOwner] = useState<string | null | undefined>(() => member ? ownerId ?? undefined : !isNew ? null : identity.status === "authenticated" ? identity.user!.id : identity.status === "guest" ? null : undefined);
@@ -126,8 +128,8 @@ export function CapsuleWorkspace({ initial, member, ownerId, isNew = false, onCl
   }
   if (owner === undefined) return <section className={css.library}><p role="status">{t("保存先のアカウントを確認しています…", "Checking the destination account…")}</p><button onClick={() => void refreshMemberIdentity(true).catch(() => {})}>{t("再確認", "Retry")}</button>{!member && identity.error && <button onClick={() => setOwner(null)}>{t("ブラウザ保存で続ける", "Continue with browser storage")}</button>}<button onClick={onClose}>{t("閉じる", "Close")}</button></section>;
   if (!ready) return <section className={css.library}><p role={error ? "alert" : "status"}>{error ?? t("Capsuleを開いています…", "Opening Capsule…")}</p>{error && <button onClick={() => { setError(null); setAttempt(v => v + 1); }}>{t("再試行", "Retry")}</button>}<button onClick={onClose}>{t("閉じる", "Close")}</button></section>;
-  return <CapsuleSurface><CapsuleStudio capsule={ready} isNew={isNew} onClose={onClose} onSave={save} locked={locked} capacity={capacity} destination={owner ? t("アカウント", "Account") : t("このブラウザ", "This browser")}
-    sharing={server && owner ? <CapsuleShareControls key={`${server.id}:${server.revision}`} capsule={server} userId={owner} disabled={locked} onUnauthorized={() => void refreshMemberIdentity(true).catch(() => {})} /> : undefined} /></CapsuleSurface>;
+  return <CapsuleSurface onClose={onClose}><CapsuleStudio capsule={ready} isNew={isNew} onClose={onClose} onSave={save} locked={locked} capacity={capacity} commentDraft={commentDraft} destination={owner ? t("アカウント", "Account") : t("このブラウザ", "This browser")}
+    sharing={server && owner ? <CapsuleShareControls key={`${server.id}:${server.revision}`} capsule={server} userId={owner} disabled={locked} draftCache={commentDraft} onUnauthorized={() => void refreshMemberIdentity(true).catch(() => {})} /> : undefined} /></CapsuleSurface>;
 }
 
 type Item = { key: string; title: string; updatedAt: string; member?: MemberCapsuleSummary; browser?: LocalCapsule; metadata: CapsuleMetadata };
@@ -138,7 +140,14 @@ export default function MyCapsules({ dataset, onClose }: { dataset: DatasetMode;
   const dialog = useRef<HTMLDialogElement>(null), active = useRef<AbortController | null>(null);
   const [items, setItems] = useState<Item[]>([]), [error, setError] = useState<string | null>(null), [busy, setBusy] = useState(true), [attempt, setAttempt] = useState(0);
   const [filter, setFilter] = useState<"recent" | "favorite" | "shared" | "published">("recent");
+  const [importing, setImporting] = useState(false);
   const [opened, setOpened] = useState<{ capsule: LocalCapsule; member?: MemberCapsule; owner?: string } | null>(null);
+  const backdrop = useCapsuleBackdrop(onClose, !opened && !importing);
+  useEffect(() => {
+    const target = dialog.current;
+    const prior = document.activeElement instanceof HTMLElement && !target?.contains(document.activeElement) ? document.activeElement : null;
+    return () => { target?.close(); if (prior?.isConnected) prior.focus({ preventScroll: true }); };
+  }, []);
   useEffect(() => { if (opened) dialog.current?.close(); else dialog.current?.showModal(); }, [opened]);
   useEffect(() => {
     const controller = new AbortController(), session = getMemberIdentitySnapshot(); active.current = controller;
@@ -181,11 +190,11 @@ export default function MyCapsules({ dataset, onClose }: { dataset: DatasetMode;
     : filter === "shared" ? t("限定リンクで共有しているCapsuleはまだありません。", "You have no Capsules shared by link yet.")
     : filter === "published" ? t("コミュニティに掲載しているCapsuleはまだありません。", "You have no Capsules listed in a community yet.")
     : t("Capsuleはまだありません。Graphの「Capsule作成」から始められます。", "No Capsules yet. Start with “Create Capsule” on a graph.");
-  return <><dialog className={css.drawer} ref={dialog} onCancel={onClose} aria-label="My Capsules">
-    <div className={css.library}><header className={css.header}><div className={css.identity}><span className={css.eyebrow}><Icon name="capsule" />My Capsules</span><h2>{t("自分のCapsule", "Your Capsules")}</h2></div><button aria-label={t("一覧を閉じる", "Close list")} onClick={onClose}><Icon name="close" /></button></header>
+  return <><dialog className={css.drawer} ref={dialog} {...backdrop.handlers} onCancel={event => { event.preventDefault(); if (event.target === event.currentTarget && !opened && !importing && !backdrop.composing.current) onClose(); }} aria-label="My Capsules" aria-busy={busy}>
+    <div className={css.library}><header className={css.header}><div className={css.identity}><span className={css.eyebrow}><Icon name="capsule" />My Capsules</span><h2>{t("自分のCapsule", "Your Capsules")}</h2></div><button disabled={importing} aria-label={t("一覧を閉じる", "Close list")} onClick={onClose}><Icon name="close" /></button></header>
     <div className={css.actions}>{([ ["recent", "history", t("最近", "Recent")], ["favorite", "star", t("お気に入り", "Favorites")], ["shared", "link", t("限定リンク", "Shared links")], ["published", "organization", t("コミュニティ", "Community")] ] as const).map(([key, icon, label]) => <button key={key} aria-pressed={filter === key} onClick={() => setFilter(key)}><Icon name={icon} />{label}</button>)}<button title={t("一覧を再取得", "Refresh list")} aria-label={t("一覧を再取得", "Refresh list")} onClick={() => { setError(null); setAttempt(v => v + 1); }}><Icon name="refresh" /></button></div>
     {busy && <p role="status">{t("読み込み中…", "Loading…")}</p>}{error && <p role="alert">{error}</p>}{!busy && !rows.length && <p className={css.empty}>{empty}</p>}
-    <ul>{rows.map(item => <li key={item.key}><div><h3>{item.title}</h3>{(item.member?.shared || item.member?.published) && <div>{item.member.shared && <span className={css.badge}><Icon name="link" style={{width:12,height:12,marginRight:4}} />{t("限定リンクで共有中", "Link shared")}</span>}{item.member.published && <span className={css.badge}><Icon name="organization" style={{width:12,height:12,marginRight:4}} />{t("コミュニティ掲載中", "Listed in a community")}</span>}</div>}<p>{item.member ? t("アカウント", "Account") : t("ブラウザ", "Browser")} · {new Date(item.updatedAt).toLocaleString(locale)}</p></div><div className={css.actions}><button title={t("お気に入り", "Favorite")} aria-label={`${item.title} ${t("お気に入り", "favorite")}`} aria-pressed={item.metadata.favorite} onClick={() => void capsuleMetadata(item.key, { favorite: !item.metadata.favorite }).then(metadata => setItems(values => values.map(v => v.key === item.key ? { ...v, metadata } : v))).catch(() => setError(t("お気に入りを保存できませんでした。", "Could not save favorite.")))}><Icon name="star" style={item.metadata.favorite ? {fill:"currentColor"} : undefined} /></button><button disabled={busy} onClick={() => void open(item)}>{t("開く", "Open")}</button>{item.browser && identity.user && <button disabled={busy} onClick={() => void (async () => { setBusy(true); try { const { memberImportRequest } = await import("../lib/client/member-api"); const request = memberImportRequest(sessionStorage, identity.user!.id, item.browser!); await memberRequest("/api/member/capsules", memberCreateResultSchema, { method: "POST", body: request, user: identity.user!.id }); setAttempt(v => v + 1); } catch { setError(t("保存できませんでした。元のブラウザ保存は保持しています。", "Could not save. The browser copy is retained.")); } finally { setBusy(false); } })()}>{t("アカウントに保存", "Save to account")}</button>}</div></li>)}</ul>
+    <ul>{rows.map(item => <li key={item.key}><div><h3>{item.title}</h3>{(item.member?.shared || item.member?.published) && <div>{item.member.shared && <span className={css.badge}><Icon name="link" style={{width:12,height:12,marginRight:4}} />{t("限定リンクで共有中", "Link shared")}</span>}{item.member.published && <span className={css.badge}><Icon name="organization" style={{width:12,height:12,marginRight:4}} />{t("コミュニティ掲載中", "Listed in a community")}</span>}</div>}<p>{item.member ? t("アカウント", "Account") : t("ブラウザ", "Browser")} · {new Date(item.updatedAt).toLocaleString(locale)}</p></div><div className={css.actions}><button title={t("お気に入り", "Favorite")} aria-label={`${item.title} ${t("お気に入り", "favorite")}`} aria-pressed={item.metadata.favorite} onClick={() => void capsuleMetadata(item.key, { favorite: !item.metadata.favorite }).then(metadata => setItems(values => values.map(v => v.key === item.key ? { ...v, metadata } : v))).catch(() => setError(t("お気に入りを保存できませんでした。", "Could not save favorite.")))}><Icon name="star" style={item.metadata.favorite ? {fill:"currentColor"} : undefined} /></button><button disabled={busy} onClick={() => void open(item)}>{t("開く", "Open")}</button>{item.browser && identity.user && <button disabled={busy} onClick={() => void (async () => { setBusy(true); setImporting(true); try { const { memberImportRequest } = await import("../lib/client/member-api"); const request = memberImportRequest(sessionStorage, identity.user!.id, item.browser!); await memberRequest("/api/member/capsules", memberCreateResultSchema, { method: "POST", body: request, user: identity.user!.id }); setAttempt(v => v + 1); } catch { setError(t("保存できませんでした。元のブラウザ保存は保持しています。", "Could not save. The browser copy is retained.")); } finally { setBusy(false); setImporting(false); } })()}>{t("アカウントに保存", "Save to account")}</button>}</div></li>)}</ul>
     </div>
   </dialog>{opened && <CapsuleWorkspace key={`${opened.capsule.id}:${opened.owner ?? "browser"}`} initial={opened.capsule} member={opened.member} ownerId={opened.owner} onClose={() => { setOpened(null); setAttempt(v => v + 1); }} />}</>;
 }

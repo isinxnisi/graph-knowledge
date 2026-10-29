@@ -1,11 +1,12 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import examples from "../docs/API_RESPONSE_EXAMPLES.json";
 import type { ClaimDetail, ClaimSummary, NeighborsResponse } from "../lib/domain/api";
-import { capsuleDocumentSchema, capsuleReferences } from "../lib/domain/capsule-document";
+import { CAPSULE_NODE_SHAPES, capsuleDocumentSchema, capsuleReferences } from "../lib/domain/capsule-document";
 import { memberCapsuleContentSchema, memberCapsuleSchema } from "../lib/domain/member-capsule";
 import { emptyExpansion, emptyGraph } from "../lib/client/graph-state";
 import { captureCapsule, capsuleClone, capsuleHistory, recordCapsule, undoCapsule, redoCapsule, removeCapsuleElements, withDocument, withCapsuleView, materializeLegacy, compareCapsuleNeighborhood, snapshotClaim } from "../lib/client/capsule-editor";
 import { capsulePresentation } from "../lib/client/capsule-presentation";
+import { capsuleNodeShapeLayout } from "../lib/client/capsule-node-layout";
 import { fetchAdjacentNeighbors, fetchNeighbors } from "../lib/client/api";
 
 vi.mock("../lib/client/api", () => ({ fetchAdjacentNeighbors: vi.fn(), fetchNeighbors: vi.fn() }));
@@ -52,6 +53,30 @@ describe("Capsule document identity and snapshots", () => {
     expect(Object.values(presentation.members).flat().sort()).toEqual(doc.relations.map(r => r.key).sort());
     const relation = parsed.relations[0];
     expect(relation.origin.kind === "kg" && relation.origin.snapshot.polarity).toBe(page.claims[0].polarity);
+  });
+  it.each(CAPSULE_NODE_SHAPES)("round-trips %s as presentation without changing KG identity, kind or snapshots", shape => {
+    const value = capture(), doc = capsuleClone(value.document!), origin = capsuleClone(doc.nodes[0].origin);
+    doc.nodes[0].shape = shape;
+    doc.nodes.push({ key: crypto.randomUUID(), title: "独自の主役", description: "", badge: "中心", shape, origin: { kind: "local" } });
+    const saved = memberCapsuleContentSchema.parse(JSON.parse(JSON.stringify({ dataset: value.dataset, title: value.title, note: value.note, language: value.language, ...capsuleReferences(doc), document: doc })));
+    expect(saved.document!.nodes[0].origin).toEqual(origin);
+    expect(capsuleReferences(saved.document!)).toEqual(capsuleReferences(value.document!));
+    const nodes = capsulePresentation(saved.document!, "ja").nodes;
+    expect(nodes[0]).toMatchObject({ shape, kind: origin.kind === "kg" ? origin.snapshot.kind : "local" });
+    expect(nodes.at(-1)).toMatchObject({ shape, kind: "local" });
+  });
+  it("keeps omitted shapes compatible and rejects unsupported presentation values", () => {
+    const doc = capture().document!;
+    expect(capsuleDocumentSchema.parse(doc).nodes[0]).not.toHaveProperty("shape");
+    expect(capsuleDocumentSchema.safeParse({ ...doc, nodes: [{ ...doc.nodes[0], shape: "star" }, ...doc.nodes.slice(1)] }).success).toBe(false);
+  });
+  it("fits all four label lines inside circles and diamonds, including the corners", () => {
+    for (const lines of [1, 2, 3, 4]) {
+      const circle = capsuleNodeShapeLayout("circle", 108, lines), diamond = capsuleNodeShapeLayout("diamond", 108, lines);
+      expect(circle.shapeWidth).toBe(circle.shapeHeight);
+      expect(Math.hypot(108, lines * 20)).toBeLessThan(circle.shapeWidth);
+      expect(108 / diamond.shapeWidth + lines * 20 / diamond.shapeHeight).toBeLessThan(1);
+    }
   });
   it("rejects counterfeit reference identity and mismatched evidence targets", () => {
     const doc = capture().document!;

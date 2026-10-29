@@ -11,6 +11,8 @@ import { useEffect, useImperativeHandle, useRef, useState } from "react";
 import type { ReactNode, Ref } from "react";
 import { restorationPan, restorationPositions, viewportCenter } from "../lib/client/graph-view";
 import { CAPSULE_TEXT_FONT, capsuleTextFormat, capsuleTextLayout, type CanvasTextFormat } from "../lib/client/capsule-text-layout";
+import { capsuleNodeShapeLayout } from "../lib/client/capsule-node-layout";
+import type { CapsuleNodeShape } from "../lib/domain/capsule-document";
 import type { GraphView, ViewRestoration } from "../lib/client/graph-view";
 export type GraphCanvasHandle = { capture: () => GraphView | null; focusEntity: (id: string) => void; ensureVisible?: (id: string) => void; focus?: () => void };
 import type { GraphState, Selection } from "../lib/client/graph-state";
@@ -24,7 +26,7 @@ import styles from "./Explorer.module.css";
 import AnimatedDetails from "./AnimatedDetails";
 import NeighborLoading from "./NeighborLoading";
 
-export type CanvasContent = { nodes: { id: string; label: string; kind: string; badge?: string; textStyle?: string; textFormat?: CanvasTextFormat }[]; relations: Record<string, CanvasRelation> };
+export type CanvasContent = { nodes: { id: string; label: string; kind: string; badge?: string; shape?: CapsuleNodeShape; textStyle?: string; textFormat?: CanvasTextFormat }[]; relations: Record<string, CanvasRelation> };
 export type GraphContextMenuRequest = {
   kind: "node" | "edge" | "background"; id?: string; selectedKeys: string[];
   clientX: number; clientY: number; position: { x: number; y: number }; source: "pointer" | "keyboard";
@@ -166,12 +168,13 @@ export default function GraphCanvas({ onInspectEntity, content, selectedKeys, on
         { selector: "node", style: { label: "data(label)", "background-color": color("person"), color: color("text"), "border-width": 1.3, "border-color": color("node-border"), width: 116, height: "data(nodeHeight)", "font-size": 15, "font-weight": 600, "font-family": "system-ui, sans-serif", "text-valign": "center", "text-halign": "center", "text-wrap": "wrap", "text-max-width": "108px", "text-overflow-wrap": "anywhere" } },
         { selector: 'node[kind="work"]', style: { shape: "round-rectangle", "background-color": color("work") } },
         { selector: 'node[kind="organization"]', style: { shape: "hexagon", "background-color": color("organization") } },
-        { selector: 'node[kind="local"]', style: { shape: "round-rectangle", "background-color": color("panel"), "border-style": "dashed" } },
+        { selector: 'node[kind="local"]', style: { shape: "round-rectangle", "background-color": color("panel"), "border-style": "solid" } },
         { selector: 'node[kind="text"]', style: { shape: "round-rectangle", "background-opacity": 0, "border-width": 0, width: "data(textWidth)", height: "data(textHeight)", "text-max-width": "data(textWidth)", "font-size": "data(textFontSize)", "font-weight": (node: cytoscape.NodeSingular) => node.data("textFontWeight") as 400 | 700, "text-justification": (node: cytoscape.NodeSingular) => node.data("textAlign") as "left" | "center" | "right", "text-margin-x": (node: cytoscape.NodeSingular) => Number(node.data("textMarginX")), "line-height": 1.35, "text-overflow-wrap": "whitespace" } },
         { selector: 'node[textStyle="muted"]', style: { "text-opacity": 0.65 } },
         { selector: "node.hovered", style: { "border-color": color("accent"), "underlay-color": color("accent"), "underlay-opacity": 0.08, "underlay-padding": 5 } },
         { selector: "node.center", style: { "border-width": 3, "border-color": color("accent") } },
         { selector: 'node[kind="event"]', style: { shape: "diamond", "background-color": color("work") } },
+        { selector: 'node[hasPresentationShape = 1]', style: { shape: (node: cytoscape.NodeSingular) => node.data("presentationShape") as cytoscape.Css.NodeShape, width: "data(shapeWidth)", height: "data(shapeHeight)" } },
         { selector: "edge", style: { label: "data(canvasLabel)", color: color("text"), "curve-style": "unbundled-bezier", "control-point-distances": "data(distance)", "control-point-weights": "data(weight)", "target-arrow-shape": "triangle", "source-arrow-shape": "none", "arrow-scale": 1.2, "line-color": color("edge"), "target-arrow-color": color("edge"), width: 1.7, "font-size": 14, "text-margin-y": (edge: cytoscape.EdgeSingular) => Number(edge.data("labelOffset")), "text-background-color": color("panel"), "text-background-opacity": 1, "text-background-padding": "5px", "text-background-shape": "roundrectangle", "text-wrap": "wrap", "text-max-width": "165px", "text-overflow-wrap": "anywhere", "text-events": "yes" } },
         { selector: 'edge[polarity="denied"]', style: { "line-style": "dashed", "line-color": color("denied"), "target-arrow-color": color("denied") } },
         { selector: 'edge[polarity="mixed"]', style: { "line-style": "dotted" } },
@@ -265,7 +268,9 @@ export default function GraphCanvas({ onInspectEntity, content, selectedKeys, on
     const surface = container.current;
     surface.addEventListener("keydown", keyboardContext);
     let dragStart: GraphView | null = null, dragging: string | null = null;
-    cy.on("grab", "node", event => { clicks.cancel(); relationClicks.cancel(); contentClicks.cancel(); dragStart = captureView(); dragging = event.target.id(); });
+    // Cytoscape emits grab on every node press, including the second press of
+    // a double-click. Only actual drag/pan/zoom below cancels the click sequence.
+    cy.on("grab", "node", event => { clicks.cancelPending(); dragStart = captureView(); dragging = event.target.id(); });
     cy.on("drag", "node", event => {
       if (!dragStart || dragging !== event.target.id() || !canvasOptions.current.currentKeys.includes(dragging!)) return;
       const from = dragStart.positions[dragging!], to = event.target.position();
@@ -317,14 +322,14 @@ export default function GraphCanvas({ onInspectEntity, content, selectedKeys, on
         const format = capsuleTextFormat(node.textStyle, node.textFormat);
         if (context) context.font = `${format.fontWeight === "bold" ? 700 : 400} ${format.fontSize}px ${CAPSULE_TEXT_FONT}`;
         const geometry = capsuleTextLayout(node.label, node.textStyle, node.textFormat, context ? text => context.measureText(text).width : undefined);
-        return { ...node, fullLabel: node.label, label: geometry.label, nodeHeight: geometry.height, textWidth: geometry.width, textHeight: geometry.height,
+        return { ...node, hasPresentationShape: 0, fullLabel: node.label, label: geometry.label, nodeHeight: geometry.height, textWidth: geometry.width, textHeight: geometry.height,
           textFontSize: geometry.fontSize, textFontWeight: geometry.fontWeight === "bold" ? 700 : 400, textAlign: geometry.align, textMarginX: geometry.textMarginX };
       }
       if (context) context.font = `600 15px ${CAPSULE_TEXT_FONT}`;
       const geometry = capsuleTextLayout(node.label, "note", { width: 128, fontSize: 15 }, context ? text => context.measureText(text).width : undefined);
       const lines = geometry.lines.slice(0, 4);
       if (geometry.lines.length > 4) lines[3] = lines[3].slice(0, -1) + "…";
-      return { ...node, fullLabel: node.label, label: content ? lines.join("\n") : node.label, nodeHeight: content ? Math.max(64, lines.length * 20 + 20) : 64 };
+      return { ...node, ...capsuleNodeShapeLayout(node.shape, geometry.labelWidth, lines.length), fullLabel: node.label, label: content ? lines.join("\n") : node.label, nodeHeight: content ? Math.max(64, lines.length * 20 + 20) : 64 };
     });
     const nodeIds = new Set(renderedNodes.map(n => n.id));
     const newNodes = renderedNodes.filter(node => !cy.getElementById(node.id).length);

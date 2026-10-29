@@ -9,6 +9,8 @@ import { captureCapsule } from "../lib/client/capsule-editor";
 import { emptyGraph } from "../lib/client/graph-state";
 import type { NeighborsResponse } from "../lib/domain/api";
 import examples from "../docs/API_RESPONSE_EXAMPLES.json";
+import CapsuleSurface, { CapsuleModal } from "../components/CapsuleSurface";
+import { useDiscussionDraft } from "../components/CapsuleDiscussion";
 import CapsuleStudio from "../components/CapsuleStudio";
 import CapsuleContextMenu from "../components/CapsuleContextMenu";
 
@@ -63,6 +65,70 @@ beforeEach(()=>{
   vi.spyOn(window.history,"pushState").mockImplementation(()=>{});vi.spyOn(window.history,"back").mockImplementation(()=>{});vi.spyOn(window.history,"forward").mockImplementation(()=>{});
 });
 afterEach(()=>{cleanup();vi.restoreAllMocks();});
+
+it("reverses a local arrow as one undoable edit and saves its new endpoints",async()=>{
+  const save=vi.fn(saveResult);render(<CapsuleStudio capsule={capsule()} isNew onSave={save}/>);
+  act(()=>mocks.canvas!.onRelationDoubleClick!(relation));click("Reverse direction");click("Apply");
+  expect(mocks.canvas!.content!.relations[relation]).toMatchObject({subjectId:b,objectId:a});
+  click("Undo");expect(mocks.canvas!.content!.relations[relation]).toMatchObject({subjectId:a,objectId:b});
+  click("Redo");expect(mocks.canvas!.content!.relations[relation]).toMatchObject({subjectId:b,objectId:a});
+  click("Save");await waitFor(()=>expect(save).toHaveBeenCalledOnce());
+  expect(save.mock.calls[0][0].document!.relations[0]).toMatchObject({source:b,target:a,origin:{kind:"local"}});
+});
+
+it("makes reciprocal local arrows without duplicating reverse evidence or an existing reverse relation",async()=>{
+  const value=capsule();value.document!.evidence[0]={...value.document!.evidence[0],targetKey:relation,supports:"relation"};
+  const save=vi.fn(saveResult);render(<CapsuleStudio capsule={value} isNew onSave={save}/>);
+  act(()=>mocks.canvas!.onRelationDoubleClick!(relation));click("Add the reverse relation too");click("Apply");
+  expect(Object.values(mocks.canvas!.content!.relations)).toHaveLength(2);
+  click("Undo");expect(Object.values(mocks.canvas!.content!.relations)).toHaveLength(1);
+  click("Redo");expect(Object.values(mocks.canvas!.content!.relations)).toHaveLength(2);
+  act(()=>mocks.canvas!.onRelationDoubleClick!(relation));click("Add the reverse relation too");click("Apply");
+  expect(Object.values(mocks.canvas!.content!.relations)).toHaveLength(2);
+  click("Save");await waitFor(()=>expect(save).toHaveBeenCalledOnce());
+  const saved=save.mock.calls[0][0].document!,reverse=saved.relations.find(r=>r.source===b && r.target===a)!;
+  expect(reverse).toBeTruthy();expect(saved.evidence).toHaveLength(1);expect(saved.evidence[0].targetKey).toBe(relation);
+  expect(saved.evidence.some(e=>e.targetKey===reverse.key)).toBe(false);
+});
+
+it("keeps a KG claim's direction fixed while exposing its endpoints",()=>{
+  const value=groupedCapsule();render(<CapsuleStudio capsule={value} isNew onSave={saveResult}/>);
+  act(()=>mocks.canvas!.onRelationDoubleClick!(Object.keys(mocks.canvas!.content!.relations)[0]));
+  expect(screen.getByText(/This direction comes from the KG/)).toBeTruthy();
+  expect(screen.queryByRole("button",{name:"Reverse direction"})).toBeNull();
+  expect(screen.queryByRole("button",{name:"Add the reverse relation too"})).toBeNull();
+});
+
+it("does not offer direction changes for a self relation",()=>{
+  const value=capsule();value.document!.relations[0].target=a;
+  render(<CapsuleStudio capsule={value} isNew onSave={saveResult}/>);
+  act(()=>mocks.canvas!.onRelationDoubleClick!(relation));
+  expect(screen.queryByRole("button",{name:"Reverse direction"})).toBeNull();
+  expect(screen.queryByRole("button",{name:"Add the reverse relation too"})).toBeNull();
+});
+
+it("saves an authored entity shape, restores it in the form and undoes a shape change",async()=>{
+  const save=vi.fn(saveResult);render(<CapsuleStudio capsule={capsule()} isNew onSave={save}/>);
+  act(()=>mocks.canvas!.onEntityDoubleClick!(a));click("Diamond");click("Apply");
+  expect(mocks.canvas!.content!.nodes.find(n=>n.id===a)).toMatchObject({shape:"diamond"});
+  click("Undo");expect(mocks.canvas!.content!.nodes.find(n=>n.id===a)?.shape).toBeUndefined();
+  click("Redo");act(()=>mocks.canvas!.onEntityDoubleClick!(a));
+  expect(button("Diamond").getAttribute("aria-pressed")).toBe("true");click("Cancel");
+  click("Save");await waitFor(()=>expect(save).toHaveBeenCalledOnce());
+  expect(save.mock.calls[0][0].document!.nodes[0]).toMatchObject({shape:"diamond",origin:{kind:"local"}});
+});
+
+it("can choose a custom entity shape and restore a KG entity's default without changing its snapshot",async()=>{
+  const value=groupedCapsule(),savedSnapshot=structuredClone(value.document!.nodes[0].origin);
+  value.document!.nodes[0].shape="circle";
+  const save=vi.fn(saveResult);render(<CapsuleStudio capsule={value} isNew onSave={save}/>);
+  act(()=>mocks.canvas!.onEntityDoubleClick!(value.document!.nodes[0].key));click("Default");click("Apply");
+  click("Add custom entity");change("Title","A central idea");click("Circle");click("Add");
+  click("Save");await waitFor(()=>expect(save).toHaveBeenCalledOnce());
+  const nodes=save.mock.calls[0][0].document!.nodes;
+  expect(nodes[0].shape).toBeUndefined();expect(nodes[0].origin).toEqual(savedSnapshot);
+  expect(nodes.find(n=>n.title==="A central idea")).toMatchObject({shape:"circle",origin:{kind:"local"}});
+});
 
 it.each([
   ["Add custom entity","Title"],
@@ -243,4 +309,99 @@ it("context menus stay on-screen and support keyboard navigation without focusin
   const view=render(<CapsuleContextMenu x={window.innerWidth-2} y={window.innerHeight-2} title="Actions" onClose={onClose} actions={[{label:"Edit",icon:"edit",action:()=>{}},{label:"Unavailable",icon:"plus",action:()=>{},disabled:true},{label:"Remove",icon:"minus",action:()=>{}}]}/>);
   const menu=screen.getByRole("menu");expect(Number.parseFloat(menu.style.left)+240).toBeLessThanOrEqual(window.innerWidth-8);expect(Number.parseFloat(menu.style.top)+180).toBeLessThanOrEqual(window.innerHeight-8);expect(document.activeElement).toBe(screen.getByRole("menuitem",{name:"Edit"}));
   fireEvent.keyDown(menu,{key:"ArrowDown"});expect(document.activeElement).toBe(screen.getByRole("menuitem",{name:"Remove"}));fireEvent.keyDown(menu,{key:"Escape"});expect(onClose).toHaveBeenCalledOnce();view.unmount();expect(document.activeElement).toBe(origin);origin.remove();measure.mockRestore();
+});
+
+
+function point(dialog: HTMLElement, type: "pointerdown" | "pointerup" | "pointercancel", x = 20, y = 20, pointerId = 1, button = 0) {
+  const event = new Event(type, { bubbles:true, cancelable:true });
+  Object.assign(event, { clientX:x, clientY:y, pointerId, button, isPrimary:true });
+  fireEvent(dialog,event);
+}
+function bounds(dialog: HTMLElement) {
+  vi.spyOn(dialog,"getBoundingClientRect").mockReturnValue({x:100,y:100,left:100,top:100,right:600,bottom:500,width:500,height:400,toJSON:()=>({})});
+  return dialog;
+}
+function outside(dialog: HTMLElement) { bounds(dialog);point(dialog,"pointerdown");point(dialog,"pointerup"); }
+
+it("closes a viewing surface only after a complete primary backdrop click, never a drag or inner padding click",()=>{
+  const close=vi.fn();render(<CapsuleSurface onClose={close}><CapsuleStudio capsule={capsule()} readOnly onClose={close}/></CapsuleSurface>);
+  const surface=bounds(screen.getByRole("dialog",{name:"Capsule"}));
+  point(surface,"pointerdown",150,150);point(surface,"pointerup"); // Started inside.
+  point(surface,"pointerdown",150,150);point(surface,"pointerup",150,150); // Dialog padding.
+  point(surface,"pointerdown");point(surface,"pointerup",50,50); // Dragged outside.
+  point(surface,"pointerdown");point(surface,"pointerup",20,20,2); // Other pointer.
+  point(surface,"pointerdown",20,20,1,2);point(surface,"pointerup"); // Right click.
+  point(surface,"pointerdown");point(surface,"pointercancel");point(surface,"pointerup");
+  expect(close).not.toHaveBeenCalled();outside(surface);expect(close).toHaveBeenCalledOnce();
+});
+
+it("has a safe host fallback and restores the originating focus on unmount",()=>{
+  const trigger=document.createElement("button");document.body.append(trigger);trigger.focus();const close=vi.fn();
+  const view=render(<CapsuleSurface onClose={close}><p>Loading a read-only Capsule</p></CapsuleSurface>);
+  outside(screen.getByRole("dialog",{name:"Capsule"}));expect(close).toHaveBeenCalledOnce();view.unmount();expect(document.activeElement).toBe(trigger);trigger.remove();
+});
+
+it("routes an editing surface backdrop through discard confirmation and cancels only the top modal outside",()=>{
+  const close=vi.fn();render(<CapsuleSurface><CapsuleStudio capsule={capsule()} isNew onSave={saveResult} onClose={close}/></CapsuleSurface>);
+  const surface=screen.getByRole("dialog",{name:"Capsule"});outside(surface);
+  const confirmation=screen.getByRole("dialog",{name:"Discard your changes?"});expect(close).not.toHaveBeenCalled();
+  outside(surface);expect(screen.getByRole("dialog",{name:"Discard your changes?"})).toBe(confirmation);
+  outside(confirmation);expect(screen.queryByRole("dialog",{name:"Discard your changes?"})).toBeNull();expect(close).not.toHaveBeenCalled();
+  outside(surface);click("Discard changes");expect(close).toHaveBeenCalledOnce();
+});
+
+it("closes clean editor forms outside but retains dirty forms and IME composition, restoring the trigger",()=>{
+  const close=vi.fn();render(<CapsuleSurface><CapsuleStudio capsule={capsule()} isNew onSave={saveResult} onClose={close}/></CapsuleSurface>);
+  const trigger=button("Add custom entity");trigger.focus();fireEvent.click(trigger);
+  outside(screen.getByRole("dialog",{name:"Edit Capsule content"}));expect(screen.queryByRole("dialog",{name:"Edit Capsule content"})).toBeNull();expect(document.activeElement).toBe(trigger);
+  fireEvent.click(trigger);const form=screen.getByRole("dialog",{name:"Edit Capsule content"}),input=screen.getByLabelText("Title");
+  fireEvent.compositionStart(input);outside(form);cancel(form);expect(screen.getByRole("dialog",{name:"Edit Capsule content"})).toBe(form);
+  fireEvent.compositionEnd(input);change("Title","Keep this input");outside(form);expect((input as HTMLInputElement).value).toBe("Keep this input");expect(screen.getByRole("dialog",{name:"Edit Capsule content"})).toBe(form);expect(close).not.toHaveBeenCalled();
+});
+
+it("cancels a safe search outside without letting its late response reopen the dialog",async()=>{
+  let resolve!:(result:unknown)=>void;mocks.search.mockImplementation((_query:string,signal:AbortSignal)=>new Promise(done=>{resolve=done;expect(signal.aborted).toBe(false);}));
+  render(<CapsuleStudio capsule={capsule()} isNew onSave={saveResult}/>);click("Search the KG");change("Name or alias","query");click("Search");
+  const signal=mocks.search.mock.calls[0][1] as AbortSignal;outside(screen.getByRole("dialog",{name:"Add from KG"}));expect(signal.aborted).toBe(true);
+  await act(async()=>resolve({items:[]}));expect(screen.queryByRole("dialog",{name:"Add from KG"})).toBeNull();expect(button("Save").hasAttribute("disabled")).toBe(false);
+});
+
+it.each(["close button","Escape","backdrop"])("retains workspace comment drafts when closing sharing with %s and confirms only whole-Capsule departure",method=>{
+  const close=vi.fn(),commentDraft={hasDraft:()=>true,hasPending:()=>true,clear:vi.fn()};
+  render(<CapsuleSurface><CapsuleStudio capsule={capsule()} onSave={saveResult} onClose={close} commentDraft={commentDraft} sharing={<p>Comment draft retained in workspace</p>}/></CapsuleSurface>);
+  click("Share");const share=screen.getByRole("dialog",{name:"Share Capsule"});
+  if(method==="close button")click("Close sharing");else if(method==="Escape")cancel(share);else outside(share);
+  expect(screen.queryByRole("dialog",{name:"Share Capsule"})).toBeNull();expect(close).not.toHaveBeenCalled();
+  outside(screen.getByRole("dialog",{name:"Capsule"}));expect(screen.getByText(/A comment submission is unconfirmed/)).toBeTruthy();expect((button("Save and finish") as HTMLButtonElement).disabled).toBe(true);
+  click("Keep editing");click("Share");expect(screen.getByText("Comment draft retained in workspace")).toBeTruthy();
+});
+
+it("does not close sharing during a mutation or close an outer modal under a nested confirmation",()=>{
+  render(<CapsuleStudio capsule={capsule()} onSave={saveResult} sharing={<section aria-busy="true">Posting</section>}/>);click("Share");const share=screen.getByRole("dialog",{name:"Share Capsule"});
+  click("Close sharing");cancel(share);outside(share);expect(screen.getByRole("dialog",{name:"Share Capsule"})).toBe(share);
+});
+
+it("blocks outside dismissal while saving from a confirmation and during a title composition",async()=>{
+  let resolve!:(value:LocalCapsule)=>void;const onSave=vi.fn(()=>new Promise<LocalCapsule>(done=>{resolve=done;})),close=vi.fn();
+  render(<CapsuleSurface><CapsuleStudio capsule={capsule()} isNew onSave={onSave} onClose={close}/></CapsuleSurface>);
+  click("My graph");fireEvent.compositionStart(screen.getByLabelText("Capsule title"));outside(screen.getByRole("dialog",{name:"Capsule"}));expect(screen.queryByRole("dialog",{name:"Discard your changes?"})).toBeNull();fireEvent.compositionEnd(screen.getByLabelText("Capsule title"));click("Cancel title change");
+  outside(screen.getByRole("dialog",{name:"Capsule"}));const confirmation=screen.getByRole("dialog",{name:"Discard your changes?"});click("Save and finish");outside(confirmation);cancel(confirmation);expect(screen.getByRole("dialog",{name:"Discard your changes?"})).toBe(confirmation);expect(close).not.toHaveBeenCalled();await act(async()=>resolve(capsule()));expect(close).toHaveBeenCalledOnce();
+});
+
+it("dismisses only the inner modal and ignores bubbled cancel events",()=>{
+  const inner=vi.fn(),outer=vi.fn();render(<CapsuleModal title="Outer" onClose={outer}><CapsuleModal title="Inner" onClose={inner}><button>Continue</button></CapsuleModal></CapsuleModal>);
+  outside(screen.getByRole("dialog",{name:"Inner"}));expect(inner).toHaveBeenCalledOnce();expect(outer).not.toHaveBeenCalled();
+  fireEvent(screen.getByRole("dialog",{name:"Inner"}),new Event("cancel",{bubbles:true,cancelable:true}));expect(inner).toHaveBeenCalledTimes(2);expect(outer).not.toHaveBeenCalled();
+});
+
+it("guards browser navigation only when a comment draft exists and clears it only after explicit whole-workspace discard",()=>{
+  const close=vi.fn();
+  function Workspace() {
+    const cache=useDiscussionDraft();
+    return <><button onClick={()=>cache.set({key:"capsule:revision:owner",body:"Unposted text",requestId:"uncertain-request"})}>Write a comment</button><CapsuleStudio capsule={capsule()} onSave={saveResult} onClose={close} commentDraft={cache}/></>;
+  }
+  render(<Workspace/>);expect(window.history.pushState).not.toHaveBeenCalled();expect(unloadIsBlocked()).toBe(false);
+  click("Write a comment");expect(window.history.pushState).toHaveBeenCalledOnce();expect(unloadIsBlocked()).toBe(true);
+  click("Close Capsule");expect(screen.getByText(/A comment submission is unconfirmed/)).toBeTruthy();click("Keep editing");expect(close).not.toHaveBeenCalled();expect(unloadIsBlocked()).toBe(true);
+  click("Close Capsule");click("Discard changes");expect(close).toHaveBeenCalledOnce();expect(unloadIsBlocked()).toBe(false);
 });

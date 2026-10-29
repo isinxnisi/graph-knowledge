@@ -7,12 +7,12 @@
 
 2026-10-29の初期実装は既存3200／HTTPS betaへ反映済みで、本番VPSは未反映。[当日の反映・復旧・実Google確認記録](../verification/CAPSULE_EDITOR_BETA_20261029.md)を参照する。
 
-2026-10-30は編集体験の更新とmigration013を対象にする。**今回の終了点は既存3200／HTTPS beta。本番VPSへの転送・切替は実行しない。** ソース実装済み、隔離検証済み、実環境への配置・実操作、ユーザーによる体験の評価はそれぞれ別の状態である。今回の結果は[UX・beta検証記録](../verification/CAPSULE_EDITOR_UX_BETA_20261030.md)へ記録し、過去の反映記録から今回も反映済みと推測しない。[先行クラウド検証](../verification/CAPSULE_EDITOR_20261029.md)も既存環境での確認とは区別する。
+2026-10-30は編集体験の更新とmigration013／014を対象にする。**今回の終了点は既存3200／HTTPS beta。本番VPSへの転送・切替は実行しない。** ソース実装済み、隔離検証済み、実環境への配置・実操作、ユーザーによる体験の評価はそれぞれ別の状態である。今回の結果は[UX・beta検証記録](../verification/CAPSULE_EDITOR_UX_BETA_20261030.md)へ記録し、過去の反映記録から今回も反映済みと推測しない。[先行クラウド検証](../verification/CAPSULE_EDITOR_20261029.md)も既存環境での確認とは区別する。
 
 | 実行箇所 | 今回の扱い |
 | --- | --- |
-| 既存開発PC | 現在の実行SHA・build・private設定を確認して更新する。000〜012を保持し、013明示適用、backup別DB復元・再実行、3200／HTTPS betaの代表操作を記録する |
-| 隔離検証環境 | 専用PostgreSQLでbackup復元・013・既存行保持を確認する。fixtureの認証と実Googleを区別する。helperやテストの成功だけを既存beta反映の証拠にしない |
+| 既存開発PC | 現在の実行SHA・build・private設定を確認して更新する。旧checksumを保持し、013／014明示適用、backup別DB復元・再実行、3200／HTTPS betaの代表操作を記録する |
+| 隔離検証環境 | 専用PostgreSQLでbackup復元・013／014・既存行保持を確認する。fixtureの認証と実Googleを区別する。helperやテストの成功だけを既存beta反映の証拠にしない |
 | image検証環境 | imageを使う反映では最終sourceのWeb／member-opsをbuild・固定する。開発PCのNode launcher反映はそのbuildを記録し、別のimageを配置したことにしない |
 | 既存VPS | 今回は未実施。後続作業で通常のdevelop SSHと管理者sudoを用い、固定資材・既存ComposeのWeb／member-opsを確認して切り替える |
 
@@ -20,7 +20,7 @@
 
 ## 更新するものと保持するもの
 
-変更対象はWeb、会員operator、会員DBの追加migration **011／012／013**（000〜012適用済み環境では013のみ追加）。本線KGへのapply・再seed、公開pipelineの署名・Worker更新、Kev、AI教育／日次予定、管理Connector、OAuth／Caddy／Tunnelの設定変更は含まない。本番のKG用ops imageと独立DB containerも保持する。
+変更対象はWeb、会員operator、会員DBの追加migration **011／012／013／014**（適用済みはchecksum確認のみ）。本線KGへのapply・再seed、公開pipelineの署名・Worker更新、Kev、AI教育／日次予定、管理Connector、OAuth／Caddy／Tunnelの設定変更は含まない。本番のKG用ops imageと独立DB containerも保持する。
 
 ユーザーは旧Capsuleを削除してよいと承認済みである。旧Capsule全件の移行を公開条件にしない。ただし、**旧Capsule削除、全データ消去、会員DB resetを更新の必須処理にしない。** 整理が必要ならCapsuleを特定し、既存の所有者用削除経路を使う。会員・認証・プロフィール・コミュニティ・独立会話・通報・監査・KGの削除へ承認を広げない。
 
@@ -39,7 +39,7 @@
    npm run test:member -- --accounts
    ```
 
-   `--capsules`は`tests/capsule-document.integration.test.ts`を選ぶ。013の既定値・未作成thread・明示OFF保持は`tests/member.integration.test.ts`と後述の復元検証で別途確認する。会員ブラウザfixtureは013を明示選択し、`--capsules --e2e`は011／012／013を適用したfixture環境で`tests/e2e/capsule-member.spec.ts`を選び、実OIDC・会員保存・指定版共有をブラウザで確認する。匿名編集・通常Graphの実ブラウザ確認は検証記録の対象Web・設定・テストを使う。fixtureと実Googleを区別する。
+   `--capsules`は`tests/capsule-document.integration.test.ts`を選ぶ。013の既定値・未作成thread・明示OFF保持は`tests/member.integration.test.ts`と後述の復元検証で別途確認する。会員ブラウザfixtureは013／014を明示選択し、`--capsules --e2e`は011／012／013／014を適用したfixture環境で`tests/e2e/capsule-member.spec.ts`を選び、実OIDC・会員保存・指定版共有をブラウザで確認する。匿名編集・通常Graphの実ブラウザ確認は検証記録の対象Web・設定・テストを使う。fixtureと実Googleを区別する。
 3. 既存Dockerfileの`web`／`ops` targetを使用する。`ops` targetには`member-migrate.ts`と会員migrationが同梱され、Composeの`member-ops`として使える。
 
    ```sh
@@ -51,11 +51,11 @@
    sha256sum capsule-images.tar.gz > capsule-images.tar.gz.sha256
    ```
 
-   tagだけを証拠にせず、source SHA、build ID、image ID／OCI manifest、platform、archive SHA256、011／012／013を含む全migrationのchecksumを固定記録へ保存する。WebのAIラボartifactは配置先の既存状態を保持し、betaの実験artifactを本番へ混入させない。
-4. 配置するソース／imageと同じmigration処理を使い、対象DBのbackupを別DBへ復元して追加migration・再実行・代表APIを検証する。000〜012適用済みのbetaでは既存13件のchecksumを照合してから013を適用し、ledger14件と既存行の保持を確認する。初期環境から適用する場合も全系列を選ぶ。移行済みchecksumを書き換えて通さない。
+   tagだけを証拠にせず、source SHA、build ID、image ID／OCI manifest、platform、archive SHA256、011／012／013／014を含む全migrationのchecksumを固定記録へ保存する。WebのAIラボartifactは配置先の既存状態を保持し、betaの実験artifactを本番へ混入させない。
+4. 配置するソース／imageと同じmigration処理を使い、対象DBのbackupを別DBへ復元して追加migration・再実行・代表APIを検証する。対象DBの実ledgerと適用済みchecksumを照合してから未適用の013／014だけを追加し、ledger15件と既存行の保持を確認する。初期環境から適用する場合も全系列を選ぶ。移行済みchecksumを書き換えて通さない。
 5. build・テスト・Dockerの資材は対象を明示し、private backupを検索対象へ混ぜない。実環境の負荷がある場合はVitestを`--maxWorkers=1 --no-file-parallelism`で実行し、`--exclude 'backups/**'`としてglobをshellで展開させずに渡す。
 
-## 011／012／013の明示適用契約
+## 011／012／013／014の明示適用契約
 
 実装は[scripts/member-migrate.ts](../../scripts/member-migrate.ts)と[追加migration処理](../../lib/server/member/migrate.ts)。通常Webの起動・APIアクセスから自動適用しない。
 
@@ -64,21 +64,22 @@
 | `--capsule-documents` | 011。文書外枠schemaVersion 2、内容版の共有停止、更新receiptを準備 |
 | `--community-capsules` | 012。固定版掲載・cohort・Capsule通報の固定参照。CLIは011も選ぶが、community系列の選択も必要 |
 | `--capsule-comments` | 013。`member_capsule_thread.closed`のDB既定値をfalseへ変更。既存の受付停止・会話行を更新せず、投稿認可を広げない |
+| `--capsule-share-recovery` | 014。限定リンクの派生方式列を追加。既存行はnullのまま保持し、新規リンクだけ所有者再取得に対応。認証secret・旧token hash・固定版は変更しない |
 | `--communities` | 005〜007を検査・選択。012の基礎となるcommunity schemaが必要 |
 | `--site-operations` | 008とcommunity系列を検査・選択 |
 | `--public-profiles` | 009／010とcommunity・運営系列を検査・選択 |
 | `--confirm-origin ORIGIN` | 上記追加系列の選択時に必須。読み込んだ`MEMBER_ORIGIN`と完全一致しなければ適用前に停止 |
 
-既存betaの公開プロフィール・運営を保持する全適用は、次の引数を使う。適用済みのchecksumは再検査し、未適用のmigrationだけを同じtransactionで追加する。000〜012が一致する環境では013のみ追加し、全系列のledgerは**14件**になる。適用前の実ledgerが想定と異なる場合は先に調べる。旧000〜010の環境でもこの全選択で011〜013を準備できる。
+既存betaの公開プロフィール・運営を保持する全適用は、次の引数を使う。適用済みのchecksumは再検査し、未適用のmigrationだけを同じtransactionで追加する。000〜013が一致する環境では014のみ追加し、全系列のledgerは**15件**になる。適用前の実ledgerが想定と異なる場合は先に調べる。旧000〜010の環境でもこの全選択で011〜014を準備できる。
 
 ```sh
 node --import tsx scripts/member-migrate.ts \
   --communities --site-operations --public-profiles \
-  --capsule-documents --community-capsules --capsule-comments \
+  --capsule-documents --community-capsules --capsule-comments --capsule-share-recovery \
   --confirm-origin "$CAPSULE_TARGET_ORIGIN"
 ```
 
-このコマンドは、**その環境の既存private会員設定を読み込んだoperator**で実行する。betaと本番のDB URL・secret・originを混ぜない。011だけを検証する場合は`--community-capsules`と`--capsule-comments`を外す。012を適用する場合はcommunity系列と011を併せて選ぶ。013は通常Webの起動や既存フラグだけでは適用されない。
+このコマンドは、**その環境の既存private会員設定を読み込んだoperator**で実行する。betaと本番のDB URL・secret・originを混ぜない。011だけを検証する場合は`--community-capsules`・`--capsule-comments`・`--capsule-share-recovery`を外す。012を適用する場合はcommunity系列と011を併せて選ぶ。013／014は通常Webの起動や既存フラグだけでは適用されない。
 
 migrationは単一transactionと既存advisory lockで行い、失敗時はDDL／ledgerともrollbackする。checksum不一致を上書きしたり、ledger行を削除して再実行しない。結果不明なら現在のledger／schemaを読んでから判断する。
 
@@ -88,8 +89,8 @@ migrationは単一transactionと既存advisory lockで行い、失敗時はDDL�
 
 1. freshなprivateディレクトリとdump名を使い、既存backupを上書きしない。ディレクトリは0700、dump・private設定・比較結果は0600とし、row本文や認証値をログへ出さない。dump SHA256を記録する。
 2. 新しい専用PostgreSQL container／別名DBへrestoreし、sourceの全tableの列・全行fingerprint・ledgerと一致することを確認する。対象の識別情報を記録し、既存beta DBや他のcontainerへrestoreしない。
-3. 復元DBで000〜012のchecksumを照合し、対象originと一致するprivate設定を用いて013を明示適用する。ledger以外の既存行が変わらず、`closed`の既定値がfalseになり、既にOFFのthreadがOFFのままであることを確認する。
-4. 同じコマンドを再実行し、ledger14件・全行fingerprintが変わらないことを確認する。認可・新規共有ON・未作成thread・固定版共有を実PostgreSQLのテストでも検証する。
+3. 復元DBで適用済み000〜013のchecksumを照合し、対象originと一致するprivate設定を用いて未適用の013／014を明示適用する。ledger以外の既存列・既存行が変わらず、`closed`の既定値がfalse、既存OFFはOFF、旧linkの派生方式列はnullのままであることを確認する。
+4. 同じコマンドを再実行し、ledger15件・全行fingerprintが変わらないことを確認する。認可・新規共有ON・未作成thread・固定版共有・所有者の同一URL再取得・旧リンク・secret変更時の挙動を実PostgreSQLのテストでも検証する。
 5. 検証用containerだけを後片付けし、dumpと照合結果をprivateに保管する。復元・テストの成功はlive betaへのmigration適用を意味しない。適用済みかどうかは対象DBのledgerで別に記録する。
 
 ## 開発PCの3200とHTTPS beta
@@ -134,11 +135,11 @@ migrationは単一transactionと既存advisory lockで行い、失敗時はDDL�
      --profile ops run --rm --no-deps --entrypoint node member-ops \
      --import tsx scripts/member-migrate.ts \
      --communities --site-operations --public-profiles \
-     --capsule-documents --community-capsules --capsule-comments \
+     --capsule-documents --community-capsules --capsule-comments --capsule-share-recovery \
      --confirm-origin https://plunode.net
    ```
 
-6. 全checksum・ledger14件・旧データ保全を確認し、同じコマンドの再実行が無変更で終わることを確認する。検証済みcandidateを既存`compose.yaml`へ反映する。旧Compose／設定をprivate backupへ残し、権限を維持する。
+6. 全checksum・ledger15件・旧データ保全を確認し、同じコマンドの再実行が無変更で終わることを確認する。検証済みcandidateを既存`compose.yaml`へ反映する。旧Compose／設定をprivate backupへ残し、権限を維持する。
 7. 既存service名`web`だけを切り替える。PG／Neo4j・KG opsを再作成せず、既存runtime設定を使う。
 
    ```sh
@@ -156,7 +157,7 @@ migrationは単一transactionと既存advisory lockで行い、失敗時はDDL�
 
 ## Capabilityと代表操作の受入
 
-新Webで本人ログイン後、同originの`GET /api/member/capsule-capabilities`を確認する。011／012適用後は`{"documents":true,"community":true}`、011だけなら`community:false`。匿名は401、会員DB障害は503となる。旧Webの404をmigration未適用の証拠としない。schemaの存在だけを示すAPIなので、bool成功と保存・認可成功も区別する。013用のcapabilityフラグは追加していない。コメント既定値の移行はledgerの013とDB default、実際の新規共有で確認する。
+新Webで本人ログイン後、同originの`GET /api/member/capsule-capabilities`を確認する。011／012適用後は`{"documents":true,"community":true}`、011だけなら`community:false`。匿名は401、会員DB障害は503となる。旧Webの404をmigration未適用の証拠としない。schemaの存在だけを示すAPIなので、bool成功と保存・認可成功も区別する。013／014用のcapabilityフラグは追加していない。コメント既定値は013とDB default、再取得は014の列・新規共有後の所有者GETで確認する。014前のWeb／operatorを混在させず、014適用後に新Webへ切り替える。
 
 | 経路 | 確認する結果 |
 | --- | --- |
@@ -165,7 +166,7 @@ migrationは単一transactionと既存advisory lockで行い、失敗時はDDL�
 | 明示保存→再訪 | 匿名IndexedDB／本人PGを区別し、保存後reloadで内容・テキスト書式・配置・中心・倍率を読む。表示領域の寸法が変わっても勝手なfitや画面外への移動を起こさない。会員一覧summaryから開く際はdocumentを含む詳細を取得する |
 | 定期本人再確認 | 30秒の再確認とタブ復帰を挟み、入力・ドラッグ・選択・メニュー・フォーカスが中断しない。通信失敗でログアウトとせず、実ログアウト／本人変更／失効と遅延応答は分離する |
 | 競合・通信結果不明 | 成功表示せず入力を保持。同じrequest IDによる照会／再送で二重版を作らない。別Userへ入力を出さない |
-| 限定リンク | 保存済みの指定版を別contextで読む。編集草稿・後のprivate更新を混ぜず、停止・再発行・所有者停止で旧アクセスが失効する |
+| 限定リンク | 保存済みの指定版を別contextで読む。編集草稿・後のprivate更新を混ぜず、所有者の共有画面を閉じて再訪しても同じURLをコピーできる。再取得は版・コメントを変更せず、停止・再発行・所有者停止で旧アクセスが失効する |
 | 共有とコメント | 新規共有の受付switchはONで、会話が自動表示される。投稿資格、未ログイン、OFF、空、読込・投稿・失敗を確認する。所有者の会話はprivate最新版ではなく実際の共有版に紐付き、明示OFFを再発行だけで変えない |
 | Community掲載 | 自分の完全な内容と版・閲覧範囲を確認して掲載。読取・関連会話・一覧・Graphへ戻る。新版保存だけで掲載を更新せず、明示更新でだけ変わる |
 | 限定範囲の負例 | 非参加者、後参加、退出後再参加、公開→限定→再公開、撤去後、Capsule削除後で権限が復活しない。許可のない題名・本文・件数を一覧へ出さない |
@@ -178,9 +179,11 @@ migrationは単一transactionと既存advisory lockで行い、失敗時はDDL�
 
 - **migration前の失敗**：Web／設定を保存した検証済み状態へ戻す。DBは未変更のためrestoreしない。archive・preflight結果・原因を残す。
 - **migration失敗・結果不明**：現在のledger／schemaを確認する。単一transactionがrollbackしたことを確認できる場合は原因を修正して同じ固定operatorを使う。checksumを改変しない。
-- **migration成功後の不具合**：011／012／013とデータを保持し、schemaVersion 2を読める修正版へのroll-forwardを優先する。新しい文書・snapshotのあるDBへ、schemaVersion 1しか読めない旧Webを戻さない。外枠schemaVersion 2への対応だけで互換と判定せず、今回追加した`layout.center`／`viewport`・text書式を含む実文書を読めるbuildか確認する。
+- **migration成功後の不具合**：011／012／013／014とデータを保持し、schemaVersion 2を読める修正版へのroll-forwardを優先する。新しい文書・snapshotのあるDBへ、schemaVersion 1しか読めない旧Webを戻さない。外枠schemaVersion 2への対応だけで互換と判定せず、今回追加した`layout.center`／`viewport`・text書式・`node.shape`を含む実文書を読めるbuildか確認する。shapeを保存した後の文書は、未知キーを拒否する旧readerでは読めない。形を失わせるために保存文書を加工せず、shape対応readerを維持して修正する。
 - Capsule専用の`disable` flagは今回追加していない。capabilityを偽ってfalseにしたり、tableを落として機能停止を装わない。公開継続できない障害では既存の管理者手順でWebを停止し、互換性を確認したbuildへ切り替える。community全体の既存flagを下げる場合は、個人Capsuleだけの停止にはならないことを明示する。
 - DB自体の復旧が必要なら、まず別DBへbackupをrestoreして確認する。backup後の退会・停止・共有失効・通報・書込差分を保全し再適用する。古いdumpで正式DBを自動上書きしない。
 - betaだけの問題なら保存した旧build／private設定へ戻せるか、新documentとの互換性を確認する。KGや他の会員・communityデータを巻き戻さない。
 
 完了報告には確認URLと短い操作手順、固定SHA・build ID、使用したimageがあれば識別情報、ソース／隔離検証結果、3200／HTTPS betaの反映状態、migration／capability／代表操作、実画面・操作記録、未確認事項を記載する。ユーザーによる体験評価とAIの実操作評価は区別し、本番VPSは今回更新していないことを明記する。接続または管理者実行が残る場合は、必要な実行箇所と固定資材だけを引き継ぎ、公開済みとしない。
+
+014以降の再取得は、既存MEMBER_AUTH_SECRETとlink ID等から用途を分けたHMACを生成し、DBのhashと一致した場合にのみ所有者へ返す。秘密値そのものは変更・出力しない。secret更新時は旧リンクのhash閲覧を保持するが、元のURLを再生成できなくなるため必要に応じて所有者が作り直す。014は既存リンクを一括再発行しない。

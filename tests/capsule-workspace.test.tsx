@@ -66,6 +66,15 @@ it("loads the full member document before opening a summary item",async()=>{
   render(<MyCapsules dataset="demo" onClose={()=>{}}/>);fireEvent.click(await screen.findByRole('button',{name:'Open'}));
   await waitFor(()=>expect(screen.getByTestId('document-nodes').textContent).toBe('1'));expect(mocks.api.mock.calls.some(([path])=>path===`/api/member/capsules/${saved.id}`)).toBe(true);expect(mocks.browser).not.toHaveBeenCalled();
 });
+it("closes the list from its backdrop without accepting an inside-to-outside gesture, then restores its trigger",async()=>{
+  authenticated();setup(()=>Promise.resolve({capsules:[]}));const close=vi.fn(),trigger=document.createElement('button');document.body.append(trigger);trigger.focus();
+  const view=render(<MyCapsules dataset="demo" onClose={close}/>);await screen.findByText('No Capsules yet. Start with “Create Capsule” on a graph.');
+  const dialog=screen.getByRole('dialog',{name:'My Capsules'});
+  vi.spyOn(dialog,'getBoundingClientRect').mockReturnValue({x:100,y:100,left:100,top:100,right:600,bottom:500,width:500,height:400,toJSON:()=>({})});
+  const point=(type:string,x:number,y:number)=>{const event=new Event(type,{bubbles:true,cancelable:true});Object.assign(event,{clientX:x,clientY:y,pointerId:1,button:0,isPrimary:true});fireEvent(dialog,event);};
+  point('pointerdown',200,200);point('pointerup',20,20);expect(close).not.toHaveBeenCalled();
+  point('pointerdown',20,20);point('pointerup',20,20);expect(close).toHaveBeenCalledOnce();view.unmount();expect(document.activeElement).toBe(trigger);trigger.remove();
+});
 it("finds favorite, link-shared and community-listed Capsules independently without exposing link capabilities",async()=>{
   authenticated();
   const capsules=[['Private study',false,false],['Link study',true,false],['Community study',false,true],['Both destinations',true,true]].map(([title,shared,published])=>{

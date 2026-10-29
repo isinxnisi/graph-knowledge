@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { canvasState, clickNode, dragNode, openSavedCapsule, renameCapsule, startCapsule, storedCapsules, studio } from "./capsule-fixture";
+import { canvasState, clickNode, dragNode, openContents, openSavedCapsule, renameCapsule, selectContent, startCapsule, storedCapsules, studio } from "./capsule-fixture";
 
 test("閲覧配置を編集へ引き継ぎ、まとめて移動を一操作で戻し、破棄で閲覧配置へ戻る", async ({ page }) => {
   await startCapsule(page);
@@ -25,9 +25,9 @@ test("閲覧配置を編集へ引き継ぎ、まとめて移動を一操作で�
   expect(moved.positions[ids[1]].x - before.positions[ids[1]].x).toBeCloseTo(delta.x, 5);
   expect(moved.positions[ids[1]].y - before.positions[ids[1]].y).toBeCloseTo(delta.y, 5);
   for (const node of before.nodes.filter(n => !ids.includes(n.id))) expect(moved.positions[node.id]).toEqual(before.positions[node.id]);
-  await studio(page).getByRole("button", { name: "↶ 戻す", exact: true }).click();
+  await studio(page).getByRole("button", { name: "元に戻す", exact: true }).click();
   expect((await canvasState(canvas)).positions).toEqual(before.positions);
-  await studio(page).getByRole("button", { name: "↷ やり直す", exact: true }).click();
+  await studio(page).getByRole("button", { name: "やり直す", exact: true }).click();
   expect((await canvasState(canvas)).positions).toEqual(moved.positions);
   await studio(page).getByRole("button", { name: "破棄", exact: true }).click();
   await studio(page).getByRole("button", { name: "変更を破棄", exact: true }).click();
@@ -105,13 +105,13 @@ for (const modifier of ["Control", "Meta"] as const) {
 test("すべての対象を外した空のCapsuleを保存し、再訪後に組み直せる", async ({ page }) => {
   const original = await startCapsule(page);
   await renameCapsule(page, "組み直すための図");
-  const contents = studio(page).locator("details").filter({ has: page.locator("summary", { hasText: "Capsuleの内容一覧" }) }).last();
-  await contents.locator("summary").click();
-  for (let i = 0; i < original.nodes.length; i++) {
-    await contents.getByRole("button").first().click();
+  for (const node of original.nodes) {
+    await selectContent(page, node.label);
     await studio(page).getByRole("button", { name: "Capsuleから外す", exact: true }).click();
   }
-  await expect(contents.getByRole("button")).toHaveCount(0);
+  const contents = await openContents(page);
+  await expect(contents.getByRole("listitem")).toHaveCount(0);
+  await contents.getByRole("button", { name: "内容一覧を閉じる", exact: true }).click();
   await studio(page).getByRole("button", { name: "保存", exact: true }).click();
   await expect(studio(page).getByRole("button", { name: "編集", exact: true })).toBeVisible();
   const [empty] = await storedCapsules(page);
@@ -121,10 +121,10 @@ test("すべての対象を外した空のCapsuleを保存し、再訪後に組�
   await page.reload();
   await openSavedCapsule(page, empty.title);
   await studio(page).getByRole("button", { name: "編集", exact: true }).click();
-  await studio(page).getByRole("button", { name: "独自Entity", exact: true }).click();
+  await studio(page).getByRole("button", { name: "独自Entityを追加", exact: true }).click();
   const editor = page.getByRole("dialog").last();
   await editor.getByLabel("タイトル", { exact: true }).fill("新しい出発点");
-  await editor.getByRole("button", { name: "適用", exact: true }).click();
+  await editor.getByRole("button", { name: "追加", exact: true }).click();
   await studio(page).getByRole("button", { name: "保存", exact: true }).click();
   await expect(studio(page).getByRole("button", { name: "編集", exact: true })).toBeVisible();
   const [rebuilt] = await storedCapsules(page);

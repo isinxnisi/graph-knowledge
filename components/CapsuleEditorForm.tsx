@@ -1,12 +1,12 @@
 "use client";
 import { useRef } from "react";
-import type { CapsuleEvidence } from "../lib/domain/capsule-document";
+import type { CapsuleEvidence, CapsuleNodeShape } from "../lib/domain/capsule-document";
 import Icon from "./Icon";
 import css from "./CapsuleStudio.module.css";
 
-export type CapsuleEditorDraft = { kind: "capsule" | "node" | "relation" | "text" | "evidence"; keys: string[]; fresh?: boolean; title: string; description: string; badge: string; style: "note" | "heading" | "muted"; width: number; fontSize: number; fontWeight: "normal" | "bold"; align: "left" | "center" | "right"; url: string; locator: string; supports: CapsuleEvidence["supports"]; stance: CapsuleEvidence["stance"]; evidence: CapsuleEvidence[] };
-type Props = { value: CapsuleEditorDraft; onChange: (value: CapsuleEditorDraft) => void; onSubmit: () => void; onCancel: () => void; locale: string; anchor?: string; relationChoices?: { key: string; label: string; choose: () => void }[] };
-export default function CapsuleEditorForm({ value: v, onChange, onSubmit, onCancel, locale, anchor, relationChoices = [] }: Props) {
+export type CapsuleEditorDraft = { kind: "capsule" | "node" | "relation" | "text" | "evidence"; keys: string[]; fresh?: boolean; reverse?: boolean; addReverse?: boolean; shape?: CapsuleNodeShape; title: string; description: string; badge: string; style: "note" | "heading" | "muted"; width: number; fontSize: number; fontWeight: "normal" | "bold"; align: "left" | "center" | "right"; url: string; locator: string; supports: CapsuleEvidence["supports"]; stance: CapsuleEvidence["stance"]; evidence: CapsuleEvidence[] };
+type Props = { value: CapsuleEditorDraft; onChange: (value: CapsuleEditorDraft) => void; onSubmit: () => void; onCancel: () => void; locale: string; anchor?: string; direction?: { source: string; target: string; editable: boolean; self: boolean }; relationChoices?: { key: string; label: string; choose: () => void }[] };
+export default function CapsuleEditorForm({ value: v, onChange, onSubmit, onCancel, locale, anchor, direction, relationChoices = [] }: Props) {
   const t = (ja: string, en: string) => locale === "en" ? en : ja;
   const composing = useRef(false), justComposed = useRef(false);
   const patch = (change: Partial<CapsuleEditorDraft>) => onChange({ ...v, ...change });
@@ -29,6 +29,10 @@ export default function CapsuleEditorForm({ value: v, onChange, onSubmit, onCanc
     }} onSubmit={event => { event.preventDefault(); if (!composing.current) onSubmit(); }}>
     <header className={css.dialogHeading}><h3>{label}</h3><button type="button" className={css.iconButton} aria-label={t("閉じる", "Close")} onClick={onCancel}><Icon name="close"/></button></header>
     {v.kind === "relation" && relationChoices.length > 1 && <label>{t(`この線には${relationChoices.length}件の関係があります`, `${relationChoices.length} individual relations on this line`)}<select value={v.keys[0]} onChange={event => relationChoices.find(item => item.key === event.target.value)?.choose()}>{relationChoices.map(item => <option key={item.key} value={item.key}>{item.label}</option>)}</select></label>}
+    {v.kind === "relation" && direction && <section className={css.relationDirection} aria-label={t("関係の向き", "Relation direction")}>
+      <div className={css.directionPreview} aria-live="polite"><span>{v.reverse ? direction.target : direction.source}</span><b aria-label={v.addReverse ? t("相互", "Both directions") : t("から", "to")}>{v.addReverse ? "↔" : "→"}</b><span>{v.reverse ? direction.source : direction.target}</span></div>
+      {direction.editable ? !direction.self && <><div className={css.actions}><button type="button" onClick={() => patch({reverse:!v.reverse || undefined})}>{t("向きを反転", "Reverse direction")}</button><button type="button" aria-pressed={!!v.addReverse} onClick={() => patch({addReverse:!v.addReverse || undefined})}>{t("逆向きも追加して相互にする", "Add the reverse relation too")}</button></div>{v.addReverse && <p className={css.status}>{t("逆向きの関係も作ります。それぞれのラベルや根拠を編集できます。", "Creates a reverse relation with its own label and evidence.")}</p>}</> : <p className={css.status}>{t("KGの記録にある向きです。別の向きはCapsule独自の関係として追加できます。", "This direction comes from the KG. Add a Capsule relation for another direction.")}</p>}
+    </section>}
     {v.kind === "evidence" ? evidenceFields({ key: v.keys[0] ?? "", targetKey: "", title:v.title, url:v.url || null, locator:v.locator, note:v.description, supports:v.supports, stance:v.stance }, e => patch({ title:e.title, url:e.url ?? "", locator:e.locator, description:e.note, supports:e.supports, stance:e.stance })) : <>
       <label>{v.kind === "text" ? t("テキスト", "Text") : v.kind === "relation" ? t("Graphに表示するラベル", "Label on the graph") : t("タイトル", "Title")}
       {v.kind === "text" ? <textarea data-autofocus className={css.textInput} required maxLength={4000} value={v.title} onChange={event => patch({ title:event.target.value })} style={{ fontSize:Math.min(v.fontSize,24), fontWeight:v.fontWeight, textAlign:v.align }}/> : <input data-autofocus required={v.kind !== "relation"} maxLength={v.kind === "capsule" ? 80 : 200} value={v.title} onChange={event => patch({title:event.target.value})}/>}</label>
@@ -37,6 +41,12 @@ export default function CapsuleEditorForm({ value: v, onChange, onSubmit, onCanc
         <div className={css.textPreviewArea}><div className={css.textPreview} style={{width:v.width,fontSize:v.fontSize,fontWeight:v.fontWeight,textAlign:v.align,opacity:v.style === "muted" ? .65 : 1}}>{v.title || t("図の中に、見出しや注釈を。", "A heading or note for your graph.")}</div></div>
       </> : <label>{t("説明", "Description")}<textarea maxLength={v.kind === "capsule" ? 4000 : 8000} placeholder={t("必要なら、補足を添える", "Add context if useful")} value={v.description} onChange={event => patch({description:event.target.value})}/></label>}
       {v.kind === "node" && <label>{t("分類バッジ", "Category badge")}<input maxLength={60} placeholder={t("例：考察・人物・テーマ", "e.g. idea, person, theme")} value={v.badge} onChange={event => patch({badge:event.target.value})}/></label>}
+      {v.kind === "node" && <fieldset className={css.shapeField}><legend>{t("形", "Shape")}</legend><div className={css.shapeChoices}>
+        {([undefined,"round-rectangle","circle","rectangle","diamond"] as const).map(shape => <button type="button" key={shape ?? "default"} aria-pressed={v.shape === shape} onClick={() => patch({shape})}>
+          <svg width="28" height="24" viewBox="0 0 28 24" fill="none" stroke="currentColor" strokeWidth="1.3" aria-hidden="true">{shape === "circle" ? <circle cx="14" cy="12" r="9"/> : shape === "diamond" ? <path d="M14 2 25 12 14 22 3 12Z"/> : shape ? <rect x="3" y="4" width="22" height="16" rx={shape === "round-rectangle" ? 4 : 0}/> : <><rect x="3" y="4" width="10" height="16" rx="2"/><circle cx="20" cy="12" r="5"/></>}</svg>
+          <span>{shape === "circle" ? t("丸", "Circle") : shape === "diamond" ? t("ひし形", "Diamond") : shape === "rectangle" ? t("四角", "Rectangle") : shape === "round-rectangle" ? t("角丸", "Rounded") : t("標準", "Default")}</span>
+        </button>)}
+      </div></fieldset>}
       {(v.kind === "node" || v.kind === "relation") && <fieldset className={css.evidenceFields}><legend>{t("根拠・参考資料", "Evidence & sources")}</legend>{v.evidence.map((e,index) => <div key={e.key} className={css.evidenceEditor}>{evidenceFields(e, next => patch({evidence:v.evidence.map(item => item.key === e.key ? next : item)}))}<button type="button" className={css.quietButton} onClick={() => patch({evidence:v.evidence.filter(item => item.key !== e.key)})}><Icon name="minus"/>{t(`資料${index+1}を外す`, `Remove source ${index+1}`)}</button></div>)}<button type="button" onClick={() => patch({evidence:[...v.evidence,{key:crypto.randomUUID(),targetKey:v.keys[0] ?? "",title:"",url:null,locator:"",note:"",supports:v.kind === "relation" ? "relation" : "description",stance:"background"}]})}><Icon name="plus"/>{t("資料を追加", "Add a source")}</button></fieldset>}
     </>}
     {v.fresh && v.kind === "node" && anchor && <p className={css.contextHint}><Icon name="link"/>{t(`「${anchor}」とつなぐ`, `Connect to “${anchor}”`)}</p>}

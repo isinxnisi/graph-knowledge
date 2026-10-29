@@ -30,7 +30,8 @@ test("本線の関係先から個別Claimを戻し、KG検索で加えた対象�
   const neighbors = await neighborsResponse;
   expect(neighbors.ok()).toBe(true);
   expect((await neighbors.json()).claims.some((claim: { id: string }) => claim.id === restoredClaim.id)).toBe(true);
-  const tray = studio(page).locator("section").filter({ has: page.getByRole("heading", { name: `${source.name} · KGの関係先`, exact: true }) }).last();
+  const tray = page.getByRole("dialog", { name: "KGの関係先", exact: true });
+  await expect(tray.getByRole("heading", { name: source.name, exact: true })).toBeVisible();
   const addClaim = tray.getByRole("button").filter({ hasText: `${source.name} → 影響を受けた → ${removed.name}` });
   await expect(addClaim).toHaveCount(1);
   await expect(addClaim).toBeEnabled();
@@ -40,19 +41,19 @@ test("本線の関係先から個別Claimを戻し、KG検索で加えた対象�
   expect(restored.nodes.map(node => node.id)).toContain(removed.id);
   expect(restored.claims).not.toContain(omittedClaim.id);
   expect(restored.claims).toEqual([...without.claims, restoredClaim.id].sort());
-  await tray.getByRole("button", { name: "閉じる", exact: true }).click();
+  await tray.getByRole("button", { name: "関係先を閉じる", exact: true }).click();
 
   await selectContent(page, source.name);
-  await studio(page).getByRole("button", { name: "KGから検索", exact: true }).click();
-  const search = page.getByRole("dialog").last();
-  await expect(search).toContainText(`選んだ対象を「${source.name}」から独自の「関係する」でつなぎます。`);
+  await studio(page).getByRole("button", { name: "KGから検索して追加", exact: true }).click();
+  const search = page.getByRole("dialog", { name: "KGから追加", exact: true });
+  await expect(search).toContainText(`「${source.name}」とつなぐ`);
   await search.getByLabel("名前・別名", { exact: true }).fill(searched.name);
   const searchResponse = page.waitForResponse(response => new URL(response.url()).pathname === "/api/entities" && new URL(response.url()).searchParams.get("q") === searched.name);
   await search.getByRole("button", { name: "検索", exact: true }).click();
   const result = await searchResponse;
   expect(result.ok()).toBe(true);
   expect((await result.json()).items.some((entity: { id: string }) => entity.id === searched.id)).toBe(true);
-  const addEntity = search.getByRole("button").filter({ hasText: new RegExp(`^${searched.name} · person`) });
+  const addEntity = search.getByRole("button").filter({ has: page.locator("strong", { hasText: searched.name }) });
   await expect(addEntity).toHaveCount(1);
   await addEntity.click();
   await expect.poll(async () => (await canvasState(canvas)).nodes.map(node => node.id)).toContain(searched.id);
@@ -62,8 +63,8 @@ test("本線の関係先から個別Claimを戻し、KG検索で加えた対象�
   await expect(studio(page)).toContainText("Capsule独自の関係");
   await studio(page).getByRole("button", { name: "… 編集", exact: true }).click();
   const editor = page.getByRole("dialog").last();
-  await editor.getByLabel("表示ラベル（任意）", { exact: true }).fill("共同制作を調べる");
-  await editor.getByLabel("説明・メモ（任意）", { exact: true }).fill("本線の関係としては未確認の調査メモ");
+  await editor.getByLabel("Graphに表示するラベル", { exact: true }).fill("共同制作を調べる");
+  await editor.getByLabel("説明", { exact: true }).fill("本線の関係としては未確認の調査メモ");
   await editor.getByRole("button", { name: "適用", exact: true }).click();
   await expect(studio(page).getByRole("heading", { name: "共同制作を調べる", exact: true })).toBeVisible();
   expect(await storedCapsules(page)).toEqual([]);

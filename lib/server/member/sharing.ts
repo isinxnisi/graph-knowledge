@@ -1,4 +1,4 @@
-import { createHash, randomBytes, randomUUID } from "node:crypto";
+import { randomUUID } from "node:crypto";
 import type { Pool, QueryResultRow } from "pg";
 import type { DatasetMode } from "../../domain/dataset";
 import { memberCapsuleSchema } from "../../domain/member-capsule";
@@ -7,11 +7,11 @@ import { activeMember } from "./operations";
 import { freezeCapsuleRevision } from "./capsule-revisions";
 import { assertMemberOrigin, MemberError, memberId, memberInput, memberJson } from "./http";
 
-const hashToken = (token: string) => createHash("sha256").update(token).digest("hex");
+import { CAPSULE_SHARE_TOKEN_VERSION, deriveCapsuleShareToken, hashCapsuleShareToken as hashToken, recoverCapsuleShareToken } from "./share-token";
 function shareDto(row: QueryResultRow) {
   return capsuleShareSchema.parse({ id: row.id, revision: Number(row.revision), createdAt: row.created_at.toISOString() });
 }
-export function createCapsuleSharing(pool: Pool, dataset: DatasetMode, origin: string, owner: (request: Request) => Promise<{ id: string }>) {
+export function createCapsuleSharing(pool: Pool, dataset: DatasetMode, origin: string, owner: (request: Request) => Promise<{ id: string }>, secret: string) {
   return {
     async readSharedRevisions(request: Request, rawId: string) {
       const user = await owner(request), id = memberId(rawId);
@@ -36,12 +36,21 @@ export function createCapsuleSharing(pool: Pool, dataset: DatasetMode, origin: s
     },
     async shareStatus(request: Request, rawId: string) {
       const user = await owner(request), id = memberId(rawId);
-      const result = await pool.query(`SELECT s.id, s.revision, s.created_at, c.sharing_blocked, COALESCE(t.closed, false) AS comments_closed FROM member_capsule c
+      // Recheck the active owner in the same statement that reads the bearer
+      // material. This endpoint is never authorized by a shared-link token.
+      const result = await pool.query(`SELECT s.id, s.revision, s.created_at, s.token_hash, (to_jsonb(s)->>'token_derivation_version')::smallint AS token_derivation_version,
+          c.sharing_blocked, COALESCE((to_jsonb(r)->>'sharing_blocked')::boolean,false) AS revision_blocked,
+          COALESCE(t.closed, false) AS comments_closed FROM member_capsule c
+        JOIN "user" u ON u.id = c.owner_user_id AND u.active = true
         LEFT JOIN member_capsule_share s ON s.capsule_id = c.id
+        LEFT JOIN member_capsule_revision r ON r.capsule_id = s.capsule_id AND r.revision = s.revision
         LEFT JOIN member_capsule_thread t ON t.capsule_id = c.id
         WHERE c.id = $1 AND c.owner_user_id = $2 AND c.dataset = $3`, [id, user.id, dataset]);
-      if (!result.rows[0]) throw new MemberError(404, "NOT_FOUND");
-      return memberJson({ share: result.rows[0].id ? shareDto(result.rows[0]) : null, blocked: result.rows[0].sharing_blocked, commentsClosed: result.rows[0].comments_closed });
+      const row = result.rows[0];
+      if (!row) throw new MemberError(404, "NOT_FOUND");
+      const token = row.id && !row.sharing_blocked && !row.revision_blocked
+        ? recoverCapsuleShareToken(secret, { dataset, capsuleId: id, shareId: row.id, revision: Number(row.revision) }, row.token_derivation_version, row.token_hash) : null;
+      return memberJson({ share: row.id ? shareDto(row) : null, blocked: row.sharing_blocked, commentsClosed: row.comments_closed, token });
     },
     async issueShare(request: Request, rawId: string) {
       assertMemberOrigin(request, origin);
@@ -60,14 +69,17 @@ export function createCapsuleSharing(pool: Pool, dataset: DatasetMode, origin: s
         if (Number(row.revision) !== input.expectedRevision) throw new MemberError(409, "REVISION_CONFLICT");
         const existing = await client.query("SELECT id FROM member_capsule_share WHERE capsule_id = $1", [id]);
         if ((existing.rows[0]?.id ?? null) !== input.expectedShareId) throw new MemberError(409, "SHARE_CONFLICT");
+        const ready = await client.query("SELECT EXISTS (SELECT 1 FROM pg_attribute WHERE attrelid = 'member_capsule_share'::regclass AND attname = 'token_derivation_version' AND NOT attisdropped) AS ready");
+        if (!ready.rows[0]?.ready) throw new MemberError(503, "SHARE_RECOVERY_UNAVAILABLE");
         await freezeCapsuleRevision(client, row);
         // Issuing a link and selecting its comment setting are one operation.
         // An omitted setting preserves an existing owner's closure choice.
         await client.query("INSERT INTO member_capsule_thread (capsule_id, closed) VALUES ($1, false) ON CONFLICT DO NOTHING", [id]);
         if (input.commentsClosed !== undefined) await client.query("UPDATE member_capsule_thread SET closed = $2 WHERE capsule_id = $1", [id, input.commentsClosed]);
-        const token = randomBytes(32).toString("base64url");
+        const shareId = randomUUID();
+        const token = deriveCapsuleShareToken(secret, { dataset, capsuleId: id, shareId, revision: input.expectedRevision });
         await client.query("DELETE FROM member_capsule_share WHERE capsule_id = $1", [id]);
-        const issued = await client.query("INSERT INTO member_capsule_share (id, capsule_id, revision, token_hash) VALUES ($1, $2, $3, $4) RETURNING *", [randomUUID(), id, input.expectedRevision, hashToken(token)]);
+        const issued = await client.query("INSERT INTO member_capsule_share (id, capsule_id, revision, token_hash, token_derivation_version) VALUES ($1, $2, $3, $4, $5) RETURNING *", [shareId, id, input.expectedRevision, hashToken(token), CAPSULE_SHARE_TOKEN_VERSION]);
         await client.query("COMMIT");
         return memberJson({ share: shareDto(issued.rows[0]), token }, 201);
       } catch (error) { await client.query("ROLLBACK"); throw error; }

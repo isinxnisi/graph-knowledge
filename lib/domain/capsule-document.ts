@@ -4,6 +4,9 @@ import { claimDetailSchema, claimSummarySchema, entityDetailSchema, entitySummar
 // A Capsule is its own document. References identify the KG record; snapshots
 // describe only what this document actually observed, never an entire KG history.
 export const CAPSULE_DOCUMENT_LIMITS = { nodes: 200, relations: 400, texts: 100, evidence: 1000, bytes: 2_000_000 } as const;
+// Shape is a document presentation choice, independent of entity kind and KG identity.
+export const CAPSULE_NODE_SHAPES = ["round-rectangle", "circle", "rectangle", "diamond"] as const;
+export type CapsuleNodeShape = typeof CAPSULE_NODE_SHAPES[number];
 const key = z.uuidv4();
 const point = z.strictObject({ x: z.number().finite().min(-1_000_000).max(1_000_000), y: z.number().finite().min(-1_000_000).max(1_000_000) });
 export const capsuleLayoutSchema = z.strictObject({
@@ -22,6 +25,7 @@ const neighborhood = z.strictObject({
 });
 export const capsuleNodeSchema = z.strictObject({
   key, title: z.string().trim().min(1).max(200), description: z.string().max(8000), badge: z.string().max(60),
+  shape: z.enum(CAPSULE_NODE_SHAPES).optional(),
   origin: z.discriminatedUnion("kind", [
     z.strictObject({ kind: z.literal("local") }),
     z.strictObject({ kind: z.literal("kg"), id: key, ...observation.shape, snapshot: entitySummarySchema,

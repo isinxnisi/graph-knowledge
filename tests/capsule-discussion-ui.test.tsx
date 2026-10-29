@@ -25,6 +25,27 @@ async function open(value: Discussion = data, cache?: DiscussionDraftStore) {
   return result;
 }
 describe("共有版の会話", () => {
+  it("共有画面を閉じて開き直しても、未確定の本文と同じ投稿キーを作業空間内に保持する", async () => {
+    const { result } = renderHook(() => useDiscussionDraft());
+    const cache = result.current;
+    const first = await open(data, cache);
+    fireEvent.change(screen.getByLabelText("コメント本文"), { target: { value: "共有画面を閉じても残すコメント" } });
+    fetchMock.mockRejectedValueOnce(new TypeError("lost response"));
+    fireEvent.click(screen.getByRole("button", { name: "この版へ投稿する" }));
+    await screen.findByText(/投稿結果が不明/);
+    const requestBody = fetchMock.mock.calls[1][1].body;
+    expect(cache.hasDraft()).toBe(true); expect(cache.hasPending()).toBe(true);
+    first.unmount();
+    await open(data, cache);
+    expect((screen.getByLabelText("コメント本文") as HTMLTextAreaElement).value).toBe("共有画面を閉じても残すコメント");
+    expect((screen.getByLabelText("コメント本文") as HTMLTextAreaElement).disabled).toBe(true);
+    fetchMock.mockResolvedValueOnce(Response.json({ postId, replayed: true }));
+    fetchMock.mockResolvedValueOnce(Response.json(data));
+    fireEvent.click(screen.getByRole("button", { name: "同じ投稿の結果を確認・再送" }));
+    await screen.findByText("投稿しました。");
+    expect(fetchMock.mock.calls[3][1].body).toBe(requestBody);
+    expect(cache.hasDraft()).toBe(false); expect(cache.hasPending()).toBe(false);
+  });
   it("共有パネル内では実際に共有中の版の会話を開き、受付switchを一つにまとめる", async () => {
     const capsule: MemberCapsule = { id: capsuleId, schemaVersion: 2, revision: 2, createdAt: "2026-10-30T00:00:00Z", updatedAt: "2026-10-30T00:00:00Z", content: { title: "保存版2の図", note: "", language: "ja", dataset: "demo", entityIds: [], claimIds: [], document: { schemaVersion: 1, nodes: [], relations: [], texts: [], evidence: [], unresolvedClaimIds: [], layout: { positions: {}, pan: { x: 0, y: 0 }, zoom: 1 } } } };
     fetchMock.mockResolvedValueOnce(Response.json({ share: { id: postId, revision: 1, createdAt: capsule.createdAt }, commentsClosed: false }));
