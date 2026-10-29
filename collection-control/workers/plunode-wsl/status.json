@@ -44,7 +44,8 @@
   "requestsByPhase": {
     "blocked": 12,
     "completed": 42,
-    "awaiting-recovery": 5
+    "awaiting-recovery": 5,
+    "waiting-control": 1
   },
   "issueIntake": {
     "collection-control/issue-sources/25.json": {
@@ -138,6 +139,10 @@
     "collection-control/issue-sources/69.json": {
       "status": "registered: issue-69-dot-ishinomori-three-20261029",
       "checkedAt": "2026-10-29T06:49:32+00:00"
+    },
+    "collection-control/issue-sources/70.json": {
+      "status": "registered: issue-70-dot-fujikof-doraemon-20261029",
+      "checkedAt": "2026-10-29T07:33:33+00:00"
     }
   },
   "publicApply": false,
@@ -179,5 +184,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-10-29T07:26:16.587796+00:00"
+  "checkedAt": "2026-10-29T07:35:13.718770+00:00"
 }
