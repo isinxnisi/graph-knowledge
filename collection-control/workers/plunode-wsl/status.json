@@ -26,16 +26,20 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-10-29T06:11:55.722260+00:00",
-  "phase": "interval",
+  "nextStartAt": "2026-10-29T07:18:58.869833+00:00",
+  "phase": "running",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
     "reason": "interval",
-    "eligibleAt": "2026-10-29T06:11:55.722260+00:00",
+    "eligibleAt": "2026-10-29T07:18:58.869833+00:00",
     "windowEndAt": "2026-10-29T09:00:00+00:00"
   },
-  "activeAttempt": null,
+  "activeAttempt": {
+    "requestId": "issue-68-dot-fujikoa-two-20261029",
+    "startedAt": "2026-10-29T06:13:58.869834+00:00",
+    "limitAt": "2026-10-29T07:08:58.869833+00:00"
+  },
   "lastAttempt": {
     "requestId": "issue-25-utc-recovery-01",
     "endedAt": "2026-10-29T06:01:55.722265+00:00"
@@ -176,5 +180,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-10-29T06:09:03.674608+00:00"
+  "checkedAt": "2026-10-29T06:14:06.009294+00:00"
 }
