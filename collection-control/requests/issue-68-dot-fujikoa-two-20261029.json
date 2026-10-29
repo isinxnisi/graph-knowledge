@@ -1,0 +1,64 @@
+{
+  "schemaVersion": 1,
+  "id": "issue-68-dot-fujikoa-two-20261029",
+  "kind": "issue-prepare",
+  "status": "approved",
+  "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
+  "issueAdapterSha256": "38aadaee84b039f9f991ac1cc831a9498a4d83fab062d96b7c252d7175326dab",
+  "applyAuthorized": {
+    "local": false,
+    "beta": false,
+    "vps": false
+  },
+  "approvalScope": "issue-manga-preparation-collection-review-only",
+  "humanDecision": {
+    "actorType": "human",
+    "reviewer": "プロジェクト運営者（範囲を限定した委任）",
+    "decidedAt": "2026-10-25T13:07:49+09:00",
+    "statement": "2026-10-25 13:07:49 JST、運営者は既存Worker対応の現在の漫画テーマ候補からdotが対象を選び、毎回の個別提示なしでGitHubの収集許可と購読を登録し、候補収集・レビューまで進める限定委任を明示承認した。同日16:17:04 JSTに固定1日1バッチ上限を撤廃し、進捗・収集量・負荷による投入調整を許可した。2026-10-26 12:37:31 JST、過去の許可を上書きせず追加分をバッチ専用の新Issueに登録する方式への明示確認に本人が肯定リアクションし、親会話で現在の反応を検証済み。2026-10-27 13:37〜13:41 JST、運営者はdotが相談中として継続していた追加投入抑制を問い直し、データ収集を急いでいること、多少多く実行してほしいこと、1日何件という制約を付ける段階ではないことを明示した。元の限定委任の範囲で投入を再開し、日次件数上限を設けず実処理・待機量・負荷を見て少量ずつ補充する。個々の人物作品組・Role・ISBNを人間が審査済みとの記録ではない。今回dotが選んだのは既存テーマIssue #5と固定catalog d3e377d5255f4c487d608e73954dc40aeb0b3cba（blob f3d33d0e83b6299a7f443fa841232407ce67657c）のM05の藤子不二雄Ⓐ→忍者ハットリくん／笑ゥせぇるすまんの2組、および導入Worker対応組との共通部分だけ。Wikidata構造化情報とNDL作成書誌のみ、1作者2作品、親準備と全子収集合計30試行以内、同一要求2試行・3秒間隔・20秒・4MiB、保存成果とcache優先。既公開・既受入・既収集の同内容、同条件の根拠保留は再収集せず、不確かな同定・Role・刊行物scopeは保留。既設時間帯・直列排他・10分休憩を維持する。固定catalog全組・将来追加テーマへの無条件許可ではなく、正式受入・公開apply・追加取得元・予算拡大・コード/adapter/権限/認証/VPS/会員DB/時間帯/ロック変更は含まない。"
+  },
+  "permission": {
+    "schemaVersion": 1,
+    "approvalId": "dot-fujikoa-two-20261029",
+    "status": "approved",
+    "approvalScope": "issue-manga-preparation-collection-review-only",
+    "adapter": "manga-discovery-v2",
+    "targets": [
+      {
+        "person": "藤子不二雄Ⓐ",
+        "work": "忍者ハットリくん"
+      },
+      {
+        "person": "藤子不二雄Ⓐ",
+        "work": "笑ゥせぇるすまん"
+      }
+    ],
+    "requestPolicy": {
+      "maxAttempts": 30,
+      "attemptsPerRequest": 2,
+      "minIntervalSeconds": 3,
+      "timeoutSeconds": 20,
+      "maxBytes": 4194304
+    },
+    "humanDecision": {
+      "actorType": "human",
+      "reviewer": "プロジェクト運営者（範囲を限定した委任）",
+      "decidedAt": "2026-10-25T13:07:49+09:00",
+      "statement": "2026-10-25 13:07:49 JST、運営者は既存Worker対応の現在の漫画テーマ候補からdotが対象を選び、毎回の個別提示なしでGitHubの収集許可と購読を登録し、候補収集・レビューまで進める限定委任を明示承認した。同日16:17:04 JSTに固定1日1バッチ上限を撤廃し、進捗・収集量・負荷による投入調整を許可した。2026-10-26 12:37:31 JST、過去の許可を上書きせず追加分をバッチ専用の新Issueに登録する方式への明示確認に本人が肯定リアクションし、親会話で現在の反応を検証済み。2026-10-27 13:37〜13:41 JST、運営者はdotが相談中として継続していた追加投入抑制を問い直し、データ収集を急いでいること、多少多く実行してほしいこと、1日何件という制約を付ける段階ではないことを明示した。元の限定委任の範囲で投入を再開し、日次件数上限を設けず実処理・待機量・負荷を見て少量ずつ補充する。個々の人物作品組・Role・ISBNを人間が審査済みとの記録ではない。今回dotが選んだのは既存テーマIssue #5と固定catalog d3e377d5255f4c487d608e73954dc40aeb0b3cba（blob f3d33d0e83b6299a7f443fa841232407ce67657c）のM05の藤子不二雄Ⓐ→忍者ハットリくん／笑ゥせぇるすまんの2組、および導入Worker対応組との共通部分だけ。Wikidata構造化情報とNDL作成書誌のみ、1作者2作品、親準備と全子収集合計30試行以内、同一要求2試行・3秒間隔・20秒・4MiB、保存成果とcache優先。既公開・既受入・既収集の同内容、同条件の根拠保留は再収集せず、不確かな同定・Role・刊行物scopeは保留。既設時間帯・直列排他・10分休憩を維持する。固定catalog全組・将来追加テーマへの無条件許可ではなく、正式受入・公開apply・追加取得元・予算拡大・コード/adapter/権限/認証/VPS/会員DB/時間帯/ロック変更は含まない。"
+    }
+  },
+  "issueOrigin": {
+    "repository": "isinxnisi/graph-knowledge",
+    "issueNumber": 68,
+    "approvalId": "dot-fujikoa-two-20261029",
+    "permissionSha256": "682d06f5fa86daae7f008ce59da0cb8a7bbd3ca0edd0138952be58cbb66c3fd3",
+    "issueBodySha256": "6f04b3abf676cc7d6ebe7f6c6bbf078602f1347db535fd80941a40cba062a71f"
+  },
+  "issueSnapshot": {
+    "url": "https://github.com/isinxnisi/graph-knowledge/issues/68",
+    "updatedAt": "2026-10-29T06:04:53Z",
+    "body": "## 限定収集バッチ：藤子不二雄Ⓐ → 忍者ハットリくん／笑ゥせぇるすまん\n\n元テーマは [Issue #5 有名漫画家と代表作品](https://github.com/isinxnisi/graph-knowledge/issues/5)。過去の許可を変更せず、元の限定委任内の今回2組だけを登録する。\n\n- 漫画制作クレジットのみ、1作者2作品。固定catalog commit d3e377d5255f4c487d608e73954dc40aeb0b3cba、blob f3d33d0e83b6299a7f443fa841232407ce67657c のM05と元テーマ#5・設置Worker対応組の共通部分。mainと設置互換基準973c7b0でも同じcatalog blobを確認。全catalogの無条件許可ではない。\n- 藤子不二雄の共同筆名、藤子・F・不二雄と藤子不二雄Ⓐを自動同定しない。漫画と映像化作品を区別し、人物QID・漫画QID・ISBN・Role・刊行物scopeが不明なら保留する。名前置換・別対象追加で通さない。今回の個々の組を人間が審査済みとはしない。既存の島への接続・島数減少は保証しない。\n- 補充判断（2026-10-29 15:04 JST）：午前#67は10:25:50に親完了・保留2・子0。15:01:55の旧recovery01保存成果再共有もcompleted復帰、通常未処理0、現在10分休憩で次開始可能15:11:55。pauseMode/controlError/activeAttemptなし。既存子を遅らせず次1バッチだけ登録。日次固定上限は置かず、実負荷と通信結果を見て判断する。\n- 事前照合：control7fe0c77b3a991ef2577818ab1398617ced1119efとmain952c8fb59fa6ca311121d81a641d3d1b847e7deeから455種類のrequest・recipe・preparation・review・保存候補・保留・受入・下書きJSONを確認。保存公開全量2175 Entity／1894 Claimおよび後続正式追加記録、人物作品の最新Issue検索に今回2組の既収集・同条件保留一致なし。藤子・F・不二雄の既存identity-only記録は別人として保全。最新本番DBの直接読取ではなく、通常Workerの実行時同定・重複検査は維持する。\n- 最新公開記録はf5dbf83f-c89e-4e40-95ee-57957016089f completedのまま。漫画15 Claim・11バッチの未承認下書きを保全。#47/#50/#60/#61のURL上限による復旧待ちや既存意味・書誌保留は別Issueで迂回しない。\n- Wikidata構造化APIとNDL作成書誌のみ。親準備と全子合計30試行、同一要求2回、逐次3秒以上、20秒timeout、4MiB。保存成果/cache/Retry-After優先、旧142枠と他バッチ履歴・予算は維持する。\n- 既設03–07／09–12／15–18 JST、終盤15分開始回避、直列排他、10分休憩を維持。手動収集・並行化なし。\n- 候補・根拠レビューまで。正式受入／公開apply、追加取得元、予算拡大、コード／adapter／権限／認証／VPS／会員DB／時間帯／ロック変更は禁止。登録／実受付／実行／完了を区別する。\n\n<!-- plunode-collection-permission:v1 -->\n```json\n{\n  \"schemaVersion\": 1,\n  \"approvalId\": \"dot-fujikoa-two-20261029\",\n  \"status\": \"approved\",\n  \"approvalScope\": \"issue-manga-preparation-collection-review-only\",\n  \"adapter\": \"manga-discovery-v2\",\n  \"targets\": [\n    {\n      \"person\": \"藤子不二雄Ⓐ\",\n      \"work\": \"忍者ハットリくん\"\n    },\n    {\n      \"person\": \"藤子不二雄Ⓐ\",\n      \"work\": \"笑ゥせぇるすまん\"\n    }\n  ],\n  \"requestPolicy\": {\n    \"maxAttempts\": 30,\n    \"attemptsPerRequest\": 2,\n    \"minIntervalSeconds\": 3,\n    \"timeoutSeconds\": 20,\n    \"maxBytes\": 4194304\n  },\n  \"humanDecision\": {\n    \"actorType\": \"human\",\n    \"reviewer\": \"プロジェクト運営者（範囲を限定した委任）\",\n    \"decidedAt\": \"2026-10-25T13:07:49+09:00\",\n    \"statement\": \"2026-10-25 13:07:49 JST、運営者は既存Worker対応の現在の漫画テーマ候補からdotが対象を選び、毎回の個別提示なしでGitHubの収集許可と購読を登録し、候補収集・レビューまで進める限定委任を明示承認した。同日16:17:04 JSTに固定1日1バッチ上限を撤廃し、進捗・収集量・負荷による投入調整を許可した。2026-10-26 12:37:31 JST、過去の許可を上書きせず追加分をバッチ専用の新Issueに登録する方式への明示確認に本人が肯定リアクションし、親会話で現在の反応を検証済み。2026-10-27 13:37〜13:41 JST、運営者はdotが相談中として継続していた追加投入抑制を問い直し、データ収集を急いでいること、多少多く実行してほしいこと、1日何件という制約を付ける段階ではないことを明示した。元の限定委任の範囲で投入を再開し、日次件数上限を設けず実処理・待機量・負荷を見て少量ずつ補充する。個々の人物作品組・Role・ISBNを人間が審査済みとの記録ではない。今回dotが選んだのは既存テーマIssue #5と固定catalog d3e377d5255f4c487d608e73954dc40aeb0b3cba（blob f3d33d0e83b6299a7f443fa841232407ce67657c）のM05の藤子不二雄Ⓐ→忍者ハットリくん／笑ゥせぇるすまんの2組、および導入Worker対応組との共通部分だけ。Wikidata構造化情報とNDL作成書誌のみ、1作者2作品、親準備と全子収集合計30試行以内、同一要求2試行・3秒間隔・20秒・4MiB、保存成果とcache優先。既公開・既受入・既収集の同内容、同条件の根拠保留は再収集せず、不確かな同定・Role・刊行物scopeは保留。既設時間帯・直列排他・10分休憩を維持する。固定catalog全組・将来追加テーマへの無条件許可ではなく、正式受入・公開apply・追加取得元・予算拡大・コード/adapter/権限/認証/VPS/会員DB/時間帯/ロック変更は含まない。\"\n  }\n}\n```\n<!-- /plunode-collection-permission:v1 -->\n"
+  },
+  "firstRecipeRevision": 47,
+  "recipeRevisionCount": 1
+}
