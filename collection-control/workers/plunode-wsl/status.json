@@ -44,7 +44,8 @@
   "requestsByPhase": {
     "blocked": 12,
     "completed": 40,
-    "awaiting-recovery": 4
+    "awaiting-recovery": 4,
+    "waiting-control": 1
   },
   "issueIntake": {
     "collection-control/issue-sources/25.json": {
@@ -130,6 +131,10 @@
     "collection-control/issue-sources/67.json": {
       "status": "registered: issue-67-dot-mizuki-two-20261029",
       "checkedAt": "2026-10-29T01:17:27+00:00"
+    },
+    "collection-control/issue-sources/68.json": {
+      "status": "registered: issue-68-dot-fujikoa-two-20261029",
+      "checkedAt": "2026-10-29T06:07:29+00:00"
     }
   },
   "publicApply": false,
@@ -171,5 +176,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-10-29T06:02:27.396772+00:00"
+  "checkedAt": "2026-10-29T06:09:03.674608+00:00"
 }
