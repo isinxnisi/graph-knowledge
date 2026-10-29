@@ -62,11 +62,60 @@
   },
   "requestSha256": "e9a655e5a732e6065253ceade19dce92cca288d328d65ec82b0f779df86877a4",
   "kind": "issue-prepare",
-  "phase": "running",
+  "phase": "retry-transport",
   "generation": 2,
   "attempts": 1,
   "workerId": "plunode-wsl",
   "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
   "updatedAt": "2026-10-29T07:36:57+00:00",
-  "message": "Execution gate: interval"
+  "message": "Technical acquisition incomplete; no semantic hold or acceptance",
+  "result": {
+    "schemaVersion": 1,
+    "status": "technical-incomplete",
+    "preparationComplete": false,
+    "issueOrigin": {
+      "repository": "isinxnisi/graph-knowledge",
+      "issueNumber": 70,
+      "approvalId": "dot-fujikof-doraemon-20261029",
+      "permissionSha256": "0b94ddaebeeed1e59557de5b108be41936eeedf6c2bd48145326a71034623620",
+      "issueBodySha256": "6371dd8d0b22866eac98c29b42daaa287c3c5f66675d154056a3699dfb21bd9d"
+    },
+    "preparationDirectory": "/home/isinxnisi/.local/share/plunode-collection-worker-phase-b-20261020/runtime/.local/collection-issues/issue-70-dot-fujikof-doraemon-20261029",
+    "batchRequests": [],
+    "generatedArtifacts": {},
+    "technicalWaits": [
+      {
+        "category": "provider-backoff",
+        "key": "publication-6abc0ce664d50e7e5319c44f",
+        "provider": "ndlsearch.ndl.go.jp",
+        "retryAt": 1793259560.4401739,
+        "recoveryRequired": false,
+        "target": "ドラえもん",
+        "lastDiagnostic": {
+          "category": "transport",
+          "phase": "open-through-response-headers",
+          "phaseBoundary": "open-through-response-headers",
+          "elapsedSeconds": 0.163701,
+          "finishedAt": "2026-10-29T07:38:20.440134+00:00",
+          "httpStatus": 429,
+          "causes": [
+            {
+              "type": "HTTPError"
+            }
+          ],
+          "retryAfterUntil": 1793259560.4401739
+        }
+      }
+    ],
+    "retryAt": 1793259560.4401739,
+    "publicApply": false,
+    "counts": {
+      "networkAttempts": 3,
+      "holds": 0,
+      "identifiedWorks": 0,
+      "technicalWaits": 1
+    }
+  },
+  "executionComplete": false,
+  "retryAt": 1793259560.4401739
 }
