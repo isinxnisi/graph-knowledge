@@ -97,8 +97,9 @@
       "checkedAt": "2026-10-28T00:27:15+00:00"
     },
     "collection-control/issue-sources/58.json": {
-      "status": "registered: issue-58-dot-takeuchi-two-20261028",
-      "checkedAt": "2026-10-28T00:57:15+00:00"
+      "status": "held",
+      "reason": "<3>WSL (1371257 - ) ERROR: UtilAcceptVsock:273: accept4 failed 110\nfatal: unable to get password from user\n",
+      "checkedAt": "2026-10-29T12:35:33+00:00"
     },
     "collection-control/issue-sources/59.json": {
       "status": "registered: issue-59-dot-kubo-two-20261028",
@@ -188,5 +189,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-10-29T12:33:34.620562+00:00"
+  "checkedAt": "2026-10-29T12:37:59.248508+00:00"
 }

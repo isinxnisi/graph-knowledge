@@ -1,6 +1,6 @@
 # CollectionWorkerの実行制御
 
-確認: 2026-10-29 21:33:34 JST。
+確認: 2026-10-29 21:37:59 JST。
 
 反映済みcontrolRevision: 8／最後の操作: pub-13abfb93-ba2d-44f7-a56b-352aa7ab0ab0-resume。
 
@@ -71,8 +71,9 @@ Issue確認結果:
     "checkedAt": "2026-10-28T00:27:15+00:00"
   },
   "collection-control/issue-sources/58.json": {
-    "status": "registered: issue-58-dot-takeuchi-two-20261028",
-    "checkedAt": "2026-10-28T00:57:15+00:00"
+    "status": "held",
+    "reason": "<3>WSL (1371257 - ) ERROR: UtilAcceptVsock:273: accept4 failed 110\nfatal: unable to get password from user\n",
+    "checkedAt": "2026-10-29T12:35:33+00:00"
   },
   "collection-control/issue-sources/59.json": {
     "status": "registered: issue-59-dot-kubo-two-20261028",
