@@ -26,30 +26,26 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-10-29T08:01:02.227648+00:00",
-  "phase": "running",
+  "nextStartAt": "2026-10-29T07:08:03.249600+00:00",
+  "phase": "interval",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
     "reason": "interval",
-    "eligibleAt": "2026-10-29T08:01:02.227648+00:00",
+    "eligibleAt": "2026-10-29T07:08:03.249600+00:00",
     "windowEndAt": "2026-10-29T09:00:00+00:00"
   },
-  "activeAttempt": {
-    "requestId": "issue-69-dot-ishinomori-three-20261029",
-    "startedAt": "2026-10-29T06:56:02.227651+00:00",
-    "limitAt": "2026-10-29T07:51:02.227648+00:00"
-  },
+  "activeAttempt": null,
   "lastAttempt": {
-    "requestId": "issue-68-dot-fujikoa-two-20261029-batch-01",
-    "endedAt": "2026-10-29T06:45:04.130150+00:00"
+    "requestId": "issue-69-dot-ishinomori-three-20261029",
+    "endedAt": "2026-10-29T06:58:03.249603+00:00"
   },
   "controlError": null,
   "requestsByPhase": {
     "blocked": 12,
     "completed": 42,
     "awaiting-recovery": 4,
-    "running": 1
+    "retry-transport": 1
   },
   "issueIntake": {
     "collection-control/issue-sources/25.json": {
@@ -184,5 +180,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-10-29T06:56:45.749253+00:00"
+  "checkedAt": "2026-10-29T06:58:50.087735+00:00"
 }
