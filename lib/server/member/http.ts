@@ -1,5 +1,4 @@
 import { z } from "zod";
-import { MEMBER_CAPSULE_LIMITS } from "../../domain/member-capsule";
 import { MemberUnavailable } from "./config";
 
 export class MemberError extends Error {
@@ -22,7 +21,7 @@ export async function memberHandle(action: () => Promise<Response>) {
 export function assertMemberOrigin(request: Request, origin: string) {
   if (request.headers.get("origin") !== origin || request.headers.get("sec-fetch-site") === "cross-site") throw new MemberError(403, "INVALID_ORIGIN");
 }
-export async function memberInput<T>(request: Request, schema: z.ZodType<T>): Promise<T> {
+export async function memberInput<T>(request: Request, schema: z.ZodType<T>, maxBytes = 32_000): Promise<T> {
   if (request.headers.get("content-type")?.split(";")[0].trim() !== "application/json") throw new MemberError(415, "JSON_REQUIRED");
   const reader = request.body?.getReader();
   if (!reader) throw new MemberError(400, "INVALID_ARGUMENT");
@@ -33,7 +32,7 @@ export async function memberInput<T>(request: Request, schema: z.ZodType<T>): Pr
       const { done, value } = await reader.read();
       if (done) break;
       size += value.byteLength;
-      if (size > MEMBER_CAPSULE_LIMITS.bytes) {
+      if (size > maxBytes) {
         await reader.cancel();
         throw new MemberError(413, "BODY_TOO_LARGE");
       }

@@ -21,6 +21,7 @@ export type DisplayRelation = {
   claimIds: string[]; polarity: "affirmed" | "denied" | "mixed"; label: string;
   badge: string; canvasLabel: string;
 };
+export type CanvasRelation = Omit<DisplayRelation, "predicate"> & { predicate?: ClaimSummary["predicate"] };
 export function displayRelations(claims: Record<string, ClaimSummary>, locale = "ja"): Record<string, DisplayRelation> {
   const groups = new Map<string, ClaimSummary[]>();
   Object.values(claims).forEach((claim) => {
@@ -43,8 +44,8 @@ export function displayRelations(claims: Record<string, ClaimSummary>, locale = 
 }
 
 // 単独Relationは直線。別Relationは線の長さに応じた中程度の曲線へ分ける。
-export function edgeRoutes(relations: Record<string, DisplayRelation>, positions: Record<string, { x: number; y: number }> = {}) {
-  const groups = new Map<string, DisplayRelation[]>();
+export function edgeRoutes(relations: Record<string, CanvasRelation>, positions: Record<string, { x: number; y: number }> = {}) {
+  const groups = new Map<string, CanvasRelation[]>();
   Object.values(relations).forEach((relation) => {
     const key = [relation.subjectId, relation.objectId].sort().join(":");
     groups.set(key, [...(groups.get(key) ?? []), relation]);

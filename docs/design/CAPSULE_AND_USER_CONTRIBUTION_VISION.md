@@ -1,5 +1,7 @@
 # Capsule・User Contribution・Global KGの将来構想
 
+> 2026-10-29、Issue #63 `capsule-contribution-001 / r02`のCapsule先行実装は[文書・Graph上の編集契約](CAPSULE_EDITOR.md)へ具体化した。下記は将来構想と各追記時点の履歴であり、旧参照中心の作成／毎回の現在KG再解決を新documentの制約にしない。知識の申請・審査・本線受入は準備中で、実装・クラウド検証と既存beta／VPS反映を区別する。[検証・反映状況](../verification/CAPSULE_EDITOR_20261029.md)。
+
 更新日: 2026-10-09 / 状態: 2026-10-06共有の将来構想を保存。物理schema・API・UI・投稿経路・審査方式の採用仕様ではない。
 
 2026-10-09追記：既存KG参照と説明だけのブラウザ内private保存・再閲覧を[最小Capsule契約](LOCAL_CAPSULES.md)として別途採用・実装した。以下の「今回」「未実装」は構想整理時点の記録。local assertion・投稿・公開共有等は引き続き未実装。

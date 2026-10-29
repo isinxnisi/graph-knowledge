@@ -45,7 +45,7 @@ for (const reducedMotion of ["no-preference", "reduce"] as const) {
       const before = await view(page);
       await page.getByTestId(`relation-${fixture.claims[6].id}`).getByRole("button", { name: "星の航路を選択・展開" }).click();
       await expect(page.getByTestId("selection-status")).toContainText("星の航路");
-      await expect(page.getByTestId("graph-overlay")).toContainText("Graphを取得中");
+      await expect(page.getByTestId("graph-overlay")).toContainText("隣接関係を取得中");
       expect((await view(page)).positions).toEqual(before.positions);
       release();
       await expect(page.getByTestId("graph-counts")).toHaveText("Entity 7 / Claim 9");
@@ -58,7 +58,7 @@ for (const reducedMotion of ["no-preference", "reduce"] as const) {
       const detail = page.getByRole("region", { name: "Entity詳細", exact: true });
       await detail.getByRole("button", { name: "展開を閉じる", exact: true }).click();
       await expect(page.getByTestId("graph-counts")).toHaveText("Entity 5 / Claim 7");
-      await expect(page.getByTestId("graph-overlay")).toContainText("展開を閉じました");
+      await expect(page.getByTestId("graph-overlay")).toContainText("展開は閉じています");
       await detail.getByRole("button", { name: "展開を再開", exact: true }).click();
       await expect(page.getByTestId("graph-counts")).toHaveText("Entity 7 / Claim 9");
       await expect.poll(async () => (await view(page)).opacity.every(value => value === 1)).toBe(true);
@@ -71,6 +71,8 @@ for (const reducedMotion of ["no-preference", "reduce"] as const) {
       await detail.getByRole("button", { name: "この対象から広く見る", exact: true }).click();
       await expect(page.getByTestId("exploration-root")).toContainText(work.name);
       await expect(page.getByTestId("graph-overlay")).toContainText("展開済み");
+      await expect(page.getByTestId("graph-counts")).toHaveText(`Entity ${neighbors.nodes.length} / Claim ${neighbors.claims.length}`);
+      await expect.poll(async () => (await view(page)).opacity.every(value => value === 1)).toBe(true);
       await page.getByTestId("graph-canvas").evaluate(el => { (el as HTMLElement).dataset.revealed = ""; });
       await page.getByRole("button", { name: "直前の探索へ戻る", exact: true }).click();
       await expect(page.getByTestId("exploration-root")).toContainText("青葉ハル");

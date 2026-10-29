@@ -1,3 +1,5 @@
+2026-10-29、Issue #63の新document付きCapsuleは[現行編集契約](design/CAPSULE_EDITOR.md)を優先する。実装・クラウド検証を完了し、既存beta／VPSは未反映。[検証・反映状況](verification/CAPSULE_EDITOR_20261029.md)／[更新・復旧](runbooks/CAPSULE_EDITOR_RELEASE.md)。以下の日付付き記述は当時の履歴として保持する。
+
 後続の漫画受入で新公開baseを使う前に、設置済み8 Role版Workerの互換対応が必要（[Issue #55](https://github.com/isinxnisi/graph-knowledge/issues/55)）。稼働Workerは変更していない。
 
 2026-10-28、映画DIRECTING／ACTINGと映画2 Claimの正式受入・本番公開を完了。plunode.net revision7c54da24…、Web build oTXBAgU034CoviTmmAHQ9。既存Issue #33の個別署名と同nonce配送を検証し、exclusion finished・監査完了・条件付きWorker resumeを確認。3200／betaは旧試験KGを保全した別DB7697の正式データ確認用投影へ切替。未収録79記録・94 Entity候補は後続。[正式公開・実ブラウザ・保全記録](verification/FILM_INITIAL_PRODUCTION_20261028.md)。以下の先行日付の未承認／未公開記述は当時の履歴。
@@ -13,6 +15,20 @@
 2026-10-29、[日次教育の接続](verification/AI_EDUCATION_SCHEDULED_20261029.md)をmain/betaへ反映。v1の独立CPU実行・共通guard・JST窓・日次予算と、v2のGitHub report/outbox・限定カテゴリ選択・v4公開artifactを再利用する。scheduled入力は厳密な`education-proposal-v1`からローカルで既存planへ正規化し、初回の運営者による実行確認・登録後のGitHub投稿者/task経路への信頼を区別する。任意コード・holdout変更・モデル採用・KG書込を受け付けない。Webは保存済み公開データを読むだけで、実行API・別教師Identityを追加しない。公式AIの判断内容を前に出し、技術的出所は監査詳細へ保持する。今回の再読込は時間上限で未完了、クラウドの実方針・日次設定も未接続として表示・報告し、本番へ反映していない。
 
 # 現行技術設計
+
+## Capsule文書と編集の現行契約（2026-10-29）
+
+Issue #63 / `capsule-contribution-001 / r02`。[Capsule文書・Graph上の編集](design/CAPSULE_EDITOR.md)を、今回の内容・作成・編集・保存・固定版共有の正本とする。実装・クラウド検証を完了し、既存3200／HTTPS beta／本番VPSは未反映。検証結果と反映状態は[専用記録](verification/CAPSULE_EDITOR_20261029.md)、既存配置への接続は[runbook](runbooks/CAPSULE_EDITOR_RELEASE.md)を参照する。
+
+新documentにはKG由来／独自の対象と関係、自由テキスト、根拠、配置を保存する。KG参照ID、図の要素キー、利用者の編集値、取り込み時の元断面を分ける。作成時に取得済みだった範囲を固定し、未取得・部分取得・記録した条件内での取得完了を区別する。保存した文書・配置を再閲覧し、現在KGとの比較は明示操作とする。本文・根拠を含む断面があってもKG全体や任意時点の完全な履歴を保証するものではない。
+
+Graphからの新規作成に旧チェックリストを必須にせず、編集はメモリ上の草稿、Undo／Redo、編集前への破棄、明示保存で区別する。閲覧中の一時配置は保存済み版を変更しない。保存失敗・競合・結果不明では入力を保持し、同じ操作の照会／再送で二重更新を避ける。documentを持たない旧形式だけは互換Readerで現在KGへの参照を解決する。下記2026-10-09の最小Capsule節にある毎回の再解決・自動配置・参照中心の上限や作成方法は、新documentの契約ではない。
+
+匿名の本文はIndexedDBへ明示保存でき、会員の本文は所有者認可付きPostgreSQLへ保存できる。最近使ったもの・お気に入りは本文と別のブラウザ内metadataで、memberIDで分離し、端末間同期は行わない。旧Capsule削除のユーザー許可により完全移行は必須条件としない。会員DBや他のcommunityデータのresetはしない。
+
+共有するのは保存済み指定版のimmutable snapshotで、編集中の草稿や後のprivate編集を混ぜない。限定リンクとcommunity掲載の認可は独立させ、現在の会員状態、発行者と閲覧者の参加世代、公開範囲、撤去、版ごとの共有停止を確認する。認可条件を一覧のLIMIT前に評価し、失効後の再参加・再公開から権限を復活させない。掲載から関連会話／Graphへ往復し、Capsule削除で独立会話を連鎖削除しない。
+
+追加migrationは011／012をCLIから明示選択し、capabilitiesで文書／掲載の準備状態を返す。本文一覧はsummaryとし、閲覧・編集・公開確認時に完全な対象内容を取得する。知識の申請は準備中で、KGへの書込・受入やAI処理を起動しない。既存KG、公開／収集Worker、Kev、AIラボ、日次予定／artifactを変更しない。
 
 2026-10-25、Issue #39初期体験の修正：既存009を不変とした明示010で、全会員プロフィール・一つの表示名・初期公開（既存false保持）を準備する。sourceに公開由来と作成者参加世代・初投稿参照を加え、作成/コメントの投影を閲覧時に再認可する。旧sourceは公開経緯不明のため省き、本文抜粋を返さない。人物表示を共通化し、マイページと編集を認証/退会設定から分ける。独立DB/Webで評価後、2026-10-26に招待の公開ID/UUID互換対応を同梱した固定71b61fbをmainへ受入、既存3200/betaへ反映し実Googleを確認した。正式VPSは未変更。[契約](design/PUBLIC_ACCOUNTS.md)／[隔離検証](verification/PUBLIC_ACCOUNTS_INITIAL_CORRECTION_20261025.md)／[beta受入](verification/PUBLIC_ACCOUNTS_BETA_ACCEPTANCE_20261026.md)。
 
@@ -782,6 +798,8 @@ Phase 22後の局所視覚調整：構造化済み具体語を持つRelationだ�
 
 ## ブラウザ内の最小Capsule（2026-10-09）
 
+> 旧形式の履歴。下記のチェックリスト作成・localStorage形式・毎回の現在KG再解決／自動配置は、documentのない参照中心Capsuleの範囲。新documentは[現行編集契約](design/CAPSULE_EDITOR.md)を優先し、保存した文書・断面・配置を読む。
+
 [採用契約](design/LOCAL_CAPSULES.md)。表示中のEntity／独立Claimから構成を明示選択し、題名・説明とともに独立したlocalStorage領域へ保存する。dataset・UUID参照・Capsule内容版（新規1、編集ごとに増加）を保持し、知識本文・通信・表示束ID・探索途中を保存形式へ混ぜない。主張の両端は構成対象として表示・保存する。30対象／60主張・10件まで。未知形式・失敗・別datasetを拒否し、既存保存ビュー／途中保存は移行しない。
 
 再閲覧はEntity／Claim詳細の現在データを同時4要求・全体60秒以内で取得し、schemaとIDを確認する。失効・取得失敗・構成外端点を区別し、保存参照を消さず再試行できる。明示構成から閲覧用Graphを作り、孤立対象を残し、`projectGraph`は通さない。GraphCanvasの閲覧モードは既存配置計算を使って接続対象から配置し、独立対象が線ラベルに重なりにくくする。pan/zoom・選択は可能、展開・配置保存は行わない。個別ClaimCardで出典を読み、関連Claimは自動追加しない。
@@ -800,6 +818,8 @@ Native History APIと`useSearchParams`で既存Explorerを保持し、閲覧中�
 
 ## 会員Capsule保存：認証と再閲覧UI（2026-10-09）
 
+> 初回の参照中心会員保存の履歴。所有者・session・dataset・競合の境界は継承するが、以下の旧構成編集UIや現在KGの再解決を新documentへ適用しない。[現行編集契約](design/CAPSULE_EDITOR.md)の本文・文書保存とsummary／詳細の分離を参照。
+
 [採用契約](design/MEMBER_CAPSULES.md)。Better Auth 1.7.7とPostgreSQLを運営・所有者付き保存へ追加した。環境で明示有効化し、未設定でも既存KGは起動できる。UserとKG Personは分離。DB session／activeとownerをprivate操作ごとに確認し、cookie cacheを使わない。account linking無効、token破棄、Origin検査、no-store応答。開発OIDCはproduction・別origin・別DBで拒否する。
 
 会員Capsuleは既存KG参照と利用者の説明だけ。ローカルのID・版・ownerを取り込まずserverが割り当てる。request IDの冪等性と件数をUser行lockで確認し、更新・削除は期待revisionをSQL条件へ含める。非所有者／不存在404、競合409、運営DB不通503。独立PGへの追加migrationだけで、知識DB・凍結dataset・ブラウザ保存を移行しない。既存Capsule Readerを使い、現在KGへ再解決し、未解決・取得失敗を保持して示す。
@@ -813,6 +833,8 @@ Native History APIと`useSearchParams`で既存Explorerを保持し、閲覧中�
 公開β step14で[退会・停止と最小運営操作](design/ACCOUNT_LIFECYCLE_OPERATIONS.md)を追加。本人退会は直近30分のDB session・Origin・期待User・明示確認を要求し、全datasetの本人Capsule／共有版／リンク／本人投稿／認証情報を一つのPG transactionで削除する。Neo4jとブラウザ保存は維持。利用停止はデータを保持し、全session／有効共有を失効する独立した運営CLI操作。Capsuleの共有停止と投稿非表示もCLIに限定し、一般Userへ管理権限を公開しない。追加migration004のみ。運営操作記録とbackupの扱いは上記契約を参照する。
 
 ## 会員Capsuleの特定版を限定リンクで共有（2026-10-09）
+
+> 初回共有の履歴。token・特定版・再認可・明示失効の境界を継承する。新documentの共有本文は保存した文書と取り込み断面であり、現在KGの毎回再解決はdocumentなしの旧形式だけ。[現行編集契約](design/CAPSULE_EDITOR.md)を優先する。
 
 [採用契約](design/CAPSULE_LINK_SHARING.md)。表示中の受理版を明示確認して、PostgreSQLへ参照と説明のsnapshotを固定する。既存のprivate編集・KG内容は不変。Capsuleごと1つの有効リンク、50共有版まで。共有済み版は更新せず、Capsule UUID＋revisionで保持する。追加migrationだけで、既存保存を移行しない。
 

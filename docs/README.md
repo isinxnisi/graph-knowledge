@@ -2,6 +2,8 @@
 
 # ドキュメントの入口
 
+- Issue #63 `capsule-contribution-001 / r02`：Capsuleの新しい現行契約は[Graph上の編集・文書・保存・固定版共有](design/CAPSULE_EDITOR.md)。[既存beta／VPSの更新・011／012適用・復旧](runbooks/CAPSULE_EDITOR_RELEASE.md)／[実装とクラウド検証の記録](verification/CAPSULE_EDITOR_20261029.md)。実装・クラウド検証を完了し、既存3200／HTTPS beta／VPSは未反映。知識の申請は準備中。以下の旧チェックリスト作成・参照中心Readerは、documentを持たない旧形式の契約として読む。
+
 - Issue #52 現行KGの管理検索：[設計](design/KG_ADMIN.md)／[VPS Connector・Access運用手順](runbooks/KG_ADMIN.md)／[本番配置・実Access全件照合・再接続](verification/KG_ADMIN_PRODUCTION_20261027.md)／[初回隔離検証](verification/KG_ADMIN_20261027.md)。専用管理Webは本番稼働。ConnectorのAccess保護・自動起動有効化・再起動後の実接続を確認済み。
 
 - Issue #39 [正式公開・本番backup/別DB復元/009・010適用](verification/PUBLIC_ACCOUNTS_PRODUCTION_20261026.md)：固定767020c／build p2mPLpwWtvRzE54EdYqwSをplunode.netへ公開。実Google、既存Capsule、プロフィール・フォロー・招待・限定境界、コミュニティ・運営・Graph・AIラボを確認。スマホ実機は運営者評価済み。[先行するbeta受入](verification/PUBLIC_ACCOUNTS_BETA_ACCEPTANCE_20261026.md)／[隔離評価](verification/PUBLIC_ACCOUNTS_INITIAL_CORRECTION_20261025.md)。
@@ -52,6 +54,7 @@
 
 | 現役の設計文書 | 状態・読む場面 |
 | --- | --- |
+| [Capsule文書とGraph上の編集](design/CAPSULE_EDITOR.md) | Issue #63 / capsule-contribution-001 / r02。表示Graphから文書を作成し、独自対象・関係・根拠・自由テキスト・配置を明示編集／保存。保存断面と現在KGを分け、固定版を共有・掲載。会員本文はアカウント保存できるが、最近／お気に入りはmemberIDで分離したブラウザ内metadataで端末間同期なし。実装・クラウド検証済み、既存beta／VPS未反映、知識申請は準備中。[更新手順](runbooks/CAPSULE_EDITOR_RELEASE.md)／[検証記録](verification/CAPSULE_EDITOR_20261029.md) |
 | [洋画Role・段別探索のbeta接続](design/FILM_BETA.md) | Issue #43を継承し正式10 Role・映画2 Claimを本番公開済み。旧trialを保全してbetaは独立DB7697で正式データを確認。[公開完了](verification/FILM_INITIAL_PRODUCTION_20261028.md)。 |
 | [コミュニティ体験設計](design/COMMUNITY_EXPERIENCE.md)／[基礎設計](design/COMMUNITY_FOUNDATION.md)／[導入計画](design/COMMUNITY_IMPLEMENTATION_PLAN.md) | コミュニティを中心に会員・独立会話・版付き掲載・公開範囲・管理・AIを整理。人間向けC1a／C1bはfeature flag内で実装・隔離検証。C3-minを追加し、C2を初回公開条件から分離。[現行C1b](design/COMMUNITY_CONTINUITY.md)／[初期試作](verification/COMMUNITY_PROTOTYPE_20261021.md)。本番・既存会員DB適用・AI接続なし |
 | [コミュニティ本線UI接続確認版](design/COMMUNITY_CONNECTION_PREVIEW.md) | 実Home・Explorer・会員画面を再利用する隔離3275／graph-com。架空会員/コミュニティと公開KG読み取りを分離。A〜Cの往復・状態復元・密度比較。[検証](verification/COMMUNITY_CONNECTION_20261021.md) |
@@ -120,11 +123,11 @@
 | [共通ヘッダとUI基礎](design/PRODUCT_UI_FOUNDATIONS.md) | 公開β step8〜12。共通ヘッダ・別タブのアカウント入口・三テーマ・操作フィードバックとreduced-motion、設定メニュー・本人表示名・ブラウザ外観保存。実Googleは別工程 |
 | [アカウント・所有者・会員保存](design/ACCOUNT_AND_OWNERSHIP_DESIGN.md) | 初回設計。会員Capsuleを実装済み（実Googleは未接続）。認証・UserとKG Person・所有者認可・一種類のprivate保存、実credential待ちの範囲とテストを具体化 |
 | [共有・議論の最小縦経路](design/COMMUNITY_VERTICAL_SLICES.md) | 初回設計。限定リンク共有と短い版別コメントを実装。投稿候補・一般公開・運営対応は未実装。Capsule版・限定リンク・スレッド対象・投稿時版・運営／知識受入の分離。全コミュニティ基盤を先行導入しない |
-| [Capsuleの限定リンク共有](design/CAPSULE_LINK_SHARING.md) | 2026-10-09。特定版の固定・匿名閲覧・根拠／探索への導線・明示再発行と失効。実公開・運営非表示は未実装。discussionは次行の別契約 |
+| [Capsuleの限定リンク共有・初回契約](design/CAPSULE_LINK_SHARING.md) | 2026-10-09当時の契約と履歴。特定版・token・認可・明示失効の境界を参照。現在KGを再取得するReaderはdocumentなしの旧形式に限り、新documentの断面・版共有は上記Capsule編集契約を優先する |
 | [Capsuleの版についての会話](design/CAPSULE_DISCUSSION.md) | 2026-10-10。明示受付・2 Userの投稿・投稿時版・非共有版隔離・本人撤回・所有者停止。所有者の旧共有版選択・説明と会話の再閲覧も接続。失効後の本人投稿一覧・撤回も接続。公開運営は未実装 |
-| [会員Capsule保存の初回](design/MEMBER_CAPSULES.md) | 2026-10-09。実認証・PostgreSQL・所有者APIと明示保存・再訪・既存構成編集UIを接続。2026-10-10に閲覧リンクからの参照追加も接続。表示名設定はstep12。実Googleは未了 |
+| [会員Capsule保存の初回](design/MEMBER_CAPSULES.md) | 2026-10-09当時の参照中心保存・編集・認証／所有者契約と履歴。新documentの編集・内容版・最近／お気に入り・端末間保存範囲は上記Capsule編集契約を参照。過去の実Google未接続等を現在状態へ戻さない |
 | [本番Google接続の準備](design/GOOGLE_MEMBER_CONNECTION.md) | 公開β step13・現在の最優先。内部専用PG・非superuser・明示migration・privateな候補env、失敗復旧付き適用script・本番imageの試験。Google Cloud手順／配置資材／本人確認経路を記録。正式HTTPS／専用PG／Google認証開始を実接続確認済。本人ログイン確認済み。MTU永続適用・本人保存再訪確認済み。編集／共有停止／実機等は未確認で工程13は未完了 |
-| [ブラウザ内の最小Capsule](design/LOCAL_CAPSULES.md) | 2026-10-09。明示した対象・独立主張と説明のprivate保存・現在データでの再閲覧・確認削除。保存ビュー／途中保存とは別コンテンツ。同IDの編集も実装。会員同期・公開共有は未実装 |
+| [ブラウザ内の最小Capsule・旧形式](design/LOCAL_CAPSULES.md) | 2026-10-09当時のlocalStorage・参照中心形式と互換読取。チェックリストによる作成・毎回の現在KG再解決・自動配置は新documentへ適用しない。新規編集・IndexedDB・保存断面は上記Capsule編集契約を参照 |
 | [ブラウザ内の探索途中保存](design/LOCAL_SAVED_WORKSPACE.md) | 2026-10-09。datasetごと最大10件、枝の開閉・取得ページ数・配置の保存と現在データからの再開。専用JSONの控え・内容確認後の読込を追加。旧1件を引き継ぎ、選択・置換・確認削除に対応。会員同期は未実装 |
 | [対象・主張の直接閲覧URL](design/DIRECT_READING_LINKS.md) | 2026-10-09。dataset・Entity／Claim IDから現在の説明・根拠を読む。履歴・明示探索・元Graphへの復帰。公開運用・検索掲載・内容版固定は含めない |
 | [ブラウザ内の保存ビュー](design/LOCAL_SAVED_VIEWS.md) | 2026-10-09。起点と確定条件のローカル保存・再訪、JSONの控えと確認後の追加。会員保存・自動同期は未実装。枝と配置の再開は別の探索途中保存を参照 |
@@ -162,6 +165,8 @@
 未実装部分を含む文書は、完了した内容が一部あっても丸ごとアーカイブしない。設計案を採用済みとみなさず、最新のユーザー指示を優先する。
 
 ## 現在地点
+
+2026-10-29、Issue #63の[Capsule文書・Graph上の編集](design/CAPSULE_EDITOR.md)の実装・クラウド検証を完了。保存した文書・配置・取り込み断面を読み、現在KGは明示比較する。既存beta／VPSへの反映は未完了で、申請は準備中。[検証・反映状況](verification/CAPSULE_EDITOR_20261029.md)を参照。以下の日付付き記述は各初回実装時点の履歴として保持する。
 
 2026-10-09、[会員Capsule保存](design/MEMBER_CAPSULES.md)の認証・所有者付き保存APIを追加した。専用PostgreSQLと開発OIDCによる検証段階で、明示保存・本人一覧・現在の根拠・別ブラウザ再訪のUIも接続した。通常の探索・ブラウザ保存を維持し、題名・説明・既存構成の編集と失効時の入力保持も接続した。2026-10-10に閲覧リンクから対象・個別主張を確認して構成へ追加する経路も接続した。共有済み版と現在版の説明・明示構成を比較する本人用の導線も追加した（[契約](design/CAPSULE_LINK_SHARING.md#所有者が共有時と現在の構成を比較する2026-10-10追加)）。表示名設定は公開β step12で実装し、実Googleは未接続。
 

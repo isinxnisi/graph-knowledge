@@ -13,7 +13,7 @@ export type MemberCapsuleDraft = {
 const sameIds = (a: string[], b: string[]) => a.length === b.length && a.every(id => b.includes(id));
 export function sameMemberContent(a: MemberCapsuleContent, b: MemberCapsuleContent) {
   return a.dataset === b.dataset && a.language === b.language && a.title.trim() === b.title.trim() && a.note === b.note
-    && sameIds(a.entityIds, b.entityIds) && sameIds(a.claimIds, b.claimIds);
+    && sameIds(a.entityIds, b.entityIds) && sameIds(a.claimIds, b.claimIds) && JSON.stringify(a.document) === JSON.stringify(b.document);
 }
 export function memberDraftRequired(draft: MemberCapsuleDraft) {
   return new Set(draft.content.claimIds.flatMap(id => {

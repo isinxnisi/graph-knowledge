@@ -52,8 +52,11 @@ import RelationsList from "./RelationsList";
 import EntityDetails from "./EntityDetails";
 import ClaimDetails from "./ClaimDetails";
 import styles from "./Explorer.module.css";
-import CapsuleDialog from "./CapsuleDialog";
-import { capsuleLabels } from "../lib/i18n/capsules";
+import MyCapsules, { CapsuleWorkspace } from "./MyCapsules";
+import { captureCapsule } from "../lib/client/capsule-editor";
+import type { LocalCapsule } from "../lib/client/local-capsules";
+import capsuleStudioCss from "./CapsuleStudio.module.css";
+
 import WorkspaceDialog from "./WorkspaceDialog";
 import { workspaceLabels } from "../lib/i18n/workspace";
 import SavedViews from "./SavedViews";
@@ -107,6 +110,7 @@ export default function Explorer({ dataset = "demo", initialRoot, services, publ
   }, []);
   const [overview, setOverview] = useState<EntitySummary | null>(null);
   const [capsuleOpen, setCapsuleOpen] = useState(false);
+  const [capsuleSession, setCapsuleSession] = useState<LocalCapsule | null>(null);
   const [workspaceOpen, setWorkspaceOpen] = useState(false);
   const [savedViewsOpen, setSavedViewsOpen] = useState(false);
   const [detailWide, setDetailWide] = useState(false);
@@ -115,6 +119,10 @@ export default function Explorer({ dataset = "demo", initialRoot, services, publ
   const [discoveryRoute, setDiscoveryRoute] = useState<{path: PathWitness; conditionKey: string} | null>(null);
   const urlState = useExplorationUrl({ dataset, initialRoot, graph, locale, capture: () => canvas.current?.capture() ?? null, apply: value => { setDiscoveryRoute(value.discoveryPath ? { path: value.discoveryPath, conditionKey: value.graph.conditionKey } : null); openWorkspace(value, canvas.current?.capture() ?? null); setActivePane("graph"); } });
   const [navigationError, setNavigationError] = useState(false);
+  function createGraphCapsule() {
+    try { setCapsuleSession(captureCapsule(graph, canvas.current?.capture() ?? null, dataset, graph.nodes[graph.centerId ?? ""]?.name ?? (locale === "en" ? "New Capsule" : "新しいCapsule"))); }
+    catch { setNavigationError(true); }
+  }
   const beforeAccountNavigation = () => {
     if (graph.centerId && !urlState.flush()) { setNavigationError(true); return false; }
     rememberExplorationReturn(); setNavigationError(false); return true;
@@ -176,12 +184,12 @@ export default function Explorer({ dataset = "demo", initialRoot, services, publ
   return <><div className={styles.explorer}>
     <SiteHeader dataset={dataset} onBeforeAccountNavigation={beforeAccountNavigation} onPrivacySettings={services && (services.ads || services.analytics) ? () => publicServices.current?.openSettings() : undefined} />
     {navigationError && <p role="alert">{locale === "en" ? "The exploration is not ready to restore. Wait for loading to finish, or save the workspace before leaving." : "探索を復元できる状態にできませんでした。取得の完了を待つか、探索途中を保存してから移動してください。"}</p>}
-    <nav ref={paneNavigation} className={styles.paneNavigation} aria-label={panes.navigation}>
+    <nav style={capsuleSession ? { display: "none" } : undefined} hidden={!!capsuleSession} ref={paneNavigation} className={styles.paneNavigation} aria-label={panes.navigation}>
       {(["search", "graph", "detail"] as const).map(pane => <button key={pane} aria-label={pane === "graph" && atHome ? discoveryHomeLabels(locale).home : panes[pane]} aria-pressed={activePane === pane} aria-controls={`explorer-${pane}`} onClick={() => moveToPane(pane)}><Icon name={pane === "search" ? "search" : pane === "graph" ? "graph" : "book"} /><span>{pane === "detail" ? ui.detail : pane === "graph" && atHome ? discoveryHomeLabels(locale).home : panes[pane]}</span></button>)}
     </nav>
     <div lang={locale} aria-live="polite">{urlState.busy && <p role="status">{explorationUrlLabels(locale).restoring}</p>}{urlState.failure && <div role="alert" className={styles.error}><p>{urlState.failure}</p><button onClick={urlState.retry}>{explorationUrlLabels(locale).retry}</button>{urlState.canRestart && <button onClick={urlState.restart}>{relationText(locale).restart}</button>}<button onClick={urlState.abandon}>{explorationUrlLabels(locale).abandon}</button></div>}</div>
-    <main inert={urlState.busy || !!urlState.failure} data-active-pane={activePane} className={`${styles.columns} ${detailWide ? styles.wideDetails : ""}`}>
-      <div id="explorer-search" role="group" tabIndex={-1} data-focus-destination aria-label={panes.search} className={styles.panel}><SearchPanel placeholder={labels.searchExample} onChoose={startFrom} onDiscover={openDiscovery} /><div lang={locale} className={styles.localActions}><h3>{designLabels(locale).tools}</h3><button onClick={() => setSavedViewsOpen(true)}><Icon name="bookmark" />{savedViewLabels(locale).launch}</button><button onClick={() => setWorkspaceOpen(true)}><Icon name="history" />{workspaceLabels(locale).launch}</button><button onClick={() => setCapsuleOpen(true)}><Icon name="capsule" />{capsuleLabels(locale).launch}</button></div><StartExamples dataset={dataset} onChoose={(entity) => startFrom(entity, true)} /></div>
+    <main style={capsuleSession ? { display: "none" } : undefined} hidden={!!capsuleSession} inert={urlState.busy || !!urlState.failure || !!capsuleSession} data-active-pane={activePane} className={`${styles.columns} ${detailWide ? styles.wideDetails : ""}`}>
+      <div id="explorer-search" role="group" tabIndex={-1} data-focus-destination aria-label={panes.search} className={styles.panel}><SearchPanel placeholder={labels.searchExample} onChoose={startFrom} onDiscover={openDiscovery} /><div lang={locale} className={styles.localActions}><h3>{designLabels(locale).tools}</h3><button onClick={() => setSavedViewsOpen(true)}><Icon name="bookmark" />{savedViewLabels(locale).launch}</button><button onClick={() => setWorkspaceOpen(true)}><Icon name="history" />{workspaceLabels(locale).launch}</button><button onClick={() => setCapsuleOpen(true)}><Icon name="capsule" />My Capsules</button></div><StartExamples dataset={dataset} onChoose={(entity) => startFrom(entity, true)} /></div>
       <div id="explorer-graph" role="group" tabIndex={-1} data-focus-destination data-discovery-home={atHome || undefined} aria-label={panes.graph} className={styles.centralScroll}>
       {atHome && <DiscoveryHome data={discoveryHome} onDiscover={() => openDiscovery({ q: "", kind: null, presentation: "explore" })} onSearch={() => {
         moveToPane("search");
@@ -193,7 +201,7 @@ export default function Explorer({ dataset = "demo", initialRoot, services, publ
             <p data-testid="graph-counts">Entity {Object.keys(graph.nodes).length} / Claim {Object.keys(graph.claims).length}</p><p data-testid="relation-counts">Relation {Object.keys(relations).length}</p>
           </div>
           <div className={styles.rootBar}><p className={styles.rootLabel} data-testid="exploration-root">{entry.root}：{graph.centerId ? graph.nodes[graph.centerId]?.name : entry.rootEmpty}</p>
-            <button className={styles.copyExploration} aria-label={explorationUrlLabels(locale).copy} title={explorationUrlLabels(locale).copy} disabled={!urlState.ready || urlState.busy || !!urlState.failure || loading > 0} onClick={() => void urlState.copy()}><Icon name="copy" /><span>{explorationUrlLabels(locale).copy}</span></button><div lang={locale} className={styles.rootSaveActions}><button onClick={() => setSavedViewsOpen(true)}><Icon name="bookmark" />{savedViewLabels(locale).launch}</button><button onClick={() => setWorkspaceOpen(true)}><Icon name="history" />{workspaceLabels(locale).launch}</button><button onClick={() => setCapsuleOpen(true)}><Icon name="capsule" />{capsuleLabels(locale).launch}</button></div>
+            <button className={styles.copyExploration} aria-label={explorationUrlLabels(locale).copy} title={explorationUrlLabels(locale).copy} disabled={!urlState.ready || urlState.busy || !!urlState.failure || loading > 0} onClick={() => void urlState.copy()}><Icon name="copy" /><span>{explorationUrlLabels(locale).copy}</span></button><div lang={locale} className={styles.rootSaveActions}><button onClick={() => setSavedViewsOpen(true)}><Icon name="bookmark" />{savedViewLabels(locale).launch}</button><button onClick={() => setWorkspaceOpen(true)}><Icon name="history" />{workspaceLabels(locale).launch}</button></div>
             {previous && <button className={styles.restoreExploration} aria-label={overviewLabels(locale).restore} title={overviewLabels(locale).restore} onClick={restorePrevious}><Icon name="back" /><span>{overviewLabels(locale).restore}</span></button>}</div>
         </div>
         {urlState.notice && <p role="status" className={styles.muted}>{urlState.notice}</p>}
@@ -207,12 +215,12 @@ export default function Explorer({ dataset = "demo", initialRoot, services, publ
         {Object.values(graph.expansions).some((meta) => meta.active && meta.hasMore) && <p className={styles.muted}>{explorationLabels(locale).neighborsPageHelp}</p>}
         {blocked && <p role="alert" className={styles.error}>{explorerMessage(blocked.error!, locale)}</p>}
         {notice?.kind === "warning" && <GraphNotice notice={notice} />}
-        <GraphCanvas notification={notice?.kind === "info" ? <GraphNotice key={`${graph.generation}:${graph.notice}`} notice={notice} /> : null} compactGuide footerAction={<button className={styles.adjacentJump} disabled={!selection} onClick={() => {
+        <GraphCanvas notification={notice?.kind === "info" ? <GraphNotice key={`${graph.generation}:${graph.notice}`} notice={notice} /> : null} compactGuide footerAction={<><button disabled={!Object.keys(graph.nodes).length} onClick={createGraphCapsule}><Icon name="capsule" />{locale === "en" ? "Create Capsule" : "Capsule作成"}</button><button className={styles.adjacentJump} disabled={!selection} onClick={() => {
           document.getElementById("explorer-relations")?.scrollIntoView({ block: "start" });
           focusDestination(document.getElementById("explorer-relations"));
-        }}>{panes.toRelations}<Icon name="chevron" /></button>} onViewChange={urlState.schedule} navigation={<GraphNavigator compact key={graph.generation} nodes={graph.nodes} selection={selection} onNavigate={(id) => {
+        }}>{panes.toRelations}<Icon name="chevron" /></button></>} onViewChange={urlState.schedule} navigation={<GraphNavigator compact key={graph.generation} nodes={graph.nodes} selection={selection} onNavigate={(id) => {
           inspectEntity(id); canvas.current?.focusEntity(id);
-        }} />} ref={canvas} restoration={viewRestoration} interactionBlocked={relationLoading || !!discoveryCriteria || !!overview || savedViewsOpen || workspaceOpen || capsuleOpen || !!reading} onEntityDoubleClick={(id) => { if (graph.nodes[id]) setOverview(graph.nodes[id]); }} graph={graph} selection={selection} onEntity={selectEntity} onRelation={id => { selectRelation(id); if (matchMedia("(min-width: 801px)").matches) trackPublicEvent("relation_detail"); }} onRelationDoubleClick={(id) => { selectRelation(id); moveToPane("detail"); if (matchMedia("(max-width: 800px)").matches) trackPublicEvent("relation_detail"); }} onToggleEntity={id => { if (!graph.expansions[id]?.open) trackPublicEvent("graph_expand"); toggleEntity(id); }} feedback={<>
+        }} />} ref={canvas} restoration={viewRestoration} interactionBlocked={relationLoading || !!discoveryCriteria || !!overview || savedViewsOpen || workspaceOpen || capsuleOpen || !!reading} onEntityDoubleClick={(id) => { if (graph.nodes[id]) setOverview(graph.nodes[id]); }} graph={graph} selection={selection} onInspectEntity={inspectEntity} onEntity={selectEntity} onRelation={id => { selectRelation(id); if (matchMedia("(min-width: 801px)").matches) trackPublicEvent("relation_detail"); }} onRelationDoubleClick={(id) => { selectRelation(id); moveToPane("detail"); if (matchMedia("(max-width: 800px)").matches) trackPublicEvent("relation_detail"); }} onToggleEntity={id => { if (!graph.expansions[id]?.open) trackPublicEvent("graph_expand"); toggleEntity(id); }} feedback={<>
           <div className={`${styles.feedback} ${!graph.centerId ? styles.initialFeedback : ""}`} aria-live="polite"><div key={feedbackKey} className={styles.feedbackContent}><p data-testid="selection-status">{ui.selected}：{selectionText}</p><p>{selectedEntity ? graph.expansions[selectedEntity.id]?.expanded ? ui.expanded : graph.expansions[selectedEntity.id]?.pages.length ? ui.closed : ui.expandHelp : <><span className={styles.desktopRelationHelp}>{ui.grouped}</span><span className={styles.touchRelationHelp}>{entry.touchRelationHelp}</span></>}</p></div></div>
         </>} />
       </section>
@@ -237,6 +245,7 @@ export default function Explorer({ dataset = "demo", initialRoot, services, publ
         {selection?.kind === "claim" && <ClaimDetails onDataChanged={invalidateData} revision={graph.revision} dataset={dataset} key={key} id={selection.id} nodes={graph.nodes} claimSummary={selectedClaim ?? undefined} onInspectEntity={inspectFromClaim} eventRoles={graph.eventRoles ?? null} positions={graph.organizationPositions ?? null} roles={graph.contributionRoles ?? null} predicates={graph.predicates} />}
       </aside>
     </main>
+    {capsuleSession && <div className={capsuleStudioCss.workspace}><CapsuleWorkspace key={capsuleSession.id} initial={capsuleSession} isNew onClose={() => setCapsuleSession(null)} /></div>}
     {discoveryCriteria && <DiscoverySearch presetBrowser={dataset === "public-kg"} dataset={dataset} initial={discoveryCriteria} onClose={closeDiscovery} onChoose={(entity, predicates, roles) => {
       if (predicates === undefined) { startFrom(entity); return; }
       trackPublicEvent("explore_start");
@@ -247,7 +256,7 @@ export default function Explorer({ dataset = "demo", initialRoot, services, publ
       switchFrom(entity, "broad"); closeReading();
     }} />}
     {overview && <EntityOverview key={overview.id} entity={overview} dataset={dataset} restricted={restricted} onClose={() => setOverview(null)} onSwitch={(mode) => switchFrom(overview, mode)} />}
-    {capsuleOpen && <CapsuleDialog onBeforeAccountNavigation={beforeAccountNavigation} dataset={dataset} graph={graph} onClose={() => setCapsuleOpen(false)} />}
+    {capsuleOpen && <MyCapsules dataset={dataset} onClose={() => setCapsuleOpen(false)} />}
     {workspaceOpen && <WorkspaceDialog dataset={dataset} graph={graph} captureView={() => canvas.current?.capture() ?? null}
       onClose={() => setWorkspaceOpen(false)} onOpen={workspace => {
         openWorkspace(workspace, canvas.current?.capture() ?? null); moveToPane("graph");

@@ -5,11 +5,11 @@ import type {CommunityMutation,CommunityMutationResult} from '../lib/client/use-
 import {CommunityDialog} from './CommunityDialog';
 import css from './CommunityPage.module.css';
 type Translate=(ja:string,en:string)=>string;
-type Props={kind:'community'|'thread'|'post';id:string;revision:number;t:Translate;mutate:CommunityMutation;busy:boolean;reportable:boolean;moderate?:boolean;hiddenBy?:string|null;hidden?:boolean;targetLabel?:string};
+type Props={kind:'community'|'thread'|'post'|'capsule';id:string;revision:number;t:Translate;mutate:CommunityMutation;busy:boolean;reportable:boolean;moderate?:boolean;hiddenBy?:string|null;hidden?:boolean;targetLabel?:string};
 export function CommunitySafetyActions({kind,id,revision,t,mutate,busy,reportable,moderate=false,hiddenBy,hidden=false,targetLabel}:Props){
  const [editor,setEditor]=useState<'report'|'moderate'|null>(null),[reason,setReason]=useState(''),[category,setCategory]=useState('spam'),[discard,setDiscard]=useState(false),[failure,setFailure]=useState<Extract<CommunityMutationResult,{ok:false}>|null>(null),[sending,setSending]=useState(false);
  const attempt=useRef<Record<string,unknown>|null>(null),reasonId=useId();
- const object=kind==='post'?t('投稿','post'):kind==='thread'?t('スレッド','thread'):t('コミュニティ','community');
+ const object=kind==='capsule'?'Capsule':kind==='post'?t('投稿','post'):kind==='thread'?t('スレッド','thread'):t('コミュニティ','community');
  const close=()=>{setEditor(null);setReason('');setFailure(null);setDiscard(false);attempt.current=null;};
  const cancel=()=>{if(sending)return;if(reason.trim()||failure?.unknown)setDiscard(true);else close();};
  const open=(mode:'report'|'moderate')=>{setEditor(mode);setDiscard(false);};
@@ -33,5 +33,5 @@ export function CommunitySafetyActions({kind,id,revision,t,mutate,busy,reportabl
  </form></CommunityDialog>}</div>;
 }
 export function CommunityReportReceipts({reports,t}:{reports:{id:string;kind:string;status:string}[];t:Translate}){
- return <section><header className={css.heading}><div><PageIdentity area="activity"/><h1>{t('自分の通報','My reports')}</h1><p>{t('受付状況を確認できます。通報は真偽の認定とは別です。','Track your reports. Reporting is separate from judging truth.')}</p></div></header>{!reports.length&&<p className={css.empty}>{t('通報はありません。','No reports.')}</p>}{reports.map(r=><article className={css.row} key={r.id}><div><strong>{r.kind==='post'?t('投稿への通報','Post report'):r.kind==='thread'?t('スレッドへの通報','Thread report'):t('コミュニティへの通報','Community report')}</strong><small>{t('受付ID','Report ID')}: <code>{r.id}</code></small></div><span>{r.status==='open'?t('確認待ち','Open'):r.status==='resolved'?t('対応を終了','Resolved'):r.status==='expired'?t('確認期限終了・必要なら再通報','Review expired · report again if needed'):t('対応不要として終了','Dismissed')}</span></article>)}</section>;
+ return <section><header className={css.heading}><div><PageIdentity area="activity"/><h1>{t('自分の通報','My reports')}</h1><p>{t('受付状況を確認できます。通報は真偽の認定とは別です。','Track your reports. Reporting is separate from judging truth.')}</p></div></header>{!reports.length&&<p className={css.empty}>{t('通報はありません。','No reports.')}</p>}{reports.map(r=><article className={css.row} key={r.id}><div><strong>{r.kind==='capsule'?t('Capsuleへの通報','Capsule report'):r.kind==='post'?t('投稿への通報','Post report'):r.kind==='thread'?t('スレッドへの通報','Thread report'):t('コミュニティへの通報','Community report')}</strong><small>{t('受付ID','Report ID')}: <code>{r.id}</code></small></div><span>{r.status==='open'?t('確認待ち','Open'):r.status==='resolved'?t('対応を終了','Resolved'):r.status==='expired'?t('確認期限終了・必要なら再通報','Review expired · report again if needed'):t('対応不要として終了','Dismissed')}</span></article>)}</section>;
 }

@@ -2,11 +2,12 @@ import type {Pool, PoolClient, QueryResultRow} from 'pg';
 import {z} from 'zod';
 import {memberTransaction} from './operations';
 import {MemberError} from './http';
+import {requireCapsuleListingAccess} from './community-capsules';
 import {exactSafetyContent, requireSafetyThread, safetyAudit, safetyHash, safetyTarget} from './community-safety';
 
 const operatorInput=z.strictObject({
  reportId:z.uuidv4(),expectedReportRevision:z.number().int().positive(),
- action:z.enum(['inspect','hide-post','unhide-post','suspend-community','resume-community','resolve','dismiss']),
+ action:z.enum(['inspect','block-capsule','hide-post','unhide-post','suspend-community','resume-community','resolve','dismiss']),
  expectedRevision:z.number().int().positive(),
  actor:z.string().regex(/^[a-zA-Z0-9_.@-]{1,80}$/),
  caseReference:z.string().min(1).max(120).regex(/^[a-zA-Z0-9_./:#-]+$/),
@@ -23,6 +24,7 @@ async function mayInspect(c:PoolClient,r:QueryResultRow,community:QueryResultRow
  if(r.reporter_generation!==null&&m?.generation!==r.reporter_generation)return false;
  if(community.visibility!=='public'&&!m)return false;
  const seed=await safetyTarget(c,r.target_kind,r.target_id);if(!seed)return false;
+ if(r.target_kind==='capsule'){try{await requireCapsuleListingAccess(c,r.target_id,r.reporter_id);}catch(e){if(e instanceof MemberError&&e.status===404)return false;throw e;}}
  if(seed.thread_id){try{await requireSafetyThread(c,seed.thread_id,r.reporter_id);}catch(e){if(e instanceof MemberError&&e.status===404)return false;throw e;}}
  return true;
 }
@@ -81,6 +83,21 @@ export async function operateCommunitySafety(pool:Pool,raw:CommunitySafetyOperat
    }
    return {applied:apply,action:input.action,communityId:community.id,revision:community.revision,status:suspend?'suspended':'archived'};
   }
+  if(input.action==='block-capsule') {
+   if(r.target_kind!=='capsule'||!r.target_capsule_id||!r.target_capsule_revision)throw new MemberError(400,'CAPSULE_REPORT_REQUIRED');
+   if(r.target_revision!==input.expectedRevision)throw new MemberError(409,'COMMUNITY_CHANGED');
+   const cap=(await c.query('SELECT id FROM member_capsule WHERE id=$1 FOR UPDATE',[r.target_capsule_id])).rows[0];
+   if(!cap)throw new MemberError(404,'NOT_FOUND');
+   const frozen=(await c.query('SELECT sharing_blocked FROM member_capsule_revision WHERE capsule_id=$1 AND revision=$2 FOR UPDATE',[r.target_capsule_id,r.target_capsule_revision])).rows[0];
+   if(!frozen)throw new MemberError(404,'NOT_FOUND');
+   if(apply&&!frozen.sharing_blocked){
+    await c.query('UPDATE member_capsule_revision SET sharing_blocked=true WHERE capsule_id=$1 AND revision=$2',[r.target_capsule_id,r.target_capsule_revision]);
+    await c.query('DELETE FROM member_capsule_share WHERE capsule_id=$1 AND revision=$2',[r.target_capsule_id,r.target_capsule_revision]);
+    await c.query('UPDATE community SET revision=revision+1 WHERE id=$1',[community.id]);
+    await audit('site-block-capsule',r.target_id,'capsule');
+   }
+   return {applied:apply,action:input.action,targetId:r.target_id,revision:r.target_revision};
+  }
   if(r.target_kind!=='post')throw new MemberError(400,'POST_REPORT_REQUIRED');
   const p=(await c.query('SELECT * FROM community_post WHERE id=$1 FOR UPDATE',[r.target_id])).rows[0];
   if(!p||p.revision!==input.expectedRevision)throw new MemberError(409,'COMMUNITY_CHANGED');
@@ -108,7 +125,7 @@ export async function communityReportQueue(pool:Pool,after?:string) {
  return memberTransaction(pool,async c=>{
   const result=await c.query(`SELECT r.id,r.target_kind AS kind,r.target_id AS "targetId",r.community_id AS "communityId",
    r.revision AS "reportRevision",c.revision AS "communityRevision",r.category,r.created_at AS "createdAt",
-   CASE r.target_kind WHEN 'post' THEN p.revision WHEN 'thread' THEN t.revision ELSE c.revision END AS "targetRevision",r.expires_at>clock_timestamp() AS unexpired
+   CASE r.target_kind WHEN 'post' THEN p.revision WHEN 'thread' THEN t.revision WHEN 'capsule' THEN r.target_revision ELSE c.revision END AS "targetRevision",r.expires_at>clock_timestamp() AS unexpired
    FROM community_report r JOIN community c ON c.id=r.community_id
    LEFT JOIN community_post p ON r.target_kind='post' AND p.id=r.target_id
    LEFT JOIN community_thread t ON r.target_kind='thread' AND t.id=r.target_id

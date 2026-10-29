@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { memberCapsuleSchema, memberCapsuleContentSchema, memberCreateSchema, type MemberCapsule } from "../domain/member-capsule";
+import { MEMBER_CAPSULE_LIMITS, memberCapsuleSchema, memberCapsuleContentSchema, memberCreateSchema, type MemberCapsule } from "../domain/member-capsule";
 import type { DatasetMode } from "../domain/dataset";
 import type { LocalCapsule } from "./local-capsules";
 
@@ -18,7 +18,11 @@ export async function memberRequest<T>(path: string, schema: z.ZodType<T>, optio
   }
   return schema.parse(await response.json());
 }
-export const memberListSchema = z.object({ capsules: z.array(memberCapsuleSchema).max(10) });
+export const memberSummarySchema = z.strictObject(memberCapsuleSchema.shape).omit({ content: true }).extend({
+  content: z.strictObject(memberCapsuleContentSchema.shape).omit({ document: true }), hasDocument: z.boolean().optional(), published: z.boolean().optional(),
+});
+export type MemberCapsuleSummary = z.infer<typeof memberSummarySchema>;
+export const memberListSchema = z.object({ capsules: z.array(memberSummarySchema).max(MEMBER_CAPSULE_LIMITS.count) });
 export const memberItemSchema = z.object({ capsule: memberCapsuleSchema });
 export const memberCreateResultSchema = memberItemSchema.extend({ replayed: z.boolean() });
 export function memberReaderCapsule(capsule: MemberCapsule, dataset: DatasetMode): LocalCapsule {
@@ -30,8 +34,8 @@ export function memberReaderCapsule(capsule: MemberCapsule, dataset: DatasetMode
 // re-login in this tab must not create another copy of the same local revision.
 // This is retry metadata, not authentication state or a cache of account-private content.
 export function memberImportRequest(storage: Pick<Storage, "getItem" | "setItem">, user: string, capsule: LocalCapsule) {
-  const { dataset, title, note, language, entityIds, claimIds } = capsule;
-  const content = memberCapsuleContentSchema.parse({ dataset, title, note, language, entityIds, claimIds });
+  const { dataset, title, note, language, entityIds, claimIds, document } = capsule;
+  const content = memberCapsuleContentSchema.parse({ dataset, title, note, language, entityIds, claimIds, ...(document ? { document } : {}) });
   const key = `graph-knowledge:member-import:${user}:${dataset}:${capsule.id}:${capsule.revision}`;
   const previous = storage.getItem(key);
   if (previous) {

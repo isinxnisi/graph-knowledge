@@ -1,5 +1,5 @@
 const ja = {
-  title: "限定リンク共有", help: "この版の題名・説明・選んだ対象と主張を、リンクを知る人がログインなしで読めます。後の編集は反映しません。検索や一覧には掲載しません。この版の既存コメントも読めます。新しい投稿は、作成者が受付を開始した場合だけログイン済みの閲覧者が行えます。",
+  title: "限定リンク共有", help: "この保存版の図・題名・説明・根拠・自由テキストなど、Capsuleの内容をリンクを知る人がログインなしで読めます。後の編集は反映しません。検索や一覧には掲載しません。この版の既存コメントも読めます。新しい投稿は、作成者が受付を開始した場合だけログイン済みの閲覧者が行えます。",
   blocked: "運営によりこのCapsuleの共有を停止しています。新しいリンクは作れません。本人の保存内容は閲覧できます。",
   stopped: "有効な共有リンクはありません。本人だけが読めます。",
   active: (revision: number) => `内容版 ${revision} の限定リンクが有効です。`,
@@ -22,7 +22,7 @@ const ja = {
   explorer: "新しい探索を開く", returnHelp: "元の探索から別タブで開いた場合は、このタブを閉じると元の探索へ戻れます。",
 };
 const en: typeof ja = {
-title: "Share by private link", help: "Anyone with the link can read this version's title, description, selected entities and claims without logging in. Later edits do not appear. It is not listed in search or catalogs. Existing comments on this version are readable. Logged-in readers can post only when the creator opens comments.",
+title: "Share by private link", help: "Anyone with the link can read this saved Capsule's graph, title, description, evidence, free text, and other content without logging in. Later edits do not appear. It is not listed in search or catalogs. Existing comments on this version are readable. Logged-in readers can post only when the creator opens comments.",
   blocked: "Sharing for this Capsule is suspended by the operator. New links cannot be created. You can still read your own saved content.",
   stopped: "No active sharing link. Only you can read this content.", active: (revision: number) => `The link to version ${revision} is active.`, current: (revision: number) => `Share the displayed version ${revision}.`,
   issue: "Create a link to this version", rotate: "Replace link with this version", revoke: "Stop sharing", confirmIssue: "Make this version readable by link", confirmRevoke: "Expire the link", cancel: "Cancel",

@@ -5,12 +5,13 @@ import {activeMember, memberTransaction} from './operations';
 import {MemberError, memberId, memberInput, memberJson} from './http';
 import {communityAllowance} from './community-rate';
 import {communityPage, pageTime} from './community-pagination';
+import {requireCapsuleListingAccess} from './community-capsules';
 
 export const readableCommunityThread = `(t.audience='public' OR EXISTS (
  SELECT 1 FROM community_audience_member a JOIN community_member m
  ON m.community_id=t.community_id AND m.user_id=a.user_id AND m.generation=a.generation AND m.status='active'
  WHERE a.thread_id=t.id AND a.user_id=$2))`;
-export const reportKind = z.enum(['community','thread','post']);
+export const reportKind = z.enum(['community','thread','post','capsule']);
 const reportInput = z.strictObject({requestId:z.uuidv4(),kind:reportKind,targetId:z.uuidv4(),expectedRevision:z.number().int().positive(),category:z.enum(['spam','harassment','privacy','other']),detail:z.string().trim().min(1).max(500)});
 const hideInput = z.strictObject({expectedRevision:z.number().int().positive(),hidden:z.boolean(),reason:z.string().trim().min(1).max(500)});
 type Helpers = {
@@ -25,11 +26,13 @@ const missing=()=>new MemberError(404,'NOT_FOUND');
 
 // Locate only; callers must lock the parent and authorize before returning any content.
 export async function safetyTarget(c:PoolClient,kind:z.infer<typeof reportKind>,id:string) {
+ if(kind==='capsule')return (await c.query('SELECT community_id FROM community_capsule_listing WHERE id=$1',[id])).rows[0];
  if(kind==='community')return (await c.query('SELECT id AS community_id FROM community WHERE id=$1',[id])).rows[0];
  if(kind==='thread')return (await c.query('SELECT community_id,id AS thread_id FROM community_thread WHERE id=$1',[id])).rows[0];
  return (await c.query('SELECT t.community_id,t.id AS thread_id FROM community_post p JOIN community_thread t ON t.id=p.thread_id WHERE p.id=$1',[id])).rows[0];
 }
 export async function exactSafetyContent(c:PoolClient,kind:z.infer<typeof reportKind>,id:string) {
+ if(kind==='capsule')return (await c.query(`SELECT l.revision,l.status,l.capsule_id,l.capsule_revision,r.snapshot#>>'{content,title}' AS title,l.description,(r.snapshot->'content')::text AS body FROM community_capsule_listing l JOIN member_capsule_revision r ON r.capsule_id=l.capsule_id AND r.revision=l.capsule_revision WHERE l.id=$1`,[id])).rows[0];
  if(kind==='community')return (await c.query('SELECT title,description,revision FROM community WHERE id=$1',[id])).rows[0];
  if(kind==='thread')return (await c.query('SELECT title,revision FROM community_thread WHERE id=$1',[id])).rows[0];
  return (await c.query('SELECT body,status,revision,hidden_by FROM community_post WHERE id=$1',[id])).rows[0];
@@ -53,6 +56,7 @@ export function createCommunitySafety(pool:Pool,h:Helpers,secret:string) {
     const seed=await safetyTarget(c,input.kind,input.targetId);if(!seed)throw missing();
     await h.context(c,seed.community_id,u.id,true);
     if(seed.thread_id)await requireSafetyThread(c,seed.thread_id,u.id);
+    if(input.kind==='capsule')await requireCapsuleListingAccess(c,input.targetId,u.id);
     const target=await exactSafetyContent(c,input.kind,input.targetId);if(!target||input.kind==='post'&&target.status!=='visible')throw missing();
     h.expected(target,input.expectedRevision);
     const hash=createHash('sha256').update(JSON.stringify(['report',input])).digest('hex');
@@ -67,6 +71,7 @@ export function createCommunitySafety(pool:Pool,h:Helpers,secret:string) {
     const id=randomUUID();
     await c.query(`INSERT INTO community_report(id,community_id,target_kind,target_id,target_revision,content_hash,reporter_id,reporter_generation,category,detail)
      VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)`,[id,seed.community_id,input.kind,input.targetId,target.revision,safetyHash(target),u.id,m?.generation??null,input.category,input.detail]);
+    if(input.kind==='capsule')await c.query('UPDATE community_report SET target_capsule_id=$2,target_capsule_revision=$3 WHERE id=$1',[id,target.capsule_id,target.capsule_revision]);
     await c.query('INSERT INTO community_request(user_id,request_id,hash,result_id) VALUES($1,$2,$3,$4)',[u.id,input.requestId,hash,id]);
     await safetyAudit(c,seed.community_id,'report',input.targetId,input.kind,input.category,{user:u.id,report:id});
     return memberJson({id},201);

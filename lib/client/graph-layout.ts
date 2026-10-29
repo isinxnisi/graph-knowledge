@@ -1,4 +1,4 @@
-import type { DisplayRelation } from "./graph-presentation";
+import type { CanvasRelation } from "./graph-presentation";
 
 export type Point = { x: number; y: number };
 const length = (a: Point, b: Point) => Math.hypot(a.x - b.x, a.y - b.y);
@@ -20,7 +20,7 @@ export function initialPositions(centerId: string, ids: string[], canvasHeight =
 
 // 既存Nodeを固定し、新規Nodeだけを近傍の候補へ配置する。
 // 有限の候補評価に留め、全体の反復レイアウトやデータ固有の配置を行わない。
-export function additionalPositions(existing: Record<string, Point>, ids: string[], relations: Record<string, DisplayRelation>, anchorId: string | null): Record<string, Point> {
+export function additionalPositions(existing: Record<string, Point>, ids: string[], relations: Record<string, CanvasRelation>, anchorId: string | null): Record<string, Point> {
   const positions = { ...existing };
   const edges = Object.values(relations);
   for (const id of ids) {
@@ -62,7 +62,7 @@ export function additionalPositions(existing: Record<string, Point>, ids: string
 
 // Explicit content may have unrelated entities. Place connected nodes first and
 // isolated members last, so an unrelated center does not sit on a relation label.
-export function contentPositions(ids: string[], relations: Record<string, DisplayRelation>, portrait = false): Record<string, Point> {
+export function contentPositions(ids: string[], relations: Record<string, CanvasRelation>, portrait = false): Record<string, Point> {
   if (!ids.length) return {};
   const degree = new Map(ids.map(id => [id, 0]));
   for (const relation of Object.values(relations)) {
