@@ -96,12 +96,12 @@
   },
   "requestSha256": "a8d4288b56a6c82bb0472be22152432c1f4167bdc3234420c83b586b6724b345",
   "kind": "collect-review",
-  "phase": "retry-wait",
-  "generation": 11434,
+  "phase": "waiting-control",
+  "generation": 11435,
   "attempts": 1,
   "workerId": "plunode-wsl",
   "sourceCommit": "ed89e5a6ff0cf7d8b485330be790a234a064eacd",
-  "updatedAt": "2026-10-29T03:32:09+00:00",
+  "updatedAt": "2026-10-29T03:36:07+00:00",
   "result": {
     "jobId": "issue-25-utc-recovery-r0001-2aae694af25bda6e",
     "collectionUnchanged": false,
@@ -128,5 +128,5 @@
     "datasets/manga-collection/decisions/issue-25-utc-recovery-01-normal-draft.json"
   ],
   "retryAt": 1793244870.5696392,
-  "message": "The read operation timed out"
+  "message": "Execution gate: outside-window"
 }
