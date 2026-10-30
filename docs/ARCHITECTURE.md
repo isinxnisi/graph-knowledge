@@ -1,3 +1,5 @@
+2026-10-30（共有の仕上げ）、Issue #63の同一URLへの明示的な共有更新・版を保持した会話・Capsule別OGP・関係先の条件横断選択を既存3200／HTTPS βへ反映。配置 `5dc34e31` / build `1eOVcSb5AZmVQ3nOgAC5l`、会員DBは015まで（16件）。現在の契約と実操作・SNS未確認範囲は[共有仕上げの検証記録](verification/CAPSULE_SHARING_20261030.md)を参照する。通常保存だけでは共有を変えず、コミュニティの固定掲載も独立させる。本番VPSは更新していない。以下の記述は各時点の履歴。
+
 2026-10-30、Capsuleの現行UIは[編集契約](design/CAPSULE_EDITOR.md)と[β操作検証](verification/CAPSULE_EDITOR_UX_BETA_20261030.md)を参照する。Surface（表示場所）、Studio（草稿・履歴・閲覧状態）、Workspace（本人・保存先）を分け、作成・再訪・再編集で同じ作業空間を使う。既存3200／HTTPS βに反映し、会員DBは014まで適用済み。旧記録の「未反映」は当時の状態であり、現在のβの状態を表さない。本番VPSは今回更新していない。
 
 2026-10-29、Issue #63の新document付きCapsuleは[現行編集契約](design/CAPSULE_EDITOR.md)を優先する。実装・クラウド検証を完了し、既存beta／VPSは未反映。[検証・反映状況](verification/CAPSULE_EDITOR_20261029.md)／[更新・復旧](runbooks/CAPSULE_EDITOR_RELEASE.md)。以下の日付付き記述は当時の履歴として保持する。
