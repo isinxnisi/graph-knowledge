@@ -13,6 +13,7 @@ let fetchMock: ReturnType<typeof vi.fn>;
 beforeEach(() => {
   Object.defineProperty(document, "visibilityState", { configurable: true, value: "visible" });
   localStorage.clear(); sessionStorage.clear();
+  vi.stubGlobal("ResizeObserver",class {observe(){} disconnect(){}});
   HTMLDialogElement.prototype.showModal = function () { this.open = true; };
   HTMLDialogElement.prototype.close = function () { this.open = false; };
   fetchMock = vi.fn(); vi.stubGlobal("fetch", fetchMock);
@@ -236,6 +237,7 @@ describe("共有版の会話", () => {
     render(<CapsuleDiscussion capsuleId={capsuleId} revision={1} userId={userId} />);
       await screen.findByText(post.body);
     expect(document.querySelector("script")).toBeNull();
+    fireEvent.click(screen.getByLabelText("投稿の操作"));
     fireEvent.click(screen.getByRole("button", { name: "自分の投稿を撤回" }));
     expect(fetchMock).toHaveBeenCalledTimes(1);
     fetchMock.mockResolvedValueOnce(Response.json({ withdrawn: true }));

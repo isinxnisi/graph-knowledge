@@ -51,3 +51,15 @@ Issue #63 / 2026-10-30。ユーザーのdraw.io注記と、会話一覧への戻
 本番VPSは今回まだ更新していない（先行するGoogle公式対応 `5ed458cc` のまま）。018のみを追加する `scripts/release-capsule-reading-production.py` と固定資材を準備中。実画面の残りを確認し、固定資材の照合・sudo実行・正式URL確認・暗号化backup回収まで終えてから本番完了とする。
 
 本番用候補資材（まだ未配置）: build `CJIYOm5CsRmTFDyWop5Ge`、Web `sha256:6790aa19e41d7f96380974e86f7f4f41677bf64695b8a142b2a7e23231cb95d2`、member-ops `sha256:0d16c393737472156fcf67eef499e79e7925eebaeadf96a07d22953a2ba0e560`。隔離起動でGoogle provider 200、未認証Capsule 401、session 200/nullを確認。VPS現状との照合・切替検証はこれから。
+
+## 2026-10-31 追加指摘への対応（配置前）
+
+コメントの補助操作を右上の共通メニューへ移し、名前・日時の揃いを修正。My CapsulesのlastOpened並べ替えを廃止し保存順を安定化。所有者用の認可付き掲載先一覧と、複数の掲載先へ別タブで進める折りたたみ導線を追加した。
+
+AIラボでGoogle画像を遮断していたCSPを、プロフィールvalidatorで許すGoogle画像の4ホストだけに合わせた。支援ページへの直接アクセスではGoogle画像96pxの読込成功、AIラボを文書として開くと同じプロフィールの画像がfallbackになることを実Chromeで確認した。認証情報やAI artifactは変更しない。
+
+保存済みダーク設定はhead内の小さい同期scriptでbody描画前に適用し、通常の設定操作・検証と同じテーマ許可値だけを扱う。不正なstorage/読取不可は従来のlightへフォールバックする。
+
+検証：UI/clientの8ファイル82件、追加のテーマ初期化・掲載先UI4件、隔離PG/OIDC Capsule統合18件、tsc・変更TSのeslint成功。掲載先は複数community、固定版、別所有者拒否、community停止、参加世代変更を実DBで検証。初回追加テスト起動はシェルglob展開でbackup内の過去テストまで対象になったため停止し、argv配列・backup除外で正しい4件を再実行した。実ブラウザ接続はChrome再起動後に復旧した。配置と変更後の実操作は後続記録を参照する。
+
+ユーザー指定：表示修正を先に反映し、Capsuleコメント通報は受付・運営確認・共有停止後の扱いを次のまとまりで続ける。

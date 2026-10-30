@@ -327,3 +327,16 @@ it('共有の作者とコメントは公開プロフィールだけを返し、�
  const posts=await read();expect(posts[0].author.handle).toBeTruthy();
  await pool().query('UPDATE member_capsule_post SET hidden_at=now() WHERE id=$1',[posts[0].id]);const hidden=await read();expect(hidden[0].author).toBeNull();expect(hidden[0].authorName).toBeNull();expect(hidden[0].body).toBeNull();
 });
+
+it('所有者の掲載先は複数のコミュニティと保存版を区別し、失効した掲載・停止中の場所・別所有者を返さない',async()=>{
+ const cap=await create(), first=await community(), second=await community('members');
+ const one=await publish(first.id,cap),two=await publish(second.id,cap,'cohort');
+ const destinations=async(who=a)=>(await call(()=>service().community.ownCapsuleDestinations(request(who),cap.id)));
+ let result=await (await destinations()).json();expect(result.destinations.map((r:{id:string})=>r.id).sort()).toEqual([one.id,two.id].sort());
+ expect(result.destinations.find((r:{id:string})=>r.id===two.id)).toMatchObject({communityId:second.id,audience:'cohort',revision:1});
+ expect((await destinations(b)).status).toBe(404);
+ await pool().query("UPDATE community SET status='suspended' WHERE id=$1",[first.id]);
+ result=await (await destinations()).json();expect(result.destinations.map((r:{id:string})=>r.id)).toEqual([two.id]);
+ await pool().query("UPDATE community_member SET generation=generation+1 WHERE community_id=$1 AND user_id=$2",[second.id,a.id]);
+ expect((await (await destinations()).json()).destinations).toEqual([]);
+});

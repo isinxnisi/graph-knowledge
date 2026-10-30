@@ -88,9 +88,9 @@ it("finds favorite, link-shared and community-listed Capsules independently with
   await screen.findByRole('heading',{name:'Both destinations'});
   const row=(title:string)=>screen.getByRole('heading',{name:title}).closest('li')!;
   expect(within(row('Private study')).queryByText('Link shared')).toBeNull();
-  expect(within(row('Link study')).getByText('Link shared')).toBeTruthy();expect(within(row('Link study')).queryByText('Listed in a community')).toBeNull();
-  expect(within(row('Community study')).getByText('Listed in a community')).toBeTruthy();expect(within(row('Community study')).queryByText('Link shared')).toBeNull();
-  expect(within(row('Both destinations')).getByText('Link shared')).toBeTruthy();expect(within(row('Both destinations')).getByText('Listed in a community')).toBeTruthy();
+  expect(within(row('Link study')).getByText('Link shared')).toBeTruthy();expect(within(row('Link study')).queryByText('Community destinations')).toBeNull();
+  expect(within(row('Community study')).getByText('Community destinations')).toBeTruthy();expect(within(row('Community study')).queryByText('Link shared')).toBeNull();
+  expect(within(row('Both destinations')).getByText('Link shared')).toBeTruthy();expect(within(row('Both destinations')).getByText('Community destinations')).toBeTruthy();
   fireEvent.click(screen.getByRole('button',{name:'Shared links'}));expect(screen.getAllByRole('listitem')).toHaveLength(2);expect(screen.queryByRole('heading',{name:'Community study'})).toBeNull();
   fireEvent.click(screen.getByRole('button',{name:'Community'}));expect(screen.getAllByRole('listitem')).toHaveLength(2);expect(screen.queryByRole('heading',{name:'Link study'})).toBeNull();
   fireEvent.click(screen.getByRole('button',{name:'Favorites'}));expect(screen.getAllByRole('listitem')).toHaveLength(1);expect(screen.getByRole('heading',{name:'Link study'})).toBeTruthy();
@@ -219,4 +219,12 @@ it("conceals a private draft on confirmed logout and restores only for the origi
   expect(screen.queryByLabelText('Draft title')).toBeNull();expect(screen.queryByTestId('canvas')).toBeNull();
   authenticated(b);view.rerender(<CapsuleWorkspace initial={initial} member={saved} ownerId={a.id}/>);expect(screen.queryByLabelText('Draft title')).toBeNull();
   authenticated();view.rerender(<CapsuleWorkspace initial={initial} member={saved} ownerId={a.id}/>);expect((screen.getByLabelText('Draft title') as HTMLInputElement).value).toBe("Original owner's draft");
+});
+
+it("keeps saved-date ordering despite an older Capsule's recent read metadata",async()=>{
+ authenticated();const newer=member({...capsule(),title:'Newer save'}),older=member({...capsule(),title:'Older save'});older.updatedAt='2026-10-20T00:00:00Z';
+ vi.mocked(capsuleMetadata).mockImplementation(async id=>({id,favorite:false,lastOpened:id.includes(older.id)?'2026-10-31T00:00:00Z':null}));
+ setup(()=>Promise.resolve({capsules:[older,newer]}));render(<MyCapsules dataset="demo" onClose={()=>{}}/>);
+ await screen.findByRole('heading',{name:'Newer save'});
+ expect(screen.getAllByRole('heading',{level:3}).map(e=>e.textContent)).toEqual(['Newer save','Older save']);
 });

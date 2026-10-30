@@ -42,10 +42,12 @@
 .empty p + p { margin-top: 4px; font-size: 12px; }
 .posts { list-style: none; padding: 0; margin: 8px 0 24px; }
 .post { padding: 18px 0; border-bottom: 1px solid var(--color-border); animation: reveal 160ms ease-out; }
-.postHeader { display: flex; gap: 10px; align-items: baseline; color: var(--color-muted); font-size: 11px; }
+.postHeader { display: flex; gap: 10px; align-items: center; justify-content: space-between; color: var(--color-muted); font-size: 11px; }
+.postIdentity { display: flex; flex-wrap: wrap; align-items: center; gap: 3px 10px; min-width: 0; }
+.postIdentity time { white-space: nowrap; }
 .postHeader strong { color: var(--color-text); font-size: 13px; }
 .postBody { margin: 7px 0 !important; white-space: pre-wrap; overflow-wrap: anywhere; font-size: 14px; }
-.postFooter { display: flex; justify-content: flex-end; }
+.postFooter { display: flex; align-items: center; justify-content: flex-end; flex-wrap: wrap; gap: 8px; }
 .composer { padding: 14px; background: var(--color-panel); border: 1px solid var(--color-control-border); border-radius: 9px; }
 .composer:focus-within { border-color: var(--color-accent); box-shadow: 0 0 0 2px var(--color-accent-soft); }
 .composer label { display: block; font-size: 12px; color: var(--color-muted); }

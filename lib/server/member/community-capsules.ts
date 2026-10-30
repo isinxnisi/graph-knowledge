@@ -108,6 +108,24 @@ export function createCommunityCapsules(pool: Pool, h: Helpers, secret: string, 
     await requireCommunityCapsules(c);
   }
   return {
+    async ownCapsuleDestinations(req: Request, rawId: string) {
+      const id=memberId(rawId), user=(await h.identity(req,true))!;
+      return memberTransaction(pool,async c=>{
+        await activeMember(c,user.id);
+        const cap=(await c.query("SELECT revision FROM member_capsule c WHERE id=$1 AND owner_user_id=$2 AND dataset=$3 AND (to_jsonb(c)->>'trashed_at') IS NULL",[id,user.id,dataset])).rows[0];
+        if(!cap)throw missing();
+        await requireCommunityCapsules(c);
+        // Apply the same listing, membership-generation and community access
+        // rules before pagination. Capsule ownership is not a read bypass.
+        const page=await communityPage(c,req,secret,'capsule-destinations:'+id,user.id,String(cap.revision),
+          `SELECT l.id,l.community_id,l.capsule_revision,l.audience,place.title,place.visibility,l.id AS page_id,${pageTime('l.created_at')}
+           ${joins} JOIN community place ON place.id=l.community_id
+           WHERE l.capsule_id=$1 AND l.owner_user_id=$2 AND cap.dataset=$3 AND ${readableCapsuleListing}
+           AND place.status<>'suspended' AND (place.visibility='public' OR EXISTS(SELECT 1 FROM community_member m WHERE m.community_id=place.id AND m.user_id=$2 AND m.status='active'))`,
+          [id,user.id,dataset],'l.created_at','l.id');
+        return memberJson({destinations:page.rows.map(row=>({id:row.id,communityId:row.community_id,title:row.title,visibility:row.visibility,audience:row.audience,revision:Number(row.capsule_revision)})),nextCursor:page.nextCursor});
+      });
+    },
     async threadCapsules(c: PoolClient, threadId: string, userId: string | null) {
       if (!(await c.query("SELECT to_regclass('community_capsule_listing') AS ready")).rows[0].ready) return [];
       const rows = (await c.query(`SELECT ${summaryProjection} ${joins} WHERE l.thread_id=$1 AND cap.dataset=$3 AND ${readableCapsuleListing} ORDER BY l.created_at DESC,l.id DESC LIMIT 20`, [threadId,userId,dataset])).rows;

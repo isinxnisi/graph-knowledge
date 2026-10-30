@@ -7,6 +7,8 @@ import type { MemberCapsule } from "../lib/domain/member-capsule";
 import { capsuleShareIssuedSchema, capsuleShareStatusSchema, capsuleShareSchema, capsuleSharePath, type CapsuleShare } from "../lib/domain/capsule-sharing";
 import { MemberClientError, memberRequest } from "../lib/client/member-api";
 import { capsuleSharingLabels } from "../lib/i18n/capsule-sharing";
+import CapsuleDestinations from "./CapsuleDestinations";
+import {useCommunitiesEnabled} from "./CommunityAvailability";
 import { CommunityDialog } from "./CommunityDialog";
 import Icon from "./Icon";
 import CapsuleDiscussion, { useDiscussionDraft, type DiscussionDraftStore } from "./CapsuleDiscussion";
@@ -15,6 +17,7 @@ import css from "./CapsuleConversation.module.css";
 export default function CapsuleShareControls({ capsule, userId, disabled, onUnauthorized, draftCache }: {
   capsule: MemberCapsule; userId: string; disabled: boolean; onUnauthorized: () => void; draftCache?: DiscussionDraftStore;
 }) {
+  const communitiesEnabled=useCommunitiesEnabled();
   const { locale } = useUiLocale(), text = capsuleSharingLabels(locale), fieldId = useId();
   const [blocked, setBlocked] = useState(false), [share, setShare] = useState<CapsuleShare | null>(null);
   const [known, setKnown] = useState(false), [busy, setBusy] = useState(true), [closed, setClosed] = useState(false);
@@ -102,6 +105,7 @@ export default function CapsuleShareControls({ capsule, userId, disabled, onUnau
     {share && discussionDraft.hasDraft() && share.revision !== capsule.revision && <p className={css.muted}>{text.finishComment}</p>}
     {share && <details className={css.details}><summary>{text.rotate}</summary><p>{text.rotationHelp}</p><button className={css.button} disabled={busy || disabled || !known || blocked} onClick={() => setConfirm("issue")}>{text.rotate}</button></details>}
     <details className={css.details}><summary>{text.details}</summary><p>{text.linkRecovery}</p><p>{text.commentScope}</p></details>
+    {communitiesEnabled && <CapsuleDestinations key={`${userId}:${capsule.id}`} capsuleId={capsule.id} ownerId={userId}/>}
     {capsule.content.document && share && !blocked && <CapsuleDiscussion key={`${capsule.id}:${share.revision}:${userId}`} capsuleId={capsule.id} revision={share.revision} userId={userId} draftCache={discussionDraft} onUnauthorized={onUnauthorized} showSettings={false} refreshVersion={commentVersion} revisionUrl={url ? revision => `${url}?revision=${revision}` : undefined} />}
     {confirm && <CommunityDialog className={css.dialog} title={confirm === "issue" ? text.rotate : text.revoke} onCancel={() => setConfirm(null)} busy={busy}>
       <p>{confirm === "issue" ? text.rotationHelp : text.revokeHelp}</p><div className={css.actions}>

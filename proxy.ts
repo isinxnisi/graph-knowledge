@@ -28,7 +28,7 @@ export async function proxy(request: NextRequest) {
   requestHeaders.set("x-plunode-locale", /^\/en(?:\/|$)/.test(request.nextUrl.pathname) ? "en" : "ja");
   const response = NextResponse.next({ request: { headers: requestHeaders } });
   if (lab) {
-    response.headers.set("Content-Security-Policy","default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; frame-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'");
+    response.headers.set("Content-Security-Policy","default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://lh3.googleusercontent.com https://lh4.googleusercontent.com https://lh5.googleusercontent.com https://lh6.googleusercontent.com; font-src 'self'; connect-src 'self'; frame-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'");
     response.headers.set("X-Robots-Tag","noindex, nofollow, noarchive");
     response.headers.set("Referrer-Policy","same-origin");
     response.headers.set("Cache-Control","no-store");

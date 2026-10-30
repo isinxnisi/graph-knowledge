@@ -26,17 +26,17 @@
 @media(max-width:800px){.tabs{flex-wrap:wrap;overflow:visible;gap:0 16px}.tabs button{min-height:42px}}
 
 /* Supporting actions: quiet visual mark, independent 44px hit area. */
-.shell .menu[data-compact] > summary{box-sizing:border-box;width:44px;height:44px;min-width:44px;min-height:44px;padding:10px;border:0;background:transparent;border-radius:50%;color:var(--color-muted)}
-.shell .menu[data-compact] > summary svg{width:20px;height:20px;margin:0}
-.shell .menu[data-compact] > summary:hover,.shell .menu[data-compact][open] > summary{background:var(--community-soft);color:var(--community-blue)}
-.shell .menuPanel{position:fixed;right:auto;bottom:auto;z-index:60;box-sizing:border-box;width:208px;padding:5px;overflow:auto;overscroll-behavior:contain;border-radius:8px;animation:none;visibility:hidden}
-.shell .menuPanel[data-positioned=true]{visibility:visible}
-.shell .menuPanel button,.shell .menuPanel .quiet{box-sizing:border-box;min-height:38px;width:100%;margin:0;padding:8px 10px;border:0;background:transparent;border-radius:4px;text-align:left;font-size:13px!important;line-height:1.5;text-decoration:none;color:var(--color-text)}
-.shell .menuPanel button:hover:not(:disabled){background:var(--community-soft)}
-.shell .menuPanel .safety,.shell .menuPanel .actions{margin:0;padding:0}
+.menu[data-compact] > summary{box-sizing:border-box;width:44px;height:44px;min-width:44px;min-height:44px;padding:10px;border:0;background:transparent;border-radius:50%;color:var(--color-muted)}
+.menu[data-compact] > summary svg{width:20px;height:20px;margin:0}
+.menu[data-compact] > summary:hover,.menu[data-compact][open] > summary{background:var(--community-soft,var(--color-hover));color:var(--community-blue,var(--color-accent))}
+.menuPanel{position:fixed;right:auto;bottom:auto;z-index:60;box-sizing:border-box;width:208px;padding:5px;overflow:auto;overscroll-behavior:contain;border-radius:8px;animation:none;visibility:hidden}
+.menuPanel[data-positioned=true]{visibility:visible}
+.menuPanel button,.menuPanel .quiet{box-sizing:border-box;min-height:38px;width:100%;margin:0;padding:8px 10px;border:0;background:transparent;border-radius:4px;text-align:left;font-size:13px!important;line-height:1.5;text-decoration:none;color:var(--color-text)}
+.menuPanel button:hover:not(:disabled){background:var(--community-soft)}
+.menuPanel .safety,.menuPanel .actions{margin:0;padding:0}
 .dialog{position:fixed;inset:auto;margin:0;left:50%;top:50%;transform:translate(-50%,-50%);width:min(540px,calc(var(--dialog-width,100vw) - 24px));max-height:calc(var(--dialog-height,100dvh) - 24px);overscroll-behavior:contain;padding:22px;overflow-wrap:anywhere}
 .dialog[open]{animation:none}.dialog textarea{font-size:16px;resize:vertical}.dialog .safetyForm{gap:12px}.dialog .safetyForm fieldset .actions{gap:8px 14px}.dialog .safetyForm fieldset label{display:inline-flex;align-items:center;min-height:30px}
-@media(max-width:760px){.dialog{padding:18px}.shell .menuPanel button{min-height:40px}.conversation{margin-top:12px}}
+@media(max-width:760px){.dialog{padding:18px}.menuPanel button{min-height:40px}.conversation{margin-top:12px}}
 .creatorLine{margin:6px 0 10px}.inlineCreator{display:inline-block;max-width:100%;margin:4px 0 4px 12px}.postContent{width:100%}.postMeta>div{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 @media(max-width:760px){.inlineCreator{display:block;margin:6px 0}.creatorLine{margin:6px 0 8px}}
 .communityHeading>.creatorLine{padding-left:54px}@media(max-width:760px){.communityHeading>.creatorLine{padding-left:45px}}

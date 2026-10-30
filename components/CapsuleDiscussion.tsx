@@ -8,6 +8,7 @@ import { DISCUSSION_LIMITS, discussionSchema, type CapsuleDiscussion as Discussi
 import { MemberClientError } from "../lib/client/member-api";
 import { memberSessionEvent } from "../lib/client/account-navigation";
 import { capsuleDiscussionLabels } from "../lib/i18n/capsule-discussion";
+import { CommunityMenu } from "./CommunityPrimitives";
 import { CommunityDialog } from "./CommunityDialog";
 import PersonIdentity from "./PersonIdentity";
 import Icon from "./Icon";
@@ -167,10 +168,10 @@ export default function CapsuleDiscussion({ capsuleId, revision, token, userId, 
         <button className={css.switch} role="switch" aria-label={text.acceptComments} aria-checked={!data.closed} title={data.closed ? text.reopen : text.close} disabled={busy} onClick={() => void mutate("close")} /></div>}
       {data.posts.length === 0 ? <div className={css.empty}><p>{text.empty}</p>{!data.closed && <p>{text.invitation}</p>}</div> :
         <ol className={css.posts}>{data.posts.map(post => <li className={css.post} key={post.id}>
-          <div className={css.postHeader}><PersonIdentity person={post.author} label={post.authorName??undefined} quiet/><time dateTime={post.createdAt}>{new Date(post.createdAt).toLocaleString(locale === "en" ? "en-GB" : "ja-JP", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" })}</time></div>
+          <div className={css.postHeader}><div className={css.postIdentity}><PersonIdentity person={post.author} label={post.authorName??undefined} quiet/><time dateTime={post.createdAt}>{new Date(post.createdAt).toLocaleString(locale === "en" ? "en-GB" : "ja-JP", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" })}</time></div>{post.own && !post.withdrawnAt && <CommunityMenu compact label={locale === "en" ? "Post actions" : "投稿の操作"}><button disabled={busy} onClick={() => setConfirm(post.id)}>{text.withdraw}</button></CommunityMenu>}</div>
 
           <p className={css.postBody}>{post.body ?? (post.withdrawnAt ? text.withdrawn : text.hidden)}</p>
-          <div className={css.postFooter}><div className={css.muted}>{revisionUrl ? <a href={revisionUrl(post.revision)} target="_blank" rel="noopener noreferrer">{locale === "en" ? `View version ${post.revision}` : `投稿時の図 · 保存版 ${post.revision}`}</a> : <span>{locale === "en" ? `Version ${post.revision}` : `保存版 ${post.revision} へのコメント`}</span>}</div>{post.own && !post.withdrawnAt && <button className={`${css.button} ${css.quiet}`} disabled={busy} onClick={() => setConfirm(post.id)}>{text.withdraw}</button>}</div>
+          <div className={css.postFooter}><div className={css.muted}>{revisionUrl ? <a href={revisionUrl(post.revision)} target="_blank" rel="noopener noreferrer">{locale === "en" ? `View version ${post.revision}` : `投稿時の図 · 保存版 ${post.revision}`}</a> : <span>{locale === "en" ? `Version ${post.revision}` : `保存版 ${post.revision} へのコメント`}</span>}</div></div>
         </li>)}</ol>}
       {data.closed && <p className={css.empty}>{text.closed}</p>}
       {!data.viewer ? <div className={css.login}><p>{text.loginPrompt}</p><a className={css.button} href="/member" target="_blank" rel="noopener noreferrer"><Icon name="person" />{text.login}</a></div> :
