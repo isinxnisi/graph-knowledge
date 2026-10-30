@@ -1,14 +1,14 @@
 # CollectionWorkerの実行制御
 
-確認: 2026-10-30 14:20:08 JST。
+確認: 2026-10-30 15:27:26 JST。
 
 反映済みcontrolRevision: 8／最後の操作: pub-13abfb93-ba2d-44f7-a56b-352aa7ab0ab0-resume。
 
-**outside-window**／停止モード: なし
+**ready**／停止モード: なし
 
 日本時間: 03:00〜07:00、09:00〜12:00、15:00〜18:00。ジョブ間10分休憩。
 
-次の開始候補: 2026-10-30 15:00:00 JST
+次の開始候補: 開始可能
 
 最後の操作SHA-256: 1cef6cdd4cb0e4eca8b60a3ae51c6b25a96271b01ffcac788f41f36a5439bf79
 
@@ -55,8 +55,9 @@ Issue確認結果:
     "checkedAt": "2026-10-29T11:23:55+00:00"
   },
   "collection-control/issue-sources/50.json": {
-    "status": "registered: issue-50-dot-endo-tista-20261027",
-    "checkedAt": "2026-10-27T08:19:09+00:00"
+    "status": "held",
+    "reason": "<urlopen error [Errno -3] Temporary failure in name resolution>",
+    "checkedAt": "2026-10-30T06:16:31+00:00"
   },
   "collection-control/issue-sources/51.json": {
     "status": "registered: issue-51-dot-araki-rohan-20261027",
