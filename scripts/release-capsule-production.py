@@ -6,7 +6,7 @@ changes runtime settings, resets production data, or rolls back a migrated DB.
 """
 import copy, datetime, fcntl, hashlib, json, os, pathlib, pwd, re, shutil, subprocess, tarfile
 ROOT = pathlib.Path('/opt/graph-knowledge')
-EXPORT = pathlib.Path('/home/develop/capsule-production-20261030')
+EXPORT = pathlib.Path('/home/develop/capsule-production-20261030-r2')
 ORIGIN = 'https://plunode.net'
 
 def run(args, data=None, output=None):
@@ -39,6 +39,60 @@ def patch_image(text, service, image):
     block, n = re.subn(r'^    image:.*$', '    image: "'+image+'"', text[m.start():stop], flags=re.M)
     assert n==1, 'Expected one image per service'
     return text[:m.start()]+block+text[stop:]
+
+def archive_identities(path, manifest):
+    """Bind both store IDs to the exact config and layer bytes in one pass."""
+    metadata = {}; seen = set()
+    with tarfile.open(path, 'r|gz') as archive:
+        for member in archive:
+            if not member.isfile(): continue
+            name = member.name
+            assert name not in seen, 'Duplicate archive member'
+            seen.add(name)
+            if name.startswith('blobs/sha256/'):
+                h = hashlib.sha256(); chunks = []
+                stream = archive.extractfile(member)
+                while data := stream.read(1024*1024):
+                    h.update(data)
+                    if member.size <= 65536: chunks.append(data)
+                assert name == 'blobs/sha256/'+h.hexdigest(), 'Archive blob bytes differ'
+                if chunks:
+                    try: metadata[name] = json.loads(b''.join(chunks))
+                    except (ValueError, UnicodeDecodeError): pass
+            elif name in ('index.json', 'manifest.json'):
+                metadata[name] = json.load(archive.extractfile(member))
+    rows = metadata['manifest.json']; index = metadata['index.json']
+    identities = {}
+    for key in ('web', 'memberOps'):
+        entry = manifest[key]
+        matching = [r for r in rows if entry['tag'] in (r.get('RepoTags') or [])]
+        descriptors = [d for d in index['manifests'] if d.get('annotations', {}).get('io.containerd.image.name') == 'docker.io/library/'+entry['tag']]
+        assert len(matching) == len(descriptors) == 1, 'Ambiguous archive tag'
+        row, descriptor = matching[0], descriptors[0]
+        assert descriptor['mediaType'] == 'application/vnd.oci.image.manifest.v1+json'
+        config_path = 'blobs/sha256/'+entry['imageId'].split(':')[1]
+        config = metadata[config_path]
+        image = metadata['blobs/sha256/'+descriptor['digest'].split(':')[1]]
+        assert row['Config'] == config_path and image['config']['digest'] == entry['imageId'], 'Manifest/config binding differs'
+        assert config['os'] == 'linux' and config['architecture'] == 'amd64'
+        assert config['config']['Labels']['org.opencontainers.image.revision'] == manifest['sourceCommit']
+        layers = [layer['digest'] for layer in image['layers']]
+        assert all(layer['mediaType'] == 'application/vnd.oci.image.layer.v1.tar' for layer in image['layers'])
+        assert layers == config['rootfs']['diff_ids'], 'Layer/config binding differs'
+        assert row['Layers'] == ['blobs/sha256/'+v.split(':')[1] for v in layers]
+        assert all(name in seen for name in row['Layers']), 'Missing archive layer'
+        identities[key] = {'configId':entry['imageId'], 'manifestId':descriptor['digest'], 'diffIds':layers}
+    return identities
+
+def verify_loaded_image(image, identity, driver_status, source):
+    drivers = [value for key, value in driver_status if key == 'driver-type']
+    assert drivers in ([], ['io.containerd.snapshotter.v1']), 'Unknown image store'
+    expected = identity['manifestId'] if drivers else identity['configId']
+    assert image['Id'] == expected, 'Loaded image differs from verified archive'
+    assert image['Os'] == 'linux' and image['Architecture'] == 'amd64'
+    assert image['RootFS']['Layers'] == identity['diffIds'], 'Loaded layers differ'
+    assert image['Config']['Labels']['org.opencontainers.image.revision'] == source
+    return expected
 
 def main():
     assert os.geteuid()==0, 'Use the existing administrator sudo'
@@ -93,11 +147,14 @@ def main():
     expected=copy.deepcopy(cfg)
     expected['services']['web']['image']=manifest['web']['tag'];expected['services']['member-ops']['image']=manifest['memberOps']['tag']
     assert json.loads(run(cdc+['config','--format','json']))==expected, 'Patch exceeds image-only scope'
+    identities=archive_identities(stage/'images.tar.gz',manifest)
     run(['docker','load','--input',str(stage/'images.tar.gz')])
-    for entry in [manifest['web'],manifest['memberOps']]:
-        image=json.loads(run(['docker','image','inspect',entry['tag']]))[0]
-        assert image['Id']==entry['imageId'] and image['Os']=='linux' and image['Architecture']=='amd64', 'Loaded image differs'
-        assert image['Config']['Labels']['org.opencontainers.image.revision']==manifest['sourceCommit']
+    driver_status=json.loads(run(['docker','info','--format','{{json .DriverStatus}}']))
+    loaded={}
+    for key in ('web','memberOps'):
+        image=json.loads(run(['docker','image','inspect',manifest[key]['tag']]))[0]
+        emit('image-identity',kind=key,observed=image['Id'],configId=identities[key]['configId'],manifestId=identities[key]['manifestId'])
+        loaded[key]=verify_loaded_image(image,identities[key],driver_status,manifest['sourceCommit'])
     assert run(['docker','run','--rm','--entrypoint','cat',manifest['web']['tag'],'/app/.next-public/BUILD_ID'])==manifest['build']
     # The current deployment has no artifact mount. Do not replace its fallback
     # public artifact with a different source copy or an experimental beta file.
@@ -151,7 +208,7 @@ def main():
         emit('migration-ok',ledgerCount=len(manifest['migrations']),oldRowsPreserved=True,repeatedUnchanged=True)
         atomic(ROOT/'compose.yaml',candidate)
         compose('up','-d','--no-deps','--pull','never','--wait','--wait-timeout','180','web');stopped=False
-        now=inspect('web');assert now['Image']==manifest['web']['imageId']
+        now=inspect('web');assert now['Image']==loaded['web']
         assert run(['docker','exec',now['Id'],'cat','/app/.next-public/BUILD_ID'])==manifest['build']
         compose('exec','-T','web','node','scripts/production-readiness.mjs')
         assert digest(ROOT/'app.env')==baseline['envSha256']
@@ -159,7 +216,7 @@ def main():
         for name,d in [('graph-member-postgres',pg),('graph-neo4j',neo)]:
             after=inspect(name);assert after['Id']==d['Id'] and after['State']['StartedAt']==d['State']['StartedAt'], 'Database runtime changed'
         assert json.loads(public('/api/dataset'))==baseline['dataset'] and public('/api/ai-lab')==lab_before
-        emit('activated',source=manifest['sourceCommit'],build=manifest['build'],webImage=now['Image'],memberOpsImage=manifest['memberOps']['imageId'],kgUnchanged=True,aiArtifactUnchanged=True,settingsUnchanged=True)
+        emit('activated',source=manifest['sourceCommit'],build=manifest['build'],webImage=now['Image'],memberOpsImage=loaded['memberOps'],kgUnchanged=True,aiArtifactUnchanged=True,settingsUnchanged=True)
     except Exception:
         if stopped and not attempted:
             compose('up','-d','--no-deps','--pull','never','--wait','--wait-timeout','180','web')

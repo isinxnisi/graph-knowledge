@@ -50,3 +50,15 @@
 結果を受領したらAutopilot holdを再取得して確認する。activation.log、encrypted backupの回収と復号、正式URLでの実Google本人セッションによる作成・保存・同URL共有更新・コメント・停止・OGP・コミュニティ往復が残る。外部SNSの実カード表示も未確認。停止後に失敗した場合は先にログとledgerを確認し、固定scriptを無条件に再実行しない。今回の旧テスト失敗は検証環境とselectorの不一致として記録し、新機能成功に読み替えない。
 
 手動holdは管理者実行待ちでの中断時に所定のterminal Enterで解放する。`autopilot assert-held`は各区切りで成功。追加の`autopilot status`はWindows連携のnull値エラーで失敗したが、最初のreview・token reviewと共通hold確認は成功しており、設定変更や失敗の一括acknowledgeは行っていない。
+
+## 初回切替の停止と識別照合の修正
+
+ユーザーが固定launcherを実行し、archiveの転送後照合とdocker loadの後、`Loaded image differs`で停止した。停止箇所はWeb停止・backup・migrationより前。既存Webの正式HTTPSとKG revisionが継続して応答することを再確認した。初回root staging／activation.logは保持する。
+
+原因候補を実archiveと既存VPS更新手順に照らして調査し、Docker classic storeのconfig digestとcontainerd storeのmanifest digestを区別していなかった公開helperを修正した。検証済みarchiveからタグごとのconfig→manifest→全layerを結び、各blobの実byte hashを一巡で検証する。Dockerのdriver-typeに対応したID、platform、RootFS layer列、source labelを照合するため、任意のIDを許容する緩和ではない。
+
+- Web OCI manifest: `sha256:3b6738c74fad01f1acb8d45b48d8d463374babf4db255208ee74a9e92980ac2f`
+- member-ops OCI manifest: `sha256:8bd83d83f24aa074dc535ff4e6743dee8485ad66af24bd571f910fd78be60090`
+- app source・build・archive byteは変更なし。`tests/test_capsule_release.py` 5件でclassic/containerdの区別、別ID／platform／source／layer／未知storeの拒否、archiveのタグ対応・layer破損の拒否を確認。実archive全blobとローカルDocker imageの照合も成功。
+
+再開用資材はprivateな`backups/capsule-production-20261030-r2/`とVPSの対応stagingへ固定する。初回root stagingを編集・削除せず、r2のroot専用stagingから初回と同じ稼働構成・ledgerを再確認して進める。復旧export先もr2で分ける。VPSが返す実manifest IDは再実行時のimage-identityログで確認する。
