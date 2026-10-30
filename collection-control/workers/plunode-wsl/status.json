@@ -26,16 +26,20 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-10-30T18:11:02.213243+00:00",
-  "phase": "interval",
+  "nextStartAt": "2026-10-30T19:16:40.872065+00:00",
+  "phase": "running",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
     "reason": "interval",
-    "eligibleAt": "2026-10-30T18:11:02.213243+00:00",
+    "eligibleAt": "2026-10-30T19:16:40.872065+00:00",
     "windowEndAt": "2026-10-30T22:00:00+00:00"
   },
-  "activeAttempt": null,
+  "activeAttempt": {
+    "requestId": "issue-42-matsumoto-recovery-20261026",
+    "startedAt": "2026-10-30T18:11:40.872067+00:00",
+    "limitAt": "2026-10-30T19:06:40.872065+00:00"
+  },
   "lastAttempt": {
     "requestId": "issue-68-dot-fujikoa-two-20261029",
     "endedAt": "2026-10-30T18:01:02.213245+00:00"
@@ -192,5 +196,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-10-30T18:03:15.117209+00:00"
+  "checkedAt": "2026-10-30T18:11:48.138423+00:00"
 }
