@@ -45,7 +45,7 @@
     "blocked": 12,
     "completed": 43,
     "awaiting-recovery": 6,
-    "retry-wait": 1
+    "waiting-lock": 1
   },
   "issueIntake": {
     "collection-control/issue-sources/25.json": {
@@ -81,9 +81,8 @@
       "checkedAt": "2026-10-29T11:23:55+00:00"
     },
     "collection-control/issue-sources/50.json": {
-      "status": "held",
-      "reason": "<urlopen error [Errno -3] Temporary failure in name resolution>",
-      "checkedAt": "2026-10-30T06:16:31+00:00"
+      "status": "registered: issue-50-dot-endo-tista-20261027",
+      "checkedAt": "2026-10-30T06:29:21+00:00"
     },
     "collection-control/issue-sources/51.json": {
       "status": "registered: issue-51-dot-araki-rohan-20261027",
@@ -193,5 +192,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-10-30T06:27:26.556973+00:00"
+  "checkedAt": "2026-10-30T06:32:47.335485+00:00"
 }
