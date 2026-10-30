@@ -26,29 +26,25 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-10-30T20:30:08.476221+00:00",
-  "phase": "running",
+  "nextStartAt": "2026-10-30T19:35:50.985710+00:00",
+  "phase": "interval",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
     "reason": "interval",
-    "eligibleAt": "2026-10-30T20:30:08.476221+00:00",
+    "eligibleAt": "2026-10-30T19:35:50.985710+00:00",
     "windowEndAt": "2026-10-30T22:00:00+00:00"
   },
-  "activeAttempt": {
-    "requestId": "issue-73-dot-murata-onepunch-20261030",
-    "startedAt": "2026-10-30T19:25:08.476223+00:00",
-    "limitAt": "2026-10-30T20:20:08.476221+00:00"
-  },
+  "activeAttempt": null,
   "lastAttempt": {
-    "requestId": "issue-60-dot-ichikawa-houseki-20261028",
-    "endedAt": "2026-10-30T19:12:19.472221+00:00"
+    "requestId": "issue-73-dot-murata-onepunch-20261030",
+    "endedAt": "2026-10-30T19:25:50.985712+00:00"
   },
   "controlError": null,
   "requestsByPhase": {
     "blocked": 10,
-    "waiting-control": 3,
-    "completed": 43,
+    "waiting-control": 2,
+    "completed": 44,
     "awaiting-recovery": 6
   },
   "issueIntake": {
@@ -196,5 +192,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-10-30T19:25:15.477726+00:00"
+  "checkedAt": "2026-10-30T19:26:41.547091+00:00"
 }
