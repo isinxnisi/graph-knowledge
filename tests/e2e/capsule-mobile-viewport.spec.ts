@@ -3,6 +3,7 @@ import { selectContent, studio } from "./capsule-fixture";
 
 test("mobile neighbor filters leave room for results and nested dialogs recover after viewport changes",async({page},info)=>{
  await page.goto("/");
+ await page.locator('button[aria-controls="explorer-search"]').click();
  // This suite targets the existing public-kg preview; it only reads KG and
  // edits an unsaved guest draft. No account or shared contents are written.
  await page.getByRole("button",{name:"PLUTOから探索を開始",exact:true}).click();
@@ -15,7 +16,7 @@ test("mobile neighbor filters leave room for results and nested dialogs recover 
  await expect(dialog.getByRole("combobox")).toHaveCount(0);
  await expect(dialog.getByRole("button",{name:"関係先を閉じる"})).toBeFocused();
  const search=dialog.getByRole("searchbox",{name:"名前で絞り込み"});
- const first=await dialog.getByRole("checkbox").first().boundingBox(),bounds=await dialog.boundingBox();
+ const first=await dialog.getByRole("checkbox").first().locator("..").boundingBox(),bounds=await dialog.boundingBox();
  expect(first!.y-bounds!.y).toBeLessThan(180);
  await dialog.screenshot({path:info.outputPath("neighbors-mobile.png")});
  await dialog.getByRole("button",{name:"条件",exact:true}).click();
@@ -32,7 +33,7 @@ test("mobile neighbor filters leave room for results and nested dialogs recover 
  await search.fill("");
  await dialog.getByRole("button",{name:"関係先を閉じる"}).click();
  expect(await page.locator("body").evaluate(el=>getComputedStyle(el).position)).toBe("fixed");
- await studio(page).getByRole("button",{name:"閉じる",exact:true}).click();
+ await studio(page).getByRole("button",{name:"Capsuleを閉じる",exact:true}).click();
  const confirm=page.getByRole("dialog",{name:"変更を破棄しますか？",exact:true});
  if(await confirm.isVisible())await confirm.getByRole("button",{name:"変更を破棄",exact:true}).click();
  await expect(page.getByRole("dialog",{name:"Capsule",exact:true})).toHaveCount(0);
