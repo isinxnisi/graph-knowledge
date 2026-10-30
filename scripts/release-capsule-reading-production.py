@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-"""Capsule reading refinement: fixed assets, additive 018, Web/member-ops only.
+"""Capsule reading refinement: fixed assets, additive 018/019, Web/member-ops only.
 
 Run from the root-private, checksum-verified staging directory. Never imports KG,
 changes runtime settings, resets production data, or rolls back a migrated DB.
 """
 import copy, datetime, fcntl, hashlib, json, os, pathlib, pwd, re, shutil, subprocess, tarfile
 ROOT = pathlib.Path('/opt/graph-knowledge')
-EXPORT = pathlib.Path('/home/develop/capsule-reading-final-20261031')
+EXPORT = pathlib.Path('/home/develop/capsule-comments-final-20261031')
 ORIGIN = 'https://plunode.net'
 
 def run(args, data=None, output=None):
@@ -98,7 +98,7 @@ def main():
     assert os.geteuid()==0, 'Use the existing administrator sudo'
     os.umask(0o077)
     stage=pathlib.Path.cwd().resolve()
-    assert str(stage)== '/root/capsule-reading-final-20261031', 'Root-private staging required'
+    assert str(stage)== '/root/capsule-comments-final-20261031', 'Root-private staging required'
     manifest=json.loads((stage/'manifest.json').read_text())
     previous=json.loads((stage/'predecessor-audit.json').read_text())
     baseline=json.loads(run(['python3','-I',str(stage/'audit.py')]))
@@ -111,7 +111,7 @@ def main():
     for name in ('graph-member-postgres','graph-neo4j'):
         assert baseline['containers'][name]==previous['containers'][name], 'Database container changed'
     private(stage/'audit-result.json',json.dumps(baseline))
-    assert manifest['sourceCommit']=='fd9f39a38ce36b6b45e979f1c69a2b0d34665a46'
+    assert manifest['sourceCommit']=='d1330ea8d5917f8c31d239fe7058c2380c554a2d'
     assert digest(stage/'images.tar.gz')==manifest['archive']['sha256'], 'Archive differs'
     lock=open(ROOT/'.member-activation.lock','a');fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
     assert digest(ROOT/'compose.yaml')==baseline['composeSha256'] and digest(ROOT/'app.env')==baseline['envSha256'], 'Configuration changed since inspection'
@@ -192,7 +192,7 @@ def main():
         run(['docker','exec','-i',pg['Id'],'pg_restore','-U','postgres','-d',restore,'--no-owner','--role=gk_member','--no-acl','--exit-on-error'],dump.read_bytes())
         assert columns(restore)==schema and fingerprints(schema,restore)==before and ledger(restore)==old_ledger, 'Separate restore differs'
         # Exercise the same migration function against the restored DB only.
-        js="import pg from 'pg';import {migrateMemberDatabase} from './lib/server/member/migrate.ts';const u=new URL(process.env.MEMBER_DATABASE_URL);u.pathname='/"+restore+"';const p=new pg.Pool({connectionString:u.href});try{await migrateMemberDatabase(p,true,true,true,true,true,true,true,true,true,true,true);}finally{await p.end();}"
+        js="import pg from 'pg';import {migrateMemberDatabase} from './lib/server/member/migrate.ts';const u=new URL(process.env.MEMBER_DATABASE_URL);u.pathname='/"+restore+"';const p=new pg.Pool({connectionString:u.href});try{await migrateMemberDatabase(p,true,true,true,true,true,true,true,true,true,true,true,true);}finally{await p.end();}"
         rehearsal=cdc+['run','--rm','--no-deps','--entrypoint','node','member-ops','--import','tsx','--input-type=module','-e',js]
         run(rehearsal);assert ledger(restore)==manifest['migrations'] and preserved(schema,restore)==preserved_before
         migrated_schema=columns(restore);migrated_rows=fingerprints(migrated_schema,restore);run(rehearsal)
@@ -215,7 +215,7 @@ def main():
         for f in [encrypted,wrapped]:
             target=export/f.name;shutil.copy2(f,target);target.chmod(0o600);os.chown(target,owner.pw_uid,owner.pw_gid)
         emit('backup-restore-rehearsal-ok',directory=str(backup),tables=len(schema),dumpSha256=digest(dump))
-        migration=cdc+['run','--rm','--no-deps','--entrypoint','node','member-ops','--import','tsx','scripts/member-migrate.ts','--communities','--site-operations','--public-profiles','--capsule-documents','--community-capsules','--capsule-comments','--capsule-share-recovery','--capsule-publications','--google-profile-images','--official-profiles','--capsule-trash','--confirm-origin',ORIGIN]
+        migration=cdc+['run','--rm','--no-deps','--entrypoint','node','member-ops','--import','tsx','scripts/member-migrate.ts','--communities','--site-operations','--public-profiles','--capsule-documents','--community-capsules','--capsule-comments','--capsule-share-recovery','--capsule-publications','--google-profile-images','--official-profiles','--capsule-trash','--capsule-post-reports','--confirm-origin',ORIGIN]
         attempted=True;run(migration)
         assert ledger()==manifest['migrations'] and preserved(schema)==preserved_before, 'Migration changed old records'
         current_schema=columns();current_rows=fingerprints(current_schema);run(migration)

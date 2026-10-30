@@ -213,7 +213,7 @@ private stagingでも、trackedソースのディレクトリは0755、通常フ
 
 開発PCの既存launcherへ移設するβbuildはwebpackを使う。symlink node_modulesを持つstagingからTurbopack buildを移動した際にpgのhash別名解決が失敗した実例がある。build成功とトップページ200だけで完了せず、会員session/APIも確認する。
 
-今回の新しい本番手順 `scripts/release-capsule-reading-production.py` は固定SHA・直前Google公式対応buildを照合し、018だけを追加する。元のGoogle公式指定を再実行しない。現時点では本番未実施。検証記録を確認してから、照合済みの新しいprivate stagingで実行する。
+当初の本番候補は018だけを追加するものだった。現在の `scripts/release-capsule-reading-production.py` は下記019を含む最終候補へ更新済みで、固定SHA・直前Google公式対応buildを照合する。元のGoogle公式指定を再実行しない。現時点では本番未実施。検証記録を確認してから、照合済みの新しいprivate stagingで実行する。
 
 ## コメント通報の追加（019、2026-10-31）
 
@@ -223,4 +223,6 @@ private stagingでも、trackedソースのディレクトリは0755、通常フ
 
 切替前のbackup、別DB復元、旧列全行の一致、旧checksumの保存、019後のledger20件、二回目無変更を確認する。beta実機では既存の共有・コメントを誤って通報／非表示にせず、明示した検証用コメントだけを使う。新しい通報から運営受信箱、監査付き確認、非表示／解除、対応終了、共有停止後の確認拒否まで確認する。Google実セッションと隔離fixtureの検証範囲は分けて記録する。
 
-`release-capsule-reading-production.py` の018専用固定候補はこの追加実装より前のもの。今回の最終配置に再利用する際は、固定ソースと実物auditを更新して新しい資材を作り、過去のstagingを上書きしない。
+`release-capsule-reading-production.py` の現行固定ソースは `d1330ea8d5917f8c31d239fe7058c2380c554a2d`、新しいprivate stagingは `capsule-comments-final-20261031`。当初の018専用候補や旧stagingは使わない。切替時にroot権限のread-only auditで稼働build・container・設定・ledgerを取得し、先行Google公式対応と照合する。追加018／019を別DBで適用・再実行した後、本番へ明示適用する。
+
+開発PCの `backups/capsule-comments-final-20261031/run-release.py` は実行時に既存Autopilot guardを取得し、そのtokenでreview/assert後、固定checksumのroot専用資材だけを実行する。終了時にguardを解放する。Codex側のholdを保持したままこのrunnerを重ねて起動しない。VPSのsudoパスワードは本人がterminalへ入力し、チャットへ送らない。権限入力待ちの間は公開未完了として扱う。

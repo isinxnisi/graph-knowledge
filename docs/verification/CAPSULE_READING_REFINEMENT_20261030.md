@@ -78,3 +78,22 @@ AIラボでGoogle画像を遮断していたCSPを、プロフィールvalidator
 - ユーザー指示に従い、先行表示修正の次に通報受付と運営処置を実装。既存受信箱へ統合し、共有IDを固定して失効後の内容確認を閉じる。
 - 実PG／fixture OIDCのCapsule統合25件、既存サイト運営統合14件、投稿・メニュー・運営UI22件が成功。019再適用でledger・checksum不変。通報の同時再送、権限なし、私有版、他Capsule、旧版文脈、非表示／解除、withdraw、共有停止／再発行／ごみ箱／公開版停止／期限切れの境界を確認。
 - 通報の本番・β配置、Google実操作は次の反映工程で記録する。
+
+
+### 2026-10-31 コメント通報のβ反映・実Google確認
+
+- 配置ソース `d1330ea8d5917f8c31d239fe7058c2380c554a2d`、3200／HTTPS β build `5O8HMYFaPiKps5cRvuky_`。両URLのbuild一致、既存KG revision `34befbcd-8f5f-4cd9-a059-242a3f0b5ffb`、private runtime・Google設定・他containerの保持を確認。
+- 019適用に先立ちconsistent snapshotを別DBへ復元。既存34テーブルの旧列・全行、000〜018 checksumを比較し、019適用と再実行で旧行不変を確認。live停止直前の追加backup SHA256 `4dcead8c2e431e3f76697c945aa80b95447f4b5503c91903962217c90e08f92c`。ledger20件。private証跡は `backups/capsule-comments-20261031/beta-result.json`。
+- 実Chrome／既存Google本人で、β確認用Capsuleの保存版4へ「β検証用」と明記した自分のコメントを一件作成。右上メニュー→通報フォーム→その他・理由→受付成功→自分の通報→運営受信箱→監査理由付き対象確認→対応終了まで操作した。対象コメントと通報理由だけが確認表示され、Capsule全体や他の投稿は出ない。完了後、未対応件数0を確認。通報ID `7d9ef37c-1ae9-4558-bb9e-b6201537da31`。既存ユーザー投稿の通報・非表示やアカウント処置は行っていない。
+- 390×844で通報フォーム、PC幅で名前・日時・右上メニュー・版リンクの分離を視覚確認。検証後にviewportを解除。実機iPhoneのキーボード／アドレスバー挙動は未確認。
+- 非表示／解除、withdraw後の確認拒否、共有停止／再発行／ごみ箱／期限切れ／公開版停止は実PG／fixture OIDC統合テストで検証。上記実Googleブラウザの確認範囲とは区別する。検証コメントと対応終了した受付・監査記録はβに残す。
+
+### 本番反映の最終資材（管理者実行待ち）
+
+- 固定アプリソースは同じ `d1330ea8`。正式環境向けbuild `1gqqeqXTNSzWUrDAFyWUn`。
+- Web: tag `graph-knowledge-web:comments-d1330ea8`、config ID `sha256:4c710439659af542a2335cea6d483d53bd95f01a5a3ec160fc4ec4664f0882c3`、manifest ID `sha256:822024fa43d5d0adb1d962bff565e848ae35f24ff742ca68dfdd7df3482b3a2e`。
+- member-ops: tag `graph-knowledge-ops:comments-d1330ea8`、config ID `sha256:9861bca084284aa5e3ef706865e06675ab9f52e9356f84127e041c6a06f9f9a8`、manifest ID `sha256:4d2bec63e5eb4dbbe42eb7fd24509f5841fcef6891629fe52204facbcd3166a3`。
+- image archiveのconfig／manifest／全layerのsha256結合を確認。隔離Web起動でGoogle provider 200、未認証Capsule 401、session 200/null。最初のsmokeはDocker host networkをWSLから参照して到達できず、続く実行もDBへのnetworkが不一致で503だった。既知のDB container networkでread-only APIを検証し成功。公開設定や認証設定は緩めていない。
+- 017時点の開発DB backupを隔離した別DBへ復元し、正式環境と同じDB host／DB名／role名／cookie prefix／originの検証条件で、018＋019を同じoperator関数とCLIにより適用・再実行。旧34テーブルの行不変、ledger18→20、CLI再実行無変更を確認。これは本番backupではないため、本番実行時もfresh backup・別DB復元・移行試験を繰り返す。
+- 正式サイトのHTTPでは従来build `2ot-o4qNUifoDe2J2Pk_s`、KG revision `f5dbf83f-c89e-4e40-95ee-57957016089f` を確認。SSH接続可、`sudo -n`は不可。root audit・本番fresh backup／復元・018／019 migration・Web切替・正式URLの実操作・暗号化backup回収は管理者実行後に記録する。本番公開済みとは扱わない。
+- 日本語commit・通常push済み: 表示 `0914b06a`、通報 `d1330ea8`。最終資材・検証記録は後続commit。無関係な自動候補は受入・確認済みへ変更していない。未追跡 `memo.txt` は保持。
