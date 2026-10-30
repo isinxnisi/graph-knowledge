@@ -287,17 +287,17 @@ export default function MemberCapsules({ dataset, initialImport = "" }: { datase
           <button aria-pressed={readingTab === "sharing"} onClick={() => { setReadingTab("sharing"); navigate(selected.id, undefined, true); }}>{text.sharingTab}</button>
 
     </nav>}</div>
-        <div hidden={readingTab !== "content"}>
+        <div className={css.readingPanel} hidden={readingTab !== "content"}>
         {historical && <div role="status"><h2>{historyText.reading(selected.revision)}</h2><p>{historyText.snapshotHelp}</p><button disabled={busy} onClick={() => read(selected.id)}>{historyText.current}</button></div>}
         {historical && <CapsuleComparison key={`comparison:${selected.id}:${selected.revision}:${user.id}`} snapshot={selected} userId={user.id} disabled={busy} onUnauthorized={() => fail(new MemberClientError(401, "UNAUTHENTICATED"))} />}
         <CapsuleReader key={`${selected.id}:${selected.revision}`} capsule={reading} explorationLinks onEditRequest={!historical&&!busy?view=>setWorkspace({capsule:view,member:selected,ownerId:user.id}):undefined}/>
         <CapsuleRevisionList key={`revisions:${selected.id}:${selected.revision}:${user.id}`} capsuleId={selected.id} userId={user.id} disabled={busy} onRead={revision => read(selected.id, revision)} onUnauthorized={() => fail(new MemberClientError(401, "UNAUTHENTICATED"))} />
 
         </div>
-        <div hidden={readingTab !== "sharing"}>
+        <div className={css.readingPanel} hidden={readingTab !== "sharing"}>
         {!historical && <CapsuleShareControls key={`share:${selected.id}:${selected.revision}`} capsule={selected} userId={user.id} disabled={busy} onUnauthorized={() => fail(new MemberClientError(401, "UNAUTHENTICATED"))} />}
         </div>
-        <div hidden={readingTab !== "content"}>
+        <div className={css.readingPanel} hidden={readingTab !== "content"}>
         {!reading.document && <CapsuleDiscussion key={`discussion:${selected.id}:${selected.revision}:${user.id}`} capsuleId={selected.id} revision={selected.revision} userId={user.id} draftCache={discussionDraft} onUnauthorized={() => fail(new MemberClientError(401, "UNAUTHENTICATED"))} />}
         {!historical && <CapsuleTrashAction id={selected.id} title={selected.content.title} revision={selected.revision} ownerId={user.id} onChanged={()=>{setSelected(null);navigate(null);refresh();}}/>}
         </div>

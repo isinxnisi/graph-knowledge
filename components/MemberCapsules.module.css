@@ -122,3 +122,6 @@
  .detailNavigation{gap:8px;margin-bottom:8px}
  .detailNavigation .readingTabs{gap:12px}
 }
+
+.readingPanel:not([hidden]){animation:ui-reveal 160ms ease-out}
+@media(prefers-reduced-motion:reduce){.readingPanel:not([hidden]){animation:none}}
