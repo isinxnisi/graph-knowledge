@@ -87,5 +87,7 @@
 
 .libraryResults>ul{opacity:1;transition:opacity 160ms ease-out}
 .drawer[aria-busy=true] .libraryResults>ul{opacity:.6}
-.libraryResults>.empty{animation:ui-reveal 160ms ease-out}
+.libraryResults>.empty{animation:libraryReveal 160ms ease-out}
 @media(prefers-reduced-motion:reduce){.libraryResults>ul{transition:none}.libraryResults>.empty{animation:none}}
+
+@keyframes libraryReveal{from{opacity:0;translate:0 3px}to{opacity:1;translate:0 0}}

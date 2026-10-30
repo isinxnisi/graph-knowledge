@@ -123,5 +123,7 @@
  .detailNavigation .readingTabs{gap:12px}
 }
 
-.readingPanel:not([hidden]){animation:ui-reveal 160ms ease-out}
+.readingPanel:not([hidden]){animation:readingReveal 160ms ease-out}
 @media(prefers-reduced-motion:reduce){.readingPanel:not([hidden]){animation:none}}
+
+@keyframes readingReveal{from{opacity:0;translate:0 3px}to{opacity:1;translate:0 0}}
