@@ -3,7 +3,7 @@
 .heading h3 { margin:4px 0 0; overflow-wrap:anywhere; }
 .heading small,.scope,.candidate small,.selection small { color:var(--muted, #60758a); font-size:12px; }
 .heading button { width:36px; height:36px; padding:8px; display:grid; place-items:center; flex:none; }
-.filters { display:grid; grid-template-columns:minmax(150px,2fr) minmax(100px,1fr) minmax(120px,1fr); gap:10px; }
+.filters { display:grid; grid-template-columns:minmax(150px,1.5fr) minmax(90px,.7fr) minmax(200px,1.6fr); gap:10px; }
 .filters label { display:grid; gap:5px; font-size:12px; min-width:0; }
 .filters input,.filters select { width:100%; min-width:0; box-sizing:border-box; }
 .scope { display:flex; align-items:center; justify-content:space-between; gap:8px; min-height:30px; }
@@ -22,4 +22,4 @@
 .chips { display:flex; gap:5px; flex-wrap:wrap; max-height:80px; overflow:auto; margin-top:6px; }
 .chips button { display:flex; gap:5px; align-items:center; font-size:11px; padding:3px 6px; max-width:100%; overflow-wrap:anywhere; }
 .chips svg { width:12px; height:12px; flex:none; }
-@media(max-width:600px) { .filters {grid-template-columns:1fr 1fr;} .search {grid-column:1 / -1;} .selection {flex-direction:column;align-items:stretch;gap:8px;} .selection>button {justify-content:center;} .results {max-height:28dvh;} }
+@media(max-width:600px) { .filters {grid-template-columns:1fr 1fr;} .search {grid-column:1 / -1;} .filters label:last-child {grid-column:1 / -1;} .selection {flex-direction:column;align-items:stretch;gap:8px;} .selection>button {justify-content:center;} .results {max-height:28dvh;} }
