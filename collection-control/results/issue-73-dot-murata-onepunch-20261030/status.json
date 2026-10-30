@@ -62,11 +62,11 @@
   },
   "requestSha256": "a85e7be348fed7cff463ab178edf56d1105a18dd2f4bc1604422a4e84f16930d",
   "kind": "issue-prepare",
-  "phase": "waiting-control",
-  "generation": 1,
-  "attempts": 0,
+  "phase": "running",
+  "generation": 34,
+  "attempts": 1,
   "workerId": "plunode-wsl",
   "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
-  "updatedAt": "2026-10-29T22:22:17+00:00",
+  "updatedAt": "2026-10-30T00:02:04+00:00",
   "message": "Execution gate: outside-window"
 }
