@@ -1,0 +1,103 @@
+{
+  "requestId": "issue-25-manga23-20261019-repair1-batch-01",
+  "request": {
+    "schemaVersion": 1,
+    "id": "issue-25-manga23-20261019-repair1-batch-01",
+    "kind": "collect-review",
+    "status": "approved",
+    "sourceCommit": "916cc77d3aeab22650e309b694661cac07a72a47",
+    "parentRequestId": "issue-25-manga23-20261019-repair1",
+    "applyAuthorized": {
+      "local": false,
+      "beta": false,
+      "vps": false
+    },
+    "approvalScope": "collection-candidates-and-review-only",
+    "humanDecision": {
+      "actorType": "human",
+      "reviewer": "プロジェクト運営者",
+      "decidedAt": "2026-10-19T02:52:00+09:00",
+      "statement": "Issue #25の2026-10-19 02:52 JST先行許可を転記。明示された23作品・人物の同定、QID・日本語代表ISBN探索、recipe生成、hidden候補収集と根拠・保留・レビュー資料生成を承認。Wikidata構造化データとNDL作成書誌だけを用い、準備・収集合計142試行、同一要求2試行、逐次3秒、20秒、4MiB以内。既設時間帯・10分休憩で途中開始・数日継続を許可。同一範囲の再承認は不要。不確かな同定・資料不足・範囲外は保留。個別正式受入・公開apply・VPS配置・会員DB変更は承認しない。"
+    },
+    "issueOrigin": {
+      "repository": "isinxnisi/graph-knowledge",
+      "issueNumber": 25,
+      "approvalId": "manga23-20261019",
+      "permissionSha256": "673d380b4fb61ab2cdef204140d63a47bbf25dbb288199f25d0e3ae740ef11b3",
+      "issueBodySha256": "5f302ff42139b5230da70d38734577da414a3b89a24a82f90302e0297afc3c69"
+    },
+    "target": {
+      "themeId": "issue-25-manga23-20261019-repair1",
+      "revision": 1,
+      "definitionSha256": "fb9a92eab29d0cb18be3b248f051b3fe75f9bed6b3ee742e344ed3eab0fe2bcf",
+      "execution": {
+        "adapter": "manga-discovery-v2",
+        "codeSha256": "80e05b67bc0129b963653b90df4cfbfa5bd6aff190acda99f54c08541e55801e",
+        "inputs": [
+          {
+            "file": "datasets/manga-collection/r0004/recipe.json",
+            "sha256": "1bd3f9f3b51c991942038cc27efd3633edaaaa2b07584618777ce1f46006ea0f"
+          },
+          {
+            "file": "datasets/manga-collection/r0004/anchor-review.json",
+            "sha256": "205f6fd7ca7459ca316268a324c899ab0763a1872a368d4df30214ee0abd6a61"
+          },
+          {
+            "file": "datasets/manga-collection/r0004/publication-review.json",
+            "sha256": "6e1eda0cac761c8be21cb8687e5c785042a08f5df3645f9840edcfcd38cfbcfd"
+          },
+          {
+            "file": "docs/research/famous-manga-creators/20261016/candidates.json",
+            "sha256": "8531fada01e5c635ba2ee278a7ef944a73f64676af14ed42ae0e690f5a1ff978"
+          },
+          {
+            "file": "datasets/public-kg/releases/20261014-credits-001/data.json",
+            "sha256": "ea91b16f52a211b5a8464382ad498b7b2bb2be69a6f33fe125a73a3c7b9da2b5"
+          },
+          {
+            "file": "datasets/public-kg/releases/20261014-credits-001/manifest.json",
+            "sha256": "e4aa3b58ed884f7d1f8fffee43b260261cc2b4d3a867fda942919f439d2bce17"
+          }
+        ],
+        "maxEntities": 2113,
+        "maxClaims": 1853
+      },
+      "targets": {
+        "people": [
+          {
+            "name": "浦沢直樹",
+            "qid": "Q348436"
+          }
+        ],
+        "works": [
+          {
+            "name": "MONSTER",
+            "qid": "Q858384",
+            "isbn13": "9784091836519"
+          },
+          {
+            "name": "20世紀少年",
+            "qid": "Q91458",
+            "isbn13": "9784091855312"
+          },
+          {
+            "name": "YAWARA!",
+            "qid": "Q528619",
+            "isbn13": "9784091813411"
+          }
+        ]
+      },
+      "existingApprovalSha256": "44507d28afe34f8581067fd8292f2438c746e8158b6093bc51fad7d7579eb8c0"
+    }
+  },
+  "requestSha256": "9e62bc58b8c3047940024842cc6b23c2744de2d19667d399d82fd9d6a4782baf",
+  "kind": "collect-review",
+  "phase": "blocked",
+  "generation": 12394,
+  "attempts": 1,
+  "workerId": "plunode-wsl",
+  "sourceCommit": "916cc77d3aeab22650e309b694661cac07a72a47",
+  "updatedAt": "2026-10-30T19:38:05+00:00",
+  "message": "Installed code differs from source commit; reviewed worker upgrade required",
+  "retryAt": 1793363691.7513745
+}
