@@ -62,13 +62,13 @@
   },
   "requestSha256": "a0603b6b44256085b8a519beea9e8eb6e4b188965afe2795a0b9f97832626eff",
   "kind": "issue-prepare",
-  "phase": "awaiting-recovery",
-  "generation": 9,
+  "phase": "retry-wait",
+  "generation": 1124,
   "attempts": 2,
   "workerId": "plunode-wsl",
   "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
-  "updatedAt": "2026-10-28T06:50:27+00:00",
-  "message": "Technical acquisition incomplete; no semantic hold or acceptance",
+  "updatedAt": "2026-10-30T17:04:54+00:00",
+  "message": "GitHub Issue read failed: HTTP 502",
   "result": {
     "schemaVersion": 1,
     "status": "technical-incomplete",
@@ -116,5 +116,5 @@
     }
   },
   "executionComplete": false,
-  "retryAt": 0
+  "retryAt": 1793380146.258602
 }
