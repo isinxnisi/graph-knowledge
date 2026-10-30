@@ -205,3 +205,12 @@ Googleプロフィール反映済みの実環境は000〜017／18件であり、
 `--capsule-trash --confirm-origin ORIGIN` を既存の全系列オプション（Google画像・公式プロフィールを含む）と併せて実行する。000〜017のchecksum一致を確認し、対象環境のprivate runtimeとoriginを使う。018はnullable列とactive-owner索引を追加するだけで、既存のCapsule・共有・コミュニティ・会員を削除しない。実際のごみ箱移動は所有者がUIで指示した対象だけ。
 
 backupを別DBへ復元し、既存全tableの列・行を比較する。018後も旧列の全行が一致し、trashed_atが全件NULL、ledger19件となること、再実行で変化しないことを確認する。ごみ箱内の内容を旧Webが表示しない保証がないため、018の利用開始後に旧Webへ機械的に戻さない。データを保持したまま互換性のある修正版で復旧する。
+
+
+### 018反映の資材作成上の注意（2026-10-31）
+
+private stagingでも、trackedソースのディレクトリは0755、通常ファイルは0644、実行ファイルは0755を保つ。秘密設定は0600。member-opsは非rootで実行されるため、別DBへの実migrationでimage内の読み取り権限まで検証する。
+
+開発PCの既存launcherへ移設するβbuildはwebpackを使う。symlink node_modulesを持つstagingからTurbopack buildを移動した際にpgのhash別名解決が失敗した実例がある。build成功とトップページ200だけで完了せず、会員session/APIも確認する。
+
+今回の新しい本番手順 `scripts/release-capsule-reading-production.py` は固定SHA・直前Google公式対応buildを照合し、018だけを追加する。元のGoogle公式指定を再実行しない。現時点では本番未実施。検証記録を確認してから、照合済みの新しいprivate stagingで実行する。

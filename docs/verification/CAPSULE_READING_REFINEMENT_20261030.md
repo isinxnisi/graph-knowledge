@@ -4,7 +4,7 @@ Issue #63 / 2026-10-30。ユーザーのdraw.io注記と、会話一覧への戻
 
 ## 実装と検証の区別
 
-実装中。実環境への反映・実ブラウザ評価・ユーザー評価は未完了であり、以下の機能テストの成功と区別する。
+実装・3200/HTTPS βへの反映済み。本番反映と最新版の実ブラウザ最終評価は未完了。以下では機能テスト、途中版での実操作、最新版のHTTP確認を区別する。
 
 - アカウント一覧と内容タブを分離し、編集時だけ広い作業面へ入る。旧形式も共通Graphで読む。
 - 一覧・My Capsulesにごみ箱・復元を追加。新規利用枠20件、既存超過分の閲覧・編集を維持。
@@ -23,3 +23,31 @@ Issue #63 / 2026-10-30。ユーザーのdraw.io注記と、会話一覧への戻
 ## 今後の記録
 
 固定SHA/build、018のbackup・別DB復元、3200/HTTPS β/正式サイトの反映、PC/スマホ幅の実画面・操作評価、未確認事項をここへ追記する。memo.txtと並行サービスを保護する。
+
+## 2026-10-31 β反映と追加フィードバック
+
+- アプリ配置SHA: `fd9f39a38ce36b6b45e979f1c69a2b0d34665a46`。
+- 3200/HTTPS β build: `ixvpDiv_71G8FLjgLRv1v`。両URLのHTML buildとKG revision `34befbcd-8f5f-4cd9-a059-242a3f0b5ffb`を確認。既存launcher/private runtime/Google認証を保持。
+- 018を適用しledgerは19件（000〜018）。000〜017のchecksum保持。別DBへの復元、移行・再実行、既存34テーブルの全旧列の行hash一致、既存Capsuleのtrashed_at全NULLを確認。移行直前backup SHA256: `ebb8d09f3abc5205f95d74836ed7f3fb4abd08e01678ee52d644b251dc376433`。private記録は `backups/capsule-reading-20261030/`。
+- My Capsulesは読み込み中・空・絞り込み中も一覧用の高さを保持。内側だけをスクロールし、開いた枠が大きく伸びて飛ぶ挙動を解消する設計。更新中のopacityと内容タブの短い出現を追加し、reduced-motionでは省略。
+- 内容タブ上部の一覧戻りとタブを一段に整理し、共有した版の履歴を図の後へ移動。スマホでは外側の二重枠と説明の占有を減らした。
+- 会話の関連Capsuleは背景・枠のある小さな資料欄へ分離。個別CapsuleとCapsule一覧リンクを別タブとし、外部表示アイコン・ラベル・noopenerを付与。会話の閲覧位置や返信草稿を元タブに保持する。
+- スマホの掲載確認で図の表示がフォーム末尾になる問題を発見。プレビューボタンの直後へ表示する配置に変更。
+- 上記追加変更後もUI等81項目と型検査成功。関連リンクの別タブ/URL/relをテストへ反映。
+
+### 実操作と未確認を区別
+
+途中の `d0b57747` / β build `9J8at0cA7JXMpP1PDXDaB` で、既存Googleログイン状態から一覧→内容タブ（自動モーダルなし）→編集モーダル→閉じて内容へ戻る経路を確認。390×844と1440×960で画面を確認し、上部余白と掲載プレビュー配置を追加修正した。会話一覧への戻り、作者表示、掲載確認のPC二列・スマホフォーム、不要な掲載確認checkboxの除去も実画面確認。
+
+ブラウザ標準の掲載取消確認を扱う途中、Computer UseがWindows上の現在URLを確定できず安全確認で停止した。そのため最新版 `fd9f39a3` の高さ固定・transitionの連続性、別タブ遷移、モバイルプレビュー位置の最終実操作は未確認。iPhone実機、実会員でのごみ箱→復元、最新版の共有作者/コメントの最終実操作も残る。機能テスト成功を人間による評価済みとは扱わない。
+
+最新版はHTTPで両環境のGoogle provider応答と、未認証Capsule APIの401を確認。Python標準User-AgentのHTTPSアクセスはCloudflare1010になったため、通常curlで確認した。認証やCloudflare設定は変更していない。
+
+### 資材検証中に修正したこと
+
+1. private stagingのumaskによりimage内のソースディレクトリが0700となり、非root member-opsが読めなかった。別DBへの移行時に検出し、live停止前に中断。tracked sourceの権限を通常値へ正規化し、Docker cacheを使わず再作成した。秘密設定の権限は0600のまま。
+2. symlink node_modulesを使ったβ Turbopack buildは、配置先を移すと外部pgのhash別名を解決できなかった。実認証経路で検出し、trashed_at全NULLを確認して直前Webへ復帰（DBは巻き戻さない）。従来同様webpackで再buildし、依存解決と実Googleセッションでの会員一覧を確認後、最新版も同方式で配置。
+
+本番VPSは今回まだ更新していない（先行するGoogle公式対応 `5ed458cc` のまま）。018のみを追加する `scripts/release-capsule-reading-production.py` と固定資材を準備中。実画面の残りを確認し、固定資材の照合・sudo実行・正式URL確認・暗号化backup回収まで終えてから本番完了とする。
+
+本番用候補資材（まだ未配置）: build `CJIYOm5CsRmTFDyWop5Ge`、Web `sha256:6790aa19e41d7f96380974e86f7f4f41677bf64695b8a142b2a7e23231cb95d2`、member-ops `sha256:0d16c393737472156fcf67eef499e79e7925eebaeadf96a07d22953a2ba0e560`。隔離起動でGoogle provider 200、未認証Capsule 401、session 200/nullを確認。VPS現状との照合・切替検証はこれから。
