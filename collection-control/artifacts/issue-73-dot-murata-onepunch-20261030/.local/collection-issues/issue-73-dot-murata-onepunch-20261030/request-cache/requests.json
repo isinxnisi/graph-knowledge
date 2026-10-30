@@ -1,0 +1,72 @@
+{
+  "policy": {
+    "maxAttempts": 30,
+    "attemptsPerRequest": 2,
+    "minIntervalSeconds": 3,
+    "timeoutSeconds": 20,
+    "maxBytes": 4194304
+  },
+  "attempts": [
+    {
+      "key": "lookup-1e6cc464963f6711fa133b5e",
+      "url": "https://www.wikidata.org/w/api.php?format=json&action=wbgetentities&sites=jawiki&titles=%E6%9D%91%E7%94%B0%E9%9B%84%E4%BB%8B%7C%E3%83%AF%E3%83%B3%E3%83%91%E3%83%B3%E3%83%9E%E3%83%B3%EF%BC%88%E6%9D%91%E7%94%B0%E9%9B%84%E4%BB%8B%E7%89%88%EF%BC%89&props=labels%7Caliases%7Cclaims&languages=ja%7Cen",
+      "time": 1793318597.5966418,
+      "status": "succeeded",
+      "diagnostic": {
+        "category": "success",
+        "phase": "response-complete",
+        "httpStatus": 200,
+        "elapsedSeconds": 6.378141,
+        "finishedAt": "2026-10-30T00:03:23+00:00"
+      }
+    },
+    {
+      "key": "wikidata-Q2602377",
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q2602377.json",
+      "time": 1793318603.9964812,
+      "status": "succeeded",
+      "diagnostic": {
+        "category": "success",
+        "phase": "response-complete",
+        "httpStatus": 200,
+        "elapsedSeconds": 1.760428,
+        "finishedAt": "2026-10-30T00:03:25+00:00"
+      }
+    },
+    {
+      "key": "lookup-4217ca92a31e6822a9ee4580",
+      "url": "https://www.wikidata.org/w/api.php?format=json&action=wbsearchentities&search=%E3%83%AF%E3%83%B3%E3%83%91%E3%83%B3%E3%83%9E%E3%83%B3%EF%BC%88%E6%9D%91%E7%94%B0%E9%9B%84%E4%BB%8B%E7%89%88%EF%BC%89&language=ja&type=item&limit=5",
+      "time": 1793318606.9945612,
+      "status": "succeeded",
+      "diagnostic": {
+        "category": "success",
+        "phase": "response-complete",
+        "httpStatus": 200,
+        "elapsedSeconds": 0.858112,
+        "finishedAt": "2026-10-30T00:03:27+00:00"
+      }
+    }
+  ],
+  "responses": {
+    "lookup-1e6cc464963f6711fa133b5e": {
+      "url": "https://www.wikidata.org/w/api.php?format=json&action=wbgetentities&sites=jawiki&titles=%E6%9D%91%E7%94%B0%E9%9B%84%E4%BB%8B%7C%E3%83%AF%E3%83%B3%E3%83%91%E3%83%B3%E3%83%9E%E3%83%B3%EF%BC%88%E6%9D%91%E7%94%B0%E9%9B%84%E4%BB%8B%E7%89%88%EF%BC%89&props=labels%7Caliases%7Cclaims&languages=ja%7Cen",
+      "sha256": "961ad550f8bd536f7e7360504ab8b53b8b09fb276b9d8d076bc0360ae40c2249",
+      "bytes": 48684,
+      "fetchedAt": "2026-10-30T00:03:23+00:00"
+    },
+    "wikidata-Q2602377": {
+      "url": "https://www.wikidata.org/wiki/Special:EntityData/Q2602377.json",
+      "sha256": "eb8ffa2f076a3d509dacc6cf15121999614a6e45d2ab52f90da21448a120f52e",
+      "bytes": 54169,
+      "fetchedAt": "2026-10-30T00:03:25+00:00"
+    },
+    "lookup-4217ca92a31e6822a9ee4580": {
+      "url": "https://www.wikidata.org/w/api.php?format=json&action=wbsearchentities&search=%E3%83%AF%E3%83%B3%E3%83%91%E3%83%B3%E3%83%9E%E3%83%B3%EF%BC%88%E6%9D%91%E7%94%B0%E9%9B%84%E4%BB%8B%E7%89%88%EF%BC%89&language=ja&type=item&limit=5",
+      "sha256": "3360490d0cbe32bd30b701a0b0be57c135a4df84fae1c9f6baaae683d491351b",
+      "bytes": 130,
+      "fetchedAt": "2026-10-30T00:03:27+00:00"
+    }
+  },
+  "blockedUntil": 0,
+  "requestRetryAt": {}
+}

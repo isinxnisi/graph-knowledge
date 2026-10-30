@@ -62,11 +62,46 @@
   },
   "requestSha256": "a85e7be348fed7cff463ab178edf56d1105a18dd2f4bc1604422a4e84f16930d",
   "kind": "issue-prepare",
-  "phase": "running",
+  "phase": "completed",
   "generation": 34,
   "attempts": 1,
   "workerId": "plunode-wsl",
   "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
   "updatedAt": "2026-10-30T00:02:04+00:00",
-  "message": "Execution gate: outside-window"
+  "result": {
+    "schemaVersion": 1,
+    "status": "prepared-candidates-not-accepted",
+    "preparationComplete": true,
+    "issueOrigin": {
+      "repository": "isinxnisi/graph-knowledge",
+      "issueNumber": 73,
+      "approvalId": "dot-murata-onepunch-20261030",
+      "permissionSha256": "30bd5e74db640bdc9d48b65c2708fc0dd6ffa78848ffb49c76e20ec45466b190",
+      "issueBodySha256": "81c2bff888f9b171449fcaa06bd91f99e2294225ddc8e96791c4765af053c927"
+    },
+    "counts": {
+      "approvedWorks": 1,
+      "preparedWorks": 0,
+      "preparedPeople": 0,
+      "batches": 0,
+      "holds": 1,
+      "networkAttempts": 3,
+      "reusedWorks": 0,
+      "reusedPublishedClaims": 0,
+      "reusedHeldWorks": 0
+    },
+    "holds": [
+      {
+        "target": "ワンパンマン（村田雄介版）",
+        "person": "村田雄介",
+        "reason": "Exact name/type QID is not unique: ワンパンマン（村田雄介版）"
+      }
+    ],
+    "reusedReviews": [],
+    "batchRequests": [],
+    "publicApply": false,
+    "preparationDirectory": "/home/isinxnisi/.local/share/plunode-collection-worker-phase-b-20261020/runtime/.local/collection-issues/issue-73-dot-murata-onepunch-20261030",
+    "generatedArtifacts": {}
+  },
+  "executionComplete": true
 }
