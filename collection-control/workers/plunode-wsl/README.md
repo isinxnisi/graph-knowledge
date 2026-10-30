@@ -1,14 +1,14 @@
 # CollectionWorkerの実行制御
 
-確認: 2026-10-31 06:31:55 JST。
+確認: 2026-10-31 06:45:47 JST。
 
 反映済みcontrolRevision: 8／最後の操作: pub-13abfb93-ba2d-44f7-a56b-352aa7ab0ab0-resume。
 
-**ready**／停止モード: なし
+**closing-window**／停止モード: なし
 
 日本時間: 03:00〜07:00、09:00〜12:00、15:00〜18:00。ジョブ間10分休憩。
 
-次の開始候補: 開始可能
+次の開始候補: 2026-10-31 09:00:00 JST
 
 最後の操作SHA-256: 1cef6cdd4cb0e4eca8b60a3ae51c6b25a96271b01ffcac788f41f36a5439bf79
 
