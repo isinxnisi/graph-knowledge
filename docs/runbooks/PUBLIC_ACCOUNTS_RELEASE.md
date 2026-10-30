@@ -95,3 +95,7 @@ node --import tsx scripts/test-member.ts --e2e --accounts
 ## 017と公式指定
 
 `--official-profiles --confirm-origin "$MEMBER_ORIGIN"` で表示属性と監査表だけを追加する。公式の付与はmigrationと分離したoperator操作。private環境変数 `PROFILE_OFFICIAL_EMAIL` と `official-profile-ops.ts --expected-handle … --google-subject-sha256 … --actor … --reason …` を使い、dry-runで対象を照合してから同じ引数に `--apply --confirm-origin` を加える。アプリの通常保存では公式指定できない。Googleのsubjectが環境間で一致しなければ停止し、メールだけで別アカウントへ適用しない。対象の公開ID・表示名・official・revision、同期するuser.name/updatedAt、旧新handle予約、監査1行だけが意図した差分。権限・他のプロフィール・コミュニティ・Capsuleに変更がないことを別DBリハーサルと本番で照合する。
+
+## 2026-10-30 Google画像・公式指定の反映記録
+
+本番/βの016・017適用と公式指定は完了。[実際の資材・backup/復元・ブラウザ確認](../verification/GOOGLE_PROFILE_OFFICIAL_20261030.md)を参照。固定の一回用release helperを再実行せず、次回は現在のledger・image・本人識別を確認する。

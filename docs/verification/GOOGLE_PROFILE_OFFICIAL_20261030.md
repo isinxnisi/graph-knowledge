@@ -16,7 +16,7 @@
 - βの016・017はそれぞれ停止中のprivate backup→別DB復元→移行→再実行→対象を限定した行比較を実施。公式指定も復元DBとβ実DBで、対象profile・同期user名/更新時刻・handle予約・監査以外の変更なし、再実行無変更を確認。旧migrationのchecksumは変更していない。
 - 017反映後の広すぎるcontainer監視が、並行して終了した隔離テストcontainerも検知して終端で停止した。DB操作・新Web起動・両URL照合はその前に完了。最後のWebのみの更新では隔離テストを監視対象から除き、実サービス10container・private設定の保持まで完了した。
 - 本番用build `2ot-o4qNUifoDe2J2Pk_s`、image tag `google-official-5ed458cc`。[資材manifest](../releases/google-profile-20261030-manifest.json)。config IDとOCI manifest IDの両方をarchiveの実bytesから照合する。
-- **本番は管理者sudo操作待ちで未反映。** 現在はCapsule版 `20e5c84a`／build `vn4RKdqxP0bGkdHIbv3P4`。新手順はこの既知の前提、private設定hash、DB container、KG、Google本人識別を照合してから016/017と公式指定を行う。旧初回deployは再実行しない。
+- **本番反映完了。** `20e5c84a`／build `vn4RKdqxP0bGkdHIbv3P4` から、上記5ed458cc／build `2ot-o4qNUifoDe2J2Pk_s` へ切替。既知の前提、private設定hash、DB container、KG、Google本人識別を照合してから016/017と公式指定を実施。旧初回deployは再実行していない。
 
 ## 検証
 
@@ -30,4 +30,21 @@
 
 [scripts/release-google-profile-production.py](../../scripts/release-google-profile-production.py) は固定source/build・前提構成を確認し、Web停止、暗号化backup、別DB復元と移行/公式指定のリハーサル、正式originでの明示migration、公式指定、新Web起動、readiness・KG/AI資材/設定保全まで行う。秘密値はprivate stagingのみ。復号秘密鍵は開発PCから転送しない。固定hashでchecksum一覧を照合するlauncherを用意する。
 
-移行前の失敗は元Webを起動する。移行着手後は旧DBで上書きせず、google iconを読めない旧編集UIへの機械的なrollbackも行わない。失敗箇所を確認して修正版へ進める。ユーザーのsudo入力後、正式URLと暗号化控えの確認結果をここへ追記する。
+移行前の失敗は元Webを起動する。移行着手後は旧DBで上書きせず、google iconを読めない旧編集UIへの機械的なrollbackも行わない。失敗箇所を確認して修正版へ進める。
+
+
+## 本番結果（2026-10-30 21時台 JST）
+
+ユーザーが既存sudoへ入力し、固定資材のchecksum照合→前提確認→backup/別DB復元→016/017→公式指定→Web切替を完了した。正式URLは https://plunode.net/people/plunode 。本番2人のhumanプロフィールをGoogle選択へ変更し、指定した1人だけ `@plunode`／「Plunode公式」へ指定。βのGoogle subject hashとの一致も確認した。監査を残し、再実行で追加変更がない。管理権限は増やしていない。
+
+- migration ledger: 000〜017、18件。既存000〜015のchecksum不変。別DB復元の33 tableを照合し、016のhuman icon/revisionと017の公式属性以外の旧行を維持。公式指定は対象profile、名前同期user、handle claim、監査だけに限定し、他の行を保持。
+- backup: `/opt/graph-knowledge/backups/google-profile-release-20261030T121930Z`。dump SHA256 `06a585609afd7649570ab420390cead03a3ad560e328fc63ed6ef23244eb2793`。暗号化控えを開発PCへ取得し、ローカル秘密鍵で復号してdump/hash・復元記録・移行前ledgerを確認。検証用の復号一時ファイルは削除済み。秘密鍵はVPSへ転送していない。
+- Web OCI manifest: `sha256:8eb1703208fe5451ea517ccdd66a134f97cb5955152fd9c46343ed86336a1917`。
+- member-ops OCI manifest: `sha256:72b269d11c0f946f99f36422edb574a79d7a5113357b3968fcb81ba92c492010`。
+- private設定、Google認証設定、会員PG/Neo4j実行container、KG revision、既存AIラボartifactの保持を確認。KG/Worker/Connectorは変更なし。
+- localhost3200／HTTPS βは `PYE1pAPFvsuJnYfbgtara`、正式URLは `2ot-o4qNUifoDe2J2Pk_s`。3originのHTML build、KG revision、公開プロフィールAPIのGoogle画像・公式属性を確認。
+- 正式サイトの実Googleログイン済み公式本人セッションで、公開ページのGoogle画像・@plunode・公式マーク・既存自己紹介、本人設定のGoogle選択・公開ID・表示名を実ブラウザ確認。画像はロード成功、ヘッダーに空の招待statusはない。新たなGoogle認証リダイレクトや再ログインは行っていない。
+- 自己紹介は切替直後のDB全行比較で保持。後続公開APIでは空行が1つ少なかったが文章は一致した。反映後の編集かどうかは未確認であり、ユーザーの内容を上書きして戻す操作はしていない。移行で消えたものとして扱わない。
+- 最終照合scriptの最初のHTTP取得はurllibのproxy経由でlocalhostが403となった。localhostをproxy対象外にしたcurlで3originの実サービスを確認した。サービス障害やDB移行失敗ではない。
+
+変更実装commitは `5a22056b`、`71eb4e0a`、`5ed458cc`、資材/手順の記録は `4d56ace0`。いずれも通常push済み。最終結果も日本語commitで記録し通常pushする。未関連の `memo.txt` を保持し、Autopilot候補の一括受入/確認済み操作は行っていない。

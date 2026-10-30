@@ -41,5 +41,9 @@
     "revision": "5ed458ccbf58aea35dae5644209f79683e387dcf",
     "manifestId": "sha256:72b269d11c0f946f99f36422edb574a79d7a5113357b3968fcb81ba92c492010"
   },
-  "status": "prepared-not-deployed"
+  "status": "deployed-and-verified",
+  "productionBackupDirectory": "/opt/graph-knowledge/backups/google-profile-release-20261030T121930Z",
+  "productionBackupDumpSha256": "06a585609afd7649570ab420390cead03a3ad560e328fc63ed6ef23244eb2793",
+  "betaBuild": "PYE1pAPFvsuJnYfbgtara",
+  "officialProfileUrl": "https://plunode.net/people/plunode"
 }
