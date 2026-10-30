@@ -3,24 +3,19 @@
 2026-10-30 / Issue #63 / `capsule-contribution-001 / r03`。
 [実装契約](../design/CAPSULE_EDITOR.md)、[確認環境の更新契約](../design/PRODUCTION_DEPLOYMENT.md#確認環境の更新契約)、[自動開発との協調](../AUTOPILOT_COLLABORATION.md)に従う。公開の承認と、対象環境への接続・実行・検証の成立は別々に記録する。
 
-## 現在の状態と残る接続
+## 現在の状態と公開対象
 
-2026-10-29の初期実装は既存3200／HTTPS betaへ反映済みで、本番VPSは未反映。[当日の反映・復旧・実Google確認記録](../verification/CAPSULE_EDITOR_BETA_20261029.md)を参照する。
+2026-10-30の最新ユーザー指示により、βで確認済みのCapsuleを正式サイト `https://plunode.net` へ公開する。以前の「βまで」「本番VPSは更新しない」は過去の実装作業の区切りであり、この公開作業の制限ではない。
 
-2026-10-30は編集体験の更新とmigration013／014を対象にする。**今回の終了点は既存3200／HTTPS beta。本番VPSへの転送・切替は実行しない。** ソース実装済み、隔離検証済み、実環境への配置・実操作、ユーザーによる体験の評価はそれぞれ別の状態である。今回の結果は[UX・beta検証記録](../verification/CAPSULE_EDITOR_UX_BETA_20261030.md)へ記録し、過去の反映記録から今回も反映済みと推測しない。[先行クラウド検証](../verification/CAPSULE_EDITOR_20261029.md)も既存環境での確認とは区別する。
+公開対象はβの実行記録から固定した `20e5c84a99dd1e1bfa8fb69779729e68a914bb14`。共有URL更新・OGP・関係先絞り込み・スマホ修正を含む。後続の `28fe3aed`／`b26022e9` はテストと記録であり、アプリ実装に差分はない。古いSHAへ戻さず、無関係な自動開発候補も混ぜない。
 
-| 実行箇所 | 今回の扱い |
-| --- | --- |
-| 既存開発PC | 現在の実行SHA・build・private設定を確認して更新する。旧checksumを保持し、013／014明示適用、backup別DB復元・再実行、3200／HTTPS betaの代表操作を記録する |
-| 隔離検証環境 | 専用PostgreSQLでbackup復元・013／014・既存行保持を確認する。fixtureの認証と実Googleを区別する。helperやテストの成功だけを既存beta反映の証拠にしない |
-| image検証環境 | imageを使う反映では最終sourceのWeb／member-opsをbuild・固定する。開発PCのNode launcher反映はそのbuildを記録し、別のimageを配置したことにしない |
-| 既存VPS | 今回は未実施。後続作業で通常のdevelop SSHと管理者sudoを用い、固定資材・既存ComposeのWeb／member-opsを確認して切り替える |
+[本番公開の実施記録](../verification/CAPSULE_PRODUCTION_20261030.md)で、資材の準備・隔離検証・本番反映・正式URLでの確認を分ける。公開の実行指示を得たことと、切替が成功したことは別である。
 
-接続情報・秘密鍵・sudoパスワードをGitやチャットへ載せない。SSHホスト鍵検証やsudo設定を変更せず、利用可能な既存管理端末から実行する。接続できない段階では、固定資材と本書を引き継いで未反映を明記する。
+接続情報・秘密鍵・sudoパスワードをGitやチャットへ載せない。SSHホスト鍵検証やsudo設定を変更せず、既存のdevelop SSHと管理者sudoを使う。管理者操作が不足するときは、固定資材と具体的な実行手順を準備したうえで必要な操作を示す。
 
 ## 更新するものと保持するもの
 
-変更対象はWeb、会員operator、会員DBの追加migration **011／012／013／014**（適用済みはchecksum確認のみ）。本線KGへのapply・再seed、公開pipelineの署名・Worker更新、Kev、AI教育／日次予定、管理Connector、OAuth／Caddy／Tunnelの設定変更は含まない。本番のKG用ops imageと独立DB containerも保持する。
+変更対象はWeb、会員operator、会員DBの追加migration **011／012／013／014／015**（適用済みはchecksum確認のみ）。本線KGへのapply・再seed、公開pipelineの署名・Worker更新、Kev、AI教育／日次予定、管理Connector、OAuth／Caddy／Tunnelの設定変更は含まない。本番のKG用ops imageと独立DB containerも保持する。
 
 ユーザーは旧Capsuleを削除してよいと承認済みである。旧Capsule全件の移行を公開条件にしない。ただし、**旧Capsule削除、全データ消去、会員DB resetを更新の必須処理にしない。** 整理が必要ならCapsuleを特定し、既存の所有者用削除経路を使う。会員・認証・プロフィール・コミュニティ・独立会話・通報・監査・KGの削除へ承認を広げない。
 
@@ -76,6 +71,7 @@
 node --import tsx scripts/member-migrate.ts \
   --communities --site-operations --public-profiles \
   --capsule-documents --community-capsules --capsule-comments --capsule-share-recovery \
+     --capsule-publications \
   --confirm-origin "$CAPSULE_TARGET_ORIGIN"
 ```
 
@@ -114,9 +110,9 @@ migrationは単一transactionと既存advisory lockで行い、失敗時はDDL�
 
 6. `http://127.0.0.1:3200/api/dataset`と**`https://graph-beta.isinxnisi.com/`の両方**からbuild・代表操作を確認する。Tunnelの設定や新しい公開先を作らない。クラウドの一時3200はこの確認の代わりにならない。
 
-## 既存VPSへの反映（後続作業・今回は実行しない）
+## 既存VPSへの反映
 
-**以下は次回の本番反映に備えた手順であり、2026-10-30の作業範囲に含めない。今回、転送・migration・切替を実行しない。**
+2026-10-30の本番公開指示に基づき実行する。対象環境の実際のledgerを読み、固定sourceのchecksumと照合して必要な追加migrationを確定する。今回の実物確認では000〜010が適用済み、011〜015が追加対象。
 
 既存の正式originは`https://plunode.net`。`/opt/graph-knowledge/app.env`と`/opt/graph-knowledge/compose.yaml`、既存develop SSH＋管理者sudoを使う。[直近の会員公開手順](PUBLIC_ACCOUNTS_RELEASE.md)の固定資材・private backup・別DB復元・Webだけの切替という順序へ接続する。
 
@@ -136,10 +132,11 @@ migrationは単一transactionと既存advisory lockで行い、失敗時はDDL�
      --import tsx scripts/member-migrate.ts \
      --communities --site-operations --public-profiles \
      --capsule-documents --community-capsules --capsule-comments --capsule-share-recovery \
+     --capsule-publications \
      --confirm-origin https://plunode.net
    ```
 
-6. 全checksum・ledger15件・旧データ保全を確認し、同じコマンドの再実行が無変更で終わることを確認する。検証済みcandidateを既存`compose.yaml`へ反映する。旧Compose／設定をprivate backupへ残し、権限を維持する。
+6. 全checksum・ledger16件・旧データ保全を確認し、同じコマンドの再実行が無変更で終わることを確認する。検証済みcandidateを既存`compose.yaml`へ反映する。旧Compose／設定をprivate backupへ残し、権限を維持する。
 7. 既存service名`web`だけを切り替える。PG／Neo4j・KG opsを再作成せず、既存runtime設定を使う。
 
    ```sh
@@ -153,7 +150,7 @@ migrationは単一transactionと既存advisory lockで行い、失敗時はDDL�
 
 8. 新build／固定image、readiness、正式HTTPS、次節の代表操作、他service継続、DB非再起動、KG revisionと既存AI artifactの保持を記録する。Web更新に本線KGの新release・署名・applyは必要ない。
 
-この節は後続作業で使う既存管理経路の手順であり、自動反映の仕組みを追加したものではない。今回のbeta検証完了を本番切替の実行指示として扱わない。
+今回の固定実行資材は `scripts/release-capsule-production.py`。実物確認結果・manifest・archive・復旧公開鍵をroot専用stagingへ複写し、固定checksumの照合後に使う。次回の更新へそのまま再実行する汎用deployではない。既存composeとenvのhash、稼働container、旧ledgerが確認時点と違えば停止する。別DBで011〜015を適用・再実行して旧列全行を照合した後、本番へ明示適用する。変更するCompose値はweb/member-opsのimageだけ。
 
 ## Capabilityと代表操作の受入
 
@@ -179,19 +176,19 @@ migrationは単一transactionと既存advisory lockで行い、失敗時はDDL�
 
 - **migration前の失敗**：Web／設定を保存した検証済み状態へ戻す。DBは未変更のためrestoreしない。archive・preflight結果・原因を残す。
 - **migration失敗・結果不明**：現在のledger／schemaを確認する。単一transactionがrollbackしたことを確認できる場合は原因を修正して同じ固定operatorを使う。checksumを改変しない。
-- **migration成功後の不具合**：011／012／013／014とデータを保持し、schemaVersion 2を読める修正版へのroll-forwardを優先する。新しい文書・snapshotのあるDBへ、schemaVersion 1しか読めない旧Webを戻さない。外枠schemaVersion 2への対応だけで互換と判定せず、今回追加した`layout.center`／`viewport`・text書式・`node.shape`を含む実文書を読めるbuildか確認する。shapeを保存した後の文書は、未知キーを拒否する旧readerでは読めない。形を失わせるために保存文書を加工せず、shape対応readerを維持して修正する。
+- **migration成功後の不具合**：011／012／013／014／015とデータを保持し、schemaVersion 2を読める修正版へのroll-forwardを優先する。新しい文書・snapshotのあるDBへ、schemaVersion 1しか読めない旧Webを戻さない。外枠schemaVersion 2への対応だけで互換と判定せず、今回追加した`layout.center`／`viewport`・text書式・`node.shape`を含む実文書を読めるbuildか確認する。shapeを保存した後の文書は、未知キーを拒否する旧readerでは読めない。形を失わせるために保存文書を加工せず、shape対応readerを維持して修正する。
 - Capsule専用の`disable` flagは今回追加していない。capabilityを偽ってfalseにしたり、tableを落として機能停止を装わない。公開継続できない障害では既存の管理者手順でWebを停止し、互換性を確認したbuildへ切り替える。community全体の既存flagを下げる場合は、個人Capsuleだけの停止にはならないことを明示する。
 - DB自体の復旧が必要なら、まず別DBへbackupをrestoreして確認する。backup後の退会・停止・共有失効・通報・書込差分を保全し再適用する。古いdumpで正式DBを自動上書きしない。
 - betaだけの問題なら保存した旧build／private設定へ戻せるか、新documentとの互換性を確認する。KGや他の会員・communityデータを巻き戻さない。
 
-完了報告には確認URLと短い操作手順、固定SHA・build ID、使用したimageがあれば識別情報、ソース／隔離検証結果、3200／HTTPS betaの反映状態、migration／capability／代表操作、実画面・操作記録、未確認事項を記載する。ユーザーによる体験評価とAIの実操作評価は区別し、本番VPSは今回更新していないことを明記する。接続または管理者実行が残る場合は、必要な実行箇所と固定資材だけを引き継ぎ、公開済みとしない。
+完了報告には確認URLと短い操作手順、固定SHA・build ID、使用したimageがあれば識別情報、ソース／隔離検証結果、3200／HTTPS betaの反映状態、migration／capability／代表操作、実画面・操作記録、未確認事項を記載する。ユーザーによる体験評価とAIの実操作評価は区別し、本番VPSについても、実際に更新できたかと正式URLで確認した範囲を明記する。接続または管理者実行が残る場合は、必要な実行箇所と固定資材だけを引き継ぎ、公開済みとしない。
 
 014以降の再取得は、既存MEMBER_AUTH_SECRETとlink ID等から用途を分けたHMACを生成し、DBのhashと一致した場合にのみ所有者へ返す。秘密値そのものは変更・出力しない。secret更新時は旧リンクのhash閲覧を保持するが、元のURLを再生成できなくなるため必要に応じて所有者が作り直す。014は既存リンクを一括再発行しない。
 
 
 ## 2026-10-30: 同一URLへの共有反映とOGP（015）
 
-今回の終了点は既存3200／HTTPS β。本番VPSは更新しない。015は適用済み000〜014を書き換えず追加する。`--capsule-publications`を既存の全明示オプションに加え、対象private runtimeの正しい`--confirm-origin https://graph-beta.isinxnisi.com`で適用する。015は014を前提とする。
+共有機能の実装時点では既存3200／HTTPS βまでを対象とした。最新の本番公開指示で正式環境も対象に更新した。015は適用済み000〜014を書き換えず追加する。`--capsule-publications`を既存の全明示オプションに加え、対象private runtimeの正しい`--confirm-origin https://graph-beta.isinxnisi.com`で適用する。015は014を前提とする。
 
 実施前にAutopilot holdと固定SHAを確認し、既存private設定・起動PID・build・Docker・KG・AI artifactを記録する。実DBのread-only exported snapshotによるbackupを別DBへ復元し、全旧列・行のfingerprintと000〜014 checksumを照合する。復元先へ015を適用・再適用して16件のledgerと旧値の保存を検証する。切替時も既存Webを正常終了し、fresh backup・別DB復元後に015を明示適用・再実行する。会員DB全体のresetやliveへのrestoreはしない。
 
