@@ -1,0 +1,93 @@
+{
+  "requestId": "issue-25-manga23-20261019-repair1-batch-10",
+  "request": {
+    "schemaVersion": 1,
+    "id": "issue-25-manga23-20261019-repair1-batch-10",
+    "kind": "collect-review",
+    "status": "approved",
+    "sourceCommit": "916cc77d3aeab22650e309b694661cac07a72a47",
+    "parentRequestId": "issue-25-manga23-20261019-repair1",
+    "applyAuthorized": {
+      "local": false,
+      "beta": false,
+      "vps": false
+    },
+    "approvalScope": "collection-candidates-and-review-only",
+    "humanDecision": {
+      "actorType": "human",
+      "reviewer": "プロジェクト運営者",
+      "decidedAt": "2026-10-19T02:52:00+09:00",
+      "statement": "Issue #25の2026-10-19 02:52 JST先行許可を転記。明示された23作品・人物の同定、QID・日本語代表ISBN探索、recipe生成、hidden候補収集と根拠・保留・レビュー資料生成を承認。Wikidata構造化データとNDL作成書誌だけを用い、準備・収集合計142試行、同一要求2試行、逐次3秒、20秒、4MiB以内。既設時間帯・10分休憩で途中開始・数日継続を許可。同一範囲の再承認は不要。不確かな同定・資料不足・範囲外は保留。個別正式受入・公開apply・VPS配置・会員DB変更は承認しない。"
+    },
+    "issueOrigin": {
+      "repository": "isinxnisi/graph-knowledge",
+      "issueNumber": 25,
+      "approvalId": "manga23-20261019",
+      "permissionSha256": "673d380b4fb61ab2cdef204140d63a47bbf25dbb288199f25d0e3ae740ef11b3",
+      "issueBodySha256": "5f302ff42139b5230da70d38734577da414a3b89a24a82f90302e0297afc3c69"
+    },
+    "target": {
+      "themeId": "issue-25-manga23-20261019-repair1",
+      "revision": 10,
+      "definitionSha256": "44fc77372c8c3137075f3f844740931f1f56ee0cdb69ec70c033d18407391e0b",
+      "execution": {
+        "adapter": "manga-discovery-v2",
+        "codeSha256": "80e05b67bc0129b963653b90df4cfbfa5bd6aff190acda99f54c08541e55801e",
+        "inputs": [
+          {
+            "file": "datasets/manga-collection/r0016/recipe.json",
+            "sha256": "bedf687ab6fd6dff0331e0658d00d9c928fff83197d65cec0bab05f36420d606"
+          },
+          {
+            "file": "datasets/manga-collection/r0016/anchor-review.json",
+            "sha256": "d6ab0ed6627d04e8c997874fd414d1b2cbefe1f7712adb6ffe1ac72bba5928ea"
+          },
+          {
+            "file": "datasets/manga-collection/r0016/publication-review.json",
+            "sha256": "0e4141e15230d637545e5cc0a225cc3fb5ecf09696964e8de8c2c82c8147b497"
+          },
+          {
+            "file": "docs/research/famous-manga-creators/20261016/candidates.json",
+            "sha256": "8531fada01e5c635ba2ee278a7ef944a73f64676af14ed42ae0e690f5a1ff978"
+          },
+          {
+            "file": "datasets/public-kg/releases/20261014-credits-001/data.json",
+            "sha256": "ea91b16f52a211b5a8464382ad498b7b2bb2be69a6f33fe125a73a3c7b9da2b5"
+          },
+          {
+            "file": "datasets/public-kg/releases/20261014-credits-001/manifest.json",
+            "sha256": "e4aa3b58ed884f7d1f8fffee43b260261cc2b4d3a867fda942919f439d2bce17"
+          }
+        ],
+        "maxEntities": 2111,
+        "maxClaims": 1847
+      },
+      "targets": {
+        "people": [
+          {
+            "name": "藤子・F・不二雄",
+            "qid": "Q17572"
+          }
+        ],
+        "works": [
+          {
+            "name": "パーマン",
+            "qid": "Q700320",
+            "isbn13": "9784091941114"
+          }
+        ]
+      },
+      "existingApprovalSha256": "82d7ecfa8ead6450fd13b696f4afc9d903a1f9a8e1b89a3258c687b42049b33b"
+    }
+  },
+  "requestSha256": "ed885e08b9e56344ecbc4f622edae4438fd5dd4f8336ffa4606190ad19fb9ff3",
+  "kind": "collect-review",
+  "phase": "waiting-control",
+  "generation": 12287,
+  "attempts": 1,
+  "workerId": "plunode-wsl",
+  "sourceCommit": "916cc77d3aeab22650e309b694661cac07a72a47",
+  "updatedAt": "2026-10-30T13:14:42+00:00",
+  "message": "Execution gate: outside-window",
+  "retryAt": 1793365905.2990851
+}
