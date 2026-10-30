@@ -102,3 +102,6 @@ HTTPS βの既存Googleログイン済み本人セッションを使用。Google
 - 3200／HTTPS betaの両方でトップ200・build一致、dataset revision `34befbcd-8f5f-4cd9-a059-242a3f0b5ffb`、PLUTO検索、Google provider、確認用共有CapsuleのJSON／HTML／OGPタイトル・PNG200、停止済み共有の画像404を確認。匿名の会員capabilitiesは期待どおり401。
 - ブラウザ操作ツールは「Local browser use is disabled in Work settings」で接続できず、今回は本人のログイン後操作を再実施していない。上記はHTTP／実行設定の復旧確認である。
 - DB migration／reset・再build・本番VPS更新は行っていない。既存の自動復帰設定やコンテナrestart policyも変更していないため、次回PC再起動時の自動復帰には、確認用KG起動とlauncher設定の引継ぎを別途揃える余地が残る。
+
+
+スマホの絞り込み・キーボード後の表示ずれへの追補は[モバイル修正と最終配置](CAPSULE_MOBILE_20261030.md)を参照。
