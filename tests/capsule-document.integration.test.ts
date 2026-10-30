@@ -68,17 +68,17 @@ it('明示追加migration前は新writerを閉じ、旧保存・共有snapshot�
   const unavailable = await call(()=>service().issueShare(request(a,{expectedRevision:1,expectedShareId:null}),old.id));
   expect(unavailable.status).toBe(503); expect(await unavailable.json()).toEqual({error:{code:'SHARE_RECOVERY_UNAVAILABLE'}});
   expect((await (await service().shareStatus(request(a),old.id)).json()).token).toBeNull();
-  await migrateMemberDatabase(pool(),true,true,true,false,false,true,true);
+  await migrateMemberDatabase(pool(),true,true,true,false,false,true,true,true);
   const share = await service().issueShare(request(a,{expectedRevision:1,expectedShareId:null}),old.id); expect(share.status).toBe(201);
   const token = (await share.json()).token;
   const before = (await pool().query('SELECT snapshot::text FROM member_capsule_revision WHERE capsule_id=$1',[old.id])).rows[0].snapshot;
   expect((await call(() => service().create(request(a,{requestId:randomUUID(),content:local()})))).status).toBe(503);
-  await migrateMemberDatabase(pool(),true,true,true,true,true,true,true);
-  await migrateMemberDatabase(pool(),true,true,true,true,true,true,true);
+  await migrateMemberDatabase(pool(),true,true,true,true,true,true,true,true);
+  await migrateMemberDatabase(pool(),true,true,true,true,true,true,true,true);
   expect((await pool().query('SELECT snapshot::text FROM member_capsule_revision WHERE capsule_id=$1',[old.id])).rows[0].snapshot).toBe(before);
   expect((await service().capabilities(request(a))).status).toBe(200);
   const shared = await service().readShared(new Request(origin,{headers:{'x-capsule-token':token}})); expect((await shared.json()).capsule).toEqual(old);
-  expect((await pool().query('SELECT count(*) FROM member_migration')).rows[0].count).toBe('15');
+  expect((await pool().query('SELECT count(*) FROM member_migration')).rows[0].count).toBe('16');
 });
 it('local-only内容・根拠・配置と32kを超える100/200参照を切り捨てず保存し、一覧から文書を除外する', async () => {
   const content = local('大きなlocal図',100); const capsule = await create(content); expect(capsule.schemaVersion).toBe(2); expect(capsule.content).toEqual(content);
@@ -135,7 +135,12 @@ it('固定共有版はprivate再編集から独立し、更新と再発行の期
   expect((await (await service().read(request(a),capsule.id)).json()).capsule.content.document.nodes[0].shape).toBe('rectangle');
   expect((await call(()=>service().issueShare(request(a,{expectedRevision:1,expectedShareId:first.share.id}),capsule.id))).status).toBe(409);
   const second = await (await service().issueShare(request(a,{expectedRevision:2,expectedShareId:first.share.id}),capsule.id)).json();
-  expect((await readToken(first.token)).status).toBe(404); expect((await (await readToken(second.token)).json()).capsule.revision).toBe(2);
+  expect((await readToken(first.token)).status).toBe(404); expect((await (await readToken(second.token)).json()).capsule.revision).toBe(1);
+  const inputPublish={expectedRevision:2,expectedSharedRevision:1,expectedShareId:second.share.id};
+  expect((await service().publishShare(request(a,inputPublish),capsule.id)).status).toBe(200);
+  expect((await service().publishShare(request(a,inputPublish),capsule.id)).status).toBe(200);
+  expect((await (await readToken(second.token)).json()).capsule.content).toEqual(changed);
+  expect((await (await service().shareStatus(request(a),capsule.id)).json()).token).toBe(second.token);
 });
 it('public掲載は保存した版だけを返し、第三者が他人のCapsuleを掲載/更新できない', async () => {
   const c = await community(), capsule = await create(), listing = await publish(c.id,capsule);
@@ -247,3 +252,40 @@ it('private本文と固定版を合算した保存総量を超える作成・共
     expect((await pool().query('SELECT count(*) FROM member_capsule_revision WHERE capsule_id=$1',[capsule.id])).rows[0].count).toBe('0');
   } finally { await pool().query('DELETE FROM member_capsule WHERE id=ANY($1::uuid[])',[seeded]); }
 },15_000);
+
+it('同じURLへの明示反映は公開履歴と投稿時の図を保持し、私有・別範囲・停止後の内容を漏らさない',async()=>{
+  await pool().query('DELETE FROM member_capsule_post WHERE author_user_id=$1',[b.id]);
+  const cap=await create(local('最初の公開図')), c=await community(), listing=await publish(c.id,cap);
+  const issued=await(await service().issueShare(request(a,{expectedRevision:1,expectedShareId:null}),cap.id)).json();
+  const shared=(revision?:number,token=issued.token)=>call(()=>service().readShared(new Request(origin+(revision?`/?revision=${revision}`:''),{headers:{'x-capsule-token':token}})));
+  const conversation=(revision:number,body?:unknown,token=issued.token)=>{
+    const req=request(b,body,`/?revision=${revision}`);req.headers.set('x-capsule-token',token);
+    return call(()=>body?service().createDiscussionPost(req,cap.id):service().readDiscussion(req,cap.id));
+  };
+  expect((await conversation(1,{requestId:randomUUID(),revision:1,body:'最初の図へのコメント'})).status).toBe(201);
+  await service().update(request(a,{requestId:randomUUID(),expectedRevision:1,content:{...cap.content,title:'コミュニティだけの版'}}),cap.id);
+  await publish(c.id,{id:cap.id,revision:2},'cohort');
+  await service().update(request(a,{requestId:randomUUID(),expectedRevision:2,content:{...cap.content,title:'改善した公開図'}}),cap.id);
+  expect((await(await shared()).json()).capsule.revision).toBe(1);
+  expect((await shared(2)).status).toBe(404);expect((await shared(3)).status).toBe(404);
+  const publication={expectedRevision:3,expectedSharedRevision:1,expectedShareId:issued.share.id};
+  expect((await call(()=>service().publishShare(request(b,publication),cap.id))).status).toBe(404);
+  const applied=await Promise.all([service().publishShare(request(a,publication),cap.id),service().publishShare(request(a,publication),cap.id)]);expect(applied.map(r=>r.status)).toEqual([200,200]);
+  expect((await(await service().shareStatus(request(a),cap.id)).json()).token).toBe(issued.token);
+  const view=await(await shared()).json();expect(view.capsule.content.title).toBe('改善した公開図');expect(view.revisions.map((r:{revision:number})=>r.revision)).toEqual([3,1]);
+  expect((await(await shared(1)).json()).capsule).toEqual(cap);expect((await shared(2)).status).toBe(404);
+  expect((await(await service().community.readCapsule(request(),listing.id)).json()).capsule.revision).toBe(1);
+  expect((await conversation(1,{requestId:randomUUID(),revision:1,body:'旧図を見たままの投稿'})).status).toBe(201);
+  expect((await conversation(3,{requestId:randomUUID(),revision:3,body:'改善後へのコメント'})).status).toBe(201);
+  const posts=(await(await conversation(3)).json()).posts;expect(posts.map((post:{revision:number})=>post.revision)).toEqual([1,1,3]);
+  expect((await(await conversation(1)).json()).posts).toEqual(posts);expect((await conversation(2)).status).toBe(404);
+  await pool().query('UPDATE member_capsule_revision SET sharing_blocked=true WHERE capsule_id=$1 AND revision=1',[cap.id]);
+  expect((await shared(1)).status).toBe(404);expect((await(await shared()).json()).revisions.map((r:{revision:number})=>r.revision)).toEqual([3]);
+  expect((await(await conversation(3)).json()).posts.map((post:{revision:number})=>post.revision)).toEqual([3]);
+  await service().revokeShare(request(a,{expectedShareId:issued.share.id}),cap.id);
+  expect((await shared()).status).toBe(404);expect((await shared(3)).status).toBe(404);expect((await conversation(3)).status).toBe(404);
+  await service().update(request(a,{requestId:randomUUID(),expectedRevision:3,content:{...cap.content,title:'停止後の新しい共有'}}),cap.id);
+  const fresh=await(await service().issueShare(request(a,{expectedRevision:4,expectedShareId:null}),cap.id)).json();
+  expect((await shared(3,fresh.token)).status).toBe(404);expect((await(await shared(undefined,fresh.token)).json()).revisions.map((r:{revision:number})=>r.revision)).toEqual([4]);
+  expect((await(await conversation(4,undefined,fresh.token)).json()).posts).toEqual([]);
+});

@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { afterEach, beforeEach, describe, expect, it, vi, type Mock } from "vitest";
-import { act, cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { act, cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import CapsuleShareControls from "../components/CapsuleShareControls";
 import SharedCapsule from "../components/SharedCapsule";
 import type { MemberCapsule } from "../lib/domain/member-capsule";
@@ -34,10 +34,10 @@ async function controls(value: { share: typeof share | null; commentsClosed: boo
 describe("限定共有の所有者操作", () => {
   it("共有画面を開き直しても同じリンクを取得し、版やコメントを更新しない", async () => {
     await controls({ share, token, commentsClosed: false });
-    expect((screen.getByLabelText("共有リンク") as HTMLInputElement).value).toBe(`${location.origin}/shared#${token}`);
+    expect((screen.getByLabelText("共有リンク") as HTMLInputElement).value).toBe(`${location.origin}/shared/${token}`);
     cleanup();
     await controls({ share, token, commentsClosed: false });
-    expect((screen.getByLabelText("共有リンク") as HTMLInputElement).value).toBe(`${location.origin}/shared#${token}`);
+    expect((screen.getByLabelText("共有リンク") as HTMLInputElement).value).toBe(`${location.origin}/shared/${token}`);
     expect(fetchMock.mock.calls.every(([, options]) => !options.method || options.method === "GET")).toBe(true);
     expect(localStorage.length).toBe(0); expect(sessionStorage.length).toBe(0);
   });
@@ -49,7 +49,7 @@ describe("限定共有の所有者操作", () => {
     fetchMock.mockResolvedValueOnce(Response.json({ share, token, commentsClosed: false }));
     fireEvent.click(screen.getByRole("button", { name: "共有状態を再確認" }));
     const field = await screen.findByLabelText("共有リンク") as HTMLInputElement;
-    expect(field.value).toBe(`${location.origin}/shared#${token}`);
+    expect(field.value).toBe(`${location.origin}/shared/${token}`);
     expect(fetchMock.mock.calls.filter(([, options]) => options.method === "POST")).toHaveLength(1);
     expect(screen.queryByRole("dialog")).toBeNull();
   });
@@ -69,7 +69,7 @@ describe("限定共有の所有者操作", () => {
     fetchMock.mockResolvedValueOnce(Response.json({ share, token }, { status: 201 }));
     fireEvent.click(screen.getByRole("button", { name: "共有リンクを作る" }));
     const field = await screen.findByLabelText("共有リンク") as HTMLInputElement;
-    expect(field.value).toBe(`${location.origin}/shared#${token}`);
+    expect(field.value).toBe(`${location.origin}/shared/${token}`);
     expect(fetchMock.mock.calls[1][1].headers).toMatchObject({ "X-Member-User": userId });
     expect(JSON.parse(fetchMock.mock.calls[1][1].body)).toEqual({ expectedRevision: 1, expectedShareId: null, commentsClosed: false });
     expect(localStorage.length).toBe(0); expect(sessionStorage.length).toBe(0);
@@ -109,11 +109,11 @@ describe("限定共有の所有者操作", () => {
     fetchMock.mockResolvedValueOnce(Response.json({ share }));
     fireEvent.click(screen.getByRole("button", { name: "共有状態を再確認" }));
     await screen.findByText("内容版 1 の限定リンクが有効です。");
-    fireEvent.click(screen.getByRole("button", { name: "リンクを更新" }));
+    fireEvent.click(screen.getByRole("button", { name: "URLを再発行" }));
     expect(screen.getByRole("dialog")).toBeTruthy();
-    expect(screen.getByText(/これまでのリンクは使えなくなります/)).toBeTruthy();
+    expect(within(screen.getByRole("dialog")).getByText(/これまでのURLを無効にします/)).toBeTruthy();
     fetchMock.mockResolvedValueOnce(Response.json({ share, token }));
-    fireEvent.click(screen.getByRole("button", { name: "リンクを更新する" }));
+    fireEvent.click(screen.getByRole("button", { name: "新しいURLを発行する" }));
     await screen.findByLabelText("共有リンク");
     expect(JSON.parse(fetchMock.mock.calls[3][1].body).expectedShareId).toBe(share.id);
   });
@@ -165,4 +165,28 @@ describe("共有内容の読取認可と継続性", () => {
     expect(screen.queryByRole("heading", { name: capsule.content.title })).toBeNull();
     expect(screen.getByText(/共有内容を取得できませんでした/)).toBeTruthy();
   });
+});
+
+it("保存版を同じURLへ明示反映し、再発行要求を送らない",async()=>{
+  fetchMock.mockResolvedValueOnce(Response.json({share,token,commentsClosed:false}));
+  render(<CapsuleShareControls capsule={{...capsule,revision:2}} userId={userId} disabled={false} onUnauthorized={vi.fn()}/>);
+  await screen.findByLabelText("共有リンク");
+  fetchMock.mockResolvedValueOnce(Response.json({share:{...share,revision:2}}));
+  fireEvent.click(screen.getByRole("button",{name:"保存した変更を共有へ反映"}));
+  await screen.findByText("内容版 2 の限定リンクが有効です。");
+  expect((screen.getByLabelText("共有リンク") as HTMLInputElement).value).toBe(`${location.origin}/shared/${token}`);
+  const call=fetchMock.mock.calls.find(([,options])=>options.method==="PATCH")!;
+  expect(JSON.parse(call[1].body)).toEqual({expectedRevision:2,expectedSharedRevision:1,expectedShareId:share.id});
+  expect(fetchMock.mock.calls.some(([,options])=>options.method==="POST")).toBe(false);
+});
+it("共有更新の通知だけでは操作中の図を差し替えず、明示して新版へ進む",async()=>{
+  render(<SharedCapsule dataset="demo" linkToken={token}/>);
+  const graph=await screen.findByRole("heading",{name:capsule.content.title});
+  const next={...capsule,revision:2,content:{...capsule.content,title:"改善した共有図"}};
+  fetchMock.mockResolvedValueOnce(Response.json({capsule:next,currentRevision:2})).mockResolvedValueOnce(Response.json({capsule,currentRevision:2}));
+  fireEvent.click(screen.getByRole("button",{name:"リンクを再確認"}));
+  const update=await screen.findByRole("button",{name:"更新された図を読む"});expect(graph.isConnected).toBe(true);
+  expect(screen.queryByRole("heading",{name:next.content.title})).toBeNull();
+  fetchMock.mockResolvedValueOnce(Response.json({capsule:next,currentRevision:2}));fireEvent.click(update);
+  await screen.findByRole("heading",{name:next.content.title});expect(graph.isConnected).toBe(false);
 });

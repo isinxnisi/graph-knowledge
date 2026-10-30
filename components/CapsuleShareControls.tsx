@@ -4,7 +4,7 @@ import { z } from "zod";
 import { useUiLocale } from "../lib/client/ui-locale";
 import { contentMessage } from "../lib/i18n/content";
 import type { MemberCapsule } from "../lib/domain/member-capsule";
-import { capsuleShareIssuedSchema, capsuleShareStatusSchema, type CapsuleShare } from "../lib/domain/capsule-sharing";
+import { capsuleShareIssuedSchema, capsuleShareStatusSchema, capsuleShareSchema, capsuleSharePath, type CapsuleShare } from "../lib/domain/capsule-sharing";
 import { MemberClientError, memberRequest } from "../lib/client/member-api";
 import { capsuleSharingLabels } from "../lib/i18n/capsule-sharing";
 import { CommunityDialog } from "./CommunityDialog";
@@ -41,7 +41,7 @@ export default function CapsuleShareControls({ capsule, userId, disabled, onUnau
     const result = await memberRequest(path, capsuleShareStatusSchema, { user: userId, signal });
     if (!signal.aborted) {
       const sameLink = currentShare.current === (result.share?.id ?? null);
-      setUrl(previous => !result.share || result.blocked ? "" : result.token ? `${location.origin}/shared#${result.token}` : sameLink ? previous : "");
+      setUrl(previous => !result.share || result.blocked ? "" : result.token ? `${location.origin}${capsuleSharePath(result.token)}` : sameLink ? previous : "");
       currentShare.current = result.share?.id ?? null;
       setShare(result.share); setBlocked(result.blocked); setClosed(result.commentsClosed); setKnown(true); setCommentVersion(value => value + 1);
     }
@@ -52,8 +52,15 @@ export default function CapsuleShareControls({ capsule, userId, disabled, onUnau
     setConfirm(null);
     void run(async signal => {
       const result = await memberRequest(path, capsuleShareIssuedSchema, { method: "POST", body: { expectedRevision: capsule.revision, expectedShareId: share?.id ?? null, commentsClosed: closed }, user: userId, signal });
-      if (!signal.aborted) { currentShare.current = result.share.id; setShare(result.share); setKnown(true); setUrl(`${location.origin}/shared#${result.token}`); setMessage(text.issued); }
+      if (!signal.aborted) { currentShare.current = result.share.id; setShare(result.share); setKnown(true); setUrl(`${location.origin}${capsuleSharePath(result.token)}`); setMessage(text.issued); }
     }, true);
+  }
+  function publish() {
+    if (!share || !known || discussionDraft.hasDraft()) return;
+    void run(async signal => {
+      const result = await memberRequest(path, z.object({share:capsuleShareSchema}), {method:"PATCH",body:{expectedShareId:share.id,expectedSharedRevision:share.revision,expectedRevision:capsule.revision},user:userId,signal});
+      if (!signal.aborted) { setShare(result.share); setKnown(true); setMessage(text.published); setCommentVersion(value=>value+1); }
+    },true);
   }
   function revoke() {
     if (!share || !known) return;
@@ -88,10 +95,14 @@ export default function CapsuleShareControls({ capsule, userId, disabled, onUnau
     {url ? <div className={css.linkBox}><label htmlFor={fieldId}>{text.url}</label><div className={css.linkField}><input id={fieldId} readOnly value={url} onFocus={event => event.target.select()} />
       <button className={`${css.button} ${css.primary}`} onClick={() => void copy()}><Icon name="copy" />{text.copy}</button></div>
       <a className={`${css.button} ${css.quiet}`} href={url} target="_blank" rel="noopener noreferrer"><Icon name="external" />{text.preview}</a></div> : null}
-    <div className={css.actions}>{share && <button className={`${css.button} ${css.quiet}`} disabled={busy || disabled || !known} onClick={() => setConfirm("revoke")}>{text.revoke}</button>}
-      <button className={`${css.button} ${url ? "" : css.primary}`} disabled={busy || disabled || !known || blocked} onClick={() => share ? setConfirm("issue") : issue()}><Icon name="link" />{share ? text.rotate : text.issue}</button></div>
+    <div className={css.actions}>
+      {share && share.revision !== capsule.revision && <button className={`${css.button} ${css.primary}`} disabled={busy || disabled || !known || blocked || discussionDraft.hasDraft()} onClick={publish}><Icon name="check" />{text.publish}</button>}
+      {share && <button className={`${css.button} ${css.quiet}`} disabled={busy || disabled || !known} onClick={() => setConfirm("revoke")}>{text.revoke}</button>}
+      {!share && <button className={`${css.button} ${css.primary}`} disabled={busy || disabled || !known || blocked} onClick={issue}><Icon name="link" />{text.issue}</button>}</div>
+    {share && discussionDraft.hasDraft() && share.revision !== capsule.revision && <p className={css.muted}>{text.finishComment}</p>}
+    {share && <details className={css.details}><summary>{text.rotate}</summary><p>{text.rotationHelp}</p><button className={css.button} disabled={busy || disabled || !known || blocked} onClick={() => setConfirm("issue")}>{text.rotate}</button></details>}
     <details className={css.details}><summary>{text.details}</summary><p>{text.linkRecovery}</p><p>{text.commentScope}</p></details>
-    {capsule.content.document && share && !blocked && <CapsuleDiscussion key={`${capsule.id}:${share.revision}:${userId}`} capsuleId={capsule.id} revision={share.revision} userId={userId} draftCache={discussionDraft} onUnauthorized={onUnauthorized} showSettings={false} refreshVersion={commentVersion} />}
+    {capsule.content.document && share && !blocked && <CapsuleDiscussion key={`${capsule.id}:${share.revision}:${userId}`} capsuleId={capsule.id} revision={share.revision} userId={userId} draftCache={discussionDraft} onUnauthorized={onUnauthorized} showSettings={false} refreshVersion={commentVersion} revisionUrl={url ? revision => `${url}?revision=${revision}` : undefined} />}
     {confirm && <CommunityDialog className={css.dialog} title={confirm === "issue" ? text.rotate : text.revoke} onCancel={() => setConfirm(null)} busy={busy}>
       <p>{confirm === "issue" ? text.rotationHelp : text.revokeHelp}</p><div className={css.actions}>
         <button className={css.button} onClick={() => setConfirm(null)} autoFocus>{text.cancel}</button><button className={`${css.button} ${css.primary}`} disabled={busy || disabled} onClick={confirm === "issue" ? issue : revoke}>{confirm === "issue" ? text.confirmIssue : text.confirmRevoke}</button>

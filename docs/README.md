@@ -1,3 +1,5 @@
+2026-10-30 Issue #63の共有URL更新・OGP・関係先選択は[検証・反映記録](verification/CAPSULE_SHARING_20261030.md)と[現行Capsule契約](design/CAPSULE_EDITOR.md)を参照。今回の反映先は3200／HTTPS βで、本番VPSは対象外。
+
 [開発・運用の統合管理一覧／予定登録](../WORK_STATUS.md)（既存状態の30分観測、AI呼出しなし）。
 
 # ドキュメントの入口

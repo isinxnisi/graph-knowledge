@@ -48,12 +48,18 @@ export function createCapsuleDiscussion(pool: Pool, dataset: DatasetMode, origin
     if (!capsule) throw new MemberError(404, "NOT_FOUND");
     const own = capsule.owner_user_id === user?.id;
     if (own) {
-      const frozen = await client.query("SELECT 1 FROM member_capsule_revision WHERE capsule_id = $1 AND revision = $2", [id, revision]);
+      const frozen = await client.query("SELECT 1 FROM member_capsule_revision r WHERE capsule_id = $1 AND revision = $2 AND NOT COALESCE((to_jsonb(r)->>'sharing_blocked')::boolean,false)", [id, revision]);
       if (!frozen.rowCount) throw new MemberError(404, "NOT_FOUND");
     } else {
       const token = capsuleShareTokenSchema.safeParse(request.headers.get("x-capsule-token"));
       if (!token.success) throw new MemberError(404, "NOT_FOUND");
-      const shared = await client.query("SELECT 1 FROM member_capsule_share WHERE capsule_id = $1 AND revision = $2 AND token_hash = $3", [id, revision, digest(token.data)]);
+      const shared = await client.query(`SELECT 1 FROM member_capsule_share s
+        JOIN member_capsule_publication p ON p.share_id=s.id AND p.capsule_id=s.capsule_id
+        JOIN member_capsule_revision r ON r.capsule_id=p.capsule_id AND r.revision=p.revision
+        JOIN member_capsule_revision live ON live.capsule_id=s.capsule_id AND live.revision=s.revision
+        WHERE s.capsule_id=$1 AND p.revision=$2 AND s.token_hash=$3
+          AND NOT COALESCE((to_jsonb(r)->>'sharing_blocked')::boolean,false)
+          AND NOT COALESCE((to_jsonb(live)->>'sharing_blocked')::boolean,false)`, [id, revision, digest(token.data)]);
       if (!shared.rowCount) throw new MemberError(404, "NOT_FOUND");
     }
     return own;
@@ -93,7 +99,14 @@ export function createCapsuleDiscussion(pool: Pool, dataset: DatasetMode, origin
         const canManage = await authorize(client, request, id, revision.data, user, false);
         const thread = await client.query("SELECT closed FROM member_capsule_thread WHERE capsule_id = $1", [id]);
         const posts = await client.query(`SELECT p.*, u.name, u.active FROM member_capsule_post p JOIN "user" u ON u.id = p.author_user_id
-          WHERE p.capsule_id = $1 AND p.revision = $2 ORDER BY p.created_at, p.id LIMIT $3`, [id, revision.data, DISCUSSION_LIMITS.posts]);
+          JOIN member_capsule_revision r ON r.capsule_id=p.capsule_id AND r.revision=p.revision
+          WHERE p.capsule_id=$1 AND NOT COALESCE((to_jsonb(r)->>'sharing_blocked')::boolean,false)
+          AND (EXISTS (SELECT 1 FROM member_capsule_share s
+            JOIN member_capsule_publication context ON context.share_id=s.id AND context.capsule_id=s.capsule_id AND context.revision=$2
+            JOIN member_capsule_publication visible ON visible.share_id=s.id AND visible.capsule_id=s.capsule_id AND visible.revision=p.revision
+            WHERE s.capsule_id=$1 AND ($4::boolean OR s.token_hash=$5))
+            OR ($4::boolean AND p.revision=$2))
+          ORDER BY p.created_at,p.id LIMIT $3`, [id, revision.data, DISCUSSION_LIMITS.posts,canManage,digest(request.headers.get("x-capsule-token")??"")]);
         return memberJson(discussionSchema.parse({ capsuleId: id, revision: revision.data, closed: thread.rows[0]?.closed ?? false, viewer: user ? { id: user.id, name: user.name } : null, canManage,
           posts: posts.rows.map(row => ({ id: row.id, revision: Number(row.revision), authorName: row.withdrawn_at || row.hidden_at || !row.active ? null : row.name,
             body: row.withdrawn_at || row.hidden_at || !row.active ? null : row.body, createdAt: row.created_at.toISOString(), withdrawnAt: row.withdrawn_at?.toISOString() ?? null, own: row.author_user_id === user?.id })) }));

@@ -21,7 +21,7 @@ afterEach(() => { cleanup(); vi.unstubAllGlobals(); vi.useRealTimers(); });
 async function open(value: Discussion = data, cache?: DiscussionDraftStore) {
   fetchMock.mockResolvedValueOnce(Response.json(value));
   const result = render(<CapsuleDiscussion capsuleId={capsuleId} revision={1} token={token} draftCache={cache} />);
-  await screen.findByText("この版のコメントはまだありません。");
+  await screen.findByText("コメントはまだありません。");
   return result;
 }
 describe("共有版の会話", () => {

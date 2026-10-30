@@ -31,7 +31,7 @@ try {
     "postgres:17-alpine@sha256:b0f9560a2de083e2cc7382e75f808c7381a32852a7ec49117deedb300e552b24"]);
   // Docker can create a container even if publishing its port fails.
   created = docker(["inspect", "--format", "{{.Id}}", container]).status === 0;
-  if (run.status !== 0) throw new Error("Dedicated member PostgreSQL could not start (check port 55432)");
+  if (run.status !== 0) throw new Error("Dedicated member PostgreSQL could not start");
   let ready = false;
   for (let attempt = 0; attempt < 30; attempt++) {
     if (docker(["exec", container, "pg_isready", "-U", "gk_member", "-d", "graph_member_test"]).status === 0) { ready = true; break; }
@@ -40,7 +40,7 @@ try {
   if (!ready) throw new Error("Dedicated member PostgreSQL did not become ready");
   child = spawn("node", browserTests
     ? ["--import", "tsx", "scripts/test-member-browser.ts", ...process.argv.slice(2).filter(arg => arg !== "--capsules" && arg !== "--e2e" && arg !== "--community" && arg !== "--safety" && arg !== "--operations" && arg !== "--accounts")]
-    : ["node_modules/vitest/vitest.mjs", "run", ...(capsuleTests ? ["tests/capsule-document.integration.test.ts"] : communityTests ? [accountTests ? "tests/public-profiles.integration.test.ts" : operationsTests ? "tests/site-operations.integration.test.ts" : safetyTests ? "tests/community-safety.integration.test.ts" : "tests/community.integration.test.ts"] : ["tests/member.integration.test.ts", "tests/member-cold.integration.test.ts"]), "--maxWorkers=1", "--no-file-parallelism"], { env, stdio: "inherit" });
+    : ["node_modules/vitest/vitest.mjs", "run", ...(capsuleTests ? ["tests/capsule-document.integration.test.ts"] : communityTests ? [accountTests ? "tests/public-profiles.integration.test.ts" : operationsTests ? "tests/site-operations.integration.test.ts" : safetyTests ? "tests/community-safety.integration.test.ts" : "tests/community.integration.test.ts"] : ["tests/member.integration.test.ts", "tests/member-cold.integration.test.ts"]), "--maxWorkers=1", "--no-file-parallelism", "--exclude", "backups/**", "--exclude", ".local/**"], { env, stdio: "inherit" });
   const timer = setTimeout(() => child?.kill("SIGTERM"), browserTests ? 960_000 : 180_000);
   const code = await new Promise<number>((resolve, reject) => { child!.once("error", reject); child!.once("exit", code => resolve(code ?? 1)); });
   clearTimeout(timer);

@@ -35,8 +35,8 @@ export function useDiscussionDraft(): DiscussionDraftStore {
   }), []);
 }
 const textMessages = capsuleDiscussionLabels();
-export default function CapsuleDiscussion({ capsuleId, revision, token, userId, draftCache, onUnauthorized, showSettings = true, refreshVersion = 0 }: {
-  capsuleId: string; revision: number; token?: string; userId?: string; draftCache?: DiscussionDraftStore; onUnauthorized?: () => void; showSettings?: boolean; refreshVersion?: number;
+export default function CapsuleDiscussion({ capsuleId, revision, token, userId, draftCache, onUnauthorized, showSettings = true, refreshVersion = 0, revisionUrl }: {
+  capsuleId: string; revision: number; token?: string; userId?: string; draftCache?: DiscussionDraftStore; onUnauthorized?: () => void; showSettings?: boolean; refreshVersion?: number; revisionUrl?: (revision: number) => string;
 }) {
   const { locale } = useUiLocale();
   const text = capsuleDiscussionLabels(locale);
@@ -167,6 +167,7 @@ export default function CapsuleDiscussion({ capsuleId, revision, token, userId, 
       {data.posts.length === 0 ? <div className={css.empty}><p>{text.empty}</p>{!data.closed && <p>{text.invitation}</p>}</div> :
         <ol className={css.posts}>{data.posts.map(post => <li className={css.post} key={post.id}>
           <div className={css.postHeader}><strong>{post.authorName ?? ""}</strong><time dateTime={post.createdAt}>{new Date(post.createdAt).toLocaleString(locale === "en" ? "en-GB" : "ja-JP", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" })}</time></div>
+          <div className={css.muted}>{revisionUrl ? <a href={revisionUrl(post.revision)} target="_blank" rel="noopener noreferrer">{locale === "en" ? `View version ${post.revision}` : `投稿時の図 · 保存版 ${post.revision}`}</a> : <span>{locale === "en" ? `Version ${post.revision}` : `保存版 ${post.revision} へのコメント`}</span>}</div>
           <p className={css.postBody}>{post.body ?? (post.withdrawnAt ? text.withdrawn : text.hidden)}</p>
           {post.own && !post.withdrawnAt && <div className={css.postFooter}><button className={`${css.button} ${css.quiet}`} disabled={busy} onClick={() => setConfirm(post.id)}>{text.withdraw}</button></div>}
         </li>)}</ol>}

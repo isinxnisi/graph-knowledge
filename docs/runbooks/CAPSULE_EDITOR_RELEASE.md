@@ -187,3 +187,14 @@ migrationは単一transactionと既存advisory lockで行い、失敗時はDDL�
 完了報告には確認URLと短い操作手順、固定SHA・build ID、使用したimageがあれば識別情報、ソース／隔離検証結果、3200／HTTPS betaの反映状態、migration／capability／代表操作、実画面・操作記録、未確認事項を記載する。ユーザーによる体験評価とAIの実操作評価は区別し、本番VPSは今回更新していないことを明記する。接続または管理者実行が残る場合は、必要な実行箇所と固定資材だけを引き継ぎ、公開済みとしない。
 
 014以降の再取得は、既存MEMBER_AUTH_SECRETとlink ID等から用途を分けたHMACを生成し、DBのhashと一致した場合にのみ所有者へ返す。秘密値そのものは変更・出力しない。secret更新時は旧リンクのhash閲覧を保持するが、元のURLを再生成できなくなるため必要に応じて所有者が作り直す。014は既存リンクを一括再発行しない。
+
+
+## 2026-10-30: 同一URLへの共有反映とOGP（015）
+
+今回の終了点は既存3200／HTTPS β。本番VPSは更新しない。015は適用済み000〜014を書き換えず追加する。`--capsule-publications`を既存の全明示オプションに加え、対象private runtimeの正しい`--confirm-origin https://graph-beta.isinxnisi.com`で適用する。015は014を前提とする。
+
+実施前にAutopilot holdと固定SHAを確認し、既存private設定・起動PID・build・Docker・KG・AI artifactを記録する。実DBのread-only exported snapshotによるbackupを別DBへ復元し、全旧列・行のfingerprintと000〜014 checksumを照合する。復元先へ015を適用・再適用して16件のledgerと旧値の保存を検証する。切替時も既存Webを正常終了し、fresh backup・別DB復元後に015を明示適用・再実行する。会員DB全体のresetやliveへのrestoreはしない。
+
+015は共有linkの`token_revision`・更新日時と公開履歴tableを追加し、現に有効なリンクだけをbackfillする。停止済み／コミュニティ限定のsnapshotを公開履歴へ含めない。Webのロールバック時もDBを巻き戻さない。ただし旧Webでは新形式URL・共有更新を扱えず、更新済みリンクの再取得も旧token算出になるため、互換旧Webへの長時間rollbackを通常運用にしない。停止したURLは新HTML・画像・JSON・履歴で読めないことを確認する。
+
+反映後は同じURLへの明示更新、旧版を見たままのコメント、履歴の範囲、共有停止、固定コミュニティ掲載、HTML metadataとPNGを確認する。SNS側のキャッシュ更新はoriginの反映と分けて記録する。旧fragmentリンクの閲覧は残るが、OGP付きで渡すには共有画面で新形式URLをコピーする。

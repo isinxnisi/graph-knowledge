@@ -291,7 +291,7 @@ it("closing the neighbors dialog cancels pagination so a late page cannot reopen
   const page={...examples.neighbors,centerId:node,claims:[examples.neighbors.claims[0]],page:{hasMore:true,nextCursor:"next-page"}} as NeighborsResponse;
   let resolve!:(value:NeighborsResponse)=>void;mocks.neighbors.mockResolvedValueOnce(page).mockImplementationOnce(()=>new Promise(done=>{resolve=done;}));
   render(<CapsuleStudio capsule={value} onSave={saveResult}/>);click("Edit");act(()=>mocks.canvas!.onEntity(node));click("Details & evidence");click("Add related KG entities");
-  await screen.findByRole("dialog",{name:"KG neighbors"});click("More neighbors");await waitFor(()=>expect(mocks.neighbors).toHaveBeenCalledTimes(2));
+  await screen.findByRole("dialog",{name:"KG neighbors"});await waitFor(()=>expect(mocks.neighbors).toHaveBeenCalledTimes(2));
   const signal=mocks.neighbors.mock.calls[1][2] as AbortSignal;click("Close neighbors");expect(signal.aborted).toBe(true);
   await act(async()=>{resolve(page);});expect(screen.queryByRole("dialog",{name:"KG neighbors"})).toBeNull();expect(button("Save").hasAttribute("disabled")).toBe(false);
 });

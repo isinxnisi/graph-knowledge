@@ -8,12 +8,13 @@ import { capsuleInsertionPoint } from "../lib/client/capsule-insertion";
 import { capsuleSchema, type LocalCapsule } from "../lib/client/local-capsules";
 import { emptyGraph, type Selection } from "../lib/client/graph-state";
 import { viewportCenter, type GraphView } from "../lib/client/graph-view";
-import { ClientApiError, fetchClaim, fetchDatasetRevision, fetchEntity, fetchNeighbors, searchEntities } from "../lib/client/api";
+import { ClientApiError, fetchClaim, fetchDatasetRevision, fetchEntity, searchEntities } from "../lib/client/api";
 import { useUiLocale } from "../lib/client/ui-locale";
 import { readingHref } from "../lib/client/reading-reference";
 import { relationLabel, formatPeriod, polarityLabel, qualificationLabel } from "../lib/client/format";
 import GraphCanvas, { type GraphCanvasHandle, type GraphContextMenuRequest } from "./GraphCanvas";
 import { CapsuleModal, useCapsuleSurfaceClose } from "./CapsuleSurface";
+import CapsuleNeighborPicker from "./CapsuleNeighborPicker";
 import CapsuleContextMenu from "./CapsuleContextMenu";
 import CapsuleEditorForm, { type CapsuleEditorDraft as Editor } from "./CapsuleEditorForm";
 import { ClaimCard } from "./ClaimDetails";
@@ -57,7 +58,7 @@ export default function CapsuleStudio({ capsule, isNew = false, readOnly = false
   const relationBaselines = useRef(new Map<string,Editor>());
   const [relationFormsChanged,setRelationFormsChanged] = useState(false);
   const [query, setQuery] = useState(""), [results, setResults] = useState<EntityDetail[]>([]), [searched, setSearched] = useState(false);
-  const [neighbors, setNeighbors] = useState<{ node: CapsuleNode; value: NeighborsResponse } | null>(null);
+  const [neighbors, setNeighbors] = useState<CapsuleNode | null>(null);
   const [comparison, setComparison] = useState<Comparison | null>(null);
   const [busy, setBusy] = useState(false), [saving, setSaving] = useState(false), [error, setError] = useState<string | null>(null), [message, setMessage] = useState<string | null>(null);
   const [leave, setLeave] = useState<"close" | "discard" | string | null>(null), [shareOpen, setShareOpen] = useState(false);
@@ -85,6 +86,11 @@ export default function CapsuleStudio({ capsule, isNew = false, readOnly = false
   const newlyAdded = useRef<string | null>(null);
   const [beforeEdit, setBeforeEdit] = useState({ capsule: capsuleClone(capsule), selected: [] as string[], selection: null as Selection });
   const historyRef = useRef(history); useEffect(() => { historyRef.current = history; }, [history]);
+  const navigateHistory=useCallback((redo=false)=>{
+    const next=redo?redoCapsule(historyRef.current):undoCapsule(historyRef.current);
+    const doc=next.present.document!,keys=new Set([...doc.nodes,...doc.relations,...doc.texts].map(item=>item.key));
+    historyRef.current=next;setHistory(next);setSelected(prior=>prior.filter(key=>keys.has(key)));setSelection(prior=>prior&&keys.has(prior.id)?prior:null);setGeneration(v=>v+1);
+  },[]);
   const value = history.present, contentDocument = value.document!;
   const presentation = useMemo(() => capsulePresentation(contentDocument, locale), [contentDocument, locale]);
   const graph = useMemo(() => emptyGraph(generation), [generation]);
@@ -124,11 +130,11 @@ export default function CapsuleStudio({ capsule, isNew = false, readOnly = false
   }, [commentDraft]);
   useEffect(() => {
     const keyboard = (event: KeyboardEvent) => {
-      if (event.isComposing || !editing || locked || busy || editor || search || leave || !(event.ctrlKey || event.metaKey) || event.key.toLowerCase() !== "z" || (event.target as Element)?.closest("input,textarea,[contenteditable=true]")) return;
-      event.preventDefault(); setHistory(h => event.shiftKey ? redoCapsule(h) : undoCapsule(h)); setGeneration(v => v + 1);
+      if (event.isComposing || !editing || locked || busy || editor || search || neighbors || leave || !(event.ctrlKey || event.metaKey) || event.key.toLowerCase() !== "z" || (event.target as Element)?.closest("input,textarea,[contenteditable=true]")) return;
+      event.preventDefault(); navigateHistory(event.shiftKey);
     };
     window.addEventListener("keydown", keyboard); return () => window.removeEventListener("keydown", keyboard);
-  }, [editing, locked, busy, editor, search, leave]);
+  }, [editing, locked, busy, editor, search, neighbors, leave, navigateHistory]);
   const guardNavigation = editing || !!commentDraft?.hasDraft();
   const navigationGuard = useRef<{ token: string; active: boolean } | null>(null);
   useEffect(() => {
@@ -316,29 +322,20 @@ export default function CapsuleStudio({ capsule, isNew = false, readOnly = false
     if (comparison.claim) doc.relations = doc.relations.map(r => r.key === comparison.key ? { ...r, origin: { kind: "kg", id: comparison.claim!.id, capturedAt, revision: comparison.revision ?? null, snapshot: snapshotClaim(comparison.claim!), detail: comparison.claim! } } : r);
     commit(withDocument(source, doc)); setComparison(null);
   }
-  function openNeighbors(more = false) {
-    const n = more ? neighbors?.node : node;
-    if (!n || n.origin.kind === "local") return;
-    const id = n.origin.id;
-    void run(async signal => {
-      const result = await fetchNeighbors(id, more ? neighbors?.value.page.nextCursor ?? null : null, signal);
-      if (result.centerId !== id || result.claims.some(c => c.subjectId !== id && c.objectId !== id)) throw Error();
-      if (!signal.aborted) setNeighbors({ node: n, value: result });
-    });
-  }
-  function addNeighbor(id: string) {
-    if (!neighbors) return;
-    const source = current(), doc = capsuleClone(source.document!), claim = neighbors.value.claims.find(c => c.id === id);
-    if (!claim) return;
-    const capturedAt = new Date().toISOString();
-    for (const entityId of [claim.subjectId, claim.objectId]) {
-      if (doc.nodes.some(n => n.origin.kind !== "local" && n.origin.id === entityId)) continue;
-      const e = neighbors.value.nodes.find(n => n.id === entityId); if (!e) return;
-      doc.nodes.push({ key: e.id, title: e.name, description: e.description ?? "", badge: "", origin: { kind: "kg", id: e.id, capturedAt, revision: neighbors.value.revision ?? null, snapshot: snapshotEntity(e), detail: null, neighbors: { state: "unknown", scope: "not queried", claimIds: [] } } });
+  function openNeighbors() { if (node && node.origin.kind !== "local") setNeighbors(node); }
+  function addNeighbors(result: NeighborsResponse, ids: string[]) {
+    const source=current(), doc=capsuleClone(source.document!), capturedAt=new Date().toISOString();
+    for(const id of new Set(ids)) {
+      const claim=result.claims.find(c=>c.id===id); if(!claim) return;
+      for(const entityId of [claim.subjectId,claim.objectId]) {
+        if(doc.nodes.some(n=>n.origin.kind!=="local"&&n.origin.id===entityId)) continue;
+        const e=result.nodes.find(n=>n.id===entityId); if(!e)return;
+        doc.nodes.push({key:e.id,title:e.name,description:e.description??"",badge:"",origin:{kind:"kg",id:e.id,capturedAt,revision:result.revision??null,snapshot:snapshotEntity(e),detail:null,neighbors:{state:"unknown",scope:"not queried",claimIds:[]}}});
+      }
+      if(!doc.relations.some(r=>r.origin.kind==="kg"&&r.origin.id===id)) doc.relations.push({key:id,source:doc.nodes.find(n=>n.origin.kind!=="local"&&n.origin.id===claim.subjectId)!.key,target:doc.nodes.find(n=>n.origin.kind!=="local"&&n.origin.id===claim.objectId)!.key,label:"",note:"",origin:{kind:"kg",id,capturedAt,revision:result.revision??null,snapshot:snapshotClaim(claim),detail:null}});
     }
-    if (!doc.relations.some(r => r.origin.kind === "kg" && r.origin.id === id)) doc.relations.push({ key: id, source: doc.nodes.find(n => n.origin.kind !== "local" && n.origin.id === claim.subjectId)!.key, target: doc.nodes.find(n => n.origin.kind !== "local" && n.origin.id === claim.objectId)!.key, label: "", note: "", origin: { kind: "kg", id, capturedAt, revision: neighbors.value.revision ?? null, snapshot: snapshotClaim(claim), detail: null } });
-    const added = doc.nodes.find(n => !source.document!.nodes.some(previous => previous.key === n.key));
-    if (commit(withDocument(source, doc), added?.key) && added) { setSelected([added.key]); setSelection({ kind: "entity", id: added.key }); }
+    const added=doc.nodes.filter(n=>!source.document!.nodes.some(previous=>previous.key===n.key));
+    if(commit(withDocument(source,doc),added[0]?.key)) {setNeighbors(null);if(added.length){setSelected(added.map(n=>n.key));setSelection({kind:"entity",id:added[0].key});}}
   }
   function finishLeave() {
     const next = leave; dirtyRef.current = false;
@@ -427,7 +424,7 @@ export default function CapsuleStudio({ capsule, isNew = false, readOnly = false
     <div className={css.body} data-inspector={inspector || undefined} inert={saving}>
       <div className={css.canvasArea}>
         <div className={css.toolRail} role="toolbar" aria-label={t("Capsuleの操作", "Capsule tools")}>
-          {editing && <><button title={t("元に戻す · Ctrl/⌘ Z", "Undo · Ctrl/⌘ Z")} aria-label={t("元に戻す", "Undo")} disabled={!history.past.length || busy} onClick={() => { setHistory(undoCapsule); setGeneration(v => v + 1); }}><Icon name="undo"/></button><button title={t("やり直す · Ctrl/⌘ Shift Z", "Redo · Ctrl/⌘ Shift Z")} aria-label={t("やり直す", "Redo")} disabled={!history.future.length || busy} onClick={() => { setHistory(redoCapsule); setGeneration(v => v + 1); }}><Icon name="redo"/></button><span className={css.toolDivider}/><button title={t("独自Entityを追加", "Add custom entity")} aria-label={t("独自Entityを追加", "Add custom entity")} disabled={busy} onClick={() => create("node")}><Icon name="plus"/></button><button title={t("KGから検索して追加", "Search the KG")} aria-label={t("KGから検索して追加", "Search the KG")} disabled={busy} onClick={startSearch}><Icon name="search"/></button><button title={t("テキストを追加", "Add text")} aria-label={t("テキストを追加", "Add text")} disabled={busy} onClick={() => create("text")}><Icon name="text"/></button><span className={css.toolDivider}/></>}
+          {editing && <><button title={t("元に戻す · Ctrl/⌘ Z", "Undo · Ctrl/⌘ Z")} aria-label={t("元に戻す", "Undo")} disabled={!history.past.length || busy} onClick={() => navigateHistory()}><Icon name="undo"/></button><button title={t("やり直す · Ctrl/⌘ Shift Z", "Redo · Ctrl/⌘ Shift Z")} aria-label={t("やり直す", "Redo")} disabled={!history.future.length || busy} onClick={() => navigateHistory(true)}><Icon name="redo"/></button><span className={css.toolDivider}/><button title={t("独自Entityを追加", "Add custom entity")} aria-label={t("独自Entityを追加", "Add custom entity")} disabled={busy} onClick={() => create("node")}><Icon name="plus"/></button><button title={t("KGから検索して追加", "Search the KG")} aria-label={t("KGから検索して追加", "Search the KG")} disabled={busy} onClick={startSearch}><Icon name="search"/></button><button title={t("テキストを追加", "Add text")} aria-label={t("テキストを追加", "Add text")} disabled={busy} onClick={() => create("text")}><Icon name="text"/></button><span className={css.toolDivider}/></>}
           <button aria-label={t("内容一覧", "Contents")} title={t("内容一覧", "Contents")} aria-pressed={contentsOpen} onClick={() => setContentsOpen(v => !v)}><Icon name="list"/></button><button aria-label={t("詳細と根拠", "Details & evidence")} title={t("詳細と根拠", "Details & evidence")} aria-pressed={inspector} onClick={() => setInspector(v => !v)}><Icon name="panel"/></button>
         </div>
         {selection && <div className={css.selectionTools}><span>{selected.length > 1 ? t(`${selected.length}要素`, `${selected.length} elements`) : node?.title ?? (text ? t("テキスト", "Text") : t("関係", "Relation"))}</span>{editing && <button aria-label={t("選択対象の操作", "Selection actions")} title={t("選択対象の操作", "Selection actions")} onClick={event => { const rect = event.currentTarget.getBoundingClientRect(); setMenu({kind:selection.kind === "relation" ? "edge" : "node",id:selection.id,selectedKeys:selected,clientX:rect.left,clientY:rect.bottom+6,position:canvas.current?.capture()?.center ?? {x:0,y:0},source:"keyboard"}); }}><Icon name="more"/></button>}<button aria-label={t("選択の詳細", "Selection details")} onClick={() => setInspector(true)}><Icon name="panel"/></button></div>}
@@ -470,7 +467,7 @@ export default function CapsuleStudio({ capsule, isNew = false, readOnly = false
     </CapsuleModal>}
     {editor && <CapsuleModal wide title={formTitle} dismissOnBackdrop={!formChanged} onClose={() => setEditor(null)}>{error && <p role="alert" className={css.formError}>{error}</p>}<CapsuleEditorForm value={editor} locale={locale} direction={direction} onChange={changeEditor} onSubmit={submitEditor} onCancel={() => setEditor(null)} anchor={node?.title} relationChoices={relations.map(r => ({key:r.key,label:r.label || (r.origin.kind === "kg" ? relationLabel(r.origin.snapshot,locale) : t("独自の関係", "Local relation")),choose:() => chooseRelation(r.key)}))}/></CapsuleModal>}
     {search && <CapsuleModal title={t("KGから追加", "Add from KG")} onClose={() => { active.current?.abort(); setBusy(false); setSearch(false); }}><form className={css.form} onSubmit={event => { event.preventDefault(); void run(async signal => { const result = await searchEntities(query,signal); if (!signal.aborted) { setResults(result.items.map(n => entityDetailSchema.parse(n))); setSearched(true); } }); }}><header className={css.dialogHeading}><h3>{t("KGから追加", "Add from KG")}</h3><button type="button" aria-label={t("検索を閉じる", "Close search")} onClick={() => { active.current?.abort(); setBusy(false); setSearch(false); }}><Icon name="close"/></button></header>{node && <p className={css.contextHint}><Icon name="link"/>{t(`「${node.title}」とつなぐ`, `Connect to “${node.title}”`)}</p>}<div className={css.searchRow}><input aria-label={t("名前・別名", "Name or alias")} data-autofocus required maxLength={100} placeholder={t("名前や別名で検索", "Search by name or alias")} value={query} onChange={event => setQuery(event.target.value)} onKeyDown={event => { if (event.key === "Enter" && (event.nativeEvent.isComposing || event.keyCode === 229)) event.preventDefault(); }}/><button disabled={busy} type="submit" data-variant="primary"><Icon name="search"/>{t("検索", "Search")}</button></div>{error && <p role="alert">{error}</p>}{busy && <p role="status">{t("検索中…", "Searching…")}</p>}{searched && !results.length && <p>{t("該当するEntityがありません。別の名前で試せます。", "No entities found. Try another name.")}</p>}<div className={css.resultList}>{results.map(e => { const exists = contentDocument.nodes.some(n => n.origin.kind !== "local" && n.origin.id === e.id); return <button type="button" key={e.id} disabled={exists} onClick={() => addEntity(e)}><div><strong>{e.name}</strong><p>{e.description}</p></div>{exists ? <span>{t("追加済み", "Included")}</span> : <Icon name="plus"/>}</button>; })}</div></form></CapsuleModal>}
-    {neighbors && editing && <CapsuleModal wide title={t("KGの関係先", "KG neighbors")} onClose={() => { active.current?.abort(); setBusy(false); setNeighbors(null); }}><header className={css.dialogHeading}><div><span className={css.eyebrow}>{t("KGの関係先", "KG neighbors")}</span><h3>{neighbors.node.title}</h3></div><button aria-label={t("関係先を閉じる", "Close neighbors")} onClick={() => { active.current?.abort(); setBusy(false); setNeighbors(null); }}><Icon name="close"/></button></header>{error && <p role="alert">{error}</p>}{!neighbors.value.claims.length && <p>{t("この取得範囲には関係がありません。", "No relations in this query scope.")}</p>}<div className={css.resultList}>{neighbors.value.claims.map(c => { const exists=contentDocument.relations.some(r => r.origin.kind === "kg" && r.origin.id === c.id); return <button key={c.id} disabled={exists || busy} onClick={() => addNeighbor(c.id)}><div><strong>{neighbors.value.nodes.find(n => n.id === (c.subjectId === (neighbors.node.origin.kind !== "local" ? neighbors.node.origin.id : "") ? c.objectId : c.subjectId))?.name}</strong><p>{neighbors.value.nodes.find(n => n.id === c.subjectId)?.name} → {relationLabel(c,locale)} → {neighbors.value.nodes.find(n => n.id === c.objectId)?.name}</p><small>{[qualificationLabel(c,locale),formatPeriod(c.period,locale),polarityLabel(c,locale)].filter(Boolean).join(" · ")}</small></div>{exists ? <span><Icon name="check"/>{t("追加済み", "Included")}</span> : <Icon name="plus"/>}</button>; })}</div>{neighbors.value.page.hasMore && <button disabled={busy} onClick={() => openNeighbors(true)}>{t("次の関係先", "More neighbors")}</button>}</CapsuleModal>}
+    {neighbors && editing && <CapsuleNeighborPicker key={neighbors.key} node={neighbors} document={contentDocument} onAdd={addNeighbors} onClose={()=>setNeighbors(null)}/>}
     {editing && (byteSize > 1_500_000 || contentDocument.nodes.length > 175 || contentDocument.relations.length > 350 || capacity && capacity.totalBytes-capacity.storageBytes < 2_000_000) && <p className={css.notice}>{t("保存容量の上限に近づいています。", "Approaching the storage limit.")} {Math.ceil(byteSize/1000)} / 2000 KB</p>}
   </section>;
 }
