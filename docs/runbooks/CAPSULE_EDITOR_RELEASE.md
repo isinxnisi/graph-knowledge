@@ -196,3 +196,12 @@ migrationは単一transactionと既存advisory lockで行い、失敗時はDDL�
 015は共有linkの`token_revision`・更新日時と公開履歴tableを追加し、現に有効なリンクだけをbackfillする。停止済み／コミュニティ限定のsnapshotを公開履歴へ含めない。Webのロールバック時もDBを巻き戻さない。ただし旧Webでは新形式URL・共有更新を扱えず、更新済みリンクの再取得も旧token算出になるため、互換旧Webへの長時間rollbackを通常運用にしない。停止したURLは新HTML・画像・JSON・履歴で読めないことを確認する。
 
 反映後は同じURLへの明示更新、旧版を見たままのコメント、履歴の範囲、共有停止、固定コミュニティ掲載、HTML metadataとPNGを確認する。SNS側のキャッシュ更新はoriginの反映と分けて記録する。旧fragmentリンクの閲覧は残るが、OGP付きで渡すには共有画面で新形式URLをコピーする。
+
+
+## 閲覧・ごみ箱・掲載導線の更新（018、2026-10-30追記）
+
+Googleプロフィール反映済みの実環境は000〜017／18件であり、冒頭の011〜015公開時点の番号を現在の配置に決め打ちしない。[仕上げ記録](../verification/CAPSULE_READING_REFINEMENT_20261030.md)の固定SHAと直前実環境を照合する。今回の追加は018-capsule-trash.sqlのみ。旧migrationのchecksumを変更しない。
+
+`--capsule-trash --confirm-origin ORIGIN` を既存の全系列オプション（Google画像・公式プロフィールを含む）と併せて実行する。000〜017のchecksum一致を確認し、対象環境のprivate runtimeとoriginを使う。018はnullable列とactive-owner索引を追加するだけで、既存のCapsule・共有・コミュニティ・会員を削除しない。実際のごみ箱移動は所有者がUIで指示した対象だけ。
+
+backupを別DBへ復元し、既存全tableの列・行を比較する。018後も旧列の全行が一致し、trashed_atが全件NULL、ledger19件となること、再実行で変化しないことを確認する。ごみ箱内の内容を旧Webが表示しない保証がないため、018の利用開始後に旧Webへ機械的に戻さない。データを保持したまま互換性のある修正版で復旧する。

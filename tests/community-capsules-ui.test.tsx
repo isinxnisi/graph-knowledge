@@ -19,6 +19,7 @@ const base='/'+community.id+'?tab=capsules';
 const mutate=vi.fn(),onDirty=vi.fn(),onThread=vi.fn();
 const props={community,user,dataset:'demo' as const,route:base,blocked:false,busy:false,mutate,onDirty,onThread};
 beforeEach(()=>{
+ vi.stubGlobal('ResizeObserver',class {observe(){} disconnect(){}});
  HTMLDialogElement.prototype.showModal=function(){this.open=true;};HTMLDialogElement.prototype.close=function(){this.open=false;};
  Object.defineProperty(document,'hidden',{configurable:true,value:false});vi.spyOn(window,'confirm').mockReturnValue(true);
  mutate.mockReset().mockResolvedValue({ok:true});onDirty.mockReset();onThread.mockReset();
@@ -27,7 +28,7 @@ beforeEach(()=>{
   return schema.parse(value);
  });
 });
-afterEach(()=>{cleanup();vi.restoreAllMocks();});
+afterEach(()=>{cleanup();vi.restoreAllMocks();vi.unstubAllGlobals();});
 async function preview(){
  fireEvent.click(await screen.findByRole('button',{name:'Publish your Capsule'}));
  const choice=await screen.findByRole('dialog',{name:'Choose a Capsule to publish'});
@@ -50,10 +51,11 @@ it('内容全体と公開範囲を確認するまで送信せず、固定版・�
  render(<CommunityCapsules {...props}/>);const dialog=await preview();
  expect(within(dialog).getByRole('region',{name:'Fixed Capsule'})).toBeDefined();
  expect(mutate).not.toHaveBeenCalled();
- const publish=within(dialog).getByRole('button',{name:'Publish this version'});expect((publish as HTMLButtonElement).disabled).toBe(true);
+ const publish=within(dialog).getByRole('button',{name:'Publish in this community'});expect((publish as HTMLButtonElement).disabled).toBe(false);
+ expect(within(dialog).queryByRole('checkbox')).toBeNull();
  fireEvent.click(within(dialog).getByRole('radio',{name:'Everyone (public)'}));
  fireEvent.change(within(dialog).getByLabelText('Introduction in this community'),{target:{value:'Our discovery'}});
- fireEvent.click(within(dialog).getByRole('checkbox',{name:'I have reviewed this version and its audience'}));
+
  fireEvent.click(publish);
  await waitFor(()=>expect(mutate).toHaveBeenCalledTimes(1));
  expect(mutate).toHaveBeenCalledWith('/'+community.id+'/capsules',{expectedRevision:7,capsuleId:capsule.id,capsuleRevision:2,audience:'public',description:'Our discovery'},true);
@@ -62,8 +64,8 @@ it('内容全体と公開範囲を確認するまで送信せず、固定版・�
 it('結果不明の掲載は入力と版を固定し、同じpayloadだけ再送する',async()=>{
  mutate.mockResolvedValueOnce({ok:false,unknown:true,code:'RESULT_UNKNOWN'}).mockResolvedValue({ok:true});
  const {rerender}=render(<CommunityCapsules {...props}/>);const dialog=await preview();
- fireEvent.click(within(dialog).getByRole('checkbox'));
- fireEvent.click(within(dialog).getByRole('button',{name:'Publish this version'}));
+
+ fireEvent.click(within(dialog).getByRole('button',{name:'Publish in this community'}));
  const retry=await within(dialog).findByRole('button',{name:'Retry same request'});
  expect((within(dialog).getByLabelText('Introduction in this community') as HTMLTextAreaElement).disabled).toBe(true);
  rerender(<CommunityCapsules {...props} community={{...community,revision:8}}/>);
@@ -74,10 +76,11 @@ it('掲載更新は本人の最新版を再取得し、掲載の期待版だけ�
  const current={...capsule,revision:4,content:{...capsule.content,title:'Latest private title'}};
  api.request.mockImplementation(async(path:string,schema:z.ZodType)=>schema.parse(path==='/api/member/capsules/'+capsule.id?{capsule:current}:path==='/api/communities/capsules/'+listing.id?{listing,capsule}:{listings:[listing],nextCursor:null,partial:false}));
  render(<CommunityCapsules {...props} route={base+'&listing='+listing.id}/>);
+ fireEvent.click(await screen.findByLabelText('Publication actions'));
  fireEvent.click(await screen.findByRole('button',{name:'Update published version'}));
  const dialog=await screen.findByRole('dialog',{name:'Update published version'});
  expect(within(dialog).getAllByText('Latest private title').length).toBeGreaterThan(0);
- expect(mutate).not.toHaveBeenCalled();fireEvent.click(within(dialog).getByRole('checkbox'));
+ expect(mutate).not.toHaveBeenCalled();
  fireEvent.click(within(dialog).getByRole('button',{name:'Update to this version'}));
  await waitFor(()=>expect(mutate).toHaveBeenCalledTimes(1));
  expect(mutate).toHaveBeenCalledWith('/capsules/'+listing.id+'/update',{expectedRevision:3,capsuleRevision:4,description:'Introduction',threadId:listing.threadId},true);
@@ -98,6 +101,7 @@ it('失効と非表示で旧読取を破棄し、再認可失敗時は本文を�
 it('掲載撤去は確認して送信し、失敗を成功表示しない',async()=>{
  mutate.mockResolvedValue({ok:false,unknown:false,code:'COMMUNITY_CHANGED'});
  render(<CommunityCapsules {...props} route={base+'&listing='+listing.id}/>);
+ fireEvent.click(await screen.findByLabelText('Publication actions'));
  fireEvent.click(await screen.findByRole('button',{name:'Withdraw listing'}));
  const dialog=await screen.findByRole('dialog',{name:'Withdraw Capsule listing'});expect(mutate).not.toHaveBeenCalled();
  fireEvent.click(within(dialog).getByRole('button',{name:'Confirm withdrawal'}));await within(dialog).findByRole('alert');
@@ -113,7 +117,7 @@ it('documentを除いた一覧から完全な内容を再取得し、その版�
  render(<CommunityCapsules {...props}/>);const dialog=await preview();
  expect(within(dialog).getByText('Local unpublished discovery')).toBeDefined();
  expect(api.request.mock.calls.some(c=>c[0]==='/api/member/capsules/'+capsule.id)).toBe(true);
- fireEvent.click(within(dialog).getByRole('checkbox'));fireEvent.click(within(dialog).getByRole('button',{name:'Publish this version'}));
+ fireEvent.click(within(dialog).getByRole('button',{name:'Publish in this community'}));
  await waitFor(()=>expect(mutate).toHaveBeenCalledTimes(1));expect(mutate.mock.calls[0][1].capsuleRevision).toBe(6);
 });
 it('migrationのない環境では掲載成功や選択画面を表示しない',async()=>{
@@ -127,6 +131,7 @@ it('会話の関連カードは固定版番号とその掲載へ戻るURLを持�
 });
 it('アーカイブ中も所有者は掲載を撤去でき、新版更新は停止する',async()=>{
  render(<CommunityCapsules {...props} community={{...community,status:'archived'}} route={base+'&listing='+listing.id}/>);
+ fireEvent.click(await screen.findByLabelText('Publication actions'));
  const withdraw=await screen.findByRole('button',{name:'Withdraw listing'});expect((withdraw as HTMLButtonElement).disabled).toBe(false);expect((screen.getByRole('button',{name:'Update published version'}) as HTMLButtonElement).disabled).toBe(true);
 });
 it('掲載更新でcursorが失効したら最初の一覧から再開できる',async()=>{
@@ -137,4 +142,13 @@ it('掲載更新でcursorが失効したら最初の一覧から再開できる'
  render(<CommunityCapsules {...props}/>);fireEvent.click(await screen.findByRole('button',{name:'Next page'}));
  fireEvent.click(await screen.findByRole('button',{name:'Restart from the first page'}));
  await screen.findByRole('link',{name:'Read Capsule'});expect(api.request.mock.calls.at(-1)![0]).toBe('/api/communities/'+community.id+'/capsules');
+});
+
+it('公開先に合う会話だけを選べ、公開範囲変更で限定会話を誤って紐づけない',async()=>{
+ render(<CommunityCapsules {...props} threads={[{id:id(60),title:'Private discussion',audience:'cohort'},{id:id(61),title:'Public discussion',audience:'public'}]}/>);
+ const dialog=await preview(),select=within(dialog).getByLabelText('Related conversation (optional)');
+ fireEvent.change(select,{target:{value:id(60)}});expect((select as HTMLSelectElement).value).toBe(id(60));
+ fireEvent.click(within(dialog).getByRole('radio',{name:'Everyone (public)'}));
+ expect((select as HTMLSelectElement).value).toBe('');expect(within(select).queryByText(/Private discussion/)).toBeNull();
+ fireEvent.click(within(dialog).getByRole('button',{name:'Publish in this community'}));await waitFor(()=>expect(mutate).toHaveBeenCalledTimes(1));expect(mutate.mock.calls[0][1].threadId).toBeUndefined();
 });

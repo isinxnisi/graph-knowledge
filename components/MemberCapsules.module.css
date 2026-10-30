@@ -107,3 +107,5 @@
   .memberNavigation :global(.ui-icon) { display: none; }
 }
 .page:has(nav[aria-label="アカウントとコミュニティ"]),.page:has(nav[aria-label="Account and communities"]){max-width:1280px;padding-top:16px;flex:1}.memberContent{min-width:0}
+
+.backLink.backLink{border:0;background:transparent;padding:4px 0;box-shadow:none;min-height:32px;margin-bottom:12px}.readingTabs{margin-bottom:16px}.readingTabs button{min-height:36px}

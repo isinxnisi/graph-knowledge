@@ -1,3 +1,4 @@
+import {personSchema} from "./community";
 import { z } from "zod";
 import { memberCapsuleSchema } from "./member-capsule";
 
@@ -16,7 +17,7 @@ export const capsuleShareIssueSchema = z.strictObject({
 export const capsuleSharePublishSchema = z.strictObject({ expectedShareId: z.uuidv4(), expectedSharedRevision: z.number().int().positive().max(Number.MAX_SAFE_INTEGER), expectedRevision: z.number().int().positive().max(Number.MAX_SAFE_INTEGER) });
 export const capsuleShareRevokeSchema = z.strictObject({ expectedShareId: z.uuidv4() });
 export const capsuleShareIssuedSchema = z.object({ share: capsuleShareSchema, token: capsuleShareTokenSchema });
-export const sharedCapsuleSchema = z.object({ capsule: memberCapsuleSchema, currentRevision: z.number().int().positive().optional(), revisions: z.array(z.object({ revision: z.number().int().positive(), publishedAt: z.iso.datetime() })).max(SHARED_REVISION_LIMIT).default([]) });
+export const sharedCapsuleSchema = z.object({ capsule: memberCapsuleSchema, author: personSchema.nullable().optional(), currentRevision: z.number().int().positive().optional(), revisions: z.array(z.object({ revision: z.number().int().positive(), publishedAt: z.iso.datetime() })).max(SHARED_REVISION_LIMIT).default([]) });
 export function capsuleSharePath(token: string, revision?: number) { return `/shared/${encodeURIComponent(token)}${revision ? `?revision=${revision}` : ""}`; }
 export const sharedRevisionSchema = z.object({ revision: memberCapsuleSchema.shape.revision, updatedAt: memberCapsuleSchema.shape.updatedAt,
   title: z.string().min(1).max(80),

@@ -4,7 +4,7 @@ import { capsuleDocumentSchema, referencesMatchDocument } from "./capsule-docume
 
 // The server accepts content only. Identity, owner, revision and timestamps are
 // assigned by the server; local browser records are never uploaded implicitly.
-export const MEMBER_CAPSULE_LIMITS = { count: 100, entities: 200, claims: 400, title: 80, note: 4000, bytes: 2_000_000, totalBytes: 64_000_000 } as const;
+export const MEMBER_CAPSULE_LIMITS = { count: 20, entities: 200, claims: 400, title: 80, note: 4000, bytes: 2_000_000, totalBytes: 64_000_000 } as const;
 const ids = (limit: number) => z.array(z.uuidv4().transform(id => id.toLowerCase())).max(limit)
   .refine(values => new Set(values).size === values.length);
 export const memberCapsuleContentSchema = z.strictObject({

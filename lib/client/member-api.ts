@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { MEMBER_CAPSULE_LIMITS, memberCapsuleSchema, memberCapsuleContentSchema, memberCreateSchema, type MemberCapsule } from "../domain/member-capsule";
+import { memberCapsuleSchema, memberCapsuleContentSchema, memberCreateSchema, type MemberCapsule } from "../domain/member-capsule";
 import type { DatasetMode } from "../domain/dataset";
 import type { LocalCapsule } from "./local-capsules";
 
@@ -19,10 +19,10 @@ export async function memberRequest<T>(path: string, schema: z.ZodType<T>, optio
   return schema.parse(await response.json());
 }
 export const memberSummarySchema = z.strictObject(memberCapsuleSchema.shape).omit({ content: true }).extend({
-  content: z.strictObject(memberCapsuleContentSchema.shape).omit({ document: true }), hasDocument: z.boolean().optional(), shared: z.boolean().optional(), published: z.boolean().optional(),
+  content: z.strictObject(memberCapsuleContentSchema.shape).omit({ document: true }), trashedAt: z.string().nullable().optional(), hasDocument: z.boolean().optional(), shared: z.boolean().optional(), published: z.boolean().optional(),
 });
 export type MemberCapsuleSummary = z.infer<typeof memberSummarySchema>;
-export const memberListSchema = z.object({ capsules: z.array(memberSummarySchema).max(MEMBER_CAPSULE_LIMITS.count) });
+export const memberListSchema = z.object({ capsules: z.array(memberSummarySchema) });
 export const memberItemSchema = z.object({ capsule: memberCapsuleSchema });
 export const memberCreateResultSchema = memberItemSchema.extend({ replayed: z.boolean() });
 export function memberReaderCapsule(capsule: MemberCapsule, dataset: DatasetMode): LocalCapsule {

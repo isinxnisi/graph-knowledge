@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, type RefObject } from "react";
+import { useLayoutEffect, type RefObject } from "react";
 
 // Nested dialogs share one lock. A child closing must not unlock its parent,
 // and the final close restores the page rather than a keyboard-shifted offset.
@@ -27,7 +27,7 @@ function lockPage() {
 }
 
 export function useModalViewport(ref: RefObject<HTMLDialogElement | null>) {
-  useEffect(() => {
+  useLayoutEffect(() => {
     const dialog = ref.current;
     if (!dialog) return;
     const unlock = lockPage(), viewport = window.visualViewport;

@@ -25,7 +25,7 @@ export function createCapsuleSharing(pool: Pool, dataset: DatasetMode, origin: s
       const result = await pool.query(`SELECT ${projection} FROM member_capsule c
         JOIN "user" u ON u.id = c.owner_user_id AND u.active = true
         LEFT JOIN member_capsule_revision r ON r.capsule_id = c.id AND ($4::bigint IS NULL OR r.revision = $4)
-        WHERE c.id = $1 AND c.owner_user_id = $2 AND c.dataset = $3
+        WHERE (to_jsonb(c)->>'trashed_at') IS NULL AND c.id = $1 AND c.owner_user_id = $2 AND c.dataset = $3
         ORDER BY r.revision DESC`, [id, user.id, dataset, rawRevision]);
       if (!result.rows.length) throw new MemberError(404, "NOT_FOUND");
       if (rawRevision !== null) {
@@ -46,7 +46,7 @@ export function createCapsuleSharing(pool: Pool, dataset: DatasetMode, origin: s
         LEFT JOIN member_capsule_share s ON s.capsule_id = c.id
         LEFT JOIN member_capsule_revision r ON r.capsule_id = s.capsule_id AND r.revision = s.revision
         LEFT JOIN member_capsule_thread t ON t.capsule_id = c.id
-        WHERE c.id = $1 AND c.owner_user_id = $2 AND c.dataset = $3`, [id, user.id, dataset]);
+        WHERE (to_jsonb(c)->>'trashed_at') IS NULL AND c.id = $1 AND c.owner_user_id = $2 AND c.dataset = $3`, [id, user.id, dataset]);
       const row = result.rows[0];
       if (!row) throw new MemberError(404, "NOT_FOUND");
       const token = row.id && !row.sharing_blocked && !row.revision_blocked
@@ -63,7 +63,7 @@ export function createCapsuleSharing(pool: Pool, dataset: DatasetMode, origin: s
         const active = await client.query('SELECT active FROM "user" WHERE id = $1 FOR UPDATE', [user.id]);
         if (active.rows[0]?.active !== true) throw new MemberError(401, "UNAUTHENTICATED");
         // Serialize issuance/revocation with current-content update/deletion.
-        const current = await client.query("SELECT * FROM member_capsule WHERE id = $1 AND owner_user_id = $2 AND dataset = $3 FOR UPDATE", [id, user.id, dataset]);
+        const current = await client.query("SELECT * FROM member_capsule c WHERE (to_jsonb(c)->>'trashed_at') IS NULL AND id = $1 AND owner_user_id = $2 AND dataset = $3 FOR UPDATE", [id, user.id, dataset]);
         const row = current.rows[0];
         if (!row) throw new MemberError(404, "NOT_FOUND");
         if (row.sharing_blocked) throw new MemberError(403, "SHARING_BLOCKED");
@@ -117,7 +117,7 @@ export function createCapsuleSharing(pool: Pool, dataset: DatasetMode, origin: s
       try {
         await client.query("BEGIN");
         if (!(await client.query('SELECT active FROM "user" WHERE id=$1 FOR UPDATE',[user.id])).rows[0]?.active) throw new MemberError(401,"UNAUTHENTICATED");
-        const row=(await client.query("SELECT * FROM member_capsule WHERE id=$1 AND owner_user_id=$2 AND dataset=$3 FOR UPDATE",[id,user.id,dataset])).rows[0];
+        const row=(await client.query("SELECT * FROM member_capsule c WHERE (to_jsonb(c)->>'trashed_at') IS NULL AND id=$1 AND owner_user_id=$2 AND dataset=$3 FOR UPDATE",[id,user.id,dataset])).rows[0];
         if (!row) throw new MemberError(404,"NOT_FOUND");
         if (row.sharing_blocked) throw new MemberError(403,"SHARING_BLOCKED");
         if (Number(row.revision)!==input.expectedRevision) throw new MemberError(409,"REVISION_CONFLICT");

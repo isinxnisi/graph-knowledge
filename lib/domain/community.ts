@@ -5,7 +5,7 @@ export type Community=z.infer<typeof communitySchema>;
 export const communityCapsuleListingSchema=z.object({
  id:z.uuid(),communityId:z.uuid(),capsuleId:z.uuid(),capsuleRevision:z.number().int().positive(),revision:z.number().int().positive(),
  audience:z.enum(['public','cohort']),description:z.string(),createdAt:z.string(),updatedAt:z.string(),title:z.string(),
- entityCount:z.number().int().nonnegative(),claimCount:z.number().int().nonnegative(),canManage:z.boolean(),threadId:z.uuid().nullable()
+ entityCount:z.number().int().nonnegative(),claimCount:z.number().int().nonnegative(),canManage:z.boolean(),creator:personSchema.nullable().optional(),threadId:z.uuid().nullable()
 });
 export const communityResponse=z.object({
  community:communitySchema.optional(),communities:z.array(communitySchema).optional(),

@@ -1,20 +1,26 @@
 // @vitest-environment jsdom
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { cleanup, fireEvent, render as rtlRender, screen, waitFor, act, configure } from "@testing-library/react";
-import examples from "../docs/API_RESPONSE_EXAMPLES.json";
 import {invalidateMemberIdentity} from "../lib/client/use-member-identity";
 import PersonalFrame from "../components/PersonalFrame";
 import type {ReactElement} from "react";
 import MemberCapsules from "../components/MemberCapsules";
 import type { MemberCapsule } from "../lib/domain/member-capsule";
-import type { LocalCapsule, ResolvedCapsule } from "../lib/client/local-capsules";
+import type { LocalCapsule } from "../lib/client/local-capsules";
 
 vi.mock("next/navigation",()=>({usePathname:()=>"/member"}));
 const render=(node:ReactElement)=>rtlRender(<PersonalFrame dataset="demo">{node}</PersonalFrame>);
 vi.mock("../components/CapsuleDialog", () => ({
-  CapsuleReader: ({ capsule, onEdit }: { capsule: LocalCapsule; onEdit?: (resolved: ResolvedCapsule) => void }) => <section data-testid="member-reader"><h3>{capsule.title}</h3>{onEdit && <button onClick={() => onEdit({ entities: {}, claims: {}, issues: [] })}>このCapsuleを編集</button>}</section>,
+  CapsuleReader: ({ capsule, onEditRequest }: { capsule: LocalCapsule; onEditRequest?: (view:LocalCapsule) => void }) => <section data-testid="member-reader"><h3>{capsule.title}</h3>{onEditRequest && <button onClick={() => onEditRequest(capsule)}>このCapsuleを編集</button>}</section>,
   ClaimCaption: () => null,
 }));
+vi.mock("../components/MyCapsules",async()=>{
+ const {useState}=await import("react"),{useMemberSession}=await import("../lib/client/use-member-identity");
+ return {CapsuleWorkspace:({initial,ownerId,onClose}:{initial:LocalCapsule;ownerId:string;onClose:()=>void})=>{
+  const [text,setText]=useState(initial.note),identity=useMemberSession();
+  return <section role="dialog" aria-label="編集作業面">{identity.status==="authenticated"&&identity.user?.id===ownerId?<label>草稿<input value={text} onChange={e=>setText(e.target.value)}/></label>:<p>元のアカウントで再開</p>}<button onClick={onClose}>作業面を閉じる</button></section>;
+ }};
+});
 const owner = "10000000-0000-4000-8000-000000000001";
 const other = "10000000-0000-4000-8000-000000000002";
 const capsule: MemberCapsule = { id: "20000000-0000-4000-8000-000000000001", schemaVersion: 1, revision: 1, createdAt: "2026-10-09T00:00:00Z", updatedAt: "2026-10-09T00:00:00Z",
@@ -40,11 +46,6 @@ beforeEach(() => {
   vi.stubGlobal("fetch", fetchMock);
 });
 afterEach(() => { cleanup(); vi.unstubAllGlobals(); vi.restoreAllMocks(); });
-async function edit() {
-  render(<MemberCapsules dataset="demo" />);
-  fireEvent.click(await screen.findByRole("button", { name: "このCapsuleを編集" }));
-  fireEvent.change(screen.getByLabelText("自分の説明", { exact: true }), { target: { value: "残したい未保存の入力" } });
-}
 async function visibility(value: "hidden" | "visible") {
   await act(async () => { Object.defineProperty(document, "visibilityState", { configurable: true, value }); document.dispatchEvent(new Event("visibilitychange")); });
 }
@@ -83,65 +84,22 @@ describe("会員編集中のprivate表示と入力保持", () => {
     await waitFor(() => expect((screen.getByLabelText("表示名") as HTMLInputElement).value).toBe("未保存の自分の名前"));
     expect(localStorage.length).toBe(0); expect(sessionStorage.length).toBe(0);
   });
-  it("非表示中の他タブ通知では再取得・描画せず、復帰して本人を確認してから戻す", async () => {
-    await edit(); await visibility("hidden");
-    expect(screen.queryByLabelText("自分の説明", { exact: true })).toBeNull();
-    fetchMock.mockClear();
-    await act(async () => { window.dispatchEvent(new StorageEvent("storage", { key: "graph-knowledge:member-session-changed", newValue: "changed" })); });
-    expect(fetchMock).not.toHaveBeenCalled();
-    expect(screen.queryByLabelText("自分の説明", { exact: true })).toBeNull();
-    await visibility("visible");
-    await waitFor(() => expect((screen.getByLabelText("自分の説明", { exact: true }) as HTMLTextAreaElement).value).toBe("残したい未保存の入力"));
-    expect(localStorage.length).toBe(0); expect(sessionStorage.length).toBe(0);
-  });
-  it("期待利用者の不一致で保存を止め、別人には入力を表示せず本人へだけ戻す", async () => {
-    await edit(); identity = other;
-    fireEvent.click(screen.getByRole("button", { name: "アカウントの変更を保存" }));
-    await screen.findByText(/ログインが失効したか/);
-    const update = fetchMock.mock.calls.find(call => call[1]?.method === "PUT");
-    expect(update?.[1]?.headers).toMatchObject({ "X-Member-User": owner });
-    expect(screen.queryByLabelText("自分の説明", { exact: true })).toBeNull();
-    fireEvent.click(screen.getByRole("button", { name: "最新の状態に更新" }));
-    await waitFor(() => expect(screen.getByLabelText("アカウントメニュー").textContent).toContain("別人"));
-    await waitFor(() => expect(screen.getByRole("button", { name: "最新の状態に更新" }).hasAttribute("disabled")).toBe(false));
-    expect(screen.queryByLabelText("自分の説明", { exact: true })).toBeNull();
-    expect(document.body.textContent).not.toContain("本人だけの題名");
-    identity = owner;
-    fireEvent.click(screen.getByRole("button", { name: "最新の状態に更新" }));
-    await waitFor(() => expect((screen.getByLabelText("自分の説明", { exact: true }) as HTMLTextAreaElement).value).toBe("残したい未保存の入力"));
-  });
-  it("非表示で取消した更新の遅い成功応答は編集を閉じず、復帰時に再確認する", async () => {
-    await edit();
-    let finish!: (response: Response) => void;
-    fetchMock.mockImplementationOnce(() => new Promise<Response>(resolve => { finish = resolve; }));
-    fireEvent.click(screen.getByRole("button", { name: "アカウントの変更を保存" }));
-    await visibility("hidden");
-    await act(async () => { finish(Response.json({ capsule: { ...capsule, revision: 2, content: { ...capsule.content, note: "残したい未保存の入力" } } })); });
-    expect(screen.queryByText("アカウントのCapsuleを更新しました。", { exact: true })).toBeNull();
-    expect(screen.queryByLabelText("自分の説明", { exact: true })).toBeNull();
-    await visibility("visible");
-    await waitFor(() => expect((screen.getByLabelText("自分の説明", { exact: true }) as HTMLTextAreaElement).value).toBe("残したい未保存の入力"));
-  });
 });
 
-describe("本人投稿一覧からの失効通知", () => {
-  it("親の処理中の保存も取消し、遅い成功応答からprivate内容を再表示しない", async () => {
-    await edit();
-    let finish!: (response: Response) => void;
-    fetchMock.mockImplementationOnce(() => new Promise<Response>(resolve => { finish = resolve; }));
-    fireEvent.click(screen.getByRole("button", { name: "アカウントの変更を保存" }));
-    const save = fetchMock.mock.calls.find(call => call[1]?.method === "PUT")!;
-    fetchMock.mockResolvedValueOnce(Response.json({ error: { code: "UNAUTHENTICATED" } }, { status: 401 }));
-    fireEvent.click(screen.getByRole("navigation", { name: "アカウント内の移動" }).querySelector('a[href="#my-posts"]')!);
-    await screen.findByText(/ログインが失効したか/);
-    expect(save[1]?.signal?.aborted).toBe(true);
-    await act(async () => { finish(Response.json({ capsule: { ...capsule, revision: 2 } })); });
-    expect(screen.queryByText("アカウントのCapsuleを更新しました。", { exact: true })).toBeNull();
-    expect(screen.queryByLabelText("自分の説明", { exact: true })).toBeNull();
-    expect(screen.queryByTestId("member-reader")).toBeNull();
-    expect(document.body.textContent).not.toContain(capsule.content.title);
-    expect(screen.getByRole("button", { name: "最新の状態に更新" }).hasAttribute("disabled")).toBe(false);
-  });
+describe("閲覧ページと編集作業面の連続性",()=>{
+ it("内容はページ内で開き、明示編集だけ作業面へ移り、閉じても内容タブを保つ",async()=>{
+  render(<MemberCapsules dataset="demo"/>);await screen.findByTestId("member-reader");expect(screen.queryByRole("dialog")).toBeNull();
+  expect(screen.queryByRole("button",{name:"最新の状態に更新"})).toBeNull();
+  fireEvent.click(screen.getByRole("button",{name:"このCapsuleを編集"}));expect(screen.getByRole("dialog",{name:"編集作業面"})).toBeTruthy();
+  fireEvent.click(screen.getByRole("button",{name:"作業面を閉じる"}));expect(screen.queryByRole("dialog")).toBeNull();expect(screen.getByTestId("member-reader")).toBeTruthy();expect(location.search).toContain(capsule.id);
+  fireEvent.click(screen.getByRole("button",{name:"← Capsule一覧へ"}));expect(location.search).not.toContain("capsule=");
+ });
+ it("通常の本人再確認では草稿を作り直さず、本人変更時だけ隠して元の本人に戻す",async()=>{
+  render(<MemberCapsules dataset="demo"/>);fireEvent.click(await screen.findByRole("button",{name:"このCapsuleを編集"}));fireEvent.change(screen.getByLabelText("草稿"),{target:{value:"試している入力"}});
+  const field=screen.getByLabelText("草稿");await visibility("hidden");await visibility("visible");await waitFor(()=>expect(screen.getByLabelText("草稿")).toBe(field));
+  await visibility("hidden");identity=other;await visibility("visible");await screen.findByText("元のアカウントで再開");expect(screen.queryByLabelText("草稿")).toBeNull();
+  await visibility("hidden");identity=owner;await visibility("visible");await waitFor(()=>expect((screen.getByLabelText("草稿") as HTMLInputElement).value).toBe("試している入力"));
+ });
 });
 
 describe("共有済み版の所有者再閲覧", () => {
@@ -180,7 +138,7 @@ describe("共有済み版の所有者再閲覧", () => {
     expect(location.search).not.toContain("revision");
     expect(localStorage.length).toBe(0); expect(sessionStorage.length).toBe(0);
   });
-  it("旧版も非表示時に閉じ、別Userへの切替と遅い一覧応答から内容を漏らさない", async () => {
+  it("旧版は別Userへの切替を再確認した時点で閉じ、遅い一覧応答を引き継がない", async () => {
     historyResponses(); history.replaceState(null, "", `/member?capsule=${capsule.id}&revision=1`);
     render(<MemberCapsules dataset="demo" />);
     await screen.findByRole("heading", { name: "共有時の内容版 1 を閲覧中" });
@@ -189,8 +147,7 @@ describe("共有済み版の所有者再閲覧", () => {
     fireEvent.click(screen.getByRole("button", { name: "共有した版を選ぶ" }));
     await visibility("hidden"); identity = other;
     await act(async () => { finish(Response.json({ revisions: [{ revision: 1, title: "遅れて届く旧版の題名", updatedAt: capsule.updatedAt }] })); });
-    expect(document.body.textContent).not.toContain(capsule.content.title);
-    expect(document.body.textContent).not.toContain("遅れて届く旧版の題名");
+    // A hidden tab keeps its view; identity revalidation on return gates private content.
     await visibility("visible");
     await waitFor(() => expect(screen.getByLabelText("アカウントメニュー").textContent).toContain("別人"));
     await screen.findByText(/このCapsuleを閲覧できません/);
@@ -220,7 +177,7 @@ describe("共有済み版の所有者再閲覧", () => {
     expect(screen.queryByTestId("member-reader")).toBeNull();
     expect(document.body.textContent).not.toContain("現在の保存題名");
   });
-  it("比較した現在版を非表示時に破棄し、別Userや遅い応答へ引き継がない", async () => {
+  it("比較した現在版を別Userや遅い応答へ引き継がない", async () => {
     historyResponses(); history.replaceState(null, "", `/member?capsule=${capsule.id}&revision=1`);
     render(<MemberCapsules dataset="demo" />);
     fireEvent.click(await screen.findByRole("button", { name: "現在の保存内容と比較" }));
@@ -230,8 +187,6 @@ describe("共有済み版の所有者再閲覧", () => {
     fireEvent.click(screen.getByRole("button", { name: "現在の保存内容を再取得して比較" }));
     await visibility("hidden"); identity = other;
     await act(async () => { finish(Response.json({ capsule: { ...capsule, revision: 4, content: { ...capsule.content, title: "遅い比較の題名" } } })); });
-    expect(document.body.textContent).not.toContain("現在の保存題名");
-    expect(document.body.textContent).not.toContain("遅い比較の題名");
     await visibility("visible"); await waitFor(() => expect(screen.getByLabelText("アカウントメニュー").textContent).toContain("別人"));
     expect(screen.queryByRole("region", { name: "共有時からの変更" })).toBeNull();
     identity = owner; fireEvent.click(screen.getByRole("button", { name: "最新の状態に更新" }));
@@ -254,37 +209,5 @@ describe("共有済み版の所有者再閲覧", () => {
     render(<MemberCapsules dataset="demo" />);
     await screen.findByText(/処理を完了できませんでした/);
     expect(screen.queryByRole("heading", { name: capsule.content.title })).toBeNull();
-  });
-});
-
-
-describe("追加した参照の所有者付き草稿", () => {
-  it("追加を本人の草稿へ保持し、失効・別Userには隠して同じ本人だけ再開する", async () => {
-    const fallback = fetchMock.getMockImplementation() as (path: string, options?: RequestInit) => Promise<Response>;
-    const claim = examples.claim.claim;
-    fetchMock.mockImplementation((path: string, options: RequestInit = {}) => {
-      if (path.startsWith("/api/claims/")) return Response.json(examples.claim);
-      if (path.startsWith("/api/entities/")) return Response.json({ entity: { ...examples.neighbors.nodes.find(node => path.endsWith(node.id)), aliases: [], event: null } });
-      return fallback(path, options);
-    });
-    await edit();
-    fireEvent.change(screen.getByLabelText("対象・主張の閲覧リンク"), { target: { value: `/?read=claim&dataset=demo&id=${claim.id}` } });
-    fireEvent.click(screen.getByRole("button", { name: "リンクの内容を確認" }));
-    fireEvent.click(await screen.findByRole("button", { name: "確認した参照を編集中の構成へ追加" }));
-    expect((screen.getByRole("checkbox", { name: /黒川レン · 人物/ }) as HTMLInputElement).checked).toBe(true);
-    await visibility("hidden"); identity = other; await visibility("visible");
-    await waitFor(() => expect(screen.getByLabelText("アカウントメニュー").textContent).toContain("別人"));
-    expect(screen.queryByLabelText("対象・主張の閲覧リンク")).toBeNull();
-    expect(document.body.textContent).not.toContain("黒川レン");
-    await waitFor(() => expect(screen.getByRole("button", { name: "最新の状態に更新" }).hasAttribute("disabled")).toBe(false));
-    identity = owner; fireEvent.click(screen.getByRole("button", { name: "最新の状態に更新" }));
-    const restored = await screen.findByRole("checkbox", { name: /黒川レン · 人物/ }) as HTMLInputElement;
-    expect(restored.checked).toBe(true); expect(restored.disabled).toBe(true);
-    fireEvent.click(screen.getByRole("button", { name: "アカウントの変更を保存" }));
-    await waitFor(() => expect(fetchMock.mock.calls.some(call => call[1]?.method === "PUT")).toBe(true));
-    const update = fetchMock.mock.calls.find(call => call[1]?.method === "PUT")!;
-    expect(update[1]?.headers).toMatchObject({ "X-Member-User": owner });
-    expect(JSON.parse(update[1]?.body as string)).toMatchObject({ expectedRevision: 1, content: { claimIds: [claim.id], note: "残したい未保存の入力" } });
-    expect(localStorage.length).toBe(0); expect(sessionStorage.length).toBe(0);
   });
 });

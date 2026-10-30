@@ -19,7 +19,7 @@ const env: NodeJS.ProcessEnv = { ...process.env, NODE_ENV: "test", GRAPH_DATASET
 if (communityTests) env.COMMUNITY_ENABLED = "1";
 if(capsuleTests)env.MEMBER_CAPSULE_TESTS="1";
 if(operationsTests)env.SITE_OPERATIONS_ENABLED="1";
-if(accountTests)env.PUBLIC_PROFILES_ENABLED="1";
+if(accountTests||capsuleTests)env.PUBLIC_PROFILES_ENABLED="1";
 const docker = (args: string[]) => spawnSync("docker", args, { env, encoding: "utf8", timeout: 30_000 });
 let child: ReturnType<typeof spawn> | undefined;
 let created = false;

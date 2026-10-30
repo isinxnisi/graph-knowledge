@@ -1,3 +1,4 @@
+import {publicPeople} from "./public-people";
 import { createHash, randomUUID } from "node:crypto";
 import type { Pool, PoolClient } from "pg";
 import { z } from "zod";
@@ -43,7 +44,7 @@ export function createCapsuleDiscussion(pool: Pool, dataset: DatasetMode, origin
   async function authorize(client: PoolClient, request: Request, id: string, revision: number, user: Viewer | null, write: boolean) {
     // Sharing, content deletion, closure and posting use the same Capsule lock.
     const result = await client.query(`SELECT c.owner_user_id FROM member_capsule c JOIN "user" u ON u.id = c.owner_user_id
-      WHERE c.id = $1 AND c.dataset = $2 AND u.active = true AND c.sharing_blocked = false ${write ? "FOR UPDATE OF c" : "FOR SHARE OF c"}`, [id, dataset]);
+      WHERE (to_jsonb(c)->>'trashed_at') IS NULL AND c.id = $1 AND c.dataset = $2 AND u.active = true AND c.sharing_blocked = false ${write ? "FOR UPDATE OF c" : "FOR SHARE OF c"}`, [id, dataset]);
     const capsule = result.rows[0];
     if (!capsule) throw new MemberError(404, "NOT_FOUND");
     const own = capsule.owner_user_id === user?.id;
@@ -107,8 +108,9 @@ export function createCapsuleDiscussion(pool: Pool, dataset: DatasetMode, origin
             WHERE s.capsule_id=$1 AND ($4::boolean OR s.token_hash=$5))
             OR ($4::boolean AND p.revision=$2))
           ORDER BY p.created_at,p.id LIMIT $3`, [id, revision.data, DISCUSSION_LIMITS.posts,canManage,digest(request.headers.get("x-capsule-token")??"")]);
+        const authors=await publicPeople(client,posts.rows.filter(row=>!row.withdrawn_at&&!row.hidden_at&&row.active).map(row=>row.author_user_id));
         return memberJson(discussionSchema.parse({ capsuleId: id, revision: revision.data, closed: thread.rows[0]?.closed ?? false, viewer: user ? { id: user.id, name: user.name } : null, canManage,
-          posts: posts.rows.map(row => ({ id: row.id, revision: Number(row.revision), authorName: row.withdrawn_at || row.hidden_at || !row.active ? null : row.name,
+          posts: posts.rows.map(row => ({ author:row.withdrawn_at||row.hidden_at||!row.active?null:authors.get(row.author_user_id)??null,id: row.id, revision: Number(row.revision), authorName: row.withdrawn_at || row.hidden_at || !row.active ? null : row.name,
             body: row.withdrawn_at || row.hidden_at || !row.active ? null : row.body, createdAt: row.created_at.toISOString(), withdrawnAt: row.withdrawn_at?.toISOString() ?? null, own: row.author_user_id === user?.id })) }));
       });
     },

@@ -80,13 +80,13 @@ export function createMemberService(config: MemberConfig, pool: Pool, auth: Memb
       // Private edits can advance the Capsule while the shared revision stays fixed.
       const shared = `EXISTS(SELECT 1 FROM member_capsule_share s JOIN member_capsule_revision r ON r.capsule_id=s.capsule_id AND r.revision=s.revision
         WHERE s.capsule_id=c.id AND c.sharing_blocked=false AND COALESCE((to_jsonb(r)->>'sharing_blocked')::boolean,false)=false)`;
-      const result = await pool.query(`SELECT c.id,c.schema_version,c.revision,c.created_at,c.updated_at,c.content-'document' AS content,(c.content ? 'document') AS has_document,${shared} AS shared,${published} AS published FROM member_capsule c WHERE c.owner_user_id = $1 AND c.dataset = $2 ORDER BY c.updated_at DESC, c.id`, [user.id, dataset]);
-      return memberJson({ capsules: result.rows.map(row => ({ id:row.id,schemaVersion:row.schema_version,revision:Number(row.revision),createdAt:row.created_at.toISOString(),updatedAt:row.updated_at.toISOString(),content:row.content,hasDocument:row.has_document,shared:row.shared,published:row.published })) });
+      const result = await pool.query(`SELECT c.id,c.schema_version,c.revision,c.created_at,c.updated_at,c.content-'document' AS content,(to_jsonb(c)->>'trashed_at') AS trashed_at,(c.content ? 'document') AS has_document,${shared} AS shared,${published} AS published FROM member_capsule c WHERE c.owner_user_id = $1 AND c.dataset = $2 ORDER BY c.updated_at DESC, c.id`, [user.id, dataset]);
+      return memberJson({ capsules: result.rows.map(row => ({ id:row.id,schemaVersion:row.schema_version,revision:Number(row.revision),createdAt:row.created_at.toISOString(),updatedAt:row.updated_at.toISOString(),content:row.content,hasDocument:row.has_document,shared:row.shared,published:row.published,trashedAt:row.trashed_at??null })) });
     },
     async read(request: Request, rawId: string) {
       const user = await owner(request);
       const id = memberId(rawId);
-      const result = await pool.query("SELECT * FROM member_capsule WHERE id = $1 AND owner_user_id = $2 AND dataset = $3", [id, user.id, dataset]);
+      const result = await pool.query("SELECT * FROM member_capsule c WHERE (to_jsonb(c)->>'trashed_at') IS NULL AND id = $1 AND owner_user_id = $2 AND dataset = $3", [id, user.id, dataset]);
       if (!result.rows[0]) throw new MemberError(404, "NOT_FOUND");
       return memberJson({ capsule: dto(result.rows[0]) });
     },
@@ -107,12 +107,12 @@ export function createMemberService(config: MemberConfig, pool: Pool, auth: Memb
         const receipt = await client.query("SELECT * FROM member_capsule_request WHERE owner_user_id = $1 AND request_id = $2", [user.id, input.requestId]);
         if (receipt.rows[0]) {
           if (receipt.rows[0].content_hash !== hash) throw new MemberError(409, "REQUEST_CONFLICT");
-          const existing = await client.query("SELECT * FROM member_capsule WHERE id = $1 AND owner_user_id = $2 AND dataset = $3", [receipt.rows[0].capsule_id, user.id, dataset]);
+          const existing = await client.query("SELECT * FROM member_capsule c WHERE (to_jsonb(c)->>'trashed_at') IS NULL AND id = $1 AND owner_user_id = $2 AND dataset = $3", [receipt.rows[0].capsule_id, user.id, dataset]);
           if (!existing.rows[0]) throw new MemberError(409, "REQUEST_CONFLICT");
           await client.query("COMMIT");
           return memberJson({ capsule: dto(existing.rows[0]), replayed: true });
         }
-        const count = await client.query("SELECT count(*) FROM member_capsule WHERE owner_user_id = $1 AND dataset = $2", [user.id, dataset]);
+        const count = await client.query("SELECT count(*) FROM member_capsule c WHERE (to_jsonb(c)->>'trashed_at') IS NULL AND owner_user_id = $1 AND dataset = $2", [user.id, dataset]);
         if (Number(count.rows[0].count) >= MEMBER_CAPSULE_LIMITS.count) throw new MemberError(422, "CAPSULE_LIMIT");
         const id = randomUUID();
         await assertCapsuleStorage(client,user.id,JSON.stringify(input.content));
@@ -140,17 +140,17 @@ export function createMemberService(config: MemberConfig, pool: Pool, auth: Memb
           const receipt = (await client.query("SELECT * FROM member_capsule_update_request WHERE owner_user_id=$1 AND request_id=$2", [user.id, input.requestId])).rows[0];
           if (receipt) {
             if (receipt.capsule_id !== id || Number(receipt.expected_revision) !== input.expectedRevision || receipt.content_hash !== hash) throw new MemberError(409, "REQUEST_CONFLICT");
-            const current = (await client.query("SELECT * FROM member_capsule WHERE id=$1 AND owner_user_id=$2 AND dataset=$3", [id,user.id,dataset])).rows[0];
+            const current = (await client.query("SELECT * FROM member_capsule c WHERE (to_jsonb(c)->>'trashed_at') IS NULL AND id=$1 AND owner_user_id=$2 AND dataset=$3", [id,user.id,dataset])).rows[0];
             if (!current) throw new MemberError(404, "NOT_FOUND");
             return memberJson({ capsule: dto(current), replayed: true, appliedRevision: Number(receipt.result_revision) });
           }
         }
         await assertCapsuleStorage(client,user.id,JSON.stringify(input.content),id);
         const result = await client.query(`UPDATE member_capsule SET content = $1, revision = revision + 1, updated_at = clock_timestamp(), schema_version=$6
-          WHERE id = $2 AND owner_user_id = $3 AND dataset = $4 AND revision = $5 AND (schema_version=1 OR $6=2) RETURNING *`,
+          WHERE (to_jsonb(member_capsule)->>'trashed_at') IS NULL AND id = $2 AND owner_user_id = $3 AND dataset = $4 AND revision = $5 AND (schema_version=1 OR $6=2) RETURNING *`,
         [JSON.stringify(input.content), id, user.id, dataset, input.expectedRevision, input.content.document ? 2 : 1]);
         if (!result.rows[0]) {
-          const exists = await client.query("SELECT id,schema_version FROM member_capsule WHERE id = $1 AND owner_user_id = $2 AND dataset = $3", [id, user.id, dataset]);
+          const exists = await client.query("SELECT id,schema_version FROM member_capsule c WHERE (to_jsonb(c)->>'trashed_at') IS NULL AND id = $1 AND owner_user_id = $2 AND dataset = $3", [id, user.id, dataset]);
           if (exists.rows[0]?.schema_version === 2 && !input.content.document) throw new MemberError(409, "CAPSULE_SCHEMA_CONFLICT");
           throw new MemberError(exists.rowCount ? 409 : 404, exists.rowCount ? "REVISION_CONFLICT" : "NOT_FOUND");
         }
@@ -173,17 +173,35 @@ export function createMemberService(config: MemberConfig, pool: Pool, auth: Memb
     },
     async remove(request: Request, rawId: string) {
       assertMemberOrigin(request, config.origin);
-      const user = await owner(request);
-      const id = memberId(rawId);
-      const input = await memberInput(request, memberDeleteSchema);
-      return memberTransaction(pool, async client => {
-        await activeMember(client, user.id);
-        const result = await client.query("DELETE FROM member_capsule WHERE id = $1 AND owner_user_id = $2 AND dataset = $3 AND revision = $4 RETURNING id", [id, user.id, dataset, input.expectedRevision]);
-        if (!result.rowCount) {
-          const exists = await client.query("SELECT id FROM member_capsule WHERE id = $1 AND owner_user_id = $2 AND dataset = $3", [id, user.id, dataset]);
-          throw new MemberError(exists.rowCount ? 409 : 404, exists.rowCount ? "REVISION_CONFLICT" : "NOT_FOUND");
-        }
-        return memberJson({ deleted: true });
+      const user = await owner(request), id = memberId(rawId), input = await memberInput(request, memberDeleteSchema);
+      return memberTransaction(pool, async c => {
+        await activeMember(c,user.id);
+        if (!(await c.query("SELECT 1 FROM information_schema.columns WHERE table_name='member_capsule' AND column_name='trashed_at'")).rowCount) throw new MemberError(503,'CAPSULES_UNAVAILABLE');
+        const row=(await c.query('SELECT * FROM member_capsule WHERE id=$1 AND owner_user_id=$2 AND dataset=$3 FOR UPDATE',[id,user.id,dataset])).rows[0];
+        if(!row)throw new MemberError(404,'NOT_FOUND');
+        if(row.trashed_at && Number(row.revision)===input.expectedRevision+1)return memberJson({deleted:true});
+        if(row.trashed_at || Number(row.revision)!==input.expectedRevision)throw new MemberError(409,'REVISION_CONFLICT');
+        await c.query('UPDATE member_capsule SET trashed_at=clock_timestamp(),revision=revision+1,updated_at=clock_timestamp() WHERE id=$1',[id]);
+        await c.query('DELETE FROM member_capsule_share WHERE capsule_id=$1',[id]);
+        if((await c.query("SELECT to_regclass('community_capsule_listing') AS ready")).rows[0].ready)
+          await c.query("UPDATE community_capsule_listing SET status='withdrawn',revision=revision+1,updated_at=clock_timestamp() WHERE capsule_id=$1 AND status='active'",[id]);
+        return memberJson({deleted:true});
+      });
+    },
+    async restore(request: Request, rawId: string) {
+      assertMemberOrigin(request, config.origin);
+      const user=await owner(request),id=memberId(rawId),input=await memberInput(request,memberDeleteSchema);
+      return memberTransaction(pool,async c=>{
+        const active=await c.query('SELECT active FROM "user" WHERE id=$1 FOR UPDATE',[user.id]);
+        if(active.rows[0]?.active!==true)throw new MemberError(401,'UNAUTHENTICATED');
+        const row=(await c.query('SELECT * FROM member_capsule WHERE id=$1 AND owner_user_id=$2 AND dataset=$3 FOR UPDATE',[id,user.id,dataset])).rows[0];
+        if(!row)throw new MemberError(404,'NOT_FOUND');
+        if(!row.trashed_at && Number(row.revision)===input.expectedRevision+1)return memberJson({capsule:dto(row)});
+        if(!row.trashed_at || Number(row.revision)!==input.expectedRevision)throw new MemberError(409,'REVISION_CONFLICT');
+        const count=Number((await c.query('SELECT count(*) FROM member_capsule WHERE owner_user_id=$1 AND dataset=$2 AND trashed_at IS NULL',[user.id,dataset])).rows[0].count);
+        if(count>=MEMBER_CAPSULE_LIMITS.count)throw new MemberError(422,'CAPSULE_LIMIT');
+        const restored=(await c.query('UPDATE member_capsule SET trashed_at=NULL,revision=revision+1,updated_at=clock_timestamp() WHERE id=$1 RETURNING *',[id])).rows[0];
+        return memberJson({capsule:dto(restored)});
       });
     },
   };

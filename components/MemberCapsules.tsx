@@ -1,4 +1,5 @@
 "use client";
+import CapsuleTrashAction from "./CapsuleTrashAction";
 import PageIdentity from "./PageIdentity";
 import {useMemberSession,refreshMemberIdentity} from "../lib/client/use-member-identity";
 import {usePersonalHash} from "../lib/client/personal-location";
@@ -49,12 +50,15 @@ export default function MemberCapsules({ dataset, initialImport = "" }: { datase
   const [publicProfileDirty,setPublicProfileDirty]=useState(false);
   const section=publicProfileDirty?"profile":hash==="profile"?"profile":hash==="account-settings"?"settings":hash==="my-posts"?"posts":"saved";
   const [readingTab, setReadingTab] = useState<"content" | "sharing">("content");
+  const loadedOwner=useRef<string|null>(null);
   const [loadedUser, setUser] = useState<MemberUser | null>(null);
   const user=identity.status==='authenticated'&&identity.user?.id===loadedUser?.id?loadedUser:null;
   const [profileDraft, setProfileDraft] = useState<{ ownerId: string; name: string } | null>(null);
   const [provider, setProvider] = useState<"google" | "fixture" | null>(null);
   const [items, setItems] = useState<MemberCapsuleSummary[]>([]);
   const [selected, setSelected] = useState<MemberCapsule | null>(null);
+  const [workspace,setWorkspace]=useState<{capsule:LocalCapsule;member:MemberCapsule;ownerId:string}|null>(null);
+  const [showTrash,setShowTrash]=useState(false);
   const [historical, setHistorical] = useState(false);
   const [local, setLocal] = useState<LocalCapsule[]>([]);
   const [sourceId, setSourceId] = useState(initialImport);
@@ -71,7 +75,7 @@ export default function MemberCapsules({ dataset, initialImport = "" }: { datase
   const heading = useRef<HTMLHeadingElement>(null);
   const source = local.find(value => value.id === sourceId);
   const reading = useMemo(() => selected ? memberReaderCapsule(selected, dataset) : null, [selected, dataset]);
-  const clearPrivate = useCallback(() => { setUser(null); setItems([]); setSelected(null); setHistorical(false); setConfirm(null); }, []);
+  const clearPrivate = useCallback(() => { loadedOwner.current=null; setUser(null); setItems([]); setSelected(null); setHistorical(false); setConfirm(null); }, []);
   const fail = useCallback((cause: unknown) => {
     if (cause instanceof MemberClientError) {
       if (cause.status === 401) { void refreshMemberIdentity(true).catch(()=>{}); clearPrivate(); setError(textMessages.expired); return; }
@@ -88,16 +92,16 @@ export default function MemberCapsules({ dataset, initialImport = "" }: { datase
     finally { if (!controller.signal.aborted) setBusy(false); }
   }, [fail]);
   const refresh = useCallback((force=true) => {
-    clearPrivate(); setProvider(null);
+    setProvider(null);
     // A storage notification may arrive while this tab is hidden. Keep private
     // content out of the DOM until visibility restoration reauthorizes it.
-    if (document.visibilityState === "hidden") { active.current?.abort(); setBusy(true); return; }
+    if (document.visibilityState === "hidden") return;
     void run(async signal => {
       const status = await memberRequest("/api/member/status", z.object({ provider: z.enum(["google", "fixture"]) }), { signal });
       if (signal.aborted) return;
       setProvider(status.provider);
       const identityUser=await refreshMemberIdentity(force);
-      if(!identityUser){if(!signal.aborted&&new URL(location.href).searchParams.has("error"))setError(textMessages.loginFailed);return;}
+      if(!identityUser){if(!signal.aborted){clearPrivate();if(new URL(location.href).searchParams.has("error"))setError(textMessages.loginFailed);}return;}
       const profile={user:identityUser};
       const result = await memberRequest("/api/member/capsules", memberListSchema, { user: profile.user.id, signal });
       // The list contains validated summaries, not complete documents. Only
@@ -106,7 +110,8 @@ export default function MemberCapsules({ dataset, initialImport = "" }: { datase
         if (item.content.dataset !== dataset) throw new Error("Dataset mismatch");
       }
       if (signal.aborted) return;
-      setUser(profile.user); setItems(result.capsules);
+      if(loadedOwner.current!==profile.user.id){setSelected(null);setHistorical(false);}
+      loadedOwner.current=profile.user.id;setUser(profile.user); setItems(result.capsules);
       const id = new URL(location.href).searchParams.get("capsule");
       const query = new URL(location.href).searchParams;
       const revision = query.get("revision");
@@ -138,8 +143,7 @@ export default function MemberCapsules({ dataset, initialImport = "" }: { datase
     // Hide private content on leaving the tab. Reauthorize on return, including
     // bfcache restoration and account changes made by another tab.
     const visibility = () => {
-      if (document.visibilityState === "hidden") { active.current?.abort(); clearPrivate(); setBusy(true); }
-      else refresh();
+      if (document.visibilityState !== "hidden") void refreshMemberIdentity(true).catch(()=>{});
     };
     const restored = (event: PageTransitionEvent) => { if (event.persisted) refresh(); };
     window.addEventListener("storage", changed); document.addEventListener("visibilitychange", visibility); window.addEventListener("pageshow", restored);
@@ -232,15 +236,8 @@ export default function MemberCapsules({ dataset, initialImport = "" }: { datase
     });
   }
   function cancelEdit() { setConfirm(null); setDraft(null); setError(null); setMessage(null); navigate(selected?.id ?? null); }
-  function remove() {
-    if (historical || !user || !selected) return;
-    void run(async signal => {
-      await memberRequest(`/api/member/capsules/${selected.id}`, z.object({ deleted: z.literal(true) }), { method: "DELETE", body: { expectedRevision: selected.revision }, user: user.id, signal });
-      if (!signal.aborted) { setItems(previous => previous.filter(item => item.id !== selected.id)); setSelected(null); setMessage(text.removed); navigate(null); }
-    });
-  }
   const title = identity.status==='guest' ? text.loginTitle : hash===null||identity.status==='checking' ? text.checking : section === "profile" ? (locale==='en'?'Edit profile':'プロフィールを編集') : section === "settings" ? text.settings : section === "posts" ? text.postsTitle : text.savedTitle;
-  return <><PersonalMemberControls logout={() => logout(false)} busy={busy || !!draft || !!profileDraft || publicProfileDirty} guard={()=>!(draft||profileDraft)||window.confirm(locale==='en'?'Leave without saving this draft?':'未保存の入力を破棄して移動しますか？')} /><main lang={locale} className={css.page}>
+  return <>{workspace&&<CapsuleWorkspace key={`edit:${workspace.member.id}`} initial={workspace.capsule} member={workspace.member} ownerId={workspace.ownerId} startEditing onClose={()=>setWorkspace(null)} onSaved={value=>{setSelected(value);setItems(items=>items.map(item=>item.id===value.id?value:item));}}/>}<PersonalMemberControls logout={() => logout(false)} busy={busy || !!draft || !!profileDraft || !!workspace || publicProfileDirty} guard={()=>!(draft||profileDraft||workspace)||window.confirm(locale==='en'?'Leave without saving this draft?':'未保存の入力を破棄して移動しますか？')} /><main lang={locale} className={css.page}>
     <div className={communitiesEnabled?undefined:css.memberLayout}>
     {user && !communitiesEnabled && <nav className={css.memberNavigation} aria-label={text.navigation}>
       <a href="#my-capsules" aria-current={section === "saved" ? "page" : undefined}><Icon name="capsule" />{text.savedTitle}</a>
@@ -253,7 +250,7 @@ export default function MemberCapsules({ dataset, initialImport = "" }: { datase
     <section id="member-login" className={user ? css.feedback : css.account} aria-label={text.title}>
       {identity.status==='guest'&&profilesEnabled&&<p>{locale==='en'?'Your profile is prepared automatically. Your Google name may be its initial display name; you can change it immediately. Your Google photo is the default public icon; you can choose another in your profile. Email is not displayed.':'プロフィールは自動で準備されます。Google等の名前が表示名の初期値になる場合があり、すぐに変更できます。公開アイコンの初期値はGoogle画像で、プロフィールから変更できます。メールアドレスは公開しません。'}</p>}
       {identity.status==='guest' && !busy && provider && <button data-variant="primary" disabled={!!draft} onClick={login}>{provider === "fixture" ? text.fixtureLogin : text.login}</button>}
-      <button className={css.refresh} title={locale==="en"?"Recheck your account and saved data without discarding your draft":"入力を保持したまま、アカウントと保存データを再取得します"} disabled={busy} onClick={()=>refresh()}><Icon name="refresh" />{text.refresh}</button>
+      {(!selected || error) && <button className={css.refresh} title={locale==="en"?"Recheck your account and saved data without discarding your draft":"入力を保持したまま、アカウントと保存データを再取得します"} disabled={busy} onClick={()=>refresh()}><Icon name="refresh" />{text.refresh}</button>}
       {draft && <p>{text.editingAccountHelp}</p>}
       {busy && <p role="status">{user ? text.busy : text.checking}</p>}
       {error && <p role="alert">{contentMessage(error, locale)}</p>}{message && <p role="status">{contentMessage(message, locale)}</p>}
@@ -284,30 +281,28 @@ export default function MemberCapsules({ dataset, initialImport = "" }: { datase
       {confirm === "discard" && <div role="alert"><p>{text.discardLockedConfirm}</p><button onClick={cancelEdit}>{captions.discard}</button><button onClick={() => setConfirm(null)}>{text.cancel}</button></div>}
     </section>}
     {user && <section id="my-capsules" className={css.card} aria-label={text.library}>
-      {draft && user.id === draft.ownerId ? <MemberCapsuleEditor draft={draft} current={selected} busy={busy} onChange={setDraft} onSave={update} onCancel={cancelEdit} onCheck={refresh} /> : selected && reading ? <><button disabled={busy} onClick={() => { setSelected(null); setConfirm(null); navigate(null); }}>{text.back}</button>
+      {draft && user.id === draft.ownerId ? <MemberCapsuleEditor draft={draft} current={selected} busy={busy} onChange={setDraft} onSave={update} onCancel={cancelEdit} onCheck={refresh} /> : selected && reading ? <><button className={css.backLink} disabled={busy} onClick={() => { setSelected(null); setConfirm(null); navigate(null); }}>← {locale==="en"?"Capsules":"Capsule一覧へ"}</button>
         {!historical && <nav className={css.readingTabs} aria-label={selected.content.title}>
           <button aria-pressed={readingTab === "content"} onClick={() => { setReadingTab("content"); navigate(selected.id); }}>{text.contentTab}</button>
           <button aria-pressed={readingTab === "sharing"} onClick={() => { setReadingTab("sharing"); navigate(selected.id, undefined, true); }}>{text.sharingTab}</button>
-          {communitiesEnabled&&<a href="/communities#%3Fmine%3D1">{locale==="en"?"Joined & managed":"参加・運営"}</a>}
+
     </nav>}
         <div hidden={readingTab !== "content"}>
         {historical && <div role="status"><h2>{historyText.reading(selected.revision)}</h2><p>{historyText.snapshotHelp}</p><button disabled={busy} onClick={() => read(selected.id)}>{historyText.current}</button></div>}
         <CapsuleRevisionList key={`revisions:${selected.id}:${selected.revision}:${user.id}`} capsuleId={selected.id} userId={user.id} disabled={busy} onRead={revision => read(selected.id, revision)} onUnauthorized={() => fail(new MemberClientError(401, "UNAUTHENTICATED"))} />
         {historical && <CapsuleComparison key={`comparison:${selected.id}:${selected.revision}:${user.id}`} snapshot={selected} userId={user.id} disabled={busy} onUnauthorized={() => fail(new MemberClientError(401, "UNAUTHENTICATED"))} />}
-        {reading.document && !historical ? readingTab === "content" && <CapsuleWorkspace key={`workspace:${selected.id}`} initial={reading} member={selected} ownerId={user.id} onClose={() => { setSelected(null); setConfirm(null); navigate(null); }} onSaved={value => { setSelected(value); setItems(items => items.map(item => item.id === value.id ? value : item)); }} /> : <CapsuleReader key={`${selected.id}:${selected.revision}`} capsule={reading} explorationLinks onEdit={!historical && !busy && !draft ? resolved => {
-          setDraft({ ownerId: user.id, base: selected, expected: selected, content: selected.content, resolved, needsCheck: false }); setError(null); setMessage(null);
-        } : undefined} />}
+        <CapsuleReader key={`${selected.id}:${selected.revision}`} capsule={reading} explorationLinks onEditRequest={!historical&&!busy?view=>setWorkspace({capsule:view,member:selected,ownerId:user.id}):undefined}/>
+
         </div>
         <div hidden={readingTab !== "sharing"}>
         {!historical && <CapsuleShareControls key={`share:${selected.id}:${selected.revision}`} capsule={selected} userId={user.id} disabled={busy} onUnauthorized={() => fail(new MemberClientError(401, "UNAUTHENTICATED"))} />}
         </div>
         <div hidden={readingTab !== "content"}>
         {!reading.document && <CapsuleDiscussion key={`discussion:${selected.id}:${selected.revision}:${user.id}`} capsuleId={selected.id} revision={selected.revision} userId={user.id} draftCache={discussionDraft} onUnauthorized={() => fail(new MemberClientError(401, "UNAUTHENTICATED"))} />}
-        {!historical && <button disabled={busy} onClick={() => setConfirm("remove")}>{text.remove}</button>}
-        {!historical && confirm === "remove" && <div role="alert"><p>{text.removeHelp}</p><button onClick={remove}>{text.removeConfirm}</button><button onClick={() => setConfirm(null)}>{text.cancel}</button></div>}
+        {!historical && <CapsuleTrashAction id={selected.id} title={selected.content.title} revision={selected.revision} ownerId={user.id} onChanged={()=>{setSelected(null);navigate(null);refresh();}}/>}
         </div>
-      </> : <><div className={css.listHeading}><span className={css.listCaption}>{locale === "en" ? "Saved in your account" : "アカウントに保存"}</span><span className={css.count}>{items.length} / 100</span></div>{!items.length && <p>{text.empty}</p>}
-        <ul className={css.savedList}>{items.map(item => <li key={item.id}><div><h3>{item.content.title}</h3><p>{captions.version(item.revision)} · {captions.selected(item.content.entityIds.length, item.content.claimIds.length)}</p></div><div className={css.actions}><button disabled={busy || !!draft} onClick={() => read(item.id)}>{text.read}</button><button disabled={busy || !!draft} onClick={() => read(item.id, undefined, true)}>{text.manageShare}</button></div></li>)}</ul></>}
+      </> : <><div className={css.listHeading}><div className={css.actions}><button aria-pressed={!showTrash} onClick={()=>setShowTrash(false)}><Icon name="capsule"/>{locale==="en"?"Saved":"保存したCapsule"}</button><button aria-pressed={showTrash} onClick={()=>setShowTrash(true)}><Icon name="trash"/>{locale==="en"?"Trash":"ごみ箱"}</button></div><span className={css.count}>{items.filter(item=>!item.trashedAt).length} / 20</span></div>{!items.some(item=>!!item.trashedAt===showTrash) && <p>{showTrash?(locale==="en"?"Trash is empty.":"ごみ箱は空です。"):text.empty}</p>}
+        <ul className={css.savedList}>{items.filter(item=>!!item.trashedAt===showTrash).map(item => <li key={item.id}><div><h3>{item.content.title}</h3><p>{new Date(item.updatedAt).toLocaleDateString(locale)} · {captions.selected(item.content.entityIds.length, item.content.claimIds.length)}</p></div><div className={css.actions}>{!showTrash&&<><button disabled={busy || !!draft} onClick={() => read(item.id)}>{locale==="en"?"Open":"開く"}</button><button title={text.manageShare} aria-label={`${item.content.title}：${text.manageShare}`} disabled={busy || !!draft} onClick={() => read(item.id, undefined, true)}><Icon name="share"/></button></>}<CapsuleTrashAction id={item.id} title={item.content.title} revision={item.revision} ownerId={user.id} trashed={showTrash} onChanged={()=>refresh()}/></div></li>)}</ul></>}
     </section>}
     <AnimatedDetails className={`${css.card} ${css.importPanel}`} bodyClassName={css.importBody} open={!!sourceId} summary={<>{text.importReview}<Icon name="chevron" /></>}>
     <section aria-label={text.localTitle}>

@@ -21,6 +21,7 @@ import { memberLabels } from "../lib/i18n/member";
 import { capsuleLabels } from "../lib/i18n/capsules";
 import { ClaimCard } from "./ClaimDetails";
 import GraphCanvas from "./GraphCanvas";
+import {materializeLegacy} from "../lib/client/capsule-editor";
 import CapsuleStudio from "./CapsuleStudio";
 import styles from "./Explorer.module.css";
 import css from "./CapsuleDialog.module.css";
@@ -37,11 +38,18 @@ export function ClaimCaption({ claim, nodes }: { claim: ClaimSummary & { withdra
     <small className={styles.muted}>ID: {claim.id}</small></>;
 }
 
-export function CapsuleReader(props: { capsule: LocalCapsule; onEdit?: (resolved: ResolvedCapsule) => void; explorationLinks?: boolean; noteAttribution?: "self" | "author" }) {
-  return props.capsule.document ? <CapsuleStudio capsule={props.capsule} readOnly /> : <LegacyCapsuleReader {...props} />;
+export function CapsuleReader(props: { capsule: LocalCapsule; byline?: import("react").ReactNode; onEditRequest?: (view:LocalCapsule)=>void; onEdit?: (resolved: ResolvedCapsule) => void; explorationLinks?: boolean; noteAttribution?: "self" | "author" }) {
+  return props.capsule.document ? <CapsuleStudio capsule={props.capsule} readOnly byline={props.byline} onEditRequest={props.onEditRequest} /> : props.onEdit ? <LegacyCapsuleReader {...props} /> : <LegacyStudioReader {...props} />;
 }
 
-function LegacyCapsuleReader({ capsule, onEdit, explorationLinks = false, noteAttribution = "self" }: { capsule: LocalCapsule; onEdit?: (resolved: ResolvedCapsule) => void; explorationLinks?: boolean; noteAttribution?: "self" | "author" }) {
+function LegacyStudioReader({capsule,byline,onEditRequest}:{capsule:LocalCapsule;byline?:import("react").ReactNode;onEditRequest?:(view:LocalCapsule)=>void}){
+ const {locale}=useUiLocale(),en=locale==="en";
+ const [ready,setReady]=useState<LocalCapsule|null>(null),[failed,setFailed]=useState(false),[attempt,setAttempt]=useState(0);
+ useEffect(()=>{const controller=new AbortController();let active=true;void resolveCapsule(capsule,controller.signal).then(value=>{if(active)setReady(materializeLegacy(capsule,value));}).catch(()=>{if(active)setFailed(true);});return()=>{active=false;controller.abort();};},[capsule,attempt]);
+ return ready?<><p className={css.note}>{en?"Legacy Capsule: references are loaded from the current KG. Saving an edit records this snapshot.":"旧Capsuleの参照を現在のKGから表示しています。編集を保存すると、この断面を記録します。"}</p><CapsuleStudio capsule={ready} readOnly byline={byline} onEditRequest={onEditRequest}/></>:<p role={failed?"alert":"status"}>{failed?(en?"Could not load references.":"参照を取得できませんでした。"):(en?"Opening Capsule…":"Capsuleを開いています…")}{failed&&<button onClick={()=>{setFailed(false);setAttempt(v=>v+1);}}>{en?"Retry":"再試行"}</button>}</p>;
+}
+
+function LegacyCapsuleReader({ capsule, onEdit, explorationLinks = false, noteAttribution = "self" }: { capsule: LocalCapsule; byline?: import("react").ReactNode; onEditRequest?: (view:LocalCapsule)=>void; onEdit?: (resolved: ResolvedCapsule) => void; explorationLinks?: boolean; noteAttribution?: "self" | "author" }) {
   const { locale } = useUiLocale();
   const text = capsuleLabels(locale);
   const [resolved, setResolved] = useState<ResolvedCapsule | null>(null);

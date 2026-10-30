@@ -1,3 +1,4 @@
+import {personSchema} from "./community";
 import { z } from "zod";
 
 export const DISCUSSION_LIMITS = { body: 2000, posts: 200, perMinute: 5 } as const;
@@ -9,7 +10,7 @@ export const discussionCreateSchema = z.strictObject({
 export const discussionCloseSchema = z.strictObject({ closed: z.boolean(), expectedClosed: z.boolean() });
 export const discussionWithdrawSchema = z.strictObject({ postId: z.uuidv4() });
 export const discussionPostSchema = z.strictObject({
-  id: z.uuidv4(), revision: discussionRevisionSchema, authorName: z.string().nullable(),
+  id: z.uuidv4(), revision: discussionRevisionSchema, authorName: z.string().nullable(), author: personSchema.nullable().optional(),
   body: z.string().nullable(), createdAt: z.iso.datetime(), withdrawnAt: z.iso.datetime().nullable(), own: z.boolean(),
 });
 export const discussionSchema = z.strictObject({

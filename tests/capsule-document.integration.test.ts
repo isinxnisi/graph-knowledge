@@ -59,7 +59,7 @@ beforeAll(async () => {
   await migrateMemberDatabase(pool(),true,true,true);
   a = await login('alice'); b = await login('bob'); late = await login('community-d');
 },30_000);
-beforeEach(async () => { await pool().query('DELETE FROM community_rate'); });
+beforeEach(async () => { await pool().query('DELETE FROM community_rate'); await pool().query('DELETE FROM member_capsule'); });
 afterAll(async () => { await pool().end(); await issuer?.close(); });
 
 it('明示追加migration前は新writerを閉じ、旧保存・共有snapshotを改変せず011/012を冪等適用する', async () => {
@@ -73,12 +73,12 @@ it('明示追加migration前は新writerを閉じ、旧保存・共有snapshot�
   const token = (await share.json()).token;
   const before = (await pool().query('SELECT snapshot::text FROM member_capsule_revision WHERE capsule_id=$1',[old.id])).rows[0].snapshot;
   expect((await call(() => service().create(request(a,{requestId:randomUUID(),content:local()})))).status).toBe(503);
-  await migrateMemberDatabase(pool(),true,true,true,true,true,true,true,true);
-  await migrateMemberDatabase(pool(),true,true,true,true,true,true,true,true);
+  await migrateMemberDatabase(pool(),true,true,true,true,true,true,true,true,true,true,true);
+  await migrateMemberDatabase(pool(),true,true,true,true,true,true,true,true,true,true,true);
   expect((await pool().query('SELECT snapshot::text FROM member_capsule_revision WHERE capsule_id=$1',[old.id])).rows[0].snapshot).toBe(before);
   expect((await service().capabilities(request(a))).status).toBe(200);
   const shared = await service().readShared(new Request(origin,{headers:{'x-capsule-token':token}})); expect((await shared.json()).capsule).toEqual(old);
-  expect((await pool().query('SELECT count(*) FROM member_migration')).rows[0].count).toBe('16');
+  expect((await pool().query('SELECT count(*) FROM member_migration')).rows[0].count).toBe('19');
 });
 it('local-only内容・根拠・配置と32kを超える100/200参照を切り捨てず保存し、一覧から文書を除外する', async () => {
   const content = local('大きなlocal図',100); const capsule = await create(content); expect(capsule.schemaVersion).toBe(2); expect(capsule.content).toEqual(content);
@@ -243,7 +243,7 @@ it('停止commitを待つ読取がtransaction内でactiveUserを再確認する'
 it('private本文と固定版を合算した保存総量を超える作成・共有を確定しない', async () => {
   const capsule = await create(), content = local('容量境界の有効文書',200);
   for (const node of content.document!.nodes) node.description='x'.repeat(7400);
-  const seeded = (await pool().query("INSERT INTO member_capsule(id,owner_user_id,dataset,schema_version,content) SELECT gen_random_uuid(),$1,'demo',2,$2::jsonb FROM generate_series(1,44) RETURNING id",[a.id,JSON.stringify(content)])).rows.map(r=>r.id);
+  const seeded = (await pool().query("INSERT INTO member_capsule(id,owner_user_id,dataset,schema_version,content,trashed_at) SELECT gen_random_uuid(),$1,'demo',2,$2::jsonb,now() FROM generate_series(1,44) RETURNING id",[a.id,JSON.stringify(content)])).rows.map(r=>r.id);
   try {
     const usage = await (await service().capabilities(request(a))).json(); expect(usage.storageBytes).toBeGreaterThan(usage.totalBytes);
     const response = await call(()=>service().create(request(a,{requestId:randomUUID(),content:local()})));
@@ -288,4 +288,42 @@ it('同じURLへの明示反映は公開履歴と投稿時の図を保持し、�
   const fresh=await(await service().issueShare(request(a,{expectedRevision:4,expectedShareId:null}),cap.id)).json();
   expect((await shared(3,fresh.token)).status).toBe(404);expect((await(await shared(undefined,fresh.token)).json()).revisions.map((r:{revision:number})=>r.revision)).toEqual([4]);
   expect((await(await conversation(4,undefined,fresh.token)).json()).posts).toEqual([]);
+});
+
+it('ごみ箱はリンクと掲載だけを止め、復元・再送・保存枠と旧版を保護する',async()=>{
+ const cap=await create(),c=await community(),listing=await publish(c.id,cap);
+ const share=await(await service().issueShare(request(a,{expectedRevision:1,expectedShareId:null}),cap.id)).json();
+ const saved=(await pool().query('SELECT snapshot FROM member_capsule_revision WHERE capsule_id=$1',[cap.id])).rows[0].snapshot;
+ expect((await call(()=>service().remove(request(b,{expectedRevision:1}),cap.id))).status).toBe(404);
+ for(let n=0;n<2;n++)expect((await service().remove(request(a,{expectedRevision:1}),cap.id)).status).toBe(200);
+ expect((await call(()=>service().read(request(a),cap.id))).status).toBe(404);
+ expect((await call(()=>service().readShared(new Request(origin,{headers:{'x-capsule-token':share.token}})))).status).toBe(404);
+ const trashed=(await(await service().list(request(a))).json()).capsules.find((v:{id:string})=>v.id===cap.id);expect(trashed.trashedAt).toBeTruthy();expect(trashed.revision).toBe(2);
+ expect((await call(()=>service().restore(request(b,{expectedRevision:2}),cap.id))).status).toBe(404);
+ for(let n=0;n<2;n++){const restored=await(await service().restore(request(a,{expectedRevision:2}),cap.id)).json();expect(restored.capsule.revision).toBe(3);expect(restored.capsule.content).toEqual(cap.content);}
+ expect((await call(()=>service().remove(request(a,{expectedRevision:1}),cap.id))).status).toBe(409);
+ expect((await call(()=>service().community.readCapsule(request(),listing.id))).status).toBe(404);
+ expect((await(await service().shareStatus(request(a),cap.id)).json()).token).toBeNull();
+ expect((await pool().query('SELECT snapshot FROM member_capsule_revision WHERE capsule_id=$1 AND revision=1',[cap.id])).rows[0].snapshot).toEqual(saved);
+ const ids=[];for(let n=0;n<19;n++)ids.push((await create(legacy('保存枠'+n))).id);
+ const overflow=await call(()=>service().create(request(a,{requestId:randomUUID(),content:legacy()})));expect(overflow.status).toBe(422);
+ await service().remove(request(a,{expectedRevision:3}),cap.id);await create(legacy('空いた枠'));
+ expect((await call(()=>service().restore(request(a,{expectedRevision:4}),cap.id))).status).toBe(422);
+ await service().remove(request(a,{expectedRevision:1}),ids[0]);expect((await service().restore(request(a,{expectedRevision:4}),cap.id)).status).toBe(200);
+ // Existing users above the new limit retain all records and may still edit.
+ await pool().query('INSERT INTO member_capsule(id,owner_user_id,dataset,content,schema_version) VALUES($1,$2,$3,$4,1)',[randomUUID(),a.id,'demo',JSON.stringify(legacy('既存21件目'))]);
+ const all=(await(await service().list(request(a))).json()).capsules;expect(all.filter((v:{trashedAt:string|null})=>!v.trashedAt)).toHaveLength(21);
+ expect((await service().update(request(a,{expectedRevision:5,content:{...cap.content,title:'上限を超えても編集可'}}),cap.id)).status).toBe(200);
+});
+
+it('共有の作者とコメントは公開プロフィールだけを返し、撤回・非表示の人物情報を出さない',async()=>{
+ const cap=await create(),place=await community(),listing=await publish(place.id,cap);
+ const issued=await(await service().issueShare(request(a,{expectedRevision:1,expectedShareId:null}),cap.id)).json();
+ const shared=await(await service().readShared(new Request(origin,{headers:{'x-capsule-token':issued.token}}))).json();
+ expect(shared.author.handle).toBeTruthy();expect(shared.author.displayName).toBeTruthy();expect(Object.keys(shared.author)).not.toContain('email');expect(Object.keys(shared.author)).not.toContain('userId');
+ const published=await(await service().community.readCapsule(request(),listing.id)).json();expect(published.listing.creator.handle).toBe(shared.author.handle);
+ const postReq=request(b,{requestId:randomUUID(),revision:1,body:'公開プロフィール付きの投稿'});postReq.headers.set('x-capsule-token',issued.token);expect((await service().createDiscussionPost(postReq,cap.id)).status).toBe(201);
+ const read=async()=>{const req=request(b,undefined,'/?revision=1');req.headers.set('x-capsule-token',issued.token);return(await(await service().readDiscussion(req,cap.id)).json()).posts;};
+ const posts=await read();expect(posts[0].author.handle).toBeTruthy();
+ await pool().query('UPDATE member_capsule_post SET hidden_at=now() WHERE id=$1',[posts[0].id]);const hidden=await read();expect(hidden[0].author).toBeNull();expect(hidden[0].authorName).toBeNull();expect(hidden[0].body).toBeNull();
 });

@@ -1,4 +1,4 @@
-import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
+import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { Pool } from "pg";
 import { operateMember } from "../lib/server/member/operations";
 import { createMemberService } from "../lib/server/member/service";
@@ -69,7 +69,7 @@ beforeAll(async () => {
   if (!config || config.provider.kind !== "fixture") throw new Error("Run npm run test:member in its disposable DB");
   fixture = await startMemberOidc();
   const migrationPool = memberPool(config);
-  try { await migrateMemberDatabase(migrationPool, false, false, false, false, false, true, true, true); await migrateMemberDatabase(migrationPool, false, false, false, false, false, true, true, true); } finally { await migrationPool.end(); }
+  try { await migrateMemberDatabase(migrationPool, false, false, false, false, false, true, true, true, false, false, true); await migrateMemberDatabase(migrationPool, false, false, false, false, false, true, true, true, false, false, true); } finally { await migrationPool.end(); }
   const { auth } = memberRuntime();
   const plan = await getMigrations(auth.options);
   expect(plan.toBeCreated).toEqual([]);
@@ -79,6 +79,7 @@ beforeAll(async () => {
   alice = await login("alice");
   bob = await login("bob");
 }, 30_000);
+beforeEach(async()=>{await memberRuntime().pool.query("DELETE FROM member_capsule");});
 afterAll(async () => { await memberRuntime().pool.end(); await fixture?.close(); });
 
 describe("実OIDC・PostgreSQLによるprivate Capsule", () => {
@@ -241,7 +242,7 @@ describe("実OIDC・PostgreSQLによるprivate Capsule", () => {
     expect(response.headers.get("vary")).toBe("X-Capsule-Token");
     expect(response.headers.get("referrer-policy")).toBe("no-referrer");
     expect(response.headers.get("x-robots-tag")).toContain("noindex");
-    expect(await response.json()).toEqual({ capsule, currentRevision:1, revisions:[{revision:1,publishedAt:expect.any(String)}] });
+    expect(await response.json()).toEqual({ capsule, author:null, currentRevision:1, revisions:[{revision:1,publishedAt:expect.any(String)}] });
     for (const headers of [{}, { "x-capsule-token": "invalid" }, { "x-capsule-token": "a".repeat(43) }] as Record<string, string>[]) {
       expect((await shared.GET(request("/api/shared/capsule", alice.cookies.value, "GET", undefined, headers))).status).toBe(404);
     }
@@ -249,14 +250,14 @@ describe("実OIDC・PostgreSQLによるprivate Capsule", () => {
     const otherDataset = createMemberService(runtime.config, runtime.pool, runtime.auth, "pilot-science-v1");
     expect((await memberHandle(() => otherDataset.readShared(request("/", "", "GET", undefined, { "x-capsule-token": token })))).status).toBe(404);
     expect((await item.PUT(request("/", alice.cookies.value, "PUT", { expectedRevision: 1, content: { ...capsule.content, title: "非共有の訂正", note: "private revision" } }), ctx)).status).toBe(200);
-    expect(await (await read()).json()).toEqual({ capsule, currentRevision:1, revisions:[{revision:1,publishedAt:expect.any(String)}] });
+    expect(await (await read()).json()).toEqual({ capsule, author:null, currentRevision:1, revisions:[{revision:1,publishedAt:expect.any(String)}] });
     expect((await sharing.POST(request("/", alice.cookies.value, "POST", { expectedRevision: 1, expectedShareId: share.id }), ctx)).status).toBe(409);
     await runtime.pool.query('UPDATE "user" SET active = false WHERE id = $1', [user.id]);
     try { expect((await read()).status).toBe(404); }
     finally { await runtime.pool.query('UPDATE "user" SET active = true WHERE id = $1', [user.id]); }
     expect((await item.DELETE(request("/", alice.cookies.value, "DELETE", { expectedRevision: 2 }), ctx)).status).toBe(200);
     expect((await read()).status).toBe(404);
-    expect((await runtime.pool.query("SELECT * FROM member_capsule_revision WHERE capsule_id = $1", [capsule.id])).rowCount).toBe(0);
+    expect((await runtime.pool.query("SELECT * FROM member_capsule_revision WHERE capsule_id = $1", [capsule.id])).rowCount).toBe(1); // Trash retains the immutable snapshot.
   });
   it("同時発行・旧画面からの再発行と停止を競合にし、失効・再送・版保持を原子的に扱う", async () => {
     const { capsule } = await (await create(alice.cookies.value)).json();
@@ -645,18 +646,19 @@ describe("実OIDC・PostgreSQLによるprivate Capsule", () => {
     expect((await collection.GET(request("/", stopped.cookies.value))).status).toBe(401);
     await pool.query('UPDATE "user" SET active = true WHERE id = $1', [user.id]);
   });
-  it("同時作成しても一所有者・datasetの100件上限を越えない", async () => {
+  it("同時作成しても一所有者・datasetの20件上限を越えない", async () => {
     const {user} = await (await profile.GET(request("/", bob.cookies.value))).json();
     const count = Number((await memberRuntime().pool.query("SELECT count(*) FROM member_capsule WHERE owner_user_id=$1 AND dataset='demo'",[user.id])).rows[0].count);
-    await memberRuntime().pool.query("INSERT INTO member_capsule(id,owner_user_id,dataset,content) SELECT gen_random_uuid(),$1,'demo',$2::jsonb FROM generate_series(1,$3)",[user.id,JSON.stringify(content()),91-count]);
+    await memberRuntime().pool.query("INSERT INTO member_capsule(id,owner_user_id,dataset,content) SELECT gen_random_uuid(),$1,'demo',$2::jsonb FROM generate_series(1,$3)",[user.id,JSON.stringify(content()),11-count]);
     const responses = await Promise.all(Array.from({ length: 12 }, () => create(bob.cookies.value)));
     expect(responses.filter(response => response.status === 201)).toHaveLength(9);
     expect(responses.filter(response => response.status === 422)).toHaveLength(3);
-    expect((await (await collection.GET(request("/", bob.cookies.value))).json()).capsules).toHaveLength(100);
+    expect((await (await collection.GET(request("/", bob.cookies.value))).json()).capsules).toHaveLength(20);
   });
   it("同じ所有者でも別datasetの環境から保存を読めない", async () => {
     const { config, pool, auth } = memberRuntime();
     const other = createMemberService(config, pool, auth, "pilot-science-v1");
+    await create(alice.cookies.value);
     const { capsules } = await (await collection.GET(request("/", alice.cookies.value))).json();
     expect((await other.list(request("/", alice.cookies.value))).status).toBe(200);
     expect((await (await other.list(request("/", alice.cookies.value))).json()).capsules).toEqual([]);
@@ -718,7 +720,7 @@ describe("退会と最小運営操作（実PostgreSQL）", () => {
   beforeAll(async () => {
     await memberRuntime().pool.query("DELETE FROM member_capsule");
     alice = await login("alice"); bob = await login("bob");
-    expect((await memberRuntime().pool.query("SELECT count(*) FROM member_migration")).rows[0].count).toBe("8");
+    expect((await memberRuntime().pool.query("SELECT count(*) FROM member_migration")).rows[0].count).toBe("9");
   });
   it("停止のdry-runは無変更。適用で全sessionと共有が失効し、再開しても復活しない", async () => {
     const { pool } = memberRuntime();

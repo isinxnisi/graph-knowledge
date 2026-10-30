@@ -21,7 +21,7 @@ import { ClaimCard } from "./ClaimDetails";
 import Icon from "./Icon";
 import css from "./CapsuleStudio.module.css";
 
-type Props = { capsule: LocalCapsule; isNew?: boolean; readOnly?: boolean; destination?: string; onClose?: () => void; onSave?: (value: LocalCapsule, asCopy: boolean) => Promise<LocalCapsule>; sharing?: ReactNode; commentDraft?: { hasDraft: () => boolean; hasPending: () => boolean; clear: () => void }; locked?: boolean; capacity?: { documents: boolean; storageBytes: number; totalBytes: number } | null };
+type Props = { capsule: LocalCapsule; isNew?: boolean; startEditing?: boolean; byline?: ReactNode; onEditRequest?: (view:LocalCapsule)=>void; readOnly?: boolean; destination?: string; onClose?: () => void; onSave?: (value: LocalCapsule, asCopy: boolean) => Promise<LocalCapsule>; sharing?: ReactNode; commentDraft?: { hasDraft: () => boolean; hasPending: () => boolean; clear: () => void }; locked?: boolean; capacity?: { documents: boolean; storageBytes: number; totalBytes: number } | null };
 
 type Comparison = { key: string; state: "same" | "changed" | "missing" | "failed"; entity?: EntityDetail; claim?: ClaimDetail; revision?: string | null; neighborhood?: CapsuleNeighborhoodComparison };
 const noAction = () => {};
@@ -41,14 +41,14 @@ function sameEditingValue(left: LocalCapsule, right: LocalCapsule) {
     && keys.every(key => b.positions[key] && Math.abs(a.positions[key].x-b.positions[key].x) <= .0001 && Math.abs(a.positions[key].y-b.positions[key].y) <= .0001);
 }
 
-export default function CapsuleStudio({ capsule, isNew = false, readOnly = false, destination, onClose, onSave, sharing, commentDraft, capacity, locked = false }: Props) {
+export default function CapsuleStudio({ capsule, isNew = false, startEditing=false, byline, onEditRequest, readOnly = false, destination, onClose, onSave, sharing, commentDraft, capacity, locked = false }: Props) {
   const { locale } = useUiLocale();
   const t = (ja: string, en: string) => locale === "en" ? en : ja;
   const evidenceSupports = { identity: t("対象の同定", "Identity"), name: t("名称", "Name"), description: t("説明・属性", "Description / attribute"), relation: t("この関係", "This relation") };
   const evidenceStances = { support: t("支持", "Support"), refute: t("反証", "Refute"), background: t("背景・参考", "Background") };
   const [saved, setSaved] = useState<LocalCapsule | null>(isNew ? null : capsule);
   const [history, setHistory] = useState(() => capsuleHistory(capsuleClone(capsule)));
-  const [editing, setEditing] = useState(isNew && !readOnly);
+  const [editing, setEditing] = useState((isNew || startEditing) && !readOnly);
   const [generation, setGeneration] = useState(1);
   const [selected, setSelected] = useState<string[]>([]);
   const [selection, setSelection] = useState<Selection>(null);
@@ -415,6 +415,7 @@ export default function CapsuleStudio({ capsule, isNew = false, readOnly = false
         {titleDraft !== null ? <div className={css.titleEditor}><input ref={titleInput} aria-label={t("Capsuleのタイトル", "Capsule title")} disabled={busy} maxLength={80} value={titleDraft} onChange={event => setTitleDraft(event.target.value)} onCompositionStart={() => { composing.current = true; }} onCompositionEnd={() => { composing.current = false; }} onKeyDown={event => { if (event.nativeEvent.isComposing || composing.current || event.keyCode === 229) return; if (event.key === "Enter") { event.preventDefault(); applyTitle(); } if (event.key === "Escape") { event.preventDefault(); event.stopPropagation(); setTitleDraft(null); } }}/><button disabled={busy} aria-label={t("タイトルを適用", "Apply title")} onClick={applyTitle}><Icon name="check"/></button><button disabled={busy} aria-label={t("タイトルの変更を取り消す", "Cancel title change")} onClick={() => setTitleDraft(null)}><Icon name="close"/></button></div> : <h2>{editing ? <button className={css.titleButton} disabled={busy} title={t("タイトルを編集", "Edit title")} onClick={() => setTitleDraft(value.title)}><span>{value.title}</span><Icon name="edit"/></button> : value.title}</h2>}
       </div></div>
       <div className={css.actions}>
+        {byline}{readOnly&&onEditRequest&&<button onClick={()=>onEditRequest(current())}><Icon name="edit"/>{t("編集","Edit")}</button>}
         {editing ? <><button disabled={busy} className={css.quietButton} onClick={() => editingChanged || !saved ? setLeave("discard") : discard()}>{t("破棄", "Discard")}</button><button data-variant="primary" disabled={busy || !onSave || capacity?.documents === false} onClick={() => void save()}><Icon name="check"/>{t("保存", "Save")}</button></> : <>{sharing && <button aria-label={t("共有", "Share")} title={t("共有", "Share")} onClick={() => setShareOpen(true)}><Icon name="share"/><span className={css.optionalLabel}>{t("共有", "Share")}</span></button>}{!readOnly && onSave && <button data-variant="primary" onClick={begin}><Icon name="edit"/>{t("編集", "Edit")}</button>}</>}
         {onClose && <button className={css.iconButton} disabled={busy} aria-label={t("Capsuleを閉じる", "Close Capsule")} onClick={requestClose}><Icon name="close"/></button>}
       </div>

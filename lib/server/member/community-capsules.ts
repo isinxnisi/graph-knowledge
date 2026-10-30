@@ -1,3 +1,4 @@
+import {publicPeople} from "./public-people";
 import { createHash, randomUUID } from "node:crypto";
 import type { Pool, PoolClient, QueryResultRow } from "pg";
 import { z } from "zod";
@@ -26,7 +27,7 @@ const missing = () => new MemberError(404, "NOT_FOUND");
 
 // The listing and its description have their own audience. Being able to read
 // a thread or possessing a link token does not satisfy this predicate.
-export const readableCapsuleListing = `(l.status='active' AND cap.sharing_blocked=false AND r.sharing_blocked=false AND u.active=true
+export const readableCapsuleListing = `(l.status='active' AND (to_jsonb(cap)->>'trashed_at') IS NULL AND cap.sharing_blocked=false AND r.sharing_blocked=false AND u.active=true
  AND issuer.status='active' AND issuer.generation=l.issuer_generation
  AND (l.audience='public' OR EXISTS(SELECT 1 FROM community_capsule_audience a JOIN community_member m
   ON m.community_id=l.community_id AND m.user_id=a.user_id AND m.generation=a.generation AND m.status='active'
@@ -73,7 +74,8 @@ export function createCommunityCapsules(pool: Pool, h: Helpers, secret: string, 
       catch (error) { if (!(error instanceof MemberError && error.status === 404)) throw error; }
     }
     const snapshot = row.snapshot ? memberCapsuleSchema.parse(row.snapshot) : null;
-    return { id: row.id, communityId: row.community_id, capsuleId: row.capsule_id, capsuleRevision: Number(row.capsule_revision),
+    const creator=(await publicPeople(c,[row.owner_user_id])).get(row.owner_user_id)??null;
+    return { creator,id: row.id, communityId: row.community_id, capsuleId: row.capsule_id, capsuleRevision: Number(row.capsule_revision),
       revision: row.revision, audience: row.audience, description: row.description, createdAt: row.created_at.toISOString(), updatedAt: row.updated_at.toISOString(),
       title: snapshot?.content.title ?? row.capsule_title, entityCount: snapshot ? snapshot.content.document?.nodes.length ?? snapshot.content.entityIds.length : row.entity_count,
       claimCount: snapshot ? snapshot.content.document?.relations.length ?? snapshot.content.claimIds.length : row.claim_count, canManage: row.owner_user_id === userId, threadId };
@@ -84,7 +86,7 @@ export function createCommunityCapsules(pool: Pool, h: Helpers, secret: string, 
     return row;
   }
   async function saved(c: PoolClient, id: string, userId: string, wanted: number) {
-    const row = (await c.query("SELECT * FROM member_capsule WHERE id=$1 AND owner_user_id=$2 AND dataset=$3 FOR UPDATE", [id, userId, dataset])).rows[0];
+    const row = (await c.query("SELECT * FROM member_capsule c WHERE (to_jsonb(c)->>'trashed_at') IS NULL AND id=$1 AND owner_user_id=$2 AND dataset=$3 FOR UPDATE", [id, userId, dataset])).rows[0];
     if (!row) throw missing();
     if (row.sharing_blocked) throw new MemberError(403, "SHARING_BLOCKED");
     const frozen = (await c.query("SELECT snapshot,sharing_blocked FROM member_capsule_revision WHERE capsule_id=$1 AND revision=$2", [id, wanted])).rows[0];
