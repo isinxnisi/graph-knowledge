@@ -133,9 +133,8 @@
       "checkedAt": "2026-10-29T01:17:27+00:00"
     },
     "collection-control/issue-sources/68.json": {
-      "status": "held",
-      "reason": "Remote end closed connection without response",
-      "checkedAt": "2026-10-30T13:17:33+00:00"
+      "status": "registered: issue-68-dot-fujikoa-two-20261029",
+      "checkedAt": "2026-10-30T13:21:21+00:00"
     },
     "collection-control/issue-sources/69.json": {
       "status": "registered: issue-69-dot-ishinomori-three-20261029",
@@ -193,5 +192,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-10-30T13:19:58.597577+00:00"
+  "checkedAt": "2026-10-30T13:23:06.044604+00:00"
 }
