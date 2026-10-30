@@ -26,29 +26,25 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-10-30T19:05:19.687055+00:00",
-  "phase": "running",
+  "nextStartAt": "2026-10-30T18:11:02.213243+00:00",
+  "phase": "interval",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
     "reason": "interval",
-    "eligibleAt": "2026-10-30T19:05:19.687055+00:00",
+    "eligibleAt": "2026-10-30T18:11:02.213243+00:00",
     "windowEndAt": "2026-10-30T22:00:00+00:00"
   },
-  "activeAttempt": {
-    "requestId": "issue-68-dot-fujikoa-two-20261029",
-    "startedAt": "2026-10-30T18:00:19.687059+00:00",
-    "limitAt": "2026-10-30T18:55:19.687055+00:00"
-  },
+  "activeAttempt": null,
   "lastAttempt": {
-    "requestId": "issue-59-dot-kubo-two-20261028",
-    "endedAt": "2026-10-30T06:36:00.981364+00:00"
+    "requestId": "issue-68-dot-fujikoa-two-20261029",
+    "endedAt": "2026-10-30T18:01:02.213245+00:00"
   },
   "controlError": null,
   "requestsByPhase": {
     "blocked": 10,
-    "waiting-control": 10,
-    "completed": 37,
+    "waiting-control": 9,
+    "completed": 38,
     "awaiting-recovery": 5
   },
   "issueIntake": {
@@ -196,5 +192,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-10-30T18:00:27.066470+00:00"
+  "checkedAt": "2026-10-30T18:03:15.117209+00:00"
 }
