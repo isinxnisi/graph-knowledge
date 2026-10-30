@@ -82,12 +82,12 @@
   },
   "requestSha256": "ed885e08b9e56344ecbc4f622edae4438fd5dd4f8336ffa4606190ad19fb9ff3",
   "kind": "collect-review",
-  "phase": "waiting-control",
-  "generation": 12364,
+  "phase": "blocked",
+  "generation": 12397,
   "attempts": 1,
   "workerId": "plunode-wsl",
   "sourceCommit": "916cc77d3aeab22650e309b694661cac07a72a47",
-  "updatedAt": "2026-10-30T18:01:52+00:00",
-  "message": "Execution gate: interval",
+  "updatedAt": "2026-10-30T19:51:16+00:00",
+  "message": "Installed code differs from source commit; reviewed worker upgrade required",
   "retryAt": 1793365905.2990851
 }
