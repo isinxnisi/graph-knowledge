@@ -125,9 +125,9 @@ it('migrationのない環境では掲載成功や選択画面を表示しない'
  render(<CommunityCapsules {...props}/>);fireEvent.click(await screen.findByRole('button',{name:'Publish your Capsule'}));
  await screen.findByRole('alert');expect(screen.queryByRole('dialog')).toBeNull();expect(mutate).not.toHaveBeenCalled();
 });
-it('会話の関連カードは固定版番号とその掲載へ戻るURLを持つ',()=>{
+it('会話を残して関連Capsuleを別タブで開き、固定版の掲載URLを維持する',()=>{
  render(<CommunityCapsuleLinks listings={[listing]}/>);
- expect(screen.getByRole('link',{name:listing.title}).getAttribute('href')).toBe('#'+encodeURIComponent(base+'&listing='+listing.id));expect(screen.getByText(/Content version 2/)).toBeDefined();
+ const link=screen.getByRole('link',{name:listing.title+' · opens in a new tab'});expect(link.getAttribute('href')).toBe('#'+encodeURIComponent(base+'&listing='+listing.id));expect(link.getAttribute('target')).toBe('_blank');expect(link.getAttribute('rel')).toContain('noopener');expect(screen.getByRole('link',{name:'All Capsules'}).getAttribute('target')).toBe('_blank');expect(screen.getByText(/Content version 2/)).toBeDefined();
 });
 it('アーカイブ中も所有者は掲載を撤去でき、新版更新は停止する',async()=>{
  render(<CommunityCapsules {...props} community={{...community,status:'archived'}} route={base+'&listing='+listing.id}/>);
