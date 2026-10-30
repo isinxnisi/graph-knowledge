@@ -75,3 +75,12 @@
 
 .libraryFilters{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin:12px 0}.libraryFilters button{display:inline-flex;align-items:center;gap:6px;font-size:12px;padding:6px 10px}.libraryFilters button:last-child{margin-left:auto}.libraryFilters svg{width:17px;height:17px}
 @media(max-width:600px){.libraryFilters{gap:5px;flex-wrap:nowrap}.libraryFilters button{width:40px;height:40px;padding:10px;flex:none}.libraryFilters button>span{display:none}.libraryFilters button:last-child{margin-left:auto}}
+
+/* Keep the list frame stable before data arrives and across filters. */
+.drawer{height:min(780px,calc(var(--dialog-height,100dvh) - 32px));overflow:hidden}
+.library{height:100%;box-sizing:border-box;display:flex;flex-direction:column;min-height:0}
+.library .header{flex:none;padding-bottom:16px;margin-bottom:0}
+.libraryFilters{flex:none}
+.libraryResults{flex:1;min-height:0;overflow:auto;overscroll-behavior:contain;scrollbar-gutter:stable}
+.libraryResults>ul{margin-top:0}
+.libraryResults>[role=status],.libraryResults>[role=alert]{padding:12px 4px}

@@ -237,7 +237,7 @@ export default function MemberCapsules({ dataset, initialImport = "" }: { datase
   }
   function cancelEdit() { setConfirm(null); setDraft(null); setError(null); setMessage(null); navigate(selected?.id ?? null); }
   const title = identity.status==='guest' ? text.loginTitle : hash===null||identity.status==='checking' ? text.checking : section === "profile" ? (locale==='en'?'Edit profile':'プロフィールを編集') : section === "settings" ? text.settings : section === "posts" ? text.postsTitle : text.savedTitle;
-  return <>{workspace&&<CapsuleWorkspace key={`edit:${workspace.member.id}`} initial={workspace.capsule} member={workspace.member} ownerId={workspace.ownerId} startEditing onClose={()=>setWorkspace(null)} onSaved={value=>{setSelected(value);setItems(items=>items.map(item=>item.id===value.id?value:item));}}/>}<PersonalMemberControls logout={() => logout(false)} busy={busy || !!draft || !!profileDraft || !!workspace || publicProfileDirty} guard={()=>!(draft||profileDraft||workspace)||window.confirm(locale==='en'?'Leave without saving this draft?':'未保存の入力を破棄して移動しますか？')} /><main lang={locale} className={css.page}>
+  return <>{workspace&&<CapsuleWorkspace key={`edit:${workspace.member.id}`} initial={workspace.capsule} member={workspace.member} ownerId={workspace.ownerId} startEditing onClose={()=>setWorkspace(null)} onSaved={value=>{setSelected(value);setItems(items=>items.map(item=>item.id===value.id?value:item));}}/>}<PersonalMemberControls logout={() => logout(false)} busy={busy || !!draft || !!profileDraft || !!workspace || publicProfileDirty} guard={()=>!(draft||profileDraft||workspace)||window.confirm(locale==='en'?'Leave without saving this draft?':'未保存の入力を破棄して移動しますか？')} /><main lang={locale} className={`${css.page} ${selected&&section==="saved"?css.readingPage:""}`}>
     <div className={communitiesEnabled?undefined:css.memberLayout}>
     {user && !communitiesEnabled && <nav className={css.memberNavigation} aria-label={text.navigation}>
       <a href="#my-capsules" aria-current={section === "saved" ? "page" : undefined}><Icon name="capsule" />{text.savedTitle}</a>
@@ -280,18 +280,18 @@ export default function MemberCapsules({ dataset, initialImport = "" }: { datase
       <button disabled={busy} onClick={() => setConfirm("discard")}>{text.discardLocked}</button>
       {confirm === "discard" && <div role="alert"><p>{text.discardLockedConfirm}</p><button onClick={cancelEdit}>{captions.discard}</button><button onClick={() => setConfirm(null)}>{text.cancel}</button></div>}
     </section>}
-    {user && <section id="my-capsules" className={css.card} aria-label={text.library}>
-      {draft && user.id === draft.ownerId ? <MemberCapsuleEditor draft={draft} current={selected} busy={busy} onChange={setDraft} onSave={update} onCancel={cancelEdit} onCheck={refresh} /> : selected && reading ? <><button className={css.backLink} disabled={busy} onClick={() => { setSelected(null); setConfirm(null); navigate(null); }}>← {locale==="en"?"Capsules":"Capsule一覧へ"}</button>
+    {user && <section id="my-capsules" className={`${css.card} ${selected?css.detailCard:""}`} aria-label={text.library}>
+      {draft && user.id === draft.ownerId ? <MemberCapsuleEditor draft={draft} current={selected} busy={busy} onChange={setDraft} onSave={update} onCancel={cancelEdit} onCheck={refresh} /> : selected && reading ? <><div className={css.detailNavigation}><button className={css.backLink} disabled={busy} onClick={() => { setSelected(null); setConfirm(null); navigate(null); }}>← {locale==="en"?"Capsules":"Capsule一覧へ"}</button>
         {!historical && <nav className={css.readingTabs} aria-label={selected.content.title}>
           <button aria-pressed={readingTab === "content"} onClick={() => { setReadingTab("content"); navigate(selected.id); }}>{text.contentTab}</button>
           <button aria-pressed={readingTab === "sharing"} onClick={() => { setReadingTab("sharing"); navigate(selected.id, undefined, true); }}>{text.sharingTab}</button>
 
-    </nav>}
+    </nav>}</div>
         <div hidden={readingTab !== "content"}>
         {historical && <div role="status"><h2>{historyText.reading(selected.revision)}</h2><p>{historyText.snapshotHelp}</p><button disabled={busy} onClick={() => read(selected.id)}>{historyText.current}</button></div>}
-        <CapsuleRevisionList key={`revisions:${selected.id}:${selected.revision}:${user.id}`} capsuleId={selected.id} userId={user.id} disabled={busy} onRead={revision => read(selected.id, revision)} onUnauthorized={() => fail(new MemberClientError(401, "UNAUTHENTICATED"))} />
         {historical && <CapsuleComparison key={`comparison:${selected.id}:${selected.revision}:${user.id}`} snapshot={selected} userId={user.id} disabled={busy} onUnauthorized={() => fail(new MemberClientError(401, "UNAUTHENTICATED"))} />}
         <CapsuleReader key={`${selected.id}:${selected.revision}`} capsule={reading} explorationLinks onEditRequest={!historical&&!busy?view=>setWorkspace({capsule:view,member:selected,ownerId:user.id}):undefined}/>
+        <CapsuleRevisionList key={`revisions:${selected.id}:${selected.revision}:${user.id}`} capsuleId={selected.id} userId={user.id} disabled={busy} onRead={revision => read(selected.id, revision)} onUnauthorized={() => fail(new MemberClientError(401, "UNAUTHENTICATED"))} />
 
         </div>
         <div hidden={readingTab !== "sharing"}>
