@@ -5,13 +5,15 @@ import { assertMemberOrigin, MemberError, memberInput, memberJson } from "./http
 import { memberTransaction } from "./operations";
 import { communityPage, pageTime } from "./community-pagination";
 
+import {googleProfileImage,publicProfileImage} from "../../domain/profile-image";
+
 const missing = () => new MemberError(404, "NOT_FOUND");
 export const publicProfilesEnabled = () => process.env.PUBLIC_PROFILES_ENABLED === "1";
-const profileSelect = `SELECT p.*, a.id AS ai_id,a.logical_key,a.operator FROM public_profile p
+const profileSelect = `SELECT p.*, u.image AS provider_image, a.id AS ai_id,a.logical_key,a.operator FROM public_profile p
  LEFT JOIN "user" u ON u.id=p.user_id LEFT JOIN ai_identity a ON a.id=p.ai_identity_id`;
 const visibleProfile = `(u.active=true OR a.status='active')`;
 export function publicProfileDto(p: QueryResultRow): PublicProfile {
-  return { handle:p.handle,kind:p.user_id?"human":"ai",displayName:p.display_name,bio:p.bio,icon:p.icon,
+  return { handle:p.handle,kind:p.user_id?"human":"ai",displayName:p.display_name,bio:p.bio,icon:p.icon,imageUrl:publicProfileImage(p.icon,p.provider_image),
     displayNameEn:p.display_name_en??null,bioEn:p.bio_en??null,timelinePublic:p.timeline_public,
     ai:p.ai_id?{id:p.ai_id,key:p.logical_key,operator:p.operator}:null };
 }
@@ -77,7 +79,7 @@ export function createPublicProfiles(pool:Pool,origin:string,owner:(req:Request)
     async own(req:Request) {
       const u=await actor(req);return memberTransaction(pool,async c=>{await active(c,u.id);
         const p=(await c.query(`${profileSelect} WHERE p.user_id=$1`,[u.id])).rows[0];
-        return memberJson({profile:p?publicProfileDto(p):null,revision:p?.revision??0});
+        return memberJson({profile:p?publicProfileDto(p):null,revision:p?.revision??0,googleImageUrl:googleProfileImage(p?.provider_image)});
       });
     },
     async save(req:Request) {
@@ -93,13 +95,13 @@ export function createPublicProfiles(pool:Pool,origin:string,owner:(req:Request)
         if(!claimed&&(await c.query('SELECT profile_id FROM public_handle_claim WHERE handle=$1',[input.handle])).rows[0]?.profile_id!==id)throw new MemberError(409,'HANDLE_UNAVAILABLE');
         if(old)await c.query(`UPDATE public_profile SET handle=$2,display_name=$3,bio=$4,icon=$5,timeline_public=$6,revision=revision+1 WHERE id=$1`,[id,input.handle,input.displayName,input.bio,input.icon,input.timelinePublic]).catch(e=>{if(e.code==='23505')throw new MemberError(409,'HANDLE_UNAVAILABLE');throw e;});
         const p=(await c.query(`${profileSelect} WHERE p.id=$1`,[id])).rows[0];
-        return memberJson({profile:publicProfileDto(p),revision:p.revision});
+        return memberJson({profile:publicProfileDto(p),revision:p.revision,googleImageUrl:googleProfileImage(p.provider_image)});
       });
     },
     async following(req:Request) {
       const u=await actor(req);return memberTransaction(pool,async c=>{await active(c,u.id);
         const page=await communityPage(c,req,secret,'account-following',u.id,'',
-          `SELECT p.*,a.id AS ai_id,a.logical_key,a.operator,f.profile_id AS page_id,${pageTime('f.created_at')}
+          `SELECT p.*,u.image AS provider_image,a.id AS ai_id,a.logical_key,a.operator,f.profile_id AS page_id,${pageTime('f.created_at')}
            FROM account_follow f JOIN public_profile p ON p.id=f.profile_id LEFT JOIN "user" u ON u.id=p.user_id LEFT JOIN ai_identity a ON a.id=p.ai_identity_id
            WHERE f.user_id=$1 AND ${visibleProfile}`,[u.id],'f.created_at','f.profile_id');
         return memberJson({profiles:page.rows.map(publicProfileDto),nextCursor:page.nextCursor});

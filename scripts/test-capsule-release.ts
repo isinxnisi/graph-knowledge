@@ -37,10 +37,27 @@ try{
  cli(full);const afterSchema=schema(),after=fingerprints(afterSchema);cli(full);assert.deepEqual(fingerprints(afterSchema),after);assert.deepEqual(fingerprints(oldSchema,"graph_member",true),before);
  assert.equal(Object.keys(ledger()).length,16);for(const [name,sum] of Object.entries(ledger()))assert.equal(sum,createHash("sha256").update(await readFile("db/member/"+name)).digest("hex"));
  console.log("PASS: old checksums/rows; separate DB restore; 011–015 rehearsal, CLI apply and idempotency");
+ if(process.argv.includes('--google-profile-images')){
+  const before=JSON.parse(sql("SELECT json_agg(p ORDER BY id) FROM public_profile p"));
+  cli([...full,'--google-profile-images']);
+  const after=JSON.parse(sql("SELECT json_agg(p ORDER BY id) FROM public_profile p"));
+  assert.deepEqual(after,before.map((p:{user_id:string|null;icon:string;revision:number})=>p.user_id?{...p,icon:'google',revision:p.revision+(p.icon==='google'?0:1)}:p));
+  assert.equal(Object.keys(ledger()).length,17);cli([...full,'--google-profile-images']);
+  assert.deepEqual(JSON.parse(sql("SELECT json_agg(p ORDER BY id) FROM public_profile p")),after);
+  sql(`UPDATE "user" SET image='https://lh3.googleusercontent.com/a/test-photo=s96-c' WHERE id='${a}'`);
+  console.log('PASS: production member-ops 016 default/backfill, unchanged AI and repeat');
+ }
  const session=(uid:string)=>JSON.parse(code(`import {createHmac} from 'node:crypto';import {createMemberAuth,memberPool} from './lib/server/member/auth.ts';import {memberConfig} from './lib/server/member/config.ts';const cfg=memberConfig();const pool=memberPool(cfg);const auth=createMemberAuth(cfg,pool);try{const ctx=await auth.$context;const s=await ctx.internalAdapter.createSession('${uid}');const signature=createHmac('sha256',process.env.MEMBER_AUTH_SECRET).update(s.token).digest('base64');console.log(JSON.stringify(ctx.authCookies.sessionToken.name+'='+encodeURIComponent(s.token+'.'+signature)));}finally{await pool.end();}`)) as string;
  cookieA=session(a);cookieB=session(b);dc(["up","-d","--no-deps","web"]);
  for(let n=0;n<60;n++){try{if((await req('/api/member/status')).ok)break;}catch{}await new Promise(r=>setTimeout(r,500));}
  assert.equal((await req('/api/member/profile')).status,401);assert.equal((await req('/api/member/capsule-capabilities','GET',undefined,'a')).status,200);
+ if(process.argv.includes('--google-profile-images')){
+  const me=await body(await req('/api/member/profile','GET',undefined,'a'));
+  assert.equal(me.user.profile.icon,'google');assert.equal(me.user.profile.imageUrl,'https://lh3.googleusercontent.com/a/test-photo=s96-c');
+  const publicProfile=await body(await req('/api/accounts/profiles/'+me.user.profile.handle));
+  assert.equal(publicProfile.profile.imageUrl,me.user.profile.imageUrl);assert.ok(!('email' in publicProfile.profile));
+  console.log('PASS: production Web authenticated and anonymous Google avatar projection');
+ }
  const n1=randomUUID(),n2=randomUUID();const content={dataset:'public-kg',title:'公開図の第一版',note:'画像と共有本文の一致を確認',language:'ja',entityIds:[],claimIds:[],document:{schemaVersion:1,nodes:[{key:n1,title:'起点',description:'',badge:'',shape:'circle',origin:{kind:'local'}},{key:n2,title:'関係先',description:'',badge:'',shape:'diamond',origin:{kind:'local'}}],relations:[{key:randomUUID(),source:n1,target:n2,label:'関係する',note:'',origin:{kind:'local'}}],texts:[],evidence:[],unresolvedClaimIds:[],layout:{positions:{[n1]:{x:0,y:0},[n2]:{x:150,y:50}},pan:{x:0,y:0},zoom:1}}};
  const cap=(await body(await req('/api/member/capsules','POST',{requestId:randomUUID(),content},'a'),201)).capsule,p='/api/member/capsules/'+cap.id;
  const issued=await body(await req(p+'/share','POST',{expectedRevision:1,expectedShareId:null},'a'),201);token=issued.token;const link='/shared/'+token;

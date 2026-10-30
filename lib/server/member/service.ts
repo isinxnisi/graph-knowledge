@@ -1,3 +1,4 @@
+import {publicProfileImage} from "../../domain/profile-image";
 import { createHash, randomUUID } from "node:crypto";
 import type { Pool } from "pg";
 import type { DatasetMode } from "../../domain/dataset";
@@ -45,10 +46,10 @@ export function createMemberService(config: MemberConfig, pool: Pool, auth: Memb
     ...createCapsuleDiscussion(pool, dataset, config.origin, owner),
     async profile(request: Request) {
       const user = await owner(request);
-      const row=(await pool.query('SELECT id,name,locale FROM "user" WHERE id=$1 AND active=true',[user.id])).rows[0];
+      const row=(await pool.query('SELECT id,name,locale,image FROM "user" WHERE id=$1 AND active=true',[user.id])).rows[0];
       if(!row)throw new MemberError(401,'UNAUTHENTICATED');
       const profile=publicProfilesEnabled()?(await pool.query('SELECT handle,icon FROM public_profile WHERE user_id=$1',[user.id])).rows[0]:null;
-      return memberJson({ user: { ...row, ...(profile?{profile}:{}), ...(isSiteOperator(user.id)?{siteOperator:true}:{}) } });
+      return memberJson({ user: { id:row.id,name:row.name,locale:row.locale, ...(profile?{profile:{...profile,imageUrl:publicProfileImage(profile.icon,row.image)}}:{}), ...(isSiteOperator(user.id)?{siteOperator:true}:{}) } });
     },
     async deleteAccount(request: Request) {
       assertMemberOrigin(request, config.origin);

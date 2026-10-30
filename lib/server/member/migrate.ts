@@ -4,7 +4,7 @@ import type { Pool } from "pg";
 
 // Explicit additive migrations, pinned in Git. Never run during requests or
 // execute generated SQL from a newly upgraded auth dependency without review.
-export async function migrateMemberDatabase(pool: Pool, communities = false, siteOperations = false, publicProfiles = false, capsuleDocuments = false, communityCapsules = false, capsuleComments = false, capsuleShareRecovery = false, capsulePublications = false) {
+export async function migrateMemberDatabase(pool: Pool, communities = false, siteOperations = false, publicProfiles = false, capsuleDocuments = false, communityCapsules = false, capsuleComments = false, capsuleShareRecovery = false, capsulePublications = false, googleProfileImages = false) {
   const client = await pool.connect();
   try {
     await client.query("BEGIN");
@@ -14,7 +14,8 @@ export async function migrateMemberDatabase(pool: Pool, communities = false, sit
     if(publicProfiles&&(!communities||!siteOperations))throw new Error("Public profiles require migrations 000-008");
     if (communityCapsules && (!communities || !capsuleDocuments)) throw new Error("Community Capsules require community and document migrations");
     if (capsulePublications && !capsuleShareRecovery) throw new Error("Capsule publications require share recovery migration");
-    for (const name of ["000-auth.sql", "001-capsules.sql", "002-capsule-sharing.sql", "003-capsule-discussion.sql", "004-account-operations.sql", ...(communities ? ["005-communities.sql", "006-community-continuity.sql", "007-community-safety.sql"] : []), ...(siteOperations ? ["008-site-operations.sql"] : []), ...(publicProfiles ? ["009-public-profiles.sql", "010-account-initial-experience.sql"] : []), ...(capsuleDocuments ? ["011-capsule-documents.sql"] : []), ...(communityCapsules ? ["012-community-capsules.sql"] : []), ...(capsuleComments ? ["013-capsule-comment-default.sql"] : []), ...(capsuleShareRecovery ? ["014-capsule-share-recovery.sql"] : []), ...(capsulePublications ? ["015-capsule-publications.sql"] : [])]) {
+    if (googleProfileImages && !publicProfiles) throw new Error("Google profile images require public profile migrations");
+    for (const name of ["000-auth.sql", "001-capsules.sql", "002-capsule-sharing.sql", "003-capsule-discussion.sql", "004-account-operations.sql", ...(communities ? ["005-communities.sql", "006-community-continuity.sql", "007-community-safety.sql"] : []), ...(siteOperations ? ["008-site-operations.sql"] : []), ...(publicProfiles ? ["009-public-profiles.sql", "010-account-initial-experience.sql"] : []), ...(capsuleDocuments ? ["011-capsule-documents.sql"] : []), ...(communityCapsules ? ["012-community-capsules.sql"] : []), ...(capsuleComments ? ["013-capsule-comment-default.sql"] : []), ...(capsuleShareRecovery ? ["014-capsule-share-recovery.sql"] : []), ...(capsulePublications ? ["015-capsule-publications.sql"] : []), ...(googleProfileImages ? ["016-google-profile-images.sql"] : [])]) {
       const sql = await readFile(new URL(`../../../db/member/${name}`, import.meta.url), "utf8");
       const checksum = createHash("sha256").update(sql).digest("hex");
       const previous = await client.query("SELECT checksum FROM member_migration WHERE name = $1", [name]);

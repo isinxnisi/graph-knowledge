@@ -35,7 +35,7 @@ export default function SiteHeader({ dataset, page = "explore", onBeforeAccountN
   const pendingLabel=operations.status==='ready'?`${locale==='en'?'Pending':'未対応'} ${operations.data?.pendingCount}`:operations.status==='error'?(locale==='en'?'Pending count unavailable':'未対応件数を確認できません'):(locale==='en'?'Checking pending cases':'未対応件数を確認中');
   const operationsBadge=<span className={styles.operationsBadge} role="status" data-pending={operations.status==='ready'&&!!operations.data?.pendingCount} aria-label={pendingLabel} title={pendingLabel}>{operations.status==='ready'?(operations.data!.pendingCount>99?'99+':operations.data!.pendingCount):operations.status==='error'?'!':'…'}</span>;
   const displayName = currentUser?.name.trim() || text.account;
-  const mark = currentUser ? <ProfileAvatar small compact icon={currentUser.profile?.icon??'person'}/> : <Icon name="person" />;
+  const mark = currentUser ? <ProfileAvatar small compact icon={currentUser.profile?.icon??'person'} imageUrl={currentUser.profile?.imageUrl}/> : <Icon name="person" />;
   const [appearance, setAppearance] = useState(defaultAppearance);
   const [capsulesOpen, setCapsulesOpen] = useState(false);
   const [storageError, setStorageError] = useState(false);

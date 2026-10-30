@@ -97,8 +97,8 @@ it('normal OIDC automatically prepares a safe profile and chosen names replace t
  const c=await make(a);const t=await thread(c.id,a);const before=await(await com('/threads/'+t.id)).json();
  expect(before.posts[0].name).toBe(a.name);expect(before.posts[0].author.handle).toMatch(/^member-/);expect(JSON.stringify(before.posts)).not.toContain(a.id);
  expect((await save(a,'profile-alice')).status).toBe(200);const data=await pub('profile-alice');expect(data.profile.displayName).toBe('公開 profile-alice');
- const serialized=JSON.stringify(data);for(const secret of [a.id,a.name,'@fixture.test','email','image','user_id'])expect(serialized).not.toContain(secret);
- const after=await(await com('/threads/'+t.id)).json();expect(after.posts[0].author).toEqual({handle:'profile-alice',icon:'leaf'});expect(after.posts[0].name).toBe('公開 profile-alice');expect(after.posts[0]).not.toHaveProperty('author_id');
+ const serialized=JSON.stringify(data);for(const secret of [a.id,a.name,'@fixture.test','email','provider_image','user_id'])expect(serialized).not.toContain(secret);
+ const after=await(await com('/threads/'+t.id)).json();expect(after.posts[0].author).toEqual({handle:'profile-alice',icon:'leaf',imageUrl:null});expect(after.posts[0].name).toBe('公開 profile-alice');expect(after.posts[0]).not.toHaveProperty('author_id');
 });
 it('new real OIDC users receive unique pseudonyms for missing/email names without a setup gate',async()=>{
  const empty=await person('profile-empty'),email=await person('profile-email');
@@ -154,7 +154,7 @@ it('creation and comments project distinct real sources, without any message exc
 });
 it('creator and roster bindings stay inside readable scope and never expose a public member roster',async()=>{
  const c=await make(a),t=await thread(c.id,a),publicPlace=await(await com('/'+c.id)).json();
- expect(publicPlace.community.creator).toEqual({handle:'profile-alice',displayName:'公開 profile-alice',icon:'leaf'});
+ expect(publicPlace.community.creator).toEqual({handle:'profile-alice',displayName:'公開 profile-alice',icon:'leaf',imageUrl:null});
  expect(publicPlace.threads.find((r:{id:string})=>r.id===t.id).creator).toEqual(publicPlace.community.creator);expect(publicPlace.members).toEqual([]);
  const detail=await(await com('/threads/'+t.id)).json();expect(detail.thread.creator).toEqual(publicPlace.community.creator);
  expect(JSON.stringify(publicPlace)).not.toContain(a.id);
@@ -312,4 +312,38 @@ it('@handle invitations retain expiry, issuer generation and target suspension i
 it('handle changes while user locking is pending never redirect an invitation to a different or retired handle',async()=>{
  const f=await inviteFixture(),pool=memberRuntime().pool,lock=await pool.connect();
  try{await lock.query('BEGIN');await lock.query('SELECT id FROM "user" WHERE id=$1 FOR UPDATE',[f.target.id]);const pending=f.issue('@'+f.handle);await vi.waitFor(async()=>expect((await pool.query("SELECT 1 FROM pg_stat_activity WHERE wait_event_type='Lock' AND query LIKE 'SELECT active FROM%'")).rowCount).toBeGreaterThan(0));await lock.query('UPDATE public_profile SET handle=$2 WHERE user_id=$1',[f.target.id,'moved-'+randomUUID().slice(0,8)]);await lock.query('COMMIT');expect((await pending).status).toBe(400);expect((await pool.query('SELECT id FROM community_invitation WHERE community_id=$1',[f.community.id])).rowCount).toBe(0);}finally{await lock.query('ROLLBACK');lock.release();}
+});
+
+it('016 switches human defaults once, protects saved choices on re-run and projects only opted-in safe Google photos',async()=>{
+ const pool=memberRuntime().pool;
+ const before=(await pool.query('SELECT * FROM public_profile ORDER BY id')).rows;
+ const usersBefore=(await pool.query('SELECT * FROM "user" ORDER BY id')).rows;
+ const ledgerBefore=(await pool.query('SELECT * FROM member_migration ORDER BY name')).rows;
+ await migrateMemberDatabase(pool,true,true,true,false,false,false,false,false,true);
+ const after=(await pool.query('SELECT * FROM public_profile ORDER BY id')).rows;
+ expect(after).toEqual(before.map(p=>p.user_id?{...p,icon:'google',revision:p.revision+(p.icon==='google'?0:1)}:p));
+ expect((await pool.query('SELECT * FROM "user" ORDER BY id')).rows).toEqual(usersBefore);
+ expect((await pool.query('SELECT * FROM member_migration ORDER BY name')).rows.slice(0,-1)).toEqual(ledgerBefore);
+ const who=await person('google-photo-default');
+ const photo='https://lh3.googleusercontent.com/a/test-account-photo=s96-c';
+ await pool.query('UPDATE "user" SET image=$2 WHERE id=$1',[who.id,photo]);
+ const own=await(await call('/me',who)).json();
+ expect(own).toMatchObject({googleImageUrl:photo,profile:{icon:'google',imageUrl:photo}});
+ expect((await pub(own.profile.handle)).profile.imageUrl).toBe(photo);
+ expect((await(await memberRuntime().service.profile(request('/api/member/profile',who))).json()).user.profile).toMatchObject({icon:'google',imageUrl:photo});
+ const place=await make(who);const conversation=await thread(place.id,who);
+ const read=await(await com('/threads/'+conversation.id)).json();
+ expect(read.thread.creator.imageUrl).toBe(photo);expect(read.posts[0].author.imageUrl).toBe(photo);
+ expect((await save(who,own.profile.handle,{icon:'leaf'})).status).toBe(200);
+ expect((await pub(own.profile.handle)).profile.imageUrl).toBeNull();
+ expect((await(await call('/me',who)).json()).googleImageUrl).toBe(photo);
+ const snapshot=(await pool.query('SELECT * FROM public_profile ORDER BY id')).rows;
+ await migrateMemberDatabase(pool,true,true,true,false,false,false,false,false,true);
+ expect((await pool.query('SELECT * FROM public_profile ORDER BY id')).rows).toEqual(snapshot);
+ expect((await save(who,own.profile.handle,{icon:'google'})).status).toBe(200);
+ await pool.query('UPDATE "user" SET image=$2 WHERE id=$1',[who.id,'https://example.com/private-tracker']);
+ expect((await pub(own.profile.handle)).profile.imageUrl).toBeNull();
+ expect((await(await call('/me',who)).json()).googleImageUrl).toBeNull();
+ await pool.query('UPDATE "user" SET image=NULL WHERE id=$1',[who.id]);
+ expect((await pub(own.profile.handle)).profile).toMatchObject({icon:'google',imageUrl:null});
 });

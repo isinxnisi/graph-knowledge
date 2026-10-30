@@ -85,3 +85,9 @@ node --import tsx scripts/test-member.ts --e2e --accounts
 ```
 
 専用container・tmpfs・独立PG・実OIDC署名/PKCE/sessionで検証し、終了時に作成したcontainerだけを撤去する。betaのGoogleや本番会員をfixtureへ置換しない。環境にブラウザ共有ライブラリが必要なら既存検証runtimeを指定する。通常コミュニティ・会員・運営の回帰は従来 `--community`／`--safety`／`--operations` と会員suiteを使う。
+
+## 016 Google画像既定への更新（2026-10-30）
+
+000〜015は不変。`--google-profile-images --confirm-origin "$MEMBER_ORIGIN"` を明示し016を適用する（000〜010もchecksum確認）。Capsule適用済み環境では既存のCapsuleフラグも併用して000〜015全件を照合する。
+
+対象Webを停止しprivate dumpを別DBへ復元・比較してから、復元DBで016と再実行を検証する。許可する既存行の差分は人間 `public_profile.icon='google'` とrevision+1だけ。AIプロフィールと他テーブル全列は不変。新規User作成triggerの既定もgoogleにする。新Webは画像のない利用者を人型へfallbackする。旧Webの編集schemaはgoogleを受け付けないので、移行後は旧Webへ機械的に戻さず修正版へroll-forwardする。本人が後から固定アイコンへ戻した選択は再適用で変更しない。
