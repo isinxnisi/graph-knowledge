@@ -1,8 +1,8 @@
 # Plunode 開発・運用の統合一覧
 
-観測：**2026-10-31T03:17:08+09:00**（JST）。30分周期・AI呼出し0。確認時点の記録です。90分以上古い場合は現在稼働を保証しません。
+観測：**2026-10-31T03:47:08+09:00**（JST）。30分周期・AI呼出し0。確認時点の記録です。90分以上古い場合は現在稼働を保証しません。
 手動の予定・名前は [WORK_SESSIONS.json](WORK_SESSIONS.json) をこのbranchで編集。自動更新はこのMarkdownだけを変更します。
-<!-- work-status:6be16fc8ff97cb7507f7cad129543b4fda697ebf3170a5b6712e366b26500fbe day:2026-10-31 -->
+<!-- work-status:f7e86445136059b21b6a33c0080a799bd60d117e36ff887407710548729b4a6a day:2026-10-31 -->
 
 ## A. 作業セッション
 
@@ -54,7 +54,7 @@
 
 | 環境・用途 | 接続・配置（設定） | 観測結果 | 利用セッション |
 |---|---|---|---|
-| Windows PC<br>ID: windows<br>起動元・Task Scheduler<br>専用通常ユーザーtask | worktree: なし | Windows観測 2026-10-31T03:16:51+09:00 | 統合管理一覧 |
+| Windows PC<br>ID: windows<br>起動元・Task Scheduler<br>専用通常ユーザーtask | worktree: なし | Windows観測 2026-10-31T03:46:51+09:00 | 統合管理一覧 |
 | WSL Ubuntu<br>ID: wsl<br>Python／Git／Worker<br>既存WSL | worktree: 複数（実測表参照） | WSL観測済み（この時点のみ） | データ収集・受入<br>データ公開・配送<br>統合管理一覧 |
 | Docker Desktop／WSL<br>ID: docker<br>既存DB・共有service<br>既存container（停止分は維持） | worktree: Compose設定は既存記録参照 | 対象7稼働／6停止 | — |
 | Cloudflare Tunnel<br>ID: tunnel<br>beta公開経路<br>cloudflared（Windows／共有container） | [URL](https://graph-beta.isinxnisi.com/)<br>worktree: なし | Windows cloudflared 1プロセス／公開経路はbetaのHTTP参照 | — |
@@ -98,19 +98,19 @@
 
 ## C. Worker・自動処理
 
-Windows task観測時刻：2026-10-31T03:16:51+09:00。
+Windows task観測時刻：2026-10-31T03:46:51+09:00。
 
 | 処理／目的 | task観測状態／終了結果 | 周期／次回 | 最終起動（観測時） |
 |---|---|---|---|
 | Afterglow-LoginRecovery / ログオン復帰 | Ready / 0 | Logon / None | 2026-10-30T15:15:24.0000000+09:00 |
 | GraphKnowledge-Autopilot / 自動開発 | Disabled / 0 | PT2H / None | 2026-10-10T10:00:02.0000000+09:00 |
-| Plunode-CollectionWorker / 収集／正式受入（依頼別・同一Worker） | Running / 2147946720 | PT1M,Logon / 2026-10-31T03:17:30.0000000+09:00 | 2026-10-31T03:16:31.0000000+09:00 |
-| Plunode-Publication-Delivery / 公開候補準備／承認済み配送 | Ready / 1 | Logon,PT5M / 2026-10-31T03:20:22.0000000+09:00 | 2026-10-31T03:15:23.0000000+09:00 |
-| Plunode-WorkStatus / 一覧の観測・差分反映（AIなし） | Running / 267009 | PT30M / 2026-10-31T03:46:46.0000000+09:00 | 2026-10-31T03:16:47.0000000+09:00 |
+| Plunode-CollectionWorker / 収集／正式受入（依頼別・同一Worker） | Running / 2147946720 | PT1M,Logon / 2026-10-31T03:47:30.0000000+09:00 | 2026-10-31T03:46:31.0000000+09:00 |
+| Plunode-Publication-Delivery / 公開候補準備／承認済み配送 | Ready / 1 | Logon,PT5M / 2026-10-31T03:50:22.0000000+09:00 | 2026-10-31T03:45:23.0000000+09:00 |
+| Plunode-WorkStatus / 一覧の観測・差分反映（AIなし） | Running / 267009 | PT30M / 2026-10-31T04:16:46.0000000+09:00 | 2026-10-31T03:46:47.0000000+09:00 |
 
 task結果267009は実行中を意味し、終了成功ではありません。表の次回時刻を過ぎた場合は新しい観測を待ってください。
 
-CollectionWorker記録：online（health観測 2026-10-30T18:17:03+00:00）。実処理 なし、pause なし。
+CollectionWorker記録：online（health観測 2026-10-30T18:46:59+00:00）。実処理 なし、pause なし。
 許可枠：03:00–07:00 JST / 09:00–12:00 JST / 15:00–18:00 JST、既存10分休憩を維持。
 catalog同期：blocked-review-required（固定runtimeとの差異の確認事項。自動修復しません）。
 公開候補準備の既存health：preparation-stopped（記録時刻 2026-10-30T20:00:31+09:00）。
@@ -119,8 +119,8 @@ catalog同期：blocked-review-required（固定runtimeとの差異の確認事�
 
 | 区分 | 件数・状態 |
 |---|---|
-| Worker依頼（履歴を含む） | awaiting-recovery: 5依頼<br>blocked: 10依頼<br>completed: 39依頼<br>waiting-control: 8依頼 |
-| 収集・レビューの継続待ち／実行中 | 13依頼<br>実処理: なし |
+| Worker依頼（履歴を含む） | awaiting-recovery: 5依頼<br>blocked: 10依頼<br>completed: 42依頼<br>waiting-control: 5依頼 |
+| 収集・レビューの継続待ち／実行中 | 10依頼<br>実処理: なし |
 | 未受入の保存レビュー候補 | 17 Claim |
 | 保存された保留（旧記録を含む） | 3 Claim<br>40作品（旧準備記録） |
 | 正式受入済み | 87 Claim / 12 receipts |
@@ -138,29 +138,26 @@ catalog同期：blocked-review-required（固定runtimeとの差異の確認事�
 
 | 依頼 | 種別／状態 | 試行 | 元状態の記録時刻 |
 |---|---|---|---|
-| issue-25-manga23-20261019 | issue-prepare / blocked | 1 | 2026-10-30T18:15:31+00:00 |
-| issue-25-manga23-20261019-repair1 | issue-prepare / blocked | 1 | 2026-10-30T18:15:29+00:00 |
-| issue-25-manga23-20261019-repair1-batch-01 | collect-review / waiting-control | 1 | 2026-10-30T18:16:14+00:00 |
-| issue-25-manga23-20261019-repair1-batch-02 | collect-review / blocked | 1 | 2026-10-30T18:16:15+00:00 |
-| issue-25-manga23-20261019-repair1-batch-03 | collect-review / blocked | 1 | 2026-10-30T18:16:17+00:00 |
-| issue-25-manga23-20261019-repair1-batch-04 | collect-review / blocked | 1 | 2026-10-30T18:16:18+00:00 |
-| issue-25-manga23-20261019-repair1-batch-05 | collect-review / blocked | 1 | 2026-10-30T18:16:20+00:00 |
-| issue-25-manga23-20261019-repair1-batch-06 | collect-review / blocked | 1 | 2026-10-30T18:16:21+00:00 |
-| issue-25-manga23-20261019-repair1-batch-07 | collect-review / blocked | 1 | 2026-10-30T18:16:23+00:00 |
-| issue-25-manga23-20261019-repair1-batch-08 | collect-review / blocked | 1 | 2026-10-30T18:16:24+00:00 |
-| issue-25-manga23-20261019-repair1-batch-09 | collect-review / blocked | 1 | 2026-10-30T18:16:26+00:00 |
-| issue-25-manga23-20261019-repair1-batch-10 | collect-review / waiting-control | 1 | 2026-10-30T18:16:27+00:00 |
-| issue-47-dot-yukimura-two-20261027 | issue-prepare / awaiting-recovery | 4 | 2026-10-30T18:15:39+00:00 |
-| issue-49-dot-hara-souten-20261027-batch-01 | collect-review / waiting-control | 1 | 2026-10-30T18:16:47+00:00 |
-| issue-50-dot-endo-tista-20261027 | issue-prepare / awaiting-recovery | 2 | 2026-10-30T18:15:45+00:00 |
-| issue-51-dot-araki-rohan-20261027 | issue-prepare / waiting-control | 1 | 2026-10-30T18:15:47+00:00 |
-| issue-56-dot-urushibara-two-20261028 | issue-prepare / waiting-control | 1 | 2026-10-30T18:15:48+00:00 |
-| issue-59-dot-kubo-two-20261028-batch-01 | collect-review / waiting-control | 1 | 2026-10-30T18:16:55+00:00 |
-| issue-60-dot-ichikawa-houseki-20261028 | issue-prepare / waiting-control | 2 | 2026-10-30T18:15:54+00:00 |
-| issue-61-dot-gotouge-kimetsu-20261028 | issue-prepare / awaiting-recovery | 2 | 2026-10-30T18:15:56+00:00 |
-| issue-69-dot-ishinomori-three-20261029 | issue-prepare / awaiting-recovery | 3 | 2026-10-30T18:16:07+00:00 |
-| issue-70-dot-fujikof-doraemon-20261029 | issue-prepare / awaiting-recovery | 2 | 2026-10-30T18:16:09+00:00 |
-| issue-73-dot-murata-onepunch-20261030 | issue-prepare / waiting-control | 1 | 2026-10-30T18:16:12+00:00 |
+| issue-25-manga23-20261019 | issue-prepare / blocked | 1 | 2026-10-30T18:44:26+00:00 |
+| issue-25-manga23-20261019-repair1 | issue-prepare / blocked | 1 | 2026-10-30T18:44:24+00:00 |
+| issue-25-manga23-20261019-repair1-batch-01 | collect-review / waiting-control | 1 | 2026-10-30T18:45:05+00:00 |
+| issue-25-manga23-20261019-repair1-batch-02 | collect-review / blocked | 1 | 2026-10-30T18:45:06+00:00 |
+| issue-25-manga23-20261019-repair1-batch-03 | collect-review / blocked | 1 | 2026-10-30T18:45:08+00:00 |
+| issue-25-manga23-20261019-repair1-batch-04 | collect-review / blocked | 1 | 2026-10-30T18:45:09+00:00 |
+| issue-25-manga23-20261019-repair1-batch-05 | collect-review / blocked | 1 | 2026-10-30T18:45:11+00:00 |
+| issue-25-manga23-20261019-repair1-batch-06 | collect-review / blocked | 1 | 2026-10-30T18:45:12+00:00 |
+| issue-25-manga23-20261019-repair1-batch-07 | collect-review / blocked | 1 | 2026-10-30T18:45:14+00:00 |
+| issue-25-manga23-20261019-repair1-batch-08 | collect-review / blocked | 1 | 2026-10-30T18:45:15+00:00 |
+| issue-25-manga23-20261019-repair1-batch-09 | collect-review / blocked | 1 | 2026-10-30T18:45:17+00:00 |
+| issue-25-manga23-20261019-repair1-batch-10 | collect-review / waiting-control | 1 | 2026-10-30T18:45:18+00:00 |
+| issue-47-dot-yukimura-two-20261027 | issue-prepare / awaiting-recovery | 4 | 2026-10-30T18:44:32+00:00 |
+| issue-50-dot-endo-tista-20261027 | issue-prepare / awaiting-recovery | 2 | 2026-10-30T18:44:38+00:00 |
+| issue-56-dot-urushibara-two-20261028 | issue-prepare / waiting-control | 1 | 2026-10-30T18:44:41+00:00 |
+| issue-60-dot-ichikawa-houseki-20261028 | issue-prepare / waiting-control | 2 | 2026-10-30T18:44:46+00:00 |
+| issue-61-dot-gotouge-kimetsu-20261028 | issue-prepare / awaiting-recovery | 2 | 2026-10-30T18:44:48+00:00 |
+| issue-69-dot-ishinomori-three-20261029 | issue-prepare / awaiting-recovery | 3 | 2026-10-30T18:44:59+00:00 |
+| issue-70-dot-fujikof-doraemon-20261029 | issue-prepare / awaiting-recovery | 2 | 2026-10-30T18:45:00+00:00 |
+| issue-73-dot-murata-onepunch-20261030 | issue-prepare / waiting-control | 1 | 2026-10-30T18:45:03+00:00 |
 
 [既存Worker結果](https://github.com/isinxnisi/graph-knowledge/tree/codex/collection-control/collection-control/results)
 
