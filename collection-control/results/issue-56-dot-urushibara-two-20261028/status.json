@@ -66,12 +66,12 @@
   },
   "requestSha256": "79a6f50ef6ec42c5e87c9337d9949db9659e05aa3970735fbdb2fc86018f0f07",
   "kind": "issue-prepare",
-  "phase": "completed",
-  "generation": 1,
+  "phase": "retry-wait",
+  "generation": 1223,
   "attempts": 1,
   "workerId": "plunode-wsl",
   "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
-  "updatedAt": "2026-10-28T00:05:34+00:00",
+  "updatedAt": "2026-10-30T13:13:14+00:00",
   "result": {
     "schemaVersion": 1,
     "status": "prepared-candidates-not-accepted",
@@ -194,5 +194,7 @@
       "datasets/collection-themes/approvals/issue-56-dot-urushibara-two-20261028/r0001.json": "abda037da34ade6dbc23d59ec2bc926fd3c6e85e8efc1e3cc6ddbf9799e97a80"
     }
   },
-  "executionComplete": true
+  "executionComplete": true,
+  "message": "Remote end closed connection without response",
+  "retryAt": 1793366131.696603
 }
