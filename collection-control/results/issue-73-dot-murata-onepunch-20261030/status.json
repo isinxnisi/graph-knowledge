@@ -62,12 +62,12 @@
   },
   "requestSha256": "a85e7be348fed7cff463ab178edf56d1105a18dd2f4bc1604422a4e84f16930d",
   "kind": "issue-prepare",
-  "phase": "completed",
-  "generation": 34,
+  "phase": "waiting-control",
+  "generation": 256,
   "attempts": 1,
   "workerId": "plunode-wsl",
   "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
-  "updatedAt": "2026-10-30T00:02:04+00:00",
+  "updatedAt": "2026-10-30T13:14:11+00:00",
   "result": {
     "schemaVersion": 1,
     "status": "prepared-candidates-not-accepted",
@@ -103,5 +103,7 @@
     "preparationDirectory": "/home/isinxnisi/.local/share/plunode-collection-worker-phase-b-20261020/runtime/.local/collection-issues/issue-73-dot-murata-onepunch-20261030",
     "generatedArtifacts": {}
   },
-  "executionComplete": true
+  "executionComplete": true,
+  "message": "Execution gate: outside-window",
+  "retryAt": 1793365849.5347807
 }
