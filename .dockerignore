@@ -64,3 +64,5 @@ db/*
 
 !vocabulary/
 !vocabulary/**
+
+!scripts/official-profile-ops.ts

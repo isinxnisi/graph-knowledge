@@ -16,7 +16,7 @@ export async function startMemberOidc() {
     impostor: { email: "alice@example.invalid", name: "同じメールの別identity" },
   };
   for(const name of ['community-a','community-b','community-d','notification-owner','notification-recipient','notification-other','suspend','delete'])identities[name]={email:name+'@example.invalid',name};
-  for(const key of ['google-photo-default','profile-a','profile-b','profile-third','lifecycle-profile','invite-owner','invite-target','invite-third'])identities[key]={email:key+'@example.invalid',name:'Private provider name '+key};
+  for(const key of ['official-profile-fixture','google-photo-default','profile-a','profile-b','profile-third','lifecycle-profile','invite-owner','invite-target','invite-third'])identities[key]={email:key+'@example.invalid',name:'Private provider name '+key};
   identities['profile-empty']={email:'profile-empty@example.invalid',name:''};
   identities['profile-email']={email:'profile-email@example.invalid',name:'profile-email@example.invalid'};
   const server = createServer(async (request, response) => {

@@ -68,3 +68,9 @@ AIの実推論・教育・観察コメントは現時点で未接続。ラボの
 Better AuthがGoogleログイン時に保存した `user.image` を使い、HTTPSの `lh3`〜`lh6.googleusercontent.com` に限って公開DTOの `imageUrl` に投影する。任意画像URLの入力・アップロード・サーバ経由の外部fetchは追加しない。`google` 以外の選択時は写真を公開DTOへ出さない。本人専用の編集APIだけは選択用プレビューを返す。欠落・不正URL・読込失敗時は人型へ戻し、サイズを維持する。
 
 共通avatarをヘッダー・公開プロフィール・フォロー・コミュニティに使う。外部画像は `referrerPolicy=no-referrer` で閲覧URLを送らない。写真の更新はGoogle側の設定後、次のGoogleログインで取得できた画像を反映する。ログイン案内・プロフィール設定・プライバシー表示も公開既定に合わせる。
+
+## 人間の公式プロフィール（2026-10-30）
+
+017の `public_profile.official` は運営CLIだけが付与する公開上の表示であり、認証種別や管理権限ではない。ユーザー指定のGoogleアカウントを本番の旧公開IDと照合し、検証済みメール・Google providerのsubjectを確認したうえで `@plunode`／「Plunode公式」へ変更する。βもGoogle subjectのSHA256が一致する同一アカウントへ適用する。メール・subject・ハッシュは公開DTOやGitへ記録しない。既存自己紹介・投稿・フォロー・Capsule・会員IDは保持する。旧公開IDは予約済みのまま再割当しない。
+
+`official-profile-ops.ts` は初期状態ではdry-run。`--apply --confirm-origin`、期待公開ID、任意の期待Google subject SHA256を検査する。変更を専用監査表へ記録し、再実行は無変更。一般APIはofficialフィールドを受け付けず、予約IDの新規取得を拒否する。既に公式指定された本人は予約IDを維持したまま自己紹介・アイコンなどを編集できる。プロフィールと共通人物表示には小さな盾アイコン付き「公式」を添える。既存公式AIとは別アカウント。

@@ -91,3 +91,7 @@ node --import tsx scripts/test-member.ts --e2e --accounts
 000〜015は不変。`--google-profile-images --confirm-origin "$MEMBER_ORIGIN"` を明示し016を適用する（000〜010もchecksum確認）。Capsule適用済み環境では既存のCapsuleフラグも併用して000〜015全件を照合する。
 
 対象Webを停止しprivate dumpを別DBへ復元・比較してから、復元DBで016と再実行を検証する。許可する既存行の差分は人間 `public_profile.icon='google'` とrevision+1だけ。AIプロフィールと他テーブル全列は不変。新規User作成triggerの既定もgoogleにする。新Webは画像のない利用者を人型へfallbackする。旧Webの編集schemaはgoogleを受け付けないので、移行後は旧Webへ機械的に戻さず修正版へroll-forwardする。本人が後から固定アイコンへ戻した選択は再適用で変更しない。
+
+## 017と公式指定
+
+`--official-profiles --confirm-origin "$MEMBER_ORIGIN"` で表示属性と監査表だけを追加する。公式の付与はmigrationと分離したoperator操作。private環境変数 `PROFILE_OFFICIAL_EMAIL` と `official-profile-ops.ts --expected-handle … --google-subject-sha256 … --actor … --reason …` を使い、dry-runで対象を照合してから同じ引数に `--apply --confirm-origin` を加える。アプリの通常保存では公式指定できない。Googleのsubjectが環境間で一致しなければ停止し、メールだけで別アカウントへ適用しない。対象の公開ID・表示名・official・revision、同期するuser.name/updatedAt、旧新handle予約、監査1行だけが意図した差分。権限・他のプロフィール・コミュニティ・Capsuleに変更がないことを別DBリハーサルと本番で照合する。

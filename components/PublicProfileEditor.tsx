@@ -3,7 +3,7 @@ import {useCallback,useEffect,useLayoutEffect,useRef,useState} from 'react';
 import {refreshMemberIdentity,updateMemberProfileDisplay} from '../lib/client/use-member-identity';
 import {useUiLocale} from '../lib/client/ui-locale';
 import {memberRequest,MemberClientError,type MemberUser} from '../lib/client/member-api';
-import {ownPublicProfileSchema,publicProfileInput,profileHref,humanIconSchema} from '../lib/domain/public-profile';
+import {ownPublicProfileSchema,publicProfileInput,profileHref,humanIconSchema,reservedPublicHandle} from '../lib/domain/public-profile';
 import {usePublicProfilesEnabled} from './PublicProfileAvailability';
 import ProfileAvatar from './ProfileAvatar';
 import css from './PublicProfile.module.css';
@@ -43,7 +43,7 @@ function Editor({user,onDirtyChange}:{user:MemberUser;onDirtyChange?:(dirty:bool
     addEventListener('popstate',historyNavigation,true);addEventListener('hashchange',historyNavigation,true);
     return()=>{removeEventListener('beforeunload',protect);document.removeEventListener('click',navigate,true);removeEventListener('popstate',historyNavigation,true);removeEventListener('hashchange',historyNavigation,true);};
   },[dirty,en,onDirtyChange]);
-  const parsed=publicProfileInput.safeParse(value);
+  const parsed=publicProfileInput.refine(v=>!reservedPublicHandle(v.handle)||v.handle===original.handle).safeParse(value);
   async function save(){if(!parsed.success||busy)return;setBusy(true);setError('');setSaved(false);try{const r=await memberRequest('/api/accounts/me',ownPublicProfileSchema,{method:'PUT',body:parsed.data,user:user.id,signal:active.current?.signal});if(!mounted.current)return;const next={...parsed.data,expectedRevision:r.revision};setValue(next);setOriginal(next);setSaved(true);if(r.profile)updateMemberProfileDisplay(user.id,r.profile);void refreshMemberIdentity(true).catch(()=>{});}catch(e){if(mounted.current)setError(e instanceof MemberClientError?e.code:'failed');}finally{if(mounted.current)setBusy(false);}}
   return <section id="public-profile-settings" className={css.card} aria-label={en?'Public profile':'公開プロフィール'}>
     <p className={css.intro}>{en?'Your display name is shared across your profile and comments. Its initial value may come from Google. You can change it here; no real name is required.':'プロフィール・コメントで同じ表示名を使います。初期値はGoogle等の名前を利用する場合があります。ここですぐ変更でき、実名である必要はありません。'}</p>

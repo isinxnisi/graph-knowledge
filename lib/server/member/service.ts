@@ -48,7 +48,7 @@ export function createMemberService(config: MemberConfig, pool: Pool, auth: Memb
       const user = await owner(request);
       const row=(await pool.query('SELECT id,name,locale,image FROM "user" WHERE id=$1 AND active=true',[user.id])).rows[0];
       if(!row)throw new MemberError(401,'UNAUTHENTICATED');
-      const profile=publicProfilesEnabled()?(await pool.query('SELECT handle,icon FROM public_profile WHERE user_id=$1',[user.id])).rows[0]:null;
+      const profile=publicProfilesEnabled()?(await pool.query(`SELECT handle,icon,COALESCE((to_jsonb(p)->>'official')::boolean,false) AS official FROM public_profile p WHERE user_id=$1`,[user.id])).rows[0]:null;
       return memberJson({ user: { id:row.id,name:row.name,locale:row.locale, ...(profile?{profile:{...profile,imageUrl:publicProfileImage(profile.icon,row.image)}}:{}), ...(isSiteOperator(user.id)?{siteOperator:true}:{}) } });
     },
     async deleteAccount(request: Request) {

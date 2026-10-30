@@ -47,6 +47,16 @@ try{
   sql(`UPDATE "user" SET image='https://lh3.googleusercontent.com/a/test-photo=s96-c' WHERE id='${a}'`);
   console.log('PASS: production member-ops 016 default/backfill, unchanged AI and repeat');
  }
+ if(process.argv.includes('--official-profiles')){
+  cli([...full,'--google-profile-images','--official-profiles']);assert.equal(Object.keys(ledger()).length,18);
+  const handle=sql(`SELECT handle FROM public_profile WHERE user_id='${a}'`);
+  sql(`INSERT INTO account("accountId","providerId","userId","createdAt","updatedAt") VALUES('release-fixture-google-sub','google','${a}',now(),now())`);
+  const args=['run','--rm','--no-deps','-e','PROFILE_OFFICIAL_EMAIL=a@example.invalid','--entrypoint','node','member-ops','--import','tsx','scripts/official-profile-ops.ts','--expected-handle',handle,'--google-subject-sha256',createHash('sha256').update('release-fixture-google-sub').digest('hex'),'--actor','release-test','--reason','Explicit test designation','--apply','--confirm-origin',origin];
+  const official=JSON.parse(dc(args).stdout.trim());assert.equal(official.handle,'plunode');assert.equal(official.applied,true);
+  assert.equal(JSON.parse(dc(args).stdout.trim()).changed,false);
+  assert.equal(sql("SELECT count(*) FROM public_profile_operation"),'1');
+  console.log('PASS: production official-profile CLI Google subject binding, rename, audit and idempotency');
+ }
  const session=(uid:string)=>JSON.parse(code(`import {createHmac} from 'node:crypto';import {createMemberAuth,memberPool} from './lib/server/member/auth.ts';import {memberConfig} from './lib/server/member/config.ts';const cfg=memberConfig();const pool=memberPool(cfg);const auth=createMemberAuth(cfg,pool);try{const ctx=await auth.$context;const s=await ctx.internalAdapter.createSession('${uid}');const signature=createHmac('sha256',process.env.MEMBER_AUTH_SECRET).update(s.token).digest('base64');console.log(JSON.stringify(ctx.authCookies.sessionToken.name+'='+encodeURIComponent(s.token+'.'+signature)));}finally{await pool.end();}`)) as string;
  cookieA=session(a);cookieB=session(b);dc(["up","-d","--no-deps","web"]);
  for(let n=0;n<60;n++){try{if((await req('/api/member/status')).ok)break;}catch{}await new Promise(r=>setTimeout(r,500));}
@@ -55,6 +65,7 @@ try{
   const me=await body(await req('/api/member/profile','GET',undefined,'a'));
   assert.equal(me.user.profile.icon,'google');assert.equal(me.user.profile.imageUrl,'https://lh3.googleusercontent.com/a/test-photo=s96-c');
   const publicProfile=await body(await req('/api/accounts/profiles/'+me.user.profile.handle));
+  if(process.argv.includes('--official-profiles')){assert.equal(publicProfile.profile.official,true);assert.equal(me.user.profile.handle,'plunode');assert.equal(me.user.siteOperator,undefined);}
   assert.equal(publicProfile.profile.imageUrl,me.user.profile.imageUrl);assert.ok(!('email' in publicProfile.profile));
   console.log('PASS: production Web authenticated and anonymous Google avatar projection');
  }

@@ -1,6 +1,6 @@
 import type { Pool, PoolClient, QueryResultRow } from "pg";
 import { z } from "zod";
-import { publicHandleSchema, publicProfileInput, type PublicProfile } from "../../domain/public-profile";
+import { publicHandleSchema, publicProfileInput, reservedPublicHandle, type PublicProfile } from "../../domain/public-profile";
 import { assertMemberOrigin, MemberError, memberInput, memberJson } from "./http";
 import { memberTransaction } from "./operations";
 import { communityPage, pageTime } from "./community-pagination";
@@ -13,7 +13,7 @@ const profileSelect = `SELECT p.*, u.image AS provider_image, a.id AS ai_id,a.lo
  LEFT JOIN "user" u ON u.id=p.user_id LEFT JOIN ai_identity a ON a.id=p.ai_identity_id`;
 const visibleProfile = `(u.active=true OR a.status='active')`;
 export function publicProfileDto(p: QueryResultRow): PublicProfile {
-  return { handle:p.handle,kind:p.user_id?"human":"ai",displayName:p.display_name,bio:p.bio,icon:p.icon,imageUrl:publicProfileImage(p.icon,p.provider_image),
+  return { handle:p.handle,kind:p.user_id?"human":"ai",displayName:p.display_name,bio:p.bio,icon:p.icon,...(p.official?{official:true}:{}),imageUrl:publicProfileImage(p.icon,p.provider_image),
     displayNameEn:p.display_name_en??null,bioEn:p.bio_en??null,timelinePublic:p.timeline_public,
     ai:p.ai_id?{id:p.ai_id,key:p.logical_key,operator:p.operator}:null };
 }
@@ -87,6 +87,7 @@ export function createPublicProfiles(pool:Pool,origin:string,owner:(req:Request)
       return memberTransaction(pool,async c=>{
         await active(c,u.id,true);
         const old=(await c.query('SELECT * FROM public_profile WHERE user_id=$1 FOR UPDATE',[u.id])).rows[0];
+        if(reservedPublicHandle(input.handle)&&!(old?.official&&old.handle===input.handle))throw new MemberError(400,'INVALID_ARGUMENT');
         if((old?.revision??0)!==input.expectedRevision)throw new MemberError(409,'REVISION_CONFLICT');
         // Claim first, under a unique DB constraint; renames never reassign an old ID.
         let id=old?.id;

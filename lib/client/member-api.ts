@@ -3,7 +3,7 @@ import { MEMBER_CAPSULE_LIMITS, memberCapsuleSchema, memberCapsuleContentSchema,
 import type { DatasetMode } from "../domain/dataset";
 import type { LocalCapsule } from "./local-capsules";
 
-export const memberProfileSchema = z.object({ user: z.object({ id: z.uuidv4(), name: z.string(), locale: z.string(), siteOperator:z.boolean().optional(), profile:z.object({handle:z.string(),icon:z.string(),imageUrl:z.string().nullable().optional()}).optional() }) });
+export const memberProfileSchema = z.object({ user: z.object({ id: z.uuidv4(), name: z.string(), locale: z.string(), siteOperator:z.boolean().optional(), profile:z.object({handle:z.string(),icon:z.string(),official:z.boolean().optional(),imageUrl:z.string().nullable().optional()}).optional() }) });
 export type MemberUser = z.infer<typeof memberProfileSchema>["user"];
 export class MemberClientError extends Error {
   constructor(public status: number, public code: string) { super(code); }
