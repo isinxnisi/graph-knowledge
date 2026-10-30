@@ -91,3 +91,14 @@ HTTPS βの既存Googleログイン済み本人セッションを使用。Google
 3. 図のEntityを選択→右クリック／「…」→「KGの関係先を追加」。名前・分類・関係で絞り、条件を変えながら選択してまとめて追加する。
 
 検証は開発者であるAIによる操作・機能確認。今回の三点に対するユーザーの体験評価は、これからβの実物で行う。
+
+
+## PC再起動後の復旧（2026-10-30 15:33 JST）
+
+ユーザーの復旧依頼に対応。mainは`60731930`、未コミットは既存`memo.txt`のみで、前回の実装・pushは完了済みだった。Autopilot reviewで未反映0件を確認し、新しいholdを取得して作業した。
+
+- 自動復帰でWeb3200・会員PGは起動していたが、Webは`.env.public`の旧KG7694を参照し、採用済み確認用KG7697のコンテナは停止していた。
+- 既存`graph-knowledge-film-confirmation-20261028`を起動。自動復帰したWebだけをSIGTERMで正常終了し、保存済みprivate runtimeと`beta-confirmation.json`を使い、既存`start-local-previews.py beta`で再起動した。実行processの21設定が一致することを確認。Node v24.21.0、配置`5dc34e31`、build `1eOVcSb5AZmVQ3nOgAC5l`を維持。
+- 3200／HTTPS betaの両方でトップ200・build一致、dataset revision `34befbcd-8f5f-4cd9-a059-242a3f0b5ffb`、PLUTO検索、Google provider、確認用共有CapsuleのJSON／HTML／OGPタイトル・PNG200、停止済み共有の画像404を確認。匿名の会員capabilitiesは期待どおり401。
+- ブラウザ操作ツールは「Local browser use is disabled in Work settings」で接続できず、今回は本人のログイン後操作を再実施していない。上記はHTTP／実行設定の復旧確認である。
+- DB migration／reset・再build・本番VPS更新は行っていない。既存の自動復帰設定やコンテナrestart policyも変更していないため、次回PC再起動時の自動復帰には、確認用KG起動とlauncher設定の引継ぎを別途揃える余地が残る。
