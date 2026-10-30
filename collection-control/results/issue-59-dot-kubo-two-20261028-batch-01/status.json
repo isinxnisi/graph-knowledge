@@ -87,12 +87,12 @@
   },
   "requestSha256": "c0d42e0541d38be705e97e5e1ddb185763d08a92fcb2643365314d1c76ae1e83",
   "kind": "collect-review",
-  "phase": "completed",
-  "generation": 4,
+  "phase": "retry-wait",
+  "generation": 1060,
   "attempts": 1,
   "workerId": "plunode-wsl",
   "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
-  "updatedAt": "2026-10-28T06:22:11+00:00",
+  "updatedAt": "2026-10-30T12:40:51+00:00",
   "result": {
     "jobId": "issue-59-dot-kubo-two-20261028-r0001-00347e7b023773d6",
     "collectionUnchanged": false,
@@ -117,5 +117,7 @@
   },
   "decisionDrafts": [
     "datasets/collection-decision-drafts/issue-59-dot-kubo-two-20261028-batch-01/ea268c44481c3e12c764fccd24dc092d3fa58302ba89f64eb029342f9c9d65ed/issue-59-dot-kubo-two-20261028-batch-01-normal-draft.json"
-  ]
+  ],
+  "message": "fatal: TaskCanceledException encountered.\n   �^�X�N����������܂����B\r\nfatal: unable to get password from user\n",
+  "retryAt": 1793364187.326904
 }
