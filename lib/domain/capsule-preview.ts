@@ -10,7 +10,16 @@ export function capsulePreviewModel(capsule:MemberCapsule) {
     const next=ranked.find(n=>!keys.has(n.key)&&(document?.relations??[]).some(e=>e.source===n.key&&keys.has(e.target)||e.target===n.key&&keys.has(e.source)))??ranked.find(n=>!keys.has(n.key));
     if(!next)break;chosen.push(next);
   }
-  const nodes=chosen.map((n,i)=>{const angle=(i-1)/Math.max(1,chosen.length-1)*Math.PI*2-Math.PI/2;return {...n,x:i===0?300:300+205*Math.cos(angle),y:i===0?245:245+172*Math.sin(angle)};});
+  // Keep a star's focal entity at the center. For multi-center diagrams,
+  // leave the center empty so an outer-to-outer edge cannot hide behind an
+  // unrelated central node and imply a connection that does not exist.
+  const chosenKeys=new Set(chosen.map(n=>n.key));
+  const star=(document?.relations??[]).filter(e=>chosenKeys.has(e.source)&&chosenKeys.has(e.target)).every(e=>e.source===chosen[0]?.key||e.target===chosen[0]?.key);
+  const nodes=chosen.map((n,i)=>{
+    const centered=chosen.length===1||star&&i===0;
+    const angle=(star?i-1:i)/Math.max(1,chosen.length-(star?1:0))*Math.PI*2-Math.PI/2;
+    return {...n,x:centered?300:300+205*Math.cos(angle),y:centered?245:245+180*Math.sin(angle)};
+  });
   const keys=new Set(nodes.map(n=>n.key));
   // Multiple Claims may form the same visible connection; retain only actual endpoints.
   const seen=new Set<string>();

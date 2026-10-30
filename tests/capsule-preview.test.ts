@@ -13,3 +13,22 @@ it("カードは実在する接続だけを選び、タイトルと対象の一�
  expect(response.headers.get("cache-control")).toBe("private, no-store");expect(bytes.subarray(1,4).toString()).toBe("PNG");expect(bytes.readUInt32BE(16)).toBe(1200);expect(bytes.readUInt32BE(20)).toBe(630);
  if(process.env.CAPSULE_PREVIEW_PROOF)await writeFile(process.env.CAPSULE_PREVIEW_PROOF,bytes);
 },30000);
+
+it("複数の中心がある図では、接続していない線が中央の対象を横切らない",()=>{
+ const document=capsule.content.document!;
+ const branched={...capsule,content:{...capsule.content,document:{...document,nodes:document.nodes.slice(0,6),relations:[
+  ...document.relations.slice(0,3),
+  {key:"branch4",source:"1",target:"4",label:"関係する",note:"",origin:{kind:"local" as const}},
+  {key:"branch5",source:"1",target:"5",label:"関係する",note:"",origin:{kind:"local" as const}},
+ ]}}};
+ const model=capsulePreviewModel(branched);
+ expect(model.nodes.every(n=>Math.hypot(n.x-300,n.y-245)>170)).toBe(true);
+ const points=new Map(model.nodes.map(n=>[n.key,n]));
+ for(const edge of model.edges){
+  const a=points.get(edge.source)!,b=points.get(edge.target)!;
+  for(const n of model.nodes.filter(n=>n.key!==a.key&&n.key!==b.key)){
+   const dx=b.x-a.x,dy=b.y-a.y,t=Math.max(0,Math.min(1,((n.x-a.x)*dx+(n.y-a.y)*dy)/(dx*dx+dy*dy)));
+   expect(Math.hypot(n.x-a.x-t*dx,n.y-a.y-t*dy)).toBeGreaterThan(45);
+  }
+ }
+});
