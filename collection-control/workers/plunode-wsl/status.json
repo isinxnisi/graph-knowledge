@@ -26,16 +26,20 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-10-29T20:46:40.915922+00:00",
-  "phase": "outside-window",
+  "nextStartAt": "2026-10-30T01:07:13.351721+00:00",
+  "phase": "running",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
-    "reason": "outside-window",
-    "eligibleAt": "2026-10-30T00:00:00+00:00",
+    "reason": "interval",
+    "eligibleAt": "2026-10-30T01:07:13.351721+00:00",
     "windowEndAt": "2026-10-30T03:00:00+00:00"
   },
-  "activeAttempt": null,
+  "activeAttempt": {
+    "requestId": "issue-73-dot-murata-onepunch-20261030",
+    "startedAt": "2026-10-30T00:02:13.351723+00:00",
+    "limitAt": "2026-10-30T00:57:13.351721+00:00"
+  },
   "lastAttempt": {
     "requestId": "issue-25-manga23-20261019-repair1-batch-04",
     "endedAt": "2026-10-29T20:36:40.915923+00:00"
@@ -192,5 +196,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-10-29T23:50:54.077034+00:00"
+  "checkedAt": "2026-10-30T00:02:20.776650+00:00"
 }
