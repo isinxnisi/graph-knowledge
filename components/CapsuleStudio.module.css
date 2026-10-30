@@ -61,3 +61,14 @@
 .evidenceTitle{display:block;min-width:0;font-size:13px;line-height:1.65;overflow-wrap:anywhere}.evidenceMeta{display:flex;flex-wrap:wrap;gap:5px;margin-top:7px}.evidence .badge{max-width:100%;white-space:normal;line-height:1.45;overflow-wrap:anywhere}.evidence .evidenceLocator{font-size:11px;color:var(--color-muted);margin:9px 0 0}.evidence .evidenceNote{white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.8;margin:8px 0 0}.evidenceActions{display:flex;align-items:center;justify-content:flex-end;flex-wrap:wrap;gap:6px;margin-top:12px}.evidenceActions>a{display:inline-flex;align-items:center;gap:5px;margin-right:auto;font-size:12px;overflow-wrap:anywhere}.evidenceActions>a>svg{width:14px;height:14px;flex:none}.evidenceActions button{flex:none}
 .modal .form .textControls label{min-width:75px}
 .shapeField{border:0;padding:0;margin:0;min-width:0}.shapeField legend{padding:0;margin-bottom:8px;font-size:12px;color:var(--color-muted)}.shapeChoices{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:7px}.modal .shapeChoices button{min-width:0;display:flex;flex-direction:column;gap:5px;padding:8px 4px;font-size:11px}.shapeChoices svg{flex:none}
+
+/* Native dialogs stay within the visible viewport, including the keyboard. */
+.surface,.modal,.drawer{position:fixed;inset:auto;margin:0;transform:translate(-50%,-50%);box-sizing:border-box;overscroll-behavior:contain}
+.surface{width:calc(var(--dialog-width,100vw) - 48px);height:calc(var(--dialog-height,100dvh) - 48px)}
+.modal{max-width:calc(var(--dialog-width,100vw) - 24px);max-height:calc(var(--dialog-height,100dvh) - 32px)}
+.drawer{max-width:calc(var(--dialog-width,100vw) - 24px);max-height:calc(var(--dialog-height,100dvh) - 32px)}
+@media(max-width:640px){
+ .surface{width:calc(var(--dialog-width,100vw) - 12px);height:calc(var(--dialog-height,100dvh) - 12px)}
+ .modal{padding:14px;max-height:calc(var(--dialog-height,100dvh) - 24px)}
+ .modal :is(input,textarea,select),.titleEditor input{font-size:16px}
+}

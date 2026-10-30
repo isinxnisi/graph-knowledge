@@ -1,5 +1,6 @@
 "use client";
 import { createContext, useCallback, useContext, useEffect, useRef, type PointerEvent, type ReactNode, type RefObject } from "react";
+import { useModalViewport } from "../lib/client/use-modal-viewport";
 import css from "./CapsuleStudio.module.css";
 
 const SurfaceClose = createContext<((handler: () => void) => () => void) | null>(null);
@@ -45,6 +46,7 @@ export function useCapsuleBackdrop(onDismiss: () => void, enabled = true) {
 /** The presentation host only. Draft, view, history and persistence live in the workspace. */
 export default function CapsuleSurface({ children, onClose }: { children: ReactNode; onClose?: () => void }) {
   const dialog = useRef<HTMLDialogElement>(null);
+  useModalViewport(dialog);
   const close = useRef<(() => void) | null>(null);
   const register = useCallback((handler: () => void) => { close.current = handler; return () => { if (close.current === handler) close.current = null; }; }, []);
   const dismiss = () => { if (close.current) close.current(); else onClose?.(); };
@@ -59,8 +61,9 @@ export default function CapsuleSurface({ children, onClose }: { children: ReactN
     onCancel={event => { event.preventDefault(); event.stopPropagation(); if (event.target === event.currentTarget && !backdrop.composing.current) dismiss(); }}>{children}</dialog></SurfaceClose.Provider>;
 }
 
-export function CapsuleModal({ title, children, onClose, wide = false, dismissOnBackdrop = true, dismissible = true, dialogRef }: { title: string; children: ReactNode; onClose: () => void; wide?: boolean; dismissOnBackdrop?: boolean; dismissible?: boolean; dialogRef?: RefObject<HTMLDialogElement | null> }) {
+export function CapsuleModal({ title, children, onClose, wide = false, dismissOnBackdrop = true, dismissible = true, dialogRef, className = "" }: { className?: string; title: string; children: ReactNode; onClose: () => void; wide?: boolean; dismissOnBackdrop?: boolean; dismissible?: boolean; dialogRef?: RefObject<HTMLDialogElement | null> }) {
   const localDialog = useRef<HTMLDialogElement>(null), dialog = dialogRef ?? localDialog;
+  useModalViewport(dialog);
   const backdrop = useCapsuleBackdrop(onClose, dismissible && dismissOnBackdrop);
   useEffect(() => {
     const target=dialog.current;
@@ -72,7 +75,7 @@ export function CapsuleModal({ title, children, onClose, wide = false, dismissOn
     target.querySelector<HTMLElement>("[data-autofocus]")?.focus({preventScroll:true});
     return () => { target.close(); if (prior?.isConnected) prior.focus({preventScroll:true}); };
   }, [dialog]);
-  return <dialog ref={dialog} className={`${css.modal} ${wide ? css.wideModal : ""}`} aria-label={title}
+  return <dialog ref={dialog} className={`${css.modal} ${wide ? css.wideModal : ""} ${className}`} aria-label={title}
     {...backdrop.handlers}
     onCancel={event => { event.preventDefault(); event.stopPropagation(); if (event.target === event.currentTarget && dismissible && !backdrop.composing.current) onClose(); }}
     onKeyDown={event => { event.stopPropagation(); }}>

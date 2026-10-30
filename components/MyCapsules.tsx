@@ -14,6 +14,7 @@ import CapsuleSurface, { useCapsuleBackdrop } from "./CapsuleSurface";
 import CapsuleShareControls from "./CapsuleShareControls";
 import { useDiscussionDraft } from "./CapsuleDiscussion";
 import Icon from "./Icon";
+import { useModalViewport } from "../lib/client/use-modal-viewport";
 import css from "./CapsuleStudio.module.css";
 
 // PostgreSQL jsonb normalizes object-key order. Compare the JSON value while
@@ -143,6 +144,7 @@ export default function MyCapsules({ dataset, onClose }: { dataset: DatasetMode;
   const [importing, setImporting] = useState(false);
   const [opened, setOpened] = useState<{ capsule: LocalCapsule; member?: MemberCapsule; owner?: string } | null>(null);
   const backdrop = useCapsuleBackdrop(onClose, !opened && !importing);
+  useModalViewport(dialog);
   useEffect(() => {
     const target = dialog.current;
     const prior = document.activeElement instanceof HTMLElement && !target?.contains(document.activeElement) ? document.activeElement : null;

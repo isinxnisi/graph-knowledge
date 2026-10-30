@@ -39,3 +39,20 @@ it("ページの続きが失敗しても選択を保持し、部分取得を全�
  expect((screen.getByRole("checkbox",{name:/アルファ/}) as HTMLInputElement).checked).toBe(true);
  await waitFor(()=>expect(screen.queryByRole("alert")).toBeNull());expect(mocks.fetch.mock.calls[2][1]).toBe("page2");
 });
+
+it("条件欄を閉じても条件と選択を保持し、開いた直後に検索へフォーカスを奪わない",async()=>{
+ const {doc,page}=setup();mocks.fetch.mockResolvedValue(page);
+ render(<CapsuleNeighborPicker node={doc.nodes[0]} document={doc} onAdd={vi.fn()} onClose={vi.fn()}/>);
+ await screen.findByRole("checkbox",{name:/アルファ/});
+ expect(document.activeElement).toBe(screen.getByRole("button",{name:"関係先を閉じる"}));
+ expect(screen.queryByRole("combobox",{name:"分類"})).toBeNull();
+ fireEvent.click(screen.getByRole("checkbox",{name:/アルファ/}));
+ fireEvent.click(screen.getByRole("button",{name:"条件"}));
+ fireEvent.change(screen.getByRole("combobox",{name:"分類"}),{target:{value:"work"}});
+ fireEvent.click(screen.getByRole("button",{name:/^条件[12]?$/}));
+ expect(screen.queryByRole("combobox",{name:"分類"})).toBeNull();
+ expect(screen.getByText(/うち1件は現在の条件の外/)).toBeTruthy();
+ expect(screen.queryByRole("checkbox",{name:/アルファ/})).toBeNull();
+ fireEvent.click(screen.getByRole("button",{name:"条件を解除"}));
+ expect((screen.getByRole("checkbox",{name:/アルファ/}) as HTMLInputElement).checked).toBe(true);
+});
