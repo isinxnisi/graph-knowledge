@@ -1,3 +1,4 @@
+import {createCapsulePostReports} from "./capsule-post-reports";
 import {publicProfileImage} from "../../domain/profile-image";
 import { createHash, randomUUID } from "node:crypto";
 import type { Pool } from "pg";
@@ -44,6 +45,7 @@ export function createMemberService(config: MemberConfig, pool: Pool, auth: Memb
     operator: createSiteOperationsService(pool, config.origin, owner, config.secret),
     ...createCapsuleSharing(pool, dataset, config.origin, owner, config.secret),
     ...createCapsuleDiscussion(pool, dataset, config.origin, owner),
+    ...createCapsulePostReports(pool, dataset, config.origin, owner),
     async profile(request: Request) {
       const user = await owner(request);
       const row=(await pool.query('SELECT id,name,locale,image FROM "user" WHERE id=$1 AND active=true',[user.id])).rows[0];

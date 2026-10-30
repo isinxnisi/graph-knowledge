@@ -108,9 +108,15 @@ export function createCapsuleDiscussion(pool: Pool, dataset: DatasetMode, origin
             WHERE s.capsule_id=$1 AND ($4::boolean OR s.token_hash=$5))
             OR ($4::boolean AND p.revision=$2))
           ORDER BY p.created_at,p.id LIMIT $3`, [id, revision.data, DISCUSSION_LIMITS.posts,canManage,digest(request.headers.get("x-capsule-token")??"")]);
+        const reportsReady=process.env.COMMUNITY_ENABLED==='1'&&(await client.query("SELECT EXISTS(SELECT 1 FROM information_schema.columns WHERE table_name='community_report' AND column_name='capsule_share_id') AS ready")).rows[0].ready;
+        const reportable=new Set<number>(reportsReady&&user?(await client.query(`SELECT p.revision FROM member_capsule_share s
+          JOIN member_capsule_publication context ON context.share_id=s.id AND context.capsule_id=s.capsule_id AND context.revision=$2
+          JOIN member_capsule_publication p ON p.share_id=s.id AND p.capsule_id=s.capsule_id
+          JOIN member_capsule_revision live ON live.capsule_id=s.capsule_id AND live.revision=s.revision AND NOT live.sharing_blocked
+          WHERE s.capsule_id=$1 AND ($3::boolean OR s.token_hash=$4)`,[id,revision.data,canManage,digest(request.headers.get("x-capsule-token")??"")])).rows.map(r=>Number(r.revision)):[]);
         const authors=await publicPeople(client,posts.rows.filter(row=>!row.withdrawn_at&&!row.hidden_at&&row.active).map(row=>row.author_user_id));
         return memberJson(discussionSchema.parse({ capsuleId: id, revision: revision.data, closed: thread.rows[0]?.closed ?? false, viewer: user ? { id: user.id, name: user.name } : null, canManage,
-          posts: posts.rows.map(row => ({ author:row.withdrawn_at||row.hidden_at||!row.active?null:authors.get(row.author_user_id)??null,id: row.id, revision: Number(row.revision), authorName: row.withdrawn_at || row.hidden_at || !row.active ? null : row.name,
+          posts: posts.rows.map(row => ({ moderationRevision:row.moderation_revision??1, canReport:reportable.has(Number(row.revision))&&!row.withdrawn_at&&!row.hidden_at&&row.active, author:row.withdrawn_at||row.hidden_at||!row.active?null:authors.get(row.author_user_id)??null,id: row.id, revision: Number(row.revision), authorName: row.withdrawn_at || row.hidden_at || !row.active ? null : row.name,
             body: row.withdrawn_at || row.hidden_at || !row.active ? null : row.body, createdAt: row.created_at.toISOString(), withdrawnAt: row.withdrawn_at?.toISOString() ?? null, own: row.author_user_id === user?.id })) }));
       });
     },

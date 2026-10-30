@@ -340,3 +340,77 @@ it('所有者の掲載先は複数のコミュニティと保存版を区別し�
  await pool().query("UPDATE community_member SET generation=generation+1 WHERE community_id=$1 AND user_id=$2",[second.id,a.id]);
  expect((await (await destinations()).json()).destinations).toEqual([]);
 });
+
+async function reportingFixture() {
+ await migrateMemberDatabase(pool(),true,true,true,true,true,true,true,true,true,true,true,true);
+ const cap=await create(local('非公開の図の題名は運営へ渡さない'));
+ const issued=await(await service().issueShare(request(a,{expectedRevision:1,expectedShareId:null}),cap.id)).json();
+ const postRequest=request(b,{requestId:randomUUID(),revision:1,body:'通報対象のコメント'});postRequest.headers.set('x-capsule-token',issued.token);
+ const post=(await(await service().createDiscussionPost(postRequest,cap.id)).json()).postId;
+ const input={requestId:randomUUID(),postId:post,revision:1,expectedRevision:1,category:'other',detail:'テスト用の確認理由'};
+ const report=(body=input,token=issued.token,who=b)=>{const req=request(who,body);req.headers.set('x-capsule-token',token);return call(()=>service().reportDiscussionPost(req,cap.id));};
+ return {cap,issued,post,input,report};
+}
+it('Capsuleコメント通報は同じ受付へ再送でき、運営受信箱・監査・非表示・解除・本人受付を一貫させる',async()=>{
+ const {cap,issued,post,input,report}=await reportingFixture();
+ const old=await pool().query('SELECT name,checksum FROM member_migration ORDER BY name');
+ await migrateMemberDatabase(pool(),true,true,true,true,true,true,true,true,true,true,true,true);
+ expect((await pool().query('SELECT name,checksum FROM member_migration ORDER BY name')).rows).toEqual(old.rows);expect(old.rows).toHaveLength(20);
+ expect((await report(input,'wrong-token')).status).toBe(404);
+ const receipts=await Promise.all([report(),report()]);expect(receipts.map(r=>r.status).sort()).toEqual([200,201]);
+ const ids=await Promise.all(receipts.map(async r=>(await r.json()).id));expect(ids[0]).toBe(ids[1]);const id=ids[0];
+ expect((await report({...input,detail:'別の内容'})).status).toBe(409);
+ expect((await report({...input,requestId:randomUUID()})).status).toBe(409);
+ const own=await(await service().community.reports(request(b))).json();expect(own.reports).toContainEqual({id,kind:'capsule-post',status:'open'});expect(JSON.stringify(own)).not.toContain('非公開の図');
+ vi.stubEnv('SITE_OPERATIONS_ENABLED','1');vi.stubEnv('SITE_OPERATOR_USER_IDS',late.id);
+ try {
+  expect((await call(()=>service().operator.read(request(b),'reports'))).status).toBe(403);
+  const queue=await(await service().operator.read(request(late),'reports')).json();const item=queue.items.find((r:{id:string})=>r.id===id);
+  expect(item.target_kind).toBe('capsule-post');expect(item.community_id).toBeNull();expect(JSON.stringify(queue)).not.toContain('通報対象のコメント');
+  expect((await(await service().operator.read(request(late),'summary')).json()).reports).toBeGreaterThan(0);
+  const action=(action:string,expectedRevision=1,requestId=randomUUID())=>call(()=>service().operator.act(request(late,{kind:'report',requestId,id,action,expectedRevision,expectedReportRevision:1,reason:'隔離fixtureの検証'})));
+  const rid=randomUUID();let inspected=await(await action('inspect',1,rid)).json();expect(inspected.result.content).toEqual({body:'通報対象のコメント'});expect(inspected.result.authorAccountId).toBe(b.id);expect(JSON.stringify(inspected)).not.toContain('非公開の図');
+  expect((await action('suspend-community')).status).toBe(400);
+  expect((await action('hide-post')).status).toBe(200);
+  const read=request(b,undefined,'/?revision=1');read.headers.set('x-capsule-token',issued.token);
+  const hidden=await(await service().readDiscussion(read,cap.id)).json();expect(hidden.posts[0].body).toBeNull();expect(hidden.posts[0].author).toBeNull();expect(hidden.posts[0].canReport).toBe(false);
+  expect((await action('unhide-post',2)).status).toBe(200);
+  expect((await action('inspect',1)).status).toBe(409);
+  expect((await action('inspect',3)).status).toBe(200);
+  await service().withdrawDiscussionPost(request(b,{postId:post}),cap.id);
+  inspected=await(await action('inspect',1,rid)).json();expect(inspected.replayed).toBe(true);expect(inspected.result.content).toBeNull();expect(inspected.result.authorAccountId).toBeNull();expect(inspected.result.detail).toBeNull();
+  expect((await action('unhide-post',3)).status).toBe(409);
+  expect((await action('resolve',3)).status).toBe(200);
+  const receipt=(await pool().query('SELECT result FROM site_operation_request WHERE request_id=$1',[rid])).rows[0].result;expect(receipt.content).toBeUndefined();expect(receipt.authorAccountId).toBeUndefined();
+ } finally {vi.unstubAllEnvs();}
+},30_000);
+
+it.each(['revoke','reissue','trash','expire','block-version'] as const)('通報後の%sで元の内容確認権限を失い、新しい共有にも付け替えない',async change=>{
+ const {cap,issued,report}=await reportingFixture();const id=(await(await report()).json()).id;
+ const inspect=()=>operateCommunitySafety(pool(),{reportId:id,expectedReportRevision:1,expectedRevision:1,action:'inspect',actor:'fixture',caseReference:'test',reason:'隔離検証'},true);
+ expect((await inspect()).content).toEqual({body:'通報対象のコメント'});
+ if(change==='revoke')await service().revokeShare(request(a,{expectedShareId:issued.share.id}),cap.id);
+ if(change==='reissue')await service().issueShare(request(a,{expectedRevision:1,expectedShareId:issued.share.id}),cap.id);
+ if(change==='trash')await service().remove(request(a,{expectedRevision:1}),cap.id);
+ if(change==='expire')await pool().query("UPDATE community_report SET expires_at=now()-interval '1 second' WHERE id=$1",[id]);
+ if(change==='block-version')await pool().query('UPDATE member_capsule_revision SET sharing_blocked=true WHERE capsule_id=$1',[cap.id]);
+ const result=await inspect();expect(result.content).toBeNull();expect(result.authorAccountId).toBeNull();expect(result.detail).toBeNull();
+ if(change==='revoke'||change==='trash'){
+  if(change==='trash')await service().restore(request(a,{expectedRevision:2}),cap.id);
+  await service().issueShare(request(a,{expectedRevision:change==='trash'?3:1,expectedShareId:null}),cap.id);
+  expect((await inspect()).content).toBeNull();
+ }
+},30_000);
+
+it('同じ共有URLの更新では旧版コメントを通報できるが、未共有版や別Capsuleの投稿は指定できない',async()=>{
+ const {cap,issued,post,report,input}=await reportingFixture();
+ await service().update(request(a,{expectedRevision:1,content:{...cap.content,title:'保存した私有版'}}),cap.id);
+ expect((await report({...input,revision:2})).status).toBe(404);
+ await service().publishShare(request(a,{expectedRevision:2,expectedSharedRevision:1,expectedShareId:issued.share.id}),cap.id);
+ const read=request(b,undefined,'/?revision=2');read.headers.set('x-capsule-token',issued.token);
+ const posts=(await(await service().readDiscussion(read,cap.id)).json()).posts;expect(posts.find((p:{id:string})=>p.id===post).canReport).toBe(true);
+ const response=await report({...input,revision:2});expect(response.status).toBe(201);
+ const id=(await response.json()).id;
+ const context=(await pool().query('SELECT target_capsule_revision,capsule_share_id FROM community_report WHERE id=$1',[id])).rows[0];expect(Number(context.target_capsule_revision)).toBe(1);expect(context.capsule_share_id).toBe(issued.share.id);
+ const other=await create();const bad=request(b,{...input,requestId:randomUUID()});bad.headers.set('x-capsule-token',issued.token);expect((await call(()=>service().reportDiscussionPost(bad,other.id))).status).toBe(404);
+},30_000);

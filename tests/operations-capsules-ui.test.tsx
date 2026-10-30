@@ -46,3 +46,10 @@ it('結果不明の版停止は同じrequestと期待版で再確認する',asyn
  fireEvent.click(await within(dialog).findByRole('button',{name:'Retry same request'}));await waitFor(()=>expect(writes).toBe(2));
  const calls=mock.request.mock.calls.filter(c=>c[2]?.method==='POST');expect(calls[1][2].body).toEqual(calls[0][2].body);
 });
+
+it('Capsuleコメントの通報ではコミュニティ停止や図の停止を表示しない',async()=>{
+ mock.request.mockImplementation(async(_path:string,schema:z.ZodType)=>schema.parse({items:[{...report,target_kind:'capsule-post',community_id:null,community_revision:null,community_status:null}],nextCursor:null,partial:false}));
+ render(<OperationsPage dataset="demo"/>);await select();
+ expect(screen.getByRole('button',{name:'Hide post'})).toBeDefined();expect(screen.getByRole('button',{name:'Review target'})).toBeDefined();
+ expect(screen.queryByRole('button',{name:'Suspend community'})).toBeNull();expect(screen.queryByRole('button',{name:'Block this Capsule version'})).toBeNull();
+});

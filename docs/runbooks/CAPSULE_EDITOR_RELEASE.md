@@ -214,3 +214,13 @@ private stagingでも、trackedソースのディレクトリは0755、通常フ
 開発PCの既存launcherへ移設するβbuildはwebpackを使う。symlink node_modulesを持つstagingからTurbopack buildを移動した際にpgのhash別名解決が失敗した実例がある。build成功とトップページ200だけで完了せず、会員session/APIも確認する。
 
 今回の新しい本番手順 `scripts/release-capsule-reading-production.py` は固定SHA・直前Google公式対応buildを照合し、018だけを追加する。元のGoogle公式指定を再実行しない。現時点では本番未実施。検証記録を確認してから、照合済みの新しいprivate stagingで実行する。
+
+## コメント通報の追加（019、2026-10-31）
+
+表示修正は `0914b06a` を先に3200／βへ配置済み。続く通報対応では019を追加し、適用済み000〜018を編集しない。`scripts/member-migrate.ts --capsule-post-reports --confirm-origin ORIGIN` は既存系列もchecksum確認したうえで019まで明示適用する。既存本番が017までなら追加は018／019、既存βが018までなら019のみ。実ledgerで確定する。
+
+019は共有IDに拘束したCapsuleコメント通報を共通受信箱に追加する。新しい通報を受け付けた後に旧Webを機械的に再配置しない。旧バージョンは対象種別や確認範囲を扱えないため、データを保持して対応版へroll-forwardする。旧dumpを本番へ上書きしない。
+
+切替前のbackup、別DB復元、旧列全行の一致、旧checksumの保存、019後のledger20件、二回目無変更を確認する。beta実機では既存の共有・コメントを誤って通報／非表示にせず、明示した検証用コメントだけを使う。新しい通報から運営受信箱、監査付き確認、非表示／解除、対応終了、共有停止後の確認拒否まで確認する。Google実セッションと隔離fixtureの検証範囲は分けて記録する。
+
+`release-capsule-reading-production.py` の018専用固定候補はこの追加実装より前のもの。今回の最終配置に再利用する際は、固定ソースと実物auditを更新して新しい資材を作り、過去のstagingを上書きしない。

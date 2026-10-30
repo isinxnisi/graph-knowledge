@@ -253,3 +253,17 @@ describe("共有版の会話", () => {
     expect(screen.queryByLabelText("コメント本文")).toBeNull();
   });
 });
+
+it("投稿の右上から通報し、通信結果不明は同じキーで再確認する",async()=>{
+ const post={id:postId,revision:1,authorName:"投稿者",body:"確認対象の本文",createdAt:"2026-10-30T00:00:00Z",withdrawnAt:null,own:false,canReport:true,moderationRevision:1};
+ fetchMock.mockResolvedValueOnce(Response.json({...data,posts:[post]}));
+ render(<CapsuleDiscussion capsuleId={capsuleId} revision={1} token={token}/>);
+ await screen.findByText("確認対象の本文");fireEvent.click(screen.getByLabelText("投稿の操作"));fireEvent.click(screen.getByRole("button",{name:/^通報/}));
+ fireEvent.change(screen.getByLabelText("通報の理由"),{target:{value:"確認をお願いします"}});
+ fetchMock.mockRejectedValueOnce(new TypeError("response lost"));fireEvent.click(screen.getByRole("button",{name:"通報を送る"}));
+ await screen.findByText(/送信結果を確認できませんでした/);
+ const first=fetchMock.mock.calls[1];expect(first[0]).toBe(`/api/capsules/${capsuleId}/discussion/reports`);expect(first[1].headers["X-Capsule-Token"]).toBe(token);expect(first[1].headers["X-Member-User"]).toBe(userId);expect(first[0]).not.toContain(token);
+ fetchMock.mockResolvedValueOnce(Response.json({id:postId}));fireEvent.click(screen.getByRole("button",{name:"同じ送信を再確認"}));
+ await screen.findByText(/通報を受け付けました/);expect(fetchMock.mock.calls[2][1].body).toBe(first[1].body);expect(screen.queryByRole("dialog")).toBeNull();
+ expect(localStorage.length).toBe(0);expect(sessionStorage.length).toBe(0);
+});

@@ -41,7 +41,7 @@ export const safetyHash=(row:QueryResultRow)=>createHash('sha256').update(JSON.s
 export async function requireSafetyThread(c:PoolClient,tid:string,uid:string|null) {
  if(!(await c.query(`SELECT t.id FROM community_thread t WHERE t.id=$1 AND ${readableCommunityThread}`,[tid,uid])).rowCount)throw missing();
 }
-export async function safetyAudit(c:PoolClient,cid:string,action:string,targetId:string,kind:string,reason:string,who:{user?:string,operator?:string,caseReference?:string,report?:string}) {
+export async function safetyAudit(c:PoolClient,cid:string|null,action:string,targetId:string,kind:string,reason:string,who:{user?:string,operator?:string,caseReference?:string,report?:string}) {
  await c.query(`INSERT INTO community_operation(community_id,actor_id,operator_id,case_reference,action,target_id,target_kind,reason,report_id)
  VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9)`,[cid,who.user??null,who.operator??null,who.caseReference??null,action,targetId,kind,reason,who.report??null]);
 }

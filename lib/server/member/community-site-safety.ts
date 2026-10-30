@@ -1,3 +1,4 @@
+import {operateCapsulePostReport} from "./capsule-post-reports";
 import type {Pool, PoolClient, QueryResultRow} from 'pg';
 import {z} from 'zod';
 import {memberTransaction} from './operations';
@@ -34,8 +35,9 @@ async function mayInspect(c:PoolClient,r:QueryResultRow,community:QueryResultRow
 export async function operateCommunitySafety(pool:Pool,raw:CommunitySafetyOperation,apply=false,client?:PoolClient,auditInspection=true) {
  const input=operatorInput.parse(raw);
  const run=async(c:PoolClient)=>{
-  const seed=(await c.query('SELECT community_id,reporter_id FROM community_report WHERE id=$1',[input.reportId])).rows[0];
+  const seed=(await c.query('SELECT community_id,reporter_id,target_kind FROM community_report WHERE id=$1',[input.reportId])).rows[0];
   if(!seed)throw new MemberError(404,'NOT_FOUND');
+  if(seed.target_kind==='capsule-post')return operateCapsulePostReport(c,input,apply,auditInspection);
   // Match User -> Community -> Report/Post lifecycle lock order. The read lock
   // makes a queued inspection recheck a committed account suspension/deletion.
   if(seed.reporter_id)await c.query('SELECT id FROM "user" WHERE id=$1 FOR SHARE',[seed.reporter_id]);
@@ -125,10 +127,11 @@ export async function communityReportQueue(pool:Pool,after?:string) {
  return memberTransaction(pool,async c=>{
   const result=await c.query(`SELECT r.id,r.target_kind AS kind,r.target_id AS "targetId",r.community_id AS "communityId",
    r.revision AS "reportRevision",c.revision AS "communityRevision",r.category,r.created_at AS "createdAt",
-   CASE r.target_kind WHEN 'post' THEN p.revision WHEN 'thread' THEN t.revision WHEN 'capsule' THEN r.target_revision ELSE c.revision END AS "targetRevision",r.expires_at>clock_timestamp() AS unexpired
-   FROM community_report r JOIN community c ON c.id=r.community_id
+   CASE r.target_kind WHEN 'post' THEN p.revision WHEN 'thread' THEN t.revision WHEN 'capsule' THEN r.target_revision WHEN 'capsule-post' THEN COALESCE((to_jsonb(cp)->>'moderation_revision')::int,r.target_revision) ELSE c.revision END AS "targetRevision",r.expires_at>clock_timestamp() AS unexpired
+   FROM community_report r LEFT JOIN community c ON c.id=r.community_id
    LEFT JOIN community_post p ON r.target_kind='post' AND p.id=r.target_id
    LEFT JOIN community_thread t ON r.target_kind='thread' AND t.id=r.target_id
+   LEFT JOIN member_capsule_post cp ON r.target_kind='capsule-post' AND cp.id=r.target_id
    WHERE r.status='open' AND ($1::uuid IS NULL OR r.id>$1) ORDER BY r.id LIMIT 51`,[id]);
   return {reports:result.rows.slice(0,50),next:result.rows.length>50?result.rows[49].id:null};
  });

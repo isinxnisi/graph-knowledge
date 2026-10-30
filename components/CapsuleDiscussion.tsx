@@ -8,6 +8,7 @@ import { DISCUSSION_LIMITS, discussionSchema, type CapsuleDiscussion as Discussi
 import { MemberClientError } from "../lib/client/member-api";
 import { memberSessionEvent } from "../lib/client/account-navigation";
 import { capsuleDiscussionLabels } from "../lib/i18n/capsule-discussion";
+import {CapsulePostReport} from "./CapsulePostReport";
 import { CommunityMenu } from "./CommunityPrimitives";
 import { CommunityDialog } from "./CommunityDialog";
 import PersonIdentity from "./PersonIdentity";
@@ -162,13 +163,13 @@ export default function CapsuleDiscussion({ capsuleId, revision, token, userId, 
       <button className={`${css.button} ${css.quiet} ${css.iconButton}`} disabled={busy || loading} aria-label={text.refresh} title={text.refresh} onClick={() => void refresh()}><Icon name="refresh" /></button></div>
     {loading && !data && <p className={css.empty} role="status">{text.loading}</p>}
     {error && <p className={css.error} role="alert">{contentMessage(error, locale)}</p>}
-    {message && <p className={css.feedback} role="status">{contentMessage(message, locale)}</p>}
+    {message && <p className={css.feedback} role="status">{contentMessage(message, locale)}{(message.startsWith("通報を受け付けました")||message.startsWith("Report received"))&&<> <a href="/communities#%2Freports" target="_blank" rel="noopener noreferrer">{locale==="en"?"My reports":"自分の通報"}</a></>}</p>}
     {data && <>
       {data.canManage && showSettings && <div className={css.setting}><div><strong>{text.acceptComments}</strong><p className={css.muted}>{data.closed ? text.acceptOff : text.acceptOn}</p></div>
         <button className={css.switch} role="switch" aria-label={text.acceptComments} aria-checked={!data.closed} title={data.closed ? text.reopen : text.close} disabled={busy} onClick={() => void mutate("close")} /></div>}
       {data.posts.length === 0 ? <div className={css.empty}><p>{text.empty}</p>{!data.closed && <p>{text.invitation}</p>}</div> :
         <ol className={css.posts}>{data.posts.map(post => <li className={css.post} key={post.id}>
-          <div className={css.postHeader}><div className={css.postIdentity}><PersonIdentity person={post.author} label={post.authorName??undefined} quiet/><time dateTime={post.createdAt}>{new Date(post.createdAt).toLocaleString(locale === "en" ? "en-GB" : "ja-JP", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" })}</time></div>{post.own && !post.withdrawnAt && <CommunityMenu compact label={locale === "en" ? "Post actions" : "投稿の操作"}><button disabled={busy} onClick={() => setConfirm(post.id)}>{text.withdraw}</button></CommunityMenu>}</div>
+          <div className={css.postHeader}><div className={css.postIdentity}><PersonIdentity person={post.author} label={post.authorName??undefined} quiet/><time dateTime={post.createdAt}>{new Date(post.createdAt).toLocaleString(locale === "en" ? "en-GB" : "ja-JP", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" })}</time></div>{((post.own && !post.withdrawnAt)||(data.viewer&&post.canReport)) && <CommunityMenu compact label={locale === "en" ? "Post actions" : "投稿の操作"}>{post.own&&!post.withdrawnAt&&<button disabled={busy} onClick={() => setConfirm(post.id)}>{text.withdraw}</button>}{data.viewer&&post.canReport&&<CapsulePostReport key={data.viewer.id+":"+post.id} capsuleId={capsuleId} revision={revision} postRevision={post.revision} postId={post.id} moderationRevision={post.moderationRevision??1} userId={data.viewer.id} token={token} t={(ja,en)=>locale==="en"?en:ja} onReported={()=>setMessage(locale==="en"?"Report received. You can track it in My reports.":"通報を受け付けました。「自分の通報」で確認できます。")}/>}</CommunityMenu>}</div>
 
           <p className={css.postBody}>{post.body ?? (post.withdrawnAt ? text.withdrawn : text.hidden)}</p>
           <div className={css.postFooter}><div className={css.muted}>{revisionUrl ? <a href={revisionUrl(post.revision)} target="_blank" rel="noopener noreferrer">{locale === "en" ? `View version ${post.revision}` : `投稿時の図 · 保存版 ${post.revision}`}</a> : <span>{locale === "en" ? `Version ${post.revision}` : `保存版 ${post.revision} へのコメント`}</span>}</div></div>

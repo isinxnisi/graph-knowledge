@@ -11,6 +11,7 @@ export const discussionCloseSchema = z.strictObject({ closed: z.boolean(), expec
 export const discussionWithdrawSchema = z.strictObject({ postId: z.uuidv4() });
 export const discussionPostSchema = z.strictObject({
   id: z.uuidv4(), revision: discussionRevisionSchema, authorName: z.string().nullable(), author: personSchema.nullable().optional(),
+  moderationRevision: z.number().int().positive().optional(), canReport: z.boolean().optional(),
   body: z.string().nullable(), createdAt: z.iso.datetime(), withdrawnAt: z.iso.datetime().nullable(), own: z.boolean(),
 });
 export const discussionSchema = z.strictObject({
