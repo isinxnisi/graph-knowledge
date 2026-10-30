@@ -9,7 +9,7 @@
 
 公開対象はβの実行記録から固定した `20e5c84a99dd1e1bfa8fb69779729e68a914bb14`。共有URL更新・OGP・関係先絞り込み・スマホ修正を含む。後続の `28fe3aed`／`b26022e9` はテストと記録であり、アプリ実装に差分はない。古いSHAへ戻さず、無関係な自動開発候補も混ぜない。
 
-[本番公開の実施記録](../verification/CAPSULE_PRODUCTION_20261030.md)で、資材の準備・隔離検証・本番反映・正式URLでの確認を分ける。公開の実行指示を得たことと、切替が成功したことは別である。
+[本番公開の実施記録](../verification/CAPSULE_PRODUCTION_20261030.md)で、資材の準備・隔離検証・本番反映・正式URLでの確認を分ける。2026-10-30のr2切替は成功し、正式URLで実Googleログイン・保存・同URL共有更新・コメント・共有停止・固定コミュニティ掲載・OGPを確認済み。今後この一回用launcherをそのまま再実行しない。
 
 接続情報・秘密鍵・sudoパスワードをGitやチャットへ載せない。SSHホスト鍵検証やsudo設定を変更せず、既存のdevelop SSHと管理者sudoを使う。管理者操作が不足するときは、固定資材と具体的な実行手順を準備したうえで必要な操作を示す。
 
@@ -46,11 +46,11 @@
    sha256sum capsule-images.tar.gz > capsule-images.tar.gz.sha256
    ```
 
-   tagだけを証拠にせず、source SHA、build ID、image ID／OCI manifest、platform、archive SHA256、011／012／013／014を含む全migrationのchecksumを固定記録へ保存する。WebのAIラボartifactは配置先の既存状態を保持し、betaの実験artifactを本番へ混入させない。
-4. 配置するソース／imageと同じmigration処理を使い、対象DBのbackupを別DBへ復元して追加migration・再実行・代表APIを検証する。対象DBの実ledgerと適用済みchecksumを照合してから未適用の013／014だけを追加し、ledger15件と既存行の保持を確認する。初期環境から適用する場合も全系列を選ぶ。移行済みchecksumを書き換えて通さない。
+   tagだけを証拠にせず、source SHA、build ID、image ID／OCI manifest、platform、archive SHA256、011／012／013／014／015を含む全migrationのchecksumを固定記録へ保存する。WebのAIラボartifactは配置先の既存状態を保持し、betaの実験artifactを本番へ混入させない。
+4. 配置するソース／imageと同じmigration処理を使い、対象DBのbackupを別DBへ復元して追加migration・再実行・代表APIを検証する。対象DBの実ledgerと適用済みchecksumを照合してから未適用の011〜015を追加し、ledger16件と既存行の保持を確認する。初期環境から適用する場合も全系列を選ぶ。移行済みchecksumを書き換えて通さない。
 5. build・テスト・Dockerの資材は対象を明示し、private backupを検索対象へ混ぜない。実環境の負荷がある場合はVitestを`--maxWorkers=1 --no-file-parallelism`で実行し、`--exclude 'backups/**'`としてglobをshellで展開させずに渡す。
 
-## 011／012／013／014の明示適用契約
+## 011／012／013／014／015の明示適用契約
 
 実装は[scripts/member-migrate.ts](../../scripts/member-migrate.ts)と[追加migration処理](../../lib/server/member/migrate.ts)。通常Webの起動・APIアクセスから自動適用しない。
 
@@ -60,22 +60,23 @@
 | `--community-capsules` | 012。固定版掲載・cohort・Capsule通報の固定参照。CLIは011も選ぶが、community系列の選択も必要 |
 | `--capsule-comments` | 013。`member_capsule_thread.closed`のDB既定値をfalseへ変更。既存の受付停止・会話行を更新せず、投稿認可を広げない |
 | `--capsule-share-recovery` | 014。限定リンクの派生方式列を追加。既存行はnullのまま保持し、新規リンクだけ所有者再取得に対応。認証secret・旧token hash・固定版は変更しない |
+| `--capsule-publications` | 015。014を前提に、URL維持の共有反映・公開履歴を準備 |
 | `--communities` | 005〜007を検査・選択。012の基礎となるcommunity schemaが必要 |
 | `--site-operations` | 008とcommunity系列を検査・選択 |
 | `--public-profiles` | 009／010とcommunity・運営系列を検査・選択 |
 | `--confirm-origin ORIGIN` | 上記追加系列の選択時に必須。読み込んだ`MEMBER_ORIGIN`と完全一致しなければ適用前に停止 |
 
-既存betaの公開プロフィール・運営を保持する全適用は、次の引数を使う。適用済みのchecksumは再検査し、未適用のmigrationだけを同じtransactionで追加する。000〜013が一致する環境では014のみ追加し、全系列のledgerは**15件**になる。適用前の実ledgerが想定と異なる場合は先に調べる。旧000〜010の環境でもこの全選択で011〜014を準備できる。
+既存betaの公開プロフィール・運営を保持する全適用は、次の引数を使う。適用済みのchecksumは再検査し、未適用のmigrationだけを同じtransactionで追加する。000〜014が一致する環境では015のみ追加し、全系列のledgerは**16件**になる。適用前の実ledgerが想定と異なる場合は先に調べる。旧000〜010の環境でもこの全選択で011〜015を準備できる。
 
 ```sh
 node --import tsx scripts/member-migrate.ts \
   --communities --site-operations --public-profiles \
   --capsule-documents --community-capsules --capsule-comments --capsule-share-recovery \
-     --capsule-publications \
+  --capsule-publications \
   --confirm-origin "$CAPSULE_TARGET_ORIGIN"
 ```
 
-このコマンドは、**その環境の既存private会員設定を読み込んだoperator**で実行する。betaと本番のDB URL・secret・originを混ぜない。011だけを検証する場合は`--community-capsules`・`--capsule-comments`・`--capsule-share-recovery`を外す。012を適用する場合はcommunity系列と011を併せて選ぶ。013／014は通常Webの起動や既存フラグだけでは適用されない。
+このコマンドは、**その環境の既存private会員設定を読み込んだoperator**で実行する。betaと本番のDB URL・secret・originを混ぜない。011だけを検証する場合は`--community-capsules`・`--capsule-comments`・`--capsule-share-recovery`・`--capsule-publications`を外す。012を適用する場合はcommunity系列と011を併せて選ぶ。013／014／015は通常Webの起動や既存フラグだけでは適用されない。
 
 migrationは単一transactionと既存advisory lockで行い、失敗時はDDL／ledgerともrollbackする。checksum不一致を上書きしたり、ledger行を削除して再実行しない。結果不明なら現在のledger／schemaを読んでから判断する。
 
@@ -85,8 +86,8 @@ migrationは単一transactionと既存advisory lockで行い、失敗時はDDL�
 
 1. freshなprivateディレクトリとdump名を使い、既存backupを上書きしない。ディレクトリは0700、dump・private設定・比較結果は0600とし、row本文や認証値をログへ出さない。dump SHA256を記録する。
 2. 新しい専用PostgreSQL container／別名DBへrestoreし、sourceの全tableの列・全行fingerprint・ledgerと一致することを確認する。対象の識別情報を記録し、既存beta DBや他のcontainerへrestoreしない。
-3. 復元DBで適用済み000〜013のchecksumを照合し、対象originと一致するprivate設定を用いて未適用の013／014を明示適用する。ledger以外の既存列・既存行が変わらず、`closed`の既定値がfalse、既存OFFはOFF、旧linkの派生方式列はnullのままであることを確認する。
-4. 同じコマンドを再実行し、ledger15件・全行fingerprintが変わらないことを確認する。認可・新規共有ON・未作成thread・固定版共有・所有者の同一URL再取得・旧リンク・secret変更時の挙動を実PostgreSQLのテストでも検証する。
+3. 復元DBの実ledgerから適用済みmigrationのchecksumを照合し、対象originと一致するprivate設定を用いて未適用の011〜015を明示適用する。ledger以外の既存列・既存行が変わらず、`closed`の既定値がfalse、既存OFFはOFF、旧linkの派生方式列はnullのままであることを確認する。
+4. 同じコマンドを再実行し、ledger16件・全行fingerprintが変わらないことを確認する。認可・新規共有ON・未作成thread・固定版共有・所有者の同一URL再取得・旧リンク・secret変更時の挙動を実PostgreSQLのテストでも検証する。
 5. 検証用containerだけを後片付けし、dumpと照合結果をprivateに保管する。復元・テストの成功はlive betaへのmigration適用を意味しない。適用済みかどうかは対象DBのledgerで別に記録する。
 
 ## 開発PCの3200とHTTPS beta
@@ -112,7 +113,7 @@ migrationは単一transactionと既存advisory lockで行い、失敗時はDDL�
 
 ## 既存VPSへの反映
 
-2026-10-30の本番公開指示に基づき実行する。対象環境の実際のledgerを読み、固定sourceのchecksumと照合して必要な追加migrationを確定する。今回の実物確認では000〜010が適用済み、011〜015が追加対象。
+2026-10-30の本番公開指示に基づき実行する。対象環境の実際のledgerを読み、固定sourceのchecksumと照合して必要な追加migrationを確定する。今回の更新前の実物確認では000〜010が適用済みで、011〜015を追加した。更新後のledgerは000〜015の16件。
 
 既存の正式originは`https://plunode.net`。`/opt/graph-knowledge/app.env`と`/opt/graph-knowledge/compose.yaml`、既存develop SSH＋管理者sudoを使う。[直近の会員公開手順](PUBLIC_ACCOUNTS_RELEASE.md)の固定資材・private backup・別DB復元・Webだけの切替という順序へ接続する。
 
@@ -188,7 +189,7 @@ migrationは単一transactionと既存advisory lockで行い、失敗時はDDL�
 
 ## 2026-10-30: 同一URLへの共有反映とOGP（015）
 
-共有機能の実装時点では既存3200／HTTPS βまでを対象とした。最新の本番公開指示で正式環境も対象に更新した。015は適用済み000〜014を書き換えず追加する。`--capsule-publications`を既存の全明示オプションに加え、対象private runtimeの正しい`--confirm-origin https://graph-beta.isinxnisi.com`で適用する。015は014を前提とする。
+共有機能の実装時点では既存3200／HTTPS βまでを対象とした。最新の本番公開指示で正式環境も対象に更新した。015は適用済み000〜014を書き換えず追加する。`--capsule-publications`を既存の全明示オプションに加え、対象private runtimeと一致する`--confirm-origin`（betaは`https://graph-beta.isinxnisi.com`、正式環境は`https://plunode.net`）で適用する。015は014を前提とする。
 
 実施前にAutopilot holdと固定SHAを確認し、既存private設定・起動PID・build・Docker・KG・AI artifactを記録する。実DBのread-only exported snapshotによるbackupを別DBへ復元し、全旧列・行のfingerprintと000〜014 checksumを照合する。復元先へ015を適用・再適用して16件のledgerと旧値の保存を検証する。切替時も既存Webを正常終了し、fresh backup・別DB復元後に015を明示適用・再実行する。会員DB全体のresetやliveへのrestoreはしない。
 
