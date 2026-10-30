@@ -101,12 +101,12 @@
   },
   "requestSha256": "7c353b1d9f9b781aa4f32f432a2e32a0733601e18c23e0407b7aa17af38bfd08",
   "kind": "issue-prepare",
-  "phase": "retry-wait",
-  "generation": 2398,
+  "phase": "waiting-control",
+  "generation": 2399,
   "attempts": 1,
   "workerId": "plunode-wsl",
   "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
-  "updatedAt": "2026-10-30T16:31:11+00:00",
+  "updatedAt": "2026-10-30T16:35:41+00:00",
   "result": {
     "schemaVersion": 1,
     "status": "prepared-candidates-not-accepted",
@@ -234,6 +234,6 @@
     }
   },
   "executionComplete": true,
-  "message": "<3>WSL (2334383 - ) ERROR: UtilAcceptVsock:273: accept4 failed 110\nfatal: unable to get password from user\n",
+  "message": "Execution gate: outside-window",
   "retryAt": 1793378001.2381747
 }
