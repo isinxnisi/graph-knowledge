@@ -1,0 +1,279 @@
+#!/usr/bin/env python3
+"""Google profile defaults: fixed assets, verified Capsule predecessor, Web/member-ops only.
+
+Run from the root-private, checksum-verified staging directory. Never imports KG,
+changes runtime settings, resets production data, or rolls back a migrated DB.
+"""
+import copy, datetime, fcntl, hashlib, json, os, pathlib, pwd, re, shutil, subprocess, tarfile
+ROOT = pathlib.Path('/opt/graph-knowledge')
+EXPORT = pathlib.Path('/home/develop/google-official-final-20261030')
+ORIGIN = 'https://plunode.net'
+
+def run(args, data=None, output=None):
+    p = subprocess.run(args, input=data, stdout=output or subprocess.PIPE, stderr=subprocess.PIPE)
+    if p.returncode: raise RuntimeError('Protected command failed: ' + args[0])
+    return p.stdout.decode().strip() if p.stdout is not None else ''
+
+def digest(p):
+    h = hashlib.sha256()
+    with p.open('rb') as f:
+        for b in iter(lambda: f.read(1024*1024), b''): h.update(b)
+    return h.hexdigest()
+
+def emit(event, **values):
+    print(json.dumps({'event':event, **values}, ensure_ascii=False), flush=True)
+
+def private(p, value):
+    with open(p, 'w') as f: f.write(value)
+    p.chmod(0o600)
+
+def atomic(p, value):
+    t = p.with_name(p.name+'.capsule.tmp'); private(t, value); os.replace(t,p)
+
+def patch_image(text, service, image):
+    if not re.fullmatch(r'[a-zA-Z0-9:._/-]+', image): raise ValueError('Invalid image reference')
+    m = re.search(r'^  '+re.escape(service)+r':\s*\n',text,re.M)
+    assert m, 'Expected service missing'
+    end = re.search(r'^(?:  [\w-]+:|[^\s#])',text[m.end():],re.M)
+    stop = m.end()+end.start() if end else len(text)
+    block, n = re.subn(r'^    image:.*$', '    image: "'+image+'"', text[m.start():stop], flags=re.M)
+    assert n==1, 'Expected one image per service'
+    return text[:m.start()]+block+text[stop:]
+
+def archive_identities(path, manifest):
+    """Bind both store IDs to the exact config and layer bytes in one pass."""
+    metadata = {}; seen = set()
+    with tarfile.open(path, 'r|gz') as archive:
+        for member in archive:
+            if not member.isfile(): continue
+            name = member.name
+            assert name not in seen, 'Duplicate archive member'
+            seen.add(name)
+            if name.startswith('blobs/sha256/'):
+                h = hashlib.sha256(); chunks = []
+                stream = archive.extractfile(member)
+                while data := stream.read(1024*1024):
+                    h.update(data)
+                    if member.size <= 65536: chunks.append(data)
+                assert name == 'blobs/sha256/'+h.hexdigest(), 'Archive blob bytes differ'
+                if chunks:
+                    try: metadata[name] = json.loads(b''.join(chunks))
+                    except (ValueError, UnicodeDecodeError): pass
+            elif name in ('index.json', 'manifest.json'):
+                metadata[name] = json.load(archive.extractfile(member))
+    rows = metadata['manifest.json']; index = metadata['index.json']
+    identities = {}
+    for key in ('web', 'memberOps'):
+        entry = manifest[key]
+        matching = [r for r in rows if entry['tag'] in (r.get('RepoTags') or [])]
+        descriptors = [d for d in index['manifests'] if d.get('annotations', {}).get('io.containerd.image.name') == 'docker.io/library/'+entry['tag']]
+        assert len(matching) == len(descriptors) == 1, 'Ambiguous archive tag'
+        row, descriptor = matching[0], descriptors[0]
+        assert descriptor['mediaType'] == 'application/vnd.oci.image.manifest.v1+json'
+        config_path = 'blobs/sha256/'+entry['imageId'].split(':')[1]
+        config = metadata[config_path]
+        image = metadata['blobs/sha256/'+descriptor['digest'].split(':')[1]]
+        assert row['Config'] == config_path and image['config']['digest'] == entry['imageId'], 'Manifest/config binding differs'
+        assert config['os'] == 'linux' and config['architecture'] == 'amd64'
+        assert config['config']['Labels']['org.opencontainers.image.revision'] == manifest['sourceCommit']
+        layers = [layer['digest'] for layer in image['layers']]
+        assert all(layer['mediaType'] == 'application/vnd.oci.image.layer.v1.tar' for layer in image['layers'])
+        assert layers == config['rootfs']['diff_ids'], 'Layer/config binding differs'
+        assert row['Layers'] == ['blobs/sha256/'+v.split(':')[1] for v in layers]
+        assert all(name in seen for name in row['Layers']), 'Missing archive layer'
+        identities[key] = {'configId':entry['imageId'], 'manifestId':descriptor['digest'], 'diffIds':layers}
+    return identities
+
+def verify_loaded_image(image, identity, driver_status, source):
+    drivers = [value for key, value in driver_status if key == 'driver-type']
+    assert drivers in ([], ['io.containerd.snapshotter.v1']), 'Unknown image store'
+    expected = identity['manifestId'] if drivers else identity['configId']
+    assert image['Id'] == expected, 'Loaded image differs from verified archive'
+    assert image['Os'] == 'linux' and image['Architecture'] == 'amd64'
+    assert image['RootFS']['Layers'] == identity['diffIds'], 'Loaded layers differ'
+    assert image['Config']['Labels']['org.opencontainers.image.revision'] == source
+    return expected
+
+def main():
+    assert os.geteuid()==0, 'Use the existing administrator sudo'
+    os.umask(0o077)
+    stage=pathlib.Path.cwd().resolve()
+    assert str(stage)== '/root/google-official-final-20261030', 'Root-private staging required'
+    manifest=json.loads((stage/'manifest.json').read_text())
+    previous=json.loads((stage/'predecessor-audit.json').read_text())
+    baseline=json.loads(run(['python3','-I',str(stage/'audit.py')]))
+    expected_images=dict(previous['images'])
+    expected_images.update({'web':'graph-knowledge-web:capsule-20e5c84a','member-ops':'graph-knowledge-ops:capsule-20e5c84a'})
+    assert baseline['images']==expected_images and baseline['envSha256']==previous['envSha256'], 'Predecessor configuration changed'
+    assert baseline['buildId']=='vn4RKdqxP0bGkdHIbv3P4', 'Unexpected predecessor build'
+    assert baseline['containers']['web']['image']=='sha256:3b6738c74fad01f1acb8d45b48d8d463374babf4db255208ee74a9e92980ac2f'
+    assert baseline['dataset']==previous['dataset']
+    for name in ('graph-member-postgres','graph-neo4j'):
+        assert baseline['containers'][name]==previous['containers'][name], 'Database container changed'
+    private(stage/'audit-result.json',json.dumps(baseline))
+    assert manifest['sourceCommit']=='5ed458ccbf58aea35dae5644209f79683e387dcf'
+    assert digest(stage/'images.tar.gz')==manifest['archive']['sha256'], 'Archive differs'
+    lock=open(ROOT/'.member-activation.lock','a');fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
+    assert digest(ROOT/'compose.yaml')==baseline['composeSha256'] and digest(ROOT/'app.env')==baseline['envSha256'], 'Configuration changed since inspection'
+    dc=['docker','compose','--env-file',str(ROOT/'app.env'),'-f',str(ROOT/'compose.yaml'),'--profile','member','--profile','ops']
+    def compose(*args):return run(dc+list(args))
+    def inspect(service):
+        cid=compose('ps','-q',service);assert cid, 'Expected running service missing'
+        return json.loads(run(['docker','inspect',cid]))[0]
+    web=inspect('web'); pg=inspect('graph-member-postgres'); neo=inspect('graph-neo4j')
+    for name,d in [('web',web),('graph-member-postgres',pg),('graph-neo4j',neo)]:
+        assert d['Id']==baseline['containers'][name]['id'] and d['Image']==baseline['containers'][name]['image'], 'Container changed since inspection'
+    assert run(['docker','exec',web['Id'],'cat','/app/.next-public/BUILD_ID'])==baseline['buildId']
+    cfg=json.loads(compose('config','--format','json'))
+    assert {k:v.get('image') for k,v in cfg['services'].items()}==baseline['images']
+    env=cfg['services']['web']['environment']
+    assert env['MEMBER_ORIGIN']==ORIGIN and env['MEMBER_AUTH_PROVIDER']=='google' and env['MEMBER_STORAGE_ENABLED']=='1'
+    assert env['GRAPH_DATASET']=='public-kg' and env['GRAPH_DEPLOYMENT']=='production'
+    assert not env.get('MEMBER_FIXTURE_ENABLED') or env['MEMBER_FIXTURE_ENABLED']=='0'
+    def sql(q,db='graph_member'):
+        return run(['docker','exec','-i',pg['Id'],'psql','-X','-At','-U','postgres','-d',db,'-v','ON_ERROR_STOP=1'],q.encode())
+    def ledger(db='graph_member'):return json.loads(sql('SELECT json_object_agg(name,checksum) FROM member_migration',db))
+    old_ledger={x['name']:x['checksum'] for x in baseline['migrations']}
+    assert ledger()==old_ledger
+    assert old_ledger=={k:v for k,v in manifest['migrations'].items() if k<'016'}, 'Unexpected migration baseline'
+    def columns(db='graph_member'):
+        return json.loads(sql("SELECT json_object_agg(table_name,cols) FROM (SELECT table_name,json_agg(column_name ORDER BY ordinal_position) cols FROM information_schema.columns WHERE table_schema='public' GROUP BY table_name) t",db))
+    def ident(s):return '"'+s.replace('"','""')+'"'
+    def fingerprints(schema,db='graph_member',old=False):
+        result={}
+        for table,fields in schema.items():
+            where=" WHERE name<'016'" if old and table=='member_migration' else ''
+            q="SELECT count(*)||':'||md5(coalesce(string_agg(row_to_json(x)::text,',' ORDER BY row_to_json(x)::text),'')) FROM (SELECT "+','.join(map(ident,fields))+' FROM '+ident(table)+where+') x'
+            result[table]=sql(q,db)
+        return result
+    def profiles(db='graph_member'):
+        return json.loads(sql("SELECT coalesce(json_agg(p ORDER BY id),'[]') FROM public_profile p",db))
+    def migrated_profiles(rows):
+        return [dict(p,official=False,icon='google',revision=p['revision']+(p['icon']!='google')) if p['user_id'] else dict(p,official=False) for p in rows]
+    def preserved(schema,db='graph_member'):
+        rows=fingerprints(schema,db,True);rows.pop('public_profile');return rows
+    def public(path):return run(['curl','--fail','--silent','--show-error','--max-time','30','http://127.0.0.1:3200'+path])
+    assert json.loads(public('/api/dataset'))==baseline['dataset']
+    lab_before=public('/api/ai-lab')
+    assert shutil.disk_usage(ROOT).free>5*1024**3, 'Insufficient backup/image space'
+    assert not any('member-ops' in n for n in run(['docker','ps','--format','{{.Names}}']).splitlines()), 'Another member operator is active'
+    original=(ROOT/'compose.yaml').read_text()
+    candidate=patch_image(patch_image(original,'web',manifest['web']['tag']),'member-ops',manifest['memberOps']['tag'])
+    candidate_path=ROOT/'compose.google-profile-candidate.yaml';private(candidate_path,candidate)
+    cdc=['docker','compose','--env-file',str(ROOT/'app.env'),'-f',str(candidate_path),'--profile','member','--profile','ops']
+    expected=copy.deepcopy(cfg)
+    expected['services']['web']['image']=manifest['web']['tag'];expected['services']['member-ops']['image']=manifest['memberOps']['tag']
+    assert json.loads(run(cdc+['config','--format','json']))==expected, 'Patch exceeds image-only scope'
+    identities=archive_identities(stage/'images.tar.gz',manifest)
+    run(['docker','load','--input',str(stage/'images.tar.gz')])
+    driver_status=json.loads(run(['docker','info','--format','{{json .DriverStatus}}']))
+    loaded={}
+    for key in ('web','memberOps'):
+        image=json.loads(run(['docker','image','inspect',manifest[key]['tag']]))[0]
+        emit('image-identity',kind=key,observed=image['Id'],configId=identities[key]['configId'],manifestId=identities[key]['manifestId'])
+        loaded[key]=verify_loaded_image(image,identities[key],driver_status,manifest['sourceCommit'])
+    assert run(['docker','run','--rm','--entrypoint','cat',manifest['web']['tag'],'/app/.next-public/BUILD_ID'])==manifest['build']
+    # The current deployment has no artifact mount. Do not replace its fallback
+    # public artifact with a different source copy or an experimental beta file.
+    assert not env.get('AI_LAB_ARTIFACT_DIRECTORY'), 'Inspect the active artifact mount before continuing'
+    artifact=run(['docker','exec',web['Id'],'sha256sum','/app/data/ai-lab/initial.json']).split()[0]
+    assert run(['docker','run','--rm','--entrypoint','sha256sum',manifest['web']['tag'],'/app/data/ai-lab/initial.json']).split()[0]==artifact, 'Existing AI artifact differs; preserve before switching'
+    identity=json.loads((stage/'official-identity.json').read_text())
+    assert identity['productionExpectedHandle']=='member-f40013def65449bc' and re.fullmatch('[a-f0-9]{64}',identity['googleSubjectHash'])
+    official_input={'email':identity['email'],'expectedHandle':identity['productionExpectedHandle'],'expectedGoogleSubjectHash':identity['googleSubjectHash'],'actor':'codex','reason':'User-requested Plunode official profile, 2026-10-30'}
+    def designate(db='graph_member',apply=False):
+        js="import pg from 'pg';import {designateOfficialProfile} from './lib/server/member/official-profile.ts';const u=new URL(process.env.MEMBER_DATABASE_URL);u.pathname="+json.dumps('/'+db)+";const p=new pg.Pool({connectionString:u.href});try{console.log(JSON.stringify(await designateOfficialProfile(p,"+json.dumps(official_input)+","+str(apply).lower()+")));}finally{await p.end();}"
+        return json.loads(run(cdc+['run','--rm','--no-deps','--entrypoint','node','member-ops','--import','tsx','--input-type=module','-e',js]))
+    planned=designate();assert planned['handle']==identity['productionExpectedHandle'] and planned['googleSubjectHash']==identity['googleSubjectHash']
+    def designate_checked(db='graph_member'):
+        current_schema=columns(db);before=fingerprints(current_schema,db);before_profiles=profiles(db)
+        target=next(p for p in before_profiles if p['handle']==identity['productionExpectedHandle'])
+        before_users=json.loads(sql('SELECT json_agg(u ORDER BY id) FROM "user" u',db))
+        before_claims=json.loads(sql('SELECT json_agg(c ORDER BY handle) FROM public_handle_claim c',db))
+        before_audits=int(sql('SELECT count(*) FROM public_profile_operation',db))
+        result=designate(db,True);assert result['applied'] and result['changed'] and result['handle']=='plunode'
+        after=fingerprints(current_schema,db)
+        for table in before:
+            if table not in ('public_profile','user','public_handle_claim','public_profile_operation'):assert after[table]==before[table], 'Official designation changed unrelated table'
+        expected=[dict(p,handle='plunode',display_name='Plunode公式',official=True,revision=p['revision']+1) if p['id']==target['id'] else p for p in before_profiles]
+        assert profiles(db)==expected
+        after_users=json.loads(sql('SELECT json_agg(u ORDER BY id) FROM "user" u',db))
+        for old,new in zip(before_users,after_users,strict=True):
+            if old['id']==target['user_id']:
+                assert new['updatedAt']>=old['updatedAt']
+                assert new==dict(old,name='Plunode公式',updatedAt=new['updatedAt'])
+            else:assert old==new
+        claims=json.loads(sql('SELECT json_agg(c ORDER BY handle) FROM public_handle_claim c',db))
+        assert claims==sorted(before_claims+[{'handle':'plunode','profile_id':target['id']}],key=lambda c:c['handle'])
+        assert int(sql('SELECT count(*) FROM public_profile_operation',db))==before_audits+1
+        audit=json.loads(sql('SELECT row_to_json(p) FROM public_profile_operation p ORDER BY id DESC LIMIT 1',db))
+        assert all(audit[k]==v for k,v in {'profile_id':target['id'],'actor':official_input['actor'],'reason':official_input['reason'],'from_handle':target['handle'],'to_handle':'plunode','official':True}.items())
+        assert not designate(db,True)['changed'] and fingerprints(current_schema,db)==after
+        return {'handle':'plunode','googleIdentityMatchedBeta':True,'unrelatedRowsUnchanged':True,'repeatedUnchanged':True}
+    emit('preflight-ok',source=manifest['sourceCommit'],build=manifest['build'],additionalMigrations=[k for k in manifest['migrations'] if k not in old_ledger])
+    backup=ROOT/'backups'/('google-profile-release-'+datetime.datetime.now(datetime.timezone.utc).strftime('%Y%m%dT%H%M%SZ'))
+    backup.mkdir(mode=0o700,parents=True,exist_ok=False)
+    for name in ['app.env','compose.yaml']:shutil.copy2(ROOT/name,backup/name);(backup/name).chmod(0o600)
+    shutil.copy2(stage/'manifest.json',backup/'manifest.json')
+    stopped=False;attempted=False
+    try:
+        compose('stop','-t','30','web');stopped=True
+        schema=columns();before=fingerprints(schema);expected_profiles=migrated_profiles(profiles())
+        preserved_before={k:v for k,v in before.items() if k!='public_profile'}
+        private(backup/'before.json',json.dumps({'schema':schema,'fingerprints':before,'ledger':old_ledger}))
+        dump=backup/'member-before-google-profile.dump'
+        with dump.open('wb') as f:run(['docker','exec',pg['Id'],'pg_dump','-U','postgres','-d','graph_member','-Fc','--no-owner','--no-acl'],output=f)
+        restore='graph_member_restore_google_profile_'+datetime.datetime.now(datetime.timezone.utc).strftime('%Y%m%d%H%M%S')
+        sql('CREATE DATABASE '+ident(restore)+' OWNER gk_member TEMPLATE template0; REVOKE CONNECT ON DATABASE '+ident(restore)+' FROM PUBLIC;')
+        run(['docker','exec','-i',pg['Id'],'pg_restore','-U','postgres','-d',restore,'--no-owner','--role=gk_member','--no-acl','--exit-on-error'],dump.read_bytes())
+        assert columns(restore)==schema and fingerprints(schema,restore)==before and ledger(restore)==old_ledger, 'Separate restore differs'
+        # Exercise the same migration function against the restored DB only.
+        js="import pg from 'pg';import {migrateMemberDatabase} from './lib/server/member/migrate.ts';const u=new URL(process.env.MEMBER_DATABASE_URL);u.pathname='/"+restore+"';const p=new pg.Pool({connectionString:u.href});try{await migrateMemberDatabase(p,true,true,true,true,true,true,true,true,true,true);}finally{await p.end();}"
+        rehearsal=cdc+['run','--rm','--no-deps','--entrypoint','node','member-ops','--import','tsx','--input-type=module','-e',js]
+        run(rehearsal);assert ledger(restore)==manifest['migrations'] and preserved(schema,restore)==preserved_before and profiles(restore)==expected_profiles
+        migrated_schema=columns(restore);migrated_rows=fingerprints(migrated_schema,restore);run(rehearsal)
+        assert fingerprints(migrated_schema,restore)==migrated_rows, 'Repeat changed restored rows'
+        restored_official=designate_checked(restore)
+        sql('DROP DATABASE '+ident(restore))
+        private(backup/'restore.json',json.dumps({'allOtherRowsEqual':True,'onlyHumanIconAndRevisionChanged':True,'tables':len(schema),'migrations':len(manifest['migrations']),'repeatedUnchanged':True,'dumpSha256':digest(dump),'separateDatabase':restore,'officialDesignation':restored_official}))
+        # Encrypted export; recovery private key remains on the development PC.
+        payload=backup/'recovery.tar'
+        with tarfile.open(payload,'w') as tar:
+            for name in ['app.env','compose.yaml','manifest.json','before.json','restore.json','member-before-google-profile.dump']:tar.add(backup/name,arcname=name)
+        key=backup/'encryption-key';private(key,os.urandom(48).hex())
+        encrypted=backup/'recovery.tar.enc';wrapped=backup/'recovery-key.enc';verified=backup/'recovery.verify.tar'
+        run(['openssl','enc','-aes-256-cbc','-pbkdf2','-iter','200000','-salt','-in',str(payload),'-out',str(encrypted),'-pass','file:'+str(key)])
+        run(['openssl','pkeyutl','-encrypt','-pubin','-inkey',str(stage/'recovery-public.pem'),'-in',str(key),'-out',str(wrapped),'-pkeyopt','rsa_padding_mode:oaep','-pkeyopt','rsa_oaep_md:sha256'])
+        run(['openssl','enc','-d','-aes-256-cbc','-pbkdf2','-iter','200000','-in',str(encrypted),'-out',str(verified),'-pass','file:'+str(key)])
+        assert digest(payload)==digest(verified)
+        for file in [payload,verified,key]:file.unlink()
+        export=EXPORT/'backup-export';export.mkdir(mode=0o700,exist_ok=False);owner=pwd.getpwnam('develop');os.chown(export,owner.pw_uid,owner.pw_gid)
+        for f in [encrypted,wrapped]:
+            target=export/f.name;shutil.copy2(f,target);target.chmod(0o600);os.chown(target,owner.pw_uid,owner.pw_gid)
+        emit('backup-restore-rehearsal-ok',directory=str(backup),tables=len(schema),dumpSha256=digest(dump))
+        migration=cdc+['run','--rm','--no-deps','--entrypoint','node','member-ops','--import','tsx','scripts/member-migrate.ts','--communities','--site-operations','--public-profiles','--capsule-documents','--community-capsules','--capsule-comments','--capsule-share-recovery','--capsule-publications','--google-profile-images','--official-profiles','--confirm-origin',ORIGIN]
+        attempted=True;run(migration)
+        assert ledger()==manifest['migrations'] and preserved(schema)==preserved_before and profiles()==expected_profiles, 'Migration changed old records'
+        current_schema=columns();current_rows=fingerprints(current_schema);run(migration)
+        assert fingerprints(current_schema)==current_rows, 'Live repeat changed rows'
+        emit('migration-ok',ledgerCount=len(manifest['migrations']),otherRowsPreserved=True,onlyHumanIconAndRevisionChanged=True,humanProfiles=len([p for p in expected_profiles if p["user_id"]]),repeatedUnchanged=True)
+        official=designate_checked();emit('official-profile-ok',**official)
+        atomic(ROOT/'compose.yaml',candidate)
+        compose('up','-d','--no-deps','--pull','never','--wait','--wait-timeout','180','web');stopped=False
+        now=inspect('web');assert now['Image']==loaded['web']
+        assert run(['docker','exec',now['Id'],'cat','/app/.next-public/BUILD_ID'])==manifest['build']
+        compose('exec','-T','web','node','scripts/production-readiness.mjs')
+        assert digest(ROOT/'app.env')==baseline['envSha256']
+        assert json.loads(compose('config','--format','json'))==expected
+        for name,d in [('graph-member-postgres',pg),('graph-neo4j',neo)]:
+            after=inspect(name);assert after['Id']==d['Id'] and after['State']['StartedAt']==d['State']['StartedAt'], 'Database runtime changed'
+        assert json.loads(public('/api/dataset'))==baseline['dataset'] and public('/api/ai-lab')==lab_before
+        emit('activated',source=manifest['sourceCommit'],build=manifest['build'],webImage=now['Image'],memberOpsImage=loaded['memberOps'],kgUnchanged=True,aiArtifactUnchanged=True,settingsUnchanged=True)
+    except Exception:
+        if stopped and not attempted:
+            compose('up','-d','--no-deps','--pull','never','--wait','--wait-timeout','180','web')
+            emit('aborted-before-live-migration',originalWebRestored=True)
+        else:emit('inspect-before-recovery',migrationAttempted=attempted,webStopped=stopped,databaseRestored=False)
+        raise
+
+if __name__=='__main__': main()

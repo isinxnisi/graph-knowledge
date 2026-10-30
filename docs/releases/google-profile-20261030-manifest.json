@@ -1,0 +1,45 @@
+{
+  "sourceCommit": "5ed458ccbf58aea35dae5644209f79683e387dcf",
+  "build": "2ot-o4qNUifoDe2J2Pk_s",
+  "archive": {
+    "file": "images.tar.gz",
+    "sha256": "13faba90deaf0169c99fd14256109524f29e515307797c601d98d933d0ed3317"
+  },
+  "migrations": {
+    "000-auth.sql": "2bf2c433610d77c0574de11c1646dc8777e0ca6903eeded337bb543bdeba88d3",
+    "001-capsules.sql": "de7f0d9c5890d568e61c022d5ac8b03c36480be20f3073f36537f1c06083ae23",
+    "002-capsule-sharing.sql": "3d3909b5a4cdf41f260153038d539eb547fa76ffbc9b2111f5f55bf83805b9b7",
+    "003-capsule-discussion.sql": "f2554048e32a3a3f58ab6dc0680daeeedd8ef6aca7fc3d561d9021b227997353",
+    "004-account-operations.sql": "4519d8dd507d8d337cf012cebde0ad0114918d09f2de2fcdd18e8db5b2a5ca8b",
+    "005-communities.sql": "1457d0e2ab88d8eaefc589a4b91500e8cef71a01b344624c1d8b8f971d1b0540",
+    "006-community-continuity.sql": "70e7f05554e5960772c28c3be4ce2ea86b8ba0e861fc152d7574994f62657ac1",
+    "007-community-safety.sql": "b0a77195770598da2a5fc9435cc429ca018d46534ce6b1eba63f699e8034087f",
+    "008-site-operations.sql": "709f74b36a1b3f9c763335b58ab12d9b42d554a163176d5385ec91ffa8b1d799",
+    "009-public-profiles.sql": "9a77e02ff90b3c84f2770903915179c344b0a9f9cc49b3e888b2be69cae76663",
+    "010-account-initial-experience.sql": "699b0a30ef6b6dfc53e7382ec62e8268aee4efe9dcf5590bd7bfff941812254a",
+    "011-capsule-documents.sql": "7f16684ea9bd43148586362d095dd3d88cf5f4881502f7dab04cd9a401aef8b9",
+    "012-community-capsules.sql": "cbde4ac6caf678a92f48100603b7bbacf41cc2f7b5e1632a0b1810ea3a4a03ea",
+    "013-capsule-comment-default.sql": "6ef50adbb4a17d9480ef5faf0bde84247d63f99c032521c4a449491843365430",
+    "014-capsule-share-recovery.sql": "893001277b1d6bbc56f82368913edd3a47b4265d8fbef7c39da34c19fcec73a2",
+    "015-capsule-publications.sql": "141487386927427572b8e18bfc96184e83110741c3524f1a896e3d0d38397baf",
+    "016-google-profile-images.sql": "9911de4374a0bf9b513bca3a88d4d99e694728e64e6cf9c7b4860bfb1cd8f869",
+    "017-official-profiles.sql": "fe8e95be9bba681971cd31dfa1408c1cf6b0b530c834ae43c4a551e2c53b7d44"
+  },
+  "web": {
+    "tag": "graph-knowledge-web:google-official-5ed458cc",
+    "imageId": "sha256:73e212d9e551c6f98677e8cfdd660a95eae62a8499258a666aafd427bd36c1f9",
+    "architecture": "amd64",
+    "os": "linux",
+    "revision": "5ed458ccbf58aea35dae5644209f79683e387dcf",
+    "manifestId": "sha256:8eb1703208fe5451ea517ccdd66a134f97cb5955152fd9c46343ed86336a1917"
+  },
+  "memberOps": {
+    "tag": "graph-knowledge-ops:google-official-5ed458cc",
+    "imageId": "sha256:a0c2677910a028ff14456b79b3feddd7093e00d96a0aa1f997434a2865a1e415",
+    "architecture": "amd64",
+    "os": "linux",
+    "revision": "5ed458ccbf58aea35dae5644209f79683e387dcf",
+    "manifestId": "sha256:72b269d11c0f946f99f36422edb574a79d7a5113357b3968fcb81ba92c492010"
+  },
+  "status": "prepared-not-deployed"
+}
