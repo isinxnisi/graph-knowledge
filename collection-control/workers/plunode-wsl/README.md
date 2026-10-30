@@ -1,6 +1,6 @@
 # CollectionWorkerの実行制御
 
-確認: 2026-10-30 22:15:58 JST。
+確認: 2026-10-30 22:19:58 JST。
 
 反映済みcontrolRevision: 8／最後の操作: pub-13abfb93-ba2d-44f7-a56b-352aa7ab0ab0-resume。
 
@@ -107,8 +107,9 @@ Issue確認結果:
     "checkedAt": "2026-10-29T01:17:27+00:00"
   },
   "collection-control/issue-sources/68.json": {
-    "status": "registered: issue-68-dot-fujikoa-two-20261029",
-    "checkedAt": "2026-10-29T11:24:20+00:00"
+    "status": "held",
+    "reason": "Remote end closed connection without response",
+    "checkedAt": "2026-10-30T13:17:33+00:00"
   },
   "collection-control/issue-sources/69.json": {
     "status": "registered: issue-69-dot-ishinomori-three-20261029",
