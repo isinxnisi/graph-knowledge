@@ -88,11 +88,11 @@
   "requestSha256": "c0d42e0541d38be705e97e5e1ddb185763d08a92fcb2643365314d1c76ae1e83",
   "kind": "collect-review",
   "phase": "waiting-control",
-  "generation": 1069,
+  "generation": 1146,
   "attempts": 1,
   "workerId": "plunode-wsl",
   "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
-  "updatedAt": "2026-10-30T13:15:36+00:00",
+  "updatedAt": "2026-10-30T18:02:52+00:00",
   "result": {
     "jobId": "issue-59-dot-kubo-two-20261028-r0001-00347e7b023773d6",
     "collectionUnchanged": false,
@@ -118,6 +118,6 @@
   "decisionDrafts": [
     "datasets/collection-decision-drafts/issue-59-dot-kubo-two-20261028-batch-01/ea268c44481c3e12c764fccd24dc092d3fa58302ba89f64eb029342f9c9d65ed/issue-59-dot-kubo-two-20261028-batch-01-normal-draft.json"
   ],
-  "message": "Execution gate: outside-window",
+  "message": "Execution gate: interval",
   "retryAt": 1793365968.6472368
 }
