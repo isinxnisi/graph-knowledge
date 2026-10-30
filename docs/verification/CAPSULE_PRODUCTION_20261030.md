@@ -8,7 +8,7 @@
 - localhost:3200／HTTPS β: 同source、build `qJH6xIjxJa3LpgA6ArfO-`。今回アプリ変更なし。両方のAPIから確認KG revision `34befbcd-8f5f-4cd9-a059-242a3f0b5ffb` を再確認した。
 - 本番の更新前: build `lNabFN3qBIdd5U2lV6e6A`、Web image `sha256:f4e2a8e484c6c9906d89f163614567007d5b35575c5ac05976434edb238a52d4`。KG revision `f5dbf83f-c89e-4e40-95ee-57957016089f`、2,207対象／1,931関係。
 - 本番の実物確認: migration000〜010の11件はsourceとchecksum一致、旧table29件。Google・会員・コミュニティ・運営・公開プロフィール・AIラボの既存設定を保持する。
-- 本番切替: 管理者による固定手順の実行と正式URLの確認を実施中。完了結果は以下へ追記する。
+- 本番切替: **管理者実行待ち・未反映**。SSHは接続済みだが、developにはDocker権限がなく、sudoはterminalへのパスワード入力が必要。読み取り専用確認はユーザーが実行し、結果を照合済み。固定済みの切替launcherを用意して実行操作を依頼した。切替ログはまだ生成されておらず、DB migration・Web更新・本番backupは未実施。
 
 ## 固定資材
 
@@ -42,3 +42,11 @@
 ## 保持事項
 
 未コミットの`memo.txt`を保持し、無関係なAutopilot候補の受入・一括acknowledgeはしていない。本線KG、KG用ops、Worker、Kev、AI教育／予定、管理Connectorは変更対象外。既存AIラボ公開artifactのJSONは固定sourceのinitial.jsonと一致した。会員・コミュニティ・KGの削除やDB resetは実施しない。
+
+## 再開点と記録commit
+
+準備・検証・固定手順は `000f090e` でcommit・upstreamへ通常push済み。ユーザーが開発PCのPowerShellから `wsl -d Ubuntu -- python3 /home/isinxnisi/1.projects/7.graph-knowledge/backups/capsule-production-20261030/run-release.py` を実行する段階。sudoパスワードはterminal内で入力し、チャットへ送らない。事前確認のためだけの追加権限やpasswordless sudoは設定していない。
+
+結果を受領したらAutopilot holdを再取得して確認する。activation.log、encrypted backupの回収と復号、正式URLでの実Google本人セッションによる作成・保存・同URL共有更新・コメント・停止・OGP・コミュニティ往復が残る。外部SNSの実カード表示も未確認。停止後に失敗した場合は先にログとledgerを確認し、固定scriptを無条件に再実行しない。今回の旧テスト失敗は検証環境とselectorの不一致として記録し、新機能成功に読み替えない。
+
+手動holdは管理者実行待ちでの中断時に所定のterminal Enterで解放する。`autopilot assert-held`は各区切りで成功。追加の`autopilot status`はWindows連携のnull値エラーで失敗したが、最初のreview・token reviewと共通hold確認は成功しており、設定変更や失敗の一括acknowledgeは行っていない。
