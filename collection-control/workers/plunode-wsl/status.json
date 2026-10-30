@@ -26,30 +26,25 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-10-30T01:07:13.351721+00:00",
-  "phase": "running",
+  "nextStartAt": "2026-10-30T00:13:53.839583+00:00",
+  "phase": "interval",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
     "reason": "interval",
-    "eligibleAt": "2026-10-30T01:07:13.351721+00:00",
+    "eligibleAt": "2026-10-30T00:13:53.839583+00:00",
     "windowEndAt": "2026-10-30T03:00:00+00:00"
   },
-  "activeAttempt": {
-    "requestId": "issue-73-dot-murata-onepunch-20261030",
-    "startedAt": "2026-10-30T00:02:13.351723+00:00",
-    "limitAt": "2026-10-30T00:57:13.351721+00:00"
-  },
+  "activeAttempt": null,
   "lastAttempt": {
-    "requestId": "issue-25-manga23-20261019-repair1-batch-04",
-    "endedAt": "2026-10-29T20:36:40.915923+00:00"
+    "requestId": "issue-73-dot-murata-onepunch-20261030",
+    "endedAt": "2026-10-30T00:03:53.839585+00:00"
   },
   "controlError": null,
   "requestsByPhase": {
     "blocked": 12,
-    "completed": 43,
-    "awaiting-recovery": 6,
-    "running": 1
+    "completed": 44,
+    "awaiting-recovery": 6
   },
   "issueIntake": {
     "collection-control/issue-sources/25.json": {
@@ -196,5 +191,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-10-30T00:02:56.586660+00:00"
+  "checkedAt": "2026-10-30T00:04:42.182615+00:00"
 }
