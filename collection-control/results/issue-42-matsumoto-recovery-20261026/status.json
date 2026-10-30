@@ -101,12 +101,12 @@
   },
   "requestSha256": "7c353b1d9f9b781aa4f32f432a2e32a0733601e18c23e0407b7aa17af38bfd08",
   "kind": "issue-prepare",
-  "phase": "completed",
-  "generation": 170,
+  "phase": "retry-wait",
+  "generation": 2398,
   "attempts": 1,
   "workerId": "plunode-wsl",
   "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
-  "updatedAt": "2026-10-26T18:10:55+00:00",
+  "updatedAt": "2026-10-30T16:31:11+00:00",
   "result": {
     "schemaVersion": 1,
     "status": "prepared-candidates-not-accepted",
@@ -233,5 +233,7 @@
       "datasets/collection-themes/approvals/issue-42-matsumoto-recovery-20261026/r0001.json": "478ed40d1af593785c8b4bba52a296a355857d4cea6dda4e8776de1175eb9281"
     }
   },
-  "executionComplete": true
+  "executionComplete": true,
+  "message": "<3>WSL (2334383 - ) ERROR: UtilAcceptVsock:273: accept4 failed 110\nfatal: unable to get password from user\n",
+  "retryAt": 1793378001.2381747
 }
