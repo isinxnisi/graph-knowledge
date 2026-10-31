@@ -97,11 +97,11 @@
   "requestSha256": "78ffd17af073fb5ff238579eca1957d2be68063bca8157b4cac2eba3f2f88eb3",
   "kind": "collect-review",
   "phase": "waiting-control",
-  "generation": 12439,
+  "generation": 12516,
   "attempts": 1,
   "workerId": "plunode-wsl",
   "sourceCommit": "ed89e5a6ff0cf7d8b485330be790a234a064eacd",
-  "updatedAt": "2026-10-31T13:39:53+00:00",
+  "updatedAt": "2026-10-31T18:08:47+00:00",
   "result": {
     "jobId": "issue-25-utc-recovery-r0009-dcce01b7349906fb",
     "collectionUnchanged": false,
@@ -128,5 +128,5 @@
     "datasets/manga-collection/decisions/issue-25-utc-recovery-09-identity-draft.json"
   ],
   "retryAt": 1793453875.7225602,
-  "message": "Execution gate: outside-window"
+  "message": "Execution gate: interval"
 }
