@@ -66,12 +66,12 @@
   },
   "requestSha256": "09841b22ac721194912d583a44c0306dd236eaeea8168e31e9515da26e9690b0",
   "kind": "issue-prepare",
-  "phase": "completed",
-  "generation": 3,
+  "phase": "retry-wait",
+  "generation": 963,
   "attempts": 1,
   "workerId": "plunode-wsl",
   "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
-  "updatedAt": "2026-10-29T01:23:45+00:00",
+  "updatedAt": "2026-10-31T08:13:05+00:00",
   "result": {
     "schemaVersion": 1,
     "status": "prepared-candidates-not-accepted",
@@ -112,5 +112,7 @@
     "preparationDirectory": "/home/isinxnisi/.local/share/plunode-collection-worker-phase-b-20261020/runtime/.local/collection-issues/issue-67-dot-mizuki-two-20261029",
     "generatedArtifacts": {}
   },
-  "executionComplete": true
+  "executionComplete": true,
+  "message": "<urlopen error [Errno -3] Temporary failure in name resolution>",
+  "retryAt": 1793434516.811702
 }
