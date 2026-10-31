@@ -1,0 +1,120 @@
+{
+  "requestId": "issue-70-dot-fujikof-doraemon-20261029",
+  "request": {
+    "schemaVersion": 1,
+    "id": "issue-70-dot-fujikof-doraemon-20261029",
+    "kind": "issue-prepare",
+    "status": "approved",
+    "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
+    "issueAdapterSha256": "38aadaee84b039f9f991ac1cc831a9498a4d83fab062d96b7c252d7175326dab",
+    "applyAuthorized": {
+      "local": false,
+      "beta": false,
+      "vps": false
+    },
+    "approvalScope": "issue-manga-preparation-collection-review-only",
+    "humanDecision": {
+      "actorType": "human",
+      "reviewer": "プロジェクト運営者（範囲を限定した委任）",
+      "decidedAt": "2026-10-25T13:07:49+09:00",
+      "statement": "2026-10-25 13:07:49 JST、運営者は既存Worker対応の現在の漫画テーマ候補からdotが対象を選び、毎回の個別提示なしでGitHubの収集許可と購読を登録し、候補収集・レビューまで進める限定委任を明示承認した。同日16:17:04 JSTに固定1日1バッチ上限を撤廃し、進捗・収集量・負荷による投入調整を許可した。2026-10-26 12:37:31 JST、過去の許可を上書きせず追加分をバッチ専用の新Issueに登録する方式への明示確認に本人が肯定リアクションし、親会話で現在の反応を検証済み。2026-10-27 13:37〜13:41 JST、運営者はdotが相談中として継続していた追加投入抑制を問い直し、データ収集を急いでいること、多少多く実行してほしいこと、1日何件という制約を付ける段階ではないことを明示した。元の限定委任の範囲で投入を再開し、日次件数上限を設けず実処理・待機量・負荷を見て少量ずつ補充する。個々の人物作品組・Role・ISBNを人間が審査済みとの記録ではない。今回dotが選んだのは既存テーマIssue #15／#5と固定catalog d3e377d5255f4c487d608e73954dc40aeb0b3cba（blob f3d33d0e83b6299a7f443fa841232407ce67657c）のM04の藤子・F・不二雄→ドラえもんの1組、および導入Worker対応組との共通部分だけ。Wikidata構造化情報とNDL作成書誌のみ、1作者1作品、親準備と全子収集合計30試行以内、同一要求2試行・3秒間隔・20秒・4MiB、保存成果とcache優先。既公開・既受入・既収集の同内容、同条件の根拠保留は再収集せず、不確かな同定・Role・刊行物scopeは保留。既設時間帯・直列排他・10分休憩を維持する。固定catalog全組・将来追加テーマへの無条件許可ではなく、正式受入・公開apply・追加取得元・予算拡大・コード/adapter/権限/認証/VPS/会員DB/時間帯/ロック変更は含まない。"
+    },
+    "permission": {
+      "schemaVersion": 1,
+      "approvalId": "dot-fujikof-doraemon-20261029",
+      "status": "approved",
+      "approvalScope": "issue-manga-preparation-collection-review-only",
+      "adapter": "manga-discovery-v2",
+      "targets": [
+        {
+          "person": "藤子・F・不二雄",
+          "work": "ドラえもん"
+        }
+      ],
+      "requestPolicy": {
+        "maxAttempts": 30,
+        "attemptsPerRequest": 2,
+        "minIntervalSeconds": 3,
+        "timeoutSeconds": 20,
+        "maxBytes": 4194304
+      },
+      "humanDecision": {
+        "actorType": "human",
+        "reviewer": "プロジェクト運営者（範囲を限定した委任）",
+        "decidedAt": "2026-10-25T13:07:49+09:00",
+        "statement": "2026-10-25 13:07:49 JST、運営者は既存Worker対応の現在の漫画テーマ候補からdotが対象を選び、毎回の個別提示なしでGitHubの収集許可と購読を登録し、候補収集・レビューまで進める限定委任を明示承認した。同日16:17:04 JSTに固定1日1バッチ上限を撤廃し、進捗・収集量・負荷による投入調整を許可した。2026-10-26 12:37:31 JST、過去の許可を上書きせず追加分をバッチ専用の新Issueに登録する方式への明示確認に本人が肯定リアクションし、親会話で現在の反応を検証済み。2026-10-27 13:37〜13:41 JST、運営者はdotが相談中として継続していた追加投入抑制を問い直し、データ収集を急いでいること、多少多く実行してほしいこと、1日何件という制約を付ける段階ではないことを明示した。元の限定委任の範囲で投入を再開し、日次件数上限を設けず実処理・待機量・負荷を見て少量ずつ補充する。個々の人物作品組・Role・ISBNを人間が審査済みとの記録ではない。今回dotが選んだのは既存テーマIssue #15／#5と固定catalog d3e377d5255f4c487d608e73954dc40aeb0b3cba（blob f3d33d0e83b6299a7f443fa841232407ce67657c）のM04の藤子・F・不二雄→ドラえもんの1組、および導入Worker対応組との共通部分だけ。Wikidata構造化情報とNDL作成書誌のみ、1作者1作品、親準備と全子収集合計30試行以内、同一要求2試行・3秒間隔・20秒・4MiB、保存成果とcache優先。既公開・既受入・既収集の同内容、同条件の根拠保留は再収集せず、不確かな同定・Role・刊行物scopeは保留。既設時間帯・直列排他・10分休憩を維持する。固定catalog全組・将来追加テーマへの無条件許可ではなく、正式受入・公開apply・追加取得元・予算拡大・コード/adapter/権限/認証/VPS/会員DB/時間帯/ロック変更は含まない。"
+      }
+    },
+    "issueOrigin": {
+      "repository": "isinxnisi/graph-knowledge",
+      "issueNumber": 70,
+      "approvalId": "dot-fujikof-doraemon-20261029",
+      "permissionSha256": "0b94ddaebeeed1e59557de5b108be41936eeedf6c2bd48145326a71034623620",
+      "issueBodySha256": "6371dd8d0b22866eac98c29b42daaa287c3c5f66675d154056a3699dfb21bd9d"
+    },
+    "issueSnapshot": {
+      "url": "https://github.com/isinxnisi/graph-knowledge/issues/70",
+      "updatedAt": "2026-10-29T07:29:55Z",
+      "body": "## 限定収集バッチ：藤子・F・不二雄 → ドラえもん\n\n元テーマは [Issue #15 藤子・F・不二雄の3作品](https://github.com/isinxnisi/graph-knowledge/issues/15) と親 [#5](https://github.com/isinxnisi/graph-knowledge/issues/5)。既存許可・購読・保存成果は変更せず、今回の未投入1組だけを登録する。\n\n- 漫画制作クレジットのみ、1作者1作品。固定catalog d3e377d5255f4c487d608e73954dc40aeb0b3cba、blob f3d33d0e83b6299a7f443fa841232407ce67657cのM04と元テーマ#15/#5および設置Worker対応組の共通部分。main・設置互換基準973c7b0も同じcatalog blobで確認。全catalog・将来テーマへの無条件許可ではない。\n- 藤子不二雄の共同名義、F/A、漫画と劇場版を区別。既存の藤子・F・不二雄identity-only候補を保存し、既収集パーマン／キテレツ大百科や同条件の保留を再投入しない。人物・作品・ISBN・Role・刊行物scopeの曖昧さは保留し、人間が個々の関係を審査済みとはしない。\n- 補充判断（2026-10-29 16:29 JST）：#68は通常再試行で2 Claimのレビュー完了、親子11/30。#69は16:25:29実処理終了、サイボーグ009の検索2Timeoutが残ってawaiting-recovery、親子11/30・子0。佐武と市の書誌照合は通常再試行で回復し同定1まで進んだが、#69全体は未完了。#69や旧#47/#50/#60/#61の失敗URLを再試行・迂回しない。通常未処理0、次16:35:29、pause/controlError/activeなし。provider全体の持続障害とは断定せず、別の未投入1作だけを少量補充し結果を再評価する。\n- 事前照合：control7fe0c77b3a991ef2577818ab1398617ced1119efとmain952c8fb59fa6ca311121d81a641d3d1b847e7deeから455 unique JSON（全request、recipe/preparation/review/proposed/held/accepted/draft等）、保存公開2175 Entity／1894 Claimと後続正式追加記録にドラえもん/Doraemonの既収集・同条件保留一致なし。最新追加#68/#69は別対象。Issue検索は元企画#15のみ。最新本番DB直接読取ではなく、実行時の同定・既存重複検査を維持する。\n- 最新公開記録はf5dbf83f-c89e-4e40-95ee-57957016089f completed、漫画17 Claim／12バッチは未承認下書きのまま保全。既存の島への接続や島数減少は保証しない。\n- Wikidata構造化API＋NDL作成書誌のみ。親準備と全子合計30試行、同一要求2回、逐次3秒以上、20秒timeout、4MiB。保存成果/cacheとRetry-Afterを優先。旧142枠・他バッチの履歴と予算は混同／リセットしない。\n- 既設03–07／09–12／15–18 JST、終盤15分の開始回避、直列排他、10分休憩を維持する。日次固定件数上限ではなく実負荷で判断し、手動収集・技術並行化は行わない。\n- 候補・根拠レビューまで。正式受入/public apply、新取得元、予算拡大、コード/adapter/権限/認証/VPS/会員DB/時間帯/ロック変更は禁止。登録・実受付・実行・完了は区別する。\n\n<!-- plunode-collection-permission:v1 -->\n```json\n{\n  \"schemaVersion\": 1,\n  \"approvalId\": \"dot-fujikof-doraemon-20261029\",\n  \"status\": \"approved\",\n  \"approvalScope\": \"issue-manga-preparation-collection-review-only\",\n  \"adapter\": \"manga-discovery-v2\",\n  \"targets\": [\n    {\n      \"person\": \"藤子・F・不二雄\",\n      \"work\": \"ドラえもん\"\n    }\n  ],\n  \"requestPolicy\": {\n    \"maxAttempts\": 30,\n    \"attemptsPerRequest\": 2,\n    \"minIntervalSeconds\": 3,\n    \"timeoutSeconds\": 20,\n    \"maxBytes\": 4194304\n  },\n  \"humanDecision\": {\n    \"actorType\": \"human\",\n    \"reviewer\": \"プロジェクト運営者（範囲を限定した委任）\",\n    \"decidedAt\": \"2026-10-25T13:07:49+09:00\",\n    \"statement\": \"2026-10-25 13:07:49 JST、運営者は既存Worker対応の現在の漫画テーマ候補からdotが対象を選び、毎回の個別提示なしでGitHubの収集許可と購読を登録し、候補収集・レビューまで進める限定委任を明示承認した。同日16:17:04 JSTに固定1日1バッチ上限を撤廃し、進捗・収集量・負荷による投入調整を許可した。2026-10-26 12:37:31 JST、過去の許可を上書きせず追加分をバッチ専用の新Issueに登録する方式への明示確認に本人が肯定リアクションし、親会話で現在の反応を検証済み。2026-10-27 13:37〜13:41 JST、運営者はdotが相談中として継続していた追加投入抑制を問い直し、データ収集を急いでいること、多少多く実行してほしいこと、1日何件という制約を付ける段階ではないことを明示した。元の限定委任の範囲で投入を再開し、日次件数上限を設けず実処理・待機量・負荷を見て少量ずつ補充する。個々の人物作品組・Role・ISBNを人間が審査済みとの記録ではない。今回dotが選んだのは既存テーマIssue #15／#5と固定catalog d3e377d5255f4c487d608e73954dc40aeb0b3cba（blob f3d33d0e83b6299a7f443fa841232407ce67657c）のM04の藤子・F・不二雄→ドラえもんの1組、および導入Worker対応組との共通部分だけ。Wikidata構造化情報とNDL作成書誌のみ、1作者1作品、親準備と全子収集合計30試行以内、同一要求2試行・3秒間隔・20秒・4MiB、保存成果とcache優先。既公開・既受入・既収集の同内容、同条件の根拠保留は再収集せず、不確かな同定・Role・刊行物scopeは保留。既設時間帯・直列排他・10分休憩を維持する。固定catalog全組・将来追加テーマへの無条件許可ではなく、正式受入・公開apply・追加取得元・予算拡大・コード/adapter/権限/認証/VPS/会員DB/時間帯/ロック変更は含まない。\"\n  }\n}\n```\n<!-- /plunode-collection-permission:v1 -->\n"
+    },
+    "firstRecipeRevision": 49,
+    "recipeRevisionCount": 1
+  },
+  "requestSha256": "e9a655e5a732e6065253ceade19dce92cca288d328d65ec82b0f779df86877a4",
+  "kind": "issue-prepare",
+  "phase": "retry-wait",
+  "generation": 900,
+  "attempts": 2,
+  "workerId": "plunode-wsl",
+  "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
+  "updatedAt": "2026-10-31T11:51:28+00:00",
+  "message": "fatal: TaskCanceledException encountered.\n   �^�X�N����������܂����B\r\nfatal: unable to get password from user\n",
+  "result": {
+    "schemaVersion": 1,
+    "status": "technical-incomplete",
+    "preparationComplete": false,
+    "issueOrigin": {
+      "repository": "isinxnisi/graph-knowledge",
+      "issueNumber": 70,
+      "approvalId": "dot-fujikof-doraemon-20261029",
+      "permissionSha256": "0b94ddaebeeed1e59557de5b108be41936eeedf6c2bd48145326a71034623620",
+      "issueBodySha256": "6371dd8d0b22866eac98c29b42daaa287c3c5f66675d154056a3699dfb21bd9d"
+    },
+    "preparationDirectory": "/home/isinxnisi/.local/share/plunode-collection-worker-phase-b-20261020/runtime/.local/collection-issues/issue-70-dot-fujikof-doraemon-20261029",
+    "batchRequests": [],
+    "generatedArtifacts": {},
+    "technicalWaits": [
+      {
+        "category": "request-attempts-exhausted",
+        "key": "publication-6abc0ce664d50e7e5319c44f",
+        "provider": "ndlsearch.ndl.go.jp",
+        "retryAt": null,
+        "recoveryRequired": true,
+        "target": "ドラえもん",
+        "lastDiagnostic": {
+          "category": "transport",
+          "phase": "open-through-response-headers",
+          "phaseBoundary": "open-through-response-headers",
+          "elapsedSeconds": 25.381544,
+          "finishedAt": "2026-10-29T07:52:35.016421+00:00",
+          "httpStatus": null,
+          "causes": [
+            {
+              "type": "TimeoutError"
+            }
+          ]
+        }
+      }
+    ],
+    "retryAt": null,
+    "publicApply": false,
+    "counts": {
+      "networkAttempts": 4,
+      "holds": 0,
+      "identifiedWorks": 0,
+      "technicalWaits": 1
+    }
+  },
+  "executionComplete": false,
+  "retryAt": 1793447744.4781454
+}
