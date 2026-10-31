@@ -106,12 +106,12 @@
   },
   "requestSha256": "a25b93cfbe06d29201c862380f1208dfa929a0856e6f8ca7473a82b223769b34",
   "kind": "collect-review",
-  "phase": "retry-wait",
-  "generation": 12471,
+  "phase": "waiting-control",
+  "generation": 12472,
   "attempts": 1,
   "workerId": "plunode-wsl",
   "sourceCommit": "ed89e5a6ff0cf7d8b485330be790a234a064eacd",
-  "updatedAt": "2026-10-31T15:32:30+00:00",
+  "updatedAt": "2026-10-31T15:36:15+00:00",
   "result": {
     "jobId": "issue-25-utc-recovery-r0002-195d12ba8ceee0b8",
     "collectionUnchanged": false,
@@ -136,5 +136,5 @@
   },
   "decisionDrafts": [],
   "retryAt": 1793460886.3758042,
-  "message": "fatal: TaskCanceledException encountered.\n   �^�X�N����������܂����B\r\nfatal: unable to get password from user\n"
+  "message": "Execution gate: outside-window"
 }
