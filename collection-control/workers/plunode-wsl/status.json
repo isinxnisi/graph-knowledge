@@ -26,29 +26,25 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-10-31T19:27:57.670559+00:00",
-  "phase": "running",
+  "nextStartAt": "2026-10-31T18:33:38.851117+00:00",
+  "phase": "interval",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
     "reason": "interval",
-    "eligibleAt": "2026-10-31T19:27:57.670559+00:00",
+    "eligibleAt": "2026-10-31T18:33:38.851117+00:00",
     "windowEndAt": "2026-10-31T22:00:00+00:00"
   },
-  "activeAttempt": {
-    "requestId": "issue-68-dot-fujikoa-two-20261029",
-    "startedAt": "2026-10-31T18:22:57.670561+00:00",
-    "limitAt": "2026-10-31T19:17:57.670559+00:00"
-  },
+  "activeAttempt": null,
   "lastAttempt": {
-    "requestId": "issue-25-manga23-20261019",
-    "endedAt": "2026-10-31T18:12:50.039180+00:00"
+    "requestId": "issue-68-dot-fujikoa-two-20261029",
+    "endedAt": "2026-10-31T18:23:38.851120+00:00"
   },
   "controlError": null,
   "requestsByPhase": {
     "blocked": 7,
-    "waiting-control": 37,
-    "completed": 18
+    "waiting-control": 36,
+    "completed": 19
   },
   "issueIntake": {
     "collection-control/issue-sources/25.json": {
@@ -195,5 +191,5 @@
       "phase": "waiting-control"
     }
   },
-  "checkedAt": "2026-10-31T18:23:04.682403+00:00"
+  "checkedAt": "2026-10-31T18:24:29.380260+00:00"
 }
