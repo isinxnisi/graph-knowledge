@@ -1,4 +1,6 @@
-2026-10-31（現在の配置）、Issue #63のCapsule閲覧・共有・コミュニティ導線とコメント通報を正式サイトへ反映完了。アプリ `d1330ea8`、本番build `1gqqeqXTNSzWUrDAFyWUn`、3200／HTTPS β build `5O8HMYFaPiKps5cRvuky_`、会員DB000〜019。fresh backup・別DB復元・再実行・暗号化backup回収を確認し、実Googleセッションで同URL共有更新・旧版コメント保持・共有停止・条件横断追加・破棄・ごみ箱復元を正式URLで検証した。通報の受付から運営処置はβ、失効境界は隔離PG/OIDCで確認。本線KG・AI artifact・既存認証設定は保持。知識申請は準備中。[最新の配置と確認範囲](verification/CAPSULE_READING_REFINEMENT_20261030.md#2026-10-31-本番反映完了)。以下は各時点の履歴。
+2026-10-31（現在の配置）、X公式Validatorで確認したCapsule共有ページのrobots巡回禁止を修正し、3200／HTTPS β／正式VPSへWeb更新を反映。アプリ `3a533256`、本番build `gICsYdcWaoj_SCu-Pm6jh`、3200／β build `BnsDx3WQt5OBxWKBlbZJg`。DB000〜019・KG・member-ops・認証設定・AI artifactは保持。正式HTTPで巡回許可・共有meta・PNGを確認したが、X側は反映後も旧拒否を返し、投稿前プレビューの画像表示成功は未確認。検索掲載のnoindexと共有認可を維持。[原因・公開後確認・残件](verification/CAPSULE_X_OGP_20261031.md)。以下は各時点の履歴。
+
+2026-10-31（コメント通報公開時点）、Issue #63のCapsule閲覧・共有・コミュニティ導線とコメント通報を正式サイトへ反映完了。アプリ `d1330ea8`、本番build `1gqqeqXTNSzWUrDAFyWUn`、3200／HTTPS β build `5O8HMYFaPiKps5cRvuky_`、会員DB000〜019。fresh backup・別DB復元・再実行・暗号化backup回収を確認し、実Googleセッションで同URL共有更新・旧版コメント保持・共有停止・条件横断追加・破棄・ごみ箱復元を正式URLで検証した。通報の受付から運営処置はβ、失効境界は隔離PG/OIDCで確認。本線KG・AI artifact・既存認証設定は保持。知識申請は準備中。[最新の配置と確認範囲](verification/CAPSULE_READING_REFINEMENT_20261030.md#2026-10-31-本番反映完了)。以下は各時点の履歴。
 
 2026-10-30（共有の仕上げ）、Issue #63の同一URLへの明示的な共有更新・版を保持した会話・Capsule別OGP・関係先の条件横断選択を既存3200／HTTPS βへ反映。配置 `5dc34e31` / build `1eOVcSb5AZmVQ3nOgAC5l`、会員DBは015まで（16件）。現在の契約と実操作・SNS未確認範囲は[共有仕上げの検証記録](verification/CAPSULE_SHARING_20261030.md)を参照する。通常保存だけでは共有を変えず、コミュニティの固定掲載も独立させる。本番VPSは更新していない。以下の記述は各時点の履歴。
 

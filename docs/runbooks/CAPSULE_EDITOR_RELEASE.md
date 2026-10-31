@@ -232,4 +232,4 @@ private stagingでも、trackedソースのディレクトリは0755、通常フ
 
 ## Xカード巡回の修正（2026-10-31）
 
-正式共有ページの巡回禁止がX公式Validatorで確認されたため、`/shared`のrobots Disallowだけを外すWeb更新を準備した。固定ソース`3a533256`、正式build `gICsYdcWaoj_SCu-Pm6jh`、3200／β build `BnsDx3WQt5OBxWKBlbZJg`。[原因・検証・反映状況](../verification/CAPSULE_X_OGP_20261031.md)。新しい一回用`release-capsule-x-ogp-production.py`は直前build・設定・ledgerを照合してWebだけを切り替える。migration／DB restore／member-ops更新は不要。正式反映はsudo実行後に確認する。
+正式共有ページの巡回禁止がX公式Validatorで確認されたため、`/shared`のrobots Disallowだけを外すWeb更新を準備した。固定ソース`3a533256`、正式build `gICsYdcWaoj_SCu-Pm6jh`、3200／β build `BnsDx3WQt5OBxWKBlbZJg`。[原因・検証・反映状況](../verification/CAPSULE_X_OGP_20261031.md)。新しい一回用`release-capsule-x-ogp-production.py`は直前build・設定・ledgerを照合してWebだけを切り替える。migration／DB restore／member-ops更新は不要。2026-10-31 11:17 JSTにsudo実行・正式反映を完了し、originのrobots・共有meta・PNG・新buildを確認した。X公式Validatorは反映後も旧拒否を返し、投稿前カードも未表示のため、X側での表示成功は未確認。詳細は上記検証記録へ残す。使用済みの一回用runnerを再実行しない。
