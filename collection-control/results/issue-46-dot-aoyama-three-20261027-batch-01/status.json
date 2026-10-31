@@ -87,12 +87,12 @@
   },
   "requestSha256": "dbbd9ac962a478f5a8f351fcdbd05ab3373bfebe364f8b738b58bffb17d3d104",
   "kind": "collect-review",
-  "phase": "retry-wait",
-  "generation": 2130,
+  "phase": "waiting-control",
+  "generation": 2131,
   "attempts": 1,
   "workerId": "plunode-wsl",
   "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
-  "updatedAt": "2026-10-31T12:55:42+00:00",
+  "updatedAt": "2026-10-31T12:59:41+00:00",
   "result": {
     "jobId": "issue-46-dot-aoyama-three-20261027-r0001-0d4c3c14acfa63a5",
     "collectionUnchanged": false,
@@ -118,6 +118,6 @@
   "decisionDrafts": [
     "datasets/collection-decision-drafts/issue-46-dot-aoyama-three-20261027-batch-01/a1c214cb4271a8014aea807e9ae859255c126c3f261ab6590a96ff3abcf67664/issue-46-dot-aoyama-three-20261027-batch-01-normal-draft.json"
   ],
-  "message": "fatal: HttpRequestException encountered.\n   ���̗v���̑��M���ɃG���[���������܂����B\r\nfatal: unable to get password from user\n",
+  "message": "Execution gate: outside-window",
   "retryAt": 1793451467.3427134
 }
