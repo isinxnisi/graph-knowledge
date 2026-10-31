@@ -1,13 +1,10 @@
 # 収集Workerの処理結果
 
-issue-5-dot-tezuka-adolf-20261025：**retry-wait**
+issue-5-dot-tezuka-adolf-20261025：**waiting-control**
 
 公開apply・restore・本番配置は行わない。承認者名は本人認証の証明ではない。
 
-fatal: TaskCanceledException encountered.
-   �^�X�N����������܂����B
-fatal: unable to get password from user
-
+Execution gate: outside-window
 
 ```json
 {
