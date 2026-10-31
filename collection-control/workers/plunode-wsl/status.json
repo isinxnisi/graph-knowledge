@@ -26,16 +26,20 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-10-31T06:24:56.616258+00:00",
-  "phase": "interval",
+  "nextStartAt": "2026-10-31T07:32:17.613160+00:00",
+  "phase": "running",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
     "reason": "interval",
-    "eligibleAt": "2026-10-31T06:24:56.616258+00:00",
+    "eligibleAt": "2026-10-31T07:32:17.613160+00:00",
     "windowEndAt": "2026-10-31T09:00:00+00:00"
   },
-  "activeAttempt": null,
+  "activeAttempt": {
+    "requestId": "issue-25-manga23-20261019-repair1-batch-01",
+    "startedAt": "2026-10-31T06:27:17.613163+00:00",
+    "limitAt": "2026-10-31T07:22:17.613160+00:00"
+  },
   "lastAttempt": {
     "requestId": "issue-66-dot-togashi-two-20261029",
     "endedAt": "2026-10-31T06:14:56.616260+00:00"
@@ -192,5 +196,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-10-31T06:15:57.665612+00:00"
+  "checkedAt": "2026-10-31T06:27:24.592163+00:00"
 }
