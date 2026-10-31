@@ -1,6 +1,6 @@
 # CollectionWorkerの実行制御
 
-確認: 2026-10-31 16:51:36 JST。
+確認: 2026-10-31 16:54:47 JST。
 
 反映済みcontrolRevision: 8／最後の操作: pub-13abfb93-ba2d-44f7-a56b-352aa7ab0ab0-resume。
 
@@ -71,9 +71,8 @@ Issue確認結果:
     "checkedAt": "2026-10-28T00:27:15+00:00"
   },
   "collection-control/issue-sources/58.json": {
-    "status": "held",
-    "reason": "<urlopen error [Errno -3] Temporary failure in name resolution>",
-    "checkedAt": "2026-10-31T07:49:16+00:00"
+    "status": "registered: issue-58-dot-takeuchi-two-20261028",
+    "checkedAt": "2026-10-31T07:53:01+00:00"
   },
   "collection-control/issue-sources/59.json": {
     "status": "registered: issue-59-dot-kubo-two-20261028",

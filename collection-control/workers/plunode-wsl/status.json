@@ -96,9 +96,8 @@
       "checkedAt": "2026-10-28T00:27:15+00:00"
     },
     "collection-control/issue-sources/58.json": {
-      "status": "held",
-      "reason": "<urlopen error [Errno -3] Temporary failure in name resolution>",
-      "checkedAt": "2026-10-31T07:49:16+00:00"
+      "status": "registered: issue-58-dot-takeuchi-two-20261028",
+      "checkedAt": "2026-10-31T07:53:01+00:00"
     },
     "collection-control/issue-sources/59.json": {
       "status": "registered: issue-59-dot-kubo-two-20261028",
@@ -192,5 +191,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-10-31T07:51:36.921880+00:00"
+  "checkedAt": "2026-10-31T07:54:47.927636+00:00"
 }
