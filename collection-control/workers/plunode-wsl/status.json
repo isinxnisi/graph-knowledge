@@ -26,29 +26,25 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-10-31T20:36:34.152501+00:00",
-  "phase": "running",
+  "nextStartAt": "2026-10-31T19:42:15.694336+00:00",
+  "phase": "interval",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
     "reason": "interval",
-    "eligibleAt": "2026-10-31T20:36:34.152501+00:00",
+    "eligibleAt": "2026-10-31T19:42:15.694336+00:00",
     "windowEndAt": "2026-10-31T22:00:00+00:00"
   },
-  "activeAttempt": {
-    "requestId": "issue-46-dot-aoyama-three-20261027",
-    "startedAt": "2026-10-31T19:31:34.152504+00:00",
-    "limitAt": "2026-10-31T20:26:34.152501+00:00"
-  },
+  "activeAttempt": null,
   "lastAttempt": {
-    "requestId": "issue-25-utc-recovery-05",
-    "endedAt": "2026-10-31T19:20:05.427044+00:00"
+    "requestId": "issue-46-dot-aoyama-three-20261027",
+    "endedAt": "2026-10-31T19:32:15.694338+00:00"
   },
   "controlError": null,
   "requestsByPhase": {
     "blocked": 9,
-    "waiting-control": 31,
-    "completed": 22
+    "waiting-control": 30,
+    "completed": 23
   },
   "issueIntake": {
     "collection-control/issue-sources/25.json": {
@@ -195,5 +191,5 @@
       "phase": "waiting-control"
     }
   },
-  "checkedAt": "2026-10-31T19:31:41.431524+00:00"
+  "checkedAt": "2026-10-31T19:33:29.528942+00:00"
 }
