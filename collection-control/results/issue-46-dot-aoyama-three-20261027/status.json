@@ -70,12 +70,12 @@
   },
   "requestSha256": "8277772eae902e72cdf68b5e7d02eb6ce10b4f37c6de085af9af6ac8a595ab10",
   "kind": "issue-prepare",
-  "phase": "completed",
-  "generation": 39,
+  "phase": "retry-wait",
+  "generation": 2150,
   "attempts": 1,
   "workerId": "plunode-wsl",
   "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
-  "updatedAt": "2026-10-27T05:59:58+00:00",
+  "updatedAt": "2026-10-31T11:40:38+00:00",
   "result": {
     "schemaVersion": 1,
     "status": "prepared-candidates-not-accepted",
@@ -203,5 +203,7 @@
       "datasets/collection-themes/approvals/issue-46-dot-aoyama-three-20261027/r0001.json": "0c20f8d033b3e5b7007c97cdd83a9b37f1a456790d2d32a7cf9a86b5a9bc19e9"
     }
   },
-  "executionComplete": true
+  "executionComplete": true,
+  "message": "Remote end closed connection without response",
+  "retryAt": 1793446971.4780493
 }
