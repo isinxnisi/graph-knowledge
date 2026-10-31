@@ -1,10 +1,10 @@
 # CollectionWorkerの実行制御
 
-確認: 2026-10-31 17:39:39 JST。
+確認: 2026-10-31 17:50:43 JST。
 
 反映済みcontrolRevision: 8／最後の操作: pub-13abfb93-ba2d-44f7-a56b-352aa7ab0ab0-resume。
 
-**interval**／停止モード: なし
+**closing-window**／停止モード: なし
 
 日本時間: 03:00〜07:00、09:00〜12:00、15:00〜18:00。ジョブ間10分休憩。
 
@@ -100,7 +100,7 @@ Issue確認結果:
   },
   "collection-control/issue-sources/66.json": {
     "status": "registered: issue-66-dot-togashi-two-20261029",
-    "checkedAt": "2026-10-30T12:56:15+00:00"
+    "checkedAt": "2026-10-31T08:48:19+00:00"
   },
   "collection-control/issue-sources/67.json": {
     "status": "registered: issue-67-dot-mizuki-two-20261029",
