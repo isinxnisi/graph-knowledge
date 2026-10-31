@@ -228,3 +228,8 @@ private stagingでも、trackedソースのディレクトリは0755、通常フ
 `release-capsule-reading-production.py` の現行固定ソースは `d1330ea8d5917f8c31d239fe7058c2380c554a2d`、新しいprivate stagingは `capsule-comments-final-20261031`。当初の018専用候補や旧stagingは使わない。切替時にroot権限のread-only auditで稼働build・container・設定・ledgerを取得し、先行Google公式対応と照合する。追加018／019を別DBで適用・再実行した後、本番へ明示適用する。
 
 開発PCの `backups/capsule-comments-final-20261031/run-release.py` は実行時に既存Autopilot guardを取得し、そのtokenでreview/assert後、固定checksumのroot専用資材だけを実行する。終了時にguardを解放する。Codex側のholdを保持したままこのrunnerを重ねて起動しない。VPSのsudoパスワードは本人がterminalへ入力し、チャットへ送らない。権限入力待ちの間は公開未完了として扱う。
+
+
+## Xカード巡回の修正（2026-10-31）
+
+正式共有ページの巡回禁止がX公式Validatorで確認されたため、`/shared`のrobots Disallowだけを外すWeb更新を準備した。固定ソース`3a533256`、正式build `gICsYdcWaoj_SCu-Pm6jh`、3200／β build `BnsDx3WQt5OBxWKBlbZJg`。[原因・検証・反映状況](../verification/CAPSULE_X_OGP_20261031.md)。新しい一回用`release-capsule-x-ogp-production.py`は直前build・設定・ledgerを照合してWebだけを切り替える。migration／DB restore／member-ops更新は不要。正式反映はsudo実行後に確認する。
