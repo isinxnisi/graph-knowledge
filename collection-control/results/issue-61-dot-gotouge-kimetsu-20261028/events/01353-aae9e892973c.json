@@ -1,0 +1,121 @@
+{
+  "requestId": "issue-61-dot-gotouge-kimetsu-20261028",
+  "request": {
+    "schemaVersion": 1,
+    "id": "issue-61-dot-gotouge-kimetsu-20261028",
+    "kind": "issue-prepare",
+    "status": "approved",
+    "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
+    "issueAdapterSha256": "38aadaee84b039f9f991ac1cc831a9498a4d83fab062d96b7c252d7175326dab",
+    "applyAuthorized": {
+      "local": false,
+      "beta": false,
+      "vps": false
+    },
+    "approvalScope": "issue-manga-preparation-collection-review-only",
+    "humanDecision": {
+      "actorType": "human",
+      "reviewer": "プロジェクト運営者（範囲を限定した委任）",
+      "decidedAt": "2026-10-25T13:07:49+09:00",
+      "statement": "2026-10-25 13:07:49 JST、運営者は既存Worker対応の現在の漫画テーマ候補からdotが対象を選び、毎回の個別提示なしでGitHubの収集許可と購読を登録し、候補収集・レビューまで進める限定委任を明示承認した。同日16:17:04 JSTに固定1日1バッチ上限を撤廃し、進捗・収集量・負荷による投入調整を許可した。2026-10-26 12:37:31 JST、過去の許可を上書きせず追加分をバッチ専用の新Issueに登録する方式への明示確認に本人が肯定リアクションし、親会話で現在の反応を検証済み。2026-10-27 13:37〜13:41 JST、運営者はdotが相談中として継続していた追加投入抑制を問い直し、データ収集を急いでいること、多少多く実行してほしいこと、1日何件という制約を付ける段階ではないことを明示した。元の限定委任の範囲で投入を再開し、日次件数上限を設けず実処理・待機量・負荷を見て少量ずつ補充する。個々の人物作品組・Role・ISBNを人間が審査済みとの記録ではない。今回dotが選んだのは既存テーマIssue #5と固定catalog d3e377d5255f4c487d608e73954dc40aeb0b3cba（blob f3d33d0e83b6299a7f443fa841232407ce67657c）のM41の吾峠呼世晴→鬼滅の刃の1組、および導入Worker対応組との共通部分だけ。Wikidata構造化情報とNDL作成書誌のみ、1作者1作品、親準備と全子収集合計30試行以内、同一要求2試行・3秒間隔・20秒・4MiB、保存成果とcache優先。既公開・既受入・既収集の同内容、同条件の根拠保留は再収集せず、不確かな同定・Role・刊行物scopeは保留。既設時間帯・直列排他・10分休憩を維持する。固定catalog全組・将来追加テーマへの無条件許可ではなく、正式受入・公開apply・追加取得元・予算拡大・コード/adapter/権限/認証/VPS/会員DB/時間帯/ロック変更は含まない。"
+    },
+    "permission": {
+      "schemaVersion": 1,
+      "approvalId": "dot-gotouge-kimetsu-20261028",
+      "status": "approved",
+      "approvalScope": "issue-manga-preparation-collection-review-only",
+      "adapter": "manga-discovery-v2",
+      "targets": [
+        {
+          "person": "吾峠呼世晴",
+          "work": "鬼滅の刃"
+        }
+      ],
+      "requestPolicy": {
+        "maxAttempts": 30,
+        "attemptsPerRequest": 2,
+        "minIntervalSeconds": 3,
+        "timeoutSeconds": 20,
+        "maxBytes": 4194304
+      },
+      "humanDecision": {
+        "actorType": "human",
+        "reviewer": "プロジェクト運営者（範囲を限定した委任）",
+        "decidedAt": "2026-10-25T13:07:49+09:00",
+        "statement": "2026-10-25 13:07:49 JST、運営者は既存Worker対応の現在の漫画テーマ候補からdotが対象を選び、毎回の個別提示なしでGitHubの収集許可と購読を登録し、候補収集・レビューまで進める限定委任を明示承認した。同日16:17:04 JSTに固定1日1バッチ上限を撤廃し、進捗・収集量・負荷による投入調整を許可した。2026-10-26 12:37:31 JST、過去の許可を上書きせず追加分をバッチ専用の新Issueに登録する方式への明示確認に本人が肯定リアクションし、親会話で現在の反応を検証済み。2026-10-27 13:37〜13:41 JST、運営者はdotが相談中として継続していた追加投入抑制を問い直し、データ収集を急いでいること、多少多く実行してほしいこと、1日何件という制約を付ける段階ではないことを明示した。元の限定委任の範囲で投入を再開し、日次件数上限を設けず実処理・待機量・負荷を見て少量ずつ補充する。個々の人物作品組・Role・ISBNを人間が審査済みとの記録ではない。今回dotが選んだのは既存テーマIssue #5と固定catalog d3e377d5255f4c487d608e73954dc40aeb0b3cba（blob f3d33d0e83b6299a7f443fa841232407ce67657c）のM41の吾峠呼世晴→鬼滅の刃の1組、および導入Worker対応組との共通部分だけ。Wikidata構造化情報とNDL作成書誌のみ、1作者1作品、親準備と全子収集合計30試行以内、同一要求2試行・3秒間隔・20秒・4MiB、保存成果とcache優先。既公開・既受入・既収集の同内容、同条件の根拠保留は再収集せず、不確かな同定・Role・刊行物scopeは保留。既設時間帯・直列排他・10分休憩を維持する。固定catalog全組・将来追加テーマへの無条件許可ではなく、正式受入・公開apply・追加取得元・予算拡大・コード/adapter/権限/認証/VPS/会員DB/時間帯/ロック変更は含まない。"
+      }
+    },
+    "issueOrigin": {
+      "repository": "isinxnisi/graph-knowledge",
+      "issueNumber": 61,
+      "approvalId": "dot-gotouge-kimetsu-20261028",
+      "permissionSha256": "3d8a4d259fdf7f1d3617cc000a9592d459ffde2fc81acb06f850eae9dcbd3e73",
+      "issueBodySha256": "9dd0369d4f35a85246fd169fbbefcef81224e84d5e4c767ed24b4ec558eedae3"
+    },
+    "issueSnapshot": {
+      "url": "https://github.com/isinxnisi/graph-knowledge/issues/61",
+      "updatedAt": "2026-10-28T06:58:53Z",
+      "body": "## 限定収集バッチ：吾峠呼世晴 → 鬼滅の刃\n\n元テーマは [Issue #5 有名漫画家と代表作品](https://github.com/isinxnisi/graph-knowledge/issues/5)。過去の許可を変更せず、元の限定委任内の今回1組だけを登録する。\n\n- 漫画制作クレジットのみ、1作者1作品。固定catalog commit d3e377d5255f4c487d608e73954dc40aeb0b3cba、blob f3d33d0e83b6299a7f443fa841232407ce67657c のM41と既存#5テーマ・設置Worker対応組の共通部分。アニメ・映画・影響/助手関係に拡張しない。設置基準973c7b0でも同catalog、Issue adapter実SHA256 38aadaee84b039f9f991ac1cc831a9498a4d83fab062d96b7c252d7175326dab。\n- 補充判断：#59親子は通常再試行後に15:24:34完了。#60は15:52:26に同一ISBN確認2回のTimeoutでawaiting-recovery（6/30、子0）。#60・#47・#50の枠切れ要求を再登録・リセットせず保全し、今回の別作品1件だけ補充する。正常実行待ち0、control8／pauseMode=null、次開始16:02:26、締切17:45。固定日次件数上限ではなく直列処理・負荷を見た少量補充。\n- 負荷：#60はrequest-attempts-exhausted、HTTP応答・429/503・Retry-Afterは観測なし。共有資料からprovider全体待機なしとは断定しない。保存cacheの待機継承、通常Workerのbackoff・10分休憩を維持し、技術拒否を迂回しない。NDL負荷や障害が続く場合は再評価する。\n- 事前照合（15:57 JST）：control commit 3abfd19a9c5f9aac435984ad80a66dfa44159db5、tree a18d01c51f1386a0fcc76b0b525f0a4a02171285。requests/results/proposed/accepted174パス164uniqueと、保存公開全量＋正式追加UUID合成2207 Entity／1931 Claim／1802 Source／1968 Citationに対象和英名なし、最新Issueは#60まで。最新本番DBの直接読取ではない。M34九井・M35大友は既受入/公開、M39 JoJoは旧同定保留で除外した。\n- 最新公開 f5dbf83f-c89e-4e40-95ee-57957016089f はcompleted。既存漫画12Claimは未承認のまま保全。通常レビューpublic欄は旧ローカルbaseだがcomparison=Trueで全12正式receiptと最新公開artifactをhash検証して合流する。最新本番直接観測とは呼ばず、正式受入前の最新base/receipt整合は別確認。\n- 人物QID・漫画作品QID・ISBN・Role・刊行物scopeは未審査。不明同定・曖昧Role・書誌不成立を推測補完しない。既存の島への接続・島数減少は保証しない。\n- Wikidata構造化API＋NDL作成書誌のみ。親準備と全子合計30試行、同一要求2回、逐次3秒以上、20秒timeout、4MiB。保存成果/cache優先、旧142枠や他バッチ履歴を混同・リセットしない。\n- 既設03–07／09–12／15–18 JST、終盤15分の新規開始回避、直列排他、10分休憩を維持。手動収集・並行化・コード/adapter/権限/認証/VPS/会員DB/時間帯/ロック変更禁止。\n- 候補・根拠レビューまで。正式受入・公開apply、新取得元・予算拡大は含まない。登録／実受付／実行／完了を区別。\n\n<!-- plunode-collection-permission:v1 -->\n```json\n{\n  \"schemaVersion\": 1,\n  \"approvalId\": \"dot-gotouge-kimetsu-20261028\",\n  \"status\": \"approved\",\n  \"approvalScope\": \"issue-manga-preparation-collection-review-only\",\n  \"adapter\": \"manga-discovery-v2\",\n  \"targets\": [\n    {\n      \"person\": \"吾峠呼世晴\",\n      \"work\": \"鬼滅の刃\"\n    }\n  ],\n  \"requestPolicy\": {\n    \"maxAttempts\": 30,\n    \"attemptsPerRequest\": 2,\n    \"minIntervalSeconds\": 3,\n    \"timeoutSeconds\": 20,\n    \"maxBytes\": 4194304\n  },\n  \"humanDecision\": {\n    \"actorType\": \"human\",\n    \"reviewer\": \"プロジェクト運営者（範囲を限定した委任）\",\n    \"decidedAt\": \"2026-10-25T13:07:49+09:00\",\n    \"statement\": \"2026-10-25 13:07:49 JST、運営者は既存Worker対応の現在の漫画テーマ候補からdotが対象を選び、毎回の個別提示なしでGitHubの収集許可と購読を登録し、候補収集・レビューまで進める限定委任を明示承認した。同日16:17:04 JSTに固定1日1バッチ上限を撤廃し、進捗・収集量・負荷による投入調整を許可した。2026-10-26 12:37:31 JST、過去の許可を上書きせず追加分をバッチ専用の新Issueに登録する方式への明示確認に本人が肯定リアクションし、親会話で現在の反応を検証済み。2026-10-27 13:37〜13:41 JST、運営者はdotが相談中として継続していた追加投入抑制を問い直し、データ収集を急いでいること、多少多く実行してほしいこと、1日何件という制約を付ける段階ではないことを明示した。元の限定委任の範囲で投入を再開し、日次件数上限を設けず実処理・待機量・負荷を見て少量ずつ補充する。個々の人物作品組・Role・ISBNを人間が審査済みとの記録ではない。今回dotが選んだのは既存テーマIssue #5と固定catalog d3e377d5255f4c487d608e73954dc40aeb0b3cba（blob f3d33d0e83b6299a7f443fa841232407ce67657c）のM41の吾峠呼世晴→鬼滅の刃の1組、および導入Worker対応組との共通部分だけ。Wikidata構造化情報とNDL作成書誌のみ、1作者1作品、親準備と全子収集合計30試行以内、同一要求2試行・3秒間隔・20秒・4MiB、保存成果とcache優先。既公開・既受入・既収集の同内容、同条件の根拠保留は再収集せず、不確かな同定・Role・刊行物scopeは保留。既設時間帯・直列排他・10分休憩を維持する。固定catalog全組・将来追加テーマへの無条件許可ではなく、正式受入・公開apply・追加取得元・予算拡大・コード/adapter/権限/認証/VPS/会員DB/時間帯/ロック変更は含まない。\"\n  }\n}\n```\n<!-- /plunode-collection-permission:v1 -->\n"
+    },
+    "firstRecipeRevision": 41,
+    "recipeRevisionCount": 1
+  },
+  "requestSha256": "05b0f0c13992def57fc28b69ca8e3789f72bc293e327273e4ee2d84a4733ac80",
+  "kind": "issue-prepare",
+  "phase": "awaiting-recovery",
+  "generation": 1353,
+  "attempts": 3,
+  "workerId": "plunode-wsl",
+  "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
+  "updatedAt": "2026-10-31T06:01:20+00:00",
+  "message": "Technical acquisition incomplete; no semantic hold or acceptance",
+  "result": {
+    "schemaVersion": 1,
+    "status": "technical-incomplete",
+    "preparationComplete": false,
+    "issueOrigin": {
+      "repository": "isinxnisi/graph-knowledge",
+      "issueNumber": 61,
+      "approvalId": "dot-gotouge-kimetsu-20261028",
+      "permissionSha256": "3d8a4d259fdf7f1d3617cc000a9592d459ffde2fc81acb06f850eae9dcbd3e73",
+      "issueBodySha256": "9dd0369d4f35a85246fd169fbbefcef81224e84d5e4c767ed24b4ec558eedae3"
+    },
+    "preparationDirectory": "/home/isinxnisi/.local/share/plunode-collection-worker-phase-b-20261020/runtime/.local/collection-issues/issue-61-dot-gotouge-kimetsu-20261028",
+    "batchRequests": [],
+    "generatedArtifacts": {},
+    "technicalWaits": [
+      {
+        "category": "request-attempts-exhausted",
+        "key": "publication-87eab7896cd87176fbb87586",
+        "provider": "ndlsearch.ndl.go.jp",
+        "retryAt": null,
+        "recoveryRequired": true,
+        "target": "鬼滅の刃",
+        "lastDiagnostic": {
+          "category": "transport",
+          "phase": "open-through-response-headers",
+          "phaseBoundary": "open-through-response-headers",
+          "elapsedSeconds": 5.204929,
+          "finishedAt": "2026-10-28T07:20:57.236305+00:00",
+          "httpStatus": 429,
+          "causes": [
+            {
+              "type": "HTTPError"
+            }
+          ],
+          "retryAfterUntil": 1793172117.2363422
+        }
+      }
+    ],
+    "retryAt": null,
+    "publicApply": false,
+    "counts": {
+      "networkAttempts": 5,
+      "holds": 0,
+      "identifiedWorks": 0,
+      "technicalWaits": 1
+    }
+  },
+  "executionComplete": false,
+  "retryAt": 0
+}
