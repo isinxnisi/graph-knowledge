@@ -1,0 +1,301 @@
+{
+  "requestId": "issue-25-manga23-20261019",
+  "request": {
+    "schemaVersion": 1,
+    "id": "issue-25-manga23-20261019",
+    "kind": "issue-prepare",
+    "status": "approved",
+    "sourceCommit": "c87051e0d15c903737d37f7c114bff0f17702ffa",
+    "applyAuthorized": {
+      "local": false,
+      "beta": false,
+      "vps": false
+    },
+    "approvalScope": "issue-manga-preparation-collection-review-only",
+    "humanDecision": {
+      "actorType": "human",
+      "reviewer": "プロジェクト運営者",
+      "decidedAt": "2026-10-19T02:52:00+09:00",
+      "statement": "Issue #25の2026-10-19 02:52 JST先行許可を転記。明示された23作品・人物の同定、QID・日本語代表ISBN探索、recipe生成、hidden候補収集と根拠・保留・レビュー資料生成を承認。Wikidata構造化データとNDL作成書誌だけを用い、準備・収集合計142試行、同一要求2試行、逐次3秒、20秒、4MiB以内。既設時間帯・10分休憩で途中開始・数日継続を許可。同一範囲の再承認は不要。不確かな同定・資料不足・範囲外は保留。個別正式受入・公開apply・VPS配置・会員DB変更は承認しない。"
+    },
+    "permission": {
+      "schemaVersion": 1,
+      "approvalId": "manga23-20261019",
+      "status": "approved",
+      "approvalScope": "issue-manga-preparation-collection-review-only",
+      "adapter": "manga-discovery-v2",
+      "targets": [
+        {
+          "person": "浦沢直樹",
+          "work": "MONSTER"
+        },
+        {
+          "person": "浦沢直樹",
+          "work": "20世紀少年"
+        },
+        {
+          "person": "浦沢直樹",
+          "work": "YAWARA!"
+        },
+        {
+          "person": "手塚治虫",
+          "work": "鉄腕アトム"
+        },
+        {
+          "person": "高橋留美子",
+          "work": "犬夜叉"
+        },
+        {
+          "person": "岸本斉史",
+          "work": "NARUTO"
+        },
+        {
+          "person": "赤坂アカ",
+          "work": "かぐや様は告らせたい"
+        },
+        {
+          "person": "田村由美",
+          "work": "ミステリと言う勿れ"
+        },
+        {
+          "person": "九井諒子",
+          "work": "ダンジョン飯"
+        },
+        {
+          "person": "荒木飛呂彦",
+          "work": "ジョジョの奇妙な冒険 第1部 ファントムブラッド"
+        },
+        {
+          "person": "荒川弘",
+          "work": "鋼の錬金術師"
+        },
+        {
+          "person": "荒川弘",
+          "work": "銀の匙 Silver Spoon"
+        },
+        {
+          "person": "荒川弘",
+          "work": "黄泉のツガイ"
+        },
+        {
+          "person": "矢沢あい",
+          "work": "天使なんかじゃない"
+        },
+        {
+          "person": "矢沢あい",
+          "work": "ご近所物語"
+        },
+        {
+          "person": "矢沢あい",
+          "work": "NANA"
+        },
+        {
+          "person": "高屋奈月",
+          "work": "フルーツバスケット"
+        },
+        {
+          "person": "高屋奈月",
+          "work": "翼を持つ者"
+        },
+        {
+          "person": "あだち充",
+          "work": "タッチ"
+        },
+        {
+          "person": "あだち充",
+          "work": "H2"
+        },
+        {
+          "person": "あだち充",
+          "work": "MIX"
+        },
+        {
+          "person": "藤子・F・不二雄",
+          "work": "パーマン"
+        },
+        {
+          "person": "藤子・F・不二雄",
+          "work": "キテレツ大百科"
+        }
+      ],
+      "requestPolicy": {
+        "maxAttempts": 142,
+        "attemptsPerRequest": 2,
+        "minIntervalSeconds": 3,
+        "timeoutSeconds": 20,
+        "maxBytes": 4194304
+      },
+      "humanDecision": {
+        "actorType": "human",
+        "reviewer": "プロジェクト運営者",
+        "decidedAt": "2026-10-19T02:52:00+09:00",
+        "statement": "Issue #25の2026-10-19 02:52 JST先行許可を転記。明示された23作品・人物の同定、QID・日本語代表ISBN探索、recipe生成、hidden候補収集と根拠・保留・レビュー資料生成を承認。Wikidata構造化データとNDL作成書誌だけを用い、準備・収集合計142試行、同一要求2試行、逐次3秒、20秒、4MiB以内。既設時間帯・10分休憩で途中開始・数日継続を許可。同一範囲の再承認は不要。不確かな同定・資料不足・範囲外は保留。個別正式受入・公開apply・VPS配置・会員DB変更は承認しない。"
+      }
+    },
+    "issueOrigin": {
+      "repository": "isinxnisi/graph-knowledge",
+      "issueNumber": 25,
+      "approvalId": "manga23-20261019",
+      "permissionSha256": "673d380b4fb61ab2cdef204140d63a47bbf25dbb288199f25d0e3ae740ef11b3",
+      "issueBodySha256": "5f302ff42139b5230da70d38734577da414a3b89a24a82f90302e0297afc3c69"
+    },
+    "issueSnapshot": {
+      "url": "https://github.com/isinxnisi/graph-knowledge/issues/25",
+      "updatedAt": "2026-10-18T18:34:40Z",
+      "body": "> **収集計画台帳／Issue #25の収集許可を先行登録**。許可対象は下記23作品の「候補データ収集・レビュー生成」までです。**既存WorkerはまだIssueを読まないため、これだけでは起動しません。** Issue起点の自動化実装・設置後、承認範囲の整合確認を経てスケジュール実行します。正式受入・公開applyは許可していません。\n\n## 収集許可の先行登録（2026-10-19 02:52 JST）\n\n- **判断主体**：プロジェクト運営者。このチャットにおいて、Issueを先に更新して自動化完了後に収集させ、朝に結果を確認する運用を指示。GitHubの表示名だけを本人認証と扱わない。\n- **許可する範囲**：本Issueの「候補23作品」に明示された作品・人物の同定に必要な識別子候補の確認、実行recipe生成、収集候補（hidden）の取得とレビュー資料・根拠・保留理由の生成。未承認の残り47作品や別領域への拡張は不可。\n- **許可する取得元**：既存 `manga-discovery-v2` が扱うWikidataの構造化データとNDL作成書誌。追加の取得元やadapter・Roleの意味変更は別判断。QID／ISBN候補の自動探索は、取得元の条件と上限を確認し、同一性や版の一意確認ができないものを保留する。\n- **通信予算の境界**：本Issueでの初回候補収集は、既存r0003で採用した上限（通算最大142リクエスト試行、同一リクエスト2試行まで、逐次・リクエスト間3秒以上、20秒timeout、1応答4MiB以下）を超えない範囲で企画・実行する。追加調査で収まらなければ対象を保留・次回判断とする。無料APIであっても取得元の利用条件を守る。\n- **実行時期**：既設Workerの毎日03:00–07:00、09:00–12:00、15:00–18:00 JST、ジョブ間10分。時間枠開始時刻を待って一斉起動するのではなく、実装完了・承認記録取込後の実行可能時間帯から順次。日をまたいだ再開を許可。\n- **成果の扱い**：候補生成・レビューまで。正式なEntity/Claim受入、release準備に対する受入判断、公開KG apply、VPS配置、会員DB変更はこの許可に含まれない。\n- **監査と再実行**：実行用承認の不変スナップショットを、対象23作品・取得元・通信上限・判断時刻に結び付け、後のIssue編集で許可範囲を暗黙に広げない。重複実行せず、停止・失敗から再開できること。\n- **状態**：**収集方針は許可済み／技術的にはIssue起点連携の実装待ち**。現時点で収集が始まったことを意味しない。\n\n**関連**：#5（有名漫画家と代表作品）。#15（藤子・F・不二雄）、#16（あだち充）も具体案として参照。当初の企画案では実行未決定でしたが、上記の限定的な収集方針は本日先行許可しています。\n\n## ねらい\n- 合意済み102作品のうち、r0002収集8作品とr0003収集24作品の計32作品を除いた**残70作品**から選択。\n- r0004候補は**23作品（残り47作品）**。r0002・r0003の固定recipeと照合して対象作品名の重複0件を確認。既存公開KGの人物・作品EntityやClaimは別途再利用・重複照合する。\n- 「同じつくり手の別作品」「別作品のつくり手へ」といった探索経路を増やす目的。特定作品がGraphに公開済みと決めつけず、未適用r0003の受入済みClaimと公開KGを区別。\n- 現行の`manga-discovery-v2`の利用可能性を確認して、20〜30作品の中で保守的な初回実行量を定義。公開applyは別。\n\n## 候補23作品\n\n### A. 既存の探索経路を伸ばす（10作品）\n\n| 人物 | 対象作品 |\n| --- | --- |\n| 浦沢直樹 | MONSTER |\n| 浦沢直樹 | 20世紀少年 |\n| 浦沢直樹 | YAWARA! |\n| 手塚治虫 | 鉄腕アトム |\n| 高橋留美子 | 犬夜叉 |\n| 岸本斉史 | NARUTO |\n| 赤坂アカ | かぐや様は告らせたい |\n| 田村由美 | ミステリと言う勿れ |\n| 九井諒子 | ダンジョン飯 |\n| 荒木飛呂彦 | ジョジョの奇妙な冒険 第1部 ファントムブラッド |\n\n### B. 新しい密集群を作る（11作品）\n\n| 人物 | 対象作品 |\n| --- | --- |\n| 荒川弘 | 鋼の錬金術師 |\n| 荒川弘 | 銀の匙 Silver Spoon |\n| 荒川弘 | 黄泉のツガイ |\n| 矢沢あい | 天使なんかじゃない |\n| 矢沢あい | ご近所物語 |\n| 矢沢あい | NANA |\n| 高屋奈月 | フルーツバスケット |\n| 高屋奈月 | 翼を持つ者 |\n| あだち充 | タッチ |\n| あだち充 | H2 |\n| あだち充 | MIX |\n\n### C. 名義・版を慎重に扱う試験枠（2作品）\n\n| 人物 | 対象作品 |\n| --- | --- |\n| 藤子・F・不二雄 | パーマン |\n| 藤子・F・不二雄 | キテレツ大百科 |\n\n## 自動実行前に検証すること（未確認分は保留）\n1. 作品・人物それぞれのWikidata QID、同名別作品・筆名同定、公開KGと正式受入済み未公開Entityとの突合。\n2. 各作品について日本語の代表ISBN、NDL作成書誌の一致（漫画／版／巻／言語／原責任表示）。既存候補資料の`checkedWorks`はISBN・Roleの実行審査完了を意味しない。\n3. AUTHORSHIP / DRAWING / ORIGINAL_STORY / CREATION など元資料で明示されたRoleだけを収集候補にする。出典が曖昧な行は保留。\n4. 作品→人物→別作品、また作品→人物→別作品→別人物の代表経路がどの独立Claimにより成立し得るか。検索機能不足と収集データ不足を切り分ける。\n5. 公開baseと既受入未適用集合・撤回履歴を確認し、凍結`r0003`や過去の受入・releaseを変更しない。\n6. 許可された取得元・通信条件・最大取得回数・出力上限と所要時間の見積もり。夜間03–07・午前09–12・午後15–18 JSTに余裕をもって投入し、55分／ワークフローの既存制限や10分休憩を無視しない。時間が読めなければ無理に1枠へ詰め込まない。\n\n## 実行できる状態へ進める工程\n- 上記の照合結果に基づいて、**r0004の不変テーマ定義・recipe・レビュー資料・hash**を新規作成する。23件一括に固執せず、取得元未確定や同定難の候補は次版へ分離してよい。\n- 本Issueの「収集許可の先行登録」が許可する23作品・情報源・上限に収まる実行定義であれば、**同じ範囲について形式的な二度目の収集承認は要求せず**、不変な承認スナップショットと入力hashの整合を検証する。曖昧な対象や条件変更・拡張があれば保留する。\n- Issue起点連携の実装・設置後、許可範囲を凍結した実行依頼を既存の `codex/collection-control` 側へ渡し、Workerが時間帯制御と排他制御に従って候補収集・レビューを実行する。正式受入・公開は別承認とする。\n- **現時点の旧WorkerはIssue変更を感知しない。** 新連携の完成までは収集を開始した事実として記述しない。新連携は単なるIssue編集を承認として扱わず、この明示許可の対象を検証する。\n\n## 参考\n- [102作品の合意済み編集候補](https://github.com/isinxnisi/graph-knowledge/blob/main/docs/research/famous-manga-creators/20261016/candidates.json)\n- [r0002の対象8作品](https://github.com/isinxnisi/graph-knowledge/blob/main/datasets/manga-collection/v1/recipe.json)\n- [r0003の対象24作品](https://github.com/isinxnisi/graph-knowledge/blob/main/datasets/manga-collection/r0003/recipe.json)\n- [収集・受入ワークフロー](https://github.com/isinxnisi/graph-knowledge/blob/main/docs/design/COLLECTION_WORKFLOW.md)\n\n## Worker用の許可記録（既存02:52 JST判断の構造化転記）\n\n以下は先行登録済みの判断範囲を機械処理へ渡す記録です。新しい承認や対象拡張ではありません。実行状況・保留・レビューは [Workerの状態](https://github.com/isinxnisi/graph-knowledge/blob/codex/collection-control/collection-control/workers/plunode-wsl/README.md) と [本Issueの処理結果](https://github.com/isinxnisi/graph-knowledge/blob/codex/collection-control/collection-control/results/issue-25-manga23-20261019/README.md) を参照してください。\n\n<!-- plunode-collection-permission:v1 -->\n```json\n{\n  \"schemaVersion\": 1,\n  \"approvalId\": \"manga23-20261019\",\n  \"status\": \"approved\",\n  \"approvalScope\": \"issue-manga-preparation-collection-review-only\",\n  \"adapter\": \"manga-discovery-v2\",\n  \"targets\": [\n    {\n      \"person\": \"浦沢直樹\",\n      \"work\": \"MONSTER\"\n    },\n    {\n      \"person\": \"浦沢直樹\",\n      \"work\": \"20世紀少年\"\n    },\n    {\n      \"person\": \"浦沢直樹\",\n      \"work\": \"YAWARA!\"\n    },\n    {\n      \"person\": \"手塚治虫\",\n      \"work\": \"鉄腕アトム\"\n    },\n    {\n      \"person\": \"高橋留美子\",\n      \"work\": \"犬夜叉\"\n    },\n    {\n      \"person\": \"岸本斉史\",\n      \"work\": \"NARUTO\"\n    },\n    {\n      \"person\": \"赤坂アカ\",\n      \"work\": \"かぐや様は告らせたい\"\n    },\n    {\n      \"person\": \"田村由美\",\n      \"work\": \"ミステリと言う勿れ\"\n    },\n    {\n      \"person\": \"九井諒子\",\n      \"work\": \"ダンジョン飯\"\n    },\n    {\n      \"person\": \"荒木飛呂彦\",\n      \"work\": \"ジョジョの奇妙な冒険 第1部 ファントムブラッド\"\n    },\n    {\n      \"person\": \"荒川弘\",\n      \"work\": \"鋼の錬金術師\"\n    },\n    {\n      \"person\": \"荒川弘\",\n      \"work\": \"銀の匙 Silver Spoon\"\n    },\n    {\n      \"person\": \"荒川弘\",\n      \"work\": \"黄泉のツガイ\"\n    },\n    {\n      \"person\": \"矢沢あい\",\n      \"work\": \"天使なんかじゃない\"\n    },\n    {\n      \"person\": \"矢沢あい\",\n      \"work\": \"ご近所物語\"\n    },\n    {\n      \"person\": \"矢沢あい\",\n      \"work\": \"NANA\"\n    },\n    {\n      \"person\": \"高屋奈月\",\n      \"work\": \"フルーツバスケット\"\n    },\n    {\n      \"person\": \"高屋奈月\",\n      \"work\": \"翼を持つ者\"\n    },\n    {\n      \"person\": \"あだち充\",\n      \"work\": \"タッチ\"\n    },\n    {\n      \"person\": \"あだち充\",\n      \"work\": \"H2\"\n    },\n    {\n      \"person\": \"あだち充\",\n      \"work\": \"MIX\"\n    },\n    {\n      \"person\": \"藤子・F・不二雄\",\n      \"work\": \"パーマン\"\n    },\n    {\n      \"person\": \"藤子・F・不二雄\",\n      \"work\": \"キテレツ大百科\"\n    }\n  ],\n  \"requestPolicy\": {\n    \"maxAttempts\": 142,\n    \"attemptsPerRequest\": 2,\n    \"minIntervalSeconds\": 3,\n    \"timeoutSeconds\": 20,\n    \"maxBytes\": 4194304\n  },\n  \"humanDecision\": {\n    \"actorType\": \"human\",\n    \"reviewer\": \"プロジェクト運営者\",\n    \"decidedAt\": \"2026-10-19T02:52:00+09:00\",\n    \"statement\": \"Issue #25の2026-10-19 02:52 JST先行許可を転記。明示された23作品・人物の同定、QID・日本語代表ISBN探索、recipe生成、hidden候補収集と根拠・保留・レビュー資料生成を承認。Wikidata構造化データとNDL作成書誌だけを用い、準備・収集合計142試行、同一要求2試行、逐次3秒、20秒、4MiB以内。既設時間帯・10分休憩で途中開始・数日継続を許可。同一範囲の再承認は不要。不確かな同定・資料不足・範囲外は保留。個別正式受入・公開apply・VPS配置・会員DB変更は承認しない。\"\n  }\n}\n```\n<!-- /plunode-collection-permission:v1 -->\n"
+    },
+    "firstRecipeRevision": 4,
+    "recipeRevisionCount": 13
+  },
+  "requestSha256": "ac202bb18150f55b7da1103ce43f2d684aa101e4d5d5107a892223bce4590039",
+  "kind": "issue-prepare",
+  "phase": "waiting-control",
+  "generation": 12804,
+  "attempts": 1,
+  "workerId": "plunode-wsl",
+  "sourceCommit": "c87051e0d15c903737d37f7c114bff0f17702ffa",
+  "updatedAt": "2026-10-31T18:01:10+00:00",
+  "result": {
+    "schemaVersion": 1,
+    "status": "prepared-candidates-not-accepted",
+    "issueOrigin": {
+      "repository": "isinxnisi/graph-knowledge",
+      "issueNumber": 25,
+      "approvalId": "manga23-20261019",
+      "permissionSha256": "673d380b4fb61ab2cdef204140d63a47bbf25dbb288199f25d0e3ae740ef11b3",
+      "issueBodySha256": "5f302ff42139b5230da70d38734577da414a3b89a24a82f90302e0297afc3c69"
+    },
+    "counts": {
+      "approvedWorks": 23,
+      "preparedWorks": 0,
+      "preparedPeople": 0,
+      "batches": 0,
+      "holds": 23,
+      "networkAttempts": 71
+    },
+    "holds": [
+      {
+        "target": "MONSTER",
+        "person": "浦沢直樹",
+        "reason": "No dated, exact first-volume Japanese manga publication"
+      },
+      {
+        "target": "20世紀少年",
+        "person": "浦沢直樹",
+        "reason": "No dated, exact first-volume Japanese manga publication"
+      },
+      {
+        "target": "YAWARA!",
+        "person": "浦沢直樹",
+        "reason": "No dated, exact first-volume Japanese manga publication"
+      },
+      {
+        "target": "鉄腕アトム",
+        "person": "手塚治虫",
+        "reason": "No dated, exact first-volume Japanese manga publication"
+      },
+      {
+        "target": "犬夜叉",
+        "person": "高橋留美子",
+        "reason": "No dated, exact first-volume Japanese manga publication"
+      },
+      {
+        "target": "NARUTO",
+        "person": "岸本斉史",
+        "reason": "No dated, exact first-volume Japanese manga publication"
+      },
+      {
+        "target": "かぐや様は告らせたい",
+        "person": "赤坂アカ",
+        "reason": "Exact name/type QID is not unique: かぐや様は告らせたい"
+      },
+      {
+        "target": "ミステリと言う勿れ",
+        "person": "田村由美",
+        "reason": "No dated, exact first-volume Japanese manga publication"
+      },
+      {
+        "target": "ダンジョン飯",
+        "person": "九井諒子",
+        "reason": "No dated, exact first-volume Japanese manga publication"
+      },
+      {
+        "target": "ジョジョの奇妙な冒険 第1部 ファントムブラッド",
+        "person": "荒木飛呂彦",
+        "reason": "Exact name/type QID is not unique: ジョジョの奇妙な冒険 第1部 ファントムブラッド"
+      },
+      {
+        "target": "鋼の錬金術師",
+        "person": "荒川弘",
+        "reason": "No dated, exact first-volume Japanese manga publication"
+      },
+      {
+        "target": "銀の匙 Silver Spoon",
+        "person": "荒川弘",
+        "reason": "No dated, exact first-volume Japanese manga publication"
+      },
+      {
+        "target": "黄泉のツガイ",
+        "person": "荒川弘",
+        "reason": "No dated, exact first-volume Japanese manga publication"
+      },
+      {
+        "target": "天使なんかじゃない",
+        "person": "矢沢あい",
+        "reason": "No dated, exact first-volume Japanese manga publication"
+      },
+      {
+        "target": "ご近所物語",
+        "person": "矢沢あい",
+        "reason": "No dated, exact first-volume Japanese manga publication"
+      },
+      {
+        "target": "NANA",
+        "person": "矢沢あい",
+        "reason": "No dated, exact first-volume Japanese manga publication"
+      },
+      {
+        "target": "フルーツバスケット",
+        "person": "高屋奈月",
+        "reason": "No dated, exact first-volume Japanese manga publication"
+      },
+      {
+        "target": "翼を持つ者",
+        "person": "高屋奈月",
+        "reason": "No dated, exact first-volume Japanese manga publication"
+      },
+      {
+        "target": "タッチ",
+        "person": "あだち充",
+        "reason": "No dated, exact first-volume Japanese manga publication"
+      },
+      {
+        "target": "H2",
+        "person": "あだち充",
+        "reason": "No dated, exact first-volume Japanese manga publication"
+      },
+      {
+        "target": "MIX",
+        "person": "あだち充",
+        "reason": "No dated, exact first-volume Japanese manga publication"
+      },
+      {
+        "target": "パーマン",
+        "person": "藤子・F・不二雄",
+        "reason": "No dated, exact first-volume Japanese manga publication"
+      },
+      {
+        "target": "キテレツ大百科",
+        "person": "藤子・F・不二雄",
+        "reason": "Exact name/type QID is not unique: キテレツ大百科"
+      }
+    ],
+    "batchRequests": [],
+    "publicApply": false,
+    "preparationDirectory": "/home/isinxnisi/.local/share/plunode-collection-worker/runtime/.local/collection-issues/issue-25-manga23-20261019",
+    "generatedArtifacts": {}
+  },
+  "executionComplete": true,
+  "message": "Execution gate: interval",
+  "retryAt": 1793460110.624871
+}
