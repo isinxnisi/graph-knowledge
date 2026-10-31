@@ -92,12 +92,12 @@
   },
   "requestSha256": "d63f6347d120cf07af48aab70b01d7b0f650b0d01d73d7d856597c8c044b5647",
   "kind": "collect-review",
-  "phase": "retry-wait",
-  "generation": 2554,
+  "phase": "waiting-control",
+  "generation": 2555,
   "attempts": 1,
   "workerId": "plunode-wsl",
   "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
-  "updatedAt": "2026-10-31T10:37:40+00:00",
+  "updatedAt": "2026-10-31T10:43:35+00:00",
   "result": {
     "jobId": "issue-42-matsumoto-recovery-20261026-r0001-2930fb6d39188165",
     "collectionUnchanged": false,
@@ -123,6 +123,6 @@
   "decisionDrafts": [
     "datasets/collection-decision-drafts/issue-42-matsumoto-recovery-20261026-batch-01/8820113eb3be4e81411e62830052de774289304fdd9868486866341d766f3adb/issue-42-matsumoto-recovery-20261026-batch-01-normal-draft.json"
   ],
-  "message": "fatal: TaskCanceledException encountered.\n   �^�X�N����������܂����B\r\nfatal: unable to get password from user\n",
+  "message": "Execution gate: outside-window",
   "retryAt": 1793443195.7619376
 }
