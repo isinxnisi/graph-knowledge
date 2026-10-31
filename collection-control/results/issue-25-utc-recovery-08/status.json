@@ -106,12 +106,12 @@
   },
   "requestSha256": "0814b8af0f80dc7f8cb28d448971a9da6a86cee02c9b6879d53a41b4a4621a76",
   "kind": "collect-review",
-  "phase": "retry-wait",
-  "generation": 12381,
+  "phase": "waiting-control",
+  "generation": 12382,
   "attempts": 1,
   "workerId": "plunode-wsl",
   "sourceCommit": "ed89e5a6ff0cf7d8b485330be790a234a064eacd",
-  "updatedAt": "2026-10-31T10:04:27+00:00",
+  "updatedAt": "2026-10-31T10:07:26+00:00",
   "result": {
     "jobId": "issue-25-utc-recovery-r0008-9f792bd2246a1595",
     "collectionUnchanged": false,
@@ -138,5 +138,5 @@
     "datasets/manga-collection/decisions/issue-25-utc-recovery-08-normal-draft.json"
   ],
   "retryAt": 1793441199.755845,
-  "message": "<urlopen error [Errno -3] Temporary failure in name resolution>"
+  "message": "Execution gate: outside-window"
 }
