@@ -66,13 +66,13 @@
   },
   "requestSha256": "45fdbc030fa87fdc492b1ccb14ab70e9bed7c6bfcf45915863626aab4cbd1b3a",
   "kind": "issue-prepare",
-  "phase": "waiting-control",
-  "generation": 2197,
+  "phase": "retry-wait",
+  "generation": 2199,
   "attempts": 4,
   "workerId": "plunode-wsl",
   "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
-  "updatedAt": "2026-10-31T14:40:54+00:00",
-  "message": "Execution gate: outside-window",
+  "updatedAt": "2026-10-31T14:47:46+00:00",
+  "message": "<urlopen error [Errno -3] Temporary failure in name resolution>",
   "result": {
     "schemaVersion": 1,
     "status": "technical-incomplete",
@@ -121,5 +121,5 @@
     }
   },
   "executionComplete": false,
-  "retryAt": 1793457452.293024
+  "retryAt": 1793459038.7056096
 }
