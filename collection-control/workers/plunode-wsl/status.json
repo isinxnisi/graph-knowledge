@@ -26,16 +26,20 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-10-31T21:15:13.200297+00:00",
-  "phase": "interval",
+  "nextStartAt": "2026-10-31T22:20:00+00:00",
+  "phase": "running",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
     "reason": "interval",
-    "eligibleAt": "2026-10-31T21:15:13.200297+00:00",
-    "windowEndAt": "2026-10-31T22:00:00+00:00"
+    "eligibleAt": "2026-11-01T00:00:00+00:00",
+    "windowEndAt": "2026-11-01T03:00:00+00:00"
   },
-  "activeAttempt": null,
+  "activeAttempt": {
+    "requestId": "issue-50-dot-endo-tista-20261027",
+    "startedAt": "2026-10-31T21:16:40.223408+00:00",
+    "limitAt": "2026-10-31T22:10:00+00:00"
+  },
   "lastAttempt": {
     "requestId": "issue-42-matsumoto-recovery-20261026-batch-01",
     "endedAt": "2026-10-31T21:05:13.200298+00:00"
@@ -192,5 +196,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-10-31T21:05:30.111074+00:00"
+  "checkedAt": "2026-10-31T21:16:47.122377+00:00"
 }
