@@ -26,31 +26,26 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-10-31T22:20:00+00:00",
-  "phase": "running",
+  "nextStartAt": "2026-10-31T21:28:01.181018+00:00",
+  "phase": "interval",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
     "reason": "interval",
-    "eligibleAt": "2026-11-01T00:00:00+00:00",
-    "windowEndAt": "2026-11-01T03:00:00+00:00"
+    "eligibleAt": "2026-10-31T21:28:01.181018+00:00",
+    "windowEndAt": "2026-10-31T22:00:00+00:00"
   },
-  "activeAttempt": {
-    "requestId": "issue-50-dot-endo-tista-20261027",
-    "startedAt": "2026-10-31T21:16:40.223408+00:00",
-    "limitAt": "2026-10-31T22:10:00+00:00"
-  },
+  "activeAttempt": null,
   "lastAttempt": {
-    "requestId": "issue-42-matsumoto-recovery-20261026-batch-01",
-    "endedAt": "2026-10-31T21:05:13.200298+00:00"
+    "requestId": "issue-50-dot-endo-tista-20261027",
+    "endedAt": "2026-10-31T21:18:01.181020+00:00"
   },
   "controlError": null,
   "requestsByPhase": {
     "blocked": 9,
     "waiting-control": 21,
     "completed": 30,
-    "awaiting-recovery": 1,
-    "running": 1
+    "awaiting-recovery": 2
   },
   "issueIntake": {
     "collection-control/issue-sources/25.json": {
@@ -197,5 +192,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-10-31T21:17:22.204776+00:00"
+  "checkedAt": "2026-10-31T21:19:06.826306+00:00"
 }
