@@ -26,29 +26,25 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-10-31T07:19:05.184154+00:00",
-  "phase": "running",
+  "nextStartAt": "2026-10-31T06:24:56.616258+00:00",
+  "phase": "interval",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
     "reason": "interval",
-    "eligibleAt": "2026-10-31T07:19:05.184154+00:00",
+    "eligibleAt": "2026-10-31T06:24:56.616258+00:00",
     "windowEndAt": "2026-10-31T09:00:00+00:00"
   },
-  "activeAttempt": {
-    "requestId": "issue-66-dot-togashi-two-20261029",
-    "startedAt": "2026-10-31T06:14:05.184157+00:00",
-    "limitAt": "2026-10-31T07:09:05.184154+00:00"
-  },
+  "activeAttempt": null,
   "lastAttempt": {
-    "requestId": "issue-61-dot-gotouge-kimetsu-20261028",
-    "endedAt": "2026-10-31T06:02:51.166932+00:00"
+    "requestId": "issue-66-dot-togashi-two-20261029",
+    "endedAt": "2026-10-31T06:14:56.616260+00:00"
   },
   "controlError": null,
   "requestsByPhase": {
     "blocked": 10,
-    "waiting-control": 3,
-    "completed": 43,
+    "waiting-control": 2,
+    "completed": 44,
     "awaiting-recovery": 6
   },
   "issueIntake": {
@@ -196,5 +192,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-10-31T06:14:12.129198+00:00"
+  "checkedAt": "2026-10-31T06:15:57.665612+00:00"
 }
