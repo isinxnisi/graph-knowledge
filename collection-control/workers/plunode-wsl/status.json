@@ -26,29 +26,25 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-10-31T20:13:31.763236+00:00",
-  "phase": "running",
+  "nextStartAt": "2026-10-31T19:19:13.232077+00:00",
+  "phase": "interval",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
     "reason": "interval",
-    "eligibleAt": "2026-10-31T20:13:31.763236+00:00",
+    "eligibleAt": "2026-10-31T19:19:13.232077+00:00",
     "windowEndAt": "2026-10-31T22:00:00+00:00"
   },
-  "activeAttempt": {
-    "requestId": "issue-42-matsumoto-recovery-20261026",
-    "startedAt": "2026-10-31T19:08:31.763239+00:00",
-    "limitAt": "2026-10-31T20:03:31.763236+00:00"
-  },
+  "activeAttempt": null,
   "lastAttempt": {
-    "requestId": "issue-62-dot-akutami-jujutsu-20261028-batch-01",
-    "endedAt": "2026-10-31T18:57:23.809208+00:00"
+    "requestId": "issue-42-matsumoto-recovery-20261026",
+    "endedAt": "2026-10-31T19:09:13.232079+00:00"
   },
   "controlError": null,
   "requestsByPhase": {
     "blocked": 9,
-    "waiting-control": 33,
-    "completed": 20
+    "waiting-control": 32,
+    "completed": 21
   },
   "issueIntake": {
     "collection-control/issue-sources/25.json": {
@@ -195,5 +191,5 @@
       "phase": "waiting-control"
     }
   },
-  "checkedAt": "2026-10-31T19:08:39.044842+00:00"
+  "checkedAt": "2026-10-31T19:10:28.158062+00:00"
 }
