@@ -128,18 +128,16 @@
       "checkedAt": "2026-10-30T12:56:15+00:00"
     },
     "collection-control/issue-sources/67.json": {
-      "status": "held",
-      "reason": "<urlopen error [Errno -3] Temporary failure in name resolution>",
-      "checkedAt": "2026-10-31T07:08:23+00:00"
+      "status": "registered: issue-67-dot-mizuki-two-20261029",
+      "checkedAt": "2026-10-31T07:12:22+00:00"
     },
     "collection-control/issue-sources/68.json": {
       "status": "registered: issue-68-dot-fujikoa-two-20261029",
       "checkedAt": "2026-10-30T13:21:21+00:00"
     },
     "collection-control/issue-sources/69.json": {
-      "status": "held",
-      "reason": "<urlopen error [Errno -3] Temporary failure in name resolution>",
-      "checkedAt": "2026-10-31T07:08:35+00:00"
+      "status": "registered: issue-69-dot-ishinomori-three-20261029",
+      "checkedAt": "2026-10-31T07:12:31+00:00"
     },
     "collection-control/issue-sources/70.json": {
       "status": "registered: issue-70-dot-fujikof-doraemon-20261029",
@@ -193,5 +191,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-10-31T07:10:40.702685+00:00"
+  "checkedAt": "2026-10-31T07:14:36.474583+00:00"
 }

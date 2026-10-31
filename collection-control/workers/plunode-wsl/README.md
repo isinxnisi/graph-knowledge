@@ -1,6 +1,6 @@
 # CollectionWorkerの実行制御
 
-確認: 2026-10-31 16:10:40 JST。
+確認: 2026-10-31 16:14:36 JST。
 
 反映済みcontrolRevision: 8／最後の操作: pub-13abfb93-ba2d-44f7-a56b-352aa7ab0ab0-resume。
 
@@ -103,18 +103,16 @@ Issue確認結果:
     "checkedAt": "2026-10-30T12:56:15+00:00"
   },
   "collection-control/issue-sources/67.json": {
-    "status": "held",
-    "reason": "<urlopen error [Errno -3] Temporary failure in name resolution>",
-    "checkedAt": "2026-10-31T07:08:23+00:00"
+    "status": "registered: issue-67-dot-mizuki-two-20261029",
+    "checkedAt": "2026-10-31T07:12:22+00:00"
   },
   "collection-control/issue-sources/68.json": {
     "status": "registered: issue-68-dot-fujikoa-two-20261029",
     "checkedAt": "2026-10-30T13:21:21+00:00"
   },
   "collection-control/issue-sources/69.json": {
-    "status": "held",
-    "reason": "<urlopen error [Errno -3] Temporary failure in name resolution>",
-    "checkedAt": "2026-10-31T07:08:35+00:00"
+    "status": "registered: issue-69-dot-ishinomori-three-20261029",
+    "checkedAt": "2026-10-31T07:12:31+00:00"
   },
   "collection-control/issue-sources/70.json": {
     "status": "registered: issue-70-dot-fujikof-doraemon-20261029",
