@@ -5,6 +5,8 @@
 
 ## 現在の状態と公開対象
 
+**最新配置（2026-10-31）**: `d1330ea8d5917f8c31d239fe7058c2380c554a2d` を正式サイトへ配置済み。build `1gqqeqXTNSzWUrDAFyWUn`、000〜019／20件。3200／HTTPS βも同じソース（build `5O8HMYFaPiKps5cRvuky_`）。[公開後の実操作・backup検証](../verification/CAPSULE_READING_REFINEMENT_20261030.md#2026-10-31-本番反映完了)を現在の記録とする。以下の011〜015公開時点と各追加工程の記述は履歴であり、現在の適用番号を決め打ちしない。今回の一回用runnerは再実行せず、次回は実環境と新しい固定資材を改めて照合する。
+
 2026-10-30の最新ユーザー指示により、βで確認済みのCapsuleを正式サイト `https://plunode.net` へ公開する。以前の「βまで」「本番VPSは更新しない」は過去の実装作業の区切りであり、この公開作業の制限ではない。
 
 公開対象はβの実行記録から固定した `20e5c84a99dd1e1bfa8fb69779729e68a914bb14`。共有URL更新・OGP・関係先絞り込み・スマホ修正を含む。後続の `28fe3aed`／`b26022e9` はテストと記録であり、アプリ実装に差分はない。古いSHAへ戻さず、無関係な自動開発候補も混ぜない。
@@ -213,7 +215,7 @@ private stagingでも、trackedソースのディレクトリは0755、通常フ
 
 開発PCの既存launcherへ移設するβbuildはwebpackを使う。symlink node_modulesを持つstagingからTurbopack buildを移動した際にpgのhash別名解決が失敗した実例がある。build成功とトップページ200だけで完了せず、会員session/APIも確認する。
 
-当初の本番候補は018だけを追加するものだった。現在の `scripts/release-capsule-reading-production.py` は下記019を含む最終候補へ更新済みで、固定SHA・直前Google公式対応buildを照合する。元のGoogle公式指定を再実行しない。現時点では本番未実施。検証記録を確認してから、照合済みの新しいprivate stagingで実行する。
+当初の本番候補は018だけを追加するものだった。現在の `scripts/release-capsule-reading-production.py` は下記019を含む最終候補へ更新済みで、固定SHA・直前Google公式対応buildを照合する。元のGoogle公式指定を再実行しない。2026-10-31に本番実行・公開後確認を完了した。次回は検証記録と稼働構成を確認し、新しい固定資材を準備する。
 
 ## コメント通報の追加（019、2026-10-31）
 

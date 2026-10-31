@@ -4,7 +4,7 @@ Issue #63 / 2026-10-30。ユーザーのdraw.io注記と、会話一覧への戻
 
 ## 実装と検証の区別
 
-実装・3200/HTTPS βへの反映済み。本番反映と最新版の実ブラウザ最終評価は未完了。以下では機能テスト、途中版での実操作、最新版のHTTP確認を区別する。
+2026-10-31、本番反映と正式URLでの代表操作確認まで完了。最新の配置・確認範囲は末尾「本番反映完了」を参照する。以下の未完了・未配置の記述は各工程時点の履歴であり、機能テスト・実Google操作・未確認事項を区別して残す。
 
 - アカウント一覧と内容タブを分離し、編集時だけ広い作業面へ入る。旧形式も共通Graphで読む。
 - 一覧・My Capsulesにごみ箱・復元を追加。新規利用枠20件、既存超過分の閲覧・編集を維持。
@@ -97,3 +97,46 @@ AIラボでGoogle画像を遮断していたCSPを、プロフィールvalidator
 - 017時点の開発DB backupを隔離した別DBへ復元し、正式環境と同じDB host／DB名／role名／cookie prefix／originの検証条件で、018＋019を同じoperator関数とCLIにより適用・再実行。旧34テーブルの行不変、ledger18→20、CLI再実行無変更を確認。これは本番backupではないため、本番実行時もfresh backup・別DB復元・移行試験を繰り返す。
 - 正式サイトのHTTPでは従来build `2ot-o4qNUifoDe2J2Pk_s`、KG revision `f5dbf83f-c89e-4e40-95ee-57957016089f` を確認。SSH接続可、`sudo -n`は不可。root audit・本番fresh backup／復元・018／019 migration・Web切替・正式URLの実操作・暗号化backup回収は管理者実行後に記録する。本番公開済みとは扱わない。
 - 日本語commit・通常push済み: 表示 `0914b06a`、通報 `d1330ea8`。最終資材・検証記録は後続commit。無関係な自動候補は受入・確認済みへ変更していない。未追跡 `memo.txt` は保持。
+
+
+## 2026-10-31 本番反映完了
+
+本人のsudo実行は09:47 JSTに正常終了。Codexがactivation logと暗号化backupを回収し、正式URLの実操作・OGP・既存設定の保持を確認した。今回の追加修正は不要で、アプリはβで確認した固定ソースのまま。
+
+| 環境 | アプリソース | 実build | 会員migration |
+| --- | --- | --- | --- |
+| localhost:3200 | `d1330ea8d5917f8c31d239fe7058c2380c554a2d` | `5O8HMYFaPiKps5cRvuky_` | 000〜019 |
+| HTTPS β | 同上 | `5O8HMYFaPiKps5cRvuky_` | 000〜019（3200と同じruntime） |
+| https://plunode.net | 同上 | `1gqqeqXTNSzWUrDAFyWUn` | 000〜019 |
+
+Web／member-opsのtag・config ID・manifest IDは直上の最終資材と一致。Web manifest `sha256:822024fa43d5d0adb1d962bff565e848ae35f24ff742ca68dfdd7df3482b3a2e`、member-ops manifest `sha256:4d2bec63e5eb4dbbe42eb7fd24509f5841fcef6891629fe52204facbcd3166a3`。正式KG revision `f5dbf83f-c89e-4e40-95ee-57957016089f`、βKG revision `34befbcd-8f5f-4cd9-a059-242a3f0b5ffb`は変更なし。既存Google認証・運営設定・公式プロフィール・AI artifact・他サービスを保持。
+
+### backup・migration・復旧資材
+
+- 本番backup: `/opt/graph-knowledge/backups/capsule-reading-release-20261031T004719Z`。
+- dump SHA256: `f89fe9e03ffe5606a4bc0057656bde86d172db4a0700aeaae8ce58d5d0c68c92`。
+- fresh backupを別DBへ復元して34テーブルを照合。018／019の適用と再実行、既存全行・旧checksum保持を確認してからliveへ適用。ledger20件、二回目無変更。
+- 暗号化archiveと暗号化鍵を開発PCへ回収。既存のローカル秘密鍵で一時領域へ復号し、archiveの構成・manifest・移行前ledger・dump hash・restore結果・activation logを照合。復号一時ファイルは削除し、暗号化資材はprivate backupに保持。秘密鍵をVPSへ送っていない。
+- private証跡: `backups/capsule-comments-final-20261031/production-result.json`、`production-ogp-r1.json`、`production-ogp-r2.json`、各PNG、`production-stopped.json`。URL tokenや認証情報はGitの記録に含めない。
+
+### 正式URLで実Googleセッションを使った確認
+
+既存の「Plunode公式」Googleセッションで実行。新しいOAuthログインのやり直しは行わず、既存セッションの継続・会員API・公開プロフィールを確認した。既存のPLUNODE Capsuleやユーザー投稿には変更を加えず、「公開確認｜Capsule操作テスト 2026-10-31」を新規作成した。
+
+1. 通常GraphのPLUTOからCapsule作成→タイトル変更→アカウント保存（保存版1）→限定リンク発行→別タブ閲覧。公式作者のGoogle画像と公式表示を確認。
+2. 保存版1で確認用コメントを投稿。所有者側で浦沢直樹の関係先10件を読み、名前BILLYでBILLY BATを選択→条件を手塚へ変更して手塚治虫を選択。「2件を選択・うち1件は現在の条件の外」と選択済み2件を確認してまとめて追加。既存PLUTOは追加済みと表示。
+3. タイトル末尾を「（更新）」へ変更し保存版2を保存。共有先の既存画面とHTTP OGPは保存版1のまま。明示的な「保存した変更を共有へ反映」で同じURLへ更新。既存閲覧画面は突然置換されず、新版の案内だけが出る。同じURLのreloadで保存版2・6対象9関係を表示。
+4. 保存版1のコメントが残ったまま保存版2へコメントを投稿。それぞれに投稿時の保存版1／2リンクを表示。名前・日時、右上の撤回／通報メニュー、本文と版リンクの分離を確認。
+5. 通報フォームが保存版2の対象コメントを指すことと390×844での配置を確認。**本番の通報は送信せずキャンセル**。受付→運営確認→対応終了の実Google操作はβで確認済み。非表示／解除・失効境界は隔離PG/OIDCの確認であり、本番の他人の投稿を操作していない。
+6. 共有停止→元URLをreloadし本文・コメント非表示。HTTP OGPは一般の閲覧不可文言に変わり、直前のOGP画像URLも404。確認用Capsuleの再編集→一時タイトル変更→破棄で保存版2と元の題名へ復帰。
+7. 確認用Capsuleのみごみ箱→復元→再訪し6対象9関係の内容を確認。ごみ箱／復元により保存版4となる。共有は自動再開しない。復元後の一覧日時10:00:12は、その後に開いて閉じても変わらず並びも同じ。確認用Capsuleは共有停止・復元済みの状態で残す。
+
+### OGP・画面・残る確認範囲
+
+- HTMLのタイトル・説明・og:url・画像URLを保存版1／2で比較。og:urlは同一、画像URLとPNGは更新される。正式ドメインのみを使用しβ／localhostを指さない。1200×630の保存版2 PNGを視覚確認し、題名・6対象9関係・図の特徴が一致。
+- **SNS側の投稿前プレビュー／キャッシュ更新は未確認**。originが返すmetadata・画像の更新確認とは区別する。告知投稿はしていない。
+- PC幅で実操作、390×844で通報フォームを確認しviewport設定を解除。iPhone実機のキーボード／アドレスバー挙動、全フレームのtransition解析は未確認。
+- 今回の本番確認では公式アカウントが非運営者のため、運営処置の本番再実行はしていない。複数掲載先・コミュニティの世代変更・失効境界は上記隔離検証、Google実画面の掲載先／会話往復・画像／ダークreloadは先行β記録を参照する。本番の独立コミュニティへ検証投稿や設定変更を加えていない。
+- 検証画像: `capsule-production-menu-20261031.jpg`（PCコメントメニュー）、`capsule-production-report-mobile-20261031.jpg`（390×844通報フォーム）。ローカルvisualizations領域に保管。
+
+公開後記録は日本語commit・通常pushで保存する。無関係な自動候補の受入・一括確認済み処理なし。`memo.txt`を保全。公開runnerのguardはexit 0で解放済み。後続の確認用holdも記録commit／push後に解放する。Issue #63はCapsule先行公開と通報対応までの完了であり、知識申請・審査・本線受入は準備中のまま、Issueは閉じない。
