@@ -83,11 +83,11 @@
   "requestSha256": "cc77e6c3adbb23a9cf2cc491368fbd39afce7cbdd8b9c8ec2dc9e851678ad95d",
   "kind": "collect-review",
   "phase": "waiting-control",
-  "generation": 1207,
+  "generation": 1304,
   "attempts": 1,
   "workerId": "plunode-wsl",
   "sourceCommit": "973c7b0c599f79905a029b28b524f4924e169376",
-  "updatedAt": "2026-10-31T12:28:42+00:00",
+  "updatedAt": "2026-10-31T18:10:36+00:00",
   "result": {
     "jobId": "issue-62-dot-akutami-jujutsu-20261028-r0001-9316236b1f6d5eb9",
     "collectionUnchanged": false,
@@ -113,6 +113,6 @@
   "decisionDrafts": [
     "datasets/collection-decision-drafts/issue-62-dot-akutami-jujutsu-20261028-batch-01/1105204981836c00d4c563ef8eb62706c6c0715527298a466a85b378bd8fcc2c/issue-62-dot-akutami-jujutsu-20261028-batch-0-normal-draft.json"
   ],
-  "message": "Execution gate: outside-window",
+  "message": "Execution gate: interval",
   "retryAt": 1793449617.459413
 }
