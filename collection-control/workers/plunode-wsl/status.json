@@ -26,8 +26,8 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-10-31T09:20:00+00:00",
-  "phase": "running",
+  "nextStartAt": "2026-10-31T08:48:44.281535+00:00",
+  "phase": "interval",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
@@ -35,20 +35,16 @@
     "eligibleAt": "2026-10-31T18:00:00+00:00",
     "windowEndAt": "2026-10-31T22:00:00+00:00"
   },
-  "activeAttempt": {
-    "requestId": "issue-67-dot-mizuki-two-20261029",
-    "startedAt": "2026-10-31T08:38:02.800847+00:00",
-    "limitAt": "2026-10-31T09:10:00+00:00"
-  },
+  "activeAttempt": null,
   "lastAttempt": {
-    "requestId": "issue-25-manga23-20261019-repair1-batch-09",
-    "endedAt": "2026-10-31T08:27:18.788742+00:00"
+    "requestId": "issue-67-dot-mizuki-two-20261029",
+    "endedAt": "2026-10-31T08:38:44.281537+00:00"
   },
   "controlError": null,
   "requestsByPhase": {
     "blocked": 11,
-    "waiting-control": 4,
-    "completed": 41,
+    "waiting-control": 3,
+    "completed": 42,
     "retry-wait": 1,
     "awaiting-recovery": 5
   },
@@ -197,5 +193,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-10-31T08:38:09.765004+00:00"
+  "checkedAt": "2026-10-31T08:39:39.945738+00:00"
 }
