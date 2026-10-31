@@ -26,16 +26,20 @@
   "finishGraceMinutes": 10,
   "workflowLimitMinutes": 55,
   "cycleLimitMinutes": 57,
-  "nextStartAt": "2026-10-31T20:41:19.281564+00:00",
-  "phase": "interval",
+  "nextStartAt": "2026-10-31T21:46:30.705603+00:00",
+  "phase": "running",
   "recoveredAttempt": null,
   "admission": {
     "ready": false,
     "reason": "interval",
-    "eligibleAt": "2026-10-31T20:41:19.281564+00:00",
-    "windowEndAt": "2026-10-31T22:00:00+00:00"
+    "eligibleAt": "2026-11-01T00:00:00+00:00",
+    "windowEndAt": "2026-11-01T03:00:00+00:00"
   },
-  "activeAttempt": null,
+  "activeAttempt": {
+    "requestId": "issue-25-utc-recovery-09",
+    "startedAt": "2026-10-31T20:41:30.705605+00:00",
+    "limitAt": "2026-10-31T21:36:30.705603+00:00"
+  },
   "lastAttempt": {
     "requestId": "issue-49-dot-hara-souten-20261027",
     "endedAt": "2026-10-31T20:31:19.281565+00:00"
@@ -192,5 +196,5 @@
       "phase": "waiting-control"
     }
   },
-  "checkedAt": "2026-10-31T20:32:28.626623+00:00"
+  "checkedAt": "2026-10-31T20:41:37.741287+00:00"
 }
