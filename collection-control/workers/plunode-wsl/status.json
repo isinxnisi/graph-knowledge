@@ -43,8 +43,8 @@
   "controlError": null,
   "requestsByPhase": {
     "blocked": 10,
-    "waiting-control": 5,
-    "completed": 41,
+    "waiting-control": 6,
+    "completed": 40,
     "retry-wait": 2,
     "awaiting-recovery": 4
   },
@@ -54,8 +54,9 @@
       "checkedAt": "2026-10-31T08:29:46+00:00"
     },
     "collection-control/issue-sources/16.json": {
-      "status": "registered: issue-16-adachi-three-20261025",
-      "checkedAt": "2026-10-30T13:28:50+00:00"
+      "status": "held",
+      "reason": "<urlopen error [Errno -3] Temporary failure in name resolution>",
+      "checkedAt": "2026-10-31T09:09:54+00:00"
     },
     "collection-control/issue-sources/5.json": {
       "status": "registered: issue-5-dot-tezuka-adolf-20261025",
@@ -174,7 +175,7 @@
     },
     "issue-25-utc-recovery-05": {
       "predecessor": "issue-25-manga23-20261019-repair1-batch-06",
-      "phase": "completed"
+      "phase": "retry-wait"
     },
     "issue-25-utc-recovery-06": {
       "predecessor": "issue-25-manga23-20261019-repair1-batch-07",
@@ -193,5 +194,5 @@
       "phase": "completed"
     }
   },
-  "checkedAt": "2026-10-31T09:08:43.292630+00:00"
+  "checkedAt": "2026-10-31T09:13:24.671592+00:00"
 }
