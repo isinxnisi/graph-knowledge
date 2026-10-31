@@ -1,6 +1,6 @@
 # CollectionWorkerの実行制御
 
-確認: 2026-10-31 23:14:59 JST。
+確認: 2026-10-31 23:24:43 JST。
 
 反映済みcontrolRevision: 8／最後の操作: pub-13abfb93-ba2d-44f7-a56b-352aa7ab0ab0-resume。
 
@@ -47,12 +47,14 @@ Issue確認結果:
     "checkedAt": "2026-10-30T13:06:52+00:00"
   },
   "collection-control/issue-sources/48.json": {
-    "status": "registered: issue-48-dot-toriyama-three-20261027",
-    "checkedAt": "2026-10-28T03:37:52+00:00"
+    "status": "held",
+    "reason": "fatal: TaskCanceledException encountered.\n   �^�X�N����������܂����B\r\nfatal: unable to get password from user\n",
+    "checkedAt": "2026-10-31T14:19:07+00:00"
   },
   "collection-control/issue-sources/49.json": {
-    "status": "registered: issue-49-dot-hara-souten-20261027",
-    "checkedAt": "2026-10-31T10:35:53+00:00"
+    "status": "held",
+    "reason": "Remote end closed connection without response",
+    "checkedAt": "2026-10-31T14:19:21+00:00"
   },
   "collection-control/issue-sources/50.json": {
     "status": "registered: issue-50-dot-endo-tista-20261027",
@@ -67,8 +69,9 @@ Issue確認結果:
     "checkedAt": "2026-10-31T09:39:02+00:00"
   },
   "collection-control/issue-sources/57.json": {
-    "status": "registered: issue-57-dot-oshima-two-20261028",
-    "checkedAt": "2026-10-31T09:39:04+00:00"
+    "status": "held",
+    "reason": "<urlopen error [Errno -3] Temporary failure in name resolution>",
+    "checkedAt": "2026-10-31T14:19:46+00:00"
   },
   "collection-control/issue-sources/58.json": {
     "status": "registered: issue-58-dot-takeuchi-two-20261028",

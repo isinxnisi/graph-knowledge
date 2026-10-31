@@ -43,9 +43,9 @@
   "controlError": null,
   "requestsByPhase": {
     "blocked": 9,
-    "waiting-control": 32,
-    "completed": 20,
-    "awaiting-recovery": 1
+    "waiting-control": 29,
+    "completed": 19,
+    "retry-wait": 5
   },
   "issueIntake": {
     "collection-control/issue-sources/25.json": {
@@ -73,12 +73,14 @@
       "checkedAt": "2026-10-30T13:06:52+00:00"
     },
     "collection-control/issue-sources/48.json": {
-      "status": "registered: issue-48-dot-toriyama-three-20261027",
-      "checkedAt": "2026-10-28T03:37:52+00:00"
+      "status": "held",
+      "reason": "fatal: TaskCanceledException encountered.\n   �^�X�N����������܂����B\r\nfatal: unable to get password from user\n",
+      "checkedAt": "2026-10-31T14:19:07+00:00"
     },
     "collection-control/issue-sources/49.json": {
-      "status": "registered: issue-49-dot-hara-souten-20261027",
-      "checkedAt": "2026-10-31T10:35:53+00:00"
+      "status": "held",
+      "reason": "Remote end closed connection without response",
+      "checkedAt": "2026-10-31T14:19:21+00:00"
     },
     "collection-control/issue-sources/50.json": {
       "status": "registered: issue-50-dot-endo-tista-20261027",
@@ -93,8 +95,9 @@
       "checkedAt": "2026-10-31T09:39:02+00:00"
     },
     "collection-control/issue-sources/57.json": {
-      "status": "registered: issue-57-dot-oshima-two-20261028",
-      "checkedAt": "2026-10-31T09:39:04+00:00"
+      "status": "held",
+      "reason": "<urlopen error [Errno -3] Temporary failure in name resolution>",
+      "checkedAt": "2026-10-31T14:19:46+00:00"
     },
     "collection-control/issue-sources/58.json": {
       "status": "registered: issue-58-dot-takeuchi-two-20261028",
@@ -192,5 +195,5 @@
       "phase": "waiting-control"
     }
   },
-  "checkedAt": "2026-10-31T14:14:59.643152+00:00"
+  "checkedAt": "2026-10-31T14:24:43.904715+00:00"
 }
