@@ -1,6 +1,6 @@
 # CollectionWorkerの実行制御
 
-確認: 2026-10-31 20:09:21 JST。
+確認: 2026-10-31 20:12:54 JST。
 
 反映済みcontrolRevision: 8／最後の操作: pub-13abfb93-ba2d-44f7-a56b-352aa7ab0ab0-resume。
 
@@ -35,9 +35,8 @@ Issue確認結果:
     "checkedAt": "2026-10-30T13:35:03+00:00"
   },
   "collection-control/issue-sources/42.json": {
-    "status": "held",
-    "reason": "fatal: TaskCanceledException encountered.\n   �^�X�N����������܂����B\r\nfatal: unable to get password from user\n",
-    "checkedAt": "2026-10-31T11:07:04+00:00"
+    "status": "registered: issue-42-dot-matsumoto-three-20261026",
+    "checkedAt": "2026-10-31T11:10:48+00:00"
   },
   "collection-control/issue-sources/46.json": {
     "status": "registered: issue-46-dot-aoyama-three-20261027",
